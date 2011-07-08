@@ -6999,6 +6999,11 @@ be displayed in an object graph with the dynamic type StatusColor. If you want t
 in the plc code for the object, you have to consider that the attribute is a pointer and 
 fetch the value with GetIpPtr.
 
+<b>ResetSequence
+It is possible to use GRAFCET sequences in a component. One difference from an ordinary
+sequence are that the reset object should be defined as an attribute of class Dv in the
+main object, with the name 'SequenceReset'. SubSteps can not be used in the sequence.
+
 <b>GraphConfiguration
 GraphConfiguration is of type Enum and used to decide which object graph is to be opened
 for the current instance. It is used by the 'ConfigureComponent' method (see below).

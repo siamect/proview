@@ -6897,6 +6897,11 @@ objektsbild med dynamiktypen StatusColor. Om man vill använda IoStatus i plc-kod
 objektet, måste man tänka på att attributet är en pekare och hämta upp värdet upp med 
 GetIpPtr.
 
+<b>ResetSequence
+Det är möjligt att använda GRAFCET sekvenser i en komponent. En skillnad från en ordinär
+sekvens är att resetobjektet ska vara definierat med ett attribut a klass Dv med namnet 
+'SequenceReset'i huvudobjektet. SubStep kan inte användas if sekvensen.
+
 <b>GraphConfiguration
 GraphConfiguration är av typ Enum och används för att bestämma vilken objektsbild som ska
 öppnas för den aktuella instansen. Används av 'ConfigureComponent' metoden (se nedan).
