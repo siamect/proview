@@ -1,7 +1,7 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X247"
-    Attr NextCix = "_X26"
+    Attr NextOix = "_X256"
+    Attr NextCix = "_X27"
     Attr NextTix[0] = "_X10"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
@@ -4581,6 +4581,200 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr LinkTimeout = 3.000000e+00
           Attr ReconnectTime = 2.000000e+00
           Attr KeepAliveTime = 1.000000e+00
+          Attr ErrorSoftLimit = 50
+          Attr ErrorHardLimit = 100
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Card object for SPI Slave.
+    !  Card object for 	SPI Slave.
+    ! 
+    !  The object is configured as a child to a generic Rack object.
+    ! 
+    !  @b See also
+    !  @classlink BaseIORack basecomponent_baseiorack.html
+    !*/
+    Object SPI_Slave $ClassDef 26 10-JUL-2011 07:17:19.39
+      Body SysBody 10-JUL-2011 07:17:08.04
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 51280
+      EndBody
+      Object RtBody $ObjBodyDef 1 10-JUL-2011 07:19:29.31
+        Body SysBody 10-JUL-2011 07:17:25.64
+          Attr StructName = "SPI_Slave"
+          Attr NextAix = "_X56"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 30 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:17:08.04
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the module. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the module.
+        ! 
+        ! 1: The module is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The module is read by the rt_io_comm process.
+        ! 4: The module is handled by an application program.
+        !*/
+        Object Process $Attribute 31 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:17:08.04
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
+        Object ThreadObject $Attribute 32 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:17:08.04
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        ! Device for the SPI slave.
+        !*/
+        Object Device $Attribute 33 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:17:08.04
+            Attr PgmName = "Device"
+            Attr TypeRef = "pwrs:Type-$String32"
+          EndBody
+        EndObject
+        !/**
+        ! Byte ordering for slave.
+        !*/
+        Object ByteOrdering $Attribute 38 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:17:08.04
+            Attr PgmName = "ByteOrdering"
+            Attr TypeRef = "pwrb:Type-ByteOrderingEnum"
+          EndBody
+        EndObject
+        !/**
+        ! Float representation for slave. Not yet implemented.
+        !*/
+        Object FloatRepresentation $Attribute 39 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:17:08.04
+            Attr PgmName = "FloatRepresentation"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrb:Type-FloatRepEnum"
+          EndBody
+        EndObject
+        !/**
+        ! Status for slave communication.
+        !*/
+        Object Status $Attribute 43 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:17:08.04
+            Attr PgmName = "Status"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        !/**
+        ! Error counter.
+        !*/
+        Object ErrorCount $Attribute 51 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:17:08.04
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Value of the error counter, when a message is sent to the console log.
+        !*/
+        Object ErrorSoftLimit $Attribute 52 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:17:08.04
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Value of the error counter, when all IO handling is aborted.
+        !*/
+        Object ErrorHardLimit $Attribute 53 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:17:08.04
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Size of input area, calculated at runtime initialization.
+        !*/
+        Object InputAreaSize $Attribute 54 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:17:08.04
+            Attr PgmName = "InputAreaSize"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Size of output area, calculated at runtime initialization.
+        !*/
+        Object OutputAreaSize $Attribute 55 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:17:08.04
+            Attr PgmName = "OutputAreaSize"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 248 10-JUL-2011 07:17:08.04
+        Object IoCardInit $Method 249 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:17:59.13
+            Attr MethodName = "SPI_Slave-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 250 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:18:10.72
+            Attr MethodName = "SPI_Slave-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 251 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:18:25.24
+            Attr MethodName = "SPI_Slave-IoCardRead"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 252 10-JUL-2011 07:17:08.04
+          Body SysBody 10-JUL-2011 07:18:33.39
+            Attr MethodName = "SPI_Slave-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 253 10-JUL-2011 07:17:08.04
+        Object Pointed $Menu 254 10-JUL-2011 07:17:08.04
+          Object Connect $MenuButton 255 10-JUL-2011 07:17:08.04
+            Body SysBody 10-JUL-2011 07:17:08.04
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object PostCreate $DbCallBack 256 10-JUL-2011 07:17:08.04
+        Body SysBody 10-JUL-2011 07:17:08.04
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
+      EndObject
+      Object Template SPI_Slave 2154528768 01-JAN-1970 01:00:00.00
+        Body RtBody 10-JUL-2011 07:20:38.66
+          Attr Process = 1
           Attr ErrorSoftLimit = 50
           Attr ErrorHardLimit = 100
         EndBody
