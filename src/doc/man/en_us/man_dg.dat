@@ -6669,7 +6669,16 @@ the Array bit in Flags, and state the number of elements in the array in Element
 <image> ced_fig3.gif
 <b>Definition of an array attribute with 50 elements
 
+<b>Pointers
+There are two types of pointer attributes
 
+- relative pointers that can be used by serveral processes. The value is set with the 
+  gdh_StoreRtdbPointer() function and converted to an absolute pointer with
+  gdh_TranslateRtdbPointer(). Set the Pointer bit in Flags. Note! The size of the element the 
+  pointer is pointing at should be set in Size (in bytes).
+
+- absolute pointers. These can only be set and used by one single process. Set the Pointer 
+  bit and the Private bit in Flags.
 
 <b>Attribute objects
 The term attribute objects refer to attributes that are described by a data structure. The
@@ -6980,13 +6989,20 @@ pwrs:Type-AttrRef. The attribute is handled by the IoConnect method.
 
 <b>IoStatus
 If you want to fetch the status from the I/O-module object, you create the attribute 
-'IoStatus' of type pwrs:Type-$Status, and set the Pointer bit in Flags.
+'IoStatus' of type pwrs:Type-$Status, and set the Pointer bit in Flags. You also have
+to set 4 in Size (for relative pointers the size of what the pointer is pointing at, has
+to specified in Size).
 
 The attribute will be assigned a pointer to the Status attribute of the I/O-module in runtime 
 when the I/O handling is initialized. The Status attribute is of type Status and can for example
 be displayed in an object graph with the dynamic type StatusColor. If you want to use IoStatus
 in the plc code for the object, you have to consider that the attribute is a pointer and 
 fetch the value with GetIpPtr.
+
+<b>ResetSequence
+It is possible to use GRAFCET sequences in a component. One difference from an ordinary
+sequence are that the reset object should be defined as an attribute of class Dv in the
+main object, with the name 'SequenceReset'. SubSteps can not be used in the sequence.
 
 <b>GraphConfiguration
 GraphConfiguration is of type Enum and used to decide which object graph is to be opened
@@ -7119,6 +7135,11 @@ components Contactor and CircuitBreaker are disabled MethodArguments[0] can cont
 where '3' is the Disable mask of the object (that disables the attributes Contactor and
 CircuitBreaker), and 'Contactor 1' results in disabling a signal attribute in Contactor, and
 'CircuitBreaker 1' disables a signal in CircuitBreaker.
+
+There is also another syntax with paranthesis that allows more than two levels. In this example
+the object above, Motor, is a part of a larger aggregate.
+
+<c>(5 (Motor 3 (Contactor 1, CircuitBreaker 1), Temp 1))
 
 <b>Component attributes with individual configuration
 

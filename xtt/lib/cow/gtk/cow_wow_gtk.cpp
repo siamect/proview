@@ -168,6 +168,130 @@ void CoWowGtk::DisplayQuestion( void *ctx, const char *title, const char *text,
   gtk_widget_show_all( question_widget);
 }
 
+void CoWowGtk::inputdialog_ok_cb( GtkWidget *w, gpointer data)
+{
+  wow_t_inputdialog_cb *cbdata = (wow_t_inputdialog_cb *) data;
+  char *text;
+  
+  gchar *textutf8 = gtk_editable_get_chars( GTK_EDITABLE(cbdata->input_widget), 0, -1);
+  text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
+
+  if (cbdata->inputdialogbox_ok)
+    (cbdata->inputdialogbox_ok)( cbdata->ctx, cbdata->data, text);
+
+  gtk_widget_destroy( cbdata->inputdialog_widget);
+  free( (char *)cbdata);
+  g_free( text);
+}
+
+void CoWowGtk::inputdialog_cancel_cb( GtkWidget *w, gpointer data)
+{
+  wow_t_inputdialog_cb *cbdata = (wow_t_inputdialog_cb *) data;
+  
+  if (cbdata->inputdialogbox_cancel)
+    (cbdata->inputdialogbox_cancel)( cbdata->ctx, cbdata->data);
+
+  gtk_widget_destroy( cbdata->inputdialog_widget);
+  free( (char *)cbdata);
+}
+
+static gint inputdialog_delete_event( GtkWidget *w, GdkEvent *event, gpointer data)
+{
+  CoWowGtk::inputdialog_cancel_cb( w, data);
+  return TRUE;
+}
+
+/************************************************************************
+*
+* Name: CreateInputDialog
+*
+* Description:	Create an input dialog widget 
+*
+*************************************************************************/
+
+void CoWowGtk::CreateInputDialog( void *ctx, const char *title, const char *text,
+				  void (* inputdialogbox_ok) ( void *, void *, char *),
+				  void (* inputdialogbox_cancel) ( void *, void *),
+				  int input_length,
+				  char *init_text,
+				  void *data)
+{
+  GtkWidget *inputdialog_widget;
+  GtkWidget *inputdialog_label;
+  wow_t_inputdialog_cb *cbdata;
+  
+  cbdata = (wow_t_inputdialog_cb *) calloc( 1, sizeof(*cbdata));
+  cbdata->inputdialogbox_ok = inputdialogbox_ok;
+  cbdata->inputdialogbox_cancel = inputdialogbox_cancel;
+  cbdata->inputdialogbox_help = 0;
+  cbdata->ctx = ctx;
+  cbdata->data = data;
+  
+
+  // Create a inputdialog window
+  inputdialog_widget = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
+						"default-height", 150,
+						"default-width", 400,
+						"title", translate_utf8(title),
+						"window-position", GTK_WIN_POS_CENTER,
+						NULL);
+  cbdata->inputdialog_widget = inputdialog_widget;
+  g_signal_connect( inputdialog_widget, "delete_event", G_CALLBACK(inputdialog_delete_event), cbdata);
+
+
+  inputdialog_label = gtk_label_new( translate_utf8( text));
+
+  GtkWidget *inputdialog_image = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
+				"stock", GTK_STOCK_DIALOG_QUESTION,
+				"icon-size", GTK_ICON_SIZE_DIALOG,
+				"xalign", 0.5,
+				"yalign", 1.0,
+				NULL);
+
+  GtkWidget *inputdialog_ok = gtk_button_new_with_label( translate_utf8("Yes"));
+  gtk_widget_set_size_request( inputdialog_ok, 70, 28);
+  g_signal_connect( inputdialog_ok, "clicked", 
+  		    G_CALLBACK(inputdialog_ok_cb), cbdata);
+
+  GtkWidget *inputdialog_no = gtk_button_new_with_label( translate_utf8("No"));
+  gtk_widget_set_size_request( inputdialog_no, 70, 28);
+  g_signal_connect( inputdialog_no, "clicked", 
+  		    G_CALLBACK(inputdialog_cancel_cb), cbdata);
+
+  GtkWidget *textinput = gtk_entry_new_with_max_length( input_length);
+  cbdata->input_widget =  textinput;
+  g_signal_connect( textinput, "activate", 
+  		    G_CALLBACK(inputdialog_ok_cb), cbdata);
+
+  GtkWidget *inputdialog_hboxtext = gtk_hbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(inputdialog_hboxtext), inputdialog_image, FALSE, FALSE, 15);
+  gtk_box_pack_start( GTK_BOX(inputdialog_hboxtext), inputdialog_label, TRUE, TRUE, 15);
+
+  GtkWidget *inputdialog_hboxinput = gtk_hbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(inputdialog_hboxinput), textinput, TRUE, TRUE, 15);
+
+  GtkWidget *inputdialog_hboxbuttons = gtk_hbox_new( TRUE, 40);
+  gtk_box_pack_start( GTK_BOX(inputdialog_hboxbuttons), inputdialog_ok, FALSE, FALSE, 0);
+  gtk_box_pack_end( GTK_BOX(inputdialog_hboxbuttons), inputdialog_no, FALSE, FALSE, 0);
+
+  GtkWidget *inputdialog_vbox = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(inputdialog_vbox), inputdialog_hboxtext, TRUE, TRUE, 20);
+  gtk_box_pack_start( GTK_BOX(inputdialog_vbox), inputdialog_hboxinput, FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX(inputdialog_vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
+  gtk_box_pack_end( GTK_BOX(inputdialog_vbox), inputdialog_hboxbuttons, FALSE, FALSE, 15);
+  gtk_container_add( GTK_CONTAINER(inputdialog_widget), inputdialog_vbox);
+  gtk_widget_show_all( inputdialog_widget);
+
+  gint pos = 0;
+  if ( init_text && strcmp( init_text, "") != 0) {
+    char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    gtk_editable_insert_text( GTK_EDITABLE(textinput), textutf8, 
+			      strlen(textutf8), &pos);
+    g_free( textutf8);
+  }
+}
+
 /************************************************************************
 *
 * Description: Create an Error message dialog.
@@ -425,9 +549,9 @@ void *CoWowGtk::CreateList (
  		    G_CALLBACK(CoWowGtk::list_cancel_cb), ctx);
 
   GtkWidget *hboxbuttons = gtk_hbox_new( TRUE, 40);
+  gtk_box_pack_start( GTK_BOX(hboxbuttons), ok_button, FALSE, FALSE, 20);
   if ( show_apply_button)
     gtk_box_pack_start( GTK_BOX(hboxbuttons), apply_button, FALSE, FALSE, 20);
-  gtk_box_pack_start( GTK_BOX(hboxbuttons), ok_button, FALSE, FALSE, 20);
   gtk_box_pack_end( GTK_BOX(hboxbuttons), cancel_button, FALSE, FALSE, 20);
 
   GtkWidget *scrolled_window = gtk_scrolled_window_new( NULL, NULL);

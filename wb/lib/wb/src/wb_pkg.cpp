@@ -261,14 +261,14 @@ void wb_pkg::readConfig()
 	    pkg_pattern rttcrrcode( fname);
 	    n.push_back( rttcrrcode);
 
-	    // RttPlc-file
-#if 0
+	    // RttSignals
+
 	    strcpy( dir, "$pwrp_load/");
-	    sprintf( fname, "%s" load_cNameRttPlc,
+	    sprintf( fname, "%s" load_cNameRttSignals,
 		dir, vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
-	    pkg_pattern rttplc( fname);
-	    n.push_back( rttplc);
-#endif
+	    pkg_pattern rttsignals( fname);
+	    n.push_back( rttsignals);
+
 	  }
 	}
 
@@ -527,8 +527,13 @@ void pkg_node::fetchFiles( bool distribute)
   ofu << 
     "dir=$HOME" << endl <<
     "cd /tmp" << endl <<
+    "if [ \"$1\" == \"\" ]; then" << endl <<
+    "  pkg_name=\"$dir/" << pkg_name << "\"" << endl <<
+    "else" << endl <<
+    "  pkg_name=$1" << endl <<
+    "fi" << endl <<
     "echo \"-- Unpack package " << pkg_name << "\"" << endl <<
-    "tar -xzf $dir/" << pkg_name << endl <<
+    "tar -xzf $pkg_name" << endl <<
     "echo \"-- Move files to target directories\"" << endl <<
     "if [ ! -e $dir/.ssh ]; then" << endl <<
     "  mkdir $dir/.ssh" << endl <<

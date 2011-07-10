@@ -78,11 +78,16 @@ class BrowCtx : public FlowCtx {
     		{ return a.brow_get_next_sibling( element, sibling);};
     int get_previous_sibling( FlowArrayElem *element, FlowArrayElem **sibling)
     		{ return a.brow_get_previous_sibling( element, sibling);};
+    int move_up( FlowArrayElem *element)
+    		{ return a.move_up( element);};
+    int move_down( FlowArrayElem *element)
+    		{ return a.move_down( element);};
     int is_visible( FlowArrayElem *element, flow_eVisible type);
     int get_first_visible( FlowArrayElem **element);
     int get_last_visible( FlowArrayElem **element);
     void center_object( FlowArrayElem *object, double factor);
     int page( double factor);
+    void zoom_absolute( double factor);
 
     ~BrowCtx() {};
     double indentation;

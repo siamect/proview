@@ -73,6 +73,7 @@
 #include "xtt_item.h"
 #include "xtt_xnav_crr.h"
 #include "xtt_xattone.h"
+#include "xtt_xcolwind.h"
 #include "co_dcli_msg.h"
 #include "rt_xnav_msg.h"
 #include "cow_xhelp.h"
@@ -171,6 +172,7 @@ static void xnav_trend_close_cb( void *ctx, XttTrend *trend);
 static void xnav_trend_help_cb( void *ctx, const char *key);
 static void xnav_sevhist_help_cb( void *ctx, const char *key);
 static int xnav_sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, char *oname);
+static int xnav_get_select_cb( void *ctx, pwr_tAttrRef *aref, int *is_attr);
 static void xnav_fast_close_cb( void *ctx, XttFast *fast);
 static void xnav_fast_help_cb( void *ctx, const char *key);
 static void xnav_xao_close_cb( void *ctx, XAttOne *xao);
@@ -325,7 +327,8 @@ dcli_tCmdTable	xnav_command_table[] = {
 		{
 			"COLLECT",
 			&xnav_collect_func,
-			{ "dcli_arg1", "/NAME", ""}
+			{ "dcli_arg1", "/NAME", "/NEWWINDOW", "/ADDWINDOW", "/LAST", "/TITLE", 
+			  "/WIDTH", "/HEIGHT", "/SCANTIME", "/ZOOMFACTOR", "/FILE", ""}
 		},
 		{
 			"CROSSREFERENCE",
@@ -4199,6 +4202,13 @@ static int xnav_sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, ch
   return XNAV__SUCCESS;
 }
 
+static int xnav_get_select_cb( void *ctx, pwr_tAttrRef *aref, int *is_attr)
+{
+  XNav *xnav = (XNav *) ctx;
+
+  return xnav->get_select( aref, is_attr);
+}
+
 static void xnav_fast_close_cb( void *ctx, XttFast *fast)
 {
   XNav *xnav = (XNav *) ctx;
@@ -4482,6 +4492,16 @@ static int	xnav_delete_func( void		*client_data,
   return XNAV__SUCCESS;	
 }
 
+static void xnav_collect_open_cb( void *ctx, char *text)
+{
+  XNav *xnav = (XNav *)ctx;
+  pwr_tCmd cmd;
+
+  sprintf( cmd, "@\"$pwrp_load/%s.rtt_col\"", text);
+
+  xnav->command( cmd);
+}
+
 static int	xnav_collect_func(	void		*client_data,
 					void		*client_flag)
 {
@@ -4491,31 +4511,148 @@ static int	xnav_collect_func(	void		*client_data,
   pwr_tAName	name_str;
   pwr_sAttrRef attrref;
   int 	is_attr;
+  double scantime, zoomfactor;
 
   IF_NOGDH_RETURN;
 
-  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str))))
-  {
-    if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
-    {
+  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str)))) {
+    int newwindow;
+    int addwindow;
+    int last;
+    char title_str[80] = "";
+    int width, height;
+    char str[80];
+    int num;
+
+    if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
       sts = gdh_NameToAttrref( pwr_cNObjid, name_str, &attrref);
-      if ( EVEN(sts))
-      {
+      if ( EVEN(sts)) {
         xnav->message('E', "No such object");
         return XNAV__HOLDCOMMAND;
       }
     }
-    else
-    {
+    else {
       sts = xnav->get_select( &attrref, &is_attr);
-      if ( EVEN(sts))
-      {
+      if ( EVEN(sts)) {
         xnav->message('E', "Enter name or select object");
         return XNAV__SUCCESS;
       }
     }
-    sts = xnav->collect_insert( &attrref);
+
+    newwindow = ODD( dcli_get_qualifier( "/NEWWINDOW", 0, 0));
+    addwindow = ODD( dcli_get_qualifier( "/ADDWINDOW", 0, 0));
+    last = ODD( dcli_get_qualifier( "/LAST", 0, 0));
+
+    if ( ODD( dcli_get_qualifier( "/WIDTH", str, sizeof(str)))) {
+      num = sscanf( str, "%d", &width);
+      if ( num != 1) {
+        xnav->message('E', "Width syntax error");
+        return XNAV__SUCCESS;
+      }
+    }
+    else
+      width = 0;
+
+    if ( ODD( dcli_get_qualifier( "/HEIGHT", str, sizeof(str)))) {
+      num = sscanf( str, "%d", &height);
+      if ( num != 1) {
+        xnav->message('E', "Height syntax error");
+        return XNAV__SUCCESS;
+      }
+    }
+    else
+      height = 0;
+
+    if ( ODD( dcli_get_qualifier( "/ZOOMFACTOR", str, sizeof(str)))) {
+      num = sscanf( str, "%lf", &zoomfactor);
+      if ( num != 1) {
+        xnav->message('E', "Zoomfactor syntax error");
+        return XNAV__SUCCESS;
+      }
+    }
+    else
+      zoomfactor = 0;
+
+    if ( ODD( dcli_get_qualifier( "/SCANTIME", str, sizeof(str)))) {
+      num = sscanf( str, "%lf", &scantime);
+      if ( num != 1) {
+        xnav->message('E', "Scantime syntax error");
+        return XNAV__SUCCESS;
+      }
+    }
+    else
+      scantime = 0;
+
+    if ( newwindow) {
+      // Create a new window and insert into window
+      pwr_tAttrRef *arlist = (pwr_tAttrRef *) calloc( 2, sizeof(pwr_tAttrRef));
+      arlist[0] = attrref;
+
+      dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str));
+      
+      xnav->last_xcolwind = xnav->xcolwind_new( arlist, title_str, xnav->gbl.advanced_user, 
+						xcolwind_eType_Collect, &sts);
+      if ( EVEN(sts)) {
+	xnav->last_xcolwind = 0;
+	return XNAV__SUCCESS;
+      }
+      // xnav->last_xcolwind->close_cb = xatt_close_cb;
+      xnav->last_xcolwind->popup_menu_cb = xnav_popup_menu_cb;
+      xnav->last_xcolwind->call_method_cb = xnav_call_method_cb;
+      xnav->last_xcolwind->is_authorized_cb = xnav->is_authorized_cb;
+      xnav->last_xcolwind->command_cb = xnav_op_command_cb;
+      xnav->last_xcolwind->get_select_cb = xnav_get_select_cb;
+
+      if ( width != 0 && height != 0)
+	xnav->last_xcolwind->set_window_size( width, height);
+
+      if ( zoomfactor != 0)
+	xnav->last_xcolwind->zoom( zoomfactor);
+
+      if ( scantime != 0)
+	xnav->last_xcolwind->set_scantime( int(scantime * 1000 + 0.5));
+
+      if ( last)
+	xnav->last_xcolwind = 0;	
+    }
+    else if ( addwindow ) {
+      // Add to last created window
+      if ( !xnav->last_xcolwind) {
+	xnav->message('E', "No last collection window");
+	return XNAV__SUCCESS;
+      }
+      xnav->last_xcolwind->collect_insert( &attrref);
+
+      if ( last)
+	xnav->last_xcolwind = 0;	
+    }
+    else {
+      sts = xnav->collect_insert( &attrref);
+    }
     return sts;
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "OPEN", strlen( arg1_str)) == 0)
+  {
+    pwr_tFileName file_str;
+
+    if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
+      pwr_tCmd cmd;
+
+      strcpy( cmd, "@\"");
+      if ( !strchr( file_str, '/'))
+	strcat( cmd, "$pwrp_load/");
+      strcat( cmd, file_str);
+      if ( !strchr( file_str, '.'))
+	strcat( cmd, ".rtt_col");
+      strcat( cmd, "\"");
+
+      xnav->command( cmd);
+    }
+    else
+      xnav->wow->CreateFileList( "Open Collection", "$pwrp_load", "*", "rtt_col",
+				     xnav_collect_open_cb, 0, xnav, 1);
+
+    return XNAV__SUCCESS;
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "SHOW", strlen( arg1_str)) == 0)
   {
@@ -7789,3 +7926,73 @@ pwr_tStatus XNav::get_instance_classgraph( char *instance_str, pwr_tFileName fil
   strcpy( filename, fname);
   return XNAV__SUCCESS;
 }
+
+int XNav::collect_window( int copy, int type)
+{
+  brow_tNode	*node_list;
+  int		node_count;
+  Item		*item;
+  int		sts;
+  pwr_sAttrRef  *ap;
+  int           i;
+  XColWind 	*xcolwind;
+
+  if ( type == xcolwind_eType_Collect) {
+    if ( copy) {
+      brow_GetObjectList( collect_brow->ctx, &node_list, &node_count);
+      if ( !node_count)
+	return 0;
+
+      ap = (pwr_sAttrRef *) calloc( node_count + 1, sizeof(pwr_sAttrRef));
+
+      for ( i = 0; i < node_count; i++) {
+	brow_GetUserData( node_list[i], (void **)&item);
+
+	switch( item->type) {
+	case xnav_eItemType_Collect:
+	  sts = gdh_NameToAttrref( pwr_cNObjid, item->name, &ap[i]);
+	  if ( EVEN(sts)) return sts;
+	
+	  break;
+	default: ;
+	}
+      }
+
+      xcolwind = xcolwind_new( ap, 0, gbl.advanced_user, xcolwind_eType_Collect, &sts);
+    }
+    else
+      xcolwind = xcolwind_new( 0, 0, gbl.advanced_user, xcolwind_eType_Collect, &sts);
+
+    if ( ODD(sts)) {
+      xcolwind->close_cb = xatt_close_cb;
+      xcolwind->popup_menu_cb = xnav_popup_menu_cb;
+      xcolwind->call_method_cb = xnav_call_method_cb;
+      xcolwind->is_authorized_cb = is_authorized_cb;
+      xcolwind->command_cb = xnav_op_command_cb;
+      xcolwind->get_select_cb = xnav_get_select_cb;
+      
+      if ( copy)
+	collect_clear();
+    }
+  }
+  else if ( type == xcolwind_eType_CollectSignals ||
+	    type == xcolwind_eType_CollectIOSignals) {
+    pwr_tAttrRef attrref;
+    int is_attr;
+    
+    sts = get_select( &attrref, &is_attr);
+    if ( EVEN(sts)) return sts;
+
+    xcolwind = xcolwind_new( &attrref, 0, gbl.advanced_user, type, &sts);
+    if ( ODD(sts)) {
+      xcolwind->close_cb = xatt_close_cb;
+      xcolwind->popup_menu_cb = xnav_popup_menu_cb;
+      xcolwind->call_method_cb = xnav_call_method_cb;
+      xcolwind->is_authorized_cb = is_authorized_cb;
+      xcolwind->command_cb = xnav_op_command_cb;
+      xcolwind->get_select_cb = xnav_get_select_cb;
+    }      
+  }
+  return XNAV__SUCCESS;
+}
+

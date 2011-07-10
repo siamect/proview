@@ -80,9 +80,10 @@ XAttNavMotif::XAttNavMotif(
 	const char     	*xa_name,
 	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
+	void		*xa_userdata,
 	Widget 		*w,
 	pwr_tStatus 	*status) :
-  XAttNav( xa_parent_ctx, xa_type, xa_name, xa_objar, xa_advanced_user, status),
+  XAttNav( xa_parent_ctx, xa_type, xa_name, xa_objar, xa_advanced_user, xa_userdata, status),
   parent_wid(xa_parent_wid)
 {
   form_widget = ScrolledBrowCreate( parent_wid, name, NULL, 0, 

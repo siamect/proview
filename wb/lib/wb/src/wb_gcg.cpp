@@ -602,6 +602,7 @@ static int gcg_is_in_focode(
 
 static void gcg_pending_compile_add( gcg_ctx gcgctx, pwr_tOid wind);
 static int gcg_pending_compile_exec( gcg_ctx gcgctx);
+static int gcg_check_grafcet_reset( gcg_ctx gcgctx, vldh_t_node node);
 
 
 
@@ -6983,59 +6984,17 @@ int	gcg_comp_m13( gcg_ctx gcgctx, vldh_t_node node)
 	unsigned long		point;
 	unsigned long		par_inverted;
 	int 			sts;
-	int			size;
 	unsigned long		point_count;
 	vldh_t_conpoint		*pointlist;
 	vldh_t_node		next_node;
 	unsigned long		next_point;
 	int			k;
-	vldh_t_plc		plc;
-	pwr_sAttrRef		resattrref;
-	pwr_sAttrRef		*resattrref_ptr;
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	if ( gcgctx->reset_checked == FALSE )
-	{
-	  /* Check the resetobject in the plcobject */
-	  plc = (node->hn.wind)->hw.plc;
-	  sts = ldh_GetObjectPar( ldhses,
-			plc->lp.oid, 
-			"DevBody",
-			"ResetObject",
-			(char **)&resattrref_ptr, &size); 
-	  if ( EVEN(sts)) return sts;
-
-	  resattrref = *resattrref_ptr;
-	  free((char *) resattrref_ptr);
-
-	  /* Indicate that the reset object is checked */
-	  gcgctx->reset_checked = TRUE;
-
-	  sts = gcg_replace_ref( gcgctx, &resattrref, node);
-	  if ( EVEN(sts)) return sts;
-
-	  /* The reset object has to be a di, do or dv */
-	  sts = ldh_GetAttrRefOrigTid( ldhses, &resattrref, &cid);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__NORESET, node);
-	    return GSX__NEXTNODE;
-	  }
-
-	  /* Check that the class of the reset object is correct */
-	  if ( !(cid == pwr_cClass_Di ||
-		 cid == pwr_cClass_Dv ||
-		 cid == pwr_cClass_Po ||
-		 cid == pwr_cClass_Do)) {
-	    gcg_error_msg( gcgctx, GSX__CLASSRESET, node);
-	    return GSX__NEXTNODE;
-	  }
-	  gcgctx->reset_object = resattrref;
-
-	  /* Insert reset object in ioread list */
-	  gcg_ioread_insert( gcgctx, resattrref, GCG_PREFIX_REF);
-
-	}
+	sts = gcg_check_grafcet_reset( gcgctx, node);
+	if ( EVEN(sts) || sts == GSX__NEXTNODE)
+	  return sts;
 
 	/* Insert step object in ref list */
 	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
@@ -8333,6 +8292,15 @@ int	gcg_comp_m12( gcg_ctx gcgctx, vldh_t_node node)
 	    return GSX__NEXTNODE;
 	  }
           break;
+        case pwr_eType_Text :
+	  if ( !( node->ln.cid == pwr_cClass_stosp ||
+	          node->ln.cid == pwr_cClass_cstosp ||
+	          node->ln.cid == pwr_cClass_stonumsp ||
+	          node->ln.cid == pwr_cClass_cstonumsp )) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+          break;
         case pwr_eType_Time :
 	  if ( !( node->ln.cid == pwr_cClass_StoATp ||
 	          node->ln.cid == pwr_cClass_CStoATp )) {
@@ -9385,56 +9353,15 @@ int	gcg_comp_m24( gcg_ctx gcgctx, vldh_t_node node)
 	unsigned long		next_point;
 	int			k;
 	int			found;
-	vldh_t_plc		plc;
-	pwr_sAttrRef 		resattrref;
-	pwr_sAttrRef		*resattrref_ptr;
 	char			*windbuffer;
 	pwr_tObjid		windowobjdid;
 	pwr_tClassId		windclass;
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	if ( gcgctx->reset_checked == FALSE )
-	{
-	  /* Check the resetobject in the plcobject */
-	  plc = (node->hn.wind)->hw.plc;
-	  sts = ldh_GetObjectPar( ldhses,
-			plc->lp.oid, 
-			"DevBody",
-			"ResetObject",
-			(char **)&resattrref_ptr, &size); 
-	  if ( EVEN(sts)) return sts;
-
-	  resattrref = *resattrref_ptr;
-	  free((char *) resattrref_ptr);
-
-	  /* Indicate that the reset object is checked */
-	  gcgctx->reset_checked = TRUE;
-
-	  sts = gcg_replace_ref( gcgctx, &resattrref, node);
-	  if ( EVEN(sts)) return sts;
-
-	  /* The reset object has to be a di, do or dv */
-	  sts = ldh_GetAttrRefOrigTid( ldhses, &resattrref, &cid);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__NORESET, node);
-	    return GSX__NEXTNODE;
-	  }
-
-	  /* Check that the class of the reset object is correct */
-	  if ( !(cid == pwr_cClass_Di ||
-		 cid == pwr_cClass_Dv ||
-		 cid == pwr_cClass_Po ||
-		 cid == pwr_cClass_Do)) {
-	    gcg_error_msg( gcgctx, GSX__CLASSRESET, node);
-	    return GSX__NEXTNODE;
-	  }
-	  gcgctx->reset_object = resattrref;
-
-	  /* Insert reset object in ioread list */
-	  gcg_ioread_insert( gcgctx, resattrref, GCG_PREFIX_REF);
-
-	}
+	sts = gcg_check_grafcet_reset( gcgctx, node);
+	if ( EVEN(sts) || sts == GSX__NEXTNODE)
+	  return sts;
 
 	/* Insert step object in ref list */
 	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
@@ -9551,16 +9478,12 @@ int	gcg_comp_m26( gcg_ctx gcgctx, vldh_t_node node)
 	unsigned long		point;
 	unsigned long		par_inverted;
 	int 			sts;
-	int			size;
 	unsigned long		point_count;
 	vldh_t_conpoint		*pointlist;
 	vldh_t_node		next_node;
 	unsigned long		next_point;
 	int			k;
-	vldh_t_plc		plc;
-	pwr_sAttrRef		resattrref;
 	pwr_tObjid		refobjdid;
-	pwr_sAttrRef		*resattrref_ptr;
 	unsigned long		orderpar_index = 1;
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
@@ -9591,45 +9514,9 @@ int	gcg_comp_m26( gcg_ctx gcgctx, vldh_t_node node)
 	/* Insert parent object in ref list */
 	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
 
-	if ( gcgctx->reset_checked == FALSE )
-	{
-	  /* Check the resetobject in the plcobject */
-	  plc = (node->hn.wind)->hw.plc;
-	  sts = ldh_GetObjectPar( ldhses, plc->lp.oid, 
-				  "DevBody", "ResetObject",
-				  (char **)&resattrref_ptr, &size); 
-	  if ( EVEN(sts)) return sts;
-
-	  resattrref = *resattrref_ptr;
-	  free((char *) resattrref_ptr);
-
-	  /* Indicate that the reset object is checked */
-	  gcgctx->reset_checked = TRUE;
-
-	  sts = gcg_replace_ref( gcgctx, &resattrref, node);
-	  if ( EVEN(sts)) return sts;
-		  
-	  /* The reset object has to be a di, do or dv */
-	  sts = ldh_GetAttrRefOrigTid( ldhses, &resattrref, &cid);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__NORESET, node);
-	    return GSX__NEXTNODE;
-	  }
-
-	  /* Check that the class of the reset object is correct */
-	  if ( !(cid == pwr_cClass_Di ||
-		 cid == pwr_cClass_Dv ||
-		 cid == pwr_cClass_Po ||
-		 cid == pwr_cClass_Do)) {
-	    gcg_error_msg( gcgctx, GSX__CLASSRESET, node);
-	    return GSX__NEXTNODE;
-	  }
-	  gcgctx->reset_object = resattrref;
-
-	  /* Insert reset object in ioread list */
-	  gcg_ioread_insert( gcgctx, resattrref, GCG_PREFIX_REF);
-
-	}
+	sts = gcg_check_grafcet_reset( gcgctx, node);
+	if ( EVEN(sts) || sts == GSX__NEXTNODE)
+	  return sts;
 
 	/* Insert step object in ref list */
 	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
@@ -16216,6 +16103,93 @@ static int gcg_pending_compile_exec( gcg_ctx gcgctx)
     sts =  gcg_wind_comp_all( ldhwb, ldhses, gcgctx->pending_compile[i],
 			      gcgctx->print, 0, gcg_debug, 1);
     if ( EVEN(sts)) return sts;
+  }
+  return GSX__SUCCESS;
+}
+
+static int gcg_check_grafcet_reset( gcg_ctx gcgctx, vldh_t_node node)
+{
+  pwr_sAttrRef 	resattrref;
+  pwr_sAttrRef 	*resattrref_ptr;
+  pwr_tStatus  	sts;
+  int		size;
+  vldh_t_plc   	plc;
+  pwr_tCid	cid;
+
+  if ( gcgctx->reset_checked == FALSE ) {
+    if ( gcg_is_in_focode( gcgctx, node)) {
+      pwr_tOid parent;
+      pwr_tAttrRef *connect_arp;
+      pwr_tAttrRef connect_ar;
+
+      // Reset object should be found in connected main object
+
+      // Get Fo object two levels upp
+      sts = ldh_GetParent( gcgctx->ldhses, node->ln.oid, &parent);
+      if ( EVEN(sts)) return sts;
+      sts = ldh_GetParent( gcgctx->ldhses, parent, &parent);
+      if ( EVEN(sts)) return sts;
+      
+      // Get Connected main object
+      sts = ldh_GetObjectPar( gcgctx->ldhses, parent, "RtBody", "PlcConnect",
+			      (char **)&connect_arp, &size);
+      if ( EVEN(sts)) {
+	gcg_error_msg( gcgctx, GSX__BADWIND, node);
+	return GSX__NEXTNODE;
+      }
+
+      connect_ar = *connect_arp;
+      free((char *) connect_arp);
+    
+      sts = gcg_replace_ref( gcgctx, &connect_ar, node);
+      if ( EVEN(sts)) return sts;
+
+      sts = ldh_ArefANameToAref( gcgctx->ldhses, &connect_ar, "SequenceReset", &resattrref);
+      if ( EVEN(sts)) {
+	gcg_error_msg( gcgctx, GSX__NOSEQRESET, node);
+	return GSX__NEXTNODE;
+      }
+    }
+    else {
+      /* Check the resetobject in the plcobject */
+      plc = (node->hn.wind)->hw.plc;
+      sts = ldh_GetObjectPar( gcgctx->ldhses,
+			      plc->lp.oid, 
+			      "DevBody",
+			      "ResetObject",
+			      (char **)&resattrref_ptr, &size); 
+      if ( EVEN(sts)) return sts;
+      
+      resattrref = *resattrref_ptr;
+      free((char *) resattrref_ptr);
+    
+      /* Indicate that the reset object is checked */
+      gcgctx->reset_checked = TRUE;
+    
+      sts = gcg_replace_ref( gcgctx, &resattrref, node);
+      if ( EVEN(sts)) return sts;
+
+    }    
+
+    /* The reset object has to be a di, do or dv */
+    sts = ldh_GetAttrRefOrigTid( gcgctx->ldhses, &resattrref, &cid);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__NORESET, node);
+      return GSX__NEXTNODE;
+    }
+    
+    /* Check that the class of the reset object is correct */
+    if ( !(cid == pwr_cClass_Di ||
+	   cid == pwr_cClass_Dv ||
+	   cid == pwr_cClass_Po ||
+	   cid == pwr_cClass_Do)) {
+      gcg_error_msg( gcgctx, GSX__CLASSRESET, node);
+      return GSX__NEXTNODE;
+    }
+    gcgctx->reset_object = resattrref;
+      
+    /* Insert reset object in ioread list */
+    gcg_ioread_insert( gcgctx, resattrref, GCG_PREFIX_REF);      
   }
   return GSX__SUCCESS;
 }

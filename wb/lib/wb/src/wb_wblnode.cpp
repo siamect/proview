@@ -1888,11 +1888,13 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
   }
   else if (getType() == tokens.STRING_LITERAL)
   {
-    // Remove quotes and replace \" with "
+    // Remove quotes and replace \" with " and also backslash
     char str[2048];
     const char *s;
     char *t;
     bool first = true;
+    bool backslash_done = false;
+
     t = str;
     for ( s = getText().c_str(); *s; s++) {
       if ( first) {
@@ -1901,6 +1903,12 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       }
       if ( *s == '"' && *(s-1) == '\\')
         t--;
+      if ( *s == '\\' && *(s-1) == '\\' && !backslash_done) {
+	backslash_done = true;
+        t--;
+      }
+      else
+	backslash_done = false;
       *t = *s;
       t++;
     }

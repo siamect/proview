@@ -644,6 +644,8 @@ void wb_print_wbl::printText(wb_volume& v,
   for (ip = text, i = 0; *ip != 0 && i < end; ip++) {
     if (*ip == '"')
       m_os << "\\";
+    else if (*ip == '\\')
+      m_os << "\\";
     m_os << *ip;
   }
     

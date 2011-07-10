@@ -116,7 +116,7 @@ pwr_tStatus udp_recv_data( io_sLocalUDP_IO *local, io_sCard *cp,
 
   sts = 1;
 
-  /* while (sts > 0) */
+  while (sts > 0)
   {
     FD_ZERO(&fdr);
     FD_ZERO(&fdw);
@@ -134,14 +134,20 @@ pwr_tStatus udp_recv_data( io_sLocalUDP_IO *local, io_sCard *cp,
       op->Status = IOM__UDP_DOWN;
       // close(local->socket);
       errh_Error( "Connection lost to modbus slave, %s", cp->Name);
-      return IO__SUCCESS;
+      if ( received)
+	return IO__SUCCESS;
+      else
+	return 0;
     }
     
     if (!(FD_ISSET(local->socket, &fdw))) {
       op->Status = IOM__UDP_DOWN;
       // close(local->socket);
       errh_Error( "Connection down to modbus slave, %s", cp->Name);
-      return IO__SUCCESS;
+      if ( received)
+	return IO__SUCCESS;
+      else
+	return 0;
     }
 
     tv.tv_sec = 0;
@@ -158,7 +164,10 @@ pwr_tStatus udp_recv_data( io_sLocalUDP_IO *local, io_sCard *cp,
       op->Status = IOM__UDP_DOWN;
       // close(local->socket);
       errh_Error( "Connection lost to modbus slave, %s", cp->Name);
-      return IO__SUCCESS;
+      if ( received)
+	return IO__SUCCESS;
+      else
+	return 0;
     }
     
     if (sts == 0) {
@@ -175,14 +184,20 @@ pwr_tStatus udp_recv_data( io_sLocalUDP_IO *local, io_sCard *cp,
         op->Status = IOM__UDP_DOWN;
 	// close(local->socket);
 	errh_Error( "UDP IO Connection lost, %s", cp->Name);
-	return IO__SUCCESS;
+	if ( received)
+	  return IO__SUCCESS;
+	else
+	  return 0;
       }
-
+ 
       if (data_size == 0) {
         op->Status = IOM__UDP_DOWN;
 	// close(local->socket);
 	errh_Error( "UDP IO Connection down, %s", cp->Name);
-	return IO__SUCCESS;
+	if ( received)
+	  return IO__SUCCESS;
+	else
+	  return 0;
       }
 
       if ( data_size < buf_size) {

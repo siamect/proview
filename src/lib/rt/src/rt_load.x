@@ -46,7 +46,7 @@
 %# define       load_cNameRttCrr         "rtt_crr_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 %# define       load_cNameRttCrrObj      "rtt_crro_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 %# define       load_cNameRttCrrCode     "rtt_crrc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
-%# define       load_cNameRttPlc         "rtt_plc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
+%# define       load_cNameRttSignals     "rtt_crrs_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 
 %
 %#elif defined OS_LYNX || defined OS_LINUX || OS_MACOS || OS_FREEBSD
@@ -66,7 +66,7 @@
 %# define       load_cNameRttCrr        "rtt_crr_%3.3d_%3.3d_%3.3d_%3.3d.dat"
 %# define       load_cNameRttCrrObj     "rtt_crro_%3.3d_%3.3d_%3.3d_%3.3d.dat"
 %# define       load_cNameRttCrrCode    "rtt_crrc_%3.3d_%3.3d_%3.3d_%3.3d.dat"
-%# define       load_cNameRttPlc        "rtt_plc_%3.3d_%3.3d_%3.3d_%3.3d.dat"
+%# define       load_cNameRttSignals    "rtt_crrs_%3.3d_%3.3d_%3.3d_%3.3d.dat"
 %# define       load_cNamePkg           "pwrp_pkg_%s_%04d.tgz"
 %# define       load_cNameCustomBuild   "$pwrp_exe/custom_build.sh"
 %#endif

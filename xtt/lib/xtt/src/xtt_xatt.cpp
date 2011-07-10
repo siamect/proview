@@ -52,6 +52,7 @@
 #include "xtt_xatt.h"
 #include "xtt_xattnav.h"
 #include "xtt_xnav.h"
+#include "xtt_item.h"
 #include "rt_xatt_msg.h"
 
 
@@ -171,6 +172,124 @@ int XAtt::xatt_is_authorized_cb( void *ctx, unsigned int access)
   if ( xatt->is_authorized_cb)
     return (xatt->is_authorized_cb)( xatt->parent_ctx, access);
   return 0;
+}
+
+int XAtt::init_cb( void *ctx)
+{
+  XAtt	*xatt = (XAtt *)ctx;
+
+  return xatt->object_attr();
+}
+
+int XAtt::object_attr()
+{
+  int	       	sts;
+  pwr_tClassId	classid;
+  unsigned long	elements;
+  Item   	*item;
+  int		attr_exist;
+  int		i;
+  gdh_sAttrDef 	*bd;
+  int 		rows;
+  pwr_tAName   	aname;
+  pwr_tAName   	attr_name;
+  pwr_tAName   	name;
+  char		*s;
+
+  brow_SetNodraw( xattnav->brow->ctx);
+
+  // Get objid for rtbody or sysbody
+
+  sts = gdh_AttrrefToName ( &objar, name, sizeof(name), cdh_mNName);
+  if ( EVEN(sts)) return sts;
+
+  s = strchr( name, '.');
+  if ( s != 0)
+    strcpy( aname, s + 1);
+  else
+    strcpy( aname, "");
+
+  sts = gdh_GetAttrRefTid( &objar, &classid);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_GetObjectBodyDef( classid, &bd, &rows, objar.Objid);
+  if ( EVEN(sts)) return sts;
+
+  for ( i = 0; i < rows; i++) {
+    if ( bd[i].flags & gdh_mAttrDef_Shadowed)
+      continue;
+    if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
+	 bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
+      continue;
+    if ( bd[i].attr->Param.Info.Type == pwr_eType_CastId ||
+	 bd[i].attr->Param.Info.Type == pwr_eType_DisableAttr)
+      continue;
+
+    if ( bd[i].attr->Param.Info.Flags & PWR_MASK_DISABLEATTR) {
+      pwr_sAttrRef aaref;
+      pwr_tDisableAttr disabled;
+
+      sts = gdh_ArefANameToAref( &objar, bd[i].attrName, &aaref);
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_ArefDisabled( &aaref, &disabled);
+      if ( EVEN(sts)) return sts;
+
+      if ( disabled)
+	continue;
+    }
+
+    if ( objar.Flags.b.CastAttr)
+      cdh_SuppressSuper( attr_name, bd[i].attrName);
+    else
+      strcpy( attr_name, bd[i].attrName);
+
+    if ( strcmp( aname, "") == 0)
+      strcpy( name, attr_name);
+    else {
+      strcpy( name, aname);
+      strcat( name, ".");
+      strcat( name, attr_name);
+    }
+
+    elements = 1;
+    if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY ) {
+      attr_exist = 1;
+      item = (Item *) new ItemAttrArray( xattnav->brow, objar.Objid, 0, 
+					 flow_eDest_IntoLast,
+					 name,
+					 bd[i].attr->Param.Info.Elements, 
+					 bd[i].attr->Param.Info.Type, 
+					 bd[i].attr->Param.TypeRef, 
+					 bd[i].attr->Param.Info.Size,
+					 bd[i].attr->Param.Info.Flags, 0);
+    }
+    else if ( bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS ) {
+      attr_exist = 1;
+      item = (Item *) new ItemAttrObject( xattnav->brow, objar.Objid, 0, 
+					  flow_eDest_IntoLast,
+					  name,
+					  bd[i].attr->Param.TypeRef,
+					  bd[i].attr->Param.Info.Size,
+					  bd[i].attr->Param.Info.Flags, 0, 0);
+    }
+    else {
+      attr_exist = 1;
+      item = (Item *) new ItemAttr( xattnav->brow, objar.Objid, 0, 
+				    flow_eDest_IntoLast, 
+				    name,
+				    bd[i].attr->Param.Info.Type, 
+				    bd[i].attr->Param.TypeRef, 
+				    bd[i].attr->Param.Info.Size,
+				    bd[i].attr->Param.Info.Flags, 0, 
+				    item_eDisplayType_Attr);
+    } 
+  }
+  free( (char *)bd);
+
+  brow_ResetNodraw( xattnav->brow->ctx);
+  brow_Redraw( xattnav->brow->ctx, 0);
+  return XATT__SUCCESS;
 }
 
 

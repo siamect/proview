@@ -45,7 +45,7 @@ pwre_config_check_include()
 	fi
 
  	incdir=${file%/*}
-	if test $incdir == "/usr/lnclude"; then
+	if test $incdir == "/usr/include"; then
           incfound=1
         else
 	  while [ $i -lt $inc_cnt ]; do
@@ -307,7 +307,7 @@ if test $pwre_hw == "hw_arm"; then
   echo "export pwre_conf_libpwrco=\"-lpwr_co\"" >> $cfile
   echo "export pwre_conf_libpwrrt=\"-lpwr_rt -lpwr_co -lpwr_statussrv -lpwr_msg_dummy\"" >> $cfile
   echo "export pwre_conf_libpwrdtt=\"-lpwr_dtt\"" >> $cfile
-  echo "export pwre_conf_libpwrotherio=\"-lpwr_usbio_dummy -lpwr_usb_dummy\"" >> $cfile
+  echo "export pwre_conf_libpwrotherio=\"-lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_cifx_dummy\"" >> $cfile
   echo "export pwre_conf_libpwrprofibus=\"-lpwr_pnak_dummy\"" >> $cfile
   echo "export pwre_conf_libpwrxtt=\"-lpwr_xtt -lpwr_ge -lpwr_cow -lpwr_flow -lpwr_glow\"" >> $cfile
   echo "export pwre_conf_libpwrxttgtk=\" -lpwr_xtt_gtk -lpwr_ge_gtk -lpwr_cow_gtk -lpwr_flow_gtk -lpwr_glow_gtk\"" >> $cfile
@@ -360,11 +360,12 @@ else
   echo "Optional :"
   pwre_config_check_lib motif     MRM      motif motif 0 "/usr/lib/libMrm.so"
   pwre_config_check_lib mysql     MYSQL    lib lib 1 "/usr/lib/libmysqlclient.so:/usr/lib/mysql/libmysqlclient.so"
-  pwre_config_check_lib mq        MQ       lib mq  1 "/usr/lib/libdmq.so"
+  pwre_config_check_lib mq        MQ       lib mq  1 "/usr/lib/libdmq.so:/usr/local/dmq/lib/libdmq.so"
   pwre_config_check_lib wmq       WMQ      lib wmq 1 "/usr/lib/libmqic.so"
   pwre_config_check_lib libpnioif PNAK     lib lib 1 "/usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a"
   pwre_config_check_lib libusb    LIBUSB   lib libusb 1 "/usr/lib/libusb-1.0.so"
 
+  pwre_config_check_include mq    MQ    0 "/usr/local/dmq/include/p_entry.h"
   pwre_config_check_include wmq   WMQ   1 "/opt/mqm/inc/cmqc.h"
   pwre_config_check_include cifx  CIFX  1 "/usr/local/include/cifx/cifxlinux.h"
 

@@ -34,27 +34,41 @@
  * General Public License plus this exception.
  */
 
-#ifndef xtt_xatt_h
-#define xtt_xatt_h
+#ifndef xtt_xcolwind_h
+#define xtt_xcolwind_h
 
-/* xtt_xatt.h -- Object attribute editor */
+/* xtt_xcolwind.h -- Object attribute editor */
 
 #ifndef pwr_h
 # include "pwr.h"
 #endif
+#include "cow_wow.h"
+#ifndef co_nav_crr_h
+#include "co_nav_crr.h"
+#endif
+
 
 class XAttNav;
+class CoWow;
 
-class XAtt {
+typedef enum {
+  xcolwind_eType_Collect,
+  xcolwind_eType_CollectSignals,
+  xcolwind_eType_CollectIOSignals
+} xcolwind_eType;
+
+class XColWind {
   public:
-    XAtt( 
+    XColWind( 
 	void 		*xa_parent_ctx, 
-	pwr_sAttrRef 	*xa_objar,
+	pwr_sAttrRef 	*xa_objar_list,
+	char 		*xa_title,
 	int 		xa_advanced_user,
+	xcolwind_eType  xa_type,
 	int             *xa_sts);
-    virtual ~XAtt();
+    virtual ~XColWind();
     void 	*parent_ctx;
-    pwr_sAttrRef objar;
+    pwr_sAttrRef* objar_list;
     char 	name[80];
     XAttNav	*xattnav;
     void	*root_item;
@@ -68,32 +82,60 @@ class XAtt {
     int         (*call_method_cb)(void *, const char *, const char *, pwr_sAttrRef,
 				  unsigned long, unsigned long, char *);
     int		(*is_authorized_cb)(void *, unsigned int);
+    void 	(*command_cb)( void *, char *);
+    int 	(*get_select_cb)( void *, pwr_tAttrRef *, int *);
     void	*client_data;
     brow_tObject input_node;
     char	input_name[80];
+    pwr_tFileName filename;
+    CoWow	*wow;
+    char       	title[80];
+    xcolwind_eType type;
 
     virtual void message( char severity, const char *message) {}
     virtual void set_prompt( const char *prompt) {}
     virtual void change_value( int set_focus) {}
     virtual void change_value_close() {}
     virtual void pop() {}
+    virtual void set_title( char *title) {}
+    virtual void set_window_size( int w, int h) {}
+    virtual void get_window_size( int *w, int *h) {}
 
     int open_changevalue( char *name);
     void swap( int mode);
-    int object_attr();
+    void set_filename( char *name);
+    void collect_insert( pwr_tAttrRef *aref);
+    void zoom( double zoom_factor);
+    void set_scantime( int t);
+    int collect_add( pwr_tAttrRef *areflist);
+    int collect_signals( pwr_tAttrRef *arp);
+    void activate_open();
+    void activate_save();
+    void activate_saveas();
+    void activate_collect_insert();
+    void activate_collect_delete();
+    void activate_moveup();
+    void activate_movedown();
     void activate_display_object();
     void activate_show_cross();
     void activate_open_classgraph();
     void activate_open_plc();
+    void activate_zoomin();
+    void activate_zoomout();
     void activate_help();
 
-    static void xatt_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
+    static void xcolwind_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
 			       unsigned long item_type, unsigned long utility,
 			       char *arg, int x, int y);
-    static int xatt_is_authorized_cb( void *ctx, unsigned int access);
-    static void message_cb( void *xatt, char severity, const char *message);
-    static void change_value_cb( void *xatt);
+    static int xcolwind_is_authorized_cb( void *ctx, unsigned int access);
+    static void message_cb( void *xcolwind, char severity, const char *message);
+    static void change_value_cb( void *xcolwind);
+    static void file_selected_cb( void *ctx, void *data, char *text);
     static int init_cb( void *ctx);
+    static void signal_insert_cb( void *ctx, void *parent_node, 
+				  navc_eItemType item_type,
+				  char *text1, char *text2, int write);
+    static int name_to_objid_cb( void *ctx, char *name, pwr_tObjid *objid);
 };
 
 #endif

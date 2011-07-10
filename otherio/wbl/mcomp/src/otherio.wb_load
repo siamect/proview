@@ -4575,12 +4575,14 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
       Object Template UDP_IO 2153742336 01-JAN-1970 01:00:00.00
-        Body RtBody 20-MAY-2011 14:29:46.64
+        Body RtBody 07-JUL-2011 16:16:10.56
           Attr Process = 1
           Attr Device = "eth0"
           Attr LinkTimeout = 3.000000e+00
           Attr ReconnectTime = 2.000000e+00
           Attr KeepAliveTime = 1.000000e+00
+          Attr ErrorSoftLimit = 50
+          Attr ErrorHardLimit = 100
         EndBody
       EndObject
     EndObject

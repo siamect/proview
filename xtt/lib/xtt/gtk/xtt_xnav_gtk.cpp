@@ -74,6 +74,7 @@ typedef void *Widget;
 #include "xtt_menu.h"
 #include "xtt_xatt_gtk.h"
 #include "xtt_xcrr_gtk.h"
+#include "xtt_xcolwind_gtk.h"
 #include "xtt_ge_gtk.h"
 #include "xtt_block_gtk.h"
 #include "xtt_trend_gtk.h"
@@ -202,6 +203,13 @@ XAtt *XNavGtk::xatt_new( pwr_tAttrRef *arp, int advanced_user, pwr_tStatus *sts)
 XCrr *XNavGtk::xcrr_new( pwr_tAttrRef *arp, int advanced_user, pwr_tStatus *sts)
 {
   return new XCrrGtk( form_widget, this, arp, advanced_user, sts);
+}
+
+XColWind *XNavGtk::xcolwind_new( pwr_tAttrRef *ar_list, char *title, int advanced_user, 
+				 int type, pwr_tStatus *sts)
+{ 
+  return new XColWindGtk( form_widget, this, ar_list, title, advanced_user, 
+			  (xcolwind_eType)type, sts);
 }
 
 Ev *XNavGtk::ev_new( char *eve_name, char *ala_name, char *blk_name,

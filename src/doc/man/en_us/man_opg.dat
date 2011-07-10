@@ -841,8 +841,8 @@ shooting you often need to look at a number of different attributes simultaneous
 traversing the object tree and collecting attributes with Functions/Collect/Insert, Ctrl+V, 
 and then activating Functions/Collect/Show these attributes are viewed on one page.
 
-A collection view can be saved to a later session by the 'save' command. To save a collection
-view with the name 'mycollection' you write the command
+A collection view can be saved to a later session by the 'save' command. To save a 
+collection view with the name 'mycollection' you write the command
 
 <c>> save/collect mycollection
 
@@ -852,6 +852,18 @@ view with the name 'mycollection' you write the command
 The name can be found in the 'Store' map, and can also be restored by the command
 
 <c>> @mycollection
+
+<h2>Collection window
+A collection view can be copied to a separate window with Functions/Collect/Copy To Window.
+Also an empty window can be created from Functions/Collect/New Window. New attributes are 
+added to the window by selecting the attribute in the runtime navigator, then selecting the
+collection window and activating Edit/Insert (Ctrl+V). With Shift+ArrowUp and 
+Shift+ArrowDown attributes can be moved up and down in the window.
+
+A collection window is saved from File/Save (Ctrl+S) with a specified name. It can later 
+be opened from Functions/Collect/Open in the runtime navigator, or File/Open in an 
+collection window. The desired window is opened from a list containing all saved collection
+windows.
 
 </topic>
 
@@ -1510,11 +1522,13 @@ Xtt commands
 
 add parameter<t>Add an attribute to a picture 	<LINK> add parameter
 add menu    <t>Add a menu item to a xtt menu  	<LINK> add menu
-collect     <t>Add an attribute to collect list <LINK> collect
 call method <t>Call a xtt method for an object <LINK> call method
 check method <t>Call a xtt method filter for an object <LINK> check method
+collect     <t>Add an attribute to collect list <LINK> collect
 collect show<t>Show the collect list		<LINK> collect show
 collect clear<t>Clear the collect list	<LINK> collect clear
+collect remove<t>Remove an attribute from the collect list <LINK> collect remove
+collect open<t>Open a stored collect window	<LINK> collect open
 close alarmlist <t>Close alarmlist		<LINK> close alarmlist
 close eventlist <t>Close eventlist		<LINK> close eventlist
 close graph <t>Close a graph			<LINK> close graph
@@ -1692,13 +1706,29 @@ delete item <LINK> delete item
 Command   collect
 
 Add an attribute to the collection list.
-If the name qualifier is omitted the current
-selected attribute will be collected.
+If the name qualifier is omitted the current selected attribute will 
+be collected.
+
+The /newwindow and /addwindow qualifiers are usually used in command
+files for stored collections windows (files of type .rtt_col)
+
 
 <B>xtt> collect
-<B>xtt> collect /name=
+<B>xtt> collect /name= 
+<B>xtt> collect /name= /newwindow /width= /height= /zoomfactor= /scantime=
+                /title= /last
+<B>xtt> collect /name= /addwindow /last
 
 /name<t>Name of the attribute
+/newwindow<t>Creates a new window and inserts the attrbute into 
+          <t>this window.
+/width    <t>Window width.
+/height   <t>Window height.
+/zoomfactor<t>Text zoom factor in new window.
+/scantime <t>Update frequency for values.
+/title    <t>Window title.
+/last     <t>This is the last attribute to add for this window.
+/addwindow <t>The attribute is added to the last created collect window.
 
 Example
 
@@ -1707,6 +1737,8 @@ xtt> collect /name=hql-hvk-Start.ActualValue
 <H2>related subjects
 collect show <LINK> collect show
 collect clear <LINK> collect clear
+collect remove <LINK> collect remove
+collect open <LINK> collect open
 </TOPIC>
 
 <TOPIC> collect show <style> function
@@ -1731,8 +1763,38 @@ Clear the collect list.
 <H2>related subjects
 collect <LINK> collect
 collect show <LINK> collect show
+collect remove <LINK> collect remove
+collect open <LINK> collect open
 </TOPIC>
 
+<TOPIC> collect remove <style> function
+Command   collect remove
+
+Clear an item in the collect list.
+
+<B>xtt> collect remove
+
+<H2>related subjects
+collect <LINK> collect
+collect show <LINK> collect show
+collect open <LINK> collect open
+</TOPIC>
+
+<TOPIC> collect open <style> function
+Command   collect open /file=
+
+Open a stored collection window. If file is not specified, a
+list of store windows are displayed.
+
+<B>xtt> collect open
+<B>xtt> collect open /file=Motor2
+
+<H2>related subjects
+collect <LINK> collect
+collect show <LINK> collect show
+collect remove <LINK> collect remove
+collect open <LINK> collect open
+</TOPIC>
 <TOPIC> create opmenuitem <style> function
 Command   create opmenuitem
 

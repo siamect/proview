@@ -69,6 +69,7 @@
 #include "xtt_menu.h"
 #include "xtt_xatt.h"
 #include "xtt_xcrr.h"
+#include "xtt_xcolwind.h"
 #include "xtt_ge.h"
 #include "xtt_ev.h"
 #include "xtt_op.h"
@@ -1022,12 +1023,13 @@ int XNav::open_object( pwr_sAttrRef *arp)
   }
   else {
     xatt = xatt_new( arp, gbl.advanced_user, &sts);
-    if ( ODD(sts))
+    if ( ODD(sts)) {
       xatt->close_cb = xatt_close_cb;
       xatt->popup_menu_cb = xnav_popup_menu_cb;
       xatt->call_method_cb = xnav_call_method_cb;
       xatt->is_authorized_cb = is_authorized_cb;
       appl.insert( applist_eType_Attr, (void *)xatt, arp, "", NULL);
+    }
   }
   return XNAV__SUCCESS;
 }
@@ -1042,11 +1044,12 @@ int XNav::open_crossref( pwr_sAttrRef *arp)
   }
   else {
     xcrr = xcrr_new( arp, gbl.advanced_user, &sts);
-    if ( ODD(sts))
+    if ( ODD(sts)) {
       xcrr->close_cb = xcrr_close_cb;
       xcrr->popup_menu_cb = xnav_popup_menu_cb;
       xcrr->start_trace_cb = xnav_start_trace_cb;
       appl.insert( applist_eType_Crossref, (void *)xcrr, arp, "", NULL);
+    }
   }
   return XNAV__SUCCESS;
 }
@@ -1091,7 +1094,8 @@ XNav::XNav(
 	menu_tree(NULL), ev(0), op(0), clog(0), closing_down(0), opplace_p(0),
 	base_priv(pwr_mPrv_System), priv(pwr_mPrv_System), displayed(0),
         current_logging_index(-1), search_last_found(0), search_compiled(0), 
-	attach_audio(0), audio(0), op_close_button(xn_op_close_button), cologin(0), scctx(0)
+	attach_audio(0), audio(0), op_close_button(xn_op_close_button), cologin(0), scctx(0),
+	last_xcolwind(0)
 {
   strcpy( name, xn_name);
   strcpy( opplace_name, xn_opplace_name);

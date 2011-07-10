@@ -362,3 +362,15 @@ void brow_scroll_vertical( BrowCtx *ctx, int value, int bottom)
 		ctx->y_high * ctx->zoom_factor);
   ctx->scroll( 0, y_pix);
 }
+
+void BrowCtx::zoom_absolute( double factor)
+{ 
+  if ( fabs(factor) < DBL_EPSILON)
+    return;
+
+  zoom_factor = factor;
+  a.zoom();
+  clear();
+  draw( 0, 0, window_width, window_height);
+  nav_zoom();
+}

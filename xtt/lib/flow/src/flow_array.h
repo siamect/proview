@@ -108,6 +108,8 @@ class FlowArray {
     int get_last( FlowArrayElem **last);
     int get_previous( FlowArrayElem *element, FlowArrayElem **prev);
     int get_next( FlowArrayElem *element, FlowArrayElem **next);
+    int move_up( FlowArrayElem *element);
+    int move_down( FlowArrayElem *element);
     ~FlowArray();
     friend class FlowNodeClass;
     friend class FlowCtx;

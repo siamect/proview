@@ -53,7 +53,6 @@
 #include "xtt_xattnav.h"
 #include "xtt_xnav.h"
 #include "xtt_xnav_brow.h"
-#include "xtt_xnav_crr.h"
 #include "xtt_item.h"
 #include "pwr_privilege.h"
 #include "cow_wow.h"
@@ -77,14 +76,15 @@ XAttNav::XAttNav(
 	const char     	*xa_name,
 	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
+	void		*xa_userdata,
 	pwr_tStatus 	*status) :
 	parent_ctx(xa_parent_ctx),
 	type(xa_type), objar(*xa_objar), 
-	advanced_user(xa_advanced_user), 
+	advanced_user(xa_advanced_user), userdata(xa_userdata),
 	bypass(0),
 	trace_started(0), message_cb(NULL), close_cb(0), change_value_cb(0),
         popup_menu_cb(0), start_trace_cb(0), is_authorized_cb(0),
-	displayed(0)
+	displayed(0), scantime(500)
 {
   strcpy( name, xa_name);
   *status = 1;
@@ -355,8 +355,7 @@ int XAttNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       switch ( item->type) {
       case xnav_eItemType_Attr:
       case xnav_eItemType_AttrArrayElem:
-      case xnav_eItemType_AttrObject:
-      case xnav_eItemType_Collect: {
+      case xnav_eItemType_AttrObject: {
 	pwr_tAName attr_str;
 
 	sts = gdh_ObjidToName( item->objid, 
@@ -366,6 +365,16 @@ int XAttNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	strcat( attr_str, ".");
 	strcat( attr_str, item->name);
 	sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, &attrref);
+	if ( EVEN(sts)) return sts;
+
+	(xattnav->popup_menu_cb)( xattnav->parent_ctx, attrref,
+				  (unsigned long)xmenu_eItemType_Attribute,
+				  (unsigned long)xmenu_mUtility_AttrEditor, NULL, x, y);
+
+	break;
+      }
+      case xnav_eItemType_Collect: {
+	sts = gdh_NameToAttrref( pwr_cNObjid, item->name, &attrref);
 	if ( EVEN(sts)) return sts;
 
 	(xattnav->popup_menu_cb)( xattnav->parent_ctx, attrref,
@@ -407,6 +416,7 @@ int XAttNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
     switch( item->type) {
     case xnav_eItemType_Attr:
     case xnav_eItemType_AttrArrayElem:
+    case xnav_eItemType_Collect:
       sts = item->open_children( xattnav->brow, 0, 0);
       if (ODD(sts)) break;
 
@@ -522,7 +532,8 @@ int XAttNav::trace_connect_bc( brow_tObject object, char *name,
   case xnav_eItemType_Attr:
   case xnav_eItemType_Enum:
   case xnav_eItemType_Mask:
-  case xnav_eItemType_AttrArrayElem: {
+  case xnav_eItemType_AttrArrayElem:
+  case xnav_eItemType_Collect: {
     ItemAttr	*item;
     
     item = (ItemAttr *) base_item;
@@ -569,6 +580,7 @@ int XAttNav::trace_scan_bc( brow_tObject object, void *p)
   {
     case xnav_eItemType_Attr:
     case xnav_eItemType_AttrArrayElem:
+    case xnav_eItemType_Collect:
     {
       ItemAttr	*item;
 
@@ -640,162 +652,12 @@ int XAttNav::trace_scan_bc( brow_tObject object, void *p)
 void XAttNav::trace_scan( void *data)
 {
   XAttNav *xattnav = (XAttNav *)data;
-  int time = 200;
 
   if ( xattnav->trace_started) {
     brow_TraceScan( xattnav->brow->ctx);
 
-    xattnav->trace_timerid->add( time, trace_scan, xattnav);
+    xattnav->trace_timerid->add( xattnav->scantime, trace_scan, xattnav);
   }
-}
-
-int	XAttNav::crossref()
-{
-  int sts;
-  pwr_tAName name;
-  pwr_tClassId classid;
-  char file[20] = "*";
-
-  sts = gdh_AttrrefToName ( &objar, name, sizeof(name), cdh_mNName);
-  if ( EVEN(sts)) return sts;
-
-  sts = gdh_GetAttrRefTid( &objar, &classid);
-  if ( EVEN(sts)) return sts;
-
-  switch ( classid)
-  {
-    case pwr_cClass_Di:
-    case pwr_cClass_Dv:
-    case pwr_cClass_Do:
-    case pwr_cClass_Po:
-    case pwr_cClass_Av:
-    case pwr_cClass_Ai:
-    case pwr_cClass_Ao:
-    case pwr_cClass_Iv:
-    case pwr_cClass_Ii:
-    case pwr_cClass_Io:
-    case pwr_cClass_Co:
-      sts = xnav_crr_signal( brow, file, name, NULL);
-      break;
-    default:
-      /* Not a signal */
-      sts = xnav_crr_object( brow, file, name, NULL);
-  }
-  // if ( EVEN(sts))
-  //  xnav->message(' ', XNav::get_message(sts));
-
-  return XATT__SUCCESS;
-}
-
-int	XAttNav::object_attr()
-{
-  int	       	sts;
-  pwr_tClassId	classid;
-  unsigned long	elements;
-  Item   	*item;
-  int		attr_exist;
-  int		i;
-  gdh_sAttrDef 	*bd;
-  int 		rows;
-  pwr_tAName   	aname;
-  pwr_tAName   	attr_name;
-  pwr_tAName   	name;
-  char		*s;
-
-  brow_SetNodraw( brow->ctx);
-
-  // Get objid for rtbody or sysbody
-
-  sts = gdh_AttrrefToName ( &objar, name, sizeof(name), cdh_mNName);
-  if ( EVEN(sts)) return sts;
-
-  s = strchr( name, '.');
-  if ( s != 0)
-    strcpy( aname, s + 1);
-  else
-    strcpy( aname, "");
-
-  sts = gdh_GetAttrRefTid( &objar, &classid);
-  if ( EVEN(sts)) return sts;
-
-  sts = gdh_GetObjectBodyDef( classid, &bd, &rows, objar.Objid);
-  if ( EVEN(sts)) return sts;
-
-  for ( i = 0; i < rows; i++) {
-    if ( bd[i].flags & gdh_mAttrDef_Shadowed)
-      continue;
-    if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
-	 bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
-      continue;
-    if ( bd[i].attr->Param.Info.Type == pwr_eType_CastId ||
-	 bd[i].attr->Param.Info.Type == pwr_eType_DisableAttr)
-      continue;
-
-    if ( bd[i].attr->Param.Info.Flags & PWR_MASK_DISABLEATTR) {
-      pwr_sAttrRef aaref;
-      pwr_tDisableAttr disabled;
-
-      sts = gdh_ArefANameToAref( &objar, bd[i].attrName, &aaref);
-      if ( EVEN(sts)) return sts;
-
-      sts = gdh_ArefDisabled( &aaref, &disabled);
-      if ( EVEN(sts)) return sts;
-
-      if ( disabled)
-	continue;
-    }
-
-    if ( objar.Flags.b.CastAttr)
-      cdh_SuppressSuper( attr_name, bd[i].attrName);
-    else
-      strcpy( attr_name, bd[i].attrName);
-
-    if ( strcmp( aname, "") == 0)
-      strcpy( name, attr_name);
-    else {
-      strcpy( name, aname);
-      strcat( name, ".");
-      strcat( name, attr_name);
-    }
-
-    elements = 1;
-    if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY ) {
-      attr_exist = 1;
-      item = (Item *) new ItemAttrArray( brow, objar.Objid, 0, 
-					 flow_eDest_IntoLast,
-					 name,
-					 bd[i].attr->Param.Info.Elements, 
-					 bd[i].attr->Param.Info.Type, 
-					 bd[i].attr->Param.TypeRef, 
-					 bd[i].attr->Param.Info.Size,
-					 bd[i].attr->Param.Info.Flags, 0);
-    }
-    else if ( bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS ) {
-      attr_exist = 1;
-      item = (Item *) new ItemAttrObject( brow, objar.Objid, 0, 
-					  flow_eDest_IntoLast,
-					  name,
-					  bd[i].attr->Param.TypeRef,
-					  bd[i].attr->Param.Info.Size,
-					  bd[i].attr->Param.Info.Flags, 0, 0);
-    }
-    else {
-      attr_exist = 1;
-      item = (Item *) new ItemAttr( brow, objar.Objid, 0, 
-				    flow_eDest_IntoLast, 
-				    name,
-				    bd[i].attr->Param.Info.Type, 
-				    bd[i].attr->Param.TypeRef, 
-				    bd[i].attr->Param.Info.Size,
-				    bd[i].attr->Param.Info.Flags, 0, 
-				    item_eDisplayType_Attr);
-    } 
-  }
-  free( (char *)bd);
-
-  brow_ResetNodraw( brow->ctx);
-  brow_Redraw( brow->ctx, 0);
-  return XATT__SUCCESS;
 }
 
 void XAttNav::enable_events()
@@ -852,17 +714,10 @@ int XAttNav::init_brow_cb( FlowCtx *fctx, void *client_data)
   xattnav->brow->create_nodeclasses();
   xattnav->enable_events();
 
-  // Create the root item
-  switch ( xattnav->type) {
-    case xattnav_eType_Object:
-      xattnav->object_attr();
-      break;
-    case xattnav_eType_CrossRef:
-      xattnav->crossref();
-      break;
-    default:
-      ;
-  }
+  // Create the items
+  if ( xattnav->init_cb)
+    (xattnav->init_cb) ( xattnav->parent_ctx);
+
   sts = brow_TraceInit( ctx, trace_connect_bc, 
 		trace_disconnect_bc, trace_scan_bc);
   xattnav->trace_started = 1;
@@ -917,6 +772,7 @@ int XAttNav::set_attr_value( brow_tObject node, char *name, char *value_str)
   switch( base_item->type) {
     case xnav_eItemType_AttrArrayElem:
     case xnav_eItemType_Attr:
+    case xnav_eItemType_Collect:
     {
       ItemAttr *item = (ItemAttr *)base_item;
 
@@ -1018,6 +874,31 @@ void XAttNav::start_trace()
   }
 }
 
+int XAttNav::get_select( pwr_tAttrRef *arp)
+{
+  brow_tNode	*node_list;
+  int		node_count;
+  ItemCollect	*item;
+  pwr_tStatus 	sts;
+
+  brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
+  if ( node_count != 1)
+    return 0;
+
+  brow_GetUserData( node_list[0], (void **)&item);
+  free( node_list);
+
+  switch( item->type) {
+  case xnav_eItemType_Collect:
+    sts = gdh_NameToAttrref( pwr_cNObjid, item->name, arp);
+    if ( EVEN(sts)) return sts;
+    break;
+  default:
+    return 0;
+  }
+  return XATT__SUCCESS;
+}
+
 void XAttNav::swap( int mode)
 {
   if ( mode == 0) {
@@ -1035,6 +916,30 @@ void XAttNav::swap( int mode)
   }
 }
 
+
+//
+//  Get zoom
+//
+void XAttNav::get_zoom( double *zoom_factor)
+{
+  brow_GetZoom( brow->ctx, zoom_factor);
+}
+
+//
+//  Zoom
+//
+void XAttNav::zoom( double zoom_factor)
+{
+  brow_Zoom( brow->ctx, zoom_factor);
+}
+
+//
+//  Return to base zoom factor
+//
+void XAttNav::unzoom()
+{
+  brow_UnZoom( brow->ctx);
+}
 
 
 

@@ -59,7 +59,7 @@ pkg_install_func ()
   fi
 
   chmod a+x pkg_unpack.sh
-  ./pkg_unpack.sh
+  ./pkg_unpack.sh $pkg
 }
 
 pkg_list_func ()
