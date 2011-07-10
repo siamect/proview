@@ -6,6 +6,8 @@ Architecture: i386
 Depends: pwr48 (>= 4.8.2-1)
 Replaces:
 Maintainer: Proview <postmaster@proview.se>
+Homepage: http://www.proview.se
+Installed-Size: 70464
 Description: Proview Demo Project package
  Proview Demo Project
  4.8.0-1 Base release 

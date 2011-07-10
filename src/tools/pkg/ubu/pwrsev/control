@@ -6,6 +6,8 @@ Architecture: i386
 Depends: libc6 (>= 2.13-0ubuntu13), libgtk2.0-0 (>= 2.24.4-0ubuntu2), libasound2 (>= 1.0.24.1-0ubuntu5), libdb4.8 (>=4.8.30-5ubuntu2), libmysql++3 (>= 3.0.9-1ubuntu2), xfonts-100dpi
 Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48
 Maintainer: Proview <postmaster@proview.se>
+Homepage: http://www.proview.se
+Installed-Size: 655536
 Description:
  Proview storage environment
  4.8.0-1 Base release
