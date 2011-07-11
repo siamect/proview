@@ -59,6 +59,22 @@ SObject pwrb:Class
 !          -- sensor function s, is determined by SensorTypeCode
 !          -- sensor polynomial p, is determined by  SensorPolyType
 !          -- filter function f, is determined by FilterType in Ai object
+!
+!  For linear conversion the conversion from rawvalue to engineering value can be
+!  specified by four ranges
+!
+!  - raw value range            RawValRangeLow - RawValRangeHigh
+!  - channel signal value range ChannelSigValRangeLow - ChannelSigValRangeHigh
+!  - sensor signal value range  SensorSigValRangeLow - SensorSigValRangeHigh
+!  - actual value range         ActValRangeLow - ActValRangeHigh
+!
+! Raw value is the value read by the card or received from the bus. This converted to
+! the signal value of the channel, typically +/-10 V, +/-5 V or +/-20 mA. The part of 
+! this range that is actually utilized by the sensor, that could be for example 4-20 mA 
+! is then converted to engineering unit.
+!
+! @image orm_chanai_conv.png
+!
 !  
 ! @b Hints
 !  ChanAi objects are configured below a suitable card
@@ -162,6 +178,10 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  The Low and High values of RawValRange specifies the
+      !  raw value range of the channel.
+      !*/
       Object RawValRangeLow $Attribute 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -172,6 +192,10 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
+      !/**
+      !  The Low and High values of ChannelSigValRange specifies the
+      !  signal range of the channel.
+      !*/
       Object ChannelSigValRangeLow $Attribute 10
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -246,6 +270,12 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
+      !/**
+      !  The Low and High values of SensorSigValRange specifies the
+      !  part of the ChannelSigValRange that is used by the sensor.
+      !  For example, the channel can have a signal range of -20 - 20 mA
+      !  but the sensor only utilizes 4 - 20 mA.
+      !*/
       Object SensorSigValRangeLow $Attribute 20
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -256,6 +286,11 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
+      !/**
+      !  The Low and High values of ActValRange specifies the
+      !  range of the ActualValue of the signal. These values are 
+      !  correlated to the SensorSigValRange.
+      !*/
       Object ActValRangeLow $Attribute 22
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
