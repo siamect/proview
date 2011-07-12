@@ -107,6 +107,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$UInt32"
           Attr Flags |= PWR_MASK_INVISIBLE
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_PRIVATE
         EndBody
       EndObject
       !/**

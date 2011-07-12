@@ -147,7 +147,8 @@ class ItemBaseAttr : public Item {
         type_id(attr_type_id), tid(attr_tid), size(attr_size), flags(attr_flags),
 	subid(pwr_cNSubid), first_scan(1), display_type(item_display_type)
 		{ strcpy( attr, attr_name);
-		  memset( old_value, 0, sizeof(old_value));};
+		  memset( old_value, 0, sizeof(old_value));
+		  noedit = flags & PWR_MASK_PRIVATE ? 1 : 0;};
     virtual int open_children( XNavBrow *brow, double x, double y);
     virtual void close( XNavBrow *brow, double x, double y);
 
@@ -160,6 +161,7 @@ class ItemBaseAttr : public Item {
     int first_scan;
     pwr_tOName attr;
     item_eDisplayType display_type;
+    int noedit;
 };
 
 class ItemHeader : public Item {
@@ -314,7 +316,7 @@ class ItemCollect : public ItemBaseAttr {
   public:
     ItemCollect( XNavBrow *brow, pwr_tObjid item_objid, char *attr_name,
 	brow_tNode dest, flow_eDest dest_code, int attr_type_id, pwr_tTid attr_tid,
-	int attr_size, int item_is_root);
+	int attr_size, int attr_flags, int item_is_root);
 };
 
 class ItemMenu : public Item {

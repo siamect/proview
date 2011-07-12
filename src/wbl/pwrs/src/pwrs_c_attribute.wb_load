@@ -143,12 +143,18 @@ SObject pwrs:Class
       !  PWR_MASK_NOINVERT      Can't be inverted in plc editor.
       !  PWR_MASK_NOREMOVE      Can't be removed in plc editor.
       !  PWR_MASK_RTDBREF       Contains an rtdb reference.
-      !  PWR_MASK_PRIVATE       Should not be interpreted by an object editor.
-      !  PWR_MASK_ISCLASS       Attribute is specified by a class.
-      !  PWR_MASK_SUBCLASS      ...
-      !  PWR_MASK_BUFFER        ...
+      !  PWR_MASK_PRIVATE       Only read access in runtime environment. Pointers should
+      !                         not be interpreted by an object editor.
+      !  PWR_MASK_CLASS         Attribute is specified by a class.
+      !  PWR_MASK_SUPERCLASS    Attribute specifies the superclass for a class.
+      !  PWR_MASK_BUFFER        Attribute is a buffer.
       !  PWR_MASK_NOWBL         Attribute will not be to printed to wb_load file.
       !  PWR_MASK_ALWAYSWBL     Attribute is always printed to wb_load file.
+      !  PWR_MASK_DISABLEATTR   Attribute can be disabled and a disable attribute is
+      !                         defined..
+      !  PWR_MASK_RTHIDE        Attribute is not viewed in runtime.
+      !  PWR_MASK_NEWATTRIBUTE  Internal flag indicating that this attribute is created
+      !                         in the last session.
       !*/
       Object Flags pwr_eClass_Param	5
         Body SysBody

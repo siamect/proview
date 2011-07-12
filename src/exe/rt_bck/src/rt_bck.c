@@ -1008,7 +1008,8 @@ bck_list_insert (
       for ( i = 0; i < rows; i++) {
 
 	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
-	     bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
+	     (bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE &&
+	      bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE))
 	  continue;
 
 	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY)

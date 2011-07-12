@@ -461,6 +461,7 @@ int XColWind::collect_add( pwr_tAttrRef *areflist)
   unsigned int 	a_size;
   unsigned int 	a_offset;
   unsigned int 	a_dim;
+  unsigned int	a_flags = 0;
   pwr_tTid	a_tid;
   pwr_tAName	name;
   pwr_tAttrRef  *arp;
@@ -484,6 +485,9 @@ int XColWind::collect_add( pwr_tAttrRef *areflist)
 					 &a_dim);
       if ( EVEN(sts)) return sts;
 
+      sts = gdh_GetAttributeFlags( arp, &a_flags);
+      if ( EVEN(sts)) return sts;
+
       sts = gdh_GetAttrRefTid( arp, &a_tid);
       if ( EVEN(sts)) return sts;
     }
@@ -491,7 +495,7 @@ int XColWind::collect_add( pwr_tAttrRef *areflist)
       continue;
 
     item = new ItemCollect( xattnav->brow, arp->Objid, attr, NULL, 
-			    flow_eDest_IntoLast, a_type_id, a_tid, a_size, 0);
+			    flow_eDest_IntoLast, a_type_id, a_tid, a_size, a_flags, 0);
   }
 
   brow_ResetNodraw( xattnav->brow->ctx);
@@ -588,6 +592,6 @@ void XColWind::signal_insert_cb( void *ctx, void *parent_node,
   if ( EVEN(sts)) return;
 
   item = new ItemCollect( brow, aref.Objid, attr, NULL, 
-			  flow_eDest_IntoLast, a_type_id, a_tid, a_size, 0);
+			  flow_eDest_IntoLast, a_type_id, a_tid, a_size, 0, 0);
 }
 

@@ -1235,6 +1235,8 @@ bool opcsrv_get_properties( struct soap *soap, bool is_item, pwr_tCid pcid, pwr_
 	break;
       case pwr_eOpc_AccessEnum_ReadWrite:
 	if ( bd->attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL ||
+	     (bd->attr->Param.Info.Flags & PWR_MASK_PRIVATE &&
+	      bd->attr->Param.Info.Flags & PWR_MASK_POINTER) ||
 	     bd->attr->Param.Info.Flags & PWR_MASK_PRIVATE)
 	  ((xsd__string *)ip->Value)->__item.assign( "readable");
 	else

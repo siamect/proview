@@ -319,6 +319,12 @@ gdh_GetAttributeCharAttrref (
 );
 
 pwr_tStatus
+gdh_GetAttributeFlags (
+  pwr_sAttrRef		*arp,
+  unsigned int		*flags
+);
+
+pwr_tStatus
 gdh_GetAttributeCharacteristics (
   char			*name,					  
   pwr_tTypeId		*tid,	

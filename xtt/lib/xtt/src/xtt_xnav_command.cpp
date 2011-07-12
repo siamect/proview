@@ -6576,7 +6576,7 @@ static int xnav_attribute_func (
 
 	/* Get type of attribute */
 	sts = gdh_GetAttributeCharacteristics ( name,
-		&attrtype, &attrsize, &attroffs, &attrelem);
+						&attrtype, &attrsize, &attroffs, &attrelem);
 	if ( EVEN(sts)) return sts;
 
 	/* Get the pointer to attribute */
@@ -7564,7 +7564,7 @@ int XNav::set_parameter( char *name_str, char *value_str, int bypass)
   if (EVEN(sts)) return sts;
 
   sts = gdh_GetAttributeCharAttrref( &attrref, &attr_type, &attr_size,
-	&attr_offset, &attr_dim);
+				     &attr_offset, &attr_dim);
   if ( EVEN(sts)) return sts;
 
   sts = attr_string_to_value( attr_type, value_str, 

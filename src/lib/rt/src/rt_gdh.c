@@ -1902,6 +1902,39 @@ gdh_GetAttributeCharAttrref (
 
   return sts;
 }
+
+
+/** 
+ * @brief Get the flags of an attribute.
+ *  
+ * @return pwr_tStatus
+ */
+
+pwr_tStatus
+gdh_GetAttributeFlags (
+  pwr_sAttrRef		*arp,  /**< The attribute of which to fetch flags. */
+  unsigned int		*flags  /**< Receives the attribute flags. */
+)
+{
+  pwr_tStatus		sts = GDH__SUCCESS;
+  mvol_sAttribute	attribute;
+  mvol_sAttribute	*ap;
+
+  memset(&attribute, 0, sizeof(attribute));
+
+  gdh_ScopeLock {
+  
+    ap = vol_ArefToAttribute(&sts, &attribute, arp, gdb_mLo_global, vol_mTrans_all);
+    if (ap != NULL) touchObject(ap->op);
+    
+  } gdh_ScopeUnlock;
+
+  if (ap != NULL)
+    *flags = ap->adef->Info.Flags;
+
+  return sts;
+}
+
 
 /** 
  * @brief Get the object identity of the previous object
@@ -4172,8 +4205,9 @@ static pwr_tStatus gdh_FWriteObjectR( FILE *fp, char *ap, char *aname, pwr_tAttr
   for ( i = 0; i < rows; i++) {
 
     if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
-	 bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
-      continue;
+	 (bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE &&
+	  bd[i].attr->Param.Info.Flags & PWR_MASK_POINTER))
+	 continue;
 
     strcpy( name, aname);
     strcat( name, ".");
