@@ -780,9 +780,9 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	  MsgWindow::message( 'E', "Database not found", vname);
 	}
 	else {
-	  int open_loadfile = 0;
+	  int open_loadfile = m_options & ldh_mWbOption_OpenDbs ? 1 : 0;
 
-	  if ( wb_dblock::is_locked(vname, uname)) {
+	  if ( wb_dblock::is_locked(vname, uname) &&  !open_loadfile) {
 	    char msg[120];
 
 	    sprintf( msg, "Database %s is locked by user %s", vol_array[0], uname);

@@ -137,6 +137,7 @@ WbGtk::WbGtk( int argc, char *argv[]) : mainwindow(0)
   char		filename[200];
   int           i;
   int		quiet = 0;
+  unsigned int	options = 0;
 
   Wb::main_wb = this;
 
@@ -160,8 +161,12 @@ WbGtk::WbGtk( int argc, char *argv[]) : mainwindow(0)
 	volumename_p = 0;
 	break;
       case 'q':
-	// Load all volumes
+	// Quiet
 	quiet = 1;
+	break;
+      case 's':
+	// Open dbs file
+	options |= ldh_mWbOption_OpenDbs;
 	break;
       case 'l':
 	if ( i+1 >= argc) {
@@ -238,7 +243,7 @@ WbGtk::WbGtk( int argc, char *argv[]) : mainwindow(0)
   CoXHelpGtk *xhelp = new CoXHelpGtk( mainwindow, 0, xhelp_eUtility_Wtt, &sts);
   CoXHelp::set_default( xhelp);
 
-  sts = ldh_OpenWB(&wbctx, volumename_p, 0);
+  sts = ldh_OpenWB(&wbctx, volumename_p, options);
   psts(sts, NULL);
   if (EVEN(sts)) exit(sts);
 
