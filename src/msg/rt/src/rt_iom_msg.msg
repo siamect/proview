@@ -44,6 +44,11 @@ udp_down	<UDP link is down>					/error
 udp_socket	<UDP create socket error>				/error
 udp_bind	<UDP bind socket error>					/error
 udp_remote	<UDP unknown remote host>				/error
+spi_device	<SPI no such device>					/error
+spi_init	<SPI initialization error>				/error
+spi_normal	<SPI normal operating state>				/info
+spi_readerror	<SPI read error>					/error
+spi_writeerror	<SPI write error>					/error
 .end
 
 

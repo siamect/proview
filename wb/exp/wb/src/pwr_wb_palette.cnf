@@ -329,6 +329,10 @@ palette NavigatorPalette
         class OneWire_AiDevice
         class Maxim_DS18B20
       }
+      menu SPI
+      {
+        class SPI_Slave
+      }
       menu USB
       {
         class USB_Agent
