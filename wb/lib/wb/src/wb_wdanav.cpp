@@ -63,6 +63,7 @@
 #include "wb_wnav.h"
 #include "wb_wnav_brow.h"
 #include "wb_wnav_item.h"
+#include "cow_msgwindow.h"
 
 static char null_str[] = "";
 
@@ -1100,6 +1101,248 @@ int WdaNav::select_by_name( char *name)
   return WDA__SUCCESS;
 }
 
+//
+// Print content to textfile
+//
+int WdaNav::print_textfile( char *filename)
+{
+  WItem		*base_item;
+  int		sts;  
+  brow_tObject 	*object_list;
+  int		object_cnt;
+  int		i;
+  char 		*value, *valp;
+  pwr_tOName	oname;
+  int   	size;
+  FILE		*fp;
+
+  fp = fopen( filename, "w");
+  if ( !fp)
+    return WDA__NOFILE;
+
+  brow_GetObjectList( brow->ctx, &object_list, &object_cnt);
+  for ( i = 0; i < object_cnt; i++) {
+
+    brow_GetUserData( object_list[i], (void **)&base_item);
+
+    switch( base_item->type) {
+    case wnav_eItemType_Attr:
+    case wnav_eItemType_AttrInput:
+    case wnav_eItemType_AttrInputF:
+    case wnav_eItemType_AttrInputInv:
+    case wnav_eItemType_AttrOutput:
+    case wnav_eItemType_AttrArrayElem: {
+      WItemBaseAttr *item = (WItemBaseAttr *)base_item;
+      
+      sts = ldh_ObjidToName( ldhses, item->objid, cdh_mName_volumeStrict, oname, 
+			     sizeof(oname), &size);
+      if ( EVEN(sts)) return sts;
+      
+      switch ( item->type_id) {
+      case pwr_eType_Text:
+	sts = item->get_value( &value);
+	if ( EVEN(sts)) return sts;
+
+	fprintf( fp, "%s.%s \"%s\"\n", oname, item->attr, value);
+	break;      
+      case pwr_eType_String:
+	sts = item->get_value( &value);
+	if ( EVEN(sts)) return sts;
+
+	fprintf( fp, "%s.%s \"%s\"\n", oname, item->attr, value);
+	break;
+      default:
+	sts = item->get_value( &valp);
+	wnav_attrvalue_to_string( ldhses, item->type_id, valp, &value, &size);
+
+	fprintf( fp, "%s.%s %s\n", oname, item->attr, value);
+      }
+
+      break;
+    }
+    default: ;
+    }
+  }
+  fclose( fp);
+
+  return WDA__SUCCESS;
+}
+
+//
+// Print content to textfile
+//
+int WdaNav::import_textfile( char *filename)
+{
+  WItem		*base_item;
+  int		sts;  
+  brow_tObject 	*object_list;
+  int		object_cnt;
+  int		i;
+  FILE		*fp;
+  char 		line[600];
+  char 		value[600];
+  pwr_tAName	name;
+  char		*s;
+  int		row;
+  int		len;
+  pwr_tAttrRef	aref;
+  pwr_tOName	attr;
+  int		found;
+  int		status = WDA__SUCCESS;
+  char		msg[400];
+
+  brow_GetObjectList( brow->ctx, &object_list, &object_cnt);
+
+  fp = fopen( filename, "r");
+  if ( !fp)
+    return WDA__NOFILE;
+
+  brow_SetNodraw( brow->ctx);
+  brow_Redraw( brow->ctx, 0);
+
+  row = 0;
+  while ( dcli_read_line( line, sizeof( line), fp)) {
+    row++;
+
+    dcli_trim( line, line);
+
+    if ( line[0] == '#' || line[0] == 0)
+        continue;
+
+    for ( s = line; *s != 32 && *s != 9 && *s != 0; s++) ;
+    
+    if ( *s == 0)
+      continue;
+
+    len = s - line;
+    if ( len > (int) sizeof(name)-1) {
+      sprintf( msg, "** Syntax error, %s, line %d\n", filename, row);
+      MsgWindow::message( 'E', msg, msgw_ePop_Default);
+      status = WDA__SYNTAX;
+      continue;
+    }
+
+    strncpy( name, line, len);
+    name[len] = 0;
+
+    strcpy( value, s);
+    dcli_trim( value, value);
+
+    sts = ldh_NameToAttrRef( ldhses, name, &aref);
+    if ( EVEN(sts)) {
+      sprintf( msg, "** Syntax error, %s, line %d\n", filename, row);
+      MsgWindow::message( 'E', msg, msgw_ePop_Default);
+      status = WDA__SYNTAX;
+      continue;
+    }
+
+    if ((s = strchr( name, '.')))
+      strcpy( attr, s+1);
+    else {
+      sprintf( msg, "** Syntax error, %s, line %d\n", filename, row);
+      MsgWindow::message( 'E', msg, msgw_ePop_Default);
+      status = WDA__SYNTAX;
+      continue;
+    }      
+
+    found = 0;
+    for ( i = 0; i < object_cnt; i++) {
+
+      brow_GetUserData( object_list[i], (void **)&base_item);
+
+      switch( base_item->type) {
+      case wnav_eItemType_Attr:
+      case wnav_eItemType_AttrInput:
+      case wnav_eItemType_AttrInputF:
+      case wnav_eItemType_AttrInputInv:
+      case wnav_eItemType_AttrOutput:
+      case wnav_eItemType_AttrArrayElem: {
+	WItemBaseAttr *item = (WItemBaseAttr *)base_item;
+      
+	if ( cdh_ObjidIsEqual( item->objid, aref.Objid) &&
+	     cdh_NoCaseStrcmp( item->attr, attr) == 0) {
+	  // Item found
+	  found = 1;
+	  switch ( item->type_id) {
+	  case pwr_eType_Text: {
+	    char str[1024];
+	    int end_found = 0;
+	    int len;
+
+	    strcpy( str, &value[1]);
+	    len = strlen(str);
+	    if ( str[len-1] != '\"') {
+	      str[len] = '\n';
+	      str[len+1] = 0;
+	      // Continue on next line
+	      while ( dcli_read_line( line, sizeof( line), fp)) {
+		if ( strlen(str) + strlen(line) > sizeof(str)) {
+		  sprintf( msg, "** Syntax error, %s, line %d\n", filename, row);
+		  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+		  brow_ResetNodraw( brow->ctx);
+		  brow_Redraw( brow->ctx, 0);
+		  return WDA__SYNTAX;		  
+		}
+		strcat( str, line);
+		len = strlen(str);
+		if ( str[len-1] != '\"') {
+		  str[len] = '\n';
+		  str[len+1] = 0;
+		}
+		else {
+		  str[len-1] = 0;
+		  strcpy( value, str);
+		  end_found = 1;
+		  break;
+		}
+	      }
+	    }
+	    else {
+	      str[strlen(str)-1] = 0;
+	      strcpy( value, str);
+	      end_found = 1;
+	    }
+	    if ( !end_found) {
+	      sprintf( msg, "** Syntax error, %s, line %d\n", filename, row);
+	      MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	      brow_ResetNodraw( brow->ctx);
+	      brow_Redraw( brow->ctx, 0);
+	      return WDA__SYNTAX;		  
+	    }
+
+	    break;
+	  }
+	  case pwr_eType_String: {
+	    // Remove ""
+	    char str[600];
+	    strcpy( str, &value[1]);
+	    str[strlen(str)-1] = 0;
+	    strcpy( value, str);
+	    break;
+	  }
+	  default: ;
+	  }	  
+	  sts = set_attr_value( item->node, item->attr, value);
+	  break;
+	}
+      }
+      default: ;
+      }
+    }
+    if ( !found) {
+      sprintf( msg, "** Attribute not found %s, row %d\n", name, row);
+      MsgWindow::message( 'E', msg, msgw_ePop_Default);
+      status = WDA__NOATTR;
+      continue;
+    }
+  }
+  fclose( fp);
+
+  brow_ResetNodraw( brow->ctx);
+  brow_Redraw( brow->ctx, 0);
+
+  return status;
+}
 
 
 

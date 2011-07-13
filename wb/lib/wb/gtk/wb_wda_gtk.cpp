@@ -181,12 +181,28 @@ void WdaGtk::activate_exit( GtkWidget *w, gpointer data)
   else
     delete wda;
 }
+
 void WdaGtk::activate_print( GtkWidget *w, gpointer data)
 {
   Wda *wda = (Wda *)data;
 
   wda->print();
 }
+
+void WdaGtk::activate_export_text( GtkWidget *w, gpointer data)
+{
+  Wda *wda = (Wda *)data;
+
+  wda->print_textfile();
+}
+
+void WdaGtk::activate_import_text( GtkWidget *w, gpointer data)
+{
+  Wda *wda = (Wda *)data;
+
+  wda->import_textfile();
+}
+
 void WdaGtk::activate_setclass( GtkWidget *w, gpointer data)
 {
   Wda *wda = (Wda *)data;
@@ -427,7 +443,7 @@ void WdaGtk::activate_cmd_input( GtkWidget *w, gpointer data)
 void WdaGtk::activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
 {
   WdaGtk *wda = (WdaGtk *)data;
-  gchar *text;
+  gchar *textutf8, *text;
   unsigned char *s;
   int sts;
 
@@ -436,8 +452,11 @@ void WdaGtk::activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
     gtk_text_buffer_get_start_iter( wda->cmd_scrolled_buffer, &start_iter);
     gtk_text_buffer_get_end_iter( wda->cmd_scrolled_buffer, &end_iter);
 
-    text = gtk_text_buffer_get_text( wda->cmd_scrolled_buffer, &start_iter, &end_iter,
-				     FALSE);
+    textutf8 = gtk_text_buffer_get_text( wda->cmd_scrolled_buffer, &start_iter, &end_iter,
+					 FALSE);
+    text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+    g_free( textutf8);
+
     // Replace ctrl characters with space
     for ( s = (unsigned char *) text; *s; s++) {
       if ( *s < ' ' && *s != 10 && *s != 13)
@@ -583,6 +602,14 @@ WdaGtk::WdaGtk(
   gtk_widget_add_accelerator( file_prev_attr, "activate", accel_g,
 			      'p', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
+  GtkWidget *file_export_text = gtk_menu_item_new_with_mnemonic( "Export to Textfile");
+  g_signal_connect( file_export_text, "activate", 
+		    G_CALLBACK(activate_export_text), this);
+
+  GtkWidget *file_import_text = gtk_menu_item_new_with_mnemonic( "Import from Textfile");
+  g_signal_connect( file_import_text, "activate", 
+		    G_CALLBACK(activate_import_text), this);
+
   GtkWidget *file_print = gtk_image_menu_item_new_from_stock(GTK_STOCK_PRINT, NULL);
   g_signal_connect(file_print, "activate", G_CALLBACK(activate_print), this);
 
@@ -594,6 +621,8 @@ WdaGtk::WdaGtk(
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_select_attr);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_next_attr);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_prev_attr);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_export_text);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_import_text);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 

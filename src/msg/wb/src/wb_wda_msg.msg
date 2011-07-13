@@ -51,3 +51,6 @@ attrinvalid	<Invalid attribute type>			/error
 attrinvisible	<Attribute invisible>				/error
 nonextattr	<No next attribute>				/error
 noprevattr	<No previous attribute>				/error
+nofile		<Unable to open file>				/error
+syntax		<Syntax error>					/error
+noattr		<Attribute not found>				/error

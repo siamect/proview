@@ -76,8 +76,8 @@ void Wda::change_value_cb( void *wda)
 
 void Wda::print()
 {
-  char filename[80] = "pwrp_tmp:wda.ps";
-  char cmd[200];
+  pwr_tFileName filename = "$pwrp_tmp/wda.ps";
+  pwr_tCmd cmd;
   int sts;
 
   dcli_translate_filename( filename, filename);
@@ -86,6 +86,74 @@ void Wda::print()
   sprintf( cmd, "wb_gre_print.sh %s", filename); 
   sts = system( cmd);
 }
+
+void Wda::print_textfile()
+{
+  message( ' ', "");
+  wow->CreateInputDialog( this, "Save as", "Enter filename",
+			  file_selected_cb, 0, 40, 0, 0);
+}
+
+void Wda::file_selected_cb( void *ctx, void *data, char *text)
+{
+  pwr_tFileName filename;
+  Wda *wda = (Wda *)ctx;
+  int sts;
+
+  if ( strchr( text, '/'))
+    strcpy( filename, text);
+  else {
+    strcpy( filename, "$pwrp_login/");
+    strcat( filename, text);
+  }
+  if ( strchr( filename, '.') == 0)
+    strcat( filename, ".wda_txt");
+    
+  dcli_translate_filename( filename, filename);
+  sts = wda->wdanav->print_textfile( filename);
+  if ( EVEN(sts))
+    wda->message( 'E', "Unable to open file");
+  else {
+    char msg[300];
+    strcpy( msg, "Exported to ");
+    strcat( msg, filename);
+    wda->message( 'I', msg);
+  }
+}
+
+void Wda::import_textfile()
+{
+  if ( !editmode) {
+    message( 'E', "Not in edit mode");
+    return;    
+  }
+
+  message( ' ', "");
+  wow->CreateFileList( "Import Spreadsheet", "$pwrp_login", "*", "wda_txt",
+		       import_file_cb, 0, this, 1);
+}
+
+void Wda::import_file_cb( void *ctx, char *text)
+{
+  pwr_tFileName filename;
+  Wda *wda = (Wda *)ctx;
+  int sts;
+
+  if ( !wda->editmode) {
+    wda->message( 'E', "Not in edit mode");
+    return;    
+  }
+
+  sprintf( filename, "$pwrp_login/%s.wda_txt", text);
+  dcli_translate_filename( filename, filename);
+
+  sts = wda->wdanav->import_textfile(filename);
+  if ( EVEN(sts)) {
+    wda->message( 'E', "Import error, see message window");
+  }
+}
+
+
 
 void Wda::set_editmode( int editmode, ldh_tSesContext ldhses)
 {

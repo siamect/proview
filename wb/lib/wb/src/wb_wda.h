@@ -106,10 +106,14 @@ class Wda {
     int next_attr();
     int prev_attr();
     void print();
+    void print_textfile();
+    void import_textfile();
 
     static void message_cb( void *wda, char severity, const char *message);
     static void change_value_cb( void *wda);
     static void set_attr_cb( void *ctx, char *text);
+    static void file_selected_cb( void *ctx, void *data, char *text);
+    static void import_file_cb( void *ctx, char *text);
 
 };
 

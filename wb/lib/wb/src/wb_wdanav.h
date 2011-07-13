@@ -118,6 +118,8 @@ class WdaNav {
 		char *new_attribute, int new_attrobjects);
     int find_by_objid( pwr_tObjid oi, brow_tObject *object);
     int print( char *filename);
+    int print_textfile( char *filename);
+    int import_textfile( char *filename);
 
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
