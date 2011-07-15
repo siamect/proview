@@ -53,8 +53,7 @@ GrowText::GrowText( GrowCtx *glow_ctx, const char *name, const char *text1, doub
 		GlowText(glow_ctx,text1,x,y,d_type,color_d_type,t_size,display_lev), 
     		hot(0), pzero(ctx), highlight(0), inverse(0), user_data(NULL),
 		dynamic(0), dynamicsize(0), original_color_drawtype(glow_eDrawType_Line),
-		font(t_font)
-		
+		font(t_font), adjustment(glow_eAdjustment_Left)		
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -266,6 +265,7 @@ void GrowText::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowText_original_color_drawtype) << FSPACE 
 		<< int(original_color_drawtype) << endl;
   fp << int(glow_eSave_GrowText_font) << FSPACE << int(font) << endl;
+  fp << int(glow_eSave_GrowText_adjustment) << FSPACE << int(adjustment) << endl;
   fp << int(glow_eSave_GrowText_dynamicsize) << FSPACE << dynamicsize << endl;
   fp << int(glow_eSave_GrowText_dynamic) << endl;
   if( dynamic)
@@ -318,6 +318,7 @@ void GrowText::open( ifstream& fp)
       case glow_eSave_GrowText_original_color_drawtype: fp >> 
 		tmp; original_color_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_GrowText_font: fp >> tmp; font = (glow_eFont)tmp; break;
+      case glow_eSave_GrowText_adjustment: fp >> tmp; adjustment = (glow_eAdjustment)tmp; break;
       case glow_eSave_GrowText_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowText_dynamic:
         fp.getline( dummy, sizeof(dummy));
@@ -658,8 +659,9 @@ void GrowText::draw( GlowWind *w,  GlowTransform *t, int highlight, int hot, voi
       return;
     hot = 0;
   }
-  int x1, y1;
+  int x1, y1, rx1, ry1;
   int z_width, z_height, z_descent;
+  int rot;
   double trf_scale = trf.vertical_scale( t);
   int idx = int( trf_scale * w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
   double tsize = trf_scale * w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
@@ -689,35 +691,75 @@ void GrowText::draw( GlowWind *w,  GlowTransform *t, int highlight, int hot, voi
   if (!t) {
     x1 = int( trf.x( p.x, p.y) * w->zoom_factor_x + 0.5) - w->offset_x;
     y1 = int( trf.y( p.x, p.y) * w->zoom_factor_y + 0.5) - w->offset_y;
+    rot = (int) trf.rot();
   }
   else {
     x1 = int( trf.x( t, p.x, p.y) * w->zoom_factor_x + 0.5) - w->offset_x;
     y1 = int( trf.y( t, p.x, p.y) * w->zoom_factor_y + 0.5) - w->offset_y;
+    rot = (int) trf.rot( t);
   }
+  if ( adjustment ==  glow_eAdjustment_Center)
+    rot = rot < 0 ? rot % 360 + 360 : rot % 360;
+  else
+    rot = 0;
 
   if ( strcmp( text, "")) {
-    if ( highl) {
+    if ( highl || (hot && !node) || adjustment != glow_eAdjustment_Left) {
       ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, max( 0, idx), lfont,
-				   &z_width, &z_height, &z_descent, tsize);
-      ctx->gdraw->rect( w, x1, y1 - (z_height-z_descent), z_width, z_height, 
+				   &z_width, &z_height, &z_descent, tsize, rot);
+      switch ( adjustment) {
+      case glow_eAdjustment_Left:
+	rx1 = x1;
+	ry1 = y1 - (z_height-z_descent);
+	break;
+      case glow_eAdjustment_Right:
+	x1 -= z_width;
+	rx1 = x1;
+	ry1 = y1 - (z_height-z_descent);
+	break;
+      case glow_eAdjustment_Center:
+	switch ( rot) {
+	case 90:
+	  rx1 = x1 - z_width / 2;
+	  ry1 = y1 - z_height / 2;
+	  x1 -= z_width / 2;
+	  y1 += z_height / 2;
+	  break;
+	case 270:
+	  rx1 = x1 - z_width / 2;
+	  ry1 = y1 - z_height / 2;
+	  x1 -= z_width / 2;
+	  y1 -= z_height / 2 - z_width /2 ;
+	  break;
+	default:
+	  rx1 = x1 - z_width / 2;
+	  // ry1 = y1 - (z_height-z_descent) + z_height / 2;
+	  ry1 = y1 - z_height / 2;
+	  x1 -= z_width / 2;
+	  y1 += z_height / 2 - z_descent;
+	}
+	break;
+      }      
+    }
+
+    if ( highl) {
+      ctx->gdraw->rect( w, rx1, ry1, z_width, z_height, 
 	glow_eDrawType_FillHighlight, max( 1, min( idx + hot, 2)), 0);
     }
     else if ( hot && !node) {
-      ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, max( 0, idx), lfont,
-				   &z_width, &z_height, &z_descent, tsize);
-      ctx->gdraw->rect( w, x1, y1 - (z_height-z_descent), z_width, z_height,
+      ctx->gdraw->rect( w, rx1, ry1, z_width, z_height,
 	glow_eDrawType_LineGray, max( min(idx,2), 1), 0);
     }
     if ( idx >= 0) {
       glow_eDrawType color = ctx->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 2);
       ctx->gdraw->text( w, x1, y1, text, strlen(text), ldraw_type, color, idx, highlight, 
-			0, lfont, tsize);
+			0, lfont, tsize, rot);
     }
   }
   else {
     ctx->gdraw->get_text_extent( "A", 1, draw_type, max( 0, idx), font, &z_width, &z_height,
-				 &z_descent, tsize);
+				 &z_descent, tsize, rot);
     ctx->gdraw->rect( w, x1, y1 - (z_height-z_descent), z_width, z_height, 
 	glow_eDrawType_LineGray, idx, 0);
   }
@@ -732,7 +774,8 @@ void GrowText::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       return;
     hot = 0;
   }
-  int x1, y1;
+  int x1, y1, rx1, ry1;
+  int rot;
   double trf_scale = trf.vertical_scale( t);
   int idx = int( trf_scale * w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
   double tsize = trf_scale * w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
@@ -758,34 +801,74 @@ void GrowText::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   {
     x1 = int( trf.x( p.x, p.y) * w->zoom_factor_x + 0.5) - w->offset_x;
     y1 = int( trf.y( p.x, p.y) * w->zoom_factor_y + 0.5) - w->offset_y;
+    rot = (int) trf.rot();
   }
   else
   {
     x1 = int( trf.x( t, p.x, p.y) * w->zoom_factor_x + 0.5) - w->offset_x;
     y1 = int( trf.y( t, p.x, p.y) * w->zoom_factor_y + 0.5) - w->offset_y;
+    rot = (int) trf.rot( t);
   }
+  if ( adjustment ==  glow_eAdjustment_Center)
+    rot = rot < 0 ? rot % 360 + 360 : rot % 360;
+  else
+    rot = 0;
 
   // w->set_draw_buffer_only();
   if ( strcmp( text, "")) {
+    if ( highl || (hot && !node) || adjustment != glow_eAdjustment_Left) {
+      ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, max( 0, idx), lfont,
+				   &z_width, &z_height, &z_descent, tsize, rot);
+      switch ( adjustment) {
+      case glow_eAdjustment_Left:
+	rx1 = x1;
+	ry1 = y1 - (z_height-z_descent);
+	break;
+      case glow_eAdjustment_Right:
+	x1 -= z_width;
+	rx1 = x1;
+	ry1 = y1 - (z_height-z_descent);
+	break;
+      case glow_eAdjustment_Center:
+	switch ( rot) {
+	case 90:
+	  rx1 = x1 - z_width / 2;
+	  ry1 = y1 - z_height / 2;
+	  x1 -= z_width / 2;
+	  y1 += z_height / 2;
+	  break;
+	case 270:
+	  rx1 = x1 - z_width / 2;
+	  ry1 = y1 - z_height / 2;
+	  x1 -= z_width / 2;
+	  y1 -= z_height / 2 - z_width /2 ;
+	  break;
+	default:
+	  rx1 = x1 - z_width / 2;
+	  // ry1 = y1 - (z_height-z_descent) + z_height / 2;
+	  ry1 = y1 - z_height / 2;
+	  x1 -= z_width / 2;
+	  y1 += z_height / 2 - z_descent;
+	}
+	break;
+      }      
+    }
+
     if ( highl) {
-      ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, max( 0, idx),
-				   lfont, &z_width, &z_height, &z_descent, tsize);
-      ctx->gdraw->rect_erase( w, x1, y1 - (z_height-z_descent), z_width, z_height, 
+      ctx->gdraw->rect_erase( w, rx1, ry1, z_width, z_height, 
 		max( 1, min( idx + hot, 2)));
     }
     else if ( hot && !node) {
-      ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, max( 0, idx), 
-				   lfont, &z_width, &z_height, &z_descent, tsize);
-      ctx->gdraw->rect_erase( w, x1, y1 - (z_height-z_descent), z_width, z_height, 
+      ctx->gdraw->rect_erase( w, rx1, ry1, z_width, z_height, 
 		max (1, min(idx,2)));
     }
     if ( idx >= 0)
-      ctx->gdraw->text_erase( w, x1, y1, text, strlen(text), ldraw_type, idx, 0, lfont, tsize);
+      ctx->gdraw->text_erase( w, x1, y1, text, strlen(text), ldraw_type, idx, 0, lfont, tsize, rot);
   }
   else
   {
     ctx->gdraw->get_text_extent( "A", 1, draw_type, idx, font, &z_width, &z_height, 
-				 &z_descent, tsize);
+				 &z_descent, tsize, rot);
     ctx->gdraw->rect_erase( w, x1, y1 - (z_height-z_descent), z_width, z_height, idx);
   }
   // w->reset_draw_buffer_only();
@@ -806,22 +889,29 @@ void GrowText::draw()
 void GrowText::get_borders( GlowTransform *t, double *x_right, 
 	double *x_left, double *y_high, double *y_low)
 {
-  double ll_x, ur_x, ll_y, ur_y;
+  double x, y, ll_x, ur_x, ll_y, ur_y;
   int	z_width, z_height, z_descent;
+  int rot;
 
   if ( t) {
-    ll_x = trf.x( t, p.x, p.y);
-    ur_y = trf.y( t, p.x, p.y);
+    x = trf.x( t, p.x, p.y);
+    y = trf.y( t, p.x, p.y);
+    rot = (int) trf.rot( t);
   }
   else {
-    ll_x = trf.x( p.x, p.y);
-    ur_y = trf.y( p.x, p.y);
+    x = trf.x( p.x, p.y);
+    y = trf.y( p.x, p.y);
+    rot = (int) trf.rot();
   }
+  if ( adjustment == glow_eAdjustment_Center)
+    rot = rot < 0 ? rot % 360 + 360 : rot % 360;
+  else
+    rot = 0;
 
   if ( strcmp( text, "") == 0)
     ctx->gdraw->get_text_extent( "A", 1, draw_type, text_size, font,
 				 &z_width, &z_height, &z_descent, 
-				 ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size));
+				 ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size), rot);
   else {
     double trf_scale = trf.vertical_scale( t);
     int idx = int( trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (text_size +4) - 4);
@@ -829,11 +919,28 @@ void GrowText::get_borders( GlowTransform *t, double *x_right,
     idx = max( 0, min( idx, DRAW_TYPE_SIZE-1));
     
     ctx->gdraw->get_text_extent( text, strlen(text), draw_type, idx, font,
-				 &z_width, &z_height, &z_descent, tsize);
+				 &z_width, &z_height, &z_descent, tsize, rot);
   }
-  ur_x = ll_x + double( z_width) / ctx->mw.zoom_factor_y;
-  ll_y = ur_y - double( z_height - z_descent) / ctx->mw.zoom_factor_y;
-  ur_y += double( z_descent) / ctx->mw.zoom_factor_y;
+  switch ( adjustment) {
+  case glow_eAdjustment_Left:
+    ll_x = x;
+    ur_x = x + double( z_width) / ctx->mw.zoom_factor_y;
+    ll_y = y - double( z_height - z_descent) / ctx->mw.zoom_factor_y;
+    ur_y = y + double( z_descent) / ctx->mw.zoom_factor_y;
+    break;
+  case glow_eAdjustment_Right:
+    ur_x = x;
+    ll_x = x - double( z_width) / ctx->mw.zoom_factor_y;
+    ll_y = y - double( z_height - z_descent) / ctx->mw.zoom_factor_y;
+    ur_y = y + double( z_descent) / ctx->mw.zoom_factor_y;
+    break;
+  case glow_eAdjustment_Center:
+    ll_x = x - double( z_width) / ctx->mw.zoom_factor_y / 2;
+    ur_x = x + double( z_width) / ctx->mw.zoom_factor_y / 2;
+    ll_y = y - double( z_height) / ctx->mw.zoom_factor_y / 2;
+    ur_y = y + double( z_height) / ctx->mw.zoom_factor_y / 2;
+    break;
+  }      
 
   if ( display_level != glow_mDisplayLevel_1)
     return;

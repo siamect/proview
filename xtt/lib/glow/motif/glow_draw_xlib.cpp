@@ -1649,7 +1649,8 @@ int GlowDrawXLib::polyline_erase( GlowWind *wind, glow_sPointX *points, int poin
 
 int GlowDrawXLib::text( GlowWind *wind, int x, int y, char *text, int len,
 			glow_eDrawType gc_type, glow_eDrawType color, int idx, 
-			int highlight, int line, glow_eFont font_idx, double size)
+			int highlight, int line, glow_eFont font_idx, double size,
+			int rot)
 {
   if ( ctx->nodraw) return 1;
   DrawWindXLib *w = (DrawWindXLib *) wind->window;
@@ -1732,7 +1733,7 @@ int GlowDrawXLib::text_cursor( GlowWind *wind, int x, int y, char *text, int len
 
 int GlowDrawXLib::text_erase( GlowWind *wind, int x, int y, char *text, int len,
 			      glow_eDrawType gc_type, int idx, int line,
-			      glow_eFont font_idx, double size)
+			      glow_eFont font_idx, double size, int rot)
 {
   if ( ctx->nodraw) return 1;
   DrawWindXLib *w = (DrawWindXLib *) wind->window;
@@ -2079,7 +2080,8 @@ void GlowDrawXLib::set_cursor( GlowWind *wind, glow_eDrawCursor cursor)
 
 int GlowDrawXLib::get_text_extent( const char *text, int len,
 				   glow_eDrawType gc_type, int idx, glow_eFont font_idx,
-				   int *width, int *height, int *descent, double size)
+				   int *width, int *height, int *descent, double size,
+				   int rot)
 {
   int	text_direction, text_ascent, text_descent;
   XCharStruct char_struct;

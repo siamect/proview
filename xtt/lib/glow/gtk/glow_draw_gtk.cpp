@@ -1607,13 +1607,14 @@ int GlowDrawGtk::polyline_erase( GlowWind *wind, glow_sPointX *points, int point
 
 int GlowDrawGtk::text( GlowWind *wind, int x, int y, char *text, int len,
 		       glow_eDrawType gc_type, glow_eDrawType color, int idx, 
-		       int highlight, int line, glow_eFont font_idx, double size)
+		       int highlight, int line, glow_eFont font_idx, double size,
+		       int rot)
 {
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
   if ( !((GrowCtx *)ctx)->bitmap_fonts)
-    return text_pango( wind, x, y, text, len, gc_type, color, idx, highlight, line, font_idx, size);
+    return text_pango( wind, x, y, text, len, gc_type, color, idx, highlight, line, font_idx, size, rot);
 
   if ( font_idx > glow_eFont_Courier)
     font_idx = glow_eFont_Helvetica;
@@ -1674,10 +1675,10 @@ int GlowDrawGtk::text_cursor( GlowWind *wind, int x, int y, char *text, int len,
 
   int theight, tdescent, width, height, descent;
   get_text_extent( "A", 1, gc_type, idx, font,
-		   &width, &height, &descent, size);
+		   &width, &height, &descent, size, 0);
   if ( pos != 0)
     get_text_extent( text, pos, gc_type, idx, font,
-		     &width, &theight, &tdescent, size);
+		     &width, &theight, &tdescent, size, 0);
   else
     width = 0;
 
@@ -1702,13 +1703,13 @@ int GlowDrawGtk::text_cursor( GlowWind *wind, int x, int y, char *text, int len,
 
 int GlowDrawGtk::text_erase( GlowWind *wind, int x, int y, char *text, int len,
 			     glow_eDrawType gc_type, int idx, int line, glow_eFont font_idx, 
-			     double size)
+			     double size, int rot)
 {
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
   if ( !((GrowCtx *)ctx)->bitmap_fonts)
-    return text_erase_pango( wind, x, y, text, len, gc_type, idx, line, font_idx, size);
+    return text_erase_pango( wind, x, y, text, len, gc_type, idx, line, font_idx, size, rot);
 
   if ( font_idx > glow_eFont_Courier)
     font_idx = glow_eFont_Helvetica;
@@ -1962,12 +1963,13 @@ void GlowDrawGtk::set_cursor( GlowWind *wind, glow_eDrawCursor cursor)
 
 int GlowDrawGtk::get_text_extent( const char *text, int len,
 				  glow_eDrawType gc_type, int idx, glow_eFont font_idx,
-				  int *width, int *height, int *descent, double size)
+				  int *width, int *height, int *descent, double size, 
+				  int rot)
 {
   int	text_width, text_ascent, text_descent, text_lbearing, text_rbearing;
 
   if ( !((GrowCtx *)ctx)->bitmap_fonts)
-    return get_text_extent_pango( text, len, gc_type, idx, font_idx, width, height, descent, size);
+    return get_text_extent_pango( text, len, gc_type, idx, font_idx, width, height, descent, size, rot);
 
   if ( font_idx > glow_eFont_Courier)
     font_idx = glow_eFont_Helvetica;
@@ -3448,7 +3450,8 @@ static char *font_string( int font_idx, int font_type, double size)
 
 int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
 			     glow_eDrawType gc_type, glow_eDrawType color, int idx, 
-			     int highlight, int line, glow_eFont font_idx, double size)
+			     int highlight, int line, glow_eFont font_idx, double size,
+			     int rot)
 {
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
@@ -3469,7 +3472,6 @@ int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
     gdk_gc_set_values( get_gc( this, gc_type, idx), &xgcv,
 	GDK_GC_FOREGROUND);
   }
-
   PangoRenderer *pr = gdk_pango_renderer_get_default( screen);
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), get_gc( this, gc_type, idx));
 
@@ -3496,6 +3498,17 @@ int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
     else
       layout = gtk_widget_create_pango_layout( w->toplevel, text);
 
+    if ( rot != 0) {
+      rot = 360 - rot;
+      PangoContext *pc = pango_layout_get_context( layout);
+      pango_context_set_base_gravity( pc, PANGO_GRAVITY_SOUTH);
+      PangoMatrix lpm = PANGO_MATRIX_INIT;
+      pango_matrix_rotate( &lpm, (double)rot);
+      pango_context_set_matrix( pc, &lpm);
+      pango_layout_context_changed( layout);
+    // pango_context_set_matrix( pc, 0);
+    }
+
     PangoFontDescription *desc = pango_font_description_from_string( font_string( font_idx, font_type, size));
     pango_layout_set_font_description( layout, desc);
     pango_font_description_free( desc);
@@ -3503,8 +3516,30 @@ int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
     int width, height;
     pango_layout_get_size( layout, &width, &height);
     height *= 0.9;
-    pango_renderer_draw_layout( pr, layout, PANGO_SCALE * x, PANGO_SCALE * y - (1.0-FONT_DESCENT)*height);
+
+    int px, py;
+    if ( rot == 180) {
+      px = -PANGO_SCALE * x - width;
+      py = -PANGO_SCALE * y - FONT_DESCENT*height;
+    }
+    else if ( rot == 90) {
+      px = -PANGO_SCALE * y - width + height/2;
+      py = PANGO_SCALE * x;
+    }
+    else if ( rot == 270) {
+      px = PANGO_SCALE * y - width;
+      py = -PANGO_SCALE * x - height;
+    }
+    else {
+      px = PANGO_SCALE * x;
+      py = PANGO_SCALE * y - (1.0-FONT_DESCENT)*height;
+    }
+    pango_renderer_draw_layout( pr, layout, px, py);
   
+    if ( rot != 0) {
+      PangoContext *pc = pango_layout_get_context( layout);
+      pango_context_set_matrix( pc, 0);
+    }
     g_object_unref( layout);
   }
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
@@ -3528,10 +3563,11 @@ int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
 
 int GlowDrawGtk::text_erase_pango( GlowWind *wind, int x, int y, char *text, int len,
 				   glow_eDrawType gc_type, int idx, int line, glow_eFont font_idx,
-				   double size)
+				   double size, int rot)
 {
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
+  int px, py, pw, ph;
 
   if ( font_idx >= glow_eFont__)
     font_idx = glow_eFont_Helvetica;
@@ -3566,16 +3602,34 @@ int GlowDrawGtk::text_erase_pango( GlowWind *wind, int x, int y, char *text, int
   int width, height;
   pango_layout_get_size( layout, &width, &height);
   height *= 0.9;
+
+  if ( rot == 90) {
+    px = x;// - height/PANGO_SCALE/2;
+    py = y - width/PANGO_SCALE;
+    ph = width / PANGO_SCALE;
+    pw = height / PANGO_SCALE;
+  }
+  else if ( rot == 270) {
+    px = x;// - height/PANGO_SCALE/2;
+    py = y - height/PANGO_SCALE/2;
+    ph = width / PANGO_SCALE;
+    pw = height / PANGO_SCALE;
+  }
+  else {
+    px = x;
+    py = y - (1.0-FONT_DESCENT)*height/PANGO_SCALE;
+    pw = width / PANGO_SCALE;
+    ph = height / PANGO_SCALE;
+  }
+
   if ( !w->draw_buffer_only)
     gdk_draw_rectangle( w->window, 
 		      get_gc( this, gc_type, idx), 1, 
-			x, y - (1.0 - FONT_DESCENT) * height / PANGO_SCALE, 
-			width / PANGO_SCALE, height / PANGO_SCALE);
+			px, py, pw, ph);
   if ( w->double_buffer_on)
     gdk_draw_rectangle( w->buffer, 
 			get_gc( this, gc_type, idx), 1, 
-			x, y - (1.0 - FONT_DESCENT) * height / PANGO_SCALE, 
-			width / PANGO_SCALE, height / PANGO_SCALE);
+			px, py, pw, ph);
   
   g_object_unref( layout);
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
@@ -3589,7 +3643,8 @@ int GlowDrawGtk::text_erase_pango( GlowWind *wind, int x, int y, char *text, int
 
 int GlowDrawGtk::get_text_extent_pango( const char *text, int len,
 					glow_eDrawType gc_type, int idx, glow_eFont font_idx,
-					int *width, int *height, int *descent, double size)
+					int *width, int *height, int *descent, double size,
+					int rot)
 {
   DrawWindGtk *w = &m_wind;
 
@@ -3624,13 +3679,20 @@ int GlowDrawGtk::get_text_extent_pango( const char *text, int len,
   pango_layout_get_size( layout, &lwidth, &lheight);
   lheight *= 0.9;
 
-  *width = lwidth / PANGO_SCALE;
-  *height = lheight / PANGO_SCALE;
+  if ( rot == 90 || rot == 270) {
+    *height = lwidth / PANGO_SCALE;
+    *width = lheight / PANGO_SCALE;
+  }
+  else {
+    *width = lwidth / PANGO_SCALE;
+    *height = lheight / PANGO_SCALE;
+  }
   *descent = FONT_DESCENT * lheight / PANGO_SCALE;
 
   g_object_unref( layout);
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
+
 
   return 1;
 }

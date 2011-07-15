@@ -120,7 +120,7 @@ void GlowText::draw( GlowWind *w, void *pos, int highlight, int hot, void *node)
   ctx->gdraw->text( w, p.z_x + ((GlowPoint *)pos)->z_x - w->offset_x, 
 		    p.z_y + ((GlowPoint *)pos)->z_y - w->offset_y, text, strlen(text),
 		    draw_type, color_drawtype, idx, highlight, 0, glow_eFont_Helvetica,
-		    w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size));
+		    w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size), 0);
 }
 
 void GlowText::erase( GlowWind *w, void *pos, int hot, void *node)
@@ -132,7 +132,7 @@ void GlowText::erase( GlowWind *w, void *pos, int hot, void *node)
   ctx->gdraw->text_erase( w, p.z_x + ((GlowPoint *)pos)->z_x - w->offset_x, 
 			  p.z_y + ((GlowPoint *)pos)->z_y - w->offset_y, text,  strlen(text),
 			  draw_type, idx, 0, glow_eFont_Helvetica,
-			  w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size));
+			  w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size), 0);
 }
 
 int GlowText::event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, int y,

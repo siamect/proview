@@ -318,6 +318,7 @@ class GrowText : public GlowText {
   char        	last_group[32];	//!< The last group the object was a member of.
   glow_eDrawType original_color_drawtype; //!< The original color, i.e. color drawn at edit time.
   glow_eFont    font; 		//!< Text font
+  glow_eAdjustment adjustment;	//!< Text adjustment.
 
   //! Set user data.
   /*!

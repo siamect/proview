@@ -445,7 +445,7 @@ void GrowFolder::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, vo
     if ( text_idx >= 0) {
       ctx->gdraw->text( w, x + h/2, ll_y + h - 2,
 			folder_text[i], strlen(folder_text[i]), text_drawtype, text_color_drawtype, 
-			text_idx, highlight, 0, glow_eFont_Helvetica, tsize);
+			text_idx, highlight, 0, glow_eFont_Helvetica, tsize, 0);
     }
     if ( i == current_folder)
       break;

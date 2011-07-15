@@ -182,7 +182,7 @@ void GrowMenu::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
     if ( info.item[i].occupied) {
       ctx->gdraw->get_text_extent( info.item[i].text, strlen(info.item[i].text), text_drawtype, 
 				   max( 0, text_idx), font, &z_width, &z_height, 
-				   &z_descent, tsize);
+				   &z_descent, tsize, 0);
       if ( z_width > max_z_width)
 	max_z_width = z_width;
       tot_z_height += int( 1.6 * z_height);
@@ -237,10 +237,10 @@ void GrowMenu::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
       }
       if ( info.item[i].type == glow_eMenuItem_ButtonDisabled)
 	ctx->gdraw->text( w, x_text, y_text, info.item[i].text, strlen(info.item[i].text), text_drawtype, 
-			  text_color_disabled, text_idx, highlight, 0, font, tsize);
+			  text_color_disabled, text_idx, highlight, 0, font, tsize, 0);
       else
 	ctx->gdraw->text( w, x_text, y_text, info.item[i].text, strlen(info.item[i].text), text_drawtype, 
-			  text_color, text_idx, highlight, 0, font, tsize);
+			  text_color, text_idx, highlight, 0, font, tsize, 0);
       if ( info.item[i].type == glow_eMenuItem_PulldownMenu) {
 	// Draw arrow
 	glow_sPointX p[4];
