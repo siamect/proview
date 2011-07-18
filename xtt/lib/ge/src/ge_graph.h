@@ -108,6 +108,10 @@ typedef enum {
   graph_eMode_Runtime		//!< Runtime mode.
 } graph_eMode;
 
+typedef enum {
+  graph_mOption_IgnoreJournal = 1 << 0
+} graph_mOption;
+
 //! Databases
 typedef enum {
   graph_eDatabase_Gdh,		//!< Database rtdb.
@@ -422,7 +426,8 @@ class Graph {
 	int xn_gdh_init_done = 0,
 	const char *xn_object_name = 0,
 	int xn_use_default_access = 0,
-	unsigned int xn_default_access = 0);
+	unsigned int xn_default_access = 0,
+	unsigned int xn_options = 0);
 
   virtual void trace_timer_remove() {}
   virtual void trace_timer_add( int time) {}

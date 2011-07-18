@@ -1569,8 +1569,11 @@ GeMotif::GeMotif( 	void 	*x_parent_ctx,
   XtManageChild( ge_widget);
   XtUnmanageChild( cmd_input);
 
+  unsigned int opt = x_options & ge_mOption_IgnoreJournal ? graph_mOption_IgnoreJournal : 0;
+
   graph = new GraphMotif( this, graph_form, "",
-		&grow_widget, &sts, "pwrp_pop:");
+			  &grow_widget, &sts, "pwrp_pop:", graph_eMode_Development, 
+			  1, 0, 0, 0, 0, opt);
   graph->message_cb = &Ge::message_cb;
   graph->get_current_subgraph_cb = &Ge::subpalette_get_select;
   graph->get_current_colors_cb = &Ge::colorpalette_get_current;

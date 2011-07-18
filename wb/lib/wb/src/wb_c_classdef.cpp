@@ -75,7 +75,7 @@ static pwr_tStatus OpenObjectGraph (
   if ( EVEN(sts)) return sts;
 
   cdh_ToLower( name, name);
-  ip->wnav->ge_new( name);
+  ip->wnav->ge_new( name, 0);
   return PWRS__SUCCESS;
 }
 

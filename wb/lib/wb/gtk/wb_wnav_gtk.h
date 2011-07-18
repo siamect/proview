@@ -73,7 +73,7 @@ class WNavGtk : public WNav {
     void set_inputfocus( int focus);
     void trace_start();
     void set_selection_owner();
-    Ge *ge_new( char *graph_name);
+    Ge *ge_new( char *graph_name, int nojournal);
     WGe *wge_new( char *name, char *filename, char *object_name,
 		  int modal);
     void create_popup_menu( pwr_tAttrRef aref, int x, int y);
