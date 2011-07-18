@@ -705,7 +705,7 @@ void GrowText::draw( GlowWind *w,  GlowTransform *t, int highlight, int hot, voi
 
   if ( strcmp( text, "")) {
     if ( highl || (hot && !node) || adjustment != glow_eAdjustment_Left) {
-      ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, max( 0, idx), lfont,
+       ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, max( 0, idx), lfont,
 				   &z_width, &z_height, &z_descent, tsize, rot);
       switch ( adjustment) {
       case glow_eAdjustment_Left:
@@ -1026,24 +1026,75 @@ void GrowText::export_javabean( GlowTransform *t, void *node,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, int in_nc, ofstream &fp)
 {
   int x1, y1;
+  int z_width, z_height, z_descent;
+  int rot;
   int bold;
   double trf_scale = trf.vertical_scale( t);
   int idx = int( trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (text_size +4) - 4);
   idx = min( idx, DRAW_TYPE_SIZE-1);
+  double tsize = trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size);
+
+  glow_eFont lfont;
+  glow_eDrawType ldraw_type;
+
+  if ( node && ((GrowNode *)node)->text_font != glow_eFont_No) {
+    lfont = ((GrowNode *)node)->text_font;
+    ldraw_type = ((GrowNode *)node)->text_type;
+  }
+  else {
+    lfont = font;
+    ldraw_type = draw_type;
+  }
 
   if (!t) {
     x1 = int( trf.x( p.x, p.y) * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
     y1 = int( trf.y( p.x, p.y) * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
+    rot = (int) trf.rot();
   }
   else {
     x1 = int( trf.x( t, p.x, p.y) * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
     y1 = int( trf.y( t, p.x, p.y) * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
+    rot = (int) trf.rot( t);
   }
+  if ( adjustment ==  glow_eAdjustment_Center)
+    rot = rot < 0 ? rot % 360 + 360 : rot % 360;
+  else
+    rot = 0;
+
+  ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, max( 0, idx), lfont,
+			       &z_width, &z_height, &z_descent, tsize, rot);
+  switch ( adjustment) {
+  case glow_eAdjustment_Left:
+    break;
+  case glow_eAdjustment_Right:
+    x1 -= z_width;
+    break;
+  case glow_eAdjustment_Center:
+    switch ( rot) {
+    case 90:
+      x1 -= z_width / 2 - z_descent;
+      y1 -= z_height / 2;
+      break;
+    case 270:
+      x1 += z_width / 2 - z_descent;
+      y1 += z_height / 2;
+      break;
+    case 180:
+      x1 += z_width / 2;
+      y1 -= z_height / 2 - z_descent;
+      break;
+    default:
+      x1 -= z_width / 2;
+      y1 += z_height / 2 - z_descent;
+    }
+    break;
+  }      
 
   bold = (draw_type == glow_eDrawType_TextHelveticaBold);
 
   ctx->export_jbean->text( x1, y1, text, 
-	draw_type, color_drawtype, bold, idx, pass, shape_cnt, node_cnt, fp);
+			   draw_type, color_drawtype, bold, idx, rot, 
+			   pass, shape_cnt, node_cnt, fp);
 }
 
 void GrowText::flip( double x0, double y0, glow_eFlipDirection dir)

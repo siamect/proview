@@ -86,7 +86,8 @@ class GlowExportJBean {
 	      glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
     void text( int x0, int y0, char *text,
 	glow_eDrawType drawtype, glow_eDrawType color_drawtype, int bold,
-	int idx, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
+	       int idx, int rotate, glow_eExportPass pass, int *shape_cnt, int node_cnt, 
+	       ofstream& fp);
     void annot( int x0, int y0, int number,
 		glow_eDrawType drawtype, glow_eDrawType text_drawtype, int bold,
 		glow_eAdjustment adjustment, int idx, glow_eExportPass pass, 
