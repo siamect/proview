@@ -544,7 +544,7 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 	      break;
 	    }
 	  }
-	  ctx->gdraw->text( w, text_x, int(y - 2),
+	  ctx->gdraw->text( w, text_x, int(y - 5),
 			    cell_value + offs, strlen(cell_value + offs), text_drawtype, text_color_drawtype,
 			    text_idx, highlight, 0, font, tsize, 0);
 	}
@@ -671,7 +671,7 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 	      }
 	    }
 
-	    ctx->gdraw->text( w, text_x, int(y - 2),
+	    ctx->gdraw->text( w, text_x, int(y - 5),
 			    cell_value + offs, strlen(cell_value + offs), text_drawtype, text_color_drawtype,
 			      text_idx, highlight, 0, font, tsize, 0);
 	  }
