@@ -76,7 +76,9 @@ typedef enum {
 	goen_eGraphIndex_GetATgeneric	= 41,
 	goen_eGraphIndex_StoATgeneric	= 42,
 	goen_eGraphIndex_GetDTgeneric	= 43,
-	goen_eGraphIndex_StoDTgeneric	= 44
+	goen_eGraphIndex_StoDTgeneric	= 44,
+	goen_eGraphIndex_True		= 45,
+	goen_eGraphIndex_False		= 46
 	} goen_eGraphIndex;
 
 static	float	f_pinlength  = GOEN_F_PINLENGTH;
@@ -494,8 +496,20 @@ int goen_create_nodetype_m4(
       break;
     }
     case goen_eGraphIndex_FirstScan:
+    case goen_eGraphIndex_True:
+    case goen_eGraphIndex_False:
     {
-      f_width = GOEN_F_GRID * 4;
+      char text[80];
+      int w;
+
+      switch ( graph_index) {
+      case goen_eGraphIndex_FirstScan:    w=4; strcpy( text, "FirstScan"); break;
+      case goen_eGraphIndex_True:         w=2; strcpy( text, "True"); break;
+      case goen_eGraphIndex_False:        w=2; strcpy( text, "False"); break;
+      default: ;
+      }
+
+      f_width = GOEN_F_GRID * w;
       f_height = GOEN_F_GRID; 
 
       flow_AddRect( nc, 0, -f_height/2, f_width, f_height, 
@@ -503,7 +517,7 @@ int goen_create_nodetype_m4(
       flow_AddLine( nc, f_width, 0, f_width + f_pinlength, 0, flow_eDrawType_Line, 2);
       flow_AddConPoint( nc, f_width + f_pinlength, 0,
 		0, flow_eDirection_Right);
-      flow_AddText( nc, "FirstScan", f_strlength, 0.5 * f_strheight,
+      flow_AddText( nc, text, f_strlength, 0.5 * f_strheight,
 		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
       break;
     }

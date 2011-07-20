@@ -192,6 +192,25 @@
     if ( in) \
       memcpy( &object->OutDataP, in, 12);
 
+/*_*
+  @aref pulsetrain PulseTrain
+*/
+#define PulseTrain_exec(o)\
+ o->P30s = (tp->before_scan.tv_sec / 15) & 1 ? 1 : 0;\
+ o->P10s = (tp->before_scan.tv_sec / 5) & 1 ? 1 : 0;\
+ o->P5s = ((tp->before_scan.tv_sec * 10 +\
+            tp->before_scan.tv_nsec / 100000000) / 25) & 1 ? 1 : 0; \
+ o->P2s = tp->before_scan.tv_sec & 1 ? 1 : 0;\
+ o->P1s = (tp->before_scan.tv_nsec / 500000000) & 1 ? 1 : 0;\
+ o->P500ms = (tp->before_scan.tv_nsec / 250000000) & 1 ? 1 : 0;\
+ o->P200ms = (tp->before_scan.tv_nsec / 100000000) & 1 ? 1 : 0;\
+ o->P100ms = (tp->before_scan.tv_nsec / 50000000) & 1 ? 1 : 0;\
+ o->P50ms = (tp->before_scan.tv_nsec / 25000000) & 1 ? 1 : 0;\
+ o->P20ms = (tp->before_scan.tv_nsec / 10000000) & 1 ? 1 : 0;\
+ o->P10ms = (tp->before_scan.tv_nsec / 5000000) & 1 ? 1 : 0;\
+ o->P5ms = (tp->before_scan.tv_nsec / 2500000) & 1 ? 1 : 0;\
+ o->P2ms = (tp->before_scan.tv_nsec / 1000000) & 1 ? 1 : 0;\
+ o->P1ms = (tp->before_scan.tv_nsec / 500000) & 1 ? 1 : 0;
 
 
 
