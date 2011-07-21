@@ -2617,7 +2617,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *tools_textsize_omenu = (GtkWidget *)g_object_new( GTK_TYPE_OPTION_MENU, 
 								"menu", textsize_menu, NULL);
 
-  gtk_option_menu_set_history( GTK_OPTION_MENU(tools_textsize_omenu), 0);
+  gtk_option_menu_set_history( GTK_OPTION_MENU(tools_textsize_omenu), 2);
   g_object_set( tools_textsize_omenu, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools3, tools_textsize_omenu, "Text Size", "");
 
