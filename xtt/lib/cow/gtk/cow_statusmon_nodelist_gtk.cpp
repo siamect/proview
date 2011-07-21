@@ -72,7 +72,7 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
 			  pwr_tStatus *status) :
   Nodelist( nodelist_parent_ctx, nodelist_name, nodelist_mode, 
 	    nodelist_view_node_descr, status), 
-  parent_wid(nodelist_parent_wid), clock_cursor(0), add_india_widget(0)
+  parent_wid(nodelist_parent_wid), clock_cursor(0), add_india_widget(0), mod_india_widget(0)
 {
   pwr_tStatus sts;
 
