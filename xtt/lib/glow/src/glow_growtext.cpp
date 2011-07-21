@@ -757,7 +757,7 @@ void GrowText::draw( GlowWind *w,  GlowTransform *t, int highlight, int hot, voi
 			0, lfont, tsize, rot);
     }
   }
-  else {
+  else if ( idx >= 0) {
     ctx->gdraw->get_text_extent( "A", 1, draw_type, max( 0, idx), font, &z_width, &z_height,
 				 &z_descent, tsize, rot);
     ctx->gdraw->rect( w, x1, y1 - (z_height-z_descent), z_width, z_height, 
@@ -865,7 +865,7 @@ void GrowText::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     if ( idx >= 0)
       ctx->gdraw->text_erase( w, x1, y1, text, strlen(text), ldraw_type, idx, 0, lfont, tsize, rot);
   }
-  else
+  else if ( idx >= 0)
   {
     ctx->gdraw->get_text_extent( "A", 1, draw_type, idx, font, &z_width, &z_height, 
 				 &z_descent, tsize, rot);
