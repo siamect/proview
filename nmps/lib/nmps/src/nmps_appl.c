@@ -547,7 +547,11 @@ nmpsappl_Mirror(
 	  switch ( cellist_ptr->classid)
 	  {
 	    case pwr_cClass_NMpsCell:
+	    case pwr_cClass_NMpsCell60:
+	    case pwr_cClass_NMpsCell120:
 	    case pwr_cClass_NMpsStoreCell:
+	    case pwr_cClass_NMpsStoreCell60:
+	    case pwr_cClass_NMpsStoreCell120:
 	    {
 	      pwr_sClass_NMpsCell *object_ptr;
 	      plc_t_DataInfo	*data_block_ptr;
@@ -792,7 +796,11 @@ nmpsappl_RemoveData(
 	  switch ( cellist_ptr->classid)
 	  {
 	    case pwr_cClass_NMpsCell:
+	    case pwr_cClass_NMpsCell60:
+	    case pwr_cClass_NMpsCell120:
 	    case pwr_cClass_NMpsStoreCell:
+	    case pwr_cClass_NMpsStoreCell60:
+	    case pwr_cClass_NMpsStoreCell120:
 	    {
 	      pwr_sClass_NMpsCell *object_ptr;
 
@@ -831,7 +839,11 @@ nmpsappl_RemoveAndDeleteData(
 	  switch ( cellist_ptr->classid)
 	  {
 	    case pwr_cClass_NMpsCell:
+	    case pwr_cClass_NMpsCell60:
+	    case pwr_cClass_NMpsCell120:
 	    case pwr_cClass_NMpsStoreCell:
+	    case pwr_cClass_NMpsStoreCell60:
+	    case pwr_cClass_NMpsStoreCell120:
 	    {
 	      pwr_sClass_NMpsCell *object_ptr;
 
@@ -903,7 +915,11 @@ pwr_tStatus	nmpsappl_TransportData(
 	  switch ( cellist_ptr->classid)
 	  {
 	    case pwr_cClass_NMpsCell:
+	    case pwr_cClass_NMpsCell60:
+	    case pwr_cClass_NMpsCell120:
 	    case pwr_cClass_NMpsStoreCell:
+	    case pwr_cClass_NMpsStoreCell60:
+	    case pwr_cClass_NMpsStoreCell120:
 	    {
 	      pwr_sClass_NMpsCell *object_ptr;
 
@@ -931,7 +947,11 @@ pwr_tStatus	nmpsappl_TransportData(
 	  switch ( cellist_ptr->classid)
 	  {
 	    case pwr_cClass_NMpsCell:
+	    case pwr_cClass_NMpsCell60:
+	    case pwr_cClass_NMpsCell120:
 	    case pwr_cClass_NMpsStoreCell:
+	    case pwr_cClass_NMpsStoreCell60:
+	    case pwr_cClass_NMpsStoreCell120:
 	    {
 	      pwr_sClass_NMpsCell *object_ptr;
 
@@ -960,7 +980,11 @@ pwr_tStatus	nmpsappl_TransportData(
 	  switch ( cellist_ptr->classid)
 	  {
 	    case pwr_cClass_NMpsCell:
+	    case pwr_cClass_NMpsCell60:
+	    case pwr_cClass_NMpsCell120:
 	    case pwr_cClass_NMpsStoreCell:
+	    case pwr_cClass_NMpsStoreCell60:
+	    case pwr_cClass_NMpsStoreCell120:
 	    {
 	      pwr_sClass_NMpsCell *object_ptr;
 
@@ -1004,7 +1028,11 @@ pwr_tStatus	nmpsappl_InsertData(
 	  switch ( cellist_ptr->classid)
 	  {
 	    case pwr_cClass_NMpsCell:
+	    case pwr_cClass_NMpsCell60:
+	    case pwr_cClass_NMpsCell120:
 	    case pwr_cClass_NMpsStoreCell:
+	    case pwr_cClass_NMpsStoreCell60:
+	    case pwr_cClass_NMpsStoreCell120:
 	    {
 	      pwr_sClass_NMpsCell *object_ptr;
 
@@ -1046,7 +1074,11 @@ pwr_tStatus	nmpsappl_RemoveAndKeepData(
 	  switch ( cellist_ptr->classid)
 	  {
 	    case pwr_cClass_NMpsCell:
+	    case pwr_cClass_NMpsCell60:
+	    case pwr_cClass_NMpsCell120:
 	    case pwr_cClass_NMpsStoreCell:
+	    case pwr_cClass_NMpsStoreCell60:
+	    case pwr_cClass_NMpsStoreCell120:
 	    {
 	      pwr_sClass_NMpsCell *object_ptr;
 
