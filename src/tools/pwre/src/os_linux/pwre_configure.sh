@@ -7,9 +7,13 @@ pwre_configure.h
 
 Arguments
 
---help    Display help.
---version State fix version of loadfiles, eg
-  pwre configure --version "29-MAY-2011 16:00:00"
+--help           Display help.
+
+--version        State fix version of loadfiles, eg
+
+                 > pwre configure --version "29-MAY-2011 16:00:00"
+
+--reset-version  Reset previous version
 
 EOF
 }
@@ -270,6 +274,19 @@ if [ "$1" = "--help" ]; then
   exit
 elif [ "$1" = "--version" ] && [ "$2" != "" ] && [ "$3" != "" ]; then
   buildversion=$2" "$3
+elif [ "$1" = "--reset-version" ]; then
+  buildversion=""
+elif [ "$1" != "" ]; then
+  echo "Unknown option \"$1\""
+  exit
+else
+  # Catch current version
+  if [ -e $cfile ]; then
+    ver=`eval cat $cfile | grep "\bexport PWRE_CONF_BUILDVERSION"`
+    ver=${ver#*=\"}
+    ver=${ver%\"}
+    buildversion=$ver
+  fi
 fi
 
 
