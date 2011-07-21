@@ -638,7 +638,14 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
 	  i_incr = 1;
 	  i++;
 	  break;
-	}
+	}	  
+	case '-': 
+	  // Possible arg to gtk
+	  if ( strcmp( (*argv)[i], "--display") == 0) {
+	    i++;	    
+	    i_incr = 1;
+	  }	    
+	  break;
 	default:
 	  usage();
 	  exit(0);
