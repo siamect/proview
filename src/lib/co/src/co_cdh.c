@@ -2948,6 +2948,7 @@ cdh_NextObjectName (
 
   \param outname	Out string.
   \param name		In string.
+  \param segments	Number of segments to return.
 */
 void cdh_CutNameSegments (
   char	*outname,

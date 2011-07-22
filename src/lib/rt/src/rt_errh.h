@@ -53,6 +53,9 @@
 extern "C" {
 #endif
 
+/** @addtogroup Errh */
+/*@{*/
+
 #ifndef errh_Bugcheck
 # if defined OS_ELN || defined OS_VMS
 #   define errh_Bugcheck(sts, str) \
@@ -76,6 +79,9 @@ extern "C" {
 #define errh_SeverityError(sts) 	(((sts) & 7) == 2)
 #define errh_SeverityFatal(sts) 	(((sts) & 7) == 4)
 
+/**
+ * Severity enumeration
+ */
 typedef enum {
   errh_eSeverity_Null,
   errh_eSeverity_Success,
@@ -88,6 +94,9 @@ typedef enum {
 
 #define errh_cAnix_SrvSize 40
 
+/**
+ * Application index
+ */
 typedef enum {
   errh_eNAnix		= 0,
   errh_eAnix_ini 	= 1,
@@ -132,9 +141,12 @@ typedef enum {
   errh_eAnix_appl20	= 40
 } errh_eAnix;
 
+/**
+ * Message type
+ */
 typedef enum {
-  errh_eMsgType_Log	= 1,
-  errh_eMsgType_Status 	= 2
+  errh_eMsgType_Log	= 1,	/**< Write to console log */
+  errh_eMsgType_Status 	= 2	/**< Set application status */
 } errh_eMsgType;
 
 
@@ -178,6 +190,9 @@ void		errh_CErrLog	(pwr_tStatus sts, ...);
 char		*errh_Message	(char *string, char severity, char *msg, ...);
 errh_eAnix	errh_Anix       ();
 errh_eSeverity	errh_Severity	(pwr_tStatus);
+
+/** @} */
+
 #if defined __cplusplus
 }
 #endif
