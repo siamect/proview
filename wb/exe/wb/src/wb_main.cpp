@@ -83,10 +83,11 @@ Wb *Wb::main_wb = 0;
 void Wb::usage()
 {
   printf("\n\
-Usage: wb [-a][-q][-c][-p] [-l language] [username] [password] [volume]\n\
+Usage: wb [-a][-q][-s][-c][-p] [-l language] [username] [password] [volume]\n\
 \n\
   -a    Attach all databases.\n\
   -q    Quiet. Hide license information.\n\
+  -s    Open dbs file for volume.\n\
   -c    Start class editor.\n\
   -p    Open project list.\n\
   -l    Language specification, sv_se or en_us.\n\

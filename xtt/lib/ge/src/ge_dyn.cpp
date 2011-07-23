@@ -8250,6 +8250,7 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
 
     sts = grow_GetSelectedCell( object, &column, &row);
     if ( ODD(sts) && sel_p[column]) {
+      // Reset previously selected
       db = dyn->parse_attr_name( sel_attribute[column], parsed_name, &inverted, &attr_type, 
 				      &attr_size);
       value = 0;
@@ -8257,7 +8258,9 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
       sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
       if ( EVEN(sts)) printf("Table error: %s\n", parsed_name);
     }
-    if ( sel_p[event->table.column]) {
+    if ( sel_p[event->table.column] && 
+	 !(event->table.column == column && event->table.row == row)) {
+      // Set new selected, if not same as previous selected
       db = dyn->parse_attr_name( sel_attribute[event->table.column], parsed_name, &inverted, &attr_type, 
 				      &attr_size);
       value = 1;

@@ -152,7 +152,8 @@ typedef enum {
 } ldh_eDId;
 
 typedef enum {
-  ldh_mWbOption_IgnoreDLoadError = 1 << 0
+  ldh_mWbOption_IgnoreDLoadError = 1 << 0,
+  ldh_mWbOption_OpenDbs = 1 << 1
 } ldh_mWbOption;
 
 typedef enum {

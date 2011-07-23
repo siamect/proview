@@ -140,13 +140,13 @@ class GlowDrawGtk : public GlowDraw {
 		      int idx);
   virtual int text( GlowWind *w, int x, int y, char *text, int len,
 		    glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight, 
-		    int line, glow_eFont font_idx, double size);
+		    int line, glow_eFont font_idx, double size, int rot);
   virtual int text_cursor( GlowWind *w, int x, int y, char *text, int len,
 			   glow_eDrawType gc_type, glow_eDrawType color, int idx, 
 			   int highlight, int pos, glow_eFont font, double size);
   virtual int text_erase( GlowWind *w, int x, int y, char *text, int len,
 			  glow_eDrawType gc_type, int idx, int line, glow_eFont font_idx, 
-			  double size);
+			  double size, int rot);
   virtual int fill_rect( GlowWind *w, int x, int y, int width, int height, 
 		 glow_eDrawType gc_type);
   virtual int pixmaps_create( GlowWind *w, glow_sPixmapData *pixmap_data,
@@ -164,7 +164,7 @@ class GlowDrawGtk : public GlowDraw {
   virtual void set_cursor( GlowWind *w, glow_eDrawCursor cursor);
   virtual int get_text_extent( const char *text, int len,
 			       glow_eDrawType gc_type, int idx, glow_eFont font_idx,
-			       int *width, int *height, int *descent, double size);
+			       int *width, int *height, int *descent, double size, int rot);
   virtual void copy_area( GlowWind *w, int x, int y);
   virtual void clear_area( GlowWind *w, int ll_x, int ur_x, int ll_y, int ur_y);
   virtual void set_inputfocus( GlowWind *w);
@@ -237,13 +237,13 @@ class GlowDrawGtk : public GlowDraw {
 				      glow_eGradient gradient);
   int text_pango( GlowWind *wind, int x, int y, char *text, int len,
 		  glow_eDrawType gc_type, glow_eDrawType color, int idx, 
-		  int highlight, int line, glow_eFont font_idx, double size);
+		  int highlight, int line, glow_eFont font_idx, double size, int rot);
   int text_erase_pango( GlowWind *wind, int x, int y, char *text, int len,
 			glow_eDrawType gc_type, int idx, int line, glow_eFont font_idx,
-			double size);
+			double size, int rot);
   int get_text_extent_pango( const char *text, int len,
 			     glow_eDrawType gc_type, int idx, glow_eFont font_idx,
-			     int *width, int *height, int *descent, double size);
+			     int *width, int *height, int *descent, double size, int rot);
   void log_event( GdkEvent *event);
   virtual void event_exec( void *event, unsigned int size);
 

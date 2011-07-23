@@ -2326,7 +2326,8 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getClassAttribute
 
 
       if ( parinfo.Flags & PWR_MASK_RTVIRTUAL || 
-           parinfo.Flags & PWR_MASK_PRIVATE)
+           (parinfo.Flags & PWR_MASK_PRIVATE &&
+	    parinfo.Flags & PWR_MASK_POINTER))
       {
         /* This parameter does not contain any useful information, take the
 	    next one */

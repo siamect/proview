@@ -731,7 +731,7 @@ void wb_build::xttgraph( pwr_tOid oid)
 	MsgWindow::message('W', cmd, msgw_ePop_No, oid);
       }
       else {
-	Ge *gectx = m_wnav->ge_new( action);
+	Ge *gectx = m_wnav->ge_new( action, 1);
 	strcpy( cmd, "export java");
 	m_sts = gectx->command( cmd);
 	if ( evenSts()) {
@@ -861,7 +861,7 @@ void wb_build::webgraph( pwr_tOid oid)
       MsgWindow::message('W', cmd, msgw_ePop_No, oid);
     }
     else {
-      Ge *gectx = m_wnav->ge_new( graph_name);
+      Ge *gectx = m_wnav->ge_new( graph_name, 1);
       strcpy( cmd, "export java");
       m_sts = gectx->command( cmd);
       if ( evenSts()) {

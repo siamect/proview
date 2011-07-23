@@ -166,7 +166,7 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
       ctx->gdraw->get_text_extent( ((GlowNode *) node)->annotv[number],
 				   strlen(((GlowNode *) node)->annotv[number]),
 				   ldraw_type, idx, lfont,
-				   &width, &height, &descent, tsize);
+				   &width, &height, &descent, tsize, 0);
 
     switch ( adjustment) {
     case glow_eAdjustment_Left:
@@ -189,22 +189,42 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
     }
     else {
       // Text is rotated, adjust the coordinates
-      if ( 45 <= rot && rot < 135) {
-	y1 += height - descent;
-      }
-      else if ( 135 <= rot && rot < 225) {
-	x1 -= width;
-	y1 += height - descent;
+      if ( adjustment == glow_eAdjustment_Center) {
+	// Only center adjustment supports text rotation
+	if ( 45 <= rot && rot < 135) {
+	  x1 += width/2;
+	  y1 += width/2;
+	}
+	else if ( 135 <= rot && rot < 225) {
+	  y1 += height - descent;
+	}
+	else if ( 225 <= rot && rot < 315) {
+	  x1 += width/2 - height + descent;
+	  y1 -= width/2 - height + descent;
+	}
+	else {
+	  x1 -= width;
+	}
       }
       else {
-	x1 -= width;
+	if ( 45 <= rot && rot < 135) {
+	  y1 += height - descent;
+	}
+	else if ( 135 <= rot && rot < 225) {
+	  x1 -= width;
+	  y1 += height - descent;
+	}
+	else {
+	  x1 -= width;
+	}
+	rot = 0;
       }
     } 
 
     ctx->gdraw->text( w, x1, y1,
 		      ((GlowNode *) node)->annotv[number], 
 		      strlen(((GlowNode *) node)->annotv[number]), ldraw_type, color, idx, 
-		      highlight, 0, lfont, tsize);
+		      highlight, 0, lfont, tsize, rot);
     if ( ((GlowNode *) node)->annotv_inputmode[number])
       ctx->gdraw->text_cursor( w, x1, y1,
 			       ((GlowNode *) node)->annotv[number],
@@ -223,13 +243,13 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 					    highlight, (GrowNode *)colornode, 2);
 
     ctx->gdraw->get_text_extent( "", 0, ldraw_type, idx, lfont, &z_width, &z_height,
-				 &z_descent, tsize);
+				 &z_descent, tsize, 0);
     for ( s = ((GlowNode *) node)->annotv[number]; *s; s++) {
       if ( *s == 10) {
 	if ( len) {
 	  *s = 0;
 	  ctx->gdraw->text( w, x1, y1 + line_cnt * z_height, line, 
-			    len, ldraw_type, color, idx, highlight, 0, lfont, tsize);
+			    len, ldraw_type, color, idx, highlight, 0, lfont, tsize, 0);
 	  *s = 10;
 	}
 	len = 0;
@@ -241,7 +261,7 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
     }
     if ( len)
       ctx->gdraw->text( w, x1, y1 + line_cnt * z_height, line, 
-			len, ldraw_type, color, idx, highlight, 0, lfont, tsize);
+			len, ldraw_type, color, idx, highlight, 0, lfont, tsize, 0);
     break;
   }
   }
@@ -306,7 +326,7 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 	ctx->gdraw->get_text_extent( ((GlowNode *) node)->annotv[number],
 				     strlen(((GlowNode *) node)->annotv[number]),
 				     ldraw_type, idx, lfont,
-				     &width, &height, &descent, tsize);
+				     &width, &height, &descent, tsize, 0);
 
       switch ( adjustment) {
       case glow_eAdjustment_Left:
@@ -325,22 +345,42 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 
       if ( !(rot < 45 || rot >= 315)) {
 	// Text is rotated, adjust the coordinates
-	if ( 45 <= rot && rot < 135) {
-	  y1 += height - descent;
-	}
-	else if ( 135 <= rot && rot < 225) {
-	  x1 -= width;
-	  y1 += height - descent;
+	if ( adjustment == glow_eAdjustment_Center) {
+	  // Only center adjustment supports text rotation
+	  if ( 45 <= rot && rot < 135) {
+	    x1 += width/2;
+	    y1 += width/2;
+	  }
+	  else if ( 135 <= rot && rot < 225) {
+	    y1 += height - descent;
+	  }
+	  else if ( 225 <= rot && rot < 315) {
+	    x1 += width/2 - height + descent;
+	    y1 -= width/2 - height + descent;
+	  }
+	  else {
+	    x1 -= width;
+	  }
 	}
 	else {
-	  x1 -= width;
+	  if ( 45 <= rot && rot < 135) {
+	    y1 += height - descent;
+	  }
+	  else if ( 135 <= rot && rot < 225) {
+	    x1 -= width;
+	    y1 += height - descent;
+	  }
+	  else {
+	    x1 -= width;
+	  }
+	  rot = 0;
 	}
       } 
 
       ctx->gdraw->text_erase( w, x1, y1,
 			      ((GlowNode *) node)->annotv[number], 
 			      strlen(((GlowNode *) node)->annotv[number]), ldraw_type, idx, 0, lfont,
-			      tsize);
+			      tsize, rot);
       break;
     }
     case glow_eAnnotType_MultiLine:
@@ -351,13 +391,13 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       char *line = ((GlowNode *) node)->annotv[number];
       char *s;
       ctx->gdraw->get_text_extent( "", 0, ldraw_type, idx, lfont, &z_width, &z_height,
-				   &z_descent, tsize);
+				   &z_descent, tsize, 0);
       for ( s = ((GlowNode *) node)->annotv[number]; *s; s++) {
         if ( *s == 10) {
 	  if ( len) {
 	    *s = 0;
             ctx->gdraw->text_erase( w, x1, y1 + line_cnt * z_height, line, 
-				    len, ldraw_type, idx, 0, lfont, tsize);
+				    len, ldraw_type, idx, 0, lfont, tsize, 0);
 	    *s = 10;
 	  }
 	  len = 0;
@@ -369,7 +409,7 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       }
       if ( len)
         ctx->gdraw->text_erase( w, x1, y1 + line_cnt * z_height, line, 
-				len, ldraw_type, idx, 0, lfont, tsize);
+				len, ldraw_type, idx, 0, lfont, tsize, 0);
       break;
     }
   }
@@ -427,7 +467,7 @@ void GrowAnnot::erase_background( GlowWind *w, GlowTransform *t, int hot, void *
         ctx->gdraw->text_erase( w, x1, y1,
 				((GlowNode *) node)->annotv[number], 
 				strlen(((GlowNode *) node)->annotv[number]), ldraw_type, idx, 0, 
-				lfont, tsize);
+				lfont, tsize, 0);
       break;
     }
     case glow_eAnnotType_MultiLine: {
@@ -437,13 +477,13 @@ void GrowAnnot::erase_background( GlowWind *w, GlowTransform *t, int hot, void *
       char *line = ((GlowNode *) node)->annotv[number];
       char *s;
       ctx->gdraw->get_text_extent( "", 0, ldraw_type, idx, lfont, &z_width, &z_height,
-				   &z_descent, tsize);
+				   &z_descent, tsize, 0);
       for ( s = ((GlowNode *) node)->annotv[number]; *s; s++) {
         if ( *s == 10) {
 	  if ( len) {
 	    *s = 0;
             ctx->gdraw->text_erase( w, x1, y1 + line_cnt * z_height, line, 
-				    len, ldraw_type, idx, 0, lfont, tsize);
+				    len, ldraw_type, idx, 0, lfont, tsize, 0);
 	    *s = 10;
 	  }
 	  len = 0;
@@ -455,7 +495,7 @@ void GrowAnnot::erase_background( GlowWind *w, GlowTransform *t, int hot, void *
       }
       if ( len)
         ctx->gdraw->text_erase( w, x1, y1 + line_cnt * z_height, line, 
-				len, ldraw_type, idx, 0, lfont, tsize);
+				len, ldraw_type, idx, 0, lfont, tsize, 0);
       break;
     }
   }

@@ -74,7 +74,8 @@ class GraphGtk : public Graph {
 	int xn_gdh_init_done = 0,
 	const char *xn_object_name = 0,
 	int xn_use_default_access = 0,
-	unsigned int xn_default_access = 0);
+	unsigned int xn_default_access = 0,
+	unsigned int xn_options = 0);
 
   void trace_timer_remove();
   void trace_timer_add( int time);

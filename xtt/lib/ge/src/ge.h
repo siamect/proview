@@ -69,7 +69,8 @@ typedef void *GlowCtx;
 /* ge.h -- Simple graphic editor */
 
 typedef enum {
-  ge_mOption_EnableComment = 1
+  ge_mOption_EnableComment = 1 << 0,
+  ge_mOption_IgnoreJournal = 1 << 1
 } ge_mOption;
 
 typedef struct {

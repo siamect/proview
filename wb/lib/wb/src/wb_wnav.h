@@ -317,7 +317,7 @@ class WNav : public WUtility{
     virtual void set_inputfocus( int focus) {}
     virtual void trace_start() {}
     virtual void set_selection_owner() {}
-    virtual Ge *ge_new( char *graph_name) { return 0;}
+    virtual Ge *ge_new( char *graph_name, int nojournal) { return 0;}
     virtual WGe *wge_new( char *name, char *filename, char *object_name,
 			  int modal) { return 0;}
     virtual void create_popup_menu( pwr_tAttrRef aref, int x, int y) {}

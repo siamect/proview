@@ -225,7 +225,8 @@ SObject pwrs:Type
      EndBody
     EndObject
     !/**
-    !  Private pointer. The pointer can only be used by the
+    !  Attribute has read only access.
+    !  If attribute is a pointer, the pointer can only be used by the
     !  owner process.
     !*/
     Object Private $Bit

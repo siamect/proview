@@ -93,6 +93,8 @@ class WdaGtk : public Wda {
     static void activate_change_value( GtkWidget *w, gpointer data);
     static void activate_close_changeval( GtkWidget *w, gpointer data);
     static void activate_exit( GtkWidget *w, gpointer data);
+    static void activate_export_text( GtkWidget *w, gpointer data);
+    static void activate_import_text( GtkWidget *w, gpointer data);
     static void activate_print( GtkWidget *w, gpointer data);
     static void activate_setclass( GtkWidget *w, gpointer data);
     static void activate_setattr( GtkWidget *w, gpointer data);

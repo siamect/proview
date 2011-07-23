@@ -155,7 +155,8 @@ Graph::Graph(
 	int xn_gdh_init_done,
 	const char *xn_object_name,
 	int xn_use_default_access,
-	unsigned int xn_default_access) :
+	unsigned int xn_default_access,
+	unsigned int xn_options) :
 	attr_list( 0, NULL),
 	parent_ctx(xn_parent_ctx),
 	grow(0), grow_cnt(0), ldhses(0), journal(0),
@@ -168,7 +169,7 @@ Graph::Graph(
 	traverse_focus_cb(NULL), set_focus_cb(NULL), get_ldhses_cb(NULL),
 	get_current_objects_cb(NULL), popup_menu_cb(NULL), call_method_cb(NULL),
 	sound_cb(0), create_modal_dialog_cb(0), eventlog_cb(0),
-	linewidth(1), linetype(glow_eLineType_Solid), textsize(0), 
+	linewidth(1), linetype(glow_eLineType_Solid), textsize(2), 
 	textbold(0), textfont(glow_eFont_Helvetica),
 	border_color(1), fill_color(1), fill(0), border(1), shadow(0),
 	grid_size_x(1), grid_size_y(1), con_type(glow_eConType_Routed),
@@ -198,7 +199,7 @@ Graph::Graph(
   strcpy( systemname, "");
 
   // Create journal file
-  if ( mode == graph_eMode_Development) {
+  if ( mode == graph_eMode_Development && !(xn_options & graph_mOption_IgnoreJournal)) {
     int sts;
 
     journal = new GraphJournal( this, &sts);

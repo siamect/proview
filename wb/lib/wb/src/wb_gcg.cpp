@@ -4408,7 +4408,11 @@ static int gcg_node_comp(
 	  if ( EVEN(sts)) return sts;
 	  
 	  compmethod = graphbody->compmethod;
-	  // printf( "Compiling %s\n", node->hn.name);
+	  if ( compmethod < 2 || compmethod >= (int)(sizeof(gcg_comp_m)/sizeof(gcg_comp_m[0]))) {
+	    gcg_error_msg( gcgctx, GSX__COMPMETHOD, node);
+	    return GSX__COMPMETHOD;
+	  }
+
 	  sts = (gcg_comp_m[ compmethod ]) (gcgctx, node); 
 	}
 	else {

@@ -183,8 +183,17 @@ errh_Interactive ()
   interactive = 1;
 }
 
-/* Set up a queue to write to, set module name.  */
 
+/**
+ * @brief Initialize errh.
+ * Set up a queue to write to, set application name.
+ *
+ *    \param name	Name of application. This name is written in the logging entry
+ *                      to identify the process.
+ *    \param anix       Application index. Applications should choose a index in the range
+ *                      errh_eAnix_appl1 - errh_eAnix_appl20.
+ *    \return           Status or operation.
+ */
 pwr_tStatus
 errh_Init (
   const char *name,
@@ -204,6 +213,13 @@ errh_Init (
   return 1;
 }
 
+/**
+ * @brief Set application status.
+ * The application status is showed in the Node graph. The application can set this status
+ * with a call to errh_SetStatus. The status should be defined in the message file.
+ *
+ *    \param sts	New application status.
+ */
 void
 errh_SetStatus( pwr_tStatus sts)
 {
@@ -211,6 +227,10 @@ errh_SetStatus( pwr_tStatus sts)
   errh_send(0, 0, sts, errh_eMsgType_Status);
 }
 
+/**
+ * @brief Get application index for the process.
+ *    \return  Application index.
+ */
 errh_eAnix
 errh_Anix()
 {
@@ -270,8 +290,18 @@ errh_Log (
 
   return buff;
 }
-
-/* Log a success message.  */
+
+/**
+ * @brief Log a success message.
+ * The function has a variable argument list similar to sprintf.
+ *
+ * \param  msg  String with message to log. The string can contain format specifiers.
+ *
+ * Example
+ *
+ * errh_Success("Process initialized");
+ */
+
 void
 errh_Success (
   const char *msg,
@@ -284,8 +314,17 @@ errh_Success (
   log_message(NULL, 'S', msg, args);
   va_end(args);
 }
-
-/* Log an info message  */
+
+/**
+ * @brief Log an info message.
+ * The function has a variable argument list similar to sprintf.
+ *
+ * \param  msg  String with message to log. The string can contain format specifiers.
+ *
+ * Example
+ *
+ * errh_Info("Reset count %d", cnt);
+ */
 
 void
 errh_Info (const char *msg, ...)
@@ -296,8 +335,17 @@ errh_Info (const char *msg, ...)
   log_message(NULL, 'I', msg, args);
   va_end(args);
 }
-
-/* Log a warning message  */
+
+/**
+ * @brief Log a warning message.
+ * The function has a variable argument list similar to sprintf.
+ *
+ * \param  msg  String with message to log. The string can contain format specifiers.
+ *
+ * Example
+ *
+ * errh_Warning("Connection lost to %s", name);
+ */
 
 void
 errh_Warning(const char *msg, ...)
@@ -308,8 +356,17 @@ errh_Warning(const char *msg, ...)
   log_message(NULL, 'W', msg, args);
   va_end(args);
 }
-
-/* Log an error message  */
+
+/**
+ * @brief Log an error message.
+ * The function has a variable argument list similar to sprintf.
+ *
+ * \param  msg  String with message to log. The string can contain format specifiers.
+ *
+ * Example
+ *
+ * errh_Error("Configuration error");
+ */
 
 void
 errh_Error(const char *msg, ...)
@@ -320,8 +377,17 @@ errh_Error(const char *msg, ...)
   log_message(NULL, 'E', msg, args);
   va_end(args);
 }
-
-/* Log a fatal message  */
+
+/**
+ * @brief Log a fatal message.
+ * The function has a variable argument list similar to sprintf.
+ *
+ * \param  msg  String with message to log. The string can contain format specifiers.
+ *
+ * Example
+ *
+ * errh_Fatal("Process terminated, %m", sts);
+ */
 
 void
 errh_Fatal(const char *msg, ...)

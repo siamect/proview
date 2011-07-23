@@ -127,6 +127,7 @@ compileparent	<Compile parent window>					/info
 disabled	<Object is disabled>					/error
 maxsize		<MaxSize is larger than cell size>			/error
 noseqreset	<No SequenceReset object found in main object>		/error
+compmethod	<Invalid compile method>				/error
 
         .facility       FOE,280 /prefix = FOE__ ! Function object editor
 

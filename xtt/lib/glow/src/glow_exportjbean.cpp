@@ -2863,7 +2863,8 @@ void GlowExportJBean::arc( double x0, double y0, double width, double height,
 
 void GlowExportJBean::text( int x0, int y0, char *text,
 	glow_eDrawType drawtype, glow_eDrawType color_drawtype, int bold,
-	int idx, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
+	int idx, int rotate, glow_eExportPass pass, int *shape_cnt, int node_cnt, 
+	ofstream& fp)
 {
   double dim_x0, dim_x1, dim_y0, dim_y1;
 
@@ -2908,6 +2909,29 @@ void GlowExportJBean::text( int x0, int y0, char *text,
       // "    g.setColor(Color.black);" << endl <<
 "    g.setFont(new Font(\"Helvetica\", Font." << bold_str << ", " << 
 	text_size << "));" << endl;
+
+       if ( 45.0 <= rotate && rotate < 135.0) {
+	fp <<
+"    save_tmp = g.getTransform();" << endl <<
+"    g.rotate( - Math.PI * 3/ 2," <<
+	  x0 - int(dim_x0) + glow_cJBean_Offset << ", " << 
+	  y0 - int(dim_y0) + glow_cJBean_Offset << ");" << endl;
+      }
+      else if ( 135.0 <= rotate && rotate < 225.0) {
+	fp <<
+"    save_tmp = g.getTransform();" << endl <<
+"    g.rotate( - Math.PI," <<
+	  x0 - int(dim_x0) + glow_cJBean_Offset << ", " << 
+	  y0 - int(dim_y0) + glow_cJBean_Offset << ");" << endl;
+      }
+      else if ( 225.0 <= rotate && rotate < 315.0) {
+	fp <<
+"    save_tmp = g.getTransform();" << endl <<
+"    g.rotate( - Math.PI / 2," <<
+	  x0 - int(dim_x0) + glow_cJBean_Offset << ", " << 
+	  y0 - int(dim_y0) + glow_cJBean_Offset << ");" << endl;
+      }
+
       if ( ((GrowCtx *)ctx)->translate_on)
 	fp <<
 "    g.drawString( JopLang.transl(\"" << str_cnv( text) << "\")," << 
@@ -2918,6 +2942,12 @@ void GlowExportJBean::text( int x0, int y0, char *text,
 "    g.drawString( \"" << str_cnv( text) << "\"," << 
 	x0 - int(dim_x0) + glow_cJBean_Offset << ", " << 
 	y0 - int(dim_y0) + glow_cJBean_Offset << ");" << endl;
+
+      if ( 45.0 <= rotate && rotate < 315.0) {
+	fp <<
+"    g.setTransform( save_tmp);" << endl;
+      }
+
       break;
     }
     default:
@@ -3014,6 +3044,8 @@ void GlowExportJBean::annot( int x0, int y0, int number,
     case glow_eExportPass_Draw:
     {
       char adjustmentstr[200];
+      char adjustmentstr_vert[200];
+      char adjustmentstr_horiz[200];
       switch ( adjustment) {
       case glow_eAdjustment_Right:
 	if ( !frc_created) {
@@ -3029,7 +3061,8 @@ void GlowExportJBean::annot( int x0, int y0, int number,
 	fp <<
 "    FontRenderContext frc = g.getFontRenderContext();" << endl;
 	}
-	sprintf( adjustmentstr, "- (float)g.getFont().getStringBounds(annot%d, frc).getWidth()/2", number);
+	sprintf( adjustmentstr_vert, "- (float)g.getFont().getStringBounds(annot%d, frc).getWidth()/2", number);
+	sprintf( adjustmentstr_horiz, "- (float)g.getFont().getStringBounds(annot%d, frc).getWidth()/2", number);
 	break;
       default:
 	strcpy( adjustmentstr, "");
@@ -3044,25 +3077,74 @@ void GlowExportJBean::annot( int x0, int y0, int number,
 	//"    g.setColor(Color.black);" << endl <<
 "    g.setFont( annot" << number << "Font);" << endl <<
 "    save_tmp = g.getTransform();" << endl;
-      if ( antialiasing_on)
-        fp <<
+      if ( antialiasing_on) {
+	if ( adjustment == glow_eAdjustment_Center) {
+	  fp <<
+"    if ( (45.0 <= rotate && rotate < 135.0) || (225.0 <= rotate && rotate < 315.0)) {" << endl <<
+"      g.transform( AffineTransform.getScaleInstance( original_height/width *" << endl <<
+"      		height/original_width * 0.75, 1));" << endl <<
+"      if ( annot" << number << " != null)" << endl <<
+"        g.drawString( annot" << number << ", " << 
+	    x0 - int(dim_x0) + glow_cJBean_Offset << 
+	    " * original_height / width * height / original_width" << adjustmentstr_vert << ", " << 
+	    y0 - int(dim_y0) + glow_cJBean_Offset << "F);" << endl <<
+"    }" << endl <<
+"    else {" << endl <<
+"      g.transform( AffineTransform.getScaleInstance( original_width/width *" << endl <<
+"      		height/original_height * 0.75, 1));" << endl <<
+"      if ( annot" << number << " != null)" << endl <<
+"        g.drawString( annot" << number << ", " << 
+	    x0 - int(dim_x0) + glow_cJBean_Offset << 
+	    " * original_height / height * width / original_width" << adjustmentstr_horiz << ", " << 
+	    y0 - int(dim_y0) + glow_cJBean_Offset << "F);" << endl <<
+"    }" << endl;
+	}
+	else {
+	  fp <<
 "    g.transform( AffineTransform.getScaleInstance( original_width/width *" << endl <<
 "      		height/original_height * 0.75, 1));" << endl <<
 "    if ( annot" << number << " != null)" << endl <<
 "      g.drawString( annot" << number << ", " << 
-	x0 - int(dim_x0) + glow_cJBean_Offset << 
-	  " * original_height / height * width / original_width" << adjustmentstr << ", " << 
-	y0 - int(dim_y0) + glow_cJBean_Offset << "F);" << endl;
-      else
-        fp <<
+	    x0 - int(dim_x0) + glow_cJBean_Offset << 
+	    " * original_height / height * width / original_width" << adjustmentstr << ", " << 
+	    y0 - int(dim_y0) + glow_cJBean_Offset << "F);" << endl;
+	}
+      }
+      else {
+	if ( adjustment == glow_eAdjustment_Center) {
+	  fp <<
+"    if ( (45.0 <= rotate && rotate < 135.0) || (225.0 <= rotate && rotate < 315.0)) {" << endl <<
+"      g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_OFF);" << endl <<
+"      g.transform( AffineTransform.getScaleInstance( original_width/height *" << endl <<
+"      		width/original_height, 1));" << endl <<
+"      if ( annot" << number << " != null)" << endl <<
+"        g.drawString( annot" << number << ", " << 
+	    x0 - int(dim_x0) + glow_cJBean_Offset << 
+	    " * original_height / width * height / original_width" << adjustmentstr_vert << ", " << 
+	    y0 - int(dim_y0) + glow_cJBean_Offset << "F);" << endl <<
+"    } else {" << endl <<
+"      g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_OFF);" << endl <<
+"      g.transform( AffineTransform.getScaleInstance( original_width/width *" << endl <<
+"      		height/original_height, 1));" << endl <<
+"      if ( annot" << number << " != null)" << endl <<
+"        g.drawString( annot" << number << ", " << 
+	    x0 - int(dim_x0) + glow_cJBean_Offset << 
+	    " * original_height / height * width / original_width" << adjustmentstr_horiz << ", " << 
+	    y0 - int(dim_y0) + glow_cJBean_Offset << "F);" << endl <<
+"    }" << endl;
+	}
+	else {
+	  fp <<
 "    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_OFF);" << endl <<
 "    g.transform( AffineTransform.getScaleInstance( original_width/width *" << endl <<
 "      		height/original_height, 1));" << endl <<
 "    if ( annot" << number << " != null)" << endl <<
 "      g.drawString( annot" << number << ", " << 
-	x0 - int(dim_x0) + glow_cJBean_Offset << 
-	" * original_height / height * width / original_width" << adjustmentstr << ", " << 
-	y0 - int(dim_y0) + glow_cJBean_Offset << "F);" << endl;
+	    x0 - int(dim_x0) + glow_cJBean_Offset << 
+	    " * original_height / height * width / original_width" << adjustmentstr << ", " << 
+	    y0 - int(dim_y0) + glow_cJBean_Offset << "F);" << endl;
+	}
+      }
       fp <<
 "    g.setTransform( save_tmp);" << endl;
       break;

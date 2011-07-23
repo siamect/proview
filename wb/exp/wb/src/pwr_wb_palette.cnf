@@ -737,13 +737,16 @@ palette PlcEditorPalette
     class Count
     class DSup
     class Edge
+    class False
     class FirstScan
     class Inv
     class Or
     class Pulse
+    class PulseTrain
     class SR_R
     class SR_S
     class Timer
+    class True
     class Wait
     class Waith
     class XOr

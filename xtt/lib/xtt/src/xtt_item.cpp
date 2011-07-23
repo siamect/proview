@@ -331,7 +331,8 @@ int ItemBaseObject::open_attributes( XNavBrow *brow, double x, double y)
       if ( bd[i].flags & gdh_mAttrDef_Shadowed)
 	continue;
       if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
-	   bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
+	   (bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE &&
+	    bd[i].attr->Param.Info.Flags & PWR_MASK_POINTER))
 	continue;
       if ( (bd[i].attr->Param.Info.Type == pwr_eType_CastId ||
 	    bd[i].attr->Param.Info.Type == pwr_eType_DisableAttr) && 
@@ -451,12 +452,14 @@ int ItemBaseObject::open_attribute( XNavBrow *brow, double x, double y,
   attr_exist = 0;
   for ( i = 0; i < rows; i++) {
     if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
-	 bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
+	 (bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE &&
+	  bd[i].attr->Param.Info.Flags & PWR_MASK_POINTER))
       continue;
 
     if ( cdh_NoCaseStrcmp( attr_name, bd[i].attrName) == 0) {
       if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
-	   bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE) {
+	   (bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE &&
+	    bd[i].attr->Param.Info.Flags & PWR_MASK_POINTER)) {
 	// This parameter does not contain any useful information 
 	return XNAV__PRIVATTR;
       }
@@ -1035,7 +1038,8 @@ int ItemAttrObject::open_attributes( XNavBrow *brow, double x, double y)
       if ( bd[i].flags & gdh_mAttrDef_Shadowed)
 	continue;
       if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
-	   bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
+	   (bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE &&
+	    bd[i].attr->Param.Info.Flags & PWR_MASK_POINTER))
 	continue;
       if ( (bd[i].attr->Param.Info.Type == pwr_eType_CastId ||
 	    bd[i].attr->Param.Info.Type == pwr_eType_DisableAttr) && 
@@ -1456,9 +1460,9 @@ int ItemFile::open_children( XNavBrow *brow, double x, double y)
 
 ItemCollect::ItemCollect( XNavBrow *brow, pwr_tObjid item_objid, char *attr_name,
 	brow_tNode dest, flow_eDest dest_code, int attr_type_id, pwr_tTid attr_tid,
-	int attr_size, int item_is_root) :
+			  int attr_size, int attr_flags, int item_is_root) :
 	ItemBaseAttr( item_objid, attr_name,
-	attr_type_id, attr_tid, attr_size, 0, item_is_root, item_eDisplayType_Path)
+	attr_type_id, attr_tid, attr_size, attr_flags, item_is_root, item_eDisplayType_Path)
 {
   int sts;
   pwr_tOName obj_name;

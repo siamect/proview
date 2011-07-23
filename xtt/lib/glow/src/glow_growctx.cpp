@@ -3825,7 +3825,7 @@ void GrowCtx::get_text_extent( char *text, int len, glow_eDrawType draw_type,
   double tsize = mw.zoom_factor_y / mw.base_zoom_factor * (8+2*text_size);
 
   gdraw->get_text_extent( text, len, draw_type, text_size, font,
-			  &z_width, &z_height, &z_descent, tsize);
+			  &z_width, &z_height, &z_descent, tsize, 0);
 
   *width = double( z_width) / mw.zoom_factor_y;
   *height = double( z_height) / mw.zoom_factor_y;

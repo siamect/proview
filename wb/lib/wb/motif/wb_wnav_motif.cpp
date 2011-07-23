@@ -263,14 +263,14 @@ void WNavMotif::create_popup_menu( pwr_tAttrRef aref, int x, int y)
   wnav_set_avoid_deadlock( this, 2000);
 }
 
-Ge *WNavMotif::ge_new( char *graph_name)
+Ge *WNavMotif::ge_new( char *graph_name, int nojournal)
 {
-  unsigned int options;
+  unsigned int options = 0;
 
   if ( gbl.enable_comment)
-    options = ge_mOption_EnableComment;
-  else
-    options = 0;
+    options |= ge_mOption_EnableComment;
+  if ( nojournal)
+    options |= ge_mOption_IgnoreJournal;
 
   GeMotif *ge = new GeMotif( NULL, parent_wid, ldhses, 0, options, graph_name);
   return ge;

@@ -1614,6 +1614,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].type = glow_eType_String;
       attrinfo[i++].size = sizeof( op->text);
 
+      strcpy( attrinfo[i].name, "Adjustment");
+      attrinfo[i].value_p = &op->adjustment;
+      attrinfo[i].type = glow_eType_Adjustment;
+      attrinfo[i++].size = sizeof( op->adjustment);
+      
       strcpy( attrinfo[i].name, "Dynamic");
       op->get_dynamic( &dynamic, &dynsize);
       attrinfo[i].value_p = malloc( 1024);

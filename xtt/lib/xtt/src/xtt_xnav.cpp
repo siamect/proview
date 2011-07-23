@@ -776,6 +776,7 @@ int XNav::collect_insert( pwr_sAttrRef *arp)
   unsigned int 	a_offset;
   unsigned int 	a_dim;
   pwr_tTid	a_tid;
+  unsigned int	a_flags = 0;
   pwr_tAName	name;
 
   sts = gdh_AttrrefToName ( arp, name, sizeof(name), cdh_mNName);
@@ -787,7 +788,10 @@ int XNav::collect_insert( pwr_sAttrRef *arp)
     strcpy( attr, s+1);
 
     sts = gdh_GetAttributeCharAttrref( arp, &a_type_id, &a_size, &a_offset, 
-	&a_dim);
+				       &a_dim);
+    if ( EVEN(sts)) return sts;
+
+    sts = gdh_GetAttributeFlags( arp, &a_flags); 
     if ( EVEN(sts)) return sts;
 
     sts = gdh_GetAttrRefTid( arp, &a_tid);
@@ -805,7 +809,10 @@ int XNav::collect_insert( pwr_sAttrRef *arp)
     strcpy( attr, strchr(obj_name, '.') + 1);
 
     sts = gdh_GetAttributeCharAttrref( &ar, &a_type_id, &a_size, &a_offset, 
-	&a_dim);
+				       &a_dim);
+    if ( EVEN(sts)) return sts;
+
+    sts = gdh_GetAttributeFlags( &ar, &a_flags); 
     if ( EVEN(sts)) return sts;
 
     sts = gdh_GetAttrRefTid( arp, &a_tid);
@@ -813,7 +820,7 @@ int XNav::collect_insert( pwr_sAttrRef *arp)
   }
 
   item = new ItemCollect( collect_brow, arp->Objid, attr, NULL, 
-		flow_eDest_IntoLast, a_type_id, a_tid, a_size, 0);
+			  flow_eDest_IntoLast, a_type_id, a_tid, a_size, a_flags, 0);
   message( 'I', "Object inserted");
   return 1;
 }
@@ -1289,8 +1296,13 @@ int XNav::check_attr_value()
   switch( base_item->type) {
   case xnav_eItemType_Attr:
   case xnav_eItemType_AttrArrayElem:
-  case xnav_eItemType_Collect:
-    return 1;
+  case xnav_eItemType_Collect: {
+    ItemBaseAttr *item = (ItemBaseAttr *)base_item;
+    if ( item->noedit)
+      return XNAV__NOCHANGE;
+    else
+      return 1;
+  }
   case xnav_eItemType_Local: {
     ItemLocal	*item;
 

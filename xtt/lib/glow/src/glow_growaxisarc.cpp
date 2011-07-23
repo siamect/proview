@@ -287,7 +287,7 @@ void GrowAxisArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, v
       format_text( text, format, min_value + increment);
     ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype,
 				 max( 0, text_idx), glow_eFont_Helvetica, 
-				 &z_width, &z_height, &z_descent, tsize);
+				 &z_width, &z_height, &z_descent, tsize, 0);
 
     // z_descent=0;
     double line_angle = (double)angle2 / (lines - 1);
@@ -318,7 +318,7 @@ void GrowAxisArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, v
 	  format_text( text, format, min_value + i * increment);
 	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype,
 				       max( 0, text_idx), glow_eFont_Helvetica, 
-				       &z_width, &z_height, &z_descent, tsize);
+				       &z_width, &z_height, &z_descent, tsize, 0);
 	  
 	  if ( i == lines - 1 && angle1 == 0 && angle2 == 180) {
 	    //yt = yt - (z_height-z_descent)/2;
@@ -334,7 +334,7 @@ void GrowAxisArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, v
 	  }
 	  ctx->gdraw->text( w, xt, yt,
 			    text, strlen(text), text_drawtype, text_color_drawtype, 
-			    text_idx, highlight, 0, glow_eFont_Helvetica, tsize);
+			    text_idx, highlight, 0, glow_eFont_Helvetica, tsize, 0);
 	}
       }
     }

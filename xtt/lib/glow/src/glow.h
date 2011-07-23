@@ -1465,6 +1465,7 @@ typedef enum {
 	glow_eSave_GrowText_original_color_drawtype = 3008,
 	glow_eSave_GrowText_trf 		= 3009,
 	glow_eSave_GrowText_font 		= 3010,
+	glow_eSave_GrowText_adjustment 		= 3011,
 	glow_eSave_GrowBar_max_value 		= 3100,
 	glow_eSave_GrowBar_min_value 		= 3101,
 	glow_eSave_GrowBar_bar_value 		= 3102,

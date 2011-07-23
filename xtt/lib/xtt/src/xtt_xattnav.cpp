@@ -129,6 +129,9 @@ int XAttNav::check_attr( int *multiline, brow_tObject *node, char *name,
     pwr_tUInt32 a_size, a_offs, a_elem;
     ItemBaseAttr *item = (ItemBaseAttr *)base_item;
 
+    if ( item->noedit)
+      return XATT__NOCHANGE;
+      
     strcpy( name, item->attr);
 
     sts = gdh_GetAttributeCharacteristics( name, &a_tid, &a_size, &a_offs, &a_elem);

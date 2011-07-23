@@ -2617,7 +2617,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *tools_textsize_omenu = (GtkWidget *)g_object_new( GTK_TYPE_OPTION_MENU, 
 								"menu", textsize_menu, NULL);
 
-  gtk_option_menu_set_history( GTK_OPTION_MENU(tools_textsize_omenu), 0);
+  gtk_option_menu_set_history( GTK_OPTION_MENU(tools_textsize_omenu), 2);
   g_object_set( tools_textsize_omenu, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools3, tools_textsize_omenu, "Text Size", "");
 
@@ -2934,9 +2934,10 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 
   // Graph component
   int sts;
+  unsigned int opt = x_options & ge_mOption_IgnoreJournal ? graph_mOption_IgnoreJournal : 0;
 
   graph = new GraphGtk( this, GTK_WIDGET(toplevel), "GraphGtk", &grow_widget, &sts, "pwrp_pop:",
-			graph_eMode_Development, 1);
+			graph_eMode_Development, 1, 0, 0, 0, 0, opt);
   graph->message_cb = &Ge::message_cb;
   graph->get_current_subgraph_cb = &Ge::subpalette_get_select;
   graph->get_current_colors_cb = &Ge::colorpalette_get_current;
