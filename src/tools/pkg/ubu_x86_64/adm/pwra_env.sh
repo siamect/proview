@@ -28,7 +28,7 @@ pwra_set_func()
     baseroot=${baseroot%/}
     if [ ! -e "$baseroot" ]; then
       echo "Base $baseroot doesn't exist"
-    else
+    elif [ "$3" != "cross" ]; then
       if [ ! -e $baseroot/$os/$hw/exp/exe/pwrp_env.sh ]; then
         echo "Not a base directory: $baseroot"
         return
@@ -116,14 +116,21 @@ EOF
 
 pwra_parse ()
 {
+  unamestr=`eval uname`
   machine=`eval uname -m`
-  if [ "$machine" != "x86_64" ]; then
-    machine="x86"
+  if [ $unamestr == "Darwin" ]; then
+    os="os_macos"
+    hw="hw_x86_64"
+  elif [ $unamestr == "FreeBSD" ]; then
+    os="os_freebsd"
+    hw="hw_x86_64"
+  else
+    if [ $machine != "x86_64" ]; then
+      machine="x86"
+    fi
+    os="os_linux"  
+    hw="hw_"$machine
   fi
-  platform=$machine"_linux"
-  os="os_linux"
-  hw="hw_"$machine
-  #mysql_socket="--socket /var/lib/mysql/mysql.sock"
 
   local cmd
 

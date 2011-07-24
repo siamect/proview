@@ -2607,7 +2607,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	fprintf( fp, "let OpSys_ARM_LINUX=256\n\n");
 
 	if ( strcmp( release, "") != 0)
-	  fprintf( fp, "source $pwra_db/pwra_env.sh set base %s\n\n", release);
+	  fprintf( fp, "source $pwra_db/pwra_env.sh set base %s cross\n\n", release);
 
 	if ( strcmp( cc, "") != 0) {
 	  fprintf( fp, "export pwre_cc=%s\n", cc);

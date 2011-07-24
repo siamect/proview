@@ -28,7 +28,7 @@ pwra_set_func()
     baseroot=${baseroot%/}
     if [ ! -e "$baseroot" ]; then
       echo "Base $baseroot doesn't exist"
-    else
+    elif [ "$3" != "cross" ]; then
       if [ ! -e $baseroot/$os/$hw/exp/exe/pwrp_env.sh ]; then
         echo "Not a base directory: $baseroot"
         return
