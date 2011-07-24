@@ -1,9 +1,15 @@
 #!/bin/bash
-#
-# Startscript för PWR
-#
+### BEGIN INIT INFO
+# Provides:          pwr
+# Required-Start:    $network
+# Required-Stop:     $network
+# Default-Start:     2
+# Default-Stop:      1
+# Short-Description: Start Proview Runtime Environment.
+### END INIT INFO
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
 wrapper="/tmp/rt_ini_wrapper"
 killer="/tmp/pwr_killer"
 

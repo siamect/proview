@@ -163,8 +163,7 @@ rm -r $pkgroot/usr/pwrrt/exe/en_us
 rm -r $pkgroot/usr/pwrrt/exe/sv_se
 rm -r $pkgroot/usr/pwrrt/exe/fr_fr
 rm -r $pkgroot/usr/pwrrt/exe/de_de
-rm -r $pkgroot/usr/pwrrt/exe/ch_zn
-rm -r $pkgroot/usr/pwrrt/doc
+rm -r $pkgroot/usr/pwrrt/exe/zh_cn
 rm -r $pkgroot/usr/pwrrt/db
 rm -r $pkgroot/usr/pwrrt/doc
 rm -r $pkgroot/usr/pwrrt/inc
