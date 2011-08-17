@@ -149,31 +149,31 @@ This ends in a Signal list, that is a list of all input and output signals of th
 
 At this point the question of which control system is to be used is raised, and one alternative
 is of course Proview. You also have to decide which I/O-system to use and how to divide the
-function in different process stations.
+function among the different process stations.
 
 <h1>IO-systems
 The task of the I/O-system is to bring signals from the process to the control system, and to
 put out signals to influence the process. The signals are usually digital or analog, but
 there are also other types as integers and counters. You can choose between a rack and card
-system connected to the process station, or a distributed I/O, e.g. profibus.
+system connected to the process station, or distributed I/O, e.g. profibus.
 
 <h1>Configure the system
 When it's time to start to configure the system, you first create a new project in the
-Administrator. The Administrator is a tool for creating orders among all the projects, as there
+Administrator. The Administrator is a tool for creating order among all the projects, as there
 can be plenty of them in time.
 
 The configuration of a system is mainly done by creating objects in a database, the Workbench. 
-There is a large amount of objects to configure everything from IO-channels to PLC programs.
+There are a large amount of objects to configure everything from IO-channels to PLC programs.
 The Proview Object Reference Manual contains over 800 different types of objects. The objects
 are placed in a tree structure, and you use a tool called the Configurator to create objects and
 to navigate in the object tree.
 
-The object tree is separated in two parts, the Plant hierarchy and the Node hierarchy.
+The object tree is divided in two parts, the Plant hierarchy and the Node hierarchy.
 The Plant hierarchy reflects the different functions in the plant and in the process, while
 the Node hierarchy reflects the hardware of the control system, with computers, I/O-racks and
 I/O-cards.
 
-When the control system later is started in runtime, a copy of the object tree is created in
+When the control system is started later in runtime, a copy of the object tree is created in
 a realtime database, rtdb. The transfer from the Workbench to rtdb is done with so called
 loadfiles, files that are generated from the Workbench and contain all its objects.
 
@@ -356,7 +356,7 @@ have a material planning module in the system, an object is created for each mat
 is processed in the plant. When the processing is completed, the object is removed.
 
 <h2>SystemVolume
-The system volume is a dynamic volume that reside in every node, and that keeps various
+The system volume is a dynamic volume that resides in every node, and that keeps various
 system objects.
 
 <h2>DirectoryVolume
@@ -364,9 +364,9 @@ The Directoy volume only exists in the development environment. Here the volumes
 the system are configured.
 
 <h1>Volyme Identity
-Each volume has a unic identity, that is written with four numbers, separated with points,
+Each volume has a unique identity, that is written with four numbers, separated by periods,
 e.g. "_V0.3.4.23". The prefix _V states that it is a volume identity. To verify that the volume
-identities are unique, there is a global volumelist that contains all volumes. Before creating
+identities are unique, there is a global volume list that contains all volumes. Before creating
 a project, the volumes of the project should be registered in the volume list.
 </topic>
 
@@ -443,12 +443,12 @@ name and the name of all the ancestors, e.g
 <c>VolTrafficCross1:TrafficCross1-ControlSignals-Reset
 
 If you want to be more specific and point out an attribute in an object, you add the attribute
-name to the object name with a point between, e.g.
+name to the object name with a period between, e.g.
 
 <c>VolTrafficCross1:TrafficCross1-ControlSignals-Reset.ActualValue
 
 Also an attribute can have several segments, since an attribute can consist of an object. The
-attribute name segments are separated by points, e.g
+attribute name segments are separated by periods, e.g
 
 <c>VolTrafficCross1:Hydr-Valve.OpenSw.ActualValue
 </topic>
@@ -1047,7 +1047,7 @@ volumes are displayed. The next step is to configure a RootVolume.
 Configure a Root Volume
 A root volume is opened from the volume selection window. Select the volume and click on the 
 Ok button. This will start the configuration editor for the root volume. As for the 
-DirectoryVolume it is separated in two windows, but this time, the left window shows the 
+DirectoryVolume it is split in two windows, but this time, the left window shows the 
 plant configuration and the right the node configuration.
 
 <h1>Plant Configuration
@@ -1929,7 +1929,7 @@ A Step is used to describe a state in the process. The following applies to a st
 <image> dg_fig50.gif
 
 In each sequence you must have an initial step (InitStep) which differs from a usual step 
-at the following points: 
+in the following way: 
 
 - You should only have one initial step in a sequence. 
 - When the program starts its execution, the initial step is active. 
@@ -2067,7 +2067,7 @@ otherwise the expression may be misinterpreted at the execution.
 
 The expression can contain advanced C code with arrays and pointers. When you write these, you 
 should be aware that indexing outside arrays, or erroneous pointers might cause the
-execution of the plcprogram to terminate.
+execution of the plc-program to terminate.
 
 <h1>Alarm Supervision 
 In Proview it is possible to supervise analog and digital signals. Supervision of analog
@@ -3386,7 +3386,7 @@ is fetched from the attribute ActualValue.
 Application programs are often put into an infinite loop, supervising attributes in the
 database and reacting to certain changes. In this case you preferably direct link to the
 attribute, i.e. get a pointer. This is done by gdh_RefObjectInfo(). In the example below
-the program is separated in an init() function direct linking to attributes, a scan()
+the program is split in an init() function direct linking to attributes, a scan()
 function containing the supervision and control functions, and a close() function removing
 the direct links.
 
@@ -3985,9 +3985,9 @@ by an application, also the rack and agent of the card have to be handled by the
 As the Process attribute is a bitmask, a unit can be handled by several processes by
 setting several bits in the mask. If you, for example, have several cards in a rack, and some 
 of the cards should be handled by the plc-process and some by an application, the rack unit 
-has to be handled by both the plc and the application. How and if it works to handle a 
-unit from several processes depends on how the I/O methods for the unit are written.
-For example for Profibus, you can not separate the handling of slaves in different
+has to be handled by both the plc and the application. Whether it works, to handle a
+unit from several processes, depends on how the I/O methods for the unit are written.
+For example for Profibus, you can not divide the handling of slaves into different
 processes.
 
 <c>#include rt_io_base.h
@@ -4317,7 +4317,7 @@ In the Text attribute, the button text is stated.
 
 <b>WebLink
 A WebLink object configures a button in the menu to open an arbitrary URL. In WebTarget
-is stated where the new page is put, in a separate frame, the right frame in the
+is stated where the new page is put, in a separate frame, or the right frame in the
 parent frame (both the menu and the right frame).
 
 <b>Open a Ge graph as a java applet
@@ -4812,10 +4812,10 @@ Always reset with 'pwr kill' before a new start attempt.
 <topic>configurator_refman
 The Configurator
 
-The configurator is used to navigate in and configure the Workbench.
-The configurator displays the object in one volume. The objects are usually separated in two
+The configurator is used to navigate in, and configure the Workbench.
+The configurator displays the objects in one volume. The objects are usually separated in two
 windows, a left and a right, and how the separation is done depends on what type of volumes
-that are handled.
+are handled.
 
 - For rootvolumes and subvolumes, the plant hierarchy is displayed in the left window, and
   the node hierarchy in the right.
@@ -5253,8 +5253,8 @@ the object editor is opened for the object. The object editor is opened in follo
 - select the object and activate 'Functions/Open object' in the menu.
 
 
-From the object editor you can change the values of various attributes. The attribute for a
-plc object is separated in input attributes, internal attributes and output attributes.
+From the object editor you can change the values of various attributes. The attributes for a
+plc object are separated into input attributes, internal attributes and output attributes.
 
 <b>Inputs
 The value of an input attribute is fetched from another function block, via a connection.
@@ -5328,11 +5328,11 @@ a thick, dashed line.
 
 <b>Reference connections
 If the editor has difficulties to find a path for the connection between the input and output
-pin, because there are too many objects in the way, or because they reside in separate 
+pin, because there are too many objects in the way, or because they reside in different 
 documents, the connections are drawn as reference connections. Reference connections can also
 be drawn by activating 'View/Reference connection' in the menu.
 
-<b>Referens connection
+<b>Reference connection
 <image> dg_fig39.gif
 
 <bookmark>feedback_connection
@@ -5456,7 +5456,7 @@ c compiler is not activated, thus possible c code errors are not detected.
 
 <h1>Cut and Paste
 The plc editor contains a paste buffer. The paste buffer is common for all windows, which
-makes it possible to copy between separate windows. With the functions 'Edit/Copy' and 
+makes it possible to copy between different windows. With the functions 'Edit/Copy' and 
 'Edit/Cut' in the menu, the selected objects are copied to the paste buffer (Cut also removes
 them from the working area). The function 'Edit/Paste' copies the paste buffer to the working
 area. The copied objects are now moved with the cursor, and you place them on the correct
@@ -5730,7 +5730,7 @@ Link
 <i>The <link> tag is a link to another help topic. The <link> tag should be placed at the 
 end of the line. When the line of the link is activated the topic of the link will be 
 displayed. The link tag should be followed by the topic, and can also be followed by a 
-bookmark and the helpfile where the topic resides, separated with comma. If a line contains 
+bookmark and the helpfile where the topic resides, separated by comma. If a line contains 
 a link, it will be marked with an arrow.
 
 <i>'some text'   <link> 'topic'[,'bookmark'][,'helpfile']
@@ -5988,7 +5988,7 @@ Also the users that the parent has inherited from its parent are inherited. A sy
 override an inherited user by defining the username in its own systemgroup.
 
 A systemgroup is referred to by the 'path'-name in the hierarchy, where the names are separated
-by points, e.g. 'ssab.hql.se1', where ssab is the root group, and se1 the lowest level in the
+by periods, e.g. 'ssab.hql.se1', where ssab is the root group, and se1 the lowest level in the
 hierarchy.
 
 A Proview system is connected to a systemgroup by stating the systemgroup in the System 
@@ -6059,7 +6059,7 @@ Proview user database V1.0.0
 <c>. . . . . . amanda     Operator4 (512)
 
 Look at the example above. This is a listing of a user database. To the left, you see the
-system groups, and the number of points mark their level in the hierarchy. In the same row
+system groups, and the number of periods mark their level in the hierarchy. In the same row
 the attribute of the system group is written. Under each systemgroup, its users with
 privileges are found. Thus the systemgroup ssab has the users sysansv, skiftel and 55.
 
@@ -6697,7 +6697,7 @@ elements in Elements.
 Attribute objects can also contain attributes that are attribute objects. The number of levels
 are limited to 20, and the total attribute name is limited to 255 characters.
 
-An attribute in an attribute object is referred to with point as delimiter, i.e. the 
+An attribute in an attribute object is referred to with periods as delimiter, i.e. the 
 attribute Description in the attribute object Pump in object o, is referred to with the name
 'o.Pump.Description'. If Pump also is an array of pumpobjects, the name of the Description
 attribute in the first pump object is 'o.Pump[0].Description'.
@@ -7743,7 +7743,7 @@ group are defined. You can also build a hierarchy of system groups where child g
 the users of their parent, and additional users can be defined for each child.
 
 A system is connected to a system group by the SystemGroup attribute in the $System object. 
-The notation for a system group in a hierarchy is the names of the group separated by a point, 
+The notation for a system group in a hierarchy is the names of the group separated by a period, 
 for example 'Main.West.F1'.
 
 In the example below Eric is responsible for all the systems in the plant, and is defined on 
@@ -7804,7 +7804,7 @@ The registration is done by the administrator:
 - Logout with the command 'logout'.
 
 <h2>Volume name
-The name of the volume, a unic name with max 31 characters.
+The name of the volume, a unique name with max 31 characters.
 
 <h2>Volume Identity
 The volume identity is a 32 bit word specified in the form v1.v2.v3.v4 where v1, v2, v3 and v4 
