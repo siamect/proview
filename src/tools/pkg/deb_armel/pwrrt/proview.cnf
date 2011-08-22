@@ -1,0 +1,18 @@
+#
+# Configuration file for Proview
+#
+# Default QCOM Bus Id
+#
+qcomBusId              1
+#
+# Web directory
+#
+webDirectory            /pwrp/common/web
+#
+# Default privileges for SevXtt: Read, Admin or None
+#
+sevXttDefaultPriv       Read
+
+
+
+

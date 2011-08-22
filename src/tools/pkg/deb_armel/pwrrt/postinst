@@ -1,0 +1,147 @@
+#!/bin/bash
+set -e
+if [ "$pwrrt_xtrace" != "" ]; then
+  set -o xtrace
+fi
+
+# Automatically added by dh_installdocs
+if [ "$1" = "configure" ]; then
+        if [ -d /usr/doc -a ! -e /usr/doc/pwrtest -a -d /usr/share/doc/pwrtest ]; then
+                ln -sf ../share/doc/pwrtest /usr/doc/pwrtest
+        fi
+fi
+# End automatically added section
+
+
+proot="/pwrp"
+aroot="/usr/pwrp/adm"
+
+
+chmod u+s /usr/pwrrt/exe/rt_ini
+chmod u+s /usr/pwrrt/exe/rt_rtt
+#chmod u+s /usr/pwrrt/exe/rt_xtt
+chmod u+s /usr/pwrrt/exe/rt_bck
+chmod u+s /usr/pwrrt/exe/rt_gdhget
+chown root /usr/pwrrt/exe/rs_remote_alcm
+chmod u+s /usr/pwrrt/exe/rs_remote_alcm
+if getent group dialout > /dev/null; then
+  chgrp dialout /usr/pwrrt/exe/rs_remote_serial
+  chmod ug+s /usr/pwrrt/exe/rs_remote_serial
+  chgrp dialout /usr/pwrrt/exe/rs_remote_3964r
+  chmod ug+s /usr/pwrrt/exe/rs_remote_3964r
+fi
+chown root /usr/pwrrt/exe/rt_prio
+chmod u+s /usr/pwrrt/exe/rt_prio
+chown root /usr/pwrrt/exe/rt_mozilla
+chmod u+s /usr/pwrrt/exe/rt_mozilla
+
+# Copy configuration files
+new_cnf=0
+if [ ! -e /etc/proview.cnf ]; then
+  cp /usr/pwrrt/cnf/proview.cnf /etc
+  new_cnf=1
+fi
+
+# Add pwrp_profile to profile
+if ! grep -q "/etc/pwrp_profile\b" /root/.bashrc; then
+  cat >> /root/.bashrc <<-EOF
+	if [ -e /etc/pwrp_profile ]; then
+	  source /etc/pwrp_profile
+	fi
+EOF
+fi
+
+# Create startup link
+set +e
+checklink=`eval ls /etc/rc2.d/S90pwr 2>/dev/null`
+set -e
+if [ "$checklink" != "" ]; then
+  rm /etc/rc2.d/S90pwr
+fi
+ln -s /etc/init.d/pwr /etc/rc2.d/S90pwr
+
+set +e
+checklink=`eval ls /etc/rc2.d/S91gdhserver 2>/dev/null`
+set -e
+if [ "$checklink" != "" ]; then
+  rm /etc/rc2.d/S91gdhserver
+fi
+
+# Create project
+new_project=0
+if [ ! -e $proot ]; then
+  new_project=1
+
+  mkdir $proot
+  mkdir $proot/common
+  mkdir $proot/common/inc
+  mkdir $proot/common/load
+  mkdir $proot/common/log
+  mkdir $proot/common/loghist
+  mkdir $proot/common/db
+  mkdir $proot/common/web
+  mkdir $proot/arm_linux
+  mkdir $proot/arm_linux/exe
+  mkdir $proot/arm_linux/lib
+  mkdir $proot/arm_linux/obj
+  mkdir $proot/arm_linux/lis
+
+fi
+
+if [ ! -e $aroot/db ]; then
+  mkdir -p $aroot/db
+fi
+
+# Copy jar-files to web directory
+if [ -e /etc/proview.cnf ]; then
+  set +e
+  web_dir=`eval cat /etc/proview.cnf | grep "\\bwebDirectory\\b" | awk '{print $2}'`
+  set -e
+
+  if [ -e "$web_dir" ]; then
+    cp /usr/pwrrt/lib/pwr_rt_client.jar $web_dir
+    cp /usr/pwrrt/lib/pwr_jop.jar $web_dir
+    cp /usr/pwrrt/lib/pwr_jopc.jar $web_dir
+  fi
+fi
+
+changes=0
+if [ $new_cnf -eq 1 ]; then
+  changes=1
+elif [ $new_project -eq 1 ]; then
+  changes=1
+fi
+
+if [ $changes -ne 0 ]; then
+  echo ""
+  echo ""
+  echo "***********************************************************"
+  echo "  Don't forget to do this :"
+  echo ""
+fi
+
+if [ $new_cnf -eq 1 ]; then
+  echo "-- Enter QcomBusId in /etc/proview.cnf"
+fi
+
+if [ $new_project -eq 1 ]; then
+  nodename=`eval uname -n`
+  echo "-- Distribute project to $nodename"
+fi
+
+if [ $changes -ne 0 ]; then
+  echo ""
+  echo "***********************************************************"
+  echo ""
+fi
+
+
+
+
+
+
+
+
+
+
+
