@@ -116,6 +116,44 @@ typedef struct {
     }									\
   }
 
+#define NMpsCell60SubWind_exec( object, subwindow)			\
+  if ( !(object->InitTime && !object->ReloadDone))			\
+  {									\
+    object->CurrentIndex = 0;						\
+    memset( &(object->DataCurrentP), 0,	 				\
+		sizeof( plc_t_DataInfo) - 16);				\
+    subwindow;								\
+    for ( object->Idx = 1; object->Idx <=	 			\
+	object->LastIndex; object->Idx++ )				\
+    {									\
+      memcpy( &(object->DataCurrentP), 					\
+		(char *) &object->Data[0].DataP +	       		\
+		(object->Idx - 1) * sizeof( plc_t_DataInfo), 		\
+		sizeof( plc_t_DataInfo) - 16);				\
+      object->CurrentIndex = object->Idx;				\
+      subwindow;							\
+    }									\
+  }
+
+#define NMpsCell120SubWind_exec( object, subwindow)			\
+  if ( !(object->InitTime && !object->ReloadDone))			\
+  {									\
+    object->CurrentIndex = 0;						\
+    memset( &(object->DataCurrentP), 0,	 				\
+		sizeof( plc_t_DataInfo) - 16);				\
+    subwindow;								\
+    for ( object->Idx = 1; object->Idx <=	 			\
+	object->LastIndex; object->Idx++ )				\
+    {									\
+      memcpy( &(object->DataCurrentP), 					\
+		(char *) &object->Data[0].DataP +	       		\
+		(object->Idx - 1) * sizeof( plc_t_DataInfo), 		\
+		sizeof( plc_t_DataInfo) - 16);				\
+      object->CurrentIndex = object->Idx;				\
+      subwindow;							\
+    }									\
+  }
+
 /*_*
   NMpsStoreCellSubWind
 
@@ -133,6 +171,44 @@ typedef struct {
     {									\
       memcpy( &(object->DataCurrentP), 					\
 		(char *) &object->Data1P +				\
+		(object->Idx - 1) * sizeof( plc_t_DataInfo), 		\
+		sizeof( plc_t_DataInfo) - 16);				\
+      object->CurrentIndex = object->Idx;				\
+      subwindow;							\
+    }									\
+  }
+
+#define NMpsStoreCell60SubWind_exec( object, subwindow)			\
+  if ( !(object->InitTime && !object->ReloadDone))			\
+  {									\
+    object->CurrentIndex = 0;						\
+    memset( &(object->DataCurrentP), 0,	 				\
+		sizeof( plc_t_DataInfo) - 16);				\
+    subwindow;								\
+    for ( object->Idx = 1; object->Idx <=	 			\
+	object->LastIndex; object->Idx++ )				\
+    {									\
+      memcpy( &(object->DataCurrentP), 					\
+		(char *) &object->Data[0].DataP +	       		\
+		(object->Idx - 1) * sizeof( plc_t_DataInfo), 		\
+		sizeof( plc_t_DataInfo) - 16);				\
+      object->CurrentIndex = object->Idx;				\
+      subwindow;							\
+    }									\
+  }
+
+#define NMpsStoreCell120SubWind_exec( object, subwindow)       		\
+  if ( !(object->InitTime && !object->ReloadDone))			\
+  {									\
+    object->CurrentIndex = 0;						\
+    memset( &(object->DataCurrentP), 0,	 				\
+		sizeof( plc_t_DataInfo) - 16);				\
+    subwindow;								\
+    for ( object->Idx = 1; object->Idx <=	 			\
+	object->LastIndex; object->Idx++ )				\
+    {									\
+      memcpy( &(object->DataCurrentP), 					\
+		(char *) &object->Data[0].DataP +	       		\
 		(object->Idx - 1) * sizeof( plc_t_DataInfo), 		\
 		sizeof( plc_t_DataInfo) - 16);				\
       object->CurrentIndex = object->Idx;				\
