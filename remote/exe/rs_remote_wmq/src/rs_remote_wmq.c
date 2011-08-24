@@ -228,7 +228,7 @@ unsigned int wmq_receive()
 
     remtrans = rn.remtrans;
     while(remtrans && search_remtrans) {
-      if ((strncmp(remtrans->objp->TransName, (char *) MsgDesc.MsgId, MQ_MSG_ID_LENGTH) == 0) &&
+      if ((strncmp(remtrans->objp->TransName, (char *) MsgDesc.CorrelId, MQ_CORREL_ID_LENGTH) == 0) &&
 	  (remtrans->objp->Direction == REMTRANS_IN)) {
         search_remtrans = false;
         sts = RemTrans_Receive(remtrans, (char *) &Buffer, DataLength);
@@ -287,14 +287,20 @@ unsigned int wmq_send(remnode_item *remnode,
   //  pmo.Options |= MQPMO_NEW_MSG_ID;
   //  pmo.Options |= MQPMO_NEW_CORREL_ID;
 
-  strncpy((char *) md.MsgId, remtrans->TransName, MQ_MSG_ID_LENGTH) ;
-  memcpy(md.CorrelId, MQCI_NONE, sizeof(md.CorrelId));
+  strncpy((char *) md.CorrelId, remtrans->TransName, MQ_CORREL_ID_LENGTH) ;
+  memcpy(md.MsgId, MQCI_NONE, sizeof(md.MsgId));
 
   if ((remtrans->Address[0] <= MQPER_PERSISTENCE_AS_Q_DEF) &&
       (remtrans->Address[0] >= MQPER_NOT_PERSISTENT))
     md.Persistence = remtrans->Address[0];
   else 
     md.Persistence = MQPER_NOT_PERSISTENT; // | MQPRE_NOT_PERSISTENT
+
+  if (remtrans->Address[1] > 0) {
+    md.Expiry = remtrans->Address[1] * 10.0; // s to 1/10 s
+  }else {
+    md.Expiry = MQEI_UNLIMITED;
+  }
   
   messlen = buf_size;
 
