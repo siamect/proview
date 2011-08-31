@@ -117,6 +117,7 @@ static gsdml_sTag taglist[] = {
   { "ModuleItemRef", gsdml_eTag_ModuleItemRef, gsdml_eType_, 0, 0, 1},
   { "VirtualSubmoduleList", gsdml_eTag_VirtualSubmoduleList, gsdml_eType_, 0, 0, 1},
   { "VirtualSubmoduleItem", gsdml_eTag_VirtualSubmoduleItem, gsdml_eType_, 0, 0, 1},
+  { "SubmoduleItem", gsdml_eTag_VirtualSubmoduleItem, gsdml_eType_, 0, 0, 1},
   { "IOData", gsdml_eTag_IOData, gsdml_eType_, 0, 0, 1},
   { "Input", gsdml_eTag_Input, gsdml_eType_, 0, 0, 1},
   { "Output", gsdml_eTag_Output, gsdml_eType_, 0, 0, 1},
@@ -2161,6 +2162,20 @@ void *pn_gsdml::object_factory( gsdml_eTag id)
       ((gsdml_ModuleItem *)p)->VirtualSubmoduleList = o;
     else {
       error_message_line( "Misplaced VirtualSubmoduleList");
+      return 0;
+    }
+
+    ro = o;
+    break;
+  }
+  case gsdml_eTag_SubmoduleList: {
+    gsdml_SubmoduleList *o = new gsdml_SubmoduleList( this);
+
+    void *p;
+    if ( (p = get_object_stack( gsdml_eTag_ApplicationProcess)))
+      ((gsdml_ApplicationProcess *)p)->SubmoduleList = o;
+    else {
+      error_message_line( "Misplaced SubmoduleList");
       return 0;
     }
 
@@ -4968,6 +4983,12 @@ gsdml_ModuleList::~gsdml_ModuleList()
     delete ModuleItem[i];
 }
 
+void gsdml_SubmoduleList::build()
+{
+  for ( unsigned int i = 0; i < SubmoduleItem.size(); i++)
+    SubmoduleItem[i]->build();
+}
+
 gsdml_SubmoduleList::~gsdml_SubmoduleList()
 {
   for ( unsigned int i = 0; i < SubmoduleItem.size(); i++)
@@ -5121,6 +5142,8 @@ void gsdml_ApplicationProcess::build()
     DeviceAccessPointList->build();
   if ( ModuleList)
     ModuleList->build();
+  if ( SubmoduleList)
+    SubmoduleList->build();
   if ( ValueList)
     ValueList->build();
   if ( ChannelDiagList)

@@ -88,8 +88,10 @@ typedef enum {
  	attrnav_eItemType_PnPortSubmodule,
  	attrnav_eItemType_PnSlot,
  	attrnav_eItemType_PnSubslot,
+ 	attrnav_eItemType_PnSubslotPhys,
  	attrnav_eItemType_PnModuleInfo,
 	attrnav_eItemType_PnModuleType,
+	attrnav_eItemType_PnSubmoduleType,
 	attrnav_eItemType_PnParRecord,
 	attrnav_eItemType_PnParValue,
 	attrnav_eItemType_PnParEnum,
@@ -332,6 +334,23 @@ class ItemPnSubslot : public ItemPn {
   int open_children( GsdmlAttrNav *attrnav, double x, double y);
 };
 
+//! Item for a physical subslot.
+class ItemPnSubslotPhys : public ItemPn {
+ public:
+  ItemPnSubslotPhys( GsdmlAttrNav *attrnav, const char *item_name, GsdmlSubslotData *item_subslotdata, 
+		     gsdml_VirtualSubmoduleItem *item_virtualsubmodule, int item_slot_idx,
+		     gsdml_UseableSubmodules *item_us,
+		 brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnSubslotPhys() {}
+
+  GsdmlSubslotData *subslotdata;
+  gsdml_VirtualSubmoduleItem *virtualsubmodule;
+  gsdml_UseableSubmodules *us;
+  int slot_idx;
+  
+  int open_children( GsdmlAttrNav *attrnav, double x, double y);
+};
+
 //! Item for the DeviceAccessPoint, slot 0
 class ItemPnDAP : public ItemPn {
  public:
@@ -412,6 +431,25 @@ class ItemPnModuleType : public ItemPn {
 
   int	    slot_number;
   int	    slot_idx;
+  int 	    old_value;
+  int 	    first_scan;
+  
+  int open_children( GsdmlAttrNav *attrnav, double x, double y);
+  int scan( GsdmlAttrNav *attrnav, void *p);
+};
+
+//! Item for module type selection.
+class ItemPnSubmoduleType : public ItemPn {
+ public:
+  ItemPnSubmoduleType( GsdmlAttrNav *attrnav, const char *item_name, int item_subslot_number,
+		       int item_slot_idx, int item_subslot_idx, gsdml_UseableSubmodules *item_us,
+		       brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnSubmoduleType() {}
+
+  int	    subslot_number;
+  int	    slot_idx;
+  int	    subslot_idx;
+  gsdml_UseableSubmodules *us;
   int 	    old_value;
   int 	    first_scan;
   

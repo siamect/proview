@@ -92,6 +92,7 @@ int GsdmlSubslotData::print( ofstream& fp)
 {
   fp <<
     "    <Subslot SubslotNumber=\"" << subslot_number << "\"" << endl <<
+    "       SubmoduleEnumNumber=\"" << submodule_enum_number << "\"" << endl <<
     "       SubmoduleIdentNumber=\"" << submodule_ident_number << "\"" << endl <<
     "       IOInputLength=\"" << io_input_length << "\"" << endl <<
     "       IOOutputLength=\"" << io_output_length << "\" >" << endl;
@@ -554,6 +555,8 @@ int GsdmlDataReader::tag_attribute( const char *name, const char *value)
       sscanf( value, "%u", &sd->subslot_number);
     else if ( strcmp( name, "SubmoduleIdentNumber") == 0)
       sscanf( value, "%u", &sd->submodule_ident_number);
+    else if ( strcmp( name, "SubmoduleEnumNumber") == 0)
+      sscanf( value, "%d", &sd->submodule_enum_number);
     else if ( strcmp( name, "IOInputLength") == 0)
       sscanf( value, "%u", &sd->io_input_length);
     else if ( strcmp( name, "IOOutputLength") == 0)

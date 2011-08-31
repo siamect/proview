@@ -850,7 +850,7 @@ typedef struct {
   gsdml_tUnsigned16 NumberOfAdditionalOutputCR;
   gsdml_tUnsigned16 NumberOfAdditionalMulticastProviderCR;
   gsdml_tUnsigned16 NumberOfMulticastConsumerCR;
-  gsdml_tUnsigned16 PullModuleAlarmSupported;
+  gsdml_tBoolean PullModuleAlarmSupported;
 } gsdml_sInterfaceSubmoduleItem_ApplicationRelations;
 
 class gsdml_InterfaceSubmoduleItem_ApplicationRelations {
@@ -1143,6 +1143,7 @@ class gsdml_SubmoduleList {
   vector<gsdml_VirtualSubmoduleItem *> SubmoduleItem;
   pn_gsdml *gsdml;
   ~gsdml_SubmoduleList();
+  void build();
   void print( int ind);
 };
 

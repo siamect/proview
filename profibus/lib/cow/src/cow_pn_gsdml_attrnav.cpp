@@ -558,6 +558,7 @@ void GsdmlAttrNav::expand_all()
     if ( !( item->type == attrnav_eItemType_PnParEnum ||
 	    item->type == attrnav_eItemType_PnDevice ||
 	    item->type == attrnav_eItemType_PnModuleType ||
+	    item->type == attrnav_eItemType_PnSubmoduleType ||
 	    item->type == attrnav_eItemType_PnDataItem ||
 	    item->type == attrnav_eItemType_PnModuleClass ||
 	    item->type == attrnav_eItemType_PnEnumByteOrder ||
@@ -1105,6 +1106,12 @@ int GsdmlAttrNav::trace_connect_bc( brow_tObject object, char *name, char *attr,
       *p = &attrnav->dev_data.slot_data[item->slot_idx]->module_enum_number;
       break;
     }
+    case attrnav_eItemType_PnSubmoduleType: {
+      ItemPnSubmoduleType	*item = (ItemPnSubmoduleType *) base_item;
+
+      *p = &attrnav->dev_data.slot_data[item->slot_idx]->subslot_data[item->subslot_idx]->submodule_enum_number;
+      break;
+    }
     case attrnav_eItemType_PnModuleClass: {
       ItemPnModuleClass	*item = (ItemPnModuleClass *) base_item;
 
@@ -1623,18 +1630,24 @@ int GsdmlAttrNav::save( const char *filename)
 	ssd->io_input_length = 0;	    
 	ssd->io_output_length = 0;	    
 
-	if ( mi->VirtualSubmoduleList->VirtualSubmoduleItem.size() == 0)
-	  continue;
-
 	gsdml_VirtualSubmoduleItem *vsd = 0;
-	if ( mi->VirtualSubmoduleList->VirtualSubmoduleItem.size() == 1)
-	  vsd = mi->VirtualSubmoduleList->VirtualSubmoduleItem[0];
+	if ( ssd->submodule_enum_number) {
+	  // Physical subslot
+	  vsd = gsdml->ApplicationProcess->SubmoduleList->SubmoduleItem[ssd->submodule_enum_number - 1];
+	}
 	else {
-	  for ( unsigned int k = 0; k < mi->VirtualSubmoduleList->VirtualSubmoduleItem.size(); k++) {
-	    if ( mi->VirtualSubmoduleList->VirtualSubmoduleItem[k]->Body.SubmoduleIdentNumber == 
-		 ssd->submodule_ident_number) {
-	      vsd = mi->VirtualSubmoduleList->VirtualSubmoduleItem[k];	      
-	      break;
+	  if ( mi->VirtualSubmoduleList->VirtualSubmoduleItem.size() == 0)
+	    continue;
+
+	  if ( mi->VirtualSubmoduleList->VirtualSubmoduleItem.size() == 1)
+	    vsd = mi->VirtualSubmoduleList->VirtualSubmoduleItem[0];
+	  else {
+	    for ( unsigned int k = 0; k < mi->VirtualSubmoduleList->VirtualSubmoduleItem.size(); k++) {
+	      if ( mi->VirtualSubmoduleList->VirtualSubmoduleItem[k]->Body.SubmoduleIdentNumber == 
+		   ssd->submodule_ident_number) {
+		vsd = mi->VirtualSubmoduleList->VirtualSubmoduleItem[k];	      
+		break;
+	      }
 	    }
 	  }
 	}
@@ -1684,10 +1697,12 @@ int GsdmlAttrNav::save( const char *filename)
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
 
-  return dev_data.print( filename);
+  sts = dev_data.print( filename);
 
   // Unload channel diag
   dev_data.channel_diag_reset();
+
+  return sts;
 }
 
 int GsdmlAttrNav::open( const char *filename)
@@ -1921,6 +1936,7 @@ int ItemPn::close( GsdmlAttrNav *attrnav, double x, double y)
       case attrnav_eItemType_PnEnumTimeRatio:
       case attrnav_eItemType_PnEnumSendClock:
       case attrnav_eItemType_PnModuleType:
+      case attrnav_eItemType_PnSubmoduleType:
       case attrnav_eItemType_PnModuleClass:
 	brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrenum);
 	break;
@@ -2232,11 +2248,12 @@ int ItemPnSlot::open_children( GsdmlAttrNav *attrnav, double x, double y)
 	    else {
 	      // FixedInSubslots supplied, create all fixed subslots
 
-	      gsdml_Valuelist *vl = new gsdml_Valuelist(  mi->VirtualSubmoduleList->
+ 	      gsdml_Valuelist *vl = new gsdml_Valuelist(  mi->VirtualSubmoduleList->
 			    VirtualSubmoduleItem[i]->Body.FixedInSubslots.str);
 	      gsdml_ValuelistIterator iter( vl);
 
 	      for ( unsigned int j = iter.begin(); j != iter.end(); j = iter.next()) {
+
 		subslot_number = j;
 		sprintf( subslot_name, "Subslot %d", subslot_number);
 	    
@@ -2269,6 +2286,127 @@ int ItemPnSlot::open_children( GsdmlAttrNav *attrnav, double x, double y)
 	    }
 	  }
 	}
+	if ( mi->UseableSubmodules  && strcmp( mi->Body.PhysicalSubslots.str, "") != 0) {
+	  gsdml_Valuelist *vl = new gsdml_Valuelist(  mi->Body.PhysicalSubslots.str);
+	  gsdml_ValuelistIterator iter( vl);
+	  char subslot_name[80];
+
+	  for ( unsigned int j = iter.begin(); j != iter.end(); j = iter.next()) {
+
+	    // Check that there is an useable module for this slot
+	    int fixed_found = 0;
+	    int fixed_enum = 0;
+	    gsdml_VirtualSubmoduleItem *fixed_si = 0;
+	    int used_found = 0;
+	    int used_enum = 0;
+	    gsdml_VirtualSubmoduleItem *used_si = 0;
+
+	    for ( unsigned int i = 0; i < mi->UseableSubmodules->SubmoduleItemRef.size(); i++) {
+	      gsdml_Valuelist *vl_allowed = new gsdml_Valuelist( mi->UseableSubmodules->SubmoduleItemRef[i]->Body.AllowedInSubslots.str);
+	      gsdml_Valuelist *vl_fixed = new gsdml_Valuelist( mi->UseableSubmodules->SubmoduleItemRef[i]->Body.FixedInSubslots.str);
+	      gsdml_Valuelist *vl_used = new gsdml_Valuelist( mi->UseableSubmodules->SubmoduleItemRef[i]->Body.UsedInSubslots.str);
+
+	      if ( vl_allowed->in_list( j)) {
+
+		// Check if fixed
+		if ( vl_fixed->in_list(j)) {
+		  // Fixed in subslot, insert the submodule directly
+		  fixed_found = 1;
+		  fixed_si = (gsdml_VirtualSubmoduleItem *)mi->UseableSubmodules->SubmoduleItemRef[i]->Body.SubmoduleItemTarget.p;
+		  for ( unsigned int k = 0; 
+			k < attrnav->gsdml->ApplicationProcess->SubmoduleList->SubmoduleItem.size();
+			k++) {
+		    if ( attrnav->gsdml->ApplicationProcess->SubmoduleList->SubmoduleItem[k] == fixed_si) {
+		      fixed_enum = k + 1;
+		      break;
+		    }
+		  }		    
+		}
+
+		// Check if used
+		if ( vl_used->in_list(j)) {
+		  used_found = 1;
+		  used_si = (gsdml_VirtualSubmoduleItem *)mi->UseableSubmodules->SubmoduleItemRef[i]->Body.SubmoduleItemTarget.p;
+		  for ( unsigned int k = 0; 
+			k < attrnav->gsdml->ApplicationProcess->SubmoduleList->SubmoduleItem.size();
+			k++) {
+		    if ( attrnav->gsdml->ApplicationProcess->SubmoduleList->SubmoduleItem[k] == used_si) {
+		      used_enum = k + 1;
+		      break;
+		    }
+		  }		    
+		}
+	      }
+	      delete vl_allowed;
+	      delete vl_used;
+	      delete vl_fixed;
+	    }
+
+	    subslot_number = j;
+	    sprintf( subslot_name, "Subslot %d", subslot_number);
+
+	    if ( fixed_found ) {
+	    
+	      GsdmlSubslotData *ssd;
+	      if ( slotdata->subslot_data.size() <= subslot_index) {
+		ssd = new GsdmlSubslotData();
+		ssd->subslot_number = subslot_number;
+		ssd->subslot_idx = subslot_index;
+		ssd->submodule_ident_number = fixed_si->Body.SubmoduleIdentNumber;
+		ssd->submodule_enum_number = fixed_enum;
+		slotdata->subslot_data.push_back(ssd);
+	      }
+	      else {
+		ssd = slotdata->subslot_data[subslot_index];
+		ssd->subslot_idx = subslot_index;
+		ssd->submodule_ident_number = fixed_si->Body.SubmoduleIdentNumber;
+		ssd->submodule_enum_number = fixed_enum;
+		if ( ssd->subslot_number != subslot_number) {
+		  ssd->subslot_number = subslot_number;
+		  printf( "GSML-Error, datafile corrupt, unexpected subslot number\n");
+		}
+	      }
+		
+	      new ItemPnSubslot( attrnav, subslot_name, ssd, fixed_si,
+				     node, flow_eDest_IntoLast);
+	      subslot_index++;
+	    }
+	    else {
+
+	      // Add selectable subslot
+	      GsdmlSubslotData *ssd;
+
+	      if ( slotdata->subslot_data.size() <= subslot_index) {
+		ssd = new GsdmlSubslotData();
+		ssd->subslot_number = subslot_number;
+		ssd->subslot_idx = subslot_index;
+		if ( used_found) {
+		  ssd->submodule_ident_number = used_si->Body.SubmoduleIdentNumber;
+		  ssd->submodule_enum_number = used_enum;
+		}
+		slotdata->subslot_data.push_back(ssd);
+	      }
+	      else {
+		ssd = slotdata->subslot_data[subslot_index];
+		ssd->subslot_idx = subslot_index;
+		if ( ssd->subslot_number != subslot_number) {
+		  ssd->subslot_number = subslot_number;
+		  printf( "GSML-Error, datafile corrupt, unexpected subslot number\n");
+		}
+		else if ( used_found) {
+		  ssd->submodule_ident_number = used_si->Body.SubmoduleIdentNumber;
+		  ssd->submodule_enum_number = used_enum;
+		}
+	      }
+
+	      new ItemPnSubslotPhys( attrnav, subslot_name, ssd, used_si, slotdata->slot_idx,
+				     mi->UseableSubmodules,
+				     node, flow_eDest_IntoLast);
+	      subslot_index++;
+	    }
+	  }
+	  delete vl;
+	}	
       }
     }
     brow_SetOpen( node, attrnav_mOpen_Children);
@@ -2384,6 +2522,105 @@ int ItemPnSubslot::open_children( GsdmlAttrNav *attrnav, double x, double y)
 
     if ( attrnav->viewio && virtualsubmodule->IOData) {
       new ItemPnIOData( attrnav, "IOData", virtualsubmodule->IOData,
+			node, flow_eDest_IntoLast);
+    }
+    brow_SetOpen( node, attrnav_mOpen_Children);
+    brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_openmap);
+    brow_ResetNodraw( attrnav->brow->ctx);
+    brow_Redraw( attrnav->brow->ctx, node_y);
+  }
+  return 1;
+}
+
+ItemPnSubslotPhys::ItemPnSubslotPhys( GsdmlAttrNav *attrnav, const char *item_name, 
+				      GsdmlSubslotData *item_subslotdata,
+				      gsdml_VirtualSubmoduleItem *item_virtualsubmodule,
+				      int item_slot_idx,
+				      gsdml_UseableSubmodules *item_us,
+				      brow_tNode dest, flow_eDest dest_code) :
+  subslotdata(item_subslotdata), virtualsubmodule(item_virtualsubmodule), 
+  us(item_us), slot_idx(item_slot_idx)
+{
+  type = attrnav_eItemType_PnSubslotPhys;
+
+  strcpy( name, item_name);
+
+  parent = 1;
+
+  brow_CreateNode( attrnav->brow->ctx, item_name, attrnav->brow->nc_attr, 
+		   dest, dest_code, (void *) this, 1, &node);
+
+  if ( parent)
+    brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_map);
+  else
+    brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_leaf);
+
+  brow_SetAnnotation( node, 0, item_name, strlen(item_name));
+}
+
+int ItemPnSubslotPhys::open_children( GsdmlAttrNav *attrnav, double x, double y)
+{
+  double	node_x, node_y;
+
+  brow_GetNodePosition( node, &node_x, &node_y);
+
+  if ( brow_IsOpen( node)) {
+    // Close
+    brow_SetNodraw( attrnav->brow->ctx);
+    brow_CloseNode( attrnav->brow->ctx, node);
+    if ( brow_IsOpen( node) & attrnav_mOpen_Children) {
+      if ( parent)
+	brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_map);
+      else
+	brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_leaf);
+    }
+    brow_ResetOpen( node, attrnav_mOpen_All);
+    brow_ResetNodraw( attrnav->brow->ctx);
+    brow_Redraw( attrnav->brow->ctx, node_y);
+  }
+  else {
+    brow_SetNodraw( attrnav->brow->ctx);
+
+    new ItemPnSubmoduleType( attrnav, "SubmoduleType", subslotdata->subslot_number, slot_idx,
+			     subslotdata->subslot_idx, us,
+			     node, flow_eDest_IntoLast);
+
+    gsdml_VirtualSubmoduleItem *subm = 0;
+    if ( subslotdata->submodule_enum_number) {
+      subm = attrnav->gsdml->ApplicationProcess->SubmoduleList->SubmoduleItem[subslotdata->submodule_enum_number - 1];
+    }
+    
+    if ( subm && subm->ModuleInfo) {
+      new ItemPnModuleInfo( attrnav, "SubmoduleInfo", subm->ModuleInfo,
+			    node, flow_eDest_IntoLast);
+    }
+
+    unsigned int record_index = 0;
+    if ( subm) {      
+      gsdml_RecordDataList *rl = subm->RecordDataList;
+      if ( rl) {
+	GsdmlDataRecord *dr;
+
+	for ( unsigned int j = 0; j < rl->ParameterRecordDataItem.size(); j++) {
+	  if ( subslotdata->data_record.size() <= record_index) {
+	    dr = new GsdmlDataRecord();
+	    dr->record_idx = record_index;
+	    subslotdata->data_record.push_back(dr);
+	  }
+	  else {
+	    dr = subslotdata->data_record[record_index];
+	    dr->record_idx = record_index;
+	  }
+
+	  new ItemPnParRecord( attrnav, "", rl->ParameterRecordDataItem[j], dr,
+			       node, flow_eDest_IntoLast);
+	  record_index++;
+	}
+      }
+    }
+
+    if ( attrnav->viewio && subm && subm->IOData) {
+      new ItemPnIOData( attrnav, "IOData", subm->IOData,
 			node, flow_eDest_IntoLast);
     }
     brow_SetOpen( node, attrnav_mOpen_Children);
@@ -3155,7 +3392,7 @@ int ItemPnModuleType::scan( GsdmlAttrNav *attrnav, void *p)
       return 1;
     gsdml_ModuleItem *mi = (gsdml_ModuleItem *)um->
       ModuleItemRef[attrnav->dev_data.slot_data[slot_idx]->module_enum_number-1]->Body.ModuleItemTarget.p;
-    if ( !mi || !mi->ModuleInfo->Body.Name.p)
+    if ( !mi || !mi->ModuleInfo || !mi->ModuleInfo->Body.Name.p)
       return 1;
     strncpy( buf, (char *) mi->ModuleInfo->Body.Name.p, sizeof(buf));
   }
@@ -3218,6 +3455,144 @@ int ItemPnModuleType::scan( GsdmlAttrNav *attrnav, void *p)
 	*datap = mcid;
       }
     }
+  }
+  else
+    first_scan = 0;
+
+  return 1;
+}
+
+ItemPnSubmoduleType::ItemPnSubmoduleType( GsdmlAttrNav *attrnav, const char *item_name, 
+					  int item_subslot_number, int item_slot_idx,
+					  int item_subslot_idx, gsdml_UseableSubmodules *item_us,
+					  brow_tNode dest, flow_eDest dest_code):
+  subslot_number(item_subslot_number), slot_idx(item_slot_idx), subslot_idx(item_subslot_idx),
+  us(item_us), old_value(0), first_scan(1)
+{
+  type = attrnav_eItemType_PnSubmoduleType;
+
+  strcpy( name, item_name);
+
+  brow_CreateNode( attrnav->brow->ctx, item_name, attrnav->brow->nc_attr, 
+		   dest, dest_code, (void *) this, 1, &node);
+
+  brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrenum);
+
+  brow_SetAnnotation( node, 0, item_name, strlen(item_name));
+  brow_SetTraceAttr( node, name, "", flow_eTraceType_User);
+}
+
+int ItemPnSubmoduleType::open_children( GsdmlAttrNav *attrnav, double x, double y)
+{
+  double	node_x, node_y;
+
+  brow_GetNodePosition( node, &node_x, &node_y);
+
+  if ( brow_IsOpen( node)) {
+    // Close
+    brow_SetNodraw( attrnav->brow->ctx);
+    brow_CloseNode( attrnav->brow->ctx, node);
+    if ( brow_IsOpen( node) & attrnav_mOpen_Attributes)
+      brow_RemoveAnnotPixmap( node, 1);
+    if ( brow_IsOpen( node) & attrnav_mOpen_Children)
+      brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrenum);
+    brow_ResetOpen( node, attrnav_mOpen_All);
+    brow_ResetNodraw( attrnav->brow->ctx);
+    brow_Redraw( attrnav->brow->ctx, node_y);
+  }
+  else {
+    brow_SetNodraw( attrnav->brow->ctx);
+
+    int idx = 0;
+    new ItemPnEnumValueMType( attrnav, "No", "", idx++, pwr_eType_UInt32, 
+			      &attrnav->dev_data.slot_data[slot_idx]->subslot_data[subslot_idx]->submodule_enum_number, 
+			      node, flow_eDest_IntoLast);
+    
+    if ( !us)
+      return 1;
+
+
+    for ( unsigned int i = 0; i < us->SubmoduleItemRef.size(); i++) {
+      gsdml_Valuelist *vl_allowed = new gsdml_Valuelist( us->SubmoduleItemRef[i]->Body.AllowedInSubslots.str);
+      gsdml_Valuelist *vl_fixed = new gsdml_Valuelist( us->SubmoduleItemRef[i]->Body.FixedInSubslots.str);
+
+      if ( vl_allowed->in_list(subslot_number)) {
+	if ( vl_fixed->in_list(subslot_number)) {
+	  delete vl_allowed;
+	  delete vl_fixed;
+	  continue;
+	}
+	char mname[160] = "ModuleName";
+	gsdml_VirtualSubmoduleItem *mi = (gsdml_VirtualSubmoduleItem *)us->SubmoduleItemRef[i]->Body.SubmoduleItemTarget.p;
+	if ( !mi || !mi->ModuleInfo || !mi->ModuleInfo->Body.Name.p)
+	  continue;
+	strncpy( mname, (char *) mi->ModuleInfo->Body.Name.p, sizeof(mname));
+	new ItemPnEnumValueMType( attrnav, mname, mi->ModuleInfo->Body.OrderNumber, idx, 
+				  pwr_eType_UInt32, 
+				  &attrnav->dev_data.slot_data[slot_idx]->subslot_data[subslot_idx]->submodule_enum_number, 
+				  node, flow_eDest_IntoLast);
+      }
+      delete vl_allowed;
+      delete vl_fixed;
+
+      idx++;
+    }
+
+    brow_SetOpen( node, attrnav_mOpen_Children);
+    brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_openmap);
+    brow_ResetNodraw( attrnav->brow->ctx);
+    brow_Redraw( attrnav->brow->ctx, node_y);
+  }
+  return 1;
+}
+
+int ItemPnSubmoduleType::scan( GsdmlAttrNav *attrnav, void *p)
+{
+  char buf[200];
+
+  if ( !first_scan) {
+    if ( old_value == *(int *)p)
+      // No change since last time
+      return 1;
+  }
+
+  if ( *(int *)p == 0)
+    strcpy( buf, "No");
+  else {
+    if ( !us)
+      return 1;
+    gsdml_VirtualSubmoduleItem *si = (gsdml_VirtualSubmoduleItem *)attrnav->gsdml->ApplicationProcess->SubmoduleList->
+      SubmoduleItem[attrnav->dev_data.slot_data[slot_idx]->subslot_data[subslot_idx]->submodule_enum_number-1];
+    if ( !si || !si->ModuleInfo->Body.Name.p)
+      return 1;
+    strncpy( buf, (char *) si->ModuleInfo->Body.Name.p, sizeof(buf));
+  }
+  brow_SetAnnotation( node, 1, buf, strlen(buf));
+  old_value = *(int *)p;
+
+  if ( !first_scan) {
+    int sts;
+    brow_tObject parentnode;
+    sts = brow_GetParent( attrnav->brow->ctx, node, &parentnode);
+    if ( EVEN(sts)) return 1;
+	
+    ItemPnSubslot *parentitem;
+    brow_GetUserData( parentnode, (void **)&parentitem);
+
+    // Note, this object is deleted here !
+    parentitem->close( attrnav, 0, 0);
+
+    // Remove old subslot data
+    // if ( parentitem->slotdata)
+    //  parentitem->slotdata->slot_reset();
+
+    parentitem->open_children( attrnav, 0, 0);
+
+    brow_SelectClear( attrnav->brow->ctx);
+    brow_SetInverse( parentnode, 1);
+    brow_SelectInsert( attrnav->brow->ctx, parentnode);
+    brow_CenterObject( attrnav->brow->ctx, parentnode, 0.25);
+    
   }
   else
     first_scan = 0;
