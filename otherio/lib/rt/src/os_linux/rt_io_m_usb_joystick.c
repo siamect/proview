@@ -265,74 +265,71 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
   int value;
 
 
-  while (1) {
-    
-    while ( read( local->fd, &js, sizeof(struct js_event)) == sizeof(struct js_event))  {
-      // printf("Event: type %d, time %d, number %d, value %d\n", js.type, js.time, js.number, js.value);
+  while ( read( local->fd, &js, sizeof(struct js_event)) == sizeof(struct js_event))  {
+    // printf("Event: type %d, time %d, number %d, value %d\n", js.type, js.time, js.number, js.value);
 
-      switch ( js.type) {
-      case 129:
-      case 1:
-	/* Buttons */
-	idx = js.number;
+    switch ( js.type) {
+    case 129:
+    case 1:
+      /* Buttons */
+      idx = js.number;
 
-	if ( js.number < KEY_MAX - BTN_MISC)
-	  idx = local->button_map[js.number];
-	else
-	  break;
-	  
-	*(pwr_tBoolean *)cp->chanlist[idx].vbp = (js.value != 0);
-
+      if ( js.number < KEY_MAX - BTN_MISC)
+	idx = local->button_map[js.number];
+      else
 	break;
-      case 130:
-      case 2: {
-	io_sChannel *chanp;
-	pwr_sClass_ChanAi *cop;
-	pwr_sClass_Ai *sop;
-	pwr_tFloat32 actvalue;
-	int ivalue;
-
-	/* Axes */
-	idx = js.number;
-	value = js.value;
-
-	if ( js.number < ABS_MAX) {
-	  idx = local->axis_map[js.number];
-	  ivalue = js.value;
-	}
-	else
-	  break;
 	  
-	chanp = &cp->chanlist[idx];
-	cop = (pwr_sClass_ChanAi *)chanp->cop;
-	sop = (pwr_sClass_Ai *)chanp->sop;
+      *(pwr_tBoolean *)cp->chanlist[idx].vbp = (js.value != 0);
 
-	if ( cop->CalculateNewCoef)
-	  // Request to calculate new coefficients
-	  io_AiRangeToCoef( chanp);
+      break;
+    case 130:
+    case 2: {
+      io_sChannel *chanp;
+      pwr_sClass_ChanAi *cop;
+      pwr_sClass_Ai *sop;
+      pwr_tFloat32 actvalue;
+      int ivalue;
 
-	io_ConvertAi( cop, ivalue, &actvalue);
+      /* Axes */
+      idx = js.number;
+      value = js.value;
 
-	// Filter
-	if ( sop->FilterType == 1 &&
-	     sop->FilterAttribute[0] > 0 &&
-	     sop->FilterAttribute[0] > ctx->ScanTime) {
-	  actvalue = *(pwr_tFloat32 *)chanp->vbp + ctx->ScanTime / sop->FilterAttribute[0] *
-	    (actvalue - *(pwr_tFloat32 *)chanp->vbp);
-	}
-
-	*(pwr_tFloat32 *)chanp->vbp = actvalue;
-	sop->SigValue = cop->SigValPolyCoef1 * ivalue + cop->SigValPolyCoef0;
-	sop->RawValue = ivalue;
-
+      if ( js.number < ABS_MAX) {
+	idx = local->axis_map[js.number];
+	ivalue = js.value;
+      }
+      else
 	break;
+      
+      chanp = &cp->chanlist[idx];
+      cop = (pwr_sClass_ChanAi *)chanp->cop;
+      sop = (pwr_sClass_Ai *)chanp->sop;
+
+      if ( cop->CalculateNewCoef)
+	// Request to calculate new coefficients
+	io_AiRangeToCoef( chanp);
+
+      io_ConvertAi( cop, ivalue, &actvalue);
+
+      // Filter
+      if ( sop->FilterType == 1 &&
+	   sop->FilterAttribute[0] > 0 &&
+	   sop->FilterAttribute[0] > ctx->ScanTime) {
+	actvalue = *(pwr_tFloat32 *)chanp->vbp + ctx->ScanTime / sop->FilterAttribute[0] *
+	  (actvalue - *(pwr_tFloat32 *)chanp->vbp);
       }
-      }
+
+      *(pwr_tFloat32 *)chanp->vbp = actvalue;
+      sop->SigValue = cop->SigValPolyCoef1 * ivalue + cop->SigValPolyCoef0;
+      sop->RawValue = ivalue;
+      
+      break;
     }
+    }
+  }
     
-    if (errno != EAGAIN) {
-      op->ErrorCount++;
-    }
+  if (errno != EAGAIN) {
+    op->ErrorCount++;
   }
 
   if ( op->ErrorCount == op->ErrorSoftLimit) {
