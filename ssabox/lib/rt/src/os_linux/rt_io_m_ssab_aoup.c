@@ -67,7 +67,7 @@
   
 \*----------------------------------------------------------------------------*/
 
-#define IO_MAXCHAN 8
+#define IO_MAXCHAN 16
 
 typedef struct {
 	unsigned int	Address;
