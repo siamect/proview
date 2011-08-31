@@ -3699,7 +3699,7 @@ static int	ccm_read_file(
   int		sts;
   char		*s, *se;
   int		row;
-  char		fname[80];
+  pwr_tFileName	fname;
 
   if ( filectx->deffilename_func)
     sts = ( filectx->deffilename_func)( fname, filename, filectx->client_data);
