@@ -172,6 +172,7 @@ struct plc_sThread {
   io_tCtx		plc_io_ctx;
   pwr_tBoolean		first_scan;
   int			skip_count;
+  pwr_tBoolean		emergency_break_old;
 };
 
 struct plc_sProcess {

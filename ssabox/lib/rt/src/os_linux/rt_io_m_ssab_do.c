@@ -278,7 +278,8 @@ static pwr_tStatus IoCardSwap (
   io_tCtx	ctx,
   io_sAgent	*ap,
   io_sRack	*rp,
-  io_sCard	*cp  
+  io_sCard	*cp,
+  io_eEvent	event
 ) 
 {
   io_sLocal 		*local;
@@ -289,32 +290,37 @@ static pwr_tStatus IoCardSwap (
   qbus_io_read		rb;
   int			sts;
 
-  op = (pwr_sClass_Ssab_BaseDoCard *) cp->op;
+  switch ( event) {
+  case io_eEvent_IoCommSwapInit:
+  case io_eEvent_IoCommSwap:
+    op = (pwr_sClass_Ssab_BaseDoCard *) cp->op;
 
-  if (!cp->Local) {
-    local = calloc( 1, sizeof(*local));
-    cp->Local = local;
+    if (!cp->Local) {
+      local = calloc( 1, sizeof(*local));
+      cp->Local = local;
 
-    local->Address[0] = op->RegAddress;
-    local->Address[1] = op->RegAddress + 2;
-    local->Qbus_fp = ((io_sRackLocal *)(rp->Local))->Qbus_fp;
-  }
-
-  for ( i = 0; i < 2; i++)
-  { 
-    if (r_local->Qbus_fp != 0 && r_local->s == 0) {
-      /* Write to local Q-bus */
-      rb.Address = local->Address[i];
-      sts = read( local->Qbus_fp, &rb, sizeof(rb));
+      local->Address[0] = op->RegAddress;
+      local->Address[1] = op->RegAddress + 2;
+      local->Qbus_fp = ((io_sRackLocal *)(rp->Local))->Qbus_fp;
     }
-    else {
-      /* Ethernet I/O, Get data from current address */
-      data = bfbeth_get_data(r_local, (pwr_tUInt16) local->Address[i], &sts);
-      /* Yes, we want to read this address the next time aswell */
-      bfbeth_set_read_req(r_local, (pwr_tUInt16) local->Address[i]);
-      sts = 1;      
-    }
+
+    for ( i = 0; i < 2; i++) { 
+      if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+	/* Write to local Q-bus */
+	rb.Address = local->Address[i];
+	sts = read( local->Qbus_fp, &rb, sizeof(rb));
+      }
+      else {
+	/* Ethernet I/O, Get data from current address */
+	data = bfbeth_get_data(r_local, (pwr_tUInt16) local->Address[i], &sts);
+	/* Yes, we want to read this address the next time aswell */
+	bfbeth_set_read_req(r_local, (pwr_tUInt16) local->Address[i]);
+	sts = 1;      
+      }
         
+    }
+    break;
+  default: ;
   }
   return 1;
 }

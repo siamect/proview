@@ -405,6 +405,7 @@ struct sLocal {
   sNodeInfo			nodeDb[cNodes];
   pwr_tBoolean			outunitServer;
   pwr_sClass_IOHandler		*iohp;
+  pwr_sNode			*nodep;
 }; 
 
 /* Global variables */
@@ -1253,6 +1254,7 @@ cSup_exec (
 	o->DelayNoted = TRUE;
 	if (o->DelayAction == 2) {
 	  l.iohp->IOReadWriteFlag = FALSE;
+	  l.nodep->EmergBreakTrue = TRUE;
 	  errh_SetStatus( MH__IOSTALLED);
 	}
       }
@@ -1996,6 +1998,7 @@ getHandlerObject ()
   pwr_sAttrRef aref; 
   pwr_tDlid dlid;
   pwr_tBoolean created = FALSE;
+  pwr_tOid 	node_oid;
 
   sts = gdh_GetClassList(pwr_eClass_Node, &nodeOid);            
   if (EVEN(sts)) {
@@ -2099,7 +2102,14 @@ getHandlerObject ()
 
   l.iohp = NULL;
   gdh_ObjidToPointer(oid, (void *) &l.iohp);
-
+  
+  sts = gdh_GetNodeObject( 0, &node_oid);
+  if (ODD(sts))
+    sts = gdh_ObjidToPointer( node_oid, (void **)&l.nodep);
+  if (EVEN(sts)) {
+    errh_Fatal("No node object found\n%m", sts);
+    exit(sts);
+  }
 }
 
 static mh_eAgent

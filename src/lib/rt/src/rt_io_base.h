@@ -105,6 +105,13 @@ typedef enum {
   io_mProcess_All      	= ~0
 } io_mProcess;
 
+typedef enum {
+  io_eEvent_EmergencyBreak,
+  io_eEvent_IoCommEmergencyBreak,
+  io_eEvent_IoCommSwapInit,
+  io_eEvent_IoCommSwap
+} io_eEvent;
+
 typedef struct {
   void		*cop;		/* Pointer to channel object */
   pwr_tDlid	ChanDlid;	/* Dlid for pointer to channel */
@@ -245,7 +252,8 @@ pwr_tStatus io_write(
 );
 
 pwr_tStatus io_swap(
-  io_tCtx 	ctx
+  io_tCtx 	ctx,
+  io_eEvent	event
 );
 
 pwr_tStatus io_close(

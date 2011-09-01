@@ -2143,7 +2143,7 @@ static pwr_tStatus io_init_agent(
   io_tCtx	ctx,
   void		*dummy,
   int		agent_type,
-  int           swap)
+  int           iocomm_swap)
 {
   pwr_tStatus	sts;
   pwr_tClassId	class;  
@@ -2181,7 +2181,7 @@ static pwr_tStatus io_init_agent(
 	strcat( attrname, ".Process");
 	sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
 	if (( EVEN(sts) ||
-	     (ODD(sts) && ctx->Process & process)) && !swap) {
+	     (ODD(sts) && ctx->Process & process)) && !iocomm_swap) {
 	  if ( EVEN(sts))
 	    process = io_mProcess_All;
 	  if ( ctx->Process == io_mProcess_Profibus)
@@ -2199,7 +2199,7 @@ static pwr_tStatus io_init_agent(
 	  else
 	    ok = 1;
 	}
-	else if (ODD(sts) && swap && AgentSwap != NULL) {
+	else if (ODD(sts) && iocomm_swap && AgentSwap != NULL) {
 	  /* IoComm-process should always handle the Swap-method */
 	  ok = 1;
 	}
@@ -2213,11 +2213,13 @@ static pwr_tStatus io_init_agent(
 	  ap->Objid = objid;
 	  strcpy( ap->Name, aname);
 	  ap->Process = process;
-          if (!swap) {
+          if (!iocomm_swap) {
 	    if ( AgentRead != NULL)
 	      ap->Action |= io_mAction_Read;
 	    if ( AgentWrite != NULL)
 	      ap->Action |= io_mAction_Write;
+	    if ( AgentSwap != NULL)
+	      ap->Action |= io_mAction_Swap;
 	    ap->Init = AgentInit;
 	    ap->Close = AgentClose;
 	    ap->Read = AgentRead;
@@ -2252,7 +2254,7 @@ static pwr_tStatus io_init_agent(
 	    alp->next = ap;
 	  }
 	  
-	  sts = io_trv_child( objid, 0, io_init_rack, ctx, ap, agent_type, swap);
+	  sts = io_trv_child( objid, 0, io_init_rack, ctx, ap, agent_type, iocomm_swap);
 	}
       }
     }
@@ -2646,7 +2648,7 @@ pwr_tStatus io_init_swap (
   {
     if (ap->Action & io_mAction_Swap)
     {
-      sts = (ap->Swap) ( *ctx, ap);
+      sts = (ap->Swap) ( *ctx, ap, io_eEvent_IoCommSwapInit);
       if ( EVEN(sts)) return sts;
     }
   }
@@ -2798,59 +2800,42 @@ pwr_tStatus io_write(
   Swap io racks and cards.
 \*----------------------------------------------------------------------------*/
 pwr_tStatus io_swap(
-  io_tCtx 	ctx)
+  io_tCtx 	ctx,
+  io_eEvent	event)
 {
   pwr_tStatus	sts;
   io_sAgent	*ap;
   io_sRack	*rp;
   io_sCard	*cp;
 
-  if ( ctx->Node->EmergBreakTrue || !ctx->IOHandler->IOReadWriteFlag)
-    return IO__IS_STOPPED;
+  switch ( event) {
+  case io_eEvent_EmergencyBreak:
+  case io_eEvent_IoCommEmergencyBreak:
+    break;
+  default:
+    if ( ctx->Node->EmergBreakTrue || !ctx->IOHandler->IOReadWriteFlag)
+      return IO__IS_STOPPED;
+  }
 
   /* Call the read methods for agents, racks and cards */
-  for ( ap = ctx->agentlist; ap != NULL; ap = ap->next)
-  {
-    if (ap->Action & io_mAction_Swap)
-    {
-      if ( ap->scan_interval_cnt <= 1)
-      {
-        sts = (ap->Swap) ( ctx, ap);
-        if ( EVEN(sts)) return sts;
-        ap->scan_interval_cnt = ap->scan_interval;
-      }
-      else
-        ap->scan_interval_cnt--;
+  for ( ap = ctx->agentlist; ap != NULL; ap = ap->next) {
+    if (ap->Action & io_mAction_Swap) {
+      sts = (ap->Swap) ( ctx, ap, event);
+      if ( EVEN(sts)) return sts;
     }
 
-    for ( rp = ap->racklist; rp != NULL; rp = rp->next)
-    {
+    for ( rp = ap->racklist; rp != NULL; rp = rp->next) {
       if (rp->Action & io_mAction_Swap &&
-	  !rp->MethodDisabled)
-      {
-        if ( rp->scan_interval_cnt <= 1)
-        {
-          sts = (rp->Swap) ( ctx, ap, rp);
-          if ( EVEN(sts)) return sts;
-          rp->scan_interval_cnt = rp->scan_interval;
-        }
-        else
-          rp->scan_interval_cnt--;
+	  !rp->MethodDisabled) {
+	sts = (rp->Swap) ( ctx, ap, rp, event);
+	if ( EVEN(sts)) return sts;
       }
 
-      for ( cp = rp->cardlist; cp != NULL; cp = cp->next)
-      {
+      for ( cp = rp->cardlist; cp != NULL; cp = cp->next) {
         if (cp->Action & io_mAction_Swap &&
-	    !cp->MethodDisabled)
-        {
-          if ( cp->scan_interval_cnt <= 1)
-          {
-            sts = (cp->Swap) ( ctx, ap, rp, cp);
-            if ( EVEN(sts)) return sts;
-            cp->scan_interval_cnt = cp->scan_interval;
-          }
-          else
-            cp->scan_interval_cnt--;
+	    !cp->MethodDisabled) {
+	  sts = (cp->Swap) ( ctx, ap, rp, cp, event);
+	  if ( EVEN(sts)) return sts;
 	}
       }
     }

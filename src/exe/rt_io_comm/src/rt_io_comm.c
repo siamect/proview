@@ -70,7 +70,7 @@
  EVENT           io_comm_terminate;
 #endif
 
-static pwr_sClass_IOHandler* init(qcom_sQid*, lst_sEntry**);
+static pwr_sClass_IOHandler* init(qcom_sQid*, lst_sEntry**, pwr_sNode**);
 
 static void usage()
 {
@@ -100,6 +100,8 @@ int main (int argc, char **argv)
   pwr_tDeltaTime cycle;
   lst_sEntry *csup_lh;
   int delay_action = 0;
+  pwr_sNode *nodep;
+  pwr_tBoolean old_emergency_break = 0;
 
   if ( argc > 1) {
     if ( strcmp( argv[1], "-m") == 0) {
@@ -112,7 +114,7 @@ int main (int argc, char **argv)
     }
   }
 
-  ihp = init(&qid, &csup_lh);
+  ihp = init(&qid, &csup_lh, &nodep);
 
   plc_UtlWaitForPlc();
 
@@ -146,13 +148,28 @@ int main (int argc, char **argv)
     get.data = mp;
     qcom_Get(&sts,&qid, &get, tmo);
     if (sts == QCOM__TMO || sts == QCOM__QEMPTY) {
-    
+
+      if ( nodep->EmergBreakTrue && !old_emergency_break)
+        sts = io_swap(io_ctx_swap, io_eEvent_IoCommEmergencyBreak);
+
       sts = io_read(io_ctx);
+      if (EVEN(sts)) {
+	ihp->IOReadWriteFlag = FALSE;
+	errh_Error("IO read, %m", sts);
+      }
       sts = io_write(io_ctx);
+      if (EVEN(sts)) {
+	ihp->IOReadWriteFlag = FALSE;
+	errh_Error("IO write, %m", sts);
+      }
+
+      if ( nodep->EmergBreakTrue && !old_emergency_break)
+        sts = io_swap(io_ctx, io_eEvent_EmergencyBreak);
+      old_emergency_break = nodep->EmergBreakTrue;
 
       if (swap_io) 
       {
-        sts = io_swap(io_ctx_swap);
+        sts = io_swap(io_ctx_swap, io_eEvent_IoCommSwap);
       }
       io_ScanSupLst( io_ctx->SupCtx);
 
@@ -193,13 +210,14 @@ int main (int argc, char **argv)
 }
 
 static pwr_sClass_IOHandler *
-init (qcom_sQid *qid, lst_sEntry **csup_lh)
+init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep)
 {
   pwr_tStatus sts = 1;
   pwr_sClass_IOHandler *ihp;
   qcom_sQattr qAttr;
   qcom_sQid qini;
-  pwr_tObjid oid;
+  pwr_tOid oid;
+  pwr_tOid node_oid;
 
   errh_Init("pwr_io", errh_eAnix_io);
 
@@ -235,6 +253,18 @@ init (qcom_sQid *qid, lst_sEntry **csup_lh)
   sts = io_get_iohandler_object(&ihp, &oid);
   if (EVEN(sts)) {
     errh_Fatal("rt_io_comm aborted, no IoHandler object found\n%m", sts);
+    exit(sts);
+  }
+
+  sts = gdh_GetNodeObject( 0, &node_oid);
+  if (EVEN(sts)) {
+    errh_Fatal("rt_io_comm aborted, no node object found\n%m", sts);
+    exit(sts);
+  }
+
+  sts = gdh_ObjidToPointer( node_oid, (void **)nodep);
+  if (EVEN(sts)) {
+    errh_Fatal("rt_io_comm aborted, no node object found\n%m", sts);
     exit(sts);
   }
 
