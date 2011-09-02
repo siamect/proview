@@ -680,6 +680,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   pwr_tObjid	distrobjid;
   pwr_tVolumeId	volume_id;
   pwr_tMask	distr_options = 0;
+  int		distr_disable;
   char		fname[200];
   char          path[80];
   int           path_file_created = 0;
@@ -1752,218 +1753,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
     
   }
     
-#if 0
 
-  sts = ldh_GetRootList( ldhses, &busobjid);
-  while ( ODD(sts)) {
-    FILE *nodefile;
-
-    sts = ldh_GetObjectClass( ldhses, busobjid, &cid);
-    if ( EVEN(sts)) return sts;
-
-    if ( cid == pwr_cClass_BusConfig) {
-
-      /* Get Bus attribute */
-      sts = ldh_GetObjectPar( ldhses, busobjid, "RtBody",
-			"BusNumber", (char **)&bus_number_ptr, &size);
-      if (EVEN(sts)) return sts;
-
-      if ( *bus_number_ptr == 0) {
-        free( (char *) bus_number_ptr);
-        sts = ldh_GetNextSibling( ldhses, busobjid, &busobjid);
-        continue;
-      }
-
-      sprintf( filename, load_cNameNode, load_cDirectory, *bus_number_ptr);
-      dcli_translate_filename( fname, filename);
-      nodefile = fopen( fname, "w");
-      if ( nodefile == 0) {
-	char msg[200];
-	sprintf( msg, "Error, Unable to open file %s\n", fname);
-	MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	return LFU__NOFILE;
-      }
-
-      sts = ldh_GetChild( ldhses, busobjid, &nodeobjid);
-      while ( ODD(sts)) {
-	sts = ldh_GetObjectClass( ldhses, nodeobjid, &cid);
-	if ( EVEN(sts)) return sts;
-
-	if ( cid == pwr_cClass_NodeConfig) {
-	  sts = ldh_ObjidToName( ldhses, nodeobjid, ldh_eName_Object, 
-			       nodeconfig_name, sizeof(nodeconfig_name), &size);
-	  if ( EVEN(sts)) return sts;
-
-	  /* Check NodeName attribute */
-	  sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
-				"NodeName", &nodename_ptr, &size);
-	  if (EVEN(sts)) return sts;
-	
-	  if ( !strcmp( nodename_ptr, "")) {
-	    char msg[200];
-	    sprintf( msg, "Error in NodeConfig object '%s', NodeName is missing\n",
-		     nodeconfig_name);
-	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	    syntax_error = 1;
-	    free( nodename_ptr);
-	    nodename_ptr = null_nodename;
-	  }
-
-	  /* Check OperatingSystem attribute */
-	  sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
-				"Address", &address_ptr, &size);
-	  if (EVEN(sts)) return sts;
-
-	  if ( strcmp( address_ptr, "") == 0) {
-	    char msg[200];
-	    sprintf( msg, "Error in NodeConfig object '%s', Address is not valid", nodeconfig_name);
-	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	    syntax_error = 1;
-	  }
-
-	  /* Check Port attribute */
-	  sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
-				  "Port", (char **)&port_ptr, &size);
-	  if (EVEN(sts)) return sts;
-	
-	  /* Find the rootvolume for this node */
-	  sts = ldh_GetChild( ldhses, nodeobjid, &volobjid);
-	  while ( ODD(sts)) {
-	    sts = ldh_GetObjectClass( ldhses, volobjid, &cid);
-	    if ( EVEN(sts)) return sts;
-
-	    if ( cid == pwr_cClass_RootVolumeLoad) {
-	      sts = ldh_ObjidToName( ldhses, volobjid, ldh_eName_Object,
-				     volume_name, sizeof(volume_name), &size);
-	      if ( EVEN(sts)) return sts;
-	      utl_toupper( name, volume_name);
-
-	      /* Check that the name is in the global volume list */
-	      found = 0;
-	      volumelist_ptr = volumelist;
-	      for ( i = 0; i < volumecount; i++) {
-		utl_toupper( volname, volumelist_ptr->volume_name);
-		if ( !strcmp( name, volname)) {
-		  if ( *port_ptr == 0)
-		    fprintf( nodefile, "%s %s %s\n",
-			     nodename_ptr,
-			     cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
-			     address_ptr);
-		  else
-		    fprintf( nodefile, "%s %s %s %d\n",
-			     nodename_ptr,
-			     cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
-			     address_ptr,
-			     *port_ptr);
-		  break;
-		}
-		volumelist_ptr++;
-	      }
-	    }
-	    sts = ldh_GetNextSibling( ldhses, volobjid, &volobjid);
-	  }
-	  if ( nodename_ptr != null_nodename)
-	    free( nodename_ptr);
-	  free( address_ptr);
-	  free( (char *) port_ptr);
-	}
-	else if ( cid == pwr_cClass_FriendNodeConfig) {
-	  sts = ldh_ObjidToName( ldhses, nodeobjid, ldh_eName_Object, 
-				 nodeconfig_name, sizeof(nodeconfig_name), &size);
-	  if ( EVEN(sts)) return sts;
-	  
-	  /* Check NodeName attribute */
-	  sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
-				  "NodeName", &nodename_ptr, &size);
-	  if (EVEN(sts)) return sts;
-	  
-	  if ( !strcmp( nodename_ptr, "")) {
-	    char msg[200];
-	    sprintf( msg, "Error in FriendNodeConfig object '%s', NodeName is missing",
-		     nodeconfig_name);
-	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	    syntax_error = 1;
-	    free( nodename_ptr);
-	    nodename_ptr = null_nodename;
-	  }
-
-	  /* Check Address attribute */
-	  sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
-				  "Address", &address_ptr, &size);
-	  if (EVEN(sts)) return sts;
-	  
-	  if ( strcmp( address_ptr, "") == 0) {
-	    char msg[200];
-	    sprintf( msg, "Error in FriendNodeConfig object '%s', Address is not valid", nodeconfig_name);
-	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	    syntax_error = 1;
-	  }
-	  
-	  /* Check Port attribute */
-	  sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
-				  "Port", (char **)&port_ptr, &size);
-	  if (EVEN(sts)) return sts;
-	  
-	  /* Find the rootvolume for this node */
-	  sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
-				  "Volume", (char **)&volume_ptr, &size);
-	  if (EVEN(sts)) return sts;
-	  
-	  if ( *volume_ptr == 0) {
-	    char msg[200];
-	    sprintf( msg, "Error in FriendNodeConfig object '%s', Volume is not valid", nodeconfig_name);
-	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	    syntax_error = 1;
-	  }
-	  else {
-	    strcpy( volume_name, volume_ptr);
-	    utl_toupper( name, volume_name);
-	    
-	    /* Check that the name is in the global volume list */
-	    found = 0;
-	    volumelist_ptr = volumelist;
-	    for ( i = 0; i < volumecount; i++) {
-	      utl_toupper( volname, volumelist_ptr->volume_name);
-	      if ( !strcmp( name, volname)) {
-		if ( *port_ptr == 0)
-		  fprintf( nodefile, "%s %s %s\n",
-			   nodename_ptr,
-			   cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
-			   address_ptr);
-		else
-		  fprintf( nodefile, "%s %s %s %d\n",
-			   nodename_ptr,
-			   cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
-			   address_ptr,
-			   *port_ptr);
-		found = 1;
-		break;
-	      }
-	      volumelist_ptr++;
-	    }
-	    if ( !found) {
-	      char msg[200];
-	      sprintf( msg, "Error in FriendNodeConfig object '%s', Unknown volume", nodeconfig_name);
-	      MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	      syntax_error = 1;
-	    }
-	  }
-	  if ( nodename_ptr == null_nodename)
-	    free( nodename_ptr);
-	  free( volume_ptr);
-	  free( address_ptr);
-	  free( (char *) port_ptr);
-	}
-	sts = ldh_GetNextSibling( ldhses, nodeobjid, &nodeobjid);
-      }
-      free( (char *) bus_number_ptr);	
-      fclose( nodefile);
-    }
-    sts = ldh_GetNextSibling( ldhses, busobjid, &busobjid);
-  }
-#endif
-
-  /* Generate data for distribution */
+  /* Generate data for distribution, custom build and build options */
   dcli_translate_filename( fname, load_cNameDistribute);
   file = fopen( fname, "w");
   if ( file == 0)
@@ -2009,6 +1800,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
       sts = ldh_GetChild( ldhses, busobjid, &nodeobjid);
       while ( ODD(sts)) {
 	distr_options = 0;
+	distr_disable = 0;
 
         sts = ldh_GetObjectClass( ldhses, nodeobjid, &cid);
         if ( EVEN(sts)) return sts;
@@ -2023,19 +1815,16 @@ pwr_tStatus lfu_SaveDirectoryVolume(
           sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
 			"DistributeDisable", (char **)&distr_disable_ptr, &size);
           if (ODD(sts)) {
-            if ( *distr_disable_ptr) {
-	      /* Distribution is disabled, goto next node */
-               sts = ldh_GetNextSibling( ldhses, nodeobjid, &nodeobjid);
-	       continue;
-            }
-          }
+	    distr_disable = *distr_disable_ptr;
+	    free( distr_disable_ptr);
+	  }
 
           /* Check NodeName attribute */
           sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
 			"NodeName", &nodename_ptr, &size);
           if (EVEN(sts)) return sts;
 
-          if ( !strcmp( nodename_ptr, "")) {
+         if ( !strcmp( nodename_ptr, "")) {
             free( nodename_ptr);
             nodename_ptr = null_nodename;
           }
@@ -2274,6 +2063,12 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    }
 	    default: ;
 	    }
+	  }
+
+	  if ( distr_disable) {
+	      /* Distribution is disabled, goto next node */
+	    sts = ldh_GetNextSibling( ldhses, nodeobjid, &nodeobjid);
+	    continue;
 	  }
 
 	  fprintf( file, "node %s %s %d %d %s %s\n",
