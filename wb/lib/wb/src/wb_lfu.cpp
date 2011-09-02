@@ -2008,6 +2008,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
       sts = ldh_GetChild( ldhses, busobjid, &nodeobjid);
       while ( ODD(sts)) {
+	distr_options = 0;
 
         sts = ldh_GetObjectClass( ldhses, nodeobjid, &cid);
         if ( EVEN(sts)) return sts;
