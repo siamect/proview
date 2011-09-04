@@ -5748,7 +5748,7 @@ static int	rtt_edit_print_value(
 	    case pwr_eType_Int64:
 	    {
 	      if ( menu_ptr->characters > 0)
-#if (defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD) && defined HW_X86_64
+#if defined OS_POSIX && defined HW_X86_64
 	        r_print( "%*ld", menu_ptr->characters, *(pwr_tInt64 *)menu_ptr->value_ptr);
 #else
 	        r_print( "%*lld", menu_ptr->characters, *(pwr_tInt64 *)menu_ptr->value_ptr);
@@ -5789,7 +5789,7 @@ static int	rtt_edit_print_value(
 	    case pwr_eType_UInt64:
 	    {
 	      if ( menu_ptr->characters > 0)
-#if (defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD) && defined HW_X86_64
+#if defined OS_POSIX && defined HW_X86_64
 	        r_print( "%*lu", menu_ptr->characters, *(pwr_tUInt64 *)menu_ptr->value_ptr);
 #else
 	        r_print( "%*llu", menu_ptr->characters, *(pwr_tUInt64 *)menu_ptr->value_ptr);
@@ -9901,7 +9901,7 @@ int	rtt_sleep(
 	  ker$wait_any( NULL, NULL, &l_time);
 	  rtt_scan( ctx);
 	}
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 	int		i;
 	int		num;
 	pwr_tDeltaTime	p_time;
@@ -9974,7 +9974,7 @@ int	rtt_get_defaultfilename(
 	  strcat( filename, inname);
 	  strcpy( outname, filename);
 	}
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 	if ( strchr( inname, '/'))
 	  strcpy( outname, inname);
 	else
@@ -10016,7 +10016,7 @@ int	rtt_get_defaultfilename(
 	  }
 	}
 
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 	cdh_ToLower( outname, outname);
 #endif
 	return RTT__SUCCESS;
@@ -10051,7 +10051,7 @@ void	rtt_exit_now( int disconnected, pwr_tStatus exit_sts)
 	rtt_logging_close_files();
 	qio_reset((int *) rtt_chn);
 
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 	/* Returnstatus 0 is OK for UNIX commands */
 	if (EVEN(exit_sts))
 	  exit( exit_sts);
@@ -10722,7 +10722,7 @@ char	*rtt_pwr_dir( char *dir)
 #elif defined(OS_VMS)
 	strcpy( pwr_dir, dir);
 	strcat( pwr_dir, ":");
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 	if ( (s = getenv( dir)) == NULL)
 	  strcpy( pwr_dir, "");
         else

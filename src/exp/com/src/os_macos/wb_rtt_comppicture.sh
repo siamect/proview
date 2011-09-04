@@ -56,7 +56,7 @@ then
 
     cc=gcc
     cinc="-I$pwr_inc -I$pwrp_rttbld"
-    cflags="-DOS_MACOS -DOS=linux -DHW_X86_64=1 -DPOSIX_SOURCE -DWall" 
+    cflags="-DOS_MACOS -DOS_POSIX -DOS=linux -DHW_X86_64=1 -DPOSIX_SOURCE -DWall" 
     ${cc} -c -o $pwrp_obj/${name}.o $pwrp_rttbld/${name}.c ${cinc} ${cflags}
     ar rc ${ar_name_pict} $pwrp_obj/${name}.o
   else
@@ -67,7 +67,7 @@ then
 
     cc=gcc
     cinc="-I$pwr_inc -I${bld_dir}"
-    cflags="-DOS_MACOS -DOS=linux -DHW_X86_64=1 -DPOSIX_SOURCE -DWall" 
+    cflags="-DOS_MACOS -DOS_POSIX -DOS=linux -DHW_X86_64=1 -DPOSIX_SOURCE -DWall" 
     ${cc} -c -o ${bld_dir}/${name}.o \
        ${bld_dir}/${name}.c ${cinc} ${cflags}
     ar rc ${ar_name_pict} ${bld_dir}/${name}.o

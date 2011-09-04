@@ -61,7 +61,7 @@
 # include <sys/types.h>   // for "mode_t"
 # include <sys/stat.h>    // for "S_IRWXU" etc.
 # include <semaphore.h>
-#elif defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 # include <errno.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -80,7 +80,7 @@
 #include "rt_errh.h"
 
 
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
  pwr_tBoolean sect_must_create = 0;
 #endif
 
@@ -103,7 +103,7 @@ segName (
     strncpy(shp->name, name, sizeof(shp->name) - 1);
     shp->name[sizeof(shp->name) - 1] = '\0';
 
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 
   static int doinit = 1;
   static char buf[4];
@@ -261,7 +261,7 @@ sect_Alloc (
       shp->flags.b.mapped   = 1;
       lsts = 1; 
     }
-#elif defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
     {
       int    shm_fd;                                              
       int    shMemFlags = O_RDWR;              
@@ -362,7 +362,7 @@ sect_Free (
   ker$delete(&lsts, shp->area);
 #elif defined(OS_VMS)
   lsts = sys$deltva(shp->sectadr, NULL, 0);
-#elif defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
   lsts = 1; /* TODO ? */
 #endif
 
@@ -409,7 +409,7 @@ sect_InitLock (
     errh_Error("sect_InitLock: sem_init, errno: %d", errno);
     lsts = 2;
   }
-#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
   if (posix_sem_init_shared(mp, ftok(shp->name, 'P'), 1) != 0) {
     errh_Error("sect_InitLock: sem_init(%s), errno: %d", shp->name, errno);
     lsts = 2;
@@ -469,7 +469,7 @@ sect_Lock (
       break;
     }
   }
-#elif defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
   while (posix_sem_wait(mp) != 0) {
     if (errno != EINTR) {
       perror("sect_Lock: sem_wait ");
@@ -528,7 +528,7 @@ sect_Unlock (
     perror("sect_Unlock: sem_signal ");
     lsts = 2;
   }
-#elif defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
   if (posix_sem_post(mp) != 0) {
     perror("sect_Unlock: sem_signal ");
     lsts = 2;

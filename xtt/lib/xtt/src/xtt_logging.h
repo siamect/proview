@@ -91,7 +91,7 @@ class XttLogging {
     pthread_t 	thread;
     unsigned int    event_flag;
 #endif
-#if defined  OS_LYNX || defined OS_LINUX || OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
     pthread_t 	thread;
 #endif
     int		line_size;

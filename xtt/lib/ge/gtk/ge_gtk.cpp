@@ -39,7 +39,7 @@
 
 #include "glow_std.h"
 
-#if defined OS_VMS || defined OS_LINUX || OS_MACOS || defined OS_FREEBSD
+#if defined OS_VMS || defined OS_POSIX
 #define LDH 1
 #endif
 

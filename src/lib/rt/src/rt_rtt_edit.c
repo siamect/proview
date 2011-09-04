@@ -50,7 +50,7 @@
  #include <string.h>
  #include <chfdef.h>
  #include <stdlib.h>
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
  #include <stdio.h>
  #include <ctype.h>
  #include <string.h>
@@ -1949,7 +1949,7 @@ static int	dtt_edit_func(	edit_ctx	ctx,
 	  sprintf( filename, "%s%s.rhlp", dtt_source_dir, menuname);
 #if defined(OS_VMS)
 	  sprintf( cmd, "spawn edit/edt %s", filename); 
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 	  sprintf( cmd, "vi %s", filename); 
 #endif
 	  system( cmd);
@@ -1961,7 +1961,7 @@ static int	dtt_edit_func(	edit_ctx	ctx,
 	  sprintf( filename, "%s%s.rhlp", dtt_source_dir, menuname);
 #if defined(OS_VMS)
 	  sprintf( cmd, "spawn edit/edt %s", filename); 
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 	  sprintf( cmd, "vi %s", filename); 
 #endif
 	  system( cmd);
@@ -1972,7 +1972,7 @@ static int	dtt_edit_func(	edit_ctx	ctx,
 #if defined(OS_VMS)
 	  sprintf( cmd, "spawn edit/edt %ra_rtt_%s.c", 
 		dtt_source_dir, dtt_programname); 
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 	  sprintf( cmd, "vi %sra_rtt_%s.c", dtt_source_dir, dtt_programname); 
 #endif
 	  system( cmd);
@@ -6976,7 +6976,7 @@ static int	dtt_edit_save_menues(	char		*filename,
 #elif defined(OS_LYNX)
 	  sprintf( cmd, "cp %s.rhlp %s.rhlp", fname_noext, 
 		fnamebld_noext); 
-#elif defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 	  sprintf( cmd, "cp -f %s.rhlp %s.rhlp", fname_noext, 
 		fnamebld_noext); 
 #endif
@@ -7815,6 +7815,8 @@ int	dtt_start( char		*programname)
 	dtt_current_opsys = pwr_mOpSys_X86_64_MACOS;
 #elif defined OS_FREEBSD
 	dtt_current_opsys = pwr_mOpSys_X86_64_FREEBSD;
+#elif defined OS_OPENBSD
+	dtt_current_opsys = pwr_mOpSys_X86_64_OPENBSD;
 #endif	  
 
 	/* Create path for source and build directories */
@@ -7831,7 +7833,7 @@ int	dtt_start( char		*programname)
 	  strcpy( dtt_build_dir, "pwrp_rttbld:");
 	  strcpy( dtt_exe_dir, "pwr_exe:");
 	}
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 	if ( dtt_is_rttsys)
 	{
 	  pwr_tFileName dir;
@@ -8033,7 +8035,7 @@ static int dtt_cc(	int	opsys,
 	sprintf( cmd, "@%swb_rtt_appl %s %d %d %d", dtt_exe_dir, 
 		dtt_programname, action, opsys, debug);
 
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 	sprintf( cmd, "%s/wb_rtt_appl.sh %s %d %d %d", dtt_exe_dir, 
 		dtt_programname, action, dtt_is_rttsys, opsys);
 #endif
@@ -8074,7 +8076,7 @@ static int dtt_compile_picture( char	*filename,
 		dtt_programname, dtt_is_rttsys, dtt_current_opsys);
 
 	  system( cmd);
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 	  sprintf( cmd, "%swb_rtt_comppicture.sh %s %s %d %d", dtt_exe_dir, filename,
 		dtt_programname, dtt_is_rttsys, dtt_current_opsys);
 
@@ -8096,7 +8098,7 @@ static int dtt_compile_picture( char	*filename,
 		dtt_programname, dtt_is_rttsys, os);
 
 	      system( cmd);
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 	      sprintf( cmd, "%swb_rtt_comppicture.sh %s %s %d %d", dtt_exe_dir, filename,
 		dtt_programname, dtt_is_rttsys, os);
 
@@ -10617,7 +10619,7 @@ static int	dtt_setup( menu_ctx	parent_ctx)
 static void	dtt_exit_now( pwr_tStatus exit_sts)
 {
 	qio_reset((int *) rtt_chn);
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 	/* Returnstatus 0 is OK for UNIX commands */
 	if (EVEN(exit_sts))
 	  exit( exit_sts);

@@ -161,6 +161,8 @@ char				rtt_os[20] = "linux";
 char				rtt_os[20] = "macos";
 #elif defined OS_FREEBSD
 char				rtt_os[20] = "freebsd";
+#elif defined OS_OPENBSD
+char				rtt_os[20] = "openbsd";
 #endif
 int				rtt_verify = 0;
 int				rtt_file_on = 0;

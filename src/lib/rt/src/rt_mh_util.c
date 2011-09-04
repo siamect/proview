@@ -56,7 +56,7 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <semaphore.h>
-#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -97,7 +97,7 @@
 #if defined OS_LYNX
 # define SEM_NAME "/pwr_mh_sem_"
   static sem_t *sem = (sem_t *)-1;
-#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 # define SEM_NAME "/tmp/pwr_mh_sem_"
   static sem_t *sem = (sem_t *)-1;
 #endif
@@ -144,7 +144,7 @@ map ()
 #endif /* OS_ELN || OS_VMS */
 
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 
 static char *
 SemName ()
@@ -173,7 +173,7 @@ map ()
     return 2;
 #if defined OS_LYNX
   sem = sem_open(name, oflags);
-#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
   sem = posix_sem_open(name, oflags);
 #endif
   if (sem == (sem_t *) -1) {
@@ -191,7 +191,7 @@ unmap ()
     return 1;
 #if defined OS_LYNX
   if (sem_close(sem) == -1) {
-#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
   if (posix_sem_close(sem) == -1) {
 #endif
     perror("rt_mh_utl: unmap. sem_close failed, ");
@@ -232,7 +232,7 @@ sendMessage (
 pwr_tStatus
 mh_UtilCreateEvent ()
 {
-#if defined OS_LYNX || OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
   char *name;
   int  oflags = O_CREAT | O_EXCL;
   mode_t mode = S_IRWXU | S_IRWXG;
@@ -252,7 +252,7 @@ mh_UtilCreateEvent ()
 
   sem_close(sem);
 
-# elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+# elif defined OS_POSIX
   posix_sem_unlink(name); /* Don't care about status */
   sem = posix_sem_open(name, oflags, mode, 0);
 
@@ -273,7 +273,7 @@ mh_UtilCreateEvent ()
 pwr_tStatus
 mh_UtilDestroyEvent ()
 {
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 
   char *name = SemName();
 
@@ -283,7 +283,7 @@ mh_UtilDestroyEvent ()
   if (sem != (sem_t *) -1)
 # if defined OS_LYNX
     sem_close(sem);
-# elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+# elif defined OS_POSIX
     posix_sem_close(sem);
 # endif
   sem = (sem_t *) -1;
@@ -294,7 +294,7 @@ mh_UtilDestroyEvent ()
     perror("mh_UtilDestroyEvent: sem_unlink");
     return 2;
   }  
-#   elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#   elif defined OS_POSIX
   if (posix_sem_unlink(name) == -1) {
     perror("mh_UtilDestroyEvent: sem_unlink");
     return 2;
@@ -342,7 +342,7 @@ mh_UtilIsStartedMh ()
 
   return (sts == 0);
 
-#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
   if (EVEN(sts))
     return FALSE;
   sts = posix_sem_trywait(sem);
@@ -444,7 +444,7 @@ mh_UtilWaitForMh ()
   sem_post(sem);
   unmap();
 
-#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
   posix_sem_wait(sem);
   posix_sem_post(sem);
   unmap();
@@ -477,7 +477,7 @@ mh_UtilWake ()
 #elif defined OS_LYNX
   sem_post(sem);
   unmap();
-#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
   posix_sem_post(sem);
   unmap();
 #endif        

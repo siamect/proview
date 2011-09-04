@@ -47,13 +47,13 @@
 # include <string.h>
 #endif
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 # include <signal.h>
 #endif
 
 #if defined (OS_LYNX)
 # include <sys/mman.h>
-#elif	defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif	defined OS_POSIX
 # include <sys/file.h>
 # include <sys/stat.h>
 # include <sys/ipc.h>
@@ -784,7 +784,7 @@ qdb_CreateDb (
   return qdb;
 }
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 /*
  * A fix which unlinks all segments for the given name.
  */
@@ -868,7 +868,7 @@ qdb_UnlinkDb ()
   int    shm_id;
   struct shmid_ds   ds;
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 
   /* Unlink pool. */
 
@@ -1272,9 +1272,13 @@ qdb_AddQue (
   qp->qix = qix;
   
   pthread_condattr_init(&condattr);
+#if !defined OS_OPENBSD
   pthread_condattr_setpshared(&condattr, PTHREAD_PROCESS_SHARED);
+#endif
   pthread_mutexattr_init(&mutexattr);
+#if !defined OS_OPENBSD
   pthread_mutexattr_setpshared(&mutexattr, PTHREAD_PROCESS_SHARED);
+#endif
   if ( pthread_mutex_init(&qp->lock.mutex, &mutexattr) != 0)
     errh_Error("pthread_mutex_init, errno %d", errno);
   if ( pthread_cond_init(&qp->lock.cond, &condattr) != 0)

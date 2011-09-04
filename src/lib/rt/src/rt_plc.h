@@ -40,7 +40,7 @@
 #if defined OS_LYNX
 # include <pthread.h>
 # include <semaphore.h>
-#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 # include <pthread.h>
 # include "rt_semaphore.h"
 #endif

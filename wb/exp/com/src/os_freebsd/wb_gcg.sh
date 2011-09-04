@@ -337,7 +337,7 @@ if [ $OpSys -eq $OpSys_PPC_LINUX ]; then
   pwrp_gc="$pwrp_tmp"
 
 # Suppress all warnings, -x
-  cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+  cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -DOS_POSIX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
 
   FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 
@@ -350,7 +350,7 @@ elif [ $OpSys -eq $OpSys_X86_LINUX ]; then
 
 # Suppress all warnings, -x
   if [ $CurrentOpSys -eq $OpSys ]; then
-     cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+     cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -DOS_POSIX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
 
      FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 
@@ -366,7 +366,7 @@ elif [ $OpSys -eq $OpSys_X86_64_LINUX ]; then
 
 # Suppress all warnings, -x
   if [ $CurrentOpSys -eq $OpSys ]; then
-      cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+      cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -DOS_POSIX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
 
       FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 
@@ -382,7 +382,7 @@ elif [ $OpSys -eq $OpSys_X86_64_MACOS ]; then
 
 # Suppress all warnings, -x
   if [ $CurrentOpSys -eq $OpSys ]; then
-      cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_MACOS -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+      cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_MACOS -DOS_POSIX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
 
       FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 
@@ -396,7 +396,7 @@ elif [ $OpSys -eq $OpSys_X86_64_FREEBSD ]; then
 
 # Suppress all warnings, -x
   if [ $CurrentOpSys -eq $OpSys ]; then
-      cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_FREEBSD -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+      cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_FREEBSD -DOS_POSIX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
 
       FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 

@@ -48,6 +48,10 @@
 #include "pwr.h"
 #include "co_time.h"
 
+#if defined OS_OPENBSD
+# define nearbyint rint
+#endif
+
 GrowAxisArc::GrowAxisArc( GrowCtx *glow_ctx, const char *name, double x1, double y1, 
 			  double x2, double y2, int ang1, int ang2, glow_eDrawType border_d_type, 
 			  int line_w, int t_size, glow_eDrawType t_drawtype, 

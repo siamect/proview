@@ -108,11 +108,17 @@ int main(  int argc, char *argv[])
   int arg_verbose = 0;
   int in_if = 0;
 #if defined OS_LINUX
-  char dos[] = "OS_LINUX";
+  char os[] = "OS_LINUX";
+  char dos[] = "-DOS_LINUX -DOS_POSIX";
 #elif defined OS_MACOS
-  char dos[] = "OS_MACOS";
+  char os[] = "OS_MACOS";
+  char dos[] = "-DOS_MACOS -DOS_POSIX";
 #elif defined OS_FREEBSD
-  char dos[] = "OS_FREEBSD";
+  char os[] = "OS_FREEBSD";
+  char dos[] = "-DOS_FREEBSD -DOS_POSIX";
+#elif defined OS_OPENBSD
+  char os[] = "OS_OPENBSD";
+  char dos[] = "-DOS_OPENBSD -DOS_POSIX";
 #endif
   if ( argc < 4) {
     usage();
@@ -122,15 +128,15 @@ int main(  int argc, char *argv[])
   if ( (s = getenv( "pwre_cc")))
     strncpy( pwre_cc, s, sizeof(pwre_cc));
   else
-    strcpy( pwre_cc, "gcc");
+    strncpy( pwre_cc, "gcc", sizeof(pwre_cc));
   if ( (s = getenv( "pwre_cxx")))
     strncpy( pwre_cxx, s, sizeof(pwre_cxx));
   else
-    strcpy( pwre_cxx, "g++");
+    strncpy( pwre_cxx, "g++", sizeof(pwre_cxx));
   if ( (s = getenv( "pwre_ar")))
     strncpy( pwre_ar, s, sizeof(pwre_ar));
   else
-    strcpy( pwre_ar, "ar");
+    strncpy( pwre_ar, "ar", sizeof(pwre_ar));
 
 
   idx = 0;
@@ -155,11 +161,11 @@ int main(  int argc, char *argv[])
 	  idx++;
 	  break;
 	case 1:
-	  strcpy( filespec, argv[i]);
+	  strncpy( filespec, argv[i], sizeof(filespec));
 	  idx++;
 	  break;
 	case 2:
-	  strcpy( outfile, argv[i]);
+	  strncpy( outfile, argv[i], sizeof(filespec));
 	  idx++;
 	  break;
       }
@@ -176,7 +182,7 @@ int main(  int argc, char *argv[])
     while( dcli_read_line( line, sizeof(line), fp)) {
       dcli_trim( line, line);
       if ( strncmp( line, "#if" , 3) == 0) {
-        in_if = ! check_os( &line[4], dos);
+        in_if = ! check_os( &line[4], os);
         continue;
       }
       else if ( in_if) {
@@ -201,8 +207,8 @@ int main(  int argc, char *argv[])
 
   switch ( mtype) {
   case merge_eMtype_IoBase: {
-    strcpy( cfile, "/tmp/rt_io_base_methods.c");
-    strcpy( ofile, "/tmp/rt_io_base_methods.o");
+    strncpy( cfile, "/tmp/rt_io_base_methods.c", sizeof(cfile));
+    strncpy( ofile, "/tmp/rt_io_base_methods.o", sizeof(cfile));
 
     outfp = fopen( cfile, "w");
     if ( !outfp) {
@@ -224,8 +230,8 @@ int main(  int argc, char *argv[])
     break;
   }
   case merge_eMtype_WbBase: {
-    strcpy( cfile, "/tmp/wb_i_base_methods.cpp");
-    strcpy( ofile, "/tmp/wb_i_base_methods.o");
+    strncpy( cfile, "/tmp/wb_i_base_methods.cpp", sizeof(cfile));
+    strncpy( ofile, "/tmp/wb_i_base_methods.o", sizeof(cfile));
 
     outfp = fopen( cfile, "w");
     if ( !outfp) {
@@ -247,8 +253,8 @@ int main(  int argc, char *argv[])
     break;
   }
   case merge_eMtype_XttBase: {
-    strcpy( cfile, "/tmp/xtt_i_methods.c");
-    strcpy( ofile, "/tmp/xtt_i_methods.o");
+    strncpy( cfile, "/tmp/xtt_i_methods.c", sizeof(cfile));
+    strncpy( ofile, "/tmp/xtt_i_methods.o", sizeof(cfile));
 
     outfp = fopen( cfile, "w");
     if ( !outfp) {
@@ -274,22 +280,22 @@ int main(  int argc, char *argv[])
   dcli_translate_filename( incdir, "$pwr_einc");
   switch ( mtype) {
   case merge_eMtype_WbBase:
-    sprintf( cmd, "%s -c -I%s -D%s -o %s %s", pwre_cxx, incdir, dos, ofile, cfile);
+    snprintf( cmd, sizeof(cmd), "%s -c -I%s %s -o %s %s", pwre_cxx, incdir, dos, ofile, cfile);
     break;
   default:
-    sprintf( cmd, "%s -c -I%s -D%s -o %s %s", pwre_cc, incdir, dos, ofile, cfile);
+    snprintf( cmd, sizeof(cmd), "%s -c -I%s %s -o %s %s", pwre_cc, incdir, dos, ofile, cfile);
   }
   if ( arg_verbose)
     printf( "co_merge: %s\n", cmd);
   system( cmd);
-  sprintf( cmd, "%s r %s %s", pwre_ar, outfile, ofile);
+  snprintf( cmd, sizeof(cmd), "%s r %s %s", pwre_ar, outfile, ofile);
   if ( arg_verbose)
     printf( "co_merge: %s\n", cmd);
   system(cmd);
-  sprintf( cmd, "rm %s", ofile);
+  snprintf( cmd, sizeof(cmd), "rm %s", ofile);
   system(cmd);
   if ( !arg_keep) {
-    sprintf( cmd, "rm %s", cfile);
+    snprintf( cmd, sizeof(cmd), "rm %s", cfile);
     system(cmd);
   }
   return 1;

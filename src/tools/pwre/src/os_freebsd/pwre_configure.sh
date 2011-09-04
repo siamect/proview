@@ -97,7 +97,7 @@ pwre_config_check_lib()
           elif test $4 == "motif"; then
 	    conf_libmotif=$conf_libmotif" -l${lib%.*}"
           else
-	    conf_lib=$conf_lib" -l${lib%.*}"
+	    conf_lib=$conf_lib" -l${lib%%.*}"
           fi
 	elif test $3 == "gtk"; then
 	  conf_libgtk=$conf_libgtk" \\\`pkg-config --libs gtk+-2.0\\\`"

@@ -42,7 +42,7 @@
 #if defined OS_VMS
 # include <stdio.h>
 # include <stdlib.h>
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 # include <stdio.h>
 # include <stdlib.h>
 # include <signal.h>

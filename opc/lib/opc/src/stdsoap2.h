@@ -413,6 +413,21 @@ A commercial use license is available from Genivia, Inc., contact@genivia.com
 #  define ULONG64 unsigned LONG64
 #  define SOAP_LONG_FORMAT "%ld"
 #  define SOAP_ULONG_FORMAT "%lu"
+# elif defined OS_OPENBSD
+/* Default asumptions on supported functions */
+#  define HAVE_STRRCHR
+#  define HAVE_STRTOD
+#  define HAVE_SSCANF
+#  define HAVE_STRTOL
+#  define HAVE_STRTOUL
+#  define HAVE_SYS_TIMEB_H
+#  define HAVE_FTIME
+#  define HAVE_RAND_R
+//#  define HAVE_GETHOSTBYNAME_R
+#  define HAVE_GMTIME_R
+#  define HAVE_LOCALTIME_R
+#  define HAVE_WCTOMB
+#  define HAVE_MBTOWC
 # else
 /* Default asumptions on supported functions */
 #  define HAVE_STRRCHR
@@ -584,7 +599,9 @@ extern "C" {
 #endif
 
 /* Portability: define SOAP_SOCKLEN_T */
-#if defined(_AIX)
+#if defined(OS_OPENBSD)
+# define SOAP_SOCKLEN_T socklen_t
+#elif defined(_AIX)
 # define SOAP_SOCKLEN_T socklen_t
 #elif defined(SOCKLEN_T)
 # define SOAP_SOCKLEN_T SOCKLEN_T

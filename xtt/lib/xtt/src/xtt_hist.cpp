@@ -40,7 +40,7 @@
    Last modification: 030217
 */
 
-#if defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 
 using namespace std;
 

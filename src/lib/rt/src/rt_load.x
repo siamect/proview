@@ -49,7 +49,7 @@
 %# define       load_cNameRttSignals     "rtt_crrs_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 
 %
-%#elif defined OS_LYNX || defined OS_LINUX || OS_MACOS || OS_FREEBSD
+%#elif defined OS_POSIX
 %# define	load_cNameDirectory	"pwrp_load"
 %# define	load_cDirectory		"$pwrp_load/"
 %# define	load_cNamePlc		"%splc_%s_%04d_%05d"

@@ -37,7 +37,7 @@
 #include <stdio.h>
 #if defined OS_LYNX
 # include <sys/wait.h>
-#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <unistd.h>
@@ -127,7 +127,7 @@ start (
   pwr_tStatus sts;
   char console[80];
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
   int	fd;
 
   if ( strcmp( cp->console, "") == 0)
@@ -510,7 +510,7 @@ terminate (
   
   mh_UtilDestroyEvent();
 
-#if defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#if defined OS_POISIX
     /* Unlink errlog mwessage queue */
     errl_Unlink();
   #endif
@@ -728,7 +728,7 @@ usage (
   char *name
 )
 {
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#if defined OS_POSIX
   fprintf(stderr, "usage: %s -a arg -b arg -d arg -efg arg -hip arg -q arg -ru arg -s arg -vwA arg -H arg\n", name);
 #else
   fprintf(stderr, "usage: %s -a arg -b arg -d arg -efhip arg -q arg -rvwA arg -H arg\n", name);
@@ -739,7 +739,7 @@ usage (
   fprintf(stderr, "  -d arg: use files from directory 'arg'\n");
   fprintf(stderr, "  -e    : ignore errors\n");
   fprintf(stderr, "  -f    : ignore fatal errors\n");
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#if defined OS_POSIX
   fprintf(stderr, "  -g arg: setgid to 'arg' before starting\n");
 #endif
   fprintf(stderr, "  -h    : give help\n");
@@ -747,7 +747,7 @@ usage (
   fprintf(stderr, "  -p arg: use 'arg' as PLC\n");
   fprintf(stderr, "  -q arg: use 'arg' as qcom bus id\n");
   fprintf(stderr, "  -r    : restart with new versions of loadfiles and PLC\n");
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#if defined OS_POSIX
   fprintf(stderr, "  -s    : stop of Proview/R\n");
   fprintf(stderr, "  -u arg: setuid to 'arg' before starting\n");
 #endif
@@ -829,7 +829,7 @@ events (
   pid_t		last_pid = 1;
   pwr_tStatus	sts = INI__SUCCESS;
   qcom_sGet	get;
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#if defined OS_POSIX
   int		tmo_ms = 1000;
 #else
   int		tmo_ms = qcom_cTmoEternal;
@@ -889,7 +889,7 @@ events (
       qcom_Free(NULL, get.data);
     }
 
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#if defined OS_POSIX
     if (lst_Succ(NULL, &cp->proc_lh, &pl) == NULL) break;
     pid = waitpid(-1, &status, WNOHANG|WUNTRACED);
     if (pid == 0) continue;

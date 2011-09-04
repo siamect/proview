@@ -64,7 +64,7 @@
 # include <descrip.h>
 # include <latdef.h>   
 # include <ssdef.h>
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 # include <stdio.h>
 # include <string.h>
 # include <termios.h>
@@ -209,7 +209,7 @@ int qio_assign( char *s, int *chn)
     }while( nbbyte >= bytebuff );		
 	return sts;
 }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 {
 	int chan = -1;
   	int sts;
@@ -251,7 +251,7 @@ int qio_set_attr( int *chn)
 {
 	return RTT__SUCCESS;
 }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 {
 	int chan;
   	int sts;
@@ -291,7 +291,7 @@ int qio_reset( int *chn)
 {
 	return RTT__SUCCESS;
 }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 {
 	int chan;
   	int sts;
@@ -371,7 +371,7 @@ int qio_readw( int *chn, char *buf, int len)
 	rtt_exit_now(1, sts);
 
 }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 {
 	int n = 0;
 
@@ -450,7 +450,7 @@ int qio_read( int *chn, int tmo, char *buf, int len)
 	rtt_exit_now( 1, sts);
 	return 1;
 }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 {
 	int n;
 
@@ -579,7 +579,7 @@ int qio_writew( int *chn, char *buf, int len)
 	return sts;
 
 }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 {
 	if ( *chn == STDIN_FILENO)
 	  write( STDOUT_FILENO, buf, len);
@@ -655,7 +655,7 @@ int qio_write( int *chn, int tmo, char *buf, int len)
 	return sts == ELN$_TIMEOUT ? 0 : 1;
 
 }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 {
 	if ( *chn == STDIN_FILENO)
 	  write( STDOUT_FILENO, buf, len);

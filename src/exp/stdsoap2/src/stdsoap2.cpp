@@ -3415,7 +3415,7 @@ tcp_gethost(struct soap *soap, const char *addr, struct in_addr *inaddr)
   { host = NULL;
     soap->errnum = h_errno;
   }
-#elif defined(HAVE_GETHOSTBYNAME_R)
+#elif defined(HAVE_GETHOSTBYNAME_R) && !defined OS_OPENBDS
   host = gethostbyname_r(addr, &hostent, soap->buf, SOAP_BUFLEN, &soap->errnum);
 #elif defined(VXWORKS)
   /* If the DNS resolver library resolvLib has been configured in the vxWorks

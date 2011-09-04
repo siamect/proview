@@ -43,7 +43,7 @@
 # include <string.h>
 # include <descrip.h>
 # include <starlet.h>
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#elif defined OS_POSIX
 # include <string.h>
 #endif
 
@@ -54,7 +54,7 @@
 #define FACNUM(sts)	(((sts >> 16) & 0x0fff) - 0x800)
 #define MSGIDX(sts)	((sts & 0x7fff) >> 3)
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 
   /* The heads of the message lists.  */
 
@@ -124,7 +124,7 @@ msg_GetText (
   return msg_GetMessage(sts, 1, buf, bufSize);
 }
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 
 /* Return the address to the Facility which contains the
    FacNum and MsgIdx.  */

@@ -47,7 +47,7 @@
 # include <string.h>
 # include <starlet.h>
 # include <lib$routines.h>
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#elif defined OS_POSIX
 # include <stdio.h>
 # include <string.h>
 #endif
@@ -293,7 +293,7 @@ void ini_StartApplications ()
       sts = lib$spawn(&SpawnCommand, NULL, NULL, &Flags);
       if (EVEN(sts)) errh_Error("lib$spawn '%s'\n%m", spawnbuf, sts);
 
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#elif defined OS_POSIX
 
       errh_Error("NYI. start %s \"%s\" %d %d \"%s\"",
 	applp->FileName, applp->ProgramName,

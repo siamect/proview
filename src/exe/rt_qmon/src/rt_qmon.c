@@ -48,13 +48,13 @@
 # include <errno.h>
 # include <unistd.h>
 # include <sched.h>
-# if defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
-#   include <sys/uio.h>
-#   include <sys/socket.h>
-# else
+# if defined OS_LYNX
 #   include <uio.h>
 #   include <socket.h>
-#endif
+# elif defined OS_POSIX
+#   include <sys/uio.h>
+#   include <sys/socket.h>
+# endif
 #endif
 
 #if defined OS_VMS

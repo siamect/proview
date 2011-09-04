@@ -334,7 +334,7 @@ encode_sfloat (
   return TRUE;
 }    
 
-#elif (defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD) && (defined(HW_X86) || defined(HW_X86_64) || defined(HW_ARM))
+#elif (defined OS_POSIX) && (defined(HW_X86) || defined(HW_X86_64) || defined(HW_ARM))
 
 static pwr_tBoolean
 encode_sfloat (
@@ -404,7 +404,7 @@ decode_sfloat (
   return TRUE;
 }    
 
-#elif (defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD) && (defined(HW_X86) || defined(HW_X86_64) || defined(HW_ARM))
+#elif (defined OS_POSIX) && (defined(HW_X86) || defined(HW_X86_64) || defined(HW_ARM))
 
 static pwr_tBoolean
 decode_sfloat(

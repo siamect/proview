@@ -44,7 +44,7 @@
 #include <unistd.h>
 #if defined OS_LYNX
 # define LOG_QUEUE_NAME "/pwrlogqueue"
-#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 # if defined _POSIX_MESSAGE_PASSING
 #  define LOG_QUEUE_NAME "/pwrlogqueue"
 # else
