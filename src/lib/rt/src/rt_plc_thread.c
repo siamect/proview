@@ -250,6 +250,9 @@ scan (
       errh_SetStatus( PLC__IOREAD);
     }
   }
+  if ( pp->Node->EmergBreakTrue && !tp->emergency_break_old)
+    io_swap(tp->plc_io_ctx, io_eEvent_EmergencyBreak);
+  tp->emergency_break_old = pp->Node->EmergBreakTrue;
 
   thread_MutexLock(&pp->io_copy_mutex);
 
@@ -307,6 +310,7 @@ scan (
 	delay_action = csup_Exec(&sts, tp->csup_lh, (pwr_tDeltaTime *) &tp->sync_time, (pwr_tDeltaTime *) &tp->after_scan, &now);
 	if (delay_action == 2) {
 	  pp->IOHandler->IOReadWriteFlag = FALSE;
+	  pp->Node->EmergBreakTrue = TRUE;
 	  errh_SetStatus( PLC__IOSTALLED);
 	}
       }

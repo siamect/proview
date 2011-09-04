@@ -84,25 +84,33 @@ static pwr_tStatus IoRackInit (
 static pwr_tStatus IoRackSwap (
   io_tCtx	ctx,
   io_sAgent	*ap,
-  io_sRack	*rp
+  io_sRack	*rp,
+  io_eEvent	event
+
 ) 
 {
   io_sRackLocal 	*local;
 
-  if (!rp->Local) {
-    /* Open Qbus driver */
-    local = calloc( 1, sizeof(*local));
-    rp->Local = local;
-
-    local->Qbus_fp = open("/dev/qbus", O_RDWR);
-    if ( local->Qbus_fp == -1)
-    {
-      errh_Error( "Qbus swap initialization error, IO rack %s", rp->Name);
-      return IO__ERRDEVICE;
+  switch ( event) {
+  case io_eEvent_IoCommSwapInit:
+  case io_eEvent_IoCommSwap:
+    if (!rp->Local) {
+      /* Open Qbus driver */
+      local = calloc( 1, sizeof(*local));
+      rp->Local = local;
+      
+      local->Qbus_fp = open("/dev/qbus", O_RDWR);
+      if ( local->Qbus_fp == -1)
+	{
+	  errh_Error( "Qbus swap initialization error, IO rack %s", rp->Name);
+	  return IO__ERRDEVICE;
+	}
+      
+      errh_Info( "Swap init of IO rack %s", rp->Name);
     }
-  
-    errh_Info( "Swap init of IO rack %s", rp->Name);
+  default: ;
   }
+
   return 1;
 }
 

@@ -209,7 +209,9 @@ static pwr_tStatus IoRackInit (
 static pwr_tStatus IoRackSwap (
   io_tCtx	ctx,
   io_sAgent	*ap,
-  io_sRack	*rp
+  io_sRack	*rp,
+  io_eEvent	event
+
 ) 
 {
   io_sRackLocal *local;
@@ -220,44 +222,51 @@ static pwr_tStatus IoRackSwap (
   struct bfb_buf rbuf;
   int size;
 
-  if (!rp->Local) {
+  switch ( event) {
+  case io_eEvent_IoCommSwapInit:
+  case io_eEvent_IoCommSwap:
 
-    sts = IoRackInitSwap(ctx, ap, rp);
-    if (sts != IO__SUCCESS)
-      return IO__ERRINIDEVICE;
-  }
-  
-  local = (io_sRackLocal *) rp->Local;
-  op = (pwr_sClass_Ssab_RemoteRack *) rp->op;
+    if (!rp->Local) {
 
-  // Calc length and send read request
-  local->read_req.service = BFB_SERVICE_READ;  
-  local->read_req.length = local->next_read_req_item*4 + 4;
-  sts = send(local->s, &local->read_req, local->read_req.length, 0);
-  op->TX_packets++;
-  local->next_read_req_item = 0;
-  bzero(&local->read_area, sizeof(local->read_area));
-
-  sts = 1;
-  while (sts > 0) {
-    FD_ZERO(&fds);
-    FD_SET(local->s, &fds);
-    tv.tv_sec = 0;
-    tv.tv_usec = 0;
-    sts = select(32, &fds, NULL, NULL, &tv);
-    if (sts > 0) {
-      size = recv(local->s, &rbuf, sizeof(rbuf), 0);
-      if (rbuf.service == BFB_SERVICE_READ) {
-        bzero(&local->read_area, sizeof(local->read_area));
-        memcpy(&local->read_area, &rbuf, size);
-      }
-      else if (rbuf.service == BFB_SERVICE_WRITE) {
-        bzero(&local->write_area, sizeof(local->write_area));
-        memcpy(&local->write_area, &rbuf, size);
-      }
-      op->RX_packets++;
+      sts = IoRackInitSwap(ctx, ap, rp);
+      if (sts != IO__SUCCESS)
+	return IO__ERRINIDEVICE;
     }
-  } 
+  
+    local = (io_sRackLocal *) rp->Local;
+    op = (pwr_sClass_Ssab_RemoteRack *) rp->op;
+
+    // Calc length and send read request
+    local->read_req.service = BFB_SERVICE_READ;  
+    local->read_req.length = local->next_read_req_item*4 + 4;
+    sts = send(local->s, &local->read_req, local->read_req.length, 0);
+    op->TX_packets++;
+    local->next_read_req_item = 0;
+    bzero(&local->read_area, sizeof(local->read_area));
+
+    sts = 1;
+    while (sts > 0) {
+      FD_ZERO(&fds);
+      FD_SET(local->s, &fds);
+      tv.tv_sec = 0;
+      tv.tv_usec = 0;
+      sts = select(32, &fds, NULL, NULL, &tv);
+      if (sts > 0) {
+	size = recv(local->s, &rbuf, sizeof(rbuf), 0);
+	if (rbuf.service == BFB_SERVICE_READ) {
+	  bzero(&local->read_area, sizeof(local->read_area));
+	  memcpy(&local->read_area, &rbuf, size);
+	}
+	else if (rbuf.service == BFB_SERVICE_WRITE) {
+	  bzero(&local->write_area, sizeof(local->write_area));
+	  memcpy(&local->write_area, &rbuf, size);
+	}
+	op->RX_packets++;
+      }
+    } 
+    break;
+  default: ;
+  }
   
   return IO__SUCCESS;
 

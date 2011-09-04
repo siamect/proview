@@ -107,7 +107,8 @@ static pwr_tStatus IoAgentClose (
 );
 static pwr_tStatus IoAgentSwap (
   io_tCtx	ctx,
-  io_sAgent	*ap
+  io_sAgent	*ap,
+  io_eEvent     event
 );
 
 
@@ -784,36 +785,49 @@ static pwr_tStatus IoAgentInit (
 \*----------------------------------------------------------------------------*/
 static pwr_tStatus IoAgentSwap (
   io_tCtx	ctx,
-  io_sAgent	*ap
+  io_sAgent	*ap,
+  io_eEvent	event
 ) 
 {
-  pwr_sClass_Pb_Profiboard *op;
-  char DeviceName[64];
-  io_sAgentLocal *local;
+
+  switch ( event) {
+  case io_eEvent_IoCommSwapInit:
+  case io_eEvent_IoCommSwap: {
+    pwr_sClass_Pb_Profiboard *op;
+    char DeviceName[64];
+    io_sAgentLocal *local;
   
-  if (ap->Local == NULL) {
-    /* Allocate area for local data structure */
-    ap->Local = calloc(1, sizeof(io_sAgentLocal));
-    if (!ap->Local) {
-      errh_Error( "ERROR swap init Profibus DP Master %s - %s", ap->Name, "calloc");
-      return IO__ERRINIDEVICE;
-    }
+    if (ap->Local == NULL) {
+      /* Allocate area for local data structure */
+      ap->Local = calloc(1, sizeof(io_sAgentLocal));
+      if (!ap->Local) {
+	errh_Error( "ERROR swap init Profibus DP Master %s - %s", ap->Name, "calloc");
+	return IO__ERRINIDEVICE;
+      }
     
-    local = (io_sAgentLocal *) ap->Local;
-
-    errh_Info( "Swap init interface for Profibus DP Master %s", ap->Name);
-
-    op = (pwr_sClass_Pb_Profiboard *) ap->op;
-    
-    sprintf(DeviceName, "/dev/pbboard%u", op->BusNumber - 1);
-    local->hDpsBoardDevice = open(DeviceName, O_RDONLY | O_NONBLOCK);
-    
-    if (local->hDpsBoardDevice == -1) {
-      errh_Error( "ERROR swap init Profibus DP Master %s - %s", ap->Name, "open");
-      return IO__ERRINIDEVICE;
-    }
-  }
+      local = (io_sAgentLocal *) ap->Local;
       
+      errh_Info( "Swap init interface for Profibus DP Master %s", ap->Name);
+
+      op = (pwr_sClass_Pb_Profiboard *) ap->op;
+    
+      sprintf(DeviceName, "/dev/pbboard%u", op->BusNumber - 1);
+      local->hDpsBoardDevice = open(DeviceName, O_RDONLY | O_NONBLOCK);
+    
+      if (local->hDpsBoardDevice == -1) {
+	errh_Error( "ERROR swap init Profibus DP Master %s - %s", ap->Name, "open");
+	return IO__ERRINIDEVICE;
+      }
+    }
+    break;
+  }
+  case io_eEvent_EmergencyBreak:
+  case io_eEvent_IoCommEmergencyBreak:
+    IoAgentClose( ctx, ap);
+    break;
+  }
+
+    
   return IO__SUCCESS;
 }
 
