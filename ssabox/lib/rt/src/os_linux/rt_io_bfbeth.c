@@ -38,3 +38,15 @@ pwr_tUInt16 bfbeth_get_data(io_sRackLocal *r, pwr_tUInt16 address, int *sts) {
   }
   return 0;
 }
+
+void bfbeth_get_write_status(io_sRackLocal *r, pwr_tUInt16 address, int *sts) {
+  int i;
+  
+  *sts = 1;
+  for (i=0; i<350; i++) {
+    if ( (0x8000 | r->write_area.item[i].address) == address) {
+      *sts = 0x8000 & r->write_area.item[i].address ? 1 : -1;
+      return;
+    }
+  }
+}

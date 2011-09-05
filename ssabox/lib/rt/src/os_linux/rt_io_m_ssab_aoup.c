@@ -77,6 +77,7 @@ typedef struct {
 	pwr_tBoolean	OldTestOn[IO_MAXCHAN];
 	int		WriteFirst;
 	pwr_tTime       ErrTime;
+        int		FirstScan;
 } io_sLocal;
 
 static pwr_tStatus AoRangeToCoef( 
@@ -148,6 +149,7 @@ static pwr_tStatus IoCardInit (
   local = calloc( 1, sizeof(*local));
   local->Address = op->RegAddress;
   local->Qbus_fp = r_local->Qbus_fp;
+  local->FirstScan = 1;
 
   errh_Info( "Init of ao card '%s'", cp->Name);
   
@@ -214,6 +216,8 @@ static pwr_tStatus IoCardWrite (
   qbus_io_write		wb;
   int			sts;
   pwr_tTime             now;
+  int			bfb_error = 0;
+  pwr_sClass_Ssab_RemoteRack	*rrp;
 
   local = (io_sLocal *) cp->Local;
   op = (pwr_sClass_Ssab_BaseACard *) cp->op;
@@ -271,8 +275,35 @@ static pwr_tStatus IoCardWrite (
       }
       else {
       	/* Ethernet I/O, Request a write to current address */
+	sts = 1;      
+	if ( !local->FirstScan)
+	  bfbeth_get_write_status(r_local, (pwr_tUInt16) (local->Address + 2*i), &sts);
+
       	bfbeth_set_write_req(r_local, (pwr_tUInt16) (local->Address + 2*i), data);
-      	sts = 1;      
+
+	if (sts == -1) {
+	  /* Error handling for ethernet Qbus-I/O */
+	  rrp = (pwr_sClass_Ssab_RemoteRack *) rp->op;
+	  if (bfb_error == 0) {
+	    op->ErrorCount++;
+	    bfb_error = 1;
+	    if ( op->ErrorCount == op->ErrorSoftLimit)
+	      errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);
+	    if ( op->ErrorCount == op->ErrorHardLimit)
+	      errh_Error( "IO Error hard limit reached on card '%s', stall action %d", cp->Name, rrp->StallAction);
+	    if ( op->ErrorCount >= op->ErrorHardLimit && rrp->StallAction == pwr_eSsabStallAction_ResetInputs ) {
+	      sts = 1;
+	    }
+	    if ( op->ErrorCount >= op->ErrorHardLimit && rrp->StallAction == pwr_eSsabStallAction_EmergencyBreak ) {
+	      ctx->Node->EmergBreakTrue = 1;
+	      return IO__ERRDEVICE;
+	    }
+	  }
+	  if (sts == -1) continue;
+	}
+	else {
+	  op->ErrorCount = 0;
+	}
       }
       
       if ( sts == -1)
