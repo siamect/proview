@@ -80,7 +80,7 @@ int	dcli_get_defaultfilename(
     strcat( filename, inname);
     strcpy( outname, filename);
   }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#elif defined OS_POSIX
   if ( strchr( inname, '/'))
     cdh_Strcpy( outname, inname);
   else if ( ( s = strchr( inname, ':')))
@@ -144,13 +144,10 @@ int	dcli_get_defaultfilename(
     }
   }
 
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
-  // cdh_ToLower( outname, outname);
-#endif
   return DCLI__SUCCESS;
 }
 
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#if defined OS_POSIX
 
 /*************************************************************************
 *

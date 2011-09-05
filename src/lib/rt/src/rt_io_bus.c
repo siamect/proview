@@ -60,6 +60,7 @@
 #include "rt_errh.h"
 #include "rt_io_supervise.h"
 #include "rt_io_base.h"
+#include "rt_io_bus.h"
 
 #define PB_UDATA_DIAG 1
 

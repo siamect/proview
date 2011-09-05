@@ -87,7 +87,7 @@ static char CPPFLAGS[] = "/C /EP /nologo";
 #elif defined OS_VMS
 static char CPP[] = "cc";
 static char CPPFLAGS[] = "/decc/prep=";
-#elif defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_MACOS || defined OS_FREEBSD || defined OS_OPENBSD
 static char CPP[] = "/usr/bin/cpp";
 static char CPPFLAGS[] = "-C";
 #else

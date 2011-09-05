@@ -60,7 +60,7 @@
 
 #if defined OS_LYNX
 # include <sys/times.h>
-#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 # include <time.h>
 #endif
 
@@ -1014,7 +1014,7 @@ void time_Sleep( float time)
 	l_time.high = -1;	
 	l_time.low = - time * 10000000;	
 	ker$wait_any( NULL, NULL, &l_time);
-#elif defined(OS_LYNX) || defined (OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#elif defined OS_POSIX
 	pwr_tDeltaTime	p_time;
 	struct timespec ts;
 

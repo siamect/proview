@@ -174,7 +174,7 @@ static int receive( int fd, int id, ard_sMsg *rmsg, int size)
   return ARD__NOMSG;
 }
 
-static int poll( ard_sMsg *msg, io_sLocal *local, ard_eMsgType mtype)
+static int apoll( ard_sMsg *msg, io_sLocal *local, ard_eMsgType mtype)
 {
   int sts;
 
@@ -491,7 +491,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
     mtype = ard_eMsgType_No;
 
   if ( !local->DiPendingPoll)
-    poll( &msg, local, mtype);
+    apoll( &msg, local, mtype);
   else
     mtype = local->PendingMsgType;
 
@@ -824,7 +824,7 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
     else
       mtype = ard_eMsgType_No;
 
-    poll( &msg, local, mtype);
+    apoll( &msg, local, mtype);
   }
 
   return IO__SUCCESS;

@@ -60,7 +60,7 @@
 #include <lib$routines.h>
 #endif
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

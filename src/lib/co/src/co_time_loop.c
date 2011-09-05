@@ -58,7 +58,7 @@
 # include <stdlib.h>
 #endif
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 # include <sys/times.h>
 #endif
 
@@ -125,7 +125,7 @@ time_GetUpTime (
   tp->tv_nsec *= -100;
 
   pwr_Assert(tp->tv_sec >= 0 && tp->tv_nsec >= 0);
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#elif defined OS_POSIX
   time_GetTime( (pwr_tTime *) tp);
 #endif
 
@@ -201,7 +201,7 @@ time_LoopWait (
     sts = sys$waitfr( ls->TimerFlag);
 #endif
   }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#elif defined OS_POSIX
   {
     struct timespec wait_time_ts;
     wait_time_ts.tv_sec = wait_time.tv_sec;

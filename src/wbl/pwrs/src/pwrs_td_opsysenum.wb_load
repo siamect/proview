@@ -157,5 +157,15 @@ SObject pwrs:Type
        Attr Value = 1024
      EndBody
     EndObject
+    !/**
+    !  Operating system is OpenBSD on x86_64
+    !*/
+    Object X86_64_OPENBSD $Value
+     Body SysBody
+       Attr PgmName = "X86_64_OPENBSD"
+       Attr Text = "OpenBSD on x86_64"
+       Attr Value = 2048
+     EndBody
+    EndObject
   EndObject
 EndSObject

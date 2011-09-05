@@ -180,7 +180,7 @@
 #define	RTT_K_COMMAND		286
 #define	RTT_K_SHIFT_ARROW_RIGHT 287
 #define	RTT_K_SHIFT_ARROW_LEFT 	288
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 # define RTT_K_RETURN 		10
 #else
 # define RTT_K_RETURN 		13
@@ -453,7 +453,7 @@ typedef struct {
 	pthread_t 	thread;
 	unsigned int    event_flag;
 #endif
-#if defined  OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined  OS_POSIX
 	pthread_t 	thread;
 #endif
 	int		line_size;

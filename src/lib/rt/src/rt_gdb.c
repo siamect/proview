@@ -48,7 +48,7 @@
 
 #if defined (OS_LYNX)
 # include <sys/mman.h>
-#elif	defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 # include <sys/file.h>
 # include <sys/stat.h>
 # include <sys/ipc.h>
@@ -203,7 +203,7 @@ mapLocalDb (
 )
 {
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
   pthread_mutexattr_t	mattr;
 #endif
 
@@ -214,17 +214,15 @@ mapLocalDb (
 
 #ifdef	OS_ELN
   ELN$CREATE_MUTEX(gdbroot->thread_lock, NULL);
-
-#elif defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD || defined(OS_LYNX) && !defined(PWR_LYNX_30)
-  pthread_mutexattr_init(&mattr);
-  if (pthread_mutex_init(&gdbroot->thread_lock, &mattr) == -1) {
+#elif defined OS_LYNX && defined PWR_LYNX_30
+  pthread_mutexattr_create(&mattr);
+  if (pthread_mutex_init(&gdbroot->thread_lock, mattr) == -1) {
     perror("mapLocalDb: pthread_mutex_init, ");
     pwr_Return(NULL, sts, GDB__MUTEXINIT);
   }
-
-#elif defined OS_LYNX
-  pthread_mutexattr_create(&mattr);
-  if (pthread_mutex_init(&gdbroot->thread_lock, mattr) == -1) {
+#elif defined OS_POSIX
+  pthread_mutexattr_init(&mattr);
+  if (pthread_mutex_init(&gdbroot->thread_lock, &mattr) == -1) {
     perror("mapLocalDb: pthread_mutex_init, ");
     pwr_Return(NULL, sts, GDB__MUTEXINIT);
   }
@@ -298,7 +296,7 @@ mapLocalDb (
   return gdbroot;  
 }
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 /*
  * A fix which unlinks all segments for the given name.
  * I don't know where to put this routine, maybe it fits better in rt_pool.c.
@@ -663,7 +661,7 @@ gdb_CreateDb (
 
   evaluateInit(ip);
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
   unlinkPool(gdb_cNamePool);
   unlinkPool(gdb_cNameRtdb);
 #endif
@@ -893,7 +891,7 @@ gdb_UnlinkDb ()
   int    shm_id;
   struct shmid_ds   ds;
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 
   /* Unlink pool. */
 

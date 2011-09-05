@@ -19,7 +19,7 @@ pwra_set_func()
     # Command is "set base"
     basename=$2
     basename=${basename//\./\\.}
-    baseroot=`eval cat $pwra_db/pwr_projectlist.dat | grep "\b"$basename"\b" | grep "\b"base"\b" | awk '{print $3}'`
+    baseroot=`eval cat $pwra_db/pwr_projectlist.dat | grep "[[:<:]]"$basename"[[:>:]]" | grep "^"%base"[[:>:]]" | awk '{print $3}'`
     if [ -z $baseroot ]; then
       echo "Unable to find base '$2'"
       return
@@ -60,14 +60,14 @@ pwra_set_func()
     # Command is "set project"
 
     project=$2
-    basename=`eval cat $pwra_db/pwr_projectlist.dat | grep "^"$project"\b" | awk '{print $2}'`
+    basename=`eval cat $pwra_db/pwr_projectlist.dat | grep "^"$project"[[:>:]]" | awk '{print $2}'`
     basename=${basename//\./\\.}
     if [ -z $basename ]; then
       echo "Unable to find project '$2'"
       return
     fi
     
-    baseroot=`eval cat $pwra_db/pwr_projectlist.dat | grep "\b"$basename"\b" | grep "\b"base"\b" | awk '{print $3}'`
+    baseroot=`eval cat $pwra_db/pwr_projectlist.dat | grep "[[:<:]]"$basename"[[:>:]]" | grep "^"%base"[[:>:]]" | awk '{print $3}'`
     if [ -z $baseroot ]; then
       echo "Unable to find base '$2'"
       return
@@ -123,6 +123,9 @@ pwra_parse ()
     hw="hw_x86_64"
   elif [ $unamestr == "FreeBSD" ]; then
     os="os_freebsd"
+    hw="hw_x86_64"
+  elif [ $unamestr == "OpenBSD" ]; then
+    os="os_openbsd"
     hw="hw_x86_64"
   else
     if [ $machine != "x86_64" ]; then

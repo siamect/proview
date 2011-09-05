@@ -95,7 +95,7 @@ thread_CondInit (
 
   return errno_Pstatus(pthread_cond_init(&cp->c, 0));
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 
   pthread_condattr_t attr;
   
@@ -130,7 +130,7 @@ thread_MutexInit (
 
   return errno_Pstatus(pthread_mutex_init(mp, NULL));
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 
   return errno_Status(pthread_mutex_init(mp, NULL));
 
@@ -154,7 +154,7 @@ thread_MutexLock (
 
   return errno_Pstatus(pthread_mutex_lock(mp));
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 
   return errno_Status(pthread_mutex_lock(mp));
 
@@ -183,7 +183,7 @@ thread_MutexUnlock (
 
   return errno_Pstatus(pthread_mutex_unlock(mp));
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 
   return errno_Status(pthread_mutex_unlock(mp));
 
@@ -215,7 +215,7 @@ thread_Cancel (
 
     return errno_Pstatus(pthread_cancel(*tp));
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 
     return errno_Status(pthread_cancel(*tp));
 
@@ -260,7 +260,7 @@ thread_Create (
 
   return errno_Pstatus(pthread_create(tp, pthread_attr_default, routine, arg));
 
-#elif defined OS_VMS || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD || defined OS_LYNX
+#elif defined OS_VMS || defined OS_POSIX
 
   pthread_attr_t  attr;
   
@@ -296,7 +296,7 @@ thread_CondWait (
 
   return sts;
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 
   pwr_tStatus sts = THREAD__SUCCESS;
 
@@ -395,7 +395,7 @@ thread_CondTimedWait (
       return sts;
 
   }
-#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD || OS_LYNX
+#elif defined OS_POSIX
   {
     pwr_tTime now;
     pwr_tTime then;
@@ -471,7 +471,7 @@ thread_CondSignal (
 
   return sts;
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 
   cp->f = 1;
 
@@ -518,7 +518,7 @@ thread_Wait (
 
     ker$wait_any(&sts, NULL, vmstime);
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 
     struct timespec rmt;
     struct timespec ttime = {9999999, 0};
@@ -551,7 +551,7 @@ thread_Self ()
 
   return NULL;
 
-#elif defined OS_LYNX || defined OS_VMS || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX || defined OS_VMS
 
   return pthread_self();
 
@@ -634,7 +634,7 @@ thread_SetPrio (
 
     return errno_Status(pthread_setschedparam(id, SCHED_FIFO, &par));
   }
-#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
   {
     pthread_t tid;
     struct sched_param par;

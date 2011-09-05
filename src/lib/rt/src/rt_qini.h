@@ -56,7 +56,7 @@
 # include <in.h>
 # include <inet.h>
 # include <ucx$inetdef.h>
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#elif defined OS_POSIX
 # include <netinet/in.h>
 # include <arpa/inet.h>
 #endif
@@ -66,7 +66,7 @@
 #include "rt_qdb.h"
 #include "rt_qdb_msg.h"
 
-#if defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#if defined OS_POSIX
 # include <sys/socket.h>
 #else
 # include <socket.h>

@@ -50,7 +50,7 @@
       Time        Time in ms that is to be converted.
       TimeLI      pointer to a LARGE_INTEGER in which the converted
                   ms-time is stored.  */
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
   const char *rt_utl_convmstoli_str = "rt_utl_convmstoli, Not needed for LYNX and LINUX";
 #else
 

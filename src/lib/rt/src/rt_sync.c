@@ -77,7 +77,7 @@ sync_CondInit (
 
   return errno_Pstatus(pthread_cond_init(&cp->c, NULL));
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 
   return errno_Status(pthread_cond_init(&cp->c, NULL));
 
@@ -108,7 +108,7 @@ sync_CondSignal (
   cp->f = 1;
   return errno_Pstatus(pthread_cond_signal(&cp->c));
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
   cp->f = 1;
   return errno_Status(pthread_cond_signal(&cp->c));
 
@@ -139,7 +139,7 @@ sync_MutexInit (
 
   return errno_Pstatus(pthread_mutex_init(mp, NULL));
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 
   return errno_Status(pthread_mutex_init(mp, NULL));
 
@@ -167,7 +167,7 @@ sync_MutexLock (
 
   return errno_Pstatus(pthread_mutex_lock(mp));
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 
   return errno_Status(pthread_mutex_lock(mp));
 
@@ -196,7 +196,7 @@ sync_MutexUnlock (
 
   return errno_Pstatus(pthread_mutex_unlock(mp));
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 
   return errno_Status(pthread_mutex_unlock(mp));
 

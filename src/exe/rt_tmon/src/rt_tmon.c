@@ -291,7 +291,7 @@ main (
       tmo_ms = 0;
     }
 
-#if defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
     aproc_TimeStamp( ((float)tmo_ms)/1000, 5);
 
     get.data = NULL;
@@ -715,7 +715,7 @@ waitClock (
     ker$wait_any(&sts, NULL, vmstime);
 # endif
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 //    pwr_tTime  rmt;
 //    pwr_tTime  wait;
     static int tics_per_sec = 0;

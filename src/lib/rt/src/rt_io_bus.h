@@ -68,6 +68,14 @@ extern "C"
 #define NULL (void *) 0
 #endif
 
+#if defined OS_OPENBSD
+# ifdef swap16
+#  undef swap16
+# endif
+# ifdef swap32
+#  undef swap32
+# endif
+#endif
 
 /*----------------------------------------------------------------------------*\
   Io functions

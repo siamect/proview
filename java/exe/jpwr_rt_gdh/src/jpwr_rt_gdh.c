@@ -67,7 +67,7 @@ typedef struct {
   pwr_tRefId 	refid;
 } sJid;
 
-#if ( defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD) && defined HW_X86_64
+#if ( defined OS_POSIX) && defined HW_X86_64
 static tree_sTable *jid_table = 0;
 static int jid_next = 1;
 #endif
@@ -2750,7 +2750,7 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectBodyDef
 
 static int gdh_JidToPointer( int id, void **p)
 {
-#if ( defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD) && defined HW_X86_64
+#if ( defined OS_POSIX) && defined HW_X86_64
   pwr_tStatus sts;
   sJid *jp;
 
@@ -2767,7 +2767,7 @@ static int gdh_JidToPointer( int id, void **p)
 
 static int gdh_JidStore( void *p, pwr_tRefId r, int *id)
 {
-#if (defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD) && defined HW_X86_64
+#if (defined POSIX) && defined HW_X86_64
   sJid *jp;
   pwr_tStatus sts;
 
@@ -2794,7 +2794,7 @@ static int gdh_JidStore( void *p, pwr_tRefId r, int *id)
 
 static int gdh_JidRemove( pwr_tRefId r)
 {
-#if ( defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD) && defined HW_X86_64
+#if ( defined OS_POSIX) && defined HW_X86_64
   sJid *jp;
   pwr_tStatus sts;
 

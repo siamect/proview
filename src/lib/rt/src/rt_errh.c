@@ -54,7 +54,7 @@
 # include <ctype.h>
 #endif
 
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
+#if defined OS_POSIX
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
@@ -63,13 +63,13 @@
 # include <unistd.h>
 # include <errno.h>
 # include "rt_errl.h"
-# if defined(OS_LINUX)
+# if defined OS_LINUX
 #   include <time.h>
 #   include <mqueue.h>
-# elif defined(OS_MACOS) || defined OS_FREEBSD
+# elif defined OS_MACOS || defined OS_FREEBSD || defined OS_OPENBSD
 #   include <sys/msg.h>
 #   include <sys/ipc.h>
-# elif defined(OS_LYNX)
+# elif defined OS_LYNX
 #   include <mqueue.h>
 # endif
 
@@ -140,7 +140,7 @@ typedef struct {
   static mqd_t mqid = (mqd_t)-1;
   static unsigned int prio = 0;
   static int mq_send_errno = 0;
-#elif defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_MACOS || defined OS_FREEBSD || defined OS_OPENBSD
 
   typedef pid_t sPid;
 
@@ -165,7 +165,7 @@ static void errh_send (char*, char, pwr_tStatus, errh_eMsgType);
 static void log_message (errh_sLog*, char, const char*, va_list);
 static int msg_vsprintf (char *, const char *, aa_list, va_list);
 
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD || defined(OS_ELN)
+#if defined OS_POSIX || defined OS_ELN
  static size_t errh_strnlen (const char*, size_t);
 #else
 #define errh_strnlen strnlen
@@ -640,7 +640,7 @@ openLog ()
       return;
     }
   }
-#elif defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_MACOS || defined OS_FREEBSD || defined OS_OPENBSD
   if (mqid == (key_t)-1) {
     char name[64];
     char *busid = getenv(pwr_dEnvBusId);
@@ -739,7 +739,7 @@ get_pid (sPid *pid)
 
   return pid;
 }
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_POSIX
 static char *
 get_name (char *name, int size)
 {
@@ -787,7 +787,7 @@ get_header (char severity, char *s)
   localtime_r(&tp, &time.tv_sec);
   t = &tp;
   s += sprintf(s, " % 4d,% 4d ", (int)PIDGET(pid), (int)pthread_self());
-# elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
+# elif defined OS_POSIX
   time_t sec = time.tv_sec;
   localtime_r(&sec, &tp);
   t = &tp;
@@ -1053,7 +1053,7 @@ repeat:
 
 
 
-#if defined(OS_LYNX)  || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD || defined(OS_ELN)
+#if defined OS_POSIX || defined OS_ELN
 /* Different strlen function, returns len OR count,
    whatever comes true first.  */
 
@@ -1216,7 +1216,7 @@ errh_send (char *s, char severity, pwr_tStatus sts, errh_eMsgType message_type)
     return;
   }
 
-#elif defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_MACOS || defined OS_FREEBSD || defined OS_OPENBSD
 
   int len;
   if (mqid != -1) {

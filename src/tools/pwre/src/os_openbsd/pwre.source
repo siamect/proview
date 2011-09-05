@@ -1,0 +1,77 @@
+#!/bin/bash
+#
+# pwre.source
+#
+# This script must be sourced
+#
+# Only the init verb is handled by this script, all the others
+# is handled by pwre.perl 
+#
+
+#
+# Don't call pwre.perl if it is the init verb
+#
+env="$2"
+
+local cmd
+cmd="help"
+if [ -z $1 ] || [ $1 = $cmd ] || [ ${cmd#$1} != $cmd ]; then
+  $pwre_bin/pwre.pl $@
+  return
+fi
+cmd="init"
+if [ $1 = $cmd ]; then
+  echo "init..."
+  if [ "$env" = "" ]; then
+    echo "++ init what?"
+  else
+    export pwre_module=rt
+    export pwre_bmodule=rt
+    if $pwre_bin/pwre.pl _exists $2; then
+      set_env `$pwre_bin/pwre.pl _print $2`
+    else
+      echo "++ Environment $2 doesn't exist"
+    fi		
+    source $pwre_bin/pwre_function
+  fi
+  return
+fi
+
+cmd="module"
+if [ $1 = $cmd ]; then
+  echo "module..."
+  if [ -z $2 ]; then
+    export pwre_module="rt"
+    export pwre_bmodule="rt"
+  else
+    export pwre_module=$2
+    export pwre_bmodule=$2
+  fi
+  env=$pwre_env
+  set_env `$pwre_bin/pwre.pl _print $env`
+  return
+fi
+
+if [ "$pwre_os" == "" ]; then
+  # Set default values for os and hw
+  unamestr=`eval uname`
+  machine=`eval uname -m`
+  if [ $unamestr == "Darwin" ]; then
+    export pwre_os="os_macos"
+    export pwre_hw="hw_x86_64"
+  elif [ $unamestr == "FreeBSD" ]; then
+    export pwre_os="os_freebsd"
+    export pwre_hw="hw_x86_64"
+  else
+    if [ $machine != "x86_64" ]; then
+      machine="x86"
+    fi
+    export pwre_os="os_linux"  
+    export pwre_hw="hw_"$machine
+  fi
+fi
+
+$pwre_bin/pwre.pl $@
+
+
+
