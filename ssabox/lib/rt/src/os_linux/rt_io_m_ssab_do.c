@@ -231,7 +231,7 @@ static pwr_tStatus IoCardWrite (
     }
     else {
       /* Ethernet I/O, Request a write to current address */
-      sts = 1;      
+      sts = 0;
       if ( !local->FirstScan)
 	bfbeth_get_write_status(r_local, (pwr_tUInt16) local->Address[i], &sts);
 
@@ -257,7 +257,7 @@ static pwr_tStatus IoCardWrite (
 	}
 	if (sts == -1) continue;
       }
-      else {
+      else if ( sts == 1) {
 	op->ErrorCount = 0;
       }
     }
