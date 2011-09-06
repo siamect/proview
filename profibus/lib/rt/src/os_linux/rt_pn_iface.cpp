@@ -400,7 +400,6 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
     (num_iocrs * num_apis + num_modules + num_datarecords) * sizeof(T_PN_REFERENCE) +
     data_record_length;
 
-  service_desc->DataLength = length;
 
   pData = (char *) (service_desc + 1);
 
@@ -708,10 +707,14 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
 	pDataRecord->VersionLowByte  = pSDR->VersionLowByte; 
 	pDataRecord->SequenceHighByte = _PN_U16_HIGH_BYTE(dev_data->slot_data[ii]->subslot_data[jj]->data_record[kk]->transfer_sequence);
 	pDataRecord->SequenceLowByte  = _PN_U16_LOW_BYTE(dev_data->slot_data[ii]->subslot_data[jj]->data_record[kk]->transfer_sequence);
-	pDataRecord->APIHighWordHighByte = _PN_U32_HIGH_HIGH_BYTE(PROFINET_DEFAULT_API);
-	pDataRecord->APIHighWordLowByte  = _PN_U32_HIGH_LOW_BYTE(PROFINET_DEFAULT_API);
-	pDataRecord->APILowWordHighByte  = _PN_U32_LOW_HIGH_BYTE(PROFINET_DEFAULT_API);
-	pDataRecord->APILowWordLowByte   = _PN_U32_LOW_LOW_BYTE(PROFINET_DEFAULT_API);
+	pDataRecord->APIHighWordHighByte = _PN_U32_HIGH_HIGH_BYTE(dev_data->slot_data[ii]->subslot_data[jj]->api);
+	pDataRecord->APIHighWordLowByte  = _PN_U32_HIGH_LOW_BYTE(dev_data->slot_data[ii]->subslot_data[jj]->api);
+	pDataRecord->APILowWordHighByte  = _PN_U32_LOW_HIGH_BYTE(dev_data->slot_data[ii]->subslot_data[jj]->api);
+	pDataRecord->APILowWordLowByte   = _PN_U32_LOW_LOW_BYTE(dev_data->slot_data[ii]->subslot_data[jj]->api);
+	//	pDataRecord->APIHighWordHighByte = _PN_U32_HIGH_HIGH_BYTE(PROFINET_DEFAULT_API);
+	//	pDataRecord->APIHighWordLowByte  = _PN_U32_HIGH_LOW_BYTE(PROFINET_DEFAULT_API);
+	//	pDataRecord->APILowWordHighByte  = _PN_U32_LOW_HIGH_BYTE(PROFINET_DEFAULT_API);
+	//	pDataRecord->APILowWordLowByte   = _PN_U32_LOW_LOW_BYTE(PROFINET_DEFAULT_API);
 	pDataRecord->IndexHighByte = _PN_U16_HIGH_BYTE(dev_data->slot_data[ii]->subslot_data[jj]->data_record[kk]->index);
 	pDataRecord->IndexLowByte  = _PN_U16_LOW_BYTE(dev_data->slot_data[ii]->subslot_data[jj]->data_record[kk]->index);
 	pDataRecord->LengthHighByte = _PN_U16_HIGH_BYTE(dev_data->slot_data[ii]->subslot_data[jj]->data_record[kk]->data_length);
@@ -720,23 +723,32 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
 	pData = (char *) (pDataRecord + 1);
 	memcpy(pData, dev_data->slot_data[ii]->subslot_data[jj]->data_record[kk]->data, dev_data->slot_data[ii]->subslot_data[jj]->data_record[kk]->data_length);
 	pData += dev_data->slot_data[ii]->subslot_data[jj]->data_record[kk]->data_length;
+
+	/*	if (((dev_data->slot_data[ii]->subslot_data[jj]->data_record[kk]->data_length % 2) > 0) &&
+	    (kk != dev_data->slot_data[ii]->subslot_data[jj]->data_record.size() - 1)) {
+	  length++;
+	  pData++;
+	  } */
 	pDataRecord = (T_PN_DATA_RECORD *) pData;
       }
     }
   }
 
-  /*  if (device_ref != 0) {
+  service_desc->DataLength = length;
 
-  pData = (char *) (pSDR);
-  printf("Download of device: %s\n", dev_data->device_name);
-  printf("Total datalength %d\n\n", length);
-  for (ii = 0; ii < length; ii++) {
-  if (ii % 16 == 0) printf("\n");
-  printf("%02hhX ", pData[ii]);
+
+  if (device_ref != 0) {
+
+    pData = (char *) (pSDR);
+    printf("Download of device: %s\n", dev_data->device_name);
+    printf("Total datalength %d\n\n", length);
+    for (ii = 0; ii < length; ii++) {
+      if (ii % 16 == 0) printf("\n");
+      printf("%02hhX ", pData[ii]);
+    }
+    printf("\n");
+    printf("\n");
   }
-  printf("\n");
-  printf("\n");
-    } */
 }
 
 int unpack_get_los_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal *local)
