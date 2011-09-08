@@ -138,6 +138,19 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Trigger a storage when event controlled storage is configured.
+      !  Trigger can be set from the application or from a process graph,
+      !  and when it has been detected by the rt_sevhistmon process, it
+      !  will be reset by this process.
+      !
+      !  To configure even controlled storage, set Event in Options.
+      !*/
+      Object Trigger $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
     EndObject
     Object Template SevHist
       Body RtBody
