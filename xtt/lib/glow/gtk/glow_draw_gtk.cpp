@@ -859,20 +859,28 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 	    if (       (event.button.state & GDK_SHIFT_MASK) && 
 		       !(event.button.state & GDK_CONTROL_MASK)) {
 	      sts = ctx->event_handler( glow_eEvent_MB1ClickShift, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    else if ( !(event.button.state & GDK_SHIFT_MASK) && 
 		      (event.button.state & GDK_CONTROL_MASK)) {
 	      sts = ctx->event_handler( glow_eEvent_MB1ClickCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    else if (  (event.button.state & GDK_SHIFT_MASK) && 
 		       (event.button.state & GDK_CONTROL_MASK)) {
 	      sts = ctx->event_handler( glow_eEvent_MB1ClickShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    else {
 	      sts = ctx->event_handler( glow_eEvent_MB1Click, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    break;
@@ -880,20 +888,28 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 	    if (       (event.button.state & GDK_SHIFT_MASK) && 
 		       !(event.button.state & GDK_CONTROL_MASK)) {
 	      sts = ctx->event_handler( glow_eEvent_MB2ClickShift, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    else if ( !(event.button.state & GDK_SHIFT_MASK) && 
 		      (event.button.state & GDK_CONTROL_MASK)) {
 	      sts = ctx->event_handler( glow_eEvent_MB2ClickCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    else if (  (event.button.state & GDK_SHIFT_MASK) && 
 		       (event.button.state & GDK_CONTROL_MASK)) {
 	      sts = ctx->event_handler( glow_eEvent_MB2ClickShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    else {
 	      sts = ctx->event_handler( glow_eEvent_MB2Click, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    break;
@@ -911,6 +927,8 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 	    else
 #endif
 	      sts = ctx->event_handler( glow_eEvent_MB3Click, (int)event.button.x, (int)event.button.y, 0, 0);
+	    if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    	      return 1;
 	    click_sensitivity = 0;
 	    break;
 	  }
@@ -919,6 +937,8 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 	  /* Button release */
 // cout << "Button release detected" << endl;
 	  sts = ctx->event_handler( glow_eEvent_ButtonRelease, (int)event.button.x, (int)event.button.y, 0, 0);
+	  if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    	    return 1;
 	}        
       }
       else {
@@ -945,20 +965,28 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 	    if ( (event.button.state & GDK_SHIFT_MASK) && 
 		 !(event.button.state & GDK_CONTROL_MASK)) {
 	      sts = ctx->event_handler( glow_eEvent_MB1DoubleClickShift, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    else if ( !(event.button.state & GDK_SHIFT_MASK) && 
 		      (event.button.state & GDK_CONTROL_MASK)) {
 	      sts = ctx->event_handler( glow_eEvent_MB1DoubleClickCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    else if (  (event.button.state & GDK_SHIFT_MASK) && 
 		       (event.button.state & GDK_CONTROL_MASK)) {
 	      sts = ctx->event_handler( glow_eEvent_MB1DoubleClickShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    else {
 	      sts = ctx->event_handler( glow_eEvent_MB1DoubleClick, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    break;
@@ -966,20 +994,28 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 	    if ( (event.button.state & GDK_SHIFT_MASK) && 
 		 !(event.button.state & GDK_CONTROL_MASK)) {
 	      sts = ctx->event_handler( glow_eEvent_MB2DoubleClickShift, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    else if ( !(event.button.state & GDK_SHIFT_MASK) && 
 		      (event.button.state & GDK_CONTROL_MASK)) {
 	      sts = ctx->event_handler( glow_eEvent_MB2DoubleClickCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    else if (  (event.button.state & GDK_SHIFT_MASK) && 
 		       (event.button.state & GDK_CONTROL_MASK)) {
 	      sts = ctx->event_handler( glow_eEvent_MB2DoubleClickShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    else {
 	      sts = ctx->event_handler( glow_eEvent_MB2DoubleClick, (int)event.button.x, (int)event.button.y, 0, 0);
+	      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+    		return 1;
 	      click_sensitivity = 0;
 	    }
 	    break;

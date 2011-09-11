@@ -287,8 +287,10 @@ static void curvewidgetgtk_destroy( GtkObject *object)
     curvew->destroyed = 1;
     if ( curvew->scroll_timerid)
       g_source_remove( curvew->scroll_timerid);
-    if ( curvew->is_navigator && curvew->curve_ctx)
-      ((CurveCtx *)curvew->curve_ctx)->no_nav = 1;
+    if ( curvew->is_navigator) {
+	if ( curvew->curve_ctx && !((CurveWidgetGtk *)curvew->main_curve_widget)->destroyed)
+          ((CurveCtx *)curvew->curve_ctx)->no_nav = 1;
+    }
     else
       delete (GlowDrawGtk *)curvew->draw_ctx;
   }

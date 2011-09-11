@@ -291,8 +291,10 @@ static void growwidgetgtk_destroy( GtkObject *object)
     grow->destroyed = 1;
     if ( grow->scroll_timerid)
       g_source_remove( grow->scroll_timerid);
-    if ( grow->is_navigator && grow->grow_ctx)
-      ((GrowCtx *)grow->grow_ctx)->no_nav = 1;
+    if ( grow->is_navigator) {
+      if ( grow->grow_ctx && !((GrowWidgetGtk *)grow->main_grow_widget)->destroyed)
+        ((GrowCtx *)grow->grow_ctx)->no_nav = 1;
+    }
     else
       delete (GlowDrawGtk *)grow->draw_ctx;
   }
