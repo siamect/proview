@@ -64,7 +64,7 @@
 #include "ge_attr.h"
 #endif
 
-#if defined OS_VMS || defined OS_LINUX
+#if defined OS_VMS || defined OS_POSIX
 #define LDH 1
 #endif
 

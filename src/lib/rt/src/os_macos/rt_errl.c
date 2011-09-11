@@ -91,6 +91,9 @@ errl_Init (
   int policy;
   struct sched_param param;
   key_t key;
+  int fd;
+  int flags = O_RDWR | O_CREAT;
+  mode_t mode  = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP;
 
   errl_log_cb = log_cb;
   errl_log_userdata = userdata;
@@ -125,7 +128,12 @@ errl_Init (
 #endif
 
   sprintf(name, "%s_%s", LOG_QUEUE_NAME, busid ? busid : "");  
+  fd = open(name, flags, mode); 
+  if ( fd == -1) {
+    printf("Message Queue, open failed on %s, errno: %d\n", name, errno);
+  }
   key = ftok(name, 'm');
+  close( fd);
 
   mqid = msgget( key, IPC_CREAT | 0660);
   if (mqid == -1) {
@@ -247,8 +255,10 @@ log_thread (void *arg)
   while (1) {
     len = msgrcv(mqid, (char *)&buf, LOG_MAX_MSG_SIZE, 0, 0);
     if (len == -1) {
-      if (errno != EINTR)
+      if (errno != EINTR) {
         perror("rt_logmod.c: mq_receive ");
+        sleep(1);
+      }
     } else {
       switch ( buf.message_type) {
       case errh_eMsgType_Log:

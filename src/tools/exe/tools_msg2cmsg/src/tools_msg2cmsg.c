@@ -59,7 +59,7 @@
 #include "msg2cmsg.h"
 
 
-#define MSG_NEW_STRING(str) strcpy(malloc(strlen(str) + 1), str)
+#define MSG_NEW_STRING(str) strncpy(malloc(strlen(str) + 1), str, strlen(str) + 1)
 
 
 typedef struct s_FacilityCB sFacilityCB;
@@ -171,9 +171,9 @@ int main(int argc, char **argv)
     fname[i] = '\0';
 #else
     if ((p = strrchr(argv[2], '/')))
-      strcpy(fname, p+1);
+      strncpy(fname, p+1, sizeof(fname));
     else
-      strcpy(fname, argv[2]);
+      strncpy(fname, argv[2], sizeof(fname));
     
 #endif
 
@@ -282,19 +282,19 @@ static void WriteFiles(char *fname, FILE *cfp, FILE *hfp)
   for (fl = LstFir(&lFacH); fl != LstEnd(&lFacH); fl = LstNex(fl)) {
     facid = 0x800 + LstObj(fl)->f.FacNum;
 #if defined OS_VMS || OS_ELN
-    sprintf(name, "%s$_FACILITY", LstObj(fl)->f.FacName);
+    snprintf(name, sizeof(name), "%s$_FACILITY", LstObj(fl)->f.FacName);
 #else
-    sprintf(name, "%s_FACILITY", LstObj(fl)->f.FacName);
+    snprintf(name, sizeof(name), "%s_FACILITY", LstObj(fl)->f.FacName);
 #endif
     fprintf(hfp, "#define %-29s %9d /* x%08x */\n", name, facid, facid);
     facid = facid << 16;
 
     if (LstObj(fl)->f.Prefix)
-      strcpy(prefix, LstObj(fl)->f.Prefix);
+      strncpy(prefix, LstObj(fl)->f.Prefix, sizeof(prefix));
     else
-      sprintf(prefix, "%s_", LstObj(fl)->f.FacName);
+      snprintf(prefix, sizeof(prefix), "%s_", LstObj(fl)->f.FacName);
 
-    sprintf(msgName, "%smsg", LstObj(fl)->f.FacName);
+    snprintf(msgName, sizeof(msgName), "%smsg", LstObj(fl)->f.FacName);
     fprintf(cfp, "static msg_sMsg %s[] = {\n", msgName);
 
 
@@ -303,7 +303,7 @@ static void WriteFiles(char *fname, FILE *cfp, FILE *hfp)
 	fprintf(cfp, ",\n");
 
       msg = facid + 0x8000 + (idx << 3) + LstObj(ml)->Severity;
-      sprintf(name, "%s%s", prefix, LstObj(ml)->m.MsgName);
+      snprintf(name, sizeof(name), "%s%s", prefix, LstObj(ml)->m.MsgName);
       fprintf(hfp, "#define %-29s %9.9d /* x%08x */\n", name, msg, msg);
       fprintf(cfp, "\t{\"%s\", \"%s\"}", LstObj(ml)->m.MsgName, LstObj(ml)->m.MsgTxt);
     }

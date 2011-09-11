@@ -315,7 +315,7 @@ sect_Alloc (
       shm_id = shmget(shm_key, size, IPC_CREAT | 0660);
       if (shm_id == -1) {
         lsts = 2;
-        errh_Error("sect_Alloc: Couldn't attach/create shm section");
+        errh_Error("sect_Alloc: Couldn't attach/create shm section size: %d. Check shmmax.", size);
         break;
       }
 

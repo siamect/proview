@@ -304,8 +304,8 @@ int exo_exec_m0( exo_ctx exoctx, vldh_t_node node)
 			      "RtBody", 1, &bodydef, &rows);
   if ( ODD(sts) ) {
     i = 0;
-    while( (bodydef[i].ParClass == pwr_eClass_Input) &&
-	   (i < rows)) {
+    while( i < rows &&
+	   bodydef[i].ParClass == pwr_eClass_Input) {
       /* Get the point for this parameter if there is one */
       sts = gcg_get_inputpoint( node, i, &point, &par_inverted);
       if ( ODD( sts)) {
@@ -435,8 +435,8 @@ int exo_exec_m2( exo_ctx exoctx, vldh_t_node node)
   if ( EVEN(sts) ) return sts;
 
   i = 0;
-  while( (bodydef[i].ParClass == pwr_eClass_Input) &&
-	 (i < rows)) {
+  while( i < rows && 
+	bodydef[i].ParClass == pwr_eClass_Input) {
     /* Get the point for this parameter if there is one */
     sts = gcg_get_inputpoint( node, i, &point, &par_inverted);
     if ( ODD( sts)) {
