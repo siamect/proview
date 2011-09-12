@@ -151,7 +151,7 @@ sub configure()
     exit 1;
   }
 
-  my $fname = $ENV{"pwre_bin"} . "/pwre_configure.sh";
+  my $fname = $ENV{"pwre_bin"} . "/pwre_configure.sh"." ".$_[0]." ".$_[1]." ".$_[2];
   system( $fname);
 }
 

@@ -75,20 +75,20 @@ pwrc_get_variables()
   local socket
   
   if [ -e /etc/proview.cnf ]; then
-    socket=`eval cat /etc/proview.cnf | grep "\bmysql_socket\b" | awk '{print $2}'`
+    socket=`eval cat /etc/proview.cnf | grep "[[:<:]]mysql_socket[[:>:]]" | awk '{print $2}'`
     if [ ! -z $socket ]; then
       mysql_socket="--socket $socket"
     fi
 
-    pwr_projectroot=`eval cat /etc/proview.cnf | grep "\bprojectroot\b" | awk '{print $2}'`
+    pwr_projectroot=`eval cat /etc/proview.cnf | grep "[[:<:]]projectroot[[:>:]]" | awk '{print $2}'`
     if [ -z $pwr_projectroot ]; then
       pwr_projectroot=/home/pwrp
     fi
   fi
   
   if [ -e $pwr_inc/pwr_version.h ]; then
-#    pwr_dbversion=`eval grep "\bpwrv_cWbdbVersionShortStr\b" $pwr_inc/pwr_version.h | awk '{print $2}'`
-    pwr_dbversion=`eval cat $pwr_inc/pwr_version.h | grep "\bpwrv_cWbdbVersionShortStr\b" | awk '{print $3}'`
+#    pwr_dbversion=`eval grep "[[:<:]]pwrv_cWbdbVersionShortStr[[:>:]]" $pwr_inc/pwr_version.h | awk '{print $2}'`
+    pwr_dbversion=`eval cat $pwr_inc/pwr_version.h | grep "[[:<:]]pwrv_cWbdbVersionShortStr[[:>:]]" | awk '{print $3}'`
 
     if [ -z $pwr_dbversion ]; then
       echo "Unable to get pwr db version"
@@ -475,7 +475,7 @@ pwrc_get_projectname()
   let found=0
 
 #  if [ -e $pwrp_db/pwrp_cnf_sysobject.dat ]; then
-#    pname=`eval cat -n $pwrp_db/pwrp_cnf_sysobject.dat | grep "\b1\b" | awk '{print $2}'`
+#    pname=`eval cat -n $pwrp_db/pwrp_cnf_sysobject.dat | grep "[[:<:]]1[[:>:]]" | awk '{print $2}'`
 #    if [ ! -z $pname ]; then
 #      found=1
 #    fi
@@ -640,12 +640,12 @@ EndVolume
 EOF
 
     # Set ownership to user and group pwrp
-    user_pwrp=`eval cat /etc/passwd | grep "\bpwrp:"`
+    user_pwrp=`eval cat /etc/passwd | grep "[[:<:]]pwrp:"`
     #if [ ! -z "$user_pwrp" ]; then
     #  chown -R pwrp $proot/
     #fi
 
-    user_pwrp=`eval cat /etc/group | grep "\bpwrp:"`
+    user_pwrp=`eval cat /etc/group | grep "[[:<:]]pwrp:"`
     if [ ! -z "$user_pwrp" ]; then
       chgrp -R pwrp $proot/
       chmod -R g+w $proot/
@@ -965,7 +965,7 @@ pwrc_set_func()
 
     if [ "$bus_id" == "" ]; then
       if [ -e /etc/proview.cnf ]; then
-        bus_id=`eval cat /etc/proview.cnf | grep "\\bqcomBusId\\b" | awk '{print $2}'`
+        bus_id=`eval cat /etc/proview.cnf | grep "[[:<:]]qcomBusId[[:>:]]" | awk '{print $2}'`
       fi
     fi
     export PWR_BUS_ID=$bus_id

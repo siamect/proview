@@ -645,9 +645,17 @@ openLog ()
     char name[64];
     char *busid = getenv(pwr_dEnvBusId);
     key_t key;
+    int fd;
+    int flags = O_RDWR | O_CREAT;
+    mode_t mode  = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP;
 
     sprintf(name, "%s_%s", LOG_QUEUE_NAME, busid ? busid : "");  
+    fd = open(name, flags, mode); 
+    if ( fd == -1) {
+      printf("Message Queue, open failed on %s, errno: %d\n", name, errno);
+    }
     key = ftok(name, 'm');
+    close( fd);
 
     mqid = msgget( key, IPC_CREAT | 0660);
     if (mqid == -1) {

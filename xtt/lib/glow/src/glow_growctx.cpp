@@ -266,7 +266,9 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
     case glow_eEvent_MB1Up:
     case glow_eEvent_MB1Click:
       sts = a[a.a_size-1]->event_handler( &mw, event, x, y, fx, fy);
-      if ( sts)
+      if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
+	return sts;
+      else if ( sts)
 	return 1;
       break;
     default: ;

@@ -44,8 +44,8 @@ char prefix[][10] = {"gdhr", "gdh", "cdhr", "cdh", "pwrb", "pwrt", "pwr",
 
 int main( int argc, char *argv[])
 {
-  char filename[80];
-  char destination[80];
+  char filename[256];
+  char destination[256];
   char cmd[200];
   char *s, *t;
   int i;
@@ -53,7 +53,7 @@ int main( int argc, char *argv[])
 
   if ( argc > 3 && strcmp( argv[1], "-d") == 0)
   {
-    strcpy( destination, argv[2]);
+    strncpy( destination, argv[2], sizeof(destination));
 
     /* Cut last to segments in directory (package name) */
     if ((s = strrchr( destination, '/')))
@@ -66,12 +66,12 @@ int main( int argc, char *argv[])
           *s = 0;
       }
     }
-    strcpy( filename, argv[3]);
+    strncpy( filename, argv[3], sizeof(filename));
   }
   else if ( argc > 1)
   {
-    strcpy( filename, argv[1]);
-    strcpy( destination, "");
+    strncpy( filename, argv[1], sizeof(filename));
+    strncpy( destination, "", sizeof(destination));
   }
   else
   {
@@ -144,9 +144,9 @@ int main( int argc, char *argv[])
 
 
   if ( strcmp( destination, "") == 0)
-    sprintf( cmd, "javac %s", filename);
+    snprintf( cmd, sizeof(cmd), "javac %s", filename);
   else
-    sprintf( cmd, "javac -d %s %s", destination, filename);
+    snprintf( cmd, sizeof(cmd), "javac -d %s %s", destination, filename);
 
   printf( "Cmd: %s\n", cmd);
   sts = system( cmd);

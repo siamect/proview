@@ -40,7 +40,8 @@
   kill -9 `ps ax | grep "rt_qmon" | awk '{ print $1}'`
   kill -9 `ps ax | grep "rt_emon" | awk '{ print $1}'`
   kill -9 `ps ax | grep "rt_tmon" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "rt_\|/pwr/exe/rs" | awk '{ print $1}'`
+  kill -9 `ps ax | grep "[0-9] rt_" | awk '{ print $1}'`
+  kill -9 `ps ax | grep "/pwr/exe/rs" | awk '{ print $1}'`
   kill -9 `ps ax | grep "\[rt_" | awk '{ print $1}'`
   kill -9 `ps ax | grep "plc_" | awk '{ print $1}'`
   kill -9 `ps ax | grep "jpwr.rt" | awk '{ print $1}'`
@@ -54,13 +55,14 @@
     user=$USER
   fi
 
+  user=`eval whoami`
   echo "User $user"
 
   eval `ipcs -s|grep ^s|grep "[ \t]$user[ \t]"|awk '{printf "ipcrm -s %s;", $2
 }'`
 
 # remove message queues
-  eval `ipcs -q|grep ^q|grep "[ \t]$user[ \t]"|awk '{printf "ipcrm -q %s;", $2
+  eval `ipcs -q|grep ^q|grep "[ \t]$user[ \t]"|awk '{printf "ipcrm -Q %s;", $3
 }'`
 
 # remove shared memory
