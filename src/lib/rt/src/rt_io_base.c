@@ -1680,6 +1680,7 @@ static pwr_tStatus io_init_card(
 
 	if ( ok) {
 	  /* Treat this card in this process */
+
 	  strcpy( attrname, cname);
 	  strcat( attrname, ".MaxNoOfChannels");
 	  sts = gdh_GetObjectInfo( attrname, &maxchan, sizeof(maxchan));
@@ -1690,6 +1691,80 @@ static pwr_tStatus io_init_card(
 	    if ( EVEN(sts)) {
 	      maxchan = IO_CHANLIST_SIZE;
 	      fix_channels = 0;
+	    }
+	  }
+
+	  if ( !fix_channels) {
+	    /* Count number of channels */
+	    maxchan = 0;
+	    sts = gdh_GetChild( objid, &chan);
+	    while( ODD(sts)) {
+	      sts = gdh_GetObjectClass( chan, &class);
+	      if ( EVEN(sts)) return sts;
+	      
+	      switch ( class) {
+	      case pwr_cClass_ChanAi:
+	      case pwr_cClass_ChanAit:
+	      case pwr_cClass_ChanAo:
+	      case pwr_cClass_ChanDo:
+	      case pwr_cClass_ChanDi:
+	      case pwr_cClass_ChanIi:
+	      case pwr_cClass_ChanIo:
+	      case pwr_cClass_ChanCo:
+		maxchan++;
+		break;
+	      default: ;
+	      }
+	      sts = gdh_GetNextSibling( chan, &chan);
+	    }
+	    
+	    if ( !maxchan) {
+	      gdh_sAttrDef *bd;
+	      int rows;
+	      int i;
+	      
+	      sts = gdh_GetObjectBodyDef( class, &bd, &rows, pwr_cNObjid);
+	      if ( EVEN(sts)) return sts;
+	      
+	      for ( i = 0; i < rows; i++) {
+		switch ( bd[i].attr->Param.TypeRef) {
+		case pwr_cClass_ChanAi:
+		case pwr_cClass_ChanAit:
+		case pwr_cClass_ChanAo:
+		case pwr_cClass_ChanDi:
+		case pwr_cClass_ChanDo:
+		case pwr_cClass_ChanIi:
+		case pwr_cClass_ChanIo:
+		case pwr_cClass_ChanCo:
+		  maxchan++;
+		  break;
+		default:
+		  if ( bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS) {
+		    gdh_sAttrDef *bd2;
+		    int rows2, ii;
+		    sts = gdh_GetObjectBodyDef( bd[i].attr->Param.TypeRef, &bd2, &rows2, pwr_cNObjid);
+		    if ( EVEN(sts)) return sts;
+		    
+		    for ( ii = 0; ii < rows2; ii++) {
+		      switch ( bd2[ii].attr->Param.TypeRef) {
+		      case pwr_cClass_ChanAi:
+		      case pwr_cClass_ChanAit:
+		      case pwr_cClass_ChanAo:
+		      case pwr_cClass_ChanDi:
+		      case pwr_cClass_ChanDo:
+		      case pwr_cClass_ChanIi:
+		      case pwr_cClass_ChanIo:
+		      case pwr_cClass_ChanCo:
+			maxchan++;
+			break;
+		      default: ;
+		      }
+		    }
+		    free( (char *)bd2);
+		  }
+		}
+	      }
+	      free( (char *)bd);
 	    }
 	  }
 
