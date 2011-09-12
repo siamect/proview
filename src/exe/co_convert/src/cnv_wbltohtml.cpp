@@ -422,9 +422,9 @@ int CnvWblToHtml::close()
   }
 #endif
 
-  char cmd[400];
-  sprintf( cmd, "cat %s/*.jsf %s/../../orm_menu.js > %s/menu.js", ctx->dir, 
-	   ctx->dir, ctx->dir);
+  char cmd[600];
+  snprintf( cmd, sizeof(cmd), "if [ -e %s/../../orm_menu.js ]; then cat %s/*.jsf %s/../../orm_menu.js > %s/menu.js; fi", 
+	   ctx->dir, ctx->dir, ctx->dir, ctx->dir);
   system( cmd);
 
   return 1;
