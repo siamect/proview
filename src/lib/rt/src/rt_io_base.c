@@ -1611,6 +1611,7 @@ static pwr_tStatus io_init_card(
 {
   pwr_tStatus 	sts;
   pwr_tClassId	class;  
+  pwr_tClassId	chan_class;  
   pwr_tStatus 	(* CardInit) ();
   pwr_tStatus 	(* CardClose) ();
   pwr_tStatus 	(* CardRead) ();
@@ -1699,10 +1700,10 @@ static pwr_tStatus io_init_card(
 	    maxchan = 0;
 	    sts = gdh_GetChild( objid, &chan);
 	    while( ODD(sts)) {
-	      sts = gdh_GetObjectClass( chan, &class);
+	      sts = gdh_GetObjectClass( chan, &chan_class);
 	      if ( EVEN(sts)) return sts;
 	      
-	      switch ( class) {
+	      switch ( chan_class) {
 	      case pwr_cClass_ChanAi:
 	      case pwr_cClass_ChanAit:
 	      case pwr_cClass_ChanAo:
@@ -1828,10 +1829,10 @@ static pwr_tStatus io_init_card(
 	      sts = gdh_DLRefObjectInfoAttrref( &attrref, (void *) &chan_op, &chandlid);
 	      if ( EVEN(sts)) return sts;
 
-	      sts = gdh_GetObjectClass( chan, &class);
+	      sts = gdh_GetObjectClass( chan, &chan_class);
 	      if ( EVEN(sts)) return sts;
 
-	      switch ( class) {
+	      switch ( chan_class) {
 	      case pwr_cClass_ChanAi:
 	        sigchancon = ((pwr_sClass_ChanAi *) chan_op)->SigChanCon;
 	        number = ((pwr_sClass_ChanAi *) chan_op)->Number;
@@ -1923,7 +1924,7 @@ static pwr_tStatus io_init_card(
 	      chanp->cop = chan_op;
 	      chanp->ChanDlid = chandlid;
 	      chanp->ChanAref = cdh_ObjidToAref(chan);
-	      chanp->ChanClass = class;
+	      chanp->ChanClass = chan_class;
 	      if ( sig_found) {
 		chanp->sop = sig_op;
 		chanp->SigDlid = sigdlid;
