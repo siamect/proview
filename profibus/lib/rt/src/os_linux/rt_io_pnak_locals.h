@@ -74,7 +74,7 @@ class PnIOCRData {
 
 class PnSubmoduleData {
  public:
-  PnSubmoduleData() : subslot_number(0), subslot_idx(0), type(0), state(0), ident_number(0), phys_ident_number(0) {}
+  PnSubmoduleData() : subslot_number(0), subslot_idx(0), type(0), state(0), ident_number(0), phys_ident_number(0), api(0) {}
   
   unsigned short subslot_number;
   unsigned short subslot_idx;
@@ -82,6 +82,7 @@ class PnSubmoduleData {
   unsigned short state;
   unsigned int   ident_number;
   unsigned int   phys_ident_number;
+  unsigned int   api;
 
   unsigned short io_in_data_length; // bytes of pure io-data
   unsigned short offset_io_in;      // offset in io-data area for this iocr

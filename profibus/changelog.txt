@@ -30,3 +30,4 @@
 110429 cs profibus    Profibus gsd Bit and BitArea syntax fix for space between Bit and (
 110531 cs profinet    Recall buffer added to profinet configurator.
 110531 cs profinet    Script functions GetIoDeviceData and SetIoDeviceData to modify profinet configuration added.
+110909 rk profinet    Added functionality for acyclic write to a device

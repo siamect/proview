@@ -63,6 +63,8 @@ void pack_set_identification_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes);
 
 void pack_get_device_state_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, unsigned short device_ref);
 
+void pack_write_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, unsigned short device_ref, pwr_sClass_PnWriteReq *wr_req);
+
 void pack_get_los_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes);
 
 void pack_get_alarm_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, unsigned short ref);
@@ -70,6 +72,8 @@ void pack_get_alarm_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, unsigned short re
 void pack_alarm_ack_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, unsigned short ref, unsigned short prio);
 
 void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *dev_data, unsigned short device_ref);
+
+int unpack_write_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal *local);
 
 int unpack_get_los_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal *local);
 
@@ -79,6 +83,8 @@ int unpack_get_device_state_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal
 int unpack_download_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal *local);
 
 int handle_service_con(io_sAgentLocal *local, io_sAgent *ap);
+
+int wait_service_con(io_sAgentLocal *local, io_sAgent *ap);
 
 void handle_exception (io_sAgentLocal *local);
 

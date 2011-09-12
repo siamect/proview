@@ -242,6 +242,54 @@ void pack_get_device_state_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, unsigned s
 
 }
 
+void pack_write_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, unsigned short device_ref, pwr_sClass_PnWriteReq *wr_req)
+{
+  unsigned offset = 0u;
+
+  T_PNAK_SERVICE_DESCRIPTION  *service_desc;
+  T_PN_SERVICE_WRITE_REQ  *pWR;
+  unsigned char           *pData;
+
+  memset(ServiceReqRes, 0, sizeof(T_PNAK_SERVICE_REQ_RES));
+  ServiceReqRes->NumberEntries = 1;
+  ServiceReqRes->ServiceEntry[0].ServiceOffset = 0;
+ 
+  service_desc = (T_PNAK_SERVICE_DESCRIPTION *) &ServiceReqRes->ServiceChannel[offset];
+
+  service_desc->DeviceRef  = device_ref;
+  service_desc->Instance   = PN_CONTROLLER;
+  service_desc->Service    = PN_SERVICE_WRITE;
+  service_desc->Primitive  = PNAK_SERVICE_REQ;
+  service_desc->ClientId   = 0;
+  service_desc->InvokeId   = 0;
+ 
+  /* Calculate length of service */
+
+  service_desc->DataLength = sizeof(T_PN_SERVICE_GET_DEVICE_STATE_REQ) + wr_req->Length;
+
+  pWR = (T_PN_SERVICE_WRITE_REQ *) service_desc + 1;
+
+  pWR->VersionHighByte = 1;
+  pWR->VersionLowByte = 0;
+  pWR->APIHighWordHighByte = _PN_U32_HIGH_HIGH_BYTE(wr_req->Api);
+  pWR->APIHighWordLowByte  = _PN_U32_HIGH_LOW_BYTE(wr_req->Api);
+  pWR->APILowWordHighByte  = _PN_U32_LOW_HIGH_BYTE(wr_req->Api);
+  pWR->APILowWordLowByte   = _PN_U32_LOW_LOW_BYTE(wr_req->Api);
+
+  pWR->SlotNumberHighByte = _PN_U16_HIGH_BYTE(wr_req->SlotNumber);
+  pWR->SlotNumberLowByte  = _PN_U16_LOW_BYTE(wr_req->SlotNumber);
+  pWR->SubSlotNumberHighByte = _PN_U16_HIGH_BYTE(wr_req->SubslotNumber);
+  pWR->SubSlotNumberLowByte  = _PN_U16_LOW_BYTE(wr_req->SubslotNumber);
+  pWR->IndexHighByte = _PN_U16_HIGH_BYTE(wr_req->Index);
+  pWR->IndexLowByte  = _PN_U16_LOW_BYTE(wr_req->Index);
+  pWR->LengthHighByte = _PN_U16_HIGH_BYTE(wr_req->Length);
+  pWR->LengthLowByte  = _PN_U16_LOW_BYTE(wr_req->Length);
+
+  pData = (unsigned char *) pWR + 1;
+
+  memcpy(pData, wr_req->Data, wr_req->Length);
+}
+
 void pack_get_los_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes)
 {
   unsigned offset = 0u;
@@ -724,11 +772,6 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
 	memcpy(pData, dev_data->slot_data[ii]->subslot_data[jj]->data_record[kk]->data, dev_data->slot_data[ii]->subslot_data[jj]->data_record[kk]->data_length);
 	pData += dev_data->slot_data[ii]->subslot_data[jj]->data_record[kk]->data_length;
 
-	/*	if (((dev_data->slot_data[ii]->subslot_data[jj]->data_record[kk]->data_length % 2) > 0) &&
-	    (kk != dev_data->slot_data[ii]->subslot_data[jj]->data_record.size() - 1)) {
-	  length++;
-	  pData++;
-	  } */
 	pDataRecord = (T_PN_DATA_RECORD *) pData;
       }
     }
@@ -737,7 +780,7 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
   service_desc->DataLength = length;
 
 
-  if (device_ref != 0) {
+  /*  if (device_ref != 0) {
 
     pData = (char *) (pSDR);
     printf("Download of device: %s\n", dev_data->device_name);
@@ -748,7 +791,7 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
     }
     printf("\n");
     printf("\n");
-  }
+    }*/
 }
 
 int unpack_get_los_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal *local)
@@ -817,6 +860,34 @@ int unpack_get_los_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal *local)
 
     printf(
 	   "channel %d: get_los.con [-] (%d)\r\n"
+	   "            code       : %d (0x%02x)\r\n"
+	   "            detail     : %d (0x%02x)\r\n"
+	   "            add. detail: %d (0x%02x)\r\n"
+	   "            area       : %d (0x%02x)\r\n",
+	   0,
+	   pSdb->DeviceRef,
+	   pErrorCon->Code, pErrorCon->Code,
+	   pErrorCon->Detail, pErrorCon->Detail,
+	   pErrorCon->AdditionalDetail, pErrorCon->AdditionalDetail,
+	   pErrorCon->AreaCode, pErrorCon->AreaCode
+	   );
+  }
+
+  return -1;
+}
+
+int unpack_write_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal *local)
+{
+
+  if (pSdb->Result == PNAK_RESULT_POS) {
+    return PNAK_OK;
+  }
+  else if (pSdb->Result == PNAK_RESULT_NEG) {
+    T_PN_SERVICE_ERROR_CON*   pErrorCon = (T_PN_SERVICE_ERROR_CON*) (pSdb + 1);
+
+
+    printf(
+	   "channel %d: write.con [-] (%d)\r\n"
 	   "            code       : %d (0x%02x)\r\n"
 	   "            detail     : %d (0x%02x)\r\n"
 	   "            add. detail: %d (0x%02x)\r\n"
@@ -1309,101 +1380,97 @@ int unpack_download_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal *local)
 int handle_service_con(io_sAgentLocal *local, io_sAgent *ap)
 {
 
-  T_PNAK_WAIT_OBJECT           wait_object;
   int                          sts;
   unsigned short               ii;
 
-  wait_object = PNAK_WAIT_OBJECT_SERVICE_CON;
+  memset(&local->service_con, 0, sizeof(T_PNAK_SERVICE_CON));
+  sts = pnak_get_service_con(0, &local->service_con);
 
-  sts = pnak_wait_for_multiple_objects(0, &wait_object, PNAK_INFINITE_TIMEOUT);
+  if (sts == PNAK_NOTIFICATION_RECEIVED) {
+    for (ii = 0; ii < local->service_con.NumberEntries; ii++) {
+      T_PNAK_SERVICE_DESCRIPTION*   pSdb;
+      unsigned int                  offset;
 
-  if (sts == PNAK_OK) {
-
-    memset(&local->service_con, 0, sizeof(T_PNAK_SERVICE_CON));
-    sts = pnak_get_service_con(0, &local->service_con);
-
-    if (sts == PNAK_NOTIFICATION_RECEIVED) {
-      for (ii = 0; ii < local->service_con.NumberEntries; ii++) {
-	T_PNAK_SERVICE_DESCRIPTION*   pSdb;
-	unsigned int                  offset;
-
-	offset = local->service_con.ServiceEntry[ii].ServiceOffset;
-	pSdb = (T_PNAK_SERVICE_DESCRIPTION *) &local->service_con.ServiceChannel[offset];
-
-	if ((pSdb->Instance == PN) || (pSdb->Instance == PN_CONTROLLER)) {
-	  switch (pSdb->Service) {
-	  case PN_SERVICE_DOWNLOAD          : {
-            sts = unpack_download_con(pSdb, local);
-	    break;
-	  }
-
-	  case PN_SERVICE_SET_IDENTIFICATION:
-	  case PN_SERVICE_READ              :
-	  case PN_SERVICE_WRITE             : {
-	    break;
-	  }
-
-	  case PN_SERVICE_GET_ALARM       : {
-	    sts = unpack_get_alarm_con(pSdb, local, ap);
-	    break;
-	  }
-	  
-	  case PN_SERVICE_GET_DEVICE_STATE: {
-	    sts = unpack_get_device_state_con(pSdb, local, ap);
-	    break;
-	  }
-	  case PN_SERVICE_ALARM_ACK       : {
-	    break;
-	  }
-
-	  
-	  default: {
-	    printf("channel %d: unhandled service confirmation [0x%x]\r\n",
-		   0,
-		   pSdb->Service
-		   );
-	  }
-	  }
+      offset = local->service_con.ServiceEntry[ii].ServiceOffset;
+      pSdb = (T_PNAK_SERVICE_DESCRIPTION *) &local->service_con.ServiceChannel[offset];
+      
+      if ((pSdb->Instance == PN) || (pSdb->Instance == PN_CONTROLLER)) {
+	switch (pSdb->Service) {
+	case PN_SERVICE_DOWNLOAD          : {
+	  sts = unpack_download_con(pSdb, local);
+	  break;
 	}
-	else if (pSdb->Instance == PN_SUPERVISOR) {
-	  switch (pSdb->Service) {
+	  
+	case PN_SERVICE_SET_IDENTIFICATION:
+	case PN_SERVICE_READ              : {
+	  break;
+	}
 
-	  case PN_SERVICE_GET_LIST_OF_STATION: {
-            sts = unpack_get_los_con(pSdb, local);
-	    break;
-	  }
+	case PN_SERVICE_WRITE       : {
+	  sts = unpack_write_con(pSdb, local);
+	  break;
+	}
 
-	  case PN_SERVICE_SET_IDENTIFICATION:
-	  case PN_SERVICE_SET_IP_SETTINGS   :
-	  case PN_SERVICE_SET_DEVICE_NAME   : {
-	    if (pSdb->Result == PNAK_RESULT_NEG) {
-	      T_PN_SERVICE_ERROR_CON*   pErrorCon = (T_PN_SERVICE_ERROR_CON*) (pSdb + 1);
-
-
-	      printf(
-		     "channel %d: get_los.con [-] (%d)\r\n"
-		     "            code       : %d (0x%02x)\r\n"
-		     "            detail     : %d (0x%02x)\r\n"
-		     "            add. detail: %d (0x%02x)\r\n"
-		     "            area       : %d (0x%02x)\r\n",
-		     0,
-		     pSdb->DeviceRef,
-		     pErrorCon->Code, pErrorCon->Code,
-		     pErrorCon->Detail, pErrorCon->Detail,
-		     pErrorCon->AdditionalDetail, pErrorCon->AdditionalDetail,
-		     pErrorCon->AreaCode, pErrorCon->AreaCode
-		     );
-	    }
-	    break;
-	  }
-
-	  default: {
-	    printf("channel %d: unhandled service confirmation [0x%x]\r\n",
+	case PN_SERVICE_GET_ALARM       : {
+	  sts = unpack_get_alarm_con(pSdb, local, ap);
+	  break;
+	}
+	  
+	case PN_SERVICE_GET_DEVICE_STATE: {
+	  sts = unpack_get_device_state_con(pSdb, local, ap);
+	  break;
+	}
+	case PN_SERVICE_ALARM_ACK       : {
+	  break;
+	}
+	  
+	  
+	default: {
+	  printf("channel %d: unhandled service confirmation [0x%x]\r\n",
+		 0,
+		 pSdb->Service
+		 );
+	}
+	}
+      }
+      else if (pSdb->Instance == PN_SUPERVISOR) {
+	switch (pSdb->Service) {
+	  
+	case PN_SERVICE_GET_LIST_OF_STATION: {
+	  sts = unpack_get_los_con(pSdb, local);
+	  break;
+	}
+	  
+	case PN_SERVICE_SET_IDENTIFICATION:
+	case PN_SERVICE_SET_IP_SETTINGS   :
+	case PN_SERVICE_SET_DEVICE_NAME   : {
+	  if (pSdb->Result == PNAK_RESULT_NEG) {
+	    T_PN_SERVICE_ERROR_CON*   pErrorCon = (T_PN_SERVICE_ERROR_CON*) (pSdb + 1);
+	    
+	    
+	    printf(
+		   "channel %d: get_los.con [-] (%d)\r\n"
+		   "            code       : %d (0x%02x)\r\n"
+		   "            detail     : %d (0x%02x)\r\n"
+		   "            add. detail: %d (0x%02x)\r\n"
+		   "            area       : %d (0x%02x)\r\n",
 		   0,
-		   pSdb->Service
+		   pSdb->DeviceRef,
+		   pErrorCon->Code, pErrorCon->Code,
+		   pErrorCon->Detail, pErrorCon->Detail,
+		   pErrorCon->AdditionalDetail, pErrorCon->AdditionalDetail,
+		   pErrorCon->AreaCode, pErrorCon->AreaCode
 		   );
 	  }
-	  }
+	  break;
+	}
+	  
+	default: {
+	  printf("channel %d: unhandled service confirmation [0x%x]\r\n",
+		 0,
+		 pSdb->Service
+		 );
+	}
 	}
       }
     }
@@ -1412,6 +1479,22 @@ int handle_service_con(io_sAgentLocal *local, io_sAgent *ap)
   return sts;
 }
 
+int wait_service_con(io_sAgentLocal *local, io_sAgent *ap)
+{
+
+  T_PNAK_WAIT_OBJECT           wait_object;
+  int                          sts;
+
+  wait_object = PNAK_WAIT_OBJECT_SERVICE_CON;
+
+  sts = pnak_wait_for_multiple_objects(0, &wait_object, PNAK_INFINITE_TIMEOUT);
+
+  if (sts == PNAK_OK) {
+    sts = handle_service_con(local, ap);
+  }
+
+  return sts;
+}
 
 void handle_exception (io_sAgentLocal *local) {
   return;
@@ -1459,7 +1542,7 @@ void handle_device_state_changed (io_sAgentLocal *local, io_sAgent *ap) {
 	  sts = pnak_send_service_req_res(0, &local->service_req_res);
       
 	  if (sts == PNAK_OK) {
-	    sts = handle_service_con(local, ap);
+	    sts = wait_service_con(local, ap);
 	  }
 	}
       }
@@ -1491,14 +1574,14 @@ void handle_alarm_indication (io_sAgentLocal *local, io_sAgent *ap) {
 	sts = pnak_send_service_req_res(0, &local->service_req_res);
 
 	if (sts == PNAK_OK) {
-	  sts = handle_service_con(local, ap);
+	  sts = wait_service_con(local, ap);
 	  if (sts == PNAK_OK) {
 	    pack_alarm_ack_req(&local->service_req_res, local->device_data[ii]->alarm_ref, local->device_data[ii]->alarm_data.alarm_prio, local->device_data[ii]->device_ref);
 
 	    sts = pnak_send_service_req_res(0, &local->service_req_res);
 
 	    if (sts == PNAK_OK) {
-	      sts = handle_service_con(local, ap);
+	      sts = wait_service_con(local, ap);
 	    }
 	  }
 	}
@@ -1526,7 +1609,7 @@ void *handle_events(void *ptr) {
   /* Do forever ... */
 
   while (1) {
-    wait_object = PNAK_WAIT_OBJECTS_EVENT_IND | PNAK_WAIT_OBJECTS_OTHER;
+    wait_object = PNAK_WAIT_OBJECTS_EVENT_IND | PNAK_WAIT_OBJECTS_OTHER | PNAK_WAIT_OBJECT_SERVICE_CON;
     sts = pnak_wait_for_multiple_objects(0, &wait_object, PNAK_INFINITE_TIMEOUT);
     
     if (sts == PNAK_OK) {
@@ -1563,7 +1646,12 @@ void *handle_events(void *ptr) {
 	//	printf("Interrupted !!"); 
 	//     What to do if interrupted ???;
       }
-      
+
+      if (wait_object & PNAK_WAIT_OBJECT_SERVICE_CON) {
+	//	printf("Service con !!"); 
+	sts = handle_service_con(local, ap);
+      }
+
     }
     else if ( (sts == PNAK_ERR_FATAL_ERROR ) ||
 	      (sts == PNAK_EXCEPTION_THROWN) ) {

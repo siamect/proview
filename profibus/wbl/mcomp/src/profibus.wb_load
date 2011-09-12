@@ -1,7 +1,7 @@
 Volume Profibus $ClassVolume 0.0.250.7 
   Body SysBody 05-SEP-2005 17:51:40.00
     Attr NextOix = "_X209"
-    Attr NextCix = "_X19"
+    Attr NextCix = "_X20"
     Attr NextTix[0] = "_X12"
   EndBody
   Object Type $TypeHier 55 16-JAN-2006 10:07:43.21
@@ -2695,7 +2695,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! 
         ! Furthermore, manufacturer specific alarms may be used and alarms 
         ! are reserved for profile specific definitions. 
-        !
+        ! 
         !*/
         Object Type $Attribute 1 10-JUN-2010 10:53:19.20
           Body SysBody 21-OCT-2010 08:59:53.40
@@ -2803,12 +2803,103 @@ Volume Profibus $ClassVolume 0.0.250.7
       EndObject
     EndObject
     !/**
+    ! Sends an acyclic write request to a device
+    ! for a certain slot and subslot.
+    !*/
+    Object PnWriteReq $ClassDef 19 07-SEP-2011 08:49:46.86
+      Body SysBody 07-SEP-2011 08:49:30.59
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 07-SEP-2011 08:49:53.46
+        Body SysBody 07-SEP-2011 08:49:53.46
+          Attr StructName = "PnWriteReq"
+          Attr NextAix = "_X8"
+        EndBody
+        !/**
+        ! Application Process Identifier, usually 0 but can be
+        ! defined to other by a device profile.
+        !*/
+        Object Api $Attribute 1 07-SEP-2011 08:50:09.27
+          Body SysBody 07-SEP-2011 08:50:29.19
+            Attr PgmName = "Api"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Number of slot to write to.
+        !*/
+        Object SlotNumber $Attribute 2 07-SEP-2011 08:50:58.89
+          Body SysBody 07-SEP-2011 08:50:58.89
+            Attr PgmName = "SlotNumber"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Number of subslot to write to.
+        !*/
+        Object SubslotNumber $Attribute 3 07-SEP-2011 08:50:58.89
+          Body SysBody 07-SEP-2011 08:50:58.89
+            Attr PgmName = "SubslotNumber"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Unique ID of record data object to write to.
+        !*/
+        Object Index $Attribute 4 07-SEP-2011 08:51:20.46
+          Body SysBody 07-SEP-2011 08:51:21.42
+            Attr PgmName = "Index"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Bytes of data to write.
+        !*/
+        Object Length $Attribute 5 07-SEP-2011 08:55:25.16
+          Body SysBody 07-SEP-2011 08:55:25.53
+            Attr PgmName = "Length"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! The data to write.
+        !*/
+        Object Data $Attribute 6 07-SEP-2011 08:56:03.58
+          Body SysBody 07-SEP-2011 08:56:48.30
+            Attr PgmName = "Data"
+            Attr Flags = 1026
+            Attr Elements = 256
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Send the write request.
+        !*/
+        Object SendReq $Attribute 7 07-SEP-2011 09:13:01.58
+          Body SysBody 07-SEP-2011 09:13:16.75
+            Attr PgmName = "SendReq"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+      EndObject
+      Object Template PnWriteReq 2152693760 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
     ! @Author Robert Karlsson
     ! @Version 1.0
     ! @Group IO
     ! @Summary Defines that a Profinet controller stack is installed.
     ! Configures a Profinet controller stack.
-    !
+    ! 
     ! @b See also
     ! @classlink PnDevice profibus_pndevice.html
     !*/
@@ -2915,7 +3006,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! @Group IO
     ! @Summary Configures one Profinet device.
     ! Configures one Profinet device.
-    !
+    ! 
     ! @b See also
     ! @classlink PnControllerSoftingPNAK profibus_pncontrollersoftingpnak.html
     ! @classlink Hilscher_cifX_PnController otherio_hilscher_cifx_pncontroller.html
@@ -2929,7 +3020,7 @@ Volume Profibus $ClassVolume 0.0.250.7
       Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
         Body SysBody 21-APR-2009 13:41:08.17
           Attr StructName = "PnDevice"
-          Attr NextAix = "_X105"
+          Attr NextAix = "_X106"
         EndBody
         !/**
         ! Description.
@@ -3105,6 +3196,16 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr PgmName = "Alarm"
             Attr Flags = 131072
             Attr TypeRef = "Profibus:Class-PnAlarm"
+          EndBody
+        EndObject
+        !/**
+        ! Request to write data to a subslot
+        !*/
+        Object WriteReq $Attribute 105 07-SEP-2011 10:24:03.67
+          Body SysBody 07-SEP-2011 10:24:13.69
+            Attr PgmName = "WriteReq"
+            Attr Flags = 16908288
+            Attr TypeRef = "Profibus:Class-PnWriteReq"
           EndBody
         EndObject
       EndObject
