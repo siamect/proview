@@ -834,6 +834,7 @@ void GrowWindow::new_ctx()
 {
   char fname[200];
   int sts;
+  int no_file = strcmp( file_name, "_no_") == 0 ? 1 : 0;   // No initial graph
 
   if ( strchr( file_name, '/') == 0) {
     strcpy( fname, "$pwrp_exe/");
@@ -862,9 +863,11 @@ void GrowWindow::new_ctx()
   window_ctx->background_disabled = 1;
   strcpy( window_ctx->owner, owner);
 
-  sts = window_ctx->open( fname, glow_eSaveMode_Edit);
-  if ( EVEN(sts))
-    printf( "** Unable to open graph %s\n", fname);
+  if ( !no_file) {
+    sts = window_ctx->open( fname, glow_eSaveMode_Edit);
+    if ( EVEN(sts))
+      printf( "** Unable to open graph %s\n", fname);
+  }
 
   strcpy( input_file_name, file_name);
   if ( window_ctx->background_color != glow_eDrawType_Inherit) {
