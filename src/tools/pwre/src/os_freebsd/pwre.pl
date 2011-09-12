@@ -151,7 +151,7 @@ sub configure()
     exit 1;
   }
 
-  my $fname = $ENV{"pwre_bin"} . "/pwre_configure.sh";
+  my $fname = $ENV{"pwre_bin"} . "/pwre_configure.sh"." ".$_[0]." ".$_[1]." ".$_[2];
   system( $fname);
 }
 
@@ -277,6 +277,7 @@ sub ebuild # args: pass flavour
   my $build_opc = 0;
   my $build_profibus = 0;
   my $build_otherio = 0;
+  my $build_misc = 0;
   my $build_ssabox = 0;
   my $build_tlog = 0;
   my $build_othermanu = 0;
@@ -298,6 +299,7 @@ sub ebuild # args: pass flavour
     elsif ( $value[0] eq "opc" && $value[1] eq "1" ) { $build_opc = 1; printf( "--   opc\n");}
     elsif ( $value[0] eq "profibus" && $value[1] eq "1" ) { $build_profibus = 1; printf( "--   profibus\n");}
     elsif ( $value[0] eq "otherio" && $value[1] eq "1" ) { $build_otherio = 1; printf( "--   otherio\n");}
+    elsif ( $value[0] eq "misc" && $value[1] eq "1" ) { $build_ssabox = 1; printf( "--   misc\n");}
     elsif ( $value[0] eq "ssabox" && $value[1] eq "1" ) { $build_ssabox = 1; printf( "--   ssabox\n");}
     elsif ( $value[0] eq "tlog" && $value[1] eq "1" ) { $build_tlog = 1; printf( "--   tlog\n");}
     elsif ( $value[0] eq "othermanu" && $value[1] eq "1" ) { $build_othermanu = 1; printf( "--   othermanu\n");}
@@ -368,6 +370,11 @@ sub ebuild # args: pass flavour
       _build("lib", "rt", "src", "all");
       merge();
     }
+    if ( $build_misc == 1) {
+      _module("misc");
+      _build("lib", "misc", "src", "all");
+      merge();
+    }
     if ( $build_ssabox == 1) {
       _module("ssabox");
       _build("lib", "rt", "src", "all");
@@ -434,6 +441,10 @@ sub ebuild # args: pass flavour
     }
     if ( $build_telemecanique == 1) {
       _module("telemecanique");
+      merge();
+    }
+    if ( $build_misc == 1) {
+      _module("misc");
       merge();
     }
   }
@@ -509,6 +520,11 @@ sub ebuild # args: pass flavour
     }
     if ( $build_klocknermoeller == 1) {
       _module("klocknermoeller");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_misc == 1) {
+      _module("misc");
       _build("mmi", "*", "src", "copy");
       merge();
     }
@@ -590,6 +606,9 @@ sub build_all_modules ()
   build_all( $flavour);
   merge();
   _module("opc");
+  build_all( $flavour);
+  merge();
+  _module("misc");
   build_all( $flavour);
   merge();
   _module("ssabox");
@@ -689,6 +708,11 @@ sub build_all_wbl ()
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
   _build("wbl", "bcomp", "src", "lib");
+  merge();
+  _module("misc");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "misc", "src", "lib");
   merge();
   _module("ssabox");
   my($load_dir) = $ENV{"pwr_load"};
@@ -825,6 +849,8 @@ sub create_all_modules ()
   _module("java");
   create();
   _module("bcomp");
+  create();
+  _module("misc");
   create();
   _module("profibus");
   create();
