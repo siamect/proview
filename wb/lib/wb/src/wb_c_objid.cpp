@@ -152,8 +152,8 @@ static pwr_tStatus Connect (
     if ( EVEN(sts)) return 0;
  
     strncpy( aname, aname_p, sizeof(aname));
-    strcat( aname, ".");
-    strcat( aname, mb.MethodArguments[0]);
+    strncat( aname, ".", sizeof(aname));
+    strncat( aname, mb.MethodArguments[0], sizeof(aname));
 
     sts = ldh_NameToAttrRef( ip->PointedSession, aname, &PattrRef);
     //sts = ldh_GetAttrRef(ip->PointedSession, ip->Pointed.Objid,
@@ -173,7 +173,7 @@ static pwr_tStatus Connect (
 			     name, sizeof(name), &len);
       if ( EVEN(sts))
 	cdh_ObjidToString( name, ip->Selected[0].Objid, 1);
-      sprintf( msg, "%s connected to:   %s", mb.MethodArguments[0], name);
+      snprintf( msg, sizeof(msg), "%s connected to:   %s", mb.MethodArguments[0], name);
       ip->wtt->message( 'I', msg);
     }
     else {

@@ -168,9 +168,9 @@ static pwr_tStatus Connect (
     sts = ldh_AttrRefToName(ip->PointedSession, &ip->Pointed, ldh_eName_VolPath,
 			    &name_p, &size);
     if ( ODD(sts)) {
-      strcpy( name, name_p);
-      strcat( name, ".");
-      strcat( name, mb.MethodArguments[0]);
+      strncpy( name, name_p, sizeof(name));
+      strncat( name, ".", sizeof(name));
+      strncat( name, mb.MethodArguments[0], sizeof(name));
 
       sts = ldh_NameToAttrRef( ip->PointedSession, name, &PattrRef);
       if (ODD(sts))
@@ -191,8 +191,8 @@ static pwr_tStatus Connect (
     if ( EVEN(sts))
       cdh_ObjidToString( name, aref.Objid, 1);
     else
-      strcpy( name, name_p);
-    sprintf( msg, "%s connected to:   %s", mb.MethodArguments[0], name);
+      strncpy( name, name_p, sizeof(name));
+    snprintf( msg, sizeof(msg), "%s connected to:   %s", mb.MethodArguments[0], name);
     ip->wtt->message( 'I', msg);
   }
   else {
@@ -349,8 +349,8 @@ static pwr_tStatus IoConnect (
   sts = ldh_AttrRefToName(ip->PointedSession, &ip->Pointed, ldh_eName_VolPath,
 			  &name_p, &size);
   if ( ODD(sts)) {
-    strcpy( name, name_p);
-    strcat( name, ".IoConnect");
+    strncpy( name, name_p, sizeof(name));
+    strncat( name, ".IoConnect", sizeof(name));
 
     sts = ldh_NameToAttrRef( ip->PointedSession, name, &PattrRef);
     if (ODD(sts))
@@ -370,8 +370,8 @@ static pwr_tStatus IoConnect (
     if ( EVEN(sts))
       cdh_ObjidToString( name, aref.Objid, 1);
     else
-      strcpy( name, name_p);
-    sprintf( msg, "Io connected to:   %s", name);
+      strncpy( name, name_p, sizeof(name));
+    snprintf( msg, sizeof(msg), "Io connected to:   %s", name);
     ip->wtt->message( 'I', msg);
   }
   else {

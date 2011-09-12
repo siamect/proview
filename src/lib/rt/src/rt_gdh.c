@@ -3297,7 +3297,7 @@ gdh_RefObjectInfoList (
  * pwr_tSubid subid;
  * pwr_tFloat32 *valuep;
  * 
- * sts = RefObjectInfo( name, &valuep, &subid, sizeof(*valuep));
+ * sts = gdh_RefObjectInfo( name, &valuep, &subid, sizeof(*valuep));
  * if ( EVEN(sts)) throw co_error(sts);
  * ...
  * sts = gdh_UnrefObjectInfo( subid);

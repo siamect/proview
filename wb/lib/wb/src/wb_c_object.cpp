@@ -334,7 +334,7 @@ static pwr_tStatus DeleteObject (
   if (sts == LDH__HAS_CHILD) {
     sts = ldh_ObjidToName(ip->PointedSession, ip->Pointed.Objid, 
       ldh_eName_Object, name, sizeof(name), &size);
-    sprintf(msg,
+    snprintf(msg, sizeof(msg),
       "Object '%s' has children!\nDo you want to delete the whole object tree ?",
       name);
     mc = (ldh_sMenuCall *) malloc (sizeof(*mc));
@@ -517,7 +517,7 @@ static pwr_tStatus OpenTemplate (
   ldh_sMenuCall *ip
 ) {
   pwr_tStatus sts;
-  pwr_tFullName Name;
+  pwr_tOName Name;
   pwr_tObjid Template;  
   pwr_sAttrRef Aref;
   int size;
@@ -527,7 +527,7 @@ static pwr_tStatus OpenTemplate (
   if (EVEN(sts))
     return sts;
 
-  strcat(Name, "-Template");
+  strncat(Name, "-Template", sizeof(Name));
   sts = ldh_NameToObjid(ip->PointedSession, &Template, Name); 
   if (EVEN(sts))
     return sts;
@@ -542,7 +542,7 @@ static pwr_tStatus SetDefaults (
   ldh_sMenuCall *ip
 ) {
   pwr_tStatus sts;
-  pwr_tFullName Name;
+  pwr_tOName Name;
   pwr_tObjid Object;  
   int size;
 
@@ -551,7 +551,7 @@ static pwr_tStatus SetDefaults (
   if (EVEN(sts))
     return sts;
 
-  strcat(Name, "-Defaults");
+  strncat(Name, "-Defaults", sizeof(Name));
   sts = ldh_NameToObjid(ip->PointedSession, &Object, Name); 
   if (EVEN(sts))
     return sts;
@@ -578,9 +578,9 @@ static pwr_tStatus ClassHelp( ldh_sMenuCall *ip)
   if ( EVEN(sts)) return sts;
 
   if ( cname[0] == '$')
-    sprintf( cmd, "help %s /strict", &cname[1]);
+    snprintf( cmd, sizeof(cmd), "help %s /strict", &cname[1]);
   else
-    sprintf( cmd, "help %s /strict", cname);
+    snprintf( cmd, sizeof(cmd), "help %s /strict", cname);
 
   ip->wnav->command( cmd);
   return 1;
@@ -612,7 +612,7 @@ static pwr_tStatus HelpClass( ldh_sMenuCall *ip)
     if ( EVEN(sts)) return sts;
 
     cdh_ToLower( vname, vname);
-    sprintf( cmd, "help %s /helpfile=\"$pwr_exe/%s/%s_xtthelp.dat\"/strict", cname, 
+    snprintf( cmd, sizeof(cmd), "help %s /helpfile=\"$pwr_exe/%s/%s_xtthelp.dat\"/strict", cname, 
 	     lng_get_language_str(), vname);
 
     ip->wnav->command( cmd);
@@ -620,9 +620,9 @@ static pwr_tStatus HelpClass( ldh_sMenuCall *ip)
   }
 
   if ( cname[0] == '$')
-    sprintf( cmd, "help %s /strict", &cname[1]);
+    snprintf( cmd, sizeof(cmd), "help %s /strict", &cname[1]);
   else
-    sprintf( cmd, "help %s /strict", cname);
+    snprintf( cmd, sizeof(cmd), "help %s /strict", cname);
 
   ip->wnav->command( cmd);
   return 1;
@@ -652,7 +652,7 @@ static pwr_tStatus Help( ldh_sMenuCall *ip)
     return LDH__SUCCESS;
   }
 
-  sprintf( cmd, "help %s /strict", topic);
+  snprintf( cmd, sizeof(cmd), "help %s /strict", topic);
   free( topic);
 
   ip->wnav->command( cmd);
@@ -882,7 +882,7 @@ static pwr_tStatus configure_attrmask( ldh_sMenuCall *ip, pwr_tAttrRef *parent, 
   vect_cnt = 0;
   s = strchr( str1, '(');
   if ( s) {
-    strcpy( str2, s+1);
+    strncpy( str2, s+1, sizeof(str2));
     if ( str2[strlen(str2)-1] != ')')
       return LDH__COMPSYNTAX;
 
@@ -994,7 +994,7 @@ static pwr_tStatus ConfigureComponent( ldh_sMenuCall *ip)
 	if ( sscanf( item[1], "%d", &disable_mask) != 1)
 	  disable_mask = 0;
 
-	strcpy( aname, item[0]);
+	strncpy( aname, item[0], sizeof(aname));
 	
 	sts = ldh_ArefANameToAref( ip->PointedSession, &ip->Pointed, aname, 
 				   &aaref);
@@ -1007,10 +1007,10 @@ static pwr_tStatus ConfigureComponent( ldh_sMenuCall *ip)
   }
   else {
     // New syntax, eg '(7 (CircuitBreaker 4, Contactor 5))'
-    char str1[80];
+    char str1[256];
     char *s;
 
-    strcpy( str1, &mb.MethodArguments[0][1]);
+    strncpy( str1, &mb.MethodArguments[0][1], sizeof(str1));
     s = strrchr( str1, ')');
     if ( !s)
       return LDH__COMPSYNTAX;
@@ -1057,8 +1057,8 @@ static pwr_tStatus ConfigureComponent( ldh_sMenuCall *ip)
       if ( sscanf( item[1], "%d", &graph_configuration) != 1)
 	graph_configuration = 0;
 
-      strcpy( aname, item[0]);
-      strcat( aname, ".GraphConfiguration");
+      strncpy( aname, item[0], sizeof(aname));
+      strncat( aname, ".GraphConfiguration", sizeof(aname));
 
       sts = ldh_ArefANameToAref( ip->PointedSession, &ip->Pointed, aname, 
 				 &aaref);
@@ -1121,7 +1121,7 @@ static pwr_tStatus History( ldh_sMenuCall *ip)
     sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "RtBody",
 			  "Action", &action, &size);
     if ( EVEN(sts)) return sts;
-    strcpy( item, action);
+    strncpy( item, action, sizeof(item));
     free( action);
 
     if ( (s = strstr( item, ".pwg")))
@@ -1129,7 +1129,7 @@ static pwr_tStatus History( ldh_sMenuCall *ip)
     else
       return 1;
 
-    strcpy( categories, mb.MethodArguments[0]);
+    strncpy( categories, mb.MethodArguments[0], sizeof(categories));
     showitem = 1;
     break;
   }
@@ -1140,10 +1140,10 @@ static pwr_tStatus History( ldh_sMenuCall *ip)
     sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "RtBody",
 			  "NodeName", &nodename, &size);
     if ( EVEN(sts)) return sts;
-    strcpy( item, nodename);
+    strncpy( item, nodename, sizeof(item));
     free( nodename);
 
-    strcpy( categories, mb.MethodArguments[0]);
+    strncpy( categories, mb.MethodArguments[0], sizeof(categories));
     showitem = 1;
     break;
   }
@@ -1157,26 +1157,26 @@ static pwr_tStatus History( ldh_sMenuCall *ip)
     sts = ldh_ObjidToName(ip->PointedSession, ip->Pointed.Objid, 
 			  ldh_eName_Object, vname, sizeof(vname), &size);
     if ( EVEN(sts)) return sts;
-    strcpy( item, vname);
+    strncpy( item, vname, sizeof(item));
 
-    strcpy( categories, mb.MethodArguments[0]);
+    strncpy( categories, mb.MethodArguments[0], sizeof(categories));
     showitem = 1;
     break;
   }
   default:
     // Item is object name
-    strcpy( item, oname);
+    strncpy( item, oname, sizeof(item));
 
-    strcpy( categories, mb.MethodArguments[0]);
+    strncpy( categories, mb.MethodArguments[0], sizeof(categories));
     if (strcmp(mb.MethodArguments[1], "Descendants") == 0) {
-      strcat( item, "*");
+      strncat( item, "*", sizeof(item));
       showitem = 1;
     }
   }
 
-  sprintf( cmd, "open history/item=\"%s\"/categories=\"%s\"", item, categories);
+  snprintf( cmd, sizeof(cmd), "open history/item=\"%s\"/categories=\"%s\"", item, categories);
   if ( showitem)
-    strcat( cmd, "/showitem");
+    strncat( cmd, "/showitem", sizeof(cmd));
 
   ip->wnav->command( cmd);
   return 1;
@@ -1201,7 +1201,7 @@ static pwr_tStatus Crossreferences( ldh_sMenuCall *ip)
 			   &namep, &size);
   if ( EVEN(sts)) return sts;
 
-  sprintf( cmd, "cross/wind/name=%s", namep);
+  snprintf( cmd, sizeof(cmd), "cross/wind/name=%s", namep);
 
   ip->wnav->command( cmd);
   return 1;
@@ -1226,7 +1226,7 @@ static pwr_tStatus PM_SyntaxCheck( ldh_sMenuCall *ip)
 			ldh_eName_VolPath, oname, sizeof(oname), &size); 
   if ( EVEN(sts)) return sts;
 
-  sprintf( cmd, "check syntax/name=%s", oname);
+  snprintf( cmd, sizeof(cmd), "check syntax/name=%s", oname);
 
   ip->wnav->command( cmd);
   return 1;
@@ -1263,8 +1263,8 @@ static pwr_tStatus ConnectAttribute (
   if ( EVEN(sts)) return 0;
  
   strncpy( aname, aname_p, sizeof(aname));
-  strcat( aname, ".");
-  strcat( aname, mb.MethodArguments[0]);
+  strncat( aname, ".", sizeof(aname));
+  strncat( aname, mb.MethodArguments[0], sizeof(aname));
 
   sts = ldh_NameToAttrRef( ip->PointedSession, aname, &PattrRef);
   if (ODD(sts))
@@ -1283,7 +1283,7 @@ static pwr_tStatus ConnectAttribute (
 	strncpy( name, aname_p, sizeof(name));
       else
 	cdh_ObjidToString( name, ip->Selected[0].Objid, 1);
-      sprintf( msg, "%s connected to:   %s", mb.MethodArguments[0], name);
+      snprintf( msg, sizeof(msg), "%s connected to:   %s", mb.MethodArguments[0], name);
       ip->wtt->message( 'I', msg);
     }
     else {
