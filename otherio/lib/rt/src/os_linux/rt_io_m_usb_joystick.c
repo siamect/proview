@@ -125,7 +125,7 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
 
   int map_found = 0;
   int name_found = 0;
-  for ( i = 0; i < IO_CHANLIST_SIZE; i++) {
+  for ( i = 0; i < cp->ChanListSize; i++) {
     if ( cp->chanlist[i].sop) {
       switch ( cp->chanlist[i].ChanClass) {
       case pwr_cClass_ChanAi: {
