@@ -1,5 +1,23 @@
 #!/bin/bash
 
+pwre_help()
+{
+  cat <<EOF
+pwre_configure.h
+
+Arguments
+
+--help           Display help.
+
+--version        State fix version of loadfiles, eg
+
+                 > pwre configure --version "29-MAY-2011 16:00:00"
+
+--reset-version  Reset previous version
+
+EOF
+}
+
 pwre_config_init()
 {
     d=`eval date +\"%F %X\"`
@@ -97,7 +115,7 @@ pwre_config_check_lib()
           elif test $4 == "motif"; then
 	    conf_libmotif=$conf_libmotif" -l${lib%.*}"
           else
-	    conf_lib=$conf_lib" -l${lib%%.*}"
+	    conf_lib=$conf_lib" -l${lib%.*}"
           fi
 	elif test $3 == "gtk"; then
 	  conf_libgtk=$conf_libgtk" \\\`pkg-config --libs gtk+-2.0\\\`"
@@ -175,7 +193,6 @@ pwre_create_makedir()
   done
 }
 
-
 #pwre_os="os_linux"
 #pwre_hw="hw_x86"
 
@@ -225,37 +242,67 @@ if test ! -e $pwre_croot; then
   exit
 fi
 
+# Options
+if [ "$1" = "--help" ]; then
+  pwre_help
+  exit
+elif [ "$1" = "--version" ] && [ "$2" != "" ] && [ "$3" != "" ]; then
+  buildversion=$2" "$3
+elif [ "$1" = "--reset-version" ]; then
+  buildversion=""
+elif [ "$1" != "" ]; then
+  echo "Unknown option \"$1\""
+  exit
+else
+  # Catch current version
+  if [ -e $cfile ]; then
+    ver=`eval cat $cfile | grep "\\bexport PWRE_CONF_BUILDVERSION"`
+    ver=${ver#*=\"}
+    ver=${ver%\"}
+    buildversion=$ver
+  fi
+fi
+
 pwre_create_blddir
 pwre_create_makedir
 
 pwre_config_init
 
+if [ "$buildversion" != "" ]; then
+  echo "export PWRE_CONF_BUILDVERSION=\"$buildversion\"" >> $cfile
+else
+  echo "export PWRE_CONF_BUILDVERSION=\"0\"" >> $cfile
+fi
+      
 #Gtk
-pwre_config_check_lib gtk      	GTK      gtk gtk 0 /usr/local/lib/libgtk-x11-2.0.so
+  echo ""
+  echo "Mandatory :"
+pwre_config_check_lib gtk      	GTK      gtk gtk 0 /usr/local/lib/libgtk-x11-2.0.a
 
 pwre_config_check_lib libantlr 	LIBANTLR lib lib 0 /usr/local/lib/libantlr.a
 pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 /usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a
-pwre_config_check_lib libasound LIBASOUND lib lib 0 /usr/lib/libasound.so:/usr/lib/libasound.a
+#pwre_config_check_lib libasound LIBASOUND lib lib 0 /usr/lib/libasound.so:/usr/lib/libasound.a
 pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 /usr/lib/libpthread.so:/usr/lib/libpthread.a
 pwre_config_check_lib libm     	LIBM     lib lib 0 /usr/lib/libm.so:/usr/lib/libm.a
 pwre_config_check_lib libdb_cxx LIBDB_CXX lib lib 0 /usr/local/lib/libdb_cxx-4.8.so
 pwre_config_check_lib libz     	LIBZ     lib lib 0 /usr/lib/libz.so:/usr/lib/libz.a
 pwre_config_check_lib libcrypt 	LIBCRYPT lib lib 0 /usr/lib/libcrypt.so:/usr/lib/libcrypt.a
-pwre_config_check_lib mysql    	MYSQL    lib lib 1 /usr/lib/libmysqlclient.so
-pwre_config_check_lib mq       MQ       lib lib 1 /usr/lib/libdmq.so
-pwre_config_check_lib libpnioif PNAK    lib lib 1 /usr/lib/libpnioif.so:/usr/local/lib/libpnioif.a
-pwre_config_check_lib libusb   LIBUSB   lib lib 1 /usr/lib/libusb-1.0.so
 pwre_config_check_lib librt    LIBRT    lib lib 0 /usr/lib/librt.dylib:/usr/lib/librt.a
 pwre_config_check_lib libiconv LIBICONV lib lib 0 /usr/local/lib/libiconv.so:usr/local/lib/libiconv.a
 pwre_config_check_lib libfl    LIBFL    lib lib 0 /usr/lib/libfl.os:/usr/lib/libfl.a
-
-#set -o xtrace
 
 pwre_config_check_include antlr ANTLR 1 /usr/local/include/antlr/CommonAST.hpp
 pwre_config_check_include gtk   GTK   1 /usr/local/include/gtk-2.0/gtk/gtk.h
 pwre_config_check_include jni   JNI   1 /usr/local/jdk1.6.0/include/jni.h
 pwre_config_check_include jni   JNI   0 /usr/local/jdk1.6.0/include/freebsd/jni_md.h
 pwre_config_check_include libdb_cxx LIBDB_CXX 0 /usr/local/include/db48/db_cxx.h
+
+  echo ""
+  echo "Optional :"
+pwre_config_check_lib mysql    	MYSQL    lib lib 1 /usr/lib/libmysqlclient.so
+pwre_config_check_lib mq       MQ       lib lib 1 /usr/lib/libdmq.so
+pwre_config_check_lib libpnioif PNAK    lib lib 1 /usr/lib/libpnioif.so:/usr/local/lib/libpnioif.a
+pwre_config_check_lib libusb   LIBUSB   lib lib 1 /usr/lib/libusb-1.0.so
 
 
 export pwre_conf_alsa=1
