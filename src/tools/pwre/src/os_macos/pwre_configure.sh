@@ -1,5 +1,23 @@
 #!/bin/bash
 
+pwre_help()
+{
+  cat <<EOF
+pwre_configure.h
+
+Arguments
+
+--help           Display help.
+
+--version        State fix version of loadfiles, eg
+
+                 > pwre configure --version "29-MAY-2011 16:00:00"
+
+--reset-version  Reset previous version
+
+EOF
+}
+
 pwre_config_init()
 {
     d=`eval date +\"%F %X\"`
@@ -180,7 +198,7 @@ pwre_create_makedir()
 cfile="$pwre_broot/pwre_${pwre_hw:3}_${pwre_os:3}.cnf"
 dos=`eval echo ${pwre_os} | tr [:lower:] [:upper:]`
 dhw=`eval echo ${pwre_hw} | tr [:lower:] [:upper:]`
-conf_cc_define="-D$dos=1 -D$dhw=1 -DOS=${pwre_os:3} -DHW=${pwre_hw:3} -D_${dos:3}"
+conf_cc_define="-D$dos=1 -DOS_POSIX -D$dhw=1 -DOS=${pwre_os:3} -DHW=${pwre_hw:3} -D_${dos:3}"
 conf_lib=""
 conf_libgtk="" 
 conf_libmotif="" 
@@ -223,31 +241,54 @@ if test ! -e $pwre_croot; then
   exit
 fi
 
+# Options
+if [ "$1" = "--help" ]; then
+  pwre_help
+  exit
+elif [ "$1" = "--version" ] && [ "$2" != "" ] && [ "$3" != "" ]; then
+  buildversion=$2" "$3
+elif [ "$1" = "--reset-version" ]; then
+  buildversion=""
+elif [ "$1" != "" ]; then
+  echo "Unknown option \"$1\""
+  exit
+else
+  # Catch current version
+  if [ -e $cfile ]; then
+    ver=`eval cat $cfile | grep "\\bexport PWRE_CONF_BUILDVERSION"`
+    ver=${ver#*=\"}
+    ver=${ver%\"}
+    buildversion=$ver
+  fi
+fi
+
 pwre_create_blddir
 pwre_create_makedir
 
 pwre_config_init
 
+if [ "$buildversion" != "" ]; then
+  echo "export PWRE_CONF_BUILDVERSION=\"$buildversion\"" >> $cfile
+else
+  echo "export PWRE_CONF_BUILDVERSION=\"0\"" >> $cfile
+fi
+      
 #Gtk
+  echo ""
+  echo "Mandatory :"
 pwre_config_check_lib gtk      	GTK      gtk gtk 0 /sw/lib/libgtk-x11-2.0.dylib
 
 pwre_config_check_lib libantlr 	LIBANTLR lib lib 0 /usr/local/lib/libantlr.a
 pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 /usr/lib/librpcsvc.dylib:/usr/lib/librpcsvc.a
-pwre_config_check_lib libasound LIBASOUND lib lib 0 /usr/lib/libasound.dylib:/usr/lib/libasound.a
+#pwre_config_check_lib libasound LIBASOUND lib lib 0 /usr/lib/libasound.dylib:/usr/lib/libasound.a
 pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 /usr/lib/libpthread.dylib:/usr/lib/libpthread.a
 pwre_config_check_lib libm     	LIBM     lib lib 0 /usr/lib/libm.dylib:/usr/lib/libm.a
 pwre_config_check_lib libdb_cxx LIBDB_CXX lib lib 0 /usr/local/BerkeleyDB.4.8/lib/libdb_cxx-4.8.dylib:/usr/lib/libdb_cxx.so
 pwre_config_check_lib libz     	LIBZ     lib lib 0 /usr/lib/libz.dylib:/usr/lib/libz.a
-pwre_config_check_lib libcrypt 	LIBCRYPT lib lib 0 /usr/lib/libcrypt.dylib:/usr/lib/libcrypt.a
-pwre_config_check_lib mysql    	MYSQL    lib lib 1 /usr/lib/libmysqlclient.dylib
-pwre_config_check_lib mq       MQ       lib lib 1 /usr/lib/libdmq.dylib
-pwre_config_check_lib libpnioif PNAK    lib lib 1 /usr/lib/libpnioif.so:/usr/local/lib/libpnioif.a
-pwre_config_check_lib libusb   LIBUSB   lib lib 1 /usr/lib/libusb-1.0.so
-pwre_config_check_lib librt    LIBRT    lib lib 0 /usr/lib/librt.dylib:/usr/lib/librt.a
+#pwre_config_check_lib libcrypt 	LIBCRYPT lib lib 0 /usr/lib/libcrypt.dylib:/usr/lib/libcrypt.a
+#pwre_config_check_lib librt    LIBRT    lib lib 0 /usr/lib/librt.dylib:/usr/lib/librt.a
 pwre_config_check_lib libiconv LIBICONV lib lib 0 /usr/lib/libiconv.dylib
 pwre_config_check_lib libfl    LIBFL    lib lib 0 /usr/lib/libfl.dylib:/usr/lib/libfl.a
-
-#set -o xtrace
 
 pwre_config_check_include antlr ANTLR 1 /usr/local/include/antlr/CommonAST.hpp
 pwre_config_check_include gtk   GTK   1 /sw/include/gtk-2.0/gtk/gtk.h
@@ -255,6 +296,13 @@ pwre_config_check_include jni   JNI   1 /Developer/SDKs/MacOSX10.6.sdk/System/Li
 pwre_config_check_include jni   JNI   0 $jdk/include/linux/jni_md.h
 pwre_config_check_include libdb_cxx LIBDB_CXX 0 /usr/local/BerkeleyDB.4.8/include/db_cxx.h:/usr/lib/db_cxx.h
 
+
+  echo ""
+  echo "Optional :"
+pwre_config_check_lib mysql    	MYSQL    lib lib 1 /usr/lib/libmysqlclient.dylib
+pwre_config_check_lib mq       MQ       lib lib 1 /usr/lib/libdmq.dylib
+pwre_config_check_lib libpnioif PNAK    lib lib 1 /usr/lib/libpnioif.so:/usr/local/lib/libpnioif.a
+pwre_config_check_lib libusb   LIBUSB   lib lib 1 /usr/lib/libusb-1.0.so
 
 export pwre_conf_alsa=1
 
