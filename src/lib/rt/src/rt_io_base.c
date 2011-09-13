@@ -1737,7 +1737,10 @@ static pwr_tStatus io_init_card(
 		case pwr_cClass_ChanIi:
 		case pwr_cClass_ChanIo:
 		case pwr_cClass_ChanCo:
-		  maxchan++;
+		  if ( bd[i].attr->Param.Info.Elements <= 1)
+		    maxchan++;
+		  else
+		    maxchan += bd[i].attr->Param.Info.Elements;
 		  break;
 		default:
 		  if ( bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS) {
@@ -1756,7 +1759,10 @@ static pwr_tStatus io_init_card(
 		      case pwr_cClass_ChanIi:
 		      case pwr_cClass_ChanIo:
 		      case pwr_cClass_ChanCo:
-			maxchan++;
+			if ( bd2[ii].attr->Param.Info.Elements <= 1)
+			  maxchan++;
+			else
+			  maxchan += bd2[ii].attr->Param.Info.Elements;
 			break;
 		      default: ;
 		      }
