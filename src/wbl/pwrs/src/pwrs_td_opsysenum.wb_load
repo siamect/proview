@@ -170,10 +170,10 @@ SObject pwrs:Type
     !/**
     !  Operating system is Cygwin on x86
     !*/
-    Object X86_CYTWIN $Value
+    Object X86_CYGWIN $Value
      Body SysBody
        Attr PgmName = "X86_CYGWIND"
-       Attr Text = "Cygwin on x86_64"
+       Attr Text = "Cygwin on x86"
        Attr Value = 4096
      EndBody
     EndObject

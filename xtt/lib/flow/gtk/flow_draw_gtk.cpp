@@ -1335,7 +1335,7 @@ int FlowDrawGtk::text_erase_pango( FlowCtx *ctx, int x, int y, char *text, int l
 
   gdk_draw_rectangle( window, 
 		      gcs[flow_eDrawType_LineErase][idx], 1, 
-		      x, y - (int)0.8 / PANGO_SCALE * h, w / PANGO_SCALE, (int)(h / PANGO_SCALE * 1.2));
+		      x, y - (int)(0.8 / PANGO_SCALE * h), w / PANGO_SCALE, (int)(h / PANGO_SCALE * 1.2));
   // pango_renderer_draw_layout( pr, layout, PANGO_SCALE * x, PANGO_SCALE * y - h * 0.8);
   
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
