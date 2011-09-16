@@ -13507,7 +13507,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
     if ( event->event == glow_eEvent_MB1Click) {
       pwr_tTime now;
       time_GetTime( &now);
-      if ( abs(now.tv_sec - focus_gained_time.tv_sec) < 2)
+      if ( abs( (int)(now.tv_sec - focus_gained_time.tv_sec)) < 2)
 	break;
     }
     if ( menu_object) {

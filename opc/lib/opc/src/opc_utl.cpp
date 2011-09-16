@@ -278,7 +278,11 @@ pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize)
   
    time_t sec = tp->tv_sec;
    tmpTm = localtime(&sec);
+#if defined OS_CYGWIN
+   tzone = 0;
+#else
    tzone = tmpTm->tm_gmtoff / 3600;
+#endif
    strftime(buf, bufsize, "%Y-%m-%dT%H:%M:%S", tmpTm);
 
    sprintf(tmpStr, ".%07d%s%02d:00", (int)(tp->tv_nsec / 100), tzone >= 0 ? "+" : "", tzone);

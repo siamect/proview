@@ -148,7 +148,7 @@ static const qcom_sQid qdb_cQmonitor	= {qdb_cImonitor, 0};
 #  define	qdb_cNameDbLock		"/tmp/pwr_qdb_lock"
 
 #  define	qdb_cSigMsg		SIGRTMIN
-#elif defined OS_MACOS || defined OS_FREEBSD || defined OS_OPENBSD
+#elif defined OS_MACOS || defined OS_FREEBSD || defined OS_OPENBSD || defined OS_CYGWIN
 #  define	qdb_cNameDatabase	"/tmp/pwr_qdb"
 
 #  define	qdb_cNamePool		"/tmp/pwr_qpool"

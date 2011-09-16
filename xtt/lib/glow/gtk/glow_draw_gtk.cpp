@@ -3434,7 +3434,7 @@ int GlowDrawGtk::gradient_fill_polyline( GlowWind *wind, glow_sPointX *points, i
     }
 
     cairo_pattern_t *pat;
-    if ( !gradient_create_pattern( x0, y0, x1 - x0, y1 - y0, d0, d1, d2, gradient, &pat))
+    if ( !gradient_create_pattern( (int)x0, (int)y0, (int)(x1 - x0), (int)(y1 - y0), d0, d1, d2, gradient, &pat))
       return 0;
     cairo_set_source( cr, pat);
     cairo_fill(cr);
@@ -3551,12 +3551,12 @@ int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
 
     int width, height;
     pango_layout_get_size( layout, &width, &height);
-    height *= 0.9;
+    height = (int)(height * 0.9);
 
     int px, py;
     if ( rot == 180) {
       px = -PANGO_SCALE * x - width;
-      py = -PANGO_SCALE * y - FONT_DESCENT*height;
+      py = (int)(-PANGO_SCALE * y - FONT_DESCENT*height);
     }
     else if ( rot == 90) {
       px = -PANGO_SCALE * y - width + height/2;
@@ -3568,7 +3568,7 @@ int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
     }
     else {
       px = PANGO_SCALE * x;
-      py = PANGO_SCALE * y - (1.0-FONT_DESCENT)*height;
+      py = (int)(PANGO_SCALE * y - (1.0-FONT_DESCENT)*height);
     }
     pango_renderer_draw_layout( pr, layout, px, py);
   
@@ -3637,7 +3637,7 @@ int GlowDrawGtk::text_erase_pango( GlowWind *wind, int x, int y, char *text, int
 
   int width, height;
   pango_layout_get_size( layout, &width, &height);
-  height *= 0.9;
+  height = (int)(height * 0.9);
 
   if ( rot == 90) {
     px = x;// - height/PANGO_SCALE/2;
@@ -3653,7 +3653,7 @@ int GlowDrawGtk::text_erase_pango( GlowWind *wind, int x, int y, char *text, int
   }
   else {
     px = x;
-    py = y - (1.0-FONT_DESCENT)*height/PANGO_SCALE;
+    py = (int)(y - (1.0-FONT_DESCENT)*height/PANGO_SCALE);
     pw = width / PANGO_SCALE;
     ph = height / PANGO_SCALE;
   }
@@ -3713,7 +3713,7 @@ int GlowDrawGtk::get_text_extent_pango( const char *text, int len,
 
   int lwidth, lheight;
   pango_layout_get_size( layout, &lwidth, &lheight);
-  lheight *= 0.9;
+  lheight = (int)(lheight * 0.9);
 
   if ( rot == 90 || rot == 270) {
     *height = lwidth / PANGO_SCALE;
@@ -3723,7 +3723,7 @@ int GlowDrawGtk::get_text_extent_pango( const char *text, int len,
     *width = lwidth / PANGO_SCALE;
     *height = lheight / PANGO_SCALE;
   }
-  *descent = FONT_DESCENT * lheight / PANGO_SCALE;
+  *descent = (int)(FONT_DESCENT * lheight / PANGO_SCALE);
 
   g_object_unref( layout);
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);

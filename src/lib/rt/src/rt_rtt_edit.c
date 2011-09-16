@@ -7817,6 +7817,11 @@ int	dtt_start( char		*programname)
 	dtt_current_opsys = pwr_mOpSys_X86_64_FREEBSD;
 #elif defined OS_OPENBSD
 	dtt_current_opsys = pwr_mOpSys_X86_64_OPENBSD;
+#elif defined OS_CYGWIN
+	if ( strcmp( rtt_hw, "x86_64") == 0)
+  	  dtt_current_opsys = pwr_mOpSys_X86_64_CYGWIN;
+	else
+  	  dtt_current_opsys = pwr_mOpSys_X86_CYGWIN;
 #endif	  
 
 	/* Create path for source and build directories */
@@ -10645,9 +10650,11 @@ static char *dtt_opsys_to_name( int opsys)
 	  case pwr_mOpSys_PPC_LINUX: strcpy( name, "PPC_LINUX"); break;
 	  case pwr_mOpSys_X86_LINUX: strcpy( name, "X86_LINUX"); break;
 	  case pwr_mOpSys_X86_64_LINUX: strcpy( name, "X86_64_LINUX"); break;
+	  case pwr_mOpSys_ARM_LINUX: strcpy( name, "ARM_LINUX"); break;
 	  case pwr_mOpSys_X86_64_MACOS: strcpy( name, "X86_64_MACOS"); break;
 	  case pwr_mOpSys_X86_64_FREEBSD: strcpy( name, "X86_64_FREEBSD"); break;
-	  case pwr_mOpSys_ARM_LINUX: strcpy( name, "ARM_LINUX"); break;
+	  case pwr_mOpSys_X86_64_OPENBSD: strcpy( name, "X86_64_OPENBSD"); break;
+	  case pwr_mOpSys_X86_CYGWIN: strcpy( name, "X86_CYGWIN"); break;
 	  default: strcpy( name, "Unknwn");
 	}
 	return name;

@@ -1532,6 +1532,16 @@ int	rtt_get_hw( char *hw)
 #elif defined OS_MACOS || defined OS_FREEBSD || OS_OPENBSD
 	strcpy( hw, "x86_64");
 	return 1;
+#elif defined OS_CYGWIN
+	struct	utsname buf;
+
+	if (uname( &buf) == -1)
+	  return 0;
+	if (strstr( buf.machine, "86_64") != 0)
+	  strcpy( hw, "x86_64");
+	else if (strstr( buf.machine, "86") != 0)
+	  strcpy( hw, "x86");
+	return 1;
 #endif
 }
 

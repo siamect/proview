@@ -280,7 +280,7 @@ void GrowAxisArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, v
   if ( 1) {
     // Lines inwards
     ctx->gdraw->arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 
-		     angle1 - rotation, angle2, drawtype, idx, 0);
+		     angle1 - (int)rotation, angle2, drawtype, idx, 0);
 
     if ( lines == 1)
       return;
@@ -392,7 +392,7 @@ void GrowAxisArc::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 
   w->set_draw_buffer_only();
   ctx->gdraw->arc_erase( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			 angle1 - rotation, angle2, idx);
+			 angle1 - (int)rotation, angle2, idx);
   ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
   w->reset_draw_buffer_only();
 }
