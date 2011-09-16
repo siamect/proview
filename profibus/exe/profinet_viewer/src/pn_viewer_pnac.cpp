@@ -48,6 +48,7 @@
 #include "netinet/in.h"
 #include "arpa/inet.h"
 
+#include "pwr_profibusclasses.h"
 #ifndef rt_pn_iface_h
 # include "rt_pn_iface.h"
 #endif
