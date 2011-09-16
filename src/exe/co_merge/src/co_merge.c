@@ -110,15 +110,23 @@ int main(  int argc, char *argv[])
 #if defined OS_LINUX
   char os[] = "OS_LINUX";
   char dos[] = "-DOS_LINUX -DOS_POSIX";
+  char cflags[] = "";
 #elif defined OS_MACOS
   char os[] = "OS_MACOS";
   char dos[] = "-DOS_MACOS -DOS_POSIX";
+  char cflags[] = "";
 #elif defined OS_FREEBSD
   char os[] = "OS_FREEBSD";
   char dos[] = "-DOS_FREEBSD -DOS_POSIX";
+  char cflags[] = "";
 #elif defined OS_OPENBSD
   char os[] = "OS_OPENBSD";
   char dos[] = "-DOS_OPENBSD -DOS_POSIX";
+  char cflags[] = "";
+#elif defined OS_CYGWIN
+  char os[] = "OS_CYGWIN";
+  char dos[] = "-DOS_CYGWIN -DOS_POSIX";
+  char cflags[] = "-I/usr/include/tirpc";
 #endif
   if ( argc < 4) {
     usage();
@@ -280,10 +288,10 @@ int main(  int argc, char *argv[])
   dcli_translate_filename( incdir, "$pwr_einc");
   switch ( mtype) {
   case merge_eMtype_WbBase:
-    snprintf( cmd, sizeof(cmd), "%s -c -I%s %s -o %s %s", pwre_cxx, incdir, dos, ofile, cfile);
+    snprintf( cmd, sizeof(cmd), "%s -c %s -I%s %s -o %s %s", pwre_cxx, cflags, incdir, dos, ofile, cfile);
     break;
   default:
-    snprintf( cmd, sizeof(cmd), "%s -c -I%s %s -o %s %s", pwre_cc, incdir, dos, ofile, cfile);
+    snprintf( cmd, sizeof(cmd), "%s -c %s -I%s %s -o %s %s", pwre_cc, cflags, incdir, dos, ofile, cfile);
   }
   if ( arg_verbose)
     printf( "co_merge: %s\n", cmd);

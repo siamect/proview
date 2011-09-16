@@ -58,6 +58,17 @@ struct arpreq {
   int     arp_flags;                      /* flags */
 };
 
+#elif defined OS_CYGWIN
+# include <sys/ioctl.h>
+# include <sys/socket.h>
+# include <net/if.h>
+
+struct arpreq {
+  struct  sockaddr arp_pa;                /* protocol address */
+  struct  sockaddr arp_ha;                /* hardware address */
+  int     arp_flags;                      /* flags */
+};
+
 #else
 # include <sys/ioctl.h>
 # if defined OS_POSIX

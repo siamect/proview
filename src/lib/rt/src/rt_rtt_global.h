@@ -163,6 +163,8 @@ char				rtt_os[20] = "macos";
 char				rtt_os[20] = "freebsd";
 #elif defined OS_OPENBSD
 char				rtt_os[20] = "openbsd";
+#elif defined OS_CYGWIN
+char				rtt_os[20] = "cygwin";
 #endif
 int				rtt_verify = 0;
 int				rtt_file_on = 0;

@@ -102,6 +102,7 @@ typedef enum {
     co_eOS_MacOS,
     co_eOS_FreeBSD,
     co_eOS_OpenBSD,
+    co_eOS_Cygwin,
     co_eOS_
 } co_eOS;
 
@@ -121,6 +122,8 @@ typedef enum {
 #   define co_dHostOS co_eOS_FreeBSD
 #elif defined OS_OPENBSD
 #   define co_dHostOS co_eOS_OpenBSD
+#elif defined OS_CYGWIN
+#   define co_dHostOS co_eOS_Cygwin
 #else 
 #   define co_dHostOS co_eOS__
 #endif

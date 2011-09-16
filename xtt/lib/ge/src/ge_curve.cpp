@@ -102,8 +102,8 @@ void GeCurve::activate_export()
     to_time = cd->x_min_value_axis[0] + (200.0 - ur_x) *
       (cd->x_max_value_axis[0] - cd->x_min_value_axis[0]) / 200;
   }
-  from.tv_sec = from_time;
-  to.tv_sec = to_time;
+  from.tv_sec = (pwr_tInt64) from_time;
+  to.tv_sec = (pwr_tInt64) to_time;
   open_export( &from, &to, 1000, filename);
 }
 
