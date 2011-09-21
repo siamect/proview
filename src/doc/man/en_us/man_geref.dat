@@ -3496,6 +3496,7 @@ create 			<link>gecmd_create
 group 			<link>gecmd_group
 move 			<link>gecmd_move
   <t>move currentobject	<link>gecmd_move_currentobject
+  <t>move selectedobject <link>gecmd_move_selectedobject
 new 			<link>gecmd_new
 select 			<link>gecmd_select
   <t>select currentobject <link>gecmd_select_currentobject
@@ -3533,14 +3534,16 @@ set 			<link>gecmd_set
   <t>set graphattributes <link>gecmd_set_graphattributes
 rotate 			<link>gecmd_rotate
   <t>rotate currentobject <link>gecmd_rotate_current
+  <t>rotate selectedobject <link>gecmd_rotate_selected
 scale 			<link>gecmd_scale
   <t>scale currentobject <link>gecmd_scale_current
+  <t>scale selectedobject <link>gecmd_scale_selected
 save 			<link>gecmd_save
 exit 			<link>gecmd_exit
 quit 			<link>gecmd_quit
 open 			<link>gecmd_open
 show 			<link>gecmd_show
-  <t>scale version <link>gecmd_show_version
+  <t>show version <link>gecmd_show_version
 </topic>
 
 <headerlevel>
@@ -3686,14 +3689,37 @@ move
 <topic>gecmd_move_currentobject
 move currentobject
 
-Move the current object.
+Move the current object. The movement can be specified with relative coordinates
+(x and y) or absolute coordinates (absx and absy) or combinations.
 
 <b>Syntax
 
 <c>ge> move currentobject /x= /y=
+<c>ge> move currentobject /absx= /absy=
 
 /x <t>Relative movement in x direction.
 /y <t>Relative movement in y direction.
+/absx <t>Movement to absolute coordinate in x direction.
+/absy <t>Movement to absolute coordinate in y direction.
+</topic>
+
+<topic>gecmd_move_selectedobject
+move selectedobject
+
+Move the selected object. The movement can be specified with relative coordinates
+(x and y) or absolute coordinates (absx and absy) or combinations.
+
+Only one object can be selected.
+
+<b>Syntax
+
+<c>ge> move selectedobject /x= /y=
+<c>ge> move selectedobject /absx= /absy=
+
+/x <t>Relative movement in x direction.
+/y <t>Relative movement in y direction.
+/absx <t>Movement to absolute coordinate in x direction.
+/absy <t>Movement to absolute coordinate in y direction.
 </topic>
 
 <topic>gecmd_new <style>function
@@ -4096,6 +4122,18 @@ Rotates the current object around the center of the object.
 /angle <t>Angle in degrees that the object is rotated.
 </topic>
 
+<topic>gecmd_rotate_selected
+rotate selectedobject
+
+Rotates the selected object around the center of the object.
+
+<b>Syntax
+
+<c>ge> rotate selectedobject /angle=
+
+/angle <t>Angle in degrees that the object is rotated.
+</topic>
+
 <topic>gecmd_scale
 scale
 </topic>
@@ -4108,6 +4146,21 @@ Scale the current object.
 <b>Syntax
 
 <c>ge> scale currentobject /scalex= /scaley= [/x= /y=]
+
+/scalex <t>Scalefactor in x direction.
+/scaley <t>Scalefactor in y direction.
+/x <t>x coordinate for the reference point of the scaling.
+/y <t>y coordinate for the reference point of the scaling.
+</topic>
+
+<topic>gecmd_scale_selected
+scale selectedobject
+
+Scale the selected object.
+
+<b>Syntax
+
+<c>ge> scale selectedobject /scalex= /scaley= [/x= /y=]
 
 /scalex <t>Scalefactor in x direction.
 /scaley <t>Scalefactor in y direction.
