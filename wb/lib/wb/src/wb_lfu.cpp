@@ -2125,7 +2125,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		fprintf( file, "boot %s\n", nodename_ptr);
 
 	      if ( *components_ptr & pwr_mDistrComponentMask_UserDatabase)
-		fprintf( file, "appl %s W $pwrp_src/%s/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat\n",
+		fprintf( file, "appl %s W $pwrp_cnf/%s/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat\n",
 			 nodename_ptr, nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_ApplFile)
 		fprintf( file, "appl %s W "load_cNameAppl" $pwrp_load/\n",
@@ -2149,10 +2149,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      if ( *components_ptr & pwr_mDistrComponentMask_FlowFiles)
 		fprintf( file, "appl %s W $pwrp_load/*.flw\n", nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_RHostsFile)
-		fprintf( file, "appl %s W $pwrp_src/%s/.rhosts:$pwra_db/.rhosts /home/pwrp/.rhosts\n",
+		fprintf( file, "appl %s W $pwrp_cnf/%s/.rhosts:$pwra_db/.rhosts /home/pwrp/.rhosts\n",
 			 nodename_ptr, nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_AuthorizedKeysFile)
-		fprintf( file, "appl %s W $pwrp_src/%s/authorized_keys:$pwra_db/authorized_keys /home/pwrp/.ssh/authorized_keys\n",
+		fprintf( file, "appl %s W $pwrp_cnf/%s/authorized_keys:$pwra_db/authorized_keys /home/pwrp/.ssh/authorized_keys\n",
 			 nodename_ptr, nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_WebFiles) {
 		fprintf( file, "appl %s W $pwrp_web/*.html\n", nodename_ptr);
@@ -2162,7 +2162,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		fprintf( file, "appl %s S $pwrp_web/*.pdf\n", nodename_ptr);
 	      }
 	      if ( *components_ptr & pwr_mDistrComponentMask_PwrpStop)
-		fprintf( file, "appl %s W $pwrp_src/%s/pwrp_stop.sh:$pwrp_exe/pwrp_stop.sh $pwrp_exe/pwrp_stop.sh\n", 
+		fprintf( file, "appl %s W $pwrp_cnf/%s/pwrp_stop.sh:$pwrp_exe/pwrp_stop.sh $pwrp_exe/pwrp_stop.sh\n", 
 			 nodename_ptr, nodename_ptr);
 
 
