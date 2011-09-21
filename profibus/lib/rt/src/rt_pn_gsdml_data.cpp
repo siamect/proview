@@ -508,6 +508,8 @@ int GsdmlDataReader::tag_attribute( const char *name, const char *value)
 	if ( strcmp( value, gsdmlfile_p) != 0 && !new_filename)
 	  return PB__GSDMLFILEMISMATCH;
       }
+      else
+	strncpy( data->gsdmlfile, value, sizeof(data->gsdmlfile));
     }
     else if ( strcmp( name, "DeviceText") == 0)
       strncpy( data->device_text, value, sizeof(data->device_text));
