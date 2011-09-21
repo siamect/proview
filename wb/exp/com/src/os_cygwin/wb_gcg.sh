@@ -479,7 +479,7 @@ elif [ $OpSys -eq $OpSys_X86_CYGWIN ]; then
 
 # Suppress all warnings, -x
   if [ $CurrentOpSys -eq $OpSys ]; then
-      cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_CYGWIN -DOS_POSIX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+      cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_CYGWIN -DOS_POSIX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp -I/usr/include/tirpc $PWR_EXT_INC"
 
       FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 
