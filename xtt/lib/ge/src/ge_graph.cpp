@@ -3956,7 +3956,7 @@ int Graph::set_folder_index( const char *name, int idx)
   return grow_SetFolderIndex( object, idx);
 }
 
-int Graph::set_subwindow_source( const char *name, char *source)
+int Graph::set_subwindow_source( const char *name, char *source, char *owner)
 {
   int  sts;
   grow_tObject object;
@@ -3971,7 +3971,7 @@ int Graph::set_subwindow_source( const char *name, char *source)
   if ( grow_GetObjectType( object) != glow_eObjectType_GrowWindow)
     return 0;
 
-  sts =  grow_SetWindowSource( object, source);
+  sts =  grow_SetWindowSource( object, source, owner);
 
   if ( ctx != grow->ctx)
     grow->pop(ctx);

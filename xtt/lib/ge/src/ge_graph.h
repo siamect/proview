@@ -1288,8 +1288,9 @@ class Graph {
   /*!
     \param name		Object name of window object.
     \param source      	Name of source graph.
+    \param owner      	Name of instance object. NULL if not used.
   */
-  int set_subwindow_source( const char *name, char *source);
+  int set_subwindow_source( const char *name, char *source, char *owner);
 
   //! Play a sound.
   /*!

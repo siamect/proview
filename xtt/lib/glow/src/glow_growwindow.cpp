@@ -981,7 +981,7 @@ int GrowWindow::get_background_object_limits(GlowTransform *t,
   return 0;
 }
 
-int GrowWindow::set_source( char *source)
+int GrowWindow::set_source( char *source, char *new_owner)
 {
   int clip_removed = 0;
 
@@ -992,6 +992,8 @@ int GrowWindow::set_source( char *source)
   }
 
   strcpy( input_file_name, source);
+  if ( new_owner)
+    strncpy( owner, new_owner, sizeof(owner));
   update_attributes();
   draw();
 

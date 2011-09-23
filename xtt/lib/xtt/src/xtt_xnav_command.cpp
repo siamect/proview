@@ -340,7 +340,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"SET",
 			&xnav_set_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/VALUE",
-			  "/BYPASS", "/INDEX", "/SOURCE", ""}
+			  "/BYPASS", "/INDEX", "/SOURCE", "/OBJECT", ""}
 		},
 		{
 			"SETUP",
@@ -686,7 +686,7 @@ static int	xnav_logout_func(	void		*client_data,
 }
 
 static int	xnav_set_func(	void		*client_data,
-					void		*client_flag)
+			       	void		*client_flag)
 {
   XNav *xnav = (XNav *)client_data;
   char	arg1_str[80];
@@ -815,7 +815,9 @@ static int	xnav_set_func(	void		*client_data,
     // Command is "SET SUBWINDOW"
     XttGe *gectx;
     char graph_str[80];
-    char object_str[80];
+    char name_str[80];
+    pwr_tOName object_str;
+    char *object_p;
     char source_str[80];
 
     if ( EVEN( dcli_get_qualifier( "dcli_arg2", graph_str, sizeof(graph_str)))) {
@@ -823,7 +825,7 @@ static int	xnav_set_func(	void		*client_data,
       return XNAV__HOLDCOMMAND;
     }
 
-    if ( EVEN( dcli_get_qualifier( "/NAME", object_str, sizeof(object_str)))) {
+    if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
       xnav->message('E', "Object name is missing");
       return XNAV__HOLDCOMMAND;
     }
@@ -833,12 +835,17 @@ static int	xnav_set_func(	void		*client_data,
       return XNAV__HOLDCOMMAND;
     }
 
+    if ( ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str))))
+      object_p = object_str;
+    else
+      object_p = 0;
+
     if ( !xnav->appl.find( applist_eType_Graph, graph_str, 0, 
 		  (void **) &gectx)) {
       xnav->message('E', "Graph is not open");
       return XNAV__HOLDCOMMAND; 	
     }
-    return gectx->set_subwindow_source( object_str, source_str);
+    return gectx->set_subwindow_source( name_str, source_str, object_p);
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "LANGUAGE", strlen( arg1_str)) == 0)
   {    
@@ -3682,6 +3689,23 @@ static int	xnav_open_func(	void		*client_data,
 
     fileview = xnav->fileview_new( aref.Objid, title_str, dir_str, file_str, type,
 				   target_str, trigger_str, filetype_p);
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "NAVIGATOR", strlen( arg1_str)) == 0) {
+    pwr_tAName object_str;
+    pwr_tAttrRef aref;
+    pwr_tStatus sts;
+
+    if ( ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
+      sts = gdh_NameToAttrref( pwr_cNObjid, object_str, &aref);
+      if ( EVEN(sts)) {
+	xnav->message('E', "Uable to find object");
+	return XNAV__HOLDCOMMAND;
+      }
+      
+      xnav->display_object( &aref, 0);
+    }
+
+    xnav->pop();
   }
   else
     xnav->message('E',"Syntax error");
