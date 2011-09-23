@@ -42,6 +42,7 @@
 #include "pwr.h"
 #include "wb_dblock.h"
 #include "co_dcli.h"
+#include "co_syi.h"
 
 vector<wb_lockfile> wb_dblock::m_lockfiles;
 
@@ -82,14 +83,24 @@ bool wb_dblock::is_locked( char *name, char *user)
 
 void wb_dblock::dblock( char *name)
 {
+  pwr_tStatus sts;
   char *value;
+  char nodename[80];
+  char username[80];
 
   ofstream fp( lockname( name));
+
+  syi_NodeName( &sts, nodename, sizeof(nodename));
+  if ( EVEN(sts))
+    strcpy( nodename, "Unknown");
+
   value = getenv( "USER");
   if ( value)
-    fp << value << endl;
+    strncpy( username, value, sizeof(username));
   else
-    fp << "Unknown" << endl;
+    strcpy( username, "Unknown");
+
+  fp << username << " on " << nodename << endl;
   fp.close();
   wb_lockfile lf( lockname( name));
 
