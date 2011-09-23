@@ -123,7 +123,7 @@ int WGe::set_folder_index( char *name, int idx)
 
 int WGe::set_subwindow_source( char *name, char *source, int modal)
 {
-  return graph->set_subwindow_source( name, source);
+  return graph->set_subwindow_source( name, source, 0);
 }
 
 void WGe::set_subwindow_release()
