@@ -43,14 +43,14 @@
 # include <string.h>
 #endif
 
-#if defined(OS_LINUX)
+#if defined OS_LINUX
 # include <pwd.h>
 # include <signal.h>
 # include <linux/capability.h>
 # include <sys/types.h>
 #endif
 
-#if defined OS_MACOS || defined OS_FREEBSD || defined OS_OPENBSD
+#if defined OS_MACOS || defined OS_FREEBSD || defined OS_OPENBSD || defined OS_CYGWIN
 # include <pwd.h>
 # include <signal.h>
 # include <sys/types.h>
@@ -317,7 +317,7 @@ scan (
 
 #if defined OS_LYNX && USE_RT_TIMER
       sem_wait(&tp->ScanSem);
-#elif defined OS_MACOS || defined OS_FREEBSD || OS_OPENBSD
+#elif defined OS_MACOS || defined OS_FREEBSD || OS_OPENBSD || OS_CYGWIN
       struct timespec ts;
       ts.tv_sec = delta.tv_sec;
       ts.tv_nsec = delta.tv_nsec;

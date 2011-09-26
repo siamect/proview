@@ -62,6 +62,8 @@
 # define pwrv_cOpSys              "FreeBSD"
 #elif defined OS_OPENBSD
 # define pwrv_cOpSys              "OpenBSD"
+#elif defined OS_CYGWIN
+# define pwrv_cOpSys              "Cygwin"
 #elif defined OS_WNT
 # define pwrv_cOpSys              "Windows NT"
 #else

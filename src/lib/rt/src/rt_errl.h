@@ -45,7 +45,9 @@
 #if defined OS_LYNX
 # define LOG_QUEUE_NAME "/pwrlogqueue"
 #elif defined OS_POSIX
-# if defined _POSIX_MESSAGE_PASSING
+# if defined OS_FREEBSD || defined OS_MACOS
+#  define LOG_QUEUE_NAME "/tmp/pwrlogqueue"
+# elif defined _POSIX_MESSAGE_PASSING
 #  define LOG_QUEUE_NAME "/pwrlogqueue"
 # else
 #  define LOG_QUEUE_NAME "/tmp/pwrlogqueue"
@@ -62,7 +64,7 @@ void		errl_Init	(const char *termname,
 void		errl_SetTerm	(const char *termname);
 void		errl_SetFile	(const char *filename);
 
-#if defined OS_LINUX || OS_MACOS || defined OS_FREEBSD
+#if defined OS_POSIX
 void		errl_Unlink	();
 #endif
 

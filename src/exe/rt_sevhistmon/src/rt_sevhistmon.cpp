@@ -196,20 +196,19 @@ int rt_sevhistmon::init_objects()
       ODD(sts);
       sts = gdh_GetNextAttrRef( pwr_cClass_SevHist, &h_aref, &h_aref)) {
     sev_sevhist h;
-    pwr_sClass_SevHist *h_p;
     int hs_idx;
 
-    m_sts = gdh_AttrRefToPointer( &h_aref, (void **)&h_p);
+    m_sts = gdh_DLRefObjectInfoAttrref( &h_aref, (void **)&h.hsp, &h.hs_refid);
     if ( EVEN(m_sts)) throw co_error(m_sts);
 
-    h.aref = h_p->Attribute;
+    h.aref = h.hsp->Attribute;
 
     m_sts = gdh_AttrrefToName( &h_aref, hname, sizeof(hname), cdh_mName_volumeStrict);
     if ( EVEN(m_sts)) throw co_error(m_sts);
 
     hs_idx = -1;
     for ( int i = 0; i < (int) m_hs.size(); i++) {
-      if ( cdh_ObjidIsEqual( h_p->ThreadObject, m_hs[i].oid)) {
+      if ( cdh_ObjidIsEqual( h.hsp->ThreadObject, m_hs[i].oid)) {
         hs_idx = i;
         break;
       }
@@ -219,7 +218,7 @@ int rt_sevhistmon::init_objects()
       continue;
     }
 
-    m_sts = gdh_GetAttributeCharAttrref( &h_p->Attribute, &a_tid, &a_size, &a_offset, &a_dim);
+    m_sts = gdh_GetAttributeCharAttrref( &h.hsp->Attribute, &a_tid, &a_size, &a_offset, &a_dim);
     if ( EVEN(m_sts)) {
       errh_Error( "Invalid SevHist Attribute %s", hname);
       continue;
@@ -227,14 +226,14 @@ int rt_sevhistmon::init_objects()
 
     h.sevid.nid = m_nodes[0].nid;
     h.sevid.rix = m_next_rix++;
-    h.storagetime = h_p->StorageTime;
-    h.deadband = h_p->DeadBand;
-    h.options = h_p->Options;
-    h.disabled = h_p->Disable;
-    strncpy( h.description, h_p->Description, sizeof(h.description));
+    h.storagetime = h.hsp->StorageTime;
+    h.deadband = h.hsp->DeadBand;
+    h.options = h.hsp->Options;
+    h.disabled = h.hsp->Disable;
+    strncpy( h.description, h.hsp->Description, sizeof(h.description));
 
     // Get unit from attribute object
-    sts = gdh_ArefANameToAref( &h_p->Attribute, "Unit", &uaref);
+    sts = gdh_ArefANameToAref( &h.hsp->Attribute, "Unit", &uaref);
     if ( ODD(sts)) {
       sts = gdh_GetObjectInfoAttrref( &uaref, &h.unit, sizeof(h.unit));
       if ( EVEN(sts))
@@ -252,7 +251,7 @@ int rt_sevhistmon::init_objects()
       continue;
     }
 
-    m_sts = gdh_AttrrefToName( &h_p->Attribute, h.aname, sizeof(h.aname), cdh_mName_volumeStrict);
+    m_sts = gdh_AttrrefToName( &h.hsp->Attribute, h.aname, sizeof(h.aname), cdh_mName_volumeStrict);
     if ( EVEN(m_sts)) throw co_error(m_sts);
 
     m_sts = gdh_RefObjectInfo( h.aname, &h.datap, &h.refid, h.size);
@@ -284,20 +283,19 @@ int rt_sevhistmon::init_sevhistobjects()
       ODD(sts);
       sts = gdh_GetNextAttrRef( pwr_cClass_SevHistObject, &h_aref, &h_aref)) {
     sev_sevhistobject h;
-    pwr_sClass_SevHistObject *h_p;
     int hs_idx;
 
-    m_sts = gdh_AttrRefToPointer( &h_aref, (void **)&h_p);
+    m_sts = gdh_DLRefObjectInfoAttrref( &h_aref, (void **)&h.hsp, &h.hs_refid);
     if ( EVEN(m_sts)) throw co_error(m_sts);
 
-    h.aref = h_p->Object;
+    h.aref = h.hsp->Object;
 
     m_sts = gdh_AttrrefToName( &h_aref, hname, sizeof(hname), cdh_mName_volumeStrict);
     if ( EVEN(m_sts)) throw co_error(m_sts);
 
     hs_idx = -1;
     for ( int i = 0; i < (int) m_hs.size(); i++) {
-      if ( cdh_ObjidIsEqual( h_p->ThreadObject, m_hs[i].oid)) {
+      if ( cdh_ObjidIsEqual( h.hsp->ThreadObject, m_hs[i].oid)) {
         hs_idx = i;
         break;
       }
@@ -307,17 +305,17 @@ int rt_sevhistmon::init_sevhistobjects()
       continue;
     }
 
-    m_sts = gdh_GetAttributeCharAttrref( &h_p->Object, &a_tid, &a_size, &a_offset, &a_dim);
+    m_sts = gdh_GetAttributeCharAttrref( &h.hsp->Object, &a_tid, &a_size, &a_offset, &a_dim);
     if ( EVEN(m_sts)) {
       errh_Error( "Invalid SevHistObject Attribute %s", hname);
       continue;
     }
 
-    h.storagetime = h_p->StorageTime;
-    h.deadband = h_p->DeadBand;
-    h.options = h_p->Options;
-    h.disabled = h_p->Disable;
-    strncpy( h.description, h_p->Description, sizeof(h.description));
+    h.storagetime = h.hsp->StorageTime;
+    h.deadband = h.hsp->DeadBand;
+    h.options = h.hsp->Options;
+    h.disabled = h.hsp->Disable;
+    strncpy( h.description, h.hsp->Description, sizeof(h.description));
 
     h.scantime = m_hs[hs_idx].scantime;
 
@@ -325,7 +323,7 @@ int rt_sevhistmon::init_sevhistobjects()
     h.sevid.rix = m_next_rix++;
 
     //Time to fetch all attributes for the object and put them into a list
-    m_sts = gdh_AttrrefToName( &h_p->Object, hname, sizeof(hname), cdh_mName_volumeStrict);
+    m_sts = gdh_AttrrefToName( &h.hsp->Object, hname, sizeof(hname), cdh_mName_volumeStrict);
     if ( EVEN(m_sts)) throw co_error(m_sts);
     strcpy(h.aname, hname);
     get_sevhistobjectattributes(hname, &h.sevhistobjectattrlist, hs_idx, true);
@@ -580,8 +578,10 @@ bool rt_sevhistmon::correct_histtype(const pwr_eType type)
 int rt_sevhistmon::close_objects()
 {
   for ( unsigned int i = 0; i < m_hs.size(); i++) {
-    for ( unsigned int j = 0; j < m_hs[i].sevhistlist.size(); j++)
-      gdh_UnrefObjectInfo( m_hs[i].sevhistlist[j].refid);
+    for ( unsigned int j = 0; j < m_hs[i].sevhistlist.size(); j++) {
+      gdh_UnrefObjectInfo( m_hs[i].sevhistlist[j].hs_refid);
+      gdh_UnrefObjectInfo( m_hs[i].sevhistlist[j].refid);      
+    }
     gdh_UnrefObjectInfo( m_hs[i].refid);
   }
   m_hs.clear();
@@ -637,7 +637,13 @@ int rt_sevhistmon::send_data()
 
     dp = (sev_sHistData *) &msg->Data;
     for ( unsigned int j = 0; j < m_hs[i].sevhistlist.size(); j++) {
-      if ( !m_hs[i].sevhistlist[j].disabled) {
+      if ( !m_hs[i].sevhistlist[j].hsp->Disable) {
+	if ( m_hs[i].sevhistlist[j].hsp->Options & pwr_mSevOptionsMask_Event &&
+	     m_hs[i].sevhistlist[j].hsp->Trigger)
+	  m_hs[i].sevhistlist[j].hsp->Trigger = 0;
+	else
+	  continue;
+
 	dp->sevid = m_hs[i].sevhistlist[j].sevid;
 	dp->type = m_hs[i].sevhistlist[j].type;
 	dp->size = m_hs[i].sevhistlist[j].size;
@@ -648,11 +654,17 @@ int rt_sevhistmon::send_data()
 
     void *dpp;
     for ( unsigned int j = 0; j < m_hs[i].sevhistobjectlist.size(); j++) {
-      dp->sevid = m_hs[i].sevhistobjectlist[j].sevid;
-      dp->size = m_hs[i].sevhistobjectlist[j].datasize;
-      dpp = &(dp->data);
-      for ( unsigned int k = 0; k < m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist.size(); k++) {
-	if ( !m_hs[i].sevhistobjectlist[j].disabled) {
+      if ( !m_hs[i].sevhistobjectlist[j].hsp->Disable) {
+	if ( m_hs[i].sevhistobjectlist[j].hsp->Options & pwr_mSevOptionsMask_Event &&
+	     m_hs[i].sevhistobjectlist[j].hsp->Trigger)
+	  m_hs[i].sevhistobjectlist[j].hsp->Trigger = 0;
+	else
+	  continue;
+
+	dp->sevid = m_hs[i].sevhistobjectlist[j].sevid;
+	dp->size = m_hs[i].sevhistobjectlist[j].datasize;
+	dpp = &(dp->data);
+	for ( unsigned int k = 0; k < m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist.size(); k++) {
 	  //dp->type = m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].type;
 	  //printf("sevhistobj[%d].attrlist[%d].aname: %s size:%d\n", j, k, m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].aname, m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].size);
 	  //if( m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].type == pwr_eType_String ) {
@@ -661,8 +673,8 @@ int rt_sevhistmon::send_data()
 	  memcpy( dpp, m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].datap, m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].size);
 	  dpp = (sev_sHistData *)((char *)dpp + m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].size);
 	}
+	dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
       }
-      dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
     }
 
     tgt.nid = m_hs[i].nid;
@@ -869,15 +881,14 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
   for ( unsigned int i = 0; i < m_hs.size(); i++) {
     if ( m_hs[i].configerror)
       continue;
-    if ( nid == m_hs[i].nid)
-    {
-        item_cnt += m_hs[i].sevhistlist.size();
-        attr_cnt += m_hs[i].sevhistlist.size();
-        objectitem_cnt += m_hs[i].sevhistobjectlist.size();
-        for( size_t j = 0; j < m_hs[i].sevhistobjectlist.size(); j++ ) {
-          attr_cnt += m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist.size();
-          histobjectsize += (m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist.size() * sizeof(sev_sHistAttr));
-        }
+    if ( nid == m_hs[i].nid) {
+      item_cnt += m_hs[i].sevhistlist.size();
+      attr_cnt += m_hs[i].sevhistlist.size();
+      objectitem_cnt += m_hs[i].sevhistobjectlist.size();
+      for( size_t j = 0; j < m_hs[i].sevhistobjectlist.size(); j++ ) {
+	attr_cnt += m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist.size();
+	histobjectsize += (m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist.size() * sizeof(sev_sHistAttr));
+      }
     }
   }
 

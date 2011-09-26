@@ -170,5 +170,15 @@ SObject pwrs:Type
        Attr Value = 2048
      EndBody
     EndObject
+    !/**
+    !  Operating system is Cygwin on x86
+    !*/
+    Object X86_CYGWIN $Bit
+     Body SysBody
+       Attr PgmName = "X86_CYGWIN"
+       Attr Text = "Cygwin on x86"
+       Attr Value = 4096
+     EndBody
+    EndObject
   EndObject
 EndSObject

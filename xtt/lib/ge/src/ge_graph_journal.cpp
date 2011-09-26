@@ -580,7 +580,7 @@ int GraphJournal::redo()
     printf( "Redo  idx: %3d  list: %3zd undo: %10d redo: %10d\n", current_idx, poslist.size() - 1, 
 	    (int)poslist[current_idx].undo_pos, (int)poslist[current_idx].redo_pos);
 
-  if ( poslist[current_idx].redo_pos == -1)
+  if ( poslist[current_idx].redo_pos == (streampos)-1)
     return 0;
 
   fp.seekp( poslist[current_idx].redo_pos);

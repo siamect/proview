@@ -1577,6 +1577,8 @@ int GsdmlAttrNav::save( const char *filename)
 	  continue;
 	}
 
+	ssd->api = vsd->Body.API;
+
 	if ( !vsd->IOData)
 	  continue;
 
@@ -1655,6 +1657,8 @@ int GsdmlAttrNav::save( const char *filename)
 	  printf( "GSDML-Error, subslot number not found\n");
 	  continue;
 	}
+
+	ssd->api = vsd->Body.API;
 
 	if ( !vsd->IOData)
 	  continue;

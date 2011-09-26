@@ -38,3 +38,23 @@ pwr_tUInt16 bfbeth_get_data(io_sRackLocal *r, pwr_tUInt16 address, int *sts) {
   }
   return 0;
 }
+
+/*
+  Return status from last write request.
+
+  Status is
+  0   if address not found in request.
+  1   if ok status.
+  -1  if error status.
+*/
+void bfbeth_get_write_status(io_sRackLocal *r, pwr_tUInt16 address, int *sts) {
+  int i;
+  
+  *sts = 0;
+  for (i=0; i<350; i++) {
+    if ( (0x8000 | r->write_area.item[i].address) == address) {
+      *sts = 0x8000 & r->write_area.item[i].address ? 1 : -1;
+      return;
+    }
+  }
+}

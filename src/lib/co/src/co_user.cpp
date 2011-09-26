@@ -41,6 +41,9 @@
 #include <float.h>
 #include <string.h>
 #include <unistd.h>
+#if defined OS_CYGWIN
+# include <crypt.h>
+#endif
 
 #include "co_user.h"
 

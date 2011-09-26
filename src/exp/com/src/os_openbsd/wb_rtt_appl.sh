@@ -102,7 +102,7 @@ then
 #   echo "Compile"
     cc=gcc
     cinc="-I$pwr_inc -I$pwrp_rttbld -I$pwrp_inc -I$pwrp_cmn/common/inc -I-"
-    cflags="-DOS_FREEBSD=1 -DOS=freebsd -DHW_X86_64=1 -DHW=x86_64 -O3 -DGNU_SOURCE -DPWR_NDEBUG -D_REENTRANT"
+    cflags="-DOS_OPENBSD=1 -DOS_POSIX -DOS=freebsd -DHW_X86_64=1 -DHW=x86_64 -O3 -DGNU_SOURCE -DPWR_NDEBUG -D_REENTRANT"
 
     ${cc} -c -o $pwrp_obj/${applname}.o \
         $pwrp_rtt/${applname}.c \

@@ -77,6 +77,7 @@ typedef struct {
 	  pwr_tBoolean Found;
 	} Filter[2];
 	pwr_tTime       ErrTime;
+        int		FirstScan;
 } io_sLocal;
 
 static pwr_tStatus IoCardInit (
@@ -99,6 +100,7 @@ static pwr_tStatus IoCardInit (
   local->Address[0] = op->RegAddress;
   local->Address[1] = op->RegAddress + 2;
   local->Qbus_fp = ((io_sRackLocal *)(rp->Local))->Qbus_fp;
+  local->FirstScan = 1;
 
   /* Init filter for Po signals */
   for ( i = 0; i < 2; i++)
@@ -166,6 +168,8 @@ static pwr_tStatus IoCardWrite (
   qbus_io_write		wb;
   int			sts;
   pwr_tTime             now;
+  int			bfb_error = 0;
+  pwr_sClass_Ssab_RemoteRack	*rrp;
 
   local = (io_sLocal *) cp->Local;
   op = (pwr_sClass_Ssab_BaseDoCard *) cp->op;
@@ -227,23 +231,41 @@ static pwr_tStatus IoCardWrite (
     }
     else {
       /* Ethernet I/O, Request a write to current address */
+      sts = 0;
+      if ( !local->FirstScan)
+	bfbeth_get_write_status(r_local, (pwr_tUInt16) local->Address[i], &sts);
+
       bfbeth_set_write_req(r_local, (pwr_tUInt16) local->Address[i], data);
-      sts = 1;      
+
+      if (sts == -1) {
+	/* Error handling for ethernet Qbus-I/O */
+  	rrp = (pwr_sClass_Ssab_RemoteRack *) rp->op;
+	if (bfb_error == 0) {
+          op->ErrorCount++;
+	  bfb_error = 1;
+          if ( op->ErrorCount == op->ErrorSoftLimit)
+            errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);
+          if ( op->ErrorCount == op->ErrorHardLimit)
+            errh_Error( "IO Error hard limit reached on card '%s', stall action %d", cp->Name, rrp->StallAction);
+          if ( op->ErrorCount >= op->ErrorHardLimit && rrp->StallAction == pwr_eSsabStallAction_ResetInputs ) {
+	    sts = 1;
+          }
+          if ( op->ErrorCount >= op->ErrorHardLimit && rrp->StallAction == pwr_eSsabStallAction_EmergencyBreak ) {
+            ctx->Node->EmergBreakTrue = 1;
+            return IO__ERRDEVICE;
+          }
+	}
+	if (sts == -1) continue;
+      }
+      else if ( sts == 1) {
+	op->ErrorCount = 0;
+      }
     }
     
     
+    /* Error handling for local Qbus-I/O */
     if ( sts == -1)
     {
-#if 0
-      /* Exceptionhandler was called */
-      if ( io_fatal_error)
-      {
-        /* Activate emergency break */
-        errh_Error( "Fatal write error, card '%s', IO is stopped", cp->Name);
-        ctx->Node->EmergBreakTrue = 1;
-        return IO__ERRDEVICE;
-      }
-#endif
       /* Increase error count and check error limits */
       time_GetTime( &now);
 
@@ -268,6 +290,8 @@ static pwr_tStatus IoCardWrite (
       continue;
     }
   }
+  if ( local->FirstScan)
+    local->FirstScan = 0;
   return 1;
 }
 
@@ -302,6 +326,7 @@ static pwr_tStatus IoCardSwap (
       local->Address[0] = op->RegAddress;
       local->Address[1] = op->RegAddress + 2;
       local->Qbus_fp = ((io_sRackLocal *)(rp->Local))->Qbus_fp;
+      local->FirstScan = 1;
     }
 
     for ( i = 0; i < 2; i++) { 

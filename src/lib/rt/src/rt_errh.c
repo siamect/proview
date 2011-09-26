@@ -63,7 +63,7 @@
 # include <unistd.h>
 # include <errno.h>
 # include "rt_errl.h"
-# if defined OS_LINUX
+# if defined OS_LINUX || defined OS_CYGWIN
 #   include <time.h>
 #   include <mqueue.h>
 # elif defined OS_MACOS || defined OS_FREEBSD || defined OS_OPENBSD
@@ -133,7 +133,7 @@ typedef struct {
 
   static sPid pid = {0, 0};
 
-#elif defined OS_LYNX || defined OS_LINUX
+#elif defined OS_LYNX || defined OS_LINUX || defined OS_CYGWIN
 
   typedef pid_t sPid;
 
@@ -624,7 +624,7 @@ set_name (const char *name)
 static void
 openLog ()
 {
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_CYGWIN
   if (mqid == (mqd_t)-1) {
     char name[64];
     char *busid = getenv(pwr_dEnvBusId);
@@ -1188,7 +1188,7 @@ static void
 errh_send (char *s, char severity, pwr_tStatus sts, errh_eMsgType message_type)
 {
 
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_CYGWIN
 
   int len;
   if (mqid != (mqd_t)-1) {

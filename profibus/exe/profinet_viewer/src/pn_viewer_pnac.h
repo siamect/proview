@@ -50,8 +50,8 @@
 
 # include "rt_io_base.h"
 
-#ifndef rt_io_pn_locals_h
-# include "rt_io_pn_locals.h"
+#ifndef rt_io_pnak_locals_h
+# include "rt_io_pnak_locals.h"
 #endif
 
 #ifndef rt_pn_gsdml_data_h

@@ -80,7 +80,7 @@ then
 
     cc=gcc
     cinc="-I$pwr_inc -I$pwrp_rttbld -I-"
-    cflags="-DOS_LINUX=1 -DOS=linux -DHW_X86=1 -DHW=x86 -O3 -DGNU_SOURCE -DPWR_NDEBUG -D_REENTRANT"
+    cflags="-DOS_LINUX=1 -DOS_POSIX -DOS=linux -DHW_X86=1 -DHW=x86 -O3 -DGNU_SOURCE -DPWR_NDEBUG -D_REENTRANT"
 
     ${cc} -c -o $pwrp_obj/${menuname}.o \
         $pwrp_rttbld/${menuname}.c \
@@ -102,7 +102,7 @@ then
 #   echo "Compile"
     cc=gcc
     cinc="-I$pwr_inc -I$pwrp_rttbld -I$pwrp_inc -I$pwrp_cmn/common/inc -I-"
-    cflags="-DOS_LINUX=1 -DOS=linux -DHW_X86=1 -DHW=x86 -O3 -DGNU_SOURCE -DPWR_NDEBUG -D_REENTRANT"
+    cflags="-DOS_LINUX=1 -DOS_POSIX -DOS=linux -DHW_X86=1 -DHW=x86 -O3 -DGNU_SOURCE -DPWR_NDEBUG -D_REENTRANT"
 
     ${cc} -c -o $pwrp_obj/${applname}.o \
         $pwrp_rtt/${applname}.c \

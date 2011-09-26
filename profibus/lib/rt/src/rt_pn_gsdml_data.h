@@ -83,13 +83,14 @@ class GsdmlIOCRData {
 class GsdmlSubslotData {
  public:
   GsdmlSubslotData() : subslot_number(0), subslot_idx(0), submodule_enum_number(0),
-    submodule_ident_number(0), io_input_length(0), io_output_length(0) {}
+    submodule_ident_number(0), api(0), io_input_length(0), io_output_length(0) {}
   
   vector<GsdmlDataRecord *> data_record;
   unsigned int subslot_number;
   unsigned int subslot_idx;
   unsigned int submodule_enum_number;
   unsigned int submodule_ident_number;
+  unsigned int api;
   unsigned int io_input_length;
   unsigned int io_output_length;
 

@@ -3718,6 +3718,11 @@ static int	ccm_read_file(
     ccm_remove_blank( str, str);
     if ( str[0] == '!' || str[0] == 0 || (str[0] == '#' && strncmp( str, "#include", 8) != 0))
       continue;
+
+    /* Remove any trailing \r */
+    if ( str[strlen(str)-1] == '\r')
+      str[strlen(str)-1] = 0;
+
     /* If last char i backslash, concatenate next line */
     while( str[strlen(str)-1] == '\\')
     {
@@ -3732,6 +3737,8 @@ static int	ccm_read_file(
       ccm_remove_blank( str2, str2);
       if ( str2[0] == '!' || str2[0] == '#')
         continue;
+      if ( str2[strlen(str2)-1] == '\r')
+	str2[strlen(str2)-1] = 0;
       str[strlen(str)-1] = 0;
       if ( strlen(str)+strlen(str2) > K_LINE_SIZE-1)
       {

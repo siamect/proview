@@ -220,6 +220,7 @@ static pwr_tStatus IoAgentInit (
 	pn_subslot_data = new PnSubmoduleData;
         pn_subslot_data->subslot_number = dev_data->slot_data[jj]->subslot_data[kk]->subslot_number;
 	pn_subslot_data->ident_number = dev_data->slot_data[jj]->subslot_data[kk]->submodule_ident_number;
+	pn_subslot_data->api = dev_data->slot_data[jj]->subslot_data[kk]->api;
         if (dev_data->slot_data[jj]->subslot_data[kk]->io_input_length > 0) {
 	  pn_subslot_data->io_in_data_length = dev_data->slot_data[jj]->subslot_data[kk]->io_input_length;
 	  pn_subslot_data->type = PROFINET_IO_SUBMODULE_TYPE_INPUT ;
@@ -261,7 +262,7 @@ static pwr_tStatus IoAgentInit (
     sts = pnak_send_service_req_res(0, &local->service_req_res);
     
     if (sts == PNAK_OK) {
-      sts = handle_service_con(local, ap);
+      sts = wait_service_con(local, ap);
       
       if (sts == PNAK_OK) { 
 	/* Loop through devices and calculate offset for io */
@@ -324,7 +325,7 @@ static pwr_tStatus IoAgentInit (
   sts = pnak_send_service_req_res(0, &local->service_req_res);
 
   if (sts == PNAK_OK) {
-    sts = handle_service_con(local, ap);
+    sts = wait_service_con(local, ap);
   }
 
   /* Set mode online */
@@ -393,7 +394,7 @@ static pwr_tStatus IoAgentInit (
     sts = pnak_send_service_req_res(0, &local->service_req_res);
 
     if (sts == PNAK_OK) {
-      sts = handle_service_con(local, ap);
+      sts = wait_service_con(local, ap);
     }
   }
 
@@ -484,6 +485,8 @@ static pwr_tStatus IoAgentWrite (
   unsigned char *io_datap;
   unsigned char *clean_io_datap;
   PnSubmoduleData *submodule;
+  io_sRack *slave_list;
+  pwr_sClass_PnDevice *sp;
 
   unsigned short data_length, ii, jj, kk, ll;
   unsigned char *status_datap;
@@ -491,6 +494,9 @@ static pwr_tStatus IoAgentWrite (
   local = (io_sAgentLocal *) ap->Local;
 
   /* Write i/o for all devices fetch it first from clean io data area */
+
+  /* Iterate over the slaves.  */
+  slave_list = ap->racklist; 
 
   for (ii = 1; ii < local->device_data.size(); ii++) {
 
@@ -520,6 +526,36 @@ static pwr_tStatus IoAgentWrite (
 	  sts = pnak_set_iocr_data(0, pn_iocr_data->identifier, pn_iocr_data->io_data, pn_iocr_data->io_data_length);
 	}
       }
+
+      if (slave_list != NULL) {
+	sp = (pwr_sClass_PnDevice *) slave_list->op;
+	slave_list = slave_list->next;
+
+	/* Check if there is a write request pending ?? */
+
+	if (sp->WriteReq.SendReq) {
+	  if ((sp->WriteReq.Length > 0) && (sp->WriteReq.Length <= sizeof(sp->WriteReq.Data))) {
+	    for (jj = 0; jj < local->device_data[ii]->module_data.size(); jj++) {
+	      if (local->device_data[ii]->module_data[jj]->slot_number == sp->WriteReq.SlotNumber) {
+		for (kk = 0; kk < local->device_data[ii]->module_data[jj]->submodule_data.size(); kk++) {
+		  if (local->device_data[ii]->module_data[jj]->submodule_data[kk]->subslot_number == sp->WriteReq.SubslotNumber) {
+		    if (local->device_data[ii]->module_data[jj]->submodule_data[kk]->api > 0) {
+		      sp->WriteReq.Api = local->device_data[ii]->module_data[jj]->submodule_data[kk]->api;
+		    }
+		    pack_write_req(&local->service_req_res, local->device_data[ii]->device_ref, &sp->WriteReq);
+		    sts = pnak_send_service_req_res(0, &local->service_req_res);
+		    
+		    break;
+		  }
+		}
+		break;
+	      }
+	    }
+	  }
+	  sp->WriteReq.SendReq = 0;
+	}
+      }
+
     }
   }
    

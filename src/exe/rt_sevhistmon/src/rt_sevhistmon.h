@@ -46,6 +46,8 @@ class sev_sevhist {
  public:
   pwr_tAttrRef 	aref;
   pwr_tAName	aname;
+  pwr_sClass_SevHist *hsp;
+  pwr_tRefId	hs_refid;
   pwr_tRefId	refid;
   void 		*datap;
   pwr_tDeltaTime storagetime;
@@ -76,6 +78,8 @@ class sev_sevhistobject {
  public:
   pwr_tAttrRef 	aref;
   pwr_tAName	aname;
+  pwr_sClass_SevHistObject *hsp;
+  pwr_tRefId	hs_refid;
   pwr_tDeltaTime storagetime;
   pwr_tFloat32  deadband;
   pwr_tMask  	options;
