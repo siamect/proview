@@ -42,6 +42,7 @@
    needed to use CDH.  */
 
 #include <limits.h>
+#include <stdlib.h>
 
 #ifndef pwr_h
 #include "pwr.h"
