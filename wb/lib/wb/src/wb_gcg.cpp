@@ -124,12 +124,14 @@ extern "C" {
 
 #define IS_OPENBSD(os) (os & pwr_mOpSys_X86_64_OPENBSD)
 
+#define IS_CYGWIN(os) (os & pwr_mOpSys_X86_CYGWIN)
+
 #define IS_LINUX(os) ((os & pwr_mOpSys_PPC_LINUX) \
 		     || (os & pwr_mOpSys_X86_LINUX) \
 		     || (os & pwr_mOpSys_X86_64_LINUX) \
 		     || (os & pwr_mOpSys_CustomBuild))
 
-#define IS_UNIX(os) (IS_LINUX(os) || IS_LYNX(os) || IS_MACOS(os) || IS_FREEBSD(os) || IS_OPENBSD(os))
+#define IS_UNIX(os) (IS_LINUX(os) || IS_LYNX(os) || IS_MACOS(os) || IS_FREEBSD(os) || IS_OPENBSD(os) || IS_CYGWIN(os))
 
 #define IS_NOT_UNIX(os) (!IS_UNIX(os))
 
@@ -887,6 +889,8 @@ static pwr_tStatus gcg_get_build_host(
 	  strcpy(logname, "pwr_build_host_x86_64_freebsd");
 	else if (os & pwr_mOpSys_X86_64_OPENBSD)
 	  strcpy(logname, "pwr_build_host_x86_64_openbsd");
+	else if (os & pwr_mOpSys_X86_CYGWIN)
+	  strcpy(logname, "pwr_build_host_x86_cygwin");
 	else if (os & pwr_mOpSys_CustomBuild)
 	  strcpy(logname, "pwr_build_host_custom_build");
 	else
@@ -4703,6 +4707,7 @@ static int	gcg_get_child_plcthread(
 	    	 (IS_MACOS(os) && *scantime_ptr < 0.0000001)  ||
 	    	 (IS_FREEBSD(os) && *scantime_ptr < 0.0000001)  ||
 	    	 (IS_OPENBSD(os) && *scantime_ptr < 0.0000001)  ||
+	    	 (IS_CYGWIN(os) && *scantime_ptr < 0.0000001)  ||
 		 (IS_LYNX(os) && ((timebase <= 0) || ((timebase / 10) * 10) != timebase)) || 
 		 (IS_VMS_OR_ELN(os) && ((timebase <= 0) || ((timebase / 10) * 10) != timebase)) ) {
 		gcg_plc_msg( gcgctx, GSX__BADSCANTIME, objdid);
@@ -5245,6 +5250,11 @@ int	gcg_comp_rtnode(
 	    strcpy( os_str, "X86_64_OPENBSD"); /* Not used */
 	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
 	    break;
+	  case pwr_mOpSys_X86_CYGWIN:
+	    strcpy( objdir, "xxx");
+	    strcpy( os_str, "X86_CYGWIN"); /* Not used */
+	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
+	    break;
 	  case pwr_mOpSys_CustomBuild:
 	    strcpy( objdir, "xxx");
 	    strcpy( os_str, "CustomBuild"); /* Not used */
@@ -5476,6 +5486,7 @@ int	gcg_comp_rtnode(
 	        case pwr_mOpSys_X86_64_MACOS:
 	        case pwr_mOpSys_X86_64_FREEBSD:
 	        case pwr_mOpSys_X86_64_OPENBSD:
+	        case pwr_mOpSys_X86_CYGWIN:
 	        case pwr_mOpSys_X86_LYNX:
 	        case pwr_mOpSys_PPC_LYNX:
 	        case pwr_mOpSys_CustomBuild:
