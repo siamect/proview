@@ -479,8 +479,10 @@ dbs_Map(pwr_tStatus *sts, const char *filename)
         return NULL;
     }
     ret = close(tfd);
+#if !defined OS_CYGWIN
     unlink(tfname);
-    
+#endif    
+
     sect = (dbs_sSect*)(base + dbs_dAlign(sizeof(dbs_sFile)));
     vrp = (dbs_sVolRef*)(base + sect[dbs_eSect_volref].offset);
     nVolRef = sect[dbs_eSect_volref].size / dbs_dAlign(sizeof(dbs_sVolRef));
@@ -492,6 +494,7 @@ dbs_Map(pwr_tStatus *sts, const char *filename)
     mep->vrp     = vrp;
     mep->nVolRef = nVolRef;
     mep->base = base;
+    strncpy(mep->tfname, tfname, sizeof(tfname));
     vep = mep->venv;
 
     vep->mp       = mep;
@@ -606,6 +609,9 @@ dbs_Unmap(pwr_tStatus *sts, dbs_sMenv *mep)
   if (mep->flags.b.isMapped) {
     munmap(mep->base, mep->size);
     mep->flags.b.isMapped = 0;
+#if defined OS_CYGWIN
+    unlink(mep->tfname);
+#endif    
     return TRUE;
   } else if (mep->f != NULL) {
     printf("ERROR, dbs_Unmap, trying to unmap a non mapped file\n");

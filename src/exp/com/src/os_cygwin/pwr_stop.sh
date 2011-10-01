@@ -56,16 +56,13 @@
 
   echo "User $user"
 
-  eval `ipcs -s|grep ^0x|grep "[ \t]$user[ \t]"|awk '{printf "ipcrm sem %s;", $2
-}'`
+  eval `ipcs -s|grep ^s|grep "[ \t]$user[ \t]"|awk '{ printf "ipcrm -s %s;", $2 }'`
 
 # remove message queues
-  eval `ipcs -q|grep ^0x|grep "[ \t]$user[ \t]"|awk '{printf "ipcrm msg %s;", $2
-}'`
+  eval `ipcs -q|grep ^q|grep "[ \t]$user[ \t]"|awk '{ printf "ipcrm -q %s;", $2 }'`
 
 # remove shared memory
-  eval `ipcs -m|grep ^0x|grep "[ \t]$user[ \t]"|awk '{printf "ipcrm shm %s;", $2
-}'`
+  eval `ipcs -m|grep ^m|grep "[ \t]$user[ \t]"|awk '{ printf "ipcrm -m %s;", $2 }'`
 
   if [ -e $pwrp_exe/pwrp_stop.sh ]; then
     source $pwrp_exe/pwrp_stop.sh
