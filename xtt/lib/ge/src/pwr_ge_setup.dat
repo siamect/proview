@@ -206,6 +206,7 @@ menu Pushbuttons
 menu Sliders
 {
   subgraph 	SliderArrow 	pwr_exe:pwr_sliderarrow.pwsg		37
+  subgraph 	SliderArrow2 	pwr_exe:pwr_sliderarrow2.pwsg		12
   subgraph 	Slider1 	pwr_exe:pwr_slider1.pwsg		37
   subgraph 	SliderBackground1 pwr_exe:pwr_sliderbackground1.pwsg	80
   subgraph 	SliderBackground1_2 pwr_exe:pwr_sliderbackground1_2.pwsg 38
