@@ -376,7 +376,7 @@ else
   pwre_config_check_lib libX11    LIBX11   lib lib 0 "/usr/lib/libX11.a"
 
   pwre_config_check_include antlr ANTLR 1 "/usr/local/include/antlr/CommonAST.hpp"
-  pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
+  pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk"
   pwre_config_check_include jni   JNI   1 "$jdk/include/jni.h"
   pwre_config_check_include jni   JNI   0 "$jdk/include/win32/jni_md.h"
   pwre_config_check_include alsa  ALSA  1 "/usr/include/alsa/asoundlib.h"

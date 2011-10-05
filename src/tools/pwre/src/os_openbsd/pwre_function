@@ -176,13 +176,13 @@ pwre_get_variables()
 {
   local socket
   
-  socket=`eval cat /etc/proview.cnf | grep "\bmysql_socket\b" | awk '{print $2}'`
+  socket=`eval cat /etc/proview.cnf | grep "[[:<:]]mysql_socket[[:>:]]" | awk '{print $2}'`
   if [ ! -z $socket ]; then
     mysql_socket="--socket $socket"
   fi
 
   if [ -n $pwre_kroot ]; then
-    pwr_dbversion=`eval cat $pwre_kroot/exp/inc/src/pwr_version.h | grep "\bpwrv_cWbdbVersionShortStr\b" | awk '{print $3}'`
+    pwr_dbversion=`eval cat $pwre_kroot/exp/inc/src/pwr_version.h | grep "[[:<:]]pwrv_cWbdbVersionShortStr[[:>:]]" | awk '{print $3}'`
 
     if [ -z $pwr_dbversion ]; then
       echo "Unable to get pwr db version"
