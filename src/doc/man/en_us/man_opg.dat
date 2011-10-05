@@ -1544,16 +1544,18 @@ help        <t>Display help			<LINK> help
 login       <t>User login			<LINK> login
 logout      <t>User logout			<LINK> logout
 logging     <t>Logg attributes to file	<LINK> logging
+open fileview <t>Open a fileview		<LINK> open fileview
 open graph  <t>Open a graph			<LINK> open graph
 open jgraph <t>Open a java graph		<LINK> open jgraph
-open fileview <t>Open a fileview		<LINK> open fileview
-open trend  <t>Open DsTrend or PlotGroup graph	<LINK> open trend
+open navigator <t>Open the navigator		<LINK> open navigator
 open operatorwindow<t>Open the operator window 	<LINK> open operatorwindow
+open trend  <t>Open DsTrend or PlotGroup graph	<LINK> open trend
 read object <t>Read the content of an object from file <LINK> read object
 search	<t>Search for an object or a string 	<LINK> search
 set advanceduser<t>Set advanced user		<LINK> set advanceduser
 set folder	<t>Set a folder in a tabbed window.  <LINK> set folder
 set parameter<t>Set the value of an attribute  <LINK> set parameter
+set subwindow<t>View a graph in a Ge window object.  <LINK> set subwindow
 setup       <t>Xtt setup			<LINK> setup
 show version<t>Show xtt version		<LINK> show version
 show symbol <t>Show a symbol			<LINK> show symbol
@@ -1680,6 +1682,22 @@ Set a folder in a tabbed window object.
 
 /name=		<t>the name of the tabbedwindow object.
 /index=		<t>index of tab to set. Starting from 0.
+</TOPIC>
+
+<TOPIC> set subwindow <style> function
+Command   set subwindow
+
+View a graph in a Ge window object. This command is used on command
+buttons to change the content of a window object. /source contains the
+name of the graph to be viewed. Also object graphs can be viewed by
+supplying the object with the /object qualifier.
+
+<B>xtt> set subwindow 'graphname' /name= /source= [/object=]
+
+'graphname'	<t>the graph where the window object resides.
+/name=		<t>the name of the window object.
+/source=	<t>name of the Ge graph to view in the window object.
+/object=	<t>specifies the object when the graph is an object graph.
 </TOPIC>
 
 <TOPIC> add menu <style> function
@@ -2018,6 +2036,17 @@ Open a java frame. The java frame can be exported from Ge or drawn in
 JBuilder.
 
 <B>xtt> open jgraph 'name'
+</TOPIC>
+
+<TOPIC> open navigator <style> function
+Command   open navigator
+
+Open the runtime navigator. If an object is supplied the object is selected in the 
+navigator object tree.
+
+<B>xtt> open navigator [/object=]
+
+/object <t>Name of an object or attribute that is viewed and selected. Optional.
 </TOPIC>
 
 <TOPIC> open fileview <style> function

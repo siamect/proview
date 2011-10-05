@@ -1556,6 +1556,7 @@ logging     <t>Logga attribut till fil		<LINK> logging
 open graph  <t>Öppna en graf			<LINK> open graph
 open jgraph <t>Öppna en java graf		<LINK> open jgraph
 open fileview <t>Öppna en fileview		<LINK> open fileview
+open navigator <t>Öppna navigatorn		<LINK> open navigator
 open trend  <t>Öppna en trendkurva		<LINK> open trend
 open operatorwindow<t>Öppna operatörsfönstret 	<LINK> open operatorwindow
 read object <t>Läs innehållet av ett objekt från fil <LINK> read object
@@ -1563,6 +1564,7 @@ search	<t>Leta efter objekt eller sträng 	<LINK> search
 set advanceduser<t>Sätt avancerad användare	<LINK> set advanceduser
 set folder	<t>Aktivera en flik i ett flikfönster.  <LINK> set folder
 set parameter<t>Sätt värdet på ett attribut  	<LINK> set parameter
+set subwindow<t>Visa in graf i ett Ge window objekt.  <LINK> set subwindow
 setup       <t>Xtt konfigurering		<LINK> setup
 show version<t>Visa xtt version			<LINK> show version
 show symbol <t>Visa en symbol			<LINK> show symbol
@@ -1689,6 +1691,22 @@ Aktivera en flik i ett flikfönster objekt.
 
 /name=		<t>Namn på filkfönster objektet.
 /index=		<t>Index på filken som ska aktiveras. Indexeringen startar från 0.
+</TOPIC>
+
+<TOPIC> set subwindow <style> function
+Command   set subwindow
+
+Visar en graf in ett Ge window objekt. Kommandot används i kommando
+knappar för att byta innehållet i ett window objekt. /source anger
+namnet på den graf som ska visas. Även objekt-bilder kan visas genom
+att aktuellt objekt med /object. 
+
+<B>xtt> set subwindow 'graphname' /name= /source= [/object=]
+
+'graphname'	<t>den graf där window objektet ligger.
+/name=		<t>namn på window objektet.
+/source=	<t>namn på den Ge graf som ska visas i window objektet.
+/object=	<t>anger aktuellt objekt när grafen är en objekts-bild.
 </TOPIC>
 
 <TOPIC> add menu <style> function
@@ -1979,6 +1997,17 @@ Kommando   open jgraph
 i t ex JBuilder.
 
 <B>xtt> open jgraph 'name'
+</TOPIC>
+
+<TOPIC> open navigator <style> function
+Command   open navigator
+
+Öppna runtime navigatorn. Om ett object har angivits kommer detta att visas
+och väljas ut i objektsträdet.
+
+<B>xtt> open navigator [/object=]
+
+/object <t>Namn på ett objekt eller attribut som visas och väljs ut.
 </TOPIC>
 
 <TOPIC> open fileview <style> function
