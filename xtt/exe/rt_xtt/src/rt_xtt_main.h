@@ -83,6 +83,7 @@ class Xtt {
     int		select_opplace;
     int		op_close_button;
     int		no_advanceduser;
+    int		network_optimized;
 
     Xtt( int *argc, char **argv[], int *return_sts);
     virtual ~Xtt() {}
