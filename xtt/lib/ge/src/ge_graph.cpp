@@ -2669,6 +2669,10 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
             sprintf( name, "C%d", grow_IncrNextObjectNameNumber( graph->grow->ctx));
             grow_SetObjectName( move_list[i], name);
             break;
+          case glow_eObjectType_GrowGroup:
+            sprintf( name, "Grp%d_", grow_IncrNextObjectNameNumber( graph->grow->ctx));
+            grow_SetObjectName( move_list[i], name);
+            break;
           default:
             sprintf( name, "O%d", grow_IncrNextObjectNameNumber( graph->grow->ctx));
             grow_SetObjectName( move_list[i], name);
