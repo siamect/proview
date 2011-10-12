@@ -171,6 +171,10 @@ class GrowGroup : public GrowNode {
     \param node		Rootnode.
   */
   void set_rootnode( void *node);
+
+  void set_object_name( char *name) { strcpy( n_name, name);
+    strcpy( nc->nc_name, name);}
+
 };
 
 /*@}*/
