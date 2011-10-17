@@ -104,7 +104,8 @@ static pwr_tStatus PostCreate( ldh_tSesContext Session,
   if ( !repr_set) {
     wb_cdef father_cdef = sp->cdef(Class);
     if ( strcmp( father_cdef.name(), "Modbus_TCP_ServerModule") == 0 ||
-	 strcmp( father_cdef.name(), "Modbus_Module") == 0) {
+	 strcmp( father_cdef.name(), "Modbus_Module") == 0 ||
+	 strcmp( father_cdef.name(), "Modbus_ModuleReadWrite") == 0) {
       
       wb_attribute a = sp->attribute( Object, "RtBody", "Representation");
       if ( !a) return a.sts();

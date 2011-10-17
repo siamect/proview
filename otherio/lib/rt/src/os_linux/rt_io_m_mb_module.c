@@ -71,12 +71,12 @@ static pwr_tStatus IoCardInit (
   io_sCard	*cp
 ) 
 {
-  io_sCardLocal *local;
+  io_sCardLocalMsg *local;
   pwr_sClass_Modbus_Module *op;
   int i;
 
   op = (pwr_sClass_Modbus_Module *) cp->op;
-  local = (io_sCardLocal *) cp->Local;
+  local = ((io_sCardLocal *) cp->Local)->msg;
   
   for (i = 0; i < IO_MAXCHAN; i++) {
     local->scancount[i] = 0;
@@ -98,12 +98,12 @@ static pwr_tStatus IoCardRead (
   io_sCard	*cp
 ) 
 {
-  io_sCardLocal *local;
+  io_sCardLocalMsg *local;
   pwr_sClass_Modbus_Module *op;
   pwr_sClass_Modbus_TCP_Slave *slave;
 
   op = (pwr_sClass_Modbus_Module *) cp->op;
-  local = (io_sCardLocal *) cp->Local;
+  local = ((io_sCardLocal *) cp->Local)->msg;
   slave = (pwr_sClass_Modbus_TCP_Slave *) rp->op;
 
   if ( op->ScanInterval > 1) {
@@ -118,7 +118,7 @@ static pwr_tStatus IoCardRead (
   }
 
   if (slave->Status == MB__NORMAL) { 
-    io_bus_card_read(ctx, rp, cp, local->input_area, NULL,  pwr_eByteOrderingEnum_BigEndian, pwr_eFloatRepEnum_FloatIntel);  
+    io_bus_card_read(ctx, rp, cp, slave->Inputs, NULL,  pwr_eByteOrderingEnum_BigEndian, pwr_eFloatRepEnum_FloatIntel);  
   }
 //  printf("Method Modbus_Module-IoCardRead\n");
   return IO__SUCCESS;
@@ -135,13 +135,13 @@ static pwr_tStatus IoCardWrite (
   io_sCard	*cp
 ) 
 {
-  io_sCardLocal *local;
+  io_sCardLocalMsg *local;
   pwr_sClass_Modbus_Module *op;
   
   pwr_sClass_Modbus_TCP_Slave *slave;
 
   op = (pwr_sClass_Modbus_Module *) cp->op;
-  local = (io_sCardLocal *) cp->Local;
+  local = ((io_sCardLocal *) cp->Local)->msg;
   slave = (pwr_sClass_Modbus_TCP_Slave *) rp->op;
   
   if ( op->ScanInterval > 1) {
@@ -159,7 +159,7 @@ static pwr_tStatus IoCardWrite (
   }
 
   if (slave->Status == MB__NORMAL) { 
-    io_bus_card_write(ctx, cp, local->output_area, pwr_eByteOrderingEnum_BigEndian, pwr_eFloatRepEnum_FloatIntel);
+    io_bus_card_write(ctx, cp, slave->Outputs, pwr_eByteOrderingEnum_BigEndian, pwr_eFloatRepEnum_FloatIntel);
   }
 //  printf("Method Modbus_Module-IoCardWrite\n");
   return IO__SUCCESS;

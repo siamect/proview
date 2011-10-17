@@ -1,7 +1,7 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X256"
-    Attr NextCix = "_X27"
+    Attr NextOix = "_X267"
+    Attr NextCix = "_X29"
     Attr NextTix[0] = "_X10"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
@@ -806,10 +806,10 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @classlink Modbus_Module otherio_modbus_module.html
     !*/
     Object Modbus_TCP_Slave $ClassDef 3 07-FEB-2008 16:12:21.21
-      Body SysBody 21-FEB-2008 11:26:38.84
+      Body SysBody 17-OCT-2011 07:55:58.79
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 41040
+        Attr Flags = 43088
       EndBody
       Object RtBody $ObjBodyDef 1 08-FEB-2008 10:26:36.84
         Body SysBody 08-FEB-2008 10:26:36.85
@@ -1114,10 +1114,10 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @classlink Modbus_TPC_Slave otherio_modbus_tcp_slave.html
     !*/
     Object Modbus_Module $ClassDef 4 08-FEB-2008 11:05:36.53
-      Body SysBody 21-FEB-2008 11:29:00.89
+      Body SysBody 17-OCT-2011 07:54:35.93
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 49232
+        Attr Flags = 51280
       EndBody
       Object RtBody $ObjBodyDef 1 08-FEB-2008 11:15:54.62
         Body SysBody 08-FEB-2008 11:15:54.63
@@ -1205,6 +1205,19 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
         !/**
+        ! Specifies, in relation to the scantime of the thread, how
+        ! often the module is handled. If ScanInterval i 1, the module
+        ! is handled every scan. If ScanInterval is for example 10, it
+        ! is handled every 10'th scan, i.e. the scantime for the module
+        ! will be ScanInterval times the scantime of the thread.
+        !*/
+        Object ScanInterval $Attribute 11 17-OCT-2011 08:08:42.29
+          Body SysBody 16-MAR-2010 08:26:09.35
+            Attr PgmName = "ScanInterval"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
         ! @Summary Process that handles the card. Plc(1), rt_io_comm(2) or application process(4).
         ! Process that handles the card.
         ! 
@@ -1228,19 +1241,6 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Body SysBody 03-SEP-2008 16:03:01.41
             Attr PgmName = "ThreadObject"
             Attr TypeRef = "pwrs:Type-$Objid"
-          EndBody
-        EndObject
-        !/**
-        ! Specifies, in relation to the scantime of the thread, how
-        ! often the module is handled. If ScanInterval i 1, the module
-        ! is handled every scan. If ScanInterval is for example 10, it
-        ! is handled every 10'th scan, i.e. the scantime for the module
-        ! will be ScanInterval times the scantime of the thread.
-        !*/
-        Object ScanInterval $Attribute 11 16-MAR-2010 08:26:01.30
-          Body SysBody 16-MAR-2010 08:26:09.35
-            Attr PgmName = "ScanInterval"
-            Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
       EndObject
@@ -1269,8 +1269,234 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object Template Modbus_Module 2148761600 01-JAN-1970 01:00:00.00
         Body RtBody 16-MAR-2010 08:26:27.97
           Attr Continous = 1
-          Attr Process = 1
           Attr ScanInterval = 1
+          Attr Process = 1
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Message specification for module object for Modbus TCP I/O.
+    !  Message specification for module object for Modbus TCP I/O.
+    !
+    !  This object is used as an attribute object for modules supporting more than
+    !  one message.
+    ! 
+    !  @b See also
+    !  @classlink Modbus_ModuleReadWrite otherio_modbus_modulereadwrite.html
+    !  @classlink Modbus_Module otherio_modbus_module.html
+    !*/
+    Object Modbus_ModuleMsg $ClassDef 28 17-OCT-2011 08:03:47.05
+      Body SysBody 17-OCT-2011 08:03:53.09
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 32848
+      EndBody
+      Object RtBody $ObjBodyDef 1 17-OCT-2011 08:04:34.90
+        Body SysBody 17-OCT-2011 08:04:09.03
+          Attr StructName = "Modbus_ModuleMsg"
+          Attr NextAix = "_X22"
+        EndBody
+        !/**
+        ! @Summary Modbus function code.
+        ! The function code defines the action that is to be perfomed with the Modbus slave.
+        ! The module is handled with the scantime of the thread.
+        ! The supported function codes are:
+        ! 	
+        ! (FC 1) ReadCoils
+        ! (FC 2) ReadDiscreteInputs
+        ! (FC 3) ReadHoldingRegisters
+        ! (FC 4) ReadInputRegisters
+        ! (FC 5) WriteSingleCoil
+        ! (FC 15) WriteMultipleCoils 
+        ! (FC 16) WriteMultipleRegisters
+        !*/
+        Object FunctionCode $Attribute 13 17-OCT-2011 08:03:36.21
+          Body SysBody 17-OCT-2011 08:03:36.21
+            Attr PgmName = "FunctionCode"
+            Attr TypeRef = "OtherIO:Type-Modbus_FCEnum"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Address of data area on Modbus slave.
+        ! Address of data area on Modbus slave. 
+        !*/
+        Object Address $Attribute 14 17-OCT-2011 08:03:36.21
+          Body SysBody 17-OCT-2011 08:03:36.21
+            Attr PgmName = "Address"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Unit id.
+        ! Identification of the modbus unit to communicate with. It is typically only used
+        ! if communicating with a tpc gateway that is connected to a Modbus serial line with
+        ! possibly several units. Usually this has no meaning and should be set to zero (0).   
+        !*/
+        Object UnitId $Attribute 15 17-OCT-2011 08:03:36.21
+          Body SysBody 17-OCT-2011 08:03:36.21
+            Attr PgmName = "UnitId"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object Status $Attribute 16 17-OCT-2011 08:03:36.21
+          Body SysBody 17-OCT-2011 08:03:36.21
+            Attr PgmName = "Status"
+            Attr Flags = 1040
+            Attr TypeRef = "OtherIO:Type-ModbusModule_StatusEnum"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Continous operation of the module.
+        ! If set to Yes the module is scanned cylically for each scan (read or write operation).
+        ! If set to false the action defined by the FunctionCode-attribute will only be executed
+        ! when the SendOp-attribute is set.
+        !*/
+        Object Continous $Attribute 17 17-OCT-2011 08:03:36.21
+          Body SysBody 17-OCT-2011 08:03:36.21
+            Attr PgmName = "Continous"
+            Attr TypeRef = "pwrb:Type-YesNoEnum"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Request to execute action defined by FunctionCode-attribute once.
+        ! This attribute is only valid if Contious-attribute is set to 'No'.
+        !*/
+        Object SendOp $Attribute 18 17-OCT-2011 08:03:36.21
+          Body SysBody 17-OCT-2011 08:03:36.21
+            Attr PgmName = "SendOp"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        ! Specifies, in relation to the scantime of the thread, how
+        ! often the module is handled. If ScanInterval i 1, the module
+        ! is handled every scan. If ScanInterval is for example 10, it
+        ! is handled every 10'th scan, i.e. the scantime for the module
+        ! will be ScanInterval times the scantime of the thread.
+        !*/
+        Object ScanInterval $Attribute 21 17-OCT-2011 08:03:36.21
+          Body SysBody 17-OCT-2011 08:03:36.21
+            Attr PgmName = "ScanInterval"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Modbus_ModuleMsg 2155053056 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Module object for Modbus TCP I/O for both read and write.
+    !  Module object for Modbus TCP I/O for both read and write.
+    !
+    !  This module object makes it possible to specify one function code for reading,
+    !  and one for writing. This is useful when creating IO module objects for 
+    !  components where both inputs and outputs are present.
+    ! 
+    !  @b See also
+    !  @classlink Modbus_ModuleMsg otherio_modbus_modulemsg.html
+    !  @classlink Modbus_Module otherio_modbus_module.html
+    Object Modbus_ModuleReadWrite $ClassDef 27 17-OCT-2011 07:54:13.97
+      Body SysBody 17-OCT-2011 07:54:45.40
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18512
+      EndBody
+      Object RtBody $ObjBodyDef 1 17-OCT-2011 07:56:53.34
+        Body SysBody 17-OCT-2011 07:56:53.34
+          Attr StructName = "Modbus_ModuleReadWrite"
+          Attr NextAix = "_X6"
+        EndBody
+        !/**
+        ! Description of module
+        !*/
+        Object Description $Attribute 3 17-OCT-2011 08:05:42.00
+          Body SysBody 17-OCT-2011 08:05:42.00
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the card. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the card.
+        ! 
+        ! 1: The card is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The card is read by the rt_io_comm process.
+        ! 4: The card is handled by an application program.
+        !*/
+        Object Process $Attribute 4 17-OCT-2011 08:06:12.09
+          Body SysBody 17-OCT-2011 08:06:12.09
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the module.
+        ! The PlcThread object of the plc thread that handles the module.
+        ! The module is handled with the scantime of the thread.
+        !*/
+        Object ThreadObject $Attribute 5 17-OCT-2011 08:06:12.09
+          Body SysBody 17-OCT-2011 08:06:12.09
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        ! Specification of the read message.
+        !*/
+        Object Read $Attribute 1 17-OCT-2011 07:57:03.88
+          Body SysBody 17-OCT-2011 08:05:22.17
+            Attr PgmName = "Read"
+            Attr Flags = 131072
+            Attr TypeRef = "OtherIO:Class-Modbus_ModuleMsg"
+          EndBody
+        EndObject
+        !/**
+        ! Specification of the write message.
+        !*/
+        Object Write $Attribute 2 17-OCT-2011 07:57:26.66
+          Body SysBody 17-OCT-2011 08:05:27.68
+            Attr PgmName = "Write"
+            Attr Flags = 131072
+            Attr TypeRef = "OtherIO:Class-Modbus_ModuleMsg"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 262 17-OCT-2011 10:49:49.90
+        Object IoCardInit $Method 263 17-OCT-2011 10:49:49.90
+          Body SysBody 17-OCT-2011 10:50:06.54
+            Attr MethodName = "Modbus_ModuleReadWrite-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 264 17-OCT-2011 10:49:49.90
+          Body SysBody 17-OCT-2011 10:50:17.58
+            Attr MethodName = "Modbus_ModuleReadWrite-IoCardRead"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 265 17-OCT-2011 10:49:49.90
+          Body SysBody 17-OCT-2011 10:50:28.69
+            Attr MethodName = "Modbus_ModuleReadWrite-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object PostCreate $DbCallBack 267 17-OCT-2011 16:58:28.81
+        Body SysBody 17-OCT-2011 16:58:28.81
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
+      EndObject
+      Object Template Modbus_ModuleReadWrite 2154790912 01-JAN-1970 01:00:00.00
+        Body RtBody 17-OCT-2011 08:07:19.24
+          Attr Process = 1
+          Attr Read.Continous = 1
+          Attr Read.ScanInterval = 1
+          Attr Write.Continous = 1
+          Attr Write.ScanInterval = 1
         EndBody
       EndObject
     EndObject
@@ -1284,10 +1510,10 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @classlink Modbus_TPC_Slave otherio_modbus_tcp_slave.html
     !*/
     Object Modbus_Master $ClassDef 5 01-SEP-2008 10:52:09.59
-      Body SysBody 03-SEP-2008 16:03:48.36
+      Body SysBody 17-OCT-2011 07:55:00.34
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 36944
+        Attr Flags = 38992
       EndBody
       Object RtBody $ObjBodyDef 1 01-SEP-2008 10:54:17.57
         Body SysBody 01-SEP-2008 10:54:17.57
@@ -1386,10 +1612,10 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @classlink Modbus_TCP_ServerModule otherio_modbus_tcp_servermodule.html
     !*/
     Object Modbus_TCP_Server $ClassDef 6 25-NOV-2009 10:32:40.64
-      Body SysBody 25-NOV-2009 10:30:31.66
+      Body SysBody 17-OCT-2011 07:56:15.58
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 41040
+        Attr Flags = 43088
       EndBody
       Object RtBody $ObjBodyDef 1 25-NOV-2009 10:30:31.66
         Body SysBody 25-NOV-2009 10:32:51.18
@@ -1597,10 +1823,10 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @classlink Modbus_TCP_Server otherio_modbus_tcp_server.html
     !*/
     Object Modbus_TCP_ServerModule $ClassDef 7 25-NOV-2009 11:05:45.82
-      Body SysBody 25-NOV-2009 11:05:23.49
+      Body SysBody 17-OCT-2011 07:56:22.47
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 49232
+        Attr Flags = 51280
       EndBody
       Object RtBody $ObjBodyDef 1 25-NOV-2009 11:05:23.49
         Body SysBody 25-NOV-2009 11:06:00.66
