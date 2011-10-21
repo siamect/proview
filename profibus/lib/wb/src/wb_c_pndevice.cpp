@@ -169,6 +169,7 @@ int pndevice_save_cb( void *sctx)
   if ( EVEN(sts)) goto return_now;
 
   // Do a temporary rename all module object to avoid name collisions
+#if 0
   for ( sts = ldh_GetChild( ctx->ldhses, ctx->aref.Objid, &oid);
 	ODD(sts);
 	sts = ldh_GetNextSibling( ctx->ldhses, oid, &oid)) {
@@ -180,6 +181,7 @@ int pndevice_save_cb( void *sctx)
     sts = ldh_ChangeObjectName( ctx->ldhses, oid, name);
     if ( EVEN(sts)) goto return_now;
   }
+#endif
 
   for ( unsigned int i = 1; i < ctx->attr->attrnav->dev_data.slot_data.size(); i++) {
     GsdmlSlotData *slot = ctx->attr->attrnav->dev_data.slot_data[i];
@@ -204,11 +206,13 @@ int pndevice_save_cb( void *sctx)
 				 sizeof(name), &size);
 	  if ( EVEN(sts)) goto return_now;
 
+#if 0
 	  if ( strcmp( name, mname) != 0) {
 	    // Change name
 	    sts = ldh_ChangeObjectName( ctx->ldhses, slot->module_oid, mname);
 	    if ( EVEN(sts)) goto return_now;
 	  }	  
+#endif
 	  
 	  // Check that sibling position is right
 	  sts = ldh_GetPreviousSibling( ctx->ldhses, slot->module_oid, &prev);
@@ -231,8 +235,13 @@ int pndevice_save_cb( void *sctx)
 	  }
 	}
 	else {
-	  // New class, delete current object
+	  // New class, delete current object, reuse the name
+	  sts = ldh_ObjidToName( ctx->ldhses, slot->module_oid, 
+				 ldh_eName_Object, mname, sizeof(mname), &size);
+	  if ( EVEN(sts)) goto return_now;
+
 	  sts = ldh_DeleteObjectTree( ctx->ldhses, slot->module_oid, 0);
+	  if ( EVEN(sts)) goto return_now;
 	}
       }
     }
@@ -826,8 +835,23 @@ pwr_tStatus pndevice_init( device_sCtx *ctx)
     ctx->attr->attrnav->dev_data.slot_data[idx]->module_oid = module_oid;
   }
   if ( corrupt) {
-    ctx->attr->wow->DisplayError( "Configuration corrupt", 
-		      "Configuration of module objects doesn't match device configuration");
+    corrupt = 0;
+
+    // Not standard module names, get slot number from object order instead
+    idx = 1;
+    for ( sts = ldh_GetChild( ctx->ldhses, ctx->aref.Objid, &module_oid);
+	  ODD(sts);
+	  sts = ldh_GetNextSibling( ctx->ldhses, module_oid, &module_oid)) {
+      if ( idx >= ctx->attr->attrnav->dev_data.slot_data.size()) {
+	corrupt = 1;
+	break;
+      }
+      ctx->attr->attrnav->dev_data.slot_data[idx]->module_oid = module_oid;
+      idx++;
+    }
+    if ( corrupt)
+      ctx->attr->wow->DisplayError( "Configuration corrupt", 
+		      "Configuration of module objects doesn't match device configuration");    
   }
   return 1;
 }
