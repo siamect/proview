@@ -638,12 +638,12 @@ int rt_sevhistmon::send_data()
     dp = (sev_sHistData *) &msg->Data;
     for ( unsigned int j = 0; j < m_hs[i].sevhistlist.size(); j++) {
       if ( !m_hs[i].sevhistlist[j].hsp->Disable) {
-	if ( m_hs[i].sevhistlist[j].hsp->Options & pwr_mSevOptionsMask_Event &&
-	     m_hs[i].sevhistlist[j].hsp->Trigger)
-	  m_hs[i].sevhistlist[j].hsp->Trigger = 0;
-	else
-	  continue;
-
+	if ( m_hs[i].sevhistlist[j].hsp->Options & pwr_mSevOptionsMask_Event) {
+	  if ( m_hs[i].sevhistlist[j].hsp->Trigger)
+	    m_hs[i].sevhistlist[j].hsp->Trigger = 0;
+	  else
+	    continue;
+	}
 	dp->sevid = m_hs[i].sevhistlist[j].sevid;
 	dp->type = m_hs[i].sevhistlist[j].type;
 	dp->size = m_hs[i].sevhistlist[j].size;
