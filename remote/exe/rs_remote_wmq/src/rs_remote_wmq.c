@@ -199,7 +199,7 @@ unsigned int wmq_receive()
   MQMD MsgDesc = {MQMD_DEFAULT};
 
   MQLONG DataLength;
-  MQCHAR Buffer[16384];
+  MQCHAR Buffer[132000];
   MQGMO GetMsgOpts = {MQGMO_DEFAULT};
 
   MQLONG BufferLength = sizeof(Buffer);
