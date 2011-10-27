@@ -985,7 +985,7 @@ static void printstat(DbEnv *ep, const char *s)
   printf("DbEnv loc statistics, %s:\n", s);
 
   ep->lock_stat(&lp, 0);
-#if DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR > 0    
+#if DB_VERSION_MAJOR > 3 && DB_VERSION_MINOR > 0    
   printf("  lastid.......: %d\n", lp->st_id);
 #else
   printf("  lastid.......: %d\n", lp->st_lastid);
@@ -1002,7 +1002,7 @@ static void printstat(DbEnv *ep, const char *s)
   printf("  maxnobjects..: %d\n", lp->st_maxnobjects);
   printf("  nrequests....: %u\n", (unsigned int)lp->st_nrequests);
   printf("  nreleases....: %u\n", (unsigned int)lp->st_nreleases);
-#if DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR == 0    
+#if DB_VERSION_MAJOR > 3 && DB_VERSION_MINOR == 0    
   printf("  nnowaits.....: %d\n", lp->st_nnowaits);
   printf("  nconflicts...: %d\n", lp->st_nconflicts);
 #endif
@@ -1113,7 +1113,7 @@ void wb_db::openDb(bool useTxn)
 
   rc = m_t_class->set_bt_compare(wb_db_class_bt_compare);
 
-#if DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR > 0    
+#if DB_VERSION_MAJOR > 3 && DB_VERSION_MINOR > 0    
   u_int32_t flags;
   if (useTxn) flags = DB_CREATE | DB_AUTO_COMMIT; 
   else flags = DB_CREATE;

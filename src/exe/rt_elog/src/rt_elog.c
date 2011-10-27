@@ -216,7 +216,7 @@ Init ()
   }
   /*open the database*/
 
-#if (DB_VERSION_MAJOR == 4) && (DB_VERSION_MINOR > 0)
+#if (DB_VERSION_MAJOR > 3) && (DB_VERSION_MINOR > 0)
   ret = dataBaseP->open(dataBaseP, NULL, fname, NULL, DATABASETYPE, DB_CREATE, 0664);
 #else
   ret = dataBaseP->open(dataBaseP, fname, NULL, DATABASETYPE, DB_CREATE, 0664);
