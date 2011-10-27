@@ -6,6 +6,11 @@ Modbus_ModuleReadWrite
 Modbus_Master
 Modbus_TCP_Server
 Modbus_TCP_ServerModule
+Modbus_RTU_Slave
+Modbus_RTU_Module
+Modbus_RTU_Master
+Modbus_RTU_Server
+Modbus_RTU_ServerModule
 Arduino_Uno
 #if OS_LINUX
 GPIO

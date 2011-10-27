@@ -307,6 +307,17 @@ palette NavigatorPalette
           class Modbus_TCP_ServerModule
 	}
       } 
+      menu Modbus_RTU 
+      {
+	class Modbus_RTU_Master
+        class Modbus_RTU_Slave
+        class Modbus_RTU_Module
+	menu Server
+	{
+	  class Modbus_RTU_Server
+          class Modbus_RTU_ServerModule
+	}
+      } 
       menu Hilscher_cifX
       {
         class Hilscher_cifX_Master
