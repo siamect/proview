@@ -246,7 +246,8 @@ static pwr_tStatus IoRackRead (
   }
   
   if (sp->ErrorCount > sp->ErrorSoftLimit ) {
-    memset(((io_sPnRackLocal *)(rp->Local))->inputs, 0, ((io_sPnRackLocal *)(rp->Local))->bytes_of_input);
+    if ( ((io_sPnRackLocal *)(rp->Local))->bytes_of_input > 0)
+      memset(((io_sPnRackLocal *)(rp->Local))->inputs, 0, ((io_sPnRackLocal *)(rp->Local))->bytes_of_input);
   }
   
   //  if (sp->ErrorCount > sp->ErrorHardLimit && sp->StallAction >= pwr_ePbStallAction_EmergencyBreak) {

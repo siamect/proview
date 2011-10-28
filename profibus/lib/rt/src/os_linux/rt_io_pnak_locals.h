@@ -57,7 +57,7 @@ typedef struct _PN_Alarm_Data {
 
 class PnIOCRData {
  public:
-  PnIOCRData() : type(0), number_modules(0), identifier(0), io_data_length(0) {}
+  PnIOCRData() : type(0), number_modules(0), identifier(0), io_data_length(0), clean_io_data_length(0) {}
   
   unsigned short type;
   unsigned short number_modules;

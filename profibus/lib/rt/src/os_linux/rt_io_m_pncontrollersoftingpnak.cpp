@@ -293,6 +293,8 @@ static pwr_tStatus IoAgentInit (
 	  local->device_data[ii]->iocr_data[jj]->clean_io_data = (unsigned char *) calloc(1, offset_inputs + offset_outputs);
 	  local->device_data[ii]->iocr_data[jj]->clean_io_data_length = offset_inputs + offset_outputs;
 	}
+      } else {
+	errh_Error( "Download of Profinet Device configuration failed for: %s", device_vect[ii]->device_name);
       }
     }
   }
