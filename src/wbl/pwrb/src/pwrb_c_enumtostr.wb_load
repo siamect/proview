@@ -91,7 +91,7 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_POINTER
           Attr Flags |= PWR_MASK_PRIVATE
           Attr Flags |= PWR_MASK_STATE
-          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_INVISIBLE
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
@@ -101,7 +101,7 @@ SObject pwrb:Class
       Object EnumDefRows $Intern 4
         Body SysBody
           Attr Flags |= PWR_MASK_STATE
-          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_INVISIBLE
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject

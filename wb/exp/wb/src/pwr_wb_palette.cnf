@@ -338,6 +338,7 @@ palette NavigatorPalette
       {
         class OneWire
         class OneWire_AiDevice
+        class OneWire_AoDevice
         class Maxim_DS18B20
       }
       menu SPI
@@ -381,6 +382,7 @@ palette NavigatorPalette
       class RemnodeTCP
       class RemnodeUDP
       class Remnode3964R
+      class RemnodeRK512
       class RemTrans
       menu Buffers
       {
@@ -922,6 +924,7 @@ palette PlcEditorPalette
       class ItoUInt64	
       class MaskToD
       class NameToStr
+      class StrToEnum
       class UInt64toI	
       class UInt32toI	
     }

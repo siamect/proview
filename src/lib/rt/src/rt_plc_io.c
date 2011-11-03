@@ -492,3 +492,34 @@ void EnumToStr_exec( plc_sThread	*tp,
     strcpy( o->ActVal, "");
 }
 
+/*_*
+  STRTOENUM
+  @aref strtoenum STRTOENUM
+*/
+
+void StrToEnum_init( pwr_sClass_StrToEnum *o) 
+{
+  if ( EVEN( gdh_GetEnumValueDef( o->TypeId, (gdh_sValueDef **)&o->EnumDefP, (int *)&o->EnumDefRows)))
+    o->EnumDefP = 0;
+}
+
+void StrToEnum_exec( plc_sThread	*tp,
+		     pwr_sClass_StrToEnum *o) 
+{
+  int i;
+  int found = 0;
+
+  if ( !o->EnumDefP)
+    return;
+
+  for ( i = 0; i < o->EnumDefRows; i++) {
+    if ( strcmp( (char *)o->StrP, ((gdh_sValueDef *)o->EnumDefP)[i].Value->Text) == 0) {
+      o->ActVal = ((gdh_sValueDef *)o->EnumDefP)[i].Value->Value;
+      found = 1;
+      break;
+    }
+  }
+  if ( !found)
+    o->ActVal = 0;
+}
+
