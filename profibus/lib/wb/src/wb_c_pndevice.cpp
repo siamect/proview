@@ -809,14 +809,16 @@ pwr_tStatus pndevice_create_ctx( ldh_tSession ldhses, pwr_tAttrRef aref,
 
 pwr_tStatus pndevice_init( device_sCtx *ctx)
 {
-  pwr_tObjName module_name;
   pwr_tOid module_oid;
-  int corrupt = 0;
+  int corrupt = 1;
   unsigned int idx;
   pwr_tStatus sts;
-  int size;
   
   // Identify module objects
+#if 0
+  int size;
+  pwr_tObjName module_name;
+
   for ( sts = ldh_GetChild( ctx->ldhses, ctx->aref.Objid, &module_oid);
 	ODD(sts);
 	sts = ldh_GetNextSibling( ctx->ldhses, module_oid, &module_oid)) {
@@ -834,6 +836,7 @@ pwr_tStatus pndevice_init( device_sCtx *ctx)
     }
     ctx->attr->attrnav->dev_data.slot_data[idx]->module_oid = module_oid;
   }
+#endif
   if ( corrupt) {
     corrupt = 0;
 
