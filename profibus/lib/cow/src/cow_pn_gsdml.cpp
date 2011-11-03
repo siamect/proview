@@ -231,6 +231,8 @@ static gsdml_sAttribute attrlist[] = {
   { "PowerOnToCommReady", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Unsigned32, sizeof(gsdml_tUnsigned32), offsetof(gsdml_sDeviceAccessPointItem,PowerOnToCommReady), 0, "0"},
   { "ParameterizationSpeedupSupported", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sDeviceAccessPointItem,ParameterizationSpeedSupported), 0, "false"},
   { "NameOfStationNotTransferable", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sDeviceAccessPointItem,NameOfStationNotTransferable), 0, "false"},
+  { "DeviceAccessSupported", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sDeviceAccessPointItem,DeviceAccessSupported), 0, "false"},
+  { "SharedDeviceSupported", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sDeviceAccessPointItem,SharedDeviceSupported), 0, "false"},
   //
   // ModuleInfo
   //
@@ -426,6 +428,7 @@ static gsdml_sAttribute attrlist[] = {
   //
   // InterfaceSubmoduleItem
   //
+  { "ID", gsdml_eTag_InterfaceSubmoduleItem, gsdml_eTag_, gsdml_eType_Id, sizeof(gsdml_tId), offsetof(gsdml_sInterfaceSubmoduleItem,ID), 0, ""},
   { "SubslotNumber", gsdml_eTag_InterfaceSubmoduleItem, gsdml_eTag_, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16), offsetof(gsdml_sInterfaceSubmoduleItem,SubslotNumber), 0, "32768"},
   { "TextId", gsdml_eTag_InterfaceSubmoduleItem, gsdml_eTag_, gsdml_eType_RefId, sizeof(gsdml_tRefId), offsetof(gsdml_sInterfaceSubmoduleItem,TextId), 0, ""},
   { "SupportedRT_Class", gsdml_eTag_InterfaceSubmoduleItem, gsdml_eTag_, gsdml_eType_Enum, sizeof(gsdml_tEnum), offsetof(gsdml_sInterfaceSubmoduleItem,SupportedRT_Class), 0, "Class1"},
@@ -462,6 +465,7 @@ static gsdml_sAttribute attrlist[] = {
   { "NumberOfAdditionalOutputCR", gsdml_eTag_ApplicationRelations, gsdml_eTag_InterfaceSubmoduleItem, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16), offsetof(gsdml_sInterfaceSubmoduleItem_ApplicationRelations,NumberOfAdditionalOutputCR), 0, "0"},
   { "NumberOfAdditionalMulticastProviderCR", gsdml_eTag_ApplicationRelations, gsdml_eTag_InterfaceSubmoduleItem, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16), offsetof(gsdml_sInterfaceSubmoduleItem_ApplicationRelations,NumberOfAdditionalMulticastProviderCR), 0, "0"},
   { "NumberOfMulticastConsumerCR", gsdml_eTag_ApplicationRelations, gsdml_eTag_InterfaceSubmoduleItem, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16), offsetof(gsdml_sInterfaceSubmoduleItem_ApplicationRelations,NumberOfMulticastConsumerCR), 0, "0"},
+  { "NumberOfAR", gsdml_eTag_ApplicationRelations, gsdml_eTag_InterfaceSubmoduleItem, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16), offsetof(gsdml_sInterfaceSubmoduleItem_ApplicationRelations,NumberOfAR), 0, "1"},
   { "PullModuleAlarmSupported", gsdml_eTag_ApplicationRelations, gsdml_eTag_InterfaceSubmoduleItem, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sInterfaceSubmoduleItem_ApplicationRelations,PullModuleAlarmSupported), 0, "false"},
   // These should not exist in InterfaceSubmodulItem ...
   { "AR_BlockVersion", gsdml_eTag_ApplicationRelations, gsdml_eTag_InterfaceSubmoduleItem, gsdml_eType_Unsigned16, 0, 0, 1, ""},
@@ -490,6 +494,7 @@ static gsdml_sAttribute attrlist[] = {
   //
   // PortSubmoduleItem
   //
+  { "ID", gsdml_eTag_PortSubmoduleItem, gsdml_eTag_, gsdml_eType_Id, sizeof(gsdml_tId), offsetof(gsdml_sPortSubmoduleItem,ID), 0, ""},
   { "SubslotNumber", gsdml_eTag_PortSubmoduleItem, gsdml_eTag_, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16), offsetof(gsdml_sPortSubmoduleItem,SubslotNumber), 0, ""},
   { "TextId", gsdml_eTag_PortSubmoduleItem, gsdml_eTag_, gsdml_eType_RefId, sizeof(gsdml_tRefId), offsetof(gsdml_sPortSubmoduleItem,TextId), 0, ""},
   { "MAUType", gsdml_eTag_PortSubmoduleItem, gsdml_eTag_, gsdml_eType_Enum, sizeof(gsdml_tEnum), offsetof(gsdml_sPortSubmoduleItem,MAUType), 0, "100BASETXFD"},

@@ -850,6 +850,7 @@ typedef struct {
   gsdml_tUnsigned16 NumberOfAdditionalOutputCR;
   gsdml_tUnsigned16 NumberOfAdditionalMulticastProviderCR;
   gsdml_tUnsigned16 NumberOfMulticastConsumerCR;
+  gsdml_tUnsigned16 NumberOfAR;
   gsdml_tBoolean PullModuleAlarmSupported;
 } gsdml_sInterfaceSubmoduleItem_ApplicationRelations;
 
@@ -880,6 +881,7 @@ class gsdml_MediaRedundancy {
 };
 
 typedef struct {
+  gsdml_tId ID;
   gsdml_tUnsigned16 SubslotNumber;
   gsdml_tRefId TextId;
   gsdml_tEnum SupportedRT_Class;
@@ -914,6 +916,7 @@ class gsdml_InterfaceSubmoduleItem {
 };
 
 typedef struct {
+  gsdml_tId ID;
   gsdml_tUnsigned16 SubslotNumber;
   gsdml_tRefId TextId;
   gsdml_tEnum MAUType;
@@ -1066,6 +1069,8 @@ typedef struct {
   gsdml_tUnsigned32 PowerOnToCommReady;
   gsdml_tBoolean ParameterizationSpeedSupported;
   gsdml_tBoolean NameOfStationNotTransferable;
+  gsdml_tBoolean DeviceAccessSupported;
+  gsdml_tBoolean SharedDeviceSupported;
 } gsdml_sDeviceAccessPointItem;
 
 class gsdml_DeviceAccessPointItem {
