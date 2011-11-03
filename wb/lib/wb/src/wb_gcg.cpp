@@ -12279,10 +12279,10 @@ int	gcg_comp_m45( gcg_ctx gcgctx, vldh_t_node node)
 	char			output_prefix;
 	char			*name;
 	char			*refstructname;
-	pwr_tObjid		refobjdid;
-	pwr_tObjid		*refobjdid_ptr;
-	ldh_tSesContext ldhses;
-	pwr_tClassId		cid;
+	pwr_tAttrRef		refaref;
+	pwr_tAttrRef		*refaref_ptr;
+	ldh_tSesContext 	ldhses;
+	pwr_tClassId		cid, refcid;
 	int			dataclass_found;	
 
 	ldhses = (node->hn.wind)->hw.ldhses;
@@ -12332,13 +12332,17 @@ int	gcg_comp_m45( gcg_ctx gcgctx, vldh_t_node node)
 			output_node->ln.oid, 
 			"DevBody",
 			"DataObject",
-			(char **)&refobjdid_ptr, &size); 
+			(char **)&refaref_ptr, &size); 
 	          if ( EVEN(sts)) return sts;
 
-	          refobjdid = *refobjdid_ptr;
-	          free((char *) refobjdid_ptr);
+	          refaref = *refaref_ptr;
+	          free((char *) refaref_ptr);
 
-	          sts = gcg_get_structname( gcgctx, refobjdid, &refstructname);
+		  sts = ldh_GetAttrRefOrigTid(gcgctx->wind->hw.ldhses, &refaref, &refcid);
+		  if ( EVEN(sts)) return sts;
+
+		  /* Get name for this class */
+		  sts = gcg_get_structname_from_cid( gcgctx, refcid, &refstructname);
 	          if ( EVEN(sts))
 	            return GSX__NEXTNODE;
 
@@ -13181,12 +13185,16 @@ int	gcg_comp_m52( gcg_ctx gcgctx, vldh_t_node node)
 	int			size;
 	pwr_tObjid		refobjdid;
 	pwr_tObjid		*refobjdid_ptr;
-	char			*parameter;
+	char			*par;
 	unsigned long		info_type;
 	int			found, i;
 	ldh_tSesContext ldhses;
 	pwr_tClassId		cid;
 	int			info_pointer_flag;
+	pwr_tString80		parameter;
+	char			*s;
+	int			pfound;
+	int			idx;
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 
@@ -13235,83 +13243,114 @@ int	gcg_comp_m52( gcg_ctx gcgctx, vldh_t_node node)
 			node->ln.oid, 
 			"DevBody",
 			bodydef[1].ParName,
-			(char **)&parameter, &size); 
+			(char **)&par, &size); 
 	if ( EVEN(sts)) return sts;
+	strncpy( parameter, par, sizeof(parameter));
+	free((char *) par);
 	free((char *) bodydef);	
 
 	/* Check that the parameter exists in the referenced object */
-	sts = ldh_GetObjectBodyDef( ldhses, cid, "RtBody", 1, 
-			&bodydef, &rows);
-	if ( EVEN(sts) )
-	{
-	  gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
-	  return GSX__NEXTNODE;
-	}
+	pfound = 0;
+	if ( strncmp( parameter, "Data[", 5) == 0 && sscanf( &parameter[5], "%d", &idx) == 1) {
+	  s = strrchr( parameter, ']');
+	  if ( s && strcmp( s, "].DataP") == 0) {
+	    pfound = 1;
+	    info_pointer_flag = 1;
+	    info_type = 0;
+	  }
+	  else if ( s && strcmp( s, "].Data_Objid") == 0) {
+	    pfound = 1;
+	    info_pointer_flag = 0;
+	    info_type = pwr_eType_Objid;
+	  }
 
-	for ( i = 0, found = 0; i < rows; i++)
-	{
-	  /* ML 961009. Use ParName instead of PgmName */
-	  if ( strcmp( bodydef[i].ParName, parameter) == 0)
-	  {
-	    found = 1;
-	    break;
+	  if ( pfound) {
+	    switch( cid) {
+	    case pwr_cClass_NMpsCell60:
+	    case pwr_cClass_NMpsStoreCell60:
+	      if ( idx >= 60) {
+		gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);
+		return GSX__NEXTNODE;
+	      }
+	      break;
+	    case pwr_cClass_NMpsCell120:
+	    case pwr_cClass_NMpsStoreCell120:
+	      if ( idx >= 120) {
+		gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);
+		return GSX__NEXTNODE;
+	      }
+	      break;
+	    default:
+	      gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);
+	      return GSX__NEXTNODE;
+	    }	   
 	  }
 	}
-	if ( !found )
-	{
-	  free((char *) parameter);
-	  gcg_error_msg( gcgctx, GSX__REFPAR, node);  
-	  free((char *) bodydef);	
-	  return GSX__NEXTNODE;
-	}
+
+	if ( !pfound) {
+	  sts = ldh_GetObjectBodyDef( ldhses, cid, "RtBody", 1, 
+				      &bodydef, &rows);
+	  if ( EVEN(sts) ) {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+
+	  for ( i = 0, found = 0; i < rows; i++) {
+	    /* ML 961009. Use ParName instead of PgmName */
+	    if ( strcmp( bodydef[i].ParName, parameter) == 0) {
+	      found = 1;
+	      break;
+	    }
+	  }
+	  if ( !found ) {
+	    gcg_error_msg( gcgctx, GSX__REFPAR, node);  
+	    free((char *) bodydef);	
+	    return GSX__NEXTNODE;
+	  }
 	
-	/* Check type of parameter */
-	switch (bodydef[i].ParClass )  {
-        case pwr_eClass_Input:
-          info_type = bodydef[i].Par->Input.Info.Type ;
-	  if ( bodydef[i].Par->Input.Info.Flags & PWR_MASK_RTVIRTUAL	)
-	  {
-	    /* Parameter is not defined in runtime */
+	  /* Check type of parameter */
+	  switch (bodydef[i].ParClass )  {
+	  case pwr_eClass_Input:
+	    info_type = bodydef[i].Par->Input.Info.Type ;
+	    if ( bodydef[i].Par->Input.Info.Flags & PWR_MASK_RTVIRTUAL	) {
+	      /* Parameter is not defined in runtime */
+	      gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	      free((char *) bodydef);	
+	      return GSX__NEXTNODE;
+	    } 
+	    break;
+	  case pwr_eClass_Output:
+	    info_type = bodydef[i].Par->Output.Info.Type ;
+	    info_pointer_flag = 
+	      PWR_MASK_POINTER & bodydef[i].Par->Output.Info.Flags;
+	    break;
+	  case pwr_eClass_Intern:
+	    info_type = bodydef[i].Par->Intern.Info.Type ;
+	    info_pointer_flag = 
+	      PWR_MASK_POINTER & bodydef[i].Par->Intern.Info.Flags;
+	    break;
+	  case pwr_eClass_Param:
+	    info_type = bodydef[i].Par->Param.Info.Type ;
+	    info_pointer_flag = 
+	      PWR_MASK_POINTER & bodydef[i].Par->Param.Info.Flags;
+	    break;
+	  default:
+	    /* Not allowed parameter type */		  
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    free((char *) bodydef);	
 	    return GSX__NEXTNODE;
- 	  } 
-	  break;
-        case pwr_eClass_Output:
-          info_type = bodydef[i].Par->Output.Info.Type ;
-          info_pointer_flag = 
-		PWR_MASK_POINTER & bodydef[i].Par->Output.Info.Flags;
-	  break;
-        case pwr_eClass_Intern:
-          info_type = bodydef[i].Par->Intern.Info.Type ;
-          info_pointer_flag = 
-		PWR_MASK_POINTER & bodydef[i].Par->Intern.Info.Flags;
-	  break;
-        case pwr_eClass_Param:
-          info_type = bodydef[i].Par->Param.Info.Type ;
-          info_pointer_flag = 
-		PWR_MASK_POINTER & bodydef[i].Par->Param.Info.Flags;
-	  break;
-	default:
-	  /* Not allowed parameter type */		  
-	  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	  free((char *) bodydef);	
-	  return GSX__NEXTNODE;
-	}
-        free((char *) bodydef );
-        
-	if (node->ln.cid == pwr_cClass_GetDap)
-	{
-	  if ( !info_pointer_flag)
-	  {
+	  }
+	  free((char *) bodydef );
+	}	  
+
+	if (node->ln.cid == pwr_cClass_GetDap) {
+	  if ( !info_pointer_flag) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
 	}
-	else if (node->ln.cid == pwr_cClass_GetObjidp)
-	{
-	  if (info_type != pwr_eType_Objid)
-	  {
+	else if (node->ln.cid == pwr_cClass_GetObjidp) {
+	  if (info_type != pwr_eType_Objid) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);
 	    return GSX__NEXTNODE;
 	  }
@@ -13326,8 +13365,6 @@ int	gcg_comp_m52( gcg_ctx gcgctx, vldh_t_node node)
 		GCG_PREFIX_REF,
 		vldh_IdToStr(0, refobjdid), 
 		parameter);
-
-	free((char *) parameter);
 
 	/* Insert object in ref list */
 	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
