@@ -1,7 +1,7 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X295"
-    Attr NextCix = "_X34"
+    Attr NextOix = "_X300"
+    Attr NextCix = "_X35"
     Attr NextTix[0] = "_X10"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
@@ -904,8 +904,8 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
         !/**
         ! Specifies the action when the errorcounter has reached the error limit.
-        !
-	! No                no action.
+        ! 
+        ! No                no action.
         ! Reset inputs      the inputs for the slave are reset.
         ! Emergency break   all I/O is stopped.
         !*/
@@ -2113,7 +2113,8 @@ Volume OtherIO $ClassVolume 0.0.250.10
         !*/
         Object Debug $Attribute 17 27-OCT-2011 08:55:53.85
           Body SysBody 27-OCT-2011 08:58:09.11
-            Attr Flags = 25167872
+            Attr PgmName = "Debug"
+            Attr Flags = 8390656
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2236,8 +2237,8 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
         !/**
         ! Specifies the action when the errorcounter has reached the error limit.
-        !
-	! No                no action.
+        ! 
+        ! No                no action.
         ! Reset inputs      the inputs for the slave are reset.
         ! Emergency break   all I/O is stopped.
         !*/
@@ -2806,7 +2807,8 @@ Volume OtherIO $ClassVolume 0.0.250.10
         !*/
         Object Debug $Attribute 60 27-OCT-2011 08:57:19.86
           Body SysBody 27-OCT-2011 08:57:53.68
-            Attr Flags = 25167872
+            Attr PgmName = "Debug"
+            Attr Flags = 8390656
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -3423,7 +3425,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
       Object Template OneWire_AiDevice 2154266624 01-JAN-1970 01:00:00.00
-        Body RtBody 08-JUN-2011 14:10:37.59
+        Body RtBody 01-NOV-2011 13:33:54.15
           Attr Super.Process = 1
           Attr Super.ErrorSoftLimit = 50
           Attr Super.ErrorHardLimit = 100
@@ -3442,6 +3444,115 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr ChAi.SensorSigValRangeHigh = 1.000000e+01
           Attr ChAi.ActValRangeLow = -1.000000e+02
           Attr ChAi.ActValRangeHigh = 1.000000e+02
+        EndBody
+      EndObject
+    EndObject
+    Object OneWire_AoDevice $ClassDef 34 01-NOV-2011 13:31:45.25
+      Body SysBody 01-NOV-2011 13:31:33.55
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 51280
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-NOV-2011 13:31:33.55
+        Body SysBody 01-NOV-2011 13:31:52.28
+          Attr StructName = "OneWire_AoDevice"
+          Attr NextAix = "_X42"
+        EndBody
+        Object Super $Attribute 33 01-NOV-2011 13:31:33.55
+          Body SysBody 01-NOV-2011 13:31:33.55
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseIOCard"
+          EndBody
+        EndObject
+        Object Status $Attribute 34 01-NOV-2011 13:31:33.55
+          Body SysBody 01-NOV-2011 13:31:33.55
+            Attr PgmName = "Status"
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        Object Family $Attribute 35 01-NOV-2011 13:31:33.55
+          Body SysBody 01-NOV-2011 13:31:33.55
+            Attr PgmName = "Family"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Resolution $Attribute 36 01-NOV-2011 13:31:33.55
+          Body SysBody 01-NOV-2011 13:31:33.55
+            Attr PgmName = "Resolution"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ScanInterval $Attribute 37 01-NOV-2011 13:31:33.55
+          Body SysBody 01-NOV-2011 13:31:33.55
+            Attr PgmName = "ScanInterval"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object DataFile $Attribute 38 01-NOV-2011 13:31:33.55
+          Body SysBody 01-NOV-2011 13:31:33.55
+            Attr PgmName = "DataFile"
+            Attr TypeRef = "pwrs:Type-$String256"
+          EndBody
+        EndObject
+        Object Format $Attribute 39 01-NOV-2011 13:32:10.45
+          Body SysBody 01-NOV-2011 13:32:11.28
+            Attr PgmName = "Format"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object ErrorValue $Attribute 40 01-NOV-2011 13:31:33.55
+          Body SysBody 01-NOV-2011 13:31:33.55
+            Attr PgmName = "ErrorValue"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ChAo $Attribute 41 01-NOV-2011 13:32:25.24
+          Body SysBody 01-NOV-2011 13:32:30.71
+            Attr PgmName = "ChAo"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 296 01-NOV-2011 13:31:33.55
+        Object IoCardInit $Method 297 01-NOV-2011 13:31:33.55
+          Body SysBody 01-NOV-2011 13:32:46.32
+            Attr MethodName = "OneWire_AoDevice-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 298 01-NOV-2011 13:31:33.55
+          Body SysBody 01-NOV-2011 13:32:52.67
+            Attr MethodName = "OneWire_AoDevice-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 299 01-NOV-2011 13:33:10.62
+          Body SysBody 01-NOV-2011 15:49:42.73
+            Attr MethodName = "OneWire_AoDevice-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object PostCreate $DbCallBack 300 01-NOV-2011 13:31:33.55
+        Body SysBody 01-NOV-2011 13:31:33.55
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
+      EndObject
+      Object Template OneWire_AoDevice 2156625920 01-JAN-1970 01:00:00.00
+        Body RtBody 01-NOV-2011 13:34:13.61
+          Attr Super.Process = 1
+          Attr Super.ErrorSoftLimit = 50
+          Attr Super.ErrorHardLimit = 100
+          Attr Super.MaxNoOfChannels = 1
+          Attr ScanInterval = 1
+          Attr DataFile = "/sys/bus/w1/devices/w1 bus master/%s/w1_slave"
+          Attr ChAo.OutPolyType = 1
+          Attr ChAo.ActValRangeLow = -1.000000e+02
+          Attr ChAo.ActValRangeHigh = 1.000000e+02
+          Attr ChAo.SensorSigValRangeLow = -5.000000e+00
+          Attr ChAo.SensorSigValRangeHigh = 5.000000e+00
+          Attr ChAo.SigValueUnit = "V"
+          Attr ChAo.ChannelSigValRangeLow = -5.000000e+00
+          Attr ChAo.ChannelSigValRangeHigh = 5.000000e+00
         EndBody
       EndObject
     EndObject

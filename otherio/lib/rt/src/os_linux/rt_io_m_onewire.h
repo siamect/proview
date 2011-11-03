@@ -13,4 +13,9 @@ typedef struct {
   int interval_cnt;
 } io_sLocalAiDevice;
 
+typedef struct {
+  FILE *value_fp;
+  int interval_cnt;
+} io_sLocalAoDevice;
+
 #endif

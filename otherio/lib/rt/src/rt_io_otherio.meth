@@ -16,6 +16,7 @@ Arduino_Uno
 GPIO
 GPIO_Module
 OneWire_AiDevice
+OneWire_AoDevice
 Maxim_DS18B20
 USB_Agent
 Velleman_K8055_Board
