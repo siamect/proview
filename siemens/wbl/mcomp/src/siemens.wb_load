@@ -2899,76 +2899,31 @@ Volume Siemens $ClassVolume 0.0.250.3
           EndBody
         EndObject
         Object Io $Attribute 12 24-NOV-2010 13:26:06.33
-          Body SysBody 24-NOV-2010 13:26:06.33
+          Body SysBody 28-OCT-2011 10:45:19.69
             Attr PgmName = "Io"
             Attr Flags = 131072
-            Attr TypeRef = "Siemens:Class-Siemens_Do32_IoModule"
+            Attr TypeRef = "Siemens:Class-Siemens_Do8_IoModule"
           EndBody
         EndObject
       EndObject
       Object Template Siemens_Do8_PnModule 2161868800 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 28-OCT-2011 10:47:20.41
           Attr Super.Process = 1
-          Attr Io.Ch00.Representation = 8
-          Attr Io.Ch01.Number = 1
-          Attr Io.Ch01.Representation = 8
-          Attr Io.Ch02.Number = 2
-          Attr Io.Ch02.Representation = 8
-          Attr Io.Ch03.Number = 3
-          Attr Io.Ch03.Representation = 8
-          Attr Io.Ch04.Number = 4
-          Attr Io.Ch04.Representation = 8
-          Attr Io.Ch05.Number = 5
-          Attr Io.Ch05.Representation = 8
-          Attr Io.Ch06.Number = 6
-          Attr Io.Ch06.Representation = 8
-          Attr Io.Ch07.Number = 7
-          Attr Io.Ch07.Representation = 8
-          Attr Io.Ch10.Representation = 8
-          Attr Io.Ch11.Number = 1
-          Attr Io.Ch11.Representation = 8
-          Attr Io.Ch12.Number = 2
-          Attr Io.Ch12.Representation = 8
-          Attr Io.Ch13.Number = 3
-          Attr Io.Ch13.Representation = 8
-          Attr Io.Ch14.Number = 4
-          Attr Io.Ch14.Representation = 8
-          Attr Io.Ch15.Number = 5
-          Attr Io.Ch15.Representation = 8
-          Attr Io.Ch16.Number = 6
-          Attr Io.Ch16.Representation = 8
-          Attr Io.Ch17.Number = 7
-          Attr Io.Ch17.Representation = 8
-          Attr Io.Ch20.Representation = 8
-          Attr Io.Ch21.Number = 1
-          Attr Io.Ch21.Representation = 8
-          Attr Io.Ch22.Number = 2
-          Attr Io.Ch22.Representation = 8
-          Attr Io.Ch23.Number = 3
-          Attr Io.Ch23.Representation = 8
-          Attr Io.Ch24.Number = 4
-          Attr Io.Ch24.Representation = 8
-          Attr Io.Ch25.Number = 5
-          Attr Io.Ch25.Representation = 8
-          Attr Io.Ch26.Number = 6
-          Attr Io.Ch26.Representation = 8
-          Attr Io.Ch27.Number = 7
-          Attr Io.Ch27.Representation = 8
-          Attr Io.Ch30.Representation = 8
-          Attr Io.Ch31.Number = 1
-          Attr Io.Ch31.Representation = 8
-          Attr Io.Ch32.Number = 2
-          Attr Io.Ch32.Representation = 8
-          Attr Io.Ch33.Number = 3
-          Attr Io.Ch33.Representation = 8
-          Attr Io.Ch34.Number = 4
-          Attr Io.Ch34.Representation = 8
-          Attr Io.Ch35.Number = 5
-          Attr Io.Ch35.Representation = 8
-          Attr Io.Ch36.Number = 6
-          Attr Io.Ch36.Representation = 8
-          Attr Io.Ch37.Number = 7
-          Attr Io.Ch37.Representation = 8
+          Attr Io.Ch[0].Representation = 8
+          Attr Io.Ch[1].Number = 1
+          Attr Io.Ch[1].Representation = 8
+          Attr Io.Ch[2].Number = 2
+          Attr Io.Ch[2].Representation = 8
+          Attr Io.Ch[3].Number = 3
+          Attr Io.Ch[3].Representation = 8
+          Attr Io.Ch[4].Number = 4
+          Attr Io.Ch[4].Representation = 8
+          Attr Io.Ch[5].Number = 5
+          Attr Io.Ch[5].Representation = 8
+          Attr Io.Ch[6].Number = 6
+          Attr Io.Ch[6].Representation = 8
+          Attr Io.Ch[7].Number = 7
+          Attr Io.Ch[7].Representation = 8
         EndBody
       EndObject
     EndObject
@@ -6508,7 +6463,7 @@ Volume Siemens $ClassVolume 0.0.250.3
     ! 
     !  Based on BaseFcPPO3Fo-class. PPO3 protocol is identical to 
     !  Standard telegram 1.
-    !
+    ! 
     !  Should be connected to either a Sinamics_G120_Tgm1- or BaseFcPPO3-object.
     !  
     !*/
