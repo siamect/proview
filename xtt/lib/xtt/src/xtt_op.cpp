@@ -94,8 +94,8 @@ void Op::scan()
 
 int Op::appl_action( int idx)
 {
-  char cmd[80];
-  char name[80];
+  pwr_tCmd cmd;
+  pwr_tAName name;
   int sts;
 
   if ( command_cb) {
@@ -363,3 +363,31 @@ void Op::sup_scan( void *data)
   op->sup_timerid->add( time, sup_scan, op);
 }
 
+void Op::appl_startup()
+{
+  pwr_tCmd cmd;
+  pwr_tAName name;
+  int sts;
+
+  if ( command_cb) {
+
+    if ( layout_mask & pwr_mOpWindLayoutMask_HideNavigator) {
+      strcpy( cmd, "close navigator");
+      command_cb( parent_ctx, cmd);
+    }
+
+    for ( unsigned int i = 0; i < sizeof(autostart_aref)/sizeof(autostart_aref[0]); i++) {
+      if ( cdh_ObjidIsNotNull( autostart_aref[i].Objid)) {
+
+	sts = gdh_AttrrefToName( &autostart_aref[i], name, sizeof(name), 
+				 cdh_mName_volumeStrict);
+        if ( ODD(sts)) {
+	  strcpy( cmd, "ope gra/obj=");
+	  strcat( cmd, name);
+	  
+	  command_cb( parent_ctx, cmd);
+	}
+      }
+    }
+  }
+}

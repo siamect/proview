@@ -2867,6 +2867,7 @@ static int	xnav_open_func(	void		*client_data,
 	xnav->op->add_close_button();
       strcpy( xnav->opplace_name, opplace_str);
       xnav->op->set_title( xnav->user);
+      xnav->op->appl_startup();
 
       // Load eventlist
       if ( xnav->ev) {

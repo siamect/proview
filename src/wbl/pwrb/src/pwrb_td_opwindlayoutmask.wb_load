@@ -111,6 +111,16 @@ SObject pwrb:Type
        Attr Value = 32
      EndBody
     EndObject
+    !/**
+    !  Hide the Navigator.
+    !*/
+    Object HideNavigator $Bit
+     Body SysBody
+       Attr PgmName = "HideNavigator"
+       Attr Text = "HideNavigator"
+       Attr Value = 64
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

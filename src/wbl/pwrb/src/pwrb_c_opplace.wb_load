@@ -129,6 +129,17 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  The graphs of the XttGraph objects specified in this list
+      !  will be opened automatically when the operator place is started.
+      !*/
+      Object AutoStart $Attribute 45
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 25
+        EndBody
+      EndObject
+      !/**
       !  Each attribute specifies the complete name of a Form or
       !  Graph object which is to be activated by a function
       !  button in the operator window. The name has to be
@@ -667,6 +678,286 @@ SObject pwrb:Class
 	      EndBody
 	    EndObject
 	  EndObject
+        EndObject
+	Object ConnectAutoStart $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Connect AutoStart"
+	  EndBody
+	    Object AutoStart1 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 0"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[0]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[0]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart2 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 1"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[1]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[1]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart3 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 2"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[2]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[2]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart4 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 3"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[3]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[3]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart5 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 4"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[4]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[4]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart6 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 5"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[5]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[5]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart7 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 6"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[6]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[6]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart8 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 7"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[7]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[7]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart9 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 8"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[8]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[8]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart10 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 9"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[9]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[9]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart11 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 10"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[10]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[10]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart12 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 11"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[11]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[11]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart13 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 12"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[12]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[12]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart14 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 13"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[13]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[13]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart15 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 14"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[14]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[14]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart16 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 15"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[15]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[15]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart17 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 16"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[16]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[16]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart18 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 17"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[17]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[17]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart19 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 18"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[18]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[18]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart20 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 19"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[19]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[19]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart21 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 20"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[20]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[20]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart22 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 21"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[21]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[21]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart23 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 22"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[22]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[22]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart24 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 23"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[23]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[23]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
+	    Object AutoStart25 $MenuButton
+	      Body SysBody
+	        Attr ButtonName = "AutoStart 24"
+	        Attr MethodName = "$Objid-Connect"
+	        Attr MethodArguments[0] = "AutoStart[24]"
+	        Attr MethodArguments[1] = "XttGraph"
+	        Attr FilterName = "$Objid-IsOkConnect"
+	        Attr FilterArguments[0] = "AutoStart[24]"
+	        Attr FilterArguments[1] = "XttGraph"
+	      EndBody
+	    EndObject
         EndObject
       EndObject
     EndObject
