@@ -161,7 +161,7 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
       else
 	num = snprintf( str, sizeof(str), op->Format, fvalue);
 
-      if ( num != 1)
+      if ( num == 0)
 	op->Super.ErrorCount++;
       
       break;
@@ -186,7 +186,7 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
       else
 	num = snprintf( str, sizeof(str), op->Format, ivalue);
 
-      if ( num != 1)
+      if ( num == 0)
 	op->Super.ErrorCount++;
     }
     }
