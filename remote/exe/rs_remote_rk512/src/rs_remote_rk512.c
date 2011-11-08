@@ -36,70 +36,88 @@
 
 /*************************************************************************
 *
-*                       R K 5 1 2
-*                       =========
+*                       3 9 6 4 R
+*                       ==========
 **************************************************************************
 *
 * Filename:             rs_remote_rk512.c
 *
 *                       Date    Pgm.    Read.   Remark
-* Modified              951006  CJu
-*                       951124  TAn
+* Modified              010401  ulflj   -       for lynx
+*			010815  ulflj		fixed for pwr 3.3a
+*			020530	ulflj		modified serial parameter
+*						read in lynx version
+*			030814	ulflj		Linux version improved
+*			030830	ulflj		fixed timeouts for DLE-answer/characters
+*			031118	ulflj		set longer char timeout to get magnemag marker to work (longer then specs)
 *
-* Description:          Implements remote transport process RK512
+* Description:          Implements remote transport process RK512.
 *
 **************************************************************************
 **************************************************************************/
 
 /*_Include files_________________________________________________________*/
 
-#ifdef  OS_ELN
-#include $vaxelnc
-#include $exit_utility
-#include $function_descriptor
-#include $dda_utility
-#include $elnmsg
-#include $kernelmsg
+/*System includes*/
 
-#include ssdef
-#include stdio
-#include stdlib
-#include string
-#include math
-#include iodef
-#include descrip
-#include psldef
-#include libdtdef
-#include starlet
-#include lib$routines
-#endif
-
-#ifdef  OS_VMS
-#include <ssdef.h>
+#include <time.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <math.h>
-#include <iodef.h>
-#include <descrip.h>
-#include <psldef.h>
-#include <libdtdef.h>
-#include <starlet.h>
-#include <lib$routines.h>
-#include <pams_c_process.h>
-#include <pams_c_type_class.h>
-#include <pams_c_return_status.h>
-#include <sbs_msg_def.h>
+#include <string.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+#include <time.h>
+#include <unistd.h>
+#include <sys/types.h>
+//#include <uio.h>
+#include <termios.h>
+#if defined OS_LINUX
+#include <termio.h>
 #endif
+#if defined OS_LINUX || defined OS_MACOS
+#include <sgtty.h>
+#endif
+#include <sys/ioctl.h>
+
+/*PWR includes*/
 
 #include "pwr_class.h"
-#include "pwr_systemclasses.h"
-#include "rt_gdh.h"
 #include "pwr_baseclasses.h"
-#include "pwr_ssabclasses.h"
-#include "rs_remote_msg.h"
-#include "rs_remote.h"
-#include "rs_remtrans_utils.h"
+#include "pwr_remoteclasses.h"
+#include "remote_mq.h"
+#include "co_cdh.h"
+#include "rt_gdh.h"
+#include "rt_aproc.h"
+#include "rt_pwr_msg.h"
+#include "remote.h"
+#include "remote_utils.h"
+#include "remote_remtrans_utils.h"
+#include "remote_remio_utils.h"
+
+
+#include "pwr.h"
+#include "rt_gdh.h"
+#include "rt_gdh_msg.h"
+#include "rt_plc_utl.h"
+#include "rt_errh.h"
+#include "co_time.h"
+
+/*_Function prototypes___________________________________________________*/
+
+void 			send_pollbuff(remnode_item *remnode, pssupd_buffer_vnet *buf);
+static unsigned int     remnode_send(remnode_item        *remnode,
+                                     pwr_sClass_RemTrans *remtrans,
+                                     char                *buf,
+                                     int                 buffer_size);
+static unsigned int     send_it(char                *buf,
+                                int                 buffer_size);
+static unsigned int     Receive();
+static unsigned int     ReceiveHandler();
 
 /*_defines_________________________________________________________________*/
 
@@ -108,13 +126,24 @@
 #define MAX_SIZE_DATA_BLOCK 128
 #define MAX_SIZE_TELEGRAM 141
 #define RESP_MESSAGE_SIZE 6
+
+
 #define NUMBER_OF_STOP_CHAR 3
+#define NET_HEADER_SIZE_IO 6
+#define NET_HEADER_SIZE_COMMON 8
+//#define MAX_SIZE_TELEGRAM 2048
 
-#define TRUE 1
-#define FALSE 0
+//#define TIMEOUT_REC_ANSWER_SEC 2
+//#define TIMEOUT_REC_ANSWER_USEC 0
 
-#define BYTE_MASK 0xFF
-#define CPU_NR_MASK 0xF0
+//#define TIMEOUT_REC_CHAR_SEC 0
+//#define TIMEOUT_REC_CHAR_USEC 900000
+
+//#define TIMEOUT_SND_ANSWER_SEC 2
+//#define TIMEOUT_SND_ANSWER_USEC 0
+
+//#define TIMEOUT_SND_CHAR_SEC 0
+//#define TIMEOUT_SND_CHAR_USEC 900000
 
 #define NUL 0
 #define STX 2
@@ -122,235 +151,68 @@
 #define DLE 16
 #define NAK 21
 
+#define DLE_BITMASK 0x10000
 
-#ifdef  OS_ELN
-/*
- * ELN specific variables
- */
-
-PORT       virtual_serial_line_port;
-PORT       job_port;
-PROCESS    my_proc;
-
-MESSAGE		read_message;
-char		*read_message_buf[1024];
-MESSAGE		write_message;
-char		*write_message_buf[1024];
-int		msgsize = 1024;
-
-#else
-/*
- * VMS specific variables
- */
-
-unsigned int receive_ef;
-unsigned int timer_ef;
-unsigned int ef_mask;
-
-#endif
-
-/*
- * Variables common for VMS and ELN
- */
-
-remnode_item remnode_struct;
-remnode_item *remnode = &remnode_struct;
-LARGE_INTEGER  timeout_cycle;
-
-float max_acknowledge_delay = 2.0;   /* Ack. time out on STX request */
-LARGE_INTEGER  timeout_ack;
-float max_response_delay = 5.0;      /* Response time out on send telegr. */
-LARGE_INTEGER  timeout_resp;
-float max_char_delay = 0.5;         /* Time out receive of next character */
-LARGE_INTEGER  timeout_char;
+/*_variables_______________________________________________________________*/
 
 unsigned int  telegram_counter = 0;  /* For control of follow on telegrams */
 
+remnode_item rn;
+pwr_sClass_RemnodeRK512 *rn_RK512;
+int ser_fd;				/* file domininator for serial port */
+unsigned char debug=0;			/* 1 if debug mode activated */
 
-/********** Function prototypes **********************************/
+float time_since_poll;
+float time_since_io;
+float time_since_scan;
 
-static void             exith(void);
-static void             DeclareExitHandler(void);
-static unsigned int     InitTimers(void);
-static unsigned int     InitNet(void);
-static unsigned int     remnode_send(remnode_item *remnode,
-                                     pwr_sClass_RemTrans *remtrans,
-                                     char *buf,
-                                     int buf_size);
-static unsigned int     Receive();
-static unsigned int     ReceiveHandler();
-int                     SendResponseTelegram(unsigned char CODE);
+int stall_action = 1;
+int use_remote_io;
 
-#ifdef OS_VMS
-int                     WaitFor_PLC_Change();
-#endif
+void load_timeval(struct timeval *tv, float t)
+{
+  tv->tv_sec = t;
+  tv->tv_usec = (t-(float)tv->tv_sec) * 1000000;
+}
+
+short poll_id[2];
+
+/*_variables_______________________________________________________________*/
+
+static int SendResponseTelegram(unsigned char CODE);
+
+
 
 /*************************************************************************
 **************************************************************************
 *
-* Namn : exith
+* Namn : send_pollbuff
 *
 * Typ  : void
 *
 * Typ           Parameter              IOGF     Beskrivning
 *
-* Beskrivning : Exit handler that is called before process termination
+* Beskrivning : Sends a poll or IO update message to Remote node
 *
 **************************************************************************
 **************************************************************************/
 
-static void exith(void)
+void send_pollbuff(remnode_item *remnode, pssupd_buffer_vnet *buf)
 {
-#ifdef OS_ELN
+  unsigned int sts, buf_size;
 
-  unsigned int sts;
+  /* Fill in remaining data in poll telegram */
+  RemUtils_AsciiToR50("PSSUPD", (short *) &buf->receive_task);
+  buf->common_name[0] = poll_id[0];
+  buf->common_name[1] = poll_id[1];
 
-#else
+  buf_size = buf->length * 2; /*  Convert to bytes  */
+  sts = send_it((char*)buf, buf_size);
 
   return;
-
-#endif
 }
 
 /*************************************************************************
-**************************************************************************
-*
-* Namn : DeclareExitHandler
-*
-* Typ  : void
-*
-* Typ           Parameter              IOGF     Beskrivning
-*
-* Beskrivning : Declares an exit handler that is called before
-*               process termination
-*
-**************************************************************************
-**************************************************************************/
-
-static void DeclareExitHandler(void)
-{
-#ifdef OS_ELN
-
-  FUNCTION_DESCRIPTOR fn_descriptor;
-
-  eln$declare_exit_handler(ELN$PASS_FUNCTION_DESCRIPTOR(fn_descriptor, exith),
-                           NULL);
-#else
-
-  atexit(exith);
-#endif
-}
-
-/*************************************************************************
-**************************************************************************
-*
-* Namn : InitTimers
-*
-* Typ  : unsigned int
-*
-* Typ           Parameter              IOGF     Beskrivning
-*
-* Beskrivning : Initiates the timers used in this process.
-*
-**************************************************************************
-**************************************************************************/
-
-static unsigned int InitTimers(void)
-{
-  unsigned int  sts;
-  unsigned int  time_function_code = LIB$K_DELTA_SECONDS_F;
-
-  /* Konvertera cykeltiden till intern deltatid */
-  sts = lib$cvtf_to_internal_time(&time_function_code,
-                                  &remnode->objp->CycleTime,
-                                  &timeout_cycle);
-
-  if ( ODD(sts) )
-  {
-    /* Set timeout for response character from receiver */
-    sts = lib$cvtf_to_internal_time(&time_function_code,
-                                    &max_acknowledge_delay,
-                                    &timeout_ack);
-  }
-
-  if ( ODD(sts) )
-  {
-    /* Set timeout for response telegram from receiver */
-    sts = lib$cvtf_to_internal_time(&time_function_code,
-                                    &max_response_delay,
-                                    &timeout_resp);
-  }
-
-  if ( ODD(sts) )
-  {
-    /* Set timeout for max delay between receive of two characters */
-    sts = lib$cvtf_to_internal_time(&time_function_code,
-                                    &max_char_delay,
-                                    &timeout_char);
-  }
-
-  return(sts);
-}
-
-/*************************************************************************
-**************************************************************************
-*
-* Namn : InitNet
-*
-* Typ  : unsigned int
-*
-* Typ           Parameter              IOGF     Beskrivning
-*
-* Beskrivning : Assigns and sets up device
-*
-**************************************************************************
-**************************************************************************/
-
-static unsigned int InitNet(void)
-{
-  unsigned int            i, sts;
-  char                    ch = '\0';
-  char                    namestring[80];
-  char                    portname[100];
-  PORT                    DDA_destination_port;
-  struct dsc$descriptor_s dataportname;
-
-
-  for ( i=0 ; ( ch != ':' )&&( i < 80 ) ; i++ )
-  {
-    namestring[i] = ch = remnode->objp->NodeName[i];
-  }
-  namestring[--i] = '\0';
-
-  sprintf(portname, "%s$ACCESS", namestring);
-  dataportname.dsc$a_pointer = portname;
-  dataportname.dsc$w_length  = strlen(portname);
-  dataportname.dsc$b_class   = DSC$K_CLASS_S;
-  dataportname.dsc$b_dtype   = DSC$K_DTYPE_T;
-
-  /* Associate portnamne with serial line port ID */
-  ker$translate_name(&sts, &DDA_destination_port, &dataportname, NAME$LOCAL);
-  if ( ODD(sts) )
-    /* Create a new port object */
-    ker$create_port(&sts, &virtual_serial_line_port, NULL);
-  if ( ODD(sts) )
-    /* Connect the port object to the destination_port */
-    ker$connect_circuit(&sts,
-                        &virtual_serial_line_port,
-                        &DDA_destination_port,
-                        NULL, NULL, NULL, NULL);
-
-  if ( ODD(sts) )
-  {
-    /* Create messages for tty_read and tty_write operations */
-    ker$create_message(&sts, &read_message, &read_message_buf, msgsize+512);
-    ker$create_message(&sts, &write_message, &write_message_buf, msgsize+512);
-  }
-
-  return(sts);
-}
-
-/*************************************************************************
 **************************************************************************
 *
 * Namn : remnode_send
@@ -359,7 +221,7 @@ static unsigned int InitNet(void)
 *
 * Typ           Parameter              IOGF     Beskrivning
 *
-* Beskrivning : Sends a message to Remote node
+* Beskrivning : Sends a RemTrans message to Remote node
 *
 **************************************************************************
 **************************************************************************/
@@ -367,368 +229,132 @@ static unsigned int InitNet(void)
 static unsigned int remnode_send(remnode_item *remnode,
                                  pwr_sClass_RemTrans *remtrans,
                                  char *buf,
-                                 int buf_size)
+                                 int buffer_size)
 {
-  unsigned int          sts, i;
-  unsigned int          size_of_telegram, datasize;
-  unsigned int          number_of_DLE = 0;
-  unsigned int          nbr_of_bytes_written = 0;
-  unsigned int          nbr_of_bytes_read = 0;
-  unsigned int          delta_pos = 0;
-  unsigned int          pos_counter = 0;
-  unsigned int          follow_on = FALSE;
-  unsigned int          A_telegram = FALSE;
-  unsigned char         ch, cpu_number, CPU;
-  unsigned char         BCC = DLE ^ ETX;
-  unsigned char         datasize_low_byte, datasize_high_byte;
-  unsigned char         received_char = '\0';
-  unsigned char         response_buffer[RESP_MESSAGE_SIZE];
-  unsigned char         *data_packet_ptr;
-  unsigned char         *end_of_message_ptr;
-  unsigned char         *restore_buf_ptr = buf;
-  static unsigned char  sstx[2] = {STX, '\0'};
-  static unsigned char  sdle[2] = {DLE, '\0'};
-  static unsigned char  snak[2] = {NAK, '\0'};
-  DDA$_BREAK_MASK       DLE_mask = DLE;
-  DDA$_BREAK_MASK       STX_mask = STX;
+  unsigned int  sts;
 
-
-  /* Define complete telegrams for sending */
-
-  struct{
-    unsigned char telegram_header[HEADER_SIZE];
-    unsigned char telegram[MAX_SIZE_DATA_BLOCK*2 + NUMBER_OF_STOP_CHAR];
-  }sendbuffer;
-
-  struct{
-    unsigned char telegram_header[FOLLOW_ON_HEADER_SIZE];
-    unsigned char telegram[MAX_SIZE_DATA_BLOCK*2 + NUMBER_OF_STOP_CHAR];
-  }follow_on_sendbuffer;
-
-
-  do     /* Send 128 byte telegrams until message is finished */
-  {
-    if ( !follow_on )
-    {
-      A_telegram = TRUE;
-/*************************************************************************/
-/**    Send A-telegram.                                                 **/
-/*************************************************************************/
-/**    Check if follow on telegrams are needed.                         **/
-/*************************************************************************/
-      if ( buf_size - pos_counter > MAX_SIZE_DATA_BLOCK )
-      {
-        delta_pos = MAX_SIZE_DATA_BLOCK;
-        follow_on = TRUE;
-      }
-      else
-      {
-        delta_pos = buf_size - pos_counter;
-      }
-
-/*************************************************************************/
-/**    Calculate the size of the A-telegram.                            **/
-/*************************************************************************/
-      /* Count DLE characters */
-      for ( i=0 ; i<delta_pos ; i++ )
-      {
-         if ( *buf++ == DLE )
-            number_of_DLE += 1;
-      }
-      size_of_telegram = HEADER_SIZE+
-                         delta_pos+number_of_DLE+NUMBER_OF_STOP_CHAR;
-
-/*************************************************************************/
-/**    Fill in the telegram header and calculate BCC.                   **/
-/*************************************************************************/
-      /* Size have to be expressed in number of 16 bits words. */
-      /* If odd number of bytes add one. */
-
-      datasize = buf_size/2 + buf_size%2;
-      datasize_low_byte = (unsigned char)(BYTE_MASK & datasize);
-      datasize = datasize >> 8;
-      datasize_high_byte = (unsigned char)(BYTE_MASK & datasize);
-      cpu_number = (unsigned char)remtrans->Address[2];
-      CPU = '\xFF';
-      CPU = CPU_NR_MASK & cpu_number;
-
-      sendbuffer.telegram_header[0] = '\0';
-      sendbuffer.telegram_header[1] = '\0';
-      sendbuffer.telegram_header[2] = 'A';
-      sendbuffer.telegram_header[3] = 'D';
-      sendbuffer.telegram_header[4] = (unsigned char)remtrans->Address[0];
-      sendbuffer.telegram_header[5] = (unsigned char)remtrans->Address[1];
-      sendbuffer.telegram_header[6] = datasize_high_byte;
-      sendbuffer.telegram_header[7] = datasize_low_byte;
-      sendbuffer.telegram_header[8] = '\xFF';
-      sendbuffer.telegram_header[9] = CPU;
-
-      /* Calculate checksum for the header */
-      for ( i=0 ; i<HEADER_SIZE ; i++ )
-      {
-        BCC ^= sendbuffer.telegram_header[i];
-      }
-/*************************************************************************/
-/**   Fill up A-telegram with contents of message and calculate BCC     **/
-/*************************************************************************/
-      buf = restore_buf_ptr;
-      for ( i=0 ; i<(delta_pos+number_of_DLE) ; i++ )
-      {
-        ch = sendbuffer.telegram[i] = *buf++;
-        BCC ^= ch;
-        if ( ch == DLE )
-        {
-          sendbuffer.telegram[++i] = DLE;
-          BCC ^= ch;
-        }
-      }
-      if ( delta_pos%2 )
-      {
-        /* Ensure that a even number of bytes is treated */
-        sendbuffer.telegram[i++] = '\0';
-        size_of_telegram += 1;
-      }
-      sendbuffer.telegram[i++] = DLE;
-      sendbuffer.telegram[i++] = ETX;
-      sendbuffer.telegram[i]   = BCC;
-
-      pos_counter = delta_pos;
-    }
-    else  /* follow on telegram */
-    {
-
-/*************************************************************************/
-/**    Send follow on telegram.                                         **/
-/*************************************************************************/
-/**    Check if more follow on telegrams are needed.                    **/
-/*************************************************************************/
-      if ( buf_size - pos_counter > MAX_SIZE_DATA_BLOCK )
-      {
-        delta_pos = MAX_SIZE_DATA_BLOCK;
-        follow_on = TRUE;
-      }
-      else
-      {
-        delta_pos = buf_size - pos_counter;
-        follow_on = FALSE;
-      }
-
-/*************************************************************************/
-/**    Calculate the size of the follow on telegram.                    **/
-/*************************************************************************/
-      /* Count DLE characters */
-      restore_buf_ptr = buf;
-      number_of_DLE = 0;
-      for ( i=0 ; i<delta_pos ; i++ )
-      {
-         if ( *buf++ == DLE )
-            number_of_DLE += 1;
-      }
-      size_of_telegram = FOLLOW_ON_HEADER_SIZE+
-                         delta_pos+number_of_DLE+NUMBER_OF_STOP_CHAR;
-
-/*************************************************************************/
-/**    Fill in the follow on telegram header and calculate BCC.         **/
-/*************************************************************************/
-      follow_on_sendbuffer.telegram_header[0] = '\xFF';
-      follow_on_sendbuffer.telegram_header[1] = '\0';
-      follow_on_sendbuffer.telegram_header[2] = 'A';
-      follow_on_sendbuffer.telegram_header[3] = 'D';
-
-      /* Calculate checksum for the header */
-      BCC = DLE ^ ETX;
-      for ( i=0 ; i<FOLLOW_ON_HEADER_SIZE ; i++ )
-      {
-        BCC ^= follow_on_sendbuffer.telegram_header[i];
-      }
-
-/*************************************************************************/
-/* Fill up follow on telegram with contents of message and calculate BCC */
-/*************************************************************************/
-      buf = restore_buf_ptr;
-      for ( i = 0 ; i < (delta_pos+number_of_DLE) ; i++ )
-      {
-        ch = follow_on_sendbuffer.telegram[i] = *buf++;
-        BCC ^= ch;
-        if ( ch == DLE )
-        {
-          follow_on_sendbuffer.telegram[++i] = DLE;
-          BCC ^= ch;
-        }
-      }
-      if ( delta_pos%2 )
-      {
-        /* Ensure that a even number of bytes is treated */
-        follow_on_sendbuffer.telegram[i++] = '\0';
-        size_of_telegram += 1;
-      }
-      follow_on_sendbuffer.telegram[i++] = DLE;
-      follow_on_sendbuffer.telegram[i++] = ETX;
-      follow_on_sendbuffer.telegram[i]   = BCC;
-
-      pos_counter += delta_pos;
-
-    }
-
-/*************************************************************************/
-/**    Execute the send procedure                                       **/
-/*************************************************************************/
-    /* Send STX and wait for answer */
-    eln$tty_write(&sts, &virtual_serial_line_port, 1, &sstx,
-                  &nbr_of_bytes_written, &write_message, &write_message_buf);
-    if ( ODD(sts) )
-    {
-      /* wait for break character or timeout */
-      eln$tty_read(&sts, &virtual_serial_line_port, 1, &received_char,
-                   &nbr_of_bytes_read, (2+4), &DLE_mask, &timeout_ack,
-                   NULL, NULL, &read_message, &read_message_buf);
-    }
-    if ( ODD(sts) && (sts != ELN$_TIMEOUT) )
-    {
-      if ( received_char == STX )
-      {
-        /* Both nodes is in sending mode. */
-        /* Cancel this send operation and wait for next timeout or receive */
-        eln$tty_write(&sts, &virtual_serial_line_port, 1, &snak,
-                      &nbr_of_bytes_written, &write_message, &write_message_buf);
-        return(FALSE);
-      }
-      if ( received_char == DLE )
-      {
-        /* Contact is established. Send telegram */
-        if ( A_telegram )
-        {
-          eln$tty_write(&sts, &virtual_serial_line_port, size_of_telegram,
-                        &sendbuffer,
-                        &nbr_of_bytes_written, &write_message, &write_message_buf);
-          A_telegram = FALSE;
-        }
-        else
-        {
-          eln$tty_write(&sts, &virtual_serial_line_port, size_of_telegram,
-                        &follow_on_sendbuffer,
-                        &nbr_of_bytes_written, &write_message, &write_message_buf);
-        }
-        if ( ODD(sts) )
-        {
-          /* wait for break character or timeout */
-          eln$tty_read(&sts, &virtual_serial_line_port, 1, &received_char,
-                       &nbr_of_bytes_read, (2+4), &DLE_mask, &timeout_ack,
-                       NULL, NULL, &read_message, &read_message_buf);
-
-          if ( ODD(sts)&&(sts != ELN$_TIMEOUT)&&(received_char == DLE) )
-          {
-
-/*************************************************************************/
-/**   The sending was a SUCCESS. Take care of the response message      **/
-/*************************************************************************/
-            eln$tty_read(&sts, &virtual_serial_line_port, 1,
-                         &received_char, &nbr_of_bytes_read, (2+4),
-                         &STX_mask, &timeout_resp, NULL, NULL, 
-			 &read_message, &read_message_buf);
-
-            if ( ODD(sts)&&(sts != ELN$_TIMEOUT)&&(received_char == STX) )
-            {
-              /* Send DLE acknowledge and wait for response data */
-              eln$tty_write(&sts, &virtual_serial_line_port, 1, &sdle,
-                            &nbr_of_bytes_written, &write_message, &write_message_buf);
-              if ( ODD(sts) )
-              {
-                BCC = '\0';
-                for (i=0 ;
-                     i<RESP_MESSAGE_SIZE&&ODD(sts)&&(sts!=ELN$_TIMEOUT);
-                     i++ )
-                {
-                  eln$tty_read(&sts, &virtual_serial_line_port, 1,
-                               &received_char, &nbr_of_bytes_read, 2,
-                               NULL, &timeout_char,
-                               NULL, NULL, &read_message, &read_message_buf);
-                  response_buffer[i] = received_char;
-                  BCC ^= received_char;
-                }  /* endfor */
-
-                if ( ODD(sts) &&
-                     (sts != ELN$_TIMEOUT) &&
-                     (response_buffer[2] == '\0') )
-                {
-                  /* Compare received BCC with calculated */
-                  eln$tty_read(&sts, &virtual_serial_line_port,
-                               1, &received_char, &nbr_of_bytes_read, 2,
-                               NULL, &timeout_char,
-                               NULL, NULL, &read_message, &read_message_buf);
-                  if ( ODD(sts) &&
-                       (sts != ELN$_TIMEOUT) &&
-                       ( BCC == received_char ) )
-                  {
-                    /* Response telegram received OK */
-                    eln$tty_write(&sts, &virtual_serial_line_port, 1, &sdle,
-                                  &nbr_of_bytes_written, &write_message, &write_message_buf);
-                    if ( response_buffer[3] != 0 )
-                    {
-                      /* This response contains a error code */
-                      errh_CErrLog(REM__SIEMENSERROR,
-                                   errh_ErrArgL(response_buffer[3]) );
-                    }
-                  }
-                  else
-                  {
-                    /* Wrong checksum. */
-                    sts = FALSE;
-                  }
-                }
-                else
-                {
-                  /* This is not a response message as expected */
-                  eln$tty_write(&sts, &virtual_serial_line_port, 1, &snak,
-                                &nbr_of_bytes_written, &write_message, &write_message_buf);
-                  sts = FALSE;
-                }
-              } /* ENDIF. DLE acknowledge failed */
-            }
-            else
-            {
-              /* STX character in response message was expected. */
-              /* Ensure that error status is returned */
-              sts = FALSE;
-            }
-          }
-          else
-          {
-            /* DLE ack. after sending telegram was expected. */
-            /* Ensure that error status is returned */
-            sts = FALSE;
-          }
-        } /* ENDIF. Contact established but tty_write failed */
-      }
-      else
-      {
-        /* Failed in making contact. Wrong response character. */
-        /* Ensure that error status is returned */
-        sts = FALSE;
-      }
-    }  /* ENDIF. tty_write or tty_read failed */
-
-/*************************************************************************/
-/**  Check final status.                                                **/
-/*************************************************************************/
-    if ( EVEN(sts) || (sts == ELN$_TIMEOUT) )
-    {
-      /* The send procedure has failed */
-      eln$tty_write(&sts, &virtual_serial_line_port, 1, &snak,
-                    &nbr_of_bytes_written, &write_message, &write_message_buf);
-
-      follow_on = FALSE;
-
-      /* Ensure that error status is returned */
-      sts = FALSE;
-    }
-
-  }while( follow_on );
-
-  return(sts);
+  sts = send_it(buf, buffer_size);
+  return sts;
 }
 
-/*************************************************************************
+/*************************************************************************
+**************************************************************************
+*
+* Namn : send_it
+*
+* Typ  : unsigned int
+*
+* Typ           Parameter              IOGF     Beskrivning
+*
+* Beskrivning : Sends a buffer
+*
+**************************************************************************
+**************************************************************************/
+
+static unsigned int send_it(char *buf, int buffer_size)
+{
+  int          		sts, i;
+  unsigned int          size_of_telegram;
+  unsigned int          number_of_DLE = 0;
+  unsigned char         ch;
+  unsigned char         BCC = DLE ^ ETX;
+  unsigned char         *restore_buf_ptr = (unsigned char *)buf;
+  unsigned char         telegram[MAX_SIZE_TELEGRAM];
+  unsigned char		buff;
+  static unsigned char  sstx[2] = {STX, '\0'};
+  //static unsigned char  sdle[2] = {DLE, '\0'};
+  static unsigned char  snak[2] = {NAK, '\0'};
+
+  fd_set read_fd;
+  struct timeval tv;
+
+/*************************************************************************/
+/** Count DLE characters and calculate the size of the telegram.        **/
+/*************************************************************************/
+  for ( i=0 ; i < buffer_size ; i++ )
+  {
+    if ( *buf++ == DLE )
+      number_of_DLE += 1;
+  }
+  size_of_telegram = buffer_size + number_of_DLE + NUMBER_OF_STOP_CHAR;
+  
+/*************************************************************************/
+/**   Fill up telegram with contents of message and calculate BCC       **/
+/*************************************************************************/
+  buf = (char *)restore_buf_ptr;
+  for ( i=0 ; i<(buffer_size + number_of_DLE) ; i++ )
+  {
+    ch = telegram[i] = *buf++;
+    BCC ^= ch;
+    if ( ch == DLE )
+    {
+      telegram[++i] = DLE;
+      BCC ^= ch;
+    }
+  }
+  telegram[i++] = DLE;
+  telegram[i++] = ETX;
+  telegram[i]   = BCC;
+
+/*************************************************************************/
+/**    Execute the send procedure      **/
+/*************************************************************************/
+
+/**** set up timeout ****/
+
+//  tv.tv_sec = TIMEOUT_SND_ANSWER_SEC;
+//  tv.tv_usec = TIMEOUT_SND_ANSWER_USEC;
+  load_timeval(&tv, rn_RK512->AckTimeout);
+
+  FD_ZERO(&read_fd);
+  FD_SET(ser_fd, &read_fd);
+
+  sts=TRUE;
+  
+  write(ser_fd, sstx, 1); 	/*send stx and wait for answer*/
+    
+  select(ser_fd+1, &read_fd, NULL, NULL, &tv);	/*wait for char or timeout*/
+  sts=read(ser_fd,&buff,1);			/*read port*/
+  
+  if(sts < 1)				/*if timeout*/
+  {
+    errh_Error("Remtrans RK512, sändning, inget svar från mottagaren, försöker igen");
+    write(ser_fd, sstx, 1);	/*try once more*/
+
+    FD_ZERO(&read_fd);
+    FD_SET(ser_fd, &read_fd);
+    load_timeval(&tv, rn_RK512->AckTimeout);
+    select(ser_fd+1, &read_fd, NULL, NULL, &tv);
+    sts=read(ser_fd,&buff,1);
+  }
+  
+  if(sts > 0 && buff==DLE)			/*if DLE ok send telegram*/
+  {
+    write(ser_fd, telegram, size_of_telegram);
+
+//    tv.tv_sec = TIMEOUT_SND_ANSWER_SEC;
+//    tv.tv_usec = TIMEOUT_SND_ANSWER_USEC;
+    load_timeval(&tv, rn_RK512->AckTimeout);
+    FD_ZERO(&read_fd);
+    FD_SET(ser_fd, &read_fd);
+    select(ser_fd+1, &read_fd, NULL, NULL, &tv);
+    sts=read(ser_fd,&buff,1); 
+  }
+  
+  if(sts < 1 || buff!=DLE)			/*if somthing went wrong*/
+  {
+    write(ser_fd,snak, 1);
+    if(sts<1)
+      errh_Error("Remtrans RK512 sändning misslyckades, inget initierande DLE-tecken från mottagaren");
+    else if(buff!=DLE)
+      errh_Error("Remtrans RK512 sändning misslyckades, inget avslutande DLE-tecken från mottagaren");
+    sts=FALSE;
+  }
+  return sts;				/*and return status*/
+}
+
+
+/*************************************************************************
 **************************************************************************
 *
 * Namn : Receive
@@ -744,66 +370,76 @@ static unsigned int remnode_send(remnode_item *remnode,
 
 static unsigned int Receive()
 {
-  unsigned int          sts, wait_result;
-  unsigned char         received_char = NUL;
-  DDA$_BREAK_MASK       DLE_mask = DLE;
-  unsigned int          nbr_of_bytes_read = 0;
-  unsigned int          nbr_of_bytes_written = 0;
-  static unsigned char  snak[2] = {NAK, NUL};
+  static int   			sts;
+  int				rsts;
+  unsigned char         	received_char = NUL;
+  static unsigned char  	snak[2] = {NAK, NUL};
+  static unsigned char  	sdle[2] = {DLE, NUL};
+  //static int			error_logged = 0;
 
+  fd_set read_fd;
+  struct timeval tv;
 
-  eln$tty_read(&sts, &virtual_serial_line_port, 1,
-               &received_char, &nbr_of_bytes_read, (2+4), &DLE_mask,
-               &timeout_cycle, NULL, NULL, &read_message, &read_message_buf);
+/**** set up timeout ****/
 
-  if (sts == ELN$_SUCCESS)
+  load_timeval(&tv, 0);		// poll
+//  load_timeval(&tv, rn_RK512->ScanTime);
+//  tv.tv_sec = TIMEOUT_REC_ANSWER_SEC;
+//  tv.tv_usec = TIMEOUT_REC_ANSWER_USEC;
+
+/**routine**/  
+
+  FD_ZERO(&read_fd);
+  FD_SET(ser_fd, &read_fd);
+  sts=select(ser_fd+1, &read_fd, NULL, NULL, &tv);
+  sts=read(ser_fd, &received_char, 1);
+
+  if (sts > 0)
   {
     if (received_char == STX)
     {
-      sts = ReceiveHandler();
+      /* Write DLE to respond */
+      if(!write(ser_fd, sdle, 1))
+        return 0;
+      rsts = ReceiveHandler(ser_fd);
 
-      while ( ODD(sts) && telegram_counter )
-      {
-        /* Follow on telegrams are expected */
-        received_char = NUL;    
-        eln$tty_read(&sts, &virtual_serial_line_port, 1,
-                     &received_char, &nbr_of_bytes_read, (2+4), &DLE_mask,
-                     &timeout_ack, NULL, NULL, &read_message, &read_message_buf);
+      while( ODD(rsts) && sts > 0 && telegram_counter) {
 
-        if (sts == ELN$_SUCCESS && received_char == STX)
-        {
-          sts = ReceiveHandler();
-        }
-        else
-        {
-          sts = FALSE;
-        }
-      } /* endwhile */
+	FD_ZERO(&read_fd);
+	FD_SET(ser_fd, &read_fd);
+	sts=select(ser_fd+1, &read_fd, NULL, NULL, &tv);
+	sts=read(ser_fd, &received_char, 1);
+
+	if (sts > 0 && received_char == STX) {
+	  /* Write DLE to respond */
+	  if(!write(ser_fd, sdle, 1))
+	    return 0;
+	  rsts = ReceiveHandler(ser_fd);
+	}
+	else
+	  rsts = 0;
+      }
     }
     else
     {
-
       /* We don't understand, Send NAK unless NAK is received */
-        
       if (received_char != NAK)
-        eln$tty_write(&sts, &virtual_serial_line_port, 1, &snak,
-                      &nbr_of_bytes_written, &write_message, &write_message_buf);
+        write(ser_fd, snak, 1);
+      errh_Error("RK512 felaktigt meddelande i mottagning, annat starttecken än STX (0x%x)", received_char);
+      sts=0;			//felstatus
+    }
+
+    if (sts < 1 || EVEN(rsts))
+    {
+      rn_RK512->ErrCount++;
+      telegram_counter = 0;
     }
   }
-
-  if ( EVEN(sts) )
-  {
-    remnode->objp->ErrTransCount++;
-    telegram_counter = 0;
-    eln$tty_write(&sts, &virtual_serial_line_port, 1, &snak,
-                  &nbr_of_bytes_written, &write_message, &write_message_buf);
-  }
-
   return(1);
 }
 
 
-/*************************************************************************
+/*************************************************************************
 **************************************************************************
 *
 * Namn : ReceiveHandler
@@ -817,112 +453,130 @@ static unsigned int Receive()
 **************************************************************************
 **************************************************************************/
 
-static unsigned int ReceiveHandler()
+static unsigned int ReceiveHandler(int fd)
 {
-  unsigned int          sts, i;
-  unsigned int          delta_pos = 0;
-  unsigned int          nbr_of_bytes_written = 0;
-  unsigned int          nbr_of_bytes_read = 0;
-  static unsigned int   datasize, pos_counter;
-  static remtrans_item  *remtrans;
-  char                  search_remtrans = FALSE;
-  char                  send_response = FALSE;
-  char                  terminate = FALSE;
-  unsigned char         CODE = '\0';
+  unsigned int          sts;
+  //unsigned int          nbr_of_bytes_written = 0;
+  //unsigned int          nbr_of_bytes_read = 0;
+  unsigned int          data_size = 0;
+  char                  cont = TRUE;
+  char			search_remtrans = FALSE;
   unsigned char         BCC = '\0';
-  unsigned char         char_buffer, BCC_checksum;
-  unsigned char         received_char = '\0';
-  unsigned char         ReceiveBuffer[MAX_SIZE_TELEGRAM];
-  unsigned char         *ReceiveBuffer_ptr;
-  unsigned char         sstx[2] = {STX, '\0'};
-  unsigned char         sdle[2] = {DLE, '\0'};
-  unsigned char         snak[2] = {NAK, '\0'};
+  unsigned char         receive_buffer[MAX_SIZE_TELEGRAM];
+  unsigned char         sdle = DLE;
+  unsigned char		received_char;
+  remtrans_item         *remtrans;
+  int 			i;
+  unsigned char         CODE = '\0';
+  static unsigned int   datasize;
   static unsigned char  *TelegramBuffer;
   static unsigned char  *TelegramBuffer_ptr;
-  DDA$_BREAK_MASK       DLE_mask = DLE;
-  DDA$_BREAK_MASK       STX_mask = STX;
+  unsigned int          pos_counter = 0;
+  unsigned int          delta_pos = 0;
+  
+  fd_set read_fd;
+  struct timeval tv;
+
+  /**** set up timeout,****/
+
+  load_timeval(&tv, rn_RK512->CharTimeout);
+
+//  tv.tv_sec = TIMEOUT_REC_CHAR_SEC;
+//  tv.tv_usec = TIMEOUT_REC_CHAR_USEC;
 
 
 /*************************************************************************/
-/** We have received STX earlier, send DLE to responde                  **/
+/**    Read telegram	                                                **/
 /*************************************************************************/
 
-    /* Send acknowledge ready to receive message */
-  eln$tty_write(&sts, &virtual_serial_line_port, 1, &sdle,
-                &nbr_of_bytes_written, &write_message, &write_message_buf);
-  if ( EVEN(sts) )
-    return(FALSE);
-
-/*************************************************************************/
-/**    Store the received telegram temporary                            **/
-/*************************************************************************/
-  eln$tty_read(&sts, &virtual_serial_line_port, 1, &received_char,
-               &nbr_of_bytes_read, 2, NULL, &timeout_char,
-               NULL, NULL, &read_message, &read_message_buf);
-  if ( EVEN(sts) || (sts == ELN$_TIMEOUT) )
-    return(FALSE);
-
-  ReceiveBuffer[0] = char_buffer = received_char;
-  BCC ^= received_char;
-
-  for ( i=1 ; (terminate==FALSE)&&(i<MAX_SIZE_TELEGRAM) ; i++ )
+  cont = TRUE;
+  data_size = 0;
+  
+  while (cont)
   {
-    eln$tty_read(&sts, &virtual_serial_line_port, 1, &received_char,
-                 &nbr_of_bytes_read, 2, NULL, &timeout_char,
-                 NULL, NULL, &read_message, &read_message_buf);
-    if ( EVEN(sts) || (sts == ELN$_TIMEOUT) )
-      return(FALSE);
+    /* Read until DLE is received */
 
-    if ( (char_buffer == DLE) && (received_char == ETX) )
+    received_char=0;
+
+    while(received_char != DLE)
     {
-      /* End of message. Read checksum and terminate. */
-      ReceiveBuffer[i] = received_char;
-      BCC ^= received_char;
-      eln$tty_read(&sts, &virtual_serial_line_port, 1, &received_char,
-                   &nbr_of_bytes_read, 2, NULL, &timeout_char,
-                   NULL, NULL, &read_message, &read_message_buf);
-      if ( EVEN(sts) || (sts == ELN$_TIMEOUT) )
-        return(FALSE);
+      load_timeval(&tv, rn_RK512->CharTimeout);
+      FD_ZERO(&read_fd);
+      FD_SET(fd, &read_fd);
+      select(fd+1, &read_fd, NULL, NULL, &tv);
+      if (read(fd, &received_char, 1) > 0) { //om det inte var timeout
+        // Prevent writing oob
+        if (data_size > MAX_SIZE_TELEGRAM - 10) return (FALSE);
+        receive_buffer[data_size++]=received_char;
+      }
+      else				//timeout gå tillbaka
+      {
+        errh_Error("RK512 mottagning, character timeout");
+        return(FALSE);  
+      }
+    }  
 
-      BCC_checksum = received_char;
-      terminate = TRUE;
+    /* Read one more */
+    load_timeval(&tv, rn_RK512->CharTimeout);
+    FD_ZERO(&read_fd);
+    FD_SET(fd, &read_fd);
+    select(fd+1, &read_fd, NULL, NULL, &tv);
+    if (read(fd, &receive_buffer[data_size], 1) < 1) {
+      errh_Error("RK512 mottagning, character timeout");
+      return(FALSE);  
+    }
+ 
+    if (receive_buffer[data_size] == ETX)
+    {
+      data_size++;
+
+      /* Read one more, should be checksum */
+      load_timeval(&tv, rn_RK512->CharTimeout);
+      FD_ZERO(&read_fd);
+      FD_SET(fd, &read_fd);
+      select(fd+1, &read_fd, NULL, NULL, &tv);
+      if (read(fd, &receive_buffer[data_size], 1) < 1) {
+        errh_Error("RK512 mottagning, character timeout");
+        return(FALSE);  
+      }
+  
+      data_size++;
+      cont = FALSE;
     }
     else
-    {
-      /* Store one more received character in the buffer */
-      BCC ^= received_char;
-      if ( (received_char != DLE) ||
-           ((received_char == DLE) && (char_buffer != DLE)) )
-      {
-        ReceiveBuffer[i] = char_buffer = received_char;
-      }
-      else
-      {
-        /* This is a duplicated DLE character. Throw away. */
-        i--;
-        char_buffer = '\0';
-      }
-    }
-  }    /* endfor */
+      if (receive_buffer[data_size] != DLE ) data_size++;
+  }
 
 /*************************************************************************/
 /**  A complete message is received. Check BCC.                         **/
 /*************************************************************************/
-  if ( BCC == BCC_checksum )
-  {
-    eln$tty_write(&sts, &virtual_serial_line_port, 1, &sdle,
-                  &nbr_of_bytes_written, &write_message, &write_message_buf);
-    if ( EVEN(sts) )
-      return(FALSE);
+  BCC = DLE ^ ETX;
+
+  for (i=0; i<data_size-3; i++)
+    if (receive_buffer[i] != DLE)
+      BCC ^= receive_buffer[i];
+  
+
+
+  if ( BCC == receive_buffer[data_size-1] ) {
+    if(!write(fd,&sdle, 1)) return(FALSE);
   }
   else
   {
     /* Checksum in this telegram is wrong */
-    return(FALSE);
+    errh_Error("RK512 mottagning, felaktig checksumma, %d, %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x", 
+    	data_size, receive_buffer[0], receive_buffer[1], receive_buffer[2], receive_buffer[3], receive_buffer[4], receive_buffer[5],
+    	receive_buffer[6], receive_buffer[7], receive_buffer[8], receive_buffer[9], receive_buffer[10], receive_buffer[11]);
+    if (debug) printf("  Checksum error\n");
+       
+    if (use_remote_io) {
+      if(!write(fd,&sdle, 1)) return(FALSE);
+    }
+    else
+      return(FALSE);
   }
 
-
-  if ( !telegram_counter && (ReceiveBuffer[0] == 0X00) )
+  if ( !telegram_counter && (receive_buffer[0] == 0X00) )
   {
 /*************************************************************************/
 /**  This is a ordinary A-telegram. Make some error checks and treat it. */
@@ -930,47 +584,48 @@ static unsigned int ReceiveHandler()
 
     /*  Find out wich RemTrans object that is the target.*/
     search_remtrans = true;
-    remtrans = remnode->remtrans;
-    while(remtrans && search_remtrans)
-    {
-      if ( (remtrans->objp->Address[0] == ReceiveBuffer[4]) &&
-           (remtrans->objp->Direction  == REMTRANS_IN) )
-      {
-        search_remtrans = false;
+    remtrans = rn.remtrans;
+    while(remtrans && search_remtrans) {
+
+      if (remtrans->objp->Direction == REMTRANS_IN) {
+	if (!use_remote_io) {
+	  search_remtrans = false;
+	}
+	else {
+	  if (remtrans->objp->Address[0] == receive_buffer[4])
+	    search_remtrans = false;
+	}
       }
-      if ( search_remtrans )
-      {
-        remtrans = (remtrans_item *) remtrans->next;
-      }
-    }   /* endwhile */
+      if ( search_remtrans ) remtrans = (remtrans_item *) remtrans->next;
+    }
 
     if (search_remtrans)
     {
       /* No corresponding RemTrans object found */
-      remnode->objp->ErrTransCount++;
+      rn_RK512->ErrCount++;
       CODE = '\x0A';
     }
 
     if ( !CODE )
     {
       /* Allowed type of telegram ? */
-      if ( ReceiveBuffer[2] != 'A' )
+      if ( receive_buffer[2] != 'A' )
         CODE = '\x16';
     }
 
     if ( !CODE )
     {
       /* Allowed type of data ? */
-      if ( ReceiveBuffer[3] != 'D' )
+      if ( receive_buffer[3] != 'D' )
         CODE = '\x10';
     }
 
     if ( !CODE )
     {
       /* Check size of received message */
-      datasize = (unsigned int)ReceiveBuffer[6];
+      datasize = (unsigned int)receive_buffer[6];
       datasize = datasize << 8;
-      datasize = datasize | (unsigned int)ReceiveBuffer[7];
+      datasize = datasize | (unsigned int)receive_buffer[7];
       datasize = datasize * 2;  /* Convert from 16 bit words to bytes */
       if ( datasize <= remtrans->objp->MaxLength)
       {
@@ -995,7 +650,7 @@ static unsigned int ReceiveHandler()
             i < (HEADER_SIZE + MAX_SIZE_DATA_BLOCK) ;
             i++ )
       {
-        *TelegramBuffer_ptr++ = ReceiveBuffer[i];
+        *TelegramBuffer_ptr++ = receive_buffer[i];
       }
       pos_counter = MAX_SIZE_DATA_BLOCK;
     }
@@ -1003,9 +658,8 @@ static unsigned int ReceiveHandler()
       if ( !CODE )
       {
         /* This message contains only one telegram. Treat it! */
-        ReceiveBuffer_ptr = &ReceiveBuffer[HEADER_SIZE];
         sts = RemTrans_Receive(remtrans,
-                               ReceiveBuffer_ptr,
+                               (char *)&receive_buffer[HEADER_SIZE],
                                datasize);
         if ( EVEN(sts) )
         {
@@ -1019,12 +673,12 @@ static unsigned int ReceiveHandler()
     if ( !telegram_counter )
       /* Wrong type of telegram received when A-telegram was expected */
       {
-      remnode->objp->ErrTransCount++;
+      rn_RK512->ErrCount++;
       CODE = '\x10';
       }
   }
 
-  if ( telegram_counter && (ReceiveBuffer[0] == 0XFF) && !CODE )
+  if ( telegram_counter && (receive_buffer[0] == 0XFF) && !CODE )
   {
 /*************************************************************************/
 /**  This is a follow on telegram. Make some error checks and treat it. **/
@@ -1033,14 +687,14 @@ static unsigned int ReceiveHandler()
     if ( !CODE )
     {
       /* Allowed type of telegram ? */
-      if ( ReceiveBuffer[2] != 'A' )
+      if ( receive_buffer[2] != 'A' )
         CODE = '\x16';
     }
 
     if ( !CODE )
     {
       /* Allowed type of data ? */
-      if ( ReceiveBuffer[3] != 'D' )
+      if ( receive_buffer[3] != 'D' )
         CODE = '\x10';
     }
 
@@ -1059,7 +713,7 @@ static unsigned int ReceiveHandler()
             i < (FOLLOW_ON_HEADER_SIZE + delta_pos) ;
             i++ )
       {
-        *TelegramBuffer_ptr++ = ReceiveBuffer[i];
+        *TelegramBuffer_ptr++ = receive_buffer[i];
       }
       telegram_counter -= 1;
       pos_counter += delta_pos;
@@ -1076,7 +730,7 @@ static unsigned int ReceiveHandler()
         }
         TelegramBuffer_ptr = TelegramBuffer;
         sts = RemTrans_Receive(remtrans,
-                               TelegramBuffer_ptr,
+                               (char *)TelegramBuffer_ptr,
                                datasize);
         free(TelegramBuffer);
         if ( EVEN(sts) )
@@ -1100,7 +754,7 @@ static unsigned int ReceiveHandler()
   }
 
   sts = SendResponseTelegram(CODE);
-  if ( EVEN(sts) || (sts == ELN$_TIMEOUT) )
+  if ( EVEN(sts))
   {
     /* A fail has occured when sending response telegram */
     return(FALSE);
@@ -1109,33 +763,138 @@ static unsigned int ReceiveHandler()
   {
     return(TRUE);
   }
+
+
+
+
+
+
+
+
+#if 0
+
+
+/*************************************************************************/
+/**  Find out if the received message is a array of io updates.         **/
+/**  Treat the message and exit.                                        **/
+/*************************************************************************/
+  {
+    io_buffer_vnet *io_buf = (io_buffer_vnet *) &receive_buffer;
+    RemUtils_R50ToAscii((unsigned short *) &io_buf->io_name, (char *) &name);
+
+    if (strstr(name, "PSS")) {
+      io_size = io_buf->length * 2;     /* Converted to bytes */
+      sts = RemIO_Receive_3964R(&rn,
+                                (unsigned char *) &io_buf->data,
+                                io_size-NET_HEADER_SIZE_IO);
+      if (debug) printf("  Receiving I/O area\n");
+
+      time_since_io = 0;
+      rn_RK512->LinkUp = 1;
+
+      return(sts);
+    }
+  }
+
+/*************************************************************************/
+/**  Find out if the received message is a array of common data         **/
+/**  Search for the RemTrans object that is the target.                 **/
+/*************************************************************************/
+  c_buf = (common_buffer_vnet *) &receive_buffer;
+
+  RemUtils_R50ToAscii((unsigned short *) &c_buf->common_name, (char *) &name);
+  for ( i=0 ; i<4 ; i++ )
+  {
+    type_name[i] = name[i+3];
+  }
+  if ( (strncmp(type_name, "COM", 3)) == 0 ){
+    search_remtrans = true;
+    remtrans = rn.remtrans;
+    while(remtrans && search_remtrans)
+    {
+      if ( remtrans->objp->Address[0] == c_buf->common_name[0] &&
+             remtrans->objp->Address[1] == c_buf->common_name[1]    )
+          search_remtrans = false;
+      if ( search_remtrans )
+          remtrans = (remtrans_item *) remtrans->next;
+    }   /* endwhile */
+
+/*************************************************************************/
+/**  Treat the common data update message and exit.                     **/
+/*************************************************************************/
+    if ( !search_remtrans ){
+      io_size = c_buf->length * 2;     /* Converted to bytes */
+      common_offset = c_buf->offset;
+
+      if (io_size > remtrans->objp->MaxLength ){
+        remtrans->objp->ErrCount++;
+        remtrans->objp->LastSts = STATUS_LENGTH;
+        return(FALSE);
+      }
+      else { 
+        memcpy(&remtrans->datap[common_offset], c_buf, io_size);
+	time_GetTime(&remtrans->objp->TransTime);
+        remtrans->objp->TransCount++;
+        remtrans->objp->DataValid = TRUE;
+        remtrans->objp->LastSts = STATUS_OK;
+        remtrans->objp->DataLength = data_size;
+      }
+      return(TRUE);
+    }
+  }
+  
+/*************************************************************************/
+/**   This message contains a ordinary remtrans                         **/
+/**   Search for the RemTrans object that is the target.                **/
+/**   If remote I/O is not used, the message is stored in the first     **/
+/**   found (ingoing) remtrans object. If we use remote I/O we check for**/
+/**   matching message header                                           **/
+/*************************************************************************/
+  search_remtrans = true;
+  remtrans = rn.remtrans;
+  while(remtrans && search_remtrans)
+  {
+    if (remtrans->objp->Direction == REMTRANS_IN) {
+      if (!use_remote_io) {
+        search_remtrans = false;
+      }
+      else {
+        if (remtrans->objp->Address[0] == c_buf->common_name[0] &&
+	    remtrans->objp->Address[1] == c_buf->common_name[1])
+              search_remtrans = false;
+      }
+    }
+    if ( search_remtrans ) remtrans = (remtrans_item *) remtrans->next;
+  }
+ 
+/*************************************************************************/
+/**  Treat the remtrans message and exit.                               **/
+/*************************************************************************/
+  if (!search_remtrans)
+  {
+    sts = RemTrans_Receive(remtrans, (char *)receive_buffer, data_size-3);
+    if ( EVEN(sts) )
+    {
+      remtrans->objp->ErrCount++;
+      return (FALSE);
+    }
+  }
+  else
+  {
+    /* No remtrans */
+    errh_Error("Remtrans RK512 no remtrans for this message");
+    rn_RK512->ErrCount++;
+    return (FALSE);
+  }
+  return (TRUE);
+#endif
 }
 
-/*************************************************************************
-**************************************************************************
-*
-* Namn : SendResponseTelegram
-*
-* Typ  : unsigned int
-*
-* Typ           Parameter              IOGF     Beskrivning
-*
-* Beskrivning : Invoked when a response telegram is to be sent.
-*
-**************************************************************************
-**************************************************************************/
-int SendResponseTelegram(unsigned char CODE)
+static int SendResponseTelegram(unsigned char CODE)
 {
   unsigned int          sts;
-  unsigned int          nbr_of_bytes_written = 0;
-  unsigned int          nbr_of_bytes_read = 0;
-  unsigned char         received_char = '\0';
   unsigned char         BCC = '\0';
   unsigned char         ResponseTelegram[RESP_MESSAGE_SIZE+1];
-  unsigned char         sstx[2] = {STX, '\0'};
-  unsigned char         sdle[2] = {DLE, '\0'};
-  DDA$_BREAK_MASK       DLE_mask = DLE;
-  DDA$_BREAK_MASK       STX_mask = STX;
 
 
   BCC = DLE ^ ETX;
@@ -1148,188 +907,200 @@ int SendResponseTelegram(unsigned char CODE)
   ResponseTelegram[5] = ETX;
   ResponseTelegram[6] = BCC;
 
-  /* Send STX and wait for answer */
-  eln$tty_write(&sts, &virtual_serial_line_port, 1,
-                &sstx, &nbr_of_bytes_written, &write_message, &write_message_buf);
-  if ( ODD(sts) )
-  {
-    /* wait for break character or timeout */
-    eln$tty_read(&sts, &virtual_serial_line_port, 1, &received_char,
-                 &nbr_of_bytes_read, (2+4), &DLE_mask, &timeout_ack,
-                 NULL, NULL, &read_message, &read_message_buf);
-
-    if ( ODD(sts) && (sts != ELN$_TIMEOUT) && (received_char == DLE) )
-    {
-      /* Contact is established. Send response telegram */
-      eln$tty_write(&sts, &virtual_serial_line_port,
-                    sizeof(ResponseTelegram), &ResponseTelegram,
-                    &nbr_of_bytes_written, &write_message, &write_message_buf);
-      if ( ODD(sts) )
-      {
-        /* wait for break character or timeout */
-        eln$tty_read(&sts, &virtual_serial_line_port, 1,
-                     &received_char, &nbr_of_bytes_read, (2+4), &DLE_mask,
-                     &timeout_ack, NULL, NULL, &read_message, &read_message_buf);
-        if ( EVEN(sts) || (sts == ELN$_TIMEOUT) || (received_char != DLE) )
-        {
-          /* DLE character in response was expected. */
-          sts = FALSE;
-        }
-      }  /* ENDIF. Contact established but tty_write failed */
-    }
-    else
-    {
-      /* Failed in making contact. DLE in response was expected. */
-      sts = FALSE;
-    }
-  }   /* ENDIF. tty_write failed when sending STX */
-
-  return(sts);
+  sts = send_it( (char *)ResponseTelegram, RESP_MESSAGE_SIZE);
+  return sts;
 }
 
+/***************************************************
+ ******        Main routine        *****************
+ ***************************************************/
 
-
-#ifdef OS_ELN
-/*************************************************************************
-**************************************************************************
-*
-* Namn : WaitFor_PLC_Change
-*
-* Typ  : int
-*
-* Typ           Parameter              IOGF     Beskrivning
-*
-* Beskrivning : Subprocess  waits for message from REMOTEHANDLER on job_port,
-*               that will kill transport when switch is done.
-*
-**************************************************************************
-**************************************************************************/
-
-int WaitFor_PLC_Change()
+int main(int argc, char *argv[]) /*argv[2]=remnode name*/
 {
-  pwr_tStatus sts;
-  MESSAGE msg_id;
-  char *mess;
-  int size;
+  unsigned int sts;			/* Status from function calls etc. */
+  unsigned char id[32];
+  unsigned char pname[32];
+  remtrans_item *remtrans;
+  int i;
+  char first;
+  pssupd_buffer_vnet buff;		/* Buffer for 'hello' */
+  pssupd_order_header *header;		/* Header for 'hello' */
+  char name[80];
 
-  while (TRUE) {
-    ker$wait_any(&sts, NULL, NULL, &job_port);
-    ker$receive(&sts, &msg_id, &mess, &size, &job_port, NULL, NULL);
+  /* Read arg number 2, should be id for this instance */
 
-    if (*mess == 1){
-      /* Hot switch init. Do nothing but delete the message */
-      ker$delete(&sts, msg_id);
-    }
-    else if (*mess == 2){
-      /* Switch is done. Execute harakiri! */
-      ker$delete(&sts, msg_id); /* Delete message */
-      exith();
-      ker$delete(&sts, my_proc);
-    }
-    else {
-      printf("Fel telegram PLC-byte %%x%x\n",*mess);
-      ker$delete(&sts, msg_id);
-    }
-  }
-}
-#endif
-
-
-/*
- * Main routine
- */
-
-main(int argc, char *argv[])
-{
-  unsigned int sts, i;                          /* Status from function calls etc. */
-  pwr_tObjid pwr_node;                          /* Own Pwr node */
-  pwr_sClass_PlcProcess *pwr_nodep;             /* Ref to own Pwr node */
-  pwr_tTime OriginChgTime;                   /* LastChgTime at start */
-
-  pwr_tClassId  remnode_class;                     /* Vår remnod's class */
-
-#ifdef OS_ELN
-  PROCESS id_p;
-  static struct dsc$descriptor_s name_desc = {0, DSC$K_DTYPE_T,DSC$K_CLASS_S,0};
-  NAME name_id;
-
-  /* Get process-id to be able to kill myself.
-     Create subprocess to kill or to signal switch. */
-
-  ker$job_port(&sts, &job_port);
-  ker$current_process(&sts, &my_proc);
-
-  /* Create a name for my own process (first process in job) */
-
-  name_desc.dsc$a_pointer = argv[3];
-  name_desc.dsc$w_length = strlen(argv[3]);
-  ker$create_name(&sts, &name_id, &name_desc, my_proc, NULL);
-
-  ker$create_process( &sts, &id_p, WaitFor_PLC_Change,NULL);
-#endif
-
-  DeclareExitHandler();
-
-  sts = gdh_Init("rs_remote_rk512");
-  if (EVEN(sts)) exit(sts);
-
-  /* Hämta remnodens objid från argumentvektorn */
-
-  if (argc >= 3)
-  {
-    sts = cdh_StringToObjid( argv[2], &remnode->objid);
-    if (EVEN(sts)) exit(sts);
-  }
+  if (argc >= 2)
+    strcpy((char *) id, argv[1]);
   else
-    remnode->objid = pwr_cNObjid;
+    strcpy((char *) id, "0");
+    
+  /* Build process name with id */
 
-  /* Kontrollera att objektet verkligen är en remnod */
+  sprintf((char *) pname, "rs_remrk512_%s", id);
 
-  sts = gdh_GetObjectClass(remnode->objid, &remnode_class);
-  if (EVEN(sts)) exit(sts);
+  /* Init of errh */
 
-  if (remnode_class != pwr_cClass_RemNode) exit(0);
+  errh_Init((char *) pname, errh_eAnix_remote);
+  errh_SetStatus(PWR__SRVSTARTUP);
 
-  /* Hämta en pekare till remnoden */
+  /* Init of gdh */
 
-  sts = gdh_ObjidToPointer(remnode->objid, (pwr_tAddress *) &remnode->objp);
-  if (EVEN(sts)) exit(sts);
+  sts = gdh_Init((char *) pname);
+  if ( EVEN(sts)) {
+    errh_Error("gdh_Init, %m", sts);
+    errh_SetStatus(PWR__SRVTERM);
+    exit(sts);
+  }
 
-  /* Kontrollera att det är rätt transport */
+  /* Arg number 3 should be my remnodes objid in string representation,
+     read it, convert to real objid and store in remnode_item */
 
-  if (remnode->objp->TransportType != REMNODE_TRANSPORT_RK512) exit(0);
+  sts = 0;
+  if (argc >= 3) sts = cdh_StringToObjid(argv[2], &rn.objid);
+  if ( EVEN(sts)) {
+    errh_Error("cdh_StringToObjid, %m", sts);
+    errh_SetStatus(PWR__SRVTERM);
+    exit(sts);
+  }
 
-  remnode->Time_since_scan = 0;
-  remnode->Time_since_poll = 0;
-  remnode->Time_since_IO   = 0;
-  remnode->Time_since_send = 0;
+  /* Get pointer to RemnodeRK512 object and store locally */
+  
+  sts = gdh_ObjidToPointer(rn.objid, (pwr_tAddress *) &rn_RK512);
+  if ( EVEN(sts)) {
+    errh_Error("cdh_ObjidToPointer, %m", sts);
+    errh_SetStatus(PWR__SRVTERM);
+    exit(sts);
+  }
+  
+  /* Get name of object to use in sending poll */
+  
+  sts = gdh_ObjidToName(rn.objid, name, sizeof(name), cdh_mName_object);
+  name[3] = 'P';
+  name[4] = 'S';
+  name[5] = 'S';
+  name[6] = 0;
+  RemUtils_AsciiToR50((char *) &name, (short *) &poll_id);
+  
+  if (debug) printf("%s, %d %d\n", name, poll_id[0], poll_id[1]);  
+      
+  /* Initialize some internal data and make standard remtrans init */
 
-  /* Initialize remtrans objects */
+  rn.next = NULL;
+  rn.local = NULL;		// We dont use local structure since we only have one remnode
+  rn.retransmit_time = 10.0;	// Not used, but initialize anyway
+  rn_RK512->ErrCount = 0;
 
-  sts = RemTrans_Init(remnode, 0);
-  if (EVEN(sts)) exit(sts);
+  sts = RemTrans_Init(&rn);
+  
+  if ( EVEN(sts)) {
+    errh_Error("RemTrans_Init, %m", sts);
+    errh_SetStatus(PWR__SRVTERM);
+    exit(sts);
+  }
 
-  /* Get pointer to $Node-object */
+  sts = RemIO_Init_3964R(&rn);
 
-  sts = gdh_GetClassList( pwr_cClass_PlcProcess, &pwr_node);
-  sts = gdh_ObjidToPointer(pwr_node, (pwr_tAddress *) &pwr_nodep);
+  if ( EVEN(sts)) {
+    errh_Error("RemIO_Init, %m", sts);
+    errh_SetStatus(PWR__SRVTERM);
+    exit(sts);
+  }
+  
+  if (rn.remio_data == NULL) 
+    use_remote_io = 0;
+  else
+    use_remote_io = 1;  
+
+  time_since_poll = 0.0;
+  time_since_io = 0.0;
+  time_since_scan = 0.0;
+
+  /* Store remtrans objects objid in remnode_RK512 object */
+  remtrans = rn.remtrans;
+  i = 0;
+  while(remtrans) {
+    rn_RK512->RemTransObjects[i++] = remtrans->objid;
+    if ( i >= (int)(sizeof(rn_RK512->RemTransObjects)/sizeof(rn_RK512->RemTransObjects[0])))
+      break;
+    remtrans = (remtrans_item *) remtrans->next;
+  }
 
   /* Initialize device */
-  sts = InitNet();
-  if (EVEN(sts)) exit(sts);
 
-  /* Initialize timers */
-  sts = InitTimers();
-  if (EVEN(sts)) exit(sts);
+  ser_fd = RemUtils_InitSerialDev(rn_RK512->DevName, 
+  				  rn_RK512->Speed, 
+				  rn_RK512->DataBits,
+				  rn_RK512->StopBits,
+				  rn_RK512->Parity);
+				  
+  if (!ser_fd) {
+    errh_Error("InitDev, %d", ser_fd);
+    errh_SetStatus(PWR__SRVTERM);
+    exit(0);
+  }    
 
+  first = TRUE;
+  rn_RK512->LinkUp = 1;
+  
   /* Loop forever */
 
-  while (!doomsday)
+  while (1)
   {
-    sts = Receive();
-    if (EVEN(sts)) exit(sts);
 
-    remnode->Time_since_send += remnode->objp->CycleTime;
-    sts = RemTrans_Cyclic(remnode, &remnode_send);
+    if (rn_RK512->Disable == 1) {
+      errh_Fatal("Disabled, exiting");
+      errh_SetStatus(PWR__SRVTERM);
+      exit(0);
+    }   
+    
+    // Wait micro time  
+    // Wait cycle time
+//    timer = (int) (rn_RK512->ScanTime * 1000000.0);
+    usleep(30000);
+    
+    Receive();
+    
+//    time_since_poll += rn_RK512->ScanTime;
+//    time_since_io += rn_RK512->ScanTime;
+    time_since_poll += 0.03;
+    time_since_io += 0.03;
+    time_since_scan += 0.03;
+
+    if (first && use_remote_io) {
+      /* Send Hello to subsystem if we have poll */
+      header = (pssupd_order_header *) &buff.data;
+      header->type = PSS_Switch_Done;
+      header->size = 0;
+      header->signal = 0;
+      buff.no_of_updates = 1;
+      buff.length = (sizeof(pssupd_buffer_vnet) -
+      MAX_ORDER_BUFFERSIZE_VNET + sizeof(pssupd_order_header) + 1) / 2;
+      send_pollbuff(&rn, &buff);
+    }
+        
+//    if (debug) printf("Remtrans Cyclic\n");
+    if (time_since_scan >= rn_RK512->ScanTime) {
+      if (debug) printf("Remtrans Cyclic\n");
+      RemTrans_Cyclic(&rn, &remnode_send);
+      time_since_scan = 0.0;
+    }
+
+    if (use_remote_io) {
+    
+      if ((rn_RK512->LinkUp && time_since_poll >= rn_RK512->ScanTime*2.0) ||
+          (!rn_RK512->LinkUp && time_since_poll >= rn_RK512->ScanTime*10.0))
+      {
+        if (debug) printf("RemIO Cyclic\n");
+        sts = RemIO_Cyclic_3964R(&rn, &send_pollbuff);
+        time_since_poll = 0.0;
+      }
+
+      if (time_since_io >= rn_RK512->LinkTimeout && rn_RK512->LinkTimeout > 0) {
+        if (debug) printf("RemIO Stall\n");
+        sts = RemIO_Stall_3964R(&rn, stall_action);
+      }
+    }
+
+    first = FALSE;    
   }
 }
