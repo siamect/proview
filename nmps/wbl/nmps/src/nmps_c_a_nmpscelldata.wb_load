@@ -72,7 +72,7 @@ SObject NMps:Class
       Object Data_ObjId $Attribute 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
@@ -82,7 +82,7 @@ SObject NMps:Class
       Object Data_Front $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
-	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
@@ -92,7 +92,7 @@ SObject NMps:Class
       Object Data_Back $Attribute 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
-	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
@@ -112,7 +112,7 @@ SObject NMps:Class
       Object Data_Select $Attribute 6
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
-	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
