@@ -6961,185 +6961,89 @@ int	XNav::show_par_hier_class_name(
 			char		*parametername,
 			char		*hiername,
 			char		*classname,
-			char		*name,
+			char		*namep,
 			int		add,
 			int		global,
 			int		max_objects)
 {
-	char		parametername_str[80];
-	pwr_tOName     	name_str;
-	int		sts;
-	pwr_tClassId	classid;
-	pwr_tObjid	hierobjid;
-	pwr_tObjid	objid;
-	char		*s;
-	int		single_object = 0;
-	char		*t;
-	char		elementstr[10];
-	int		len;
-	int		element;
-	pwr_tOName     	name_array[2];
-	int		names;
-	ItemObject	*item;
+  ItemCollect 	*item;
+  int		sts;
+  pwr_tAName   	attr;
+  char		*s;
+  pwr_tAName   	obj_name;
+  pwr_sAttrRef 	ar;
+  pwr_tTypeId 	a_type_id;
+  unsigned int 	a_size;
+  unsigned int 	a_offset;
+  unsigned int 	a_dim;
+  pwr_tTid	a_tid;
+  unsigned int	a_flags = 0;
+  pwr_tAName	name;
 
-	if ( max_objects == 0)
-	  max_objects = 300;
-
-	if ( (parametername == NULL) && (name != NULL))
-	{
-	  /* Parse the parameter name to get object name and
-	   parameter name */
-	   names = dcli_parse( name, ".", "",
-		(char *) name_array, sizeof( name_array)/sizeof( name_array[0]), 
-		sizeof( name_array[0]), 0);
-	  if ( names != 2 )
-	  {
-	    message('E',"Name syntax error");
-	    return XNAV__SUCCESS;
-	  }
-	  strncpy( name_str, name_array[0], sizeof(name_str));
-	  strncpy( parametername_str, name_array[1], sizeof(parametername_str));
-	  parametername = parametername_str;
-	  name = name_str;
-	}
-	else if (parametername == NULL)
-	{
-	  message('E', "Enter parameter");
-	  return XNAV__HOLDCOMMAND;
-	}
-
-	if ( name != NULL)
-	{
-	  /* Check if name does not include a wildcard */
-	  s = strchr( name, '*');
-	  if ( s == 0)
-	  {
-	    /* Get objid for the object */
-	    sts = find_name( name, &objid);
-	    if ( EVEN(sts))
-	    {
-     	      message('E',"Object does not exist");
-	      return XNAV__HOLDCOMMAND;
-	    }
-	    single_object = 1;
-	  }
-	  else {
-	    /* Convert name to upper case */
-	    // cdh_ToUpper( name, name);
-	  }
-	}
-
-	/* Check if class */
-	if ( classname != NULL )
-	{
-	  /* Get classid for the class */
-	  sts = gdh_ClassNameToId ( classname, &classid);
-	  if ( EVEN(sts))
-	  {
-	    /* Class not found */
-	    message('E',"Unknown class");
-	    return XNAV__HOLDCOMMAND;
-	  }
-	}	
-	else
-	  classid = 0;
-
-	/* Check if hierarchy */
-	if ( hiername != NULL )
-	{
-	  if ( *hiername == '\0')
-	  {
-	    /* No value is given, take the title as default */
-//	    sts = rtt_find_hierarchy( parent_ctx, &hierobjid);
-	    sts = 0;
-	    if (EVEN(sts)) 
-	    {
-	      message('E', "No hierarchy found");
-	      return XNAV__HOLDCOMMAND;
-	    }
-	  }
-	  else
-	  {
-	    /* Get objid for the hierarchy object */
-	    sts = gdh_NameToObjid ( hiername, &hierobjid);
-	    if (EVEN(sts))
-	    {
-	      message('E',"Hierarchy object not found");
-	      return XNAV__HOLDCOMMAND;
-	    }
-	  }
-	}
-	else
-	  hierobjid = pwr_cNObjid;
-
-	/* Check index in parameter */
-	s = strchr( parametername, '[');
-	if ( s == 0)
-	  element = -1;
-	else
-	{
-	  t = strchr( parametername, ']');
-	  if ( t == 0)
-	  {
-	    message('E',"Syntax error in parameter name");
-	    return XNAV__HOLDCOMMAND;
-	  }
-	  else
-	  {
-	    len = t - s - 1;
-	    strncpy( elementstr, s + 1, len);
-	    elementstr[ len] = 0;
-	    sscanf( elementstr, "%d", &element);
-	    *s = '\0';
-	    if ( (element < 0) || (element > 1000) )
-	    {
-	      message('E',"Syntax error in parameter name");
-	      return XNAV__HOLDCOMMAND;
-	    }
-	  }
-	}
+  if ( !namep) {
+    message('E', "Syntax error");
+    return XNAV__HOLDCOMMAND;
+  }
 
 
-	if ( !add == XNAV_MENU_ADD)
-	{
-          brow_pop();
-	}
+  if ( !add == XNAV_MENU_ADD) 
+    brow_pop();
 
-	try {
-	  if ( single_object) {
-	    item = new ItemObject( brow, objid, NULL,  flow_eDest_IntoLast, 1);
-	    item->open_attribute( brow, 0, 0, parametername, element);
-	    delete item;
-//	    sts = rtt_show_parameter_add( objid, &menulist, 
-//		parametername, &index, &element, 0);
-          }
-	  else
-          {
-//	    sts = rtt_get_objects_hier_class_name( parent_ctx, hierobjid, 
-//		classid, name, max_objects, global,
-//		&rtt_show_parameter_add, (void *) &menulist, 
-//		(void *) parametername, (void *) &index, 
-//		(void *) &element, 0);
-//	    if ( sts == XNAV__MAXCOUNT)
-//	      message('E',"To many object, all objects could not be shown");
-//	    else if ( EVEN (sts)) return sts;
+  try {
+    pwr_tAttrRef aref;
+    sts = gdh_NameToAttrref( pwr_cNObjid, namep, &aref);
+    if ( EVEN(sts)) return sts;
+    
+    sts = gdh_AttrrefToName ( &aref, name, sizeof(name), cdh_mNName);
+    if ( EVEN(sts)) return sts;
 
-//	    if ( index)
-//	      sts = rtt_menu_upd_bubblesort( menulist);
-// 	    else
-//	    {
-//	      message('E', "No objects found");
-//	      return XNAV__HOLDCOMMAND;
-//	    }
-	  }
-	}
-	catch ( co_error& e) {
-	  brow_push_all();
-	  brow_Redraw( brow->ctx, 0);
-	  message('E', (char *)e.what().c_str());
-	}
+    if ( !aref.Flags.b.Object && !aref.Flags.b.ObjectAttr) {
+      if ( (s = strchr( name, '.')) == 0)
+	return 0;
+      strcpy( attr, s+1);
 
-	return XNAV__SUCCESS;
+      sts = gdh_GetAttributeCharAttrref( &aref, &a_type_id, &a_size, &a_offset, 
+					 &a_dim);
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_GetAttributeFlags( &ar, &a_flags); 
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_GetAttrRefTid( &aref, &a_tid);
+      if ( EVEN(sts)) return sts;
+    }
+    else {
+      sts = get_trace_attr( &aref, attr);
+      if ( EVEN(sts)) return sts;
+      strcpy( obj_name, name);
+      strcat( obj_name, ".");
+      strcat( obj_name, attr);
+      sts = gdh_NameToAttrref( pwr_cNObjid, obj_name, &ar);
+      if ( EVEN(sts)) return sts;
+
+      strcpy( attr, strchr(obj_name, '.') + 1);
+
+      sts = gdh_GetAttributeCharAttrref( &ar, &a_type_id, &a_size, &a_offset, 
+					 &a_dim);
+      if ( EVEN(sts)) return sts;
+      
+      sts = gdh_GetAttributeFlags( &ar, &a_flags); 
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_GetAttrRefTid( &aref, &a_tid);
+      if ( EVEN(sts)) return sts;
+    }
+
+    item = new ItemCollect( brow, aref.Objid, attr, NULL, 
+			    flow_eDest_IntoLast, a_type_id, a_tid, a_size, a_flags, 0);
+  }
+  catch ( co_error& e) {
+    brow_push_all();
+    brow_Redraw( brow->ctx, 0);
+    message('E', (char *)e.what().c_str());
+  }
+
+  return XNAV__SUCCESS;
 }
 
 int	XNav::find_name(
