@@ -134,6 +134,8 @@ pwre_config_check_lib()
 	    conf_libmq=$conf_libmq" -l${lib%.*}"
           elif test $4 == "wmq"; then
 	    conf_libwmq=$conf_libwmq" -l${lib%.*}"
+          elif test $4 == "pnak"; then
+	    conf_libpnak=$conf_libpnak" -l${lib%.*}"
           elif test $4 == "libusb"; then
 	    conf_lib=$conf_lib" -lusb-1.0"
           else
@@ -227,6 +229,7 @@ conf_lib=""
 conf_libwb=""
 conf_libmq=""
 conf_libwmq=""
+conf_libpnak=""
 conf_libgtk="" 
 conf_libmotif="" 
 conf_libdir=""
@@ -341,6 +344,7 @@ if test $pwre_hw == "hw_arm"; then
   echo "export pwre_conf_libwb=\"$conf_libwb\"" >> $cfile
   echo "export pwre_conf_libmq=\"$conf_libmq\"" >> $cfile
   echo "export pwre_conf_libwmq=\"$conf_libwmq\"" >> $cfile
+  echo "export pwre_conf_libpnak=\"$conf_libpnak\"" >> $cfile
   echo "export pwre_conf_libgtk=\"$conf_libgtk\"" >> $cfile
   echo "export pwre_conf_libmotif=\"$conf_libmotif\"" >> $cfile
   echo "export pwre_conf_libdir=\"$conf_libdir\"" >> $cfile
@@ -379,7 +383,7 @@ else
   pwre_config_check_lib mysql     MYSQL    lib lib 1 "/usr/lib/libmysqlclient.so:/usr/lib/mysql/libmysqlclient.so"
   pwre_config_check_lib mq        MQ       lib mq  1 "/usr/lib/libdmq.so:/usr/local/dmq/lib/libdmq.so"
   pwre_config_check_lib wmq       WMQ      lib wmq 1 "/usr/lib/libmqic.so"
-  pwre_config_check_lib libpnioif PNAK     lib lib 1 "/usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a"
+  pwre_config_check_lib libpnioif PNAK     lib pnak 1 "/usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a"
   pwre_config_check_lib libusb    LIBUSB   lib libusb 1 "/usr/lib/libusb-1.0.so"
 
   pwre_config_check_include mq    MQ    0 "/usr/local/dmq/include/p_entry.h"
@@ -423,6 +427,7 @@ else
   echo "export pwre_conf_libwb=\"$conf_libwb\"" >> $cfile
   echo "export pwre_conf_libmq=\"$conf_libmq\"" >> $cfile
   echo "export pwre_conf_libwmq=\"$conf_libwmq\"" >> $cfile
+  echo "export pwre_conf_libpnak=\"$conf_libpnak\"" >> $cfile
   echo "export pwre_conf_libgtk=\"$conf_libgtk\"" >> $cfile
   echo "export pwre_conf_libmotif=\"$conf_libmotif\"" >> $cfile
   echo "export pwre_conf_libdir=\"$conf_libdir\"" >> $cfile
