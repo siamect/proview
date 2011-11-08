@@ -309,6 +309,11 @@ mh_OutunitConnect (
       l.pSelL = (void *)&((pwr_sClass_EventPrinter*) p)->SelectList[0];
       l.SelectListIsUpdated = NULL;
       break;
+    case pwr_cClass_PostConfig:
+      type = mh_eOutunitType_Post;
+      l.pSelL = (void *)&((pwr_sClass_PostConfig*) p)->EventSelectList[0];
+      l.SelectListIsUpdated = NULL;
+      break;
     default:
       return MH__NOOUTUNIT;
       break;

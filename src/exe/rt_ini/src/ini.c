@@ -124,6 +124,7 @@
 # define cPrio_sysmon		(cPrio_base + 16)
 # define cPrio_opc_server      	(cPrio_base + 15)
 # define cPrio_statussrv      	(cPrio_base + 15)
+# define cPrio_post      	(cPrio_base + 5)
 # define cPrio_sevhistmon      	(cPrio_base + 15)
 # define cPrio_sev_server      	(cPrio_base + 15)
 # define cPrio_plc_init		(cPrio_base + 5)
@@ -2092,6 +2093,9 @@ ini_ProcTable (
   pp->proc.flags.b.system = 1;
 
   pp = ini_ProcInsert(sts, cp, "pwr_statussrv", "pwr_statussrv_%d", 0, 1, "rt_statussrv", cPrio_statussrv, 0, "");
+  pp->proc.flags.b.system = 1;
+
+  pp = ini_ProcInsert(sts, cp, "pwr_post", "pwr_post_%d", 0, 1, "rt_post", cPrio_post, 0, "");
   pp->proc.flags.b.system = 1;
 
   pp = ini_ProcInsert(sts, cp, "pwr_sevhistmon", "pwr_sevhistmon_%d", 0, 1, "rt_sevhistmon", cPrio_sevhistmon, 0, "");

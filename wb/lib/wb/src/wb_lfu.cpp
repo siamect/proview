@@ -2959,6 +2959,7 @@ pwr_tStatus lfu_check_appl_file( char *nodename, int bus_number)
     "#pwr_webmonelog, , noload, norun, , 5, debug, \"\"" << endl <<
     "#pwr_opc_server, , noload, norun, , 5, debug, \"\"" << endl <<
     "#pwr_statussrv,  , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_post,       , noload, norun, , 5, debug, \"\"" << endl <<
     "#pwr_sevhistmon, , noload, norun, , 5, debug, \"\"" << endl <<
     "#pwr_sev_server, , noload, norun, , 5, debug, \"\"" << endl;
 

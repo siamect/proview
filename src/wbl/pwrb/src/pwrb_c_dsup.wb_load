@@ -342,6 +342,15 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Recipient for epost and mms alarms.
+      !  The recipient is a user defined in the user database.
+      !*/
+      Object Recipient $Attribute 38 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
       !  Attribute is filled in by the user if the input named
       !  IN is left open. If the input is connected the names
       !  are filled in by the PROVIEW/R system at compilation.

@@ -218,6 +218,8 @@ class UserList {
 			  char *email, char *phone, char *sms);
   UserList	*next_user() { return next;}
   char		*get_name() { return name;}
+  void		get_sms( char *s, int size) { strncpy(s, sms, size);}
+  void		get_email( char *s, int size) { strncpy( s, email, size);}
   unsigned long	get_priv() { return priv;}		
   static char     *pwcrypt( const char *str);
 };

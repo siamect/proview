@@ -166,7 +166,8 @@ enum mh_eOutunitType{
   mh_eOutunitType_File	    = 3,
   mh_eOutunitType_Terminal  = 4,
   mh_eOutunitType_Logger    = 5,
-  mh_eOutunitType_  	    = 6
+  mh_eOutunitType_Post      = 6,
+  mh_eOutunitType_  	    = 7
 };
 
 enum mh_eSource {
@@ -379,6 +380,7 @@ struct mh_sMessage {
   pwr_sAttrRef		Object;
   pwr_sAttrRef	 	SupObject;
   pwr_tAName		EventName;
+  pwr_tString40		Receiver;
 };
 
 struct mh_sReturn {

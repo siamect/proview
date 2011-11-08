@@ -159,6 +159,7 @@ struct s_Active {
   mh_eEvent		event;
   pwr_tAttrRef		eventSound;
   pwr_tString256	eventMoreText;
+  pwr_tString256	receiver;
   pwr_tBoolean		local;
   sEventTab		*detect_etp;
   sEventTab		*return_etp;
@@ -257,6 +258,7 @@ struct s_Sup {
   mh_mEventFlags  EventFlags pwr_dAlignW;
   pwr_tAttrRef	  Sound pwr_dAlignW;
   pwr_tText256	  MoreText pwr_dAlignW;
+  pwr_tString40	  Recipient pwr_dAlignW;
   /* Internal attributes */
   pwr_sAttrRef    Attribute pwr_dAlignW;
   mh_uEventInfo   AlarmStatus pwr_dAlignW;
@@ -1630,6 +1632,7 @@ formatSupEvent (
     mp->Object = sp->link.object;
     mp->SupObject = sp->link.supObject;
     strncpy(mp->EventName, sp->link.eventName, sizeof(mp->EventName));
+    strncpy(mp->Receiver, sup->Recipient, sizeof(mp->Receiver));
     memcpy(&mp->SupInfo.mh_uSupInfo_u, sp->supInfoP, sp->supInfoSize);
     *size = sizeof(mh_sMessage);
 
@@ -2639,7 +2642,8 @@ initSupActiveCB (
 
   sts = gdh_AttrrefToName(&Object, sp->link.objName, sizeof(sp->link.objName), cdh_mNName);
   if (EVEN(sts))
-    errh_Error("Couldn't get name for supervised object\n%m", sts);
+    errh_Error("Couldn't get name for supervised object, %s\n%m", 
+	       cdh_ObjidToString(0, SupObject->Objid, 1), sts);
   strncpy(sp->link.eventName, sp->link.objName, sizeof(sp->link.eventName));
   cdh_ToUpper(sp->link.objName, NULL);
 
@@ -2718,7 +2722,8 @@ initSupActiveCB (
       &sp->attribute, (pwr_tAddress *)&sp->actualValue, &sp->attrDlid
     );
     if (EVEN(sts)) {
-      errh_Error("%s\n%m", "Couldn't link to supervised attribute", sts);
+      errh_Error("%s, %s\n%m", "Couldn't link to supervised attribute",
+		 cdh_ObjidToString(0, SupObject->Objid, 1), sts);
       sp->agent = mh_eAgent_None;    
     }
   }

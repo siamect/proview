@@ -342,6 +342,15 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Recipient for epost and mms alarms.
+      !  The recipient is a user defined in the user database.
+      !*/
+      Object Recipient $Attribute 41 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
       !  Specifies the complete name of supervised parameter.
       !  Attribute is filled in by the user if the input named
       !  IN is left open. If the input is connected the names

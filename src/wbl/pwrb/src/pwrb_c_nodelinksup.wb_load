@@ -334,6 +334,15 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Recipient for epost and mms alarms.
+      !  The recipient is a user defined in the user database.
+      !*/
+      Object Recipient $Attribute 44 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
       !  Attribute is filled in by the server process to the 
       !  NodeLinkSup object itself.
       !*/

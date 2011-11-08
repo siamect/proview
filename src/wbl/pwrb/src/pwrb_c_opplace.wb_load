@@ -257,7 +257,7 @@ SObject pwrb:Class
       !  identity according to the calling parameter EventName.
       !  
       !  SelectList specifies the hierarchies from which
-      !  messages are to be sent to the user. Up to 20 different
+      !  messages are to be sent to the user. Up to 40 different
       !  hierarchies can be specified. If messages from e.g. a
       !  Watchdog object in a node will be received, then the
       !  name of the node will be specified.
