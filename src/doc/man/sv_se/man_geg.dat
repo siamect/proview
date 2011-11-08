@@ -1039,21 +1039,24 @@ Dynamik och action
 En processbild har huvudsakligen två uppgifter, att visa läget i processen för operatoren, och
 att göra det möjlig för operatören att påverka processen.
 
-Den första uppgiften, att visa läget i processen, åstadkommer man genom att lägga in dynamik
-i bilderna. Dynamiken kan vara att 
+För att visa läget i processen lägger man in dynamik i bilderna. Dynamiken kan vara att 
 
 ändra färg på ett objekt <link>geg_dynamic_color
 göra objekt osynliga eller okänsliga <link>geg_dynamic_invisible
 skriva ut texter <link>geg_dynamic_text
 ändra form på ett objekt <link>geg_dynamic_shape
-visa analoga värden i form av kurvor, staplar eller siffror <link>geg_dynamic_analog
+visa analoga värden <link>geg_dynamic_analog
 flytta, skala eller rotera objekt <link>geg_dynamic_move
 Ljud och kommandon <link>geg_dynamic_misc
 
-För den andra uppgifen, att göra det möjligt för operatören att påverka processen, lägger 
-man in action på objekt i processbilden. Action kan vara att
+För att göra det möjligt för operatören att påverka processen, lägger man in action på objekt
+i processbilden. Genom att lägga in action på ett objekt kan man också göra det möjligt för
+operatören att få mer information om objektet, från popup-menyer eller genom att öppna bilder
+eller kurvor mm. Action kan vara att
 
 sätta värden med trycknappar <link>geg_action_button
+popupmeny <link>geg_action_popupmenu
+öppna bilder <link>geg_action_opengraph
 exekvera kommandon <link>geg_action_command
 tooltip <link>geg_action_tooltip
 hjälptexter <link>geg_action_help
@@ -1097,7 +1100,7 @@ För att kunna sätta dynamik gör vi en grupp av de båda cirklarna. När vi öppnar 
 för gruppen har vi nu attributet Dynamic och väljer DigLowColor. Vi sätter DigLowColor.Color
 till en mörkgrå nyans och kopplar DigLowColor.Attribute till en Dv, H1-Dv1.
 
-<image> geg_fig87.png
+<image> geg_fig88.png
 <b>Fig Dynamik DigLowColor
 
 Resultatet ses i figuren nedan. När signalen är hög är indikatorn orange, och signalen är
@@ -1106,6 +1109,832 @@ låg är indikatorn mörkgrå.
 <image> geg_fig90.png
 <b>Fig Indikatorn med hög signal till vänster och låg till höger
 
+Dynamiktypen DigColor är snarlik DigLowColor, och man skulle också kunna ha använt denna typ
+här. Skillnaden är att signalens funktion är inverterad. I DigLowColor anger man den färg
+som objektet har när signalen är låg, medan för DigColor anger man den färg som objektet har
+när signalen är hög. Vi väljer en blå nyans.
+
+<h2>Skifta mellan flera färger
+Vi ska nu se hur man kan skifta mellan flera färger. Vi utgår från indikatorn i exemplet
+ovan och adderar dynamiken DigColor. I objektseditorn har vi nu attributen DigColor.Attribute
+och DigColor.Color. DigColor.Attriubut kopplas mot en signal i databasen, H1-Dv2, och i
+DigColor.Color anges den färg som indikatorn får när signalen är hög.
+
+<image> geg_fig90.png
+<b>Fig En Tredje färg adderad med DigColor
+
+Indikatorn kan nu skifta mellan tre olika färger. DigLowColor skiftar som förut mellan
+mörkgrått och orange beroende på H1-Dv1, och DigColor sätter blå färg när H1-Dv2 går hög.
+Notera att DigColor har högre prioritet än DigLowColor. Man kan se det i objektseditorn där
+dynamiken ordnas i prioritetsordning med hög prioritet överst och låg prioritet underst.
+Den högre prioriteten på DigColor gör att när H1-Dv2 är hög, blåfärgas indikatorn oberoende
+av värdet på H1-Dv1.
+
+<image> geg_fig91.png
+<b>Fig Indikatorn färgas orange när H1-Dv1 är hög, och blå när H1-Dv2 är hög
+
+Vi ska nu lägga till ytterligare en färg och studera begreppet Instance. En del dynamik och
+action typer kan förekomma i flera upplagor, eller flera instanser på samma objekt. För
+DigColor innebär det att när man adderar ytterligare en instans, kan man sätta en färg till
+på objektet. Eftersom det finns upp till 32 instanser kan man sätta 32 olika färger, där 
+varje färg kopplas till en signal i databasen.
+
+Man adderar en DigColor instans genom att öppna DigColor.Instances och markera instans 2.
+Nu visas attributen för denna instans, DigColor2.Attribute och DigColor2.Color. Vi kopplar
+DigColor2.Attribute till signalen H1-Dv3 och anger en grön färg i DigColor2.Color. Notera
+att instanser med högre instans-nummer har högre prioritet, dvs H1-Dv3 kommer att färga
+indikatorn grön oberoende av värdet på H1-Dv1 och H2-Dv2.
+
+<image> geg_fig92.png
+<b>Fig En fjärde färg adderad med DigColor instans 2
+
+Resultatet ses i figuren nedan. Man kan nu skifta mellan fyra olika färger. Förutom de tre
+tidigare, mörkgrått, orange och blått, färgas indikatorn nu grön när signalen H1-Dv3 är hög.
+
+<image> geg_fig93.png
+<b>Fig Indikatorns fyra olika färger
+
+<h2>Färger för varning och fel
+I Proview används genomgående färgerna gult och rött för varning resp fel. Det finns
+två typer av dynamik, DigWarning och DigError, som sätter gul resp röd färg. Fördelen
+jämfört med DigLowColor eller DigColor är att men inte behöver ange färgen, utan det räcker
+att koppla dynamiken till en digital signal i databasen.
+
+Vi använder indikatorn i ovanståend exempel, men färgar om den till mörkgrått, som blir
+den färg man får då varken signalen för DigWarning eller DigError är hög.
+Vi kopplar DigWarning.Attribute till H1-Dv4 och DigError.Attribute till H1-Dv5. 
+
+<image> geg_fig94.png
+<b>Fig Dynamiken DigWarning och DigError
+
+När ingen signal är sätt har indikatorn ursprungsfärgen mörkgrått. När H1-Dv4 sätts får den
+varnings-färgen gul, och när H1-Dv5 sätts får den fel-färgen rött. DigError har högre
+prioritet än DigWarning, alltså blir den röd när H1-Dv4 är satt, oberoende av vad H1-Dv3 har
+för värde.
+
+<image> geg_fig95.png
+<b>Fig Gul färg för varning och röd för fel
+
+<h2> Blinkande dynamik
+För att dra maximal uppmärksamhet till ett objekt kan man sätta DigFlash dynamik på det.
+DigFlash innebär att objektet kommer att blinka, dvs skifta mella två färger, när en signal
+är hög. Blinknings-frekvensen är lika med uppdaterings-frekvensen för objektet. Om Cycle är 
+Slow sker blinkningen med ScanTime för grafen, och om Cycle är Fast med FastScanTime.
+
+Vi sätter DigFlash dynamik på indikatorn och kan nu ange två färger som objektet kommer
+att blinka med, DigFlash.Color och DigFlash.Color2. Vi sätter DigFlash.Color till röd och 
+DigFlash.Color2 till svart, och kopplar DigFlash.Attribute till signalen H1-Dv6.
+
+<image> geg_fig96.png
+<b>Fig DigFlash dynamik
+
+När signalen H1-Dv6 är låg har indikatorn ursprungsfärgen mörkgrå. När H1-Dv6 går hög 
+börjar den blinka med färgerna rött och svart.
+
+<image> geg_fig97.png
+<b>Fig Indikatorn blinkar mellan rött och svart när signalen är hög
+
+<h2>Ändra färg på en analog signal
+Nu ska vi titta på hur man kan ändra färg på ett objekt beroende på värdet på en analog
+signal. Det finns två olika typer av dynamik, FillColor och AnalogColor, som kopplas till
+en analog signal. FillColor färgar en del av ett objekt och hur stor del beror på signalens
+värde. AnalogColor skiftar färg på objektet när signalen passerar vissa gränsvärden.
+
+<h2>Färga till en viss nivå
+Dynamiken FillColor färgar ett objekt till en viss nivå beroende på en analog signal. Den
+liknar mycket stapel-objektet som vi har ett tidigare, med den skillanden att den kan 
+appliceras på vilken form som helst. Vi ska sätta FillColor på en tank som vi hämtar från 
+Hydraulics/Tank2 i subgrafmenyn.
+
+<image> geg_fig102.png
+<b>Fig En tank
+
+Tanken har ingen default dynamik. Vi markerar FillColor i DynType och kopplar den till Av
+objektet H4-Av1. Vi sätter också en mörkgrå nyans i FillLevel.BackgroundColor. 
+FillLevel.MinValue och FillLevel.MaxValue anger området på signalen, som default är 0-100.
+När värdet är noll kommer tanken att färgas helt med bakgrundsfärgen och när värdet är 100 
+med den blå färg som vi sätter i editorn.
+
+<image> geg_fig98.png
+<b>Fig FillColor dynamik på tanken
+
+I figuren nedan har vi satt värdet 70 på H4-Av1 och tanken är fylld upp till denna nivå.
+
+<image> geg_fig99.png
+<b>Fig Tanken fylld till en viss nivå
+
+Man kan fylla tanken i andra rikningar genom att ändra på FillColor.Direction. Används
+FillColor dynamiken i en objektsbild kan också området kopplas till attribut för min och 
+max-värde i databasen.
+
+<h2>Ändra färg över eller under en viss nivå
+Ofta vill man visa att en analog signal har överskridit eller underskridit ett viss värde.
+I tank-exemplet ovan ska nivån normalt ligga under 80, och stiger den över 90 börjar läget
+bli kritiskt. Vi använder dynamikan AnalogColor för att ändra färg på tanken när värdet
+passerar de båda gränsvärdena.
+
+Till att börja med vill vi färga tanken gul när signalen H4-Av1 är över 80. Vi adderar
+AnalogColor till DynType och kan nu sätta AnalogColor.Limit till 80. Typen av gränsvärde,
+AnalogColor.LimitType, är redan GreaterThan, så denna behöver vi inte ändra på. Däremot
+måste vi ange färgen som ska sättas när signalen överskrider 80, och vi lägger in en
+gul nyans i AnlogColor.Color.
+
+För att kunna lägga in ytterligare ett gränsvärde vid 90, lägger vi till instans 2 i 
+AnalogColor.Instances. Nu dyker attributen för AnalogColor2 upp och vi sätter 
+AnalogColor2.Limit till 90 och AnalogColor2.Color till en röd nyans. Notera att man inte
+kopplar något ny signal till instans 2, utan alla instanser använder samma signal.
+
+<image> geg_fig100.png
+<b>Fig AnalogColor dynamik
+
+Resultatet visas figuren nedan. Så länge värdet på H4-Dv1 är under 80 är tanken blå. När
+värdet går över 80 blir den gul, och när 90 passeras blir den röd.
+
+<image> geg_fig101.png
+<b>Fig Vid 80 slår färgen om till gult, och vid 90 till rött
+
+Genom att sätt LimitType till LessThan kan man också lägga till gränsvärden för miniminivåer,
+t ex färga tanken gul om nivån underskrider 20, och röd om tanken underskrider 10.
+
 </topic>
+
+<topic> geg_dynamic_invisible
+Göra objekt osynliga eller okänsliga
+För att göra objekt osynliga eller dimmade använder man dynamiken Invisible. För att
+demonstrera det skapar vi en trycknapp från Button/Button2MetallFrame i subgrafsmenyn.
+
+<image> geg_fig103.png
+<b>Fig En trycknapp
+
+<h2>Osynlig 
+Trycknappen har som default attributen för DigToggle, och genom att addera Invisible till
+DynType ser vi även attributen för Invisible. Genom att koppla en digital signal till 
+Invisible.Attribut kommer trycknappen att bli osynlig när signalen är hög.
+
+<image> geg_fig104.png
+<b>Fig Attribut for invisible
+
+Vi kopplar Invisible.Attribut till H1-Dv2, och resultatet blir att när H1-Dv2 är hög blir
+trycknappen osynlig.
+
+<h2>Dimmad
+Om man endast vill göra trycknappen okänslig för klick och dimmad, sätter man Invisible.Dimmed
+till 1.
+
+<image> geg_fig105.png
+<b>Fig Invisible.Dimmed satt för dimmad dynamik
+
+När H1-Dv2 blir hög är trycknappen inte lägre känslig för musklick. Det markeras genom att
+den ritas dimmad.
+
+<image> geg_fig106.png
+<b>Fig Trycknappen in dimmat läge till vänster
+</topic>
+
+<topic> geg_dynamic_text
+För att skriva ut en dynamisk text måste man använda en subgraf som innehåller en Annotation.
+T ex innehåller nästan alla trycknappar in Annotation för att man ska kunna skriva ut en
+text på knappen. Även value och inputvalue subgrafer innehåller en Annotation.
+
+En annotaion är en plats i subgrafen där en text kan skrivas ut. Texten kan antingen anges
+i editorn, eller med hjälp av några olika typer av dynamik, kopplas till attribut i databasen
+och förändras i runtime. 
+
+Det olika typer av text-dynamik vi ska titta på här är 
+- DigText, där man skiftar mellan två olika texter beroende på en digital signal.
+- Analog text, där man skiftar mellan flera olika texter beroende på en analog signal.
+- Value, som kopplas till ett sträng-attribut i databasen och attributets innehåll.
+
+<h2>Skifta mellan två texter på en digital signal
+Dynamiken DigLowText skiftar mellan två texter beroende på en digital signal.
+Vi skapar en trycknapp av typen ButtonRoundMetalFrame och öppnar objektseditorn.
+
+<image> geg_fig107.png
+<b>Fig Trycknapp med Annotation
+
+I Text kan man lägga in en text som visas på trycknappen, och vi lägger in texten 'Off'.
+Genom att addera dynamiken DigText kommer texten i Text att ersättas av texten in 
+DigText.LowText när signalen vi kopplar till DigText.Attribut är låg. Vi lägger in 'On' i
+DigText.LowText och kopplar DigText.Attribute till Dv'n H1-Dv1. För enkelhets skull kopplar
+vi även ToggleDig.Attribute till samma signal så att vi enkelt kan ändra på den genom att
+klicka på knappen.
+
+<image> geg_fig108.png
+<b>Fig Dynamik DigLowText
+
+Dynamiken fungerar nu så här. När H1-Dv1 är låg skrivs texten 'On' ut på knappen, dvs texten
+i DigText.LowText, och när signalen är hög skrivs texten 'Off' ut, den text vi skrev in i Text
+attributet.
+
+<image> geg_fig109.png
+<b>Fig Låg signal till vänster och hög signal till höger
+
+DigText har flera instanser, och för varje instans kan man ange en text och koppla den till 
+en digital signal. Observera att funktionen är annorlunda för de andra instanserna. För den
+första anger man en LowText, dvs en text som skrivs ut när signalen är låg. På övriga 
+instanser anger man en HighText, en text som skrivs ut när signalen är hög.
+
+
+<h2>Skifta mellan flera texter berorende på en analog signal
+För dynamiken AnalogColor kan man ange upp till 32 olika texter, och vilken av texerna som
+skrivs ut beror på värdet av den analoga signal som kopplas till dynamiken.
+
+Vi använder en ValueLargeCenter för att demonstrera dynamiken. 
+
+<image> geg_fig110.png
+<b>Fig En ValueLargeCenter subgraf
+
+ValueLargeCenter har Value dynamik som default, så vi börjar med att ta bort den genom att 
+ta bort Inherit in DynType, och lägger istället in AnalogText.
+
+I AnalogText.TextMask markerar man de texter som ska användas. Vi kommer att skifta mellan
+fyra olika texter och markerar 2, 3 och 4. Texterna 'Low level', 'Normal level', 'High level'
+och 'Very high level' fylls i text-attributen. Vi behåller enumvärdena, vilket innebär att 
+AnalogText.Text1 visas när signalen är 0, AnalogText.Text2 när signalen är 1 osv. I praktiken
+är det så att texten skiftar vid värdena 0.5, 1.5 och 2.5. Om signalen är större än 3.5
+skrivs inte någon text ut alls.
+
+Vi kopplar också Av'n H4-Av1 till AnalogText.Attribute.
+
+<image> geg_fig111.png
+<b>Fig Value dynamiken ersatt av AnalogText
+
+Resultatet visas i figuren nedan visas value-objektet när H4-Av1 har värden 0, 1, 2 och 3, med
+0 värdet längst ner.
+
+<image> geg_fig112.png
+<b>Fig Texten vid olika värden på H4-Av1
+
+<h2>Visa texten i ett sträng-attribut
+För att visa innehållet i ett sträng-attribut i database använder man Value dynamiken. Som
+i föregående exempel skapar vi ett ValueLargeCenter objekt.
+
+<image> geg_fig110.png
+<b>Fig En ValueLargeCenter subgraf
+
+Den här subgrafen har Value som default dynamik, så vi behöver bara koppla Value.Attribute
+till ett sträng-attribut och lägga in sträng-formatet '%s' i Value.Format. Vi kopplar
+Value.Attribute till Sv-objektet H1-Sv.
+
+<image> geg_fig113.png
+<b>Fig Value dynamik
+
+För att visa resultatet lägger vi in texten 'Starting up' i H1-Sv1 i Xtt.
+
+<image> geg_fig114.png
+<b>Fig Sätt en text i Sv attributet
+
+Texten visas i Value-objektet.
+
+<image> geg_fig115.png
+<b>Fig Texten skrivs ut i value objektet
+</topic>
+
+<topic> geg_dynamic_shape
+I många fall är det bästa sättat att visa läget i processen att ändra form på ett objekt. Det
+kan vara en grind som visas öppen eller stängd, eller ett hänglås som är låst eller olåst.
+Det här kan man åstadkomma genom att använda subgrafer med två eller flera sidor.
+
+Ett exempel på en subgraf med flera sidor är Smiley
+
+Subgrafer med flera sidor hanteras av dynamiktyperna DigShift, AnalogShift och Animation.
+
+<image> geg_fig116.png
+<b>Fig Exempel på subgraf med flera sidor
+
+DigShift växlar mellan två olika sidor beroende på en digital signal.
+AnalogShift växlar mellan flera olika sidor beroende på en analog signal.
+Animation spelar upp ett antal sidor med en viss hastighet så att man får intryck av rörelse.
+
+<h2>Växla mellan två sidor
+Dynamiken DigShift kan användas på en subgraf med flera sidor. Den kopplas till en digial
+signal och växlar mellan första och sista sidan beroende på om signalen är hög eller låg.
+
+Vi använder subgrafen Smiley for demonstrera DigShift. Smiley har dynamiken AnalogShift som
+default, och den måste vi först ta bort genom att återställa Inherit i DynType. I stället
+anger vi DigShift, och kopplar till signalen H1-Dv1.
+
+<image> geg_fig117.png
+<b>Fig Dynamiken DigShift vald
+
+Resultatet visas i figuren nedan. När signalen är låg visas subgrafens första sida, och när
+signalen är hög visas subgrafens sista sida.
+
+<image> geg_fig118.png
+<b>Fig Låg signal till vänster och hög signal till höger
+
+<h2>Växla mellan flera sidor
+AnalogShift kopplas till en analog signal, och kan skifta mellan flera sidor. Värdet på
+den analoga signalen bestämmer index för den sida som visas. När signalen är 0 visas första
+sidan, vid 1 visas andra sidan osv.
+
+Subgrafen Smiley har AnalogShift som default. Det enda vi behöver göra är att koppla den till
+en analog signal. Vi kopplar den till H4-Av1.
+
+<image> geg_fig119.png
+<b>Fig Dynamik AnalogShift
+
+Smiley innehåller 6 olika sidor, när signalen är 0 eller mindre än 0 visas första sidan, när 
+den är 1 visas andra sidan osv. När signalen är 5 eller större än 5 visas sista sidan.
+
+<image> geg_fig120.png
+<b>Fig Signalens värde är 0 till vänster och ökar med 1 för varje bild
+
+<h2>Animation
+TODO
+
+<image> geg_fig121.png
+<b>Fig Animation för att öppna/stänga ett hänglås
+</topic>
+
+<topic> geg_dynamic_analog
+Visa anloga värden
+
+<h2>Visa analoga värden i sifferform
+För att visa analoga värden i sifferform använder man dynamiken Value. Value kopplas till
+en analog signal och konverteras till lämplig form med hjälp av format specifikationen.
+
+Value dynamiken kan användas på subgrafer som innehåller en annotation, dvs en plat för att
+skriva ut en text. Ett exempel på en sådan subgraf är ValueLargeCenter. 
+
+<image> geg_fig122.png
+<b>Fig ValueLargeCenter
+
+Vi skapar en ValueLargeCenter och kopplar den till den analoga signalen H4-Av1. Vi måste
+dessutom ange formateringen i Value.Format. '%f' är formateringen för ett flyttal, och man
+kan även specifiera hur många tecken och hur många decimaler som talet ska skriva ut
+med. Med '%7.2f' anges att talet är upp till 7 tecken stort, inklusive punkten, och att två
+av dessa är decimaler.
+
+<image> geg_fig123.png
+<b>Fig Value dynamik med format specifikation
+
+Resultatet visas i figuren nedan. Det analoga värdet skrivs med två decimaler.
+
+<image> geg_fig124.png
+<b>Fig Value dynamik
+
+
+Notera att Value dynamiken kan användas för att visa innehållet i en rad olika typer av
+signaler, heltal, strängar, tider mm.
+
+Genom att skapar flera instanser av Value dynamik för ett objekt kan man visa fler analoga
+värden på samma objekt. Det här kräver att subgrafen innehåller flera Annotations.
+
+Analoga värden kan även visas i form av kurvor, staplar och detta finns beskrivet i kapitlet
+'Speciella Object'
+
+Trend <link> geg_specialobjects_trend
+Bar <link> geg_specialobjects_bar
+
+</topic>
+
+<topic> geg_dynamic_move
+Flytta, skala och rotera objekt
+
+<h2>Flytta ett objekt
+För att flytta och skala ett objekt används dynamiken Move. Vi ska till att börja med titta
+på hur man kan flytta objektet. Objektet kan flyttas i x- och y-led och för varje riktning
+kopplar man en analog signal som specifierar förflyttningen relativt ursprungspositionen.
+Signalvärdet kan räknas om till en förflyttning i Ge-koordinater med en faktor (Move.XFactor
+och Move.YFactor) och ett offset (Move.XOffset och Move.YOffset).
+
+I det här exemplet ska vi flytta en rektangel i x-led. Vi ritar rektangeln och gör en grupp
+av den. Vi ritar också en x-axel för att visa förflyttningen
+
+<image> geg_fig125.png
+<b>Fig En rektangel
+
+När den är grupperad kan vi sätta Move i DynType och attributen för Move visas i 
+objektseditorn. Eftersom vi ska flytta i x-led kopplar Move.XAttribute till signalen H4-Av1
+i databasen. Vi mäter upp områden som rektangeln ska flyttas på, och kommer fram till att
+när signalen variera mellan 0-100 ska rektangeln flyttas 20 Ge-enheter i bilden. Genom att
+placera rektangeln på 0-punkten behöver vi inte ange något offset, men vi måste skala ner
+signalvärdet med 20/100 = 0.2 som vi lägger in i Move.XFactor. I exemplet har vi även lagt
+in en x-axel för att visa storleken på förflyttningen.
+
+<image> geg_fig126.png
+<b>Fig Move dynamik på rektangeln
+
+Resultatet blir att när signalen är 0 ligger rektangeln kvar på ursprungspositionen. Vid 
+värdet 60 har rektanglen flyttats 12 enheter, se figure nedan, och vid värdet 100 har 
+rektangeln flyttas 20 enheter.
+
+<image> geg_fig127.png
+<b>Fig Rektangeln flyttad 12 Ge-enheter i x-led
+
+<h2>Skala ett objekt
+Move dynamiken kan även användas för att skala ett objekt. Skalningen kan ske i x- och y-led
+och för varje riktning kopplar man en analog signal som specifierar storleken på skalningen.
+
+Vi lägger in skalning i x-led för rektangeln i exemplet ovan. Move.ScaleXAttribute kopplas
+till signalen H4-Av2. Vi måste också räkna ut en skalfaktor och lägga in i Move.ScaleXFactor.
+Rektangeln har bredden 2 enheter och med skalfaktorn 0.1 kommer ett signalvärde på 100 att
+ge en bredd på 20 enhter.
+
+<image> geg_fig128.png
+<b>Fig Signal och skalfaktor angivna
+
+Resultatet blir att när signalvärdet är 0, har rektanglen ingen bredd alls, utan ritas som 
+ett streck. Vid signalvärdet 25 ser det ur som i  figuren nedan, rektanglen är skalad 2.5 
+gånger, och när signalvärdet är 100 är rektanglen skalad 10 gånger och täcker hela x-axeln.
+
+<image> geg_fig129.png
+<b>Fig Signalvärdet 25 ger en skalning på 2.5 gånger
+
+<h2>Rotera ett objekt
+För att roterar ett objekt använder man dynamiken Rotate. Rotate kopplas till en analog 
+signal som innehåller rotationen i grader.
+
+Rotate har vissa begränsningar eftersom rektanglar och ellipser endast kan roteras i steg 
+med 90 grader. Därför använder man företrädesvis polylinjer, linjer och cirklar med Rotate.
+
+Vi ritar en enkel visare med ett cirkel-segment och en polylinje. Efter att ha grupperat dem
+sätter vi Rotate i DynType. Vi ritar även en cirkulär skala med ett AxisArc objekt.
+
+<image> geg_fig130.png
+<b>Fig Visare med rotations-dynamik
+
+Visaren kopplas till den analoga signalen H4-Av1. Vi måste också specifiera den punkt som 
+objeket ska rotera runt. I det här fallet är det cirkelsegmentets mittpunkt som har 
+x-koordinaten 9 och y-koordinaten 1. Rotationspunkten läggs in i Rotate.x0 och Rotate.y0.
+
+Skalan som vi har ritat har områden -100 - 100, vilket är området för signalen H4-Av1. Denna
+ska räknas om till grader och motvarande rotation är -90 - 90 grader, dvs skalfaktorn är 0.9.
+Vi lägger in 0.9 i Rotate.Factor.
+
+<image> geg_fig131.png
+<b>Fig Visaren kopplade till en analog signal och skalfaktorn satt till 0.9
+
+Resulatet kan ses i figuren nedan.
+
+<image> geg_fig132.png
+<b>Fig Värdet 40 ger en rotation på 36 grader
+</topic>
+
+<topic> geg_dynamic_misc
+Ljud och kommandon
+
+TODO
+</topic>
+
+<topic> geg_action_button
+Sätta värden med trycknappar
+
+<h2>Sätta ett digitalt värde
+Action SetDig sätter värdet på en digital signal till 1 när man klickar på ett objekt.
+
+Vi börjar med att tillverka en knapp av en rektangel. Genom att sätta 3D och öka shadow_width
+till 15 får vi ett karakteristiskt knapp-utseende på rektangeln. Dessutom adderar vi
+gradienten DiagonalLowerRight med gradient_contrast 1 för att ytterligare förstärka 3D 
+effekten. Slutligen gör vi en grupp av rektangeln så att vi kan sätta Action på den.
+
+<image> geg_fig133.png
+<b>Fig En rektangel formad som en trycknapp
+
+För att sätta en digital signal till 1 när man trycker på knappen, sätter vi SetDig i Action.
+Det innebär att om signalens värde är 0 kommer det att sättas till 1. Om det redan är 1 blir
+det ingen förändring.
+
+Vi kopplar SetDig.Attribute till signalen H1-Dv1. 
+
+<image> geg_fig134.png
+<b>Fig Action SetDig på knappen
+
+Resultatet blir att när vi klickar på knappen sätts H1-Dv1 till 1.
+
+Det är möjlig att addera flera instanser av SetDig och för varje ny instans kopplar man en
+ny signal som sätts till 1 när man klickar på knappen. På så sätt kan man sätta flera 
+signaler på en knapptryckning.
+
+
+<h2>Återställa ett digitalt värde
+ResetDig fungera som SetDig med den skillnaden att den sätter värdet 0 på signalen i stället.
+
+Vi sätter Action ResetDig och kopplar till signalen H1-Dv1.
+
+<image> geg_fig135.png
+<b>Fig Action ResetDig på knappen
+
+Resultatet blir att när vi klickar på knappen sätts H1-Dv1 till 0.
+
+<h2>Toggla ett digitalt värde
+Med Action ToggleDig ändrar man värdet på en digital signal när man klickar på objektet. Om
+värdet på signalen är 1, sätt det till 0, och om värdet på signalen är 0 sätts det till 1.
+
+Vi kopplar ToggleDig.Attribute till signalen H1-Dv1.
+
+<image> geg_fig136.png
+<b>Fig Action ToggleDig på knappen
+
+Resultatet blir att värdet på H1-Dv1 ändras när man klickar på knappen.
+
+<h2>Sätta ett digitalt värde så länge knappen är nedtryckt
+Med Action StoDig sättar man värdet på en digital signal till 1 när knappen trycks ned, och 
+återställer till 0 när knappen släpps.
+
+Vi sätter Action StoDig på knappen och kopplar den till H1-Dv1.
+
+<image> geg_fig137.png
+<b>Fig Action StoDig
+
+Resultatet blir att när vi trycker på knappen, sätts H1-Dv1 till 1, och när vi släpper
+knappen sätts H1-Dv1 till 0.
+
+<h2>Sätta ett analog värde
+För att sätta ett värde i en analog signal använder man Action SetValue. SetValue kopplas till
+en analog signal, och man klickar på objektet sätts ett specificerat värde i signalen.
+
+Vi sätter Action SetValue på knappen, och kopplar till Av-objektet H4-Av1. Vi vill sätta
+värdet 4.5 och lägger in 4.5 i SetValue.Value.
+
+<image> geg_fig138.png
+<b>Fig SetValue
+
+Resultatet blir att när vi klickar på knappen läggs värdet 4.5 in i H4-Av1.
+
+SetValue tillåter flera instanser, och för varje instans anger man ett värde och kopplar
+instansen till en analog signal. Men knapptryckningen kan man då sätta olika värden in ett
+antal analoga signaler.
+
+<h2>Öka/Minska knappar
+Med action IncrAnalog kan man öka eller minska värdet på en analog singnal med en 
+knapptryckning. IncrAnalog kopplas till en analog signal och i IncrAnalog.Increment anger
+man hur mycket värdet ska öka eller minska vid varje klick. Man kan också lägga in min och
+max-värde för signalen.
+
+Vi lägger ut en ButtonUp och en ButtonDown. 
+
+<image> geg_fig148.png
+<b>Fig ButtonUp och ButtonDown
+
+Båda har SetDig som default. Vi tar bort SetDig genom att avmarkera Inherit i Action, och 
+markerar istället IncrAnalog. Vi kopplar båda knapparna till signalen H4-Av1. ButtonUp knappen
+ska öka värdet med 1 för varje klick, så vi sätter IncrAnalog.Increment till 1. ButtonDown
+knappen ska minska värdet med 1, så vi sätter IncrAnalog.Increment till -1. Vi lägger också 
+in min och maxvärden och sätter IncrAnalog.MaxValue till 10. 
+
+<image> geg_fig149.png
+<b>Fig ButtonUp till vänster och ButtonDown till höger
+
+Resultatet blir att när vi klickar på ButtonUp knappen ökar värdet på H4-Av1 med 1 för varje
+klick tills värdet har nått max-värdet 10. När vi klickar på ButtonDown minskar värdet med 1
+för varje klick men går inte under min-värdet 0.
+
+<h2>Radioknappar
+Radioknappar används när man vill välja ut ett alternativ av ett antal alternativ. För varje
+alternativ skapar man en radioknapp och kopplar den till en digital signal. Därefter
+grupperar man radio-knapparna. Action RadioButton fungerar så att signalen för den radioknapp
+man klickar på sätts, medan övriga radioknappar i gruppen återställs. Det innebär att det är
+högst ett alternativ valt, dvs bara en av signalerna är 1. 
+
+Vi lägger ut fyra radioknappar av typen RadioButtonRelief. 
+
+<image> geg_fig150.png
+<b>Fig Fyra radioknappar
+
+De har redan action RadioButton som default. Vi kopplar radioknapparna till var sin digital 
+signal, H1-Dv1, H1-Dv2, H1-Dv3 och H1-Dv4. Därefter grupperar vi de fyra radioknapparna så 
+att de tillhör samma grupp. Vidare lägger vi in några lämpliga texter för att beskriva de 
+olika alternativen.
+
+<image> geg_fig151.png
+<b>Fig Den första radioknappen kopplad till H1-Dv1
+
+När vi tar upp grafen med radioknappar i operatörsmiljön, kan vi välja ett av alternativen. 
+Det utvalda makeras med ett svart prick, medan tidigare utvalda återställs. Samtidigt sätts 
+signalen som den utvalda knappen är kopplad till, medan övriga signaler nollställs. I figuren
+nedan är andra alternativet makerat, dvs H1-Dv2 är 1 och Dv1, Dv3 och Dv4 0.
+
+<image> geg_fig152.png
+<b>Fig Radioknapp markerad
+
+<h2>Checkbox
+Checkboxar brukar användas för att bocka för ett antal alternativ ut en lista. Till skillnad 
+från radioknappar kan man välja ut flera alternativ samtidigt. En checkbox har action 
+ToggleDig kombinerad med dynamiken DigShift. 
+
+Vi skapar fyra checkboxar av typen Checkbox2, och lägger beskrivande texter intill.
+
+<image> geg_fig153.png
+<b>Fig Checkboxar
+
+Checkboxarna kopplas till signalerna H1-Dv1, H1-Dv2, H1-Dv3 och H1-Dv4. Notera att både
+DigShift.Attribute och ToggleDig.Attribut kopplas till samma signal.
+
+<image> geg_fig154.png
+<b>Fig Objektseditorn för den första checkboxen
+
+I figuren nedan är första och tredje checkboxen markerad, dvs H1-Dv1 och H1-Dv3 är satta till
+1.
+
+<image> geg_fig155.png
+<b>Fig Checkboxar markerade
+
+</topic>
+
+<topic> geg_action_popupmenu
+Popup-meny
+Med action PopupMenu kan man genom att högerklicka på ett objekt visa en popup-meny. 
+Popup-menyn är kopplad till ett objekt i databasen, och visar upp metoderna för det objektet.
+Vilka metoder som visas i popup-menyn beror på hur objektet är konfigurerat i databasen, och
+vilka metoder som finns definerade för den typen av objekt.
+
+Låt oss börja med ett enkelt exempel där vi visar värdet i ett Av-objekt i ett Value fält.
+Vi skapar en ValueLargeCenter, kopplar den till H4-Av1 och lägger in formateringen %7.2f i
+Value.Format.
+
+<image> geg_fig122.png
+<b>Fig ValueLargeCenter
+
+Nu adderar vi även PopupMenu i Action, och lägger in Av-objektet i PopupMenu.ReferenceObject.
+Notera att det är hela objektet som refereras och inte ett enskilt attribut.
+
+Vi måste också öppna Files/Graph Attributes från menyn och sätta MB3Action till PopupMenu.
+
+<image> geg_fig139.png
+<b>Fig Action PopupMenu adderad
+
+När vi nu tar upp bilden i operatörsmiljön och högerklickar på Value fältet öppnas 
+popup-menyn.
+
+<image> geg_fig140.png
+<b>Fig Popupmenyn
+
+Vilka metoder som finns i popmenyn beror vilken klass det refererade objektet har och hur
+det är konfigurerat. I figuren nedan kan visas Av-objektets konfigurering, och vi kan se
+attributen DefGraph, DefTrend, HelpTopic, DataSheet, CircuitDiagram, Photo och Note som
+alla har samband med olika metoder.
+
+<image> geg_fig141.png
+<b>Fig Konfigurereringen av H4-Av1
+
+Vi ska här gå igenom några av alternativen i popmenyn och se hur de är konfigurerade, eller
+vad de är beroende av
+
+<b>Graph
+För Graph kan man specifiera en graf som visar information om objektet, eller 
+anläggningsdelen där objektet förekommer. Konfigureringen sker genom att man lägger in ett
+XttGraph objekt i DefGraph. För H4-Av1 är inte DefGraph ifyllt, och då öppnas grafen för 
+närmaste överliggande objekt som har DefGraph ifyllt. I det här fallet är det H4 som har
+en default graf angiven.
+
+<b>Object Graph
+Object Graph visar objektsbilden för objektet. Objektsbilden är en graf som visar 
+information om ett objekt av en viss klass. Om det finns en objektbild tillgänglig för det
+aktuella klassen finns det här alternativet i menyn.
+
+<b>Trend
+Visar en trend för objektet. Det kräver att en trend är konfigurerad med ett DsTrend objekt,
+och att trend-objektet är inlagt in attributet DefTrend. DefTrend kan även vara ett DsFast
+eller PlotGroup objekt.
+
+<b>History
+Visar en kurva med process historik för objektet. Det kräver att lagring av data är 
+konfigurerat med ett SevHist objekt under objektet.
+
+<b>Hist Event
+Hist Event öppnar en dialog där man kan söka efter larm och händelser som finns lagrade för
+det aktuella objektet. 
+
+<b>Block Events
+Block Event öppnar en dialog där man kan blockera larm av olika prioritet.
+
+<b>Help
+Help visar en hjälptext för objektet. Hjälptexter skrivs in i en hjälp-fil 
+($pwrp_cnf/xtt_help.dat) och varje text omfattar ett ämne (topic). Genom att lägga in ett ämne
+i attributet HelpTopic visas texten för det här ämnet när Help alternativet i popupmenyn
+aktiveras.
+
+<b>Note
+Med Note kan man skriva in en text som lagras i objektets Note-attribut. Note texten visas i
+objektets objektsbild.
+
+<b>Open Object
+Open Object öppnar objektet och visar innehållet i objektet.
+
+<b>RtNavigator
+RtNavigator letar upp objektet i runtime navigatorn.
+
+<b>Crossreferences
+Visar en lista med referenser till objektet i plc-kod och grafer.
+
+<b>Help Class
+Help Class öppnar en hjälptext för objekts-klassen.
+
+<b>Photo
+Photo visar ett fotografi på objektet i anläggningen. Det konfigureras genom att man lägger
+in en URL till fotografiet i attributet Photo. 
+
+<b>DataSheet
+Om man har ett datablad för objektet, kan man lägga in en URL till detta i attributet
+DataSheet.
+
+<b>CircuitDiagram
+En länk till ett kretsschema kan läggas in i attributet CircuitDiagram.
+</topic>
+
+<topic> geg_action_opengraph
+Öppna en graf
+För att öppna en graf genom att klicka på ett objekt, använder man normalt action OpenGraph.
+Man kan även använda action Command med kommandot 'open graph'.
+
+<h2>Öppna en graf från en trycknapp
+
+Vi tillverkar en trycknapp för att öppna en bild med en rektangel och en text som grupperas.
+
+<image> geg_fig142.png
+<b>Fig Trycknapp för att öppna en bild
+
+I första exemplet sätter vi action till OpenGraph. OpenGraph kräver att man har ett 
+konfigurerat XttGraph objekt i databasen (se kapitel...). XttGraph objektet läggs in i
+OpenGraph.GraphObject.
+
+<image> geg_fig143.png
+<b>Fig OpenGraph action
+
+Man kan även öppna en graf med action Command och kommandot
+
+<c>open graph 'graphname' [/width=] [/height=]
+
+eller en objektsbild med kommandot
+
+<c>open graph /class /instance=
+
+I det här exemplet har vi satt Command i Action och lagt ett kommando för att öppna
+objektsbilden för Av-objektet H4-Av1.
+
+<image> geg_fig144.png
+<b>Fig Öppna en objektsbild
+
+Om man redan har action PopupMenu och dessutom vill öppna objektsbilden när man klickar
+på objektet, då räcker det med att addera OpenGraph till action. Man behäver inte fylla
+i något objekt, utan det objekt som är angivet i PopupMenu.ReferenceObject väljs som default.
+
+<image> geg_fig145.png
+<b>Fig Öppna objektsbilden när PopupMenu är konfigurerat
+
+
+<h2>Stänga en graf
+För att stänga en graf används action CloseGraph. 
+
+<image> geg_fig146.png
+<b>Fig Trycknapp för att stänga en graf
+
+Vi skapar en trycknapp med texten 'Close' och sätter Action till CloseGraph.
+
+<image> geg_fig147.png
+<b>Fig Action CloseGraph
+
+</topic>
+
+<topic> geg_action_command
+Exekvera kommandon
+Med action Command kan man ange ett xtt-kommando som exekveras när man klickar på ett objekt.
+Det finns en rad xtt-kommandon för att öppna bilder, visa kurvor, anropa metoder etc. Xtt
+kommandona finns beskrivna i Operator's Guide. Man kan även exekvera script med Command.
+
+I det har exemplet ska vi öppna en trend-kurva från en trycknapp.
+Vi skapar en rektangel, lägger en lämplig text ovanpå och grupperar rektangeln och texten.
+
+<image> geg_fig156.png
+<b>Fig Kommando trycknapp
+
+I Action markeras Command och i Command.Command läggs xtt-kommandot in. Vi vill öppna en
+trend-kurva som är konfigurerad med DsTrend objektet H4-Av1-Trend, och kommandot för att
+öppna kurvan är
+
+<c>open trend H4-Av1-Trend
+
+<image> geg_fig157.png
+<b>Fig Kommando för att öppna en trend
+
+<h2>Exekvera ett script
+Med ett script kan man utföra flera kommandon samtidigt, men man kan även läsa attribut
+i databasen, test på olika villkor, och sätta attribut.
+
+Ett script exekveras med ett xtt-kommando genom att ange filnamnet för scriptet med ett '@'
+tecken framför, t ex
+
+<c>@$pwrp_exe/my_script
+
+kommer att exekvera scriptet my_script.rtt_com på $pwrp_exe.
+
+Här är ett exempel på ett script som öppnar grafen g1 om H1-Dv1 är satt, annars öppnas grafen
+g2.
+
+<c>main()
+<c>  int sts;
+<c>
+<c>  if ( GetAttribute( "H1-Dv1.ActualValue", sts))
+<c>    open graph g1
+<c>  else
+<c>    open graph g2
+<c>  endif
+<c>endmain
+
+
+</topic>
+
 
 </chapter>
