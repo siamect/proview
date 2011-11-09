@@ -45,6 +45,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
+#include "co_syi.h"
 #include "rt_errh.h"
 #include "rt_qcom.h"
 #include "rt_ini_event.h"
@@ -64,6 +65,15 @@ union alau_Event
     mh_sReturn  Return;
     mh_sBlock   Block;
 };
+
+rt_post::rt_post() : scan_time(1), conf(0), udb(0), sent_sms_startidx(0), sent_sms_endidx(0), 
+		     sent_email_startidx(0), sent_email_endidx(0)
+{ 
+  pwr_tStatus sts;
+
+  strcpy( systemgroup, ""); 
+  syi_NodeName( &sts, nodename, sizeof(nodename));
+}
 
 void rt_post::open()
 {
@@ -199,6 +209,7 @@ pwr_tStatus rt_post::mh_alarm_bc( mh_sMessage *MsgP)
   pwr_tDeltaTime diff;
   int rcvnum;
   char rcv_array[10][80];
+  char text[400];
 
   if ( !post || post->conf->Disable)
     return 1;
@@ -282,7 +293,8 @@ pwr_tStatus rt_post::mh_alarm_bc( mh_sMessage *MsgP)
       
       ul->get_email( address, sizeof(address));
       
-      post->format_cmd( cmd,  post->conf->EmailCmd, address, event->Msg.EventText);
+      post->format_email_text( MsgP, text, sizeof(text));
+      post->format_cmd( cmd,  post->conf->EmailCmd, address, text);
 
       if ( post->conf->Log)
 	errh_Info( "Email: %s", cmd);
@@ -298,7 +310,8 @@ pwr_tStatus rt_post::mh_alarm_bc( mh_sMessage *MsgP)
     
       ul->get_sms( sms, sizeof(sms));
 
-      post->format_cmd( cmd,  post->conf->SMS_Cmd, sms, event->Msg.EventText);
+      post->format_sms_text( MsgP, text, sizeof(text));
+      post->format_cmd( cmd,  post->conf->SMS_Cmd, sms, text);
       
       if ( post->conf->Log)
 	errh_Info( "SMS: %s", cmd);
@@ -328,6 +341,63 @@ pwr_tStatus rt_post::mh_clear_alarmlist_bc( pwr_tNodeIndex nix)
 pwr_tStatus rt_post::mh_clear_blocklist_bc( pwr_tNodeIndex nix)
 {
   return 1;
+}
+
+void rt_post::format_sms_text( mh_sMessage *MsgP, char *text, unsigned int size)
+{
+  ala_uEvent 	*event = (ala_uEvent *) MsgP;
+  char 		prio[2];
+  
+  switch ( event->Info.EventPrio) {
+  case mh_eEventPrio_A:
+    strcpy( prio, "A");
+    break;
+  case mh_eEventPrio_B:
+    strcpy( prio, "B");
+    break;
+  case mh_eEventPrio_C:
+    strcpy( prio, "C");
+    break;
+  case mh_eEventPrio_D:
+    strcpy( prio, "D");
+    break;
+  default:
+    strcpy( prio, "?");
+  }
+
+  snprintf( text, size, "Proview %s Prio %s,\n%s,\n%s", nodename, prio, event->Msg.EventText,
+	    event->Msg.EventName);
+}
+
+void rt_post::format_email_text( mh_sMessage *MsgP, char *text, unsigned int size)
+{
+  ala_uEvent 	*event = (ala_uEvent *) MsgP;
+  char prio[2];
+  pwr_tTime etime;
+  char timstr[40];
+  
+  switch ( event->Info.EventPrio) {
+  case mh_eEventPrio_A:
+    strcpy( prio, "A");
+    break;
+  case mh_eEventPrio_B:
+    strcpy( prio, "B");
+    break;
+  case mh_eEventPrio_C:
+    strcpy( prio, "C");
+    break;
+  case mh_eEventPrio_D:
+    strcpy( prio, "D");
+    break;
+  default:
+    strcpy( prio, "?");
+  }
+
+  etime = net_NetTimeToTime( &event->Info.EventTime);
+  time_AtoAscii( &etime, time_eFormat_DateAndTime, timstr, sizeof(timstr));
+
+  snprintf( text, size, "Proview alarm from node %s\nPriority %s\nEvent time %s\n\nEvent text:  %s\nEvent name:  %s", 
+	    nodename, prio, timstr, event->Msg.EventText, event->Msg.EventName);
 }
 
 void rt_post::format_cmd( char *cmd, char *format, char *address, char *text)

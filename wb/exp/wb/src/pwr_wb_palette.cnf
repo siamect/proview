@@ -218,6 +218,7 @@ palette NavigatorPalette
       class Opc_ServerConfig
       class PlcProcess
       class PlcThread
+      class PostConfig
       class RemoteConfig
       class SysMonConfig
       class StatusServerConfig

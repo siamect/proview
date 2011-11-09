@@ -343,7 +343,16 @@ SObject pwrb:Class
       EndObject
       !/**
       !  Recipient for epost and mms alarms.
-      !  The recipient is a user defined in the user database.
+      !  The recipient is a user defined in the user database in the 
+      !  current system group.
+      !  Recipient can also be a list of users separated by comma, eg
+      !  'dennis, jimmy'. Also symbols defined in the Symbol table in
+      !  the PostConfig object can be used. Symbols should be referenced
+      !  with a $ sign before the symbol name, eg '$on_duty'.
+      !
+      !  The users should be defined in the current system group or in a
+      !  subgroup to this, If a subgroup is used, the subgroup should
+      !  be specified in the recipient name, eg 'sms.dennis'.
       !*/
       Object Recipient $Attribute 41 
         Body SysBody

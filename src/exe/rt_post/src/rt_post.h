@@ -66,10 +66,7 @@ using namespace std;
 
 class rt_post {
  public:
-  rt_post() : scan_time(1), conf(0), udb(0), sent_sms_startidx(0), sent_sms_endidx(0), 
-    sent_email_startidx(0), sent_email_endidx(0)
-    { strcpy( systemgroup, ""); }
-
+  rt_post();
   void init( qcom_sQid *qid);
   void open();
   void close();
@@ -81,6 +78,8 @@ class rt_post {
   void sms_register( mh_sEventId *id);
   int email_check( mh_sEventId *id);
   int sms_check( mh_sEventId *id);
+  void format_sms_text( mh_sMessage *MsgP, char *text, unsigned int size);
+  void format_email_text( mh_sMessage *MsgP, char *text, unsigned int size);
 
   static pwr_tStatus mh_ack_bc( mh_sAck *MsgP);
   static pwr_tStatus mh_return_bc( mh_sReturn *MsgP);
@@ -94,6 +93,7 @@ class rt_post {
   double	scan_time;
   pwr_sClass_PostConfig *conf;
   GeUser 	*udb;
+  char		nodename[80];
   char		systemgroup[80];
   mh_sEventId	sent_sms[200];
   mh_sEventId   sent_email[200];
