@@ -961,6 +961,8 @@ int OpGtk::configure( char *opplace_str)
   if ( opplace_p->StartJavaProcess)
     start_jop = 1;
 
+  // Store autostart array
+  memcpy( autostart_aref, opplace_p->AutoStart, sizeof(autostart_aref)); 
 
   // Examine Graph objects
   for ( i = 0; i < sizeof(opplace_p->FastAvail)/sizeof(opplace_p->FastAvail[0]); i++) {
@@ -975,7 +977,7 @@ int OpGtk::configure( char *opplace_str)
     if ( tid != pwr_cClass_XttGraph)
       continue;
 
-     memset( &attrref, 0, sizeof(attrref));
+    memset( &attrref, 0, sizeof(attrref));
     sts = gdh_ClassAttrToAttrref( pwr_cClass_XttGraph, ".ButtonText", &attrref);
     if ( EVEN(sts)) return sts;
 

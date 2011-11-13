@@ -282,7 +282,7 @@ class GrowWindow : public GrowRect {
 				   double x, double y, GlowArrayElem **background,
 				   double *min, double *max, glow_eDirection *direction);
   void set_input_focus( int focus, glow_eEvent event);
-  int set_source( char *source);
+  int set_source( char *source, char *new_owner);
 
   static void v_value_changed_cb( void *o, double value);
   static void h_value_changed_cb( void *o, double value);

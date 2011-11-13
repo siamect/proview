@@ -40,13 +40,13 @@
 wb_attrname::wb_attrname( const char *name)
 {
   try {
-    char str[80];
+    pwr_tOName str;
     if ( *name != '.') {
       strcpy( str, ".");
-      strcat( str, name);
+      strncat( str, name, sizeof(str)-1);
     }
     else
-      strcpy( str, name);
+      strncpy( str, name,  sizeof(str));
     m_nrep = new wb_nrep( str);
     m_sts = LDH__SUCCESS;
     m_nrep->ref();

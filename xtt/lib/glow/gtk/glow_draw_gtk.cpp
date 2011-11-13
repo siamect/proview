@@ -3700,12 +3700,16 @@ int GlowDrawGtk::get_text_extent_pango( const char *text, int len,
 
   PangoLayout *layout;
   if ( ((GrowCtx *)ctx)->text_coding != glow_eTextCoding_UTF_8) {
-    char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    char *textutf8 = g_convert( text, len, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
     layout = gtk_widget_create_pango_layout( w->toplevel, textutf8);
     g_free( textutf8);
   }
-  else 
-    layout = gtk_widget_create_pango_layout( w->toplevel, text);
+  else {
+    char *textp = (char *) calloc( 1, len + 1);
+    strncpy( textp, text, len);
+    layout = gtk_widget_create_pango_layout( w->toplevel, textp);
+    free( textp);
+  }
 
   PangoFontDescription *desc = pango_font_description_from_string( font_string( font_idx, font_type, size));
   pango_layout_set_font_description( layout, desc);

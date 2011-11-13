@@ -74,6 +74,7 @@ class XttMethodToolbar {
  public:
   static const int m_size = 17;
   static xtt_sMethodButton m_data[m_size];
+  static int m_disabled;
   XNav *m_xnav;
   void *m_parent_ctx;
   unsigned int m_method_mask;
@@ -85,6 +86,8 @@ class XttMethodToolbar {
     get_select_cb(0) { strcpy( m_tooltip_suffix, tooltip_suffix); }
   virtual ~XttMethodToolbar() {}
   virtual void set_sensitive() {}
+
+  static void disable() { m_disabled = 1;}
 };
 
 #endif

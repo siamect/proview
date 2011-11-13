@@ -4769,9 +4769,9 @@ int grow_SetFolderIndex( grow_tObject folder, int idx)
   return ((GrowFolder *)folder)->set_folder( idx);
 }
 
-int grow_SetWindowSource( grow_tObject window, char *source)
+int grow_SetWindowSource( grow_tObject window, char *source, char *owner)
 {
-  return ((GrowWindow *)window)->set_source( source);
+  return ((GrowWindow *)window)->set_source( source, owner);
 }
 
 void grow_GetWindowSize( grow_tCtx ctx, int *width, int *height)

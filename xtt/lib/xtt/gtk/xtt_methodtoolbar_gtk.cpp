@@ -133,6 +133,9 @@ gboolean XttMethodToolbarGtk::set_sensitive_cb( void *data)
 
 void XttMethodToolbarGtk::set_current_sensitive()
 {
+  if ( m_disabled)
+    return;
+
   int		is_attr;
   pwr_sAttrRef	aref;
   xmenu_eItemType menu_type;

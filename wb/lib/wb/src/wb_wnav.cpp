@@ -1009,6 +1009,14 @@ int WNav::get_select( pwr_sAttrRef **attrref, int **is_attr, int *cnt)
         }
         *is_attr_p = 1;
         break;
+      case wnav_eItemType_Crossref:
+        sts = ldh_NameToAttrRef( ldhses, attr_str, ap);
+        if ( EVEN(sts)) {
+          // ldh_NameToAttrRef doesn't handle objects with no RtBody...
+          *ap = cdh_ObjidToAref( item->objid);
+        }
+        *is_attr_p = 2;
+	break;
       default:
         sts = ldh_NameToAttrRef( ldhses, attr_str, ap);
         if ( EVEN(sts)) {
@@ -1783,7 +1791,13 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       {
         case flow_eObjectType_Node:
           brow_GetUserData( event->object.object, (void **)&item);
-          aref = item->aref();
+          switch( item->type) {
+	  case wnav_eItemType_Crossref: 
+	    aref = pwr_cNAttrRef;
+	    break;
+	  default:
+	    aref = item->aref();
+	  }
           break;
         default:
           aref = pwr_cNAttrRef;

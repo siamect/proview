@@ -874,7 +874,7 @@ int main(int argc, char *argv[])
         time_since_keepalive = 0;
       }
 
-      if (time_since_rcv >= rn_tcp->LinkTimeout) {
+      if (time_since_rcv >= rn_tcp->LinkTimeout && rn_tcp->LinkTimeout != 0) {
         if (rn_tcp->LinkUp) {
           errh_Info("TCP link down %s", rn_tcp->RemoteHostname);
           rn_tcp->LinkUp = 0;

@@ -1055,6 +1055,13 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-HelpFilter"
 	EndBody
       EndObject
+      Object Photo $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Photo"
+	  Attr MethodName = "$Object-Photo"
+	  Attr FilterName = "$Object-PhotoFilter"
+	EndBody
+      EndObject
       Object Note $MenuButton
 	Body SysBody
 	  Attr ButtonName = "Note"
@@ -1097,13 +1104,6 @@ SObject pwrs:Class
 	  Attr ButtonName = "Help Class"
 	  Attr MethodName = "$Object-HelpClass"
 	  Attr FilterName = "$Object-HelpClassFilter"
-	EndBody
-      EndObject
-      Object Photo $MenuButton
-	Body SysBody
-	  Attr ButtonName = "Photo"
-	  Attr MethodName = "$Object-Photo"
-	  Attr FilterName = "$Object-PhotoFilter"
 	EndBody
       EndObject
       Object DataSheet $MenuButton

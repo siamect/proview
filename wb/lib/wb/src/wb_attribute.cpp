@@ -234,7 +234,7 @@ wb_attribute::wb_attribute(const wb_attribute& pa, int idx, const char *aname) :
 {
   pwr_tCid cid;
   wb_attrname n;
-  char attrname[120];
+  pwr_tAName attrname;
   
   if ( !cdh_tidIsCid( pa.tid()) || pa.m_orep == 0)
     return;

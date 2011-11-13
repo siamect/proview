@@ -193,9 +193,9 @@ int XttGe::set_folder_index( const char *name, int idx)
   return graph->set_folder_index( name, idx);
 }
 
-int XttGe::set_subwindow_source( const char *name, char *source)
+int XttGe::set_subwindow_source( const char *name, char *source, char *object)
 {
-  return graph->set_subwindow_source( name, source);
+  return graph->set_subwindow_source( name, source, object);
 }
 
 XttGe::~XttGe()

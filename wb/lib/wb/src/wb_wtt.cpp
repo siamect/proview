@@ -1107,6 +1107,13 @@ void Wtt::activate_cut()
     return;
   }
 
+  for ( int i = 0; i < sel_cnt; i++) {
+    if ( is_attr[i]) {
+      message( 'E', "Selected item is not an object");      
+      return;
+    }
+  }
+
   sts = ldh_Cut( ldhses, sel_list, false);
   if (EVEN(sts)) {
     message( 'E', wnav_get_message( sts));

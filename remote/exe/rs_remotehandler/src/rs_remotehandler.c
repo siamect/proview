@@ -61,6 +61,7 @@
 *                                               i sökvägarna till exe-filerna
 *			040422	C Jurstrand	4.0.0
 *			101209	R Karlsson	Adderat stöd för Websphere MQ
+*			111102	cs		RK512 ported from ELN version.
 *			
 * Description:
 *       Start and control of transportprocesses for remote communication
@@ -320,6 +321,28 @@ static void AddTransports()
     tp[tpcount].objid = objid;
     tp[tpcount].objref = objref;
     tp[tpcount].classid = pwr_cClass_Remnode3964R;
+    tp[tpcount].cpid = -1;
+    tp[tpcount].first = true;
+      
+    remcfgp->RemNodeObjects[tpcount] = objid;
+
+    tpcount++;
+    sts = gdh_GetNextObject (objid, &objid);
+  }
+
+  sts = gdh_GetClassList (pwr_cClass_RemnodeRK512, &objid);
+  while ( ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer(objid, &objref);
+    sprintf(tp[tpcount].path, "rs_remote_rk512"); 
+    tp[tpcount].id = 0;
+    tp[tpcount].disable = &((pwr_sClass_Remnode3964R *) objref)->Disable;
+    tp[tpcount].restart_limit = &((pwr_sClass_RemnodeRK512 *) objref)->RestartLimit;
+    tp[tpcount].restarts = &((pwr_sClass_RemnodeRK512 *) objref)->RestartCount;
+    ((pwr_sClass_RemnodeRK512 *) objref)->RestartCount = 0;
+    tp[tpcount].objid = objid;
+    tp[tpcount].objref = objref;
+    tp[tpcount].classid = pwr_cClass_RemnodeRK512;
     tp[tpcount].cpid = -1;
     tp[tpcount].first = true;
       

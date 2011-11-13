@@ -1106,6 +1106,10 @@ int pb_gsd::build()
 
   // Check Module UserPrmDataLen
   for ( gsd_sModule *mp = modulelist; mp; mp = mp->next) {
+    if ( mp->Ext_Module_Prm_Data_Len > 0 && !mp->extuserprmdataconst) {
+      mp->extuserprmdataconst = (gsd_sExtUserPrmDataConst *) calloc( 1, sizeof(gsd_sExtUserPrmDataConst));
+      mp->extuserprmdataconst->len = mp->Ext_Module_Prm_Data_Len; 
+    }
     if ( mp->Ext_Module_Prm_Data_Len == 0 && mp->extuserprmdataconst)
       mp->Ext_Module_Prm_Data_Len = mp->extuserprmdataconst->len +
 	mp->extuserprmdataconst->Const_Offset;

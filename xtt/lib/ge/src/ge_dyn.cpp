@@ -1710,9 +1710,10 @@ void GeDigLowColor::set_attribute( grow_tObject object, const char *attr_name, i
 
     strncpy( attribute, attr_name, sizeof( attribute));
     if ( dyn->total_dyn_type & ge_mDynType_Tone)
-      sprintf( msg, "DigLowTone.Attribute = %s", attr_name);
+      snprintf( msg, sizeof(msg), "DigLowTone.Attribute = %s", attr_name);
     else
-      sprintf( msg, "DigLowColor.Attribute = %s", attr_name);
+      snprintf( msg, sizeof(msg), "DigLowColor.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -1728,12 +1729,13 @@ int GeDigLowColor::set_color( grow_tObject object, glow_eDrawType color)
 
   if ( dyn->total_dyn_type & ge_mDynType_Tone) {
     this->color = glow_eDrawType( color / 30);
-    sprintf( msg, "DigLowTone.Tone = %s", grow_ColorToneToName( this->color));
+    snprintf( msg, sizeof(msg), "DigLowTone.Tone = %s", grow_ColorToneToName( this->color));
   }
   else {
     this->color = color;
-    sprintf( msg, "DigLowColor.Color = %s", grow_ColorToName(this->color));
+    snprintf( msg, sizeof(msg), "DigLowColor.Color = %s", grow_ColorToName(this->color));
   }
+  msg[sizeof(msg)-1] = 0;
   dyn->graph->message( 'I', msg);
   return 1;
 }
@@ -2016,18 +2018,19 @@ void GeDigColor::set_attribute( grow_tObject object, const char *attr_name, int 
     strncpy( attribute, attr_name, sizeof( attribute));
     if ( instance == ge_mInstance_1) {
       if ( dyn->total_dyn_type & ge_mDynType_Tone)
-	sprintf( msg, "DigTone.Attribute = %s", attr_name);
+	snprintf( msg, sizeof(msg), "DigTone.Attribute = %s", attr_name);
       else
-	sprintf( msg, "DigColor.Attribute = %s", attr_name);
+	snprintf( msg, sizeof(msg), "DigColor.Attribute = %s", attr_name);
     }
     else {
       if ( dyn->total_dyn_type & ge_mDynType_Tone)
-	sprintf( msg, "DigTone%d.Attribute = %s", GeDyn::instance_to_number( instance),
+	snprintf( msg, sizeof(msg), "DigTone%d.Attribute = %s", GeDyn::instance_to_number( instance),
 	       attr_name);
       else
-	sprintf( msg, "DigColor%d.Attribute = %s", GeDyn::instance_to_number( instance),
+	snprintf( msg, sizeof(msg), "DigColor%d.Attribute = %s", GeDyn::instance_to_number( instance),
 	       attr_name);
     }
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -2044,19 +2047,20 @@ int GeDigColor::set_color( grow_tObject object, glow_eDrawType color)
   if ( dyn->total_dyn_type & ge_mDynType_Tone) {
     this->color = glow_eDrawType( color / 30);
     if ( instance == ge_mInstance_1)
-      sprintf( msg, "DigTone.Tone = %s", grow_ColorToneToName( this->color));
+      snprintf( msg, sizeof(msg), "DigTone.Tone = %s", grow_ColorToneToName( this->color));
     else
-      sprintf( msg, "DigTone%d.Tone = %s", GeDyn::instance_to_number( instance),
+      snprintf( msg, sizeof(msg), "DigTone%d.Tone = %s", GeDyn::instance_to_number( instance),
 	       grow_ColorToneToName( this->color));
   }
   else {
     this->color = color;
     if ( instance == ge_mInstance_1)
-      sprintf( msg, "DigColor.Color = %s", grow_ColorToName( this->color));
+      snprintf( msg, sizeof(msg), "DigColor.Color = %s", grow_ColorToName( this->color));
     else
-      sprintf( msg, "DigColor%d.Color = %s", GeDyn::instance_to_number( instance),
+      snprintf( msg, sizeof(msg), "DigColor%d.Color = %s", GeDyn::instance_to_number( instance),
 	       grow_ColorToName( this->color));
   }
+  msg[sizeof(msg)-1] = 0;
   dyn->graph->message( 'I', msg);
   return 1;
 }
@@ -2290,7 +2294,8 @@ void GeDigWarning::set_attribute( grow_tObject object, const char *attr_name, in
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "DigWaring.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "DigWaring.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -2498,7 +2503,8 @@ void GeDigError::set_attribute( grow_tObject object, const char *attr_name, int 
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "DigError.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "DigError.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -2733,7 +2739,8 @@ void GeDigFlash::set_attribute( grow_tObject object, const char *attr_name, int 
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "DigFlash.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "DigFlash.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -2749,12 +2756,13 @@ int GeDigFlash::set_color( grow_tObject object, glow_eDrawType color)
 
   if ( dyn->total_dyn_type & ge_mDynType_Tone) {
     this->color = glow_eDrawType( color / 30);
-    sprintf( msg, "DigFlash.Tone = %s", grow_ColorToneToName( this->color));
+    snprintf( msg, sizeof(msg), "DigFlash.Tone = %s", grow_ColorToneToName( this->color));
   }
   else {
     this->color = color;
-    sprintf( msg, "DigFlash.Color = %s", grow_ColorToName(this->color));
+    snprintf( msg, sizeof(msg), "DigFlash.Color = %s", grow_ColorToName(this->color));
   }
+  msg[sizeof(msg)-1] = 0;
   dyn->graph->message( 'I', msg);
   return 1;
 }
@@ -2979,11 +2987,12 @@ void GeInvisible::set_attribute( grow_tObject object, const char *attr_name, int
 
     strncpy( attribute, attr_name, sizeof( attribute));
     if ( instance == ge_mInstance_1)
-      sprintf( msg, "Invisible.Attribute = %s", attr_name);
+      snprintf( msg, sizeof(msg), "Invisible.Attribute = %s", attr_name);
     else
-      sprintf( msg, "Invisible%d.Attribute = %s", GeDyn::instance_to_number( instance),
+      snprintf( msg, sizeof(msg), "Invisible%d.Attribute = %s", GeDyn::instance_to_number( instance),
 	       attr_name);
 
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -3301,7 +3310,8 @@ void GeDigBorder::set_attribute( grow_tObject object, const char *attr_name, int
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "DigBorder.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "DigBorder.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -3488,12 +3498,13 @@ void GeDigText::set_attribute( grow_tObject object, const char *attr_name, int *
 
     strncpy( attribute, attr_name, sizeof( attribute));
     if ( instance == ge_mInstance_1) {
-      sprintf( msg, "DigText.Attribute = %s", attr_name);
+      snprintf( msg, sizeof(msg), "DigText.Attribute = %s", attr_name);
     }
     else {
-      sprintf( msg, "DigText%d.Attribute = %s", GeDyn::instance_to_number( instance),
+      snprintf( msg, sizeof(msg), "DigText%d.Attribute = %s", GeDyn::instance_to_number( instance),
 	       attr_name);
     }
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -3709,7 +3720,8 @@ void GeValue::set_attribute( grow_tObject object, const char *attr_name, int *cn
 
     if ( instance == ge_mInstance_1) {
       strncpy( attribute, attr_name, sizeof( attribute));
-      sprintf( msg, "Value.Attribute = %s", attr_name);
+      snprintf( msg, sizeof(msg), "Value.Attribute = %s", attr_name);
+      msg[sizeof(msg)-1] = 0;
       dyn->graph->message( 'I', msg);
     }
   }
@@ -4770,9 +4782,10 @@ void GeAnalogColor::set_attribute( grow_tObject object, const char *attr_name, i
 
     strncpy( e->attribute, attr_name, sizeof( attribute));
     if ( dyn->total_dyn_type & ge_mDynType_Tone)
-      sprintf( msg, "AnalogTone.Attribute = %s", attr_name);
+      snprintf( msg, sizeof(msg), "AnalogTone.Attribute = %s", attr_name);
     else
-      sprintf( msg, "AnalogColor.Attribute = %s", attr_name);
+      snprintf( msg, sizeof(msg), "AnalogColor.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -4789,19 +4802,20 @@ int GeAnalogColor::set_color( grow_tObject object, glow_eDrawType color)
   if ( dyn->total_dyn_type & ge_mDynType_Tone) {
     this->color = glow_eDrawType( color / 30);
     if ( instance == ge_mInstance_1)
-      sprintf( msg, "AnalogTone.Tone = %s", grow_ColorToneToName( this->color));
+      snprintf( msg, sizeof(msg), "AnalogTone.Tone = %s", grow_ColorToneToName( this->color));
     else
-      sprintf( msg, "AnalogTone%d.Tone = %s", GeDyn::instance_to_number( instance),
+      snprintf( msg, sizeof(msg), "AnalogTone%d.Tone = %s", GeDyn::instance_to_number( instance),
 	       grow_ColorToneToName( this->color));
   }
   else {
     this->color = color;
     if ( instance == ge_mInstance_1)
-      sprintf( msg, "AnalogColor.Color = %s", grow_ColorToName( this->color));
+      snprintf( msg, sizeof(msg), "AnalogColor.Color = %s", grow_ColorToName( this->color));
     else
-      sprintf( msg, "AnalogColor%d.Color = %s", GeDyn::instance_to_number( instance),
+      snprintf( msg, sizeof(msg), "AnalogColor%d.Color = %s", GeDyn::instance_to_number( instance),
 	       grow_ColorToName( this->color));
   }
+  msg[sizeof(msg)-1] = 0;
   dyn->graph->message( 'I', msg);
   return 1;
 }
@@ -5099,7 +5113,8 @@ void GeRotate::set_attribute( grow_tObject object, const char *attr_name, int *c
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "Rotate.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "Rotate.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -5324,14 +5339,16 @@ void GeMove::set_attribute( grow_tObject object, const char *attr_name, int *cnt
     char msg[200];
 
     strncpy( move_x_attribute, attr_name, sizeof( move_x_attribute));
-    sprintf( msg, "Move.XAttribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "Move.XAttribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
   else if ( *cnt == 1) {
     char msg[200];
 
     strncpy( move_y_attribute, attr_name, sizeof( move_y_attribute));
-    sprintf( msg, "Move.YAttribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "Move.YAttribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
     (*cnt)--;
   }
@@ -5684,7 +5701,8 @@ void GeAnalogShift::set_attribute( grow_tObject object, const char *attr_name, i
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "AnalogShift.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "AnalogShift.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -5855,7 +5873,8 @@ void GeDigShift::set_attribute( grow_tObject object, const char *attr_name, int 
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "DigShift.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "DigShift.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -6010,7 +6029,8 @@ void GeAnimation::set_attribute( grow_tObject object, const char *attr_name, int
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "Animation.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "Animation.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -6314,7 +6334,8 @@ void GeBar::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "Bar.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "Bar.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -6540,14 +6561,16 @@ void GeTrend::set_attribute( grow_tObject object, const char *attr_name, int *cn
     char msg[200];
 
     strncpy( attribute1, attr_name, sizeof( attribute1));
-    sprintf( msg, "Trend.Attribute1 = %s", attr_name);
+    snprintf( msg, sizeof(msg), "Trend.Attribute1 = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
   else if ( *cnt == 1) {
     char msg[200];
 
     strncpy( attribute2, attr_name, sizeof( attribute2));
-    sprintf( msg, "Trend.YAttribute2 = %s", attr_name);
+    snprintf( msg, sizeof(msg), "Trend.YAttribute2 = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
     (*cnt)--;
   }
@@ -7009,14 +7032,16 @@ void GeXY_Curve::set_attribute( grow_tObject object, const char *attr_name, int 
     char msg[200];
 
     strncpy( x_attr, attr_name, sizeof( x_attr));
-    sprintf( msg, "XY_Curve.XAttr = %s", attr_name);
+    snprintf( msg, sizeof(msg), "XY_Curve.XAttr = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
   else if ( *cnt == 1) {
     char msg[200];
 
     strncpy( y_attr, attr_name, sizeof( y_attr));
-    sprintf( msg, "XY_Curve.YAttr = %s", attr_name);
+    snprintf( msg, sizeof(msg), "XY_Curve.YAttr = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
     (*cnt)--;
   }
@@ -7684,7 +7709,8 @@ void GeTable::set_attribute( grow_tObject object, const char *attr_name, int *cn
     char msg[200];
 
     strncpy( attribute[0], attr_name, sizeof( attribute));
-    sprintf( msg, "Column1.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "Column1.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -8463,9 +8489,10 @@ void GeStatusColor::set_attribute( grow_tObject object, const char *attr_name, i
 
     strncpy( attribute, attr_name, sizeof( attribute));
     if ( dyn->total_dyn_type & ge_mDynType_Tone)
-      sprintf( msg, "StatusTone.Attribute = %s", attr_name);
+      snprintf( msg, sizeof(msg), "StatusTone.Attribute = %s", attr_name);
     else
-      sprintf( msg, "StatusColor.Attribute = %s", attr_name);
+      snprintf( msg, sizeof(msg), "StatusColor.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -8481,12 +8508,13 @@ int GeStatusColor::set_color( grow_tObject object, glow_eDrawType color)
 
   if ( dyn->total_dyn_type & ge_mDynType_Tone) {
     this->nostatus_color = glow_eDrawType( color / 30);
-    sprintf( msg, "StatusTone.NoStatusTone = %s", grow_ColorToneToName( this->nostatus_color));
+    snprintf( msg, sizeof(msg), "StatusTone.NoStatusTone = %s", grow_ColorToneToName( this->nostatus_color));
   }
   else {
     this->nostatus_color = color;
-    sprintf( msg, "StatusColor.NoStatusColor = %s", grow_ColorToName(this->nostatus_color));
+    snprintf( msg, sizeof(msg), "StatusColor.NoStatusColor = %s", grow_ColorToName(this->nostatus_color));
   }
+  msg[sizeof(msg)-1] = 0;
   dyn->graph->message( 'I', msg);
   return 1;
 }
@@ -8714,7 +8742,8 @@ void GeHostObject::set_attribute( grow_tObject object, const char *attr_name, in
     if ( (s = strrchr( hostobject, '.')))
       *s = 0;
 	 
-    sprintf( msg, "HostObject.Object = %s", hostobject);
+    snprintf( msg, sizeof(msg), "HostObject.Object = %s", hostobject);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -8852,12 +8881,13 @@ void GeDigSound::set_attribute( grow_tObject object, const char *attr_name, int 
 
     strncpy( attribute, attr_name, sizeof( attribute));
     if ( instance == ge_mInstance_1) {
-      sprintf( msg, "DigSound.Attribute = %s", attr_name);
+      snprintf( msg, sizeof(msg), "DigSound.Attribute = %s", attr_name);
     }
     else {
-      sprintf( msg, "DigSound%d.Attribute = %s", GeDyn::instance_to_number( instance),
+      snprintf( msg, sizeof(msg), "DigSound%d.Attribute = %s", GeDyn::instance_to_number( instance),
 	       attr_name);
     }
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -9048,7 +9078,8 @@ void GeFillLevel::set_attribute( grow_tObject object, const char *attr_name, int
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "FillLevel.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "FillLevel.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -9338,12 +9369,13 @@ void GeDigCommand::set_attribute( grow_tObject object, const char *attr_name, in
 
     strncpy( attribute, attr_name, sizeof( attribute));
     if ( instance == ge_mInstance_1) {
-      sprintf( msg, "DigCommand.Attribute = %s", attr_name);
+      snprintf( msg, sizeof(msg), "DigCommand.Attribute = %s", attr_name);
     }
     else {
-      sprintf( msg, "DigCommand%d.Attribute = %s", GeDyn::instance_to_number( instance),
+      snprintf( msg, sizeof(msg), "DigCommand%d.Attribute = %s", GeDyn::instance_to_number( instance),
 	       attr_name);
     }
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -9504,7 +9536,8 @@ void GePopupMenu::set_attribute( grow_tObject object, const char *attr_name, int
     strncpy( ref_object, attr_name, sizeof( ref_object));
     if ( (s = strchr( ref_object, '.')))
       *s = 0;
-    sprintf( msg, "PopupMenu.ReferenceObject = %s", ref_object);
+    snprintf( msg, sizeof(msg), "PopupMenu.ReferenceObject = %s", ref_object);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -9754,10 +9787,11 @@ void GeSetDig::set_attribute( grow_tObject object, const char *attr_name, int *c
 
     strncpy( attribute, attr_name, sizeof( attribute));
     if ( instance == ge_mInstance_1)
-      sprintf( msg, "SetDig.Attribute = %s", attr_name);
+      snprintf( msg, sizeof(msg), "SetDig.Attribute = %s", attr_name);
     else
-      sprintf( msg, "SetDig%d.Attribute = %s", GeDyn::instance_to_number( instance),
+      snprintf( msg, sizeof(msg), "SetDig%d.Attribute = %s", GeDyn::instance_to_number( instance),
 	       attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -9962,10 +9996,11 @@ void GeResetDig::set_attribute( grow_tObject object, const char *attr_name, int 
 
     strncpy( attribute, attr_name, sizeof( attribute));
     if ( instance == ge_mInstance_1)
-      sprintf( msg, "ResetDig.Attribute = %s", attr_name);
+      snprintf( msg, sizeof(msg), "ResetDig.Attribute = %s", attr_name);
     else
-      sprintf( msg, "ResetDig%d.Attribute = %s", GeDyn::instance_to_number( instance),
+      snprintf( msg, sizeof(msg), "ResetDig%d.Attribute = %s", GeDyn::instance_to_number( instance),
 	       attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -10128,7 +10163,8 @@ void GeToggleDig::set_attribute( grow_tObject object, const char *attr_name, int
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "ToggleDig.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "ToggleDig.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -10322,7 +10358,8 @@ void GeStoDig::set_attribute( grow_tObject object, const char *attr_name, int *c
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "StoDig.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "StoDig.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -10742,7 +10779,8 @@ void GeIncrAnalog::set_attribute( grow_tObject object, const char *attr_name, in
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "IncrAnalog.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "IncrAnalog.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -10892,7 +10930,8 @@ void GeRadioButton::set_attribute( grow_tObject object, const char *attr_name, i
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "RadioButton.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "RadioButton.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -11349,7 +11388,8 @@ void GeOpenGraph::set_attribute( grow_tObject object, const char *attr_name, int
     strncpy( graph_object, attr_name, sizeof( graph_object));
     if ( (s = strrchr( graph_object, '.')))
       *s = 0;
-    sprintf( msg, "OpenGraph.GraphObject = %s", graph_object);
+    snprintf( msg, sizeof(msg), "OpenGraph.GraphObject = %s", graph_object);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -12026,7 +12066,8 @@ void GeSlider::set_attribute( grow_tObject object, const char *attr_name, int *c
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "Slider.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "Slider.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -12525,7 +12566,8 @@ void GeFastCurve::set_attribute( grow_tObject object, const char *attr_name, int
     strncpy( fast_object, attr_name, sizeof( fast_object));
     if ( (s = strchr( fast_object, '.')))
       *s = 0;
-    sprintf( msg, "FastCurve.FastObject = %s", fast_object);
+    snprintf( msg, sizeof(msg), "FastCurve.FastObject = %s", fast_object);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -13861,7 +13903,8 @@ void GeOptionMenu::set_attribute( grow_tObject object, const char *attr_name, in
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "OptionMenu.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "OptionMenu.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -14480,7 +14523,8 @@ void GeAnalogText::set_attribute( grow_tObject object, const char *attr_name, in
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "AnalogText.Attribute = %s", attr_name);
+    snprintf( msg, sizeof(msg), "AnalogText.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }
@@ -14614,10 +14658,11 @@ void GeSetValue::set_attribute( grow_tObject object, const char *attr_name, int 
 
     strncpy( attribute, attr_name, sizeof( attribute));
     if ( instance == ge_mInstance_1)
-      sprintf( msg, "SetValue.Attribute = %s", attr_name);
+      snprintf( msg, sizeof(msg), "SetValue.Attribute = %s", attr_name);
     else
-      sprintf( msg, "SetValue%d.Attribute = %s", GeDyn::instance_to_number( instance),
+      snprintf( msg, sizeof(msg), "SetValue%d.Attribute = %s", GeDyn::instance_to_number( instance),
 	       attr_name);
+    msg[sizeof(msg)-1] = 0;
     dyn->graph->message( 'I', msg);
   }
 }

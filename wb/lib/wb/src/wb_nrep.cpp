@@ -687,7 +687,7 @@ char *wb_nrep::objectName(const char *n, char *res)
 
 char *wb_nrep::pathName(const char *n, char *res)
 {
-  static char result[80];
+  static pwr_tOName result;
 
   if ( num_seg <= 1) {
     if ( res) {
@@ -745,7 +745,7 @@ char *wb_nrep::segmentName(const char *n, int idx, char *res)
 
 char *wb_nrep::attributeName(const char *n, int idx, char *res)
 {
-  static char result[80];
+  static pwr_tOName result;
 
   if ( idx >= num_attr || idx < 0) {
     if ( res) {
@@ -883,7 +883,7 @@ char *wb_nrep::nameName(const char *n, int ntype, char *res)
 
 char *wb_nrep::unatName(const char *name)
 {
-  static char result[80];
+  static char result[256];
   const char *s;
   char *su;
 

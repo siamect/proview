@@ -866,7 +866,8 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
         // Compare current value to old value
         switch ( m_items[item_idx].attr[attr_idx].type) {
           case pwr_eType_Float32:
-            if ( fabsf ( *(pwr_tFloat32 *)buf - *(pwr_tFloat32 *)m_items[item_idx].old_value) < m_items[item_idx].deadband) {
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tFloat32))) ||
+		 (fabsf ( *(pwr_tFloat32 *)buf - *(pwr_tFloat32 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
               update_time_only = 1;
             }
             else {
@@ -875,7 +876,8 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
             }
             break;
           case pwr_eType_Float64:
-            if ( fabsf ( *(pwr_tFloat64 *)buf - *(pwr_tFloat64 *)m_items[item_idx].old_value) < m_items[item_idx].deadband) {
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tFloat64))) ||
+		 (fabsf ( *(pwr_tFloat64 *)buf - *(pwr_tFloat64 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
               update_time_only = 1;
             }
             else {
@@ -884,7 +886,8 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
             }
             break;
           case pwr_eType_Int64:
-            if ( fabsf ( *(pwr_tInt64 *)buf - *(pwr_tInt64 *)m_items[item_idx].old_value) < m_items[item_idx].deadband) {
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tInt64))) ||
+		 (fabsf ( *(pwr_tInt64 *)buf - *(pwr_tInt64 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
               update_time_only = 1;
             }
             else {
@@ -893,7 +896,8 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
             }
             break;
           case pwr_eType_Int32:
-            if ( fabsf ( *(pwr_tInt32 *)buf - *(pwr_tInt32 *)m_items[item_idx].old_value) < m_items[item_idx].deadband) {
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tInt32))) ||
+		 (fabsf ( *(pwr_tInt32 *)buf - *(pwr_tInt32 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
               update_time_only = 1;
             }
             else {
@@ -902,7 +906,8 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
             }
             break;
           case pwr_eType_Int16:
-            if ( fabsf ( *(pwr_tInt16 *)buf - *(pwr_tInt16 *)m_items[item_idx].old_value) < m_items[item_idx].deadband) {
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tInt16))) ||
+		 (fabsf ( *(pwr_tInt16 *)buf - *(pwr_tInt16 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
               update_time_only = 1;
             }
             else {
@@ -912,7 +917,8 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
             break;
           case pwr_eType_Int8:
           case pwr_eType_Char:
-            if ( fabsf ( *(pwr_tInt8 *)buf - *(pwr_tInt8 *)m_items[item_idx].old_value) < m_items[item_idx].deadband) {
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tInt8))) ||
+		 (fabsf ( *(pwr_tInt8 *)buf - *(pwr_tInt8 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
               update_time_only = 1;
             }
             else {
@@ -921,7 +927,8 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
             }
             break;
           case pwr_eType_UInt64:
-            if ( fabsf ( *(pwr_tUInt64 *)buf - *(pwr_tUInt64 *)m_items[item_idx].old_value) < m_items[item_idx].deadband) {
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tUInt64))) ||
+		 (fabsf ( *(pwr_tUInt64 *)buf - *(pwr_tUInt64 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
               update_time_only = 1;
             }
             else {
@@ -931,7 +938,8 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
             break;
           case pwr_eType_UInt32:
           case pwr_eType_Boolean:
-            if ( fabsf ( *(pwr_tUInt32 *)buf - *(pwr_tUInt32 *)m_items[item_idx].old_value) < m_items[item_idx].deadband) {
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tUInt32))) ||
+		 (fabsf ( *(pwr_tUInt32 *)buf - *(pwr_tUInt32 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
               update_time_only = 1;
             }
             else {
@@ -940,7 +948,8 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
             }
             break;
           case pwr_eType_UInt16:
-            if ( fabsf ( *(pwr_tUInt16 *)buf - *(pwr_tUInt16 *)m_items[item_idx].old_value) < m_items[item_idx].deadband) {
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tUInt16))) ||
+		 (fabsf ( *(pwr_tUInt16 *)buf - *(pwr_tUInt16 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
               update_time_only = 1;
             }
             else {
@@ -949,12 +958,22 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
             }
             break;
           case pwr_eType_UInt8:
-            if ( fabsf ( *(pwr_tUInt8 *)buf - *(pwr_tUInt8 *)m_items[item_idx].old_value) < m_items[item_idx].deadband) {
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tUInt8))) ||
+		 (fabsf ( *(pwr_tUInt8 *)buf - *(pwr_tUInt8 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
               update_time_only = 1;
             }
             else {
               m_items[item_idx].deadband_active = 0;
               *(pwr_tUInt8 *)m_items[item_idx].old_value = *(pwr_tUInt8 *)buf;
+            }
+            break;
+          case pwr_eType_String:
+            if ( !strncmp( (char *)buf, (char *)m_items[item_idx].old_value, m_items[item_idx].value_size)) {
+              update_time_only = 1;
+            }
+            else {
+              m_items[item_idx].deadband_active = 0;
+              strncpy( (char *)m_items[item_idx].old_value, (char *)buf, m_items[item_idx].value_size);
             }
             break;
           default: ;
@@ -964,11 +983,93 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
         // Compare current value to old value
         switch ( m_items[item_idx].attr[attr_idx].type) {
           case pwr_eType_Float32:
-            if ( fabsf ( *(pwr_tFloat32 *)buf - *(pwr_tFloat32 *)m_items[item_idx].old_value) < m_items[item_idx].deadband) {
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tFloat32))) ||
+		 (fabsf ( *(pwr_tFloat32 *)buf - *(pwr_tFloat32 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
               m_items[item_idx].deadband_active = 1;
               set_jump = 1;
             }
-            *(pwr_tFloat32 *)m_items[item_idx].old_value = *(pwr_tFloat32 *)buf;
+	    *(pwr_tFloat32 *)m_items[item_idx].old_value = *(pwr_tFloat32 *)buf;
+	    break;
+          case pwr_eType_Float64:
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tFloat64))) ||
+		 (fabsf ( *(pwr_tFloat64 *)buf - *(pwr_tFloat64 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
+              m_items[item_idx].deadband_active = 1;
+              set_jump = 1;
+            }
+	    *(pwr_tFloat64 *)m_items[item_idx].old_value = *(pwr_tFloat64 *)buf;
+            break;
+          case pwr_eType_Int64:
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tInt64))) ||
+		 (fabsf ( *(pwr_tInt64 *)buf - *(pwr_tInt64 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
+              m_items[item_idx].deadband_active = 1;
+              set_jump = 1;
+            }
+	    *(pwr_tInt64 *)m_items[item_idx].old_value = *(pwr_tInt64 *)buf;
+            break;
+          case pwr_eType_Int32:
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tInt32))) ||
+		 (fabsf ( *(pwr_tInt32 *)buf - *(pwr_tInt32 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
+              m_items[item_idx].deadband_active = 1;
+              set_jump = 1;
+            }
+	    *(pwr_tInt32 *)m_items[item_idx].old_value = *(pwr_tInt32 *)buf;
+            break;
+          case pwr_eType_Int16:
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tInt16))) ||
+		 (fabsf ( *(pwr_tInt16 *)buf - *(pwr_tInt16 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
+              m_items[item_idx].deadband_active = 1;
+              set_jump = 1;
+            }
+	    *(pwr_tInt16 *)m_items[item_idx].old_value = *(pwr_tInt16 *)buf;
+            break;
+          case pwr_eType_Int8:
+          case pwr_eType_Char:
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tInt8))) ||
+		 (fabsf ( *(pwr_tInt8 *)buf - *(pwr_tInt8 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
+              m_items[item_idx].deadband_active = 1;
+              set_jump = 1;
+            }
+	    *(pwr_tInt8 *)m_items[item_idx].old_value = *(pwr_tInt8 *)buf;
+            break;
+          case pwr_eType_UInt64:
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tUInt64))) ||
+		 (fabsf ( *(pwr_tUInt64 *)buf - *(pwr_tUInt64 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
+              m_items[item_idx].deadband_active = 1;
+              set_jump = 1;
+            }
+	    *(pwr_tUInt64 *)m_items[item_idx].old_value = *(pwr_tUInt64 *)buf;
+            break;
+          case pwr_eType_UInt32:
+          case pwr_eType_Boolean:
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tUInt32))) ||
+		 (fabsf ( *(pwr_tUInt32 *)buf - *(pwr_tUInt32 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
+              m_items[item_idx].deadband_active = 1;
+              set_jump = 1;
+            }
+	    *(pwr_tUInt32 *)m_items[item_idx].old_value = *(pwr_tUInt32 *)buf;
+            break;
+          case pwr_eType_UInt16:
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tUInt16))) ||
+		 (fabsf ( *(pwr_tUInt16 *)buf - *(pwr_tUInt16 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
+              m_items[item_idx].deadband_active = 1;
+              set_jump = 1;
+            }
+	    *(pwr_tUInt16 *)m_items[item_idx].old_value = *(pwr_tUInt16 *)buf;
+            break;
+          case pwr_eType_UInt8:
+            if ( (m_items[item_idx].deadband == 0 && !memcmp( buf, m_items[item_idx].old_value, sizeof(pwr_tUInt8))) ||
+		 (fabsf ( *(pwr_tUInt8 *)buf - *(pwr_tUInt8 *)m_items[item_idx].old_value) < m_items[item_idx].deadband)) {
+              m_items[item_idx].deadband_active = 1;
+              set_jump = 1;
+            }
+	    *(pwr_tUInt8 *)m_items[item_idx].old_value = *(pwr_tUInt8 *)buf;
+            break;
+          case pwr_eType_String:
+            if ( !strncmp( (char *)buf, (char *)m_items[item_idx].old_value, m_items[item_idx].value_size)) {
+              m_items[item_idx].deadband_active = 1;
+              set_jump = 1;
+            }
+	    strncpy( (char *)m_items[item_idx].old_value, (char *)buf, m_items[item_idx].value_size);
             break;
           default: ;
         }

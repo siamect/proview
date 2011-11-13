@@ -49,7 +49,7 @@ SObject pwrb:Type
     !/**
     !  The Proview user database $pwra_db/pwr_user.dat is included.
     !  The source is fetched from
-    !      1. $pwrp_src/'nodename'/pwr_user.dat
+    !      1. $pwrp_cnf/'nodename'/pwr_user.dat
     !      2. $pwra_db/pwr_user.dat
     !*/
     Object UserDatabase $Bit
@@ -115,7 +115,7 @@ SObject pwrb:Type
     EndObject
     !/**
     !  The xtt help file is included. The source file is fetched from
-    !     1. $pwrp_src/'nodename'/xtt_help.dat
+    !     1. $pwrp_cnf/'nodename'/xtt_help.dat
     !     2. $pwrp_exe/xtt_help.dat
     !*/
     Object XttHelpFile $Bit
@@ -128,7 +128,7 @@ SObject pwrb:Type
     !/**
     !  The xtt resource file with function key definitions is included. The source
     !  file is fetched from
-    !     1. $pwrp_src/'nodename'/Rt_xtt
+    !     1. $pwrp_cnf/'nodename'/Rt_xtt
     !     2. $pwrp_pop/Rt_xtt
     !  and distributed to /home/b55
     !*/
@@ -142,7 +142,7 @@ SObject pwrb:Type
     !/**
     !  The xtt setup file with menu configuration and symbol definitions is included.
     !  The source is fetched from
-    !     1. $pwrp_src/'nodename'/xtt_setup.rtt_com
+    !     1. $pwrp_cnf/'nodename'/xtt_setup.rtt_com
     !     2. $pwrp_pop/xtt_setup.rtt_com
     !  and distributed to /home/b55
     !*/
@@ -165,7 +165,7 @@ SObject pwrb:Type
     EndObject
     !/**
     !  The .rhosts file used by rsh is included. The source is fetched from
-    !     1. $pwrp_src/'nodename'/.rhosts
+    !     1. $pwrp_cnf/'nodename'/.rhosts
     !     2. $pwra_db/.rhosts
     !*/
     Object RHostsFile $Bit
@@ -197,7 +197,7 @@ SObject pwrb:Type
     EndObject
     !/**
     !  The .ssh/authorized_keys file used by ssh is included. The source is fetched from
-    !     1. $pwrp_src/'nodename'/authorized_keys
+    !     1. $pwrp_cnf/'nodename'/authorized_keys
     !     2. $pwra_db/authorized_keys
     !*/
     Object AuthorizedKeysFile $Bit

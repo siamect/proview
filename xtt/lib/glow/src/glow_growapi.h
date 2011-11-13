@@ -2993,7 +2993,7 @@ extern "C" {
   void grow_GetSubmenuPosition( grow_tObject menu, int item, double *x, double *y);
   int grow_GetMenuParent( grow_tObject menu, grow_tObject *parent);
   int grow_SetFolderIndex( grow_tObject folder, int idx);
-  int grow_SetWindowSource( grow_tObject window, char *source);
+  int grow_SetWindowSource( grow_tObject window, char *source, char *owner);
   void grow_GetWindowSize( grow_tCtx ctx, int *width, int *height);
   int grow_IsJava( char *name, int *is_frame, int *is_applet, char *java_name);
   void grow_GetOwner( grow_tCtx ctx, char *owner);

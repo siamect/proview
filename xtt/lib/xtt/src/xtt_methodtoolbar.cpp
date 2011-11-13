@@ -40,6 +40,8 @@
 #include <stdlib.h>
 #include "xtt_methodtoolbar.h"
 
+int XttMethodToolbar::m_disabled = 0;
+
 xtt_sMethodButton XttMethodToolbar::m_data[XttMethodToolbar::m_size] =
   {{"Help", 		"$Object-Help",		"$Object-HelpFilter", 		"$pwr_exe/xtt_meth_help.png", 		"Help"},
    {"Note",		"$Object-Note",		"$Object-NoteFilter", 		"$pwr_exe/xtt_meth_note.png", 		"Note"},

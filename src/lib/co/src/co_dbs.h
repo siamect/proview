@@ -579,7 +579,8 @@ struct dbs_sMenv {
     pwr_tUInt32  size;    /**< size of mapped file */
     char         *base;
     dbs_sVolRef  *vrp;
-    dbs_sVenv     venv[1];
+    char	 tfname[40];
+    dbs_sVenv    venv[1];
 };
 
 

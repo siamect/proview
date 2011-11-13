@@ -531,7 +531,9 @@ void Xtt::activate_help_proview()
 }
 
 Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
-  root_item(0), input_open(0), command_open(0), india_ok_cb(0), queid(qcom_cNQid), quiet(0), attach_audio(0), select_opplace(0), op_close_button(0), no_advanceduser(0)
+  root_item(0), input_open(0), command_open(0), india_ok_cb(0), queid(qcom_cNQid), quiet(0), 
+  attach_audio(0), select_opplace(0), op_close_button(0), no_advanceduser(0), 
+  network_optimized(0)
 {
   pwr_tStatus	sts;
   int		i;
@@ -600,6 +602,9 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
 	  break;
 	case 'd':
 	  no_advanceduser = 1;
+	  break;
+	case 'n':
+	  network_optimized = 1;
 	  break;
 	case 'l':
 	  if ( i + 1 >= *argc ||
@@ -675,6 +680,9 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
     }
   }
     
+  if ( network_optimized)
+    XttMethodToolbar::disable();
+
   if ( select_opplace) {
     // Check if there is only one single opplace
     pwr_tOName fullname;

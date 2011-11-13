@@ -218,6 +218,7 @@ palette NavigatorPalette
       class Opc_ServerConfig
       class PlcProcess
       class PlcThread
+      class PostConfig
       class RemoteConfig
       class SysMonConfig
       class StatusServerConfig
@@ -307,6 +308,17 @@ palette NavigatorPalette
           class Modbus_TCP_ServerModule
 	}
       } 
+      menu Modbus_RTU 
+      {
+	class Modbus_RTU_Master
+        class Modbus_RTU_Slave
+        class Modbus_RTU_Module
+	menu Server
+	{
+	  class Modbus_RTU_Server
+          class Modbus_RTU_ServerModule
+	}
+      } 
       menu Hilscher_cifX
       {
         class Hilscher_cifX_Master
@@ -327,6 +339,7 @@ palette NavigatorPalette
       {
         class OneWire
         class OneWire_AiDevice
+        class OneWire_AoDevice
         class Maxim_DS18B20
       }
       menu SPI
@@ -370,6 +383,7 @@ palette NavigatorPalette
       class RemnodeTCP
       class RemnodeUDP
       class Remnode3964R
+      class RemnodeRK512
       class RemTrans
       menu Buffers
       {
@@ -911,6 +925,7 @@ palette PlcEditorPalette
       class ItoUInt64	
       class MaskToD
       class NameToStr
+      class StrToEnum
       class UInt64toI	
       class UInt32toI	
     }

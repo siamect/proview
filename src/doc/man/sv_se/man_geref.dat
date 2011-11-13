@@ -3479,6 +3479,7 @@ create 			<link>gecmd_create
 group 			<link>gecmd_group
 move 			<link>gecmd_move
   <t>move currentobject	<link>gecmd_move_currentobject
+  <t>move selectedobject <link>gecmd_move_selectedobject
 new 			<link>gecmd_new
 select 			<link>gecmd_select
   <t>select currentobject <link>gecmd_select_currentobject
@@ -3516,14 +3517,16 @@ set 			<link>gecmd_set
   <t>set graphattributes <link>gecmd_set_graphattributes
 rotate 			<link>gecmd_rotate
   <t>rotate currentobject <link>gecmd_rotate_current
+  <t>rotate selectedobject <link>gecmd_rotate_selected
 scale 			<link>gecmd_scale
   <t>scale currentobject <link>gecmd_scale_current
+  <t>scale selectedobject <link>gecmd_scale_selected
 save 			<link>gecmd_save
 exit 			<link>gecmd_exit
 quit 			<link>gecmd_quit
 open 			<link>gecmd_open
 show 			<link>gecmd_show
-  <t>scale version <link>gecmd_show_version
+  <t>show version <link>gecmd_show_version
 </topic>
 
 <headerlevel>
@@ -3672,9 +3675,28 @@ Flyttar senast skapade objekt.
 <b>Syntax
 
 <c>ge> move currentobject /x= /y=
+<c>ge> move currentobject /absx= /absy=
 
 /x <t>Förflyttning i x-led relativt tidigare position.
 /y <t>Förflyttning i y-led relativt tidigare position.
+/absx <t>Förflyttning i x-led till absolut position.
+/absy <t>Förflyttning i y-led till absolut position.
+</topic>
+
+<topic>gecmd_move_selectedobject
+move selectedobject
+
+Flyttar utvalt objekt.
+
+<b>Syntax
+
+<c>ge> move selectedobject /x= /y=
+<c>ge> move selectedobject /absx= /absy=
+
+/x <t>Förflyttning i x-led relativt tidigare position.
+/y <t>Förflyttning i y-led relativt tidigare position.
+/absx <t>Förflyttning i x-led till absolut position.
+/absy <t>Förflyttning i y-led till absolut position.
 </topic>
 
 <topic>gecmd_new <style>function
@@ -4077,6 +4099,18 @@ Roterar senast skapade objekt runt objektets mittpunkt.
 /angle <t>Vinkel i grader som objektet ska roteras.
 </topic>
 
+<topic>gecmd_rotate_selected
+rotate selectedobject
+
+Roterar utvalt objekt runt objektets mittpunkt.
+
+<b>Syntax
+
+<c>ge> rotate selectedobject /angle=
+
+/angle <t>Vinkel i grader som objektet ska roteras.
+</topic>
+
 <topic>gecmd_scale
 scale
 </topic>
@@ -4089,6 +4123,21 @@ Skalar om senast skapade objekt.
 <b>Syntax
 
 <c>ge> scale currentobject /scalex= /scaley= [/x= /y=]
+
+/scalex <t>Skalfaktor i x-led
+/scaley <t>Skalfaktor i y-led.
+/x <t>x-koordinat för skalningens referenspunkt.
+/y <t>y-koordinat för skalningens referenspunkt.
+</topic>
+
+<topic>gecmd_scale_selected
+scale selectedobject
+
+Skalar om utvalt objekt.
+
+<b>Syntax
+
+<c>ge> scale selectedobject /scalex= /scaley= [/x= /y=]
 
 /scalex <t>Skalfaktor i x-led
 /scaley <t>Skalfaktor i y-led.

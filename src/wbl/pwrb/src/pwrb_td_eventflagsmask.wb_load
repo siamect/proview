@@ -125,6 +125,28 @@ SObject pwrb:Type
        Attr Value = 64
      EndBody
     EndObject
+    !/**
+    !  The message will be handle by the email server and
+    !  forwarded to the specified receiver.
+    !*/
+    Object Email $Bit
+     Body SysBody
+       Attr PgmName = "Email"
+       Attr Text = "Email"
+       Attr Value = 128
+     EndBody
+    EndObject
+    !/**
+    !  The message will be handle by the SMS server and
+    !  forwarded to the specified receiver.
+    !*/
+    Object SMS $Bit
+     Body SysBody
+       Attr PgmName = "SMS"
+       Attr Text = "SMS"
+       Attr Value = 256
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

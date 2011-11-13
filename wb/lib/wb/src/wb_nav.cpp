@@ -1788,7 +1788,7 @@ int Nav::get_select( pwr_sAttrRef *attrref, int *is_attr)
   brow_tNode	*node_list;
   int		node_count;
   Item		*item;
-  pwr_tOName   	attr_str;
+  pwr_tAName   	attr_str;
   int		sts, size;
   
   brow_GetSelectedNodes( brow_ctx, &node_list, &node_count);

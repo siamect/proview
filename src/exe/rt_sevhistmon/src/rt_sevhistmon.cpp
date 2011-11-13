@@ -46,6 +46,7 @@
 #include "rt_qcom_msg.h"
 #include "rt_ini_event.h"
 #include "rt_errh.h"
+#include "rt_aproc.h"
 #include "rt_sev_net.h"
 #include "rt_sevhistmon.h"
 #include "rt_sev_msg.h"
@@ -64,8 +65,8 @@ int rt_sevhistmon::init()
   pwr_tOid    conf_oid;
   pwr_tOName oname;
 
-  errh_Init("pwr_sevhistmon", errh_eNAnix);
-  // errh_SetStatus( PWR__SRVSTARTUP);
+  errh_Init("pwr_sevhistmon", errh_eAnix_sevhistmon);
+  errh_SetStatus( PWR__SRVSTARTUP);
 
   sts = gdh_Init( "rt_sevhistmon");
   if ( EVEN(sts)) throw co_error(sts);
@@ -82,6 +83,8 @@ int rt_sevhistmon::init()
 
   m_sts = gdh_RefObjectInfo( oname, (void **)&m_confp, &m_conf_refid, sizeof(*m_confp));
   if ( EVEN(m_sts)) throw co_error(m_sts);
+
+  aproc_RegisterObject( conf_oid);
 
   m_confp->Status = m_server_status = PWR__SRVSTARTUP;
   m_scantime = m_confp->ScanTime;
@@ -594,6 +597,8 @@ int rt_sevhistmon::close()
 {
   close_objects();
   m_confp->Status = PWR__SRVTERM;
+  errh_SetStatus( PWR__SRVTERM);
+
   gdh_UnrefObjectInfo( m_conf_refid);
   return 1;
 }
@@ -638,12 +643,12 @@ int rt_sevhistmon::send_data()
     dp = (sev_sHistData *) &msg->Data;
     for ( unsigned int j = 0; j < m_hs[i].sevhistlist.size(); j++) {
       if ( !m_hs[i].sevhistlist[j].hsp->Disable) {
-	if ( m_hs[i].sevhistlist[j].hsp->Options & pwr_mSevOptionsMask_Event &&
-	     m_hs[i].sevhistlist[j].hsp->Trigger)
-	  m_hs[i].sevhistlist[j].hsp->Trigger = 0;
-	else
-	  continue;
-
+	if ( m_hs[i].sevhistlist[j].hsp->Options & pwr_mSevOptionsMask_Event) {
+	  if ( m_hs[i].sevhistlist[j].hsp->Trigger)
+	    m_hs[i].sevhistlist[j].hsp->Trigger = 0;
+	  else
+	    continue;
+	}
 	dp->sevid = m_hs[i].sevhistlist[j].sevid;
 	dp->type = m_hs[i].sevhistlist[j].type;
 	dp->size = m_hs[i].sevhistlist[j].size;
@@ -718,6 +723,7 @@ void rt_sevhistmon::set_status()
     }
   }
   m_confp->Status = sts;
+  errh_SetStatus( sts);
 }
 
 int rt_sevhistmon::retry_connect()
@@ -1045,6 +1051,7 @@ int rt_sevhistmon::mainloop()
 	if ( m_loopcnt % reconnect_time == 0)
 	  retry_connect();
       }
+      aproc_TimeStamp( m_scantime, 5);
       continue;
     }
 
@@ -1072,7 +1079,7 @@ int rt_sevhistmon::mainloop()
           new_event.m  = ep->mask;
           if (new_event.b.oldPlcStop && !m_swap) {
             m_swap = 1;
-            // errh_SetStatus( PWR__SRVRESTART);
+            errh_SetStatus( PWR__SRVRESTART);
             m_confp->Status = PWR__SRVRESTART;
             close();
           }
@@ -1086,7 +1093,7 @@ int rt_sevhistmon::mainloop()
               errh_Error( "SevHistMonitor terminating, %m", e.sts());
               exit(0);
             }
-            // errh_SetStatus( PWR__SRUN);
+            errh_SetStatus( PWR__SRUN);
             m_confp->Status = PWR__SRUN;
             errh_Info("Warm restart completed");
           }

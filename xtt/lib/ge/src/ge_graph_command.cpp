@@ -173,7 +173,7 @@ dcli_tCmdTable	graph_command_table[] = {
 		{
 			"MOVE",
 			&graph_move_func,
-			{ "dcli_arg1", "/X", "/Y",
+			{ "dcli_arg1", "/X", "/Y", "/ABSX", "/ABSY",
 			""}
 		},
 		{
@@ -1457,44 +1457,51 @@ static int	graph_rotate_func( void		*client_data,
 
   char	arg1_str[80];
   int	arg1_sts;
+  char str[80];
+  int sts;
+  float value;
+  double angle;
 	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if ( cdh_NoCaseStrncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
-  {
-    char str[80];
-    int sts;
-    float value;
-    double angle;
-
-    if ( !graph->current_cmd_object)
-    {
+  if ( cdh_NoCaseStrncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0) {
+    if ( !graph->current_cmd_object) {
       graph->message('E', "No current object");
       return GE__NOCURRENT;
     }
-    if ( EVEN( dcli_get_qualifier( "/ANGLE", str, sizeof(str))))
-    {
-      graph->message('E', "Syntax error");
-      return GE__SYNTAX;
-    }
-    sts = sscanf( str, "%f", &value);
-    if ( sts != 1)
-    {
-      graph->message('E', "Syntax error");
-      return GE__SYNTAX;
-    }
-    angle = double(value);
-    
-    grow_StoreTransform( graph->current_cmd_object);
-    grow_SetObjectRotation( graph->current_cmd_object, angle, 0,
-	0, glow_eRotationPoint_Center);
-    grow_SetModified( graph->grow->ctx, 1);
   }
-  else
-  {
+  else if ( cdh_NoCaseStrncmp( arg1_str, "SELECTEDOBJECT", strlen( arg1_str)) == 0) {
+    grow_tObject 	*sel_list;
+    int			sel_count;
+
+    grow_GetSelectList( graph->grow->ctx, &sel_list, &sel_count);
+    if ( sel_count != 1) {
+      graph->message('E', "Select one object");
+      return GE__SYNTAX;
+    }
+    graph->current_cmd_object = sel_list[0];
+  }
+  else {
     graph->message('E', "Syntax error");
     return GE__SYNTAX;
   }
+
+  if ( EVEN( dcli_get_qualifier( "/ANGLE", str, sizeof(str)))) {
+    graph->message('E', "Syntax error");
+    return GE__SYNTAX;
+  }
+  sts = sscanf( str, "%f", &value);
+  if ( sts != 1) {
+    graph->message('E', "Syntax error");
+    return GE__SYNTAX;
+  }
+  angle = double(value);
+    
+  grow_StoreTransform( graph->current_cmd_object);
+  grow_SetObjectRotation( graph->current_cmd_object, angle, 0,
+			  0, glow_eRotationPoint_Center);
+  grow_SetModified( graph->grow->ctx, 1);
+
   return GE__SUCCESS;
 }
 
@@ -1727,87 +1734,88 @@ static int	graph_scale_func( void		*client_data,
 
   char	arg1_str[80];
   int	arg1_sts;
-	
+  char str[80];
+  int sts;
+  float value;
+  double scalex, scaley;
+  glow_eScaleType scale_type;
+  double x0, y0;
+  	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if ( cdh_NoCaseStrncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
-  {
-    char str[80];
-    int sts;
-    float value;
-    double scalex, scaley;
-    glow_eScaleType scale_type;
-    double x0, y0;
-
-    if ( !graph->current_cmd_object)
-    {
+  if ( cdh_NoCaseStrncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0) {
+    if ( !graph->current_cmd_object) {
       graph->message('E', "No current object");
       return GE__NOCURRENT;
     }
-    if ( EVEN( dcli_get_qualifier( "/SCALEX", str, sizeof(str))))
-    {
-      graph->message('E', "Syntax error");
-      return GE__SYNTAX;
-    }
-    sts = sscanf( str, "%f", &value);
-    if ( sts != 1)
-    {
-      graph->message('E', "Syntax error");
-      return GE__SYNTAX;
-    }
-    scalex = double(value);
-    
-    if ( EVEN( dcli_get_qualifier( "/SCALEY", str, sizeof(str))))
-    {
-      graph->message('E', "Syntax error");
-      return GE__SYNTAX;
-    }
-    sts = sscanf( str, "%f", &value);
-    if ( sts != 1)
-    {
-      graph->message('E', "Syntax error");
-      return GE__SYNTAX;
-    }
-    scaley = double(value);
-    
-    scale_type =  glow_eScaleType_LowerLeft;
-    x0 = 0;
-    y0 = 0;
-
-    if ( ODD( dcli_get_qualifier( "/X", str, sizeof(str))))
-    {
-      sts = sscanf( str, "%f", &value);
-      if ( sts != 1)
-      {
-        graph->message('E', "Syntax error");
-        return GE__SYNTAX;
-      }
-      x0 = double(value);
-      scale_type = glow_eScaleType_FixPoint;
-    }
-
-    if ( ODD( dcli_get_qualifier( "/Y", str, sizeof(str))))
-    {
-      sts = sscanf( str, "%f", &value);
-      if ( sts != 1)
-      {
-        graph->message('E', "Syntax error");
-        return GE__SYNTAX;
-      }
-      y0 = double(value);
-      scale_type = glow_eScaleType_FixPoint;
-    }    
-
-    grow_StoreTransform( graph->current_cmd_object);
-    grow_SetObjectScale( graph->current_cmd_object, scalex, scaley,
-	x0, y0, scale_type);
-    grow_SetModified( graph->grow->ctx, 1);
   }
-  else
-  {
+  else if ( cdh_NoCaseStrncmp( arg1_str, "SELECTEDOBJECT", strlen( arg1_str)) == 0) {
+    grow_tObject 	*sel_list;
+    int			sel_count;
+
+    grow_GetSelectList( graph->grow->ctx, &sel_list, &sel_count);
+    if ( sel_count != 1) {
+      graph->message('E', "Select one object");
+      return GE__SYNTAX;
+    }
+    graph->current_cmd_object = sel_list[0];
+  }
+  else {
     graph->message('E', "Syntax error");
     return GE__SYNTAX;
   }
+
+  if ( EVEN( dcli_get_qualifier( "/SCALEX", str, sizeof(str)))) {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+  }
+  sts = sscanf( str, "%f", &value);
+  if ( sts != 1) {
+    graph->message('E', "Syntax error");
+    return GE__SYNTAX;
+  }
+  scalex = double(value);
+    
+  if ( EVEN( dcli_get_qualifier( "/SCALEY", str, sizeof(str)))) {
+    graph->message('E', "Syntax error");
+    return GE__SYNTAX;
+  }
+  sts = sscanf( str, "%f", &value);
+  if ( sts != 1) {
+    graph->message('E', "Syntax error");
+    return GE__SYNTAX;
+  }
+  scaley = double(value);
+    
+  scale_type =  glow_eScaleType_LowerLeft;
+  x0 = 0;
+  y0 = 0;
+
+  if ( ODD( dcli_get_qualifier( "/X", str, sizeof(str)))) {
+    sts = sscanf( str, "%f", &value);
+    if ( sts != 1) {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+    x0 = double(value);
+    scale_type = glow_eScaleType_FixPoint;
+  }
+
+  if ( ODD( dcli_get_qualifier( "/Y", str, sizeof(str)))) {
+    sts = sscanf( str, "%f", &value);
+    if ( sts != 1) {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+    y0 = double(value);
+    scale_type = glow_eScaleType_FixPoint;
+  }    
+
+  grow_StoreTransform( graph->current_cmd_object);
+  grow_SetObjectScale( graph->current_cmd_object, scalex, scaley,
+		       x0, y0, scale_type);
+  grow_SetModified( graph->grow->ctx, 1);
+
   return GE__SUCCESS;
 }
 
@@ -1818,56 +1826,85 @@ static int	graph_move_func( void		*client_data,
 
   char	arg1_str[80];
   int	arg1_sts;
+  char str[80];
+  int sts;
+  float value;
+  double x0, y0;
+  double ll_x, ll_y, ur_x, ur_y;
 	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if ( cdh_NoCaseStrncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
-  {
-    char str[80];
-    int sts;
-    float value;
-    double x0, y0;
-
-    if ( !graph->current_cmd_object)
-    {
+  if ( cdh_NoCaseStrncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0) {
+    if ( !graph->current_cmd_object) {
       graph->message('E', "No current object");
       return GE__NOCURRENT;
     }
-    if ( EVEN( dcli_get_qualifier( "/X", str, sizeof(str))))
-    {
-      graph->message('E', "Syntax error");
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "SELECTEDOBJECT", strlen( arg1_str)) == 0) {
+    grow_tObject 	*sel_list;
+    int			sel_count;
+
+    grow_GetSelectList( graph->grow->ctx, &sel_list, &sel_count);
+    if ( sel_count != 1) {
+      graph->message('E', "Select one object");
       return GE__SYNTAX;
     }
+    graph->current_cmd_object = sel_list[0];
+  }
+  else {
+    graph->message('E', "Syntax error");
+    return GE__SYNTAX;
+  }
+
+  if ( ODD( dcli_get_qualifier( "/X", str, sizeof(str)))) {
     sts = sscanf( str, "%f", &value);
-    if ( sts != 1)
-    {
+    if ( sts != 1) {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
     x0 = double(value);
-    
-    if ( EVEN( dcli_get_qualifier( "/Y", str, sizeof(str))))
-    {
+  }
+  else if ( ODD( dcli_get_qualifier( "/ABSX", str, sizeof(str)))) {
+    sts = sscanf( str, "%f", &value);
+    if ( sts != 1) {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
+    grow_MeasureNode( graph->current_cmd_object, &ll_x, &ll_y, &ur_x, &ur_y);
+    x0 = double(value) - ll_x;
+  }
+  else {
+    graph->message('E', "Syntax error");
+    return GE__SYNTAX;
+  }
+    
+  if ( ODD( dcli_get_qualifier( "/Y", str, sizeof(str)))) {
     sts = sscanf( str, "%f", &value);
-    if ( sts != 1)
-    {
+    if ( sts != 1) {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
     y0 = double(value);
-    
-    grow_StoreTransform( graph->current_cmd_object);
-    grow_SetObjectPosition( graph->current_cmd_object, x0, y0);
-    grow_SetModified( graph->grow->ctx, 1);
   }
-  else
-  {
+  else if ( ODD( dcli_get_qualifier( "/ABSy", str, sizeof(str)))) {
+    sts = sscanf( str, "%f", &value);
+    if ( sts != 1) {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+    grow_MeasureNode( graph->current_cmd_object, &ll_x, &ll_y, &ur_x, &ur_y);
+    y0 = double(value) - ll_y;
+  }
+  else {
     graph->message('E', "Syntax error");
     return GE__SYNTAX;
   }
+    
+    
+  grow_StoreTransform( graph->current_cmd_object);
+  grow_SetObjectPosition( graph->current_cmd_object, x0, y0);
+  grow_SetModified( graph->grow->ctx, 1);
+
   return GE__SUCCESS;
 }
 
