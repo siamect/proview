@@ -181,16 +181,16 @@ chmod u+s /usr/pwrrt/exe/rt_rtt
 #chmod u+s /usr/pwrrt/exe/rt_xtt
 chmod u+s /usr/pwrrt/exe/rt_bck
 chmod u+s /usr/pwrrt/exe/rt_gdhget
-chown root /usr/pwrrt/exe/rs_remote_alcm
-chmod u+s /usr/pwrrt/exe/rs_remote_alcm
+#chown root /usr/pwrrt/exe/rs_remote_alcm
+#chmod u+s /usr/pwrrt/exe/rs_remote_alcm
 if getent group dialout > /dev/null; then
   chgrp dialout /usr/pwrrt/exe/rs_remote_serial
   chmod ug+s /usr/pwrrt/exe/rs_remote_serial
   chgrp dialout /usr/pwrrt/exe/rs_remote_3964r
   chmod ug+s /usr/pwrrt/exe/rs_remote_3964r
 fi
-chown root /usr/pwrrt/exe/rt_prio
-chmod u+s /usr/pwrrt/exe/rt_prio
+#chown root /usr/pwrrt/exe/rt_prio
+#chmod u+s /usr/pwrrt/exe/rt_prio
 chown root /usr/pwrrt/exe/rt_mozilla
 chmod u+s /usr/pwrrt/exe/rt_mozilla
 
@@ -205,28 +205,18 @@ fi
 if ! grep -q "/etc/pwrp_profile[[:>:]]" /etc/profile; then
   cat >> /etc/profile <<-EOF
 	if [ -e /etc/pwrp_profile ]; then
-	  source /etc/pwrp_profile
+	  . /etc/pwrp_profile
 	fi
 EOF
 fi
 
 # Create startup link
-set +e
-checklink=`eval ls /etc/rc2.d/S90pwr 2>/dev/null`
-set -e
-if [ "$checklink" != "" ]; then
-  rm /etc/rc2.d/S90pwr
+if ! grep -q "/etc/pwrrt/pwr start" /etc/rc.local; then
+   cat >> /etc/rc.local <<-EOF
+/etc/pwrrt/pwr start
+EOF
 fi
-ln -s /etc/init.d/pwr /etc/rc2.d/S90pwr
 
-set +e
-checklink=`eval ls /etc/rc2.d/S91gdhserver 2>/dev/null`
-set -e
-if [ "$checklink" != "" ]; then
-  rm /etc/rc2.d/S91gdhserver
-fi
-# Obsolete
-#ln -s /etc/init.d/gdhserver /etc/rc2.d/S91gdhserver
 
 # Create project
 new_project=0

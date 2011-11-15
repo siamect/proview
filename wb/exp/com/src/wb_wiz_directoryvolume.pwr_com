@@ -571,6 +571,18 @@ page_4:
     if ( os == "MacOS")
       SetAttribute( attr, 256);
     endif
+    if ( os == "ARM")
+      SetAttribute( attr, 512);
+    endif
+    if ( os == "FreeBSD")
+      SetAttribute( attr, 1024);
+    endif
+    if ( os == "OpenBSD")
+      SetAttribute( attr, 2048);
+    endif
+    if ( os == "Cygwin")
+      SetAttribute( attr, 4098);
+    endif
   
     attr = name + ".Address";
     SetAttribute( attr, node_ip[i]);

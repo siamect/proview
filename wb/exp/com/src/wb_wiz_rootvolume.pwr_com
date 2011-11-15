@@ -158,8 +158,17 @@ page_4:
       set attr/name='str1'/attr=OperatingSystem/value=64/nolog/noconf
     endif
   endif
-  if ( os == "MacOS")
-    set attr/name='str1'/attr=OperatingSystem/value=256/nolog/noconf
+  if ( os == "ARM")
+    set attr/name='str1'/attr=OperatingSystem/value=512/nolog/noconf
+  endif
+  if ( os == "FreeBSD")
+    set attr/name='str1'/attr=OperatingSystem/value=1024/nolog/noconf
+  endif
+  if ( os == "OpenBSD")
+    set attr/name='str1'/attr=OperatingSystem/value=2048/nolog/noconf
+  endif
+  if ( os == "Cygwin")
+    set attr/name='str1'/attr=OperatingSystem/value=4096/nolog/noconf
   endif
 
   if ( rv_nodehierroot != "")

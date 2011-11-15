@@ -95,7 +95,7 @@ if [ "$1" == "-v" ]; then
 fi
 
 pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwrrt
-pkgsrc=$pwre_sroot/tools/pkg/deb/pwrrt
+pkgsrc=$pwre_sroot/tools/pkg/openbsd/pwrrt
 packagename=pwrrt-$version.tar.gz
 
 # Create directories
@@ -112,10 +112,6 @@ cp $pkgsrc/copyright $pkgroot/usr/share/doc/pwrrt
 # changelog
 cp $pkgsrc/changelog $pkgroot/usr/share/doc/pwrrt
 gzip -fq --best $pkgroot/usr/share/doc/pwrrt/changelog
-
-# changelog.Debian
-cp $pkgsrc/changelog.Debian $pkgroot/usr/share/doc/pwrrt
-gzip -fq --best $pkgroot/usr/share/doc/pwrrt/changelog.Debian
 
 # Startup files
 cp $pkgsrc/pwrp_profile $pkgroot/etc
@@ -183,6 +179,7 @@ echo "rm -r /usr/pwrrt" >> $pkgroot/etc/pwrrt/rmfiles.sh
 cp $pkgsrc/control $pkgroot/etc/pwrrt
 cp $pkgsrc/prerm $pkgroot/etc/pwrrt
 cp $pkgsrc/postinst $pkgroot/etc/pwrrt
+cp $pkgsrc/pwr $pkgroot/etc/pwrrt
 
 tar -czf ../$packagename *
 
