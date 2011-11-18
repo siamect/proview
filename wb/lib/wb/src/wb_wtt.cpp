@@ -1187,7 +1187,8 @@ void Wtt::activate_paste()
       pwr_tObjName name;
       pwr_tCid prev_cid, cid;
       int size;
-
+      pwr_tStatus lsts;
+      
       sts = ldh_GetObjectClass( wnav->ldhses, prev, &prev_cid);
       if ( EVEN(sts)) return;
 	      
@@ -1199,8 +1200,8 @@ void Wtt::activate_paste()
 				       &size);
 	if ( EVEN(sts)) return;
 
-	sts = cdh_NextObjectName( name, name);
-	if ( ODD(sts))
+	lsts = cdh_NextObjectName( name, name);
+	if ( ODD(lsts))
 	  sts = ldh_SetObjectName( wnav->ldhses, oid, name);
       }
     }
