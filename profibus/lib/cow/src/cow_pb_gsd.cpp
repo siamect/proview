@@ -446,6 +446,7 @@ int pb_gsd::read( char *filename)
       read_line_done = 0;
 
 
+    dcli_trim( line, line);
     compress( line);
     part_cnt = dcli_parse( line, " 	=", "", (char *)line_part,
 			   sizeof( line_part) / sizeof( line_part[0]), 
@@ -585,11 +586,26 @@ int pb_gsd::read( char *filename)
     }
     case gsd_Module: {
       gsd_sModule *mp;
+      char *s;
       gsd_sModule *m = (gsd_sModule *) calloc( 1, sizeof(gsd_sModule));
       strncpy( m->Mod_Name, line_part[1], sizeof(m->Mod_Name));
+      if ( part_cnt == 2 && line[strlen(line)-1] != '"') {
+	// No space between module name and config, insert at space
+	if ( (s = strrchr( line, '"'))) {
+	  char tmp[200];
+	  strncpy( tmp, s+1, sizeof(tmp));
+	  strcpy( s+1, " ");
+	  strcat( s, tmp);
+
+	  part_cnt = dcli_parse( line, " 	=", "", (char *)line_part,
+				 sizeof( line_part) / sizeof( line_part[0]), 
+				 sizeof( line_part[0]), 0);
+	  strncpy( m->Mod_Name, line_part[1], sizeof(m->Mod_Name));
+	}
+      }
       if ( part_cnt > 2)
 	str_to_ostring( &m->Config, line_part[2], 244, &m->config_size);
-      
+
       if ( !modulelist)
 	modulelist = m;
       else {
