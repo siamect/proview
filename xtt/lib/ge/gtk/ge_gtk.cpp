@@ -2249,7 +2249,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 
   GtkWidget *tools_circ = image_button( "$pwr_exe/ge_circ.png");
   g_signal_connect(tools_circ, "clicked", G_CALLBACK(activate_circle), this);
-  gtk_toolbar_append_widget( tools, tools_circ, "Draw a circle or elipse", "");
+  gtk_toolbar_append_widget( tools, tools_circ, "Draw a circle or ellipse", "");
 
   GtkWidget *tools_line = image_button( "$pwr_exe/ge_line.png");
   g_signal_connect(tools_line, "clicked", G_CALLBACK(activate_line), this);

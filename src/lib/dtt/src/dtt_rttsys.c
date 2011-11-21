@@ -1088,6 +1088,9 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
 	      case co_eOS_MacOS: strcpy( menu_ptr->value_ptr, "MacOS"); break;
 	      case co_eOS_VMS: strcpy( menu_ptr->value_ptr, "VMS"); break;
 	      case co_eOS_ELN: strcpy( menu_ptr->value_ptr, "ELN"); break;
+	      case co_eOS_FreeBSD: strcpy( menu_ptr->value_ptr, "FreeBSD"); break;
+	      case co_eOS_OpenBSD: strcpy( menu_ptr->value_ptr, "OpenBSD"); break;
+	      case co_eOS_Cygwin: strcpy( menu_ptr->value_ptr, "Cygwin"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");
 	    }
             menu_ptr++;
@@ -1099,6 +1102,7 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
 	      case co_eHW_VAX: strcpy( menu_ptr->value_ptr, "VAX"); break;
 	      case co_eHW_Alpha: strcpy( menu_ptr->value_ptr, "AXP"); break;
 	      case co_eHW_PPC: strcpy( menu_ptr->value_ptr, "PPC"); break;
+	      case co_eHW_ARM: strcpy( menu_ptr->value_ptr, "ARM"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");
 	    }
             menu_ptr++;
@@ -1254,6 +1258,9 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
 	      case co_eOS_MacOS: strcpy( menu_ptr->value_ptr, "MacOS"); break;
 	      case co_eOS_VMS: strcpy( menu_ptr->value_ptr, "VMS"); break;
 	      case co_eOS_ELN: strcpy( menu_ptr->value_ptr, "ELN"); break;
+	      case co_eOS_FreeBSD: strcpy( menu_ptr->value_ptr, "FreeBSD"); break;
+	      case co_eOS_OpenBSD: strcpy( menu_ptr->value_ptr, "OpenBSD"); break;
+	      case co_eOS_Cygwin: strcpy( menu_ptr->value_ptr, "Cygwin"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");
 	    }
             menu_ptr++;
@@ -1265,6 +1272,7 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
 	      case co_eHW_VAX: strcpy( menu_ptr->value_ptr, "VAX"); break;
 	      case co_eHW_Alpha: strcpy( menu_ptr->value_ptr, "AXP"); break;
 	      case co_eHW_PPC: strcpy( menu_ptr->value_ptr, "PPC"); break;
+	      case co_eHW_ARM: strcpy( menu_ptr->value_ptr, "ARM"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");
 	    }
             menu_ptr++;
@@ -11785,8 +11793,12 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 	    switch ( np->os) {
 	      case co_eOS_Lynx: strcpy( menu_ptr->value_ptr, "Lynx"); break;
 	      case co_eOS_Linux: strcpy( menu_ptr->value_ptr, "Linux"); break;
+	      case co_eOS_MacOS: strcpy( menu_ptr->value_ptr, "MacOS"); break;
 	      case co_eOS_VMS: strcpy( menu_ptr->value_ptr, "VMS"); break;
 	      case co_eOS_ELN: strcpy( menu_ptr->value_ptr, "ELN"); break;
+	      case co_eOS_FreeBSD: strcpy( menu_ptr->value_ptr, "FreeBSD"); break;
+	      case co_eOS_OpenBSD: strcpy( menu_ptr->value_ptr, "OpenBSD"); break;
+	      case co_eOS_Cygwin: strcpy( menu_ptr->value_ptr, "Cygwin"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");
 	    }
             menu_ptr++;
@@ -11798,6 +11810,7 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 	      case co_eHW_VAX: strcpy( menu_ptr->value_ptr, "VAX"); break;
 	      case co_eHW_Alpha: strcpy( menu_ptr->value_ptr, "AXP"); break;
 	      case co_eHW_PPC: strcpy( menu_ptr->value_ptr, "PPC"); break;
+	      case co_eHW_ARM: strcpy( menu_ptr->value_ptr, "ARM"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");
 	    }
             menu_ptr++;
@@ -11948,6 +11961,9 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 	      case co_eOS_MacOS: strcpy( menu_ptr->value_ptr, "MacOS"); break;
 	      case co_eOS_VMS: strcpy( menu_ptr->value_ptr, "VMS"); break;
 	      case co_eOS_ELN: strcpy( menu_ptr->value_ptr, "ELN"); break;
+	      case co_eOS_FreeBSD: strcpy( menu_ptr->value_ptr, "FreeBSD"); break;
+	      case co_eOS_OpenBSD: strcpy( menu_ptr->value_ptr, "OpenBSD"); break;
+	      case co_eOS_Cygwin: strcpy( menu_ptr->value_ptr, "Cygwin"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");
 	    }
             menu_ptr++;
@@ -11959,6 +11975,7 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
 	      case co_eHW_VAX: strcpy( menu_ptr->value_ptr, "VAX"); break;
 	      case co_eHW_Alpha: strcpy( menu_ptr->value_ptr, "AXP"); break;
 	      case co_eHW_PPC: strcpy( menu_ptr->value_ptr, "PPC"); break;
+	      case co_eHW_ARM: strcpy( menu_ptr->value_ptr, "ARM"); break;
 	      default: strcpy( menu_ptr->value_ptr, "Unknwn");
 	    }
             menu_ptr++;
