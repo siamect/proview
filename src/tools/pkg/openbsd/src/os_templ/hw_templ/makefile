@@ -29,7 +29,8 @@ copy :
 
 lib :
 
-exe : $(bld_dir)/control_pwrrt $(bld_dir)/control_pwr $(bld_dir)/control_pwrdemo $(bld_dir)/control_pwrsev
+#exe : $(bld_dir)/control_pwrrt $(bld_dir)/control_pwr $(bld_dir)/control_pwrdemo $(bld_dir)/control_pwrsev
+exe : $(bld_dir)/control_pwr $(bld_dir)/control_pwrrt
 
 clean :
 

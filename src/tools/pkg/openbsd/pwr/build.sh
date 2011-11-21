@@ -1,11 +1,6 @@
 #!/bin/bash
 
-set -o xtrace
-
 aroot="/usr/pwrp/adm"
-
-pkgsrc=$pwre_sroot/tools/pkg/openbsd/pwr
-
 
 # Get version
 if [ -e $pwr_inc/pwr_version.h ]; then
@@ -20,11 +15,11 @@ fi
 
 # Generate version help file
 {
-  if [ ! -e $pkgsrc/control ]; then
+  if [ ! -e $pwre_sroot/tools/pkg/deb/pwr/control ]; then
     echo "Controlfile not found"
     exit 1
   fi
-  datfile=$pkgsrc/control
+  datfile=$pwre_sroot/tools/pkg/deb/pwr/control
 
   echo "<topic> version"
   d=`eval date +\"%F %X\"`
@@ -98,77 +93,78 @@ if [ "$1" == "-v" ]; then
   exit
 fi
 
+pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwr$ver
+pkgsrc=$pwre_sroot/tools/pkg/openbsd/pwr
+packagename=pwr$ver-$version.tar.gz
+
 echo "-- Building pwr$ver"
-packagename=pwr$ver-$version
-pkgroot=$pwre_broot/$pwre_target/bld/pkg/$packagename
-pkg_proot=$pwre_broot/$pwre_target/bld/pkg/$packagename/share/pwr$ver
+
 # Create directories
-echo "echo pwr$ver dummy" > $pkgroot/bin/pwr$ver
-chmod a+x $pkgroot/bin/pwr$ver
-mkdir -p $pkgroot/share/pwr$ver
+mkdir -p $pkgroot/etc/pwr$ver
+mkdir -p $pkgroot/usr/share/doc/pwr$ver
+mkdir -p $pkgroot/usr/pwrp
+mkdir -p $pkgroot/etc
 
-mkdir -p $pkg_proot/usr/pwrp
-mkdir -p $pkg_proot/etc
-mkdir -p $pkg_proot/bin
-echo "Start pwr$ver with command pwra" > $pkg_proot/share/pwr$ver/README
-cp $pkgsrc/postinst $pkg_proot/install.site
-
-find $pkg_proot -type d | xargs chmod 755
+find $pkgroot -type d | xargs chmod 755
 
 # copyright
-cp $pkgsrc/copyright $pkg_proot/usr/share/doc/pwr$ver
+cp $pkgsrc/copyright $pkgroot/usr/share/doc/pwr$ver
+
+# changelog
+cp $pkgsrc/changelog $pkgroot/usr/share/doc/pwr$ver
+gzip -fq --best $pkgroot/usr/share/doc/pwr$ver/changelog
 
 # Man pages
-mkdir -p $pkg_proot/usr/share/man/man1
-cp $pkgsrc/pwr.1 $pkg_proot/usr/share/man/man1/pwr.1
-gzip -fq --best $pkg_proot/usr/share/man/man1/pwr.1
+mkdir -p $pkgroot/usr/share/man/man1
+cp $pkgsrc/pwr.1 $pkgroot/usr/share/man/man1/pwr.1
+gzip -fq --best $pkgroot/usr/share/man/man1/pwr.1
 
 # Copy proview
-mkdir $pkg_proot/usr/pwr$ver
+mkdir $pkgroot/usr/pwr$ver
 currentdir="`eval pwd`"
 tarfile=$pwre_broot/$pwre_target/bld/pkg/pwrtmp.tar
 cd $pwre_broot
 echo "-- copy release to package tree"
 tar -cf $tarfile $pwre_target/exp
-cd $pkg_proot/usr/pwr$ver
+cd $pkgroot/usr/pwr$ver
 tar -xf $tarfile
 rm $tarfile
 cd $currentdir
 
 # Remove not needed libraries
-rm $pkg_proot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_flow.a
-rm $pkg_proot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_ge.a
-rm $pkg_proot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_glow.a
-rm $pkg_proot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_tlog.a
-rm $pkg_proot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_wb.a
-rm $pkg_proot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_xtt.a
+rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_flow.a
+rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_ge.a
+rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_glow.a
+rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_tlog.a
+rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_wb.a
+rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_xtt.a
 
 # Copy configuration files to cnf
-cp $pkgsrc/proview.cnf $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf
-cp $pkgsrc/pwrp_profile $pkg_proot/etc
-chmod a+x $pkg_proot/etc/pwrp_profile
+cp $pkgsrc/proview.cnf $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+cp $pkgsrc/pwrp_profile $pkgroot/etc
+chmod a+x $pkgroot/etc/pwrp_profile
 
 # Copy adm files to cnf
-cp $pwre_sroot/tools/pkg/deb/adm/pwr_setup.sh $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf
-echo "pwrp set base V${ver:0:1}.${ver:1:1}" >> $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf/pwr_setup.sh
-chmod a+x $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf/pwr_setup.sh
-cp $pwre_sroot/tools/pkg/deb/adm/pwra_env.sh $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf
-chmod a+x $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf/pwra_env.sh
-cp $pwre_sroot/tools/pkg/deb/adm/pwr_volumelist.dat $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf
-cp $pwre_sroot/tools/pkg/deb/adm/pwr_user2.dat $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf
-cp $pwre_sroot/tools/pkg/deb/adm/proview_icon.png $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf
+cp $pwre_sroot/tools/pkg/deb/adm/pwr_setup.sh $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+echo "pwrp set base V${ver:0:1}.${ver:1:1}" >> $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/pwr_setup.sh
+chmod a+x $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/pwr_setup.sh
+cp $pwre_sroot/tools/pkg/deb/adm/pwra_env.sh $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+chmod a+x $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/pwra_env.sh
+cp $pwre_sroot/tools/pkg/deb/adm/pwr_volumelist.dat $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+cp $pwre_sroot/tools/pkg/deb/adm/pwr_user2.dat $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+cp $pwre_sroot/tools/pkg/deb/adm/proview_icon.png $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
 
 # Copy user to cnf
-mkdir $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.bashrc $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf/user
-echo "source $aroot/db/pwr_setup.sh" >> $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf/user/.bashrc
-cp $pwre_sroot/tools/pkg/deb/user/.bash_profile $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf/user
-#cp $pwre_sroot/tools/pkg/deb/user/.mwmrc $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.rtt_start $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.xtt_start $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf/user
-#cp $pwre_sroot/tools/pkg/deb/user/.xsession $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/wtt_init.pwr_com $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/wtt_init1.pwr_com $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf/user
+mkdir $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
+cp $pwre_sroot/tools/pkg/openbsd/user/.bashrc $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
+echo "source $aroot/db/pwr_setup.sh" >> $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user/.bashrc
+cp $pwre_sroot/tools/pkg/deb/user/.bash_profile $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
+#cp $pwre_sroot/tools/pkg/deb/user/.mwmrc $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
+cp $pwre_sroot/tools/pkg/deb/user/.rtt_start $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
+cp $pwre_sroot/tools/pkg/deb/user/.xtt_start $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
+#cp $pwre_sroot/tools/pkg/deb/user/.xsession $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
+cp $pwre_sroot/tools/pkg/deb/user/wtt_init.pwr_com $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
+cp $pwre_sroot/tools/pkg/deb/user/wtt_init1.pwr_com $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 
 # Generate desktop file
 {
@@ -181,25 +177,24 @@ cp $pwre_sroot/tools/pkg/deb/user/wtt_init1.pwr_com $pkg_proot/usr/pwr$ver/$pwre
   echo "Exec=xterm -title \"Proview Development Console\" -e 'export pwra_db=$aroot/db;source \$pwra_db/pwra_env.sh set base V""${version:0:3}"";source \$pwra_db/pwra_env.sh set bus;wb -p pwrp pwrp'"
   echo "Icon=$aroot/db/proview_icon.png"
   echo "Categories=GNOME;GTK;Application;"
-} > $pkg_proot/usr/pwr$ver/$pwre_target/exp/cnf/user/proview$ver.desktop
+} > $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user/proview$ver.desktop
 
 # Create package
 echo "-- Building package"
-cd $pwre_broot/$pwre_target/bld/pkg
-tar -czf /usr/ports/distfiles/$packagename.tar.gz $packagename
-mkdir -p /usr/ports/mystuff/misc/pwr$ver
-cd /usr/ports/mystuff/misc/pwr$ver
-cp $pkgsrc/Makefile .
-make makesum
-mkdir pkg
-echo "Proview development and runtime package" > pkg/DESCR
-if [ -e /usr/obj/ports/$pkgname ]; then
-  rm -r /usr/obj/ports/$pkgname
-fi
-make fake
-make plist
-make package
-#rm -r $pgkroot
+
+mkdir -p $pkgroot/etc/pwr$ver
+cd $pkgroot
+find * -type f -exec echo "rm -f /{}" \; > $pkgroot/etc/pwr$ver/rmfiles.sh
+echo "rm -r /usr/pwr$ver" >> $pkgroot/etc/pwr$ver/rmfiles.sh
+
+# control
+cp $pkgsrc/control $pkgroot/etc/pwr$ver
+cp $pkgsrc/prerm $pkgroot/etc/pwr$ver
+cp $pkgsrc/postinst $pkgroot/etc/pwr$ver
+
+tar -czf ../$packagename *
+
+rm -r $pkgroot
 
 
 

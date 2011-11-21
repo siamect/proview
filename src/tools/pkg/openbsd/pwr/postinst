@@ -1,7 +1,21 @@
-#!/bin/sh
+#!/usr/local/bin/bash
 set -e
 
-# ver=""
+
+if [ ! -e /usr/local/bin/bash ]; then
+  echo "** Error, bash not installed"
+  exit
+fi
+
+if [ ! -e /bin/bash ]; then
+  ln -s /usr/local/bin/bash /bin/bash
+fi
+
+# Get version from current path
+dname=`eval dirname $0`
+pwrdir=`eval bash -c "cd $dname; pwd"`
+ver="${pwrdir:8:1}${pwrdir:9:1}"
+
 # pwre_target=""
 
 echo "Here in postinst..."
@@ -28,7 +42,7 @@ if getent passwd pwrp > /dev/null; then
 else
   new_user=1
 
-  if useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -d /home/pwrp pwrp; then
+  if useradd -m -s /bin/bash -p aaupl/kQs1p3U -g pwrp -d /home/pwrp pwrp; then
     echo "-- user pwrp added"
   fi
   if [ ! -e /home/pwrp ]; then
@@ -72,10 +86,10 @@ if [ ! -e /etc/proview.cnf ]; then
 fi
 
 # Add pwrp_profile to profile
-if ! grep -q "/etc/pwrp_profile\b" /etc/profile; then
+if ! grep -q "/etc/pwrp_profile[[:>:]]" /etc/profile; then
   cat >> /etc/profile <<-EOF
 	if [ -e /etc/pwrp_profile ]; then
-	  source /etc/pwrp_profile
+	  . /etc/pwrp_profile
 	fi
 EOF
 fi
@@ -100,7 +114,7 @@ if [ ! -e $aroot/db/pwr_projectlist.dat ]; then
   echo "%base V${ver:0:1}.${ver:1:1} /usr/pwr$ver" > $aroot/db/pwr_projectlist.dat
 else
   set +e
-  ptst=`eval grep "^%base" $aroot/db/pwr_projectlist.dat | grep "\bV${ver:0:1}.${ver:1:1}\b"`
+  ptst=`eval grep "^%base" $aroot/db/pwr_projectlist.dat | grep "[[:<:]]V${ver:0:1}.${ver:1:1}[[:>:]]"`
   set -e
   if [ "$ptst" = "" ]; then
     echo "%base V${ver:0:1}.${ver:1:1} /usr/pwr$ver" >> $aroot/db/pwr_projectlist.dat
