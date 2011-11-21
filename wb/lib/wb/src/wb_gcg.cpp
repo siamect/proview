@@ -552,61 +552,26 @@ static int  gcg_sort_threadlist(
     unsigned long	size
 );
 
-static int	gcg_check_ra_plc_user(
-    char	*filename
-);
-
-static pwr_tStatus gcg_read_volume_plclist( 
-  gcg_ctx	gcgctx,
-  pwr_tVolumeId	volid,
-  unsigned long	*plc_count, 
-  gcg_t_plclist **plclist,
-  unsigned long	*thread_count, 
-  gcg_t_threadlist **threadlist
-);
-
-
-static int	gcg_parname_to_pgmname( 
-    ldh_tSesContext ldhses,
-    pwr_tClassId cid,
-    char	*parname,
-    char	*pgmname
-);
-
-static pwr_tStatus gcg_replace_ref( 
-    gcg_ctx gcgctx, 
-    pwr_sAttrRef *attrref, 
-    vldh_t_node output_node
-);
-
-static int gcg_set_cmanager( 
-    vldh_t_wind wind);
-
-static int gcg_cmanager_find_nodes( 
-    vldh_t_wind wind, 
-    vldh_t_node mgr, 
-    vldh_t_node *nodelist,
-    int node_count);
-
-static int gcg_cmanager_comp( 
-    gcg_ctx	gcgctx,
-    vldh_t_node	node);
-
-static int gcg_reset_cmanager( 
-    gcg_ctx	gcgctx);
-
-static int gcg_check_attrref( 
-    gcg_ctx gcgctx, 
-    vldh_t_node node, 
-    const char *attr);
-
-static int gcg_is_in_focode( 
-    gcg_ctx gcgctx, 
-    vldh_t_node node);
-
+static int gcg_check_ra_plc_user( char *filename);
+static pwr_tStatus gcg_read_volume_plclist( gcg_ctx gcgctx, pwr_tVolumeId  volid,
+					    unsigned long *plc_count, gcg_t_plclist **plclist,
+					    unsigned long *thread_count, 
+					    gcg_t_threadlist **threadlist);
+static int gcg_parname_to_pgmname( ldh_tSesContext ldhses, pwr_tClassId cid,
+				   char *parname, char *pgmname);
+static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref, 
+				    vldh_t_node output_node);
+static int gcg_set_cmanager( vldh_t_wind wind);
+static int gcg_cmanager_find_nodes( vldh_t_wind wind, vldh_t_node mgr, 
+				    vldh_t_node *nodelist, int node_count);
+static int gcg_cmanager_comp( gcg_ctx gcgctx, vldh_t_node node);
+static int gcg_reset_cmanager( gcg_ctx	gcgctx);
+static int gcg_check_attrref( gcg_ctx gcgctx, vldh_t_node node, const char *attr);
+static int gcg_is_in_focode( gcg_ctx gcgctx, vldh_t_node node);
 static void gcg_pending_compile_add( gcg_ctx gcgctx, pwr_tOid wind);
 static int gcg_pending_compile_exec( gcg_ctx gcgctx);
 static int gcg_check_grafcet_reset( gcg_ctx gcgctx, vldh_t_node node);
+static int gcg_in_libhier( gcg_ctx gcgctx, pwr_tOid oid);
 
 
 
@@ -3375,6 +3340,13 @@ int gcg_get_outputstring (
 	  	    free((char *) objdid);
 		    return GSX__NEXTPAR;
 		  }
+		  /* Check that the object is not in a library hierarchy */
+		  if ( gcg_in_libhier( gcgctx, *objdid)) {
+		    gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
+	  	    free((char *) objdid);
+		    return GSX__NEXTPAR;
+		  }
+
 	  	  strcpy( parstring, 
 			(output_bodydef->Par)->Param.Info.PgmName);
 	          if ( output_bodydef->Par->Output.Info.Flags & PWR_MASK_ARRAY)
@@ -3408,6 +3380,13 @@ int gcg_get_outputstring (
 	  	    free((char *) attrref);
 		    return GSX__NEXTPAR;
 		  }
+		  /* Check that object is not in a library hierarchy */
+		  if ( gcg_in_libhier( gcgctx, attrref->Objid)) {
+		    gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
+	  	    free((char *) attrref);
+		    return GSX__NEXTPAR;
+		  }
+
 	  	  strcpy( parstring, 
 			(output_bodydef->Par)->Param.Info.PgmName);
 	          if ( output_bodydef->Par->Output.Info.Flags & PWR_MASK_ARRAY)
@@ -3531,6 +3510,13 @@ static int	gcg_get_outputstring_spec(
       free((char *) attrref);
       return GSX__NEXTPAR;
     }
+    /* Check that the object is not in a library hierarchy */
+    if ( gcg_in_libhier( gcgctx, attrref->Objid)) {
+      gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
+      free((char *) attrref);
+      return GSX__NEXTPAR;
+    }
+
     /* Get the attribute name of last segment */
     sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, 
 			     &name_p, &size);
@@ -3586,6 +3572,12 @@ static int	gcg_get_outputstring_spec(
       free((char *) attrref);
       return GSX__NEXTPAR;
     }
+    /* Check that the object is not in a library hierarchy */
+    if ( gcg_in_libhier( gcgctx, attrref->Objid)) {
+      gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
+      free((char *) attrref);
+      return GSX__NEXTPAR;
+    }
 
     strcpy( parstring, 
 	    (output_bodydef->Par)->Param.Info.PgmName);
@@ -3628,6 +3620,12 @@ static int	gcg_get_outputstring_spec(
     sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &cid);
     if ( EVEN(sts)) {
       gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      free((char *) attrref);
+      return GSX__NEXTPAR;
+    }
+    /* Check that the object is not in a library hierarchy */
+    if ( gcg_in_libhier( gcgctx, attrref->Objid)) {
+      gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
       free((char *) attrref);
       return GSX__NEXTPAR;
     }
@@ -3725,6 +3723,12 @@ static int	gcg_get_outputstring_spec(
     sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &cid);
     if ( EVEN(sts)) {
       gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      free((char *) attrref);
+      return GSX__NEXTPAR;
+    }
+    /* Check that the object is not in a library hierarchy */
+    if ( gcg_in_libhier( gcgctx, attrref->Objid)) {
+      gcg_error_msg( gcgctx, GSX__LIBREF, output_node);  
       free((char *) attrref);
       return GSX__NEXTPAR;
     }
@@ -16255,4 +16259,22 @@ static int gcg_check_grafcet_reset( gcg_ctx gcgctx, vldh_t_node node)
     gcg_ioread_insert( gcgctx, resattrref, GCG_PREFIX_REF);      
   }
   return GSX__SUCCESS;
+}
+
+static int gcg_in_libhier( gcg_ctx gcgctx, pwr_tOid oid)
+{
+  pwr_tStatus sts;
+  pwr_tOid parent;
+  pwr_tCid cid;
+
+  for ( sts = ldh_GetParent( gcgctx->ldhses, oid, &parent);
+	ODD(sts);
+	sts = ldh_GetParent( gcgctx->ldhses, parent, &parent)) {
+    sts = ldh_GetObjectClass( gcgctx->ldhses, parent, &cid);
+    if ( EVEN(sts)) return 0;
+
+    if ( cid == pwr_cClass_LibHier)
+      return 1;
+  }
+  return 0;
 }
