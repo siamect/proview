@@ -1,6 +1,6 @@
 Volume Profibus $ClassVolume 0.0.250.7 
   Body SysBody 05-SEP-2005 17:51:40.00
-    Attr NextOix = "_X209"
+    Attr NextOix = "_X213"
     Attr NextCix = "_X20"
     Attr NextTix[0] = "_X12"
   EndBody
@@ -3204,7 +3204,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         Object WriteReq $Attribute 105 07-SEP-2011 10:24:03.67
           Body SysBody 07-SEP-2011 10:24:13.69
             Attr PgmName = "WriteReq"
-            Attr Flags = 16908288
+            Attr Flags = 131072
             Attr TypeRef = "Profibus:Class-PnWriteReq"
           EndBody
         EndObject
@@ -3218,6 +3218,13 @@ Volume Profibus $ClassVolume 0.0.250.7
               Attr FilterName = "PnDevice-ConfigureFilter"
             EndBody
           EndObject
+          Object CopyDevice $MenuButton 213 22-NOV-2011 10:13:58.01
+            Body SysBody 22-NOV-2011 10:13:58.01
+              Attr ButtonName = "CopyDevice"
+              Attr MethodName = "PnDevice-CopyDevice"
+              Attr FilterName = "PnDevice-CopyDeviceFilter"
+            EndBody
+          EndObject
         EndObject
       EndObject
       Object ConfiguratorPoscn $Menu 125 21-APR-2009 13:41:08.17
@@ -3227,6 +3234,13 @@ Volume Profibus $ClassVolume 0.0.250.7
               Attr ButtonName = "ConfigureDevice"
               Attr MethodName = "PnDevice-Configure"
               Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+          Object CopyDevice $MenuButton 212 22-NOV-2011 10:13:53.30
+            Body SysBody 22-NOV-2011 10:13:53.30
+              Attr ButtonName = "CopyDevice"
+              Attr MethodName = "PnDevice-CopyDevice"
+              Attr FilterName = "PnDevice-CopyDeviceFilter"
             EndBody
           EndObject
         EndObject
@@ -3240,6 +3254,13 @@ Volume Profibus $ClassVolume 0.0.250.7
               Attr FilterName = "PnDevice-ConfigureFilter"
             EndBody
           EndObject
+          Object CopyDevice $MenuButton 211 22-NOV-2011 10:13:47.81
+            Body SysBody 22-NOV-2011 10:13:47.81
+              Attr ButtonName = "CopyDevice"
+              Attr MethodName = "PnDevice-CopyDevice"
+              Attr FilterName = "PnDevice-CopyDeviceFilter"
+            EndBody
+          EndObject
         EndObject
       EndObject
       Object ConfiguratorPoson $Menu 131 21-APR-2009 13:41:08.17
@@ -3249,6 +3270,13 @@ Volume Profibus $ClassVolume 0.0.250.7
               Attr ButtonName = "ConfigureDevice"
               Attr MethodName = "PnDevice-Configure"
               Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+          Object CopyDevice $MenuButton 210 22-NOV-2011 10:13:27.97
+            Body SysBody 22-NOV-2011 10:12:33.44
+              Attr ButtonName = "CopyDevice"
+              Attr MethodName = "PnDevice-CopyDevice"
+              Attr FilterName = "PnDevice-CopyDeviceFilter"
             EndBody
           EndObject
           Object ConnectThread $MenuButton 134 21-APR-2009 13:41:08.17
