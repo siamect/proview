@@ -89,7 +89,8 @@
 
 class lfu_nodeconf {
 public:
-  lfu_nodeconf() : isfriend(0), port(0), vid(0), connection(0)
+  lfu_nodeconf() : isfriend(0), port(0), vid(0), connection(0), 
+		   qcom_min_resend_time(0), qcom_max_resend_time(0)
   { strcpy( address, ""); strcpy( nodename, "");}
   int isfriend;
   pwr_tOid oid;
@@ -99,6 +100,8 @@ public:
   pwr_tUInt32 port;
   pwr_tVid vid;
   pwr_tEnum connection;
+  pwr_tFloat32 qcom_min_resend_time;
+  pwr_tFloat32 qcom_max_resend_time;
 };
       
 
@@ -1481,6 +1484,20 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	a.value( &nc.port);
 	if ( !a) return sts;
 	
+	// Get attribute QComMinResendTime
+	a = sp->attribute( nodeo.oid(), "RtBody", "QComMinResendTime");
+	if ( !a) return a.sts();
+	
+	a.value( &nc.qcom_min_resend_time);
+	if ( !a) return sts;
+	  
+	// Get attribute QComMaxResendTime
+	a = sp->attribute( nodeo.oid(), "RtBody", "QComMaxResendTime");
+	if ( !a) return a.sts();
+	
+	a.value( &nc.qcom_max_resend_time);
+	if ( !a) return sts;
+	  
 	if ( !strcmp( nc.nodename, "")) {
 	  char msg[200];
 	  sprintf( msg, "Error in NodeConfig object '%s', NodeName is missing\n",
@@ -1569,6 +1586,20 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	a.value( volstr);
 	if ( !a) return sts;
 	
+	// Get attribute QComMinResendTime
+	a = sp->attribute( nodeo.oid(), "RtBody", "QComMinResendTime");
+	if ( !a) return a.sts();
+	
+	a.value( &nc.qcom_min_resend_time);
+	if ( !a) return sts;
+
+	// Get attribute QComMaxResendTime
+	a = sp->attribute( nodeo.oid(), "RtBody", "QComMaxResendTime");
+	if ( !a) return a.sts();
+	
+	a.value( &nc.qcom_max_resend_time);
+	if ( !a) return sts;
+
 	/* Check that the name is in the global volume list */
 	found = 0;
 	volumelist_ptr = volumelist;
@@ -1641,8 +1672,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 	for ( int i = 0; i < (int)nodevect.size(); i++) {
 	  lfu_nodeconf nc = nodevect[i];
-	  fprintf( fp, "%s %s %s %d %d\n", nc.nodename, 
-		   cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, nc.connection);
+	  fprintf( fp, "%s %s %s %d %d %d %d\n", nc.nodename, 
+		   cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, 
+		   nc.connection, int(nc.qcom_min_resend_time * 1000), 
+		   int(nc.qcom_max_resend_time * 1000));
 	}
 
 	// Add specific FriendNodes for the node
@@ -1689,6 +1722,20 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    a.value( volstr);
 	    if ( !a) return sts;
 	
+	    // Get attribute QComMaxResendTime
+	    a = sp->attribute( fnodeo.oid(), "RtBody", "QComMinResendTime");
+	    if ( !a) return a.sts();
+
+	    a.value( &nc.qcom_min_resend_time);
+	    if ( !a) return sts;
+	  
+	    // Get attribute QComMaxResendTime
+	    a = sp->attribute( fnodeo.oid(), "RtBody", "QComMaxResendTime");
+	    if ( !a) return a.sts();
+
+	    a.value( &nc.qcom_max_resend_time);
+	    if ( !a) return sts;
+	  
 	    /* Check that the name is in the global volume list */
 	    found = 0;
 	    volumelist_ptr = volumelist;
@@ -1708,8 +1755,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      syntax_error = 1;
 	    }
 
-	    fprintf( fp, "%s %s %s %d %d\n", nc.nodename, 
-		     cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, nc.connection);
+	    fprintf( fp, "%s %s %s %d %d %d %d\n", nc.nodename, 
+		     cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, 
+		     nc.connection, (int)(nc.qcom_min_resend_time * 1000), 
+		     (int)(nc.qcom_max_resend_time * 1000));
 	    break;
 	  }
 	  default: ;

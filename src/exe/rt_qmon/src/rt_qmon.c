@@ -91,6 +91,8 @@
 #define RTT_RXMAX	10000 /* ms */
 #define RACK_TMO	1
 
+#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
+
 typedef enum {
   eAction__ = 0,
   eAction_export,
@@ -981,6 +983,8 @@ get_tmo (
       link_stalled(lp);
   } else if (do_inc) {
     lp->np->link.rtt_rto *= 2;
+    if (lp->np->link.rtt_rto > lp->np->link.rtt_rxmax)
+      lp->np->link.rtt_rto = lp->np->link.rtt_rxmax;
   }
 
   return (time_tClock) (time_Clock(NULL, NULL) + rto);
@@ -1535,6 +1539,7 @@ new_link (
   sLink *lp;
   sEseg *sp;
   static int tics_per_sec = 0;
+  int rtt_rxmin, rtt_rxmax;
 
   if (nid == qdb->my_node->nid) return NULL;
   if (nid == qdb->no_node->nid) return NULL;
@@ -1553,12 +1558,15 @@ new_link (
 
   pwr_Assert(lp->np != NULL);
 
+  rtt_rxmin = max( RTT_RXMIN, max(lp->np->min_resend_time,qdb->my_node->min_resend_time));
+  rtt_rxmax = max( RTT_RXMAX, max(lp->np->max_resend_time,qdb->my_node->max_resend_time));
+       
   que_Create(NULL, &lp->q_in);
   lst_Init(NULL, &lp->lh_send, NULL);
   lst_Init(NULL, &lp->lh_win, NULL);
   lp->np->link.win_max = 1;
-  lp->np->link.rtt_rxmax = (RTT_RXMAX * tics_per_sec) / 1000;
-  lp->np->link.rtt_rxmin = (RTT_RXMIN * tics_per_sec) / 1000;
+  lp->np->link.rtt_rxmax = (rtt_rxmax * tics_per_sec) / 1000;
+  lp->np->link.rtt_rxmin = (rtt_rxmin * tics_per_sec) / 1000;
   lp->tmo.c.action = eAction_tmo;
                                     
   if (mp != NULL) {

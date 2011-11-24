@@ -154,6 +154,22 @@ SObject pwrb:Class
           Attr TypeRef = "pwrb:Type-RemoteShellEnum"
         EndBody
       EndObject
+      !/**
+      ! QCom minimum resend time in seconds.
+      !*/
+      Object QComMinResendTime $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      ! QCom maxium resend time in seconds.
+      !*/
+      Object QComMaxResendTime $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
     EndObject
     Object PostCreate $DbCallBack
       Body SysBody

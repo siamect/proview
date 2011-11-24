@@ -69,6 +69,8 @@ addNode (
   memcpy(&np->arp.arp_pa.sa_data, &np->sa.sin_addr.s_addr, sizeof(np->sa.sin_addr.s_addr));
 
   np->connection = nep->connection;
+  np->min_resend_time = nep->min_resend_time;
+  np->max_resend_time = nep->max_resend_time;
 
   return np;
 }
@@ -125,6 +127,8 @@ qini_ParseFile (
   char		s_naddr[80];
   char		s_port[80];
   char		s_connection[80];
+  char		s_min_resend_time[80];
+  char		s_max_resend_time[80];
   pwr_tNodeId	nid;
   struct in_addr	naddr;
   qini_sNode	*nep;
@@ -137,7 +141,8 @@ qini_ParseFile (
       continue;
     }
 
-    n = sscanf(s, "%s %s %s %s %s", name, s_nid, s_naddr, s_port, s_connection);
+    n = sscanf(s, "%s %s %s %s %s %s %s", name, s_nid, s_naddr, s_port, s_connection,
+	       s_min_resend_time, s_max_resend_time);
     if (n < 3) {
       errh_Error("error in line, <wrong number of arguments>, skip to next line.\n>> %s", s);
       (*errors)++;
@@ -175,6 +180,8 @@ qini_ParseFile (
     nep->naddr.s_addr = htonl(naddr.s_addr);
     if (n > 3) nep->port = htons(atoi(s_port));
     if (n > 4) nep->connection = atoi(s_connection);
+    if (n > 5) nep->min_resend_time = atoi(s_min_resend_time);
+    if (n > 6) nep->max_resend_time = atoi(s_max_resend_time);
     memset(&arpreq, 0, sizeof(arpreq));
     memcpy(&arpreq.arp_pa.sa_data, &naddr, sizeof(naddr));
     inet_GetArpEntry(&sts, 0, &arpreq);

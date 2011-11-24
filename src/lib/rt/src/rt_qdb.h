@@ -675,6 +675,8 @@ typedef struct {
 
   void			*mon;		/* Monitor private data. */
   qcom_eNodeConnection	connection;     /* Type of connection */
+  pwr_tUInt32		min_resend_time;
+  pwr_tUInt32		max_resend_time;
 } qdb_sNode;
 
 typedef struct {

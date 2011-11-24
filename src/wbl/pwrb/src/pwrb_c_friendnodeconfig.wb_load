@@ -109,6 +109,22 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
+      !/**
+      ! QCom minimum resend time in seconds.
+      !*/
+      Object QComMinResendTime $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      ! QCom maxium resend time in seconds.
+      !*/
+      Object QComMaxResendTime $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
     EndObject
   EndObject
 EndSObject

@@ -109,6 +109,8 @@ typedef struct {
   struct in_addr	naddr;
   int			port;
   qcom_eNodeConnection 	connection;
+  unsigned int		min_resend_time;
+  unsigned int		max_resend_time;
   pwr_tBoolean		connect;
 } qini_sNode;    
 
