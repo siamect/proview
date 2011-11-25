@@ -167,7 +167,7 @@ int main (int argc, char **argv)
 
   /* If even sts, just wait for init message */
 
-  time_GetTime(&LastScan);
+  time_GetTimeMonotonic(&LastScan);
   ScanDeltaTime.tv_sec =  ScanTime;
   ScanDeltaTime.tv_nsec = 0;
 
@@ -176,7 +176,7 @@ int main (int argc, char **argv)
 
   for (;;) {
 
-    time_GetTime(&CurrentTime);
+    time_GetTimeMonotonic(&CurrentTime);
     time_Aadd(&NextScan, &LastScan, &ScanDeltaTime);
     if (time_Acomp(&CurrentTime, &NextScan) < 0) { 
       time_Adiff(&WaitTime, &NextScan, &CurrentTime);
