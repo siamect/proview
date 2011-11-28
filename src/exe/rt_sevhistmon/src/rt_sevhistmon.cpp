@@ -74,6 +74,7 @@ int rt_sevhistmon::init()
   // Get the config object
   sts = gdh_GetClassList( pwr_cClass_SevHistMonitor, &conf_oid);
   if ( EVEN(sts)) {
+    errh_SetStatus( 0);
     errh_CErrLog( PWR__SRVNOTCONF, 0);
     exit(0);
   }

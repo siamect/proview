@@ -91,7 +91,7 @@ void rt_post::open()
   }
   else {
     errh_Info( "No Post configuration");
-    conf->Status = 0;
+    errh_SetStatus( 0);
     exit(0);
   }
 
