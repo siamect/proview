@@ -116,7 +116,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
 {
   io_sLocalAiDevice *local = (io_sLocalAiDevice *)cp->Local;
   pwr_sClass_OneWire_AiDevice *op = (pwr_sClass_OneWire_AiDevice *)cp->op;
-  char str[80];
+  char str[256];
   char *s;
   pwr_tUInt32 error_count = op->Super.ErrorCount;
 
