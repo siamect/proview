@@ -1189,6 +1189,9 @@ void GsdmlAttrNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_attr, 12, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddAnnot( nc_attr, 24, 0.6, 2,
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
+		1);
   brow_AddFrame( nc_attr, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create multiline attribute nodeclass
@@ -3380,6 +3383,7 @@ int ItemPnModuleType::open_children( GsdmlAttrNav *attrnav, double x, double y)
 int ItemPnModuleType::scan( GsdmlAttrNav *attrnav, void *p)
 {
   char buf[200];
+  char buf2[200];
 
   if ( !first_scan) {
     if ( old_value == *(int *)p)
@@ -3387,8 +3391,10 @@ int ItemPnModuleType::scan( GsdmlAttrNav *attrnav, void *p)
       return 1;
   }
 
-  if ( *(int *)p == 0)
+  if ( *(int *)p == 0) {
     strcpy( buf, "No");
+    strcpy( buf2, "");
+  }
   else {
     gsdml_UseableModules *um = attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->
       DeviceAccessPointItem[attrnav->device_num-1]->UseableModules;
@@ -3399,8 +3405,10 @@ int ItemPnModuleType::scan( GsdmlAttrNav *attrnav, void *p)
     if ( !mi || !mi->ModuleInfo || !mi->ModuleInfo->Body.Name.p)
       return 1;
     strncpy( buf, (char *) mi->ModuleInfo->Body.Name.p, sizeof(buf));
+    strncpy( buf2, mi->ModuleInfo->Body.OrderNumber, sizeof(buf2));
   }
   brow_SetAnnotation( node, 1, buf, strlen(buf));
+  brow_SetAnnotation( node, 2, buf2, strlen(buf2));
   old_value = *(int *)p;
 
   if ( !first_scan) {
