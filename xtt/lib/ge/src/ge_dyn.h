@@ -1038,6 +1038,8 @@ class GeDigFlash : public GeDynElem {
   bool first_scan;
   pwr_tBoolean old_value;
   bool on;
+  int a_typeid;
+  unsigned int bitmask;  
 
   GeDigFlash( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType_DigFlash, (ge_mActionType) 0, ge_eDynPrio_DigFlash),
@@ -1109,6 +1111,8 @@ class GeDigBorder : public GeDynElem {
   int inverted;
   bool first_scan;
   pwr_tBoolean old_value;
+  int a_typeid;
+  unsigned int bitmask;  
 
   GeDigBorder( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType_DigBorder, (ge_mActionType) 0, ge_eDynPrio_DigBorder),
@@ -1143,6 +1147,8 @@ class GeDigText : public GeDynElem {
   bool first_scan;
   pwr_tBoolean old_value;
   char high_text[80];
+  int a_typeid;
+  unsigned int bitmask;  
 
   GeDigText( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType_DigText, (ge_mActionType) 0, ge_eDynPrio_DigText)
@@ -1441,6 +1447,8 @@ class GeDigShift : public GeDynElem {
   int inverted;
   bool first_scan;
   pwr_tBoolean old_value;
+  int a_typeid;
+  unsigned int bitmask;  
 
   GeDigShift( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType_DigShift, (ge_mActionType) 0, ge_eDynPrio_DigShift)
@@ -1475,6 +1483,8 @@ class GeAnimation : public GeDynElem {
   pwr_tBoolean old_value;
   int animation_count;
   int animation_direction;
+  int a_typeid;
+  unsigned int bitmask;  
 
   GeAnimation( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType_Animation, (ge_mActionType) 0, ge_eDynPrio_Animation),
@@ -1632,6 +1642,8 @@ class GeDigSound : public GeDynElem {
   bool first_scan;
   pwr_tBoolean old_value;
   double time_since_last;
+  int a_typeid;
+  unsigned int bitmask;  
 
   GeDigSound( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType_DigSound, (ge_mActionType) 0, ge_eDynPrio_DigSound),
@@ -2245,6 +2257,7 @@ class GeDigCommand : public GeDynElem {
   bool first_scan;
   pwr_tBoolean old_value;
   int a_typeid;
+  unsigned int bitmask;  
 
   GeDigCommand( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType_DigCommand, (ge_mActionType) 0, ge_eDynPrio_DigCommand)
