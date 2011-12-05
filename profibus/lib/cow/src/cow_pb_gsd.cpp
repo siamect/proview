@@ -411,7 +411,7 @@ int pb_gsd::read( char *filename)
 {
   pwr_tFileName fname;
   int state;
-  char line[1000];
+  char line[2000];
   gsd_sKeyword *keyp;
   gsd_sData *datap;
   char	line_part[6][500];
@@ -1810,7 +1810,7 @@ int pb_gsd::print()
 
 int pb_gsd::str_to_ostring( unsigned char **data, char *str, int size, int *rsize)
 {
-  char valstr[40];
+  char valstr[200];
   int valcnt;
   unsigned int val;
   char *s, *t;
@@ -1834,7 +1834,7 @@ int pb_gsd::str_to_ostring( unsigned char **data, char *str, int size, int *rsiz
 	sts = sscanf( valstr, "%d", &val);
       *(*data + valcnt++) = (unsigned char) val;
       if ( sts != 1)
-	printf( "Syntax error, line %d\n", line_cnt);
+	printf( "** Syntax error, line %d\n", line_cnt);
  
       t = s+1;
     }
@@ -1877,30 +1877,33 @@ int pb_gsd::read_line( char *line, int lsize, FILE *fp)
 	continue;
       
       while (1) {
-	if ( line[strlen(line)-1] == '\\') {
+	if ( line[strlen(line)-1] == '\\' || line[strlen(line)-2] == '\\') {
+	  char line2[500];
+
 	  // Add next line
-	  sts = dcli_read_line( &line[strlen(line)-1], lsize-strlen(line), fp);
+	  sts = dcli_read_line( line2, lsize-strlen(line2), fp);
 	  if ( !sts)
 	    break;
 	  line_cnt++;
 	  
 	  // Remove comments
 	  in_string = 0;
-	  for ( s = line; *s; s++) {
+	  for ( s = line2; *s; s++) {
 	    if ( *s == '"')
 	      in_string = !in_string;
 	    if ( *s == ';' && !in_string)
 	      *s = 0;
+	  }	  
+	  if ( !in_string)
+	    dcli_remove_blank( line2, line2);
+	  if ( strlen(line) + strlen(line2) > (unsigned int)lsize) {
+	    printf( "** Line to long, line %d\n", line_cnt);
+	    return 0;
 	  }
-	  dcli_remove_blank( line, line);
-	}
-	else if ( line[strlen(line)-2] == '\\') {
-	  // Add next line
-	  sts = dcli_read_line( &line[strlen(line)-2], lsize-strlen(line), fp);
-	  if ( !sts)
-	    break;
-	  line_cnt++;
-	  dcli_remove_blank( line, line);
+	  if ( line[strlen(line)-1] == '\\')
+	    strcpy( &line[strlen(line)-1], line2);
+	  else
+ 	    strcpy( &line[strlen(line)-2], line2);
 	}
 	else 
 	  break;
