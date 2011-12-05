@@ -167,7 +167,9 @@ static short fmb_set_configuration(T_PROFI_DEVICE_HANDLE *hDevice,
   data.dp.max_slave_output_len = op->MaxSlaveOutputLen;
   data.dp.max_slave_input_len = op->MaxSlaveInputLen;
   data.dp.max_slave_diag_entries = op->MaxNumberSlaves * 4;
-  data.dp.max_slave_diag_len = 60;
+  data.dp.max_slave_diag_len = op->MaxSlaveDiagLen;
+  if ( data.dp.max_slave_diag_len == 0)
+    data.dp.max_slave_diag_len = 60;
   data.dp.max_bus_para_len = 1024;
   data.dp.max_slave_para_len = 1024;
 

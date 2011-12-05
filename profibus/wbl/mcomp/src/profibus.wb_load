@@ -1888,7 +1888,7 @@ Volume Profibus $ClassVolume 0.0.250.7
       Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.51
         Body SysBody 16-JAN-2006 09:46:40.51
           Attr StructName = "Pb_Profiboard"
-          Attr NextAix = "_X27"
+          Attr NextAix = "_X28"
         EndBody
         !/**
         ! Text description of the object (comment).
@@ -1989,6 +1989,15 @@ Volume Profibus $ClassVolume 0.0.250.7
         Object MaxSlaveInputLen $Attribute 10 16-JAN-2006 09:46:40.51
           Body SysBody 16-JAN-2006 09:46:40.51
             Attr PgmName = "MaxSlaveInputLen"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Maximum length for slave diagnostic.
+        !*/
+        Object MaxSlaveDiagLen $Attribute 27 05-DEC-2011 14:15:03.22
+          Body SysBody 05-DEC-2011 14:15:04.84
+            Attr PgmName = "MaxSlaveDiagLen"
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -2199,12 +2208,13 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndObject
       EndObject
       Object Template Pb_Profiboard 2151120896 16-JAN-2006 09:59:41.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 05-DEC-2011 14:15:48.65
           Attr Process = 1
           Attr BusNumber = 1
           Attr MaxNumberSlaves = 48
           Attr MaxSlaveOutputLen = 128
           Attr MaxSlaveInputLen = 128
+          Attr MaxSlaveDiagLen = 60
           Attr BaudRate = 12000
           Attr StallTime = 3000
           Attr Tsl = 1000
