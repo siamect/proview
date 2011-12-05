@@ -94,6 +94,7 @@
 #include "rt_gdh.h"
 #include "rt_aproc.h"
 #include "rt_pwr_msg.h"
+#include "rs_remote_msg.h"
 #include "remote.h"
 #include "remote_utils.h"
 #include "remote_remtrans_utils.h"
@@ -115,7 +116,8 @@ static unsigned int     remnode_send(remnode_item        *remnode,
                                      char                *buf,
                                      int                 buffer_size);
 static unsigned int     send_it(char                *buf,
-                                int                 buffer_size);
+                                int                 buffer_size,
+				int 		    double_dle);
 static unsigned int     Receive();
 static unsigned int     ReceiveHandler();
 
@@ -145,6 +147,9 @@ static unsigned int     ReceiveHandler();
 //#define TIMEOUT_SND_CHAR_SEC 0
 //#define TIMEOUT_SND_CHAR_USEC 900000
 
+#define BYTE_MASK 0xFF
+#define CPU_NR_MASK 0xF0
+
 #define NUL 0
 #define STX 2
 #define ETX 3
@@ -155,6 +160,7 @@ static unsigned int     ReceiveHandler();
 
 /*_variables_______________________________________________________________*/
 
+static int log_on = 0;
 unsigned int  telegram_counter = 0;  /* For control of follow on telegrams */
 
 remnode_item rn;
@@ -181,6 +187,15 @@ short poll_id[2];
 
 static int SendResponseTelegram(unsigned char CODE);
 
+static void rlog( const char *text, int val)
+{
+  if ( log_on) {
+    char timstr[20];
+  
+    time_AtoAscii( 0, time_eFormat_Time, timstr, sizeof(timstr));
+    printf( "%s  %4d %s\n", timstr, val, text);
+  }
+}
 
 
 /*************************************************************************
@@ -207,7 +222,7 @@ void send_pollbuff(remnode_item *remnode, pssupd_buffer_vnet *buf)
   buf->common_name[1] = poll_id[1];
 
   buf_size = buf->length * 2; /*  Convert to bytes  */
-  sts = send_it((char*)buf, buf_size);
+  sts = send_it((char*)buf, buf_size, 1);
 
   return;
 }
@@ -229,12 +244,350 @@ void send_pollbuff(remnode_item *remnode, pssupd_buffer_vnet *buf)
 static unsigned int remnode_send(remnode_item *remnode,
                                  pwr_sClass_RemTrans *remtrans,
                                  char *buf,
-                                 int buffer_size)
+                                 int buf_size)
 {
-  unsigned int  sts;
+  unsigned int          sts, i;
+  unsigned int          size_of_telegram, datasize;
+  unsigned int          number_of_DLE = 0;
+  unsigned int          delta_pos = 0;
+  unsigned int          pos_counter = 0;
+  unsigned int          follow_on = FALSE;
+  unsigned int          A_telegram = FALSE;
+  unsigned char         ch, cpu_number, CPU;
+  unsigned char         BCC = DLE ^ ETX;
+  unsigned char         datasize_low_byte, datasize_high_byte;
+  unsigned char         received_char = '\0';
+  unsigned char         response_buffer[RESP_MESSAGE_SIZE];
+  unsigned char         *restore_buf_ptr = (unsigned char *)buf;
+  static unsigned char  sstx[2] = {STX, '\0'};
+  static unsigned char  sdle[2] = {DLE, '\0'};
+  static unsigned char  snak[2] = {NAK, '\0'};
+  fd_set read_fd;
+  struct timeval tv;
 
-  sts = send_it(buf, buffer_size);
-  return sts;
+
+  /* Define complete telegrams for sending */
+
+  struct{
+    unsigned char telegram_header[HEADER_SIZE];
+    unsigned char telegram[MAX_SIZE_DATA_BLOCK*2 + NUMBER_OF_STOP_CHAR];
+  }sendbuffer;
+
+  struct{
+    unsigned char telegram_header[FOLLOW_ON_HEADER_SIZE];
+    unsigned char telegram[MAX_SIZE_DATA_BLOCK*2 + NUMBER_OF_STOP_CHAR];
+  }follow_on_sendbuffer;
+
+
+  do     /* Send 128 byte telegrams until message is finished */
+  {
+    if ( !follow_on )
+    {
+      A_telegram = TRUE;
+/*************************************************************************/
+/**    Send A-telegram.                                                 **/
+/*************************************************************************/
+/**    Check if follow on telegrams are needed.                         **/
+/*************************************************************************/
+      if ( buf_size - pos_counter > MAX_SIZE_DATA_BLOCK )
+      {
+        delta_pos = MAX_SIZE_DATA_BLOCK;
+        follow_on = TRUE;
+      }
+      else
+      {
+        delta_pos = buf_size - pos_counter;
+      }
+
+/*************************************************************************/
+/**    Calculate the size of the A-telegram.                            **/
+/*************************************************************************/
+      /* Count DLE characters */
+      for ( i=0 ; i<delta_pos ; i++ )
+      {
+         if ( *buf++ == DLE )
+            number_of_DLE += 1;
+      }
+      size_of_telegram = HEADER_SIZE+
+                         delta_pos+number_of_DLE+NUMBER_OF_STOP_CHAR;
+
+/*************************************************************************/
+/**    Fill in the telegram header and calculate BCC.                   **/
+/*************************************************************************/
+      /* Size have to be expressed in number of 16 bits words. */
+      /* If odd number of bytes add one. */
+
+      datasize = buf_size/2 + buf_size%2;
+      datasize_low_byte = (unsigned char)(BYTE_MASK & datasize);
+      datasize = datasize >> 8;
+      datasize_high_byte = (unsigned char)(BYTE_MASK & datasize);
+      cpu_number = (unsigned char)remtrans->Address[2];
+      CPU = '\xFF';
+      CPU = CPU_NR_MASK & cpu_number;
+
+      sendbuffer.telegram_header[0] = '\0';
+      sendbuffer.telegram_header[1] = '\0';
+      sendbuffer.telegram_header[2] = 'A';
+      sendbuffer.telegram_header[3] = 'D';
+      sendbuffer.telegram_header[4] = (unsigned char)remtrans->Address[0];
+      sendbuffer.telegram_header[5] = (unsigned char)remtrans->Address[1];
+      sendbuffer.telegram_header[6] = datasize_high_byte;
+      sendbuffer.telegram_header[7] = datasize_low_byte;
+      sendbuffer.telegram_header[8] = '\xFF';
+      sendbuffer.telegram_header[9] = CPU;
+
+      /* Calculate checksum for the header */
+      for ( i=0 ; i<HEADER_SIZE ; i++ )
+      {
+        BCC ^= sendbuffer.telegram_header[i];
+      }
+/*************************************************************************/
+/**   Fill up A-telegram with contents of message and calculate BCC     **/
+/*************************************************************************/
+      buf = (char *)restore_buf_ptr;
+      for ( i=0 ; i<(delta_pos+number_of_DLE) ; i++ )
+      {
+        ch = sendbuffer.telegram[i] = *buf++;
+        BCC ^= ch;
+        if ( ch == DLE )
+        {
+          sendbuffer.telegram[++i] = DLE;
+          BCC ^= ch;
+        }
+      }
+      if ( delta_pos%2 )
+      {
+        /* Ensure that a even number of bytes is treated */
+        sendbuffer.telegram[i++] = '\0';
+        size_of_telegram += 1;
+      }
+      sendbuffer.telegram[i++] = DLE;
+      sendbuffer.telegram[i++] = ETX;
+      sendbuffer.telegram[i]   = BCC;
+
+      pos_counter = delta_pos;
+    }
+    else  /* follow on telegram */
+    {
+
+/*************************************************************************/
+/**    Send follow on telegram.                                         **/
+/*************************************************************************/
+/**    Check if more follow on telegrams are needed.                    **/
+/*************************************************************************/
+      if ( buf_size - pos_counter > MAX_SIZE_DATA_BLOCK )
+      {
+        delta_pos = MAX_SIZE_DATA_BLOCK;
+        follow_on = TRUE;
+      }
+      else
+      {
+        delta_pos = buf_size - pos_counter;
+        follow_on = FALSE;
+      }
+
+/*************************************************************************/
+/**    Calculate the size of the follow on telegram.                    **/
+/*************************************************************************/
+      /* Count DLE characters */
+      restore_buf_ptr = (unsigned char *)buf;
+      number_of_DLE = 0;
+      for ( i=0 ; i<delta_pos ; i++ )
+      {
+         if ( *buf++ == DLE )
+            number_of_DLE += 1;
+      }
+      size_of_telegram = FOLLOW_ON_HEADER_SIZE+
+                         delta_pos+number_of_DLE+NUMBER_OF_STOP_CHAR;
+
+/*************************************************************************/
+/**    Fill in the follow on telegram header and calculate BCC.         **/
+/*************************************************************************/
+      follow_on_sendbuffer.telegram_header[0] = '\xFF';
+      follow_on_sendbuffer.telegram_header[1] = '\0';
+      follow_on_sendbuffer.telegram_header[2] = 'A';
+      follow_on_sendbuffer.telegram_header[3] = 'D';
+
+      /* Calculate checksum for the header */
+      BCC = DLE ^ ETX;
+      for ( i=0 ; i<FOLLOW_ON_HEADER_SIZE ; i++ )
+      {
+        BCC ^= follow_on_sendbuffer.telegram_header[i];
+      }
+
+/*************************************************************************/
+/* Fill up follow on telegram with contents of message and calculate BCC */
+/*************************************************************************/
+      buf = (char *)restore_buf_ptr;
+      for ( i = 0 ; i < (delta_pos+number_of_DLE) ; i++ )
+      {
+        ch = follow_on_sendbuffer.telegram[i] = *buf++;
+        BCC ^= ch;
+        if ( ch == DLE )
+        {
+          follow_on_sendbuffer.telegram[++i] = DLE;
+          BCC ^= ch;
+        }
+      }
+      if ( delta_pos%2 )
+      {
+        /* Ensure that a even number of bytes is treated */
+        follow_on_sendbuffer.telegram[i++] = '\0';
+        size_of_telegram += 1;
+      }
+      follow_on_sendbuffer.telegram[i++] = DLE;
+      follow_on_sendbuffer.telegram[i++] = ETX;
+      follow_on_sendbuffer.telegram[i]   = BCC;
+
+      pos_counter += delta_pos;
+
+    }
+
+/*************************************************************************/
+/**    Execute the send procedure                                       **/
+/*************************************************************************/
+    /* Send STX and wait for answer */
+    sts = write(ser_fd, sstx, 1);
+    rlog("snd STX", 0);
+    if ( sts > 0) {
+      load_timeval(&tv, rn_RK512->CharTimeout);
+      FD_ZERO(&read_fd);
+      FD_SET(ser_fd, &read_fd);
+      select(ser_fd+1, &read_fd, NULL, NULL, &tv);
+      sts = read(ser_fd, &received_char, 1);
+    }
+    if ( sts > 0) { //om det inte var timeout
+
+      if ( received_char == STX ) {
+	rlog("snd STX received", 0);
+	/* Both nodes is in sending mode. */
+	/* Cancel this send operation and wait for next timeout or receive */
+	write(ser_fd, snak, 1);
+	return(FALSE);
+      }
+      if ( received_char == DLE ) {
+	/* Contact is established. Send telegram */
+	rlog("snd DLE received, contact", 0);
+	if ( A_telegram ) {
+	  sts = write(ser_fd, &sendbuffer, size_of_telegram);
+	  rlog("snd message sent", size_of_telegram);
+	  A_telegram = FALSE;
+	}
+	else {
+	  sts = write(ser_fd, &follow_on_sendbuffer, size_of_telegram);
+	  rlog("snd message sent", size_of_telegram);
+	}
+	if ( sts > 0 ) {
+	  /* wait for break character or timeout */
+	  load_timeval(&tv, rn_RK512->CharTimeout);
+	  FD_ZERO(&read_fd);
+	  FD_SET(ser_fd, &read_fd);
+	  select(ser_fd+1, &read_fd, NULL, NULL, &tv);
+	  sts = read(ser_fd, &received_char, 1);
+
+          if ( sts > 0 &&(received_char == DLE) ) {
+
+/*************************************************************************/
+/**   The sending was a SUCCESS. Take care of the response message      **/
+/*************************************************************************/
+	    rlog("snd DLE received, success", 0);
+	    load_timeval(&tv, rn_RK512->CharTimeout);
+	    FD_ZERO(&read_fd);
+	    FD_SET(ser_fd, &read_fd);
+	    select(ser_fd+1, &read_fd, NULL, NULL, &tv);
+	    sts = read(ser_fd, &received_char, 1);
+
+            if ( sts > 0 &&(received_char == STX) ) {
+              /* Send DLE acknowledge and wait for response data */
+	      sts = write(ser_fd, sdle, 1);
+              if ( sts > 0 ) {
+                BCC = '\0';
+                for (i=0 ;
+                     i < RESP_MESSAGE_SIZE && sts > 1;
+                     i++ ) {
+
+		  load_timeval(&tv, rn_RK512->CharTimeout);
+		  FD_ZERO(&read_fd);
+		  FD_SET(ser_fd, &read_fd);
+		  select(ser_fd+1, &read_fd, NULL, NULL, &tv);
+		  sts = read(ser_fd, &received_char, 1);
+
+                  response_buffer[i] = received_char;
+                  BCC ^= received_char;
+                }  /* endfor */
+
+                if ( sts > 0 &&
+                     (response_buffer[2] == '\0') ) {
+                  /* Compare received BCC with calculated */
+		  load_timeval(&tv, rn_RK512->CharTimeout);
+		  FD_ZERO(&read_fd);
+		  FD_SET(ser_fd, &read_fd);
+		  select(ser_fd+1, &read_fd, NULL, NULL, &tv);
+		  sts = read(ser_fd, &received_char, 1);
+                  if ( sts > 0 &&
+                       ( BCC == received_char ) ) {
+                    /* Response telegram received OK */
+		    sts = write(ser_fd, sdle, 1);
+                    if ( response_buffer[3] != 0 ) {
+                      /* This response contains a error code */
+                      errh_CErrLog(REM__SIEMENSERROR,
+                                   errh_ErrArgL(response_buffer[3]) );
+                    }
+                  }
+                  else {
+                    /* Wrong checksum. */
+                    sts = FALSE;
+                  }
+                }
+                else {
+                  /* This is not a response message as expected */
+		  sts = write(ser_fd, snak, 1);
+                  sts = FALSE;
+                }
+              } /* ENDIF. DLE acknowledge failed */
+            }
+            else
+            {
+              /* STX character in response message was expected. */
+              /* Ensure that error status is returned */
+              sts = FALSE;
+            }
+          }
+          else
+          {
+            /* DLE ack. after sending telegram was expected. */
+            /* Ensure that error status is returned */
+	    rlog("snd DLE missing", 0);
+            sts = FALSE;
+          }
+        } /* ENDIF. Contact established but tty_write failed */
+      }
+      else
+      {
+        /* Failed in making contact. Wrong response character. */
+        /* Ensure that error status is returned */
+        sts = FALSE;
+      }
+    }  /* ENDIF. tty_write or tty_read failed */
+
+/*************************************************************************/
+/**  Check final status.                                                **/
+/*************************************************************************/
+    if ( EVEN(sts))
+    {
+      /* The send procedure has failed */
+      sts = write(ser_fd, snak, 1);
+      rlog("snd failed, NAK sent", 0);
+
+      follow_on = FALSE;
+
+      /* Ensure that error status is returned */
+      sts = FALSE;
+    }
+
+  }while( follow_on );
+
+  return(sts);
 }
 
 /*************************************************************************
@@ -251,7 +604,7 @@ static unsigned int remnode_send(remnode_item *remnode,
 **************************************************************************
 **************************************************************************/
 
-static unsigned int send_it(char *buf, int buffer_size)
+static unsigned int send_it(char *buf, int buffer_size, int double_dle)
 {
   int          		sts, i;
   unsigned int          size_of_telegram;
@@ -286,7 +639,7 @@ static unsigned int send_it(char *buf, int buffer_size)
   {
     ch = telegram[i] = *buf++;
     BCC ^= ch;
-    if ( ch == DLE )
+    if ( ch == DLE && double_dle)
     {
       telegram[++i] = DLE;
       BCC ^= ch;
@@ -492,6 +845,8 @@ static unsigned int ReceiveHandler(int fd)
   cont = TRUE;
   data_size = 0;
   
+  rlog("rcv STX", 0);
+
   while (cont)
   {
     /* Read until DLE is received */
@@ -506,15 +861,20 @@ static unsigned int ReceiveHandler(int fd)
       select(fd+1, &read_fd, NULL, NULL, &tv);
       if (read(fd, &received_char, 1) > 0) { //om det inte var timeout
         // Prevent writing oob
-        if (data_size > MAX_SIZE_TELEGRAM - 10) return (FALSE);
+        if (data_size > MAX_SIZE_TELEGRAM - 10) {
+	  rlog("rcv Maxsize", data_size);
+	  return (FALSE);
+	}
         receive_buffer[data_size++]=received_char;
       }
       else				//timeout gå tillbaka
       {
+	rlog("rcv Timeout", data_size);
         errh_Error("RK512 mottagning, character timeout");
         return(FALSE);  
       }
     }  
+    rlog("rcv DLE", data_size);
 
     /* Read one more */
     load_timeval(&tv, rn_RK512->CharTimeout);
@@ -522,6 +882,7 @@ static unsigned int ReceiveHandler(int fd)
     FD_SET(fd, &read_fd);
     select(fd+1, &read_fd, NULL, NULL, &tv);
     if (read(fd, &receive_buffer[data_size], 1) < 1) {
+      rlog("rcv Timeout extra char", data_size);
       errh_Error("RK512 mottagning, character timeout");
       return(FALSE);  
     }
@@ -529,6 +890,7 @@ static unsigned int ReceiveHandler(int fd)
     if (receive_buffer[data_size] == ETX)
     {
       data_size++;
+      rlog("rcv ETX", data_size);
 
       /* Read one more, should be checksum */
       load_timeval(&tv, rn_RK512->CharTimeout);
@@ -537,15 +899,19 @@ static unsigned int ReceiveHandler(int fd)
       select(fd+1, &read_fd, NULL, NULL, &tv);
       if (read(fd, &receive_buffer[data_size], 1) < 1) {
         errh_Error("RK512 mottagning, character timeout");
+	rlog("rcv Timeout Checksum", data_size);
         return(FALSE);  
       }
   
       data_size++;
       cont = FALSE;
+      rlog("rcv Checksum", data_size);
     }
     else
       if (receive_buffer[data_size] != DLE ) data_size++;
   }
+
+  rlog("rcv Complete Message", data_size);
 
 /*************************************************************************/
 /**  A complete message is received. Check BCC.                         **/
@@ -907,7 +1273,7 @@ static int SendResponseTelegram(unsigned char CODE)
   ResponseTelegram[5] = ETX;
   ResponseTelegram[6] = BCC;
 
-  sts = send_it( (char *)ResponseTelegram, RESP_MESSAGE_SIZE);
+  sts = send_it( (char *)ResponseTelegram, 4 /* RESP_MESSAGE_SIZE */, 0);
   return sts;
 }
 
@@ -934,6 +1300,8 @@ int main(int argc, char *argv[]) /*argv[2]=remnode name*/
   else
     strcpy((char *) id, "0");
     
+  if (argc >= 4)
+    log_on = 1;
   /* Build process name with id */
 
   sprintf((char *) pname, "rs_remrk512_%s", id);
