@@ -2660,8 +2660,7 @@ Window visar en separat graf inom ett specificerat område i en annan graf. Grafe
 med eller utan skroll-lister.
 
 <h2>Begränsningar
-Sliders går inte att påverka i window objektet.
-Det går inte att ange ett hierarki eller klass objekt.
+Kopplingar i fönstret skalas inte på rätt sätt.
 
 <h2>Attribut
 <b>Attribut    <t><t>Beskrivning
@@ -2682,8 +2681,7 @@ TabbedWindow är ett Window objekt med flik-register. För varje flik anges en sep
 och när fliken aktiveras visas en angivna grafen i fönstret.
 
 <h2>Begränsningar
-Sliders går inte att påverka i window objektet.
-Det går inte att ange ett hierarki eller klass objekt.
+Kopplingar i fönstret skalas inte på rätt sätt.
 
 <h2>Attribut
 <b>Attribut    <t><t>Beskrivning
@@ -3810,8 +3808,7 @@ sedan aktiverar 'Functions/Group' i menyn. Om man vill lösa upp en grupp, väljer
 och aktiverar 'Functions/Ungroup' i menyn.
 
 Det finns vissa begränsningar på objekt som kan tillhöra grupper, kopplingar är t ex inte 
-tillåtna i en grupp, och tryckknappar och objekt som är känsliga för klick, kommer att 
-förlora sin känslighet.
+tillåtna i en grupp, och slider objekt kommer att förlora sin känslighet.
 
 <h2>Dynamik
 En egenskap hos grupper är att man kan sätta dynamik på dem. Alla de typer av dynamik och 

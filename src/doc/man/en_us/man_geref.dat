@@ -2679,8 +2679,7 @@ Window displays a separate graph in a specified area in another graph. The graph
 with or without scrollbars.
 
 <h2>Limitations
-Sliders within the window object are disabled.
-You can not state an hierarchy or class object.
+Connections within the window object are scaled properly.
 
 <h2>Attributes
 <b>Attribute    <t><t>Description
@@ -3850,8 +3849,7 @@ activating 'Functions/Group' in the menu. If you want to resolve a group, you se
 and activate 'Functions/Ungroup' in the menu.
 
 There are some limitations in objects that can be a part of a group, connections for example
-are not allowed in groups, and pushbuttons and objects that is sensitive for mouse clicks, will
-loose their sensitivity.
+are not allowed in groups, and sliders will loose their sensitivity.
 
 <h2>Dynamics
 One property for groups is that you can specify dynamic to them. All types of dynamics and
