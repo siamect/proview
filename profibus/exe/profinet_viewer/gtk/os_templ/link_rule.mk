@@ -8,6 +8,6 @@ link = $(ldxx) -L$(pwr_elib) $(elinkflags) $(domap) -o $(pwr_exe)/profinet_viewe
 	$(wb_msg_eobjs) $(rt_msg_eobjs) \
 	$(pwr_eobj)/rt_io_user.o \
 	$(pwre_conf_libdir) $(pwre_conf_libpwrxttgtk) $(pwre_conf_libpwrxtt) $(pwre_conf_libgtk) \
-	$(pwre_conf_libpwrrt) $(pwre_conf_pnak) $(pwre_conf_lib)
+	$(pwre_conf_libpwrrt) $(pwre_conf_libpnak) $(pwre_conf_lib)
 
 endif
