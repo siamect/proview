@@ -33,45 +33,26 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_postconfig.wb_load -- Defines the class PostConfig.
+!  pwrb_c_reportconfig.wb_load -- Defines the class ReportConfig.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Servers,NodeConfiguration
-!  @Summary Configuration of event post server.
-!  Configuration of event post server.
+!  @Summary Configuration of report server.
+!  Configuration of report server.
 ! 
-!  The Post server receives alarm events from the event monitor
-!  and forwards them to SMS numbers and email addresses.
-!
-!  Alarms forwarded should have SMS or Email in the Flags attribute
-!  of the DSup, ASup or CycleSup object. A Recipient is also specified
-!  in the sup object, and this recipient is search for in the user database
-!  under the current system group, and from the found user, the SMS number
-!  or email address is fetched. Also a list of recipients can be specifed,
-!  separated by comma, and the event is forwarded to the SMS number or 
-!  email address of all these users.
-!
-!  A recipient can, in the sup object, be specified by a symbol. The should
-!  be defined in the Symbol table in the PostConfig object. If for example
-!  the recipient is specified with '$on_duty', and a symbol with name 'on_duty'
-!  and value 'john, dennis' is defined in symbol table, the event will be 
-!  forwarded to the users john and dennis.
-!
-!  The command to send a SMS or email depeneds on the utility that is used,
-!  and you have to insert the shell command for the utility in the
-!  EmailCmd and SMS_Cmd attributes. Replace the email address or SMS number
-!  with the string '$address' and the message text with the string '$text'.
+!  The Report server creates and send reports to printers and epost
+!  addresses.
 !*/
-  Object PostConfig $ClassDef 548 
+  Object ReportConfig $ClassDef 550 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "PostConfig"
+        Attr StructName = "ReportConfig"
       EndBody
       !/**
       !  Specifies the email shell command.
@@ -79,6 +60,16 @@ SObject pwrb:Class
       !  $address will be replaced by the email address for the 
       !  specified user, and $text will be replaced by a message 
       !  text with event text and event name.
+      !  If document format Pdf or Html is selected the report will
+      !  be sent as an attached file, and command should also contain
+      !  $reportfile which will be replaced by the report filename.
+      !
+      !  Example for mutt with pdf or html format
+      !  echo '$text' | mutt $address -s '$subject' -a $reportfile
+      !
+      !  Example for mutt text format
+      !  cat $reportfile | mutt $address -s '$subject'
+      !  
       !*/
       Object EmailCmd $Attribute 1 
         Body SysBody
@@ -98,20 +89,14 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  SelectList specifies the hierarchies from which
-      !  messages are to be sent to the user. Up to 20 different
-      !  hierarchies can be specified. If messages from e.g. a
-      !  Watchdog object in a node will be received, then the
-      !  name of the node will be specified.
-      !  
-      !  Note! If the SelectList is left blank no message at all is
-      !  sent to the user.
+      !  Specifies the print shell command.
+      !  The command should contain the strings $reportfile. 
+      !  $reportfile will be replaced by the name of the generated file
+      !  that should be printed.
       !*/
-      Object EventSelectList $Attribute 3
+      Object PrintCmd $Attribute 3 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String80"
-          Attr Flags |= PWR_MASK_ARRAY
-	  Attr Elements = 40
+          Attr TypeRef = "pwrs:Type-$String256"
         EndBody
       EndObject
       !/**
@@ -137,8 +122,9 @@ SObject pwrb:Class
       EndObject
       !/**
       !  Specifies language.
+      !  Not yet implemented.
       !*/
-      Object Language $Attribute 10
+      Object Language $Attribute 5
         Body SysBody
           Attr TypeRef = "pwrb:Type-LanguageEnum"
         EndBody
@@ -146,7 +132,7 @@ SObject pwrb:Class
       !/**
       !  Server status.
       !*/
-      Object Status $Attribute 5
+      Object Status $Attribute 6
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Status"
 	  Attr Flags |= PWR_MASK_STATE
@@ -156,7 +142,7 @@ SObject pwrb:Class
       !/**
       !  Number of sent SMS.
       !*/
-      Object SentSMS $Attribute 6
+      Object SentSMS $Attribute 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_STATE
@@ -166,7 +152,7 @@ SObject pwrb:Class
       !/**
       !  Number of sent Email.
       !*/
-      Object SentEmail $Attribute 7
+      Object SentEmail $Attribute 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_STATE
@@ -174,26 +160,19 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Disable post.
-      !  When Disable is 0, no events are posted.
+      !  Disable reports.
+      !  When Disable is 0, no reports are created.
       !*/
-      Object Disable $Attribute 8
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Boolean"
-        EndBody
-      EndObject
-      !/**
-      !  Print posted commands to console log.
-      !*/
-      Object Log $Attribute 9
+      Object Disable $Attribute 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
     EndObject
-    Object Template PostConfig
+    Object Template ReportConfig
       Body RtBody
-        Attr EmailCmd = "mailto 'Proview' '$address' 'Proview alarm' '$text'"
+        Attr EmailCmd = "echo '$text' | mutt $address -s '$subject' -a $reportfile"
+        Attr PrintCmd = "lpr $reportfile"
       EndBody
     EndObject
   EndObject
