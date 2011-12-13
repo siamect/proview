@@ -503,7 +503,7 @@ static unsigned int remnode_send(remnode_item *remnode,
               if ( sts > 0 ) {
                 BCC = '\0';
                 for (i=0 ;
-                     i < RESP_MESSAGE_SIZE && sts > 1;
+                     i < RESP_MESSAGE_SIZE && sts > 0;
                      i++ ) {
 
 		  load_timeval(&tv, rn_RK512->CharTimeout);
@@ -954,13 +954,8 @@ static unsigned int ReceiveHandler(int fd)
     while(remtrans && search_remtrans) {
 
       if (remtrans->objp->Direction == REMTRANS_IN) {
-	if (!use_remote_io) {
+	if (remtrans->objp->Address[0] == receive_buffer[4])
 	  search_remtrans = false;
-	}
-	else {
-	  if (remtrans->objp->Address[0] == receive_buffer[4])
-	    search_remtrans = false;
-	}
       }
       if ( search_remtrans ) remtrans = (remtrans_item *) remtrans->next;
     }
