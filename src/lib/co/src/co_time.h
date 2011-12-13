@@ -87,7 +87,9 @@ typedef enum {
   time_eFormat_DateAndTime = 0,       //!< Display date and time, 01-JAN-1970 01:00:00.00
   time_eFormat_Time  = 1,             //!< Display time only 01:00:00.00
   time_eFormat_ComprDateAndTime = 2,  //!< Date and time compressed format, 70-01-01 00:00:00
-  time_eFormat_NumDateAndTime = 3     //!< Date and time format, 2005-01-01 00:00:00
+  time_eFormat_NumDateAndTime = 3,    //!< Date and time format, 2005-01-01 00:00:00
+  time_eFormat_FileDateAndTime = 4,   //!< Date and time format, 20050101_000000
+  time_eFormat_FileDate = 5           //!< Date format, 20050101
 } time_eFormat;
 
 typedef enum {

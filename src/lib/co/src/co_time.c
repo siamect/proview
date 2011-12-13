@@ -541,10 +541,16 @@ time_AtoAscii (
     return TIME__RANGE;
 
 
-  sprintf(tmpStr, ".%02d", (int)(tp->tv_nsec / 10000000));
   buflen = strlen(buf);
-  if (strlen(tmpStr) + buflen < (unsigned int) bufsize)
-    strcpy(&buf[buflen], tmpStr);
+  switch (format) {
+  case time_eFormat_FileDateAndTime:
+  case time_eFormat_FileDate:
+    break;
+  default:
+    sprintf(tmpStr, ".%02d", (int)(tp->tv_nsec / 10000000));
+    if (strlen(tmpStr) + buflen < (unsigned int) bufsize)
+      strcpy(&buf[buflen], tmpStr);
+  }
 
   return TIME__SUCCESS;
 }
@@ -678,6 +684,10 @@ time_TmToAscii (
     strftime(buf, bufsize, "%d-%b-%Y %H:%M:%S", tmptr);
     for (i = 3; i < 6; i++)
       buf[i] = toupper(buf[i]);
+  } else if (format == time_eFormat_FileDateAndTime) {
+    strftime(buf, bufsize, "%Y%m%d_%H%M%S", tmptr);
+  } else if (format == time_eFormat_FileDate) {
+    strftime(buf, bufsize, "%Y%m%d", tmptr);
   } else if (format == time_eFormat_ComprDateAndTime) {
     strftime(buf, bufsize, "%y-%m-%d %H:%M:%S", tmptr);
   } else if (format == time_eFormat_NumDateAndTime) {
