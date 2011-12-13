@@ -140,6 +140,9 @@ void *CnvXtthelpToPs::insert( navh_eItemType item_type, const char *text1,
 	  else
 	    first_chaptertopic = 0;
 	}
+	else
+	  tops.set_ci( ps_eId_TopicL1);
+
 	if ( tops.cf == ps_eFile_Info)
 	  tops.y = ps_cPageHeight - ps_cTopMargin;
 	tops.set_cf( ps_eFile_Body);
@@ -177,6 +180,10 @@ void *CnvXtthelpToPs::insert( navh_eItemType item_type, const char *text1,
 	base_ci = tops.ci;
 	tops.set_ci( ps_eId_Function);
 	user_style = 1;
+      }
+      else if ( cdh_NoCaseStrcmp( text1, "report") == 0) {
+	base_ci = tops.ci;
+	tops.set_ci( ps_eId_Report);
       }
       return NULL;
     }

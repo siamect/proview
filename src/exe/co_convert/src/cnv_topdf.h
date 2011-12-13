@@ -85,6 +85,7 @@ typedef enum {
   pdf_eId_TopicL3,
   pdf_eId_Function,
   pdf_eId_Class,
+  pdf_eId_Report,
   pdf_eId__
 } pdf_eId;
 
@@ -188,6 +189,8 @@ class CnvToPdf  {
 	CnvStyle( "TimesNewRoman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
       style[pdf_eId_TopicL3].text = 
 	CnvStyle( "TimesNewRoman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
+      style[pdf_eId_Report].h1 = 
+	CnvStyle( "Helvetica-Bold-ISOLatin1", 20, 0, 14, 20, cnv_eAlignment_Left, 0, 0, 0);
     }
   ~CnvToPdf();
 

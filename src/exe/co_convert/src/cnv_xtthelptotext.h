@@ -34,49 +34,50 @@
  * General Public License plus this exception.
  */
 
-#ifndef cnv_xtthelpto_h
-#define cnv_xtthelpto_h
-
-#if defined __cplusplus
-extern "C" {
-#endif
-
-#include "pwr.h"
-#include "co_nav_help.h"
-#include "cnv_readxtthelp.h"
+#ifndef cnv_xtthelptotext_h
+#define cnv_xtthelptotext_h
 
 using namespace std;
 
-class CnvReadXtthelp;
+#include <iostream>
+#include <vector>
+#include <string>
+#include "pwr.h"
+#include "cnv_xtthelpto.h"
+#include "cnv_style.h"
+#include "cnv_content.h"
+#include "cnv_file.h"
 
-typedef enum {
-  Cnv_eXtthelpToType_Html,
-  Cnv_eXtthelpToType_Xml,
-  Cnv_eXtthelpToType_Ps,
-  Cnv_eXtthelpToType_Pdf,
-  Cnv_eXtthelpToType_Text
-} Cnv_eXtthelpToType;
-  
-class CnvXtthelpTo {
+class CnvCtx;
+
+class CnvXtthelpToText : public CnvXtthelpTo {
  public:
-  // CnvXtthelpTo() {}
+  CnvXtthelpToText( CnvCtx *cnv_ctx) :
+    ctx(cnv_ctx), cf(0), first_topic(1), in_topic(0), print_disable(0) {}
+  virtual ~CnvXtthelpToText();
 
-  virtual Cnv_eXtthelpToType type() { return Cnv_eXtthelpToType_Html;}
-  virtual void *insert( navh_eItemType item_type, const char *text1,
-			const char *text2, const char *text3, const char *link, 
-			const char *link_bookmark, const char *file_name,
-			navh_eHelpFile file_type, int help_index, 
-			const char *bookmark, int coding) 
-    { return 0;}
-  virtual bool confpass() { return false;}
-  virtual void set_confpass( bool conf) {};
+  Cnv_eXtthelpToType type() { return Cnv_eXtthelpToType_Text;}
+  void *insert( navh_eItemType item_type, const char *text1,
+		const char *text2, const char *text3, const char *link, 
+		const char *link_bookmark, const char *file_name,
+		navh_eHelpFile file_type, int help_index, 
+		const char *bookmark, int coding);
+  void subject_to_fname( char *fname, const char *subject, int path);
 
-  virtual ~CnvXtthelpTo() {}
+  CnvCtx *ctx;
+  CnvFile *cf;
+  int first_topic;
+  int in_topic;
+  int print_disable;
 };
 
-#if defined __cplusplus
-}
 #endif
-#endif
+
+
+
+
+
+
+
 
 

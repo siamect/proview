@@ -86,6 +86,7 @@ typedef enum {
   ps_eId_TopicL3,
   ps_eId_Function,
   ps_eId_Class,
+  ps_eId_Report,
   ps_eId__
 } ps_eId;
 
@@ -140,6 +141,8 @@ class CnvToPs  {
 	CnvStyle( "Times-Roman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
       style[ps_eId_TopicL3].text = 
 	CnvStyle( "Times-Roman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
+      style[ps_eId_Report].h1 = 
+	CnvStyle( "Helvetica-Bold-ISOLatin1", 24, 0, 24, 20, cnv_eAlignment_Left, 0, 0, 0);
     }
   ~CnvToPs();
 

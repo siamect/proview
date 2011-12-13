@@ -60,6 +60,7 @@ extern "C" {
 #include "cnv_xtthelptoxml.h"
 #include "cnv_xtthelptops.h"
 #include "cnv_xtthelptopdf.h"
+#include "cnv_xtthelptotext.h"
 #include "cnv_pwgtoxtthelp.h"
 #include "cnv_classdep.h"
 #include "cnv_changelog.h"
@@ -119,6 +120,7 @@ int main( int argc, char *argv[])
   int   xtthelp_to_xml = 0;
   int   xtthelp_to_ps = 0;
   int   xtthelp_to_pdf = 0;
+  int   xtthelp_to_text = 0;
   int   pwg_to_xtthelp = 0;
   int   changelog = 0;
   char from[80] = "";
@@ -213,6 +215,9 @@ int main( int argc, char *argv[])
 	case 'f':
 	  xtthelp_to_pdf = 1;
 	  break;
+	case 'j':
+	  xtthelp_to_text = 1;
+	  break;
 	case 'a':
 	  pwg_to_xtthelp = 1;
 	  break;
@@ -276,6 +281,14 @@ int main( int argc, char *argv[])
   }
   if ( xtthelp_to_pdf) {
     CnvXtthelpToPdf *xtthelpto = new CnvXtthelpToPdf( ctx);
+    ctx->rx = new CnvReadXtthelp( files, ctx->dir, xtthelpto);
+    ctx->rx->read_xtthelp();
+    delete ctx->rx;
+    delete xtthelpto;
+    exit(0);
+  }
+  if ( xtthelp_to_text) {
+    CnvXtthelpToText *xtthelpto = new CnvXtthelpToText( ctx);
     ctx->rx = new CnvReadXtthelp( files, ctx->dir, xtthelpto);
     ctx->rx->read_xtthelp();
     delete ctx->rx;

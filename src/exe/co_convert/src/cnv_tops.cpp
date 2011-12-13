@@ -338,6 +338,8 @@ page_x << " " << ps_cPageNumY << " moveto" << endl <<
 
 void CnvToPs::print_content()
 {
+  if ( !content.tab.size())
+    return;
 
   cf = ps_eFile_Info;
   ci = ps_eId_Content;
@@ -382,10 +384,15 @@ CnvToPs::~CnvToPs()
 
 void CnvToPs::close()
 {
-  cf = ps_eFile_Body;
-  print_pagebreak( 1);
-  cf = ps_eFile_Info;
-  print_content();
+  if ( ci != ps_eId_Report) {
+    cf = ps_eFile_Body;
+    print_pagebreak( 1);
+    cf = ps_eFile_Info;
+    print_content();
+  }
+  else 
+    fp[cf] << "showpage" << endl;
+
   if ( !conf_pass) {
     fp[ps_eFile_Info].close();
     fp[ps_eFile_Body].close();
@@ -560,7 +567,7 @@ void CnvToPs::print_h1( const char *text, int hlevel, char *subject)
   else 
     print_text( text, style[ci].h1);
   
-  if ( conf_pass) {
+  if ( conf_pass && ci != ps_eId_Report) {
     CnvContentElem cnt;
     cnt.page_number = page_number[cf];
     cnt.header_level = hlevel;

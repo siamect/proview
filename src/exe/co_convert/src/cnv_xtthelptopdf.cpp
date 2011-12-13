@@ -144,6 +144,8 @@ void *CnvXtthelpToPdf::insert( navh_eItemType item_type, const char *text1,
 	    topdf.y = pdf_cPageHeight - pdf_cTopMargin;
 	  }
 	}
+	else
+	  topdf.set_ci( pdf_eId_TopicL1);
       }
 
       if ( first_topic) {
@@ -177,6 +179,10 @@ void *CnvXtthelpToPdf::insert( navh_eItemType item_type, const char *text1,
 	base_ci = topdf.ci;
 	topdf.set_ci( pdf_eId_Function);
 	user_style = 1;
+      }
+      else if ( cdh_NoCaseStrcmp( text1, "report") == 0) {
+	base_ci = topdf.ci;
+	topdf.set_ci( pdf_eId_Report);
       }
       return NULL;
     }
