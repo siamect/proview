@@ -211,7 +211,7 @@
   struct tm tm; \
   time_t time = t.tv_sec; \
 \
-  localtime_r( &t, &tm); \
+  localtime_r( &time, &tm); \
   obj->Second = tm.tm_sec; \
   obj->Minute = tm.tm_min; \
   obj->Hour = tm.tm_hour; \
