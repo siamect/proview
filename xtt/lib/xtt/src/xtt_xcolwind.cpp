@@ -544,6 +544,8 @@ void XColWind::signal_insert_cb( void *ctx, void *parent_node,
   unsigned int 	a_offset;
   unsigned int 	a_dim;
   pwr_tTid	a_tid;
+  unsigned int	a_flags = 0;
+  pwr_sAttrRef 	ar;
   pwr_tStatus   sts;
   ItemCollect 	*item;
   char		*s;
@@ -587,11 +589,20 @@ void XColWind::signal_insert_cb( void *ctx, void *parent_node,
   strcat( name, ".");
   strcat( name, trace_attr);
 
-  sts = gdh_GetAttributeCharacteristics( name, &a_type_id, &a_size, &a_offset, 
-					 &a_dim);
+  sts = gdh_NameToAttrref( pwr_cNObjid, name, &ar);
+  if ( EVEN(sts)) return;
+
+  sts = gdh_GetAttributeCharAttrref( &ar, &a_type_id, &a_size, &a_offset, 
+				     &a_dim);
+  if ( EVEN(sts)) return;
+
+  sts = gdh_GetAttributeFlags( &ar, &a_flags); 
+  if ( EVEN(sts)) return;
+
+  sts = gdh_GetAttrRefTid( &ar, &a_tid);
   if ( EVEN(sts)) return;
 
   item = new ItemCollect( brow, aref.Objid, attr, NULL, 
-			  flow_eDest_IntoLast, a_type_id, a_tid, a_size, 0, 0);
+			  flow_eDest_IntoLast, a_type_id, a_tid, a_size, a_flags, 0);
 }
 
