@@ -265,11 +265,23 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
     case glow_eEvent_MB1Down:
     case glow_eEvent_MB1Up:
     case glow_eEvent_MB1Click:
+    case glow_eEvent_Key_Return:
       sts = a[a.a_size-1]->event_handler( &mw, event, x, y, fx, fy);
       if ( sts == GLOW__TERMINATED || sts == GLOW__DESTROYED)
 	return sts;
       else if ( sts)
 	return 1;
+      break;
+    case glow_eEvent_Key_Right:
+    case glow_eEvent_Key_Left:
+    case glow_eEvent_Key_Up:
+    case glow_eEvent_Key_Down:
+    case glow_eEvent_Key_BackSpace:
+    case glow_eEvent_Key_Tab:
+    case glow_eEvent_Key_ShiftTab:
+    case glow_eEvent_Key_Escape:
+    case glow_eEvent_Key_Ascii:
+    case glow_eEvent_Exposure:
       break;
     default: ;
       return 0;
