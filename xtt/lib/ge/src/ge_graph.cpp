@@ -4373,7 +4373,15 @@ void  Graph::string_to_type( char *type_str, pwr_eType *type,
     else
       *size = atoi( str + 6);
   }
-  if ( !found && strncmp("BIT", str, 3) == 0) 
+  else if ( !found && strncmp("TEXT", str, 4) == 0) 
+  {
+    *type = pwr_eType_Text;
+    if ( *(str+4) == 0)
+      *size = 80;
+    else
+      *size = atoi( str + 4);
+  }
+  else if ( !found && strncmp("BIT", str, 3) == 0) 
   {
     *type = (pwr_eType) graph_eType_Bit;
     *size = 4;

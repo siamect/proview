@@ -156,6 +156,7 @@ static int check_format( char *format, int type)
       return 1;
     break;
   case pwr_eType_String:
+  case pwr_eType_Text:
     if ( *s == 's')
       return 1;
     break;
@@ -3728,6 +3729,7 @@ int GeValue::scan( grow_tObject object)
     break;
   }
   case pwr_eType_String:
+  case pwr_eType_Text:
     if ( !first_scan) {
       if ( strncmp( old_value, (char *)p, size) == 0)
 	// No change since last time

@@ -145,9 +145,12 @@ int XAttOneGtk::change_value( int set_focus)
   sts = gdh_GetObjectInfoAttrref( &aref, aval, sizeof(aval));
   if ( EVEN(sts)) return sts;
 
-  XNav::attrvalue_to_string( atype, atype, &aval, buf, sizeof(buf), &len, NULL);
-
-  value = buf;
+  if ( atype == pwr_eType_Text)
+    value = aval;
+  else {
+    XNav::attrvalue_to_string( atype, atype, &aval, buf, sizeof(buf), &len, NULL);
+    value = buf;
+  }
 
   if ( !access_rw) {
     gtk_label_set_text( GTK_LABEL(cmd_label), buf);

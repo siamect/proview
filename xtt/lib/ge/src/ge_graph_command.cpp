@@ -219,7 +219,7 @@ dcli_tCmdTable	graph_command_table[] = {
 		{
 			"EXPORT",
 			&graph_export_func,
-			{"dcli_arg1", ""}
+			{"dcli_arg1", "/SIGNATURE", ""}
 		},
 		{
 			"DISABLE",
@@ -1576,8 +1576,15 @@ static int	graph_export_func(	void		*client_data,
     char filename[120];
     char name[80];
     char graph_name[80];
+    char *signature_p;
+    char signature[80];
     char *s;
     int sts;
+
+    if (dcli_get_qualifier( "/SIGNATURE", signature, sizeof(signature)))
+      signature_p = signature;
+    else
+      signature_p = 0;
 
     if ( ! graph->get_java_name( name)) {
       // Set default name
@@ -1645,7 +1652,8 @@ static int	graph_export_func(	void		*client_data,
 	  // Compile frame
 	  graph->get_systemname( systemname);
 
-	  sprintf( cmd, "$pwr_exe/ge_javac.sh java %s %s", filename, systemname);
+	  sprintf( cmd, "$pwr_exe/ge_javac.sh java %s %s \"%s\"", filename, systemname,
+		   signature);
 	  sts = system( cmd);
 	  if ( sts != 0) {
 	    graph->message( 'E', "Java compilation errors");
@@ -1670,7 +1678,8 @@ static int	graph_export_func(	void		*client_data,
 	  // Compile applet
 	  graph->get_systemname( systemname);
 
-	  sprintf( cmd, "$pwr_exe/ge_javac.sh java_web %s %s", filename, systemname);
+	  sprintf( cmd, "$pwr_exe/ge_javac.sh java_web %s %s \"%s\"", filename, systemname,
+		   signature);
 	  sts = system( cmd);
 	  if ( sts != 0) {
 	    graph->message( 'E', "Java compilation errors");

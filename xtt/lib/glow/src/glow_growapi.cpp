@@ -1601,6 +1601,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].type = glow_eType_Font;
       attrinfo[i++].size = sizeof( op->font);
       
+      strcpy( attrinfo[i].name, "Type");
+      attrinfo[i].value_p = &op->annot_type;
+      attrinfo[i].type = glow_eType_AnnotType;
+      attrinfo[i++].size = sizeof( op->annot_type);
+      
       break;
     }
     case glow_eObjectType_GrowText:

@@ -98,7 +98,8 @@ typedef enum {
   glow_eType_Adjustment,  	//!< Type is glow_eAdjustment
   glow_eType_Font,	  	//!< Type is glow_eFont
   glow_eType_Gradient,      	//!< Type is glow_eGradient
-  glow_eType_HotIndication     	//!< Type is glow_eHotIndication
+  glow_eType_HotIndication,    	//!< Type is glow_eHotIndication
+  glow_eType_AnnotType     	//!< Type is glow_eAnnotType
 } glow_eType;
 
 //! Type of Ctx class

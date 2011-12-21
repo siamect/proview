@@ -106,6 +106,7 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   pwr_tString80 title;
   pwr_tString80 text;
   pwr_tString80 file_name;
+  pwr_tString80 pwrhost;
   pwr_tBoolean  enable_login;
   pwr_tBoolean  enable_alarmlist;
   pwr_tBoolean  enable_eventlog;
@@ -192,6 +193,14 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   strcpy( text, value_p);
   free( value_p); 
 
+  // Attribute PwrHost
+  sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "PwrHost",
+			  &value_p, &size);
+  if (EVEN(sts)) return sts;
+  strcpy( pwrhost, value_p);
+  free( value_p); 
+  dcli_trim( pwrhost, pwrhost);
+
   // Attribute EnableLogin
   sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "EnableLogin",
 			  &value_p, &size);
@@ -241,7 +250,8 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   strcpy( load_archives, (char *)value_p);
   free( value_p); 
 
-  strcpy( arlist, "pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar,pwr_bcomp.jar,pwr_bcompfc.jar,pwr_abb.jar");
+  strcpy( arlist, "pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar");
+  // strcat( arlist ",pwr_bcomp.jar,pwr_bcompfc.jar,pwr_abb.jar");
   dcli_trim( load_archives, load_archives);
   if ( strcmp( load_archives, "") != 0) {
     strcat( arlist, ",");
@@ -509,17 +519,34 @@ graph_text << "'," << resize << "," << width+20 << "," << height+20
 "    <title>" << title << "</title>" << endl <<
 "  </head>" << endl <<
 "  <body>" << endl <<
+"<!--[if !IE]> -->" << endl <<
+"    <object classid=\"java:jpwr.jop.JopOpWindowApplet.class\"" << endl <<
+"      type=\"application/x-java-applet\"" << endl <<
+"      archive=\"" << arlist << ",pwrp_" << sname << "_web.jar\"" << endl <<
+"      width=100% height=100% >" << endl <<
+"      <param name = \"code\" value=\"jpwr.jop.JopOpWindowApplet.class\" >" << endl <<
+"      <param name =\"archive\" value=\"" << arlist << ",pwrp_" << sname << "_web.jar\">" << endl <<
+"      <param name=\"persistState\" value=\"false\" />" << endl <<
+"      <param name=\"scriptable\" value=\"false\">" << endl;
+  if ( strcmp( pwrhost, "") != 0)
+    fp_ow <<
+"      <param name=\"pwrhost\" value=\"" << pwrhost << "\">" << endl;
+  fp_ow <<
+"     </object>" << endl <<
+"<!--<![endif]--> " << endl <<
+"<!--[if IE]>" << endl <<
 "    <object classid=\"clsid:8AD9C840-044E-11D1-B3E9-00805F499D93\"" << endl <<
 "      width=100% height=100%  codebase=\"" << codebase << "\">" << endl <<
 "      <param name = code value=jpwr.jop.JopOpWindowApplet.class >" << endl <<
 "      <param name =\"archive\" value=\"" << arlist << ",pwrp_" << sname << "_web.jar\">" << endl <<
 "      <param name=\"type\" value=\"application/x-java-applet;version=1.3\">" << endl <<
-"      <param name=\"scriptable\" value=\"false\">" << endl <<
-"    <embed type=\"application/x-java-applet;version=1.4\" " << endl <<
-"      code = jpwr.jop.JopOpWindowApplet.class " << endl <<
-"      archive=\"" << arlist << ",pwrp_" << sname << "_web.jar\" " << endl <<
-"      width = 100% height = 100% scriptable=false " << endl <<
-"      pluginspage=\"http://java.sun.com/products/plugin/index.html#download\">" << endl <<
+"      <param name=\"scriptable\" value=\"false\">" << endl;
+  if ( strcmp( pwrhost, "") != 0)
+    fp_ow <<
+"      <param name=\"pwrhost\" value=\"" << pwrhost << "\">" << endl;
+  fp_ow <<
+"     </object>" << endl <<
+"<![endif]-->" << endl <<
 "  </body>" << endl <<
 "</html>" << endl;
   fp_ow.close();
