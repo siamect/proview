@@ -615,9 +615,20 @@ int rt_sevhistmon::send_data()
   int   stime;
   pwr_tTime current_time;
   pwr_tStatus   conf_sts = SEV__SUCCESS;
+  int connected;
 
   for ( unsigned int i = 0; i < m_hs.size(); i++) {
     if ( m_hs[i].configerror)
+      continue;
+
+    connected = 0;
+    for ( unsigned int j = 0; j < m_nodes.size(); j++) {
+      if ( m_hs[i].nid == m_nodes[j].nid) {
+	connected = m_nodes[j].connected;
+	break;
+      }      
+    }
+    if ( !connected)
       continue;
 
     stime = int(m_hs[i].scantime / m_scantime + 0.5);
@@ -732,15 +743,8 @@ int rt_sevhistmon::retry_connect()
   pwr_tStatus sts;  
 
   for ( unsigned int i = 0; i < m_nodes.size(); i++) {
-
-    if ( m_nodes[i].is_server && !m_nodes[i].connected) {
-      m_nodes[i].ctime += m_scantime;
-      if ( m_nodes[i].ctime > 60) {
-        m_nodes[i].ctime = 0;
-
-        send_connect( m_nodes[i].nid, &sts);
-      }
-    }
+    if ( m_nodes[i].is_server && !m_nodes[i].connected)
+      send_connect( m_nodes[i].nid, &sts);
   }
   return 1;
 }
@@ -878,6 +882,7 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
     if ( nid == m_nodes[i].nid) {
       found = true;
       m_nodes[i].connected = 1;
+      printf( "rt_sevhistmon: node %s connected\n", m_nodes[i].name);
       break;
     }
   }
@@ -1012,6 +1017,7 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
   if ( !m_allconnected) {
     bool all_conn = true;
     for ( unsigned int i = 0; i < m_nodes.size(); i++) {
+      printf( "Sev %s %d %d\n", m_nodes[i].name, m_nodes[i].is_server, m_nodes[i].connected);
       if ( m_nodes[i].is_server && !m_nodes[i].connected) {
         all_conn = false;
         break;
