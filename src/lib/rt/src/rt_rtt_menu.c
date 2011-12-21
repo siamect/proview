@@ -337,6 +337,15 @@ int	rtt_init_state_table()
 	return RTT__SUCCESS;
 }		
 
+void rtt_usage()
+{
+  printf( "\nrt_rtt   Runtime Terminal Tool.\n\n"
+	  "Arguments:\n"
+	  "	username password [commandfile] [RttConfig-object] [menu-title]\n\n"
+	  "	-h         Show this help.\n"
+	  "	qcomonly   Attach qcom, not gdh.\n\n");
+}
+
 /*************************************************************************
 *
 * Name:		rtt_initialize()
@@ -363,11 +372,11 @@ int	rtt_initialize( char	*username,
 
   	qio_assign( "stdin", (int *) &rtt_chn);
 
-	if ( strcmp( username, "NONETH_SYS") == 0) {
+	if ( strcmp( username, "noneth") == 0) {
 	  noneth = 1;
 	  rtt_priv = RTT_PRV_SYS;
 	}
-	else if ( strcmp( username, "QCOMONLY") == 0) {
+	else if ( strcmp( username, "qcomonly") == 0) {
 	  noneth = 1;
 	  qcom_only = 1;
 	  rtt_priv = RTT_PRV_SYS;

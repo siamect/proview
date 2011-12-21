@@ -47,7 +47,7 @@ int	rtt_initialize( char	*username,
 			char	*password,
 			char	*commandfile,
 			char	*mainmenu_title);
-
+void	rtt_usage();
 
 int	rtt_parse( 	char	*string,
 			char	*parse_char,

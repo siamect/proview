@@ -388,7 +388,15 @@ for ( i = 0; i < rtt_args; i++)	{		\
   strncpy( rtt_arg[i], argv[i+1], sizeof(rtt_arg[i]));\
   rtt_toupper( rtt_arg[i], rtt_arg[i]);		\
 }						\
-if ( argc >= 3 ) {				\
+if ( argc >= 2 && strcmp( argv[1], "qcomonly") == 0)\
+  strcpy( username, argv[1]);			\
+if ( argc >= 2 && strcmp( argv[1], "noneth") == 0)\
+  strcpy( username, argv[1]);			\
+else if ( argc >= 2 && strcmp( argv[1], "-h") == 0) {	\
+  rtt_usage();			\
+  exit(0);					\
+}						\
+else if ( argc >= 3 ) {				\
   strcpy( username, argv[1]);			\
   rtt_toupper( username, username);		\
   strcpy( password, argv[2]);			\
