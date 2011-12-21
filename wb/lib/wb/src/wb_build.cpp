@@ -771,6 +771,7 @@ void wb_build::webgraph( pwr_tOid oid)
   pwr_tFileName graph_name, dir;
   char		dev[80], type[80];
   int		version;
+  pwr_tString80	appletsignature = "";
 
   wb_object o = m_session.object(oid);
   if ( !o) {
@@ -861,8 +862,31 @@ void wb_build::webgraph( pwr_tOid oid)
       MsgWindow::message('W', cmd, msgw_ePop_No, oid);
     }
     else {
+      // Get signature from WebHandler
+      for ( wb_object p = o.parent(); p.oddSts(); p = p.parent()) {
+	if ( p.cid() == pwr_cClass_WebHandler) {
+	  wb_attribute a = m_session.attribute( p.oid(), "RtBody", "AppletSignature");
+	  if ( !a) {
+	    m_sts = a.sts();
+	    return;
+	  }
+
+	  a.value( appletsignature);
+	  if ( !a) {
+	    m_sts = a.sts();
+	    return;
+	  }
+	  dcli_trim( appletsignature, appletsignature);
+	  break;
+	}
+      }
+
+
       Ge *gectx = m_wnav->ge_new( graph_name, 1);
-      strcpy( cmd, "export java");
+      if ( strcmp( appletsignature, "") == 0)
+	strcpy( cmd, "export java");
+      else
+	sprintf( cmd, "export java /signature=\"%s\"", appletsignature);
       m_sts = gectx->command( cmd);
       if ( evenSts()) {
 	msg_GetMsg( m_sts, cmd, sizeof(cmd));

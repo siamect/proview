@@ -55,6 +55,7 @@ public class JopApplet extends JApplet
 {
   public JopSession session;
   public JopEngine engine;
+  String pwrHost;
 
   public JopApplet()
   {
@@ -62,6 +63,8 @@ public class JopApplet extends JApplet
 
   public void init() {
     String instance = this.getParameter("instance");
+    pwrHost = getParameter( "pwrhost");
+    System.out.println( "Parameter pwrhost: " + pwrHost);
 
     engine = new JopEngine(1000, (Object)this);
     session = new JopSession( engine, (Object)this);
@@ -88,5 +91,8 @@ public class JopApplet extends JApplet
   }
   public String[][] getParameterInfo() {
     return null;
+  }
+  public String getPwrHost() {
+    return pwrHost;
   }
 }

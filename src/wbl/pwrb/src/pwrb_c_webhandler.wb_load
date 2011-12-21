@@ -234,6 +234,46 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Name of Proview host when web interface is opened from another 
+      !  site than the process or operator station.
+      !*/
+      Object PwrHost $Attribute 18 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Signature alias set to the project archive.
+      !  To be able to open the web interface from another site than
+      !  the process or operator station, the host name of the process 
+      !  station has to be stated in PwrHost and a signature has to be 
+      !  applied to the jar-files of the web site. The signature is an 
+      !  alias created by keytool and is stated in AppletSignature.
+      !
+      !  In this example a signature with the alias pwrkey is created with
+      !  a validity of 100 years
+      !
+      !  > keytool -genkey -alias pwrkey
+      !  > keytool -selfcert -alias pwrkey -validity 36500
+      !
+      !  The alias should be signed to all jarfiles in $pwrp_web,
+      !  pwr_rt_client.jar, pwr_jop.jar, pwr_jopc.jar etc. This is done with
+      !  jarsigner
+      !
+      !  > jarsigner $pwrp_web/pwr_rt_client.jar pwrkey
+      !  
+      !  The project specific jarfile will automatically be signed if the
+      !  alias is stated in AppletSignature. Note that the passphrase for the
+      !  keystore has to be entered in the terminal window. It is possible to
+      !  state the passphrase in the AppletSignature after the alias and a '/',
+      !  eg 'pwrkey/mypassphrase'.
+      !*/
+      Object AppletSignature $Attribute 19 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
       !  A message created by an ASup or DSup object gets the
       !  same identity as the supervised object. Messages
       !  produced in an application by means of mh_ApplMessage

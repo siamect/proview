@@ -39,6 +39,7 @@
 function=$1
 src_file=$2
 systemname=$3
+signature=$4
 
 
 if [ $function == "java_web" ]; then
@@ -73,6 +74,25 @@ if [ $function == "java_web" ]; then
       jar -uf $jarfile *.jpg
     fi
 
+    if [ "$signature" != "" ]; then
+      storepass=${signature#*/}
+      passopt=""
+      if [ "$storepass" != "$signature" ]; then
+        signature=${signature%/*}
+	passopt="-storepass "$storepass
+      fi
+
+      jars=`eval ls $pwrp_web/*.jar`
+
+      for jarfile in $jars; do
+	ok="jar verified."
+	res=`eval jarsigner -verify $jarfile $signature`
+	if [ "$res" != "$ok" ]; then
+	  echo "-- Signature $signature set to $jarfile"
+	  jarsigner $passopt $jarfile $signature
+	fi  
+      done
+    fi
   fi
 fi
 
@@ -117,7 +137,25 @@ if [ $function == "java" ]; then
       jar -uf $jarfile *.jpg
       jar -uf $jarfileweb *.jpg
     fi
+    if [ "$signature" != "" ]; then
+      storepass=${signature#*/}
+      passopt=""
+      if [ "$storepass" != "$signature" ]; then
+        signature=${signature%/*}
+	passopt="-storepass "$storepass
+      fi
 
+      jars=`eval ls $pwrp_web/*.jar`
+
+      for jarfile in $jars; do
+	ok="jar verified."
+	res=`eval jarsigner -verify $jarfile $signature`
+	if [ "$res" != "$ok" ]; then
+	  echo "-- Signature $signature set to $jarfile"
+	  jarsigner $passopt $jarfile $signature
+	fi  
+      done
+    fi
   fi
 fi
 

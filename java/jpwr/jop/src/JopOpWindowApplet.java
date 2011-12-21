@@ -105,6 +105,7 @@ public class JopOpWindowApplet extends JopApplet
     size = new Dimension( 300, 900);
     setSize( size);
     engine.setFrameReady();
+
   }
 
   public void start() {

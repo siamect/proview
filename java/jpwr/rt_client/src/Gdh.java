@@ -136,12 +136,13 @@ public class Gdh
   {
     try
     {
-      URL url = ((JApplet)root).getCodeBase();
-      if(trace)
-      {
-        System.out.println("Opening socket to " + url.getHost());
+      String pwrHost = ((jpwr.jop.JopApplet)root).getPwrHost();
+      if ( pwrHost == null) {
+	URL url = ((JApplet)root).getDocumentBase();
+	pwrHost = url.getHost();
       }
-      gdhSocket = new Socket(url.getHost(), 4445);
+      System.out.println("Opening socket to " + pwrHost);
+      gdhSocket = new Socket(pwrHost, 4445);
       out = new ObjectOutputStream(new BufferedOutputStream(gdhSocket.getOutputStream()));
       in = new ObjectInputStream(new BufferedInputStream(gdhSocket.getInputStream()));
       
