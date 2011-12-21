@@ -984,7 +984,7 @@ get_tmo (
   } else if (do_inc) {
     lp->np->link.rtt_rto *= 2;
     if (lp->np->link.rtt_rto > lp->np->link.rtt_rxmax)
-      lp->np->link.rtt_rto = lp->np->link.rtt_rxmax;
+      lp->np->link.rtt_rto = lp->np->link.rtt_rxmax + 1;
   }
 
   return (time_tClock) (time_Clock(NULL, NULL) + rto);
@@ -1692,6 +1692,7 @@ send_ack (
       errno = iosb.tsize;
     }
 #else
+    // printf( "sendmsg ack\n");
     bytes = sendmsg(l.sock, &msg.msg, 0);
 #endif
   thread_MutexUnlock(&l.send_mutex);
@@ -1848,6 +1849,7 @@ seg_send (
       errno = iosb.tsize;
     }
 #else
+    // printf( "sendmsg segment\n");
     sp->bytes = sendmsg(l.sock, &msg.msg, 0);
 #endif
   thread_MutexUnlock(&l.send_mutex);
