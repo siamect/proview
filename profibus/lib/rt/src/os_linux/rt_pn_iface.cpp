@@ -394,7 +394,9 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
   unsigned short datarecord_ind = 0;
   unsigned short data_record_length = 0;
   unsigned short no_items;
-  unsigned short ii, jj, kk, length;
+  unsigned short ii, jj, kk, length, slot_api, found;
+  vector<PnApiData> apis;
+
   static unsigned short phase = 1;
   //  static unsigned short old_red_ratio = 1;
   
@@ -418,8 +420,7 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
 
   num_iocrs = dev_data->iocr_data.size();
 
-  if (num_iocrs > 0)
-    num_apis = 1;
+  /* Calculate num modules */
 
   for (ii = 0; ii < dev_data->slot_data.size(); ii++) {
     if ((dev_data->slot_data[ii]->module_enum_number != 0) ||
@@ -429,6 +430,42 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
   }
 
   //  num_modules = dev_data->slot_data.size();
+
+  /* Calculate num apis */
+
+  if (num_iocrs > 0) {
+
+    for (ii = 0; ii < num_modules; ii++) {
+
+      slot_api = PROFINET_DEFAULT_API;
+      for (jj = 0; jj < dev_data->slot_data[ii]->subslot_data.size(); jj++) {
+	if (dev_data->slot_data[ii]->subslot_data[jj]->api > 0) {
+	  slot_api = dev_data->slot_data[ii]->subslot_data[jj]->api;
+	  break;
+	}
+      }
+      
+      found = 0;
+      for (kk = 0; kk < apis.size(); kk++) {
+	if (apis[kk].api == slot_api) {
+	  found = TRUE;
+	  break;
+	}
+      }
+
+      if (!found) {
+	PnApiData api;
+	api.api = slot_api;
+	api.module_index.push_back(ii);
+	apis.push_back(api);
+      } else {
+	apis[kk].module_index.push_back(ii);
+      }
+    }    
+    num_apis = apis.size();
+  }
+
+  /* Calculate num sub modules */
 
   for (ii = 0; ii < num_modules; ii++) {
     num_sm = dev_data->slot_data[ii]->subslot_data.size();
@@ -647,21 +684,29 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
 
     /* Fill data for API */
   
+    /*    pAPI->APIHighWordHighByte = _PN_U32_HIGH_HIGH_BYTE(15616);
+    pAPI->APIHighWordLowByte  = _PN_U32_HIGH_LOW_BYTE(15616);
+    pAPI->APILowWordHighByte  = _PN_U32_LOW_HIGH_BYTE(15616);
+    pAPI->APILowWordLowByte   = _PN_U32_LOW_LOW_BYTE(15616);
     pAPI->APIHighWordHighByte = _PN_U32_HIGH_HIGH_BYTE(PROFINET_DEFAULT_API);
     pAPI->APIHighWordLowByte  = _PN_U32_HIGH_LOW_BYTE(PROFINET_DEFAULT_API);
     pAPI->APILowWordHighByte  = _PN_U32_LOW_HIGH_BYTE(PROFINET_DEFAULT_API);
-    pAPI->APILowWordLowByte   = _PN_U32_LOW_LOW_BYTE(PROFINET_DEFAULT_API);
+    pAPI->APILowWordLowByte   = _PN_U32_LOW_LOW_BYTE(PROFINET_DEFAULT_API); */
+    pAPI->APIHighWordHighByte = _PN_U32_HIGH_HIGH_BYTE(apis[ii].api);
+    pAPI->APIHighWordLowByte  = _PN_U32_HIGH_LOW_BYTE(apis[ii].api);
+    pAPI->APILowWordHighByte  = _PN_U32_LOW_HIGH_BYTE(apis[ii].api);
+    pAPI->APILowWordLowByte   = _PN_U32_LOW_LOW_BYTE(apis[ii].api);
 
-    pAPI->NumberOfModulesHighByte = _PN_U16_HIGH_BYTE(num_modules);
-    pAPI->NumberOfModulesLowByte  = _PN_U16_LOW_BYTE(num_modules);
+    pAPI->NumberOfModulesHighByte = _PN_U16_HIGH_BYTE(apis[ii].module_index.size());
+    pAPI->NumberOfModulesLowByte  = _PN_U16_LOW_BYTE(apis[ii].module_index.size());
 
     /* Fill references to Modules */
 
     pModuleReference = (T_PN_REFERENCE *) (pAPI + 1);
 
-    for (module_ind = 0; module_ind < num_modules; module_ind++) {
-      pModuleReference->ReferenceHighByte = _PN_U16_HIGH_BYTE(module_ind); 
-      pModuleReference->ReferenceLowByte  = _PN_U16_LOW_BYTE(module_ind); 
+    for (module_ind = 0; module_ind < apis[ii].module_index.size(); module_ind++) {
+      pModuleReference->ReferenceHighByte = _PN_U16_HIGH_BYTE(apis[ii].module_index[module_ind]); 
+      pModuleReference->ReferenceLowByte  = _PN_U16_LOW_BYTE(apis[ii].module_index[module_ind]); 
       pModuleReference++;
     }
 

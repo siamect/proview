@@ -55,6 +55,18 @@ typedef struct _PN_Alarm_Data {
     unsigned char  *data;
 } PN_Alarm_Data;
 
+class PnApiData {
+ public:
+  PnApiData() : api(0) {}
+    
+    unsigned int         api;
+    vector<unsigned int> module_index;
+
+    ~PnApiData() {}
+
+    int print( ofstream& fp);
+};
+
 class PnIOCRData {
  public:
   PnIOCRData() : type(0), number_modules(0), identifier(0), io_data_length(0), clean_io_data_length(0) {}

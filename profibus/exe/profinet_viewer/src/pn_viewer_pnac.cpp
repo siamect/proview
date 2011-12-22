@@ -109,7 +109,7 @@ PnViewerPNAC::PnViewerPNAC( pwr_tStatus *sts, const char *dev_name)
   *sts = pnak_send_service_req_res(0, &local->service_req_res);
 
   if (*sts == PNAK_OK) {
-    *sts = handle_service_con(local, 0);
+    *sts = wait_service_con(local, 0);
 
     if (*sts != PNAK_OK) { 
 	/* Loop through devices and calculate offset for io */
@@ -123,7 +123,7 @@ PnViewerPNAC::PnViewerPNAC( pwr_tStatus *sts, const char *dev_name)
   *sts = pnak_send_service_req_res(0, &local->service_req_res);
 
   if (*sts == PNAK_OK) {
-    *sts = handle_service_con(local, 0);
+    *sts = wait_service_con(local, 0);
   }
 
   pMode.Mode = PNAK_MODE_ONLINE;
@@ -167,7 +167,7 @@ void PnViewerPNAC::fetch_devices( vector<PnDevice>& dev_vect)
     sts = pnak_send_service_req_res(0, &local->service_req_res);
   
     if (sts == PNAK_OK) {
-      sts = handle_service_con(local, 0);
+      sts = wait_service_con(local, 0);
       if (sts == PNAK_OK) {
 	if (local->dev_info.size() > 0) {
 	  for (ii = 0; ii < local->dev_info.size(); ii++) {
@@ -238,14 +238,14 @@ void PnViewerPNAC::set_device_properties( unsigned char *macaddress, unsigned ch
   sts = pnak_send_service_req_res(0, &local->service_req_res);
 
   if (sts == PNAK_OK) {
-    sts = handle_service_con(local, 0);
+    sts = wait_service_con(local, 0);
   }
 
   pack_set_ip_settings_req(&local->service_req_res, &dev_info);
   sts = pnak_send_service_req_res(0, &local->service_req_res);
       
   if (sts == PNAK_OK) {
-    sts = handle_service_con(local, 0);
+    sts = wait_service_con(local, 0);
   }
 
 }
