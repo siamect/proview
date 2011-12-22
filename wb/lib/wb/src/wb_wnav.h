@@ -297,6 +297,7 @@ class WNav : public WUtility{
     wnav_eSearchType	search_type;
     int			selection_owner;
     brow_tObject	last_selected;
+    brow_tObject	prev_selected;
     int			displayed;
     int			scriptmode;
     int			dialog_ok;

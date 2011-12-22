@@ -613,7 +613,7 @@ WNav::WNav(
 	base_priv(pwr_mPrv_System), priv(pwr_mPrv_System), editmode(0),
 	layout_objid(pwr_cNObjid), search_last(pwr_cNObjid), search_compiled(0),
 	search_type(wnav_eSearchType_No), selection_owner(0), last_selected(0),
-	displayed(0), scriptmode(0), dialog_width(0), dialog_height(0),
+	prev_selected(0), displayed(0), scriptmode(0), dialog_width(0), dialog_height(0),
 	dialog_x(0), dialog_y(0), menu(0), admin_login(0), nodraw(0)
 {
   strcpy( name, xn_name);
@@ -1143,8 +1143,12 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
         if ( wnav->last_selected && wnav->object_exist( wnav->last_selected))
           object = wnav->last_selected;
         else {
-          sts = brow_GetLastVisible( wnav->brow->ctx, &object);
-          if ( EVEN(sts)) return 1;
+	  if ( wnav->prev_selected && wnav->object_exist( wnav->prev_selected))
+	    object = wnav->prev_selected;
+	  else {
+	    sts = brow_GetLastVisible( wnav->brow->ctx, &object);
+	    if ( EVEN(sts)) return 1;
+	  }
         }
       }
       else {
@@ -1202,6 +1206,7 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
         brow_CenterObject( wnav->brow->ctx, object, 0.25);
       if ( node_count)
         free( node_list);
+      wnav->prev_selected = wnav->last_selected;
       wnav->last_selected = object;
       break;
     }
@@ -1219,8 +1224,12 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
         if ( wnav->last_selected && wnav->object_exist( wnav->last_selected))
           object = wnav->last_selected;
         else {
-          sts = brow_GetFirstVisible( wnav->brow->ctx, &object);
-          if ( EVEN(sts)) return 1;
+	  if ( wnav->prev_selected && wnav->object_exist( wnav->prev_selected))
+	    object = wnav->prev_selected;
+	  else {
+	    sts = brow_GetFirstVisible( wnav->brow->ctx, &object);
+	    if ( EVEN(sts)) return 1;
+	  }
         }
       }
       else {
@@ -1277,6 +1286,7 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
         brow_CenterObject( wnav->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);
+      wnav->prev_selected = wnav->last_selected;
       wnav->last_selected = object;
       break;
     }
@@ -1485,6 +1495,7 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       if ( !brow_IsVisible( wnav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( wnav->brow->ctx, object, 0.25);
       free( node_list);
+      wnav->prev_selected = wnav->last_selected;
       wnav->last_selected = object;
       break;
     }
@@ -1707,6 +1718,7 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
         default:
           brow_SelectClear( wnav->brow->ctx);
       }
+      wnav->prev_selected = wnav->last_selected;
       wnav->last_selected = event->object.object;
       break;
     }
@@ -2846,6 +2858,12 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
   pwr_tObjid	*sel_objid;
   int		*sel_type;
   char		*sel_attr;
+  pwr_tObjid	last_sel_objid;
+  int		last_sel_type;
+  pwr_tOName   	last_sel_attr;
+  pwr_tObjid	prev_sel_objid;
+  int		prev_sel_type;
+  pwr_tOName   	prev_sel_attr;
 
   if ( brow->type != wnav_eBrowType_Volume)
     return;
@@ -2926,6 +2944,58 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
     }
     free( node_list);
   }
+
+  // Store last selected object
+  if ( last_selected && object_exist( last_selected)) {
+    brow_GetUserData( last_selected, (void **)&item_sel);
+    last_sel_objid = item_sel->objid;
+    last_sel_type = item_sel->type;
+    switch( item_sel->type) {
+    case wnav_eItemType_Attr:
+    case wnav_eItemType_AttrInput:
+    case wnav_eItemType_AttrInputF:
+    case wnav_eItemType_AttrInputInv:
+    case wnav_eItemType_AttrOutput:
+    case wnav_eItemType_AttrArray:
+    case wnav_eItemType_AttrObject:
+    case wnav_eItemType_AttrArrayOutput:
+    case wnav_eItemType_AttrArrayElem:
+    case wnav_eItemType_Enum:
+    case wnav_eItemType_Mask:
+      strcpy( last_sel_attr, item_sel->name);
+      break;
+    default:
+      ;
+    }
+  }
+  else
+    last_selected = 0;
+
+  // Store prev selected object
+  if ( prev_selected && object_exist( prev_selected)) {
+    brow_GetUserData( prev_selected, (void **)&item_sel);
+    prev_sel_objid = item_sel->objid;
+    prev_sel_type = item_sel->type;
+    switch( item_sel->type) {
+    case wnav_eItemType_Attr:
+    case wnav_eItemType_AttrInput:
+    case wnav_eItemType_AttrInputF:
+    case wnav_eItemType_AttrInputInv:
+    case wnav_eItemType_AttrOutput:
+    case wnav_eItemType_AttrArray:
+    case wnav_eItemType_AttrObject:
+    case wnav_eItemType_AttrArrayOutput:
+    case wnav_eItemType_AttrArrayElem:
+    case wnav_eItemType_Enum:
+    case wnav_eItemType_Mask:
+      strcpy( prev_sel_attr, item_sel->name);
+      break;
+    default:
+      ;
+    }
+  }
+  else
+    prev_selected = 0;
 
   brow_SetNodraw( brow->ctx);
   brow_DeleteAll( brow->ctx);
@@ -3071,6 +3141,76 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
     free( (char *)sel_objid);
     free( (char *)sel_type);
     free( (char *)sel_attr);
+  }
+
+  // Find previously last selected
+  if ( last_selected) {
+    brow_GetObjectList( brow->ctx, &object_list, &object_cnt);
+
+    found = 0;
+    for ( j = object_cnt - 1; j >= 0; j--) {
+      brow_GetUserData( object_list[j], (void **)&object_item);
+      if ( cdh_ObjidIsEqual( last_sel_objid, object_item->objid) &&
+	   last_sel_type == object_item->type) {
+	switch( object_item->type) {
+	case wnav_eItemType_Attr:
+	case wnav_eItemType_AttrInput:
+	case wnav_eItemType_AttrInputF:
+	case wnav_eItemType_AttrInputInv:
+	case wnav_eItemType_AttrOutput:
+	case wnav_eItemType_AttrArray:
+	case wnav_eItemType_AttrObject:
+	case wnav_eItemType_AttrArrayOutput:
+	case wnav_eItemType_AttrArrayElem:
+	case wnav_eItemType_Enum:
+	case wnav_eItemType_Mask:
+	  if ( strcmp( last_sel_attr, object_item->name) == 0)
+	    found = 1;
+	  break;
+	default:
+	  found = 1;
+	}
+      }
+      if ( found) {
+        last_selected = object_item->node;
+	break;
+      }
+    }
+  }
+
+  // Find previously prev selected
+  if ( prev_selected) {
+    brow_GetObjectList( brow->ctx, &object_list, &object_cnt);
+
+    found = 0;
+    for ( j = object_cnt - 1; j >= 0; j--) {
+      brow_GetUserData( object_list[j], (void **)&object_item);
+      if ( cdh_ObjidIsEqual( prev_sel_objid, object_item->objid) &&
+	   prev_sel_type == object_item->type) {
+	switch( object_item->type) {
+	case wnav_eItemType_Attr:
+	case wnav_eItemType_AttrInput:
+	case wnav_eItemType_AttrInputF:
+	case wnav_eItemType_AttrInputInv:
+	case wnav_eItemType_AttrOutput:
+	case wnav_eItemType_AttrArray:
+	case wnav_eItemType_AttrObject:
+	case wnav_eItemType_AttrArrayOutput:
+	case wnav_eItemType_AttrArrayElem:
+	case wnav_eItemType_Enum:
+	case wnav_eItemType_Mask:
+	  if ( strcmp( prev_sel_attr, object_item->name) == 0)
+	    found = 1;
+	  break;
+	default:
+	  found = 1;
+	}
+      }
+      if ( found) {
+        prev_selected = object_item->node;
+	break;
+      }
+    }
   }
 
   brow_ResetNodraw( brow->ctx);
