@@ -1577,6 +1577,12 @@ void handle_device_state_changed (io_sAgentLocal *local, io_sAgent *ap) {
 	    pwr_sClass_PnDevice *dev;
 	    dev = (pwr_sClass_PnDevice *) slave_list->op;
 	    dev->State = dev_state.State[ii];
+
+	    if (dev->State == PNAK_DEVICE_STATE_CONNECTED)
+	      dev->Status = PB__NORMAL;
+	    else 
+	      dev->Status = PB__NOCONN;
+
 	    errh_Info( "Profinet - New device state, dev: %s, state: %d", slave_list->Name, dev->State);
 	  }
 	}

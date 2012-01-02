@@ -1,4 +1,4 @@
-#060227 cs  -          Changelog created.
+060227 cs  -          Changelog created.
 060509 cj  -          Added some commentation.
                       Fixed bug in pb_ai and pb_di. 3-byte input where not properly
 		      aligned when byte swapping.
@@ -31,3 +31,6 @@
 110531 cs profinet    Recall buffer added to profinet configurator.
 110531 cs profinet    Script functions GetIoDeviceData and SetIoDeviceData to modify profinet configuration added.
 110909 rk profinet    Added functionality for acyclic write to a device
+111222 rk profinet    Added support for handling more than one API.
+111222 rk profinet    Bugfixes in profinet_viewer.
+111230 rk profinet    Set correct status on profinet device when losing connection.
