@@ -281,6 +281,16 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Specifies views in the alarm list.
+      !*/
+      Object AlarmViews $Attribute 46
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 25
+        EndBody
+      EndObject
+      !/**
       !  Setup script file.
       !  The default script file is xtt_setup.rtt_com on the
       !  login directory for the user. If another scriptfile
