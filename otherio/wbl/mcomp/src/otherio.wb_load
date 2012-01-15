@@ -1,8 +1,8 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X300"
-    Attr NextCix = "_X35"
-    Attr NextTix[0] = "_X10"
+    Attr NextOix = "_X304"
+    Attr NextCix = "_X36"
+    Attr NextTix[0] = "_X11"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
     Object MotionControl_StatusEnum $TypeDef 1 15-NOV-2007 14:36:24.17
@@ -533,6 +533,39 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Body SysBody 11-MAR-2011 10:09:12.14
           Attr Text = "Warning"
           Attr PgmName = "Warning"
+          Attr Value = 3
+        EndBody
+      EndObject
+    EndObject
+    Object SPI_ModeEnum $TypeDef 10 15-JAN-2012 10:17:13.34
+      Body SysBody 15-JAN-2012 10:17:26.16
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object Mode0 $Value 301 15-JAN-2012 10:17:52.48
+        Body SysBody 15-JAN-2012 10:17:57.54
+          Attr Text = "Mode0"
+          Attr PgmName = "Mode0"
+        EndBody
+      EndObject
+      Object Mode1 $Value 302 15-JAN-2012 10:18:15.82
+        Body SysBody 15-JAN-2012 10:18:18.23
+          Attr Text = "Mode1"
+          Attr PgmName = "Mode1"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object Mode2 $Value 303 15-JAN-2012 10:18:10.78
+        Body SysBody 15-JAN-2012 10:18:34.24
+          Attr Text = "Mode2"
+          Attr PgmName = "Mode2"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object Mode3 $Value 304 15-JAN-2012 10:18:37.17
+        Body SysBody 15-JAN-2012 10:18:41.01
+          Attr Text = "Mode3"
+          Attr PgmName = "Mode3"
           Attr Value = 3
         EndBody
       EndObject
@@ -5963,13 +5996,44 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !/**
     !  @Version 1.0
     !  @Group IO
-    !  @Summary Card object for SPI Slave.
-    !  Card object for 	SPI Slave.
+    !  @Summary Rack object for SPI Master.
+    !  Rack object for SPI Master.
+    !  The object represents the SPI master.
     ! 
-    !  The object is configured as a child to a generic Rack object.
+    !  The object is configured as a child to the node object.
+    !  Each SPI slave is configured as a child with a SPI_Slave object.
     ! 
     !  @b See also
-    !  @classlink BaseIORack basecomponent_baseiorack.html
+    !  @classlink SPI_Slave otherio_spi_slave.html
+    !*/
+    Object SPI_Master $ClassDef 35 15-JAN-2012 10:38:09.98
+      Body SysBody 15-JAN-2012 10:38:18.39
+        Attr Flags = 10240
+      EndBody
+      Object RtBody $ObjBodyDef 1 15-JAN-2012 10:38:27.11
+        Body SysBody 15-JAN-2012 10:38:27.11
+          Attr StructName = "SPI_Master"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1 15-JAN-2012 10:38:35.30
+          Body SysBody 15-JAN-2012 10:40:19.18
+            Attr Flags = 17170432
+            Attr TypeRef = "BaseComponent:Class-BaseIORack"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Card object for SPI Slave.
+    !  Card object for SPI Slave.
+    !  The object represents a SPI slave connected by the SPI bus.
+    ! 
+    !  The object is configured as a child to a SPI_Rack object.
+    ! 
+    !  @b See also
+    !  @classlink SPI_Master otherio_spi_master.html
     !*/
     Object SPI_Slave $ClassDef 26 10-JUL-2011 07:17:19.39
       Body SysBody 10-JUL-2011 07:17:08.04
@@ -5980,7 +6044,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object RtBody $ObjBodyDef 1 10-JUL-2011 07:19:29.31
         Body SysBody 10-JUL-2011 07:17:25.64
           Attr StructName = "SPI_Slave"
-          Attr NextAix = "_X56"
+          Attr NextAix = "_X60"
         EndBody
         !/**
         ! Optional description.
@@ -6024,6 +6088,52 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Body SysBody 10-JUL-2011 07:17:08.04
             Attr PgmName = "Device"
             Attr TypeRef = "pwrs:Type-$String32"
+          EndBody
+        EndObject
+        !/**
+        ! SPI mode.Each slave may clock may operate at different polarities 
+        ! and clock phases. The permutations of polarities and phases are referred 
+        ! to as SPI modes.
+        ! 
+        ! Mode          Clock pol    Phase
+        ! SPI_MODE_0       0           0
+        ! SPI_MODE_1       0           1
+        ! SPI_MODE_2       1           0
+        ! SPI_MODE_3       1           1
+        !*/
+        Object Mode $Attribute 56 15-JAN-2012 10:14:40.11
+          Body SysBody 15-JAN-2012 10:19:28.91
+            Attr PgmName = "Mode"
+            Attr TypeRef = "OtherIO:Type-SPI_ModeEnum"
+          EndBody
+        EndObject
+        !/**
+        ! Number of bits per word for the transfer.
+        !*/
+        Object BitsPerWord $Attribute 57 15-JAN-2012 10:15:07.96
+          Body SysBody 15-JAN-2012 10:15:29.14
+            Attr PgmName = "BitsPerWord"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Bit justification use to transfer words.
+        ! 0 for MSB first and 1 for LSB first.
+        !*/
+        Object LSB_First $Attribute 58 15-JAN-2012 10:15:46.96
+          Body SysBody 15-JAN-2012 10:16:06.24
+            Attr PgmName = "LSB_First"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        ! Maximum SPI transfer speed in Hz.
+	! If 0, the default maximum speed will not be changed.
+        !*/
+        Object MaxSpeed $Attribute 59 15-JAN-2012 10:16:16.00
+          Body SysBody 15-JAN-2012 10:16:29.49
+            Attr PgmName = "MaxSpeed"
+            Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         !/**
@@ -6147,8 +6257,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
       Object Template SPI_Slave 2154528768 01-JAN-1970 01:00:00.00
-        Body RtBody 10-JUL-2011 07:20:38.66
+        Body RtBody 15-JAN-2012 10:20:33.58
           Attr Process = 1
+          Attr BitsPerWord = 8
           Attr ErrorSoftLimit = 50
           Attr ErrorHardLimit = 100
         EndBody
