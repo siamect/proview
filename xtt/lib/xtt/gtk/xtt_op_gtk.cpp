@@ -730,7 +730,7 @@ void  OpGtk::update_alarm_info()
   int		height, active_height;
   char          str[40];
   char		text[500], ctext[500];
-  char		timestr[40];
+  char		timestr[40] = "";
   int 		fsize = text_size * 1024;
   int		show_time = 0;
   time_eFormat  time_format;
