@@ -302,7 +302,7 @@ void CnvChangeLog::print_docbook()
   sort_time();
 
   fp << "<table xml:id=\"changelog_\" border=\"1\"><tbody>" << endl <<
-    "<tr><td><classname>Date________</classname></td>" << endl <<
+    "<tr><td><classname>Date_________</classname></td>" << endl <<
     "<td><classname>Module_____</classname></td>" << endl <<
     "<td><classname>Change</classname></td></tr>" << endl;
 
@@ -376,4 +376,50 @@ void CnvChangeLog::print_html()
     "</html>" << endl;
 }
 
+void CnvChangeLog::from_git()
+{
+  pwr_tFileName tmpfile = "/tmp/cnv_from_git.txt";
+  pwr_tCmd cmd = "git log --pretty=format:\"%ai \'%cN\' %s\" >";
+  char line[1000];
+  char date[20];
+  char user[80];
+  char cuser[80];
+  char *s1, *s2, *textp = 0;
+
+  strcat( cmd, tmpfile);
+  system( cmd);
+
+  ifstream fp( tmpfile);
+  while( fp.getline( line, sizeof(line))) {
+    date[0] = line[2];
+    date[1] = line[3];
+    date[2] = line[5];
+    date[3] = line[6];
+    date[4] = line[8];
+    date[5] = line[9];
+    date[6] = 0;
+
+    if ( (s1 = strchr( line, '\'')) && (s2 = strchr( s1+1, '\''))) {
+      *s2 = 0;
+      strncpy( user, s1 + 1, sizeof(user));
+
+      if ( user[0] == 'R' || user[0] == 'r')
+	strcpy( cuser, "rk");
+      else
+	strcpy( cuser, "cs");
+
+      textp = s2 + 2;
+    }
+
+    if ( textp)
+      printf( "%s %s  x         %s\n", date, cuser, textp);
+  }
+
+
+  fp.close();
+
+  strcpy( cmd, "rm ");
+  strcat( cmd, tmpfile);
+  system( cmd);
+}
 

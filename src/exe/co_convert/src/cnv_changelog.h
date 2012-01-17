@@ -102,6 +102,7 @@ class CnvChangeLog {
   void sort_module();
   void sort_component();
   void sort_signature();
+  static void from_git();
 };
 
 #if defined __cplusplus

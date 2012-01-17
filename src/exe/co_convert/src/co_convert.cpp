@@ -83,6 +83,7 @@ static void usage()
   printf( "      -f:  Create pdf from xtthelp-file\n");
   printf( "      -q:  Create postscript from wb_load-files\n");
   printf( "      -e:  Merge changlog files to docbook file\n");
+  printf( "      -i:  Convert git log to changelog format\n");
   printf( "      -a:  Create xtthelp from pwg-files\n");
   printf( "      -d:  Output directory\n");
   printf( "      -g:  Setup file\n");
@@ -123,6 +124,7 @@ int main( int argc, char *argv[])
   int   xtthelp_to_text = 0;
   int   pwg_to_xtthelp = 0;
   int   changelog = 0;
+  int   changelog_from_git = 0;
   char from[80] = "";
 
   if ( argc < 2 || argc > 9) {
@@ -224,6 +226,9 @@ int main( int argc, char *argv[])
 	case 'e':
 	  changelog = 1;
 	  break;
+	case 'i':
+	  changelog_from_git = 1;
+	  break;
 	case '-': {
 	  if ( strcmp( s, "-from") == 0 && ( i+1 < argc)) {
 	    strcpy( from, argv[i+1]);
@@ -253,6 +258,10 @@ int main( int argc, char *argv[])
   if ( changelog) {
     CnvChangeLog *c = new CnvChangeLog( ctx, from);
     delete c;
+    exit(0);
+  }
+  if ( changelog_from_git) {
+    CnvChangeLog::from_git();
     exit(0);
   }
   if ( xtthelp_to_html) {
