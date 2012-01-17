@@ -3547,7 +3547,6 @@ int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
 
     PangoFontDescription *desc = pango_font_description_from_string( font_string( font_idx, font_type, size));
     pango_layout_set_font_description( layout, desc);
-    pango_font_description_free( desc);
 
     int width, height;
     pango_layout_get_size( layout, &width, &height);
@@ -3577,6 +3576,7 @@ int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
       pango_context_set_matrix( pc, 0);
     }
     g_object_unref( layout);
+    pango_font_description_free( desc);
   }
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
@@ -3633,7 +3633,6 @@ int GlowDrawGtk::text_erase_pango( GlowWind *wind, int x, int y, char *text, int
 
   PangoFontDescription *desc = pango_font_description_from_string( font_string( font_idx, font_type, size));
   pango_layout_set_font_description( layout, desc);
-  pango_font_description_free( desc);
 
   int width, height;
   pango_layout_get_size( layout, &width, &height);
@@ -3668,6 +3667,7 @@ int GlowDrawGtk::text_erase_pango( GlowWind *wind, int x, int y, char *text, int
 			px, py, pw, ph);
   
   g_object_unref( layout);
+  pango_font_description_free( desc);
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
 
@@ -3713,7 +3713,6 @@ int GlowDrawGtk::get_text_extent_pango( const char *text, int len,
 
   PangoFontDescription *desc = pango_font_description_from_string( font_string( font_idx, font_type, size));
   pango_layout_set_font_description( layout, desc);
-  pango_font_description_free( desc);
 
   int lwidth, lheight;
   pango_layout_get_size( layout, &lwidth, &lheight);
@@ -3730,6 +3729,7 @@ int GlowDrawGtk::get_text_extent_pango( const char *text, int len,
   *descent = (int)(FONT_DESCENT * lheight / PANGO_SCALE);
 
   g_object_unref( layout);
+  pango_font_description_free( desc);
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
 

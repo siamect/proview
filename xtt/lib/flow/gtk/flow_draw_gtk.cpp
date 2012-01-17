@@ -1241,7 +1241,6 @@ int FlowDrawGtk::text_pango( FlowCtx *ctx, int x, int y, char *text, int len,
 
   PangoFontDescription *desc = pango_font_description_from_string( font_string( gc_type, size));
   pango_layout_set_font_description( layout, desc);
-  pango_font_description_free( desc);
 
   int w, h;
   pango_layout_get_size( layout, &w, &h);
@@ -1256,6 +1255,7 @@ int FlowDrawGtk::text_pango( FlowCtx *ctx, int x, int y, char *text, int len,
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
   g_object_unref( layout);
+  pango_font_description_free( desc);
   g_object_unref( pctx);
   
   return 1;
@@ -1287,7 +1287,6 @@ int FlowDrawGtk::text_inverse_pango( FlowCtx *ctx, int x, int y, char *text, int
 
   PangoFontDescription *desc = pango_font_description_from_string( font_string( gc_type, size));
   pango_layout_set_font_description( layout, desc);
-  pango_font_description_free( desc);
 
   int w, h;
   pango_layout_get_size( layout, &w, &h);
@@ -1297,6 +1296,7 @@ int FlowDrawGtk::text_inverse_pango( FlowCtx *ctx, int x, int y, char *text, int
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
   g_object_unref( layout);
+  pango_font_description_free( desc);
   g_object_unref( pctx);
 
   return 1;
@@ -1328,7 +1328,6 @@ int FlowDrawGtk::text_erase_pango( FlowCtx *ctx, int x, int y, char *text, int l
 
   PangoFontDescription *desc = pango_font_description_from_string( font_string( gc_type, size));
   pango_layout_set_font_description( layout, desc);
-  pango_font_description_free( desc);
 
   int w, h;
   pango_layout_get_size( layout, &w, &h);
@@ -1341,6 +1340,7 @@ int FlowDrawGtk::text_erase_pango( FlowCtx *ctx, int x, int y, char *text, int l
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
   g_object_unref( layout);
+  pango_font_description_free( desc);
   g_object_unref( pctx);
 
   return 1;
@@ -1729,7 +1729,6 @@ int FlowDrawGtk::get_text_extent_pango( FlowCtx *ctx, const char *text, int len,
 
   PangoFontDescription *desc = pango_font_description_from_string( font_string( gc_type, size));
   pango_layout_set_font_description( layout, desc);
-  pango_font_description_free( desc);
 
   int w, h;
   pango_layout_get_size( layout, &w, &h);
@@ -1740,6 +1739,7 @@ int FlowDrawGtk::get_text_extent_pango( FlowCtx *ctx, const char *text, int len,
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
   g_object_unref( layout);
+  pango_font_description_free( desc);
   g_object_unref( pctx);
 
   return 1;
