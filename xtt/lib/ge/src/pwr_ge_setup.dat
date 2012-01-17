@@ -596,6 +596,7 @@ menu Components
   menu Profibus
   {
     subgraph	Pb_DP_Slave  pwr_exe:mcomp_pb_dp_slave.pwsg		5
+    subgraph	PnDevice  pwr_exe:mcomp_pndevice.pwsg		5
   }
 }
 localsubgraphs Ssab ssab_exe:*.pwsg
