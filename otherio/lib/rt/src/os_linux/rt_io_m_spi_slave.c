@@ -89,6 +89,10 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
   unsigned int output_area_offset = 0;
   unsigned int output_area_chansize = 0;
   int sts;
+  unsigned char mode;
+  unsigned char lsb;
+  unsigned char bits;
+  __u32 speed;
 
   local = (io_sLocalSPI_Slave *) calloc( 1, sizeof(io_sLocalSPI_Slave));
   cp->Local = local;
@@ -102,13 +106,64 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
       return IO__INITFAIL;
   }
 
-  sts = ioctl( local->fd, SPI_IOC_RD_MODE, &local->mode);
-  if ( sts < 0) {
-    errh_Error( "SPI Slave, init error errno %d, '%s'", errno, cp->Name);
+  /* Set mode */
+  switch ( op->Mode) {
+  case pwr_eSPI_ModeEnum_Mode0:
+    mode = SPI_MODE_0;
+    break;
+  case pwr_eSPI_ModeEnum_Mode1:
+    mode = SPI_MODE_1;
+    break;
+  case pwr_eSPI_ModeEnum_Mode2:
+    mode = SPI_MODE_2;
+    break;
+  case pwr_eSPI_ModeEnum_Mode3:
+    mode = SPI_MODE_3;
+    break;
+  default:
+    errh_Error( "SPI Slave, invalid mode, '%s'", errno, cp->Name);
     op->Status = IOM__SPI_INIT;
     return IO__INITFAIL;
   }
 
+  sts = ioctl( local->fd, SPI_IOC_WR_MODE, &mode);
+  if ( sts < 0) {
+    errh_Error( "SPI Slave, unable to set mode, init error errno %d, '%s'", errno, cp->Name);
+    op->Status = IOM__SPI_INIT;
+    return IO__INITFAIL;
+  }
+
+  /* Set LSB first encoding */
+  if ( op->LSB_First)
+    lsb = 1;
+  else
+    lsb = 0;
+  sts = ioctl( local->fd, SPI_IOC_WR_LSB_FIRST, &lsb);
+  if ( sts < 0) {
+    errh_Error( "SPI Slave, unable to set LSB first, init error errno %d, '%s'", errno, cp->Name);
+    op->Status = IOM__SPI_INIT;
+    return IO__INITFAIL;
+  }
+  
+  /* Set bits per word */
+  bits = op->BitsPerWord;
+  sts = ioctl( local->fd, SPI_IOC_WR_BITS_PER_WORD, &bits);
+  if ( sts < 0) {
+    errh_Error( "SPI Slave, unable to set Bits per word, init error errno %d, '%s'", errno, cp->Name);
+    op->Status = IOM__SPI_INIT;
+    return IO__INITFAIL;
+  }
+  
+  /* Set Max speed */
+  speed = op->MaxSpeed;
+  if ( speed != 0) {
+    sts = ioctl( local->fd, SPI_IOC_WR_MAX_SPEED_HZ, &speed);
+    if ( sts < 0) {
+      errh_Error( "SPI Slave, unable to set Max speed, init error errno %d, '%s'", errno, cp->Name);
+      op->Status = IOM__SPI_INIT;
+      return IO__INITFAIL;
+    }  
+  }
   local->byte_ordering = op->ByteOrdering;
   
   io_bus_card_init( ctx, cp, &input_area_offset, &input_area_chansize,
