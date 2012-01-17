@@ -235,6 +235,39 @@ enum net_eState {
   net_eState_
 };
 
+/* ClassDef backward compatible */
+struct net_sClassDef {
+  pwr_tInt32	Editor;
+  pwr_tInt32	Method;
+  pwr_tUInt32	Flags;
+  pwr_tUInt32	NumOfObjBodies;
+  pwr_tInt32 PopEditor;
+};
+
+/* ObjBodyDef backward compatible */
+struct net_sObjBodyDef {
+  pwr_tStructName	StructName;
+  pwr_tUInt32		NumOfParams;
+  pwr_tUInt32		Size;
+  pwr_tUInt32		NextAix;
+  pwr_tUInt32		Flags;
+};
+
+struct net_sParInfo {
+  pwr_tPgmName		PgmName;
+  pwr_eType		Type;
+  pwr_tUInt32		Offset;
+  pwr_tUInt32		Size;
+  pwr_tUInt32		Flags;
+  pwr_tUInt32		Elements;
+  pwr_tUInt32		ParamIndex;
+};
+
+struct net_sParam {
+  net_sParInfo	Info;
+  pwr_tTypeId  	TypeRef;
+};
+
 /* Add subscription.  */
 
 struct net_sSubSpec {
@@ -1029,7 +1062,7 @@ struct net_sMount {
 
 struct net_sGattribute {
   net_sGobject		ao;
-  pwr_sParam		ab;
+  net_sParam		ab;
 };
 
 
@@ -1037,9 +1070,9 @@ struct net_sGclass {
   net_sTime		time; 	/**< Time of last change */
   pwr_tBitMask		dbsFlags;
   net_sGobject		co;
-  pwr_sClassDef		cb;
+  net_sClassDef		cb;
   net_sGobject		bo;
-  pwr_sObjBodyDef	bb;
+  net_sObjBodyDef	bb;
   pwr_tUInt32		size;	/**< Size of objects body  */
   pwr_tUInt32		acount;	/**< # of attributes  */
 };

@@ -231,7 +231,11 @@ cmvolsm_GetGclass (
       cbp = pool_Address(&sts, gdbroot->rtdb, cp->cbr);
       if (cbp == NULL)
         break;
-      rmp->gclass.cb = *cbp;
+      rmp->gclass.cb.Editor = cbp->Editor;
+      rmp->gclass.cb.Method = cbp->Method;
+      rmp->gclass.cb.Flags = (pwr_tUInt32) cbp->Flags.m;
+      rmp->gclass.cb.NumOfObjBodies = cbp->NumOfObjBodies;
+      rmp->gclass.cb.PopEditor = cbp->PopEditor;
 
       bop = pool_Address(&sts, gdbroot->pool, cp->bor);
       if (bop == NULL)
@@ -241,7 +245,11 @@ cmvolsm_GetGclass (
       bbp = pool_Address(&sts, gdbroot->rtdb, cp->bbr);
       if (bbp == NULL)
         break;
-      rmp->gclass.bb = *bbp;
+      strcpy( rmp->gclass.bb.StructName, bbp->StructName);
+      rmp->gclass.bb.NumOfParams = bbp->NumOfParams;
+      rmp->gclass.bb.Size = bbp->Size;
+      rmp->gclass.bb.NextAix = bbp->NextAix;
+      rmp->gclass.bb.Flags = bbp->Flags;
     }    
 
     rmp->gclass.size = cp->size;
@@ -260,7 +268,14 @@ cmvolsm_GetGclass (
       abp = pool_Address(&sts, gdbroot->rtdb, ap->abr);
       if (aop == NULL)
         break;
-      gap->ab = *abp;
+      strcpy( gap->ab.Info.PgmName, abp->Info.PgmName);
+      gap->ab.Info.Type = abp->Info.Type;
+      gap->ab.Info.Offset = abp->Info.Offset;
+      gap->ab.Info.Size = abp->Info.Size;
+      gap->ab.Info.Flags = abp->Info.Flags;
+      gap->ab.Info.Elements = abp->Info.Elements;
+      gap->ab.Info.ParamIndex = abp->Info.ParamIndex;
+      gap->ab.TypeRef = abp->TypeRef;
     }
 
     rmp->acntmsg = acnt;

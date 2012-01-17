@@ -384,6 +384,9 @@ cmvolc_GetNonExistingClass (
   net_sGclass		*gcp;  
   pwr_tObjid		poid;
   pwr_tTime		gcp_time;
+  pwr_sClassDef		classdef;
+  pwr_sObjBodyDef	objbodydef;
+  pwr_sParam		attrdef;
 
   gdb_AssumeLocked;
 
@@ -448,22 +451,44 @@ cmvolc_GetNonExistingClass (
     poid.vid = cvid;
     poid.oix = 1; /* ClassHier object is the father */
     
+    memset( &classdef, 0, sizeof(classdef));
+    classdef.Editor = gcp->cb.Editor;
+    classdef.Method = gcp->cb.Method;
+    classdef.Flags = (pwr_mClassDef) gcp->cb.Flags;
+    classdef.NumOfObjBodies = gcp->cb.NumOfObjBodies;
+
     gcp_time = net_NetTimeToTime(&gcp->time);
     cop = createObject(sts, vp, &gcp->co, &gcp_time, gcp->dbsFlags, 
-                       &gcp->cb, sizeof(gcp->cb), poid);
+                       &classdef, sizeof(classdef), poid);
     if (cop == NULL)
       goto cleanup;
     
 
+    memset( &objbodydef, 0, sizeof(objbodydef));
+    strcpy( objbodydef.StructName, gcp->bb.StructName);
+    objbodydef.NumOfParams = gcp->bb.NumOfParams;
+    objbodydef.Size = gcp->bb.Size;
+    objbodydef.NextAix = gcp->bb.NextAix;
+    objbodydef.Flags = gcp->bb.Flags;
+
     bop = createObject(&lsts, vp, &gcp->bo, &gcp_time, 0,
-                       &gcp->bb, sizeof(gcp->bb), cop->g.oid);
+                       &objbodydef, sizeof(objbodydef), cop->g.oid);
     if (bop == NULL)
       errh_Bugcheck(lsts, "cmvolc_GetNonExistingClass, load sys body failed");
     
     
     for (i = j = 0, gap = msgs[0]->attr; i < gcp->acount; i++, gap++) {
+      strcpy( attrdef.Info.PgmName, gap->ab.Info.PgmName);
+      attrdef.Info.Type = gap->ab.Info.Type;
+      attrdef.Info.Offset = gap->ab.Info.Offset;
+      attrdef.Info.Size = gap->ab.Info.Size;
+      attrdef.Info.Flags = gap->ab.Info.Flags;
+      attrdef.Info.Elements = gap->ab.Info.Elements;
+      attrdef.Info.ParamIndex = gap->ab.Info.ParamIndex;
+      attrdef.TypeRef = gap->ab.TypeRef;
+
       aop = createObject(&lsts, vp, &gap->ao, &gcp_time, 0, 
-                         &gap->ab, sizeof(gap->ab), bop->g.oid);
+                         &attrdef, sizeof(gap->ab), bop->g.oid);
       if (aop == NULL)
         errh_Bugcheck(lsts, "cmvolc_GetNonExistingClass, load attribute failed");
       
