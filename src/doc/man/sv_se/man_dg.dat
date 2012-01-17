@@ -2176,8 +2176,8 @@ plc_'nodename'_'qbus'.opt, t ex
 
 I denna läggs följande rad in
 
-<c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy \
-<c> -lpwr_pnak_dummy
+<c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy 
+<c> -lpwr_pnak_dummy -lpwr_cifx_dummy
 
 Vi kan nu bygga noden och starta Proview runtime.
 

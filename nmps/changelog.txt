@@ -4,3 +4,5 @@
 080124 cs  applmir   Lock added for NMps cells to avoid inconsistency in application mirror.
 080425 cs  wbl       Plc classes DataFRead and DataFWrite added.
 110517 cs  -         NMps cells added with size 60 and 120.
+111103 cs  -         DataCopy, DataReset bugfix, didn't work for attribute object references
+111108 cs  wbl       NMpsCellData visibility of attributes changed

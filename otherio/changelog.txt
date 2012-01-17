@@ -19,3 +19,7 @@
 110518 cs  udp       UDP IO implemented.
 110609 cs  onewire   1-Wire generic Ai device added.
 110609 cs  cifx      Hilscher cifX profinet controller, beta version.
+110710 cs  spi       Support for SPI Slave added
+111017 cs  modbus    Modbus TCP module with both read and write
+111027 cs  modbus    Modbus RTU added
+111103 cs  onewire   OneWire, generic ao device added

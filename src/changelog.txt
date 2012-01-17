@@ -165,3 +165,27 @@
 110512 cs  plc       DataCollect alignment bug fixed.
 110527 cs  plc       Plc object EnumToStr get the text for an enum type added.
 110531 cs  pwrb      New BuildOptions object to configure plc link options.
+110701 cs  rt        pwr_pkg.sh package name with path allowed
+110711 cs  rt        ld_appl file, pwr_sevhistmon and pwr_sev_server added
+110722 cs  doc       Programmers reference manual, errh added
+110723 cs  tools     Build of ARM package added
+110901 cs  io        Event arg added to swap IO method, new event for emergency break
+110905 cs  tools     Build define OS_POSIX added
+110912 cs  tools     Conversion wbl to html, error message for missing java script class menu removed
+110912 cs  io        IO, max limit for number of channels for a card removed
+110926 cs  tools     Antlr from release
+110926 cs  tools     OpenBSD package
+111005 cs  doc       Ge designer's guide new draft
+111021 cs  sev       Sevhist Trigger bugfix for sevobjects
+111027 cs  sev       Sev, deadband for other types than float
+111103 cs  plc       Functionobject EnumToStr added
+111103 cs  plc       Functionobject StrToEnum added
+111108 cs  rt        Server rt_post for email and sms added
+111121 cs  rtt       rt_rtt, show nodes, os and hw added
+111124 cs  rt        Qcom, configuration of min and max resend time
+111125 cs  rt        rt_trend, changed to monotonic time to avoid delay at time shifts
+111213 cs  rt        rt_report, new report server
+111213 cs  cnv       co_convert conversion from xtt help to text
+111213 cs  plc       Plc functionobject localtime bugfix
+111221 cs  rtt       rt_rtt qcomonly, user argument removed
+111221 cs  sev       rt_sevhistmon, bugfix in connect request

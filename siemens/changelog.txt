@@ -8,4 +8,5 @@
                       Siemens_DR_SegmStatus.
 101202 rk  wbl        Added classes for Sinamics G120 drive with Profinet/Profibus.
 101202 rk  wbl        Added classes for Siemens ET200M/S using Profinet.
+111103 cs  wbl        Siemens_Do8 profinet module, number of channels corrected
 

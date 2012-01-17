@@ -204,3 +204,23 @@
 110513 cs  ge        Component AxisArc for circular axes added.
 110517 cs  xtt       Bugfix in 'close navigator' command.
 110517 cs  xtt       Xtt graph options for fullscreen, maximize and iconify added for command and XttGraph.
+110701 cs  xtt       Collection window added
+110706 cs  xtt       Xtt, collection of all signals in an hierarchy and insert into a collection window
+110715 cs  ge        Ge rotation of texts implemented
+110719 cs  ge        Ge table select, element unselected when clicked on if already selected
+110721 cs  ge        Ge bugfix, strange color in navigatin window when new text object was created
+110721 cs  ge        Ge default textsize changed to 12
+110912 cs  ge        Ge window object, error message for window with no initial graph removed
+110921 cs  ge        Ge commands move, scale and rotate for selected object added, and move with absolute coordinates
+110923 cs  xtt       Xtt command 'open navigator' added, and /object added to command 'set subwindow'
+111005 cs  ge        Ge subgraph sliderarrow2 added
+111010 cs  xtt       rt_xtt option n added for optimized network
+111012 cs  ge        Ge metal button subgraphs fix for dimmed frame
+111012 cs  ge        Ge group name change fix
+111103 cs  xtt       Xtt, RemnodeWMQ added to remnode table
+111104 cs  ge        Ge valueinput, bugfix in input cursor position
+111104 cs  xtt       Xtt opplace, starup applications added, and layout option hide navigator
+111108 cs  xtt       Xtt command store without /col didn't work for attribute objects
+111205 cs  ge        Ge, Bit type added for all digital attributes, and reference attribute for SetDig
+111214 cs  ge        Ge optionmenu and menu bugfix, key events and exposure events was lost
+111221 cs  ge        Ge support for multiline texts

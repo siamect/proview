@@ -173,3 +173,18 @@
 110203 cs  wb        Plc link, problem with uppercase nodename for opt-file fixed.
 110309 cs  wb        Wtt command set attribute, support for deltatimes added.
 110310 cs  wb        Plc editor, accelerator for build added.
+110707 cs  wb        ConfigureComponent with disable setting on more than two levels
+110707 cs  wb        wb_load files, backslash replaced by double backslash to void parse errors
+110708 cs  wb        Plc Grafcet sequences can be used in component function objects
+110712 cs  wb        Attribute flag Private declares readonly access to attribute. Used for ValueIndex in signals
+110712 cs  wb        wb option -s to open dbs-file for volume instead of db
+110713 cs  wb        Spreadsheet editor, export to text file and import from textfile added
+110720 cs  plc       Plc function objects PulseTrain, True and False added
+110902 cs  wb        Distribute bugfix, SevNodeConfig object caused incomplete packages of other nodes
+110902 cs  dist      Distribute fix, build options and custom build not dependent on DistributeDisabled
+110912 cs  dist      Distribute mask, bit for XML files added
+110921 cs  wb        Script, \r at end of line accepted
+110921 cs  dist      Distribute, searchpath for userdatabase, rhost file and pwrp_stop.sh change from pwrp_src to pwrp_cnf
+110923 cs  wb        Wb database lockfile, nodename added to file content
+111121 cs  plc       Plc editor, check that references are not in LibHier added
+111222 cs  wb        wb navigator, prevously selected item stored to be remembered after delete operation

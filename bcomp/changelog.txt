@@ -23,3 +23,4 @@
 100309 cs  bcomp      ForceMan input added to CompModeDFo and CompModeD2Fo.
 100326 cs  bcomp      BaseContactor, pulsed start/stop implemented.
 101120 cs  bcomp      Graphical symbols without mode indication and subraphs for separate mode indication added.
+111121 cs  bcomp      BaseSupSwitch, normally open added

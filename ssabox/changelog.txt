@@ -5,3 +5,6 @@
 080226 cs   rt         Read method for co-card changed with double reading of high word (24-bit only).
 080926 cs   rt         Bugfix for do cards. 16 channels do card couldn't be handled.
 100630 cs   rt         PSS9000 card MIO3102up added.
+110831 cs   rt         PSS9000 Ao-cards, max number of channels increased to 16
+110905 cs   rt         PSS9000 remote rack check of return status added
+110905 cs   rt         PSS9000 stall for ao card in remote rack added
