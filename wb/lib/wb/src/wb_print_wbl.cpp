@@ -313,7 +313,8 @@ void wb_print_wbl::printClass(wb_volume& v,
       printAttribute(v, attr2, tattr2, adef2, 0);
     
       attr2 = attr2.after();
-      tattr2 = tattr2.after();
+      if ( tattr2.oddSts())
+	tattr2 = tattr2.after();
     }
   }
 
@@ -530,11 +531,12 @@ void wb_print_wbl::printParameter(wb_volume& v,
   int varSize = adef.size() / nElement;
   char* valueb = (char *)attr.value();
   char* val;
-  char* tvalueb = (char *)tattr.value();
+  char* tvalueb;
   char* tval;
   char* svalp;
   int varOffset;
   bool parValOk;
+  bool print_all = false;
   const char* name = adef.subName();   
 
   if (valueb == NULL) {
@@ -549,9 +551,16 @@ void wb_print_wbl::printParameter(wb_volume& v,
     return;
   }
 
-  if ( attr == tattr)
+  if ( tattr.evenSts()) {
+    // Template attribute not found, should not happen
+    tvalueb = (char *)calloc( 1, attr.size());
+    print_all = true;
+  }
+  else if ( attr == tattr)
     // This is the template object itself, print all nonzero
     tvalueb = (char *)calloc( 1, tattr.size());
+  else
+    tvalueb = (char *)tattr.value();
 
   for (int i = 0; i < nElement; i++) {
     switch (adef.type()) {
@@ -589,7 +598,7 @@ void wb_print_wbl::printParameter(wb_volume& v,
       val = valueb + varOffset;
       tval = tvalueb + varOffset;
             
-      if (memcmp(val, tval, varSize) == 0 && !(adef.flags() & PWR_MASK_ALWAYSWBL))
+      if (memcmp(val, tval, varSize) == 0 && !(adef.flags() & PWR_MASK_ALWAYSWBL) && !print_all)
         continue;
 
       parValOk = printValue(v, adef, val, varSize, &svalp);
@@ -623,7 +632,7 @@ void wb_print_wbl::printParameter(wb_volume& v,
       break;
     }
   }
-  if ( attr == tattr)
+  if ( tattr.evenSts() || attr == tattr)
     free( tvalueb);
 }
 
