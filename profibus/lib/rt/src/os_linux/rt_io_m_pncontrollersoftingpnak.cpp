@@ -491,7 +491,7 @@ static pwr_tStatus IoAgentWrite (
   pwr_sClass_PnDevice *sp;
 
   unsigned short data_length, ii, jj, kk, ll;
-  unsigned char *status_datap;
+  //  unsigned char *status_datap;
 
   local = (io_sAgentLocal *) ap->Local;
 
@@ -508,7 +508,11 @@ static pwr_tStatus IoAgentWrite (
 	pn_iocr_data = local->device_data[ii]->iocr_data[jj];
 	
 	if (pn_iocr_data->type == PROFINET_IO_CR_TYPE_OUTPUT) {
-	  data_length = pn_iocr_data->io_data_length;	  
+	  data_length = pn_iocr_data->io_data_length;
+
+	  /* Set io status to good */
+
+	  memset(pn_iocr_data->io_data, 0x80, data_length); // 0x80 is PNAK_IOXS_STATUS_DATA_GOOD	  
 	  
 	  for (kk = 0; kk < local->device_data[ii]->module_data.size(); kk++) {
 	    for (ll = 0; ll < local->device_data[ii]->module_data[kk]->submodule_data.size(); ll++) {
@@ -519,9 +523,9 @@ static pwr_tStatus IoAgentWrite (
 		clean_io_datap = (pn_iocr_data->clean_io_data + submodule->offset_clean_io_out);
 		memcpy(io_datap, clean_io_datap, submodule->io_out_data_length);
 		
-		status_datap = io_datap + submodule->io_out_data_length;
-		*status_datap = PNAK_IOXS_STATUS_NO_EXTENTION_FOLLOWS | PNAK_IOXS_STATUS_DATA_GOOD;
-		
+		/*		status_datap = io_datap + submodule->io_out_data_length;
+		 *status_datap = PNAK_IOXS_STATUS_NO_EXTENTION_FOLLOWS | PNAK_IOXS_STATUS_DATA_GOOD;
+		 */		
 	      }
 	    }
 	  }
