@@ -213,8 +213,14 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
   io_sLocalSPI_Slave *local = (io_sLocalSPI_Slave *)cp->Local;
   pwr_sClass_SPI_Slave *op = (pwr_sClass_SPI_Slave *)cp->op;
   int sts;
+  int i;
   
-  sts = read( local->fd, local->input_area, local->input_area_size);
+  // sts = read( local->fd, local->input_area, local->input_area_size);
+  for ( i = 0; i < local->input_area_size; i++) {
+    sts = read( local->fd, &local->input_area[i], 1);
+    if ( sts != 1)
+      break;
+  }  
   if ( sts < 0) {
     op->ErrorCount++;
     if ( !local->readerror_logged) {
@@ -223,7 +229,8 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
     }
     op->Status = IOM__SPI_READERROR;
   }
-  else if ( sts < local->input_area_size) {
+  //else if ( sts != local->input_area_size) {
+  else if ( sts == 0) {
     op->ErrorCount++;
     if ( !local->readerror_logged) {
       errh_Error( "SPI read buffer smaller than expected: %d, '%s'", sts, cp->Name);
@@ -238,11 +245,13 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
 		      local->byte_ordering, pwr_eFloatRepEnum_FloatIEEE);
   }
   
-  if ( op->ErrorCount == op->ErrorSoftLimit && !local->softlimit_logged) {
+  if ( op->ErrorSoftLimit && 
+       op->ErrorCount == op->ErrorSoftLimit && !local->softlimit_logged) {
     errh_Warning( "IO Card ErrorSoftLimit reached, '%s'", cp->Name);
     local->softlimit_logged = 1;
   }
-  if ( op->ErrorCount >= op->ErrorHardLimit) {
+  if ( op->ErrorHardLimit && 
+       op->ErrorCount >= op->ErrorHardLimit) {
     errh_Error( "IO Card ErrorHardLimit reached '%s', IO stopped", cp->Name);
     ctx->Node->EmergBreakTrue = 1;
     return IO__ERRDEVICE;
@@ -259,11 +268,17 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
   io_sLocalSPI_Slave *local = (io_sLocalSPI_Slave *)cp->Local;
   pwr_sClass_SPI_Slave *op = (pwr_sClass_SPI_Slave *)cp->op;
   int sts;
+  int i;
 
   io_bus_card_write( ctx, cp, local->output_area,
 		     local->byte_ordering, pwr_eFloatRepEnum_FloatIEEE);
     
-  sts = write( local->fd, local->output_area, local->output_area_size);
+  // sts = write( local->fd, local->output_area, local->output_area_size);
+  for ( i = 0; i < local->output_area_size; i++) {
+    sts = write( local->fd, &local->output_area[i], 1);
+    if ( sts != 1)
+      break;
+  }
   if ( sts < 0) {
     op->ErrorCount++;
     if ( !local->writeerror_logged) {
@@ -272,7 +287,8 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
     }
     op->Status = IOM__SPI_WRITEERROR;
   }
-  else if ( sts != local->output_area_size) {
+  // else if ( sts != local->output_area_size) {
+  else if ( sts == 0) {
     op->ErrorCount++;
     if ( !local->writeerror_logged) {
       errh_Error( "SPI write buffer unexpected size %d, '%s'", sts, cp->Name);
@@ -285,11 +301,12 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
     op->Status = IOM__SPI_NORMAL;
   }
 
-  if ( op->ErrorCount == op->ErrorSoftLimit && !local->softlimit_logged) {
+  if ( op->ErrorSoftLimit && 
+       op->ErrorCount == op->ErrorSoftLimit && !local->softlimit_logged) {
     errh_Warning( "IO Card ErrorSoftLimit reached, '%s'", cp->Name);
     local->softlimit_logged = 1;
   }
-  if ( op->ErrorCount >= op->ErrorHardLimit) {
+  if ( op->ErrorHardLimit && op->ErrorCount >= op->ErrorHardLimit) {
     errh_Error( "IO Card ErrorHardLimit reached '%s', IO stopped", cp->Name);
     ctx->Node->EmergBreakTrue = 1;
     return IO__ERRDEVICE;
