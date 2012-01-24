@@ -1,0 +1,56 @@
+
+Wireshark dissector for Proview
+
+Built for Wireshark 1.6.4.
+
+This directory contains files to build a wireshark dissector for QCom, and this
+is a description of how to build the dissector.
+
+1. Download the wireshark source code.
+
+3. Read README.plugins and README.developer on the wireshark directory.
+
+2. Create the directory plugin/qcom and copy the files on 
+   $pwre_croot/src/tools/wireshark to this directory.
+
+3. Edit these files and add qcom analog to the gryphon dissector
+
+	configure.in
+	CMakeLists.txt
+	epan/Makefile.am
+	Makefile.am
+	packaging/nsis/Makefile.nmake
+	packaging/nsis/wireshark.nsi
+	plugins/Makefile.am
+	plugins/Makefile.nmake
+
+4. Build wireshark
+
+  > ./autogen
+  > ./configure
+  > make all
+
+5. Setup a working root to build and intstall wireshark there.
+
+  > mkdir -p /data0/wireshark/bld
+  > ./configure --prefix=/data0/wireshark/bld;make install
+
+6. To intstall changes in the qcom plugin, go to the plugin/qcom directory
+   and execute 'make install'
+
+  > make install
+
+7. To run wireshark, define PWR_BUS_ID, go to the bin directory in the build
+   tree, and define WIRESHARK_RUN_FROM_BUILD_DIRECTORY
+
+   > cd /data0/wireshark/bld/bin
+   > export PWR_BUS_ID=999
+   > export WIRESHARK_RUN_FROM_BUILD_DIRECTORY=1
+   > ./wireshark
+
+   or to run with debug
+
+   > libtool --mode=execute gdb wireshark
+
+   Specify filter 'qcom' and start capturing.
+
