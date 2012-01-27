@@ -47,7 +47,7 @@ extern "C"
 
 #define sev_eProcSevClient 121
 #define sev_eProcSevServer 122
-#define sev_cMsgClass	   201
+#define sev_cMsgClass	   202
 
 typedef enum {
   sev_eMsgType_NodeUp,
