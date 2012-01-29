@@ -293,7 +293,7 @@ void Hist::get_hist_list()
     return;
   }
 
-#if DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR > 0
+#if DB_VERSION_MAJOR > 3 && DB_VERSION_MINOR > 0
   //        int  (*open) __P((DB *, DB_TXN *,
   //              const char *, const char *, DBTYPE, u_int32_t, int));
 

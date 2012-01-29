@@ -1,11 +1,14 @@
+Source: pwrsrc
+Section: devel
 Package: pwr48
-Version: 4.8.2-1
-Section: base
 Priority: optional
-Architecture: amd64
-Depends: libc6 (>= 2.13-0ubuntu13), libgtk2.0-0 (>= 2.24.4-0ubuntu2), libasound2 (>= 1.0.24.1-0ubuntu5), libdb4.8 (>=4.8.30-5ubuntu2), libdb4.8++ (>=4.8.30-5ubuntu2), libmysql++3 (>= 3.0.9-1ubuntu2), g++ (>= 4:4.5.2-1ubuntu3), xfonts-100dpi
-Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47
 Maintainer: Proview <postmaster@proview.se>
+Version: 4.8.3-1
+Architecture: amd64
+Depends: libc6 (>= 2.13-20ubuntu5), libgtk2.0-0 (>= 2.24.6-0ubuntu5), libasound2 (>= 1.0.24.1-0ubuntu10), libdb5.1 (>=5.1.25-11), libdb4.8++ (>=5.1.25-11), libmysql++3 (>= 3.1.0-1ubuntu1), g++ (>= 4:4.6.1-2ubuntu5), xfonts-100dpi
+Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47
+Homepage: http://www.proview.se
+Installed-Size: 1114020
 Description: Proview development and runtime environment package
  Proview development and runtime environment
  4.8.0-1 Base release 
@@ -30,3 +33,6 @@ Description: Proview development and runtime environment package
    - Support for Hilscher cifX Profinet Controller.
    - UDP communication configured with IO objects.
    - Support for USB joystick.
+ 4.8.3-1
+   - Post server for sending emails and sms.
+   - Report server.

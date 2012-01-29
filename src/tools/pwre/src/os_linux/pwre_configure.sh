@@ -356,11 +356,11 @@ else
   #Gtk
   echo ""
   echo "Mandatory :"
-  pwre_config_check_lib gtk    	  GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so"
+  pwre_config_check_lib gtk    	  GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-gnu/libgtk-x11-2.0.so"
 
   pwre_config_check_lib libantlr  LIBANTLR lib wb 0 "/usr/lib/libantlr.a:/usr/local/lib/libantlr.a"
   pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 "/usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a:/usr/lib/$hwpl-linux-gnu/librpcsvc.a"
-  pwre_config_check_lib libasound LIBASOUND lib lib 0 "/usr/lib/libasound.so:/usr/lib/libasound.a"
+  pwre_config_check_lib libasound LIBASOUND lib lib 0 "/usr/lib/libasound.so:/usr/lib/libasound.a:/usr/lib/$hwpl-linux-gnu/libasound.so"
   pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 "/usr/lib/libpthread.so:/usr/lib/libpthread.a:/usr/lib/$hwpl-linux-gnu/libpthread.so"
   pwre_config_check_lib libm      LIBM     lib lib 0 "/usr/lib/libm.so:/usr/lib/libm.a:/usr/lib/$hwpl-linux-gnu/libm.so"
   pwre_config_check_lib libdb     LIBDB    lib lib 0 "/usr/lib/libdb.so:/usr/lib/$hwpl-linux-gnu/libdb.so"
@@ -384,7 +384,7 @@ else
   pwre_config_check_lib mq        MQ       lib mq  1 "/usr/lib/libdmq.so:/usr/local/dmq/lib/libdmq.so"
   pwre_config_check_lib wmq       WMQ      lib wmq 1 "/usr/lib/libmqic.so"
   pwre_config_check_lib libpnioif PNAK     lib pnak 1 "/usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a"
-  pwre_config_check_lib libusb    LIBUSB   lib libusb 1 "/usr/lib/libusb-1.0.so"
+  pwre_config_check_lib libusb    LIBUSB   lib libusb 1 "/usr/lib/libusb-1.0.so:/usr/lib/$hwpl-linux-gnu/libusb-1.0.so"
 
   pwre_config_check_include mq    MQ    0 "/usr/local/dmq/include/p_entry.h"
   pwre_config_check_include wmq   WMQ   1 "/opt/mqm/inc/cmqc.h"
