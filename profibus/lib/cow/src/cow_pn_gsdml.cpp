@@ -39,11 +39,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <float.h>
+#include <stddef.h>
 
 #include "co_dcli.h"
 #include "cow_pn_gsdml.h"
 #include "rt_pb_msg.h"
 #include "pwr_baseclasses.h"
+
 
 static char noref[] = "Unresolved reference";
 
