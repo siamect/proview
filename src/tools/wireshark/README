@@ -55,3 +55,17 @@ is a description of how to build the dissector.
 
    Specify filter 'qcom' and start capturing.
 
+8. Build debian package.
+
+   Install dependencies, for example
+
+   > apt-get install docbook-xsl libpcre3-dev libcap-dev libgnutls-dev portaudio19-dev libkrb5-dev liblua5.1-0-dev libsmi2-dev libgeoip-dev dpatch automake1.9 libc-ares-dev
+
+  > make debian-package
+
+  Install the wireshark-common and wireshark packages on the target node
+
+  > dpkg -i wireshark-common_1.6.4_i386.deb
+  > dpgk -i wireshark_1.6.4_i386.deb
+
+  

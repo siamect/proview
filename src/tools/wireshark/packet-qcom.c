@@ -810,8 +810,8 @@ proto_register_qcom(void)
     /* Net GetObjectInfoR */
     { &hf_net_getobjectinfor,
       { "NetGetObjectInfoR", "qcom.net.getobjectinfor", FT_NONE, BASE_NONE, NULL, 0x0, "QCOM NetGetObjectInfoR", HFILL }},
-    { &hf_net_getobjectinfor_arefoix,
-      { "Sts", "qcom.net.getobjectinfo.stsr", FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }},
+    { &hf_net_getobjectinfor_sts,
+      { "Sts", "qcom.net.getobjectinfo.sts", FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }},
     { &hf_net_getobjectinfor_arefoix,
       { "ArefOix", "qcom.net.getobjectinfor.arefoix", FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }},
     { &hf_net_getobjectinfor_arefvid,
