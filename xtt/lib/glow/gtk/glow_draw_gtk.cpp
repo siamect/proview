@@ -674,6 +674,7 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 	  sts = ctx->event_handler( glow_eEvent_Key_PF4, 0, 0, 0, 0);
 	  break;
 	case GDK_Cancel:
+	case GDK_Escape:
 	  sts = ctx->event_handler( glow_eEvent_Key_Escape, 0, 0, 0, 0);
 	  break;
 	case GDK_Tab:
