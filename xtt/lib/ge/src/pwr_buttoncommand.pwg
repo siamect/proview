@@ -6,7 +6,7 @@
 ! <image> pwr_buttonx_gs.gif
 !
 ! <h1>Description
-! Button to execute a xtt command.
+! Button to execute an xtt command.
 !
 ! <h1>Default dynamics
 ! Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat

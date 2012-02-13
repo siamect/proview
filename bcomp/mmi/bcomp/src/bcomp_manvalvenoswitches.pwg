@@ -6,7 +6,7 @@
 ! <image> bcomp_manvalve_gs.gif
 !
 ! <h1>Description
-! Manuel valve without switches.
+! Manual valve without switches.
 ! This subgraph is used when the open/closed state can 
 ! be set by the operator from the object graph.
 !
