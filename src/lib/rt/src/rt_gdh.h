@@ -825,6 +825,20 @@ gdh_RegisterLogFunction(
   void (*func)(char *, void *, unsigned int)
 );
 
+pwr_tStatus 
+gdh_GetSubClassList(
+  pwr_tCid cid,
+  pwr_tCid *subcid
+);
+
+pwr_tStatus 
+gdh_GetNextSubClass(
+  pwr_tCid cid,
+  pwr_tCid psubcid,
+  pwr_tCid *subcid
+);
+
+
 /** @} */
 
 #if defined __cplusplus

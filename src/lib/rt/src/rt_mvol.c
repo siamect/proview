@@ -355,7 +355,10 @@ mvol_AnameToAttribute (
       if (ap->idx > ap->adef->Info.Elements - 1 && !(ap->adef->Info.Flags & PWR_MASK_DYNAMIC))
 	pwr_Return(NULL, sts, GDH__SUBSCRIPT);
       ap->size /= ap->elem;
-      ap->offs += ap->size * ap->idx;
+      if ( ap->flags.b.Indirect)
+	ap->offs += sizeof(pwr_tUInt64) * ap->idx;
+      else
+	ap->offs += ap->size * ap->idx;
       ap->elem = 1;
     }
     ap->flags.b.ObjectAttr = (cdh_tidIsCid( ap->tid) != 0);
@@ -391,6 +394,7 @@ mvol_ArefToAttribute (
   int			idx = UINT_MAX;
   char			idxstr[20];
   pwr_tBoolean          noDot = TRUE;
+  int			parsize;
 
 
 #if 0
@@ -449,8 +453,12 @@ mvol_ArefToAttribute (
     }
 
     if ( !acp->attr[i].flags.b.isclass) {
-      if ( acp->attr[i].elem > 1 || acp->attr[i].flags.b.dynamic)
-	idx = (arp->Offset - offset) / (acp->attr[i].size / acp->attr[i].elem);
+      if ( acp->attr[i].elem > 1 || acp->attr[i].flags.b.dynamic) {
+	if ( acp->attr[i].flags.b.pointer)
+	  idx = (arp->Offset - offset) / sizeof(pwr_tUInt64);
+	else
+	  idx = (arp->Offset - offset) / (acp->attr[i].size / acp->attr[i].elem);
+      }
       break;
     }
     if ( arp->Size == 0 && arp->Flags.b.ObjectAttr && offset == arp->Offset && 
@@ -493,7 +501,12 @@ mvol_ArefToAttribute (
   ap->adef  = param;
   ap->idx   = UINT_MAX;		/* Guess, no index.  */
 
-  if (arp->Size > (param->Info.Size / param->Info.Elements) || arp->Size == 0) {
+  if (param->Info.Flags & PWR_MASK_POINTER)
+    parsize = sizeof(pwr_tUInt64);
+  else
+    parsize = param->Info.Size / param->Info.Elements;
+
+  if (arp->Size > parsize || arp->Size == 0) {
 
     /* If this is the first attribute, then match whole object
        otherwise say the attribute is ok!  */
@@ -526,7 +539,10 @@ mvol_ArefToAttribute (
 
     if (ap->idx != UINT_MAX) {
       ap->size /= ap->elem;
-      ap->offs += ap->size * ap->idx;
+      if ( param->Info.Flags & PWR_MASK_POINTER)
+	ap->offs += sizeof(pwr_tUInt64) * ap->idx;
+      else
+	ap->offs += ap->size * ap->idx;
       ap->elem = 1;
     }
   } else {
@@ -717,7 +733,10 @@ mvol_LinkClass (
     cp->attr[i].offs    = abp->Info.Offset;
     cp->attr[i].size    = abp->Info.Size;
     cp->attr[i].elem    = abp->Info.Elements;
-    cp->attr[i].moffset = abp->Info.Offset + abp->Info.Size - 1;
+    if ( abp->Info.Flags & PWR_MASK_POINTER && !(abp->Info.Flags & PWR_MASK_PRIVATE))
+      cp->attr[i].moffset = abp->Info.Offset + sizeof(pwr_tUInt64) * abp->Info.Elements - 1;
+    else
+      cp->attr[i].moffset = abp->Info.Offset + abp->Info.Size - 1;
     cp->attr[i].tid     = abp->TypeRef;
     coid.pwr = aop->g.oid;
     cp->attr[i].aix     = coid.t.aix;

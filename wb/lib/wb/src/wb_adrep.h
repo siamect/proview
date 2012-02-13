@@ -85,6 +85,12 @@ public:
 
   pwr_sAttrRef aref();
   size_t size() {return m_size;}
+  size_t rsize() {
+    if ( m_flags & PWR_MASK_POINTER)
+      return m_elements * sizeof(pwr_tUInt64);
+    else
+      return m_size;
+  }
   int offset() {return m_offset;}
   pwr_eType type() const {return m_type;}
   pwr_tTid tid() {return m_tid;}

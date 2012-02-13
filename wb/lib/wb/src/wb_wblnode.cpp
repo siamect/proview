@@ -992,7 +992,10 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
     o->a.offset = ((pwr_sParam *)o->rbody)->Info.Offset = *boffset;
     if ( o->a.flags & pwr_mAdef_pointer && !(o->a.flags & pwr_mAdef_private)) {
       // Size contains the size if the pointed entity
-      *boffset += pwr_cAlignLW;
+      if ( o->a.flags & pwr_mAdef_array)
+	*boffset += pwr_cAlignLW * o->a.elements;
+      else
+	*boffset += pwr_cAlignLW;
     }
     else {
       o->a.size = ((pwr_sParam *)o->rbody)->Info.Size = size;

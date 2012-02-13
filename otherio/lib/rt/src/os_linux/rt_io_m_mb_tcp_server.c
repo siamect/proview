@@ -885,6 +885,23 @@ static pwr_tStatus mb_init_channels( io_tCtx ctx, io_sAgent *ap, io_sRack *rp)
 
   cardp = rp->cardlist;
 
+  unsigned int prev_input_area_offset = 0;
+  unsigned int prev_output_area_offset = 0;
+  unsigned int input_area_offset = 0;
+  unsigned int output_area_offset = 0;
+  unsigned int input_area_chansize = 0;
+  unsigned int output_area_chansize = 0;
+
+  while(cardp) {
+    local_card = calloc(1, sizeof(*local_card));
+    cardp->Local = local_card;
+
+    local_card->input_area = (void *) &(op->Inputs) + input_area_offset + 
+      input_area_chansize;
+    local_card->output_area = (void *) &(op->Outputs) + output_area_offset + 
+      output_area_chansize;
+
+#if 0
   input_counter = 0;
   output_counter = 0;
   card_input_counter = 0;
@@ -892,9 +909,6 @@ static pwr_tStatus mb_init_channels( io_tCtx ctx, io_sAgent *ap, io_sRack *rp)
   latent_input_counter = 0;
   latent_output_counter = 0;
 
-  while(cardp) {
-    local_card = calloc(1, sizeof(*local_card));
-    cardp->Local = local_card;
     input_counter = input_counter + card_input_counter + latent_input_counter;
     output_counter = output_counter + card_output_counter + latent_output_counter;
     local_card->input_area = (void *) &(op->Inputs) + input_counter;
@@ -1039,15 +1053,36 @@ static pwr_tStatus mb_init_channels( io_tCtx ctx, io_sAgent *ap, io_sRack *rp)
         
         break;
     } /* End - switch ... */
+#endif
 
+    io_bus_card_init( ctx, cardp, &input_area_offset, &input_area_chansize,
+		      &output_area_offset, &output_area_chansize, 
+		      pwr_eByteOrderingEnum_BigEndian);
+
+
+    local_card->input_size = input_area_offset + input_area_chansize - 
+      prev_input_area_offset;
+    local_card->output_size = output_area_offset + output_area_chansize - 
+      prev_output_area_offset;
+
+#if 0
     local_card->input_size = card_input_counter + latent_input_counter;
     local_card->output_size = card_output_counter + latent_output_counter;
+#endif
+
+    prev_input_area_offset = input_area_offset + input_area_chansize;
+    prev_output_area_offset = output_area_offset + output_area_chansize;
 
     cardp = cardp->next;
   }
 
+  local->input_size = input_area_offset + input_area_chansize;
+  local->output_size = output_area_offset + output_area_chansize;
+
+#if 0
   local->input_size = input_counter + card_input_counter + latent_input_counter;
   local->output_size = output_counter + card_output_counter + latent_output_counter;
+#endif
 
   return IO__SUCCESS;
 }

@@ -41,7 +41,7 @@
   store digital output
   @aref stodo StoDo
 */
-#define stodo_exec(obj,in)						\
+#define stodo_exec(obj,in) \
   obj->ActualValue = in;
 
 /*_*
@@ -49,7 +49,7 @@
   store digital value				
   @aref stodv StoDv
 */
-#define stodv_exec(obj,in)						\
+#define stodv_exec(obj,in) \
   obj->ActualValue = in;
 
 /*_*
@@ -57,7 +57,7 @@
   Store into digital parameter			
   @aref stodp StoDp
 */
-#define stodp_exec(ut,in)						\
+#define stodp_exec(ut,in) \
   ut = in;
 
 /*_*
@@ -65,7 +65,7 @@
   store into analog output			
   @aref stoao StoAo
 */
-#define stoao_exec(obj,in)						\
+#define stoao_exec(obj,in) \
   obj->ActualValue = in;
 
 /*_*
@@ -73,7 +73,7 @@
   store into analog value				
   @aref stoav StoAv
 */
-#define stoav_exec(obj,in)						\
+#define stoav_exec(obj,in) \
   obj->ActualValue = in;
 
 /*_*
@@ -81,7 +81,7 @@
   Store into analog parameter			
   @aref stoap StoAp
 */
-#define stoap_exec(ut,in)						\
+#define stoap_exec(ut,in) \
   ut = in;
 
 /*_*
@@ -89,7 +89,7 @@
   store conditionally into analog output		
   @aref cstoao CStoAo
 */
-#define cstoao_exec(obj,in,cond)					\
+#define cstoao_exec(obj,in,cond) \
   if ( cond ) obj->ActualValue = in;
 
 /*_*
@@ -97,7 +97,7 @@
   store conditionally into analog value		
   @aref cstoav CStoAv
 */
-#define cstoav_exec(obj,in,cond)					\
+#define cstoav_exec(obj,in,cond) \
   if ( cond ) obj->ActualValue = in;
 
 /*_*
@@ -105,7 +105,7 @@
   Store conditionally into analog parameter	
   @aref cstoap CStoAp
 */
-#define cstoap_exec(ut,in,cond)						\
+#define cstoap_exec(ut,in,cond)	\
   if ( cond ) ut = in;
 
 /*_*
@@ -113,7 +113,7 @@
   Set digital output if true			
   @aref setdo SetDo
 */
-#define setdo_exec(obj,in)						\
+#define setdo_exec(obj,in) \
   if ( in ) obj->ActualValue = true;
 
 /*_*
@@ -121,7 +121,7 @@
   Set digital value if true			
   @aref setdv SetDv
 */
-#define setdv_exec(obj,in)						\
+#define setdv_exec(obj,in) \
   if ( in ) obj->ActualValue = true;
 
 /*_*
@@ -129,7 +129,7 @@
   Set digital parameter if true			
   @aref setdp SetDp
 */
-#define setdp_exec(ut,in)						\
+#define setdp_exec(ut,in) \
   if ( in ) ut = true;
 
 /*_*
@@ -137,7 +137,7 @@
   Reset digital output if true			
   @aref resdo ResDo
 */
-#define resdo_exec(obj,in)						\
+#define resdo_exec(obj,in) \
   if ( in ) obj->ActualValue = false;
 
 /*_*
@@ -145,7 +145,7 @@
   Reset digital value if true			
   @aref resdv ResDv
 */
-#define resdv_exec(obj,in)						\
+#define resdv_exec(obj,in) \
   if ( in ) obj->ActualValue = false;
 
 /*_*
@@ -153,7 +153,7 @@
   Reset digital parameter if true			
   @aref resdp ResDp
 */
-#define resdp_exec(ut,in)						\
+#define resdp_exec(ut,in) \
   if ( in ) ut = false;
 
 /*_*
@@ -161,7 +161,7 @@
   Store integer parameter                    
   @aref stoip StoIp
 */
-#define StoIp_exec(ut,in)                                               \
+#define StoIp_exec(ut,in) \
   ut = in;
 
 /*_*
@@ -169,7 +169,7 @@
   Store conditionally integer parameter      
   @aref cstoip CStoIp
 */
-#define CStoIp_exec(ut,in,cond)                                         \
+#define CStoIp_exec(ut,in,cond) \
   if ( cond ) ut = in;
 
 /*_*
@@ -177,7 +177,7 @@
   Store analog value into integer parameter                    
   @aref stoatoip StoAtoIp
 */
-#define StoAtoIp_exec(ut,in)                                               \
+#define StoAtoIp_exec(ut,in) \
   ut = in > 0 ? in + 0.5 : in - 0.5;
 
 /*_*
@@ -185,7 +185,7 @@
   Store conditionally analog value into integer parameter      
   @aref cstoatoip CStoAtoIp
 */
-#define CStoAtoIp_exec(ut,in,cond)                                         \
+#define CStoAtoIp_exec(ut,in,cond) \
   if ( cond ) ut = in > 0 ? in + 0.5 : in - 0.5;
 
 /*_*
@@ -193,7 +193,7 @@
   Get Integer parameter as an analog value             
   @aref getiptoa GetIpToA
 */
-#define GetIpToA_exec(object,in)                                           \
+#define GetIpToA_exec(object,in) \
   object->ActVal = in;
 
 /*_*
@@ -201,7 +201,7 @@
   Get Integer parameter             
   @aref getip GetIp
 */
-#define GetIp_exec(object,in)                                           \
+#define GetIp_exec(object,in) \
   object->ActVal = in;
 
 /*_*
@@ -209,7 +209,7 @@
   store digital input (Simulate)			
   @aref stodi StoDi
 */
-#define stodi_exec(obj,in)						\
+#define stodi_exec(obj,in) \
   obj->ActualValue = in;
 
 /*_*
@@ -217,7 +217,7 @@
   Set digital input if true (Simulate)		
   @aref setdi SetDi
 */
-#define setdi_exec(obj,in)						\
+#define setdi_exec(obj,in) \
   if ( in ) obj->ActualValue = true;
 
 /*_*
@@ -225,7 +225,7 @@
   Reset digital input if true (Simulate)		
   @aref resdi ResDi
 */
-#define resdi_exec(obj,in)						\
+#define resdi_exec(obj,in) \
   if ( in ) obj->ActualValue = false;
 
 /*_*
@@ -233,7 +233,7 @@
   Toggle digital input (Simulate)			
   @aref toggledi ToggleDi
 */
-#define toggledi_exec(obj,in)						\
+#define toggledi_exec(obj,in) \
   if ( in) obj->ActualValue = !obj->ActualValue;
 
 /*_*
@@ -241,7 +241,7 @@
   store analog input (Simulate)			
   @aref stoai StoAi
 */
-#define stoai_exec(obj,in)						\
+#define stoai_exec(obj,in) \
   obj->ActualValue = in;
 
 /*_*
@@ -249,7 +249,7 @@
   store conditionally into analog input (Simulate) 
   @aref cstoai CStoAi
 */
-#define cstoai_exec(obj,in,cond)					\
+#define cstoai_exec(obj,in,cond) \
   if ( cond ) obj->ActualValue = in;
 
 /*_*
@@ -257,8 +257,8 @@
   store into co (Simulate) 
   @aref stopi StoPi
 */
-#define stopi_exec( rawvalue, absvalue ,in)				\
-  rawvalue->RawValue = in;						\
+#define stopi_exec( rawvalue, absvalue ,in) \
+  rawvalue->RawValue = in; \
   absvalue->RawValue = in;
 
 /*_*
@@ -266,7 +266,7 @@
   Store integer output	
   @aref stoio StoIo
 */
-#define stoio_exec(obj,in)						\
+#define stoio_exec(obj,in) \
   obj->ActualValue = in;
 
 /*_*
@@ -274,7 +274,7 @@
   store conditionally into integer output 
   @aref cstoio CStoIo
 */
-#define cstoio_exec(obj,in,cond)					\
+#define cstoio_exec(obj,in,cond) \
   if ( cond ) obj->ActualValue = in;
 
 /*_*
@@ -282,7 +282,7 @@
   Store integer value	
   @aref stoiv StoIv
 */
-#define stoiv_exec(obj,in)						\
+#define stoiv_exec(obj,in) \
   obj->ActualValue = in;
 
 /*_*
@@ -290,7 +290,7 @@
   store conditionally into integer value 
   @aref cstoiv CStoIv
 */
-#define cstoiv_exec(obj,in,cond)					\
+#define cstoiv_exec(obj,in,cond) \
   if ( cond ) obj->ActualValue = in;
 
 /*_*
@@ -298,7 +298,7 @@
   store integer input (Simulate)			
   @aref stoii StoIi
 */
-#define stoii_exec(obj,in)						\
+#define stoii_exec(obj,in) \
   obj->ActualValue = in;
 
 /*_*
@@ -306,8 +306,106 @@
   store conditionally into integer input (Simulate) 
   @aref cstoii CStoIi
 */
-#define cstoii_exec(obj,in,cond)					\
+#define cstoii_exec(obj,in,cond) \
   if ( cond ) obj->ActualValue = in;
+
+/*_*
+  StoBiInt32								
+  store buffer input (Simulate)			
+  @aref stobiint32 StoBiInt32
+*/
+#define StoBiInt32_exec(obj,in)	\
+  obj->ActualValue = in;
+
+/*_*
+  CStoBiInt32								
+  store conditionally into buffer input (Simulate) 
+  @aref cstobiint32 CStoBiInt32
+*/
+#define CStoBiInt32_exec(obj,in,cond) \
+  if ( cond ) obj->ActualValue = in;
+
+/*_*
+  StoBoInt32								
+  store buffer output			
+  @aref stoboint32 StoBoInt32
+*/
+#define StoBoInt32_exec(obj,in)	\
+  obj->ActualValue = in;
+
+
+/*_*
+  CStoBoInt32								
+  store conditionally into buffer output 
+  @aref cstoboint32 CStoBoInt32
+*/
+#define CStoBoInt32_exec(obj,in,cond) \
+  if ( cond ) obj->ActualValue = in;
+
+/*_*
+  StoBiFloat32								
+  store buffer input (Simulate)			
+  @aref stobifloat32 StoBiFloat32
+*/
+#define StoBiFloat32_exec(obj,in) \
+  obj->ActualValue = in;
+
+/*_*
+  CStoBiFloat32								
+  store conditionally into buffer input (Simulate) 
+  @aref cstobifloat32 CStoBiFloat32
+*/
+#define CStoBiFloat32_exec(obj,in,cond) \
+  if ( cond ) obj->ActualValue = in;
+
+/*_*
+  StoBoFloat32								
+  store buffer output			
+  @aref stobofloat32 StoBoFloat32
+*/
+#define StoBoFloat32_exec(obj,in) \
+  obj->ActualValue = in;
+
+/*_*
+  CStoBoFloat32								
+  store conditionally into buffer output 
+  @aref cstobofloat32 CStoBoFloat32
+*/
+#define CStoBoFloat32_exec(obj,in,cond)	\
+  if ( cond ) obj->ActualValue = in;
+
+/*_*
+  StoBiString80								
+  store buffer input (Simulate)			
+  @aref stobistring80 StoBiString80
+*/
+#define StoBiString80_exec(obj,in) \
+  strncpy( obj->ActualValue, in, 80);
+
+/*_*
+  CStoBiString80								
+  store conditionally buffer input (Simulate)			
+  @aref cstobistring80 CStoBiString80
+*/
+#define CStoBiString80_exec(obj,in,cond) \
+  if ( cond) strncpy( obj->ActualValue, in, 80);
+
+/*_*
+  StoBoString80								
+  store buffer output			
+  @aref stobostring80 StoBoString80
+*/
+#define StoBoString80_exec(obj,in) \
+  strncpy( obj->ActualValue, in, 80);
+
+/*_*
+  CStoBoString80								
+  store conditionally buffer input			
+  @aref cstobostring80 CStoBoString80
+*/
+#define CStoBoString80_exec(obj,in,cond) \
+  if ( cond) strncpy( obj->ActualValue, in, 80);
+
 
 /*_*
   AtoI

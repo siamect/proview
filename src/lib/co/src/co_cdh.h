@@ -1066,6 +1066,11 @@ pwr_tStatus cdh_NextObjectName( char *t, const char *s);
 
 void cdh_CutNameSegments( char *outname, char *name, int segments);
 
+pwr_tUInt32 cdh_AttrSize( pwr_sParInfo *info);
+
+pwr_tUInt32 cdh_AttrElemSize( pwr_sParInfo *info);
+
+
 /*@}*/
 
 #ifdef __cplusplus

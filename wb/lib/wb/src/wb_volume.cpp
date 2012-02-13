@@ -409,7 +409,7 @@ wb_attribute wb_volume::attribute(const pwr_sAttrRef* arp) const
   while (ODD(sts)) {
     bool newBody = false;
     while (ODD(sts)) {
-      if (arp->Offset < (adrep->offset() + adrep->size())){
+      if (arp->Offset < (adrep->offset() + adrep->rsize())){
         if (arp->Size == 0 || adrep->size() == arp->Size) {
           // Attribute found
           idx = (adrep->nElement() > 1) ? -1 : 0;
@@ -423,7 +423,7 @@ wb_attribute wb_volume::attribute(const pwr_sAttrRef* arp) const
         else if (adrep->flags() & PWR_MASK_ARRAY &&
                  adrep->size()/adrep->nElement() == arp->Size) {  
           // Attribute element found
-          idx = (arp->Offset - adrep->offset()) / (adrep->size() / adrep->nElement());
+	  idx = (arp->Offset - adrep->offset()) / (adrep->rsize() / adrep->nElement());
           wb_attribute a(LDH__SUCCESS, orep, adrep, idx);
           delete bdrep;
           orep->unref();

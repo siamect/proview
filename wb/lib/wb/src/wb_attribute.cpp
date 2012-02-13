@@ -117,7 +117,10 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, wb_adrep* adrep, int 
         m_idx = idx;
         if (idx != -1) { // element
           m_size = m_adrep->size() / m_adrep->nElement();
-          m_offset = m_adrep->offset() + m_idx * m_size;
+	  if ( m_flags & PWR_MASK_POINTER)
+	    m_offset = m_adrep->offset() + m_idx * sizeof(pwr_tUInt64);
+	  else
+	    m_offset = m_adrep->offset() + m_idx * m_size;
           m_elements = 1;
         }
       } else

@@ -151,7 +151,11 @@ wb_adrep *wb_bdrep::adrep( pwr_tStatus *sts, const char *aname)
     bool next_attr = false;
     wb_name an(n.attribute(i));
     wb_orep *orep = bd->m_orep->vrep()->child( sts, bd->m_orep, an);
-    while ( EVEN(*sts)) {
+    if ( EVEN(*sts) && i > 0) {
+      *sts = LDH__ATTRINDEX;
+      return 0;
+    }
+    while ( EVEN(*sts)) {      
       // Try Super attribute
       orep = bd->m_orep->vrep()->first( sts, bd->m_orep);
       if ( EVEN(*sts)) {

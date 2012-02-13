@@ -509,6 +509,8 @@ link_io_base_areas (
   dlink_area((plc_sDlink *)&pp->base.ii_a, "pwrNode-active-io-ii", pp->IOHandler->IiCount * sizeof(pwr_tInt32));
   dlink_area((plc_sDlink *)&pp->base.io_a, "pwrNode-active-io-io", pp->IOHandler->IoCount * sizeof(pwr_tInt32));
   dlink_area((plc_sDlink *)&pp->base.iv_a, "pwrNode-active-io-iv", pp->IOHandler->IvCount * sizeof(pwr_tInt32));
+  dlink_area((plc_sDlink *)&pp->base.bi_a, "pwrNode-active-io-bi", pp->IOHandler->BiSize);
+  dlink_area((plc_sDlink *)&pp->base.bo_a, "pwrNode-active-io-bo", pp->IOHandler->BoSize);
   dlink_area((plc_sDlink *)&pp->base.av_i, "pwrNode-active-io-av_init", pp->IOHandler->AvCount * sizeof(pwr_tUInt64));
   dlink_area((plc_sDlink *)&pp->base.dv_i, "pwrNode-active-io-dv_init", pp->IOHandler->DvCount * sizeof(pwr_tUInt64));
   dlink_area((plc_sDlink *)&pp->base.iv_i, "pwrNode-active-io-iv_init", pp->IOHandler->IvCount * sizeof(pwr_tUInt64));
@@ -518,6 +520,10 @@ link_io_base_areas (
   dlink_area((plc_sDlink *)&pp->base.do_i, "pwrNode-active-io-do_init", pp->IOHandler->DoCount * sizeof(pwr_tUInt64));
   dlink_area((plc_sDlink *)&pp->base.ii_i, "pwrNode-active-io-ii_init", pp->IOHandler->IiCount * sizeof(pwr_tUInt64));
   dlink_area((plc_sDlink *)&pp->base.io_i, "pwrNode-active-io-io_init", pp->IOHandler->IoCount * sizeof(pwr_tUInt64));
+  dlink_area((plc_sDlink *)&pp->base.bi_i, "pwrNode-active-io-bi_init", pp->IOHandler->BiCount * sizeof(pwr_tUInt64));
+  dlink_area((plc_sDlink *)&pp->base.bi_isize, "pwrNode-active-io-bi_initsize", pp->IOHandler->BiCount * sizeof(pwr_tUInt64));
+  dlink_area((plc_sDlink *)&pp->base.bo_i, "pwrNode-active-io-bo_init", pp->IOHandler->BoCount * sizeof(pwr_tUInt64));
+  dlink_area((plc_sDlink *)&pp->base.bo_isize, "pwrNode-active-io-bo_initsize", pp->IOHandler->BoCount * sizeof(pwr_tUInt64));
 }
 
 /* Link to I/O copy areas.
@@ -564,6 +570,12 @@ link_io_copy_areas (
 
   tp->copy.iv_a = pp->base.iv_a;
   tp->copy.iv_a.p = calloc(1, tp->copy.iv_a.size);
+
+  tp->copy.bi_a = pp->base.bi_a;
+  tp->copy.bi_a.p = calloc(1, tp->copy.bi_a.size);
+
+  tp->copy.bo_a = pp->base.bo_a;
+  tp->copy.bo_a.p = calloc(1, tp->copy.bo_a.size);
 
 }
 
@@ -742,6 +754,20 @@ save_values (
     if (p != NULL)
       *p = pp->base.io_a.p->Value[i];
   }
+  for (i = 0; i < pp->IOHandler->BiCount; i++) {
+    char *p = gdh_TranslateRtdbPointer(pp->base.bi_i.p->Value[i]);
+    unsigned int idx = pp->base.bi_isize.p->Value[i] >> 32;
+    unsigned int size = 0xFFFFFFFF & pp->base.bi_isize.p->Value[i];
+    if (p != NULL && idx + size <= pp->IOHandler->BiSize)
+      memcpy( p, &pp->base.bi_a.p->Value[idx], size); 
+  }
+  for (i = 0; i < pp->IOHandler->BoCount; i++) {
+    char *p = gdh_TranslateRtdbPointer(pp->base.bo_i.p->Value[i]);
+    unsigned int idx = pp->base.bo_isize.p->Value[i] >> 32;
+    unsigned int size = 0xFFFFFFFF & pp->base.bo_isize.p->Value[i];
+    if (p != NULL && idx + size <= pp->IOHandler->BoSize)
+      memcpy( p, &pp->base.bo_a.p->Value[idx], size); 
+  }
 }
 
 static void
@@ -795,5 +821,19 @@ set_values (
     pwr_tInt32 *p = gdh_TranslateRtdbPointer(pp->base.io_i.p->Value[i]);
     if (p != NULL)
       pp->base.io_a.p->Value[i] = *p;
+  }
+  for (i = 0; i < pp->IOHandler->BiCount; i++) {
+    char *p = gdh_TranslateRtdbPointer(pp->base.bi_i.p->Value[i]);
+    unsigned int idx = pp->base.bi_isize.p->Value[i] >> 32;
+    unsigned int size = 0xFFFFFFFF & pp->base.bi_isize.p->Value[i];
+    if (p != NULL && idx + size <= pp->IOHandler->BiSize)
+      memcpy( &pp->base.bi_a.p->Value[idx], p, size); 
+  }
+  for (i = 0; i < pp->IOHandler->BoCount; i++) {
+    char *p = gdh_TranslateRtdbPointer(pp->base.bo_i.p->Value[i]);
+    unsigned int idx = pp->base.bo_isize.p->Value[i] >> 32;
+    unsigned int size = 0xFFFFFFFF & pp->base.bo_isize.p->Value[i];
+    if (p != NULL && idx + size <= pp->IOHandler->BoSize)
+      memcpy( &pp->base.bo_a.p->Value[idx], p, size); 
   }
 }

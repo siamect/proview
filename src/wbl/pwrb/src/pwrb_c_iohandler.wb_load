@@ -222,6 +222,46 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Number of configured Bi objects in the node.
+      !*/
+      Object BiCount $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Number of configured Bo objects in the node.
+      !*/
+      Object BoCount $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Number of configured Bi buffers.
+      !*/
+      Object BiSize $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Total size of Bo buffers.
+      !*/
+      Object BoSize $Attribute 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
     EndObject
     !
     ! Template for IOHandler

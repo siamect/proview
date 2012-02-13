@@ -2983,6 +2983,28 @@ void cdh_CutNameSegments (
 }
 
 
+//! Get attribute size.
+/*!
+  Get the attribute size from parinfo.
+*/
+pwr_tUInt32 cdh_AttrSize( pwr_sParInfo *info)
+{
+  if ( info->Flags & PWR_MASK_POINTER && !(info->Flags & PWR_MASK_PRIVATE))
+    /* Return pointer size, info size contains size of pointed entity */
+    return sizeof(pwr_tUInt64) * info->Elements;
+
+  return info->Size;
+}
+
+//! Get attribute array element size.
+/*!
+  Get the array elements size of an array attribut from parinfo.
+*/
+pwr_tUInt32 cdh_AttrElemSize( pwr_sParInfo *info)
+{
+  return cdh_AttrSize( info) / info->Elements;
+}
+
 /*@}*/
 
 

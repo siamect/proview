@@ -126,6 +126,9 @@ typedef struct {
   pwr_tUInt32	size;		/* Size of channel in byte */
   pwr_tUInt32	offset;		/* Offset to channel in card */
   pwr_tUInt32	mask;		/* Mask for bit oriented channels */
+  pwr_eType	SigType;	/* Type of buffer signal */
+  pwr_tUInt32	SigElem;	/* Elements of buffer array signal */
+  pwr_tUInt32	SigStrSize;	/* Size of buffer signal element */
   pwr_tUInt32   udata;       	/* User defined data */
 } io_sChannel;
 	
@@ -264,7 +267,15 @@ pwr_tStatus io_AiRangeToCoef(
   io_sChannel 	*chanp
 );
 
+pwr_tStatus io_BiRangeToCoef( 
+  io_sChannel 	*chanp
+);
+
 pwr_tStatus io_AoRangeToCoef( 
+  io_sChannel 	*chanp
+);
+
+pwr_tStatus io_BoRangeToCoef( 
   io_sChannel 	*chanp
 );
 
