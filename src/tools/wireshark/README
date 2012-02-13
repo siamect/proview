@@ -61,7 +61,10 @@ is a description of how to build the dissector.
 
    Install dependencies, for example
 
-   > apt-get install docbook-xsl libpcre3-dev libcap-dev libgnutls-dev portaudio19-dev libkrb5-dev liblua5.1-0-dev libsmi2-dev libgeoip-dev dpatch automake1.9 libc-ares-dev
+   > apt-get install docbook-xsl libpcre3-dev libcap-dev libgnutls-dev portaudio19-dev libkrb5-dev liblua5.1-0-dev libsmi2-dev libgeoip-dev dpatch automake1.9 libc-ares-dev xsltproc
+
+  On ubuntu change libwireshark.so.1.1.0 -> libwireshark.so.1.1.1 in
+  debian/wireshark-common.files
 
   > make debian-package
 
