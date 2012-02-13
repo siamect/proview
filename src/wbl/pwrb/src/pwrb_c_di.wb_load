@@ -265,10 +265,10 @@ SObject pwrb:Class
 	    Attr ButtonName = "Connect Channel"
 	    Attr MethodName = "$AttrRef-Connect"
 	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr MethodArguments[1] = "ChanDi"
+	    Attr MethodArguments[1] = "ChanDi,ChanD"
 	    Attr FilterName = "$AttrRef-IsOkConnect"
 	    Attr FilterArguments[0] = "SigChanCon"
-	    Attr FilterArguments[1] = "ChanDi"
+	    Attr FilterArguments[1] = "ChanDi,ChanD"
 	  EndBody
 	EndObject
 	Object ConnectGraph $MenuButton

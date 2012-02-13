@@ -403,6 +403,48 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       chanp->mask = 0;
       break;
     }
+
+    case pwr_cClass_ChanD: {
+      pwr_sClass_ChanD *chan_d = (pwr_sClass_ChanD *) chanp->cop;
+      if ( chan_d->Type == pwr_eDChanTypeEnum_Di) {
+	/* Di type */
+	if (chan_d->Number == 0) {
+	  *input_area_offset += *input_area_chansize;
+	  *input_area_chansize = GetChanSize( chan_d->Representation);
+	}
+	if ( !chanp->sop)
+	  continue;
+
+	chanp->offset = *input_area_offset;
+	chanp->mask = 1 << chan_d->Number;
+	if ( byte_order == pwr_eByteOrderingEnum_BigEndian) {
+	  if ( chan_d->Representation == pwr_eDataRepEnum_Bit16)
+	    chanp->mask = swap16( (unsigned short)chanp->mask);
+	  else if ( chan_d->Representation == pwr_eDataRepEnum_Bit32) 
+	    chanp->mask = swap32( chanp->mask);
+	}
+      }
+      else {
+	/*  Do type */
+	if (chan_d->Number == 0) {
+	  *output_area_offset += *output_area_chansize;
+	  *output_area_chansize = GetChanSize( chan_d->Representation);
+	}
+	if ( !chanp->sop)
+	  continue;
+
+	chanp->offset = *output_area_offset;
+	chanp->mask = 1 << chan_d->Number;
+	if ( byte_order == pwr_eByteOrderingEnum_BigEndian) {
+	  if ( chan_d->Representation == pwr_eDataRepEnum_Bit16)
+	    chanp->mask = swap16( (unsigned short)chanp->mask);
+	  else if ( chan_d->Representation == pwr_eDataRepEnum_Bit32) 
+	    chanp->mask = swap32( chanp->mask);
+	}
+      }
+      break;
+    }
+
     }
   }
   return IO__SUCCESS;
@@ -422,6 +464,7 @@ void io_bus_card_read( io_tCtx ctx,
 {
   io_sChannel *chanp;
   pwr_sClass_ChanDi *chan_di;
+  pwr_sClass_ChanD *chan_d;
   pwr_sClass_Di *sig_di;
   pwr_sClass_ChanAi *chan_ai;
   pwr_sClass_Ai *sig_ai;
@@ -475,6 +518,37 @@ void io_bus_card_read( io_tCtx ctx,
 
 	}
 
+      }
+      break;
+
+    case pwr_cClass_ChanD:
+      chan_d = (pwr_sClass_ChanD *) chanp->cop;
+      if ( chan_d->Type == pwr_eDChanTypeEnum_Di) {
+	sig_di = (pwr_sClass_Di *) chanp->sop;
+	if (chan_d && sig_di && chan_d->ConversionOn) {
+
+	  switch (chan_d->Representation) {
+
+	  case pwr_eDataRepEnum_Bit8:
+	    udata8p = input_area + cp->offset + chanp->offset;
+	    * (pwr_tUInt16 *) (chanp->vbp) = chan_d->InvertOn ? ((*udata8p & chanp->mask) == 0) :
+	      ((*udata8p & chanp->mask) != 0);
+	    break;
+
+	  case pwr_eDataRepEnum_Bit16:
+	    udata16p = input_area + cp->offset + chanp->offset;
+	    * (pwr_tUInt16 *) (chanp->vbp) = chan_d->InvertOn ? ((*udata16p & chanp->mask) == 0) :
+	      ((*udata16p & chanp->mask) != 0);
+	    break;
+
+	  case pwr_eDataRepEnum_Bit32:
+	    udata32p = input_area + cp->offset + chanp->offset;
+	    * (pwr_tUInt16 *) (chanp->vbp) = chan_d->InvertOn ? ((*udata32p & chanp->mask) == 0) :
+	      ((*udata32p & chanp->mask) != 0);
+	    break;
+	    
+	  }
+	}
       }
       break;
 
@@ -887,6 +961,7 @@ void io_bus_card_write( io_tCtx ctx,
   io_sChannel *chanp;
   
   pwr_sClass_ChanDo *chan_do;
+  pwr_sClass_ChanD *chan_d;
   pwr_sClass_Do *sig_do;
   pwr_sClass_ChanAo *chan_ao;
   pwr_sClass_Ao *sig_ao;
@@ -957,6 +1032,52 @@ void io_bus_card_write( io_tCtx ctx,
 
 	}
 	    
+      }
+	  
+      break;
+
+    case pwr_cClass_ChanD:
+      chan_d = (pwr_sClass_ChanD *) chanp->cop;
+      if ( chan_d->Type == pwr_eDChanTypeEnum_Do) {
+	sig_do = (pwr_sClass_Do *) chanp->sop;
+	if (chan_d && sig_do) {
+
+	  if (fixout)
+	    do_actval = chan_d->FixedOutValue;
+	  else if (chan_d->TestOn != 0)
+	    do_actval = chan_d->TestValue;
+	  else
+	    do_actval = *(pwr_tInt32 *) chanp->vbp;
+	  
+	  switch (chan_d->Representation) {
+
+	  case pwr_eDataRepEnum_Bit8:
+	    udata8p = output_area + cp->offset + chanp->offset;
+	    if (do_actval ^ chan_d->InvertOn)
+	      *udata8p |= chanp->mask;
+	    else
+	      *udata8p &= ~chanp->mask;
+	    break;
+	  
+	  case pwr_eDataRepEnum_Bit16:
+	    udata16p = output_area + cp->offset + chanp->offset;
+	    if (do_actval ^ chan_d->InvertOn)
+	      *udata16p |= chanp->mask;
+	    else
+	      *udata16p &= ~chanp->mask;
+	    break;
+
+	  case pwr_eDataRepEnum_Bit32:
+	    udata32p = output_area + cp->offset + chanp->offset;
+	    if (do_actval ^ chan_d->InvertOn)
+	      *udata32p |= chanp->mask;
+	    else
+	      *udata32p &= ~chanp->mask;
+	    break;
+	    
+	  }
+	}
+	
       }
 	  
       break;

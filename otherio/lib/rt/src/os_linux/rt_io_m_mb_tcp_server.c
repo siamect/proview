@@ -852,26 +852,10 @@ static pwr_tStatus mb_init_channels( io_tCtx ctx, io_sAgent *ap, io_sRack *rp)
   io_sServerModuleLocal *local_card;
   io_sCard *cardp;
   io_sServerLocal *local;
-  short input_counter;
-  short output_counter;
-  short card_input_counter;
-  short card_output_counter;
   pwr_sClass_Modbus_TCP_Server *op;
-  pwr_sClass_Modbus_TCP_ServerModule *mp;
   char name[196];
   pwr_tStatus sts;
-  pwr_tCid cid;
   
-  io_sChannel *chanp;
-  int i, latent_input_counter, latent_output_counter;
-  pwr_tInt32 chan_size;
-  pwr_sClass_ChanDi *chan_di;
-  pwr_sClass_ChanDo *chan_do;
-  pwr_sClass_ChanAi *chan_ai;
-  pwr_sClass_ChanAit *chan_ait;
-  pwr_sClass_ChanIi *chan_ii;
-  pwr_sClass_ChanAo *chan_ao;
-  pwr_sClass_ChanIo *chan_io;
 
   sts = gdh_ObjidToName(rp->Objid, (char *) &name, sizeof(name), cdh_mNName);
 
@@ -901,159 +885,6 @@ static pwr_tStatus mb_init_channels( io_tCtx ctx, io_sAgent *ap, io_sRack *rp)
     local_card->output_area = (void *) &(op->Outputs) + output_area_offset + 
       output_area_chansize;
 
-#if 0
-  input_counter = 0;
-  output_counter = 0;
-  card_input_counter = 0;
-  card_output_counter = 0;
-  latent_input_counter = 0;
-  latent_output_counter = 0;
-
-    input_counter = input_counter + card_input_counter + latent_input_counter;
-    output_counter = output_counter + card_output_counter + latent_output_counter;
-    local_card->input_area = (void *) &(op->Inputs) + input_counter;
-    local_card->output_area = (void *) &(op->Outputs) + output_counter;
-    card_input_counter = 0;
-    card_output_counter = 0;
-    latent_input_counter = 0;
-    latent_output_counter = 0;
-
-    /* From v4.1.3 we can have subclasses, find the super class */
-    
-    cid = cardp->Class;
-    while ( ODD( gdh_GetSuperClass( cid, &cid, cardp->Objid))) ;
-
-    switch (cid) {
-
-      case pwr_cClass_Modbus_TCP_ServerModule:
-        mp = (pwr_sClass_Modbus_TCP_ServerModule *) cardp->op;
-        mp->Status = pwr_eModbusModule_StatusEnum_StatusUnknown;
-        for (i = 0; i < cardp->ChanListSize; i++) {
-          chanp = &cardp->chanlist[i];
-
-	  if ( is_diag( &chanp->ChanAref)) {
-	    chanp->udata |= PB_UDATA_DIAG;
-	    switch (chanp->ChanClass) {	    
-            case pwr_cClass_ChanIi:
-	      chanp->offset = ((pwr_sClass_ChanIi *)chanp->cop)->Number;
-	      chanp->size = GetChanSize( ((pwr_sClass_ChanIi *)chanp->cop)->Representation);
-	      break;
-	    default:
-	      errh_Error( "Diagnostic channel class, card %s", cardp->Name);
-	    }
-	    continue;
-	  }
-
-          if (chanp->ChanClass != pwr_cClass_ChanDi) {
-            card_input_counter += latent_input_counter;
-	    latent_input_counter = 0;
-          }
-
-          if (chanp->ChanClass != pwr_cClass_ChanDo) {
-            card_output_counter += latent_output_counter;
-	    latent_output_counter = 0;
-          }
-      
-          switch (chanp->ChanClass) {
-      
-            case pwr_cClass_ChanDi:
-	      chan_di = (pwr_sClass_ChanDi *) chanp->cop;
-              if (chan_di->Number == 0) {
-	        card_input_counter += latent_input_counter;
-	        latent_input_counter = 0;
-	      }
-              chanp->offset = card_input_counter;
-	      chanp->mask = 1 << chan_di->Number;
-	      if (chan_di->Representation == pwr_eDataRepEnum_Bit16) 
-	        chanp->mask = swap16(chanp->mask);
-	      if (chan_di->Representation == pwr_eDataRepEnum_Bit32)
-	        chanp->mask = swap32((unsigned short) chanp->mask);
-	      if (chan_di->Number == 0) latent_input_counter = GetChanSize(chan_di->Representation);
-	      if (local_card->di_size == 0)
-		local_card->di_offset = chanp->offset;
-	      if (chan_di->Number == 0 || local_card->di_size == 0)
-		local_card->di_size += GetChanSize(chan_di->Representation);
-//	      printf("Di channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_di->Number, chanp->offset);
-	      break;
-	  
-            case pwr_cClass_ChanAi:
-	      chan_ai = (pwr_sClass_ChanAi *) chanp->cop;
-              chanp->offset = card_input_counter;
-	      chan_size = GetChanSize(chan_ai->Representation);
-              chanp->size = chan_size;
-	      chanp->mask = 0;
-	      card_input_counter += chan_size;
-              io_AiRangeToCoef(chanp);
-//	      printf("Ai channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_ai->Number, chanp->offset);
-	      break;
-	  
-            case pwr_cClass_ChanAit:
-	      chan_ait = (pwr_sClass_ChanAit *) chanp->cop;
-              chanp->offset = card_input_counter;
-	      chan_size = GetChanSize(chan_ait->Representation);
-              chanp->size = chan_size;
-	      chanp->mask = 0;
-	      card_input_counter += chan_size;
-              io_AiRangeToCoef(chanp);
-	      break;
-	  
-            case pwr_cClass_ChanIi:
-	      chan_ii = (pwr_sClass_ChanIi *) chanp->cop;
-              chanp->offset = card_input_counter;
-	      chan_size = GetChanSize(chan_ii->Representation);
-              chanp->size = chan_size;
-	      chanp->mask = 0;
-	      card_input_counter += chan_size;
-//	      printf("Ii channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_ii->Number, chanp->offset);
-	      break;
-	  
-            case pwr_cClass_ChanDo:
-	      chan_do = (pwr_sClass_ChanDo *) chanp->cop;
-              if (chan_do->Number == 0) {
-	        card_output_counter += latent_output_counter;
-	        latent_output_counter = 0;
-	      }
-              chanp->offset = card_output_counter;
-	      chan_size = GetChanSize(chan_do->Representation);
-	      chanp->mask = 1 << chan_do->Number;
-	      if (chan_do->Representation == pwr_eDataRepEnum_Bit16) 
-	        chanp->mask = swap16(chanp->mask);
-	      if (chan_do->Representation == pwr_eDataRepEnum_Bit32)
-	        chanp->mask = swap32((unsigned short) chanp->mask);
-	      if (chan_do->Number == 0) latent_output_counter = GetChanSize(chan_do->Representation);
-	      if (local_card->do_size == 0)
-		local_card->do_offset = chanp->offset;
-	      if (chan_do->Number == 0 || local_card->do_size == 0)
-		local_card->do_size += GetChanSize(chan_do->Representation);
-//	      printf("Do channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_do->Number, chanp->offset);
-	      break;
-	  
-	    case pwr_cClass_ChanAo:
-	      chan_ao = (pwr_sClass_ChanAo *) chanp->cop;
-              chanp->offset = card_output_counter;
-	      chan_size = GetChanSize(chan_ao->Representation);
-              chanp->size = chan_size;
-	      chanp->mask = 0;
-	      card_output_counter += chan_size;
-              io_AoRangeToCoef(chanp);
-//	      printf("Ao channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_ao->Number, chanp->offset);
-	      break;
-	  
-            case pwr_cClass_ChanIo:
-	      chan_io = (pwr_sClass_ChanIo *) chanp->cop;
-              chanp->offset = card_output_counter;
-	      chan_size = GetChanSize(chan_io->Representation);
-              chanp->size = chan_size;
-	      chanp->mask = 0;
-	      card_output_counter += chan_size;
-//	      printf("Io channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_io->Number, chanp->offset);
-	      break;
-          }
-        } /* End - for ... */
-        
-        break;
-    } /* End - switch ... */
-#endif
 
     io_bus_card_init( ctx, cardp, &input_area_offset, &input_area_chansize,
 		      &output_area_offset, &output_area_chansize, 
@@ -1065,11 +896,6 @@ static pwr_tStatus mb_init_channels( io_tCtx ctx, io_sAgent *ap, io_sRack *rp)
     local_card->output_size = output_area_offset + output_area_chansize - 
       prev_output_area_offset;
 
-#if 0
-    local_card->input_size = card_input_counter + latent_input_counter;
-    local_card->output_size = card_output_counter + latent_output_counter;
-#endif
-
     prev_input_area_offset = input_area_offset + input_area_chansize;
     prev_output_area_offset = output_area_offset + output_area_chansize;
 
@@ -1079,10 +905,6 @@ static pwr_tStatus mb_init_channels( io_tCtx ctx, io_sAgent *ap, io_sRack *rp)
   local->input_size = input_area_offset + input_area_chansize;
   local->output_size = output_area_offset + output_area_chansize;
 
-#if 0
-  local->input_size = input_counter + card_input_counter + latent_input_counter;
-  local->output_size = output_counter + card_output_counter + latent_output_counter;
-#endif
 
   return IO__SUCCESS;
 }

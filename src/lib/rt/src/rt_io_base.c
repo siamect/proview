@@ -433,6 +433,7 @@ pwr_tStatus io_init_di_signals(
   pwr_sClass_DiArea		*area_op;
   pwr_sClass_Di			*sig_op;
   pwr_sClass_ChanDi		*chan_op;
+  pwr_sClass_ChanD		*chan_opd;
   pwr_sAttrRef			sig_aref;
   pwr_tAName		       	buf;
   pwr_tUInt32			sig_count = 0;
@@ -464,6 +465,14 @@ pwr_tStatus io_init_di_signals(
     sts = gdh_GetNextAttrRef( pwr_cClass_ChanDi, &sig_aref, &sig_aref);
   }
 
+  sts = gdh_GetClassListAttrRef( pwr_cClass_ChanD, &sig_aref);
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &sig_aref, (void *) &chan_opd);
+    if ( ODD(sts) && chan_opd->Type == pwr_eDChanTypeEnum_Di)
+      chan_opd->SigChanCon.Objid = pwr_cNObjid;
+    sts = gdh_GetNextAttrRef( pwr_cClass_ChanD, &sig_aref, &sig_aref);
+  }
+
   sts = gdh_GetClassListAttrRef( pwr_cClass_Di, &sig_aref);
   while (ODD(sts)) {
     sts = gdh_AttrrefToName( &sig_aref, buf, sizeof(buf), cdh_mNName);
@@ -480,7 +489,7 @@ pwr_tStatus io_init_di_signals(
     else {
       sts = gdh_GetAttrRefTid( &sig_op->SigChanCon, &class);
       if (EVEN(sts) || 
-	  (class != pwr_cClass_ChanDi)) {
+	  (!(class == pwr_cClass_ChanDi || class == pwr_cClass_ChanD))) {
 	errh_Error("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
@@ -489,12 +498,25 @@ pwr_tStatus io_init_di_signals(
 	  errh_Error("IO init: Signal SigChanCon error '%s'", buf);
 	}	
 	else {
-	  if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
-	    pwr_tAName oldsig;
-	    sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
-	    errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	  if ( class == pwr_cClass_Di) {
+	    if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
+	      pwr_tAName oldsig;
+	      sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
+	      errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	    }
+	    chan_op->SigChanCon = sig_aref;
 	  }
-	  chan_op->SigChanCon = sig_aref;
+	  else {
+	    if ( ((pwr_sClass_ChanD *)chan_op)->Type != pwr_eDChanTypeEnum_Di)
+	      errh_Error( "IO init: ChanD type is not Di '%s'", buf);
+	    else if ( cdh_ObjidIsNotNull( ((pwr_sClass_ChanD *)chan_op)->SigChanCon.Objid)) {
+	      pwr_tAName oldsig;
+	      sts = gdh_AttrrefToName( &((pwr_sClass_ChanD *)chan_op)->SigChanCon, oldsig, sizeof(oldsig), 
+				       cdh_mNName);
+	      errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	    }
+	    ((pwr_sClass_ChanD *)chan_op)->SigChanCon = sig_aref;
+	  }
 	}
       }		
     }
@@ -528,6 +550,7 @@ pwr_tStatus io_init_do_signals(
   pwr_sClass_DoArea		*area_op;
   pwr_sClass_Do			*sig_op;
   pwr_sClass_ChanDo		*chan_op;
+  pwr_sClass_ChanD		*chan_opd;
   pwr_sAttrRef			sig_aref;
   pwr_tAName   			buf;
   pwr_tUInt32			sig_count = 0;
@@ -559,6 +582,14 @@ pwr_tStatus io_init_do_signals(
     sts = gdh_GetNextAttrRef( pwr_cClass_ChanDo, &sig_aref, &sig_aref);
   }
 
+  sts = gdh_GetClassListAttrRef( pwr_cClass_ChanD, &sig_aref);
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &sig_aref, (void *) &chan_opd);
+    if ( ODD(sts) && chan_opd->Type == pwr_eDChanTypeEnum_Do)
+      chan_opd->SigChanCon.Objid = pwr_cNObjid;
+    sts = gdh_GetNextAttrRef( pwr_cClass_ChanD, &sig_aref, &sig_aref);
+  }
+
   sts = gdh_GetClassListAttrRef( pwr_cClass_Do, &sig_aref);
   while (ODD(sts)) {
 
@@ -576,7 +607,7 @@ pwr_tStatus io_init_do_signals(
     else {
       sts = gdh_GetAttrRefTid( &sig_op->SigChanCon, &class);
       if (EVEN(sts) ||
-	  (class != pwr_cClass_ChanDo)) {
+	  (!(class == pwr_cClass_ChanDo || class == pwr_cClass_ChanD))) {
 	errh_Error("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
@@ -585,12 +616,25 @@ pwr_tStatus io_init_do_signals(
 	  errh_Error("IO init: Signal SigChanCon error '%s'", buf);
 	}	
 	else {
-	  if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
-	    pwr_tAName oldsig;
-	    sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
-	    errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	  if ( class == pwr_cClass_ChanDo) {
+	    if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
+	      pwr_tAName oldsig;
+	      sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
+	      errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	    }
+	    chan_op->SigChanCon = sig_aref;
 	  }
-	  chan_op->SigChanCon = sig_aref;
+	  else {
+	    if ( ((pwr_sClass_ChanD *)chan_op)->Type != pwr_eDChanTypeEnum_Do)
+	      errh_Error( "IO init: ChanD type is not Do '%s'", buf);
+	    else if ( cdh_ObjidIsNotNull( ((pwr_sClass_ChanD *)chan_op)->SigChanCon.Objid)) {
+	      pwr_tAName oldsig;
+	      sts = gdh_AttrrefToName( &((pwr_sClass_ChanD *)chan_op)->SigChanCon, oldsig, sizeof(oldsig), 
+				       cdh_mNName);
+	      errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	    }
+	    ((pwr_sClass_ChanD *)chan_op)->SigChanCon = sig_aref;
+	  } 
 	}
       }		
     }
@@ -1811,6 +1855,10 @@ static pwr_tStatus io_handle_channels(
       sigchancon = ((pwr_sClass_ChanDo *) chan_op)->SigChanCon;
       number = *chan_cnt;
       break;
+    case pwr_cClass_ChanD:
+      sigchancon = ((pwr_sClass_ChanD *) chan_op)->SigChanCon;
+      number = *chan_cnt;
+      break;
     case pwr_cClass_ChanIi:
       sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon;
       number = *chan_cnt;
@@ -2081,6 +2129,7 @@ static pwr_tStatus io_init_card(
 	      case pwr_cClass_ChanAo:
 	      case pwr_cClass_ChanDo:
 	      case pwr_cClass_ChanDi:
+	      case pwr_cClass_ChanD:
 	      case pwr_cClass_ChanIi:
 	      case pwr_cClass_ChanIo:
 	      case pwr_cClass_ChanCo:
@@ -2108,6 +2157,7 @@ static pwr_tStatus io_init_card(
 		case pwr_cClass_ChanAo:
 		case pwr_cClass_ChanDi:
 		case pwr_cClass_ChanDo:
+		case pwr_cClass_ChanD:
 		case pwr_cClass_ChanIi:
 		case pwr_cClass_ChanIo:
 		case pwr_cClass_ChanCo:
@@ -2132,6 +2182,7 @@ static pwr_tStatus io_init_card(
 		      case pwr_cClass_ChanAo:
 		      case pwr_cClass_ChanDi:
 		      case pwr_cClass_ChanDo:
+		      case pwr_cClass_ChanD:
 		      case pwr_cClass_ChanIi:
 		      case pwr_cClass_ChanIo:
 		      case pwr_cClass_ChanCo:
@@ -2236,6 +2287,10 @@ static pwr_tStatus io_init_card(
 	      case pwr_cClass_ChanDi:
 	        sigchancon = ((pwr_sClass_ChanDi *) chan_op)->SigChanCon;
 	        number = ((pwr_sClass_ChanDi *) chan_op)->Number;
+	        break;
+	      case pwr_cClass_ChanD:
+	        sigchancon = ((pwr_sClass_ChanD *) chan_op)->SigChanCon;
+	        number = ((pwr_sClass_ChanD *) chan_op)->Number;
 	        break;
 	      case pwr_cClass_ChanIi:
 		sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon;
@@ -2454,6 +2509,9 @@ static pwr_tStatus io_init_card(
 		case pwr_cClass_ChanDo:
 		  csize = sizeof( pwr_sClass_ChanDo);
 		  break;
+		case pwr_cClass_ChanD:
+		  csize = sizeof( pwr_sClass_ChanD);
+		  break;
 		case pwr_cClass_ChanIi:
 		  csize = sizeof( pwr_sClass_ChanIi);
 		  break;
@@ -2492,6 +2550,9 @@ static pwr_tStatus io_init_card(
 			break;
 		      case pwr_cClass_ChanDo:
 			csize = sizeof( pwr_sClass_ChanDo);
+			break;
+		      case pwr_cClass_ChanD:
+			csize = sizeof( pwr_sClass_ChanD);
 			break;
 		      case pwr_cClass_ChanIi:
 			csize = sizeof( pwr_sClass_ChanIi);

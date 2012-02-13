@@ -726,6 +726,12 @@ static pwr_tStatus IoRackInit (
 	case pwr_cClass_ChanDo:
 	  no_do++;
 	  break;
+	case pwr_cClass_ChanD:
+	  if ( ((pwr_sClass_ChanD *)chanp->cop)->Type == pwr_eDChanTypeEnum_Di)
+	    no_di++;
+	  else
+	    no_do++;
+	  break;
 	}
       }	   
       local_card->msg[0].input_size = input_area_offset + input_area_chansize - 
@@ -772,6 +778,11 @@ static pwr_tStatus IoRackInit (
 	case pwr_cClass_ChanDo:
 	  no_do++;
 	  break;
+	case pwr_cClass_ChanD:
+	  if ( ((pwr_sClass_ChanD *)chanp->cop)->Type == pwr_eDChanTypeEnum_Di)
+	    no_di++;
+	  else
+	    no_do++;
 	}
       }	   
       local_card->msg[0].input_size = input_area_offset + input_area_chansize - 
