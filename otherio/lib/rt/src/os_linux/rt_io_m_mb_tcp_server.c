@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -855,6 +855,8 @@ static pwr_tStatus mb_init_channels( io_tCtx ctx, io_sAgent *ap, io_sRack *rp)
   pwr_sClass_Modbus_TCP_Server *op;
   char name[196];
   pwr_tStatus sts;
+  io_sChannel *chanp;
+  int i;
   
 
   sts = gdh_ObjidToName(rp->Objid, (char *) &name, sizeof(name), cdh_mNName);
@@ -890,6 +892,47 @@ static pwr_tStatus mb_init_channels( io_tCtx ctx, io_sAgent *ap, io_sRack *rp)
 		      &output_area_offset, &output_area_chansize, 
 		      pwr_eByteOrderingEnum_BigEndian);
 
+    for (i = 0; i < cardp->ChanListSize; i++) {
+      chanp = &cardp->chanlist[i];
+      switch (chanp->ChanClass) {      
+      case pwr_cClass_ChanDi: {
+	pwr_sClass_ChanDi *chan_di = (pwr_sClass_ChanDi *) chanp->cop;
+
+	if (local_card->di_size == 0)
+	  local_card->di_offset = chanp->offset;
+	if (chan_di->Number == 0 || local_card->di_size == 0)
+	  local_card->di_size += GetChanSize(chan_di->Representation);
+
+	break;
+      }
+      case pwr_cClass_ChanDo: {
+	pwr_sClass_ChanDo *chan_do = (pwr_sClass_ChanDo *) chanp->cop;
+
+	if (local_card->do_size == 0)
+	  local_card->do_offset = chanp->offset;
+	if (chan_do->Number == 0 || local_card->do_size == 0)
+	  local_card->do_size += GetChanSize(chan_do->Representation);
+
+	break;
+      }
+      case pwr_cClass_ChanD: {
+	pwr_sClass_ChanD *chan_d = (pwr_sClass_ChanD *) chanp->cop;
+	if ( chan_d->Type == pwr_eDChanTypeEnum_Di) {
+	  if (local_card->di_size == 0)
+	    local_card->di_offset = chanp->offset;
+	  if (chan_d->Number == 0 || local_card->di_size == 0)
+	    local_card->di_size += GetChanSize(chan_d->Representation);
+	}
+	else {
+	  if (local_card->do_size == 0)
+	    local_card->do_offset = chanp->offset;
+	  if (chan_d->Number == 0 || local_card->do_size == 0)
+	    local_card->do_size += GetChanSize(chan_d->Representation);
+	}
+	break;
+      }
+      }
+    }	   
 
     local_card->input_size = input_area_offset + input_area_chansize - 
       prev_input_area_offset;
