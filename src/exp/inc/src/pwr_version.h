@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -90,10 +90,10 @@
 
 #define pwrv_cBuildTimeStr       "13-DEC-2011 17:00:00"
 
-#define pwrv_cPwrVersionStr      "V4.8.3"
-#define pwrv_cPwrVersion         SET_VERSION('V', 4, 8, 3)
+#define pwrv_cPwrVersionStr      "V4.8.4"
+#define pwrv_cPwrVersion         SET_VERSION('V', 4, 8, 4)
 
 #define pwrv_cWbdbVersionShortStr "V48"
-#define pwrv_cPwrCopyright	 "Copyright (C) 2005-2011 SSAB Oxelösund"
+#define pwrv_cPwrCopyright	 "Copyright (C) 2005-2012 SSAB EMEA"
 
 #endif

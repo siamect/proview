@@ -2,7 +2,6 @@
 #
 #  Merge build tree for a module to common build tree
 #
-
 merge_dir_func()
 {
   local todir=$1
@@ -37,10 +36,10 @@ merge_dir_func()
   fi
 }
 
-
 fromroot=$1
 toroot=$2
 file=$3
+
 
 if [ -z "$pwre_host_exe" ]; then
   co_merge="co_merge"

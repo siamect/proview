@@ -1354,7 +1354,7 @@ sub merge ()
   my($mroot) = $eroot;
   $mroot .= "/" . $ENV{"pwre_module"};
   $eroot .= "/exp";
-  printf("--\n");
+  printf("\n");
   printf("-- Merge %s %s\n", $module, $file);
 
   my($cmd) = $ENV{pwre_bin} . "/pwre_merge.sh " . $mroot . " " . $eroot . " " . $file;
