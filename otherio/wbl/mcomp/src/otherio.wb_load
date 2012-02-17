@@ -1,6 +1,6 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X304"
+    Attr NextOix = "_X308"
     Attr NextCix = "_X36"
     Attr NextTix[0] = "_X11"
   EndBody
@@ -456,11 +456,32 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Attr TypeRef = "pwrs:Type-$Mask"
         Attr Elements = 1
       EndBody
-      Object OptimizedDiPoll $Bit 169 06-JAN-2011 15:49:48.79
-        Body SysBody 06-JAN-2011 15:49:55.05
+      Object OptimizedDiPoll $Bit 308 05-FEB-2012 18:28:28.45
+        Body SysBody 05-FEB-2012 18:28:28.45
           Attr Text = "OptimizedDiPoll"
           Attr PgmName = "OptimizedDiPoll"
           Attr Value = 1
+        EndBody
+      EndObject
+      Object ConnectionRequest $Bit 305 05-FEB-2012 16:29:04.97
+        Body SysBody 05-FEB-2012 16:29:08.51
+          Attr Text = "ConnectionRequest"
+          Attr PgmName = "ConnectionRequest"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object Ao16Bit $Bit 306 05-FEB-2012 16:29:52.15
+        Body SysBody 05-FEB-2012 16:29:55.69
+          Attr Text = "Ao16Bit"
+          Attr PgmName = "Ao16Bit"
+          Attr Value = 4
+        EndBody
+      EndObject
+      Object Checksum $Bit 307 05-FEB-2012 18:27:48.23
+        Body SysBody 05-FEB-2012 18:27:51.71
+          Attr Text = "Checksum"
+          Attr PgmName = "Checksum"
+          Attr Value = 8
         EndBody
       EndObject
     EndObject
@@ -4079,7 +4100,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object RtBody $ObjBodyDef 1 13-DEC-2010 21:36:40.01
         Body SysBody 13-DEC-2010 21:39:07.38
           Attr StructName = "Arduino_Uno"
-          Attr NextAix = "_X25"
+          Attr NextAix = "_X28"
         EndBody
         !/**
         ! Optional description.
@@ -4242,6 +4263,25 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        Object StallAction $Attribute 25 05-FEB-2012 16:31:41.97
+          Body SysBody 05-FEB-2012 16:31:41.97
+            Attr PgmName = "StallAction"
+            Attr TypeRef = "pwrb:Type-StallActionEnum"
+          EndBody
+        EndObject
+        Object Timeout $Attribute 26 05-FEB-2012 18:33:56.70
+          Body SysBody 05-FEB-2012 18:33:53.26
+            Attr PgmName = "Timeout"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object FirmwareVersion $Attribute 27 05-FEB-2012 16:33:33.69
+          Body SysBody 05-FEB-2012 16:33:52.27
+            Attr PgmName = "FirmwareVersion"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
       EndObject
       Object IoMethods $RtMethod 144 13-DEC-2010 21:36:40.01
         Object IoCardInit $Method 145 13-DEC-2010 21:36:40.01
@@ -4286,12 +4326,13 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
       Object Template Arduino_Uno 2151907328 01-JAN-1970 01:00:00.00
-        Body RtBody 09-MAR-2011 15:42:29.56
+        Body RtBody 05-FEB-2012 16:34:14.13
           Attr Process = 1
           Attr ErrorSoftLimit = 25
           Attr ErrorHardLimit = 50
           Attr WatchdogTime = 5.000000e+00
           Attr BaudRate = 9600
+          Attr Timeout = 1.000000e+00
         EndBody
       EndObject
     EndObject
@@ -6008,7 +6049,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !*/
     Object SPI_Master $ClassDef 35 15-JAN-2012 10:38:09.98
       Body SysBody 15-JAN-2012 10:38:18.39
-        Attr Flags = 10240
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10256
       EndBody
       Object RtBody $ObjBodyDef 1 15-JAN-2012 10:38:27.11
         Body SysBody 15-JAN-2012 10:38:27.11
@@ -6017,10 +6060,18 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
         Object Super $Attribute 1 15-JAN-2012 10:38:35.30
           Body SysBody 15-JAN-2012 10:40:19.18
-            Attr Flags = 17170432
+            Attr PgmName = "Super"
+            Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseIORack"
           EndBody
         EndObject
+      EndObject
+      Object Template SPI_Master 2156888064 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Super.ErrorSoftLimit = 50
+          Attr Super.ErrorHardLimit = 100
+        EndBody
       EndObject
     EndObject
     !/**
@@ -6128,7 +6179,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
         !/**
         ! Maximum SPI transfer speed in Hz.
-	! If 0, the default maximum speed will not be changed.
+        ! If 0, the default maximum speed will not be changed.
         !*/
         Object MaxSpeed $Attribute 59 15-JAN-2012 10:16:16.00
           Body SysBody 15-JAN-2012 10:16:29.49
