@@ -357,6 +357,34 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       break;
     }
 
+    case pwr_cClass_ChanBiBlob: {
+      pwr_sClass_ChanBiBlob *chan_bi = (pwr_sClass_ChanBiBlob *) chanp->cop;
+      *input_area_offset += *input_area_chansize;
+      *input_area_chansize = chan_bi->Size;
+      if ( !chanp->sop || !chan_bi->Size)
+	continue;
+
+      chanp->offset = *input_area_offset;
+      chanp->size = *input_area_chansize;
+      chanp->mask = 0;
+
+      break;
+    }
+
+    case pwr_cClass_ChanBoBlob: {
+      pwr_sClass_ChanBoBlob *chan_bo = (pwr_sClass_ChanBoBlob *) chanp->cop;
+      *output_area_offset += *output_area_chansize;
+      *output_area_chansize = chan_bo->Size;
+      if ( !chanp->sop || !chan_bo->Size)
+	continue;
+
+      chanp->offset = *output_area_offset;
+      chanp->size = *output_area_chansize;
+      chanp->mask = 0;
+
+      break;
+    }
+
     case pwr_cClass_ChanDo: {
       pwr_sClass_ChanDo *chan_do = (pwr_sClass_ChanDo *) chanp->cop;
       if (chan_do->Number == 0) {
@@ -941,6 +969,13 @@ void io_bus_card_read( io_tCtx ctx,
       }
       break;
     }
+    case pwr_cClass_ChanBiBlob: {
+      if ( chanp->cop && chanp->sop) {	  
+	memcpy( (char *)chanp->vbp, (char *)input_area + cp->offset + chanp->offset,
+		chanp->SigStrSize);
+      }
+      break;
+    }
     }
   }
 }
@@ -1401,6 +1436,13 @@ void io_bus_card_write( io_tCtx ctx,
 	  }
 	}
 
+      }
+      break;
+    }
+    case pwr_cClass_ChanBoBlob: {
+      if ( chanp->cop && chanp->sop) {	  
+	memcpy( (char *)output_area + cp->offset + chanp->offset, (char *)chanp->vbp,
+		chanp->SigStrSize);
       }
       break;
     }

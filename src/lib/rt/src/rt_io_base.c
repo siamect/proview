@@ -1875,6 +1875,14 @@ static pwr_tStatus io_handle_channels(
       sigchancon = ((pwr_sClass_ChanBo *) chan_op)->SigChanCon;
       number = *chan_cnt;
       break;
+    case pwr_cClass_ChanBiBlob:
+      sigchancon = ((pwr_sClass_ChanBiBlob *) chan_op)->AttributeChanCon;
+      number = 0;
+      break;
+    case pwr_cClass_ChanBoBlob:
+      sigchancon = ((pwr_sClass_ChanBoBlob *) chan_op)->AttributeChanCon;
+      number = 0;
+      break;
     case pwr_cClass_ChanCo:
       sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon;
       number = *chan_cnt;
@@ -1954,50 +1962,74 @@ static pwr_tStatus io_handle_channels(
 	break;
       default: {
 	int class_ok = 0;
-		  
-	/* Look for Bi or Bo subclass */
-	sts = gdh_GetSuperClass( sigclass, &scid, pwr_cNObjid);
-	if ( ODD(sts)) {
-	  switch ( scid) {
 
-	  case pwr_cClass_Bi: {
-	    pwr_tAttrRef actval_aref;
-	    pwr_tTypeId a_type;
-	    unsigned int a_size, a_offs, a_dim;
+	if ( bd[i].attr->Param.TypeRef == pwr_cClass_ChanBiBlob ||
+	     bd[i].attr->Param.TypeRef == pwr_cClass_ChanBoBlob) {
+	  unsigned int a_size, a_offs, a_dim;
+	  pwr_tTypeId a_type;
+
+	  chanp->vbp = sig_op;
+
+	  sts = gdh_GetAttributeCharAttrref( &sigchancon, &a_type, &a_size, &a_offs, &a_dim);
+	  if ( EVEN(sts)) return sts;		  
 	    
-	    sts = gdh_ArefANameToAref( &sigchancon, "ActualValue", &actval_aref);
-	    if ( EVEN(sts)) return sts;
-	    
-	    sts = gdh_GetAttributeCharAttrref( &actval_aref, &a_type, &a_size, &a_offs, &a_dim);
-	    if ( EVEN(sts)) return sts;		  
-	    
-	    chanp->vbp = gdh_TranslateRtdbPointer( (unsigned long) ((char *)sig_op + a_offs));
-	    chanp->SigElem = a_dim;
-	    chanp->SigType = a_type;
-	    if ( a_type == pwr_eType_String)
-	      chanp->SigStrSize = a_size / a_dim;
-	    class_ok = 1;
-	    break;
+	  chanp->SigStrSize = a_size;
+	  if ( bd[i].attr->Param.TypeRef == pwr_cClass_ChanBiBlob) {
+	    if ( chanp->SigStrSize > ((pwr_sClass_ChanBiBlob *)chanp->cop)->Size)
+	      chanp->SigStrSize = ((pwr_sClass_ChanBiBlob *)chanp->cop)->Size;
 	  }
-	  case pwr_cClass_Bo: {
-	    pwr_tAttrRef actval_aref;
-	    pwr_tTypeId a_type;
-	    unsigned int a_size, a_offs, a_dim;
-
-	    sts = gdh_ArefANameToAref( &sigchancon, "ActualValue", &actval_aref);
-	    if ( EVEN(sts)) return sts;
-
-	    sts = gdh_GetAttributeCharAttrref( &actval_aref, &a_type, &a_size, &a_offs, &a_dim);
-	    if ( EVEN(sts)) return sts;		  
-
-	    chanp->vbp = gdh_TranslateRtdbPointer( (unsigned long) ((char *)sig_op + a_offs));
-	    chanp->SigElem = a_dim;
-	    chanp->SigType = a_type;
-	    if ( a_type == pwr_eType_String)
-	      chanp->SigStrSize = a_size / a_dim;
-	    class_ok = 1;
-	    break;
+	  else {
+	    if ( chanp->SigStrSize > ((pwr_sClass_ChanBoBlob *)chanp->cop)->Size)
+	      chanp->SigStrSize = ((pwr_sClass_ChanBoBlob *)chanp->cop)->Size;
 	  }
+
+	  class_ok = 1;
+	}
+	else {
+	  /* Look for Bi or Bo subclass */
+	  sts = gdh_GetSuperClass( sigclass, &scid, pwr_cNObjid);
+	  if ( ODD(sts)) {
+	    switch ( scid) {
+
+	    case pwr_cClass_Bi: {
+	      pwr_tAttrRef actval_aref;
+	      pwr_tTypeId a_type;
+	      unsigned int a_size, a_offs, a_dim;
+	      
+	      sts = gdh_ArefANameToAref( &sigchancon, "ActualValue", &actval_aref);
+	      if ( EVEN(sts)) return sts;
+	    
+	      sts = gdh_GetAttributeCharAttrref( &actval_aref, &a_type, &a_size, &a_offs, &a_dim);
+	      if ( EVEN(sts)) return sts;		  
+	    
+	      chanp->vbp = gdh_TranslateRtdbPointer( (unsigned long) ((char *)sig_op + a_offs));
+	      chanp->SigElem = a_dim;
+	      chanp->SigType = a_type;
+	      if ( a_type == pwr_eType_String)
+		chanp->SigStrSize = a_size / a_dim;
+	      class_ok = 1;
+	      break;
+	    }
+	    case pwr_cClass_Bo: {
+	      pwr_tAttrRef actval_aref;
+	      pwr_tTypeId a_type;
+	      unsigned int a_size, a_offs, a_dim;
+	      
+	      sts = gdh_ArefANameToAref( &sigchancon, "ActualValue", &actval_aref);
+	      if ( EVEN(sts)) return sts;
+
+	      sts = gdh_GetAttributeCharAttrref( &actval_aref, &a_type, &a_size, &a_offs, &a_dim);
+	      if ( EVEN(sts)) return sts;		  
+
+	      chanp->vbp = gdh_TranslateRtdbPointer( (unsigned long) ((char *)sig_op + a_offs));
+	      chanp->SigElem = a_dim;
+	      chanp->SigType = a_type;
+	      if ( a_type == pwr_eType_String)
+		chanp->SigStrSize = a_size / a_dim;
+	      class_ok = 1;
+	      break;
+	    }
+	    }
 	  }
 	}
 	if ( !class_ok) {
@@ -2135,6 +2167,8 @@ static pwr_tStatus io_init_card(
 	      case pwr_cClass_ChanCo:
 	      case pwr_cClass_ChanBi:
 	      case pwr_cClass_ChanBo:
+	      case pwr_cClass_ChanBiBlob:
+	      case pwr_cClass_ChanBoBlob:
 		maxchan++;
 		break;
 	      default: ;
@@ -2163,6 +2197,8 @@ static pwr_tStatus io_init_card(
 		case pwr_cClass_ChanCo:
 		case pwr_cClass_ChanBi:
 		case pwr_cClass_ChanBo:
+		case pwr_cClass_ChanBiBlob:
+		case pwr_cClass_ChanBoBlob:
 		  if ( bd[i].attr->Param.Info.Elements <= 1)
 		    maxchan++;
 		  else
@@ -2188,6 +2224,8 @@ static pwr_tStatus io_init_card(
 		      case pwr_cClass_ChanCo:
 		      case pwr_cClass_ChanBi:
 		      case pwr_cClass_ChanBo:
+		      case pwr_cClass_ChanBiBlob:
+		      case pwr_cClass_ChanBoBlob:
 			if ( bd2[ii].attr->Param.Info.Elements <= 1)
 			  maxchan++;
 			else
@@ -2312,6 +2350,14 @@ static pwr_tStatus io_init_card(
 		sigchancon = ((pwr_sClass_ChanBo *) chan_op)->SigChanCon;
 		number = ((pwr_sClass_ChanCo *) chan_op)->Number;
 		break;
+	      case pwr_cClass_ChanBiBlob:
+		sigchancon = ((pwr_sClass_ChanBiBlob *) chan_op)->AttributeChanCon;
+		number = 0;
+		break;
+	      case pwr_cClass_ChanBoBlob:
+		sigchancon = ((pwr_sClass_ChanBoBlob *) chan_op)->AttributeChanCon;
+		number = 0;
+		break;
 	      default:
 		sts = gdh_DLUnrefObjectInfo( chandlid);
 		sts = gdh_GetNextSibling( chan, &chan);
@@ -2415,51 +2461,75 @@ static pwr_tStatus io_init_card(
 		default: {
 		  int class_ok = 0;
 		  
-		  /* Look for Bi or Bo subclass */
-		  sts = gdh_GetSuperClass( sigclass, &scid, pwr_cNObjid);
-		  if ( ODD(sts)) {
-		    switch ( scid) {
+		  if ( chan_class == pwr_cClass_ChanBiBlob ||
+		       chan_class == pwr_cClass_ChanBoBlob) {
+		    unsigned int a_size, a_offs, a_dim;
+		    pwr_tTypeId a_type;
 
-		    case pwr_cClass_Bi: {
-		      pwr_tAttrRef actval_aref;
-		      pwr_tTypeId a_type;
-		      unsigned int a_size, a_offs, a_dim;
-
-		      sts = gdh_ArefANameToAref( &sigchancon, "ActualValue", &actval_aref);
-		      if ( EVEN(sts)) return sts;
-
-		      sts = gdh_GetAttributeCharAttrref( &actval_aref, &a_type, &a_size, &a_offs, &a_dim);
-		      if ( EVEN(sts)) return sts;		  
-
-		      pwr_tUInt64 actval = *(pwr_tUInt64 *)((char *)sig_op + a_offs);
-		      chanp->vbp = gdh_TranslateRtdbPointer( (unsigned long) actval);
-		      chanp->SigElem = a_dim;
-		      chanp->SigType = a_type;
-		      if ( a_type == pwr_eType_String)
-			chanp->SigStrSize = a_size / a_dim;
-		      class_ok = 1;
-		      break;
+		    chanp->vbp = sig_op;
+		    
+		    sts = gdh_GetAttributeCharAttrref( &sigchancon, &a_type, &a_size, &a_offs, &a_dim);
+		    if ( EVEN(sts)) return sts;		  
+	    
+		    chanp->SigStrSize = a_size;
+		    if ( chan_class == pwr_cClass_ChanBiBlob) {
+		      if ( chanp->SigStrSize > ((pwr_sClass_ChanBiBlob *)chanp->cop)->Size)
+			chanp->SigStrSize = ((pwr_sClass_ChanBiBlob *)chanp->cop)->Size;
 		    }
-		    case pwr_cClass_Bo: {
-		      pwr_tAttrRef actval_aref;
-		      pwr_tTypeId a_type;
-		      unsigned int a_size, a_offs, a_dim;
-
-		      sts = gdh_ArefANameToAref( &sigchancon, "ActualValue", &actval_aref);
-		      if ( EVEN(sts)) return sts;
-
-		      sts = gdh_GetAttributeCharAttrref( &actval_aref, &a_type, &a_size, &a_offs, &a_dim);
-		      if ( EVEN(sts)) return sts;		  
-
-		      pwr_tUInt64 actval = *(pwr_tUInt64 *)((char *)sig_op + a_offs);
-		      chanp->vbp = gdh_TranslateRtdbPointer( (unsigned long) actval);
-		      chanp->SigElem = a_dim;
-		      chanp->SigType = a_type;
-		      if ( a_type == pwr_eType_String)
-			chanp->SigStrSize = a_size / a_dim;
-		      class_ok = 1;
-		      break;
+		    else {
+		      if ( chanp->SigStrSize > ((pwr_sClass_ChanBoBlob *)chanp->cop)->Size)
+			chanp->SigStrSize = ((pwr_sClass_ChanBoBlob *)chanp->cop)->Size;
 		    }
+
+		    class_ok = 1;
+		  }
+		  else {
+		    /* Look for Bi or Bo subclass */
+		    sts = gdh_GetSuperClass( sigclass, &scid, pwr_cNObjid);
+		    if ( ODD(sts)) {
+		      switch ( scid) {
+
+		      case pwr_cClass_Bi: {
+			pwr_tAttrRef actval_aref;
+			pwr_tTypeId a_type;
+			unsigned int a_size, a_offs, a_dim;
+			
+			sts = gdh_ArefANameToAref( &sigchancon, "ActualValue", &actval_aref);
+			if ( EVEN(sts)) return sts;
+			
+			sts = gdh_GetAttributeCharAttrref( &actval_aref, &a_type, &a_size, &a_offs, &a_dim);
+			if ( EVEN(sts)) return sts;		  
+		      
+			pwr_tUInt64 actval = *(pwr_tUInt64 *)((char *)sig_op + a_offs);
+			chanp->vbp = gdh_TranslateRtdbPointer( (unsigned long) actval);
+			chanp->SigElem = a_dim;
+			chanp->SigType = a_type;
+			if ( a_type == pwr_eType_String)
+			  chanp->SigStrSize = a_size / a_dim;
+			class_ok = 1;
+			break;
+		      }
+		      case pwr_cClass_Bo: {
+			pwr_tAttrRef actval_aref;
+			pwr_tTypeId a_type;
+			unsigned int a_size, a_offs, a_dim;
+			
+			sts = gdh_ArefANameToAref( &sigchancon, "ActualValue", &actval_aref);
+			if ( EVEN(sts)) return sts;
+
+			sts = gdh_GetAttributeCharAttrref( &actval_aref, &a_type, &a_size, &a_offs, &a_dim);
+			if ( EVEN(sts)) return sts;		  
+
+			pwr_tUInt64 actval = *(pwr_tUInt64 *)((char *)sig_op + a_offs);
+			chanp->vbp = gdh_TranslateRtdbPointer( (unsigned long) actval);
+			chanp->SigElem = a_dim;
+			chanp->SigType = a_type;
+			if ( a_type == pwr_eType_String)
+			  chanp->SigStrSize = a_size / a_dim;
+			class_ok = 1;
+			break;
+		      }
+		      }
 		    }
 		  }
 		  if ( !class_ok) {
@@ -2524,6 +2594,12 @@ static pwr_tStatus io_init_card(
 		case pwr_cClass_ChanBo:
 		  csize = sizeof( pwr_sClass_ChanBo);
 		  break;
+		case pwr_cClass_ChanBiBlob:
+		  csize = sizeof( pwr_sClass_ChanBiBlob);
+		  break;
+		case pwr_cClass_ChanBoBlob:
+		  csize = sizeof( pwr_sClass_ChanBoBlob);
+		  break;
 		case pwr_cClass_ChanCo:
 		  csize = sizeof( pwr_sClass_ChanCo);
 		  break;
@@ -2565,6 +2641,12 @@ static pwr_tStatus io_init_card(
 			break;
 		      case pwr_cClass_ChanBo:
 			csize = sizeof( pwr_sClass_ChanBo);
+			break;
+		      case pwr_cClass_ChanBiBlob:
+			csize = sizeof( pwr_sClass_ChanBiBlob);
+			break;
+		      case pwr_cClass_ChanBoBlob:
+			csize = sizeof( pwr_sClass_ChanBoBlob);
 			break;
 		      case pwr_cClass_ChanCo:
 			csize = sizeof( pwr_sClass_ChanCo);
