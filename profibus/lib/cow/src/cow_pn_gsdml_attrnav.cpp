@@ -3515,8 +3515,7 @@ int ItemPnSubmoduleType::open_children( GsdmlAttrNav *attrnav, double x, double 
   else {
     brow_SetNodraw( attrnav->brow->ctx);
 
-    int idx = 0;
-    new ItemPnEnumValueMType( attrnav, "No", "", idx++, pwr_eType_UInt32, 
+    new ItemPnEnumValueMType( attrnav, "No", "", 0, pwr_eType_UInt32, 
 			      &attrnav->dev_data.slot_data[slot_idx]->subslot_data[subslot_idx]->submodule_enum_number, 
 			      node, flow_eDest_IntoLast);
     
@@ -3539,6 +3538,19 @@ int ItemPnSubmoduleType::open_children( GsdmlAttrNav *attrnav, double x, double 
 	if ( !mi || !mi->ModuleInfo || !mi->ModuleInfo->Body.Name.p)
 	  continue;
 	strncpy( mname, (char *) mi->ModuleInfo->Body.Name.p, sizeof(mname));
+
+	// Find index in submodule list
+	int idx = 0;
+	for ( unsigned int j = 0; j < attrnav->gsdml->ApplicationProcess->SubmoduleList->SubmoduleItem.size(); j++) {
+	  gsdml_VirtualSubmoduleItem *si = (gsdml_VirtualSubmoduleItem *)attrnav->gsdml->ApplicationProcess->SubmoduleList->SubmoduleItem[j];
+	  if ( si->ModuleInfo == mi->ModuleInfo) {
+	    idx = j + 1;
+	    break;
+	  }
+	}
+	if ( idx == 0)
+	  continue;
+
 	new ItemPnEnumValueMType( attrnav, mname, mi->ModuleInfo->Body.OrderNumber, idx, 
 				  pwr_eType_UInt32, 
 				  &attrnav->dev_data.slot_data[slot_idx]->subslot_data[subslot_idx]->submodule_enum_number, 
@@ -3546,8 +3558,6 @@ int ItemPnSubmoduleType::open_children( GsdmlAttrNav *attrnav, double x, double 
       }
       delete vl_allowed;
       delete vl_fixed;
-
-      idx++;
     }
 
     brow_SetOpen( node, attrnav_mOpen_Children);
@@ -3573,6 +3583,8 @@ int ItemPnSubmoduleType::scan( GsdmlAttrNav *attrnav, void *p)
   else {
     if ( !us)
       return 1;
+
+    // gsdml_VirtualSubmoduleItem *si = (gsdml_VirtualSubmoduleItem *)us->SubmoduleItemRef[attrnav->dev_data.slot_data[slot_idx]->subslot_data[subslot_idx]->submodule_enum_number-1]->Body.SubmoduleItemTarget.p;
     gsdml_VirtualSubmoduleItem *si = (gsdml_VirtualSubmoduleItem *)attrnav->gsdml->ApplicationProcess->SubmoduleList->
       SubmoduleItem[attrnav->dev_data.slot_data[slot_idx]->subslot_data[subslot_idx]->submodule_enum_number-1];
     if ( !si || !si->ModuleInfo->Body.Name.p)
