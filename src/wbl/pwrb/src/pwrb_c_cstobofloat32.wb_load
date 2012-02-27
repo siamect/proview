@@ -38,10 +38,11 @@
 SObject pwrb:Class
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcIO
 !  @Code rt_plc_macro_io.h
 !  @Summary Store Bo signal
 !  Store Buffer input.
-!  @image orm_cstobo_fo.gif
+!  @image orm_cstobofloat32_fo.png
 !
 !  Stores an integer value on the specified local Bo object.
 !  

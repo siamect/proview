@@ -42,7 +42,7 @@ SObject pwrb:Class
 !  @Code rt_plc_macro_io.h
 !  @Summary Storage of Bo string value
 !  Storage of Bo string value.
-!  @image orm_stobostring80_fo.gif
+!  @image orm_stobostring80_fo.png
 !
 !  Storage of a Bo string value.
 !*/
@@ -78,10 +78,22 @@ SObject pwrb:Class
       !*/
       Object BoObject $Intern 1 
         Body SysBody
-          Attr PgmName = "SvObject"
+          Attr PgmName = "BoObject"
           Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr GraphName = "In"
           Attr NiNaAnnot = 1
+          Attr NiNaSegments = 1
+        EndBody
+      EndObject
+      !/**
+      !  Used by the PLC Editor.
+      !*/
+      Object SigChanCon $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr NiNaAnnot = 2
+          Attr NiNaCond = 1
           Attr NiNaSegments = 1
         EndBody
       EndObject
@@ -90,12 +102,37 @@ SObject pwrb:Class
       !  is to be displayed in the symbol of the StoBo object.
       !  The segments are counted from behind.
       !*/
-      Object BoObjectSegments $Intern 2 
+      Object BoObjectSegments $Intern 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
       EndObject
-      Object PlcNode $Buffer 3 
+      !/**
+      !  Specifies if the name on the channel object (
+      !  associated with the signal object) is to be displayed
+      !  in the symbol of the StoBo object or not. FALSE means
+      !  no displaying and TRUE displaying.
+      !  See also SigChanConSegments.
+      !*/
+      Object ShowSigChanCon $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, when ShowSigChanCon = TRUE, how many
+      !  segments of the channel object name that is to be
+      !  displayed in the symbol of the StoBo object. The
+      !  segments are counted from behind.
+      !  0 and 1 both result in displaying the last segment of
+      !  the channel object name.
+      !*/
+      Object SigChanConSegments $Intern 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 6 
         Body SysBody
           Attr Class = pwr_eClass_PlcNode
           Attr Flags |= PWR_MASK_INVISIBLE
@@ -129,6 +166,8 @@ SObject pwrb:Class
     Object Template StoBoString80
       Body DevBody
         Attr BoObjectSegments = 2
+        Attr SigChanConSegments = 2
+        Attr ShowSigChanCon = 1
       EndBody
     EndObject
   EndObject

@@ -42,7 +42,7 @@ SObject pwrb:Class
 !  @Code rt_plc_macro_io.h
 !  @Summary Store Bi signal
 !  Store Buffer input.
-!  @image orm_stobi_fo.gif
+!  @image orm_stobiint32_fo.png
 !
 !  Stores an integer value on the specified local Bi object.
 !  

@@ -41,7 +41,7 @@ SObject pwrb:Class
 !  @Group Plc,PlcIO
 !  @Summary Get Bi signal
 !  Get buffer input.
-!  @image orm_getbi_fo.gif
+!  @image orm_getbifloat32_fo.png
 !  
 !  Fetches the engineering value for a specified Bi-signal
 !  from I/O-copied area. See PROVIEW/R Designer's Guide.

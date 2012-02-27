@@ -41,7 +41,7 @@ SObject pwrb:Class
 !  @Group Plc,PlcIO
 !  @Summary Get Bo signal string value
 !  Get Bo signal string value.
-!  @image orm_getbostring80_fo.gif
+!  @image orm_getbostring80_fo.png
 !
 !*/
   Object GetBoString80 $ClassDef 578 
@@ -80,16 +80,53 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Used by the PLC Editor.
+      !*/
+      Object SigChanCon $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr NiNaAnnot = 2
+          Attr NiNaCond = 1
+          Attr NiNaSegments = 1
+        EndBody
+      EndObject
+      !/**
       !  Specifies how many segments of the Sv object name that
       !  is to be displayed in the symbol of the GetSv object.
       !  The segments are counted from behind.
       !*/
-      Object BoObjectSegments $Intern 2 
+      Object BoObjectSegments $Intern 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
       EndObject
-      Object PlcNode $Buffer 3 
+      !/**
+      !  Specifies if the name on the channel object (
+      !  associated with the signal object) is to be displayed
+      !  in the symbol of the GetBo object or not. FALSE means
+      !  no displaying and TRUE displaying.
+      !  See also SigChanConSegments.
+      !*/
+      Object ShowSigChanCon $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, when ShowSigChanCon = TRUE, how many
+      !  segments of the channel object name that is to be
+      !  displayed in the symbol of the GetBo object. The
+      !  segments are counted from behind.
+      !  0 and 1 both result in displaying the last segment of
+      !  the channel object name.
+      !*/
+      Object SigChanConSegments $Intern 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 6 
         Body SysBody
           Attr Class = pwr_eClass_PlcNode
           Attr Flags |= PWR_MASK_INVISIBLE
@@ -123,6 +160,8 @@ SObject pwrb:Class
     Object Template GetBoString80
       Body DevBody
         Attr BoObjectSegments = 2
+        Attr SigChanConSegments = 2
+        Attr ShowSigChanCon = 1
       EndBody
     EndObject
   EndObject

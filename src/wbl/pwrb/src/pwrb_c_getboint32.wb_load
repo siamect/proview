@@ -41,7 +41,7 @@ SObject pwrb:Class
 !  @Group Plc,PlcIO
 !  @Summary Get Bo signal
 !  Get buffer input.
-!  @image orm_getbo_fo.gif
+!  @image orm_getboint32_fo.png
 !  
 !  Fetches the engineering value for a specified Bo-signal
 !  from I/O-copied area. See PROVIEW/R Designer's Guide.
