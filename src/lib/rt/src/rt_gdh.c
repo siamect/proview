@@ -1172,6 +1172,9 @@ gdh_GetAttrRefTid (
 
     }   
   }
+  else if (ap != 0 && ap->adef == 0 && ODD(sts)) {
+    *tid = ap->cp->cid;
+  }
   return sts;
 }
 
