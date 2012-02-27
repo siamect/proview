@@ -34,7 +34,18 @@
  * General Public License plus this exception.
  */
 
-/* rt_io_m_motioncontrol_usbio.c -- I/O methods for class MotionControl_USBIO. */
+/* rt_io_m_arduino_uno.c -- I/O methods for class Arduino_Uno. */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <float.h>
+
+#include <termios.h>
 
 #include "pwr.h"
 #include "pwr_basecomponentclasses.h"
@@ -83,20 +94,12 @@ typedef struct {
   ard_eMsgType PendingMsgType;
   int AiIntervalCnt;
   int AoIntervalCnt;
+  int Reconnect;
+  int ReconnectCnt;
   io_sChannel *DChanList[D_MAX_SIZE * 8];
   io_sChannel *AiChanList[AI_MAX_SIZE * 8];
   io_sChannel *AoChanList[AO_MAX_SIZE * 8];
 } io_sLocal;
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <string.h>
-
-#include <termios.h>
 
 // static FILE *fp;
 
@@ -130,16 +133,41 @@ typedef struct {
   unsigned char data[100] __attribute__ ((aligned(1)));
 } ard_sMsg;
 
-static int receive( int fd, int id, ard_sMsg *rmsg, int size)
+static unsigned char checksum( unsigned char *buf, int len)
+{
+  int i;
+  unsigned char sum = 0;
+
+  for ( i = 0; i < len; i++)
+    sum ^= buf[i];
+
+  return sum;
+}
+
+static void get_tv(struct timeval *tv, float t)
+{
+  if ( t < FLT_EPSILON) {
+    tv->tv_sec = 1;
+    tv->tv_usec = 0;
+  }
+  else {
+    tv->tv_sec = t;
+    tv->tv_usec = (t-(float)tv->tv_sec) * 1000000;
+  }
+}
+
+static int receive( int fd, int id, ard_sMsg *rmsg, int size, float tmo)
 {
   fd_set rfd;
-  struct timeval tv = {1,0};
+  struct timeval tv;
   int sts;
   int msize;
+  int ret;
 
   FD_ZERO(&rfd);
   FD_SET(fd, &rfd);
   while ( 1) {
+    get_tv( &tv, tmo);
     sts = select(fd+1, &rfd, NULL, NULL, &tv);
     if ( sts == 0) return ARD__NOMSG;
     
@@ -147,12 +175,17 @@ static int receive( int fd, int id, ard_sMsg *rmsg, int size)
     msize += read( fd, rmsg, 1);
 
     // logg( "Receive read");
+    if ( msize == 0) return ARD__NOMSG;
 
     while ( msize < rmsg->size) {
+      get_tv( &tv, tmo);
       sts = select(fd+1, &rfd, NULL, NULL, &tv);
       if ( sts == 0) return ARD__NOMSG;
 
-      msize += read( fd, (char *)rmsg + msize, rmsg->size - msize);
+      ret = read( fd, (char *)rmsg + msize, rmsg->size - msize);
+      if ( ret == 0) return ARD__NOMSG;
+
+      msize += ret;
 
       // logg( "Receive read ++");
 
@@ -373,6 +406,12 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
       break;
   }
 
+  tty_attributes.c_iflag &= ~(BRKINT | ICRNL | IMAXBEL);
+  tty_attributes.c_oflag &= ~(OPOST | ONLCR);
+  tty_attributes.c_lflag &= ~(ISIG | ICANON | IEXTEN | ECHO | ECHOE | ECHOK | ECHOCTL | ECHOKE);
+  tty_attributes.c_cc[VMIN] = 1;
+  tty_attributes.c_cc[VTIME] = 0;
+  tty_attributes.c_cc[VEOF] = 1;
   sts = tcsetattr( local->fd, TCSANOW, &tty_attributes);
   if ( sts < 0) {
     errh_Error( "IO Init Card '%s', unable to set baud rate on device %s", cp->Name, op->Device);
@@ -419,7 +458,7 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
 
   sts = write( local->fd, &msg, msg.size);
       
-  sts = receive( local->fd, msg.id, &rmsg, 1);
+  sts = receive( local->fd, msg.id, &rmsg, 1, op->Timeout);
   if ( sts & 1) {
     op->Status = rmsg.data[0];    
   }
@@ -466,7 +505,11 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
   int skip_ai;
   ard_eMsgType mtype;
   ard_sMsg msg;
+  io_sChannel *chanp;
  
+  if ( local->Reconnect)
+    return IO__SUCCESS;
+
   if ( local->AiSize) {
     skip_ai = 0;
 
@@ -508,7 +551,8 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
     pwr_tFloat32 actvalue;
 
 
-    sts = receive( local->fd, local->DiPollId, &rmsg, local->DiSize + local->AiNum * 2);
+    sts = receive( local->fd, local->DiPollId, &rmsg, local->DiSize + local->AiNum * 2,
+		   op->Timeout);
     op->Status = sts;
     if ( EVEN(sts)) {
       op->ErrorCount++;
@@ -519,8 +563,13 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
       for ( i = 0; i < local->DiSize; i++) {
 	for ( j = 0; j < 8; j++) {
 	  m = 1 << j;
-	  if ( local->DiMask[i] & m)
-	    *(pwr_tBoolean *)local->DChanList[i*8+j]->vbp = ((rmsg.data[i] & m) != 0);
+	  if ( local->DiMask[i] & m) {
+	    chanp = local->DChanList[i*8+j];
+	    pwr_sClass_ChanDi *cop = (pwr_sClass_ChanDi *) chanp->cop;
+
+	    if ( cop->ConversionOn)
+	      *(pwr_tBoolean *)chanp->vbp = ((rmsg.data[i] & m) != 0);
+	  }
 	}
       }
     }
@@ -534,25 +583,27 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
 	  pwr_sClass_ChanAi *cop = (pwr_sClass_ChanAi *)chanp->cop;
 	  pwr_sClass_Ai *sop = (pwr_sClass_Ai *)chanp->sop;
 	  
-	  if ( cop->CalculateNewCoef)
-	    // Request to calculate new coefficients
-	    io_AiRangeToCoef( chanp);
+	  if ( cop->ConversionOn) {
+	    if ( cop->CalculateNewCoef)
+	      // Request to calculate new coefficients
+	      io_AiRangeToCoef( chanp);
 	      
-	  ivalue = rmsg.data[local->DiSize + ai_cnt*2] * 256 + 
-	    rmsg.data[local->DiSize+ai_cnt*2 + 1];
-	  io_ConvertAi( cop, ivalue, &actvalue);
+	    ivalue = rmsg.data[local->DiSize + ai_cnt*2] * 256 + 
+	      rmsg.data[local->DiSize+ai_cnt*2 + 1];
+	    io_ConvertAi( cop, ivalue, &actvalue);
 	  
-	  // Filter
-	  if ( sop->FilterType == 1 &&
-	       sop->FilterAttribute[0] > 0 &&
-	       sop->FilterAttribute[0] > ctx->ScanTime) {
-	    actvalue = *(pwr_tFloat32 *)chanp->vbp + ctx->ScanTime / sop->FilterAttribute[0] *
-	      (actvalue - *(pwr_tFloat32 *)chanp->vbp);
-	  }
+	    // Filter
+	    if ( sop->FilterType == 1 &&
+		 sop->FilterAttribute[0] > 0 &&
+		 sop->FilterAttribute[0] > ctx->ScanTime) {
+	      actvalue = *(pwr_tFloat32 *)chanp->vbp + ctx->ScanTime / sop->FilterAttribute[0] *
+		(actvalue - *(pwr_tFloat32 *)chanp->vbp);
+	    }
 	      
-	  *(pwr_tFloat32 *)chanp->vbp = actvalue;
-	  sop->SigValue = cop->SigValPolyCoef1 * ivalue + cop->SigValPolyCoef0;
-	  sop->RawValue = ivalue;
+	    *(pwr_tFloat32 *)chanp->vbp = actvalue;
+	    sop->SigValue = cop->SigValPolyCoef1 * ivalue + cop->SigValPolyCoef0;
+	    sop->RawValue = ivalue;
+	  }
 	  ai_cnt++;
 	}	    
       }
@@ -566,7 +617,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
     int i, j;
     unsigned char m;
 
-    sts = receive( local->fd, local->DiPollId, &rmsg, local->DiSize);
+    sts = receive( local->fd, local->DiPollId, &rmsg, local->DiSize, op->Timeout);
     op->Status = sts;
     if ( EVEN(sts)) {
       op->ErrorCount++;
@@ -577,8 +628,13 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
       for ( i = 0; i < local->DiSize; i++) {
 	for ( j = 0; j < 8; j++) {
 	  m = 1 << j;
-	  if ( local->DiMask[i] & m)
-	    *(pwr_tBoolean *)local->DChanList[i*8+j]->vbp = ((rmsg.data[i] & m) != 0);
+	  if ( local->DiMask[i] & m) {
+	    chanp = local->DChanList[i*8+j];
+	    pwr_sClass_ChanDi *cop = (pwr_sClass_ChanDi *) chanp->cop;
+
+	    if ( cop->ConversionOn)
+	      *(pwr_tBoolean *)chanp->vbp = ((rmsg.data[i] & m) != 0);
+	  }
 	}
       }
     }
@@ -591,7 +647,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
       pwr_tInt32 ivalue;
       pwr_tFloat32 actvalue;
 
-      sts = receive( local->fd, local->DiPollId, &rmsg, local->AiNum * 2);
+      sts = receive( local->fd, local->DiPollId, &rmsg, local->AiNum * 2, op->Timeout);
       if ( EVEN(sts)) {
       }
       else {
@@ -604,24 +660,26 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
 	      pwr_sClass_ChanAi *cop = (pwr_sClass_ChanAi *)chanp->cop;
 	      pwr_sClass_Ai *sop = (pwr_sClass_Ai *)chanp->sop;
 	      
-	      if ( cop->CalculateNewCoef)
-		// Request to calculate new coefficients
-		io_AiRangeToCoef( chanp);
+	      if ( cop->ConversionOn) {
+		if ( cop->CalculateNewCoef)
+		  // Request to calculate new coefficients
+		  io_AiRangeToCoef( chanp);
 	      
-	      ivalue = rmsg.data[ai_cnt*2] * 256 + rmsg.data[ai_cnt*2+1];
-	      io_ConvertAi( cop, ivalue, &actvalue);
+		ivalue = rmsg.data[ai_cnt*2] * 256 + rmsg.data[ai_cnt*2+1];
+		io_ConvertAi( cop, ivalue, &actvalue);
 
-	      // Filter
-	      if ( sop->FilterType == 1 &&
-		   sop->FilterAttribute[0] > 0 &&
-		   sop->FilterAttribute[0] > ctx->ScanTime) {
-		actvalue = *(pwr_tFloat32 *)chanp->vbp + ctx->ScanTime / sop->FilterAttribute[0] *
-		  (actvalue - *(pwr_tFloat32 *)chanp->vbp);
-	      }
+		// Filter
+		if ( sop->FilterType == 1 &&
+		     sop->FilterAttribute[0] > 0 &&
+		     sop->FilterAttribute[0] > ctx->ScanTime) {
+		  actvalue = *(pwr_tFloat32 *)chanp->vbp + ctx->ScanTime / sop->FilterAttribute[0] *
+		    (actvalue - *(pwr_tFloat32 *)chanp->vbp);
+		}
 	      
-	      *(pwr_tFloat32 *)chanp->vbp = actvalue;
-	      sop->SigValue = cop->SigValPolyCoef1 * ivalue + cop->SigValPolyCoef0;
-	      sop->RawValue = ivalue;
+		*(pwr_tFloat32 *)chanp->vbp = actvalue;
+		sop->SigValue = cop->SigValPolyCoef1 * ivalue + cop->SigValPolyCoef0;
+		sop->RawValue = ivalue;
+	      }
 	      ai_cnt++;
 	    }	    
 	  }
@@ -656,6 +714,20 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
   ard_sMsg msg;
   int sts;
   int skip_ao;
+  io_sChannel *chanp;
+
+  if ( local->Reconnect) {
+    local->ReconnectCnt++;
+    if ( local->ReconnectCnt * ctx->ScanTime > 5.0) {
+      sts = IoCardClose( ctx, ap, rp, cp);    
+      sts = IoCardInit( ctx, ap, rp, cp);    
+      local = cp->Local;
+      if ( EVEN(sts)) {
+	local->Reconnect = 1;
+      }
+    }
+    return IO__SUCCESS;
+  }
 
   if ( local->AoSize) {
     skip_ao = 0;
@@ -682,7 +754,16 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
       for ( j = 0; j < 8; j++) {
 	m = 1 << j;
 	if ( local->DoMask[i] & m) {
-	  if ( *(pwr_tBoolean *)local->DChanList[i*8+j]->vbp)
+	  chanp = local->DChanList[i*8+j];
+	  pwr_sClass_ChanDo *cop = (pwr_sClass_ChanDo *) chanp->cop;
+	  pwr_tInt32 do_actval;
+
+          if ( cop->TestOn != 0)
+	    do_actval = cop->TestValue;
+	  else
+	    do_actval = *(pwr_tInt32 *) chanp->vbp;
+
+	  if ( do_actval)
 	    msg.data[i] |= m;
 	}
       }
@@ -717,8 +798,13 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
 	      io_AoRangeToCoef( chanp);
 	      
 
-	    value = *(pwr_tFloat32 *)chanp->vbp * cop->OutPolyCoef1 + 
-	      cop->OutPolyCoef0 + 0.49;
+	    if ( cop->TestOn)
+	      value = cop->TestValue * cop->OutPolyCoef1 + 
+		cop->OutPolyCoef0 + 0.49;
+	    else
+	      value = *(pwr_tFloat32 *)chanp->vbp * cop->OutPolyCoef1 + 
+		cop->OutPolyCoef0 + 0.49;
+
 	    if ( value < 0)
 	      value = 0;
 	    else if (value > 255)
@@ -747,7 +833,16 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
       for ( j = 0; j < 8; j++) {
 	m = 1 << j;
 	if ( local->DoMask[i] & m) {
-	  if ( *(pwr_tBoolean *)local->DChanList[i*8+j]->vbp)
+	  chanp = local->DChanList[i*8+j];
+	  pwr_sClass_ChanDo *cop = (pwr_sClass_ChanDo *) chanp->cop;
+	  pwr_tInt32 do_actval;
+
+          if ( cop->TestOn != 0)
+	    do_actval = cop->TestValue;
+	  else
+	    do_actval = *(pwr_tInt32 *) chanp->vbp;
+
+	  if ( do_actval)
 	    msg.data[i] |= m;
 	}
       }
@@ -770,8 +865,13 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
 	    io_AoRangeToCoef( chanp);
 	      
 
-	  value = *(pwr_tFloat32 *)chanp->vbp * cop->OutPolyCoef1 + 
-	    cop->OutPolyCoef0 + 0.49;
+	  if ( cop->TestOn)
+	    value = cop->TestValue * cop->OutPolyCoef1 + 
+	      cop->OutPolyCoef0 + 0.49;
+	  else
+	    value = *(pwr_tFloat32 *)chanp->vbp * cop->OutPolyCoef1 + 
+	      cop->OutPolyCoef0 + 0.49;
+
 	  if ( value < 0)
 	    value = 0;
 	  else if (value > 255)
@@ -789,6 +889,12 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
     // logg( "Write All");
     sts = write( local->fd, &msg, msg.size);
  
+  }
+  if ( sts < 0) {
+    /* Connection lost, open device again */
+    local->Reconnect = 1;
+    local->ReconnectCnt = 0;
+    return IO__SUCCESS;
   }
  
   if ( op->ErrorCount >= op->ErrorSoftLimit && 
