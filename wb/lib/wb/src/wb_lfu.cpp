@@ -2093,6 +2093,11 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      else
 		sprintf( &str[strlen(str)], "-lpwr_usbio_dummy ");
 
+	      if ( bop->SystemModules & pwr_mBuildOptionsMask_Nodave)
+		sprintf( &str[strlen(str)], "-lnodave ");
+	      else
+		sprintf( &str[strlen(str)], "-lpwr_nodave_dummy ");
+
 	      free( (char *)bop);
 
 	      if ( os == pwr_mOpSys_CustomBuild)	      

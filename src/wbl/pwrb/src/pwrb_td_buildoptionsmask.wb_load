@@ -151,6 +151,16 @@ SObject pwrb:Type
        Attr Value = 524288
      EndBody
     EndObject
+    !/**
+    !  Nodave archive.
+    !*/
+    Object Nodave $Bit
+     Body SysBody
+       Attr PgmName = "Nodave"
+       Attr Text = "Nodave"
+       Attr Value = 1048576
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

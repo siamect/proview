@@ -244,6 +244,7 @@ sub build_kernel # args: flavour
   _build("lib","usbio_dummy","src","init lib");
   _build("lib","usb_dummy","src","init lib");
   _build("lib","cifx_dummy","src","init lib");
+  _build("lib","nodave_dummy","src","init lib");
   merge();
   _module("xtt");
   build_all("exe", $flavour);
@@ -354,6 +355,7 @@ sub ebuild # args: pass flavour
     _build("lib","usbio_dummy","src","init lib");
     _build("lib","usb_dummy","src","init lib");
     _build("lib","cifx_dummy","src","init lib");
+    _build("lib","nodave_dummy","src","init lib");
     merge();
     _module("rt");
     _build("exe", "rt*", "src", "all");

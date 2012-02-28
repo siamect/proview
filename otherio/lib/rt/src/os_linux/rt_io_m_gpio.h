@@ -1,7 +1,7 @@
-/* ra_io_m_motioncontrol_usb.h -- I/O methods for class MotionControl_USBIO. */
+/* ra_io_m_gpio.h -- I/O methods for GPIO. */
 
-#ifndef ra_io_m_gpio_h
-#define ra_io_m_gpio_h
+#ifndef rt_io_m_gpio_h
+#define rt_io_m_gpio_h
 
 #define GPIO_MAX_CHANNELS 32
 

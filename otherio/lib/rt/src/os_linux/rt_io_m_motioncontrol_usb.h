@@ -1,7 +1,7 @@
-/* ra_io_m_motioncontrol_usb.h -- I/O methods for class MotionControl_USBIO. */
+/* rt_io_m_motioncontrol_usb.h -- I/O methods for class MotionControl_USBIO. */
 
-#ifndef ra_io_m_motioncontrol_usb_h
-#define ra_io_m_motioncontrol_usb_h
+#ifndef rt_io_m_motioncontrol_usb_h
+#define rt_io_m_motioncontrol_usb_h
 
 #define USB_MAX_CARDS 50
 

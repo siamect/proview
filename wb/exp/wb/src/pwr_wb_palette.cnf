@@ -252,7 +252,9 @@ palette NavigatorPalette
         class ChanAit
         class ChanAo
         class ChanBi
+        class ChanBiBlob
         class ChanBo
+        class ChanBoBlob
         class ChanCo
         class ChanD
         class ChanDi
@@ -388,6 +390,11 @@ palette NavigatorPalette
           class USB_Joystick
           class BaseIORack
         }
+      }
+      menu Nodave
+      {
+        class Nodave_PLC
+	class Nodave_Transaction
       }
     }
     menu Remote

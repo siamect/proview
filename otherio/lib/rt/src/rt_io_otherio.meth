@@ -26,4 +26,6 @@ Hilscher_cifX_Module
 USB_Joystick
 UDP_IO
 SPI_Slave
+Nodave_PLC
+Nodave_Transaction
 #endif
