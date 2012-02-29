@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -299,7 +299,15 @@ int WGre::get_annotations( vldh_t_node node, char *annot_str,
 	      sts = ldh_GetObjectPar( ldhses, oid,
 				      "RtBody", s+1,
 				      (char **)&parvalue, &size);
-	      if ( EVEN(sts)) continue;
+	      if ( EVEN(sts)) {
+		s = strchr( s+1, '.');
+		if ( s == 0) continue;
+
+		sts = ldh_GetObjectPar( ldhses, oid,
+					"RtBody", s+1,
+					(char **)&parvalue, &size);
+		if ( EVEN(sts)) continue;
+	      }
 	    }
 	    else
 	      continue;
@@ -3177,6 +3185,24 @@ int WGre::set_trace_attributes( char *host)
       case pwr_cClass_GetDTp:
       case pwr_cClass_StoDTp:
       case pwr_cClass_CStoDTp:
+      case pwr_cClass_GetBiInt32:
+      case pwr_cClass_GetBiFloat32:
+      case pwr_cClass_GetBiString80:
+      case pwr_cClass_GetBoInt32:
+      case pwr_cClass_GetBoFloat32:
+      case pwr_cClass_GetBoString80:
+      case pwr_cClass_StoBiInt32:
+      case pwr_cClass_StoBiFloat32:
+      case pwr_cClass_StoBiString80:
+      case pwr_cClass_CStoBiInt32:
+      case pwr_cClass_CStoBiFloat32:
+      case pwr_cClass_CStoBiString80:
+      case pwr_cClass_StoBoInt32:
+      case pwr_cClass_StoBoFloat32:
+      case pwr_cClass_StoBoString80:
+      case pwr_cClass_CStoBoInt32:
+      case pwr_cClass_CStoBoFloat32:
+      case pwr_cClass_CStoBoString80:
 	sts = ldh_GetObjectBodyDef( wind->hw.ldhses, 
 			(*node_ptr)->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
@@ -3225,6 +3251,24 @@ int WGre::set_trace_attributes( char *host)
       case pwr_cClass_GetDTp:
       case pwr_cClass_StoDTp:
       case pwr_cClass_CStoDTp:
+      case pwr_cClass_GetBiInt32:
+      case pwr_cClass_GetBiFloat32:
+      case pwr_cClass_GetBiString80:
+      case pwr_cClass_GetBoInt32:
+      case pwr_cClass_GetBoFloat32:
+      case pwr_cClass_GetBoString80:
+      case pwr_cClass_StoBiInt32:
+      case pwr_cClass_StoBiFloat32:
+      case pwr_cClass_StoBiString80:
+      case pwr_cClass_CStoBiInt32:
+      case pwr_cClass_CStoBiFloat32:
+      case pwr_cClass_CStoBiString80:
+      case pwr_cClass_StoBoInt32:
+      case pwr_cClass_StoBoFloat32:
+      case pwr_cClass_StoBoString80:
+      case pwr_cClass_CStoBoInt32:
+      case pwr_cClass_CStoBoFloat32:
+      case pwr_cClass_CStoBoString80:
 	s = strrchr( object_str, '.');
 	if ( s) {
 	  strcpy( attr_str, s + 1);

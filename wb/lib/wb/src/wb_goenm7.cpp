@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -279,6 +279,12 @@ int goen_create_nodetype_m7(
     case pwr_cClass_GetDp:
     case pwr_cClass_GetAp:
     case pwr_cClass_GetIp:
+    case pwr_cClass_GetBiInt32:
+    case pwr_cClass_GetBiFloat32:
+    case pwr_cClass_GetBiString80:
+    case pwr_cClass_GetBoInt32:
+    case pwr_cClass_GetBoFloat32:
+    case pwr_cClass_GetBoString80:
       /* Use objects trace attribute */
       strcpy( trace_attr, "$object");
       break;

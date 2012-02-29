@@ -10,7 +10,7 @@
 
 Name: pwrrt
 Summary: Proview/R runtime environment
-Version: 4.8.2
+Version: 4.8.4
 Release: 1
 License: GPL
 BuildArch: i386
@@ -486,6 +486,11 @@ fi
 #%postun
 
 %changelog
+* Thu Mar 01 2012 Claes Sjofors <claes.sjofors@proview.se> 4.8.4-1
+   - Buffer input and output channels and signals.
+* Thu Dec 20 2012 Claes Sjofors <claes.sjofors@proview.se> 4.8.3-1
+   - Post server for sending emails and sms.
+   - Report server.
 * Sun Jun 12 2011 Claes Sjofors <claes.sjofors@proview.se> 4.8.2-1
   - Support for Hilscher cifX boards.
   - Support for Hilscher cifX Profinet Controller.

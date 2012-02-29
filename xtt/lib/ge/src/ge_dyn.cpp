@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -2989,6 +2989,9 @@ int GeInvisible::scan( grow_tObject object)
 
   if ( !get_dig( &val, p, a_typeid, bitmask))
     return 1;
+
+  if ( a_typeid == pwr_eType_String)
+    val = !val;
 
   if ( inverted)
     val = !val;

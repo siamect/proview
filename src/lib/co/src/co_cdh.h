@@ -1,6 +1,6 @@
 /** 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -1065,6 +1065,11 @@ char *cdh_StringToObjectName( char *t, const char *s);
 pwr_tStatus cdh_NextObjectName( char *t, const char *s);
 
 void cdh_CutNameSegments( char *outname, char *name, int segments);
+
+pwr_tUInt32 cdh_AttrSize( pwr_sParInfo *info);
+
+pwr_tUInt32 cdh_AttrElemSize( pwr_sParInfo *info);
+
 
 /*@}*/
 

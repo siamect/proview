@@ -47,6 +47,22 @@ palette NavigatorPalette
       class Iv
       class Po
       class Sv
+      menu Bi
+      {	
+        class BiIntArray20
+        class BiIntArray100
+        class BiFloatArray20
+        class BiFloatArray100
+	class BiString80
+      }
+      menu Bo
+      {	
+        class BoIntArray20
+        class BoIntArray100
+        class BoFloatArray20
+        class BoFloatArray100
+	class BoString80
+      }
     }
     menu DataStorage
     {
@@ -235,7 +251,12 @@ palette NavigatorPalette
         class ChanAi
         class ChanAit
         class ChanAo
+        class ChanBi
+        class ChanBiBlob
+        class ChanBo
+        class ChanBoBlob
         class ChanCo
+        class ChanD
         class ChanDi
         class ChanDo
         class ChanIi
@@ -369,6 +390,11 @@ palette NavigatorPalette
           class USB_Joystick
           class BaseIORack
         }
+      }
+      menu Nodave
+      {
+        class Nodave_PLC
+	class Nodave_Transaction
       }
     }
     menu Remote
@@ -903,6 +929,21 @@ palette PlcEditorPalette
       class GetPi
       class PiPos
     }
+    menu Buffer 
+    {
+      class CStoBoInt32
+      class CStoBoFloat32
+      class CStoBoString80
+      class GetBiInt32
+      class GetBiFloat32
+      class GetBiString80
+      class GetBoFloat32
+      class GetBoInt32
+      class GetBoString80
+      class StoBoInt32
+      class StoBoFloat32
+      class StoBoString80
+    }
     menu Conversion
     {
       class AtoI
@@ -983,10 +1024,16 @@ palette PlcEditorPalette
     menu Simulate
     {
       class CStoAi
+      class CStoBiInt32
+      class CStoBiFloat32
+      class CStoBiString80
       class CStoIi
       class ResDi
       class SetDi
       class StoAi
+      class StoBiInt32
+      class StoBiFloat32
+      class StoBiString80
       class StoDi
       class StoIi
       class StoPi

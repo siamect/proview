@@ -1,3 +1,5 @@
+#!/bin/bash
+#set -o xtrace
 if [ "$2" == "c" ]; then
   echo "executing $1"
   awk -f license.awk $1 > t.tmp

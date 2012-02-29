@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -1171,6 +1171,9 @@ gdh_GetAttrRefTid (
       } gdh_ScopeUnlock;
 
     }   
+  }
+  else if (ap != 0 && ap->adef == 0 && ODD(sts)) {
+    *tid = ap->cp->cid;
   }
   return sts;
 }
@@ -5011,3 +5014,38 @@ void gdh_RegisterLogFunction( void (*func)(char *, void *, unsigned int))
 {
   gdh_log_cb = func;
 }
+
+
+pwr_tStatus gdh_GetSubClassList( pwr_tCid cid, pwr_tCid *subcid)
+{
+  return gdh_GetNextSubClass( cid, 0, subcid);
+}
+
+pwr_tStatus gdh_GetNextSubClass( pwr_tCid cid, pwr_tCid psubcid, pwr_tCid *subcid)
+{
+  pwr_tStatus sts;
+  pwr_tOid oid;
+  pwr_tCid cd_cid;
+  pwr_tCid super_cid;
+
+  if ( psubcid == 0)
+    sts = gdh_GetClassList( pwr_eClass_ClassDef, &oid); 
+  else {
+    oid = cdh_ClassIdToObjid( psubcid);
+    sts = gdh_GetNextObject( oid, &oid);			     
+  }
+  for ( ; ODD(sts); sts = gdh_GetNextObject( oid, &oid)) {
+    cd_cid = cdh_ClassObjidToId( oid);
+
+    sts = gdh_GetSuperClass( cd_cid, &super_cid, pwr_cNOid);
+    if ( EVEN(sts)) 
+      continue;
+
+    if ( super_cid == cid) {
+      *subcid = cd_cid;
+      return GDH__SUCCESS;
+    }
+  }
+  return GDH__NOSUCHCLASS;
+}
+

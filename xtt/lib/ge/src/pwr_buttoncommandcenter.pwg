@@ -6,7 +6,7 @@
 ! <image> pwr_buttonxcenter_gs.gif
 !
 ! <h1>Description
-! Button to execute a xtt command. Center aligned text.
+! Button to execute an xtt command. Center aligned text.
 !
 ! <h1>Default dynamics
 ! Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat

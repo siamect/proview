@@ -1,6 +1,6 @@
 ! 
 !  Proview   Open Source Process Control.
-!  Copyright (C) 2005-2011 SSAB Oxelosund AB.
+!  Copyright (C) 2005-2012 SSAB EMEA AB.
 ! 
 !  This file is part of Proview.
 !
@@ -216,6 +216,46 @@ SObject pwrb:Class
       !  Number of configured Iv objects in the node.
       !*/
       Object IvCount $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Number of configured Bi objects in the node.
+      !*/
+      Object BiCount $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Number of configured Bo objects in the node.
+      !*/
+      Object BoCount $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Number of configured Bi buffers.
+      !*/
+      Object BiSize $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Total size of Bo buffers.
+      !*/
+      Object BoSize $Attribute 18
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_STATE

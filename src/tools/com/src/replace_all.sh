@@ -1,3 +1,4 @@
+#!/bin/bash
 #set -o xtrace
 
 if [ "$1" == "cpp" ]; then

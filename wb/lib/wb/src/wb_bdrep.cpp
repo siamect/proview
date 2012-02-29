@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -151,7 +151,7 @@ wb_adrep *wb_bdrep::adrep( pwr_tStatus *sts, const char *aname)
     bool next_attr = false;
     wb_name an(n.attribute(i));
     wb_orep *orep = bd->m_orep->vrep()->child( sts, bd->m_orep, an);
-    while ( EVEN(*sts)) {
+    while ( EVEN(*sts)) {      
       // Try Super attribute
       orep = bd->m_orep->vrep()->first( sts, bd->m_orep);
       if ( EVEN(*sts)) {
@@ -226,6 +226,12 @@ wb_adrep *wb_bdrep::adrep( pwr_tStatus *sts, const char *aname)
       if ( EVEN(*sts)) { delete cd; return 0;}
 
       delete cd;
+    }
+    else if ( (i != n.attributes() - 1) && !adrep->isClass()) {
+      // To many attribute
+      delete adrep;
+      *sts = LDH__NOSUCHATTR;
+      return 0;
     }
 
   }

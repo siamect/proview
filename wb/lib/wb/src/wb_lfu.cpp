@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -2092,6 +2092,11 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		sprintf( &str[strlen(str)], "-lusbio ");
 	      else
 		sprintf( &str[strlen(str)], "-lpwr_usbio_dummy ");
+
+	      if ( bop->SystemModules & pwr_mBuildOptionsMask_Nodave)
+		sprintf( &str[strlen(str)], "-lnodave ");
+	      else
+		sprintf( &str[strlen(str)], "-lpwr_nodave_dummy ");
 
 	      free( (char *)bop);
 

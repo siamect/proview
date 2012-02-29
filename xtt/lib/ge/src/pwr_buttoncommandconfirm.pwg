@@ -6,7 +6,7 @@
 ! <image> pwr_buttonx_gs.gif
 !
 ! <h1>Description
-! Button to execute a xtt command with confirm.
+! Button to execute an xtt command with confirm.
 !
 ! <h1>Default dynamics
 ! Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat

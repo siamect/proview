@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -219,12 +219,28 @@ plc_rtdbref (
          index is stored in the object itself.  */
 
       if (local_object) {
-        sts = plc_GetObjectAttrValue(la->ObjType, la->AttrRef, ".ValueIndex", &Index, sizeof(pwr_tInt32));
-        if (EVEN(sts)) {
-	  errh_Error("plc_GetObjectAttrValue object %s.ValueIndex\n%m", cdh_ObjidToString(NULL, la->AttrRef.Objid, 0), sts);
-	  GUARD_DL( la->Pointer, la->Size );
-	  continue;
-        }
+	switch (la->ObjType) {
+	case pwr_cClass_Di:
+	case pwr_cClass_Ai:
+	case pwr_cClass_Ii:
+	case pwr_cClass_Do:
+	case pwr_cClass_Ao:
+	case pwr_cClass_Io:
+	case pwr_cClass_Dv:
+	case pwr_cClass_Av:
+	case pwr_cClass_Iv:
+	case pwr_cClass_Co:
+	  sts = plc_GetObjectAttrValue(la->ObjType, la->AttrRef, ".ValueIndex", &Index, sizeof(pwr_tInt32));
+	  if (EVEN(sts)) {
+	    errh_Error("plc_GetObjectAttrValue object %s.ValueIndex\n%m", cdh_ObjidToString(NULL, la->AttrRef.Objid, 0), sts);
+	    GUARD_DL( la->Pointer, la->Size );
+	    continue;
+	  }
+	  break;
+	default: {
+	  /* Bi or Bo, get value, get valueindex later */
+	}
+	}
       }
 
 
@@ -298,7 +314,39 @@ plc_rtdbref (
 	    strcpy(aname, ".RawValue" );
 	}
 	break;
+      default: {
+	pwr_tCid scid;
+	pwr_tAttrRef oaref;
+	
+	/* Get ValueIndex that is sibling attribute to the attrref */
+	sts = gdh_AttrArefToObjectAref( &la->AttrRef, &oaref);
+	if ( ODD(sts))
+	  sts = plc_GetObjectAttrValue(la->ObjType, oaref, ".ValueIndex", &Index, sizeof(pwr_tInt32));
+	if ( EVEN(sts)) {
+	  errh_Error("plc_GetObjectAttrValue object %s.ValueIndex\n%m", cdh_ObjidToString(NULL, la->AttrRef.Objid, 0), sts);
+	  GUARD_DL( la->Pointer, la->Size );
+	  continue;
+	}
+
+	/* Bi or Bo subclass */
+	sts = gdh_GetSuperClass( la->ObjType, &scid, pwr_cNOid);
+	if ( EVEN(sts)) break;
+
+	switch ( scid) {
+	case pwr_cClass_Bi:
+	  if (la->UseCode == UC_READ && local_object)
+	    *la->Pointer = (char *)&tp->copy.bi_a.p->Value[Index] + la->Offset;
+	  break;
+	case pwr_cClass_Bo:
+	  if (la->UseCode == UC_READ && local_object)
+	    *la->Pointer = (char *)&tp->copy.bo_a.p->Value[Index] + la->Offset;
+	  break;
+	}
+	strcpy(aname, "" );
+
       }
+      }
+
 
       if (*la->Pointer != NULL)
 	continue;

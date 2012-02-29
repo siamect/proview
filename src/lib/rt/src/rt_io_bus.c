@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -154,37 +154,35 @@ static void ConvertAi ( io_tCtx ctx,
 
   sigvalue = chan_ai->SigValPolyCoef0 + chan_ai->SigValPolyCoef1 * f_raw;
 
-  switch (chan_ai->SensorPolyType)
-  {
-    case 0:
-      actvalue = sigvalue;
-      break;
-    case 1:
-      actvalue = chan_ai->SensorPolyCoef0 + chan_ai->SensorPolyCoef1 * f_raw;
-      break;
-    case 2:
-      polycoef_p = &chan_ai->SensorPolyCoef2;
+  switch (chan_ai->SensorPolyType) {
+  case 0:
+    actvalue = sigvalue;
+    break;
+  case 1:
+    actvalue = chan_ai->SensorPolyCoef0 + chan_ai->SensorPolyCoef1 * f_raw;
+    break;
+  case 2:
+    polycoef_p = &chan_ai->SensorPolyCoef2;
+    actvalue = 0;
+    for ( i = 0; i < 3; i++) {
+      actvalue = sigvalue * actvalue + *polycoef_p;
+      polycoef_p--;
+    }
+    break;
+  case 3:
+    actvalue = chan_ai->SensorPolyCoef0 + chan_ai->SensorPolyCoef1 * sigvalue;
+    if ( actvalue >= 0)
+      actvalue = chan_ai->SensorPolyCoef2 * sqrt(actvalue);
+    else
       actvalue = 0;
-      for ( i = 0; i < 3; i++)
-      {
-        actvalue = sigvalue * actvalue + *polycoef_p;
-        polycoef_p--;
-      }
-      break;
-    case 3:
-      actvalue = chan_ai->SensorPolyCoef0 + chan_ai->SensorPolyCoef1 * sigvalue;
-      if ( actvalue >= 0)
-        actvalue = chan_ai->SensorPolyCoef2 * sqrt(actvalue);
-      else
-        actvalue = 0;
-      break;      
-    case 4:
-      actvalue = chan_ai->SensorPolyCoef0 + chan_ai->SensorPolyCoef1 * sigvalue;
-      if ( actvalue >= 0)
-        actvalue = chan_ai->SensorPolyCoef2 * sqrt(actvalue);
-      else
-        actvalue = -chan_ai->SensorPolyCoef2 * sqrt(-actvalue);
-      break;      
+    break;      
+  case 4:
+    actvalue = chan_ai->SensorPolyCoef0 + chan_ai->SensorPolyCoef1 * sigvalue;
+    if ( actvalue >= 0)
+      actvalue = chan_ai->SensorPolyCoef2 * sqrt(actvalue);
+    else
+      actvalue = -chan_ai->SensorPolyCoef2 * sqrt(-actvalue);
+    break;      
   }
 
   if (sig_ai->FilterType == 1 && sig_ai->FilterAttribute[0] > 0 && sig_ai->FilterAttribute[0] > ctx->ScanTime) {
@@ -196,6 +194,55 @@ static void ConvertAi ( io_tCtx ctx,
   
   return;
 }
+
+static void ConvertBi ( io_tCtx ctx,
+			pwr_tFloat32 rawvalue,
+			pwr_tFloat32 *actualvalue,
+			pwr_sClass_ChanBi *chan_bi,
+			io_sChannel *chanp)
+{
+  pwr_tFloat32		sigvalue;
+  pwr_tFloat32		actvalue;
+  pwr_tFloat32		*polycoef_p;
+  int			i;
+
+  sigvalue = chan_bi->SigValPolyCoef0 + chan_bi->SigValPolyCoef1 * rawvalue;
+
+  switch (chan_bi->SensorPolyType) {
+  case 0:
+    actvalue = sigvalue;
+    break;
+  case 1:
+    actvalue = chan_bi->SensorPolyCoef0 + chan_bi->SensorPolyCoef1 * rawvalue;
+    break;
+  case 2:
+    polycoef_p = &chan_bi->SensorPolyCoef2;
+    actvalue = 0;
+    for ( i = 0; i < 3; i++) {
+      actvalue = sigvalue * actvalue + *polycoef_p;
+      polycoef_p--;
+    }
+    break;
+  case 3:
+    actvalue = chan_bi->SensorPolyCoef0 + chan_bi->SensorPolyCoef1 * sigvalue;
+    if ( actvalue >= 0)
+      actvalue = chan_bi->SensorPolyCoef2 * sqrt(actvalue);
+    else
+      actvalue = 0;
+    break;      
+  case 4:
+    actvalue = chan_bi->SensorPolyCoef0 + chan_bi->SensorPolyCoef1 * sigvalue;
+    if ( actvalue >= 0)
+      actvalue = chan_bi->SensorPolyCoef2 * sqrt(actvalue);
+    else
+      actvalue = -chan_bi->SensorPolyCoef2 * sqrt(-actvalue);
+    break;      
+  }
+
+  *actualvalue = actvalue;
+}
+
+
 
 /*----------------------------------------------------------------------------*\
   Initialization of a bus card.
@@ -277,6 +324,67 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       break;
     }
 
+    case pwr_cClass_ChanBi: {
+      pwr_sClass_ChanBi *chan_bi = (pwr_sClass_ChanBi *) chanp->cop;
+      *input_area_offset += *input_area_chansize;
+      *input_area_chansize = chan_bi->Size;
+      if ( !chanp->sop || !chan_bi->Size)
+	continue;
+
+      chanp->offset = *input_area_offset;
+      chanp->size = *input_area_chansize;
+      chanp->mask = 0;
+
+      if ( chanp->SigType == pwr_eType_Float32)
+	io_BiRangeToCoef(chanp);
+
+      break;
+    }
+
+    case pwr_cClass_ChanBo: {
+      pwr_sClass_ChanBo *chan_bo = (pwr_sClass_ChanBo *) chanp->cop;
+      *output_area_offset += *output_area_chansize;
+      *output_area_chansize = chan_bo->Size;
+      if ( !chanp->sop || !chan_bo->Size)
+	continue;
+
+      chanp->offset = *output_area_offset;
+      chanp->size = *output_area_chansize;
+      chanp->mask = 0;
+
+      if ( chanp->SigType == pwr_eType_Float32)
+	io_BoRangeToCoef(chanp);
+      break;
+    }
+
+    case pwr_cClass_ChanBiBlob: {
+      pwr_sClass_ChanBiBlob *chan_bi = (pwr_sClass_ChanBiBlob *) chanp->cop;
+      *input_area_offset += *input_area_chansize;
+      *input_area_chansize = chan_bi->Size;
+      if ( !chanp->sop || !chan_bi->Size)
+	continue;
+
+      chanp->offset = *input_area_offset;
+      chanp->size = *input_area_chansize;
+      chanp->mask = 0;
+
+      break;
+    }
+
+    case pwr_cClass_ChanBoBlob: {
+      pwr_sClass_ChanBoBlob *chan_bo = (pwr_sClass_ChanBoBlob *) chanp->cop;
+      *output_area_offset += *output_area_chansize;
+      *output_area_chansize = chan_bo->Size;
+      if ( !chanp->sop || !chan_bo->Size)
+	continue;
+
+      chanp->offset = *output_area_offset;
+      chanp->size = *output_area_chansize;
+      chanp->mask = 0;
+
+      break;
+    }
+
     case pwr_cClass_ChanDo: {
       pwr_sClass_ChanDo *chan_do = (pwr_sClass_ChanDo *) chanp->cop;
       if (chan_do->Number == 0) {
@@ -323,6 +431,48 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       chanp->mask = 0;
       break;
     }
+
+    case pwr_cClass_ChanD: {
+      pwr_sClass_ChanD *chan_d = (pwr_sClass_ChanD *) chanp->cop;
+      if ( chan_d->Type == pwr_eDChanTypeEnum_Di) {
+	/* Di type */
+	if (chan_d->Number == 0) {
+	  *input_area_offset += *input_area_chansize;
+	  *input_area_chansize = GetChanSize( chan_d->Representation);
+	}
+	if ( !chanp->sop)
+	  continue;
+
+	chanp->offset = *input_area_offset;
+	chanp->mask = 1 << chan_d->Number;
+	if ( byte_order == pwr_eByteOrderingEnum_BigEndian) {
+	  if ( chan_d->Representation == pwr_eDataRepEnum_Bit16)
+	    chanp->mask = swap16( (unsigned short)chanp->mask);
+	  else if ( chan_d->Representation == pwr_eDataRepEnum_Bit32) 
+	    chanp->mask = swap32( chanp->mask);
+	}
+      }
+      else {
+	/*  Do type */
+	if (chan_d->Number == 0) {
+	  *output_area_offset += *output_area_chansize;
+	  *output_area_chansize = GetChanSize( chan_d->Representation);
+	}
+	if ( !chanp->sop)
+	  continue;
+
+	chanp->offset = *output_area_offset;
+	chanp->mask = 1 << chan_d->Number;
+	if ( byte_order == pwr_eByteOrderingEnum_BigEndian) {
+	  if ( chan_d->Representation == pwr_eDataRepEnum_Bit16)
+	    chanp->mask = swap16( (unsigned short)chanp->mask);
+	  else if ( chan_d->Representation == pwr_eDataRepEnum_Bit32) 
+	    chanp->mask = swap32( chanp->mask);
+	}
+      }
+      break;
+    }
+
     }
   }
   return IO__SUCCESS;
@@ -342,12 +492,15 @@ void io_bus_card_read( io_tCtx ctx,
 {
   io_sChannel *chanp;
   pwr_sClass_ChanDi *chan_di;
+  pwr_sClass_ChanD *chan_d;
   pwr_sClass_Di *sig_di;
   pwr_sClass_ChanAi *chan_ai;
   pwr_sClass_Ai *sig_ai;
 //  pwr_sClass_ChanAit *chan_ait;
   pwr_sClass_ChanIi *chan_ii;
   pwr_sClass_Ii *sig_ii;
+  pwr_sClass_ChanBi *chan_bi;
+  pwr_sClass_Bi *sig_bi;
   pwr_tUInt8 udata8 = 0;
   pwr_tUInt16 udata16 = 0;
   pwr_tUInt32 udata32 = 0;
@@ -358,7 +511,7 @@ void io_bus_card_read( io_tCtx ctx,
   pwr_tUInt16 *udata16p;
   pwr_tUInt32 *udata32p;
   pwr_tFloat32 f_raw = 0.0;
-  int i;
+  int i, j;
 
   for (i = 0; i < cp->ChanListSize; i++) {
     chanp = &cp->chanlist[i];
@@ -366,267 +519,468 @@ void io_bus_card_read( io_tCtx ctx,
 
       // Channel type is Di (digital input)
 
-      case pwr_cClass_ChanDi:
-	chan_di = (pwr_sClass_ChanDi *) chanp->cop;
-	sig_di = (pwr_sClass_Di *) chanp->sop;
-	if (chan_di && sig_di && chan_di->ConversionOn) {
+    case pwr_cClass_ChanDi:
+      chan_di = (pwr_sClass_ChanDi *) chanp->cop;
+      sig_di = (pwr_sClass_Di *) chanp->sop;
+      if (chan_di && sig_di && chan_di->ConversionOn) {
 
-	  switch (chan_di->Representation) {
+	switch (chan_di->Representation) {
 
-            case pwr_eDataRepEnum_Bit8:
-	      udata8p = input_area + cp->offset + chanp->offset;
-	      * (pwr_tUInt16 *) (chanp->vbp) = chan_di->InvertOn ? ((*udata8p & chanp->mask) == 0) :
+	case pwr_eDataRepEnum_Bit8:
+	  udata8p = input_area + cp->offset + chanp->offset;
+	  * (pwr_tUInt16 *) (chanp->vbp) = chan_di->InvertOn ? ((*udata8p & chanp->mask) == 0) :
 		                                                   ((*udata8p & chanp->mask) != 0);
-	      break;
+	  break;
 
-            case pwr_eDataRepEnum_Bit16:
-	      udata16p = input_area + cp->offset + chanp->offset;
-	      * (pwr_tUInt16 *) (chanp->vbp) = chan_di->InvertOn ? ((*udata16p & chanp->mask) == 0) :
-		                                                   ((*udata16p & chanp->mask) != 0);
-	      break;
+	case pwr_eDataRepEnum_Bit16:
+	  udata16p = input_area + cp->offset + chanp->offset;
+	  * (pwr_tUInt16 *) (chanp->vbp) = chan_di->InvertOn ? ((*udata16p & chanp->mask) == 0) :
+	    ((*udata16p & chanp->mask) != 0);
+	  break;
 
-            case pwr_eDataRepEnum_Bit32:
-	      udata32p = input_area + cp->offset + chanp->offset;
-	      * (pwr_tUInt16 *) (chanp->vbp) = chan_di->InvertOn ? ((*udata32p & chanp->mask) == 0) :
-		                                                   ((*udata32p & chanp->mask) != 0);
-	      break;
-
-	  }
+	case pwr_eDataRepEnum_Bit32:
+	  udata32p = input_area + cp->offset + chanp->offset;
+	  * (pwr_tUInt16 *) (chanp->vbp) = chan_di->InvertOn ? ((*udata32p & chanp->mask) == 0) :
+	    ((*udata32p & chanp->mask) != 0);
+	  break;
 
 	}
-	break;
+
+      }
+      break;
+
+    case pwr_cClass_ChanD:
+      chan_d = (pwr_sClass_ChanD *) chanp->cop;
+      if ( chan_d->Type == pwr_eDChanTypeEnum_Di) {
+	sig_di = (pwr_sClass_Di *) chanp->sop;
+	if (chan_d && sig_di && chan_d->ConversionOn) {
+
+	  switch (chan_d->Representation) {
+
+	  case pwr_eDataRepEnum_Bit8:
+	    udata8p = input_area + cp->offset + chanp->offset;
+	    * (pwr_tUInt16 *) (chanp->vbp) = chan_d->InvertOn ? ((*udata8p & chanp->mask) == 0) :
+	      ((*udata8p & chanp->mask) != 0);
+	    break;
+
+	  case pwr_eDataRepEnum_Bit16:
+	    udata16p = input_area + cp->offset + chanp->offset;
+	    * (pwr_tUInt16 *) (chanp->vbp) = chan_d->InvertOn ? ((*udata16p & chanp->mask) == 0) :
+	      ((*udata16p & chanp->mask) != 0);
+	    break;
+
+	  case pwr_eDataRepEnum_Bit32:
+	    udata32p = input_area + cp->offset + chanp->offset;
+	    * (pwr_tUInt16 *) (chanp->vbp) = chan_d->InvertOn ? ((*udata32p & chanp->mask) == 0) :
+	      ((*udata32p & chanp->mask) != 0);
+	    break;
+	    
+	  }
+	}
+      }
+      break;
 
       // Channel type is Ai (analog input)
 
-      case pwr_cClass_ChanAi:
-	chan_ai = (pwr_sClass_ChanAi *) chanp->cop;
-	sig_ai = (pwr_sClass_Ai *) chanp->sop;
-	if (chan_ai && sig_ai && chan_ai->ConversionOn) {
+    case pwr_cClass_ChanAi:
+      chan_ai = (pwr_sClass_ChanAi *) chanp->cop;
+      sig_ai = (pwr_sClass_Ai *) chanp->sop;
+      if (chan_ai && sig_ai && chan_ai->ConversionOn) {
 
-          if (chan_ai->CalculateNewCoef) io_AiRangeToCoef(chanp);
+	if (chan_ai->CalculateNewCoef) {
+	  io_AiRangeToCoef(chanp);
+	  chan_ai->CalculateNewCoef = 0;
+	}
 
-	  switch (chan_ai->Representation) {
+	switch (chan_ai->Representation) {
 
-            case pwr_eDataRepEnum_Int8:
-	      memcpy(&data8, input_area + cp->offset + chanp->offset, 1);
-	      f_raw = (float) data8;
-	      sig_ai->RawValue = data8;
-	      break;
+	case pwr_eDataRepEnum_Int8:
+	  memcpy(&data8, input_area + cp->offset + chanp->offset, 1);
+	  f_raw = (float) data8;
+	  sig_ai->RawValue = data8;
+	  break;
 
-            case pwr_eDataRepEnum_UInt8:
-	      memcpy(&udata8, input_area + cp->offset + chanp->offset, 1);
-	      f_raw = (float) udata8;
-	      sig_ai->RawValue = udata8;
-	      break;
+	case pwr_eDataRepEnum_UInt8:
+	  memcpy(&udata8, input_area + cp->offset + chanp->offset, 1);
+	  f_raw = (float) udata8;
+	  sig_ai->RawValue = udata8;
+	  break;
 
-            case pwr_eDataRepEnum_Int16:
-	      memcpy(&data16, input_area + cp->offset + chanp->offset, 2);
-	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) data16 = swap16(data16);
-	      f_raw = (float) data16;
-	      sig_ai->RawValue = data16;
-	      break;
+	case pwr_eDataRepEnum_Int16:
+	  memcpy(&data16, input_area + cp->offset + chanp->offset, 2);
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) data16 = swap16(data16);
+	  f_raw = (float) data16;
+	  sig_ai->RawValue = data16;
+	  break;
 
-            case pwr_eDataRepEnum_UInt16:
-	      memcpy(&udata16, input_area + cp->offset + chanp->offset, 2);
-	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata16 = swap16(udata16);
-	      f_raw = (float) udata16;
-	      sig_ai->RawValue = udata16;
-	      break;
+	case pwr_eDataRepEnum_UInt16:
+	  memcpy(&udata16, input_area + cp->offset + chanp->offset, 2);
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata16 = swap16(udata16);
+	  f_raw = (float) udata16;
+	  sig_ai->RawValue = udata16;
+	  break;
 
-            case pwr_eDataRepEnum_Int24:
-	      data32 = 0;
-	      memcpy(&data32, input_area + cp->offset + chanp->offset, 3);
-	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) {
-		data32 = swap32(data32);
-		data32 = data32 >> 8;
-	      }
-	      f_raw = (float) data32;
-	      sig_ai->RawValue = data32;
-	      break;
+	case pwr_eDataRepEnum_Int24:
+	  data32 = 0;
+	  memcpy(&data32, input_area + cp->offset + chanp->offset, 3);
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) {
+	    data32 = swap32(data32);
+	    data32 = data32 >> 8;
+	  }
+	  f_raw = (float) data32;
+	  sig_ai->RawValue = data32;
+	  break;
 
-            case pwr_eDataRepEnum_UInt24:
-	      udata32 = 0;
-	      memcpy(&udata32, input_area + cp->offset + chanp->offset, 3);
-	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) {
-		udata32 = swap32(udata32);
-		udata32 = udata32 >> 8;
-	      }
-	      f_raw = (float) udata32;
-	      sig_ai->RawValue = udata32;
-	      break;
+	case pwr_eDataRepEnum_UInt24:
+	  udata32 = 0;
+	  memcpy(&udata32, input_area + cp->offset + chanp->offset, 3);
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) {
+	    udata32 = swap32(udata32);
+	    udata32 = udata32 >> 8;
+	  }
+	  f_raw = (float) udata32;
+	  sig_ai->RawValue = udata32;
+	  break;
 
-            case pwr_eDataRepEnum_Int32:
-	      memcpy(&data32, input_area + cp->offset + chanp->offset, 4);
-	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
-	      f_raw = (float) data32;
-	      sig_ai->RawValue = data32;
-	      break;
+	case pwr_eDataRepEnum_Int32:
+	  memcpy(&data32, input_area + cp->offset + chanp->offset, 4);
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
+	  f_raw = (float) data32;
+	  sig_ai->RawValue = data32;
+	  break;
 
-            case pwr_eDataRepEnum_UInt32:
-	      memcpy(&udata32, input_area + cp->offset + chanp->offset, 4);
-	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32);
-	      f_raw = (float) udata32;
-	      sig_ai->RawValue = udata32;
-	      break;
+	case pwr_eDataRepEnum_UInt32:
+	  memcpy(&udata32, input_area + cp->offset + chanp->offset, 4);
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32);
+	  f_raw = (float) udata32;
+	  sig_ai->RawValue = udata32;
+	  break;
 
-            case pwr_eDataRepEnum_Float32:
-	      memcpy(&udata32, input_area + cp->offset + chanp->offset, 4);
-	      if (byte_order == pwr_eByteOrderingEnum_BigEndian ||
-		  float_rep == pwr_eFloatRepEnum_FloatIEEE) udata32 = swap32(udata32);
-	      memcpy(&f_raw, &udata32, 4);
-	      sig_ai->RawValue = udata32;
-	      break;
-
-          }
-
-//	    sig_ai->RawValue = 0;
-	  ConvertAi(ctx, f_raw, chan_ai, sig_ai, chanp);
+	case pwr_eDataRepEnum_Float32:
+	  memcpy(&udata32, input_area + cp->offset + chanp->offset, 4);
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian ||
+	      float_rep == pwr_eFloatRepEnum_FloatIEEE) udata32 = swap32(udata32);
+	  memcpy(&f_raw, &udata32, 4);
+	  sig_ai->RawValue = udata32;
+	  break;
 
 	}
-	break;
+
+//	    sig_ai->RawValue = 0;
+	ConvertAi(ctx, f_raw, chan_ai, sig_ai, chanp);
+
+      }
+      break;
 
       // Channel type is Ait (analog input with table conversion)
 
-      case pwr_cClass_ChanAit:
-	break;
+    case pwr_cClass_ChanAit:
+      break;
 
       // Channel type is Ii (integer input)
 
-      case pwr_cClass_ChanIi:
-	chan_ii = (pwr_sClass_ChanIi *) chanp->cop;
-	sig_ii = (pwr_sClass_Ii *) chanp->sop;
-	if (chan_ii && sig_ii && chan_ii->ConversionOn) {
-	  if ( (chanp->udata & PB_UDATA_DIAG) == 0) {
-	    /* Fetch data from input area */
+    case pwr_cClass_ChanIi:
+      chan_ii = (pwr_sClass_ChanIi *) chanp->cop;
+      sig_ii = (pwr_sClass_Ii *) chanp->sop;
+      if (chan_ii && sig_ii && chan_ii->ConversionOn) {
+	if ( (chanp->udata & PB_UDATA_DIAG) == 0) {
+	  /* Fetch data from input area */
+	  switch (chan_ii->Representation) {
+
+	  case pwr_eDataRepEnum_Int8:
+	    memcpy(&data8, input_area + cp->offset + chanp->offset, 1);
+	    *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data8;
+	    break;
+
+	  case pwr_eDataRepEnum_UInt8:
+	    memcpy(&udata8, input_area + cp->offset + chanp->offset, 1);
+	    *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata8;
+	    break;
+
+	  case pwr_eDataRepEnum_Int16:
+	    memcpy(&data16, input_area + cp->offset + chanp->offset, 2);
+	    if (byte_order == pwr_eByteOrderingEnum_BigEndian) data16 = swap16(data16);
+	    *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data16;
+	    break;
+
+	  case pwr_eDataRepEnum_UInt16:
+	    memcpy(&udata16, input_area + cp->offset + chanp->offset, 2);
+	    if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata16 = swap16(udata16);
+	    *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata16;
+	    break;
+
+	  case pwr_eDataRepEnum_Int24:
+	    data32 = 0;
+	    memcpy(&data32, input_area + cp->offset + chanp->offset, 3);
+	    if (byte_order == pwr_eByteOrderingEnum_BigEndian) {
+	      data32 = swap32(data32);
+	      data32 = data32 >> 8;
+	    }
+	    *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data32;
+	    break;
+
+	  case pwr_eDataRepEnum_UInt24:
+	    udata32 = 0;
+	    memcpy(&udata32, input_area + cp->offset + chanp->offset, 3);
+	    if (byte_order == pwr_eByteOrderingEnum_BigEndian) {
+	      udata32 = swap32(udata32);
+	      udata32 = udata32 >> 8;
+	    }
+	    *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata32;
+	    break;
+
+	  case pwr_eDataRepEnum_Int32:
+	    memcpy(&data32, input_area + cp->offset + chanp->offset, 4);
+	    if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
+	    *(pwr_tInt32 *) chanp->vbp = data32;
+	    break;
+
+	  case pwr_eDataRepEnum_UInt32:
+	    memcpy(&udata32, input_area + cp->offset + chanp->offset, 4);
+	    if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32);
+	    *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata32;
+	    break;
+
+	  }
+	}
+	else {
+	  /* Fetch value from diagnostic area */
+	    
+	  if (diag_area) {
+
 	    switch (chan_ii->Representation) {
 
-            case pwr_eDataRepEnum_Int8:
-	      memcpy(&data8, input_area + cp->offset + chanp->offset, 1);
-              *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data8;
+	    case pwr_eDataRepEnum_Int8:
+	      memcpy(&data8, diag_area + chanp->offset, 1);
+	      *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data8;
 	      break;
 
-            case pwr_eDataRepEnum_UInt8:
-	      memcpy(&udata8, input_area + cp->offset + chanp->offset, 1);
-              *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata8;
+	    case pwr_eDataRepEnum_UInt8:
+	      memcpy(&udata8, diag_area + chanp->offset, 1);
+	      *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata8;
 	      break;
 
-            case pwr_eDataRepEnum_Int16:
-	      memcpy(&data16, input_area + cp->offset + chanp->offset, 2);
+	    case pwr_eDataRepEnum_Int16:
+	      memcpy(&data16, diag_area + chanp->offset, 2);
 	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) data16 = swap16(data16);
-              *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data16;
+	      *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data16;
 	      break;
 
-            case pwr_eDataRepEnum_UInt16:
-	      memcpy(&udata16, input_area + cp->offset + chanp->offset, 2);
+	    case pwr_eDataRepEnum_UInt16:
+	      memcpy(&udata16, diag_area + chanp->offset, 2);
 	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata16 = swap16(udata16);
-              *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata16;
+	      *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata16;
 	      break;
 
-            case pwr_eDataRepEnum_Int24:
+	    case pwr_eDataRepEnum_Int24:
 	      data32 = 0;
-	      memcpy(&data32, input_area + cp->offset + chanp->offset, 3);
+	      memcpy(&data32, diag_area + chanp->offset, 3);
 	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) {
 		data32 = swap32(data32);
 		data32 = data32 >> 8;
 	      }
-              *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data32;
+	      *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data32;
 	      break;
 
-            case pwr_eDataRepEnum_UInt24:
+	    case pwr_eDataRepEnum_UInt24:
 	      udata32 = 0;
-	      memcpy(&udata32, input_area + cp->offset + chanp->offset, 3);
+	      memcpy(&udata32, diag_area + chanp->offset, 3);
 	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) {
 		udata32 = swap32(udata32);
 		udata32 = udata32 >> 8;
 	      }
-              *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata32;
+	      *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata32;
 	      break;
 
-            case pwr_eDataRepEnum_Int32:
-	      memcpy(&data32, input_area + cp->offset + chanp->offset, 4);
+	    case pwr_eDataRepEnum_Int32:
+	      memcpy(&data32, diag_area + chanp->offset, 4);
 	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
-              *(pwr_tInt32 *) chanp->vbp = data32;
+	      *(pwr_tInt32 *) chanp->vbp = data32;
 	      break;
-
-            case pwr_eDataRepEnum_UInt32:
-	      memcpy(&udata32, input_area + cp->offset + chanp->offset, 4);
+	      
+	    case pwr_eDataRepEnum_UInt32:
+	      memcpy(&udata32, diag_area + chanp->offset, 4);
 	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32);
-              *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata32;
+	      *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata32;
 	      break;
 
-	    }
-	  }
-	  else {
-	    /* Fetch value from diagnostic area */
-	    
-	    if (diag_area) {
-
-	      switch (chan_ii->Representation) {
-
-              case pwr_eDataRepEnum_Int8:
-		memcpy(&data8, diag_area + chanp->offset, 1);
-        	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data8;
-		break;
-
-              case pwr_eDataRepEnum_UInt8:
-		memcpy(&udata8, diag_area + chanp->offset, 1);
-        	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata8;
-		break;
-
-              case pwr_eDataRepEnum_Int16:
-		memcpy(&data16, diag_area + chanp->offset, 2);
-		if (byte_order == pwr_eByteOrderingEnum_BigEndian) data16 = swap16(data16);
-        	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data16;
-		break;
-
-              case pwr_eDataRepEnum_UInt16:
-		memcpy(&udata16, diag_area + chanp->offset, 2);
-		if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata16 = swap16(udata16);
-        	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata16;
-		break;
-
-              case pwr_eDataRepEnum_Int24:
-		data32 = 0;
-		memcpy(&data32, diag_area + chanp->offset, 3);
-		if (byte_order == pwr_eByteOrderingEnum_BigEndian) {
-		  data32 = swap32(data32);
-		  data32 = data32 >> 8;
-		}
-        	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data32;
-		break;
-
-              case pwr_eDataRepEnum_UInt24:
-		udata32 = 0;
-		memcpy(&udata32, diag_area + chanp->offset, 3);
-		if (byte_order == pwr_eByteOrderingEnum_BigEndian) {
-		  udata32 = swap32(udata32);
-		  udata32 = udata32 >> 8;
-		}
-        	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata32;
-		break;
-
-              case pwr_eDataRepEnum_Int32:
-		memcpy(&data32, diag_area + chanp->offset, 4);
-		if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
-        	*(pwr_tInt32 *) chanp->vbp = data32;
-		break;
-
-              case pwr_eDataRepEnum_UInt32:
-		memcpy(&udata32, diag_area + chanp->offset, 4);
-		if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32);
-        	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata32;
-		break;
-
-	      }
 	    }
 	  }
 	}
-	break;
+      }
+      break;
+    case pwr_cClass_ChanBi: {
+      int chan_elem;
+      int elem;
+      char *fromp, *top;
+	  
+      chan_bi = (pwr_sClass_ChanBi *) chanp->cop;
+      sig_bi = (pwr_sClass_Bi *) chanp->sop;
+      if (chan_bi && sig_bi) {
+	  
+	chan_elem = chan_bi->Size / GetChanSize(chan_bi->Representation);
+	if ( chanp->SigType == pwr_eType_String)
+	  elem = chanp->SigElem * chanp->SigStrSize;
+	else
+	  elem = chanp->SigElem;
+
+	if ( chan_elem < elem)
+	  elem = chan_elem;
+	    
+	top = (char *)chanp->vbp;
+	fromp = (char *)input_area + cp->offset + chanp->offset;
+	for ( j = 0; j < elem; j++) {
+	  switch ( chanp->SigType) {
+	  case pwr_eType_Int32:
+	    switch ( chan_bi->Representation) {
+	    case pwr_eDataRepEnum_Int32:
+	      memcpy(&data32, fromp, 4);
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
+	      *(pwr_tInt32 *) top = data32;
+	      fromp += 4;
+	      top += 4;
+	      break;
+	    case pwr_eDataRepEnum_UInt32:
+	      memcpy(&udata32, fromp, 4);
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32);
+	      *(pwr_tUInt32 *) top = udata32;
+	      fromp += 4;
+	      top += 4;
+	      break;
+	    case pwr_eDataRepEnum_Int16:
+	      data32 = 0;
+	      memcpy(&data16, fromp, 2);
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap16(data16);
+	      *(pwr_tInt32 *) top = data32;
+	      fromp += 2;
+	      top += 4;
+	      break;
+	    case pwr_eDataRepEnum_UInt16:
+	      udata32 = 0;
+	      memcpy(&udata16, fromp, 2);
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap16(udata16);
+	      *(pwr_tUInt32 *) top = udata32;
+	      fromp += 2;
+	      top += 4;
+	      break;
+	    case pwr_eDataRepEnum_Int8:
+	      memcpy( &data8, fromp, 1);
+	      *(pwr_tInt32 *) top = data8;
+	      fromp += 1;
+	      top += 4;
+	    case pwr_eDataRepEnum_UInt8:
+	      memcpy( &udata8, fromp, 1);
+	      *(pwr_tUInt32 *) top = udata8;
+	      fromp += 1;
+	      top += 4;
+	      break;
+	    }
+	    break;
+
+	  case pwr_eType_Float32:
+	    if (chan_bi->CalculateNewCoef  &&
+		chanp->SigType == pwr_eType_Float32) {
+	      io_BiRangeToCoef(chanp);
+	      chan_bi->CalculateNewCoef = 0;
+	    }
+
+	    switch (chan_bi->Representation) {
+	    case pwr_eDataRepEnum_Int8:
+	      memcpy(&data8, fromp, 1);
+	      f_raw = (float) data8;
+	      ConvertBi(ctx, f_raw, (float *)top, chan_bi, chanp);
+	      fromp += 1;
+	      top += 4;
+	      break;
+
+	    case pwr_eDataRepEnum_UInt8:
+	      memcpy(&udata8, fromp, 1);
+	      f_raw = (float) udata8;
+	      ConvertBi(ctx, f_raw, (float *)top, chan_bi, chanp);
+	      fromp += 1;
+	      top += 4;
+	      break;
+
+	    case pwr_eDataRepEnum_Int16:
+	      memcpy(&data16, fromp, 2);
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) data16 = swap16(data16);
+	      f_raw = (float) data16;
+	      ConvertBi(ctx, f_raw, (float *)top, chan_bi, chanp);
+	      fromp += 2;
+	      top += 4;
+	      break;
+
+	    case pwr_eDataRepEnum_UInt16:
+	      memcpy(&udata16, fromp, 2);
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata16 = swap16(udata16);
+	      f_raw = (float) udata16;
+	      ConvertBi(ctx, f_raw, (float *)top, chan_bi, chanp);
+	      fromp += 2;
+	      top += 4;
+	      break;
+
+	    case pwr_eDataRepEnum_Int32:
+	      memcpy(&data32, fromp, 4);
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
+	      f_raw = (float) data32;
+	      ConvertBi(ctx, f_raw, (float *)top, chan_bi, chanp);
+	      fromp += 4;
+	      top += 4;
+	      break;
+	      
+	    case pwr_eDataRepEnum_UInt32:
+	      memcpy(&udata32, fromp, 4);
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32);
+	      f_raw = (float) udata32;
+	      ConvertBi(ctx, f_raw, (float *)top, chan_bi, chanp);
+	      fromp += 4;
+	      top += 4;
+	      break;
+
+	    case pwr_eDataRepEnum_Float32:
+	      memcpy(&udata32, fromp, 4);
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian ||
+		  float_rep == pwr_eFloatRepEnum_FloatIEEE) udata32 = swap32(udata32);
+	      memcpy(&f_raw, &udata32, 4);
+	      ConvertBi(ctx, f_raw, (float *)top, chan_bi, chanp);
+	      fromp += 4;
+	      top += 4;
+	      break;
+	      
+	    }
+
+	    break;
+
+	  case pwr_eType_String:
+	    switch ( chan_bi->Representation) {
+	    case pwr_eDataRepEnum_Int8:
+	    case pwr_eDataRepEnum_UInt8:
+	      memcpy( top, fromp, 1);
+	      fromp += 1;
+	      top += 1;
+	      break;
+	    }
+	    break;
+
+	  default: ;
+	  }
+	}
+	
+      }
+      break;
+    }
+    case pwr_cClass_ChanBiBlob: {
+      if ( chanp->cop && chanp->sop) {	  
+	memcpy( (char *)chanp->vbp, (char *)input_area + cp->offset + chanp->offset,
+		chanp->SigStrSize);
+      }
+      break;
+    }
     }
   }
-
-
 }
+
+
 /*----------------------------------------------------------------------------*\
   Write method for bus-card
 \*----------------------------------------------------------------------------*/
@@ -642,11 +996,14 @@ void io_bus_card_write( io_tCtx ctx,
   io_sChannel *chanp;
   
   pwr_sClass_ChanDo *chan_do;
+  pwr_sClass_ChanD *chan_d;
   pwr_sClass_Do *sig_do;
   pwr_sClass_ChanAo *chan_ao;
   pwr_sClass_Ao *sig_ao;
   pwr_sClass_ChanIo *chan_io;
   pwr_sClass_Io *sig_io;
+  pwr_sClass_ChanBo *chan_bo;
+  pwr_sClass_Bo *sig_bo;
 
   pwr_tUInt8 *udata8p;
   pwr_tUInt16 *udata16p;
@@ -660,7 +1017,7 @@ void io_bus_card_write( io_tCtx ctx,
   pwr_tInt32 do_actval;;
   pwr_tFloat32 value, rawvalue;
   int fixout;
-  int i;
+  int i, j;
 
 
 
@@ -670,218 +1027,427 @@ void io_bus_card_write( io_tCtx ctx,
     chanp = &cp->chanlist[i];
     switch (chanp->ChanClass) {
       
-      case pwr_cClass_ChanDo:
-	chan_do = (pwr_sClass_ChanDo *) chanp->cop;
+    case pwr_cClass_ChanDo:
+      chan_do = (pwr_sClass_ChanDo *) chanp->cop;
+      sig_do = (pwr_sClass_Do *) chanp->sop;
+      if (chan_do && sig_do) {
+
+	if (fixout)
+	  do_actval = chan_do->FixedOutValue;
+	else if (chan_do->TestOn != 0)
+	  do_actval = chan_do->TestValue;
+	else
+	  do_actval = *(pwr_tInt32 *) chanp->vbp;
+	
+	switch (chan_do->Representation) {
+
+	case pwr_eDataRepEnum_Bit8:
+	  udata8p = output_area + cp->offset + chanp->offset;
+	  if (do_actval ^ chan_do->InvertOn)
+	    *udata8p |= chanp->mask;
+	  else
+	    *udata8p &= ~chanp->mask;
+	  break;
+	  
+	case pwr_eDataRepEnum_Bit16:
+	  udata16p = output_area + cp->offset + chanp->offset;
+	  if (do_actval ^ chan_do->InvertOn)
+	    *udata16p |= chanp->mask;
+	  else
+	    *udata16p &= ~chanp->mask;
+	  break;
+
+	case pwr_eDataRepEnum_Bit32:
+	  udata32p = output_area + cp->offset + chanp->offset;
+	  if (do_actval ^ chan_do->InvertOn)
+	    *udata32p |= chanp->mask;
+	  else
+	    *udata32p &= ~chanp->mask;
+	  break;
+
+	}
+	    
+      }
+	  
+      break;
+
+    case pwr_cClass_ChanD:
+      chan_d = (pwr_sClass_ChanD *) chanp->cop;
+      if ( chan_d->Type == pwr_eDChanTypeEnum_Do) {
 	sig_do = (pwr_sClass_Do *) chanp->sop;
-	if (chan_do && sig_do) {
+	if (chan_d && sig_do) {
 
 	  if (fixout)
-	    do_actval = chan_do->FixedOutValue;
-          else if (chan_do->TestOn != 0)
-	    do_actval = chan_do->TestValue;
+	    do_actval = chan_d->FixedOutValue;
+	  else if (chan_d->TestOn != 0)
+	    do_actval = chan_d->TestValue;
 	  else
 	    do_actval = *(pwr_tInt32 *) chanp->vbp;
-
-	  switch (chan_do->Representation) {
-
-            case pwr_eDataRepEnum_Bit8:
-	      udata8p = output_area + cp->offset + chanp->offset;
-              if (do_actval ^ chan_do->InvertOn)
-		*udata8p |= chanp->mask;
-              else
-		*udata8p &= ~chanp->mask;
-	      break;
-
-            case pwr_eDataRepEnum_Bit16:
-	      udata16p = output_area + cp->offset + chanp->offset;
-	      if (do_actval ^ chan_do->InvertOn)
-		*udata16p |= chanp->mask;
-	      else
-		*udata16p &= ~chanp->mask;
-	      break;
-
-            case pwr_eDataRepEnum_Bit32:
-	      udata32p = output_area + cp->offset + chanp->offset;
-              if (do_actval ^ chan_do->InvertOn)
-		*udata32p |= chanp->mask;
-              else
-		*udata32p &= ~chanp->mask;
-	      break;
-
-	  }
-	    
-	}
 	  
-	break;
+	  switch (chan_d->Representation) {
+
+	  case pwr_eDataRepEnum_Bit8:
+	    udata8p = output_area + cp->offset + chanp->offset;
+	    if (do_actval ^ chan_d->InvertOn)
+	      *udata8p |= chanp->mask;
+	    else
+	      *udata8p &= ~chanp->mask;
+	    break;
+	  
+	  case pwr_eDataRepEnum_Bit16:
+	    udata16p = output_area + cp->offset + chanp->offset;
+	    if (do_actval ^ chan_d->InvertOn)
+	      *udata16p |= chanp->mask;
+	    else
+	      *udata16p &= ~chanp->mask;
+	    break;
+
+	  case pwr_eDataRepEnum_Bit32:
+	    udata32p = output_area + cp->offset + chanp->offset;
+	    if (do_actval ^ chan_d->InvertOn)
+	      *udata32p |= chanp->mask;
+	    else
+	      *udata32p &= ~chanp->mask;
+	    break;
+	    
+	  }
+	}
+	
+      }
+	  
+      break;
 
       // Channel type is Ao (analog output)
 
-      case pwr_cClass_ChanAo:
-	chan_ao = (pwr_sClass_ChanAo *) chanp->cop;
-	sig_ao = (pwr_sClass_Ao *) chanp->sop;
-	if (chan_ao && sig_ao) {
+    case pwr_cClass_ChanAo:
+      chan_ao = (pwr_sClass_ChanAo *) chanp->cop;
+      sig_ao = (pwr_sClass_Ao *) chanp->sop;
+      if (chan_ao && sig_ao) {
 
-          if (fixout)
-            value = chan_ao->FixedOutValue;
-          else if (chan_ao->TestOn)
-            value = chan_ao->TestValue;
-          else
-	    value = *(pwr_tFloat32 *) chanp->vbp;
+	if (fixout)
+	  value = chan_ao->FixedOutValue;
+	else if (chan_ao->TestOn)
+	  value = chan_ao->TestValue;
+	else
+	  value = *(pwr_tFloat32 *) chanp->vbp;
 
-          if (chan_ao->CalculateNewCoef) io_AoRangeToCoef(chanp);
+	if (chan_ao->CalculateNewCoef) {
+	  io_AoRangeToCoef(chanp);
+	  chan_ao->CalculateNewCoef = 0;
+	}
 
-          if (value > chan_ao->ActValRangeHigh)
-            value = chan_ao->ActValRangeHigh;
-          else if ( value < chan_ao->ActValRangeLow)
-            value = chan_ao->ActValRangeLow;
+	if (value > chan_ao->ActValRangeHigh)
+	  value = chan_ao->ActValRangeHigh;
+	else if ( value < chan_ao->ActValRangeLow)
+	  value = chan_ao->ActValRangeLow;
+	
+	rawvalue = chan_ao->OutPolyCoef1 * value + chan_ao->OutPolyCoef0;
 
-          rawvalue = chan_ao->OutPolyCoef1 * value + chan_ao->OutPolyCoef0;
-
-	  if (chan_ao->Representation != pwr_eDataRepEnum_Float32) {
-	    if ( rawvalue > 0)
-	      rawvalue = rawvalue + 0.5;
-	    else
-	      rawvalue = rawvalue - 0.5;
-	  }
+	if (chan_ao->Representation != pwr_eDataRepEnum_Float32) {
+	  if ( rawvalue > 0)
+	    rawvalue = rawvalue + 0.5;
+	  else
+	    rawvalue = rawvalue - 0.5;
+	}
 
 //            sig_ao->RawValue = 0;
 
-          sig_ao->SigValue = chan_ao->SigValPolyCoef1 * value + chan_ao->SigValPolyCoef0;
+	sig_ao->SigValue = chan_ao->SigValPolyCoef1 * value + chan_ao->SigValPolyCoef0;
 	    
-	  switch (chan_ao->Representation) {
+	switch (chan_ao->Representation) {
 
-            case pwr_eDataRepEnum_Int8:
-	      data8 = (pwr_tInt8) rawvalue;
-	      memcpy(output_area + cp->offset + chanp->offset, &data8, 1);
-              sig_ao->RawValue = data8;
-	      break;
+	case pwr_eDataRepEnum_Int8:
+	  data8 = (pwr_tInt8) rawvalue;
+	  memcpy(output_area + cp->offset + chanp->offset, &data8, 1);
+	  sig_ao->RawValue = data8;
+	  break;
+	  
+	case pwr_eDataRepEnum_UInt8:
+	  udata8 = (pwr_tUInt8) rawvalue;
+	  memcpy(output_area + cp->offset + chanp->offset, &udata8, 1);
+	  sig_ao->RawValue = udata8;
+	  break;
+		
+	case pwr_eDataRepEnum_Int16:
+	  data16 = (pwr_tInt16) rawvalue;
+	  sig_ao->RawValue = data16;
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) data16 = swap16(data16);
+	  memcpy(output_area + cp->offset + chanp->offset, &data16, 2);
+	  break;
+		
+	case pwr_eDataRepEnum_UInt16:
+	  udata16 = (pwr_tUInt16) rawvalue;
+	  sig_ao->RawValue = udata16;
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata16 = swap16(udata16);
+	  memcpy(output_area + cp->offset + chanp->offset, &udata16, 2);
+	  break;
 
-            case pwr_eDataRepEnum_UInt8:
-	      udata8 = (pwr_tUInt8) rawvalue;
-	      memcpy(output_area + cp->offset + chanp->offset, &udata8, 1);
-              sig_ao->RawValue = udata8;
-	      break;
+	case pwr_eDataRepEnum_Int24:
+	  data32 = (pwr_tInt32) rawvalue;
+	  sig_ao->RawValue = data32;
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32) << 8;
+	  memcpy(output_area + cp->offset + chanp->offset, &data32, 3);
+	  break;
 		
-            case pwr_eDataRepEnum_Int16:
-	      data16 = (pwr_tInt16) rawvalue;
-              sig_ao->RawValue = data16;
-              if (byte_order == pwr_eByteOrderingEnum_BigEndian) data16 = swap16(data16);
-	      memcpy(output_area + cp->offset + chanp->offset, &data16, 2);
-	      break;
-		
-            case pwr_eDataRepEnum_UInt16:
-	      udata16 = (pwr_tUInt16) rawvalue;
-              sig_ao->RawValue = udata16;
-              if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata16 = swap16(udata16);
-	      memcpy(output_area + cp->offset + chanp->offset, &udata16, 2);
-	      break;
+	case pwr_eDataRepEnum_UInt24:
+	  udata32 = (pwr_tUInt32) rawvalue;
+	  sig_ao->RawValue = udata32;
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32) << 8;
+	  memcpy(output_area + cp->offset + chanp->offset, &udata32, 3);
+	  break;
 
-            case pwr_eDataRepEnum_Int24:
-	      data32 = (pwr_tInt32) rawvalue;
-              sig_ao->RawValue = data32;
-              if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32) << 8;
-	      memcpy(output_area + cp->offset + chanp->offset, &data32, 3);
-	      break;
+	case pwr_eDataRepEnum_Int32:
+	  data32 = (pwr_tInt32) rawvalue;
+	  sig_ao->RawValue = data32;
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
+	  memcpy(output_area + cp->offset + chanp->offset, &data32, 4);
+	  break;
 		
-            case pwr_eDataRepEnum_UInt24:
-	      udata32 = (pwr_tUInt32) rawvalue;
-              sig_ao->RawValue = udata32;
-              if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32) << 8;
-	      memcpy(output_area + cp->offset + chanp->offset, &udata32, 3);
-	      break;
-
-            case pwr_eDataRepEnum_Int32:
-	      data32 = (pwr_tInt32) rawvalue;
-              sig_ao->RawValue = data32;
-              if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
-	      memcpy(output_area + cp->offset + chanp->offset, &data32, 4);
-	      break;
+	case pwr_eDataRepEnum_UInt32:
+	  udata32 = (pwr_tUInt32) rawvalue;
+	  sig_ao->RawValue = udata32;
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32);
+	  memcpy(output_area + cp->offset + chanp->offset, &udata32, 4);
+	  break;
 		
-            case pwr_eDataRepEnum_UInt32:
-	      udata32 = (pwr_tUInt32) rawvalue;
-              sig_ao->RawValue = udata32;
-              if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32);
-	      memcpy(output_area + cp->offset + chanp->offset, &udata32, 4);
-	      break;
+	case pwr_eDataRepEnum_Float32:
+	  memcpy(&udata32, &rawvalue, 4);
+	  sig_ao->RawValue = udata32;
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian ||
+	      float_rep == pwr_eFloatRepEnum_FloatIEEE) udata32 = swap32(udata32);
+	  memcpy(output_area + cp->offset + chanp->offset, &udata32, 4);
+	  break;
 		
-            case pwr_eDataRepEnum_Float32:
-	      memcpy(&udata32, &rawvalue, 4);
-              sig_ao->RawValue = udata32;
-              if (byte_order == pwr_eByteOrderingEnum_BigEndian ||
-		  float_rep == pwr_eFloatRepEnum_FloatIEEE) udata32 = swap32(udata32);
-	      memcpy(output_area + cp->offset + chanp->offset, &udata32, 4);
-	      break;
-		
-          }
-	    
 	}
-	break;
+	    
+      }
+      break;
 	  
       // Channel type is Io (integer output)
 	
-      case pwr_cClass_ChanIo:
-	chan_io = (pwr_sClass_ChanIo *) chanp->cop;
-	sig_io = (pwr_sClass_Io *) chanp->sop;
-	if (chan_io && sig_io) {
+    case pwr_cClass_ChanIo:
+      chan_io = (pwr_sClass_ChanIo *) chanp->cop;
+      sig_io = (pwr_sClass_Io *) chanp->sop;
+      if (chan_io && sig_io) {
 	  
-          if (fixout)
-            data32 = (pwr_tInt32) chan_io->FixedOutValue;
-          else if (chan_io->TestOn)
-            data32 = (pwr_tInt32) chan_io->TestValue;
-          else
-	    data32 = *(pwr_tInt32 *) chanp->vbp;
+	if (fixout)
+	  data32 = (pwr_tInt32) chan_io->FixedOutValue;
+	else if (chan_io->TestOn)
+	  data32 = (pwr_tInt32) chan_io->TestValue;
+	else
+	  data32 = *(pwr_tInt32 *) chanp->vbp;
 
-	  switch (chan_io->Representation) {
+	switch (chan_io->Representation) {
 
-            case pwr_eDataRepEnum_Int8:
-	      data8 = (pwr_tInt8) data32;
-	      memcpy(output_area + cp->offset + chanp->offset, &data8, 1);
-	      break;
+	case pwr_eDataRepEnum_Int8:
+	  data8 = (pwr_tInt8) data32;
+	  memcpy(output_area + cp->offset + chanp->offset, &data8, 1);
+	  break;
 		
-            case pwr_eDataRepEnum_UInt8:
-	      udata8 = (pwr_tUInt8) data32;
-	      memcpy(output_area + cp->offset + chanp->offset, &udata8, 1);
-	      break;
+	case pwr_eDataRepEnum_UInt8:
+	  udata8 = (pwr_tUInt8) data32;
+	  memcpy(output_area + cp->offset + chanp->offset, &udata8, 1);
+	  break;
 
-            case pwr_eDataRepEnum_Int16:
-	      data16 = (pwr_tInt16) data32;
-              if (byte_order == pwr_eByteOrderingEnum_BigEndian) data16 = swap16(data16);
-	      memcpy(output_area + cp->offset + chanp->offset, &data16, 2);
-	      break;
+	case pwr_eDataRepEnum_Int16:
+	  data16 = (pwr_tInt16) data32;
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) data16 = swap16(data16);
+	  memcpy(output_area + cp->offset + chanp->offset, &data16, 2);
+	  break;
 		
-            case pwr_eDataRepEnum_UInt16:
-	      udata16 = (pwr_tUInt16) data32;
-              if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata16 = swap16(udata16);
-	      memcpy(output_area + cp->offset + chanp->offset, &udata16, 2);
-	      break;
+	case pwr_eDataRepEnum_UInt16:
+	  udata16 = (pwr_tUInt16) data32;
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata16 = swap16(udata16);
+	  memcpy(output_area + cp->offset + chanp->offset, &udata16, 2);
+	  break;
 
-            case pwr_eDataRepEnum_Int24:
-              if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32) << 8;
-	      memcpy(output_area + cp->offset + chanp->offset, &data32, 3);
-	      break;
+	case pwr_eDataRepEnum_Int24:
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32) << 8;
+	  memcpy(output_area + cp->offset + chanp->offset, &data32, 3);
+	  break;
+	  
+	case pwr_eDataRepEnum_UInt24:
+	  udata32 = (pwr_tUInt32) data32;
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32) << 8;
+	  memcpy(output_area + cp->offset + chanp->offset, &udata32, 3);
+	  break;
 		
-            case pwr_eDataRepEnum_UInt24:
-	      udata32 = (pwr_tUInt32) data32;
-              if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32) << 8;
-	      memcpy(output_area + cp->offset + chanp->offset, &udata32, 3);
-	      break;
+	case pwr_eDataRepEnum_Int32:
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
+	  memcpy(output_area + cp->offset + chanp->offset, &data32, 4);
+	  break;
 		
-            case pwr_eDataRepEnum_Int32:
-              if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
-	      memcpy(output_area + cp->offset + chanp->offset, &data32, 4);
-	      break;
-		
-            case pwr_eDataRepEnum_UInt32:
-	      udata32 = (pwr_tUInt32) data32;
-              if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32);
-	      memcpy(output_area + cp->offset + chanp->offset, &udata32, 4);
-	      break;
+	case pwr_eDataRepEnum_UInt32:
+	  udata32 = (pwr_tUInt32) data32;
+	  if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32);
+	  memcpy(output_area + cp->offset + chanp->offset, &udata32, 4);
+	  break;
 				
-          }
 	}
-	break;
+      }
+      break;
+
+      // Channel type is Bo (buffer output)
+	
+    case pwr_cClass_ChanBo: {
+      int chan_elem;
+      int elem;
+      char *fromp, *top;
+
+      chan_bo = (pwr_sClass_ChanBo *) chanp->cop;
+      sig_bo = (pwr_sClass_Bo *) chanp->sop;
+      if (chan_bo && sig_bo) {
+	  
+	chan_elem = chan_bo->Size / GetChanSize(chan_bo->Representation);
+	if ( chanp->SigType == pwr_eType_String)
+	  elem = chanp->SigElem * chanp->SigStrSize;
+	else
+	  elem = chanp->SigElem;
+
+	if ( chan_elem < elem)
+	  elem = chan_elem;
+	     
+	
+	fromp = (char *)chanp->vbp;
+	top = (char *)output_area + cp->offset + chanp->offset;
+	for ( j = 0; j < elem; j++) {
+	  switch ( chanp->SigType) {
+	  case pwr_eType_Int32:
+	    switch ( chan_bo->Representation) {
+	    case pwr_eDataRepEnum_Int32:
+	    case pwr_eDataRepEnum_UInt32:
+	      data32 = *(pwr_tInt32 *) fromp;
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
+	      memcpy( top, &data32, 4);
+	      fromp += 4;
+	      top += 4;
+	      break;
+	    case pwr_eDataRepEnum_Int16:
+	    case pwr_eDataRepEnum_UInt16:
+	      data16 = *(pwr_tInt16 *) fromp;
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) data16 = swap16(data16);
+	      memcpy( top, &data16, 2);
+	      fromp += 4;
+	      top += 2;
+	      break;
+	    case pwr_eDataRepEnum_Int8:
+	    case pwr_eDataRepEnum_UInt8:
+	      memcpy( top, fromp, 1);
+	      fromp += 4;
+	      top += 1;
+	      break;
+	    }
+	    break;
+
+	  case pwr_eType_Float32: {
+
+	    value = *(pwr_tFloat32 *) ((char *)chanp->vbp + i * sizeof(pwr_tFloat32));
+	    
+	    if (chan_bo->CalculateNewCoef &&
+		chanp->SigType == pwr_eType_Float32) {
+	      io_BoRangeToCoef(chanp);
+	      chan_bo->CalculateNewCoef = 0;
+	    }
+
+	    if (value > chan_bo->ActValRangeHigh)
+	      value = chan_bo->ActValRangeHigh;
+	    else if ( value < chan_bo->ActValRangeLow)
+	      value = chan_bo->ActValRangeLow;
+	
+	    rawvalue = chan_bo->OutPolyCoef1 * value + chan_bo->OutPolyCoef0;
+
+	    if (chan_bo->Representation != pwr_eDataRepEnum_Float32) {
+	      if ( rawvalue > 0)
+		rawvalue = rawvalue + 0.5;
+	      else
+		rawvalue = rawvalue - 0.5;
+	    }
+
+	    switch (chan_bo->Representation) {
+
+	    case pwr_eDataRepEnum_Int8:
+	      data8 = (pwr_tInt8) rawvalue;
+	      memcpy( top, &data8, 1);
+	      fromp += 4;
+	      top += 1;
+	      break;	  
+	    case pwr_eDataRepEnum_UInt8:
+	      udata8 = (pwr_tUInt8) rawvalue;
+	      memcpy( top, &udata8, 1);
+	      fromp += 4;
+	      top += 1;
+	      break;
+	    case pwr_eDataRepEnum_Int16:
+	      data16 = (pwr_tInt16) rawvalue;
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) data16 = swap16(data16);
+	      memcpy( top, &data16, 2);
+	      fromp += 4;
+	      top += 2;
+	      break;
+		
+	    case pwr_eDataRepEnum_UInt16:
+	      udata16 = (pwr_tUInt16) rawvalue;
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata16 = swap16(udata16);
+	      memcpy( top, &udata16, 2);
+	      fromp += 4;
+	      top += 2;
+	      break;
+
+	    case pwr_eDataRepEnum_Int32:
+	      data32 = (pwr_tInt32) rawvalue;
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
+	      memcpy( top, &data32, 4);
+	      fromp += 4;
+	      top += 4;
+	      break;
+		
+	    case pwr_eDataRepEnum_UInt32:
+	      udata32 = (pwr_tUInt32) rawvalue;
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32);
+	      memcpy( top, &udata32, 4);
+	      fromp += 4;
+	      top += 4;
+	      break;
+		
+	    case pwr_eDataRepEnum_Float32:
+	      memcpy(&udata32, &rawvalue, 4);
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian ||
+		  float_rep == pwr_eFloatRepEnum_FloatIEEE) udata32 = swap32(udata32);
+	      memcpy( top, &udata32, 4);
+	      fromp += 4;
+	      top += 4;
+	      break;
+		
+	    }
+	    break;
+	  }
+	  case pwr_eType_String:
+	    switch ( chan_bo->Representation) {
+	    case pwr_eDataRepEnum_Int8:
+	    case pwr_eDataRepEnum_UInt8:
+	      memcpy( top, fromp, 1);
+	      fromp += 1;
+	      top += 1;
+	      break;
+	    }
+	    break;
+
+	  default: ;
+	  }
+	}
+
+      }
+      break;
+    }
+    case pwr_cClass_ChanBoBlob: {
+      if ( chanp->cop && chanp->sop) {	  
+	memcpy( (char *)output_area + cp->offset + chanp->offset, (char *)chanp->vbp,
+		chanp->SigStrSize);
+      }
+      break;
+    }
     }
   }
-
+  
 }
 

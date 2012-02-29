@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -635,6 +635,9 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   const int    	names_height = 150;
   const int    	nav_height = 120;
   pwr_tFileName fname;
+
+  if ( !cd)
+    return;
 
   cdh_StrncpyCutOff( title, curve_name, sizeof(title), 1);
 

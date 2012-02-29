@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -108,6 +108,8 @@ typedef struct {
   IO_AREA(pwr_sClass_IiArea) ii_a;
   IO_AREA(pwr_sClass_IoArea) io_a;
   IO_AREA(pwr_sClass_IvArea) iv_a;
+  IO_AREA(pwr_sClass_BiArea) bi_a;
+  IO_AREA(pwr_sClass_BoArea) bo_a;
   IO_AREA(pwr_sClass_InitArea) av_i;
   IO_AREA(pwr_sClass_InitArea) dv_i;
   IO_AREA(pwr_sClass_InitArea) iv_i;
@@ -117,6 +119,10 @@ typedef struct {
   IO_AREA(pwr_sClass_InitArea) ao_i;
   IO_AREA(pwr_sClass_InitArea) do_i;
   IO_AREA(pwr_sClass_InitArea) io_i;
+  IO_AREA(pwr_sClass_InitArea) bi_i;
+  IO_AREA(pwr_sClass_InitArea) bi_isize;
+  IO_AREA(pwr_sClass_InitArea) bo_i;
+  IO_AREA(pwr_sClass_InitArea) bo_isize;
 } plc_sArea;
 
 #ifndef rt_io_base_h

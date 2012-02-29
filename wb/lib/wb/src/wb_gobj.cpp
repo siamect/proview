@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -58,7 +58,7 @@
 
 #define	BEEP	    putchar( '\7' );
 
-#define	GOBJ_MAX_METHOD 31
+#define	GOBJ_MAX_METHOD 33
 
 typedef int (* gobj_tMethod)( WFoe *, vldh_t_node, unsigned long);
 
@@ -94,6 +94,8 @@ int	gobj_get_object_m28( WFoe *foe, vldh_t_node node, unsigned long index);
 int	gobj_get_object_m29( WFoe *foe, vldh_t_node node, unsigned long index);
 int	gobj_get_object_m30( WFoe *foe, vldh_t_node node, unsigned long index);
 int	gobj_get_object_m31( WFoe *foe, vldh_t_node node, unsigned long index);
+int	gobj_get_object_m32( WFoe *foe, vldh_t_node node, unsigned long index);
+int	gobj_get_object_m33( WFoe *foe, vldh_t_node node, unsigned long index);
 
 gobj_tMethod gobj_get_object_m[40] = {
 	gobj_get_object_m0,
@@ -128,6 +130,8 @@ gobj_tMethod gobj_get_object_m[40] = {
  	gobj_get_object_m29,
  	gobj_get_object_m30,
  	gobj_get_object_m31,
+ 	gobj_get_object_m32,
+ 	gobj_get_object_m33,
 	};
 
 static int	gobj_expand_m0(	WFoe		*foe,
@@ -300,7 +304,7 @@ int	gobj_get_object_m1( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -354,7 +358,7 @@ int	gobj_get_object_m2( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 	
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -406,7 +410,7 @@ int	gobj_get_object_m3( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 	
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -458,7 +462,7 @@ int	gobj_get_object_m4( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 	
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -510,7 +514,7 @@ int	gobj_get_object_m5( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 	
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -562,7 +566,7 @@ int	gobj_get_object_m6( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 	
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -643,7 +647,7 @@ int	gobj_get_object_m7( WFoe *foe, vldh_t_node node, unsigned long index)
     }
     if ( type ==  pwr_eType_AttrRef ) {
       if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-	gobj_ref_replace( ldhses, node, &attrref);
+	sts = gobj_ref_replace( ldhses, node, &attrref);
 	if ( EVEN(sts)) return sts;
       }
 
@@ -703,7 +707,7 @@ int	gobj_get_object_m8( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 	
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -756,7 +760,7 @@ int	gobj_get_object_m9( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 	
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -1066,7 +1070,7 @@ int	gobj_get_object_m13( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 	
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -1192,7 +1196,7 @@ int	gobj_get_object_m14( WFoe *foe, vldh_t_node node, unsigned long index)
   foe->popupmenu_node = 0;
 
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -1308,7 +1312,7 @@ int	gobj_get_object_m15( WFoe *foe, vldh_t_node node, unsigned long index)
   foe->popupmenu_node = 0;
 
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -1435,7 +1439,7 @@ int	gobj_get_object_m16( WFoe *foe, vldh_t_node node, unsigned long index)
   foe->popupmenu_node = 0;
 
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -1552,7 +1556,7 @@ int	gobj_get_object_m17( WFoe *foe, vldh_t_node node, unsigned long index)
   foe->popupmenu_node = 0;
 
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -1608,7 +1612,7 @@ int	gobj_get_object_m18( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 	
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -1714,7 +1718,7 @@ int	gobj_get_object_m19( WFoe *foe, vldh_t_node node, unsigned long index)
   foe->popupmenu_node = 0;
 
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -1824,7 +1828,7 @@ int	gobj_get_object_m20( WFoe *foe, vldh_t_node node, unsigned long index)
   foe->popupmenu_node = 0;
 
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -1879,7 +1883,7 @@ int	gobj_get_object_m21( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 	
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -1931,7 +1935,7 @@ int	gobj_get_object_m22( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 	
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -1983,7 +1987,7 @@ int	gobj_get_object_m23( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 	
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -2105,7 +2109,7 @@ int	gobj_get_object_m24( WFoe *foe, vldh_t_node node, unsigned long index)
   foe->popupmenu_node = 0;
 
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -2228,7 +2232,7 @@ int	gobj_get_object_m25( WFoe *foe, vldh_t_node node, unsigned long index)
   foe->popupmenu_node = 0;
 
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -2340,7 +2344,7 @@ int	gobj_get_object_m27( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 	
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -2478,7 +2482,7 @@ int	gobj_get_object_m28( WFoe *foe, vldh_t_node node, unsigned long index)
   foe->popupmenu_node = 0;
 
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -2610,7 +2614,7 @@ int	gobj_get_object_m29( WFoe *foe, vldh_t_node node, unsigned long index)
   foe->popupmenu_node = 0;
 
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -2666,7 +2670,7 @@ int	gobj_get_object_m30( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 	
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -2719,7 +2723,7 @@ int	gobj_get_object_m31( WFoe *foe, vldh_t_node node, unsigned long index)
   }
 	
   if ( cdh_IsClassVolume( node->ln.oid.vid)) {
-    gobj_ref_replace( ldhses, node, &attrref);
+    sts = gobj_ref_replace( ldhses, node, &attrref);
     if ( EVEN(sts)) return sts;
   }
 
@@ -2728,6 +2732,284 @@ int	gobj_get_object_m31( WFoe *foe, vldh_t_node node, unsigned long index)
 			  node->ln.oid, 
 			  "DevBody",
 			  "DTvObject",
+			  (char *)&attrref, sizeof(attrref)); 
+  if ( EVEN(sts)) return sts;
+
+  foe->gre->node_update( node);
+
+  return FOE__SUCCESS;
+}
+
+//
+// Description:	Method for GetBi, StoBi etc.
+//		Places the objdid in the first found parameter in devboy
+//		with type objdid.
+//
+int	gobj_get_object_m32( WFoe *foe, vldh_t_node node, unsigned long index)
+{
+  ldh_tSesContext	ldhses;
+  int		sts;
+  vldh_t_plc	plc;
+  pwr_sAttrRef	attrref;
+  int		is_attr;
+  pwr_tTid	tid;
+  char 		*anamep;
+  pwr_tAName	oname;
+  pwr_tCid	cid;
+  pwr_tCid	scid;
+  char 		*s;
+  int		size;
+  int		ok;
+  pwr_tAttrRef  oaref;
+  ldh_sParDef 	*bodydef;
+  int 		rows;
+
+  /* Get the selected object in the navigator */
+  plc = (node->hn.wind)->hw.plc;
+  ldhses =(node->hn.wind)->hw.ldhses;
+
+  sts = gobj_get_select( foe, &attrref, &is_attr);
+  if ( EVEN(sts)) { 
+    foe->message( "Select an attribute in the navigator");
+    BEEP;
+    return sts;
+  }
+
+  sts = ldh_GetAttrRefTid( ldhses, &attrref, &tid);
+  if ( EVEN(sts)) return sts;
+
+  if ( !cdh_tidIsCid(tid)) {
+    sts = ldh_GetAttrRefType( ldhses, &attrref, (pwr_eType *)&tid);
+    if (EVEN(sts)) return sts;
+  }
+
+  if ( cdh_tidIsCid( tid)) {
+    foe->message( "Select an attribute in the navigator");
+    BEEP;
+    return 0;
+  }
+
+  /* Check that attrref is a subclass of Bi */
+  sts = ldh_AttrRefToName( ldhses, &attrref, cdh_mNName, &anamep, &size);
+  if ( EVEN(sts)) return sts;
+
+  strncpy( oname, anamep, sizeof(oname));
+  s = strrchr( oname, '.');
+  if ( s)
+    *s = 0;
+
+  sts = ldh_NameToAttrRef( ldhses, oname, &oaref);
+  if ( EVEN(sts)) return sts;
+
+  sts = ldh_GetAttrRefTid( ldhses, &oaref, &cid);
+  if ( EVEN(sts)) return sts;
+
+  ok = 0;
+  if ( cdh_tidIsCid( cid)) {
+    sts = ldh_GetSuperClass( ldhses, cid, &scid);
+    if ( ODD(sts)) {
+      if ( scid == pwr_cClass_Bi)
+	ok = 1;
+    }
+  }
+  if ( !ok) {
+    foe->message( "Select ActualValue of a Buffer Input object");
+    BEEP;
+    return 0;
+  }
+
+  ok = 0;
+  switch ( node->ln.cid) {
+  case pwr_cClass_GetBiInt32:
+    if ( tid == pwr_eType_Int32 ||
+	 tid == pwr_eType_UInt32)
+      ok = 1;
+    break;
+  case pwr_cClass_GetBiFloat32:
+    if ( tid == pwr_eType_Float32)
+      ok = 1;
+    break;
+  case pwr_cClass_GetBiString80:
+    if ( tid == pwr_eType_String)
+      ok = 1;
+    break;
+  default:
+    /* No typecheck */
+    ok = 1;
+  }
+  
+  if ( !ok) {
+    foe->message( "Error on Bi object data type");
+    BEEP;
+    return 0;
+  }
+
+  /* Check that element index is supplied if ActualValue is an array */
+  sts = ldh_GetObjectBodyDef( ldhses, cid, "RtBody", 1, &bodydef, &rows);
+  if ( EVEN(sts)) return sts;
+
+  if ( strcmp( bodydef[rows-2].ParName, "ActualValue") == 0) {
+    if ( bodydef[rows-2].Par->Param.Info.Flags && PWR_MASK_ARRAY) {
+      if ( attrref.Flags.b.Array) {
+	foe->message( "Select and array element");
+	BEEP;
+	return 0;
+      }
+    }
+  }
+  else {
+    foe->message( "Bi object ActualValue attribute not found");
+    BEEP;
+    return 0;
+  }
+  free((char *) bodydef);
+
+  if ( cdh_IsClassVolume( node->ln.oid.vid)) {
+    sts = gobj_ref_replace( ldhses, node, &attrref);
+    if ( EVEN(sts)) return sts;
+  }
+  
+  /* Set the parameter value */
+  sts = ldh_SetObjectPar( ldhses,
+			  node->ln.oid, 
+			  "DevBody",
+			  "BiObject",
+			  (char *)&attrref, sizeof(attrref)); 
+  if ( EVEN(sts)) return sts;
+
+  foe->gre->node_update( node);
+
+  return FOE__SUCCESS;
+}
+
+//
+// Description:	Method for GetBo, StoBo etc.
+//		Places the objdid in the first found parameter in devboy
+//		with type objdid.
+//
+int	gobj_get_object_m33( WFoe *foe, vldh_t_node node, unsigned long index)
+{
+  ldh_tSesContext	ldhses;
+  int		sts;
+  vldh_t_plc	plc;
+  pwr_sAttrRef	attrref;
+  int		is_attr;
+  pwr_tTid	tid;
+  char 		*anamep;
+  pwr_tAName	oname;
+  pwr_tCid	cid;
+  pwr_tCid	scid;
+  char 		*s;
+  int		size;
+  int		ok;
+  pwr_tAttrRef  oaref;
+  ldh_sParDef 	*bodydef;
+  int 		rows;
+
+  /* Get the selected object in the navigator */
+  plc = (node->hn.wind)->hw.plc;
+  ldhses =(node->hn.wind)->hw.ldhses;
+
+  sts = gobj_get_select( foe, &attrref, &is_attr);
+  if ( EVEN(sts)) { 
+    foe->message( "Select an attribute in the navigator");
+    BEEP;
+    return sts;
+  }
+
+  sts = ldh_GetAttrRefTid( ldhses, &attrref, &tid);
+  if ( EVEN(sts)) return sts;
+
+  if ( !cdh_tidIsCid(tid)) {
+    sts = ldh_GetAttrRefType( ldhses, &attrref, (pwr_eType *)&tid);
+    if (EVEN(sts)) return sts;
+  }
+
+  if ( cdh_tidIsCid( tid)) {
+    foe->message( "Select an attribute in the navigator");
+    BEEP;
+    return sts;
+  }
+
+  /* Check that attrref is a subclass of Bo */
+  sts = ldh_AttrRefToName( ldhses, &attrref, cdh_mNName, &anamep, &size);
+  if ( EVEN(sts)) return sts;
+
+  strncpy( oname, anamep, sizeof(oname));
+  s = strrchr( oname, '.');
+  if ( s)
+    *s = 0;
+
+  sts = ldh_NameToAttrRef( ldhses, oname, &oaref);
+  if ( EVEN(sts)) return sts;
+
+  sts = ldh_GetAttrRefTid( ldhses, &oaref, &cid);
+  if ( EVEN(sts)) return sts;
+
+  ok = 0;
+  if ( cdh_tidIsCid( cid)) {
+    sts = ldh_GetSuperClass( ldhses, cid, &scid);
+    if ( ODD(sts)) {
+      if ( scid == pwr_cClass_Bo)
+	ok = 1;
+    }
+  }
+  if ( !ok) {
+    foe->message( "Select ActualValue of a Buffer Output object");
+    BEEP;
+    return sts;
+  }
+
+  ok = 0;
+  switch ( node->ln.cid) {
+  case pwr_cClass_GetBoInt32:
+    if ( tid == pwr_eType_Int32 ||
+	 tid == pwr_eType_UInt32)
+      ok = 1;
+    break;
+  case pwr_cClass_GetBoFloat32:
+    if ( tid == pwr_eType_Float32)
+      ok = 1;
+    break;
+  case pwr_cClass_GetBoString80:
+    if ( tid == pwr_eType_String)
+      ok = 1;
+    break;
+  default:
+    /* No typecheck */
+    ok = 1;
+  }
+
+  /* Check that element index is supplied if ActualValue is an array */
+  sts = ldh_GetObjectBodyDef( ldhses, cid, "RtBody", 1, &bodydef, &rows);
+  if ( EVEN(sts)) return sts;
+
+  if ( strcmp( bodydef[rows-2].ParName, "ActualValue") == 0) {
+    if ( bodydef[rows-2].Par->Param.Info.Flags && PWR_MASK_ARRAY) {
+      if ( attrref.Flags.b.Array) {
+	foe->message( "Select and array element");
+	BEEP;
+	return 0;
+      }
+    }
+  }
+  else {
+    foe->message( "Bi object ActualValue attribute not found");
+    BEEP;
+    return 0;
+  }
+  free((char *) bodydef);
+
+  if ( cdh_IsClassVolume( node->ln.oid.vid)) {
+    sts = gobj_ref_replace( ldhses, node, &attrref);
+    if ( EVEN(sts)) return sts;
+  }
+  
+  /* Set the parameter value */
+  sts = ldh_SetObjectPar( ldhses,
+			  node->ln.oid, 
+			  "DevBody",
+			  "BoObject",
 			  (char *)&attrref, sizeof(attrref)); 
   if ( EVEN(sts)) return sts;
 
@@ -2813,6 +3095,12 @@ int	gobj_expand(	WFoe		*foe,
     case pwr_cClass_StoDTp:
     case pwr_cClass_CStoATp:
     case pwr_cClass_CStoDTp:
+    case pwr_cClass_GetBiInt32:
+    case pwr_cClass_GetBiFloat32:
+    case pwr_cClass_GetBiString80:
+    case pwr_cClass_GetBoInt32:
+    case pwr_cClass_GetBoFloat32:
+    case pwr_cClass_GetBoString80:
       sts = gobj_expand_m1( foe, node, compress);
       break;
     case pwr_cClass_and:

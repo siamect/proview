@@ -6,7 +6,7 @@
 ! <image> pwr_valvemanuel_gs.gif
 !
 ! <h1>Description
-! Manuel valve.
+! Manual valve.
 !
 ! <h1>Default dynamics
 ! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat

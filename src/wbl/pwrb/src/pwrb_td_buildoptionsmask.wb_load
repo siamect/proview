@@ -1,6 +1,6 @@
 ! 
 !  Proview   Open Source Process Control.
-!  Copyright (C) 2005-2011 SSAB Oxelosund AB.
+!  Copyright (C) 2005-2012 SSAB EMEA AB.
 ! 
 !  This file is part of Proview.
 !
@@ -149,6 +149,16 @@ SObject pwrb:Type
        Attr PgmName = "MotionControlUSBIO"
        Attr Text = "MotionControlUSBIO"
        Attr Value = 524288
+     EndBody
+    EndObject
+    !/**
+    !  Nodave archive.
+    !*/
+    Object Nodave $Bit
+     Body SysBody
+       Attr PgmName = "Nodave"
+       Attr Text = "Nodave"
+       Attr Value = 1048576
      EndBody
     EndObject
   EndObject

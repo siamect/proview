@@ -7,7 +7,7 @@
 !
 ! <h1>Description
 ! Control damper.
-! Annotation to display manuel or local mode.
+! Annotation to display manual or local mode.
 !
 ! <h1>Default dynamics
 ! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat

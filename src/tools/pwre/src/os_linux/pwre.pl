@@ -244,6 +244,7 @@ sub build_kernel # args: flavour
   _build("lib","usbio_dummy","src","init lib");
   _build("lib","usb_dummy","src","init lib");
   _build("lib","cifx_dummy","src","init lib");
+  _build("lib","nodave_dummy","src","init lib");
   merge();
   _module("xtt");
   build_all("exe", $flavour);
@@ -354,6 +355,7 @@ sub ebuild # args: pass flavour
     _build("lib","usbio_dummy","src","init lib");
     _build("lib","usb_dummy","src","init lib");
     _build("lib","cifx_dummy","src","init lib");
+    _build("lib","nodave_dummy","src","init lib");
     merge();
     _module("rt");
     _build("exe", "rt*", "src", "all");
@@ -1354,7 +1356,7 @@ sub merge ()
   my($mroot) = $eroot;
   $mroot .= "/" . $ENV{"pwre_module"};
   $eroot .= "/exp";
-  printf("--\n");
+  printf("\n");
   printf("-- Merge %s %s\n", $module, $file);
 
   my($cmd) = $ENV{pwre_bin} . "/pwre_merge.sh " . $mroot . " " . $eroot . " " . $file;

@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -489,7 +489,8 @@ static void gcg_print_artdbref(
     pwr_sAttrRef       	attrref,
     char		prefix,
     pwr_tClassId	cid,
-    unsigned long	reftype
+    unsigned long	reftype,
+    unsigned int	offset
 );
 
 static int gcg_error_msg( 
@@ -3138,7 +3139,7 @@ static int	gcg_aref_print(
 	  if( EVEN(sts)) return sts;
 
 	  gcg_print_adecl( gcgctx, name, attrref, prefix, GCG_REFTYPE_REF);
-	  gcg_print_artdbref( gcgctx, attrref, prefix, cid, GCG_REFTYPE_REF);
+	  gcg_print_artdbref( gcgctx, attrref, prefix, cid, GCG_REFTYPE_REF, 0);
 	}
 
 	return GSX__SUCCESS;
@@ -3168,25 +3169,118 @@ static int	gcg_ioread_print(
 	pwr_sAttrRef	attrref;
 	char		prefix;
 	pwr_tClassId	cid;
-	char		*name;
+	char		*namep;
+	pwr_tObjName	name;
+	unsigned int	offset;
 
 	for ( i = 0; i < (int)gcgctx->ioreadcount; i++)
 	{
+	  offset = 0;
 	  attrref = (gcgctx->ioread + i)->attrref;
 	  prefix = (gcgctx->ioread + i)->prefix;
 
 	  sts = ldh_GetAttrRefOrigTid(gcgctx->wind->hw.ldhses, &attrref, &cid);
 	  if ( EVEN(sts)) return sts;
 
-	  /* Get name for this class */
-	  sts = gcg_get_structname_from_cid( gcgctx, cid, &name);
-	  if( EVEN(sts)) return sts;
+	  if ( !cdh_tidIsCid( cid)) {
+	    // This is a Bi
+	    char *name_p;
+	    pwr_tAName oname;
+	    int size;
+	    char *s;
+	    int nr;
+	    char offsetstr[40];
+	    pwr_tAttrRef oattrref;
+	    pwr_tCid ocid;
 
+	    // Get offset from name
+	    sts = ldh_AttrRefToName( gcgctx->ldhses, &attrref, ldh_eName_ArefVol, 
+				     &name_p, &size);
+	    if ( EVEN(sts)) return sts;
+
+	    if ( name_p[strlen(name_p)-1] == ']') {
+	      s = strrchr( name_p, '[');
+	      if ( !s) 
+		continue;
+		
+	      strncpy( offsetstr, s+1, sizeof(offsetstr));
+	      offsetstr[strlen(offsetstr)-1] = 0;
+	      nr = sscanf( offsetstr, "%u", &offset);
+	      if ( nr != 1)
+		continue;
+	    }
+
+	    // Get object class
+	    strncpy( oname, name_p, sizeof(oname));
+	    s = strrchr( oname, '.');
+	    if ( s)
+	      *s = 0;
+
+	    sts = ldh_NameToAttrRef( gcgctx->ldhses, oname, &oattrref);
+	    if ( EVEN(sts)) return sts;
+
+	    sts = ldh_GetAttrRefOrigTid(gcgctx->wind->hw.ldhses, &oattrref, &ocid);
+	    if ( EVEN(sts)) return sts;
+
+	    switch ( cid) {
+	    case pwr_eType_Boolean:
+	      offset *= sizeof(pwr_tBoolean);
+	      strcpy( name, "BBoolean");
+	      break;
+	    case pwr_eType_Int64:
+	      offset *= sizeof(pwr_tInt64);
+	      strcpy( name, "BInt64");
+	      break;
+	    case pwr_eType_Int32:
+	      offset *= sizeof(pwr_tInt32);
+	      strcpy( name, "BInt32");
+	      break;
+	    case pwr_eType_Int16:
+	      offset *= sizeof(pwr_tInt16);
+	      strcpy( name, "BInt16");
+	      break;
+	    case pwr_eType_Int8:
+	      offset *= sizeof(pwr_tInt8);
+	      strcpy( name, "BInt8");
+	      break;
+	    case pwr_eType_Float32:
+	      offset *= sizeof(pwr_tFloat32);
+	      strcpy( name, "BFloat32");
+	      break;
+	    case pwr_eType_Float64:
+	      offset *= sizeof(pwr_tFloat64);
+	      strcpy( name, "BFloat64");
+	      break;
+	    default: {
+	      pwr_eType type;
+
+	      sts = ldh_GetAttrRefType(gcgctx->wind->hw.ldhses, &attrref, &type);
+	      if ( EVEN(sts)) return sts;
+
+	      if ( type == pwr_eType_String) {
+		offset *= attrref.Size; 
+		strcpy( name, "BString");
+	      }
+	      else
+		continue;	      
+	    }
+	    }
+
+	    // Print object cid
+	    cid = ocid;
+	  }
+	  else {
+	    /* Get name for this class */
+	    sts = gcg_get_structname_from_cid( gcgctx, cid, &namep);
+	    if( EVEN(sts)) return sts;
+
+	    strncpy( name, namep, sizeof(name));
+	  }
 	  gcg_print_adecl( gcgctx, name, attrref, prefix, GCG_REFTYPE_IOR);
 	  if ( prefix == GCG_PREFIX_IOC )
-	    gcg_print_artdbref( gcgctx, attrref, prefix, cid, GCG_REFTYPE_IOC);
+	    gcg_print_artdbref( gcgctx, attrref, prefix, cid, GCG_REFTYPE_IOC, offset);
 	  else
-	    gcg_print_artdbref( gcgctx, attrref, prefix, cid, GCG_REFTYPE_IOR);
+	    gcg_print_artdbref( gcgctx, attrref, prefix, cid, GCG_REFTYPE_IOR, offset);
 	}
 
 	return GSX__SUCCESS;
@@ -3216,25 +3310,119 @@ static int	gcg_iowrite_print(
 	pwr_sAttrRef	attrref;
 	char		prefix;
 	pwr_tClassId	cid;
-	char		*name;
+	char		*namep;
+	pwr_tObjName	name;
+	unsigned int	offset;
 
 	for ( i = 0; i < (int)gcgctx->iowritecount; i++)
 	{
+	  offset = 0;
 	  attrref = (gcgctx->iowrite + i)->attrref;
 	  prefix = (gcgctx->iowrite + i)->prefix;
 
 	  sts = ldh_GetAttrRefOrigTid(gcgctx->wind->hw.ldhses, &attrref, &cid);
 	  if ( EVEN(sts)) return sts;
 
-	  /* Get name for this class */
-	  sts = gcg_get_structname_from_cid( gcgctx, cid, &name);
-	  if( EVEN(sts)) return sts;
+	  if ( !cdh_tidIsCid( cid)) {
+	    // This is a Bi or Bo
+	    char *name_p;
+	    pwr_tAName oname;
+	    int size;
+	    char *s;
+	    int nr;
+	    char offsetstr[40];
+	    pwr_tAttrRef oattrref;
+	    pwr_tCid ocid;
+
+	    // Get offset from name
+	    sts = ldh_AttrRefToName( gcgctx->ldhses, &attrref, ldh_eName_ArefVol, 
+				     &name_p, &size);
+	    if ( EVEN(sts)) return sts;
+
+	    if ( name_p[strlen(name_p)-1] == ']') {
+	      s = strrchr( name_p, '[');
+	      if ( !s) 
+		continue;
+		
+	      strncpy( offsetstr, s+1, sizeof(offsetstr));
+	      offsetstr[strlen(offsetstr)-1] = 0;
+	      nr = sscanf( offsetstr, "%u", &offset);
+	      if ( nr != 1)
+		continue;
+	    }
+
+	    // Get object class
+	    strncpy( oname, name_p, sizeof(oname));
+	    s = strrchr( oname, '.');
+	    if ( s)
+	      *s = 0;
+
+	    sts = ldh_NameToAttrRef( gcgctx->ldhses, oname, &oattrref);
+	    if ( EVEN(sts)) return sts;
+
+	    sts = ldh_GetAttrRefOrigTid(gcgctx->wind->hw.ldhses, &oattrref, &ocid);
+	    if ( EVEN(sts)) return sts;
+
+	    switch ( cid) {
+	    case pwr_eType_Boolean:
+	      offset *= sizeof(pwr_tBoolean);
+	      strcpy( name, "BBoolean");
+	      break;
+	    case pwr_eType_Int64:
+	      offset *= sizeof(pwr_tInt64);
+	      strcpy( name, "BInt64");
+	      break;
+	    case pwr_eType_Int32:
+	      offset *= sizeof(pwr_tInt32);
+	      strcpy( name, "BInt32");
+	      break;
+	    case pwr_eType_Int16:
+	      offset *= sizeof(pwr_tInt16);
+	      strcpy( name, "BInt16");
+	      break;
+	    case pwr_eType_Int8:
+	      offset *= sizeof(pwr_tInt8);
+	      strcpy( name, "BInt8");
+	      break;
+	    case pwr_eType_Float32:
+	      offset *= sizeof(pwr_tFloat32);
+	      strcpy( name, "BFloat32");
+	      break;
+	    case pwr_eType_Float64:
+	      offset *= sizeof(pwr_tFloat64);
+	      strcpy( name, "BFloat64");
+	      break;
+	    default: {
+	      pwr_eType type;
+
+	      sts = ldh_GetAttrRefType(gcgctx->wind->hw.ldhses, &attrref, &type);
+	      if ( EVEN(sts)) return sts;
+
+	      if ( type == pwr_eType_String) {
+		offset *= attrref.Size; 
+		strcpy( name, "BString");
+	      }
+	      else
+		continue;	      
+	    }
+	    }
+
+	    // Print object cid
+	    cid = ocid;
+	  }
+	  else {
+	    /* Get name for this class */
+	    sts = gcg_get_structname_from_cid( gcgctx, cid, &namep);
+	    if( EVEN(sts)) return sts;
+
+	    strncpy( name, namep, sizeof(name));
+	  }
 
 	  gcg_print_adecl( gcgctx, name, attrref, prefix, GCG_REFTYPE_IOW);
 	  if ( prefix == GCG_PREFIX_IOCW )
-	    gcg_print_artdbref( gcgctx, attrref, prefix, cid, GCG_REFTYPE_IOCW);
+	    gcg_print_artdbref( gcgctx, attrref, prefix, cid, GCG_REFTYPE_IOCW, offset);
 	  else
-	    gcg_print_artdbref( gcgctx, attrref, prefix, cid, GCG_REFTYPE_IOW);
+	    gcg_print_artdbref( gcgctx, attrref, prefix, cid, GCG_REFTYPE_IOW, offset);
 
 	}
 
@@ -4066,7 +4254,7 @@ static void gcg_print_rtdbref(
 	/* Print direct link command */
 	if ( reftype == 0) {
 	  IF_PR fprintf( gcgctx->files[GCGM1_RTDBREF_FILE], 
-		"{ (void **)&%c%s, {{%u,%u},0,0,0,0}, %u,  sizeof(*%c%s), %ld},\n",
+		"{ (void **)&%c%s, {{%u,%u},0,0,0,0}, %u,  sizeof(*%c%s), %ld, 0},\n",
 		prefix,
 		vldh_IdToStr(0, objdid),
 		objdid.oix, objdid.vid,
@@ -4077,7 +4265,7 @@ static void gcg_print_rtdbref(
 	}
 	else {
 	  IF_PR fprintf( gcgctx->files[GCGM1_RTDBREF2_FILE], 
-		"{ (void **)&%c%s, {{%u,%u},0,0,0,0}, %u, sizeof(*%c%s), %ld },\n",
+		"{ (void **)&%c%s, {{%u,%u},0,0,0,0}, %u, sizeof(*%c%s), %ld, 0},\n",
 		prefix,
 		vldh_IdToStr(0, objdid),
 		objdid.oix, objdid.vid,
@@ -4094,13 +4282,14 @@ static void gcg_print_artdbref(
     pwr_sAttrRef       	attrref,
     char		prefix,
     pwr_tClassId	cid,
-    unsigned long	reftype
+    unsigned long	reftype,
+    unsigned int	offset
 )
 {
 	/* Print direct link command */
 	if ( reftype == 0) {
 	  IF_PR fprintf( gcgctx->files[GCGM1_RTDBREF_FILE], 
-		"{ (void **)&%c%s, {{%u,%u},%u,%u,%u,%u}, %u,  sizeof(*%c%s), %ld},\n",
+		"{ (void **)&%c%s, {{%u,%u},%u,%u,%u,%u}, %u,  sizeof(*%c%s), %ld, %u},\n",
 		prefix,
 		vldh_AttrRefToStr(0, attrref),
 	        attrref.Objid.oix, attrref.Objid.vid, attrref.Body,
@@ -4108,11 +4297,12 @@ static void gcg_print_artdbref(
 		cid,
 		prefix,
 		vldh_AttrRefToStr(1, attrref),
-		reftype);
+		reftype,
+		offset);
 	}
 	else {
 	  IF_PR fprintf( gcgctx->files[GCGM1_RTDBREF2_FILE], 
-		"{ (void **)&%c%s, {{%u,%u},%u,%u,%u,%u}, %u, sizeof(*%c%s), %ld },\n",
+		"{ (void **)&%c%s, {{%u,%u},%u,%u,%u,%u}, %u, sizeof(*%c%s), %ld, %u},\n",
 		prefix,
 		vldh_AttrRefToStr(0, attrref),
 	        attrref.Objid.oix, attrref.Objid.vid, attrref.Body,
@@ -4120,7 +4310,8 @@ static void gcg_print_artdbref(
 		cid,
 		prefix,
 		vldh_AttrRefToStr(1, attrref),
-		reftype);
+		reftype,
+	        offset);
 
 	}
 }
@@ -6616,6 +6807,7 @@ int	gcg_comp_m8( gcg_ctx gcgctx, vldh_t_node node)
 	ldh_tSesContext 	ldhses;
 	pwr_tClassId		cid;
 	pwr_tDisableAttr	disabled;
+	pwr_tCid		scid;
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 	
@@ -6656,62 +6848,119 @@ int	gcg_comp_m8( gcg_ctx gcgctx, vldh_t_node node)
 	}
 
 	/* Check that the class of the referenced object is correct */
-	if ( node->ln.cid == pwr_cClass_GetDi) {
+	switch ( node->ln.cid) {
+	case pwr_cClass_GetDi:
 	  if ( cid != pwr_cClass_Di) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
-	}    
-	else if ( node->ln.cid == pwr_cClass_GetDo) {
+	  break; 
+	case pwr_cClass_GetDo:
 	  if ( ! ( cid == pwr_cClass_Do ||
 	           cid == pwr_cClass_Po)) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
-	}    
-	else if ( node->ln.cid == pwr_cClass_GetDv) {
+	  break;
+	case pwr_cClass_GetDv:
 	  if ( cid != pwr_cClass_Dv) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
-	}    
-	else if ( node->ln.cid == pwr_cClass_GetAi) {
+	  break; 
+	case pwr_cClass_GetAi:
 	  if ( cid != pwr_cClass_Ai) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
-	}    
-	else if ( node->ln.cid == pwr_cClass_GetAo) {
+	  break; 
+	case pwr_cClass_GetAo:
 	  if ( cid != pwr_cClass_Ao) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
-	}
-	else if ( node->ln.cid == pwr_cClass_GetAv) {
+	  break;
+	case pwr_cClass_GetAv:
 	  if ( cid != pwr_cClass_Av) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
-	}
-	else if ( node->ln.cid == pwr_cClass_GetIi) {
+	  break;
+	case pwr_cClass_GetIi:
 	  if ( cid != pwr_cClass_Ii) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
-	}    
-	else if ( node->ln.cid == pwr_cClass_GetIo) {
+	  break;
+	case pwr_cClass_GetIo:
 	  if ( cid != pwr_cClass_Io) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
-	}
-	else if ( node->ln.cid == pwr_cClass_GetIv) {
+	  break;
+	case pwr_cClass_GetIv:
 	  if ( cid != pwr_cClass_Iv) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
+	  break;
+	case pwr_cClass_GetBiInt32:
+	case pwr_cClass_GetBoInt32:
+	case pwr_cClass_GetBiString80:
+	case pwr_cClass_GetBiFloat32:
+	case pwr_cClass_GetBoFloat32: {
+	case pwr_cClass_GetBoString80:
+	  // The attrref is on an ActualValue attribute, and the one level up attribute should
+	  // have Bi or Bo as superclass
+	  char *aname_p;
+	  pwr_tAName aname;
+	  pwr_tAttrRef laref;
+	  pwr_tCid lcid;
+	  char *s;
+	  
+	  sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol, &aname_p, &size);
+	  if ( EVEN(sts)) return sts;
+	 
+	  strncpy( aname, aname_p, sizeof(aname));
+	  s = strrchr( aname, '.');
+	  if ( s == 0 ) {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  *s = 0;
+
+	  sts = ldh_NameToAttrRef( ldhses, aname, &laref);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = ldh_GetAttrRefOrigTid( ldhses, &laref, &lcid);
+
+	  sts = ldh_GetSuperClass( gcgctx->ldhses, lcid, &scid);
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+
+	  switch ( node->ln.cid) {
+	  case pwr_cClass_GetBiInt32:
+	  case pwr_cClass_GetBiFloat32:
+	  case pwr_cClass_GetBiString80:
+	    if ( scid != pwr_cClass_Bi) {
+	      gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	      return GSX__NEXTNODE;
+	    }
+	    break; 
+	  case pwr_cClass_GetBoInt32:
+	  case pwr_cClass_GetBoFloat32:
+	  case pwr_cClass_GetBoString80:
+	    if ( scid != pwr_cClass_Bo) {
+	      gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	      return GSX__NEXTNODE;
+	    }
+	    break; 
+	  }
+	  break;
 	}
-	else if ( node->ln.cid == pwr_cClass_GetSv) {
+	case pwr_cClass_GetSv:
 	  if ( cid != pwr_cClass_Sv) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
@@ -6720,8 +6969,8 @@ int	gcg_comp_m8( gcg_ctx gcgctx, vldh_t_node node)
 	  /* Insert io object in ioread list */
 	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF);
 	  return GSX__SUCCESS;
-	}
-	else if ( node->ln.cid == pwr_cClass_GetATv) {
+	  break;
+	case pwr_cClass_GetATv:
 	  if ( cid != pwr_cClass_ATv) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
@@ -6730,8 +6979,7 @@ int	gcg_comp_m8( gcg_ctx gcgctx, vldh_t_node node)
 	  /* Insert io object in ioread list */
 	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF);
 	  return GSX__SUCCESS;
-	}
-	else if ( node->ln.cid == pwr_cClass_GetDTv) {
+	case pwr_cClass_GetDTv:
 	  if ( cid != pwr_cClass_DTv) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
@@ -6740,6 +6988,9 @@ int	gcg_comp_m8( gcg_ctx gcgctx, vldh_t_node node)
 	  /* Insert io object in ioread list */
 	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF);
 	  return GSX__SUCCESS;
+	default:
+	  gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	  return GSX__NEXTNODE;
 	}
 
 	/* Insert io object in ioread list */
@@ -11234,6 +11485,7 @@ int	gcg_comp_m38( gcg_ctx gcgctx, vldh_t_node node)
 	gcg_t_nocondef		nocondef[2];
 	unsigned long		nocontype[2];
 	char			*name;
+	pwr_tCid		scid;
 
 	nocondef[1].bo = 1;
 	nocontype[1] = GCG_BOOLEAN;
@@ -11298,42 +11550,132 @@ int	gcg_comp_m38( gcg_ctx gcgctx, vldh_t_node node)
 	}
 
 	/* Check that the class of the referenced object is correct */
-	if ( node->ln.cid == pwr_cClass_setdi ||	
-	     node->ln.cid == pwr_cClass_toggledi ||	
-	     node->ln.cid == pwr_cClass_resdi) {
+	switch ( node->ln.cid) {
+	case pwr_cClass_setdi:
+	case pwr_cClass_toggledi:
+	case pwr_cClass_resdi:
 	  if ( cid != pwr_cClass_Di) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].bo = TRUE;
 	  nocontype[0] = GCG_BOOLEAN;
-	}    
-	else if ( node->ln.cid == pwr_cClass_stodi) {
+	  break;
+	case pwr_cClass_stodi:
 	  if ( cid != pwr_cClass_Di) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].bo = (int)*nocondef_ptr;
 	  nocontype[0] = GCG_BOOLEAN;
-	}
-	else if ( (node->ln.cid == pwr_cClass_stoai) ||
-		  (node->ln.cid == pwr_cClass_cstoai)) {
+	  break;
+	case pwr_cClass_stoai:
+	case pwr_cClass_cstoai:
 	  if ( cid != pwr_cClass_Ai) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].fl = *(float *) nocondef_ptr;
 	  nocontype[0] = GCG_FLOAT;
-	}    
-	else if ( (node->ln.cid == pwr_cClass_stoii) ||
-		  (node->ln.cid == pwr_cClass_cstoii)) {
+	  break;    
+        case pwr_cClass_stoii:
+	case pwr_cClass_cstoii:
 	  if ( cid != pwr_cClass_Ii) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].bo = *(int *) nocondef_ptr;
 	  nocontype[0] = GCG_INT32;
-	}    
+	  break; 
+	case pwr_cClass_StoBiInt32:
+	case pwr_cClass_StoBiFloat32:
+	case pwr_cClass_StoBiString80:
+	case pwr_cClass_StoBoInt32:
+	case pwr_cClass_StoBoFloat32:
+	case pwr_cClass_StoBoString80:
+	case pwr_cClass_CStoBiInt32:
+	case pwr_cClass_CStoBiFloat32:
+	case pwr_cClass_CStoBiString80:
+	case pwr_cClass_CStoBoInt32:
+	case pwr_cClass_CStoBoFloat32:
+	case pwr_cClass_CStoBoString80: {
+	  // The attrref is on an ActualValue attribute, and the one level up attribute should
+	  // have Bi/Bo as superclass
+	  char *aname_p;
+	  pwr_tAName aname;
+	  pwr_tAttrRef laref;
+	  pwr_tCid lcid;
+	  char *s;
+	  
+	  sts = ldh_AttrRefToName( ldhses, &refattrref, ldh_eName_ArefVol, &aname_p, &size);
+	  if ( EVEN(sts)) return sts;
+	 
+	  strncpy( aname, aname_p, sizeof(aname));
+	  s = strrchr( aname, '.');
+	  if ( s == 0 ) {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  *s = 0;
+
+	  sts = ldh_NameToAttrRef( ldhses, aname, &laref);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = ldh_GetAttrRefOrigTid( ldhses, &laref, &lcid);
+
+	  sts = ldh_GetSuperClass( gcgctx->ldhses, lcid, &scid);
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+
+	  switch ( node->ln.cid) {
+	  case pwr_cClass_StoBiInt32:
+	  case pwr_cClass_StoBiFloat32:
+	  case pwr_cClass_StoBiString80:
+	  case pwr_cClass_CStoBiInt32:
+	  case pwr_cClass_CStoBiFloat32:
+	  case pwr_cClass_CStoBiString80:
+	    if ( scid != pwr_cClass_Bi) {
+	      gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	      return GSX__NEXTNODE;
+	    }
+	    break;
+	  case pwr_cClass_StoBoInt32:
+	  case pwr_cClass_StoBoFloat32:
+	  case pwr_cClass_StoBoString80:
+	    if ( scid != pwr_cClass_Bo) {
+	      gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	      return GSX__NEXTNODE;
+	    }
+	    break;
+	  }
+	  switch ( node->ln.cid) {
+	  case pwr_cClass_StoBiInt32:
+	  case pwr_cClass_StoBoInt32:
+	  case pwr_cClass_CStoBiInt32:
+	  case pwr_cClass_CStoBoInt32:
+	    nocondef[0].bo = *(int *) nocondef_ptr;
+	    nocontype[0] = GCG_INT32;
+	    break;
+	  case pwr_cClass_StoBiFloat32:
+	  case pwr_cClass_StoBoFloat32:
+	  case pwr_cClass_CStoBiFloat32:
+	  case pwr_cClass_CStoBoFloat32:
+	    nocondef[0].fl = *(float *) nocondef_ptr;
+	    nocontype[0] = GCG_FLOAT;
+	    break;
+	  case pwr_cClass_StoBiString80:
+	  case pwr_cClass_StoBoString80:
+	  case pwr_cClass_CStoBiString80:
+	  case pwr_cClass_CStoBoString80:
+	    strcpy( nocondef[0].str, (char *) nocondef_ptr);
+	    nocontype[0] = GCG_STRING;
+	    break;
+	  }
+	  break; 
+	}
+	}
 	free(nocondef_ptr);
 
 	/* Insert io object in iowrite list */

@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -48,57 +48,89 @@
 
 
 /* Direct link table */
-typedef struct 
-{
+typedef struct {
   void		**Pointer;
   pwr_sAttrRef	AttrRef;
   pwr_tClassId	ObjType;
   pwr_tUInt32	Size;
   pwr_tUInt32	UseCode;
-  }	plc_t_rtdbref;
+  pwr_tUInt32   Offset;
+} plc_t_rtdbref;
 
 
-typedef struct 	{
-	pwr_tBoolean	ActualValue;
-	}	plc_sClass_Di;
+typedef struct {
+  pwr_tBoolean	ActualValue;
+} plc_sClass_Di;
 
-typedef struct 	{
-	pwr_tBoolean	ActualValue;
-	}	plc_sClass_Do;
+typedef struct {
+  pwr_tBoolean	ActualValue;
+} plc_sClass_Do;
 
-typedef struct 	{
-	pwr_tBoolean	ActualValue;
-	}	plc_sClass_Po;
+typedef struct {
+  pwr_tBoolean	ActualValue;
+} plc_sClass_Po;
 
-typedef struct 	{
-	pwr_tBoolean	ActualValue;
-	}	plc_sClass_Dv;
+typedef struct {
+  pwr_tBoolean	ActualValue;
+} plc_sClass_Dv;
 
-typedef struct 	{
-	pwr_tInt32	RawValue;
-	}	plc_sClass_Co;
+typedef struct {
+  pwr_tInt32	RawValue;
+} plc_sClass_Co;
 
-typedef struct 	{
-	pwr_tFloat32	ActualValue;
-	}	plc_sClass_Ai;
+typedef struct {
+  pwr_tFloat32	ActualValue;
+} plc_sClass_Ai;
 
-typedef struct 	{
-	pwr_tFloat32	ActualValue;
-	}	plc_sClass_Ao;
+typedef struct {
+  pwr_tFloat32	ActualValue;
+} plc_sClass_Ao;
 
-typedef struct 	{
-	pwr_tFloat32	ActualValue;
-	}	plc_sClass_Av;
+typedef struct {
+  pwr_tFloat32	ActualValue;
+} plc_sClass_Av;
 
-typedef struct 	{
-	pwr_tInt32	ActualValue;
-	}	plc_sClass_Ii;
+typedef struct {
+  pwr_tInt32	ActualValue;
+} plc_sClass_Ii;
 
-typedef struct 	{
-	pwr_tInt32	ActualValue;
-	}	plc_sClass_Io;
+typedef struct {
+  pwr_tInt32	ActualValue;
+} plc_sClass_Io;
 
-typedef struct 	{
-	pwr_tInt32	ActualValue;
-	}	plc_sClass_Iv;
+typedef struct {
+   pwr_tInt32	ActualValue;
+} plc_sClass_Iv;
+
+typedef struct {
+   pwr_tBoolean	ActualValue;
+} plc_sClass_BBoolean;
+
+typedef struct {
+   pwr_tInt64	ActualValue;
+} plc_sClass_BInt64;
+
+typedef struct {
+   pwr_tInt32	ActualValue;
+} plc_sClass_BInt32;
+
+typedef struct {
+   pwr_tInt16	ActualValue;
+} plc_sClass_BInt16;
+
+typedef struct {
+   pwr_tInt8	ActualValue;
+} plc_sClass_BInt8;
+
+typedef struct {
+   pwr_tFloat32	ActualValue;
+} plc_sClass_BFloat32;
+
+typedef struct {
+   pwr_tFloat64	ActualValue;
+} plc_sClass_BFloat64;
+
+typedef struct {
+  char	ActualValue[1];
+} plc_sClass_BString;
 

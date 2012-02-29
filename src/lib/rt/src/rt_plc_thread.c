@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -183,6 +183,8 @@ plc_thread (
   memcpy(tp->copy.ii_a.p, tp->pp->base.ii_a.p, tp->copy.ii_a.size);
   memcpy(tp->copy.io_a.p, tp->pp->base.io_a.p, tp->copy.io_a.size);
   memcpy(tp->copy.iv_a.p, tp->pp->base.iv_a.p, tp->copy.iv_a.size);
+  memcpy(tp->copy.bi_a.p, tp->pp->base.bi_a.p, tp->copy.bi_a.size);
+  memcpy(tp->copy.bo_a.p, tp->pp->base.bo_a.p, tp->copy.bo_a.size);
 
   thread_MutexUnlock(&tp->pp->io_copy_mutex);
   
@@ -267,6 +269,8 @@ scan (
   memcpy(tp->copy.ii_a.p, pp->base.ii_a.p, tp->copy.ii_a.size);
   memcpy(tp->copy.io_a.p, pp->base.io_a.p, tp->copy.io_a.size);
   memcpy(tp->copy.iv_a.p, pp->base.iv_a.p, tp->copy.iv_a.size);
+  memcpy(tp->copy.bi_a.p, pp->base.bi_a.p, tp->copy.bi_a.size);
+  memcpy(tp->copy.bo_a.p, pp->base.bo_a.p, tp->copy.bo_a.size);
 
   thread_MutexUnlock(&pp->io_copy_mutex);
 

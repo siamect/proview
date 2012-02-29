@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
+ * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -433,6 +433,7 @@ pwr_tStatus io_init_di_signals(
   pwr_sClass_DiArea		*area_op;
   pwr_sClass_Di			*sig_op;
   pwr_sClass_ChanDi		*chan_op;
+  pwr_sClass_ChanD		*chan_opd;
   pwr_sAttrRef			sig_aref;
   pwr_tAName		       	buf;
   pwr_tUInt32			sig_count = 0;
@@ -464,6 +465,14 @@ pwr_tStatus io_init_di_signals(
     sts = gdh_GetNextAttrRef( pwr_cClass_ChanDi, &sig_aref, &sig_aref);
   }
 
+  sts = gdh_GetClassListAttrRef( pwr_cClass_ChanD, &sig_aref);
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &sig_aref, (void *) &chan_opd);
+    if ( ODD(sts) && chan_opd->Type == pwr_eDChanTypeEnum_Di)
+      chan_opd->SigChanCon.Objid = pwr_cNObjid;
+    sts = gdh_GetNextAttrRef( pwr_cClass_ChanD, &sig_aref, &sig_aref);
+  }
+
   sts = gdh_GetClassListAttrRef( pwr_cClass_Di, &sig_aref);
   while (ODD(sts)) {
     sts = gdh_AttrrefToName( &sig_aref, buf, sizeof(buf), cdh_mNName);
@@ -480,7 +489,7 @@ pwr_tStatus io_init_di_signals(
     else {
       sts = gdh_GetAttrRefTid( &sig_op->SigChanCon, &class);
       if (EVEN(sts) || 
-	  (class != pwr_cClass_ChanDi)) {
+	  (!(class == pwr_cClass_ChanDi || class == pwr_cClass_ChanD))) {
 	errh_Error("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
@@ -489,12 +498,25 @@ pwr_tStatus io_init_di_signals(
 	  errh_Error("IO init: Signal SigChanCon error '%s'", buf);
 	}	
 	else {
-	  if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
-	    pwr_tAName oldsig;
-	    sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
-	    errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	  if ( class == pwr_cClass_Di) {
+	    if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
+	      pwr_tAName oldsig;
+	      sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
+	      errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	    }
+	    chan_op->SigChanCon = sig_aref;
 	  }
-	  chan_op->SigChanCon = sig_aref;
+	  else {
+	    if ( ((pwr_sClass_ChanD *)chan_op)->Type != pwr_eDChanTypeEnum_Di)
+	      errh_Error( "IO init: ChanD type is not Di '%s'", buf);
+	    else if ( cdh_ObjidIsNotNull( ((pwr_sClass_ChanD *)chan_op)->SigChanCon.Objid)) {
+	      pwr_tAName oldsig;
+	      sts = gdh_AttrrefToName( &((pwr_sClass_ChanD *)chan_op)->SigChanCon, oldsig, sizeof(oldsig), 
+				       cdh_mNName);
+	      errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	    }
+	    ((pwr_sClass_ChanD *)chan_op)->SigChanCon = sig_aref;
+	  }
 	}
       }		
     }
@@ -528,6 +550,7 @@ pwr_tStatus io_init_do_signals(
   pwr_sClass_DoArea		*area_op;
   pwr_sClass_Do			*sig_op;
   pwr_sClass_ChanDo		*chan_op;
+  pwr_sClass_ChanD		*chan_opd;
   pwr_sAttrRef			sig_aref;
   pwr_tAName   			buf;
   pwr_tUInt32			sig_count = 0;
@@ -559,6 +582,14 @@ pwr_tStatus io_init_do_signals(
     sts = gdh_GetNextAttrRef( pwr_cClass_ChanDo, &sig_aref, &sig_aref);
   }
 
+  sts = gdh_GetClassListAttrRef( pwr_cClass_ChanD, &sig_aref);
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &sig_aref, (void *) &chan_opd);
+    if ( ODD(sts) && chan_opd->Type == pwr_eDChanTypeEnum_Do)
+      chan_opd->SigChanCon.Objid = pwr_cNObjid;
+    sts = gdh_GetNextAttrRef( pwr_cClass_ChanD, &sig_aref, &sig_aref);
+  }
+
   sts = gdh_GetClassListAttrRef( pwr_cClass_Do, &sig_aref);
   while (ODD(sts)) {
 
@@ -576,7 +607,7 @@ pwr_tStatus io_init_do_signals(
     else {
       sts = gdh_GetAttrRefTid( &sig_op->SigChanCon, &class);
       if (EVEN(sts) ||
-	  (class != pwr_cClass_ChanDo)) {
+	  (!(class == pwr_cClass_ChanDo || class == pwr_cClass_ChanD))) {
 	errh_Error("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
@@ -585,12 +616,25 @@ pwr_tStatus io_init_do_signals(
 	  errh_Error("IO init: Signal SigChanCon error '%s'", buf);
 	}	
 	else {
-	  if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
-	    pwr_tAName oldsig;
-	    sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
-	    errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	  if ( class == pwr_cClass_ChanDo) {
+	    if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
+	      pwr_tAName oldsig;
+	      sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
+	      errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	    }
+	    chan_op->SigChanCon = sig_aref;
 	  }
-	  chan_op->SigChanCon = sig_aref;
+	  else {
+	    if ( ((pwr_sClass_ChanD *)chan_op)->Type != pwr_eDChanTypeEnum_Do)
+	      errh_Error( "IO init: ChanD type is not Do '%s'", buf);
+	    else if ( cdh_ObjidIsNotNull( ((pwr_sClass_ChanD *)chan_op)->SigChanCon.Objid)) {
+	      pwr_tAName oldsig;
+	      sts = gdh_AttrrefToName( &((pwr_sClass_ChanD *)chan_op)->SigChanCon, oldsig, sizeof(oldsig), 
+				       cdh_mNName);
+	      errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	    }
+	    ((pwr_sClass_ChanD *)chan_op)->SigChanCon = sig_aref;
+	  } 
 	}
       }		
     }
@@ -1144,6 +1188,312 @@ io_init_iv_signals (
   return sts;
 }
 
+/*----------------------------------------------------------------------------*\
+  Initialization of Bi signals and channels.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus io_init_bi_signals(
+  pwr_sClass_IOHandler		*io_op)
+{
+  pwr_tStatus			sts;
+  pwr_tObjid			area_objid;
+  pwr_sClass_BiArea		*area_op;
+  pwr_sClass_Bi			*sig_op;
+  pwr_sClass_ChanBi		*chan_op;
+  pwr_sAttrRef			sig_aref;
+  pwr_tAName   			buf;
+  pwr_tUInt32			sig_count = 0;
+  pwr_tUInt32			sig_size = 0;
+  pwr_tClassId			class;
+  pwr_sClass_InitArea		*iarea_op;
+  pwr_sClass_InitArea		*isizearea_op;
+  pwr_tTypeId			a_type, iv_type;
+  unsigned int			a_size, a_offs, a_dim;
+  unsigned int			iv_size, iv_offs, iv_dim;
+  pwr_tCid			subcid;
+  int 				i;
+  pwr_tAttrRef			actval_aref;
+  pwr_tAttrRef			initval_aref;
+
+  // Get pointer to area-object
+  sts = gdh_NameToObjid( "pwrNode-active-io-bi", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to init area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-bi_init", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &iarea_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to initarea size object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-bi_initsize", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &isizearea_op);
+  if (EVEN(sts)) return sts;
+
+  // Check SigChanCon and put signal in channels SigChanCon
+
+  // Zero sigchancon in channel to detect double connections
+  sts = gdh_GetClassListAttrRef( pwr_cClass_ChanBi, &sig_aref);
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &sig_aref, (void *) &chan_op);
+    if ( ODD(sts))
+      chan_op->SigChanCon.Objid = pwr_cNObjid;
+    sts = gdh_GetNextAttrRef( pwr_cClass_ChanBi, &sig_aref, &sig_aref);
+  }
+
+  for ( sts = gdh_GetSubClassList( pwr_cClass_Bi, &subcid);
+	ODD(sts);
+	sts = gdh_GetNextSubClass( pwr_cClass_Bi, subcid, &subcid)) {
+
+    for ( sts = gdh_GetClassListAttrRef( subcid, &sig_aref);
+	  ODD(sts);
+	  sts = gdh_GetNextAttrRef( subcid, &sig_aref, &sig_aref)) {
+
+      sts = gdh_AttrrefToName( &sig_aref, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_AttrRefToPointer( &sig_aref, (void *) &sig_op);
+      if (EVEN(sts)) return sts;
+    
+      if ( cdh_ObjidIsNull( sig_op->SigChanCon.Objid)) {
+	errh_Info("IO init: Signal is not connected '%s'", buf);
+      }
+      else if ( EVEN(io_replace_symbol( &sig_op->SigChanCon, &sig_aref))) {
+      }
+      else {
+	sts = gdh_GetAttrRefTid( &sig_op->SigChanCon, &class);
+	if (EVEN(sts) || 
+	    (class != pwr_cClass_ChanBi)) {
+	  errh_Error("IO init: Signal SigChanCon error '%s'", buf);
+	}
+	else {
+	  sts = gdh_AttrRefToPointer( &sig_op->SigChanCon, (void *) &chan_op);
+	  if (EVEN(sts)) {
+	    errh_Error("IO init: Signal SigChanCon error '%s'", buf);
+	  }	
+	  else {
+	    if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
+	      pwr_tAName oldsig;
+	      sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
+	      errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	    }
+	    chan_op->SigChanCon = sig_aref;
+	  }
+	}
+      }
+      
+      /* Get offset to to ActualValue and InitialValue */
+      sts = gdh_ArefANameToAref( &sig_aref, "ActualValue", &actval_aref);
+      if ( EVEN(sts)) {
+	errh_Error("IO init: Signal class structure error '%s'", buf);
+	continue;
+      }
+
+      sts = gdh_GetAttributeCharAttrref( &actval_aref, &a_type, &a_size, &a_offs, &a_dim);
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_ArefANameToAref( &sig_aref, "InitialValue", &initval_aref);
+      if ( EVEN(sts)) {
+	errh_Error("IO init: Signal class structure error '%s'", buf);
+	continue;
+      }
+
+      sts = gdh_GetAttributeCharAttrref( &initval_aref, &iv_type, &iv_size, &iv_offs, &iv_dim);
+      if ( EVEN(sts)) return sts;
+
+      if ( sig_op->Size != iv_size ||
+	   iv_dim != a_dim ||
+	   a_type != iv_type) {
+	errh_Error("IO init: Signal size or type error '%s'", buf);
+	continue;
+      }
+
+      for ( i = 0; i < a_dim; i++) {
+	if ( i == 0) {
+	  sig_size = pwr_AlignLW(sig_size);
+	  sig_op->ValueIndex = sig_size;
+	}
+	gdh_StoreRtdbPointer( (unsigned long *)((char *) sig_op + a_offs + i * sizeof(pwr_tUInt64)), 
+			      (char *)area_op->Value + sig_size);
+
+	gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[sig_count],
+			      (char *) sig_op + iv_offs + i * iv_size / iv_dim);
+
+	isizearea_op->Value[sig_count] = (pwr_tUInt64)iv_size / iv_dim + ((pwr_tUInt64)sig_size << 32);
+
+	io_connect_status( &sig_aref, &sig_op->SigChanCon);
+	sig_count++;
+	sig_size += a_size / a_dim;
+      }
+    }
+  }
+
+  /* Store number of Bi in node object  */
+  io_op->BiCount = sig_count;
+  io_op->BiSize = sig_size;
+
+  return IO__SUCCESS;
+}
+
+/*----------------------------------------------------------------------------*\
+  Initialization of Bo signals and channels.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus io_init_bo_signals(
+  pwr_sClass_IOHandler		*io_op)
+{
+  pwr_tStatus			sts;
+  pwr_tObjid			area_objid;
+  pwr_sClass_BoArea		*area_op;
+  pwr_sClass_Bo			*sig_op;
+  pwr_sClass_ChanBo		*chan_op;
+  pwr_sAttrRef			sig_aref;
+  pwr_tAName   			buf;
+  pwr_tUInt32			sig_count = 0;
+  pwr_tUInt32			sig_size = 0;
+  pwr_tClassId			class;
+  pwr_sClass_InitArea		*iarea_op;
+  pwr_sClass_InitArea		*isizearea_op;
+  pwr_tTypeId			a_type, iv_type;
+  unsigned int			a_size, a_offs, a_dim;
+  unsigned int			iv_size, iv_offs, iv_dim;
+  pwr_tCid			subcid;
+  int 				i;
+  pwr_tAttrRef			actval_aref;
+  pwr_tAttrRef			initval_aref;
+
+  // Get pointer to area-object
+  sts = gdh_NameToObjid( "pwrNode-active-io-bo", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-bo_init", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &iarea_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to initarea size object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-bo_initsize", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &isizearea_op);
+  if (EVEN(sts)) return sts;
+
+  // Check SigChanCon and put signal in channels SigChanCon
+
+  // Zero sigchancon in channel to detect double connections
+  sts = gdh_GetClassListAttrRef( pwr_cClass_ChanBo, &sig_aref);
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &sig_aref, (void *) &chan_op);
+    if ( ODD(sts))
+      chan_op->SigChanCon.Objid = pwr_cNObjid;
+    sts = gdh_GetNextAttrRef( pwr_cClass_ChanBo, &sig_aref, &sig_aref);
+  }
+
+  for ( sts = gdh_GetSubClassList( pwr_cClass_Bo, &subcid);
+	ODD(sts);
+	sts = gdh_GetNextSubClass( pwr_cClass_Bo, subcid, &subcid)) {
+
+    // Zero sigchancon in channel to detect double connections
+    for ( sts = gdh_GetClassListAttrRef( subcid, &sig_aref);
+	  ODD(sts);
+	  sts = gdh_GetNextAttrRef( subcid, &sig_aref, &sig_aref)) {
+
+      sts = gdh_AttrrefToName( &sig_aref, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_AttrRefToPointer( &sig_aref, (void *) &sig_op);
+      if (EVEN(sts)) return sts;
+    
+      if ( cdh_ObjidIsNull( sig_op->SigChanCon.Objid)) {
+	errh_Info("IO init: Signal is not connected '%s'", buf);
+      }
+      else if ( EVEN(io_replace_symbol( &sig_op->SigChanCon, &sig_aref))) {
+      }
+      else {
+	sts = gdh_GetAttrRefTid( &sig_op->SigChanCon, &class);
+	if (EVEN(sts) || 
+	    (class != pwr_cClass_ChanBo)) {
+	  errh_Error("IO init: Signal SigChanCon error '%s'", buf);
+	}
+	else {
+	  sts = gdh_AttrRefToPointer( &sig_op->SigChanCon, (void *) &chan_op);
+	  if (EVEN(sts)) {
+	    errh_Error("IO init: Signal SigChanCon error '%s'", buf);
+	  }	
+	  else {
+	    if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
+	      pwr_tAName oldsig;
+	      sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
+	      errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	    }
+	    chan_op->SigChanCon = sig_aref;
+	  }
+	}
+      }
+      
+      sts = gdh_ArefANameToAref( &sig_aref, "ActualValue", &actval_aref);
+      if ( EVEN(sts)) {
+	errh_Error("IO init: Signal class structure error '%s'", buf);
+	continue;
+      }
+
+      sts = gdh_GetAttributeCharAttrref( &actval_aref, &a_type, &a_size, &a_offs, &a_dim);
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_ArefANameToAref( &sig_aref, "InitialValue", &initval_aref);
+      if ( EVEN(sts)) {
+	errh_Error("IO init: Signal class structure error '%s'", buf);
+	continue;
+      }
+
+      sts = gdh_GetAttributeCharAttrref( &initval_aref, &iv_type, &iv_size, &iv_offs, &iv_dim);
+      if ( EVEN(sts)) return sts;
+
+      if ( sig_op->Size != iv_size ||
+	   iv_dim != a_dim ||
+	   a_type != iv_type) {
+	errh_Error("IO init: Signal size or type error '%s'", buf);
+	continue;
+      }
+
+      for ( i = 0; i < a_dim; i++) {
+	if ( i == 0) {
+	  sig_size = pwr_AlignLW(sig_size);
+	  sig_op->ValueIndex = sig_size;
+	}
+	gdh_StoreRtdbPointer( (unsigned long *)((char *) sig_op + a_offs + i * sizeof(pwr_tUInt64)), 
+			      (char *)area_op->Value + sig_size);
+
+	gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[sig_count],
+			      (char *) sig_op + iv_offs + i * iv_size / iv_dim);
+
+	isizearea_op->Value[sig_count] = (pwr_tUInt64)iv_size / iv_dim + ((pwr_tUInt64)sig_size << 32);
+
+	io_connect_status( &sig_aref, &sig_op->SigChanCon);
+	sig_count++;
+	sig_size += a_size / a_dim;
+      }
+    }
+  }
+
+  /* Store number of Bo in node object  */
+  io_op->BoCount = sig_count;
+  io_op->BoSize = sig_size;
+
+  return IO__SUCCESS;
+}
+
 
 /*----------------------------------------------------------------------------*\
   Initialize io handler object.
@@ -1267,6 +1617,12 @@ pwr_tStatus io_init_signals( void)
   if ( EVEN(sts)) return sts;
 
   sts = io_init_iv_signals( io_op);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_bi_signals( io_op);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_bo_signals( io_op);
   if ( EVEN(sts)) return sts;
 
   sts = io_init_iohandler_object();
@@ -1469,6 +1825,7 @@ static pwr_tStatus io_handle_channels(
   int 		sig_found;
   pwr_tStatus 	sts;
   int           j;
+  pwr_tCid	scid;
   
 
   elem = 1;
@@ -1498,6 +1855,10 @@ static pwr_tStatus io_handle_channels(
       sigchancon = ((pwr_sClass_ChanDo *) chan_op)->SigChanCon;
       number = *chan_cnt;
       break;
+    case pwr_cClass_ChanD:
+      sigchancon = ((pwr_sClass_ChanD *) chan_op)->SigChanCon;
+      number = *chan_cnt;
+      break;
     case pwr_cClass_ChanIi:
       sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon;
       number = *chan_cnt;
@@ -1505,6 +1866,22 @@ static pwr_tStatus io_handle_channels(
     case pwr_cClass_ChanIo:
       sigchancon = ((pwr_sClass_ChanIo *) chan_op)->SigChanCon;
       number = *chan_cnt;
+      break;
+    case pwr_cClass_ChanBi:
+      sigchancon = ((pwr_sClass_ChanBi *) chan_op)->SigChanCon;
+      number = *chan_cnt;
+      break;
+    case pwr_cClass_ChanBo:
+      sigchancon = ((pwr_sClass_ChanBo *) chan_op)->SigChanCon;
+      number = *chan_cnt;
+      break;
+    case pwr_cClass_ChanBiBlob:
+      sigchancon = ((pwr_sClass_ChanBiBlob *) chan_op)->AttributeChanCon;
+      number = 0;
+      break;
+    case pwr_cClass_ChanBoBlob:
+      sigchancon = ((pwr_sClass_ChanBoBlob *) chan_op)->AttributeChanCon;
+      number = 0;
       break;
     case pwr_cClass_ChanCo:
       sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon;
@@ -1583,13 +1960,87 @@ static pwr_tStatus io_handle_channels(
 	chanp->abs_vbp = gdh_TranslateRtdbPointer( 
 						  (unsigned long) ((pwr_sClass_Co *)sig_op)->AbsValue);
 	break;
-      default:
-	errh_Error( 
-		   "IO init error: unknown signal class card  %, chan nr %d", 
-		   cp->Name, number);
-	sts = gdh_DLUnrefObjectInfo( sigdlid);
-	sig_op = 0;
-	sigdlid = pwr_cNDlid;
+      default: {
+	int class_ok = 0;
+
+	if ( bd[i].attr->Param.TypeRef == pwr_cClass_ChanBiBlob ||
+	     bd[i].attr->Param.TypeRef == pwr_cClass_ChanBoBlob) {
+	  unsigned int a_size, a_offs, a_dim;
+	  pwr_tTypeId a_type;
+
+	  chanp->vbp = sig_op;
+
+	  sts = gdh_GetAttributeCharAttrref( &sigchancon, &a_type, &a_size, &a_offs, &a_dim);
+	  if ( EVEN(sts)) return sts;		  
+	    
+	  chanp->SigStrSize = a_size;
+	  if ( bd[i].attr->Param.TypeRef == pwr_cClass_ChanBiBlob) {
+	    if ( chanp->SigStrSize > ((pwr_sClass_ChanBiBlob *)chanp->cop)->Size)
+	      chanp->SigStrSize = ((pwr_sClass_ChanBiBlob *)chanp->cop)->Size;
+	  }
+	  else {
+	    if ( chanp->SigStrSize > ((pwr_sClass_ChanBoBlob *)chanp->cop)->Size)
+	      chanp->SigStrSize = ((pwr_sClass_ChanBoBlob *)chanp->cop)->Size;
+	  }
+
+	  class_ok = 1;
+	}
+	else {
+	  /* Look for Bi or Bo subclass */
+	  sts = gdh_GetSuperClass( sigclass, &scid, pwr_cNObjid);
+	  if ( ODD(sts)) {
+	    switch ( scid) {
+
+	    case pwr_cClass_Bi: {
+	      pwr_tAttrRef actval_aref;
+	      pwr_tTypeId a_type;
+	      unsigned int a_size, a_offs, a_dim;
+	      
+	      sts = gdh_ArefANameToAref( &sigchancon, "ActualValue", &actval_aref);
+	      if ( EVEN(sts)) return sts;
+	    
+	      sts = gdh_GetAttributeCharAttrref( &actval_aref, &a_type, &a_size, &a_offs, &a_dim);
+	      if ( EVEN(sts)) return sts;		  
+	    
+	      chanp->vbp = gdh_TranslateRtdbPointer( (unsigned long) ((char *)sig_op + a_offs));
+	      chanp->SigElem = a_dim;
+	      chanp->SigType = a_type;
+	      if ( a_type == pwr_eType_String)
+		chanp->SigStrSize = a_size / a_dim;
+	      class_ok = 1;
+	      break;
+	    }
+	    case pwr_cClass_Bo: {
+	      pwr_tAttrRef actval_aref;
+	      pwr_tTypeId a_type;
+	      unsigned int a_size, a_offs, a_dim;
+	      
+	      sts = gdh_ArefANameToAref( &sigchancon, "ActualValue", &actval_aref);
+	      if ( EVEN(sts)) return sts;
+
+	      sts = gdh_GetAttributeCharAttrref( &actval_aref, &a_type, &a_size, &a_offs, &a_dim);
+	      if ( EVEN(sts)) return sts;		  
+
+	      chanp->vbp = gdh_TranslateRtdbPointer( (unsigned long) ((char *)sig_op + a_offs));
+	      chanp->SigElem = a_dim;
+	      chanp->SigType = a_type;
+	      if ( a_type == pwr_eType_String)
+		chanp->SigStrSize = a_size / a_dim;
+	      class_ok = 1;
+	      break;
+	    }
+	    }
+	  }
+	}
+	if ( !class_ok) {
+	  errh_Error( 
+		     "IO init error: unknown signal class card  %, chan nr %d", 
+		     cp->Name, number);
+	  sts = gdh_DLUnrefObjectInfo( sigdlid);
+	  sig_op = 0;
+	  sigdlid = pwr_cNDlid;
+	}
+      }
       }
     }
   }
@@ -1641,6 +2092,7 @@ static pwr_tStatus io_init_card(
   int		chan_cnt = 0;
   int 		sig_found;
   int		idx;
+  pwr_tCid	scid;
 
   
   sts = gdh_GetObjectClass( objid, &class);
@@ -1709,9 +2161,14 @@ static pwr_tStatus io_init_card(
 	      case pwr_cClass_ChanAo:
 	      case pwr_cClass_ChanDo:
 	      case pwr_cClass_ChanDi:
+	      case pwr_cClass_ChanD:
 	      case pwr_cClass_ChanIi:
 	      case pwr_cClass_ChanIo:
 	      case pwr_cClass_ChanCo:
+	      case pwr_cClass_ChanBi:
+	      case pwr_cClass_ChanBo:
+	      case pwr_cClass_ChanBiBlob:
+	      case pwr_cClass_ChanBoBlob:
 		maxchan++;
 		break;
 	      default: ;
@@ -1734,9 +2191,14 @@ static pwr_tStatus io_init_card(
 		case pwr_cClass_ChanAo:
 		case pwr_cClass_ChanDi:
 		case pwr_cClass_ChanDo:
+		case pwr_cClass_ChanD:
 		case pwr_cClass_ChanIi:
 		case pwr_cClass_ChanIo:
 		case pwr_cClass_ChanCo:
+		case pwr_cClass_ChanBi:
+		case pwr_cClass_ChanBo:
+		case pwr_cClass_ChanBiBlob:
+		case pwr_cClass_ChanBoBlob:
 		  if ( bd[i].attr->Param.Info.Elements <= 1)
 		    maxchan++;
 		  else
@@ -1756,9 +2218,14 @@ static pwr_tStatus io_init_card(
 		      case pwr_cClass_ChanAo:
 		      case pwr_cClass_ChanDi:
 		      case pwr_cClass_ChanDo:
+		      case pwr_cClass_ChanD:
 		      case pwr_cClass_ChanIi:
 		      case pwr_cClass_ChanIo:
 		      case pwr_cClass_ChanCo:
+		      case pwr_cClass_ChanBi:
+		      case pwr_cClass_ChanBo:
+		      case pwr_cClass_ChanBiBlob:
+		      case pwr_cClass_ChanBoBlob:
 			if ( bd2[ii].attr->Param.Info.Elements <= 1)
 			  maxchan++;
 			else
@@ -1859,6 +2326,10 @@ static pwr_tStatus io_init_card(
 	        sigchancon = ((pwr_sClass_ChanDi *) chan_op)->SigChanCon;
 	        number = ((pwr_sClass_ChanDi *) chan_op)->Number;
 	        break;
+	      case pwr_cClass_ChanD:
+	        sigchancon = ((pwr_sClass_ChanD *) chan_op)->SigChanCon;
+	        number = ((pwr_sClass_ChanD *) chan_op)->Number;
+	        break;
 	      case pwr_cClass_ChanIi:
 		sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon;
 		number = ((pwr_sClass_ChanIi *) chan_op)->Number;
@@ -1870,6 +2341,22 @@ static pwr_tStatus io_init_card(
 	      case pwr_cClass_ChanCo:
 		sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon;
 		number = ((pwr_sClass_ChanCo *) chan_op)->Number;
+		break;
+	      case pwr_cClass_ChanBi:
+		sigchancon = ((pwr_sClass_ChanBi *) chan_op)->SigChanCon;
+		number = ((pwr_sClass_ChanCo *) chan_op)->Number;
+		break;
+	      case pwr_cClass_ChanBo:
+		sigchancon = ((pwr_sClass_ChanBo *) chan_op)->SigChanCon;
+		number = ((pwr_sClass_ChanCo *) chan_op)->Number;
+		break;
+	      case pwr_cClass_ChanBiBlob:
+		sigchancon = ((pwr_sClass_ChanBiBlob *) chan_op)->AttributeChanCon;
+		number = 0;
+		break;
+	      case pwr_cClass_ChanBoBlob:
+		sigchancon = ((pwr_sClass_ChanBoBlob *) chan_op)->AttributeChanCon;
+		number = 0;
 		break;
 	      default:
 		sts = gdh_DLUnrefObjectInfo( chandlid);
@@ -1971,15 +2458,91 @@ static pwr_tStatus io_init_card(
 		  chanp->abs_vbp = gdh_TranslateRtdbPointer( 
 		    (unsigned long) ((pwr_sClass_Co *)sig_op)->AbsValue);
 		  break;
-		default:
-		  errh_Error( 
-		    "IO init error: unknown signal class card  %, chan nr %d", 
-		    cp->Name, number);
-		  sts = gdh_DLUnrefObjectInfo( chandlid);
-		  sts = gdh_DLUnrefObjectInfo( sigdlid);
-		  memset( chanp, 0, sizeof(*chanp));
-		}
+		default: {
+		  int class_ok = 0;
+		  
+		  if ( chan_class == pwr_cClass_ChanBiBlob ||
+		       chan_class == pwr_cClass_ChanBoBlob) {
+		    unsigned int a_size, a_offs, a_dim;
+		    pwr_tTypeId a_type;
 
+		    chanp->vbp = sig_op;
+		    
+		    sts = gdh_GetAttributeCharAttrref( &sigchancon, &a_type, &a_size, &a_offs, &a_dim);
+		    if ( EVEN(sts)) return sts;		  
+	    
+		    chanp->SigStrSize = a_size;
+		    if ( chan_class == pwr_cClass_ChanBiBlob) {
+		      if ( chanp->SigStrSize > ((pwr_sClass_ChanBiBlob *)chanp->cop)->Size)
+			chanp->SigStrSize = ((pwr_sClass_ChanBiBlob *)chanp->cop)->Size;
+		    }
+		    else {
+		      if ( chanp->SigStrSize > ((pwr_sClass_ChanBoBlob *)chanp->cop)->Size)
+			chanp->SigStrSize = ((pwr_sClass_ChanBoBlob *)chanp->cop)->Size;
+		    }
+
+		    class_ok = 1;
+		  }
+		  else {
+		    /* Look for Bi or Bo subclass */
+		    sts = gdh_GetSuperClass( sigclass, &scid, pwr_cNObjid);
+		    if ( ODD(sts)) {
+		      switch ( scid) {
+
+		      case pwr_cClass_Bi: {
+			pwr_tAttrRef actval_aref;
+			pwr_tTypeId a_type;
+			unsigned int a_size, a_offs, a_dim;
+			
+			sts = gdh_ArefANameToAref( &sigchancon, "ActualValue", &actval_aref);
+			if ( EVEN(sts)) return sts;
+			
+			sts = gdh_GetAttributeCharAttrref( &actval_aref, &a_type, &a_size, &a_offs, &a_dim);
+			if ( EVEN(sts)) return sts;		  
+		      
+			pwr_tUInt64 actval = *(pwr_tUInt64 *)((char *)sig_op + a_offs);
+			chanp->vbp = gdh_TranslateRtdbPointer( (unsigned long) actval);
+			chanp->SigElem = a_dim;
+			chanp->SigType = a_type;
+			if ( a_type == pwr_eType_String)
+			  chanp->SigStrSize = a_size / a_dim;
+			class_ok = 1;
+			break;
+		      }
+		      case pwr_cClass_Bo: {
+			pwr_tAttrRef actval_aref;
+			pwr_tTypeId a_type;
+			unsigned int a_size, a_offs, a_dim;
+			
+			sts = gdh_ArefANameToAref( &sigchancon, "ActualValue", &actval_aref);
+			if ( EVEN(sts)) return sts;
+
+			sts = gdh_GetAttributeCharAttrref( &actval_aref, &a_type, &a_size, &a_offs, &a_dim);
+			if ( EVEN(sts)) return sts;		  
+
+			pwr_tUInt64 actval = *(pwr_tUInt64 *)((char *)sig_op + a_offs);
+			chanp->vbp = gdh_TranslateRtdbPointer( (unsigned long) actval);
+			chanp->SigElem = a_dim;
+			chanp->SigType = a_type;
+			if ( a_type == pwr_eType_String)
+			  chanp->SigStrSize = a_size / a_dim;
+			class_ok = 1;
+			break;
+		      }
+		      }
+		    }
+		  }
+		  if ( !class_ok) {
+		    errh_Error( 
+			       "IO init error: unknown signal class card  %, chan nr %d", 
+			       cp->Name, number);
+		    sts = gdh_DLUnrefObjectInfo( chandlid);
+		    sts = gdh_DLUnrefObjectInfo( sigdlid);
+		    memset( chanp, 0, sizeof(*chanp));
+		  }
+		}
+		}
+		  
 		/* If the signal has a Sup-object as a child, this will be inserted
 		   in the suplist */
 		/* if ( process != io_mProcess_Plc) */
@@ -2016,11 +2579,26 @@ static pwr_tStatus io_init_card(
 		case pwr_cClass_ChanDo:
 		  csize = sizeof( pwr_sClass_ChanDo);
 		  break;
+		case pwr_cClass_ChanD:
+		  csize = sizeof( pwr_sClass_ChanD);
+		  break;
 		case pwr_cClass_ChanIi:
 		  csize = sizeof( pwr_sClass_ChanIi);
 		  break;
 		case pwr_cClass_ChanIo:
 		  csize = sizeof( pwr_sClass_ChanIo);
+		  break;
+		case pwr_cClass_ChanBi:
+		  csize = sizeof( pwr_sClass_ChanBi);
+		  break;
+		case pwr_cClass_ChanBo:
+		  csize = sizeof( pwr_sClass_ChanBo);
+		  break;
+		case pwr_cClass_ChanBiBlob:
+		  csize = sizeof( pwr_sClass_ChanBiBlob);
+		  break;
+		case pwr_cClass_ChanBoBlob:
+		  csize = sizeof( pwr_sClass_ChanBoBlob);
 		  break;
 		case pwr_cClass_ChanCo:
 		  csize = sizeof( pwr_sClass_ChanCo);
@@ -2049,11 +2627,26 @@ static pwr_tStatus io_init_card(
 		      case pwr_cClass_ChanDo:
 			csize = sizeof( pwr_sClass_ChanDo);
 			break;
+		      case pwr_cClass_ChanD:
+			csize = sizeof( pwr_sClass_ChanD);
+			break;
 		      case pwr_cClass_ChanIi:
 			csize = sizeof( pwr_sClass_ChanIi);
 			break;
 		      case pwr_cClass_ChanIo:
 			csize = sizeof( pwr_sClass_ChanIo);
+			break;
+		      case pwr_cClass_ChanBi:
+			csize = sizeof( pwr_sClass_ChanBi);
+			break;
+		      case pwr_cClass_ChanBo:
+			csize = sizeof( pwr_sClass_ChanBo);
+			break;
+		      case pwr_cClass_ChanBiBlob:
+			csize = sizeof( pwr_sClass_ChanBiBlob);
+			break;
+		      case pwr_cClass_ChanBoBlob:
+			csize = sizeof( pwr_sClass_ChanBoBlob);
 			break;
 		      case pwr_cClass_ChanCo:
 			csize = sizeof( pwr_sClass_ChanCo);
@@ -3075,6 +3668,65 @@ pwr_tStatus io_AiRangeToCoef(
   return IO__SUCCESS;
 }
 
+pwr_tStatus io_BiRangeToCoef( 
+  io_sChannel 	*chanp)
+{
+  pwr_sClass_ChanBi	*cop;
+  pwr_tAName   		buf;
+  pwr_tStatus		sts;
+  pwr_tFloat32		PolyCoef1;
+  pwr_tFloat32		PolyCoef0;
+
+  cop = chanp->cop;
+
+  if ( cop)
+  {
+    cop->CalculateNewCoef = 0;
+
+    /* Coef for RawValue to SignalValue conversion */
+    if ( cop->RawValRangeHigh != cop->RawValRangeLow)
+    {
+      cop->SigValPolyCoef1 =
+	(cop->ChannelSigValRangeHigh - cop->ChannelSigValRangeLow) /
+	(cop->RawValRangeHigh - cop->RawValRangeLow);
+      cop->SigValPolyCoef0 = cop->ChannelSigValRangeHigh - 
+	cop->RawValRangeHigh * cop->SigValPolyCoef1;
+    }
+    else
+    {
+      sts = gdh_AttrrefToName( &chanp->ChanAref, buf, sizeof(buf), 
+			cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+      errh_Error( "Invalid RawValueRange in Bi channel %s", buf);
+      return IO__CHANRANGE;
+    }
+
+    /* Coef for RawValue to ActualValue conversion */
+    if ( cop->SensorPolyType == 1)
+    {
+      if ( cop->SensorSigValRangeHigh != cop->SensorSigValRangeLow)
+      {
+        PolyCoef1 = (cop->ActValRangeHigh - cop->ActValRangeLow)/
+		(cop->SensorSigValRangeHigh - cop->SensorSigValRangeLow);
+        PolyCoef0 = cop->ActValRangeHigh - cop->SensorSigValRangeHigh *
+		PolyCoef1;
+        cop->SensorPolyCoef1 = cop->SigValPolyCoef1 * PolyCoef1;
+        cop->SensorPolyCoef0 = PolyCoef0 + PolyCoef1*
+		cop->SigValPolyCoef0;
+      }
+      else
+      {
+        sts = gdh_AttrrefToName( &chanp->ChanAref, buf, sizeof(buf), 
+			cdh_mName_volumeStrict);
+        if ( EVEN(sts)) return sts;
+ 	errh_Error( "Invalid SensorSigValueRange in Bi channel %s", buf);
+        return IO__CHANRANGE;
+      }
+    }
+  }
+  return IO__SUCCESS;
+}
+
 
 /*----------------------------------------------------------------------------*\
   Calculate polynomial coefficients for ao conversion.
@@ -3129,6 +3781,61 @@ pwr_tStatus io_AoRangeToCoef(
 			cdh_mName_volumeStrict);
       if ( EVEN(sts)) return sts;
       errh_Error( "Invalid ChannelSigValueRange in Ao channel %s", buf);
+      return IO__CHANRANGE;
+    }
+  }
+  return IO__SUCCESS;
+}
+
+pwr_tStatus io_BoRangeToCoef( 
+  io_sChannel 	*chanp)
+{
+  pwr_sClass_ChanBo	*cop;
+  pwr_tAName   		buf;
+  pwr_tStatus		sts;
+  pwr_tFloat32		PolyCoef1;
+  pwr_tFloat32		PolyCoef0;
+
+  cop = chanp->cop;
+
+  if ( cop)
+  {
+    cop->CalculateNewCoef = 0;
+
+    /* Coef for ActualValue to RawValue conversion */
+    if ( cop->ActValRangeHigh != cop->ActValRangeLow)
+    {
+      cop->SigValPolyCoef1 = (cop->SensorSigValRangeHigh - cop->SensorSigValRangeLow)/
+		(cop->ActValRangeHigh - cop->ActValRangeLow);
+      cop->SigValPolyCoef0 = cop->SensorSigValRangeHigh - cop->ActValRangeHigh *
+		cop->SigValPolyCoef1;
+    }
+    else
+    {
+      sts = gdh_AttrrefToName( &chanp->ChanAref, buf, sizeof(buf), 
+			cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+      errh_Error( "Invalid ActValueRange in Bo channel %s", buf);
+      return IO__CHANRANGE;
+    }
+    /* Coef for ActualValue to SignalValue conversion */
+    if ( cop->ChannelSigValRangeHigh != 0)
+    {
+      PolyCoef1 =
+	(cop->RawValRangeHigh - cop->RawValRangeLow) /
+	(cop->ChannelSigValRangeHigh - cop->ChannelSigValRangeLow);
+      PolyCoef0 = cop->RawValRangeHigh - cop->ChannelSigValRangeHigh *
+		PolyCoef1;
+      cop->OutPolyCoef1 = cop->SigValPolyCoef1 * PolyCoef1;
+      cop->OutPolyCoef0 = PolyCoef0 + PolyCoef1*
+		cop->SigValPolyCoef0;
+    }
+    else
+    {
+      sts = gdh_AttrrefToName( &chanp->ChanAref, buf, sizeof(buf), 
+			cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+      errh_Error( "Invalid ChannelSigValueRange in Bo channel %s", buf);
       return IO__CHANRANGE;
     }
   }
