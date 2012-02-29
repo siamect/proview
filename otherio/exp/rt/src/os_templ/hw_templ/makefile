@@ -23,7 +23,7 @@ all : init copy lib
 
 init :
 
-copy : $(inc_dir)/libusbio.h $(inc_dir)/openSocket.h $(inc_dir)/setport.h $(inc_dir)/pwr_arduino_uno.pde
+copy : $(inc_dir)/libusbio.h $(inc_dir)/openSocket.h $(inc_dir)/setport.h $(inc_dir)/pwr_arduino_uno.ino
 
 lib :
 
@@ -51,8 +51,8 @@ $(inc_dir)/setport.h : ../../setport.h
 	@ echo "Copying setport.h"
 	@ $(cp) $(cpflags) $(source) $(target)
 
-$(inc_dir)/pwr_arduino_uno.pde : ../../pwr_arduino_uno.pde
-	@ echo "Copying pwr_arduino_uno.pde"
+$(inc_dir)/pwr_arduino_uno.ino : ../../pwr_arduino_uno.ino
+	@ echo "Copying pwr_arduino_uno.ino"
 	@ $(cp) $(cpflags) $(source) $(target)
 
 

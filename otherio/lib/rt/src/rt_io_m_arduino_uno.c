@@ -72,7 +72,9 @@ typedef enum {
   ard_eMsgType_Status 	= 6,
   ard_eMsgType_Debug 	= 7,
   ard_eMsgType_WriteAll = 8,
-  ard_eMsgType_ReadAll	= 9
+  ard_eMsgType_ReadAll	= 9,
+  ard_eMsgType_ConnectReq = 10,
+  ard_eMsgType_ConnectRes = 11
 } ard_eMsgType;
 
 typedef struct {
@@ -96,6 +98,8 @@ typedef struct {
   int AoIntervalCnt;
   int Reconnect;
   int ReconnectCnt;
+  int VersionMajor;
+  int VersionMinor;
   io_sChannel *DChanList[D_MAX_SIZE * 8];
   io_sChannel *AiChanList[AI_MAX_SIZE * 8];
   io_sChannel *AoChanList[AO_MAX_SIZE * 8];
@@ -125,6 +129,7 @@ static void logg( const char *str)
 #define ARD__COMMERROR 10
 #define ARD__MSGSIZE 12
 #define ARD__NOMSG 14
+#define ARD__CHECKSUM 16
 
 typedef struct {
   unsigned char size __attribute__ ((aligned(1)));
@@ -133,15 +138,211 @@ typedef struct {
   unsigned char data[100] __attribute__ ((aligned(1)));
 } ard_sMsg;
 
-static unsigned char checksum( unsigned char *buf, int len)
+static void add_checksum( void *buf);
+static int check_checksum( void *buf);
+static int receive( int fd, int id, ard_sMsg *rmsg, int size, float tmo, pwr_sClass_Arduino_Uno *op);
+
+
+static int open_device( io_sLocal *local, pwr_sClass_Arduino_Uno *op, io_sCard *cp)
+{
+  struct termios tty_attributes;
+  int sts;
+
+  // Open device
+  local->fd = open( op->Device, O_RDWR | O_NDELAY | O_NOCTTY);
+  if ( local->fd == -1) {
+    errh_Error( "IO Init Card '%s', unable to open device %s", cp->Name, op->Device);
+    op->Status = pwr_eArduino_StatusEnum_NoSuchDevice;
+    return IO__INITFAIL;
+  }
+
+  tcgetattr( local->fd, &tty_attributes); 
+#if defined OS_LINUX
+  tty_attributes.c_cflag &= ~CBAUD;  //maska bort all hastighet
+#endif
+  switch( op->BaudRate) {
+    case 300:
+      tty_attributes.c_cflag |= B300;
+      break;
+    case 1200:
+      tty_attributes.c_cflag |= B1200;
+      break;
+    case 2400:
+      tty_attributes.c_cflag |= B2400;
+      break;
+    case 4800:
+      tty_attributes.c_cflag |= B4800;
+      break;
+    case 9600:
+      tty_attributes.c_cflag |= B9600;
+      break;
+    case 19200:
+      tty_attributes.c_cflag |= B19200;
+      break;
+    case 38400:
+      tty_attributes.c_cflag |= B38400;
+      break;
+    case 57600:
+      tty_attributes.c_cflag |= B57600;
+      break;
+    case 115200:
+      tty_attributes.c_cflag |= B115200;
+      break;
+    default:
+      tty_attributes.c_cflag |= B9600;
+      break;
+  }
+
+  tty_attributes.c_iflag &= ~(BRKINT | ICRNL | IMAXBEL);
+  tty_attributes.c_oflag &= ~(OPOST | ONLCR);
+  tty_attributes.c_lflag &= ~(ISIG | ICANON | IEXTEN | ECHO | ECHOE | ECHOK | ECHOCTL | ECHOKE);
+  tty_attributes.c_cc[VMIN] = 1;
+  tty_attributes.c_cc[VTIME] = 0;
+  tty_attributes.c_cc[VEOF] = 1;
+  sts = tcsetattr( local->fd, TCSANOW, &tty_attributes);
+  if ( sts < 0) {
+    errh_Error( "IO Init Card '%s', unable to set baud rate on device %s", cp->Name, op->Device);
+    op->Status = pwr_eArduino_StatusEnum_DeviceSetupError;
+    return IO__INITFAIL;
+  }
+
+  tcflush( local->fd, TCIOFLUSH);
+
+  return IO__SUCCESS;
+}
+
+static int send_configuration( io_sLocal *local, pwr_sClass_Arduino_Uno *op, io_sCard *cp)
+{
+  unsigned char wdg;
+  int i;
+  int sts;
+
+  // Configure Watchdog
+  if ( op->WatchdogTime == 0)
+    wdg = 0;
+  else if ( op->WatchdogTime > 255)
+    wdg = 255;
+  else {
+    wdg = op->WatchdogTime * 10;
+    if ( wdg < 1)
+      wdg = 1;    
+  }  
+
+  // Send config message
+  ard_sMsg msg, rmsg;
+  int offs = 0;
+
+  msg.size = 3;
+  msg.id = local->IdCnt++;
+  msg.type = ard_eMsgType_Configure;
+
+  msg.data[offs++] = wdg;
+
+  msg.data[offs++] = local->DiSize;
+  for ( i = 0; i < local->DiSize; i++)
+    msg.data[offs++] = local->DiMask[i];
+
+  msg.data[offs++] = local->DoSize;
+  for ( i = 0; i < local->DoSize; i++)
+    msg.data[offs++] = local->DoMask[i];
+
+  msg.data[offs++] = local->AiSize;
+  for ( i = 0; i < local->AiSize; i++)
+    msg.data[offs++] = local->AiMask[i];
+
+  msg.data[offs++] = local->AoSize;
+  for ( i = 0; i < local->AoSize; i++)
+    msg.data[offs++] = local->AoMask[i];
+
+  msg.size += offs;
+
+  printf( "Config (size=%d, id= %d): ", offs, msg.id);
+  for ( i = 0; i < offs; i++)
+    printf( "%u ", msg.data[i]);
+  printf( "\n");
+
+  sleep(5);
+
+  if ( op->Options & pwr_mArduino_OptionsMask_Checksum)
+    add_checksum( &msg);
+
+  sts = write( local->fd, &msg, msg.size);
+      
+  sts = receive( local->fd, msg.id, &rmsg, 1, op->Timeout, op);
+  if ( sts & 1) {
+    op->Status = rmsg.data[0];    
+  }
+  else {
+    errh_Error( "IO Init Card '%s', config error: %d", cp->Name, sts);
+    op->Status = sts;
+    if ( sts == pwr_eArduino_StatusEnum_NoMessage)
+      sts = pwr_eArduino_StatusEnum_ConnectionTimeout;
+    return IO__INITFAIL;
+    printf( "Config read error %d\n", sts);
+  }
+
+  return IO__SUCCESS;
+}
+
+static int send_connect_request( io_sLocal *local, pwr_sClass_Arduino_Uno *op, io_sCard *cp)
+{
+  int sts;
+
+  // Send connect request
+  ard_sMsg msg, rmsg;
+
+  msg.size = 3;
+  msg.id = local->IdCnt++;
+  msg.type = ard_eMsgType_ConnectReq;
+
+  if ( op->Options & pwr_mArduino_OptionsMask_Checksum)
+    add_checksum( &msg);
+
+  sts = write( local->fd, &msg, msg.size);
+      
+  sts = receive( local->fd, msg.id, &rmsg, 21, op->Timeout, op);
+  if ( sts & 1) {
+    if ( rmsg.type != ard_eMsgType_ConnectRes)
+      return IO__INITFAIL;
+
+    op->Status = rmsg.data[0];
+    local->VersionMajor = rmsg.data[1];
+    local->VersionMinor = rmsg.data[2];
+    snprintf( op->FirmwareVersion, sizeof(op->FirmwareVersion), "V%d.%d %s", 
+	      local->VersionMajor, local->VersionMinor, (char *)&rmsg.data[3]);
+  }
+  else {
+    return IO__INITFAIL;
+  }
+
+  return IO__SUCCESS;
+}
+
+static void add_checksum( void *buf)
 {
   int i;
   unsigned char sum = 0;
+  unsigned char *b = (unsigned char *)buf;
 
-  for ( i = 0; i < len; i++)
-    sum ^= buf[i];
+  b[0]++;
+  for ( i = 0; i < b[0] - 1; i++)
+    sum ^= b[i];
 
-  return sum;
+  b[b[0]-1] = sum;
+}
+
+static int check_checksum( void *buf)
+{
+  int i;
+  unsigned char sum = 0;
+  unsigned char *b = (unsigned char *)buf;
+
+  for ( i = 0; i < b[0] - 1; i++)
+    sum ^= b[i];
+
+  if ( b[b[0]-1] == sum)
+    return 1;
+  return 0;
 }
 
 static void get_tv(struct timeval *tv, float t)
@@ -156,13 +357,16 @@ static void get_tv(struct timeval *tv, float t)
   }
 }
 
-static int receive( int fd, int id, ard_sMsg *rmsg, int size, float tmo)
+static int receive( int fd, int id, ard_sMsg *rmsg, int size, float tmo, pwr_sClass_Arduino_Uno *op)
 {
   fd_set rfd;
   struct timeval tv;
   int sts;
   int msize;
   int ret;
+
+  if ( op->Options & pwr_mArduino_OptionsMask_Checksum)
+    size++;
 
   FD_ZERO(&rfd);
   FD_SET(fd, &rfd);
@@ -200,14 +404,21 @@ static int receive( int fd, int id, ard_sMsg *rmsg, int size, float tmo)
       printf( "\n");
     }
     else {
-      if ( rmsg->size == size + 3 && rmsg->id == id)
+      if ( rmsg->size == size + 3 && rmsg->id == id) {
+	if ( op->Options & pwr_mArduino_OptionsMask_Checksum) {
+	  if ( !check_checksum( rmsg))
+	    return ARD__CHECKSUM;
+	     
+	  rmsg->size--;
+	}
 	return ARD__SUCCESS;
+      }
     }
   }
   return ARD__NOMSG;
 }
 
-static int apoll( ard_sMsg *msg, io_sLocal *local, ard_eMsgType mtype)
+static int apoll( ard_sMsg *msg, io_sLocal *local, ard_eMsgType mtype, pwr_sClass_Arduino_Uno *op)
 {
   int sts;
 
@@ -220,6 +431,9 @@ static int apoll( ard_sMsg *msg, io_sLocal *local, ard_eMsgType mtype)
   msg->type = mtype;
 
   // logg( "Poll Di");
+  if ( op->Options & pwr_mArduino_OptionsMask_Checksum)
+    add_checksum( msg);
+
   sts = write( local->fd, msg, msg->size);
   local->DiPollId = msg->id;
   local->DiPendingPoll = 1;
@@ -238,8 +452,6 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
   unsigned int number, number_byte, number_bit;
   pwr_tStatus sts;
   int i;
-  unsigned char wdg;
-  struct termios tty_attributes;
 
   // fp = fopen( "/home/claes/ard.log", "w"); // Test
 
@@ -350,127 +562,17 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
     }
   }
 
-  // Configure Watchdog
-  if ( op->WatchdogTime == 0)
-    wdg = 0;
-  else if ( op->WatchdogTime > 255)
-    wdg = 255;
-  else {
-    wdg = op->WatchdogTime * 10;
-    if ( wdg < 1)
-      wdg = 1;    
-  }  
+  sts = open_device( local, op, cp);
+  if ( EVEN(sts)) return sts;
 
-  // Open device
-  local->fd = open( op->Device, O_RDWR | O_NDELAY | O_NOCTTY);
-  if ( local->fd == -1) {
-    errh_Error( "IO Init Card '%s', unable to open device %s", cp->Name, op->Device);
-    op->Status = pwr_eArduino_StatusEnum_NoSuchDevice;
-    return IO__INITFAIL;
+  if ( op->Options & pwr_mArduino_OptionsMask_ConnectionRequest) {
+    sts = send_connect_request( local, op, cp);
+    if ( EVEN(sts)) return sts;
   }
 
-  tcgetattr( local->fd, &tty_attributes); 
-#if defined OS_LINUX
-  tty_attributes.c_cflag &= ~CBAUD;  //maska bort all hastighet
-#endif
-  switch( op->BaudRate) {
-    case 300:
-      tty_attributes.c_cflag |= B300;
-      break;
-    case 1200:
-      tty_attributes.c_cflag |= B1200;
-      break;
-    case 2400:
-      tty_attributes.c_cflag |= B2400;
-      break;
-    case 4800:
-      tty_attributes.c_cflag |= B4800;
-      break;
-    case 9600:
-      tty_attributes.c_cflag |= B9600;
-      break;
-    case 19200:
-      tty_attributes.c_cflag |= B19200;
-      break;
-    case 38400:
-      tty_attributes.c_cflag |= B38400;
-      break;
-    case 57600:
-      tty_attributes.c_cflag |= B57600;
-      break;
-    case 115200:
-      tty_attributes.c_cflag |= B115200;
-      break;
-    default:
-      tty_attributes.c_cflag |= B9600;
-      break;
-  }
-
-  tty_attributes.c_iflag &= ~(BRKINT | ICRNL | IMAXBEL);
-  tty_attributes.c_oflag &= ~(OPOST | ONLCR);
-  tty_attributes.c_lflag &= ~(ISIG | ICANON | IEXTEN | ECHO | ECHOE | ECHOK | ECHOCTL | ECHOKE);
-  tty_attributes.c_cc[VMIN] = 1;
-  tty_attributes.c_cc[VTIME] = 0;
-  tty_attributes.c_cc[VEOF] = 1;
-  sts = tcsetattr( local->fd, TCSANOW, &tty_attributes);
-  if ( sts < 0) {
-    errh_Error( "IO Init Card '%s', unable to set baud rate on device %s", cp->Name, op->Device);
-    op->Status = pwr_eArduino_StatusEnum_DeviceSetupError;
-    return IO__INITFAIL;
-  }
-
-  tcflush( local->fd, TCIOFLUSH);
-
-  // Send config message
-  ard_sMsg msg, rmsg;
-  int offs = 0;
-
-  msg.size = 3;
-  msg.id = local->IdCnt++;
-  msg.type = ard_eMsgType_Configure;
-
-  msg.data[offs++] = wdg;
-
-  msg.data[offs++] = local->DiSize;
-  for ( i = 0; i < local->DiSize; i++)
-    msg.data[offs++] = local->DiMask[i];
-
-  msg.data[offs++] = local->DoSize;
-  for ( i = 0; i < local->DoSize; i++)
-    msg.data[offs++] = local->DoMask[i];
-
-  msg.data[offs++] = local->AiSize;
-  for ( i = 0; i < local->AiSize; i++)
-    msg.data[offs++] = local->AiMask[i];
-
-  msg.data[offs++] = local->AoSize;
-  for ( i = 0; i < local->AoSize; i++)
-    msg.data[offs++] = local->AoMask[i];
-
-  msg.size += offs;
-
-  printf( "Config (size=%d, id= %d): ", offs, msg.id);
-  for ( i = 0; i < offs; i++)
-    printf( "%u ", msg.data[i]);
-  printf( "\n");
-
-  sleep(5);
-
-  sts = write( local->fd, &msg, msg.size);
-      
-  sts = receive( local->fd, msg.id, &rmsg, 1, op->Timeout);
-  if ( sts & 1) {
-    op->Status = rmsg.data[0];    
-  }
-  else {
-    errh_Error( "IO Init Card '%s', config error: %d", cp->Name, sts);
-    op->Status = sts;
-    if ( sts == pwr_eArduino_StatusEnum_NoMessage)
-      sts = pwr_eArduino_StatusEnum_ConnectionTimeout;
-    return IO__INITFAIL;
-    printf( "Config read error %d\n", sts);
-  }
-
+  sts = send_configuration( local, op, cp);
+  if ( EVEN(sts)) return sts;
+  
   errh_Info( "Init of Arduino card '%s'", cp->Name);
 
   return IO__SUCCESS;
@@ -534,7 +636,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
     mtype = ard_eMsgType_No;
 
   if ( !local->DiPendingPoll)
-    apoll( &msg, local, mtype);
+    apoll( &msg, local, mtype, op);
   else
     mtype = local->PendingMsgType;
 
@@ -552,7 +654,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
 
 
     sts = receive( local->fd, local->DiPollId, &rmsg, local->DiSize + local->AiNum * 2,
-		   op->Timeout);
+		   op->Timeout, op);
     op->Status = sts;
     if ( EVEN(sts)) {
       op->ErrorCount++;
@@ -617,7 +719,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
     int i, j;
     unsigned char m;
 
-    sts = receive( local->fd, local->DiPollId, &rmsg, local->DiSize, op->Timeout);
+    sts = receive( local->fd, local->DiPollId, &rmsg, local->DiSize, op->Timeout, op);
     op->Status = sts;
     if ( EVEN(sts)) {
       op->ErrorCount++;
@@ -647,7 +749,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
       pwr_tInt32 ivalue;
       pwr_tFloat32 actvalue;
 
-      sts = receive( local->fd, local->DiPollId, &rmsg, local->AiNum * 2, op->Timeout);
+      sts = receive( local->fd, local->DiPollId, &rmsg, local->AiNum * 2, op->Timeout, op);
       if ( EVEN(sts)) {
       }
       else {
@@ -771,6 +873,9 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
 
 
     // logg( "Write Do");
+    if ( op->Options & pwr_mArduino_OptionsMask_Checksum)
+      add_checksum( &msg);
+
     sts = write( local->fd, &msg, msg.size);
   } 
   else if ( local->AoSize && !local->DoSize) {
@@ -780,7 +885,10 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
       int value;
 
       memset( &msg, 0, sizeof(msg));
-      msg.size = local->AoNum + 3;
+      if ( op->Options & pwr_mArduino_OptionsMask_Ao16Bit)
+	msg.size = local->AoNum + 3;
+      else
+	msg.size = local->AoNum * 2 + 3;
       msg.id = local->IdCnt++;
       msg.type = ard_eMsgType_AoWrite;
 
@@ -805,12 +913,23 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
 	      value = *(pwr_tFloat32 *)chanp->vbp * cop->OutPolyCoef1 + 
 		cop->OutPolyCoef0 + 0.49;
 
-	    if ( value < 0)
-	      value = 0;
-	    else if (value > 255)
-	      value = 255;
+	    if ( op->Options & pwr_mArduino_OptionsMask_Ao16Bit) {
+	      if ( value < 0)
+		value = 0;
+	      else if (value > 65535)
+		value = 65535;
 
-	    msg.data[ao_cnt]  = value;
+	      msg.data[ao_cnt * 2]  = value / 256;
+	      msg.data[ao_cnt * 2 + 1]  = value % 256;
+	    }
+	    else {
+	      if ( value < 0)
+		value = 0;
+	      else if (value > 255)
+		value = 255;
+
+	      msg.data[ao_cnt]  = value;
+	    }	      
 
 	    sop->SigValue = cop->SigValPolyCoef1 * *(pwr_tFloat32 *)chanp->vbp + 
 	      cop->SigValPolyCoef0;
@@ -820,12 +939,19 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
 	}
       }
       // logg( "Write Ao");
+
+      if ( op->Options & pwr_mArduino_OptionsMask_Checksum)
+	add_checksum( &msg);
+
       sts = write( local->fd, &msg, msg.size);
     }
   }
   else if ( local->DoSize && !skip_ao) {
     memset( &msg, 0, sizeof(msg));
-    msg.size = local->DoSize + local->AoNum + 3;
+    if ( op->Options & pwr_mArduino_OptionsMask_Ao16Bit)
+      msg.size = local->DoSize + local->AoNum * 2 + 3;
+    else
+      msg.size = local->DoSize + local->AoNum + 3;
     msg.id = local->IdCnt++;
     msg.type = ard_eMsgType_WriteAll;
 
@@ -872,12 +998,29 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
 	    value = *(pwr_tFloat32 *)chanp->vbp * cop->OutPolyCoef1 + 
 	      cop->OutPolyCoef0 + 0.49;
 
+	  if ( op->Options & pwr_mArduino_OptionsMask_Ao16Bit) {
+	    if ( value < 0)
+	      value = 0;
+	    else if (value > 65535)
+	      value = 65535;
+
+	    msg.data[local->DoSize + ao_cnt * 2]  = value / 256;
+	    msg.data[local->DoSize + ao_cnt * 2 + 1]  = value % 256;
+	  }
+	  else {
+	    if ( value < 0)
+	      value = 0;
+	    else if (value > 255)
+	      value = 255;
+	    
+	    msg.data[local->DoSize + ao_cnt]  = value;
+	  }
+
 	  if ( value < 0)
 	    value = 0;
 	  else if (value > 255)
 	    value = 255;
 
-	  msg.data[local->DoSize + ao_cnt]  = value;
 
 	  sop->SigValue = cop->SigValPolyCoef1 * *(pwr_tFloat32 *)chanp->vbp + 
 	    cop->SigValPolyCoef0;
@@ -887,6 +1030,10 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
       }
     }
     // logg( "Write All");
+
+    if ( op->Options & pwr_mArduino_OptionsMask_Checksum)
+      add_checksum( &msg);
+
     sts = write( local->fd, &msg, msg.size);
  
   }
@@ -930,7 +1077,7 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
     else
       mtype = ard_eMsgType_No;
 
-    apoll( &msg, local, mtype);
+    apoll( &msg, local, mtype, op);
   }
 
   return IO__SUCCESS;
