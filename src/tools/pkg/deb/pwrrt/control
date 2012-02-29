@@ -1,5 +1,5 @@
 Package: pwrrt
-Version: 4.8.2-1
+Version: 4.8.4-1
 Section: base
 Priority: optional
 Architecture: i386
@@ -23,3 +23,8 @@ Description:
    - Support for Hilscher cifX Profinet Controller.
    - UDP communication configured with IO objects.
    - Support for USB joystick.
+ 4.8.3-1
+   - Post server for sending emails and sms.
+   - Report server.
+ 4.8.4-1
+   - Buffer input and output channels and signals.

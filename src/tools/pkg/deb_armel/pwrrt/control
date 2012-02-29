@@ -2,7 +2,7 @@ Source: pwrrt
 Section: unknown
 Priority: extra
 Build-Depends: 
-Standards-Version: 4.8.2-1
+Standards-Version: 4.8.4-1
 Maintainer: Claes Sjofors <claes.sjofors@proview.se>
 Homepage: <proview.se>
 
@@ -27,3 +27,8 @@ Description: Proview runtime environment
    - Support for Hilscher cifX Profinet Controller.
    - UDP communication configured with IO objects.
    - Support for USB joystick.
+ 4.8.3-1
+   - Post server for sending emails and sms.
+   - Report server.
+ 4.8.4-1
+   - Buffer input and output channels and signals.
