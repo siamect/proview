@@ -104,7 +104,7 @@ int main (int argc, char **argv)
 
   cp = createContext(argc, argv);
 
-  ver_WriteVersionInfo("PROVIEW/R Process Environment");
+  ver_WriteVersionInfo("Proview Runtime Environment");
 
   if (cp->flags.b.restart) {
     sts = interactive(argc, argv, cp);

@@ -41,6 +41,7 @@
 #include <time.h>
 #include "pwr_version.h"
 #include "co_ver.h"
+#include "co_syi.h"
 
 void
 ver_WriteVersionInfo (
@@ -48,8 +49,8 @@ ver_WriteVersionInfo (
 ) {
 
   printf("\n   Proview/R Version %s for %s on %s\n", pwrv_cPwrVersionStr,
-    pwrv_cOpSys, pwrv_cHardware);
-  printf("   Copyright © %s by SSAB Oxelösund AB\n\n", pwrv_cBuildTimeStr);
+	 syi_OpSys(), syi_Hardware());
+  printf("   %s\n\n", pwrv_cPwrCopyright);
   printf("   Proview/R is free software; you can redistribute it and/or\n\
    modify it under the terms of the GNU General Public License.\n\n\
    This program is distributed in the hope that it will be useful\n\

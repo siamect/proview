@@ -129,6 +129,7 @@ static void usage()
     "	-s  Show a selection list of OpPlace objects." << endl <<
     "	-a  Connect to audio device." << endl << 
     "	-q  Hide license information." << endl <<
+    "	-n  Network optimized." << endl <<
     "	-c  Add close button to operator window." << endl << endl;
 }
 
