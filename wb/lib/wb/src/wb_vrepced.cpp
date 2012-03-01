@@ -1871,7 +1871,7 @@ bool wb_vrepced::buildClass( pwr_tStatus *sts, wb_orep *co)
 
 	  // Alignment for next attribute
 	  if ( flags & PWR_MASK_POINTER && !(flags & PWR_MASK_PRIVATE))
-	    offset += pwr_cAlignLW;
+	    offset += pwr_cAlignLW * elements;
 	  else
 	    offset += size;
 
