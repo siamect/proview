@@ -101,7 +101,7 @@ void add_checksum( byte *buf)
 int check_checksum( byte size, byte id, byte type, byte *buf)
 {
   int i;
-  unsigned char sum = 0;
+  byte sum = 0;
 
   sum ^= size;
   sum ^= id;
@@ -109,7 +109,7 @@ int check_checksum( byte size, byte id, byte type, byte *buf)
   for ( i = 0; i < size - 4; i++)
     sum ^= buf[i];
 
-  if ( buf[size-1] == sum)
+  if ( buf[size-4] == sum)
     return 1;
   return 0;
 }
@@ -135,6 +135,7 @@ void resetOutput()
 int serialRead()
 {
   int num;
+  int csum;
 
   num = Serial.available();
   if ( num == 0)
@@ -153,11 +154,10 @@ int serialRead()
   for ( int i = 0; i < msgSize; i++)
     msgData[i] = Serial.read();
     
-  if ( !check_checksum( msgSize, msgId, msgType, msgData))
-    return ARD__CHECKSUM;
+  csum = check_checksum( msgSize + 3, msgId, msgType, msgData);
 
   if ( debug) {
-    rmsg[0] = msgSize - 1 + 3;
+    rmsg[0] = msgSize + 3 - 1;
     rmsg[1] = msgId;
     rmsg[2] = MSG_TYPE_DEBUG;
     for ( int j = 0; j < msgSize-1; j++)
@@ -165,6 +165,10 @@ int serialRead()
     add_checksum( rmsg);
     Serial.write( rmsg, rmsg[0]);
   }
+  msgSize--;
+ 
+  if ( !csum)
+    return ARD__CHECKSUM;
   
   return ARD__SUCCESS;
 }

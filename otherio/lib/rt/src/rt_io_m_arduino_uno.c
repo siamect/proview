@@ -300,7 +300,7 @@ static int send_connect_request( io_sLocal *local, pwr_sClass_Arduino_Uno *op, i
 
   sts = write( local->fd, &msg, msg.size);
       
-  sts = receive( local->fd, msg.id, &rmsg, 21, op->Timeout, op);
+  sts = receive( local->fd, msg.id, &rmsg, 23, op->Timeout, op);
   if ( sts & 1) {
     if ( rmsg.type != ard_eMsgType_ConnectRes)
       return IO__INITFAIL;
