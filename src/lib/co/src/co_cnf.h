@@ -45,7 +45,7 @@ extern "C" {
 #endif
 
 
-char *cnf_get_value( const char *name, char *value);
+char *cnf_get_value( const char *name, char *value, int size);
 
 #ifdef __cplusplus
 }

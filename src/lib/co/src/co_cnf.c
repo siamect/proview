@@ -58,7 +58,7 @@ char default_values[][2][200] = {
   };
 
 
-char *cnf_get_value( const char *name, char *value)
+char *cnf_get_value( const char *name, char *value, int size)
 {
   FILE *fp;
   char line[400];
@@ -84,7 +84,7 @@ char *cnf_get_value( const char *name, char *value)
       if ( cdh_NoCaseStrcmp( name, item_str[0]) == 0) {
         strcpy( ret_value, item_str[1]);
         if ( value)
-          strcpy( value, ret_value);
+          strncpy( value, ret_value, size);
         fclose( fp);
         return ret_value;
       }
@@ -97,7 +97,7 @@ char *cnf_get_value( const char *name, char *value)
     if ( strcmp( name, default_values[i][0]) == 0) {
       strcpy( ret_value, default_values[i][1]);
       if ( value)
-        strcpy( value, ret_value);
+        strncpy( value, ret_value, size);
       return ret_value;
     }
   }

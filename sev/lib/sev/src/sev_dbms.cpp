@@ -52,6 +52,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
+#include "co_cnf.h"
 #include "rt_load.h"
 #include "sev_dbms.h"
 #include "rt_sev_msg.h"
@@ -219,8 +220,8 @@ int sev_dbms_env::open(const char *v_host, const char *v_user, const char *v_pas
 }
 
 int sev_dbms_env::create(const char *v_fileName, const char *v_host, const char *v_user,
-                          const char *v_passwd, const char *v_dbName, unsigned int v_port,
-                          const char *v_socket)
+			 const char *v_passwd, const char *v_dbName, unsigned int v_port,
+			 const char *v_socket)
 {
   fileName(v_fileName);
   host(v_host);
@@ -647,6 +648,11 @@ int sev_dbms::create_table( pwr_tStatus *sts, char *tablename, pwr_eType type,
   char jumpstr[80];
   char idtypestr[20];
   char readoptstr[80];
+  char engine[80];
+  char enginestr[100] = "";
+
+  if ( cnf_get_value( "sevMysqlEngine", engine, sizeof(engine)) != 0)
+    snprintf( enginestr, sizeof(enginestr), " engine=%s", engine);
 
   if ( options & pwr_mSevOptionsMask_PosixTime) {
     if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
@@ -684,8 +690,8 @@ int sev_dbms::create_table( pwr_tStatus *sts, char *tablename, pwr_eType type,
     strcpy( jumpstr, "");
 
   sprintf( query, "create table %s ( %s"
-	   "%s, value %s %s, index (time));",
-	   tablename, readoptstr, timeformatstr, pwrtype_to_type( type, size), jumpstr);
+	   "%s, value %s %s, index (time))%s;",
+	   tablename, readoptstr, timeformatstr, pwrtype_to_type( type, size), jumpstr, enginestr);
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
@@ -2096,6 +2102,11 @@ int sev_dbms::create_objecttable( pwr_tStatus *sts, char *tablename, pwr_tMask o
   char jumpstr[80];
   char idtypestr[20];
   char readoptstr[80];
+  char engine[80];
+  char enginestr[100] = "";
+
+  if ( cnf_get_value( "sevMysqlEngine", engine, sizeof(engine)) != 0)
+    snprintf( enginestr, sizeof(enginestr), " engine=%s", engine);
 
   if ( options & pwr_mSevOptionsMask_PosixTime) {
     if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
@@ -2133,8 +2144,8 @@ int sev_dbms::create_objecttable( pwr_tStatus *sts, char *tablename, pwr_tMask o
     strcpy( jumpstr, "");
 
   sprintf( query, "create table %s ( %s"
-	   "%s %s, index (sev__time) );",
-	   tablename, readoptstr, timeformatstr, jumpstr);
+	   "%s %s, index (sev__time) )%s;",
+	   tablename, readoptstr, timeformatstr, jumpstr, enginestr);
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
@@ -3509,6 +3520,33 @@ int sev_dbms::repair_table( pwr_tStatus *sts, char *tablename)
     *sts = SEV__SUCCESS;
 
   return ODD(*sts);
+}
+
+int sev_dbms::alter_engine( pwr_tStatus *sts, char *tablename)
+{  
+  char query[200];
+  int rc;
+  char engine[80];
+
+  if ( cnf_get_value( "sevMysqlEngine", engine, sizeof(engine)) == 0) {
+    printf( "** No engine specified in /etc/proview.cnf\n");
+    return 0;
+  }
+
+  // Check table
+  printf( "-- Altering engine to %s table %s...\n", engine, tablename);
+
+  sprintf( query, "alter table %s engine=%s", tablename, engine);
+  rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+
+  *sts = SEV__SUCCESS;
+  return 1;
 }
 
 

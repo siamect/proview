@@ -118,7 +118,7 @@ int sev_server::init( int noneth)
   env = new sev_dbms_env( envname);
   env->open( envname);
   if ( !env->exists()) {
-    cnf_get_value( "mysqlSocket", socket);
+    cnf_get_value( "mysqlSocket", socket, sizeof(socket));
     env->create( envname, "localhost", "pwrp", "", sev_dbms_env::dbName(), 50, 
 		 socket);
 

@@ -1679,7 +1679,7 @@ int Graph::export_javaframe( char *filename, char *bean_name, int applet,
     char codebase[200];
 
     // Create a html file
-    cnf_get_value( "appletCodebase", codebase);
+    cnf_get_value( "appletCodebase", codebase, sizeof(codebase));
 
     grow_MeasureJavaBean( grow->ctx, &x1, &x0, &y1, &y0);
     fp.open( fname);
@@ -1981,7 +1981,7 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
     char codebase[200];
 
     // Create a html file
-    cnf_get_value( "appletCodebase", codebase);
+    cnf_get_value( "appletCodebase", codebase, sizeof(codebase));
 
     grow_SetJavaFrame( grow->ctx, &x1, &x0, &y1, &y0);
     fp.open( fname);

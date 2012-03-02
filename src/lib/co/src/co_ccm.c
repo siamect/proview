@@ -5044,7 +5044,7 @@ static int ccm_func_get_pwr_config(
   if ( arg_list->value_decl != K_DECL_STRING)
     return CCM__VARTYPE;
 
-  if ( cnf_get_value( arg_list->value_string, value)) {
+  if ( cnf_get_value( arg_list->value_string, value, sizeof(value))) {
     strncpy( return_string, value, K_STRING_SIZE);
     return_string[K_STRING_SIZE-1] = 0;
   }

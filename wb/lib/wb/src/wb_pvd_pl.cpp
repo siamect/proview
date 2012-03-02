@@ -152,7 +152,7 @@ void wb_pvd_pl::createObject( co_procom *pcom, pwr_tOix destoix, int desttype,
     pwr_sClass_ProjectReg *body = (pwr_sClass_ProjectReg *)m_list[oix].body;
 
     // Set default values to project, version and path
-    cnf_get_value( "defaultProjectRoot", defaultpath);
+    cnf_get_value( "defaultProjectRoot", defaultpath, sizeof(defaultpath));
     cdh_ToLower( lowname, m_list[oix].name);
     strcat( defaultpath, "/");
     strcat( defaultpath, lowname);

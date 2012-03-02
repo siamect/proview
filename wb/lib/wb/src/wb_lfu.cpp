@@ -2907,7 +2907,7 @@ pwr_tStatus lfu_ParseDbmsServer( char *server, char *user, char *password,
   char lserver[80];
 
   if ( strcmp( server, "") == 0) {
-    if ( !cnf_get_value( "mysqlServer", lserver)) {
+    if ( !cnf_get_value( "mysqlServer", lserver, sizeof(lserver))) {
       printf( "** mysql Server not defined\n");
       return LDH__NOSERVER;
     }

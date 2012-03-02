@@ -189,6 +189,7 @@ class sev_dbms : public sev_db {
   int handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx);
   int handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject);
   int repair_table( pwr_tStatus *sts, char *tablename);
+  int alter_engine( pwr_tStatus *sts, char *tablename);
   inline char* create_colName(unsigned int index, char *attributename) {
     static char colName[constMaxColNameLength];
     strncpy(colName, attributename, constMaxColNameLength);

@@ -36,6 +36,7 @@
 
 #if defined PWRE_CONF_MYSQL
 
+#include <iostream>
 
 #include "pwr.h"
 #include "co_cdh.h"
@@ -45,6 +46,16 @@
 #include "sev_dbms.h"
 #include "rt_sev_msg.h"
 
+
+static void usage()
+{
+  cout << endl << endl <<
+    "sev_repair   Maintain sev database" << endl << endl <<
+    "> sev_repair [-e] [-r] [-h]" << endl << endl <<
+    "-r   Repair database" << endl <<
+    "-e   Alter database engine to engine specified in /etc/proview.cnf, " << endl <<
+    "     eg \"sevMysqlEngine innodb\"" << endl << endl;
+}
 
 int sev_repair::init()
 {
@@ -95,12 +106,43 @@ int sev_repair::check()
   return 1;
 }
 
+int sev_repair::alter_engine()
+{
+  pwr_tStatus sts;
+  int fail_cnt = 0;
+
+
+  printf( "-- Number of tables to alter: %u\n", m_db->m_items.size());
+  for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
+    printf( "\n-- Processing %u (%u) %s\n", i, m_db->m_items.size(), m_db->m_items[i].tablename);
+    m_db->alter_engine( &sts, m_db->m_items[i].tablename);
+    if ( EVEN(sts))
+      fail_cnt++;
+  }
+  if ( fail_cnt)
+    printf( "** Alter failed on %d tables\n", fail_cnt);
+  else
+    printf( "-- Tables successfully altered\n");
+  return 1;
+}
+
 int main (int argc, char *argv[])
 {
   sev_repair rep;
 
-  rep.init();
-  rep.check();
+  if ( argc > 1 && strcmp( argv[1], "-e") == 0) {
+    // Alter engine
+    rep.init();
+    rep.alter_engine();
+  }
+  else if ( argc > 1 && strcmp( argv[1], "-r") == 0) {
+    // Repair
+    rep.init();
+    rep.check();
+  }
+  else
+    usage();
+
 }
 #else
 int main(){}

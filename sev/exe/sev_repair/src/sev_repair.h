@@ -55,5 +55,6 @@ class sev_repair {
 
   int init();
   int check();
+  int alter_engine();
 };
 #endif

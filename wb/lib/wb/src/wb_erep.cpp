@@ -1184,7 +1184,7 @@ wb_vrep *wb_erep::createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid,
     unsigned int port = 0;
     char socket[80];
 
-    cnf_get_value( "mysqlSocket", socket);
+    cnf_get_value( "mysqlSocket", socket, sizeof(socket));
       
     *sts = lfu_ParseDbmsServer( server, user, password, &port, host);
     if ( EVEN(*sts)) return 0;

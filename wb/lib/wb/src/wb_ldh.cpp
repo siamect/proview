@@ -1997,7 +1997,7 @@ ldh_WbLoad( ldh_tSession session, char *loadfile, int ignore_oix)
 	sts = lfu_ParseDbmsServer( server, user, password, &port, host);
 	if ( EVEN(sts)) return sts;
 
-	cnf_get_value( "mysqlSocket", socket);
+	cnf_get_value( "mysqlSocket", socket, sizeof(socket));
 
 	wb_dbms_env *env = new wb_dbms_env();
 	env->create( db_name, host, user, password, cdh_Low(vname), port, socket);

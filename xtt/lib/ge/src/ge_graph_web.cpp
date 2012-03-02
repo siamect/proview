@@ -136,7 +136,7 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   ge_get_systemname( sname);
 
   // Get codebase for applets from global config file
-  cnf_get_value( "appletCodebase", codebase);
+  cnf_get_value( "appletCodebase", codebase, sizeof(codebase));
 
   // Find the WebHandler object
   
