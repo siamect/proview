@@ -1323,15 +1323,14 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
     return 0;
   }
   if ( starttime && endtime) {
-    pwr_tTime create_time;
     pwr_tTime update_time;
-    timestr_to_time( row[11], &create_time);
-    timestr_to_time( row[12], &update_time);
+    if ( row[12])
+      timestr_to_time( row[12], &update_time);
 
     if ( time_Acomp( creatime, &stime) == 1)
       stime = *creatime;
 
-    if ( time_Acomp( &etime, &update_time) == 1)
+    if ( row[12] && time_Acomp( &etime, &update_time) == 1)
       etime = update_time;
 
     time_Adiff( &dt, &etime, &stime);
@@ -1341,7 +1340,10 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
   }
   else if ( starttime) {
     pwr_tTime update_time;
-    timestr_to_time( row[12], &update_time);
+    if ( row[12])
+      timestr_to_time( row[12], &update_time);
+    else
+      time_GetTime( &update_time);
 
     if ( time_Acomp( &update_time, starttime) != 1) {
       mysql_free_result( result);
@@ -2897,15 +2899,14 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
     return 0;
   }
   if ( starttime && endtime) {
-    pwr_tTime create_time;
     pwr_tTime update_time;
-    timestr_to_time( row[11], &create_time);
-    timestr_to_time( row[12], &update_time);
+    if ( row[12])
+      timestr_to_time( row[12], &update_time);
 
     if ( time_Acomp( &item->creatime, &stime) == 1)
       stime = item->creatime;
 
-    if ( time_Acomp( &etime, &update_time) == 1)
+    if ( row[12] && time_Acomp( &etime, &update_time) == 1)
       etime = update_time;
 
     time_Adiff( &dt, &etime, &stime);
@@ -2915,7 +2916,10 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   }
   else if ( starttime) {
     pwr_tTime update_time;
-    timestr_to_time( row[12], &update_time);
+    if ( row[12])
+      timestr_to_time( row[12], &update_time);
+    else
+      time_GetTime( &update_time);
 
     if ( time_Acomp( &update_time, starttime) != 1) {
       mysql_free_result( result);
