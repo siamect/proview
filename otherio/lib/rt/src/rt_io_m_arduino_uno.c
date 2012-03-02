@@ -94,6 +94,8 @@ typedef struct {
   int DiPollId;
   int DiPendingPoll;
   ard_eMsgType PendingMsgType;
+  int ReceiveWriteRespons;
+  int WriteId;
   int AiIntervalCnt;
   int AoIntervalCnt;
   int Reconnect;
@@ -612,6 +614,21 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
   if ( local->Reconnect)
     return IO__SUCCESS;
 
+  if ( local->ReceiveWriteRespons) {
+    // Receive response status from last write
+    ard_sMsg rmsg;
+
+    sts = receive( local->fd, local->WriteId, &rmsg, 1, op->Timeout, op);
+    if ( EVEN(sts))
+      op->ErrorCount++;
+    else {
+      op->Status = rmsg.data[0];
+      if ( EVEN(op->Status))
+	op->ErrorCount++;
+    }    
+    local->ReceiveWriteRespons = 0;
+  }
+
   if ( local->AiSize) {
     skip_ai = 0;
 
@@ -877,6 +894,10 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
       add_checksum( &msg);
 
     sts = write( local->fd, &msg, msg.size);
+    if ( sts > 0) {
+      local->ReceiveWriteRespons = 1;
+      local->WriteId = msg.id;
+    }
   } 
   else if ( local->AoSize && !local->DoSize) {
 
@@ -944,6 +965,10 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
 	add_checksum( &msg);
 
       sts = write( local->fd, &msg, msg.size);
+      if ( sts > 0) {
+	local->ReceiveWriteRespons = 1;
+	local->WriteId = msg.id;
+      }
     }
   }
   else if ( local->DoSize && !skip_ao) {
@@ -1035,6 +1060,10 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
       add_checksum( &msg);
 
     sts = write( local->fd, &msg, msg.size);
+    if ( sts > 0) {
+      local->ReceiveWriteRespons = 1;
+      local->WriteId = msg.id;
+    }
  
   }
   if ( sts < 0) {
