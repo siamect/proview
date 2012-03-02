@@ -4626,12 +4626,13 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
       Object Template Arduino_Uno 2151907328 01-JAN-1970 01:00:00.00
-        Body RtBody 05-FEB-2012 16:34:14.13
+        Body RtBody 02-MAR-2012 11:10:43.63
           Attr Process = 1
           Attr ErrorSoftLimit = 25
           Attr ErrorHardLimit = 50
           Attr WatchdogTime = 5.000000e+00
           Attr BaudRate = 9600
+          Attr Options = 10
           Attr Timeout = 1.000000e+00
         EndBody
       EndObject
@@ -6887,14 +6888,13 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Debug $Attribute 24 28-FEB-2012 13:43:24.06
           Body SysBody 28-FEB-2012 13:43:25.34
             Attr PgmName = "Debug"
-            Attr Flags = 16777216
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object Inputs $Attribute 25 28-FEB-2012 13:43:38.60
           Body SysBody 28-FEB-2012 13:44:39.78
             Attr PgmName = "Inputs"
-            Attr Flags = 16779282
+            Attr Flags = 2066
             Attr Elements = 200
             Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
@@ -6902,7 +6902,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Outputs $Attribute 26 28-FEB-2012 13:44:12.16
           Body SysBody 28-FEB-2012 13:44:30.91
             Attr PgmName = "Outputs"
-            Attr Flags = 16779282
+            Attr Flags = 2066
             Attr Elements = 200
             Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
