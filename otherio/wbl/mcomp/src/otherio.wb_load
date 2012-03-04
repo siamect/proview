@@ -1,6 +1,6 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X368"
+    Attr NextOix = "_X369"
     Attr NextCix = "_X38"
     Attr NextTix[0] = "_X15"
   EndBody
@@ -482,6 +482,13 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr Text = "Checksum"
           Attr PgmName = "Checksum"
           Attr Value = 8
+        EndBody
+      EndObject
+      Object SerialPort $Bit 369 04-MAR-2012 13:51:26.95
+        Body SysBody 04-MAR-2012 13:51:31.41
+          Attr Text = "SerialPort"
+          Attr PgmName = "SerialPort"
+          Attr Value = 16
         EndBody
       EndObject
     EndObject

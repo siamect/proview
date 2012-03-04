@@ -98,6 +98,8 @@ typedef struct {
   int WriteId;
   int AiIntervalCnt;
   int AoIntervalCnt;
+  int Reopendev;
+  int ReopendevCnt;
   int Reconnect;
   int ReconnectCnt;
   int VersionMajor;
@@ -144,6 +146,11 @@ static void add_checksum( void *buf);
 static int check_checksum( void *buf);
 static int receive( int fd, int id, ard_sMsg *rmsg, int size, float tmo, pwr_sClass_Arduino_Uno *op);
 
+static int close_device( io_sLocal *local)
+{
+  close( local->fd);
+  return IO__SUCCESS;
+}
 
 static int open_device( io_sLocal *local, pwr_sClass_Arduino_Uno *op, io_sCard *cp)
 {
@@ -210,6 +217,8 @@ static int open_device( io_sLocal *local, pwr_sClass_Arduino_Uno *op, io_sCard *
 
   tcflush( local->fd, TCIOFLUSH);
 
+  sleep(5);
+
   return IO__SUCCESS;
 }
 
@@ -263,8 +272,6 @@ static int send_configuration( io_sLocal *local, pwr_sClass_Arduino_Uno *op, io_
     printf( "%u ", msg.data[i]);
   printf( "\n");
 
-  sleep(5);
-
   if ( op->Options & pwr_mArduino_OptionsMask_Checksum)
     add_checksum( &msg);
 
@@ -310,13 +317,31 @@ static int send_connect_request( io_sLocal *local, pwr_sClass_Arduino_Uno *op, i
     op->Status = rmsg.data[0];
     local->VersionMajor = rmsg.data[1];
     local->VersionMinor = rmsg.data[2];
-    snprintf( op->FirmwareVersion, sizeof(op->FirmwareVersion), "V%d.%d %s", 
-	      local->VersionMajor, local->VersionMinor, (char *)&rmsg.data[3]);
+    snprintf( op->FirmwareVersion, sizeof(op->FirmwareVersion), "%s", 
+	      (char *)&rmsg.data[3]);
   }
   else {
     return IO__INITFAIL;
   }
 
+  return IO__SUCCESS;
+}
+
+static int open_and_connect( io_sLocal *local, pwr_sClass_Arduino_Uno *op, io_sCard *cp)
+{
+  int sts;
+
+  sts = open_device( local, op, cp);
+  if ( EVEN(sts)) return sts;
+
+  if ( op->Options & pwr_mArduino_OptionsMask_ConnectionRequest) {
+    sts = send_connect_request( local, op, cp);
+    if ( EVEN(sts)) return sts;
+  }
+
+  sts = send_configuration( local, op, cp);
+  if ( EVEN(sts)) return sts;
+  
   return IO__SUCCESS;
 }
 
@@ -564,17 +589,9 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
     }
   }
 
-  sts = open_device( local, op, cp);
+  sts = open_and_connect( local, op, cp);
   if ( EVEN(sts)) return sts;
 
-  if ( op->Options & pwr_mArduino_OptionsMask_ConnectionRequest) {
-    sts = send_connect_request( local, op, cp);
-    if ( EVEN(sts)) return sts;
-  }
-
-  sts = send_configuration( local, op, cp);
-  if ( EVEN(sts)) return sts;
-  
   errh_Info( "Init of Arduino card '%s'", cp->Name);
 
   return IO__SUCCESS;
@@ -587,7 +604,7 @@ static pwr_tStatus IoCardClose( io_tCtx ctx,
 {
   io_sLocal *local = cp->Local;
 
-  close( local->fd);
+  close_device( local);
   free( cp->Local);
 
   // fclose(fp); //Test
@@ -611,10 +628,11 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
   ard_sMsg msg;
   io_sChannel *chanp;
  
-  if ( local->Reconnect)
+  if ( local->Reopendev || local->Reconnect)
     return IO__SUCCESS;
 
   if ( local->ReceiveWriteRespons) {
+#if 0
     // Receive response status from last write
     ard_sMsg rmsg;
 
@@ -626,6 +644,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
       if ( EVEN(op->Status))
 	op->ErrorCount++;
     }    
+#endif
     local->ReceiveWriteRespons = 0;
   }
 
@@ -675,6 +694,10 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
     op->Status = sts;
     if ( EVEN(sts)) {
       op->ErrorCount++;
+      if ( sts == ARD__NOMSG &&
+	   op->Options & pwr_mArduino_OptionsMask_SerialPort) {
+	local->Reconnect = 1;
+      }
     }
     else {
       // printf( "Read: %u %u  (%d)\n", rmsg.data[0], rmsg.data[1], sts);
@@ -739,6 +762,10 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
     sts = receive( local->fd, local->DiPollId, &rmsg, local->DiSize, op->Timeout, op);
     op->Status = sts;
     if ( EVEN(sts)) {
+      if ( sts == ARD__NOMSG &&
+	   op->Options & pwr_mArduino_OptionsMask_SerialPort) {
+	local->Reconnect = 1;
+      }
       op->ErrorCount++;
     }
     else {
@@ -835,17 +862,40 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
   int skip_ao;
   io_sChannel *chanp;
 
-  if ( local->Reconnect) {
+  if ( local->Reopendev) {
+    local->ReopendevCnt++;
+    if ( local->ReopendevCnt * ctx->ScanTime > 5.0) {
+      close_device( local);
+      sts = open_and_connect( local, op, cp);
+      if ( EVEN(sts)) {
+	local->Reopendev = 1;
+	local->ReopendevCnt = 0;
+	return IO__SUCCESS;
+      }
+      else
+	local->Reopendev = 0;
+    }
+    else
+      return IO__SUCCESS;
+  }
+  else if ( local->Reconnect) {
     local->ReconnectCnt++;
     if ( local->ReconnectCnt * ctx->ScanTime > 5.0) {
-      sts = IoCardClose( ctx, ap, rp, cp);    
-      sts = IoCardInit( ctx, ap, rp, cp);    
-      local = cp->Local;
-      if ( EVEN(sts)) {
-	local->Reconnect = 1;
+      if ( op->Options & pwr_mArduino_OptionsMask_ConnectionRequest) {
+	sts = send_connect_request( local, op, cp);
+	if ( EVEN(sts)) {
+	  local->Reconnect = 1;
+	  local->ReconnectCnt = 0;
+	  return IO__SUCCESS;
+	}
+	else
+	  local->Reconnect = 0;
       }
+      else
+	local->Reconnect = 0;
     }
-    return IO__SUCCESS;
+    else
+      return IO__SUCCESS;
   }
 
   if ( local->AoSize) {
@@ -1068,8 +1118,8 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
   }
   if ( sts < 0) {
     /* Connection lost, open device again */
-    local->Reconnect = 1;
-    local->ReconnectCnt = 0;
+    local->Reopendev = 1;
+    local->ReopendevCnt = 0;
     return IO__SUCCESS;
   }
  
