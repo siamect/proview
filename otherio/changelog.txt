@@ -23,3 +23,5 @@
 111017 cs  modbus    Modbus TCP module with both read and write
 111027 cs  modbus    Modbus RTU added
 111103 cs  onewire   OneWire, generic ao device added
+120228 cs  arduino   Libnodave premilinary implementation.
+120302 cs  arduino   Arduino checksum, connect request added and 16 bits Ao.

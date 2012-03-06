@@ -189,3 +189,10 @@
 111213 cs  plc       Plc functionobject localtime bugfix
 111221 cs  rtt       rt_rtt qcomonly, user argument removed
 111221 cs  sev       rt_sevhistmon, bugfix in connect request
+120117 cs  rt        Class cache compatible with 4.6, and incompatible with 4.8.2
+120117 cs  cnv         co_convert function to generate changelog texts from git log
+120117 cs  plc       Plc Timit.OldAcc changed from invisible to noedit
+120124 cs  tools     QCom wireshark dissector added
+120213 cs  io        IO digital channel for di or do added
+120213 cs  io        IO Buffer input and Buffer output signals/channels added
+120227 cs  gdh       Gdh bugfix int gdh_GetAttrRefTid for classes

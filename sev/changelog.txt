@@ -2,3 +2,4 @@
 110321 cs  sev       Bugfix, pwr_tTime types didn't work.
 110324 cs  sev       Check/repair program for mysql history database added.
 110831 cs  sev       Sev bootfile name bugfix
+120302 cs  sev       Sev altering of database engine added to sev_repair

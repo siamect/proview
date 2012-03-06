@@ -224,3 +224,6 @@
 111205 cs  ge        Ge, Bit type added for all digital attributes, and reference attribute for SetDig
 111214 cs  ge        Ge optionmenu and menu bugfix, key events and exposure events was lost
 111221 cs  ge        Ge support for multiline texts
+120120 cs  xtt       Xtt 'show device' channels in io module wasn't displayed
+120215 cs  ge        Ge curve bugfix for datafile not found
+120215 cs  ge        Ge invisible dynamics, string attributes inverted

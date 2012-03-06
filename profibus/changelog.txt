@@ -42,3 +42,7 @@
 111122 cs  profinet   Profinet Device method, CopyDevice, added
 111205 cs  profinet   Profinet configurator, serial number viewed for module
 111205 cs  profibus   Softing profiboard, MaxSlaveDiagLen added
+111222 cs  profinet   Profinet, support for different API's
+120102 cs  profinet   Profinet, set correct status on profinet device when losing connection
+120120 cs  profinet   Profinet, IO status wasn't set properly
+120227 cs  profinet   Profinet configurator bugfix in submodule index

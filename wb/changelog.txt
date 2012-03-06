@@ -188,3 +188,5 @@
 110923 cs  wb        Wb database lockfile, nodename added to file content
 111121 cs  plc       Plc editor, check that references are not in LibHier added
 111222 cs  wb        wb navigator, prevously selected item stored to be remembered after delete operation
+120119 cs  wbl       Wbl print fix when template objects are not found
+120302 cs  wb        Wb syntax check for bi and bo signals
