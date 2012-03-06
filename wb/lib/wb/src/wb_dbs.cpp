@@ -64,7 +64,7 @@
 static int comp_dbs_name(tree_sTable *tp, tree_sNode  *x, tree_sNode  *y);
 
 wb_dbs::wb_dbs(wb_vrep *v) :
-  m_oid(pwr_cNOid), m_warnings(0), m_errors(0),
+  m_oid(pwr_cNOid), m_rtonly(0), m_warnings(0), m_errors(0),
   m_nObjects(0), m_nTreeObjects(0), m_nClassObjects(0),
   m_nNameObjects(0), m_nRbodyObjects(0), m_nDbodyObjects(0), m_oep(0)
 {
@@ -396,11 +396,13 @@ wb_dbs::createFile()
   size += m_sect[dbs_eSect_rbody].size;
   m_sect[dbs_eSect_dbody].offset = size;
 
-  sts = writeSectDbody();
-  if (EVEN(sts)) goto error_handler;
+  // if ( !m_rtonly) {
+    sts = writeSectDbody();
+    if (EVEN(sts)) goto error_handler;
 
-  size += m_sect[dbs_eSect_dbody].size;
-  m_sect[dbs_eSect_object].offset = size;
+    size += m_sect[dbs_eSect_dbody].size;
+    m_sect[dbs_eSect_object].offset = size;
+  // }
 
   sts = writeSectObject();
   if (EVEN(sts)) goto error_handler;
@@ -428,8 +430,10 @@ wb_dbs::createFile()
   sts = writeSectVolref(size);
   if (EVEN(sts)) goto error_handler;
 
-  sts = writeReferencedVolumes();
-  if (EVEN(sts)) goto error_handler;
+  if ( !m_rtonly) {
+    sts = writeReferencedVolumes();
+    if (EVEN(sts)) goto error_handler;
+  }
   
   sts = closeFile(0);
   if (EVEN(sts)) goto error_handler;

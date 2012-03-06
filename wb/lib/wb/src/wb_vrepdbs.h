@@ -165,7 +165,7 @@ public:
   virtual bool isLocal (const wb_orep *);
   virtual pwr_tCid cid () const;
   virtual wb_merep *merep () const;
-  virtual bool createSnapshot (const char *, const pwr_tTime *);
+  virtual bool createSnapshot (const char *, const pwr_tTime *, const int);
   virtual pwr_tStatus updateMeta() {return 0;}
 
   virtual bool isCommonMeta() const { return false;}

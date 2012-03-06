@@ -76,7 +76,7 @@ public:
 
   wb_vrep *next() { return m_vrep->next();}
 
-  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time);
+  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time, const int rtonly);
   virtual pwr_tStatus updateMeta() { return m_vrep->updateMeta();}
 
   virtual void unref();

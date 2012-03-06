@@ -115,8 +115,8 @@ public:
     
   bool isLocal(wb_object &o) const;
     
-  bool createSnapshot(const char *fileName, const pwr_tTime *time) 
-    { return m_vrep->createSnapshot(fileName, time);}
+  bool createSnapshot(const char *fileName, const pwr_tTime *time, const int rtonly) 
+    { return m_vrep->createSnapshot(fileName, time, rtonly);}
   bool exportTree( wb_volume &import, pwr_tOid oid);
     
   pwr_tStatus syntaxCheck( int *errorcount, int *warningcount);

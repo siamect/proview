@@ -171,7 +171,7 @@ public:
   virtual const char *name() { return m_name;}
   virtual wb_merep *merep() const = 0;
 
-  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time) = 0;
+  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time, const int rtonly) = 0;
   virtual pwr_tStatus updateMeta() { return 0;};
 
   virtual void objectName(const wb_orep *o, char *str) = 0;

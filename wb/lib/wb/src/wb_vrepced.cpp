@@ -287,9 +287,9 @@ bool wb_vrepced::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
   return m_vrep->writeBody( sts, o, bix, p);
 }
 
-bool wb_vrepced::createSnapshot(const char *fileName, const pwr_tTime *time)
+bool wb_vrepced::createSnapshot(const char *fileName, const pwr_tTime *time, const int rtonly)
 {
-  return m_vrep->createSnapshot( fileName, time);
+  return m_vrep->createSnapshot( fileName, time, rtonly);
 }
 
 bool wb_vrepced::commit(pwr_tStatus *sts) 
@@ -360,7 +360,7 @@ bool wb_vrepced::commit(pwr_tStatus *sts)
   printStructFile( true);
   printPaletteFile();
 
-  createSnapshot( 0, 0);
+  createSnapshot( 0, 0, 0);
 
   // Replace new dbs-file in global merep
   wb_mvrep *mv = m_erep->merep()->volume( sts, m_vrep->vid());
@@ -414,7 +414,7 @@ bool wb_vrepced::commit(pwr_tStatus *sts)
   // Create new dbs with new templatevalues
   m_vrep->commit( sts);
 
-  createSnapshot( 0, 0);
+  createSnapshot( 0, 0, 0);
 
   // Replace new dbs-file in global merep
   mv = m_erep->merep()->volume( sts, m_vrep->vid());

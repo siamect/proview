@@ -93,7 +93,7 @@ public:
 
   wb_erep *erep() {return m_erep;}
   wb_merep *merep() const { return m_merep;}
-  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time) { return false;}
+  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time, const int rtonly) { return false;}
   virtual pwr_tStatus updateMeta() {return 0;}
   virtual pwr_tOid oid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOid;}    
   virtual pwr_tVid vid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNVid;}    

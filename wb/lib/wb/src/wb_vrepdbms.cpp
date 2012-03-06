@@ -230,7 +230,7 @@ bool wb_vrepdbms::isLocal(const wb_orep *o)
   return false;
 }
 
-bool wb_vrepdbms::createSnapshot(const char *fileName, const pwr_tTime *time)
+bool wb_vrepdbms::createSnapshot(const char *fileName, const pwr_tTime *time, const int rtonly)
 {
   try {
     wb_dbs dbs(this);

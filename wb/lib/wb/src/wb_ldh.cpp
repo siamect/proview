@@ -193,7 +193,7 @@ ldh_CreatVolumeSnapshot(ldh_tWorkbench	workbench, char *name, ldh_tVolume *volum
   //wb_env *wb = (wb_env *)workbench;
     
   wb_volume *v = (wb_volume *)volume;
-  v->createSnapshot(name, 0);
+  v->createSnapshot(name, 0, 0);
 
   return LDH__SUCCESS;
 }
@@ -1862,7 +1862,7 @@ ldh_CreateLoadFile(ldh_tSession session)
   wb_session *sp = (wb_session*)session;
 
   try {
-    sp->createSnapshot( 0, 0);
+    sp->createSnapshot( 0, 0, 0);
   }
   catch (wb_error& e) {
     return e.sts();

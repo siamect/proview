@@ -292,7 +292,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/NAME", "/IDENTITY", "/FILES", "/OUT", "/IGNORE",
 			"/DIRECTORY", "/DATABASE", "/SERVER", 
 			"/PLCPGM", "/HIERARCHY", "/FROM_PLCPGM", "/TEMPLATE", 
-			"/SIMULATION", ""}
+			"/SIMULATION", "/RTONLY", ""}
 		},
 		{
 			"NEW",
@@ -4035,6 +4035,7 @@ static int	wnav_create_func( void		*client_data,
     pwr_tFileName	outstr;
     char        *outstr_p;
     int         ignore;
+    int		rtonly;
     pwr_tStatus	sts;
     pwr_tTime	buildtime, *timep;
     char	*s;
@@ -4053,6 +4054,7 @@ static int	wnav_create_func( void		*client_data,
       outstr_p = 0;
 
     ignore = ODD( dcli_get_qualifier( "/IGNORE", 0, 0));
+    rtonly = ODD( dcli_get_qualifier( "/RTONLY", 0, 0));
 
     if ( (s = getenv( "PWRE_CONF_BUILDVERSION"))) {
       if ( strcmp( s, "") == 0 || 
@@ -4079,7 +4081,7 @@ static int	wnav_create_func( void		*client_data,
       wbl->ref();
       sts = wbl->load( filestr);
       if ( ODD(sts) || ignore)
-	wbl->createSnapshot( outstr_p, timep);
+	wbl->createSnapshot( outstr_p, timep, rtonly);
       delete wbl;
     }
     catch ( wb_error &e) {

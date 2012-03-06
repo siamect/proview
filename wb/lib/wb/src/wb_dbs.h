@@ -118,6 +118,7 @@ public:
   pwr_tOid     m_oid;
   pwr_tUInt32  m_dvVersion;
   dbs_sSect    m_sect[dbs_eSect_];    /**< section header */
+  int	       m_rtonly;
 
   unsigned int m_warnings;
   unsigned int m_errors;
@@ -149,6 +150,7 @@ public:
     
   void setFileName(const char *name);
   void setTime(const pwr_tTime t);
+  void setRtonly( const int rtonly) { m_rtonly = rtonly;}
 
   void         getAliasServer(sOentry *oep, void *p);
   char        *pathName(sOentry *oep);

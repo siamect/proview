@@ -567,7 +567,7 @@ wb_merep *wb_vrepdbs::merep() const
   return m_merep;
 }
 
-bool wb_vrepdbs::createSnapshot(const char *, const pwr_tTime *)
+bool wb_vrepdbs::createSnapshot(const char *, const pwr_tTime *, const int rtonly)
 {
   return false;
 }

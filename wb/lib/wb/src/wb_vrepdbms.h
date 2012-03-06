@@ -203,7 +203,7 @@ public:
 
   virtual bool isLocal(const wb_orep *o);
 
-  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time);
+  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time, const int rtonly);
 
   virtual void objectName(const wb_orep *o, char *str);
 

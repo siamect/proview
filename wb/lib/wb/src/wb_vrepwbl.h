@@ -84,7 +84,7 @@ public:
 
   wb_vrep *next();
 
-  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time);
+  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time, const int rtonly);
   virtual pwr_tStatus updateMeta() {return 0;}
 
   int load( const char *fname);

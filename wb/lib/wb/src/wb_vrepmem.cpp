@@ -218,7 +218,7 @@ void wb_vrepmem::info()
 }
 
 bool
-wb_vrepmem::createSnapshot(const char *fileName, const pwr_tTime *time)
+wb_vrepmem::createSnapshot(const char *fileName, const pwr_tTime *time, const int rtonly)
 {
   try {
     wb_dbs dbs(this);

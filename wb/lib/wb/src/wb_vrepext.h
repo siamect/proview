@@ -180,7 +180,7 @@ public:
 
   wb_vrep *next();
 
-  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time) { return false;}
+  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time, const int rtonly) { return false;}
   virtual pwr_tStatus updateMeta() { return 0;}
 
   char volume_class[32];

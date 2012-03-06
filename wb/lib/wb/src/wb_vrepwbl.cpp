@@ -144,7 +144,7 @@ void wb_vrepwbl::info()
 }
 
 bool
-wb_vrepwbl::createSnapshot(const char *fileName, const pwr_tTime *time)
+wb_vrepwbl::createSnapshot(const char *fileName, const pwr_tTime *time, const int rtonly)
 {
   try {
     wb_dbs dbs(this);
@@ -153,6 +153,7 @@ wb_vrepwbl::createSnapshot(const char *fileName, const pwr_tTime *time)
       dbs.setFileName( fileName);
     if ( time)
       dbs.setTime( *time);
+    dbs.setRtonly( rtonly);
 
     dbs.importVolume(*this);
 
