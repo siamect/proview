@@ -5,7 +5,7 @@ Priority: optional
 Maintainer: Proview <postmaster@proview.se>
 Version: 4.8.4-1
 Architecture: i386
-Depends: libc6 (>= 2.13-20ubuntu5), libgtk2.0-0 (>= 2.24.6-0ubuntu5), libasound2 (>= 1.0.24.1-0ubuntu10), libdb5.1 (>=5.1.25-11), libdb4.8++ (>=5.1.25-11), libmysql++3 (>= 3.1.0-1ubuntu1), g++ (>= 4:4.6.1-2ubuntu5), xfonts-100dpi
+Depends: libc6 (>= 2.13-20ubuntu5), libgtk2.0-0 (>= 2.24.6-0ubuntu5), libasound2 (>= 1.0.24.1-0ubuntu10), libdb5.1 (>=5.1.25-11), libdb5.1++ (>=5.1.25-11), libmysql++3 (>= 3.1.0-1ubuntu1), g++ (>= 4:4.6.1-2ubuntu5), xfonts-100dpi
 Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47
 Homepage: http://www.proview.se
 Installed-Size: 1114020
