@@ -11009,7 +11009,47 @@ int GeTipText::action( grow_tObject object, glow_tEvent event)
   switch ( event->event) {
   case glow_eEvent_TipText: {
     
-    if ( text[0] == '&') {
+    if ( strcmp( text, "") == 0) {
+      pwr_tAName attr;
+      char 	value[80];
+      pwr_tAName parsed_name;
+      int       inverted;
+      int	attr_type, attr_size;
+      int 	sts;
+      int found = 0;
+
+      // Fetch text from Description for popup menu object
+      if ( dyn->total_action_type & ge_mActionType_PopupMenu) {
+	for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
+	  if ( elem->action_type == ge_mActionType_PopupMenu) {
+	    strncpy( attr, ((GePopupMenu *)elem)->ref_object, sizeof(attr));	    
+	    strncat( attr, ".Description", sizeof(attr));
+	    found = 1;
+	    break;
+	  }
+	}
+      }
+      else if ( dyn->total_dyn_type & ge_mDynType_HostObject) {
+	for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
+	  if ( elem->dyn_type == ge_mDynType_HostObject) {
+	    strncpy( attr, ((GeHostObject *)elem)->hostobject, sizeof(attr));
+	    strncat( attr, ".Description", sizeof(attr));
+	    found = 1;
+	    break;
+	  }
+	}
+      }
+      if ( found) {
+	dyn->parse_attr_name( attr, parsed_name,
+			      &inverted, &attr_type, &attr_size);
+	sts = gdh_GetObjectInfo( parsed_name, value, sizeof(value));
+	if ( EVEN(sts)) printf("ToolTip error: %s\n", attr);
+
+	grow_SetTipText( dyn->graph->grow->ctx, event->object.object, 
+			 value, event->any.x_pixel, event->any.y_pixel);
+      }
+    }
+    else if ( text[0] == '&') {
       char 	value[80];
       pwr_tAName parsed_name;
       int       inverted;
