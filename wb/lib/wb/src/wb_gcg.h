@@ -133,10 +133,16 @@ typedef struct {
 
 typedef struct {
 	pwr_tObjid	objdid;
+	pwr_tObjid	plcproc_oid;
 	float		scantime;
 	unsigned long	prio;
-	char		name[120];
+	pwr_tOName     	name;
 	} gcg_t_threadlist;
+
+typedef struct {
+	pwr_tObjid	oid;
+	pwr_tOName     	name;
+	} gcg_t_plcproclist;
 
 typedef struct {
 	pwr_tObjid	objdid;
@@ -324,6 +330,16 @@ int gcg_wind_comp_all(
 
 int	gcg_comp_volume( 
     ldh_tSesContext ldhses
+);
+
+pwr_tStatus gcg_read_volume_plclist( 
+  pwr_tVolumeId	volid,
+  unsigned long	*plc_count, 
+  gcg_t_plclist **plclist,
+  unsigned long	*thread_count, 
+  gcg_t_threadlist **threadlist,
+  unsigned long	*plcproc_count, 
+  gcg_t_plcproclist **plcproclist
 );
 
 #ifdef __cplusplus

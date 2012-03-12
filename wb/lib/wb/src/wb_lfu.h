@@ -115,7 +115,8 @@ pwr_tStatus lfu_ReadBootFile( char *filename,
 			      pwr_tVolumeId **vollist,
 			      pwr_tString40 **volnamelist,
 			      int *volcount,
-			      char *plc_name);
+			      pwr_tString80 **plclist,
+			      int *plccount);
 
 pwr_tStatus lfu_ReadSysObjectFile( char	*SystemName,
 				   char	*SystemGroup);
@@ -136,8 +137,9 @@ pwr_tStatus lfu_GetVolumeCnf( char *name, pwr_tVid *vid, pwr_tCid *cid, ldh_eVol
 pwr_tStatus lfu_ParseDbmsServer( char *server, char *user, char *passw, 
 				 unsigned int *port, char *host);
 
-pwr_tStatus lfu_check_appl_file( char *nodename, int bus_number);
-pwr_tStatus lfu_check_opt_file( char *nodename, int bus_number, pwr_mOpSys opsys);
+pwr_tStatus lfu_check_appl_file( ldh_tSesContext ldhses,
+				 char *nodename, int bus_number);
+pwr_tStatus lfu_check_opt_file( ldh_tSesContext ldhses, char *nodename, int bus_number, pwr_mOpSys opsys);
 
 #ifdef __cplusplus
 }

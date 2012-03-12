@@ -37,7 +37,7 @@
 !
 SObject pwrb:Class
 !/**
-!  @Version 2.0
+!  @Version 3.0
 !  @Group ProjectConfiguration
 !  @Summary Build options for plc program
 !  Configures the build options for the plc program.
@@ -55,7 +55,12 @@ SObject pwrb:Class
 !  - function objects from the class volumes NMps, Remote, Misc or Ssabox are
 !    used.
 !
-!  The object creates an option file $pwrp_exe/plc_'nodename'_'busnumber'.opt
+!  From V4.8.4 serveral PLC processes can be configured in the same node, and also
+!  several BuildOptions object can be configured. Which process a BuildOptions belongs
+!  to is specified by inserting the name of the PlcProcess object into the PlcProcess
+!  attribute,
+!
+!  The object creates an option file $pwrp_exe/plc_'nodename'_'busnumber'_'plcprocess'.opt
 !  with options that is added to the link command. If other requirements are 
 !  needed in this file than the BuildOptions object offers, the file can be 
 !  edited and handled manually if no BuildOptions object is present.
@@ -69,6 +74,15 @@ SObject pwrb:Class
       Body SysBody
         Attr StructName = "BuildOptions"
       EndBody
+      !/**
+      ! Name of PlcProcess object for the executable that these options
+      ! are specifications for. Only the last name segment should be stated.
+      !*/
+      Object PlcProcess $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+        EndBody
+      EndObject
       !/**
       ! System archives and system modules.
       !*/

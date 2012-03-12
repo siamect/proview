@@ -35,11 +35,10 @@
 %#if defined OS_VMS || defined OS_ELN
 %# define	load_cNameDirectory	"pwrp_load:"
 %# define	load_cDirectory		"pwrp_load:"
-%# define	load_cNamePlc		"%splc_%s_%04d_%05d.exe"
+%# define	load_cNamePlc		"%splc_%s_%04d_%s.exe"
 %
 %# define	load_cNameBootList	"pwrp_root:[src.db]pwrp_cnf_bootlist.dat"
 %# define	load_cNameVolumeList	"pwrp_root:[src.db]pwrp_cnf_volumelist.dat"
-%# define	load_cNamePlcVersion	"pwrp_root:[src.db]pwrp_cnf_plcvers_%s.dat"
 %# define	load_cNameDistribute	"pwrp_root:[src.db]pwrp_cnf_distribute.dat"
 %# define	load_cNameSysObject	"pwrp_root:[src.db]pwrp_cnf_sysobject.dat"
 %# define	load_cNameGblVolumeList	"pwra_db:pwr_volumelist.dat"
@@ -52,11 +51,10 @@
 %#elif defined OS_POSIX
 %# define	load_cNameDirectory	"pwrp_load"
 %# define	load_cDirectory		"$pwrp_load/"
-%# define	load_cNamePlc		"%splc_%s_%04d_%05d"
+%# define	load_cNamePlc		"%splc_%s_%04d_%s"
 %
 %# define	load_cNameBootList	"$pwrp_root/src/db/pwrp_cnf_bootlist.dat"
 %# define	load_cNameVolumeList	"$pwrp_root/src/db/pwrp_cnf_volumelist.dat"
-%# define	load_cNamePlcVersion	"$pwrp_root/src/db/pwrp_cnf_plcvers_%s.dat"
 %# define	load_cNameDistribute	"$pwrp_root/src/db/pwrp_cnf_distribute.dat"
 %# define	load_cNameSysObject	"$pwrp_root/src/db/pwrp_cnf_sysobject.dat"
 %# define	load_cNameFilePath	"$pwrp_root/src/db/pwrp_cnf_dirlist.dat"
@@ -77,7 +75,7 @@
 %
 %#define	load_cNameAlias		"%spwrp_alias.dat"
 %#define	load_cNameAppl		"%sld_appl_%s_%d.txt"
-%#define	load_cNameOpt		"%splc_%s_%04d.opt"
+%#define	load_cNameOpt		"%splc_%s_%04d_%s.opt"
 %#define	load_cNameBoot		"%sld_boot_%s_%04d.dat"
 %#define	load_cNameNode		"%sld_node_%s_%04d.dat"
 %#define	load_cNameRc		"%sld_rc_%s_%04d.dat"

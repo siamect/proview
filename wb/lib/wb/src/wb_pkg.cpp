@@ -176,7 +176,8 @@ void wb_pkg::readConfig()
       pwr_tVolumeId *vollist;
       pwr_tString40 *volnamelist;
       int       volcount;
-      char      plcname[80];
+      pwr_tString80 *plclist;
+      int	plccount;
       char     	systemname[80];
       char     	systemgroup[80];
       pwr_tTime date;
@@ -199,12 +200,12 @@ void wb_pkg::readConfig()
 
 	// Read bootfile, get plc and volumes
 	sts = lfu_ReadBootFile( fname, &date, systemname, 
-	      systemgroup, &vollist, &volnamelist, &volcount, plcname);
+				systemgroup, &vollist, &volnamelist, &volcount, &plclist, &plccount);
 	if ( EVEN(sts))
 	  throw wb_error_str("Bootfile is corrupt");
 
 	// Add plc
-	if ( plcname[0] != 0) {
+	for ( int j = 0; j < plccount; j++) {
 	  pwr_tFileName dir;
 	
 	  if ( n.opsys() == pwr_mOpSys_CustomBuild && 
@@ -212,7 +213,7 @@ void wb_pkg::readConfig()
 	    sprintf( dir, "$pwrp_root/bld/%s/exe/", n.customPlatform());
 	  else
 	    sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( n.opsys()));
-	  sprintf( fname, "%s%s", dir, plcname); 
+	  sprintf( fname, "%s%s", dir, plclist[j]);
 	  sprintf( dir, "$pwrp_exe/");
 	  pkg_pattern pplc( fname, dir, 'W');
 	  n.push_back( pplc);

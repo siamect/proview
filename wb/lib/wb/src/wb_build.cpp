@@ -121,7 +121,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
     for ( int i = 0; i < volumecnt; i++) {
       if ( cdh_NoCaseStrcmp( nodename, vlist[i].p1) == 0) {
 	if ( bussid == -1) {
-	  char systemname[80], systemgroup[80], pname[80];
+	  char systemname[80], systemgroup[80];
 	  pwr_tVid *vl;
 	  pwr_tString40 *vnl;
 	  int vcnt;
@@ -137,7 +137,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
 	  cdh_ToLower( fname, fname);
 	  dcli_translate_filename( fname, fname);
 	  status = lfu_ReadBootFile( fname, &btime, systemname, systemgroup, &vl, &vnl, 
-				     &vcnt, pname);
+				     &vcnt, 0, 0);
 	  if ( EVEN(status)) {
 	    rebuild = 1;
 	  }	 

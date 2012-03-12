@@ -227,9 +227,9 @@ start (
 #endif
 
   ini_ProcTable(&sts, cp);
-  ini_ProcIter(&sts, cp, proc_mProcess_system, ini_ProcLoad);
-  ini_ProcIter(&sts, cp, proc_mProcess_system, ini_ProcStart);
-  ini_ProcIter(&sts, cp, proc_mProcess_system, ini_ProcPrio);
+  ini_ProcIter(&sts, cp, proc_mProcess_system, 0, ini_ProcLoad);
+  ini_ProcIter(&sts, cp, proc_mProcess_system, 0, ini_ProcStart);
+  ini_ProcIter(&sts, cp, proc_mProcess_system, 0, ini_ProcPrio);
 
   net_Connect(&sts, &gdbroot->my_aid, &gdbroot->my_qid, NULL, "pwr_ini");
   /*if (!qcom_Init(&sts, 0)) {*/
@@ -240,9 +240,9 @@ start (
 
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_newPlcInit | ini_mEvent_newPlcStart);
 
-  ini_ProcIter(&sts, cp, proc_mProcess_user, ini_ProcLoad);
-  ini_ProcIter(&sts, cp, proc_mProcess_user, ini_ProcStart);
-  ini_ProcIter(&sts, cp, proc_mProcess_user, ini_ProcPrio);
+  ini_ProcIter(&sts, cp, proc_mProcess_user, 0, ini_ProcLoad);
+  ini_ProcIter(&sts, cp, proc_mProcess_user, 0, ini_ProcStart);
+  ini_ProcIter(&sts, cp, proc_mProcess_user, 0, ini_ProcPrio);
 
   qcom_CreateQ(&sts, &cp->eventQ, NULL, "iniEvent");
   if (EVEN(sts)) {
@@ -406,6 +406,9 @@ restart (
 )
 {
   pwr_tStatus	sts;
+  char time[24];
+  lst_sEntry	*pl;
+  ini_sProc	*pp;
 
   ini_CheckContext(&sts, cp);
 
@@ -437,8 +440,11 @@ restart (
 
   ini_ProcTable(&sts, cp);
 
-  ini_ProcLoad(&sts, cp, cp->plc);
-  ini_ProcStart(&sts, cp, cp->plc);
+  // ini_ProcLoad(&sts, cp, cp->plc);
+  // ini_ProcStart(&sts, cp, cp->plc);
+  ini_ProcIter(&sts, cp, proc_mProcess_user, ini_mProc_plc, ini_ProcLoad);
+  ini_ProcIter(&sts, cp, proc_mProcess_user, ini_mProc_plc, ini_ProcStart);
+
 
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_newPlcInit);
   qcom_WaitAnd(&sts, &cp->eventQ, &qcom_cQini, ini_mEvent_newPlcInitDone, qcom_cTmoEternal);
@@ -454,16 +460,21 @@ restart (
   errh_LogInfo(&cp->log, "Time critical period over, new PLC is running");
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_swapDone);
   
-  if (cp->PlcProcess != NULL) {
-    char time[24];
+  for (pp = lst_Succ(NULL, &cp->proc_lh, &pl); pp != NULL; pp = lst_Succ(NULL, pl, &pl)) {
+    if ( pp->flags.m & ini_mProc_plc && pp->objectp) {
+      pwr_sClass_PlcProcess *plc = pp->objectp;
 
-    time_GetTime(&cp->PlcProcess->LastChgTime);
-    time_Dsub(&cp->PlcProcess->StallTime, &cp->PlcProcess->StartTime, &cp->PlcProcess->StopTime);
-    time_DtoAscii(&cp->PlcProcess->StallTime, 1, time, sizeof(time));
-    cp->log.put.type.s = 2;
-    errh_LogInfo(&cp->log, "IO stall time: %s", time);
-    cp->np->RestartStallTime = cp->PlcProcess->StallTime;
+      time_GetTime(&plc->LastChgTime);
+      if ( time_Dcomp(&plc->StartTime, &plc->StopTime) == 1)
+	time_Dsub(&plc->StallTime, &plc->StartTime, &plc->StopTime);
+      else
+	plc->StallTime = pwr_cNDeltaTime;
+      time_DtoAscii(&plc->StallTime, 1, time, sizeof(time));
+      cp->np->RestartStallTime = plc->StallTime;
+    }
   }
+  cp->log.put.type.s = 2;
+  errh_LogInfo(&cp->log, "IO stall time: %s", time);
 
   ini_FreeBodies(&sts, cp, 0);
   ini_FreeBodies(&sts, cp, 1);
@@ -671,7 +682,10 @@ createContext (int argc, char **argv)
 	    exit(0);
 	  }
 	  cp->flags.b.plcfile = 1;
-	  strcpy(cp->plcfile.name, argv[i+1]);
+	  cp->plcfile = (ini_sFile *) calloc( 1, sizeof(ini_sFile)); 
+	  cp->plcfile_cnt = 1;
+	  strcpy(cp->plcfile[0].name, argv[i+1]);
+	  cp->plcfile[0].logOpenFail = errh_LogInfo;
 	  i++;	    
 	  i_incr = 1;
 	  break;

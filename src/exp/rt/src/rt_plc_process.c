@@ -51,6 +51,9 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <unistd.h>
+#if defined OS_LINUX
+#include <sched.h>
+#endif
 
 #include <pwd.h>
 #include "pwr.h"
@@ -79,7 +82,7 @@
 #include "rt_pwr_msg.h"
 
 static plc_sProcess	*init_process ();
-static pwr_tStatus	init_plc (plc_sProcess*);
+static pwr_tStatus	init_plc (plc_sProcess*, char *name);
 static void		init_threads (plc_sProcess*);
 static void		start_threads (plc_sProcess*);
 static void		run_threads (plc_sProcess*);
@@ -179,7 +182,7 @@ int main (
 
   qcom_WaitAnd(&sts, &pp->eventQ, &qcom_cQini, ini_mEvent_newPlcInit, qcom_cTmoEternal);
 
-  init_plc(pp);
+  init_plc(pp, argv[0]);
   create_threads(pp);
   init_threads(pp);
 
@@ -302,7 +305,8 @@ init_process ()
 
 static pwr_tStatus 
 init_plc (
-  plc_sProcess	*pp
+	  plc_sProcess	*pp,
+	  char *name
 )
 {
   pwr_tStatus	sts = PLC__SUCCESS;
@@ -314,6 +318,12 @@ init_plc (
   int		msec;
   int		i;
   pwr_tCid	cid;
+  int		busid;
+  int		found;
+  char		busidstr[10];
+  char		pp_name[80];
+  pwr_tObjName  oname;
+  char 		*s;
 
   sts = gdh_GetNodeObject(0, &oid);
   if (EVEN(sts)) {
@@ -324,14 +334,57 @@ init_plc (
   sts = gdh_ObjidToPointer(oid, (void *)&pp->Node);
   if (EVEN(sts)) return sts;
 
-  sts = gdh_GetClassList(pwr_cClass_PlcProcess, &pp_oid);
-  if (EVEN(sts)) {
-    errh_Error("Found no PlcProcess-object\n%m", sts);
-    return sts;
+  busid = qcom_MyBus( &sts);
+  if ( EVEN(sts)) return sts;
+
+  sprintf( busidstr, "_%04d_", busid);
+  s = strstr( name, busidstr);
+  if ( s) {
+    strncpy( pp_name, s + 6, sizeof(pp_name));
+    if ( (s = strchr( pp_name, '.')))
+      *s = 0;
+  }
+  else {
+    strcpy( pp_name, "");
+  }
+
+  for ( sts = gdh_GetClassList(pwr_cClass_PlcProcess, &pp_oid);
+	ODD(sts);
+	sts = gdh_GetNextObject(pp_oid, &pp_oid)) {
+
+    sts = gdh_ObjidToName(pp_oid, oname, sizeof(oname), cdh_mName_object);
+    if (EVEN(sts)) return sts;
+
+    if ( cdh_NoCaseStrcmp( pp_name, oname) == 0) {
+      found = 1;
+      break;
+    }
+  }
+  if (!found) {
+    errh_Error("Found no PlcProcess-object %s", pp_name);
+    return 0;
   }
 
   sts = gdh_ObjidToPointer(pp_oid, (void *)&pp->PlcProcess);
   if (EVEN(sts)) return sts;
+
+#if defined OS_LINUX
+  if ( pp->PlcProcess->CpuMask != 0) {
+    cpu_set_t mask;
+
+    CPU_ZERO(&mask);
+    for ( i = 0; i < 32; i++) {
+      if ( pp->PlcProcess->CpuMask & 1 << i)
+	CPU_SET( i, &mask);
+    }
+
+    sts = sched_setaffinity( 0, sizeof(mask), &mask);
+    if ( sts < 0)
+      errh_Error("Unable to set affinity mask");
+    else
+      errh_Info("Affinity mask set to %d", pp->PlcProcess->CpuMask);
+  }
+#endif
 
   i = 0;
   sts = gdh_GetChild( pp_oid, &thread_oid);

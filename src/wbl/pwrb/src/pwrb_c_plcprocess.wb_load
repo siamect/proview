@@ -75,6 +75,11 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
+      Object CpuMask $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Mask"
+        EndBody
+      EndObject
       Object BootVersion $Attribute 5
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"

@@ -148,6 +148,7 @@ extern "C" {
 
 typedef struct {
   pwr_tObjid	thread_objid;
+  pwr_tObjid	plcproc_objid;
   float 	scantime;
   int		prio;
   pwr_tObjid	*plclist;
@@ -554,10 +555,6 @@ static int  gcg_sort_threadlist(
 );
 
 static int gcg_check_ra_plc_user( char *filename);
-static pwr_tStatus gcg_read_volume_plclist( gcg_ctx gcgctx, pwr_tVolumeId  volid,
-					    unsigned long *plc_count, gcg_t_plclist **plclist,
-					    unsigned long *thread_count, 
-					    gcg_t_threadlist **threadlist);
 static int gcg_parname_to_pgmname( ldh_tSesContext ldhses, pwr_tClassId cid,
 				   char *parname, char *pgmname);
 static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref, 
@@ -4846,6 +4843,61 @@ static int	gcg_get_plc_windows(
 	return GSX__SUCCESS;
 }
 
+/*************************************************************************
+*
+* Name:		gcg_get_rtnode_plcproc()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* unsigned long	gcgctx		I	gcg context.
+* unsigned long	*plcproc_count	O	number of plcproc objects in list.
+* gcg_t_plcproclist **plcproclist O	found thread's.
+*
+* Description:
+*	This routine returns a list of all plcprocess objects in the volume.
+*       The list should be freed by the caller.
+*
+**************************************************************************/
+
+static int	gcg_get_rtnode_plcproc( 
+    gcg_ctx		gcgctx,
+    unsigned long	*plcproc_count,
+    gcg_t_plcproclist	**plcproclist
+)
+{
+  int 		sts;
+  pwr_tObjid 	oid;
+  int 		size;
+  gcg_t_plcproclist *plcproclist_pointer;	
+
+  /* Get all the plcprocess objects in this volume */
+  *plcproc_count = 0;
+
+  for ( sts = ldh_GetClassList( gcgctx->ldhses, pwr_cClass_PlcProcess, &oid);
+	ODD(sts);
+	sts = ldh_GetNextObject( gcgctx->ldhses, oid, &oid)) {
+    if ( gcg_in_libhier( gcgctx, oid))
+      continue;
+
+    sts = utl_realloc((char **) plcproclist, 
+		      *plcproc_count * sizeof(gcg_t_plcproclist), 
+		      (*plcproc_count + 1) * sizeof(gcg_t_plcproclist));
+    if ( EVEN(sts)) return sts;
+
+    plcproclist_pointer = *plcproclist;
+    (plcproclist_pointer + *plcproc_count)->oid = oid;
+    sts = ldh_ObjidToName( gcgctx->ldhses, oid,
+			   ldh_eName_Object, 
+			   (plcproclist_pointer + *plcproc_count)->name, 
+			   sizeof( (plcproclist_pointer + *plcproc_count)->name), 
+			   &size);
+    if ( EVEN(sts)) return sts;
+
+    (*plcproc_count)++;
+  }
+  return GSX__SUCCESS;
+}
 
 /*************************************************************************
 *
@@ -4878,12 +4930,13 @@ static int	gcg_get_child_plcthread(
     gcg_t_threadlist	**threadlist
 )
 {
-	pwr_tClassId		cid;
+        pwr_tClassId		cid, pcid;
 	int			sts, size;
 	gcg_t_threadlist	*threadlist_pointer;	
 	float			*scantime_ptr;
 	pwr_tInt32		*prio_ptr;
 	int			timebase;
+	pwr_tOid		parent;
 
 	/* Get all the children of this  node */
 	sts = ldh_GetChild( gcgctx->ldhses, objdid, &objdid);
@@ -4909,6 +4962,21 @@ static int	gcg_get_child_plcthread(
 	    }
 	    else { 
 	        
+	      /* Get plcprocess, should be parent */
+	      sts = ldh_GetParent( gcgctx->ldhses, objdid, &parent);
+	      if ( EVEN(sts)) {
+		gcg_plc_msg( gcgctx, GSX__MISPLACEDTHREAD, objdid);
+		return sts;
+	      }
+
+	      sts = ldh_GetObjectClass( gcgctx->ldhses, parent, &pcid);
+	      if ( EVEN(sts)) return sts;
+
+	      if ( pcid != pwr_cClass_PlcProcess) {
+		gcg_plc_msg( gcgctx, GSX__MISPLACEDTHREAD, objdid);
+		return GSX__MISPLACEDTHREAD;
+	      }
+
 	      /* Get the priority */
 	      sts = ldh_GetObjectPar( gcgctx->ldhses, objdid, "RtBody", 
 			"Prio",
@@ -4921,6 +4989,7 @@ static int	gcg_get_child_plcthread(
 	      if ( EVEN(sts)) return sts;
 	      threadlist_pointer = *threadlist;
 	      (threadlist_pointer + *thread_count)->objdid = objdid;
+	      (threadlist_pointer + *thread_count)->plcproc_oid = parent;
 	      (threadlist_pointer + *thread_count)->scantime = *scantime_ptr;
 	      (threadlist_pointer + *thread_count)->prio = *prio_ptr;
 	      sts = ldh_ObjidToName( gcgctx->ldhses, objdid,
@@ -4950,6 +5019,7 @@ static int	gcg_get_child_plcthread(
 	}
 	return GSX__SUCCESS;
 }
+
 
 
 
@@ -5005,6 +5075,7 @@ static int	gcg_get_rtnode_plcthread(
 	}
 	return GSX__SUCCESS;
 }
+
 /*************************************************************************
 *
 * Name:		gcg_get_child_plc()
@@ -5246,77 +5317,101 @@ static int  gcg_sort_plclist(
 }
 
 
-static pwr_tStatus gcg_read_volume_plclist( 
-  gcg_ctx	gcgctx,
+pwr_tStatus gcg_read_volume_plclist( 
   pwr_tVolumeId	volid,
   unsigned long	*plc_count, 
   gcg_t_plclist **plclist,
   unsigned long	*thread_count, 
-  gcg_t_threadlist **threadlist)
+  gcg_t_threadlist **threadlist,
+  unsigned long	*plcproc_count, 
+  gcg_t_plcproclist **plcproclist)
 {
-	FILE		*file;
-	pwr_tFileName	filenames;
-	pwr_tFileName	fullfilename;
-	char		type[20];
-	int		line_count = 0;
-	char		line[256];
-	char		objid_str[40];
-	char		thread_str[40];
-	float		scantime;
-	int		executeorder;
-	int		prio;
-	int		sts;
-	gcg_t_plclist 	*plclist_pointer;
-	gcg_t_threadlist *threadlist_pointer;
-	pwr_tOName     	name;
+  FILE		*file;
+  pwr_tFileName	filenames;
+  pwr_tFileName	fullfilename;
+  char		type[20];
+  int		line_count = 0;
+  char		line[256];
+  char		objid_str[40];
+  char		plcproc_objid_str[40];
+  char		thread_str[40];
+  float		scantime;
+  int		executeorder;
+  int		prio;
+  int		sts;
+  gcg_t_plclist *plclist_pointer;
+  gcg_t_threadlist *threadlist_pointer;
+  gcg_t_plcproclist *plcproclist_pointer;
+  pwr_tOName   	name;
 
-	sprintf( filenames, "%s%s", gcgmv_filenames[0], 
-		vldh_VolumeIdToStr( volid));
-	sprintf( fullfilename,"%s%s%s", DATDIR, filenames, DATEXT);
-	dcli_translate_filename( fullfilename, fullfilename);
-	file = fopen( fullfilename,"r");
-	if ( !file )
-	  return GSX__NOLOADFILE;
+  sprintf( filenames, "%s%s", gcgmv_filenames[0], 
+	   vldh_VolumeIdToStr( volid));
+  sprintf( fullfilename,"%s%s%s", DATDIR, filenames, DATEXT);
+  dcli_translate_filename( fullfilename, fullfilename);
+  file = fopen( fullfilename,"r");
+  if ( !file )
+    return GSX__NOLOADFILE;
 
-	while( 
-	   ODD( sts = utl_read_line( line, sizeof(line), file, &line_count)))
-	{
-	  if ( strncmp( line, "PlcThread", 9) == 0)
-	  {
-	    sscanf( line, "%s %s %f %d %s", type, objid_str, &scantime, &prio,
-			name);
-	    sts = utl_realloc((char **) threadlist, 
-		  *thread_count * sizeof(gcg_t_threadlist), 
-		  (*thread_count + 1) * sizeof(gcg_t_threadlist));
-	    if ( EVEN(sts)) return sts;
-	    threadlist_pointer = *threadlist;
-	    sts = cdh_StringToObjid( objid_str, 
-	  		&(threadlist_pointer + *thread_count)->objdid);
-	    if ( EVEN(sts)) return sts;
-	    (threadlist_pointer + *thread_count)->scantime = scantime;
-	    (threadlist_pointer + *thread_count)->prio = prio;
-	    (*thread_count)++;
-	  }
-	  else
-	  {
-	    sscanf( line, "%s %s %s %d %s", type, objid_str, thread_str, 
+  while( ODD( sts = utl_read_line( line, sizeof(line), file, &line_count))) {
+
+    if ( strncmp( line, "PlcProcess", 10) == 0) {
+      if ( plcproclist) {
+	sscanf( line, "%s %s %s", type, objid_str, name);
+	sts = utl_realloc((char **) plcproclist, 
+			  *plcproc_count * sizeof(gcg_t_plcproclist), 
+			  (*plcproc_count + 1) * sizeof(gcg_t_plcproclist));
+	if ( EVEN(sts)) return sts;
+	plcproclist_pointer = *plcproclist;
+	sts = cdh_StringToObjid( objid_str, 
+				 &(plcproclist_pointer + *plcproc_count)->oid);
+	strcpy( (plcproclist_pointer + *plcproc_count)->name, name);
+	(*plcproc_count)++;
+      }
+    }
+    else if ( strncmp( line, "PlcThread", 9) == 0) {
+      if ( threadlist) {
+	sscanf( line, "%s %s %s %f %d %s", type, objid_str, plcproc_objid_str, &scantime, &prio,
+		name);
+	sts = utl_realloc((char **) threadlist, 
+			  *thread_count * sizeof(gcg_t_threadlist), 
+			  (*thread_count + 1) * sizeof(gcg_t_threadlist));
+	if ( EVEN(sts)) return sts;
+	threadlist_pointer = *threadlist;
+	sts = cdh_StringToObjid( objid_str, 
+				 &(threadlist_pointer + *thread_count)->objdid);
+	if ( EVEN(sts)) return sts;
+	sts = cdh_StringToObjid( plcproc_objid_str, 
+				 &(threadlist_pointer + *thread_count)->plcproc_oid);
+	if ( EVEN(sts)) return sts;
+	(threadlist_pointer + *thread_count)->scantime = scantime;
+	(threadlist_pointer + *thread_count)->prio = prio;
+	(*thread_count)++;
+      }
+    }
+    else if ( strncmp( line, "PlcPgm", 6) == 0) {
+      if ( plclist) {
+	sscanf( line, "%s %s %s %d %s", type, objid_str, thread_str, 
 		&executeorder, name);
-	    sts = utl_realloc((char **) plclist, 
-		  *plc_count * sizeof(gcg_t_plclist), 
-		  (*plc_count + 1) * sizeof(gcg_t_plclist));
-	    if ( EVEN(sts)) return sts;
-	    plclist_pointer = *plclist;
-	    sts = cdh_StringToObjid( objid_str, 
-	  		&(plclist_pointer + *plc_count)->objdid);
-	    if ( EVEN(sts)) return sts;
-	    sts = cdh_StringToObjid( thread_str, 
-	  		&(plclist_pointer + *plc_count)->thread);
-	    (plclist_pointer + *plc_count)->executeorder = executeorder;
-	    strcpy( (plclist_pointer + *plc_count)->name, name);
-	    (*plc_count)++;
-	  }
-	}
-	return GSX__SUCCESS;
+	sts = utl_realloc((char **) plclist, 
+			  *plc_count * sizeof(gcg_t_plclist), 
+			  (*plc_count + 1) * sizeof(gcg_t_plclist));
+	if ( EVEN(sts)) return sts;
+	plclist_pointer = *plclist;
+	sts = cdh_StringToObjid( objid_str, 
+				 &(plclist_pointer + *plc_count)->objdid);
+	if ( EVEN(sts)) return sts;
+	sts = cdh_StringToObjid( thread_str, 
+				 &(plclist_pointer + *plc_count)->thread);
+	(plclist_pointer + *plc_count)->executeorder = executeorder;
+	strcpy( (plclist_pointer + *plc_count)->name, name);
+	(*plc_count)++;
+      }
+    }
+    else {
+      printf( "** Syntax error in plcpgm list\n");
+    }
+  }
+  return GSX__SUCCESS;
 }
 
 /*************************************************************************
@@ -5358,386 +5453,371 @@ int	gcg_comp_rtnode(
     pwr_tFloat32    single_scantime
 )
 {
-	int			i, j, k, l, sts;
-	pwr_tFileName  		fullfilename;
-	FILE			*files[2];
-	char			module_name[80];
-	pwr_tFileName	       	plcfilename;
-	unsigned long		plc_count;
-	gcg_t_plclist		*plclist;
-	gcg_t_timebase		*timebase;
-	int			timebase_count;
-	int			found;
-	pwr_tObjid		*timebase_ptr;
-	int			timebase_ms;		
-	gcg_ctx			gcgctx;
-	char			gcdir[80];
-	char			objdir[80];
-	char			plclib_frozen[80];
-	pwr_tVolumeId		*volumelist_ptr;
-	char			os_str[20];
-	int			max_no_timebase;
-	gcg_t_threadlist	*threadlist;
-	unsigned long		thread_count;
-	char			text[80];
-	char			nodename_low[80];
+  int			i, j, k, l, sts;
+  pwr_tFileName        	fullfilename;
+  FILE			*files[2];
+  char			module_name[80];
+  pwr_tFileName	       	plcfilename;
+  unsigned long		plc_count;
+  gcg_t_plclist		*plclist;
+  gcg_t_timebase       	*timebase;
+  int			timebase_count;
+  int			found;
+  pwr_tObjid		*timebase_ptr;
+  int			timebase_ms;		
+  gcg_ctx	       	gcgctx;
+  char			gcdir[80];
+  char			objdir[80];
+  char			plclib_frozen[80];
+  pwr_tVolumeId		*volumelist_ptr;
+  char			os_str[20];
+  int			max_no_timebase;
+  gcg_t_threadlist	*threadlist;
+  unsigned long		thread_count;
+  gcg_t_plcproclist	*plcproclist;
+  unsigned long		plcproc_count;
+  char			text[80];
+  char			nodename_low[80];
 
-	gcg_debug = debug;
+  gcg_debug = debug;
 
-	gcg_ctx_new( &gcgctx, 0);
-	strcpy(gcdir, GCDIR);
-	strncpy( nodename_low, cdh_Low(nodename), sizeof(nodename_low));
+  gcg_ctx_new( &gcgctx, 0);
+  strcpy(gcdir, GCDIR);
+  strncpy( nodename_low, cdh_Low(nodename), sizeof(nodename_low));
 
-	switch ( os) 
-	{
+  switch ( os) {
+  case pwr_mOpSys_VAX_ELN:
+    strcpy( objdir, "pwrp_root:[vax_eln.obj]");
+    strcpy( os_str, "VAX_ELN");
+    max_no_timebase = GCG_MAX_NO_TIMEBASE_ELN;
+    break;
+  case pwr_mOpSys_VAX_VMS:
+    strcpy( objdir, "pwrp_root:[vax_vms.obj]");
+    strcpy( os_str, "VAX_VMS");
+    max_no_timebase = GCG_MAX_NO_TIMEBASE_VMS;
+    break;
+  case pwr_mOpSys_AXP_VMS:
+    strcpy( objdir, "pwrp_root:[axp_vms.obj]");
+    strcpy( os_str, "AXP_VMS");
+    max_no_timebase = GCG_MAX_NO_TIMEBASE_VMS;
+    break;
+  case pwr_mOpSys_PPC_LYNX:
+    strcpy( objdir, "xxx"); /* Not used */
+    strcpy( os_str, "PPC_LYNX");
+    max_no_timebase = GCG_MAX_NO_TIMEBASE_LYNX;
+    break;
+  case pwr_mOpSys_X86_LYNX:
+    strcpy( objdir, "xxx");
+    strcpy( os_str, "X86_LYNX"); /* Not used */
+    max_no_timebase = GCG_MAX_NO_TIMEBASE_LYNX;
+    break;
+  case pwr_mOpSys_PPC_LINUX:
+    strcpy( objdir, "xxx"); /* Not used */
+    strcpy( os_str, "PPC_LINUX");
+    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
+    break;
+  case pwr_mOpSys_X86_LINUX:
+    strcpy( objdir, "xxx");
+    strcpy( os_str, "X86_LINUX"); /* Not used */
+    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
+    break;
+  case pwr_mOpSys_X86_64_LINUX:
+    strcpy( objdir, "xxx");
+    strcpy( os_str, "X86_64_LINUX"); /* Not used */
+    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
+    break;
+  case pwr_mOpSys_X86_64_MACOS:
+    strcpy( objdir, "xxx");
+    strcpy( os_str, "X86_64_MACOS"); /* Not used */
+    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
+    break;
+  case pwr_mOpSys_X86_64_FREEBSD:
+    strcpy( objdir, "xxx");
+    strcpy( os_str, "X86_64_FREEBSD"); /* Not used */
+    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
+    break;
+  case pwr_mOpSys_X86_64_OPENBSD:
+    strcpy( objdir, "xxx");
+    strcpy( os_str, "X86_64_OPENBSD"); /* Not used */
+    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
+    break;
+  case pwr_mOpSys_X86_CYGWIN:
+    strcpy( objdir, "xxx");
+    strcpy( os_str, "X86_CYGWIN"); /* Not used */
+    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
+    break;
+  case pwr_mOpSys_CustomBuild:
+    strcpy( objdir, "xxx");
+    strcpy( os_str, "CustomBuild"); /* Not used */
+    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
+    break;
+  default:
+    return GSX__UNKNOPSYS;
+  }
+
+
+  /* Get the plclist for this node */
+  plc_count = 0;
+  thread_count = 0;
+  plcproc_count = 0;
+  volumelist_ptr = volumelist;
+  for( i = 0; i < volume_count; i++) {
+    sts = gcg_read_volume_plclist( *volumelist_ptr, 
+				   &plc_count, &plclist, &thread_count, &threadlist,  
+				   &plcproc_count, &plcproclist);
+    if ( EVEN(sts)) {
+      /* No plcpgm's in this volume */
+      *volumelist_ptr = 0;
+    }
+    volumelist_ptr++;
+  }
+
+  /* Sort the plclist in executeorder order */
+  sts = gcg_sort_plclist( gcgctx, plclist, plc_count);
+  if ( EVEN(sts)) return sts;
+
+  /* Sort the threadlist in priority order */
+  sts = gcg_sort_threadlist( gcgctx, threadlist, thread_count);
+  if ( EVEN(sts)) return sts;
+
+  if ( plc_count == 0) {
+    /* No plcpgms on this node */
+    printf( "-- No plcpgms found on node %s\n", nodename);
+    return GSX__NOPLC;
+  }
+
+  /* Check that every plcpgm has a valid thread */
+  for ( i = 0; i < (int)plc_count; i++) {
+    found = 0;
+    for ( j = 0; j < (int)thread_count; j++) {
+      if ( cdh_ObjidIsEqual( (plclist + i)->thread, 
+			     (threadlist+ j)->objdid)) {
+	found = 1;
+	break;
+      }
+    }
+    if ( !found) {
+      sprintf( text, "in plcpgm %s", (plclist+i)->name);
+      gcg_text_msg( gcgctx, GSX__NOTHREAD, text);
+    }
+  }
+
+  if ( thread_count == 0) {
+    /* No threads on this node */
+    printf( "-- No PlcThreads found on node %s\n", nodename);
+    return GSX__NOPLC;
+  }
+
+  /* Insert the plc objects in the timebaselists */
+  timebase = (gcg_t_timebase *) calloc( thread_count, 
+					sizeof( gcg_t_timebase));
+  for ( i = 0; i < (int)thread_count; i++ ) {
+    (timebase+i)->thread_objid = (threadlist+i)->objdid;
+    (timebase+i)->plcproc_objid = (threadlist+i)->plcproc_oid;
+    (timebase+i)->scantime = (threadlist+i)->scantime;
+    (timebase+i)->prio = (threadlist+i)->prio;
+    (timebase+i)->plc_count = 0;
+    (timebase+i)->plclist = (pwr_tObjid *)calloc( plc_count, 
+						  sizeof( pwr_tObjid));
+    for ( k = 0; k < (int)plc_count; k++ ) {
+      if ( cdh_ObjidIsEqual((plclist+k)->thread, (threadlist+i)->objdid)) {
+	(timebase+i)->plclist[(timebase+i)->plc_count] = 
+	  (plclist+k)->objdid;
+	(timebase+i)->plc_count++;
+      }
+    }
+  }
+  timebase_count = thread_count;
+  
+  if ( single_scantime != 0) {
+    /* Insert all plcpgm's into one timebase */
+    timebase->prio = 1;
+    timebase_count = 1;
+    for ( i = 1; i < (int)thread_count; i++ ) {
+      for ( k = 0; k < (timebase+i)->plc_count; k++) {
+	timebase->plclist[timebase->plc_count] = (timebase+i)->plclist[k];
+	timebase->plc_count++;
+      }
+      free( (char *)(timebase+i)->plclist);
+    }
+    printf ("-- SimulateSingleProcess is configured for this node\n");
+  }
+
+  if ( timebase_count > max_no_timebase) {
+    printf( "** Error, %d frequencies is supported on %s, %d is found\n",
+	    max_no_timebase, os_str, timebase_count);
+    return GSX__NONODE;
+  }
+
+  /* Generate one c module for every timebase, and one optfile */
+  if ( codetype) {
+
+    for ( j = 0; j < (int)plcproc_count; j++) {
+
+      sprintf( fullfilename,"%s%s%s_%4.4d_%s%s", gcdir, gcgmn_filenames[0], 
+	       nodename_low, bus, cdh_Low(plcproclist[j].name), GCEXT);
+      dcli_translate_filename( fullfilename, fullfilename);
+      if ((files[0] = fopen( fullfilename,"w")) == NULL) {
+	printf("Cannot open file: %s\n", fullfilename);
+	return GSX__OPENFILE;
+      }
+      fprintf( files[0],"#include \"%s\"\n\n", PLCINC);
+      fprintf( files[0],"#include \"%s\"\n\n", PROCINC);
+
+      if (IS_VMS_OR_ELN(os)) {
+	sprintf( fullfilename,"%splc_%s_%4.4d_%s.opt", "pwrp_tmp:", nodename_low, bus, 
+		 cdh_Low(plcproclist[j].name));
+	dcli_translate_filename( fullfilename, fullfilename);
+	if ((files[1] = fopen( fullfilename,"w")) == NULL) {
+	  printf("Cannot open file: %s\n", fullfilename);
+	  fclose(files[0]);
+	  return GSX__OPENFILE;
+	}
+      }
+    
+      for ( i = 0; i < timebase_count; i++ ) {
+
+	if ( cdh_ObjidIsEqual( timebase[i].plcproc_objid, plcproclist[j].oid)) {
+
+	  timebase_ms = (int)((timebase+i)->scantime * 1000 + 0.5);
+	  timebase_ptr = (timebase+i)->plclist;
+	  printf ( "-- Plc thread generated priority %d, scantime %9.5f s, %d plcpgm's \n",
+		   (timebase+i)->prio, (timebase+i)->scantime, 
+		   (timebase+i)->plc_count);
+
+	  /* Init */
+	  fprintf( files[0],
+		   "void plc_p%d_init( int DirectLink, plc_sThread *tp){\n",
+		   i + 1);
+	  for ( k = 0; k < (timebase+i)->plc_count; k++ ) {
+	    fprintf( files[0],
+		     "  %c%s_init( DirectLink, tp);\n",
+		     GCG_PREFIX_MOD, vldh_IdToStr(0, (timebase+i)->plclist[k]));
+	  }
+	  fprintf(files[0], "}\n");
+
+	  /* Exec */
+	  fprintf( files[0],
+		   "void plc_p%d_exec( int DirectLink, plc_sThread *tp){\n",
+		   i + 1);
+	  for ( k = 0; k < (timebase+i)->plc_count; k++ ) {
+	    fprintf( files[0],
+		     "  %c%s_exec( tp);\n",
+		     GCG_PREFIX_MOD, vldh_IdToStr(0, (timebase+i)->plclist[k]));
+	  }
+	  fprintf(files[0], "}\n");
+
+	  /* proctbl */
+	  fprintf( files[0],"struct plc_proctbl plc_proc%d = \n", i + 1);
+	  fprintf( files[0],
+		   "{ {%d, %d}, plc_p%d_init, plc_p%d_exec };\n",
+		   (timebase+i)->thread_objid.oix, (timebase+i)->thread_objid.vid,
+		   i + 1, 
+		   i + 1);
+	  fprintf( files[0],"\n\n");
+	  
+	}
+
+      }
+
+      fprintf( files[0],"struct plc_proctbl *plc_proctbllist[] = {\n");
+      for ( i = 0; i < timebase_count; i++ ) {
+	if ( cdh_ObjidIsEqual( timebase[i].plcproc_objid, plcproclist[j].oid))
+	  fprintf( files[0],"  &plc_proc%d,\n", i + 1);
+      }
+      fprintf( files[0],"  (void *)0\n};\n");
+      fclose(files[0]);
+      files[0] = NULL;	   
+
+      /* Create an object file */
+      sprintf( module_name, "%s%s_%4.4d_%s", gcgmn_filenames[0], nodename_low, bus, 
+	       cdh_Low(plcproclist[j].name));
+      gcg_cc( GCG_PROC, module_name, NULL, NULL, os, GCG_NOSPAWN);
+
+      /* print module in option file */
+      if (IS_VMS_OR_ELN(os))
+	fprintf( files[1],"%s%s%s_%4.4d_%s\n", objdir, gcgmn_filenames[0], 
+		 nodename_low, bus, cdh_Low(plcproclist[j].name));
+	
+      /* Print plc libraries in option file */
+      volumelist_ptr = volumelist;
+      *plclib_frozen = '\0'; 
+      for (i = l = 0; i < volume_count; i++, volumelist_ptr++) {
+	if ( *volumelist_ptr ) {
+	  switch ( os) {
 	  case pwr_mOpSys_VAX_ELN:
-       	    strcpy( objdir, "pwrp_root:[vax_eln.obj]");
-	    strcpy( os_str, "VAX_ELN");
-	    max_no_timebase = GCG_MAX_NO_TIMEBASE_ELN;
+	    sprintf( plclib_frozen, "%s%s.olb", PLCLIB_FROZEN_VAX_ELN,
+		     vldh_VolumeIdToStr( *volumelist_ptr));
 	    break;
 	  case pwr_mOpSys_VAX_VMS:
-	    strcpy( objdir, "pwrp_root:[vax_vms.obj]");
-	    strcpy( os_str, "VAX_VMS");
-	    max_no_timebase = GCG_MAX_NO_TIMEBASE_VMS;
+	    sprintf( plclib_frozen, "%s%s.olb", PLCLIB_FROZEN_VAX_VMS,
+		     vldh_VolumeIdToStr( *volumelist_ptr));
 	    break;
 	  case pwr_mOpSys_AXP_VMS:
-	    strcpy( objdir, "pwrp_root:[axp_vms.obj]");
-	    strcpy( os_str, "AXP_VMS");
-	    max_no_timebase = GCG_MAX_NO_TIMEBASE_VMS;
-	    break;
-	  case pwr_mOpSys_PPC_LYNX:
-	    strcpy( objdir, "xxx"); /* Not used */
-	    strcpy( os_str, "PPC_LYNX");
-	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LYNX;
-	    break;
-	  case pwr_mOpSys_X86_LYNX:
-	    strcpy( objdir, "xxx");
-	    strcpy( os_str, "X86_LYNX"); /* Not used */
-	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LYNX;
+	    sprintf( plclib_frozen, "%s%s.olb", PLCLIB_FROZEN_AXP_VMS,
+		     vldh_VolumeIdToStr( *volumelist_ptr));
 	    break;
 	  case pwr_mOpSys_PPC_LINUX:
-	    strcpy( objdir, "xxx"); /* Not used */
-	    strcpy( os_str, "PPC_LINUX");
-	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
-	    break;
 	  case pwr_mOpSys_X86_LINUX:
-	    strcpy( objdir, "xxx");
-	    strcpy( os_str, "X86_LINUX"); /* Not used */
-	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
-	    break;
 	  case pwr_mOpSys_X86_64_LINUX:
-	    strcpy( objdir, "xxx");
-	    strcpy( os_str, "X86_64_LINUX"); /* Not used */
-	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
-	    break;
 	  case pwr_mOpSys_X86_64_MACOS:
-	    strcpy( objdir, "xxx");
-	    strcpy( os_str, "X86_64_MACOS"); /* Not used */
-	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
-	    break;
 	  case pwr_mOpSys_X86_64_FREEBSD:
-	    strcpy( objdir, "xxx");
-	    strcpy( os_str, "X86_64_FREEBSD"); /* Not used */
-	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
-	    break;
 	  case pwr_mOpSys_X86_64_OPENBSD:
-	    strcpy( objdir, "xxx");
-	    strcpy( os_str, "X86_64_OPENBSD"); /* Not used */
-	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
-	    break;
 	  case pwr_mOpSys_X86_CYGWIN:
-	    strcpy( objdir, "xxx");
-	    strcpy( os_str, "X86_CYGWIN"); /* Not used */
-	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
-	    break;
+	  case pwr_mOpSys_X86_LYNX:
+	  case pwr_mOpSys_PPC_LYNX:
 	  case pwr_mOpSys_CustomBuild:
-	    strcpy( objdir, "xxx");
-	    strcpy( os_str, "CustomBuild"); /* Not used */
-	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
+	    l += sprintf( &plclib_frozen[l], "%s%s ", PLCLIB_FROZEN_LINK_UNIX,
+			  vldh_VolumeIdToStr( *volumelist_ptr));
 	    break;
 	  default:
 	    return GSX__UNKNOPSYS;
-	}
-
-
-	/* Get the plclist for this node */
-	plc_count = 0;
-	thread_count = 0;
-	volumelist_ptr = volumelist;
-	for( i = 0; i < volume_count; i++)
-	{
-	  sts = gcg_read_volume_plclist( gcgctx, *volumelist_ptr, 
-			&plc_count, &plclist, &thread_count, &threadlist);
-	  if ( EVEN(sts)) 
-	  {
-	    /* No plcpgm's in this volume */
-	    *volumelist_ptr = 0;
 	  }
-	  volumelist_ptr++;
-	}
-
-	/* Sort the plclist in executeorder order */
-	sts = gcg_sort_plclist( gcgctx, plclist, plc_count);
-	if ( EVEN(sts)) return sts;
-
-	/* Sort the threadlist in priority order */
-	sts = gcg_sort_threadlist( gcgctx, threadlist, thread_count);
-	if ( EVEN(sts)) return sts;
-
-	if ( plc_count == 0)
-	{
-	  /* No plcpgms on this node */
-	  printf( "-- No plcpgms found on node %s\n", nodename);
-	  return GSX__NOPLC;
-	}
-
-	/* Check that every plcpgm has a valid thread */
-	for ( i = 0; i < (int)plc_count; i++)
-	{
-	  found = 0;
-	  for ( j = 0; j < (int)thread_count; j++)
-	  {
-	    if ( cdh_ObjidIsEqual( (plclist + i)->thread, 
-			(threadlist+ j)->objdid))
-	    {
-	      found = 1;
-	      break;
-	    }
-	  }
-	  if ( !found)
-	  {
-	    sprintf( text, "in plcpgm %s", (plclist+i)->name);
-	    gcg_text_msg( gcgctx, GSX__NOTHREAD, text);
-	  }
-	}
-
-	if ( thread_count == 0)
-	{
-	  /* No threads on this node */
-	  printf( "-- No PlcThreads found on node %s\n", nodename);
-	  return GSX__NOPLC;
-	}
-
-	/* Insert the plc objects in the timebaselists */
-	timebase = (gcg_t_timebase *) calloc( thread_count, 
-		sizeof( gcg_t_timebase));
-	for ( i = 0; i < (int)thread_count; i++ )
-	{
-	  (timebase+i)->thread_objid = (threadlist+i)->objdid;
-	  (timebase+i)->scantime = (threadlist+i)->scantime;
-	  (timebase+i)->prio = (threadlist+i)->prio;
-	  (timebase+i)->plc_count = 0;
-	  (timebase+i)->plclist = (pwr_tObjid *)calloc( plc_count, 
-		sizeof( pwr_tObjid));
-	  for ( k = 0; k < (int)plc_count; k++ )
-	  {
-	    if ( cdh_ObjidIsEqual((plclist+k)->thread, (threadlist+i)->objdid))
-	    {
-	      (timebase+i)->plclist[(timebase+i)->plc_count] = 
-			(plclist+k)->objdid;
-	      (timebase+i)->plc_count++;
-	    }
-	  }
-	}
-	timebase_count = thread_count;
-
-	if ( single_scantime != 0)
-	{
-	  /* Insert all plcpgm's into one timebase */
-/*	  timebase->scantime = single_scantime; */
-	  timebase->prio = 1;
-	  timebase_count = 1;
-	  for ( i = 1; i < (int)thread_count; i++ )
-	  {
-	    for ( k = 0; k < (timebase+i)->plc_count; k++)
-	    {
-	      timebase->plclist[timebase->plc_count] =
-		(timebase+i)->plclist[k];
-	      timebase->plc_count++;
-	    }
-	    free( (char *)(timebase+i)->plclist);
-	  }
-	  printf ("-- SimulateSingleProcess is configured for this node\n");
-	}
-
-	if ( timebase_count > max_no_timebase)
-	{
-          printf( "** Error, %d frequencies is supported on %s, %d is found\n",
-			 max_no_timebase, os_str, timebase_count);
-	  return GSX__NONODE;
-        }
-
-	/* Generate one c module for every timebase, and one optfile */
-	if ( codetype)
-	{
-
-	  sprintf( fullfilename,"%s%s%s_%4.4d%s", gcdir, gcgmn_filenames[0], 
-		nodename_low, bus, GCEXT);
-	  dcli_translate_filename( fullfilename, fullfilename);
-	  if ((files[0] = fopen( fullfilename,"w")) == NULL) 
-	  {
-	    printf("Cannot open file: %s\n", fullfilename);
-	    return GSX__OPENFILE;
-	  }
-	  fprintf( files[0],"#include \"%s\"\n\n", PLCINC);
-	  fprintf( files[0],"#include \"%s\"\n\n", PROCINC);
-
 	  if (IS_VMS_OR_ELN(os)) 
-	  {
-	    sprintf( fullfilename,"%splc_%s_%4.4d.opt", "pwrp_tmp:", nodename_low, bus);
-	    dcli_translate_filename( fullfilename, fullfilename);
-	    if ((files[1] = fopen( fullfilename,"w")) == NULL) 
-	    {
-	      printf("Cannot open file: %s\n", fullfilename);
-	      fclose(files[0]);
-	      return GSX__OPENFILE;
-	    }
-	  }
-
-	  for ( i = 0; i < timebase_count; i++ )
-	  {
-	    timebase_ms = (int)((timebase+i)->scantime * 1000 + 0.5);
-	    timebase_ptr = (timebase+i)->plclist;
-	    printf (
-"-- Plc thread generated priority %d, scantime %9.5f s, %d plcpgm's \n",
-			(timebase+i)->prio, (timebase+i)->scantime, 
-			(timebase+i)->plc_count);
-
-	    /* Init */
-	    fprintf( files[0],
-		"void plc_p%d_init( int DirectLink, plc_sThread *tp){\n",
-		i + 1);
-	    for ( k = 0; k < (timebase+i)->plc_count; k++ )
-	    {
-	      fprintf( files[0],
-	  	"  %c%s_init( DirectLink, tp);\n",
-		GCG_PREFIX_MOD, vldh_IdToStr(0, (timebase+i)->plclist[k]));
-	    }
-	    fprintf(files[0], "}\n");
-
-	    /* Exec */
-	    fprintf( files[0],
-		"void plc_p%d_exec( int DirectLink, plc_sThread *tp){\n",
-		i + 1);
-	    for ( k = 0; k < (timebase+i)->plc_count; k++ )
-	    {
-	      fprintf( files[0],
-	  	"  %c%s_exec( tp);\n",
-		GCG_PREFIX_MOD, vldh_IdToStr(0, (timebase+i)->plclist[k]));
-	    }
-	    fprintf(files[0], "}\n");
-
-	    /* proctbl */
-	    fprintf( files[0],"struct plc_proctbl plc_proc%d = \n", i + 1);
-	    fprintf( files[0],
-		"{ {%d, %d}, plc_p%d_init, plc_p%d_exec };\n",
-		(timebase+i)->thread_objid.oix, (timebase+i)->thread_objid.vid,
-		i + 1, 
-		i + 1);
-	    fprintf( files[0],"\n\n");
-
-	  }
-
-	  fprintf( files[0],"struct plc_proctbl *plc_proctbllist[] = {\n");
-	  for ( i = 0; i < timebase_count; i++ )
-	    fprintf( files[0],"  &plc_proc%d,\n", i + 1);
-	  fprintf( files[0],"  (void *)0\n};\n");
-	  fclose(files[0]);
-	  files[0] = NULL;	   
-
-	  /* Create an object file */
-	  sprintf( module_name, "%s%s_%4.4d", gcgmn_filenames[0], nodename_low, bus);
-	  gcg_cc( GCG_PROC, module_name, NULL, NULL, os, GCG_NOSPAWN);
-
-	    /* print module in option file */
-	  if (IS_VMS_OR_ELN(os))
-	    fprintf( files[1],"%s%s%s_%4.4d\n", objdir, gcgmn_filenames[0], 
-		     nodename_low, bus);
-	
-	  /* Print plc libraries in option file */
-	  volumelist_ptr = volumelist;
-	  *plclib_frozen = '\0'; 
-	  for (i = l = 0; i < volume_count; i++, volumelist_ptr++)
-	  {
-	    if ( *volumelist_ptr )
-	    {
-	      switch ( os) 
-	      {
-	        case pwr_mOpSys_VAX_ELN:
-	          sprintf( plclib_frozen, "%s%s.olb", PLCLIB_FROZEN_VAX_ELN,
-			vldh_VolumeIdToStr( *volumelist_ptr));
-	          break;
-	        case pwr_mOpSys_VAX_VMS:
-	          sprintf( plclib_frozen, "%s%s.olb", PLCLIB_FROZEN_VAX_VMS,
-			vldh_VolumeIdToStr( *volumelist_ptr));
-	          break;
-	        case pwr_mOpSys_AXP_VMS:
-	          sprintf( plclib_frozen, "%s%s.olb", PLCLIB_FROZEN_AXP_VMS,
-			vldh_VolumeIdToStr( *volumelist_ptr));
-	          break;
-	        case pwr_mOpSys_PPC_LINUX:
-	        case pwr_mOpSys_X86_LINUX:
-	        case pwr_mOpSys_X86_64_LINUX:
-	        case pwr_mOpSys_X86_64_MACOS:
-	        case pwr_mOpSys_X86_64_FREEBSD:
-	        case pwr_mOpSys_X86_64_OPENBSD:
-	        case pwr_mOpSys_X86_CYGWIN:
-	        case pwr_mOpSys_X86_LYNX:
-	        case pwr_mOpSys_PPC_LYNX:
-	        case pwr_mOpSys_CustomBuild:
-	          l += sprintf( &plclib_frozen[l], "%s%s ", PLCLIB_FROZEN_LINK_UNIX,
-			vldh_VolumeIdToStr( *volumelist_ptr));
-	          break;
-	        default:
-	          return GSX__UNKNOPSYS;
-	      }
-	      if (IS_VMS_OR_ELN(os)) 
-	        fprintf( files[1],"%s/lib\n", plclib_frozen);
-	    }
-	  }
-
-	  if (IS_VMS_OR_ELN(os)) 
-	  { 
-	    fclose(files[1]);
-	    files[1] = NULL;	   
-	  }
-
-	  /* Link */
-	  if (IS_VMS_OR_ELN(os)) 
-	  {
-	    sprintf( plcfilename, "pwrp_exe:plc_%s_%4.4d_%5.5ld.exe",
-		     nodename_low, bus, plc_version);
-	    sprintf( fullfilename,"%s%s_%4.4d", gcgmn_filenames[0], nodename_low, bus);
-	    gcg_cc( GCG_RTNODE, fullfilename, plcfilename, NULL, os,
-	          GCG_NOSPAWN);
-	  } 
-	  else
-	  {
-	    sprintf( plcfilename, "plc_%s_%4.4d_%5.5ld",
-		     nodename_low, bus, plc_version);
-	    sprintf( fullfilename,"%s%s_%4.4d", gcgmn_filenames[0], nodename_low, bus);
-	    gcg_cc( GCG_RTNODE, fullfilename, plcfilename, 
-	        plclib_frozen, os, GCG_NOSPAWN);
-	  }
-
+	    fprintf(files[1],"%s/lib\n", plclib_frozen);
 	}
+      }
 
-	for ( i = 0; i < timebase_count; i++ )
-	{
-	  if ( (timebase+i)->plc_count > 0)
-	    free((char *) (timebase+i)->plclist);
-	}
-	free((char *) timebase);
+      if (IS_VMS_OR_ELN(os)) { 
+	fclose(files[1]);
+	files[1] = NULL;	   
+      }
 
-	*errorcount = gcgctx->errorcount;
-	*warningcount = gcgctx->warningcount;
+      /* Link */
+      if (IS_VMS_OR_ELN(os)) {
+	sprintf( plcfilename, "pwrp_exe:plc_%s_%4.4d_%s.exe",
+		 nodename_low, bus, cdh_Low(plcproclist[j].name));
+	sprintf( fullfilename,"%s%s_%4.4d_%s", gcgmn_filenames[0], nodename_low, bus, 
+		 cdh_Low(plcproclist[j].name));
+	gcg_cc( GCG_RTNODE, fullfilename, plcfilename, NULL, os,
+		GCG_NOSPAWN);
+      } 
+      else {
+	sprintf( plcfilename, "plc_%s_%4.4d_%s",
+		 nodename_low, bus, cdh_Low(plcproclist[j].name));
+	sprintf( fullfilename,"%s%s_%4.4d_%s", gcgmn_filenames[0], nodename_low, bus,
+		 cdh_Low(plcproclist[j].name));
+	gcg_cc( GCG_RTNODE, fullfilename, plcfilename, 
+		plclib_frozen, os, GCG_NOSPAWN);
+      }      
+    }
+  }
 
-	if ( plc_count > 0)
-	  free((char *) plclist);
+  for ( i = 0; i < timebase_count; i++ ) {
+    if ( (timebase+i)->plc_count > 0)
+      free((char *) (timebase+i)->plclist);
+  }
+  free((char *) timebase);
 
-	gcg_ctx_delete( gcgctx);
+  *errorcount = gcgctx->errorcount;
+  *warningcount = gcgctx->warningcount;
 
-	return GSX__SUCCESS;
+  if ( plc_count > 0)
+    free((char *) plclist);
+
+  gcg_ctx_delete( gcgctx);
+  
+  return GSX__SUCCESS;
 }
 
 /*************************************************************************
@@ -5780,6 +5860,9 @@ int	gcg_comp_volume(
 	gcg_t_threadlist	*threadlist;
 	unsigned long		thread_count;
 	char			thread_objid_str[40];
+	gcg_t_plcproclist	*plcproclist;
+	unsigned long		plcproc_count;
+	char			plcproc_oidstr[40];
 
 	/* Get the volumeid from the ldh session */
 	sts = ldh_GetVolumeInfo( ldh_SessionToVol( ldhses), &info);
@@ -5799,6 +5882,10 @@ int	gcg_comp_volume(
    
         operating_system = *os;
 	free((char *)os);
+
+	/* Get all plcproc objects in this volume */
+	sts = gcg_get_rtnode_plcproc( gcgctx, &plcproc_count, &plcproclist);
+	if ( EVEN(sts)) return sts;
 
 	/* Get all plcthread objects in this volume */
 	sts = gcg_get_rtnode_plcthread( gcgctx, volobjid, operating_system, 
@@ -5836,14 +5923,24 @@ int	gcg_comp_volume(
 	  return GSX__OPENFILE;
 	}
 
+	for ( i = 0; i < (int)plcproc_count; i++ )
+	{
+	  fprintf( file, "%s %s %s\n", 
+		"PlcProcess", 
+		cdh_ObjidToString( NULL, (plcproclist+i)->oid, 0),
+		(plcproclist+i)->name);
+	}
+
 	for ( i = 0; i < (int)thread_count; i++ )
 	{
-	  fprintf( file, "%s %s %f %ld %s\n", 
-		"PlcThread", 
-		cdh_ObjidToString( NULL, (threadlist+i)->objdid, 0),
-		(threadlist+i)->scantime,
-		(threadlist+i)->prio,
-		(threadlist+i)->name);
+	  strcpy( plcproc_oidstr, cdh_ObjidToString( NULL, (threadlist+i)->plcproc_oid, 0));
+	  fprintf( file, "%s %s %s %f %ld %s\n", 
+		   "PlcThread", 
+		   cdh_ObjidToString( NULL, (threadlist+i)->objdid, 0),
+		   plcproc_oidstr,
+		   (threadlist+i)->scantime,
+		   (threadlist+i)->prio,
+		   (threadlist+i)->name);
 	}
 
 	for ( i = 0; i < (int)plc_count; i++ )

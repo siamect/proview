@@ -268,113 +268,125 @@ pwr_tStatus lfu_create_bootfile(
 	int		volumecount,
 	int		debug)
 {
-	int j;
-	FILE *file;
-	lfu_t_volumelist *volumelist_ptr;
-	lfu_t_volumelist *first_volumelist_ptr;
-	pwr_tString40 nodename;
-	pwr_tStatus sts;
-	char filename[120];
-	pwr_tUInt32 bus;
-	pwr_tVolumeId node_vollist[ LFU_MAX_NODE_VOLUMES];
-	int	node_vollist_count;
-	pwr_mOpSys 	    os;
-	unsigned long errorcount;
-	unsigned long warningcount;
-	unsigned long plc_version;
-	pwr_tFloat32 single_scantime;
-	char nodeconfigname_upper[80];
-	char vollistname_upper[80];
-	char systemname[80];
-	char systemgroup[80];
-	char timstr[32];
-	char plcname[80];
+  int i, j;
+  FILE *file;
+  lfu_t_volumelist *volumelist_ptr;
+  lfu_t_volumelist *first_volumelist_ptr;
+  pwr_tString40 nodename;
+  pwr_tStatus sts;
+  char filename[120];
+  pwr_tUInt32 bus;
+  pwr_tVolumeId node_vollist[ LFU_MAX_NODE_VOLUMES];
+  int	node_vollist_count;
+  pwr_mOpSys 	    os;
+  unsigned long errorcount;
+  unsigned long warningcount;
+  pwr_tFloat32 single_scantime;
+  char nodeconfigname_upper[80];
+  char vollistname_upper[80];
+  char systemname[80];
+  char systemgroup[80];
+  char timstr[32];
+  gcg_t_plcproclist	*plcproclist;
+  unsigned long		plcproc_count;
+  int noplc;
+  char plcname[80];
 
-	volumelist_ptr = volumelist;
-	utl_toupper( nodeconfigname_upper, nodeconfigname);
-        for ( j = 0; j < volumecount; j++)
-        {
-	  utl_toupper( vollistname_upper, volumelist_ptr->p1);
-          if ( !strcmp( nodeconfigname_upper, vollistname_upper)) {
-	    strcpy( nodename, volumelist_ptr->p2);
-	    sscanf( volumelist_ptr->p3, "%d", &bus);
-	    sscanf( volumelist_ptr->p4, "%d", (int *)&os);
-	    sscanf( volumelist_ptr->p5, "%f", &single_scantime);
+  volumelist_ptr = volumelist;
+  utl_toupper( nodeconfigname_upper, nodeconfigname);
+  for ( j = 0; j < volumecount; j++) {
 
-	    node_vollist_count = 0;
-	    first_volumelist_ptr = volumelist_ptr;
+    utl_toupper( vollistname_upper, volumelist_ptr->p1);
+    if ( !strcmp( nodeconfigname_upper, vollistname_upper)) {
+      strcpy( nodename, volumelist_ptr->p2);
+      sscanf( volumelist_ptr->p3, "%d", &bus);
+      sscanf( volumelist_ptr->p4, "%d", (int *)&os);
+      sscanf( volumelist_ptr->p5, "%f", &single_scantime);
 
-	    while( !strcmp( nodeconfigname_upper, vollistname_upper)) {
-	      if ( node_vollist_count < LFU_MAX_NODE_VOLUMES) {
-	        node_vollist[node_vollist_count] = volumelist_ptr->volume_id;
-	        node_vollist_count++;
-	      }
-	      else {
-	        printf( "** Error, max number of volumes exceeded\n");
-	        return LFU__NOFILE;
-	      }
-              volumelist_ptr++;
-	      utl_toupper( vollistname_upper, volumelist_ptr->p1);
-	    }
+      node_vollist_count = 0;
+      first_volumelist_ptr = volumelist_ptr;
 
-	    /* Get data for plc and print volumes on terminal */
-	    printf( "-- Creating bootfile for node %s\n", nodename);
-	    sprintf( filename, load_cNamePlcVersion, nodeconfigname);
-	    cdh_ToLower( filename, filename);
-	    sts = lfu_IncrementAndGetVersion( filename, &plc_version);
-	    if ( EVEN(sts)) return sts;
+      while( !strcmp( nodeconfigname_upper, vollistname_upper)) {
+	if ( node_vollist_count < LFU_MAX_NODE_VOLUMES) {
+	  node_vollist[node_vollist_count] = volumelist_ptr->volume_id;
+	  node_vollist_count++;
+	}
+	else {
+	  printf( "** Error, max number of volumes exceeded\n");
+	  return LFU__NOFILE;
+	}
+	volumelist_ptr++;
+	utl_toupper( vollistname_upper, volumelist_ptr->p1);
+      }
 
-	    sprintf( plcname, load_cNamePlc, "", cdh_Low(nodename), bus, (int)plc_version);
+      /* Get data for plc and print volumes on terminal */
+      printf( "-- Creating bootfile for node %s\n", nodename);
 
-	    sts = gcg_comp_rtnode( nodename, os,
-			bus, 1, &errorcount, &warningcount, debug, node_vollist, 
-			node_vollist_count, plc_version, single_scantime);
-	    if ( EVEN(sts)) return sts;
-	    if ( sts == GSX__NOPLC)
-	      plc_version = 0;
+      sts = gcg_comp_rtnode( nodename, os,
+			     bus, 1, &errorcount, &warningcount, debug, node_vollist, 
+			     node_vollist_count, 0, single_scantime);
+      if ( EVEN(sts)) return sts;
+      if ( sts == GSX__NOPLC)
+	noplc = 1;
+      else
+	noplc = 0;
 
-	    /* Open the file and print boot data */
-	    sprintf( filename, load_cNameBoot, 
-			load_cDirectory, cdh_Low(nodename), bus);
-	    dcli_translate_filename( filename, filename);
-	    file = fopen( filename, "w");
-	    if ( !file) {
-	      printf( "** Error, Unable to open bootfile, %s", filename);
-	      return LFU__NOFILE;
-	    }
+      /* Open the file and print boot data */
+      sprintf( filename, load_cNameBoot, 
+	       load_cDirectory, cdh_Low(nodename), bus);
+      dcli_translate_filename( filename, filename);
+      file = fopen( filename, "w");
+      if ( !file) {
+	printf( "** Error, Unable to open bootfile, %s", filename);
+	return LFU__NOFILE;
+      }
 
-	    time_AtoAscii(NULL, time_eFormat_DateAndTime, timstr,sizeof(timstr));
-	    fprintf( file, "%s\n", timstr);
+      time_AtoAscii(NULL, time_eFormat_DateAndTime, timstr,sizeof(timstr));
+      fprintf( file, "%s\n", timstr);
 
-	    sts = lfu_ReadSysObjectFile( systemname, systemgroup);
-	    if ( EVEN(sts)) {
-	      fprintf( file, "\n");
-	      fprintf( file, "\n");
-	    }
-	    else {
-	      fprintf( file, "%s\n", systemname);
-	      fprintf( file, "%s\n", systemgroup);
-	    }
+      sts = lfu_ReadSysObjectFile( systemname, systemgroup);
+      if ( EVEN(sts)) {
+	fprintf( file, "\n");
+	fprintf( file, "\n");
+      }
+      else {
+	fprintf( file, "%s\n", systemname);
+	fprintf( file, "%s\n", systemgroup);
+      }
 
-	    fprintf( file, "%s %s\n", plcname, cdh_VolumeIdToString( NULL, 0, 0, 0));
+      plcproc_count = 0;
+      gcg_read_volume_plclist( first_volumelist_ptr->volume_id, 0, 0, 0, 0,
+			       &plcproc_count, &plcproclist);
 
-	    node_vollist_count = 0;
-	    volumelist_ptr = first_volumelist_ptr;
-	    utl_toupper( vollistname_upper, volumelist_ptr->p1);
-	    while( !strcmp( nodeconfigname_upper, vollistname_upper)) {
-	      fprintf( file, "%s %s\n",
-		       volumelist_ptr->volume_name,
-		       cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0));
-              volumelist_ptr++;
-	      utl_toupper( vollistname_upper, volumelist_ptr->p1);
-	    }
-	    fclose( file);
 
-	    break;
-          }
-          volumelist_ptr++;
-        }
-	return LFU__SUCCESS;	  
+      if ( noplc || plcproc_count == 0)
+	fprintf( file, "-\n");
+      else {
+	for ( i = 0; i < (int)plcproc_count; i++) {
+	  if ( i != 0)
+	    fprintf( file, ",");
+	  strncpy( plcname, cdh_Low(plcproclist[i].name), sizeof(plcname));
+	  fprintf( file, load_cNamePlc, "", cdh_Low(nodename), bus, plcname);
+	}
+	fprintf( file, "\n");
+      }
+      node_vollist_count = 0;
+      volumelist_ptr = first_volumelist_ptr;
+      utl_toupper( vollistname_upper, volumelist_ptr->p1);
+      while( !strcmp( nodeconfigname_upper, vollistname_upper)) {
+	fprintf( file, "%s %s\n",
+		 volumelist_ptr->volume_name,
+		 cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0));
+	volumelist_ptr++;
+	utl_toupper( vollistname_upper, volumelist_ptr->p1);
+      }
+      fclose( file);
+      
+      break;
+    }
+    volumelist_ptr++;
+  }
+  return LFU__SUCCESS;	  
 }
 
 
@@ -1342,8 +1354,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  free( (char *) single_scan_ptr);
 
 
-	  lfu_check_appl_file( nodename_ptr, *bus_number_ptr);
-	  // lfu_check_opt_file( nodename_ptr, *bus_number_ptr, (pwr_mOpSys) os);
+	  lfu_check_appl_file( ldhses, nodename_ptr, *bus_number_ptr);
+	  // lfu_check_opt_file( ldhses, nodename_ptr, *bus_number_ptr, (pwr_mOpSys) os);
 
 	  /* Find the volumes in this node */
 	  sts = ldh_GetChild( ldhses, nodeobjid, &volobjid);
@@ -2011,9 +2023,14 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      char str[2000] = "";
 	      FILE *optfile;
 	      char dir[80];
+	      pwr_tObjName plcproc;
 
 	      if ( os == pwr_mOpSys_CustomBuild && custom_os == pwr_mOpSys__)
 		break;
+
+	      sts = ldh_ObjidToName( ldhses, applobjid, ldh_eName_Object,
+				     appl_name, sizeof(appl_name), &size);
+	      if ( EVEN(sts)) return sts;
 
 	      sts = ldh_GetObjectBody( ldhses, applobjid, "RtBody", (void **)&bop, &size);
 	      if ( EVEN(sts)) return sts;
@@ -2098,23 +2115,34 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      else
 		sprintf( &str[strlen(str)], "-lpwr_nodave_dummy ");
 
-	      free( (char *)bop);
-
-	      if ( os == pwr_mOpSys_CustomBuild)	      
-		sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( (pwr_mOpSys)custom_os));
-	      else
-		sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( (pwr_mOpSys)os));
-	      sprintf( fname, load_cNameOpt, dir, nodename_ptr, *bus_number_ptr);
-	      dcli_translate_filename( fname, fname);
-	      optfile = fopen( fname, "w");
-	      if ( optfile == 0) {
+	      if ( strcmp( bop->PlcProcess, "") == 0) {
 		char msg[200];
-		sprintf( msg, "Error, Unable to open file %s", fname);
+		sprintf( msg, "Error in BuildOptions object '%s', PlcProcess is missing\n",
+			 appl_name);
 		MsgWindow::message( 'E', msg, msgw_ePop_Default);
-		return LFU__NOFILE;
+		syntax_error = 1;
+		free( (char *)bop);
 	      }
-	      fprintf( optfile, "%s", str);
-	      fclose( optfile);
+	      else {
+		strncpy( plcproc, bop->PlcProcess, sizeof(plcproc));
+		free( (char *)bop);
+
+		if ( os == pwr_mOpSys_CustomBuild)	      
+		  sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( (pwr_mOpSys)custom_os));
+		else
+		  sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( (pwr_mOpSys)os));
+		sprintf( fname, load_cNameOpt, dir, nodename_ptr, *bus_number_ptr, cdh_Low(plcproc));
+		dcli_translate_filename( fname, fname);
+		optfile = fopen( fname, "w");
+		if ( optfile == 0) {
+		  char msg[200];
+		  sprintf( msg, "Error, Unable to open file %s", fname);
+		  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+		  return LFU__NOFILE;
+		}
+		fprintf( optfile, "%s", str);
+		fclose( optfile);
+	      }
 	      break;
 	    }
 	    default: ;
@@ -2667,77 +2695,85 @@ pwr_tStatus lfu_ReadBootFile(
   pwr_tVolumeId **vollist,
   pwr_tString40	**volnamelist,
   int		*volcount,
-  char		*plc_name
+  pwr_tString80	**plclist,
+  int 		*plccount
 )
 {
-	FILE	*file;
-	char	timstr[40];
-	char	vol_name[40];
-	char	vol_str[20];
-	int	plc_found;
-	pwr_tVolumeId volid;
-	pwr_tStatus sts;
-	char	fname[120];
+  FILE	*file;
+  char	timstr[40];
+  char	vol_name[40];
+  char	vol_str[20];
+  pwr_tVolumeId volid;
+  pwr_tStatus sts;
+  char	fname[120];
+  char buff[1000];
+  pwr_tString80 plcarray[50];
 
+  dcli_translate_filename( fname, filename);
+  file = fopen( fname, "r");
+  if ( file == 0) 
+    return LFU__NOFILE;
 
-	dcli_translate_filename( fname, filename);
-	file = fopen( fname, "r");
-	if ( file == 0) 
-	  return LFU__NOFILE;
+  if (fgets( timstr, sizeof( timstr), file) == NULL) {
+    fclose( file);
+    return LFU__FILECRP;
+  }
+  sts = time_AsciiToA(timstr, date);
+  if ( EVEN(sts)) {
+    fclose( file);
+    return sts;
+  }
 
-	if (fgets( timstr, sizeof( timstr), file) == NULL)
-	{
-	  fclose( file);
-	  return LFU__FILECRP;
-	}
-	sts = time_AsciiToA(timstr, date);
-	if ( EVEN(sts)) return sts;
-	if ( EVEN(sts))
-	{
-	  fclose( file);
-	  return sts;
-	}
+  if ( utl_read_line( systemname, sizeof(pwr_tString80), file, NULL) == 0) {
+    fclose( file);
+    return LFU__FILECRP;
+  }
 
-	if ( utl_read_line( systemname, sizeof(pwr_tString80), file, NULL) == 0)
-	{
-	  fclose( file);
-	  return LFU__FILECRP;
-	}
+  if ( utl_read_line( systemgroup, sizeof(pwr_tString80), file, NULL) == 0) {
+    fclose( file);
+    return LFU__FILECRP;
+  }
 
-	if ( utl_read_line( systemgroup, sizeof(pwr_tString80), file, NULL) == 0)
-	{
-	  fclose( file);
-	  return LFU__FILECRP;
-	}
+  if ( utl_read_line( buff, sizeof(buff), file, NULL) == 0) {
+    fclose( file);
+    return LFU__FILECRP;
+  }
 
-	*volcount = 0;
-	*vollist = 
-	   (pwr_tVolumeId *) calloc( LFU_MAX_NODE_VOLUMES, sizeof(**vollist));
-	*volnamelist = 
-	   (pwr_tString40 *) calloc( LFU_MAX_NODE_VOLUMES, sizeof(**volnamelist));
-	plc_found = 0;
-	while ( fscanf( file, "%s %s", vol_name, vol_str) == 2) {
-	  sts = cdh_StringToVolumeId( vol_str, &volid);
-	  if ( EVEN(sts)) {
-	    fclose( file);
-	    return sts;
-	  }
-	  if ( *volcount == 0 && volid == 0) {
-	    strcpy( plc_name, vol_name);
-	    plc_found = 1;
-	    continue;
-	  }
+  if ( plclist) {
+    if ( buff[0] == '-') {
+      *plccount = 0;    
+      *plclist = (pwr_tString80 *)0;
+    }
+    else {
+      *plccount = dcli_parse( buff, ",", "", (char *)plcarray,
+			       sizeof(plcarray)/sizeof(plcarray[0]),
+			       sizeof(plcarray[0]), 0);
 
-	  *(*vollist + *volcount) = volid;
-	  strcpy( *(*volnamelist + *volcount), vol_name);
-	  (*volcount)++;
-	}
+      *plclist = (pwr_tString80 *) calloc( *plccount, sizeof(pwr_tString80));
+      memcpy( *plclist, plcarray, *plccount * sizeof(pwr_tString80));
+    }
+  }
+    
+  if ( vollist) {
+    *volcount = 0;
+    *vollist = 
+      (pwr_tVolumeId *) calloc( LFU_MAX_NODE_VOLUMES, sizeof(**vollist));
+    *volnamelist = 
+      (pwr_tString40 *) calloc( LFU_MAX_NODE_VOLUMES, sizeof(**volnamelist));
+    while ( fscanf( file, "%s %s", vol_name, vol_str) == 2) {
+      sts = cdh_StringToVolumeId( vol_str, &volid);
+      if ( EVEN(sts)) {
 	fclose( file);
+	return sts;
+      }
+      *(*vollist + *volcount) = volid;
+      strcpy( *(*volnamelist + *volcount), vol_name);
+      (*volcount)++;
+    }
+  }
+  fclose( file);
 
-	if ( !plc_found)
-	  strcpy( plc_name, "");
-
-	return LFU__SUCCESS;
+  return LFU__SUCCESS;
 }
 
 
@@ -2961,7 +2997,8 @@ pwr_tStatus lfu_ParseDbmsServer( char *server, char *user, char *password,
   return LFU__SUCCESS;
 }
 
-pwr_tStatus lfu_check_appl_file( char *nodename, int bus_number)
+pwr_tStatus lfu_check_appl_file( ldh_tSesContext ldhses,
+				 char *nodename, int bus_number)
 {
   pwr_tFileName fname;
   pwr_tTime t;
@@ -2993,7 +3030,7 @@ pwr_tStatus lfu_check_appl_file( char *nodename, int bus_number)
     "# System processes" << endl <<
     "# System processes can be disabled by removing the #" << endl <<
     "#pwr_neth,       , noload, norun, , 5, debug, \"\"" << endl <<
-    "#pwr_plc,        , noload, norun, ,  , debug, \"\"" << endl <<
+    "#pwr_plc_plc,        , noload, norun, ,  , debug, \"\"" << endl <<
     "#pwr_alim,       , noload, norun, , 5, debug, \"\"" << endl <<
     "#pwr_emon,       , noload, norun, , 10, debug, \"\"" << endl <<
     "#pwr_tmon,       , noload, norun, , 5, debug, \"\"" << endl <<
@@ -3021,43 +3058,58 @@ pwr_tStatus lfu_check_appl_file( char *nodename, int bus_number)
   return LFU__SUCCESS;
 }
 
-pwr_tStatus lfu_check_opt_file( char *nodename, int bus_number, pwr_mOpSys opsys)
+pwr_tStatus lfu_check_opt_file( ldh_tSesContext ldhses, char *nodename, int bus_number, 
+				pwr_mOpSys opsys)
 {
   pwr_tFileName fname;
   pwr_tTime t;
-  char dir[80];
+  pwr_tFileName dir;
+  pwr_tObjName name;
+  int size;
+  pwr_tStatus sts;
+  pwr_tOid oid;
 
   sprintf( dir, "$pwrp_root/%s/exe/", cdh_OpSysToStr( opsys));
-  sprintf( fname, load_cNameOpt, dir, nodename, bus_number);
-  dcli_translate_filename( fname, fname);
 
-  if ( ODD(dcli_file_time( fname, &t)))
-    return LFU__SUCCESS;
+  for ( sts = ldh_GetClassList( ldhses, pwr_cClass_PlcProcess, &oid);
+	ODD(sts);
+	sts = ldh_GetNextObject( ldhses, oid, &oid)) {
 
-  strcat( fname, "_template");
-  if ( ODD(dcli_file_time( fname, &t)))
-    return LFU__SUCCESS;
+    sts = ldh_ObjidToName( ldhses, oid, ldh_eName_Object,
+			   name, sizeof(name), &size);
+    if( EVEN(sts)) return sts;
 
-  // Create a template file
-  ofstream fp( fname);
-  if ( !fp)
-    return LFU__SUCCESS;
+    sprintf( fname, load_cNameOpt, dir, nodename, bus_number, cdh_Low(name));
+    dcli_translate_filename( fname, fname);
+
+    if ( ODD(dcli_file_time( fname, &t)))
+      continue;
+
+    strcat( fname, "_template");
+    if ( ODD(dcli_file_time( fname, &t)))
+      continue;
+
+    // Create a template file
+    ofstream fp( fname);
+    if ( !fp)
+      return LFU__SUCCESS;
   
-  switch ( opsys) {
-  case pwr_mOpSys_PPC_LYNX:
-  case pwr_mOpSys_X86_LYNX:
-  case pwr_mOpSys_PPC_LINUX:
-  case pwr_mOpSys_X86_LINUX:
-  case pwr_mOpSys_X86_64_LINUX:
-  case pwr_mOpSys_X86_64_MACOS:
-  case pwr_mOpSys_CustomBuild:
-    fp << 
-      "$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy" << endl;
-    break;
-  default : ;
-  }
+    switch ( opsys) {
+    case pwr_mOpSys_PPC_LYNX:
+    case pwr_mOpSys_X86_LYNX:
+    case pwr_mOpSys_PPC_LINUX:
+    case pwr_mOpSys_X86_LINUX:
+    case pwr_mOpSys_X86_64_LINUX:
+    case pwr_mOpSys_X86_64_MACOS:
+    case pwr_mOpSys_CustomBuild:
+      fp << 
+	"$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_pnak_dummy -lpwr_cifx_dummy -lpwr_usb_dummy -lpwr_usbio_dummy -lpwr_nodave_dummy" << endl;
+      break;
+    default : ;
+    }
 
-  fp.close();
+    fp.close();
+  }
   return LFU__SUCCESS;
 }
 

@@ -141,6 +141,7 @@ typedef struct {
   char		id[40];
   ini_mProc	flags;
   proc_sProcess	proc;
+  void		*objectp;
 } ini_sProc;
 
 typedef struct {
@@ -158,7 +159,8 @@ typedef struct {
   ini_sFile	applfile;
   ini_sFile	bootfile;
   ini_sFile	nodefile;
-  ini_sFile	plcfile;
+  ini_sFile	*plcfile;
+  int		plcfile_cnt;
   int		busid;
   char		dir[256];
   char		bdir[256]; /* Base dir (pwr_load) */
@@ -206,8 +208,8 @@ char *		ini_LoadDirectory	(pwr_tStatus*, ini_sContext*);
 pwr_tBoolean	ini_LoadNode		(pwr_tStatus*, ini_sContext*);
 pwr_tBoolean	ini_LoadVolume		(pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 FILE           *ini_OpenFile		(pwr_tStatus*, ini_sContext*, ini_sFile*);
-ini_sProc      *ini_ProcInsert		(pwr_tStatus*, ini_sContext*, char*, char*, int, int, char*, int, int, char*);
-void		ini_ProcIter		(pwr_tStatus*, ini_sContext*, int,
+ini_sProc      *ini_ProcInsert		(pwr_tStatus*, ini_sContext*, char*, char*, int, int, char*, int, int, char*, void*);
+void		ini_ProcIter		(pwr_tStatus*, ini_sContext*, int, int,
 			void	(*func)	(pwr_tStatus*, ini_sContext*, ini_sProc*));
 void		ini_ProcLoad		(pwr_tStatus*, ini_sContext*, ini_sProc*);
 void		ini_ProcStart		(pwr_tStatus*, ini_sContext*, ini_sProc*);
