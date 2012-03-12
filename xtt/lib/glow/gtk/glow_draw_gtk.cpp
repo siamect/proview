@@ -628,7 +628,7 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 
 	if ( buff >= 0x020)
 	  sts = ctx->event_handler( glow_eEvent_Key_Ascii, 0, 0, (int)buff, 0);
-	else {
+	else if ( buff > 0) {
 	  sts = ctx->event_handler( glow_eEvent_Key_CtrlAscii, 0, 0, (int)buff, 0);
 	}
       }

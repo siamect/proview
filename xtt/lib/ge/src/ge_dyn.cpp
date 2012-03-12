@@ -9483,7 +9483,7 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
       strcpy( filter, "$Object-HelpClassFilter");
       break;
     default:
-      ;
+      return 1;
     }
 
     if ( dyn->graph->call_method_cb) {
