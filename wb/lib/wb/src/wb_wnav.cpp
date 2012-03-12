@@ -865,7 +865,7 @@ int WNav::check_attr_value( brow_tObject node, int *multiline,
         strcpy( name, "");
       *init_value = name;
       *multiline = 0;
-      *size = sizeof( name);
+      *size = sizeof( name) - 1;
       break;
     }
     case wnav_eItemType_Local:
