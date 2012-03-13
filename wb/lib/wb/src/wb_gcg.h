@@ -147,11 +147,13 @@ typedef struct {
 typedef struct {
 	pwr_tObjid	objdid;
 	char		prefix;
+	vldh_t_node	node;
 	} gcg_t_reflist;
 
 typedef struct {
 	pwr_sAttrRef	attrref;
 	char		prefix;
+        vldh_t_node	node;
 	} gcg_t_areflist;
 
 typedef struct {

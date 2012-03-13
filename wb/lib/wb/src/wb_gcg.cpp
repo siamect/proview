@@ -416,13 +416,15 @@ static int	gcg_iowrite_insert(
 static int	gcg_ref_insert( 
     gcg_ctx		gcgctx,
     pwr_tObjid		objdid,
-    char		prefix
+    char		prefix,
+    vldh_t_node		node
 );
 
 static int	gcg_aref_insert( 
     gcg_ctx		gcgctx,
     pwr_sAttrRef       	attrref,
-    char		prefix
+    char		prefix,
+    vldh_t_node		node
 );
 
 static int	gcg_ref_print( 
@@ -2970,7 +2972,8 @@ static int	gcg_iowrite_insert(
 static int	gcg_ref_insert( 
     gcg_ctx		gcgctx,
     pwr_tObjid		objdid,
-    char		prefix
+    char		prefix,
+    vldh_t_node		node
 )
 {
 	int	i, found, sts;
@@ -3021,7 +3024,8 @@ static int	gcg_ref_insert(
 static int	gcg_aref_insert( 
     gcg_ctx		gcgctx,
     pwr_sAttrRef       	attrref,
-    char		prefix
+    char		prefix,
+    vldh_t_node		node
 )
 {
 	int	i, found, sts;
@@ -3084,11 +3088,17 @@ static int	gcg_ref_print(
 	  prefix = (gcgctx->ref + i)->prefix;
 
 	  sts = ldh_GetObjectClass(gcgctx->wind->hw.ldhses, objdid, &cid);
-	  if ( EVEN(sts)) return sts;
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, (gcgctx->ref + i)->node);  
+	    continue;
+	  }
 
 	  /* Get name for this class */
 	  sts = gcg_get_structname( gcgctx, objdid, &name);
-	  if( EVEN(sts)) return sts;
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, (gcgctx->ref + i)->node);  
+	    continue;
+	  }
 
 	  gcg_print_decl( gcgctx, name, objdid, prefix, GCG_REFTYPE_REF);
 	  gcg_print_rtdbref( gcgctx, objdid, prefix, cid, GCG_REFTYPE_REF);
@@ -3129,11 +3139,17 @@ static int	gcg_aref_print(
 	  prefix = (gcgctx->aref + i)->prefix;
 
 	  sts = ldh_GetAttrRefOrigTid(gcgctx->wind->hw.ldhses, &attrref, &cid);
-	  if ( EVEN(sts)) return sts;
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, (gcgctx->aref + i)->node);  
+	    continue;
+	  }
 
 	  /* Get name for this class */
 	  sts = gcg_get_structname_from_cid( gcgctx, cid, &name);
-	  if( EVEN(sts)) return sts;
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, (gcgctx->aref + i)->node);  
+	    continue;
+	  }
 
 	  gcg_print_adecl( gcgctx, name, attrref, prefix, GCG_REFTYPE_REF);
 	  gcg_print_artdbref( gcgctx, attrref, prefix, cid, GCG_REFTYPE_REF, 0);
@@ -6394,7 +6410,7 @@ int	gcg_comp_m1( vldh_t_wind wind,
 		GCG_PREFIX_MOD, vldh_IdToStr(0, wind->lw.oid));
 
 	/* Print exec call for the window */
-	sts = gcg_ref_insert( gcgctx, wind->lw.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, wind->lw.oid, GCG_PREFIX_REF, 0);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, wind->lw.oid, &name);
@@ -6622,7 +6638,7 @@ int	gcg_comp_m6( gcg_ctx gcgctx, vldh_t_node node)
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts; 
@@ -6667,7 +6683,7 @@ int	gcg_comp_m7( gcg_ctx gcgctx, vldh_t_node node)
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts; 
@@ -6711,7 +6727,7 @@ int	gcg_comp_m5( gcg_ctx gcgctx, vldh_t_node node)
 {
 	int 	sts;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts; 
@@ -6778,7 +6794,7 @@ int	gcg_comp_m4( gcg_ctx gcgctx, vldh_t_node node)
 	char			output_par[80];
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -7064,7 +7080,7 @@ int	gcg_comp_m8( gcg_ctx gcgctx, vldh_t_node node)
 	  }
 
 	  /* Insert io object in ioread list */
-	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF);
+	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF, node);
 	  return GSX__SUCCESS;
 	  break;
 	case pwr_cClass_GetATv:
@@ -7074,7 +7090,7 @@ int	gcg_comp_m8( gcg_ctx gcgctx, vldh_t_node node)
 	  }
 
 	  /* Insert io object in ioread list */
-	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF);
+	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF, node);
 	  return GSX__SUCCESS;
 	case pwr_cClass_GetDTv:
 	  if ( cid != pwr_cClass_DTv) {
@@ -7083,7 +7099,7 @@ int	gcg_comp_m8( gcg_ctx gcgctx, vldh_t_node node)
 	  }
 
 	  /* Insert io object in ioread list */
-	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF);
+	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF, node);
 	  return GSX__SUCCESS;
 	default:
 	  gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
@@ -7321,7 +7337,7 @@ int	gcg_comp_m10( gcg_ctx gcgctx, vldh_t_node node)
 	}
 
 	/* Insert object in ref list */
-	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
+	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF, node);
 
 	return GSX__SUCCESS;
 }
@@ -7375,7 +7391,7 @@ int	gcg_comp_m13( gcg_ctx gcgctx, vldh_t_node node)
 	  return sts;
 
 	/* Insert step object in ref list */
-	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Print the execute command */
 	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
@@ -7502,7 +7518,7 @@ int	gcg_comp_m15( gcg_ctx gcgctx, vldh_t_node node)
 
 
 	/* Insert trans object in ref list */
-	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Print the execute command */
 	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
@@ -7983,7 +7999,7 @@ int	gcg_comp_m16( gcg_ctx gcgctx, vldh_t_node node)
 	      return GSX__ORDERMISM;
 	    }   
 	    if ( cid == pwr_cClass_sorder) {
-	      sts = gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF);
+	      sts = gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF, node);
 
 	      /* Get name for execute call */
 	      sts = gcg_get_structname( gcgctx, next_objdid, &name);
@@ -8004,7 +8020,7 @@ int	gcg_comp_m16( gcg_ctx gcgctx, vldh_t_node node)
 	    else if ( cid == pwr_cClass_lorder) {
 	      /* Get the time */
 
-	      sts = gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF);
+	      sts = gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF, node);
 
 	      /* Print timer code */
 	      gcg_timer_print( gcgctx, next_objdid);
@@ -8026,7 +8042,7 @@ int	gcg_comp_m16( gcg_ctx gcgctx, vldh_t_node node)
 	    else if ( cid == pwr_cClass_dorder) {
 	      /* Get the time */
 
-	      sts = gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF);
+	      sts = gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF, node);
 
 	      /* Print timer code */
 	      gcg_timer_print( gcgctx, next_objdid);
@@ -8046,7 +8062,7 @@ int	gcg_comp_m16( gcg_ctx gcgctx, vldh_t_node node)
 	      step_objdid = next_objdid;
 	    }
 	    else if ( cid == pwr_cClass_porder) {
-	      sts = gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF);
+	      sts = gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF, node);
 
 	      /* Get name for execute call */
 	      sts = gcg_get_structname( gcgctx, next_objdid, &name);
@@ -8063,7 +8079,7 @@ int	gcg_comp_m16( gcg_ctx gcgctx, vldh_t_node node)
 	      step_objdid = next_objdid;
 	    }
 	    else if ( cid == pwr_cClass_corder) {
-	      sts = gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF);
+	      sts = gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF, node);
 
 	      /* Get name for execute call */
 	      sts = gcg_get_structname( gcgctx, next_objdid, &name);
@@ -8116,7 +8132,7 @@ int	gcg_comp_m16( gcg_ctx gcgctx, vldh_t_node node)
 	if ( ldhsubordercount != subordercount )
 	  return GSX__ORDERMISM;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for execute call */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -8439,7 +8455,7 @@ int	gcg_comp_m11( gcg_ctx gcgctx, vldh_t_node node)
 	     cid == pwr_cClass_ATv ||
 	     cid == pwr_cClass_DTv) {
 	  /* Insert io object in ref list */
-	  gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
+	  gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF, node);
 
 	  /* Print the execute command */
 	  sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -8750,7 +8766,7 @@ int	gcg_comp_m12( gcg_ctx gcgctx, vldh_t_node node)
 	free(nocondef_ptr);
 
 	/* Insert object in ref list */
-	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
+	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -8832,7 +8848,7 @@ int	gcg_comp_m17( gcg_ctx gcgctx, vldh_t_node node)
 	nocondef.bo = TRUE;
 	ldhses = (node->hn.wind)->hw.ldhses; 
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -8994,7 +9010,7 @@ int	gcg_comp_m18( gcg_ctx gcgctx, vldh_t_node node)
 
 	/* Insert sorder and reset_so object in ref list */
 
-	gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF, node);
 
 	sts = gcg_print_exec_macro( gcgctx, node, next_objdid, GCG_PREFIX_REF);
 	if ( EVEN(sts))	return sts;
@@ -9085,7 +9101,7 @@ int	gcg_comp_m19( gcg_ctx gcgctx, vldh_t_node node)
 	}	  
 
 	/* Insert order ref list */
-	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF, node);
 
 	return GSX__SUCCESS;
 }
@@ -9177,7 +9193,7 @@ int	gcg_comp_m20( gcg_ctx gcgctx, vldh_t_node node)
 	  refobjdid = next_objdid;
 	}
 	/* Insert referenced object in ref list */
-	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -9223,7 +9239,7 @@ int	gcg_comp_m21( gcg_ctx gcgctx, vldh_t_node node)
 {
 	int 	sts;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	return GSX__SUCCESS;
 }
@@ -9274,7 +9290,7 @@ int	gcg_comp_m25( gcg_ctx gcgctx, vldh_t_node node)
 	nocondef[0].bo = FALSE;
 	nocondef[1].bo = TRUE;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts; 
@@ -9431,7 +9447,7 @@ int	gcg_comp_m22( gcg_ctx gcgctx, vldh_t_node node)
 	  expression);
 	free((char *) expression);
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -9742,7 +9758,7 @@ int	gcg_comp_m24( gcg_ctx gcgctx, vldh_t_node node)
 	  return sts;
 
 	/* Insert step object in ref list */
-	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Print the execute command */
 	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
@@ -9890,14 +9906,14 @@ int	gcg_comp_m26( gcg_ctx gcgctx, vldh_t_node node)
 	}
 
 	/* Insert parent object in ref list */
-	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF, node);
 
 	sts = gcg_check_grafcet_reset( gcgctx, node);
 	if ( EVEN(sts) || sts == GSX__NEXTNODE)
 	  return sts;
 
 	/* Insert step object in ref list */
-	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Print the execute command */
 	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
@@ -9990,7 +10006,7 @@ int	gcg_comp_m28( gcg_ctx gcgctx, vldh_t_node node)
 	char			output_par[80];
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -10113,7 +10129,7 @@ int	gcg_comp_m29( gcg_ctx gcgctx, vldh_t_node node)
 	char			output_par[80];
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -10250,7 +10266,7 @@ int	gcg_comp_m30( gcg_ctx gcgctx, vldh_t_node node)
 	char			output_par[80];
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -10404,7 +10420,7 @@ int	gcg_comp_m31( gcg_ctx gcgctx, vldh_t_node node)
 	char			output_par[80];
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -10562,7 +10578,7 @@ int	gcg_comp_m32( gcg_ctx gcgctx, vldh_t_node node)
 	char			output_par[80];
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -10730,7 +10746,7 @@ int	gcg_comp_m33( gcg_ctx gcgctx, vldh_t_node node)
 
 	ldhses = (node->hn.wind)->hw.ldhses; 
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for the exec command for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -11000,7 +11016,7 @@ int	gcg_comp_m34( gcg_ctx gcgctx, vldh_t_node node)
 	}
 */
 	/* Insert referenced object in ref list */
-	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -11113,7 +11129,7 @@ int	gcg_comp_m35( gcg_ctx gcgctx, vldh_t_node node)
 	default:;
 	}
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -11256,7 +11272,7 @@ int	gcg_comp_m36( gcg_ctx gcgctx, vldh_t_node node)
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get the objdid of the referenced io object stored in the
 	  first parameter in defbody */
@@ -11376,7 +11392,7 @@ int	gcg_comp_m36( gcg_ctx gcgctx, vldh_t_node node)
 		parameter);
 
 	/* Insert object in ref list */
-	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
+	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF, node);
 
 	return GSX__SUCCESS;
 }
@@ -11514,7 +11530,7 @@ int	gcg_comp_m37( gcg_ctx gcgctx, vldh_t_node node)
 	}
 #if 0
 	char			*name;
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -12011,7 +12027,7 @@ OA1,OA2,OA3,OA4,OA5,OA6,OA7,OA8,od1,od2,od3,od4,od5,od6,od7,od8) ",
 
 	free((char *) expression);
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -12237,7 +12253,7 @@ int	gcg_comp_m41( gcg_ctx gcgctx, vldh_t_node node)
 	char			output_par[80];
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -12442,7 +12458,7 @@ int	gcg_comp_m42( gcg_ctx gcgctx, vldh_t_node node)
 	free((char *) expression);
 	free( newstr);
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get the runtime parameters for this class */
 	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
@@ -12561,7 +12577,7 @@ int	gcg_comp_m43( gcg_ctx gcgctx, vldh_t_node node)
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get the objdid of the referenced io object stored in the
 	  first parameter in defbody */
@@ -12597,7 +12613,7 @@ int	gcg_comp_m43( gcg_ctx gcgctx, vldh_t_node node)
 	}
 
 	/* Insert object in ref list */
-	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
+	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF, node);
 
 	/* The Out parameter will contain the pointer to the
 	   referenced object */
@@ -12669,7 +12685,7 @@ int	gcg_comp_m44( gcg_ctx gcgctx, vldh_t_node node)
 	}
 
 	/* Insert order ref list */
-	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF, node);
 
 	return GSX__SUCCESS;
 }
@@ -12729,7 +12745,7 @@ int	gcg_comp_m45( gcg_ctx gcgctx, vldh_t_node node)
 	int			dataclass_found;	
 
 	ldhses = (node->hn.wind)->hw.ldhses;
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -13087,7 +13103,7 @@ int	gcg_comp_m47( gcg_ctx gcgctx, vldh_t_node node)
 
 	nocondef.bo = FALSE;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts; 
@@ -13228,8 +13244,8 @@ int	gcg_comp_m48( gcg_ctx gcgctx, vldh_t_node node)
 	  return GSX__NEXTNODE;
 	}
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
-	sts = gcg_ref_insert( gcgctx, window, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
+	sts = gcg_ref_insert( gcgctx, window, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -13286,7 +13302,7 @@ int	gcg_comp_m49( gcg_ctx gcgctx, vldh_t_node node)
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Check the attributes in the parent order node */
 	sts = ldh_GetObjectBodyDef( ldhses,
@@ -13411,7 +13427,7 @@ int	gcg_comp_m50( gcg_ctx gcgctx, vldh_t_node node)
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Print the function call to execute the subwindow */
 	/* Check first that there is a subwindow */
@@ -13641,7 +13657,7 @@ int	gcg_comp_m52( gcg_ctx gcgctx, vldh_t_node node)
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get the objdid of the referenced io object stored in the
 	  first parameter in defbody */
@@ -13810,7 +13826,7 @@ int	gcg_comp_m52( gcg_ctx gcgctx, vldh_t_node node)
 		parameter);
 
 	/* Insert object in ref list */
-	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF, node);
 
 	return GSX__SUCCESS;
 }
@@ -14003,7 +14019,7 @@ int	gcg_comp_m53( gcg_ctx gcgctx, vldh_t_node node)
 	}
 
 	/* Print the code */
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -14243,10 +14259,10 @@ int	gcg_comp_m54( gcg_ctx gcgctx, vldh_t_node node)
 	free((char *) index_ptr);
 
 	/* Insert parent object in ref list */
-	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF, node);
 
 	/* Insert object in ref list */
-	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Print the execute command */
 	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
@@ -14363,7 +14379,7 @@ int	gcg_comp_m55( gcg_ctx gcgctx, vldh_t_node node)
 	int			sts;
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for the exec command for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -14661,7 +14677,7 @@ int	gcg_comp_m57( gcg_ctx gcgctx, vldh_t_node node)
 	free(nocondef_ptr);
 
 	/* Insert host object in ref list */
-	gcg_ref_insert( gcgctx, host_objid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, host_objid, GCG_PREFIX_REF, node);
 
 	/* Print the execute command */
 
@@ -14773,7 +14789,7 @@ int	gcg_comp_m58( gcg_ctx gcgctx, vldh_t_node node)
 	    return GSX__NEXTNODE;
 	  }
 
-	  gcg_aref_insert( gcgctx, aref, GCG_PREFIX_REF);
+	  gcg_aref_insert( gcgctx, aref, GCG_PREFIX_REF, node);
 
 	  // Make connection mutual
 	  sts = ldh_ObjidToName( ldhses, cdh_ClassIdToObjid( node->ln.cid), 
@@ -14957,7 +14973,7 @@ int	gcg_comp_m58( gcg_ctx gcgctx, vldh_t_node node)
 	free( (char *)template_time);
 
 	/* Print the code */
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -15309,7 +15325,7 @@ int	gcg_comp_m59( gcg_ctx gcgctx, vldh_t_node node)
         free((char *) bodydef );        
 
 	/* Insert object in ref list */
-	gcg_ref_insert( gcgctx, host_objid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, host_objid, GCG_PREFIX_REF, node);
 
 	return GSX__SUCCESS;
 }
@@ -15376,7 +15392,7 @@ int	gcg_comp_m60( gcg_ctx gcgctx, vldh_t_node node)
   if ( EVEN(sts)) return sts;
 
   /* Insert object in ref list */
-  sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+  sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
   
   return GSX__SUCCESS;
 }
@@ -15521,7 +15537,7 @@ int	gcg_comp_m62( gcg_ctx gcgctx, vldh_t_node node)
 	}
 
 	/* Insert object in ref list */
-	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
+	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF, node);
 
 	return GSX__SUCCESS;
 }
@@ -15668,9 +15684,9 @@ int	gcg_comp_m63( gcg_ctx gcgctx, vldh_t_node node)
 	}
 
 	/* Insert object in ref list */
-	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
+	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF, node);
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
@@ -15804,7 +15820,7 @@ int	gcg_comp_m64( gcg_ctx gcgctx, vldh_t_node node)
 	  return GSX__NEXTNODE;
 	}
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get name for this class */
 	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
@@ -15873,7 +15889,7 @@ int	gcg_comp_m65( gcg_ctx gcgctx, vldh_t_node node)
 	  return GSX__NEXTNODE;
 	}
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts; 
@@ -15934,7 +15950,7 @@ int	gcg_comp_m66( gcg_ctx gcgctx, vldh_t_node node)
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
 	/* Get the attrref of the referenced io object stored in the
 	  first parameter in defbody */
@@ -15997,7 +16013,7 @@ int	gcg_comp_m66( gcg_ctx gcgctx, vldh_t_node node)
 		aname);
 
 	/* Insert object in ref list */
-	gcg_ref_insert( gcgctx, refattrref.Objid, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, refattrref.Objid, GCG_PREFIX_REF, node);
 
 	return GSX__SUCCESS;
 }
