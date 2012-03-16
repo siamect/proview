@@ -927,6 +927,9 @@ void TblNav::build_tree()
   for ( int i = 0; i < (int)sevhistobjectlist.size(); i++) {
     TblTreeNode n;
 
+    if ( sevhistobjectlist[i].objectattrlist.size() == 0)
+      continue;
+
     strcpy( aname, sevhistobjectlist[i].oname);
     strcat( aname, ".");
     strcat( aname, sevhistobjectlist[i].objectattrlist[0].aname);
