@@ -43,7 +43,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
-// #include "pwr_basecomponentclasses.h"
+#include "xtt_ssaboxclasses.h"
 #include "rt_gdh.h"
 #include "co_dcli.h"
 #include "ge_msg.h"
@@ -575,14 +575,25 @@ static int graph_object_ix( Graph *graph, pwr_sAttrRef *arp)
 // 
 
 typedef struct {
-	grow_tObject 	trend_object;
-	grow_tObject 	hold_button_object;
-	float		*scan_time_p;
-	float		old_scan_time;
-	double		*data_scan_time_p;
-	int		*hold_button_p;
-	int		*hold_p;
-	} graph_sObjectDx;
+  pwr_tCid	cid;
+  grow_tObject 	trend_object;
+  grow_tObject 	hold_button_object;
+  float		*scan_time_p;
+  float		old_scan_time;
+  double	*data_scan_time_p;
+  int		*hold_button_p;
+  int		*hold_p;
+  pwr_tBoolean	*conv_p;
+  pwr_tBoolean	*inv_p;
+  pwr_tBoolean	*test_p;
+  pwr_tSubid	conv_subid;
+  pwr_tSubid	inv_subid;
+  pwr_tSubid	test_subid;
+  pwr_tBoolean	*local_conv_p;
+  pwr_tBoolean	*local_inv_p;
+  pwr_tBoolean	*local_test_p;
+  pwr_tMask	mask;
+} graph_sObjectDx;
 
 static void graph_object_dx_scan( Graph *graph)
 {
@@ -602,11 +613,37 @@ static void graph_object_dx_scan( Graph *graph)
 
   if ( od->hold_button_p && od->hold_p)
     *od->hold_p = *od->hold_button_p;
+
+  if ( od->mask) {
+    if ( od->local_conv_p && od->conv_p)
+      *od->local_conv_p = *od->conv_p & od->mask ? 1 : 0;
+    if ( od->local_inv_p && od->inv_p)
+      *od->local_inv_p = *od->inv_p & od->mask ? 1 : 0;
+    if ( od->local_test_p && od->test_p)
+      *od->local_test_p = *od->test_p & od->mask ? 1 : 0;
+  }
+  else {
+    if ( od->local_conv_p && od->conv_p)
+      *od->local_conv_p = *od->conv_p;
+    if ( od->local_inv_p && od->inv_p)
+      *od->local_inv_p = *od->inv_p;
+    if ( od->local_test_p && od->test_p)
+      *od->local_test_p = *od->test_p;
+  }
 }
 
 
 static void graph_object_dx_close( Graph *graph)
 {
+  graph_sObjectDx *od = (graph_sObjectDx *)graph->graph_object_data;
+
+  if ( od->local_conv_p && od->conv_p)
+    gdh_UnrefObjectInfo( od->conv_subid);
+  if ( od->local_inv_p && od->inv_p)
+    gdh_UnrefObjectInfo( od->inv_subid);
+  if ( od->local_conv_p && od->test_p)
+    gdh_UnrefObjectInfo( od->test_subid);
+
   free( graph->graph_object_data);
 }
 
@@ -616,10 +653,16 @@ static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
   graph_sObjectDx *od;
   double 	scan_time;
   GeDyn *dyn;
+  pwr_tAttrRef aref, chanaref;
+  pwr_tAName aname;
+  pwr_tCid card_cid;
 
   od = (graph_sObjectDx *) calloc( 1, sizeof(graph_sObjectDx));
   graph->graph_object_data = (void *) od;
   graph->graph_object_close = graph_object_dx_close;
+
+  sts = gdh_GetAttrRefTid( arp, &od->cid);
+  if ( EVEN(sts)) return sts;
 
   // Configure trend
   sts = grow_FindObjectByName( graph->grow->ctx, "ActualValueTrend", 
@@ -643,6 +686,150 @@ static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
   grow_GetUserData( od->trend_object, (void **)&dyn);
   od->data_scan_time_p = dyn->ref_trend_scantime();
   od->hold_p = dyn->ref_trend_hold();
+
+  // Get channel object
+  sts = gdh_ArefANameToAref( arp, "SigChanCon", &aref);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_GetObjectInfoAttrref( &aref, &chanaref, sizeof(chanaref));
+  if ( EVEN(sts)) return sts;
+
+  od->local_conv_p = (pwr_tBoolean *) graph->localdb_ref_or_create( "ConversionOn", 
+								    pwr_eType_Boolean);
+  od->local_inv_p = (pwr_tBoolean *) graph->localdb_ref_or_create( "InvertOn", 
+								   pwr_eType_Boolean);
+  od->local_test_p = (pwr_tBoolean *) graph->localdb_ref_or_create( "TestOn", 
+								    pwr_eType_Boolean);
+
+  // Get card object
+  if ( chanaref.Flags.b.ObjectAttr) {
+    sts = gdh_GetObjectClass( chanaref.Objid, &card_cid);
+    if ( EVEN(sts)) return sts;
+  }
+  else
+    card_cid = 0;
+
+  switch ( card_cid) {
+  case pwr_cClass_Ssab_DI32D: {
+    pwr_tAName card_name;
+    unsigned int chan_idx = (chanaref.Offset - pwr_AlignLW(sizeof(pwr_sClass_Ssab_BaseDiCard))) / pwr_AlignLW(sizeof(pwr_sClass_ChanDi));
+
+    sts = gdh_ObjidToName( chanaref.Objid, card_name, sizeof(card_name), cdh_mNName);
+    if ( EVEN(sts)) return sts;
+
+    if ( chan_idx < 16) {
+      strcpy( aname, card_name);
+      strcat( aname, ".ConvMask1");
+
+      graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->conv_p, &od->conv_subid, 
+			      sizeof(pwr_tBoolean), true);
+
+      strcpy( aname, card_name);
+      strcat( aname, ".InvMask1");
+
+      graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->inv_p, &od->inv_subid, 
+			      sizeof(pwr_tBoolean), true);
+
+      od->mask = 1 << chan_idx;
+    }
+    else if ( chan_idx < 32) {
+      strcpy( aname, card_name);
+      strcat( aname, ".ConvMask2");
+
+      graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->conv_p, &od->conv_subid, 
+			      sizeof(pwr_tBoolean), true);
+
+      strcpy( aname, card_name);
+      strcat( aname, ".InvMask2");
+
+      graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->inv_p, &od->inv_subid, 
+			      sizeof(pwr_tBoolean), true);
+
+      od->mask = 1 << (chan_idx - 16);
+    }
+    else
+      return 0;
+
+    break;
+  }
+  case pwr_cClass_Ssab_DO32DKS:
+  case pwr_cClass_Ssab_DO32DKS_Stall: {
+    pwr_tAName card_name;
+    unsigned int chan_idx = (chanaref.Offset - pwr_AlignLW(sizeof(pwr_sClass_Ssab_BaseDoCard))) / pwr_AlignLW(sizeof(pwr_sClass_ChanDo));
+
+    sts = gdh_ObjidToName( chanaref.Objid, card_name, sizeof(card_name), cdh_mNName);
+    if ( EVEN(sts)) return sts;
+
+    if ( chan_idx < 16) {
+      strcpy( aname, card_name);
+      strcat( aname, ".TestMask1");
+
+      graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->test_p, &od->test_subid, 
+			      sizeof(pwr_tBoolean), true);
+
+      strcpy( aname, card_name);
+      strcat( aname, ".InvMask1");
+
+      graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->inv_p, &od->inv_subid, 
+			      sizeof(pwr_tBoolean), true);
+
+      od->mask = 1 << chan_idx;
+    }
+    else if ( chan_idx < 32) {
+      strcpy( aname, card_name);
+      strcat( aname, ".TestMask2");
+
+      graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->test_p, &od->test_subid, 
+			      sizeof(pwr_tBoolean), true);
+
+      strcpy( aname, card_name);
+      strcat( aname, ".InvMask2");
+
+      graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->inv_p, &od->inv_subid, 
+			      sizeof(pwr_tBoolean), true);
+
+      od->mask = 1 << (chan_idx - 16);
+    }
+    else
+      return 0;
+
+    if ( od->local_conv_p)
+      *od->local_conv_p = 1;
+
+    break;
+  }
+  default: {
+    pwr_tAName chan_name;
+
+    sts = gdh_AttrrefToName( &chanaref, chan_name, sizeof(chan_name), 
+			     cdh_mNName);
+    if ( ODD(sts)) {
+      if ( od->cid == pwr_cClass_Di) {
+	strcpy( aname, chan_name);
+	strcat( aname, ".ConversionOn");
+	graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->conv_p, &od->conv_subid, 
+				sizeof(pwr_tBoolean), true);
+      }
+
+
+      strcpy( aname, chan_name);
+      strcat( aname, ".InvertOn");
+      graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->inv_p, &od->inv_subid, 
+			      sizeof(pwr_tBoolean), true);
+
+
+      if ( od->cid == pwr_cClass_Do) {
+	strcpy( aname, chan_name);
+	strcat( aname, ".TestOn");
+	graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->test_p, &od->test_subid, 
+				sizeof(pwr_tBoolean), true);
+
+	if ( od->local_conv_p)
+	  *od->local_conv_p = 1;
+      }
+    }
+  }
+  }
 
   // Register scan function
   graph->graph_object_scan = graph_object_dx_scan;

@@ -102,6 +102,7 @@ class FlowNode : public FlowArrayElem {
 	{ *ll_x = x_left; *ll_y = y_low; *ur_x = x_right; *ur_y = y_high;};
     void	set_annot_pixmap( int num, flow_sAnnotPixmap *pixmap, 
 			int nodraw);
+    void 	get_annot_pixmap( int num, flow_sAnnotPixmap **pixmap);
     void	remove_annot_pixmap( int num);
     double	x_right;
     double	x_left;

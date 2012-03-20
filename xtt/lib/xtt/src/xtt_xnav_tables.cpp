@@ -46,6 +46,7 @@
 #include "co_time.h"
 #include "pwr_baseclasses.h"
 #include "pwr_remoteclasses.h"
+#include "xtt_ssaboxclasses.h"
 #include "rt_xnav_msg.h"
 #include "flow.h"
 #include "flow_browctx.h"
@@ -62,6 +63,13 @@ extern "C" {
 #include "rt_sub.h"
 #include "rt_io_base.h"
 }
+
+typedef struct {
+  void *chanp;
+  void *cardp;
+  pwr_tCid chan_cid;
+  pwr_tCid card_cid;
+} tab_sChannelFlagsData;
 
 static int	xnav_subcli_remote_cnt;
 
@@ -298,6 +306,7 @@ int XNav::show_nethandler()
         case co_eHW_VAX: strcpy( t.elem[t.elem_cnt].fix_str, "VAX"); break;
         case co_eHW_Alpha: strcpy( t.elem[t.elem_cnt].fix_str, "AXP"); break;
         case co_eHW_PPC: strcpy( t.elem[t.elem_cnt].fix_str, "PPC"); break;
+        case co_eHW_ARM: strcpy( t.elem[t.elem_cnt].fix_str, "ARM"); break;
         default: strcpy( t.elem[t.elem_cnt].fix_str, "-");
       }
       switch ( np->os) {
@@ -305,6 +314,10 @@ int XNav::show_nethandler()
         case co_eOS_Linux: strcat( t.elem[t.elem_cnt].fix_str, "_Linux"); break;
         case co_eOS_VMS: strcat( t.elem[t.elem_cnt].fix_str, "_VMS"); break;
         case co_eOS_ELN: strcat( t.elem[t.elem_cnt].fix_str, "_ELN"); break;
+        case co_eOS_MacOS: strcat( t.elem[t.elem_cnt].fix_str, "_MacOS"); break;
+        case co_eOS_FreeBSD: strcat( t.elem[t.elem_cnt].fix_str, "_FreeBSD"); break;
+        case co_eOS_OpenBSD: strcat( t.elem[t.elem_cnt].fix_str, "_OpenBSD"); break;
+        case co_eOS_Cygwin: strcat( t.elem[t.elem_cnt].fix_str, "_Cygwin"); break;
         default: ;
       }
       t.elem[t.elem_cnt].fix_str[11] = 0;
@@ -913,6 +926,209 @@ int XNav::show_device()
   return XNAV__SUCCESS;
 }
 
+static void xnav_channel_get_flags( void *cardp, void *chanp, 
+				    pwr_tCid card_cid, pwr_tCid chan_cid,
+				    int *conv, int *inv, int *teston)
+{
+  switch ( card_cid) {
+  case pwr_cClass_Ssab_DI32D: {
+    pwr_sClass_Ssab_BaseDiCard *cp = (pwr_sClass_Ssab_BaseDiCard *)cardp;
+    pwr_tMask mask;
+    unsigned int chan_idx;
+
+    chan_idx = ((char *)chanp - (char *)cp - pwr_AlignLW(sizeof(pwr_sClass_Ssab_BaseDiCard))) / pwr_AlignLW(sizeof(pwr_sClass_ChanDi));
+    if ( chan_idx < 16) {
+      mask = 1 << chan_idx;
+      *conv = cp->ConvMask1 & mask ? 1 : 0;
+      *inv = cp->InvMask1 & mask ? 1 : 0;
+      *teston = 0;
+    }
+    else if ( chan_idx < 32) {
+      mask = 1 << (chan_idx - 16);
+      *conv = cp->ConvMask2 & mask ? 1 : 0;
+      *inv = cp->InvMask2 & mask ? 1 : 0;
+      *teston = 0;
+    }    
+    break;
+  }
+  case pwr_cClass_Ssab_DO32DKS:
+  case pwr_cClass_Ssab_DO32DKS_Stall: {
+    pwr_sClass_Ssab_BaseDoCard *cp = (pwr_sClass_Ssab_BaseDoCard *)cardp;
+    pwr_tMask mask;
+    unsigned int chan_idx;
+
+    chan_idx = ((char *)chanp - (char *)cp - pwr_AlignLW(sizeof(pwr_sClass_Ssab_BaseDoCard))) / pwr_AlignLW(sizeof(pwr_sClass_ChanDo));
+    if ( chan_idx < 16) {
+      mask = 1 << chan_idx;
+      *conv = 1;
+      *inv = cp->InvMask1 & mask ? 1 : 0;
+      *teston = cp->TestMask1 & mask ? 1: 0;
+    }
+    else if ( chan_idx < 32) {
+      mask = 1 << (chan_idx - 16);
+      *conv = 1;
+      *inv = cp->InvMask2 & mask ? 1 : 0;
+      *teston = cp->TestMask2 & mask ? 1: 0;
+    }    
+    break;
+  }
+  default: {
+    switch ( chan_cid) {
+    case pwr_cClass_ChanDi: {
+      pwr_sClass_ChanDi *cp = (pwr_sClass_ChanDi *)chanp;
+
+      *inv = cp->InvertOn;
+      *conv = cp->ConversionOn;
+      *teston = 0;
+      break;
+    }
+    case pwr_cClass_ChanDo: {
+      pwr_sClass_ChanDo *cp = (pwr_sClass_ChanDo *)chanp;
+
+      *inv = cp->InvertOn;
+      *conv = 0;
+      *teston = cp->TestOn;
+      break;
+    }
+    case pwr_cClass_ChanD: {
+      pwr_sClass_ChanD *cp = (pwr_sClass_ChanD *)chanp;
+      
+      *inv = cp->InvertOn;
+      *conv = cp->ConversionOn;
+      *teston = cp->TestOn;
+      break;
+    }
+    case pwr_cClass_ChanIi: {
+      pwr_sClass_ChanIi *cp = (pwr_sClass_ChanIi *)chanp;
+      
+      *inv = 0;
+      *conv = cp->ConversionOn;
+      *teston = 0;
+      break;
+    }
+    case pwr_cClass_ChanIo: {
+      pwr_sClass_ChanIo *cp = (pwr_sClass_ChanIo *)chanp;
+      
+      *inv = 0;
+      *conv = 1;
+      *teston = cp->TestOn;
+      break;
+    }
+    case pwr_cClass_ChanAi: {
+      pwr_sClass_ChanAi *cp = (pwr_sClass_ChanAi *)chanp;
+      
+      *inv = 0;
+      *conv = cp->ConversionOn;
+      *teston = 0;
+      break;
+    }
+    case pwr_cClass_ChanAit: {
+      pwr_sClass_ChanAit *cp = (pwr_sClass_ChanAit *)chanp;
+      
+      *inv = 0;
+      *conv = cp->ConversionOn;
+      *teston = 0;
+      break;
+    }
+    case pwr_cClass_ChanAo: {
+      pwr_sClass_ChanAo *cp = (pwr_sClass_ChanAo *)chanp;
+      
+      *inv = 0;
+      *conv = 1;
+      *teston = cp->TestOn;
+      break;
+    }
+    case pwr_cClass_ChanBi: {
+      pwr_sClass_ChanBi *cp = (pwr_sClass_ChanBi *)chanp;
+      
+      *inv = 0;
+      *conv = cp->ConversionOn;
+      *teston = 0;
+      break;
+    }
+    case pwr_cClass_ChanBo:
+    case pwr_cClass_ChanBiBlob:
+    case pwr_cClass_ChanBoBlob:
+      *inv = 0;
+      *conv = 1;
+      *teston = 0;
+      break;
+    }
+  }
+  }
+}
+
+static void xnav_show_channels_scan( XNav *xnav)
+{
+  brow_tObject	*node_list;
+  int		node_cnt;
+  ItemTable	*item;
+  int		i;
+  int		conv, inv, teston;
+  flow_sAnnotPixmap *pixmap;
+
+  brow_GetObjectList( xnav->brow->ctx, &node_list, &node_cnt);
+
+  for ( i = 1; i < node_cnt; i++) {    
+    brow_GetUserData( node_list[i], (void **)&item);
+
+    if ( item->type == xnav_eItemType_Channel) {
+      xnav_channel_get_flags( ((tab_sChannelFlagsData *)item->col.user)->cardp,
+			      ((tab_sChannelFlagsData *)item->col.user)->chanp,
+			      ((tab_sChannelFlagsData *)item->col.user)->card_cid,
+			      ((tab_sChannelFlagsData *)item->col.user)->chan_cid,
+			      &conv, &inv, &teston);
+
+      strcpy( (char *)item->col.elem[2].value_p, "");
+      if ( !conv)
+	strcat( (char *)item->col.elem[2].value_p, "Off ");
+      if ( inv)
+	strcat( (char *)item->col.elem[2].value_p, "Inv ");
+      if ( teston)
+	strcat( (char *)item->col.elem[2].value_p, "Test ");
+
+      brow_GetAnnotPixmap( node_list[i], 1, &pixmap);
+      if ( !conv) {
+	brow_GetAnnotPixmap( node_list[i], 1, &pixmap);
+	if ( pixmap != xnav->brow->pixmap_offline)
+	  brow_SetAnnotPixmap( node_list[i], 1, xnav->brow->pixmap_offline);
+      }
+      else if ( teston) {
+	if ( pixmap != xnav->brow->pixmap_teston)
+	  brow_SetAnnotPixmap( node_list[i], 1, xnav->brow->pixmap_teston);
+      }
+      else if ( inv) {
+	if ( pixmap != xnav->brow->pixmap_inverted)
+	  brow_SetAnnotPixmap( node_list[i], 1, xnav->brow->pixmap_inverted);
+      }
+      else {
+	if ( pixmap == xnav->brow->pixmap_offline ||
+	     pixmap == xnav->brow->pixmap_teston ||
+	     pixmap == xnav->brow->pixmap_inverted)
+	  brow_RemoveAnnotPixmap( node_list[i], 1);
+      }
+    }
+  }
+}
+
+static void xnav_show_channels_close( XNav *xnav)
+{
+  brow_tObject	*node_list;
+  int		node_cnt;
+  ItemTable	*item;
+  int		i;
+
+  brow_GetObjectList( xnav->brow->ctx, &node_list, &node_cnt);
+
+  for ( i = 1; i < node_cnt; i++) {    
+    brow_GetUserData( node_list[i], (void **)&item);
+    if ( item->type == xnav_eItemType_Channel) {
+      free( item->col.elem[2].value_p);
+      free( item->col.user);
+    }
+  }
+}
+
 int XNav::show_channels( pwr_tObjid card_objid)
 {
   item_sTableHeader 	th;
@@ -921,6 +1137,7 @@ int XNav::show_channels( pwr_tObjid card_objid)
   pwr_tTypeId		attrtype;
   unsigned int		attrsize, attroffs, attrelem;
   pwr_tSubid		subid;
+  pwr_tSubid		card_subid;
   pwr_tOName   		object_name;
   pwr_tAName   		attr_name;
   int			sts;
@@ -931,9 +1148,14 @@ int XNav::show_channels( pwr_tObjid card_objid)
   char			namebuf[80];
   void			*attr_ptr;
   ItemChannel		*item;
-  pwr_tClassId		chan_classid;
+  pwr_tCid		chan_cid;
+  pwr_tCid		card_cid;
   pwr_tAName   		signal_name;
   int			child_found = 0;
+  ItemTableHeader      	*item_header;
+  void 			*cardp;
+  void			*chanp;
+  pwr_tAttrRef		aref;
 
   brow_pop();
   brow_SetNodraw( brow->ctx);
@@ -947,19 +1169,46 @@ int XNav::show_channels( pwr_tObjid card_objid)
   strcpy( th.title[th.table_cnt++], "");
   strcpy( th.title[th.table_cnt++], "");
   strcpy( th.title[th.table_cnt++], "Description");
-  new ItemTableHeader( brow, this, "Title", &th,  NULL, flow_eDest_IntoLast);
+  item_header = new ItemTableHeader( brow, this, "Title", &th,  NULL, flow_eDest_IntoLast);
+  item_header->add_bc( xnav_show_channels_scan, xnav_show_channels_close);
+
+  sts = gdh_GetObjectClass( card_objid, &card_cid);
+  if ( EVEN(sts)) return sts;
+
+  aref = cdh_ObjidToAref( card_objid);
+  sts = gdh_DLRefObjectInfoAttrref( &aref, &cardp, &card_subid);
+  if ( EVEN(sts)) return sts;
 
   // Get all children
   sts = gdh_GetChild( card_objid, &chan_objid);
   while( ODD(sts)) {
     child_found = 1;
 
-    sts = gdh_ObjidToName ( chan_objid, object_name,
+    t.elem_cnt = 0;
+    ts.subid_cnt = 0;
+
+    sts = gdh_ObjidToName( chan_objid, object_name,
 			sizeof(object_name), cdh_mName_volumeStrict);
     if ( EVEN(sts)) return sts;
 
-    sts = gdh_GetObjectClass ( chan_objid, &chan_classid);
+    sts = gdh_GetObjectClass( chan_objid, &chan_cid);
     if ( EVEN(sts)) return sts;
+
+    aref = cdh_ObjidToAref( chan_objid);
+    sts = gdh_DLRefObjectInfoAttrref( &aref, &chanp, &subid);
+    if ( EVEN(sts)) return sts;
+
+    ts.subid[ts.subid_cnt++] = subid;
+    if ( card_subid.nid != 0) {
+      ts.subid[ts.subid_cnt++] = card_subid;
+      card_subid = pwr_cNSubid;
+    }
+
+    t.user = calloc( 1, sizeof(tab_sChannelFlagsData));
+    ((tab_sChannelFlagsData *)t.user)->chanp = chanp;
+    ((tab_sChannelFlagsData *)t.user)->cardp = cardp;
+    ((tab_sChannelFlagsData *)t.user)->card_cid = card_cid;
+    ((tab_sChannelFlagsData *)t.user)->chan_cid = chan_cid;
 
     // Get connected signal
     strcpy( attr_name, object_name);
@@ -967,8 +1216,8 @@ int XNav::show_channels( pwr_tObjid card_objid)
     sts = gdh_GetObjectInfo( attr_name,
 		(void *) &signal_aref, sizeof(signal_aref));
     if ( ODD(sts)) {
-      sts = gdh_AttrrefToName ( &signal_aref, signal_name,
-			sizeof(signal_name), cdh_mNName);
+      sts = gdh_AttrrefToName( &signal_aref, signal_name,
+			       sizeof(signal_name), cdh_mNName);
       if ( EVEN(sts)) {
         signal_aref.Objid = pwr_cNObjid;
         strcpy( signal_name, "-");
@@ -977,9 +1226,6 @@ int XNav::show_channels( pwr_tObjid card_objid)
     else
       signal_aref.Objid = pwr_cNObjid;
 
-    t.elem_cnt = 0;
-    ts.subid_cnt = 0;
-
     // Object name
     xnav_cut_segments( namebuf, object_name, 2);
 
@@ -987,13 +1233,17 @@ int XNav::show_channels( pwr_tObjid card_objid)
     t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
 
     // Value
-    if ( cdh_ObjidIsNotNull( signal_aref.Objid))
-    {
+    if ( cdh_ObjidIsNotNull( signal_aref.Objid) &&
+	 !(chan_cid == pwr_cClass_ChanBi ||
+	   chan_cid == pwr_cClass_ChanBo ||
+	   chan_cid == pwr_cClass_ChanBiBlob ||
+	   chan_cid == pwr_cClass_ChanBiBlob)) {
       strcpy( attr_name, signal_name);
-      switch( chan_classid)
+      switch( chan_cid)
       {
         case pwr_cClass_ChanDi:
         case pwr_cClass_ChanDo:
+        case pwr_cClass_ChanD:
         case pwr_cClass_ChanAi:
         case pwr_cClass_ChanAo:
         case pwr_cClass_ChanIi:
@@ -1011,26 +1261,28 @@ int XNav::show_channels( pwr_tObjid card_objid)
       sts = gdh_NameToAttrref( pwr_cNObjid, attr_name, &attrref);
       if ( EVEN(sts)) return sts;
 
-      sts = gdh_DLRefObjectInfoAttrref ( &attrref, &attr_ptr, &subid);
+      sts = gdh_DLRefObjectInfoAttrref( &attrref, &attr_ptr, &subid);
       if ( EVEN(sts)) return sts;
 
       t.elem[t.elem_cnt].value_p = attr_ptr;
       t.elem[t.elem_cnt].type_id = attrtype;
       t.elem[t.elem_cnt].size = attrsize;
 
-      switch( chan_classid)
-      {
-        case pwr_cClass_ChanDi:
-        case pwr_cClass_ChanDo:
-        case pwr_cClass_ChanIi:
-        case pwr_cClass_ChanIo:
-        case pwr_cClass_ChanCo:
-          strcpy( t.elem[t.elem_cnt++].format, "%8d");
-          break;
-        case pwr_cClass_ChanAi:
-        case pwr_cClass_ChanAo:
-          strcpy( t.elem[t.elem_cnt++].format, "%f");
-          break;
+      switch( chan_cid) {
+      case pwr_cClass_ChanDi:
+      case pwr_cClass_ChanDo:
+      case pwr_cClass_ChanD:
+      case pwr_cClass_ChanIi:
+      case pwr_cClass_ChanIo:
+      case pwr_cClass_ChanCo:
+	strcpy( t.elem[t.elem_cnt++].format, "%8d");
+	break;
+      case pwr_cClass_ChanAi:
+      case pwr_cClass_ChanAo:
+	strcpy( t.elem[t.elem_cnt++].format, "%f");
+	break;
+      default:
+	t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
       }
       ts.subid[ts.subid_cnt++] = subid;
     }
@@ -1038,7 +1290,11 @@ int XNav::show_channels( pwr_tObjid card_objid)
       t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
 
     // Flags
-    t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
+    t.elem[t.elem_cnt].value_p = calloc( 1, sizeof(pwr_tString80));
+    t.elem[t.elem_cnt].size = sizeof(pwr_tString80);
+    // t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
+    strcpy( t.elem[t.elem_cnt].format, "%s");
+    t.elem[t.elem_cnt++].type_id = pwr_eType_String;
 
     // Signal
     if ( cdh_ObjidIsNotNull( signal_aref.Objid))
@@ -1078,7 +1334,7 @@ int XNav::show_channels( pwr_tObjid card_objid)
   if ( !child_found) {
     pwr_tAttrRef card_aref = cdh_ObjidToAref( card_objid);
 
-    sts = show_attr_channels( &card_aref);
+    sts = show_attr_channels( &card_aref, cardp, &card_subid, card_cid);
     if ( EVEN(sts)) return sts;
   }
 	  
@@ -1089,7 +1345,8 @@ int XNav::show_channels( pwr_tObjid card_objid)
 }
 
 
-int XNav::show_attr_channels( pwr_tAttrRef *mod_aref)
+int XNav::show_attr_channels( pwr_tAttrRef *mod_aref, void *cardp, pwr_tSubid *card_subid,
+			      pwr_tCid card_cid)
 {
   gdh_sAttrDef *bd;
   int rows;
@@ -1111,8 +1368,10 @@ int XNav::show_attr_channels( pwr_tAttrRef *mod_aref)
   char			namebuf[80];
   void			*attr_ptr;
   ItemChannel		*item;
-  pwr_tClassId		chan_classid;
+  pwr_tCid		chan_cid;
   pwr_tAName   		signal_name;
+  pwr_tAttrRef		aref;
+  void 			*chanp;
 
   sts = gdh_GetAttrRefTid( mod_aref, &cid);
   if ( EVEN(sts)) return sts;
@@ -1131,9 +1390,14 @@ int XNav::show_attr_channels( pwr_tAttrRef *mod_aref)
     case pwr_cClass_ChanAo:
     case pwr_cClass_ChanDi:
     case pwr_cClass_ChanDo:
+    case pwr_cClass_ChanD:
     case pwr_cClass_ChanIi:
     case pwr_cClass_ChanIo:
     case pwr_cClass_ChanCo:
+    case pwr_cClass_ChanBo:
+    case pwr_cClass_ChanBi:
+    case pwr_cClass_ChanBoBlob:
+    case pwr_cClass_ChanBiBlob:
       break;
     default:
       if ( bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS) {
@@ -1142,13 +1406,13 @@ int XNav::show_attr_channels( pwr_tAttrRef *mod_aref)
 
 	gdh_ArefANameToAref( mod_aref, bd[i].attrName, &aref);
 	
-	sts = show_attr_channels( &aref);
+	sts = show_attr_channels( &aref, cardp, card_subid, card_cid);
 	if ( EVEN(sts)) return sts;
       }
       continue;
     }
 
-    chan_classid = bd[i].attr->Param.TypeRef;
+    chan_cid = bd[i].attr->Param.TypeRef;
     
     if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY)
       elem = bd[i].attr->Param.Info.Elements;
@@ -1157,6 +1421,9 @@ int XNav::show_attr_channels( pwr_tAttrRef *mod_aref)
 
     for ( int j = 0; j < elem; j++) {
 
+      t.elem_cnt = 0;
+      ts.subid_cnt = 0;
+      
       if ( elem == 1) {
 	strcpy( object_name, mod_name);
 	strcat( object_name, ".");
@@ -1166,6 +1433,24 @@ int XNav::show_attr_channels( pwr_tAttrRef *mod_aref)
 	sprintf( object_name, "%s.%s[%d]", mod_name, bd[i].attrName, j);
       }
 	
+      sts = gdh_NameToAttrref( pwr_cNOid, object_name, &aref);
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_DLRefObjectInfoAttrref( &aref, &chanp, &subid);
+      if ( EVEN(sts)) return sts;
+
+      ts.subid[ts.subid_cnt++] = subid;
+      if ( card_subid->nid != 0) {
+	ts.subid[ts.subid_cnt++] = *card_subid;
+	*card_subid = pwr_cNSubid;
+      }
+
+      t.user = calloc( 1, sizeof(tab_sChannelFlagsData));
+      ((tab_sChannelFlagsData *)t.user)->chanp = chanp;
+      ((tab_sChannelFlagsData *)t.user)->cardp = cardp;
+      ((tab_sChannelFlagsData *)t.user)->card_cid = card_cid;
+      ((tab_sChannelFlagsData *)t.user)->chan_cid = chan_cid;
+
       // Get connected signal
       strcpy( attr_name, object_name);
       strcat( attr_name, ".SigChanCon");
@@ -1182,9 +1467,6 @@ int XNav::show_attr_channels( pwr_tAttrRef *mod_aref)
       else
 	signal_aref.Objid = pwr_cNObjid;
       
-      t.elem_cnt = 0;
-      ts.subid_cnt = 0;
-      
       // Object name
       xnav_cut_segments( namebuf, object_name, 2);
 
@@ -1192,11 +1474,16 @@ int XNav::show_attr_channels( pwr_tAttrRef *mod_aref)
       t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
 
       // Value
-      if ( cdh_ObjidIsNotNull( signal_aref.Objid)) {
+      if ( cdh_ObjidIsNotNull( signal_aref.Objid) &&
+	   !(chan_cid == pwr_cClass_ChanBi ||
+	     chan_cid == pwr_cClass_ChanBo ||
+	     chan_cid == pwr_cClass_ChanBiBlob ||
+	     chan_cid == pwr_cClass_ChanBiBlob)) {
 	strcpy( attr_name, signal_name);
-	switch( chan_classid) {
+	switch( chan_cid) {
 	case pwr_cClass_ChanDi:
 	case pwr_cClass_ChanDo:
+	case pwr_cClass_ChanD:
 	case pwr_cClass_ChanAi:
 	case pwr_cClass_ChanAo:
 	case pwr_cClass_ChanIi:
@@ -1221,9 +1508,10 @@ int XNav::show_attr_channels( pwr_tAttrRef *mod_aref)
 	t.elem[t.elem_cnt].type_id = attrtype;
 	t.elem[t.elem_cnt].size = attrsize;
 	
-	switch( chan_classid) {
+	switch( chan_cid) {
 	case pwr_cClass_ChanDi:
 	case pwr_cClass_ChanDo:
+	case pwr_cClass_ChanD:
 	case pwr_cClass_ChanIi:
 	case pwr_cClass_ChanIo:
 	case pwr_cClass_ChanCo:
@@ -1240,7 +1528,10 @@ int XNav::show_attr_channels( pwr_tAttrRef *mod_aref)
 	t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
 
       // Flags
-      t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
+      t.elem[t.elem_cnt].value_p = calloc( 1, sizeof(pwr_tString80));
+      t.elem[t.elem_cnt].size = sizeof(pwr_tString80);
+      strcpy( t.elem[t.elem_cnt].format, "%s");
+      t.elem[t.elem_cnt++].type_id = pwr_eType_String;
 
       // Signal
       if ( cdh_ObjidIsNotNull( signal_aref.Objid)) {

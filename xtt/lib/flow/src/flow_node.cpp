@@ -722,6 +722,11 @@ void FlowNode::set_annot_pixmap( int num, flow_sAnnotPixmap *pixmap,
 
 }
 
+void FlowNode::get_annot_pixmap( int num, flow_sAnnotPixmap **pixmap)
+{
+  *pixmap = annotpixmapv[num];
+}
+
 void FlowNode::remove_annot_pixmap( int num)
 {
 

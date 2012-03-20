@@ -51,67 +51,69 @@
 #include "rt_xnav_msg.h"
 
 typedef enum {
-	xnav_eItemType_Object,
-	xnav_eItemType_Attr,
-	xnav_eItemType_AttrArray,
-	xnav_eItemType_AttrArrayElem,
-	xnav_eItemType_Header,
-	xnav_eItemType_HeaderLarge,
-	xnav_eItemType_Text,
-	xnav_eItemType_Collect,
-	xnav_eItemType_Plc,
-	xnav_eItemType_Menu,
-	xnav_eItemType_Command,
-	xnav_eItemType_File,
-	xnav_eItemType_Crossref,
-	xnav_eItemType_Local,
-	xnav_eItemType_Table,
-	xnav_eItemType_TableHeader,
-	xnav_eItemType_Device,
-	xnav_eItemType_Channel,
-	xnav_eItemType_RemNode,
-	xnav_eItemType_RemTrans,
-	xnav_eItemType_Help,
-	xnav_eItemType_HelpBold,
-	xnav_eItemType_HelpHeader,
-	xnav_eItemType_ObjectStruct,
-	xnav_eItemType_AttrObject,
-	xnav_eItemType_Enum,
-	xnav_eItemType_Mask
-	} xnav_eItemType;
+  xnav_eItemType_Object,
+  xnav_eItemType_Attr,
+  xnav_eItemType_AttrArray,
+  xnav_eItemType_AttrArrayElem,
+  xnav_eItemType_Header,
+  xnav_eItemType_HeaderLarge,
+  xnav_eItemType_Text,
+  xnav_eItemType_Collect,
+  xnav_eItemType_Plc,
+  xnav_eItemType_Menu,
+  xnav_eItemType_Command,
+  xnav_eItemType_File,
+  xnav_eItemType_Crossref,
+  xnav_eItemType_Local,
+  xnav_eItemType_Table,
+  xnav_eItemType_TableHeader,
+  xnav_eItemType_Device,
+  xnav_eItemType_Channel,
+  xnav_eItemType_RemNode,
+  xnav_eItemType_RemTrans,
+  xnav_eItemType_Help,
+  xnav_eItemType_HelpBold,
+  xnav_eItemType_HelpHeader,
+  xnav_eItemType_ObjectStruct,
+  xnav_eItemType_AttrObject,
+  xnav_eItemType_Enum,
+  xnav_eItemType_Mask
+} xnav_eItemType;
 
 typedef enum {
-	item_eDisplayType_Attr,
-	item_eDisplayType_Path
-	} item_eDisplayType;
+  item_eDisplayType_Attr,
+  item_eDisplayType_Path
+} item_eDisplayType;
 
 typedef enum {
-	item_eFileType_Unknown,
-	item_eFileType_Script,
-	item_eFileType_Graph,
-	item_eFileType_RttLog
-	} item_eFileType;
+  item_eFileType_Unknown,
+  item_eFileType_Script,
+  item_eFileType_Graph,
+  item_eFileType_RttLog
+} item_eFileType;
 
 typedef struct {
-	char  	title[10][32];
-	int	table_cnt;
-	} item_sTableHeader;
+  char  title[10][32];
+  int	table_cnt;
+} item_sTableHeader;
 
 typedef struct {
-	pwr_tSubid  	subid[8];
-	int		subid_cnt;
-	} item_sTableSubid;
+  pwr_tSubid  	subid[8];
+  int		subid_cnt;
+} item_sTableSubid;
+
 
 typedef struct {
-	struct {
-	  char		fix_str[80];
-	  int		type_id;
-	  int		size;
-	  void		*value_p;
-	  char		format[16];
-	} elem[10];
-	int	elem_cnt;
-	} item_sTable;
+  struct {
+    char       	fix_str[80];
+    int		type_id;
+    int		size;
+    void       	*value_p;
+    char       	format[16];
+  } elem[10];
+  void	*user;
+  int	elem_cnt;
+} item_sTable;
 
 class Item {
   public:

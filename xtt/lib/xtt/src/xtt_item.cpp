@@ -44,6 +44,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
+#include "xtt_ssaboxclasses.h"
 #include "co_dcli.h"
 #include "flow.h"
 #include "flow_browctx.h"
@@ -68,6 +69,8 @@
 // Member functions for Item classes
 //
 
+static void xnav_set_sigchan_flags( XNavBrow *brow, pwr_tAttrRef *arp, pwr_tCid cid, 
+				    brow_tNode node, int annot);
 
 
 
@@ -150,6 +153,9 @@ ItemObject::ItemObject( XNavBrow *brow, pwr_tObjid item_objid,
 	brow_SetAnnotation( node, 3, descr, strlen(descr));
       }
     }
+
+    pwr_tAttrRef aref = cdh_ObjidToAref( objid);
+    xnav_set_sigchan_flags( brow, &aref, cid, node, 3);
   }
 }
 
@@ -957,6 +963,8 @@ ItemAttrObject::ItemAttrObject( XNavBrow *brow, pwr_tObjid item_objid,
   sts = gdh_GetObjectInfo( segname, descr, sizeof(descr));
   if ( ODD(sts))
     brow_SetAnnotation( node, 2, descr, strlen(descr));
+
+  xnav_set_sigchan_flags( brow, &aref, classid, node, 3);
 }
 
 void ItemAttrObject::close( XNavBrow *brow, double x, double y)
@@ -2143,7 +2151,319 @@ int ItemMask::toggle_value()
 }
 
 
+static void xnav_set_sigchan_flags( XNavBrow *brow, pwr_tAttrRef *arp, pwr_tCid cid, 
+				    brow_tNode node, int annot)
+{
+  pwr_tStatus sts;
+  pwr_tBoolean is_local;
 
+  sts = gdh_GetObjectLocation( arp->Objid, &is_local);
+  if ( EVEN(sts) || !is_local)
+    return;
+
+  int is_signal = 0;
+  pwr_tBoolean inv;
+  pwr_tBoolean conv;
+  pwr_tBoolean test;
+  pwr_tAttrRef aref;
+  pwr_tAttrRef chanaref;
+  pwr_tCid chan_cid;
+  pwr_tCid card_cid;
+
+  switch ( cid) {
+  case pwr_cClass_Di:
+  case pwr_cClass_Do:
+  case pwr_cClass_Ai:
+  case pwr_cClass_Ao:
+  case pwr_cClass_Ii:
+  case pwr_cClass_Io: 
+  case pwr_cClass_Co: 
+  case pwr_cClass_Po: {
+    is_signal = 1;
+    break;
+  }
+  case pwr_cClass_ChanDi:
+  case pwr_cClass_ChanDo:
+  case pwr_cClass_ChanD:
+  case pwr_cClass_ChanAi:
+  case pwr_cClass_ChanAit:
+  case pwr_cClass_ChanAo:
+  case pwr_cClass_ChanIi:
+  case pwr_cClass_ChanIo: {
+    break;
+  }
+  default:
+    sts = gdh_GetSuperClass( cid, &cid, pwr_cNOid);
+    switch ( cid) {
+    case pwr_cClass_Bi: 
+    case pwr_cClass_Bo:
+      is_signal = 1;
+      break;
+    default:
+      return;
+    }
+  }
+
+  if ( is_signal) {
+    // Get channel
+    sts = gdh_ArefANameToAref( arp, "SigChanCon", &aref);
+    if ( EVEN(sts)) return;
+
+    sts = gdh_GetObjectInfoAttrref( &aref, &chanaref, sizeof(chanaref));
+    if ( EVEN(sts)) return;
+
+    if ( chanaref.Objid.oix == 0) {
+      brow_SetAnnotPixmap( node, annot, brow->pixmap_offline);
+      return;
+    }
+    sts = gdh_GetAttrRefTid( &chanaref, &chan_cid);
+    if ( EVEN(sts)) {
+      brow_SetAnnotPixmap( node, annot, brow->pixmap_offline);
+      return;
+    }
+
+    switch ( cid) {
+    case pwr_cClass_Bi: 
+    case pwr_cClass_Bo:
+      return;
+    }
+  }
+  else {
+    chanaref = *arp;
+    chan_cid = cid;
+  }
+
+  if ( chanaref.Flags.b.ObjectAttr) {
+    sts = gdh_GetObjectClass( chanaref.Objid, &card_cid);
+    if ( EVEN(sts)) return;
+  }
+  else
+    card_cid = 0;
+
+  if ( !is_signal) {
+    sts = gdh_ArefANameToAref( &chanaref, "SigChanCon", &aref);
+    if ( EVEN(sts)) return;
+
+    sts = gdh_GetObjectInfoAttrref( &aref, &aref, sizeof(aref));
+    if ( EVEN(sts)) return;
+    
+    if ( aref.Objid.oix == 0) {
+      brow_SetAnnotPixmap( node, annot, brow->pixmap_offline);
+      return;
+    }
+  }
+
+  switch ( card_cid) {
+  case pwr_cClass_Ssab_DI32D: {
+    pwr_tMask invmask, convmask, mask;
+
+    unsigned int chan_idx = (chanaref.Offset - pwr_AlignLW(sizeof(pwr_sClass_Ssab_BaseDiCard))) / pwr_AlignLW(sizeof(pwr_sClass_ChanDi));
+
+    if ( chan_idx < 16) {
+      aref = cdh_ObjidToAref( chanaref.Objid);
+      sts = gdh_ArefANameToAref( &aref, "InvMask1", &aref);
+      if ( EVEN(sts)) return;
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &invmask, sizeof(invmask));
+      if ( EVEN(sts)) return;
+
+      aref = cdh_ObjidToAref( chanaref.Objid);
+      sts = gdh_ArefANameToAref( &aref, "ConvMask1", &aref);
+      if ( EVEN(sts)) return;
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &convmask, sizeof(convmask));
+      if ( EVEN(sts)) return;
+
+      mask = 1 << chan_idx;
+    }
+    else if ( chan_idx < 32) {
+      aref = cdh_ObjidToAref( chanaref.Objid);
+      sts = gdh_ArefANameToAref( &aref, "InvMask2", &aref);
+      if ( EVEN(sts)) return;
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &invmask, sizeof(invmask));
+      if ( EVEN(sts)) return;
+
+      aref = cdh_ObjidToAref( chanaref.Objid);
+      sts = gdh_ArefANameToAref( &aref, "ConvMask2", &aref);
+      if ( EVEN(sts)) return;
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &convmask, sizeof(convmask));
+      if ( EVEN(sts)) return;
+
+      mask = 1 << (chan_idx - 16);
+    }
+    else
+      return;
+
+    conv = convmask & mask ? 1 : 0;
+    inv = invmask & mask ? 1 : 0;
+    test = 0;
+    break;
+  }
+  case pwr_cClass_Ssab_DO32DKS:
+  case pwr_cClass_Ssab_DO32DKS_Stall: {
+    pwr_tMask invmask, testmask, mask;
+
+    unsigned int chan_idx = (chanaref.Offset - pwr_AlignLW(sizeof(pwr_sClass_Ssab_BaseDoCard))) / pwr_AlignLW(sizeof(pwr_sClass_ChanDo));
+
+    if ( chan_idx < 16) {
+      aref = cdh_ObjidToAref( chanaref.Objid);
+      sts = gdh_ArefANameToAref( &aref, "InvMask1", &aref);
+      if ( EVEN(sts)) return;
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &invmask, sizeof(invmask));
+      if ( EVEN(sts)) return;
+
+      aref = cdh_ObjidToAref( chanaref.Objid);
+      sts = gdh_ArefANameToAref( &aref, "TestMask1", &aref);
+      if ( EVEN(sts)) return;
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &testmask, sizeof(testmask));
+      if ( EVEN(sts)) return;
+
+      mask = 1 << chan_idx;
+    }
+    else if ( chan_idx < 32) {
+      aref = cdh_ObjidToAref( chanaref.Objid);
+      sts = gdh_ArefANameToAref( &aref, "InvMask2", &aref);
+      if ( EVEN(sts)) return;
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &invmask, sizeof(invmask));
+      if ( EVEN(sts)) return;
+
+      aref = cdh_ObjidToAref( chanaref.Objid);
+      sts = gdh_ArefANameToAref( &aref, "TestMask2", &aref);
+      if ( EVEN(sts)) return;
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &testmask, sizeof(testmask));
+      if ( EVEN(sts)) return;
+
+      mask = 1 << (chan_idx - 16);
+    }
+    else
+      return;
+
+    conv = 1;
+    inv = invmask & mask ? 1 : 0;
+    test = testmask & mask ? 1 : 0;
+    break;
+  }
+  default: {
+    if ( !is_signal) {
+      sts = gdh_ArefANameToAref( &chanaref, "SigChanCon", &aref);
+      if ( EVEN(sts)) return;
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &aref, sizeof(aref));
+      if ( EVEN(sts)) return;
+
+      if ( aref.Objid.oix == 0) {
+	brow_SetAnnotPixmap( node, annot, brow->pixmap_offline);
+	return;
+      }
+    }
+
+    switch ( chan_cid) {
+    case pwr_cClass_ChanDi:
+      sts = gdh_ArefANameToAref( &chanaref, "ConversionOn", &aref);
+      if ( EVEN(sts)) {
+	brow_SetAnnotPixmap( node, annot, brow->pixmap_offline);
+	return;
+      }
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &conv, sizeof(conv));
+      if ( EVEN(sts)) return;
+
+      sts = gdh_ArefANameToAref( &chanaref, "InvertOn", &aref);
+      if ( EVEN(sts)) return;
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &inv, sizeof(inv));
+      if ( EVEN(sts)) return;
+
+      test = 0;
+      break;
+    case pwr_cClass_ChanDo:
+      sts = gdh_ArefANameToAref( &chanaref, "TestOn", &aref);
+      if ( EVEN(sts)) {
+	brow_SetAnnotPixmap( node, annot, brow->pixmap_offline);
+	return;
+      }
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &test, sizeof(test));
+      if ( EVEN(sts)) return;
+
+      sts = gdh_ArefANameToAref( &chanaref, "InvertOn", &aref);
+      if ( EVEN(sts)) return;
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &inv, sizeof(inv));
+      if ( EVEN(sts)) return;
+
+      conv = 1;
+      break;
+    case pwr_cClass_ChanD:
+      sts = gdh_ArefANameToAref( &chanaref, "ConversionOn", &aref);
+      if ( EVEN(sts)) {
+	brow_SetAnnotPixmap( node, annot, brow->pixmap_offline);
+	return;
+      }
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &conv, sizeof(conv));
+      if ( EVEN(sts)) return;
+
+      sts = gdh_ArefANameToAref( &chanaref, "TestOn", &aref);
+      if ( EVEN(sts)) return;
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &test, sizeof(test));
+      if ( EVEN(sts)) return;
+
+      sts = gdh_ArefANameToAref( &chanaref, "InvertOn", &aref);
+      if ( EVEN(sts)) return;
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &inv, sizeof(inv));
+      if ( EVEN(sts)) return;
+
+      break;
+    case pwr_cClass_ChanAi:
+    case pwr_cClass_ChanIi:
+      sts = gdh_ArefANameToAref( &chanaref, "ConversionOn", &aref);
+      if ( EVEN(sts)) {
+	brow_SetAnnotPixmap( node, annot, brow->pixmap_offline);
+	return;
+      }
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &conv, sizeof(conv));
+      if ( EVEN(sts)) return;
+
+      inv = 0;
+      test = 0;
+      break;
+    case pwr_cClass_ChanAo:
+    case pwr_cClass_ChanIo:
+      sts = gdh_ArefANameToAref( &chanaref, "TestOn", &aref);
+      if ( EVEN(sts)) {
+	brow_SetAnnotPixmap( node, annot, brow->pixmap_offline);
+	return;
+      }
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &test, sizeof(test));
+      if ( EVEN(sts)) return;
+
+      conv = 1;
+      inv = 0;
+      break;
+    default:
+      return;
+    }
+  }
+  }
+
+  if ( conv == 0)
+    brow_SetAnnotPixmap( node, annot, brow->pixmap_offline);
+  else if ( test)
+    brow_SetAnnotPixmap( node, annot, brow->pixmap_teston);
+  else if ( inv)
+    brow_SetAnnotPixmap( node, annot, brow->pixmap_inverted);
+}
 
 
 

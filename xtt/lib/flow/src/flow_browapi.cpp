@@ -630,9 +630,15 @@ void brow_Redraw( brow_tCtx ctx, double y_redraw)
 }
 
 void brow_SetAnnotPixmap( brow_tNode node, int number, 
-	flow_sAnnotPixmap *pixmap)
+			  flow_sAnnotPixmap *pixmap)
 {
   ((FlowNode *)node)->set_annot_pixmap( number, pixmap, 0);
+}
+
+void brow_GetAnnotPixmap( brow_tNode node, int number, 
+			  flow_sAnnotPixmap **pixmap)
+{
+  ((FlowNode *)node)->get_annot_pixmap( number, pixmap);
 }
 
 void brow_RemoveAnnotPixmap( brow_tNode node, int number)

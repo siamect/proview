@@ -94,6 +94,9 @@ class XNavBrow {
     flow_sAnnotPixmap 	*pixmap_attrref;
     flow_sAnnotPixmap 	*pixmap_castattr;
     flow_sAnnotPixmap 	*pixmap_plcpgm;
+    flow_sAnnotPixmap 	*pixmap_inverted;
+    flow_sAnnotPixmap 	*pixmap_teston;
+    flow_sAnnotPixmap 	*pixmap_offline;
     char                push_command[200];
 
     void free_pixmaps();

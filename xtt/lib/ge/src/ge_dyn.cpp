@@ -2957,6 +2957,9 @@ int GeInvisible::connect( grow_tObject object, glow_sTraceData *trace_data)
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
       if ( EVEN(sts)) return sts;
       break;
+    case graph_eDatabase_Local:
+      p = (pwr_tBoolean *)dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
+      break;
     case graph_eDatabase_Ccm:
       sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, (void **)&p);
       if ( EVEN(sts)) return sts;

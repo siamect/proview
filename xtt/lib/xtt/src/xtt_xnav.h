@@ -545,7 +545,8 @@ class XNav {
     int show_subcli();
     int show_device();
     int show_channels( pwr_tObjid card_objid);
-    int show_attr_channels( pwr_tAttrRef *mod_aref);
+    int show_attr_channels( pwr_tAttrRef *mod_aref, void *cardp, pwr_tSubid *card_subid, 
+			    pwr_tCid card_cid);
     int show_object( pwr_tAttrRef *oarp, brow_tNode node);
     int show_remnode();
     int show_remtrans( pwr_tObjid remnode_objid);

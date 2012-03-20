@@ -220,7 +220,9 @@ void brow_SetNodraw( brow_tCtx ctx);
 void brow_ResetNodraw( brow_tCtx ctx);
 void brow_Redraw( brow_tCtx ctx, double y_redraw);
 void brow_SetAnnotPixmap( brow_tNode node, int number, 
-	flow_sAnnotPixmap *pixmap);
+			  flow_sAnnotPixmap *pixmap);
+void brow_GetAnnotPixmap( brow_tNode node, int number, 
+			  flow_sAnnotPixmap **pixmap);
 void brow_RemoveAnnotPixmap( brow_tNode node, int number);
 void brow_AllocAnnotPixmap( brow_tCtx ctx, flow_sPixmapData *pixmap_data, 
 		flow_sAnnotPixmap **pixmap);
