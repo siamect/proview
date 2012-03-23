@@ -204,7 +204,7 @@ static pwr_tStatus IoRackInit (
 
   res = daveInitAdapter( local->di);
   if ( res != 0) {
-    errh_Error( "Nodave PLC, new interface error, %s, %s", daveStrerror(res), rp->Name);
+    errh_Error( "Nodave PLC, new interface error, %s (%d), %s", daveStrerror(res), res, rp->Name);
     strncpy( op->Status, daveStrerror(res), sizeof(op->Status));
     local->status = IO__ERRINIDEVICE;
     return IO__ERRINIDEVICE;
@@ -214,7 +214,7 @@ static pwr_tStatus IoRackInit (
 
   res = daveConnectPLC( local->dc);
   if ( res != 0) {
-    errh_Error( "Nodave PLC, new interface error, %s, %s", daveStrerror(res), rp->Name);
+    errh_Error( "Nodave PLC, new connection error, %s (%d), %s", daveStrerror(res), res, rp->Name);
     strncpy( op->Status, daveStrerror(res), sizeof(op->Status));
     local->status = IO__ERRINIDEVICE;
     return IO__ERRINIDEVICE;
