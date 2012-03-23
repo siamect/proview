@@ -471,6 +471,9 @@ E 3.1.16 "Update range"
 E 3.1.17 "Signal"
 E 3.1.18 "TestOn"
 E 3.1.19 "TestValue"
+E 3.1.20 "Inverted"
+E 3.1.21 "Test"
+E 3.1.22 "Off/Test"
 #
 # Mode - PID
 E 3.2.1 "Mode"

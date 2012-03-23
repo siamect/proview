@@ -454,6 +454,9 @@ E 3.1.16 "Uppdatera område"
 E 3.1.17 "Signal"
 E 3.1.18 "TestTill"
 E 3.1.19 "TestVärde"
+E 3.1.20 "Inverterad"
+E 3.1.21 "Test"
+E 3.1.22 "Från/Test"
 #
 # Mode - PID
 E 3.2.1 "Mod"
