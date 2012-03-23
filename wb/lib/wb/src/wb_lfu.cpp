@@ -665,6 +665,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   pwr_tObjid	busobjid;
   char		*nodename_ptr;
   char		*bootnode_ptr;
+  char		nodename[80];
   pwr_tUInt32	*os_ptr;
   pwr_tUInt32	os;
   pwr_tEnum	*remote_access_type_ptr;
@@ -2131,7 +2132,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( (pwr_mOpSys)custom_os));
 		else
 		  sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( (pwr_mOpSys)os));
-		sprintf( fname, load_cNameOpt, dir, nodename_ptr, *bus_number_ptr, cdh_Low(plcproc));
+		cdh_ToLower( nodename, nodename_ptr);
+		sprintf( fname, load_cNameOpt, dir, nodename, *bus_number_ptr, cdh_Low(plcproc));
 		dcli_translate_filename( fname, fname);
 		optfile = fopen( fname, "w");
 		if ( optfile == 0) {
