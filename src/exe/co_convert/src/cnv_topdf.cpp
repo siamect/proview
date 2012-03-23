@@ -329,6 +329,8 @@ number + topdf->v_outline.size() + topdf->v_pages.size() + topdf->v_content.size
 
 
   cnv_free_image( image, pixmap);
+  fimg.close();
+  system( "rm /tmp/pwr_cnv.jpg");
   return 1;
 }
 
