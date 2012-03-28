@@ -258,6 +258,7 @@ void CnvPdfObj::print_end()
 
 int CnvPdfObj::print_image()
 {
+  pwr_tCmd cmd;
   cnv_tImImage image;
   cnv_tPixmap pixmap;
   pwr_tFileName fname;
@@ -314,7 +315,7 @@ number + topdf->v_outline.size() + topdf->v_pages.size() + topdf->v_content.size
 
   start = (int) topdf->fp[topdf->cf].tellp();
 
-  strcpy( fname, "/tmp/pwr_cnv.jpg");
+  sprintf( fname, "/tmp/pwr_cnv_%08u.jpg", dcli_random());
   cnv_print_image( image, fname);
 
   ifstream fimg( fname);
@@ -330,7 +331,8 @@ number + topdf->v_outline.size() + topdf->v_pages.size() + topdf->v_content.size
 
   cnv_free_image( image, pixmap);
   fimg.close();
-  system( "rm /tmp/pwr_cnv.jpg");
+  sprintf( cmd, "rm %s", fname);
+  system( cmd);
   return 1;
 }
 

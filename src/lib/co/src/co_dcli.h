@@ -90,6 +90,7 @@ char	*dcli_pwr_dir( const char *dir);
 int 	dcli_wildcard(	char	*wildname,
 			char	*name);
 int dcli_read_line( char *line, int maxsize, FILE *file);
+unsigned int dcli_random();
 
 
 /* Functions in module co_dcli_file */

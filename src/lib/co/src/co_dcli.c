@@ -1222,3 +1222,14 @@ int dcli_read_line( char *line, int maxsize, FILE *file)
 
 	return 1;
 }
+
+unsigned int dcli_random()
+{
+  pwr_tTime t;
+
+  time_GetTime( &t);
+  int itime = t.tv_nsec + t.tv_sec % 10000;
+
+  srand( itime);
+  return (unsigned int)((double) rand() / ((double) RAND_MAX + 1) * 999999);
+}
