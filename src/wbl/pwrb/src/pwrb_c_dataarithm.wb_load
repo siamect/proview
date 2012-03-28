@@ -130,7 +130,7 @@ SObject pwrb:Class
       !*/
       Object DataIn1 $Input 1
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da1"
         EndBody
@@ -142,7 +142,7 @@ SObject pwrb:Class
       !*/
       Object DataIn2 $Input 2
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da2"
         EndBody
@@ -154,7 +154,7 @@ SObject pwrb:Class
       !*/
       Object DataIn3 $Input 3
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da3"
         EndBody
@@ -166,7 +166,7 @@ SObject pwrb:Class
       !*/
       Object DataIn4 $Input 4
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da4"
         EndBody
@@ -406,7 +406,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "ODa1"
         EndBody
       EndObject
@@ -433,7 +433,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "ODa2"
         EndBody
       EndObject
@@ -460,7 +460,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "ODa3"
         EndBody
       EndObject
@@ -487,7 +487,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "ODa4"
         EndBody
       EndObject

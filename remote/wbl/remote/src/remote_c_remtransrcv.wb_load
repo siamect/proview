@@ -37,7 +37,7 @@
 !
 SObject Remote:Class
 !/**
-!  @Version 1.0
+!  @Version 1.1
 !  @Code remote_plc_macro.h
 !  @Group Remote,Plc
 !  @Summary Supervision of a receive RemTrans object and unpacks the receive buffer.
@@ -70,7 +70,7 @@ SObject Remote:Class
       !*/
       Object RemTrans $Input 1
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE

@@ -50,7 +50,7 @@ SObject NMps:Class
       EndBody
       Object DataIn $Input 1
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da"
         EndBody

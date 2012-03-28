@@ -477,7 +477,7 @@ SObject NMps:Class
       Object DataLP $Intern 28
         Body SysBody
           Attr PgmName = "DataLP"
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -536,7 +536,7 @@ SObject NMps:Class
       Object DataLastP $Output 35
         Body SysBody
           Attr PgmName = "DataLastP"
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "DL"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
@@ -600,7 +600,7 @@ SObject NMps:Class
       EndObject
       Object DataCurrentP $Intern 42
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -648,7 +648,7 @@ SObject NMps:Class
       Object Data1P $Output 53
         Body SysBody
           Attr PgmName = "Data1P"
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "D1"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
@@ -714,7 +714,7 @@ SObject NMps:Class
       Object Data2P $Output 60
         Body SysBody
           Attr PgmName = "Data2P"
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "D2"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
@@ -770,7 +770,7 @@ SObject NMps:Class
       EndObject
       Object Data3P $Output 67
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "D3"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
@@ -822,7 +822,7 @@ SObject NMps:Class
       EndObject
       Object Data4P $Output 74
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "D4"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
@@ -874,7 +874,7 @@ SObject NMps:Class
       EndObject
       Object Data5P $Output 81
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "D5"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
@@ -926,7 +926,7 @@ SObject NMps:Class
       EndObject
       Object Data6P $Output 88
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "D6"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
@@ -978,7 +978,7 @@ SObject NMps:Class
       EndObject
       Object Data7P $Output 95
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "D7"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
@@ -1030,7 +1030,7 @@ SObject NMps:Class
       EndObject
       Object Data8P $Output 102
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "D8"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
@@ -1082,7 +1082,7 @@ SObject NMps:Class
       EndObject
       Object Data9P $Intern 109
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1133,7 +1133,7 @@ SObject NMps:Class
       EndObject
       Object Data10P $Intern 116
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1184,7 +1184,7 @@ SObject NMps:Class
       EndObject
       Object Data11P $Intern 123
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1235,7 +1235,7 @@ SObject NMps:Class
       EndObject
       Object Data12P $Intern 130
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1286,7 +1286,7 @@ SObject NMps:Class
       EndObject
       Object Data13P $Intern 137
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1337,7 +1337,7 @@ SObject NMps:Class
       EndObject
       Object Data14P $Intern 144
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1388,7 +1388,7 @@ SObject NMps:Class
       EndObject
       Object Data15P $Intern 151
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1439,7 +1439,7 @@ SObject NMps:Class
       EndObject
       Object Data16P $Intern 158
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1490,7 +1490,7 @@ SObject NMps:Class
       EndObject
       Object Data17P $Intern 165
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1541,7 +1541,7 @@ SObject NMps:Class
       EndObject
       Object Data18P $Intern 172
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1592,7 +1592,7 @@ SObject NMps:Class
       EndObject
       Object Data19P $Intern 179
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1643,7 +1643,7 @@ SObject NMps:Class
       EndObject
       Object Data20P $Intern 186
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1694,7 +1694,7 @@ SObject NMps:Class
       EndObject
       Object Data21P $Intern 193
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1745,7 +1745,7 @@ SObject NMps:Class
       EndObject
       Object Data22P $Intern 200
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1796,7 +1796,7 @@ SObject NMps:Class
       EndObject
       Object Data23P $Intern 207
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1847,7 +1847,7 @@ SObject NMps:Class
       EndObject
       Object Data24P $Intern 214
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1898,7 +1898,7 @@ SObject NMps:Class
       EndObject
       Object Data25P $Intern 221
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -1949,7 +1949,7 @@ SObject NMps:Class
       EndObject
       Object Data26P $Intern 228
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -2000,7 +2000,7 @@ SObject NMps:Class
       EndObject
       Object Data27P $Intern 235
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -2051,7 +2051,7 @@ SObject NMps:Class
       EndObject
       Object Data28P $Intern 242
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -2102,7 +2102,7 @@ SObject NMps:Class
       EndObject
       Object Data29P $Intern 249
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -2153,7 +2153,7 @@ SObject NMps:Class
       EndObject
       Object Data30P $Intern 256
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE

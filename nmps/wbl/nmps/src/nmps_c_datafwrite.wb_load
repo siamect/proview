@@ -72,7 +72,7 @@ SObject NMps:Class
       !*/
       Object Data $Input 1
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_STATE

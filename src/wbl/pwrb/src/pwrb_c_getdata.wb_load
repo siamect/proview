@@ -69,7 +69,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "Out"
         EndBody
       EndObject

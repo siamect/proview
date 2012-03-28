@@ -110,7 +110,7 @@ SObject NMps:Class
       !*/
       Object Cell1 $Input 1
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -123,7 +123,7 @@ SObject NMps:Class
       !*/
       Object Cell2 $Input 2
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -135,7 +135,7 @@ SObject NMps:Class
       !*/
       Object Cell3 $Input 3
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -147,7 +147,7 @@ SObject NMps:Class
       !*/
       Object Cell4 $Input 4
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -159,7 +159,7 @@ SObject NMps:Class
       !*/
       Object Cell5 $Input 5
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -171,7 +171,7 @@ SObject NMps:Class
       !*/
       Object Cell6 $Input 6
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -183,7 +183,7 @@ SObject NMps:Class
       !*/
       Object Cell7 $Input 7
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -195,7 +195,7 @@ SObject NMps:Class
       !*/
       Object Cell8 $Input 8
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -207,7 +207,7 @@ SObject NMps:Class
       !*/
       Object Cell9 $Input 9
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -219,7 +219,7 @@ SObject NMps:Class
       !*/
       Object Cell10 $Input 10
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -248,7 +248,7 @@ SObject NMps:Class
       !*/
       Object DisplayObject $Input 12
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT

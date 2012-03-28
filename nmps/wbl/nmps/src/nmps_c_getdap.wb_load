@@ -54,7 +54,7 @@ SObject NMps:Class
       Object OutDataP $Output 1
         Body SysBody
           Attr PgmName = "OutDataP"
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "Out"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_PRIVATE

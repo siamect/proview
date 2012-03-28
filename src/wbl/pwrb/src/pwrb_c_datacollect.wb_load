@@ -89,168 +89,168 @@ SObject pwrb:Class
       !*/
       Object DataIn1 $Input 1
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da1"
         EndBody
       EndObject
       Object DataIn2 $Input 2
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da2"
         EndBody
       EndObject
       Object DataIn3 $Input 3
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da3"
         EndBody
       EndObject
       Object DataIn4 $Input 4
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da4"
         EndBody
       EndObject
       Object DataIn5 $Input 5
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da5"
         EndBody
       EndObject
       Object DataIn6 $Input 6
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da6"
         EndBody
       EndObject
       Object DataIn7 $Input 7
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da7"
         EndBody
       EndObject
       Object DataIn8 $Input 8
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da8"
         EndBody
       EndObject
       Object DataIn9 $Input 9
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da9"
         EndBody
       EndObject
       Object DataIn10 $Input 10
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da10"
         EndBody
       EndObject
       Object DataIn11 $Input 11
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da11"
         EndBody
       EndObject
       Object DataIn12 $Input 12
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da12"
         EndBody
       EndObject
       Object DataIn13 $Input 13
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da13"
         EndBody
       EndObject
       Object DataIn14 $Input 14
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da14"
         EndBody
       EndObject
       Object DataIn15 $Input 15
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da15"
         EndBody
       EndObject
       Object DataIn16 $Input 16
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da16"
         EndBody
       EndObject
       Object DataIn17 $Input 17
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da17"
         EndBody
       EndObject
       Object DataIn18 $Input 18
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da18"
         EndBody
       EndObject
       Object DataIn19 $Input 19
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da19"
         EndBody
       EndObject
       Object DataIn20 $Input 20
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da20"
         EndBody
       EndObject
       Object DataIn21 $Input 21
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da21"
         EndBody
       EndObject
       Object DataIn22 $Input 22
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da22"
         EndBody
       EndObject
       Object DataIn23 $Input 23
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da23"
         EndBody
       EndObject
       Object DataIn24 $Input 24
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da24"
         EndBody
@@ -268,7 +268,7 @@ SObject pwrb:Class
       !*/
       Object DataP $Intern 26
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
 	  Attr Flags |= PWR_MASK_POINTER
           Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
@@ -295,7 +295,7 @@ SObject pwrb:Class
       Object OutDataP $Output 28
         Body SysBody
           Attr PgmName = "OutDataP"
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Void"
           Attr GraphName = "Out"
 	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_STATE
