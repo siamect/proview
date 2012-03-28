@@ -34,103 +34,31 @@
  * General Public License plus this exception.
  */
 
-#ifndef pwr_h
-#include "pwr.h"
+#ifndef rt_plc_io_h
+#define rt_plc_io_h 
+
+
+void pipos_exec( plc_sThread *tp, pwr_sClass_pipos *object);
+void count_exec( plc_sThread *tp, pwr_sClass_count *object);
+void bcddo_exec( plc_sThread *tp, pwr_sClass_bcddo *object);
+void dibcd_exec( plc_sThread *tp, pwr_sClass_dibcd *object);
+void gray_exec( plc_sThread *tp, pwr_sClass_gray *object);
+void GetDpPtr_init( pwr_sClass_GetDpPtr *o);
+void GetDpPtr_exec( plc_sThread *tp, pwr_sClass_GetDpPtr *o);
+void GetApPtr_init( pwr_sClass_GetApPtr *o);
+void GetApPtr_exec( plc_sThread *tp, pwr_sClass_GetApPtr *o);
+void GetIpPtr_init( pwr_sClass_GetIpPtr *o);
+void GetIpPtr_exec( plc_sThread *tp, pwr_sClass_GetIpPtr *o);
+void StoDpPtr_init( pwr_sClass_StoDpPtr *o);
+void StoDpPtr_exec( plc_sThread *tp, pwr_sClass_StoDpPtr *o);
+void StoApPtr_init( pwr_sClass_StoApPtr *o);
+void StoApPtr_exec( plc_sThread *tp, pwr_sClass_StoApPtr *o);
+void StoIpPtr_init( pwr_sClass_StoIpPtr *o);
+void StoIpPtr_exec( plc_sThread *tp, pwr_sClass_StoIpPtr *o);
+void EnumToStr_init( pwr_sClass_EnumToStr *o);
+void EnumToStr_exec( plc_sThread *tp, pwr_sClass_EnumToStr *o);
+void StrToEnum_init( pwr_sClass_StrToEnum *o);
+void StrToEnum_exec( plc_sThread *tp, pwr_sClass_StrToEnum *o);
+
+
 #endif
-
-#define UC_NORMAL	0
-#define UC_READ		1
-#define UC_WRITE	2
-#define UC_READ2	3
-#define UC_WRITE2	4
-
-#define	_z_	,
-
-
-/* Direct link table */
-typedef struct {
-  void		**Pointer;
-  pwr_sAttrRef	AttrRef;
-  pwr_tClassId	ObjType;
-  pwr_tUInt32	Size;
-  pwr_tUInt32	UseCode;
-  pwr_tUInt32   Offset;
-} plc_t_rtdbref;
-
-
-typedef struct {
-  pwr_tBoolean	ActualValue;
-} plc_sClass_Di;
-
-typedef struct {
-  pwr_tBoolean	ActualValue;
-} plc_sClass_Do;
-
-typedef struct {
-  pwr_tBoolean	ActualValue;
-} plc_sClass_Po;
-
-typedef struct {
-  pwr_tBoolean	ActualValue;
-} plc_sClass_Dv;
-
-typedef struct {
-  pwr_tInt32	RawValue;
-} plc_sClass_Co;
-
-typedef struct {
-  pwr_tFloat32	ActualValue;
-} plc_sClass_Ai;
-
-typedef struct {
-  pwr_tFloat32	ActualValue;
-} plc_sClass_Ao;
-
-typedef struct {
-  pwr_tFloat32	ActualValue;
-} plc_sClass_Av;
-
-typedef struct {
-  pwr_tInt32	ActualValue;
-} plc_sClass_Ii;
-
-typedef struct {
-  pwr_tInt32	ActualValue;
-} plc_sClass_Io;
-
-typedef struct {
-   pwr_tInt32	ActualValue;
-} plc_sClass_Iv;
-
-typedef struct {
-   pwr_tBoolean	ActualValue;
-} plc_sClass_BBoolean;
-
-typedef struct {
-   pwr_tInt64	ActualValue;
-} plc_sClass_BInt64;
-
-typedef struct {
-   pwr_tInt32	ActualValue;
-} plc_sClass_BInt32;
-
-typedef struct {
-   pwr_tInt16	ActualValue;
-} plc_sClass_BInt16;
-
-typedef struct {
-   pwr_tInt8	ActualValue;
-} plc_sClass_BInt8;
-
-typedef struct {
-   pwr_tFloat32	ActualValue;
-} plc_sClass_BFloat32;
-
-typedef struct {
-   pwr_tFloat64	ActualValue;
-} plc_sClass_BFloat64;
-
-typedef struct {
-  char	ActualValue[1];
-} plc_sClass_BString;
-

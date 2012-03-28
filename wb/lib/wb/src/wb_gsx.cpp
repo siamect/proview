@@ -509,8 +509,15 @@ int	gsx_check_connection(
 	  /* source and destination has to be of the same type */
 	  if ( source_pointer_flag != dest_pointer_flag)
 	    return GSX__CONTYPE;
-	  else if ( source_type != dest_type)
-	    return GSX__CONTYPE;
+	  else if ( source_type != dest_type) {
+	    if ( source_pointer_flag && dest_pointer_flag &&
+		 (source_type == pwr_eType_Float32 || source_type == pwr_eType_Void) &&
+		 (dest_type == pwr_eType_Float32 || dest_type == pwr_eType_Void)) {
+	      /* Ok */
+	    }
+	    else
+	      return GSX__CONTYPE;
+	  }
 	}
 	if ( source_pointer_flag)
 	  *conclass = DATA_CONN;
@@ -775,6 +782,13 @@ int gsx_auto_create(
               break;
             case pwr_eType_DeltaTime:
               sts = foe->gre->create_node( pwr_cClass_GetDTgeneric, 
+			x, y, dest);
+              if ( EVEN(sts)) return sts;
+	      *destpoint = 0;
+              break;
+            case pwr_eType_Void: 
+	      if ( source_pointer_flag)
+                sts = foe->gre->create_node( pwr_cClass_GetData, 
 			x, y, dest);
               if ( EVEN(sts)) return sts;
 	      *destpoint = 0;

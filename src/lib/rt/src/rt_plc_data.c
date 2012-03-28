@@ -45,6 +45,7 @@
 #include "pwr.h"
 #include "rt_plc.h"
 #include "pwr_baseclasses.h"
+#include "rt_plc_data.h"
 
 /* Nice functions */
 #define ODD(a)  (((int)(a) & 1) != 0)

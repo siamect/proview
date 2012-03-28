@@ -44,6 +44,7 @@
 #include "pwr_nmpsclasses.h"
 #include "rt_plc.h"
 #include "co_time.h"
+#include "nmps.h"
 
 #define ODD(a)	(((int)(a) & 1) != 0)
 #define EVEN(a)	(((int)(a) & 1) == 0)

@@ -41,6 +41,7 @@
 #include "pwr_baseclasses.h"
 #include "rt_plc.h"
 #include "rt_plc_timer.h"
+#include "rt_plc_io.h"
 
 /*_*
   PiPos

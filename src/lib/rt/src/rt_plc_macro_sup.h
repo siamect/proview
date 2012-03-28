@@ -86,12 +86,12 @@
   @aref asup ASup
 */
 #define	ASup_exec(o, In, con)\
-  if (o->High && In <= o->CtrlLimit - o->Hysteres	\
-    || !o->High && In >= o->CtrlLimit + o->Hysteres	\
+  if ((o->High && In <= o->CtrlLimit - o->Hysteres) ||	\
+      (!o->High && In >= o->CtrlLimit + o->Hysteres)	\
   ) {							\
     if (o->Action) o->Action = FALSE;			\
     if (o->ReturnCheck) {				\
-      time_GetTime(&o->ReturnTime);	\
+      time_GetTime(&o->ReturnTime);			\
       o->ReturnCheck = FALSE;				\
       o->ReturnSend = TRUE;				\
     }							\
@@ -99,9 +99,9 @@
       o->TimerCount = 0;				\
       o->DetectCheck = TRUE;				\
     }							\
-  } else if (con && (o->High && In > o->CtrlLimit	\
-    || !o->High && In < o->CtrlLimit)			\
-  ) {							\
+  } else if (con && 					\
+	     ((o->High && In > o->CtrlLimit) ||	       	\
+	      (!o->High && In < o->CtrlLimit))) { 	\
     if (!o->Action) o->Action = TRUE;			\
     if (o->AlarmCheck && o->DetectOn && !o->Blocked) {	\
       if (o->DetectCheck) {				\

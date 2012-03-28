@@ -4217,6 +4217,12 @@ int GeValueInput::action( grow_tObject object, glow_tEvent event)
 
     break;
   }
+  case glow_eEvent_Key_Escape:
+    if ( grow_AnnotationInputIsOpen( object, 1)) {
+      grow_CloseAnnotationInputAll( dyn->graph->grow->ctx);
+      grow_SetObjectInputFocus( object, 0, event->event);
+    }
+    break;
   default: ;    
   }
   return 1;

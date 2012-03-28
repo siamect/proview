@@ -166,6 +166,7 @@ typedef enum {
   pwr_eTix_ProString	= 32,	/* Basic type */
   pwr_eTix_DisableAttr	= 33,	/* Basic type */
   pwr_eTix_DataRef	= 34,	/* Basic type */
+  pwr_eTix_Void		= 35,	/* Basic type */
   pwr_eTix_
 } pwr_eTix;
 
@@ -210,6 +211,7 @@ typedef enum {
   pwr_eType_ProString	= pwr_TypeId(pwr_eTix_ProString),
   pwr_eType_DisableAttr	= pwr_TypeId(pwr_eTix_DisableAttr),
   pwr_eType_DataRef	= pwr_TypeId(pwr_eTix_DataRef),
+  pwr_eType_Void	= pwr_TypeId(pwr_eTix_Void),
   pwr_eType_		= pwr_TypeId(pwr_eTix_)
 } pwr_eType;
 

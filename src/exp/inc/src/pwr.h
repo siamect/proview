@@ -251,6 +251,11 @@ typedef pwr_tUInt32	pwr_tMask;		//!< Mask type.
 */
 typedef pwr_tInt32	pwr_tEnum;		//!< Enumeration type.
 
+/*_*
+  @aref viod Void
+*/
+typedef void           pwr_tVoid;		//!< Void type.
+
 //! Object identity type.
 /*_*
   @aref objid Objid

@@ -33,23 +33,14 @@
  * combined work), being distributed under the terms of the GNU 
  * General Public License plus this exception.
  */
-#ifndef rt_plc_data_h
-#define rt_plc_data_h 
+#ifndef rt_plc_drive_h
+#define rt_plc_drive_h 
 
 
-typedef pwr_tBoolean pwr_sDpDistribute[24];
-typedef pwr_tFloat32 pwr_sApDistribute[24];
-typedef pwr_tInt32 pwr_sIpDistribute[24];
 
-
-void DpCollect_exec( plc_sThread *tp, pwr_sClass_DpCollect *object);
-void ApCollect_exec( plc_sThread *tp, pwr_sClass_ApCollect *object);
-void IpCollect_exec( plc_sThread *tp, pwr_sClass_IpCollect *object);
-void DpDistribute_exec( plc_sThread *tp, pwr_sClass_DpDistribute *object);
-void ApDistribute_exec( plc_sThread *tp, pwr_sClass_ApDistribute *object);
-void IpDistribute_exec( plc_sThread *tp, pwr_sClass_IpDistribute *object);
-void DataCollect_exec( plc_sThread *tp, pwr_sClass_DataCollect *object);
-void CStoAttrRefP_exec( plc_sThread *tp, pwr_sClass_CStoAttrRefP *object, pwr_sAttrRef *aref);
-
+void drive_exec( plc_sThread *tp, pwr_sClass_drive *object);
+void valve_exec( plc_sThread *tp, pwr_sClass_valve *object);
+void mvalve_exec( plc_sThread *tp, pwr_sClass_mvalve *object);
+void posit_exec( plc_sThread *tp, pwr_sClass_posit *object);
 
 #endif

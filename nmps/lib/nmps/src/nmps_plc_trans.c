@@ -53,6 +53,7 @@
 #include "rt_gdh.h"
 #include "rt_plc.h"
 #include "nmps_cnv.h"
+#include "nmps.h"
 
 #define ODD(a)	(((int)(a) & 1) != 0)
 #define EVEN(a)	(((int)(a) & 1) == 0)

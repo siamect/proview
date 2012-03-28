@@ -39,6 +39,7 @@
 #include "pwr_baseclasses.h"
 #include "rt_plc.h"
 #include "rt_plc_timer.h"
+#include "rt_plc_drive.h"
 
 /*_*
   Drive

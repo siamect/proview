@@ -44,6 +44,7 @@
 #include "pwr_baseclasses.h"
 #include "rt_plc.h"
 #include "rt_plc_timer.h"
+#include "rt_plc_pid.h"
 
 /* 		PLC RUTINER			*/
 
@@ -54,8 +55,7 @@
 
   @aref inc3p Inc3p
 */
-void inc3p_init(object)
-pwr_sClass_inc3p 	*object;
+void inc3p_init( pwr_sClass_inc3p *object)
 {
 	object->Acc = 0;
 }

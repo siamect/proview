@@ -131,6 +131,8 @@ static wbl_sSym datatypes[] =
   ,{ "pwr_eTdix_ObjBodyDefFlags", pwr_eTdix_ObjBodyDefFlags }
   ,{ "pwr_eType_DataRef", pwr_eType_DataRef }
   ,{ "pwr_eTix_DataRef", pwr_eTix_DataRef }
+  ,{ "pwr_eType_Void", pwr_eType_Void }
+  ,{ "pwr_eTix_Void", pwr_eTix_Void }
   ,{ 0, 0 }
 };
 

@@ -47,7 +47,7 @@
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "rt_plc.h"
-
+#include "rt_plc_arithm.h"
 
 /* 		PLC RUTINER			*/
 
@@ -359,8 +359,7 @@ void ramp_exec(
 
   @aref filter Filter
 */
-void filter_init(object)
-pwr_sClass_filter 	*object;
+void filter_init( pwr_sClass_filter *object)
 {
 	object->In = *object->InP;
 	object->ActVal = object->In;
@@ -501,8 +500,7 @@ void curve_exec(
   @aref adelay Adelay
 */
 
-void adelay_init(object)
-pwr_sClass_adelay		*object;
+void adelay_init( pwr_sClass_adelay *object)
 {
 	object->StoredNumbers = 0;
 	object->StoInd = -1;
@@ -563,8 +561,7 @@ void adelay_exec(
   @aref pispeed PiSpeed
 */
 
-void pispeed_init(object)
-pwr_sClass_pispeed              *object;
+void pispeed_init( pwr_sClass_pispeed *object)
 {
 /* Read input */
         object->PulsIn = *object->PulsInP;

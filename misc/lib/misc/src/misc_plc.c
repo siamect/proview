@@ -45,6 +45,7 @@
 #include "rt_gdh.h"
 #include "rt_plc.h"
 #include "co_time.h"
+#include "misc.h"
 
 #define BASE_SPEED 10
 #define MAX_ANGLE 60

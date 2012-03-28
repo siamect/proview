@@ -33,23 +33,20 @@
  * combined work), being distributed under the terms of the GNU 
  * General Public License plus this exception.
  */
-#ifndef rt_plc_data_h
-#define rt_plc_data_h 
 
+#ifndef rt_plc_bcomp_h
+#define rt_plc_bcomp_h
 
-typedef pwr_tBoolean pwr_sDpDistribute[24];
-typedef pwr_tFloat32 pwr_sApDistribute[24];
-typedef pwr_tInt32 pwr_sIpDistribute[24];
+#include "rt_plc.h"
+#include "pwr_basecomponentclasses.h"
 
-
-void DpCollect_exec( plc_sThread *tp, pwr_sClass_DpCollect *object);
-void ApCollect_exec( plc_sThread *tp, pwr_sClass_ApCollect *object);
-void IpCollect_exec( plc_sThread *tp, pwr_sClass_IpCollect *object);
-void DpDistribute_exec( plc_sThread *tp, pwr_sClass_DpDistribute *object);
-void ApDistribute_exec( plc_sThread *tp, pwr_sClass_ApDistribute *object);
-void IpDistribute_exec( plc_sThread *tp, pwr_sClass_IpDistribute *object);
-void DataCollect_exec( plc_sThread *tp, pwr_sClass_DataCollect *object);
-void CStoAttrRefP_exec( plc_sThread *tp, pwr_sClass_CStoAttrRefP *object, pwr_sAttrRef *aref);
-
+void RunTimeCounterFo_init( pwr_sClass_RunTimeCounterFo *object);
+void RunTimeCounterFo_exec( plc_sThread *tp, pwr_sClass_RunTimeCounterFo *object);
+void CompModePID_Fo_init( pwr_sClass_CompModePID_Fo *object);
+void CompModePID_Fo_exec( plc_sThread *tp, pwr_sClass_CompModePID_Fo *object);
+void CompPID_Fo_init( pwr_sClass_CompPID_Fo *object);
+void CompPID_Fo_exec( plc_sThread *tp, pwr_sClass_CompPID_Fo *object);
+void CompOnOffBurnerFo_exec( plc_sThread *tp, pwr_sClass_CompOnOffBurnerFo *object);
+void CompOnOffZoneFo_exec( plc_sThread *tp, pwr_sClass_CompOnOffZoneFo *object);
 
 #endif

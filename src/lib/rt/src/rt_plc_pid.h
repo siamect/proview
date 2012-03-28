@@ -33,23 +33,17 @@
  * combined work), being distributed under the terms of the GNU 
  * General Public License plus this exception.
  */
-#ifndef rt_plc_data_h
-#define rt_plc_data_h 
+
+#ifndef rt_plc_pid_h
+#define rt_plc_pid_h 
 
 
-typedef pwr_tBoolean pwr_sDpDistribute[24];
-typedef pwr_tFloat32 pwr_sApDistribute[24];
-typedef pwr_tInt32 pwr_sIpDistribute[24];
-
-
-void DpCollect_exec( plc_sThread *tp, pwr_sClass_DpCollect *object);
-void ApCollect_exec( plc_sThread *tp, pwr_sClass_ApCollect *object);
-void IpCollect_exec( plc_sThread *tp, pwr_sClass_IpCollect *object);
-void DpDistribute_exec( plc_sThread *tp, pwr_sClass_DpDistribute *object);
-void ApDistribute_exec( plc_sThread *tp, pwr_sClass_ApDistribute *object);
-void IpDistribute_exec( plc_sThread *tp, pwr_sClass_IpDistribute *object);
-void DataCollect_exec( plc_sThread *tp, pwr_sClass_DataCollect *object);
-void CStoAttrRefP_exec( plc_sThread *tp, pwr_sClass_CStoAttrRefP *object, pwr_sAttrRef *aref);
+void inc3p_init( pwr_sClass_inc3p *object);
+void inc3p_exec( plc_sThread *tp, pwr_sClass_inc3p *object);
+void pos3p_exec( plc_sThread *tp, pwr_sClass_pos3p *object);
+void out2p_exec( plc_sThread *tp, pwr_sClass_out2p *object);
+void mode_exec( plc_sThread *tp, pwr_sClass_mode *object);
+void pid_exec( plc_sThread *tp, pwr_sClass_pid *object);
 
 
 #endif

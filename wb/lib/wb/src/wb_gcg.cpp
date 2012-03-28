@@ -5,7 +5,7 @@
  * This file is part of Proview.
  *
  * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 2 of 
  * the License, or (at your option) any later version.
  *
@@ -4267,7 +4267,7 @@ static void gcg_print_rtdbref(
 	/* Print direct link command */
 	if ( reftype == 0) {
 	  IF_PR fprintf( gcgctx->files[GCGM1_RTDBREF_FILE], 
-		"{ (void **)&%c%s, {{%u,%u},0,0,0,0}, %u,  sizeof(*%c%s), %ld, 0},\n",
+		"{ (void **)&%c%s, {{%u,%u},0,0,0, {0}}, %uUL,  sizeof(*%c%s), %ld, 0},\n",
 		prefix,
 		vldh_IdToStr(0, objdid),
 		objdid.oix, objdid.vid,
@@ -4278,7 +4278,7 @@ static void gcg_print_rtdbref(
 	}
 	else {
 	  IF_PR fprintf( gcgctx->files[GCGM1_RTDBREF2_FILE], 
-		"{ (void **)&%c%s, {{%u,%u},0,0,0,0}, %u, sizeof(*%c%s), %ld, 0},\n",
+		"{ (void **)&%c%s, {{%u,%u},0,0,0,{0}}, %uUL, sizeof(*%c%s), %ld, 0},\n",
 		prefix,
 		vldh_IdToStr(0, objdid),
 		objdid.oix, objdid.vid,
@@ -4302,7 +4302,7 @@ static void gcg_print_artdbref(
 	/* Print direct link command */
 	if ( reftype == 0) {
 	  IF_PR fprintf( gcgctx->files[GCGM1_RTDBREF_FILE], 
-		"{ (void **)&%c%s, {{%u,%u},%u,%u,%u,%u}, %u,  sizeof(*%c%s), %ld, %u},\n",
+		"{ (void **)&%c%s, {{%u,%u},%uUL,%u,%u,{%u}}, %uUL,  sizeof(*%c%s), %ld, %u},\n",
 		prefix,
 		vldh_AttrRefToStr(0, attrref),
 	        attrref.Objid.oix, attrref.Objid.vid, attrref.Body,
@@ -4315,7 +4315,7 @@ static void gcg_print_artdbref(
 	}
 	else {
 	  IF_PR fprintf( gcgctx->files[GCGM1_RTDBREF2_FILE], 
-		"{ (void **)&%c%s, {{%u,%u},%u,%u,%u,%u}, %u, sizeof(*%c%s), %ld, %u},\n",
+		"{ (void **)&%c%s, {{%u,%u},%uUL,%u,%u,{%u}}, %uUL, sizeof(*%c%s), %ld, %u},\n",
 		prefix,
 		vldh_AttrRefToStr(0, attrref),
 	        attrref.Objid.oix, attrref.Objid.vid, attrref.Body,
@@ -5701,6 +5701,18 @@ int	gcg_comp_rtnode(
 		   (timebase+i)->prio, (timebase+i)->scantime, 
 		   (timebase+i)->plc_count);
 
+	  /* Prototypes */
+	  for ( k = 0; k < (timebase+i)->plc_count; k++ ) {
+	    fprintf( files[0],
+		     "void %c%s_init( int DirectLink, plc_sThread *tp);\n",
+		     GCG_PREFIX_MOD, vldh_IdToStr(0, (timebase+i)->plclist[k]));
+	  }
+	  for ( k = 0; k < (timebase+i)->plc_count; k++ ) {
+	    fprintf( files[0],
+		     "void %c%s_exec( plc_sThread *tp);\n",
+		     GCG_PREFIX_MOD, vldh_IdToStr(0, (timebase+i)->plclist[k]));
+	  }
+
 	  /* Init */
 	  fprintf( files[0],
 		   "void plc_p%d_init( int DirectLink, plc_sThread *tp){\n",
@@ -6137,6 +6149,18 @@ int	gcg_comp_m0( vldh_t_plc	plc,
 	  fprintf( files[ GCGM0_MODULE_FILE ],
 		"#include \"%s\"\n", PLCINC);
 
+	  /* Print pototype declarations for the exec and init function */
+	  for ( i = 0; i < (int)ldhwind_count; i++)
+	  {
+	    fprintf( files[ GCGM0_MODULE_FILE ],
+	  	"void %c%s_init( int DirectLink, plc_sThread *tp);\n",
+		GCG_PREFIX_MOD, vldh_IdToStr(0, *(ldhwindlist + i)));
+	  }
+	  fprintf( files[ GCGM0_MODULE_FILE ],
+	  	"void %c%s_exec( plc_sThread *tp);\n",
+		GCG_PREFIX_MOD, vldh_IdToStr(0, *ldhwindlist));
+	  
+
 	  fprintf( files[ GCGM0_MODULE_FILE ],
 	    "void %c%s_init( int DirectLink, plc_sThread *tp){\n",
 	     GCG_PREFIX_MOD, vldh_IdToStr(0, plc->lp.oid));
@@ -6399,9 +6423,9 @@ int	gcg_comp_m1( vldh_t_wind wind,
 		"void %c%s_init( int DirectLink, plc_sThread *tp){\n",
 		GCG_PREFIX_MOD, vldh_IdToStr(0, wind->lw.oid));
 	IF_PR fprintf( gcgctx->files[ GCGM1_MODULE_FILE ],
-		"if (DirectLink == 1)\n  plc_rtdbref( &rtdbref, tp);\n");
+		"if (DirectLink == 1)\n  plc_rtdbref( (struct plc_rtdbref (*)[]) &rtdbref, tp);\n");
 	IF_PR fprintf( gcgctx->files[ GCGM1_MODULE_FILE ],
-		"else if (DirectLink == 2)\n  plc_rtdbref( &rtdbref2, tp);\n");
+		"else if (DirectLink == 2)\n  plc_rtdbref( (struct plc_rtdbref (*)[]) &rtdbref2, tp);\n");
 	IF_PR fprintf( gcgctx->files[ GCGM1_MODULE_FILE ],
 		"else\n  {\n#include \"%s%s\"\n  }\n}\n\n",
 		gcgctx->filenames[ GCGM1_REF_FILE ], GCEXT);
@@ -7702,6 +7726,10 @@ int	gcg_comp_m15( gcg_ctx gcgctx, vldh_t_node node)
 	if ( wind_found )
 	{
 	  /* Print the window execute command */
+	  IF_PR fprintf( gcgctx->files[GCGM1_DECL_FILE],
+		"void %c%s_exec(plc_sThread *tp);",
+		GCG_PREFIX_MOD,
+		vldh_IdToStr(0, windowobjdid));
 	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 		"%c%s_exec( tp);\n",
 		GCG_PREFIX_MOD,
@@ -8115,6 +8143,10 @@ int	gcg_comp_m16( gcg_ctx gcgctx, vldh_t_node node)
 	      else if ( wind_found )
 	      {
 	        /* Print execute command for the subwindow */
+		IF_PR fprintf( gcgctx->files[GCGM1_DECL_FILE],
+			       "void %c%s_exec(plc_sThread *tp);",
+			       GCG_PREFIX_MOD,
+			       vldh_IdToStr(0, windobjdid));
 	        IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 			"%c%s_exec( tp);",
 			GCG_PREFIX_MOD,
@@ -8210,6 +8242,10 @@ int	gcg_comp_m16( gcg_ctx gcgctx, vldh_t_node node)
 	else if ( wind_found )
 	{
 	  /* There should be an activity window */
+	  IF_PR fprintf( gcgctx->files[GCGM1_DECL_FILE],
+		"void %c%s_exec(plc_sThread *tp);",
+		GCG_PREFIX_MOD,
+		vldh_IdToStr(0, windobjdid));
 	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		"%c%s_exec( tp);\n",
 		GCG_PREFIX_MOD,
@@ -8893,6 +8929,10 @@ int	gcg_comp_m17( gcg_ctx gcgctx, vldh_t_node node)
 	else
 	{
 	  /* Print the window execute command */
+	  IF_PR fprintf( gcgctx->files[GCGM1_DECL_FILE],
+		"void %c%s_exec(plc_sThread *tp);",
+		GCG_PREFIX_MOD,
+		vldh_IdToStr(0, windowobjdid));
 	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 		" ,%c%s_exec( tp);",
 		GCG_PREFIX_MOD,
@@ -9800,6 +9840,10 @@ int	gcg_comp_m24( gcg_ctx gcgctx, vldh_t_node node)
 	else
 	{
 	  /* Print the window execute command */
+	  IF_PR fprintf( gcgctx->files[GCGM1_DECL_FILE],
+		"void %c%s_exec(plc_sThread *tp);",
+		GCG_PREFIX_MOD,
+		vldh_IdToStr(0, windowobjdid));
 	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 		"%c%s_exec( tp);,\n",
 		GCG_PREFIX_MOD,
@@ -10935,6 +10979,10 @@ int	gcg_comp_m33( gcg_ctx gcgctx, vldh_t_node node)
 	if ( wind_found )
 	{
 	  /* Print the window execute command */
+	  IF_PR fprintf( gcgctx->files[GCGM1_DECL_FILE],
+		"void %c%s_exec(plc_sThread *tp);",
+		GCG_PREFIX_MOD,
+		vldh_IdToStr(0, windowobjdid));
 	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 		"%c%s_exec( tp);\n",
 		GCG_PREFIX_MOD,
@@ -12322,7 +12370,7 @@ int	gcg_comp_m41( gcg_ctx gcgctx, vldh_t_node node)
 	      else
 	      {
 	        IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
-			"%c%s->%sP = %c%s;\n", 
+			"%c%s->%sP = (pwr_tInt32 *)%c%s;\n", 
 			GCG_PREFIX_REF,
 			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
@@ -12618,7 +12666,7 @@ int	gcg_comp_m43( gcg_ctx gcgctx, vldh_t_node node)
 	/* The Out parameter will contain the pointer to the
 	   referenced object */
 	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
-			"%c%s->Out = %c%s;\n", 
+			"%c%s->Out = (pwr_tVoid *)%c%s;\n", 
 			GCG_PREFIX_REF,
 			vldh_IdToStr(0, node->ln.oid),
 			GCG_PREFIX_REF,
@@ -13052,6 +13100,10 @@ int	gcg_comp_m46( gcg_ctx gcgctx, vldh_t_node node)
 
 
 	  /* Print the window execute command */
+	  IF_PR fprintf( gcgctx->files[GCGM1_DECL_FILE],
+		"void %c%s_exec(plc_sThread *tp);",
+		GCG_PREFIX_MOD,
+		vldh_IdToStr(0, windowobjdid));
 	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 		"%c%s_exec( tp)",
 		GCG_PREFIX_MOD,
@@ -13470,6 +13522,10 @@ int	gcg_comp_m50( gcg_ctx gcgctx, vldh_t_node node)
 	/* Print the window execute command */
 	if ( wind_found)
 	{
+	  IF_PR fprintf( gcgctx->files[GCGM1_DECL_FILE],
+		"void %c%s_exec(plc_sThread *tp);",
+		GCG_PREFIX_MOD,
+		vldh_IdToStr(0, windowobjdid));
 	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 		"%c%s_exec( tp)",
 		GCG_PREFIX_MOD,
@@ -13584,19 +13640,23 @@ int	gcg_comp_m51( gcg_ctx gcgctx, vldh_t_node node)
 {
 	int 			sts;
 	ldh_tSesContext 	ldhses;
-
+	char			cast_str[40];
+	
 	ldhses = (node->hn.wind)->hw.ldhses; 
 
 	sts = gcg_comp_m4( gcgctx, node);
 	if ( EVEN(sts)) return sts;
 
+	strcpy( cast_str, "(pwr_tFloat32 *)");	  
+
 	/* Place the pointer to the object in the output */
 	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
-			"%c%s->OutDataP = %c%s;\n", 
-			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.oid),
-			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.oid));
+		       "%c%s->OutDataP = %s%c%s;\n", 
+		       GCG_PREFIX_REF,
+		       vldh_IdToStr(0, node->ln.oid),
+		       cast_str, 
+		       GCG_PREFIX_REF,
+		       vldh_IdToStr(1, node->ln.oid));
 
 	/* Place the objid of the object in the output */
 	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
@@ -14035,6 +14095,10 @@ int	gcg_comp_m53( gcg_ctx gcgctx, vldh_t_node node)
 	if ( node->ln.cid == pwr_cClass_Func)
 	{
 	  /* Print the window execute command */
+	  IF_PR fprintf( gcgctx->files[GCGM1_DECL_FILE],
+		"void %c%s_exec(plc_sThread *tp);",
+		GCG_PREFIX_MOD,
+		vldh_IdToStr(0, window_objid));
 	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 		", %c%s_exec( tp)",
 		GCG_PREFIX_MOD,
@@ -15075,6 +15139,10 @@ int	gcg_comp_m58( gcg_ctx gcgctx, vldh_t_node node)
 	free((char *) bodydef);
 
 	/* Print the window execute command */
+	IF_PR fprintf( gcgctx->files[GCGM1_DECL_FILE],
+		       "void %c%s_exec(plc_sThread *tp);",
+		       GCG_PREFIX_MOD,
+		       vldh_IdToStr(0, window_objid));
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 		       "%c%s_exec( tp);\n",
 		       GCG_PREFIX_MOD,

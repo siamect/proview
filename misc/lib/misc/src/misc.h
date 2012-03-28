@@ -33,23 +33,15 @@
  * combined work), being distributed under the terms of the GNU 
  * General Public License plus this exception.
  */
-#ifndef rt_plc_data_h
-#define rt_plc_data_h 
 
+#ifndef misc_h
+#define misc_h
 
-typedef pwr_tBoolean pwr_sDpDistribute[24];
-typedef pwr_tFloat32 pwr_sApDistribute[24];
-typedef pwr_tInt32 pwr_sIpDistribute[24];
+#include "rt_plc.h"
+#include "pwr_miscellaneousclasses.h"
 
-
-void DpCollect_exec( plc_sThread *tp, pwr_sClass_DpCollect *object);
-void ApCollect_exec( plc_sThread *tp, pwr_sClass_ApCollect *object);
-void IpCollect_exec( plc_sThread *tp, pwr_sClass_IpCollect *object);
-void DpDistribute_exec( plc_sThread *tp, pwr_sClass_DpDistribute *object);
-void ApDistribute_exec( plc_sThread *tp, pwr_sClass_ApDistribute *object);
-void IpDistribute_exec( plc_sThread *tp, pwr_sClass_IpDistribute *object);
-void DataCollect_exec( plc_sThread *tp, pwr_sClass_DataCollect *object);
-void CStoAttrRefP_exec( plc_sThread *tp, pwr_sClass_CStoAttrRefP *object, pwr_sAttrRef *aref);
-
+void Misc_PingPongFo_init( pwr_sClass_Misc_PingPongFo  *object);
+void Misc_PingPongFo_exec( plc_sThread *tp, pwr_sClass_Misc_PingPongFo *object);
+void Misc_DemoPattern_exec( plc_sThread *tp, pwr_sClass_Misc_DemoPattern *object);
 
 #endif

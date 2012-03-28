@@ -1143,6 +1143,8 @@ static pwr_tStatus IoAgentClose (
   INT16                    result;              /* !!! local result variable !!! */
 
   local = (io_sAgentLocal *) ap->Local;
+  if ( !local) return IO__SUCCESS;
+
   hDevice = (T_PROFI_DEVICE_HANDLE *) ap->Local;
   sdb.comm_ref = 0;
   sdb.layer = DP;

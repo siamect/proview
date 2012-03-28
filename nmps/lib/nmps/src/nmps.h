@@ -34,6 +34,10 @@
  * General Public License plus this exception.
  */
 
+#ifndef nmps_h
+#define nmps_h
+
+#include "rt_plc.h"
 
 
 #define	NMPS_CELL_MAXSIZE	       	120	/* Number of  dataobject in
@@ -105,3 +109,40 @@ typedef struct {
 
 int	nmps_RemoveData( pwr_tObjid objid);
 int	nmps_RemoveAndDeleteData( pwr_tObjid objid);
+
+void NMpsCell_init( pwr_sClass_NMpsCell  *object);
+void NMpsCell_exec( plc_sThread *tp, pwr_sClass_NMpsCell *object);
+void NMpsStoreCell_init( pwr_sClass_NMpsStoreCell  *object);
+void NMpsStoreCell_exec( plc_sThread *tp, pwr_sClass_NMpsStoreCell *object);
+void NMpsOutCell_exec( plc_sThread *tp, pwr_sClass_NMpsOutCell *object);
+void NMpsTrp_exec( plc_sThread *tp, pwr_sClass_NMpsTrp *object);
+void NMpsTrpRR_exec( plc_sThread *tp, pwr_sClass_NMpsTrpRR *object);
+void NMpsTrpFF_exec( plc_sThread *tp, pwr_sClass_NMpsTrpFF *object);
+void DataSelect_exec( plc_sThread *tp, pwr_sClass_DataSelect *object);
+void NMpsMirrorCell_init( pwr_sClass_NMpsMirrorCell *object);
+void NMpsMirrorCell_exec( plc_sThread *tp, pwr_sClass_NMpsMirrorCell *object);
+void DataFWrite_exec( plc_sThread *tp, pwr_sClass_DataFWrite *object);
+void DataFRead_exec( plc_sThread *tp, pwr_sClass_DataFRead *object);
+void NMpsCell60_init( pwr_sClass_NMpsCell60  *object);
+void NMpsCell60_exec( plc_sThread *tp, pwr_sClass_NMpsCell60 *object);
+void NMpsCell120_init( pwr_sClass_NMpsCell120  *object);
+void NMpsCell120_exec( plc_sThread *tp, pwr_sClass_NMpsCell120 *object);
+void NMpsStoreCell60_init( pwr_sClass_NMpsStoreCell60  *object);
+void NMpsStoreCell60_exec( plc_sThread *tp, pwr_sClass_NMpsStoreCell60 *object);
+void NMpsStoreCell120_init( pwr_sClass_NMpsStoreCell120  *object);
+void NMpsStoreCell120_exec( plc_sThread *tp, pwr_sClass_NMpsStoreCell120 *object);
+void CellDisp_init( pwr_sClass_CellDisp  *object);
+void CellDisp_exec( plc_sThread *tp, pwr_sClass_CellDisp *object);
+void CellDispMir_init( pwr_sClass_CellDispMir  *object);
+void CellDispMir_exec( plc_sThread *tp, pwr_sClass_CellDispMir *object);
+void CellUpdate_init( pwr_sClass_CellUpdate  *object);
+void CellUpdate_exec( plc_sThread *tp, pwr_sClass_CellUpdate *object);
+void DispLink_exec( plc_sThread *tp, pwr_sClass_DispLink *object);
+void RunningTime_exec( plc_sThread *tp, pwr_sClass_RunningTime *object);
+void datacnv_init( pwr_sClass_datacnv  *object);
+void datacnv_exec( plc_sThread *tp, pwr_sClass_datacnv *object);
+void DataRequest_exec( plc_sThread *tp, pwr_sClass_DataRequest *object);
+void DataRcv_exec( plc_sThread *tp, pwr_sClass_DataRcv *object);
+void DataSend_exec( plc_sThread *tp, pwr_sClass_DataSend *object);
+
+#endif

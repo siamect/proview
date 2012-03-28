@@ -1858,7 +1858,7 @@ Possible return values:
   FUNCTION_BODY
 
   // --- check if service device is open
-  if (!hDevice->hServiceWriteDevice) return (E_IF_PAPI_NOT_INITIALIZED);
+  if (!hDevice || !hDevice->hServiceWriteDevice) return (E_IF_PAPI_NOT_INITIALIZED);
 
   return(profi_write_service(hDevice->hServiceWriteDevice,pSdb,pData));
 }
@@ -1900,7 +1900,7 @@ Possible return values:
   FUNCTION_BODY
 
   // --- check if service device is open
-  if (!hDevice->hServiceReadDevice) return (E_IF_PAPI_NOT_INITIALIZED);
+  if (!hDevice || !hDevice->hServiceReadDevice) return (E_IF_PAPI_NOT_INITIALIZED);
 
   return(profi_read_service(hDevice->hServiceReadDevice,pSdb,pData,pDataLength));
 }

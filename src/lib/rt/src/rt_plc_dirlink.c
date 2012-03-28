@@ -58,7 +58,7 @@
 #include "rt_ini_msg.h"
 #include "rt_plc_msg.h"
 #include "rt_plc.h"
-#include "rt_plc_io.h"
+#include "rt_plc_ioarea.h"
 
 #if 0
 /*

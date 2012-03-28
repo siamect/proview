@@ -33,23 +33,104 @@
  * combined work), being distributed under the terms of the GNU 
  * General Public License plus this exception.
  */
-#ifndef rt_plc_data_h
-#define rt_plc_data_h 
 
-
-typedef pwr_tBoolean pwr_sDpDistribute[24];
-typedef pwr_tFloat32 pwr_sApDistribute[24];
-typedef pwr_tInt32 pwr_sIpDistribute[24];
-
-
-void DpCollect_exec( plc_sThread *tp, pwr_sClass_DpCollect *object);
-void ApCollect_exec( plc_sThread *tp, pwr_sClass_ApCollect *object);
-void IpCollect_exec( plc_sThread *tp, pwr_sClass_IpCollect *object);
-void DpDistribute_exec( plc_sThread *tp, pwr_sClass_DpDistribute *object);
-void ApDistribute_exec( plc_sThread *tp, pwr_sClass_ApDistribute *object);
-void IpDistribute_exec( plc_sThread *tp, pwr_sClass_IpDistribute *object);
-void DataCollect_exec( plc_sThread *tp, pwr_sClass_DataCollect *object);
-void CStoAttrRefP_exec( plc_sThread *tp, pwr_sClass_CStoAttrRefP *object, pwr_sAttrRef *aref);
-
-
+#ifndef pwr_h
+#include "pwr.h"
 #endif
+
+#define UC_NORMAL	0
+#define UC_READ		1
+#define UC_WRITE	2
+#define UC_READ2	3
+#define UC_WRITE2	4
+
+#define	_z_	,
+
+
+/* Direct link table */
+typedef struct {
+  void		**Pointer;
+  pwr_sAttrRef	AttrRef;
+  pwr_tClassId	ObjType;
+  pwr_tUInt32	Size;
+  pwr_tUInt32	UseCode;
+  pwr_tUInt32   Offset;
+} plc_t_rtdbref;
+
+
+typedef struct {
+  pwr_tBoolean	ActualValue;
+} plc_sClass_Di;
+
+typedef struct {
+  pwr_tBoolean	ActualValue;
+} plc_sClass_Do;
+
+typedef struct {
+  pwr_tBoolean	ActualValue;
+} plc_sClass_Po;
+
+typedef struct {
+  pwr_tBoolean	ActualValue;
+} plc_sClass_Dv;
+
+typedef struct {
+  pwr_tInt32	RawValue;
+} plc_sClass_Co;
+
+typedef struct {
+  pwr_tFloat32	ActualValue;
+} plc_sClass_Ai;
+
+typedef struct {
+  pwr_tFloat32	ActualValue;
+} plc_sClass_Ao;
+
+typedef struct {
+  pwr_tFloat32	ActualValue;
+} plc_sClass_Av;
+
+typedef struct {
+  pwr_tInt32	ActualValue;
+} plc_sClass_Ii;
+
+typedef struct {
+  pwr_tInt32	ActualValue;
+} plc_sClass_Io;
+
+typedef struct {
+   pwr_tInt32	ActualValue;
+} plc_sClass_Iv;
+
+typedef struct {
+   pwr_tBoolean	ActualValue;
+} plc_sClass_BBoolean;
+
+typedef struct {
+   pwr_tInt64	ActualValue;
+} plc_sClass_BInt64;
+
+typedef struct {
+   pwr_tInt32	ActualValue;
+} plc_sClass_BInt32;
+
+typedef struct {
+   pwr_tInt16	ActualValue;
+} plc_sClass_BInt16;
+
+typedef struct {
+   pwr_tInt8	ActualValue;
+} plc_sClass_BInt8;
+
+typedef struct {
+   pwr_tFloat32	ActualValue;
+} plc_sClass_BFloat32;
+
+typedef struct {
+   pwr_tFloat64	ActualValue;
+} plc_sClass_BFloat64;
+
+typedef struct {
+  char	ActualValue[1];
+} plc_sClass_BString;
+

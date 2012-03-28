@@ -1055,6 +1055,7 @@ int CnvWblToH::check_typename( char *type_volume, char *type_name)
 	"pwr_tPrivMask",
 	"pwr_tProString40",
 	"pwr_tDataRef",
+	"pwr_tVoid",
 	"pwr_tConfigStatusEnum",
 	""};
 

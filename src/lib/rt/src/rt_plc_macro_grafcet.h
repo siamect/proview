@@ -38,11 +38,6 @@
 #define true 1
 #define _z_ ,
 
-static pwr_tBoolean *pointer;
-static pwr_tBoolean **ppointer;
-static pwr_tBoolean test;
-static pwr_tBoolean order_old;
-
 /*_*
    InitStep
 
@@ -128,31 +123,31 @@ static pwr_tBoolean order_old;
 
 #define trans_exec(obj,insteplist,outsteplist,cond)			\
 {									\
-  pwr_tBoolean *inpntr[] = insteplist;		 			\
-  pwr_tBoolean *outpntr[] = outsteplist;				\
+  pwr_tBoolean *inptr[] = insteplist;		 			\
+  pwr_tBoolean *outptr[] = outsteplist;					\
+  pwr_tBoolean test;							\
+  int idx;								\
+\
   /* Test condition */							\
   cond									\
-  if ( obj->Man ) obj->Cond = obj->OpCond;				\
-  if ( obj->Cond )                                                      \
-  {                                                                     \
+  if ( obj->Man) obj->Cond = obj->OpCond;				\
+  if ( obj->Cond) {							\
     /* Test if step(s) above are active */				\
     test = true;							\
-    ppointer = inpntr;							\
-    while ( test && *ppointer != NULL )					\
-    {									\
-      pointer = *ppointer++;						\
-      if ( !*pointer++ ) test = false;					\
-      else if ( !*pointer ) test = false;				\
+    idx = 0;								\
+    while ( test && inptr[idx] != NULL ) {				\
+      if ( !*inptr[idx]) test = false;					\
+      else if ( !*(inptr[idx]+1)) test = false;				\
+      idx++;								\
     }									\
     /* Transfer active status to step(s) below */			\
-    if ( test )								\
-    {									\
-      ppointer = inpntr;						\
-      while ( *ppointer != NULL )					\
-        **ppointer++ = false;						\
-      ppointer = outpntr;						\
-      while ( *ppointer != NULL )					\
-        **ppointer++ = true;						\
+    if ( test) {							\
+      idx = 0;								\
+      while ( inptr[idx] != NULL )					\
+        *inptr[idx++] = false;						\
+      idx = 0;								\
+      while ( outptr[idx] != NULL )					\
+        *outptr[idx++] = true;						\
       obj->OpCond = false;						\
     }							   		\
   }									\
@@ -164,12 +159,15 @@ static pwr_tBoolean order_old;
 */
 
 #define order_exec(obj,stepobj,chain)					\
+{									\
+  pwr_tBoolean order_old;						\
   order_old = obj->Status[0];						\
   obj->Status[0] = stepobj->Status[0];					\
   if (obj->Status[0] || order_old || stepobj->Status[0] || stepobj->Status[1]) \
   {									\
     chain								\
-  }
+  }									\
+}
 
 /*_*
   DOrder
