@@ -623,7 +623,10 @@ wb_dbs::prepareSectVolref()
           nvep = (sVentry*)tree_Insert(&sts, m_vol_th, &vp->vid);
           if (sts == TREE__INSERTED) {
 	    wb_mvrep *nmvrep = m_v->merep()->volume(&sts, vp->vid);
-	    if ( EVEN(sts)) throw wb_error_str("Metavolume not found");
+	    if ( EVEN(sts)) {
+	      printf( "** Classvolume %s referenced but not loaded\n", vp->name);
+	      throw wb_error_str("Metavolume not loaded");
+	    }      
       
 	    dvVersion = getDvVersion( mvrep);
       
