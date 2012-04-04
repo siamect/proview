@@ -2820,11 +2820,10 @@ void DataSelect_exec(
 	  i = *object->MaxIndexP + FLT_EPSILON;
 	i--;
 
-	DataP = (float **)((char *) &object->DataIn1P +
-		i * (sizeof(object->DataIn1) + sizeof(object->DataIn1P)));
+	DataP = (float **)((char *) &object->DataIn1P + i * pwr_cInputOffset);
 
 	memcpy( &object->OutDataP, *DataP,
-		sizeof( object->OutDataP) + sizeof( object->OutData_ObjId));
+		pwr_AlignLW(sizeof( object->OutDataP)) + sizeof( object->OutData_ObjId));
 }
 
 
