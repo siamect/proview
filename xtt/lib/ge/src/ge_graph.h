@@ -1274,6 +1274,8 @@ class Graph {
   */
   void create_axis( grow_tObject *object, double x, double y);
   void create_axisarc( grow_tObject *object, double x, double y);
+  void create_pie( grow_tObject *object, double x, double y);
+  void create_barchart( grow_tObject *object, double x, double y);
 
   int create_node_floating( double x, double y);
   

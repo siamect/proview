@@ -236,6 +236,8 @@ palette NavigatorPalette
       class PlcThread
       class PostConfig
       class RemoteConfig
+      class ReportConfig
+      class Report
       class SysMonConfig
       class StatusServerConfig
       class SevHistMonitor

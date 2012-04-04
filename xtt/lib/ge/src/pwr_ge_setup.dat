@@ -22,6 +22,8 @@ menu Analog
   subgraph 	Bar		pwr_bar.component 		26
   subgraph 	Axis		pwr_axis.component 		27
   subgraph 	AxisArc		pwr_axisarc.component 		250
+  subgraph 	Pie		pwr_pie.component 		6
+  subgraph 	BarChart	pwr_barchart.component 		25
 }
 menu Process
 {

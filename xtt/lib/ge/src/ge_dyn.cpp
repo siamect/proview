@@ -457,6 +457,10 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeXY_Curve((const GeXY_Curve&) *elem); break;
     case ge_mDynType_DigCommand:
       e = new GeDigCommand((const GeDigCommand&) *elem); break;
+    case ge_mDynType_Pie:
+      e = new GePie((const GePie&) *elem); break;
+    case ge_mDynType_BarChart:
+      e = new GeBarChart((const GeBarChart&) *elem); break;
     default: ;
     }
     switch( elem->action_type) {
@@ -585,6 +589,8 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_AnalogText: e = (GeDynElem *) new GeAnalogText(this); break;
       case ge_eSave_Table: e = (GeDynElem *) new GeTable(this); break;
       case ge_eSave_StatusColor: e = (GeDynElem *) new GeStatusColor(this); break;
+      case ge_eSave_Pie: e = (GeDynElem *) new GePie(this); break;
+      case ge_eSave_BarChart: e = (GeDynElem *) new GeBarChart(this); break;
       case ge_eSave_HostObject: e = (GeDynElem *) new GeHostObject(this); break;
       case ge_eSave_DigSound: e = (GeDynElem *) new GeDigSound(this); break;
       case ge_eSave_XY_Curve: e = (GeDynElem *) new GeXY_Curve(this); break;
@@ -1306,6 +1312,12 @@ GeDynElem *GeDyn::create_dyn_element( int mask, int instance)
   case ge_mDynType_StatusColor:
     e = (GeDynElem *) new GeStatusColor(this);
     break;
+  case ge_mDynType_Pie:
+    e = (GeDynElem *) new GePie(this);
+    break;
+  case ge_mDynType_BarChart:
+    e = (GeDynElem *) new GeBarChart(this);
+    break;
   case ge_mDynType_HostObject:
     e = (GeDynElem *) new GeHostObject(this);
     break;
@@ -1472,6 +1484,12 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
     case ge_mDynType_StatusColor:
       e = (GeDynElem *) new GeStatusColor((GeStatusColor&) x);
       break;
+    case ge_mDynType_Pie:
+      e = (GeDynElem *) new GePie((GePie&) x);
+      break;
+    case ge_mDynType_BarChart:
+      e = (GeDynElem *) new GeBarChart((GeBarChart&) x);
+      break;
     case ge_mDynType_HostObject:
       e = (GeDynElem *) new GeHostObject((GeHostObject&) x);
       break;
@@ -1563,7 +1581,9 @@ int GeDyn::connect( grow_tObject object, glow_sTraceData *trace_data)
        grow_GetObjectType( object) == glow_eObjectType_GrowTable ||
        grow_GetObjectType( object) == glow_eObjectType_GrowWindow ||
        grow_GetObjectType( object) == glow_eObjectType_GrowXYCurve ||
-       grow_GetObjectType( object) == glow_eObjectType_GrowTrend) {
+       grow_GetObjectType( object) == glow_eObjectType_GrowTrend ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowPie ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowBarChart) {
     if ( cycle == glow_eCycle_Inherit)
       cycle = glow_eCycle_Slow;
     if ( dyn_type & ge_mDynType_Inherit)
@@ -7546,81 +7566,81 @@ void GeTable::open( ifstream& fp)
     fp >> type;
 
     switch( type) {
-      case ge_eSave_Table: break;
-      case ge_eSave_Table_attribute1:
-        fp.get(); fp.getline( attribute[0], sizeof(attribute[0])); break;
-      case ge_eSave_Table_format1:
-        fp.get(); fp.getline( format[0], sizeof(format[0])); break;
-      case ge_eSave_Table_sel_attribute1:
-        fp.get(); fp.getline( sel_attribute[0], sizeof(sel_attribute[0])); break;
-      case ge_eSave_Table_attribute2:
-        fp.get(); fp.getline( attribute[1], sizeof(attribute[0])); break;
-      case ge_eSave_Table_format2:
-        fp.get(); fp.getline( format[1], sizeof(format[0])); break;
-      case ge_eSave_Table_sel_attribute2:
-        fp.get(); fp.getline( sel_attribute[1], sizeof(sel_attribute[0])); break;
-      case ge_eSave_Table_attribute3:
-        fp.get(); fp.getline( attribute[2], sizeof(attribute[0])); break;
-      case ge_eSave_Table_format3:
-        fp.get(); fp.getline( format[2], sizeof(format[0])); break;
-      case ge_eSave_Table_sel_attribute3:
-        fp.get(); fp.getline( sel_attribute[2], sizeof(sel_attribute[0])); break;
-      case ge_eSave_Table_attribute4:
-        fp.get(); fp.getline( attribute[3], sizeof(attribute[0])); break;
-      case ge_eSave_Table_format4:
-        fp.get(); fp.getline( format[3], sizeof(format[0])); break;
-      case ge_eSave_Table_sel_attribute4:
-        fp.get(); fp.getline( sel_attribute[3], sizeof(sel_attribute[0])); break;
-      case ge_eSave_Table_attribute5:
-        fp.get(); fp.getline( attribute[4], sizeof(attribute[0])); break;
-      case ge_eSave_Table_format5:
-        fp.get(); fp.getline( format[4], sizeof(format[0])); break;
-      case ge_eSave_Table_sel_attribute5:
-        fp.get(); fp.getline( sel_attribute[4], sizeof(sel_attribute[0])); break;
-      case ge_eSave_Table_attribute6:
-        fp.get(); fp.getline( attribute[5], sizeof(attribute[0])); break;
-      case ge_eSave_Table_format6:
-        fp.get(); fp.getline( format[5], sizeof(format[0])); break;
-      case ge_eSave_Table_sel_attribute6:
-        fp.get(); fp.getline( sel_attribute[5], sizeof(sel_attribute[0])); break;
-      case ge_eSave_Table_attribute7:
-        fp.get(); fp.getline( attribute[6], sizeof(attribute[0])); break;
-      case ge_eSave_Table_format7:
-        fp.get(); fp.getline( format[6], sizeof(format[0])); break;
-      case ge_eSave_Table_sel_attribute7:
-        fp.get(); fp.getline( sel_attribute[6], sizeof(sel_attribute[0])); break;
-      case ge_eSave_Table_attribute8:
-        fp.get(); fp.getline( attribute[7], sizeof(attribute[0])); break;
-      case ge_eSave_Table_format8:
-        fp.get(); fp.getline( format[7], sizeof(format[0])); break;
-      case ge_eSave_Table_sel_attribute8:
-        fp.get(); fp.getline( sel_attribute[7], sizeof(sel_attribute[0])); break;
-      case ge_eSave_Table_attribute9:
-        fp.get(); fp.getline( attribute[8], sizeof(attribute[0])); break;
-      case ge_eSave_Table_format9:
-        fp.get(); fp.getline( format[8], sizeof(format[0])); break;
-      case ge_eSave_Table_sel_attribute9:
-        fp.get(); fp.getline( sel_attribute[8], sizeof(sel_attribute[0])); break;
-      case ge_eSave_Table_attribute10:
-        fp.get(); fp.getline( attribute[9], sizeof(attribute[0])); break;
-      case ge_eSave_Table_format10:
-        fp.get(); fp.getline( format[9], sizeof(format[0])); break;
-      case ge_eSave_Table_sel_attribute10:
-        fp.get(); fp.getline( sel_attribute[9], sizeof(sel_attribute[0])); break;
-      case ge_eSave_Table_attribute11:
-        fp.get(); fp.getline( attribute[10], sizeof(attribute[0])); break;
-      case ge_eSave_Table_format11:
-        fp.get(); fp.getline( format[10], sizeof(format[0])); break;
-      case ge_eSave_Table_sel_attribute11:
-        fp.get(); fp.getline( sel_attribute[10], sizeof(sel_attribute[0])); break;
-      case ge_eSave_Table_attribute12:
-        fp.get(); fp.getline( attribute[11], sizeof(attribute[0])); break;
-      case ge_eSave_Table_format12:
-        fp.get(); fp.getline( format[11], sizeof(format[0])); break;
-     case ge_eSave_Table_sel_attribute12:
-        fp.get(); fp.getline( sel_attribute[11], sizeof(sel_attribute[0])); break;
-      case ge_eSave_End: end_found = 1; break;
-      default:
+    case ge_eSave_Table: break;
+    case ge_eSave_Table_attribute1:
+      fp.get(); fp.getline( attribute[0], sizeof(attribute[0])); break;
+    case ge_eSave_Table_format1:
+      fp.get(); fp.getline( format[0], sizeof(format[0])); break;
+    case ge_eSave_Table_sel_attribute1:
+      fp.get(); fp.getline( sel_attribute[0], sizeof(sel_attribute[0])); break;
+    case ge_eSave_Table_attribute2:
+      fp.get(); fp.getline( attribute[1], sizeof(attribute[0])); break;
+    case ge_eSave_Table_format2:
+      fp.get(); fp.getline( format[1], sizeof(format[0])); break;
+    case ge_eSave_Table_sel_attribute2:
+      fp.get(); fp.getline( sel_attribute[1], sizeof(sel_attribute[0])); break;
+    case ge_eSave_Table_attribute3:
+      fp.get(); fp.getline( attribute[2], sizeof(attribute[0])); break;
+    case ge_eSave_Table_format3:
+      fp.get(); fp.getline( format[2], sizeof(format[0])); break;
+    case ge_eSave_Table_sel_attribute3:
+      fp.get(); fp.getline( sel_attribute[2], sizeof(sel_attribute[0])); break;
+    case ge_eSave_Table_attribute4:
+      fp.get(); fp.getline( attribute[3], sizeof(attribute[0])); break;
+    case ge_eSave_Table_format4:
+      fp.get(); fp.getline( format[3], sizeof(format[0])); break;
+    case ge_eSave_Table_sel_attribute4:
+      fp.get(); fp.getline( sel_attribute[3], sizeof(sel_attribute[0])); break;
+    case ge_eSave_Table_attribute5:
+      fp.get(); fp.getline( attribute[4], sizeof(attribute[0])); break;
+    case ge_eSave_Table_format5:
+      fp.get(); fp.getline( format[4], sizeof(format[0])); break;
+    case ge_eSave_Table_sel_attribute5:
+      fp.get(); fp.getline( sel_attribute[4], sizeof(sel_attribute[0])); break;
+    case ge_eSave_Table_attribute6:
+      fp.get(); fp.getline( attribute[5], sizeof(attribute[0])); break;
+    case ge_eSave_Table_format6:
+      fp.get(); fp.getline( format[5], sizeof(format[0])); break;
+    case ge_eSave_Table_sel_attribute6:
+      fp.get(); fp.getline( sel_attribute[5], sizeof(sel_attribute[0])); break;
+    case ge_eSave_Table_attribute7:
+      fp.get(); fp.getline( attribute[6], sizeof(attribute[0])); break;
+    case ge_eSave_Table_format7:
+      fp.get(); fp.getline( format[6], sizeof(format[0])); break;
+    case ge_eSave_Table_sel_attribute7:
+      fp.get(); fp.getline( sel_attribute[6], sizeof(sel_attribute[0])); break;
+    case ge_eSave_Table_attribute8:
+      fp.get(); fp.getline( attribute[7], sizeof(attribute[0])); break;
+    case ge_eSave_Table_format8:
+      fp.get(); fp.getline( format[7], sizeof(format[0])); break;
+    case ge_eSave_Table_sel_attribute8:
+      fp.get(); fp.getline( sel_attribute[7], sizeof(sel_attribute[0])); break;
+    case ge_eSave_Table_attribute9:
+      fp.get(); fp.getline( attribute[8], sizeof(attribute[0])); break;
+    case ge_eSave_Table_format9:
+      fp.get(); fp.getline( format[8], sizeof(format[0])); break;
+    case ge_eSave_Table_sel_attribute9:
+      fp.get(); fp.getline( sel_attribute[8], sizeof(sel_attribute[0])); break;
+    case ge_eSave_Table_attribute10:
+      fp.get(); fp.getline( attribute[9], sizeof(attribute[0])); break;
+    case ge_eSave_Table_format10:
+      fp.get(); fp.getline( format[9], sizeof(format[0])); break;
+    case ge_eSave_Table_sel_attribute10:
+      fp.get(); fp.getline( sel_attribute[9], sizeof(sel_attribute[0])); break;
+    case ge_eSave_Table_attribute11:
+      fp.get(); fp.getline( attribute[10], sizeof(attribute[0])); break;
+    case ge_eSave_Table_format11:
+      fp.get(); fp.getline( format[10], sizeof(format[0])); break;
+    case ge_eSave_Table_sel_attribute11:
+      fp.get(); fp.getline( sel_attribute[10], sizeof(sel_attribute[0])); break;
+    case ge_eSave_Table_attribute12:
+      fp.get(); fp.getline( attribute[11], sizeof(attribute[0])); break;
+    case ge_eSave_Table_format12:
+      fp.get(); fp.getline( format[11], sizeof(format[0])); break;
+    case ge_eSave_Table_sel_attribute12:
+      fp.get(); fp.getline( sel_attribute[11], sizeof(sel_attribute[0])); break;
+    case ge_eSave_End: end_found = 1; break;
+    default:
         cout << "GeTable:open syntax error" << endl;
         fp.getline( dummy, sizeof(dummy));
     }
@@ -8514,6 +8534,472 @@ int GeStatusColor::export_java( grow_tObject object, ofstream& fp, bool first, c
   else
     fp << "      ,";
   fp << "new GeDynStatusColor(" << var_name << ".dd, \"" << attribute << "\"," << jcolor << ")" << endl;
+  return 1;
+}
+
+void GePie::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  for ( int j = 0; j < PIE_MAX_SECTORS; j++) {
+    sprintf( attrinfo[i].name, "Pie.Attribute%d", j);
+    attrinfo[i].value = attribute[j];
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute[0]);
+  }
+
+  strcpy( attrinfo[i].name, "Pie.FixRange");
+  attrinfo[i].value = &fix_range;
+  attrinfo[i].type = glow_eType_Boolean;
+  attrinfo[i++].size = sizeof( fix_range);
+
+  *item_count = i;
+}
+
+void GePie::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
+{
+  char msg[200];
+
+  strncpy( attribute[0], attr_name, sizeof( attribute[0]));
+  snprintf( msg, sizeof(msg), "Pie.Attribute = %s", attr_name);
+  msg[sizeof(msg)-1] = 0;
+  dyn->graph->message( 'I', msg);
+}
+
+void GePie::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  for ( int i = 0; i < PIE_MAX_SECTORS; i++)
+    GeDyn::replace_attribute( attribute[i], sizeof(attribute[0]), from, to, cnt, strict);
+}
+
+void GePie::save( ofstream& fp)
+{
+  fp << int(ge_eSave_Pie) << endl;
+  fp << int(ge_eSave_Pie_fix_range) << FSPACE << fix_range << endl;
+  for ( int i = 0; i < PIE_MAX_SECTORS; i++)
+    fp << int(ge_eSave_Pie_attribute1)+i << FSPACE << attribute[i] << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GePie::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[40];
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GePie: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+    case ge_eSave_Pie: break;
+    case ge_eSave_Pie_fix_range: fp >> fix_range; break;
+    case ge_eSave_Pie_attribute1:
+      fp.get();
+      fp.getline( attribute[0], sizeof(attribute[0]));
+      break;
+    case ge_eSave_Pie_attribute2:
+      fp.get();
+      fp.getline( attribute[1], sizeof(attribute[0]));
+      break;
+    case ge_eSave_Pie_attribute3:
+      fp.get();
+      fp.getline( attribute[2], sizeof(attribute[0]));
+      break;
+    case ge_eSave_Pie_attribute4:
+      fp.get();
+      fp.getline( attribute[3], sizeof(attribute[0]));
+      break;
+    case ge_eSave_Pie_attribute5:
+      fp.get();
+      fp.getline( attribute[4], sizeof(attribute[0]));
+      break;
+    case ge_eSave_Pie_attribute6:
+      fp.get();
+      fp.getline( attribute[5], sizeof(attribute[0]));
+      break;
+    case ge_eSave_Pie_attribute7:
+      fp.get();
+      fp.getline( attribute[6], sizeof(attribute[0]));
+      break;
+    case ge_eSave_Pie_attribute8:
+      fp.get();
+      fp.getline( attribute[7], sizeof(attribute[0]));
+      break;
+    case ge_eSave_Pie_attribute9:
+      fp.get();
+      fp.getline( attribute[8], sizeof(attribute[0]));
+      break;
+    case ge_eSave_Pie_attribute10:
+      fp.get();
+      fp.getline( attribute[9], sizeof(attribute[0]));
+      break;
+    case ge_eSave_Pie_attribute11:
+      fp.get();
+      fp.getline( attribute[10], sizeof(attribute[0]));
+      break;
+    case ge_eSave_Pie_attribute12:
+      fp.get();
+      fp.getline( attribute[11], sizeof(attribute[0]));
+        break;
+    case ge_eSave_End: end_found = 1; break;
+    default:
+      cout << "GePie:open syntax error" << endl;
+      fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }
+}
+
+int GePie::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+  pwr_tAName   	parsed_name;
+  int		inverted;
+  int		sts;
+  int		atype;
+  int		asize;
+
+  grow_GetPieConf( object, &sectors, &min_value, &max_value);
+  if ( sectors >= PIE_MAX_SECTORS)
+    sectors = PIE_MAX_SECTORS;
+  
+  for ( int i = 0; i < sectors; i++) {
+
+    dyn->parse_attr_name( attribute[i], parsed_name, &inverted, &atype, &asize);
+    if ( strcmp( parsed_name,"") == 0)
+      continue;
+
+    if ( i == 0) {
+      attr_type = atype;
+      size = asize;
+
+      switch ( atype) {
+      case pwr_eType_Float32:
+      case pwr_eType_Int32:
+	break;
+      default:
+	return 1;
+      }
+    }
+    else {
+      if ( attr_type != atype || size != asize)
+	continue;
+    }
+
+
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p[i],
+				       &subid[i], asize);
+    if ( EVEN(sts)) return sts;
+
+    trace_data->p = &pdummy;
+  }
+
+  first_scan = true;
+  return 1;
+}
+
+int GePie::disconnect( grow_tObject object)
+{
+  for ( int i = 0; i < sectors; i++) {
+    gdh_UnrefObjectInfo( subid[i]);
+    p[i] = 0;
+  }
+  return 1;
+}
+
+int GePie::scan( grow_tObject object)
+{
+  int i;
+
+  switch ( attr_type) {
+  case pwr_eType_Float32: {    
+    pwr_tFloat32 val[PIE_MAX_SECTORS];
+    for ( i = 0; i < sectors; i++)
+      val[i] = *p[i];
+    if ( !first_scan) {
+      int update = 0;
+      for ( i = 0; i < sectors; i++) {
+	if ( fabs( old_value[i] - val[i]) > FLT_EPSILON) {
+	  update = 1;
+	  break;
+	}
+      }
+      if ( !update)
+	return 1;
+    }
+    else
+      first_scan = false;
+
+    if ( fabs( max_value - min_value) < FLT_EPSILON)
+      return 1;
+
+    double dval[PIE_MAX_SECTORS];
+    if ( fix_range || sectors == 1) {
+      for ( i = 0; i < sectors; i++)
+	dval[i] = val[i];
+    }
+    else {
+      double sum = 0;
+      for ( i = 0; i < sectors; i++)
+	sum += val[i];
+      for ( i = 0; i < sectors; i++) {
+	if ( fabs( sum) < DBL_EPSILON)
+	  dval[i] = 0;
+	else
+	  dval[i] = val[i] / sum * (max_value - min_value);
+      }
+    }
+
+    grow_SetPieValues( object, dval);
+    memcpy( &old_value, &val, size * sectors);
+    break;
+  }
+  case pwr_eType_Int32: {
+    break;
+  }
+  default: ;
+  }
+  return 1;
+}
+
+int GePie::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
+  return 1;
+}
+
+void GeBarChart::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  for ( int j = 0; j < BARCHART_MAX_BARSEGMENTS; j++) {
+    sprintf( attrinfo[i].name, "BarChart.Attribute%d", j);
+    attrinfo[i].value = attribute[j];
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute[0]);
+  }
+
+  strcpy( attrinfo[i].name, "BarChart.FixRange");
+  attrinfo[i].value = &fix_range;
+  attrinfo[i].type = glow_eType_Boolean;
+  attrinfo[i++].size = sizeof( fix_range);
+
+  *item_count = i;
+}
+
+void GeBarChart::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
+{
+  char msg[200];
+
+  strncpy( attribute[0], attr_name, sizeof( attribute[0]));
+  snprintf( msg, sizeof(msg), "BarChart.Attribute = %s", attr_name);
+  msg[sizeof(msg)-1] = 0;
+  dyn->graph->message( 'I', msg);
+}
+
+void GeBarChart::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  for ( int i = 0; i < BARCHART_MAX_BARSEGMENTS; i++)
+    GeDyn::replace_attribute( attribute[i], sizeof(attribute[0]), from, to, cnt, strict);
+}
+
+void GeBarChart::save( ofstream& fp)
+{
+  fp << int(ge_eSave_BarChart) << endl;
+  fp << int(ge_eSave_BarChart_fix_range) << FSPACE << fix_range << endl;
+  for ( int i = 0; i < BARCHART_MAX_BARSEGMENTS; i++)
+    fp << int(ge_eSave_BarChart_attribute1)+i << FSPACE << attribute[i] << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeBarChart::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[40];
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeBarChart: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+    case ge_eSave_BarChart: break;
+    case ge_eSave_BarChart_fix_range: fp >> fix_range; break;
+    case ge_eSave_BarChart_attribute1:
+      fp.get();
+      fp.getline( attribute[0], sizeof(attribute[0]));
+      break;
+    case ge_eSave_BarChart_attribute2:
+      fp.get();
+      fp.getline( attribute[1], sizeof(attribute[0]));
+      break;
+    case ge_eSave_BarChart_attribute3:
+      fp.get();
+      fp.getline( attribute[2], sizeof(attribute[0]));
+      break;
+    case ge_eSave_BarChart_attribute4:
+      fp.get();
+      fp.getline( attribute[3], sizeof(attribute[0]));
+      break;
+    case ge_eSave_BarChart_attribute5:
+      fp.get();
+      fp.getline( attribute[4], sizeof(attribute[0]));
+      break;
+    case ge_eSave_BarChart_attribute6:
+      fp.get();
+      fp.getline( attribute[5], sizeof(attribute[0]));
+      break;
+    case ge_eSave_BarChart_attribute7:
+      fp.get();
+      fp.getline( attribute[6], sizeof(attribute[0]));
+      break;
+    case ge_eSave_BarChart_attribute8:
+      fp.get();
+      fp.getline( attribute[7], sizeof(attribute[0]));
+      break;
+    case ge_eSave_BarChart_attribute9:
+      fp.get();
+      fp.getline( attribute[8], sizeof(attribute[0]));
+      break;
+    case ge_eSave_BarChart_attribute10:
+      fp.get();
+      fp.getline( attribute[9], sizeof(attribute[0]));
+      break;
+    case ge_eSave_BarChart_attribute11:
+      fp.get();
+      fp.getline( attribute[10], sizeof(attribute[0]));
+      break;
+    case ge_eSave_BarChart_attribute12:
+      fp.get();
+      fp.getline( attribute[11], sizeof(attribute[0]));
+        break;
+    case ge_eSave_End: end_found = 1; break;
+    default:
+      cout << "GeBarChart:open syntax error" << endl;
+      fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }
+}
+
+int GeBarChart::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+  pwr_tAName   	parsed_name;
+  int		inverted;
+  int		sts;
+  int		atype;
+  int		asize;
+  int		elements;
+
+  grow_GetBarChartConf( object, &bars, &barsegments, &min_value, &max_value);
+  if ( barsegments >= BARCHART_MAX_BARSEGMENTS)
+    barsegments = BARCHART_MAX_BARSEGMENTS;
+  
+  for ( int i = 0; i < barsegments; i++) {
+
+    dyn->parse_attr_name( attribute[i], parsed_name, &inverted, &atype, &asize, &elements);
+    if ( strcmp( parsed_name,"") == 0)
+      continue;
+
+    if ( !elements)
+      continue;
+
+    asize = asize / elements;
+    bars = MIN( bars, elements);
+
+    if ( i == 0) {
+      attr_type = atype;
+
+      switch ( atype) {
+      case pwr_eType_Float32:
+      case pwr_eType_Int32:
+	break;
+      default:
+	return 1;
+      }
+    }
+    else {
+      if ( attr_type != atype)
+	continue;
+    }
+
+
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p[i],
+				       &subid[i], bars * asize);
+    if ( EVEN(sts)) return sts;
+
+    trace_data->p = &pdummy;
+  }
+
+  size = barsegments * bars * sizeof(pwr_tFloat32);
+  value = (pwr_tFloat32 *) calloc( 1, size);
+  old_value = (pwr_tFloat32 *) calloc( 1, size);
+
+  first_scan = true;
+  return 1;
+}
+
+int GeBarChart::disconnect( grow_tObject object)
+{
+  for ( int i = 0; i < barsegments; i++) {
+    gdh_UnrefObjectInfo( subid[i]);
+    p[i] = 0;
+  }
+  return 1;
+}
+
+int GeBarChart::scan( grow_tObject object)
+{
+  int i;
+
+  switch ( attr_type) {
+  case pwr_eType_Float32: {    
+    for ( i = 0; i < barsegments; i++) {
+      if ( p[i])
+	memcpy( &value[i*bars], p[i], bars * sizeof(pwr_tFloat32));
+    }
+    if ( !first_scan) {
+      if ( memcmp( value, old_value, size)== 0)
+	return 1;
+    }
+    else
+      first_scan = false;
+
+    if ( fabs( max_value - min_value) < FLT_EPSILON)
+      return 1;
+
+    pwr_tFloat32 *valp[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
+
+    for ( i = 0; i < barsegments; i++)
+      valp[i] = &value[i*bars];
+    grow_SetBarChartValues( object, valp[0], valp[1], valp[2], valp[3], valp[4], valp[5], valp[6], valp[7], 
+			    valp[8], valp[9], valp[10], valp[11]);
+    memcpy( old_value, value, size);
+    break;
+  }
+  case pwr_eType_Int32: {
+    break;
+  }
+  default: ;
+  }
+  return 1;
+}
+
+int GeBarChart::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
   return 1;
 }
 

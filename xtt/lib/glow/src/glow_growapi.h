@@ -1236,6 +1236,18 @@ extern "C" {
         glow_eDrawType text_drawtype, void *user_data,
 	grow_tObject *axis);
 
+  void grow_CreateGrowPie( grow_tCtx ctx, const char *name, 
+			   double x1, double y1, double x2, double y2,
+			   int angle1, int angle2, glow_eDrawType draw_type, 
+			   int line_width, int border, int shadow, glow_eDrawType fill_draw_type,
+			   void *user_data, grow_tObject *arc);
+
+  void grow_CreateGrowBarChart( grow_tCtx ctx, const char *name, 
+				double x, double y, double width, double height,
+				glow_eDrawType draw_type, int line_width, int border, int shadow, 
+				glow_eDrawType fill_draw_type,
+				void *user_data, grow_tObject *barchart);
+
   //! Create a connection glue object, i.e. an object of class GrowConGlue.
   /*!
     \param ctx		Grow context.
@@ -2955,6 +2967,17 @@ extern "C" {
 				  glow_eDrawType fill_color);
   void grow_SetXYCurveData( grow_tObject object, double *y_data, double *x_data, int curve_idx, 
 			    int data_points);
+  void grow_SetPieValues( grow_tObject object, double *values);
+  void grow_SetPieConf( grow_tObject object, int sector_num, double min_val, double max_val, glow_eDrawType *color);
+  void grow_GetPieConf( grow_tObject object, int *sector_num, double *min_val, double *max_val);
+  void grow_SetBarChartValues( grow_tObject object, 
+			       float *values1, float *values2, float *values3, float *values4, 
+			       float *values5, float *values6, float *values7, float *values8, 
+			       float *values9, float *values10, float *values11, float *values12);
+  void grow_SetBarChartConf( grow_tObject object, int bar_num, int barsegment_num,  
+			     double min_val, double max_val, int vert_lines, int horiz_lines, 
+			     glow_eDrawType line_color, glow_eDrawType *color);
+  void grow_GetBarChartConf( grow_tObject object, int *bar_num, int *barsegment_num, double *min_val, double *max_val);
 
   //! Get text size and color for an annotation.
   /*!

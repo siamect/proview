@@ -162,6 +162,8 @@
     ge_eDynPrio_InputFocus,
     ge_eDynPrio_DigCommand,
     ge_eDynPrio_SetValue,
+    ge_eDynPrio_Pie,
+    ge_eDynPrio_BarChart,
 
     // This should always be last
     ge_eDynPrio_CloseGraph = 10000
@@ -199,7 +201,9 @@
     ge_mDynType_HostObject    	= 1 << 26,
     ge_mDynType_DigSound    	= 1 << 27,
     ge_mDynType_XY_Curve    	= 1 << 28,
-    ge_mDynType_DigCommand    	= 1 << 29
+    ge_mDynType_DigCommand    	= 1 << 29,
+    ge_mDynType_Pie	    	= 1 << 30,
+    ge_mDynType_BarChart      	= 1 << 31
   } ge_mDynType;
 
   //! Action types.
@@ -299,6 +303,8 @@
     ge_eSave_DigSound	             	= 33,
     ge_eSave_XY_Curve	             	= 34,
     ge_eSave_DigCommand	             	= 35,
+    ge_eSave_Pie	             	= 36,
+    ge_eSave_BarChart	             	= 37,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -468,6 +474,32 @@
     ge_eSave_DigCommand_command      	= 3501,
     ge_eSave_DigCommand_instance        = 3502,
     ge_eSave_DigCommand_instance_mask 	= 3503,
+    ge_eSave_Pie_attribute1      	= 3600,
+    ge_eSave_Pie_attribute2      	= 3601,
+    ge_eSave_Pie_attribute3      	= 3602,
+    ge_eSave_Pie_attribute4      	= 3603,
+    ge_eSave_Pie_attribute5      	= 3604,
+    ge_eSave_Pie_attribute6      	= 3605,
+    ge_eSave_Pie_attribute7      	= 3606,
+    ge_eSave_Pie_attribute8      	= 3607,
+    ge_eSave_Pie_attribute9      	= 3608,
+    ge_eSave_Pie_attribute10      	= 3609,
+    ge_eSave_Pie_attribute11      	= 3610,
+    ge_eSave_Pie_attribute12      	= 3611,
+    ge_eSave_Pie_fix_range      	= 3612,
+    ge_eSave_BarChart_attribute1      	= 3700,
+    ge_eSave_BarChart_attribute2      	= 3701,
+    ge_eSave_BarChart_attribute3      	= 3702,
+    ge_eSave_BarChart_attribute4      	= 3703,
+    ge_eSave_BarChart_attribute5      	= 3704,
+    ge_eSave_BarChart_attribute6      	= 3705,
+    ge_eSave_BarChart_attribute7      	= 3706,
+    ge_eSave_BarChart_attribute8      	= 3707,
+    ge_eSave_BarChart_attribute9      	= 3708,
+    ge_eSave_BarChart_attribute10      	= 3709,
+    ge_eSave_BarChart_attribute11      	= 3710,
+    ge_eSave_BarChart_attribute12      	= 3711,
+    ge_eSave_BarChart_fix_range      	= 3712,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -2366,6 +2398,95 @@ class GeTable : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   int action( grow_tObject object, glow_tEvent event);
+  void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+};
+
+//! Dynamics for a pie object.
+#define PIE_MAX_SECTORS 12
+
+class GePie : public GeDynElem {
+ public:
+  int sectors;
+  double min_value;
+  double max_value;
+  pwr_tBoolean fix_range;
+  int size;
+  graph_eDatabase db;
+  int attr_type;
+  pwr_tAName attribute[PIE_MAX_SECTORS];
+  bool first_scan;
+  pwr_tFloat32 *p[PIE_MAX_SECTORS];
+  pwr_tSubid subid[PIE_MAX_SECTORS];
+  pwr_tFloat32 old_value[PIE_MAX_SECTORS];
+
+  GePie( GeDyn *e_dyn) : 
+    GeDynElem(e_dyn, ge_mDynType_Pie, (ge_mActionType) 0, ge_eDynPrio_Pie),
+    sectors(0), min_value(0), max_value(0), fix_range(0) { 
+    for ( int i = 0; i < PIE_MAX_SECTORS; i++)
+      strcpy( attribute[i], "");
+  }
+  GePie( const GePie& x) : 
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), 
+    sectors(x.sectors), min_value(x.min_value), max_value(x.max_value), fix_range(x.fix_range) { 
+    for ( int i = 0; i < PIE_MAX_SECTORS; i++)
+      strcpy( attribute[i], x.attribute[i]);
+  }
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
+  void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+};
+
+//! Dynamics for a barchart object.
+#define BARCHART_MAX_BARSEGMENTS 12
+
+class GeBarChart : public GeDynElem {
+ public:
+  int bars;
+  int barsegments;
+  double min_value;
+  double max_value;
+  pwr_tBoolean fix_range;
+  int size;
+  graph_eDatabase db;
+  int attr_type;
+  pwr_tAName attribute[BARCHART_MAX_BARSEGMENTS];
+  bool first_scan;
+  pwr_tFloat32 *p[BARCHART_MAX_BARSEGMENTS];
+  pwr_tSubid subid[BARCHART_MAX_BARSEGMENTS];
+  pwr_tFloat32 *value;
+  pwr_tFloat32 *old_value;
+
+  GeBarChart( GeDyn *e_dyn) : 
+    GeDynElem(e_dyn, ge_mDynType_BarChart, (ge_mActionType) 0, ge_eDynPrio_BarChart),
+    bars(0), barsegments(0), min_value(0), max_value(0), fix_range(0), value(0), old_value(0) { 
+    for ( int i = 0; i < BARCHART_MAX_BARSEGMENTS; i++) {
+      strcpy( attribute[i], "");
+      p[i] = 0;
+    }
+  }
+  GeBarChart( const GeBarChart& x) : 
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), 
+    bars(x.bars),barsegments(x.barsegments), min_value(x.min_value), max_value(x.max_value), fix_range(x.fix_range),
+    value(0), old_value(0) { 
+    for ( int i = 0; i < BARCHART_MAX_BARSEGMENTS; i++) {
+      strcpy( attribute[i], x.attribute[i]);
+      p[i] = 0;
+    }
+  }
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);

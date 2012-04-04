@@ -1659,6 +1659,83 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 		&grow_info_cnt);
     *item_cnt = 0;
   }
+  else if ( grow_GetObjectType( object) == glow_eObjectType_GrowPie)
+  {
+    char transtab[][32] = {             
+                                        "Angle1",	        "Pie.Angle1",
+                                        "Angle2",	        "Pie.Angle2",
+                                        "Sectors",	        "Pie.Sectors",
+                                        "MinValue",	        "Pie.MinValue",
+                                        "MaxValue",	        "Pie.MaxValue",
+                                        "SectorColor1",	        "Pie.SectorColor1",
+                                        "SectorColor2",	        "Pie.SectorColor2",
+                                        "SectorColor3",	        "Pie.SectorColor3",
+                                        "SectorColor4",	        "Pie.SectorColor4",
+                                        "SectorColor5",	        "Pie.SectorColor5",
+                                        "SectorColor6",	        "Pie.SectorColor6",
+                                        "SectorColor7",	        "Pie.SectorColor7",
+                                        "SectorColor8",	        "Pie.SectorColor8",
+                                        "SectorColor9",	        "Pie.SectorColor9",
+                                        "SectorColor10",        "Pie.SectorColor10",
+                                        "SectorColor11",        "Pie.SectorColor11",
+                                        "SectorColor12",        "Pie.SectorColor12",
+                                        "ShadowWidth",          "Pie.ShadowWidth",
+                                        "ShadowContrast",       "Pie.ShadowContrast",
+                                        "GradientContrast",     "Pie.GradientContrast",
+                                        "Gradient",             "Pie.Gradient",
+                                        "Relief",               "Pie.Relief",
+					"Dynamic",		"Dynamic",
+					""};
+    GeDyn *dyn;
+
+    grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
+		&grow_info_cnt);
+
+    grow_GetUserData( object, (void **)&dyn);
+
+    *item_cnt = 0;
+    dyn->get_attributes( object, items, item_cnt);
+
+    *client_data = 0;
+  }
+  else if ( grow_GetObjectType( object) == glow_eObjectType_GrowBarChart)
+  {
+    char transtab[][32] = {             
+                                        "Bars",	        	"BarChart.Bars",
+                                        "BarSegments",	        "BarChart.BarSegments",
+                                        "MinValue",	        "BarChart.MinValue",
+                                        "MaxValue",	        "BarChart.MaxValue",
+                                        "SectorColor1",	        "BarChart.BarColor1",
+                                        "BarColor2",	        "BarChart.BarColor2",
+                                        "BarColor3",	        "BarChart.BarColor3",
+                                        "BarColor4",	        "BarChart.BarColor4",
+                                        "BarColor5",	        "BarChart.BarColor5",
+                                        "BarColor6",	        "BarChart.BarColor6",
+                                        "BarColor7",	        "BarChart.BarColor7",
+                                        "BarColor8",	        "BarChart.BarColor8",
+                                        "BarColor9",	        "BarChart.BarColor9",
+                                        "BarColor10",        	"BarChart.BarColor10",
+                                        "BarColor11",        	"BarChart.BarColor11",
+                                        "BarColor12",        	"BarChart.BarColor12",
+                                        "ShadowWidth",          "BarChart.ShadowWidth",
+                                        "ShadowContrast",       "BarChart.ShadowContrast",
+                                        "GradientContrast",     "BarChart.GradientContrast",
+                                        "Gradient",             "BarChart.Gradient",
+                                        "Relief",               "BarChart.Relief",
+					"Dynamic",		"Dynamic",
+					""};
+    GeDyn *dyn;
+
+    grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
+		&grow_info_cnt);
+
+    grow_GetUserData( object, (void **)&dyn);
+
+    *item_cnt = 0;
+    dyn->get_attributes( object, items, item_cnt);
+
+    *client_data = 0;
+  }
   else if ( grow_GetObjectType( object) == glow_eObjectType_GrowSlider)
   {
     char transtab[][32] = {	 	"SubGraph",		"SubGraph",
@@ -1828,7 +1905,9 @@ static int graph_attr_recall_cb( void *g, grow_tObject object, int idx,
        grow_GetObjectType( object) == glow_eObjectType_GrowTrend ||
        grow_GetObjectType( object) == glow_eObjectType_GrowXYCurve ||
        grow_GetObjectType( object) == glow_eObjectType_GrowTable ||
-       grow_GetObjectType( object) == glow_eObjectType_GrowBar) {
+       grow_GetObjectType( object) == glow_eObjectType_GrowBar ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowPie ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowBarChart) {
     sts = graph->recall.get( &dyn, idx);
     if ( ODD(sts)) {
       grow_GetUserData( object, (void **)old_dyn);
@@ -2489,6 +2568,14 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	else if ( strcmp( sub_name, "pwr_axisarc") == 0) {
 	  grow_tObject t1;
 	  graph->create_axisarc( &t1, event->create_grow_object.x, event->create_grow_object.y);
+	}
+	else if ( strcmp( sub_name, "pwr_pie") == 0) {
+	  grow_tObject t1;
+	  graph->create_pie( &t1, event->create_grow_object.x, event->create_grow_object.y);
+	}
+	else if ( strcmp( sub_name, "pwr_barchart") == 0) {
+	  grow_tObject t1;
+	  graph->create_barchart( &t1, event->create_grow_object.x, event->create_grow_object.y);
 	}
 	else if ( strcmp( sub_name, "pwr_conglue") == 0) {
 	  grow_tObject t1;
@@ -3467,7 +3554,9 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
             grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
             grow_GetObjectType( event->object.object) == glow_eObjectType_GrowXYCurve ||
             grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
-            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar))
+            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar ||
+            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowPie ||
+            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBarChart))
       {
 	GeDyn *dyn;
 
@@ -3489,7 +3578,9 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowTrend ||
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowXYCurve ||
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowTable ||
-           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowBar)
+           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowBar ||
+           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowPie ||
+           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowBarChart)
       {
 	GeDyn *dyn;
 
@@ -3644,7 +3735,9 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
               grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar ||
               grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
               grow_GetObjectType( event->object.object) == glow_eObjectType_GrowXYCurve ||
-              grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend))
+              grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
+              grow_GetObjectType( event->object.object) == glow_eObjectType_GrowPie ||
+              grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBarChart))
         break;
       if ( graph->mode != graph_eMode_Runtime)
         break;
@@ -3709,7 +3802,9 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowXYCurve ||
-           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend)
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowPie ||
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBarChart)
       {
 
         grow_GetUserData( event->object.object, (void **)&dyn);
@@ -4815,6 +4910,70 @@ void Graph::create_axisarc( grow_tObject *object, double x, double y)
   grow_Redraw( grow->ctx);
 }
 
+void Graph::create_pie( grow_tObject *object, double x, double y)
+{
+  GeDyn *dyn;
+  double width = 5;
+  double height = 5;
+  glow_eDrawType color[12] = { glow_eDrawType_Color115,
+			       glow_eDrawType_Color145,
+			       glow_eDrawType_Color175,
+			       glow_eDrawType_Color205,
+			       glow_eDrawType_Color235,
+			       glow_eDrawType_Color265,
+			       glow_eDrawType_Color295,
+			       glow_eDrawType_Color105,
+			       glow_eDrawType_Color135,
+			       glow_eDrawType_Color165,
+			       glow_eDrawType_Color195,
+			       glow_eDrawType_Color225 };
+  double values[12] = { 8.333, 8.333, 8.333, 8.333, 8.333, 8.333, 8.333, 8.333, 8.333, 8.333, 8.333, 8.333};
+
+  grow_CreateGrowPie( grow->ctx, "", 
+		      x, y, x + width, y + height, 0, 360, 
+		      glow_eDrawType_Line, 1, 1, 0, glow_eDrawType_Color38,
+		      NULL, object);
+
+  grow_SetPieConf( *object, 12, 0, 100, color);
+  grow_SetPieValues( *object, values);
+  dyn = new GeDyn( this);
+  dyn->dyn_type = dyn->total_dyn_type = ge_mDynType_Pie;
+  dyn->update_elements();
+  grow_SetUserData( *object, (void *)dyn);
+  grow_Redraw( grow->ctx);
+}
+
+void Graph::create_barchart( grow_tObject *object, double x, double y)
+{
+  GeDyn *dyn;
+  double width = 7;
+  double height = 5;
+  glow_eDrawType color[12] = { glow_eDrawType_Color115,
+			       glow_eDrawType_Color145,
+			       glow_eDrawType_Color175,
+			       glow_eDrawType_Color205,
+			       glow_eDrawType_Color235,
+			       glow_eDrawType_Color265,
+			       glow_eDrawType_Color295,
+			       glow_eDrawType_Color105,
+			       glow_eDrawType_Color135,
+			       glow_eDrawType_Color165,
+			       glow_eDrawType_Color195,
+			       glow_eDrawType_Color225 };
+
+  grow_CreateGrowBarChart( grow->ctx, "", 
+			   x, y, width, height, 
+			   glow_eDrawType_Line, 1, 1, 0, glow_eDrawType_Color40,
+			   NULL, object);
+
+  grow_SetBarChartConf( *object, 12, 10, 0, 100, 4, 4, glow_eDrawType_Color37, color);
+  dyn = new GeDyn( this);
+  dyn->dyn_type = dyn->total_dyn_type = ge_mDynType_BarChart;
+  dyn->update_elements();
+  grow_SetUserData( *object, (void *)dyn);
+  grow_Redraw( grow->ctx);
+}
+
 int Graph::create_node_floating( double x, double y)
 {
   char 		sub_name[80] = "graph";
@@ -4917,6 +5076,8 @@ static void graph_free_dyn( grow_tObject object)
        grow_GetObjectType( object) == glow_eObjectType_GrowXYCurve ||
        grow_GetObjectType( object) == glow_eObjectType_GrowTable ||
        grow_GetObjectType( object) == glow_eObjectType_GrowBar ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowPie ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowBarChart ||
        grow_GetObjectType( object) == glow_eObjectType_NodeClass) {
     GeDyn *dyn;
     

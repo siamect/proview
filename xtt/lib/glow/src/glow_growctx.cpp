@@ -67,6 +67,8 @@
 #include "glow_growgroup.h"
 #include "glow_growaxis.h"
 #include "glow_growaxisarc.h"
+#include "glow_growpie.h"
+#include "glow_growbarchart.h"
 #include "glow_growmenu.h"
 #include "glow_growfolder.h"
 #include "glow_growtable.h"
@@ -4374,6 +4376,14 @@ void GrowCtx::read_object( ifstream& fp, GlowArrayElem **o)
   }
   case glow_eSave_GrowAxisArc: {
     n = new GrowAxisArc( this, "");
+    break;
+  }
+  case glow_eSave_GrowPie: {
+    n = new GrowPie( this, "");
+    break;
+  }
+  case glow_eSave_GrowBarChart: {
+    n = new GrowBarChart( this, "");
     break;
   }
   case glow_eSave_GrowConGlue: {

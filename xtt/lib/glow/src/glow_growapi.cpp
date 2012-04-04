@@ -80,6 +80,8 @@
 #include "glow_growimage.h"
 #include "glow_growaxis.h"
 #include "glow_growaxisarc.h"
+#include "glow_growpie.h"
+#include "glow_growbarchart.h"
 #include "glow_growgroup.h"
 #include "glow_growconglue.h"
 #include "glow_growmenu.h"
@@ -1139,6 +1141,36 @@ void grow_CreateGrowAxisArc( grow_tCtx ctx, const char *name,
   ctx->insert( l1);
   ctx->nav_zoom();
   *axis = (grow_tObject) l1;
+}
+
+void grow_CreateGrowPie( grow_tCtx ctx, const char *name, 
+			 double x1, double y1, double x2, double y2,
+			 int angle1, int angle2, glow_eDrawType draw_type, 
+			 int line_width, int border, int shadow, glow_eDrawType fill_draw_type,
+			 void *user_data, grow_tObject *arc)
+{
+  GrowPie *a1;
+  a1 = new GrowPie( ctx, name, x1, y1, x2, y2, angle1, angle2, draw_type, 
+		    line_width, border, shadow, fill_draw_type);
+  a1->set_user_data( user_data);
+  ctx->insert( a1);
+  ctx->nav_zoom();
+  *arc = (grow_tObject) a1;
+}
+
+void grow_CreateGrowBarChart( grow_tCtx ctx, const char *name, 
+			      double x, double y, double width, double height,
+			      glow_eDrawType draw_type, int line_width, int border, int shadow, 
+			      glow_eDrawType fill_draw_type,
+			      void *user_data, grow_tObject *barchart)
+{
+  GrowBarChart *r1;
+  r1 = new GrowBarChart( ctx, name, x, y, width, height, draw_type, line_width, border, shadow, 
+			 fill_draw_type);
+  r1->set_user_data( user_data);
+  ctx->insert( r1);
+  ctx->nav_zoom();
+  *barchart = (grow_tObject) r1;
 }
 
 void grow_CreateGrowConGlue( grow_tCtx ctx, const char *name, 
@@ -2495,6 +2527,222 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       }
       break;
     }
+    case glow_eObjectType_GrowPie:
+    {
+      GrowPie *op = (GrowPie *)object;
+      char *name;
+      char *dynamic;
+      int  dynsize;
+
+      if ( (name = growapi_translate( transtab, "Angle1"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->angle1;
+        attrinfo[i].type = glow_eType_Int;
+        attrinfo[i++].size = sizeof( op->angle1);
+      }
+      if ( (name = growapi_translate( transtab, "Angle2"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->angle2;
+        attrinfo[i].type = glow_eType_Int;
+        attrinfo[i++].size = sizeof( op->angle2);
+      }
+      if ( (name = growapi_translate( transtab, "ShadowWidth"))) {
+        strcpy( attrinfo[i].name, name);
+	attrinfo[i].value_p = &op->shadow_width;
+	attrinfo[i].minlimit = 0;
+	attrinfo[i].maxlimit = 50;
+	attrinfo[i].type = glow_eType_Double;
+	attrinfo[i++].size = sizeof( op->shadow_width);
+      }
+      if ( (name = growapi_translate( transtab, "ShadowContrast"))) {
+        strcpy( attrinfo[i].name, name);
+	attrinfo[i].value_p = &op->shadow_contrast;
+	attrinfo[i].type = glow_eType_Int;
+	attrinfo[i].minlimit = 1;
+	attrinfo[i].maxlimit = 3;
+	attrinfo[i++].size = sizeof( op->shadow_contrast);
+      }
+      if ( (name = growapi_translate( transtab, "GradientContrast"))) {
+        strcpy( attrinfo[i].name, name);
+	attrinfo[i].value_p = &op->gradient_contrast;
+	attrinfo[i].type = glow_eType_Int;
+	attrinfo[i].minlimit = -10;
+	attrinfo[i].maxlimit = 10;
+	attrinfo[i++].size = sizeof( op->gradient_contrast);
+      }
+      if ( (name = growapi_translate( transtab, "Gradient"))) {
+        strcpy( attrinfo[i].name, name);
+	attrinfo[i].value_p = &op->gradient;
+	attrinfo[i].type = glow_eType_Gradient;
+	attrinfo[i++].size = sizeof( op->gradient);
+      }
+      if ( (name = growapi_translate( transtab, "Relief"))) {
+        strcpy( attrinfo[i].name, name);
+	attrinfo[i].value_p = &op->relief;
+	attrinfo[i].type = glow_eType_Relief;
+	attrinfo[i++].size = sizeof( op->relief);
+      }
+      if ( (name = growapi_translate( transtab, "Sectors"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->sectors;
+	attrinfo[i].minlimit = 1;
+	attrinfo[i].maxlimit = 12;
+        attrinfo[i].type = glow_eType_Int;
+        attrinfo[i++].size = sizeof( op->sectors);
+      }
+      if ( (name = growapi_translate( transtab, "MinValue"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->min_value;
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->min_value);
+      }
+      if ( (name = growapi_translate( transtab, "MaxValue"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->max_value;
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->max_value);
+      }
+      for ( int j = 0; j < 12; j++) {
+	char tname[32];
+
+	sprintf( tname, "SectorColor%d", j+1);
+	if ( (name = growapi_translate( transtab, tname))) {
+	  strcpy( attrinfo[i].name, name);
+	  attrinfo[i].value_p = &op->sector_color[j];
+	  attrinfo[i].type = glow_eType_Color;
+	  attrinfo[i++].size = sizeof( op->sector_color[0]);
+	}
+      }
+      if ( (name = growapi_translate( transtab, "Dynamic"))) {
+        strcpy( attrinfo[i].name, name);
+        op->get_dynamic( &dynamic, &dynsize);
+        attrinfo[i].value_p = malloc( 1024);
+        if ( dynsize)
+          strncpy( (char *) attrinfo[i].value_p, dynamic, 1024);
+        else
+          strcpy( (char *) attrinfo[i].value_p, "");
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i].size = 1024;
+        attrinfo[i].multiline = 1;
+        attrinfo[i++].info_type = grow_eInfoType_Dynamic;
+      }
+      break;
+    }
+    case glow_eObjectType_GrowBarChart:
+    {
+      GrowBarChart *op = (GrowBarChart *)object;
+      char *name;
+      char *dynamic;
+      int  dynsize;
+
+      if ( (name = growapi_translate( transtab, "ShadowWidth"))) {
+        strcpy( attrinfo[i].name, name);
+	attrinfo[i].value_p = &op->shadow_width;
+	attrinfo[i].minlimit = 0;
+	attrinfo[i].maxlimit = 50;
+	attrinfo[i].type = glow_eType_Double;
+	attrinfo[i++].size = sizeof( op->shadow_width);
+      }
+      if ( (name = growapi_translate( transtab, "ShadowContrast"))) {
+        strcpy( attrinfo[i].name, name);
+	attrinfo[i].value_p = &op->shadow_contrast;
+	attrinfo[i].type = glow_eType_Int;
+	attrinfo[i].minlimit = 1;
+	attrinfo[i].maxlimit = 3;
+	attrinfo[i++].size = sizeof( op->shadow_contrast);
+      }
+      if ( (name = growapi_translate( transtab, "GradientContrast"))) {
+        strcpy( attrinfo[i].name, name);
+	attrinfo[i].value_p = &op->gradient_contrast;
+	attrinfo[i].type = glow_eType_Int;
+	attrinfo[i].minlimit = -10;
+	attrinfo[i].maxlimit = 10;
+	attrinfo[i++].size = sizeof( op->gradient_contrast);
+      }
+      if ( (name = growapi_translate( transtab, "Gradient"))) {
+        strcpy( attrinfo[i].name, name);
+	attrinfo[i].value_p = &op->gradient;
+	attrinfo[i].type = glow_eType_Gradient;
+	attrinfo[i++].size = sizeof( op->gradient);
+      }
+      if ( (name = growapi_translate( transtab, "Relief"))) {
+        strcpy( attrinfo[i].name, name);
+	attrinfo[i].value_p = &op->relief;
+	attrinfo[i].type = glow_eType_Relief;
+	attrinfo[i++].size = sizeof( op->relief);
+      }
+      if ( (name = growapi_translate( transtab, "Bars"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->bars;
+	attrinfo[i].minlimit = 1;
+	attrinfo[i].maxlimit = 200;
+        attrinfo[i].type = glow_eType_Int;
+        attrinfo[i++].size = sizeof( op->bars);
+      }
+      if ( (name = growapi_translate( transtab, "BarSegments"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->barsegments;
+	attrinfo[i].minlimit = 1;
+	attrinfo[i].maxlimit = 12;
+        attrinfo[i].type = glow_eType_Int;
+        attrinfo[i++].size = sizeof( op->barsegments);
+      }
+      if ( (name = growapi_translate( transtab, "MinValue"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->min_value;
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->min_value);
+      }
+      if ( (name = growapi_translate( transtab, "MaxValue"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->max_value;
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->max_value);
+      }
+      if ( (name = growapi_translate( transtab, "LineColor"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->line_color;
+	attrinfo[i].type = glow_eType_Color;
+        attrinfo[i++].size = sizeof( op->line_color);
+      }
+      if ( (name = growapi_translate( transtab, "HorizontalLines"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->horizontal_lines;
+        attrinfo[i].type = glow_eType_Int;
+        attrinfo[i++].size = sizeof( op->horizontal_lines);
+      }
+      if ( (name = growapi_translate( transtab, "VerticalLines"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->vertical_lines;
+        attrinfo[i].type = glow_eType_Int;
+        attrinfo[i++].size = sizeof( op->vertical_lines);
+      }
+      for ( int j = 0; j < 12; j++) {
+	char tname[32];
+
+	sprintf( tname, "BarColor%d", j+1);
+	if ( (name = growapi_translate( transtab, tname))) {
+	  strcpy( attrinfo[i].name, name);
+	  attrinfo[i].value_p = &op->bar_color[j];
+	  attrinfo[i].type = glow_eType_Color;
+	  attrinfo[i++].size = sizeof( op->bar_color[0]);
+	}
+      }
+      if ( (name = growapi_translate( transtab, "Dynamic"))) {
+        strcpy( attrinfo[i].name, name);
+        op->get_dynamic( &dynamic, &dynsize);
+        attrinfo[i].value_p = malloc( 1024);
+        if ( dynsize)
+          strncpy( (char *) attrinfo[i].value_p, dynamic, 1024);
+        else
+          strcpy( (char *) attrinfo[i].value_p, "");
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i].size = 1024;
+        attrinfo[i].multiline = 1;
+        attrinfo[i++].info_type = grow_eInfoType_Dynamic;
+      }
+      break;
+    }
     case glow_eObjectType_GrowNode:
     case glow_eObjectType_GrowGroup:
     {
@@ -3414,6 +3662,41 @@ void grow_UpdateObject(  grow_tCtx ctx, grow_tObject object,
       }
 
       ((GrowAxisArc *)object)->configure();
+      ((GrowAxisArc *)object)->zoom();
+      ((GrowAxisArc *)object)->nav_zoom();
+      ((GrowAxisArc *)object)->get_node_borders();
+      ((GrowAxisArc *)object)->draw( &ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
+      break;
+    case glow_eObjectType_GrowPie:
+      // Set changed dynamic
+      info_p = info;
+      while ( info_p->info_type != grow_eInfoType_End)
+      {
+        switch( info_p->info_type)
+        {
+          case grow_eInfoType_Dynamic:
+          {
+            char *dynamic;
+	    int  dynsize;
+
+            ((GrowAxisArc *)object)->get_dynamic( &dynamic, &dynsize);
+	    if ( strcmp( (char *) info_p->value_p, "") == 0 && !dynsize)
+              break;
+
+            if ( dynsize && strcmp( dynamic, (char *) info_p->value_p) != 0)
+              ((GrowAxisArc *)object)->set_dynamic( (char *)info_p->value_p,
+			strlen( (char *)info_p->value_p));
+            else if ( !dynsize)
+              ((GrowAxisArc *)object)->set_dynamic( (char *)info_p->value_p,
+			strlen( (char *)info_p->value_p));
+            break;
+          }
+          default:
+            ;
+        }
+        info_p++;
+      }
+
       ((GrowAxisArc *)object)->zoom();
       ((GrowAxisArc *)object)->nav_zoom();
       ((GrowAxisArc *)object)->get_node_borders();
@@ -4721,6 +5004,43 @@ void grow_SetXYCurveData( grow_tObject object, double *y_data, double *x_data, i
 			  int data_points)
 {
   ((GrowXYCurve *)object)->set_xy_data( y_data, x_data, curve_idx, data_points);
+}
+
+void grow_SetPieValues( grow_tObject object, double *values)
+{
+    ((GrowPie *)object)->set_values( values);
+}
+
+void grow_SetPieConf( grow_tObject object, int sector_num, double min_val, double max_val, glow_eDrawType *color)
+{
+  ((GrowPie *)object)->set_conf( sector_num, min_val, max_val, color);
+}
+
+void grow_GetPieConf( grow_tObject object, int *sector_num, double *min_val, double *max_val)
+{
+  ((GrowPie *)object)->get_conf( sector_num, min_val, max_val);
+}
+
+void grow_SetBarChartValues( grow_tObject object, 
+			     float *values1, float *values2, float *values3, float *values4, 
+			     float *values5, float *values6, float *values7, float *values8, 
+			     float *values9, float *values10, float *values11, float *values12)
+{
+    ((GrowBarChart *)object)->set_values( values1, values2, values3, values4, values5, values6, 
+					  values7, values8, values9, values10, values11, values12);
+}
+
+void grow_SetBarChartConf( grow_tObject object, int bar_num, int barsegment_num,  
+			   double min_val, double max_val, int vert_lines, int horiz_lines, 
+			   glow_eDrawType line_color, glow_eDrawType *color)
+{
+  ((GrowBarChart *)object)->set_conf( bar_num, barsegment_num, min_val, max_val, vert_lines, horiz_lines,
+				      line_color, color);
+}
+
+void grow_GetBarChartConf( grow_tObject object, int *bar_num, int *barsegment_num, double *min_val, double *max_val)
+{
+  ((GrowBarChart *)object)->get_conf( bar_num, barsegment_num, min_val, max_val);
 }
 
 int grow_GetObjectAnnotInfo( grow_tObject object, int num, int *text_size, glow_eDrawType *text_drawtype,
