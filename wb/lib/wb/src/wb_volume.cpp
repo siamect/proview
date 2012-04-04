@@ -731,7 +731,7 @@ pwr_tStatus wb_volume::triggAnteUnadopt(wb_object& father, wb_object& o)
   wb_cdrep *cdrep = m_vrep->merep()->cdrep(&sts, father.cid());
   if (EVEN(sts)) return sts;
 
-  cdrep->dbCallBack(&sts, ldh_eDbCallBack_AnteAdopt, &methodName, 0);
+  cdrep->dbCallBack(&sts, ldh_eDbCallBack_AnteUnadopt, &methodName, 0);
   delete cdrep;
   if (EVEN(sts)) return LDH__SUCCESS;
 
