@@ -181,7 +181,7 @@ GNU General Public License for more details.\n\n";
     /* get and parse the command */
 
     /* get input */
-    dcli_qio_set_attr( &cmd->chn);
+    dcli_qio_set_attr( &cmd->chn, 10);
     sts = dcli_get_input_command( &cmd->chn, "pwr> ", str, 
 		sizeof(str), cmd->recall_buf);
     dcli_qio_reset( &cmd->chn);
