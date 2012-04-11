@@ -774,7 +774,7 @@ int dcli_qio_assign( char *s, dcli_sChannel *chn)
       return 0;
     }
   }
-  sts = dcli_qio_set_attr( &chan);
+  sts = dcli_qio_set_attr( &chan, 10);
   *chn = (dcli_sChannel) chan;
   return 1;
 }
@@ -785,7 +785,7 @@ int dcli_qio_assign( char *s, dcli_sChannel *chn)
 
 /************************************************************************
 *
-* Name:	dcli_qio_set_attr( dcli_sChannel *chn)
+* Name:	dcli_qio_set_attr( dcli_sChannel *chn, int tmo)
 *
 * Type:	int
 *
@@ -795,7 +795,7 @@ int dcli_qio_assign( char *s, dcli_sChannel *chn)
 *
 * Description:	Set attributes to a tty
 *************************************************************************/
-int dcli_qio_set_attr( dcli_sChannel *chn)
+int dcli_qio_set_attr( dcli_sChannel *chn, int tmo)
 #if defined(OS_VMS) || defined(OS_ELN)
 {
   return DCLI__SUCCESS;
@@ -812,7 +812,7 @@ int dcli_qio_set_attr( dcli_sChannel *chn)
   if ( sts != 0) return 0;
 
   t.c_cc[VMIN] = 0;
-  t.c_cc[VTIME] = 10;
+  t.c_cc[VTIME] = tmo;
   t.c_lflag &= ~ICANON;
   t.c_lflag &= ~ECHO;
   /* t.c_iflag ...*/

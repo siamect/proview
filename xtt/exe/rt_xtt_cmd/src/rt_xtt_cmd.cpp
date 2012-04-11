@@ -1,4 +1,4 @@
-/** 
+/* 
  * Proview   Open Source Process Control.
  * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
@@ -32,65 +32,54 @@
  * the source code of Proview (the version used to produce the 
  * combined work), being distributed under the terms of the GNU 
  * General Public License plus this exception.
- **/
+ */
 
-#ifndef co_dcli_input_h
-#define co_dcli_input_h
+/* wb.cpp -- graphical editor */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
-/* co_dcli_input.h 
-   Command line input. */
+#include "pwr.h"
+#include "co_dcli.h"
 
-#define DCLI_OPT_NORECALL	1
-#define DCLI_OPT_NOEDIT		2
-#define DCLI_OPT_NOECHO		4
-#define DCLI_OPT_NOPFTAN	8
-#define DCLI_OPT_TIMEOUT	16
-#define DCLI_OPT_NOSCROLL	32
+int main( int argc, char *argv[])
+{
+  int i;
+  int found = 0;
+  char wmg[80];
+  pwr_tFileName file;
+  
+  if ( argc > 1) {
 
-#define DCLI_RECALL_MAX		30
+    for ( i = 1; i < argc; i++) {
+      if ( strcmp( argv[i], "-f") == 0) {
+	if ( i+1 >= argc) {
+	  printf( "rt_xtt_cmd: Syntax error\n");
+	  exit(0);
+	}
+	found = 1;
+	strcpy( wmg, argv[i+1]);
+	i++;
+      }
+    }
+  }
+  if ( !found) {
+    struct stat st;
 
-typedef struct {
-	int	first_command;
-	int	last_command;
-	char	command[DCLI_RECALL_MAX][200];
-	} dcli_sRecall;
+    strcpy( file, "$pwr_exe/rt_xtt_cmd_gtk");
+    dcli_translate_filename( file, file);
+    if ( stat( file, &st) == 0)
+      strcpy( wmg, "gtk");
+    else
+      strcpy( wmg, "motif");
+  }
 
-#if defined OS_ELN
-typedef unsigned long dcli_sChannel[4];
-#else
-typedef int dcli_sChannel;
-#endif
+  strcpy( file, argv[0]);
+  strcat( file, "_");
+  strcat( file, wmg);
 
-int	dcli_input_init( dcli_sChannel *chn, dcli_sRecall **recall_buf);
-int	dcli_input_end( dcli_sChannel *chn, dcli_sRecall *recall_buf);
-int	dcli_get_input_command( dcli_sChannel *chn, const char *prompt,char *cmd, 
-		int maxlen, dcli_sRecall *recall_buf);
-int	dcli_get_input_string( 	dcli_sChannel	*chn,
-				char		*out_string,
-				unsigned long	*out_terminator,
-				int		out_maxlen,
-				dcli_sRecall 	*recall,
-				unsigned long	option,
-				int		timeout,
-				int		(* timeout_func) (),
-				void		*timeout_arg,
-				const char     	*prompt);
-
-int dcli_qio_assign( char *s, dcli_sChannel *chn);
-int dcli_qio_set_attr( dcli_sChannel *chn, int tmo);
-int dcli_qio_reset( dcli_sChannel *chn);
-int dcli_qio_readw( dcli_sChannel *chn, char *buf, int len);
-int dcli_qio_read( dcli_sChannel *chn, int tmo, char *buf, int len);
-int dcli_qio_writew( dcli_sChannel *chn, char *buf, int len);
-int dcli_qio_write( dcli_sChannel *chn, int tmo, char *buf, int len);
-
-
-#ifdef __cplusplus
+  execvp( file, argv);
 }
-#endif
-
-#endif
