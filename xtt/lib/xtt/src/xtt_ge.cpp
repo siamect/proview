@@ -214,6 +214,14 @@ void XttGe::print()
   system(cmd);
 }
 
+void XttGe::export_image( char *filename)
+{
+  pwr_tFileName fname;
+
+  dcli_translate_filename( fname, filename);
+  graph->export_image( fname);
+}
+
 void XttGe::swap( int mode)
 {
   graph->swap( mode);

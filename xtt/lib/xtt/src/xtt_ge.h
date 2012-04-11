@@ -87,6 +87,7 @@ class XttGe {
 
   void message( char severity, const char *msg);
   void print();
+  void export_image( char *filename);
   int set_object_focus( const char *name, int empty);
   int set_folder_index( const char *name, int idx);
   int set_subwindow_source( const char *name, char *source, char *object);

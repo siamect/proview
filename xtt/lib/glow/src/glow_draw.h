@@ -138,7 +138,8 @@ class GlowDraw {
   virtual int create_buffer( GlowWind *w) {return 1;}
   virtual void delete_buffer( GlowWind *w) {}
   virtual void buffer_background( GlowWind *w) {}
-  virtual int print( char *filename, double x0, double x1, int end) { return 1;};
+  virtual int export_image( char *filename) { return 1;}
+  virtual int print( char *filename, double x0, double x1, int end) { return 1;}
   //virtual void set_clip( DrawWind *w, GC gc) {}
   //virtual void reset_clip( DrawWind *w, GC gc) {}
   

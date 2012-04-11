@@ -608,6 +608,9 @@ extern "C" {
   //! Print context to postscript file.
   void grow_Print( grow_tCtx ctx, char *filename, double x0, double x1, int end);
 
+  //! Print graph to image file.
+  int grow_ExportImage( grow_tCtx ctx, char *filename);
+
   //! Get user data of an object.
   /*!
     \param object	Object.

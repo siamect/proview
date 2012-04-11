@@ -193,7 +193,8 @@ typedef enum {
         ge_mOptions_FullScreen   = 1 << 0,
         ge_mOptions_Maximize     = 1 << 1,
         ge_mOptions_FullMaximize = 1 << 2,
-        ge_mOptions_Iconify      = 1 << 3
+        ge_mOptions_Iconify      = 1 << 3,
+        ge_mOptions_Invisible    = 1 << 4
 } ge_mOptions;
 
 typedef enum {

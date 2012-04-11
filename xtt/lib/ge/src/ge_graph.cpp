@@ -227,6 +227,14 @@ void Graph::print( char *filename)
 }
 
 //
+//  Export to image file
+//
+int Graph::export_image( char *filename)
+{
+  return grow_ExportImage( grow->ctx, filename);
+}
+
+//
 //  Rotate
 //
 void Graph::rotate( double angle)

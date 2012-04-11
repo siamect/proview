@@ -535,6 +535,10 @@ class Graph {
   /*! \param filename	Name of postscript file. */
   void print( char *filename);
 
+  //! Print to image file.
+  /*! \param filename	Name of image file. */
+  int export_image( char *filename);
+
   //! Zoom with a specifed zoom factor.
   /*! \param zoom_factor	Zoom factor. */
   void zoom( double zoom_factor);

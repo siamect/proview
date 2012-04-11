@@ -660,6 +660,11 @@ void GlowCtx::print( char *filename, double x0, double x1, int end)
   gdraw->print( filename, x0, x1, end);
 }
 
+int GlowCtx::export_image( char *filename) 
+{ 
+  return gdraw->export_image( filename);
+}
+
 void GlowCtx::draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int		i;

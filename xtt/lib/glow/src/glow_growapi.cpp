@@ -579,6 +579,11 @@ void grow_Print( grow_tCtx ctx, char *filename, double x0, double x1, int end)
   ctx->print( filename, x0, x1, end);
 }
 
+int grow_ExportImage( grow_tCtx ctx, char *filename)
+{
+  return ctx->export_image( filename);
+}
+
 void grow_GetUserData( grow_tObject object, void **user_data)
 {
   ((GlowArrayElem *)object)->get_user_data( user_data);

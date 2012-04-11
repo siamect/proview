@@ -228,6 +228,8 @@ static int	xnav_check_func(       	void		*client_data,
 					void		*client_flag);
 static int	xnav_print_func(       	void		*client_data,
 					void		*client_flag);
+static int	xnav_export_func(      	void		*client_data,
+					void		*client_flag);
 static int	xnav_sound_func(       	void		*client_data,
 					void		*client_flag);
 static int	xnav_write_func(       	void		*client_data,
@@ -258,7 +260,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			  "/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", 
 			  "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/PARENT", "/BYPASS", 
 			  "/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", "/FTYPE", 
-			  "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE", "/ICONIFY", ""}
+			  "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE", "/ICONIFY", "/HIDE", ""}
 		},
 		{
 			"CLOSE",
@@ -385,6 +387,13 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"PRINT",
 			&xnav_print_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/FILE", 
+			  "/OBJECT", "/CLASSGRAPH", "/INSTANCE",
+			  ""}
+		},
+		{
+			"EXPORT",
+			&xnav_export_func,
+			{ "dcli_arg1", "/GRAPH", "/NAME", "/FILE", 
 			  "/OBJECT", "/CLASSGRAPH", "/INSTANCE",
 			  ""}
 		},
@@ -2486,6 +2495,8 @@ static int	xnav_open_func(	void		*client_data,
       options |= ge_mOptions_FullMaximize;
     if ( ODD( dcli_get_qualifier( "/ICONIFY", 0, 0)))
       options |= ge_mOptions_Iconify;	   
+    if ( ODD( dcli_get_qualifier( "/HIDE", 0, 0)))
+      options |= ge_mOptions_Invisible;	   
 
 
     if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str)))) {
@@ -5606,6 +5617,130 @@ static int	xnav_print_func(void		*client_data,
     if ( xnav->appl.find( applist_eType_Graph, file_str, instance_p, 
 		  (void **) &gectx))
       gectx->print();
+    else {
+      xnav->message('E', "Graph not found");
+      return XNAV__HOLDCOMMAND;
+    }
+  }
+  else
+    xnav->message('E',"Syntax error");
+
+  return XNAV__SUCCESS;	
+}
+
+static int	xnav_export_func(void		*client_data,
+				 void		*client_flag)
+{
+  XNav *xnav = (XNav *)client_data;
+
+  char	arg1_str[80];
+  int	arg1_sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( cdh_NoCaseStrncmp( arg1_str, "GRAPH", strlen( arg1_str)) == 0)
+  {
+    pwr_tFileName file_str;
+    pwr_tFileName graph_str;
+    pwr_tAName instance_str;
+    XttGe *gectx;
+    pwr_tFileName fname;
+    int classgraph;
+    char *instance_p;
+    int sts;
+
+
+    if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str)))) {
+      instance_p = instance_str;
+    }
+    else
+      instance_p = 0;
+
+    if (  ODD( dcli_get_qualifier( "/CLASSGRAPH", 0, 0))) {
+      classgraph = 1;
+      if ( !instance_p) {
+	xnav->message('E', "Instance is missing");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      classgraph = 0;
+
+    if ( EVEN( dcli_get_qualifier( "/file", file_str, sizeof(file_str)))) {
+	xnav->message('E', "File is missing");
+	return XNAV__HOLDCOMMAND;
+    }
+
+    if ( ODD( dcli_get_qualifier( "/GRAPH", graph_str, sizeof(graph_str)))) {
+      // Get base class graphs on $pwr_exe
+      cdh_ToLower( graph_str, graph_str);
+    }
+    else if ( classgraph) {
+      // Get file from class of instance object
+      pwr_sAttrRef aref;
+      pwr_tObjName cname;
+      pwr_tCid cid;
+      pwr_tFileName found_file;
+	  
+      if ( !instance_p) {
+	xnav->message('E',"Enter instance object");
+	return XNAV__HOLDCOMMAND;
+      }
+
+      sts = gdh_NameToAttrref( pwr_cNObjid, instance_p, &aref);
+      if ( EVEN(sts)) {
+	xnav->message('E',"Instance object not found");
+	return XNAV__HOLDCOMMAND;
+      }
+      sts = gdh_GetAttrRefTid( &aref, &cid);
+      while ( ODD(sts)) {
+	// Try all superclasses
+	sts = gdh_ObjidToName( cdh_ClassIdToObjid( cid), cname, sizeof(cname),
+			       cdh_mName_object);
+	if ( EVEN(sts)) return sts;
+	
+	cdh_ToLower( cname, cname);
+	if ( cdh_CidToVid(cid) < cdh_cUserClassVolMin ||
+	     (cdh_CidToVid(cid) >= cdh_cManufactClassVolMin &&
+	      cdh_CidToVid(cid) <= cdh_cManufactClassVolMax)) {
+	  if ( cname[0] == '$')
+	    sprintf( graph_str, "pwr_c_%s", &cname[1]);
+	  else
+	    sprintf( graph_str, "pwr_c_%s", cname);
+	}
+	else
+	  strcpy( graph_str, cname);
+	
+	// Get base class graphs on $pwr_exe
+	cdh_ToLower( fname, graph_str);
+	if ( instance_p && 
+	     (cdh_NoCaseStrncmp( fname, "pwr_c_", 6) == 0 || 
+	      cdh_NoCaseStrncmp( fname, "pwr_c_", 6) == 0)) {
+	  strcpy( fname, "$pwr_exe/");
+	  strcat( fname, graph_str);
+	  strcpy( graph_str, fname);
+	}
+	else {
+	  strcpy( fname, "$pwrp_exe/");
+	  strcat( fname, graph_str);
+	  strcpy( graph_str, fname);
+	}
+	strcat( fname, ".pwg");
+	sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+	dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+	if ( ODD(sts)) break;
+	
+	sts = gdh_GetSuperClass( cid, &cid, aref.Objid);
+      }
+      if ( EVEN(sts)) {
+	xnav->message('E',"No classgraph found");
+	return XNAV__HOLDCOMMAND;
+      }      
+    }
+
+    if ( xnav->appl.find( applist_eType_Graph, graph_str, instance_p, 
+		  (void **) &gectx))
+      gectx->export_image( file_str);
     else {
       xnav->message('E', "Graph not found");
       return XNAV__HOLDCOMMAND;

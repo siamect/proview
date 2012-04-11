@@ -219,7 +219,7 @@ dcli_tCmdTable	graph_command_table[] = {
 		{
 			"EXPORT",
 			&graph_export_func,
-			{"dcli_arg1", "/SIGNATURE", ""}
+			{"dcli_arg1", "/SIGNATURE", "/FILE", ""}
 		},
 		{
 			"DISABLE",
@@ -1708,6 +1708,22 @@ static int	graph_export_func(	void		*client_data,
       else
         graph->message( 'I', "This graph is not java frame or applet");
     }
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "IMAGE", strlen( arg1_str)) == 0) {
+    char file_str[120];
+    int sts;
+    
+    if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
+      graph->message('E', "Enter file");
+      return GE__FILENAME;
+    }
+
+    sts = graph->export_image( file_str);
+    if ( EVEN(sts)) {
+      graph->message('E', "Export error");
+    }
+    else
+      graph->message('E', "Graph exported");
   }
   else
   {

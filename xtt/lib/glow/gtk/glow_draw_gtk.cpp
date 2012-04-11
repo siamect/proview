@@ -2556,6 +2556,32 @@ void GlowDrawGtk::buffer_background( DrawWind *wind)
   }
 }
 
+int GlowDrawGtk::export_image( char *filename)
+{
+  DrawWindGtk *w = &m_wind;
+  int window_width = ctx->mw.window_width;
+  int window_height = ctx->mw.window_height;
+  GdkPixbuf *image;
+  gboolean sts;
+
+  if ( w->double_buffer_on)
+    image = gdk_pixbuf_get_from_drawable( NULL, w->buffer, 0,
+					    0, 0, 0, 0, w->buffer_width,
+					    w->buffer_height);
+  else
+    image = gdk_pixbuf_get_from_drawable( NULL, w->window, 0,
+					    0, 0, 0, 0, window_width,
+					    window_height);
+  if ( !image)
+    return 0;
+
+  sts = gdk_pixbuf_save( image, filename, "png", NULL, "compression", "9", NULL);
+  if ( sts == 0)
+    return 0;
+
+  return 1;
+}
+
 int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
 {
 

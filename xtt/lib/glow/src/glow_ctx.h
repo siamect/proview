@@ -481,7 +481,10 @@ class GlowCtx {
   void 	print( double  ll_x, double  ll_y, double  ur_x, double  ur_y);
 
   //! Print to postscript.
-  void 	print( char *filename, double x0, double x1, int end);
+  void print( char *filename, double x0, double x1, int end);
+
+  //! Export to image file.
+  int export_image( char *filename);
 
   //! Redraw an area of the window.
   /*!
