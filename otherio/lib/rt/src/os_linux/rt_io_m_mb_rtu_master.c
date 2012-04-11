@@ -162,6 +162,15 @@ static pwr_tStatus IoAgentInit (
   case 19200:
     tty_attributes.c_cflag |= B19200;
     break;
+  case 38400:
+    tty_attributes.c_cflag |= B38400;
+    break;
+  case 57600:
+    tty_attributes.c_cflag |= B57600;
+    break;
+  case 115200:
+    tty_attributes.c_cflag |= B115200;
+    break;
   default:
     errh_Error( "Modbus RTU Master, unsupported speed, %s", ap->Name);
     tty_attributes.c_cflag |= B9600;
