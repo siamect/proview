@@ -272,11 +272,14 @@ int CnvPdfObj::print_image()
 #endif
   char c;
 	
-  // Try $pwr_doc/help/
-  strcpy( fname, "$pwr_doc/help/");
-  strcat( fname, text);
-  dcli_translate_filename( fname, fname);
-
+  if ( strchr( text, '/') != 0)
+    dcli_translate_filename( fname, text);
+  else {
+    // Try $pwr_doc/help/
+    strcpy( fname, "$pwr_doc/help/");
+    strcat( fname, text);
+    dcli_translate_filename( fname, fname);
+  }
   sts = cnv_get_image( fname, &image, &pixmap);
   if ( EVEN(sts)) {
     // Try $pwr_exe
@@ -912,11 +915,14 @@ int CnvToPdf::print_image( const char *filename)
   im_cnt++;
   x = pdf_cLeftMargin;
 
-  // Try $pwr_doc/help/
-  strcpy( fname, "$pwr_doc/help/");
-  strcat( fname, filename);
-  dcli_translate_filename( fname, fname);
-
+  if ( strchr( filename, '/') != 0)
+    dcli_translate_filename( fname, filename);
+  else {
+    // Try $pwr_doc/help/
+    strcpy( fname, "$pwr_doc/help/");
+    strcat( fname, filename);
+    dcli_translate_filename( fname, fname);
+  }
   sts = cnv_get_image( fname, &image, &pixmap);
   if ( EVEN(sts)) {
     // Try $pwr_exe

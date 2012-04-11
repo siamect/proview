@@ -271,9 +271,14 @@ void rt_report::create_report( pwr_sClass_Report *o)
   fout << "<topic> index <style> report" << endl;
 
   while ( fin.getline( line, sizeof(line))) {
-    replace_value( newline, sizeof(newline), line);
+    if ( cdh_NoCaseStrncmp( line, "<execute>", 9) == 0) {
+      parse( &line[9]);
+    }
+    else {
+      replace_value( newline, sizeof(newline), line);
 
-    fout << newline << endl;
+      fout << newline << endl;
+    }
   }  
 
   fout << "</topic>" << endl;
@@ -559,7 +564,7 @@ int rt_report::replace_value( char *out, unsigned int size,
 			       char *in)
 {
   char str[500] = "";
-  char str2[500];
+  char str2[500] = "";
   char valstr[500];
   char *s1, *s2, *t;
   unsigned long len;
@@ -873,6 +878,47 @@ void rt_report::format_cmd( char *cmd, int cmd_size,
       strncat( cmd, str, cmd_size);
     }
   }
+}
+
+int rt_report::parse( char *line) 
+{
+  char line_array[5][80];
+  int num;
+
+  num = dcli_parse( line, " 	", "",
+		    (char *) line_array, sizeof( line_array)/sizeof( line_array[0]),
+		    sizeof( line_array[0]), 0);
+
+  if ( num > 0 && cdh_NoCaseStrcmp( line_array[0], "print") == 0) {
+    if ( num > 1 && cdh_NoCaseStrcmp( line_array[1], "graph") == 0) {
+      ofstream fout;
+      pwr_tFileName fname;
+      pwr_tFileName tmpfile = "$pwrp_tmp/report_print.rtt_com";
+      pwr_tCmd cmd;
+
+      if ( num < 4)
+	return 0;
+
+      dcli_translate_filename( fname, tmpfile);
+      fout.open( fname);
+      if ( !fout)
+	return 0;
+      
+      fout << "open graph /hide " << line_array[2] << endl;
+      fout << "export graph /graph=" << line_array[2] << " /file=\"" << line_array[3] << "\"" << endl;
+
+      sprintf( cmd, "rt_xtt_cmd -i -q  @%s", fname);
+      system( cmd);
+      sprintf( cmd, "rm %s", fname);
+      system( cmd);
+    }
+    else
+      return 0;
+  }
+  else 
+    return 0;
+
+  return 1;
 }
 
 int main()

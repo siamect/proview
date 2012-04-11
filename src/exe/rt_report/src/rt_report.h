@@ -80,6 +80,7 @@ class rt_report {
 		   const char *reportfile, const char *date);
   void periodic_scan();
   int periodic_check( pwr_sClass_Report *o);
+  int parse( char *line);
 
   double	scan_time;
   pwr_sClass_ReportConfig *conf;
