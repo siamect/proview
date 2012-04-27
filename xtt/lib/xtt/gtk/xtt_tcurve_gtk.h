@@ -34,64 +34,26 @@
  * General Public License plus this exception.
  */
 
-#ifndef xtt_trend_h
-#define xtt_trend_h
+#ifndef xtt_tcurve_gtk_h
+#define xtt_tcurve_gtk_h
 
-/* xtt_trend.h -- DsTrend curves */
+/* xtt_tcurve_gtk.h -- TCurve curves */
 
-#ifndef pwr_h
-# include "pwr.h"
+#ifndef xtt_tcurve_h
+# include "xtt_tcurve.h"
 #endif
 
-#ifndef ge_curve_h
-# include "ge_curve.h"
-#endif
-
-#define XTT_TREND_MAX 20
-
-class CoWow;
-class CoWowTimer;
-
-class XttTrend {
+class XttTCurveGtk : public XttTCurve {
  public:
-  void       *xnav;
-  int        trend_cnt;
-  GeCurveData *gcd;
-  GeCurve    *curve;
-  pwr_tRefId subid[XTT_TREND_MAX];
-  pwr_sClass_DsTrend *trend_p[XTT_TREND_MAX];
-  int        element_size[XTT_TREND_MAX];
-  pwr_eType  element_type[XTT_TREND_MAX];
-  int        interval[XTT_TREND_MAX];
-  pwr_tAName trend_name[XTT_TREND_MAX];
-  int        max_time;
-  int        min_interval;
-  int        min_interval_idx;
-  int        max_points;
-  pwr_tTid   trend_tid;
-  int	     update_time;
-  gdh_sCircBuffInfo cb_info[XTT_TREND_MAX];
-  CoWowTimer *timerid;
-  int        last_buffer[XTT_TREND_MAX];
-  int        last_next_index[XTT_TREND_MAX];
-  void       (*close_cb)( void *, XttTrend *);
-  void       (*help_cb)( void *, const char *);
-  void       (*command_cb)( void *, const char *);
-  CoWow	     *wow;
-
-  XttTrend( void *xn_parent_ctx,
-	    char *xn_name,
-	    pwr_sAttrRef *objid,
-	    pwr_sAttrRef *plotgroup,
-	    int *sts);
-  virtual ~XttTrend();
-  void pop();
-
-  static void trend_close_cb( void *ctx);
-  static void trend_help_cb( void *ctx);
-  static void trend_snapshot_cb( void *ctx);
-  static void trend_scan( void *data);
-
+  GtkWidget    	*parent_widget;		//!< Parent widget.
+  
+  XttTCurveGtk( void *xn_parent_ctx,
+		 GtkWidget *xn_parent_wid,
+		 const char *xn_name,
+		 GtkWidget **w,
+		 pwr_tAttrRef *xn_arefv,
+		 int *sts);
+  ~XttTCurveGtk();
 };
 
 #endif

@@ -2856,6 +2856,88 @@ int cdh_TypeToMaxStrSize( pwr_eType type, int attr_size, int attr_elements)
   return size;
 }
 
+int cdh_TypeToSize( pwr_eType type)
+{
+  int size;
+
+  switch( type) {
+  case pwr_eType_Boolean:
+    size = sizeof(pwr_tBoolean);
+    break;
+  case pwr_eType_Enum:
+    size = sizeof(pwr_tEnum);
+    break;
+  case pwr_eType_Mask:
+    size = sizeof(pwr_tMask);
+    break;
+  case pwr_eType_Status:
+  case pwr_eType_NetStatus:
+    size = sizeof(pwr_tStatus);
+    break;
+  case pwr_eType_Int64:
+  case pwr_eType_UInt64:
+    size = sizeof(pwr_tInt64);
+    break;
+  case pwr_eType_Int32:
+  case pwr_eType_UInt32:
+    size = sizeof(pwr_tInt32);
+    break;
+  case pwr_eType_Int16:
+  case pwr_eType_UInt16:
+    size = sizeof(pwr_tInt16);
+    break;
+  case pwr_eType_Int8:
+  case pwr_eType_UInt8:
+    size = sizeof(pwr_tInt8);
+    break;
+  case pwr_eType_Char:
+    size = sizeof(pwr_tChar);
+    break;
+  case pwr_eType_Float32:
+    size = sizeof(pwr_tFloat32);
+    break;
+  case pwr_eType_Float64:
+    size = sizeof(pwr_tFloat64);
+    break;
+  case pwr_eType_Time:
+    size = sizeof(pwr_tTime);
+    break;
+  case pwr_eType_DeltaTime:
+    size = sizeof(pwr_tDeltaTime);
+    break;
+  case pwr_eType_AttrRef:
+    size = sizeof(pwr_tAttrRef);
+    break;
+  case pwr_eType_TypeId:
+    size = sizeof(pwr_tTypeId);
+    break;
+  case pwr_eType_ClassId:
+    size = sizeof(pwr_tClassId);
+    break;
+  case pwr_eType_ObjectIx:
+    size = sizeof(pwr_tObjectIx);
+    break;
+  case pwr_eType_RefId:
+    size = sizeof(pwr_tRefId);
+    break;
+  case pwr_eType_CastId:
+    size = sizeof(pwr_tCastId);
+    break;
+  case pwr_eType_DisableAttr:
+    size = sizeof(pwr_tDisableAttr);
+    break;
+  case pwr_eType_Objid:
+    size = sizeof(pwr_tObjid);
+    break;
+  case pwr_eType_VolumeId:
+    size = sizeof(pwr_tVolumeId);
+    break;
+  default:
+    size = 0;
+  }
+  return size;
+}
+
 //! Convert string to valid object name.
 /*!
   Invalid characters in the string are replaced by '_'. If the first char is invalid

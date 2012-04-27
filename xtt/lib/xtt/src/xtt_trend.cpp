@@ -66,24 +66,25 @@ XttTrend::XttTrend( void *parent_ctx,
 		    pwr_sAttrRef *trend_list,
 		    pwr_sAttrRef *plotgroup,
 		    int *sts) :
-  xnav(parent_ctx), trend_cnt(0), close_cb(0), help_cb(0)
+  xnav(parent_ctx), trend_cnt(0), update_time(1000), close_cb(0), help_cb(0), command_cb(0)
 {
   pwr_sAttrRef *aref_list;
   pwr_sAttrRef *aref_p;
   pwr_sAttrRef plot_trends[XTT_TREND_MAX];
   pwr_sClass_PlotGroup plot;
-  pwr_tAName trend_name[XTT_TREND_MAX];
   pwr_tAName object_name[XTT_TREND_MAX];
   pwr_sClass_DsTrend tp[XTT_TREND_MAX];
   pwr_tAName plot_name;
   int i, j, k;
   int start_idx;
   int time;
+  pwr_tTid tid;
   int trend_buff_size = (int) sizeof( trend_p[0]->DataBuffer) /
                           sizeof( trend_p[0]->DataBuffer[0]);
     
   *sts = XNAV__SUCCESS;
 
+  memset( cb_info, 0, sizeof(cb_info));
 
   if ( trend_list) {
     // List of trend objects as input
@@ -107,122 +108,130 @@ XttTrend::XttTrend( void *parent_ctx,
     aref_list = plot_trends;
   }
 
-  // Get current status of the trend objects
-  i = 0;
-  aref_p = aref_list;
-  while ( cdh_ObjidIsNotNull( aref_p->Objid)) {
-    *sts = gdh_AttrrefToName( aref_p, trend_name[i], sizeof(trend_name[0]), 
-                cdh_mNName);
-    if (EVEN(*sts)) return;
-
-    *sts = gdh_GetObjectInfo( trend_name[i], &tp[i], sizeof(tp[0]));
+  for ( aref_p = aref_list; cdh_ObjidIsNotNull( aref_p->Objid); aref_p++) {
+    *sts = gdh_GetAttrRefTid( aref_p, &tid);
     if ( EVEN(*sts)) return;
 
-    *sts = gdh_AttrrefToName( &tp[i].DataName, object_name[i], 
-                sizeof(object_name[0]), cdh_mNName);
-    if (EVEN(*sts)) return;
-
-    i++;
-    aref_p++;
-  }
-  trend_cnt = i;
-
-  if ( trend_cnt == 0) {
-   *sts = XNAV__TRENDCONFIG;
-    return;
+    trend_tid = tid;
   }
 
-  // Calculate number of points
-  max_time = 0;
-  min_interval = 100000;
-  for ( i = 0; i < trend_cnt; i++) {
-    time = tp[i].Multiple * tp[i].ScanTime * tp[i].NoOfBuffers *
-           tp[i].NoOfSample;
-    if ( time > max_time)
-      max_time = time;
+  if ( trend_tid == pwr_cClass_DsTrend) {
+    // Get current status of the trend objects
+    i = 0;
+    aref_p = aref_list;
+    while ( cdh_ObjidIsNotNull( aref_p->Objid)) {
+      *sts = gdh_AttrrefToName( aref_p, trend_name[i], sizeof(trend_name[0]), 
+				cdh_mNName);
+      if (EVEN(*sts)) return;
+      
+      *sts = gdh_GetObjectInfo( trend_name[i], &tp[i], sizeof(tp[0]));
+      if ( EVEN(*sts)) return;
+      
+      *sts = gdh_AttrrefToName( &tp[i].DataName, object_name[i], 
+				sizeof(object_name[0]), cdh_mNName);
+      if (EVEN(*sts)) return;
 
-    if ( (int) (tp[i].Multiple * tp[i].ScanTime) < min_interval) {
-      min_interval = tp[i].Multiple * tp[i].ScanTime;
-      min_interval_idx = i;
+      i++;
+      aref_p++;
     }
-  }
+    trend_cnt = i;
 
-  if ( min_interval == 0) {
-   *sts = XNAV__TRENDCONFIG;
-    return;
-  }
-
-  max_points = max_time / min_interval;
-
-  for ( i = 0; i < trend_cnt; i++) {
-    interval[i] = tp[i].Multiple * tp[i].ScanTime / min_interval;
-  }
-
-  // Create data for time axis
-  gcd = new GeCurveData( curve_eDataType_DsTrend);
-  gcd->x_data[0] = (double *) malloc( 8 * max_points);
-  strcpy( gcd->x_name, "Time");
-  for ( j = 0; j < max_points; j++) {
-    gcd->x_data[0][j] = double( j * min_interval);
-  }
-  gcd->x_axis_type[0] = curve_eAxis_x;
-
-  for ( i = 0; i < trend_cnt; i++) {
-    gcd->y_data[i] = (double *) calloc( 1, 8 * max_points);
-
-    int write_buffer = (int) tp[i].WriteBuffer;
-    start_idx = write_buffer * trend_buff_size / 2
-              + int( tp[i].NextWriteIndex[write_buffer]);
-    if ( start_idx == 0) {
-      start_idx = tp[i].NoOfSample - 1 + trend_buff_size / 2;
-      write_buffer = 1;
+    if ( trend_cnt == 0) {
+      *sts = XNAV__TRENDCONFIG;
+      return;
     }
-    else if ( start_idx == trend_buff_size / 2) {
-      start_idx = tp[i].NoOfSample - 1;
-      write_buffer = 0;
-    }
-    else
-      start_idx--;
 
-    int idx = 0;
-    for ( j = start_idx; j >= write_buffer * trend_buff_size/2; j--) {
-      for ( k = 0; k < interval[i]; k++) {
-        gcd->y_data[i][idx] = tp[i].DataBuffer[j];
-        idx++;
+    // Calculate number of points
+    max_time = 0;
+    min_interval = 100000;
+    for ( i = 0; i < trend_cnt; i++) {
+      time = tp[i].Multiple * tp[i].ScanTime * tp[i].NoOfBuffers *
+	tp[i].NoOfSample;
+      if ( time > max_time)
+	max_time = time;
+      
+      if ( (int) (tp[i].Multiple * tp[i].ScanTime) < min_interval) {
+	min_interval = tp[i].Multiple * tp[i].ScanTime;
+	min_interval_idx = i;
       }
     }
-    for ( j = tp[i].NoOfSample - 1 + (!write_buffer) * trend_buff_size/2;
-          j >= (!write_buffer) * trend_buff_size/2; j--) {
-      for ( k = 0; k < interval[i]; k++) {
-        gcd->y_data[i][idx] = tp[i].DataBuffer[j];
-        idx++;
-      }
+
+    if ( min_interval == 0) {
+      *sts = XNAV__TRENDCONFIG;
+      return;
     }
-    if ( start_idx != (int) tp[i].NoOfSample - 1 + 
-                   write_buffer * trend_buff_size/2) {
-      for ( j = tp[i].NoOfSample - 1 + write_buffer * trend_buff_size/2; 
-            j > start_idx; j--) {
-        for ( k = 0; k < interval[i]; k++) {
-          gcd->y_data[i][idx] = tp[i].DataBuffer[j];
-          idx++;
-        }
-      }
-    }
-    last_buffer[i] = tp[i].WriteBuffer;
-    last_next_index[i] = tp[i].NextWriteIndex[last_buffer[i]];
-    gcd->y_axis_type[i] = curve_eAxis_y;
-  }
-
-  // Subscribe to object
-  for ( i = 0; i < trend_cnt; i++) {
-
-    *sts = gdh_RefObjectInfo( trend_name[i], (pwr_tAddress *)&trend_p[i], 
-                      &subid[i], sizeof(pwr_sClass_DsTrend));
-    if ( EVEN(*sts)) return;
-
-    strcpy( gcd->y_name[i], object_name[i]);
     
-    switch( trend_p[i]->DataType) {
+    max_points = max_time / min_interval;
+    
+    for ( i = 0; i < trend_cnt; i++) {
+      interval[i] = tp[i].Multiple * tp[i].ScanTime / min_interval;
+    }
+
+    // Create data for time axis
+    gcd = new GeCurveData( curve_eDataType_DsTrend);
+    gcd->x_data[0] = (double *) malloc( 8 * max_points);
+    strcpy( gcd->x_name, "Time");
+    for ( j = 0; j < max_points; j++) {
+      gcd->x_data[0][j] = double( j * min_interval);
+    }
+    gcd->x_axis_type[0] = curve_eAxis_x;
+    
+    for ( i = 0; i < trend_cnt; i++) {
+      gcd->y_data[i] = (double *) calloc( 1, 8 * max_points);
+      
+      int write_buffer = (int) tp[i].WriteBuffer;
+      start_idx = write_buffer * trend_buff_size / 2
+	+ int( tp[i].NextWriteIndex[write_buffer]);
+      if ( start_idx == 0) {
+	start_idx = tp[i].NoOfSample - 1 + trend_buff_size / 2;
+	write_buffer = 1;
+      }
+      else if ( start_idx == trend_buff_size / 2) {
+	start_idx = tp[i].NoOfSample - 1;
+	write_buffer = 0;
+      }
+      else
+	start_idx--;
+      
+      int idx = 0;
+      for ( j = start_idx; j >= write_buffer * trend_buff_size/2; j--) {
+	for ( k = 0; k < interval[i]; k++) {
+	  gcd->y_data[i][idx] = tp[i].DataBuffer[j];
+	  idx++;
+	}
+      }
+      for ( j = tp[i].NoOfSample - 1 + (!write_buffer) * trend_buff_size/2;
+	    j >= (!write_buffer) * trend_buff_size/2; j--) {
+	for ( k = 0; k < interval[i]; k++) {
+	  gcd->y_data[i][idx] = tp[i].DataBuffer[j];
+	  idx++;
+	}
+      }
+      if ( start_idx != (int) tp[i].NoOfSample - 1 + 
+	   write_buffer * trend_buff_size/2) {
+	for ( j = tp[i].NoOfSample - 1 + write_buffer * trend_buff_size/2; 
+	      j > start_idx; j--) {
+	  for ( k = 0; k < interval[i]; k++) {
+	    gcd->y_data[i][idx] = tp[i].DataBuffer[j];
+	    idx++;
+	  }
+	}
+      }
+      last_buffer[i] = tp[i].WriteBuffer;
+      last_next_index[i] = tp[i].NextWriteIndex[last_buffer[i]];
+      gcd->y_axis_type[i] = curve_eAxis_y;
+    }
+
+    // Subscribe to object
+    for ( i = 0; i < trend_cnt; i++) {
+      
+      *sts = gdh_RefObjectInfo( trend_name[i], (pwr_tAddress *)&trend_p[i], 
+				&subid[i], sizeof(pwr_sClass_DsTrend));
+      if ( EVEN(*sts)) return;
+      
+      strcpy( gcd->y_name[i], object_name[i]);
+      
+      switch( trend_p[i]->DataType) {
       case pwr_eType_Float32:
       case pwr_eType_Int32:
       case pwr_eType_UInt32:
@@ -243,31 +252,189 @@ XttTrend::XttTrend( void *parent_ctx,
         break;
       default:
         element_size[i] = 4;
+      }
+      gcd->rows[i] = max_points;
     }
-    gcd->rows[i] = max_points;
+    gcd->cols = trend_cnt;
+    gcd->x_reverse = 1;
+    gcd->get_borders();
+    gcd->get_default_axis();
+    gcd->select_color( 0);
+    
+    if ( !trend_list) {
+      // Use axis values from plotgroup object
+      for ( i = 0; i < trend_cnt; i++) {
+	if ( plot.YMinValue[i] != plot.YMaxValue[i])
+	  gcd->scale( gcd->y_axis_type[i], gcd->y_value_type[i], 
+		      plot.YMinValue[i],  plot.YMaxValue[i], 
+		      &gcd->y_min_value_axis[i], &gcd->y_max_value_axis[i], 
+		      &gcd->y_trend_lines[i], &gcd->y_axis_lines[i], &gcd->y_axis_linelongq[i], 
+		      &gcd->y_axis_valueq[i], gcd->y_format[i], 
+		      &gcd->y_axis_width[i], 1, 1);
+      }
+    }
   }
-  gcd->cols = trend_cnt;
-  gcd->x_reverse = 1;
-  gcd->get_borders();
-  gcd->get_default_axis();
-  gcd->select_color( 0);
+  else if ( trend_tid == pwr_cClass_DsTrendCurve) {
+    pwr_sClass_DsTrendCurve tcp[XTT_TREND_MAX];
+    unsigned int actual_data_size[XTT_TREND_MAX];
+    double fmin_interval;
+    int tcp_i;
+    
+    // Get current status of the trend objects
+    i = 0;
+    tcp_i = 0;
+    max_points = 0;    
 
-  if ( !trend_list) {
-    // Use axis values from plotgroup object
-    for ( i = 0; i < trend_cnt; i++) {
-      if ( plot.YMinValue[i] != plot.YMaxValue[i])
-        gcd->scale( gcd->y_axis_type[i], gcd->y_value_type[i], 
-          plot.YMinValue[i],  plot.YMaxValue[i], 
-          &gcd->y_min_value_axis[i], &gcd->y_max_value_axis[i], 
-          &gcd->y_trend_lines[i], &gcd->y_axis_lines[i], &gcd->y_axis_linelongq[i], 
-	  &gcd->y_axis_valueq[i], gcd->y_format[i], 
-          &gcd->y_axis_width[i], 1, 1);
+    for ( aref_p = aref_list; cdh_ObjidIsNotNull( aref_p->Objid); aref_p++) {
+      *sts = gdh_AttrrefToName( aref_p, trend_name[i], sizeof(trend_name[0]), 
+				cdh_mNName);
+      if (EVEN(*sts)) return;
+      
+      *sts = gdh_GetObjectInfo( trend_name[i], &tcp[tcp_i], sizeof(tcp[0]));
+      if ( EVEN(*sts)) return;
+      
+      for ( int j = 0; j < 10; j++) {
+	if ( cdh_ObjidIsNotNull( tcp[tcp_i].Attribute[j].Objid) &&
+	     cdh_ObjidIsNotNull( tcp[tcp_i].Buffers[j].Objid)) {
+	  *sts = gdh_AttrrefToName( &tcp[tcp_i].Buffers[j], object_name[i],
+				    sizeof(object_name[0]), cdh_mNName);
+	  if (EVEN(*sts)) return;
+
+	  *sts = gdh_AttrrefToName( &tcp[tcp_i].Attribute[j], object_name[i], 
+				    sizeof(object_name[0]), cdh_mNName);
+	  if (EVEN(*sts)) return;
+
+	  
+	  element_size[i] = cdh_TypeToSize( (pwr_eType)tcp[tcp_i].AttributeType[j]);
+	  element_type[i] = (pwr_eType)tcp[tcp_i].AttributeType[j];
+	  cb_info[i].resolution = tcp[tcp_i].DisplayResolution;
+	  if ( cb_info[i].resolution <= 0)
+	    cb_info[i].resolution = 1;
+	  cb_info[i].samples = tcp[tcp_i].DisplayTime / tcp[tcp_i].ScanTime / cb_info[i].resolution;
+	  cb_info[i].bufsize = cb_info[i].samples * element_size[i];
+	  cb_info[i].bufp = (char *) calloc( 1, cb_info[i].bufsize);
+	  cb_info[i].circ_aref = tcp[tcp_i].Buffers[j];
+	  *sts = gdh_GetCircBuffInfo( &cb_info[i], 1); 
+	  if ( EVEN(*sts))
+	    continue;
+
+	  actual_data_size[i] = cb_info[i].size;
+	  if ( actual_data_size[i] > cb_info[i].bufsize)
+	    printf( "** Sample size error !!!\n");
+
+	  i++;
+	}
+      }
+      if ( tcp_i == 0) {
+	update_time = tcp[0].DisplayUpdateTime * 1000;
+	fmin_interval = tcp[0].ScanTime;
+      }
+      tcp_i++;
     }
+    trend_cnt = i;
+
+    if ( trend_cnt == 0) {
+      *sts = XNAV__TRENDCONFIG;
+      return;
+    }
+
+    for ( i = 0; i < trend_cnt; i++) {
+      if ( (int)cb_info[i].samples > max_points)
+	max_points = cb_info[i].samples;
+    }
+
+    // Create data for time axis
+    gcd = new GeCurveData( curve_eDataType_DsTrend);
+    gcd->x_data[0] = (double *) malloc( 8 * max_points);
+    strcpy( gcd->x_name, "Time");
+    for ( j = 0; j < max_points; j++) {
+      gcd->x_data[0][j] = double( fmin_interval * j * tcp[0].DisplayResolution);
+    }
+    gcd->x_axis_type[0] = curve_eAxis_x;
+    
+    for ( i = 0; i < trend_cnt; i++) {
+      gcd->y_data[i] = (double *) calloc( 1, 8 * max_points);
+      
+      switch ( element_type[i]) {
+      case pwr_eType_Float32:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tFloat32 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tFloat32));
+	break;
+      case pwr_eType_Float64:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tFloat64 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tFloat64));
+	break;
+      case pwr_eType_Boolean:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tBoolean *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tBoolean));
+	break;
+      case pwr_eType_Int64:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tInt64 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tInt64));
+	break;
+      case pwr_eType_UInt64:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tUInt64 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tUInt64));
+	break;
+      case pwr_eType_Int32:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tInt32 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tInt32));
+	break;
+      case pwr_eType_UInt32:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tUInt32 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tUInt32));
+	break;
+      case pwr_eType_Int16:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tInt16 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tInt16));
+	break;
+      case pwr_eType_UInt16:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tUInt16 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tUInt16));
+	break;
+      case pwr_eType_Int8:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tInt8 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tInt8));
+	break;
+      case pwr_eType_UInt8:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tUInt8 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tUInt8));
+	break;
+      default: ;
+      }
+      
+      gcd->y_axis_type[i] = curve_eAxis_y;
+      strcpy( gcd->y_name[i], object_name[i]);      
+      gcd->rows[i] = max_points;
+    }
+
+    gcd->cols = trend_cnt;
+    gcd->x_reverse = 1;
+    gcd->get_borders();
+    gcd->get_default_axis();
+    gcd->select_color( 0);
+    
+    if ( !trend_list) {
+      // Use axis values from plotgroup object
+      for ( i = 0; i < trend_cnt; i++) {
+	if ( plot.YMinValue[i] != plot.YMaxValue[i])
+	  gcd->scale( gcd->y_axis_type[i], gcd->y_value_type[i], 
+		      plot.YMinValue[i],  plot.YMaxValue[i], 
+		      &gcd->y_min_value_axis[i], &gcd->y_max_value_axis[i], 
+		      &gcd->y_trend_lines[i], &gcd->y_axis_lines[i], &gcd->y_axis_linelongq[i], 
+		      &gcd->y_axis_valueq[i], gcd->y_format[i], 
+		      &gcd->y_axis_width[i], 1, 1);
+      }
+    }
+
   }
 }
 
 XttTrend::~XttTrend()
 {
+  for ( int i = 0; i < XTT_TREND_MAX; i++)
+    if ( cb_info[i].bufp)
+      free( cb_info[i].bufp);
 }
 
 void XttTrend::pop()
@@ -285,6 +452,17 @@ void XttTrend::trend_close_cb( void *ctx)
     delete trend;
 }
 
+void XttTrend::trend_snapshot_cb( void *ctx)
+{
+  XttTrend *trend = (XttTrend *) ctx;
+  pwr_tCmd cmd;
+
+  sprintf( cmd, "open tcurve %s", trend->trend_name[0]);
+
+  if ( trend->command_cb)
+    (trend->command_cb)( trend->xnav, cmd);
+}
+
 void XttTrend::trend_help_cb( void *ctx)
 {
   XttTrend *trend = (XttTrend *) ctx;
@@ -296,48 +474,118 @@ void XttTrend::trend_help_cb( void *ctx)
 void XttTrend::trend_scan( void *data)
 {
   XttTrend *trend = (XttTrend *)data;
-  int i, j, k;
-  int write_buffer;
-  int idx;
-  int values;
-  int trend_buff_size = (int) sizeof( trend->trend_p[0]->DataBuffer) /
-                          sizeof( trend->trend_p[0]->DataBuffer[0]);
+  int i, j, k;  
 
-  // Check if any new value
-  i = trend->min_interval_idx;
-  if ( trend->trend_p[i]->NextWriteIndex[trend->trend_p[i]->WriteBuffer] !=
-          trend->last_next_index[i]) {
-    values = trend->trend_p[i]->NextWriteIndex[trend->trend_p[i]->WriteBuffer]
-          - trend->last_next_index[i];
-    if ( values < 0)
-      values = values + trend->trend_p[i]->NoOfSample;
+  if ( trend->trend_tid == pwr_cClass_DsTrend) {
+    int write_buffer;
+    int idx;
+    int values;
+    int trend_buff_size = (int) sizeof( trend->trend_p[0]->DataBuffer) /
+      sizeof( trend->trend_p[0]->DataBuffer[0]);
 
-    trend->last_next_index[i] =
-      trend->trend_p[i]->NextWriteIndex[trend->trend_p[i]->WriteBuffer];
+    // Check if any new value
+    i = trend->min_interval_idx;
+    if ( trend->trend_p[i]->NextWriteIndex[trend->trend_p[i]->WriteBuffer] !=
+	 trend->last_next_index[i]) {
+      values = trend->trend_p[i]->NextWriteIndex[trend->trend_p[i]->WriteBuffer]
+	- trend->last_next_index[i];
+      if ( values < 0)
+	values = values + trend->trend_p[i]->NoOfSample;
 
-    for ( k = 0; k < values; k++) {
-      // Add new points
-      for ( i = 0; i < trend->trend_cnt; i++) {
-        // Shift data
-        for ( j = trend->max_points - 1; j > 0; j--)
-          trend->gcd->y_data[i][j] = trend->gcd->y_data[i][j-1];
-        // Insert new value
-        write_buffer = trend->trend_p[i]->WriteBuffer;
-        idx = write_buffer * trend_buff_size / 2
-	  + int( trend->trend_p[i]->NextWriteIndex[write_buffer]) - (values - 1 - k);
-        if ( idx == 0 || idx == trend_buff_size/2)
-          idx = trend->trend_p[i]->NoOfSample - 1 + (!write_buffer) *
-                 trend_buff_size/2;
-        else
-          idx--;
+      trend->last_next_index[i] =
+	trend->trend_p[i]->NextWriteIndex[trend->trend_p[i]->WriteBuffer];
 
-        trend->gcd->y_data[i][0] = trend->trend_p[i]->DataBuffer[idx];
+      for ( k = 0; k < values; k++) {
+	// Add new points
+	for ( i = 0; i < trend->trend_cnt; i++) {
+	  // Shift data
+	  for ( j = trend->max_points - 1; j > 0; j--)
+	    trend->gcd->y_data[i][j] = trend->gcd->y_data[i][j-1];
+	  // Insert new value
+	  write_buffer = trend->trend_p[i]->WriteBuffer;
+	  idx = write_buffer * trend_buff_size / 2
+	    + int( trend->trend_p[i]->NextWriteIndex[write_buffer]) - (values - 1 - k);
+	  if ( idx == 0 || idx == trend_buff_size/2)
+	    idx = trend->trend_p[i]->NoOfSample - 1 + (!write_buffer) *
+	      trend_buff_size/2;
+	  else
+	    idx--;
+	  
+	  trend->gcd->y_data[i][0] = trend->trend_p[i]->DataBuffer[idx];
+	}
+	trend->curve->points_added( 1);
       }
-      trend->curve->points_added();
-    }
+    }    
   }
+  else if ( trend->trend_tid == pwr_cClass_DsTrendCurve) {
+    pwr_tStatus sts;
+    unsigned int size;
 
-  trend->timerid->add( 1000, trend_scan, trend);
+    sts = gdh_UpdateCircBuffInfo( trend->cb_info, trend->trend_cnt);
+    if ( EVEN(sts)) return;
+
+    for ( i = 0; i < trend->trend_cnt; i++) {
+
+      size = trend->cb_info[i].size;
+      if ( size > 0) {
+ 
+	// Shift data
+	for ( j = trend->cb_info[i].samples - 1; j >= (int)size; j--)
+	  trend->gcd->y_data[i][j] = trend->gcd->y_data[i][j-size];
+	// Insert new value
+	switch ( trend->element_type[i]) {
+	case pwr_eType_Float64:
+	  for ( j = 0; j < (int)size; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tFloat64 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tFloat64));
+	  break;
+	case pwr_eType_Float32:
+	  for ( j = 0; j < (int)size; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tFloat32 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tFloat32));
+	  break;
+	case pwr_eType_Boolean:
+	  for ( j = 0; j < (int)size; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tBoolean *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tBoolean));
+	  break;
+	case pwr_eType_Int64:
+	  for ( j = 0; j < (int)size; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tInt64 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tInt64));
+	  break;
+	case pwr_eType_UInt64:
+	  for ( j = 0; j < (int)size; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tUInt64 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tUInt64));
+	  break;
+	case pwr_eType_Int32:
+	  for ( j = 0; j < (int)size; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tInt32 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tInt32));
+	  break;
+	case pwr_eType_UInt32:
+	  for ( j = 0; j < (int)size; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tUInt32 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tUInt32));
+	  break;
+	case pwr_eType_Int16:
+	  for ( j = 0; j < (int)size; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tInt16 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tInt16));
+	  break;
+	case pwr_eType_UInt16:
+	  for ( j = 0; j < (int)size; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tUInt16 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tUInt16));
+	  break;
+	case pwr_eType_Int8:
+	  for ( j = 0; j < (int)size; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tInt8 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tInt8));
+	  break;
+	case pwr_eType_UInt8:
+	  for ( j = 0; j < (int)size; j++)
+	    trend->gcd->y_data[i][j] = *(pwr_tUInt8 *)((char *)trend->cb_info[i].bufp + (size - j - 1) * sizeof(pwr_tUInt8));
+	  break;
+	default: ;
+	}
+      }
+    }
+    if ( size > 0)
+      trend->curve->points_added( size);
+  }
+  trend->timerid->add( trend->update_time, trend_scan, trend);
 }
 
 

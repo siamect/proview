@@ -2677,7 +2677,7 @@ extern "C" {
 
     Add the new value first in all the curves, and shift the other values one step forward.
   */
-  void grow_CurveAddPoints( grow_tObject object, glow_sCurveData *data);
+  void grow_CurveAddPoints( grow_tObject object, glow_sCurveData *data, unsigned int no_of_points);
 
   //! Get the group the specified object is a member of.
   /*!

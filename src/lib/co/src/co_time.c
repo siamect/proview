@@ -1308,6 +1308,20 @@ void time_Period( time_ePeriod period, pwr_tTime *from, pwr_tTime *to, pwr_tTime
   pwr_tTime current;
 
   switch ( period) {
+  case time_ePeriod_OneSecond:
+    if ( !center) {
+      time_Period( time_ePeriod_LastSecond, from, to, center, daybreak);
+      return;
+    }
+    time_PeriodSec( from, to, center, 1);
+    break;
+  case time_ePeriod_10Seconds:
+    if ( !center) {
+      time_Period( time_ePeriod_10Seconds, from, to, center, daybreak);
+      return;
+    }
+    time_PeriodSec( from, to, center, 10);
+    break;
   case time_ePeriod_OneMinute:
     if ( !center) {
       time_Period( time_ePeriod_LastMinute, from, to, center, daybreak);
@@ -1370,6 +1384,16 @@ void time_Period( time_ePeriod period, pwr_tTime *from, pwr_tTime *to, pwr_tTime
       from->tv_nsec = current.tv_sec;
       *to = current;
     }
+    break;
+  case time_ePeriod_LastSecond:
+    sts = time_GetTime( to);
+    from->tv_sec = to->tv_sec - 1;
+    from->tv_nsec = to->tv_nsec;
+    break;
+  case time_ePeriod_Last10Seconds:
+    sts = time_GetTime( to);
+    from->tv_sec = to->tv_sec - 10;
+    from->tv_nsec = to->tv_nsec;
     break;
   case time_ePeriod_LastMinute:
     sts = time_GetTime( to);
@@ -1479,6 +1503,24 @@ void time_PreviousPeriod( time_ePeriod period, pwr_tTime *prev_from, pwr_tTime *
 {
 
   switch ( period) {
+  case time_ePeriod_OneSecond:
+  case time_ePeriod_LastSecond:
+    *to = *from = *prev_from;
+    from->tv_sec -= 1;
+    if ( from->tv_sec < 0) {
+      from->tv_sec = 0;
+      to->tv_sec = 1;
+    }
+    break;
+  case time_ePeriod_10Seconds:
+  case time_ePeriod_Last10Seconds:
+    *to = *from = *prev_from;
+    from->tv_sec -= 10;
+    if ( from->tv_sec < 0) {
+      from->tv_sec = 0;
+      to->tv_sec = 10;
+    }
+    break;
   case time_ePeriod_OneMinute:
   case time_ePeriod_LastMinute:
     *to = *from = *prev_from;
@@ -1574,6 +1616,26 @@ void time_NextPeriod( time_ePeriod period, pwr_tTime *prev_from, pwr_tTime *prev
   sts = time_GetTime( &current);
 
   switch ( period) {
+  case time_ePeriod_OneSecond:
+  case time_ePeriod_LastSecond:
+    *to = *from = *prev_to;
+    to->tv_sec += 1;
+    if ( time_Acomp( &current, to) != 1) {
+      *to = current;
+      from->tv_sec = current.tv_sec - 1;
+      from->tv_nsec = current.tv_nsec;
+    }
+    break;
+  case time_ePeriod_10Seconds:
+  case time_ePeriod_Last10Seconds:
+    *to = *from = *prev_to;
+    to->tv_sec += 10;
+    if ( time_Acomp( &current, to) != 1) {
+      *to = current;
+      from->tv_sec = current.tv_sec - 10;
+      from->tv_nsec = current.tv_nsec;
+    }
+    break;
   case time_ePeriod_OneMinute:
   case time_ePeriod_LastMinute:
     *to = *from = *prev_to;
@@ -1671,6 +1733,14 @@ int time_PeriodZoomIn( time_ePeriod *period)
 {
   int changed = 1;
   switch( *period) {
+  case time_ePeriod_Last10Seconds:
+  case time_ePeriod_10Seconds:
+    *period = time_ePeriod_OneSecond;
+    break;
+  case time_ePeriod_LastMinute:
+  case time_ePeriod_OneMinute:
+    *period = time_ePeriod_10Seconds;
+    break;
   case time_ePeriod_Last10Minutes:
   case time_ePeriod_10Minutes:
     *period = time_ePeriod_OneMinute;
@@ -1712,6 +1782,14 @@ int time_PeriodZoomOut( time_ePeriod *period)
   int changed = 1;
 
   switch( *period) {
+  case time_ePeriod_OneSecond:
+  case time_ePeriod_LastSecond:
+    *period = time_ePeriod_10Seconds;
+    break;
+  case time_ePeriod_Last10Seconds:
+  case time_ePeriod_10Seconds:
+    *period = time_ePeriod_OneMinute;
+    break;
   case time_ePeriod_OneMinute:
   case time_ePeriod_LastMinute:
     *period = time_ePeriod_10Minutes;

@@ -539,6 +539,7 @@ class GrowPolyLine : public GlowPolyLine {
     is inserted in the first point. The x-value are kept intact.
   */
   void add_and_shift_y_value( double value);
+  void add_and_shift_y_values( double *values, unsigned int no_of_values);
 
   //! Add a new y-value for the first point for a filled curve, and shift the y-values one step forward.
   /*!
@@ -548,6 +549,7 @@ class GrowPolyLine : public GlowPolyLine {
     is inserted in the first point. The x-value are kept intact.
   */
   void add_and_shift_y_value_filled( double value);
+  void add_and_shift_y_values_filled( double *values, unsigned int no_of_values);
 
   void get_ctx( void **c) { *c = (void *)ctx;}; 	//!< Should be replace by get_ctx() !!
 

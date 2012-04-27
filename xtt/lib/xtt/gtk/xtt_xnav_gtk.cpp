@@ -79,6 +79,7 @@ typedef void *Widget;
 #include "xtt_block_gtk.h"
 #include "xtt_trend_gtk.h"
 #include "xtt_sevhist_gtk.h"
+#include "xtt_tcurve_gtk.h"
 #include "xtt_fast_gtk.h"
 #include "xtt_xattone_gtk.h"
 #include "xtt_clog_gtk.h"
@@ -254,6 +255,13 @@ XttSevHist *XNavGtk::xttsevhist_new( char *name, pwr_tOid *oidv, pwr_tOName *ana
   GtkWidget *w;
 
   return new XttSevHistGtk( this, parent_wid, name, &w, oidv, anamev, onamev, sevhistobjectv, scctx, sts);
+}
+
+XttTCurve *XNavGtk::xtttcurve_new( char *name, pwr_tAttrRef *arefv, pwr_tStatus *sts)
+{
+  GtkWidget *w;
+
+  return new XttTCurveGtk( this, parent_wid, name, &w, arefv, sts);
 }
 
 XttFast *XNavGtk::xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts)

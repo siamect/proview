@@ -369,11 +369,13 @@ void Xtt::activate_opengraph()
   if ( cdh_tidIsCid( classid)) {
     switch ( classid) {
     case pwr_cClass_DsTrend:
+    case pwr_cClass_DsTrendCurve:
       // Open trend
       sprintf( cmd, "open trend /name=%s /title=\"%s\"", vname, name);
       xnav->command( cmd);
       return;
     case pwr_cClass_DsFast:
+    case pwr_cClass_DsFastCurve:
       // Open fast
       sprintf( cmd, "open fast /name=%s /title=\"%s\"", vname, name);
       xnav->command( cmd);
@@ -398,11 +400,13 @@ void Xtt::activate_opengraph()
 
 	switch ( classid) {
 	case pwr_cClass_DsTrend:
+	case pwr_cClass_DsTrendCurve:
 	  // Open trend
 	  sprintf( cmd, "open trend /name=%s /title=\"%s\"", vname, name);
 	  xnav->command( cmd);
 	  return;
 	case pwr_cClass_DsFast:
+	case pwr_cClass_DsFastCurve:
 	  // Open fast
 	  sprintf( cmd, "open fast /name=%s /title=\"%s\"", vname, name);
 	  xnav->command( cmd);

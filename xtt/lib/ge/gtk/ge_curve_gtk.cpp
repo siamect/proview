@@ -73,6 +73,8 @@ typedef struct {
 } ge_sTimeComboText;
 
 ge_sTimeComboText curve_timecombo_text[] = {
+  {"One Second", time_ePeriod_OneSecond},
+  {"10 Seconds", time_ePeriod_10Seconds},
   {"One Minute", time_ePeriod_OneMinute},
   {"10 Minutes", time_ePeriod_10Minutes},
   {"One Hour", time_ePeriod_OneHour},
@@ -308,6 +310,13 @@ void GeCurveGtk::activate_xlimits( GtkWidget *w, gpointer data)
   curve->open_minmax(0);
 }
 
+void GeCurveGtk::activate_snapshot( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  curve->activate_snapshot();
+}
+
 void GeCurveGtk::activate_export( GtkWidget *w, gpointer data)
 {
   GeCurve *curve = (GeCurve *)data;
@@ -445,6 +454,11 @@ void GeCurveGtk::enable_timebox()
 void GeCurveGtk::enable_export()
 {
   g_object_set( menu_export, "visible", TRUE, NULL);
+}
+
+void GeCurveGtk::enable_snapshot()
+{
+  g_object_set( menu_snapshot, "visible", TRUE, NULL);
 }
 
 void GeCurveGtk::pop()
@@ -674,6 +688,11 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   menu_export = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Export"));
   g_signal_connect(menu_export, "activate", G_CALLBACK(activate_export), this);
 
+  menu_snapshot = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Snapshot"));
+  g_signal_connect(menu_snapshot, "activate", G_CALLBACK(activate_snapshot), this);
+  gtk_widget_add_accelerator( menu_snapshot, "activate", accel_g,'n', 
+			      GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
+
   GtkWidget *file_close = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Close"));
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(file_close), 
 				 gtk_image_new_from_stock( "gtk-close", GTK_ICON_SIZE_MENU));
@@ -684,6 +703,7 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_refresh);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), menu_snapshot);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), menu_export);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
@@ -962,6 +982,7 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   gtk_paned_set_position( GTK_PANED(vpaned1), names_height);
   gtk_paned_set_position( GTK_PANED(vpaned2), window_height - names_height - nav_height - 50);
   g_object_set( sea_timebox, "visible", FALSE, NULL);
+  g_object_set( menu_snapshot, "visible", FALSE, NULL);
   g_object_set( menu_export, "visible", FALSE, NULL);
 
   wow = new CoWowGtk( toplevel);

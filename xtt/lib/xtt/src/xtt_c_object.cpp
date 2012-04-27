@@ -295,7 +295,9 @@ static pwr_tStatus OpenTrend( xmenu_sMenuCall *ip)
   sts = gdh_GetAttrRefTid( objar, &classid);
   if ( EVEN(sts)) return sts;
 
-  if ( classid == pwr_cClass_DsTrend || classid == pwr_cClass_PlotGroup) {
+  if ( classid == pwr_cClass_DsTrend || 
+       classid == pwr_cClass_DsTrendCurve ||
+       classid == pwr_cClass_PlotGroup) {
     sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
 			cdh_mName_volumeStrict);
     if ( EVEN(sts)) return sts;
@@ -317,7 +319,9 @@ static pwr_tStatus OpenTrend( xmenu_sMenuCall *ip)
     // Default XttGraph found
     sts = gdh_GetAttrRefTid( &deftrend, &classid);
     if ( ODD(sts) &&
-         (classid == pwr_cClass_DsTrend || classid == pwr_cClass_PlotGroup)) {
+         (classid == pwr_cClass_DsTrend || 
+	  classid == pwr_cClass_DsTrendCurve || 
+	  classid == pwr_cClass_PlotGroup)) {
 
       sts = gdh_AttrrefToName( &deftrend, name, sizeof(name),
 			cdh_mName_volumeStrict);
@@ -340,7 +344,8 @@ static pwr_tStatus OpenTrend( xmenu_sMenuCall *ip)
     sts = gdh_GetObjectClass( child, &classid);
     if ( EVEN(sts)) return sts;
     
-    if ( classid == pwr_cClass_DsTrend) {
+    if ( classid == pwr_cClass_DsTrend ||
+	 classid == pwr_cClass_DsTrendCurve) {
       found = 1;
       break;
     }      
@@ -380,6 +385,7 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
 
   switch ( cid) {
   case pwr_cClass_DsTrend:
+  case pwr_cClass_DsTrendCurve:
     return XNAV__SUCCESS;
   case pwr_cClass_PlotGroup: {
     sts = gdh_AttrrefToName( objar, name, sizeof(name),
@@ -409,7 +415,9 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
     // Default XttGraph found
     sts = gdh_GetAttrRefTid( &deftrend, &classid);
     if ( ODD(sts) &&
-         (classid == pwr_cClass_DsTrend || classid == pwr_cClass_PlotGroup))
+         (classid == pwr_cClass_DsTrend || 
+	  classid == pwr_cClass_DsTrendCurve || 
+	  classid == pwr_cClass_PlotGroup))
       return XNAV__SUCCESS;
   }
 
@@ -425,7 +433,8 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
     sts = gdh_GetObjectClass( child, &classid);
     if ( EVEN(sts)) return sts;
 
-    if ( classid == pwr_cClass_DsTrend)
+    if ( classid == pwr_cClass_DsTrend ||
+	 classid == pwr_cClass_DsTrendCurve)
       return XNAV__SUCCESS;
 
     sts = gdh_GetNextSibling( child, &child);

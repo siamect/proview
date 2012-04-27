@@ -83,6 +83,7 @@
 #include "ge_curve.h"
 #include "xtt_trend.h"
 #include "xtt_sevhist.h"
+#include "xtt_tcurve.h"
 #include "xtt_fast.h"
 #include "xtt_xcrr.h"
 #include "xtt_menu.h"
@@ -169,7 +170,10 @@ static void xnav_op_map_cb( void *ctx);
 static int xnav_op_get_alarm_info_cb( void *xnav, evlist_sAlarmInfo *info);
 static void xnav_op_ack_last_cb( void *xnav, unsigned long type, unsigned long prio);
 static void xnav_trend_close_cb( void *ctx, XttTrend *trend);
+static void xnav_trend_command_cb( void *ctx, const char *key);
 static void xnav_trend_help_cb( void *ctx, const char *key);
+static void xnav_tcurve_close_cb( void *ctx, XttTCurve *trend);
+static void xnav_tcurve_help_cb( void *ctx, const char *key);
 static void xnav_sevhist_help_cb( void *ctx, const char *key);
 static int xnav_sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, char *oname);
 static int xnav_get_select_cb( void *ctx, pwr_tAttrRef *aref, int *is_attr);
@@ -3029,6 +3033,8 @@ static int	xnav_open_func(	void		*client_data,
       switch ( classid) {
         case pwr_cClass_DsTrend:
           break;
+        case pwr_cClass_DsTrendCurve:
+          break;
         case pwr_cClass_PlotGroup:
           plotgroup = aref_vect[i];
           plotgroup_found = 1;
@@ -3070,7 +3076,9 @@ static int	xnav_open_func(	void		*client_data,
           xnav->message('E',"Error in trend configuration");
         else {
           trend->close_cb = xnav_trend_close_cb;
+          trend->help_cb = xnav_trend_command_cb;
           trend->help_cb = xnav_trend_help_cb;
+          trend->command_cb = xnav_trend_command_cb;
           xnav->appl.insert( applist_eType_Trend, (void *)trend, &plotgroup, "",
 		   NULL);
         }
@@ -3087,6 +3095,7 @@ static int	xnav_open_func(	void		*client_data,
 	    xnav->message('E',"Error in trend configuration");
 	  else {
 	    trend->close_cb = xnav_trend_close_cb;
+	    trend->command_cb = xnav_trend_command_cb;
 	    trend->help_cb = xnav_trend_help_cb;
 	    xnav->appl.insert( applist_eType_Trend, (void *)trend, &aref_vect[0], "",
 			       NULL);
@@ -3096,7 +3105,8 @@ static int	xnav_open_func(	void		*client_data,
       else {
 	trend = xnav->xtttrend_new( title_str, aref_vect, 0, &sts);
 	if ( ODD(sts)) {
-	  trend->help_cb = xnav_trend_help_cb;
+	  trend->close_cb = xnav_trend_close_cb;
+	  trend->command_cb = xnav_trend_command_cb;
 	  trend->help_cb = xnav_trend_help_cb;
 	}
       }
@@ -3167,6 +3177,56 @@ static int	xnav_open_func(	void		*client_data,
     ctx->xnav = xnav;
     xnav->wow->CreateList( "History List", (char *)cname, sizeof(cname[0]), xnav_open_shist_cb, 
 			   xnav_open_shist_cancel_cb, ctx);
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "TCURVE", strlen( arg1_str)) == 0)
+  {
+    pwr_tAName name_str;
+    char *name_ptr;
+    pwr_tAttrRef aref_vect[2];
+    pwr_tStatus sts;
+    char title_str[80];
+
+    /* Get the name qualifier */
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
+      if ( name_str[0] != '/')
+        /* Assume that this is the namestring */
+        name_ptr = name_str;
+      else {
+        xnav->message('E', "Syntax error");
+        return XNAV__HOLDCOMMAND; 	
+      } 
+    }
+    else {
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
+        name_ptr = name_str;
+      else {
+        /* Get the selected object */
+        sts = xnav->get_current_aref( &aref_vect[0], name_str, 
+	  sizeof( name_str), cdh_mName_path | cdh_mName_object | cdh_mName_attribute);
+        if ( EVEN(sts)) {
+          xnav->message('E', "Enter name or select an object");
+          return XNAV__SUCCESS;
+        }
+        name_ptr = name_str;
+      }
+    }
+    
+    if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str)))) {
+      strcpy( title_str, "Trend");
+    }
+
+    memset( aref_vect, 0, sizeof(aref_vect));
+    sts = gdh_NameToAttrref( pwr_cNObjid, name_str, &aref_vect[0]);
+    if (EVEN(sts)) {
+      xnav->message('E', "Object not found");
+      return XNAV__HOLDCOMMAND;
+    }
+    XttTCurve *tcurve = xnav->xtttcurve_new( title_str, aref_vect, &sts);
+    if ( ODD(sts)) {
+      tcurve->close_cb = xnav_tcurve_close_cb;
+      tcurve->help_cb = xnav_tcurve_help_cb;
+    }
+    return XNAV__SUCCESS;
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "HISTORY", strlen( arg1_str)) == 0)
   {
@@ -3909,6 +3969,7 @@ static int	xnav_close_func(	void		*client_data,
     switch ( classid) {
       case pwr_cClass_PlotGroup:
       case pwr_cClass_DsTrend:
+      case pwr_cClass_DsTrendCurve:
         plotgroup_found = 1;
         break;
       default:
@@ -4150,7 +4211,35 @@ static void xnav_trend_close_cb( void *ctx, XttTrend *trend)
   delete trend;
 }
 
+static void xnav_trend_command_cb( void *ctx, const char *cmd)
+{
+  XNav *xnav = (XNav *) ctx;
+
+  xnav->command( (char *)cmd);
+}
+
 static void xnav_trend_help_cb( void *ctx, const char *key)
+{
+  XNav *xnav = (XNav *) ctx;
+
+  int	sts;
+
+  sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Base, NULL, 0);
+  if ( EVEN(sts))
+    xnav->message( 'E', "Unable to find topic");
+  else
+    xnav->message( ' ', null_str);
+}
+
+static void xnav_tcurve_close_cb( void *ctx, XttTCurve *trend)
+{
+  XNav *xnav = (XNav *) ctx;
+
+  xnav->appl.remove( (void *)trend);
+  delete trend;
+}
+
+static void xnav_tcurve_help_cb( void *ctx, const char *key)
 {
   XNav *xnav = (XNav *) ctx;
 
@@ -7893,6 +7982,7 @@ static void xnav_show_objectlist_cb( void *ctx, char *text)
   
   switch ( cid) {
   case pwr_cClass_DsTrend:
+  case pwr_cClass_DsTrendCurve:
     sprintf( cmd, "open trend/name=%s/title=\"%s\"", text, text);
     break;
   case pwr_cClass_DsFastCurve:

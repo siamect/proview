@@ -80,6 +80,12 @@ void GeCurve::activate_configure()
   configure_axes();
 }
 
+void GeCurve::activate_snapshot()
+{
+  if ( snapshot_cb)
+    (snapshot_cb)( parent_ctx);
+}
+
 void GeCurve::activate_export()
 {
   double ll_x, ll_y, ur_x, ur_y;
@@ -1168,7 +1174,7 @@ void GeCurve::redraw()
   grow_Redraw( growcurve_ctx);
 }
 
-void GeCurve::points_added()
+void GeCurve::points_added( unsigned int no_of_points)
 {
   int i, idx;
   glow_sCurveData gcd;
@@ -1217,7 +1223,7 @@ void GeCurve::points_added()
   gcd.rows[0] = max_index - min_index + 1;
   gcd.x_reverse = cd->x_reverse;
 
-  grow_CurveAddPoints( curve_object, &gcd);
+  grow_CurveAddPoints( curve_object, &gcd, no_of_points);
 
   // Simulate cursormotion and slidermoved event to update markvalues
   glow_sEvent e;
@@ -1372,7 +1378,7 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
   border_bright(glow_eDrawType_Color22),
   cd(0), axis_window_width(0), auto_refresh(1), axis_displayed(1),
   minmax_idx(0), close_cb(0), help_cb(0), increase_period_cb(0), decrease_period_cb(0), reload_cb(0),
-  prev_period_cb(0), next_period_cb(0), add_cb(0), remove_cb(0), export_cb(0),
+  prev_period_cb(0), next_period_cb(0), add_cb(0), remove_cb(0), export_cb(0), snapshot_cb(0),
   initial_right_position(pos_right), last_cursor_x(0), last_mark1_x(0), last_mark2_x(0),
   deferred_configure_axes(0), center_from_window(0)
 {

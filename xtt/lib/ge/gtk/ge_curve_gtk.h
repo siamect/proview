@@ -64,6 +64,7 @@ class GeCurveGtk : public GeCurve {
     GtkWidget   *minmax_widget;
     GtkWidget   *minmax_textmin_widget;
     GtkWidget   *minmax_textmax_widget;
+    GtkWidget   *menu_snapshot;
     GtkWidget   *menu_export;
     GtkWidget   *export_widget;
     GtkWidget   *export_attrcombo_widget;
@@ -89,6 +90,7 @@ class GeCurveGtk : public GeCurve {
     void set_inputfocus();
     void enable_timebox();
     void enable_export();
+    void enable_snapshot();
     void set_times( pwr_tTime *from, pwr_tTime *to);
     void set_times_sensitivity( int sensitive);
     pwr_tStatus get_times( pwr_tTime *from, pwr_tTime *to);
@@ -100,6 +102,7 @@ class GeCurveGtk : public GeCurve {
     static void activate_exit( GtkWidget *w, gpointer data);
     static void activate_configure( GtkWidget *w, gpointer data);
     static void activate_print( GtkWidget *w, gpointer data);
+    static void activate_snapshot( GtkWidget *w, gpointer data);
     static void activate_export( GtkWidget *w, gpointer data);
     static void activate_zoomin( GtkWidget *w, gpointer data);
     static void activate_zoomout( GtkWidget *w, gpointer data);

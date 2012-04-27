@@ -96,7 +96,7 @@ class GrowCurve : public GrowTrend {
 
     Add the new value first in all the curves, and shift the other values one step forward.
   */
-  void add_points( glow_sCurveData *data);
+  void add_points( glow_sCurveData *data, unsigned int no_of_points);
 };
 
 

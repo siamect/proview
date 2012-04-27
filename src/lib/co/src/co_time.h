@@ -95,6 +95,8 @@ typedef enum {
 typedef enum {
   time_ePeriod_,
   time_ePeriod_UserDefined,
+  time_ePeriod_OneSecond,
+  time_ePeriod_10Seconds,
   time_ePeriod_OneMinute,
   time_ePeriod_10Minutes,
   time_ePeriod_OneHour,
@@ -102,6 +104,8 @@ typedef enum {
   time_ePeriod_OneWeek,
   time_ePeriod_OneMonth,
   time_ePeriod_OneYear,
+  time_ePeriod_LastSecond,
+  time_ePeriod_Last10Seconds,
   time_ePeriod_LastMinute,
   time_ePeriod_Last10Minutes,
   time_ePeriod_LastHour,

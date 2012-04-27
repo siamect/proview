@@ -1396,6 +1396,20 @@ void GrowPolyLine::add_and_shift_y_value( double value)
   nav_zoom();
 }
 
+void GrowPolyLine::add_and_shift_y_values( double *values, unsigned int no_of_values)
+{
+  if ( !no_of_values)
+    return;
+
+  for ( unsigned int i = a_points.size() - 1; i >= no_of_values; i--)
+    ((GlowPoint *)a_points[i])->y = ((GlowPoint *)a_points[i-no_of_values])->y;
+  
+  for ( unsigned int i = 0; i < no_of_values; i++) 
+    ((GlowPoint *)a_points[i])->y = *(values + i);
+  zoom();
+  nav_zoom();
+}
+
 void GrowPolyLine::add_and_shift_y_value_filled( double value)
 {
   for ( int i = a_points.size() - 2; i > 1; i--)
@@ -1403,6 +1417,20 @@ void GrowPolyLine::add_and_shift_y_value_filled( double value)
     ((GlowPoint *)a_points[i])->y = ((GlowPoint *)a_points[i-1])->y;
   }
   ((GlowPoint *)a_points[1])->y = value;
+  zoom();
+  nav_zoom();
+}
+
+void GrowPolyLine::add_and_shift_y_values_filled( double *values, unsigned int no_of_values)
+{
+  if ( !no_of_values)
+    return;
+
+  for ( unsigned int i = a_points.size() - 2; i >= no_of_values + 1; i--)
+    ((GlowPoint *)a_points[i])->y = ((GlowPoint *)a_points[i-no_of_values])->y;
+
+  for ( unsigned int i = 0; i < no_of_values; i++)
+    ((GlowPoint *)a_points[i+1])->y = *(values + i);
   zoom();
   nav_zoom();
 }

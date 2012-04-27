@@ -4786,9 +4786,9 @@ void grow_CurveConfigure( grow_tObject object, glow_sCurveData *data)
   ((GrowCurve *)object)->configure_curves( data);
 }
 
-void grow_CurveAddPoints( grow_tObject object, glow_sCurveData *data)
+void grow_CurveAddPoints( grow_tObject object, glow_sCurveData *data, unsigned int no_of_points)
 {
-  ((GrowCurve *)object)->add_points( data);
+  ((GrowCurve *)object)->add_points( data, no_of_points);
 }
 
 int grow_GetObjectGroup( grow_tCtx ctx, grow_tObject object, 

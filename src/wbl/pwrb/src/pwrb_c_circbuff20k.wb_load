@@ -33,62 +33,55 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_dstrendconf.wb_load -- Defines the class DsTrendConf.
+!  pwrb_c_circbuff10k.wb_load -- Defines the class CircBuff10k.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  @Group Servers,NodeConfiguration
-!  @Summary Configuration of DsTrend process
-!  Specifies attributes of a single DsTrend job.
-!  
-!  In every node where trend graphs shall be stored there
-!  is a need for a DsTrend job which is searching through
-!  the local DsTrend objects.
-!  @image orm_en1-71.gif
-!  DsTrend Job with Matching Objects 
-!  
-! @b Hints
-!  Because a DsTrend job default is loaded to each OpenVMS
-!  node it is suitable to configure DsTrendConf object on
-!  this nodes. The DsTrendConf objects are placed below
-!  the $Node objects.
-!  
-!  If a Ds_Trend job is loaded to a node that has no
-!  DsTrendConf object, it will execute with 1 Hz.
-!
-! @b Object graph
-!  @image orm_dstrendconf_og.gif
-!  
-! @b See Also
-!  @classlink DsTrend pwrb_dstrend.html
+!  @Summary Circular buffer with buffer size 20kB
+!  Circular buffer with buffer size 20kB.
 !*/
-  Object DsTrendConf $ClassDef 109 
+  Object CircBuff20k $ClassDef 597
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 1
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "DsTrendConf"
+        Attr StructName = "CircBuff20k"
       EndBody
       !/**
-      !  The scanning period, in seconds, of the DsTrend job. 
-      !  1 <= ScanTime <= 3600.
-      !  The ScanTime attribute in every DsTrend object
-      !  belonging to the same same node as the DsTrendConf are
-      !  assigned the value of the attribute!
+      !  Buffer header.
       !*/
-      Object ScanTime $Attribute 1 
+      Object Head $Attribute 1 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrb:Class-CircBuffHeader"
+          Attr Flags |= PWR_MASK_CLASS
+        EndBody
+      EndObject
+      !/**
+      !  Data buffer.
+      !*/
+      Object Data $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Elements = 5000
         EndBody
       EndObject
     EndObject
-    Object Template DsTrendConf
+    Object Template CircBuff20k
       Body RtBody
-        Attr ScanTime = 1
+	Attr Head.Size = 5000
+	Attr Head.ElementSize = 4
       EndBody
     EndObject
   EndObject
 EndSObject
+
+
+
+

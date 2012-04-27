@@ -38,6 +38,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
 #include <gtk/gtk.h>
 
 #include "pwr.h"
@@ -55,46 +56,56 @@
 #include "glow_growapi.h"
 #include "glow_curvectx.h"
 #include "glow_curveapi.h"
-
 #include "xtt_xnav.h"
-#include "xtt_trend_gtk.h"
+#include "xtt_tcurve_gtk.h"
 #include "ge_curve_gtk.h"
 
-XttTrendGtk::XttTrendGtk( void *parent_ctx,
-			  GtkWidget *parent_wid,
-			  char *name,
-			  GtkWidget **w,
-			  pwr_sAttrRef *trend_list,
-			  pwr_sAttrRef *plotgroup,
-			  int *sts) :
-  XttTrend( parent_ctx, name, trend_list, plotgroup, sts), parent_widget(parent_wid)
+
+XttTCurveGtk::XttTCurveGtk( void *parent_ctx,
+			      GtkWidget *parent_wid,
+			      const char *name,
+			      GtkWidget **w,
+			      pwr_tAttrRef *xn_arefv,
+			      int *sts) :
+  XttTCurve( parent_ctx, name, xn_arefv, sts), 
+  parent_widget(parent_wid)
 {
+  char title[250];
+  strncpy(title, name, sizeof(title));
+      
   if ( EVEN(*sts))
+    // Error from XttTCurve
     return;
+
   *sts = XNAV__SUCCESS;
 
-  curve = new GeCurveGtk( this, parent_widget, name, NULL, gcd, 1);
-  curve->close_cb = trend_close_cb;
-  curve->help_cb = trend_help_cb;
-  curve->snapshot_cb = trend_snapshot_cb;
-
-  if ( trend_tid == pwr_cClass_DsTrendCurve)
-    curve->enable_snapshot();
+  curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 1);
+  curve->close_cb = tcurve_close_cb;
+  curve->help_cb = tcurve_help_cb;
+  curve->increase_period_cb = tcurve_increase_period_cb;
+  curve->decrease_period_cb = tcurve_decrease_period_cb;
+  curve->reload_cb = tcurve_reload_cb;
+  curve->prev_period_cb = tcurve_prev_period_cb;
+  curve->next_period_cb = tcurve_next_period_cb;
+  curve->add_cb = tcurve_add_cb;
+  curve->remove_cb = tcurve_remove_cb;
+  curve->export_cb = tcurve_export_cb;
+  curve->enable_timebox();
+  curve->enable_export();
 
   wow = new CoWowGtk( parent_widget);
   timerid = wow->timer_new();
-  timerid->add( 1000, trend_scan, this);
+
+  timerid->add( 1000, tcurve_scan, this);
 }
 
-XttTrendGtk::~XttTrendGtk()
+XttTCurveGtk::~XttTCurveGtk()
 {
   timerid->remove();
 
-  for ( int i = 0; i < trend_cnt; i++) {
-    gdh_UnrefObjectInfo( subid[i]);
-  }
   delete curve;
 }
+
 
 
 

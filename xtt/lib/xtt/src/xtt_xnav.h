@@ -114,6 +114,7 @@ class XColWind;
 class Block;
 class XttTrend;
 class XttSevHist;
+class XttTCurve;
 class XttFast;
 class XAttOne;
 class GeCurve;
@@ -373,6 +374,7 @@ class XNav {
     virtual XttSevHist *xttsevhist_new( char *name, pwr_tOid *oidv, pwr_tOName *aname,
 					pwr_tOName *oname, bool *sevhistobjectv, sevcli_tCtx scctx, 
 					pwr_tStatus *sts) {return 0;}
+    virtual XttTCurve *xtttcurve_new( char *name, pwr_tAttrRef *arefv, pwr_tStatus *sts) {return 0;}
     virtual XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts) {return 0;}
     virtual XAttOne *xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
 			  pwr_tStatus *sts) {return 0;}

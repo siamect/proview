@@ -170,6 +170,7 @@ class GeCurve {
     void 	 (*add_cb)( void *);
     void 	 (*remove_cb)( void *);
     int 	 (*export_cb)( void *, pwr_tTime *, pwr_tTime *, int, int, char *);
+    void 	 (*snapshot_cb)( void *);
     int          initial_right_position;
     char	 title[300];
     double  	 last_cursor_x;
@@ -189,6 +190,7 @@ class GeCurve {
     virtual void open_export( pwr_tTime *from, pwr_tTime *to, int rows, char *filename) {}
     virtual void axis_set_width( int width) {}  
     virtual void enable_timebox() {}
+    virtual void enable_snapshot() {}
     virtual void enable_export() {}
     virtual void set_times( pwr_tTime *from, pwr_tTime *to) {}
     virtual void set_times_sensitivity( int sensitive) {}
@@ -201,7 +203,7 @@ class GeCurve {
     int configure_curves();
     int configure_axes();
     int config_names();
-    void points_added();
+    void points_added( unsigned int no_of_points);
     void set_title( char *str);
     void set_time( pwr_tTime time);
     void print( char *filename);
@@ -209,6 +211,7 @@ class GeCurve {
     void measure_window( double *ll_x, double *ll_y, double *ur_x, double *ur_y);
     void activate_exit();
     void activate_configure();
+    void activate_snapshot();
     void activate_export();
     void activate_print();
     void activate_background();

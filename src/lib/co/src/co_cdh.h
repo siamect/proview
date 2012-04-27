@@ -1060,6 +1060,8 @@ void cdh_SuppressSuperAll( char *out, char *in);
 
 int cdh_TypeToMaxStrSize( pwr_eType type, int attr_size, int attr_elements);
 
+int cdh_TypeToSize( pwr_eType type);
+
 char *cdh_StringToObjectName( char *t, const char *s);
 
 pwr_tStatus cdh_NextObjectName( char *t, const char *s);
