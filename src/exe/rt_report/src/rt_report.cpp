@@ -251,8 +251,9 @@ void rt_report::create_report( pwr_sClass_Report *o)
   pwr_tStatus sts;
   char address[40];
   pwr_tFileName cnvfile;
-  pwr_tFileName tmpfile = "$pwrp_tmp/report.tmp";
+  pwr_tFileName tmpfile = "$pwrp_lis/report.tmp";
   pwr_tString256 conf_cmd;
+  int first = 1;
 
   dcli_translate_filename( fname, o->TemplateFile);
   fin.open( fname);
@@ -271,10 +272,16 @@ void rt_report::create_report( pwr_sClass_Report *o)
   fout << "<topic> index <style> report" << endl;
 
   while ( fin.getline( line, sizeof(line))) {
-    if ( cdh_NoCaseStrncmp( line, "<execute>", 9) == 0) {
+    dcli_trim( newline, line);
+    if ( first && strcmp( newline, "") == 0)
+      continue;
+
+    if ( cdh_NoCaseStrncmp( newline, "<execute>", 9) == 0) {
       parse( &line[9]);
     }
     else {
+      first = 0;
+
       replace_value( newline, sizeof(newline), line);
 
       fout << newline << endl;
@@ -295,23 +302,23 @@ void rt_report::create_report( pwr_sClass_Report *o)
     case pwr_eDocumentFormatEnum_PDF:
       // Convert to pdf
       sprintf( cmd, "co_convert -f -d %s %s", 
-	       "$pwrp_tmp", tmpfile);
+	       "$pwrp_lis", tmpfile);
       system( cmd);
-      strcpy( cnvfile, "$pwrp_tmp/report.pdf");
+      strcpy( cnvfile, "$pwrp_lis/report.pdf");
       break;
     case pwr_eDocumentFormatEnum_Html:
       // Convert to pdf
       sprintf( cmd, "co_convert -s -d %s %s", 
-	       "$pwrp_tmp", tmpfile);
+	       "$pwrp_lis", tmpfile);
       system( cmd);
-      strcpy( cnvfile, "$pwrp_tmp/report_index.html");
+      strcpy( cnvfile, "$pwrp_lis/report_index.html");
       break;
     default:
       // Convert to text
       sprintf( cmd, "co_convert -j -d %s %s", 
-	       "$pwrp_tmp", tmpfile);
+	       "$pwrp_lis", tmpfile);
       system( cmd);
-      strcpy( cnvfile, "$pwrp_tmp/report.txt");
+      strcpy( cnvfile, "$pwrp_lis/report.txt");
     }
     
 
@@ -391,9 +398,9 @@ void rt_report::create_report( pwr_sClass_Report *o)
 
     // Convert to text
     sprintf( cmd, "co_convert -j -d %s %s", 
-	     "$pwrp_tmp", tmpfile);
+	     "$pwrp_lis", tmpfile);
     system( cmd);
-    strcpy( cnvfile, "$pwrp_tmp/report.txt");
+    strcpy( cnvfile, "$pwrp_lis/report.txt");
 
 
     replace_symbol( str, o->Recipient);
@@ -488,10 +495,10 @@ void rt_report::create_report( pwr_sClass_Report *o)
     pwr_tCmd cmd;
 
     sprintf( cmd, "co_convert -n -d %s %s", 
-	     "$pwrp_tmp", tmpfile);
+	     "$pwrp_lis", tmpfile);
     system( cmd);
 
-    strcpy( cnvfile, "$pwrp_tmp/report.ps");
+    strcpy( cnvfile, "$pwrp_lis/report.ps");
 
     dcli_trim( conf_cmd, o->PrintCmd);
     if ( strcmp( conf_cmd, "") == 0)
@@ -513,30 +520,30 @@ void rt_report::create_report( pwr_sClass_Report *o)
     case pwr_eDocumentFormatEnum_PDF:
       // Convert to pdf
       sprintf( cmd, "co_convert -f -d %s %s", 
-	       "$pwrp_tmp", tmpfile);
+	       "$pwrp_lis", tmpfile);
       system( cmd);
-      strcpy( cnvfile, "$pwrp_tmp/report.pdf");
+      strcpy( cnvfile, "$pwrp_lis/report.pdf");
       break;
     case pwr_eDocumentFormatEnum_Html:
       // Convert to pdf
       sprintf( cmd, "co_convert -s -d %s %s", 
-	       "$pwrp_tmp", tmpfile);
+	       "$pwrp_lis", tmpfile);
       system( cmd);
-      strcpy( cnvfile, "$pwrp_tmp/report_index.html");
+      strcpy( cnvfile, "$pwrp_lis/report_index.html");
       break;
     case pwr_eDocumentFormatEnum_Postscript:
       // Convert to Postscript
       sprintf( cmd, "co_convert -n -d %s %s", 
-	       "$pwrp_tmp", tmpfile);
+	       "$pwrp_lis", tmpfile);
       system( cmd);
-      strcpy( cnvfile, "$pwrp_tmp/report.ps");
+      strcpy( cnvfile, "$pwrp_lis/report.ps");
       break;
     default:
       // Convert to text
       sprintf( cmd, "co_convert -j -d %s %s", 
-	       "$pwrp_tmp", tmpfile);
+	       "$pwrp_lis", tmpfile);
       system( cmd);
-      strcpy( cnvfile, "$pwrp_tmp/report.txt");
+      strcpy( cnvfile, "$pwrp_lis/report.txt");
     }
     
     // Rename file to target filename
@@ -893,7 +900,7 @@ int rt_report::parse( char *line)
     if ( num > 1 && cdh_NoCaseStrcmp( line_array[1], "graph") == 0) {
       ofstream fout;
       pwr_tFileName fname;
-      pwr_tFileName tmpfile = "$pwrp_tmp/report_print.rtt_com";
+      pwr_tFileName tmpfile = "$pwrp_lis/report_print.rtt_com";
       pwr_tCmd cmd;
 
       if ( num < 4)
@@ -905,6 +912,7 @@ int rt_report::parse( char *line)
 	return 0;
       
       fout << "open graph /hide " << line_array[2] << endl;
+      fout << "wait 2 " << endl;
       fout << "export graph /graph=" << line_array[2] << " /file=\"" << line_array[3] << "\"" << endl;
 
       sprintf( cmd, "rt_xtt_cmd -i -q  @%s", fname);
