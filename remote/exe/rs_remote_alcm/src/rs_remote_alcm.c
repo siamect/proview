@@ -90,7 +90,7 @@
 #include "remote_remio_utils.h"
 #include "rs_remote_alcm.h"
 
-#define TIME_INCR 0.02
+#define TIME_INCR 0.005
 
 typedef struct {
   pwr_sClass_RemnodeALCM *ref;
