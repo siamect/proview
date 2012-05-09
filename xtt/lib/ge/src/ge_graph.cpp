@@ -4596,6 +4596,11 @@ int Graph::get_reference_name( char *name, char *tname)
     else
       strcpy( refname, &name[1]);
 
+    if ( refname[0] == '&') {
+      sts = get_reference_name( refname, refname);
+      if ( EVEN(sts)) return sts;
+    }
+
     sts = gdh_GetAttributeCharacteristics( refname, &atid, &asize, &aoffs, &aelem);
     if ( EVEN(sts)) return sts;
 
