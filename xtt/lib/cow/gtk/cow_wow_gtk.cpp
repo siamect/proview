@@ -285,7 +285,7 @@ void CoWowGtk::CreateInputDialog( void *ctx, const char *title, const char *text
 
   gint pos = 0;
   if ( init_text && strcmp( init_text, "") != 0) {
-    char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    char *textutf8 = g_convert( init_text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
     gtk_editable_insert_text( GTK_EDITABLE(textinput), textutf8, 
 			      strlen(textutf8), &pos);
     g_free( textutf8);

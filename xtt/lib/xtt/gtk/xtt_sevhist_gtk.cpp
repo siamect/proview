@@ -94,8 +94,7 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
   curve->add_cb = sevhist_add_cb;
   curve->remove_cb = sevhist_remove_cb;
   curve->export_cb = sevhist_export_cb;
-  curve->enable_timebox();
-  curve->enable_export();
+  curve->enable( curve_mEnable_Timebox | curve_mEnable_Export);
 
   wow = new CoWowGtk( parent_widget);
   timerid = wow->timer_new();

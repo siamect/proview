@@ -88,10 +88,13 @@ XttTCurveGtk::XttTCurveGtk( void *parent_ctx,
   curve->prev_period_cb = tcurve_prev_period_cb;
   curve->next_period_cb = tcurve_next_period_cb;
   curve->add_cb = tcurve_add_cb;
+  curve->new_cb = tcurve_new_cb;
+  curve->open_cb = tcurve_open_cb;
+  curve->save_cb = tcurve_save_cb;
   curve->remove_cb = tcurve_remove_cb;
   curve->export_cb = tcurve_export_cb;
-  curve->enable_timebox();
-  curve->enable_export();
+  curve->enable( curve_mEnable_Timebox | curve_mEnable_Export | curve_mEnable_New |
+		 curve_mEnable_Open | curve_mEnable_Save);
 
   wow = new CoWowGtk( parent_widget);
   timerid = wow->timer_new();

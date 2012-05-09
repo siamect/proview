@@ -45,6 +45,15 @@
 
 #include "cow_wow_gtk.h"
 
+typedef enum {
+  curve_mEnable_New 	= 1 << 0,
+  curve_mEnable_Save 	= 1 << 1,
+  curve_mEnable_Open 	= 1 << 2,
+  curve_mEnable_Snapshot = 1 << 3,
+  curve_mEnable_Export	= 1 << 4,
+  curve_mEnable_Timebox = 1 << 5
+} curve_mEnable;
+
 class GeCurveGtk : public GeCurve {
   public:
     GeCurveGtk( void *gc_parent_ctx, GtkWidget *parent_widget, char *curve_name,
@@ -64,8 +73,12 @@ class GeCurveGtk : public GeCurve {
     GtkWidget   *minmax_widget;
     GtkWidget   *minmax_textmin_widget;
     GtkWidget   *minmax_textmax_widget;
+    GtkWidget   *menu_new;
+    GtkWidget   *menu_save;
+    GtkWidget   *menu_open;
     GtkWidget   *menu_snapshot;
     GtkWidget   *menu_export;
+    GtkWidget   *tools_snapshot;
     GtkWidget   *export_widget;
     GtkWidget   *export_attrcombo_widget;
     GtkWidget   *export_fromtime_widget;
@@ -88,9 +101,7 @@ class GeCurveGtk : public GeCurve {
     void create_minmax_dialog();
     void create_export_dialog();
     void set_inputfocus();
-    void enable_timebox();
-    void enable_export();
-    void enable_snapshot();
+    void enable( unsigned int mask);
     void set_times( pwr_tTime *from, pwr_tTime *to);
     void set_times_sensitivity( int sensitive);
     pwr_tStatus get_times( pwr_tTime *from, pwr_tTime *to);
@@ -102,6 +113,9 @@ class GeCurveGtk : public GeCurve {
     static void activate_exit( GtkWidget *w, gpointer data);
     static void activate_configure( GtkWidget *w, gpointer data);
     static void activate_print( GtkWidget *w, gpointer data);
+    static void activate_new( GtkWidget *w, gpointer data);
+    static void activate_save( GtkWidget *w, gpointer data);
+    static void activate_open( GtkWidget *w, gpointer data);
     static void activate_snapshot( GtkWidget *w, gpointer data);
     static void activate_export( GtkWidget *w, gpointer data);
     static void activate_zoomin( GtkWidget *w, gpointer data);

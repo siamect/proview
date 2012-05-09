@@ -170,6 +170,9 @@ class GeCurve {
     void 	 (*add_cb)( void *);
     void 	 (*remove_cb)( void *);
     int 	 (*export_cb)( void *, pwr_tTime *, pwr_tTime *, int, int, char *);
+    void 	 (*new_cb)( void *);
+    void 	 (*save_cb)( void *);
+    void 	 (*open_cb)( void *);
     void 	 (*snapshot_cb)( void *);
     int          initial_right_position;
     char	 title[300];
@@ -189,9 +192,7 @@ class GeCurve {
     virtual void open_minmax( int idx) {}
     virtual void open_export( pwr_tTime *from, pwr_tTime *to, int rows, char *filename) {}
     virtual void axis_set_width( int width) {}  
-    virtual void enable_timebox() {}
-    virtual void enable_snapshot() {}
-    virtual void enable_export() {}
+    virtual void enable( unsigned int mask) {}
     virtual void set_times( pwr_tTime *from, pwr_tTime *to) {}
     virtual void set_times_sensitivity( int sensitive) {}
     virtual pwr_tStatus get_times( pwr_tTime *from, pwr_tTime *to) {return 0;}
@@ -211,6 +212,9 @@ class GeCurve {
     void measure_window( double *ll_x, double *ll_y, double *ur_x, double *ur_y);
     void activate_exit();
     void activate_configure();
+    void activate_new();
+    void activate_save();
+    void activate_open();
     void activate_snapshot();
     void activate_export();
     void activate_print();
@@ -224,6 +228,7 @@ class GeCurve {
     void redraw();
     void x_to_points( double x, double *time, double *values);
     void set_center_from_window( int val) { center_from_window = val;}
+    void set_title( const char *str);
     
     static int growcurve_cb( GlowCtx *ctx, glow_tEvent event);
     static int init_growcurve_cb( GlowCtx *fctx, void *client_data);

@@ -3186,6 +3186,20 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tStatus sts;
     char title_str[80];
 
+    if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str)))) {
+      strcpy( title_str, "Trend");
+    }
+
+    if ( ODD( dcli_get_qualifier( "/NEW", 0, 0))) {
+      XttTCurve *tcurve = xnav->xtttcurve_new( title_str, 0, &sts);
+      if ( ODD(sts)) {
+	tcurve->close_cb = xnav_tcurve_close_cb;
+	tcurve->command_cb = xnav_trend_command_cb;
+	tcurve->help_cb = xnav_tcurve_help_cb;
+      }
+      return XNAV__SUCCESS;
+    }
+
     /* Get the name qualifier */
     if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
       if ( name_str[0] != '/')
@@ -3211,10 +3225,6 @@ static int	xnav_open_func(	void		*client_data,
       }
     }
     
-    if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str)))) {
-      strcpy( title_str, "Trend");
-    }
-
     memset( aref_vect, 0, sizeof(aref_vect));
     sts = gdh_NameToAttrref( pwr_cNObjid, name_str, &aref_vect[0]);
     if (EVEN(sts)) {
@@ -3224,6 +3234,7 @@ static int	xnav_open_func(	void		*client_data,
     XttTCurve *tcurve = xnav->xtttcurve_new( title_str, aref_vect, &sts);
     if ( ODD(sts)) {
       tcurve->close_cb = xnav_tcurve_close_cb;
+      tcurve->command_cb = xnav_trend_command_cb;
       tcurve->help_cb = xnav_tcurve_help_cb;
     }
     return XNAV__SUCCESS;

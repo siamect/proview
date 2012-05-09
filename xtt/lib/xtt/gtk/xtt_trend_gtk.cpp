@@ -79,7 +79,7 @@ XttTrendGtk::XttTrendGtk( void *parent_ctx,
   curve->snapshot_cb = trend_snapshot_cb;
 
   if ( trend_tid == pwr_cClass_DsTrendCurve)
-    curve->enable_snapshot();
+    curve->enable( curve_mEnable_Snapshot);
 
   wow = new CoWowGtk( parent_widget);
   timerid = wow->timer_new();

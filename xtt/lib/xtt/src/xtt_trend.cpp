@@ -457,7 +457,7 @@ void XttTrend::trend_snapshot_cb( void *ctx)
   XttTrend *trend = (XttTrend *) ctx;
   pwr_tCmd cmd;
 
-  sprintf( cmd, "open tcurve %s", trend->trend_name[0]);
+  sprintf( cmd, "open tcurve %s/title=%s", trend->trend_name[0], trend->trend_name[0]);
 
   if ( trend->command_cb)
     (trend->command_cb)( trend->xnav, cmd);

@@ -77,6 +77,7 @@ XttTCurve::XttTCurve( void *parent_ctx,
   if ( xn_arefv == 0 || xn_arefv[0].Objid.vid == 0) {
     aref_cnt = 0;
     gcd = new GeCurveData( curve_eDataType_DsTrend);
+    *sts = 1;
     return;
   }
 
@@ -472,6 +473,44 @@ void XttTCurve::tcurve_close_cb( void *ctx)
     (tcurve->close_cb)( tcurve->xnav, tcurve);
   else
     delete tcurve;
+}
+
+void XttTCurve::tcurve_new_cb( void *ctx)
+{
+  XttTCurve *tcurve = (XttTCurve *) ctx;
+
+  if ( tcurve->command_cb)
+    (tcurve->command_cb)( tcurve->xnav, "open tcurve /new");
+}
+
+void XttTCurve::tcurve_file_selected_cb( void *ctx, void *data, char *text)
+{
+  XttTCurve *tcurve = (XttTCurve *)ctx;
+
+  tcurve->save( text);
+}
+
+void XttTCurve::tcurve_save_cb( void *ctx)
+{
+  XttTCurve *tcurve = (XttTCurve *) ctx;
+
+  tcurve->curve->wow->CreateInputDialog( tcurve, "Save as", "Enter filename",
+					 tcurve_file_selected_cb, 0, 40, tcurve->title, 0);
+}
+
+void XttTCurve::tcurve_open_file_cb( void *ctx, char *text)
+{
+  XttTCurve *tcurve = (XttTCurve *)ctx;
+
+  tcurve->open( text);
+}
+
+void XttTCurve::tcurve_open_cb( void *ctx)
+{
+  XttTCurve *tcurve = (XttTCurve *) ctx;
+
+  tcurve->curve->wow->CreateFileList( "Open trend data", "$pwrp_load", "*", "rtt_trd",
+				     tcurve_open_file_cb, 0, tcurve, 1);
 }
 
 void XttTCurve::tcurve_decrease_period_cb( void *ctx)
@@ -879,9 +918,86 @@ int XttTCurve::load_data( pwr_tStatus *sts, pwr_tAttrRef *aref)
       return 0;
     }
   }
+  else
+    *sts = 1;
+
   return 1;
 }
 
 
+void XttTCurve::save( char *filename) 
+{ 
+  pwr_tFileName fname;
 
+  strcpy( fname, filename);
+  if ( !( strlen(filename) < 9 && 
+	  strcmp( &filename[strlen(filename)-9], ".rtt_trd") == 0))
+    strncat( fname, ".rtt_trd", sizeof(fname));
 
+  dcli_translate_filename( fname, fname);
+
+  ofstream fp(fname);
+  if ( !fp) {
+    printf( "Unable to open file\n");
+    return;
+  }
+
+  fp.write( (char *)&aref_cnt, sizeof(aref_cnt));
+  fp.write( (char *)arefv, aref_cnt * sizeof(arefv[0]));
+  fp.write( (char *)&tc, sizeof(tc));
+  fp.write( tc.tbuf, tc.timebuf_bsize);
+  for ( int i = 0; i < tc.bufcnt; i++)
+    fp.write( tc.vbuf[i], tc.buf_bsize[i]);
+
+  fp.close();
+}
+
+void XttTCurve::open( char *filename) 
+{ 
+  pwr_tFileName fname;
+  pwr_tStatus sts;
+
+  strcpy( fname, filename);
+  if ( !( strlen(filename) < 9 && 
+	  strcmp( &filename[strlen(filename)-9], ".rtt_trd") == 0))
+    strncat( fname, ".rtt_trd", sizeof(fname));
+
+  dcli_translate_filename( fname, fname);
+
+  ifstream fp(fname);
+  if ( !fp) {
+    printf( "Unable to open file\n");
+    return;
+  }
+
+  // Free old data
+  free( tc.tbuf);
+  for ( int i = 0; i < tc.bufcnt; i++)
+    free( tc.vbuf[i]);
+
+  fp.read( (char *)&aref_cnt, sizeof(aref_cnt));
+  fp.read( (char *)arefv, aref_cnt * sizeof(arefv[0]));
+  fp.read( (char *)&tc, sizeof(tc));
+  tc.tbuf = (char *)calloc( 1, tc.timebuf_bsize);
+  fp.read( tc.tbuf, tc.timebuf_bsize);
+  for ( int i = 0; i < tc.bufcnt; i++) {
+    tc.vbuf[i] = (char *)calloc( 1, tc.buf_bsize[i]);
+    fp.read( tc.vbuf[i], tc.buf_bsize[i]);
+  }
+
+  fp.close();
+
+  pwr_tTime from = pwr_cNTime;
+  pwr_tTime to = {0xEFFFFFFF, 0};
+  get_data( &sts, from, to);
+  if ( curve)
+    curve->config_names();
+
+  set_title( filename);
+}
+
+void XttTCurve::set_title( const char *str)
+{
+  strncpy( title, str, sizeof(title));
+  curve->write_title( title);
+}

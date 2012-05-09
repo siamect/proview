@@ -80,6 +80,24 @@ void GeCurve::activate_configure()
   configure_axes();
 }
 
+void GeCurve::activate_new()
+{
+  if ( new_cb)
+    (new_cb)( parent_ctx);
+}
+
+void GeCurve::activate_save()
+{
+  if ( save_cb)
+    (save_cb)( parent_ctx);
+}
+
+void GeCurve::activate_open()
+{
+  if ( open_cb)
+    (open_cb)( parent_ctx);
+}
+
 void GeCurve::activate_snapshot()
 {
   if ( snapshot_cb)
@@ -401,6 +419,9 @@ int GeCurve::growcurve_cb( GlowCtx *ctx, glow_tEvent event)
     char str[40];
     double time;
     double values[CURVE_MAX_COLS];
+
+    if ( curve->cd->cols == 0)
+      return 1;
 
     curve->last_cursor_x = event->any.x;
     curve->x_to_points( event->any.x, &time, values);
@@ -1378,7 +1399,8 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
   border_bright(glow_eDrawType_Color22),
   cd(0), axis_window_width(0), auto_refresh(1), axis_displayed(1),
   minmax_idx(0), close_cb(0), help_cb(0), increase_period_cb(0), decrease_period_cb(0), reload_cb(0),
-  prev_period_cb(0), next_period_cb(0), add_cb(0), remove_cb(0), export_cb(0), snapshot_cb(0),
+  prev_period_cb(0), next_period_cb(0), add_cb(0), remove_cb(0), export_cb(0), new_cb(0),
+  save_cb(0), open_cb(0), snapshot_cb(0),
   initial_right_position(pos_right), last_cursor_x(0), last_mark1_x(0), last_mark2_x(0),
   deferred_configure_axes(0), center_from_window(0)
 {
