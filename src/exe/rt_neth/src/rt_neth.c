@@ -100,6 +100,8 @@ static void		volumesR	(qcom_sGet*);
 static void		volumes7	(qcom_sGet*);
 static void		serverConnect	(qcom_sGet*);
 static void		fileList	(qcom_sGet*);
+static void		getCircBuffer	(qcom_sGet*);
+static void		updateCircBuffer(qcom_sGet*);
 #if 0
   static void		linkEvent	(pwr_tUInt32, net_eEvent);
   static void		sendIdAck	(gdb_sNode*);
@@ -142,6 +144,11 @@ static char *cMsg[net_eMsg_end] = {
   "getGclassR",
   "serverConnect",
   "fileList",
+  "fileListR",
+  "getCircBuffer",
+  "getCircBufferR",
+  "updateCircBuffer",
+  "updateCircBufferR",
   "net_eMsg_",
   "volumes7"
 };
@@ -178,6 +185,11 @@ static void (*fromApplication[net_eMsg_end])(qcom_sGet *) = {
   bugError,                     /* net_eMsg_GetGclassR will never reach neth */
   serverConnect,                /* net_eMsg_serverConnect */
   fileList,               	/* net_eMsg_fileList */
+  bugError,			/* net_eMsg_fileListR, will never reach neth.  */
+  getCircBuffer,               	/* net_eMsg_getCircBuffer */
+  bugError,			/* net_eMsg_getCircBufferR, will never reach neth.  */
+  updateCircBuffer,          	/* net_eMsg_updateCircBuffer */
+  bugError,			/* net_eMsg_updateCircBufferR, will never reach neth.  */
   bugError,                     /* net_eMsg_ */
   volumes7
 };
@@ -1550,6 +1562,153 @@ fileList (
     rmp->filecnt = filecnt;
     memcpy( rmp->files, filelist, filecnt * sizeof(pwr_tString40));
     free( filelist);
+  }
+
+  net_Reply(&sts, get, &put, 0);
+}
+
+static void
+getCircBuffer (
+  qcom_sGet	*get
+)
+{
+  net_sGetCircBuffer *mp = get->data;
+  net_sGetCircBufferR *rmp;
+  gdb_sNode	*np;
+  pwr_tStatus 	sts;
+  pwr_tUInt32		size;
+  qcom_sPut		put;
+  gdh_sCircBuffInfo info;
+
+  gdb_ScopeLock {
+    np = hash_Search(&sts, gdbroot->nid_ht, &mp->hdr.nid);
+  } gdb_ScopeUnlock;
+
+
+  if (gdbroot->db->log.b.id) {
+    errh_Info("Sending 'getCircBuffer' to %s (%s)",
+      np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
+  }
+
+  info.circ_aref = mp->circ_aref;
+  info.resolution = mp->resolution;
+  info.samples = mp->samples;
+  info.bufsize = mp->bufsize;
+  info.bufp = calloc( 1, info.bufsize);
+
+  sts = gdh_GetCircBuffInfo( &info, 1);
+  if ( EVEN(sts))
+    size = sizeof(*rmp);
+  else
+    size = sizeof(*rmp) + info.bufsize;
+  size = (size + 3) & ~3;   /* Size up to nearest multiple of 4.  */
+  
+  rmp = net_Alloc(&sts, &put, size, net_eMsg_getCircBufferR);
+  if (rmp == NULL) {
+    errh_Error("Failed to allocate 'getCircBufferR' to %s (%s)",
+      np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
+    return;
+  }
+
+  rmp->sts = sts;
+  if ( EVEN(sts)) {
+    rmp->sts = sts;
+    rmp->size = 0;
+  }
+  else {
+    rmp->sts = sts;
+    rmp->circ_aref = info.circ_aref;
+    rmp->size = info.size;
+    rmp->bufsize = info.bufsize;
+    rmp->first_idx = info.first_idx;
+    rmp->last_idx = info.last_idx;
+    rmp->offset = info.offset;
+    memcpy( rmp->buf, info.bufp, info.bufsize);
+    free( info.bufp);
+  }
+
+  net_Reply(&sts, get, &put, 0);
+}
+
+static void
+updateCircBuffer (
+  qcom_sGet	*get
+)
+{
+  net_sUpdateCircBuffer *mp = get->data;
+  net_sUpdateCircBufferR *rmp;
+  gdb_sNode	*np;
+  pwr_tStatus 	sts;
+  pwr_tUInt32  	size;
+  pwr_tUInt32  	total_size;
+  qcom_sPut    	put;
+  gdh_sCircBuffInfo info[10];
+  int		i, offs;
+
+  gdb_ScopeLock {
+    np = hash_Search(&sts, gdbroot->nid_ht, &mp->hdr.nid);
+  } gdb_ScopeUnlock;
+
+
+  if (gdbroot->db->log.b.id) {
+    errh_Info("Sending 'updateCircBuffer' to %s (%s)",
+      np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
+  }
+
+  if ( mp->info_size >= 10) {
+    errh_Error("Parameter size error 'updateCircBufferR' to %s (%s)",
+      np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
+    return;
+  }
+  for ( i = 0; i < mp->info_size; i++) {
+
+    info[i].circ_aref = mp->circ_aref[i];
+    info[i].resolution = mp->resolution[i];
+    info[i].samples = mp->samples[i];
+    info[i].last_idx = mp->last_idx[i];
+    info[i].offset = mp->offset[i];
+    info[i].bufsize = mp->bufsize[i];
+    info[i].bufp = calloc( 1, info[i].bufsize);
+  }
+  sts = gdh_UpdateCircBuffInfo( info, mp->info_size);
+  if ( EVEN(sts))
+    size = sizeof(*rmp);
+  else {
+    total_size = 0;
+    for ( i = 0; i < mp->info_size; i++)
+      total_size += info[i].bufsize;
+    size = sizeof(*rmp) + total_size;
+  }
+  size = (size + 3) & ~3;   /* Size up to nearest multiple of 4.  */
+  
+  rmp = net_Alloc(&sts, &put, size, net_eMsg_updateCircBufferR);
+  if (rmp == NULL) {
+    errh_Error("Failed to allocate 'updateCircBufferR' to %s (%s)",
+      np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
+    return;
+  }
+
+  rmp->sts = sts;
+  if ( EVEN(sts)) {
+    rmp->sts = sts;
+    rmp->bsize = 0;
+  }
+  else {
+    rmp->sts = sts;
+    rmp->info_size = mp->info_size;
+    rmp->bsize = total_size;
+    offs = 0;
+    for ( i = 0; i < mp->info_size; i++) {
+      rmp->circ_aref[i] = info[i].circ_aref;
+      rmp->size[i] = info[i].size;
+      rmp->bufsize[i] = info[i].bufsize;
+      rmp->first_idx[i] = info[i].first_idx;
+      rmp->last_idx[i] = info[i].last_idx;
+      rmp->offset[i] = info[i].offset;
+      memcpy( rmp->buf + offs, info[i].bufp, info[i].bufsize);
+      offs += info[i].bufsize;
+      free( info[i].bufp);
+    }
   }
 
   net_Reply(&sts, get, &put, 0);

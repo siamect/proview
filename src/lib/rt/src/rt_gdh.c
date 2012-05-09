@@ -5076,6 +5076,66 @@ gdh_GetCircBuffInfo (
       ap = vol_ArefToAttribute(&sts, &attribute, &info[j].circ_aref, gdb_mLo_global, vol_mTrans_all);
       if (ap == NULL || ap->op == NULL) break;
 
+      if ( ap->op->l.flags.b.isCached) {
+	net_sGetCircBuffer		*mp;
+	qcom_sPut		put;
+	gdb_sVolume		*vp;
+	qcom_sQid	tgt;
+	qcom_sGet	get;
+	net_sGetCircBufferR *rsp;
+	gdb_sNode	*np;
+  
+	vp = pool_Address(NULL, gdbroot->pool, ap->op->l.vr);
+	if (vp == NULL) {
+	  sts = GDH__NOSUCHOBJ;
+	  break;
+	}
+
+	mp = net_Alloc(&sts, &put, sizeof(*mp), net_eMsg_getCircBuffer);
+	if (mp == NULL) break;
+
+	mp->circ_aref = info->circ_aref;
+	mp->resolution = info->resolution;
+	mp->samples = info->samples;
+	mp->bufsize = info->bufsize;
+
+	np = hash_Search(&sts, gdbroot->nid_ht, &vp->g.nid);
+	if (np == NULL) break;
+
+	tgt = np->handler;
+
+	gdb_Unlock;
+
+	rsp = net_Request(&sts, &tgt, &put, &get, net_eMsg_getCircBufferR, 0, 0);
+
+	gdb_Lock;
+
+	if (EVEN(sts))
+	  break;
+
+	if (EVEN(rsp->sts)) {
+	  sts = rsp->sts;
+	  net_Free(NULL, rsp);
+	  break;
+	}
+
+	if ( cdh_ObjidIsNotEqual(rsp->circ_aref.Objid, info->circ_aref.Objid)) {
+	  sts = 0;
+	  break;
+	}
+     
+	info->size = rsp->size;
+	info->bufsize = rsp->bufsize;
+	info->first_idx = rsp->first_idx;
+	info->last_idx = rsp->last_idx;
+	info->offset = rsp->offset;
+	info->bufp = calloc( 1, info->bufsize);
+	memcpy( info->bufp, rsp->buf, info->bufsize);
+	
+	net_Free(NULL, rsp);
+	break;
+      }
+
       touchObject(ap->op);
 
       samples = info[j].samples;
@@ -5184,6 +5244,7 @@ gdh_UpdateCircBuffInfo (
   int			split = 0;
   int			start_idx;
   int			first_index, last_index;
+  int			finish = 0;
   int j;
 
   memset(&attribute, 0, sizeof(attribute));
@@ -5195,6 +5256,80 @@ gdh_UpdateCircBuffInfo (
     while ( 1) {
       ap = vol_ArefToAttribute(&sts, &attribute, &info[j].circ_aref, gdb_mLo_global, vol_mTrans_all);
       if (ap == NULL || ap->op == NULL) break;
+
+      if ( ap->op->l.flags.b.isCached) {
+	net_sUpdateCircBuffer		*mp;
+	qcom_sPut		put;
+	gdb_sVolume		*vp;
+	qcom_sQid	tgt;
+	qcom_sGet	get;
+	net_sUpdateCircBufferR *rsp;
+	gdb_sNode	*np;
+	int i;
+	int offs;
+  
+	vp = pool_Address(NULL, gdbroot->pool, ap->op->l.vr);
+	if (vp == NULL) {
+	  sts = GDH__NOSUCHOBJ;
+	  break;
+	}
+
+	mp = net_Alloc(&sts, &put, sizeof(*mp), net_eMsg_updateCircBuffer);
+	if (mp == NULL) break;
+
+	mp->info_size = infosize;
+	if ( mp->info_size > 10)
+	  mp->info_size = 10;
+
+	for ( i = 0; i < infosize; i++) {
+	  mp->circ_aref[i] = info[i].circ_aref;
+	  mp->resolution[i] = info[i].resolution;
+	  mp->samples[i] = info[i].samples;
+	  mp->bufsize[i] = info[i].bufsize;
+	  mp->last_idx[i] = info[i].last_idx;
+	  mp->offset[i] = info[i].offset;
+	}
+
+	np = hash_Search(&sts, gdbroot->nid_ht, &vp->g.nid);
+	if (np == NULL) break;
+
+	tgt = np->handler;
+
+	gdb_Unlock;
+
+	rsp = net_Request(&sts, &tgt, &put, &get, net_eMsg_updateCircBufferR, 0, 0);
+
+	gdb_Lock;
+
+	if (EVEN(sts))
+	  break;
+
+	if (EVEN(rsp->sts)) {
+	  sts = rsp->sts;
+	  net_Free(NULL, rsp);
+	  break;
+	}
+
+	offs = 0;
+	for ( i = 0; i < rsp->info_size; i++) {
+	  if ( cdh_ObjidIsNotEqual(rsp->circ_aref[i].Objid, info[i].circ_aref.Objid)) {
+	    sts = 0;
+	    break;
+	  }
+	  
+	  info[i].size = rsp->size[i];
+	  info[i].bufsize = rsp->bufsize[i];
+	  info[i].first_idx = rsp->first_idx[i];
+	  info[i].last_idx = rsp->last_idx[i];
+	  info[i].offset = rsp->offset[i];
+	  info[i].bufp = calloc( 1, info[i].bufsize);
+	  memcpy( info[i].bufp, rsp->buf + offs, info[i].bufsize);
+	  offs += info[i].bufsize;
+	}
+	net_Free(NULL, rsp);
+	finish = 1;
+	break;
+      }
 
       touchObject(ap->op);
     
@@ -5283,6 +5418,9 @@ gdh_UpdateCircBuffInfo (
       break;
     }
     gdh_Unlock;
+
+    if ( finish)
+      break;
   }
   return sts;
 }
