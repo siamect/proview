@@ -87,14 +87,15 @@ static pwr_tStatus IoCardInit (
   io_sCard	*cp  
 ) 
 {
-  pwr_sClass_Di_DIX2	*op;
+  pwr_sClass_Di_DIX2	*op = (pwr_sClass_Di_DIX2 *) cp->op;
+  int 			words = op->MaxNoOfChannels <= 16 ? 1 : 2;
   io_sLocal 		*local;
   int			i, j;
   io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
 
-  op = (pwr_sClass_Di_DIX2 *) cp->op;
   local = calloc( 1, sizeof(*local));
   cp->Local = local;
+
 
   errh_Info( "Init of di card '%s'", cp->Name);
 
@@ -103,7 +104,7 @@ static pwr_tStatus IoCardInit (
   local->Qbus_fp = r_local->Qbus_fp;
    
   /* Init filter */
-  for ( i = 0; i < 2; i++)
+  for ( i = 0; i < words; i++)
   {
     /* The filter handles one 16-bit word */
     for ( j = 0; j < 16; j++)
@@ -128,13 +129,15 @@ static pwr_tStatus IoCardClose (
 {
   io_sLocal 		*local;
   int			i;
+  pwr_sClass_Di_DIX2	*op = (pwr_sClass_Di_DIX2 *) cp->op;
+  int 			words = op->MaxNoOfChannels <= 16 ? 1 : 2;
 
   local = (io_sLocal *) cp->Local;
 
   errh_Info( "IO closing di card '%s'", cp->Name);
 
   /* Free filter data */
-  for ( i = 0; i < 2; i++)
+  for ( i = 0; i < words; i++)
   {
     if ( local->Filter[i].Found)
       io_CloseDiFilter( local->Filter[i].Data);
@@ -158,7 +161,6 @@ static pwr_tStatus IoCardRead (
   io_sLocal 		*local = (io_sLocal *) cp->Local;
   io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
   pwr_tUInt16		data = 0;
-  pwr_sClass_Di_DIX2	*op;
   pwr_sClass_Ssab_RemoteRack	*rrp;
   pwr_tUInt16		invmask;
   pwr_tUInt16		convmask;
@@ -167,10 +169,10 @@ static pwr_tStatus IoCardRead (
   qbus_io_read 		rb;
   int			bfb_error = 0;
   pwr_tTime             now;
+  pwr_sClass_Di_DIX2	*op = (pwr_sClass_Di_DIX2 *) cp->op;
+  int words = op->MaxNoOfChannels <= 16 ? 1 : 2;
 
-  op = (pwr_sClass_Di_DIX2 *) cp->op;
-
-  for ( i = 0; i < 2; i++)
+  for ( i = 0; i < words; i++)
   { 
     if ( i == 0)
     {
