@@ -48,6 +48,7 @@
 #include "co_time.h"
 #include "co_dcli.h"
 #include "cow_wow.h"
+#include "rt_xnav_msg.h"
 #include "rt_sev_msg.h"
 
 #include "flow.h"
@@ -246,7 +247,7 @@ int XttTCurve::get_data( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
     curve->configure_axes();
     curve->redraw();
   }
-  *sts = SEV__SUCCESS;
+  *sts = XNAV__SUCCESS;
   return 1;
 }
 
@@ -414,7 +415,7 @@ int XttTCurve::get_multidata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
     curve->configure_axes();
     curve->redraw();
   }
-  *sts = SEV__SUCCESS;
+  *sts = XNAV__SUCCESS;
 #endif
   return 1;
 }
@@ -682,80 +683,121 @@ void XttTCurve::tcurve_add_cb( void *ctx)
 
 void XttTCurve::tcurve_remove_cb( void *ctx)
 {
-  // Do do
+  // Todo
 }
 
 int XttTCurve::tcurve_export_cb( void *ctx, pwr_tTime *from, pwr_tTime *to, int rows, int idx, 
 				   char *filename)
 {
-#if 0
   XttTCurve *tcurve = (XttTCurve *) ctx;
   pwr_tFileName fname;
-  pwr_tTime *tbuf;
-  void *vbuf;
-  pwr_eType	vtype;
-  unsigned int  vsize;
-  pwr_tStatus sts;
-  int rrows;
+  pwr_tStatus sts = XNAV__SUCCESS;
   char timestr[40];
   FILE *fp;
+  char *timep;
+  char *valp;
+  pwr_tTime time;
+  int rowcnt;
+  int resolution;
 
   dcli_translate_filename( fname, filename);
-
-
-  sevcli_get_itemdata( &sts, tcurve->scctx, tcurve->oidv[idx], tcurve->anamev[idx], *from, *to, 
-		       rows, &tbuf, &vbuf, &rrows, &vtype, &vsize);
-  if ( EVEN(sts))
-    return sts;
-
-  if( rrows == 0 ) {
-    return SEV__NODATATIME;
-  }
 
   fp = fopen( fname, "w");
   if ( !fp)
     return SEV__EXPORTFILE;
 
-  for ( int i = 0; i < rrows; i++) {
-    time_AtoAscii( &tbuf[i], time_eFormat_DateAndTime, timestr, sizeof(timestr));
-    fprintf( fp, "%s, ", timestr);
-    switch ( vtype) {
-    case pwr_eType_Int32:
-    case pwr_eType_Int64:
-    case pwr_eType_Int16:
-    case pwr_eType_Int8:
-      fprintf( fp, "%d", ((pwr_tInt32 *)vbuf)[i]);
-      break;
-    case pwr_eType_UInt64:
-    case pwr_eType_UInt32:
-    case pwr_eType_UInt16:
-    case pwr_eType_UInt8:
-      fprintf( fp, "%u", ((pwr_tUInt32 *)vbuf)[i]);
-      break;
-    case pwr_eType_Float32:
-      fprintf( fp, "%g", ((pwr_tFloat32 *)vbuf)[i]);
-      break;
-    case pwr_eType_Float64:
-      fprintf( fp, "%g", ((pwr_tFloat64 *)vbuf)[i]);
-      break;
-    case pwr_eType_Boolean:
-      fprintf( fp, "%d", ((pwr_tBoolean *)vbuf)[i]);
-      break;
-    default: 
-      sts = SEV__CURVETYPE;
+  // Count number of samples in the specified interval
+  rowcnt = 0;
+  timep = tcurve->tc.tbuf;
+  for ( int i = 0; i < tcurve->tc.timebuf_samples; i++) {
+    if ( tcurve->tc.timeelement_size == 4) {
+      time.tv_sec = *(unsigned int *)timep;
+      time.tv_nsec = 0;
     }
-    fprintf( fp, "\n");
+    else {
+      time.tv_sec = *(unsigned int *)timep;
+      time.tv_nsec = *(unsigned int *)(timep+4);
+    }
+    timep += tcurve->tc.timeelement_size;
+
+    if ( time_Acomp( &time, from) >= 0 &&
+	 time_Acomp( &time, to) <= 0) {
+      rowcnt++;
+    }
   }
-  free( tbuf);
-  free( vbuf);
+
+  resolution = rowcnt / rows + 1;
+
+  rowcnt = 0;
+  timep = tcurve->tc.tbuf;
+  for ( int i = 0; i < tcurve->tc.timebuf_samples; i++) {
+    if ( tcurve->tc.timeelement_size == 4) {
+      time.tv_sec = *(unsigned int *)timep;
+      time.tv_nsec = 0;
+    }
+    else {
+      time.tv_sec = *(unsigned int *)timep;
+      time.tv_nsec = *(unsigned int *)(timep+4);
+    }
+    timep += tcurve->tc.timeelement_size;
+
+    if ( time_Acomp( &time, from) >= 0 &&
+	 time_Acomp( &time, to) <= 0) {
+      if ( resolution > 1 && (i % resolution) != 0)
+	continue;
+
+      rowcnt++;
+
+      time_AtoAscii( &time, time_eFormat_DateAndTime, timestr, sizeof(timestr));
+      fprintf( fp, "%s, ", timestr);
+
+      for ( int j = 0; j < tcurve->tc.bufcnt; j++) {
+	if ( i >= tcurve->tc.buf_samples[j])
+	  fprintf( fp, "%d", 0);
+	else {
+
+	  valp = tcurve->tc.vbuf[j] + i * tcurve->tc.element_size[j];
+	  switch ( tcurve->tc.type[j]) {
+	  case pwr_eType_Int32:
+	  case pwr_eType_Int64:
+	  case pwr_eType_Int16:
+	  case pwr_eType_Int8:
+	    fprintf( fp, "%d", *(pwr_tInt32 *)valp);
+	    break;
+	  case pwr_eType_UInt64:
+	  case pwr_eType_UInt32:
+	  case pwr_eType_UInt16:
+	  case pwr_eType_UInt8:
+	    fprintf( fp, "%u", *(pwr_tUInt32 *)valp);
+	    break;
+	  case pwr_eType_Float32:
+	    fprintf( fp, "%g", *(pwr_tFloat32 *)valp);
+	    break;
+	  case pwr_eType_Float64:
+	    fprintf( fp, "%g", *(pwr_tFloat64 *)valp);
+	    break;
+	  case pwr_eType_Boolean:
+	    fprintf( fp, "%d", *(pwr_tBoolean *)valp);
+	    break;
+	  default: 
+	    sts = SEV__CURVETYPE;
+	  }
+	}
+	if ( j < tcurve->tc.bufcnt - 1)
+	  fprintf( fp, ", ");
+	else
+	  fprintf( fp, "\n");
+      }
+    }
+  }
   fclose( fp);
 
-  printf( "Exported %d rows to file \"%s\" (%d)\n", rrows, fname, idx);
+  printf( "Exported %d rows to file \"%s\"\n", rowcnt, fname);
 
   if ( EVEN(sts))
     return sts;
-#endif
-  return SEV__SUCCESS;
+
+  return XNAV__SUCCESS;
 }
 
 void XttTCurve::tcurve_help_cb( void *ctx)
