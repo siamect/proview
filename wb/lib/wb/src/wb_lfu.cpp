@@ -96,7 +96,7 @@ public:
   pwr_tOid oid;
   pwr_tEnum operatingsystem;
   pwr_tString80 nodename;
-  pwr_tString16 address;
+  pwr_tString80 address;
   pwr_tUInt32 port;
   pwr_tVid vid;
   pwr_tEnum connection;

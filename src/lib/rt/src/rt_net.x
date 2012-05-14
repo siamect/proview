@@ -1629,6 +1629,7 @@ struct  net_sUpdateCircBuffer {
 %net_sTime net_DeltaTimeToNetTime( const pwr_tDeltaTime *t);
 %net_sTime net_DeltaTimeToNetTime( const pwr_tDeltaTime *t);
 %int net_GetTime( net_sTime *nt);
+%int net_StringToAddr( char *str, struct in_addr *naddr);
 %
 %#endif
 %

@@ -58,6 +58,7 @@
 #include "rt_io_bus.h"
 #include "rt_io_msg.h"
 #include "rt_errh.h"
+#include "rt_net.h"
 #include "co_cdh.h"
 #include "co_time.h"
 #include "rt_mb_msg.h"
@@ -103,7 +104,12 @@ static int connect_slave( io_sRackLocal *local, io_sRack *rp)
 
   local->rem_addr.sin_family = AF_INET;
   local->rem_addr.sin_port = htons(port);
-  local->rem_addr.sin_addr.s_addr = inet_addr((char *) &(op->Address));
+  // local->rem_addr.sin_addr.s_addr = inet_addr((char *) &(op->Address));
+  sts = net_StringToAddr( op->Address, &local->rem_addr.sin_addr);
+  if ( EVEN(sts)) {
+    errh_Error( "Address error for IO modbus tcp slave %s %s", rp->Name, op->Address);
+    return sts;
+  }
   
   /* Connect to remote address */
 

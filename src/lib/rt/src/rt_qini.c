@@ -35,6 +35,8 @@
  */
 
 /* rt_qini.c -- Queue Communication, initiation  */
+#include <string.h>
+#include <stdlib.h>
 
 #include "pwr.h"
 #include "rt_errh.h"
@@ -45,6 +47,7 @@
 #include "co_cdh.h"
 #include "rt_qini.h"
 #include "rt_inet.h"
+#include "rt_net.h"
 
 
 static qdb_sNode *
@@ -156,16 +159,46 @@ qini_ParseFile (
       continue;
     }
 
+    sts = net_StringToAddr( s_naddr, &naddr);
+    if ( EVEN(sts)) {
+      errh_Error("error in line, <network address>, skip to next line.\n>> %s", s);
+      (*errors)++;
+      continue;
+    }
+
+#if 0
     naddr.s_addr = inet_network(s_naddr);
 #if defined(OS_VMS) 
     if (naddr.s_addr == (in_addr_t)-1) {
 #else
     if (naddr.s_addr == (unsigned int)-1) {
 #endif
-      errh_Error("error in line, <network address>, skip to next line.\n>> %s", s);
-      (*errors)++;
-      continue;
+      /* Try name instead */
+      struct addrinfo hints;
+      struct addrinfo *res;
+      int err;
+
+      memset((void*)&hints, 0, sizeof(hints));
+      hints.ai_socktype = SOCK_STREAM;
+
+      err = getaddrinfo(s_naddr, 0, &hints, &res);
+      if ( err < 0) {
+	errh_Error("error in line, <network address>, skip to next line.\n>> %s", s);
+	(*errors)++;
+	continue;
+      }
+      switch ( res->ai_family) {
+      case AF_INET:
+	// memcpy( &naddr.s_addr, (char *)&res->ai_addr->sa_data + 2, 4);
+	memcpy( &naddr.s_addr, &((struct sock_addr_in *)res->ai_addr)->sin_addr, 4);
+	naddr.s_addr = ntohl( naddr.s_addr);
+	break;
+      case AF_INET6:
+	break;
+      }
+      freeaddrinfo( res);
     }
+#endif
 
     nep = tree_Find(&sts, ntp, &nid);
     if (nep != NULL) {

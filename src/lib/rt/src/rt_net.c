@@ -59,6 +59,10 @@
 # include <stddef.h>
 # include <string.h>
 # include <pthread.h>
+# include <sys/types.h>
+# include <sys/socket.h>
+# include <arpa/inet.h>
+# include <netdb.h>
 #endif
 
 #include "pwr.h"
@@ -812,4 +816,36 @@ int net_GetTime( net_sTime *nt)
   nt->tv_sec = t.tv_sec;
   nt->tv_nsec = t.tv_nsec;
   return sts;
+}
+
+int net_StringToAddr( char *str, struct in_addr *naddr)
+{
+  naddr->s_addr = inet_network( str);
+  if (naddr->s_addr == (unsigned int)-1) {
+    /* Try name instead */
+    struct addrinfo hints;
+    struct addrinfo *res;
+    int err;
+
+    memset((void*)&hints, 0, sizeof(hints));
+    hints.ai_socktype = SOCK_STREAM;
+
+    err = getaddrinfo(str, 0, &hints, &res);
+    if ( err < 0) {
+      return 0;
+    }
+
+    switch ( res->ai_family) {
+    case AF_INET:
+      memcpy( &naddr->s_addr, (char *)&res->ai_addr->sa_data + 2, 4);
+      naddr->s_addr = ntohl( naddr->s_addr);
+      break;
+    case AF_INET6:
+      /* Not yet implemented */
+      return 0;
+      break;
+    }
+    freeaddrinfo( res);
+  }
+  return 1;
 }

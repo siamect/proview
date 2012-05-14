@@ -1238,9 +1238,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! IP-address for the remote node. Dynamic change is not possible.
         !*/
         Object Address $Attribute 6 08-FEB-2008 10:44:42.47
-          Body SysBody 08-FEB-2008 10:47:01.34
+          Body SysBody 14-MAY-2012 13:53:27.76
             Attr PgmName = "Address"
-            Attr TypeRef = "pwrs:Type-$String32"
+            Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         !/**
