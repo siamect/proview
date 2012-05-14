@@ -1002,6 +1002,31 @@ sub build_all ()
       _build("exe", "jpwr_rt_gdh", "src", "all");
     }
   }
+  elsif ( $module eq "profibus") {
+    if ( $copy == 1) {
+      _build("wbl", "*", "src", "copy");
+      _build("lib", "*", "src", "init copy");
+      _build("lib", "*", $flavour, "copy");
+      _build("exp", "*", "src", "init copy");
+      _build("mmi", "*", "src", "copy");
+      _build("mmi", "*", $flavour, "copy");
+      _build("exe", "*", "src", "copy");
+    }
+    if ( $lib == 1) {
+      _build("lib", "*", "src", "lib");
+      _build("lib", "*", $flavour, "lib");
+      _build("exp", "*", "src", "lib");
+    }
+    if ( $exe == 1) {
+      _build("wbl", "*", "src", "lib");
+      _build("wbl", "*", "src", "exe");
+      if ( $lib == 1) {
+	merge();
+      }
+      _build("exe", "*", "src", "all");
+      _build("exe", "*", $flavour, "all");
+    }
+  }
   else {
     if ( $copy == 1) {
       _build("wbl", "*", "src", "copy");
