@@ -42,6 +42,7 @@
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
+#include "rt_cbuf.h"
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_time.h"
@@ -314,7 +315,7 @@ XttTrend::XttTrend( void *parent_ctx,
 	  cb_info[i].bufsize = cb_info[i].samples * element_size[i];
 	  cb_info[i].bufp = (char *) calloc( 1, cb_info[i].bufsize);
 	  cb_info[i].circ_aref = tcp[tcp_i].Buffers[j];
-	  *sts = gdh_GetCircBuffInfo( &cb_info[i], 1); 
+	  *sts = cbuf_GetCircBuffInfo( &cb_info[i], 1); 
 	  if ( EVEN(*sts))
 	    continue;
 
@@ -521,7 +522,7 @@ void XttTrend::trend_scan( void *data)
     pwr_tStatus sts;
     unsigned int size;
 
-    sts = gdh_UpdateCircBuffInfo( trend->cb_info, trend->trend_cnt);
+    sts = cbuf_UpdateCircBuffInfo( trend->cb_info, trend->trend_cnt);
     if ( EVEN(sts)) return;
 
     for ( i = 0; i < trend->trend_cnt; i++) {

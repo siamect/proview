@@ -68,8 +68,18 @@ palette NavigatorPalette
     {
       class DsFastCurve
       class DsTrend
+      class DsTrendCurve
       class SevHist
       class SevHistObject
+      menu CircularBuffer
+      {
+        class CircBuff1k
+        class CircBuff2k
+        class CircBuff10k
+        class CircBuff20k
+        class CircBuff100k
+        class CircBuff200k
+      }
     }
     menu Supervision
     {

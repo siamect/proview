@@ -34,80 +34,42 @@
  * General Public License plus this exception.
  */
 
-#ifndef xtt_trend_h
-#define xtt_trend_h
-
-/* xtt_trend.h -- DsTrend curves */
-
-#ifndef pwr_h
-# include "pwr.h"
-#endif
-
-#ifndef ge_curve_h
-# include "ge_curve.h"
-#endif
-
 #ifndef rt_cbuf_h
-# include "rt_cbuf.h"
-#endif
+#define rt_cbuf_h
 
-#define XTT_TREND_MAX 20
-
-class CoWow;
-class CoWowTimer;
-
-class XttTrend {
- public:
-  void       *xnav;
-  int        trend_cnt;
-  GeCurveData *gcd;
-  GeCurve    *curve;
-  pwr_tRefId subid[XTT_TREND_MAX];
-  pwr_sClass_DsTrend *trend_p[XTT_TREND_MAX];
-  int        element_size[XTT_TREND_MAX];
-  pwr_eType  element_type[XTT_TREND_MAX];
-  int        interval[XTT_TREND_MAX];
-  pwr_tAName trend_name[XTT_TREND_MAX];
-  int        max_time;
-  int        min_interval;
-  int        min_interval_idx;
-  int        max_points;
-  pwr_tTid   trend_tid;
-  int	     update_time;
-  cbuf_sCircBuffInfo cb_info[XTT_TREND_MAX];
-  CoWowTimer *timerid;
-  int        last_buffer[XTT_TREND_MAX];
-  int        last_next_index[XTT_TREND_MAX];
-  void       (*close_cb)( void *, XttTrend *);
-  void       (*help_cb)( void *, const char *);
-  void       (*command_cb)( void *, const char *);
-  CoWow	     *wow;
-
-  XttTrend( void *xn_parent_ctx,
-	    char *xn_name,
-	    pwr_sAttrRef *objid,
-	    pwr_sAttrRef *plotgroup,
-	    int *sts);
-  virtual ~XttTrend();
-  void pop();
-
-  static void trend_close_cb( void *ctx);
-  static void trend_help_cb( void *ctx);
-  static void trend_snapshot_cb( void *ctx);
-  static void trend_scan( void *data);
-
-};
-
+#if defined __cplusplus
+extern "C" {
 #endif
 
 
+/**
+ * Circular buffer argument structure
+ */
+typedef struct {
+  pwr_sAttrRef		circ_aref; /**< Attribute reference to circular buffer object */
+  unsigned int		resolution; /**< Resolution of return data */
+  unsigned int		samples;  /**< number of data values */
+  void			*bufp;    /**< Data buffer that receives the requested information */
+  unsigned int		bufsize;  /**< The size in bytes of the data buffer */
+  unsigned int		size;     /**< Number of returned values */
+  unsigned int		first_idx; /**< First index, this has to be saved to the next call */
+  unsigned int		last_idx; /**< Last index, this has to be saved to the next call */
+  unsigned int		offset;    /**< Index offset to use in the next call */
+} cbuf_sCircBuffInfo;
 
+pwr_tStatus cbuf_GetCircBuffInfo( cbuf_sCircBuffInfo *info,
+				  int infosize);
+pwr_tStatus cbuf_UpdateCircBuffInfo( cbuf_sCircBuffInfo *info,
+				     int infosize);
+  
+void cbuf_GetCircBufferMsg( qcom_sGet *get);
+void cbuf_UpdateCircBufferMsg( qcom_sGet *get);
 
+void cbuf_InitBuffer( void *o, pwr_tUInt32 size, pwr_tUInt32 element_size);
+void cbuf_AddSample( void *o, void *value);
+void cbuf_AddTimeSample( void *o, pwr_tTime *t);
 
-
-
-
-
-
-
-
+#if defined __cplusplus
+}
+#endif
+#endif

@@ -33,15 +33,15 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_circbuff1000.wb_load -- Defines the class CircBuff1000.
+!  pwrb_c_circbuff2k.wb_load -- Defines the class CircBuff2k.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  @Summary Circular buffer with buffer size 1000 byte
-!  Circular buffer with buffer size 1000 byte.
+!  @Summary Circular buffer with buffer size 2000 byte
+!  Circular buffer with buffer size 2000 byte.
 !*/
-  Object CircBuff1000 $ClassDef 595
+  Object CircBuff2k $ClassDef 600
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
@@ -49,7 +49,7 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "CircBuff1000"
+        Attr StructName = "CircBuff2k"
       EndBody
       !/**
       !  Buffer header.
@@ -69,13 +69,13 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_ARRAY
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Elements = 250
+	  Attr Elements = 500
         EndBody
       EndObject
     EndObject
-    Object Template CircBuff1000
+    Object Template CircBuff2k
       Body RtBody
-	Attr Head.Size = 250
+	Attr Head.Size = 500
 	Attr Head.ElementSize = 4
       EndBody
     EndObject
