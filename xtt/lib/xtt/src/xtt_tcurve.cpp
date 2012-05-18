@@ -837,14 +837,14 @@ int XttTCurve::load_data( pwr_tStatus *sts, pwr_tAttrRef *aref)
       int last_idx;
       int size;
       char *tb;
-      char *vb[10];
+      char *vb[XTT_TCURVE_MAX];
       int header_size = pwr_AlignLW(sizeof(pwr_sClass_CircBuffHeader));
       
       *sts = gdh_GetObjectInfoAttrref( aref, &trend, sizeof(trend));
       if ( EVEN(*sts)) return 0;
 
       idx = 0;
-      for ( int j = 0; j < 10; j++) {
+      for ( int j = 0; j < XTT_TCURVE_MAX; j++) {
 	if ( cdh_ObjidIsNull( trend.Buffers[j].Objid))
 	  continue;
 
@@ -971,7 +971,12 @@ void XttTCurve::save( char *filename)
 { 
   pwr_tFileName fname;
 
-  strcpy( fname, filename);
+  if ( strchr( filename, '/') == 0)
+    strcpy( fname, "$pwrp_load/");
+  else
+    strcpy( fname, "");
+
+  strncat( fname, filename, sizeof(fname));
   if ( !( strlen(filename) < 9 && 
 	  strcmp( &filename[strlen(filename)-9], ".rtt_trd") == 0))
     strncat( fname, ".rtt_trd", sizeof(fname));
@@ -998,8 +1003,10 @@ void XttTCurve::open( char *filename)
 { 
   pwr_tFileName fname;
   pwr_tStatus sts;
+  tcurve_sTc *tcp;
 
-  strcpy( fname, filename);
+  strcpy( fname, "$pwrp_load/");
+  strncat( fname, filename, sizeof(fname));
   if ( !( strlen(filename) < 9 && 
 	  strcmp( &filename[strlen(filename)-9], ".rtt_trd") == 0))
     strncat( fname, ".rtt_trd", sizeof(fname));
@@ -1012,22 +1019,41 @@ void XttTCurve::open( char *filename)
     return;
   }
 
+  fp.read( (char *)&aref_cnt, sizeof(aref_cnt));
+  if ( aref_cnt > XTT_TCURVE_MAX) {
+    printf( "Read error\n");
+    return;
+  }
+  fp.read( (char *)arefv, aref_cnt * sizeof(arefv[0]));
+  tcp = (tcurve_sTc *)calloc( 1, sizeof(tcurve_sTc));
+  fp.read( (char *)tcp, sizeof(*tcp));
+
+  if ( tcp->bufcnt > XTT_TCURVE_MAX || tcp->timebuf_bsize > 20000000) {
+    printf( "Read error\n");
+    return;
+  }
+  for ( int i = 0; i < tcp->bufcnt; i++) {
+    if ( tcp->buf_bsize[i] > 20000000) {
+      printf( "Read error\n");
+      return;
+    }
+  }
+  tcp->tbuf = (char *)calloc( 1, tcp->timebuf_bsize);
+  fp.read( tcp->tbuf, tcp->timebuf_bsize);
+  for ( int i = 0; i < tcp->bufcnt; i++) {
+    tcp->vbuf[i] = (char *)calloc( 1, tcp->buf_bsize[i]);
+    fp.read( tcp->vbuf[i], tcp->buf_bsize[i]);
+  }
+
+  fp.close();
+
   // Free old data
   free( tc.tbuf);
   for ( int i = 0; i < tc.bufcnt; i++)
     free( tc.vbuf[i]);
 
-  fp.read( (char *)&aref_cnt, sizeof(aref_cnt));
-  fp.read( (char *)arefv, aref_cnt * sizeof(arefv[0]));
-  fp.read( (char *)&tc, sizeof(tc));
-  tc.tbuf = (char *)calloc( 1, tc.timebuf_bsize);
-  fp.read( tc.tbuf, tc.timebuf_bsize);
-  for ( int i = 0; i < tc.bufcnt; i++) {
-    tc.vbuf[i] = (char *)calloc( 1, tc.buf_bsize[i]);
-    fp.read( tc.vbuf[i], tc.buf_bsize[i]);
-  }
-
-  fp.close();
+  memcpy( &tc, tcp, sizeof(tc));
+  free( tcp);
 
   pwr_tTime from = pwr_cNTime;
   pwr_tTime to = {0xEFFFFFFF, 0};

@@ -56,21 +56,21 @@
 /*! \addtogroup Xtt */
 /*@{*/
 
-#define XTT_TCURVE_MAX 20
+#define XTT_TCURVE_MAX 10
 
 class CoWow;
 class CoWowTimer;
 
 typedef struct {
-  pwr_tAName name[10];
-  pwr_tAttrRef buf_aref[10];
+  pwr_tAName name[XTT_TCURVE_MAX];
+  pwr_tAttrRef buf_aref[XTT_TCURVE_MAX];
   pwr_tAttrRef timebuf_aref;
-  int element_size[10];
-  pwr_eType type[10];
-  int buf_size[10];
-  int buf_bsize[10];
-  int buf_samples[10];
-  char *vbuf[10];
+  int element_size[XTT_TCURVE_MAX];
+  pwr_eType type[XTT_TCURVE_MAX];
+  int buf_size[XTT_TCURVE_MAX];
+  int buf_bsize[XTT_TCURVE_MAX];
+  int buf_samples[XTT_TCURVE_MAX];
+  char *vbuf[XTT_TCURVE_MAX];
   int bufcnt;
   int timeelement_size;
   int timebuf_size;
