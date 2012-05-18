@@ -168,6 +168,14 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Options.
+      !*/
+      Object Options $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-PostOptionsMask"
+        EndBody
+      EndObject
     EndObject
     Object Template ReportConfig
       Body RtBody
