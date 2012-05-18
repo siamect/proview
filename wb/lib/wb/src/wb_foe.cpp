@@ -2059,11 +2059,13 @@ pwr_tStatus WFoe::ldh_this_session_cb( void *ctx, ldh_sEvent *event)
   WFoe *foe = (WFoe *) ctx;
   vldh_t_node	node;
   int		sts;
+  ldh_sEvent    *next;
 
   if ( !foe->ldh_cb_enabled)
     return 1;
 
   while (event) {
+    next = event->nep;
     switch (event->Event) {
     case ldh_eEvent_AttributeModified:
     case ldh_eEvent_ObjectRenamed:
@@ -2077,7 +2079,7 @@ pwr_tStatus WFoe::ldh_this_session_cb( void *ctx, ldh_sEvent *event)
     default:
       break;
     }
-    event = event->nep;
+    event = next;
   }
   return 1;
 }
