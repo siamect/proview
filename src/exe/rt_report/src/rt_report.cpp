@@ -601,6 +601,7 @@ int rt_report::replace_value( char *out, unsigned int size,
   pwr_tUInt32 a_size;
   pwr_tUInt32 a_offs;
   pwr_tUInt32 a_elem;
+  pwr_eType a_type;
   int flen;
   char timstr[40];
 
@@ -647,7 +648,8 @@ int rt_report::replace_value( char *out, unsigned int size,
     if ( !value_found || !format_found)
       return 0;
 
-    sts = gdh_AttrValueToString( pwr_eType_Float32, a_tid, buf, fstr, 
+    a_type = (pwr_eType)pwr_TypeId( pwr_Tix(a_tid));
+    sts = gdh_AttrValueToString( a_type, a_tid, buf, fstr, 
 				 sizeof(fstr), &flen, format);
     if ( EVEN(sts)) return sts;
 
