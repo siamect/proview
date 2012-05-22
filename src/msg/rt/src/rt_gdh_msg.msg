@@ -100,6 +100,7 @@ noobject        <AttrRef is not an object>				/error
 file		<Unable to open file>					/error
 convert		<Unable to convert value>				/error
 readonly	<Object or attribute is read only>			/error
+remotemount	<Remotly mounted object>				/error
 .end
 
 
