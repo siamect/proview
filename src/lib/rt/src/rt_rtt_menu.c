@@ -5363,6 +5363,14 @@ static int	rtt_print_value(
 					*(pwr_tSubid *) value_ptr, 1));
 	      break;
 	    }
+	    case pwr_eType_NetStatus:
+	    case pwr_eType_Status: 
+	    {
+	      char msg[200];
+	      msg_GetMsg( *(pwr_tStatus *)value_ptr, msg, sizeof(msg));
+	      r_print( "%s", msg);
+	      break;
+	    }
 	  }
 	}
 	memcpy( old_value, value_ptr, min(size, 80));
