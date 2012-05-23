@@ -1,6 +1,6 @@
 Volume Siemens $ClassVolume 0.0.250.3 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X75"
+    Attr NextOix = "_X95"
     Attr NextCix = "_X69"
     Attr NextTix[0] = "_X3"
   EndBody
@@ -6476,7 +6476,7 @@ Volume Siemens $ClassVolume 0.0.250.3
       Object RtBody $ObjBodyDef 1 25-NOV-2010 09:55:06.72
         Body SysBody 25-NOV-2010 09:55:06.72
           Attr StructName = "Sinamics_G120_Tgm1Fo"
-          Attr NextAix = "_X10"
+          Attr NextAix = "_X11"
         EndBody
         Object PowerOn $Input 2 25-NOV-2010 09:55:52.11
           Body SysBody 25-NOV-2010 09:57:01.65
@@ -6526,6 +6526,14 @@ Volume Siemens $ClassVolume 0.0.250.3
             Attr GraphName = "eno"
           EndBody
         EndObject
+        Object SupDisabled $Input 10 23-MAY-2012 10:42:24.67
+          Body SysBody 23-MAY-2012 10:42:34.25
+            Attr PgmName = "SupDisabled"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "dis"
+          EndBody
+        EndObject
         Object PlcConnect $Intern 1 25-NOV-2010 09:55:06.72
           Body SysBody 25-NOV-2010 09:55:06.72
             Attr PgmName = "PlcConnect"
@@ -6563,7 +6571,7 @@ Volume Siemens $ClassVolume 0.0.250.3
       Object GraphPlcNode $GraphPlcNode 37 25-NOV-2010 09:55:06.72
         Body SysBody 25-NOV-2010 10:41:11.19
           Attr object_type = 11
-          Attr parameters[0] = 6
+          Attr parameters[0] = 7
           Attr parameters[1] = 1
           Attr parameters[2] = 2
           Attr parameters[3] = 0
@@ -6595,26 +6603,30 @@ Volume Siemens $ClassVolume 0.0.250.3
       Object Code PlcTemplate 40 25-NOV-2010 09:55:06.72
         Body RtBody 25-NOV-2010 09:55:06.72
         EndBody
-        Body DevBody 25-NOV-2010 10:53:20.85
+        Body DevBody 23-MAY-2012 11:18:02.06
           Buffer PlcProgram
             Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
             Attr defnamecount[2] = 1
-            Attr defnamecount[11] = 1
+            Attr defnamecount[11] = 2
+            Attr defnamecount[91] = 1
+            Attr defnamecount[95] = 1
+            Attr defnamecount[97] = 1
             Attr defnamecount[136] = 1
-            Attr defnamecount[137] = 5
-            Attr defnamecount[139] = 2
+            Attr defnamecount[137] = 7
+            Attr defnamecount[139] = 3
+            Attr defnamecount[252] = 1
             Attr defnamecount[253] = 1
             Attr defnamecount[255] = 2
-            Attr defnamecount[256] = 5
-            Attr connamecount = 16
+            Attr defnamecount[256] = 7
+            Attr connamecount = 26
           EndBuffer
         EndBody
         Object W WindowPlc 41 25-NOV-2010 10:42:00.23
           Body RtBody 25-NOV-2010 10:42:00.23
           EndBody
-          Body DevBody 25-NOV-2010 10:53:20.85
-            Attr Modified = "25-NOV-2010 10:53:20.85"
+          Body DevBody 23-MAY-2012 11:18:02.06
+            Attr Modified = "23-MAY-2012 11:18:02.06"
             Buffer PlcWindow
               Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -6624,23 +6636,324 @@ Volume Siemens $ClassVolume 0.0.250.3
               Attr refconcount = 1
             EndBuffer
           EndBody
+          Object cn25 ConDigital 95 23-MAY-2012 11:17:27.11
+            Body DevBody 23-MAY-2012 11:18:02.06
+              Buffer PlcConnection
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn25"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-Or0"
+                Attr dest_point = 6
+                Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-BaseFcPPO3Fo0"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.849000e+00
+                  Attr y = 1.550000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.185000e+00
+                  Attr y = 1.550000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.185000e+00
+                  Attr y = 1.500000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.220000e+00
+                  Attr y = 1.500000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn24 ConDigital 94 23-MAY-2012 11:17:09.42
+            Body DevBody 23-MAY-2012 11:18:02.06
+              Buffer PlcConnection
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn24"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-Or0"
+                Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp6"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.589778e+00
+                  Attr y = 1.550000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.670000e+00
+                  Attr y = 1.550000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.375000e+00
+                  Attr y = 1.725000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.034500e+00
+                  Attr y = 1.725000e+00
+                EndBuffer
+                Buffer point[4]
+                  Attr x = 2.034500e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[5]
+                  Attr x = 1.839778e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn22 ConDigital 90 23-MAY-2012 11:16:45.37
+            Body DevBody 23-MAY-2012 11:18:02.06
+              Buffer PlcConnection
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn22"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-Wait0"
+                Attr dest_point = 1
+                Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-Or0"
+                Attr point_count = 6
+                Buffer point[0]
+                  Attr x = 2.436889e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.470778e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.470778e+00
+                  Attr y = 1.650000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.629889e+00
+                  Attr y = 1.650000e+00
+                EndBuffer
+                Buffer point[4]
+                  Attr x = 1.629889e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[5]
+                  Attr x = 1.670000e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn21 ConDigital 89 23-MAY-2012 11:16:43.76
+            Body DevBody 23-MAY-2012 11:18:02.06
+              Buffer PlcConnection
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn21"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-SR_R0"
+                Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-Wait0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.220000e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.150000e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn19 ConDigital 84 23-MAY-2012 11:15:26.55
+            Body DevBody 23-MAY-2012 11:18:02.06
+              Buffer PlcConnection
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn19"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-SR_R0"
+                Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp5"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.565333e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.920000e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.717667e+00
+                  Attr y = 1.750000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.665333e+00
+                  Attr y = 1.750000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn17 ConDigital 80 23-MAY-2012 11:14:35.82
+            Body DevBody 23-MAY-2012 11:18:02.06
+              Buffer PlcConnection
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn17"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-Even1"
+                Attr dest_point = 1
+                Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-SR_R0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.920000e+00
+                  Attr y = 1.850000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.799000e+00
+                  Attr y = 1.850000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn16 ConAnalog 79 23-MAY-2012 11:14:34.35
+            Body DevBody 23-MAY-2012 11:18:02.06
+              Buffer PlcConnection
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn16"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-Even1"
+                Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetIp0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.556444e+00
+                  Attr y = 1.850000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.620000e+00
+                  Attr y = 1.850000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.738222e+00
+                  Attr y = 1.950000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.706445e+00
+                  Attr y = 1.950000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn15 ConDigital 75 25-NOV-2010 10:45:28.36
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Buffer PlcConnection
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn15"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_point = 7
+                Attr source_point = 8
                 Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-BaseFcPPO3Fo0"
                 Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-StoDp1"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.570000e+00
+                  Attr x = 2.770000e+00
                   Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.356889e+00
+                  Attr x = 2.554667e+00
                   Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[2]
@@ -6664,22 +6977,22 @@ Volume Siemens $ClassVolume 0.0.250.3
             EndBody
           EndObject
           Object cn14 ConDigital 73 25-NOV-2010 10:45:24.76
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Buffer PlcConnection
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn14"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_point = 6
+                Attr source_point = 7
                 Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-BaseFcPPO3Fo0"
                 Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-StoDp0"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.570000e+00
+                  Attr x = 2.770000e+00
                   Attr y = 1.200000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.356889e+00
+                  Attr x = 2.554667e+00
                   Attr y = 1.200000e+00
                 EndBuffer
                 Buffer point[2]
@@ -6703,7 +7016,7 @@ Volume Siemens $ClassVolume 0.0.250.3
             EndBody
           EndObject
           Object cn11 ConDigital 67 25-NOV-2010 10:45:04.30
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Buffer PlcConnection
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn11"
                 Attr object_type = 23
@@ -6714,11 +7027,11 @@ Volume Siemens $ClassVolume 0.0.250.3
                 Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp4"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.893111e+00
+                  Attr x = 1.643111e+00
                   Attr y = 1.450000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.020000e+00
+                  Attr x = 2.220000e+00
                   Attr y = 1.450000e+00
                 EndBuffer
                 Buffer point[2]
@@ -6742,7 +7055,7 @@ Volume Siemens $ClassVolume 0.0.250.3
             EndBody
           EndObject
           Object cn10 ConDigital 65 25-NOV-2010 10:45:00.88
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Buffer PlcConnection
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn10"
                 Attr object_type = 23
@@ -6753,11 +7066,11 @@ Volume Siemens $ClassVolume 0.0.250.3
                 Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp3"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.762000e+00
+                  Attr x = 1.512000e+00
                   Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.020000e+00
+                  Attr x = 2.220000e+00
                   Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[2]
@@ -6781,7 +7094,7 @@ Volume Siemens $ClassVolume 0.0.250.3
             EndBody
           EndObject
           Object cn9 ConDigital 63 25-NOV-2010 10:44:57.48
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Buffer PlcConnection
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn9"
                 Attr object_type = 23
@@ -6792,11 +7105,11 @@ Volume Siemens $ClassVolume 0.0.250.3
                 Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp2"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.762000e+00
+                  Attr x = 1.512000e+00
                   Attr y = 1.350000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.020000e+00
+                  Attr x = 2.220000e+00
                   Attr y = 1.350000e+00
                 EndBuffer
                 Buffer point[2]
@@ -6820,7 +7133,7 @@ Volume Siemens $ClassVolume 0.0.250.3
             EndBody
           EndObject
           Object cn8 ConAnalog 61 25-NOV-2010 10:44:53.71
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Buffer PlcConnection
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn8"
                 Attr object_type = 24
@@ -6831,11 +7144,11 @@ Volume Siemens $ClassVolume 0.0.250.3
                 Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetAp0"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.802000e+00
+                  Attr x = 1.552000e+00
                   Attr y = 1.300000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.020000e+00
+                  Attr x = 2.220000e+00
                   Attr y = 1.300000e+00
                 EndBuffer
                 Buffer point[2]
@@ -6859,7 +7172,7 @@ Volume Siemens $ClassVolume 0.0.250.3
             EndBody
           EndObject
           Object cn7 ConDigital 59 25-NOV-2010 10:44:50.15
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Buffer PlcConnection
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn7"
                 Attr object_type = 23
@@ -6870,11 +7183,11 @@ Volume Siemens $ClassVolume 0.0.250.3
                 Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp1"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.733111e+00
+                  Attr x = 1.483111e+00
                   Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.020000e+00
+                  Attr x = 2.220000e+00
                   Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[2]
@@ -6898,7 +7211,7 @@ Volume Siemens $ClassVolume 0.0.250.3
             EndBody
           EndObject
           Object cn1 ConDigital 47 25-NOV-2010 10:44:35.21
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Buffer PlcConnection
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn1"
                 Attr object_type = 23
@@ -6908,11 +7221,11 @@ Volume Siemens $ClassVolume 0.0.250.3
                 Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp0"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.790889e+00
+                  Attr x = 1.540889e+00
                   Attr y = 1.200000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.020000e+00
+                  Attr x = 2.220000e+00
                   Attr y = 1.200000e+00
                 EndBuffer
                 Buffer point[2]
@@ -6956,17 +7269,17 @@ Volume Siemens $ClassVolume 0.0.250.3
             Body RtBody 25-NOV-2010 10:52:34.91
               Attr PlcConnect = "$PlcMain:Siemens-Class-Sinamics_G120_Tgm1"
             EndBody
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "BaseComponent:Class-BaseFcPPO3Fo"
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-BaseFcPPO3Fo0"
-                Attr x = 2.000000e+00
-                Attr y = -5.250000e-01
-                Attr width = 3.368889e-01
-                Attr heigth = 4.000000e-01
+                Attr x = 2.200000e+00
+                Attr y = -5.750000e-01
+                Attr width = 3.346667e-01
+                Attr heigth = 4.500000e-01
                 Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
-                Attr mask[0] = 63
+                Attr mask[0] = 127
                 Attr mask[1] = 3
               EndBuffer
             EndBody
@@ -6974,13 +7287,13 @@ Volume Siemens $ClassVolume 0.0.250.3
           Object GetDp0 GetDp 46 25-NOV-2010 10:44:35.21
             Body RtBody 25-NOV-2010 10:44:35.21
             EndBody
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Attr DpObject = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.PowerOn"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp0"
-                Attr x = 1.450000e+00
+                Attr x = 1.200000e+00
                 Attr y = -2.250001e-01
                 Attr width = 3.408889e-01
                 Attr heigth = 5.000000e-02
@@ -6992,13 +7305,13 @@ Volume Siemens $ClassVolume 0.0.250.3
           Object GetDp1 GetDp 58 25-NOV-2010 10:44:50.15
             Body RtBody 25-NOV-2010 10:44:50.15
             EndBody
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Attr DpObject = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.Start"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp1"
-                Attr x = 1.450000e+00
+                Attr x = 1.200000e+00
                 Attr y = -2.750000e-01
                 Attr width = 2.831111e-01
                 Attr heigth = 5.000000e-02
@@ -7010,13 +7323,13 @@ Volume Siemens $ClassVolume 0.0.250.3
           Object GetAp0 GetAp 60 25-NOV-2010 10:44:53.71
             Body RtBody 25-NOV-2010 10:44:53.71
             EndBody
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Attr ApObject = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.RefSpeed"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetAp0"
-                Attr x = 1.450000e+00
+                Attr x = 1.200000e+00
                 Attr y = -3.250000e-01
                 Attr width = 3.520000e-01
                 Attr heigth = 5.000000e-02
@@ -7028,13 +7341,13 @@ Volume Siemens $ClassVolume 0.0.250.3
           Object GetDp2 GetDp 62 25-NOV-2010 10:44:57.48
             Body RtBody 25-NOV-2010 10:44:57.48
             EndBody
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Attr DpObject = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.NoOff2"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp2"
-                Attr x = 1.450000e+00
+                Attr x = 1.200000e+00
                 Attr y = -3.750000e-01
                 Attr width = 3.120000e-01
                 Attr heigth = 5.000000e-02
@@ -7046,13 +7359,13 @@ Volume Siemens $ClassVolume 0.0.250.3
           Object GetDp3 GetDp 64 25-NOV-2010 10:45:00.88
             Body RtBody 25-NOV-2010 10:45:00.88
             EndBody
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Attr DpObject = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.NoOff3"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp3"
-                Attr x = 1.450000e+00
+                Attr x = 1.200000e+00
                 Attr y = -4.250000e-01
                 Attr width = 3.120000e-01
                 Attr heigth = 5.000000e-02
@@ -7064,13 +7377,13 @@ Volume Siemens $ClassVolume 0.0.250.3
           Object GetDp4 GetDp 66 25-NOV-2010 10:45:04.30
             Body RtBody 25-NOV-2010 10:45:04.30
             EndBody
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Attr DpObject = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.EnableOperation"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp4"
-                Attr x = 1.450000e+00
+                Attr x = 1.200000e+00
                 Attr y = -4.750001e-01
                 Attr width = 4.431111e-01
                 Attr heigth = 5.000000e-02
@@ -7082,13 +7395,13 @@ Volume Siemens $ClassVolume 0.0.250.3
           Object StoDp0 StoDp 72 25-NOV-2010 10:45:24.76
             Body RtBody 25-NOV-2010 10:45:24.76
             EndBody
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Attr Object = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.ReadyRemote"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-StoDp0"
-                Attr x = 2.550000e+00
+                Attr x = 2.750000e+00
                 Attr y = -2.250001e-01
                 Attr width = 4.563333e-01
                 Attr heigth = 5.000000e-02
@@ -7100,18 +7413,146 @@ Volume Siemens $ClassVolume 0.0.250.3
           Object StoDp1 StoDp 74 25-NOV-2010 10:45:28.36
             Body RtBody 25-NOV-2010 10:45:28.36
             EndBody
-            Body DevBody 25-NOV-2010 10:53:20.85
+            Body DevBody 23-MAY-2012 11:18:02.06
               Attr Object = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.Run"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-StoDp1"
-                Attr x = 2.550000e+00
+                Attr x = 2.750000e+00
                 Attr y = -2.750000e-01
                 Attr width = 3.185556e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
                 Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetIp0 GetIp 76 23-MAY-2012 11:13:14.71
+            Body RtBody 23-MAY-2012 11:13:14.71
+            EndBody
+            Body DevBody 23-MAY-2012 11:18:02.06
+              Attr IpObject = "$PlcMain:Siemens-Class-Sinamics_G120_Tgm1.Super.IoStatus"
+              Buffer PlcNode
+                Attr object_type = 252
+                Attr cid = "pwrb:Class-GetIp"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetIp0"
+                Attr x = 1.150000e+00
+                Attr y = -8.250000e-01
+                Attr width = 3.564444e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object SR_R0 SR_R 77 23-MAY-2012 11:14:11.76
+            Body RtBody 23-MAY-2012 11:14:11.76
+            EndBody
+            Body DevBody 23-MAY-2012 11:18:02.06
+              Buffer PlcNode
+                Attr object_type = 95
+                Attr cid = "pwrb:Class-SR_R"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-SR_R0"
+                Attr x = 1.900000e+00
+                Attr y = -9.250000e-01
+                Attr width = 2.300000e-01
+                Attr heigth = 2.000000e-01
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Even1 Even 78 23-MAY-2012 11:14:22.35
+            Body RtBody 23-MAY-2012 11:14:22.35
+            EndBody
+            Body DevBody 23-MAY-2012 11:18:02.06
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Even"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-Even1"
+                Attr x = 1.600000e+00
+                Attr y = -8.750000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[0] = 1
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp5 GetDp 83 23-MAY-2012 11:15:26.55
+            Body RtBody 23-MAY-2012 11:15:26.55
+            EndBody
+            Body DevBody 23-MAY-2012 11:18:02.06
+              Attr DpObject = "$PlcMain:Siemens-Class-Sinamics_G120_Tgm1.Super.OpReset"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp5"
+                Attr x = 1.200000e+00
+                Attr y = -8.249999e-01
+                Attr width = 3.653333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Wait0 Wait 85 23-MAY-2012 11:16:10.64
+            Body RtBody 23-MAY-2012 11:16:18.25
+              Attr TimerTime = 5.000000e+00
+            EndBody
+            Body DevBody 23-MAY-2012 11:18:02.06
+              Buffer PlcNode
+                Attr object_type = 97
+                Attr cid = "pwrb:Class-Wait"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-Wait0"
+                Attr x = 2.200000e+00
+                Attr y = -8.749999e-01
+                Attr width = 2.168889e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[0] = 1
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Or0 Or 86 23-MAY-2012 11:16:23.32
+            Body RtBody 23-MAY-2012 11:16:23.32
+            EndBody
+            Body DevBody 23-MAY-2012 11:18:02.06
+              Buffer PlcNode
+                Attr object_type = 91
+                Attr cid = "pwrb:Class-Or"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-Or0"
+                Attr x = 1.650000e+00
+                Attr y = -6.249999e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp6 GetDp 93 23-MAY-2012 11:17:09.42
+            Body RtBody 23-MAY-2012 11:17:09.42
+            EndBody
+            Body DevBody 23-MAY-2012 11:18:02.06
+              Attr DpObject = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.SupDisabled"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp6"
+                Attr x = 1.200000e+00
+                Attr y = -5.749999e-01
+                Attr width = 3.897778e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
