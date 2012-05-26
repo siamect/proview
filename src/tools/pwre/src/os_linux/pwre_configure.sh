@@ -380,7 +380,7 @@ else
   echo ""
   echo "Optional :"
   pwre_config_check_lib motif     MRM      motif motif 0 "/usr/lib/libMrm.so"
-  pwre_config_check_lib mysql     MYSQL    lib lib 1 "/usr/lib/libmysqlclient.so:/usr/lib/mysql/libmysqlclient.so"
+  pwre_config_check_lib mysql     MYSQL    lib lib 1 "/usr/lib/libmysqlclient.so:/usr/lib/mysql/libmysqlclient.so:/usr/lib/$hwpl-linux-gnu/libmysqlclient.so"
   pwre_config_check_lib mq        MQ       lib mq  1 "/usr/lib/libdmq.so:/usr/local/dmq/lib/libdmq.so"
   pwre_config_check_lib wmq       WMQ      lib wmq 1 "/usr/lib/libmqic.so"
   pwre_config_check_lib libpnioif PNAK     lib pnak 1 "/usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a"
