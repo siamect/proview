@@ -103,6 +103,11 @@ fetch (
   }
 
   for (i = 0, gop = &rsp->g[0]; i < rsp->count; i++, gop++) {
+    if ( vp->g.vid != gop->oid.vid) {
+      net_Free(NULL, rsp);
+      pwr_Return(NULL, sts, GDH__REMOTEMOUNT);
+    }
+
     op = cvol_LoadObject(&lsts, np, vp, gop);
     if (cdh_ObjidIsEqual(gop->oid, rsp->oid)) {
       /* This is the referenced object.  */

@@ -32,44 +32,44 @@
  * the source code of Proview (the version used to produce the 
  * combined work), being distributed under the terms of the GNU 
  * General Public License plus this exception.
- **/
+ */
 
-#ifndef wb_build_h
-#define wb_build_h
+#ifndef rt_cbuf_h
+#define rt_cbuf_h
 
-#include "pwr.h"
-#include "wb_ldh.h"
-#include "wb_session.h"
-#include "wb_wnav.h"
-#include "wb_build_opt.h"
-
-class Wtt;
-
-class wb_build : public wb_status
-{
- public:
-  wb_build( wb_session ses, WNav *wnav = 0):
-    m_session(ses), m_wnav(wnav), m_hierarchy(pwr_cNOid) {};
-
-  void classlist( pwr_tCid cid);
-  void node( char *nodename, void *volumelist, int volumecnt);
-  void volume();
-  void rootvolume( pwr_tVid vid);
-  void classvolume( pwr_tVid vid);
-  void planthier( pwr_tOid oid);
-  void nodehier( pwr_tOid oid);
-  void plcpgm( pwr_tOid oid);
-  void xttgraph( pwr_tOid oid);
-  void webhandler( pwr_tOid oid);
-  void webbrowserconfig( pwr_tOid oid);
-  void webgraph( pwr_tOid oid);
-  void application( pwr_tOid oid);
-
-  wb_build_opt opt;
-  wb_session m_session;
-  WNav *m_wnav;
-  pwr_tOid m_hierarchy;
-};
-
+#if defined __cplusplus
+extern "C" {
 #endif
 
+
+/**
+ * Circular buffer argument structure
+ */
+typedef struct {
+  pwr_sAttrRef		circ_aref; /**< Attribute reference to circular buffer object */
+  unsigned int		resolution; /**< Resolution of return data */
+  unsigned int		samples;  /**< number of data values */
+  void			*bufp;    /**< Data buffer that receives the requested information */
+  unsigned int		bufsize;  /**< The size in bytes of the data buffer */
+  unsigned int		size;     /**< Number of returned values */
+  unsigned int		first_idx; /**< First index, this has to be saved to the next call */
+  unsigned int		last_idx; /**< Last index, this has to be saved to the next call */
+  unsigned int		offset;    /**< Index offset to use in the next call */
+} cbuf_sCircBuffInfo;
+
+pwr_tStatus cbuf_GetCircBuffInfo( cbuf_sCircBuffInfo *info,
+				  int infosize);
+pwr_tStatus cbuf_UpdateCircBuffInfo( cbuf_sCircBuffInfo *info,
+				     int infosize);
+  
+void cbuf_GetCircBufferMsg( qcom_sGet *get);
+void cbuf_UpdateCircBufferMsg( qcom_sGet *get);
+
+void cbuf_InitBuffer( void *o, pwr_tUInt32 size, pwr_tUInt32 element_size);
+void cbuf_AddSample( void *o, void *value);
+void cbuf_AddTimeSample( void *o, pwr_tTime *t);
+
+#if defined __cplusplus
+}
+#endif
+#endif

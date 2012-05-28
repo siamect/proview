@@ -12724,6 +12724,11 @@ int	gcg_comp_m44( gcg_ctx gcgctx, vldh_t_node node)
 	}
 
 	if ( !((cid == vldh_eclass( ldhses, "NMpsCell")) ||
+	       (cid == vldh_eclass( ldhses, "NMpsCell60")) ||
+	       (cid == vldh_eclass( ldhses, "NMpsCell120")) ||
+	       (cid == vldh_eclass( ldhses, "NMpsStoreCell")) ||
+	       (cid == vldh_eclass( ldhses, "NMpsStoreCell60")) ||
+	       (cid == vldh_eclass( ldhses, "NMpsStoreCell120")) ||
 	       (cid == vldh_eclass( ldhses, "CLoop")) ||
 	       (cid == vldh_eclass( ldhses, "NMpsMirrorCell")) ||
 	       (cid == vldh_eclass( ldhses, "NMpsStoreCell"))))

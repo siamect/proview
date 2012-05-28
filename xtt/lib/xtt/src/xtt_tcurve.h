@@ -56,21 +56,21 @@
 /*! \addtogroup Xtt */
 /*@{*/
 
-#define XTT_TCURVE_MAX 20
+#define XTT_TCURVE_MAX 10
 
 class CoWow;
 class CoWowTimer;
 
 typedef struct {
-  pwr_tAName name[10];
-  pwr_tAttrRef buf_aref[10];
+  pwr_tAName name[XTT_TCURVE_MAX];
+  pwr_tAttrRef buf_aref[XTT_TCURVE_MAX];
   pwr_tAttrRef timebuf_aref;
-  int element_size[10];
-  pwr_eType type[10];
-  int buf_size[10];
-  int buf_bsize[10];
-  int buf_samples[10];
-  char *vbuf[10];
+  int element_size[XTT_TCURVE_MAX];
+  pwr_eType type[XTT_TCURVE_MAX];
+  int buf_size[XTT_TCURVE_MAX];
+  int buf_bsize[XTT_TCURVE_MAX];
+  int buf_samples[XTT_TCURVE_MAX];
+  char *vbuf[XTT_TCURVE_MAX];
   int bufcnt;
   int timeelement_size;
   int timebuf_size;
@@ -104,6 +104,7 @@ class XttTCurve {
   void       	(*close_cb)( void *, XttTCurve *); //!< Close callback to parent.
   void       	(*help_cb)( void *, const char *); //!< Open help window.
   int       	(*get_select_cb)( void *, pwr_tOid *, char *, char *); //!< Get selected TCurve object.
+  void       	(*command_cb)( void *, const char *); //!< Command callback to parent.
   bool		first_scan;		//!< Indicates that this is the first scan.
   char		title[250];		//!< Window title
   pwr_tAttrRef	arefv[XTT_TCURVE_MAX];
@@ -128,8 +129,14 @@ class XttTCurve {
   int get_multidata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to);
   void curve_add( pwr_tAttrRef aref);
   int load_data( pwr_tStatus *sts, pwr_tAttrRef *aref);
+  void save( char *filename);
+  void open( char *filename);
+  void set_title( const char *str);
 
   static void tcurve_close_cb( void *ctx);
+  static void tcurve_new_cb( void *ctx);
+  static void tcurve_save_cb( void *ctx);
+  static void tcurve_open_cb( void *ctx);
   static void tcurve_increase_period_cb( void *ctx);
   static void tcurve_decrease_period_cb( void *ctx);
   static void tcurve_reload_cb( void *ctx);
@@ -140,6 +147,8 @@ class XttTCurve {
   static int tcurve_export_cb( void *ctx, pwr_tTime *from, pwr_tTime *to, 
 				int rows, int idx, char *filename);
   static void tcurve_help_cb( void *ctx);
+  static void tcurve_file_selected_cb( void *ctx, void *data, char *text);
+  static void tcurve_open_file_cb( void *ctx, char *text);
   static void tcurve_scan( void *data);
 
 };

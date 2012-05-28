@@ -296,7 +296,7 @@ pwr_tStatus rt_post::mh_alarm_bc( mh_sMessage *MsgP)
       post->format_email_text( MsgP, text, sizeof(text));
       post->format_cmd( cmd,  post->conf->EmailCmd, address, text);
 
-      if ( post->conf->Log)
+      if ( post->conf->Options & pwr_mPostOptionsMask_Log)
 	errh_Info( "Email: %s", cmd);
 
       system( cmd);
@@ -313,7 +313,7 @@ pwr_tStatus rt_post::mh_alarm_bc( mh_sMessage *MsgP)
       post->format_sms_text( MsgP, text, sizeof(text));
       post->format_cmd( cmd,  post->conf->SMS_Cmd, sms, text);
       
-      if ( post->conf->Log)
+      if ( post->conf->Options & pwr_mPostOptionsMask_Log)
 	errh_Info( "SMS: %s", cmd);
 
       system( cmd);
@@ -332,7 +332,7 @@ pwr_tStatus rt_post::mh_cancel_bc( mh_sReturn *MsgP)
 }
 pwr_tStatus rt_post::mh_info_bc( mh_sMessage *MsgP)
 {
-  return 1;
+  return mh_alarm_bc( MsgP);
 }
 pwr_tStatus rt_post::mh_clear_alarmlist_bc( pwr_tNodeIndex nix)
 {
@@ -365,8 +365,12 @@ void rt_post::format_sms_text( mh_sMessage *MsgP, char *text, unsigned int size)
     strcpy( prio, "?");
   }
 
-  snprintf( text, size, "Proview %s Prio %s,\n%s,\n%s", nodename, prio, event->Msg.EventText,
-	    event->Msg.EventName);
+  if ( conf->Options & pwr_mPostOptionsMask_SingleLineSMS)
+    snprintf( text, size, "Proview %s Prio %s, %s, %s", nodename, prio, event->Msg.EventText,
+	      event->Msg.EventName);
+  else
+    snprintf( text, size, "Proview %s Prio %s,\n%s,\n%s", nodename, prio, event->Msg.EventText,
+	      event->Msg.EventName);
 }
 
 void rt_post::format_email_text( mh_sMessage *MsgP, char *text, unsigned int size)
@@ -508,7 +512,7 @@ int rt_post::email_check( mh_sEventId *id)
     if ( i == sent_email_endidx)
       break;
 
-    if ( memcmp( &sent_email[i], id, sizeof(*id)))
+    if ( memcmp( &sent_email[i], id, sizeof(*id)) == 0)
       return 1;
 
   }

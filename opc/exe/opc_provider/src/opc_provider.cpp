@@ -124,201 +124,244 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, s0__BrowseElement 
 	       sizeof(((pwr_sClass_Opc_Hier *)o->po.body)->Description));
   }
   else {
+    bool foundType = false;
+    
     if ( opc_get_property( element->Properties, opc_mProperty_DataType, &valp)) {
-      if ( !opc_string_to_opctype( ((xsd__string *)valp)->__item.c_str(), &opctype))
+      if ( !opc_string_to_opctype( ((xsd__string *)valp)->__item.c_str(), &opctype)) {
+	foundType = false; 
 	opctype = opc_eDataType_;
-      
-      switch ( opctype) {
-      case opc_eDataType_string:
-	o->po.cid = pwr_cClass_Opc_String;
-	o->po.body_size = sizeof(pwr_sClass_Opc_String);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_String;
-	o->size = sizeof( pwr_tString80);
-	break;
-      case opc_eDataType_boolean:
-	o->po.cid = pwr_cClass_Opc_Boolean;
-	o->po.body_size = sizeof(pwr_sClass_Opc_Boolean);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_Boolean;
-	o->size = sizeof( pwr_tBoolean);
-	break;
-      case opc_eDataType_float:
-	o->po.cid = pwr_cClass_Opc_Float;
-	o->po.body_size = sizeof(pwr_sClass_Opc_Float);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_Float32;
-	o->size = sizeof( pwr_tFloat32);
-	((pwr_sClass_Opc_Float *)o->po.body)->HighEU = 100;
-	break;
-      case opc_eDataType_double:
-	o->po.cid = pwr_cClass_Opc_Double;
-	o->po.body_size = sizeof(pwr_sClass_Opc_Double);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_Float64;
-	o->size = sizeof( pwr_tFloat64);
-	((pwr_sClass_Opc_Double *)o->po.body)->HighEU = 100;
-	break;
-      case opc_eDataType_decimal:
-	o->po.cid = pwr_cClass_Opc_Decimal;
-	o->po.body_size = sizeof(pwr_sClass_Opc_Decimal);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_Float32;
-	o->size = sizeof( pwr_tFloat32);
-	((pwr_sClass_Opc_Decimal *)o->po.body)->HighEU = 100;
-	break;
-      case opc_eDataType_long:
-	o->po.cid = pwr_cClass_Opc_Long;
-	o->po.body_size = sizeof(pwr_sClass_Opc_Long);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_Int64;
-	o->size = sizeof( pwr_tInt64);
-	((pwr_sClass_Opc_Long *)o->po.body)->HighEU = 100;
-	break;
-      case opc_eDataType_int:
-	o->po.cid = pwr_cClass_Opc_Int;
-	o->po.body_size = sizeof(pwr_sClass_Opc_Int);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_Int32;
-	o->size = sizeof( pwr_tInt32);
-	((pwr_sClass_Opc_Int *)o->po.body)->HighEU = 100;
-	break;
-      case opc_eDataType_short:
-	o->po.cid = pwr_cClass_Opc_Short;
-	o->po.body_size = sizeof(pwr_sClass_Opc_Short);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_Int16;
-	o->size = sizeof( pwr_tInt16);
-	((pwr_sClass_Opc_Short *)o->po.body)->HighEU = 100;
-	break;
-      case opc_eDataType_byte:
-	o->po.cid = pwr_cClass_Opc_Byte;
-	o->po.body_size = sizeof(pwr_sClass_Opc_Byte);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_Int8;
-	o->size = sizeof( pwr_tInt8);
-	((pwr_sClass_Opc_Byte *)o->po.body)->HighEU = 100;
-	break;
-      case opc_eDataType_unsignedLong:
-	o->po.cid = pwr_cClass_Opc_UnsignedLong;
-	o->po.body_size = sizeof(pwr_sClass_Opc_UnsignedLong);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_UInt64;
-	o->size = sizeof( pwr_tUInt64);
-	((pwr_sClass_Opc_UnsignedLong *)o->po.body)->HighEU = 100;
-	break;
-      case opc_eDataType_unsignedInt:
-	o->po.cid = pwr_cClass_Opc_UnsignedInt;
-	o->po.body_size = sizeof(pwr_sClass_Opc_UnsignedInt);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_UInt32;
-	o->size = sizeof( pwr_tUInt32);
-	((pwr_sClass_Opc_UnsignedInt *)o->po.body)->HighEU = 100;
-	break;
-      case opc_eDataType_unsignedShort:
-	o->po.cid = pwr_cClass_Opc_UnsignedShort;
-	o->po.body_size = sizeof(pwr_sClass_Opc_UnsignedShort);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_UInt16;
-	o->size = sizeof( pwr_tUInt16);
-	((pwr_sClass_Opc_UnsignedShort *)o->po.body)->HighEU = 100;
-	break;
-      case opc_eDataType_unsignedByte:
-	o->po.cid = pwr_cClass_Opc_UnsignedByte;
-	o->po.body_size = sizeof(pwr_sClass_Opc_UnsignedByte);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_UInt8;
-	o->size = sizeof( pwr_tUInt8);
-	((pwr_sClass_Opc_UnsignedByte *)o->po.body)->HighEU = 100;
-	break;
-      case opc_eDataType_base64Binary:
-	o->po.cid = pwr_cClass_Opc_Base64Binary;
-	o->po.body_size = sizeof(pwr_sClass_Opc_Base64Binary);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_UInt64;
-	o->size = sizeof( pwr_tUInt64);
-	break;
-      case opc_eDataType_dateTime:
-	o->po.cid = pwr_cClass_Opc_DateTime;
-	o->po.body_size = sizeof(pwr_sClass_Opc_DateTime);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_Time;
-	o->size = sizeof( pwr_tTime);
-	break;
-      case opc_eDataType_time:
-	o->po.cid = pwr_cClass_Opc_Time;
-	o->po.body_size = sizeof(pwr_sClass_Opc_Time);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_Time;
-	o->size = sizeof( pwr_tTime);
-	break;
-      case opc_eDataType_date:
-	o->po.cid = pwr_cClass_Opc_Date;
-	o->po.body_size = sizeof(pwr_sClass_Opc_Date);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_Time;
-	o->size = sizeof( pwr_tTime);
-	break;
-      case opc_eDataType_duration:
-	o->po.cid = pwr_cClass_Opc_Duration;
-	o->po.body_size = sizeof(pwr_sClass_Opc_Duration);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_DeltaTime;
-	o->size = sizeof( pwr_tDeltaTime);
-	break;
-      case opc_eDataType_QName:
-	o->po.cid = pwr_cClass_Opc_QName;
-	o->po.body_size = sizeof(pwr_sClass_Opc_QName);
-	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_String;
-	o->size = sizeof( pwr_tString80);
-      default:
-	o->po.cid = pwr_cClass_Opc_Hier;
-	o->po.body_size = sizeof(pwr_sClass_Opc_Hier);
-	o->po.body = calloc( 1, o->po.body_size);
+      } 
+      else
+	foundType = true;
+    } 
+    
+    if (!foundType) {
+
+      // Call opc server to Get Properties of this element for DataType
+      _s0__GetPropertiesResponse properties_response_datatype;
+      _s0__GetProperties get_properties_dataType;
+      s0__ItemIdentifier itemid;      
+
+      get_properties_dataType.ReturnPropertyValues = (bool *) malloc( sizeof(bool));
+      *get_properties_dataType.ReturnPropertyValues = true;
+      itemid.ItemName = new std::string( o->item_name);
+    
+      get_properties_dataType.ItemIDs.push_back( &itemid);
+
+      opc_mask_to_propertynames( get_properties_dataType.PropertyNames, opc_mProperty_DataType);
+    
+      if ( soap_call___s0__GetProperties( &soap, opc_endpoint, NULL, &get_properties_dataType, 
+					  &properties_response_datatype) == SOAP_OK) {
+	server_state->RequestCnt++;
+	if ( properties_response_datatype.PropertyLists.size() > 0 &&
+	     properties_response_datatype.PropertyLists[0]->Properties.size() > 0) {	  	
+	  
+	  if ( opc_get_property( properties_response_datatype.PropertyLists[0]->Properties, 
+				 opc_mProperty_DataType, &valp)) {
+	    if ( !opc_string_to_opctype( ((xsd__string *)valp)->__item.c_str(), &opctype))
+	      opctype = opc_eDataType_;
+	    else
+	      foundType = true;
+	  }
+	}
       }
+      delete itemid.ItemName;
+      free( (char *)get_properties_dataType.ReturnPropertyValues);
+    }
 
-      if ( opc_get_property( element->Properties, opc_mProperty_Description, &valp)) {
-	pwr_tString80 desc;
-	strncpy( desc, ((xsd__string *)valp)->__item.c_str(), sizeof(desc));
 
-	switch ( o->po.cid) {
-	case pwr_cClass_Opc_Float:
-	  strncpy( ((pwr_sClass_Opc_Float *)o->po.body)->Description, desc, 
-		   sizeof(((pwr_sClass_Opc_Float *)o->po.body)->Description));
-	  break;
-	case pwr_cClass_Opc_Double:
-	  strncpy( ((pwr_sClass_Opc_Float *)o->po.body)->Description, desc, 
-		   sizeof(((pwr_sClass_Opc_Double *)o->po.body)->Description));
-	  break;
-	case pwr_cClass_Opc_Int:
-	  strncpy( ((pwr_sClass_Opc_Int *)o->po.body)->Description, desc, 
-		   sizeof(((pwr_sClass_Opc_Int *)o->po.body)->Description));
-	  break;
-	case pwr_cClass_Opc_Short:
-	  strncpy( ((pwr_sClass_Opc_Short *)o->po.body)->Description, desc, 
-		   sizeof(((pwr_sClass_Opc_Short *)o->po.body)->Description));
-	  break;
-	case pwr_cClass_Opc_Byte:
-	  strncpy( ((pwr_sClass_Opc_Byte *)o->po.body)->Description, desc, 
-		   sizeof(((pwr_sClass_Opc_Byte *)o->po.body)->Description));
-	  break;
+    switch ( opctype) {
+    case opc_eDataType_string:
+      o->po.cid = pwr_cClass_Opc_String;
+      o->po.body_size = sizeof(pwr_sClass_Opc_String);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_String;
+      o->size = sizeof( pwr_tString80);
+      break;
+    case opc_eDataType_boolean:
+      o->po.cid = pwr_cClass_Opc_Boolean;
+      o->po.body_size = sizeof(pwr_sClass_Opc_Boolean);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_Boolean;
+      o->size = sizeof( pwr_tBoolean);
+      break;
+    case opc_eDataType_float:
+      o->po.cid = pwr_cClass_Opc_Float;
+      o->po.body_size = sizeof(pwr_sClass_Opc_Float);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_Float32;
+      o->size = sizeof( pwr_tFloat32);
+      ((pwr_sClass_Opc_Float *)o->po.body)->HighEU = 100;
+      break;
+    case opc_eDataType_double:
+      o->po.cid = pwr_cClass_Opc_Double;
+      o->po.body_size = sizeof(pwr_sClass_Opc_Double);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_Float64;
+      o->size = sizeof( pwr_tFloat64);
+      ((pwr_sClass_Opc_Double *)o->po.body)->HighEU = 100;
+      break;
+    case opc_eDataType_decimal:
+      o->po.cid = pwr_cClass_Opc_Decimal;
+      o->po.body_size = sizeof(pwr_sClass_Opc_Decimal);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_Float32;
+      o->size = sizeof( pwr_tFloat32);
+      ((pwr_sClass_Opc_Decimal *)o->po.body)->HighEU = 100;
+      break;
+    case opc_eDataType_long:
+      o->po.cid = pwr_cClass_Opc_Long;
+      o->po.body_size = sizeof(pwr_sClass_Opc_Long);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_Int64;
+      o->size = sizeof( pwr_tInt64);
+      ((pwr_sClass_Opc_Long *)o->po.body)->HighEU = 100;
+      break;
+    case opc_eDataType_int:
+      o->po.cid = pwr_cClass_Opc_Int;
+      o->po.body_size = sizeof(pwr_sClass_Opc_Int);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_Int32;
+      o->size = sizeof( pwr_tInt32);
+      ((pwr_sClass_Opc_Int *)o->po.body)->HighEU = 100;
+	break;
+    case opc_eDataType_short:
+      o->po.cid = pwr_cClass_Opc_Short;
+      o->po.body_size = sizeof(pwr_sClass_Opc_Short);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_Int16;
+      o->size = sizeof( pwr_tInt16);
+      ((pwr_sClass_Opc_Short *)o->po.body)->HighEU = 100;
+      break;
+    case opc_eDataType_byte:
+      o->po.cid = pwr_cClass_Opc_Byte;
+      o->po.body_size = sizeof(pwr_sClass_Opc_Byte);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_Int8;
+      o->size = sizeof( pwr_tInt8);
+      ((pwr_sClass_Opc_Byte *)o->po.body)->HighEU = 100;
+      break;
+    case opc_eDataType_unsignedLong:
+      o->po.cid = pwr_cClass_Opc_UnsignedLong;
+      o->po.body_size = sizeof(pwr_sClass_Opc_UnsignedLong);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_UInt64;
+      o->size = sizeof( pwr_tUInt64);
+      ((pwr_sClass_Opc_UnsignedLong *)o->po.body)->HighEU = 100;
+      break;
+    case opc_eDataType_unsignedInt:
+      o->po.cid = pwr_cClass_Opc_UnsignedInt;
+      o->po.body_size = sizeof(pwr_sClass_Opc_UnsignedInt);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_UInt32;
+      o->size = sizeof( pwr_tUInt32);
+      ((pwr_sClass_Opc_UnsignedInt *)o->po.body)->HighEU = 100;
+      break;
+    case opc_eDataType_unsignedShort:
+      o->po.cid = pwr_cClass_Opc_UnsignedShort;
+      o->po.body_size = sizeof(pwr_sClass_Opc_UnsignedShort);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_UInt16;
+      o->size = sizeof( pwr_tUInt16);
+      ((pwr_sClass_Opc_UnsignedShort *)o->po.body)->HighEU = 100;
+      break;
+    case opc_eDataType_unsignedByte:
+      o->po.cid = pwr_cClass_Opc_UnsignedByte;
+      o->po.body_size = sizeof(pwr_sClass_Opc_UnsignedByte);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_UInt8;
+      o->size = sizeof( pwr_tUInt8);
+      ((pwr_sClass_Opc_UnsignedByte *)o->po.body)->HighEU = 100;
+      break;
+    case opc_eDataType_base64Binary:
+      o->po.cid = pwr_cClass_Opc_Base64Binary;
+      o->po.body_size = sizeof(pwr_sClass_Opc_Base64Binary);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_UInt64;
+      o->size = sizeof( pwr_tUInt64);
+      break;
+    case opc_eDataType_dateTime:
+      o->po.cid = pwr_cClass_Opc_DateTime;
+      o->po.body_size = sizeof(pwr_sClass_Opc_DateTime);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_Time;
+      o->size = sizeof( pwr_tTime);
+      break;
+    case opc_eDataType_time:
+      o->po.cid = pwr_cClass_Opc_Time;
+      o->po.body_size = sizeof(pwr_sClass_Opc_Time);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_Time;
+      o->size = sizeof( pwr_tTime);
+      break;
+    case opc_eDataType_date:
+      o->po.cid = pwr_cClass_Opc_Date;
+      o->po.body_size = sizeof(pwr_sClass_Opc_Date);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_Time;
+      o->size = sizeof( pwr_tTime);
+      break;
+    case opc_eDataType_duration:
+      o->po.cid = pwr_cClass_Opc_Duration;
+      o->po.body_size = sizeof(pwr_sClass_Opc_Duration);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_DeltaTime;
+      o->size = sizeof( pwr_tDeltaTime);
+      break;
+    case opc_eDataType_QName:
+      o->po.cid = pwr_cClass_Opc_QName;
+      o->po.body_size = sizeof(pwr_sClass_Opc_QName);
+      o->po.body = calloc( 1, o->po.body_size);
+      o->type = pwr_eType_String;
+      o->size = sizeof( pwr_tString80);
+    default:
+      o->po.cid = pwr_cClass_Opc_Hier;
+      o->po.body_size = sizeof(pwr_sClass_Opc_Hier);
+      o->po.body = calloc( 1, o->po.body_size);
+    }
+    
+    if ( opc_get_property( element->Properties, opc_mProperty_Description, &valp)) {
+      pwr_tString80 desc;
+      strncpy( desc, ((xsd__string *)valp)->__item.c_str(), sizeof(desc));
+      
+      switch ( o->po.cid) {
+      case pwr_cClass_Opc_Float:
+	strncpy( ((pwr_sClass_Opc_Float *)o->po.body)->Description, desc, 
+		 sizeof(((pwr_sClass_Opc_Float *)o->po.body)->Description));
+	break;
+      case pwr_cClass_Opc_Double:
+	strncpy( ((pwr_sClass_Opc_Float *)o->po.body)->Description, desc, 
+		 sizeof(((pwr_sClass_Opc_Double *)o->po.body)->Description));
+	break;
+      case pwr_cClass_Opc_Int:
+	strncpy( ((pwr_sClass_Opc_Int *)o->po.body)->Description, desc, 
+		 sizeof(((pwr_sClass_Opc_Int *)o->po.body)->Description));
+	break;
+      case pwr_cClass_Opc_Short:
+	strncpy( ((pwr_sClass_Opc_Short *)o->po.body)->Description, desc, 
+		 sizeof(((pwr_sClass_Opc_Short *)o->po.body)->Description));
+	break;
+      case pwr_cClass_Opc_Byte:
+	strncpy( ((pwr_sClass_Opc_Byte *)o->po.body)->Description, desc, 
+		 sizeof(((pwr_sClass_Opc_Byte *)o->po.body)->Description));
+	break;
 	case pwr_cClass_Opc_UnsignedInt:
 	  strncpy( ((pwr_sClass_Opc_UnsignedInt *)o->po.body)->Description, desc, 
 		   sizeof(((pwr_sClass_Opc_UnsignedInt *)o->po.body)->Description));
 	  break;
-	case pwr_cClass_Opc_UnsignedShort:
-	  strncpy( ((pwr_sClass_Opc_UnsignedShort *)o->po.body)->Description, desc, 
-		   sizeof(((pwr_sClass_Opc_UnsignedShort *)o->po.body)->Description));
-	  break;
-	case pwr_cClass_Opc_UnsignedByte:
-	  strncpy( ((pwr_sClass_Opc_UnsignedByte *)o->po.body)->Description, desc, 
-		   sizeof(((pwr_sClass_Opc_UnsignedByte *)o->po.body)->Description));
-	  break;
-	}
+      case pwr_cClass_Opc_UnsignedShort:
+	strncpy( ((pwr_sClass_Opc_UnsignedShort *)o->po.body)->Description, desc, 
+		 sizeof(((pwr_sClass_Opc_UnsignedShort *)o->po.body)->Description));
+	break;
+      case pwr_cClass_Opc_UnsignedByte:
+	strncpy( ((pwr_sClass_Opc_UnsignedByte *)o->po.body)->Description, desc, 
+		 sizeof(((pwr_sClass_Opc_UnsignedByte *)o->po.body)->Description));
+	break;
       }
     }
-    else {
+
+    // No dataType could be found, set as OpcHier object
+    if (!foundType) {
       o->po.cid = pwr_cClass_Opc_Hier;
       o->po.body_size = sizeof(pwr_sClass_Opc_Hier);
       o->po.body = calloc( 1, o->po.body_size);
@@ -355,7 +398,8 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, s0__BrowseElement 
   m_list.push_back( o);
 
   if ( opc_get_property( element->Properties, opc_mProperty_EuType, &valp)) {
-    if ( ((xsd__string *)valp)->__item == "analog")
+    if ( ( ((xsd__string *)valp)->__item == "analog" || ((xsd__string *)valp)->__item == "" ) ||
+	 ( ( ((xsd__string *)valp)->__item != "noEnum") && ((xsd__string *)valp)->__item != "enumerated") )
       m_list[o->po.oix]->po.flags |= procom_obj_mFlags_Analog;
   }
   if ( m_list[o->po.oix]->po.flags & procom_obj_mFlags_Analog) {

@@ -48,6 +48,7 @@
 #include "co_time.h"
 #include "co_dcli.h"
 #include "cow_wow.h"
+#include "rt_xnav_msg.h"
 #include "rt_sev_msg.h"
 
 #include "flow.h"
@@ -77,6 +78,7 @@ XttTCurve::XttTCurve( void *parent_ctx,
   if ( xn_arefv == 0 || xn_arefv[0].Objid.vid == 0) {
     aref_cnt = 0;
     gcd = new GeCurveData( curve_eDataType_DsTrend);
+    *sts = 1;
     return;
   }
 
@@ -245,7 +247,7 @@ int XttTCurve::get_data( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
     curve->configure_axes();
     curve->redraw();
   }
-  *sts = SEV__SUCCESS;
+  *sts = XNAV__SUCCESS;
   return 1;
 }
 
@@ -413,7 +415,7 @@ int XttTCurve::get_multidata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
     curve->configure_axes();
     curve->redraw();
   }
-  *sts = SEV__SUCCESS;
+  *sts = XNAV__SUCCESS;
 #endif
   return 1;
 }
@@ -472,6 +474,44 @@ void XttTCurve::tcurve_close_cb( void *ctx)
     (tcurve->close_cb)( tcurve->xnav, tcurve);
   else
     delete tcurve;
+}
+
+void XttTCurve::tcurve_new_cb( void *ctx)
+{
+  XttTCurve *tcurve = (XttTCurve *) ctx;
+
+  if ( tcurve->command_cb)
+    (tcurve->command_cb)( tcurve->xnav, "open tcurve /new");
+}
+
+void XttTCurve::tcurve_file_selected_cb( void *ctx, void *data, char *text)
+{
+  XttTCurve *tcurve = (XttTCurve *)ctx;
+
+  tcurve->save( text);
+}
+
+void XttTCurve::tcurve_save_cb( void *ctx)
+{
+  XttTCurve *tcurve = (XttTCurve *) ctx;
+
+  tcurve->curve->wow->CreateInputDialog( tcurve, "Save as", "Enter filename",
+					 tcurve_file_selected_cb, 0, 40, tcurve->title, 0);
+}
+
+void XttTCurve::tcurve_open_file_cb( void *ctx, char *text)
+{
+  XttTCurve *tcurve = (XttTCurve *)ctx;
+
+  tcurve->open( text);
+}
+
+void XttTCurve::tcurve_open_cb( void *ctx)
+{
+  XttTCurve *tcurve = (XttTCurve *) ctx;
+
+  tcurve->curve->wow->CreateFileList( "Open trend data", "$pwrp_load", "*", "rtt_trd",
+				     tcurve_open_file_cb, 0, tcurve, 1);
 }
 
 void XttTCurve::tcurve_decrease_period_cb( void *ctx)
@@ -643,80 +683,121 @@ void XttTCurve::tcurve_add_cb( void *ctx)
 
 void XttTCurve::tcurve_remove_cb( void *ctx)
 {
-  // Do do
+  // Todo
 }
 
 int XttTCurve::tcurve_export_cb( void *ctx, pwr_tTime *from, pwr_tTime *to, int rows, int idx, 
 				   char *filename)
 {
-#if 0
   XttTCurve *tcurve = (XttTCurve *) ctx;
   pwr_tFileName fname;
-  pwr_tTime *tbuf;
-  void *vbuf;
-  pwr_eType	vtype;
-  unsigned int  vsize;
-  pwr_tStatus sts;
-  int rrows;
+  pwr_tStatus sts = XNAV__SUCCESS;
   char timestr[40];
   FILE *fp;
+  char *timep;
+  char *valp;
+  pwr_tTime time;
+  int rowcnt;
+  int resolution;
 
   dcli_translate_filename( fname, filename);
-
-
-  sevcli_get_itemdata( &sts, tcurve->scctx, tcurve->oidv[idx], tcurve->anamev[idx], *from, *to, 
-		       rows, &tbuf, &vbuf, &rrows, &vtype, &vsize);
-  if ( EVEN(sts))
-    return sts;
-
-  if( rrows == 0 ) {
-    return SEV__NODATATIME;
-  }
 
   fp = fopen( fname, "w");
   if ( !fp)
     return SEV__EXPORTFILE;
 
-  for ( int i = 0; i < rrows; i++) {
-    time_AtoAscii( &tbuf[i], time_eFormat_DateAndTime, timestr, sizeof(timestr));
-    fprintf( fp, "%s, ", timestr);
-    switch ( vtype) {
-    case pwr_eType_Int32:
-    case pwr_eType_Int64:
-    case pwr_eType_Int16:
-    case pwr_eType_Int8:
-      fprintf( fp, "%d", ((pwr_tInt32 *)vbuf)[i]);
-      break;
-    case pwr_eType_UInt64:
-    case pwr_eType_UInt32:
-    case pwr_eType_UInt16:
-    case pwr_eType_UInt8:
-      fprintf( fp, "%u", ((pwr_tUInt32 *)vbuf)[i]);
-      break;
-    case pwr_eType_Float32:
-      fprintf( fp, "%g", ((pwr_tFloat32 *)vbuf)[i]);
-      break;
-    case pwr_eType_Float64:
-      fprintf( fp, "%g", ((pwr_tFloat64 *)vbuf)[i]);
-      break;
-    case pwr_eType_Boolean:
-      fprintf( fp, "%d", ((pwr_tBoolean *)vbuf)[i]);
-      break;
-    default: 
-      sts = SEV__CURVETYPE;
+  // Count number of samples in the specified interval
+  rowcnt = 0;
+  timep = tcurve->tc.tbuf;
+  for ( int i = 0; i < tcurve->tc.timebuf_samples; i++) {
+    if ( tcurve->tc.timeelement_size == 4) {
+      time.tv_sec = *(unsigned int *)timep;
+      time.tv_nsec = 0;
     }
-    fprintf( fp, "\n");
+    else {
+      time.tv_sec = *(unsigned int *)timep;
+      time.tv_nsec = *(unsigned int *)(timep+4);
+    }
+    timep += tcurve->tc.timeelement_size;
+
+    if ( time_Acomp( &time, from) >= 0 &&
+	 time_Acomp( &time, to) <= 0) {
+      rowcnt++;
+    }
   }
-  free( tbuf);
-  free( vbuf);
+
+  resolution = rowcnt / rows + 1;
+
+  rowcnt = 0;
+  timep = tcurve->tc.tbuf;
+  for ( int i = 0; i < tcurve->tc.timebuf_samples; i++) {
+    if ( tcurve->tc.timeelement_size == 4) {
+      time.tv_sec = *(unsigned int *)timep;
+      time.tv_nsec = 0;
+    }
+    else {
+      time.tv_sec = *(unsigned int *)timep;
+      time.tv_nsec = *(unsigned int *)(timep+4);
+    }
+    timep += tcurve->tc.timeelement_size;
+
+    if ( time_Acomp( &time, from) >= 0 &&
+	 time_Acomp( &time, to) <= 0) {
+      if ( resolution > 1 && (i % resolution) != 0)
+	continue;
+
+      rowcnt++;
+
+      time_AtoAscii( &time, time_eFormat_DateAndTime, timestr, sizeof(timestr));
+      fprintf( fp, "%s, ", timestr);
+
+      for ( int j = 0; j < tcurve->tc.bufcnt; j++) {
+	if ( i >= tcurve->tc.buf_samples[j])
+	  fprintf( fp, "%d", 0);
+	else {
+
+	  valp = tcurve->tc.vbuf[j] + i * tcurve->tc.element_size[j];
+	  switch ( tcurve->tc.type[j]) {
+	  case pwr_eType_Int32:
+	  case pwr_eType_Int64:
+	  case pwr_eType_Int16:
+	  case pwr_eType_Int8:
+	    fprintf( fp, "%d", *(pwr_tInt32 *)valp);
+	    break;
+	  case pwr_eType_UInt64:
+	  case pwr_eType_UInt32:
+	  case pwr_eType_UInt16:
+	  case pwr_eType_UInt8:
+	    fprintf( fp, "%u", *(pwr_tUInt32 *)valp);
+	    break;
+	  case pwr_eType_Float32:
+	    fprintf( fp, "%g", *(pwr_tFloat32 *)valp);
+	    break;
+	  case pwr_eType_Float64:
+	    fprintf( fp, "%g", *(pwr_tFloat64 *)valp);
+	    break;
+	  case pwr_eType_Boolean:
+	    fprintf( fp, "%d", *(pwr_tBoolean *)valp);
+	    break;
+	  default: 
+	    sts = SEV__CURVETYPE;
+	  }
+	}
+	if ( j < tcurve->tc.bufcnt - 1)
+	  fprintf( fp, ", ");
+	else
+	  fprintf( fp, "\n");
+      }
+    }
+  }
   fclose( fp);
 
-  printf( "Exported %d rows to file \"%s\" (%d)\n", rrows, fname, idx);
+  printf( "Exported %d rows to file \"%s\"\n", rowcnt, fname);
 
   if ( EVEN(sts))
     return sts;
-#endif
-  return SEV__SUCCESS;
+
+  return XNAV__SUCCESS;
 }
 
 void XttTCurve::tcurve_help_cb( void *ctx)
@@ -756,14 +837,14 @@ int XttTCurve::load_data( pwr_tStatus *sts, pwr_tAttrRef *aref)
       int last_idx;
       int size;
       char *tb;
-      char *vb[10];
+      char *vb[XTT_TCURVE_MAX];
       int header_size = pwr_AlignLW(sizeof(pwr_sClass_CircBuffHeader));
       
       *sts = gdh_GetObjectInfoAttrref( aref, &trend, sizeof(trend));
       if ( EVEN(*sts)) return 0;
 
       idx = 0;
-      for ( int j = 0; j < 10; j++) {
+      for ( int j = 0; j < XTT_TCURVE_MAX; j++) {
 	if ( cdh_ObjidIsNull( trend.Buffers[j].Objid))
 	  continue;
 
@@ -879,9 +960,112 @@ int XttTCurve::load_data( pwr_tStatus *sts, pwr_tAttrRef *aref)
       return 0;
     }
   }
+  else
+    *sts = 1;
+
   return 1;
 }
 
 
+void XttTCurve::save( char *filename) 
+{ 
+  pwr_tFileName fname;
 
+  if ( strchr( filename, '/') == 0)
+    strcpy( fname, "$pwrp_load/");
+  else
+    strcpy( fname, "");
 
+  strncat( fname, filename, sizeof(fname));
+  if ( !( strlen(filename) < 9 && 
+	  strcmp( &filename[strlen(filename)-9], ".rtt_trd") == 0))
+    strncat( fname, ".rtt_trd", sizeof(fname));
+
+  dcli_translate_filename( fname, fname);
+
+  ofstream fp(fname);
+  if ( !fp) {
+    printf( "Unable to open file\n");
+    return;
+  }
+
+  fp.write( (char *)&aref_cnt, sizeof(aref_cnt));
+  fp.write( (char *)arefv, aref_cnt * sizeof(arefv[0]));
+  fp.write( (char *)&tc, sizeof(tc));
+  fp.write( tc.tbuf, tc.timebuf_bsize);
+  for ( int i = 0; i < tc.bufcnt; i++)
+    fp.write( tc.vbuf[i], tc.buf_bsize[i]);
+
+  fp.close();
+}
+
+void XttTCurve::open( char *filename) 
+{ 
+  pwr_tFileName fname;
+  pwr_tStatus sts;
+  tcurve_sTc *tcp;
+
+  strcpy( fname, "$pwrp_load/");
+  strncat( fname, filename, sizeof(fname));
+  if ( !( strlen(filename) < 9 && 
+	  strcmp( &filename[strlen(filename)-9], ".rtt_trd") == 0))
+    strncat( fname, ".rtt_trd", sizeof(fname));
+
+  dcli_translate_filename( fname, fname);
+
+  ifstream fp(fname);
+  if ( !fp) {
+    printf( "Unable to open file\n");
+    return;
+  }
+
+  fp.read( (char *)&aref_cnt, sizeof(aref_cnt));
+  if ( aref_cnt > XTT_TCURVE_MAX) {
+    printf( "Read error\n");
+    return;
+  }
+  fp.read( (char *)arefv, aref_cnt * sizeof(arefv[0]));
+  tcp = (tcurve_sTc *)calloc( 1, sizeof(tcurve_sTc));
+  fp.read( (char *)tcp, sizeof(*tcp));
+
+  if ( tcp->bufcnt > XTT_TCURVE_MAX || tcp->timebuf_bsize > 20000000) {
+    printf( "Read error\n");
+    return;
+  }
+  for ( int i = 0; i < tcp->bufcnt; i++) {
+    if ( tcp->buf_bsize[i] > 20000000) {
+      printf( "Read error\n");
+      return;
+    }
+  }
+  tcp->tbuf = (char *)calloc( 1, tcp->timebuf_bsize);
+  fp.read( tcp->tbuf, tcp->timebuf_bsize);
+  for ( int i = 0; i < tcp->bufcnt; i++) {
+    tcp->vbuf[i] = (char *)calloc( 1, tcp->buf_bsize[i]);
+    fp.read( tcp->vbuf[i], tcp->buf_bsize[i]);
+  }
+
+  fp.close();
+
+  // Free old data
+  free( tc.tbuf);
+  for ( int i = 0; i < tc.bufcnt; i++)
+    free( tc.vbuf[i]);
+
+  memcpy( &tc, tcp, sizeof(tc));
+  free( tcp);
+
+  pwr_tTime from = pwr_cNTime;
+  pwr_tTime to = {0xEFFFFFFF, 0};
+  get_data( &sts, from, to);
+  if ( curve)
+    curve->config_names();
+
+  set_title( filename);
+}
+
+void XttTCurve::set_title( const char *str)
+{
+  strncpy( title, str, sizeof(title));
+  curve->write_title( title);
+}

@@ -110,6 +110,11 @@ enum net_eMsg {
   net_eMsg_fileList,
   net_eMsg_fileListR,
 
+  net_eMsg_getCircBuffer,
+  net_eMsg_getCircBufferR,
+  net_eMsg_updateCircBuffer,
+  net_eMsg_updateCircBufferR,
+
   net_eMsg_,			/* Not a valid message */
   
   net_eMsg_volumes7,            /* Version 7. Internal only */
@@ -1306,10 +1311,10 @@ struct net_sFileList {
 %
 %
 %typedef struct {
-%  net_sMessage 	hdr;/**< Header */
-%  pwr_tStatus          sts;/**< Status */
-%  pwr_tUInt32		filecnt; /**< Number of files found. */  
-%  char			files[1]; /**< List of files */
+%  net_sMessage 	hdr;		/**< Header */
+%  pwr_tStatus          sts;		/**< Status */
+%  pwr_tUInt32		filecnt; 	/**< Number of files found. */  
+%  char			files[1]; 	/**< List of files */
 %} net_sFileListR;
 %
 %bool_t xdr_net_sFileListR(XDR *xdrs, net_sFileListR *objp);
@@ -1357,9 +1362,187 @@ struct net_sFileList {
 %}
 #endif
 
+struct  net_sGetCircBuffer {
+  net_sMessage		hdr;
+  pwr_sAttrRef		circ_aref;
+  pwr_tUInt32		resolution;
+  pwr_tUInt32		samples;
+  pwr_tUInt32		bufsize;
+};
+
+#ifdef RPC_HDR
+%
+%
+%typedef struct {
+%  net_sMessage 	hdr;		/**< Header */
+%  pwr_tStatus          sts;		/**< Status */
+%  pwr_sAttrRef		circ_aref; 	/**< CircBuffer attribute reference. */
+%  pwr_tUInt32		first_idx; 	/**< First index in buffer. */
+%  pwr_tUInt32		last_idx; 	/**< Last index in buffer. */
+%  pwr_tUInt32		offset; 	/**< Offset for next update. */
+%  pwr_tUInt32		size; 		/**< Returned number of samples. */
+%  pwr_tUInt32		bufsize; 	/**< Size data in bytes. */
+%  char			buf[1]; 	/**< Data */
+%} net_sGetCircBufferR;
+%
+%bool_t xdr_net_sGetCircBufferR(XDR *xdrs, net_sGetCircBufferR *objp);
+%
+#elif defined RPC_XDR
+%
+%bool_t
+%xdr_net_sGetCircBufferR(XDR *xdrs, net_sGetCircBufferR *objp)
+%{
+%	pwr_tStatus 	sts;
+%	pwr_tUInt32 	bufsize;
+% 
+%	if (xdrs->x_op == XDR_DECODE) {
+%		sts = (int) ntohl(objp->sts);
+%		bufsize = (int) ntohl(objp->bufsize);
+%	} else {
+%		sts = objp->sts;
+%		bufsize = objp->bufsize;
+%	}
+%
+%	if (!xdr_net_sMessage(xdrs, &objp->hdr)) {
+%		return (FALSE);
+%	}
+%	if (!xdr_pwr_tStatus(xdrs, &objp->sts)) {
+%		return (FALSE);
+%	}
+%
+%	if (EVEN(sts)) {
+%		if (!xdr_pwr_sAttrRef(xdrs, &objp->circ_aref)) {
+%			return (FALSE);
+%		}	
+%		if (!xdr_pwr_tUInt32(xdrs, &objp->size  )) {
+%			return (FALSE);
+%		}
+%		return (TRUE); 
+%       }  
+%
+%
+%	if (!xdr_pwr_sAttrRef(xdrs, &objp->circ_aref)) {
+%		return (FALSE);
+%	}
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->size  )) {
+%		return (FALSE);
+%	} 
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->last_idx  )) {
+%		return (FALSE);
+%	} 
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->first_idx  )) {
+%		return (FALSE);
+%	} 
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->offset  )) {
+%		return (FALSE);
+%	} 
+%	if (!xdr_opaque(xdrs, (char *)objp->buf, bufsize)) {
+%		return (FALSE);
+%	}
+%	return (TRUE);
+%
+%}
+#endif
 
 
+struct  net_sUpdateCircBuffer {
+  net_sMessage		hdr;
+  pwr_tUInt32		info_size;	
+  pwr_sAttrRef		circ_aref[10];
+  pwr_tUInt32		resolution[10];
+  pwr_tUInt32		samples[10];
+  pwr_tUInt32		last_idx[10];
+  pwr_tUInt32		offset[10];
+  pwr_tUInt32		bufsize[10];
+};
 
+#ifdef RPC_HDR
+%
+%
+%typedef struct {
+%  net_sMessage 	hdr;		/**< Header */
+%  pwr_tStatus          sts;		/**< Status */
+%  pwr_tUInt32		info_size;
+%  pwr_sAttrRef		circ_aref[10]; 	/**< CircBuffer attribute reference. */
+%  pwr_tUInt32		first_idx[10]; 	/**< First index in buffer. */
+%  pwr_tUInt32		last_idx[10]; 	/**< Last index in buffer. */
+%  pwr_tUInt32		offset[10]; 	/**< Offset for next update. */
+%  pwr_tUInt32		size[10]; 	/**< Returned number of samples. */
+%  pwr_tUInt32		bufsize[10]; 	/**< Size data for each item in bytes. */
+%  pwr_tUInt32		bsize; 		/**< Total size data in bytes. */
+%  char			buf[1]; 	/**< Data */
+%} net_sUpdateCircBufferR;
+%
+%bool_t xdr_net_sUpdateCircBufferR(XDR *xdrs, net_sUpdateCircBufferR *objp);
+%
+#elif defined RPC_XDR
+%
+%bool_t
+%xdr_net_sUpdateCircBufferR(XDR *xdrs, net_sUpdateCircBufferR *objp)
+%{
+%	pwr_tStatus 	sts;
+%	pwr_tUInt32 	bsize;
+%	pwr_tUInt32 	info_size;
+%	int	 	i;
+% 
+%	if (xdrs->x_op == XDR_DECODE) {
+%		sts = (int) ntohl(objp->sts);
+%		bsize = (int) ntohl(objp->bsize);
+%		info_size = (int) ntohl(objp->info_size);
+%	} else {
+%		sts = objp->sts;
+%		bsize = objp->bsize;
+%		info_size = objp->info_size;
+%	}
+%
+%	if (!xdr_net_sMessage(xdrs, &objp->hdr)) {
+%		return (FALSE);
+%	}
+%	if (!xdr_pwr_tStatus(xdrs, &objp->sts)) {
+%		return (FALSE);
+%	}
+%
+%	if (EVEN(sts)) {
+%		if (!xdr_pwr_tUInt32(xdrs, &objp->info_size  )) {
+%			return (FALSE);
+%		}
+%		return (TRUE); 
+%       }  
+%
+%
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->bsize  )) {
+%		return (FALSE);
+%	} 
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->info_size  )) {
+%		return (FALSE);
+%	} 
+%	for ( i = 0; i < info_size; i++) {
+%	  if (!xdr_pwr_sAttrRef(xdrs, &objp->circ_aref[i])) {
+%		return (FALSE);
+%	  }
+%	  if (!xdr_pwr_tUInt32(xdrs, &objp->last_idx[i]  )) {
+%		 return (FALSE);
+%	  } 
+%	  if (!xdr_pwr_tUInt32(xdrs, &objp->first_idx[i]  )) {
+%		return (FALSE);
+%	  } 
+%	  if (!xdr_pwr_tUInt32(xdrs, &objp->offset[i]  )) {
+%		return (FALSE);
+%	  } 
+%	  if (!xdr_pwr_tUInt32(xdrs, &objp->size[i]  )) {
+%		return (FALSE);
+%	  } 
+%	  if (!xdr_pwr_tUInt32(xdrs, &objp->bufsize[i]  )) {
+%		return (FALSE);
+%	  } 
+%	}
+%	if (!xdr_opaque(xdrs, (char *)objp->buf, bsize)) {
+%		return (FALSE);
+%	}
+%	return (TRUE);
+%
+%}
+#endif
 
 
 
@@ -1446,6 +1629,7 @@ struct net_sFileList {
 %net_sTime net_DeltaTimeToNetTime( const pwr_tDeltaTime *t);
 %net_sTime net_DeltaTimeToNetTime( const pwr_tDeltaTime *t);
 %int net_GetTime( net_sTime *nt);
+%int net_StringToAddr( char *str, struct in_addr *naddr);
 %
 %#endif
 %

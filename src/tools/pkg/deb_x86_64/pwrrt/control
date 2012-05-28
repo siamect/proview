@@ -1,5 +1,5 @@
 Package: pwrrt
-Version: 4.8.4-1
+Version: 4.8.5-1
 Section: base
 Priority: optional
 Architecture: amd64
@@ -28,3 +28,8 @@ Description:
    - Report server.
  4.8.4-1
    - Buffer input and output channels and signals.
+ 4.8.5-1
+   - Support for several plc processes.
+   - Display of invert, test and conversion for signals and channels in rt_xtt.
+   - Ge pie chart and bar chart.
+   - Trend curves with larger buffers and faster scantimes. Snapshot function.

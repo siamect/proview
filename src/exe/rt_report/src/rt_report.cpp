@@ -380,8 +380,8 @@ void rt_report::create_report( pwr_sClass_Report *o)
       format_cmd( cmd, sizeof(cmd), conf_cmd, address, text, subject, 
 		  cnvfile, 0);
 
-      // if ( conf->Log)
-      // errh_Info( "Email: %s", cmd);
+      if (conf->Options & pwr_mPostOptionsMask_Log)
+	errh_Info( "Email: %s", cmd);
 
       system( cmd);
       conf->SentEmail++;
@@ -480,8 +480,16 @@ void rt_report::create_report( pwr_sClass_Report *o)
       format_cmd( cmd, sizeof(cmd), conf_cmd, address, subject, text, 
 		  cnvfile, 0);
 
-      // if ( conf->Log)
-      // errh_Info( "SMS: %s", cmd);
+      if (conf->Options & pwr_mPostOptionsMask_Log)
+	errh_Info( "SMS: %s", cmd);
+
+      if ( conf->Options & pwr_mPostOptionsMask_SingleLineSMS) {
+	for ( char *s = cmd; *s; s++) {
+	  // Replace LF with space
+	  if ( *s == 10)
+	    *s = ' ';
+	}
+      }
 
       system( cmd);
       conf->SentSMS++;
@@ -506,6 +514,9 @@ void rt_report::create_report( pwr_sClass_Report *o)
 
     format_cmd( cmd, sizeof(cmd), conf_cmd, 0, 0, 0, 
 		cnvfile, 0);
+
+    if (conf->Options & pwr_mPostOptionsMask_Log)
+      errh_Info( "Print: %s", cmd);
 
     system( cmd);
  
@@ -563,6 +574,10 @@ void rt_report::create_report( pwr_sClass_Report *o)
       system( cmd);
     }
     sprintf( cmd, "rm %s", tmpfile);
+
+    if (conf->Options & pwr_mPostOptionsMask_Log)
+      errh_Info( "File: %s", cmd);
+
     system( cmd);
   }
 }
@@ -586,6 +601,7 @@ int rt_report::replace_value( char *out, unsigned int size,
   pwr_tUInt32 a_size;
   pwr_tUInt32 a_offs;
   pwr_tUInt32 a_elem;
+  pwr_eType a_type;
   int flen;
   char timstr[40];
 
@@ -632,7 +648,8 @@ int rt_report::replace_value( char *out, unsigned int size,
     if ( !value_found || !format_found)
       return 0;
 
-    sts = gdh_AttrValueToString( pwr_eType_Float32, a_tid, buf, fstr, 
+    a_type = (pwr_eType)pwr_TypeId( pwr_Tix(a_tid));
+    sts = gdh_AttrValueToString( a_type, a_tid, buf, fstr, 
 				 sizeof(fstr), &flen, format);
     if ( EVEN(sts)) return sts;
 

@@ -1521,8 +1521,32 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
       return 1;
 
     if ( flow_GetPasteActive( ctx)) {
+      flow_tObject	*select_list;
+      int	       	select_cnt;
+      double		pos_x, pos_y;
+      int		i;
+      vldh_t_node	vnode;
+
       flow_PasteStop( ctx);
       flow_MoveSelectedNodes( ctx, 0, 0, 1);
+
+      flow_GetSelectList( ctx, &select_list, &select_cnt);
+      for ( i = 0; i < select_cnt; i++) {
+	flow_GetUserData( select_list[i], (void **) &vnode);
+
+	if ( gre->floating_node && vnode == gre->floating_node) {
+	  flow_GetNodePosition( select_list[i], &pos_x, &pos_y);
+	  vnode->ln.x = pos_x;
+	  vnode->ln.y = pos_y;
+	  vldh_nodemodified( vnode);
+
+	  (gre->gre_node_moved) (gre);
+
+	  if ( gre->gre_node_floating_created)
+	    (gre->gre_node_floating_created) ( gre, vnode);
+	  gre->floating_node = 0;
+	}
+      }
       return 1;
     }
 

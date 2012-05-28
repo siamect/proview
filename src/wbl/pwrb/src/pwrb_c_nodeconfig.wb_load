@@ -126,13 +126,12 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      ! IP address of the node.
-      !
-      ! In format a.b.c.d, e.g. 192.168.32.144
+      ! IP address of the node in format a.b.c.d, e.g. 192.168.32.144,
+      ! or the host name.
       !*/
       Object Address $Attribute 6 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String16"
+          Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
       !/**

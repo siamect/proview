@@ -89,7 +89,7 @@ SObject Remote:Class
       !*/
       Object RemoteHostname $Attribute 4
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String32"
+          Attr TypeRef = "pwrs:Type-$String80"
 	EndBody
       EndObject
       !/**

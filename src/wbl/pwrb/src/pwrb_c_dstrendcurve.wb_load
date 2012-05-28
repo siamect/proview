@@ -38,12 +38,11 @@
 SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  Stores data for a fast graph à la storage oscilloscope.
+!  Stores data for a trend graph.
 !  
-!  In one DsFastCurve object, up to 10 attributes can be specified.
-!  The storage of the attributes will be trigger by the same event,
-!  stored with the same frequency, and the curves will be plotted 
-!  in the same fastcurve window.
+!  In one DsTrendCurve object, up to 10 attributes can be specified.
+!  The attribute values will be stored with the same frequency, and the 
+!  curves will be plotted in the same trend window.
 !
 !  The names of the attributes is specified the the Attribute array.
 !  For every attribute, a storage area object also has to be specified.
@@ -51,33 +50,57 @@ SObject pwrb:Class
 !  objects, for example to store at different frequencies.
 !  
 !  The sampling rate is specified the the ScanTime attribute.
-!  The sampling will start when a trigger event is detected. In some
-!  cases, when data before the trigger event is valid, the sampling will
-!  go on even before the trigger event.
 !
-!  @b Storage arrays
-!  Storage arrays has to be supplied by the user, one array for the time axis data, and
-!  one for each configured attribute. For example, Buff1440, Buff4096 or Buff32k objects
-!  can be used for the data storage. These will store up to 360, 1024 resp. 8192 points of
-!  pwr_tFloat32 attributes.
+!  @b Storage buffers
+!  Storage buffers has to be supplied by the user, one buffer for the time axis data, and
+!  one for each configured attribute. Object of type CircBuffer has to be used, eg 
+!  CircBuff1k, CircBuff2k, CircBuff10k, CircBuff20k, CircBuf100k and CircBuff200k.
+!  A CircBuff1k object will for example store 250 samples of size 4 bytes and a 
+!  CircBuff200k 50000.
 !
 !  @b Data types
 !  The datatypes that can be stored is
 !  - pwr_tFloat32, pwr_tFloat64
 !  - pwr_tInt32, pwr_tUInt32, pwr_tInt16, pwr_tUInt16, pwr_tInt8, pwr_tUInt8
 !
-!  The time is stored as pwr_tFloat32.
+!  The time is stored as one or two UInt32, dependent on the selected TimeResolution.
+!  The default time is of size 4 bytes where the seconds from epoch is stored. With time
+!  resolution nanoseconds the size is 8 bytes, and one word with the nanoseconds are added
+!  for each sample.
 !
 !  @b Server
 !  DsTrendCurve objects is handled by the fast server rt_trend.
 !  The base frequency for the fast server process is configured in
 !  the DsTrendConf object.
 !
+!  @b User storage
+!  Trend data can be stored by a user defined server, for example by the plc program.
+!  In this case a number of setting has to be done:
+!  - Function is set to 1.
+!  - AttributeType should be set, eg pwrs:Type-$Float32.
+!  - Attribute should be set to an arbitrary attribute. The only function for the attribute
+!    is the curve name.
+!  - ScanTime should be set to the time difference between two samples.
+!  In the Buffer object, the Size (max number of samples) and ElementSize in bytes should be set.
+!  To fill in the samples the functions cbuf_AddSample() and cbuf_AddTimeSample() can be used.
+!  In this example the trend is filled in from a DataArithm where the data buffer is connected
+!  to Da1 and the time buffer to Da2.
+!
+!    classdef Da1 CircBuff10k;
+!    classdef Da2 CircBuff20k;
+!    pwr_tTime time;
+!
+!    time_GetTime(&time);
+!    cbuf_AddSample(Da1, &A1);
+!    cbuf_AddTimeSample(Da2, &time);
+!
 !  @b Se also
-!  @classlink Buff1440 ssab_buff1440.html
-!  @classlink Buff4096 ssab_buff4096.html
-!  @classlink Buff32k ssab_buff32k.html
-!  @classlink DsFastConf pwrb_dsfastconf.html
+!  @classlink CircBuff10k pwrb_circbuff1k.html
+!  @classlink CircBuff10k pwrb_circbuff2k.html
+!  @classlink CircBuff10k pwrb_circbuff10k.html
+!  @classlink CircBuff10k pwrb_circbuff20k.html
+!  @classlink CircBuff10k pwrb_circbuff10k.html
+!  @classlink DsTrendConf pwrb_dstrendconf.html
 !*/
   Object DsTrendCurve $ClassDef 593 
     Body SysBody
@@ -125,6 +148,9 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  The attribute type only has to be set if UserStorage 
+      !  is used, where the type is set in the form pwrs:Type-$Float32.
+      !
       !  Stores measurants data types. It has to be of any of
       !  the types pwr_tBoolean, pwr_tFloat32, pwr_tFloat64,
       !  pwr_tInt8, pwr_tInt16, pwr_tInt32, pwr_tUInt8,
@@ -133,8 +159,6 @@ SObject pwrb:Class
       Object AttributeType $Attribute 5
         Body SysBody
           Attr TypeRef = "pwrs:Type-$TypeId"
-          Attr Flags |= PWR_MASK_STATE
-          Attr Flags |= PWR_MASK_INVISIBLE
           Attr Flags |= PWR_MASK_ARRAY
 	  Attr Elements = 10
         EndBody
@@ -152,11 +176,11 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  @Summary Data buffers. Array attributes that contains the data of the curves.
-      !  Data buffers. Array attributes that contains the data of the curves.
+      !  @Summary Data buffers. Circular buffer objects  that contains the data of the curves.
+      !  Circular buffer objects that contains the data of the curves.
       !  Objects for the databuffers has to be configured by the user. The extent of the
       !  buffer attributes should equal or exceed the storeage size, i.e. the size of the
-      !  sampled attribute's type multiplied by NoOfPoints.
+      !  sampled attribute's type multiplied by NoOfSample.
       !*/
       Object Buffers $Attribute 7
         Body SysBody
@@ -166,8 +190,8 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  @Summary Time buffer. An array attribute that contain the time axis data for the curves.
-      !  Time buffer. An array attribute that contain the time axis data for the curves.
+      !  @Summary Time buffer. A circular buffer object that contain the time axis data for the curves.
+      !  Time buffer. A circular buffer object that contain the time axis data for the curves.
       !  The object for the time buffer has to be configured by the user. The extent of the
       !  buffer attributes should equal or exceed the storeage size for the time data.
       !*/
@@ -178,7 +202,7 @@ SObject pwrb:Class
       EndObject
       !/**
       !  Resolution of time scale, seconds or nanoseconds.
-      !  Seconds will require 4 bytes per point, and nanoseconds 8 bytes per point.
+      !  Seconds will require 4 bytes per sample, and nanoseconds 8 bytes per sample.
       !*/
       Object TimeResolution $Attribute 16
         Body SysBody

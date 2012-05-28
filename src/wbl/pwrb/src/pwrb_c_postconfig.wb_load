@@ -144,6 +144,14 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Options.
+      !*/
+      Object Options $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-PostOptionsMask"
+        EndBody
+      EndObject
+      !/**
       !  Server status.
       !*/
       Object Status $Attribute 5
@@ -178,14 +186,6 @@ SObject pwrb:Class
       !  When Disable is 0, no events are posted.
       !*/
       Object Disable $Attribute 8
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Boolean"
-        EndBody
-      EndObject
-      !/**
-      !  Print posted commands to console log.
-      !*/
-      Object Log $Attribute 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody

@@ -86,9 +86,11 @@ void XttGeGtk::set_size( int width, int height)
 
   // This condition is due to a bug in Reflection X 11.0.5...
   if ( !((XNav *)parent_ctx)->gbl.no_graph_ratio) {
-    geometry.min_aspect = geometry.max_aspect = gdouble(default_width)/default_height;
+    // Note, equal min and max aspect will cause recursive resize on LXDE
+    geometry.min_aspect = gdouble(default_width)/default_height;
+    geometry.max_aspect = gdouble(default_width)/default_height * 1.02;
     gtk_window_set_geometry_hints( GTK_WINDOW(toplevel), GTK_WIDGET(toplevel),
-				   &geometry, GDK_HINT_ASPECT);
+    				   &geometry, GDK_HINT_ASPECT);
   }
 }
 
@@ -320,9 +322,10 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
 					 NULL);
   g_free( titleutf8);
 
-  geometry.min_aspect = geometry.max_aspect = gdouble(window_width)/window_height;
+  geometry.min_aspect = gdouble(window_width)/window_height;
+  geometry.max_aspect = gdouble(window_width)/window_height * 1.02;
   gtk_window_set_geometry_hints( GTK_WINDOW(toplevel), GTK_WIDGET(toplevel),
-				 &geometry, GDK_HINT_ASPECT);
+  				 &geometry, GDK_HINT_ASPECT);
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
   g_signal_connect( toplevel, "destroy", G_CALLBACK(destroy_event), this);

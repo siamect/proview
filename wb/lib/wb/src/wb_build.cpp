@@ -77,6 +77,9 @@ void wb_build::classlist( pwr_tCid cid)
     case pwr_cClass_WebHandler:
       webhandler( o.oid());
       break;
+    case pwr_cClass_WebBrowserConfig:
+      webbrowserconfig( o.oid());
+      break;
     case pwr_cClass_WebGraph:
       webgraph( o.oid());
       break;
@@ -345,6 +348,11 @@ void wb_build::rootvolume( pwr_tVid vid)
     if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
       sumsts = m_sts;
 
+    classlist( pwr_cClass_WebBrowserConfig);
+    if ( evenSts()) return;
+    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+      sumsts = m_sts;
+
     // Build all WebGraph
     classlist( pwr_cClass_WebGraph);
     if ( evenSts()) return;
@@ -548,6 +556,11 @@ void wb_build::nodehier( pwr_tOid oid)
   sumsts = m_sts;
 
   classlist( pwr_cClass_WebHandler);
+  if ( evenSts()) return;
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+
+  classlist( pwr_cClass_WebBrowserConfig);
   if ( evenSts()) return;
   if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
     sumsts = m_sts;
@@ -1036,7 +1049,122 @@ void wb_build::application( pwr_tOid oid)
   }
 }
 
+#define MAXSYMBOLS 100
 
+void wb_build::webbrowserconfig( pwr_tOid oid)
+{
+  pwr_tTime	modtime;
+  pwr_tFileName fname;
+  pwr_tTime 	ftime;
+  pwr_tStatus   fsts;
+  FILE 		*fp;
+  int		i, j;
+  int		found;
+  char		line[200];
+  pwr_tObjName  vname;
+
+  strncpy( vname, m_session.name(), sizeof(vname));
+
+  wb_object o = m_session.object(oid);
+  if ( !o) {
+    m_sts = o.sts();
+    return;
+  }
+
+  modtime = o.modTime();
+
+  sprintf( fname, "$pwrp_db/pwrp_cnf_websymbols.dat");
+  dcli_translate_filename( fname, fname);
+  fsts = dcli_file_time( fname, &ftime);
+
+  m_sts = PWRB__NOBUILT;
+  if ( opt.force || EVEN(fsts) || time_Acomp( &modtime, &ftime) == 1) {
+    pwr_sClass_WebBrowserConfig body;
+    int url_symbols_size = sizeof(body.URL_Symbols)/sizeof(body.URL_Symbols[0]);
+    char sym_vect[MAXSYMBOLS][80];
+    char value_vect[MAXSYMBOLS][80];
+    char volume_vect[MAXSYMBOLS][80];
+    int vect_cnt;
+    int nr;
+    char elemv[3][80];
+    
+    wb_attribute a = m_session.attribute( oid, "RtBody", "URL_Symbols");
+    if ( !a) {
+      m_sts = a.sts();
+      return;
+    }
+    a.value( body.URL_Symbols);
+    if ( !a) {
+      m_sts = a.sts();
+      return;
+    }
+
+    // Read the file and merge the symbols of this volume with other symbols in the project
+    vect_cnt = 0;
+    fp = fopen( fname, "r");
+    if ( fp) {
+      while ( dcli_read_line( line, sizeof( line), fp)) {
+	nr = dcli_parse( line, " ", "", (char *)elemv, sizeof( elemv) / sizeof( elemv[0]), 
+			 sizeof( elemv[0]), 0);
+	if ( nr != 3)
+	  continue;
+
+	// Skip old symbols from this volume
+	if ( cdh_NoCaseStrcmp( vname, elemv[0]) == 0)
+	  continue;
+
+	strcpy( volume_vect[vect_cnt], elemv[0]);
+	strcpy( sym_vect[vect_cnt], elemv[1]);
+	strcpy( value_vect[vect_cnt], elemv[2]);
+	vect_cnt++;
+      }
+      fclose( fp);
+    }
+
+    for ( i = 0; i < url_symbols_size; i++) {
+      nr = dcli_parse( body.URL_Symbols[i], " ", "", (char *)elemv, sizeof( elemv) / sizeof( elemv[0]), 
+		       sizeof( elemv[0]), 0);
+      if ( nr != 2)
+	continue;
+      
+      found = 0;
+      for ( j = 0; j < vect_cnt; j++) {
+	if ( cdh_NoCaseStrcmp( elemv[0], sym_vect[j]) == 0) {
+	  strcpy( value_vect[j], elemv[1]);
+	  found = 1;
+	  break;
+	}
+      }
+      if ( !found) {
+	// Insert first
+	for ( j = MIN(vect_cnt,MAXSYMBOLS-1); j > 0; j--) {
+	  strcpy( volume_vect[j], volume_vect[j-1]);
+	  strcpy( sym_vect[j], sym_vect[j-1]);
+	  strcpy( value_vect[j], value_vect[j-1]);
+	}
+	strcpy( volume_vect[0], vname);
+	strcpy( sym_vect[0], elemv[0]);
+	strcpy( value_vect[0], elemv[1]);	
+	vect_cnt++;
+	if ( vect_cnt > MAXSYMBOLS)
+	  vect_cnt = MAXSYMBOLS;
+      }
+    }
+
+    // Write the file
+    fp = fopen( fname, "w");
+    if ( !fp) {
+      char msg[200];
+      sprintf( msg, "Build:    Unable to open file %s", fname);
+      MsgWindow::message( 'E', msg, msgw_ePop_No, oid);
+      return;
+    }
+
+    for ( i = 0; i < vect_cnt; i++)
+      fprintf( fp, "%s %s %s\n", volume_vect[i], sym_vect[i], value_vect[i]);
+    fclose( fp);
+  }
+}
 
 
 

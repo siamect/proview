@@ -85,12 +85,12 @@ static pwr_tStatus IoCardInit (
   io_sCard	*cp  
 ) 
 {
-  pwr_sClass_Do_HVDO32	*op;
+  pwr_sClass_Do_HVDO32	*op = (pwr_sClass_Do_HVDO32 *) cp->op;
   io_sLocal 		*local;
   int			i, j;
   io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
+  int 			words = op->MaxNoOfChannels <= 16 ? 1 : 2;
 
-  op = (pwr_sClass_Do_HVDO32 *) cp->op;
   local = calloc( 1, sizeof(*local));
   cp->Local = local;
 
@@ -101,7 +101,7 @@ static pwr_tStatus IoCardInit (
   local->Qbus_fp = r_local->Qbus_fp;
 
   /* Init filter for Po signals */
-  for ( i = 0; i < 2; i++)
+  for ( i = 0; i < words; i++)
   {
     /* The filter handles one 16-bit word */
     for ( j = 0; j < 16; j++)
@@ -128,13 +128,15 @@ static pwr_tStatus IoCardClose (
 {
   io_sLocal 		*local;
   int			i;
+  pwr_sClass_Do_HVDO32	*op = (pwr_sClass_Do_HVDO32 *) cp->op;
+  int 			words = op->MaxNoOfChannels <= 16 ? 1 : 2;
 
   local = (io_sLocal *) cp->Local;
 
   errh_Info( "IO closing do card '%s'", cp->Name);
 
   /* Free filter data */
-  for ( i = 0; i < 2; i++)
+  for ( i = 0; i < words; i++)
   {
     if ( local->Filter[i].Found)
       io_ClosePoFilter( local->Filter[i].Data);
@@ -158,7 +160,6 @@ static pwr_tStatus IoCardWrite (
   io_sLocal 		*local = (io_sLocal *) cp->Local;
   io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
   pwr_tUInt16		data = 0;
-  pwr_sClass_Do_HVDO32	*op;
   pwr_tUInt16		invmask;
   pwr_tUInt16		testmask;
   pwr_tUInt16		testvalue;
@@ -166,14 +167,15 @@ static pwr_tStatus IoCardWrite (
   qbus_io_write		wb;
   int			sts;
   pwr_tTime             now;
+  pwr_sClass_Do_HVDO32	*op = (pwr_sClass_Do_HVDO32 *) cp->op;
+  int 			words = op->MaxNoOfChannels <= 16 ? 1 : 2;
 
-  op = (pwr_sClass_Do_HVDO32 *) cp->op;
 
 #if defined(OS_ELN)
   vaxc$establish(machfailwrite);
 #endif
 
-  for ( i = 0; i < 2; i++)
+  for ( i = 0; i < words; i++)
   { 
     if ( i == 1 && op->MaxNoOfChannels <= 16)
       break;

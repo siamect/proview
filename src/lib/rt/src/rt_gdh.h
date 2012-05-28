@@ -170,21 +170,6 @@ typedef struct {
 
 } gdh_sBitDef;
 
-/**
- * Circular buffer argument structure
- */
-typedef struct {
-  pwr_sAttrRef		circ_aref; /**< Attribute reference to circular buffer object */
-  unsigned int		resolution; /**< Resolution of return data */
-  unsigned int		samples;  /**< number of data values */
-  void			*bufp;    /**< Data buffer that receives the requested information */
-  unsigned int		bufsize;  /**< The size in bytes of the data buffer */
-  unsigned int		size;     /**< Number of returned values */
-  unsigned int		first_idx; /**< First index, this has to be saved to the next call */
-  unsigned int		last_idx; /**< Last index, this has to be saved to the next call */
-  unsigned int		offset;    /**< Index offset to use in the next call */
-} gdh_sCircBuffInfo;
-
 /* GDH entrypoints (as function prototypes).  */
 
 /** @} */
@@ -813,18 +798,6 @@ gdh_GetAttrRefAdef(
 pwr_tStatus 
 gdh_SetObjectReadOnly( 
   pwr_tOid oid
-);
-
-pwr_tStatus
-gdh_GetCircBuffInfo (
-  gdh_sCircBuffInfo *info,
-  int infosize
-);
-
-pwr_tStatus
-gdh_UpdateCircBuffInfo (
-  gdh_sCircBuffInfo *info,
-  int infosize
 );
 
 /* Undocumented functions. For internal use only.  */

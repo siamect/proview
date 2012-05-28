@@ -47,6 +47,10 @@
 # include "ge_curve.h"
 #endif
 
+#ifndef rt_cbuf_h
+# include "rt_cbuf.h"
+#endif
+
 #define XTT_TREND_MAX 20
 
 class CoWow;
@@ -70,7 +74,7 @@ class XttTrend {
   int        max_points;
   pwr_tTid   trend_tid;
   int	     update_time;
-  gdh_sCircBuffInfo cb_info[XTT_TREND_MAX];
+  cbuf_sCircBuffInfo cb_info[XTT_TREND_MAX];
   CoWowTimer *timerid;
   int        last_buffer[XTT_TREND_MAX];
   int        last_next_index[XTT_TREND_MAX];

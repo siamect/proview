@@ -180,7 +180,7 @@ CompileRtNode()
 
 #link option file exists and is not empty
   if [ -s $pwrp_exe/$FileName.opt ]; then
-
+    echo "-- Using local option-file $FileName.opt"
     ld_opt_tmp="`cat $pwrp_exe/$FileName.opt`"
     ld_opt="`eval echo $ld_opt_tmp`"
   else

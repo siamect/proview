@@ -68,6 +68,9 @@ extern "C" {
 #define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
 
+static int replace_url_symbols( const pwr_tURL in, pwr_tURL out);
+static int find_symbol( char *name, char *value);
+
 void CnvXtthelpToHtml::subject_to_fname( char *fname, const char *subject, int path)
 {
   char *s, *t;
@@ -174,10 +177,11 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, const char *text1,
       if ( strcmp( link, "") != 0) {
 
 	if ( strncmp( link, "$web:", 5) == 0) {
-	  if ( strncmp( &link[5], "$pwrp_web/", 10) == 0)
-	    strcpy( fname, &link[15]);
-	  else
-	    strcpy( fname, &link[5]);
+	  replace_url_symbols( &link[5], fname);
+	  // if ( strncmp( &link[5], "$pwrp_web/", 10) == 0)
+	  //   strcpy( fname, &link[15]);
+	  // else
+	  //   strcpy( fname, &link[5]);
 	} 
 	else if ( strncmp( link, "$class:", 7) == 0) {
 	  char *s;
@@ -387,6 +391,133 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, const char *text1,
 }
 
 
+static int replace_url_symbols( const pwr_tURL in, pwr_tURL out)
+{
+  char *s, *t;
+  char *sym_start;
+  char sym_value[80];
+  char sym_name[80];
+  pwr_tURL tmp;
+  int skip_sym = 0;
+  pwr_tURL url;
+     
+  strncpy( url, in, sizeof(pwr_tURL));
+
+  sym_start = 0;
+  t = tmp;
+  for ( s = url; *s; s++) {
+    if ( *s == '\\' && *(s+1) == '$')
+      skip_sym = 1;
+    if ( *s == '$' && !skip_sym) {
+      if ( sym_start) {
+        strncpy( sym_name, sym_start+1, s - (sym_start + 1));
+        sym_name[s - sym_start - 1] = 0;
+        if ( find_symbol( sym_name, sym_value)) {
+          strcpy( t, sym_value);
+          t += strlen(sym_value);
+        }
+        else {
+          strncpy( t, sym_start, s - sym_start);
+          t += s - sym_start;
+        }
+      }
+      sym_start = s;
+    }
+    else if ( *s == '$' && skip_sym) {
+      skip_sym = 0;
+      *t++ = *s;
+    }
+    else if ( sym_start) {
+      if ( !(isdigit(*s) || isalpha(*s) || *s == '_')) {
+        // End of symbol
+        strncpy( sym_name, sym_start+1, s - (sym_start + 1));
+        sym_name[s - sym_start - 1] = 0;
+        if ( find_symbol( sym_name, sym_value)) {
+          strcpy( t, sym_value);
+          t += strlen(sym_value);
+        }
+        else {
+          strncpy( t, sym_start, s - sym_start);
+          t += s - sym_start;
+        }
+        sym_start = 0;
+        *t++ = *s;
+      }
+    }
+    else
+      *t++ = *s;
+  }
+  if ( sym_start) {
+    strcpy( sym_name, sym_start+1);
+    if ( find_symbol( sym_name, sym_value))
+      strcpy( t, sym_value);
+    else
+      strcpy( t, sym_start);
+  }
+  else
+    *t = 0;
+
+  strcpy( out, tmp);
+  return 1;
+}
+
+#define MAXSYMBOLS 100
+
+static int find_symbol( char *name, char *value)
+{
+  static int loaded = 0;
+  static char sym_vect[MAXSYMBOLS][80];
+  static char value_vect[MAXSYMBOLS][80];
+  static int vect_cnt;
+  int nr;
+  char elemv[3][80];
+  int j;
+  int		found;
+
+  // Read the file
+  if ( !loaded) {
+    FILE *fp;
+    char line[200];
+    pwr_tFileName fname;
+
+    vect_cnt = 0;
+
+    sprintf( fname, "$pwrp_db/pwrp_cnf_websymbols.dat");
+    dcli_translate_filename( fname, fname);
+
+    fp = fopen( fname, "r");
+    if ( !fp)
+      return 0;
+
+
+    while ( dcli_read_line( line, sizeof( line), fp)) {
+      nr = dcli_parse( line, " ", "", (char *)elemv, sizeof( elemv) / sizeof( elemv[0]), 
+		       sizeof( elemv[0]), 0);
+      if ( nr != 3)
+	continue;
+      strcpy( sym_vect[vect_cnt], elemv[1]);
+      strcpy( value_vect[vect_cnt], elemv[2]);
+      vect_cnt++;
+    }
+    fclose( fp);
+    loaded = 1;
+  }
+
+  if ( !vect_cnt)
+    return 0;
+
+  for ( j = 0; j < vect_cnt; j++) {
+    if ( cdh_NoCaseStrcmp( name, sym_vect[j]) == 0) {
+      strcpy( value, value_vect[j]);
+      found = 1;
+      break;
+    }
+  }
+  if ( !found) 
+    return 0;
+
+  return 1;
+}
 
 
 

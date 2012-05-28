@@ -67,6 +67,7 @@
 #include "rt_cvol.h"
 #include "rt_cvolsm.h"
 #include "rt_cvolcm.h"
+#include "rt_cbuf.h"
 #include "rt_pwr_msg.h"
 
 /* Declare routines used by main.  */
@@ -142,6 +143,11 @@ static char *cMsg[net_eMsg_end] = {
   "getGclassR",
   "serverConnect",
   "fileList",
+  "fileListR",
+  "getCircBuffer",
+  "getCircBufferR",
+  "updateCircBuffer",
+  "updateCircBufferR",
   "net_eMsg_",
   "volumes7"
 };
@@ -178,6 +184,11 @@ static void (*fromApplication[net_eMsg_end])(qcom_sGet *) = {
   bugError,                     /* net_eMsg_GetGclassR will never reach neth */
   serverConnect,                /* net_eMsg_serverConnect */
   fileList,               	/* net_eMsg_fileList */
+  bugError,			/* net_eMsg_fileListR, will never reach neth.  */
+  cbuf_GetCircBufferMsg,       	/* net_eMsg_getCircBuffer */
+  bugError,			/* net_eMsg_getCircBufferR, will never reach neth.  */
+  cbuf_UpdateCircBufferMsg,     /* net_eMsg_updateCircBuffer */
+  bugError,			/* net_eMsg_updateCircBufferR, will never reach neth.  */
   bugError,                     /* net_eMsg_ */
   volumes7
 };
@@ -1554,3 +1565,4 @@ fileList (
 
   net_Reply(&sts, get, &put, 0);
 }
+
