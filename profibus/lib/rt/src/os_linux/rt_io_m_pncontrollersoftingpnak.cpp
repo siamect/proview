@@ -295,6 +295,11 @@ static pwr_tStatus IoAgentInit (
 	}
       } else {
 	errh_Error( "Download of Profinet Device configuration failed for: %s", device_vect[ii]->device_name);
+	/* Setup a dummy i/o area. Depending on exisiting channels this area needs to exist */
+
+	for (jj = 0; jj <  local->device_data[ii]->iocr_data.size(); jj++) {
+	  local->device_data[ii]->iocr_data[jj]->clean_io_data = (unsigned char *) calloc(1, PROFINET_IO_DATA_MAX_LENGTH);
+	}
       }
     }
   }
