@@ -220,6 +220,8 @@ class GsdmlAttrNav {
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);
     static void device_changed_ok( void *ctx, void *data);
     static void device_changed_cancel( void *ctx, void *data);
+    static pwr_tBoolean device_check_change_ok( void *ctx);
+    static void device_update_change( void *ctx);
 };
 
 class ItemPn {

@@ -1039,6 +1039,85 @@ void GsdmlAttrNav::device_changed_ok( void *ctx, void *data)
 
 }
 
+void GsdmlAttrNav::device_update_change( void *ctx)
+{
+  GsdmlAttrNav *attrnav = (GsdmlAttrNav *)ctx;
+
+  // Get new item
+  attrnav->device_item = attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->DeviceAccessPointItem[attrnav->device_num - 1];
+
+  gsdml_UseableModules *um = attrnav->device_item->UseableModules;
+
+  // Save the enum numbers for the slots
+  for ( unsigned int ii = 0; ii < attrnav->dev_data.slot_data.size(); ii++) {
+
+    if (ii == 0) {
+      attrnav->dev_data.slot_data[ii]->slot_reset();
+      attrnav->dev_data.slot_data[ii]->module_ident_number = attrnav->device_item->Body.ModuleIdentNumber;
+      continue;
+    }
+
+    if (attrnav->dev_data.slot_data[ii]->module_enum_number == 0) {
+      break;
+    }
+
+    for ( unsigned int jj = 0; jj < um->ModuleItemRef.size(); jj++) {
+      gsdml_ModuleItem *mi = (gsdml_ModuleItem *)um->ModuleItemRef[jj]->Body.ModuleItemTarget.p;
+
+      if (attrnav->dev_data.slot_data[ii]->module_ident_number == mi->Body.ModuleIdentNumber) {
+	attrnav->dev_data.slot_data[ii]->module_enum_number = jj + 1;
+	break;
+      }
+    }
+  }
+}
+
+pwr_tBoolean GsdmlAttrNav::device_check_change_ok( void *ctx)
+{
+  GsdmlAttrNav *attrnav = (GsdmlAttrNav *)ctx;
+  pwr_tBoolean found, check_ok;
+
+
+  gsdml_UseableModules *um = attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->DeviceAccessPointItem[attrnav->device_num - 1]->UseableModules;
+
+  check_ok = true;
+
+  for ( unsigned int ii = 0; ii < attrnav->dev_data.slot_data.size(); ii++) {
+
+    if (ii == 0) {
+      continue;
+    }
+
+    if (attrnav->dev_data.slot_data[ii]->module_enum_number == 0) {
+      break;
+    }
+
+    found = FALSE;
+    for ( unsigned int jj = 0; jj < um->ModuleItemRef.size(); jj++) {
+      if ( um->ModuleItemRef[jj]->Body.AllowedInSlots.list &&
+	   um->ModuleItemRef[jj]->Body.AllowedInSlots.list->in_list(ii)) {
+	gsdml_ModuleItem *mi = (gsdml_ModuleItem *)um->
+	  ModuleItemRef[jj]->Body.ModuleItemTarget.p;
+
+	if (attrnav->dev_data.slot_data[ii]->module_ident_number == mi->Body.ModuleIdentNumber) {
+	  found = TRUE;
+	  break;
+	}
+      }
+    }
+
+    if (!found) {
+      check_ok = FALSE;
+      break;
+    }
+  }
+
+  return check_ok;
+
+
+}
+
+
 void GsdmlAttrNav::device_changed_cancel( void *ctx, void *data)
 {
   long int old_device = (long int )data;
@@ -1504,8 +1583,10 @@ int GsdmlAttrNav::save( const char *filename)
 	  ModuleItemRef[dev_data.slot_data[i]->module_enum_number-1]->Body.ModuleItemTarget.p;
 	dev_data.slot_data[i]->module_ident_number = mi->Body.ModuleIdentNumber;
       }
-      else
+      else {
 	dev_data.slot_data[i]->module_ident_number = 0;
+	dev_data.slot_data[i]->module_class = 0;
+      }
     }
   }
 
@@ -1662,6 +1743,7 @@ int GsdmlAttrNav::save( const char *filename)
 	}
 
 	ssd->api = vsd->Body.API;
+        ssd->submodule_ident_number = vsd->Body.SubmoduleIdentNumber;
 
 	if ( !vsd->IOData)
 	  continue;
@@ -2127,13 +2209,19 @@ int ItemPnDevice::scan( GsdmlAttrNav *attrnav, void *p)
       return 1;
     }
     else {
-      attrnav->wow->DisplayQuestion( attrnav, "Device Changed", 
-		     "All configuration data will be lost when changing the device.\n"
-		     "Do you really want to change the device ?",
-		     GsdmlAttrNav::device_changed_ok, GsdmlAttrNav::device_changed_cancel, 
-		     (void *)old_value);
-      attrnav->device_confirm_active = 1;
-      return 1;
+
+      if (GsdmlAttrNav::device_check_change_ok( attrnav)) {
+	GsdmlAttrNav::device_update_change(attrnav);
+      }
+      else {
+	attrnav->wow->DisplayQuestion( attrnav, "Device Changed", 
+				       "All configuration data will be lost when changing the device.\n"
+				       "Do you really want to change the device ?",
+				       GsdmlAttrNav::device_changed_ok, GsdmlAttrNav::device_changed_cancel, 
+				       (void *)old_value);
+	attrnav->device_confirm_active = 1;
+	return 1;
+      }
     }
   }
 
