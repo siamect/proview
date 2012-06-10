@@ -71,18 +71,20 @@ static pwr_tStatus IoCardInit (
   io_sCard	*cp
 ) 
 {
-  io_sCardLocalMsg *local;
-  pwr_sClass_Modbus_Module *op;
+  io_sCardLocal *local;
+  pwr_sClass_Modbus_ModuleReadWrite *op;
   int i;
 
-  op = (pwr_sClass_Modbus_Module *) cp->op;
-  local = ((io_sCardLocal *) cp->Local)->msg;
+  op = (pwr_sClass_Modbus_ModuleReadWrite *) cp->op;
+  local = (io_sCardLocal *) cp->Local;
   
   for (i = 0; i < IO_MAXCHAN; i++) {
-    local->scancount[i] = 0;
+    local->msg[0].scancount[i] = 0;
+    local->msg[1].scancount[i] = 0;
   }
 
-  op->Status = pwr_eModbusModule_StatusEnum_StatusUnknown;
+  op->Read.Status = pwr_eModbusModule_StatusEnum_StatusUnknown;
+  op->Write.Status = pwr_eModbusModule_StatusEnum_StatusUnknown;
 
   return IO__SUCCESS;
 }
@@ -98,29 +100,28 @@ static pwr_tStatus IoCardRead (
   io_sCard	*cp
 ) 
 {
-  io_sCardLocalMsg *local;
-  pwr_sClass_Modbus_Module *op;
+  io_sCardLocal *local;
+  pwr_sClass_Modbus_ModuleReadWrite *op;
   pwr_sClass_Modbus_TCP_Slave *slave;
 
-  op = (pwr_sClass_Modbus_Module *) cp->op;
-  local = ((io_sCardLocal *) cp->Local)->msg;
+  op = (pwr_sClass_Modbus_ModuleReadWrite *) cp->op;
+  local = (io_sCardLocal *) cp->Local;
   slave = (pwr_sClass_Modbus_TCP_Slave *) rp->op;
 
-  if ( op->ScanInterval > 1) {
-    local->has_read_method = 1;
-    if ( local->interval_cnt != 0) {
-      local->interval_cnt++;
-      if ( local->interval_cnt >= op->ScanInterval)
-        local->interval_cnt = 0;
+  if ( op->Read.ScanInterval > 1) {
+    local->msg[0].has_read_method = 1;
+    if ( local->msg[0].interval_cnt != 0) {
+      local->msg[0].interval_cnt++;
+      if ( local->msg[0].interval_cnt >= op->Read.ScanInterval)
+        local->msg[0].interval_cnt = 0;
       return IO__SUCCESS;
     }
-    local->interval_cnt++;
+    local->msg[0].interval_cnt++;
   }
 
   if (slave->Status == MB__NORMAL) { 
     io_bus_card_read(ctx, rp, cp, slave->Inputs, NULL,  pwr_eByteOrderingEnum_BigEndian, pwr_eFloatRepEnum_FloatIntel);  
   }
-//  printf("Method Modbus_Module-IoCardRead\n");
   return IO__SUCCESS;
 }
 
@@ -135,26 +136,26 @@ static pwr_tStatus IoCardWrite (
   io_sCard	*cp
 ) 
 {
-  io_sCardLocalMsg *local;
-  pwr_sClass_Modbus_Module *op;
+  io_sCardLocal *local;
+  pwr_sClass_Modbus_ModuleReadWrite *op;
   
   pwr_sClass_Modbus_TCP_Slave *slave;
 
-  op = (pwr_sClass_Modbus_Module *) cp->op;
-  local = ((io_sCardLocal *) cp->Local)->msg;
+  op = (pwr_sClass_Modbus_ModuleReadWrite *) cp->op;
+  local = (io_sCardLocal *) cp->Local;
   slave = (pwr_sClass_Modbus_TCP_Slave *) rp->op;
   
-  if ( op->ScanInterval > 1) {
-    if ( !local->has_read_method) {
-      if ( local->interval_cnt != 0) {
-	local->interval_cnt++;
-	if ( local->interval_cnt >= op->ScanInterval)
-	  local->interval_cnt = 0;
+  if ( op->Write.ScanInterval > 1) {
+    if ( !local->msg[1].has_read_method) {
+      if ( local->msg[1].interval_cnt != 0) {
+	local->msg[1].interval_cnt++;
+	if ( local->msg[1].interval_cnt >= op->Write.ScanInterval)
+	  local->msg[1].interval_cnt = 0;
 	return IO__SUCCESS;
       }
-      local->interval_cnt++;
+      local->msg[1].interval_cnt++;
     }
-    else if ( local->interval_cnt != 1)
+    else if ( local->msg[1].interval_cnt != 1)
       return IO__SUCCESS;
   }
 
@@ -170,7 +171,7 @@ static pwr_tStatus IoCardWrite (
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/
 
-pwr_dExport pwr_BindIoMethods(Modbus_Module) = {
+pwr_dExport pwr_BindIoMethods(Modbus_ModuleReadWrite) = {
   pwr_BindIoMethod(IoCardInit),
   pwr_BindIoMethod(IoCardRead),
   pwr_BindIoMethod(IoCardWrite),

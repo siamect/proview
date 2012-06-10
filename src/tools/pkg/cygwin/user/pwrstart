@@ -1,0 +1,9 @@
+#!/bin/bash
+export PATH=/usr/local/bin:/usr/bin
+export pwra_db=/data0/pwr/adm/db
+source $pwra_db/pwr_setup.sh
+pwrp set base X4.8.6
+export PWR_BUS_ID=999
+export DISPLAY=127.0.0.1:0
+wb -p
+

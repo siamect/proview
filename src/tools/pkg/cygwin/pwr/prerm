@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+echo "Here in prerm..."
+# Automatically added by dh_installdocs
+if [ \( "$1" = "upgrade" -o "$1" = "remove" \) -a -L /usr/doc/pwrtest ]; then
+        rm -f /usr/doc/pwrtest
+fi
+# End automatically added section
+
+dname=`eval dirname $0`
+chmod a+x $dname/rmfiles.sh
+$dname/rmfiles.sh

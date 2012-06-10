@@ -491,7 +491,7 @@ pwrc_create_func()
   local proot
   local bname
   local pname
-  local platforms="x86_linux x86_64_linux arm_linux x86_64_macos"
+  local platforms="x86_cygwin"
   let argc=$#
 
   cmd="project"

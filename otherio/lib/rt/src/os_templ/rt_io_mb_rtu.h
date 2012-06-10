@@ -47,27 +47,11 @@
 #define PB_MODULE_STATE_NOTINIT 0
 #define PB_MODULE_STATE_OPERATE 1
 
-//#define PB_SLAVE_STATE_NOTINIT 0
-//#define PB_SLAVE_STATE_STOPPED 1
-//#define PB_SLAVE_STATE_OPERATE 2
-
-//#define PB_MASTER_STATE_NOTINIT 0
-//#define PB_MASTER_STATE_STOPPED 1
-//#define PB_MASTER_STATE_CLEARED 2
-//#define PB_MASTER_STATE_OPERATE 3
-
-//#define PB_STALLACTION_NONE	0
-//#define PB_STALLACTION_RESET 	1
-//#define PB_STALLACTION_BREAK 	2
-
 #define PB_NUMREP_UNSIGNEDINT	0
 #define PB_NUMREP_SIGNEDINT	1
 #define PB_NUMREP_FLOATIEEE	2
 #define PB_NUMREP_FLOATVAX	3
 #define PB_NUMREP_FLOATINTEL	4
-
-//#define PB_BYTEORDERING_LE	0
-//#define PB_BYTEORDERING_BE	1
 
 #define PB_ORIENTATION_BYTE	8
 #define PB_ORIENTATION_WORD	16
@@ -86,19 +70,17 @@ typedef enum {
 
 typedef struct {
   int initialized;
+  int fd;
 } io_sAgentLocal;
 
 typedef struct {
   int initialized;
-  int s;
   short int trans_id;
-  struct sockaddr_in rem_addr;		/* Remote socket description */
-  struct sockaddr_in loc_addr;		/* Remote socket description */
   int input_size;
   int output_size;
-  int expected_msgs;
   int msgs_lost;
   pwr_tTime last_try_connect_time;
+  int reset_inputs;
 } io_sRackLocal;
 
 typedef struct {
@@ -119,24 +101,13 @@ typedef struct {
 } io_sCardLocal;
 
 typedef struct {
-  pwr_tTime last_req_time;
-  thread_s t;
-  int c_socket;
-  struct sockaddr_in addr;
-  socklen_t addrlen;
-  int occupied;
-} io_sServerConnection;
-
-typedef struct {
   int initialized;
-  int s;
-  int current_socket;
-  short int trans_id;
-  struct sockaddr_in loc_addr;		/* Remote socket description */
+  int fd;
   int input_size;
   int output_size;
+  pwr_tTime last_req_time;
   thread_sMutex mutex;
-  io_sServerConnection connections[MB_MAX_CONNECTIONS];
+  thread_s receive_thread;
 } io_sServerLocal;
 
 typedef struct {
@@ -154,114 +125,117 @@ typedef struct {
   int do_size;
 } io_sServerModuleLocal;
 
-
 #pragma pack(1)
-typedef struct
-{
-  unsigned char protocol_id[2];
-  short int msg_size;
-  short int msg_id[2];
-} remote_tcp_header;
 
-typedef struct _mbap_header {
-  short int trans_id;
-  short int proto_id;
-  short int length;
-  unsigned char      unit_id;
-} mbap_header;
 
 typedef struct _read_req {
-  mbap_header  head;
-  unsigned char         fc;
+  unsigned char unit_id;
+  unsigned char fc;
   short int    addr;
   short int    quant;
+  short int    crc;
 } read_req;
 
 typedef struct _rec_buf {
-  mbap_header  head;
-  short int    buf[1000];
+  unsigned char unit_id;
+  unsigned char fc;
+  unsigned char buf[255];
 } rec_buf;
 
 typedef struct _write_single_req {
-  mbap_header  head;
-  unsigned char         fc;
+  unsigned char unit_id;
+  unsigned char fc;
   short int    addr;
   short int    value;
+  short int    crc;
 } write_single_req;
 
 typedef struct _write_reg_req {
-  mbap_header  head;
-  unsigned char         fc;
+  unsigned char unit_id;
+  unsigned char fc;
   short int    addr;
   short int    quant;
   unsigned char         bc;
   short int    reg[125];
+  short int    crc;
 } write_reg_req;
 
 typedef struct _write_coils_req {
-  mbap_header  head;
-  unsigned char         fc;
+  unsigned char unit_id;
+  unsigned char fc;
   short int    addr;
   short int    quant;
-  unsigned char         bc;
-  unsigned  char    reg[250];
+  unsigned char bc;
+  unsigned char reg[247];
+  short int    crc;
 } write_coils_req;
 
 typedef struct _read_dev_id_req {
-  mbap_header  head;
+  unsigned char unit_id;
   unsigned char fc;
   unsigned char mei_type;
   unsigned char id_code;
   unsigned char object_id;
+  short int     crc;
 } read_dev_id_req;
 
 typedef struct _res_write {
-  unsigned char         fc;
+  unsigned char unit_id;
+  unsigned char fc;
   short int    addr;
   short int    quant;
-  short int    buf[250];
+  unsigned char buf[248];
+  short int    crc;
 } res_write;
 
 typedef struct _res_read {
-  unsigned char         fc;
-  unsigned char         bc;
-  short int    buf[250];
+  unsigned char unit_id;
+  unsigned char fc;
+  unsigned char bc;
+  unsigned char buf[251];
+  short int    crc;
 } res_read;
 
 typedef struct _res_fault {
+  unsigned char unit_id;
   unsigned char         fc;
   unsigned char         ec;
+  short int             crc;
 } res_fault;
 
 typedef struct _rsp_fault {
-  mbap_header  		head;
-  unsigned char         fc;
+  unsigned char unit_id;
+  unsigned char fc;
   unsigned char         ec;
+  short int             crc;
 } rsp_fault;
 
 typedef struct _rsp_read {
-  mbap_header  		head;
-  unsigned char         fc;
+  unsigned char unit_id;
+  unsigned char fc;
   unsigned char         bc;
-  short int    buf[250];
+  unsigned char         buf[250];
+  short int             crc;
 } rsp_read;
 
 typedef struct _rsp_write {
-  mbap_header  		head;
-  unsigned char         fc;
+  unsigned char unit_id;
+  unsigned char fc;
   short int    		addr;
   short int    		quant;
+  short int             crc;
 } rsp_write;
 
 typedef struct _rsp_single_write {
-  mbap_header  		head;
-  unsigned char         fc;
+  unsigned char unit_id;
+  unsigned char fc;
   short int    		addr;
   short int    		value;
+  short int             crc;
 } rsp_single_write;
 
 typedef struct _rsp_dev_id {
-  mbap_header  head;
+  unsigned char unit_id;
   unsigned char fc;
   unsigned char mei_type;
   unsigned char id_code;
@@ -270,6 +244,7 @@ typedef struct _rsp_dev_id {
   unsigned char next_object_id;
   unsigned char number_of_objects;
   unsigned char list[80];
+  short int     crc;
 } rsp_dev_id;
 
 #pragma pack(0)

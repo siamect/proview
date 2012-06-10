@@ -15,6 +15,8 @@ Arguments
 
 --reset-version  Reset previous version
 
+--updatedir      Update makefile directories
+
 EOF
 }
 
