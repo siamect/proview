@@ -466,7 +466,15 @@ int CnvToPs::print_image( const char *filename)
     dcli_translate_filename( fname, fname);
 
     sts = cnv_get_image( fname, &image, &pixmap);
-    if ( EVEN(sts)) return 0;
+    if ( EVEN(sts)) {
+      // Try $pwrp_exe
+      strcpy( fname, "$pwrp_exe/");
+      strcat( fname, filename);
+      dcli_translate_filename( fname, fname);
+
+      sts = cnv_get_image( fname, &image, &pixmap);
+      if ( EVEN(sts)) return 0;
+    }
   }
 
   width = cnv_image_width( image);
