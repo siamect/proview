@@ -227,3 +227,12 @@
 120120 cs  xtt       Xtt 'show device' channels in io module wasn't displayed
 120215 cs  ge        Ge curve bugfix for datafile not found
 120215 cs  ge        Ge invisible dynamics, string attributes inverted
+120309 cs  ge        Ge Tooltip action, empty tooltip string will fetch view description of popupmenu object or host object
+120312 cs  ge        Ge bugfix for input of key pad keys without numlock
+120320 cs  xtt       Show inverted/teston/conversion for channel/signal in xtt
+120404 cs  ge        Ge pie chart and bar chart added
+120411 cs  xtt       Operator window, shows logo in $pwrp_exe/pwrp_logotype.png
+120411 cs  ge        Ge graph, export as image
+120427 cs  xtt       Trend curves, faster and larger
+120509 cs  ge        Ge recursive references for subscription added
+120523 cs  ge        Ge fix for shrinking windows on LXDE

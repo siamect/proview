@@ -5,3 +5,4 @@
 071203 cs  -       Bugfix in Opc Server, subscription on string variable could cause segfault.
 081125 cs  -       Bugfix in opc_provider argument check, server identity was not optional.
 101220 cs  -       Opc_server fix, suppressed error return from not mounted mountobjects.
+120522 sh  -       Opc client, support for canonical data types added

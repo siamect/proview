@@ -196,3 +196,13 @@
 120213 cs  io        IO digital channel for di or do added
 120213 cs  io        IO Buffer input and Buffer output signals/channels added
 120227 cs  gdh       Gdh bugfix int gdh_GetAttrRefTid for classes
+120323 cs  cnv       co_convert, temporary image file removed after use
+120328 cs  rt        Data pointer type changed to pwr_tVoid *
+120404 cs  plc       Plc object DataSelect pointer offset fix
+120411 cs  rt        rt_xtt_cmd, program for xtt commands added
+120411 cs  rt        Report, generate image from graph and insert in report
+120509 cs  neth      neth messages for circular buffers added
+120514 cs  qcom      NodeConfig, configuration with hostname instead of IP address
+120521 cs  rt        Report bugfix, value tag only worked for float
+120522 cs  rtt       rt_rtt, attribute of type Status wasn't displayed
+120522 cs  gdh       Gdh bugfix for subscriptions on remotely mounted objects

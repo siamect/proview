@@ -338,11 +338,11 @@ void CnvChangeLog::print_html()
     "<html>" << endl <<
     "  <head>" << endl <<
     "    <link rel=\"stylesheet\" type=\"text/css\" href=\"../pcss.css\">" << endl <<
-    "    <title>Proview Cangelog</title>" << endl <<
+    "    <title>Proview Changelog</title>" << endl <<
     "  </head>" << endl <<
     "  <body id=\"news\">" << endl <<
     "    <div id=\"news\"><p id=\"news\">" << endl <<
-    "    <h1>Proview Changlog</h1>" << endl <<
+    "    <h1>Proview Changelog</h1>" << endl <<
     "    <table border=\"1\" cellpadding=\"3\">" << endl;
 
   sort_time();

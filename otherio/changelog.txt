@@ -25,3 +25,6 @@
 111103 cs  onewire   OneWire, generic ao device added
 120228 cs  arduino   Libnodave premilinary implementation.
 120302 cs  arduino   Arduino checksum, connect request added and 16 bits Ao.
+120411 cs  modbus    Modbus RTU higher baudrate added
+120514 cs  modbus    Modbus TCP, configuration with hostname instead of IP address
+120522 ab  modbus    Modbus TCP receive bugfix

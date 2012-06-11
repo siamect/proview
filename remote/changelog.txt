@@ -3,3 +3,4 @@
 071115 rk  tcpip     Fixed several bugs when acting as server.
 101216 rk  wmq       Added functionality for handling Websphere MQ as remote node.
 111108 cs  rk512     Remote rk512 ported from ELN
+120427 cs  alcm      Remote ALCM, time increment reduced to 0.005

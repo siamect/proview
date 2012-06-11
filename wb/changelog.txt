@@ -190,3 +190,14 @@
 111222 cs  wb        wb navigator, prevously selected item stored to be remembered after delete operation
 120119 cs  wbl       Wbl print fix when template objects are not found
 120302 cs  wb        Wb syntax check for bi and bo signals
+120306 cs  wb        Wb generation of size optimized loadfile for runtime
+120312 cs  wb        Plc, several plc processes with possibility to set affinity, and plc version removed
+120312 cs  wb        Configurator, input size of object name was 1 char to large
+120313 cs  plc       Plc compile, erroneous reference to removed object in function object code wasn't detected.
+120323 cs  wb        wb options file name lowercase fix
+120328 cs  plc       Plc compile with all warnings
+120404 cs  wb        Dbs file generation, message for missing referenced volume added
+120404 cs  wb        wb callback AnteUnadopt errouneously called AnteAdopt instead
+120511 cs  wb        Xtthelp web symbols made available at conversion of helpfile to html
+120518 cs  plc       Plc editor bugfix, CurrentData and CurrentIndex caused an event loop when name was changed
+120518 cs  plc       Plc editor bugfix, coordinate wasn't not set correctly when floating node created with MB2
