@@ -47,6 +47,8 @@ void CompModePID_Fo_exec( plc_sThread *tp, pwr_sClass_CompModePID_Fo *object);
 void CompPID_Fo_init( pwr_sClass_CompPID_Fo *object);
 void CompPID_Fo_exec( plc_sThread *tp, pwr_sClass_CompPID_Fo *object);
 void CompOnOffBurnerFo_exec( plc_sThread *tp, pwr_sClass_CompOnOffBurnerFo *object);
+void CompOnOffBurnerFo_init( pwr_sClass_CompOnOffBurnerFo *object);
 void CompOnOffZoneFo_exec( plc_sThread *tp, pwr_sClass_CompOnOffZoneFo *object);
+void CompOnOffZoneFo_init( pwr_sClass_CompOnOffZoneFo *object);
 
 #endif

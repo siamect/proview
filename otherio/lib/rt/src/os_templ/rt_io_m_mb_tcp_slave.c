@@ -58,13 +58,14 @@
 #include "rt_io_bus.h"
 #include "rt_io_msg.h"
 #include "rt_errh.h"
+#include "rt_net.h"
 #include "co_cdh.h"
 #include "co_time.h"
 #include "rt_mb_msg.h"
 
 #include "rt_io_mb_locals.h"
 
-char rcv_buffer[65536];
+//char rcv_buffer[65536];
 
 /* Check if channel should be fetched from diagnostic area, 
    i.e. channel name starts with "Diag_" */
@@ -103,7 +104,13 @@ static int connect_slave( io_sRackLocal *local, io_sRack *rp)
 
   local->rem_addr.sin_family = AF_INET;
   local->rem_addr.sin_port = htons(port);
-  local->rem_addr.sin_addr.s_addr = inet_addr((char *) &(op->Address));
+  // local->rem_addr.sin_addr.s_addr = inet_addr((char *) &(op->Address));
+  sts = net_StringToAddr( op->Address, &local->rem_addr.sin_addr);
+  if ( EVEN(sts)) {
+    errh_Error( "Address error for IO modbus tcp slave %s %s", rp->Name, op->Address);
+    return sts;
+  }
+  local->rem_addr.sin_addr.s_addr = ntohl(local->rem_addr.sin_addr.s_addr);
   
   /* Connect to remote address */
 
@@ -125,7 +132,7 @@ static int connect_slave( io_sRackLocal *local, io_sRack *rp)
       tv.tv_usec = 200000;
     }
 
-    sts = select(32, &fdr, &fdw, NULL, &tv);
+    sts = select((int)local->s+1, &fdr, &fdw, NULL, &tv);
     
     if (sts <= 0) {
       close(local->s);
@@ -143,202 +150,217 @@ pwr_tStatus mb_recv_data(io_sRackLocal *local,
                              io_sRack      *rp,
 			     pwr_sClass_Modbus_TCP_Slave *sp)
 {
-  io_sCardLocal *local_card;
+  io_sCardLocalMsg *local_card;
   io_sCard *cardp;
-  pwr_sClass_Modbus_Module *mp;
+  pwr_sClass_Modbus_ModuleMsg *mp;
   pwr_tStatus sts;
   fd_set fdr;				/* For select call */
-  fd_set fde;				/* For select call */
-  fd_set fdw;				/* For select call */
   struct timeval tv;
   pwr_tBoolean found;
   int data_size;
   rec_buf *rb;
+  char rcv_buffer[260];
   pwr_tCid cid;
   unsigned char fc;
   short int trans_id;
   short int size_of_msg;
+  int modules;
+  int i;
   
-  /* Receive answer */
+	short int remaining_data; // Data we have to get from the socket.
+	short int received_data;  // Data that has been received.
 
-  sts = 1;
+	sts = 1;
+	rb = (rec_buf *) rcv_buffer;
 
-  while (sts > 0) {
-    FD_ZERO(&fdr);
-    FD_ZERO(&fdw);
-    FD_ZERO(&fde);
-    FD_SET(local->s, &fdr);
-    FD_SET(local->s, &fdw);
-    FD_SET(local->s, &fde);
+	while (sts > 0) { /* Receive answer */
+		
+		size_of_msg = 0;
+		remaining_data = sizeof(mbap_header);
+		received_data = 0;
+		
+		/*
+		First read at least the MBAP header, and no more.
+		Then, read the remaining bytes indicaterd in the header, but no more.
+		We control the amount of data because could be more than one message in the socket buffer or
+		only the first bytes of a packet.
+		*/
+		
+		while ( (remaining_data > 0) && (sts > 0) ) { // if there is data to read and everything is ok, receive.
+			
+			FD_ZERO(&fdr);
+			FD_SET(local->s, &fdr);
+			
+			if (local->expected_msgs > 0) {
+			  tv.tv_sec = 0;
+			  tv.tv_usec = sp->ResponseTime * 1000;
+			} else {
+			  tv.tv_sec = 0;
+			  tv.tv_usec = 0;
+			}
+		
+			sts = select((int)local->s+1, &fdr, NULL, NULL, &tv);
+			
+			if (sts<=0) { // Timeout or error.
+				if ((sts == 0) && (local->expected_msgs > 0)) { // Timeout but there are messages pending
+					local->msgs_lost++;
+					if (local->msgs_lost > MAX_MSGS_LOST) {
+						sp->Status = MB__CONNDOWN;
+						close(local->s);
+						errh_Error( "Data expected but timeout. Connection down to modbus slave, %s", rp->Name);
+					}
+					return IO__SUCCESS;
+				}
+				
+				if (sts < 0) { // Error in the socket
+					sp->Status = MB__CONNLOST;
+					close(local->s);
+					errh_Error( "Socket Error. Connection lost to modbus slave, %s", rp->Name);
+					return IO__SUCCESS;
+				}
+				
+			} else { // There are something to read (no timeout and no error). Could be a closed socket too, so we have to check later anyway.
+				data_size = recv(local->s, &rcv_buffer[received_data], remaining_data, 0);
 
-    size_of_msg = 0;
-    tv.tv_sec = 0;
-    tv.tv_usec = 0;
+				if (data_size < 0) {
+					sp->Status = MB__CONNLOST;
+					close(local->s);
+					errh_Error( "Error reading data. Connection lost to modbus slave, %s", rp->Name);
+					return IO__SUCCESS;
+				}
+				
+				if (data_size == 0) {
+					sp->Status = MB__CONNDOWN;
+					close(local->s);
+					errh_Error( "Error reading data. Connection down to modbus slave, %s", rp->Name);
+					return IO__SUCCESS;
+				}
 
-    sts = select(32, &fdr, &fdw, &fde, &tv);
+				remaining_data = remaining_data - data_size;
+				received_data = received_data + data_size;
+				
+				if ( (received_data >= sizeof(mbap_header)) && (size_of_msg == 0 )) {
+					// Compute the complete header
+					trans_id = ntohs(rb->head.trans_id);
+					size_of_msg = ntohs(rb->head.length) + 6;
+					
+					// Check header data
+					if ((ntohs(rb->head.proto_id)!=0) || (size_of_msg>260)) { // Invalid modbus packet
+						sp->Status = MB__CONNDOWN;
+						close(local->s);
+						errh_Error( "Invalid Modbus packet. Connection down to modbus slave, %s", rp->Name);
+						return IO__SUCCESS;
+					}
+					
+					// Update remaining data
+					remaining_data = size_of_msg - received_data;
+				}
+			}
+		} // while
 
-    if (sts < 0) {
-      sp->Status = MB__CONNLOST;
-      close(local->s);
-      errh_Error( "Connection lost to modbus slave, %s", rp->Name);
-      return IO__SUCCESS;
-    }
-    
-    if (!(FD_ISSET(local->s, &fdw))) {
-      sp->Status = MB__CONNDOWN;
-      close(local->s);
-      errh_Error( "Connection down to modbus slave, %s", rp->Name);
-      return IO__SUCCESS;
-    }
+		if (sts > 0) { // processing packet...
+		
+			local->msgs_lost = 0;
+			sp->RX_packets++;
+			local->expected_msgs--;
+			cardp = rp->cardlist;
+			
+			while(cardp) {
+				/* From v4.1.3 we can have subclasses, find the super class */
+				found = FALSE;
+				cid = cardp->Class;
+				while ( ODD( gdh_GetSuperClass( cid, &cid, cardp->Objid))) ;
+				
+					switch (cid) {
+						case pwr_cClass_Modbus_Module:
+							mp = (pwr_sClass_Modbus_ModuleMsg *) &((pwr_sClass_Modbus_Module *) cardp->op)->FunctionCode;
+							modules = 1;
+							local_card = ((io_sCardLocal *)cardp->Local)->msg;
+							break;
+						case pwr_cClass_Modbus_ModuleReadWrite:
+							mp = &((pwr_sClass_Modbus_ModuleReadWrite *) cardp->op)->Read;
+							modules = 2;
+							local_card = ((io_sCardLocal *)cardp->Local)->msg;
+							break;
+						default:
+							modules = 0;
+					}
 
-    if (local->expected_msgs > 0) {
-      tv.tv_sec = 0;
-      tv.tv_usec = sp->ResponseTime * 1000;
-    } else {
-      tv.tv_sec = 0;
-      tv.tv_usec = 0;
-    }
+				if ( !modules) {
+					cardp = cardp->next;
+					continue;
+				}
 
-    FD_ZERO(&fdr);
-    FD_ZERO(&fde);
-    FD_SET(local->s, &fdr);
-    FD_SET(local->s, &fde);
+				for ( i = 0; i < modules; i++) {
 
-    sts = select(32, &fdr, NULL, &fde, &tv);
+					if (local_card->trans_id == trans_id) {
 
-    if (sts < 0) {
-      sp->Status = MB__CONNLOST;
-      close(local->s);
-      errh_Error( "Connection lost to modbus slave, %s", rp->Name);
-      return IO__SUCCESS;
-    }
-    
-    if ((sts == 0) && (local->expected_msgs > 0)) {
-      local->msgs_lost++;
-      if (local->msgs_lost > MAX_MSGS_LOST) {
-        sp->Status = MB__CONNDOWN;
-        close(local->s);
-        errh_Error( "Connection down to modbus slave, %s", rp->Name);
-      }
-      return IO__SUCCESS;
-    }
+						fc = (unsigned char) *rb->buf;
+						if (fc > 0x80) {
+							res_fault *res_f;
+							res_f = (res_fault *) rb->buf;
+							mp->Status = res_f->ec;
+							mp++;
+							local_card++;
+							continue;
+						}
 
-    if (sts > 0 && FD_ISSET(local->s, &fdr)) {
-      data_size = recv(local->s, rcv_buffer, sizeof(rec_buf), 0);
+						if (fc != mp->FunctionCode) {
+							mp->Status = pwr_eModbusModule_StatusEnum_StatusUnknown;
+							mp++;
+							local_card++;
+							continue;
+						}
 
-      if (data_size < 0) {
-        sp->Status = MB__CONNLOST;
-	close(local->s);
-	errh_Error( "Connection lost to modbus slave, %s", rp->Name);
-	return IO__SUCCESS;
-      }
+						mp->Status = pwr_eModbusModule_StatusEnum_OK;
 
-      if (data_size == 0) {
-        sp->Status = MB__CONNDOWN;
-	close(local->s);
-	errh_Error( "Connection down to modbus slave, %s", rp->Name);
-	return IO__SUCCESS;
-      }
+						switch (fc) {
+							case pwr_eModbus_FCEnum_ReadCoils: {
+								res_read *res_r;
+								res_r = (res_read *) rb->buf;
+								memcpy(local_card->input_area, res_r->buf, MIN(res_r->bc, local_card->input_size));
+								break;
+							}
 
-      while (data_size > 0) {
+							case pwr_eModbus_FCEnum_ReadDiscreteInputs: {
+								res_read *res_r;
+								res_r = (res_read *) rb->buf;
+								memcpy(local_card->input_area, res_r->buf, MIN(res_r->bc, local_card->input_size));
+								break;
+							}
 
-        local->msgs_lost = 0;
+							case pwr_eModbus_FCEnum_ReadHoldingRegisters: {
+								res_read *res_r;
+								res_r = (res_read *) rb->buf;
+								memcpy(local_card->input_area, res_r->buf, MIN(res_r->bc, local_card->input_size));
+								break;
+							}
 
-  	sp->RX_packets++;
-	
-	local->expected_msgs--;
+							case pwr_eModbus_FCEnum_ReadInputRegisters: { 
+								res_read *res_r;
+								res_r = (res_read *) rb->buf;
+								memcpy(local_card->input_area, res_r->buf, MIN(res_r->bc, local_card->input_size));
+								break;
+							}
 
-	cardp = rp->cardlist;
+							case pwr_eModbus_FCEnum_WriteMultipleCoils:
+							case pwr_eModbus_FCEnum_WriteMultipleRegisters:
+							case pwr_eModbus_FCEnum_WriteSingleRegister:
+							// Nothing good to do here
+							break;
+						}
+						found = TRUE;
+					}
+					mp++;
+					local_card++;
+				} // for ( i = 0; i < modules; i++)
+				if (found)
+				break;
+				cardp = cardp->next;
+			} /* End - while(cardp) ... */
+		} // if (sts > 0) processing packet...
+	} // while (sts > 0)  Receive answer
 
-	if (data_size < sizeof(mbap_header))
-	  break;
-
-	rb = (rec_buf *) &rcv_buffer[size_of_msg];
-
-	trans_id = ntohs(rb->head.trans_id);
-	size_of_msg += ntohs(rb->head.length) + 6;
-	data_size -= ntohs(rb->head.length) + 6;
-
-        while(cardp) {
-          /* From v4.1.3 we can have subclasses, find the super class */
-          found = FALSE;
-          cid = cardp->Class;
-          while ( ODD( gdh_GetSuperClass( cid, &cid, cardp->Objid))) ;
-
-          switch (cid) {
-
-            case pwr_cClass_Modbus_Module: {
-              mp = (pwr_sClass_Modbus_Module *) cardp->op;
-
-              local_card = cardp->Local;
-
-	      if (local_card->trans_id == trans_id) {
-
-                fc = (unsigned char) *rb->buf;
-                if (fc > 0x80) {
-	          res_fault *res_f;
-	          res_f = (res_fault *) rb->buf;
-	          mp->Status = res_f->ec;
-	          break;
-	        }
-
-                if (fc != mp->FunctionCode) {
-	          mp->Status = pwr_eModbusModule_StatusEnum_StatusUnknown;
-	          break;
-	        }
-
-	        mp->Status = pwr_eModbusModule_StatusEnum_OK;
-
-                switch (fc) {
-	          case pwr_eModbus_FCEnum_ReadCoils: {
-	            res_read *res_r;
-                    res_r = (res_read *) rb->buf;
-		    memcpy(local_card->input_area, res_r->buf, MIN(res_r->bc, local_card->input_size));
-	            break;
-		  }
-
-	          case pwr_eModbus_FCEnum_ReadDiscreteInputs: {
-	            res_read *res_r;
-                    res_r = (res_read *) rb->buf;
-		    memcpy(local_card->input_area, res_r->buf, MIN(res_r->bc, local_card->input_size));
-	            break;
-		  }
-
-	          case pwr_eModbus_FCEnum_ReadHoldingRegisters: {
-	            res_read *res_r;
-                    res_r = (res_read *) rb->buf;
-		    memcpy(local_card->input_area, res_r->buf, MIN(res_r->bc, local_card->input_size));
-	            break;
-		  }
-
-	          case pwr_eModbus_FCEnum_ReadInputRegisters: { 
-	            res_read *res_r;
-                    res_r = (res_read *) rb->buf;
-		    memcpy(local_card->input_area, res_r->buf, MIN(res_r->bc, local_card->input_size));
-	            break;
-		  }
-
-	          case pwr_eModbus_FCEnum_WriteMultipleCoils:
-	          case pwr_eModbus_FCEnum_WriteMultipleRegisters:
-	          case pwr_eModbus_FCEnum_WriteSingleRegister:
-	            // Nothing good to do here
-	            break;
-	        }
-		found = TRUE;
-	      }
-	      break;
-	    }
-	    default:
-	      break;
-	  } /* End - switch (cid) ... */
-	  if (found)
-	    break;
-          cardp = cardp->next;
-        } /* End - while(cardp) ... */
-      } /* End - data_size > 0 ... */
-    } /* End - if received message ... */
-  } /* End - receive messages ... */
-  
   return IO__SUCCESS;
 }
 
@@ -347,11 +369,13 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
 			     pwr_sClass_Modbus_TCP_Slave *sp, 
 			     mb_tSendMask   mask)
 {
-  io_sCardLocal *local_card;
+  io_sCardLocalMsg *local_card;
   io_sCard *cardp;
-  pwr_sClass_Modbus_Module *mp;
+  pwr_sClass_Modbus_ModuleMsg *mp;
   pwr_tStatus sts;
   pwr_tCid cid;
+  int modules;
+  int i;
 
   /* Send messages to slave */
 
@@ -364,231 +388,250 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
     while ( ODD( gdh_GetSuperClass( cid, &cid, cardp->Objid))) ;
 
     switch (cid) {
-      case pwr_cClass_Modbus_Module:
-        mp = (pwr_sClass_Modbus_Module *) cardp->op;
+    case pwr_cClass_Modbus_Module:
+      mp = (pwr_sClass_Modbus_ModuleMsg *) &((pwr_sClass_Modbus_Module *) cardp->op)->FunctionCode;
+      modules = 1;
+      break;
+    case pwr_cClass_Modbus_ModuleReadWrite:
+      mp = &((pwr_sClass_Modbus_ModuleReadWrite *) cardp->op)->Read;
+      modules = 2;
+      break;
+    default:
+      modules = 0;
+    }
 
-        if (!mp->Continous && !mp->SendOp) {
+    if ( !modules) {
+      cardp = cardp->next;
+      continue;
+    }
+
+    for ( i = 0; i < modules; i++) {
+      sts = 1;
+      
+      if (!mp->Continous && !mp->SendOp) {
+	break;
+      }
+      
+      local_card = &((io_sCardLocal *)cardp->Local)->msg[i];
+      if ( mp->ScanInterval > 1 && local_card->interval_cnt != 0) {
+	cardp = cardp->next;
+	continue;
+      }
+      
+      if (mask & mb_mSendMask_ReadReq) {
+	switch (mp->FunctionCode) {
+	case pwr_eModbus_FCEnum_ReadCoils:
+	case pwr_eModbus_FCEnum_ReadDiscreteInputs: {
+	  read_req rr;
+	  
+	  mp->SendOp = FALSE;
+	  
+	  local->trans_id++;
+	  local_card->trans_id = local->trans_id;
+
+	  rr.head.trans_id = htons(local->trans_id);
+	  rr.head.proto_id = 0;
+	  rr.head.length = htons(sizeof(read_req) - 6);
+	  rr.head.unit_id = mp->UnitId;
+	  rr.fc = mp->FunctionCode;
+	  rr.addr = htons(mp->Address);
+	  rr.quant = htons(local_card->no_di);
+	  //              rr.quant = ntohs(local_card->input_size * 8);
+
+	  sts = send(local->s, &rr, sizeof(read_req), MSG_DONTWAIT);
+	  if (sts < 0) {
+	    sp->Status = MB__CONNDOWN;
+	    close(local->s);
+	    errh_Error( "Connection down to modbus slave, %s", rp->Name);
+	    return IO__SUCCESS;
+	  }
+	      
+	  local->expected_msgs++;
+	  sp->TX_packets++;
 	  break;
 	}
-		
-        local_card = cardp->Local;
-	if ( mp->ScanInterval > 1 && local_card->interval_cnt != 0) {
-	  cardp = cardp->next;
-	  continue;
+
+	case pwr_eModbus_FCEnum_ReadHoldingRegisters:
+	case pwr_eModbus_FCEnum_ReadInputRegisters: {
+	  read_req rr;
+
+	  mp->SendOp = FALSE;
+
+	  local->trans_id++;
+	  local_card->trans_id = local->trans_id;
+
+	  rr.head.trans_id = htons(local->trans_id);
+	  rr.head.proto_id = 0;
+	  rr.head.length = htons(sizeof(read_req) - 6);
+	  rr.head.unit_id = mp->UnitId;
+	  rr.fc = mp->FunctionCode;
+	  rr.addr = htons(mp->Address);
+	  rr.quant = ntohs((local_card->input_size + 1) / 2);
+
+	  sts = send(local->s, &rr, sizeof(read_req), MSG_DONTWAIT);
+	  if (sts < 0) {
+	    sp->Status = MB__CONNDOWN;
+	    close(local->s);
+	    errh_Error( "Connection down to modbus slave, %s", rp->Name);
+	    return IO__SUCCESS;
+	  }
+	  sp->TX_packets++;
+	  local->expected_msgs++;
+	  break;
+	}
+	} /* End - switch FC ... */
+      }
+
+      if (mask & mb_mSendMask_WriteReq) {
+	switch (mp->FunctionCode) {
+
+	case pwr_eModbus_FCEnum_WriteSingleCoil: {
+	  write_single_req wsr;
+
+	  mp->SendOp = FALSE;
+
+	  local->trans_id++;
+	  local_card->trans_id = local->trans_id;
+	  
+	  wsr.head.trans_id = htons(local->trans_id);
+	  wsr.head.proto_id = 0;
+	  wsr.head.length = htons(sizeof(wsr) - 6); 
+	  wsr.head.unit_id = mp->UnitId;
+	  wsr.fc = mp->FunctionCode;
+	  wsr.addr = htons(mp->Address);
+	  if (local_card->output_size == 4) {
+	    if (*(int *)local_card->output_area)
+	      wsr.value = ntohs(0xFF00);
+	    else wsr.value = 0;
+	  } else if (local_card->output_size == 2) {
+	    if (*(short int *)local_card->output_area)
+	      wsr.value = ntohs(0xFF00);
+	    else wsr.value = 0;
+	  } else if (local_card->output_size == 1) {
+	    if (*(char *)local_card->output_area)
+	      wsr.value = ntohs(0xFF00);
+	    else wsr.value = 0;
+	  } else wsr.value = 0;
+
+	  sts = send(local->s, &wsr, ntohs(wsr.head.length) + 6, MSG_DONTWAIT);
+	  if (sts < 0) {
+	    sp->Status = MB__CONNDOWN;
+	    close(local->s);
+	    errh_Error( "Connection down to modbus slave, %s", rp->Name);
+	    return IO__SUCCESS;
+	  }
+	  local->expected_msgs++;
+	  sp->TX_packets++;
+	  break;
 	}
 
-        if (mask & mb_mSendMask_ReadReq) {
-	  switch (mp->FunctionCode) {
-	    case pwr_eModbus_FCEnum_ReadCoils:
-	    case pwr_eModbus_FCEnum_ReadDiscreteInputs: {
-	      read_req rr;
+	case pwr_eModbus_FCEnum_WriteMultipleCoils: {
+	  write_coils_req wcr;
 
-	      mp->SendOp = FALSE;
+	  mp->SendOp = FALSE;
 
-	      local->trans_id++;
-	      local_card->trans_id = local->trans_id;
+	  local->trans_id++;
+	  local_card->trans_id = local->trans_id;
 
-              rr.head.trans_id = htons(local->trans_id);
-              rr.head.proto_id = 0;
-              rr.head.length = htons(sizeof(read_req) - 6);
-              rr.head.unit_id = mp->UnitId;
-              rr.fc = mp->FunctionCode;
-              rr.addr = htons(mp->Address);
-              rr.quant = htons(local_card->no_di);
-	      //              rr.quant = ntohs(local_card->input_size * 8);
+	  wcr.head.trans_id = htons(local->trans_id);
+	  wcr.head.proto_id = 0;
+	  wcr.head.length = htons(sizeof(wcr) - 6 - 
+				  sizeof(wcr.reg) + local_card->output_size);
+	  wcr.head.unit_id = mp->UnitId;
+	  wcr.fc = mp->FunctionCode;
+	  wcr.addr = htons(mp->Address);
+	  wcr.quant = htons(local_card->no_do);
+	  //              wcr.quant = ntohs((local_card->output_size) * 8);
+	  wcr.bc = local_card->output_size;
+	  memcpy(wcr.reg, local_card->output_area, local_card->output_size);
 
-	      sts = send(local->s, &rr, sizeof(read_req), MSG_DONTWAIT);
-	      if (sts < 0) {
-                sp->Status = MB__CONNDOWN;
-                close(local->s);
-                errh_Error( "Connection down to modbus slave, %s", rp->Name);
-                return IO__SUCCESS;
-              }
-	      
-	      local->expected_msgs++;
-	      sp->TX_packets++;
-	      break;
-	    }
-
-	    case pwr_eModbus_FCEnum_ReadHoldingRegisters:
-	    case pwr_eModbus_FCEnum_ReadInputRegisters: {
-	      read_req rr;
-
-	      mp->SendOp = FALSE;
-
-	      local->trans_id++;
-	      local_card->trans_id = local->trans_id;
-
-              rr.head.trans_id = htons(local->trans_id);
-              rr.head.proto_id = 0;
-              rr.head.length = htons(sizeof(read_req) - 6);
-              rr.head.unit_id = mp->UnitId;
-              rr.fc = mp->FunctionCode;
-              rr.addr = htons(mp->Address);
-              rr.quant = ntohs((local_card->input_size + 1) / 2);
-
-	      sts = send(local->s, &rr, sizeof(read_req), MSG_DONTWAIT);
-	      if (sts < 0) {
-                sp->Status = MB__CONNDOWN;
-                close(local->s);
-                errh_Error( "Connection down to modbus slave, %s", rp->Name);
-                return IO__SUCCESS;
-              }
-	      sp->TX_packets++;
-	      local->expected_msgs++;
-	      break;
-	    }
-	  } /* End - switch FC ... */
+	  sts = send(local->s, &wcr, ntohs(wcr.head.length) + 6, MSG_DONTWAIT);
+	  if (sts < 0) {
+	    sp->Status = MB__CONNDOWN;
+	    close(local->s);
+	    errh_Error( "Connection down to modbus slave, %s", rp->Name);
+	    return IO__SUCCESS;
+	  }
+	  local->expected_msgs++;
+	  sp->TX_packets++;
+	  break;
 	}
 
-        if (mask & mb_mSendMask_WriteReq) {
-	  switch (mp->FunctionCode) {
+	case pwr_eModbus_FCEnum_WriteMultipleRegisters: {
+	  write_reg_req wrr;
 
-	    case pwr_eModbus_FCEnum_WriteSingleCoil: {
-	      write_single_req wsr;
+	  mp->SendOp = FALSE;
 
-	      mp->SendOp = FALSE;
+	  local->trans_id++;
+	  local_card->trans_id = local->trans_id;
 
-	      local->trans_id++;
-	      local_card->trans_id = local->trans_id;
+	  wrr.head.trans_id = htons(local->trans_id);
+	  wrr.head.proto_id = 0;
+	  wrr.head.length = htons(sizeof(wrr) - 6 - 
+				  sizeof(wrr.reg) + local_card->output_size);
+	  wrr.head.unit_id = mp->UnitId;
+	  wrr.fc = mp->FunctionCode;
+	  wrr.addr = htons(mp->Address);
+	  wrr.quant = ntohs((local_card->output_size) / 2);
+	  wrr.bc = local_card->output_size;
+	  memcpy(wrr.reg, local_card->output_area, local_card->output_size);
 
-              wsr.head.trans_id = htons(local->trans_id);
-              wsr.head.proto_id = 0;
-              wsr.head.length = htons(sizeof(wsr) - 6); 
-              wsr.head.unit_id = mp->UnitId;
-              wsr.fc = mp->FunctionCode;
-              wsr.addr = htons(mp->Address);
-	      if (local_card->output_size == 4) {
-                if (*(int *)local_card->output_area)
-		  wsr.value = ntohs(0xFF00);
-		else wsr.value = 0;
-	      } else if (local_card->output_size == 2) {
-                if (*(short int *)local_card->output_area)
-		  wsr.value = ntohs(0xFF00);
-		else wsr.value = 0;
-	      } else if (local_card->output_size == 1) {
-                if (*(char *)local_card->output_area)
-		  wsr.value = ntohs(0xFF00);
-		else wsr.value = 0;
-	      } else wsr.value = 0;
-
-	      sts = send(local->s, &wsr, ntohs(wsr.head.length) + 6, MSG_DONTWAIT);
-	      if (sts < 0) {
-                sp->Status = MB__CONNDOWN;
-                close(local->s);
-                errh_Error( "Connection down to modbus slave, %s", rp->Name);
-                return IO__SUCCESS;
-              }
-	      local->expected_msgs++;
-	      sp->TX_packets++;
-	      break;
-	    }
-
-	    case pwr_eModbus_FCEnum_WriteMultipleCoils: {
-	      write_coils_req wcr;
-
-	      mp->SendOp = FALSE;
-
-	      local->trans_id++;
-	      local_card->trans_id = local->trans_id;
-
-              wcr.head.trans_id = htons(local->trans_id);
-              wcr.head.proto_id = 0;
-              wcr.head.length = htons(sizeof(wcr) - 6 - 
-	                             sizeof(wcr.reg) + local_card->output_size);
-              wcr.head.unit_id = mp->UnitId;
-              wcr.fc = mp->FunctionCode;
-              wcr.addr = htons(mp->Address);
-              wcr.quant = htons(local_card->no_do);
-	      //              wcr.quant = ntohs((local_card->output_size) * 8);
-	      wcr.bc = local_card->output_size;
-	      memcpy(wcr.reg, local_card->output_area, local_card->output_size);
-
-	      sts = send(local->s, &wcr, ntohs(wcr.head.length) + 6, MSG_DONTWAIT);
-	      if (sts < 0) {
-                sp->Status = MB__CONNDOWN;
-                close(local->s);
-                errh_Error( "Connection down to modbus slave, %s", rp->Name);
-                return IO__SUCCESS;
-              }
-	      local->expected_msgs++;
-	      sp->TX_packets++;
-	      break;
-	    }
-
-	    case pwr_eModbus_FCEnum_WriteMultipleRegisters: {
-	      write_reg_req wrr;
-
-	      mp->SendOp = FALSE;
-
-	      local->trans_id++;
-	      local_card->trans_id = local->trans_id;
-
-              wrr.head.trans_id = htons(local->trans_id);
-              wrr.head.proto_id = 0;
-              wrr.head.length = htons(sizeof(wrr) - 6 - 
-	                             sizeof(wrr.reg) + local_card->output_size);
-              wrr.head.unit_id = mp->UnitId;
-              wrr.fc = mp->FunctionCode;
-              wrr.addr = htons(mp->Address);
-              wrr.quant = ntohs((local_card->output_size) / 2);
-	      wrr.bc = local_card->output_size;
-	      memcpy(wrr.reg, local_card->output_area, local_card->output_size);
-
-	      sts = send(local->s, &wrr, ntohs(wrr.head.length) + 6, MSG_DONTWAIT);
-	      if (sts < 0) {
-                sp->Status = MB__CONNDOWN;
-                close(local->s);
-                errh_Error( "Connection down to modbus slave, %s", rp->Name);
-                return IO__SUCCESS;
-              }
-	      sp->TX_packets++;
-	      local->expected_msgs++;
-	      break;
-	    }
-	    case pwr_eModbus_FCEnum_WriteSingleRegister: {
-	      write_single_req wrr;
-
-	      mp->SendOp = FALSE;
-
-	      local->trans_id++;
-	      local_card->trans_id = local->trans_id;
-
-              wrr.head.trans_id = htons(local->trans_id);
-              wrr.head.proto_id = 0;
-              wrr.head.length = htons(sizeof(wrr) - 6);
-              wrr.head.unit_id = mp->UnitId;
-              wrr.fc = mp->FunctionCode;
-              wrr.addr = htons(mp->Address);
-	      memcpy(&wrr.value, local_card->output_area, sizeof(wrr.value));
-
-	      sts = send(local->s, &wrr, ntohs(wrr.head.length) + 6, MSG_DONTWAIT);
-	      if (sts < 0) {
-                sp->Status = MB__CONNDOWN;
-                close(local->s);
-                errh_Error( "Connection down to modbus slave, %s", rp->Name);
-                return IO__SUCCESS;
-              }
-	      sp->TX_packets++;
-	      local->expected_msgs++;
-	      break;
-	    }
-	  } /* End - switch FC ... */
+	  sts = send(local->s, &wrr, ntohs(wrr.head.length) + 6, MSG_DONTWAIT);
+	  if (sts < 0) {
+	    sp->Status = MB__CONNDOWN;
+	    close(local->s);
+	    errh_Error( "Connection down to modbus slave, %s", rp->Name);
+	    return IO__SUCCESS;
+	  }
+	  sp->TX_packets++;
+	  local->expected_msgs++;
+	  break;
 	}
-	if (sts < 0) {
-	  sp->Status = MB__CONNDOWN;
-	  close(local->s);
-	  errh_Error( "Connection down to modbus slave, %s", rp->Name);
-	  return IO__SUCCESS;
+	case pwr_eModbus_FCEnum_WriteSingleRegister: {
+	  write_single_req wrr;
+
+	  mp->SendOp = FALSE;
+
+	  local->trans_id++;
+	  local_card->trans_id = local->trans_id;
+
+	  wrr.head.trans_id = htons(local->trans_id);
+	  wrr.head.proto_id = 0;
+	  wrr.head.length = htons(sizeof(wrr) - 6);
+	  wrr.head.unit_id = mp->UnitId;
+	  wrr.fc = mp->FunctionCode;
+	  wrr.addr = htons(mp->Address);
+	  memcpy(&wrr.value, local_card->output_area, sizeof(wrr.value));
+
+	  sts = send(local->s, &wrr, ntohs(wrr.head.length) + 6, MSG_DONTWAIT);
+	  if (sts < 0) {
+	    sp->Status = MB__CONNDOWN;
+	    close(local->s);
+	    errh_Error( "Connection down to modbus slave, %s", rp->Name);
+	    return IO__SUCCESS;
+	  }
+	  sp->TX_packets++;
+	  local->expected_msgs++;
+	  break;
 	}
-
-	if (sp->SingleOp)    
-	  sts = mb_recv_data(local, rp, sp);
-
-	if (sp->Status != MB__NORMAL) return IO__SUCCESS;
-
+	} /* End - switch FC ... */
+      }
+      if ( sts < 0)
 	break;
-    } /* End - switch cid ... */
+      mp++;
+    }
+
+    if (sts < 0) {
+      sp->Status = MB__CONNDOWN;
+      close(local->s);
+      errh_Error( "Connection down to modbus slave, %s", rp->Name);
+      return IO__SUCCESS;
+    }
+
+    if (sp->SingleOp)    
+      sts = mb_recv_data(local, rp, sp);
+
+    if (sp->Status != MB__NORMAL) return IO__SUCCESS;
 
     cardp = cardp->next;
 
@@ -609,28 +652,15 @@ static pwr_tStatus IoRackInit (
   io_sCardLocal *local_card;
   io_sCard *cardp;
   io_sRackLocal *local;
-  short input_counter;
-  short output_counter;
-  short card_input_counter;
-  short card_output_counter;
-  short no_di;
-  short no_do;
+  int no_di;
+  int no_do;
   pwr_sClass_Modbus_TCP_Slave *op;
-  pwr_sClass_Modbus_Module *mp;
   char name[196];
   pwr_tStatus sts;
   pwr_tCid cid;
   
   io_sChannel *chanp;
-  int i, latent_input_counter, latent_output_counter;
-  pwr_tInt32 chan_size;
-  pwr_sClass_ChanDi *chan_di;
-  pwr_sClass_ChanDo *chan_do;
-  pwr_sClass_ChanAi *chan_ai;
-  pwr_sClass_ChanAit *chan_ait;
-  pwr_sClass_ChanIi *chan_ii;
-  pwr_sClass_ChanAo *chan_ao;
-  pwr_sClass_ChanIo *chan_io;
+  int i;
 
   sts = gdh_ObjidToName(rp->Objid, (char *) &name, sizeof(name), cdh_mNName);
   errh_Info( "Init of Modbus TCP Slave and Modules %s", name);
@@ -654,167 +684,135 @@ static pwr_tStatus IoRackInit (
 
   cardp = rp->cardlist;
 
-  input_counter = 0;
-  output_counter = 0;
-  card_input_counter = 0;
-  card_output_counter = 0;
-  latent_input_counter = 0;
-  latent_output_counter = 0;
+  unsigned int prev_input_area_offset = 0;
+  unsigned int prev_output_area_offset = 0;
+  unsigned int input_area_offset = 0;
+  unsigned int output_area_offset = 0;
+  unsigned int input_area_chansize = 0;
+  unsigned int output_area_chansize = 0;
 
   while(cardp) {
     local_card = calloc(1, sizeof(*local_card));
-    cardp->Local = local_card;
-    input_counter = input_counter + card_input_counter + latent_input_counter;
-    output_counter = output_counter + card_output_counter + latent_output_counter;
-    local_card->input_area = (void *) &(op->Inputs) + input_counter;
-    local_card->output_area = (void *) &(op->Outputs) + output_counter;
-    card_input_counter = 0;
-    card_output_counter = 0;
-    latent_input_counter = 0;
-    latent_output_counter = 0;
-    no_di = 0;
-    no_do = 0;
 
-    /* From v4.1.3 we can have subclasses, find the super class */
-    
     cid = cardp->Class;
+    /* Find the super class */
     while ( ODD( gdh_GetSuperClass( cid, &cid, cardp->Objid))) ;
 
     switch (cid) {
+    case pwr_cClass_Modbus_Module: {
+      pwr_sClass_Modbus_Module *mp;
 
-      case pwr_cClass_Modbus_Module:
-        mp = (pwr_sClass_Modbus_Module *) cardp->op;
-        mp->Status = pwr_eModbusModule_StatusEnum_StatusUnknown;
-        for (i = 0; i < cardp->ChanListSize; i++) {
-          chanp = &cardp->chanlist[i];
+      cardp->Local = local_card;
+      no_di = 0;
+      no_do = 0;
 
-	  if ( is_diag( &chanp->ChanAref)) {
-	    chanp->udata |= PB_UDATA_DIAG;
-	    switch (chanp->ChanClass) {	    
-            case pwr_cClass_ChanIi:
-	      chanp->offset = ((pwr_sClass_ChanIi *)chanp->cop)->Number;
-	      chanp->size = GetChanSize( ((pwr_sClass_ChanIi *)chanp->cop)->Representation);
-	      break;
-	    default:
-	      errh_Error( "Diagnostic channel class, card %s", cardp->Name);
-	    }
-	    continue;
-	  }
+      local_card->msg[0].input_area = (void *) &(op->Inputs) + input_area_offset + 
+	input_area_chansize;
+      local_card->msg[0].output_area = (void *) &(op->Outputs) + output_area_offset + 
+	output_area_chansize;
 
-          if (chanp->ChanClass != pwr_cClass_ChanDi) {
-            card_input_counter += latent_input_counter;
-	    latent_input_counter = 0;
-          }
+    
+      mp = (pwr_sClass_Modbus_Module *) cardp->op;
+      mp->Status = pwr_eModbusModule_StatusEnum_StatusUnknown;
 
-          if (chanp->ChanClass != pwr_cClass_ChanDo) {
-            card_output_counter += latent_output_counter;
-	    latent_output_counter = 0;
-          }
+      io_bus_card_init( ctx, cardp, &input_area_offset, &input_area_chansize,
+			&output_area_offset, &output_area_chansize, 
+			pwr_eByteOrderingEnum_BigEndian);
+
+      /* Count number of di and do */
+      for (i = 0; i < cardp->ChanListSize; i++) {
+	chanp = &cardp->chanlist[i];
+	switch (chanp->ChanClass) {      
+	case pwr_cClass_ChanDi:
+	  no_di++;
+	  break;
+	case pwr_cClass_ChanDo:
+	  no_do++;
+	  break;
+	case pwr_cClass_ChanD:
+	  if ( ((pwr_sClass_ChanD *)chanp->cop)->Type == pwr_eDChanTypeEnum_Di)
+	    no_di++;
+	  else
+	    no_do++;
+	  break;
+	}
+      }	   
+      local_card->msg[0].input_size = input_area_offset + input_area_chansize - 
+	prev_input_area_offset;
+      local_card->msg[0].output_size = output_area_offset + output_area_chansize - 
+	prev_output_area_offset;
+      local_card->msg[0].no_di = no_di;
+      local_card->msg[0].no_do = no_do;
       
-          switch (chanp->ChanClass) {
-      
-            case pwr_cClass_ChanDi:
-	      chan_di = (pwr_sClass_ChanDi *) chanp->cop;
-              if (chan_di->Number == 0) {
-	        card_input_counter += latent_input_counter;
-	        latent_input_counter = 0;
-	      }
-              chanp->offset = card_input_counter;
-	      chanp->mask = 1 << chan_di->Number;
-	      if (chan_di->Representation == pwr_eDataRepEnum_Bit16) 
-	        chanp->mask = swap16(chanp->mask);
-	      if (chan_di->Representation == pwr_eDataRepEnum_Bit32)
-	        chanp->mask = swap32((unsigned short) chanp->mask);
-	      if (chan_di->Number == 0) latent_input_counter = GetChanSize(chan_di->Representation);
-	      no_di++;
-//	      printf("Di channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_di->Number, chanp->offset);
-	      break;
-	  
-            case pwr_cClass_ChanAi:
-	      chan_ai = (pwr_sClass_ChanAi *) chanp->cop;
-              chanp->offset = card_input_counter;
-	      chan_size = GetChanSize(chan_ai->Representation);
-              chanp->size = chan_size;
-	      chanp->mask = 0;
-	      card_input_counter += chan_size;
-              io_AiRangeToCoef(chanp);
-//	      printf("Ai channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_ai->Number, chanp->offset);
-	      break;
-	  
-            case pwr_cClass_ChanAit:
-	      chan_ait = (pwr_sClass_ChanAit *) chanp->cop;
-              chanp->offset = card_input_counter;
-	      chan_size = GetChanSize(chan_ait->Representation);
-              chanp->size = chan_size;
-	      chanp->mask = 0;
-	      card_input_counter += chan_size;
-              io_AiRangeToCoef(chanp);
-	      break;
-	  
-            case pwr_cClass_ChanIi:
-	      chan_ii = (pwr_sClass_ChanIi *) chanp->cop;
-              chanp->offset = card_input_counter;
-	      chan_size = GetChanSize(chan_ii->Representation);
-              chanp->size = chan_size;
-	      chanp->mask = 0;
-	      card_input_counter += chan_size;
-//	      printf("Ii channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_ii->Number, chanp->offset);
-	      break;
-	  
-            case pwr_cClass_ChanDo:
-	      chan_do = (pwr_sClass_ChanDo *) chanp->cop;
-              if (chan_do->Number == 0) {
-	        card_output_counter += latent_output_counter;
-	        latent_output_counter = 0;
-	      }
-              chanp->offset = card_output_counter;
-	      chan_size = GetChanSize(chan_do->Representation);
-	      chanp->mask = 1 << chan_do->Number;
-	      if (chan_do->Representation == pwr_eDataRepEnum_Bit16) 
-	        chanp->mask = swap16(chanp->mask);
-	      if (chan_do->Representation == pwr_eDataRepEnum_Bit32)
-	        chanp->mask = swap32((unsigned short) chanp->mask);
-	      if (chan_do->Number == 0) latent_output_counter = GetChanSize(chan_do->Representation);
-	      no_do++;
-//	      printf("Do channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_do->Number, chanp->offset);
-	      break;
-	  
-	    case pwr_cClass_ChanAo:
-	      chan_ao = (pwr_sClass_ChanAo *) chanp->cop;
-              chanp->offset = card_output_counter;
-	      chan_size = GetChanSize(chan_ao->Representation);
-              chanp->size = chan_size;
-	      chanp->mask = 0;
-	      card_output_counter += chan_size;
-              io_AoRangeToCoef(chanp);
-//	      printf("Ao channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_ao->Number, chanp->offset);
-	      break;
-	  
-            case pwr_cClass_ChanIo:
-	      chan_io = (pwr_sClass_ChanIo *) chanp->cop;
-              chanp->offset = card_output_counter;
-	      chan_size = GetChanSize(chan_io->Representation);
-              chanp->size = chan_size;
-	      chanp->mask = 0;
-	      card_output_counter += chan_size;
-//	      printf("Io channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_io->Number, chanp->offset);
-	      break;
-          }
-        } /* End - for ... */
+      break;
+    }
+    case pwr_cClass_Modbus_ModuleReadWrite: {
+      pwr_sClass_Modbus_ModuleReadWrite *mp;
+
+      cardp->Local = local_card;
+      no_di = 0;
+      no_do = 0;
+
+      local_card->msg[0].input_area = (void *) &(op->Inputs) + input_area_offset + 
+	input_area_chansize;
+      local_card->msg[0].output_area = (void *) &(op->Outputs) + output_area_offset + 
+	output_area_chansize;
+      local_card->msg[1].input_area = (void *) &(op->Inputs) + input_area_offset + 
+	input_area_chansize;
+      local_card->msg[1].output_area = (void *) &(op->Outputs) + output_area_offset + 
+	output_area_chansize;
+
+    
+      mp = (pwr_sClass_Modbus_ModuleReadWrite *) cardp->op;
+      mp->Read.Status = pwr_eModbusModule_StatusEnum_StatusUnknown;
+      mp->Write.Status = pwr_eModbusModule_StatusEnum_StatusUnknown;
+
+      io_bus_card_init( ctx, cardp, &input_area_offset, &input_area_chansize,
+			&output_area_offset, &output_area_chansize, 
+			pwr_eByteOrderingEnum_BigEndian);
+
+      /* Count number of di and do */
+      for (i = 0; i < cardp->ChanListSize; i++) {
+	chanp = &cardp->chanlist[i];
+	switch (chanp->ChanClass) {      
+	case pwr_cClass_ChanDi:
+	  no_di++;
+	  break;
+	case pwr_cClass_ChanDo:
+	  no_do++;
+	  break;
+	case pwr_cClass_ChanD:
+	  if ( ((pwr_sClass_ChanD *)chanp->cop)->Type == pwr_eDChanTypeEnum_Di)
+	    no_di++;
+	  else
+	    no_do++;
+	}
+      }	   
+      local_card->msg[0].input_size = input_area_offset + input_area_chansize - 
+	prev_input_area_offset;
+      local_card->msg[0].output_size = 0;
+      local_card->msg[0].no_di = no_di;
+      local_card->msg[0].no_do = 0;
+      local_card->msg[1].input_size = 0;
+      local_card->msg[1].output_size = output_area_offset + output_area_chansize - 
+	prev_output_area_offset;
+      local_card->msg[1].no_di = 0;
+      local_card->msg[1].no_do = no_do;
         
-        break;
+      break;
+    }
+      
     } /* End - switch ... */
 
-    local_card->input_size = card_input_counter + latent_input_counter;
-    local_card->output_size = card_output_counter + latent_output_counter;
-    local_card->no_di = no_di;
-    local_card->no_do = no_do;
+
+    prev_input_area_offset = input_area_offset + input_area_chansize;
+    prev_output_area_offset = output_area_offset + output_area_chansize;
 
     cardp = cardp->next;
   }
 
-  local->input_size = input_counter + card_input_counter + latent_input_counter;
-  local->output_size = output_counter + card_output_counter + latent_output_counter;
+  local->input_size = input_area_offset + input_area_chansize;
+  local->output_size = output_area_offset + output_area_chansize;
 
   return IO__SUCCESS;
 }

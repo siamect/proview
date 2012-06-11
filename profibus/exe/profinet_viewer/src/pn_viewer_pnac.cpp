@@ -241,6 +241,8 @@ void PnViewerPNAC::set_device_properties( unsigned char *macaddress, unsigned ch
     sts = wait_service_con(local, 0);
   }
 
+  sleep(3);
+
   pack_set_ip_settings_req(&local->service_req_res, &dev_info);
   sts = pnak_send_service_req_res(0, &local->service_req_res);
       

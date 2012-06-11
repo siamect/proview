@@ -35,19 +35,36 @@
 # General Public License plus this exception.
 #
 
-  kill -9 `ps ax | grep "rt_neth_acp" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "rt_neth" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "rt_qmon" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "rt_emon" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "rt_tmon" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "rt_\|/pwr/exe/rs" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "\[rt_" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "plc_" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "jpwr.rt" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "rs_nmps" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "rs_remote" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "sev_server" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "opc_server" | awk '{ print $1}'`
+pwrp_kill_rt()
+{
+  OLD_IFS=$IFS
+  IFS=$(echo -en "\n\b")
+  a=`ps ax | grep $1`
+
+  for b in $a
+  do
+    c=`echo ${b:1} | awk '{ print $1}'`
+    kill -9 $c
+  done
+#  kill -9 `ps ax | grep "rt_neth_acp" | awk '{ print $2}'`
+  IFS=$OLD_IFS
+}
+
+  pwrp_kill_rt "rt_neth_acp"
+  pwrp_kill_rt "rt_neth"
+  pwrp_kill_rt "rt_qmon"
+  pwrp_kill_rt "rt_emon"
+  pwrp_kill_rt "rt_tmon"
+  pwrp_kill_rt "exe/rt_"
+  pwrp_kill_rt "exe/rs_"
+  pwrp_kill_rt "\[rt_"
+  pwrp_kill_rt "plc_"
+  pwrp_kill_rt "jpwr.rt"
+  pwrp_kill_rt "rs_nmps"
+  pwrp_kill_rt "rs_remote"
+  pwrp_kill_rt "sev_server"
+  pwrp_kill_rt "opc_server"
+
   if [ -u $pwr_exe/rt_ini ]; then
     user=`ls -al $pwr_exe/rt_ini | awk '{ print $3}'`
   else

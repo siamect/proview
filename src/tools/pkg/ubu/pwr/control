@@ -3,21 +3,21 @@ Section: devel
 Package: pwr48
 Priority: optional
 Maintainer: Proview <postmaster@proview.se>
-Version: 4.8.4-1
+Version: 4.8.5-1
 Architecture: i386
-Depends: libc6 (>= 2.13-20ubuntu5), libgtk2.0-0 (>= 2.24.6-0ubuntu5), libasound2 (>= 1.0.24.1-0ubuntu10), libdb5.1 (>=5.1.25-11), libdb5.1++ (>=5.1.25-11), libmysql++3 (>= 3.1.0-1ubuntu1), g++ (>= 4:4.6.1-2ubuntu5), xfonts-100dpi
+Depends: libc6 (>= 2.15-0ubuntu10), libgtk2.0-0 (>= 2.24.10-0ubuntu6), libasound2 (>= 1.0.25-1ubuntu10), libdb5.1 (>=5.1.25-11build1), libdb5.1++ (>=5.1.25-11build1), libmysql++3 (>= 3.1.0-2), g++ (>= 4:4.6.1-2ubuntu5), xfonts-100dpi
 Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47
 Homepage: http://www.proview.se
 Installed-Size: 1114020
 Description: Proview development and runtime environment package
  Proview development and runtime environment
- - 4.8.0-1 Base release 
- - 4.8.1-1 
+ 4.8.0-1 Base release 
+ 4.8.1-1 
    - I/O support for Arduino USB board.
    - Remote support for Websphere Message Queue.
    - Operator event logging and replay.
    - Chinese translation of operator enivornment.
- - 4.8.1-2
+ 4.8.1-2
    - Profinet configurator, ordernumber showed in module enum list. 
    - Curve window, second mark and export dialog added.
    - Profibus/Profinet configurator, default module class setting added, and Appl button added.
@@ -28,13 +28,18 @@ Description: Proview development and runtime environment package
    - Wb object editor, Ctrl DoubleClick MB1 didn't work on attribute references.
    - Flow alloc color problem fixed.
    - wb locale fix for ubuntu.
- - 4.8.2-1
+ 4.8.2-1
    - Support for Hilscher cifX boards.
    - Support for Hilscher cifX Profinet Controller.
    - UDP communication configured with IO objects.
    - Support for USB joystick.
- - 4.8.3-1
+ 4.8.3-1
    - Post server for sending emails and sms.
    - Report server.
- - 4.8.4-1
+ 4.8.4-1
    - Buffer input and output channels and signals.
+ 4.8.5-1
+   - Display of invert, test and conversion for channels and signals.
+   - Support for several plc processes.
+   - Ge pie chart and bar chart.
+   - Trend curves with larger buffers and shorter scantimes. Snapshot function.

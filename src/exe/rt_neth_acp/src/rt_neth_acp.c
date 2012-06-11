@@ -153,11 +153,24 @@ init (
     exit(sts);
   } 
 
+#if defined OS_CYGWIN
+  qcom_sQattr   qAttr;
+  qcom_sQid qid = qcom_cQnacp;	
+
+  qAttr.type = qcom_eQtype_private;
+  qAttr.quota = 100;
+  if (!qcom_CreateQ(&sts, &qid, &qAttr, "nacp")) {
+    errh_Error("Failed to create QCOM que\n%m", sts);
+    errh_SetStatus( PWR__SRVTERM);
+    exit(sts);
+  }
+#else
   if (!qcom_AttachQ(&sts, &qcom_cQnacp)) {
     errh_Fatal("qcom_AttachQ, %m", sts);
     errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   } 
+#endif
   *myQid = qcom_cQnacp;
 
   if (!qcom_Bind(&sts, myQid, &qcom_cQini)) {

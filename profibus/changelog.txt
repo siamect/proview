@@ -46,3 +46,6 @@
 120102 cs  profinet   Profinet, set correct status on profinet device when losing connection
 120120 cs  profinet   Profinet, IO status wasn't set properly
 120227 cs  profinet   Profinet configurator bugfix in submodule index
+120608 rk  profinet   Profinet configurator bugfix in submodule index
+120608 rk  profinet   Profinet configurator bugfix in module deletion
+120608 rk  profinet   Profinet configurator, added flexibility when changeing device type keeping same gsdml-file

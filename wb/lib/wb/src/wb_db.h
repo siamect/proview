@@ -68,6 +68,14 @@ class wb_db_txn;
 class wb_db_ohead;
 class wb_destination;
 
+#if defined OS_CYGWIN
+#define wb_db_txn DbTxn
+#else
+class wb_db_txn : public DbTxn
+{
+};
+#endif
+
 class wb_db : public wb_import
 {
 public:
@@ -417,11 +425,6 @@ public:
 
   void iter(void (*print)(pwr_tOid oid));
   void iter(wb_import &i);
-};
-
-class wb_db_txn : public DbTxn
-{
-
 };
 
 #endif

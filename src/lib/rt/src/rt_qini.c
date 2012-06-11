@@ -276,7 +276,9 @@ qini_BuildDb (
     addQueue(ap, qcom_cImhAllOutunits, "allOutunits", qdb_eQue_forward, qdb_mQue_broadcast);
     addQueue(ap, qcom_cIhdServer, "hdServer", qdb_eQue_forward, qdb_mQue_broadcast);
     addQueue(ap, qcom_cIhdClient, "hdClient", qdb_eQue_forward, qdb_mQue_broadcast);
+#if !defined OS_CYGWIN
     addQueue(NULL, qcom_cInacp, "nacp", qdb_eQue_private, qdb_mQue_system);
+#endif
     addQueue(ap, qcom_cIini, "ini", qdb_eQue_forward, qdb_mQue_system | qdb_mQue_event);
 
   } qdb_ScopeUnlock;

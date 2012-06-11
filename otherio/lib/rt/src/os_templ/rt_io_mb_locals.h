@@ -112,6 +112,10 @@ typedef struct {
   short int no_do;
   int interval_cnt;
   int has_read_method;
+} io_sCardLocalMsg;
+
+typedef struct {
+  io_sCardLocalMsg msg[2];
 } io_sCardLocal;
 
 typedef struct {

@@ -753,7 +753,7 @@ get_name (char *name, int size)
 {
   int len = strlen(UNKNOWN_PROGRAM_NAME);
 
-  strncat(name, UNKNOWN_PROGRAM_NAME, MIN(size, len));
+  strncpy(name, UNKNOWN_PROGRAM_NAME, MIN(size, len));
 
   name[MIN(size, len)] = '\0';
 

@@ -1,0 +1,78 @@
+#!/bin/bash
+set -e
+
+echo "Here in postinst..."
+
+# Get version from current path
+dname=`eval dirname $0`
+pwrdir=`eval bash -c "cd $dname; pwd"`
+ver="${pwrdir:12:1}${pwrdir:13:1}"
+
+aroot="/usr/pwrp/adm"
+export pwra_db=$aroot/db
+
+# Register volume
+if [ -e $aroot/db/pwr_volumelist.dat ]; then
+  set +e
+  ptst=`eval grep "'\bVolPwrDemo\b'" $aroot/db/pwr_volumelist.dat | grep "\bpwrdemo\b"`
+  set -e
+  if [ "$ptst" = "" ]; then
+    echo "	 VolPwrDemo 0.254.254.200 pwrdemo" >> $aroot/db/pwr_volumelist.dat
+  fi
+fi
+
+# Insert base in projectlist
+if [ -e $aroot/db/pwr_projectlist.dat ]; then
+  set +e
+  ptst=`eval grep "'\bpwrdemo$ver\b'" $aroot/db/pwr_projectlist.dat`
+  set -e
+  if [ "$ptst" = "" ]; then
+    echo "pwrdemo$ver V${ver:0:1}.${ver:1:1} /usr/pwrp/pwrdemo$ver pwrdemo$ver \"\" " >> $aroot/db/pwr_projectlist.dat
+  fi
+fi
+
+# Insert nodename in DirectoryVolume and create bootfile
+nodename=`eval uname -n`
+initsh=/tmp/pwrdemo_init.sh
+initpwrc=/tmp/pwrdemo_init.pwr_com
+
+# Create a shellscript that attaches to projects and runs wb_cmd
+cat > $initsh <<EOF
+#!/bin/bash
+
+source $aroot/db/pwr_setup.sh
+source \$pwr_exe/pwrp_env.sh set project pwrdemo$ver
+
+wb_cmd_gtk @$initpwrc
+EOF
+
+chmod a+x $initsh
+
+# Create a wb_cmd script that inserts nodename and creates bootfile
+cat > $initpwrc <<EOF
+  set attr/name=Bus999-DemoNode/attr=NodeName/value="$nodename"/noconf
+  save
+  create boot/node=DemoNode
+  exit
+EOF
+
+# Execute shellscript
+$initsh
+
+rm $initsh
+rm $initpwrc
+
+if [ -e $USERPROFILE/Desktop ]; then
+  cp /usr/pwrp/pwrdemo$var/cnf/pwrdemostart ~/
+  chmod a+x ~/pwrdemostart
+  cp /usr/pwrp/pwrdemo$ver/cnf/ProviewDemo.lnk $USERPROFILE/Desktop
+  cp /usr/pwrp/pwrdemo$ver/cnf/proview_icon.ico $USERPROFILE/Download
+fi
+
+
+
+
+
+
+
+
