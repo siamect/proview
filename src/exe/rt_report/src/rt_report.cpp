@@ -501,6 +501,7 @@ void rt_report::create_report( pwr_sClass_Report *o)
   if ( o->Media & pwr_mReportMediaMask_Printer) {
     // Convert to postscript
     pwr_tCmd cmd;
+    pwr_tFileName target_file;
 
     sprintf( cmd, "co_convert -n -d %s %s", 
 	     "$pwrp_lis", tmpfile);
@@ -508,12 +509,20 @@ void rt_report::create_report( pwr_sClass_Report *o)
 
     strcpy( cnvfile, "$pwrp_lis/report.ps");
 
+    if ( strcmp( o->TargetFile, "") != 0) {
+      strcpy( target_file, o->TargetFile);
+      snprintf( cmd, sizeof(cmd), "mv %s %s", cnvfile, target_file);
+      system( cmd);
+    }
+    else
+      strcpy( target_file, cnvfile);
+
     dcli_trim( conf_cmd, o->PrintCmd);
     if ( strcmp( conf_cmd, "") == 0)
       strncpy( conf_cmd, conf->PrintCmd, sizeof(conf_cmd));
 
     format_cmd( cmd, sizeof(cmd), conf_cmd, 0, 0, 0, 
-		cnvfile, 0);
+		target_file, 0);
 
     if (conf->Options & pwr_mPostOptionsMask_Log)
       errh_Info( "Print: %s", cmd);
@@ -928,7 +937,7 @@ int rt_report::parse( char *line)
       if ( !fout)
 	return 0;
       
-      fout << "open graph /hide " << line_array[2] << endl;
+      fout << "open graph  " << line_array[2] << endl; // Should be with /hide but it sometimes doesn't work...
       fout << "wait 2 " << endl;
       fout << "export graph /graph=" << line_array[2] << " /file=\"" << line_array[3] << "\"" << endl;
 
