@@ -54,6 +54,12 @@ typedef struct {
     	int	mask;
 } attr_sItem;
 
+typedef enum {
+  attr_eOrderModuleType_Default,
+  attr_eOrderModuleType_Name,
+  attr_eOrderModuleType_Number
+} attr_eOrderModuleType;
+
 class GsdmlAttrNav;
 class CoWow;
 
@@ -87,6 +93,7 @@ class GsdmlAttr {
   virtual void set_prompt( const char *prompt) {}
   virtual void change_value() {}
 
+  void activate_ordermoduletype( attr_eOrderModuleType type);
   void activate_exit();
   void activate_help();
   void activate_copy();

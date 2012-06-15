@@ -78,41 +78,42 @@ extern "C" {
 #define pn_cModuleClassFile "$pwr_exe/pn_module_classes.dat"
 
 typedef enum {
-	attrnav_eItemType_PnBase,
-	attrnav_eItemType_PnEnumValue,
- 	attrnav_eItemType_PnDevice,
- 	attrnav_eItemType_PnNetwork,
- 	attrnav_eItemType_PnDeviceInfo,
- 	attrnav_eItemType_PnDAP,
- 	attrnav_eItemType_PnInterfaceSubmodule,
- 	attrnav_eItemType_PnPortSubmodule,
- 	attrnav_eItemType_PnSlot,
- 	attrnav_eItemType_PnSubslot,
- 	attrnav_eItemType_PnSubslotPhys,
- 	attrnav_eItemType_PnModuleInfo,
-	attrnav_eItemType_PnModuleType,
-	attrnav_eItemType_PnSubmoduleType,
-	attrnav_eItemType_PnParRecord,
-	attrnav_eItemType_PnParValue,
-	attrnav_eItemType_PnParEnum,
-	attrnav_eItemType_PnParEnumBit,
-	attrnav_eItemType_PnModuleClass,
- 	attrnav_eItemType_PnIOData,
- 	attrnav_eItemType_PnInput,
- 	attrnav_eItemType_PnOutput,
- 	attrnav_eItemType_PnDataItem,
- 	attrnav_eItemType_PnBitDataItem,
-	attrnav_eItemType_PnEnumByteOrder,
-	attrnav_eItemType_PnEnumTimeRatio,
-	attrnav_eItemType_PnEnumSendClock,
-	attrnav_eItemType_PnEnumValueMType,
-	} attrnav_eItemType;
+  attrnav_eItemType_PnBase,
+  attrnav_eItemType_PnEnumValue,
+  attrnav_eItemType_PnDevice,
+  attrnav_eItemType_PnNetwork,
+  attrnav_eItemType_PnDeviceInfo,
+  attrnav_eItemType_PnDAP,
+  attrnav_eItemType_PnInterfaceSubmodule,
+  attrnav_eItemType_PnPortSubmodule,
+  attrnav_eItemType_PnSlot,
+  attrnav_eItemType_PnSubslot,
+  attrnav_eItemType_PnSubslotPhys,
+  attrnav_eItemType_PnModuleInfo,
+  attrnav_eItemType_PnModuleType,
+  attrnav_eItemType_PnSubmoduleType,
+  attrnav_eItemType_PnParRecord,
+  attrnav_eItemType_PnParValue,
+  attrnav_eItemType_PnParEnum,
+  attrnav_eItemType_PnParEnumBit,
+  attrnav_eItemType_PnModuleClass,
+  attrnav_eItemType_PnIOData,
+  attrnav_eItemType_PnInput,
+  attrnav_eItemType_PnOutput,
+  attrnav_eItemType_PnDataItem,
+  attrnav_eItemType_PnBitDataItem,
+  attrnav_eItemType_PnEnumByteOrder,
+  attrnav_eItemType_PnEnumTimeRatio,
+  attrnav_eItemType_PnEnumSendClock,
+  attrnav_eItemType_PnEnumValueMType,
+} attrnav_eItemType;
 
 typedef enum {
-	attrnav_mOpen_All	= ~0,
-	attrnav_mOpen_Children	= 1 << 0,
-	attrnav_mOpen_Attributes = 1 << 1
-	} attrnav_mOpen;
+  attrnav_mOpen_All		= ~0,
+  attrnav_mOpen_Children	= 1 << 0,
+  attrnav_mOpen_Attributes 	= 1 << 1
+} attrnav_mOpen;
+
 
 class ItemPn;
 
@@ -173,6 +174,7 @@ class GsdmlAttrNav {
     unsigned int 	time_ratio;
     unsigned int 	send_clock;
     unsigned int 	phase;
+    attr_eOrderModuleType order_moduletype;
     
     GsdmlAttrNav(
 	void *xn_parent_ctx,
@@ -206,6 +208,7 @@ class GsdmlAttrNav {
     void set_viewio( int set) { viewio = set;}
     int search_class( const char *filename, const char *model, 
 		      const char *module, char *mclass);
+    void set_order_moduletype( attr_eOrderModuleType type) { order_moduletype = type;}
 
     static void trace_scan( void *data);
     static int trace_scan_bc( brow_tObject object, void *p);
@@ -289,6 +292,7 @@ class ItemPnEnumValueMType : public ItemPn {
     void		*value_p;
     int 		old_value;
     int 		first_scan;
+    char		number[80];
 
     int scan( GsdmlAttrNav *attrnav, void *p);
 };
@@ -326,12 +330,13 @@ class ItemPnSlot : public ItemPn {
 class ItemPnSubslot : public ItemPn {
  public:
   ItemPnSubslot( GsdmlAttrNav *attrnav, const char *item_name, GsdmlSubslotData *item_subslotdata, 
-		 gsdml_VirtualSubmoduleItem *item_virtualsubmodule,
+		 gsdml_VirtualSubmoduleItem *item_virtualsubmodule, int item_slot_idx,
 		 brow_tNode dest, flow_eDest dest_code);
   virtual ~ItemPnSubslot() {}
 
   GsdmlSubslotData *subslotdata;
   gsdml_VirtualSubmoduleItem *virtualsubmodule;
+  int slot_idx;
   
   int open_children( GsdmlAttrNav *attrnav, double x, double y);
 };
@@ -553,10 +558,13 @@ class ItemPnParEnumBit : public ItemPn {
 class ItemPnIOData : public ItemPn {
  public:
   ItemPnIOData( GsdmlAttrNav *attrnav, const char *item_name, gsdml_IOData *item_iodata, 
-		 brow_tNode dest, flow_eDest dest_code);
+		int item_subslot_idx, int item_slot_idx,
+		brow_tNode dest, flow_eDest dest_code);
   virtual ~ItemPnIOData() {}
 
   gsdml_IOData *iodata;
+  int subslot_idx;
+  int slot_idx;
   
   int open_children( GsdmlAttrNav *attrnav, double x, double y);
 };

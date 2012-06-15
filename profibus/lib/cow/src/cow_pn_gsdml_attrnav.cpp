@@ -469,7 +469,8 @@ GsdmlAttrNav::GsdmlAttrNav(
   parent_ctx(xn_parent_ctx),
   gsdml(xn_gsdml), edit_mode(xn_edit_mode), trace_started(0),
   message_cb(0), change_value_cb(0), device_num(0), device_item(0), 
-  device_confirm_active(0), device_read(0), viewio(0), time_ratio(1), send_clock(32), phase(1)
+  device_confirm_active(0), device_read(0), viewio(0), time_ratio(1), send_clock(32), phase(1),
+  order_moduletype( attr_eOrderModuleType_Default)
 {
   strcpy( name, xn_name);
 
@@ -1712,9 +1713,8 @@ int GsdmlAttrNav::save( const char *filename)
 
       for ( unsigned int j = 0; j < dev_data.slot_data[i]->subslot_data.size(); j++) {
 	GsdmlSubslotData *ssd = dev_data.slot_data[i]->subslot_data[j];
-
-	ssd->io_input_length = 0;	    
-	ssd->io_output_length = 0;	    
+	unsigned int io_input_length = 0;
+	unsigned int io_output_length = 0;
 
 	gsdml_VirtualSubmoduleItem *vsd = 0;
 	if ( ssd->submodule_enum_number) {
@@ -1760,8 +1760,12 @@ int GsdmlAttrNav::save( const char *filename)
 	    sts = gsdml->get_datavalue_length( datatype, di->Body.Length, &len);
 	    if ( EVEN(sts)) printf( "GSDML-Error, Datatype %s not yet implemented\n", di->Body.DataType);
 
-	    ssd->io_input_length += len;	    
+	    io_input_length += len;	    
 	  }
+	  if ( ssd->io_input_length == 0)
+	    ssd->io_input_length = io_input_length;
+	  else if ( ssd->io_input_length > io_input_length)
+	    ssd->io_input_length = io_input_length;
 	}
 	if ( vsd->IOData->Output) {
 	  for ( unsigned k = 0; k < vsd->IOData->Output->DataItem.size(); k++) {
@@ -1775,8 +1779,12 @@ int GsdmlAttrNav::save( const char *filename)
 	    sts = gsdml->get_datavalue_length( datatype, di->Body.Length, &len);
 	    if ( EVEN(sts)) printf( "GSDML-Error, Datatype %s not yet implemented\n", di->Body.DataType);
 
-	    ssd->io_output_length += len;	    
+	    io_output_length += len;	    
 	  }
+	  if ( ssd->io_output_length == 0)
+	    ssd->io_output_length = io_output_length;
+	  else if ( ssd->io_output_length > io_output_length)
+	    ssd->io_output_length = io_output_length;
 	}
       }
     }
@@ -2097,6 +2105,7 @@ ItemPnEnumValueMType::ItemPnEnumValueMType( GsdmlAttrNav *attrnav, const char *i
   type = attrnav_eItemType_PnEnumValueMType;
 
   strcpy( name, item_name);
+  strcpy( number, item_number);
 
   brow_CreateNode( attrnav->brow->ctx, item_name, attrnav->brow->nc_enum_mtype, 
 		dest, dest_code, (void *) this, 1, &node);
@@ -2336,7 +2345,7 @@ int ItemPnSlot::open_children( GsdmlAttrNav *attrnav, double x, double y)
 	      }
 	      
 	      new ItemPnSubslot( attrnav, subslot_name, ssd,
-				 mi->VirtualSubmoduleList->VirtualSubmoduleItem[0],
+				 mi->VirtualSubmoduleList->VirtualSubmoduleItem[0], slotdata->slot_idx,
 				 node, flow_eDest_IntoLast);
 		
 	    }
@@ -2373,7 +2382,7 @@ int ItemPnSlot::open_children( GsdmlAttrNav *attrnav, double x, double y)
 		}
 		
 		new ItemPnSubslot( attrnav, subslot_name, ssd,
-				   mi->VirtualSubmoduleList->VirtualSubmoduleItem[i],
+				   mi->VirtualSubmoduleList->VirtualSubmoduleItem[i], slotdata->slot_idx,
 				   node, flow_eDest_IntoLast);
 		subslot_index++;
 	      }
@@ -2462,7 +2471,7 @@ int ItemPnSlot::open_children( GsdmlAttrNav *attrnav, double x, double y)
 		}
 	      }
 		
-	      new ItemPnSubslot( attrnav, subslot_name, ssd, fixed_si,
+	      new ItemPnSubslot( attrnav, subslot_name, ssd, fixed_si, slotdata->slot_idx,
 				     node, flow_eDest_IntoLast);
 	      subslot_index++;
 	    }
@@ -2546,9 +2555,9 @@ int ItemPnSlot::scan( GsdmlAttrNav *attrnav, void *p)
 
 ItemPnSubslot::ItemPnSubslot( GsdmlAttrNav *attrnav, const char *item_name, 
 			      GsdmlSubslotData *item_subslotdata, 
-			      gsdml_VirtualSubmoduleItem *item_virtualsubmodule,
+			      gsdml_VirtualSubmoduleItem *item_virtualsubmodule, int item_slot_idx,
 			      brow_tNode dest, flow_eDest dest_code) :
-  subslotdata(item_subslotdata), virtualsubmodule(item_virtualsubmodule)
+  subslotdata(item_subslotdata), virtualsubmodule(item_virtualsubmodule), slot_idx(item_slot_idx)
 {
   type = attrnav_eItemType_PnSubslot;
 
@@ -2616,7 +2625,7 @@ int ItemPnSubslot::open_children( GsdmlAttrNav *attrnav, double x, double y)
     }
 
     if ( attrnav->viewio && virtualsubmodule->IOData) {
-      new ItemPnIOData( attrnav, "IOData", virtualsubmodule->IOData,
+      new ItemPnIOData( attrnav, "IOData", virtualsubmodule->IOData, subslotdata->subslot_idx, slot_idx,
 			node, flow_eDest_IntoLast);
     }
     brow_SetOpen( node, attrnav_mOpen_Children);
@@ -2715,7 +2724,7 @@ int ItemPnSubslotPhys::open_children( GsdmlAttrNav *attrnav, double x, double y)
     }
 
     if ( attrnav->viewio && subm && subm->IOData) {
-      new ItemPnIOData( attrnav, "IOData", subm->IOData,
+      new ItemPnIOData( attrnav, "IOData", subm->IOData, subslotdata->subslot_idx, slot_idx,
 			node, flow_eDest_IntoLast);
     }
     brow_SetOpen( node, attrnav_mOpen_Children);
@@ -2807,7 +2816,7 @@ int ItemPnDAP::open_children( GsdmlAttrNav *attrnav, double x, double y)
 	    }
 	    
 	    new ItemPnSubslot( attrnav, subslot_name, ssd,
-			       mi->VirtualSubmoduleList->VirtualSubmoduleItem[0],
+			       mi->VirtualSubmoduleList->VirtualSubmoduleItem[0], slotdata->slot_idx,
 			       node, flow_eDest_IntoLast);
 		
 	    subslot_index++;
@@ -2844,7 +2853,7 @@ int ItemPnDAP::open_children( GsdmlAttrNav *attrnav, double x, double y)
 	      }
 		
 	      new ItemPnSubslot( attrnav, subslot_name, ssd,
-				 mi->VirtualSubmoduleList->VirtualSubmoduleItem[i],
+				 mi->VirtualSubmoduleList->VirtualSubmoduleItem[i], slotdata->slot_idx,
 				 node, flow_eDest_IntoLast);
 	      subslot_index++;
 	    }
@@ -3404,6 +3413,32 @@ ItemPnModuleType::ItemPnModuleType( GsdmlAttrNav *attrnav, const char *item_name
   brow_SetTraceAttr( node, name, "", flow_eTraceType_User);
 }
 
+static int gsdml_comp_nodes_name( const void *n1, const void *n2)
+{
+  ItemPnEnumValueMType *item1;
+  ItemPnEnumValueMType *item2;
+  brow_tObject o1 = *(brow_tObject *)n1;
+  brow_tObject o2 = *(brow_tObject *)n2;
+
+  brow_GetUserData( o1, (void **)&item1);
+  brow_GetUserData( o2, (void **)&item2);
+
+  return strcmp( item1->name, item2->name);
+}
+
+static int gsdml_comp_nodes_number( const void *n1, const void *n2)
+{
+  ItemPnEnumValueMType *item1;
+  ItemPnEnumValueMType *item2;
+  brow_tObject o1 = *(brow_tObject *)n1;
+  brow_tObject o2 = *(brow_tObject *)n2;
+
+  brow_GetUserData( o1, (void **)&item1);
+  brow_GetUserData( o2, (void **)&item2);
+
+  return strcmp( item1->number, item2->number);
+}
+
 int ItemPnModuleType::open_children( GsdmlAttrNav *attrnav, double x, double y)
 {
   double	node_x, node_y;
@@ -3460,6 +3495,18 @@ int ItemPnModuleType::open_children( GsdmlAttrNav *attrnav, double x, double y)
       }
       idx++;
     }
+
+    // Sort
+    switch ( attrnav->order_moduletype) {
+    case attr_eOrderModuleType_Name:
+      brow_SortChildren( attrnav->brow->ctx, node, 1, gsdml_comp_nodes_name);
+      break;
+    case attr_eOrderModuleType_Number:
+      brow_SortChildren( attrnav->brow->ctx, node, 1, gsdml_comp_nodes_number);
+      break;
+    default: ;
+    }
+
     brow_SetOpen( node, attrnav_mOpen_Children);
     brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_openmap);
     brow_ResetNodraw( attrnav->brow->ctx);
@@ -4334,8 +4381,9 @@ int ItemPnModuleClass::scan( GsdmlAttrNav *attrnav, void *p)
 
 ItemPnIOData::ItemPnIOData( GsdmlAttrNav *attrnav, const char *item_name, 
 			    gsdml_IOData *item_iodata,
+			    int item_subslot_idx, int item_slot_idx,
 			    brow_tNode dest, flow_eDest dest_code) :
-  iodata(item_iodata)
+  iodata(item_iodata), subslot_idx(item_subslot_idx), slot_idx(item_slot_idx)
 {
   type = attrnav_eItemType_PnIOData;
 
@@ -4397,6 +4445,21 @@ int ItemPnIOData::open_children( GsdmlAttrNav *attrnav, double x, double y)
     if ( iodata->Output) {
       new ItemPnOutput( attrnav, "Output", iodata->Output,
 		       node, flow_eDest_IntoLast);
+    }
+
+    GsdmlSubslotData *ssd = attrnav->dev_data.slot_data[slot_idx]->subslot_data[subslot_idx];
+    if ( iodata->Input) {
+
+      void *p = (void *) &ssd->io_input_length;
+      new ItemPnBase( attrnav, "InputLength", "LocalGsdmlAttr", 
+		      pwr_eType_UInt32, sizeof(ssd->io_input_length), 0, 0,
+		      p, 0, node, flow_eDest_IntoLast);
+    }
+    if ( iodata->Output) {
+      void *p = (void *) &ssd->io_output_length;
+      new ItemPnBase( attrnav, "OutputLength", "LocalGsdmlAttr", 
+		      pwr_eType_UInt32, sizeof(ssd->io_output_length), 0, 0,
+		      p, 0, node, flow_eDest_IntoLast);
     }
 
     brow_SetOpen( node, attrnav_mOpen_Children);

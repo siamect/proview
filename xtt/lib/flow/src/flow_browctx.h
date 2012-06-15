@@ -82,6 +82,8 @@ class BrowCtx : public FlowCtx {
     		{ return a.move_up( element);};
     int move_down( FlowArrayElem *element)
     		{ return a.move_down( element);};
+    int sort_children( FlowArrayElem *element, int offset, int (*comp)(const void *, const void *)) 
+    		{ return a.sort_children( element, offset, comp); }
     int is_visible( FlowArrayElem *element, flow_eVisible type);
     int get_first_visible( FlowArrayElem **element);
     int get_last_visible( FlowArrayElem **element);

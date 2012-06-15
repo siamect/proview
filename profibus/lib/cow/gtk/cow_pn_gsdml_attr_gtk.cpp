@@ -137,6 +137,27 @@ void GsdmlAttrGtk::activate_change_value( GtkWidget *w, gpointer data)
   attr->change_value();
 }
 
+void GsdmlAttrGtk::activate_ordermoduletype_default( GtkWidget *w, gpointer data)
+{
+  GsdmlAttrGtk *attr = (GsdmlAttrGtk *)data;
+
+  attr->activate_ordermoduletype(attr_eOrderModuleType_Default);
+}
+
+void GsdmlAttrGtk::activate_ordermoduletype_name( GtkWidget *w, gpointer data)
+{
+  GsdmlAttrGtk *attr = (GsdmlAttrGtk *)data;
+
+  attr->activate_ordermoduletype( attr_eOrderModuleType_Name);
+}
+
+void GsdmlAttrGtk::activate_ordermoduletype_number( GtkWidget *w, gpointer data)
+{
+  GsdmlAttrGtk *attr = (GsdmlAttrGtk *)data;
+
+  attr->activate_ordermoduletype( attr_eOrderModuleType_Number);
+}
+
 void GsdmlAttrGtk::activate_exit( GtkWidget *w, gpointer data)
 {
   GsdmlAttr *attr = (GsdmlAttr *)data;
@@ -408,8 +429,33 @@ GsdmlAttrGtk::GsdmlAttrGtk( GtkWidget *a_parent_wid,
   gtk_widget_add_accelerator( menubutton_changevalue, "activate", accel_g,
 			      'q', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
+  // Submenu Order module type
+  GSList *radio_group = NULL;
+  GtkWidget *func_ordermoduletype_default = gtk_radio_menu_item_new_with_mnemonic( radio_group, "_Default");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(func_ordermoduletype_default));
+  g_signal_connect( func_ordermoduletype_default, "activate",
+		    G_CALLBACK(activate_ordermoduletype_default), this);
+
+  GtkWidget *func_ordermoduletype_name = gtk_radio_menu_item_new_with_mnemonic( radio_group, "By _name");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(func_ordermoduletype_name));
+  g_signal_connect( func_ordermoduletype_name, "activate",
+		    G_CALLBACK(activate_ordermoduletype_name), this);
+
+  GtkWidget *func_ordermoduletype_number = gtk_radio_menu_item_new_with_mnemonic( radio_group, "By n_umber");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(func_ordermoduletype_number));
+  g_signal_connect( func_ordermoduletype_number, "activate",
+		    G_CALLBACK(activate_ordermoduletype_number), this);
+
+  GtkWidget *func_ordermoduletype = gtk_menu_item_new_with_mnemonic( "_Order ModuleType");
+  GtkMenu *func_ordermoduletype_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(func_ordermoduletype_menu), func_ordermoduletype_default);
+  gtk_menu_shell_append(GTK_MENU_SHELL(func_ordermoduletype_menu), func_ordermoduletype_name);
+  gtk_menu_shell_append(GTK_MENU_SHELL(func_ordermoduletype_menu), func_ordermoduletype_number);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(func_ordermoduletype),GTK_WIDGET(func_ordermoduletype_menu));
+
   GtkMenu *func_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(func_menu), menubutton_changevalue);
+  gtk_menu_shell_append(GTK_MENU_SHELL(func_menu), func_ordermoduletype);
 
   GtkWidget *functions = gtk_menu_item_new_with_mnemonic("_Functions");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), functions);

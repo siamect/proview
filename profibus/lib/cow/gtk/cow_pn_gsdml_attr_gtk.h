@@ -80,6 +80,9 @@ class GsdmlAttrGtk : public GsdmlAttr {
   static void gsdnkattr_message( void *attr, char severity, char *message);
   static void gsdmlattr_change_value_cb( void *attr_ctx);
   static void activate_change_value( GtkWidget *w, gpointer data);
+  static void activate_ordermoduletype_default( GtkWidget *w, gpointer data);
+  static void activate_ordermoduletype_name( GtkWidget *w, gpointer data);
+  static void activate_ordermoduletype_number( GtkWidget *w, gpointer data);
   static void activate_exit( GtkWidget *w, gpointer data);
   static void activate_help( GtkWidget *w, gpointer data);
   static void activate_copy( GtkWidget *w, gpointer data);

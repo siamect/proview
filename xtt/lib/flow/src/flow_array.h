@@ -110,6 +110,7 @@ class FlowArray {
     int get_next( FlowArrayElem *element, FlowArrayElem **next);
     int move_up( FlowArrayElem *element);
     int move_down( FlowArrayElem *element);
+    int sort_children( FlowArrayElem *element, int offset, int (*comp)(const void *, const void *));
     ~FlowArray();
     friend class FlowNodeClass;
     friend class FlowCtx;

@@ -734,6 +734,12 @@ int brow_MoveDown( brow_tCtx ctx, brow_tObject object)
   return ctx->move_down( (FlowArrayElem *)object);
 }
 
+int brow_SortChildren( brow_tCtx ctx, brow_tObject object, int offset, 
+		       int (*comp)(const void *, const void *))
+{
+  return ctx->sort_children( (FlowArrayElem *)object, offset, comp);
+}
+
 int brow_IsVisible( brow_tCtx ctx, brow_tObject object, flow_eVisible type)
 {
   return ctx->is_visible( (FlowArrayElem *)object, type);

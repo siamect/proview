@@ -1154,3 +1154,43 @@ int FlowArray::move_down( FlowArrayElem *element)
   }
   return FLOW__NOELEM;
 }
+
+int FlowArray::sort_children( FlowArrayElem *element, int offset, 
+			      int (*comp)(const void *, const void *)) {
+  // Count children
+  int		i;
+  int		idx;
+  int		last_idx;
+  int		found;
+  int		level;
+
+  found = 0;
+  for ( i = 0; i < a_size; i++) {
+    if ( *(a + i) == element) {
+      idx = i;
+      found = 1;
+      break;
+    }
+  }
+  if ( !found)
+    return FLOW__NOELEM;
+
+  if ( idx == a_size - 1)
+    return FLOW__NOCHILD;
+
+  // Return next element of higher level
+  level = ((FlowNode *)a[idx])->get_level();
+  found = 0;
+  for ( i = idx + 1 + offset; i < a_size; i++) { 
+    if (((FlowNode *)a[i])->get_level() <= level)
+      break;
+
+    found = 1;
+    last_idx = i;
+  }
+  if ( !found)
+    return FLOW__NOCHILD;
+
+  qsort( &a[idx+1 + offset], last_idx - (idx + 1) + 1 - offset, sizeof(a[0]), comp);
+  return FLOW__SUCCESS;
+}

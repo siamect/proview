@@ -91,6 +91,11 @@ void GsdmlAttr::activate_exit()
     delete this;
 }
 
+void GsdmlAttr::activate_ordermoduletype( attr_eOrderModuleType type)
+{
+  attrnav->set_order_moduletype( type);
+}
+
 void GsdmlAttr::activate_help()
 {
   int sts;
