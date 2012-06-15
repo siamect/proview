@@ -45,6 +45,8 @@
 #include "glow_growctx.h"
 #include "glow_grownode.h"
 #include "glow_exportjbean.h"
+#include "glow_growpie.h"
+#include "glow_growbarchart.h"
 
 #define glow_cJBean_Offset 2
 #define glow_cJBean_SizeCorr 2
@@ -3877,6 +3879,201 @@ void GlowExportJBean::axisarc( double x1, double y1, double x2, double y2,
 "    " << var_name << ".setFormat(\"" << format << "\");" << endl;
 
 
+      if ( is_nodeclass)
+	fp <<
+"    add(" << var_name << ");" << endl;
+      else
+	fp <<
+"    localPanel.add(" << var_name << ", new Proportion(" << var_name << ".getBounds(), dsize));" << endl;
+      break;
+    }
+    case glow_eExportPass_Draw:
+      break;
+    default:
+      ;
+  }
+}
+
+void GlowExportJBean::pie( double x1, double y1, double x2, double y2, int angle1, int angle2,
+			   glow_eDrawType border_drawtype,
+			   glow_eDrawType	fill_drawtype,
+			   int		fill,
+			   int		border,
+			   int		sectors,
+			   glow_eDrawType *sector_colors,
+			   double		min_value,
+			   double		max_value,
+			   int		line_width,
+			   double		rotate,
+			   double shadow_width, int shadow, 
+			   glow_eGradient gradient, 
+			   int gc1, int gc2,
+			   glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
+{
+  double dim_x0, dim_x1, dim_y0, dim_y1;
+  char var_name[40];
+  char class_name[] = "JopPie";
+
+  strcpy( var_name, class_name);
+  var_name[0] = _tolower(var_name[0]);
+  sprintf( &var_name[strlen(var_name)], "%d", node_cnt);
+
+  switch ( pass)
+  {
+    case glow_eExportPass_Shape:
+      break;
+    case glow_eExportPass_Declare:
+    {
+      fp <<
+"  " << class_name << "	" << var_name << ";" << endl;
+      break;
+    }
+    case glow_eExportPass_Attributes:
+    {
+      ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
+
+      fp <<
+"    " << var_name << " = new " << class_name << "(session);" << endl <<
+"    " << var_name << ".setBounds(new Rectangle(" << 
+	(int)(x1 - dim_x0 + glow_cJBean_Offset) << "," << 
+	(int)(y1 - dim_y0 + glow_cJBean_Offset) << "," << 
+	(int)(x2 - x1) << "," << 
+	(int)(y2 - y1) << "));" <<
+"    " << var_name << ".setAngle1(" << angle1 << "F);" << endl <<
+"    " << var_name << ".setAngle2(" << angle2 << "F);" << endl;
+      if ( fill_drawtype != glow_eDrawType_No)
+        fp <<
+"    " << var_name << ".setFillColor(" << (int)fill_drawtype << ");" << endl;
+      if ( border_drawtype != glow_eDrawType_No)
+        fp <<
+"    " << var_name << ".setBorderColor(" << (int)border_drawtype << ");" << endl;
+      else
+        fp <<
+"    " << var_name << ".setBorderColor( 0);" << endl;
+      if ( fill)
+        fp <<
+"    " << var_name << ".setDrawFill(1);" << endl;
+      if ( border)
+        fp <<
+"    " << var_name << ".setDrawBorder(1);" << endl;
+      fp <<
+"    " << var_name << ".setSectors(" << sectors << ");" << endl <<
+"    " << var_name << ".setSectorColors(new int[] {";
+      for ( int i = 0; i < PIE_MAX_SECTORS; i++) {
+	fp << sector_colors[i];
+	if ( i != PIE_MAX_SECTORS - 1)
+	  fp << ",";
+      }
+      fp << "});" << endl;
+      fp <<
+"    " << var_name << ".setLineWidth(" << line_width << ");" << endl <<
+"    " << var_name << ".setMinValue(" << min_value << "F);" << endl <<
+"    " << var_name << ".setMaxValue(" << max_value << "F);" << endl <<
+"    " << var_name << ".setRotate(" << rotate << ");" << endl <<
+"    " << var_name << ".setShadow(" << shadow << ");" << endl <<
+"    " << var_name << ".setShadowWidth(" << shadow_width << ");" << endl <<
+"    " << var_name << ".setGradient(" << (int)gradient << ");" << endl <<
+"    " << var_name << ".setGc1(" << gc1 << ");" << endl <<
+"    " << var_name << ".setGc2(" << gc2 << ");" << endl;
+      if ( is_nodeclass)
+	fp <<
+"    add(" << var_name << ");" << endl;
+      else
+	fp <<
+"    localPanel.add(" << var_name << ", new Proportion(" << var_name << ".getBounds(), dsize));" << endl;
+      break;
+    }
+    case glow_eExportPass_Draw:
+      break;
+    default:
+      ;
+  }
+}
+void GlowExportJBean::barchart( double x1, double y1, double x2, double y2,
+				glow_eDrawType border_drawtype,
+				glow_eDrawType	fill_drawtype,
+				int		fill,
+				int		border,
+				int		bars,
+				int		barsegments,
+			        glow_eDrawType  *bar_colors,
+				double		min_value,
+				double		max_value,
+				int		line_width,
+				double		rotate,
+				double shadow_width, int shadow, 
+				glow_eGradient gradient, 
+				int gc1, int gc2,
+				int vertical_lines, int horizontal_lines, glow_eDrawType line_color,
+				glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
+{
+  double dim_x0, dim_x1, dim_y0, dim_y1;
+  char var_name[40];
+  char class_name[] = "JopBarChart";
+
+  strcpy( var_name, class_name);
+  var_name[0] = _tolower(var_name[0]);
+  sprintf( &var_name[strlen(var_name)], "%d", node_cnt);
+
+  switch ( pass)
+  {
+    case glow_eExportPass_Shape:
+      break;
+    case glow_eExportPass_Declare:
+    {
+      fp <<
+"  " << class_name << "	" << var_name << ";" << endl;
+      break;
+    }
+    case glow_eExportPass_Attributes:
+    {
+      ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
+
+      fp <<
+"    " << var_name << " = new " << class_name << "(session);" << endl <<
+"    " << var_name << ".setBounds(new Rectangle(" << 
+	(int)(x1 - dim_x0 + glow_cJBean_Offset) << "," << 
+	(int)(y1 - dim_y0 + glow_cJBean_Offset) << "," << 
+	(int)(x2 - x1) << "," << 
+	(int)(y2 - y1) << "));" << endl;
+      if ( fill_drawtype != glow_eDrawType_No)
+        fp <<
+"    " << var_name << ".setFillColor(" << (int)fill_drawtype << ");" << endl;
+      if ( border_drawtype != glow_eDrawType_No)
+        fp <<
+"    " << var_name << ".setBorderColor(" << (int)border_drawtype << ");" << endl;
+      else
+        fp <<
+"    " << var_name << ".setBorderColor( 0);" << endl;
+      if ( fill)
+        fp <<
+"    " << var_name << ".setDrawFill(1);" << endl;
+      if ( border)
+        fp <<
+"    " << var_name << ".setDrawBorder(1);" << endl;
+      fp <<
+"    " << var_name << ".setBars(" << bars << ");" << endl <<
+"    " << var_name << ".setBarSegments(" << barsegments << ");" << endl <<
+"    " << var_name << ".setBarColors(new int[] {";
+      for ( int i = 0; i < BARCHART_MAX_BARSEGMENTS; i++) {
+	fp << bar_colors[i];
+	if ( i != BARCHART_MAX_BARSEGMENTS - 1)
+	  fp << ",";
+      }
+      fp << "});" << endl;
+      fp <<
+"    " << var_name << ".setLineWidth(" << line_width << ");" << endl <<
+"    " << var_name << ".setMinValue(" << min_value << "F);" << endl <<
+"    " << var_name << ".setMaxValue(" << max_value << "F);" << endl <<
+"    " << var_name << ".setRotate(" << rotate << ");" << endl <<
+"    " << var_name << ".setShadow(" << shadow << ");" << endl <<
+"    " << var_name << ".setShadowWidth(" << shadow_width << ");" << endl <<
+"    " << var_name << ".setGradient(" << (int)gradient << ");" << endl <<
+"    " << var_name << ".setGc1(" << gc1 << ");" << endl <<
+"    " << var_name << ".setGc2(" << gc2 << ");" << endl <<
+"    " << var_name << ".setVerticalLines(" << vertical_lines << ");" << endl <<
+"    " << var_name << ".setHorizontalLines(" << horizontal_lines << ");" << endl <<
+"    " << var_name << ".setLineColor(" << (int)line_color << ");" << endl;
       if ( is_nodeclass)
 	fp <<
 "    add(" << var_name << ");" << endl;

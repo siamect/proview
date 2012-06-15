@@ -523,6 +523,8 @@ void GrowPie::export_javabean( GlowTransform *t, void *node,
 {
   double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
   double rotation;
+  double ish;
+  int gc1, gc2;
 
   if (!t)
   {
@@ -549,12 +551,22 @@ void GrowPie::export_javabean( GlowTransform *t, void *node,
   else
     rotation = (trf.rot() / 360 - floor( trf.rot() / 360)) * 360;
 
-#if 0
-  ((GrowCtx *)ctx)->export_jbean->pie( ll_x, ll_y, ur_x, ur_y, angle1, angle2,
-     draw_type, text_color_drawtype, min_value, max_value, lines, longquotient, valuequotient,
-     linelength, line_width, rotation, bold, idx, format,
-     pass, shape_cnt, node_cnt, fp);
-#endif
+  ish = shadow_width / 100 * min(ur_x - ll_x, ur_y - ll_y);
+
+  if ( gradient_contrast >= 0) {
+    gc1 = gradient_contrast/2;
+    gc2 = -int(float(gradient_contrast)/2+0.6);
+  }
+  else {
+    gc1 = int(float(gradient_contrast)/2-0.6);
+    gc2 = -gradient_contrast/2;
+  }
+
+  ctx->export_jbean->pie( ll_x, ll_y, ur_x, ur_y, angle1, angle2,
+    	draw_type, fill_drawtype, fill,
+	border, sectors, sector_color, min_value, max_value,
+	line_width, rotation, ish, shadow, gradient, gc1, gc2,
+    	pass, shape_cnt, node_cnt, fp);
 }
 
 void GrowPie::set_conf( int sector_num, double min_val, double max_val, glow_eDrawType *color)

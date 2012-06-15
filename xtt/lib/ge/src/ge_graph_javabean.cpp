@@ -1483,6 +1483,10 @@ int Graph::export_gejava_nodeclass( ofstream& fp, grow_tNodeClass nodeclass)
         export_BarTraceAttr( fp, *object_p, i);
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowTrend)
         export_TrendTraceAttr( fp, *object_p, i);
+      else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowPie)
+        export_PieTraceAttr( fp, *object_p, i);
+      else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowBarChart)
+        export_BarChartTraceAttr( fp, *object_p, i);
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowTable)
         export_TableTraceAttr( fp, *object_p, i);
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowSlider)
@@ -1627,6 +1631,10 @@ int Graph::export_javaframe( char *filename, char *bean_name, int applet,
             export_BarTraceAttr( fp, *object_p, i);
           else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowTrend)
             export_TrendTraceAttr( fp, *object_p, i);
+          else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowPie)
+            export_PieTraceAttr( fp, *object_p, i);
+          else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowBarChart)
+            export_BarChartTraceAttr( fp, *object_p, i);
           else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowTable)
             export_TableTraceAttr( fp, *object_p, i);
           else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowSlider)
@@ -1882,6 +1890,10 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
         export_BarTraceAttr( fp, *object_p, i);
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowTrend)
         export_TrendTraceAttr( fp, *object_p, i);
+      else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowPie)
+        export_PieTraceAttr( fp, *object_p, i);
+      else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowBarChart)
+        export_BarChartTraceAttr( fp, *object_p, i);
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowTable)
         export_TableTraceAttr( fp, *object_p, i);
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowSlider)
@@ -2284,19 +2296,6 @@ int Graph::export_BarTraceAttr( ofstream& fp, grow_tObject object, int cnt)
     dyn->export_java( object, fp, var_name);
   }
 
-#if 0
-  grow_GetTraceAttr( object, &trace_data);
-
-  strcpy( var_name, class_name);
-  var_name[0] = _tolower(var_name[0]);
-  sprintf( &var_name[strlen(var_name)], "%d", cnt);
-
-  if ( strcmp( trace_data->data[0], "") != 0)
-  {
-    fp <<
-"    " << var_name << ".setPwrAttribute(\"" << trace_data->data[0] << "\");" << endl;
-  }
-#endif
   return 1;
 }
 
@@ -2344,24 +2343,87 @@ int Graph::export_TrendTraceAttr( ofstream& fp, grow_tObject object, int cnt)
     dyn->export_java( object, fp, var_name);
   }
 
+  return 1;
+}
 
-#if 0
-  grow_GetTraceAttr( object, &trace_data);
+int Graph::export_PieTraceAttr( ofstream& fp, grow_tObject object, int cnt)
+{
+  GeDyn			*dyn;
+  char			class_name[] = "JopPie";
+  char 			var_name[40];
+
+  grow_GetUserData( object, (void **)&dyn);
 
   strcpy( var_name, class_name);
   var_name[0] = _tolower(var_name[0]);
   sprintf( &var_name[strlen(var_name)], "%d", cnt);
 
-  if ( strcmp( trace_data->data[0], "") != 0)
-  {
-    if ( strcmp( trace_data->data[0], "") != 0)
+  for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
+    if ( elem->dyn_type == ge_mDynType_Pie) {
       fp <<
-"    " << var_name << ".setPwrAttribute1(\"" << trace_data->data[0] << "\");" << endl;
-    if ( strcmp( trace_data->data[1], "") != 0)
-      fp <<
-"    " << var_name << ".setPwrAttribute2(\"" << trace_data->data[1] << "\");" << endl;
+"    " << var_name << ".setPwrAttribute(new String[]{";
+
+      for ( int i = 0; i < PIE_MAX_SECTORS; i++) {
+	if ( strcmp( ((GePie *)elem)->attribute[i], "") != 0) 
+	  fp << "\"" << ((GePie *)elem)->attribute[i] << "\"";
+	else
+	  fp << "null";
+	if ( i != PIE_MAX_SECTORS - 1)
+	  fp << ",";
+      }
+      fp << "});" << endl <<
+"    " << var_name << ".setFixRange(" << ((GePie *)elem)->fix_range << ");" << endl;
+    }
+    break;
   }
-#endif
+  if ( dyn->total_action_type & ~ge_mActionType_Inherit) {
+    fp <<
+"    " << var_name << ".dd.setActionType(" << (int)dyn->total_action_type << ");" << endl <<
+"    " << var_name << ".dd.setAccess(" << (int)dyn->access << ");" << endl;
+
+    dyn->export_java( object, fp, var_name);
+  }
+
+  return 1;
+}
+
+int Graph::export_BarChartTraceAttr( ofstream& fp, grow_tObject object, int cnt)
+{
+  GeDyn			*dyn;
+  char			class_name[] = "JopBarChart";
+  char 			var_name[40];
+
+  grow_GetUserData( object, (void **)&dyn);
+
+  strcpy( var_name, class_name);
+  var_name[0] = _tolower(var_name[0]);
+  sprintf( &var_name[strlen(var_name)], "%d", cnt);
+
+  for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
+    if ( elem->dyn_type == ge_mDynType_BarChart) {
+      fp <<
+"    " << var_name << ".setPwrAttribute(new String[]{";
+
+      for ( int i = 0; i < BARCHART_MAX_BARSEGMENTS; i++) {
+	if ( strcmp( ((GeBarChart *)elem)->attribute[i], "") != 0) 
+	  fp << "\"" << ((GeBarChart *)elem)->attribute[i] << "\"";
+	else
+	  fp << "null";
+	if ( i != BARCHART_MAX_BARSEGMENTS - 1)
+	  fp << ",";
+      }
+      fp << "});" << endl;
+    }
+    break;
+  }
+  if ( dyn->total_action_type & ~ge_mActionType_Inherit) {
+    fp <<
+"    " << var_name << ".dd.setActionType(" << (int)dyn->total_action_type << ");" << endl <<
+"    " << var_name << ".dd.setAccess(" << (int)dyn->access << ");" << endl;
+
+    dyn->export_java( object, fp, var_name);
+  }
+
   return 1;
 }
 
@@ -2399,6 +2461,8 @@ int Graph::export_ObjectTraceAttr( ofstream& fp, grow_tObject object, int cnt) {
 int Graph::export_GejavaObjectTraceAttr( ofstream& fp, grow_tObject object, int cnt) { return 1;}
 int Graph::export_BarTraceAttr( ofstream& fp, grow_tObject object, int cnt){ return 1;}
 int Graph::export_TrendTraceAttr( ofstream& fp, grow_tObject object, int cnt) { return 1;}
+int Graph::export_PieTraceAttr( ofstream& fp, grow_tObject object, int cnt){ return 1;}
+int Graph::export_BarChartTraceAttr( ofstream& fp, grow_tObject object, int cnt){ return 1;}
 int Graph::export_TableTraceAttr( ofstream& fp, grow_tObject object, int cnt) { return 1;}
 int Graph::export_SliderTraceAttr( ofstream& fp, grow_tObject object, int cnt) { return 1;}
 
