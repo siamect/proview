@@ -289,6 +289,7 @@ bck_LoadBackup ()
 	  if (dh.valid) {
 
 	    /* Find object */
+	    strcpy(objectname, "");
 
 	    if (dh.dynamic) {
               strp = strchr(namep, '.');	/* always is a full object! */
@@ -311,6 +312,8 @@ bck_LoadBackup ()
 	        strcat(objectname, namep);
 	        sts = gdh_SetObjectInfo(objectname, datap, dh.size);
 	      }
+	      else
+		strcpy(objectname, cdh_ObjidToString( 0, dh.objid, 1));
 	    }
 	  } /* valid segment */
 
