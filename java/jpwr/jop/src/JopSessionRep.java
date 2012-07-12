@@ -396,12 +396,22 @@ public class JopSessionRep implements JopSessionIfc {
     else if ( isOpWindowFrame())
       ((JopOpWindowFrame)root).setLabelText( text);
   }
+
   public void setOpWindowLanguage( int language) {
     if ( isOpWindowApplet())
       ((JopOpWindowApplet)root).setLanguage( language);
     else if ( isOpWindowFrame())
       ((JopOpWindowFrame)root).setLanguage( language);
   }
+
+  public void openTrend( String[] trendList, String plotGroup) {
+    new JopXttTrend( session, trendList, plotGroup);
+  }
+
+  public void openFast( String fastObject) {
+    new JopXttFast( session, fastObject);
+  }
+  
 }
 
 

@@ -40,6 +40,7 @@
 #include "jpwr_rt_gdh.h"
 #include "pwr.h"
 #include "rt_gdh.h"
+#include "rt_cbuf.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
@@ -2746,6 +2747,241 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectBodyDef
   }
   free((char *)bd);
   return gdhrsAttrDefArr;
+}
+
+JNIEXPORT jint JNICALL Java_jpwr_rt_Gdh_getCircBuffInfo
+  (JNIEnv *env, jobject obj, jobject info_obj)
+{
+  int		sts;
+  jclass 	circBuffInfo_id;
+  static jmethodID 	circBuffInfo_getCircArefOix = NULL;
+  static jmethodID 	circBuffInfo_getCircArefVid = NULL;
+  static jmethodID 	circBuffInfo_getCircArefBody = NULL;
+  static jmethodID 	circBuffInfo_getCircArefOffset = NULL;
+  static jmethodID 	circBuffInfo_getCircArefSize = NULL;
+  static jmethodID 	circBuffInfo_getCircArefFlags = NULL;
+  static jmethodID 	circBuffInfo_getResolution = NULL;
+  static jmethodID 	circBuffInfo_getSamples = NULL;
+  static jmethodID 	circBuffInfo_getElementType = NULL;
+  static jmethodID 	circBuffInfo_getFirstIdx = NULL;
+  static jmethodID 	circBuffInfo_getLastIdx = NULL;
+  static jmethodID 	circBuffInfo_getOffset = NULL;
+  static jfieldID	circBuffInfo_firstIdx_id;
+  static jfieldID	circBuffInfo_lastIdx_id;
+  static jfieldID	circBuffInfo_offset_id;
+  static jfieldID	circBuffInfo_samples_id;
+  static jfieldID	circBuffInfo_size_id;
+  static jfieldID	circBuffInfo_bufp_id;
+  static jfieldID	circBuffInfo_status_id;
+  int		element_type;
+  int		element_size;
+  jint 		jsts;
+  cbuf_sCircBuffInfo  info;
+
+  memset( &info, 0, sizeof(info));
+
+  circBuffInfo_id = (*env)->FindClass( env, "jpwr/rt/CircBuffInfo");
+
+  if( circBuffInfo_getCircArefOix == NULL) {
+    circBuffInfo_getCircArefOix = (*env)->GetMethodID( env, circBuffInfo_id, "getCircArefOix", "()I");
+    circBuffInfo_getCircArefVid = (*env)->GetMethodID( env, circBuffInfo_id, "getCircArefVid", "()I");
+    circBuffInfo_getCircArefBody = (*env)->GetMethodID( env, circBuffInfo_id, "getCircArefBody", "()I");
+    circBuffInfo_getCircArefOffset = (*env)->GetMethodID( env, circBuffInfo_id, "getCircArefOffset", "()I");
+    circBuffInfo_getCircArefSize = (*env)->GetMethodID( env, circBuffInfo_id, "getCircArefSize", "()I");
+    circBuffInfo_getCircArefFlags = (*env)->GetMethodID( env, circBuffInfo_id, "getCircArefFlags", "()I");
+    circBuffInfo_getResolution = (*env)->GetMethodID( env, circBuffInfo_id, "getResolution", "()I");
+    circBuffInfo_getSamples = (*env)->GetMethodID( env, circBuffInfo_id, "getSamples", "()I");
+    circBuffInfo_getElementType = (*env)->GetMethodID( env, circBuffInfo_id, "getElementType", "()I");
+    circBuffInfo_getFirstIdx = (*env)->GetMethodID( env, circBuffInfo_id, "getFirstIdx", "()I");
+    circBuffInfo_getLastIdx = (*env)->GetMethodID( env, circBuffInfo_id, "getLastIdx", "()I");
+    circBuffInfo_getOffset = (*env)->GetMethodID( env, circBuffInfo_id, "getOffset", "()I");
+
+    circBuffInfo_firstIdx_id = (*env)->GetFieldID( env, circBuffInfo_id, "firstIdx", "I");
+    circBuffInfo_lastIdx_id = (*env)->GetFieldID( env, circBuffInfo_id, "lastIdx", "I");
+    circBuffInfo_offset_id = (*env)->GetFieldID( env, circBuffInfo_id, "offset", "I");
+    circBuffInfo_samples_id = (*env)->GetFieldID( env, circBuffInfo_id, "samples", "I");
+    circBuffInfo_size_id = (*env)->GetFieldID( env, circBuffInfo_id, "size", "I");
+    circBuffInfo_bufp_id = (*env)->GetFieldID( env, circBuffInfo_id, "bufp", "Ljava/lang/Object;");
+    circBuffInfo_status_id = (*env)->GetFieldID( env, circBuffInfo_id, "status", "I");
+  }
+
+  info.circ_aref.Objid.oix = (*env)->CallIntMethod( env, info_obj, circBuffInfo_getCircArefOix);
+  info.circ_aref.Objid.vid = (*env)->CallIntMethod( env, info_obj, circBuffInfo_getCircArefVid);
+  info.circ_aref.Body = (*env)->CallIntMethod( env, info_obj, circBuffInfo_getCircArefBody);
+  info.circ_aref.Offset = (*env)->CallIntMethod( env, info_obj, circBuffInfo_getCircArefOffset);
+  info.circ_aref.Size = (*env)->CallIntMethod( env, info_obj, circBuffInfo_getCircArefSize);
+  info.circ_aref.Flags.m = (*env)->CallIntMethod( env, info_obj, circBuffInfo_getCircArefFlags);
+  info.samples = (*env)->CallIntMethod( env, info_obj, circBuffInfo_getSamples);
+  info.resolution = (*env)->CallIntMethod( env, info_obj, circBuffInfo_getResolution);
+  info.first_idx = (*env)->CallIntMethod( env, info_obj, circBuffInfo_getFirstIdx);
+  info.last_idx = (*env)->CallIntMethod( env, info_obj, circBuffInfo_getLastIdx);
+  info.offset = (*env)->CallIntMethod( env, info_obj, circBuffInfo_getOffset);
+  element_type = (*env)->CallIntMethod( env, info_obj, circBuffInfo_getElementType);
+  element_size = cdh_TypeToSize( (pwr_eType)element_type);
+  info.bufsize = info.samples * element_size;
+  info.bufp = (char *) calloc( 1, info.bufsize);
+
+  sts = cbuf_GetCircBuffInfo( &info, 1); 
+  jsts = (jint) sts;
+  (*env)->SetIntField( env, info_obj, circBuffInfo_status_id, jsts);
+  if ( ODD(sts)) {
+    switch ( element_type) {
+    case pwr_eType_Float32: {
+      jfloatArray jfarray = 0;
+      jfarray = (*env)->NewFloatArray( env, info.bufsize/4);
+      (*env)->SetFloatArrayRegion( env, jfarray, 0, info.bufsize/4, info.bufp);
+
+      (*env)->SetObjectField( env, info_obj, circBuffInfo_bufp_id, (jobject)jfarray);
+
+      break;
+    } 
+    case pwr_eType_UInt32:
+    case pwr_eType_Int32:
+    case pwr_eType_UInt16:
+    case pwr_eType_Int16:
+    case pwr_eType_UInt8:
+    case pwr_eType_Int8: {
+      jintArray jiarray = 0;
+      jiarray = (*env)->NewIntArray( env, info.bufsize/4);
+      (*env)->SetIntArrayRegion( env, jiarray, 0, info.bufsize/4, info.bufp);
+
+      (*env)->SetObjectField( env, info_obj, circBuffInfo_bufp_id, (jobject)jiarray);
+      break;
+    } 
+    default: ;
+    }
+    (*env)->SetIntField( env, info_obj, circBuffInfo_firstIdx_id, info.first_idx);
+    (*env)->SetIntField( env, info_obj, circBuffInfo_lastIdx_id, info.last_idx);
+    (*env)->SetIntField( env, info_obj, circBuffInfo_offset_id, info.offset);
+    (*env)->SetIntField( env, info_obj, circBuffInfo_samples_id, info.samples);
+    (*env)->SetIntField( env, info_obj, circBuffInfo_size_id, info.size);
+  }
+  free( info.bufp);
+  
+  return 1;
+}
+
+JNIEXPORT jint JNICALL Java_jpwr_rt_Gdh_updateCircBuffInfo
+   (JNIEnv *env, jobject obj, jobject info_array, jint info_size)
+{
+  int		sts;
+  jclass 	circBuffInfo_id;
+  static jmethodID 	circBuffInfo_getCircArefOix = NULL;
+  static jmethodID 	circBuffInfo_getCircArefVid = NULL;
+  static jmethodID 	circBuffInfo_getCircArefBody = NULL;
+  static jmethodID 	circBuffInfo_getCircArefOffset = NULL;
+  static jmethodID 	circBuffInfo_getCircArefSize = NULL;
+  static jmethodID 	circBuffInfo_getCircArefFlags = NULL;
+  static jmethodID 	circBuffInfo_getResolution = NULL;
+  static jmethodID 	circBuffInfo_getSamples = NULL;
+  static jmethodID 	circBuffInfo_getElementType = NULL;
+  static jmethodID 	circBuffInfo_getFirstIdx = NULL;
+  static jmethodID 	circBuffInfo_getLastIdx = NULL;
+  static jmethodID 	circBuffInfo_getOffset = NULL;
+  static jfieldID	circBuffInfo_firstIdx_id;
+  static jfieldID	circBuffInfo_lastIdx_id;
+  static jfieldID	circBuffInfo_offset_id;
+  static jfieldID	circBuffInfo_samples_id;
+  static jfieldID	circBuffInfo_size_id;
+  static jfieldID	circBuffInfo_bufp_id;
+  static jfieldID	circBuffInfo_status_id;
+  int		element_type;
+  int		element_size;
+  jint 		jsts;
+  cbuf_sCircBuffInfo  info[20];
+  jobject 	info_obj[20];
+  int 		i;
+
+  memset( &info, 0, sizeof(info));
+
+  circBuffInfo_id = (*env)->FindClass( env, "jpwr/rt/CircBuffInfo");
+  if( circBuffInfo_getCircArefOix == NULL) {
+    circBuffInfo_getCircArefOix = (*env)->GetMethodID( env, circBuffInfo_id, "getCircArefOix", "()I");
+    circBuffInfo_getCircArefVid = (*env)->GetMethodID( env, circBuffInfo_id, "getCircArefVid", "()I");
+    circBuffInfo_getCircArefBody = (*env)->GetMethodID( env, circBuffInfo_id, "getCircArefBody", "()I");
+    circBuffInfo_getCircArefOffset = (*env)->GetMethodID( env, circBuffInfo_id, "getCircArefOffset", "()I");
+    circBuffInfo_getCircArefSize = (*env)->GetMethodID( env, circBuffInfo_id, "getCircArefSize", "()I");
+    circBuffInfo_getCircArefFlags = (*env)->GetMethodID( env, circBuffInfo_id, "getCircArefFlags", "()I");
+    circBuffInfo_getResolution = (*env)->GetMethodID( env, circBuffInfo_id, "getResolution", "()I");
+    circBuffInfo_getSamples = (*env)->GetMethodID( env, circBuffInfo_id, "getSamples", "()I");
+    circBuffInfo_getElementType = (*env)->GetMethodID( env, circBuffInfo_id, "getElementType", "()I");
+    circBuffInfo_getFirstIdx = (*env)->GetMethodID( env, circBuffInfo_id, "getFirstIdx", "()I");
+    circBuffInfo_getLastIdx = (*env)->GetMethodID( env, circBuffInfo_id, "getLastIdx", "()I");
+    circBuffInfo_getOffset = (*env)->GetMethodID( env, circBuffInfo_id, "getOffset", "()I");
+
+    circBuffInfo_firstIdx_id = (*env)->GetFieldID( env, circBuffInfo_id, "firstIdx", "I");
+    circBuffInfo_lastIdx_id = (*env)->GetFieldID( env, circBuffInfo_id, "lastIdx", "I");
+    circBuffInfo_offset_id = (*env)->GetFieldID( env, circBuffInfo_id, "offset", "I");
+    circBuffInfo_samples_id = (*env)->GetFieldID( env, circBuffInfo_id, "samples", "I");
+    circBuffInfo_size_id = (*env)->GetFieldID( env, circBuffInfo_id, "size", "I");
+    circBuffInfo_bufp_id = (*env)->GetFieldID( env, circBuffInfo_id, "bufp", "Ljava/lang/Object;");
+    circBuffInfo_status_id = (*env)->GetFieldID( env, circBuffInfo_id, "status", "I");
+  }
+
+
+  if ( info_size > 20)
+    info_size = 20;
+
+  for ( i = 0; i < info_size; i++) {
+    info_obj[i] = (*env)->GetObjectArrayElement( env, info_array, i);
+    
+    info[i].circ_aref.Objid.oix = (*env)->CallIntMethod( env, info_obj[i], circBuffInfo_getCircArefOix);
+    info[i].circ_aref.Objid.vid = (*env)->CallIntMethod( env, info_obj[i], circBuffInfo_getCircArefVid);
+    info[i].circ_aref.Body = (*env)->CallIntMethod( env, info_obj[i], circBuffInfo_getCircArefBody);
+    info[i].circ_aref.Offset = (*env)->CallIntMethod( env, info_obj[i], circBuffInfo_getCircArefOffset);
+    info[i].circ_aref.Size = (*env)->CallIntMethod( env, info_obj[i], circBuffInfo_getCircArefSize);
+    info[i].circ_aref.Flags.m = (*env)->CallIntMethod( env, info_obj[i], circBuffInfo_getCircArefFlags);
+    info[i].samples = (*env)->CallIntMethod( env, info_obj[i], circBuffInfo_getSamples);
+    info[i].resolution = (*env)->CallIntMethod( env, info_obj[i], circBuffInfo_getResolution);
+    info[i].first_idx = (*env)->CallIntMethod( env, info_obj[i], circBuffInfo_getFirstIdx);
+    info[i].last_idx = (*env)->CallIntMethod( env, info_obj[i], circBuffInfo_getLastIdx);
+    info[i].offset = (*env)->CallIntMethod( env, info_obj[i], circBuffInfo_getOffset);
+    element_type = (*env)->CallIntMethod( env, info_obj[i], circBuffInfo_getElementType);
+    element_size = cdh_TypeToSize( (pwr_eType)element_type);
+    info[i].bufsize = info[i].samples * element_size;
+    info[i].bufp = (char *) calloc( 1, info[i].bufsize);
+  }
+  sts = cbuf_UpdateCircBuffInfo( info, info_size); 
+  jsts = (jint) sts;
+
+  (*env)->SetIntField( env, info_obj[0], circBuffInfo_status_id, jsts);
+  if ( ODD(sts)) {
+    for ( i = 0; i < info_size; i++) {
+      switch ( element_type) {
+      case pwr_eType_Float32: {
+	jfloatArray jfarray = 0;
+	jfarray = (*env)->NewFloatArray( env, info[i].size);
+	(*env)->SetFloatArrayRegion( env, jfarray, 0, info[i].size, info[i].bufp);
+
+	(*env)->SetObjectField( env, info_obj[i], circBuffInfo_bufp_id, (jobject)jfarray);
+
+	break;
+      } 
+      case pwr_eType_UInt32:
+      case pwr_eType_Int32:
+      case pwr_eType_UInt16:
+      case pwr_eType_Int16:
+      case pwr_eType_UInt8:
+      case pwr_eType_Int8: {
+	jintArray jiarray = 0;
+	jiarray = (*env)->NewIntArray( env, info[i].size);
+	(*env)->SetIntArrayRegion( env, jiarray, 0, info[i].size, info[i].bufp);
+
+	(*env)->SetObjectField( env, info_obj[i], circBuffInfo_bufp_id, (jobject)jiarray);
+
+	break;
+      } 
+      default: ;
+      }
+      (*env)->SetIntField( env, info_obj[i], circBuffInfo_firstIdx_id, info[i].first_idx);
+      (*env)->SetIntField( env, info_obj[i], circBuffInfo_lastIdx_id, info[i].last_idx);
+      (*env)->SetIntField( env, info_obj[i], circBuffInfo_offset_id, info[i].offset);
+      (*env)->SetIntField( env, info_obj[i], circBuffInfo_samples_id, info[i].samples);
+      (*env)->SetIntField( env, info_obj[i], circBuffInfo_size_id, info[i].size);
+      free( info[i].bufp);
+    }
+  }
+  return 1;
 }
 
 static int gdh_JidToPointer( int id, void **p)

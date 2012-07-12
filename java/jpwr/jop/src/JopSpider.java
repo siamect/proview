@@ -136,6 +136,8 @@ System.out.println( "qcom put finished");
           String jgraph = "JGRAPH";
           String graph = "GRAPH";
           String url = "URL";
+          String trend = "TREND";
+          String fast = "FAST";
           String cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
           if ( jgraph.length() >= cli_arg1.length() &&
                jgraph.substring(0,cli_arg1.length()).equals(cli_arg1)) {
@@ -369,9 +371,37 @@ System.out.println( "qcom put finished");
 	        openURL( session, urlValue, newFrame, frameName, null);
 	      }
 	    } 
-	    else if ( root instanceof JFrame) {
-	      System.out.println( "Not yet implemented");
-	    }
+	  }
+          else if ( trend.length() >= cli_arg1.length() &&
+		    trend.substring(0,cli_arg1.length()).equals(cli_arg1)) {
+	    // Command is "OPEN TREND"
+	    String name;
+
+	    if ( cli.qualifierFound("cli_arg2"))
+	      name = cli.getQualValue("cli_arg2");
+	    else
+	      name = cli.getQualValue("/NAME");
+
+	    StringTokenizer tokens = new StringTokenizer( name, ",");
+	    int cnt = tokens.countTokens();
+	    String[] trendList = new String[cnt];
+	      
+	    for ( int i = 0; i < cnt; i++)
+	      trendList[i] = tokens.nextToken();
+	      
+	    session.openTrend( trendList, null);
+	  }
+          else if ( fast.length() >= cli_arg1.length() &&
+		    fast.substring(0,cli_arg1.length()).equals(cli_arg1)) {
+	    // Command is "OPEN FAST"
+	    String name;
+
+	    if ( cli.qualifierFound("cli_arg2"))
+	      name = cli.getQualValue("cli_arg2");
+	    else
+	      name = cli.getQualValue("/NAME");
+
+	    session.openFast( name);
 	  }
 	  else {
 	    System.out.println( "Unknown command");

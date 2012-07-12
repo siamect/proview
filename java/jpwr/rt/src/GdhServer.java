@@ -111,6 +111,8 @@ public class GdhServer
   public final static int GET_ALL_CLASS_ATTRIBUTES_STRING = 56;
   public final static int GET_OBJECT_INFO_FLOAT_ARRAY = 57;
   public final static int GET_OBJECT_INFO_INT_ARRAY = 58;
+  public final static int GET_CIRCBUFF_INFO = 59;
+  public final static int UPDATE_CIRCBUFF_INFO = 60;
 
   public final static int PORT = 4445;
 
@@ -589,7 +591,7 @@ public class GdhServer
               }
               catch(IOException e)
               {
-                System.out.println("setObjectInfoString: IO exception");
+                System.out.println("getObjectInfoString: IO exception");
               }
               break;
             case GET_OBJECT_INFO_OBJID:
@@ -1793,6 +1795,118 @@ public class GdhServer
                 System.out.println("GET_SUBSCRIPTIONS: IO exception");
               }
               break;
+            case GET_CIRCBUFF_INFO:
+              try
+              {
+		CircBuffInfo info = new CircBuffInfo();
+
+                int oix = in.readInt();
+                int vid = in.readInt();
+                int body = in.readInt();
+                int offset = in.readInt();
+                int size = in.readInt();
+                int flags = in.readInt();
+                PwrtObjid objid = new PwrtObjid(oix, vid);
+		info.circAref = new PwrtAttrRef(objid, body, offset, size, flags);
+
+                info.samples = in.readInt();
+                info.resolution = in.readInt();
+		info.elementType = in.readInt();
+
+		gdh.getCircBuffInfo( info);
+		out.writeInt(info.status);
+
+		if ( info.status % 2 != 0) {
+		  out.writeInt(info.size);
+		  out.writeInt(info.firstIdx);
+		  out.writeInt(info.lastIdx);
+		  out.writeInt(info.offset);
+		  out.writeInt(info.samples);
+		  switch( info.elementType) {
+		  case Pwr.eType_Float32:
+		      for ( int j = 0; j < info.size; j++)
+			  out.writeFloat(((float[])info.bufp)[j]);
+		      break;
+		  case Pwr.eType_Int32:
+		  case Pwr.eType_UInt32:
+		  case Pwr.eType_Int16:
+		  case Pwr.eType_UInt16:
+		  case Pwr.eType_Int8:
+		  case Pwr.eType_UInt8:
+		      for ( int j = 0; j < info.size; j++)
+			  out.writeInt(((int[])info.bufp)[j]);
+		      break;
+		  default: ;
+		  }
+                }
+		out.flush();
+              }
+              catch(IOException e)
+              {
+                System.out.println("getCircBuffInfo: IO exception");
+              }
+	      break;
+            case UPDATE_CIRCBUFF_INFO:
+              try
+              {
+                int info_size = in.readInt();
+
+		CircBuffInfo[] info = new CircBuffInfo[info_size];
+
+		for ( i = 0; i < info_size; i++) {
+		  info[i] = new CircBuffInfo();
+                  int oix = in.readInt();
+		  int vid = in.readInt();
+		  int body = in.readInt();
+		  int offset = in.readInt();
+		  int size = in.readInt();
+		  int flags = in.readInt();
+		  PwrtObjid objid = new PwrtObjid(oix, vid);
+		  info[i].circAref = new PwrtAttrRef(objid, body, offset, size, flags);
+
+		  info[i].samples = in.readInt();
+		  info[i].resolution = in.readInt();
+		  info[i].elementType = in.readInt();
+		  info[i].firstIdx = in.readInt();
+		  info[i].lastIdx = in.readInt();
+		  info[i].offset = in.readInt();
+		}
+
+		gdh.updateCircBuffInfo( info, info_size);
+		out.writeInt(info[0].status);
+
+		if ( info[0].status % 2 != 0) {
+		  for ( i = 0; i < info_size; i++) {
+		    out.writeInt(info[i].size);
+		    out.writeInt(info[i].firstIdx);
+		    out.writeInt(info[i].lastIdx);
+		    out.writeInt(info[i].offset);
+		    out.writeInt(info[i].samples);
+		    switch( info[i].elementType) {
+		    case Pwr.eType_Float32:
+			for ( int j = 0; j < info[i].size; j++)
+			    out.writeFloat(((float[])info[i].bufp)[j]);
+			break;
+		    case Pwr.eType_UInt32:
+		    case Pwr.eType_Int32:
+		    case Pwr.eType_Int16:
+		    case Pwr.eType_UInt16:
+		    case Pwr.eType_Int8:
+		    case Pwr.eType_UInt8:
+			for ( int j = 0; j < info[i].size; j++)
+			    out.writeInt(((int[])info[i].bufp)[j]);
+			break;
+		    default: ;
+		    }
+		  }
+		}
+		out.flush();
+              }
+              catch(IOException e)
+              {
+                System.out.println("updateCircBuffInfo: IO exception");
+              }
+	      break;
             default:
               errh.error("Received unknown function : " + function);
           }

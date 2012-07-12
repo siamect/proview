@@ -34,36 +34,21 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
-import jpwr.rt.*;
+package jpwr.rt;
+import java.io.Serializable;
 
-public interface JopSessionIfc {
-  public void setSession( Object session);
-  public void setRoot( Object root);
-  public Object getRoot();
-  public void setEngine( JopEngine engine);
-  public String getLang();
-  public void setLang( String lang);
-  public JopEngine getEngine();
-  public void setNavigator( Object navigator);
-  public void setAlarmList( Object alarmList);
-  public void addUtility( Object utility);
-  public void removeUtility( Object utility);
-  public void openNavigator( PwrtObjid oid);
-  public void openAlarmList();
-  public void openEventLog();
-  public void openLogin();
-  public void openLanguage();
-  public void openGraphFrame( String name, String instance, boolean scrollbar, boolean classGraph);
-  public void openFlowFrame( PwrtObjid oid, String center);
-  public void openCrrFrame( String name);
-  public int executeCommand( String command);
-  public boolean isApplet();
-  public boolean isApplication();
-  public boolean isOpWindowApplet();
-  public void openSearch(String object);
-  public void setOpWindowLabelText( String text );
-  public void setOpWindowLanguage( int language );
-  public void openTrend( String[] trendList, String plotGroup);
-  public void openFast( String fastObject);
+public class GdhrCircBuffInfo implements Serializable
+{
+    public CircBuffInfo info;
+    public int sts;
+  
+    public GdhrCircBuffInfo( CircBuffInfo info, 
+			     int         sts) 
+    {
+	this.info = info; 
+	this.sts = sts;
+    }
+    public boolean evenSts() { return (sts % 2 == 0);}
+    public boolean oddSts() { return (sts % 2 == 1);}
+    public int getSts() { return sts;}
 }

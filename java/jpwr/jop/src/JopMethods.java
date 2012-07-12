@@ -103,10 +103,10 @@ public class JopMethods {
       return false; // NYI
     }
     else if ( method.equals("Trend")) {
-      return false; // NYI
+      return trendFilter();
     }
     else if ( method.equals("Fast")) {
-      return false; // NYI
+      return fastFilter();
     }
     else if ( method.equals("Photo")) {
       return false; // NYI
@@ -161,13 +161,13 @@ public class JopMethods {
       // NYI
     }
     else if ( method.equals("Trend")) {
-      // NYI
+      trend();
     }
     else if ( method.equals("Fast")) {
-      // NYI
+      fast();
     }
     else if ( method.equals("Photo")) {
-      // NYI
+      photo();
     }
     else if ( method.equals("Note")) {
       // NYI
@@ -318,6 +318,70 @@ public class JopMethods {
     session.executeCommand( cmd);
   }
 
+  public boolean trendFilter() {
+
+    CdhrClassId cret = gdh.getObjectClass( aref.getObjid());
+    if ( cret.evenSts()) return false;
+
+    if ( cret.classId == Pwrb.cClass_DsTrend ||
+	 cret.classId == Pwrb.cClass_DsTrendCurve ||
+	 cret.classId == Pwrb.cClass_PlotGroup)
+      return true;
+
+    String attr = object + ".DefTrend";
+    CdhrString sret = gdh.getObjectInfoString( attr);
+    if ( sret.evenSts())
+      return false;
+    if ( sret.str.equals(""))
+      return false;
+
+    return true;
+  }
+  public void trend() {
+    CdhrClassId cret = gdh.getObjectClass( aref.getObjid());
+
+    if ( cret.evenSts()) return;
+
+    if ( cret.classId == Pwrb.cClass_DsTrend ||
+	 cret.classId == Pwrb.cClass_DsTrendCurve ||
+	 cret.classId == Pwrb.cClass_PlotGroup) {
+      String cmd = "open trend /name=" + object;
+      System.out.println( "trend: " + cmd);
+      session.executeCommand( cmd);
+      return;
+    }
+
+    String attr = object + ".DefTrend";
+    CdhrString deftrend = gdh.getObjectInfoString( attr);
+    if ( deftrend.evenSts()) return;
+
+    String cmd = "open trend /name=" + deftrend;
+    System.out.println( "trend: " + cmd);
+    session.executeCommand( cmd);
+  }
+
+  public boolean fastFilter() {
+
+    CdhrClassId cret = gdh.getObjectClass( aref.getObjid());
+    if ( cret.evenSts()) return false;
+
+    if ( cret.classId == Pwrb.cClass_DsFastCurve)
+      return true;
+
+    return false;
+  }
+  public void fast() {
+    CdhrClassId cret = gdh.getObjectClass( aref.getObjid());
+
+    if ( cret.evenSts()) return;
+
+    if ( cret.classId == Pwrb.cClass_DsFastCurve) {
+      String cmd = "open fast /name=" + object;
+      System.out.println( "fast: " + cmd);
+      session.executeCommand( cmd);
+    }
+  }
+
   public boolean dataSheetFilter() {
     String attr = object + ".DataSheet";
     CdhrString sret = gdh.getObjectInfoString( attr);
@@ -429,7 +493,6 @@ public class JopMethods {
     else
       // Java name equals class name
       name = sret.str.substring(0,1).toUpperCase() + sret.str.substring(1).toLowerCase();
-    System.out.println( "classGraphFilter: " + name + ", class: " + sret.str);
 
     try {
       Class clazz = Class.forName( name);

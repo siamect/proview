@@ -29,6 +29,7 @@ local_java_sources := \
 	GeDyn.java \
 	GeComponent.java \
 	GeTextField.java \
+	GeGradient.java \
 	GeSlider.java \
 	JopBar.java \
 	JopTrend.java \
@@ -78,6 +79,9 @@ local_java_sources := \
 	JopXYCurve.java \
 	Proportion.java\
 	RatioLayout.java \
+	JopCurveAxis.java \
+	JopCurveAxisLayout.java \
+	JopCurveChartLayout.java \
 	AspectRatioListener.java \
 	JopSpiderFrame.java \
 	JopLoginFrame.java \
@@ -92,7 +96,6 @@ local_java_sources := \
         JopUtilities.java \
         GeImage.java \
 	GeFrameThin.java \
-	GeGradient.java \
 	Flow.java \
 	FlowCtxInterface.java \
 	FlowCmn.java \
@@ -128,6 +131,11 @@ local_java_sources := \
 	XttTree.java \
 	JopXttApplet.java \
 	JopXttFrame.java \
+	JopCurveData.java \
+	JopCurveIfc.java \
+	JopCurve.java \
+	JopXttTrend.java \
+	JopXttFast.java \
         EventTableModel.java \
 	EventTableCellRender.java \
 	MhTable.java \

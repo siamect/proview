@@ -450,6 +450,8 @@ public class Gdh {
   public native CdhrString getMsgText( int sts);
   public native CdhrClassId getSuperClass( int classid, PwrtObjid objid);
   public native GdhrsAttrDef[] getObjectBodyDef(int classid, PwrtAttrRef aref);
+  public native int getCircBuffInfo(CircBuffInfo info);
+  public native int updateCircBuffInfo(CircBuffInfo[] info, int info_size);
   //  public native GdhrGetXttObj[] getAllXttChildrenNative(PwrtObjid objid);
 }
 
