@@ -203,6 +203,18 @@ public class JopXttFast implements ActionListener, JopCurveIfc {
 		    sret = engine.gdh.getObjectInfoString( fastObject + ".Attribute[" + fast_cnt + "]");
 		    if ( sret.evenSts()) return;
 		    String attrName = sret.str;		
+		    
+		    int offs = attrName.lastIndexOf('.');
+		    String Unit;
+		    if ( offs != -1) {
+			sret = engine.gdh.getObjectInfoString( attrName.substring(0,offs) + ".Unit");
+			if ( sret.oddSts())
+			    Unit = sret.str;
+			else
+			    Unit = new String();
+		    }
+		    else
+			Unit = new String();
 
 		    sret = engine.gdh.getObjectInfoString( fastObject + ".Buffers[" + fast_cnt + "]");
 		    if ( sret.evenSts()) return;
@@ -211,7 +223,7 @@ public class JopXttFast implements ActionListener, JopCurveIfc {
 		    gcd.y_axis_type[fast_cnt] = JopCurveData.eAxis_y;
 		    gcd.y_name[fast_cnt] = attrName;
 		    gcd.rows[fast_cnt] = noOfPoints;
-		    gcd.y_unit[i] = new String( "m/s");
+		    gcd.y_unit[i] = Unit;
 
 		    if ( !active) {
 			faret = engine.gdh.getObjectInfoFloatArray( buffers[fast_cnt], noOfPoints);
@@ -278,7 +290,6 @@ public class JopXttFast implements ActionListener, JopCurveIfc {
 		}
 		for ( j = 0; j < noOfPoints; j++) {
 		    gcd.x_data[0][j] = faret.value[j];	    	    		
-		    System.out.println( "Time value[" + j + "]: " + faret.value[j]);
 		}	    
 		
 		for ( i = 0; i < fast_cnt; i++) {

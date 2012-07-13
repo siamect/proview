@@ -404,8 +404,8 @@ public class JopSessionRep implements JopSessionIfc {
       ((JopOpWindowFrame)root).setLanguage( language);
   }
 
-  public void openTrend( String[] trendList, String plotGroup) {
-    new JopXttTrend( session, trendList, plotGroup);
+  public void openTrend( String[] trendList) {
+    new JopXttTrend( session, trendList);
   }
 
   public void openFast( String fastObject) {

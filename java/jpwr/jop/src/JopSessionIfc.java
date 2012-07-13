@@ -64,6 +64,6 @@ public interface JopSessionIfc {
   public void openSearch(String object);
   public void setOpWindowLabelText( String text );
   public void setOpWindowLanguage( int language );
-  public void openTrend( String[] trendList, String plotGroup);
+  public void openTrend( String[] trendList);
   public void openFast( String fastObject);
 }

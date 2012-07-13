@@ -129,7 +129,6 @@ public class JopCurveData
       } 
       
       if ( type == eDataType_MultiTrend) {
-	  System.out.println( "get_borders datatype: " + type);
 	for ( int i = 0; i < cols; i++) {
 	  x_max_value[i] = 1e-37;
 	  x_min_value[i] = 1e37;
@@ -145,7 +144,6 @@ public class JopCurveData
 	}
       } 
       else {
-	  System.out.println( "get_borders datatype: " + type + " rows " + rows[0]);
 	for ( int i = 0; i < 1; i++) {
 	  x_max_value[i] = 1e-37;
 	  x_min_value[i] = 1e37;
@@ -173,7 +171,6 @@ public class JopCurveData
       double axis_width;
 
       if ( type != eDataType_MultiTrend) {
-	  System.out.println( "x_min_value " + x_min_value[0] + " x_max_value " + x_max_value[0]);
 	scale( x_axis_type[i], i, x_value_type[i], x_min_value[i],  x_max_value[i], false, false);
       }
       else {
@@ -554,7 +551,6 @@ public class JopCurveData
 	}
       }
 
-      System.out.println( "Time format: " + time_format);
       switch ( time_format) {
       case eTimeFormat_Float:
 	// Float format
@@ -570,7 +566,6 @@ public class JopCurveData
     
 	format = new String( "%" + format_int + "." +  format_dec + "f");
 	axis_width = 0.65 * format_int + 0.4;
-	System.out.println( "format " + format);
 	break;
       case eTimeFormat_HourMinute:
 	// Hour and minute format
@@ -589,7 +584,6 @@ public class JopCurveData
 	y_max_value_axis[idx] = maxval;
 	y_min_value_axis[idx] = minval;
 	y_trend_lines[idx] = Math.abs(max_lines - min_lines) + 1;
-	System.out.println( "trend_lines " + y_trend_lines[idx] + "   " + idx);
 	y_axis_lines[idx] = (y_trend_lines[idx] - 1) * trendlinequot + 1;
 	y_axis_linelongq[idx] = axlinequot;
 	y_axis_valueq[idx] = axvaluequot;
@@ -604,7 +598,6 @@ public class JopCurveData
 	x_axis_linelongq[idx] = axlinequot;
 	x_axis_valueq[idx] = axvaluequot;
 	x_format[idx] = format;
-	System.out.println( "x_format " + idx + " " + x_format[idx]);
       }
     }
 

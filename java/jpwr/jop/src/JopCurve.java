@@ -58,7 +58,7 @@ public class JopCurve extends JFrame
     static final int COLUMN_SCALE		= 3;
     static final int COLUMN_ATTRIBUTE    	= 4;
     static final int COLUMNS    		= 5;
-
+    static final float ZOOM_FACTOR = 1.2F;
 
     JopSession session;
     JopEngine engine;
@@ -67,6 +67,7 @@ public class JopCurve extends JFrame
     private JTable names;
     private JToolBar toolbar;
     private JScrollPane chartScrollPane;
+    private AxisPanel axisPanel;
     private Chart  chart;
     private Chart  navigator;
     private JopCurveAxis[] yaxis = new JopCurveAxis[JopCurveData.CURVE_MAX_COLS];
@@ -137,7 +138,6 @@ public class JopCurve extends JFrame
 	}
 	chart.setVerticalLines(gcd.x_trend_lines[0]-2);
 	chart.setHorizontalLines(gcd.y_trend_lines[0]-2);
-	System.out.println( "Lines " + (gcd.x_trend_lines[0]-2) + " " + (gcd.y_trend_lines[0]-2));
 	chart.repaint();
 	navigator.repaint();
     }
@@ -201,14 +201,14 @@ public class JopCurve extends JFrame
 	panel1.add(scp1);
 
 	// Y axes
-	AxisPanel panel5 = new AxisPanel();
+        axisPanel = new AxisPanel();
 
 	Dimension dsize = new Dimension( gcd.cols * 40, 700);
-	panel5.setSize(dsize);
-	// panel5.addComponentListener(new AspectRatioListener(this, dsize));
-	panel5.setLayout( new JopCurveAxisLayout());
+	axisPanel.setSize(dsize);
+	// axisPanel.addComponentListener(new AspectRatioListener(this, dsize));
+	axisPanel.setLayout( new JopCurveAxisLayout());
 	for ( int i = 0; i < gcd.cols; i++) {
-	    panel5.add( yaxis[i]);
+	    axisPanel.add( yaxis[i]);
 	}
 
 	// Scrolled chart
@@ -221,8 +221,8 @@ public class JopCurve extends JFrame
 	chartScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 	chartScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 	chartScrollPane.setBounds(new Rectangle( gcd.cols*40, 0, 1000, 700));
-	panel5.add( chartScrollPane);
-	panel2.add( panel5);
+	axisPanel.add( chartScrollPane);
+	panel2.add( axisPanel);
 
 	panel3.add( navigator);
 
@@ -245,7 +245,6 @@ public class JopCurve extends JFrame
 	if ( gcd.type == JopCurveData.eDataType_DsTrend) {
 	    JScrollBar sb = chartScrollPane.getHorizontalScrollBar();
 	    int value = sb.getMaximum();
-	    System.out.println( "Scrollbar maximum " + value);
 	    sb.setValue( value);
 	}
     }
@@ -326,7 +325,6 @@ public class JopCurve extends JFrame
 				 {
 				     public void actionPerformed(ActionEvent event)
 				     {
-					 System.out.println("Button Clicked in JTable Cell " + currentNamesScale);
 					 maxMinDialog( currentNamesScale);
 				     }
 				 }
@@ -383,7 +381,6 @@ public class JopCurve extends JFrame
 
 	public Component getTableCellEditorComponent(JTable table, Object value,
 						     boolean isSelected, int row, int column) {
-	    System.out.println( "Button editor row: " + row);
 	    label = (value == null) ? "" : value.toString();
 	    currentNamesScale = row;
 	    button.setText(label);
@@ -505,6 +502,22 @@ public class JopCurve extends JFrame
 	}
     }
 
+
+    // Time task used to adjust scroll value for zoom in when the scroll value is larger
+    // than the old maximum value.
+    // This has to be done in a timer task as the revalidation doesn't have immediate effect.
+    java.util.Timer timer;
+    int scrollValue;
+    class ScrollSet extends TimerTask {
+	public void run() {
+	    JScrollBar sb = chartScrollPane.getHorizontalScrollBar();
+	    int value = sb.getValue();
+	    int extent = sb.getVisibleAmount();
+	    float new_value = ZOOM_FACTOR * value + (ZOOM_FACTOR - 1) * extent / 2;
+	    sb.setValue( scrollValue);
+	}
+    }
+
     private class MenuAction extends AbstractAction {
 	public MenuAction( String text, Icon icon) {
 	    super( text, icon);
@@ -512,25 +525,53 @@ public class JopCurve extends JFrame
 	public void actionPerformed( ActionEvent e) {
 
 	    if ( e.getActionCommand() == "Zoom In") {
-		chartWidth += 1000;
+		JScrollBar sb = chartScrollPane.getHorizontalScrollBar();
+		int value = sb.getValue();
+		int extent = sb.getVisibleAmount();
+
+		chartWidth *= ZOOM_FACTOR;
 		Dimension d = chartScrollPane.getSize();
 		xaxis.setBounds(new Rectangle(0,d.height - JopCurveChartLayout.AXIS_HEIGHT, chartWidth,30));
 		chart.setFixWidth(chartWidth);
-		chartScrollPane.setPreferredSize( new Dimension( chartWidth, d.height));
+		chart.setVerticalLines(gcd.x_trend_lines[0]-2);
+		chart.setHorizontalLines(gcd.y_trend_lines[0]-2);
+		chart.repaint();
+		axisPanel.revalidate();
+		float new_value = ZOOM_FACTOR * value + (ZOOM_FACTOR - 1) * extent / 2;
+		sb.setValue( (int)new_value);
+		if ( new_value + extent > chartWidth / ZOOM_FACTOR) {
+		    // Maximum value is not changed yet, and a value > old width can't be set.
+		    scrollValue = (int)new_value;
+		    timer = new java.util.Timer();
+		    timer.schedule( new ScrollSet(), 1);
+		}
 	    }
 	    else if ( e.getActionCommand() == "Zoom Out") {
-		chartWidth -= 1000;
+		JScrollBar sb = chartScrollPane.getHorizontalScrollBar();
+		int value = sb.getValue();
+		int extent = sb.getVisibleAmount();
+		chartWidth /= ZOOM_FACTOR;
 		Dimension d = chartScrollPane.getSize();
 		xaxis.setBounds(new Rectangle(0,d.height - JopCurveChartLayout.AXIS_HEIGHT, chartWidth,30));
 		chart.setFixWidth(chartWidth);
-		chartScrollPane.setPreferredSize( new Dimension( chartWidth, d.height));
+		chart.setVerticalLines(gcd.x_trend_lines[0]-2);
+		chart.setHorizontalLines(gcd.y_trend_lines[0]-2);
+		chart.repaint();
+		axisPanel.revalidate();
+		float new_value = 1F/ZOOM_FACTOR * value + (1F/ZOOM_FACTOR - 1) * extent / 2;
+		sb.setValue( (int)new_value);
 	    }
 	    else if ( e.getActionCommand() == "Zoom Reset") {
 		chartWidth = 5000;
 		Dimension d = chartScrollPane.getSize();
 		xaxis.setBounds(new Rectangle(0,d.height - JopCurveChartLayout.AXIS_HEIGHT, chartWidth,30));
 		chart.setFixWidth(chartWidth);
-		chartScrollPane.setPreferredSize( new Dimension( chartWidth, chartScrollPane.getHeight()));
+		// chartScrollPane.setPreferredSize( new Dimension( chartWidth, chartScrollPane.getHeight()));
+		chart.setVerticalLines(gcd.x_trend_lines[0]-2);
+		chart.setHorizontalLines(gcd.y_trend_lines[0]-2);
+		chart.repaint();
+		axisPanel.revalidate();
+		JScrollBar sb = chartScrollPane.getHorizontalScrollBar();
 	    }
 	    else if ( e.getActionCommand() == "Page Left") {
 		JScrollBar sb = chartScrollPane.getHorizontalScrollBar();
@@ -551,7 +592,6 @@ public class JopCurve extends JFrame
 		JScrollBar sb = chartScrollPane.getHorizontalScrollBar();
 		int value = sb.getValue();
 		sb.setValue( value + sb.getVisibleAmount());	   
-		System.out.println( "Page Right value: " + value);
 	    }
 
 	}
@@ -620,8 +660,8 @@ public class JopCurve extends JFrame
 	boolean updateLines = true;
 	int verticalLines = 0;
 	int horizontalLines = 0;
-	int lineColor = 35;
-	int fillColor = 38;
+	int lineColor = GeColor.COLOR_37;
+	int fillColor = GeColor.COLOR_39;
 	int borderColor = 9999;
 
 	public void setVerticalLines( int verticalLines) {
@@ -635,7 +675,8 @@ public class JopCurve extends JFrame
 	public void setFixWidth( float fixWidth) {
 	    this.fixWidth = fixWidth;
 	    float height = getHeight();
-	    setSize(new Dimension((int)fixWidth, (int)height));
+	    //setSize(new Dimension((int)fixWidth, (int)height));
+	    setBounds(new Rectangle(0,0,(int)fixWidth,(int)height));
 	}
 
 	public Dimension getPreferredSize() {

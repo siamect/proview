@@ -161,8 +161,8 @@ public class JopSession {
     ((JopSessionIfc) sessionRep).setOpWindowLanguage( language);
   }
 
-  public void openTrend( String[] trendList, String plotGroup) {
-    ((JopSessionIfc) sessionRep).openTrend( trendList, plotGroup);
+  public void openTrend( String[] trendList) {
+    ((JopSessionIfc) sessionRep).openTrend( trendList);
   }
 
   public void openFast( String fastObject) {

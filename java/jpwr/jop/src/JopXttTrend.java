@@ -77,6 +77,8 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
     CircBuffInfo[] cb_info = new CircBuffInfo[XTT_TREND_MAX];
 
     private class DsTrend {
+	public String DataName;
+	public String Unit;
 	public int NoOfBuffers;
 	public int ScanTime;
 	public int Multiple;
@@ -101,30 +103,30 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 	public String Buffer;
 	public int ElementType;
 	public int ActualDataSize;
+	public String Unit;
 
 	public DsTrendCurve() {}
     }
 
-    public JopXttTrend( String[] trendList, String plotGroup ) {
+    public JopXttTrend( String[] trendList) {
 	engine = new JopEngine( 1000, (Object)this);
 	session = new JopSession( engine, (Object)this);
 
-	init( trendList, plotGroup);
+	init( trendList);
     }
 
-    public JopXttTrend( JopSession session, String[] trendList, String plotGroup ) {
+    public JopXttTrend( JopSession session, String[] trendList) {
 	this.session = session;
 	engine = session.getEngine();
 	
-	init( trendList, plotGroup);
+	init( trendList);
     }
 
     public void close() {
-	System.out.println("JopXttTrend.close");
 	timer.stop();
     }
 
-    void init( String[] trendList, String plotGroup) {
+    void init( String[] trendList) {
 
 	int i, j, k;
 	int start_idx;
@@ -132,28 +134,12 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 
 	timer = new Timer( 1000, this); 
 
-	if ( trendList != null) {
-	    trend_name = trendList;
-	    trend_cnt = trend_name.length;
-	}	
-	else {
-	    // Plotgroup as input
-	    CdhrString ret;
-	    trend_cnt = 0;
-	    for ( i = 0; i < 20; i ++) {
-		ret = engine.gdh.getObjectInfoString( plotGroup + ".YObjectName["+i+"]");
-		if ( ret.evenSts() || ret.str.equals(""))
-		    continue;
-		trend_name[trend_cnt++] = ret.str;
-	    }
-	}
-
-	if ( trend_cnt == 0) {
+	if ( trendList.length == 0) {
 	    System.out.println("Error in trend  configuration");
 	    return;
 	}
 
-	CdhrObjid oret = engine.gdh.nameToObjid( trend_name[0]);
+	CdhrObjid oret = engine.gdh.nameToObjid( trendList[0]);
 	if ( oret.evenSts()) {
 	    System.out.println("Error in trend  configuration");
 	    return;
@@ -165,12 +151,60 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 	}
 	trend_tid = cret.classId;
 
+	if ( trend_tid == Pwrb.cClass_PlotGroup) {
+	    // Plotgroup as input
+	    CdhrString ret;
+	    trend_cnt = 0;
+	    for ( i = 0; i < 20; i ++) {
+		ret = engine.gdh.getObjectInfoString( trendList[0] + ".YObjectName["+i+"]");
+		if ( ret.evenSts() || ret.str.equals(""))
+		    continue;
+		trend_name[trend_cnt++] = ret.str;
+	    }
+
+
+	    oret = engine.gdh.nameToObjid( trend_name[0]);
+	    if ( oret.evenSts()) {
+		System.out.println("Error in trend  configuration");
+		return;
+	    }
+	    cret = engine.gdh.getObjectClass( oret.objid);
+	    if ( cret.evenSts()) {
+		System.out.println("Error in trend  configuration");
+		return;
+	    }
+	    trend_tid = cret.classId;
+	}
+	else {
+	    // DsTrend or DsTrendCurve as input
+	    trend_name = trendList;
+	    trend_cnt = trend_name.length;
+	}	
+
 	if ( trend_tid == Pwrb.cClass_DsTrend) {
 
 	    tp = new DsTrend[trend_cnt];
 	    for ( i = 0; i < trend_cnt; i++) {
 		tp[i] = new DsTrend();
 		
+		CdhrString sret = engine.gdh.getObjectInfoString( trend_name[i] + ".DataName");
+		if ( sret.evenSts()) {
+		    System.out.println("Trend object error, " + trend_name[i]);
+		    return;
+		}
+		tp[i].DataName = sret.str;
+
+		int offs = tp[i].DataName.lastIndexOf('.');
+		if ( offs != -1) {
+		    sret = engine.gdh.getObjectInfoString( tp[i].DataName.substring(0,offs) + ".Unit");
+		    if ( sret.oddSts())
+			tp[i].Unit = sret.str;
+		    else
+			tp[i].Unit = new String();
+		}
+		else
+		    tp[i].Unit = new String();
+
 		CdhrInt ret = engine.gdh.getObjectInfoInt( trend_name[i] + ".ScanTime");
 		if ( ret.oddSts()) {
 		    tp[i].ScanTime = ret.value;
@@ -203,6 +237,7 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 		    System.out.println("Trend object error, " + trend_name[i]);
 		    return;
 		}
+
 		CdhrFloatArray faret = engine.gdh.getObjectInfoFloatArray( trend_name[i] + ".DataBuffer", 478);
 		if ( faret.evenSts()) {
 		    System.out.println("Trend object error, " + trend_name[i]);
@@ -217,7 +252,6 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 	    min_interval = 100000;
 	    int time;
 	    for ( i = 0; i < trend_cnt; i++) {
-		System.out.println( "Multiple " + tp[i].Multiple + " ScanTime " + tp[i].ScanTime + " NoOfBuffers " + tp[i].NoOfBuffers + " NoOfSample " + tp[i].NoOfSample);
 		time = tp[i].Multiple * tp[i].ScanTime * tp[i].NoOfBuffers *
 		    tp[i].NoOfSample;
 		if ( time > max_time)
@@ -235,7 +269,6 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 	    }
     
 	    max_points = max_time / min_interval;
-	    System.out.println( "max_points: " + max_points);
 	    
 	    for ( i = 0; i < trend_cnt; i++) {
 		interval[i] = tp[i].Multiple * tp[i].ScanTime / min_interval;
@@ -270,7 +303,6 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 		int idx = 0;
 		for ( j = start_idx; j >= write_buffer * trend_buff_size/2; j--) {
 		    for ( k = 0; k < interval[i]; k++) {
-			System.out.println( "idx: " + idx + " i: " + i + " j: " + j + " DataBuffer.length: " + tp[i].DataBuffer.length + " gcd.y_data[i].length: " + gcd.y_data[i].length);
 			gcd.y_data[i][idx] = tp[i].DataBuffer[j];
 			idx++;
 		    }
@@ -296,8 +328,8 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 		last_next_index[i] = tp[i].NextWriteIndex[last_buffer[i]];
 		gcd.y_axis_type[i] = JopCurveData.eAxis_y;
 	    
-		gcd.y_name[i] = trend_name[i];
-		gcd.y_unit[i] = new String( "m/s");
+		gcd.y_name[i] = tp[i].DataName;
+		gcd.y_unit[i] = tp[i].Unit;
 		gcd.rows[i] = max_points;
 	    }
 
@@ -326,6 +358,7 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 		int noOfSample;
 		int displayResolution;
 		int timeResolution;
+		String unit;
 
 		tcp[object_cnt] = new DsTrendCurve();
 
@@ -359,9 +392,14 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 		    continue;
 		timeResolution = iret.value;
 		
+		CdhrString sret = engine.gdh.getObjectInfoString( object_names[i] + ".Unit");
+		if ( sret.oddSts())
+		    unit = sret.str;
+		else
+		    unit = new String();
 
 		for ( j = 0; j < 10; j++) {
-		    CdhrString sret = engine.gdh.getObjectInfoString( object_names[i] + ".Attribute["+j+"]");
+		    sret = engine.gdh.getObjectInfoString( object_names[i] + ".Attribute["+j+"]");
 		    if ( sret.oddSts() && !sret.str.equals("")) {
 			tcp[tcp_i] = new DsTrendCurve();
 
@@ -372,7 +410,19 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 			tcp[tcp_i].NoOfSample = noOfSample;
 			tcp[tcp_i].DisplayResolution = displayResolution;
 			tcp[tcp_i].TimeResolution = timeResolution;
+			tcp[tcp_i].Unit = unit;
 			
+			int offs = tcp[tcp_i].AttrName.lastIndexOf('.');
+			if ( offs != -1) {
+			    sret = engine.gdh.getObjectInfoString( tcp[tcp_i].AttrName.substring(0,offs) + ".Unit");
+			    if ( sret.oddSts())
+				tcp[tcp_i].Unit = sret.str;
+			    else
+				tcp[tcp_i].Unit = new String();
+			}
+			else
+			    tcp[tcp_i].Unit = new String();
+
 			sret = engine.gdh.getObjectInfoString( object_names[i] + ".Buffers["+j+"]");
 			if ( sret.evenSts() || sret.str.equals(""))
 			    continue;			
@@ -404,17 +454,14 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 	   
 
 	    for ( i = 0; i < trend_cnt; i++) {
-		System.out.println("Attribute " + tcp[i].AttrName + " Buffer " + tcp[i].Buffer);
 
 		cb_info[i] = new CircBuffInfo();
 		cb_info[i].circAref = tcp[i].AttrRef;
 		cb_info[i].resolution = tcp[i].DisplayResolution;
 		cb_info[i].elementType = tcp[i].ElementType;
 		cb_info[i].samples = (int)(tcp[i].DisplayTime / tcp[i].ScanTime / cb_info[i].resolution);
-		System.out.println( "Samples: " + cb_info[i].samples);
 
 		engine.gdh.getCircBuffInfo( cb_info[i]);
-		System.out.println( "sts: " + cb_info[i].status);
 
 		tcp[i].ActualDataSize = cb_info[i].size;
 
@@ -443,12 +490,10 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 	    for ( i = 0; i < trend_cnt; i++) {
 		gcd.y_data[i] = new double[max_points];
 
-		System.out.println("ElementType " + tcp[i].ElementType + " " + Pwr.eType_Float32);
 		switch ( tcp[i].ElementType) {
 		case Pwr.eType_Float32:
 		    for (  j = 0; j < tcp[i].ActualDataSize; j++) {
 			gcd.y_data[i][j] = (double)((float[])cb_info[i].bufp)[ tcp[i].ActualDataSize - j - 1];
-			System.out.println( j + "  " + (double)((float[])cb_info[i].bufp)[ tcp[i].ActualDataSize - j - 1]); 
 		    }
 		    break;
 		case Pwr.eType_Int32:
@@ -459,7 +504,6 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 		case Pwr.eType_UInt8:
 		    for (  j = 0; j < tcp[i].ActualDataSize; j++) {
 			gcd.y_data[i][j] = (double)((int[])cb_info[i].bufp)[ tcp[i].ActualDataSize - j - 1];
-			System.out.println( j + "  " + (double)((int[])cb_info[i].bufp)[ tcp[i].ActualDataSize - j - 1]); 
 		    }
 		    break;
 		default: ;
@@ -469,7 +513,7 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 		gcd.y_axis_type[i] = JopCurveData.eAxis_y;
 		gcd.y_name[i] = tcp[i].AttrName;      
 		gcd.rows[i] = max_points;
-		gcd.y_unit[i] = new String( "m/s");
+		gcd.y_unit[i] = tcp[i].Unit;
 	    }
 
 	    gcd.cols = trend_cnt;
@@ -494,8 +538,6 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 	gcd.get_borders();
 	gcd.get_default_axis();
 	gcd.select_color(false);
-
-	System.out.println( "Lines h : " + gcd.y_trend_lines[0] + " v: " + gcd.x_trend_lines[0]);
 
 	curve = new JopCurve( session, this, gcd);
 	curve.setFillCurve(false);
@@ -635,7 +677,7 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 	
 	
 	
-	JopXttTrend trend = new JopXttTrend(new String[] {"H28-Trend2"},null);
+	JopXttTrend trend = new JopXttTrend(new String[] {"H28-Plot2"});
     }
 }
 

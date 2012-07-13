@@ -389,7 +389,7 @@ System.out.println( "qcom put finished");
 	    for ( int i = 0; i < cnt; i++)
 	      trendList[i] = tokens.nextToken();
 	      
-	    session.openTrend( trendList, null);
+	    session.openTrend( trendList);
 	  }
           else if ( fast.length() >= cli_arg1.length() &&
 		    fast.substring(0,cli_arg1.length()).equals(cli_arg1)) {
