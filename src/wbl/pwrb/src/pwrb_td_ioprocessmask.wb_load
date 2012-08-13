@@ -69,13 +69,23 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  User1. Device is handled by a user process.
+    !  Reserved for profibus handling.
+    !*/
+    Object Profibus $Bit
+     Body SysBody
+       Attr PgmName = "Profibus"
+       Attr Text = "Reserved"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  User. Device is handled by a user process.
     !*/
     Object User $Bit
      Body SysBody
-       Attr PgmName = "User1"
-       Attr Text = "User1"
-       Attr Value = 4
+       Attr PgmName = "User"
+       Attr Text = "User"
+       Attr Value = 8
      EndBody
     EndObject
     !/**
@@ -85,7 +95,7 @@ SObject pwrb:Type
      Body SysBody
        Attr PgmName = "User2"
        Attr Text = "User2"
-       Attr Value = 8
+       Attr Value = 16
      EndBody
     EndObject
     !/**
@@ -95,7 +105,7 @@ SObject pwrb:Type
      Body SysBody
        Attr PgmName = "User3"
        Attr Text = "User3"
-       Attr Value = 16
+       Attr Value = 32
      EndBody
     EndObject
     !/**
@@ -105,7 +115,7 @@ SObject pwrb:Type
      Body SysBody
        Attr PgmName = "User4"
        Attr Text = "User4"
-       Attr Value = 32
+       Attr Value = 64
      EndBody
     EndObject
   EndObject

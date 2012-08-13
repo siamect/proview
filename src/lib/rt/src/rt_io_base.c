@@ -2114,7 +2114,10 @@ static pwr_tStatus io_init_card(
 	strcpy( attrname, cname);
 	strcat( attrname, ".Process");
 	sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
-	if ( ((EVEN(sts) && ctx->Process == io_mProcess_User) ||
+	if ( ((EVEN(sts) && (ctx->Process == io_mProcess_User || 
+			     ctx->Process == io_mProcess_User2 || 
+			     ctx->Process == io_mProcess_User3 || 
+			     ctx->Process == io_mProcess_User4)) ||
 	      (ODD(sts) && ctx->Process == (int) process)) && !swap) {
 	  if ( process == io_mProcess_Plc) {
 	    /* Check thread also */
