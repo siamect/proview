@@ -2512,6 +2512,7 @@ void wb_vrepmem::classeditorCommit()
 {
   // Set 'newattribute' bit in flag in $Attribute objects to indicate that 
   // template object should be updated with defaultvalues.
+  // Also set Class bit if TypeRef is a cid
   if ( !root_object)
     return;
 
@@ -2532,12 +2533,19 @@ void wb_vrepmem::classeditorCommit()
 	    ((pwr_sParam *)o3->rbody)->Info.Flags |= PWR_MASK_NEWATTRIBUTE;
 	  else
 	    ((pwr_sParam *)o3->rbody)->Info.Flags &= ~PWR_MASK_NEWATTRIBUTE;
+
+	  if ( cdh_tidIsCid( ((pwr_sParam *)o3->rbody)->TypeRef))
+	    ((pwr_sParam *)o3->rbody)->Info.Flags |= PWR_MASK_CLASS;
+
 	  break;
 	case pwr_eClass_Intern:
 	  if ( o3->m_created)
 	    ((pwr_sIntern *)o3->rbody)->Info.Flags |= PWR_MASK_NEWATTRIBUTE;
 	  else
 	    ((pwr_sIntern *)o3->rbody)->Info.Flags &= ~PWR_MASK_NEWATTRIBUTE;
+
+	  if ( cdh_tidIsCid( ((pwr_sIntern *)o3->rbody)->TypeRef))
+	    ((pwr_sIntern *)o3->rbody)->Info.Flags |= PWR_MASK_CLASS;
 	  break;
 	default: ;
 	}
