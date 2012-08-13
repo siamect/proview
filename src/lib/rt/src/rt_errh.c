@@ -237,6 +237,17 @@ errh_Anix()
   return errh_anix;
 }
 
+/**
+ * @brief Set application index for the process.
+ */
+void
+errh_SetAnix(
+  errh_eAnix anix
+)
+{
+  errh_anix = anix;
+}
+
 
 /* Check if a given messagenumber exists,
    return string representation if valid.  */

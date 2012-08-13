@@ -192,6 +192,7 @@ void		*errh_ErrArgL	(int val);
 void		errh_CErrLog	(pwr_tStatus sts, ...);
 char		*errh_Message	(char *string, char severity, char *msg, ...);
 errh_eAnix	errh_Anix       ();
+void		errh_SetAnix	(errh_eAnix anix);
 errh_eSeverity	errh_Severity	(pwr_tStatus);
 
 /** @} */
