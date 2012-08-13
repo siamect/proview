@@ -594,6 +594,8 @@ menu Components
   {
     subgraph	Eurotherm_TC3001  pwr_exe:mcomp_eurotherm_tc3001.pwsg 180
     subgraph	Eurotherm_TC3001Aggr  pwr_exe:mcomp_eurotherm_tc3001aggr.pwsg 180
+    subgraph	Janitza_UMG96S		pwr_exe:mcomp_janitza_umg96s1.pwsg 47	
+    subgraph	Janitza_UMG96S_Large	pwr_exe:mcomp_janitza_umg96s2.pwsg 6		
   }
   menu Profibus
   {
