@@ -192,6 +192,7 @@ pwr_tStatus   time_SetTime  (pwr_tTime*);
 pwr_tDeltaTime *  time_FloatToD (pwr_tDeltaTime*, pwr_tFloat32);
 pwr_tDeltaTime *  time_Float64ToD (pwr_tDeltaTime*, pwr_tFloat64);
 pwr_tFloat32    time_DToFloat (pwr_tFloat32*, pwr_tDeltaTime*);
+pwr_tFloat64    time_DToFloat64 (pwr_tFloat64*, pwr_tDeltaTime*);
 
 pwr_tDeltaTime *  time_Uptime (pwr_tStatus*, pwr_tDeltaTime*, pwr_tDeltaTime*);
 time_tClock   time_Clock  (pwr_tStatus*, pwr_tDeltaTime*);

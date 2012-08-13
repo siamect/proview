@@ -951,7 +951,7 @@ time_Float64ToD (
 }
 
 
-//! Convert time to float.
+//! Convert time to Float32.
 
 pwr_tFloat32
 time_DToFloat (
@@ -960,6 +960,23 @@ time_DToFloat (
 )
 {
   static pwr_tFloat32 flt;
+
+  flt =  1e-9 * dt->tv_nsec  + dt->tv_sec;
+
+  if (f != NULL) *f = flt;
+
+  return flt;
+}
+
+//! Convert time to Float64.
+
+pwr_tFloat64
+time_DToFloat64 (
+  pwr_tFloat64    *f,
+  pwr_tDeltaTime  *dt
+)
+{
+  static pwr_tFloat64 flt;
 
   flt =  1e-9 * dt->tv_nsec  + dt->tv_sec;
 
