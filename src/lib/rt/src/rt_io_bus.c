@@ -186,7 +186,7 @@ static void ConvertAi ( io_tCtx ctx,
   }
 
   if (sig_ai->FilterType == 1 && sig_ai->FilterAttribute[0] > 0 && sig_ai->FilterAttribute[0] > ctx->ScanTime) {
-    actvalue = *(sig_ai->ActualValue) + ctx->ScanTime / sig_ai->FilterAttribute[0] * (actvalue - *(sig_ai->ActualValue));
+    actvalue = *(pwr_tFloat32 *) chanp->vbp + ctx->ScanTime / sig_ai->FilterAttribute[0] * (actvalue - *(pwr_tFloat32 *) chanp->vbp);
   }
 
   sig_ai->SigValue = sigvalue;
