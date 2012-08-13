@@ -1701,7 +1701,13 @@ int XNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
   if ( !xnav->is_authorized())
     return 1;
 
-  xnav->message( ' ', null_str);
+  switch ( event->event) {
+  case flow_eEvent_Resized:
+    break;
+  default:
+    xnav->message( ' ', null_str);
+  }
+
   try {
     switch ( event->event) {
     case flow_eEvent_Key_Up:
