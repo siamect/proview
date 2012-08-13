@@ -100,6 +100,8 @@ public class Gdh
   public final static int GET_ALL_CLASS_ATTRIBUTES_STRING = 56;
   public final static int GET_OBJECT_INFO_FLOAT_ARRAY = 57;
   public final static int GET_OBJECT_INFO_INT_ARRAY = 58;
+  public final static int GET_CIRCBUFF_INFO = 59;
+  public final static int UPDATE_CIRCBUFF_INFO = 60;
 
 
 
@@ -1855,16 +1857,133 @@ public class Gdh
     }
   }
 
+  public int getCircBuffInfo(CircBuffInfo info)
+  {
+    try {
+      out.writeInt(GET_CIRCBUFF_INFO);
+      out.writeInt(info.circAref.objid.oix);
+      out.writeInt(info.circAref.objid.vid);
+      out.writeInt(info.circAref.body);
+      out.writeInt(info.circAref.offset);
+      out.writeInt(info.circAref.size);
+      out.writeInt(info.circAref.flags);
+      out.writeInt(info.samples);
+      out.writeInt(info.resolution);
+      out.writeInt(info.elementType);
+      out.flush();
+      int sts = in.readInt();
+      if(sts % 2 == 0) {
+	info.status = sts;
+        return 0;
+      }
+
+      info.size = in.readInt();
+      info.firstIdx = in.readInt();
+      info.lastIdx = in.readInt();
+      info.offset = in.readInt();
+      info.samples = in.readInt();
+      switch ( info.elementType) {
+      case Pwr.eType_Float32: {
+	  float[] buf = new float[info.size];
+	  for ( int i = 0; i < info.size; i++)
+	      buf[i] = in.readFloat();
+	  info.bufp = buf;
+	  break;
+      }
+      case Pwr.eType_UInt32:
+      case Pwr.eType_Int32:
+      case Pwr.eType_Int16:
+      case Pwr.eType_UInt16:
+      case Pwr.eType_Int8:
+      case Pwr.eType_UInt8: {
+	  int[] buf = new int[info.size];
+	  for ( int i = 0; i < info.size; i++)
+	      buf[i] = in.readInt();
+	  info.bufp = buf;
+	  break;
+      }
+      default: ;
+      }
+    }
+    catch(IOException e) {
+      info.status = __IO_EXCEPTION;
+      return 0;
+    }
+    return 1;
+  }
+
+  public int updateCircBuffInfo(CircBuffInfo[] info, int info_size) 
+  {
+    try {
+      out.writeInt(UPDATE_CIRCBUFF_INFO);
+      out.writeInt(info_size);
+      for ( int i = 0; i < info_size; i++) {
+	out.writeInt(info[i].circAref.objid.oix);
+        out.writeInt(info[i].circAref.objid.vid);
+        out.writeInt(info[i].circAref.body);
+	out.writeInt(info[i].circAref.offset);
+	out.writeInt(info[i].circAref.size);
+	out.writeInt(info[i].circAref.flags);
+	out.writeInt(info[i].samples);
+	out.writeInt(info[i].resolution);
+	out.writeInt(info[i].elementType);
+	out.writeInt(info[i].firstIdx);
+	out.writeInt(info[i].lastIdx);
+	out.writeInt(info[i].offset);
+      }
+      out.flush();
+      int sts = in.readInt();
+      if(sts % 2 == 0) {
+	System.out.println( "updateCircBuffInfo: sts " + sts);
+	info[0].status = sts;
+	return 0;
+      }
+
+      for ( int i = 0; i < info_size; i++) {
+        info[i].size = in.readInt();
+	info[i].firstIdx = in.readInt();
+	info[i].lastIdx = in.readInt();
+	info[i].offset = in.readInt();
+	info[i].samples = in.readInt();
+	switch( info[i].elementType) {
+	case Pwr.eType_Float32: {
+	    float[] buf = new float[info[i].size];
+	    for ( int j = 0; j < info[i].size; j++)
+		buf[j] = in.readFloat();
+	    info[i].bufp = buf;
+	    break;
+	}
+	case Pwr.eType_UInt32:
+	case Pwr.eType_Int32:
+	case Pwr.eType_Int16:
+	case Pwr.eType_UInt16:
+	case Pwr.eType_Int8:
+	case Pwr.eType_UInt8: {
+	    int[] buf = new int[info[i].size];
+	    for ( int j = 0; j < info[i].size; j++)
+		buf[j] = in.readInt();
+	    info[i].bufp = buf;
+	    break;
+	}
+	default: ;
+	}
+      }
+    }
+    catch(IOException e) {
+      info[0].status = __IO_EXCEPTION;
+      return 0;
+    }
+    return 1;
+  }
+ 
   public void logString(String str)
   {
-    try
-    {
+    try {
       out.writeInt(LOG_STRING);
       out.writeUTF(str);
       out.flush();
     }
-    catch(IOException e)
-    {
+    catch(IOException e) {
     }
   }
 
@@ -1891,8 +2010,7 @@ public class Gdh
   {
     String suffix;
     int idx1 = attrName.indexOf("##");
-    if(idx1 < 0)
-    {
+    if(idx1 < 0) {
       return Pwr.eType_Boolean;
     }
 

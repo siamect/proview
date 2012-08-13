@@ -370,10 +370,26 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getSuperClass
 /*
  * Class:     jpwr_rt_Gdh
  * Method:    getObjectBodyDef
- * Signature: (ILjpwr/rt/PwrtAttrRef;)[Ljpwr/rt/GdhrsAttrDef;
+ * Signature: (ILjpwr/rt/PwrtAttrRef;)Ljpwr/rt/GdhrsAttrDef;
  */
 JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectBodyDef
   (JNIEnv *, jobject, jint, jobject);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getCircBuffInfo
+ * Signature: (Ljpwr/rt/CircBuffInfo;)I
+ */
+JNIEXPORT jint JNICALL Java_jpwr_rt_Gdh_getCircBuffInfo
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    updateCircBuffInfo
+ * Signature: (Ljpwr/rt/CircBuffInfo[];I)I
+ */
+JNIEXPORT jint JNICALL Java_jpwr_rt_Gdh_updateCircBuffInfo
+  (JNIEnv *, jobject, jobject, jint);
 
 #ifdef __cplusplus
 }

@@ -76,62 +76,72 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
     JMenuItem item;
 
     if ( methods.openGraphFilter()) {
-	popup.add( item = new JMenuItem( JopLang.transl("Graph")));
+      popup.add( item = new JMenuItem( JopLang.transl("Graph")));
       item.addActionListener( this);
     }
 
     if ( methods.openObjectGraphFilter()) {
-	popup.add( item = new JMenuItem( JopLang.transl("Object Graph")));
+      popup.add( item = new JMenuItem( JopLang.transl("Object Graph")));
+      item.addActionListener( this);
+    }
+
+    if ( methods.trendFilter()) {
+      popup.add( item = new JMenuItem( JopLang.transl("Trend")));
+      item.addActionListener( this);
+    }
+
+    if ( methods.fastFilter()) {
+      popup.add( item = new JMenuItem( JopLang.transl("Fast")));
       item.addActionListener( this);
     }
 
     if ( methods.helpFilter()) {
-	popup.add( item = new JMenuItem( JopLang.transl("Help")));
+      popup.add( item = new JMenuItem( JopLang.transl("Help")));
       item.addActionListener( this);
     }
 
     if ( methods.photoFilter()) {
-	popup.add( item = new JMenuItem( JopLang.transl("Photo")));
+      popup.add( item = new JMenuItem( JopLang.transl("Photo")));
       item.addActionListener( this);
     }
  
     if ( methods.dataSheetFilter()) {
-	popup.add( item = new JMenuItem( JopLang.transl("DataSheet")));
+      popup.add( item = new JMenuItem( JopLang.transl("DataSheet")));
       item.addActionListener( this);
     }
 
     if ( methods.rtNavigatorFilter()) {
-	popup.add( item = new JMenuItem( JopLang.transl("Navigator")));
+      popup.add( item = new JMenuItem( JopLang.transl("Navigator")));
       item.addActionListener( this);
     }
 
     if ( methods.openTraceFilter()) {
-	popup.add( item = new JMenuItem( JopLang.transl("Open Plc")));
+      popup.add( item = new JMenuItem( JopLang.transl("Open Plc")));
       item.addActionListener( this);
     }
 
     if ( methods.openCrossrefFilter()) {
-	popup.add( item = new JMenuItem( JopLang.transl("Crossreferences")));
+      popup.add( item = new JMenuItem( JopLang.transl("Crossreferences")));
       item.addActionListener( this);
     }
 
     if ( methods.helpClassFilter()) {
-	popup.add( item = new JMenuItem( JopLang.transl("Help Class")));
+      popup.add( item = new JMenuItem( JopLang.transl("Help Class")));
       item.addActionListener( this);
     }
  
     if ( methods.circuitDiagramFilter()) {
-	popup.add( item = new JMenuItem( JopLang.transl("CircuitDiagram")));
+      popup.add( item = new JMenuItem( JopLang.transl("CircuitDiagram")));
       item.addActionListener( this);
     }
  
     if ( methods.histEventFilter()){
-	popup.add(item= new JMenuItem( JopLang.transl("Hist Event...")));
+      popup.add(item= new JMenuItem( JopLang.transl("Hist Event...")));
       item.addActionListener( this);
     }
 
     if ( methods.simulateFilter()){
-	popup.add(item= new JMenuItem( JopLang.transl("Simulate")));
+      popup.add(item= new JMenuItem( JopLang.transl("Simulate")));
       item.addActionListener( this);
     }
     popup.addPopupMenuListener( this);
@@ -153,6 +163,12 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
     }
     else if ( event.getActionCommand().equals(JopLang.transl("Graph"))) {
       methods.openGraph();
+    }
+    else if ( event.getActionCommand().equals(JopLang.transl("Trend"))) {
+      methods.trend();
+    }
+    else if ( event.getActionCommand().equals(JopLang.transl("Fast"))) {
+      methods.fast();
     }
     else if ( event.getActionCommand().equals(JopLang.transl("Help"))) {
       methods.help();

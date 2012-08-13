@@ -33,6 +33,8 @@ local_java_sources = \
 	CdhrObjAttr.java \
 	PwrsParInfo.java \
 	GdhrsAttrDef.java \
+	CircBuffInfo.java \
+	GdhrCircBuffInfo.java \
 	Gdh.java \
         Sub.java \
 	SubElement.java \

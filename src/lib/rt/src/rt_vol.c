@@ -848,7 +848,8 @@ vol_OidToObject (
   if (op == NULL) {
     if (lo_flags & gdb_mLo_remote) {
       vp = hash_Search(sts, gdbroot->vid_ht, &oid.vid); 
-      if (vp == NULL) pwr_Return(NULL, sts, GDH__NOSUCHVOL);
+      if (vp == NULL) pwr_Return(NULL, sts, GDH__NOSUCHOBJ);
+      if (vp->l.flags.b.isNative) pwr_Return(NULL, sts, GDH__NOTMOUNTED);
       if (!vp->l.flags.b.isMounted) pwr_Return(NULL, sts, GDH__NOTMOUNTED);
 
       if (vp->l.flags.m & lo_flags) {

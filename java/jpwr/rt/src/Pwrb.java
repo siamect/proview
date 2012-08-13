@@ -158,10 +158,12 @@ public class Pwrb {
   public static final int cClass_drive = 131896;
   public static final int cClass_DsFast = 131904;
   public static final int cClass_DsFastConf = 131912;
+  public static final int cClass_DsFastCurve = 133616;
   public static final int cClass_DsHist = 131920;
   public static final int cClass_DsHistServer = 131928;
   public static final int cClass_DsTrend = 131936;
   public static final int cClass_DsTrendConf = 131944;
+  public static final int cClass_DsTrendCurve = 135816;
   public static final int cClass_DSup = 131952;
   public static final int cClass_Dv = 131960;
   public static final int cClass_DvArea = 131968;

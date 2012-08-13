@@ -1304,7 +1304,27 @@ public class XttTree extends JPanel
         Logg.loggToApplet("Select an object");
         return;
       }
-      String cmd = "open graph/class/inst=" + name;
+      
+      int cid = 0;
+      CdhrObjid oret = gdh.nameToObjid(name);
+      if ( oret.oddSts()) {
+	  CdhrClassId cret = gdh.getObjectClass(oret.objid);
+	  if ( cret.oddSts())
+	      cid = cret.getClassId();
+      }
+      String cmd;
+      switch ( cid) {
+      case Pwrb.cClass_DsTrend:
+      case Pwrb.cClass_DsTrendCurve:
+      case Pwrb.cClass_PlotGroup:
+	  cmd = "open trend/name=" + name;
+	  break;
+      case Pwrb.cClass_DsFastCurve:
+	  cmd = "open fast/name=" + name;
+	  break;
+      default:
+	  cmd = "open graph/class/inst=" + name;
+      }
       session.executeCommand(cmd);
     }
     catch(Exception e) {

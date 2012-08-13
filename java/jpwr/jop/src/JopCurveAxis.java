@@ -43,9 +43,9 @@ import javax.swing.*;
 import java.awt.event.*;
 import jpwr.rt.*;
 
-public class JopAxis extends JComponent {
+public class JopCurveAxis extends JComponent {
   Dimension size;
-  public JopAxis()
+  public JopCurveAxis()
   {
     try {
       jbInit();
@@ -154,7 +154,8 @@ public class JopAxis extends JComponent {
   float hTextPosX[];
   float hTextPosY[];
   String hText[];
-  float oldWidth;
+  float oldHeight;
+  float heightOrig = 0;
   float widthOrig = 0;
   public void paintComponent(Graphics g1) {
     int i, j;
@@ -166,13 +167,14 @@ public class JopAxis extends JComponent {
     float value;
     boolean drawText = (minValue != maxValue);
 
-    if ( widthOrig == 0)
+    if ( heightOrig == 0) {
+      heightOrig = height;
       widthOrig = width;
-
+    }
     //g.setFont( font);
     g.setFont( font.deriveFont( width / widthOrig * font.getSize()));
 
-    if ( shapes == null || width != oldWidth) {
+    if ( shapes == null || height != oldHeight) {
       float lineLen = this.lineLength * width / widthOrig;
       shapes = new Shape[1];
       FontRenderContext frc = g.getFontRenderContext();
@@ -186,68 +188,7 @@ public class JopAxis extends JComponent {
           hTextPosX = new float[lines/valueQuotient + 1];
 	}
 
-        if ( 315 <= rotate || rotate < 45.0) {
-          shapes[0] = new Line2D.Float(width, 0F, width, height);
-          delta = height / ( lines - 1);
-	  for ( i = 0; i < lines; i++) {
-            if ( i % longQuotient == 0)
-	      hLines[i] = new Line2D.Float( width - lineLen, delta * i, 
-					    width, delta * i);
-            else
-	      hLines[i] = new Line2D.Float( width - 2F/3F*lineLen, 
-					  delta * i, width, delta * i);
-	    if ( drawText && i % valueQuotient == 0) {
-	      if ( maxValue > minValue)
-	        value = maxValue - (maxValue - minValue) / ( lines - 1) * i;
-              else
-	        value = (minValue - maxValue) / ( lines - 1) * i;
-	      hText[i/valueQuotient] = 
-                 cFormat.format( value, new StringBuffer()).toString();
-              Rectangle2D textBounds = 
-		  g.getFont().getStringBounds( hText[i/valueQuotient], frc);
-              float textHeight = (float) textBounds.getHeight();
-              if ( i == lines - 1)
-                hTextPosY[i/valueQuotient] = height;
-              else if ( i == 0)
-                hTextPosY[i/valueQuotient] = 0F + textHeight/2;
-              else
-                hTextPosY[i/valueQuotient] = delta * i + textHeight/4;
-              hTextPosX[i/valueQuotient] = 0F;
-            }
-          }
-        }
-        else if ( 45.0 <= rotate && rotate < 135.0) {
-          shapes[0] = new Line2D.Float(0F, height, width, height);
-          delta = width / ( lines - 1);
-	  for ( i = 0; i < lines; i++) {
-            if ( i % longQuotient == 0)
-	      hLines[i] = new Line2D.Float( delta * i, height - lineLen, 
-					    delta * i, height);
-            else
-	      hLines[i] = new Line2D.Float( delta * i, 
-			  height - 2F/3F*lineLen, delta * i, height);
-	    if ( drawText && i % valueQuotient == 0) {
-	      if ( maxValue > minValue)
-	        value = (maxValue - minValue) / ( lines - 1) * i;
-              else
-	        value = minValue - (minValue - maxValue) / ( lines - 1) * i;
-	      hText[i/valueQuotient] = 
-                 cFormat.format( value, new StringBuffer()).toString();
-              Rectangle2D textBounds = 
-		  g.getFont().getStringBounds( hText[i/valueQuotient], frc);
-              float textHeight = (float) textBounds.getHeight();
-              float textWidth = (float) textBounds.getWidth();
-              if ( i == lines - 1)
-                hTextPosX[i/valueQuotient] = width - textWidth;
-              else if ( i == 0)                
-                hTextPosX[i/valueQuotient] = 0F;
-              else
-                hTextPosX[i/valueQuotient] = delta * i - textWidth/2;
-              hTextPosY[i/valueQuotient] = 0F + textHeight * 0.75F;
-            }
-          }
-        }
-        else if ( 135.0 <= rotate && rotate < 225.0) {
+        if ( 135.0 <= rotate && rotate < 225.0) {
           shapes[0] = new Line2D.Float(0F, 0F, 0F, height);
           delta = height / ( lines - 1);
 	  for ( i = 0; i < lines; i++) {
@@ -259,7 +200,7 @@ public class JopAxis extends JComponent {
 			      delta * i, 2F/3F*lineLen, delta * i);
 	    if ( drawText && i % valueQuotient == 0) {
 	      if ( maxValue > minValue)
-	        value = (maxValue - minValue) / ( lines - 1) * i;
+	        value = minValue + (maxValue - minValue) / ( lines - 1) * i;
 	      else
 	        value = minValue - (minValue - maxValue) / ( lines - 1) * i;
 	      hText[i/valueQuotient] = 
@@ -267,44 +208,13 @@ public class JopAxis extends JComponent {
               Rectangle2D textBounds = 
 		  g.getFont().getStringBounds( hText[i/valueQuotient], frc);
               float textHeight = (float) textBounds.getHeight();
-              if ( i == lines - 1)
+              if ( i == 0)
                 hTextPosY[i/valueQuotient] = height;
-              else if ( i == 0)
+              else if ( i == lines - 1)
                 hTextPosY[i/valueQuotient] = 0F + textHeight/2;
               else
-                hTextPosY[i/valueQuotient] = delta * i + textHeight/4;
+		  hTextPosY[i/valueQuotient] = height - delta * i + textHeight/4;
               hTextPosX[i/valueQuotient] = lineLen;
-            }
-          }
-        }
-        else if ( 225.0 <= rotate && rotate < 315.0) {
-          shapes[0] = new Line2D.Float(0F, 0F, width, 0F);
-          delta = width / ( lines - 1);
-	  for ( i = 0; i < lines; i++) {
-            if ( i % longQuotient == 0)
-	      hLines[i] = new Line2D.Float( delta * i, 0F,
-					    delta * i, lineLen);
-            else
-	      hLines[i] = new Line2D.Float( delta * i, 
-			  0F , delta * i, 2F/3F*lineLen);
-	    if ( drawText && i % valueQuotient == 0) {
-	      if ( maxValue > minValue)
-	        value = maxValue - (maxValue - minValue) / ( lines - 1) * i;
-              else
-	        value = (minValue - maxValue) / ( lines - 1) * i;
-	      hText[i/valueQuotient] = 
-                 cFormat.format( value, new StringBuffer()).toString();
-              Rectangle2D textBounds = 
-		  g.getFont().getStringBounds( hText[i/valueQuotient], frc);
-              float textHeight = (float) textBounds.getHeight();
-              float textWidth = (float) textBounds.getWidth();
-              if ( i == lines - 1)
-                hTextPosX[i/valueQuotient] = width - textWidth;
-              else if ( i == 0)                
-                hTextPosX[i/valueQuotient] = 0F;
-              else
-                hTextPosX[i/valueQuotient] = delta * i - textWidth/2;
-              hTextPosY[i/valueQuotient] = height;
             }
           }
         }
@@ -312,22 +222,10 @@ public class JopAxis extends JComponent {
     }
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 
-    /*
-    if ( 45.0 <= rotate && rotate < 135.0) {
-      g.translate( -height, 0.0); 
-      g.rotate( - Math.PI * rotate/180, height, 0.0);
+    if ( isOpaque()) {
+      g.setColor(GeColor.getColor(0, fillColor));
+      g.fill( new Rectangle2D.Float( 0F, 0F, width, height));
     }
-    else if ( 135.0 <= rotate && rotate < 225.0)
-    {
-      g.rotate( - Math.PI * rotate/180, width/2, height/2);
-    }
-    else if ( 225.0 <= rotate && rotate < 315.0)
-    {
-      g.translate( width, 0.0); 
-      g.rotate( - Math.PI * rotate/180, 0.0, 0.0);
-      g.transform( AffineTransform.getScaleInstance( height/width, width/height));      
-    }
-    */
     g.setStroke( new BasicStroke((float)lineWidth));
     g.setColor(GeColor.getColor(0, borderColor));
     g.draw( shapes[0]);
@@ -341,7 +239,7 @@ public class JopAxis extends JComponent {
 	}
       } 
     }
-    oldWidth = width;
+    oldHeight = height;
   }
   public Dimension getPreferredSize() { return size;}
   public Dimension getMinimumSize() { return size;}
