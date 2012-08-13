@@ -58,9 +58,11 @@
 static pwr_tStatus ShowConfiguration( xmenu_sMenuCall *ip)
 {
   xtt_slave_sCtx *ctx;
+  pwr_tStatus sts;
   int edit_mode = 0;
   
-  xtt_pb_dp_slave_create_ctx( ip->Pointed, ip->EditorContext, &ctx);
+  sts = xtt_pb_dp_slave_create_ctx( ip->Pointed, ip->EditorContext, &ctx);
+  if ( EVEN(sts)) return sts;
   
   ctx->attr = new GsdAttrGtk( CoXHelpGtk::get_widget(), ctx, 0, ctx->gsd, edit_mode);
   ctx->attr->close_cb = xtt_pb_dp_slave_close_cb;
