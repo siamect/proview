@@ -5010,6 +5010,9 @@ static int	xnav_crossref_func(	void		*client_data,
       case pwr_cClass_Ii:
       case pwr_cClass_Io:
       case pwr_cClass_Co:
+      case pwr_cClass_Sv:
+      case pwr_cClass_ATv:
+      case pwr_cClass_DTv:
 	if ( !file_ptr) {
 	  strcpy( file_str, "*");
 	  file_ptr = file_str;
