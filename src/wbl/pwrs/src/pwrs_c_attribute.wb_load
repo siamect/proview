@@ -117,8 +117,9 @@ SObject pwrs:Class
           Attr Type = pwr_eType_UInt32
           Attr Offset = 40
           Attr Size = 4
-          Attr Flags = PWR_MASK_NOEDIT
-          Attr Flags |= PWR_MASK_NOWBL
+          Attr Flags = 0
+          ! Attr Flags = PWR_MASK_NOEDIT
+          ! Attr Flags |= PWR_MASK_NOWBL
           Attr Elements = 1
           Attr ParamIndex = 4
           Attr TypeRef = pwr_eType_UInt32

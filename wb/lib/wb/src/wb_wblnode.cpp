@@ -994,6 +994,9 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
     o->a.offset = ((pwr_sParam *)o->rbody)->Info.Offset = *boffset;
     if ( o->a.flags & pwr_mAdef_pointer && !(o->a.flags & pwr_mAdef_private)) {
       // Size contains the size if the pointed entity
+      if ( o->a.size == 0)
+	m_vrep->error( "Size of relative pointer should contain target size", getFileName(), line_number);
+      
       if ( o->a.flags & pwr_mAdef_array)
 	*boffset += pwr_cAlignLW * o->a.elements;
       else
