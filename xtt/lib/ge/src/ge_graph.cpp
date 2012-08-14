@@ -4381,8 +4381,10 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
 
   if ( (s = strstr( str, "##")))
     string_to_type( s + 2, (pwr_eType *)type, size, &elements);
-  else
+  else {
     *type = pwr_eType__;
+    *size = 0;
+  }
 
   if ( (s = strchr( str, '#'))) {
     *s = 0;
