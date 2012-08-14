@@ -322,6 +322,12 @@ static pwr_tStatus InitTrendList( trend_tCtx ctx)
     }
     o = ep->o;       
 
+   /* Set init values */
+    o->BufferStatus[0] = 1;
+    o->BufferStatus[1] = 1;
+    o->NoOfBuffers = 2;
+    o->NoOfBufElement = 239;
+
     /* Initiate DsTrend object, sampled attribute must be on local node */	  
 
     sts = gdh_DLRefObjectInfoAttrref((pwr_sAttrRef *)&o->DataName, 
