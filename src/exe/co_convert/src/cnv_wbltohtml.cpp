@@ -630,13 +630,13 @@ endl <<
 	html_clf->f << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
-	html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
+	html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><BR><XMP>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
-	html_clf->f << "</XMP><H3>" << txt + 3 << "</H3><XMP>" << endl;
+	html_clf->f << "</XMP><H3>" << txt + 3 << "</H3><BR><XMP>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
-	html_clf->f << "</XMP><H4>" << txt + 3 << "</H4><XMP>" << endl;
+	html_clf->f << "</XMP><H4>" << txt + 3 << "</H4><BR><XMP>" << endl;
       }
       else
 	html_clf->f << ctx->rw->doc_text[i] << endl;
@@ -908,13 +908,13 @@ int CnvWblToHtml::attribute_exec()
 	  continue;
 	}
 	else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
-	  html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
+	  html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP><BR>" << endl;
 	}
 	else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
-	  html_clf->f << "<H3>" << txt + 3 << "</H3>" << endl;
+	  html_clf->f << "<H3>" << txt + 3 << "</H3><BR>" << endl;
 	}
 	else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
-	  html_clf->f << "<H4>" << txt + 3 << "</H4>" << endl;
+	  html_clf->f << "<H4>" << txt + 3 << "</H4><BR>" << endl;
 	}
 	else {
 	  html_clf->f << ctx->rw->doc_text[i];
@@ -985,13 +985,13 @@ int CnvWblToHtml::attribute_exec()
 	fp_tmp << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
-	fp_tmp << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
+	fp_tmp << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><BR><XMP>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
-	fp_tmp << "</XMP><H3>" << txt + 3 << "</H3><XMP>" << endl;
+	fp_tmp << "</XMP><H3>" << txt + 3 << "</H3><BR><XMP>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
-	fp_tmp << "</XMP><H4>" << txt + 3 << "</H4><XMP>" << endl;
+	fp_tmp << "</XMP><H4>" << txt + 3 << "</H4><BR><XMP>" << endl;
       }
       else
 	fp_tmp << ctx->rw->doc_text[i] << endl;
@@ -1032,13 +1032,13 @@ int CnvWblToHtml::bit_exec()
 	  continue;
 	}
 	else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
-	  html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
+	  html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP><BR>" << endl;
 	}
 	else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
-	  html_clf->f << "<H3>" << txt + 3 << "</H3>" << endl;
+	  html_clf->f << "<H3>" << txt + 3 << "</H3><BR>" << endl;
 	}
 	else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
-	  html_clf->f << "<H4>" << txt + 3 << "</H4>" << endl;
+	  html_clf->f << "<H4>" << txt + 3 << "</H4><BR>" << endl;
 	}
 	else {
 	  html_clf->f << ctx->rw->doc_text[i];
@@ -1081,13 +1081,13 @@ int CnvWblToHtml::bit_exec()
 	fp_tmp << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
-	fp_tmp << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
+	fp_tmp << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><BR><XMP>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
-	fp_tmp << "</XMP><H3>" << txt + 3 << "</H3><XMP>" << endl;
+	fp_tmp << "</XMP><H3>" << txt + 3 << "</H3><BR><XMP>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
-	fp_tmp << "</XMP><H4>" << txt + 3 << "</H4><XMP>" << endl;
+	fp_tmp << "</XMP><H4>" << txt + 3 << "</H4><BR><XMP>" << endl;
       }
       else
 	fp_tmp << ctx->rw->doc_text[i] << endl;
@@ -1265,13 +1265,13 @@ endl <<
 	html_clf->f << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
-	html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
+	html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><BR><XMP>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
-	html_clf->f << "</XMP><H3>" << txt + 3 << "</H3><XMP>" << endl;
+	html_clf->f << "</XMP><H3>" << txt + 3 << "</H3><BR><XMP>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
-	html_clf->f << "</XMP><H4>" << txt + 3 << "</H4><XMP>" << endl;
+	html_clf->f << "</XMP><H4>" << txt + 3 << "</H4><BR><XMP>" << endl;
       }
       else
 	html_clf->f << ctx->rw->doc_text[i] << endl;
