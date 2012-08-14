@@ -1056,7 +1056,7 @@ void GrowNode::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
 	    ((GrowNode *)colornode)->color_tone == glow_eDrawTone_No)
     colornode = (void *) this;
 
-  if ( ((GrowNode *)node)->invisible)
+  if ( ((GrowNode *)node)->invisible || invisible)
     return;
 
   if ( input_focus) {
