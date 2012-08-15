@@ -4012,7 +4012,7 @@ static int	xnav_close_func(	void		*client_data,
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "ALL", strlen( arg1_str)) == 0)
   {
-    char except_str[80];
+    char except_str[400];
     char name_array[20][80];
     int names;
     ApplListElem *elem, *next_elem;
