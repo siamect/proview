@@ -2222,6 +2222,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		fprintf( file, "appl %s W $pwrp_inc/*.h\n", nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_GraphFiles)
 		fprintf( file, "appl %s W $pwrp_exe/*.pwg\n", nodename_ptr);
+	      if ( *components_ptr & pwr_mDistrComponentMask_XMLFiles)
+		fprintf( file, "appl %s W $pwrp_load/*.xml\n", nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_XttHelpFile)
 		fprintf( file, "appl %s W $pwrp_cnf/%s/xtt_help.dat:$pwrp_cnf/xtt_help.dat $pwrp_exe/xtt_help.dat\n", 
 			 nodename_ptr, nodename_ptr);
@@ -2243,6 +2245,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		fprintf( file, "appl %s W $pwrp_web/*.html\n", nodename_ptr);
 		fprintf( file, "appl %s W $pwrp_web/*.jar\n", nodename_ptr);
 		fprintf( file, "appl %s S $pwrp_web/*.gif\n", nodename_ptr);
+		fprintf( file, "appl %s S $pwrp_web/*.png\n", nodename_ptr);
 		fprintf( file, "appl %s S $pwrp_web/*.jpg\n", nodename_ptr);
 		fprintf( file, "appl %s S $pwrp_web/*.pdf\n", nodename_ptr);
 	      }
