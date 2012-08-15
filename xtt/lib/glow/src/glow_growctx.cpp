@@ -260,9 +260,18 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 
   // Check if any menue is active
   if ( a.a_size && a[a.a_size-1]->type() == glow_eObjectType_GrowMenu) {
+    for ( i = a.a_size-1; i >= 0; i--) {
+      if ( a[i]->type() != glow_eObjectType_GrowMenu)
+	break;
+      switch ( event) {
+      case glow_eEvent_CursorMotion:
+	sts = a[i]->event_handler( &mw, event, x, y, fx, fy);
+	break;
+      default: ;
+      }
+    }
     switch ( event) {
     case glow_eEvent_CursorMotion:
-      sts = a[a.a_size-1]->event_handler( &mw, event, x, y, fx, fy);
       return 1;
     case glow_eEvent_MB1Down:
     case glow_eEvent_MB1Up:
