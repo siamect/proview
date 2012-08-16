@@ -672,6 +672,7 @@ palette PlcEditorPalette
     class Curve
     class DArithm
     class DataArithm
+    class DataArithmL
     class Demux
     class Div
     class Equal

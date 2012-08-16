@@ -452,6 +452,10 @@ typedef char		pwr_tText256	[256];			//!< 256 byte text type.
 */
 typedef char		pwr_tText1024	[1024];			//!< 1024 byte text type.
 /*_*
+  @aref text8192 Text8192
+*/
+typedef char		pwr_tText8192	[8192];			//!< 8192 byte text type.
+/*_*
   @aref url URL
 */
 typedef char		pwr_tURL	[160];			//!< URL type.

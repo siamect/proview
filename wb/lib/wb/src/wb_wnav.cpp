@@ -301,7 +301,7 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
   pwr_tObjid		objid;
   pwr_sAttrRef		*attrref;
   int			sts;
-  static char		str[2048];
+  static char		str[8192];
 
   switch ( type_id ) {
   case pwr_eType_Boolean: {

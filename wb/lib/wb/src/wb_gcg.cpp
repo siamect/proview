@@ -12466,10 +12466,20 @@ int	gcg_comp_m42( gcg_ctx gcgctx, vldh_t_node node)
 	int			error_line_size = sizeof(error_line);
 	char			pointer_name[80];
 	int			codesize;
+	int			buff_size;
 
 #define DATAA_BUFF_SIZE 16000
+#define DATAA_BUFF_SIZEL 48000
 
 	ldhses = (node->hn.wind)->hw.ldhses; 
+
+	switch ( node->ln.cid) {
+	case pwr_cClass_dataarithml:
+	  buff_size = DATAA_BUFF_SIZEL;
+	  break;
+	default:
+	  buff_size = DATAA_BUFF_SIZE;
+	}
 
 	/* Get c-expression stored in devbody */
 	sts = ldh_GetObjectPar( ldhses,
@@ -12486,12 +12496,12 @@ int	gcg_comp_m42( gcg_ctx gcgctx, vldh_t_node node)
 	sprintf( pointer_name, "%c%s", GCG_PREFIX_REF,
 			vldh_IdToStr(0, node->ln.oid));
 
-	newstr = (char *)calloc( 1, DATAA_BUFF_SIZE);
+	newstr = (char *)calloc( 1, buff_size);
 	if ( !newstr) 
 	  return FOE__NOMEMORY;
 
 	sts = dataarithm_convert( expression, newstr, pointer_name, 
-		DATAA_BUFF_SIZE, error_line, &error_line_size, &error_num,
+		buff_size, error_line, &error_line_size, &error_num,
 		&codesize);
 	if (EVEN(sts))
 	{

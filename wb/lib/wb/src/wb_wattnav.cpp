@@ -1074,7 +1074,7 @@ int WAttNav::set_attr_value( brow_tObject node, char *name, char *value_str)
 {
   WItem		*base_item;
   int		sts;
-  char 		buff[1024];
+  char 		buff[8192];
   int		size;
 
   // Check that object still exist

@@ -1050,6 +1050,7 @@ int CnvWblToH::check_typename( char *type_volume, char *type_name)
 	"pwr_tString1",
 	"pwr_tText256",
 	"pwr_tText1024",
+	"pwr_tText8192",
 	"pwr_tURL",
 	"pwr_tOpSysEnum",
 	"pwr_tPrivMask",

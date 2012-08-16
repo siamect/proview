@@ -63,7 +63,7 @@
 #include "wb_tra.h"
 
 
-#define ANNOT_LEN_MAX 	1024
+#define ANNOT_LEN_MAX 	8192
 #define ANNOT_NR_MAX 	8
 
 
