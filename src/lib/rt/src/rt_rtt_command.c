@@ -731,7 +731,7 @@ static int	show_func(	menu_ctx	ctx,
 	else if ( cdh_NoCaseStrncmp( arg1_str, "CHILDREN", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW CHILDREN" */
-	  char		name_str[80];
+	  pwr_tOName   	name_str;
 	  pwr_tObjid	objid;
 
 	  IF_NOGDH_RETURN;
@@ -766,7 +766,7 @@ static int	show_func(	menu_ctx	ctx,
 	  /* Command is "SHOW OBJECT" */
 	  char	class_str[80];
 	  pwr_tOName name_str;
-	  char	hierarchy_str[80];
+	  pwr_tOName hierarchy_str;
 	  char	objdid_str[80];
 	  char	maxobjects_str[80];
 	  char	type_str[80];
@@ -7067,8 +7067,9 @@ static int	rtt_get_child_object_hi_cl_na(
 	pwr_tClassId		obj_class;
 	pwr_tObjid		childobjid;
 	int			name_ok, class_ok;
-	char			obj_name[80];
+	pwr_tOName	       	obj_name;
 	unsigned int		location;
+	char 			*s;
 
 	if ( !global)
 	{
@@ -7097,8 +7098,12 @@ static int	rtt_get_child_object_hi_cl_na(
 		cdh_mName_volumeStrict);
 	  if ( EVEN(sts)) return sts;
 
-	  if ( rtt_wildcard( name, obj_name) != 0)
-	    name_ok = 0;	
+	  if ( rtt_wildcard( name, obj_name) != 0) {
+	    if ( (s = strchr( obj_name, ':'))) {
+	      if ( rtt_wildcard( name, s+1) != 0)
+		name_ok = 0;	
+	    }
+	  }
 	}
 
 	if ( class_ok && name_ok)
@@ -7454,7 +7459,7 @@ int	rtt_menu_classort(
 	int		sts;
 	rtt_t_menu	*menu_ptr;
 	pwr_tClassId	class;
-	char		classname[80];
+	pwr_tOName     	classname;
 	char		dummytxt[120];
 
 	/* Get the size of the menu */
@@ -8148,7 +8153,7 @@ static int rtt_getclasslist_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tClassId	class;
   pwr_tObjid	objid;
 
@@ -8184,7 +8189,7 @@ static int rtt_getrootlist_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tObjid	objid;
 
   if ( arg_count != 0)
@@ -8213,7 +8218,7 @@ static int rtt_getnodeobject_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tObjid	objid;
 
   if ( arg_count != 0)
@@ -8242,7 +8247,7 @@ static int rtt_getnextobject_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tObjid	objid;
   pwr_tObjid	next_objid;
 
@@ -8279,7 +8284,7 @@ static int rtt_getobjectclass_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tObjid	objid;
 
   if ( arg_count != 1)
@@ -8901,7 +8906,7 @@ int	rtt_command_get_input_string(
 int	rtt_learn_start(
 			char		*filename)
 {
-	char	filename_str[80];
+	pwr_tFileName	filename_str;
 
 	/* Add default extention '.rtt_com' if there is no extention given */
 	rtt_get_defaultfilename( filename, filename_str, ".rtt_com");
@@ -9098,7 +9103,7 @@ static int	rtt_set_parameter(
 	pwr_tObjid	value_objid;
 	pwr_eType	parameter_type;
 	unsigned long	parameter_size;
-	char		buffer[80];
+	char		buffer[250];
 	char		*buffer_ptr = buffer;
 	int		value_syntax_error;
 	char		*s;
@@ -10441,9 +10446,9 @@ static int	rtt_set_conversion(	pwr_tObjid	objid,
 	pwr_tClassId	class;
 	pwr_tUInt16	chan_number;
 	pwr_tUInt32	conv_mask;
-	char		name[80];
-	char		card_name[80];
-	char		attrname[120];
+	pwr_tOName     	name;
+	pwr_tOName     	card_name;
+	pwr_tAName     	attrname;
 	pwr_tBoolean	conversion_on;
 
 	sts = gdh_GetObjectClass ( objid, &class);
@@ -10606,9 +10611,9 @@ static int	rtt_set_invert(	pwr_tObjid	objid,
 	pwr_tClassId	class;
 	pwr_tUInt16	chan_number;
 	pwr_tUInt32	inv_mask;
-	char		name[80];
-	char		card_name[80];
-	char		attrname[120];
+	pwr_tOName     	name;
+	pwr_tOName     	card_name;
+	pwr_tAName     	attrname;
 	pwr_tBoolean	invert_on;
 
 	sts = gdh_GetObjectClass ( objid, &class);
@@ -10750,9 +10755,9 @@ static int	rtt_get_invert(	pwr_tObjid	objid,
 	pwr_tClassId	class;
 	pwr_tUInt16	chan_number;
 	pwr_tUInt32	inv_mask;
-	char		name[80];
-	char		card_name[80];
-	char		attrname[120];
+	pwr_tOName     	name;
+	pwr_tOName     	card_name;
+	pwr_tAName     	attrname;
 
 	sts = gdh_GetObjectClass ( objid, &class);
 	if ( EVEN(sts)) return sts;
@@ -10852,9 +10857,9 @@ static int	rtt_get_conversion(	pwr_tObjid	objid,
 	pwr_tClassId	class;
 	pwr_tUInt16	chan_number;
 	pwr_tUInt32	conv_mask;
-	char		name[80];
-	char		card_name[80];
-	char		attrname[120];
+	pwr_tOName     	name;
+	pwr_tOName     	card_name;
+	pwr_tAName     	attrname;
 
 	sts = gdh_GetObjectClass ( objid, &class);
 	if ( EVEN(sts)) return sts;
@@ -10961,9 +10966,9 @@ int	rtt_get_do_test(	pwr_tObjid	objid,
 	pwr_tClassId	class;
 	pwr_tUInt16	chan_number;
 	pwr_tUInt32	test_mask;
-	char		name[80];
-	char		card_name[80];
-	char		attrname[120];
+	pwr_tOName     	name;
+	pwr_tOName     	card_name;
+	pwr_tAName     	attrname;
 
 	sts = gdh_GetObjectClass ( objid, &class);
 	if ( EVEN(sts)) return sts;
@@ -11062,9 +11067,9 @@ int	rtt_set_do_test( pwr_tObjid	objid,
 	pwr_tClassId	class;
 	pwr_tUInt16	chan_number;
 	pwr_tUInt32	test_mask;
-	char		name[80];
-	char		card_name[80];
-	char		attrname[120];
+	pwr_tOName     	name;
+	pwr_tOName     	card_name;
+	pwr_tAName     	attrname;
 	pwr_tBoolean	test_on;
 
 	sts = gdh_GetObjectClass ( objid, &class);
@@ -11202,9 +11207,9 @@ int	rtt_get_do_testvalue(	pwr_tObjid	objid,
 	pwr_tClassId	class;
 	pwr_tUInt16	chan_number;
 	pwr_tUInt32	testvalue_mask;
-	char		name[80];
-	char		card_name[80];
-	char		attrname[120];
+	pwr_tOName     	name;
+	pwr_tOName     	card_name;
+	pwr_tAName     	attrname;
 
 	sts = gdh_GetObjectClass ( objid, &class);
 	if ( EVEN(sts)) return sts;
@@ -11303,9 +11308,9 @@ int	rtt_set_do_testvalue(	pwr_tObjid	objid,
 	pwr_tClassId	class;
 	pwr_tUInt16	chan_number;
 	pwr_tUInt32	testvalue_mask;
-	char		name[80];
-	char		card_name[80];
-	char		attrname[120];
+	pwr_tOName     	name;
+	pwr_tOName     	card_name;
+	pwr_tAName     	attrname;
 	pwr_tBoolean	test_value;
 
 	sts = gdh_GetObjectClass ( objid, &class);
