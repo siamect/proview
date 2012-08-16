@@ -1135,6 +1135,9 @@ volumes (
 
     for (i = 0; i < vmp->count; i++) {
 
+      if (vmp->g[i].cid == pwr_eClass_SharedVolume)
+	continue;
+
       if (vmp->g[i].cid == pwr_eClass_ClassVolume ||
 	  vmp->g[i].cid == pwr_eClass_DetachedClassVolume) {
         cvolcm_AddClassVolume(&sts, np, &vmp->g[i]);
