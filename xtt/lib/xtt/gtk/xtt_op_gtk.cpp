@@ -91,6 +91,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
   text_size(12)
 {
   pwr_tStatus sts;
+  int root_width, root_height;
   memset( a_exist, 0, sizeof(a_exist));
   memset( a_active, 0, sizeof(a_active));
   GdkColor red_color;
@@ -103,6 +104,11 @@ OpGtk::OpGtk( void *op_parent_ctx,
 
   gtk_window_set_decorated( GTK_WINDOW(toplevel), FALSE);
   CoWowGtk::SetWindowIcon( toplevel);
+  GdkWindow *rootwindow = gtk_widget_get_root_window( toplevel);
+  gdk_drawable_get_size( rootwindow, &root_width, &root_height);
+  if ( root_width / root_height >= 2)
+    // Assume two screens
+    root_width = root_width / 2;
 
   pwr_tFileName fname;
   dcli_translate_filename( fname, "$pwr_exe/xtt_alarm_active.png");
@@ -577,6 +583,23 @@ OpGtk::OpGtk( void *op_parent_ctx,
     gtk_box_pack_start( GTK_BOX(status_bar), GTK_WIDGET(title_label), FALSE, FALSE, 20);
 
     // Add node supervision buttons
+    int padding1, padding2, buttonwidth;
+    if ( sup_vect.size() > 10) {
+      padding1 = 0;
+      padding2 = 0;
+      buttonwidth = (root_width - 350) / sup_vect.size();
+    }
+    else if ( sup_vect.size() > 6) {
+      padding1 = 8;
+      padding2 = 5;
+      buttonwidth = (root_width - 350) / sup_vect.size() - 2 * padding2;
+    }
+    else {
+      padding1 = 8;
+      padding2 = 5;
+      buttonwidth = 0;
+    }
+
     for ( unsigned int i = 0; i < sup_vect.size(); i++) {
       GtkWidget *node_label = gtk_label_new("");
       snprintf( text, sizeof(text), "<span size=\"%d\">%s</span>", 12 * 1024, sup_vect[i].node_name);
@@ -586,15 +609,19 @@ OpGtk::OpGtk( void *op_parent_ctx,
       GtkWidget *node_hbox = gtk_hbox_new( FALSE, 0);
       dcli_translate_filename( fname, "$pwr_exe/xtt_ind_gray2.png");
       GtkWidget *node_image = gtk_image_new_from_file( fname);
-      gtk_box_pack_start( GTK_BOX(node_hbox), GTK_WIDGET(node_image), FALSE, FALSE, 8);
-      gtk_box_pack_start( GTK_BOX(node_hbox), GTK_WIDGET(node_label), FALSE, FALSE, 8);
+      gtk_box_pack_start( GTK_BOX(node_hbox), GTK_WIDGET(node_image), FALSE, FALSE, padding1);
+      gtk_box_pack_start( GTK_BOX(node_hbox), GTK_WIDGET(node_label), FALSE, FALSE, padding1);
+      if ( buttonwidth)
+	gtk_widget_set_size_request( node_button, buttonwidth, -1);
       gtk_container_add( GTK_CONTAINER(node_button), node_hbox);
       sup_vect[i].imagew = (void *)node_image;
       sup_vect[i].buttonw = (void *)node_button;
       g_signal_connect( node_button, "clicked", G_CALLBACK(activate_sup_node), this);
       g_object_set( node_button, "can-focus", FALSE, NULL);
-      gtk_box_pack_start( GTK_BOX(status_bar), GTK_WIDGET(node_button), FALSE, FALSE, 5);
+      gtk_box_pack_start( GTK_BOX(status_bar), GTK_WIDGET(node_button), FALSE, FALSE, padding2);
     }
+    if ( buttonwidth)
+      gtk_widget_set_size_request( status_bar, root_width - 6, -1);
   }
 
   // Main window
@@ -651,14 +678,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
     activate_aalarm_decr( 0, this);
   }
 
-  int width, height;
-  GdkWindow *rootwindow = gtk_widget_get_root_window( toplevel);
-  gdk_drawable_get_size( rootwindow, &width, &height);
-  // gtk_window_get_size( GTK_WINDOW(toplevel), &width, &height);
-  if ( width / height >= 2)
-    // Assume two screens
-    width = width / 2;
-  gtk_window_resize( GTK_WINDOW(toplevel), width - 6, OP_HEIGHT_MIN);
+  gtk_window_resize( GTK_WINDOW(toplevel), root_width - 6, OP_HEIGHT_MIN);
   gtk_window_move( GTK_WINDOW(toplevel), 0, 0);
 
   wow = new CoWowGtk( toplevel);
