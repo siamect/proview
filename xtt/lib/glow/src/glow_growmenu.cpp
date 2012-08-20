@@ -202,13 +202,16 @@ void GrowMenu::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
     ur_x = ll_x + int(min_width * w->zoom_factor_x);
   ur_y = ll_y + int(tot_z_height);
 
-  if ( ur_y > w->window_height + w->offset_y + w->subwindow_y) {
+  if ( ur_y > w->window_height  + w->subwindow_y) {
     // Outside window border
-    trf.move( 0, double(ur_y - (w->window_height + w->offset_y + w->subwindow_y)) / w->zoom_factor_y);
-    ur_y = w->window_height + w->offset_y + w->subwindow_y;
+    ur_y = w->window_height + w->subwindow_y;
     ll_y = ur_y - int(tot_z_height);
-    ll.posit_z( ll.z_x, ll_y + w->offset_y + w->subwindow_y);
-    ur.posit_z( ur.z_x, ur_y + w->offset_y + w->subwindow_y); // Might not always be correct?
+    ll.posit_z( ll.z_x, ll_y + w->offset_y);
+    ur.posit_z( ur.z_x, ur_y + w->offset_y); // Might not always be correct?
+    ll_x = int( ll.x * w->zoom_factor_x) - w->offset_x;
+    ll_y = int( ll.y * w->zoom_factor_y) - w->offset_y;
+    ur_x = ll_x + max_z_width + 15 + int(pulldown_found * arrow_size);
+    ur_y = ll_y + int(tot_z_height);
   }
   else
     ur.posit_z( ur_x + w->offset_x, ur_y + w->offset_y);
