@@ -1743,6 +1743,9 @@ extern "C" {
   */
   void grow_SetObjectVisibility( grow_tObject object, glow_eVis visibility);
 
+  //! Get object visibility.
+  glow_eVis grow_GetObjectVisibility( grow_tObject object);
+
   //! Rotate selected objects.
   /*!
     \param ctx		Grow context.

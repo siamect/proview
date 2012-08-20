@@ -2087,6 +2087,15 @@ int GrowNode::get_annotation_text_size( int num, double *tsize)
   return nc->get_annotation_text_size( &trf, num, tsize);
 }
 
+glow_eVis GrowNode::get_visibility()
+{
+  if ( invisible)
+    return glow_eVis_Invisible;
+  if ( dimmed)
+    return glow_eVis_Dimmed;
+  return glow_eVis_Visible;
+}
+
 void GrowNode::set_visibility( glow_eVis visibility)
 {
   switch( visibility) {

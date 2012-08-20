@@ -4101,6 +4101,11 @@ void grow_SetObjectVisibility( grow_tObject object, glow_eVis visibility)
   ((GlowArrayElem *)object)->set_visibility( visibility);
 }
 
+glow_eVis grow_GetObjectVisibility( grow_tObject object)
+{
+  return ((GlowArrayElem *)object)->get_visibility();
+}
+
 void grow_RotateSelectedObjects( grow_tCtx ctx, double angle, 
 	glow_eRotationPoint type)
 {

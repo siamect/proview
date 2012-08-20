@@ -182,6 +182,7 @@ class GlowArrayElem {
     virtual void set_original_color_shift( int shift) {};
     virtual void reset_color_shift() {};
     virtual void set_visibility( glow_eVis visibiliby) {};
+    virtual glow_eVis get_visibility() { return glow_eVis_Visible;}
     virtual void set_transform( GlowTransform *t) {};
     virtual void set_transform_from_stored(  GlowTransform *t) {};
     virtual void store_transform() {};

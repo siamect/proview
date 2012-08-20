@@ -532,6 +532,9 @@ class GrowNode : public GlowNode {
   */
   void set_visibility( glow_eVis visibility);
 
+  //! Get object visibility.
+  glow_eVis get_visibility();
+
   //! Set position relative last stored transform.
   /*!
     \param x	x coordinate.

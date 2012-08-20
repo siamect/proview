@@ -12052,6 +12052,8 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
   int sts;
   grow_tObject next;
   int found;
+  GeDyn 	*next_dyn;
+  GeInputFocus	*next_inputfocus;
 
   switch ( event->event) {
   case glow_eEvent_MB1Click:
@@ -12065,25 +12067,49 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
   case glow_eEvent_Key_Right:
     if ( event->object.object_type != glow_eObjectType_NoObject) {
       found = 0;
-      if ( strcmp( next_horizontal, "") != 0) {
-	sts = grow_FindObjectByName( dyn->graph->grow->ctx, next_horizontal, &next);
-	if ( ODD(sts)) {
+      next_inputfocus = this;
+      while ( !found) {
+	if ( strcmp( next_inputfocus->next_horizontal, "") != 0) {
+	  sts = grow_FindObjectByName( dyn->graph->grow->ctx, next_inputfocus->next_horizontal, 
+				       &next);
+	  if ( EVEN(sts)) 
+	    break;
+
 	  // Check that this object can handle input focus
-	  GeDyn 	*next_dyn;
 	  grow_GetUserData( next, (void **)&next_dyn);
-	  if ( next_dyn->total_action_type & ge_mActionType_InputFocus)
-	    found = 1;
+	  if ( next_dyn->total_action_type & ge_mActionType_InputFocus) {
+	    for ( GeDynElem *elem = next_dyn->elements; elem; elem = elem->next) {
+	      if ( elem->action_type == ge_mActionType_InputFocus) {
+		next_inputfocus = (GeInputFocus *)elem;
+		found = 1;
+		break;
+	      }
+	    }
+	    if ( found && grow_GetObjectVisibility( next) != glow_eVis_Visible)
+	      found = 0;
+	  }
 	}
-      }
-      else if ( strcmp( next_tab, "") != 0) {
-	sts = grow_FindObjectByName( dyn->graph->grow->ctx, next_tab, &next);
-	if ( ODD(sts)) {
+	else if ( strcmp( next_inputfocus->next_tab, "") != 0) {
+	  sts = grow_FindObjectByName( dyn->graph->grow->ctx, next_inputfocus->next_tab, &next);
+	  if ( EVEN(sts))
+	    break;
+	  
 	  // Check that this object can handle input focus
-	  GeDyn 	*next_dyn;
 	  grow_GetUserData( next, (void **)&next_dyn);
-	  if ( next_dyn->total_action_type & ge_mActionType_InputFocus)		
-	    found = 1;
+	  if ( next_dyn->total_action_type & ge_mActionType_InputFocus) {
+	    for ( GeDynElem *elem = next_dyn->elements; elem; elem = elem->next) {
+	      if ( elem->action_type == ge_mActionType_InputFocus) {
+		next_inputfocus = (GeInputFocus *)elem;
+		found = 1;
+		break;
+	      }
+	    }
+	    if ( found && grow_GetObjectVisibility( next) != glow_eVis_Visible)
+	      found = 0;
+	  }
 	}
+	if ( next_inputfocus == this)
+	  break;
       }
 
       if ( found)
@@ -12244,32 +12270,33 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
   case glow_eEvent_Key_Tab:
     if ( event->object.object_type != glow_eObjectType_NoObject) {
       found = 0;
-      if ( strcmp( next_tab, "") != 0) {
-	sts = grow_FindObjectByName( dyn->graph->grow->ctx, next_tab, &next);
-	if ( ODD(sts)) {
+      next_inputfocus = this;
+      while ( !found) {
+	if ( strcmp( next_inputfocus->next_tab, "") != 0) {
+	  sts = grow_FindObjectByName( dyn->graph->grow->ctx, next_inputfocus->next_tab, &next);
+	  if ( EVEN(sts))
+	    break;
+
 	  // Check that this object can handle input focus
-	  GeDyn 	*next_dyn;
 	  grow_GetUserData( next, (void **)&next_dyn);
-	  if ( next_dyn->total_action_type & ge_mActionType_InputFocus)
-	    found = 1;
+	  if ( next_dyn->total_action_type & ge_mActionType_InputFocus) {
+	    for ( GeDynElem *elem = next_dyn->elements; elem; elem = elem->next) {
+	      if ( elem->action_type == ge_mActionType_InputFocus) {
+		next_inputfocus = (GeInputFocus *)elem;
+		found = 1;
+		break;
+	      }
+	    }
+	    if ( found && grow_GetObjectVisibility( next) != glow_eVis_Visible)
+	      found = 0;
+	  }
 	}
+	if ( next_inputfocus == this)
+	  break;
       }
       if ( found) {
 	grow_SetObjectInputFocus( next, 1, event->event);
-
-	// Mark this object as previous tab
-	if ( grow_GetObjectType( next) == glow_eObjectType_GrowNode ||
-	     grow_GetObjectType( next) == glow_eObjectType_GrowSlider ||
-	     grow_GetObjectType( next) == glow_eObjectType_GrowGroup) {
-	  GeDyn *next_dyn;
-	  grow_GetUserData( next, (void **)&next_dyn);
-	  for ( GeDynElem *elem = next_dyn->elements; elem; elem = elem->next) {
-	    if ( elem->action_type == ge_mActionType_InputFocus) {
-	      ((GeInputFocus *)elem)->prev_tab = object;
-	      break;
-	    }
-	  }
-	}
+	next_inputfocus->prev_tab = object;
       }
       else
 	grow_SetObjectInputFocus( object, 0, event->event);
