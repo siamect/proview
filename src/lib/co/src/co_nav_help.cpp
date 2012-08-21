@@ -190,7 +190,7 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
     else if ( cdh_NoCaseStrncmp( line, "<include>", 9) == 0) {      
       help_remove_spaces( &line[9], include_file);
 
-      if ( !noprop) {
+      if ( !noprop || strstr( include_file, "$pwr_lang") == 0) {
 	sts = help( help_key, help_bookmark, navh_eHelpFile_Other, 
 		    include_file, book_mark, strict);
 	if ( ODD(sts) && !print_all) {
