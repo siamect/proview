@@ -288,7 +288,7 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Hist_getHistList
   //create a new MhrEvent[]
   jobjectArr = (jobjectArray)env->NewObjectArray(nrOfEvents, mhrEventArrCls, NULL);
   
-  printf("nrOfEvents: %d\n", nrOfEvents);
+  // printf("nrOfEvents: %d\n", nrOfEvents);
   sEvent ev;
   //put the result in an objectarray of MhrEvent
   for(i=0;i<nrOfEvents;i++)
@@ -332,6 +332,7 @@ err:
   env->ReleaseStringUTFChars( jtext, cstr_eventText );
   return jobjectArr;
 #else
+  printf( "** Hist server not built with BerkeleyDB\n");
   return 0;
 #endif
 }

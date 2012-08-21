@@ -364,7 +364,7 @@ else
   pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 "/usr/lib/libpthread.so:/usr/lib/libpthread.a:/usr/lib/$hwpl-linux-gnu/libpthread.so"
   pwre_config_check_lib libm      LIBM     lib lib 0 "/usr/lib/libm.so:/usr/lib/libm.a:/usr/lib/$hwpl-linux-gnu/libm.so"
   pwre_config_check_lib libdb     LIBDB    lib lib 0 "/usr/lib/libdb.so:/usr/lib/$hwpl-linux-gnu/libdb.so"
-  pwre_config_check_lib libdb_cxx LIBDB_CXX lib wb 0 "/usr/lib/libdb_cxx.so:/usr/lib/$hwpl-linux-gnu/libdb_cxx.so"
+  pwre_config_check_lib libdb_cxx LIBDB_CXX lib wb 1 "/usr/lib/libdb_cxx.so:/usr/lib/$hwpl-linux-gnu/libdb_cxx.so"
   pwre_config_check_lib libz      LIBZ     lib lib 0 "/usr/lib/libz.so:/usr/lib/libz.a:/usr/lib/$hwpl-linux-gnu/libz.so"
   pwre_config_check_lib libcrypt  LIBCRYPT lib lib 0 "/usr/lib/libcrypt.so:/usr/lib/libcrypt.a:/usr/lib/$hwpl-linux-gnu/libcrypt.so"
   pwre_config_check_lib librt     LIBRT    lib lib 0 "/usr/lib/librt.so:/usr/lib/librt.a:/usr/lib/$hwpl-linux-gnu/librt.so"
