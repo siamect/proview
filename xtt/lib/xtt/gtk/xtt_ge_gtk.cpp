@@ -184,9 +184,9 @@ void XttGeGtk::activate_confirm_ok( GtkWidget *w, gpointer data)
 
   g_object_set( ((XttGeGtk *)ge)->confirm_widget, "visible", FALSE, NULL);
   ge->confirm_open = 0;
-  ge->graph->confirm_ok( ge->current_confirm_object);
   if ( ge->eventlog_cb)
     (ge->eventlog_cb)( ge->parent_ctx, ge, xttlog_eCategory_GeConfirmOk, 0, 0);
+  ge->graph->confirm_ok( ge->current_confirm_object);
 }
 
 void XttGeGtk::activate_confirm_cancel( GtkWidget *w, gpointer data)
