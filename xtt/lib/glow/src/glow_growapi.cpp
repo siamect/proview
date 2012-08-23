@@ -3943,6 +3943,12 @@ void grow_SetObjectPosition( grow_tObject object, double x, double y)
   ((GlowArrayElem *)object)->set_position( x, y);
 }
 
+void grow_MoveObject( grow_tObject object, double x, double y)
+{
+  grow_tCtx ctx = (grow_tCtx)((GlowArrayElem *)object)->get_ctx();
+  ((GlowArrayElem *)object)->move( x * ctx->mw.zoom_factor_x, y * ctx->mw.zoom_factor_y, 0);
+}
+
 void grow_SetObjectScale( grow_tObject object, double scale_x, double scale_y, 
 	double x0, double y0, glow_eScaleType type)
 {

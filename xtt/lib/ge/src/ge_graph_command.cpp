@@ -1911,7 +1911,7 @@ static int	graph_move_func( void		*client_data,
     }
     y0 = double(value);
   }
-  else if ( ODD( dcli_get_qualifier( "/ABSy", str, sizeof(str)))) {
+  else if ( ODD( dcli_get_qualifier( "/ABSY", str, sizeof(str)))) {
     sts = sscanf( str, "%f", &value);
     if ( sts != 1) {
       graph->message('E', "Syntax error");
@@ -1926,8 +1926,9 @@ static int	graph_move_func( void		*client_data,
   }
     
     
-  grow_StoreTransform( graph->current_cmd_object);
-  grow_SetObjectPosition( graph->current_cmd_object, x0, y0);
+  // grow_StoreTransform( graph->current_cmd_object);
+  // grow_SetObjectPosition( graph->current_cmd_object, x0, y0);
+  grow_MoveObject( graph->current_cmd_object, x0, y0);
   grow_SetModified( graph->grow->ctx, 1);
 
   return GE__SUCCESS;

@@ -1537,6 +1537,14 @@ extern "C" {
   */
   void grow_SetObjectPosition( grow_tObject object, double x, double y);
 
+  //! Move the object.
+  /*!
+    \param object	Object to move.
+    \param x		Movement in x direction.
+    \param y		Movement in y directino.
+  */
+  void grow_MoveObject( grow_tObject object, double x, double y);
+
   //! Scale an object. The scale is made form the last stored transform.
   /*!
     \param object	Object to scale.
