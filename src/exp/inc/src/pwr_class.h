@@ -1072,11 +1072,11 @@ struct pwr_s_Node {
   pwr_tDeltaTime	RestartStallTime pwr_dAlignLW;
   pwr_tTime		SystemTime	pwr_dAlignLW;
   pwr_tNetStatus	SystemStatus	pwr_dAlignW;  
-  pwr_tStatus		ProcStatus[60]	pwr_dAlignW;
-  pwr_tStatus		ProcMsgSeverity[60] pwr_dAlignW;
-  pwr_tString80      	ProcMessage[60]	pwr_dAlignW;
-  pwr_tOid		ProcObject[60]	pwr_dAlignW;
-  pwr_tTime		ProcTimeStamp[60] pwr_dAlignLW;
+  pwr_tStatus		ProcStatus[80]	pwr_dAlignW;
+  pwr_tStatus		ProcMsgSeverity[80] pwr_dAlignW;
+  pwr_tString80      	ProcMessage[80]	pwr_dAlignW;
+  pwr_tOid		ProcObject[80]	pwr_dAlignW;
+  pwr_tTime		ProcTimeStamp[80] pwr_dAlignLW;
   pwr_tBoolean		EmergBreakTrue	pwr_dAlignW;
   pwr_tUInt32		EmergBreakSelect pwr_dAlignW;
 };

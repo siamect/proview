@@ -63,11 +63,14 @@ pwrs_Node_Exec (
   pwr_tDeltaTime diff;
   errh_eSeverity severity;
   errh_eSeverity system_severity;
+  errh_eSeverity plc_severity;
   int new_idx = -1;
-  static int supervise[60] = {
+  static int supervise[80] = {
     0,0,0,0,1,1,1,0,1,1,
     1,1,1,0,0,1,0,1,1,1,
     1,1,1,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,
     1,1,1,1,1,1,1,1,1,1,
     1,1,1,1,1,1,1,1,1,1};
@@ -107,7 +110,25 @@ pwrs_Node_Exec (
   else
     reboot_done = 0;
 
+  /* Calculate plc status */
+  new_idx = -1;
+  plc_severity = errh_Severity( np->ProcStatus[errh_eAnix_plc-1]);
+  for ( i = errh_eAnix_plc1 - 1; i < errh_eAnix_plc1 - 1 + errh_cAnix_PlcSize; i++) {
+    severity = errh_Severity( np->ProcStatus[i]);
+    if ( np->ProcStatus[i] != 0 && EVEN(np->ProcStatus[i])) {
+      if ( severity >= plc_severity) {
+	new_idx = i;
+        plc_severity = severity;
+      }
+    }
+  }
+  if ( new_idx != -1)
+    np->ProcStatus[errh_eAnix_plc-1] = np->ProcStatus[new_idx];
+  else if ( EVEN(np->ProcStatus[errh_eAnix_plc-1]))
+    np->ProcStatus[errh_eAnix_plc-1] = PWR__SRUN;
 
+  /* Calculate system status and check timestamp */
+  new_idx = -1;
   system_severity = errh_Severity( np->SystemStatus);
   time_GetTime( &current_time);
   for ( i = 0; i < sizeof(np->ProcStatus)/sizeof(np->ProcStatus[0]); i++) {

@@ -89,175 +89,6 @@ pwr_exe:
 123
 2
 3
-300 pwr_framethin
-301
-2
-20
-2004 
-2000 8
-2001 1
-2002 0
-2003 0
-2009 108
-2010 0
-2005
-6
-600 108
-601 1
-602
-7
-700 8
-701 0
-99
-603
-7
-700 1
-701 0
-99
-99
-2008
-28
-2800 1
-2801 0
-2802 0
-2803 0
-2804 1
-2805 0
-2806 0
-99
-99
-20
-2004 
-2000 1
-2001 1
-2002 4
-2003 0
-2009 108
-2010 0
-2005
-6
-600 108
-601 1
-602
-7
-700 1
-701 4
-99
-603
-7
-700 1
-701 0
-99
-99
-2008
-28
-2800 1
-2801 0
-2802 0
-2803 0
-2804 1
-2805 0
-2806 0
-99
-99
-20
-2004 
-2000 8
-2001 1
-2002 4
-2003 4
-2009 40
-2010 0
-2005
-6
-600 40
-601 1
-602
-7
-700 8
-701 4
-99
-603
-7
-700 1
-701 4
-99
-99
-2008
-28
-2800 1
-2801 0
-2802 0
-2803 0
-2804 1
-2805 0
-2806 0
-99
-99
-20
-2004 
-2000 8
-2001 8
-2002 4
-2003 0
-2009 40
-2010 0
-2005
-6
-600 40
-601 1
-602
-7
-700 8
-701 4
-99
-603
-7
-700 8
-701 0
-99
-99
-2008
-28
-2800 1
-2801 0
-2802 0
-2803 0
-2804 1
-2805 0
-2806 0
-99
-99
-99
-302 0
-304 0
-303
-305 0
-306
-307
-308 0
-321 0
-309 0
-313 0
-322 0
-323 0
-324 0
-325 0
-326 0
-327 0
-310 1
-311 0
-312 
-314 
-315 1
-316 1
-317 0
-318 0
-319 0
-320 0
-328 0
-99
-3
 300 pwr_indsquare
 301
 2
@@ -564,6 +395,175 @@ pwr_exe:
 319 0
 320 0
 328 1077182464
+99
+3
+300 pwr_framethin
+301
+2
+20
+2004 
+2000 8
+2001 1
+2002 0
+2003 0
+2009 108
+2010 0
+2005
+6
+600 108
+601 1
+602
+7
+700 8
+701 0
+99
+603
+7
+700 1
+701 0
+99
+99
+2008
+28
+2800 1
+2801 0
+2802 0
+2803 0
+2804 1
+2805 0
+2806 0
+99
+99
+20
+2004 
+2000 1
+2001 1
+2002 4
+2003 0
+2009 108
+2010 0
+2005
+6
+600 108
+601 1
+602
+7
+700 1
+701 4
+99
+603
+7
+700 1
+701 0
+99
+99
+2008
+28
+2800 1
+2801 0
+2802 0
+2803 0
+2804 1
+2805 0
+2806 0
+99
+99
+20
+2004 
+2000 8
+2001 1
+2002 4
+2003 4
+2009 40
+2010 0
+2005
+6
+600 40
+601 1
+602
+7
+700 8
+701 4
+99
+603
+7
+700 1
+701 4
+99
+99
+2008
+28
+2800 1
+2801 0
+2802 0
+2803 0
+2804 1
+2805 0
+2806 0
+99
+99
+20
+2004 
+2000 8
+2001 8
+2002 4
+2003 0
+2009 40
+2010 0
+2005
+6
+600 40
+601 1
+602
+7
+700 8
+701 4
+99
+603
+7
+700 8
+701 0
+99
+99
+2008
+28
+2800 1
+2801 0
+2802 0
+2803 0
+2804 1
+2805 0
+2806 0
+99
+99
+99
+302 0
+304 0
+303
+305 0
+306
+307
+308 0
+321 0
+309 0
+313 0
+322 0
+323 0
+324 0
+325 0
+326 0
+327 0
+310 1
+311 0
+312 
+314 
+315 1
+316 1
+317 0
+318 0
+319 0
+320 0
+328 0
 99
 99
 124
@@ -8966,11 +8966,11 @@ pwr_exe:
 0
 1006 6.07329
 1007 0.949998
-1008 24.15
+1008 24.1605
 1009 23.4
 1013 6.07329
 1014 0.949998
-1015 24.15
+1015 24.1605
 1016 23.4
 1003
 0
@@ -9034,7 +9034,7 @@ pwr_exe:
 5000 &$object.ProcObject[16]
 99
 55
-5500 open graph/classgraph/instance=&$object.ProcObject[16]
+5500 open graph/file=pwr_c_node_plc/instance=$object
 99
 99
 99
@@ -15462,7 +15462,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcStatus[40]##status
+3100 $object.ProcStatus[60]##status
 3101 38
 99
 99
@@ -15591,7 +15591,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcStatus[40]##status
+1200 $object.ProcStatus[60]##status
 1201 %1m
 1202 1
 1203 1
@@ -15723,7 +15723,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcMsgSeverity[40]##status
+3100 $object.ProcMsgSeverity[60]##status
 3101 38
 99
 99
@@ -15852,7 +15852,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcMessage[40]##string80
+1200 $object.ProcMessage[60]##string80
 1201 %s
 1202 1
 1203 1
@@ -15984,7 +15984,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcStatus[41]##status
+3100 $object.ProcStatus[61]##status
 3101 38
 99
 99
@@ -16113,7 +16113,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcStatus[41]##status
+1200 $object.ProcStatus[61]##status
 1201 %1m
 1202 1
 1203 1
@@ -16245,7 +16245,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcMsgSeverity[41]##status
+3100 $object.ProcMsgSeverity[61]##status
 3101 38
 99
 99
@@ -16374,7 +16374,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcMessage[41]##string80
+1200 $object.ProcMessage[61]##string80
 1201 %s
 1202 1
 1203 1
@@ -16506,7 +16506,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcStatus[42]##status
+3100 $object.ProcStatus[62]##status
 3101 38
 99
 99
@@ -16635,7 +16635,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcStatus[42]##status
+1200 $object.ProcStatus[62]##status
 1201 %1m
 1202 1
 1203 1
@@ -16767,7 +16767,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcMsgSeverity[42]##status
+3100 $object.ProcMsgSeverity[62]##status
 3101 38
 99
 99
@@ -16896,7 +16896,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcMessage[42]##string80
+1200 $object.ProcMessage[62]##string80
 1201 %s
 1202 1
 1203 1
@@ -17028,7 +17028,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcStatus[43]##status
+3100 $object.ProcStatus[63]##status
 3101 38
 99
 99
@@ -17157,7 +17157,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcStatus[43]##status
+1200 $object.ProcStatus[63]##status
 1201 %1m
 1202 1
 1203 1
@@ -17289,7 +17289,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcMsgSeverity[43]##status
+3100 $object.ProcMsgSeverity[63]##status
 3101 38
 99
 99
@@ -17418,7 +17418,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcMessage[43]##string80
+1200 $object.ProcMessage[63]##string80
 1201 %s
 1202 1
 1203 1
@@ -17550,7 +17550,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcStatus[44]##status
+3100 $object.ProcStatus[64]##status
 3101 38
 99
 99
@@ -17679,7 +17679,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcStatus[44]##status
+1200 $object.ProcStatus[64]##status
 1201 %1m
 1202 1
 1203 1
@@ -17811,7 +17811,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcMsgSeverity[44]##status
+3100 $object.ProcMsgSeverity[64]##status
 3101 38
 99
 99
@@ -17940,7 +17940,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcMessage[44]##string80
+1200 $object.ProcMessage[64]##string80
 1201 %s
 1202 1
 1203 1
@@ -18072,7 +18072,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcStatus[45]##status
+3100 $object.ProcStatus[65]##status
 3101 38
 99
 99
@@ -18201,7 +18201,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcStatus[45]##status
+1200 $object.ProcStatus[65]##status
 1201 %1m
 1202 1
 1203 1
@@ -18333,7 +18333,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcMsgSeverity[45]##status
+3100 $object.ProcMsgSeverity[65]##status
 3101 38
 99
 99
@@ -18462,7 +18462,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcMessage[45]##string80
+1200 $object.ProcMessage[65]##string80
 1201 %s
 1202 1
 1203 1
@@ -18594,7 +18594,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcStatus[46]##status
+3100 $object.ProcStatus[66]##status
 3101 38
 99
 99
@@ -18723,7 +18723,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcStatus[46]##status
+1200 $object.ProcStatus[66]##status
 1201 %1m
 1202 1
 1203 1
@@ -18855,7 +18855,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcMsgSeverity[46]##status
+3100 $object.ProcMsgSeverity[66]##status
 3101 38
 99
 99
@@ -18984,7 +18984,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcMessage[46]##string80
+1200 $object.ProcMessage[66]##string80
 1201 %s
 1202 1
 1203 1
@@ -19116,7 +19116,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcStatus[47]##status
+3100 $object.ProcStatus[67]##status
 3101 38
 99
 99
@@ -19245,7 +19245,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcStatus[47]##status
+1200 $object.ProcStatus[67]##status
 1201 %1m
 1202 1
 1203 1
@@ -19377,7 +19377,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcMsgSeverity[47]##status
+3100 $object.ProcMsgSeverity[67]##status
 3101 38
 99
 99
@@ -19506,7 +19506,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcMessage[47]##string80
+1200 $object.ProcMessage[67]##string80
 1201 %s
 1202 1
 1203 1
@@ -19638,7 +19638,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcStatus[48]##status
+3100 $object.ProcStatus[68]##status
 3101 38
 99
 99
@@ -19767,7 +19767,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcStatus[48]##status
+1200 $object.ProcStatus[68]##status
 1201 %1m
 1202 1
 1203 1
@@ -19899,7 +19899,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcMsgSeverity[48]##status
+3100 $object.ProcMsgSeverity[68]##status
 3101 38
 99
 99
@@ -20028,7 +20028,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcMessage[48]##string80
+1200 $object.ProcMessage[68]##string80
 1201 %s
 1202 1
 1203 1
@@ -20160,7 +20160,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcStatus[49]##status
+3100 $object.ProcStatus[69]##status
 3101 38
 99
 99
@@ -20289,7 +20289,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcStatus[49]##status
+1200 $object.ProcStatus[69]##status
 1201 %1m
 1202 1
 1203 1
@@ -20421,7 +20421,7 @@ pwr_exe:
 102 65532
 103 0
 31
-3100 $object.ProcMsgSeverity[49]##status
+3100 $object.ProcMsgSeverity[69]##status
 3101 38
 99
 99
@@ -20550,7 +20550,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.ProcMessage[49]##string80
+1200 $object.ProcMessage[69]##string80
 1201 %s
 1202 1
 1203 1
@@ -20682,14 +20682,14 @@ pwr_exe:
 102 65535
 103 0
 12
-1200 $object.ProcObject[40]##objid
+1200 $object.ProcObject[60]##objid
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 55
-5500 open graph/classgraph/instance=&$object.ProcObject[20]
+5500 open graph/classgraph/instance=&$object.ProcObject[60]
 99
 99
 99
@@ -20817,14 +20817,14 @@ pwr_exe:
 102 65535
 103 0
 12
-1200 $object.ProcObject[41]##objid
+1200 $object.ProcObject[61]##objid
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 55
-5500 open graph/classgraph/instance=&$object.ProcObject[21]
+5500 open graph/classgraph/instance=&$object.ProcObject[61]
 99
 99
 99
@@ -20952,14 +20952,14 @@ pwr_exe:
 102 65535
 103 0
 12
-1200 $object.ProcObject[42]##objid
+1200 $object.ProcObject[62]##objid
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 55
-5500 open graph/classgraph/instance=&$object.ProcObject[22]
+5500 open graph/classgraph/instance=&$object.ProcObject[62]
 99
 99
 99
@@ -21087,14 +21087,14 @@ pwr_exe:
 102 65535
 103 0
 12
-1200 $object.ProcObject[43]##objid
+1200 $object.ProcObject[63]##objid
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 55
-5500 open graph/classgraph/instance=&$object.ProcObject[23]
+5500 open graph/classgraph/instance=&$object.ProcObject[63]
 99
 99
 99
@@ -21222,14 +21222,14 @@ pwr_exe:
 102 65535
 103 0
 12
-1200 $object.ProcObject[44]##objid
+1200 $object.ProcObject[64]##objid
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 55
-5500 open graph/classgraph/instance=&$object.ProcObject[24]
+5500 open graph/classgraph/instance=&$object.ProcObject[64]
 99
 99
 99
@@ -21357,14 +21357,14 @@ pwr_exe:
 102 65535
 103 0
 12
-1200 $object.ProcObject[45]##objid
+1200 $object.ProcObject[65]##objid
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 55
-5500 open graph/classgraph/instance=&$object.ProcObject[25]
+5500 open graph/classgraph/instance=&$object.ProcObject[65]
 99
 99
 99
@@ -21492,14 +21492,14 @@ pwr_exe:
 102 65535
 103 0
 12
-1200 $object.ProcObject[46]##objid
+1200 $object.ProcObject[66]##objid
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 55
-5500 open graph/classgraph/instance=&$object.ProcObject[26]
+5500 open graph/classgraph/instance=&$object.ProcObject[66]
 99
 99
 99
@@ -21627,14 +21627,14 @@ pwr_exe:
 102 65535
 103 0
 12
-1200 $object.ProcObject[47]##objid
+1200 $object.ProcObject[67]##objid
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 55
-5500 open graph/classgraph/instance=&$object.ProcObject[27]
+5500 open graph/classgraph/instance=&$object.ProcObject[67]
 99
 99
 99
@@ -21762,14 +21762,14 @@ pwr_exe:
 102 65535
 103 0
 12
-1200 $object.ProcObject[48]##objid
+1200 $object.ProcObject[68]##objid
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 55
-5500 open graph/classgraph/instance=&$object.ProcObject[28]
+5500 open graph/classgraph/instance=&$object.ProcObject[68]
 99
 99
 99
@@ -21897,14 +21897,14 @@ pwr_exe:
 102 65535
 103 0
 12
-1200 $object.ProcObject[49]##objid
+1200 $object.ProcObject[69]##objid
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 55
-5500 open graph/classgraph/instance=&$object.ProcObject[29]
+5500 open graph/classgraph/instance=&$object.ProcObject[69]
 99
 99
 99

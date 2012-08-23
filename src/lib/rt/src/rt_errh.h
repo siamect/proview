@@ -93,6 +93,7 @@ typedef enum {
 
 
 #define errh_cAnix_SrvSize 40
+#define errh_cAnix_PlcSize 20
 
 /**
  * Application index
@@ -122,26 +123,47 @@ typedef enum {
   errh_eAnix_post  	= 21,
   errh_eAnix_report  	= 22,
   errh_eAnix_sevhistmon = 23,
-  errh_eAnix_appl1	= 41,
-  errh_eAnix_appl2	= 42,
-  errh_eAnix_appl3	= 43,
-  errh_eAnix_appl4	= 44,
-  errh_eAnix_appl5	= 45,
-  errh_eAnix_appl6	= 46,
-  errh_eAnix_appl7	= 47,
-  errh_eAnix_appl8	= 48,
-  errh_eAnix_appl9	= 49,
-  errh_eAnix_appl10	= 50,
-  errh_eAnix_appl11	= 51,
-  errh_eAnix_appl12	= 52,
-  errh_eAnix_appl13	= 53,
-  errh_eAnix_appl14	= 54,
-  errh_eAnix_appl15	= 55,
-  errh_eAnix_appl16	= 56,
-  errh_eAnix_appl17	= 57,
-  errh_eAnix_appl18	= 58,
-  errh_eAnix_appl19	= 59,
-  errh_eAnix_appl20	= 50
+  errh_eAnix_plc1	= 41,
+  errh_eAnix_plc2	= 42,
+  errh_eAnix_plc3	= 43,
+  errh_eAnix_plc4	= 44,
+  errh_eAnix_plc5	= 45,
+  errh_eAnix_plc6	= 46,
+  errh_eAnix_plc7	= 47,
+  errh_eAnix_plc8	= 48,
+  errh_eAnix_plc9	= 49,
+  errh_eAnix_plc10	= 50,
+  errh_eAnix_plc11	= 51,
+  errh_eAnix_plc12	= 52,
+  errh_eAnix_plc13	= 53,
+  errh_eAnix_plc14	= 54,
+  errh_eAnix_plc15	= 55,
+  errh_eAnix_plc16	= 56,
+  errh_eAnix_plc17	= 57,
+  errh_eAnix_plc18	= 58,
+  errh_eAnix_plc19	= 59,
+  errh_eAnix_plc20	= 60,
+  errh_eAnix_appl1	= 61,
+  errh_eAnix_appl2	= 62,
+  errh_eAnix_appl3	= 63,
+  errh_eAnix_appl4	= 64,
+  errh_eAnix_appl5	= 65,
+  errh_eAnix_appl6	= 66,
+  errh_eAnix_appl7	= 67,
+  errh_eAnix_appl8	= 68,
+  errh_eAnix_appl9	= 69,
+  errh_eAnix_appl10	= 70,
+  errh_eAnix_appl11	= 71,
+  errh_eAnix_appl12	= 72,
+  errh_eAnix_appl13	= 73,
+  errh_eAnix_appl14	= 74,
+  errh_eAnix_appl15	= 75,
+  errh_eAnix_appl16	= 76,
+  errh_eAnix_appl17	= 77,
+  errh_eAnix_appl18	= 78,
+  errh_eAnix_appl19	= 79,
+  errh_eAnix_appl20	= 80,
+  errh_eAnix__		= 81
 } errh_eAnix;
 
 /**
@@ -193,6 +215,7 @@ void		errh_CErrLog	(pwr_tStatus sts, ...);
 char		*errh_Message	(char *string, char severity, char *msg, ...);
 errh_eAnix	errh_Anix       ();
 void		errh_SetAnix	(errh_eAnix anix);
+void		errh_SetName	(char *name);
 errh_eSeverity	errh_Severity	(pwr_tStatus);
 
 /** @} */

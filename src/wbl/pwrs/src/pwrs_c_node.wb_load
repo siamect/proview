@@ -204,7 +204,7 @@ SObject pwrs:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	  Attr Flags |= PWR_MASK_ARRAY
-	  Attr Elements = 60
+	  Attr Elements = 80
         EndBody
       EndObject
       !/**
@@ -216,7 +216,7 @@ SObject pwrs:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	  Attr Flags |= PWR_MASK_ARRAY
-	  Attr Elements = 60
+	  Attr Elements = 80
         EndBody
       EndObject
       !/**
@@ -228,7 +228,7 @@ SObject pwrs:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	  Attr Flags |= PWR_MASK_ARRAY
-	  Attr Elements = 60
+	  Attr Elements = 80
         EndBody
       EndObject
       !/**
@@ -240,7 +240,7 @@ SObject pwrs:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	  Attr Flags |= PWR_MASK_ARRAY
-	  Attr Elements = 60
+	  Attr Elements = 80
         EndBody
       EndObject
       !/**
@@ -252,7 +252,7 @@ SObject pwrs:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	  Attr Flags |= PWR_MASK_ARRAY
-	  Attr Elements = 60
+	  Attr Elements = 80
         EndBody
       EndObject
       !/**

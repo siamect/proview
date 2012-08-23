@@ -189,6 +189,8 @@ struct plc_sProcess {
   pwr_sClass_PlcProcess	*PlcProcess;
   pwr_tFullName		nodeName;
   qcom_sQid		eventQ;
+  pwr_tOid		oid;
+  int			index;
   thread_sMutex		io_copy_mutex;
   plc_sArea		base;
 };

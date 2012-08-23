@@ -248,6 +248,17 @@ errh_SetAnix(
   errh_anix = anix;
 }
 
+/**
+ * @brief Set application name for the process.
+ */
+void
+errh_SetName(
+  char *name
+)
+{
+  set_name(name);
+}
+
 
 /* Check if a given messagenumber exists,
    return string representation if valid.  */

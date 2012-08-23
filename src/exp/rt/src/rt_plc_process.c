@@ -178,7 +178,12 @@ int main (
   i = 1/0;
   printf("%d\n", i);
 */
-  pp = init_process();
+  pp = init_process( argv[0]);
+  if ( !pp) {
+    errh_Fatal("Plc process terminated");
+    errh_SetStatus( PWR__SRVTERM);
+    exit(sts);
+  }
 
   qcom_WaitAnd(&sts, &pp->eventQ, &qcom_cQini, ini_mEvent_newPlcInit, qcom_cTmoEternal);
 
@@ -255,10 +260,18 @@ int main (
 }
 
 static plc_sProcess *
-init_process ()
+init_process ( char *name)
 {
   plc_sProcess	*pp;
   pwr_tStatus	sts = PLC__SUCCESS;
+  pwr_tObjid   	pp_oid;
+  int		found;
+  char		busidstr[10];
+  char		pp_name[80];
+  pwr_tObjName  oname;
+  int		busid;
+  char 		*s;
+  int		idx;
 
 #if 0
   thread_SetPrio(NULL, 15);
@@ -279,6 +292,50 @@ init_process ()
     errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
+
+  /* Get PlcProcess object */
+  busid = qcom_MyBus( &sts);
+  if ( EVEN(sts)) return 0;
+
+  sprintf( busidstr, "_%04d_", busid);
+  s = strstr( name, busidstr);
+  if ( s) {
+    strncpy( pp_name, s + 6, sizeof(pp_name));
+    if ( (s = strchr( pp_name, '.')))
+      *s = 0;
+  }
+  else {
+    strcpy( pp_name, "");
+  }
+
+  idx = 0;
+  for ( sts = gdh_GetClassList(pwr_cClass_PlcProcess, &pp_oid);
+	ODD(sts);
+	sts = gdh_GetNextObject(pp_oid, &pp_oid)) {
+
+    sts = gdh_ObjidToName(pp_oid, oname, sizeof(oname), cdh_mName_object);
+    if (EVEN(sts)) return 0;
+
+    if ( cdh_NoCaseStrcmp( pp_name, oname) == 0) {
+      found = 1;
+      break;
+    }
+    idx++;
+  }
+  if (!found) {
+    errh_Error("PlcProcess object not found, %s", pp_name);
+    return 0;
+  }
+
+  pp->index = idx;
+  pp->oid = pp_oid;
+
+  if ( errh_eAnix_plc1 + pp->index < errh_eAnix__)
+    errh_SetAnix( errh_eAnix_plc1 + pp->index);
+  errh_SetName( pp_name);
+
+  sts = gdh_ObjidToPointer(pp_oid, (void *)&pp->PlcProcess);
+  if (EVEN(sts)) return 0;
 
 #if defined OS_VMS
   qdb->thread_lock.isThreaded = 1;
@@ -311,19 +368,12 @@ init_plc (
 {
   pwr_tStatus	sts = PLC__SUCCESS;
   pwr_tObjid   	oid;
-  pwr_tObjid   	pp_oid;
   pwr_tObjid   	io_oid;
   pwr_tObjid	thread_oid;
   int		sec;
   int		msec;
   int		i;
   pwr_tCid	cid;
-  int		busid;
-  int		found;
-  char		busidstr[10];
-  char		pp_name[80];
-  pwr_tObjName  oname;
-  char 		*s;
 
   sts = gdh_GetNodeObject(0, &oid);
   if (EVEN(sts)) {
@@ -332,40 +382,6 @@ init_plc (
   }
 
   sts = gdh_ObjidToPointer(oid, (void *)&pp->Node);
-  if (EVEN(sts)) return sts;
-
-  busid = qcom_MyBus( &sts);
-  if ( EVEN(sts)) return sts;
-
-  sprintf( busidstr, "_%04d_", busid);
-  s = strstr( name, busidstr);
-  if ( s) {
-    strncpy( pp_name, s + 6, sizeof(pp_name));
-    if ( (s = strchr( pp_name, '.')))
-      *s = 0;
-  }
-  else {
-    strcpy( pp_name, "");
-  }
-
-  for ( sts = gdh_GetClassList(pwr_cClass_PlcProcess, &pp_oid);
-	ODD(sts);
-	sts = gdh_GetNextObject(pp_oid, &pp_oid)) {
-
-    sts = gdh_ObjidToName(pp_oid, oname, sizeof(oname), cdh_mName_object);
-    if (EVEN(sts)) return sts;
-
-    if ( cdh_NoCaseStrcmp( pp_name, oname) == 0) {
-      found = 1;
-      break;
-    }
-  }
-  if (!found) {
-    errh_Error("Found no PlcProcess-object %s", pp_name);
-    return 0;
-  }
-
-  sts = gdh_ObjidToPointer(pp_oid, (void *)&pp->PlcProcess);
   if (EVEN(sts)) return sts;
 
 #if defined OS_LINUX
@@ -387,7 +403,7 @@ init_plc (
 #endif
 
   i = 0;
-  sts = gdh_GetChild( pp_oid, &thread_oid);
+  sts = gdh_GetChild( pp->oid, &thread_oid);
   while ( ODD(sts)) {
     sts = gdh_GetObjectClass( thread_oid, &cid);
     if ( EVEN(sts)) return sts;
@@ -400,7 +416,7 @@ init_plc (
   for ( ; i > sizeof(pp->PlcProcess->PlcThreadObjects)/sizeof(pp->PlcProcess->PlcThreadObjects[0]); i++)
     pp->PlcProcess->PlcThreadObjects[i] = pwr_cNObjid;
 
-  aproc_RegisterObject( pp_oid);
+  aproc_RegisterObject( pp->oid);
 
   sts = gdh_GetClassList(pwr_cClass_IOHandler, &io_oid);
   if (EVEN(sts)) {
