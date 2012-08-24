@@ -355,6 +355,7 @@ static void *opcsrv_cyclic( void *arg)
 	  //	   (it->first>>24)&0xFF,(it->first>>16)&0xFF,(it->first>>8)&0xFF,it->first&0xFF);
 	  opcsrv->m_clientlist.erase( it);
 	  opcsrv->m_config->ClientCnt--;
+	  break;
 	}
       }
     }
