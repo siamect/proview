@@ -209,7 +209,7 @@ int main (
     setreuid(ruid, ruid);
 #endif
 
-  qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_newPlcInitDone);
+  qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_newPlcInitDone | pp->sigmask);
   qcom_WaitAnd(&sts, &pp->eventQ, &qcom_cQini, ini_mEvent_newPlcStart, qcom_cTmoEternal);
 
 //  proc_SetPriority(pp->PlcProcess->Prio);
@@ -218,7 +218,7 @@ int main (
   run_threads(pp);
   time_Uptime(&sts, &pp->PlcProcess->StartTime, NULL);
 
-  qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_newPlcStartDone);
+  qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_newPlcStartDone | pp->sigmask);
 
 #if 0
   /* Force the backup to take care initialized backup objects. */
@@ -245,7 +245,7 @@ int main (
     stop_threads(pp);
     save_values(pp);
 
-    qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_oldPlcStopDone);
+    qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_oldPlcStopDone | pp->sigmask);
 
 #if defined OS_ELN
     sts = proc_SetPriority(31);
@@ -328,6 +328,8 @@ init_process ( char *name)
   }
 
   pp->index = idx;
+  if ( idx < 20)
+    pp->sigmask = ini_mEvent_plc1 << idx;
   pp->oid = pp_oid;
 
   if ( errh_eAnix_plc1 + pp->index < errh_eAnix__)

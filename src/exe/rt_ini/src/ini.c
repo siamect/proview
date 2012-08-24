@@ -60,6 +60,7 @@
 #if defined OS_ELN
 # include "ini_time.h"
 #endif
+#include "rt_ini_event.h"
 #include "rt_ini_alias.h"
 #include "rt_ini_msg.h"
 #include "rt_lst.h"
@@ -2039,6 +2040,7 @@ ini_ProcTable (
   char		*s;
   char		buffer[256];
   pwr_tStatus   lsts;
+  int 		plc_idx;
 
   pwr_dStatus(sts, status, INI__SUCCESS);
 
@@ -2118,6 +2120,8 @@ ini_ProcTable (
   pp->proc.flags.b.system = 1;
 #endif
 
+  plc_idx = 0;
+  cp->plc_sigmask = 0;
   for ( lsts = gdh_GetClassList(pwr_cClass_PlcProcess, &oid);
 	ODD(lsts);
 	lsts = gdh_GetNextObject( oid, &oid)) {
@@ -2154,6 +2158,7 @@ ini_ProcTable (
     }
 
     if ( !found) {
+      plc_idx++;
       continue;
     }
 
@@ -2166,6 +2171,8 @@ ini_ProcTable (
     pp->proc.flags.b.user = 1;
     pp->proc.flags.b.k_mode = 1;
     pp->proc.k_size = 30;
+    cp->plc_sigmask |= ini_mEvent_plc1 << plc_idx;
+    plc_idx++;
   }
 
   for (

@@ -161,6 +161,7 @@ typedef struct {
   ini_sFile	nodefile;
   ini_sFile	*plcfile;
   int		plcfile_cnt;
+  unsigned int  plc_sigmask;
   int		busid;
   char		dir[256];
   char		bdir[256]; /* Base dir (pwr_load) */

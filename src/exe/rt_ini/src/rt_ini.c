@@ -250,7 +250,7 @@ start (
     exit(sts);
   }
 
-  qcom_WaitAnd(&sts, &cp->eventQ, &qcom_cQini, ini_mEvent_newPlcStartDone, qcom_cTmoEternal);
+  qcom_WaitAnd(&sts, &cp->eventQ, &qcom_cQini, ini_mEvent_newPlcStartDone | cp->plc_sigmask, qcom_cTmoEternal);
 
   sts = ini_SetAttributeAfterPlc(cp->aliasfile.name, cp->nodename, 0);
   if (EVEN(sts) && sts != INI__FILE)
@@ -447,16 +447,18 @@ restart (
 
 
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_newPlcInit);
-  qcom_WaitAnd(&sts, &cp->eventQ, &qcom_cQini, ini_mEvent_newPlcInitDone, qcom_cTmoEternal);
+  qcom_WaitAnd(&sts, &cp->eventQ, &qcom_cQini, ini_mEvent_newPlcInitDone | cp->plc_sigmask, qcom_cTmoEternal);
   errh_LogInfo(&cp->log, "Entering time critical period, stopping old PLC");
+  qcom_SignalAnd(&sts, &qcom_cQini, ~cp->plc_sigmask);
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_oldPlcStop);
-  qcom_WaitAnd(&sts, &cp->eventQ, &qcom_cQini, ini_mEvent_oldPlcStopDone, qcom_cTmoEternal);
+  qcom_WaitAnd(&sts, &cp->eventQ, &qcom_cQini, ini_mEvent_oldPlcStopDone | cp->plc_sigmask, qcom_cTmoEternal);
   qcom_SignalAnd(&sts, &qcom_cQini, ~ini_mEvent_oldPlcStop);
 
   ini_UpdateBodies(&sts, cp, 0);
 
+  qcom_SignalAnd(&sts, &qcom_cQini, ~cp->plc_sigmask);
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_newPlcStart);
-  qcom_WaitAnd(&sts, &cp->eventQ, &qcom_cQini, ini_mEvent_newPlcStartDone, qcom_cTmoEternal);
+  qcom_WaitAnd(&sts, &cp->eventQ, &qcom_cQini, ini_mEvent_newPlcStartDone | cp->plc_sigmask, qcom_cTmoEternal);
   errh_LogInfo(&cp->log, "Time critical period over, new PLC is running");
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_swapDone);
   

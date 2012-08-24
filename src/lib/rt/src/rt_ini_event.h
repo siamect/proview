@@ -53,10 +53,28 @@ typedef union {
 
     pwr_Bits( swapDone		, 1),
     pwr_Bits( terminate		, 1),
-    pwr_Bits( fill_1	    , 6),,,,,,
+    pwr_Bits( fill_1	    	, 2),,
 
-    pwr_Bits( fill_2	    , 8),,,,,,,,
-    pwr_Bits( fill_3	    , 8),,,,,,,
+    pwr_Bits( plcProc1		, 1),
+    pwr_Bits( plcProc2		, 1),
+    pwr_Bits( plcProc3		, 1),
+    pwr_Bits( plcProc4		, 1),
+    pwr_Bits( plcProc5		, 1),
+    pwr_Bits( plcProc6		, 1),
+    pwr_Bits( plcProc7		, 1),
+    pwr_Bits( plcProc8		, 1),
+    pwr_Bits( plcProc9		, 1),
+    pwr_Bits( plcProc10		, 1),
+    pwr_Bits( plcProc11		, 1),
+    pwr_Bits( plcProc12		, 1),
+    pwr_Bits( plcProc13		, 1),
+    pwr_Bits( plcProc14		, 1),
+    pwr_Bits( plcProc15		, 1),
+    pwr_Bits( plcProc16		, 1),
+    pwr_Bits( plcProc17		, 1),
+    pwr_Bits( plcProc18		, 1),
+    pwr_Bits( plcProc19		, 1),
+    pwr_Bits( plcProc20		, 1)
   ) b;
 
 #define ini_mEvent__			0
@@ -71,6 +89,26 @@ typedef union {
 
 #define ini_mEvent_swapDone		pwr_Bit(8)
 #define ini_mEvent_terminate		pwr_Bit(9)
+#define ini_mEvent_plc1			pwr_Bit(12)
+#define ini_mEvent_plc2			pwr_Bit(13)
+#define ini_mEvent_plc3			pwr_Bit(14)
+#define ini_mEvent_plc4			pwr_Bit(15)
+#define ini_mEvent_plc5			pwr_Bit(16)
+#define ini_mEvent_plc6			pwr_Bit(17)
+#define ini_mEvent_plc7			pwr_Bit(18)
+#define ini_mEvent_plc8			pwr_Bit(19)
+#define ini_mEvent_plc9			pwr_Bit(20)
+#define ini_mEvent_plc10	       	pwr_Bit(21)
+#define ini_mEvent_plc11	       	pwr_Bit(22)
+#define ini_mEvent_plc12	       	pwr_Bit(23)
+#define ini_mEvent_plc13	       	pwr_Bit(24)
+#define ini_mEvent_plc14	       	pwr_Bit(25)
+#define ini_mEvent_plc15	       	pwr_Bit(26)
+#define ini_mEvent_plc16	       	pwr_Bit(27)
+#define ini_mEvent_plc17	       	pwr_Bit(28)
+#define ini_mEvent_plc18	       	pwr_Bit(29)
+#define ini_mEvent_plc19	       	pwr_Bit(30)
+#define ini_mEvent_plc20	       	pwr_Bit(31)
 #define ini_mEvent_			(~ini_mEvent__)
 } ini_mEvent;
  

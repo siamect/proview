@@ -191,6 +191,7 @@ struct plc_sProcess {
   qcom_sQid		eventQ;
   pwr_tOid		oid;
   int			index;
+  unsigned int		sigmask;
   thread_sMutex		io_copy_mutex;
   plc_sArea		base;
 };
