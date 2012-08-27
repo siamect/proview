@@ -40,7 +40,7 @@
 #include <iostream>
 #include <fstream>
 
-#include <X11/Xlib.h>
+// #include <X11/Xlib.h>
 #include "glow.h"
 #include "glow_ctx.h"
 #include "glow_nodeclass.h"
