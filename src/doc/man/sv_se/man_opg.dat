@@ -1545,10 +1545,11 @@ close navigator <t>Stäng navigatorn		<LINK> close navigator
 create opmenuitem <t>Skapa ett menyalternativ i operatörsfönstret <LINK> create opmenuitem
 create item <t>Skapa ett xtt menyalternativ	<LINK> create item
 crossreference<t>Visa korsreferenser		<LINK> crossreference
-exit        <t>Stäng xtt			<LINK> exit
 define      <t>Definiera en symbol		<LINK> define
 delete opmenuitem <t>Ta bort ett xtt menyalternativ <LINK> delete item
 delete item <t>Ta bort ett menyalternativ i operatörsfönstret <LINK> delete item
+eventlist    <t>Hantera händlselistan		<LINK> eventlist
+exit        <t>Stäng xtt			<LINK> exit
 help        <t>Visa hjälp			<LINK> help
 login       <t>Inloggning av användare		<LINK> login
 logout      <t>Utloggning av änvändare		<LINK> logout
@@ -1914,6 +1915,34 @@ xtt> delete item /name=exit
 <H2>Se även
 add menu <LINK> add menu
 create item <LINK> create item
+</TOPIC>
+
+<TOPIC> eventlist <style> function
+Kommando   eventlist
+
+Hantera händelselistan
+
+<b>xtt> eventlist load
+
+Ladda händelselistan.
+
+<b>xtt> eventlist unload
+
+Ta bort händelselistan.
+
+<b>xtt> eventlist acknowledge /priority= 
+
+Kvittera det sista larmet med angiven priritet. Prioriteten kan vara A, B, C, D, I
+eller NOA. NOA kvitterar det sista larmet som inte är ett A larm.
+
+<b>xtt> eventlist acknowledge /all 
+
+Kvittera alla larm.
+
+<H2>Se även
+show alarmlist <LINK> show alarmlist
+show eventlist <LINK> show eventlist
+
 </TOPIC>
 
 <TOPIC> help <style> function

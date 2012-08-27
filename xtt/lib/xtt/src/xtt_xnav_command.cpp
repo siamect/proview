@@ -361,7 +361,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 		{
 			"EVENTLIST",
 			&xnav_eventlist_func,
-			{"dcli_arg1", "/PRIORITY", "/NAME", "",}
+			{"dcli_arg1", "/PRIORITY", "/NAME", "/ALL", "",}
 		},
 		{
 			"TEST",
@@ -2151,11 +2151,17 @@ static int	xnav_eventlist_func(	void		*client_data,
     // Command is "EVENTLIST ACKNOWLEDGE"
     char prio_str[80];
     mh_sEventId *id;
+    int all;
 
-    if ( xnav->ev)
-    {
-      if ( ODD( dcli_get_qualifier( "/PRIORITY", prio_str, sizeof(prio_str))))
-      {
+    all = ODD( dcli_get_qualifier( "/ALL", 0, 0));
+    if ( all) {
+      if ( xnav->ev)
+	xnav->ev->ack_all();
+      return XNAV__SUCCESS;      
+    }
+
+    if ( xnav->ev) {
+      if ( ODD( dcli_get_qualifier( "/PRIORITY", prio_str, sizeof(prio_str)))) {
         cdh_ToUpper( prio_str, prio_str);
         if ( strcmp( prio_str, "A") == 0)
           xnav->ev->ack_last_prio( evlist_eEventType_Alarm, mh_eEventPrio_A);
@@ -2167,8 +2173,7 @@ static int	xnav_eventlist_func(	void		*client_data,
           xnav->ev->ack_last_prio( evlist_eEventType_Alarm, mh_eEventPrio_D);
         else if ( strncmp( prio_str, "I", 1) == 0)
           xnav->ev->ack_last_prio( evlist_eEventType_Info, 0);
-        else if ( strcmp( prio_str, "NOA") == 0)
-        {
+        else if ( strcmp( prio_str, "NOA") == 0) {
           if ( ODD( xnav->ev->get_last_not_acked_prio( &id, 
 			evlist_eEventType_Alarm, mh_eEventPrio_B)))
             xnav->ev->ack_last_prio( evlist_eEventType_Alarm, mh_eEventPrio_B);

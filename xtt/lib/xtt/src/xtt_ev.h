@@ -122,6 +122,7 @@ class Ev {
     int         is_mapped_blk() { return blk_displayed;};
     int		get_alarm_info( evlist_sAlarmInfo *info);
     void 	ack_last_prio( unsigned long type, unsigned long prio);
+    void	ack_all();
     int		get_last_not_acked_prio( mh_sEventId **id, unsigned long type, 
 			unsigned long prio);
     void	create_aliaslist( void *up);
@@ -131,6 +132,7 @@ class Ev {
     void ala_activate_print();
     void blk_activate_print();
     void eve_activate_ack_last();
+    void eve_activate_ack_all();
     void eve_activate_help();
     void eve_activate_helpevent();
     void ala_activate_help();

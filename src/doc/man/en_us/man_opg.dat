@@ -1536,10 +1536,11 @@ close navigator <t>Close the navigator	<LINK> close navigator
 create item <t>Create a menu item in the Xtt menu <LINK> create item
 create opmenuitem <t>Create a menu item in the operator window menu <LINK> create opmenuitem
 crossreference<t>Show crossreferenses	<LINK> crossreference
-exit        <t>close xtt			<LINK> exit
 define      <t>Define a symbol		<LINK> define
 delete item <t>Delete a menu item in the Xtt menu <LINK> delete item
 delete opmenuitem <t>Delete a menu item in the operator window menu <LINK> delete opmenuitem
+eventlist    <t>Handle the eventlist		<LINK> eventlist
+exit        <t>close xtt			<LINK> exit
 help        <t>Display help			<LINK> help
 login       <t>User login			<LINK> login
 logout      <t>User logout			<LINK> logout
@@ -1951,6 +1952,34 @@ xtt> delete item /name=exit
 <H2>related subjects
 add menu <LINK> add menu
 create item <LINK> create item
+</TOPIC>
+
+<TOPIC> eventlist <style> function
+Command   eventlist
+
+Handle the eventlist
+
+<b>xtt> eventlist load
+
+Load the eventlist.
+
+<b>xtt> eventlist unload
+
+Unload the eventlist.
+
+<b>xtt> eventlist acknowledge /priority= 
+
+Acknowledge last alarm of specified priority. Priority can be A, B, C, D, I or NOA.
+NOA acknowleges the last not A alarm.
+
+<b>xtt> eventlist acknowledge /all 
+
+Acknowledge all alarms.
+
+<H2>related subjects
+show alarmlist <LINK> show alarmlist
+show eventlist <LINK> show eventlist
+
 </TOPIC>
 
 <TOPIC> help <style> function

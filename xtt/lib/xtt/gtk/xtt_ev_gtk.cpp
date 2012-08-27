@@ -406,6 +406,11 @@ EvGtk::EvGtk( void *ev_parent_ctx,
 				'k', GdkModifierType(GDK_CONTROL_MASK), 
 				GTK_ACCEL_VISIBLE);
 
+    GtkWidget *functions_ack_all = gtk_menu_item_new_with_mnemonic( 
+				CoWowGtk::translate_utf8("A_cknowledge All"));
+    g_signal_connect( functions_ack_all, "activate", 
+		      G_CALLBACK(ala_activate_ack_all), this);
+
     GtkWidget *functions_open_plc = gtk_menu_item_new_with_mnemonic( 
                       CoWowGtk::translate_utf8("Open _Program"));
     g_signal_connect( functions_open_plc, "activate", 
@@ -424,6 +429,7 @@ EvGtk::EvGtk( void *ev_parent_ctx,
 
     GtkMenu *func_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
     gtk_menu_shell_append(GTK_MENU_SHELL(func_menu), functions_ack_last);
+    gtk_menu_shell_append(GTK_MENU_SHELL(func_menu), functions_ack_all);
     gtk_menu_shell_append(GTK_MENU_SHELL(func_menu), functions_open_plc);
     gtk_menu_shell_append(GTK_MENU_SHELL(func_menu), functions_display_object);
 
@@ -912,6 +918,13 @@ void EvGtk::eve_activate_ack_last( GtkWidget *w, gpointer data)
 void EvGtk::ala_activate_ack_last( GtkWidget *w, gpointer data)
 {
   eve_activate_ack_last( w, data);
+}
+
+void EvGtk::ala_activate_ack_all( GtkWidget *w, gpointer data)
+{
+  Ev *ev = (Ev *)data;
+
+  ev->eve_activate_ack_all();
 }
 
 void EvGtk::eve_activate_zoom_in( GtkWidget *w, gpointer data)

@@ -211,6 +211,11 @@ void Ev::eve_activate_ack_last()
   mh_OutunitAck( &lid);
 }
 
+void Ev::eve_activate_ack_all()
+{
+  ack_all();
+}
+
 void Ev::eve_activate_help()
 {
   if ( help_cb)
@@ -326,6 +331,22 @@ void Ev::ack_last_prio( unsigned long type, unsigned long prio)
     ala->ack( id);
     eve->ack( id);
     mh_OutunitAck( &lid);
+  }
+}
+
+void Ev::ack_all()
+{
+  mh_sEventId *id;
+  int sts;
+
+  sts = ala->get_last_not_acked( &id);
+  while ( ODD(sts)) {
+    mh_sEventId lid = *id;
+    ala->ack( id);
+    eve->ack( id);
+    mh_OutunitAck( &lid);
+
+    sts = ala->get_last_not_acked( &id);
   }
 }
 
