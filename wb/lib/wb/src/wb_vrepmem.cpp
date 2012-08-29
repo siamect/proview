@@ -36,6 +36,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <sys/stat.h>
 
 #include "wb_vrepmem.h"
@@ -1948,6 +1949,7 @@ bool wb_vrepmem::commit(pwr_tStatus *sts)
   pwr_tCmd cmd;
 
   if ( m_classeditor) {
+    classeditorCheckCommit();
     classeditorCommit();
   }
 
@@ -2091,6 +2093,105 @@ void wb_vrepmem::classeditorDeleteObject( mem_object *memo)
     break;
   }
   default: ;
+  }
+}
+
+void wb_vrepmem::classeditorCheckCommit()
+{
+  vector<string> rtbody_vect;
+  vector<string> devbody_vect;
+
+  mem_object *class_hier;
+
+  for ( class_hier = root_object; 
+	class_hier && class_hier->m_cid != pwr_eClass_ClassHier; 
+	class_hier = class_hier->fws) ;
+  if ( !class_hier || class_hier->m_cid != pwr_eClass_ClassHier)
+    return;
+
+  // Check that RtBody.StructName is unique
+  for ( mem_object *o1 = class_hier->fch; o1; o1 = o1->fws) {
+    for ( mem_object *o2 = o1->fch; o2; o2 = o2->fws) {
+      switch ( o2->m_cid) {	
+      case pwr_eClass_ObjBodyDef:
+	if ( strcmp( o2->name(), "RtBody") == 0) {
+	  int found = 0;
+	  for ( unsigned int i = 0; i < rtbody_vect.size(); i++) {
+	    if ( strcmp( rtbody_vect[i].c_str(), ((pwr_sObjBodyDef *)o2->rbody)->StructName) == 0) {
+	      found = 1;
+	      char str[400];
+	      sprintf( str, "%s.RtBody.StructName \"%s\" already used in this volume", 
+		       o1->name(), rtbody_vect[i].c_str());
+	      MsgWindow::message( 'E', str, msgw_ePop_Yes);
+	      break;
+	    }
+	  }
+	  if ( !found) {
+	    string str(((pwr_sObjBodyDef *)o2->rbody)->StructName);
+	    rtbody_vect.push_back(str);
+	  }
+	}
+	else if ( strcmp( o2->name(), "DevBody") == 0) {
+	  int found = 0;
+	  for ( unsigned int i = 0; i < devbody_vect.size(); i++) {
+	    if ( strcmp( devbody_vect[i].c_str(), ((pwr_sObjBodyDef *)o2->rbody)->StructName) == 0) {
+	      found = 1;
+	      char str[400];
+	      sprintf( str, "%s.DevBody.StructName \"%s\" already used in this volume", 
+		       o1->name(), devbody_vect[i].c_str());
+	      MsgWindow::message( 'E', str, msgw_ePop_Yes);
+	      break;
+	    }
+	  }
+	  if ( !found) {
+	    string str(((pwr_sObjBodyDef *)o2->rbody)->StructName);
+	    devbody_vect.push_back(str);
+	  }
+	}
+      default: ;
+      }
+    }
+  }
+
+  // Check that Attribute.PgmName is unique within one class
+  for ( mem_object *o1 = class_hier->fch; o1; o1 = o1->fws) {
+    vector<string> pgmname_vect;
+    for ( mem_object *o2 = o1->fch; o2; o2 = o2->fws) {
+      switch ( o2->m_cid) {	
+      case pwr_eClass_ObjBodyDef:
+	for ( mem_object *o3 = o2->fch; o3; o3 = o3->fws) {
+	  switch ( o3->m_cid) {
+	  case pwr_eClass_Param: 
+	  case pwr_eClass_Input: 
+	  case pwr_eClass_Output: 
+	  case pwr_eClass_Intern:
+	  case pwr_eClass_Buffer:
+	  case pwr_eClass_ObjXRef:
+	  case pwr_eClass_AttrXRef: {
+	    int found = 0;
+	    for ( unsigned int i = 0; i < pgmname_vect.size(); i++) {
+	      if ( strcmp( pgmname_vect[i].c_str(), ((pwr_sParam *)o3->rbody)->Info.PgmName) == 0) {
+		found = 1;
+		char str[400];
+		sprintf( str, "%s-%s-%s.PgmName \"%s\" already used in this class", 
+			 o1->name(), o2->name(), o3->name(), pgmname_vect[i].c_str());
+		MsgWindow::message( 'E', str, msgw_ePop_Yes);
+		break;
+	      }
+	    }
+	    if ( !found) {
+	      string str(((pwr_sParam *)o3->rbody)->Info.PgmName);
+	      pgmname_vect.push_back(str);
+	    }
+
+	    break;
+	  }
+	  default: ;
+	  }	
+	}
+      default: ;
+      }
+    }
   }
 }
 

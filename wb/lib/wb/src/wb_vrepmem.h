@@ -422,6 +422,7 @@ public:
   void classeditorRenameObject( mem_object *memo, char *oldname, 
 				wb_name &name);
   void classeditorDeleteObject( mem_object *memo);
+  void classeditorCheckCommit();
 
  private:
   bool nameCheck( mem_object *memo);
