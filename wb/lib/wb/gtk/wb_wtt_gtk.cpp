@@ -2841,9 +2841,19 @@ WttGtk::WttGtk(
   gtk_box_pack_start( GTK_BOX(statusbar), cmd_input, TRUE, TRUE, 20);
   gtk_widget_show_all( statusbar);
 
+  GtkWidget *vbox1 = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(vbox1), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(vbox1), GTK_WIDGET(tools), FALSE, FALSE, 0);
+
+  dcli_translate_filename( fname, "$pwr_exe/proview_icon2_gray.png");
+  GtkWidget *wb_image = gtk_image_new_from_file( fname);
+
+  GtkWidget *hbox1 = gtk_hbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(hbox1), GTK_WIDGET(vbox1), TRUE, TRUE, 0);
+  gtk_box_pack_end( GTK_BOX(hbox1), GTK_WIDGET(wb_image), FALSE, FALSE, 0);
+
   GtkWidget *vbox = gtk_vbox_new( FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(tools), FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(hbox1), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(palette_paned), TRUE, TRUE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(statusbar), FALSE, FALSE, 3);
 
