@@ -89,6 +89,9 @@ void wb_build::classlist( pwr_tCid cid)
     case pwr_cClass_PlcProcess:
       application( o.oid());
       break;
+    case pwr_eClass_ClassDef:
+      classdef( o.oid());
+      break;
     default: 
       m_sts = PWRB__NOBUILT;
     }
@@ -448,6 +451,19 @@ void wb_build::classvolume( pwr_tVid vid)
   pwr_tObjName name;
   pwr_tTime wbl_time, dbs_time, h_time;
   pwr_tStatus fsts;
+  pwr_tStatus sumsts = PWRB__NOBUILT;
+
+  wb_log::push();
+
+  if ( !opt.manual) {
+    // Build all ClassDef
+    classlist( pwr_eClass_ClassDef);
+    if ( evenSts()) return;
+    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+      sumsts = m_sts;
+  }
+
+  wb_log::pull();
 
   if ( vid == 0) {
     // Build current volume
@@ -502,9 +518,10 @@ void wb_build::classvolume( pwr_tVid vid)
        mtime.tv_sec > dbs_time.tv_sec) {
     sprintf( cmd, "create snapshot/file=\"$pwrp_db/%s.wb_load\"", name);
     m_sts = m_wnav->command( cmd);
+    sumsts = m_sts;
   }
   else
-    m_sts = PWRB__NOBUILT;
+    m_sts = sumsts;
 
   // Get time for struct file
   sprintf( fname, "$pwrp_inc/pwr_%sclasses.h", name);
@@ -515,9 +532,12 @@ void wb_build::classvolume( pwr_tVid vid)
   if ( opt.force || EVEN(fsts) || wbl_time.tv_sec > h_time.tv_sec) {
     sprintf( cmd, "create struct/file=\"$pwrp_db/%s.wb_load\"", name);
     m_sts = m_wnav->command( cmd);
+    sumsts = m_sts;
   }
+  else
+    m_sts = sumsts;
 
-  if ( m_sts != PWRB__NOBUILT) {
+  if ( sumsts != PWRB__NOBUILT) {
     char msg[80];
 
     sprintf( msg, "Build:    Volume   %s", name);
@@ -1164,6 +1184,70 @@ void wb_build::webbrowserconfig( pwr_tOid oid)
       fprintf( fp, "%s %s %s\n", volume_vect[i], sym_vect[i], value_vect[i]);
     fclose( fp);
   }
+}
+
+void wb_build::classdef( pwr_tOid oid)
+{
+  pwr_tFileName src_fname, dest_fname;
+  pwr_tCmd	cmd;
+  pwr_tString80	action;
+  pwr_tString80	name;
+  pwr_tTime	dest_time, src_time;
+  int 		check_hierarchy = cdh_ObjidIsNotNull( m_hierarchy);
+  int 		hierarchy_found = 0;
+  char  	*s;
+
+  wb_object o = m_session.object(oid);
+  if ( !o) {
+    m_sts = o.sts();
+    return;
+  }
+  
+  // Check that no ancestor is a LibHier
+  for ( wb_object p = o.parent(); p.oddSts(); p = p.parent()) {
+    if ( p.cid() == pwr_eClass_LibHier) {
+      m_sts = PWRB__INLIBHIER;
+      return;
+    }
+    if ( check_hierarchy && cdh_ObjidIsEqual( m_hierarchy, p.oid()))
+      hierarchy_found = 1;
+  }
+
+  if ( check_hierarchy && !hierarchy_found) {
+    m_sts = PWRB__NOBUILT;
+    return;
+  }
+
+  strcpy( action, cdh_Low( o.name()));
+  strcat( action, ".pwg");
+
+  strcpy( src_fname, "$pwrp_pop/");
+  strcat( src_fname, action);
+  dcli_translate_filename( src_fname, src_fname);
+  m_sts = dcli_file_time( src_fname, &src_time);
+  if ( evenSts()) {
+    m_sts = PWRB__NOBUILT;
+    return;
+  }
+
+  strcpy( dest_fname, "$pwrp_exe/");
+  strcat( dest_fname, action);
+  dcli_translate_filename( dest_fname, dest_fname);
+  m_sts = dcli_file_time( dest_fname, &dest_time);
+  if ( opt.force || evenSts() || src_time.tv_sec > dest_time.tv_sec) {
+    sprintf( cmd, "cp %s %s", src_fname, dest_fname);
+    system( cmd);
+    sprintf( cmd, "Build:    ClassDef copy $pwrp_pop/%s -> $pwrp_exe", action);
+    MsgWindow::message( 'I', cmd, msgw_ePop_No, oid);
+    
+    strcpy( name, action);
+    if (( s = strrchr( name, '.')))
+      *s = 0;
+    wb_log::log( wlog_eCategory_GeBuild, name, 0);
+    m_sts = PWRB__SUCCESS;
+  }
+  else
+    m_sts = PWRB__NOBUILT;
 }
 
 

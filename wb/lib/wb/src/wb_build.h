@@ -64,6 +64,7 @@ class wb_build : public wb_status
   void webbrowserconfig( pwr_tOid oid);
   void webgraph( pwr_tOid oid);
   void application( pwr_tOid oid);
+  void classdef( pwr_tOid oid);
 
   wb_build_opt opt;
   wb_session m_session;
