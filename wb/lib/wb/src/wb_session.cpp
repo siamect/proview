@@ -369,7 +369,7 @@ bool wb_session::writeAttribute(wb_attribute &a, void *p)
   return sts;
 }
 
-bool wb_session::copyOset( pwr_sAttrRef *arp, bool keepref, bool ignore_errors)
+bool wb_session::copyOset( pwr_sAttrRef *arp, bool keepref, bool keepsym, bool ignore_errors)
 {
   char name[32];
   pwr_tStatus sts;
@@ -439,7 +439,7 @@ bool wb_session::copyOset( pwr_sAttrRef *arp, bool keepref, bool ignore_errors)
     }
     ap++;
   }
-  return mem->importTree( keepref);  
+  return mem->importTree( keepref, keepsym);  
 }
 
 bool wb_session::cutOset( pwr_sAttrRef *arp, bool keepref)
@@ -449,7 +449,7 @@ bool wb_session::cutOset( pwr_sAttrRef *arp, bool keepref)
 
   m_sts = LDH__SUCCESS;
 
-  copyOset( arp, keepref, false);
+  copyOset( arp, keepref, false, false);
   if ( EVEN(m_sts)) return false;
 
   //ldh_sEvent *ep = m_srep->eventStart( pwr_cNOid, ldh_eEvent_ObjectTreeDeleted);

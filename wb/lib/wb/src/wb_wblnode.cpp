@@ -1786,8 +1786,21 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
         if ( child->getType() == tokens.OBJECT) {
           childname = child->getText();
           if ( strcmp( childname.c_str(), "Template") == 0) {
-            o->c.templ = child;
-            o->c.templ->node_type = wbl_eNodeType_Template;
+	    ref_wblnode fc = child->getFirstChild();
+	    if ( fc->getText() == name()) {
+	      o->c.templ = child;
+	      o->c.templ->node_type = wbl_eNodeType_Template;
+	    }
+	    else {
+	      // Erroneous class from paste 
+	      o->c.templ = child;
+	      o->c.templ->o = new wbl_object();
+	      strcpy( o->c.templ->o->cname, name());
+	      o->c.templ->o->m_cid = o->c.cid;
+	      o->c.templ->node_type = wbl_eNodeType_Template;
+	      string cname(name());
+	      fc->setText(cname);
+	    }
           }
           else if ( strcmp( childname.c_str(), "Code") == 0) {
             o->c.code = child;
@@ -2207,6 +2220,7 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
 
       sts = m_vrep->nameToOid( value_str, &objid);
       if (EVEN(sts)) return 0;
+
       memcpy( buffer_ptr, &objid, sizeof(objid));
       break;
     }
@@ -2278,6 +2292,10 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
 
       sts = m_vrep->nameToAttrRef( value_str, &attrref);
       if (EVEN(sts)) return 0;
+
+      if ( sts == LDH__NUMAREF)
+	m_vrep->error( "Local numeric attribute reference conversion", getFileName(), line_number);
+
       memcpy( buffer_ptr, &attrref, sizeof(attrref));
 
       break;

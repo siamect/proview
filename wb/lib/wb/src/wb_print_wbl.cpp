@@ -60,6 +60,7 @@ wb_print_wbl::wb_print_wbl(ostream& os, int levelIndentation) :
   m_level(0),
   m_levelInd(levelIndentation),
   m_keepName(false),
+  m_isTemplateObject(false),
   m_os(os)
 {
   memset(m_indBuf, ' ', sizeof(m_indBuf));
@@ -504,6 +505,13 @@ void wb_print_wbl::printObject(wb_volume& v, wb_object& o, bool recursive)
     m_os << "Template not found for class " << cdef.name() << endl;
     return;
   }
+
+  if ( v.cid() == pwr_eClass_ClassVolume &&
+       strcmp( o.name(), "Template") == 0)
+    m_isTemplateObject = true;
+  else
+    m_isTemplateObject = false;
+  
  
   printBody(v, o, templ, cdef, pwr_eBix_rt);
   printBody(v, o, templ, cdef, pwr_eBix_dev);
@@ -556,7 +564,7 @@ void wb_print_wbl::printParameter(wb_volume& v,
     tvalueb = (char *)calloc( 1, attr.size());
     print_all = true;
   }
-  else if ( attr == tattr)
+  else if ( attr == tattr || m_isTemplateObject)
     // This is the template object itself, print all nonzero
     tvalueb = (char *)calloc( 1, tattr.size());
   else
@@ -820,9 +828,13 @@ bool wb_print_wbl::printValue (wb_volume& v,
 	  sprintf(sval, "\"%s\"", cdh_ArefToString(NULL, (pwr_sAttrRef*)val, 1));
 	}
       } catch ( wb_error &e) {
-	sprintf(sval, "Unknown attribute reference");
-	m_errCnt++;
-	retval = FALSE;
+	if ( ldh_isSymbolicVid( ((pwr_sAttrRef *)val)->Objid.vid))
+	  sprintf(sval, "\"%s\"", cdh_ArefToString(NULL, (pwr_sAttrRef*)val, 1));
+	else {
+	  sprintf(sval, "Unknown attribute reference");
+	  m_errCnt++;
+	  retval = FALSE;
+	}
       }
     }
 #if 0      

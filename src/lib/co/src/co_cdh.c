@@ -966,6 +966,102 @@ cdh_StringToObjid (
 
   return CDH__SUCCESS;
 }
+
+//! Convert AttrRef string to id.
+/*!
+  Convert a string of format "_A1.2.3.4:34(_T44.33:0.5.1)[760,4]" ('_A' is optional), where
+  1.2.3.4 is the volume id and 34 is the object index.
+
+  \param s	String.
+  \param aref	Attribute reference.
+  \return	Status of the operation. CDH__SUCCESS or CDH__INVCID.
+*/
+pwr_tStatus
+cdh_StringToAref (
+  const char		*s,
+  pwr_tAttrRef		*aref
+)
+{
+  char oid_str[40];
+  char body_str[40];
+  char offset_str[40];
+  char size_str[40];
+  pwr_tAttrRef a;
+  pwr_tStatus sts;
+  unsigned int idx;
+  unsigned int state;
+  const char *t;
+
+  pwr_Assert(aref != NULL);
+
+  idx = 0;
+  state = 0;
+  for ( t = s; *t; t++) {
+    if ( state == 0 && *t == '(') {
+      oid_str[idx] = 0;
+      idx = 0;
+      state++;
+    }
+    else if ( state == 1 && *t == ')') {
+      body_str[idx] = 0;
+      idx = 0;
+      state++;
+      t++;
+      if ( *t != '[')
+	return CDH__INVCID;
+    }
+    else if ( state == 2 && *t == '.') {
+      offset_str[idx] = 0;
+      idx = 0;
+      state++;
+    }
+    else if ( state == 3 && *t == ']') {
+      size_str[idx] = 0;
+      state++;
+    }
+    else {
+      if ( state == 0)
+	oid_str[idx++] = *t;
+      else if ( state == 1)
+	body_str[idx++] = *t;
+      else if ( state == 2)
+	offset_str[idx++] = *t;
+      else if ( state == 3)
+	size_str[idx++] = *t;
+      else
+	return CDH__INVCID;
+    }
+  }    
+
+  memset( &a, 0, sizeof(a));
+
+  sts = cdh_StringToObjid( oid_str, &a.Objid);
+  if ( EVEN(sts)) return sts;
+
+  if ( state < 1)
+    a.Flags.b.Object = 1;
+  else {
+    sts = cdh_StringToTypeId( body_str, &a.Body);
+    if ( EVEN(sts)) return sts;
+
+    if ( state < 2)
+      a.Flags.b.Object = 1;
+    else {
+      if ( sscanf(offset_str, "%u", &a.Offset) != 1)
+	return CDH__INVCID;
+      if ( sscanf(size_str, "%u", &a.Size) != 1)
+	return CDH__INVCID;
+
+      a.Flags.m = 0;
+    }
+  }
+
+  *aref = a;
+
+  return CDH__SUCCESS;
+}
+
+
 
 //! Convert TypeId string to id.
 /*! 

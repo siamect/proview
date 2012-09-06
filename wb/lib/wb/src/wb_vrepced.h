@@ -182,7 +182,7 @@ public:
 				pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				size_t rbSize, size_t dbSize, void *rbody, void *dbody) {
     return m_vrep->importTreeObject( merep, oid, cid, poid, boid, name, flags, rbSize, dbSize, rbody, dbody);}
-  virtual bool importTree( bool keepref) { return m_vrep->importTree( keepref);}
+  virtual bool importTree( bool keepref, bool keepsym) { return m_vrep->importTree( keepref, keepsym);}
   virtual bool importPasteObject(pwr_tOid destination, ldh_eDest destcode,
 				 bool keepoid, pwr_tOid oid, 
 				 pwr_tCid cid, pwr_tOid poid,

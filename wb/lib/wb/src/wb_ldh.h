@@ -540,6 +540,7 @@ pwr_tStatus ldh_Copy (
   ldh_tSession	Session,
   pwr_sAttrRef	*aref,
   int           keepref,
+  int           keepsym,
   int		ignore_errors
 );
 
@@ -559,6 +560,7 @@ pwr_tStatus ldh_CopyObjectTrees (
   ldh_eDest	    dest,
   pwr_tBoolean	    Self,
   int		    keepref,
+  int		    keepsym,
   int		    recycleix
 );
 

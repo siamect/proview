@@ -164,7 +164,7 @@ public:
   virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 				pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				size_t rbSize, size_t dbSize, void *rbody, void *dbody) {return false;}
-  virtual bool importTree( bool keepref) {return false;}
+  virtual bool importTree( bool keepref, bool keepsym) {return false;}
   virtual bool importPasteObject(pwr_tOid destination, ldh_eDest destcode,
 				 bool keepoid, pwr_tOid oid, 
 				 pwr_tCid cid, pwr_tOid poid,

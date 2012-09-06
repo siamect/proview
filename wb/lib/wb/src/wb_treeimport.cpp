@@ -52,17 +52,34 @@ bool wb_treeimport::importTranslationTableInsert( pwr_tOix from, pwr_tOix to)
   return result.second;
 }
 
+bool wb_treeimport::importTranslationTableCidInsert( pwr_tCid from, pwr_tCid to)
+{
+  pair<pwr_tCid, pwr_tCid>p(from,to);
+  pair<map<pwr_tCid,pwr_tCid>::iterator,bool>result = m_translation_table_cid.insert(p);
+
+  return result.second;
+}
+
 void wb_treeimport::importTranslationTableClear()
 {
   // while( ! m_translation_table.empty())
   //   m_translation_table.erase( m_translation_table.begin());
   m_translation_table.clear();
+  m_translation_table_cid.clear();
 }
 
 pwr_tOix wb_treeimport::importTranslate( pwr_tOix oix)
 {
   iterator_translation_table it = m_translation_table.find( oix);
   if ( it == m_translation_table.end())
+    return 0;
+  return it->second;
+}
+
+pwr_tCid wb_treeimport::importTranslateCid( pwr_tCid cid)
+{
+  iterator_translation_table_cid it = m_translation_table_cid.find( cid);
+  if ( it == m_translation_table_cid.end())
     return 0;
   return it->second;
 }
@@ -119,6 +136,11 @@ bool wb_treeimport::importUpdateSubClass( wb_adrep *subattr, char *body, wb_vrep
 	      oidp->oix = oix;
 	      *modified = true;
 	    }
+	    else if ( ldh_isSymbolicVid( oidp->vid) && 
+		      (oix = importTranslateCid(oidp->oix))) {
+	      oidp->oix = oix;
+	      *modified = true;
+	    }
 	    oidp++;
 	  }
 	  break;
@@ -129,6 +151,11 @@ bool wb_treeimport::importUpdateSubClass( wb_adrep *subattr, char *body, wb_vrep
 	  for ( int j = 0; j < elements; j++) {
 	    if ( arp->Objid.vid == m_import_source_vid && (oix = importTranslate( arp->Objid.oix))) {
 	      arp->Objid.vid = vrep->vid();
+	      arp->Objid.oix = oix;
+	      *modified = true;
+	    }
+	    else if ( ldh_isSymbolicVid( arp->Objid.vid) && 
+		      (oix = importTranslateCid(arp->Objid.oix))) {
 	      arp->Objid.oix = oix;
 	      *modified = true;
 	    }
@@ -206,6 +233,11 @@ bool wb_treeimport::importUpdateObject( wb_orep *o, wb_vrep *vrep)
 	      oidp->oix = oix;
 	      modified = true;
 	    }
+	    else if ( ldh_isSymbolicVid( oidp->vid) && 
+		      (oix = importTranslateCid(oidp->oix))) {
+	      oidp->oix = oix;
+	      modified = true;
+	    }
 	    oidp++;
 	  }
 	  break;
@@ -215,6 +247,11 @@ bool wb_treeimport::importUpdateObject( wb_orep *o, wb_vrep *vrep)
 	  for ( int j = 0; j < elements; j++) {
 	    if ( arp->Objid.vid == m_import_source_vid && (oix = importTranslate( arp->Objid.oix))) {
 	      arp->Objid.vid = vrep->vid();
+	      arp->Objid.oix = oix;
+	      modified = true;
+	    }
+	    else if ( ldh_isSymbolicVid( arp->Objid.vid) && 
+		      (oix = importTranslateCid(arp->Objid.oix))) {
 	      arp->Objid.oix = oix;
 	      modified = true;
 	    }

@@ -53,9 +53,11 @@ class wb_merep;
 class wb_treeimport
 {
   map<pwr_tOix, pwr_tOix> m_translation_table;
+  map<pwr_tCid, pwr_tCid> m_translation_table_cid;
   pwr_tVid m_import_source_vid;
 
   typedef map<pwr_tOix, pwr_tOix>::iterator iterator_translation_table;
+  typedef map<pwr_tCid, pwr_tCid>::iterator iterator_translation_table_cid;
 
   bool importUpdateSubClass( wb_adrep *subattr, char *body, wb_vrep *vrep, 
 			     bool *modified);
@@ -63,7 +65,7 @@ class wb_treeimport
 
 public:
   virtual ~wb_treeimport() {}
-  virtual bool importTree( bool keepref) = 0;
+  virtual bool importTree( bool keepref, bool keepsym) = 0;
   virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 				pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				size_t rbSize, size_t dbSize, void *rbody, void *dbody) = 0;
@@ -75,8 +77,10 @@ public:
 				 pwr_tOid woid, pwr_tOid *roid) = 0;
   virtual void importIgnoreErrors() = 0;
   bool importTranslationTableInsert( pwr_tOix from, pwr_tOix to);
+  bool importTranslationTableCidInsert( pwr_tCid from, pwr_tCid to);
   void importTranslationTableClear();
   pwr_tOix importTranslate( pwr_tOix oix);
+  pwr_tCid importTranslateCid( pwr_tCid cid);
   void importSetSourceVid( pwr_tVid vid) { m_import_source_vid = vid;}
   bool importUpdateTree( wb_vrep *vrep);
 };

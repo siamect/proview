@@ -898,6 +898,12 @@ cdh_StringToObjid (
 );
 
 pwr_tStatus
+cdh_StringToAref (
+  const char		*s,
+  pwr_tAttrRef		*aref
+);
+
+pwr_tStatus
 cdh_StringToSubid (
   const char		*s,
   pwr_tSubid		*sid

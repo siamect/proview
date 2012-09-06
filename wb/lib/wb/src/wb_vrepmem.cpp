@@ -1226,7 +1226,7 @@ bool wb_vrepmem::renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name)
 //
 // Update oid and attrref attributes, reset extern references
 //
-bool wb_vrepmem::importTree( bool keepref)
+bool wb_vrepmem::importTree( bool keepref, bool keepsym)
 {
   if ( !root_object)
     return true;
@@ -1238,7 +1238,7 @@ bool wb_vrepmem::importTree( bool keepref)
 
   while ( ODD(sts)) {
     o->ref();
-    updateObject( o, keepref);
+    updateObject( o, keepref, keepsym);
 
     wb_orep *prev = o;
     o = o->after( &sts);
@@ -1247,7 +1247,7 @@ bool wb_vrepmem::importTree( bool keepref)
   return true;
 }
 
-bool wb_vrepmem::updateSubClass( wb_adrep *subattr, char *body, bool keepref)
+bool wb_vrepmem::updateSubClass( wb_adrep *subattr, char *body, bool keepref, bool keepsym)
 {
   pwr_tStatus sts;
   pwr_tCid cid = subattr->subClass();
@@ -1264,7 +1264,7 @@ bool wb_vrepmem::updateSubClass( wb_adrep *subattr, char *body, bool keepref)
       int elements = adrep->isArray() ? adrep->nElement() : 1;
       if ( adrep->isClass()) {
 	updateSubClass( adrep, body + i * subattr->size() / subattr_elements + adrep->offset(),
-			keepref);
+			keepref, keepsym);
       }
       else {
 	switch ( adrep->type()) {
@@ -1274,10 +1274,11 @@ bool wb_vrepmem::updateSubClass( wb_adrep *subattr, char *body, bool keepref)
 	  for ( int j = 0; j < elements; j++) {
 	    if ( oidp->vid == m_source_vid && findObject( oidp->oix))
 	      oidp->vid = m_vid;
+	    else if ( !keepsym &&
+		      ldh_isSymbolicVid( oidp->vid))
+	      oidp->oix = cdh_cixToCid( m_vid, cdh_cidToCix( oidp->oix));
 	    else if ( !keepref && 
-		      !(oidp->vid == ldh_cPlcMainVolume || 
-			oidp->vid == ldh_cPlcFoVolume || 
-			oidp->vid == ldh_cIoConnectVolume))
+		      !ldh_isSymbolicVid( oidp->vid))
 	      *oidp = pwr_cNOid;
 	    oidp++;
 	  }
@@ -1289,10 +1290,11 @@ bool wb_vrepmem::updateSubClass( wb_adrep *subattr, char *body, bool keepref)
 	  for ( int j = 0; j < elements; j++) {
 	    if ( arp->Objid.vid == m_source_vid && findObject( arp->Objid.oix))
 	      arp->Objid.vid = m_vid;
+	    else if ( !keepsym &&
+		      ldh_isSymbolicVid( arp->Objid.vid))
+	      arp->Objid.oix = cdh_cixToCid( m_vid, cdh_cidToCix( arp->Objid.oix));
 	    else if ( !keepref && 
-		      !(arp->Objid.vid == ldh_cPlcMainVolume || 
-			arp->Objid.vid == ldh_cPlcFoVolume || 
-			arp->Objid.vid == ldh_cIoConnectVolume))
+		      !ldh_isSymbolicVid( arp->Objid.vid))
 	      arp->Objid = pwr_cNOid;
 	    arp++;
 	  }
@@ -1305,9 +1307,7 @@ bool wb_vrepmem::updateSubClass( wb_adrep *subattr, char *body, bool keepref)
 	    if ( drp->Aref.Objid.vid == m_source_vid && findObject( drp->Aref.Objid.oix))
 	      drp->Aref.Objid.vid = m_vid;
 	    else if ( !keepref && 
-		      !(drp->Aref.Objid.vid == ldh_cPlcMainVolume || 
-			drp->Aref.Objid.vid == ldh_cPlcFoVolume || 
-			drp->Aref.Objid.vid == ldh_cIoConnectVolume))
+		      !ldh_isSymbolicVid( drp->Aref.Objid.vid))
 	      drp->Aref.Objid = pwr_cNOid;
 	    drp++;
 	  }
@@ -1328,7 +1328,7 @@ bool wb_vrepmem::updateSubClass( wb_adrep *subattr, char *body, bool keepref)
   return true;
 }
 
-bool wb_vrepmem::updateObject( wb_orep *o, bool keepref)
+bool wb_vrepmem::updateObject( wb_orep *o, bool keepref, bool keepsym)
 {
   pwr_tStatus sts;
   wb_cdrep *cdrep = m_merep->cdrep( &sts, o->cid());
@@ -1347,7 +1347,7 @@ bool wb_vrepmem::updateObject( wb_orep *o, bool keepref)
     while ( ODD(sts)) {
       int elements = adrep->isArray() ? adrep->nElement() : 1;
       if ( adrep->isClass()) {
-	updateSubClass( adrep, body + adrep->offset(), keepref);
+	updateSubClass( adrep, body + adrep->offset(), keepref, keepsym);
       }
       else {
 	switch ( adrep->type()) {
@@ -1357,10 +1357,11 @@ bool wb_vrepmem::updateObject( wb_orep *o, bool keepref)
 	    if ( oidp->vid == m_source_vid && findObject( oidp->oix))
 	      // Intern reference
 	      oidp->vid = m_vid;
+	    else if ( !keepsym && 
+		      ldh_isSymbolicVid( oidp->vid))
+	      oidp->oix = cdh_cixToCid( m_vid, cdh_cidToCix( oidp->oix));
 	    else if ( !keepref &&
-		      !(oidp->vid == ldh_cPlcMainVolume || 
-			oidp->vid == ldh_cPlcFoVolume || 
-			oidp->vid == ldh_cIoConnectVolume))
+		      !ldh_isSymbolicVid( oidp->vid))
 	      *oidp = pwr_cNOid;
 	    oidp++;
 	  }
@@ -1371,10 +1372,11 @@ bool wb_vrepmem::updateObject( wb_orep *o, bool keepref)
 	  for ( int j = 0; j < elements; j++) {
 	    if ( arp->Objid.vid == m_source_vid && findObject( arp->Objid.oix))
 	      arp->Objid.vid = m_vid;
+	    else if ( !keepsym &&
+		      ldh_isSymbolicVid( arp->Objid.vid))
+	      arp->Objid.oix = cdh_cixToCid( m_vid, cdh_cidToCix( arp->Objid.oix));
 	    else if ( !keepref && 
-		      !(arp->Objid.vid == ldh_cPlcMainVolume || 
-			arp->Objid.vid == ldh_cPlcFoVolume || 
-			arp->Objid.vid == ldh_cIoConnectVolume))
+		      !ldh_isSymbolicVid( arp->Objid.vid))
 	      arp->Objid = pwr_cNOid;
 	    arp++;
 	  }
@@ -1386,9 +1388,7 @@ bool wb_vrepmem::updateObject( wb_orep *o, bool keepref)
 	    if ( drp->Aref.Objid.vid == m_source_vid && findObject( drp->Aref.Objid.oix))
 	      drp->Aref.Objid.vid = m_vid;
 	    else if ( !keepref && 
-		      !(drp->Aref.Objid.vid == ldh_cPlcMainVolume || 
-			drp->Aref.Objid.vid == ldh_cPlcFoVolume || 
-			drp->Aref.Objid.vid == ldh_cIoConnectVolume))
+		      !ldh_isSymbolicVid(drp->Aref.Objid.vid))
 	      drp->Aref.Objid = pwr_cNOid;
 	    drp++;
 	  }
@@ -1410,7 +1410,7 @@ bool wb_vrepmem::updateObject( wb_orep *o, bool keepref)
   wb_orep *child = o->first( &sts);
   while ( ODD(sts)) {
     child->ref();
-    updateObject( child, keepref);
+    updateObject( child, keepref, keepsym);
 
     wb_orep *prev = child;
     child = child->after( &sts);
@@ -1592,13 +1592,15 @@ bool wb_vrepmem::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
 	if ( strcmp( name, "Template") == 0 && 
 	     pmemo->m_cid == pwr_eClass_ClassDef &&
 	     !cdh_ObjidIsNull( boid)) {
-	  // Unable to paste a tempate object correctly, remove it
+#if 0
+	  // Unable to paste a template object correctly, remove it
 	  delete memo;
 
 	  // Link any forward sibling to backward sibling
 	  pwr_tOix boix = importTranslate( boid.oix);
 	  importTranslationTableInsert( oid.oix, boix);
 	  return true;
+#endif
 	}
       }
       memo->fth = pmemo;
@@ -1620,7 +1622,7 @@ bool wb_vrepmem::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
   memo->m_oid.vid = m_vid;
   memo->m_cid = cid;
   memo->m_flags = flags;
-  memo->m_created = 1;
+  // memo->m_created = 1;
   memo->m_ohtime = time;
   memo->rbody_size = rbSize;
   if ( memo->rbody_size) {
@@ -1710,6 +1712,8 @@ bool wb_vrepmem::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
 
   registerObject( memo->m_oid.oix, memo);
   importTranslationTableInsert( oid.oix, memo->m_oid.oix);
+  if ( cid == pwr_eClass_ClassDef)
+    importTranslationTableCidInsert( cdh_ClassObjidToId( oid), cdh_ClassObjidToId(memo->m_oid));
 
   *roid = memo->m_oid;
   return true;
@@ -2115,37 +2119,41 @@ void wb_vrepmem::classeditorCheckCommit()
       switch ( o2->m_cid) {	
       case pwr_eClass_ObjBodyDef:
 	if ( strcmp( o2->name(), "RtBody") == 0) {
-	  int found = 0;
-	  for ( unsigned int i = 0; i < rtbody_vect.size(); i++) {
-	    if ( strcmp( rtbody_vect[i].c_str(), ((pwr_sObjBodyDef *)o2->rbody)->StructName) == 0) {
-	      found = 1;
-	      char str[400];
-	      sprintf( str, "%s.RtBody.StructName \"%s\" already used in this volume", 
-		       o1->name(), rtbody_vect[i].c_str());
-	      MsgWindow::message( 'E', str, msgw_ePop_Yes);
-	      break;
+	  if ( strcmp( ((pwr_sObjBodyDef *)o2->rbody)->StructName, "") != 0) {
+	    int found = 0;
+	    for ( unsigned int i = 0; i < rtbody_vect.size(); i++) {
+	      if ( strcmp( rtbody_vect[i].c_str(), ((pwr_sObjBodyDef *)o2->rbody)->StructName) == 0) {
+		found = 1;
+		char str[400];
+		sprintf( str, "%s.RtBody.StructName \"%s\" already used in this volume", 
+			 o1->name(), rtbody_vect[i].c_str());
+		MsgWindow::message( 'E', str, msgw_ePop_Yes);
+		break;
+	      }
 	    }
-	  }
-	  if ( !found) {
-	    string str(((pwr_sObjBodyDef *)o2->rbody)->StructName);
-	    rtbody_vect.push_back(str);
+	    if ( !found) {
+	      string str(((pwr_sObjBodyDef *)o2->rbody)->StructName);
+	      rtbody_vect.push_back(str);
+	    }
 	  }
 	}
 	else if ( strcmp( o2->name(), "DevBody") == 0) {
-	  int found = 0;
-	  for ( unsigned int i = 0; i < devbody_vect.size(); i++) {
-	    if ( strcmp( devbody_vect[i].c_str(), ((pwr_sObjBodyDef *)o2->rbody)->StructName) == 0) {
-	      found = 1;
-	      char str[400];
-	      sprintf( str, "%s.DevBody.StructName \"%s\" already used in this volume", 
-		       o1->name(), devbody_vect[i].c_str());
-	      MsgWindow::message( 'E', str, msgw_ePop_Yes);
-	      break;
+	  if ( strcmp( ((pwr_sObjBodyDef *)o2->rbody)->StructName, "") != 0) {
+	    int found = 0;
+	    for ( unsigned int i = 0; i < devbody_vect.size(); i++) {
+	      if ( strcmp( devbody_vect[i].c_str(), ((pwr_sObjBodyDef *)o2->rbody)->StructName) == 0) {
+		found = 1;
+		char str[400];
+		sprintf( str, "%s.DevBody.StructName \"%s\" already used in this volume", 
+			 o1->name(), devbody_vect[i].c_str());
+		MsgWindow::message( 'E', str, msgw_ePop_Yes);
+		break;
+	      }
 	    }
-	  }
-	  if ( !found) {
-	    string str(((pwr_sObjBodyDef *)o2->rbody)->StructName);
-	    devbody_vect.push_back(str);
+	    if ( !found) {
+	      string str(((pwr_sObjBodyDef *)o2->rbody)->StructName);
+	      devbody_vect.push_back(str);
+	    }
 	  }
 	}
       default: ;
@@ -2247,7 +2255,11 @@ bool wb_vrepmem::classeditorCheck( ldh_eDest dest_code, mem_object *dest, pwr_tC
       case pwr_eClass_Object:
       case pwr_cClass_PlcTemplate:
 	break;
-      default:
+      default:	
+	if ( strcmp( name, "Template") == 0)
+	  // Allow temporary template of other class
+	  break;
+
 	*sts = LDH__CLASSMISPLACED;
 	return false;
       }
@@ -2337,6 +2349,13 @@ bool wb_vrepmem::classeditorCheck( ldh_eDest dest_code, mem_object *dest, pwr_tC
     }
     if ( !import_paste) 
       sprintf( name, "O%u", *oix);
+    else {
+      pwr_tObjName n;
+
+      strncpy( n, name, sizeof(n));
+      snprintf( name, sizeof(pwr_tObjName), "C%u_%s", ((pwr_sClassVolume *)volume_object->rbody)->NextCix, n);
+      name[sizeof(pwr_tObjName)-1] = 0;
+    }
     break;
 
   case pwr_eClass_TypeDef:

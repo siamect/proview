@@ -1071,14 +1071,23 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
 
   if ( strncmp( name, "_A", 2) == 0) {
     // Fix
-    return 0;
+    sts = cdh_StringToAref( name, attrref);
+    if ( EVEN(sts)) return sts;
+
+    if ( attrref->Objid.vid == m_vid)
+      return LDH__NUMAREF;
+    return sts;
   }
   else if ( strncmp( name, "_O", 2) == 0) {
     pwr_tOid oid;
 
-    cdh_StringToObjid( name, &oid);
+    sts = cdh_StringToObjid( name, &oid);
     *attrref = cdh_ObjidToAref( oid);
-    return 1;
+    if ( EVEN(sts)) return sts;
+
+    if ( attrref->Objid.vid == m_vid)
+      return LDH__NUMAREF;
+    return sts;
   }
 
   wb_name aname = wb_name(name);

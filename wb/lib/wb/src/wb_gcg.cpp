@@ -14040,7 +14040,7 @@ int	gcg_comp_m53( gcg_ctx gcgctx, vldh_t_node node)
 	  free((char *) function_objid);
 
 	  sts = ldh_CopyObjectTrees( ldhses, attrref, node->ln.oid,
-		ldh_eDest_IntoFirst,  0, 0, 0);
+				     ldh_eDest_IntoFirst,  0, 0, 0, 0);
 	  if ( EVEN(sts))
 	  {
 	    /* Function not found */
@@ -14955,7 +14955,7 @@ int	gcg_comp_m58( gcg_ctx gcgctx, vldh_t_node node)
 
 
 	  sts = ldh_CopyObjectTrees( ldhses, attrref, node->ln.oid,
-		ldh_eDest_IntoFirst, 0, 0, found);
+				     ldh_eDest_IntoFirst, 0, 0, 1, found);
 	  if ( EVEN(sts)) {
 	    /* Function not found */
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, node);  

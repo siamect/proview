@@ -150,3 +150,5 @@ noserver	<Server not configured>					/error
 lockstolen	<Database lock is stolen>				/error
 maxwblfiles     <Max number of wb_load files exceeded>			/error
 compsyntax	<Configure component syntax error>			/error
+numaref		<Attribute referens in numeric format>			/info
+numobjid	<Objid in numeric format>				/info

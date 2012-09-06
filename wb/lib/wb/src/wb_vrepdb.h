@@ -234,7 +234,7 @@ public:
 
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid);
   bool exportTreeHelper(wb_treeimport &i, pwr_tOid oid, bool isRoot);
-  virtual bool importTree(bool keepref) { return false;}
+  virtual bool importTree(bool keepref, bool keepsym) { return false;}
   virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
                                 pwr_tOid boid, const char *name, pwr_mClassDef flags,
                                 size_t rbSize, size_t dbSize, void *rbody, void *dbody)

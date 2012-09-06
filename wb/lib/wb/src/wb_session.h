@@ -101,7 +101,7 @@ public:
   bool writeAttribute(wb_attribute &a, void *p);
   bool writeBody() {return false;} // Fix
 
-  bool copyOset( pwr_sAttrRef *arp, bool keepref, bool ignore_errors);
+  bool copyOset( pwr_sAttrRef *arp, bool keepref, bool keepsym, bool ignore_errors);
   bool cutOset( pwr_sAttrRef *arp, bool keepref);
   bool pasteOset( pwr_tOid doid, ldh_eDest dest, 
 		  bool keepoid, bool recycleix, char *buffer);

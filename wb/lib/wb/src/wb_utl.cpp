@@ -10423,7 +10423,7 @@ int utl_copy_objects (
 	  attrref[1].Objid = pwr_cNObjid;
 
 	  sts = ldh_CopyObjectTrees( ldhses, &attrref, destination,
-		code,  0, 0, 0);
+				     code,  0, 0, 0, 0);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Fetch the created root object, and change the name */

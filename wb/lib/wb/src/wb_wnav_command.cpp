@@ -3250,7 +3250,7 @@ static int	wnav_copy_func(	void		*client_data,
     keepref = ODD( dcli_get_qualifier( "/KEEPREFERENCES", 0, 0));
     ignore_errors = ODD( dcli_get_qualifier( "/IGNORE_ERRORS", 0, 0));
 
-    sts = ldh_Copy( wnav->ldhses, sel_list, keepref, ignore_errors);
+    sts = ldh_Copy( wnav->ldhses, sel_list, keepref, 0, ignore_errors);
     if ( sel_cnt > 0) {
       free( sel_list);
       free( sel_is_attr);

@@ -386,7 +386,7 @@ public:
   virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 				pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				size_t rbSize, size_t dbSize, void *rbody, void *dbody);
-  virtual bool importTree( bool keepref);
+  virtual bool importTree( bool keepref, bool keepsym);
   virtual bool importPasteObject(pwr_tOid destination, ldh_eDest destcode,
 				 bool keepoid, pwr_tOid oid, 
 				 pwr_tCid cid, pwr_tOid poid,
@@ -395,8 +395,8 @@ public:
 				 pwr_tOid woid, pwr_tOid *roid);
   virtual bool importPaste();
   virtual void importIgnoreErrors() { m_ignore = true;}
-  bool updateObject( wb_orep *o, bool keepref);
-  bool updateSubClass( wb_adrep *subattr, char *body, bool keepref);
+  bool updateObject( wb_orep *o, bool keepref, bool keepsym);
+  bool updateSubClass( wb_adrep *subattr, char *body, bool keepref, bool keepsym);
   virtual bool accessSupported( ldh_eAccess access) { return true;}
   virtual const char *fileName() { return "";}
 

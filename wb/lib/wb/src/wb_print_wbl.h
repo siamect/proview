@@ -68,6 +68,7 @@ protected:
   int  m_levelInd;
   char m_indBuf[256];
   bool m_keepName;
+  bool m_isTemplateObject;
   ostream& m_os;
     
 

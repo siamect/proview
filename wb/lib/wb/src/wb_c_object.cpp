@@ -191,7 +191,7 @@ static pwr_tStatus CopyObjectTree (
   }
 
   sts = ldh_CopyObjectTrees(ip->PointedSession, ip->Selected,
-    ip->Pointed.Objid, Dest, Self, 0, 0); 
+			    ip->Pointed.Objid, Dest, Self, 0, 0, 0); 
   return sts;
 }
 

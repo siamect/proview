@@ -1791,11 +1791,11 @@ ldh_SyntaxCheck(ldh_tSession session, int *errorcount, int *warningcount)
 }
 
 pwr_tStatus
-ldh_CopyObjectTrees(ldh_tSession session, pwr_sAttrRef *arp, pwr_tOid doid, ldh_eDest dest, pwr_tBoolean self, int keepref, int recycleix)
+ldh_CopyObjectTrees(ldh_tSession session, pwr_sAttrRef *arp, pwr_tOid doid, ldh_eDest dest, pwr_tBoolean self, int keepref, int keepsym, int recycleix)
 {
   pwr_tStatus sts;
 
-  sts = ldh_Copy( session, arp, keepref, false);
+  sts = ldh_Copy( session, arp, keepref, keepsym, false);
   if (EVEN(sts)) return sts;
 
   sts = ldh_Paste( session, doid, dest, 0, recycleix, 0);  
@@ -1809,12 +1809,12 @@ ldh_CopyObjectTrees(ldh_tSession session, pwr_sAttrRef *arp, pwr_tOid doid, ldh_
    left untouched.  */
 
 pwr_tStatus
-ldh_Copy(ldh_tSession session, pwr_sAttrRef *arp, int keepref, int ignore_errors)
+ldh_Copy(ldh_tSession session, pwr_sAttrRef *arp, int keepref, int keepsym, int ignore_errors)
 {
   wb_session *sp = (wb_session*)session;
 
   try {
-    sp->copyOset( arp, (keepref != 0), (ignore_errors != 0));
+    sp->copyOset( arp, (keepref != 0), (keepsym != 0), (ignore_errors != 0));
   }
   catch (wb_error& e) {
     return e.sts();

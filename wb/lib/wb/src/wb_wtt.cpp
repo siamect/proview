@@ -1070,7 +1070,7 @@ void Wtt::activate_copy()
     return;
   }
 
-  sts = ldh_Copy( ldhses, sel_list, 0, 0);
+  sts = ldh_Copy( ldhses, sel_list, 0, 0, 0);
   if (EVEN(sts)) {
     message( 'E', wnav_get_message( sts));
     return;
@@ -1176,33 +1176,38 @@ void Wtt::activate_paste()
        (sel_cnt2 == 1 && sel_is_attr2[0] == 0)) {
     pwr_tOid oid;
     pwr_tOid prev;
+    pwr_tCid prev_cid;
+
     if ( sel_cnt1)
       prev = sel_list1[0].Objid;
     else
       prev = sel_list2[0].Objid;
 
-    // Get name from previous sibling
-    sts = ldh_GetNextSibling( wnav->ldhses, prev, &oid);
-    if ( ODD(sts)) {
-      pwr_tObjName name;
-      pwr_tCid prev_cid, cid;
-      int size;
-      pwr_tStatus lsts;
-      
-      sts = ldh_GetObjectClass( wnav->ldhses, prev, &prev_cid);
-      if ( EVEN(sts)) return;
-	      
-      sts = ldh_GetObjectClass( wnav->ldhses, oid, &cid);
-      if ( EVEN(sts)) return;
-	      
-      if ( prev_cid == cid) {
-	sts = ldh_ObjidToName( wnav->ldhses, prev, ldh_eName_Object, name, sizeof(name),
-				       &size);
-	if ( EVEN(sts)) return;
+    sts = ldh_GetObjectClass( wnav->ldhses, prev, &prev_cid);
+    if ( EVEN(sts)) return;
 
-	lsts = cdh_NextObjectName( name, name);
-	if ( ODD(lsts))
-	  sts = ldh_SetObjectName( wnav->ldhses, oid, name);
+    // Get name from previous sibling
+    if ( prev_cid != pwr_eClass_ClassDef) {
+      sts = ldh_GetNextSibling( wnav->ldhses, prev, &oid);
+      if ( ODD(sts)) {
+	pwr_tObjName name;
+	pwr_tCid cid;
+	int size;
+	pwr_tStatus lsts;
+      
+	      
+	sts = ldh_GetObjectClass( wnav->ldhses, oid, &cid);
+	if ( EVEN(sts)) return;
+	      
+	if ( prev_cid == cid) {
+	  sts = ldh_ObjidToName( wnav->ldhses, prev, ldh_eName_Object, name, sizeof(name),
+				       &size);
+	  if ( EVEN(sts)) return;
+
+	  lsts = cdh_NextObjectName( name, name);
+	  if ( ODD(lsts))
+	    sts = ldh_SetObjectName( wnav->ldhses, oid, name);
+	}
       }
     }
   }
@@ -1286,7 +1291,7 @@ void Wtt::activate_copykeep()
     return;
   }
 
-  sts = ldh_Copy( ldhses, sel_list, 1, 0);
+  sts = ldh_Copy( ldhses, sel_list, 1, 0, 0);
   if (EVEN(sts)) {
     message( 'E', wnav_get_message( sts));
     return;
