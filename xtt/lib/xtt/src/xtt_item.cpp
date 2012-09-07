@@ -766,7 +766,7 @@ ItemAttr::ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
 	int attr_size, int attr_flags,
 	int item_is_root, item_eDisplayType item_display_type) :
 	ItemBaseAttr( item_objid, attr_name,
-	attr_type_id, attr_tid, attr_size, attr_flags, item_is_root, item_display_type)
+		      attr_type_id, attr_tid, attr_size, attr_flags, item_is_root, item_display_type)
 {
   pwr_tOName obj_name;
   pwr_tAName	annot;
@@ -829,7 +829,7 @@ ItemAttr::ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
       strcat( aname, attr_name);
 
       sts = gdh_GetObjectInfo( aname, buff, size);
-      ((XNav *)brow->userdata)->attrvalue_to_string( type_id, tid, buff, str, sizeof(str), &len, NULL);
+      ((XNav *)brow->userdata)->attrvalue_to_string( type_id, tid, buff, str, sizeof(str), &len, NULL, 0);
       brow_SetAnnotation( node, 1, str, len);
     }
     else

@@ -867,6 +867,11 @@ cdh_StringToAttrValue (
   void			*Value
 );
 
+char *cdh_MaskToBinaryString( 
+  unsigned int mask,
+  int noofbits
+);
+
 pwr_tStatus
 cdh_StringToClassId (
   const char		*s,

@@ -148,7 +148,7 @@ int XAttOneGtk::change_value( int set_focus)
   if ( atype == pwr_eType_Text)
     value = aval;
   else {
-    XNav::attrvalue_to_string( atype, atype, &aval, buf, sizeof(buf), &len, NULL);
+    XNav::attrvalue_to_string( atype, atype, &aval, buf, sizeof(buf), &len, NULL, 0);
     value = buf;
   }
 

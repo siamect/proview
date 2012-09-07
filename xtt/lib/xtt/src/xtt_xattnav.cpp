@@ -603,7 +603,8 @@ int XAttNav::trace_scan_bc( brow_tObject object, void *p)
       else
         item->first_scan = 0;
 
-      XNav::attrvalue_to_string( item->type_id, item->tid, p, buf, sizeof(buf), &len, NULL);
+      XNav::attrvalue_to_string( item->type_id, item->tid, p, buf, sizeof(buf), &len, NULL,
+				 item->conversion);
       brow_SetAnnotation( object, 1, buf, len);
       memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
       break;

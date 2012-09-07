@@ -131,6 +131,7 @@ class Item {
     virtual int open_crossref( XNavBrow *brow, double x, double y)
       { return 1;}
     virtual void close( XNavBrow *brow, double x, double y) {}
+    virtual void set_conversion( xnav_eConv c) {}
 
     xnav_eItemType	type;
     pwr_tObjid		objid;
@@ -142,28 +143,34 @@ class Item {
 class ItemBaseAttr : public Item {
   public:
     ItemBaseAttr( pwr_tObjid item_objid,
-	char *attr_name, int attr_type_id, pwr_tTid attr_tid,
-        int attr_size, int attr_flags,
-	int item_is_root, item_eDisplayType item_display_type) :
-	Item( item_objid, item_is_root),
-        type_id(attr_type_id), tid(attr_tid), size(attr_size), flags(attr_flags),
-	subid(pwr_cNSubid), first_scan(1), display_type(item_display_type)
-		{ strcpy( attr, attr_name);
-		  memset( old_value, 0, sizeof(old_value));
-		  noedit = flags & PWR_MASK_PRIVATE ? 1 : 0;};
-    virtual int open_children( XNavBrow *brow, double x, double y);
-    virtual void close( XNavBrow *brow, double x, double y);
+		  char *attr_name, int attr_type_id, pwr_tTid attr_tid,
+		  int attr_size, int attr_flags,
+		  int item_is_root, item_eDisplayType item_display_type) :
+      Item( item_objid, item_is_root),
+      type_id(attr_type_id), tid(attr_tid), size(attr_size), flags(attr_flags),
+      subid(pwr_cNSubid), first_scan(1), display_type(item_display_type),
+      conversion(xnav_eConv_No)
+	{ strcpy( attr, attr_name);
+	  memset( old_value, 0, sizeof(old_value));
+	  noedit = flags & PWR_MASK_PRIVATE ? 1 : 0;};
+      virtual int open_children( XNavBrow *brow, double x, double y);
+      virtual void close( XNavBrow *brow, double x, double y);
+      virtual void set_conversion( xnav_eConv c) { 
+	conversion = c; 
+	memset(old_value,-99,sizeof(old_value));
+      }
 
-    int type_id;
-    pwr_tTid tid;
-    int size;
-    int flags;
-    pwr_tSubid subid;
-    char old_value[80];
-    int first_scan;
-    pwr_tOName attr;
-    item_eDisplayType display_type;
-    int noedit;
+      int type_id;
+      pwr_tTid tid;
+      int size;
+      int flags;
+      pwr_tSubid subid;
+      char old_value[80];
+      int first_scan;
+      pwr_tOName attr;
+      item_eDisplayType display_type;
+      int noedit;
+      xnav_eConv conversion;
 };
 
 class ItemHeader : public Item {

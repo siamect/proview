@@ -1554,6 +1554,7 @@ open trend  <t>Open DsTrend or PlotGroup graph	<LINK> open trend
 read object <t>Read the content of an object from file <LINK> read object
 search	<t>Search for an object or a string 	<LINK> search
 set advanceduser<t>Set advanced user		<LINK> set advanceduser
+set display<t>Set format of display for selected attribute <LINK> set display
 set folder	<t>Set a folder in a tabbed window.  <LINK> set folder
 set parameter<t>Set the value of an attribute  <LINK> set parameter
 set subwindow<t>View a graph in a Ge window object.  <LINK> set subwindow
@@ -2225,6 +2226,25 @@ Set or reset advanced user.
 
 <H2>related subjects
 advanced user <LINK> advanced user
+</TOPIC>
+
+<TOPIC> set display <style> function
+Command   set display
+
+Set format for display of the selected attribute. The attribute can
+be displayed as decimal, hexadecimal, octal, binary, integer or float.
+Object identities and attribute references can be displayed
+as identity.
+
+<B>xtt> set display default
+<B>xtt> set display hexdecimal
+<B>xtt> set display decimal
+<B>xtt> set display octal
+<B>xtt> set display binary
+<B>xtt> set display integer
+<B>xtt> set display float
+<B>xtt> set display identity
+
 </TOPIC>
 
 <TOPIC> setup <style> function

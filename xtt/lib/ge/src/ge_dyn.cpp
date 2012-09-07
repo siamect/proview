@@ -324,24 +324,6 @@ static int dyn_get_typeid( char *format)
   return pwr_eType_Int32;
 }
 
-// Convert a bitmask to binary string
-static char *dyn_mask_to_bits( unsigned int value, int noofbits)
-{
-  static char str[40];
-  unsigned int m;
-
-  m = 1 << (noofbits - 1);
-  strcpy( str, "");
-  for ( int i = 0; i < noofbits; i++) {
-    if ( m & value)
-      strcat( str, "1");
-    else
-      strcat( str, "0");
-    m >>= 1;
-  }
-  return str;
-}
-
 
 // Replace " to \"
 char *GeDyn::cmd_cnv( char *instr)
@@ -3981,9 +3963,9 @@ int GeValue::scan( grow_tObject object)
     switch ( format[strlen(format)-1]) {
     case 'b':
       if ( strncmp( &format[1], "16", 2) == 0)
-	strcpy( buf, dyn_mask_to_bits( val, 16));
+	strcpy( buf, cdh_MaskToBinaryString( val, 16));
       else
-	strcpy( buf, dyn_mask_to_bits( val, 32));
+	strcpy( buf, cdh_MaskToBinaryString( val, 32));
       len = strlen(buf);
       break;
     default: {

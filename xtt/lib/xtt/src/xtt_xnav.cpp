@@ -451,7 +451,7 @@ int XNav::attr_string_to_value( int type_id, char *value_str,
 // Convert attribute value to string
 //
 void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr, 
-				char *str, int size, int *len, char *format)
+				char *str, int size, int *len, char *format, int conv)
 {
   pwr_tObjid		objid;
   pwr_sAttrRef		*attrref;
@@ -489,16 +489,52 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
       *len = strlen(str);
     }
     else {
-      if ( !format)
-	*len = snprintf( str, size, "%g", *(float *)value_ptr);
+      if ( !format) {
+	switch ( conv) {
+	case xnav_eConv_Hex:
+	  *len = snprintf( str, size, "0x%x", *(unsigned int *)value_ptr);	
+	  break;
+	case xnav_eConv_Octal:
+	  *len = snprintf( str, size, "0%o", *(unsigned int *)value_ptr);	
+	  break;
+	case xnav_eConv_Binary:
+	  strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 32));
+	  *len = 32;
+	  break;
+	case xnav_eConv_Decimal:
+	case xnav_eConv_Integer:
+	  *len = snprintf( str, size, "%u", *(unsigned int *)value_ptr);	
+	  break;
+	default:
+	  *len = snprintf( str, size, "%g", *(float *)value_ptr);
+	}
+      }
       else
 	*len = snprintf( str, size, format, *(float *)value_ptr);
     }
     break;
   }
   case pwr_eType_Float64: {
-    if ( !format)
-      *len = snprintf( str, size, "%g", *(double *)value_ptr);
+    if ( !format) {
+      switch ( conv) {
+      case xnav_eConv_Hex:
+	*len = snprintf( str, size, "0x"pwr_dFormatHexInt64, *(pwr_tUInt64 *)value_ptr);	
+	break;
+      case xnav_eConv_Octal:
+	*len = snprintf( str, size, "0"pwr_dFormatOctInt64, *(pwr_tUInt64 *)value_ptr);	
+	break;
+      case xnav_eConv_Binary:
+	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 64));
+	*len = 64;
+	break;
+      case xnav_eConv_Decimal:
+      case xnav_eConv_Integer:
+	*len = snprintf( str, size, pwr_dFormatUInt64, *(pwr_tUInt64 *)value_ptr);
+	break;
+      default:
+	*len = snprintf( str, size, "%g", *(double *)value_ptr);
+      }
+    }
     else
       *len = snprintf( str, size, format, *(double *)value_ptr);
     break;
@@ -511,15 +547,43 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     break;
   }
   case pwr_eType_Int8: {
-    if ( !format)
-      *len = snprintf( str, size, "%d", *(char *)value_ptr);
+    if ( !format) {
+      switch ( conv) {
+      case xnav_eConv_Hex:
+	*len = snprintf( str, size, "0x%hx", *(unsigned char *)value_ptr);	
+	break;
+      case xnav_eConv_Octal:
+	*len = snprintf( str, size, "0%ho", *(unsigned char *)value_ptr);	
+	break;
+      case xnav_eConv_Binary:
+	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 8));
+	*len = 8;
+	break;
+      default:
+	*len = snprintf( str, size, "%d", *(char *)value_ptr);
+      }
+    }
     else
       *len = snprintf( str, size, format, *(char *)value_ptr);
     break;
   }
   case pwr_eType_Int16: {
-    if ( !format)
-      *len = snprintf( str, size, "%hd", *(short *)value_ptr);
+    if ( !format) {
+      switch ( conv) {
+      case xnav_eConv_Hex:
+	*len = snprintf( str, size, "0x%hx", *(unsigned short *)value_ptr);	
+	break;
+      case xnav_eConv_Octal:
+	*len = snprintf( str, size, "0%ho", *(unsigned short *)value_ptr);	
+	break;
+      case xnav_eConv_Binary:
+	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 16));
+	*len = 16;
+	break;
+      default:
+	*len = snprintf( str, size, "%hd", *(short *)value_ptr);
+      }
+    }
     else
       *len = snprintf( str, size, format, *(short *)value_ptr);
     break;
@@ -534,30 +598,92 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
       *len = strlen(str);
     }
     else {
-      if ( !format)
-	*len = snprintf( str, size, "%d", *(int *)value_ptr);
+      if ( !format) {
+	switch ( conv) {
+	case xnav_eConv_Hex:
+	  *len = snprintf( str, size, "0x%x", *(unsigned int *)value_ptr);	
+	  break;
+	case xnav_eConv_Octal:
+	  *len = snprintf( str, size, "0%o", *(unsigned int *)value_ptr);	
+	  break;
+	case xnav_eConv_Binary:
+	  strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 32));
+	  *len = 32;
+	  break;
+	case xnav_eConv_Float:
+	  *len = snprintf( str, size, "%g", *(float *)value_ptr);	
+	  break;
+	default:
+	  *len = snprintf( str, size, "%d", *(int *)value_ptr);	
+	}
+      }
       else
 	*len = snprintf( str, size, format, *(int *)value_ptr);
     }
     break;
   }
   case pwr_eType_Int64: {
-    if ( !format)
-      *len = snprintf( str, size, pwr_dFormatInt64, *(pwr_tInt64 *)value_ptr);
+    if ( !format) {
+      switch ( conv) {
+      case xnav_eConv_Hex:
+	*len = snprintf( str, size, "0x"pwr_dFormatHexInt64, *(pwr_tInt64 *)value_ptr);	
+	break;
+      case xnav_eConv_Octal:
+	*len = snprintf( str, size, "0"pwr_dFormatOctInt64, *(pwr_tInt64 *)value_ptr);	
+	break;
+      case xnav_eConv_Binary:
+	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 64));
+	*len = 64;
+	break;
+      case xnav_eConv_Float:
+	*len = snprintf( str, size, "%g", *(double *)value_ptr);	
+	break;
+      default:
+	*len = snprintf( str, size, pwr_dFormatInt64, *(pwr_tInt64 *)value_ptr);
+      }
+    }
     else
       *len = snprintf( str, size, format, *(pwr_tInt64 *)value_ptr);
     break;
   }
   case pwr_eType_UInt8: {
-    if ( !format)
-      *len = snprintf( str, size, "%u", *(unsigned char *)value_ptr);
+    if ( !format) {
+      switch ( conv) {
+      case xnav_eConv_Hex:
+	*len = snprintf( str, size, "0x%hx", *(unsigned char *)value_ptr);	
+	break;
+      case xnav_eConv_Octal:
+	*len = snprintf( str, size, "0%ho", *(unsigned char *)value_ptr);	
+	break;
+      case xnav_eConv_Binary:
+	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 8));
+	*len = 8;
+	break;
+      default:
+	*len = snprintf( str, size, "%u", *(unsigned char *)value_ptr);
+      }
+    }
     else
       *len = snprintf( str, size, format, *(unsigned char *)value_ptr);
     break;
   }
   case pwr_eType_UInt16: {
-    if ( !format)
-      *len = snprintf( str, size, "%hu", *(unsigned short *)value_ptr);
+    if ( !format) {
+      switch ( conv) {
+      case xnav_eConv_Hex:
+	*len = snprintf( str, size, "0x%hx", *(unsigned short *)value_ptr);	
+	break;
+      case xnav_eConv_Octal:
+	*len = snprintf( str, size, "0%ho", *(unsigned short *)value_ptr);	
+	break;
+      case xnav_eConv_Binary:
+	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 16));
+	*len = 16;
+	break;
+      default:
+	*len = snprintf( str, size, "%hu", *(unsigned short *)value_ptr);
+      }
+    }
     else
       *len = snprintf( str, size, format, *(unsigned short *)value_ptr);
     break;
@@ -565,15 +691,49 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
   case pwr_eType_UInt32:
   case pwr_eType_Mask:
   case pwr_eType_DisableAttr: {
-    if ( !format)
-      *len = snprintf( str, size, "%u", *(unsigned int *)value_ptr);
+    if ( !format) {
+      switch ( conv) {
+      case xnav_eConv_Hex:
+	*len = snprintf( str, size, "0x%x", *(unsigned int *)value_ptr);	
+	break;
+      case xnav_eConv_Octal:
+	*len = snprintf( str, size, "0%o", *(unsigned int *)value_ptr);	
+	break;
+      case xnav_eConv_Binary:
+	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 32));
+	*len = 32;
+	break;
+	case xnav_eConv_Float:
+	  *len = snprintf( str, size, "%g", *(float *)value_ptr);	
+	  break;
+      default:
+	*len = snprintf( str, size, "%u", *(unsigned int *)value_ptr);
+      }
+    }
     else
       *len = snprintf( str, size, format, *(unsigned int *)value_ptr);
     break;
   }
   case pwr_eType_UInt64: {
-    if ( !format)
-      *len = snprintf( str, size, pwr_dFormatUInt64, *(pwr_tUInt64 *)value_ptr);
+    if ( !format) {
+      switch ( conv) {
+      case xnav_eConv_Hex:
+	*len = snprintf( str, size, "0x"pwr_dFormatHexInt64, *(pwr_tUInt64 *)value_ptr);	
+	break;
+      case xnav_eConv_Octal:
+	*len = snprintf( str, size, "0"pwr_dFormatOctInt64, *(pwr_tUInt64 *)value_ptr);	
+	break;
+      case xnav_eConv_Binary:
+	strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 64));
+	*len = 64;
+	break;
+      case xnav_eConv_Float:
+	*len = snprintf( str, size, "%g", *(double *)value_ptr);	
+	break;
+      default:
+	*len = snprintf( str, size, pwr_dFormatUInt64, *(pwr_tUInt64 *)value_ptr);
+      }
+    }
     else
       *len = snprintf( str, size, format, *(pwr_tUInt64 *)value_ptr);
     break;
@@ -583,25 +743,41 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     int 		rows;
     bool		converted = false;
 
-    sts = gdh_GetEnumValueDef( tid, &valuedef, &rows);
-    if ( ODD(sts)) {
-
-      for ( int i = 0; i < rows; i++) {
-	if ( valuedef[i].Value->Value == *(pwr_tInt32 *)value_ptr) {
-	  strcpy( str, valuedef[i].Value->Text);
-	  *len = strlen(str);
-	  converted = true;
-	  break;
-	}
-      }
-      free( (char *)valuedef);
-    }
-    if ( !converted) {
-      if ( !format)
-	*len = snprintf( str, size, "%d", *(unsigned int *)value_ptr);
-      else
-	*len = snprintf( str, size, format, *(unsigned int *)value_ptr);
+    switch ( conv) {
+    case xnav_eConv_Hex:
+      *len = snprintf( str, size, "0x%x", *(unsigned int *)value_ptr);	
       break;
+    case xnav_eConv_Octal:
+      *len = snprintf( str, size, "0%o", *(unsigned int *)value_ptr);	
+      break;
+    case xnav_eConv_Binary:
+      strcpy( str, cdh_MaskToBinaryString( *(unsigned int *)value_ptr, 32));
+      *len = 32;
+      break;
+    case xnav_eConv_Decimal:
+    case xnav_eConv_Integer:
+      *len = snprintf( str, size, "%d", *(int *)value_ptr);	
+      break;
+    default:
+      sts = gdh_GetEnumValueDef( tid, &valuedef, &rows);
+      if ( ODD(sts)) {
+
+	for ( int i = 0; i < rows; i++) {
+	  if ( valuedef[i].Value->Value == *(pwr_tInt32 *)value_ptr) {
+	    strcpy( str, valuedef[i].Value->Text);
+	    *len = strlen(str);
+	    converted = true;
+	    break;
+	  }
+	}
+	free( (char *)valuedef);
+      }
+      if ( !converted) {
+	if ( !format)
+	  *len = snprintf( str, size, "%d", *(unsigned int *)value_ptr);
+	else
+	  *len = snprintf( str, size, format, *(unsigned int *)value_ptr);
+      }
     }
     break;
   }
@@ -627,32 +803,46 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     pwr_tOName hiername;
 
     objid = *(pwr_tObjid *)value_ptr;
-    if ( !objid.oix)
-      sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), 
-			      cdh_mName_volumeStrict);
-    else
-      sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), 
-			      cdh_mNName);
-    if (EVEN(sts))
-      {
-        strcpy( str, "");
-        *len = 0;
-        break;
+    switch ( conv) {
+    case xnav_eConv_Identity:
+      strcpy( str, cdh_ObjidToString( 0, objid, 1));
+      *len = strlen(str);
+      break;
+    default:
+      if ( !objid.oix)
+	sts = gdh_ObjidToName( objid, hiername, sizeof(hiername), 
+			       cdh_mName_volumeStrict);
+      else
+	sts = gdh_ObjidToName( objid, hiername, sizeof(hiername), 
+			       cdh_mNName);
+      if (EVEN(sts)) {
+	strcpy( str, "");
+	*len = 0;
       }
-    *len = snprintf( str, size, "%s", hiername);
+      else
+	*len = snprintf( str, size, "%s", hiername);
+    }
     break;
   }
   case pwr_eType_AttrRef: {
     pwr_tAName hiername;
 
     attrref = (pwr_sAttrRef *) value_ptr;
-    sts = gdh_AttrrefToName( attrref, hiername, sizeof(hiername), cdh_mNName);
-    if (EVEN(sts)) {
-      strcpy( str, "");
-      *len = 0;
+
+    switch ( conv) {
+    case xnav_eConv_Identity:
+      strcpy( str, cdh_ArefToString( 0, attrref, 1));
+      *len = strlen(str);
       break;
+    default:
+      sts = gdh_AttrrefToName( attrref, hiername, sizeof(hiername), cdh_mNName);
+      if (EVEN(sts)) {
+	strcpy( str, "");
+	*len = 0;
+      }
+      else
+	*len = snprintf( str, size, "%s", hiername);
     }
-    *len = snprintf( str, size, "%s", hiername);
     break;
   }
   case pwr_eType_DataRef: {
@@ -670,19 +860,33 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     break;
   }
   case pwr_eType_Time: {
-    sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
+    switch ( conv) {
+    case xnav_eConv_Integer:
+      *len = snprintf( str, size, "("pwr_dFormatInt64","pwr_dFormatInt64")", 
+		       ((pwr_tTime *)value_ptr)->tv_sec, ((pwr_tTime *)value_ptr)->tv_nsec);
+      break;
+    default:
+      sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
 			 timstr, sizeof(timstr));
-    if ( EVEN(sts))
-      strcpy( timstr, "-");
-    *len = snprintf( str, size, "%s", timstr);
+      if ( EVEN(sts))
+	strcpy( timstr, "-");
+      *len = snprintf( str, size, "%s", timstr);
+    }
     break;
   }
   case pwr_eType_DeltaTime: {
-    sts = time_DtoAscii( (pwr_tDeltaTime *) value_ptr, 1, 
-			 timstr, sizeof(timstr));
-    if ( EVEN(sts))
-      strcpy( timstr, "Undefined time");
-    *len = snprintf( str, size, "%s", timstr);
+    switch ( conv) {
+    case xnav_eConv_Integer:
+      *len = snprintf( str, size, "("pwr_dFormatInt64","pwr_dFormatInt64")", 
+		       ((pwr_tTime *)value_ptr)->tv_sec, ((pwr_tDeltaTime *)value_ptr)->tv_nsec);
+      break;
+    default:
+      sts = time_DtoAscii( (pwr_tDeltaTime *) value_ptr, 1, 
+			   timstr, sizeof(timstr));
+      if ( EVEN(sts))
+	strcpy( timstr, "Undefined time");
+      *len = snprintf( str, size, "%s", timstr);
+    }
     break;
   }
   case pwr_eType_ObjectIx: {
@@ -1557,6 +1761,19 @@ int XNav::is_authorized( unsigned int access, int msg)
 }
 
 
+void XNav::set_select_conversion( xnav_eConv conv)
+{
+  brow_tNode	*node_list;
+  int		node_count;
+  Item		*item;
+
+  brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
+  for ( int i = 0; i < node_count; i++) {
+    brow_GetUserData( node_list[i], (void **)&item);
+    item->set_conversion( conv);
+  }
+  free( node_list);
+}
 
 #if 0 // Currently not used, avoid compiler warnings
 //
@@ -2266,7 +2483,9 @@ int XNav::trace_scan_bc( brow_tObject object, void *p)
       else
         item->first_scan = 0;
 
-      attrvalue_to_string( item->type_id, item->tid, p, buf, sizeof(buf), &len, NULL);
+      attrvalue_to_string( item->type_id, item->tid, p, buf, sizeof(buf), &len, NULL,
+			   item->conversion);
+	
       brow_SetAnnotation( object, 1, buf, len);
       memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
       break;
@@ -2329,7 +2548,7 @@ int XNav::trace_scan_bc( brow_tObject object, void *p)
       else
         item->first_scan = 0;
 
-      attrvalue_to_string( item->type_id, 0, p, buf, sizeof(buf), &len, NULL);
+      attrvalue_to_string( item->type_id, 0, p, buf, sizeof(buf), &len, NULL, 0);
       brow_SetAnnotation( object, 1, buf, len);
       memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
       break;
@@ -2354,7 +2573,7 @@ int XNav::trace_scan_bc( brow_tObject object, void *p)
       else
         item->first_scan = 0;
 
-      attrvalue_to_string( item->type_id, 0, p, buf, sizeof(buf), &len, NULL);
+      attrvalue_to_string( item->type_id, 0, p, buf, sizeof(buf), &len, NULL, 0);
       brow_SetAnnotation( object, 1, buf, len);
       memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
       break;
@@ -2420,7 +2639,7 @@ int XNav::trace_scan_bc( brow_tObject object, void *p)
           {
             attrvalue_to_string( item->col.elem[i].type_id, 0,
 		item->col.elem[i].value_p, buf, sizeof(buf), &len,
-		item->col.elem[i].format);
+				 item->col.elem[i].format, 0);
             brow_SetAnnotation( object, i, buf, len);
             memcpy( item->old_value[i], item->col.elem[i].value_p,
 		min(item->col.elem[i].size, (int) sizeof(item->old_value[i])));

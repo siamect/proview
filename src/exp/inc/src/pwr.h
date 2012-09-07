@@ -755,9 +755,13 @@ static const pwr_tDeltaTime pwr_cNDeltaTime = {0, 0};	//!< Zero deltatime consta
 #if (defined OS_POSIX) && defined HW_X86_64
 # define pwr_dFormatUInt64 "%lu"
 # define pwr_dFormatInt64 "%ld"
+# define pwr_dFormatHexInt64 "%lx"
+# define pwr_dFormatOctInt64 "%lo"
 #else
 # define pwr_dFormatUInt64 "%llu"
 # define pwr_dFormatInt64 "%lld"
+# define pwr_dFormatHexInt64 "%llx"
+# define pwr_dFormatOctInt64 "%llo"
 #endif
 /*@}*/
 

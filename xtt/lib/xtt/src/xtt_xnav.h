@@ -165,6 +165,17 @@ typedef enum {
   menu_ePixmap_Leaf
 } menu_ePixmap;
 
+typedef enum {
+  xnav_eConv_No,
+  xnav_eConv_Hex,
+  xnav_eConv_Decimal,
+  xnav_eConv_Binary,
+  xnav_eConv_Octal,
+  xnav_eConv_Integer,
+  xnav_eConv_Float,
+  xnav_eConv_Identity  
+} xnav_eConv;
+
 typedef struct {
 	char	title[80];
 	int	item_type;
@@ -414,6 +425,7 @@ class XNav {
     int get_select_all( pwr_sAttrRef **attrref, int **is_attr);
     int get_all_objects( pwr_sAttrRef **attrref, int **is_attr);
     int get_all_collect_objects( pwr_sAttrRef **attrref, int **is_attr);
+    void set_select_conversion( xnav_eConv conv);
     int collect_insert( pwr_sAttrRef *attrref);
     int collect_remove();
     int collect_show();
@@ -468,7 +480,7 @@ class XNav {
     static int attr_string_to_value( int type_id, char *value_str, 
 				     void *buffer_ptr, int buff_size, int attr_size);
     static void attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr, 
-					   char *str, int size, int *len, char *format);
+				     char *str, int size, int *len, char *format, int conv);
     static void trace_subwindow_cb( void *ctx, pwr_tObjid objid);
     static void trace_display_object_cb( void *ctx, pwr_tObjid objid);
     static int is_authorized_cb( void *xnav, unsigned int access);

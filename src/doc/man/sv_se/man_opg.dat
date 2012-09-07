@@ -1563,6 +1563,7 @@ open operatorwindow<t>Öppna operatörsfönstret 	<LINK> open operatorwindow
 read object <t>Läs innehållet av ett objekt från fil <LINK> read object
 search	<t>Leta efter objekt eller sträng 	<LINK> search
 set advanceduser<t>Sätt avancerad användare	<LINK> set advanceduser
+set display<t>Sätt format for visning av utvalt attribut <LINK> set display
 set folder	<t>Aktivera en flik i ett flikfönster.  <LINK> set folder
 set parameter<t>Sätt värdet på ett attribut  	<LINK> set parameter
 set subwindow<t>Visa in graf i ett Ge window objekt.  <LINK> set subwindow
@@ -2187,6 +2188,25 @@ Sätt eller återställ advanced user.
 
 <H2>Se även
 advanced user <LINK> advanced user
+</TOPIC>
+
+<TOPIC> set display <style> function
+Command   set display
+
+Sätt format for visning av utvalt attribut. Ett attribut kan visas
+som decimalt, hexadecimalt, oktalt, binärt, eller som heltal eller
+flyttal. Objektidentiteter och attribut-referenser kan visas som
+identiteter.
+
+<B>xtt> set display default
+<B>xtt> set display hexdecimal
+<B>xtt> set display decimal
+<B>xtt> set display octal
+<B>xtt> set display binary
+<B>xtt> set display integer
+<B>xtt> set display float
+<B>xtt> set display identity
+
 </TOPIC>
 
 <TOPIC> setup <style> function

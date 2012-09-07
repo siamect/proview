@@ -884,6 +884,40 @@ static int	xnav_set_func(	void		*client_data,
     char c;
     c = *p;
   }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "DISPLAY", strlen( arg1_str)) == 0)
+  {    
+    // Command is "SET DISPLAY"
+    xnav_eConv conv;
+    char	arg2_str[80];
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str)))) {
+      xnav->message('E',"Syntax error");
+      return 1;
+    }
+
+    if ( cdh_NoCaseStrncmp( arg2_str, "HEXADECIMAL", strlen( arg2_str)) == 0)
+      conv = xnav_eConv_Hex;
+    else if ( cdh_NoCaseStrncmp( arg2_str, "DECIMAL", strlen( arg2_str)) == 0)
+      conv = xnav_eConv_Decimal;
+    else if ( cdh_NoCaseStrncmp( arg2_str, "OCTAL", strlen( arg2_str)) == 0)
+      conv = xnav_eConv_Octal;
+    else if ( cdh_NoCaseStrncmp( arg2_str, "BINARY", strlen( arg2_str)) == 0)
+      conv = xnav_eConv_Binary;
+    else if ( cdh_NoCaseStrncmp( arg2_str, "FLOAT", strlen( arg2_str)) == 0)
+      conv = xnav_eConv_Float;
+    else if ( cdh_NoCaseStrncmp( arg2_str, "INTEGER", strlen( arg2_str)) == 0)
+      conv = xnav_eConv_Integer;
+    else if ( cdh_NoCaseStrncmp( arg2_str, "IDENTITY", strlen( arg2_str)) == 0)
+      conv = xnav_eConv_Identity;
+    else if ( cdh_NoCaseStrncmp( arg2_str, "DEFAULT", strlen( arg2_str)) == 0)
+      conv = xnav_eConv_No;
+    else {
+      xnav->message('E',"Syntax error");
+      return 1;
+    }
+
+    xnav->set_select_conversion( conv);
+  }
   else
     xnav->message('E',"Syntax error");
   return 1;

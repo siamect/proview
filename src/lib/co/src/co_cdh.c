@@ -595,6 +595,7 @@ cdh_AttrValueToString (
   strncpy(String, sval, MaxSize);
   return sts;
 }
+
 
 //! Converts an attribute value given as a text string, to internal binary format.
 
@@ -870,6 +871,29 @@ cdh_StringToAttrValue (
   }
   
   return sts;
+}
+
+//! Converts a bitmask to a binary string.
+
+char *cdh_MaskToBinaryString( 
+  unsigned int mask,
+  int noofbits
+)
+{
+  static char str[80];
+  unsigned int m;
+  int i;
+
+  m = 1 << (noofbits - 1);
+  strcpy( str, "");
+  for ( i = 0; i < noofbits; i++) {
+    if ( m & mask)
+      strcat( str, "1");
+    else
+      strcat( str, "0");
+    m >>= 1;
+  }
+  return str;
 }
 
 
