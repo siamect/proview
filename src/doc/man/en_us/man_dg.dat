@@ -3870,11 +3870,13 @@ Send alarms and messages
 
 From an application you can send alarms and messages to the alarmlist and eventlist of
 the operator. First you have to connect to the event monitor with mh_ApplConnect() which
-takes the object identity for the application object as first argument.
+takes the object identity for the application object as first argument. For subclasses to
+the rt_appl class this identity is fetched with apploid().
 
 <c>#include "rt_mh_appl.h"
 <c>
 <c>pwr_tUInt32 num;
+<c>pwr_tOid aoid = apploid();
 <c>sts = mh_ApplConnect( aoid, mh_mApplFlags(0), "", mh_eEvent_Info, mh_eEventPrio_A,
 <c>			mh_mEventFlags_Bell, "", &num);
 <c>  if (EVEN(sts)) throw co_error(sts);
@@ -3888,7 +3890,7 @@ We then can send alarms with mh_ApplMessage().
 <c>msg.EventFlags = mh_mEventFlags(mh_mEventFlags_Returned | 
 <c>				  mh_mEventFlags_NoObject | 
 <c>				  mh_mEventFlags_Bell);
-<c>clock_gettime( CLOCK_REALTIME, &msg.EventTime);
+<c>time_GetTime( &msg.EventTime);
 <c>strcpy( msg.EventName, "Message from ra_myappl");
 <c>strcpy( msg.EventText, "I'm up and running now !");
 <c>msg.EventType = mh_eEvent_Alarm;
@@ -6999,7 +7001,7 @@ be displayed in an object graph with the dynamic type StatusColor. If you want t
 in the plc code for the object, you have to consider that the attribute is a pointer and 
 fetch the value with GetIpPtr.
 
-<b>ResetSequence
+<b>SequenceReset
 It is possible to use GRAFCET sequences in a component. One difference from an ordinary
 sequence are that the reset object should be defined as an attribute of class Dv in the
 main object, with the name 'SequenceReset'. SubSteps can not be used in the sequence.

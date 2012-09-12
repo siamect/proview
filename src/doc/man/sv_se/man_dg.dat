@@ -3828,11 +3828,13 @@ Skicka larm och meddelanden
 
 Från en applikation kan man även skicka larm och meddelanden till operatörens larm och 
 händelselista. Först måste man knyta upp sig mot eventmonitorn med mh_ApplConnect(). Vi
-skickar med objektidentiteten för applikationsobjektet som första argument.
+skickar med objektidentiteten för applikationsobjektet som första argument. För subclasser
+till rt_appl can identiteten hämtas med apploid().
 
 <c>#include "rt_mh_appl.h"
 <c>
 <c>pwr_tUInt32 num;
+<c>pwr_tOid aoid = apploid();
 <c>sts = mh_ApplConnect( aoid, mh_mApplFlags(0), "", mh_eEvent_Info, mh_eEventPrio_A,
 <c>			mh_mEventFlags_Bell, "", &num);
 <c>  if (EVEN(sts)) throw co_error(sts);
@@ -3846,7 +3848,7 @@ Därefter kan vi skicka larm med mh_ApplMessage().
 <c>msg.EventFlags = mh_mEventFlags(mh_mEventFlags_Returned | 
 <c>				  mh_mEventFlags_NoObject | 
 <c>				  mh_mEventFlags_Bell);
-<c>clock_gettime( CLOCK_REALTIME, &msg.EventTime);
+<c>time_GetTime( &msg.EventTime);
 <c>strcpy( msg.EventName, "Message from ra_myappl");
 <c>strcpy( msg.EventText, "I'm up and running now !");
 <c>msg.EventType = mh_eEvent_Alarm;
@@ -6897,9 +6899,9 @@ objektsbild med dynamiktypen StatusColor. Om man vill använda IoStatus i plc-kod
 objektet, måste man tänka på att attributet är en pekare och hämta upp värdet upp med 
 GetIpPtr.
 
-<b>ResetSequence
+<b>SequenceReset
 Det är möjligt att använda GRAFCET sekvenser i en komponent. En skillnad från en ordinär
-sekvens är att resetobjektet ska vara definierat med ett attribut a klass Dv med namnet 
+sekvens är att resetobjektet ska vara definierat med ett attribut av klass Dv med namnet 
 'SequenceReset'i huvudobjektet. SubStep kan inte användas if sekvensen.
 
 <b>GraphConfiguration
