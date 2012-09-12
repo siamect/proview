@@ -206,3 +206,17 @@
 120521 cs  rt        Report bugfix, value tag only worked for float
 120522 cs  rtt       rt_rtt, attribute of type Status wasn't displayed
 120522 cs  gdh       Gdh bugfix for subscriptions on remotely mounted objects
+120611 cs  cnv       co_convert xtthelp to html web symbol fix
+120615 cs  report    rt_report bugfix for several concurrent reports, target file wasn't used
+120712 cs  backup    Backup load bugfix
+120712 cs  rt        vol_OidToObject, return status corrected for nonexisting objects
+120912 cs  wbl       Wbload files, size of pointer attributes were missing
+120813 cs  time      Time function time_DToFloat64 added
+120813 cs  rt        IO process mask updated to match definition in rt_io_base.h
+120813 cs  errh      Errh function errh_SetAnix added
+120814 cs  cnv       Convert wbl to html, <br> added to headers and bold text
+120814 cs  tremd     Trend, template values set in rt_trend
+120816 cs  neth      Neth, remote shared volumes ignored
+120821 cs  cnv       Xtthelp html pages generated for included helpfiles
+120823 cs  plc       Plc, serveral processes, handling of error log and process status
+120824 cs  plc       Plc, several plc processes, signal handling with rt_ini at start and restart

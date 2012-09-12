@@ -49,3 +49,6 @@
 120608 rk  profinet   Profinet configurator bugfix in submodule index
 120608 rk  profinet   Profinet configurator bugfix in module deletion
 120608 rk  profinet   Profinet configurator, added flexibility when changeing device type keeping same gsdml-file
+120615 cs  profinet   Profinet configurator, sorting of moduletypes and iodata length settings
+120813 cs  profibus   Profibus configurator in xtt, bugfix in errorhandling for empty gsd-file (refs #112)
+120813 cs  profibus   Profibus device Janitza umg961 added

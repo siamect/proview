@@ -6,3 +6,4 @@
 081125 cs  -       Bugfix in opc_provider argument check, server identity was not optional.
 101220 cs  -       Opc_server fix, suppressed error return from not mounted mountobjects.
 120522 sh  -       Opc client, support for canonical data types added
+120824 cs  -       Opc server asserted when client was removed

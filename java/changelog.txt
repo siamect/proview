@@ -22,3 +22,6 @@
 110112 cs  rt        Java bugfix, subscription of String array didn't work.
 110112 cs  rt        Java table column reordering disabled.
 111221 cs  web       Web site can be opened from another than the process/operator station
+120615 cs  jop       Java piechart and barchart implemented
+120712 cs  jop       Java trend and fast curves implemented
+120821 cs  rt        Java eventlog wasn't built with db++

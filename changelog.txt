@@ -9,3 +9,4 @@
 100329 cs  .         Release 4.7.0-1.
 101121 cs  .         Operating system FreeBSD added.
 120304 cs  .         Release 4.8.4-1.
+120527 cs  .         Release 4.8.5-1.

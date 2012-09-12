@@ -236,3 +236,15 @@
 120427 cs  xtt       Trend curves, faster and larger
 120509 cs  ge        Ge recursive references for subscription added
 120523 cs  ge        Ge fix for shrinking windows on LXDE
+120813 cs  xtt       Xtt message removed when window auto resized (refs #113)
+120814 cs  ge        Ge value dynamics, fix to avoid segfault when type is not specifed
+120814 cs  ge        Ge invisible dynamic didn't work for object in a group
+120815 cs  ge        Ge submenu closing bugfix (refs #1)
+120815 cs  xtt       Xtt close/except command, max lengt for except string increased
+120912 cs  xtt       Xtt operator log configured in OpPlace object, attribute Options
+120817 cs  xtt       Operator window status bar, size of node buttons decreased for large number of nodes
+120820 cs  ge        Ge action input focus, invisible objects skipped for next tab and arrow right
+120822 cs  ge        Ge fix for close graph dynamics with confirm
+120823 cs  ge        Ge command 'move selected' bugfix (refs #42)
+120827 cs  xtt       Alarm window, button to ack all alarms, and xtt command 'eventlist ack/all'
+120907 cs  xtt       Xtt display values as hex, octal, binary etc
