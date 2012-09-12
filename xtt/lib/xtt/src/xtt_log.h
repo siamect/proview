@@ -40,7 +40,7 @@
 #include "pwr.h"
 #include "cow_log.h"
 
-#define xttlog_cLogFile "$pwrp_log/xtt.log"
+#define xttlog_cLogFile "$pwrp_log/xtt_%s.log"
 
 typedef enum {
   xttlog_eCategory_,

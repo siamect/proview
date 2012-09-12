@@ -206,6 +206,18 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Operatorplace options.
+      !  - OperatorLog will turn on the operator logging when rt_xtt is started.
+      !    The logging is stored in $pwrp_log/xtt_'opplace'.log
+      !  - OperatorExendedLog will also store all mouse and motion events in the 
+      !    logfile.
+      !*/
+      Object Options $Attribute 47
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-OpPlaceOptionsMask"
+        EndBody
+      EndObject
+      !/**
       !  Specifies the maximum number of contemporary alarms in
       !  the user's alarm list.
       !  The number should exceed the maximum number of 

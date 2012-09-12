@@ -3675,6 +3675,15 @@ int XNav::init_brow_base_cb( FlowCtx *fctx, void *client_data)
   else
     xnav->login();
 
+  if ( xnav->opplace_p && (xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_OperatorLog ||
+			   xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_OperatorExtendedLog)) {
+    pwr_tCmd cmd;
+    strcpy( cmd, "oplog start");
+    if ( xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_OperatorExtendedLog)
+      strcat( cmd, " /event");
+    xnav->command( cmd);
+  }
+
   // Execute the setup script
   xnav->gbl.setupscript_exec( xnav);
 

@@ -6047,6 +6047,7 @@ static int	xnav_oplog_func(void		*client_data,
 
   char	arg1_str[80];
   int	arg1_sts;
+  pwr_tCmd cmd;
 
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
@@ -6056,7 +6057,18 @@ static int	xnav_oplog_func(void		*client_data,
     int event = ODD( dcli_get_qualifier( "/EVENT", 0, 0));
 
     if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
-      strcpy( file_str, xttlog_cLogFile);
+      char *s;
+
+      if ( (s = strrchr( xnav->opplace_name, '-')))
+	s++;
+      else
+	s = xnav->opplace_name;
+
+      sprintf( file_str, xttlog_cLogFile, cdh_Low(s));
+
+      // Save any previous file with this name
+      sprintf( cmd, "pwrp_env.sh save file %s", file_str);
+      system( cmd);
     }
 
     if ( event)
@@ -6083,7 +6095,14 @@ static int	xnav_oplog_func(void		*client_data,
     int pid;
 
     if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
-      strcpy( file_str, xttlog_cLogFile);
+      char *s;
+
+      if ( (s = strrchr( xnav->opplace_name, '-')))
+	s++;
+      else
+	s = xnav->opplace_name;
+
+      sprintf( file_str, xttlog_cLogFile, cdh_Low(s));
     }
 
     if ( ODD( dcli_get_qualifier( "/SPEED", speed_str, sizeof(speed_str)))) {
