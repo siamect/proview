@@ -315,7 +315,8 @@ void Ev::update( double scantime)
     ala->reset_nodraw();
   }
 
-  ala->beep( scantime);
+  if ( beep)
+    ala->beep( scantime);
 }      
 
 void Ev::ack_last_prio( unsigned long type, unsigned long prio)
