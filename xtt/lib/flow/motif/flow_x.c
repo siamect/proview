@@ -1,4 +1,4 @@
-/** 
+ /** 
  * Proview   Open Source Process Control.
  * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
@@ -36,10 +36,6 @@
 
 //
 // Interface to Xlib and Xt macros which is compiled with alignment on alpha.
- * Proview   Open Source Process Control.
- * Copyright (C) 2005-2011 SSAB Oxelosund AB.
- *
- * This file is part of Proview.
 // does the #pragma alignment...
 //
 
