@@ -702,6 +702,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   int           path_file_created = 0;
   pwr_tString80 custom_platform;
   pwr_mOpSys   	custom_os;
+  pwr_tEnum  	qcom_auto_dis = 0;
 
   syntax_error = 0;
   strcpy( null_nodename, "-");
@@ -1457,6 +1458,12 @@ pwr_tStatus lfu_SaveDirectoryVolume(
     if ( bus_number == 0) 
       continue;
 
+    a = sp->attribute( buso.oid(), "RtBody", "QComAutoConnectDisable");
+    if ( !a) return a.sts();
+
+    a.value( &qcom_auto_dis);
+    if ( !a) return a.sts();
+
     // Get all nodeconfig and friendnodes for this bus
     vector<lfu_nodeconf> nodevect;
     int node_cnt = 0;
@@ -1685,6 +1692,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 	for ( int i = 0; i < (int)nodevect.size(); i++) {
 	  lfu_nodeconf nc = nodevect[i];
+
+	  if ( qcom_auto_dis == pwr_eYesNoEnum_Yes && i != idx)
+	    continue;
+
 	  fprintf( fp, "%s %s %s %d %d %d %d\n", nc.nodename, 
 		   cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, 
 		   nc.connection, int(nc.qcom_min_resend_time * 1000), 

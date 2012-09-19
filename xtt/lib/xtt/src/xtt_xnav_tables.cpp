@@ -986,7 +986,7 @@ static void xnav_channel_get_flags( void *cardp, void *chanp,
       pwr_sClass_ChanDo *cp = (pwr_sClass_ChanDo *)chanp;
 
       *inv = cp->InvertOn;
-      *conv = 0;
+      *conv = 1;
       *teston = cp->TestOn;
       break;
     }

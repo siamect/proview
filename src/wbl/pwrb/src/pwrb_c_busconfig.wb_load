@@ -93,6 +93,17 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
+      !/**
+      !  Disable the QCom auto connect. The nodes in the project
+      !  will not automatically create QCom links between each other.
+      !  These links can be configured individually for each node with 
+      !  FriendNode objects.
+      !*/
+      Object QComAutoConnectDisable $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-YesNoEnum"
+        EndBody
+      EndObject
     EndObject
   EndObject
 EndSObject
