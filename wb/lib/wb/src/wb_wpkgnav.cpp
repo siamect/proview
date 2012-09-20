@@ -148,13 +148,9 @@ int WPkgNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
         sts = brow_GetPrevious( wpkgnav->brow->ctx, node_list[0], &object);
         if ( EVEN(sts))
         {
-          sts = brow_GetLast( wpkgnav->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
-            if ( node_count)
-	      free( node_list);
-            return 1;
- 	  }
+	  if ( node_count)
+	    free( node_list);
+	  return 1;
         }
       }
       brow_SelectClear( wpkgnav->brow->ctx);
@@ -184,13 +180,9 @@ int WPkgNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
         sts = brow_GetNext( wpkgnav->brow->ctx, node_list[0], &object);
         if ( EVEN(sts))
         {
-          sts = brow_GetFirst( wpkgnav->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
-            if ( node_count)
-	      free( node_list);
-            return 1;
- 	  }
+	  if ( node_count)
+	    free( node_list);
+	  return 1;
         }
       }
       brow_SelectClear( wpkgnav->brow->ctx);
@@ -337,6 +329,22 @@ int WPkgNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       // Add select region
       brow_SetSelectInverse( wpkgnav->brow->ctx);
       break;
+    case flow_eEvent_Key_PageDown: {
+      brow_Page( wpkgnav->brow->ctx, 0.8);
+      break;
+    }
+    case flow_eEvent_Key_PageUp: {
+      brow_Page( wpkgnav->brow->ctx, -0.8);
+      break;
+    }
+    case flow_eEvent_ScrollDown: {
+      brow_Page( wpkgnav->brow->ctx, 0.1);
+      break;
+    }
+    case flow_eEvent_ScrollUp: {
+      brow_Page( wpkgnav->brow->ctx, -0.1);
+      break;
+    }
     case flow_eEvent_Map:
     {
       wpkgnav->displayed = 1;
@@ -430,6 +438,14 @@ void WPkgNav::enable_events()
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Right, flow_eEventType_CallBack, 
 	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack, 
+	brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, 
+	brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, 
+	brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
 	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Map, flow_eEventType_CallBack, 
 	brow_cb);
