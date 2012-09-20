@@ -673,6 +673,7 @@ int WItemPkgInfoHier::open_children( WNavBrow *brow, double x, double y, int dis
 {
   pwr_tFileName bootfile;
   pwr_tFileName bfile;
+  char 		bus_str[20];
   pwr_tTime	date;
   pwr_tString80	systemname;
   pwr_tString80	systemgroup;
@@ -703,6 +704,8 @@ int WItemPkgInfoHier::open_children( WNavBrow *brow, double x, double y, int dis
   sts = time_AtoAscii( &date, time_eFormat_DateAndTime, version, sizeof(version));
   brow_SetNodraw( brow->ctx);
   new WItemPkgInfo( brow, "NodeName", nodename, node, flow_eDest_IntoLast);
+  sprintf( bus_str, "%d", bus);
+  new WItemPkgInfo( brow, "QComBusId", bus_str, node, flow_eDest_IntoLast);
   if ( volcount > 0)
     new WItemPkgInfo( brow, "RootVolume", volnamelist[0], node, flow_eDest_IntoLast);
   new WItemPkgInfo( brow, "Version", version, node, flow_eDest_IntoLast);
