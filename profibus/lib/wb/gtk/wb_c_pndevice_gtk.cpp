@@ -176,7 +176,7 @@ static pwr_tStatus CopyDevice (
   memset( aref, 0, sizeof(aref));
   aref[0] = ip->Pointed;
   sts = ldh_CopyObjectTrees( ip->PointedSession, aref, ip->Pointed.Objid,
-			     ldh_eDest_After, 0, 1, 0);
+			     ldh_eDest_After, 0, 1, 0, 0);
   if ( EVEN(sts)) return sts;
 
   sts = ldh_GetNextSibling( ip->PointedSession, ip->Pointed.Objid, &oid);

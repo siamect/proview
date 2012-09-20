@@ -227,7 +227,7 @@ RtTrace *XNavMotif::plctrace_new( pwr_tOid oid, pwr_tStatus *sts)
 
 XAtt *XNavMotif::xatt_new( pwr_tAttrRef *arp, int advanced_user, pwr_tStatus *sts)
 {
-  return new XAttMotif( form_widget, this, arp, advanced_user, 0, sts);
+  return new XAttMotif( form_widget, this, arp, advanced_user, sts);
 }
 
 XCrr *XNavMotif::xcrr_new( pwr_tAttrRef *arp, int advanced_user, pwr_tStatus *sts)

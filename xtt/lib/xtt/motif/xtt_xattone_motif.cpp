@@ -148,7 +148,7 @@ int XAttOneMotif::change_value( int set_focus)
   sts = gdh_GetObjectInfoAttrref( &aref, aval, sizeof(aval));
   if ( EVEN(sts)) return sts;
 
-  XNav::attrvalue_to_string( atype, atype, &aval, buf, sizeof(buf), &len, NULL);
+  XNav::attrvalue_to_string( atype, atype, &aval, buf, sizeof(buf), &len, NULL, 0);
 
   value = buf;
 

@@ -1,5 +1,5 @@
 Package: pwrrt
-Version: 4.8.5-1
+Version: 4.8.6-1
 Section: base
 Priority: optional
 Architecture: i386
@@ -33,3 +33,10 @@ Description:
    - Display of invert, test and conversion for signals and channels in rt_xtt.
    - Ge pie chart and bar chart.
    - Trend curves with larger buffers and faster scantimes. Snapshot function.
+ 4.8.6-1
+   - Trend and fast curves in web interface.
+   - Pie chart and bar chart in web interface.
+   - Display values as hex, octal or binary in xtt.
+   - Configure operator log in OpPlace object.
+   - Plc, several processes, handling of error log and process status.
+   - DataArithmL with 8191 characters added.
