@@ -136,11 +136,41 @@ class WItemPkgNode : public WItemPkg {
 
 class WItemPkgPackage : public WItemPkg {
   public:
-    WItemPkgPackage( WNavBrow *brow, char *item_name, char *item_packagename, pwr_tTime item_time,
-		  brow_tNode dest, flow_eDest dest_code);
+  WItemPkgPackage( WNavBrow *brow, char *item_name, char *item_packagename, 
+		   pwr_tTime item_time, char *item_nodename, int item_bus,
+		   brow_tNode dest, flow_eDest dest_code);
     int	 open_children( WNavBrow *brow, double x, double y, int display_mode);
     char packagename[120];
     pwr_tTime time;
+    char nodename[32];
+    int bus;
+};
+
+class WItemPkgFileHier : public WItemPkg {
+  public:
+    WItemPkgFileHier( WNavBrow *brow, const char *item_name, char *item_packagename,
+		      brow_tNode dest, flow_eDest dest_code);
+    int	 open_children( WNavBrow *brow, double x, double y, int display_mode);
+    char packagename[120];
+};
+
+class WItemPkgInfoHier : public WItemPkg {
+ public:
+  WItemPkgInfoHier( WNavBrow *brow, const char *item_name, 
+		    char *item_packagename, char *item_nodename, int item_bus,
+		    brow_tNode dest, flow_eDest dest_code);
+    int	 open_children( WNavBrow *brow, double x, double y, int display_mode);
+    char packagename[120];
+    char nodename[120];
+    int bus;
+};
+
+class WItemPkgInfo : public WItemPkg {
+  public:
+  WItemPkgInfo( WNavBrow *brow, const char *item_name, char *item_value,
+		brow_tNode dest, flow_eDest dest_code);
+  char name[120];
+  char value[120];
 };
 
 class WItemPkgFile : public WItemPkg {
@@ -152,7 +182,5 @@ class WItemPkgFile : public WItemPkg {
 };
 
 #endif
-
-
 
 

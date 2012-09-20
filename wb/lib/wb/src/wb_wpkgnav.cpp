@@ -53,6 +53,7 @@
 #include "wb_wnav.h"
 #include "wb_wnav_brow.h"
 #include "wb_wnav_item.h"
+#include "wb_lfu.h"
 #include "wb_error.h"
 
 
@@ -575,16 +576,16 @@ int WItemPkgNode::open_children( WNavBrow *brow, double x, double y, int display
     while ( ODD(sts)) {
       brow_GetUserData( child, (void **)&item);
       if ( item->time.tv_sec < time.tv_sec) {
-	new WItemPkgPackage( brow, file, file, time, child,
-			     flow_eDest_Before);
+	new WItemPkgPackage( brow, file, file, time,
+			     nodename, bus, child, flow_eDest_Before);
 	inserted = 1;
 	break;
       }
       sts = brow_GetNextSibling( brow->ctx, child, &child);
     }
     if ( !inserted)
-      new WItemPkgPackage( brow, file, file, time, node,
-			 flow_eDest_IntoLast);
+      new WItemPkgPackage( brow, file, file, time, nodename, bus, node,
+			   flow_eDest_IntoLast);
 
     pkg_cnt++;
 
@@ -603,13 +604,15 @@ int WItemPkgNode::open_children( WNavBrow *brow, double x, double y, int display
 
 
 WItemPkgPackage::WItemPkgPackage( WNavBrow *brow, char *item_name,
-			    char *item_packagename, pwr_tTime item_time,
-			    brow_tNode dest, flow_eDest dest_code) 
-  : time(item_time)
+				  char *item_packagename, pwr_tTime item_time,
+				  char *item_nodename, int item_bus,
+				  brow_tNode dest, flow_eDest dest_code) 
+  : time(item_time), bus(item_bus)
 {
   char timestr[32];
 
   strcpy( packagename, item_packagename);
+  strcpy( nodename, item_nodename);
 
   time_AtoAscii( &time, time_eFormat_DateAndTime, timestr, sizeof(timestr));
   brow_CreateNode( brow->ctx, name, brow->nc_object,
@@ -621,6 +624,106 @@ WItemPkgPackage::WItemPkgPackage( WNavBrow *brow, char *item_name,
 
 int WItemPkgPackage::open_children( WNavBrow *brow, double x, double y, int display_mode)
 {
+
+  if ( brow_IsOpen( node)) {
+    close( brow, 0, 0);
+    return 1;
+  }
+
+  brow_SetNodraw( brow->ctx);
+  new WItemPkgInfoHier( brow, "Info", packagename, nodename, bus, node, flow_eDest_IntoLast);
+  new WItemPkgFileHier( brow, "Files", packagename, node, flow_eDest_IntoLast);
+  brow_ResetNodraw( brow->ctx);
+  brow_Redraw( brow->ctx, 0);
+  brow_SetOpen( node, wnav_mOpen_Children);
+  return 1;
+}
+
+WItemPkgInfoHier::WItemPkgInfoHier( WNavBrow *brow, const char *item_name,
+				    char *item_packagename, char *item_nodename, int item_bus,
+				    brow_tNode dest, flow_eDest dest_code)
+  : bus(item_bus)
+{
+  strcpy( packagename, item_packagename);
+  strcpy( nodename, item_nodename);
+
+  brow_CreateNode( brow->ctx, name, brow->nc_object,
+		dest, dest_code, (void *)this, 1, &node);
+  brow_SetAnnotPixmap( node, 0, brow->pixmap_map);
+  brow_SetAnnotation( node, 0, item_name, strlen(item_name));
+}
+
+int WItemPkgInfoHier::open_children( WNavBrow *brow, double x, double y, int display_mode)
+{
+  pwr_tFileName bootfile;
+  pwr_tFileName bfile;
+  pwr_tTime	date;
+  pwr_tString80	systemname;
+  pwr_tString80	systemgroup;
+  pwr_tVolumeId *vollist;
+  pwr_tString40	*volnamelist;
+  int		volcount;
+  pwr_tString80	*plclist;
+  int 		plccount;
+  char		version[40];
+  pwr_tCmd	cmd;
+  pwr_tStatus   sts;
+
+  if ( brow_IsOpen( node)) {
+    close( brow, 0, 0);
+    return 1;
+  }
+
+  sprintf( bootfile, load_cNameBoot, "pkg_build/", nodename, bus);
+  sprintf( cmd, "cd $pwrp_tmp; tar -xzf $pwrp_load/%s %s", packagename, bootfile);
+  system( cmd);
+  strcpy( bfile, "$pwrp_tmp/");
+  strcat( bfile, bootfile);
+
+  sts = lfu_ReadBootFile( bfile, &date, systemname, systemgroup, &vollist, &volnamelist,
+			  &volcount, &plclist, &plccount);
+  if ( EVEN(sts)) return sts;
+
+  sts = time_AtoAscii( &date, time_eFormat_DateAndTime, version, sizeof(version));
+  brow_SetNodraw( brow->ctx);
+  new WItemPkgInfo( brow, "NodeName", nodename, node, flow_eDest_IntoLast);
+  if ( volcount > 0)
+    new WItemPkgInfo( brow, "RootVolume", volnamelist[0], node, flow_eDest_IntoLast);
+  new WItemPkgInfo( brow, "Version", version, node, flow_eDest_IntoLast);
+  brow_ResetNodraw( brow->ctx);
+  brow_Redraw( brow->ctx, 0);
+  brow_SetOpen( node, wnav_mOpen_Children);
+  return 1;
+}
+
+WItemPkgInfo::WItemPkgInfo( WNavBrow *brow, const char *item_name,
+			    char *item_value,
+			    brow_tNode dest, flow_eDest dest_code)
+{
+  strcpy( name, item_name);
+  strcpy( value, item_value);
+
+  brow_CreateNode( brow->ctx, name, brow->nc_object,
+		dest, dest_code, (void *)this, 1, &node);
+  brow_SetAnnotPixmap( node, 0, brow->pixmap_leaf);
+  brow_SetAnnotation( node, 0, item_name, strlen(item_name));
+  brow_SetAnnotation( node, 1, item_value, strlen(item_value));
+}
+
+WItemPkgFileHier::WItemPkgFileHier( WNavBrow *brow, const char *item_name,
+				    char *item_packagename,
+				    brow_tNode dest, flow_eDest dest_code) 
+{
+  strcpy( packagename, item_packagename);
+
+  brow_CreateNode( brow->ctx, name, brow->nc_object,
+		dest, dest_code, (void *)this, 1, &node);
+  brow_SetAnnotPixmap( node, 0, brow->pixmap_map);
+  brow_SetAnnotation( node, 0, item_name, strlen(item_name));
+}
+
+int WItemPkgFileHier::open_children( WNavBrow *brow, double x, double y, int display_mode)
+{
   char cmd[200];
   char tmpfile[200];
   char line[200];
@@ -630,12 +733,14 @@ int WItemPkgPackage::open_children( WNavBrow *brow, double x, double y, int disp
   pwr_tTime time;
   int file_cnt = 0;
   WItemPkgFile    *item;
-  WItemPkgPackage *next_item = 0;
+  WItemPkgFileHier *next_files_item = 0;
+  WItemPkgPackage *next_pkg_item = 0;
   int inserted = 0;
   brow_tObject child;
   int sts;
-  brow_tObject next;
-  int next_was_open = 0;
+  brow_tObject next_pkg, next_files, parent;
+  int next_pkg_was_open = 0;
+  int next_files_was_open = 0;
 
   if ( brow_IsOpen( node)) {
     close( brow, 0, 0);
@@ -653,14 +758,38 @@ int WItemPkgPackage::open_children( WNavBrow *brow, double x, double y, int disp
 
   if ( display_mode & wpkg_mDisplayMode_FileDiff) {
     // Display only file with newer date compared to previous package
-    sts = brow_GetNextSibling( brow->ctx, node, &next);
+    sts = brow_GetParent( brow->ctx, node, &parent);
+    if ( ODD(sts))
+      sts = brow_GetNextSibling( brow->ctx, parent, &next_pkg);
     if ( ODD(sts)) {
-      brow_GetUserData( next, (void **)&next_item);
-      if ( brow_IsOpen( next)) {
-	next_item->close( brow, 0, 0);
-	next_was_open = 1;
+      brow_GetUserData( next_pkg, (void **)&next_pkg_item);
+      if ( brow_IsOpen( next_pkg)) {
+	sts = brow_GetChild( brow->ctx, next_pkg, &next_files);
+	if ( ODD(sts))
+	  sts = brow_GetNextSibling( brow->ctx, next_files, &next_files);
+	if ( ODD(sts)) {
+	  brow_GetUserData( next_files, (void **)&next_files_item);
+	  if ( brow_IsOpen( next_files))
+	    next_files_was_open = 1;
+	}
+	next_pkg_item->close( brow, 0, 0);
+	next_pkg_was_open = 1;
       }
-      next_item->open_children( brow, 0, 0, wpkg_mDisplayMode__);
+      next_pkg_item->open_children( brow, 0, 0, wpkg_mDisplayMode__);
+
+      sts = brow_GetChild( brow->ctx, next_pkg, &next_files);
+      if ( ODD(sts))
+	sts = brow_GetNextSibling( brow->ctx, next_files, &next_files);
+      if ( ODD(sts)) {
+	brow_GetUserData( next_files, (void **)&next_files_item);
+	if ( brow_IsOpen( next_files)) {
+	  next_files_item->close( brow, 0, 0);
+	}
+	next_files_item->open_children( brow, 0, 0, wpkg_mDisplayMode__);
+      }
+      else
+	// No next sibling, display all files
+	display_mode &= ~wpkg_mDisplayMode_FileDiff;
     }
     else
       // No next sibling, display all files
@@ -684,7 +813,7 @@ int WItemPkgPackage::open_children( WNavBrow *brow, double x, double y, int disp
     if ( display_mode & wpkg_mDisplayMode_FileDiff) {
       // Check if this file is changed
       int keep = 1;
-      sts = brow_GetChild( brow->ctx, next, &child);
+      sts = brow_GetChild( brow->ctx, next_files, &child);
       while ( ODD(sts)) {
 	brow_GetUserData( child, (void **)&item);
 	if ( strcmp( item->filename, line_item[2]) == 0) {
@@ -726,10 +855,20 @@ int WItemPkgPackage::open_children( WNavBrow *brow, double x, double y, int disp
 
   is.close();
 
-  if ( display_mode & wpkg_mDisplayMode_FileDiff && next_item) {
-    next_item->close( brow, 0, 0);
-    if ( next_was_open)
-      next_item->open_children( brow, 0, 0, display_mode);
+  if ( display_mode & wpkg_mDisplayMode_FileDiff && next_pkg_item) {
+    next_pkg_item->close( brow, 0, 0);
+    if ( next_pkg_was_open) {
+      next_pkg_item->open_children( brow, 0, 0, display_mode);
+      if ( next_files_was_open) {
+	sts = brow_GetChild( brow->ctx, next_pkg, &next_files);
+	if ( ODD(sts))
+	  sts = brow_GetNextSibling( brow->ctx, next_files, &next_files);
+	if ( ODD(sts)) {
+	  brow_GetUserData( next_files, (void **)&next_files_item);
+	  next_files_item->open_children( brow, 0, 0, display_mode);
+	}
+      }
+    }
   }
 
   if ( file_cnt) {

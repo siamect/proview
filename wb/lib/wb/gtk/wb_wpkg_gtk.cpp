@@ -303,15 +303,15 @@ WPkgGtk::WPkgGtk(
   GtkWidget *view_zoom_reset = gtk_image_menu_item_new_from_stock(GTK_STOCK_ZOOM_100, NULL);
   g_signal_connect(view_zoom_reset, "activate", G_CALLBACK(WPkgGtk::activate_zoom_reset), this);
 
-  GtkWidget *view_dmode_filediff = gtk_menu_item_new_with_mnemonic( "_Display File Differences");
+  GtkWidget *view_dmode_filediff = gtk_check_menu_item_new_with_mnemonic( "_Display File Differences");
   g_signal_connect( view_dmode_filediff, "activate", 
 		    G_CALLBACK(WPkgGtk::activate_dmode_filediff), this);
 
-  GtkWidget *view_dmode_filetime = gtk_menu_item_new_with_mnemonic( "Display Files In _Time Order");
+  GtkWidget *view_dmode_filetime = gtk_check_menu_item_new_with_mnemonic( "Display Files In _Time Order");
   g_signal_connect( view_dmode_filetime, "activate", 
 		    G_CALLBACK(WPkgGtk::activate_dmode_filetime), this);
 
-  GtkWidget *view_dmode_filepath = gtk_menu_item_new_with_mnemonic( "Display File _Path");
+  GtkWidget *view_dmode_filepath = gtk_check_menu_item_new_with_mnemonic( "Display File _Path");
   g_signal_connect( view_dmode_filepath, "activate", 
 		    G_CALLBACK(WPkgGtk::activate_dmode_filepath), this);
 

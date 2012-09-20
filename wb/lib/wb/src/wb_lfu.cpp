@@ -2755,8 +2755,13 @@ pwr_tStatus lfu_ReadBootFile(
   }
 
   if ( utl_read_line( buff, sizeof(buff), file, NULL) == 0) {
+    // Sev node bootfile
     fclose( file);
-    return LFU__FILECRP;
+    *volcount = 0;
+    *plccount = 0;
+    if ( plclist)
+      *plclist = (pwr_tString80 *)0;
+    return LFU__SUCCESS;
   }
 
   if ( plclist) {
