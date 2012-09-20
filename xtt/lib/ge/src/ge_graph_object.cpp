@@ -689,7 +689,11 @@ static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
 
   // Get channel object
   sts = gdh_ArefANameToAref( arp, "SigChanCon", &aref);
-  if ( EVEN(sts)) return sts;
+  if ( EVEN(sts)) {
+    // Dv object, register scan function and return with success
+    graph->graph_object_scan = graph_object_dx_scan;
+    return 1;
+  }
 
   sts = gdh_GetObjectInfoAttrref( &aref, &chanaref, sizeof(chanaref));
   if ( EVEN(sts)) return sts;
