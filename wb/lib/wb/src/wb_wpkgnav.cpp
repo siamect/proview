@@ -701,6 +701,9 @@ int WItemPkgInfoHier::open_children( WNavBrow *brow, double x, double y, int dis
 			  &volcount, &plclist, &plccount);
   if ( EVEN(sts)) return sts;
 
+  sprintf( cmd, "cd $pwrp_tmp; rm %s; rmdir pkg_build", bootfile);
+  system( cmd);
+
   sts = time_AtoAscii( &date, time_eFormat_DateAndTime, version, sizeof(version));
   brow_SetNodraw( brow->ctx);
   new WItemPkgInfo( brow, "NodeName", nodename, node, flow_eDest_IntoLast);
