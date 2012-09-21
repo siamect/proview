@@ -664,6 +664,7 @@ qcom_Put (
   qdb_sNode		*np = NULL;
   qdb_sQue		*qp = NULL;
   pwr_dStatus		(sts, status, QCOM__SUCCESS);
+  pwr_tStatus		lsts;
 
   pwr_Assert(pp != NULL);
 
@@ -694,7 +695,9 @@ qcom_Put (
     }
 
     qdb_Put(sts, bp, qp);
-    if (ODD(*sts)) qdb->ap->put_count++;
+    if ( *sts == QDB__QUOTAEXCEEDED)
+      qdb_Free(&lsts, bp);
+    else if (ODD(*sts)) qdb->ap->put_count++;
 
   } qdb_ScopeUnlock;
 
