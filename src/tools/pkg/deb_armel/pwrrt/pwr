@@ -42,10 +42,15 @@ create_killer()
     echo "`ps ax | grep "ra_" | awk '{ print "kill -9 "$1}'`" >> $killer
     echo "`ps ax | grep "sev_" | awk '{ print "kill -9 "$1}'`" >> $killer
     echo "`ps ax | grep "opc_" | awk '{ print "kill -9 "$1}'`" >> $killer
+    echo "`ps ax | grep "plc_" | awk '{ print "kill -9 "$1}'`" >> $killer
+    echo "`ps ax | grep "jpwr.rt" | awk '{ print "kill -9 "$1}'`" >> $killer
 
     echo "eval `ipcs -s|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm sem %s;", $2}'`" >> $killer
     echo "eval `ipcs -q|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm msg %s;", $2}'`" >> $killer
     echo "eval `ipcs -m|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm shm %s;", $2}'`" >> $killer
+    echo "if [ -e $pwrp_exe/pwrp_stop.sh ]; then" >> $killer
+    echo "  source $pwrp_exe/pwrp_stop.sh" >> $killer
+    echo "fi" >> $killer
     echo "rm /tmp/pwr*\$PWR_BUS_ID" >> $killer
     
     chmod a+rx $killer
@@ -129,17 +134,17 @@ case "$1"
 	echo "Done."
 	;;
     kill)
-	echo "Remove all processes and resources for Proview Storage Environment"
+	echo "Remove all processes and resources for Proview Runtime Environment"
         pwr_kill
 	echo "Done."
 	;;
     reset)
-	echo "Remove all processes and resources for Proview Storage Environment"
+	echo "Remove all processes and resources for Proview Runtime Environment"
         pwr_kill
 	echo "Done."
 	;;
     *)
-	echo "  pwrsev  Start and stop Proview Storage Environment" >&2
+	echo "  pwrsev  Start and stop Proview Runtime Environment" >&2
 	echo "" >&2
 	echo "  Usage:" >&2
 	echo "  pwr start|stop|restart|reload|reset" >&2
