@@ -48,6 +48,7 @@
   kill -9 `ps ax | grep "rs_remote" | awk '{ print $1}'`
   kill -9 `ps ax | grep "sev_server" | awk '{ print $1}'`
   kill -9 `ps ax | grep "opc_server" | awk '{ print $1}'`
+  kill -9 `ps ax | grep "opc_provider" | awk '{ print $1}'`
   if [ -u $pwr_exe/rt_ini ]; then
     user=`ls -al $pwr_exe/rt_ini | awk '{ print $3}'`
   else
