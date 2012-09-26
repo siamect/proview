@@ -167,8 +167,19 @@ subcm_Data (
     gdbroot->db->subm_lc++;
     np = hash_Search(&sts, gdbroot->nid_ht, &mp->msg.hdr.nid);
 
-    /* Walk through every entry in the message buffer.  */
 
+    /* Check if message is corrupt */
+    dp = (net_sSubData *)&mp->msg.subdata;
+    for ( i=0; i < mp->msg.count; i++) {
+      if ( (char *)dp > (char *)&mp->msg + get->size || (char *)dp < (char *)&mp->msg) {
+	errh_Error( "Subscription client message corrupt");
+	gdb_Unlock;
+	return;
+      }
+      dp = (net_sSubData *)((unsigned long)&dp->data + dp->size);
+    }
+
+    /* Walk through every entry in the message buffer.  */
     for (
       i=0,
       dp = (net_sSubData *)&mp->msg.subdata,
