@@ -624,7 +624,7 @@
 */
 #define GetExtFloat32_init(obj, name) \
 { \
-  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tFloat32)); \
+  gdh_RefObjectInfo( name, (void **)&obj->ExtP, 0, sizeof(pwr_tFloat32)); \
 }
 
 #define GetExtFloat32_exec(obj) \
@@ -637,7 +637,7 @@
 */
 #define GetExtFloat64_init(obj, name) \
 { \
-  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tFloat64)); \
+  gdh_RefObjectInfo( name, (void **)&obj->ExtP, 0, sizeof(pwr_tFloat64)); \
 }
 
 #define GetExtFloat64_exec(obj) \
@@ -650,7 +650,7 @@
 */
 #define GetExtInt64_init(obj, name) \
 { \
-  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tInt64)); \
+  gdh_RefObjectInfo( name, (void **)&obj->ExtP, 0, sizeof(pwr_tInt64)); \
 }
 
 #define GetExtInt64_exec(obj) \
@@ -663,7 +663,7 @@
 */
 #define GetExtUInt64_init(obj, name) \
 { \
-  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tUInt64)); \
+  gdh_RefObjectInfo( name, (void **)&obj->ExtP, 0, sizeof(pwr_tUInt64)); \
 }
 
 #define GetExtUInt64_exec(obj) \
@@ -677,7 +677,7 @@
 */
 #define GetExtInt32_init(obj, name) \
 { \
-  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tInt32)); \
+  gdh_RefObjectInfo( name, (void **)&obj->ExtP, 0, sizeof(pwr_tInt32)); \
 }
 
 #define GetExtInt32_exec(obj) \
@@ -690,7 +690,7 @@
 */
 #define GetExtUInt32_init(obj, name) \
 { \
-  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tUInt32)); \
+  gdh_RefObjectInfo( name, (void **)&obj->ExtP, 0, sizeof(pwr_tUInt32)); \
 }
 
 #define GetExtUInt32_exec(obj) \
@@ -703,7 +703,7 @@
 */
 #define GetExtInt16_init(obj, name) \
 { \
-  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tInt16)); \
+  gdh_RefObjectInfo( name, (void **)&obj->ExtP, 0, sizeof(pwr_tInt16)); \
 }
 
 #define GetExtInt16_exec(obj) \
@@ -716,7 +716,7 @@
 */
 #define GetExtUInt16_init(obj, name) \
 { \
-  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tUInt16)); \
+  gdh_RefObjectInfo( name, (void **)&obj->ExtP, 0, sizeof(pwr_tUInt16)); \
 }
 
 #define GetExtUInt16_exec(obj) \
@@ -729,7 +729,7 @@
 */
 #define GetExtInt8_init(obj, name) \
 { \
-  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tInt8)); \
+  gdh_RefObjectInfo( name, (void **)&obj->ExtP, 0, sizeof(pwr_tInt8)); \
 }
 
 #define GetExtInt8_exec(obj) \
@@ -742,7 +742,7 @@
 */
 #define GetExtUInt8_init(obj, name) \
 { \
-  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tUInt8)); \
+  gdh_RefObjectInfo( name, (void **)&obj->ExtP, 0, sizeof(pwr_tUInt8)); \
 }
 
 #define GetExtUInt8_exec(obj) \
@@ -755,7 +755,7 @@
 */
 #define GetExtBoolean_init(obj, name) \
 { \
-  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tBoolean)); \
+  gdh_RefObjectInfo( name, (void **)&obj->ExtP, 0, sizeof(pwr_tBoolean)); \
 }
 
 #define GetExtBoolean_exec(obj) \
@@ -768,7 +768,7 @@
 */
 #define GetExtString_init(obj, name) \
 { \
-  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tString80)); \
+  gdh_RefObjectInfo( name, (void **)&obj->ExtP, 0, sizeof(pwr_tString80)); \
 }
 
 #define GetExtString_exec(obj) \
@@ -781,7 +781,7 @@
 */
 #define GetExtTime_init(obj, name) \
 { \
-  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tTime)); \
+  gdh_RefObjectInfo( name, (void **)&obj->ExtP, 0, sizeof(pwr_tTime)); \
 }
 
 #define GetExtTime_exec(obj) \
