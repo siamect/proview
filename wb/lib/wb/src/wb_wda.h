@@ -98,7 +98,8 @@ class Wda {
     virtual void change_value( int set_focus) {}
     virtual void change_value_close() {}
     virtual void pop() {}
-
+    virtual void print( const char *title) {}
+    
     int open_changevalue( char *name);
     void set_editmode( int editmode, ldh_tSesContext ldhses);
     void open_class_dialog();
@@ -108,6 +109,7 @@ class Wda {
     void print();
     void print_textfile();
     void import_textfile();
+    void activate_print();
 
     static void message_cb( void *wda, char severity, const char *message);
     static void change_value_cb( void *wda);

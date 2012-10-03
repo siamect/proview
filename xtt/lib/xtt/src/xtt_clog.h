@@ -69,9 +69,11 @@ class CLog {
     virtual void set_clock_cursor() {}
     virtual void reset_cursor() {}
     virtual void free_cursor() {}
+    virtual void print() {}
 
     void activate_next_file();
     void activate_prev_file();
+    void activate_print();
     void activate_help();
 };
 

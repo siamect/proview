@@ -58,9 +58,11 @@ class EvListGtk : public EvList {
     GtkWidget		*brow_widget;
     GtkWidget		*form_widget;
     GtkWidget		*toplevel;
+    char		print_title[120];
 
     void set_input_focus();
     void bell();
+    void print( const char *title);
     void popup_position( int x_event, int y_event, int *x, int *y);
 };
 

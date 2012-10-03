@@ -87,12 +87,14 @@ class XColWindGtk : public XColWind {
     void set_title( char *title);
     void set_window_size( int w, int h);
     void get_window_size( int *w, int *h);
+    void print();
 
     static void activate_open( GtkWidget *w, gpointer data);
     static void activate_save( GtkWidget *w, gpointer data);
     static void activate_saveas( GtkWidget *w, gpointer data);
     static void activate_insert( GtkWidget *w, gpointer data);
     static void activate_delete( GtkWidget *w, gpointer data);
+    static void activate_print( GtkWidget *w, gpointer data);
     static void activate_moveup( GtkWidget *w, gpointer data);
     static void activate_movedown( GtkWidget *w, gpointer data);
     static void activate_change_value( GtkWidget *w, gpointer data);

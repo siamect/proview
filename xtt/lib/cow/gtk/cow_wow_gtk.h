@@ -148,6 +148,11 @@ class CoWowGtk : public CoWow {
   void DisplayLicense();
   pwr_tStatus CreateMenuItem( const char *name, void *menu, int pixmap, int append, void *w);
   pwr_tStatus DeleteMenuItem( const char *name, void *menu);
+  void CreateBrowPrintDialog( const char *title, void *brow_ctx, int orientation,
+			      void *parent_widget, pwr_tStatus *sts) {
+    CreateBrowPrintDialogGtk( title, brow_ctx, orientation, parent_widget, sts);}
+  static void CreateBrowPrintDialogGtk( const char *title, void *brow_ctx, int orientation,
+					void *parent_widget, pwr_tStatus *sts);
   CoWowTimer *timer_new();
   void SetParent( GtkWidget *parent) { m_parent = parent;}
   void Wait( float time);

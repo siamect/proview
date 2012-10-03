@@ -210,6 +210,13 @@ void XColWindGtk::activate_saveas( GtkWidget *w, gpointer data)
   xcolwind->activate_saveas();
 }
 
+void XColWindGtk::activate_print( GtkWidget *w, gpointer data)
+{
+  XColWind *xcolwind = (XColWind *)data;
+
+  xcolwind->activate_print();
+}
+
 void XColWindGtk::activate_close_changeval( GtkWidget *w, gpointer data)
 {
   XColWind *xcolwind = (XColWind *)data;
@@ -550,6 +557,14 @@ void XColWindGtk::get_window_size( int *w, int *h)
   gtk_window_get_size( GTK_WINDOW(toplevel), w, h);
 }
 
+void XColWindGtk::print()
+{
+  pwr_tStatus sts;
+
+  wow->CreateBrowPrintDialog( title, xattnav->brow->ctx, flow_eOrientation_Portrait,
+			      (void *)toplevel, &sts);
+}
+
 XColWindGtk::~XColWindGtk()
 {
   delete (XAttNav *)xattnav;
@@ -631,11 +646,16 @@ XColWindGtk::XColWindGtk( GtkWidget 	*xa_parent_wid,
   g_signal_connect( file_open, "activate", 
 		    G_CALLBACK(activate_open), this);
 
+  GtkWidget *file_print = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Print"));
+  g_signal_connect( file_print, "activate", 
+		    G_CALLBACK(activate_print), this);
+
 
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_open);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_save);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_saveas);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_File"));

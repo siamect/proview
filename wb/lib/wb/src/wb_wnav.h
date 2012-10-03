@@ -316,6 +316,7 @@ class WNav : public WUtility{
 
     virtual void pop() {}
     virtual void set_inputfocus( int focus) {}
+    virtual void print( const char *title) {}
     virtual void trace_start() {}
     virtual void set_selection_owner() {}
     virtual Ge *ge_new( char *graph_name, int nojournal) { return 0;}
@@ -353,7 +354,6 @@ class WNav : public WUtility{
     int create_object_item( pwr_tObjid objid, 
 		brow_tNode dest, flow_eDest dest_code, void **item,
 		int is_root);
-    void print( char *filename);
     void zoom( double zoom_factor);
     void get_zoom( double *zoom_factor);
     void unzoom();

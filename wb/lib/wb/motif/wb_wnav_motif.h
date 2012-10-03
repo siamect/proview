@@ -70,6 +70,7 @@ class WNavMotif : public WNav {
 
     void pop();
     void set_inputfocus( int focus);
+    void print( const char *title);
     void trace_start();
     void set_selection_owner();
     Ge *ge_new( char *graph_name, int nojournal);

@@ -74,17 +74,9 @@ void Wda::change_value_cb( void *wda)
   ((Wda *)wda)->change_value(1);
 }
 
-void Wda::print()
+void Wda::activate_print()
 {
-  pwr_tFileName filename = "$pwrp_tmp/wda.ps";
-  pwr_tCmd cmd;
-  int sts;
-
-  dcli_translate_filename( filename, filename);
-  wdanav->print(filename);
-
-  sprintf( cmd, "wb_gre_print.sh %s", filename); 
-  sts = system( cmd);
+  print( "Speadsheet Editor");
 }
 
 void Wda::print_textfile()

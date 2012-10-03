@@ -83,10 +83,12 @@ class WAttGtk : public WAtt {
   int open_changevalue( char *name);
   void change_value_close();
   void pop();
+  void print( const char *title);
 
   static void activate_change_value( GtkWidget *w, gpointer data);
   static void activate_close_changeval( GtkWidget *w, gpointer data);
   static void activate_exit( GtkWidget *w, gpointer data);
+  static void activate_print( GtkWidget *w, gpointer data);
   static void activate_help( GtkWidget *w, gpointer data);
   static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
   static void valchanged_cmd_input( GtkWidget *w, gpointer data);

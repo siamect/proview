@@ -218,6 +218,60 @@ int BrowCtx::print( char *filename)
   return 1;
 }
 
+void BrowCtx::print_draw_page( void *context, const char *title, int page,
+			       flow_eOrientation orientation)
+{
+  double ll_x, ll_y, ur_x, ur_y;
+  double width, height;
+  int sts;
+
+  if ( a.size() == 0)
+    return;
+
+  ((FlowNode *)a[0])->measure( &ll_x, &ll_y, &ur_x, &ur_y);
+  height = 60 * (ur_y - ll_y);
+  width = 0.70 * height;
+  if ( orientation == flow_eOrientation_Landscape) {
+    height = 40 * ( ur_y - ll_y);
+    width = height / 0.70;
+  }
+
+  current_print = (FlowPrint *)fdraw->print_draw_new( context, title, page, this, 1, &sts);
+  if ( EVEN(sts)) return;
+
+  ll_y = page * height;
+  ur_y = ll_y + height;
+  ll_x = 0;
+  ur_x = width;
+  if (  ll_y > y_high)
+    return;
+
+  current_print->print_page( ll_x, ll_y, ur_x, ur_y);
+  delete current_print;  
+}
+
+void BrowCtx::print_get_pages( flow_eOrientation orientation, int *pages)
+{
+  double ll_x, ll_y, ur_x, ur_y;
+  double width, height;
+
+  if ( a.size() == 0) {
+    *pages = 0;
+    return;
+  }
+
+  ((FlowNode *)a[0])->measure( &ll_x, &ll_y, &ur_x, &ur_y);
+  height = 60 * (ur_y - ll_y);
+  width = 0.70 * height;
+  if ( orientation == flow_eOrientation_Landscape) {
+    // Portrait
+    height = 40 * ( ur_y - ll_y);
+    width = height / 0.70;
+  }
+
+  *pages = int(y_high / height + 1);
+}
+
 
 int BrowCtx::is_visible( FlowArrayElem *element, flow_eVisible type)
 {

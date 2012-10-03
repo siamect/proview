@@ -75,6 +75,14 @@ void WdaGtk::set_prompt( const char *prompt)
   }
 }
 
+void WdaGtk::print( const char *title)
+{
+  pwr_tStatus sts;
+
+  wow->CreateBrowPrintDialog( title, wdanav->brow->ctx, flow_eOrientation_Portrait,
+			      (void *)toplevel, &sts);
+}
+
 void WdaGtk::change_value( int set_focus)
 {
   int		sts;
@@ -186,7 +194,7 @@ void WdaGtk::activate_print( GtkWidget *w, gpointer data)
 {
   Wda *wda = (Wda *)data;
 
-  wda->print();
+  wda->activate_print();
 }
 
 void WdaGtk::activate_export_text( GtkWidget *w, gpointer data)

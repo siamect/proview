@@ -45,6 +45,8 @@
 #include "co_dcli.h"
 
 bool CoWow::m_autoremove = false;
+bool CoWow::m_printdialog_disable = false;
+char CoWow::m_default_printer[80] = "";
 
 CoWow::~CoWow() {}
 

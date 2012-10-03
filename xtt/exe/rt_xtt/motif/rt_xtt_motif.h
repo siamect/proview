@@ -83,6 +83,7 @@ class XttMotif : public Xtt {
 			    void (*ok_cb)( Xtt *, char *));
     void set_prompt( const char *prompt);
     void open_change_value();
+    void print();
 
     static void close( void *ctx, int terminate);
     static void set_dimension( void *ctx, int width, int height);

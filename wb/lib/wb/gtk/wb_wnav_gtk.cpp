@@ -140,6 +140,7 @@ WNavGtk::WNavGtk(
 
   wow = new CoWowGtk( parent_wid);
 
+  toplevel = form_widget;
   *status = 1;
 }
 
@@ -210,6 +211,14 @@ void WNavGtk::trace_scan( WNavGtk *wnav)
     wnav->trace_timerid = g_timeout_add( time, 
 					 wnavgtk_trace_scan, wnav);
   }
+}
+
+void WNavGtk::print( const char *title)
+{
+  pwr_tStatus sts;
+
+  wow->CreateBrowPrintDialog( title, brow->ctx, flow_eOrientation_Portrait,
+			      (void *)0, &sts);
 }
 
 int WNavGtk::get_selection( char *str, int len)

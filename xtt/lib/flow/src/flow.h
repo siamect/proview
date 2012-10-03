@@ -124,6 +124,11 @@ typedef enum {
 	} flow_eDirection;
 
 typedef enum {
+ 	flow_eOrientation_Portrait,
+ 	flow_eOrientation_Landscape
+	} flow_eOrientation;
+
+typedef enum {
 	flow_eNodeGroup_Common,
 	flow_eNodeGroup_Document,
 	flow_eNodeGroup_Trace

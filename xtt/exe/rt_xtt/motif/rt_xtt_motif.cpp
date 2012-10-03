@@ -534,6 +534,17 @@ void XttMotif::valchanged_cmd_input( Widget w, XEvent *event, XmAnyCallbackStruc
   }
 }
 
+void XttMotif::print()
+{
+  pwr_tFileName filename;
+  pwr_tCmd cmd;
+
+  dcli_translate_filename( filename, "$pwrp_tmp/xnav.ps");
+  xnav->print( filename);
+
+  sprintf( cmd, "$pwr_exe/rt_print.sh %s", filename);
+  system(cmd);
+}
 
 int main(  int argc, char *argv[])
 {

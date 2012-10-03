@@ -644,14 +644,6 @@ WNav::~WNav()
 }
 
 //
-//  Print
-//
-void WNav::print( char *filename)
-{
-  brow_Print( brow->ctx, filename);
-}
-
-//
 //  Get current zoom factor
 //
 void WNav::get_zoom( double *zoom_factor)

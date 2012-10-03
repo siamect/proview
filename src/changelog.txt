@@ -220,3 +220,4 @@
 120821 cs  cnv       Xtthelp html pages generated for included helpfiles
 120823 cs  plc       Plc, serveral processes, handling of error log and process status
 120824 cs  plc       Plc, several plc processes, signal handling with rt_ini at start and restart
+120926 cs  neth      Size check in subscription client message to avoid rt_neth crash at bad network

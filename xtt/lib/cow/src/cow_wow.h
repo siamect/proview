@@ -40,6 +40,7 @@
 /* cow_wow -- useful windows */
 
 #include <string.h>
+#include "co_wow_msg.h"
 
 typedef enum {
   wow_eFileSelType_,
@@ -102,6 +103,8 @@ class CoWowRecall {
 class CoWow {
  protected:
   static bool m_autoremove;
+  static bool m_printdialog_disable;
+  static char m_default_printer[80];
 
  public:
   CoWow() {}
@@ -150,6 +153,11 @@ class CoWow {
   virtual CoWowTimer *timer_new() { return 0;}
   virtual pwr_tStatus CreateMenuItem( const char *name, void *menu, int pixmap, int append, void *w) { return 0;}
   virtual pwr_tStatus DeleteMenuItem( const char *name, void *menu) { return 0;}
+  virtual void CreateBrowPrintDialog( const char *title, void *brow_ctx, int orientation,
+				      void *parent_widget, pwr_tStatus *sts) {*sts = WOW__NYI;}
+  static void SetDefaultPrinter( const char *printer) { strncpy( m_default_printer, printer, sizeof(m_default_printer));}
+  static void DisablePrintDialog() { m_printdialog_disable = true;}
+  static bool PrintDialogIsDisabled() { return m_printdialog_disable;}
   static void SetAutoRemove( bool on) { m_autoremove = on;}
 
 };

@@ -84,6 +84,14 @@ void CLog::activate_prev_file()
   reset_cursor();
 }
 
+void CLog::activate_print()
+{
+  if ( CoWow::PrintDialogIsDisabled())
+    wow->DisplayError( "Disabled", "Print Dialog is disabled");
+  else
+    print();
+}
+
 void CLog::activate_help()
 {
   if ( help_cb)

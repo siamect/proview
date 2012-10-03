@@ -128,10 +128,14 @@ void Hist::hist_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp)
 
 void Hist::activate_print()
 {
-  char filename[200];
-  dcli_translate_filename( filename, "$pwrp_tmp/xnav.ps");
+  if ( CoWow::PrintDialogIsDisabled()) {
+    char filename[200];
+    dcli_translate_filename( filename, "$pwrp_tmp/xnav.ps");
 
-  hist->print( filename);
+    hist->print_nodia( filename);
+  }
+  else
+    hist->print( "Event Log");
 }
 
 void Hist::activate_help()

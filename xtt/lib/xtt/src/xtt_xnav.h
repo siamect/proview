@@ -416,6 +416,9 @@ class XNav {
 		brow_tNode dest, flow_eDest dest_code, void **item,
 		int is_root);
     void print( char *filename);
+    void print_draw_page( void *context, const char *title, int page, 
+			  flow_eOrientation orientation);
+    void print_get_pages( flow_eOrientation orientation, int *pages);
     void zoom( double zoom_factor);
     void get_zoom( double *zoom_factor);
     void unzoom();

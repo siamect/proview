@@ -247,6 +247,20 @@ void WNavMotif::set_selection_owner()
   selection_owner = 1;
 }
 
+void WNavMotif::print( const char *title)
+{
+  char filename[80] = "pwrp_tmp:wnav.ps";
+  char cmd[200];
+
+  dcli_translate_filename( filename, filename);
+  brow_Print( brow->ctx, filename);
+
+#if defined OS_POSIX
+  sprintf( cmd, "wb_gre_print.sh %s", filename); 
+  sts = system( cmd);
+#endif
+}
+
 void WNavMotif::create_popup_menu( pwr_tAttrRef aref, int x, int y)
 {
   short x1, y1;

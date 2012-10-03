@@ -73,6 +73,7 @@ class CLogGtk : public CLog {
     void reset_cursor();
     void free_cursor();
     void create_filter_dialog();
+    void print();
 
     static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
     static void activate_exit( GtkWidget*w, gpointer data);
@@ -80,6 +81,7 @@ class CLogGtk : public CLog {
     static void activate_next_file( GtkWidget*w, gpointer data);
     static void activate_prev_file( GtkWidget*w, gpointer data);
     static void activate_update( GtkWidget*w, gpointer data);
+    static void activate_print( GtkWidget*w, gpointer data);
     static void activate_zoom_in( GtkWidget*w, gpointer data);
     static void activate_zoom_out( GtkWidget*w, gpointer data);
     static void activate_zoom_reset( GtkWidget*w, gpointer data);

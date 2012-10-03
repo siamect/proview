@@ -83,6 +83,7 @@ class WdaMotif : public Wda {
     void change_value_close();
     void pop();
     void open_class_dialog( char *hierstr, char *classstr);
+    void print( const char *title);
 
     static void enable_set_focus( WdaMotif *wda);
     static void disable_set_focus( WdaMotif *wda, int time);

@@ -44,6 +44,7 @@
 
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_syi.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
 
@@ -123,6 +124,10 @@ CLogGtk::CLogGtk( void *clog_parent_ctx,
 			      'u', GdkModifierType(GDK_CONTROL_MASK), 
 			      GTK_ACCEL_VISIBLE);
 
+  GtkWidget *file_print = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Print"));
+  g_signal_connect( file_print, "activate", 
+		    G_CALLBACK(activate_print), this);
+
   GtkWidget *file_close = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Close"));
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(file_close), 
 				 gtk_image_new_from_stock( "gtk-close", GTK_ICON_SIZE_MENU));
@@ -136,6 +141,7 @@ CLogGtk::CLogGtk( void *clog_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_next_file);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_prev_file);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_update);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_File"));
@@ -381,6 +387,13 @@ void CLogGtk::activate_update( GtkWidget *w, gpointer data)
   clog->reset_cursor();
 }
 
+void CLogGtk::activate_print( GtkWidget *w, gpointer data)
+{
+  CLog *clog = (CLog *)data;
+
+  clog->activate_print();
+}
+
 void CLogGtk::activate_help( GtkWidget *w, gpointer data)
 {
   CLog *clog = (CLog *)data;
@@ -506,6 +519,23 @@ void CLogGtk::create_filter_dialog()
   gtk_container_add( GTK_CONTAINER(filter_form), filter_vbox);
   gtk_widget_show_all( filter_form);
 
+}
+
+void CLogGtk::print()
+{
+  char		nodename[80];
+  pwr_tStatus	sts;
+  char 		title[80];
+  
+  strcpy( title, "System Messages ");
+  syi_NodeName( &sts, nodename, sizeof(nodename));
+  if ( ODD(sts)) {
+    strcat( title, " ");
+    strcat( title, nodename);
+  }
+
+  wow->CreateBrowPrintDialog( title, clognav->brow->ctx, flow_eOrientation_Landscape,
+			      parent_wid, &sts);
 }
 
 

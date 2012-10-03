@@ -204,6 +204,13 @@ void WAttGtk::activate_exit( GtkWidget *w, gpointer data)
     delete watt;
 }
 
+void WAttGtk::activate_print( GtkWidget *w, gpointer data)
+{
+  WAtt *watt = (WAtt *)data;
+
+  watt->activate_print();
+}
+
 void WAttGtk::activate_help( GtkWidget *w, gpointer data)
 {
   CoXHelp::dhelp( "objecteditor_refman", 0, navh_eHelpFile_Other, 
@@ -231,6 +238,14 @@ gboolean WAttGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer dat
   watt->focustimer.disable( 400);
 
   return FALSE;
+}
+
+void WAttGtk::print( const char *title)
+{
+  pwr_tStatus sts;
+
+  CoWowGtk::CreateBrowPrintDialogGtk( title, wattnav->brow->ctx, flow_eOrientation_Portrait,
+				      (void *)toplevel, &sts);
 }
 
 #if 0
@@ -508,7 +523,11 @@ WAttGtk::WAttGtk(
   GtkWidget *file_close = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLOSE, accel_g);
   g_signal_connect(file_close, "activate", G_CALLBACK(activate_exit), this);
 
+  GtkWidget *file_print = gtk_image_menu_item_new_from_stock(GTK_STOCK_PRINT, accel_g);
+  g_signal_connect(file_print, "activate", G_CALLBACK(activate_print), this);
+
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic("_File");

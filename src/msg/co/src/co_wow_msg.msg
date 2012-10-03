@@ -33,57 +33,14 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_opplaceoptionsmask.wb_load -- Defines the mask type OpPlaceOptionsMask
+!  co_wow_msg.msg -- System information
 !
-SObject pwrb:Type
-!/**
-!  @Version 1.0
-!  @Group Types
-!  Bitmask for opplace options.
+!  Return codes from system information routines.
 !
-! @b See also
-!  @classlink OpPlace pwrb_opplace.html
-!*/
-  Object OpPlaceOptionsMask $TypeDef 66
-    Body SysBody
-      Attr Type = pwr_eType_Mask
-      Attr Size = 4
-      Attr TypeRef = "pwrs:Type-$Mask"
-      Attr Elements = 1
-    EndBody
-    !/**
-    !  Activate operator log
-    !*/
-    Object OperatorLog $Bit
-     Body SysBody
-       Attr PgmName = "OperatorLog"
-       Attr Text = "OperatorLog"
-       Attr Value = 1
-     EndBody
-    EndObject
-    !/**
-    !  Also store mouse and motion events in the operator log.
-    !*/
-    Object OperatorExtendedLog $Bit
-     Body SysBody
-       Attr PgmName = "OperatorExtendedLog"
-       Attr Text = "OperatorExtendedLog"
-       Attr Value = 2
-     EndBody
-    EndObject
-    !/**
-    !  Enable Print Dialog.
-    !*/
-    Object EnablePrintDialog $Bit
-     Body SysBody
-       Attr PgmName = "EnablePrintDialog"
-       Attr Text = "EnablePrintDialog"
-       Attr Value = 4
-     EndBody
-    EndObject
-  EndObject
-EndSObject
+.facility       WOW,322 /prefix = WOW__	!  System information
 
+success		<successful completion>					/succ
+printdialogdisabled	<print dialog disabled>					/error
+nyi		<not yet implemented>					/error
 
-
-
+.end

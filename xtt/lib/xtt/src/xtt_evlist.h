@@ -189,6 +189,7 @@ class EvList {
     virtual void set_input_focus() {}
     virtual void bell() {}
     virtual void popup_position( int x_event, int y_event, int *x, int *y) {}
+    virtual void print( const char *title) {}
 
     void event_info( mh_sMessage *msg);
     void event_alarm( mh_sMessage *msg);
@@ -218,7 +219,7 @@ class EvList {
     int get_selected_event( char *eventname, ItemAlarm **item);
     int get_destination( pwr_tTime time, void **dest);
     void block_remove();
-    void print( char *filename);
+    void print_nodia( char *filename);
 
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);

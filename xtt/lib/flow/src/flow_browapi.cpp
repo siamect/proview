@@ -460,6 +460,17 @@ int brow_Print( brow_tCtx ctx, char *filename)
   return ctx->print( filename);
 }
 
+void brow_PrintDrawPage( brow_tCtx ctx, void *context, const char *title, int page,
+			 flow_eOrientation orientation)
+{
+  ctx->print_draw_page( context, title, page, orientation);
+}
+
+void brow_PrintGetPages( brow_tCtx ctx, flow_eOrientation orientation, int *pages)
+{
+  ctx->print_get_pages( orientation, pages);
+}
+
 void brow_GetUserData( brow_tObject object, void **user_data)
 {
   ((FlowArrayElem *)object)->get_user_data( user_data);

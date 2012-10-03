@@ -84,6 +84,7 @@ class XttGtk : public Xtt {
     void set_prompt( const char *prompt);
     void open_change_value();
     void create_input_dialog();
+    void print();
 
     static void close( void *ctx, int terminate);
     static void set_dimension( void *ctx, int width, int height);

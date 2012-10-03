@@ -248,3 +248,6 @@
 120823 cs  ge        Ge command 'move selected' bugfix (refs #42)
 120827 cs  xtt       Alarm window, button to ack all alarms, and xtt command 'eventlist ack/all'
 120907 cs  xtt       Xtt display values as hex, octal, binary etc
+120912 cs  xtt       Xtt, alarm beep wasn't controled by OpPlace AlarmBell attribute
+120919 cs  xtt       Xtt, bugfix in display of Do channel flags (refs #116)
+120920 cs  xtt       Xtt bugfix, Hold and Scantime didn't work in Dv object graph

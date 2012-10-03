@@ -314,6 +314,14 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Default printer.
+      !*/
+      Object Printer $Attribute 48
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
       !  Obsolete from V4.7.0.
       !*/
       Object OpNumber $Attribute 2

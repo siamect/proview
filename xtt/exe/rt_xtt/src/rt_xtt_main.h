@@ -93,6 +93,7 @@ class Xtt {
 				    void (*ok_cb)( Xtt *, char *)) {}
     virtual void set_prompt( const char *prompt) {}
     virtual void open_change_value() {}
+    virtual void print() {}
 
     void list_opplace();
     static void opplace_selected_cb( void *ctx, char *text);

@@ -34,95 +34,39 @@
  * General Public License plus this exception.
  **/
 
-/* wb_watt.cpp -- Display object attributes */
-
-#include "glow_std.h"
+#ifndef flow_printdraw_gtk_h
+#define flow_printdraw_gtk_h
 
 #include <stdio.h>
-#include <stdlib.h>
-#include "co_cdh.h"
-#include "co_dcli.h"
-#include "co_time.h"
-#include "wb_watt_msg.h"
+#include <gtk/gtk.h>
+
 #include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "wb_watt.h"
-#include "wb_wattnav.h"
-#include "wb_wtt.h"
-#include "wb_wnav.h"
-#include "cow_xhelp.h"
+#include "flow_printdraw.h"
 
+class FlowPrintDrawGtk : public FlowPrintDraw {
+ public:
+  FlowPrintDrawGtk( void *context, const char *title, int page, void *flow_ctx, int page_border, int *sts);
+  ~FlowPrintDrawGtk();
+  int print_page( double ll_x, double ll_y, double ur_x, double ur_y);
+  int rect( double x, double y, double width, double height, flow_eDrawType type, double idx, int highlight);
+  int filled_rect( double x, double y, double width, double height, flow_eDrawType type, double idx);
+  int arc( double x, double y, double width, double height, int angle1, int angle2,
+	   flow_eDrawType type, double idx, int highlight);
+  int line( double x1, double y1, double x2, double y2, flow_eDrawType type, double idx, int highlight);
+  int text( double x, double y, char *text, int len,  flow_eDrawType type, double size);
+  int pixmap( double x, double y, flow_sPixmapDataElem *data, flow_eDrawType type);
+  int arrow( double x1, double y1, double x2, double y2, 
+	     double x3, double y3, flow_eDrawType type, double idx);
+  void set_showred( int show) { show_red = show;}
+  GtkPrintContext *print_ctx;
+  int border;
+  FlowCtx *ctx;
+  int show_red;
+  cairo_t *cairo;
+  double page_x;
+  double page_y;
+  char title[80];
+  int page;
+};
 
-void WAtt::message_cb( void *watt, char severity, const char *message)
-{
-  ((WAtt *)watt)->message( severity, message);
-}
-
-void WAtt::change_value_cb( void *watt)
-{
-  ((WAtt *)watt)->change_value(1);
-}
-
-void WAtt::activate_print()
-{
-  char *namep;
-  pwr_tStatus sts;
-  int size;
-  pwr_tAName aname;
-
-  sts = ldh_AttrRefToName( ldhses, &aref, ldh_eName_VolPath, &namep, &size);
-  if ( EVEN(sts)) return;
-
-  strcpy( aname, namep);
-  print( aname);
-}
-
-void WAtt::set_editmode( int editmode, ldh_tSesContext ldhses)
-{
-  this->ldhses = ldhses;
-  this->editmode = editmode;
-  ((WAttNav *)wattnav)->set_editmode( editmode, ldhses);
-}
-
-int WAtt::open_changevalue( const char *name, int close)
-{
-  int sts;
-
-  pending_close = close;
-
-  sts = ((WAttNav*)wattnav)->select_by_name( name);
-  if ( EVEN(sts)) return sts;
-
-  change_value(0);
-  return WATT__SUCCESS;
-}
-
-WAtt::~WAtt()
-{
-}
-
-WAtt::WAtt( 
-	void 		*wa_parent_ctx, 
-	ldh_tSesContext wa_ldhses, 
-	pwr_sAttrRef 	wa_aref,
-	int 		wa_editmode,
-	int 		wa_advanced_user,
-	int		wa_display_objectname) :
- 	parent_ctx(wa_parent_ctx), 
-	ldhses(wa_ldhses), aref(wa_aref), editmode(wa_editmode), 
-	input_open(0), input_multiline(0), 
-	close_cb(0), redraw_cb(0), client_data(0), pending_close(0)
-{
-}
-
-
-
-
-
-
-
-
-
-
-
+#endif

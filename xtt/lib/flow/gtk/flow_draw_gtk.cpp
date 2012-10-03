@@ -46,6 +46,7 @@
 #include "flow_draw_gtk.h"
 #include "flow_msg.h"
 #include "flow_widget_gtk.h"
+#include "flow_printdraw_gtk.h"
 #include "pwr.h"
 #include "co_dcli.h"
 #include "flow_browwidget_gtk.h"
@@ -2025,4 +2026,12 @@ int FlowDrawGtk::image_load( const char *imagefile, float scale, float nav_scale
 
   *im = (flow_tImImage *) gdk_pixbuf_scale_simple( (GdkPixbuf *)*orig_im, width, height, GDK_INTERP_NEAREST);
   return 1;
+}
+
+FlowPrintDraw *FlowDrawGtk::print_draw_new( void *context, const char *title, int page, 
+					    void *flow_ctx, int page_border, int *sts)
+{
+  FlowPrintDrawGtk *pd = new FlowPrintDrawGtk( context, title, page, flow_ctx, 
+					       page_border, sts);
+  return (FlowPrintDraw *)pd;
 }

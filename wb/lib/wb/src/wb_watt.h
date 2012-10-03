@@ -90,7 +90,9 @@ class WAtt {
     virtual void change_value( int set_focus) {}
     virtual void change_value_close() {}
     virtual void pop() {}
+    virtual void print( const char *title) {}
 
+    void activate_print();
     void set_editmode( int editmode, ldh_tSesContext ldhses);
     int open_changevalue( const char *name, int close = 0);
     static void message_cb( void *watt, char severity, const char *message);

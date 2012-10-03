@@ -283,14 +283,7 @@ void Xtt::selection_changed( void *ctx)
 //
 void Xtt::activate_print()
 {
-  pwr_tFileName filename;
-  pwr_tCmd cmd;
-
-  dcli_translate_filename( filename, "$pwrp_tmp/xnav.ps");
-  xnav->print( filename);
-
-  sprintf( cmd, "$pwr_exe/rt_print.sh %s", filename);
-  system(cmd);
+  print();
 }
 
 void Xtt::activate_find()
@@ -815,6 +808,11 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
 
     if ( opp->AttachAudio)
       attach_audio = 1;
+
+    if ( !(opp->Options & pwr_mOpPlaceOptionsMask_EnablePrintDialog))
+      CoWow::DisablePrintDialog();
+    if ( strcmp( opp->Printer, "") != 0)
+      CoWow::SetDefaultPrinter( opp->Printer);
   }
 
   if ( quiet)

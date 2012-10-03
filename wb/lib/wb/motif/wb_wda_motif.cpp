@@ -105,6 +105,19 @@ void WdaMotif::set_prompt( const char *prompt)
   XmStringFree( cstr);
 }
 
+void WdaMotif::print( const char *title)
+{
+  pwr_tFileName filename = "$pwrp_tmp/wda.ps";
+  pwr_tCmd cmd;
+  int sts;
+
+  dcli_translate_filename( filename, filename);
+  wdanav->print(filename);
+
+  sprintf( cmd, "wb_gre_print.sh %s", filename); 
+  sts = system( cmd);
+}
+
 void WdaMotif::change_value( int set_focus)
 {
   int		sts;

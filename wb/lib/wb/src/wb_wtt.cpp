@@ -956,22 +956,27 @@ int Wtt::get_wbctx( void *ctx, ldh_tWBContext *wbctx)
 
 void Wtt::activate_print()
 {
-  char filename[80] = "pwrp_tmp:wnav.ps";
-  char cmd[200];
-  int sts;
+  ldh_sVolumeInfo info;
+  int		sts;
+  int		size;
+  char		title[80];
 
+  if ( !ldhses)
+    return;
+
+  sts = ldh_GetVolumeInfo( ldh_SessionToVol( ldhses), &info);
+  if (EVEN(sts)) return;
+
+  strcpy( title, "PwR ");
+  sts = ldh_VolumeIdToName( ldh_SessionToWB( ldhses), info.Volume,
+			    &title[4], sizeof(title)-4, &size);
+  if ( EVEN(sts)) return;
 
   if ( !focused_wnav)
     set_focus_default();
 
   set_clock_cursor();
-  dcli_translate_filename( filename, filename);
-  focused_wnav->print( filename);
-
-#if defined OS_POSIX
-  sprintf( cmd, "wb_gre_print.sh %s", filename); 
-  sts = system( cmd);
-#endif
+  focused_wnav->print( title);
   reset_cursor();
 }
 

@@ -311,6 +311,12 @@ void XColWind::activate_movedown()
   }
 }
 
+void XColWind::activate_print()
+{
+  if ( !CoWow::PrintDialogIsDisabled())
+    print();
+}
+
 void XColWind::activate_help()
 {
   // Not yet implemented

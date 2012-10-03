@@ -934,7 +934,7 @@ void EvList::event_return( mh_sReturn *msg)
   }
 }
 
-void EvList::print( char *filename)
+void EvList::print_nodia( char *filename)
 {
   brow_Print( brow->ctx, filename);
 }

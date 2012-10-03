@@ -40,6 +40,7 @@
 #include <stdlib.h>
 
 class FlowCtx;
+class FlowPrintDraw;
 
 class FlowDraw {
  public:
@@ -169,6 +170,8 @@ class FlowDraw {
 			  flow_tImImage *orig_im, flow_tImImage *im, 
 			  flow_tPixmap *im_pixmap, flow_tPixmap *im_mask,
 			  flow_tPixmap *im_nav_pixmap, flow_tPixmap *im_nav_mask) {return 0;}
+  virtual FlowPrintDraw *print_draw_new( void *context, const char *title, int page,
+					 void *flow_ctx, int page_border, int *sts) {*sts = 0; return 0;}
 };
 
 

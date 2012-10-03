@@ -206,6 +206,8 @@ class FlowDrawGtk : public FlowDraw {
   int get_text_extent_pango( FlowCtx *ctx, const char *text, int len,
 			     flow_eDrawType gc_type, int idx, double size,
 			     int *width, int *height);
+  FlowPrintDraw *print_draw_new( void *context, const char *title, int page, void *flow_ctx, 
+				 int page_border, int *sts);
 };
 
 #endif

@@ -100,6 +100,7 @@ class XColWind {
     virtual void set_title( char *title) {}
     virtual void set_window_size( int w, int h) {}
     virtual void get_window_size( int *w, int *h) {}
+    virtual void print() {}
 
     int open_changevalue( char *name);
     void swap( int mode);
@@ -123,6 +124,7 @@ class XColWind {
     void activate_zoomin();
     void activate_zoomout();
     void activate_help();
+    void activate_print();
 
     static void xcolwind_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
 			       unsigned long item_type, unsigned long utility,

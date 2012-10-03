@@ -44,6 +44,7 @@
 
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_syi.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
 #include "rt_mh.h"
@@ -94,4 +95,22 @@ void EvListGtk::bell()
 void EvListGtk::popup_position( int x_event, int y_event, int *x, int *y)
 {
   CoWowGtk::PopupPosition( brow_widget, x_event, y_event, x, y);
+}
+
+void EvListGtk::print( const char *title)
+{
+  char nodename[80];
+  pwr_tStatus sts;
+  char print_title[120];
+  
+
+  strcpy( print_title, title);
+  syi_NodeName( &sts, nodename, sizeof(nodename));
+  if ( ODD(sts)) {
+    strcat( print_title, " ");
+    strcat( print_title, nodename);
+  }
+
+  CoWowGtk::CreateBrowPrintDialogGtk( print_title, brow->ctx, flow_eOrientation_Landscape,
+				      GTK_WINDOW(parent_wid), &sts);
 }

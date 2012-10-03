@@ -293,6 +293,30 @@ void XttGtk::activate_print( GtkWidget *w, gpointer data)
   xtt->activate_print();
 }
 
+void XttGtk::print()
+{
+  char		title[120] = "Xtt ";
+  char		nodename[80];
+  pwr_tStatus	sts;
+
+  syi_NodeName( &sts, nodename, sizeof(nodename));
+  if ( ODD(sts))
+    strcat( title, nodename);
+
+  wow->CreateBrowPrintDialog( title, xnav->brow->ctx, flow_eOrientation_Portrait,
+			      (void *)toplevel, &sts);
+  if ( sts == WOW__PRINTDIALOGDISABLED) {
+    pwr_tFileName filename;
+    pwr_tCmd cmd;
+
+    dcli_translate_filename( filename, "$pwrp_tmp/xnav.ps");
+    xnav->print( filename);
+    
+    sprintf( cmd, "$pwr_exe/rt_print.sh %s", filename);
+    system(cmd);
+  }
+}
+
 void XttGtk::activate_login( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
@@ -693,7 +717,7 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   // File Entry
   GtkWidget *file_print = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Print"));
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(file_print), 
-				 gtk_image_new_from_stock( "gtk-print", GTK_ICON_SIZE_MENU));
+				 gtk_image_new_from_stock( GTK_STOCK_PRINT, GTK_ICON_SIZE_MENU));
   g_signal_connect(file_print, "activate", G_CALLBACK(XttGtk::activate_print), this);
 
   GtkWidget *file_login = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Login"));
