@@ -45,6 +45,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_syi.h"
+#include "co_dcli.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
 #include "rt_mh.h"
@@ -113,4 +114,14 @@ void EvListGtk::print( const char *title)
 
   CoWowGtk::CreateBrowPrintDialogGtk( print_title, brow->ctx, flow_eOrientation_Landscape,
 				      GTK_WINDOW(parent_wid), &sts);
+  if ( sts == WOW__PRINTDIALOGDISABLED) {
+    pwr_tFileName filename;
+    pwr_tCmd cmd;
+
+    dcli_translate_filename( filename, "$pwrp_tmp/xnav.ps");
+    print_nodia( filename);
+
+    sprintf( cmd, "$pwr_exe/rt_print.sh %s", filename);
+    system(cmd);
+  }
 }

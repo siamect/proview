@@ -163,50 +163,17 @@ void Ev::blk_display_in_xnav_cb( void *ctx, pwr_tAttrRef *arp)
 
 void Ev::eve_activate_print()
 {
-  if ( CoWow::PrintDialogIsDisabled()) {
-    pwr_tFileName filename;
-    pwr_tCmd cmd;
-
-    dcli_translate_filename( filename, "$pwrp_tmp/xnav.ps");
-    eve->print_nodia( filename);
-
-    sprintf( cmd, "$pwr_exe/rt_print.sh %s", filename);
-    system(cmd);
-  }
-  else
-    eve->print( "Event List");
+  eve->print( "Event List");
 }
 
 void Ev::ala_activate_print()
 {
-  if ( CoWow::PrintDialogIsDisabled()) {
-    pwr_tFileName filename;
-    pwr_tCmd cmd;
-
-    dcli_translate_filename( filename, "$pwrp_tmp/xnav.ps");
-    ala->print_nodia( filename);
-
-    sprintf( cmd, "$pwr_exe/rt_print.sh %s", filename);
-    system(cmd);
-  }
-  else    
-    ala->print( "Alarm List");
+  ala->print( "Alarm List");
 }
 
 void Ev::blk_activate_print()
 {
-  if ( CoWow::PrintDialogIsDisabled()) {
-    pwr_tFileName filename;
-    pwr_tCmd cmd;
-
-    dcli_translate_filename( filename, "$pwrp_tmp/xnav.ps");
-    blk->print_nodia( filename);
-
-    sprintf( cmd, "$pwr_exe/rt_print.sh %s", filename);
-    system(cmd);
-  }
-  else    
-    blk->print( "Block List");
+  blk->print( "Block List");
 }
 
 void Ev::eve_activate_ack_last()
