@@ -1066,11 +1066,11 @@ int rt_sevhistmon::mainloop()
       case sev_cMsgClass:
         switch ( (int)get.type.s) {
           case sev_eMsgType_NodeUp:
-            printf("rt_sevhistmon: Node up recevied\n");
+            printf("rt_sevhistmon: Node up received\n");
             send_itemlist( get.sender.nid);
             break;
           case sev_eMsgType_HistItemsRequest:
-            printf("rt_sevhistmon: HistitemsRequest recevied\n");
+            printf("rt_sevhistmon: HistitemsRequest received\n");
             send_itemlist( get.sender.nid);
             break;
           case sev_eMsgType_ServerStatus:
