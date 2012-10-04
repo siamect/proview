@@ -43,7 +43,9 @@
 
 class FlowPrintDraw : public FlowPrint {
  public:
-  FlowPrintDraw() {}
+  double print_margin_x;
+  double print_margin_y;
+  FlowPrintDraw() : print_margin_x(40), print_margin_y(40) {}
   virtual ~FlowPrintDraw() {}
   virtual int print_page( double ll_x, double ll_y, double ur_x, double ur_y) {return 1;}
   virtual int rect( double x, double y, double width, double height, flow_eDrawType type, double idx, int highlight) {return 1;}

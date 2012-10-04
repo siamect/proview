@@ -1537,7 +1537,7 @@ static void begin_print( GtkPrintOperation *operation,
   wow_sPrintData *print_data = (wow_sPrintData *)user_data;
   int pages;
 
-  brow_PrintGetPages( print_data->brow_ctx, flow_eOrientation_Portrait, &pages);
+  brow_PrintGetPages( print_data->brow_ctx, print_data->orientation, &pages);
   gtk_print_operation_set_n_pages( operation, pages);
 }
 
@@ -1557,7 +1557,7 @@ static void draw_page( GtkPrintOperation *operation,
   wow_sPrintData *print_data = (wow_sPrintData *)user_data;
 
   brow_PrintDrawPage( print_data->brow_ctx, context, print_data->title, page_nr, 
-		      flow_eOrientation_Portrait);
+		      print_data->orientation);
 }
 
 static void request_page_setup( GtkPrintOperation *operation,

@@ -232,7 +232,7 @@ void BrowCtx::print_draw_page( void *context, const char *title, int page,
   height = 60 * (ur_y - ll_y);
   width = 0.70 * height;
   if ( orientation == flow_eOrientation_Landscape) {
-    height = 40 * ( ur_y - ll_y);
+    height = 35 * ( ur_y - ll_y);
     width = height / 0.70;
   }
 
@@ -265,7 +265,7 @@ void BrowCtx::print_get_pages( flow_eOrientation orientation, int *pages)
   width = 0.70 * height;
   if ( orientation == flow_eOrientation_Landscape) {
     // Portrait
-    height = 40 * ( ur_y - ll_y);
+    height = 35 * ( ur_y - ll_y);
     width = height / 0.70;
   }
 
