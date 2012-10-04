@@ -561,7 +561,7 @@ void XColWindGtk::print()
 {
   pwr_tStatus sts;
 
-  wow->CreateBrowPrintDialog( title, xattnav->brow->ctx, flow_eOrientation_Portrait,
+  wow->CreateBrowPrintDialog( title, xattnav->brow->ctx, flow_eOrientation_Portrait, 1.0,
 			      (void *)toplevel, &sts);
 }
 

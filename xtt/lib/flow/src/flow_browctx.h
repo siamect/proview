@@ -65,8 +65,8 @@ class BrowCtx : public FlowCtx {
     void unzoom() { zoom( base_zoom_factor / zoom_factor);};
     int print( char *filename);
     void print_draw_page( void *context, const char *title, int page, 
-			  flow_eOrientation orientation);
-    void print_get_pages( flow_eOrientation orientation, int *pages);
+			  flow_eOrientation orientation, double scale);
+    void print_get_pages( flow_eOrientation orientation, double scale, int *pages);
     int get_first( FlowArrayElem **first) { return a.get_first( first);};
     int get_last( FlowArrayElem **last) { return a.get_last( last);};
     int get_previous( FlowArrayElem *element, FlowArrayElem **prev)

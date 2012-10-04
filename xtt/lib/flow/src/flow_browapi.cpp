@@ -461,14 +461,14 @@ int brow_Print( brow_tCtx ctx, char *filename)
 }
 
 void brow_PrintDrawPage( brow_tCtx ctx, void *context, const char *title, int page,
-			 flow_eOrientation orientation)
+			 flow_eOrientation orientation, double scale)
 {
-  ctx->print_draw_page( context, title, page, orientation);
+  ctx->print_draw_page( context, title, page, orientation, scale);
 }
 
-void brow_PrintGetPages( brow_tCtx ctx, flow_eOrientation orientation, int *pages)
+void brow_PrintGetPages( brow_tCtx ctx, flow_eOrientation orientation, double scale, int *pages)
 {
-  ctx->print_get_pages( orientation, pages);
+  ctx->print_get_pages( orientation, scale, pages);
 }
 
 void brow_GetUserData( brow_tObject object, void **user_data)

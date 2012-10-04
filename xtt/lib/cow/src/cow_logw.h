@@ -59,7 +59,9 @@ class CoLogW {
 	pwr_tStatus *status);
     virtual ~CoLogW() {}
 
+    virtual void print() {}
     void show( char categories[][20], char *item);
+    void activate_print() {print();}
 
     void 		*parent_ctx;
     char 		name[80];

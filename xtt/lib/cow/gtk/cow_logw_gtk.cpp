@@ -95,7 +95,11 @@ CoLogWGtk::CoLogWGtk (
   GtkWidget *file_close = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLOSE, accel_g);
   g_signal_connect(file_close, "activate", G_CALLBACK(CoLogWGtk::activate_exit), this);
 
+  GtkWidget *file_print = gtk_image_menu_item_new_from_stock(GTK_STOCK_PRINT, accel_g);
+  g_signal_connect(file_print, "activate", G_CALLBACK(CoLogWGtk::activate_print), this);
+
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic("_File");
@@ -152,6 +156,14 @@ CoLogWGtk::~CoLogWGtk()
     gtk_widget_destroy( toplevel);
 }
 
+void CoLogWGtk::print()
+{
+  pwr_tStatus sts;
+
+  CoWowGtk::CreateBrowPrintDialogGtk( name, logwnav->brow->ctx, flow_eOrientation_Portrait, 1.0,
+				      (void *)toplevel, &sts);
+}
+
 gboolean CoLogWGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data)
 {
   CoLogWGtk *logw = (CoLogWGtk *)data;
@@ -171,6 +183,13 @@ void CoLogWGtk::activate_exit( GtkWidget *w, gpointer data)
   CoLogWGtk *logw = (CoLogWGtk *)data;
 
   delete logw;
+}
+
+void CoLogWGtk::activate_print( GtkWidget *w, gpointer data)
+{
+  CoLogW *logw = (CoLogW *)data;
+
+  logw->activate_print();
 }
 
 void CoLogWGtk::activate_zoom_in( GtkWidget *w, gpointer data)

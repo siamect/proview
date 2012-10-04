@@ -55,6 +55,7 @@ class FlowPrintDrawGtk : public FlowPrintDraw {
   int line( double x1, double y1, double x2, double y2, flow_eDrawType type, double idx, int highlight);
   int text( double x, double y, char *text, int len,  flow_eDrawType type, double size);
   int pixmap( double x, double y, flow_sPixmapDataElem *data, flow_eDrawType type);
+  int image( double x, double y, double width, double height, flow_tImImage image, flow_eDrawType type);
   int arrow( double x1, double y1, double x2, double y2, 
 	     double x3, double y3, flow_eDrawType type, double idx);
   void set_showred( int show) { show_red = show;}

@@ -181,8 +181,8 @@ void brow_MeasureNode( brow_tNode node, double *ll_x, double *ll_y,
 	double *ur_x, double *ur_y);
 int brow_Print( brow_tCtx ctx, char *filename);
 void brow_PrintDrawPage( brow_tCtx ctx, void *context, const char *title, int page,
-			 flow_eOrientation orientation);
-void brow_PrintGetPages( brow_tCtx ctx, flow_eOrientation orientation, int *pages);
+			 flow_eOrientation orientation, double scale);
+  void brow_PrintGetPages( brow_tCtx ctx, flow_eOrientation orientation, double scale, int *pages);
 void brow_GetUserData( brow_tObject object, void **user_data);
 void brow_SetUserData( brow_tObject object, void *user_data);
 void brow_GetCtxUserData( brow_tCtx ctx, void **user_data);

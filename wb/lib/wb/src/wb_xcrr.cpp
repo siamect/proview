@@ -56,10 +56,10 @@
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
+#include "wb_ldh.h"
 #include "wb_xcrr.h"
 #include "wb_watt_msg.h"
 #include "co_lng.h"
-
 
 WCrr::~WCrr()
 {
@@ -67,10 +67,12 @@ WCrr::~WCrr()
 
 WCrr::WCrr( 
 	void 		*xa_parent_ctx, 
+	ldh_tSesContext xa_ldhses, 
 	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
         int             *xa_sts) :
  	parent_ctx(xa_parent_ctx), 
+	ldhses(xa_ldhses),
 	objar(*xa_objar), 
 	input_open(0), input_multiline(0), 
 	close_cb(0), redraw_cb(0), popup_menu_cb(0), start_trace_cb(0),

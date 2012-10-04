@@ -67,9 +67,11 @@ class MsgWindowGtk : public MsgWindow {
 
     void	map();
     void	unmap();
+    void	print();
 
     static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
     static void activate_exit( GtkWidget *w, gpointer data);
+    static void activate_print( GtkWidget *w, gpointer data);
     static void activate_clear( GtkWidget *w, gpointer data);
     static void activate_zoom_in( GtkWidget *w, gpointer data);
     static void activate_zoom_out( GtkWidget *w, gpointer data);

@@ -82,10 +82,12 @@ class XAttGtk : public XAtt {
     int open_changevalue( char *name);
     void change_value_close();
     void pop();
+    void print();
 
     static void activate_change_value( GtkWidget *w, gpointer data);
     static void activate_close_changeval( GtkWidget *w, gpointer data);
     static void activate_exit( GtkWidget *w, gpointer data);
+    static void activate_print( GtkWidget *w, gpointer data);
     static void activate_display_object( GtkWidget *w, gpointer data);
     static void activate_show_cross( GtkWidget *w, gpointer data);
     static void activate_open_classgraph( GtkWidget *w, gpointer data);

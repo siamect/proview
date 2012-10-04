@@ -83,6 +83,13 @@ void CoXHelpGtk::activate_close( GtkWidget *w, gpointer data)
   //  delete xhelp;
 }
 
+void CoXHelpGtk::activate_print( GtkWidget *w, gpointer data)
+{
+  CoXHelp *xhelp = (CoXHelp *)data;
+
+  xhelp->activate_print();
+}
+
 void CoXHelpGtk::activate_back( GtkWidget *w, gpointer data)
 {
   CoXHelpGtk *xhelp = (CoXHelpGtk *)data;
@@ -214,6 +221,17 @@ void CoXHelpGtk::set_dimension( int width, int height)
 		NULL);
 }
 
+void CoXHelpGtk::print()
+{
+  pwr_tStatus sts;
+  char title[80];
+
+  strcpy( title, CoWowGtk::translate_utf8("Help"));
+
+  CoWowGtk::CreateBrowPrintDialogGtk( title, xhelpnav->brow->ctx, flow_eOrientation_Portrait, 0.7,
+				      (void *)toplevel, &sts);
+}
+
 static gint delete_event( GtkWidget *w, GdkEvent *event, gpointer data)
 {
   CoXHelpGtk *xhelp = (CoXHelpGtk *)data;
@@ -291,6 +309,10 @@ CoXHelpGtk::CoXHelpGtk(
   gtk_widget_add_accelerator( file_close, "activate", accel_g,
 			      'w', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
+  GtkWidget *file_print = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Print"));
+  g_signal_connect( file_print, "activate", 
+		    G_CALLBACK(activate_print), this);
+
   GtkWidget *file_home = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Home"));
   g_signal_connect( file_home, "activate",
 		    G_CALLBACK(activate_home), this);
@@ -317,6 +339,7 @@ CoXHelpGtk::CoXHelpGtk(
 
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_home);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_back);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_nexttopic);

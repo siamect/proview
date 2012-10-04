@@ -49,11 +49,13 @@ class WCrr {
   public:
     WCrr( 
 	void 		*xa_parent_ctx, 
+	ldh_tSesContext xa_ldhses, 
 	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
 	int             *xa_sts);
     virtual ~WCrr();
     void 	*parent_ctx;
+    ldh_tSesContext ldhses; 
     pwr_sAttrRef objar;
     char 	name[80];
     WAttNav	*xcrrnav;
@@ -71,7 +73,9 @@ class WCrr {
     char	input_name[80];
 
     virtual void pop() {}
+    virtual void print() {}
 
+    void activate_print() {print();}
     static void xcrr_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
 				    unsigned long item_type, unsigned long utility, 
 				    char *arg, int x, int y);

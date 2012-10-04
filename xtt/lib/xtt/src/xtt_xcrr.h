@@ -71,8 +71,10 @@ class XCrr {
     char	input_name[80];
 
     virtual void pop() {}
+    virtual void print() {}
 
     int crossref();
+    void activate_print() {print();}
     static void xcrr_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
 				    unsigned long item_type, unsigned long utility, 
 				    char *arg, int x, int y);

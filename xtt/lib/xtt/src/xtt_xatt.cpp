@@ -117,6 +117,11 @@ void XAtt::activate_open_plc()
   }
 }
 
+void XAtt::activate_print()
+{
+  print();
+}
+
 void XAtt::activate_help()
 {
   // Not yet implemented

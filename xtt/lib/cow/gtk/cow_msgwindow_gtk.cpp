@@ -95,6 +95,9 @@ MsgWindowGtk::MsgWindowGtk (
   g_signal_connect( file_clear, "activate", 
 		    G_CALLBACK(MsgWindowGtk::activate_clear), this);
 
+  GtkWidget *file_print = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Print"));
+  g_signal_connect(file_print, "activate", G_CALLBACK(MsgWindowGtk::activate_print), this);
+
   GtkWidget *file_close = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Close"));
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(file_close), 
 				 gtk_image_new_from_stock( "gtk-close", GTK_ICON_SIZE_MENU));
@@ -104,6 +107,7 @@ MsgWindowGtk::MsgWindowGtk (
 
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_clear);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_File"));
@@ -199,6 +203,17 @@ void MsgWindowGtk::unmap()
   }
 }
 
+void MsgWindowGtk::print()
+{
+  pwr_tStatus sts;
+  char title[80];
+
+  strncpy( title, CoWowGtk::translate_utf8(name), sizeof(title));
+
+  CoWowGtk::CreateBrowPrintDialogGtk( title, msgnav->brow->ctx, flow_eOrientation_Landscape, 1.4,
+				      (void *)toplevel, &sts);
+}
+
 gboolean MsgWindowGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data)
 {
   MsgWindowGtk *msgw = (MsgWindowGtk *)data;
@@ -219,6 +234,13 @@ void MsgWindowGtk::activate_exit( GtkWidget *w, gpointer data)
 
   g_object_set( msgw->toplevel, "visible", FALSE, NULL);
   msgw->displayed = 0;
+}
+
+void MsgWindowGtk::activate_print( GtkWidget *w, gpointer data)
+{
+  MsgWindow *msgw = (MsgWindow *)data;
+
+  msgw->activate_print();
 }
 
 void MsgWindowGtk::activate_clear( GtkWidget *w, gpointer data)

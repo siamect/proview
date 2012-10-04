@@ -1333,12 +1333,12 @@ void XNav::print( char *filename)
 void XNav::print_draw_page( void *context, const char *title, int page,
 			    flow_eOrientation orientation)
 {
-  brow_PrintDrawPage( brow->ctx, context, title, page, orientation);
+  brow_PrintDrawPage( brow->ctx, context, title, page, orientation, 1.0);
 }
 
 void XNav::print_get_pages( flow_eOrientation orientation, int *pages)
 {
-  brow_PrintGetPages( brow->ctx, orientation, pages);
+  brow_PrintGetPages( brow->ctx, orientation, 1.0, pages);
 }
 
 //

@@ -77,6 +77,7 @@ class XAtt {
     virtual void change_value( int set_focus) {}
     virtual void change_value_close() {}
     virtual void pop() {}
+    virtual void print() {}
 
     int open_changevalue( char *name);
     void swap( int mode);
@@ -86,6 +87,7 @@ class XAtt {
     void activate_open_classgraph();
     void activate_open_plc();
     void activate_help();
+    void activate_print();
 
     static void xatt_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
 			       unsigned long item_type, unsigned long utility,

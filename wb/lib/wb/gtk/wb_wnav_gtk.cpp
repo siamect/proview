@@ -217,7 +217,7 @@ void WNavGtk::print( const char *title)
 {
   pwr_tStatus sts;
 
-  wow->CreateBrowPrintDialog( title, brow->ctx, flow_eOrientation_Portrait,
+  wow->CreateBrowPrintDialog( title, brow->ctx, flow_eOrientation_Portrait, 1.0,
 			      (void *)0, &sts);
 }
 

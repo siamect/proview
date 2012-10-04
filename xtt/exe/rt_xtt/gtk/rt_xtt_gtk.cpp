@@ -303,7 +303,7 @@ void XttGtk::print()
   if ( ODD(sts))
     strcat( title, nodename);
 
-  wow->CreateBrowPrintDialog( title, xnav->brow->ctx, flow_eOrientation_Portrait,
+  wow->CreateBrowPrintDialog( title, xnav->brow->ctx, flow_eOrientation_Portrait, 1.0,
 			      (void *)toplevel, &sts);
   if ( sts == WOW__PRINTDIALOGDISABLED) {
     pwr_tFileName filename;

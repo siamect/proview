@@ -64,8 +64,10 @@ class XCrrGtk : public XCrr {
     CoWowFocusTimerGtk focustimer;
 
     void pop();
+    void print();
 
     static void activate_exit( GtkWidget *w, gpointer data);
+    static void activate_print( GtkWidget *w, gpointer data);
     static void activate_openplc( GtkWidget *w, gpointer data);
     static void activate_help( GtkWidget *w, gpointer data);
     static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);

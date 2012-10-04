@@ -79,7 +79,7 @@ void WdaGtk::print( const char *title)
 {
   pwr_tStatus sts;
 
-  wow->CreateBrowPrintDialog( title, wdanav->brow->ctx, flow_eOrientation_Portrait,
+  wow->CreateBrowPrintDialog( title, wdanav->brow->ctx, flow_eOrientation_Portrait, 1.0,
 			      (void *)toplevel, &sts);
 }
 

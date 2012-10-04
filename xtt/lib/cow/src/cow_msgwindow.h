@@ -85,6 +85,7 @@ class MsgWindow {
 
     virtual void	map() {}
     virtual void	unmap() {}
+    virtual void	print() {}
 
     int         is_mapped() { return displayed;};
     void 	insert( int severity, const char *text, pwr_tOid oid = pwr_cNOid, bool is_plc = false);
@@ -92,6 +93,7 @@ class MsgWindow {
     void	reset_nodraw();
     void 	msg( int severity, const char *text, msgw_ePop pop = msgw_ePop_Default, 
 			 pwr_tOid oid = pwr_cNOid, bool is_plc = false);
+    void 	activate_print() { print();}
     static void	set_default( MsgWindow *msgw) { default_window = msgw;}
     static void message( int severity, const char *text, msgw_ePop pop = msgw_ePop_Default, 
 			 pwr_tOid oid = pwr_cNOid, bool is_plc = false);

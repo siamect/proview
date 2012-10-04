@@ -219,7 +219,7 @@ int BrowCtx::print( char *filename)
 }
 
 void BrowCtx::print_draw_page( void *context, const char *title, int page,
-			       flow_eOrientation orientation)
+			       flow_eOrientation orientation, double scale)
 {
   double ll_x, ll_y, ur_x, ur_y;
   double width, height;
@@ -229,10 +229,10 @@ void BrowCtx::print_draw_page( void *context, const char *title, int page,
     return;
 
   ((FlowNode *)a[0])->measure( &ll_x, &ll_y, &ur_x, &ur_y);
-  height = 60 * (ur_y - ll_y);
+  height = 60 * (ur_y - ll_y) * scale;
   width = 0.70 * height;
   if ( orientation == flow_eOrientation_Landscape) {
-    height = 35 * ( ur_y - ll_y);
+    height = 35 * ( ur_y - ll_y) * scale;
     width = height / 0.70;
   }
 
@@ -250,7 +250,7 @@ void BrowCtx::print_draw_page( void *context, const char *title, int page,
   delete current_print;  
 }
 
-void BrowCtx::print_get_pages( flow_eOrientation orientation, int *pages)
+void BrowCtx::print_get_pages( flow_eOrientation orientation, double scale, int *pages)
 {
   double ll_x, ll_y, ur_x, ur_y;
   double width, height;
@@ -261,11 +261,11 @@ void BrowCtx::print_get_pages( flow_eOrientation orientation, int *pages)
   }
 
   ((FlowNode *)a[0])->measure( &ll_x, &ll_y, &ur_x, &ur_y);
-  height = 60 * (ur_y - ll_y);
+  height = 60 * (ur_y - ll_y) * scale;
   width = 0.70 * height;
   if ( orientation == flow_eOrientation_Landscape) {
     // Portrait
-    height = 35 * ( ur_y - ll_y);
+    height = 35 * ( ur_y - ll_y) * scale;
     width = height / 0.70;
   }
 

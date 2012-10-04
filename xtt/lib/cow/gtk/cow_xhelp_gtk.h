@@ -66,10 +66,12 @@ class CoXHelpGtk : public CoXHelp {
 
     void set_dimension( int width, int height);    
     void pop();
+    void print();
     void open_input_dialog( const char *text, const char *title,
 			    const char *init_text,
 			    void (*ok_cb)( CoXHelp *, char *));
     static void activate_close( GtkWidget *w, gpointer data);
+    static void activate_print( GtkWidget *w, gpointer data);
     static void activate_home( GtkWidget *w, gpointer data);
     static void activate_back( GtkWidget *w, gpointer data);
     static void activate_nexttopic( GtkWidget *w, gpointer data);

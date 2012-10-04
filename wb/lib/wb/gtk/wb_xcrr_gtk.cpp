@@ -67,6 +67,13 @@ void WCrrGtk::activate_exit(GtkWidget *w, gpointer data)
     delete xcrr;
 }
 
+void WCrrGtk::activate_print(GtkWidget *w, gpointer data)
+{
+  WCrr *xcrr = (WCrr *)data;
+
+  xcrr->activate_print();
+}
+
 void WCrrGtk::activate_openplc(GtkWidget *w, gpointer data)
 {
   // WCrr *xcrr = (WCrr *)data;
@@ -98,6 +105,22 @@ void WCrrGtk::pop()
   gtk_window_present( GTK_WINDOW(toplevel));
 }
 
+void WCrrGtk::print()
+{
+  pwr_tStatus sts;
+  char *namep;
+  int size;
+  pwr_tAName   	title;
+
+  sts = ldh_AttrRefToName( ldhses, &objar, cdh_mNName, &namep, &size);
+  if ( EVEN(sts)) return;
+
+  strncpy( title, namep, sizeof(title));
+
+  CoWowGtk::CreateBrowPrintDialogGtk( title, xcrrnav->brow->ctx, flow_eOrientation_Portrait, 1.0,
+				      (void *)toplevel, &sts);
+}
+
 WCrrGtk::~WCrrGtk()
 {
   delete xcrrnav;
@@ -127,7 +150,7 @@ WCrrGtk::WCrrGtk(
 	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
         int             *xa_sts) :
-  WCrr( xa_parent_ctx, xa_objar, xa_advanced_user, xa_sts),
+  WCrr( xa_parent_ctx, xa_ldhses, xa_objar, xa_advanced_user, xa_sts),
   parent_wid(xa_parent_wid)
 {
   int sts;
@@ -162,10 +185,14 @@ WCrrGtk::WCrrGtk(
   GtkMenuBar *menu_bar = (GtkMenuBar *) g_object_new(GTK_TYPE_MENU_BAR, NULL);
 
   // File entry
+  GtkWidget *file_print = gtk_image_menu_item_new_from_stock(GTK_STOCK_PRINT, accel_g);
+  g_signal_connect(file_print, "activate", G_CALLBACK(activate_print), this);
+
   GtkWidget *file_close = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLOSE, accel_g);
   g_signal_connect(file_close, "activate", G_CALLBACK(activate_exit), this);
 
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_File"));

@@ -244,7 +244,7 @@ void WAttGtk::print( const char *title)
 {
   pwr_tStatus sts;
 
-  CoWowGtk::CreateBrowPrintDialogGtk( title, wattnav->brow->ctx, flow_eOrientation_Portrait,
+  CoWowGtk::CreateBrowPrintDialogGtk( title, wattnav->brow->ctx, flow_eOrientation_Portrait, 1.0,
 				      (void *)toplevel, &sts);
 }
 

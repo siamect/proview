@@ -66,6 +66,7 @@ typedef struct {
   char title[80];
   brow_tCtx brow_ctx;
   flow_eOrientation orientation;
+  double scale;
 } wow_sPrintData;
 
 
@@ -1537,7 +1538,7 @@ static void begin_print( GtkPrintOperation *operation,
   wow_sPrintData *print_data = (wow_sPrintData *)user_data;
   int pages;
 
-  brow_PrintGetPages( print_data->brow_ctx, print_data->orientation, &pages);
+  brow_PrintGetPages( print_data->brow_ctx, print_data->orientation, print_data->scale, &pages);
   gtk_print_operation_set_n_pages( operation, pages);
 }
 
@@ -1557,7 +1558,7 @@ static void draw_page( GtkPrintOperation *operation,
   wow_sPrintData *print_data = (wow_sPrintData *)user_data;
 
   brow_PrintDrawPage( print_data->brow_ctx, context, print_data->title, page_nr, 
-		      print_data->orientation);
+		      print_data->orientation, print_data->scale);
 }
 
 static void request_page_setup( GtkPrintOperation *operation,
@@ -1576,7 +1577,7 @@ static void request_page_setup( GtkPrintOperation *operation,
 
 
 void CoWowGtk::CreateBrowPrintDialogGtk( const char *title, void *brow_ctx, int orientation,
-					 void *parent_widget, pwr_tStatus *sts)
+					 double scale, void *parent_widget, pwr_tStatus *sts)
 {
   static GtkPrintSettings *settings = 0;
   GtkPrintOperation *print;
@@ -1591,6 +1592,7 @@ void CoWowGtk::CreateBrowPrintDialogGtk( const char *title, void *brow_ctx, int 
   wow_sPrintData *print_data = (wow_sPrintData *)calloc( 1, sizeof(wow_sPrintData));
   print_data->brow_ctx = (brow_tCtx)brow_ctx;
   print_data->orientation = (flow_eOrientation)orientation;
+  print_data->scale = scale;
   strncpy( print_data->title, title, sizeof(print_data->title));
 	   
   print = gtk_print_operation_new();

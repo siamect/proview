@@ -244,7 +244,7 @@ int FlowPrintDrawGtk::pixmap( double x, double y, flow_sPixmapDataElem *data,
   int i, j;
   float scale = 0.7;
 
-  // Do do, set color
+  // To do, set color
   switch( type) {
   case flow_eDrawType_LineRed:
     break;
@@ -272,6 +272,81 @@ int FlowPrintDrawGtk::pixmap( double x, double y, flow_sPixmapDataElem *data,
 
   surface = cairo_image_surface_create_for_data( sdata, CAIRO_FORMAT_A1, data->width,
 						 data->height, stride);
+  cairo_scale( cairo, scale, scale);
+  //cairo_mask_surface( cairo, surface, (x - page_x)/scale, (y - page_y)/scale);
+  cairo_set_source_surface( cairo, surface, (print_margin_x + x - page_x)/scale, (print_margin_y + y - page_y)/scale);
+  cairo_paint( cairo);
+  cairo_scale( cairo, 1.0 / scale, 1.0 / scale);
+
+  cairo_surface_destroy( surface);
+  // free( sdata);
+  return 1;
+}
+
+int FlowPrintDrawGtk::image( double x, double y, double width, double height, flow_tImImage image, 
+			     flow_eDrawType type)
+{
+  int stride;
+  cairo_surface_t *surface;
+  unsigned char *sdata;
+  unsigned char *sdata_p;
+  float scale = 0.7;
+  unsigned char *rgb, *rgb_row;
+  int 		rgb_height;
+  int 		rgb_width;
+  int		rowstride;
+  int		n_channels;
+   
+  rgb = gdk_pixbuf_get_pixels( (GdkPixbuf *)image);
+  rgb_height = gdk_pixbuf_get_height( (GdkPixbuf *)image);
+  rgb_width = gdk_pixbuf_get_width( (GdkPixbuf *)image);
+  rowstride = gdk_pixbuf_get_rowstride( (GdkPixbuf *)image);
+  n_channels = gdk_pixbuf_get_n_channels( (GdkPixbuf *)image);
+
+  stride = cairo_format_stride_for_width( CAIRO_FORMAT_ARGB32, rgb_width);
+  sdata = (unsigned char *) calloc( 1, 4 * stride * rgb_height);
+
+  rgb_row = rgb;
+  for ( int j = 0; j < rgb_height; j++) {
+    rgb = rgb_row;
+    sdata_p = sdata + j * stride;
+    for ( int i = 0; i < rgb_width; i++) {
+      switch( n_channels) {
+      case 1:
+	sdata_p[0] = rgb[0];
+	sdata_p[1] = rgb[0];
+	sdata_p[2] = rgb[0];
+	sdata_p[3] = 255;
+	break;
+      case 2:
+	sdata_p[0] = rgb[0];
+	sdata_p[1] = rgb[1];
+	sdata_p[2] = rgb[1];
+	sdata_p[3] = 255;
+	break;
+      case 3:
+	sdata_p[0] = rgb[0];
+	sdata_p[1] = rgb[1];
+	sdata_p[2] = rgb[2];
+	sdata_p[3] = 255;
+	break;
+      default:
+	sdata_p[0] = rgb[2]; // Blue
+	sdata_p[1] = rgb[1]; // Green
+	sdata_p[2] = rgb[0]; // Red
+	sdata_p[3] = rgb[3]; // Alpha
+      }
+      
+      rgb += n_channels;
+      sdata_p += 4;
+    }
+    rgb_row += rowstride;
+  }
+
+  surface = cairo_image_surface_create_for_data( sdata, CAIRO_FORMAT_ARGB32, rgb_width,
+						 rgb_height, stride);
+  
+  scale = width / rgb_width;
   cairo_scale( cairo, scale, scale);
   //cairo_mask_surface( cairo, surface, (x - page_x)/scale, (y - page_y)/scale);
   cairo_set_source_surface( cairo, surface, (print_margin_x + x - page_x)/scale, (print_margin_y + y - page_y)/scale);

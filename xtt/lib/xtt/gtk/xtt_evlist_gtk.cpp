@@ -112,7 +112,7 @@ void EvListGtk::print( const char *title)
     strcat( print_title, nodename);
   }
 
-  CoWowGtk::CreateBrowPrintDialogGtk( print_title, brow->ctx, flow_eOrientation_Landscape,
+  CoWowGtk::CreateBrowPrintDialogGtk( print_title, brow->ctx, flow_eOrientation_Landscape, 1.0,
 				      0 /* GTK_WINDOW(parent_wid) */, &sts);
   if ( sts == WOW__PRINTDIALOGDISABLED) {
     pwr_tFileName filename;

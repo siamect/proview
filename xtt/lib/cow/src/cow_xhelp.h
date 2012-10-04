@@ -65,6 +65,7 @@ class CoXHelp {
 
     virtual void set_dimension( int width, int height) {}
     virtual void pop();
+    virtual void print() {}
 
     void map();
     void clear();
@@ -75,6 +76,7 @@ class CoXHelp {
     int back();
     int next_topic();
     int previous_topic();
+    void activate_print() { print();}
     static void set_default( CoXHelp *xhelp) { default_xhelp = xhelp;}
     static int dhelp( const char *key, const char *help_bookmark, navh_eHelpFile file_type,
 		      const char *file_name, bool strict);

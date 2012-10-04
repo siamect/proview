@@ -204,6 +204,13 @@ void XAttGtk::activate_exit( GtkWidget *w, gpointer data)
     delete xatt;
 }
 
+void XAttGtk::activate_print( GtkWidget *w, gpointer data)
+{
+  XAtt *xatt = (XAtt *)data;
+
+  xatt->activate_print();
+}
+
 void XAttGtk::activate_display_object( GtkWidget *w, gpointer data)
 {
   XAtt *xatt = (XAtt *)data;
@@ -427,6 +434,18 @@ void XAttGtk::pop()
   gtk_window_present( GTK_WINDOW(toplevel));
 }
 
+void XAttGtk::print()
+{
+  pwr_tStatus sts;
+  pwr_tAName   	title;
+
+  sts = gdh_AttrrefToName( &objar, title, sizeof(title), cdh_mNName);
+  if ( EVEN(sts)) return;
+
+  CoWowGtk::CreateBrowPrintDialogGtk( title, xattnav->brow->ctx, flow_eOrientation_Portrait, 1.0,
+				      (void *)toplevel, &sts);
+}
+
 XAttGtk::~XAttGtk()
 {
   delete (XAttNav *)xattnav;
@@ -488,6 +507,9 @@ XAttGtk::XAttGtk( GtkWidget 		*xa_parent_wid,
   GtkMenuBar *menu_bar = (GtkMenuBar *) g_object_new(GTK_TYPE_MENU_BAR, NULL);
 
   // File entry
+  GtkWidget *file_print = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Print"));
+  g_signal_connect(file_print, "activate", G_CALLBACK(activate_print), this);
+
   GtkWidget *file_close = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Close"));
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(file_close), 
 				 gtk_image_new_from_stock( "gtk-close", GTK_ICON_SIZE_MENU));
@@ -496,6 +518,7 @@ XAttGtk::XAttGtk( GtkWidget 		*xa_parent_wid,
 			      'w', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_File"));
