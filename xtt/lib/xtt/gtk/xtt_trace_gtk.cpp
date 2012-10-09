@@ -68,9 +68,12 @@ void RtTraceGtk::activate_close(GtkWidget *w, gpointer data)
 
 void RtTraceGtk::activate_print(GtkWidget *w, gpointer data)
 {
-  RtTrace *tractx = (RtTrace *)data;
+  RtTraceGtk *tractx = (RtTraceGtk *)data;
+  pwr_tStatus sts;
 
-  tractx->activate_print();
+  CoWowGtk::CreateFlowPrintDialogGtk( "Trace", tractx->flow_ctx, flow_eOrientation_Landscape,
+				      1.0, tractx->toplevel, &sts);
+
 }
 
 void RtTraceGtk::activate_printselect(GtkWidget *w, gpointer data)

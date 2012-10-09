@@ -92,8 +92,8 @@ void FlowAnnot::print( void *pos, void *node, int highlight)
         x = p.print_z_x + ((FlowPoint *)pos)->print_z_x;
       ctx->current_print->text( x, 
 	p.print_z_y + ((FlowPoint *)pos)->print_z_y, 
-	((FlowNode *) node)->annotv[number], 
-	strlen(((FlowNode *) node)->annotv[number]), draw_type, size);
+				((FlowNode *) node)->annotv[number],
+				strlen(((FlowNode *) node)->annotv[number]), draw_type, size, 0);
       break;
     case flow_eAnnotType_MultiLine:
     {
@@ -114,7 +114,7 @@ void FlowAnnot::print( void *pos, void *node, int highlight)
 	{
 	  if ( len)
             ctx->current_print->text( z_x, z_y + line_cnt * z_h, line, len, 
-		draw_type, size);
+				      draw_type, size, line_cnt);
 	  len = 0;
 	  line = s+1;
 	  line_cnt++;
@@ -124,7 +124,7 @@ void FlowAnnot::print( void *pos, void *node, int highlight)
       }
       if ( len)
         ctx->current_print->text( z_x, z_y + line_cnt * z_h, line, 
-		len, draw_type, size);
+				  len, draw_type, size, line_cnt);
       break;
     }
   }

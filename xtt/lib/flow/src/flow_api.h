@@ -43,7 +43,9 @@
 extern "C" {
 #endif
 
-#ifndef __cplusplus
+#if defined __cplusplus
+#include "flow_ctx.h"
+#else
 #ifndef flow_browapi_h
 typedef void *FlowCtx;
 #endif
@@ -208,6 +210,10 @@ int flow_PrintRegion( flow_tCtx ctx, double ll_x, double ll_y,
 	double ur_x, double ur_y, char *filename);
 int flow_PrintPdfRegion( flow_tCtx ctx, double ll_x, double ll_y,
 			 double ur_x, double ur_y, char *filename);
+void flow_PrintDrawPage( flow_tCtx ctx, void *context, const char *title, int page,
+			 flow_eOrientation orientation, double scale);
+void flow_PrintGetPages( flow_tCtx ctx, flow_eOrientation orientation, double scale, int *pages);
+void flow_PrintDrawGetOrientation( flow_tCtx ctx, int page_nr, flow_eOrientation *orientation);
 void flow_GetUserData( flow_tObject object, void **user_data);
 void flow_SetUserData( flow_tObject object, void *user_data);
 void flow_GetCtxUserData( flow_tCtx ctx, void **user_data);

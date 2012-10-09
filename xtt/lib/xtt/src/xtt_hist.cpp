@@ -135,7 +135,7 @@ void Hist::activate_print()
     hist->print_nodia( filename);
   }
   else
-    hist->print( "Event Log");
+    hist->print( Lng::translate( "Eventlog"));
 }
 
 void Hist::activate_help()

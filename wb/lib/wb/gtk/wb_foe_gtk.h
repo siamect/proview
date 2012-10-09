@@ -210,6 +210,7 @@ class WFoeGtk : public WFoe {
   static void activate_restoretrace( GtkWidget *w, gpointer data);
   static void activate_history( GtkWidget *w, gpointer data);
   static void activate_print( GtkWidget *w, gpointer data);
+  static void activate_printdialog( GtkWidget *w, gpointer data);
   static void activate_printoverv( GtkWidget *w, gpointer data);
   static void activate_printselect( GtkWidget *w, gpointer data);
   static void activate_printpdf( GtkWidget *w, gpointer data);

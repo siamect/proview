@@ -163,17 +163,26 @@ void Ev::blk_display_in_xnav_cb( void *ctx, pwr_tAttrRef *arp)
 
 void Ev::eve_activate_print()
 {
-  eve->print( "Event List");
+  char title[80];
+
+  strcpy( title, Lng::translate( "Event List"));
+  eve->print( title);
 }
 
 void Ev::ala_activate_print()
 {
-  ala->print( "Alarm List");
+  char title[80];
+
+  strcpy( title, Lng::translate( "Alarm List"));
+  ala->print( title);
 }
 
 void Ev::blk_activate_print()
 {
-  blk->print( "Block List");
+  char title[80];
+
+  strcpy( title, Lng::translate( "Blocked Alarms"));
+  blk->print( title);
 }
 
 void Ev::eve_activate_ack_last()

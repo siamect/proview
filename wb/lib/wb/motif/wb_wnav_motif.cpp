@@ -251,6 +251,7 @@ void WNavMotif::print( const char *title)
 {
   char filename[80] = "pwrp_tmp:wnav.ps";
   char cmd[200];
+  int sts;
 
   dcli_translate_filename( filename, filename);
   brow_Print( brow->ctx, filename);

@@ -72,7 +72,7 @@ void FlowText::print( void *pos, void *node, int highlight)
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->current_print->text( p.print_z_x + ((FlowPoint *)pos)->print_z_x , 
 	p.print_z_y + ((FlowPoint *)pos)->print_z_y, text, strlen(text),
-	draw_type, size);
+			    draw_type, size, 0);
 }
 
 void FlowText::save( ofstream& fp, flow_eSaveMode mode)

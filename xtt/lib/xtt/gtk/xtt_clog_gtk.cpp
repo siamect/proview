@@ -527,7 +527,7 @@ void CLogGtk::print()
   pwr_tStatus	sts;
   char 		title[80];
   
-  strcpy( title, "System Messages ");
+  strcpy( title, Lng::translate( "System Messages"));
   syi_NodeName( &sts, nodename, sizeof(nodename));
   if ( ODD(sts)) {
     strcat( title, " ");

@@ -754,6 +754,80 @@ int FlowCtx::print_pdf_region( double ll_x, double ll_y, double ur_x,
   return sts;
 }
 
+void FlowCtx::print_draw_page( void *context, const char *title, int page,
+			       flow_eOrientation orientation, double scale)
+{
+  double ll_x, ll_y, ur_x, ur_y;
+  int sts;
+
+  if ( a.size() == 0)
+    return;
+
+  int doc_cnt = 0;
+  int found = 0;
+  int page_idx;
+  for ( int i = 0; i < a.a_size; i++) {
+    if ( a.a[i]->type() == flow_eObjectType_Node &&
+	 ((FlowNode *)a.a[i])->nc->group == flow_eNodeGroup_Document) {
+      doc_cnt++;
+      if ( doc_cnt == page + 1) {
+	found = 1;
+	page_idx = i;
+	break;
+      }
+    }
+  }
+
+  ((FlowNode *)a[page_idx])->measure( &ll_x, &ll_y, &ur_x, &ur_y);
+
+  current_print = (FlowPrint *)fdraw->print_draw_new( context, title, page, this, 1, &sts);
+  if ( EVEN(sts)) return;
+
+  current_print->print_page( ll_x, ll_y, ur_x, ur_y);
+  delete current_print;  
+}
+
+void FlowCtx::print_get_pages( flow_eOrientation orientation, double scale, int *pages)
+{
+  int doc_cnt = 0;
+  for ( int i = 0; i < a.a_size; i++) {
+    if ( a.a[i]->type() == flow_eObjectType_Node &&
+	 ((FlowNode *)a.a[i])->nc->group == flow_eNodeGroup_Document)
+      doc_cnt++;
+  }
+  *pages = doc_cnt;
+}
+
+void FlowCtx::print_get_orientation( int page_nr, flow_eOrientation *orientation)
+{
+  double ll_x, ll_y, ur_x, ur_y;
+  int doc_cnt = 0;
+  int found = 0;
+  int page_idx;
+  for ( int i = 0; i < a.a_size; i++) {
+    if ( a.a[i]->type() == flow_eObjectType_Node &&
+	 ((FlowNode *)a.a[i])->nc->group == flow_eNodeGroup_Document) {
+      doc_cnt++;
+      if ( doc_cnt == page_nr + 1) {
+	found = 1;
+	page_idx = i;
+	break;
+      }
+    }
+  }
+
+  if ( !found) {
+    *orientation = flow_eOrientation_Portrait;
+    return;
+  }
+  
+  ((FlowNode *)a[page_idx])->measure( &ll_x, &ll_y, &ur_x, &ur_y);
+  if ( ur_x - ll_x < ur_y - ll_y)
+    *orientation = flow_eOrientation_Portrait;
+  else
+    *orientation = flow_eOrientation_Landscape;
+}
+
 void FlowCtx::nav_clear()
 {
   fdraw->nav_clear( this);

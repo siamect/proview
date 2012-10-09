@@ -155,6 +155,8 @@ class CoWow {
   virtual pwr_tStatus DeleteMenuItem( const char *name, void *menu) { return 0;}
   virtual void CreateBrowPrintDialog( const char *title, void *brow_ctx, int orientation,
 				      double scale, void *parent_widget, pwr_tStatus *sts) {*sts = WOW__NYI;}
+  virtual void CreateFlowPrintDialog( const char *title, void *flow_ctx, int orientation,
+				      double scale, void *parent_widget, pwr_tStatus *sts) {*sts = WOW__NYI;}
   static void SetDefaultPrinter( const char *printer) { strncpy( m_default_printer, printer, sizeof(m_default_printer));}
   static void DisablePrintDialog() { m_printdialog_disable = true;}
   static bool PrintDialogIsDisabled() { return m_printdialog_disable;}

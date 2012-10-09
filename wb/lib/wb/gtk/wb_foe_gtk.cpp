@@ -145,6 +145,16 @@ void WFoeGtk::activate_print( GtkWidget *w, gpointer data)
 }
 
 //	Callback from the menu.
+void WFoeGtk::activate_printdialog( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+
+  pwr_tStatus sts;
+  CoWowGtk::CreateFlowPrintDialogGtk( "PlcEditor", foe->gre->flow_ctx, flow_eOrientation_Landscape,
+				      1.0, ((WFoeGtk *)foe)->toplevel, &sts);
+}
+
+//	Callback from the menu.
 void WFoeGtk::activate_printoverv( GtkWidget *w, gpointer data)
 {
   WFoe *foe = (WFoe *)data;
@@ -1221,6 +1231,11 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   g_signal_connect(widgets.save, "activate", G_CALLBACK(WFoeGtk::activate_save), this);
 
   // Submenu Print
+  GtkWidget *file_print_dialog = gtk_menu_item_new_with_mnemonic( "_Print...");
+  g_signal_connect( file_print_dialog, "activate", 
+		    G_CALLBACK(WFoeGtk::activate_printdialog), this);
+
+  // Submenu Print
   GtkWidget *file_print_documents = gtk_menu_item_new_with_mnemonic( "_Documents");
   g_signal_connect( file_print_documents, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_print), this);
@@ -1239,6 +1254,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
 
   GtkWidget *file_print = gtk_menu_item_new_with_mnemonic( "_Print");
   GtkMenu *file_print_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_print_menu), file_print_dialog);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_print_menu), file_print_documents);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_print_menu), file_print_overv);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_print_menu), file_print_select);

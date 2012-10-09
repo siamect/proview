@@ -51,6 +51,12 @@ FlowPrintDrawGtk::FlowPrintDrawGtk( void *context, const char *t, int p, void *f
   print_ctx((GtkPrintContext *)context), border(page_border), ctx((FlowCtx *)flow_ctx), show_red(1), page(p)
 {
   strncpy( title, t, sizeof(title));
+
+  if ( ctx->type() == flow_eCtxType_Flow) {
+    print_margin_x = 10;
+    print_margin_y = 10;
+  }
+
   *sts = 1;
 }
 
@@ -66,11 +72,22 @@ int FlowPrintDrawGtk::print_page( double ll_x, double ll_y, double ur_x, double 
   PangoFontDescription *desc;
   char page_str[40];
           
+  if ( ctx->type() == flow_eCtxType_Flow) {
+    if ( ur_x - ll_x > ur_y - ll_y) {
+      print_margin_x = 10;
+      print_margin_y = 60;
+    }
+    else {
+      print_margin_x = 60;
+      print_margin_y = 10;
+    }
+  }
 
   if ( ur_x - ll_x > ur_y - ll_y)
     ctx->print_zoom_factor = 730 / (ur_x - ll_x);
   else
     ctx->print_zoom_factor = 730 / (ur_y - ll_y);
+
   ctx->print_zoom();
   page_x = ll_x * ctx->print_zoom_factor;
   page_y = ll_y * ctx->print_zoom_factor;
@@ -78,52 +95,53 @@ int FlowPrintDrawGtk::print_page( double ll_x, double ll_y, double ur_x, double 
   cairo = gtk_print_context_get_cairo_context (print_ctx);
   width = gtk_print_context_get_width (print_ctx);
           
-  cairo_move_to( cairo, print_margin_x, print_margin_y);
-  cairo_line_to( cairo, print_margin_x + width, print_margin_y);
-  cairo_set_source_rgb( cairo, 0, 0, 0);
-  cairo_set_line_width( cairo, 0.5);
-  cairo_stroke( cairo);
+  if ( ctx->type() == flow_eCtxType_Brow) {
+    cairo_move_to( cairo, print_margin_x, print_margin_y);
+    cairo_line_to( cairo, print_margin_x + width, print_margin_y);
+    cairo_set_source_rgb( cairo, 0, 0, 0);
+    cairo_set_line_width( cairo, 0.5);
+    cairo_stroke( cairo);
 
-  layout = gtk_print_context_create_pango_layout( print_ctx);
+    layout = gtk_print_context_create_pango_layout( print_ctx);
           
-  desc = pango_font_description_from_string( "Lucida Sans 9");
-  pango_layout_set_font_description( layout, desc);
-  pango_font_description_free( desc);
+    desc = pango_font_description_from_string( "Lucida Sans 9");
+    pango_layout_set_font_description( layout, desc);
+    pango_font_description_free( desc);
   
-  sprintf( page_str, "Page %d", page + 1);
-  pango_layout_set_width( layout, -1);
-  pango_layout_set_text( layout, page_str, -1);
-  pango_layout_set_alignment( layout, PANGO_ALIGN_LEFT);
+    sprintf( page_str, "Page %d", page + 1);
+    pango_layout_set_width( layout, -1);
+    pango_layout_set_text( layout, page_str, -1);
+    pango_layout_set_alignment( layout, PANGO_ALIGN_LEFT);
   
-  pango_layout_get_size( layout, NULL, &layout_height);
-  text_height = (gdouble)layout_height / PANGO_SCALE;
+    pango_layout_get_size( layout, NULL, &layout_height);
+    text_height = (gdouble)layout_height / PANGO_SCALE;
           
-  cairo_move_to( cairo, print_margin_x + width - 90, print_margin_y - text_height);
-  cairo_set_source_rgb( cairo, 0, 0, 0);
-  pango_cairo_show_layout( cairo, layout);
+    cairo_move_to( cairo, print_margin_x + width - 90, print_margin_y - text_height);
+    cairo_set_source_rgb( cairo, 0, 0, 0);
+    pango_cairo_show_layout( cairo, layout);
           
-  g_object_unref( layout);
+    g_object_unref( layout);
 
-  layout = gtk_print_context_create_pango_layout (print_ctx);
+    layout = gtk_print_context_create_pango_layout (print_ctx);
           
-  desc = pango_font_description_from_string( "Lucida Sans 9");
-  pango_layout_set_font_description( layout, desc);
-  pango_font_description_free( desc);
+    desc = pango_font_description_from_string( "Lucida Sans 9");
+    pango_layout_set_font_description( layout, desc);
+    pango_font_description_free( desc);
   
-  pango_layout_set_width( layout, -1);
-  pango_layout_set_alignment( layout, PANGO_ALIGN_CENTER);
-  pango_layout_set_text( layout, title, -1);
+    pango_layout_set_width( layout, -1);
+    pango_layout_set_alignment( layout, PANGO_ALIGN_CENTER);
+    pango_layout_set_text( layout, title, -1);
   
-  pango_layout_get_size( layout, &layout_width, &layout_height);
-  text_height = (gdouble)layout_height / PANGO_SCALE;
+    pango_layout_get_size( layout, &layout_width, &layout_height);
+    text_height = (gdouble)layout_height / PANGO_SCALE;
           
-  cairo_move_to (cairo, print_margin_x + width/2 - (gdouble)layout_width/PANGO_SCALE/2, 
-		 print_margin_y - text_height);
-  cairo_set_source_rgb( cairo, 0, 0, 0);
-  pango_cairo_show_layout( cairo, layout);
+    cairo_move_to (cairo, print_margin_x + width/2 - (gdouble)layout_width/PANGO_SCALE/2, 
+		   print_margin_y - text_height);
+    cairo_set_source_rgb( cairo, 0, 0, 0);
+    pango_cairo_show_layout( cairo, layout);
           
-  g_object_unref( layout);
-
+    g_object_unref( layout);
+  }
   cairo_rectangle( cairo, print_margin_x, print_margin_y, (ur_x - ll_x) * ctx->print_zoom_factor, 
 		   (ur_y - ll_y) * ctx->print_zoom_factor);
           
@@ -140,15 +158,13 @@ int FlowPrintDrawGtk::print_page( double ll_x, double ll_y, double ur_x, double 
 int FlowPrintDrawGtk::rect( double x, double y, double width, double height, flow_eDrawType type, 
 	double idx, int highlight)
 {
-  switch( type) {
-  case flow_eDrawType_LineRed:
+  if ( highlight || type == flow_eDrawType_LineRed)
     cairo_set_source_rgb( cairo, 1, 0, 0);
-    break;
-  default:
+  else
     cairo_set_source_rgb( cairo, 0, 0, 0);
-  }  
+
   cairo_set_line_width( cairo, 0.5 * idx);
-  cairo_rectangle( cairo, x - page_x, y - page_y, width, height);
+  cairo_rectangle( cairo, print_margin_x + x - page_x, print_margin_y + y - page_y, width, height);
   cairo_stroke( cairo);
 
   return 1;
@@ -187,22 +203,75 @@ int FlowPrintDrawGtk::filled_rect( double x, double y, double width, double heig
 int FlowPrintDrawGtk::arc( double x, double y, double width, double height, int angle1, int angle2,
 		flow_eDrawType type, double idx, int highlight)
 {
+  double dashed[] = {4.0, 2.0};
+
+  if ( highlight || type == flow_eDrawType_LineRed || type == flow_eDrawType_LineDashedRed)
+    cairo_set_source_rgb( cairo, 1, 0, 0);
+  else
+    cairo_set_source_rgb( cairo, 0, 0, 0);
+
+  if ( type == flow_eDrawType_LineDashed || type == flow_eDrawType_LineDashedRed)
+    cairo_set_dash( cairo, dashed, 2, 0);
+
+  cairo_set_line_width( cairo, 0.5 * idx);
+  cairo_arc( cairo, print_margin_x + x + width/2 - page_x, print_margin_y + y + height/2 - page_y, width/2, 
+	     - M_PI * (angle1 + angle2) / 180, - M_PI * angle1 / 180);
+  cairo_stroke( cairo);
+
+  if ( type == flow_eDrawType_LineDashed || type == flow_eDrawType_LineDashedRed)
+    cairo_set_dash( cairo, 0, 0, 0);
+
   return 1;
 }
 
 int FlowPrintDrawGtk::line( double x1, double y1, double x2, double y2, flow_eDrawType type, 
 	double idx, int highlight)
 {
+  double dashed[] = {4.0, 2.0};
+
+  switch( type) {
+  case flow_eDrawType_LineRed:
+    cairo_set_source_rgb( cairo, 1, 0, 0);
+    break;    
+  case flow_eDrawType_LineGray:
+    cairo_set_source_rgb( cairo, 0.7, 0.7, 0.7);
+    break;    
+  case flow_eDrawType_LineDashed:
+    cairo_set_dash( cairo, dashed, 2, 0);
+    cairo_set_source_rgb( cairo, 0, 0, 0);
+    break;    
+  case flow_eDrawType_LineDashedRed:
+    cairo_set_dash( cairo, dashed, 2, 0);
+    cairo_set_source_rgb( cairo, 1, 0, 0);
+    break;    
+  default:
+    cairo_set_source_rgb( cairo, 0, 0, 0);
+  }  
+
+  cairo_move_to( cairo, print_margin_x + x1 - page_x, print_margin_y + y1 - page_y);
+  cairo_line_to( cairo, print_margin_x + x2 - page_x, print_margin_y + y2 - page_y);
+  cairo_set_line_width( cairo, 0.5 * idx);
+  cairo_stroke( cairo);
+
+  switch( type) {
+  case flow_eDrawType_LineDashed:
+  case flow_eDrawType_LineDashedRed:
+    cairo_set_dash( cairo, 0, 0, 0);
+    break;    
+  default: ;
+  }
+    
   return 1;
 }
 
 int FlowPrintDrawGtk::text( double x, double y, char *text, int len, flow_eDrawType type, 
-	double size)
+			    double size, int line)
 {
   char font[40];
-  PangoLayout *layout;
+  PangoLayout *layout = 0;
   PangoFontDescription *desc;
   int w, h;
+  char *s;
 
   switch( type) {
   case flow_eDrawType_TextHelvetica:
@@ -214,20 +283,28 @@ int FlowPrintDrawGtk::text( double x, double y, char *text, int len, flow_eDrawT
   default:
     ;
   }  
-
-  layout = gtk_print_context_create_pango_layout( print_ctx);
           
   desc = pango_font_description_from_string( font);
-  pango_layout_set_font_description( layout, desc);
-  pango_font_description_free( desc);
   
-  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-  pango_layout_set_text( layout, textutf8, -1);
-  pango_layout_set_alignment( layout, PANGO_ALIGN_LEFT);
-  pango_layout_get_size( layout, &w, &h);
-  cairo_move_to( cairo, print_margin_x + x - page_x,  print_margin_y + y - page_y - 0.8 / PANGO_SCALE * h);
-  cairo_set_source_rgb( cairo, 0, 0, 0);
-  pango_cairo_show_layout( cairo, layout);
+  for ( s = text; *s; s++) {
+    if ( *s == 10)
+      break;
+  }
+
+  char *textutf8 = g_convert( text, s - text, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  if ( s - text > 0) {
+    layout = gtk_print_context_create_pango_layout( print_ctx);
+    pango_layout_set_font_description( layout, desc);
+    pango_layout_set_text( layout, textutf8, -1);
+    pango_layout_set_alignment( layout, PANGO_ALIGN_LEFT);
+    pango_layout_get_size( layout, &w, &h);
+    // cairo_move_to( cairo, print_margin_x + x - page_x,  print_margin_y + y - page_y - 0.8 / PANGO_SCALE * h);
+    cairo_move_to( cairo, print_margin_x + x - page_x,  print_margin_y + y - page_y - 0.8 / PANGO_SCALE * size * 1093 + 0.5 / PANGO_SCALE * size * 1093 * line);
+    cairo_set_source_rgb( cairo, 0, 0, 0);
+    pango_cairo_show_layout( cairo, layout);
+    g_object_unref( layout);
+  }
+  pango_font_description_free( desc);
   g_free( textutf8);
 
   return 1;
@@ -361,6 +438,24 @@ int FlowPrintDrawGtk::image( double x, double y, double width, double height, fl
 int FlowPrintDrawGtk::arrow( double x1, double y1, double x2, double y2, 
 	double x3, double y3, flow_eDrawType type, double idx)
 {
+  switch( type) {
+  case flow_eDrawType_LineRed:
+    cairo_set_source_rgb( cairo, 1, 0, 0);
+    break;    
+  case flow_eDrawType_LineGray:
+    cairo_set_source_rgb( cairo, 0.7, 0.7, 0.7);
+    break;    
+  default:
+    cairo_set_source_rgb( cairo, 0, 0, 0);
+  }  
+
+  cairo_move_to( cairo, print_margin_x + x1 - page_x, print_margin_y + y1 - page_y);
+  cairo_line_to( cairo, print_margin_x + x2 - page_x, print_margin_y + y2 - page_y);
+  cairo_line_to( cairo, print_margin_x + x3 - page_x, print_margin_y + y3 - page_y);
+  cairo_line_to( cairo, print_margin_x + x1 - page_x, print_margin_y + y1 - page_y);
+  cairo_close_path( cairo);
+  cairo_fill_preserve( cairo);
+
   return 1;
 }
 

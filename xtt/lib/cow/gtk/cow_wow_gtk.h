@@ -153,6 +153,11 @@ class CoWowGtk : public CoWow {
     CreateBrowPrintDialogGtk( title, brow_ctx, orientation, scale, parent_widget, sts);}
   static void CreateBrowPrintDialogGtk( const char *title, void *brow_ctx, int orientation,
 					double scale, void *parent_widget, pwr_tStatus *sts);
+  void CreateFlowPrintDialog( const char *title, void *flow_ctx, int orientation, double scale,
+			      void *parent_widget, pwr_tStatus *sts) {
+    CreateFlowPrintDialogGtk( title, flow_ctx, orientation, scale, parent_widget, sts);}
+  static void CreateFlowPrintDialogGtk( const char *title, void *flow_ctx, int orientation,
+					double scale, void *parent_widget, pwr_tStatus *sts);
   CoWowTimer *timer_new();
   void SetParent( GtkWidget *parent) { m_parent = parent;}
   void Wait( float time);

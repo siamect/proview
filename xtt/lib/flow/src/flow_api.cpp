@@ -490,6 +490,22 @@ int flow_PrintPdfRegion( flow_tCtx ctx, double ll_x, double ll_y,
   return ctx->print_pdf_region( ll_x, ll_y, ur_x, ur_y, filename);
 }
 
+void flow_PrintDrawPage( flow_tCtx ctx, void *context, const char *title, int page,
+			 flow_eOrientation orientation, double scale)
+{
+  ctx->print_draw_page( context, title, page, orientation, scale);
+}
+
+void flow_PrintGetPages( flow_tCtx ctx, flow_eOrientation orientation, double scale, int *pages)
+{
+  ctx->print_get_pages( orientation, scale, pages);
+}
+
+void flow_PrintDrawGetOrientation( flow_tCtx ctx, int page_nr, flow_eOrientation *orientation)
+{
+  ctx->print_get_orientation( page_nr, orientation);
+}
+
 void flow_GetUserData( flow_tObject object, void **user_data)
 {
   ((FlowArrayElem *)object)->get_user_data( user_data);

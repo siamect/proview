@@ -51,7 +51,7 @@ class FlowPscript : public FlowPrint {
      int arc( double x, double y, double width, double height, int angle1, int angle2,
 		flow_eDrawType type, double idx, int highlight);
      int line( double x1, double y1, double x2, double y2, flow_eDrawType type, double idx, int highlight);
-     int text( double x, double y, char *text, int len,  flow_eDrawType type, double size);
+     int text( double x, double y, char *text, int len,  flow_eDrawType type, double size, int line);
      int pixmap( double x, double y, flow_sPixmapDataElem *data, flow_eDrawType type);
      int arrow( double x1, double y1, double x2, double y2, 
 	double x3, double y3, flow_eDrawType type, double idx);

@@ -286,7 +286,7 @@ int FlowPscript::line( double x1, double y1, double x2, double y2, flow_eDrawTyp
 }
 
 int FlowPscript::text( double x, double y, char *text, int len, flow_eDrawType type, 
-	double size)
+		       double size, int line)
 {
   char font[40];
   char c;

@@ -140,7 +140,7 @@ int FlowPdf::arc( double x, double y, double width, double height, int angle1, i
 }
 
 int FlowPdf::text( double x, double y, char *text, int len, flow_eDrawType type, 
-		   double size)
+		   double size, int line)
 {
   char t[500];
 

@@ -64,7 +64,7 @@ struct trace_sNode {
 class RtTrace {
  public:
   void			*parent_ctx;
-  char			name[80];
+  pwr_tOName	       	name;
   flow_tNodeClass	trace_analyse_nc;
   flow_tConClass	trace_con_cc;
   int			trace_started;

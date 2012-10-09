@@ -211,7 +211,7 @@ void WdaMotif::activate_exit( Widget w, WdaMotif *wda, XmAnyCallbackStruct *data
 }
 void WdaMotif::activate_print( Widget w, WdaMotif *wda, XmAnyCallbackStruct *data)
 {
-  wda->print();
+  ((Wda *)wda)->activate_print();
 }
 void WdaMotif::activate_setclass( Widget w, WdaMotif *wda, XmAnyCallbackStruct *data)
 {

@@ -49,6 +49,7 @@
 #include "co_api.h"
 #include "co_lng.h"
 #include "co_wow_msg.h"
+#include "flow_api.h"
 #include "flow_browapi.h"
 
 #define WOW_MAXNAMES 400
@@ -64,7 +65,7 @@ typedef struct {
 
 typedef struct {
   char title[80];
-  brow_tCtx brow_ctx;
+  flow_tCtx flow_ctx;
   flow_eOrientation orientation;
   double scale;
 } wow_sPrintData;
@@ -1531,18 +1532,18 @@ void CoWowGtk::Wait( float time)
 
 
 
-static void begin_print( GtkPrintOperation *operation,
+static void browprint_begin_print( GtkPrintOperation *operation,
 			 GtkPrintContext   *context,
 			 gpointer           user_data)
 {
   wow_sPrintData *print_data = (wow_sPrintData *)user_data;
   int pages;
 
-  brow_PrintGetPages( print_data->brow_ctx, print_data->orientation, print_data->scale, &pages);
+  brow_PrintGetPages( (brow_tCtx)print_data->flow_ctx, print_data->orientation, print_data->scale, &pages);
   gtk_print_operation_set_n_pages( operation, pages);
 }
 
-static void end_print( GtkPrintOperation *operation,
+static void browprint_end_print( GtkPrintOperation *operation,
 		       GtkPrintContext   *context,
 		       gpointer           user_data)
 {
@@ -1550,18 +1551,18 @@ static void end_print( GtkPrintOperation *operation,
   free( print_data);
 }
 
-static void draw_page( GtkPrintOperation *operation,
+static void browprint_draw_page( GtkPrintOperation *operation,
 		       GtkPrintContext   *context,
 		       gint               page_nr,
 		       gpointer           user_data)
 {
   wow_sPrintData *print_data = (wow_sPrintData *)user_data;
 
-  brow_PrintDrawPage( print_data->brow_ctx, context, print_data->title, page_nr, 
+  brow_PrintDrawPage( (brow_tCtx)print_data->flow_ctx, context, print_data->title, page_nr, 
 		      print_data->orientation, print_data->scale);
 }
 
-static void request_page_setup( GtkPrintOperation *operation,
+static void browprint_request_page_setup( GtkPrintOperation *operation,
 				GtkPrintContext   *context,
 				gint              page_nr,
 				GtkPageSetup      *setup,
@@ -1590,7 +1591,103 @@ void CoWowGtk::CreateBrowPrintDialogGtk( const char *title, void *brow_ctx, int 
   }
 
   wow_sPrintData *print_data = (wow_sPrintData *)calloc( 1, sizeof(wow_sPrintData));
-  print_data->brow_ctx = (brow_tCtx)brow_ctx;
+  print_data->flow_ctx = (flow_tCtx)brow_ctx;
+  print_data->orientation = (flow_eOrientation)orientation;
+  print_data->scale = scale;
+  strncpy( print_data->title, convert_utf8(title), sizeof(print_data->title));
+	   
+  print = gtk_print_operation_new();
+  if ( settings)
+    gtk_print_operation_set_print_settings( print, settings);
+  else
+    settings = gtk_print_settings_new();
+
+
+  if ( strcmp( m_default_printer, "") != 0) {
+    gtk_print_settings_set_printer( settings, m_default_printer);
+    gtk_print_operation_set_print_settings( print, settings);
+  }
+  if ( m_printdialog_disable)
+    action = GTK_PRINT_OPERATION_ACTION_PRINT;
+
+  g_signal_connect( print, "begin_print", G_CALLBACK(browprint_begin_print), print_data);
+  g_signal_connect( print, "draw_page", G_CALLBACK(browprint_draw_page), print_data);
+  g_signal_connect( print, "request_page_setup", G_CALLBACK(browprint_request_page_setup), print_data);
+  g_signal_connect( print, "end_print", G_CALLBACK(browprint_end_print), print_data);
+
+  gtk_print_operation_set_allow_async( print, TRUE);
+  result = gtk_print_operation_run( print, action, GTK_WINDOW(parent_widget), 0);
+  if ( result == GTK_PRINT_OPERATION_RESULT_APPLY) {
+    if ( settings)
+      g_object_unref( settings);
+    settings = (GtkPrintSettings *)g_object_ref( gtk_print_operation_get_print_settings( print));
+  }
+  g_object_unref( print);    
+  *sts = WOW__SUCCESS;
+}
+
+static void flowprint_begin_print( GtkPrintOperation *operation,
+				   GtkPrintContext   *context,
+				   gpointer           user_data)
+{
+  wow_sPrintData *print_data = (wow_sPrintData *)user_data;
+  int pages;
+
+  flow_PrintGetPages( print_data->flow_ctx, print_data->orientation, print_data->scale, &pages);
+  gtk_print_operation_set_n_pages( operation, pages);
+}
+
+static void flowprint_end_print( GtkPrintOperation *operation,
+				 GtkPrintContext   *context,
+				 gpointer           user_data)
+{
+  wow_sPrintData *print_data = (wow_sPrintData *)user_data;
+  free( print_data);
+}
+
+static void flowprint_draw_page( GtkPrintOperation *operation,
+				 GtkPrintContext   *context,
+				 gint               page_nr,
+				 gpointer           user_data)
+{
+  wow_sPrintData *print_data = (wow_sPrintData *)user_data;
+
+  flow_PrintDrawPage( print_data->flow_ctx, context, print_data->title, page_nr, 
+		      print_data->orientation, print_data->scale);
+}
+
+static void flowprint_request_page_setup( GtkPrintOperation *operation,
+					  GtkPrintContext   *context,
+					  gint              page_nr,
+					  GtkPageSetup      *setup,
+					  gpointer           user_data)
+{
+  wow_sPrintData *print_data = (wow_sPrintData *)user_data;
+  flow_eOrientation orientation;
+  
+  flow_PrintDrawGetOrientation( print_data->flow_ctx, page_nr, &orientation);
+  if ( orientation == flow_eOrientation_Landscape)
+    gtk_page_setup_set_orientation( setup, GTK_PAGE_ORIENTATION_LANDSCAPE);
+  else
+    gtk_page_setup_set_orientation( setup, GTK_PAGE_ORIENTATION_PORTRAIT);
+}
+
+
+void CoWowGtk::CreateFlowPrintDialogGtk( const char *title, void *flow_ctx, int orientation,
+					 double scale, void *parent_widget, pwr_tStatus *sts)
+{
+  static GtkPrintSettings *settings = 0;
+  GtkPrintOperation *print;
+  GtkPrintOperationResult result;
+  GtkPrintOperationAction action = GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG;
+
+  if ( m_printdialog_disable && strcmp( m_default_printer, "") == 0) {
+    *sts = WOW__PRINTDIALOGDISABLED;
+    return;
+  }
+
+  wow_sPrintData *print_data = (wow_sPrintData *)calloc( 1, sizeof(wow_sPrintData));
+  print_data->flow_ctx = (flow_tCtx)flow_ctx;
   print_data->orientation = (flow_eOrientation)orientation;
   print_data->scale = scale;
   strncpy( print_data->title, title, sizeof(print_data->title));
@@ -1609,10 +1706,10 @@ void CoWowGtk::CreateBrowPrintDialogGtk( const char *title, void *brow_ctx, int 
   if ( m_printdialog_disable)
     action = GTK_PRINT_OPERATION_ACTION_PRINT;
 
-  g_signal_connect( print, "begin_print", G_CALLBACK(begin_print), print_data);
-  g_signal_connect( print, "draw_page", G_CALLBACK(draw_page), print_data);
-  g_signal_connect( print, "request_page_setup", G_CALLBACK(request_page_setup), print_data);
-  g_signal_connect( print, "end_print", G_CALLBACK(end_print), print_data);
+  g_signal_connect( print, "begin_print", G_CALLBACK(flowprint_begin_print), print_data);
+  g_signal_connect( print, "draw_page", G_CALLBACK(flowprint_draw_page), print_data);
+  g_signal_connect( print, "request_page_setup", G_CALLBACK(flowprint_request_page_setup), print_data);
+  g_signal_connect( print, "end_print", G_CALLBACK(flowprint_end_print), print_data);
 
   gtk_print_operation_set_allow_async( print, TRUE);
   result = gtk_print_operation_run( print, action, GTK_WINDOW(parent_widget), 0);

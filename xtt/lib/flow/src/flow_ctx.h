@@ -257,6 +257,11 @@ class FlowCtx {
 			      double ur_y, char *filename);
     int		print_pdf_region( double ll_x, double ll_y, double ur_x, 
 				  double ur_y, char *filename);
+    void	print_draw_page( void *context, const char *title, int page,
+				 flow_eOrientation orientation, double scale);
+    void	print_get_pages( flow_eOrientation orientation, double scale, int *pages);
+    void	print_get_orientation( int page_nr, flow_eOrientation *orientation);
+
     double	draw_delta;
     double	grafcet_con_delta;
     int		refcon_cnt;

@@ -53,7 +53,7 @@ class FlowPrintDraw : public FlowPrint {
   virtual int arc( double x, double y, double width, double height, int angle1, int angle2,
 		   flow_eDrawType type, double idx, int highlight) {return 1;}
   virtual int line( double x1, double y1, double x2, double y2, flow_eDrawType type, double idx, int highlight) {return 1;}
-  virtual int text( double x, double y, char *text, int len,  flow_eDrawType type, double size) {return 1;}
+  virtual int text( double x, double y, char *text, int len,  flow_eDrawType type, double size, int line) {return 1;}
   virtual int pixmap( double x, double y, flow_sPixmapDataElem *data, flow_eDrawType type) {return 1;}
   virtual int arrow( double x1, double y1, double x2, double y2, 
 		     double x3, double y3, flow_eDrawType type, double idx) {return 1;}
