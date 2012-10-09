@@ -1580,6 +1580,7 @@ void ItemAlarm::update_text()
     case evlist_eEventType_Info:
     case evlist_eEventType_Alarm:
     case evlist_eEventType_Return:
+    case evlist_eEventType_Block:
       if ( ! evlist->hide_text) {
         brow_SetAnnotation( node, 2, alias, strlen(alias));
         brow_SetAnnotation( node, 3, eventtext, strlen(eventtext));
