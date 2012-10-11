@@ -558,10 +558,10 @@ static int	xnav_help_func(		void		*client_data,
   }
   else
   {
-    sts = CoXHelp::dhelp( key, bookmark_str, navh_eHelpFile_Base, 0, strict);
+    sts = CoXHelp::dhelp( key, bookmark_str, navh_eHelpFile_Project, 0, strict);
     if ( EVEN(sts))
     {
-      sts = CoXHelp::dhelp( key, bookmark_str, navh_eHelpFile_Project, 0, strict);
+      sts = CoXHelp::dhelp( key, bookmark_str, navh_eHelpFile_Base, 0, strict);
       if ( EVEN(sts))
         xnav->message('E', "No help on this subject");
     }
