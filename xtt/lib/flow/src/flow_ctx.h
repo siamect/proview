@@ -288,8 +288,11 @@ class FlowCtx {
     void trace_close();
     void trace_scan();
     void *user_data;
-    void set_user_data( void *data) { user_data = data;};
-    void get_user_data( void **data) { *data = user_data;};
+    unsigned int user_version;
+    void set_user_data( void *data) { user_data = data;}
+    void get_user_data( void **data) { *data = user_data;}
+    void set_user_version( unsigned int version) { user_version = version;}
+    void get_user_version( unsigned int *version) { *version = user_version;}
     void get_selected_nodes( FlowArrayElem ***nodes, int *num);
     void get_selected_cons( FlowArrayElem ***cons, int *num);
     void position_to_pixel( double x, double y, int *pix_x, int *pix_y)

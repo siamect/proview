@@ -111,12 +111,12 @@ void WFoe::activate_save()
     }
   }
   clock_cursor();
-  sts = create_flow();
   sts = gre->undelete_reset();	  
   disable_ldh_cb();
   sts = vldh_wind_save( gre->wind);
   enable_ldh_cb();
   error_msg( sts);
+  sts = create_flow();
 	
   normal_cursor();
 
@@ -1455,10 +1455,10 @@ void WFoe::exit_save( WFoe *foe)
     }
   }
   foe->clock_cursor();
-  sts = foe->create_flow();
   foe->disable_ldh_cb();
   sts = vldh_wind_save( foe->gre->wind);
   foe->error_msg( sts);
+  sts = foe->create_flow();
 	
   foe->normal_cursor();
   if ( sts == VLDH__PLCNOTSAVED ) {

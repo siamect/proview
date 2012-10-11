@@ -1206,6 +1206,8 @@ int vldh_wind_save (
     time_GetTime( &time);
     sts = ldh_SetObjectPar( wind->hw.ldhses, wind->lw.oid,
 			    "DevBody", "Modified", (char *)&time, sizeof( time)); 
+    sts = ldh_SetObjectPar( wind->hw.ldhses, wind->lw.oid,
+			    "RtBody", "Version", (char *)&time.tv_sec, sizeof( time.tv_sec)); 
   }
 
   /* Save the nodes that is created or modified */

@@ -218,6 +218,8 @@ void flow_GetUserData( flow_tObject object, void **user_data);
 void flow_SetUserData( flow_tObject object, void *user_data);
 void flow_GetCtxUserData( flow_tCtx ctx, void **user_data);
 void flow_SetCtxUserData( flow_tCtx ctx, void *user_data);
+void flow_GetCtxUserVersion( flow_tCtx ctx, unsigned int *user_version);
+void flow_SetCtxUserVersion( flow_tCtx ctx, unsigned int user_version);
 flow_tCtx flow_GetCtx( flow_tObject object);
 void flow_SetTraceAttr( flow_tObject object, char *trace_object, 
 		char *trace_attribute, flow_eTraceType trace_attr_type, int inverted);

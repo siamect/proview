@@ -526,6 +526,16 @@ void flow_SetCtxUserData( flow_tCtx ctx, void *user_data)
   ((FlowCtx *)ctx)->set_user_data( user_data);
 }
 
+void flow_GetCtxUserVersion( flow_tCtx ctx, unsigned int *user_version)
+{
+  ((FlowCtx *)ctx)->get_user_version( user_version);
+}
+
+void flow_SetCtxUserVersion( flow_tCtx ctx, unsigned int user_version)
+{
+  ((FlowCtx *)ctx)->set_user_version( user_version);
+}
+
 flow_tCtx flow_GetCtx( flow_tObject object)
 {
   return (flow_tCtx)((FlowArrayElem *)object)->get_ctx();

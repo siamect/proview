@@ -97,7 +97,7 @@ FlowCtx::FlowCtx( const char *ctx_name, double zoom_fact, int offs_x, int offs_y
     grafcet_con_delta(2), refcon_cnt(0), refcon_width(1.5), 
     refcon_height(0.8), refcon_textsize(3), refcon_linewidth(2),
     trace_connect_func(0), trace_scan_func(0), trace_started(0), 
-    unobscured(1), nodraw(0), no_nav(1), widget_cnt(0),
+    user_version(0), unobscured(1), nodraw(0), no_nav(1), widget_cnt(0),
     select_policy(flow_eSelectPolicy_Partial), tiptext(0),
     inverse_color(flow_eDrawType_Line), text_coding(flow_eTextCoding_ISO8859_1),
     display_level(flow_mDisplayLevel_1),  
@@ -195,6 +195,7 @@ int FlowCtx::save( char *filename, flow_eSaveMode mode)
   fp <<	int(flow_eSave_Ctx_refcon_height) << FSPACE << refcon_height << endl;
   fp <<	int(flow_eSave_Ctx_refcon_textsize) << FSPACE << refcon_textsize << endl;
   fp <<	int(flow_eSave_Ctx_refcon_linewidth) << FSPACE << refcon_linewidth << endl;
+  fp <<	int(flow_eSave_Ctx_user_version) << FSPACE << user_version << endl;
   fp <<	int(flow_eSave_Ctx_a_nc) << endl;
   a_nc.save( fp, mode);
   fp <<	int(flow_eSave_Ctx_a_cc) << endl;
@@ -259,6 +260,7 @@ int FlowCtx::open( char *filename, flow_eSaveMode mode)
       case flow_eSave_Ctx_refcon_height: fp >> refcon_height; break;
       case flow_eSave_Ctx_refcon_textsize: fp >> refcon_textsize; break;
       case flow_eSave_Ctx_refcon_linewidth: fp >> refcon_linewidth; break;
+      case flow_eSave_Ctx_user_version: fp >> user_version; break;
       case flow_eSave_Ctx_a_nc: a_nc.open( this, fp); break;
       case flow_eSave_Ctx_a_cc: a_cc.open( this, fp); break;
       case flow_eSave_Ctx_a: a.open( this, fp); break;

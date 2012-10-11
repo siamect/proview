@@ -699,204 +699,22 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
       version = info.st_ctime;    
   }
 #endif
-#if 0
-  FlowWidget	fwidget;
-  char		uid_filename[120] = {"xtt_trace.uid"};
-  char		*uid_filename_p = uid_filename;
-  Arg 		args[20];
-  unsigned long sts;
-  pwr_tOName   	name;
-  int		i;
-  pwr_tObjid	window_objid;
-  pwr_tClassId	cid;
-  char   	title[220];
-  pwr_tOName   	hostname;
-  pwr_tOName   	plcconnect;
-  MrmHierarchy s_DRMh;
-  MrmType dclass;
-  Widget	trace_widget;
-  static MrmRegisterArg	reglist[] = {
-        { "tra_ctx", 0 },
-	{"tra_activate_close",(caddr_t)activate_close },
-	{"tra_activate_print",(caddr_t)activate_print },
-	{"tra_activate_printselect",(caddr_t)activate_printselect },
-	{"tra_activate_savetrace",(caddr_t)activate_savetrace },
-	{"tra_activate_restoretrace",(caddr_t)activate_restoretrace },
-	{"tra_activate_cleartrace",(caddr_t)activate_cleartrace },
-	{"tra_activate_trace",(caddr_t)activate_trace },
-	{"tra_activate_display_object",(caddr_t)activate_display_object },
-	{"tra_activate_open_object",(caddr_t)activate_open_object },
-	{"tra_activate_show_cross",(caddr_t)activate_show_cross },
-	{"tra_activate_open_classgraph",(caddr_t)activate_open_classgraph },
-	{"tra_activate_collect_insert",(caddr_t)activate_collect_insert },
-	{"tra_activate_view",(caddr_t)activate_view },
-	{"tra_activate_simulate",(caddr_t)activate_simulate },
-	{"tra_activate_zoomin",(caddr_t)activate_zoomin },
-	{"tra_activate_zoomout",(caddr_t)activate_zoomout },
-	{"tra_activate_zoomreset",(caddr_t)activate_zoomreset },
-	{"tra_activate_scantime1",(caddr_t)activate_scantime1 },
-	{"tra_activate_scantime2",(caddr_t)activate_scantime2 },
-	{"tra_activate_scantime3",(caddr_t)activate_scantime3 },
-	{"tra_activate_scantime4",(caddr_t)activate_scantime4 },
-	{"tra_activate_scantime5",(caddr_t)activate_scantime5 },
-	{"tra_activate_help",(caddr_t)activate_help },
-	{"tra_activate_helpplc",(caddr_t)activate_helpplc },
-	{"tra_create_form",(caddr_t)create_form },
-	{"tra_create_menu",(caddr_t)create_menu }
-	};
 
-  static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
+  // Check version
+  unsigned int flow_version;
+  pwr_tUInt32 window_version;
+  pwr_tAName aname;
 
-  lng_get_uid( uid_filename, uid_filename);
+  flow_GetCtxUserVersion( flow_ctx, &flow_version);
 
-  sts = gdh_ObjidToName( tr_objid, name, sizeof(name), cdh_mNName); 
-  if (EVEN(sts)) {
-    *status = sts;
-    return;
-  }
-  strcpy( title, "Trace ");
-  strcat( title, name);
+  strcpy( aname, name);
+  strcat( aname, ".Version");
 
-  /* Find plcwindow */
-  sts = gdh_GetObjectClass( tr_objid, &cid);
-  if ( EVEN(sts)) {
-    *status = sts;
-    return;
-  }
+  sts = gdh_GetObjectInfo( aname, &window_version, sizeof(window_version));
+  if ( EVEN(sts)) return;
 
-  if ( !(cid == pwr_cClass_windowplc ||
-         cid == pwr_cClass_windowcond ||
-         cid == pwr_cClass_windoworderact ||
-         cid == pwr_cClass_windowsubstep ))
-  {
-
-    sts = gdh_GetChild( tr_objid, &window_objid);
-    if ( EVEN(sts)) {
-      *status = sts;
-      return;
-    }
-  }
-  else
-    window_objid = tr_objid; 
-
-  sts = gdh_GetObjectClass( window_objid, &cid);
-  if ( EVEN(sts)) {
-    *status = sts;
-    return;
-  }
-
-  if ( !(cid == pwr_cClass_windowplc ||
-         cid == pwr_cClass_windowcond ||
-         cid == pwr_cClass_windoworderact ||
-         cid == pwr_cClass_windowsubstep )) {
-    *status = 0;
-    return;
-  }
-
-  sts = get_filename( window_objid, filename, &m_has_host, hostname, 
-		      plcconnect);
-  if ( EVEN(sts)) {
-    *status = sts;
-    return;
-  }
-
-  /* Create object context */
-  objid = window_objid;
-  if ( m_has_host) {
-    strcpy( m_hostname, hostname);
-    strcpy( m_plcconnect, plcconnect);
-  }
-  reglist[0].value = (caddr_t) this;
- 
-  toplevel = XtCreatePopupShell( name, 
-		topLevelShellWidgetClass, parent_wid, args, 0);
-
-  /* Save the context structure in the widget */
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
-
-  sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);
-  if (sts != MrmSUCCESS) printf("can't open %s\n", uid_filename);
-
-  MrmRegisterNames(reglist, reglist_num);
-
-  sts = MrmFetchWidgetOverride( s_DRMh, "trace_window", toplevel,
-			title, args, 1, &trace_widget, &dclass);
-  if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
-
-  MrmCloseHierarchy(s_DRMh);
-
-
-  i = 0;
-  XtSetArg(args[i],XmNwidth,800);i++;
-  XtSetArg(args[i],XmNheight,600);i++;
-  XtSetValues( toplevel ,args,i);
-    
-  XtManageChild( trace_widget);
-
-  i = 0;
-/*
-  XtSetArg(args[i],XmNwidth,790);i++;
-  XtSetArg(args[i],XmNheight,560);i++;
-*/
-  XtSetArg( args[i], XmNtopAttachment, XmATTACH_WIDGET);i++;
-  XtSetArg( args[i], XmNtopWidget, menu);i++;
-  XtSetArg( args[i], XmNrightAttachment, XmATTACH_FORM);i++;
-  XtSetArg( args[i], XmNleftAttachment, XmATTACH_FORM);i++;
-  XtSetArg( args[i], XmNbottomAttachment, XmATTACH_FORM);i++;
-  flow_widget = FlowCreate( form, "Flow window", args, i, 
-			    init_flow, (void *)this);
-
-  XtManageChild( (Widget) flow_widget);
-/*
-  XtRealizeWidget(toplevel);
-*/
-  XtPopup( toplevel, XtGrabNone);
-
-  fwidget = (FlowWidget) flow_widget;
-  flow_ctx = (flow_tCtx)fwidget->flow.flow_ctx;
-  flow_SetCtxUserData( flow_ctx, this);
-
-  /* Create navigator popup */
-
-  i = 0;
-  XtSetArg(args[i],XmNallowShellResize, TRUE); i++;
-  XtSetArg(args[i],XmNallowResize, TRUE); i++;
-  XtSetArg(args[i],XmNwidth,200);i++;
-  XtSetArg(args[i],XmNheight,200);i++;
-  XtSetArg(args[i],XmNx,500);i++;
-  XtSetArg(args[i],XmNy,500);i++;
-
-  nav_shell = XmCreateDialogShell( flow_widget, "Navigator",
-        args, i);
-  XtManageChild( nav_shell);
-
-  i = 0;
-  XtSetArg(args[i],XmNwidth,200);i++;
-  XtSetArg(args[i],XmNheight,200);i++;
-  nav_widget = FlowCreateNav( nav_shell, "navigator",
-        args, i, flow_widget);
-  XtManageChild( nav_widget);
-  XtRealizeWidget( nav_shell);
-
-  // Connect the window manager close-button to exit
-  flow_AddCloseVMProtocolCb( toplevel, 
-	(XtCallbackProc)activate_close, this);
-
-  wow = new CoWowGtk( toplevel);
-  trace_timerid = wow->timer_new();
-
-  viewsetup();
-  flow_Open( flow_ctx, filename);
-  trasetup();
-  trace_start();
-
-#if defined OS_LINUX
-  {
-    struct stat info;
-
-    if ( stat( filename, &info) != -1)
-      version = info.st_ctime;    
-  }
-#endif
-#endif
+  if ( flow_version > window_version)
+    wow->DisplayError( "Version mismatch", "Trace file is newer than database version");
+  else if ( flow_version < window_version)
+    wow->DisplayError( "Version mismatch", "Trace file is older than database version");
 }

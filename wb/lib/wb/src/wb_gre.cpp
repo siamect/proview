@@ -3127,6 +3127,15 @@ int WGre::set_trace_attributes( char *host)
   char			*np;
   char			*s;
   unsigned int		options;
+  pwr_tUInt32		*version;
+
+  // Set version
+  sts = ldh_GetObjectPar( wind->hw.ldhses, wind->lw.oid,
+			  "RtBody", "Version", (char **)&version, &size); 
+  if ( EVEN(sts)) return sts;
+
+  flow_SetCtxUserVersion( flow_ctx, *version);
+  free( (char *)version);
 
   sts = vldh_get_nodes( wind, &node_count, &nodelist);
   if ( EVEN(sts)) return sts;

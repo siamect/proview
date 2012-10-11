@@ -434,6 +434,7 @@ typedef enum {
 	flow_eSave_Ctx_refcon_height		= 131,
 	flow_eSave_Ctx_refcon_textsize		= 132,
 	flow_eSave_Ctx_refcon_linewidth		= 133,
+	flow_eSave_Ctx_user_version		= 134,
 	flow_eSave_Array_a			= 200,
 	flow_eSave_NodeClass_nc_name		= 300,
 	flow_eSave_NodeClass_a			= 301,
