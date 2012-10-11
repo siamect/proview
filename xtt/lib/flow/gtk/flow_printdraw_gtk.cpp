@@ -299,7 +299,7 @@ int FlowPrintDrawGtk::text( double x, double y, char *text, int len, flow_eDrawT
     pango_layout_set_alignment( layout, PANGO_ALIGN_LEFT);
     pango_layout_get_size( layout, &w, &h);
     // cairo_move_to( cairo, print_margin_x + x - page_x,  print_margin_y + y - page_y - 0.8 / PANGO_SCALE * h);
-    cairo_move_to( cairo, print_margin_x + x - page_x,  print_margin_y + y - page_y - 0.8 / PANGO_SCALE * size * 1093 + 0.5 / PANGO_SCALE * size * 1093 * line);
+    cairo_move_to( cairo, print_margin_x + x - page_x,  print_margin_y + y - page_y - 0.8 / PANGO_SCALE * size * 1093 + 0.4 / PANGO_SCALE * size * 1093 * line);
     cairo_set_source_rgb( cairo, 0, 0, 0);
     pango_cairo_show_layout( cairo, layout);
     g_object_unref( layout);
