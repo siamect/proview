@@ -352,7 +352,7 @@ if [ $OpSys -eq $OpSys_PPC_LINUX ]; then
   pwrp_gc="$pwrp_tmp"
 
 # Suppress all warnings, -x
-  cc_cmd="$cc -c -x c -Wall $cc_debug -D_REENTRANT -DOS_LINUX -I$pwrinc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+  cc_cmd="$cc -c -x c -Wall $cc_debug -D_REENTRANT -DOS_LINUX -DOS_POSIX -I$pwrinc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
 
   FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 
@@ -365,7 +365,7 @@ elif [ $OpSys -eq $OpSys_X86_LINUX ]; then
 
 # Suppress all warnings, -x
   if [ $CurrentOpSys -eq $OpSys ]; then
-     cc_cmd="$cc -c -x c -Wall $cc_debug -D_REENTRANT -DOS_LINUX -I$pwrinc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+     cc_cmd="$cc -c -x c -Wall $cc_debug -D_REENTRANT -DOS_LINUX -DOS_POSIX -I$pwrinc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
 
      FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 
@@ -381,7 +381,7 @@ elif [ $OpSys -eq $OpSys_X86_64_LINUX ]; then
 
 # Suppress all warnings, -x
   if [ $CurrentOpSys -eq $OpSys ]; then
-      cc_cmd="$cc -c -x c -Wall $cc_debug -D_REENTRANT -DOS_LINUX -I$pwrinc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+      cc_cmd="$cc -c -x c -Wall $cc_debug -D_REENTRANT -DOS_LINUX -DOS_POSIX -I$pwrinc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
 
       FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 
@@ -398,7 +398,7 @@ elif [ $OpSys -eq $OpSys_ARM_LINUX ]; then
   echo "-- Cross compilation ARM_LINUX"
 
 # Suppress all warnings, -x
-  cc_cmd="$cc -c -x c -Wall $cc_debug -D_REENTRANT -DOS_LINUX -I$pwrinc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+  cc_cmd="$cc -c -x c -Wall $cc_debug -D_REENTRANT -DOS_LINUX -DOS_POSIX -I$pwrinc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
 
   FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 
