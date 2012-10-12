@@ -566,7 +566,7 @@ static int gcg_cmanager_find_nodes( vldh_t_wind wind, vldh_t_node mgr,
 				    vldh_t_node *nodelist, int node_count);
 static int gcg_cmanager_comp( gcg_ctx gcgctx, vldh_t_node node);
 static int gcg_reset_cmanager( gcg_ctx	gcgctx);
-static int gcg_check_attrref( gcg_ctx gcgctx, vldh_t_node node, const char *attr);
+static int gcg_check_attrref( gcg_ctx gcgctx, vldh_t_node node, const char *attr, pwr_tAttrRef *arp);
 static int gcg_is_in_focode( gcg_ctx gcgctx, vldh_t_node node);
 static void gcg_pending_compile_add( gcg_ctx gcgctx, pwr_tOid wind);
 static int gcg_pending_compile_exec( gcg_ctx gcgctx);
@@ -11140,38 +11140,67 @@ int	gcg_comp_m35( gcg_ctx gcgctx, vldh_t_node node)
 	char			output_prefix;
 	char			output_par[80];
 	char			*name;
+	pwr_tAttrRef		refattrref;
+	ldh_sAttrRefInfo	info;
 
 	/* Check if there is a PlcConnected */
-	sts = gcg_check_attrref( gcgctx, node, "PlcConnect");
+	sts = gcg_check_attrref( gcgctx, node, "PlcConnect", 0);
 	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__NOCONNECT, node);
 	  return GSX__NEXTNODE;
 	}
 
+
 	/* Check special attrref's for som classes */
 	switch ( node->ln.cid) {
 	case pwr_cClass_GetApPtr:
 	case pwr_cClass_StoApPtr:
-	  sts = gcg_check_attrref( gcgctx, node, "ApPtrObject");
+	  sts = gcg_check_attrref( gcgctx, node, "ApPtrObject", &refattrref);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, sts, node);
 	    return GSX__NEXTNODE;
+	  }
+	  sts = ldh_GetAttrRefInfo( gcgctx->ldhses, &refattrref, &info);
+	  if ( EVEN(sts)) return sts;
+
+	  if ( info.type != pwr_eType_Float32) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTPAR;
 	  }
 	  break;
 	case pwr_cClass_GetDpPtr:
 	case pwr_cClass_StoDpPtr:
-	  sts = gcg_check_attrref( gcgctx, node, "DpPtrObject");
+	  sts = gcg_check_attrref( gcgctx, node, "DpPtrObject", &refattrref);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, sts, node);
 	    return GSX__NEXTNODE;
 	  }
+	  sts = ldh_GetAttrRefInfo( gcgctx->ldhses, &refattrref, &info);
+	  if ( EVEN(sts)) return sts;
+
+	  if ( info.type != pwr_eType_Boolean) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTPAR;
+	  }
 	  break;
 	case pwr_cClass_GetIpPtr:
 	case pwr_cClass_StoIpPtr:
-	  sts = gcg_check_attrref( gcgctx, node, "IpPtrObject");
+	  sts = gcg_check_attrref( gcgctx, node, "IpPtrObject", &refattrref);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, sts, node);
 	    return GSX__NEXTNODE;
+	  }
+	  sts = ldh_GetAttrRefInfo( gcgctx->ldhses, &refattrref, &info);
+	  if ( EVEN(sts)) return sts;
+
+	  if ( !(info.type == pwr_eType_Int32 ||
+		 info.type == pwr_eType_UInt32 ||
+		 info.type == pwr_eType_Status ||
+		 info.type == pwr_eType_NetStatus ||
+		 info.type == pwr_eType_Enum ||
+		 info.type == pwr_eType_Mask)) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTPAR;
 	  }
 	  break;
 	default:;
@@ -16628,7 +16657,7 @@ static int gcg_reset_cmanager(
   return GSX__SUCCESS;
 }	
 
-static int gcg_check_attrref( gcg_ctx gcgctx, vldh_t_node node, const char *attr) 
+static int gcg_check_attrref( gcg_ctx gcgctx, vldh_t_node node, const char *attr, pwr_tAttrRef *arp) 
 {
   pwr_tStatus sts;
   int size;
@@ -16655,6 +16684,9 @@ static int gcg_check_attrref( gcg_ctx gcgctx, vldh_t_node node, const char *attr
     sts = ldh_GetAttrRefOrigTid( gcgctx->ldhses, &aref, &cid);
     if ( EVEN(sts))
       return GSX__REFOBJ;
+
+    if ( arp)
+      *arp = aref;
   }
   return GSX__SUCCESS;
 }
