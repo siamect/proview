@@ -116,7 +116,7 @@ static int get_bit( char *parsed_name, int attr_type, unsigned int *bitmask)
     char *s;
     int bitnum;
 
-    if ( (s = strchr( parsed_name, '['))) {
+    if ( (s = strrchr( parsed_name, '['))) {
       sscanf( s+1, "%d", &bitnum);
       *s = 0;
       if ( bitnum >= 0 && bitnum < 32) {
@@ -10178,7 +10178,7 @@ int GeSetDig::action( grow_tObject object, glow_tEvent event)
 	char *s;
 	int bitnum;
 
-	if ( (s = strchr( parsed_name, '['))) {
+	if ( (s = strrchr( parsed_name, '['))) {
 	  sscanf( s+1, "%d", &bitnum);
 	  *s = 0;
 	  if ( !(bitnum >= 0 && bitnum < 32))
@@ -10379,7 +10379,7 @@ int GeResetDig::action( grow_tObject object, glow_tEvent event)
       char *s;
       int bitnum;
 
-      if ( (s = strchr( parsed_name, '['))) {
+      if ( (s = strrchr( parsed_name, '['))) {
 	sscanf( s+1, "%d", &bitnum);
 	*s = 0;
 	if ( !(bitnum >= 0 && bitnum < 32))
@@ -10548,7 +10548,7 @@ int GeToggleDig::action( grow_tObject object, glow_tEvent event)
 	char *s;
 	int bitnum;
 
-	if ( (s = strchr( parsed_name, '['))) {
+	if ( (s = strrchr( parsed_name, '['))) {
 	  sscanf( s+1, "%d", &bitnum);
 	  *s = 0;
 	  if ( !(bitnum >= 0 && bitnum < 32))
