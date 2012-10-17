@@ -453,11 +453,14 @@ int CnvToPs::print_image( const char *filename)
 	
   x = ps_cLeftMargin;
 
-  // Try $pwr_doc/help/
-  strcpy( fname, "$pwr_doc/help/");
-  strcat( fname, filename);
-  dcli_translate_filename( fname, fname);
-
+  if ( strchr( filename, '/') != 0)
+    dcli_translate_filename( fname, filename);
+  else {
+    // Try $pwr_doc/help/
+    strcpy( fname, "$pwr_doc/help/");
+    strcat( fname, filename);
+    dcli_translate_filename( fname, fname);
+  }
   sts = cnv_get_image( fname, &image, &pixmap);
   if ( EVEN(sts)) {
     // Try $pwr_exe
