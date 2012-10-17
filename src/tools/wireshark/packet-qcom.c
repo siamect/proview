@@ -1139,541 +1139,561 @@ dissect_qcom(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
   is_mhreturn = 0;
   is_sev = 0;
   if ( is_user) {
-    receiver_qix = tvb_get_ntohl( tvb, header_size + 12);
-    reply_qix = tvb_get_ntohl( tvb, header_size + 20);
-    btype = tvb_get_ntohl( tvb, header_size + 28);
-    stype = tvb_get_ntohl( tvb, header_size + 32);
-    msg_size = tvb_get_ntohl( tvb, header_size + 40);
+    if ( msg_flags & mSeg_middle && !(msg_flags & mSeg_first))
+      strcpy( info, "Middle segment");
+    else if ( msg_flags & mSeg_last && !(msg_flags & mSeg_first))
+      strcpy( info, "Last segment");
+    else {
+      receiver_qix = tvb_get_ntohl( tvb, header_size + 12);
+      reply_qix = tvb_get_ntohl( tvb, header_size + 20);
+      btype = tvb_get_ntohl( tvb, header_size + 28);
+      stype = tvb_get_ntohl( tvb, header_size + 32);
+      msg_size = tvb_get_ntohl( tvb, header_size + 40);
 
-    if ( receiver_qix == 122 || reply_qix == 122)
-      /* Fix for 4.8.2 and earlier */
-      btype = sev_cMsgClass;
+      if ( receiver_qix == 122 || reply_qix == 122)
+	/* Fix for 4.8.2 and earlier */
+	btype = sev_cMsgClass;
 
-    switch ( btype) {
-    case qcom_eBtype_system: { 
-      /* System */
-      protostrp = protostr[1];  /* QCOM SYS */
-
-      break;
-    }
-    case qcom_eBtype_qcom: { 
-      /* Qcom */
-      protostrp = protostr[0]; /* QCOM */
-
-      switch ( stype) {
-      case qcom_eStype_linkConnect:
-	strcpy( info, "LinkConnect");
-	break;
-      case qcom_eStype_linkDisconnect:
-	strcpy( info, "LinkDisonnect");
-	break;
-      case qcom_eStype_linkActive:
-	strcpy( info, "LinkActive");
-	break;
-      case qcom_eStype_linkStalled:
-	strcpy( info, "LinkStalled");
-	break;
-      case qcom_eStype_applConnect:
-	strcpy( info, "ApplConnect");
-	break;
-      case qcom_eStype_applDisconnect:
-	strcpy( info, "ApplDisconnect");
-	break;
-      default:
-	strcpy( info, "Unknown subtype");
-      }
-
-      break;
-    }
-    case qcom_eBtype_event: {
-      /* Event */
-      protostrp = protostr[2]; /* QCOM EV */
-
-      switch ( stype) {
-      case qcom_cIloopBack:
-	strcpy( info, "LoopBack");
-	break;
-      case qcom_cInetEvent:
-	strcpy( info, "NetEvent");
-	break;
-      case qcom_cIapplEvent:
-	strcpy( info, "ApplEvent");
-	break;
-      case qcom_cImhAllHandlers:
-	strcpy( info, "MhAllHandlers");
-	break;
-      case qcom_cImhAllOutunits:
-	strcpy( info, "MhAllOutunits");
-	break;
-      case qcom_cIhdServer:
-	strcpy( info, "HdServer");
-	break;
-      case qcom_cIhdClient:
-	strcpy( info, "HdClient");
-	break;
-      case qcom_cInacp:
-	strcpy( info, "Nacp");
-	break;
-      case qcom_cIini:
-	strcpy( info, "Ini");
-	break;
-      default:
-	strcpy( info, "Unknown subtype");
-      }
-      break;
-    }
-    case net_cMsgClass: {
-      /* Neth */
-      protostrp = protostr[3]; /* NETH */
-
-      is_net = 1;
-      net_endian = ENC_LITTLE_ENDIAN;
-
-      switch ( stype) {
-      case net_eMsg_error:
-	strcpy( info, "Error");
-	break;
-      case net_eMsg_id:
-	strcpy( info, "Id");
-	break;
-      case net_eMsg_idAck:
-	strcpy( info, "IdAck");
-	break;
-      case net_eMsg_idAck2:
-	strcpy( info, "IdAck2");
-	break;
-      case net_eMsg_volumes:
-	strcpy( info, "Volumes");
-	break;
-      case net_eMsg_volumesR:
-	strcpy( info, "VolumesR");
-	break;
-      case net_eMsg_subAdd:
-	strcpy( info, "SubAdd");
-	break;
-      case net_eMsg_subRemove:
-	strcpy( info, "SubRemove");
-	break;
-      case net_eMsg_subData:
-	strcpy( info, "SubData");
-	break;
-      case net_eMsg_sanAdd:
-	strcpy( info, "SanAdd");
-	break;
-      case net_eMsg_sanRemove:
-	strcpy( info, "SanRemove");
-	break;
-      case net_eMsg_sanUpdate:
-	strcpy( info, "SanUpdate");
-	break;
-      case net_eMsg_nameToObject:
-	strcpy( info, "NameToObject");
-	break;
-      case net_eMsg_oidToObject:
-	is_netoidtoobject = 1;
-
-	/* Get oid */
-	offs = header_size + info_size + net_message_size;
-	if ( net_endian == ENC_BIG_ENDIAN) {
-	  oid_oix = tvb_get_ntohl( tvb, offs);
-	  offs += 4;
-	  oid_vid = tvb_get_ntohl( tvb, offs);
-	}
-	else {
-	  oid_oix = tvb_get_letohl( tvb, offs);
-	  offs += 4;
-	  oid_vid = tvb_get_letohl( tvb, offs);
-	}
-	sprintf( info, "OidToObject     oid  %s", qcom_oid_to_string( oid_oix, oid_vid));
-	break;
-      case net_eMsg_objectR: {
-	gchar name[200];
-	guint32 poid_oix;
-	guint32 prev_oid_oix;
-	guint32 prev_poid_oix = 0;
-	strcpy( info, "ObjectR");
-	is_netobjectr = 1;
-
-	/* Get gobject count */
-	offs = header_size + info_size + net_message_size + 12;
-	if ( net_endian == ENC_BIG_ENDIAN)
-	  net_gobject_count = tvb_get_ntohl( tvb, offs);
-	else
-	  net_gobject_count = tvb_get_letohl( tvb, offs);
-
-	/* Get the name */
-	offs += 4;
-	strcpy( name, "");
-	for ( i = 0; i < (int)net_gobject_count; i++) {
-	  if ( i == 1 && prev_poid_oix == 0)
-	    strcat( name, ":");
-	  else if ( i > 1)
-	    strcat( name, "-");	    
-
-	  if ( net_endian == ENC_BIG_ENDIAN)
-	    oid_oix = tvb_get_ntohl( tvb, offs);
-	  else
-	    oid_oix = tvb_get_letohl( tvb, offs);
-	  offs += 12;
-	  strncat( name, tvb_get_string( tvb, offs, 32), sizeof(name));
-	  offs += 68;
-	  if ( net_endian == ENC_BIG_ENDIAN)
-	    poid_oix = tvb_get_ntohl( tvb, offs);
-	  else
-	    poid_oix = tvb_get_letohl( tvb, offs);
-	  offs += 32;
-
-	  if  ( i != 0 && poid_oix != prev_poid_oix)
-	    break;
-
-	  prev_oid_oix = oid_oix;
-	  prev_poid_oix = poid_oix;	    
-	}
-
-	if ( strcmp( name, "") != 0)
-	  sprintf( info, "ObjectR         name %s", name);
-
-	if ( net_gobject_count > 10)
-	  net_gobject_count = 10;
+      switch ( btype) {
+      case qcom_eBtype_system: { 
+	/* System */
+	protostrp = protostr[1];  /* QCOM SYS */
 
 	break;
       }
-      case net_eMsg_getObjectInfo:
-	is_netgetobjectinfo = 1;
-
-	/* Get aref */
-	offs = header_size + info_size + net_message_size;
-	if ( net_endian == ENC_BIG_ENDIAN) {
-	  aref_oix = tvb_get_ntohl( tvb, offs);
-	  offs += 4;
-	  aref_vid = tvb_get_ntohl( tvb, offs);
-	  offs += 8;
-	  aref_offset = tvb_get_ntohl( tvb, offs);
-	  offs += 4;
-	  aref_size = tvb_get_ntohl( tvb, offs);	    
-	}
-	else {
-	  aref_oix = tvb_get_letohl( tvb, offs);
-	  offs += 4;
-	  aref_vid = tvb_get_letohl( tvb, offs);
-	  offs += 8;
-	  aref_offset = tvb_get_letohl( tvb, offs);
-	  offs += 4;
-	  aref_size = tvb_get_letohl( tvb, offs);
-	}
-	sprintf( info, "GetObjectInfo   aref %s", qcom_aref_to_string( aref_oix, aref_vid,
-								      aref_offset, aref_size));
-	break;
-      case net_eMsg_getObjectInfoR:
-	is_netgetobjectinfor = 1;
-
-	/* Get aref */
-	offs = header_size + info_size + net_message_size + 4;
-	if ( net_endian == ENC_BIG_ENDIAN) {
-	  aref_oix = tvb_get_ntohl( tvb, offs);
-	  offs += 4;
-	  aref_vid = tvb_get_ntohl( tvb, offs);
-	  offs += 8;
-	  aref_offset = tvb_get_ntohl( tvb, offs);
-	  offs += 4;
-	  aref_size = tvb_get_ntohl( tvb, offs);	    
-	}
-	else {
-	  aref_oix = tvb_get_letohl( tvb, offs);
-	  offs += 4;
-	  aref_vid = tvb_get_letohl( tvb, offs);
-	  offs += 8;
-	  aref_offset = tvb_get_letohl( tvb, offs);
-	  offs += 4;
-	  aref_size = tvb_get_letohl( tvb, offs);
-	}
-	sprintf( info, "GetObjectInfoR  aref %s", qcom_aref_to_string( aref_oix, aref_vid,
-								       aref_offset, aref_size));
-	break;
-      case net_eMsg_setObjectInfo:
-	strcpy( info, "SetObjectInfo");
-	break;
-      case net_eMsg_setObjectInfoR:
-	strcpy( info, "SetObjectInfoR");
-	break;
-      case net_eMsg_flush:
-	strcpy( info, "Flush");
-	break;
-      case net_eMsg_createObject:
-	strcpy( info, "CreateObject");
-	break;
-      case net_eMsg_deleteObject:
-	strcpy( info, "DeleteObject");
-	break;
-	strcpy( info, "MoveObject");
-      case net_eMsg_moveObject:
-	break;
-      case net_eMsg_renameObject:
-	strcpy( info, "RenameObject");
-	break;
-      case net_eMsg_nodeUp:
-	strcpy( info, "NodeUp");
-	break;
-      case net_eMsg_nodeDown:
-	strcpy( info, "NodeDown");
-	break;
-      case net_eMsg_getCclass:
-	strcpy( info, "GetCclass");
-	break;
-      case net_eMsg_getCclassR:
-	strcpy( info, "GetCclassR");
-	break;
-      case net_eMsg_getGclass:
-	strcpy( info, "GetGclass");
-	break;
-      case net_eMsg_getGclassR:
-	strcpy( info, "GetGclassR");
-	break;
-      case net_eMsg_serverConnect:
-	strcpy( info, "ServerConnect");
-	break;
-      case net_eMsg_fileList:
-	strcpy( info, "FileList");
-	break;
-      case net_eMsg_fileListR:
-	strcpy( info, "FileListR");
-	break;
-      case net_eMsg_volumes7:
-	strcpy( info, "Volumes7");
-	break;
-      default:
-	strcpy( info, "Unknown net_eMsgType");
-      }
-      break;
-    }
-    case mh_cMsgClass: {
-      /* Mh */
-      protostrp = protostr[4];  /* MH */
-
-      if ( msg_size >= 28) {
-	is_mh = 1;
-	mh_type = tvb_get_ntohl( tvb, qcommsg_size + 24);
-	mh_endian = ENC_BIG_ENDIAN;
-	if ( mh_type > 255) {
-	  mh_type = tvb_get_letohl( tvb, qcommsg_size + 24);
-	  mh_endian = ENC_LITTLE_ENDIAN;
-	}
-
-	switch ( mh_type) {
-	case mh_eMsg_ApplConnect:
+      case qcom_eBtype_qcom: { 
+	/* Qcom */
+	protostrp = protostr[0]; /* QCOM */
+	
+	switch ( stype) {
+	case qcom_eStype_linkConnect:
+	  strcpy( info, "LinkConnect");
+	  break;
+	case qcom_eStype_linkDisconnect:
+	  strcpy( info, "LinkDisonnect");
+	  break;
+	case qcom_eStype_linkActive:
+	  strcpy( info, "LinkActive");
+	  break;
+	case qcom_eStype_linkStalled:
+	  strcpy( info, "LinkStalled");
+	  break;
+	case qcom_eStype_applConnect:
 	  strcpy( info, "ApplConnect");
 	  break;
-	case mh_eMsg_ApplDisconnect:
+	case qcom_eStype_applDisconnect:
 	  strcpy( info, "ApplDisconnect");
 	  break;
-	case mh_eMsg_ApplGetMsgInfo:
-	  strcpy( info, "ApplGetMsgInfo");
-	  break;
-	case mh_eMsg_ApplMessage:
-	  strcpy( info, "ApplMessage");
-	  break;
-	case mh_eMsg_ApplReply:
-	  strcpy( info, "ApplReply");
-	  break;
-	case mh_eMsg_ApplReturn:
-	  strcpy( info, "ApplReturn");
-	  break;
-	case mh_eMsg_Event: {
-	  is_mhmsg = 1;
-	  
-	  /* Get event type */
-	  if ( mh_endian == ENC_BIG_ENDIAN)
-	    mh_eventtype = tvb_get_ntohl( tvb, qcommsg_size + mh_header_size + 132);
-	  else
-	    mh_eventtype = tvb_get_letohl( tvb, qcommsg_size + mh_header_size + 132);
-
-	  switch ( mh_eventtype) {
-	  case mh_eEvent_Ack:
-	    is_mhack = 1;
-
-	    if ( mh_endian == ENC_BIG_ENDIAN) 
-	      mh_id = tvb_get_ntohl( tvb, qcommsg_size + mh_header_size + mh_msginfo_size + 12);
-	    else
-	      mh_id = tvb_get_letohl( tvb, qcommsg_size + mh_header_size + mh_msginfo_size + 12);
-
-	    snprintf( info, sizeof(info), "Event Ack       id   %-5d", mh_id);
-	    break;
-	  case mh_eEvent_Block:
-	  case mh_eEvent_CancelBlock:
-	  case mh_eEvent_Reblock:
-	  case mh_eEvent_Unblock:
-	    is_mhblock = 1;
-
-	    if ( mh_eventtype == mh_eEvent_CancelBlock)
-	      strcpy( info, "Event CancelBlo ");
-	    else if ( mh_eventtype == mh_eEvent_Reblock)
-	      strcpy( info, "Event CancelBlo ");
-	    else if ( mh_eventtype == mh_eEvent_Unblock)
-	      strcpy( info, "Event Unblock   ");
-	    else
-	      strcpy( info, "Event Block     ");
-
-	    /* Get oid */
-	    offs = qcommsg_size + mh_header_size + mh_msginfo_size + 36;
-	    if ( mh_endian == ENC_BIG_ENDIAN) {
-	      oid_oix = tvb_get_ntohl( tvb, offs);
-	      offs += 4;
-	      oid_vid = tvb_get_ntohl( tvb, offs);
-	    }
-	    else {
-	      oid_oix = tvb_get_letohl( tvb, offs);
-	      offs += 4;
-	      oid_vid = tvb_get_letohl( tvb, offs);
-	    }
-	    snprintf( &info[16], sizeof(info)-16, "oid  %s", qcom_oid_to_string( oid_oix, oid_vid));
-	    break;
-	  case mh_eEvent_Missing:
-	    strcpy( info, "Event Missing");
-	    break;
-	  case mh_eEvent_Cancel:
-	  case mh_eEvent_Return:
-	    is_mhreturn = 1;
-
-	    if ( mh_eventtype == mh_eEvent_Cancel)
-	      strcpy( info, "Event Cancel    ");
-	    else
-	      strcpy( info, "Event Return    ");
-
-	    if ( mh_endian == ENC_BIG_ENDIAN) 
-	      mh_id = tvb_get_ntohl( tvb, qcommsg_size + mh_header_size + mh_msginfo_size + 92);
-	    else
-	      mh_id = tvb_get_letohl( tvb, qcommsg_size + mh_header_size + mh_msginfo_size + 92);
-
-	    snprintf( &info[16], sizeof(info)-16, "id   %-5d", mh_id);
-	    break;
-	  case mh_eEvent_Info:
-	  case mh_eEvent_Alarm:
-	    is_mhmessage = 1;
-
-	    if ( mh_eventtype == mh_eEvent_Info)
-	      strcpy( info, "Event Info      ");
-	    else
-	      strcpy( info, "Event Alarm     ");
-
-	    if ( mh_endian == ENC_BIG_ENDIAN) 
-	      mh_id = tvb_get_ntohl( tvb, qcommsg_size + mh_header_size + 12);
-	    else
-	      mh_id = tvb_get_letohl( tvb, qcommsg_size + mh_header_size + 12);
-
-	    snprintf( &info[16], sizeof(info)-16, "id   %-5d  \"%s\"", mh_id, 
-		      tvb_get_string( tvb, qcommsg_size + mh_header_size + mh_msginfo_size, 80));
-	    break;
-	  default: 
-	    strcpy( info, "Unknown Mh EventType");
-	  }
-	  break;
+	default:
+	  strcpy( info, "Unknown subtype");
 	}
-	case mh_eMsg_HandlerDisconnect:
-	  strcpy( info, "HandlerDisconnect");
+
+	break;
+      }
+      case qcom_eBtype_event: {
+	/* Event */
+	protostrp = protostr[2]; /* QCOM EV */
+
+	switch ( stype) {
+	case qcom_cIloopBack:
+	  strcpy( info, "LoopBack");
 	  break;
-	case mh_eMsg_HandlerHello:
-	  strcpy( info, "HandlerHello");
+	case qcom_cInetEvent:
+	  strcpy( info, "NetEvent");
 	  break;
-	case mh_eMsg_HandlerSync:
-	  strcpy( info, "HandlerSync");
+	case qcom_cIapplEvent:
+	  strcpy( info, "ApplEvent");
 	  break;
-	case mh_eMsg_OutunitAck:
-	  strcpy( info, "OutunitAck");
+	case qcom_cImhAllHandlers:
+	  strcpy( info, "MhAllHandlers");
 	  break;
-	case mh_eMsg_OutunitBlock:
-	  strcpy( info, "OutunitBlock");
+	case qcom_cImhAllOutunits:
+	  strcpy( info, "MhAllOutunits");
 	  break;
-	case mh_eMsg_OutunitDisconnect:
-	  strcpy( info, "OutunitDisconnect");
+	case qcom_cIhdServer:
+	  strcpy( info, "HdServer");
 	  break;
-	case mh_eMsg_OutunitHello:
-	  strcpy( info, "OutunitHello");
+	case qcom_cIhdClient:
+	  strcpy( info, "HdClient");
 	  break;
-	case mh_eMsg_OutunitInfo:
-	  strcpy( info, "OutunitInfo");
+	case qcom_cInacp:
+	  strcpy( info, "Nacp");
 	  break;
-	case mh_eMsg_OutunitSync:
-	  strcpy( info, "OutunitSync");
-	  break;
-	case mh_eMsg_ProcDown:
-	  strcpy( info, "ProcDown");
-	  break;
-	case mh_eMsg_StopScanSup:
-	  strcpy( info, "StopScanSup");
-	  break;
-	case mh_eMsg_StartScanSup:
-	  strcpy( info, "StartScanSup");
-	  break;
-	case mh_eMsg_Sync:
-	  strcpy( info, "Sync");
+	case qcom_cIini:
+	  strcpy( info, "Ini");
 	  break;
 	default:
-	  strcpy( info, "Unknown mh_eMsg");
+	  strcpy( info, "Unknown subtype");
 	}
+	break;
       }
-      else {
-	strcpy( info, "Unknown sub type");
-      }
-      break;
-    }
-    case sev_cMsgClass: {
-      /* Sev */
-      protostrp = protostr[5];  /* QCOM-Sev */
+      case net_cMsgClass: {
+	/* Neth */
+	protostrp = protostr[3]; /* NETH */
 
-      if ( msg_size >= 4) {
-	is_sev = 1;
-	sev_type = tvb_get_ntohl( tvb, header_size + info_size);
+	is_net = 1;
+	net_endian = ENC_LITTLE_ENDIAN;
 
-	// printf( "sev_type: %d %d\n", header_size + info_size, sev_type);
+	switch ( stype) {
+	case net_eMsg_error:
+	  strcpy( info, "Error");
+	  break;
+	case net_eMsg_id:
+	  strcpy( info, "Id");
+	  break;
+	case net_eMsg_idAck:
+	  strcpy( info, "IdAck");
+	  break;
+	case net_eMsg_idAck2:
+	  strcpy( info, "IdAck2");
+	  break;
+	case net_eMsg_volumes:
+	  strcpy( info, "Volumes");
+	  break;
+	case net_eMsg_volumesR:
+	  strcpy( info, "VolumesR");
+	  break;
+	case net_eMsg_subAdd:
+	  strcpy( info, "SubAdd");
+	  break;
+	case net_eMsg_subRemove:
+	  strcpy( info, "SubRemove");
+	  break;
+	case net_eMsg_subData:
+	  strcpy( info, "SubData");
+	  break;
+	case net_eMsg_sanAdd:
+	  strcpy( info, "SanAdd");
+	  break;
+	case net_eMsg_sanRemove:
+	  strcpy( info, "SanRemove");
+	  break;
+	case net_eMsg_sanUpdate:
+	  strcpy( info, "SanUpdate");
+	  break;
+	case net_eMsg_nameToObject:
+	  strcpy( info, "NameToObject");
+	  break;
+	case net_eMsg_oidToObject:
+	  is_netoidtoobject = 1;
 	  
-	switch ( sev_type) {
-	case sev_eMsgType_NodeUp:
+	  /* Get oid */
+	  offs = header_size + info_size + net_message_size;
+	  if ( net_endian == ENC_BIG_ENDIAN) {
+	    oid_oix = tvb_get_ntohl( tvb, offs);
+	    offs += 4;
+	    oid_vid = tvb_get_ntohl( tvb, offs);
+	  }
+	  else {
+	    oid_oix = tvb_get_letohl( tvb, offs);
+	    offs += 4;
+	    oid_vid = tvb_get_letohl( tvb, offs);
+	  }
+	  sprintf( info, "OidToObject     oid  %s", qcom_oid_to_string( oid_oix, oid_vid));
+	  break;
+	case net_eMsg_objectR: {
+	  gchar name[200];
+	  guint32 poid_oix;
+	  guint32 prev_oid_oix;
+	  guint32 prev_poid_oix = 0;
+	  strcpy( info, "ObjectR");
+	  is_netobjectr = 1;
+
+	  /* Get gobject count */
+	  offs = header_size + info_size + net_message_size + 12;
+	  if ( net_endian == ENC_BIG_ENDIAN)
+	    net_gobject_count = tvb_get_ntohl( tvb, offs);
+	  else
+	    net_gobject_count = tvb_get_letohl( tvb, offs);
+	  
+	  /* Get the name */
+	  offs += 4;
+	  strcpy( name, "");
+	  for ( i = 0; i < (int)net_gobject_count; i++) {
+	    if ( i == 1 && prev_poid_oix == 0)
+	      strcat( name, ":");
+	    else if ( i > 1)
+	      strcat( name, "-");	    
+
+	    if ( net_endian == ENC_BIG_ENDIAN)
+	      oid_oix = tvb_get_ntohl( tvb, offs);
+	    else
+	      oid_oix = tvb_get_letohl( tvb, offs);
+	    offs += 12;
+	    strncat( name, tvb_get_string( tvb, offs, 32), sizeof(name));
+	    offs += 68;
+	    if ( net_endian == ENC_BIG_ENDIAN)
+	      poid_oix = tvb_get_ntohl( tvb, offs);
+	    else
+	      poid_oix = tvb_get_letohl( tvb, offs);
+	    offs += 32;
+	    
+	    if  ( i != 0 && poid_oix != prev_poid_oix)
+	      break;
+	    
+	    prev_oid_oix = oid_oix;
+	    prev_poid_oix = poid_oix;	    
+	  }
+
+	  if ( strcmp( name, "") != 0)
+	    sprintf( info, "ObjectR         name %s", name);
+	  
+	  if ( net_gobject_count > 10)
+	    net_gobject_count = 10;
+
+	  break;
+      }
+	case net_eMsg_getObjectInfo:
+	  is_netgetobjectinfo = 1;
+
+	  /* Get aref */
+	  offs = header_size + info_size + net_message_size;
+	  if ( net_endian == ENC_BIG_ENDIAN) {
+	    aref_oix = tvb_get_ntohl( tvb, offs);
+	    offs += 4;
+	    aref_vid = tvb_get_ntohl( tvb, offs);
+	    offs += 8;
+	    aref_offset = tvb_get_ntohl( tvb, offs);
+	    offs += 4;
+	    aref_size = tvb_get_ntohl( tvb, offs);	    
+	  }
+	  else {
+	    aref_oix = tvb_get_letohl( tvb, offs);
+	    offs += 4;
+	    aref_vid = tvb_get_letohl( tvb, offs);
+	    offs += 8;
+	    aref_offset = tvb_get_letohl( tvb, offs);
+	    offs += 4;
+	    aref_size = tvb_get_letohl( tvb, offs);
+	  }
+	  sprintf( info, "GetObjectInfo   aref %s", qcom_aref_to_string( aref_oix, aref_vid,
+								      aref_offset, aref_size));
+	  break;
+	case net_eMsg_getObjectInfoR:
+	  is_netgetobjectinfor = 1;
+	  
+	  /* Get aref */
+	  offs = header_size + info_size + net_message_size + 4;
+	  if ( net_endian == ENC_BIG_ENDIAN) {
+	    aref_oix = tvb_get_ntohl( tvb, offs);
+	    offs += 4;
+	    aref_vid = tvb_get_ntohl( tvb, offs);
+	    offs += 8;
+	    aref_offset = tvb_get_ntohl( tvb, offs);
+	    offs += 4;
+	    aref_size = tvb_get_ntohl( tvb, offs);	    
+	  }
+	  else {
+	    aref_oix = tvb_get_letohl( tvb, offs);
+	    offs += 4;
+	    aref_vid = tvb_get_letohl( tvb, offs);
+	    offs += 8;
+	    aref_offset = tvb_get_letohl( tvb, offs);
+	    offs += 4;
+	    aref_size = tvb_get_letohl( tvb, offs);
+	  }
+	  sprintf( info, "GetObjectInfoR  aref %s", qcom_aref_to_string( aref_oix, aref_vid,
+								       aref_offset, aref_size));
+	  break;
+	case net_eMsg_setObjectInfo:
+	  strcpy( info, "SetObjectInfo");
+	  break;
+	case net_eMsg_setObjectInfoR:
+	  strcpy( info, "SetObjectInfoR");
+	  break;
+	case net_eMsg_flush:
+	  strcpy( info, "Flush");
+	  break;
+	case net_eMsg_createObject:
+	  strcpy( info, "CreateObject");
+	  break;
+	case net_eMsg_deleteObject:
+	  strcpy( info, "DeleteObject");
+	  break;
+	  strcpy( info, "MoveObject");
+	case net_eMsg_moveObject:
+	  break;
+	case net_eMsg_renameObject:
+	  strcpy( info, "RenameObject");
+	  break;
+	case net_eMsg_nodeUp:
 	  strcpy( info, "NodeUp");
 	  break;
-	case sev_eMsgType_HistItemsRequest:
-	  strcpy( info, "HistItemRequest");
+	case net_eMsg_nodeDown:
+	  strcpy( info, "NodeDown");
 	  break;
-	case sev_eMsgType_HistItems:
-	  strcpy( info, "HistItems");
+	case net_eMsg_getCclass:
+	  strcpy( info, "GetCclass");
 	  break;
-	case sev_eMsgType_HistDataStore:
-	  strcpy( info, "HistDataStore");
+	case net_eMsg_getCclassR:
+	  strcpy( info, "GetCclassR");
 	  break;
-	case sev_eMsgType_HistDataGetRequest:
-	  strcpy( info, "HistDataGetRequest");
+	case net_eMsg_getGclass:
+	  strcpy( info, "GetGclass");
 	  break;
-	case sev_eMsgType_HistDataGet:
-	  strcpy( info, "HistDataGet");
+	case net_eMsg_getGclassR:
+	  strcpy( info, "GetGclassR");
 	  break;
-	case sev_eMsgType_HistItemDelete:
-	  strcpy( info, "HistItemDelete");
+	case net_eMsg_serverConnect:
+	  strcpy( info, "ServerConnect");
 	  break;
-	case sev_eMsgType_HistItemStatus:
-	  strcpy( info, "HistItemStatus");
+	case net_eMsg_fileList:
+	  strcpy( info, "FileList");
 	  break;
-	case sev_eMsgType_ServerStatusRequest:
-	  strcpy( info, "ServerStatusRequest");
+	case net_eMsg_fileListR:
+	  strcpy( info, "FileListR");
 	  break;
-	case sev_eMsgType_ServerStatus:
-	  strcpy( info, "ServerStatus");
+	case net_eMsg_getCircBuffer:
+	  strcpy( info, "GetCircBuffer");
 	  break;
-	case sev_eMsgType_HistObjectDataGetRequest:
-	  strcpy( info, "HistObjectDataGetRequest");
+	case net_eMsg_getCircBufferR:
+	  strcpy( info, "GetCircBufferR");
 	  break;
-	case sev_eMsgType_HistObjectDataGet:
-	  strcpy( info, "HistObjectDataGet");
+	case net_eMsg_updateCircBuffer:
+	  strcpy( info, "UpdateCircBuffer");
+	  break;
+	case net_eMsg_updateCircBufferR:
+	  strcpy( info, "UpdateCircBufferR");
+	  break;
+	case net_eMsg_volumes7:
+	  strcpy( info, "Volumes7");
 	  break;
 	default:
-	  strcpy( info, "Unknown sev_eMsgType");
+	  strcpy( info, "Unknown net_eMsgType");
 	}
+	break;
       }
-      break;
-    }
+      case mh_cMsgClass: {
+	/* Mh */
+	protostrp = protostr[4];  /* MH */
 
-    default:
-      protostrp = protostr[0]; /* QCOM */
-      strcpy( info, "Unknown basetype");
+	if ( msg_size >= 28) {
+	  is_mh = 1;
+	  mh_type = tvb_get_ntohl( tvb, qcommsg_size + 24);
+	  mh_endian = ENC_BIG_ENDIAN;
+	  if ( mh_type > 255) {
+	    mh_type = tvb_get_letohl( tvb, qcommsg_size + 24);
+	    mh_endian = ENC_LITTLE_ENDIAN;
+	  }
+	  
+	  switch ( mh_type) {
+	  case mh_eMsg_ApplConnect:
+	    strcpy( info, "ApplConnect");
+	    break;
+	  case mh_eMsg_ApplDisconnect:
+	    strcpy( info, "ApplDisconnect");
+	    break;
+	  case mh_eMsg_ApplGetMsgInfo:
+	    strcpy( info, "ApplGetMsgInfo");
+	    break;
+	  case mh_eMsg_ApplMessage:
+	    strcpy( info, "ApplMessage");
+	    break;
+	  case mh_eMsg_ApplReply:
+	    strcpy( info, "ApplReply");
+	    break;
+	  case mh_eMsg_ApplReturn:
+	    strcpy( info, "ApplReturn");
+	    break;
+	  case mh_eMsg_Event: {
+	    is_mhmsg = 1;
+	  
+	    /* Get event type */
+	    if ( mh_endian == ENC_BIG_ENDIAN)
+	      mh_eventtype = tvb_get_ntohl( tvb, qcommsg_size + mh_header_size + 132);
+	    else
+	      mh_eventtype = tvb_get_letohl( tvb, qcommsg_size + mh_header_size + 132);
+	    
+	    switch ( mh_eventtype) {
+	    case mh_eEvent_Ack:
+	      is_mhack = 1;
+	      
+	      if ( mh_endian == ENC_BIG_ENDIAN) 
+		mh_id = tvb_get_ntohl( tvb, qcommsg_size + mh_header_size + mh_msginfo_size + 12);
+	      else
+		mh_id = tvb_get_letohl( tvb, qcommsg_size + mh_header_size + mh_msginfo_size + 12);
+	      
+	      snprintf( info, sizeof(info), "Event Ack       id   %-5d", mh_id);
+	      break;
+	    case mh_eEvent_Block:
+	    case mh_eEvent_CancelBlock:
+	    case mh_eEvent_Reblock:
+	    case mh_eEvent_Unblock:
+	      is_mhblock = 1;
+	      
+	      if ( mh_eventtype == mh_eEvent_CancelBlock)
+		strcpy( info, "Event CancelBlo ");
+	      else if ( mh_eventtype == mh_eEvent_Reblock)
+		strcpy( info, "Event CancelBlo ");
+	      else if ( mh_eventtype == mh_eEvent_Unblock)
+		strcpy( info, "Event Unblock   ");
+	      else
+		strcpy( info, "Event Block     ");
+	      
+	      /* Get oid */
+	      offs = qcommsg_size + mh_header_size + mh_msginfo_size + 36;
+	      if ( mh_endian == ENC_BIG_ENDIAN) {
+		oid_oix = tvb_get_ntohl( tvb, offs);
+		offs += 4;
+		oid_vid = tvb_get_ntohl( tvb, offs);
+	      }
+	      else {
+		oid_oix = tvb_get_letohl( tvb, offs);
+		offs += 4;
+		oid_vid = tvb_get_letohl( tvb, offs);
+	      }
+	      snprintf( &info[16], sizeof(info)-16, "oid  %s", qcom_oid_to_string( oid_oix, oid_vid));
+	      break;
+	    case mh_eEvent_Missing:
+	      strcpy( info, "Event Missing");
+	      break;
+	    case mh_eEvent_Cancel:
+	    case mh_eEvent_Return:
+	      is_mhreturn = 1;
+
+	      if ( mh_eventtype == mh_eEvent_Cancel)
+		strcpy( info, "Event Cancel    ");
+	      else
+		strcpy( info, "Event Return    ");
+	      
+	      if ( mh_endian == ENC_BIG_ENDIAN) 
+		mh_id = tvb_get_ntohl( tvb, qcommsg_size + mh_header_size + mh_msginfo_size + 92);
+	      else
+		mh_id = tvb_get_letohl( tvb, qcommsg_size + mh_header_size + mh_msginfo_size + 92);
+	      
+	      snprintf( &info[16], sizeof(info)-16, "id   %-5d", mh_id);
+	      break;
+	    case mh_eEvent_Info:
+	    case mh_eEvent_Alarm:
+	      is_mhmessage = 1;
+	      
+	      if ( mh_eventtype == mh_eEvent_Info)
+		strcpy( info, "Event Info      ");
+	      else
+		strcpy( info, "Event Alarm     ");
+	      
+	      if ( mh_endian == ENC_BIG_ENDIAN) 
+		mh_id = tvb_get_ntohl( tvb, qcommsg_size + mh_header_size + 12);
+	      else
+		mh_id = tvb_get_letohl( tvb, qcommsg_size + mh_header_size + 12);
+	      
+	      snprintf( &info[16], sizeof(info)-16, "id   %-5d  \"%s\"", mh_id, 
+			tvb_get_string( tvb, qcommsg_size + mh_header_size + mh_msginfo_size, 80));
+	      break;
+	    default: 
+	      strcpy( info, "Unknown Mh EventType");
+	    }
+	    break;
+	  }
+	  case mh_eMsg_HandlerDisconnect:
+	    strcpy( info, "HandlerDisconnect");
+	    break;
+	  case mh_eMsg_HandlerHello:
+	    strcpy( info, "HandlerHello");
+	    break;
+	  case mh_eMsg_HandlerSync:
+	    strcpy( info, "HandlerSync");
+	    break;
+	  case mh_eMsg_OutunitAck:
+	    strcpy( info, "OutunitAck");
+	    break;
+	  case mh_eMsg_OutunitBlock:
+	    strcpy( info, "OutunitBlock");
+	    break;
+	  case mh_eMsg_OutunitDisconnect:
+	    strcpy( info, "OutunitDisconnect");
+	    break;
+	  case mh_eMsg_OutunitHello:
+	    strcpy( info, "OutunitHello");
+	    break;
+	  case mh_eMsg_OutunitInfo:
+	    strcpy( info, "OutunitInfo");
+	    break;
+	  case mh_eMsg_OutunitSync:
+	    strcpy( info, "OutunitSync");
+	    break;
+	  case mh_eMsg_ProcDown:
+	    strcpy( info, "ProcDown");
+	    break;
+	  case mh_eMsg_StopScanSup:
+	    strcpy( info, "StopScanSup");
+	    break;
+	  case mh_eMsg_StartScanSup:
+	    strcpy( info, "StartScanSup");
+	    break;
+	  case mh_eMsg_Sync:
+	    strcpy( info, "Sync");
+	    break;
+	  default:
+	    strcpy( info, "Unknown mh_eMsg");
+	  }
+	}
+	else {
+	  strcpy( info, "Unknown sub type");
+	}
+	break;
+      }
+      case sev_cMsgClass: {
+	/* Sev */
+	protostrp = protostr[5];  /* QCOM-Sev */
+	
+	if ( msg_size >= 4) {
+	  is_sev = 1;
+	  sev_type = tvb_get_ntohl( tvb, header_size + info_size);
+	  
+	  // printf( "sev_type: %d %d\n", header_size + info_size, sev_type);
+	  
+	  switch ( sev_type) {
+	  case sev_eMsgType_NodeUp:
+	    strcpy( info, "NodeUp");
+	    break;
+	  case sev_eMsgType_HistItemsRequest:
+	    strcpy( info, "HistItemRequest");
+	    break;
+	  case sev_eMsgType_HistItems:
+	    strcpy( info, "HistItems");
+	    break;
+	  case sev_eMsgType_HistDataStore:
+	    strcpy( info, "HistDataStore");
+	    break;
+	  case sev_eMsgType_HistDataGetRequest:
+	    strcpy( info, "HistDataGetRequest");
+	    break;
+	  case sev_eMsgType_HistDataGet:
+	    strcpy( info, "HistDataGet");
+	    break;
+	  case sev_eMsgType_HistItemDelete:
+	    strcpy( info, "HistItemDelete");
+	    break;
+	  case sev_eMsgType_HistItemStatus:
+	    strcpy( info, "HistItemStatus");
+	    break;
+	  case sev_eMsgType_ServerStatusRequest:
+	    strcpy( info, "ServerStatusRequest");
+	    break;
+	  case sev_eMsgType_ServerStatus:
+	    strcpy( info, "ServerStatus");
+	    break;
+	  case sev_eMsgType_HistObjectDataGetRequest:
+	    strcpy( info, "HistObjectDataGetRequest");
+	    break;
+	  case sev_eMsgType_HistObjectDataGet:
+	    strcpy( info, "HistObjectDataGet");
+	    break;
+	  default:
+	    strcpy( info, "Unknown sev_eMsgType");
+	  }
+	}
+	break;
+      }
+
+      default:
+	protostrp = protostr[0]; /* QCOM */
+	strcpy( info, "Unknown basetype");
+      }
     }
+    if ( msg_flags & mSeg_first && !(msg_flags & mSeg_last))
+      strcat( info, " First segment");
   }
 
   if (check_col(pinfo->cinfo, COL_PROTOCOL)) {
