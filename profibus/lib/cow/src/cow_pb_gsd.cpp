@@ -798,8 +798,11 @@ int pb_gsd::read( char *filename)
 	    printf( "Syntax error, line %d (%s)\n", line_cnt, line);
 	}
 	else {
-	  char allstr[16][10];
+	  char allstr[25][20];
 	  int all_cnt;
+
+	  for ( int i = 3; i < part_cnt; i++)
+	    strncat( line_part[2], line_part[i], sizeof(line_part[2]));
 	  
 	  all_cnt = dcli_parse( line_part[2], " 	,", "", (char *)allstr,
 				sizeof( allstr) / sizeof( allstr[0]), 
