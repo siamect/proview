@@ -179,6 +179,11 @@ struct plc_sThread {
   pwr_tBoolean		first_scan;
   int			skip_count;
   pwr_tBoolean		emergency_break_old;
+  pwr_tBoolean		sim_initdone_old;
+  pwr_tBoolean		sim_disable_old;
+  unsigned int		sim_idx;
+  unsigned int		sim_halted;
+  unsigned int		sim_singlestep;
 };
 
 struct plc_sProcess {
@@ -187,6 +192,7 @@ struct plc_sProcess {
   pwr_sNode		*Node;
   pwr_sClass_IOHandler	*IOHandler;
   pwr_sClass_PlcProcess	*PlcProcess;
+  pwr_sClass_SimulateConfig *SimConfig;
   pwr_tFullName		nodeName;
   qcom_sQid		eventQ;
   pwr_tOid		oid;

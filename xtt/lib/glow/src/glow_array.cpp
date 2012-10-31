@@ -437,6 +437,7 @@ void GlowArray::copy_from( const GlowArray& array)
             case glow_eObjectType_Node:
             case glow_eObjectType_GrowNode:
             case glow_eObjectType_GrowSlider:
+            case glow_eObjectType_GrowConGlue:
             {
 	      if ( array.a[j] == ((GlowCon *)array.a[i])->destination())
                 dest_node = (GlowNode *)a[k];
@@ -446,7 +447,8 @@ void GlowArray::copy_from( const GlowArray& array)
               break;
             }
             default:
-              ;
+	      if ( array.a[j]->type() != glow_eObjectType_Con)
+		k++;
           }
         }
         if ( dest_node && source_node)

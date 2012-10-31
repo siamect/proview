@@ -1981,11 +1981,46 @@ fromEvent (
       setTimerActive(cMessageIdx, FALSE);
       errh_Info("No supervise objects.");
     }
-  } else if (new_event.b.swapInit & !cur_event.b.swapInit) {
+  } 
+  else if (new_event.b.swapInit & !cur_event.b.swapInit) {
     l.supListState = eSupListState_Wait;
     errh_Info("Warm restart initiated.");   
     handlerEvent(eHEvent_RestartInit, l.head.nix);
-  } else if (new_event.b.terminate & !cur_event.b.terminate) {
+  }
+  else if (new_event.b.simLoadStart & !cur_event.b.simLoadStart) {
+    LstLink(sOutunit) *ol;
+    sOutunit *op;
+
+    l.supListState = eSupListState_Wait;
+    handlerEvent(eHEvent_RestartInit, l.head.nix);
+
+    for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol)) {
+      op = LstObj(ol);
+      if (op->syncedIdx == op->eventIdx)
+	sendToOutunit(op, mh_eMsg_OutunitClear, 0, NULL, 0);
+    }
+    printf( "rt_emon: SimLoadStart\n");
+  }
+  else if (new_event.b.simLoadDone & !cur_event.b.simLoadDone) {
+    printf( "rt_emon: SimLoadDone\n");
+    handlerEvent(eHEvent_RestartComplete, l.head.nix);
+    reInitSupList();
+
+    if (!LstEmp(&l.sup_l)) {
+      l.supListState = eSupListState_Scan;
+      setTimerActive(cMessageIdx, TRUE);
+      if (!LstEmp(&l.detect_l)) {
+        scanTimerList();
+        scanDetectList();
+        setTimerActive(cDetectIdx, TRUE);
+      }
+      scanSupList();
+    } else {
+      l.supListState = eSupListState_NoSup;
+      setTimerActive(cMessageIdx, FALSE);
+    }
+  } 
+  else if (new_event.b.terminate & !cur_event.b.terminate) {
     exit(0);
   }
 

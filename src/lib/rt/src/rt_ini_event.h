@@ -53,7 +53,8 @@ typedef union {
 
     pwr_Bits( swapDone		, 1),
     pwr_Bits( terminate		, 1),
-    pwr_Bits( fill_1	    	, 2),,
+    pwr_Bits( simLoadStart      , 1),
+    pwr_Bits( simLoadDone    	, 1),
 
     pwr_Bits( plcProc1		, 1),
     pwr_Bits( plcProc2		, 1),
@@ -86,9 +87,10 @@ typedef union {
 #define ini_mEvent_newPlcStartDone	pwr_Bit(5)
 #define ini_mEvent_oldPlcStop		pwr_Bit(6)
 #define ini_mEvent_oldPlcStopDone	pwr_Bit(7)
-
 #define ini_mEvent_swapDone		pwr_Bit(8)
 #define ini_mEvent_terminate		pwr_Bit(9)
+#define ini_mEvent_simLoadStart		pwr_Bit(10)
+#define ini_mEvent_simLoadDone		pwr_Bit(11)
 #define ini_mEvent_plc1			pwr_Bit(12)
 #define ini_mEvent_plc2			pwr_Bit(13)
 #define ini_mEvent_plc3			pwr_Bit(14)

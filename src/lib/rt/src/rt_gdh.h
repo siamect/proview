@@ -293,6 +293,15 @@ gdh_FReadObject (
 );
 
 pwr_tStatus 
+gdh_FWriteObjectR ( 
+  FILE *fp, 
+  char *ap, 
+  char *aname, 
+  pwr_tAttrRef *arp, 			  
+  pwr_tCid cid
+);
+
+pwr_tStatus 
 gdh_FWriteObject ( 
   char *filename, 
   pwr_tAttrRef *arp

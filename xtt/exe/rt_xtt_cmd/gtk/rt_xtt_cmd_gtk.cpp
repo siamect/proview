@@ -117,6 +117,10 @@ int main(int argc, char *argv[])
 	// Hide
 	hide = 1;
 	break;
+      case '-':
+	// Display sent to gtk
+	i++;
+	break;
       default:
 	cout << "Unknown argument: " << argv[i] << endl;
       }

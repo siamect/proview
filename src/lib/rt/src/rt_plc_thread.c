@@ -61,6 +61,7 @@
 #include "pwr_baseclasses.h"
 #include "co_time.h"
 #include "co_time_msg.h"
+#include "co_cdh.h"
 #include "rt_errh.h"
 #include "rt_gdh.h"
 #include "rt_plc_msg.h"
@@ -68,6 +69,7 @@
 #include "rt_plc.h"
 #include "rt_thread.h"
 #include "rt_thread_msg.h"
+#include "rt_sim_msg.h"
 #include "rt_que.h"
 #include "rt_io_base.h"
 #include "rt_csup.h"
@@ -219,6 +221,87 @@ plc_thread (
   /* Tell main we are done.  */
   que_Put(&sts, &tp->q_out, &tp->event, (void *)5);
 }
+
+static int sim_scan( plc_sThread *tp)
+{
+  pwr_sClass_SimulateConfig *sp = tp->pp->SimConfig;
+  unsigned int i;
+
+
+  if ( !tp->sim_initdone_old && sp->InitDone) {
+    /* Identify index in simulate configuration */
+    for ( i = 0; i < sizeof(sp->PlcThreads)/sizeof(sp->PlcThreads[0]); i++) {
+      if ( cdh_ObjidIsEqual( tp->aref.Objid, sp->PlcThreads[i])) {
+	tp->sim_idx = i;
+	sp->ThreadStatus[i] = tp->sim_halted ? SIM__THREAD_HALT : SIM__THREAD_RUNNING;
+	break;
+      }
+    }
+    tp->sim_disable_old = sp->Disable;
+  }
+  tp->sim_initdone_old = sp->InitDone;
+
+  if ( !tp->sim_disable_old && sp->Disable) {
+    pwr_tTime current;
+
+    /* Use nominal scantime as time since last scan */
+    time_GetTimeMonotonic( &current);
+    time_Asub( &tp->one_before_scan, &current, &tp->scan_time);
+    time_GetTime( &current);
+    time_Asub( &tp->one_before_scan_abs, &current, &tp->scan_time);
+    
+    tp->sim_disable_old = sp->Disable;
+    return 0;
+  }
+  tp->sim_disable_old = sp->Disable;
+
+
+  if ( sp->PlcHaltOrder && sp->ThreadSelected[tp->sim_idx]) {
+    if ( !tp->sim_halted) {
+      tp->sim_halted = 1;
+      sp->ThreadStatus[tp->sim_idx] = SIM__THREAD_HALT;
+      sp->PlcHaltOrder--;
+    }
+  }
+  if ( sp->PlcContinueOrder && sp->ThreadSelected[tp->sim_idx]) {
+    if ( tp->sim_halted) {
+      pwr_tTime current;
+
+      tp->sim_halted = 0;
+      sp->ThreadStatus[tp->sim_idx] = SIM__THREAD_RUNNING;
+      sp->PlcContinueOrder--;
+
+      /* Use nominal scantime as time since last scan */
+      time_GetTimeMonotonic( &current);
+      time_Asub( &tp->one_before_scan, &current, &tp->scan_time);
+      time_GetTime( &current);
+      time_Asub( &tp->one_before_scan_abs, &current, &tp->scan_time);
+    }
+  }
+  if ( tp->sim_singlestep && sp->PlcStepOrder == 0)
+    tp->sim_singlestep = 0;
+
+  if ( sp->PlcStepOrder && sp->ThreadSelected[tp->sim_idx] && !tp->sim_singlestep) {
+    if ( tp->sim_halted) {
+      pwr_tTime current;
+
+      tp->sim_singlestep = 1;
+      sp->PlcStepOrder--;
+
+      /* Use nominal scantime as time since last scan */
+      time_GetTimeMonotonic( &current);
+      time_Asub( &tp->one_before_scan, &current, &tp->scan_time);
+      time_GetTime( &current);
+      time_Asub( &tp->one_before_scan_abs, &current, &tp->scan_time);
+      return 0;
+    }
+  }
+  if ( sp->PlcLoadOrder  && tp->sim_halted) {
+    sp->PlcLoadOrder--;
+  }
+  return tp->sim_halted;
+}
+
 
 static void
 scan (
@@ -233,6 +316,36 @@ scan (
   time_GetTimeMonotonic(&tp->before_scan);
   time_GetTime(&tp->before_scan_abs);
   pp->Node->SystemTime = tp->before_scan_abs;
+
+  if ( pp->SimConfig) {
+    if ( !pp->SimConfig->Disable || !tp->sim_disable_old) {
+      if ( sim_scan( tp)) {
+	pwr_tDeltaTime delta;
+
+	time_GetTimeMonotonic(&tp->after_scan);
+	time_Aadd(NULL, &tp->sync_time, &tp->scan_time);
+	time_Adiff(&delta, &tp->sync_time, &tp->after_scan);
+	if (time_Dcomp(&delta, NULL) > 0) {
+#if defined OS_LYNX && USE_RT_TIMER
+	  sem_wait(&tp->ScanSem);
+#elif defined OS_MACOS || defined OS_FREEBSD || OS_OPENBSD || OS_CYGWIN
+	  struct timespec ts;
+	  ts.tv_sec = delta.tv_sec;
+	  ts.tv_nsec = delta.tv_nsec;
+	  nanosleep(&ts, NULL);
+#else
+	  struct timespec ts;
+	  ts.tv_sec = tp->sync_time.tv_sec;
+	  ts.tv_nsec = tp->sync_time.tv_nsec;
+	  clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL);
+#endif
+	}
+	return;
+	}
+    }
+    else
+      tp->sim_halted = 0;
+  }
 
   if (tp->loops > 0) {
 /*    if (sts == TIME__CLKCHANGE) {

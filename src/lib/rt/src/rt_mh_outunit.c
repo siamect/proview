@@ -755,6 +755,11 @@ fromHandler (
     if (hp->selGen != l.selGen)
       sendInfo(hp);
     break;
+  case mh_eMsg_OutunitClear:
+    printf( "Clear alarmlist received\n");
+    if (l.cbClearAlarmList != NULL)
+      l.cbClearAlarmList(hp->nix);
+    break;
   default:
     errh_Warning("Received unhandled messagetype: %d", p->type);
     break;

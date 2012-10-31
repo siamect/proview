@@ -7848,8 +7848,22 @@ int GeTable::scan( grow_tObject object)
 	  int sts;
 	  pwr_tOName name;
 	  pwr_tObjid objid = *(pwr_tObjid *)headerref_p[i][j];
-	  sts = gdh_ObjidToName ( objid, name, sizeof(name), 
-				  cdh_mName_object);
+
+	  switch ( format[i][1]) {
+	  case '1':
+	    // Format %1o, write path
+	    sts = gdh_ObjidToName ( objid, name, sizeof(name), 
+				    cdh_mName_pathStrict);
+	    break;
+	  case '2':
+	    // Format %2o, write volume and path
+	    sts = gdh_ObjidToName ( objid, name, sizeof(name), 
+				    cdh_mName_volumeStrict);
+	    break;
+	  default:
+	    sts = gdh_ObjidToName ( objid, name, sizeof(name), 
+				    cdh_mName_object);
+	  }
 	  if ( EVEN(sts))
 	    strcpy( name, "");
 	  len = sprintf( buf, "%s", name);
@@ -7957,8 +7971,21 @@ int GeTable::scan( grow_tObject object)
 	  int sts;
 	  pwr_tOName name;
 	  pwr_tObjid objid = *(pwr_tObjid *)(p[i] + offs);
-	  sts = gdh_ObjidToName ( objid, name, sizeof(name), 
-				  cdh_mName_object);
+	  switch ( format[i][1]) {
+	  case '1':
+	    // Format %1o, write path
+	    sts = gdh_ObjidToName ( objid, name, sizeof(name), 
+				    cdh_mName_pathStrict);
+	    break;
+	  case '2':
+	    // Format %2o, write volume and path
+	    sts = gdh_ObjidToName ( objid, name, sizeof(name), 
+				    cdh_mName_volumeStrict);
+	    break;
+	  default:
+	    sts = gdh_ObjidToName ( objid, name, sizeof(name), 
+				    cdh_mName_object);
+	  }
 	  if ( EVEN(sts))
 	    strcpy( name, "");
 	  len = sprintf( buf, "%s", name);

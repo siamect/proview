@@ -264,7 +264,8 @@ init_process ( char *name)
 {
   plc_sProcess	*pp;
   pwr_tStatus	sts = PLC__SUCCESS;
-  pwr_tObjid   	pp_oid;
+  pwr_tOid   	pp_oid;
+  pwr_tOid	sim_oid;
   int		found;
   char		busidstr[10];
   char		pp_name[80];
@@ -338,6 +339,13 @@ init_process ( char *name)
 
   sts = gdh_ObjidToPointer(pp_oid, (void *)&pp->PlcProcess);
   if (EVEN(sts)) return 0;
+
+  sts = gdh_GetClassList(pwr_cClass_SimulateConfig, &sim_oid);
+  if ( ODD(sts)) {
+    sts = gdh_ObjidToPointer(sim_oid, (void *)&pp->SimConfig);
+    if (EVEN(sts)) return 0;
+  }
+
 
 #if defined OS_VMS
   qdb->thread_lock.isThreaded = 1;

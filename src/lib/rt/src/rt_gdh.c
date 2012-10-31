@@ -4189,8 +4189,8 @@ pwr_tStatus gdh_ArefDisabled(
 }
 
 
-static pwr_tStatus gdh_FWriteObjectR( FILE *fp, char *ap, char *aname, pwr_tAttrRef *arp, 
-				      pwr_tCid cid)
+pwr_tStatus gdh_FWriteObjectR( FILE *fp, char *ap, char *aname, pwr_tAttrRef *arp, 
+			       pwr_tCid cid)
 {
   pwr_tOName 	name;
   char 		value_str[512];
@@ -4647,8 +4647,45 @@ pwr_tStatus gdh_AttrValueToString(
   case pwr_eType_Time: {
     char			timstr[64];
 
-    sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
-			 timstr, sizeof(timstr));
+    if( format && format[0] == '%' && format[2] == 't') {
+      switch ( format[1]) {
+      case '1': 
+	// Format %1t, only time, no hundredth
+	sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_Time, 
+			     timstr, sizeof(timstr));
+	timstr[8] = 0;
+	break;
+      case '2': 
+	// Format %2t, only time, with hundredth
+	sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_Time,
+			     timstr, sizeof(timstr));
+	break;
+      case '3': 
+	// Format %3t, compressed date and time, no hundredth
+	sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_ComprDateAndTime,
+			     timstr, sizeof(timstr));
+	timstr[17] = 0;
+	break;
+      case '4':
+	// Format %4t, date only
+	sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
+			     timstr, sizeof(timstr));
+	timstr[11] = 0;
+	break;
+      case '5':
+	// Format %5t, compressed date only
+	sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_ComprDateAndTime, 
+			     timstr, sizeof(timstr));
+	timstr[8] = 0;
+	break;
+      default:
+	sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
+			     timstr, sizeof(timstr));
+      }
+    }
+    else 
+      sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
+			     timstr, sizeof(timstr));
     if ( EVEN(sts))
       strcpy( timstr, "-");
     *len = sprintf( str, "%s", timstr);

@@ -244,7 +244,8 @@ static pwr_tStatus	nmpsbck_write_cells( 	bck_ctx	bckctx,
 						FILE	*bckfile);
 static pwr_tStatus	nmpsbck_write_data( 	bck_ctx	bckctx,
 						FILE	*bckfile);
-static pwr_tStatus	nmpsbck_read( 		bck_ctx	bckctx);
+static pwr_tStatus	nmpsbck_read( 		bck_ctx	bckctx,
+						char    *backupfile);
 static pwr_tStatus	nmpsbck_cell_handler( bck_ctx	bckctx);
 static pwr_tStatus	nmpsbck_free( bck_ctx bckctx);
 
@@ -1626,7 +1627,7 @@ static pwr_tStatus nmpsbck_check_file( 	bck_ctx		bckctx,
 *
 **************************************************************************/
 
-static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
+static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx, char *backupfile)
 {
 	pwr_tStatus		sts;
 	nmpsbck_t_cellheader	cellheader;
@@ -1668,8 +1669,8 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
 	/* Open file 1 */
 	file_num = 1;
 	bckfile1_sts = NMPS__SUCCESS;
-	nmpsbck_get_filename( bckctx->bckconfig->BackupFile,
-			filename, NMPSBCK_FILE_EXT1);
+	nmpsbck_get_filename( backupfile,
+			      filename, NMPSBCK_FILE_EXT1);
 
 #if defined(OS_ELN)
 	bckfile1 = fopen( filename, "r+", "shr=get");
@@ -1697,8 +1698,8 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
 	file_num = 2;
 	bckfile2_sts = NMPS__SUCCESS;
 
-	nmpsbck_get_filename( bckctx->bckconfig->BackupFile,
-			filename, NMPSBCK_FILE_EXT2);
+	nmpsbck_get_filename( backupfile,
+			      filename, NMPSBCK_FILE_EXT2);
 
 #if defined(OS_ELN)
 	bckfile2 = fopen( filename, "r+", "shr=get");
@@ -2627,7 +2628,7 @@ static pwr_tStatus	nmpsbck_free( bck_ctx bckctx)
 	return NMPS__SUCCESS;
 }
 
-int main()
+int main( int argc, char *argv[])
 {
 	bck_ctx		bckctx;
 	pwr_tStatus	sts;
@@ -2643,6 +2644,28 @@ int main()
 	int		swap = 0;
 	char 		mp[2000];
 	qcom_sGet 	get;
+
+	if ( argc > 2 && strcmp( argv[1], "-l") == 0) {
+	  errh_Init("nmps_bck_load", 0);
+
+	  sts = gdh_Init("nmps_bck_load");
+	  if (EVEN(sts)) LogAndExit( sts);
+
+	  bckctx = calloc( 1 , sizeof( *bckctx));
+	  if ( bckctx == 0 ) return NMPS__NOMEMORY;
+
+	  bckctx->file_num = 1;
+
+	  sts = nmps_get_bckconfig( bckctx);
+	  if (EVEN(sts)) LogAndExit( sts);
+
+	  if ( !bckctx->bckconfig->NoRead) {
+	    /* Restore the specified backup file */
+	    sts = nmpsbck_read( bckctx, argv[2]);
+	  }
+	  exit(0);
+	}
+
 
 	errh_Init("rs_nmps_bck", 0);
 
@@ -2678,7 +2701,7 @@ int main()
 
 	  if ( !bckctx->bckconfig->NoRead) {
 	    /* Restore the old backup file */
-	    sts = nmpsbck_read( bckctx);
+	    sts = nmpsbck_read( bckctx, bckctx->bckconfig->BackupFile);
 	  }
 	  else {
 	    /* Release the cells by setting backup done flag */
@@ -2763,6 +2786,12 @@ int main()
 		break;
 	      } 
 	      else if (new_event.b.swapDone && swap) {
+		swap = 0;
+	      } 
+	      else if (new_event.b.simLoadStart && !swap) {
+		swap = 1;
+	      } 
+	      else if (new_event.b.simLoadDone && swap) {
 		swap = 0;
 	      } 
 	      else if (new_event.b.terminate) {

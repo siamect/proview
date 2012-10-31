@@ -148,6 +148,7 @@ enum mh_eMsg {
   mh_eMsg_OutunitHello		= 19,
   mh_eMsg_OutunitInfo		= 20,
   mh_eMsg_OutunitSync		= 21,
+  mh_eMsg_OutunitClear		= 22,
 
   mh_eMsg_ProcDown		= 24,
 
