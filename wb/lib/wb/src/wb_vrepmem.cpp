@@ -2176,22 +2176,23 @@ void wb_vrepmem::classeditorCheckCommit()
 	  case pwr_eClass_Buffer:
 	  case pwr_eClass_ObjXRef:
 	  case pwr_eClass_AttrXRef: {
-	    int found = 0;
-	    for ( unsigned int i = 0; i < pgmname_vect.size(); i++) {
-	      if ( strcmp( pgmname_vect[i].c_str(), ((pwr_sParam *)o3->rbody)->Info.PgmName) == 0) {
-		found = 1;
-		char str[400];
-		sprintf( str, "%s-%s-%s.PgmName \"%s\" already used in this class", 
-			 o1->name(), o2->name(), o3->name(), pgmname_vect[i].c_str());
-		MsgWindow::message( 'E', str, msgw_ePop_Yes);
-		break;
+	    if ( strcmp( ((pwr_sParam *)o3->rbody)->Info.PgmName, "") != 0) {
+	      int found = 0;
+	      for ( unsigned int i = 0; i < pgmname_vect.size(); i++) {
+		if ( strcmp( pgmname_vect[i].c_str(), ((pwr_sParam *)o3->rbody)->Info.PgmName) == 0) {
+		  found = 1;
+		  char str[400];
+		  sprintf( str, "%s-%s-%s.PgmName \"%s\" already used in this class", 
+			   o1->name(), o2->name(), o3->name(), pgmname_vect[i].c_str());
+		  MsgWindow::message( 'E', str, msgw_ePop_Yes);
+		  break;
+		}
+	      }
+	      if ( !found) {
+		string str(((pwr_sParam *)o3->rbody)->Info.PgmName);
+		pgmname_vect.push_back(str);
 	      }
 	    }
-	    if ( !found) {
-	      string str(((pwr_sParam *)o3->rbody)->Info.PgmName);
-	      pgmname_vect.push_back(str);
-	    }
-
 	    break;
 	  }
 	  default: ;
