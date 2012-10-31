@@ -1588,6 +1588,9 @@ qdb_Wait (
 
   qdb_AssumeLocked;
 
+  if (pool_QisLinked(sts, &qdb->pool, &qp->eve_ll))
+    pool_Qremove(sts, &qdb->pool, &qp->eve_ll);
+
   pool_QinsertPred(NULL, &qdb->pool, &qp->eve_ll, &ep->eve_lh);
 
   return qos_WaitQue(sts, qp, tmo);
