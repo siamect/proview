@@ -176,6 +176,16 @@ SObject pwrb:Class
           Attr TypeRef = "pwrb:Type-PostOptionsMask"
         EndBody
       EndObject
+      !/**
+      !  A valid display is needed to print out Ge graphs. By default the local
+      !  screen is used, but if the local screen is not logged in another display 
+      !  can be set in this attribute.
+      !*/
+      Object Display $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
     EndObject
     Object Template ReportConfig
       Body RtBody

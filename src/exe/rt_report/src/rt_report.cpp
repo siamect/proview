@@ -62,6 +62,7 @@ rt_report::rt_report() : scan_time(1), conf(0), first_scan(1),
 			 now_sec(0), now_min(0), now_hour(0), now_mday(0), 
 			 now_wday(0), now_yday(0)
 { 
+  strcpy( display, "");
 }
 
 void rt_report::open()
@@ -941,7 +942,18 @@ int rt_report::parse( char *line)
       fout << "wait 2 " << endl;
       fout << "export graph /graph=" << line_array[2] << " /file=\"" << line_array[3] << "\"" << endl;
 
-      sprintf( cmd, "rt_xtt_cmd -i -q  @%s", fname);
+      strcpy( cmd, "rt_xtt_cmd ");
+      if ( strcmp( display, "") != 0) {
+	strcpy( cmd, "export DISPLAY=");
+	strcat( cmd, display);
+	strcat( cmd, ";");
+      }
+      else
+	strcpy( cmd, "");
+      strcat( cmd, "rt_xtt_cmd ");
+      strcat( cmd, " -i -q  @");
+      strcat( cmd, fname);
+
       system( cmd);
       sprintf( cmd, "rm %s", fname);
       system( cmd);
@@ -955,7 +967,7 @@ int rt_report::parse( char *line)
   return 1;
 }
 
-int main()
+int main( int argc, char *argv[])
 {
   pwr_tStatus sts;
   int tmo;
@@ -967,6 +979,11 @@ int main()
 
   report = new rt_report();
   report->init( &qid);
+
+  if ( argc > 1) {
+    if ( strcmp( argv[1], "-d") == 0 && argc > 2)
+      strcpy( report->display, argv[2]);
+  }
 
   try {
     report->open();

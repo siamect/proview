@@ -88,6 +88,7 @@ class rt_report {
   GeUser 	*udb;
   char		nodename[80];
   char		systemgroup[80];
+  char		display[80];
   int		first_scan;
   int 		old_sec;
   int 		old_min;
