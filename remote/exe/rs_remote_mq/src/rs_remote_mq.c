@@ -129,8 +129,8 @@ void RemoteSleep(float time)
 
 unsigned int bmq_receive()
 {
-  char buf[16384];
-  char prio;
+  char buf[32767];
+  char prio = 0;
   q_address source;
   int16 class, type, len, len_data;
   struct PSB psb;
