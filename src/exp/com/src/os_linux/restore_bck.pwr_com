@@ -51,6 +51,7 @@ main()
   int first;
   int len;
   string start;
+  string name;
   string objname;
   string attrname;
   string db_attrname;
@@ -60,7 +61,8 @@ main()
   int loaddb;
   int export_alias;
   string alias_filename;
-  
+
+  verify(0);  
   printf("\n");
 
   if (p1 == "" || p2 == "")
@@ -97,17 +99,20 @@ main()
     start = extract(1, 2, str);
     i = strstr(start, "/");
     if (!i)
-      i = strstr(str, ".");
       j = strstr(str, " ");
       first = 1;
-      len = i-1;
-      objname = extract(first, len, str);
-      first = i+1;
-      len = j-i-1;
-      attrname = extract(first, len, str);
-      first = j+1;
+      len = j - 1;
+      name = extract( first, len, str);	
+      first = j + 1;
       len = strlen(str) - j;
       value = extract(first, len, str);
+      i = strrchr(name, ".");
+      first = 1;
+      len = i - 1;
+      objname = extract(first, len, name);
+      first = i + 1;
+      len = strlen(name) - i;
+      attrname = extract(first, len, name);
   
       db_attrname = attrname;
       if (attrname == "ActualValue")
