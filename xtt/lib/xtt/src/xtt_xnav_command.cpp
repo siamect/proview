@@ -3156,7 +3156,7 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tAName name_str;
     char *name_ptr;
     pwr_tOid oid, coid;
-    pwr_tString80 cname[10];
+    pwr_tString80 cname[30];
     xnav_sHistList *ctx;
     pwr_tAttrRef aref;
     pwr_tStatus sts;
