@@ -371,6 +371,16 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
+      !/**
+      !  Reset.
+      !*/
+      Object Reset $Attribute 32 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
     EndObject
     Object Template SimulateConfig
       Body RtBody

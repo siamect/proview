@@ -619,6 +619,15 @@ void rt_sim::load_nmps()
   system( cmd);
 }
 
+void rt_sim::store_state()
+{
+  // Store current state
+  for ( unsigned int i = 0; i < plcpgm_cnt; i++) {
+    plcpgm_stored_scanoff[i] = windowplcp[i]->ScanOff;
+  }
+  state_stored = 1;
+}
+
 void rt_sim::scan()
 {
   pwr_tStatus sts;
@@ -644,6 +653,8 @@ void rt_sim::scan()
       conf->PlcPgmScanOff = 0;
     if ( conf->PlcPgmScanOn)
       conf->PlcPgmScanOn = 0;
+    if ( conf->Reset)
+      conf->Reset = 0;
 
     
     if ( !disable_old) {    
@@ -653,10 +664,9 @@ void rt_sim::scan()
 	  conf->ThreadStatus[i] = SIM__THREAD_RUNNING;
       }
       // Set scan on of plcpgm
-      for ( unsigned int i = 0; i < plcpgm_cnt; i++) {
-	if ( plcpgm_scanoff_set[i]) {
-	  windowplcp[i]->ScanOff = 0;
-	  plcpgm_scanoff_set[i] = 0;
+      if ( state_stored) {
+	for ( unsigned int i = 0; i < plcpgm_cnt; i++) {
+	  windowplcp[i]->ScanOff = plcpgm_stored_scanoff[i];
 	}
       }
 
@@ -671,8 +681,11 @@ void rt_sim::scan()
     return;
   }
 
-  if ( !conf->Disable && disable_old)
+  if ( !conf->Disable && disable_old) {
     conf->Message = SIM__ACTIVE;
+
+    store_state();
+  }
 
   disable_old = conf->Disable;
 
@@ -709,6 +722,9 @@ void rt_sim::scan()
     conf->PlcHalt = 0;
     conf->PlcContinueStatus = 0;
 
+    if ( !state_stored)
+      store_state();
+
     // Count selected threads in running state
     select_thread_cnt = 0;
     for ( unsigned int i = 0; i < thread_cnt; i++) {
@@ -741,6 +757,9 @@ void rt_sim::scan()
     conf->PlcContinue = 0;
     conf->PlcHaltStatus = 0;
 
+    if ( !state_stored)
+      store_state();
+
     // Count selected threads
     select_thread_cnt = 0;
     for ( unsigned int i = 0; i < thread_cnt; i++) {
@@ -769,6 +788,9 @@ void rt_sim::scan()
   if ( conf->PlcStep) {
     conf->PlcStep = 0;
 
+    if ( !state_stored)
+      store_state();
+
     // Count selected threads
     select_thread_cnt = 0;
     for ( unsigned int i = 0; i < thread_cnt; i++) {
@@ -796,6 +818,9 @@ void rt_sim::scan()
   // Load database request
   if ( conf->Load) {
     conf->Load = 0;
+
+    if ( !state_stored)
+      store_state();
 
     // Check that all thread are halted
     int not_halted = 0;
@@ -854,6 +879,9 @@ void rt_sim::scan()
   if ( conf->Store) {
     conf->Store = 0;
 
+    if ( !state_stored)
+      store_state();
+
     // Check that all thread are halted
     int not_halted = 0;
     for ( unsigned int i = 0; i < thread_cnt; i++) {
@@ -877,12 +905,14 @@ void rt_sim::scan()
   if ( conf->PlcPgmScanOn) {
     conf->PlcPgmScanOn = 0;
 
+    if ( !state_stored)
+      store_state();
+
     int found = 0;
     for ( unsigned int i = 0; i < plcpgm_cnt; i++) {
       if ( conf->PlcPgmSelected[i]) {
 	windowplcp[i]->ScanOff = 0;
 	conf->PlcPgmStatus[i] = SIM__SCANON;
-	plcpgm_scanoff_set[i] = 0;
 	found = 1;
       }
     }
@@ -896,12 +926,14 @@ void rt_sim::scan()
   if ( conf->PlcPgmScanOff) {
     conf->PlcPgmScanOff = 0;
 
+    if ( !state_stored)
+      store_state();
+
     int found = 0;
     for ( unsigned int i = 0; i < plcpgm_cnt; i++) {
       if ( conf->PlcPgmSelected[i]) {
 	windowplcp[i]->ScanOff = 1;
 	conf->PlcPgmStatus[i] = SIM__SCANOFF;
-	plcpgm_scanoff_set[i] = 1;
 	found = 1;
       }
     }
@@ -909,6 +941,37 @@ void rt_sim::scan()
       conf->Message = SIM__SCANOFF_SET;
     else
       conf->Message = SIM__NOSELPLCPGM;
+  }
+
+
+  if ( conf->Reset) {
+    conf->Reset = 0;
+
+    // Revert to stored state
+    if ( state_stored) {
+      for ( unsigned int i = 0; i < plcpgm_cnt; i++) {
+	windowplcp[i]->ScanOff = plcpgm_stored_scanoff[i];
+      }
+    }    
+
+    for ( unsigned int i = 0; i < thread_cnt; i++)
+      conf->ThreadSelected[i] = 1;
+    for ( unsigned int i = 0; i < plcpgm_cnt; i++)
+      conf->PlcPgmSelected[i] = 1;
+
+    // Set continue order on halted threads
+    select_thread_cnt = 0;
+    for ( unsigned int i = 0; i < thread_cnt; i++) {
+      if ( conf->ThreadStatus[i] == SIM__THREAD_HALT)
+	select_thread_cnt++;
+    }
+
+    if ( select_thread_cnt > 0) {
+      conf->PlcContinueOrder = select_thread_cnt;
+      continue_order_active = true;
+      conf->Message = SIM__THREADRESPOND;
+    }
+
   }
 }
 

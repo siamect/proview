@@ -57,9 +57,9 @@ typedef enum {
 
 class rt_sim {
  public:
-  rt_sim() : scan_time(0.5), thread_cnt(0), select_thread_cnt(0), halt_order_active(false),
-    load_order_active(false), disable_old(0) { 
-    memset(plcpgm_scanoff_set,0,sizeof(plcpgm_scanoff_set));}
+  rt_sim() : scan_time(0.5), thread_cnt(0), select_thread_cnt(0), state_stored(false),
+    halt_order_active(false), load_order_active(false), disable_old(0) { 
+    memset(plcpgm_stored_scanoff,0,sizeof(plcpgm_stored_scanoff));}
   void init( qcom_sQid *qid);
   void open();
   void close();
@@ -75,6 +75,7 @@ class rt_sim {
   void store_nmps();
   void load_nmps();
   void delete_children( pwr_tOid oid);
+  void store_state();
 
   double	scan_time;
   pwr_sClass_SimulateConfig *conf;
@@ -86,7 +87,8 @@ class rt_sim {
   unsigned int plcpgm_thread_idx[200];
   pwr_sClass_windowplc *windowplcp[200];
   pwr_tDlid windowplc_dlid[200];
-  int plcpgm_scanoff_set[200];
+  int plcpgm_stored_scanoff[200];
+  bool state_stored;
   bool halt_order_active;
   bool step_order_active;
   bool continue_order_active;
