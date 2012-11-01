@@ -665,6 +665,8 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
     case glow_eEvent_MB3Press:
     case glow_eEvent_MB1Down:
     case glow_eEvent_MB1Up:
+    case glow_eEvent_ScrollUp:
+    case glow_eEvent_ScrollDown:
       tiptext->remove();
       sts = 0;
       for ( i = 0; i < a.a_size; i++)

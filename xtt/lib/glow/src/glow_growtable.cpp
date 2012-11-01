@@ -967,6 +967,46 @@ int GrowTable::event_handler( GlowWind *w, glow_eEvent event, int x, int y, doub
       ((GrowCtx *)ctx)->send_table_callback( this, event, fx, fy, column, row);
     break;
   }
+  case glow_eEvent_ScrollUp:
+    if ( !ctx->trace_started)
+      return 0;
+    if ( v_scrollbar) {
+      double rx, ry;
+
+      // Convert koordinates to local koordinates
+      trf.reverse( fx, fy, &rx, &ry);
+      sts = local_event_handler( event, rx, ry);
+      if ( sts) {
+	v_value -= (table_y1 - table_y0) * window_scale/50;
+	if ( v_value < table_y0 * window_scale)
+	  v_value = table_y0 * window_scale;
+	draw();
+	v_scrollbar->set_value( v_value, y_high - 
+				(y_low + y_low_offs) - scrollbar_width * horizontal_scrollbar);
+	return 1;
+      }
+    }
+    return 0;
+  case glow_eEvent_ScrollDown:
+    if ( !ctx->trace_started)
+      return 0;
+    if ( v_scrollbar) {
+      double rx, ry;
+
+      // Convert koordinates to local koordinates
+      trf.reverse( fx, fy, &rx, &ry);
+      sts = local_event_handler( event, rx, ry);
+      if ( sts) {
+	v_value += (table_y1 - table_y0) * window_scale/50;
+	if ( v_value > (table_y1 - (y_high - y_low - scrollbar_width * horizontal_scrollbar)) * window_scale)
+	  v_value = (table_y1 - (y_high - y_low - scrollbar_width * horizontal_scrollbar)) * window_scale;
+	draw();
+	v_scrollbar->set_value( v_value, y_high - 
+				(y_low + y_low_offs) - scrollbar_width * horizontal_scrollbar);
+	return 1;
+      }
+    }
+    return 0;
   default: ;
   }
 

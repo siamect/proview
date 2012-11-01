@@ -1144,9 +1144,9 @@ int GlowDrawGtk::event_handler( GdkEvent event)
       break;          
     case GDK_SCROLL:
       if ( event.scroll.direction == GDK_SCROLL_UP)
-	sts = ctx->event_handler( glow_eEvent_ScrollUp, 0, 0, 0, 0);
+	sts = ctx->event_handler( glow_eEvent_ScrollUp, (int)event.scroll.x, (int)event.scroll.y, 0, 0);
       else if ( event.scroll.direction == GDK_SCROLL_DOWN)
-	sts = ctx->event_handler( glow_eEvent_ScrollDown, 0, 0, 0, 0);
+	sts = ctx->event_handler( glow_eEvent_ScrollDown, (int)event.scroll.x, (int)event.scroll.y, 0, 0);
       break;
     default:
       break;
