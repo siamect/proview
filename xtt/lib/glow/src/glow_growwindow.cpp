@@ -597,8 +597,10 @@ int GrowWindow::event_handler( GlowWind *w, glow_eEvent event, int x, int y, dou
 				(y_low + y_low_offs) - scrollbar_width * horizontal_scrollbar);
 	return 1;
       }
+      else
+	return 0;
     }
-    return 0;
+    break;
   case glow_eEvent_ScrollDown:
     if ( !ctx->trace_started)
       return 0;
@@ -617,8 +619,10 @@ int GrowWindow::event_handler( GlowWind *w, glow_eEvent event, int x, int y, dou
 				(y_low + y_low_offs) - scrollbar_width * horizontal_scrollbar);
 	return 1;
       }
+      else
+	return 0;
     }
-    return 0;
+    break;
   default:
     ;
   }
