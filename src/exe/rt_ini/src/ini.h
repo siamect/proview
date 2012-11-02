@@ -209,7 +209,7 @@ char *		ini_LoadDirectory	(pwr_tStatus*, ini_sContext*);
 pwr_tBoolean	ini_LoadNode		(pwr_tStatus*, ini_sContext*);
 pwr_tBoolean	ini_LoadVolume		(pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 FILE           *ini_OpenFile		(pwr_tStatus*, ini_sContext*, ini_sFile*);
-ini_sProc      *ini_ProcInsert		(pwr_tStatus*, ini_sContext*, char*, char*, int, int, char*, int, int, char*, void*);
+ini_sProc      *ini_ProcInsert		(pwr_tStatus*, ini_sContext*, char*, char*, int, int, char*, int, int, pwr_tCid, char*, void*);
 void		ini_ProcIter		(pwr_tStatus*, ini_sContext*, int, int,
 			void	(*func)	(pwr_tStatus*, ini_sContext*, ini_sProc*));
 void		ini_ProcLoad		(pwr_tStatus*, ini_sContext*, ini_sProc*);

@@ -231,6 +231,15 @@ sub build_kernel # args: flavour
   _module("wb");
   build_all("copy", $flavour);
   merge();
+  _module("nmps");
+  build_all("copy", $flavour);
+  merge();
+  _module("remote");
+  build_all("copy", $flavour);
+  merge();
+  _module("opc");
+  build_all("copy", $flavour);
+  merge();
   _module("rt");
   build_all("lib", $flavour);
   merge();
