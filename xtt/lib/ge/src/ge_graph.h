@@ -99,7 +99,8 @@ typedef enum {
   ge_eAttrType_InputFocus 	= 1006,				//!< Initial input focus mask.
   ge_eAttrType_Dyn	 	= 1007,				//!< Dynamic data.
   ge_eAttrType_ScaleType      	= 1008,				//!< Scale type.
-  ge_eAttrType_CurveDataType   	= 1009				//!< Data type for XY_Curve.
+  ge_eAttrType_CurveDataType   	= 1009,				//!< Data type for XY_Curve.
+  ge_eAttrType_OptionMenuType   = 1010				//!< OptionMenu type.
 } ge_eAttrType;
 
 //! Graph mode.

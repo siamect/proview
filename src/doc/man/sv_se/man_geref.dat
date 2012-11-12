@@ -3686,7 +3686,18 @@ listan motsvarar ett uppräkningsvärde, och när alternativet väljs läggs värdet i
 databas-attributet. Komponenten läser kontinuerligt av värdet på databasattributet, och 
 skriver ut texten för det alternativ som motsvarar värdet, i sitt text-fält.
 
+Optionmenyn kan vara statisk eller dynamisk. För en statisk meny anger man texter och 
+uppräkningsvärde i olika item, för en dynamisk meny hämtas meny-texterna från ett attribut
+i databasen av typen array of String80. Antalet texter i menyn hämtas från ett attribut
+av typen Int32, och dessutom ska man ange ett attribut som indikerar att nya texter ska
+läsas in. Det här attributet ska vara av typen Boolean och inläsningen av nya texter sker
+när värdet ändras från 0 till 1. 
+
 <b>Attribut <t><t>Beskrivning
+OptionMenu.Type	      <t><t>Typ av optionmeny. Statisk eller dynamisk.
+
+Statisk meny
+
 OptionMenu.Attribute  <t><t>Databas attribut av typen Float32, Float64, Int32, 
                       <t><t>UInt32, Int16, UInt16, Int8 eller UInt8. Värdet i 
                       <t><t>ItemEnum för valt alternativ sätts i databas attributet.
@@ -3695,6 +3706,20 @@ OptionMenu.ItemText1  <t><t>Text för första menyalternativet.
 OptionMenu.ItemEnum1  <t><t>Uppräkningsvärdet för första menyalternativet.
 OptionMenu.ItemText2  <t><t>Text för andra menyalternativet.
 OptionMenu.ItemEnum2  <t><t>Uppräkningsvärdet för andra menyalternativet.
+
+Dynamisk meny
+
+OptionMenu.Attribute  <t><t>Databas attribut av typen Float32, Float64, Int32, 
+                      <t><t>UInt32, Int16, UInt16, Int8 eller UInt8. Index för
+                      <t><t>valt alternativ sätts i databas attributet.
+OptionMenu.TextAttribute <t><t>Databas attribut av typen vektor med String80, som
+		      <t><t>innehåller de texter som visas i menyn.
+OptionMenu.SizeAttribute <t><t>Databas attribut av typen Int32, som anger antalet
+		      <t><t>alternativ i menyn.
+OptionMenu.UpdateAttribute <t><t>Databas attribut av typen Boolean, som anger att
+		      <t><t>texterna i menyn ska uppdateras. Uppdateringen sker när
+		      <t><t>värdet ändras från 0 till 1.
+
 </topic>
 </headerlevel>
 <pagebreak>

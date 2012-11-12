@@ -14117,14 +14117,14 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 	}
 
 	glow_eDrawType text_drawtype, text_color, bg_color, text_color_disabled;
-	int text_size;
+	int tsize;
 	glow_eFont text_font;
 
-	grow_GetMenuChar( object, &text_size, &bg_color, &text_drawtype, &text_color, 
+	grow_GetMenuChar( object, &tsize, &bg_color, &text_drawtype, &text_color, 
 			  &text_color_disabled, &text_font);
 
 	grow_CreateGrowMenu( dyn->graph->grow->ctx, "__Menu", &info, event->menu.x, event->menu.y, 0,
-			     glow_eDrawType_Line, 0, 1, 1, bg_color, text_size,
+			     glow_eDrawType_Line, 0, 1, 1, bg_color, tsize,
 			     text_drawtype, text_color,
 			     text_color_disabled, text_font, object,
 			     &menu_object);
@@ -14246,30 +14246,53 @@ void GeOptionMenu::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
   
+  strcpy( attrinfo[i].name, "OptionMenu.Type");
+  attrinfo[i].value = &optionmenu_type;
+  attrinfo[i].type = ge_eAttrType_OptionMenuType;
+  attrinfo[i++].size = sizeof( optionmenu_type);
+
   strcpy( attrinfo[i].name, "OptionMenu.Attribute");
   attrinfo[i].value = attribute;
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( attribute);
 
-  strcpy( attrinfo[i].name, "OptionMenu.ItemMask");
-  attrinfo[i].value = &button_mask;
-  attrinfo[i].type = ge_eAttrType_InstanceMask;
-  attrinfo[i++].size = sizeof( button_mask);
+  if ( optionmenu_type == ge_eOptionMenuType_Dynamic) {
+    strcpy( attrinfo[i].name, "OptionMenu.TextAttribute");
+    attrinfo[i].value = text_attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( text_attribute);
 
-  int b_mask = ge_mInstance_1;
-  for ( int j = 0; j < 32; j++) {
-    if ( b_mask & button_mask) {
-      sprintf( attrinfo[i].name, "OptionMenu.ItemText%d", j+1);
-      attrinfo[i].value = items_text[j];
-      attrinfo[i].type = glow_eType_String;
-      attrinfo[i++].size = sizeof( items_text[0]);
+    strcpy( attrinfo[i].name, "OptionMenu.SizeAttribute");
+    attrinfo[i].value = size_attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( size_attribute);
 
-      sprintf( attrinfo[i].name, "OptionMenu.ItemEnum%d", j+1);
-      attrinfo[i].value = &items_enum[j];
-      attrinfo[i].type = glow_eType_Int;
-      attrinfo[i++].size = sizeof(items_enum[0]);
+    strcpy( attrinfo[i].name, "OptionMenu.UpdateAttribute");
+    attrinfo[i].value = update_attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( update_attribute);
+  }
+  else {
+    strcpy( attrinfo[i].name, "OptionMenu.ItemMask");
+    attrinfo[i].value = &button_mask;
+    attrinfo[i].type = ge_eAttrType_InstanceMask;
+    attrinfo[i++].size = sizeof( button_mask);
+
+    int b_mask = ge_mInstance_1;
+    for ( int j = 0; j < 32; j++) {
+      if ( b_mask & button_mask) {
+	sprintf( attrinfo[i].name, "OptionMenu.ItemText%d", j+1);
+	attrinfo[i].value = items_text[j];
+	attrinfo[i].type = glow_eType_String;
+	attrinfo[i++].size = sizeof( items_text[0]);
+
+	sprintf( attrinfo[i].name, "OptionMenu.ItemEnum%d", j+1);
+	attrinfo[i].value = &items_enum[j];
+	attrinfo[i].type = glow_eType_Int;
+	attrinfo[i++].size = sizeof(items_enum[0]);
+      }
+      b_mask = b_mask << 1;
     }
-    b_mask = b_mask << 1;
   }
   dyn->display_access = true;
   *item_count = i;
@@ -14308,6 +14331,10 @@ void GeOptionMenu::save( ofstream& fp)
 {
   fp << int(ge_eSave_OptionMenu) << endl;  
   fp << int(ge_eSave_OptionMenu_attribute) << FSPACE << attribute << endl;
+  fp << int(ge_eSave_OptionMenu_text_attribute) << FSPACE << text_attribute << endl;
+  fp << int(ge_eSave_OptionMenu_size_attribute) << FSPACE << size_attribute << endl;
+  fp << int(ge_eSave_OptionMenu_update_attribute) << FSPACE << update_attribute << endl;
+  fp << int(ge_eSave_OptionMenu_optionmenu_type) << FSPACE << optionmenu_type << endl;
   fp << int(ge_eSave_OptionMenu_button_mask) << FSPACE << int(button_mask) << endl;
   int b_mask = ge_mInstance_1;
   for ( int j = 0; j < 32; j++) {
@@ -14343,6 +14370,19 @@ void GeOptionMenu::open( ifstream& fp)
         fp.get();
         fp.getline( attribute, sizeof(attribute));
         break;
+      case ge_eSave_OptionMenu_text_attribute:
+        fp.get();
+        fp.getline( text_attribute, sizeof(text_attribute));
+        break;
+      case ge_eSave_OptionMenu_size_attribute:
+        fp.get();
+        fp.getline( size_attribute, sizeof(size_attribute));
+        break;
+      case ge_eSave_OptionMenu_update_attribute:
+        fp.get();
+        fp.getline( update_attribute, sizeof(update_attribute));
+        break;
+      case ge_eSave_OptionMenu_optionmenu_type: fp >> tmp; optionmenu_type = (ge_eOptionMenuType)tmp; break;
       case ge_eSave_OptionMenu_button_mask: fp >> tmp; button_mask = (ge_mInstance)tmp; break;
       case ge_eSave_OptionMenu_items_text0:
         fp.get();
@@ -14565,6 +14605,16 @@ int GeOptionMenu::connect( grow_tObject object, glow_sTraceData *trace_data)
     return 1;
   }
 
+  update_p = 0;
+  if ( strcmp( text_attribute, "") != 0 && strcmp( update_attribute, "") != 0) {
+    db = dyn->parse_attr_name( update_attribute, parsed_name,
+			       &inverted, &attr_type, &attr_size);
+    if ( strcmp( parsed_name,"") != 0) {
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&update_p, &update_subid, attr_size);
+      if ( EVEN(sts)) return sts;
+    }
+  }
+
   trace_data->p = &pdummy;
   first_scan = true;
   return 1;
@@ -14575,6 +14625,10 @@ int GeOptionMenu::disconnect( grow_tObject object)
   if ( p && db == graph_eDatabase_Gdh)
     gdh_UnrefObjectInfo( subid);
   p = 0;
+
+  if ( update_p)
+    gdh_UnrefObjectInfo( update_subid);
+
   return 1;
 }
 
@@ -14583,15 +14637,48 @@ int GeOptionMenu::scan( grow_tObject object)
   if ( !p)
     return 1;
 
+  int update_texts = 0;
   if ( !first_scan) {
-    if ( memcmp( &old_value, p, size) == 0 )
-      // No change since last time
-      return 1;
+    if ( update_p) {
+      if ( *update_p == old_update_value && memcmp( &old_value, p, size) == 0)
+	// No change since last time
+	return 1;
+    }
+    else {
+      if ( memcmp( &old_value, p, size) == 0)
+	// No change since last time
+	return 1;
+    }
+    if ( update_p && !old_update_value)
+      update_texts = 1;
   }
-  else
+  else {
     first_scan = false;
+    if ( update_p)
+      update_texts = 1;
+  }
 
   unsigned int enum_value;
+
+  if ( update_texts) {
+    pwr_tAName  pname;
+    int		attr_type, attr_size;
+    int		sts;
+    int		inverted;
+
+    dyn->parse_attr_name( size_attribute, pname, &inverted, &attr_type, &attr_size);
+
+    sts = gdh_GetObjectInfo( pname, &text_size, sizeof(text_size));
+    if ( EVEN(sts)) return sts;
+
+    if ( text_size > 32)
+      return 0;
+
+    dyn->parse_attr_name( text_attribute, pname, &inverted, &attr_type, &attr_size);
+
+    sts = gdh_GetObjectInfo( pname, items_text, text_size * sizeof(pwr_tString80));
+    if ( EVEN(sts)) return sts;
+  }
 
   switch( type_id) {
   case pwr_eType_Float32: 
@@ -14611,16 +14698,27 @@ int GeOptionMenu::scan( grow_tObject object)
     return 1;
   }
 
-  int found = 0;
-  for ( int i = 0; i < 32; i++) {
-    if ( items_enum[i] == enum_value) {
-      grow_SetAnnotation( object, 1, items_text[i], strlen(items_text[i]));
-      found = 1;
-      break;
+  if ( !update_p) {
+    int found = 0;
+    for ( int i = 0; i < 32; i++) {
+      if ( items_enum[i] == enum_value) {
+	grow_SetAnnotation( object, 1, items_text[i], strlen(items_text[i]));
+	found = 1;
+	break;
+      }
     }
+    if ( !found)
+      grow_SetAnnotation( object, 1, "", 0);
   }
-  if ( !found)
-    grow_SetAnnotation( object, 1, "", 0);
+  else {
+    if ( enum_value >= 0 && (unsigned int)enum_value < text_size) {
+      int len = MIN(strlen(items_text[enum_value]), sizeof(pwr_tString80));
+      grow_SetAnnotation( object, 1, items_text[enum_value], len);
+    }
+    else 
+      grow_SetAnnotation( object, 1, "", 0);
+    old_update_value = *update_p;
+  }
 
   memcpy( &old_value, p, MIN(size, (int) sizeof(old_value)));
   return 1;
@@ -14709,31 +14807,44 @@ int GeOptionMenu::action( grow_tObject object, glow_tEvent event)
       double	ll_x, ll_y, ur_x, ur_y;
       glow_sMenuInfo info;
 
-      int b_mask = 1;
-      for ( int i = 0; i < 32; i++) {
-	if ( b_mask & button_mask) {
-	  info.item[i].occupied = true;
-	  strcpy( info.item[i].text, items_text[i]);
-
-	  // Check access
-	  info.item[i].type = glow_eMenuItem_Button;
+      if ( !update_p) {
+	int b_mask = 1;
+	for ( int i = 0; i < 32; i++) {
+	  if ( b_mask & button_mask) {
+	    info.item[i].occupied = true;
+	    strcpy( info.item[i].text, items_text[i]);
+	    
+	    // Check access
+	    info.item[i].type = glow_eMenuItem_Button;
+	  }
+	  else
+	    info.item[i].occupied = false;
+	  b_mask = b_mask << 1;
 	}
-	else
-	  info.item[i].occupied = false;
-	b_mask = b_mask << 1;
+      }
+      else {
+	for ( unsigned int i = 0; i < 32; i++) {
+	  if ( i < text_size) {
+	    strncpy( info.item[i].text, items_text[i], sizeof(info.item[0].text));
+	    info.item[i].type = glow_eMenuItem_Button;
+	    info.item[i].occupied = true;
+	  }
+	  else
+	    info.item[i].occupied = false;
+	}
       }
 
       // Get fillcolor, and textattributes from object
       glow_eDrawType text_drawtype, text_color, bg_color;
-      int text_size;
+      int tsize;
       int sts;
       double scale;
       glow_eFont text_font;
 
-      sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, &bg_color,
+      sts = grow_GetObjectAnnotInfo( object, 1, &tsize, &text_drawtype, &text_color, &bg_color,
 				     &scale, &text_font);
       if ( EVEN(sts)) {
-	text_size = 2;
+	tsize = 2;
 	text_drawtype = glow_eDrawType_TextHelveticaBold;
 	text_color = glow_eDrawType_Line;
 	bg_color = glow_eDrawType_LightGray;
@@ -14743,7 +14854,7 @@ int GeOptionMenu::action( grow_tObject object, glow_tEvent event)
 	
       grow_MeasureNode( object, &ll_x, &ll_y, &ur_x, &ur_y);
       grow_CreateGrowMenu( dyn->graph->grow->ctx, "__Menu", &info, ll_x, ur_y, ur_x - ll_x,
-			   glow_eDrawType_Line, 0, 1, 1, bg_color, text_size,
+			   glow_eDrawType_Line, 0, 1, 1, bg_color, tsize,
 			   text_drawtype, text_color,
 			   glow_eDrawType_MediumGray, text_font, 0,
 			   &menu_object);

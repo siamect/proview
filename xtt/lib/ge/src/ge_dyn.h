@@ -96,6 +96,12 @@
     ge_eCurveDataType_TableObject      	//!< Table object syntax.
   } ge_eCurveDataType;
 
+  //! Types of animation sequences.
+  typedef enum {
+    ge_eOptionMenuType_Static,		//!< Static optionmenu.
+    ge_eOptionMenuType_Dynamic 		//!< Dynamic optionmenu.
+  } ge_eOptionMenuType;
+
   //! Dyn attributes displayed in attribute editor
   typedef enum {
     ge_eDynAttr_All,
@@ -667,6 +673,10 @@
     ge_eSave_OptionMenu_items_enum30	= 6963,
     ge_eSave_OptionMenu_items_enum31	= 6964,
     ge_eSave_OptionMenu_attribute	= 6965,
+    ge_eSave_OptionMenu_text_attribute	= 6966,
+    ge_eSave_OptionMenu_size_attribute	= 6967,
+    ge_eSave_OptionMenu_update_attribute = 6968,
+    ge_eSave_OptionMenu_optionmenu_type = 6969,
     ge_eSave_SetValue_attribute		= 7000,
     ge_eSave_SetValue_value		= 7001,
     ge_eSave_SetValue_instance		= 7002,
@@ -2533,8 +2543,11 @@ class GePulldownMenu : public GeDynElem {
 class GeOptionMenu : public GeDynElem {
  public:
   pwr_tAName attribute;		//!< Database reference for analog attribute.
+  pwr_tAName text_attribute;	//!< Database reference for text array attribute.
+  pwr_tAName size_attribute;	//!< Database reference for menu size attribute.
+  pwr_tAName update_attribute;	//!< Database reference for update text attribute.
   unsigned int items_enum[32];
-  char  items_text[80][32];
+  char  items_text[32][80];
   unsigned int button_mask;
   grow_tObject menu_object;
   pwr_tTime focus_gained_time;
@@ -2543,15 +2556,23 @@ class GeOptionMenu : public GeDynElem {
   pwr_tSubid subid;
   int size;
   graph_eDatabase db;
+  pwr_tBoolean *update_p;
+  pwr_tSubid update_subid;  
   bool first_scan;
   char old_value[8];
   int type_id;
+  unsigned int text_size;
+  pwr_tBoolean old_update_value;
+  ge_eOptionMenuType optionmenu_type;
 
   GeOptionMenu( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_OptionMenu, ge_eDynPrio_OptionMenu),
     button_mask(1), menu_object(0)
     { 
       strcpy( attribute, "");
+      strcpy( text_attribute, "");
+      strcpy( size_attribute, "");
+      strcpy( update_attribute, "");
       for ( int i = 0; i < 32; i++)
         items_enum[i] = i;
       memset( items_text, 0, sizeof( items_text));
@@ -2562,6 +2583,9 @@ class GeOptionMenu : public GeDynElem {
     {
       memset( &focus_gained_time, 0, sizeof( focus_gained_time));
       strcpy( attribute, x.attribute);
+      strcpy( text_attribute, x.text_attribute);
+      strcpy( size_attribute, x.size_attribute);
+      strcpy( update_attribute, x.update_attribute);
       memcpy( items_text, x.items_text, sizeof(items_text)); 
       for ( int i = 0; i < 32; i++) {
 	items_enum[i] = x.items_enum[i];

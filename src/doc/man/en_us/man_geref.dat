@@ -3727,7 +3727,18 @@ the list corresponds to an enumeration value, and when an alternative is selecte
 is inserted into the database attribute. The component is continuously reading the value of the
 databas attribute, and displays the corresponding text in the text field.
 
+The option men can be static or dynamic. For a static meny you state the texts and 
+enumeration values in different items. For a dynamic meny the meny text are fetched
+from a database attribute of type array of String80. The number of texts in the menu is
+fetched from an attribute of type Int32, and further more you should state an attribute
+that indicates that new texts should be loaded. This attribute should be of type Boolean
+and the new texts are loaded when the value is changed from 0 to 1.
+
 <b>Attribute <t><t>Description
+OptionMenu.Type	      <t><t>Type of option menu. Static eller dynamic.
+
+Static menu
+
 OptionMenu.Attribute  <t><t>Database attribute of type Float32, Float64, Int32,
                       <t><t>UInt32, Int16, UInt16, Int8 or UInt8. The value in
                       <t><t>ItemEnum for a selected alternative inserted into the 
@@ -3737,6 +3748,20 @@ OptionMenu.ItemText1  <t><t>Text of the first menu alternative.
 OptionMenu.ItemEnum1  <t><t>Enumeration value of the first menu alternative.
 OptionMenu.ItemText2  <t><t>Text of the second menu alternative.
 OptionMenu.ItemEnum2  <t><t>Enumeration value of the second menu alternative.
+
+Dynamic menu
+
+OptionMenu.Attribute  <t><t>Database attribute of type Float32, Float64, Int32,
+                      <t><t>UInt32, Int16, UInt16, Int8 or UInt8. The value in
+                      <t><t>ItemEnum for a selected alternative inserted into the 
+                      <t><t>database attribute.
+OptionMenu.TextAttribute <t><t>Database attribute of type array of String80. The array
+		      <t><t>contains the texts that are displayed in the menu.
+OptionMenu.SizeAttribute <t><t>Database attribute of type Int32. States the number of
+		      <t><t>alternative in the menu.
+OptionMenu.UpdateAttribute <t><t>Database attribute of type Boolean. Should be set to 
+		      <t><t>1 when new texts are present in the TextAttribute. New text 
+		      <t><t>are loaded when the value is changed from 0 to 1.
 </topic>
 </headerlevel>
 <pagebreak>

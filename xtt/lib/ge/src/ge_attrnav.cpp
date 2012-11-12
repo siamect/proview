@@ -969,6 +969,11 @@ static attrnav_sEnumElement elem_gradient[] = {
 	{ (int) glow_eGradient_RadialLowerRight, "RadialLowerRight"},
 	{ 0, ""}};
 
+static attrnav_sEnumElement elem_optionmenu_type[] = {
+	{ (int) ge_eOptionMenuType_Static,  "Static"},
+	{ (int) ge_eOptionMenuType_Dynamic, "Dynamic"},
+	{ 0, ""}};
+
 static attrnav_sEnum enum_types[] = {
 	{ (int) glow_eType_Direction, 	(attrnav_sEnumElement *) &elem_direction},
 	{ (int) glow_eType_Color, 	(attrnav_sEnumElement *) &elem_color},
@@ -987,7 +992,8 @@ static attrnav_sEnum enum_types[] = {
 	{ (int) ge_eAttrType_CurveDataType, (attrnav_sEnumElement *) &elem_curve_datatype},
 	{ (int) glow_eType_Gradient, 	(attrnav_sEnumElement *) &elem_gradient},
 	{ (int) glow_eType_HotIndication, (attrnav_sEnumElement *) &elem_hot_indication},
-	{ (int) glow_eType_AnnotType, (attrnav_sEnumElement *) &elem_annot_type},
+	{ (int) glow_eType_AnnotType, 	(attrnav_sEnumElement *) &elem_annot_type},
+	{ (int) ge_eAttrType_OptionMenuType, (attrnav_sEnumElement *) &elem_optionmenu_type},
 	{ 0, NULL}};
 
 static attrnav_sEnum mask_types[] = {
@@ -1062,6 +1068,7 @@ int  attrnav_attr_string_to_value( int type_id, char *value_str,
     case ge_eAttrType_InputFocus:
     case ge_eAttrType_ScaleType:
     case ge_eAttrType_CurveDataType:
+    case ge_eAttrType_OptionMenuType:
     {
       if ( sscanf( value_str, "%u", (int *)buffer_ptr) != 1)
         return ATTRNAV__INPUT_SYNTAX;
@@ -1142,6 +1149,7 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
     case ge_eAttrType_LimitType:
     case ge_eAttrType_ScaleType:
     case ge_eAttrType_CurveDataType:
+    case ge_eAttrType_OptionMenuType:
     {
       attrnav_sEnumElement	*elem_p;
       attrnav_sEnum		*enum_p;
@@ -1612,6 +1620,11 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 	     *(int *)((ItemEnum *)item)->value_p = ((ItemEnum *)item)->num;
 
           }
+	  if ( (((ItemEnum *)item)->type_id == ge_eAttrType_OptionMenuType) &&
+	       attrnav->reconfigure_attr_cb) {
+	    (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
+	    return FLOW__DESTROYED;
+	  }
           break;
         }
         case attrnav_eItemType_Mask: 
@@ -1631,10 +1644,10 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 	     *(unsigned int *)((ItemEnum *)item)->value_p |= 
 			((ItemMask *)item)->mask;
           }
-	  if ( (((ItemEnum *)item)->type_id == ge_eAttrType_DynType ||
-	        ((ItemEnum *)item)->type_id == ge_eAttrType_DynTypeTone ||
-		((ItemEnum *)item)->type_id == ge_eAttrType_ActionType ||
-		((ItemEnum *)item)->type_id == ge_eAttrType_InstanceMask) &&
+	  if ( (((ItemMask *)item)->type_id == ge_eAttrType_DynType ||
+	        ((ItemMask *)item)->type_id == ge_eAttrType_DynTypeTone ||
+		((ItemMask *)item)->type_id == ge_eAttrType_ActionType ||
+		((ItemMask *)item)->type_id == ge_eAttrType_InstanceMask) &&
 	       attrnav->reconfigure_attr_cb) {
 	    (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
 	    return FLOW__DESTROYED;
@@ -1717,6 +1730,11 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 	         *(int *)((ItemEnum *)item)->value_p = ((ItemEnum *)item)->num;
 
               }
+	      if ( (((ItemEnum *)item)->type_id == ge_eAttrType_OptionMenuType) &&
+		   attrnav->reconfigure_attr_cb) {
+		(attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
+		return FLOW__DESTROYED;
+	      }
               break;
             case attrnav_eItemType_Mask: 
                brow_SetRadiobutton( event->radiobutton.object, 
@@ -1731,6 +1749,7 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 	       if ( (((ItemMask *)item)->type_id == ge_eAttrType_DynType ||
 	             ((ItemMask *)item)->type_id == ge_eAttrType_DynTypeTone ||
 		     ((ItemMask *)item)->type_id == ge_eAttrType_ActionType ||
+		     ((ItemMask *)item)->type_id == ge_eAttrType_OptionMenuType ||
 		     ((ItemMask *)item)->type_id == ge_eAttrType_InstanceMask) &&
 		    attrnav->reconfigure_attr_cb) {
 		 (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
@@ -2204,6 +2223,7 @@ ItemLocal::ItemLocal( AttrNav *attrnav, const char *item_name, const char *attr,
     case ge_eAttrType_InputFocus:
     case ge_eAttrType_ScaleType:
     case ge_eAttrType_CurveDataType:
+    case ge_eAttrType_OptionMenuType:
       if ( !noedit)
       {
         brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrarray);
