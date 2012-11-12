@@ -631,6 +631,9 @@ linkActive (
   qcom_sNode	*node = (qcom_sNode *)get->data;
   gdb_sNode	*np;
 
+  if ( node->connection != qcom_eNodeConnectionFull)
+    return;
+
   gdb_AssumeUnlocked;
 
   gdb_ScopeLock {
@@ -678,6 +681,9 @@ linkDisconnect (
   qcom_sNode	*node = (qcom_sNode *)get->data;
   gdb_sNode	*np;
 
+  if ( node->connection != qcom_eNodeConnectionFull)
+    return;
+
   gdb_AssumeUnlocked;
 
   gdb_ScopeLock {
@@ -724,6 +730,9 @@ linkStalled (
   pwr_tStatus	sts;
   qcom_sNode	*node = (qcom_sNode *)get->data;
   gdb_sNode	*np;
+
+  if ( node->connection != qcom_eNodeConnectionFull)
+    return;
 
   gdb_AssumeUnlocked;
 

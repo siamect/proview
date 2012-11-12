@@ -3033,6 +3033,9 @@ linkActive (
 {
   qcom_sNode *node = (qcom_sNode *)msg->data;
 
+  if ( node->connection != qcom_eNodeConnectionFull)
+    return;
+
   errh_Info("Active, link to node %s (%s)",
     node->name, cdh_NodeIdToString(NULL, node->nid, 0, 0));
 
@@ -3047,6 +3050,9 @@ linkConnect (
   LstLink(sOutunit) *ol;
   qcom_sNode *node = (qcom_sNode *)msg->data;
   int nix = node->nid;
+
+  if ( node->connection != qcom_eNodeConnectionFull)
+    return;
 
   errh_Info("Connected, link to node %s (%s)",
     node->name, cdh_NodeIdToString(NULL, node->nid, 0, 0));
@@ -3079,6 +3085,9 @@ linkDisconnect (
   int		nix = node->nid;
 
 
+  if ( node->connection != qcom_eNodeConnectionFull)
+    return;
+
   errh_Info("Disconnected, link to node %s (%s)",
     node->name, cdh_NodeIdToString(NULL, node->nid, 0, 0));
 
@@ -3104,6 +3113,9 @@ linkStalled (
 )
 {
   qcom_sNode *node = (qcom_sNode *)msg->data;
+
+  if ( node->connection != qcom_eNodeConnectionFull)
+    return;
 
   errh_Info("Stalled, link to node %s (%s)",
     node->name, cdh_NodeIdToString(NULL, node->nid, 0, 0));
