@@ -655,8 +655,9 @@ void wb_print_wbl::printText(wb_volume& v,
   const char* ip;
   int i;
   int end = varSize - 1;
+  const char* name = adef.subName();   
 
-  indent() << "Attr " << adef.name() << " = \"";
+  indent() << "Attr " << name << " = \"";
 
   for (ip = text, i = 0; *ip != 0 && i < end; ip++) {
     if (*ip == '"')
