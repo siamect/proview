@@ -318,7 +318,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			{ "dcli_arg1", "dcli_arg2", "dcli_arg3", "dcli_arg4",
 			  "/HELPFILE", "/POPNAVIGATOR", "/BOOKMARK", 
 			  "/INDEX", "/BASE", "/RETURNCOMMAND", "/WIDTH",
-			  "/HEIGHT", "/VERSION", ""}
+			  "/HEIGHT", "/VERSION", "/STRICT", ""}
 		},
 		{
 			"LOGOUT",
@@ -478,7 +478,8 @@ static int	xnav_help_func(		void		*client_data,
     return sts;
   }
 
-  int strict = 0;
+  int strict = ODD( dcli_get_qualifier( "/STRICT", 0, 0));
+
   if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg_str, sizeof(arg_str))))
   {
     sts = CoXHelp::dhelp( "help command", "", navh_eHelpFile_Base, NULL, strict);

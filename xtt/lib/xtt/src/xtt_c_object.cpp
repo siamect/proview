@@ -1378,9 +1378,9 @@ static pwr_tStatus HelpClass( xmenu_sMenuCall *ip)
   }
 
   if ( classname[0] == '$')
-    sprintf( cmd, "help %s", &classname[1]);
+    sprintf( cmd, "help %s /strict", &classname[1]);
   else
-    sprintf( cmd, "help %s", classname);
+    sprintf( cmd, "help %s /strict", classname);
 
   sts = ((XNav *)ip->EditorContext)->command( cmd);
   return XNAV__SUCCESS;
