@@ -390,7 +390,7 @@ for ( i = 0; i < rtt_args; i++)	{		\
 }						\
 if ( argc >= 2 && strcmp( argv[1], "qcomonly") == 0)\
   strcpy( username, argv[1]);			\
-if ( argc >= 2 && strcmp( argv[1], "noneth") == 0)\
+else if ( argc >= 2 && strcmp( argv[1], "noneth") == 0)	\
   strcpy( username, argv[1]);			\
 else if ( argc >= 2 && strcmp( argv[1], "-h") == 0) {	\
   rtt_usage();			\
