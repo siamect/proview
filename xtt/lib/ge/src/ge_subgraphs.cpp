@@ -672,10 +672,12 @@ int SubGraphs::edit_attributes( void *object)
   Attr		        *attr;
   subgraphs_tAttr 	attrlist_p;
   int			trace_type;
-  int			dyn_action_type;
+  int			dyn_type2;
+  int			dyn_action_type1;
+  int			dyn_action_type2;
 
   grow_GetObjectAttrInfo( (grow_tObject)object, NULL, &grow_info, &grow_info_cnt);
-  grow_GetNodeClassDynType( object, &trace_type, &dyn_action_type);
+  grow_GetNodeClassDynType( object, &trace_type, &dyn_type2, &dyn_action_type1, &dyn_action_type2);
 
   grow_info_p = grow_info;
   for ( i = 0; i < grow_info_cnt; i++)

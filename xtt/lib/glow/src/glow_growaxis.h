@@ -141,6 +141,7 @@ class GrowAxis : public GrowRect {
   int                 	valuequotient;		//!< Quotient of lines that displays a value.
   double              	increment;		//!< Value difference between two lines.
   char                	format[20];		//!< Format of displayed values.
+  GlowTraceData		trace;			//!< Obsolete
 
   //! Erase the object.
   /*!
@@ -223,6 +224,21 @@ class GrowAxis : public GrowRect {
   //! Set configuration values for the axis.
   void set_conf( double max_val, double min_val, int no_of_lines, 
                    int long_quot, int value_quot, double rot, const char *format);
+
+  //! Scan trace
+  /*! Calls the trace scan callback for the object.
+   */
+  void trace_scan();
+
+  //! Init trace
+  /*! Calls the trace connect callback for the object.
+   */
+  int trace_init();
+
+  //! Close trace
+  /*! Calls the trace disconnect callback for the object.
+   */
+  void trace_close();
 
   //! Conversion between different versions of Glow
   /*!

@@ -1030,7 +1030,7 @@ static int	graph_set_func(	void		*client_data,
       {
         case glow_eType_Int:
         case glow_eType_TraceColor:
-        case glow_eType_DynType:
+        case glow_eType_DynType1:
         case glow_eType_Access:
         case glow_eType_Boolean:
         case glow_eType_Direction:
@@ -1218,7 +1218,7 @@ static int	graph_set_func(	void		*client_data,
     {
       case glow_eType_Int:
       case glow_eType_TraceColor:
-      case glow_eType_DynType:
+      case glow_eType_DynType1:
       case glow_eType_Access:
       case glow_eType_Boolean:
       case glow_eType_Direction:

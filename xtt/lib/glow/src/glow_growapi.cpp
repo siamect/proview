@@ -2954,15 +2954,20 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].type = glow_eType_Int;
       attrinfo[i++].size = sizeof( op->dyn_attr[0]);
 
-      strcpy( attrinfo[i].name, "DynType");
-      attrinfo[i].value_p = &op->dyn_type;
-      attrinfo[i].type = glow_eType_DynType;
-      attrinfo[i++].size = sizeof( op->dyn_type);
+      strcpy( attrinfo[i].name, "DynType1");
+      attrinfo[i].value_p = &op->dyn_type1;
+      attrinfo[i].type = glow_eType_DynType1;
+      attrinfo[i++].size = sizeof( op->dyn_type1);
 
-      strcpy( attrinfo[i].name, "Action");
-      attrinfo[i].value_p = &op->dyn_action_type;
-      attrinfo[i].type = glow_eType_ActionType;
-      attrinfo[i++].size = sizeof( op->dyn_action_type);
+      strcpy( attrinfo[i].name, "DynType2");
+      attrinfo[i].value_p = &op->dyn_type2;
+      attrinfo[i].type = glow_eType_DynType2;
+      attrinfo[i++].size = sizeof( op->dyn_type2);
+
+      strcpy( attrinfo[i].name, "Action1");
+      attrinfo[i].value_p = &op->dyn_action_type1;
+      attrinfo[i].type = glow_eType_ActionType1;
+      attrinfo[i++].size = sizeof( op->dyn_action_type1);
 
       strcpy( attrinfo[i].name, "Cycle");
       attrinfo[i].value_p = &op->cycle;
@@ -3000,17 +3005,23 @@ int grow_GetSubGraphAttrInfo( grow_tCtx ctx, char *transtab, grow_sAttrInfo **in
 
   i = 0;
 
-  if ( (name = growapi_translate( transtab, "DynType"))) {
+  if ( (name = growapi_translate( transtab, "DynType1"))) {
     strcpy( attrinfo[i].name, name);
-    attrinfo[i].value_p = &ctx->dyn_type;
-    attrinfo[i].type = glow_eType_DynType;
-    attrinfo[i++].size = sizeof( ctx->dyn_type);
+    attrinfo[i].value_p = &ctx->dyn_type1;
+    attrinfo[i].type = glow_eType_DynType1;
+    attrinfo[i++].size = sizeof( ctx->dyn_type1);
   }
-  if ( (name = growapi_translate( transtab, "DynActionType"))) {
+  if ( (name = growapi_translate( transtab, "DynType2"))) {
     strcpy( attrinfo[i].name, name);
-    attrinfo[i].value_p = &ctx->dyn_action_type;
-    attrinfo[i].type = glow_eType_ActionType;
-    attrinfo[i++].size = sizeof( ctx->dyn_action_type);
+    attrinfo[i].value_p = &ctx->dyn_type2;
+    attrinfo[i].type = glow_eType_DynType2;
+    attrinfo[i++].size = sizeof( ctx->dyn_type2);
+  }
+  if ( (name = growapi_translate( transtab, "DynActionType1"))) {
+    strcpy( attrinfo[i].name, name);
+    attrinfo[i].value_p = &ctx->dyn_action_type1;
+    attrinfo[i].type = glow_eType_ActionType1;
+    attrinfo[i++].size = sizeof( ctx->dyn_action_type1);
   }
   if ( (name = growapi_translate( transtab, "DynColor1"))) {
     strcpy( attrinfo[i].name, name);
@@ -4218,20 +4229,24 @@ void grow_SetPath( grow_tCtx ctx, int path_cnt, const char *path)
   ctx->set_path( path_cnt, path);
 }
 
-void grow_GetObjectClassDynType( grow_tObject object, int *dyn_type,
-				   int *dyn_action_type)
+void grow_GetObjectClassDynType( grow_tObject object, int *dyn_type1, int *dyn_type2,
+				 int *dyn_action_type1, int *dyn_action_type2)
 {
   if ( ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowNode ||
        ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowSlider ||
        ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowGroup) {
 
     GlowNodeClass *base_nc = ((GrowNode *)object)->nc->get_base_nc();
-    *dyn_type = base_nc->dyn_type;
-    *dyn_action_type = base_nc->dyn_action_type;
+    *dyn_type1 = base_nc->dyn_type1;
+    *dyn_type2 = base_nc->dyn_type2;
+    *dyn_action_type1 = base_nc->dyn_action_type1;
+    *dyn_action_type2 = base_nc->dyn_action_type2;
   }
   else {
-    *dyn_type = 0;
-    *dyn_action_type = 0;
+    *dyn_type1 = 0;
+    *dyn_type2 = 0;
+    *dyn_action_type1 = 0;
+    *dyn_action_type2 = 0;
   }
 }
 
@@ -4241,12 +4256,14 @@ void grow_GetObjectClassCycle( grow_tObject object, glow_eCycle *cycle)
   *cycle = base_nc->cycle;
 }
 
-void grow_GetNodeClassDynType( grow_tNodeClass nodeclass, int *dyn_type,
-				 int *dyn_action_type)
+void grow_GetNodeClassDynType( grow_tNodeClass nodeclass, int *dyn_type1, int *dyn_type2, 
+			       int *dyn_action_type1, int *dyn_action_type2)
 {
   GlowNodeClass *base_nc = ((GlowNodeClass *)nodeclass)->get_base_nc();
-  *dyn_type = base_nc->dyn_type;
-  *dyn_action_type = base_nc->dyn_action_type;
+  *dyn_type1 = base_nc->dyn_type1;
+  *dyn_type2 = base_nc->dyn_type2;
+  *dyn_action_type1 = base_nc->dyn_action_type1;
+  *dyn_action_type2 = base_nc->dyn_action_type2;
 }
 
 void grow_GetObjectClassUserData( grow_tObject object, void **user_data)
@@ -4255,10 +4272,12 @@ void grow_GetObjectClassUserData( grow_tObject object, void **user_data)
   base_nc->get_user_data( user_data);
 }
 
-void grow_GetSubGraphDynType( grow_tCtx ctx, int *dyn_type, int *dyn_action_type)
+void grow_GetSubGraphDynType( grow_tCtx ctx, int *dyn_type1, int *dyn_type2, int *dyn_action_type1, int *dyn_action_type2)
 {
-  *dyn_type = ctx->dyn_type;
-  *dyn_action_type = ctx->dyn_action_type;
+  *dyn_type1 = ctx->dyn_type1;
+  *dyn_type2 = ctx->dyn_type2;
+  *dyn_action_type1 = ctx->dyn_action_type1;
+  *dyn_action_type2 = ctx->dyn_action_type2;
 }
 
 void grow_GetSubGraphTraceColor( grow_tCtx ctx, glow_eDrawType *color,
@@ -4556,6 +4575,14 @@ void grow_SetAxisConf( grow_tObject object, double max_val, double min_val,
   else if ( ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowAxisArc)
     ((GrowAxisArc *)object)->set_conf( max_val, min_val, no_of_lines,
 				       long_quot, value_quot, rot, format);
+}
+
+void grow_SetAxisRange( grow_tObject object, double minval, double maxval)
+{
+  if ( ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowAxis)
+    ((GrowAxis *)object)->set_range( minval, maxval);
+  else if ( ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowAxisArc)
+    ((GrowAxisArc *)object)->set_range( minval, maxval);
 }
 
 void grow_SetModified( grow_tCtx ctx, int modified)

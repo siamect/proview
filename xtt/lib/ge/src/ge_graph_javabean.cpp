@@ -69,8 +69,10 @@ int Graph::export_javabean( char *filename, char *bean_name)
   char beaninfo_filename[120];
   char *s;
   double x0, x1, y0, y1;
-  int trace_type;
-  int dyn_action_type;
+  int trace_type1;
+  int trace_type2;
+  int dyn_action_type1;
+  int dyn_action_type2;
   glow_eDrawType trace_color;
   glow_eDrawType trace_color2;
   char low_bean_name[80];
@@ -80,10 +82,10 @@ int Graph::export_javabean( char *filename, char *bean_name)
 
   cdh_ToLower( low_bean_name, bean_name);
 
-  grow_GetSubGraphDynType( grow->ctx, &trace_type, &dyn_action_type);
+  grow_GetSubGraphDynType( grow->ctx, &trace_type1, &trace_type2, &dyn_action_type1, &dyn_action_type2);
   grow_GetSubGraphTraceColor( grow->ctx, &trace_color, &trace_color2);
   if ( grow_IsSlider( grow->ctx))
-    trace_type = graph_eTrace_Slider;
+    trace_type1 = graph_eTrace_Slider;
 
   grow_GetSubgraphAnnotNumbers( grow->ctx, &numbers, &annot_cnt);
 
@@ -96,7 +98,7 @@ int Graph::export_javabean( char *filename, char *bean_name)
   }
   fp.open( fname);
 
-  switch ( trace_type)
+  switch ( trace_type1)
   {
     case graph_eTrace_SetDig:
     case graph_eTrace_ResetDig:
@@ -126,7 +128,7 @@ int Graph::export_javabean( char *filename, char *bean_name)
 "  Dimension size;" << endl <<
 "  Object root;" << endl <<
 "  JopEngine en;" << endl;
-      switch ( trace_type)
+      switch ( trace_type1)
       {
         case graph_eTrace_SetDig:
         case graph_eTrace_SetDigWithTone:
@@ -282,7 +284,7 @@ endl <<
       fp <<
 "  public Dimension getPreferredSize() { return size;}" << endl <<
 "  public Dimension getMinimumSize() { return size;}" << endl;
-      switch ( trace_type)
+      switch ( trace_type1)
       {
         case graph_eTrace_SetDig:
         case graph_eTrace_ResetDig:
@@ -376,7 +378,7 @@ endl <<
 "      }" << endl <<
 "      valueTextOld = valueText;" << endl <<
 "    }" << endl;
-      switch ( trace_type)
+      switch ( trace_type1)
       {
         case graph_eTrace_SetDig:
         case graph_eTrace_ResetDig:
@@ -521,7 +523,7 @@ endl <<
 "  public Dimension getPreferredSize() { return size;}" << endl <<
 "  public Dimension getMinimumSize() { return size;}" << endl;
 
-  switch ( trace_type)
+  switch ( trace_type1)
   {
     case graph_eTrace_DigWithError:
     {  
@@ -968,7 +970,7 @@ endl <<
 "      _rotate.setDisplayName(\"rotate\");" << endl <<
 "      _rotate.setShortDescription(\"rotate\");" << endl;
 
-  switch ( trace_type)
+  switch ( trace_type1)
   {
     case graph_eTrace_SetDig:
     case graph_eTrace_ResetDig:
@@ -1386,20 +1388,22 @@ int Graph::export_gejava_nodeclass( ofstream& fp, grow_tNodeClass nodeclass)
 {
   char bean_name[40];
   double x0, x1, y0, y1;
-  int dyn_type;
-  int dyn_action_type;
+  int dyn_type1;
+  int dyn_type2;
+  int dyn_action_type1;
+  int dyn_action_type2;
   int pages;
   grow_tObject 	*objectlist, *object_p;
   int 		object_cnt;
   int i;
 
   grow_GetNodeClassJavaName( nodeclass, bean_name);
-  grow_GetNodeClassDynType( nodeclass, &dyn_type, &dyn_action_type);
+  grow_GetNodeClassDynType( nodeclass, &dyn_type1, &dyn_type2, &dyn_action_type1, &dyn_action_type2);
 
   grow_MeasureNodeClassJavaBean( nodeclass, &x1, &x0, &y1, &y0);
   pages = grow_GetNodeClassPages( nodeclass);
 
-  if ( dyn_action_type & ge_mActionType_ValueInput) {
+  if ( dyn_action_type1 & ge_mActionType1_ValueInput) {
     glow_eDrawType annot_background = (glow_eDrawType) 31;
     grow_GetNodeClassAnnotBackground( nodeclass, &annot_background);
 
@@ -2034,8 +2038,10 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
 
 int Graph::export_ObjectTraceAttr( ofstream& fp, grow_tObject object, int cnt)
 {
-  int			dyn_type;
-  int			dyn_action_type;
+  int			dyn_type1;
+  int			dyn_type2;
+  int			dyn_action_type1;
+  int			dyn_action_type2;
   glow_sTraceData	*trace_data;
   glow_eDrawType 	trace_color;
   glow_eDrawType 	trace_color2;
@@ -2055,9 +2061,9 @@ int Graph::export_ObjectTraceAttr( ofstream& fp, grow_tObject object, int cnt)
   sprintf( &var_name[strlen(var_name)], "%d", cnt);
 
   // todo
-  dyn_type = (graph_eTrace) trace_data->attr_type;
-  if ( dyn_type == graph_eTrace_Inherit)
-    grow_GetObjectClassDynType( object, &dyn_type, &dyn_action_type);
+  dyn_type1 = (graph_eTrace) trace_data->attr_type;
+  if ( dyn_type1 == graph_eTrace_Inherit)
+    grow_GetObjectClassDynType( object, &dyn_type1, &dyn_type2, &dyn_action_type1, &dyn_action_type2);
 
   trace_color = trace_data->color;
   if ( trace_color == glow_eDrawType_Inherit)
@@ -2067,10 +2073,10 @@ int Graph::export_ObjectTraceAttr( ofstream& fp, grow_tObject object, int cnt)
     grow_GetObjectClassTraceColor( object, &color, &trace_color2);
   
   // dyn_type No equals Inherit from class
-  if ( dyn_type == graph_eTrace_No)
-    dyn_type = graph_eTrace_Inherit;
+  if ( dyn_type1 == graph_eTrace_No)
+    dyn_type1 = graph_eTrace_Inherit;
 
-  switch ( dyn_type)
+  switch ( dyn_type1)
   {
     case graph_eTrace_Dig:
     case graph_eTrace_DigWithCommand:
@@ -2207,12 +2213,14 @@ int Graph::export_GejavaObjectTraceAttr( ofstream& fp, grow_tObject object, int 
   int			*numbers;
   char			annot_str[200];
   GeDyn			*dyn;
-  int			dyn_type;
-  int			dyn_action_type;
+  int			dyn_type1;
+  int			dyn_type2;
+  int			dyn_action_type1;
+  int			dyn_action_type2;
 
   grow_GetUserData( object, (void **)&dyn);
   grow_GetObjectClassJavaName( object, class_name);
-  grow_GetObjectClassDynType( object, &dyn_type, &dyn_action_type);
+  grow_GetObjectClassDynType( object, &dyn_type1, &dyn_type2, &dyn_action_type1, &dyn_action_type2);
 
   strcpy( var_name, class_name);
   var_name[0] = _tolower(var_name[0]);
@@ -2229,7 +2237,7 @@ int Graph::export_GejavaObjectTraceAttr( ofstream& fp, grow_tObject object, int 
         fp <<
 "    " << var_name << ".setAnnot" << numbers[i] << "(\"" << annot_str << "\");" << endl;
     }
-    if ( dyn_action_type & ge_mActionType_ValueInput) {
+    if ( dyn_action_type1 & ge_mActionType1_ValueInput) {
       // Set text size of GeTextField
       double tsize;
       int sts;
@@ -2275,7 +2283,7 @@ int Graph::export_BarTraceAttr( ofstream& fp, grow_tObject object, int cnt)
   sprintf( &var_name[strlen(var_name)], "%d", cnt);
 
   for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
-    if ( elem->dyn_type == ge_mDynType_Bar) {
+    if ( elem->dyn_type1 == ge_mDynType1_Bar) {
       if ( strcmp( ((GeBar *)elem)->attribute, "") != 0)
 	fp <<
 "    " << var_name << ".setPwrAttribute(\"" << ((GeBar *)elem)->attribute << "\");" << endl;
@@ -2288,9 +2296,9 @@ int Graph::export_BarTraceAttr( ofstream& fp, grow_tObject object, int cnt)
     }
     break;
   }
-  if ( dyn->total_action_type & ~ge_mActionType_Inherit) {
+  if ( dyn->total_action_type1 & ~ge_mActionType1_Inherit) {
     fp <<
-"    " << var_name << ".dd.setActionType(" << (int)dyn->total_action_type << ");" << endl <<
+"    " << var_name << ".dd.setActionType(" << (int)dyn->total_action_type1 << ");" << endl <<
 "    " << var_name << ".dd.setAccess(" << (int)dyn->access << ");" << endl;
 
     dyn->export_java( object, fp, var_name);
@@ -2313,7 +2321,7 @@ int Graph::export_TrendTraceAttr( ofstream& fp, grow_tObject object, int cnt)
 
   for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
 
-    if ( elem->dyn_type == ge_mDynType_Trend) {
+    if ( elem->dyn_type1 == ge_mDynType1_Trend) {
       if ( strcmp( ((GeTrend *)elem)->attribute1, "") != 0)
 	fp <<
 "    " << var_name << ".setPwrAttribute1(\"" << ((GeTrend *)elem)->attribute1 << "\");" << endl;
@@ -2335,9 +2343,9 @@ int Graph::export_TrendTraceAttr( ofstream& fp, grow_tObject object, int cnt)
     }
     break;
   }
-  if ( dyn->total_action_type & ~ge_mActionType_Inherit) {
+  if ( dyn->total_action_type1 & ~ge_mActionType1_Inherit) {
     fp <<
-"    " << var_name << ".dd.setActionType(" << (int)dyn->total_action_type << ");" << endl <<
+"    " << var_name << ".dd.setActionType(" << (int)dyn->total_action_type1 << ");" << endl <<
 "    " << var_name << ".dd.setAccess(" << (int)dyn->access << ");" << endl;
 
     dyn->export_java( object, fp, var_name);
@@ -2359,7 +2367,7 @@ int Graph::export_PieTraceAttr( ofstream& fp, grow_tObject object, int cnt)
   sprintf( &var_name[strlen(var_name)], "%d", cnt);
 
   for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
-    if ( elem->dyn_type == ge_mDynType_Pie) {
+    if ( elem->dyn_type1 == ge_mDynType1_Pie) {
       fp <<
 "    " << var_name << ".setPwrAttribute(new String[]{";
 
@@ -2376,9 +2384,9 @@ int Graph::export_PieTraceAttr( ofstream& fp, grow_tObject object, int cnt)
     }
     break;
   }
-  if ( dyn->total_action_type & ~ge_mActionType_Inherit) {
+  if ( dyn->total_action_type1 & ~ge_mActionType1_Inherit) {
     fp <<
-"    " << var_name << ".dd.setActionType(" << (int)dyn->total_action_type << ");" << endl <<
+"    " << var_name << ".dd.setActionType(" << (int)dyn->total_action_type1 << ");" << endl <<
 "    " << var_name << ".dd.setAccess(" << (int)dyn->access << ");" << endl;
 
     dyn->export_java( object, fp, var_name);
@@ -2400,7 +2408,7 @@ int Graph::export_BarChartTraceAttr( ofstream& fp, grow_tObject object, int cnt)
   sprintf( &var_name[strlen(var_name)], "%d", cnt);
 
   for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
-    if ( elem->dyn_type == ge_mDynType_BarChart) {
+    if ( elem->dyn_type1 == ge_mDynType1_BarChart) {
       fp <<
 "    " << var_name << ".setPwrAttribute(new String[]{";
 
@@ -2416,9 +2424,9 @@ int Graph::export_BarChartTraceAttr( ofstream& fp, grow_tObject object, int cnt)
     }
     break;
   }
-  if ( dyn->total_action_type & ~ge_mActionType_Inherit) {
+  if ( dyn->total_action_type1 & ~ge_mActionType1_Inherit) {
     fp <<
-"    " << var_name << ".dd.setActionType(" << (int)dyn->total_action_type << ");" << endl <<
+"    " << var_name << ".dd.setActionType(" << (int)dyn->total_action_type1 << ");" << endl <<
 "    " << var_name << ".dd.setAccess(" << (int)dyn->access << ");" << endl;
 
     dyn->export_java( object, fp, var_name);

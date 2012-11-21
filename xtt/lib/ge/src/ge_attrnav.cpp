@@ -75,95 +75,95 @@
 #define ATTRNAV__ITEM_NOCREA 8
 #define ATTRNAV__SUCCESS 1
 
-static attrnav_sEnumElement elem_dyn_type[] = {
-	{ (int) ge_mDynType_Inherit		, "Inherit"},
-	{ (int) ge_mDynType_Tone		, "Tone"},
-	{ (int) ge_mDynType_DigLowColor		, "DigLowColor"},
-	{ (int) ge_mDynType_DigColor		, "DigColor"},
-	{ (int) ge_mDynType_AnalogColor		, "AnalogColor"},
-	{ (int) ge_mDynType_StatusColor		, "StatusColor"},
-	{ (int) ge_mDynType_DigWarning		, "DigWarning"},
-	{ (int) ge_mDynType_DigError		, "DigError"},
-	{ (int) ge_mDynType_DigFlash		, "DigFlash"},
-	{ (int) ge_mDynType_FillLevel       	, "FillLevel"},
-	{ (int) ge_mDynType_Invisible		, "Invisible"},
-	{ (int) ge_mDynType_DigBorder		, "DigBorder"},
-	{ (int) ge_mDynType_DigText		, "DigText"},
-	{ (int) ge_mDynType_AnalogText		, "AnalogText"},
-	{ (int) ge_mDynType_Value		, "Value"},
-	{ (int) ge_mDynType_Rotate		, "Rotate"},
-	{ (int) ge_mDynType_Move		, "Move"},
-	{ (int) ge_mDynType_AnalogShift		, "AnalogShift"},
-	{ (int) ge_mDynType_DigShift		, "DigShift"},
-	{ (int) ge_mDynType_Animation		, "Animation"},
-	{ (int) ge_mDynType_Bar			, "Bar"},
-	{ (int) ge_mDynType_Trend		, "Trend"},
-	{ (int) ge_mDynType_FastCurve		, "FastCurve"},
-	{ (int) ge_mDynType_XY_Curve		, "XY_Curve"},
-	{ (int) ge_mDynType_SliderBackground   	, "SliderBackground"},
-	{ (int) ge_mDynType_Video		, "Video"},
-	{ (int) ge_mDynType_Table		, "Table"},
-	{ (int) ge_mDynType_HostObject		, "HostObject"},
-	{ (int) ge_mDynType_DigSound		, "DigSound"},
-	{ (int) ge_mDynType_DigCommand		, "DigCommand"},
+static attrnav_sEnumElement elem_dyn_type1[] = {
+	{ (int) ge_mDynType1_Inherit		, "Inherit"},
+	{ (int) ge_mDynType1_Tone		, "Tone"},
+	{ (int) ge_mDynType1_DigLowColor		, "DigLowColor"},
+	{ (int) ge_mDynType1_DigColor		, "DigColor"},
+	{ (int) ge_mDynType1_AnalogColor		, "AnalogColor"},
+	{ (int) ge_mDynType1_StatusColor		, "StatusColor"},
+	{ (int) ge_mDynType1_DigWarning		, "DigWarning"},
+	{ (int) ge_mDynType1_DigError		, "DigError"},
+	{ (int) ge_mDynType1_DigFlash		, "DigFlash"},
+	{ (int) ge_mDynType1_FillLevel       	, "FillLevel"},
+	{ (int) ge_mDynType1_Invisible		, "Invisible"},
+	{ (int) ge_mDynType1_DigBorder		, "DigBorder"},
+	{ (int) ge_mDynType1_DigText		, "DigText"},
+	{ (int) ge_mDynType1_AnalogText		, "AnalogText"},
+	{ (int) ge_mDynType1_Value		, "Value"},
+	{ (int) ge_mDynType1_Rotate		, "Rotate"},
+	{ (int) ge_mDynType1_Move		, "Move"},
+	{ (int) ge_mDynType1_AnalogShift		, "AnalogShift"},
+	{ (int) ge_mDynType1_DigShift		, "DigShift"},
+	{ (int) ge_mDynType1_Animation		, "Animation"},
+	{ (int) ge_mDynType1_Bar			, "Bar"},
+	{ (int) ge_mDynType1_Trend		, "Trend"},
+	{ (int) ge_mDynType1_FastCurve		, "FastCurve"},
+	{ (int) ge_mDynType1_XY_Curve		, "XY_Curve"},
+	{ (int) ge_mDynType1_SliderBackground   	, "SliderBackground"},
+	{ (int) ge_mDynType1_Video		, "Video"},
+	{ (int) ge_mDynType1_Table		, "Table"},
+	{ (int) ge_mDynType1_HostObject		, "HostObject"},
+	{ (int) ge_mDynType1_DigSound		, "DigSound"},
+	{ (int) ge_mDynType1_DigCommand		, "DigCommand"},
 	{ 0, ""}};
 
-static attrnav_sEnumElement elem_dyn_type_tone[] = {
-	{ (int) ge_mDynType_Inherit		, "Inherit"},
-	{ (int) ge_mDynType_Tone		, "Tone"},
-	{ (int) ge_mDynType_DigLowColor		, "DigLowTone"},
-	{ (int) ge_mDynType_DigColor		, "DigTone"},
-	{ (int) ge_mDynType_AnalogColor		, "AnalogTone"},
-	{ (int) ge_mDynType_StatusColor		, "StatusTone"},
-	{ (int) ge_mDynType_DigWarning     	, "DigToneWarning"},
-	{ (int) ge_mDynType_DigError       	, "DigToneError"},
-	{ (int) ge_mDynType_DigFlash       	, "DigFlash"},
-	{ (int) ge_mDynType_FillLevel       	, "FillLevel"},
-	{ (int) ge_mDynType_Invisible		, "Invisible"},
-	{ (int) ge_mDynType_DigBorder		, "DigBorder"},
-	{ (int) ge_mDynType_DigText		, "DigText"},
-	{ (int) ge_mDynType_AnalogText		, "AnalogText"},
-	{ (int) ge_mDynType_Value		, "Value"},
-	{ (int) ge_mDynType_Rotate		, "Rotate"},
-	{ (int) ge_mDynType_Move		, "Move"},
-	{ (int) ge_mDynType_AnalogShift		, "AnalogShift"},
-	{ (int) ge_mDynType_DigShift		, "DigShift"},
-	{ (int) ge_mDynType_Animation		, "Animation"},
-	{ (int) ge_mDynType_Bar			, "Bar"},
-	{ (int) ge_mDynType_Trend		, "Trend"},
-	{ (int) ge_mDynType_FastCurve		, "FastCurve"},
-	{ (int) ge_mDynType_XY_Curve		, "XY_Curve"},
-	{ (int) ge_mDynType_SliderBackground   	, "SliderBackground"},
-	{ (int) ge_mDynType_Video		, "Video"},
-	{ (int) ge_mDynType_Table		, "Table"},
-	{ (int) ge_mDynType_HostObject		, "HostObject"},
-	{ (int) ge_mDynType_DigSound		, "DigSound"},
-	{ (int) ge_mDynType_DigCommand		, "DigCommand"},
+static attrnav_sEnumElement elem_dyn_type1_tone[] = {
+	{ (int) ge_mDynType1_Inherit		, "Inherit"},
+	{ (int) ge_mDynType1_Tone		, "Tone"},
+	{ (int) ge_mDynType1_DigLowColor		, "DigLowTone"},
+	{ (int) ge_mDynType1_DigColor		, "DigTone"},
+	{ (int) ge_mDynType1_AnalogColor		, "AnalogTone"},
+	{ (int) ge_mDynType1_StatusColor		, "StatusTone"},
+	{ (int) ge_mDynType1_DigWarning     	, "DigToneWarning"},
+	{ (int) ge_mDynType1_DigError       	, "DigToneError"},
+	{ (int) ge_mDynType1_DigFlash       	, "DigFlash"},
+	{ (int) ge_mDynType1_FillLevel       	, "FillLevel"},
+	{ (int) ge_mDynType1_Invisible		, "Invisible"},
+	{ (int) ge_mDynType1_DigBorder		, "DigBorder"},
+	{ (int) ge_mDynType1_DigText		, "DigText"},
+	{ (int) ge_mDynType1_AnalogText		, "AnalogText"},
+	{ (int) ge_mDynType1_Value		, "Value"},
+	{ (int) ge_mDynType1_Rotate		, "Rotate"},
+	{ (int) ge_mDynType1_Move		, "Move"},
+	{ (int) ge_mDynType1_AnalogShift		, "AnalogShift"},
+	{ (int) ge_mDynType1_DigShift		, "DigShift"},
+	{ (int) ge_mDynType1_Animation		, "Animation"},
+	{ (int) ge_mDynType1_Bar			, "Bar"},
+	{ (int) ge_mDynType1_Trend		, "Trend"},
+	{ (int) ge_mDynType1_FastCurve		, "FastCurve"},
+	{ (int) ge_mDynType1_XY_Curve		, "XY_Curve"},
+	{ (int) ge_mDynType1_SliderBackground   	, "SliderBackground"},
+	{ (int) ge_mDynType1_Video		, "Video"},
+	{ (int) ge_mDynType1_Table		, "Table"},
+	{ (int) ge_mDynType1_HostObject		, "HostObject"},
+	{ (int) ge_mDynType1_DigSound		, "DigSound"},
+	{ (int) ge_mDynType1_DigCommand		, "DigCommand"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_action_type[] = {
-	{ (int) ge_mActionType_Inherit		, "Inherit"},
-	{ (int) ge_mActionType_PopupMenu	, "PopupMenu"},
-	{ (int) ge_mActionType_SetDig		, "SetDig"},
-	{ (int) ge_mActionType_ResetDig		, "ResetDig"},
-	{ (int) ge_mActionType_ToggleDig	, "ToggleDig"},
-	{ (int) ge_mActionType_StoDig		, "StoDig"},
-	{ (int) ge_mActionType_SetValue		, "SetValue"},
-	{ (int) ge_mActionType_Command		, "Command"},
-	{ (int) ge_mActionType_CommandDoubleClick , "CommandDoubleClick"},
-	{ (int) ge_mActionType_Help		, "Help"},
-	{ (int) ge_mActionType_OpenGraph	, "OpenGraph"},
-	{ (int) ge_mActionType_CloseGraph	, "CloseGraph"},
-	{ (int) ge_mActionType_OpenURL		, "OpenURL"},
-	{ (int) ge_mActionType_Confirm		, "Confirm"},
-	{ (int) ge_mActionType_IncrAnalog	, "IncrAnalog"},
-	{ (int) ge_mActionType_RadioButton	, "RadioButton"},
-	{ (int) ge_mActionType_ValueInput	, "ValueInput"},
-	{ (int) ge_mActionType_TipText		, "ToolTip"},
-	{ (int) ge_mActionType_InputFocus      	, "InputFocus"},
-	{ (int) ge_mActionType_PulldownMenu     , "PulldownMenu"},
-	{ (int) ge_mActionType_OptionMenu       , "OptionMenu"},
-	{ (int) ge_mActionType_Slider		, "Slider"},
+	{ (int) ge_mActionType1_Inherit		, "Inherit"},
+	{ (int) ge_mActionType1_PopupMenu	, "PopupMenu"},
+	{ (int) ge_mActionType1_SetDig		, "SetDig"},
+	{ (int) ge_mActionType1_ResetDig		, "ResetDig"},
+	{ (int) ge_mActionType1_ToggleDig	, "ToggleDig"},
+	{ (int) ge_mActionType1_StoDig		, "StoDig"},
+	{ (int) ge_mActionType1_SetValue		, "SetValue"},
+	{ (int) ge_mActionType1_Command		, "Command"},
+	{ (int) ge_mActionType1_CommandDoubleClick , "CommandDoubleClick"},
+	{ (int) ge_mActionType1_Help		, "Help"},
+	{ (int) ge_mActionType1_OpenGraph	, "OpenGraph"},
+	{ (int) ge_mActionType1_CloseGraph	, "CloseGraph"},
+	{ (int) ge_mActionType1_OpenURL		, "OpenURL"},
+	{ (int) ge_mActionType1_Confirm		, "Confirm"},
+	{ (int) ge_mActionType1_IncrAnalog	, "IncrAnalog"},
+	{ (int) ge_mActionType1_RadioButton	, "RadioButton"},
+	{ (int) ge_mActionType1_ValueInput	, "ValueInput"},
+	{ (int) ge_mActionType1_TipText		, "ToolTip"},
+	{ (int) ge_mActionType1_InputFocus      	, "InputFocus"},
+	{ (int) ge_mActionType1_PulldownMenu     , "PulldownMenu"},
+	{ (int) ge_mActionType1_OptionMenu       , "OptionMenu"},
+	{ (int) ge_mActionType1_Slider		, "Slider"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_color[] = {
@@ -998,9 +998,9 @@ static attrnav_sEnum enum_types[] = {
 
 static attrnav_sEnum mask_types[] = {
 	{ (int) glow_eType_Access, 	(attrnav_sEnumElement *) &elem_access},
-	{ (int) ge_eAttrType_DynType, 	(attrnav_sEnumElement *) &elem_dyn_type},
-	{ (int) ge_eAttrType_DynTypeTone, (attrnav_sEnumElement *) &elem_dyn_type_tone},
-	{ (int) ge_eAttrType_ActionType, (attrnav_sEnumElement *) &elem_action_type},
+	{ (int) ge_eAttrType_DynType1, 	(attrnav_sEnumElement *) &elem_dyn_type1},
+	{ (int) ge_eAttrType_DynTypeTone, (attrnav_sEnumElement *) &elem_dyn_type1_tone},
+	{ (int) ge_eAttrType_ActionType1, (attrnav_sEnumElement *) &elem_action_type},
 	{ (int) ge_eAttrType_InstanceMask, (attrnav_sEnumElement *) &elem_instance_mask},
 	{ (int) ge_eAttrType_InputFocus, (attrnav_sEnumElement *) &elem_inputfocus_mask},
 	{ 0, NULL}};
@@ -1059,9 +1059,9 @@ int  attrnav_attr_string_to_value( int type_id, char *value_str,
     case glow_eType_TextSize: 
     case glow_eType_Gradient: 
     case glow_eType_HotIndication: 
-    case ge_eAttrType_DynType:
+    case ge_eAttrType_DynType1:
     case ge_eAttrType_DynTypeTone:
-    case ge_eAttrType_ActionType:
+    case ge_eAttrType_ActionType1:
     case ge_eAttrType_AnimSequence:
     case ge_eAttrType_LimitType:
     case ge_eAttrType_InstanceMask:
@@ -1194,9 +1194,9 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
       break;
     }
     case glow_eType_Access:
-    case ge_eAttrType_DynType:
+    case ge_eAttrType_DynType1:
     case ge_eAttrType_DynTypeTone:
-    case ge_eAttrType_ActionType:
+    case ge_eAttrType_ActionType1:
     case ge_eAttrType_InstanceMask:
     case ge_eAttrType_InputFocus:
     {
@@ -1644,9 +1644,9 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 	     *(unsigned int *)((ItemEnum *)item)->value_p |= 
 			((ItemMask *)item)->mask;
           }
-	  if ( (((ItemMask *)item)->type_id == ge_eAttrType_DynType ||
+	  if ( (((ItemMask *)item)->type_id == ge_eAttrType_DynType1 ||
 	        ((ItemMask *)item)->type_id == ge_eAttrType_DynTypeTone ||
-		((ItemMask *)item)->type_id == ge_eAttrType_ActionType ||
+		((ItemMask *)item)->type_id == ge_eAttrType_ActionType1 ||
 		((ItemMask *)item)->type_id == ge_eAttrType_InstanceMask) &&
 	       attrnav->reconfigure_attr_cb) {
 	    (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
@@ -1746,9 +1746,9 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 	         *(unsigned int *)((ItemMask *)item)->value_p |= 
 			((ItemMask *)item)->mask;
 
-	       if ( (((ItemMask *)item)->type_id == ge_eAttrType_DynType ||
+	       if ( (((ItemMask *)item)->type_id == ge_eAttrType_DynType1 ||
 	             ((ItemMask *)item)->type_id == ge_eAttrType_DynTypeTone ||
-		     ((ItemMask *)item)->type_id == ge_eAttrType_ActionType ||
+		     ((ItemMask *)item)->type_id == ge_eAttrType_ActionType1 ||
 		     ((ItemMask *)item)->type_id == ge_eAttrType_OptionMenuType ||
 		     ((ItemMask *)item)->type_id == ge_eAttrType_InstanceMask) &&
 		    attrnav->reconfigure_attr_cb) {
@@ -2214,9 +2214,9 @@ ItemLocal::ItemLocal( AttrNav *attrnav, const char *item_name, const char *attr,
     case glow_eType_TextSize:
     case glow_eType_Gradient: 
     case glow_eType_HotIndication: 
-    case ge_eAttrType_DynType:
+    case ge_eAttrType_DynType1:
     case ge_eAttrType_DynTypeTone:
-    case ge_eAttrType_ActionType:
+    case ge_eAttrType_ActionType1:
     case ge_eAttrType_AnimSequence:
     case ge_eAttrType_LimitType:
     case ge_eAttrType_InstanceMask:

@@ -90,9 +90,9 @@
 
 //! Type of attributes. Should not collide with glow_eType
 typedef enum {
-  ge_eAttrType_DynType 		= glow_eType_DynType,  		//!< DynType.
+  ge_eAttrType_DynType1        	= glow_eType_DynType1,  	//!< DynType.
   ge_eAttrType_DynTypeTone 	= 1001,				//!< DynType with color tone.
-  ge_eAttrType_ActionType 	= glow_eType_ActionType,	//!< ActionType.
+  ge_eAttrType_ActionType1 	= glow_eType_ActionType1,	//!< ActionType.
   ge_eAttrType_AnimSequence    	= 1003,				//!< Animation sequence.
   ge_eAttrType_LimitType    	= 1004,				//!< Limit type (Gt or Lt).
   ge_eAttrType_InstanceMask    	= 1005,				//!< Instance mask.
@@ -100,7 +100,9 @@ typedef enum {
   ge_eAttrType_Dyn	 	= 1007,				//!< Dynamic data.
   ge_eAttrType_ScaleType      	= 1008,				//!< Scale type.
   ge_eAttrType_CurveDataType   	= 1009,				//!< Data type for XY_Curve.
-  ge_eAttrType_OptionMenuType   = 1010				//!< OptionMenu type.
+  ge_eAttrType_OptionMenuType   = 1010,				//!< OptionMenu type.
+  ge_eAttrType_DynType2        	= glow_eType_DynType2,  	//!< DynType mask 2.
+  ge_eAttrType_ActionType2      = glow_eType_ActionType2,  	//!< ActionType mask 2.
 } ge_eAttrType;
 
 //! Graph mode.
@@ -1293,8 +1295,8 @@ class Graph {
     \param x		x coordinate for object.
     \param y		y coordinate for object.
   */
-  void create_axis( grow_tObject *object, double x, double y);
-  void create_axisarc( grow_tObject *object, double x, double y);
+  void create_axis( grow_tObject *object, double x, double y, int dynamic);
+  void create_axisarc( grow_tObject *object, double x, double y, int dynamic);
   void create_pie( grow_tObject *object, double x, double y);
   void create_barchart( grow_tObject *object, double x, double y);
 

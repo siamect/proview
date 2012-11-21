@@ -1892,10 +1892,13 @@ extern "C" {
   //! Get dyntype and actiontype for the nodeclass of an object.
   /*!
     \param object	Object.
-    \param dyn_type	Dyntype of the object's nodeclass.
-    \param dyn_action_type Actiontype of the object's nodeclass.
+    \param dyn_type1	Dyntype of the object's nodeclass mask 1.
+    \param dyn_type2	Dyntype of the object's nodeclass mask 2.
+    \param dyn_action_type1 Actiontype of the object's nodeclass mask 1.
+    \param dyn_action_type2 Actiontype of the object's nodeclass mask 2.
   */
-  void grow_GetObjectClassDynType( grow_tObject object, int *dyn_type, int *dyn_action_type);
+void grow_GetObjectClassDynType( grow_tObject object, int *dyn_type1, int *dyn_type2,
+				 int *dyn_action_type1, int *dyn_action_type2);
 
   //! Get cycle for the nodeclass of an object.
   /*!
@@ -1914,18 +1917,23 @@ extern "C" {
   //! Get nodeclass dyntype and actiontype.
   /*!
     \param nodeclass	Nodeclass.
-    \param dyn_type	Dyntype of the nodeclass.
-    \param dyn_action_type Actiontype of the nodeclass.
+    \param dyn_type1	Dyntype of the nodeclass mask 1.
+    \param dyn_type2	Dyntype of the nodeclass mask 2.
+    \param dyn_action_type1 Actiontype of the nodeclass mask 1.
+    \param dyn_action_type2 Actiontype of the nodeclass mask 2.
   */
-  void grow_GetNodeClassDynType( grow_tNodeClass nodeclass, int *dyn_type, int *dyn_action_type);
+  void grow_GetNodeClassDynType( grow_tNodeClass nodeclass, int *dyn_type1, int *dyn_type2, 
+				 int *dyn_action_type1, int *dyn_action_type2);
 
   //! Get the dyntype and actiontype of a grow subgraph context.
   /*!
     \param ctx		Grow subgraph context.
-    \param dyn_type	Dyntype of the subgraph context.
-    \param dyn_action_type Actiontype of the subgraph context.
+    \param dyn_type1	Dyntype of the subgraph context.
+    \param dyn_type2	Dyntype of the subgraph context.
+    \param dyn_action_type1 Actiontype of the subgraph context.
+    \param dyn_action_type2 Actiontype of the subgraph context.
   */
-  void grow_GetSubGraphDynType( grow_tCtx ctx, int *dyn_type, int *dyn_action_type);
+  void grow_GetSubGraphDynType( grow_tCtx ctx, int *dyn_type1, int *dyn_type2, int *dyn_action_type1, int *dyn_action_type2);
 
   //! Get the dynamic colors of a grow subgraph context.
   /*!
@@ -2321,6 +2329,9 @@ extern "C" {
   void grow_SetAxisConf( grow_tObject object, double max_val, double min_val, 
 			 int no_of_lines, int long_quot, int value_quot, double rot, 
 			 const char *format);
+
+  void grow_SetAxisRange( grow_tObject object, double minval, double maxval);
+
 
   //! Set that graph is modified or not since last save.
   /*! 

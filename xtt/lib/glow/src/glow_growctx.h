@@ -86,7 +86,7 @@ class GrowCtx : public GlowCtx {
 	background_color(glow_eDrawType_LineErase), highlight_disabled(0),
 	dynamic(0), dynamicsize(0), arg_cnt(0), x0(0), y0(0), x1(0), y1(0),
 	path_cnt(0),
-        dyn_type(0), dyn_action_type(0),
+        dyn_type1(0), dyn_type2(0), dyn_action_type1(0), dyn_action_type2(0),
 	no_con_obstacle(0), slider(0), slider_cursor_offset(0), 
 	move_restriction(glow_eMoveRestriction_No), restriction_max_limit(0),
 	restriction_min_limit(0), restriction_object(0), subgraph(0),
@@ -888,8 +888,10 @@ class GrowCtx : public GlowCtx {
   double	y1;			//!< High border of graph.
   int		path_cnt;		//!< Number of paths in searchpath
   char		path[10][80];		//!< Search paths where subgraphs and imagefiles are searched for.
-  int		dyn_type;		//!< Dyntype for a subgraph.
-  int		dyn_action_type;	//!< Action type for a subgraph.
+  int		dyn_type1;		//!< Dyntype for a subgraph mask 1.
+  int		dyn_type2;		//!< Dyntype for a subgraph mask 2.
+  int		dyn_action_type1;	//!< Action type for a subgraph mask 1.
+  int		dyn_action_type2;	//!< Action type for a subgraph mask 2.
   glow_eDrawType dyn_color[4];		//!< Dynamic colors for a subgraph.
   int		dyn_attr[4];		//!< Dynamic attributes for a subgraph.
   int		no_con_obstacle;	//!< Subgraph is not an obstacle for a connection.

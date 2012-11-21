@@ -52,7 +52,7 @@
 GlowNodeClass::GlowNodeClass( GrowCtx *glow_ctx, const char *name, 
 	glow_eNodeGroup grp)
   : ctx(glow_ctx), a(10,10), group(grp), dynamic(0), dynamicsize(0),
-    arg_cnt(0), nc_extern(0), dyn_type(0), dyn_action_type(0),
+    arg_cnt(0), nc_extern(0), dyn_type1(0), dyn_type2(0), dyn_action_type1(0), dyn_action_type2(0),
     no_con_obstacle(0), slider(0), animation_count(1),
     y0(0), y1(0), x0(0), x1(0),
     next_nc(0), prev_nc(0), cycle(glow_eCycle_Slow), user_data(0)
@@ -141,8 +141,10 @@ void GlowNodeClass::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_NodeClass_argtype) << endl;  
   for ( i = 0; i < arg_cnt; i++)
     fp << argtype[i] << endl;
-  fp << int(glow_eSave_NodeClass_dyn_type) << FSPACE << dyn_type << endl;
-  fp << int(glow_eSave_NodeClass_dyn_action_type) << FSPACE << dyn_action_type << endl;
+  fp << int(glow_eSave_NodeClass_dyn_type1) << FSPACE << dyn_type1 << endl;
+  fp << int(glow_eSave_NodeClass_dyn_type2) << FSPACE << dyn_type2 << endl;
+  fp << int(glow_eSave_NodeClass_dyn_action_type1) << FSPACE << dyn_action_type1 << endl;
+  fp << int(glow_eSave_NodeClass_dyn_action_type2) << FSPACE << dyn_action_type2 << endl;
   fp << int(glow_eSave_NodeClass_dyn_color1) << FSPACE << int(dyn_color[0]) << endl;
   fp << int(glow_eSave_NodeClass_dyn_color2) << FSPACE << int(dyn_color[1]) << endl;
   fp << int(glow_eSave_NodeClass_dyn_color3) << FSPACE << int(dyn_color[2]) << endl;
@@ -232,8 +234,10 @@ void GlowNodeClass::open( ifstream& fp)
         for ( i = 0; i < arg_cnt; i++)
           fp >> argtype[i];
         break;
-      case glow_eSave_NodeClass_dyn_type: fp >> dyn_type; break; 
-      case glow_eSave_NodeClass_dyn_action_type: fp >> dyn_action_type; break; 
+      case glow_eSave_NodeClass_dyn_type1: fp >> dyn_type1; break; 
+      case glow_eSave_NodeClass_dyn_type2: fp >> dyn_type2; break; 
+      case glow_eSave_NodeClass_dyn_action_type1: fp >> dyn_action_type1; break; 
+      case glow_eSave_NodeClass_dyn_action_type2: fp >> dyn_action_type2; break; 
       case glow_eSave_NodeClass_dyn_color1:
         fp >> tmp;
 	dyn_color[0] = (glow_eDrawType)tmp;
@@ -724,7 +728,7 @@ void GlowNodeClass::get_origo( GlowTransform *t, double *x,
 void GlowNodeClass::convert( glow_eConvert version) 
 {
   a.convert( version);
-  if ( dyn_type == 3 || dyn_type == 4 || dyn_type == 12) {
+  if ( dyn_type1 == 3 || dyn_type1 == 4 || dyn_type1 == 12) {
     if ( (glow_eDrawTone) dyn_color[0] == glow_eDrawTone_YellowGreen)
       dyn_color[0] = (glow_eDrawType) glow_eDrawTone_Yellow;
     if ( (glow_eDrawTone) dyn_color[1] == glow_eDrawTone_YellowGreen)

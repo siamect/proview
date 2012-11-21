@@ -376,117 +376,119 @@ void GeDyn::replace_attribute( char *attribute, int attr_size, char *from, char 
 }
 
 GeDyn::GeDyn( const GeDyn& x) : 
-  elements(0), graph(x.graph), dyn_type(x.dyn_type), total_dyn_type(x.total_dyn_type),
-  action_type(x.action_type), total_action_type(x.total_action_type), access(x.access),
+  elements(0), graph(x.graph), dyn_type1(x.dyn_type1), total_dyn_type1(x.total_dyn_type1),
+  action_type1(x.action_type1), total_action_type1(x.total_action_type1), access(x.access),
   cycle(x.cycle), attr_editor(x.attr_editor)
 {
   GeDynElem *elem, *e;
 
   for ( elem = x.elements; elem; elem = elem->next) {
     e = 0;
-    switch( elem->dyn_type) {
-    case ge_mDynType_DigLowColor:
+    switch( elem->dyn_type1) {
+    case ge_mDynType1_DigLowColor:
       e = new GeDigLowColor((const GeDigLowColor&) *elem); break;
-    case ge_mDynType_DigColor:
+    case ge_mDynType1_DigColor:
       e = new GeDigColor((const GeDigColor&) *elem); break;
-    case ge_mDynType_DigError:
+    case ge_mDynType1_DigError:
       e = new GeDigError((const GeDigError&) *elem); break;
-    case ge_mDynType_DigWarning:
+    case ge_mDynType1_DigWarning:
       e = new GeDigWarning((const GeDigWarning&) *elem); break;
-    case ge_mDynType_DigFlash:
+    case ge_mDynType1_DigFlash:
       e = new GeDigFlash((const GeDigFlash&) *elem); break;
-    case ge_mDynType_Invisible:
+    case ge_mDynType1_Invisible:
       e = new GeInvisible((const GeInvisible&) *elem); break;
-    case ge_mDynType_DigBorder:
+    case ge_mDynType1_DigBorder:
       e = new GeDigBorder((const GeDigBorder&) *elem); break;
-    case ge_mDynType_DigText:
+    case ge_mDynType1_DigText:
       e = new GeDigText((const GeDigText&) *elem); break;
-    case ge_mDynType_Value:
+    case ge_mDynType1_Value:
       e = new GeValue((const GeValue&) *elem); break;
-    case ge_mDynType_AnalogColor:
+    case ge_mDynType1_AnalogColor:
       e = new GeAnalogColor((const GeAnalogColor&) *elem); break;
-    case ge_mDynType_Rotate:
+    case ge_mDynType1_Rotate:
       e = new GeRotate((const GeRotate&) *elem); break;
-    case ge_mDynType_Move:
+    case ge_mDynType1_Move:
       e = new GeMove((const GeMove&) *elem); break;
-    case ge_mDynType_DigShift:
+    case ge_mDynType1_DigShift:
       e = new GeDigShift((const GeDigShift&) *elem); break;
-    case ge_mDynType_AnalogShift:
+    case ge_mDynType1_AnalogShift:
       e = new GeAnalogShift((const GeAnalogShift&) *elem); break;
-    case ge_mDynType_Video:
+    case ge_mDynType1_Video:
       e = new GeVideo((const GeVideo&) *elem); break;
-    case ge_mDynType_Animation:
+    case ge_mDynType1_Animation:
       e = new GeAnimation((const GeAnimation&) *elem); break;
-    case ge_mDynType_Bar:
+    case ge_mDynType1_Bar:
       e = new GeBar((const GeBar&) *elem); break;
-    case ge_mDynType_Trend:
+    case ge_mDynType1_Trend:
       e = new GeTrend((const GeTrend&) *elem); break;
-    case ge_mDynType_FillLevel:
+    case ge_mDynType1_FillLevel:
       e = new GeFillLevel((const GeFillLevel&) *elem); break;
-    case ge_mDynType_FastCurve:
+    case ge_mDynType1_FastCurve:
       e = new GeFastCurve((const GeFastCurve&) *elem); break;
-    case ge_mDynType_AnalogText:
+    case ge_mDynType1_AnalogText:
       e = new GeAnalogText((const GeAnalogText&) *elem); break;
-    case ge_mDynType_Table:
+    case ge_mDynType1_Table:
       e = new GeTable((const GeTable&) *elem); break;
-    case ge_mDynType_StatusColor:
+    case ge_mDynType1_StatusColor:
       e = new GeStatusColor((const GeStatusColor&) *elem); break;
-    case ge_mDynType_HostObject:
+    case ge_mDynType1_HostObject:
       e = new GeHostObject((const GeHostObject&) *elem); break;
-    case ge_mDynType_DigSound:
+    case ge_mDynType1_DigSound:
       e = new GeDigSound((const GeDigSound&) *elem); break;
-    case ge_mDynType_XY_Curve:
+    case ge_mDynType1_XY_Curve:
       e = new GeXY_Curve((const GeXY_Curve&) *elem); break;
-    case ge_mDynType_DigCommand:
+    case ge_mDynType1_DigCommand:
       e = new GeDigCommand((const GeDigCommand&) *elem); break;
-    case ge_mDynType_Pie:
+    case ge_mDynType1_Pie:
       e = new GePie((const GePie&) *elem); break;
-    case ge_mDynType_BarChart:
+    case ge_mDynType1_BarChart:
       e = new GeBarChart((const GeBarChart&) *elem); break;
+    case ge_mDynType2_Axis:
+      e = new GeAxis((const GeAxis&) *elem); break;
     default: ;
     }
-    switch( elem->action_type) {
-    case ge_mActionType_PopupMenu:
+    switch( elem->action_type1) {
+    case ge_mActionType1_PopupMenu:
       e = new GePopupMenu((const GePopupMenu&) *elem); break;
-    case ge_mActionType_SetDig:
+    case ge_mActionType1_SetDig:
       e = new GeSetDig((const GeSetDig&) *elem); break;
-    case ge_mActionType_ResetDig:
+    case ge_mActionType1_ResetDig:
       e = new GeResetDig((const GeResetDig&) *elem); break;
-    case ge_mActionType_ToggleDig:
+    case ge_mActionType1_ToggleDig:
       e = new GeToggleDig((const GeToggleDig&) *elem); break;
-    case ge_mActionType_StoDig:
+    case ge_mActionType1_StoDig:
       e = new GeStoDig((const GeStoDig&) *elem); break;
-    case ge_mActionType_Command:
+    case ge_mActionType1_Command:
       e = new GeCommand((const GeCommand&) *elem); break;
-    case ge_mActionType_CommandDoubleClick: 
+    case ge_mActionType1_CommandDoubleClick: 
       e = new GeCommandDoubleClick((const GeCommandDoubleClick&) *elem); break;
-    case ge_mActionType_Confirm:
+    case ge_mActionType1_Confirm:
       e = new GeConfirm((const GeConfirm&) *elem); break;
-    case ge_mActionType_IncrAnalog:
+    case ge_mActionType1_IncrAnalog:
       e = new GeIncrAnalog((const GeIncrAnalog&) *elem); break;
-    case ge_mActionType_RadioButton:
+    case ge_mActionType1_RadioButton:
       e = new GeRadioButton((const GeRadioButton&) *elem); break;
-    case ge_mActionType_Slider:
+    case ge_mActionType1_Slider:
       e = new GeSlider((const GeSlider&) *elem); break;
-    case ge_mActionType_ValueInput:
+    case ge_mActionType1_ValueInput:
       e = new GeValueInput((const GeValueInput&) *elem); break;
-    case ge_mActionType_TipText:
+    case ge_mActionType1_TipText:
       e = new GeTipText((const GeTipText&) *elem); break;
-    case ge_mActionType_Help:
+    case ge_mActionType1_Help:
       e = new GeHelp((const GeHelp&) *elem); break;
-    case ge_mActionType_OpenGraph:
+    case ge_mActionType1_OpenGraph:
       e = new GeOpenGraph((const GeOpenGraph&) *elem); break;
-    case ge_mActionType_OpenURL:
+    case ge_mActionType1_OpenURL:
       e = new GeOpenURL((const GeOpenURL&) *elem); break;
-    case ge_mActionType_InputFocus:
+    case ge_mActionType1_InputFocus:
       e = new GeInputFocus((const GeInputFocus&) *elem); break;
-    case ge_mActionType_CloseGraph:
+    case ge_mActionType1_CloseGraph:
       e = new GeCloseGraph((const GeCloseGraph&) *elem); break;
-    case ge_mActionType_PulldownMenu:
+    case ge_mActionType1_PulldownMenu:
       e = new GePulldownMenu((const GePulldownMenu&) *elem); break;
-    case ge_mActionType_OptionMenu:
+    case ge_mActionType1_OptionMenu:
       e = new GeOptionMenu((const GeOptionMenu&) *elem); break;
-    case ge_mActionType_SetValue:
+    case ge_mActionType1_SetValue:
       e = new GeSetValue((const GeSetValue&) *elem); break;
     default: ;
     }
@@ -510,8 +512,10 @@ GeDyn::~GeDyn()
 void GeDyn::save( ofstream& fp)
 {
   fp << int(ge_eSave_Dyn) << endl;
-  fp << int(ge_eSave_Dyn_dyn_type) << FSPACE << int(dyn_type) << endl;
-  fp << int(ge_eSave_Dyn_action_type) << FSPACE << int(action_type) << endl;
+  fp << int(ge_eSave_Dyn_dyn_type1) << FSPACE << int(dyn_type1) << endl;
+  fp << int(ge_eSave_Dyn_dyn_type2) << FSPACE << int(dyn_type2) << endl;
+  fp << int(ge_eSave_Dyn_action_type1) << FSPACE << int(action_type1) << endl;
+  fp << int(ge_eSave_Dyn_action_type2) << FSPACE << int(action_type2) << endl;
   fp << int(ge_eSave_Dyn_access) << FSPACE << int(access) << endl;
   fp << int(ge_eSave_Dyn_cycle) << FSPACE << int(cycle) << endl;
 
@@ -543,8 +547,10 @@ void GeDyn::open( ifstream& fp)
     e = 0;
     switch( type) {
       case ge_eSave_Dyn: break;
-      case ge_eSave_Dyn_dyn_type: fp >> tmp; dyn_type = (ge_mDynType)tmp; break;
-      case ge_eSave_Dyn_action_type: fp >> tmp; action_type = (ge_mActionType)tmp; break;
+      case ge_eSave_Dyn_dyn_type1: fp >> tmp; dyn_type1 = (ge_mDynType1)tmp; break;
+      case ge_eSave_Dyn_dyn_type2: fp >> tmp; dyn_type2 = (ge_mDynType2)tmp; break;
+      case ge_eSave_Dyn_action_type1: fp >> tmp; action_type1 = (ge_mActionType1)tmp; break;
+      case ge_eSave_Dyn_action_type2: fp >> tmp; action_type2 = (ge_mActionType2)tmp; break;
       case ge_eSave_Dyn_access: fp >> tmp; access = (glow_mAccess)tmp; break;
       case ge_eSave_Dyn_cycle: fp >> tmp; cycle = (glow_eCycle)tmp; break;
       case ge_eSave_DigLowColor: e = (GeDynElem *) new GeDigLowColor(this); break;
@@ -573,6 +579,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_StatusColor: e = (GeDynElem *) new GeStatusColor(this); break;
       case ge_eSave_Pie: e = (GeDynElem *) new GePie(this); break;
       case ge_eSave_BarChart: e = (GeDynElem *) new GeBarChart(this); break;
+      case ge_eSave_Axis: e = (GeDynElem *) new GeAxis(this); break;
       case ge_eSave_HostObject: e = (GeDynElem *) new GeHostObject(this); break;
       case ge_eSave_DigSound: e = (GeDynElem *) new GeDigSound(this); break;
       case ge_eSave_XY_Curve: e = (GeDynElem *) new GeXY_Curve(this); break;
@@ -614,42 +621,86 @@ void GeDyn::open( ifstream& fp)
   }  
 }
 
-ge_mDynType GeDyn::get_dyntype( grow_tObject object)
+ge_mDynType1 GeDyn::get_dyntype1( grow_tObject object)
 {
-  if ( object && dyn_type & ge_mDynType_Inherit) {
+  if ( object && dyn_type1 & ge_mDynType1_Inherit) {
     if ( grow_GetObjectType( object) == glow_eObjectType_GrowNode ||
 	 grow_GetObjectType( object) == glow_eObjectType_GrowSlider ||
 	 grow_GetObjectType( object) == glow_eObjectType_GrowGroup) {
-      int inherit_dyn_type;
-      int inherit_action_type;
+      int inherit_dyn_type1;
+      int inherit_dyn_type2;
+      int inherit_action_type1;
+      int inherit_action_type2;
 
-      grow_GetObjectClassDynType( object, &inherit_dyn_type, &inherit_action_type);
-      return (ge_mDynType) ((dyn_type & ~ge_mDynType_Inherit) | inherit_dyn_type);
+      grow_GetObjectClassDynType( object, &inherit_dyn_type1, &inherit_dyn_type2, 
+				  &inherit_action_type1, &inherit_action_type2);
+      return (ge_mDynType1) ((dyn_type1 & ~ge_mDynType1_Inherit) | inherit_dyn_type1);
     }
   }
-  return dyn_type;
+  return dyn_type1;
 }
 
-ge_mActionType GeDyn::get_actiontype( grow_tObject object)
+ge_mDynType2 GeDyn::get_dyntype2( grow_tObject object)
 {
-  if ( object && action_type & ge_mDynType_Inherit) {
+  if ( object && dyn_type1 & ge_mDynType1_Inherit) {
     if ( grow_GetObjectType( object) == glow_eObjectType_GrowNode ||
 	 grow_GetObjectType( object) == glow_eObjectType_GrowSlider ||
 	 grow_GetObjectType( object) == glow_eObjectType_GrowGroup) {
-      int inherit_dyn_type;
-      int inherit_action_type;
+      int inherit_dyn_type1;
+      int inherit_dyn_type2;
+      int inherit_action_type1;
+      int inherit_action_type2;
 
-      grow_GetObjectClassDynType( object, &inherit_dyn_type, &inherit_action_type);
-      return (ge_mActionType) ((action_type & ~ge_mActionType_Inherit) | inherit_action_type);
+      grow_GetObjectClassDynType( object, &inherit_dyn_type1, &inherit_dyn_type2, 
+				  &inherit_action_type1, &inherit_action_type2);
+      return (ge_mDynType2) (dyn_type2 | inherit_dyn_type2);
     }
   }
-  return action_type;
+  return dyn_type2;
+}
+
+ge_mActionType1 GeDyn::get_actiontype1( grow_tObject object)
+{
+  if ( object && action_type1 & ge_mActionType1_Inherit) {
+    if ( grow_GetObjectType( object) == glow_eObjectType_GrowNode ||
+	 grow_GetObjectType( object) == glow_eObjectType_GrowSlider ||
+	 grow_GetObjectType( object) == glow_eObjectType_GrowGroup) {
+      int inherit_dyn_type1;
+      int inherit_dyn_type2;
+      int inherit_action_type1;
+      int inherit_action_type2;
+
+      grow_GetObjectClassDynType( object, &inherit_dyn_type1, &inherit_dyn_type2, 
+				  &inherit_action_type1, &inherit_action_type2);
+      return (ge_mActionType1) ((action_type1 & ~ge_mActionType1_Inherit) | inherit_action_type1);
+    }
+  }
+  return action_type1;
+}
+
+ge_mActionType2 GeDyn::get_actiontype2( grow_tObject object)
+{
+  if ( object && action_type1 & ge_mActionType1_Inherit) {
+    if ( grow_GetObjectType( object) == glow_eObjectType_GrowNode ||
+	 grow_GetObjectType( object) == glow_eObjectType_GrowSlider ||
+	 grow_GetObjectType( object) == glow_eObjectType_GrowGroup) {
+      int inherit_dyn_type1;
+      int inherit_dyn_type2;
+      int inherit_action_type1;
+      int inherit_action_type2;
+
+      grow_GetObjectClassDynType( object, &inherit_dyn_type1, &inherit_dyn_type2, 
+				  &inherit_action_type1, &inherit_action_type2);
+      return (ge_mActionType2) (action_type2 | inherit_action_type2);
+    }
+  }
+  return action_type2;
 }
 
 void GeDyn::unset_inherit( grow_tObject object)
 {
-  dyn_type = get_dyntype( object);
-  action_type = get_actiontype( object);
+  dyn_type1 = get_dyntype1( object);
+  action_type1 = get_actiontype1( object);
 }
 
 glow_eDrawType GeDyn::get_color1( grow_tObject object, glow_eDrawType color)
@@ -681,8 +732,10 @@ void GeDyn::get_attributes( grow_tObject object, attr_sItem *itemlist, int *item
   attr_sItem *attrinfo;
   int i;
 
-  total_dyn_type = get_dyntype( object);
-  total_action_type = get_actiontype( object);
+  total_dyn_type1 = get_dyntype1( object);
+  total_dyn_type2 = get_dyntype2( object);
+  total_action_type1 = get_actiontype1( object);
+  total_action_type2 = get_actiontype2( object);
   display_access = false;
 
   update_elements();
@@ -707,34 +760,34 @@ void GeDyn::get_attributes( grow_tObject object, attr_sItem *itemlist, int *item
     attrinfo[i].type = glow_eType_Cycle;
     attrinfo[i++].size = sizeof( cycle);
       
-    strcpy( attrinfo[i].name, "DynType");
-    attrinfo[i].value = &dyn_type;
-    if ( total_dyn_type & ge_mDynType_Tone)
+    strcpy( attrinfo[i].name, "DynType1");
+    attrinfo[i].value = &dyn_type1;
+    if ( total_dyn_type1 & ge_mDynType1_Tone)
       attrinfo[i].type = ge_eAttrType_DynTypeTone;
     else
-      attrinfo[i].type = ge_eAttrType_DynType;
-    if ( total_dyn_type & ge_mDynType_Bar ||
-	 total_dyn_type & ge_mDynType_Trend ||
-	 total_dyn_type & ge_mDynType_Table ||
-	 total_dyn_type & ge_mDynType_FastCurve ||
-	 total_dyn_type & ge_mDynType_XY_Curve)
+      attrinfo[i].type = ge_eAttrType_DynType1;
+    if ( total_dyn_type1 & ge_mDynType1_Bar ||
+	 total_dyn_type1 & ge_mDynType1_Trend ||
+	 total_dyn_type1 & ge_mDynType1_Table ||
+	 total_dyn_type1 & ge_mDynType1_FastCurve ||
+	 total_dyn_type1 & ge_mDynType1_XY_Curve)
       attrinfo[i].noedit = 1;
-    attrinfo[i].mask = ~(ge_mDynType_Bar | ge_mDynType_Trend | ge_mDynType_Table | 
-			 ge_mDynType_FastCurve | ge_mDynType_XY_Curve | ge_mDynType_SliderBackground);
-    attrinfo[i++].size = sizeof( dyn_type);
+    attrinfo[i].mask = ~(ge_mDynType1_Bar | ge_mDynType1_Trend | ge_mDynType1_Table | 
+			 ge_mDynType1_FastCurve | ge_mDynType1_XY_Curve | ge_mDynType1_SliderBackground);
+    attrinfo[i++].size = sizeof( dyn_type1);
   }
   else {
-    strcpy( attrinfo[i].name, "DynType");
-    attrinfo[i].value = &dyn_type;
-    attrinfo[i].type = ge_eAttrType_DynType;
-    attrinfo[i].mask = ge_mDynType_Invisible;
-    attrinfo[i++].size = sizeof( dyn_type);
+    strcpy( attrinfo[i].name, "DynType1");
+    attrinfo[i].value = &dyn_type1;
+    attrinfo[i].type = ge_eAttrType_DynType1;
+    attrinfo[i].mask = ge_mDynType1_Invisible;
+    attrinfo[i++].size = sizeof( dyn_type1);
   }
   strcpy( attrinfo[i].name, "Action");
-  attrinfo[i].value = &action_type;
-  attrinfo[i].type = ge_eAttrType_ActionType;
-  attrinfo[i].mask = ~ge_mActionType_Slider;
-  attrinfo[i++].size = sizeof( action_type);
+  attrinfo[i].value = &action_type1;
+  attrinfo[i].type = ge_eAttrType_ActionType1;
+  attrinfo[i].mask = ~ge_mActionType1_Slider;
+  attrinfo[i++].size = sizeof( action_type1);
 
   *item_count = i;
 }
@@ -746,8 +799,10 @@ void GeDyn::get_transtab( grow_tObject object, char **tt)
 					"Dynamic",		"",
 					""};
 
-  total_dyn_type = get_dyntype( object);
-  total_action_type = get_actiontype( object);
+  total_dyn_type1 = get_dyntype1( object);
+  total_dyn_type2 = get_dyntype2( object);
+  total_action_type1 = get_actiontype1( object);
+  total_action_type2 = get_actiontype2( object);
 
   update_elements();
   *tt = 0;
@@ -764,8 +819,10 @@ void GeDyn::set_attribute( grow_tObject object, const char *attr_name, int secon
 {
   int cnt = second + 1;
 
-  total_dyn_type = get_dyntype( object);
-  total_action_type = get_actiontype( object);
+  total_dyn_type1 = get_dyntype1( object);
+  total_dyn_type2 = get_dyntype2( object);
+  total_action_type1 = get_actiontype1( object);
+  total_action_type2 = get_actiontype2( object);
 
   update_elements();
 
@@ -788,8 +845,10 @@ void GeDyn::set_color( grow_tObject object, glow_eDrawType color)
 {
   int sts = 0;
 
-  total_dyn_type = get_dyntype( object);
-  total_action_type = get_actiontype( object);
+  total_dyn_type1 = get_dyntype1( object);
+  total_dyn_type2 = get_dyntype2( object);
+  total_action_type1 = get_actiontype1( object);
+  total_action_type2 = get_actiontype2( object);
 
   update_elements();
 
@@ -807,17 +866,19 @@ void GeDyn::set_access( glow_mAccess acc)
   access = acc;
 }
 
-void GeDyn::set_dyn( ge_mDynType type, ge_mActionType action)
+void GeDyn::set_dyn( ge_mDynType1 type1, ge_mDynType2 type2, ge_mActionType1 action1, ge_mActionType2 action2)
 {
-  dyn_type = type;
-  action_type = action;
+  dyn_type1 = type1;
+  dyn_type2 = type2;
+  action_type1 = action1;
+  action_type2 = action2;
   update_elements();
 }
 
 void GeDyn::set_command( const char *cmd)
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
-    if ( elem->action_type == ge_mActionType_Command) {
+    if ( elem->action_type1 == ge_mActionType1_Command) {
       strncpy( ((GeCommand *)elem)->command, cmd, sizeof(((GeCommand *)elem)->command));
       ((GeCommand *)elem)->command[sizeof(((GeCommand *)elem)->command)-1] = 0;
       break;
@@ -828,7 +889,7 @@ void GeDyn::set_command( const char *cmd)
 void GeDyn::set_hostobject( char *hostobject)
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
-    if ( elem->dyn_type == ge_mDynType_HostObject) {
+    if ( elem->dyn_type1 == ge_mDynType1_HostObject) {
       strncpy( ((GeHostObject *)elem)->hostobject, hostobject, 
 	       sizeof(((GeHostObject *)elem)->hostobject));
       break;
@@ -839,7 +900,7 @@ void GeDyn::set_hostobject( char *hostobject)
 void GeDyn::get_hostobject( char *hostobject)
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
-    if ( elem->dyn_type == ge_mDynType_HostObject) {
+    if ( elem->dyn_type1 == ge_mDynType1_HostObject) {
       strcpy( hostobject, ((GeHostObject *)elem)->hostobject);
       break;
     }
@@ -866,7 +927,7 @@ graph_eDatabase GeDyn::parse_attr_name( char *name, char *parsed_name,
 {
   char *s;
 
-  if ( total_dyn_type & ge_mDynType_HostObject &&
+  if ( total_dyn_type1 & ge_mDynType1_HostObject &&
        (s = strstr( name, "$hostobject"))) {
     // Replace string $hostobject with host object
     pwr_tAName hostobject;
@@ -884,11 +945,11 @@ graph_eDatabase GeDyn::parse_attr_name( char *name, char *parsed_name,
 void GeDyn::set_value_input( const char *format, double min_value, double max_value)
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
-    if ( elem->action_type == ge_mActionType_ValueInput) {
+    if ( elem->action_type1 == ge_mActionType1_ValueInput) {
       GeValueInput *e = (GeValueInput *)elem;
       if ( !e->value_element) {
 	for ( GeDynElem *elem2 = elements; elem2; elem2 = elem2->next) {
-	  if ( elem2->dyn_type == ge_mDynType_Value) {
+	  if ( elem2->dyn_type1 == ge_mDynType1_Value) {
 	    e->value_element = (GeValue *)elem2;
 	    e->annot_typeid = e->value_element->annot_typeid;
 	    e->annot_size = e->value_element->annot_size;
@@ -909,7 +970,7 @@ void GeDyn::set_value_input( const char *format, double min_value, double max_va
 int GeDyn::get_attr_typeid()
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
-    if ( elem->dyn_type == ge_mDynType_Value)
+    if ( elem->dyn_type1 == ge_mDynType1_Value)
       return ((GeValue *)elem)->annot_typeid;
   }
   return 0;
@@ -918,7 +979,7 @@ int GeDyn::get_attr_typeid()
 int *GeDyn::ref_slider_disabled()
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
-    if ( elem->action_type == ge_mActionType_Slider)
+    if ( elem->action_type1 == ge_mActionType1_Slider)
       return &((GeSlider *)elem)->slider_disabled;
   }
   return 0;
@@ -927,7 +988,7 @@ int *GeDyn::ref_slider_disabled()
 int GeDyn::get_slider_disabled()
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
-    if ( elem->action_type == ge_mActionType_Slider)
+    if ( elem->action_type1 == ge_mActionType1_Slider)
       return ((GeSlider *)elem)->slider_disabled;
   }
   return 0;
@@ -936,7 +997,7 @@ int GeDyn::get_slider_disabled()
 int *GeDyn::ref_trend_hold()
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
-    if ( elem->dyn_type == ge_mDynType_Trend)
+    if ( elem->dyn_type1 == ge_mDynType1_Trend)
       return &((GeTrend *)elem)->trend_hold;
   }
   return 0;
@@ -945,7 +1006,7 @@ int *GeDyn::ref_trend_hold()
 double *GeDyn::ref_trend_scantime()
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
-    if ( elem->dyn_type == ge_mDynType_Trend)
+    if ( elem->dyn_type1 == ge_mDynType1_Trend)
       return &((GeTrend *)elem)->scan_time;
   }
   return 0;
@@ -954,9 +1015,9 @@ double *GeDyn::ref_trend_scantime()
 void *GeDyn::get_p()
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
-    if ( elem->dyn_type == ge_mDynType_DigLowColor)
+    if ( elem->dyn_type1 == ge_mDynType1_DigLowColor)
       return ((GeDigLowColor *)elem)->p;
-    else if ( elem->dyn_type == ge_mDynType_Value)
+    else if ( elem->dyn_type1 == ge_mDynType1_Value)
       return ((GeValue *)elem)->p;
   }
   return 0;
@@ -965,7 +1026,7 @@ void *GeDyn::get_p()
 void GeDyn::set_p( grow_tObject object, void *p)
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
-    if ( elem->dyn_type == ge_mDynType_Value) {
+    if ( elem->dyn_type1 == ge_mDynType1_Value) {
       glow_sTraceData *data;
       grow_GetTraceAttr( object, &data);
       data->p = p;
@@ -974,7 +1035,7 @@ void GeDyn::set_p( grow_tObject object, void *p)
       ((GeValue *)elem)->p = p;
       break;
     }
-    else if ( elem->dyn_type == ge_mDynType_DigLowColor) {      
+    else if ( elem->dyn_type1 == ge_mDynType1_DigLowColor) {      
       glow_sTraceData *data;
       grow_GetTraceAttr( object, &data);
       data->p = p;
@@ -993,15 +1054,17 @@ void GeDyn::update()
 }
 
 void GeDyn::update_elements()
-{
+ {
   GeDynElem *elem, *prev, *next;
 
   // Remove
   prev = 0;
   elem = elements;
   while ( elem) {
-    if ( (elem->dyn_type && !(elem->dyn_type & total_dyn_type)) || 
-	 (elem->action_type && !(elem->action_type & total_action_type))) {
+    if ( (elem->dyn_type1 && !(elem->dyn_type1 & total_dyn_type1)) || 
+	 (elem->action_type1 && !(elem->action_type1 & total_action_type1)) ||
+	 (elem->dyn_type2 && !(elem->dyn_type2 & total_dyn_type2)) || 
+	 (elem->action_type2 && !(elem->action_type2 & total_action_type2))) {
       // Type is not valid, remove element
       if ( !prev)
 	elements = elem->next;
@@ -1050,10 +1113,10 @@ void GeDyn::update_elements()
 
   mask = 1;
   for ( int i = 0; i < 32; i++) {
-    if ( mask & total_dyn_type) {
+    if ( mask & total_dyn_type1) {
       found = false;
       for ( elem = elements; elem; elem = elem->next) {
-	if ( elem->dyn_type == mask && elem->instance == ge_mInstance_1) {
+	if ( elem->dyn_type1 == mask && elem->instance == ge_mInstance_1) {
 	  found = true;
 
 	  if ( elem->instance_mask > ge_mInstance_1) {
@@ -1062,7 +1125,7 @@ void GeDyn::update_elements()
 	    for ( int j = 0; j < 32; j++) {
 	      i_found = false;
 	      for ( i_elem = elements; i_elem; i_elem = i_elem->next) {
-		if ( i_elem->dyn_type == mask && 
+		if ( i_elem->dyn_type1 == mask && 
 		     i_elem->instance & elem->instance_mask &&
 		     i_elem->instance == i_mask) {
 		  i_found = true;
@@ -1070,7 +1133,7 @@ void GeDyn::update_elements()
 		}
 	      }
 	      if ( !i_found && i_mask & elem->instance_mask) {
-		e = create_dyn_element( mask, i_mask);
+		e = create_dyn1_element( mask, i_mask);
 		if ( e)
 		  insert_element( e);
 	      }
@@ -1082,7 +1145,7 @@ void GeDyn::update_elements()
       }
       if ( !found) {
 	// Create this element
-	e = create_dyn_element( mask, ge_mInstance_1);
+	e = create_dyn1_element( mask, ge_mInstance_1);
 	if ( e)
 	  insert_element( e);
       }
@@ -1092,10 +1155,10 @@ void GeDyn::update_elements()
 
   mask = 1;
   for ( int i = 0; i < 32; i++) {
-    if ( mask & total_action_type) {
+    if ( mask & total_dyn_type2) {
       found = false;
-      for ( elem = elements; elem; elem  = elem->next) {
-	if ( elem->action_type == mask && elem->instance == ge_mInstance_1) {
+      for ( elem = elements; elem; elem = elem->next) {
+	if ( elem->dyn_type2 == mask && elem->instance == ge_mInstance_1) {
 	  found = true;
 
 	  if ( elem->instance_mask > ge_mInstance_1) {
@@ -1104,7 +1167,7 @@ void GeDyn::update_elements()
 	    for ( int j = 0; j < 32; j++) {
 	      i_found = false;
 	      for ( i_elem = elements; i_elem; i_elem = i_elem->next) {
-		if ( i_elem->action_type == mask && 
+		if ( i_elem->dyn_type2 == mask && 
 		     i_elem->instance & elem->instance_mask &&
 		     i_elem->instance == i_mask) {
 		  i_found = true;
@@ -1112,7 +1175,7 @@ void GeDyn::update_elements()
 		}
 	      }
 	      if ( !i_found && i_mask & elem->instance_mask) {
-		e = create_action_element( mask, i_mask);
+		e = create_dyn2_element( mask, i_mask);
 		if ( e)
 		  insert_element( e);
 	      }
@@ -1124,7 +1187,91 @@ void GeDyn::update_elements()
       }
       if ( !found) {
 	// Create this element
-	e = create_action_element( mask, ge_mInstance_1);
+	e = create_dyn2_element( mask, ge_mInstance_1);
+	if ( e)
+	  insert_element( e);
+      }
+    }
+    mask = mask << 1;
+  }
+
+  mask = 1;
+  for ( int i = 0; i < 32; i++) {
+    if ( mask & total_action_type1) {
+      found = false;
+      for ( elem = elements; elem; elem  = elem->next) {
+	if ( elem->action_type1 == mask && elem->instance == ge_mInstance_1) {
+	  found = true;
+
+	  if ( elem->instance_mask > ge_mInstance_1) {
+	    // Check instance
+	    i_mask = ge_mInstance_1;
+	    for ( int j = 0; j < 32; j++) {
+	      i_found = false;
+	      for ( i_elem = elements; i_elem; i_elem = i_elem->next) {
+		if ( i_elem->action_type1 == mask && 
+		     i_elem->instance & elem->instance_mask &&
+		     i_elem->instance == i_mask) {
+		  i_found = true;
+		  break;
+		}
+	      }
+	      if ( !i_found && i_mask & elem->instance_mask) {
+		e = create_action1_element( mask, i_mask);
+		if ( e)
+		  insert_element( e);
+	      }
+	      i_mask = i_mask << 1;
+	    }
+	  }
+	  break;
+	}
+      }
+      if ( !found) {
+	// Create this element
+	e = create_action1_element( mask, ge_mInstance_1);
+	if ( e)
+	  insert_element( e);
+      }
+    }
+    mask = mask << 1;
+  }
+
+  mask = 1;
+  for ( int i = 0; i < 32; i++) {
+    if ( mask & total_action_type2) {
+      found = false;
+      for ( elem = elements; elem; elem  = elem->next) {
+	if ( elem->action_type2 == mask && elem->instance == ge_mInstance_1) {
+	  found = true;
+
+	  if ( elem->instance_mask > ge_mInstance_1) {
+	    // Check instance
+	    i_mask = ge_mInstance_1;
+	    for ( int j = 0; j < 32; j++) {
+	      i_found = false;
+	      for ( i_elem = elements; i_elem; i_elem = i_elem->next) {
+		if ( i_elem->action_type2 == mask && 
+		     i_elem->instance & elem->instance_mask &&
+		     i_elem->instance == i_mask) {
+		  i_found = true;
+		  break;
+		}
+	      }
+	      if ( !i_found && i_mask & elem->instance_mask) {
+		e = create_action2_element( mask, i_mask);
+		if ( e)
+		  insert_element( e);
+	      }
+	      i_mask = i_mask << 1;
+	    }
+	  }
+	  break;
+	}
+      }
+      if ( !found) {
+	// Create this element
+	e = create_action2_element( mask, ge_mInstance_1);
 	if ( e)
 	  insert_element( e);
       }
@@ -1134,12 +1281,14 @@ void GeDyn::update_elements()
 
   // Update PulldownMenu items
   for ( elem = elements; elem; elem  = elem->next) {
-    if ( elem->action_type == ge_mActionType_PulldownMenu) {
+    if ( elem->action_type1 == ge_mActionType1_PulldownMenu) {
       GePulldownMenu *pm = (GePulldownMenu *) elem;
       for ( int i = 0; i < 32; i++) {
 	if ( pm->items_dyn[i]) {
-	  pm->items_dyn[i]->total_dyn_type = pm->items_dyn[i]->dyn_type;
-	  pm->items_dyn[i]->total_action_type = pm->items_dyn[i]->action_type;
+	  pm->items_dyn[i]->total_dyn_type1 = pm->items_dyn[i]->dyn_type1;
+	  pm->items_dyn[i]->total_dyn_type2 = pm->items_dyn[i]->dyn_type2;
+	  pm->items_dyn[i]->total_action_type1 = pm->items_dyn[i]->action_type1;
+	  pm->items_dyn[i]->total_action_type2 = pm->items_dyn[i]->action_type2;
 	  pm->items_dyn[i]->update_elements();
 	}
       }
@@ -1147,72 +1296,72 @@ void GeDyn::update_elements()
   }
 }
 
-GeDynElem *GeDyn::create_action_element( int mask, int instance)
+GeDynElem *GeDyn::create_action1_element( int mask, int instance)
 {
   GeDynElem *e = 0;
 
   switch ( mask) {
-  case ge_mActionType_PopupMenu:
+  case ge_mActionType1_PopupMenu:
     e = (GeDynElem *) new GePopupMenu(this);
     break;
-  case ge_mActionType_SetDig:
+  case ge_mActionType1_SetDig:
     e = (GeDynElem *) new GeSetDig(this, (ge_mInstance)instance);
     break;
-  case ge_mActionType_ResetDig:
+  case ge_mActionType1_ResetDig:
     e = (GeDynElem *) new GeResetDig(this, (ge_mInstance)instance);
     break;
-  case ge_mActionType_ToggleDig:
+  case ge_mActionType1_ToggleDig:
     e = (GeDynElem *) new GeToggleDig(this);
     break;
-  case ge_mActionType_StoDig:
+  case ge_mActionType1_StoDig:
     e = (GeDynElem *) new GeStoDig(this);
     break;
-  case ge_mActionType_Command:
+  case ge_mActionType1_Command:
     e = (GeDynElem *) new GeCommand(this);
     break;
-  case ge_mActionType_CommandDoubleClick:
+  case ge_mActionType1_CommandDoubleClick:
     e = (GeDynElem *) new GeCommandDoubleClick(this);
     break;
-  case ge_mActionType_Confirm:
+  case ge_mActionType1_Confirm:
     e = (GeDynElem *) new GeConfirm(this);
     break;
-  case ge_mActionType_IncrAnalog:
+  case ge_mActionType1_IncrAnalog:
     e = (GeDynElem *) new GeIncrAnalog(this);
     break;
-  case ge_mActionType_RadioButton:
+  case ge_mActionType1_RadioButton:
     e = (GeDynElem *) new GeRadioButton(this);
     break;
-  case ge_mActionType_Slider:
+  case ge_mActionType1_Slider:
     e = (GeDynElem *) new GeSlider(this);
     break;
-  case ge_mActionType_ValueInput:
+  case ge_mActionType1_ValueInput:
     e = (GeDynElem *) new GeValueInput(this);
     break;
-  case ge_mActionType_TipText:
+  case ge_mActionType1_TipText:
     e = (GeDynElem *) new GeTipText(this);
     break;
-  case ge_mActionType_Help:
+  case ge_mActionType1_Help:
     e = (GeDynElem *) new GeHelp(this);
     break;
-  case ge_mActionType_OpenGraph:
+  case ge_mActionType1_OpenGraph:
     e = (GeDynElem *) new GeOpenGraph(this);
     break;
-  case ge_mActionType_OpenURL:
+  case ge_mActionType1_OpenURL:
     e = (GeDynElem *) new GeOpenURL(this);
     break;
-  case ge_mActionType_InputFocus:
+  case ge_mActionType1_InputFocus:
     e = (GeDynElem *) new GeInputFocus(this);
     break;
-  case ge_mActionType_CloseGraph:
+  case ge_mActionType1_CloseGraph:
     e = (GeDynElem *) new GeCloseGraph(this);
     break;
-  case ge_mActionType_PulldownMenu:
+  case ge_mActionType1_PulldownMenu:
     e = (GeDynElem *) new GePulldownMenu(this);
     break;
-  case ge_mActionType_OptionMenu:
+  case ge_mActionType1_OptionMenu:
     e = (GeDynElem *) new GeOptionMenu(this);
     break;
-  case ge_mActionType_SetValue:
+  case ge_mActionType1_SetValue:
     e = (GeDynElem *) new GeSetValue(this, (ge_mInstance)instance);
     break;
   default: ;
@@ -1220,97 +1369,120 @@ GeDynElem *GeDyn::create_action_element( int mask, int instance)
   return e;
 }
 
-GeDynElem *GeDyn::create_dyn_element( int mask, int instance)
+GeDynElem *GeDyn::create_action2_element( int mask, int instance)
 {
   GeDynElem *e = 0;
 
   switch ( mask) {
-  case ge_mDynType_DigLowColor:
+  default: ;
+  }
+  return e;
+}
+
+GeDynElem *GeDyn::create_dyn1_element( int mask, int instance)
+{
+  GeDynElem *e = 0;
+
+  switch ( mask) {
+  case ge_mDynType1_DigLowColor:
     e = (GeDynElem *) new GeDigLowColor(this);
     break;
-  case ge_mDynType_DigColor:
+  case ge_mDynType1_DigColor:
     e = (GeDynElem *) new GeDigColor(this, (ge_mInstance)instance);
     break;
-  case ge_mDynType_DigWarning:
+  case ge_mDynType1_DigWarning:
     e = (GeDynElem *) new GeDigWarning(this);
     break;
-  case ge_mDynType_DigError:
+  case ge_mDynType1_DigError:
     e = (GeDynElem *) new GeDigError(this);
     break;
-  case ge_mDynType_DigFlash:
+  case ge_mDynType1_DigFlash:
     e = (GeDynElem *) new GeDigFlash(this);
     break;
-  case ge_mDynType_Invisible:
+  case ge_mDynType1_Invisible:
     e = (GeDynElem *) new GeInvisible(this, (ge_mInstance)instance);
     break;
-  case ge_mDynType_DigBorder:
+  case ge_mDynType1_DigBorder:
     e = (GeDynElem *) new GeDigBorder(this);
     break;
-  case ge_mDynType_DigText:
+  case ge_mDynType1_DigText:
     e = (GeDynElem *) new GeDigText(this, (ge_mInstance)instance);
     break;
-  case ge_mDynType_Value:
+  case ge_mDynType1_Value:
     e = (GeDynElem *) new GeValue(this, (ge_mInstance)instance);
     break;
-  case ge_mDynType_AnalogColor:
+  case ge_mDynType1_AnalogColor:
     e = (GeDynElem *) new GeAnalogColor(this, (ge_mInstance)instance);
     break;
-  case ge_mDynType_Rotate:
+  case ge_mDynType1_Rotate:
     e = (GeDynElem *) new GeRotate(this);
     break;
-  case ge_mDynType_Move:
+  case ge_mDynType1_Move:
     e = (GeDynElem *) new GeMove(this);
     break;
-  case ge_mDynType_AnalogShift:
+  case ge_mDynType1_AnalogShift:
     e = (GeDynElem *) new GeAnalogShift(this);
     break;
-  case ge_mDynType_DigShift:
+  case ge_mDynType1_DigShift:
     e = (GeDynElem *) new GeDigShift(this);
     break;
-  case ge_mDynType_Animation:
+  case ge_mDynType1_Animation:
     e = (GeDynElem *) new GeAnimation(this);
     break;
-  case ge_mDynType_Video:
+  case ge_mDynType1_Video:
     e = (GeDynElem *) new GeVideo(this);
     break;
-  case ge_mDynType_Bar:
+  case ge_mDynType1_Bar:
     e = (GeDynElem *) new GeBar(this);
     break;
-  case ge_mDynType_Trend:
+  case ge_mDynType1_Trend:
     e = (GeDynElem *) new GeTrend(this);
     break;
-  case ge_mDynType_FillLevel:
+  case ge_mDynType1_FillLevel:
     e = (GeDynElem *) new GeFillLevel(this);
     break;
-  case ge_mDynType_FastCurve:
+  case ge_mDynType1_FastCurve:
     e = (GeDynElem *) new GeFastCurve(this);
     break;
-  case ge_mDynType_AnalogText:
+  case ge_mDynType1_AnalogText:
     e = (GeDynElem *) new GeAnalogText(this);
     break;
-  case ge_mDynType_Table:
+  case ge_mDynType1_Table:
     e = (GeDynElem *) new GeTable(this);
     break;
-  case ge_mDynType_StatusColor:
+  case ge_mDynType1_StatusColor:
     e = (GeDynElem *) new GeStatusColor(this);
     break;
-  case ge_mDynType_Pie:
+  case ge_mDynType1_Pie:
     e = (GeDynElem *) new GePie(this);
     break;
-  case ge_mDynType_BarChart:
+  case ge_mDynType1_BarChart:
     e = (GeDynElem *) new GeBarChart(this);
     break;
-  case ge_mDynType_HostObject:
+  case ge_mDynType1_HostObject:
     e = (GeDynElem *) new GeHostObject(this);
     break;
-  case ge_mDynType_DigSound:
+  case ge_mDynType1_DigSound:
     e = (GeDynElem *) new GeDigSound(this, (ge_mInstance)instance);
     break;
-  case ge_mDynType_XY_Curve:
+  case ge_mDynType1_XY_Curve:
     e = (GeDynElem *) new GeXY_Curve(this, (ge_mInstance)instance);
     break;
-  case ge_mDynType_DigCommand:
+  case ge_mDynType1_DigCommand:
     e = (GeDynElem *) new GeDigCommand(this, (ge_mInstance)instance);
+    break;
+  default: ;
+  }
+  return e;
+}
+
+GeDynElem *GeDyn::create_dyn2_element( int mask, int instance)
+{
+  GeDynElem *e = 0;
+
+  switch ( mask) {
+  case ge_mDynType2_Axis:
+    e = (GeDynElem *) new GeAxis(this);
     break;
   default: ;
   }
@@ -1321,162 +1493,175 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
 {
   GeDynElem *e = 0;
 
-  if ( x.action_type) {
-    switch ( x.action_type) {
-    case ge_mActionType_PopupMenu:
+  if ( x.action_type1) {
+    switch ( x.action_type1) {
+    case ge_mActionType1_PopupMenu:
       e = (GeDynElem *) new GePopupMenu((GePopupMenu&) x);
       break;
-    case ge_mActionType_SetDig:
+    case ge_mActionType1_SetDig:
       e = (GeDynElem *) new GeSetDig((GeSetDig&) x);
       break;
-    case ge_mActionType_ResetDig:
+    case ge_mActionType1_ResetDig:
       e = (GeDynElem *) new GeResetDig((GeResetDig&) x);
       break;
-    case ge_mActionType_ToggleDig:
+    case ge_mActionType1_ToggleDig:
       e = (GeDynElem *) new GeToggleDig((GeToggleDig&) x);
       break;
-    case ge_mActionType_StoDig:
+    case ge_mActionType1_StoDig:
       e = (GeDynElem *) new GeStoDig((GeStoDig&) x);
       break;
-    case ge_mActionType_Command:
+    case ge_mActionType1_Command:
       e = (GeDynElem *) new GeCommand((GeCommand&) x);
       break;
-    case ge_mActionType_CommandDoubleClick:
+    case ge_mActionType1_CommandDoubleClick:
       e = (GeDynElem *) new GeCommandDoubleClick((GeCommandDoubleClick&) x);
       break;
-    case ge_mActionType_Confirm:
+    case ge_mActionType1_Confirm:
       e = (GeDynElem *) new GeConfirm((GeConfirm&) x);
       break;
-    case ge_mActionType_IncrAnalog:
+    case ge_mActionType1_IncrAnalog:
       e = (GeDynElem *) new GeIncrAnalog((GeIncrAnalog&) x);
       break;
-    case ge_mActionType_RadioButton:
+    case ge_mActionType1_RadioButton:
       e = (GeDynElem *) new GeRadioButton((GeRadioButton&) x);
       break;
-    case ge_mActionType_Slider:
+    case ge_mActionType1_Slider:
       e = (GeDynElem *) new GeSlider((GeSlider&) x);
       break;
-    case ge_mActionType_ValueInput:
+    case ge_mActionType1_ValueInput:
       e = (GeDynElem *) new GeValueInput((GeValueInput&) x);
       break;
-    case ge_mActionType_TipText:
+    case ge_mActionType1_TipText:
       e = (GeDynElem *) new GeTipText((GeTipText&) x);
       break;
-    case ge_mActionType_Help:
+    case ge_mActionType1_Help:
       e = (GeDynElem *) new GeHelp((GeHelp &) x);
       break;
-    case ge_mActionType_OpenGraph:
+    case ge_mActionType1_OpenGraph:
       e = (GeDynElem *) new GeOpenGraph((GeOpenGraph&) x);
       break;
-    case ge_mActionType_OpenURL:
+    case ge_mActionType1_OpenURL:
       e = (GeDynElem *) new GeOpenURL((GeOpenURL&) x);
       break;
-    case ge_mActionType_InputFocus:
+    case ge_mActionType1_InputFocus:
       e = (GeDynElem *) new GeInputFocus((GeInputFocus&) x);
       break;
-    case ge_mActionType_CloseGraph:
+    case ge_mActionType1_CloseGraph:
       e = (GeDynElem *) new GeCloseGraph((GeCloseGraph&) x);
       break;
-    case ge_mActionType_PulldownMenu:
+    case ge_mActionType1_PulldownMenu:
       e = (GeDynElem *) new GePulldownMenu((GePulldownMenu&) x);
       break;
-    case ge_mActionType_OptionMenu:
+    case ge_mActionType1_OptionMenu:
       e = (GeDynElem *) new GeOptionMenu((GeOptionMenu&) x);
       break;
-    case ge_mActionType_SetValue:
+    case ge_mActionType1_SetValue:
       e = (GeDynElem *) new GeSetValue((GeSetValue&) x);
       break;
     default: ;
     }
   }
-  else if ( x.dyn_type) {
-    switch ( x.dyn_type) {
-    case ge_mDynType_DigLowColor:
+  else if ( x.action_type2) {
+    switch ( x.action_type2) {
+    default: ;
+    }
+  }
+  else if ( x.dyn_type1) {
+    switch ( x.dyn_type1) {
+    case ge_mDynType1_DigLowColor:
       e = (GeDynElem *) new GeDigLowColor((GeDigLowColor&) x);
       break;
-    case ge_mDynType_DigColor:
+    case ge_mDynType1_DigColor:
       e = (GeDynElem *) new GeDigColor((GeDigColor&) x);
       break;
-    case ge_mDynType_DigWarning:
+    case ge_mDynType1_DigWarning:
       e = (GeDynElem *) new GeDigWarning((GeDigWarning&) x);
       break;
-    case ge_mDynType_DigError:
+    case ge_mDynType1_DigError:
       e = (GeDynElem *) new GeDigError((GeDigError&) x);
       break;
-    case ge_mDynType_DigFlash:
+    case ge_mDynType1_DigFlash:
       e = (GeDynElem *) new GeDigFlash((GeDigFlash&) x);
       break;
-    case ge_mDynType_Invisible:
+    case ge_mDynType1_Invisible:
       e = (GeDynElem *) new GeInvisible((GeInvisible&) x);
       break;
-    case ge_mDynType_DigBorder:
+    case ge_mDynType1_DigBorder:
       e = (GeDynElem *) new GeDigBorder((GeDigBorder&) x);
       break;
-    case ge_mDynType_DigText:
+    case ge_mDynType1_DigText:
       e = (GeDynElem *) new GeDigText((GeDigText&) x);
       break;
-    case ge_mDynType_Value:
+    case ge_mDynType1_Value:
       e = (GeDynElem *) new GeValue((GeValue&) x);
       break;
-    case ge_mDynType_AnalogColor:
+    case ge_mDynType1_AnalogColor:
       e = (GeDynElem *) new GeAnalogColor((GeAnalogColor&) x);
       break;
-    case ge_mDynType_Rotate:
+    case ge_mDynType1_Rotate:
       e = (GeDynElem *) new GeRotate((GeRotate&) x);
       break;
-    case ge_mDynType_Move:
+    case ge_mDynType1_Move:
       e = (GeDynElem *) new GeMove((GeMove&) x);
       break;
-    case ge_mDynType_AnalogShift:
+    case ge_mDynType1_AnalogShift:
       e = (GeDynElem *) new GeAnalogShift((GeAnalogShift&) x);
       break;
-    case ge_mDynType_DigShift:
+    case ge_mDynType1_DigShift:
       e = (GeDynElem *) new GeDigShift((GeDigShift&) x);
       break;
-    case ge_mDynType_Animation:
+    case ge_mDynType1_Animation:
       e = (GeDynElem *) new GeAnimation((GeAnimation&) x);
       break;
-    case ge_mDynType_Video:
+    case ge_mDynType1_Video:
       e = (GeDynElem *) new GeVideo((GeVideo&) x);
       break;
-    case ge_mDynType_Bar:
+    case ge_mDynType1_Bar:
       e = (GeDynElem *) new GeBar((GeBar&) x);
       break;
-    case ge_mDynType_Trend:
+    case ge_mDynType1_Trend:
       e = (GeDynElem *) new GeTrend((GeTrend&) x);
       break;
-    case ge_mDynType_XY_Curve:
+    case ge_mDynType1_XY_Curve:
       e = (GeDynElem *) new GeXY_Curve((GeXY_Curve&) x);
       break;
-    case ge_mDynType_DigCommand:
+    case ge_mDynType1_DigCommand:
       e = (GeDynElem *) new GeDigCommand((GeDigCommand&) x);
       break;
-    case ge_mDynType_FillLevel:
+    case ge_mDynType1_FillLevel:
       e = (GeDynElem *) new GeFillLevel((GeFillLevel&) x);
       break;
-    case ge_mDynType_FastCurve:
+    case ge_mDynType1_FastCurve:
       e = (GeDynElem *) new GeFastCurve((GeFastCurve&) x);
       break;
-    case ge_mDynType_AnalogText:
+    case ge_mDynType1_AnalogText:
       e = (GeDynElem *) new GeAnalogText((GeAnalogText&) x);
       break;
-    case ge_mDynType_Table:
+    case ge_mDynType1_Table:
       e = (GeDynElem *) new GeTable((GeTable&) x);
       break;
-    case ge_mDynType_StatusColor:
+    case ge_mDynType1_StatusColor:
       e = (GeDynElem *) new GeStatusColor((GeStatusColor&) x);
       break;
-    case ge_mDynType_Pie:
+    case ge_mDynType1_Pie:
       e = (GeDynElem *) new GePie((GePie&) x);
       break;
-    case ge_mDynType_BarChart:
+    case ge_mDynType1_BarChart:
       e = (GeDynElem *) new GeBarChart((GeBarChart&) x);
       break;
-    case ge_mDynType_HostObject:
+    case ge_mDynType1_HostObject:
       e = (GeDynElem *) new GeHostObject((GeHostObject&) x);
       break;
-    case ge_mDynType_DigSound:
+    case ge_mDynType1_DigSound:
       e = (GeDynElem *) new GeDigSound((GeDigSound&) x);
+      break;
+    default: ;
+    }
+  }
+  else if ( x.dyn_type2) {
+    switch ( x.dyn_type2) {
+    case ge_mDynType2_Axis:
+      e = (GeDynElem *) new GeAxis((GeAxis&) x);
       break;
     default: ;
     }
@@ -1518,16 +1703,18 @@ void GeDyn::merge( GeDyn& x)
   GeDynElem *elem, *xelem, *prev, *next;
   GeDynElem *e;
 
-  dyn_type = (ge_mDynType)(dyn_type | x.dyn_type);
-  total_dyn_type = (ge_mDynType)(total_dyn_type | x.total_dyn_type);
-  action_type = (ge_mActionType)(action_type | x.action_type);
-  total_action_type = (ge_mActionType)(total_action_type | x.total_action_type);
+  dyn_type1 = (ge_mDynType1)(dyn_type1 | x.dyn_type1);
+  total_dyn_type1 = (ge_mDynType1)(total_dyn_type1 | x.total_dyn_type1);
+  action_type1 = (ge_mActionType1)(action_type1 | x.action_type1);
+  total_action_type1 = (ge_mActionType1)(total_action_type1 | x.total_action_type1);
   
   for ( xelem = x.elements; xelem; xelem = xelem->next) {
     prev = 0;
     for ( elem = elements; elem; elem = elem->next) {
-      if ( elem->dyn_type == xelem->dyn_type && 
-	   elem->action_type == xelem->action_type) {
+      if ( elem->dyn_type1 == xelem->dyn_type1 && 
+	   elem->dyn_type2 == xelem->dyn_type2 && 
+	   elem->action_type1 == xelem->action_type1 &&
+	   elem->action_type2 == xelem->action_type2) {
 	// Element exists in both, use element in x, i.e. remove current element
 	if ( !prev)
 	  elements = elem->next;
@@ -1556,8 +1743,10 @@ int GeDyn::disconnect( grow_tObject object)
 
 int GeDyn::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
-  int inherit_dyn_type;
-  int inherit_action_type;
+  int inherit_dyn_type1;
+  int inherit_dyn_type2;
+  int inherit_action_type1;
+  int inherit_action_type2;
 
   if ( grow_GetObjectType( object) == glow_eObjectType_GrowBar || 
        grow_GetObjectType( object) == glow_eObjectType_GrowTable ||
@@ -1565,28 +1754,38 @@ int GeDyn::connect( grow_tObject object, glow_sTraceData *trace_data)
        grow_GetObjectType( object) == glow_eObjectType_GrowXYCurve ||
        grow_GetObjectType( object) == glow_eObjectType_GrowTrend ||
        grow_GetObjectType( object) == glow_eObjectType_GrowPie ||
-       grow_GetObjectType( object) == glow_eObjectType_GrowBarChart) {
+       grow_GetObjectType( object) == glow_eObjectType_GrowBarChart ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowAxis ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowAxisArc) {
     if ( cycle == glow_eCycle_Inherit)
       cycle = glow_eCycle_Slow;
-    if ( dyn_type & ge_mDynType_Inherit)
-      dyn_type = ge_mDynType( dyn_type & ~ge_mDynType_Inherit);
-    if ( action_type & ge_mActionType_Inherit)
-      action_type = ge_mActionType( action_type & ~ge_mActionType_Inherit);
+    if ( dyn_type1 & ge_mDynType1_Inherit)
+      dyn_type1 = ge_mDynType1( dyn_type1 & ~ge_mDynType1_Inherit);
+    if ( action_type1 & ge_mActionType1_Inherit)
+      action_type1 = ge_mActionType1( action_type1 & ~ge_mActionType1_Inherit);
   }
 
-  if ( dyn_type & ge_mDynType_Inherit) {
-    grow_GetObjectClassDynType( object, &inherit_dyn_type, &inherit_action_type);
-    total_dyn_type = ge_mDynType( dyn_type | inherit_dyn_type);
+  if ( dyn_type1 & ge_mDynType1_Inherit) {
+    grow_GetObjectClassDynType( object, &inherit_dyn_type1, &inherit_dyn_type2, 
+				&inherit_action_type1, &inherit_action_type2);
+    total_dyn_type1 = ge_mDynType1( dyn_type1 | inherit_dyn_type1);
+    total_dyn_type2 = ge_mDynType2( dyn_type2 | inherit_dyn_type2);
   }
-  else
-    total_dyn_type = dyn_type;
+  else {
+    total_dyn_type1 = dyn_type1;
+    total_dyn_type2 = dyn_type2;
+  }
 
-  if ( action_type & ge_mActionType_Inherit) {
-    grow_GetObjectClassDynType( object, &inherit_dyn_type, &inherit_action_type);
-    total_action_type = ge_mActionType( action_type | inherit_action_type);
+  if ( action_type1 & ge_mActionType1_Inherit) {
+    grow_GetObjectClassDynType( object, &inherit_dyn_type1, &inherit_dyn_type2, 
+				 &inherit_action_type1, &inherit_action_type2);
+    total_action_type1 = ge_mActionType1( action_type1 | inherit_action_type1);
+    total_action_type2 = ge_mActionType2( action_type2 | inherit_action_type2);
   }
-  else
-    total_action_type = action_type;
+  else {
+    total_action_type1 = action_type1;
+    total_action_type2 = action_type2;
+  }
 
   if ( cycle == glow_eCycle_Inherit)
     grow_GetObjectClassCycle( object, &cycle);
@@ -1626,7 +1825,7 @@ int GeDyn::confirmed_action( grow_tObject object, glow_tEvent event)
 {
   int sts;
 
-  total_action_type = (ge_mActionType) (total_action_type & ~ge_mActionType_Confirm);
+  total_action_type1 = (ge_mActionType1) (total_action_type1 & ~ge_mActionType1_Confirm);
 
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
     sts = elem->action( object, event);
@@ -1634,7 +1833,7 @@ int GeDyn::confirmed_action( grow_tObject object, glow_tEvent event)
       return sts;
   }
 
-  total_action_type = (ge_mActionType) (total_action_type | ge_mActionType_Confirm);
+  total_action_type1 = (ge_mActionType1) (total_action_type1 | ge_mActionType1_Confirm);
   return 1;
 }
 
@@ -1647,7 +1846,8 @@ int GeDyn::change_value( grow_tObject object, char *text)
 
 void GeDyn::export_java( grow_tObject object, ofstream& fp, char *var_name)
 {
-  int inherit_dyn_type, inherit_action_type;
+  int inherit_dyn_type1, inherit_action_type1;
+  int inherit_dyn_type2, inherit_action_type2;
 
   if ( grow_GetObjectType( object) == glow_eObjectType_GrowBar || 
        grow_GetObjectType( object) == glow_eObjectType_GrowTable ||
@@ -1656,30 +1856,38 @@ void GeDyn::export_java( grow_tObject object, ofstream& fp, char *var_name)
        grow_GetObjectType( object) == glow_eObjectType_GrowTrend) {
     if ( cycle == glow_eCycle_Inherit)
       cycle = glow_eCycle_Slow;
-    if ( dyn_type & ge_mDynType_Inherit)
-      dyn_type = ge_mDynType( dyn_type & ~ge_mDynType_Inherit);
-    if ( action_type & ge_mActionType_Inherit)
-      action_type = ge_mActionType( action_type & ~ge_mActionType_Inherit);
+    if ( dyn_type1 & ge_mDynType1_Inherit)
+      dyn_type1 = ge_mDynType1( dyn_type1 & ~ge_mDynType1_Inherit);
+    if ( action_type1 & ge_mActionType1_Inherit)
+      action_type1 = ge_mActionType1( action_type1 & ~ge_mActionType1_Inherit);
   }
 
-  if ( dyn_type & ge_mDynType_Inherit) {
-    grow_GetObjectClassDynType( object, &inherit_dyn_type, &inherit_action_type);
-    total_dyn_type = ge_mDynType( dyn_type | inherit_dyn_type);
+  if ( dyn_type1 & ge_mDynType1_Inherit) {
+    grow_GetObjectClassDynType( object, &inherit_dyn_type1, &inherit_dyn_type2,
+				 &inherit_action_type1, &inherit_action_type2);
+    total_dyn_type1 = ge_mDynType1( dyn_type1 | inherit_dyn_type1);
+    total_dyn_type2 = ge_mDynType2( dyn_type2 | inherit_dyn_type2);
   }
-  else
-    total_dyn_type = dyn_type;
+  else {
+    total_dyn_type1 = dyn_type1;
+    total_dyn_type2 = dyn_type2;
+  }
 
-  if ( action_type & ge_mActionType_Inherit) {
-    grow_GetObjectClassDynType( object, &inherit_dyn_type, &inherit_action_type);
-    total_action_type = ge_mActionType( (action_type | inherit_action_type) & ~ge_mActionType_Inherit);
+  if ( action_type1 & ge_mActionType1_Inherit) {
+    grow_GetObjectClassDynType( object, &inherit_dyn_type1,&inherit_dyn_type2, 
+				 &inherit_action_type1, &inherit_action_type2);
+    total_action_type1 = ge_mActionType1( (action_type1 | inherit_action_type1) & ~ge_mActionType1_Inherit);
+    total_action_type2 = ge_mActionType2( action_type2 | inherit_action_type2);
   }
-  else
-    total_action_type = action_type;
+  else {
+    total_action_type1 = action_type1;
+    total_action_type2 = action_type2;
+  }
 
   fp <<
-"    " << var_name << ".dd.setDynType(" << total_dyn_type << ");" << endl <<
-"    " << var_name << ".dd.setActionType(" << total_action_type << ");" << endl;
-  if ( total_action_type)
+"    " << var_name << ".dd.setDynType1(" << total_dyn_type1 << ");" << endl <<
+"    " << var_name << ".dd.setActionType1(" << total_action_type1 << ");" << endl;
+  if ( total_action_type1)
     fp <<
 "    " << var_name << ".dd.setAccess(" << access << ");" << endl;
 
@@ -1702,7 +1910,7 @@ void GeDyn::export_java_object( grow_tObject object, ofstream& fp, char *var_nam
 {
 
   fp <<
-      "    new GeDyn(" << var_name << "," << dyn_type << "," << action_type << "," << access << "," << "new GeDynElemIfc[] {" << endl;
+      "    new GeDyn(" << var_name << "," << dyn_type1 << "," << action_type1 << "," << access << "," << "new GeDynElemIfc[] {" << endl;
 
   bool first = true;
   int sts = 0;
@@ -1733,7 +1941,7 @@ void GeDigLowColor::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     strcpy( attrinfo[i].name, "DigLowTone.Attribute");
     attrinfo[i].value = attribute;
     attrinfo[i].type = glow_eType_String;
@@ -1765,7 +1973,7 @@ void GeDigLowColor::set_attribute( grow_tObject object, const char *attr_name, i
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    if ( dyn->total_dyn_type & ge_mDynType_Tone)
+    if ( dyn->total_dyn_type1 & ge_mDynType1_Tone)
       snprintf( msg, sizeof(msg), "DigLowTone.Attribute = %s", attr_name);
     else
       snprintf( msg, sizeof(msg), "DigLowColor.Attribute = %s", attr_name);
@@ -1783,7 +1991,7 @@ int GeDigLowColor::set_color( grow_tObject object, glow_eDrawType color)
 {
   char msg[200];
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     this->color = glow_eDrawType( color / 30);
     snprintf( msg, sizeof(msg), "DigLowTone.Tone = %s", grow_ColorToneToName( this->color));
   }
@@ -1905,7 +2113,7 @@ int GeDigLowColor::scan( grow_tObject object)
   else
     first_scan = false;
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     if ( !val) {
       if ( color >= (glow_eDrawType) glow_eDrawTone__)
 	grow_SetObjectFillColor( object, color);
@@ -1944,7 +2152,7 @@ void GeDigColor::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     if ( instance == ge_mInstance_1) {
       strcpy( attrinfo[i].name, "DigTone.Attribute");
       attrinfo[i].value = attribute;
@@ -2029,13 +2237,13 @@ void GeDigColor::set_attribute( grow_tObject object, const char *attr_name, int 
 
     strncpy( attribute, attr_name, sizeof( attribute));
     if ( instance == ge_mInstance_1) {
-      if ( dyn->total_dyn_type & ge_mDynType_Tone)
+      if ( dyn->total_dyn_type1 & ge_mDynType1_Tone)
 	snprintf( msg, sizeof(msg), "DigTone.Attribute = %s", attr_name);
       else
 	snprintf( msg, sizeof(msg), "DigColor.Attribute = %s", attr_name);
     }
     else {
-      if ( dyn->total_dyn_type & ge_mDynType_Tone)
+      if ( dyn->total_dyn_type1 & ge_mDynType1_Tone)
 	snprintf( msg, sizeof(msg), "DigTone%d.Attribute = %s", GeDyn::instance_to_number( instance),
 	       attr_name);
       else
@@ -2056,7 +2264,7 @@ int GeDigColor::set_color( grow_tObject object, glow_eDrawType color)
 {
   char msg[200];
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     this->color = glow_eDrawType( color / 30);
     if ( instance == ge_mInstance_1)
       snprintf( msg, sizeof(msg), "DigTone.Tone = %s", grow_ColorToneToName( this->color));
@@ -2186,7 +2394,7 @@ int GeDigColor::scan( grow_tObject object)
   else
     first_scan = false;
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     if ( val) {
       if ( color >= (glow_eDrawType) glow_eDrawTone__) {
 	if ( dyn->reset_color)
@@ -2355,7 +2563,7 @@ int GeDigWarning::scan( grow_tObject object)
   else
     first_scan = false;
     
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     if ( val) {
       grow_SetObjectColorTone( object, glow_eDrawTone_Yellow);
       dyn->ignore_color = true;
@@ -2515,7 +2723,7 @@ int GeDigError::scan( grow_tObject object)
   else
     first_scan = false;
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     if ( val) {
       grow_SetObjectColorTone( object, glow_eDrawTone_Red);
       dyn->ignore_color = true;
@@ -2554,7 +2762,7 @@ void GeDigFlash::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     strcpy( attrinfo[i].name, "DigFlash.Attribute");
     attrinfo[i].value = attribute;
     attrinfo[i].type = glow_eType_String;
@@ -2611,7 +2819,7 @@ int GeDigFlash::set_color( grow_tObject object, glow_eDrawType color)
 {
   char msg[200];
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     this->color = glow_eDrawType( color / 30);
     snprintf( msg, sizeof(msg), "DigFlash.Tone = %s", grow_ColorToneToName( this->color));
   }
@@ -2730,7 +2938,7 @@ int GeDigFlash::scan( grow_tObject object)
   else
     first_scan = false;
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     if ( val) {
       if ( on) {
 	if ( color >= (glow_eDrawType) glow_eDrawTone__)
@@ -4136,7 +4344,7 @@ int GeValueInput::connect( grow_tObject object, glow_sTraceData *trace_data)
   annot_typeid = annot_size = 0;
   value_element = 0;
   for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
-    if ( elem->dyn_type == ge_mDynType_Value) {
+    if ( elem->dyn_type1 == ge_mDynType1_Value) {
       value_element = (GeValue *)elem;
       annot_typeid = value_element->annot_typeid;
       annot_size = value_element->annot_size;
@@ -4164,7 +4372,7 @@ int GeValueInput::action( grow_tObject object, glow_tEvent event)
     grow_SetClickSensitivity( dyn->graph->grow->ctx, glow_mSensitivity_MB1Click);
     break;
   case glow_eEvent_MB1Click:
-    if ( !(dyn->total_action_type & ge_mActionType_InputFocus)) {
+    if ( !(dyn->total_action_type1 & ge_mActionType1_InputFocus)) {
 	grow_SetObjectInputFocus( object, 1, event->event);
 	dyn->graph->set_inputfocus( 1);
     }
@@ -4176,7 +4384,7 @@ int GeValueInput::action( grow_tObject object, glow_tEvent event)
     if ( ODD(sts)) {
       grow_CloseAnnotationInput( object, 1);
       grow_SetObjectInputFocus( object, 0, event->event);
-      if ( dyn->total_action_type & ge_mActionType_InputFocus)
+      if ( dyn->total_action_type1 & ge_mActionType1_InputFocus)
 	// Trigger a tab event, this is ugly but it works...
 	event->event = glow_eEvent_Key_Tab;
     }
@@ -4400,11 +4608,12 @@ int GeValueInput::change_value( grow_tObject object, char *text)
 
 int GeValueInput::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
-  int class_dyn_type, class_action_type;
+  int class_dyn_type1, class_action_type1;
+  int class_dyn_type2, class_action_type2;
 
   // Check that nodeclass is a valueinput, otherwise this will not be a GeTextField
-  grow_GetObjectClassDynType( object, &class_dyn_type, &class_action_type);
-  if ( !(class_action_type & ge_mActionType_ValueInput))
+  grow_GetObjectClassDynType( object, &class_dyn_type1, &class_dyn_type2, &class_action_type1, &class_action_type2);
+  if ( !(class_action_type1 & ge_mActionType1_ValueInput))
     return 1;
 
   if ( first)
@@ -4427,7 +4636,7 @@ void GeAnalogColor::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     if ( instance == ge_mInstance_1) {
       strcpy( attrinfo[i].name, "AnalogTone.Limit");
       attrinfo[i].value = &limit;
@@ -4547,7 +4756,7 @@ void GeAnalogColor::set_attribute( grow_tObject object, const char *attr_name, i
       e = this;
     else {
       for ( elem = dyn->elements; elem; elem = elem->next) {
-	if ( elem->dyn_type == ge_mDynType_AnalogColor &&
+	if ( elem->dyn_type1 == ge_mDynType1_AnalogColor &&
 	     elem->instance == ge_mInstance_1) {
 	  found = true;
 	  break;
@@ -4561,7 +4770,7 @@ void GeAnalogColor::set_attribute( grow_tObject object, const char *attr_name, i
     char msg[200];
 
     strncpy( e->attribute, attr_name, sizeof( attribute));
-    if ( dyn->total_dyn_type & ge_mDynType_Tone)
+    if ( dyn->total_dyn_type1 & ge_mDynType1_Tone)
       snprintf( msg, sizeof(msg), "AnalogTone.Attribute = %s", attr_name);
     else
       snprintf( msg, sizeof(msg), "AnalogColor.Attribute = %s", attr_name);
@@ -4579,7 +4788,7 @@ int GeAnalogColor::set_color( grow_tObject object, glow_eDrawType color)
 {
   char msg[200];
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     this->color = glow_eDrawType( color / 30);
     if ( instance == ge_mInstance_1)
       snprintf( msg, sizeof(msg), "AnalogTone.Tone = %s", grow_ColorToneToName( this->color));
@@ -4665,7 +4874,7 @@ int GeAnalogColor::connect( grow_tObject object, glow_sTraceData *trace_data)
     e = this;
   else {
     for ( elem = dyn->elements; elem; elem = elem->next) {
-      if ( elem->dyn_type == ge_mDynType_AnalogColor &&
+      if ( elem->dyn_type1 == ge_mDynType1_AnalogColor &&
 	   elem->instance == ge_mInstance_1) {
 	found = true;
 	break;
@@ -4819,7 +5028,7 @@ int GeAnalogColor::scan( grow_tObject object)
   if ( !set_color && !reset_color) {
     return 1;
   }
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     if ( set_color) {
       if ( color >= (glow_eDrawType) glow_eDrawTone__)
 	grow_SetObjectFillColor( object, color);
@@ -8282,7 +8491,7 @@ void GeStatusColor::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     strcpy( attrinfo[i].name, "StatusTone.Attribute");
     attrinfo[i].value = attribute;
     attrinfo[i].type = glow_eType_String;
@@ -8314,7 +8523,7 @@ void GeStatusColor::set_attribute( grow_tObject object, const char *attr_name, i
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    if ( dyn->total_dyn_type & ge_mDynType_Tone)
+    if ( dyn->total_dyn_type1 & ge_mDynType1_Tone)
       snprintf( msg, sizeof(msg), "StatusTone.Attribute = %s", attr_name);
     else
       snprintf( msg, sizeof(msg), "StatusColor.Attribute = %s", attr_name);
@@ -8332,7 +8541,7 @@ int GeStatusColor::set_color( grow_tObject object, glow_eDrawType color)
 {
   char msg[200];
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     this->nostatus_color = glow_eDrawType( color / 30);
     snprintf( msg, sizeof(msg), "StatusTone.NoStatusTone = %s", grow_ColorToneToName( this->nostatus_color));
   }
@@ -8476,7 +8685,7 @@ int GeStatusColor::scan( grow_tObject object)
   else
     first_scan = false;
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     switch ( value) {
     case ge_ePwrStatus_No:
       if ( nostatus_color >= (glow_eDrawType) glow_eDrawTone__)
@@ -9012,6 +9221,151 @@ int GeBarChart::export_java( grow_tObject object, ofstream& fp, bool first, char
   return 1;
 }
 
+void GeAxis::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+  
+  strcpy( attrinfo[i].name, "Axis.MinValueAttr");
+  attrinfo[i].value = minvalue_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( minvalue_attr);
+
+  strcpy( attrinfo[i].name, "Axis.MaxValueAttr");
+  attrinfo[i].value = maxvalue_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( maxvalue_attr);
+
+  *item_count = i;
+}
+
+void GeAxis::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
+{
+}
+
+void GeAxis::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( minvalue_attr, sizeof(minvalue_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute( maxvalue_attr, sizeof(maxvalue_attr), from, to, cnt, strict);
+}
+
+void GeAxis::save( ofstream& fp)
+{
+  fp << int(ge_eSave_Axis) << endl;
+  fp << int(ge_eSave_Axis_minvalue_attr) << FSPACE << minvalue_attr << endl;
+  fp << int(ge_eSave_Axis_maxvalue_attr) << FSPACE << maxvalue_attr << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeAxis::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[40];
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeAxis: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+      case ge_eSave_Axis: break;
+      case ge_eSave_Axis_minvalue_attr:
+        fp.get();
+        fp.getline( minvalue_attr, sizeof(minvalue_attr));
+        break;
+      case ge_eSave_Axis_maxvalue_attr:
+        fp.get();
+        fp.getline( maxvalue_attr, sizeof(maxvalue_attr));
+        break;
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeAxis:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeAxis::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+  int		attr_type, attr_size;
+  pwr_tAName   	parsed_name;
+  int		sts;
+  int		inverted;
+
+  min_value_p = 0;
+  dyn->parse_attr_name( minvalue_attr, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
+				       &min_value_subid, attr_size);
+  }
+
+  max_value_p = 0;
+  dyn->parse_attr_name( maxvalue_attr, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
+				       &max_value_subid, attr_size);
+  }
+
+  trace_data->p = &pdummy;
+  first_scan = true;
+
+  return 1;
+}
+
+int GeAxis::disconnect( grow_tObject object)
+{
+  if ( min_value_p) {
+    gdh_UnrefObjectInfo( min_value_subid);
+    min_value_p = 0;
+  }
+  if ( max_value_p) {
+    gdh_UnrefObjectInfo( max_value_subid);
+    max_value_p = 0;
+  }
+  return 1;
+}
+
+int GeAxis::scan( grow_tObject object)
+{
+  if ( !(max_value_p || min_value_p))
+    return 1;
+  
+  if ( !(first_scan ||
+	 (max_value_p && ( *max_value_p != max_value)) ||
+	 (min_value_p && ( *min_value_p != min_value)))) {
+    return 1;
+  }
+  if ( first_scan)
+    first_scan = 0;
+
+  if ( min_value_p)
+    min_value = *min_value_p;
+  if ( max_value_p)
+    max_value = *max_value_p;
+
+  if ( max_value == min_value)
+    return 1;
+
+  grow_SetAxisRange( object, min_value, max_value);
+  return 1;
+}
+
+int GeAxis::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
+  return 1;
+}
+
 void GeHostObject::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -9334,7 +9688,7 @@ void GeFillLevel::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( attribute);
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     strcpy( attrinfo[i].name, "FillLevel.BackgroundTone");
     attrinfo[i].value = &color;
     attrinfo[i].type = glow_eType_ToneOrColor;
@@ -9477,7 +9831,7 @@ int GeFillLevel::connect( grow_tObject object, glow_sTraceData *trace_data)
   trace_data->p = &pdummy;
   first_scan = true;
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     if ( color >= (glow_eDrawType) glow_eDrawTone__)
       grow_SetObjectLevelFillColor( object, color);
     else
@@ -10174,7 +10528,7 @@ int GeSetDig::action( grow_tObject object, glow_tEvent event)
     int			attr_type, attr_size;
     graph_eDatabase 	db;
     
-    if ( dyn->total_action_type & ge_mActionType_Confirm)
+    if ( dyn->total_action_type1 & ge_mActionType1_Confirm)
       break;
 
     db = dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, 
@@ -10385,7 +10739,7 @@ int GeResetDig::action( grow_tObject object, glow_tEvent event)
     int			inverted;
     int			attr_type, attr_size;
     
-    if ( dyn->total_action_type & ge_mActionType_Confirm)
+    if ( dyn->total_action_type1 & ge_mActionType1_Confirm)
       break;
 
     dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
@@ -10547,7 +10901,7 @@ int GeToggleDig::action( grow_tObject object, glow_tEvent event)
     int			attr_type, attr_size;
     graph_eDatabase 	db;
     
-    if ( dyn->total_action_type & ge_mActionType_Confirm)
+    if ( dyn->total_action_type1 & ge_mActionType1_Confirm)
       break;
 
     db = dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
@@ -10854,7 +11208,7 @@ int GeCommand::action( grow_tObject object, glow_tEvent event)
     break;
   case glow_eEvent_Key_Return:
   case glow_eEvent_MB1Click:
-    if ( dyn->total_action_type & ge_mActionType_Confirm)
+    if ( dyn->total_action_type1 & ge_mActionType1_Confirm)
       break;
 
     if ( dyn->graph->command_cb) {
@@ -11033,13 +11387,13 @@ int GeConfirm::action( grow_tObject object, glow_tEvent event)
   if ( !dyn->graph->is_authorized( dyn->access))
     return 1;
 
-  if ( !(dyn->total_action_type & ge_mActionType_Confirm))
+  if ( !(dyn->total_action_type1 & ge_mActionType1_Confirm))
     return 1;
 
   switch ( event->event) {
   case glow_eEvent_Key_Return:
   case glow_eEvent_MB1Click: {
-    if ( dyn->total_action_type & ge_mActionType_ValueInput)
+    if ( dyn->total_action_type1 & ge_mActionType1_ValueInput)
       return 1;
     if ( dyn->graph->confirm_cb) {
       (dyn->graph->confirm_cb)( dyn->graph->parent_ctx, 
@@ -11385,7 +11739,7 @@ int GeRadioButton::action( grow_tObject object, glow_tEvent event)
     int			attr_type, attr_size;
     pwr_tBoolean 	value;
 
-    if ( dyn->total_action_type & ge_mActionType_Confirm)
+    if ( dyn->total_action_type1 & ge_mActionType1_Confirm)
       break;
 
     sts = grow_GetObjectGroup( dyn->graph->grow->ctx, object, &group);
@@ -11401,9 +11755,9 @@ int GeRadioButton::action( grow_tObject object, glow_tEvent event)
 	GeDyn *gm_dyn;
 
         grow_GetUserData( *object_p, (void **)&gm_dyn);
-	if ( gm_dyn->total_action_type & ge_mActionType_RadioButton ) {
+	if ( gm_dyn->total_action_type1 & ge_mActionType1_RadioButton ) {
 	  for ( GeDynElem *elem = gm_dyn->elements; elem; elem = elem->next) {
-	    if ( elem->action_type == ge_mActionType_RadioButton) {
+	    if ( elem->action_type1 == ge_mActionType1_RadioButton) {
 	      dyn->parse_attr_name( ((GeRadioButton *)elem)->attribute, parsed_name,
 					   &inverted, &attr_type, &attr_size);
 	      if ( parsed_name[0] == '&')
@@ -11523,9 +11877,9 @@ int GeTipText::action( grow_tObject object, glow_tEvent event)
       int found = 0;
 
       // Fetch text from Description for popup menu object
-      if ( dyn->total_action_type & ge_mActionType_PopupMenu) {
+      if ( dyn->total_action_type1 & ge_mActionType1_PopupMenu) {
 	for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
-	  if ( elem->action_type == ge_mActionType_PopupMenu) {
+	  if ( elem->action_type1 == ge_mActionType1_PopupMenu) {
 	    strncpy( attr, ((GePopupMenu *)elem)->ref_object, sizeof(attr));	    
 	    strncat( attr, ".Description", sizeof(attr));
 	    found = 1;
@@ -11533,9 +11887,9 @@ int GeTipText::action( grow_tObject object, glow_tEvent event)
 	  }
 	}
       }
-      else if ( dyn->total_dyn_type & ge_mDynType_HostObject) {
+      else if ( dyn->total_dyn_type1 & ge_mDynType1_HostObject) {
 	for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
-	  if ( elem->dyn_type == ge_mDynType_HostObject) {
+	  if ( elem->dyn_type1 == ge_mDynType1_HostObject) {
 	    strncpy( attr, ((GeHostObject *)elem)->hostobject, sizeof(attr));
 	    strncat( attr, ".Description", sizeof(attr));
 	    found = 1;
@@ -11680,7 +12034,7 @@ int GeHelp::action( grow_tObject object, glow_tEvent event)
     break;
   case glow_eEvent_Key_Return:
   case glow_eEvent_MB1Click:
-    if ( dyn->total_action_type & ge_mActionType_Confirm)
+    if ( dyn->total_action_type1 & ge_mActionType1_Confirm)
       break;
 
     if ( dyn->graph->command_cb) {
@@ -11816,7 +12170,7 @@ int GeOpenGraph::action( grow_tObject object, glow_tEvent event)
     break;
   case glow_eEvent_Key_Return:
   case glow_eEvent_MB1Click:
-    if ( dyn->total_action_type & ge_mActionType_Confirm)
+    if ( dyn->total_action_type1 & ge_mActionType1_Confirm)
       break;
 
     if ( dyn->graph->command_cb) {
@@ -11827,17 +12181,17 @@ int GeOpenGraph::action( grow_tObject object, glow_tEvent event)
 	sprintf( command, "open graph/object=%s", graph_object);
       else {
 	// Open classgraph for popup menu object
-	if ( dyn->total_action_type & ge_mActionType_PopupMenu) {
+	if ( dyn->total_action_type1 & ge_mActionType1_PopupMenu) {
 	  for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
-	    if ( elem->action_type == ge_mActionType_PopupMenu) {
+	    if ( elem->action_type1 == ge_mActionType1_PopupMenu) {
 	      sprintf( command, "open graph/class/instance=%s", ((GePopupMenu *)elem)->ref_object);
 	      break;
 	    }
 	  }
 	}
-	else if ( dyn->total_dyn_type & ge_mDynType_HostObject) {
+	else if ( dyn->total_dyn_type1 & ge_mDynType1_HostObject) {
 	  for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
-	    if ( elem->dyn_type == ge_mDynType_HostObject) {
+	    if ( elem->dyn_type1 == ge_mDynType1_HostObject) {
 	      sprintf( command, "open graph/class/instance=%s", ((GeHostObject *)elem)->hostobject);
 	      break;
 	    }
@@ -11947,7 +12301,7 @@ int GeOpenURL::action( grow_tObject object, glow_tEvent event)
     break;
   case glow_eEvent_Key_Return:
   case glow_eEvent_MB1Click:
-    if ( dyn->total_action_type & ge_mActionType_Confirm)
+    if ( dyn->total_action_type1 & ge_mActionType1_Confirm)
       break;
 
     if ( dyn->graph->command_cb) {
@@ -12086,9 +12440,9 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 
 	  // Check that this object can handle input focus
 	  grow_GetUserData( next, (void **)&next_dyn);
-	  if ( next_dyn->total_action_type & ge_mActionType_InputFocus) {
+	  if ( next_dyn->total_action_type1 & ge_mActionType1_InputFocus) {
 	    for ( GeDynElem *elem = next_dyn->elements; elem; elem = elem->next) {
-	      if ( elem->action_type == ge_mActionType_InputFocus) {
+	      if ( elem->action_type1 == ge_mActionType1_InputFocus) {
 		next_inputfocus = (GeInputFocus *)elem;
 		found = 1;
 		break;
@@ -12105,9 +12459,9 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	  
 	  // Check that this object can handle input focus
 	  grow_GetUserData( next, (void **)&next_dyn);
-	  if ( next_dyn->total_action_type & ge_mActionType_InputFocus) {
+	  if ( next_dyn->total_action_type1 & ge_mActionType1_InputFocus) {
 	    for ( GeDynElem *elem = next_dyn->elements; elem; elem = elem->next) {
-	      if ( elem->action_type == ge_mActionType_InputFocus) {
+	      if ( elem->action_type1 == ge_mActionType1_InputFocus) {
 		next_inputfocus = (GeInputFocus *)elem;
 		found = 1;
 		break;
@@ -12152,9 +12506,9 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	     grow_GetObjectType( *object_p) == glow_eObjectType_GrowSlider ||
 	     grow_GetObjectType( *object_p) == glow_eObjectType_GrowGroup) {
 	  grow_GetUserData( *object_p, (void **)&gm_dyn);
-	  if ( gm_dyn->total_action_type & ge_mActionType_InputFocus ) {
+	  if ( gm_dyn->total_action_type1 & ge_mActionType1_InputFocus ) {
 	    for ( GeDynElem *elem = gm_dyn->elements; elem; elem = elem->next) {
-	      if ( elem->action_type == ge_mActionType_InputFocus) {
+	      if ( elem->action_type1 == ge_mActionType1_InputFocus) {
 		if ( strcmp( ((GeInputFocus *)elem)->next_horizontal, name) == 0) {
 		  found = 1;
 		  prev = *object_p;
@@ -12173,7 +12527,7 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	// Check that this object can handle input focus
 	GeDyn 	*prev_dyn;
 	grow_GetUserData( prev, (void **)&prev_dyn);
-	if ( prev_dyn->total_action_type & ge_mActionType_InputFocus)		
+	if ( prev_dyn->total_action_type1 & ge_mActionType1_InputFocus)		
 	  grow_SetObjectInputFocus( prev, 1, event->event);
 	else
 	  grow_SetObjectInputFocus( object, 0, event->event);
@@ -12195,7 +12549,7 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	  // Check that this object can handle input focus
 	  GeDyn 	*next_dyn;
 	  grow_GetUserData( next, (void **)&next_dyn);
-	  if ( next_dyn->total_action_type & ge_mActionType_InputFocus)
+	  if ( next_dyn->total_action_type1 & ge_mActionType1_InputFocus)
 	    found = 1;
 	}
       }
@@ -12205,7 +12559,7 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	  // Check that this object can handle input focus
 	  GeDyn 	*next_dyn;
 	  grow_GetUserData( next, (void **)&next_dyn);
-	  if ( next_dyn->total_action_type & ge_mActionType_InputFocus)		
+	  if ( next_dyn->total_action_type1 & ge_mActionType1_InputFocus)		
 	    found = 1;
 	}
       }
@@ -12242,9 +12596,9 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	     grow_GetObjectType( *object_p) == glow_eObjectType_GrowSlider ||
 	     grow_GetObjectType( *object_p) == glow_eObjectType_GrowGroup) {
 	  grow_GetUserData( *object_p, (void **)&gm_dyn);
-	  if ( gm_dyn->total_action_type & ge_mActionType_InputFocus ) {
+	  if ( gm_dyn->total_action_type1 & ge_mActionType1_InputFocus ) {
 	    for ( GeDynElem *elem = gm_dyn->elements; elem; elem = elem->next) {
-	      if ( elem->action_type == ge_mActionType_InputFocus) {
+	      if ( elem->action_type1 == ge_mActionType1_InputFocus) {
 		if ( strcmp( ((GeInputFocus *)elem)->next_vertical, name) == 0) {
 		  found = 1;
 		  prev = *object_p;
@@ -12263,7 +12617,7 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	// Check that this object can handle input focus
 	GeDyn 	*prev_dyn;
 	grow_GetUserData( prev, (void **)&prev_dyn);
-	if ( prev_dyn->total_action_type & ge_mActionType_InputFocus)		
+	if ( prev_dyn->total_action_type1 & ge_mActionType1_InputFocus)		
 	  grow_SetObjectInputFocus( prev, 1, event->event);
 	else
 	  grow_SetObjectInputFocus( object, 0, event->event);
@@ -12288,9 +12642,9 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 
 	  // Check that this object can handle input focus
 	  grow_GetUserData( next, (void **)&next_dyn);
-	  if ( next_dyn->total_action_type & ge_mActionType_InputFocus) {
+	  if ( next_dyn->total_action_type1 & ge_mActionType1_InputFocus) {
 	    for ( GeDynElem *elem = next_dyn->elements; elem; elem = elem->next) {
-	      if ( elem->action_type == ge_mActionType_InputFocus) {
+	      if ( elem->action_type1 == ge_mActionType1_InputFocus) {
 		next_inputfocus = (GeInputFocus *)elem;
 		found = 1;
 		break;
@@ -12322,7 +12676,7 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
       if ( prev_tab) {
 	GeDyn 	*prev_dyn;
 	grow_GetUserData( prev_tab, (void **)&prev_dyn);
-	if ( prev_dyn->total_action_type & ge_mActionType_InputFocus)
+	if ( prev_dyn->total_action_type1 & ge_mActionType1_InputFocus)
 	  grow_SetObjectInputFocus( prev_tab, 1, event->event);
 	else
 	  grow_SetObjectInputFocus( object, 0, event->event);
@@ -12398,7 +12752,7 @@ int GeCloseGraph::action( grow_tObject object, glow_tEvent event)
     break;
   case glow_eEvent_MB1Click:
   case glow_eEvent_Key_Return:
-    if ( dyn->total_action_type & ge_mActionType_Confirm)
+    if ( dyn->total_action_type1 & ge_mActionType1_Confirm)
       break;
 
     if ( dyn->graph->close_cb) {
@@ -12565,7 +12919,7 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
     grow_GetSliderInfo( object, &direction, 
 		&max_value, &min_value, &max_pos, &min_pos);
     sts = grow_GetBackgroundObjectLimits( dyn->graph->grow->ctx, 
-					(glow_eTraceType)ge_mDynType_SliderBackground,
+					(glow_eTraceType)ge_mDynType1_SliderBackground,
 					(ll_x + ur_x) / 2, (ll_y + ur_y) / 2, &background,
 					&min_pos, &max_pos, &direction);
     if ( ODD(sts)) {
@@ -12887,7 +13241,7 @@ int GeSlider::export_java( grow_tObject object, ofstream& fp, bool first, char *
   grow_MeasureJavaBean( dyn->graph->grow->ctx, &dim_x1, &dim_x0, &dim_y1, &dim_y0);
   grow_GetSliderInfo( object, &direction, &max_value, &min_value, &max_pos, &min_pos);
   grow_GetSliderInfoPixel( object, &direction, &max_pos, &min_pos, 
-			   ge_mDynType_SliderBackground);
+			   ge_mDynType1_SliderBackground);
 
   switch ( direction) {
   case glow_eDirection_Left:
@@ -13371,9 +13725,18 @@ int GePulldownMenu::get_transtab( char **tt)
 
 void GePulldownMenu::save( ofstream& fp)
 {
+
+  int b_mask = ge_mInstance_1;
+  for ( int j = 0; j < 32; j++) {
+    if ( b_mask & button_mask) {
+      if ( !items_dyn[j])
+	dyn->update_elements();
+    }
+    b_mask = b_mask << 1;
+  }
+
   fp << int(ge_eSave_PulldownMenu) << endl;  
   fp << int(ge_eSave_PulldownMenu_button_mask) << FSPACE << int(button_mask) << endl;
-  int b_mask = ge_mInstance_1;
   for ( int j = 0; j < 32; j++) {
     if ( b_mask & button_mask) {
       fp << int(ge_eSave_PulldownMenu_items_text0+j) << FSPACE << items_text[j] << endl;
@@ -13787,7 +14150,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
       int sts;
       for ( int j = 0; j < 32; j++) {
 	if ( items_dyn[j] && 
-	     items_dyn[j]->action_type & ge_mActionType_PulldownMenu) {
+	     items_dyn[j]->action_type1 & ge_mActionType1_PulldownMenu) {
 	  sts = items_dyn[j]->action( 0, event);
 	  if ( sts == GE__NO_PROPAGATE) return sts;
 	}
@@ -13805,7 +14168,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
       int sts;
       for ( int j = 0; j < 32; j++) {
 	if ( items_dyn[j] && 
-	     items_dyn[j]->action_type & ge_mActionType_PulldownMenu) {
+	     items_dyn[j]->action_type1 & ge_mActionType1_PulldownMenu) {
 	  sts = items_dyn[j]->action( 0, event);
 	  if ( sts == GE__NO_PROPAGATE) return sts;
 	}
@@ -13823,7 +14186,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 	break;
       
       if ( items_dyn[item] && 
-	   items_dyn[item]->action_type & ge_mActionType_PulldownMenu) {
+	   items_dyn[item]->action_type1 & ge_mActionType1_PulldownMenu) {
 	// Send create menu event
 	glow_sEvent e;
 	e.event = glow_eEvent_MenuCreate;
@@ -13838,7 +14201,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
       int sts;
       for ( int j = 0; j < 32; j++) {
 	if ( items_dyn[j] &&
-	     items_dyn[j]->action_type & ge_mActionType_PulldownMenu) {
+	     items_dyn[j]->action_type1 & ge_mActionType1_PulldownMenu) {
 	  sts = items_dyn[j]->action( 0, event);
 	  if ( sts == GE__NO_PROPAGATE) return sts;
 	}
@@ -13856,7 +14219,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
       e.menu.object = 0;
       for ( int j = 0; j < 32; j++) {
 	if ( items_dyn[j] && 
-	     items_dyn[j]->action_type & ge_mActionType_PulldownMenu)
+	     items_dyn[j]->action_type1 & ge_mActionType1_PulldownMenu)
 	  items_dyn[j]->action( 0, &e);
       }
 
@@ -13868,7 +14231,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
       int sts;
       for ( int j = 0; j < 32; j++) {
 	if ( items_dyn[j] &&
-	     items_dyn[j]->action_type & ge_mActionType_PulldownMenu) {
+	     items_dyn[j]->action_type1 & ge_mActionType1_PulldownMenu) {
 	  sts = items_dyn[j]->action( 0, event);
 	  if ( sts == GE__NO_PROPAGATE) return sts;
 	}
@@ -13890,7 +14253,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 	break;
 
       int close_graph = 0;
-      if ( items_dyn[e.menu.item] && items_dyn[e.menu.item]->action_type & ge_mActionType_CloseGraph)
+      if ( items_dyn[e.menu.item] && items_dyn[e.menu.item]->action_type1 & ge_mActionType1_CloseGraph)
 	close_graph = 1;
 
       action( object, &e);
@@ -13925,7 +14288,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
     else {
       for ( int j = 0; j < 32; j++) {
 	if ( items_dyn[j] &&
-	     items_dyn[j]->action_type & ge_mActionType_PulldownMenu)
+	     items_dyn[j]->action_type1 & ge_mActionType1_PulldownMenu)
 	  items_dyn[j]->action( object, event);
       }
     }
@@ -13946,7 +14309,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
       // Close, delete this menu and all childmenues
       for ( int j = 0; j < 32; j++) {
 	if ( items_dyn[j] && 
-	     items_dyn[j]->action_type & ge_mActionType_PulldownMenu)
+	     items_dyn[j]->action_type1 & ge_mActionType1_PulldownMenu)
 	  items_dyn[j]->action( 0, event);
       }
 
@@ -13964,13 +14327,13 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 	  strcpy( info.item[i].text, items_text[i]);
 
 	  // Check access
-	  if ( items_dyn[i]->action_type & ge_mActionType_PulldownMenu)
+	  if ( items_dyn[i]->action_type1 & ge_mActionType1_PulldownMenu)
 	    info.item[i].type = glow_eMenuItem_PulldownMenu;
 	  else {
 	    // Check access
 	    if ( dyn->graph->is_authorized( items_dyn[i]->access)) {
 	      info.item[i].type = glow_eMenuItem_Button;
-	      if ( items_dyn[i]->dyn_type & ge_mDynType_Invisible) {
+	      if ( items_dyn[i]->dyn_type1 & ge_mDynType1_Invisible) {
 		int		attr_type, attr_size;
 		int 		inverted;
 		pwr_tAName     	parsed_name;
@@ -13981,7 +14344,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 		pwr_tBoolean	value;
 
 		for ( GeDynElem *elem = items_dyn[i]->elements; elem; elem = elem->next) {
-		  if ( elem->dyn_type == ge_mDynType_Invisible) {
+		  if ( elem->dyn_type1 == ge_mDynType1_Invisible) {
 		    invis_element = (GeInvisible *)elem;
 		    break;
 		  }
@@ -14068,7 +14431,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
     else {
       for ( int j = 0; j < 32; j++) {
 	if ( items_dyn[j] && 
-	     items_dyn[j]->action_type & ge_mActionType_PulldownMenu)
+	     items_dyn[j]->action_type1 & ge_mActionType1_PulldownMenu)
 	  items_dyn[j]->action( 0, event);
       }
     }
@@ -14085,7 +14448,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
       else {
 	// Send event to all child menu items
 	for ( int j = 0; j < 32; j++) {
-	  if ( items_dyn[j] && items_dyn[j]->action_type & ge_mActionType_PulldownMenu)
+	  if ( items_dyn[j] && items_dyn[j]->action_type1 & ge_mActionType1_PulldownMenu)
 	    items_dyn[j]->action( 0, event);
 	}
       }
@@ -14101,7 +14464,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 	  if ( b_mask & button_mask) {
 	    info.item[i].occupied = true;
 	    strcpy( info.item[i].text, items_text[i]);
-	    if ( items_dyn[i]->action_type & ge_mActionType_PulldownMenu)
+	    if ( items_dyn[i]->action_type1 & ge_mActionType1_PulldownMenu)
 	      info.item[i].type = glow_eMenuItem_PulldownMenu;
 	    else {
 	      // Check access
@@ -14141,7 +14504,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 	else {
 	  // Send event to child menu items
 	  for ( int j = 0; j < 32; j++) {
-	    if ( items_dyn[j] && items_dyn[j]->action_type & ge_mActionType_PulldownMenu)
+	    if ( items_dyn[j] && items_dyn[j]->action_type1 & ge_mActionType1_PulldownMenu)
 	      items_dyn[j]->action( 0, event);
 	  }
 	}
@@ -14156,7 +14519,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 
     for ( int j = 0; j < 32; j++) {
       if ( items_dyn[j] && 
-	   items_dyn[j]->action_type & ge_mActionType_PulldownMenu)
+	   items_dyn[j]->action_type1 & ge_mActionType1_PulldownMenu)
 	items_dyn[j]->action( 0, &e);
     }
     grow_DeleteObject( dyn->graph->grow->ctx, menu_object);
@@ -14170,7 +14533,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
       // Delete this and all child menues
       for ( int j = 0; j < 32; j++) {
 	if ( items_dyn[j] && 
-	     items_dyn[j]->action_type & ge_mActionType_PulldownMenu)
+	     items_dyn[j]->action_type1 & ge_mActionType1_PulldownMenu)
 	  items_dyn[j]->action( 0, event);
       }
       grow_DeleteObject( dyn->graph->grow->ctx, menu_object);
@@ -14182,7 +14545,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 	event->menu.object = 0;
 	for ( int j = 0; j < 32; j++) {
 	  if ( items_dyn[j] && 
-	       items_dyn[j]->action_type & ge_mActionType_PulldownMenu)
+	       items_dyn[j]->action_type1 & ge_mActionType1_PulldownMenu)
 	    items_dyn[j]->action( 0, event);
 	}
 	event->menu.object = menu_object;
@@ -14193,7 +14556,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
       else {
 	for ( int j = 0; j < 32; j++) {
 	  if ( items_dyn[j] && 
-	       items_dyn[j]->action_type & ge_mActionType_PulldownMenu)
+	       items_dyn[j]->action_type1 & ge_mActionType1_PulldownMenu)
 	    items_dyn[j]->action( 0, event);
 	}
       }
@@ -15244,7 +15607,7 @@ int GeSetValue::action( grow_tObject object, glow_tEvent event)
     graph_eDatabase 	db;
     char		buf[200];
     
-    if ( dyn->total_action_type & ge_mActionType_Confirm)
+    if ( dyn->total_action_type1 & ge_mActionType1_Confirm)
       break;
 
     db = dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, 

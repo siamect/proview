@@ -170,6 +170,7 @@
     ge_eDynPrio_SetValue,
     ge_eDynPrio_Pie,
     ge_eDynPrio_BarChart,
+    ge_eDynPrio_Axis,
 
     // This should always be last
     ge_eDynPrio_CloseGraph = 10000
@@ -177,67 +178,76 @@
 
   //! Dynamic types
   typedef enum {
-    ge_mDynType_No		= 0,
-    ge_mDynType_Inherit        	= 1 << 0,
-    ge_mDynType_Tone		= 1 << 1,
-    ge_mDynType_DigLowColor	= 1 << 2,
-    ge_mDynType_DigColor       	= 1 << 3,
-    ge_mDynType_DigError       	= 1 << 4,
-    ge_mDynType_DigWarning	= 1 << 5,
-    ge_mDynType_DigFlash       	= 1 << 6,
-    ge_mDynType_Invisible 	= 1 << 7,
-    ge_mDynType_DigBorder      	= 1 << 8,
-    ge_mDynType_DigText		= 1 << 9,
-    ge_mDynType_Value		= 1 << 10,
-    ge_mDynType_AnalogColor	= 1 << 11,
-    ge_mDynType_Rotate		= 1 << 12,
-    ge_mDynType_Move		= 1 << 13,
-    ge_mDynType_AnalogShift	= 1 << 14,
-    ge_mDynType_DigShift       	= 1 << 15,
-    ge_mDynType_Animation      	= 1 << 16,
-    ge_mDynType_Bar		= 1 << 17,
-    ge_mDynType_Trend		= 1 << 18,
-    ge_mDynType_SliderBackground = 1 << 19,
-    ge_mDynType_Video		= 1 << 20,
-    ge_mDynType_FillLevel	= 1 << 21,
-    ge_mDynType_FastCurve	= 1 << 22,
-    ge_mDynType_AnalogText	= 1 << 23,
-    ge_mDynType_Table		= 1 << 24,
-    ge_mDynType_StatusColor    	= 1 << 25,
-    ge_mDynType_HostObject    	= 1 << 26,
-    ge_mDynType_DigSound    	= 1 << 27,
-    ge_mDynType_XY_Curve    	= 1 << 28,
-    ge_mDynType_DigCommand    	= 1 << 29,
-    ge_mDynType_Pie	    	= 1 << 30,
-    ge_mDynType_BarChart      	= 1 << 31
-  } ge_mDynType;
+    ge_mDynType1_No		= 0,
+    ge_mDynType1_Inherit        = 1 << 0,
+    ge_mDynType1_Tone		= 1 << 1,
+    ge_mDynType1_DigLowColor	= 1 << 2,
+    ge_mDynType1_DigColor      	= 1 << 3,
+    ge_mDynType1_DigError      	= 1 << 4,
+    ge_mDynType1_DigWarning	= 1 << 5,
+    ge_mDynType1_DigFlash      	= 1 << 6,
+    ge_mDynType1_Invisible 	= 1 << 7,
+    ge_mDynType1_DigBorder     	= 1 << 8,
+    ge_mDynType1_DigText        = 1 << 9,
+    ge_mDynType1_Value		= 1 << 10,
+    ge_mDynType1_AnalogColor	= 1 << 11,
+    ge_mDynType1_Rotate		= 1 << 12,
+    ge_mDynType1_Move		= 1 << 13,
+    ge_mDynType1_AnalogShift	= 1 << 14,
+    ge_mDynType1_DigShift      	= 1 << 15,
+    ge_mDynType1_Animation     	= 1 << 16,
+    ge_mDynType1_Bar		= 1 << 17,
+    ge_mDynType1_Trend		= 1 << 18,
+    ge_mDynType1_SliderBackground = 1 << 19,
+    ge_mDynType1_Video		= 1 << 20,
+    ge_mDynType1_FillLevel	= 1 << 21,
+    ge_mDynType1_FastCurve	= 1 << 22,
+    ge_mDynType1_AnalogText	= 1 << 23,
+    ge_mDynType1_Table		= 1 << 24,
+    ge_mDynType1_StatusColor   	= 1 << 25,
+    ge_mDynType1_HostObject    	= 1 << 26,
+    ge_mDynType1_DigSound    	= 1 << 27,
+    ge_mDynType1_XY_Curve    	= 1 << 28,
+    ge_mDynType1_DigCommand    	= 1 << 29,
+    ge_mDynType1_Pie	    	= 1 << 30,
+    ge_mDynType1_BarChart      	= 1 << 31
+  } ge_mDynType1;
+
+  typedef enum {
+    ge_mDynType2_No		= 0,
+    ge_mDynType2_Axis		= 1 << 0
+  } ge_mDynType2;
 
   //! Action types.
   typedef enum {
-    ge_mActionType_No		= 0,
-    ge_mActionType_Inherit	= 1 << 0,
-    ge_mActionType_PopupMenu    = 1 << 1,
-    ge_mActionType_SetDig      	= 1 << 2,
-    ge_mActionType_ResetDig	= 1 << 3,
-    ge_mActionType_ToggleDig    = 1 << 4,
-    ge_mActionType_StoDig      	= 1 << 5,
-    ge_mActionType_Command	= 1 << 6,
-    ge_mActionType_CommandDoubleClick = 1 << 7,
-    ge_mActionType_Confirm	= 1 << 8,
-    ge_mActionType_IncrAnalog	= 1 << 9,
-    ge_mActionType_RadioButton	= 1 << 10,
-    ge_mActionType_Slider      	= 1 << 11,
-    ge_mActionType_ValueInput   = 1 << 12,
-    ge_mActionType_TipText    	= 1 << 13,
-    ge_mActionType_Help		= 1 << 14,
-    ge_mActionType_OpenGraph	= 1 << 15,
-    ge_mActionType_OpenURL	= 1 << 16,
-    ge_mActionType_InputFocus	= 1 << 17,
-    ge_mActionType_CloseGraph	= 1 << 18,
-    ge_mActionType_PulldownMenu	= 1 << 19,
-    ge_mActionType_OptionMenu 	= 1 << 20,
-    ge_mActionType_SetValue 	= 1 << 21
-  } ge_mActionType;
+    ge_mActionType1_No		= 0,
+    ge_mActionType1_Inherit	= 1 << 0,
+    ge_mActionType1_PopupMenu   = 1 << 1,
+    ge_mActionType1_SetDig     	= 1 << 2,
+    ge_mActionType1_ResetDig	= 1 << 3,
+    ge_mActionType1_ToggleDig   = 1 << 4,
+    ge_mActionType1_StoDig     	= 1 << 5,
+    ge_mActionType1_Command	= 1 << 6,
+    ge_mActionType1_CommandDoubleClick = 1 << 7,
+    ge_mActionType1_Confirm	= 1 << 8,
+    ge_mActionType1_IncrAnalog	= 1 << 9,
+    ge_mActionType1_RadioButton	= 1 << 10,
+    ge_mActionType1_Slider     	= 1 << 11,
+    ge_mActionType1_ValueInput  = 1 << 12,
+    ge_mActionType1_TipText    	= 1 << 13,
+    ge_mActionType1_Help       	= 1 << 14,
+    ge_mActionType1_OpenGraph	= 1 << 15,
+    ge_mActionType1_OpenURL	= 1 << 16,
+    ge_mActionType1_InputFocus	= 1 << 17,
+    ge_mActionType1_CloseGraph	= 1 << 18,
+    ge_mActionType1_PulldownMenu = 1 << 19,
+    ge_mActionType1_OptionMenu 	= 1 << 20,
+    ge_mActionType1_SetValue 	= 1 << 21
+  } ge_mActionType1;
+
+  typedef enum {
+    ge_mActionType2_No		= 0
+  } ge_mActionType2;
 
   //! Instances. A bitmask where each bit represents an instance.
   typedef enum {
@@ -311,6 +321,7 @@
     ge_eSave_DigCommand	             	= 35,
     ge_eSave_Pie	             	= 36,
     ge_eSave_BarChart	             	= 37,
+    ge_eSave_Axis	             	= 38,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -333,11 +344,13 @@
     ge_eSave_OptionMenu      		= 69,
     ge_eSave_SetValue			= 70,
     ge_eSave_End		       	= 99,
-    ge_eSave_Dyn_dyn_type	       	= 100,
-    ge_eSave_Dyn_action_type	       	= 101,
+    ge_eSave_Dyn_dyn_type1	       	= 100,
+    ge_eSave_Dyn_action_type1	       	= 101,
     ge_eSave_Dyn_access			= 102,
     ge_eSave_Dyn_cycle			= 103,
     ge_eSave_Dyn_ref_object	       	= 104,
+    ge_eSave_Dyn_dyn_type2	       	= 105,
+    ge_eSave_Dyn_action_type2	       	= 106,
     ge_eSave_DigLowColor_attribute	= 200,
     ge_eSave_DigLowColor_color		= 201,
     ge_eSave_DigColor_attribute		= 300,
@@ -506,6 +519,8 @@
     ge_eSave_BarChart_attribute11      	= 3710,
     ge_eSave_BarChart_attribute12      	= 3711,
     ge_eSave_BarChart_fix_range      	= 3712,
+    ge_eSave_Axis_minvalue_attr      	= 3800,
+    ge_eSave_Axis_maxvalue_attr      	= 3801,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -704,10 +719,14 @@ class GeDyn {
   bool		reset_invisible;	//!< An element of higher prio is passing invisible dynamics to elements of lower prio.
   bool		ignore_text_a1;		//!< All remaining elements with lower prio should ignore a1 text dynamics.
   bool		reset_text_a1;		//!< An element of higher prio is passing a1 text dynamics to elements of lower prio.
-  ge_mDynType	dyn_type;		//!< Dynamic type.
-  ge_mDynType	total_dyn_type;		//!< Total dynamic type, including the dyntype of the nodeclass if Inherit is set.
-  ge_mActionType action_type;		//!< Action type.
-  ge_mActionType total_action_type;	//!< Total action type, including the actiontype of the nodeclass if Inherit is set.
+  ge_mDynType1	dyn_type1;		//!< Dynamic type.
+  ge_mDynType2	dyn_type2;		//!< Dynamic type.
+  ge_mDynType1	total_dyn_type1;       	//!< Total dynamic type, including the dyntype of the nodeclass if Inherit is set.
+  ge_mDynType2	total_dyn_type2;       	//!< Total dynamic type, including the dyntype of the nodeclass if Inherit is set.
+  ge_mActionType1 action_type1;		//!< Action type.
+  ge_mActionType2 action_type2;		//!< Action type.
+  ge_mActionType1 total_action_type1;	//!< Total action type, including the actiontype of the nodeclass if Inherit is set.
+  ge_mActionType2 total_action_type2;	//!< Total action type, including the actiontype of the nodeclass if Inherit is set.
   glow_mAccess	access;			//!< Access of the object.
   glow_eCycle	cycle;			//!< Cycle in which the scan is executed.
   bool		display_access;		//!< Display acess in attrbute editor.
@@ -720,8 +739,9 @@ class GeDyn {
   GeDyn( Graph *d_graph, ge_eDynAttr d_attr_editor = ge_eDynAttr_All) : 
     elements(0), graph(d_graph), ignore_color(false), 
     reset_color(false), ignore_invisible(false), reset_invisible(false),
-    dyn_type(ge_mDynType_Inherit), total_dyn_type(ge_mDynType_Inherit), 
-    action_type(ge_mActionType_Inherit), total_action_type(ge_mActionType_Inherit),
+    dyn_type1(ge_mDynType1_Inherit), dyn_type2(ge_mDynType2_No), total_dyn_type1(ge_mDynType1_Inherit), 
+    total_dyn_type2(ge_mDynType2_No), action_type1(ge_mActionType1_Inherit), action_type2(ge_mActionType2_No),
+    total_action_type1(ge_mActionType1_Inherit), total_action_type2(ge_mActionType2_No),
     access(glow_mAccess_RtDefault), cycle(glow_eCycle_Inherit), attr_editor( d_attr_editor)
     {}
 
@@ -773,15 +793,17 @@ class GeDyn {
   //! Execute action after confirm.
   int confirmed_action( grow_tObject object, glow_tEvent event);
   int change_value( grow_tObject object, char *text);
-  ge_mDynType get_dyntype( grow_tObject object);
-  ge_mActionType get_actiontype( grow_tObject object);
+  ge_mDynType1 get_dyntype1( grow_tObject object);
+  ge_mDynType2 get_dyntype2( grow_tObject object);
+  ge_mActionType1 get_actiontype1( grow_tObject object);
+  ge_mActionType2 get_actiontype2( grow_tObject object);
   glow_eDrawType get_color1( grow_tObject object, glow_eDrawType color);
   glow_eDrawType get_color2( grow_tObject object, glow_eDrawType color);
   void set_attribute( grow_tObject object, const char *attr_name, int second);
   void set_color( grow_tObject object, glow_eDrawType color);
   int get_attr_typeid();
   void set_access( glow_mAccess acc);
-  void set_dyn( ge_mDynType type, ge_mActionType action);
+  void set_dyn( ge_mDynType1 type1, ge_mDynType2 type2, ge_mActionType1 action1, ge_mActionType2 action2);
   void unset_inherit( grow_tObject object);
   void set_command( const char *cmd);
   void set_hostobject( char *hostobject);
@@ -796,8 +818,10 @@ class GeDyn {
   void update();
   void export_java( grow_tObject object, ofstream& fp, char *var_name);
   void export_java_object( grow_tObject object, ofstream& fp, char *var_name);
-  GeDynElem *create_dyn_element( int mask, int instance);
-  GeDynElem *create_action_element( int mask, int instance);
+  GeDynElem *create_dyn1_element( int mask, int instance);
+  GeDynElem *create_dyn2_element( int mask, int instance);
+  GeDynElem *create_action1_element( int mask, int instance);
+  GeDynElem *create_action2_element( int mask, int instance);
   GeDynElem *copy_element( GeDynElem& x);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   graph_eDatabase parse_attr_name( char *name, char *parsed_name, 
@@ -813,8 +837,10 @@ class GeDyn {
 class GeDynElem {
  public:
   GeDyn		*dyn;		//!< Parent GeDyn object.
-  ge_mDynType	dyn_type;	//!< Dyntype of the element.
-  ge_mActionType action_type;	//!< Actiontype of the element.
+  ge_mDynType1	dyn_type1;	//!< Dyntype of the element.
+  ge_mDynType2	dyn_type2;	//!< Dyntype of the element.
+  ge_mActionType1 action_type1;	//!< Actiontype of the element.
+  ge_mActionType2 action_type2;	//!< Actiontype of the element.
   ge_eDynPrio	prio;		//!< Priority of the element.
   unsigned int	instance_mask;	//!< Instance mask. Only valid in the first instance.
   ge_mInstance	instance;	//!< Instance of the element
@@ -823,20 +849,24 @@ class GeDynElem {
   //! Constructor.
   /*!
     \param e_dyn	Parent GeDyn object.
-    \param e_dyn_type	Dyntype of the element.
-    \param e_action_type Actiontype of the element.
+    \param e_dyn_type1	Dyntype of the element.
+    \param e_dyn_type2	Dyntype of the element.
+    \param e_action_type1 Actiontype of the element.
+    \param e_action_type2 Actiontype of the element.
     \param e_prio	Priority of the element.
   */
-  GeDynElem( GeDyn *e_dyn, ge_mDynType e_dyn_type, ge_mActionType e_action_type, 
+  GeDynElem( GeDyn *e_dyn, ge_mDynType1 e_dyn_type1, ge_mDynType2 e_dyn_type2, 
+	     ge_mActionType1 e_action_type1, ge_mActionType2 e_action_type2, 
 	     ge_eDynPrio e_prio):
-    dyn(e_dyn), dyn_type(e_dyn_type), action_type(e_action_type), prio(e_prio), 
+    dyn(e_dyn), dyn_type1(e_dyn_type1), dyn_type2(e_dyn_type2), action_type1(e_action_type1), 
+    action_type2(e_action_type2), prio(e_prio), 
     instance_mask(ge_mInstance_1), instance(ge_mInstance_1), next(0)
     {}
 
   //! Copy constructor
   /*! \param x	Element to copy. */
-  GeDynElem( const GeDynElem& x) : dyn(x.dyn), dyn_type(x.dyn_type), 
-    action_type(x.action_type), prio(x.prio), next(0) {}
+    GeDynElem( const GeDynElem& x) : dyn(x.dyn), dyn_type1(x.dyn_type1), dyn_type2(x.dyn_type2),
+      action_type1(x.action_type1), action_type2(x.action_type2), prio(x.prio), next(0) {}
 
   //! Disconnect the element.
   /*! \param object 	Owner object. */
@@ -945,11 +975,12 @@ class GeDigLowColor : public GeDynElem {
   unsigned int bitmask;  
 
   GeDigLowColor( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_DigLowColor, (ge_mActionType) 0, ge_eDynPrio_DigLowColor),
+    GeDynElem(e_dyn, ge_mDynType1_DigLowColor, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No,
+	      ge_eDynPrio_DigLowColor),
     color(glow_eDrawType_Inherit), bitmask(0)
     { strcpy( attribute, "");}
   GeDigLowColor( const GeDigLowColor& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), color(x.color)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), color(x.color)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -980,11 +1011,11 @@ class GeDigColor : public GeDynElem {
   unsigned int bitmask;
 
   GeDigColor( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
-    GeDynElem(e_dyn, ge_mDynType_DigColor, (ge_mActionType) 0, ge_eDynPrio_DigColor),
+    GeDynElem(e_dyn, ge_mDynType1_DigColor, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigColor),
     color(glow_eDrawType_Inherit), bitmask(0)
     { strcpy( attribute, ""); instance = e_instance;}
   GeDigColor( const GeDigColor& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), color(x.color)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), color(x.color)
     { strcpy( attribute, x.attribute); 
     instance = x.instance; instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
@@ -1015,10 +1046,10 @@ class GeDigWarning : public GeDynElem {
   unsigned int bitmask;  
 
   GeDigWarning( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_DigWarning, (ge_mActionType) 0, ge_eDynPrio_DigWarning), bitmask(0)
+    GeDynElem(e_dyn, ge_mDynType1_DigWarning, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigWarning), bitmask(0)
     { strcpy( attribute, "");}
   GeDigWarning( const GeDigWarning& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1048,10 +1079,10 @@ class GeDigError : public GeDynElem {
   unsigned int bitmask;  
 
   GeDigError( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_DigError, (ge_mActionType) 0, ge_eDynPrio_DigError), bitmask(0)
+    GeDynElem(e_dyn, ge_mDynType1_DigError, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigError), bitmask(0)
     { strcpy( attribute, "");}
   GeDigError( const GeDigError& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1084,11 +1115,11 @@ class GeDigFlash : public GeDynElem {
   unsigned int bitmask;  
 
   GeDigFlash( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_DigFlash, (ge_mActionType) 0, ge_eDynPrio_DigFlash),
+    GeDynElem(e_dyn, ge_mDynType1_DigFlash, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigFlash),
     color(glow_eDrawType_Inherit), color2(glow_eDrawType_Inherit), on(true)
     { strcpy( attribute, "");}
   GeDigFlash( const GeDigFlash& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), color(x.color), 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), color(x.color), 
     color2(x.color2), on(x.on)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
@@ -1121,11 +1152,11 @@ class GeInvisible : public GeDynElem {
   unsigned int bitmask;
 
   GeInvisible( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
-    GeDynElem(e_dyn, ge_mDynType_Invisible, (ge_mActionType) 0, ge_eDynPrio_Invisible), 
+    GeDynElem(e_dyn, ge_mDynType1_Invisible, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Invisible), 
     dimmed(0), bitmask(0)
     { strcpy( attribute, ""); instance = e_instance;}
   GeInvisible( const GeInvisible& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), dimmed(x.dimmed)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), dimmed(x.dimmed)
     { strcpy( attribute, x.attribute);
     instance = x.instance; instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
@@ -1157,11 +1188,11 @@ class GeDigBorder : public GeDynElem {
   unsigned int bitmask;  
 
   GeDigBorder( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_DigBorder, (ge_mActionType) 0, ge_eDynPrio_DigBorder),
+    GeDynElem(e_dyn, ge_mDynType1_DigBorder, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigBorder),
     color(glow_eDrawType_Inherit)
     { strcpy( attribute, "");}
   GeDigBorder( const GeDigBorder& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), color(x.color)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), color(x.color)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1193,10 +1224,10 @@ class GeDigText : public GeDynElem {
   unsigned int bitmask;  
 
   GeDigText( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
-    GeDynElem(e_dyn, ge_mDynType_DigText, (ge_mActionType) 0, ge_eDynPrio_DigText)
+    GeDynElem(e_dyn, ge_mDynType1_DigText, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigText)
     { strcpy( attribute, ""); strcpy( low_text, ""); instance = e_instance;}
   GeDigText( const GeDigText& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( attribute, x.attribute); strcpy( low_text, x.low_text);
     instance = x.instance; instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
@@ -1230,12 +1261,12 @@ class GeValue : public GeDynElem {
   pwr_tTid tid;
 
   GeValue( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
-    GeDynElem(e_dyn, ge_mDynType_Value, (ge_mActionType) 0, ge_eDynPrio_Value),
+    GeDynElem(e_dyn, ge_mDynType1_Value, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Value),
     zero_blank(0), annot_typeid(0), annot_size(0), tid(0)
     { strcpy( attribute, ""); strcpy( format, ""); instance = e_instance;
       memset(old_value, 0, sizeof(old_value));}
   GeValue( const GeValue& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), zero_blank(x.zero_blank)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), zero_blank(x.zero_blank)
     { strcpy( attribute, x.attribute); strcpy( format, x.format);
       instance = x.instance; instance_mask = x.instance_mask;
       memset(old_value, 0, sizeof(old_value));}
@@ -1269,12 +1300,12 @@ class GeValueInput : public GeDynElem {
   GeValue *value_element;
 
   GeValueInput( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_ValueInput, 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_ValueInput, ge_mActionType2_No,
 	      ge_eDynPrio_ValueInput),
     min_value(0), max_value(0), clear(0), popup(0), unselect(0), escape_store(0), value_element(0)
     { strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");}
   GeValueInput( const GeValueInput& x) :
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), min_value(x.min_value),
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), min_value(x.min_value),
     max_value(x.max_value), clear(x.clear), popup(x.popup), unselect(x.unselect), 
     escape_store(x.escape_store)
     { strcpy( minvalue_attr, x.minvalue_attr); strcpy( maxvalue_attr, x.maxvalue_attr);}
@@ -1309,12 +1340,12 @@ class GeAnalogColor : public GeDynElem {
   GeAnalogColor *e;
 
   GeAnalogColor( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
-    GeDynElem(e_dyn, ge_mDynType_AnalogColor, (ge_mActionType) 0, ge_eDynPrio_AnalogColor),
+    GeDynElem(e_dyn, ge_mDynType1_AnalogColor, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_AnalogColor),
     limit(0), limit_type(ge_eLimitType_Gt), color(glow_eDrawType_Inherit), 
     old_state(false), p(0), old_value(FLT_INI), e(0)
     { strcpy( attribute, ""); instance = e_instance;}
   GeAnalogColor( const GeAnalogColor& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), limit(x.limit), 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), limit(x.limit), 
     limit_type(x.limit_type), color(x.color), old_state(false), p(0), 
     old_value(FLT_INI), e(0)
     { strcpy( attribute, x.attribute);
@@ -1349,11 +1380,11 @@ class GeRotate : public GeDynElem {
   glow_eRotationPoint rotation_point;
 
   GeRotate( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_Rotate, (ge_mActionType) 0, ge_eDynPrio_Rotate),
+    GeDynElem(e_dyn, ge_mDynType1_Rotate, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Rotate),
     x0(0), y0(0), factor(1)
     { strcpy( attribute, "");}
   GeRotate( const GeRotate& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), x0(x.x0), y0(x.y0), factor(x.factor)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), x0(x.x0), y0(x.y0), factor(x.factor)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1413,7 +1444,7 @@ class GeMove : public GeDynElem {
   double height_orig;
 
   GeMove( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_Move, (ge_mActionType) 0, ge_eDynPrio_Move),
+    GeDynElem(e_dyn, ge_mDynType1_Move, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Move),
     x_offset(0), y_offset(0), x_factor(1), y_factor(0), scale_x_factor(1), 
     scale_y_factor(0), scale_type(glow_eScaleType_LowerLeft)
     {
@@ -1423,7 +1454,7 @@ class GeMove : public GeDynElem {
       strcpy( scale_y_attribute, "");
     }
   GeMove( const GeMove& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), x_offset(x.x_offset), 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), x_offset(x.x_offset), 
     y_offset(x.y_offset), x_factor(x.x_factor), y_factor(x.y_factor), 
     scale_x_factor(x.scale_x_factor), scale_y_factor(x.scale_y_factor), 
     scale_type(x.scale_type)
@@ -1459,11 +1490,11 @@ class GeAnalogShift : public GeDynElem {
   pwr_tFloat32 old_value;
 
   GeAnalogShift( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_AnalogShift, (ge_mActionType) 0, ge_eDynPrio_AnalogShift), 
+    GeDynElem(e_dyn, ge_mDynType1_AnalogShift, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_AnalogShift), 
     old_value(FLT_INI)
     { strcpy( attribute, "");}
   GeAnalogShift( const GeAnalogShift& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), old_value(FLT_INI)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), old_value(FLT_INI)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1493,10 +1524,10 @@ class GeDigShift : public GeDynElem {
   unsigned int bitmask;  
 
   GeDigShift( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_DigShift, (ge_mActionType) 0, ge_eDynPrio_DigShift)
+    GeDynElem(e_dyn, ge_mDynType1_DigShift, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigShift)
     { strcpy( attribute, "");}
   GeDigShift( const GeDigShift& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1529,11 +1560,11 @@ class GeAnimation : public GeDynElem {
   unsigned int bitmask;  
 
   GeAnimation( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_Animation, (ge_mActionType) 0, ge_eDynPrio_Animation),
+    GeDynElem(e_dyn, ge_mDynType1_Animation, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Animation),
     sequence( ge_eAnimSequence_Inherit)
     { strcpy( attribute, "");}
   GeAnimation( const GeAnimation& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), sequence(x.sequence)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), sequence(x.sequence)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1551,10 +1582,10 @@ class GeAnimation : public GeDynElem {
 class GeVideo : public GeDynElem {
  public:
   GeVideo( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_Video, (ge_mActionType) 0, ge_eDynPrio_Video)
+    GeDynElem(e_dyn, ge_mDynType1_Video, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Video)
     {}
   GeVideo( const GeVideo& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     {}
   void save( ofstream& fp);
   void open( ifstream& fp);
@@ -1581,11 +1612,11 @@ class GeStatusColor : public GeDynElem {
   bool on;
 
   GeStatusColor( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_StatusColor, (ge_mActionType) 0, ge_eDynPrio_StatusColor),
+    GeDynElem(e_dyn, ge_mDynType1_StatusColor, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_StatusColor),
     nostatus_color(glow_eDrawType_Inherit), on(true)
     { strcpy( attribute, "");}
   GeStatusColor( const GeStatusColor& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), nostatus_color(x.nostatus_color)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), nostatus_color(x.nostatus_color)
     { strcpy(attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1625,13 +1656,13 @@ class GeFillLevel : public GeDynElem {
   pwr_tSubid max_value_subid;
 
   GeFillLevel( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_FillLevel, (ge_mActionType) 0, ge_eDynPrio_FillLevel),
+    GeDynElem(e_dyn, ge_mDynType1_FillLevel, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_FillLevel),
     color( glow_eDrawType_Inherit), direction( glow_eDirection_Down), min_value(0),
     max_value(100), limits_found(false),
     min_value_p(0), max_value_p(0)
     { strcpy( attribute, ""); strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");}
   GeFillLevel( const GeFillLevel& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), color(x.color),
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), color(x.color),
     direction(x.direction), min_value(x.min_value),max_value(x.max_value),
     min_value_p(0), max_value_p(0)
     { strcpy( attribute, x.attribute); strcpy( minvalue_attr, x.minvalue_attr);
@@ -1654,10 +1685,10 @@ class GeHostObject : public GeDynElem {
   pwr_tAName hostobject;
 
   GeHostObject( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_HostObject, (ge_mActionType) 0, ge_eDynPrio_HostObject)
+    GeDynElem(e_dyn, ge_mDynType1_HostObject, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_HostObject)
     { strcpy( hostobject, "");}
   GeHostObject( const GeHostObject& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy(hostobject, x.hostobject);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1688,11 +1719,11 @@ class GeDigSound : public GeDynElem {
   unsigned int bitmask;  
 
   GeDigSound( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
-    GeDynElem(e_dyn, ge_mDynType_DigSound, (ge_mActionType) 0, ge_eDynPrio_DigSound),
+    GeDynElem(e_dyn, ge_mDynType1_DigSound, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigSound),
     level(0), interval(10), time_since_last(0)
     { strcpy( attribute, ""); strcpy( soundobject, ""); instance = e_instance;}
   GeDigSound( const GeDigSound& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), level(x.level),
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), level(x.level),
     interval(x.interval), time_since_last(0)
     { strcpy( attribute, x.attribute); strcpy(soundobject, x.soundobject);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
@@ -1711,10 +1742,10 @@ class GePopupMenu : public GeDynElem {
   pwr_tAName ref_object;
 
   GePopupMenu( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_PopupMenu, ge_eDynPrio_PopupMenu)
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_PopupMenu, ge_mActionType2_No, ge_eDynPrio_PopupMenu)
     { strcpy( ref_object, "");}
   GePopupMenu( const GePopupMenu& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( ref_object, x.ref_object);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1732,10 +1763,10 @@ class GeSetDig : public GeDynElem {
   pwr_tAName attribute;
 
   GeSetDig( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_SetDig, ge_eDynPrio_SetDig)
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_SetDig, ge_mActionType2_No, ge_eDynPrio_SetDig)
     { strcpy( attribute, ""); instance = e_instance;}
   GeSetDig( const GeSetDig& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( attribute, x.attribute);
     instance = x.instance, instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
@@ -1755,10 +1786,10 @@ class GeResetDig : public GeDynElem {
   pwr_tAName attribute;
 
   GeResetDig( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_ResetDig, ge_eDynPrio_ResetDig)
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_ResetDig, ge_mActionType2_No, ge_eDynPrio_ResetDig)
     { strcpy( attribute, ""); instance = e_instance;}
   GeResetDig( const GeResetDig& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( attribute, x.attribute);
     instance = x.instance; instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
@@ -1778,10 +1809,10 @@ class GeToggleDig : public GeDynElem {
   pwr_tAName attribute;
 
   GeToggleDig( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_ToggleDig, ge_eDynPrio_ToggleDig)
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_ToggleDig, ge_mActionType2_No, ge_eDynPrio_ToggleDig)
     { strcpy( attribute, "");}
   GeToggleDig( const GeToggleDig& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   int get_transtab( char **tt);
@@ -1800,10 +1831,10 @@ class GeStoDig : public GeDynElem {
   pwr_tAName attribute;
 
   GeStoDig( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_StoDig, ge_eDynPrio_StoDig)
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_StoDig, ge_mActionType2_No, ge_eDynPrio_StoDig)
     { strcpy( attribute, "");}
   GeStoDig( const GeStoDig& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   int get_transtab( char **tt);
@@ -1822,10 +1853,10 @@ class GeCommand : public GeDynElem {
   char command[400];
 
   GeCommand( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_Command, ge_eDynPrio_Command)
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_Command, ge_mActionType2_No, ge_eDynPrio_Command)
     { strcpy( command, "");}
   GeCommand( const GeCommand& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( command, x.command);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   int get_transtab( char **tt);
@@ -1843,11 +1874,11 @@ class GeCommandDoubleClick : public GeDynElem {
   char command[400];
 
   GeCommandDoubleClick( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_CommandDoubleClick, 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_CommandDoubleClick, ge_mActionType2_No,
 	      ge_eDynPrio_CommandDoubleClick)
     { strcpy( command, "");}
   GeCommandDoubleClick( const GeCommandDoubleClick& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( command, x.command);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   int get_transtab( char **tt);
@@ -1864,10 +1895,10 @@ class GeConfirm : public GeDynElem {
   char text[120];
 
   GeConfirm( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_Confirm, ge_eDynPrio_Confirm)
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_Confirm, ge_mActionType2_No, ge_eDynPrio_Confirm)
     { strcpy( text, "");}
   GeConfirm( const GeConfirm& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( text, x.text);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1886,11 +1917,11 @@ class GeIncrAnalog : public GeDynElem {
   double max_value;
 
   GeIncrAnalog( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_IncrAnalog, ge_eDynPrio_IncrAnalog), 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_IncrAnalog, ge_mActionType2_No, ge_eDynPrio_IncrAnalog), 
     increment(1), min_value(0), max_value(0)
     { strcpy( attribute, "");}
   GeIncrAnalog( const GeIncrAnalog& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), increment(x.increment),
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), increment(x.increment),
     min_value(min_value), max_value(max_value)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
@@ -1917,11 +1948,11 @@ class GeRadioButton : public GeDynElem {
   pwr_tBoolean old_value;
 
   GeRadioButton( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType)0, ge_mActionType_RadioButton, 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_RadioButton, ge_mActionType2_No,
 	      ge_eDynPrio_RadioButton)
     { strcpy( attribute, "");}
   GeRadioButton( const GeRadioButton& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1942,11 +1973,11 @@ class GeTipText : public GeDynElem {
   char text[200];
 
   GeTipText( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType)0, ge_mActionType_TipText, 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_TipText, ge_mActionType2_No,
 	      ge_eDynPrio_TipText)
     { strcpy( text, "");}
   GeTipText( const GeTipText& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( text, x.text);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1963,10 +1994,10 @@ class GeHelp : public GeDynElem {
   char bookmark[80];
 
   GeHelp( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_Help, ge_eDynPrio_Help)
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_Help, ge_mActionType2_No, ge_eDynPrio_Help)
     { strcpy( topic, ""); strcpy( bookmark, "");}
   GeHelp( const GeHelp& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( topic, x.topic); strcpy( bookmark, x.bookmark);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   int get_transtab( char **tt);
@@ -1982,10 +2013,10 @@ class GeOpenGraph : public GeDynElem {
   char graph_object[80];
 
   GeOpenGraph( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_OpenGraph, ge_eDynPrio_OpenGraph)
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_OpenGraph, ge_mActionType2_No, ge_eDynPrio_OpenGraph)
     { strcpy( graph_object, "");}
   GeOpenGraph( const GeOpenGraph& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( graph_object, x.graph_object);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   int get_transtab( char **tt);
@@ -2003,10 +2034,10 @@ class GeOpenURL : public GeDynElem {
   char url[200];
 
   GeOpenURL( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_OpenURL, ge_eDynPrio_OpenURL)
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_OpenURL, ge_mActionType2_No, ge_eDynPrio_OpenURL)
     { strcpy( url, "");}
   GeOpenURL( const GeOpenURL& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( url, x.url);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   int get_transtab( char **tt);
@@ -2026,11 +2057,11 @@ class GeInputFocus : public GeDynElem {
   grow_tObject prev_tab;
 
   GeInputFocus( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_InputFocus, ge_eDynPrio_InputFocus),
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_InputFocus, ge_mActionType2_No, ge_eDynPrio_InputFocus),
     initial_focus(0), prev_tab(0)
     { strcpy( next_horizontal, ""); strcpy( next_vertical, ""); strcpy( next_tab, "");}
   GeInputFocus( const GeInputFocus& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), initial_focus(x.initial_focus),
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), initial_focus(x.initial_focus),
     prev_tab(0)
     { strcpy( next_horizontal, x.next_horizontal); strcpy( next_vertical, x.next_vertical);
       strcpy( next_tab, x.next_tab);}
@@ -2045,10 +2076,10 @@ class GeCloseGraph : public GeDynElem {
  public:
 
   GeCloseGraph( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_CloseGraph, ge_eDynPrio_CloseGraph)
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_CloseGraph, ge_mActionType2_No, ge_eDynPrio_CloseGraph)
     {}
   GeCloseGraph( const GeCloseGraph& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     {}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -2087,12 +2118,12 @@ class GeSlider : public GeDynElem {
   graph_eDatabase insensitive_db;
 
   GeSlider( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType)0, ge_mActionType_Slider, ge_eDynPrio_Slider),
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_Slider, ge_mActionType2_No, ge_eDynPrio_Slider),
     min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0), insensitive_p(0)
     { strcpy( attribute, ""); strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");
     strcpy( insensitive_attr, "");}
   GeSlider( const GeSlider& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio),
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio),
     min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0), insensitive_p(0)
     { strcpy( attribute, x.attribute); strcpy( minvalue_attr, x.minvalue_attr);
     strcpy( maxvalue_attr, x.maxvalue_attr); strcpy( insensitive_attr, x.insensitive_attr);}
@@ -2131,11 +2162,11 @@ class GeBar : public GeDynElem {
   pwr_tSubid max_value_subid;
 
   GeBar( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_Bar, (ge_mActionType) 0, ge_eDynPrio_Bar), 
+    GeDynElem(e_dyn, ge_mDynType1_Bar, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Bar), 
     min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0)
     { strcpy( attribute, ""); strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");}
   GeBar( const GeBar& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio),
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio),
     min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0)
     { strcpy( attribute, x.attribute); strcpy( minvalue_attr, x.minvalue_attr);
     strcpy( maxvalue_attr, x.maxvalue_attr);}
@@ -2188,14 +2219,14 @@ class GeTrend : public GeDynElem {
   pwr_tSubid max_value_subid2;
 
   GeTrend( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_Trend, (ge_mActionType) 0, ge_eDynPrio_Trend),
+    GeDynElem(e_dyn, ge_mDynType1_Trend, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Trend),
     min_value1_p(0), max_value1_p(0), old_min_value1(0), old_max_value1(0),
     min_value2_p(0), max_value2_p(0), old_min_value2(0), old_max_value2(0)
     { strcpy( attribute1, ""); strcpy( attribute2, "");
     strcpy( minvalue_attr1, ""); strcpy( maxvalue_attr1, "");
     strcpy( minvalue_attr2, ""); strcpy( maxvalue_attr2, "");}
   GeTrend( const GeTrend& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( attribute1, x.attribute1); strcpy( attribute2, x.attribute2); 
     strcpy( minvalue_attr1, x.minvalue_attr1); strcpy( maxvalue_attr1, x.maxvalue_attr1); 
     strcpy( minvalue_attr2, x.minvalue_attr2); strcpy( maxvalue_attr2, x.maxvalue_attr2);}
@@ -2252,7 +2283,7 @@ class GeXY_Curve : public GeDynElem {
   int curve_number;  
 
   GeXY_Curve( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
-    GeDynElem(e_dyn, ge_mDynType_XY_Curve, (ge_mActionType) 0, ge_eDynPrio_XY_Curve),
+    GeDynElem(e_dyn, ge_mDynType1_XY_Curve, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_XY_Curve),
     y_min_value(0), y_max_value(100), x_min_value(0), x_max_value(100),
     noofpoints(100), datatype(0), curve_color(glow_eDrawType_Inherit),
     fill_color(glow_eDrawType_Inherit), update_p(0), old_update(0), 
@@ -2264,7 +2295,7 @@ class GeXY_Curve : public GeDynElem {
     strcpy( x_minvalue_attr, ""); strcpy( x_maxvalue_attr, "");
     strcpy( noofpoints_attr, ""); strcpy( update_attr, "");}
   GeXY_Curve( const GeXY_Curve& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), 
     y_min_value(x.y_min_value), y_max_value(x.y_max_value),
     x_min_value(x.x_min_value), x_max_value(x.x_max_value),
     noofpoints(x.noofpoints), datatype(x.datatype), curve_color(x.curve_color),
@@ -2302,10 +2333,10 @@ class GeDigCommand : public GeDynElem {
   unsigned int bitmask;  
 
   GeDigCommand( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
-    GeDynElem(e_dyn, ge_mDynType_DigCommand, (ge_mActionType) 0, ge_eDynPrio_DigCommand)
+    GeDynElem(e_dyn, ge_mDynType1_DigCommand, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigCommand)
     { strcpy( attribute, ""); strcpy( command, ""); instance = e_instance;}
   GeDigCommand( const GeDigCommand& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( attribute, x.attribute); strcpy( command, x.command);
     instance = x.instance; instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
@@ -2344,11 +2375,11 @@ class GeFastCurve : public GeDynElem {
   int		fast_cnt;
 
   GeFastCurve( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_FastCurve, (ge_mActionType) 0, 
+    GeDynElem(e_dyn, ge_mDynType1_FastCurve, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, 
 	      ge_eDynPrio_FastCurve), curve_index1(0), curve_index2(0)
     { strcpy( fast_object, "");}
   GeFastCurve( const GeFastCurve& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), 
     curve_index1(x.curve_index1), curve_index2(x.curve_index2)
     { strcpy( fast_object, x.fast_object);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
@@ -2388,7 +2419,7 @@ class GeTable : public GeDynElem {
   int sel_elements[TABLE_MAX_COL];
 
   GeTable( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_Table, (ge_mActionType) 0, 
+    GeDynElem(e_dyn, ge_mDynType1_Table, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, 
 	      ge_eDynPrio_Table)
     { memset( attribute,0,sizeof(attribute)); memset( format,0,sizeof(format)); 
     memset( sel_attribute,0,sizeof(sel_attribute)); memset(old_value,0,sizeof(old_value));
@@ -2396,7 +2427,7 @@ class GeTable : public GeDynElem {
     memset( sel_elements, 0, sizeof(sel_elements));
     }
   GeTable( const GeTable& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { memcpy( attribute, x.attribute,sizeof(attribute)); memcpy( format, x.format, sizeof(format));
     memcpy( sel_attribute, x.sel_attribute,sizeof(sel_attribute));
     memset( is_headerref, 0, sizeof(is_headerref)); memset(headerref_p,0,sizeof(headerref_p));
@@ -2432,13 +2463,13 @@ class GePie : public GeDynElem {
   pwr_tFloat32 old_value[PIE_MAX_SECTORS];
 
   GePie( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_Pie, (ge_mActionType) 0, ge_eDynPrio_Pie),
+    GeDynElem(e_dyn, ge_mDynType1_Pie, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Pie),
     sectors(0), min_value(0), max_value(0), fix_range(0) { 
     for ( int i = 0; i < PIE_MAX_SECTORS; i++)
       strcpy( attribute[i], "");
   }
   GePie( const GePie& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), 
     sectors(x.sectors), min_value(x.min_value), max_value(x.max_value), fix_range(x.fix_range) { 
     for ( int i = 0; i < PIE_MAX_SECTORS; i++)
       strcpy( attribute[i], x.attribute[i]);
@@ -2475,7 +2506,7 @@ class GeBarChart : public GeDynElem {
   pwr_tFloat32 *old_value;
 
   GeBarChart( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_BarChart, (ge_mActionType) 0, ge_eDynPrio_BarChart),
+    GeDynElem(e_dyn, ge_mDynType1_BarChart, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_BarChart),
     bars(0), barsegments(0), min_value(0), max_value(0), fix_range(0), value(0), old_value(0) { 
     for ( int i = 0; i < BARCHART_MAX_BARSEGMENTS; i++) {
       strcpy( attribute[i], "");
@@ -2483,7 +2514,7 @@ class GeBarChart : public GeDynElem {
     }
   }
   GeBarChart( const GeBarChart& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), 
     bars(x.bars),barsegments(x.barsegments), min_value(x.min_value), max_value(x.max_value), fix_range(x.fix_range),
     value(0), old_value(0) { 
     for ( int i = 0; i < BARCHART_MAX_BARSEGMENTS; i++) {
@@ -2512,7 +2543,7 @@ class GePulldownMenu : public GeDynElem {
   pwr_tTime focus_gained_time;
 
   GePulldownMenu( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_PulldownMenu, ge_eDynPrio_PulldownMenu),
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_PulldownMenu, ge_mActionType2_No, ge_eDynPrio_PulldownMenu),
     button_mask(1), menu_object(0)
     { 
       memset( items_dyn, 0, sizeof( items_dyn));
@@ -2521,7 +2552,7 @@ class GePulldownMenu : public GeDynElem {
       items_dyn[0] = new GeDyn( dyn->graph, ge_eDynAttr_Menu);
     }
   GePulldownMenu( const GePulldownMenu& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), button_mask(x.button_mask), menu_object(0)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), button_mask(x.button_mask), menu_object(0)
     {
       memset( items_dyn, 0, sizeof( items_dyn));
       memset( &focus_gained_time, 0, sizeof( focus_gained_time));
@@ -2566,7 +2597,7 @@ class GeOptionMenu : public GeDynElem {
   ge_eOptionMenuType optionmenu_type;
 
   GeOptionMenu( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_OptionMenu, ge_eDynPrio_OptionMenu),
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_OptionMenu, ge_mActionType2_No, ge_eDynPrio_OptionMenu),
     button_mask(1), menu_object(0)
     { 
       strcpy( attribute, "");
@@ -2579,7 +2610,7 @@ class GeOptionMenu : public GeDynElem {
       memset( &focus_gained_time, 0, sizeof( focus_gained_time));
     }
   GeOptionMenu( const GeOptionMenu& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), button_mask(x.button_mask), menu_object(0)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), button_mask(x.button_mask), menu_object(0)
     {
       memset( &focus_gained_time, 0, sizeof( focus_gained_time));
       strcpy( attribute, x.attribute);
@@ -2609,7 +2640,7 @@ class GeAnalogText : public GeOptionMenu {
  public:
   GeAnalogText( GeDyn *e_dyn) : 
     GeOptionMenu(e_dyn)
-    { dyn_type = ge_mDynType_AnalogText; action_type = ge_mActionType_No; prio = ge_eDynPrio_AnalogText;}
+    { dyn_type1 = ge_mDynType1_AnalogText; action_type1 = ge_mActionType1_No; prio = ge_eDynPrio_AnalogText;}
 
   GeAnalogText( const GeAnalogText& x) : 
     GeOptionMenu(x)
@@ -2630,16 +2661,52 @@ class GeSetValue : public GeDynElem {
   pwr_tString80 value;
 
   GeSetValue( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
-    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_SetValue, ge_eDynPrio_SetValue)
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_SetValue, ge_mActionType2_No, ge_eDynPrio_SetValue)
     { strcpy( attribute, ""); strcpy( value, ""); instance = e_instance;}
   GeSetValue( const GeSetValue& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( attribute, x.attribute); strcpy( value, x.value);
     instance = x.instance, instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
   int action( grow_tObject object, glow_tEvent event);
+  void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+
+};
+
+//! Changes the fill color up to a certain level of the component.
+class GeAxis : public GeDynElem {
+ public:
+  bool first_scan;
+
+  double min_value;
+  double max_value;
+  pwr_tAName minvalue_attr;
+  pwr_tAName maxvalue_attr;
+
+  pwr_tFloat32 *min_value_p;
+  pwr_tFloat32 *max_value_p;
+  pwr_tSubid min_value_subid;
+  pwr_tSubid max_value_subid;
+
+  GeAxis( GeDyn *e_dyn) : 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_Axis, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Axis),
+    min_value(0), max_value(100), min_value_p(0), max_value_p(0)
+    { strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");}
+  GeAxis( const GeAxis& x) : 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), 
+    min_value(x.min_value),max_value(x.max_value),
+    min_value_p(0), max_value_p(0)
+    { strcpy( minvalue_attr, x.minvalue_attr); strcpy( maxvalue_attr, x.maxvalue_attr);}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);

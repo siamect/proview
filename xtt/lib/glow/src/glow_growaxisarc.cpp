@@ -52,6 +52,14 @@
 # define nearbyint rint
 #endif
 
+typedef struct {
+  int lines;
+  int longq;
+  int vvalq;
+  int hvalq;
+  char format[10];
+} sRange;
+
 GrowAxisArc::GrowAxisArc( GrowCtx *glow_ctx, const char *name, double x1, double y1, 
 			  double x2, double y2, int ang1, int ang2, glow_eDrawType border_d_type, 
 			  int line_w, int t_size, glow_eDrawType t_drawtype, 
@@ -104,6 +112,10 @@ void GrowAxisArc::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowAxisArc_text_size) << FSPACE << text_size << endl;
   fp << int(glow_eSave_GrowAxisArc_text_drawtype) << FSPACE << int(text_drawtype) << endl;
   fp << int(glow_eSave_GrowAxisArc_text_color_drawtype) << FSPACE << int(text_color_drawtype) << endl;
+  if ( user_data && ctx->userdata_save_callback) {
+    fp << int(glow_eSave_GrowAxisArc_userdata_cb) << endl;
+    (ctx->userdata_save_callback)(&fp, this, glow_eUserdataCbType_Node);
+  }
   fp << int(glow_eSave_End) << endl;
 }
 
@@ -141,6 +153,10 @@ void GrowAxisArc::open( ifstream& fp)
       case glow_eSave_GrowAxisArc_text_size: fp >> text_size; break;
       case glow_eSave_GrowAxisArc_text_drawtype: fp >> tmp; text_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_GrowAxisArc_text_color_drawtype: fp >> tmp; text_color_drawtype = (glow_eDrawType)tmp; break;
+      case glow_eSave_GrowAxisArc_userdata_cb:
+	if ( ctx->userdata_open_callback)
+	  (ctx->userdata_open_callback)(&fp, this, glow_eUserdataCbType_Node);
+	break;
       case glow_eSave_End: end_found = 1; break;
       default:
         cout << "GrowAxisArc:open syntax error" << endl;
@@ -482,11 +498,154 @@ void GrowAxisArc::set_textbold( int bold)
   draw();
 }
 
-void GrowAxisArc::set_range( double min, double max)
+void GrowAxisArc::set_range( double minval, double maxval)
 {
-  max_value = max;
-  min_value = min;
+  static sRange rdata[2][25] = {
+    {{  26,  5,  5, 10, "%3.1f"}, // 1
+     {  21,  5,  5, 10, "%3.1f"}, // 2
+     {  31,  5, 10, 10, "%3.1f"}, // 3
+     {  41,  5, 10, 20, "%3.1f"}, // 4
+     {  26,  5,  5, 10, "%1.0f"}, // 5
+     {  31,  5, 10, 10, "%1.0f"}, // 6
+     {  36,  5, 10, 10, "%1.0f"}, // 7
+     {  17,  2,  4,  4, "%1.0f"}, // 8
+     {  19,  2,  4,  4, "%1.0f"}, // 9
+     {  21,  2,  4,  8, "%2.0f"}, // 10
+     {  23,  2,  4,  8, "%2.0f"}, // 11
+     {  13,  4,  4,  4, "%2.0f"}, // 12
+     {  14,  4,  4,  4, "%2.0f"}, // 13
+     {  15,  4,  4,  4, "%2.0f"}, // 14
+     {  16,  5,  5,  5, "%2.0f"}, // 15
+     {  17,  5,  5,  5, "%2.0f"}, // 16
+     {  18,  5,  5,  5, "%2.0f"}, // 17
+     {  19,  5,  5,  5, "%2.0f"}, // 18
+     {  20,  5,  5,  5, "%2.0f"}, // 19
+     {  21,  5,  5,  5, "%2.0f"}, // 20
+     {  22,  5,  5,  5, "%2.0f"}, // 21
+     {  23,  5,  5,  5, "%2.0f"}, // 22
+     {  24,  5,  5,  5, "%2.0f"}, // 23
+     {  25,  5,  5,  5, "%2.0f"}, // 24
+     {  26,  5,  5, 10, "%2.0f"}},// 25
+    {{ 101,  5, 10, 20, "%3.1f"}, // 1
+     { 101,  5, 10, 20, "%3.1f"}, // 2
+     {  61, 10, 10, 20, "%3.1f"}, // 3
+     {  81, 10, 10, 20, "%3.1f"}, // 4
+     { 101, 10, 20, 20, "%1.0f"}, // 5
+     {  61,  5, 10, 20, "%1.0f"}, // 6
+     {  71,  5, 10, 20, "%1.0f"}, // 7
+     {  81,  5, 10, 20, "%1.0f"}, // 8
+     {  91,  5, 10, 20, "%1.0f"}, // 9
+     { 101,  5, 10, 20, "%2.0f"}, // 10
+     {  56,  5,  5,  5, "%2.0f"}, // 11
+     {  61,  5, 10, 10, "%2.0f"}, // 12
+     {  66,  5, 10, 20, "%2.0f"}, // 13
+     {  71,  5, 10, 20, "%2.0f"}, // 14
+     {  76,  5, 10, 20, "%2.0f"}, // 15
+     {  81,  5, 10, 20, "%2.0f"}, // 16
+     {  86,  5, 10, 20, "%2.0f"}, // 17
+     {  91,  5, 10, 20, "%2.0f"}, // 18
+     {  96,  5, 10, 20, "%2.0f"}, // 19
+     { 101,  5, 10, 25, "%2.0f"}, // 20
+     {  43,  2,  6,  6, "%2.0f"}, // 21
+     {  45,  2,  4,  8, "%2.0f"}, // 22
+     {  47,  2,  4,  8, "%2.0f"}, // 23
+     {  49,  2,  4,  8, "%2.0f"}, // 24
+     {  26,  5,  5,  5, "%2.0f"}}}; // 25
+
+  erase( &ctx->mw);
+  erase( &ctx->navw);
+  max_value = maxval;
+  min_value = minval;
+
+  GlowWind *w = &ctx->mw;
+  // double tsize = w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
+  int x1 = int( trf.x( ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+  int y1 = int( trf.y( ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+  int x2 = int( trf.x( ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+  int y2 = int( trf.y( ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
+  double rotation = (trf.rot() / 360 - floor( trf.rot() / 360)) * 360;
+
+
+  int len;
+  int lix;
+  int di;
+  int horizontal = ( rotation < 45 || (rotation > 135 && rotation < 225) || rotation > 315) ? 0 : 1;
+  if ( horizontal)
+    len = abs( x2 - x1);
+  else
+    len = abs( y2 - y1);
+
+  if ( len < 150)
+    lix = 0;
+  else 
+    lix = 1;
+
+  double d = fabs( maxval - minval);
+  if ( d < 5)
+    d = 1000 * d;
+
+  di = (int) (d + 0.5);
+  while ( di >= 25)
+    di /= 10;
+
+  if ( di > 0 && di <= 25) {
+    lines = rdata[lix][di-1].lines;
+    longquotient = rdata[lix][di-1].longq;
+    if ( horizontal)
+      valuequotient = rdata[lix][di-1].hvalq;
+    else
+      valuequotient = rdata[lix][di-1].vvalq;
+  }
+
+  double m = max(fabs(maxval),fabs(minval)); 
+  switch ( lix) {
+  case 0: {
+    if ( m < 0.01)
+      strcpy( format, "%g");
+    else if ( m < 0.1)
+      strcpy( format, "%5.3f");
+    else if ( m < 1)
+      strcpy( format, "%4.2f");
+    else if ( m < 3)
+      strcpy( format, "%3.1f");
+    else if ( m <= 20)
+      strcpy( format, "%2.0f");
+    else if ( m <= 200)
+      strcpy( format, "%3.0f");
+    else if ( m < 2000)
+      strcpy( format, "%4.0f");
+    else if ( m < 20000)
+      strcpy( format, "%5.0f");
+    else
+      strcpy( format, "%g");
+    break;
+  }
+  case 1: {
+    if ( m < 0.01)
+      strcpy( format, "%g");
+    else if ( m < 0.1)
+      strcpy( format, "%5.3f");
+    else if ( m < 1)
+      strcpy( format, "%4.2f");
+    else if ( m <= 4)
+      strcpy( format, "%3.1f");
+    else if ( m <= 20)
+      strcpy( format, "%2.0f");
+    else if ( m <= 200)
+      strcpy( format, "%3.0f");
+    else if ( m < 2000)
+      strcpy( format, "%4.0f");
+    else if ( m < 20000)
+      strcpy( format, "%5.0f");
+    else
+      strcpy( format, "%g");
+    break;
+  }
+  default: ;
+  }
+
   configure();
+  draw();
 }
 
 void GrowAxisArc::export_javabean( GlowTransform *t, void *node,
@@ -529,6 +688,32 @@ void GrowAxisArc::export_javabean( GlowTransform *t, void *node,
      draw_type, text_color_drawtype, min_value, max_value, lines, longquotient, valuequotient,
      linelength, line_width, rotation, bold, idx, format,
      pass, shape_cnt, node_cnt, fp);
+}
+
+void GrowAxisArc::trace_scan()
+{
+  if ( !trace.p)
+    return;
+
+  if ( ctx->trace_scan_func)
+  {
+    ctx->trace_scan_func( (void *) this, trace.p);
+    return;
+  }    
+}
+
+int GrowAxisArc::trace_init()
+{
+  int sts;
+
+  sts = ctx->trace_connect_func( (void *) this, &trace);
+  return sts;
+}
+
+void GrowAxisArc::trace_close()
+{
+  if ( trace.p)
+    ctx->trace_disconnect_func( (void *) this);
 }
 
 void GrowAxisArc::set_conf( double max_val, double min_val, int no_of_lines, 
@@ -605,8 +790,11 @@ void GrowAxisArc::format_text( char *text, char *fmt, double value)
     timstr[16] = 0;
     strcpy( text, timstr);
   }
-  else
+  else {
+    if ( fabs(value) < FLT_EPSILON)
+      value = 0;
     sprintf( text, fmt, value);
+  }
 }
 
 void GrowAxisArc::convert( glow_eConvert version) 

@@ -398,8 +398,10 @@ class GlowNodeClass : public GlowArrayElem {
   char		argname[20][32]; //!< Arguments to dynamic code.
   int		argtype[20];	//!< Type of arguments to dynamic code.
   int		nc_extern;	//!< Nodeclass is extern, i.e loaded from pwsg file.
-  int		dyn_type;	//!< Dynamic type.
-  int		dyn_action_type; //!< Action type.
+  int		dyn_type1;	//!< Dynamic type mask 1.
+  int		dyn_type2;	//!< Dynamic type mask 2.
+  int		dyn_action_type1; //!< Action type mask 1.
+  int		dyn_action_type2; //!< Action type mask 2.
   glow_eDrawType dyn_color[4];	//!< Dynamic colors.
   int		dyn_attr[4];	//!< Dynamic attributes.
   int		no_con_obstacle; //!< Node of this nodeclass are not obstacles for routed connections.

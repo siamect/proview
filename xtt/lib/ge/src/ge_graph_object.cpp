@@ -1315,7 +1315,7 @@ static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref)
   dyn = new GeDyn( graph);
   grow_SetUserData( scantime_button, (void *)dyn);
 
-  dyn->set_dyn( ge_mDynType_Value, ge_mActionType_ValueInput);
+  dyn->set_dyn( ge_mDynType1_Value, ge_mDynType2_No, ge_mActionType1_ValueInput, ge_mActionType2_No);
   dyn->update_elements();
   dyn->set_access( (glow_mAccess) 65535);
   dyn->set_attribute( scantime_button, "$local.ScanTime##Float32", 0);
@@ -1336,7 +1336,7 @@ static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref)
   grow_SetSelectOrigColorTone( graph->grow->ctx, glow_eDrawTone_Gray);
   grow_SelectRemove( graph->grow->ctx, hold_button);
 
-  dyn->set_dyn( ge_mDynType_No, ge_mActionType_SetDig);
+  dyn->set_dyn( ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_SetDig, ge_mActionType2_No);
   dyn->update_elements();
   dyn->set_access( (glow_mAccess) 65535);
   dyn->set_attribute( hold_button, "$local.TrendHold##Boolean", 0);
@@ -1373,7 +1373,7 @@ static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref)
 			    glow_eDrawType_Color40, NULL, 
 			    &od->trend_objects[od->trend_cnt]);
 	  dyn = new GeDyn( graph);
-	  dyn->dyn_type = ge_mDynType_Trend;
+	  dyn->dyn_type1 = ge_mDynType1_Trend;
 	  dyn->update_elements();
 	  grow_SetUserData( od->trend_objects[od->trend_cnt], (void *)dyn);
 

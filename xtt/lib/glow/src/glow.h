@@ -82,8 +82,8 @@ typedef enum {
   glow_eType_Int,  		//!< Type is an integer
   glow_eType_Double,  		//!< Type is a double
   glow_eType_String,  		//!< Type is a string
-  glow_eType_DynType, 		//!< Type of dynamics
-  glow_eType_ActionType,  	//!< Type of action
+  glow_eType_DynType1, 		//!< Type of dynamics mask 1
+  glow_eType_ActionType1,  	//!< Type of action mask 1
   glow_eType_Direction,  	//!< Type is glow_eDirection
   glow_eType_Color,  		//!< Type is a drawtype (glow_eDrawType)
   glow_eType_Tone,  		//!< Type is a colortone ( glow_eDrawTone)
@@ -99,7 +99,9 @@ typedef enum {
   glow_eType_Font,	  	//!< Type is glow_eFont
   glow_eType_Gradient,      	//!< Type is glow_eGradient
   glow_eType_HotIndication,    	//!< Type is glow_eHotIndication
-  glow_eType_AnnotType     	//!< Type is glow_eAnnotType
+  glow_eType_AnnotType,     	//!< Type is glow_eAnnotType
+  glow_eType_DynType2, 		//!< Type of dynamics mask 2
+  glow_eType_ActionType2  	//!< Type of action mask 2
 } glow_eType;
 
 //! Type of Ctx class
@@ -1130,7 +1132,7 @@ typedef enum {
 	glow_eSave_NodeClass_arg_cnt		= 305,
 	glow_eSave_NodeClass_argname		= 306,
 	glow_eSave_NodeClass_argtype		= 307,
-	glow_eSave_NodeClass_dyn_type		= 308,
+	glow_eSave_NodeClass_dyn_type1		= 308,
 	glow_eSave_NodeClass_dyn_color1		= 309,
 	glow_eSave_NodeClass_no_con_obstacle	= 310,
 	glow_eSave_NodeClass_slider		= 311,
@@ -1143,7 +1145,7 @@ typedef enum {
 	glow_eSave_NodeClass_y1	                = 318,
 	glow_eSave_NodeClass_x0	                = 319,
 	glow_eSave_NodeClass_x1	                = 320,
-	glow_eSave_NodeClass_dyn_action_type    = 321,
+	glow_eSave_NodeClass_dyn_action_type1   = 321,
 	glow_eSave_NodeClass_dyn_color3	        = 322,
 	glow_eSave_NodeClass_dyn_color4	        = 323,
 	glow_eSave_NodeClass_dyn_attr1	        = 324,
@@ -1152,6 +1154,8 @@ typedef enum {
 	glow_eSave_NodeClass_dyn_attr4	        = 327,
 	glow_eSave_NodeClass_input_focus_mark   = 328,
 	glow_eSave_NodeClass_userdata_cb	= 329,
+	glow_eSave_NodeClass_dyn_type2		= 330,
+	glow_eSave_NodeClass_dyn_action_type2   = 331,
 	glow_eSave_ConClass_cc_name		= 400,
 	glow_eSave_ConClass_con_type		= 401,
 	glow_eSave_ConClass_corner		= 402,
@@ -1324,7 +1328,7 @@ typedef enum {
 	glow_eSave_GrowCtx_y1			= 2212,
 	glow_eSave_GrowCtx_path_cnt		= 2213,
 	glow_eSave_GrowCtx_path			= 2214,
-	glow_eSave_GrowCtx_dyn_type		= 2215,
+	glow_eSave_GrowCtx_dyn_type1		= 2215,
 	glow_eSave_GrowCtx_dyn_color1		= 2216,
 	glow_eSave_GrowCtx_no_con_obstacle	= 2217,
 	glow_eSave_GrowCtx_slider		= 2218,
@@ -1345,7 +1349,7 @@ typedef enum {
 	glow_eSave_GrowCtx_cycle	        = 2233,
 	glow_eSave_GrowCtx_mb3_action	        = 2234,
 	glow_eSave_GrowCtx_translate_on	        = 2235,
-	glow_eSave_GrowCtx_dyn_action_type    	= 2236,
+	glow_eSave_GrowCtx_dyn_action_type1    	= 2236,
 	glow_eSave_GrowCtx_dyn_color3	        = 2237,
 	glow_eSave_GrowCtx_dyn_color4	        = 2238,
 	glow_eSave_GrowCtx_dyn_attr1	        = 2239,
@@ -1355,6 +1359,8 @@ typedef enum {
 	glow_eSave_GrowCtx_input_focus_mark     = 2243,
 	glow_eSave_GrowCtx_userdata_cb	        = 2244,
 	glow_eSave_GrowCtx_bitmap_fonts	        = 2245,
+	glow_eSave_GrowCtx_dyn_type2		= 2246,
+	glow_eSave_GrowCtx_dyn_action_type2    	= 2247,
 	glow_eSave_GrowSubAnnot_x_right		= 2300,
 	glow_eSave_GrowSubAnnot_x_left		= 2301,
 	glow_eSave_GrowSubAnnot_y_high		= 2302,
@@ -1567,6 +1573,7 @@ typedef enum {
 	glow_eSave_GrowAxis_text_size 		= 3707,
 	glow_eSave_GrowAxis_text_drawtype 	= 3708,
 	glow_eSave_GrowAxis_text_color_drawtype	= 3709,
+	glow_eSave_GrowAxis_userdata_cb		= 3710,
 	glow_eSave_GrowRectRounded_x_right	= 3800,
 	glow_eSave_GrowRectRounded_x_left      	= 3801,
 	glow_eSave_GrowRectRounded_y_high      	= 3802,
@@ -1758,6 +1765,7 @@ typedef enum {
 	glow_eSave_GrowAxisArc_text_size       	= 4408,
 	glow_eSave_GrowAxisArc_text_drawtype 	= 4409,
 	glow_eSave_GrowAxisArc_text_color_drawtype = 4410,
+	glow_eSave_GrowAxisArc_userdata_cb     	= 4411,
 	glow_eSave_GrowPie_arc_part        	= 4500,
 	glow_eSave_GrowPie_sectors	     	= 4501,
 	glow_eSave_GrowPie_min_value	     	= 4502,

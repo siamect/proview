@@ -21,7 +21,9 @@ menu Analog
   subgraph 	XYCurve 	pwr_xycurve.component 		25
   subgraph 	Bar		pwr_bar.component 		26
   subgraph 	Axis		pwr_axis.component 		27
+  subgraph 	DynamicAxis	pwr_dynamicaxis.component 	27
   subgraph 	AxisArc		pwr_axisarc.component 		250
+  subgraph 	DynamicAxisArc	pwr_dynamicaxisarc.component 	250
   subgraph 	Pie		pwr_pie.component 		6
   subgraph 	BarChart	pwr_barchart.component 		25
 }

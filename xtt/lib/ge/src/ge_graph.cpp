@@ -727,7 +727,8 @@ int Graph::ungroup_select( int force)
     for ( i = 0; i < sel_count; i++) {
       if ( grow_GetObjectType( sel_list[i]) == glow_eObjectType_GrowGroup) {
 	grow_GetUserData( sel_list[i], (void **)&dyn);
-	if ( dyn->get_dyntype( sel_list[i]) || dyn->get_actiontype( sel_list[i]))
+	if ( dyn->get_dyntype1( sel_list[i]) || dyn->get_actiontype1( sel_list[i]) ||
+ 	     dyn->get_dyntype2( sel_list[i]) || dyn->get_actiontype2( sel_list[i]))
           return GE__GROUPDYNDATA;
       }
     }
@@ -738,7 +739,8 @@ int Graph::ungroup_select( int force)
       if ( grow_GetObjectType( sel_list[i]) == glow_eObjectType_GrowGroup) {
         grow_GetObjectName( sel_list[i], name);	
 	grow_GetUserData( sel_list[i], (void **)&dyn);
-	if ( dyn->get_dyntype( sel_list[i]) || dyn->get_actiontype( sel_list[i]))
+	if ( dyn->get_dyntype1( sel_list[i]) || dyn->get_actiontype1( sel_list[i]) ||
+ 	     dyn->get_dyntype2( sel_list[i]) || dyn->get_actiontype2( sel_list[i]))
           recall.insert( dyn, name, sel_list[i]);
       }
     }
@@ -888,16 +890,16 @@ void Graph::change_value( grow_tObject object, char *text)
   GeDyn *dyn;
 
   grow_GetUserData( object, (void **)&dyn);
-  if ( dyn->action_type & ge_mActionType_Confirm) {
+  if ( dyn->action_type1 & ge_mActionType1_Confirm) {
     glow_sEvent event;
 
     event.event = glow_eEvent_MB1Click;
 
     // Trigger the confirm action
-    dyn->total_action_type = ge_mActionType( dyn->total_action_type & ~ge_mActionType_ValueInput);
+    dyn->total_action_type1 = ge_mActionType1( dyn->total_action_type1 & ~ge_mActionType1_ValueInput);
     strncpy( confirm_text, text, sizeof(confirm_text));
     dyn->action( object, &event);
-    dyn->total_action_type = ge_mActionType( dyn->total_action_type | ge_mActionType_ValueInput);
+    dyn->total_action_type1 = ge_mActionType1( dyn->total_action_type1 | ge_mActionType1_ValueInput);
   }
   else {
     dyn->change_value( object, text);
@@ -1566,7 +1568,7 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 
     grow_GetUserData( object, (void **)&dyn);
 
-    if ( dyn->dyn_type & ge_mDynType_FastCurve) {
+    if ( dyn->dyn_type1 & ge_mDynType1_FastCurve) {
       char transtab[][32] = {	 	"NoOfPoints",		"FastCurve.NoOfPoints",
 					"ScanTime",		"",
 					"CurveWidth",		"FastCurve.CurveLineWidth",
@@ -1589,7 +1591,7 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
       *item_cnt = 0;
       dyn->get_attributes( object, items, item_cnt);
     }
-    if ( dyn->dyn_type & ge_mDynType_XY_Curve) {
+    if ( dyn->dyn_type1 & ge_mDynType1_XY_Curve) {
       char transtab[][32] = {	 	"NoOfPoints",		"XY_Curve.NoOfPoints",
 					"ScanTime",		"",
 					"CurveWidth",		"XY_Curve.CurveLineWidth",
@@ -1639,20 +1641,47 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
   }
   else if ( grow_GetObjectType( object) == glow_eObjectType_GrowAxis)
   {
-    char transtab[][32] = {             "MaxValue",	        "MaxValue",
-                                        "MinValue",	        "MinValue",
-                                        "Lines",	        "Lines",
-					"LongQuotient",	        "LongQuotient",
-					"ValueQuotient",	"ValueQuotient",
-					"Dynamic",		"Dynamic",
-					""};
-    grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-    *item_cnt = 0;
+    GeDyn *dyn;
+
+    grow_GetUserData( object, (void **)&dyn);
+
+    if ( !dyn) {
+      char transtab[][32] = {             "MaxValue",	        "MaxValue",
+					  "MinValue",	        "MinValue",
+					  "Lines",	        "Lines",
+					  "LongQuotient",       "LongQuotient",
+					  "ValueQuotient",	"ValueQuotient",
+					  "Format",		"Format",
+					  "Dynamic",		"",
+					  ""};
+
+      grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
+			      &grow_info_cnt);
+      *item_cnt = 0;
+    }
+    else {
+      char transtab[][32] = {             "MaxValue",	        "Axis.MaxValue",
+					  "MinValue",	        "Axis.MinValue",
+					  "Lines",	        "Axis.Lines",
+					  "LongQuotient",	"Axis.LongQuotient",
+					  "ValueQuotient",	"Axis.ValueQuotient",
+					  "Format",		"Axis.Format",
+					  "Dynamic",		"",
+					  ""};
+      grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
+			      &grow_info_cnt);
+      *item_cnt = 0;
+      dyn->get_attributes( object, items, item_cnt);
+    }
   }
   else if ( grow_GetObjectType( object) == glow_eObjectType_GrowAxisArc)
   {
-    char transtab[][32] = {             
+    GeDyn *dyn;
+
+    grow_GetUserData( object, (void **)&dyn);
+
+    if ( !dyn) {
+      char transtab[][32] = {             
                                         "Angle1",	        "Angle1",
                                         "Angle2",	        "Angle2",
                                         "LineLength",	        "LineLength",
@@ -1661,11 +1690,32 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
                                         "Lines",	        "Lines",
 					"LongQuotient",	        "LongQuotient",
 					"ValueQuotient",	"ValueQuotient",
-					"Dynamic",		"Dynamic",
+					"Format",		"Format",
+					"Dynamic",		"",
 					""};
-    grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-    *item_cnt = 0;
+      grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
+			      &grow_info_cnt);
+      *item_cnt = 0;
+    }
+    else {
+      char transtab[][32] = {             
+                                        "Angle1",	        "Axis.Angle1",
+                                        "Angle2",	        "Axis.Angle2",
+                                        "LineLength",	        "Axis.LineLength",
+                                        "MaxValue",	        "Axis.MaxValue",
+                                        "MinValue",	        "Axis.MinValue",
+                                        "Lines",	        "Axis.Lines",
+					"LongQuotient",	        "Axis.LongQuotient",
+					"ValueQuotient",	"Axis.ValueQuotient",
+					"Format",		"Axis.Format",
+					"Dynamic",		"",
+					""};
+
+      grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
+			      &grow_info_cnt);
+      *item_cnt = 0;
+      dyn->get_attributes( object, items, item_cnt);
+    }
   }
   else if ( grow_GetObjectType( object) == glow_eObjectType_GrowPie)
   {
@@ -1957,15 +2007,17 @@ static int graph_get_subgraph_info_cb( void *g, char *name,
   int			grow_info_cnt;
   int			sts;
   grow_tObject		object;
-  int			dyn_type;
-  int			dyn_action_type;
+  int			dyn_type1;
+  int			dyn_type2;
+  int			dyn_action_type1;
+  int			dyn_action_type2;
   int			item_cnt;
 
   sts = grow_FindNodeClassByName( graph->grow->ctx, name, &object);
   if ( EVEN(sts)) return sts;
 
   grow_GetObjectAttrInfo( object, NULL, &grow_info, &grow_info_cnt);
-  grow_GetNodeClassDynType( object, &dyn_type, &dyn_action_type);
+  grow_GetNodeClassDynType( object, &dyn_type1, &dyn_type2, &dyn_action_type1, &dyn_action_type2);
 
   grow_info_p = grow_info;
   for ( i = 0; i < grow_info_cnt; i++)
@@ -1973,7 +2025,7 @@ static int graph_get_subgraph_info_cb( void *g, char *name,
     items[i].value = grow_info_p->value_p;
     strcpy( items[i].name, grow_info_p->name);
     if ( grow_info_p->type == glow_eType_TraceColor) {
-      if ( dyn_type & ge_mDynType_Tone)
+      if ( dyn_type1 & ge_mDynType1_Tone)
 	items[i].type = glow_eType_ToneOrColor;
       else
 	items[i].type = glow_eType_Color;
@@ -1992,7 +2044,7 @@ static int graph_get_subgraph_info_cb( void *g, char *name,
   grow_GetUserData( object, (void **)&dyn);
 
   item_cnt = 0;
-  if ( dyn && dyn_type & ge_mDynType_HostObject) {
+  if ( dyn && dyn_type1 & ge_mDynType1_HostObject) {
     dyn->get_attributes( 0, &items[grow_info_cnt], &item_cnt);
 
     // Add "HostObject." to hostobjects items
@@ -2019,9 +2071,11 @@ int Graph::get_subgraph_attr_items( attr_sItem **itemlist,
   int			i;
   grow_sAttrInfo	*grow_info, *grow_info_p;
   int			grow_info_cnt;
-  int			dyn_type;
-  int			dyn_action_type;
-  char transtab[][32] = {	 	"DynType",		"DynType",
+  int			dyn_type1;
+  int			dyn_type2;
+  int			dyn_action_type1;
+  int			dyn_action_type2;
+  char transtab[][32] = {	 	"DynType1",		"DynType1",
 					"DynActionType",	"Action",
 					"DynColor1",		"Color1",
 					"DynColor2",		"Color2",
@@ -2035,7 +2089,7 @@ int Graph::get_subgraph_attr_items( attr_sItem **itemlist,
 					""};
 
   grow_GetSubGraphAttrInfo( grow->ctx, (char *)transtab, &grow_info, &grow_info_cnt);
-  grow_GetSubGraphDynType( grow->ctx, &dyn_type, &dyn_action_type);
+  grow_GetSubGraphDynType( grow->ctx, &dyn_type1, &dyn_type2, &dyn_action_type1, &dyn_action_type2);
 
   // Create dyn if change from graph to subgraph
   if ( !was_subgraph) {
@@ -2045,7 +2099,7 @@ int Graph::get_subgraph_attr_items( attr_sItem **itemlist,
 
   memset( items, 0, sizeof(items));
   *item_cnt = 0;
-  if ( subgraph_dyn && dyn_type & ge_mDynType_HostObject) {
+  if ( subgraph_dyn && dyn_type1 & ge_mDynType1_HostObject) {
     subgraph_dyn->get_attributes( 0, items, item_cnt);
 
     // Add "HostObject." to hostobjects items
@@ -2063,15 +2117,19 @@ int Graph::get_subgraph_attr_items( attr_sItem **itemlist,
     strcpy( items[i].name, grow_info_p->name);
 
     if ( grow_info_p->type == glow_eType_TraceColor) {
-      if ( dyn_type & ge_mDynType_Tone)
+      if ( dyn_type1 & ge_mDynType1_Tone)
 	items[i].type = glow_eType_ToneOrColor;
       else
 	items[i].type = glow_eType_Color;
     }
-    else if ( grow_info_p->type == glow_eType_DynType)
-      items[i].type = ge_eAttrType_DynType;
-    else if ( grow_info_p->type == glow_eType_ActionType)
-      items[i].type = ge_eAttrType_ActionType;
+    else if ( grow_info_p->type == glow_eType_DynType1)
+      items[i].type = ge_eAttrType_DynType1;
+    else if ( grow_info_p->type == glow_eType_DynType2)
+      items[i].type = ge_eAttrType_DynType2;
+    else if ( grow_info_p->type == glow_eType_ActionType1)
+      items[i].type = ge_eAttrType_ActionType1;
+    else if ( grow_info_p->type == glow_eType_ActionType2)
+      items[i].type = ge_eAttrType_ActionType2;
     else
       items[i].type = grow_info_p->type;
     if ( strcmp( grow_info_p->name, "AnimSequence") == 0)
@@ -2492,7 +2550,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	GeDyn *dyn = new GeDyn( graph);
         grow_SetUserData( n1, (void *)dyn);
         if ( grow_IsSliderClass( nc))
-	  dyn->action_type = ge_mActionType( dyn->action_type | ge_mActionType_Slider);
+	  dyn->action_type1 = ge_mActionType1( dyn->action_type1 | ge_mActionType1_Slider);
 
 	graph->journal_store( journal_eAction_CreateObject, n1);
       }
@@ -2524,7 +2582,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	  grow_tObject t1;
 	  graph->create_trend( &t1, event->create_grow_object.x, 
 			       event->create_grow_object.y, 
-			       (unsigned int)ge_mDynType_Trend);
+			       (unsigned int)ge_mDynType1_Trend);
 
 	  graph->journal_store( journal_eAction_CreateObject, t1);
 
@@ -2533,7 +2591,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	  grow_tObject t1;
 	  graph->create_trend( &t1, event->create_grow_object.x, 
 			       event->create_grow_object.y, 
-			       (unsigned int)ge_mDynType_FastCurve);
+			       (unsigned int)ge_mDynType1_FastCurve);
 
 	  graph->journal_store( journal_eAction_CreateObject, t1);
 	}
@@ -2541,7 +2599,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	  grow_tObject t1;
 	  graph->create_xycurve( &t1, event->create_grow_object.x, 
 			       event->create_grow_object.y, 
-			       (unsigned int)ge_mDynType_XY_Curve);
+			       (unsigned int)ge_mDynType1_XY_Curve);
 
 	  graph->journal_store( journal_eAction_CreateObject, t1);
 	}
@@ -2571,11 +2629,19 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	}
 	else if ( strcmp( sub_name, "pwr_axis") == 0) {
 	  grow_tObject t1;
-	  graph->create_axis( &t1, event->create_grow_object.x, event->create_grow_object.y);
+	  graph->create_axis( &t1, event->create_grow_object.x, event->create_grow_object.y, 0);
+	}
+	else if ( strcmp( sub_name, "pwr_dynamicaxis") == 0) {
+	  grow_tObject t1;
+	  graph->create_axis( &t1, event->create_grow_object.x, event->create_grow_object.y, 1);
 	}
 	else if ( strcmp( sub_name, "pwr_axisarc") == 0) {
 	  grow_tObject t1;
-	  graph->create_axisarc( &t1, event->create_grow_object.x, event->create_grow_object.y);
+	  graph->create_axisarc( &t1, event->create_grow_object.x, event->create_grow_object.y, 0);
+	}
+	else if ( strcmp( sub_name, "pwr_dynamicaxisarc") == 0) {
+	  grow_tObject t1;
+	  graph->create_axisarc( &t1, event->create_grow_object.x, event->create_grow_object.y, 1);
 	}
 	else if ( strcmp( sub_name, "pwr_pie") == 0) {
 	  grow_tObject t1;
@@ -3436,8 +3502,10 @@ static int graph_trace_connect_bc( grow_tObject object,
 	glow_sTraceData *trace_data)
 {
   GeDyn *dyn;
-  int			dyn_type;
-  int			dyn_action_type;
+  int			dyn_type1;
+  int			dyn_type2;
+  int			dyn_action_type1;
+  int			dyn_action_type2;
 
   GrowCtx *ctx;
   Graph	*graph;
@@ -3465,10 +3533,10 @@ static int graph_trace_connect_bc( grow_tObject object,
     return 1;
   }
 
-  // Get Dyn from nodeclass i dyn_type is HostObject
-  grow_GetObjectClassDynType( object, &dyn_type, &dyn_action_type);
-  if ( dyn_type & ge_mDynType_HostObject && 
-       (dyn->dyn_type & ge_mDynType_Inherit || dyn->dyn_type & ge_mDynType_HostObject)) {
+  // Get Dyn from nodeclass i dyn_type1 is HostObject
+  grow_GetObjectClassDynType( object, &dyn_type1, &dyn_type2, &dyn_action_type1, &dyn_action_type2);
+  if ( dyn_type1 & ge_mDynType1_HostObject && 
+       (dyn->dyn_type1 & ge_mDynType1_Inherit || dyn->dyn_type1 & ge_mDynType1_HostObject)) {
     GeDyn *nodeclass_dyn;
     GeDyn *old_dyn;
     pwr_tAName hostobject;
@@ -3479,7 +3547,7 @@ static int graph_trace_connect_bc( grow_tObject object,
       dyn = new GeDyn( *nodeclass_dyn);
       old_dyn->get_hostobject( hostobject);
 #if 0
-      dyn->dyn_type = dyn->total_dyn_type = (ge_mDynType) (dyn->dyn_type | dyn_type);
+      dyn->dyn_type1 = dyn->total_dyn_type1 = (ge_mDynType1) (dyn->dyn_type1 | dyn_type1);
       dyn->update_elements();
       dyn->set_hostobject( hostobject);
 #endif
@@ -3522,10 +3590,10 @@ static int graph_trace_scan_bc( grow_tObject object, void *p)
   if ( dyn->cycle == glow_eCycle_Inherit)
     return 1;
   if ( dyn->cycle == glow_eCycle_Slow && dyn->graph->slow_scan_cnt != 0 &&
-       !(dyn->total_dyn_type & ge_mDynType_Animation))
+       !(dyn->total_dyn_type1 & ge_mDynType1_Animation))
     return 1;
   if ( dyn->cycle == glow_eCycle_Fast && dyn->graph->fast_scan_cnt != 0 &&
-       !(dyn->total_dyn_type & ge_mDynType_Animation))
+       !(dyn->total_dyn_type1 & ge_mDynType1_Animation))
     return 1;
 
   dyn->scan( object);
@@ -3634,8 +3702,8 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	  }
 	}
         if ( graph->is_authorized( dyn->access) &&
-	     dyn->get_actiontype( event->object.object) & ~ge_mActionType_Inherit) {
-	  if ( dyn->get_actiontype( event->object.object) & ~ge_mActionType_PopupMenu) {
+	     dyn->get_actiontype1( event->object.object) & ~ge_mActionType1_Inherit) {
+	  if ( dyn->get_actiontype1( event->object.object) & ~ge_mActionType1_PopupMenu) {
 	    if ( ctx_popped) 
 	      graph->grow->push();
 	    return int(glow_mHotType_CursorCrossHair);
@@ -3989,7 +4057,7 @@ void Graph::confirm_ok( grow_tObject object)
 
   grow_GetUserData( object, (void **)&dyn);
   event.event = glow_eEvent_MB1Click;
-  if ( dyn->total_action_type & ge_mActionType_ValueInput)
+  if ( dyn->total_action_type1 & ge_mActionType1_ValueInput)
     dyn->change_value( object, confirm_text);
   else
     dyn->confirmed_action( object, &event);
@@ -4021,8 +4089,8 @@ void Graph::connect( grow_tObject object, char *attr_name, int second)
 
 int Graph::set_object_focus( const char *name, int empty)
 {
-  int  dyn_type;
-  int  action_type;
+  int  dyn_type1;
+  int  action_type1;
   int  sts;
   grow_tObject object;
   GeDyn *dyn;
@@ -4037,13 +4105,13 @@ int Graph::set_object_focus( const char *name, int empty)
   if ( !dyn)
     return 0;
 
-  dyn_type = dyn->get_dyntype( object);
-  action_type = dyn->get_actiontype( object);
+  dyn_type1 = dyn->get_dyntype1( object);
+  action_type1 = dyn->get_actiontype1( object);
 
   if ( !is_authorized( dyn->access))
     return GE__NOACCESS;
 
-  if ( action_type & ge_mActionType_InputFocus || action_type & ge_mActionType_ValueInput)
+  if ( action_type1 & ge_mActionType1_InputFocus || action_type1 & ge_mActionType1_ValueInput)
     grow_SetObjectInputFocus( object, 1, glow_eEvent_Null);
 
   return GE__SUCCESS;
@@ -4153,7 +4221,7 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
     }
   }
   s0 = in;
-  if ( dyn && dyn->total_dyn_type & ge_mDynType_HostObject) {
+  if ( dyn && dyn->total_dyn_type1 & ge_mDynType1_HostObject) {
     pwr_tAName hostobject;
 
     dyn->get_hostobject( hostobject);
@@ -4726,7 +4794,7 @@ int Graph::ref_object_info_all()
 }
 
 void Graph::create_trend( grow_tObject *object, double x, double y,
-			  unsigned int dyn_type)
+			  unsigned int dyn_type1)
 {
   double width = 7;
   double height = 5;
@@ -4740,7 +4808,7 @@ void Graph::create_trend( grow_tObject *object, double x, double y,
 			    glow_eDrawType_Color40, NULL, 
 			    object);
   dyn = new GeDyn( this);
-  dyn->dyn_type = dyn->total_dyn_type = (ge_mDynType) dyn_type;
+  dyn->dyn_type1 = dyn->total_dyn_type1 = (ge_mDynType1) dyn_type1;
   dyn->update_elements();
   grow_SetUserData( *object, (void *)dyn);
 
@@ -4764,7 +4832,7 @@ void Graph::create_trend( grow_tObject *object, double x, double y,
 }
 
 void Graph::create_xycurve( grow_tObject *object, double x, double y,
-			    unsigned int dyn_type)
+			    unsigned int dyn_type1)
 {
   double width = 7;
   double height = 5;
@@ -4778,7 +4846,7 @@ void Graph::create_xycurve( grow_tObject *object, double x, double y,
 			  glow_eDrawType_Color40, NULL, 
 			  object);
   dyn = new GeDyn( this);
-  dyn->dyn_type = dyn->total_dyn_type = (ge_mDynType) dyn_type;
+  dyn->dyn_type1 = dyn->total_dyn_type1 = (ge_mDynType1) dyn_type1;
   dyn->update_elements();
   grow_SetUserData( *object, (void *)dyn);
 
@@ -4815,7 +4883,7 @@ void Graph::create_bar( grow_tObject *object, double x, double y)
 			    glow_eDrawType_Color40, NULL, 
 			    object);
   dyn = new GeDyn( this);
-  dyn->dyn_type = dyn->total_dyn_type = ge_mDynType_Bar;
+  dyn->dyn_type1 = dyn->total_dyn_type1 = ge_mDynType1_Bar;
   dyn->update_elements();
   grow_SetUserData( *object, (void *)dyn);
 
@@ -4858,7 +4926,7 @@ void Graph::create_table( grow_tObject *object, double x, double y)
 			    1, 1, glow_eDrawType_Color33, glow_mDisplayLevel_1, NULL, 
 			    object);
   dyn = new GeDyn( this);
-  dyn->dyn_type = dyn->total_dyn_type = ge_mDynType_Table;
+  dyn->dyn_type1 = dyn->total_dyn_type1 = ge_mDynType1_Table;
   dyn->update_elements();
   grow_SetUserData( *object, (void *)dyn);
 
@@ -4883,7 +4951,7 @@ void Graph::create_folder( grow_tObject *object, double x, double y)
   grow_Redraw( grow->ctx);
 }
 
-void Graph::create_axis( grow_tObject *object, double x, double y)
+void Graph::create_axis( grow_tObject *object, double x, double y, int dynamic)
 {
   double width = 1.2;
   double height = 5;
@@ -4893,6 +4961,16 @@ void Graph::create_axis( grow_tObject *object, double x, double y)
 		       x, y, x + width, y + height,
 		       glow_eDrawType_Line, 1, 1,
 		       glow_eDrawType_TextHelvetica, NULL, object);
+
+
+  if ( dynamic) {
+    GeDyn *dyn;
+
+    dyn = new GeDyn( this);
+    dyn->dyn_type2 = dyn->total_dyn_type2 = ge_mDynType2_Axis;
+    dyn->update_elements();
+    grow_SetUserData( *object, (void *)dyn);
+  }
 
   info.max_value = 100;
   info.min_value = 0;
@@ -4904,7 +4982,7 @@ void Graph::create_axis( grow_tObject *object, double x, double y)
   grow_Redraw( grow->ctx);
 }
 
-void Graph::create_axisarc( grow_tObject *object, double x, double y)
+void Graph::create_axisarc( grow_tObject *object, double x, double y, int dynamic)
 {
   double width = 5;
   double height = 5;
@@ -4914,6 +4992,15 @@ void Graph::create_axisarc( grow_tObject *object, double x, double y)
 			  x, y, x + width, y + height, 0, 180, 
 			  glow_eDrawType_Line, 1, 1,
 			  glow_eDrawType_TextHelvetica, NULL, object);
+
+  if ( dynamic) {
+    GeDyn *dyn;
+
+    dyn = new GeDyn( this);
+    dyn->dyn_type2 = dyn->total_dyn_type2 = ge_mDynType2_Axis;
+    dyn->update_elements();
+    grow_SetUserData( *object, (void *)dyn);
+  }
 
   info.max_value = 100;
   info.min_value = 0;
@@ -4952,7 +5039,7 @@ void Graph::create_pie( grow_tObject *object, double x, double y)
   grow_SetPieConf( *object, 12, 0, 100, color);
   grow_SetPieValues( *object, values);
   dyn = new GeDyn( this);
-  dyn->dyn_type = dyn->total_dyn_type = ge_mDynType_Pie;
+  dyn->dyn_type1 = dyn->total_dyn_type1 = ge_mDynType1_Pie;
   dyn->update_elements();
   grow_SetUserData( *object, (void *)dyn);
   grow_Redraw( grow->ctx);
@@ -4983,7 +5070,7 @@ void Graph::create_barchart( grow_tObject *object, double x, double y)
 
   grow_SetBarChartConf( *object, 12, 10, 0, 100, 4, 4, glow_eDrawType_Color37, color);
   dyn = new GeDyn( this);
-  dyn->dyn_type = dyn->total_dyn_type = ge_mDynType_BarChart;
+  dyn->dyn_type1 = dyn->total_dyn_type1 = ge_mDynType1_BarChart;
   dyn->update_elements();
   grow_SetUserData( *object, (void *)dyn);
   grow_Redraw( grow->ctx);
@@ -5041,7 +5128,7 @@ int Graph::create_node_floating( double x, double y)
     GeDyn *dyn = new GeDyn( this);
     grow_SetUserData( n1, (void *)dyn);
     if ( grow_IsSliderClass( nc))
-      dyn->action_type = ge_mActionType( dyn->action_type | ge_mActionType_Slider);
+      dyn->action_type1 = ge_mActionType1( dyn->action_type1 | ge_mActionType1_Slider);
 
     grow_Paste( grow->ctx);
     // grow_SetSelectHighlight( grow->ctx);    

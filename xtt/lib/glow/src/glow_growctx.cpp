@@ -1932,8 +1932,10 @@ void GrowCtx::save_grow( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowCtx_path) << endl;
   for ( i = 0; i < path_cnt; i++)
     fp << path[i] << endl;
-  fp << int(glow_eSave_GrowCtx_dyn_type) << FSPACE << dyn_type << endl;
-  fp << int(glow_eSave_GrowCtx_dyn_action_type) << FSPACE << dyn_action_type << endl;
+  fp << int(glow_eSave_GrowCtx_dyn_type1) << FSPACE << dyn_type1 << endl;
+  fp << int(glow_eSave_GrowCtx_dyn_type2) << FSPACE << dyn_type2 << endl;
+  fp << int(glow_eSave_GrowCtx_dyn_action_type1) << FSPACE << dyn_action_type1 << endl;
+  fp << int(glow_eSave_GrowCtx_dyn_action_type2) << FSPACE << dyn_action_type2 << endl;
   fp << int(glow_eSave_GrowCtx_dyn_color1) << FSPACE << int(dyn_color[0]) << endl;
   fp << int(glow_eSave_GrowCtx_dyn_color2) << FSPACE << int(dyn_color[1]) << endl;
   fp << int(glow_eSave_GrowCtx_dyn_color3) << FSPACE << int(dyn_color[2]) << endl;
@@ -2096,8 +2098,10 @@ void GrowCtx::open_grow( ifstream& fp)
           fp.getline( path[i], sizeof(path[0]));
         }
         break;
-      case glow_eSave_GrowCtx_dyn_type: fp >> dyn_type; break; 
-      case glow_eSave_GrowCtx_dyn_action_type: fp >> dyn_action_type; break; 
+      case glow_eSave_GrowCtx_dyn_type1: fp >> dyn_type1; break; 
+      case glow_eSave_GrowCtx_dyn_type2: fp >> dyn_type2; break; 
+      case glow_eSave_GrowCtx_dyn_action_type1: fp >> dyn_action_type1; break; 
+      case glow_eSave_GrowCtx_dyn_action_type2: fp >> dyn_action_type2; break; 
       case glow_eSave_GrowCtx_dyn_color1:
         fp >> tmp;
 	dyn_color[0] = (glow_eDrawType)tmp;
@@ -2246,8 +2250,10 @@ int GrowCtx::save_subgraph( char *filename, glow_eSaveMode mode)
     }
     fp << "\"" << endl;
   }
-  fp << int(glow_eSave_NodeClass_dyn_type) << FSPACE << dyn_type << endl;
-  fp << int(glow_eSave_NodeClass_dyn_action_type) << FSPACE << dyn_action_type << endl;
+  fp << int(glow_eSave_NodeClass_dyn_type1) << FSPACE << dyn_type1 << endl;
+  fp << int(glow_eSave_NodeClass_dyn_type2) << FSPACE << dyn_type2 << endl;
+  fp << int(glow_eSave_NodeClass_dyn_action_type1) << FSPACE << dyn_action_type1 << endl;
+  fp << int(glow_eSave_NodeClass_dyn_action_type2) << FSPACE << dyn_action_type2 << endl;
   fp << int(glow_eSave_NodeClass_dyn_color1) << FSPACE << int(dyn_color[0]) << endl;
   fp << int(glow_eSave_NodeClass_dyn_color2) << FSPACE << int(dyn_color[1]) << endl;
   fp << int(glow_eSave_NodeClass_dyn_color3) << FSPACE << int(dyn_color[2]) << endl;
@@ -4009,7 +4015,7 @@ void GrowCtx::convert( glow_eConvert version)
     // Conversion of colors
     background_color = GlowColor::convert( version, background_color);
     set_background( background_color);
-    if ( dyn_type == 3 || dyn_type == 4 || dyn_type == 12) {
+    if ( dyn_type1 == 3 || dyn_type1 == 4 || dyn_type1 == 12) {
       if ( (glow_eDrawTone) dyn_color[0] == glow_eDrawTone_YellowGreen)
 	dyn_color[0] = (glow_eDrawType) glow_eDrawTone_Yellow;
       if ( (glow_eDrawTone) dyn_color[1] == glow_eDrawTone_YellowGreen)

@@ -1793,7 +1793,7 @@ int GrowNode::get_background_object_limits(GlowTransform *t,
 {
   int dyn_type;
   GlowNodeClass *base_nc = nc->get_base_nc();
-  dyn_type = base_nc->dyn_type;
+  dyn_type = base_nc->dyn_type1;
 
   if ( !( (int) type & dyn_type))
     return 0;
