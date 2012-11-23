@@ -770,7 +770,8 @@ void GeDyn::get_attributes( grow_tObject object, attr_sItem *itemlist, int *item
 	 total_dyn_type1 & ge_mDynType1_Trend ||
 	 total_dyn_type1 & ge_mDynType1_Table ||
 	 total_dyn_type1 & ge_mDynType1_FastCurve ||
-	 total_dyn_type1 & ge_mDynType1_XY_Curve)
+	 total_dyn_type1 & ge_mDynType1_XY_Curve ||
+	 total_dyn_type2 & ge_mDynType2_Axis)
       attrinfo[i].noedit = 1;
     attrinfo[i].mask = ~(ge_mDynType1_Bar | ge_mDynType1_Trend | ge_mDynType1_Table | 
 			 ge_mDynType1_FastCurve | ge_mDynType1_XY_Curve | ge_mDynType1_SliderBackground);

@@ -1965,7 +1965,9 @@ static int graph_attr_recall_cb( void *g, grow_tObject object, int idx,
        grow_GetObjectType( object) == glow_eObjectType_GrowTable ||
        grow_GetObjectType( object) == glow_eObjectType_GrowBar ||
        grow_GetObjectType( object) == glow_eObjectType_GrowPie ||
-       grow_GetObjectType( object) == glow_eObjectType_GrowBarChart) {
+       grow_GetObjectType( object) == glow_eObjectType_GrowBarChart ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowAxis ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowAxisArc) {
     sts = graph->recall.get( &dyn, idx);
     if ( ODD(sts)) {
       grow_GetUserData( object, (void **)old_dyn);
@@ -3632,14 +3634,17 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
             grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
             grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar ||
             grow_GetObjectType( event->object.object) == glow_eObjectType_GrowPie ||
-            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBarChart))
+            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBarChart ||
+            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowAxis ||
+            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowAxisArc))
       {
 	GeDyn *dyn;
 
         grow_GetUserData( event->object.object, (void **)&dyn);
-	dyn->action( event->object.object, event);
-        graph->current_mb1_down = event->object.object;
-
+	if ( dyn) {
+	  dyn->action( event->object.object, event);
+	  graph->current_mb1_down = event->object.object;
+	}
       }
       break;
     }
@@ -3656,14 +3661,17 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowTable ||
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowBar ||
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowPie ||
-           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowBarChart)
+           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowBarChart ||
+           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowAxis ||
+           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowAxisArc)
       {
 	GeDyn *dyn;
 
         grow_GetUserData( graph->current_mb1_down, (void **)&dyn);
-	dyn->action( graph->current_mb1_down, event);
-        graph->current_mb1_down = 0;
-
+	if ( dyn) {
+	  dyn->action( graph->current_mb1_down, event);
+	  graph->current_mb1_down = 0;
+	}
       }
       break;
     }
@@ -3813,7 +3821,9 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
               grow_GetObjectType( event->object.object) == glow_eObjectType_GrowXYCurve ||
               grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
               grow_GetObjectType( event->object.object) == glow_eObjectType_GrowPie ||
-              grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBarChart))
+              grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBarChart ||
+              grow_GetObjectType( event->object.object) == glow_eObjectType_GrowAxis ||
+              grow_GetObjectType( event->object.object) == glow_eObjectType_GrowAxisArc))
         break;
       if ( graph->mode != graph_eMode_Runtime)
         break;
@@ -3824,7 +3834,8 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	GeDyn *dyn;
 
 	grow_GetUserData( event->object.object, (void **)&dyn);
-	dyn->action( event->object.object, event);
+	if ( dyn)
+	  dyn->action( event->object.object, event);
 	break;
       }
       default: ;
@@ -3880,17 +3891,21 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowXYCurve ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowPie ||
-           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBarChart)
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBarChart ||
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowAxis ||
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowAxisArc)
       {
 
         grow_GetUserData( event->object.object, (void **)&dyn);
-	sts = dyn->action( event->object.object, event);
-	if ( sts == GLOW__TERMINATED)
-	  return sts;
-	else if ( sts == GLOW__SUBTERMINATED) {
-	  if ( ctx_popped) 
-	    graph->grow->push();
-	  return sts;
+	if ( dyn) {
+	  sts = dyn->action( event->object.object, event);
+	  if ( sts == GLOW__TERMINATED)
+	    return sts;
+	  else if ( sts == GLOW__SUBTERMINATED) {
+	    if ( ctx_popped) 
+	      graph->grow->push();
+	    return sts;
+	  }
 	}
       }
       break;
@@ -5180,11 +5195,14 @@ static void graph_free_dyn( grow_tObject object)
        grow_GetObjectType( object) == glow_eObjectType_GrowBar ||
        grow_GetObjectType( object) == glow_eObjectType_GrowPie ||
        grow_GetObjectType( object) == glow_eObjectType_GrowBarChart ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowAxis ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowAxisArc ||
        grow_GetObjectType( object) == glow_eObjectType_NodeClass) {
     GeDyn *dyn;
     
     grow_GetUserData( object, (void **)&dyn);
-    delete dyn;
+    if ( dyn)
+      delete dyn;
   }
 }
 
