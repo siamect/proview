@@ -12089,8 +12089,14 @@ int RTTSYS_POOLS( 	menu_ctx	ctx,
   rtt_t_menu_upd	*menulist;
   int			i, j;
   pool_sGhead		*pool;
+  int			num;
 
-  IF_NOGDH_RETURN;
+  IF_NOQCOM_RETURN;
+
+  if ( rtt_gdh_started)
+    num = 3;
+  else
+    num = 1;
 
   /**********************************************************
   *	The value of a parameter is changed.
@@ -12101,7 +12107,7 @@ int RTTSYS_POOLS( 	menu_ctx	ctx,
       menulist = (rtt_t_menu_upd *) ctx->menu;
       menu_ptr = menulist;
 
-      for ( j = 0; j < 3; j++)
+      for ( j = 0; j < num; j++)
       {
         if ( j == 0)
           /* qdb pool */
@@ -12175,7 +12181,7 @@ int RTTSYS_POOLS( 	menu_ctx	ctx,
       menulist = (rtt_t_menu_upd *) ctx->menu;
       menu_ptr = menulist;
 
-      for ( j = 0; j < 3; j++)
+      for ( j = 0; j < num; j++)
       {
         if ( j == 0)
           /* qdb pool */
@@ -12275,7 +12281,7 @@ int RTTSYS_POOL_SEGS( 	menu_ctx	ctx,
   int			i, k, l;
   static pool_sGhead	*pool;
 
-  IF_NOGDH_RETURN;
+  IF_NOQCOM_RETURN;
 
   /**********************************************************
   *	The value of a parameter is changed.
