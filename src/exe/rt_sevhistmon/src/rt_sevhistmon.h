@@ -42,6 +42,10 @@
 #include "pwr.h"
 #include "pwr_class.h"
 
+#define ev_cInit 0xFFFF
+
+class rt_sevhistmon;
+
 class sev_sevhist {
  public:
   pwr_tAttrRef 	aref;
@@ -60,6 +64,30 @@ class sev_sevhist {
   pwr_tString16 unit;
   pwr_tFloat32  scantime;
   pwr_tBoolean  disabled;
+};
+
+class sev_sevhistevents {
+ public:
+  sev_sevhistevents( rt_sevhistmon *m) : event_thread_idx(0), evbuf_oldest(ev_cInit), evbuf_last(ev_cInit), 
+    evbuf_sent(ev_cInit), monitor(m) {}
+
+  pwr_sClass_SevHistEvents *hsp;
+  pwr_tString80 description;
+  pwr_tOid	hs_oid;
+  pwr_tRefId	hs_refid;
+  pwr_tDeltaTime storagetime;
+  pwr_tMask  	options;
+  pwr_tBoolean  disabled;
+  unsigned int event_thread_idx;
+  sev_sEvent event_buffer[20];
+  unsigned int evbuf_oldest;
+  unsigned int evbuf_last;
+  unsigned int evbuf_sent;
+  rt_sevhistmon *monitor;
+  pwr_tOName	oname;
+
+  void evbuf_insert( sev_sEvent *ev);
+  void evbuf_send();
 };
 
 class sev_sevhistobjectattr {
@@ -117,11 +145,12 @@ class sev_node {
   pwr_tStatus   status;
 };
 
+
 class rt_sevhistmon {
  public:
 
   rt_sevhistmon() : m_msg_id(0), m_next_rix(0), m_loopcnt(0), m_allconnected(0), m_server_status(0), 
-    m_swap(0) {}
+    m_swap(0), m_sevhistevents(0) {}
 
   pwr_tStatus m_sts;
   vector<sev_sevhistthread> m_hs;
@@ -131,14 +160,17 @@ class rt_sevhistmon {
   unsigned int m_loopcnt;
   float m_scantime;
   pwr_sClass_SevHistMonitor *m_confp;
+  pwr_tOid m_confoid;
   pwr_tRefId m_conf_refid;
   int m_allconnected;
   pwr_tStatus m_server_status;
   int m_swap;
+  sev_sevhistevents *m_sevhistevents;
 
   int init();
   int init_objects();
   int init_sevhistobjects();
+  int init_events();
   void insert_sevhistobjectattr(pwr_sAttrRef    *aref,
                                 pwr_tAName      objectname,
                                 int hs_idx,
@@ -160,5 +192,16 @@ class rt_sevhistmon {
   void receive_server_status( sev_sMsgServerStatus *msg, pwr_tNid nid);
   int send_itemlist( pwr_tNid nid);
   int send_data();
+  void evbuf_insert( sev_sEvent *ev);
+  void evbuf_send();
+  static pwr_tStatus mh_ack_bc( mh_sAck *MsgP);
+  static pwr_tStatus mh_return_bc( mh_sReturn *MsgP);
+  static pwr_tStatus mh_alarm_bc( mh_sMessage *MsgP);
+  static pwr_tStatus mh_block_bc( mh_sBlock *MsgP);
+  static pwr_tStatus mh_cancel_bc( mh_sReturn *MsgP);
+  static pwr_tStatus mh_info_bc( mh_sMessage *MsgP);
+  static pwr_tStatus mh_clear_alarmlist_bc( pwr_tNodeIndex nix);
+  static pwr_tStatus mh_clear_blocklist_bc( pwr_tNodeIndex nix);
+
 };
 #endif

@@ -314,6 +314,11 @@ mh_OutunitConnect (
       l.pSelL = (void *)&((pwr_sClass_PostConfig*) p)->EventSelectList[0];
       l.SelectListIsUpdated = NULL;
       break;
+    case pwr_cClass_SevHistEvents:
+      type = mh_eOutunitType_SevHistEvents;
+      l.pSelL = (void *)&((pwr_sClass_SevHistEvents*) p)->EventSelectList[0];
+      l.SelectListIsUpdated = NULL;
+      break;
     default:
       return MH__NOOUTUNIT;
       break;

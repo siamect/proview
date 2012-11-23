@@ -61,8 +61,29 @@ typedef enum {
   sev_eMsgType_ServerStatusRequest,
   sev_eMsgType_ServerStatus,
   sev_eMsgType_HistObjectDataGetRequest,
-  sev_eMsgType_HistObjectDataGet
+  sev_eMsgType_HistObjectDataGet,
+  sev_eMsgType_EventsStore
 } sev_eMsgType;  
+
+typedef enum {
+  sev_eEventType_Info,
+  sev_eEventType_Return,
+  sev_eEventType_Ack,
+  sev_eEventType_Alarm,
+  sev_eEventType_Block,
+  sev_eEventType_Cancel
+} sev_eEventType;
+
+typedef struct {
+  sev_eEventType 	type;
+  unsigned int	 	eventprio;
+  unsigned int 		eventid_nix;
+  unsigned int 		eventid_birthtime;
+  unsigned int 		eventid_idx;
+  net_sTime 		time;
+  char 			eventtext[80];
+  char 			eventname[80];
+} sev_sEvent;
 
 typedef struct {
   pwr_tOName aname;
@@ -102,7 +123,7 @@ typedef struct {
 
 typedef struct {
   sev_eMsgType         Type;
-  pwr_tStatus	         Status;
+  pwr_tStatus	       Status;
   unsigned int         NumItems;
   unsigned int         NumAttributes;
   sev_sHistItem	       Items[1];
@@ -113,6 +134,13 @@ typedef struct {
   net_sTime	       Time;
   int	       	       Data[1];	
 } sev_sMsgHistDataStore;
+
+typedef struct {
+  sev_eMsgType         Type;
+  pwr_tOid	       Oid;
+  unsigned int	       NumEvents;
+  sev_sEvent           Events[1];	
+} sev_sMsgEventsStore;
 
 typedef struct {
   sev_eMsgType         Type;

@@ -74,7 +74,7 @@ class sev_dbms_env
 
   sev_dbms_env(const sev_dbms_env &);
   void operator = (const sev_dbms_env &);
-  virtual ~	sev_dbms_env() { close();}
+  virtual ~sev_dbms_env() { close();}
 
   int create(const char *fileName, const char *host, const char *user, const char *passwd,
              const char *dbName, unsigned int port, const char *socket);  
@@ -87,6 +87,7 @@ class sev_dbms_env
   int checkAndUpdateVersion(unsigned int version);
   int updateDBToSevVersion2(void);
   int createSevVersion2Tables(void);
+  int createSevVersion3Tables(void);
   MYSQL *createDb(void);
   MYSQL *openDb(void);
   bool exists() { return m_exists;}    
@@ -177,12 +178,15 @@ class sev_dbms : public sev_db {
   int get_objectitems( pwr_tStatus *sts);
   int get_objectitemattributes( pwr_tStatus *sts, sev_item *item, char *tablename);
   int check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
-																	pwr_eType type, unsigned int size, unsigned int *idx);
+			    pwr_eType type, unsigned int size, unsigned int *idx);
   int delete_old_objectdata( pwr_tStatus *sts, char *tablename, 
                              pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle);
   int check_deadband(pwr_eType type, unsigned int size, pwr_tFloat32 deadband, void *value, void *oldvalue);
   int get_objectvalues( pwr_tStatus *sts, sev_item *item, unsigned int size, pwr_tTime *starttime, pwr_tTime *endtime, 
 			                  int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize);
+  int delete_event_table( pwr_tStatus *sts, char *tablename);
+  int create_event_table( pwr_tStatus *sts, char *tablename, pwr_tMask options);
+  int store_event( pwr_tStatus *sts, int item_idx, sev_event *ep);
   pwr_tUInt64 get_minFromIntegerColumn( char *tablename, char *colname );
   pwr_tUInt64 get_maxFromIntegerColumn( char *tablename, char *colname );
   pwr_tUInt64 get_nextAutoIncrement( char *tablename );
@@ -190,6 +194,7 @@ class sev_dbms : public sev_db {
   int handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject);
   int repair_table( pwr_tStatus *sts, char *tablename);
   int alter_engine( pwr_tStatus *sts, char *tablename);
+  int store_stat( sev_sStat *stat);
   inline char* create_colName(unsigned int index, char *attributename) {
     static char colName[constMaxColNameLength];
     strncpy(colName, attributename, constMaxColNameLength);

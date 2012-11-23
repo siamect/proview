@@ -290,6 +290,7 @@ MYSQL *sev_dbms_env::createDb(void)
   if (rc) printf( "Create items table: %s\n", mysql_error(m_con));
 
   createSevVersion2Tables();
+  createSevVersion3Tables();
 
   return con;
 }
@@ -329,6 +330,10 @@ int sev_dbms_env::checkAndUpdateVersion(unsigned int version)
   if(old_version < 2 ) {
     printf("Updating database tables to sev version 2\n");
     updateDBToSevVersion2();
+  }
+  if (old_version < 3) {
+    printf("Updating database tables to sev version 3\n");
+    createSevVersion3Tables();
   }
 
   if(old_version != version) {
@@ -464,6 +469,24 @@ int sev_dbms_env::createSevVersion2Tables(void)
   return 1;
 }
 
+int sev_dbms_env::createSevVersion3Tables(void)
+{
+  char query[400];
+
+  sprintf( query, "create table sev_stat (current_load float,medium_load float,datastore_msg_cnt int unsigned,dataget_msg_cnt int unsigned,items_msg_cnt int unsigned,eventstore_msg_cnt int unsigned);");
+  int rc = mysql_query( m_con, query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Create sev_stat table: %s\n", mysql_error(m_con));
+  }
+  sprintf( query, "insert into sev_stat (current_load, medium_load) values(0,0)");
+  rc = mysql_query( m_con, query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Insert into table sev_stat: %s\n", mysql_error(m_con));
+  }
+  return 1;
+}
 
 MYSQL *sev_dbms_env::openDb()
 {
@@ -704,6 +727,83 @@ int sev_dbms::create_table( pwr_tStatus *sts, char *tablename, pwr_eType type,
 }
 
 int sev_dbms::delete_table( pwr_tStatus *sts, char *tablename)
+{
+  char query[200];
+
+  sprintf( query, "drop table %s;", tablename);
+
+  int rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Delete table: %s\n", mysql_error(m_env->con()));
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+  return 1;
+}
+
+int sev_dbms::create_event_table( pwr_tStatus *sts, char *tablename, pwr_tMask options)
+{
+  char query[400];
+  char timeformatstr[80];
+  char jumpstr[80];
+  char idtypestr[20];
+  char readoptstr[80];
+  char engine[80];
+  char enginestr[100] = "";
+
+  if ( cnf_get_value( "sevMysqlEngine", engine, sizeof(engine)) != 0)
+    snprintf( enginestr, sizeof(enginestr), " engine=%s", engine);
+
+  if ( options & pwr_mSevOptionsMask_PosixTime) {
+    if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
+      // Posix time, high resolution
+      strcpy( timeformatstr, "time int unsigned, ntime int unsigned");
+      strcpy( idtypestr, "bigint");
+    }
+    else {
+      // Posix time, low resolution
+      strcpy( timeformatstr, "time int unsigned");
+      strcpy( idtypestr, "int");
+    }
+  }
+  else {
+    if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
+      // Sql time, high resolution
+      strcpy( timeformatstr, "time datetime not null, ntime int unsigned");
+      strcpy( idtypestr, "bigint");
+    }
+    else {
+      // Sql time, low resolution
+      strcpy( timeformatstr, "time datetime not null");
+      strcpy( idtypestr, "int");
+    }
+  }
+
+  if ( options & pwr_mSevOptionsMask_ReadOptimized)
+    sprintf( readoptstr, "id %s unsigned not null primary key auto_increment,", idtypestr);
+  else
+    strcpy( readoptstr, "");
+
+  strcpy( jumpstr, "");
+
+  sprintf( query, "create table %s ( %s"
+	   "%s, eventtype int, eventprio int, eventid_nix int, eventid_birthtime int, eventid_idx int,"
+	   "eventtext varchar(80), eventname varchar(80), index (time))%s;",
+	   tablename, readoptstr, timeformatstr, enginestr);
+
+
+  int rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Create table: %s\n", mysql_error(m_env->con()));
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+  return 1;
+}
+
+int sev_dbms::delete_event_table( pwr_tStatus *sts, char *tablename)
 {
   char query[200];
 
@@ -1663,6 +1763,76 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
   return 1;
 }
 
+int sev_dbms::store_event( pwr_tStatus *sts, int item_idx, sev_event *ep)
+{
+  char query[400];
+  char timstr[40];
+
+
+  *sts = time_AtoAscii( &ep->time, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
+  if ( EVEN(*sts)) return 0;
+  timstr[19] = 0;
+
+  if ( m_items[item_idx].options & pwr_mSevOptionsMask_PosixTime) {
+    if ( m_items[item_idx].options & pwr_mSevOptionsMask_HighTimeResolution) {
+      // Posix time, high resolution
+      sprintf( query, "insert into %s (time, ntime, eventtype, eventprio, eventid_nix, eventid_birthtime,"
+	       "eventid_idx, eventtext, eventname) values (%ld,%ld,%d,%d,%d,%d,%d,'%s','%s')",
+	       m_items[item_idx].tablename,
+	       (long int)ep->time.tv_sec, (long int)ep->time.tv_nsec,
+	       ep->type, ep->eventprio, ep->eventid.Nix, ep->eventid.BirthTime.tv_sec, ep->eventid.Idx, ep->eventtext,
+	       ep->eventname);
+    }
+    else {
+      // Posix time, low resolution
+      sprintf( query, "insert into %s (time, eventtype, eventprio, eventid_nix, eventid_birthtime,"
+	       "eventid_idx, eventtext, eventname) values (%ld,%d,%d,%d,%d,%d,'%s','%s')",
+	       m_items[item_idx].tablename,
+	       (long int)ep->time.tv_sec,
+	       ep->type, ep->eventprio, ep->eventid.Nix, ep->eventid.BirthTime.tv_sec, ep->eventid.Idx, ep->eventtext,
+	       ep->eventname);
+    }
+  }
+  else {
+    if ( m_items[item_idx].options & pwr_mSevOptionsMask_HighTimeResolution) {
+      // Sql time, high resolution
+      sprintf( query, "insert into %s (time, ntime, eventtype, eventprio, eventid_nix, eventid_birthtime,"
+	       "eventid_idx, eventtext, eventname) values ('%s',%ld,%d,%d,%d,%d,%d,'%s','%s')",
+	       m_items[item_idx].tablename,
+	       timstr, (long int)ep->time.tv_sec,
+	       ep->type, ep->eventprio, ep->eventid.Nix, ep->eventid.BirthTime.tv_sec, ep->eventid.Idx, ep->eventtext,
+	       ep->eventname);
+    }
+    else {
+      // Sql time, low resolution
+      sprintf( query, "insert into %s (time, eventtype, eventprio, eventid_nix, eventid_birthtime,"
+	       "eventid_idx, eventtext, eventname) values ('%s',%d,%d,%d,%d,%d,'%s','%s')",
+	       m_items[item_idx].tablename,
+	       timstr,
+	       ep->type, ep->eventprio, ep->eventid.Nix, ep->eventid.BirthTime.tv_sec, ep->eventid.Idx, ep->eventtext,
+	       ep->eventname);
+      
+    }
+  }
+  int rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    // printf( "Store value: %s \"%s\"\n", mysql_error(m_env->con()), query);
+    *sts = SEV__DBERROR;
+    m_items[item_idx].status = *sts;
+    if ( m_items[item_idx].status != m_items[item_idx].logged_status) {
+      m_items[item_idx].logged_status = m_items[item_idx].status;
+      errh_Error( "Database store error: %s, table: %s object: %s", 
+		  mysql_error(m_env->con()),  m_items[item_idx].tablename, m_items[item_idx].oname);
+    }
+    return 0;
+  }
+
+  *sts = SEV__SUCCESS;
+  m_items[item_idx].status = *sts;
+  m_items[item_idx].logged_status = 1;
+  return 1;
+}
+
 
 int sev_dbms::check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname, 
                           pwr_tDeltaTime storagetime, pwr_eType type, unsigned int size, 
@@ -1765,7 +1935,10 @@ int sev_dbms::add_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname
 	      scantime, deadband, options);
   if ( EVEN(*sts)) return 0;
   
-  create_table( sts, tablename, type, size, options, deadband);
+  if ( strcmp( aname, "Events") == 0)
+    create_event_table( sts, tablename, options);
+  else
+    create_table( sts, tablename, type, size, options, deadband);
   if ( EVEN(*sts)) return 0;
 
   sev_item item;
@@ -2261,8 +2434,7 @@ pwr_tUInt64 sev_dbms::get_nextAutoIncrement( char *tablename )
 {
 	char query[200];
   pwr_tUInt64 retVal = 0;
-  sprintf( query, "SELECT Auto_increment FROM information_schema.tables WHERE table_name='%s'", tablename);
-
+  sprintf( query, "SELECT Auto_increment FROM information_schema.tables WHERE table_name='%s' && table_schema='%s'", tablename, m_env->dbName());
   //printf( "%s: %s\n", __FUNCTION__ ,query);
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
@@ -3553,6 +3725,22 @@ int sev_dbms::alter_engine( pwr_tStatus *sts, char *tablename)
   return 1;
 }
 
+int sev_dbms::store_stat( sev_sStat *stat)
+{
+  char query[250];
+  int rc;
+
+  sprintf( query, "update sev_stat set current_load = %f,medium_load = %f,datastore_msg_cnt=%d,dataget_msg_cnt=%d,items_msg_cnt=%d,eventstore_msg_cnt=%d", 
+	   stat->current_load, stat->medium_load, stat->datastore_msg_cnt, stat->dataget_msg_cnt, stat->items_msg_cnt, 
+	   stat->eventstore_msg_cnt);
+  rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Update sev_stat: %s\n", mysql_error(m_env->con()));
+    return 0;
+  }
+  return 1;
+}
 
 sev_dbms::~sev_dbms()
 {

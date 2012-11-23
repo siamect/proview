@@ -36,6 +36,7 @@
 
 #if defined PWRE_CONF_MYSQL
 
+#include <math.h>
 
 #include "pwr.h"
 #include "co_cdh.h"
@@ -56,6 +57,7 @@
 #include "rt_errh.h"
 #include "pwr_baseclasses.h"
 
+#define sev_cStatInterval 10
 #define sev_cGarbageInterval 120
 #define sev_cGarbageCycle 86400
 
@@ -403,27 +405,54 @@ int sev_server::delete_item( qcom_sQid tgt, sev_sMsgHistItemDelete *rmsg)
 int sev_server::mainloop()
 {
   qcom_sQid qid;
-  int tmo = 1000;
+  int tmo = 200;
   qcom_sGet get;
   void *mp;
   pwr_tStatus sts;
   pwr_tTime next_garco, currenttime;
+  pwr_tTime next_stat;
+  pwr_tDeltaTime stat_interval;
   pwr_tDeltaTime garco_interval;
+  pwr_tTime before_get;
+  pwr_tDeltaTime busy = pwr_cNDeltaTime;
+  pwr_tDeltaTime idle = pwr_cNDeltaTime;
+  pwr_tDeltaTime dt;
+  float a = exp(-((float)sev_cStatInterval)/300);
 
   qid.nid = 0;
   qid.qix = sev_eProcSevServer;
 
   time_FloatToD( &garco_interval, sev_cGarbageInterval);
+  time_FloatToD( &stat_interval, sev_cStatInterval);
   time_GetTime( &currenttime);
   time_Aadd( &next_garco, &currenttime, &garco_interval);
+  time_Aadd( &next_stat, &currenttime, &stat_interval);
 
   m_server_status = PWR__SRUN;
 
   for (;;) {
     memset( &get, 0, sizeof(get));
+    time_GetTime( &before_get);
+    time_Adiff( &dt, &before_get, &currenttime);
+    time_Dadd( &busy, &busy, &dt);
+
     mp = qcom_Get(&sts, &qid, &get, tmo);
 
     time_GetTime( &currenttime);
+    time_Adiff( &dt, &currenttime, &before_get);
+    time_Dadd( &idle, &idle, &dt);
+
+    if ( time_Acomp( &currenttime, &next_stat) == 1) {
+      m_stat.current_load = 100.0 * time_DToFloat(0, &busy)/(time_DToFloat(0, &busy)+time_DToFloat(0, &idle));      
+      if ( m_stat.medium_load == 0)
+	m_stat.medium_load = m_stat.current_load;
+      else
+	m_stat.medium_load = a * m_stat.medium_load + (1.0-a) * m_stat.current_load;
+      m_db->store_stat( &m_stat); 
+      time_Aadd( &next_stat, &next_stat, &stat_interval);
+      busy = pwr_cNDeltaTime;
+      idle = pwr_cNDeltaTime;
+    }
     if ( time_Acomp( &currenttime, &next_garco) == 1) {
       garbage_collector();
       time_Aadd( &next_garco, &next_garco, &garco_interval);
@@ -441,12 +470,15 @@ int sev_server::mainloop()
           case sev_eMsgType_HistItems:
             errh_Info("Itemlist received %s", cdh_NodeIdToString( 0, get.reply.nid, 0, 0));
             check_histitems( (sev_sMsgHistItems *) mp, get.size);
+	    m_stat.items_msg_cnt++;
             break;
           case sev_eMsgType_HistDataStore:
             receive_histdata( (sev_sMsgHistDataStore *) mp, get.size);
+	    m_stat.datastore_msg_cnt++;
             break;
           case sev_eMsgType_HistDataGetRequest:
             send_histdata( get.reply, (sev_sMsgHistDataGetRequest *) mp, get.size);
+	    m_stat.dataget_msg_cnt++;
             break;
           case sev_eMsgType_HistItemsRequest:
             send_itemlist( get.reply);
@@ -459,6 +491,12 @@ int sev_server::mainloop()
             break;
           case sev_eMsgType_HistObjectDataGetRequest:
             send_objecthistdata( get.reply, (sev_sMsgHistDataGetRequest *) mp, get.size);
+	    m_stat.dataget_msg_cnt++;
+            break;
+          case sev_eMsgType_EventsStore:
+	    printf( "sev_server Events received\n");
+            receive_events( (sev_sMsgEventsStore *) mp, get.size);
+	    m_stat.eventstore_msg_cnt++;
             break;
           default: ;
         }
@@ -501,173 +539,188 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
   }
 
   for ( int i = 0; i < item_cnt; i++) {
+    if ( msg->Items[i].attrnum > 0) {
 
-    // Deadband requires id variable
-    if ( msg->Items[i].options & pwr_mSevOptionsMask_UseDeadBand)
-      msg->Items[i].options |= pwr_mSevOptionsMask_ReadOptimized;
+      // Deadband requires id variable
+      if ( msg->Items[i].options & pwr_mSevOptionsMask_UseDeadBand)
+	msg->Items[i].options |= pwr_mSevOptionsMask_ReadOptimized;
 
-    // printf( "Received: %s.%s\n", msg->Items[i].oname, msg->Items[i].attr[0].aname);
-    storagetime = net_NetTimeToDeltaTime( &msg->Items[i].storagetime);
+      // printf( "Received: %s.%s\n", msg->Items[i].oname, msg->Items[i].attr[0].aname);
+      storagetime = net_NetTimeToDeltaTime( &msg->Items[i].storagetime);
 
-    if(msg->Items[i].attrnum > 1) {
-      //printf( "Received: %s.%s AttrNum:%d\n", msg->Items[i].oname, msg->Items[i].attr[0].aname, msg->Items[i].attrnum);
-      sev_sHistItem *buffP = &msg->Items[i];
-      while(buffP < &msg->Items[item_cnt]) {
-        //for(size_t j = 0; j < buffP->attrnum; j++) {
-        //  printf( "Received: %s.%s\n", buffP->oname, buffP->attr[j].aname);
-        //}
-        char *s;
-        char tablename[400];
-        char tmpStr[400];
-        char attributeName[400];
-        strcpy( tmpStr, buffP->oname);
-        //Point out attribute name
-        s = strchr( tmpStr, '.');
-        if (s)
-        {
-          *s = 0;
-          strcpy( attributeName, s+1);
-        }
-        else
-          attributeName[0] = '\0';
+      if(msg->Items[i].attrnum > 1) {
+	//printf( "Received: %s.%s AttrNum:%d\n", msg->Items[i].oname, msg->Items[i].attr[0].aname, msg->Items[i].attrnum);
+	sev_sHistItem *buffP = &msg->Items[i];
+	while( (char *)buffP < (char *)msg + size) {
+	  //for(size_t j = 0; j < buffP->attrnum; j++) {
+	  //  printf( "Received: %s.%s\n", buffP->oname, buffP->attr[j].aname);
+	  //}
+	  char *s;
+	  char tablename[400];
+	  char tmpStr[400];
+	  char attributeName[400];
+	  strcpy( tmpStr, buffP->oname);
+	  //Point out attribute name
+	  s = strchr( tmpStr, '.');
+	  if (s) {
+	    *s = 0;
+	    strcpy( attributeName, s+1);
+	  }
+	  else
+	    attributeName[0] = '\0';
 
-        storagetime = net_NetTimeToDeltaTime( &buffP->storagetime );
-        sprintf( tablename, "HiaHia"); //Dummy-name, real name created in add_objectitem
-        bool newobject = false;
-        if ( !m_db->check_objectitem( &m_sts, 
-                                      tablename, 
-                                      buffP->oid, 
-                                      buffP->oname, 
-                                      attributeName,
-                                      storagetime, 
-                                      buffP->description, 
-                                      buffP->scantime, 
-                                      buffP->deadband, 
-                                      buffP->options, 
-                                      &idx)) {
-          m_db->add_objectitem( &m_sts, 
-                                tablename, 
-                                buffP->oid, 
-                                buffP->oname, 
-                                attributeName,
-                                storagetime, 
-                                buffP->description,
-                                buffP->scantime, 
-                                buffP->deadband, 
-                                buffP->options, 
-                                &idx);
-          if ( EVEN(m_sts)) return m_sts;
-          newobject = true;
-        }
+	  storagetime = net_NetTimeToDeltaTime( &buffP->storagetime );
+	  sprintf( tablename, "HiaHia"); //Dummy-name, real name created in add_objectitem
+	  bool newobject = false;
+	  if ( !m_db->check_objectitem( &m_sts, 
+					tablename, 
+					buffP->oid, 
+					buffP->oname, 
+					attributeName,
+					storagetime, 
+					buffP->description, 
+					buffP->scantime, 
+					buffP->deadband, 
+					buffP->options, 
+					&idx)) {
+	    m_db->add_objectitem( &m_sts, 
+				  tablename, 
+				  buffP->oid, 
+				  buffP->oname, 
+				  attributeName,
+				  storagetime, 
+				  buffP->description,
+				  buffP->scantime, 
+				  buffP->deadband, 
+				  buffP->options, 
+				  &idx);
+	    if ( EVEN(m_sts)) return m_sts;
+	    newobject = true;
+	  }
 
-        vector<sev_attr> oldattrVec = m_db->m_items[idx].attr;
-        vector<sev_attr> newattrVec;
-        m_db->m_items[idx].value_size = 0;
-        //Check if any new attributes is found if so add column
-        bool tableChange = false;
-        for(size_t j = 0; j < buffP->attrnum; j++) {
-          //printf( "Received: %s.%s\n", buffP->oname, buffP->attr[j].aname);
-          sev_attr newattr;
-          strncpy( newattr.aname, buffP->attr[j].aname, sizeof(newattr.aname));
-          newattr.type = buffP->attr[j].type;
-          newattr.size = buffP->attr[j].size;
-          m_db->m_items[idx].value_size += newattr.size;
-          newattr.elem = 0;
-          newattrVec.push_back(newattr);
+	  vector<sev_attr> oldattrVec = m_db->m_items[idx].attr;
+	  vector<sev_attr> newattrVec;
+	  m_db->m_items[idx].value_size = 0;
+	  //Check if any new attributes is found if so add column
+	  bool tableChange = false;
+	  for(size_t j = 0; j < buffP->attrnum; j++) {
+	    //printf( "Received: %s.%s\n", buffP->oname, buffP->attr[j].aname);
+	    sev_attr newattr;
+	    strncpy( newattr.aname, buffP->attr[j].aname, sizeof(newattr.aname));
+	    newattr.type = buffP->attr[j].type;
+	    newattr.size = buffP->attr[j].size;
+	    m_db->m_items[idx].value_size += newattr.size;
+	    newattr.elem = 0;
+	    newattrVec.push_back(newattr);
 
-          if ( !m_db->check_objectitemattr( &m_sts, 
-                                            tablename, 
-                                            buffP->oid, 
-                                            buffP->attr[j].aname, 
-                                            buffP->oname,
-                                            buffP->attr[j].type, 
-                                            buffP->attr[j].size, 
-                                            &idx) ) {
-            tableChange = true;
-          }
-        }
+	    if ( !m_db->check_objectitemattr( &m_sts, 
+					      tablename, 
+					      buffP->oid, 
+					      buffP->attr[j].aname, 
+					      buffP->oname,
+					      buffP->attr[j].type, 
+					      buffP->attr[j].size, 
+					      &idx) ) {
+	      tableChange = true;
+	    }
+	  }
 
 
-        //Be sure that we have the correct attribute order. Use the list from the client
-        m_db->m_items[idx].attr.clear();
-        m_db->m_items[idx].attr = newattrVec;
-        m_db->m_items[idx].attrnum = newattrVec.size();
+	  //Be sure that we have the correct attribute order. Use the list from the client
+	  m_db->m_items[idx].attr.clear();
+	  m_db->m_items[idx].attr = newattrVec;
+	  m_db->m_items[idx].attrnum = newattrVec.size();
 
-        if(tableChange) {
-          //Either an attribute has changed type or size or we have a new attribute
-          //rename the table to something and create a new one.
-          //this is the only way to do this without hanging the server for several minutes
-          m_db->handle_objectchange(&m_sts, tablename, idx, newobject);
-        }
+	  if(tableChange) {
+	    //Either an attribute has changed type or size or we have a new attribute
+	    //rename the table to something and create a new one.
+	    //this is the only way to do this without hanging the server for several minutes
+	    m_db->handle_objectchange(&m_sts, tablename, idx, newobject);
+	  }
 
-        //If node is coming up again we do not want deadband to be active due to init of old_value
-        m_db->m_items[idx].deadband_active = 0;
-        m_db->m_items[idx].first_storage = 1;
+	  //If node is coming up again we do not want deadband to be active due to init of old_value
+	  m_db->m_items[idx].deadband_active = 0;
+	  m_db->m_items[idx].first_storage = 1;
 
-        //TODO Check if some items in oldAttrVec no longer exists if so mark this item
-        //so that databaseadministrator knows which columns he can delete
+	  //TODO Check if some items in oldAttrVec no longer exists if so mark this item
+	  //so that databaseadministrator knows which columns he can delete
 
-        //If something was wrong during checking of attributes we ignore this object
-        if ( ODD(m_sts) )
-        {
-          //Create space for the old values used if we have deadband active
-          if( m_db->m_items[idx].old_value != 0 ) {
-            free(m_db->m_items[idx].old_value);
-            m_db->m_items[idx].old_value = 0;
-          }
-          m_db->m_items[idx].old_value = malloc(m_db->m_items[idx].value_size);
+	  //If something was wrong during checking of attributes we ignore this object
+	  if ( ODD(m_sts) ) {
+	    //Create space for the old values used if we have deadband active
+	    if( m_db->m_items[idx].old_value != 0 ) {
+	      free(m_db->m_items[idx].old_value);
+	      m_db->m_items[idx].old_value = 0;
+	    }
+	    m_db->m_items[idx].old_value = malloc(m_db->m_items[idx].value_size);
+	    
+	    m_db->m_items[idx].sevid = buffP->sevid;
 
-          m_db->m_items[idx].sevid = buffP->sevid;
-
-          pwr_tRefId rk;
-          sev_sRefid *rp;
+	    pwr_tRefId rk;
+	    sev_sRefid *rp;
                   
-          rk = buffP->sevid;
-          rp = (sev_sRefid *) tree_Insert(&sts, m_refid, &rk);
-          rp->idx = idx;
-        }
+	    rk = buffP->sevid;
+	    rp = (sev_sRefid *) tree_Insert(&sts, m_refid, &rk);
+	    rp->idx = idx;
+	  }
 
-        int numberOfAttributes = buffP->attrnum;
-        //buffP points after the last attribute written
-        if(numberOfAttributes == 0) {
-          printf("Something is very strange at line:%d in file:%s\n", __LINE__, __FUNCTION__);
-          break;
-        }
-        buffP = (sev_sHistItem *)&buffP->attr[numberOfAttributes];
+	  int numberOfAttributes = buffP->attrnum;
+	  //buffP points after the last attribute written
+	  if(numberOfAttributes == 0) {
+	    printf("Something is very strange at line:%d in file:%s\n", __LINE__, __FUNCTION__);
+	    break;
+	  }
+	  buffP = (sev_sHistItem *)&buffP->attr[numberOfAttributes];
+	}
+	break;
       }
-      break;
-    }
-    if ( !m_db->check_item( &m_sts, msg->Items[i].oid, msg->Items[i].oname, msg->Items[i].attr[0].aname,
-			    storagetime, msg->Items[i].attr[0].type, msg->Items[i].attr[0].size, 
-			    msg->Items[i].description, msg->Items[i].attr[0].unit, msg->Items[i].scantime, 
-			    msg->Items[i].deadband, msg->Items[i].options, &idx)) {
-      m_db->add_item( &m_sts, msg->Items[i].oid, msg->Items[i].oname, msg->Items[i].attr[0].aname,
-		      storagetime, msg->Items[i].attr[0].type, msg->Items[i].attr[0].size, 
-		      msg->Items[i].description, msg->Items[i].attr[0].unit, msg->Items[i].scantime, 
-		      msg->Items[i].deadband, msg->Items[i].options, &idx);
-      if ( EVEN(m_sts)) return m_sts;
-    }
-    if ( ODD(m_sts) ) {
-      //Create space for the old values used if we have deadband active
-      if ( m_db->m_items[idx].old_value != 0 ) {
-        free(m_db->m_items[idx].old_value);
-        m_db->m_items[idx].old_value = 0;
+      if ( !m_db->check_item( &m_sts, msg->Items[i].oid, msg->Items[i].oname, msg->Items[i].attr[0].aname,
+			      storagetime, msg->Items[i].attr[0].type, msg->Items[i].attr[0].size, 
+			      msg->Items[i].description, msg->Items[i].attr[0].unit, msg->Items[i].scantime, 
+			      msg->Items[i].deadband, msg->Items[i].options, &idx)) {
+	m_db->add_item( &m_sts, msg->Items[i].oid, msg->Items[i].oname, msg->Items[i].attr[0].aname,
+			storagetime, msg->Items[i].attr[0].type, msg->Items[i].attr[0].size, 
+			msg->Items[i].description, msg->Items[i].attr[0].unit, msg->Items[i].scantime, 
+			msg->Items[i].deadband, msg->Items[i].options, &idx);
+	if ( EVEN(m_sts)) return m_sts;
       }
-      m_db->m_items[idx].value_size = msg->Items[i].attr[0].size;
-      m_db->m_items[idx].old_value = malloc(m_db->m_items[idx].value_size);
+      if ( ODD(m_sts) ) {
+	//Create space for the old values used if we have deadband active
+	if ( m_db->m_items[idx].old_value != 0 ) {
+	  free(m_db->m_items[idx].old_value);
+	  m_db->m_items[idx].old_value = 0;
+	}
+	m_db->m_items[idx].value_size = msg->Items[i].attr[0].size;
+	m_db->m_items[idx].old_value = malloc(m_db->m_items[idx].value_size);
+	
+	//If node is coming up again we do not want deadband to be active due to init of old_value
+	m_db->m_items[idx].deadband_active = 0;
+	m_db->m_items[idx].first_storage = 1;
+	
+	m_db->m_items[idx].sevid = msg->Items[i].sevid;
   
-      //If node is coming up again we do not want deadband to be active due to init of old_value
-      m_db->m_items[idx].deadband_active = 0;
-      m_db->m_items[idx].first_storage = 1;
-  
-      m_db->m_items[idx].sevid = msg->Items[i].sevid;
-  
-      pwr_tRefId rk;
-      sev_sRefid *rp;
+	pwr_tRefId rk;
+	sev_sRefid *rp;
                     
-      rk = msg->Items[i].sevid;
-      rp = (sev_sRefid *) tree_Insert(&sts, m_refid, &rk);
-      rp->idx = idx;
+	rk = msg->Items[i].sevid;
+	rp = (sev_sRefid *) tree_Insert(&sts, m_refid, &rk);
+	rp->idx = idx;
+      }
+    }
+    else {
+      // SevHistEvents item
+      printf( "Event item received\n");
+
+      if ( !m_db->check_item( &m_sts, msg->Items[i].oid, msg->Items[i].oname, (char *)"Events",
+			      storagetime, (pwr_eType)0, 0, 
+			      msg->Items[i].description, (char *)"", msg->Items[i].scantime, 
+			      0, msg->Items[i].options, &idx)) {
+	m_db->add_item( &m_sts, msg->Items[i].oid, msg->Items[i].oname, (char *)"Events",
+			storagetime, (pwr_eType)0, 0,
+			msg->Items[i].description, (char *)"", msg->Items[i].scantime, 
+			0, msg->Items[i].options, &idx);
+	if ( EVEN(m_sts)) return m_sts;
+      }
     }
   }
   printf( "----  Node up (%d) ----\n", nid);
@@ -821,6 +874,47 @@ int sev_server::send_objecthistdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *
     qcom_Free( &sts, put.data);
   }    
 
+  return 1;
+}
+
+int sev_server::receive_events( sev_sMsgEventsStore *msg, unsigned int size)
+{
+  sev_sEvent *ep = (sev_sEvent *)&msg->Events[0];
+
+  // Get index
+  int idx;
+  int found = 0;
+  for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
+    if ( m_db->m_items[i].deleted)
+      continue;
+    if ( cdh_ObjidIsEqual( m_db->m_items[i].oid, msg->Oid)) {
+      idx = i;
+      found = 1;
+      break;
+    }    
+  }
+  if ( !found) {
+    errh_Error( "Unknown event table, objid (%d,%d)", msg->Oid.vid, msg->Oid.oix);
+    return 1;
+  }
+
+  for ( unsigned int i = 0; i < msg->NumEvents; i++) {
+    sev_event ev;
+
+    printf( "Event Type %d Id %d text \"%s\"\n", ep->type, ep->eventid_idx, ep->eventtext); 
+
+    ev.type = ep->type;
+    ev.eventprio = ep->eventprio;
+    ev.eventid.Nix = ep->eventid_nix;
+    ev.eventid.BirthTime.tv_sec = ep->eventid_birthtime;
+    ev.eventid.BirthTime.tv_nsec = 0;
+    ev.eventid.Idx = ep->eventid_idx;
+    ev.time = net_NetTimeToTime( &ep->time);
+    strcpy( ev.eventtext, ep->eventtext);
+    strcpy( ev.eventname, ep->eventname);
+    m_db->store_event( &m_sts, idx, &ev);
+    ep++;
+  }
   return 1;
 }
 

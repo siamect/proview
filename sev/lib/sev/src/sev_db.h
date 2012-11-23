@@ -41,8 +41,18 @@
 
 #include "pwr.h"
 #include "pwr_class.h"
+#include "rt_mh_net.h"
 
 using namespace std;
+
+typedef struct {
+  float current_load;
+  float medium_load;
+  unsigned int datastore_msg_cnt;
+  unsigned int dataget_msg_cnt;
+  unsigned int items_msg_cnt;
+  unsigned int eventstore_msg_cnt;
+} sev_sStat;
 
 class sev_attr {
  public:
@@ -51,6 +61,16 @@ class sev_attr {
   unsigned int	size;
   unsigned int  elem;
   pwr_tString16 unit;
+};
+
+class sev_event {
+ public:
+  unsigned int 	       	type;
+  unsigned int	 	eventprio;
+  mh_sEventId 		eventid;
+  pwr_tTime 		time;
+  char 			eventtext[80];
+  char 			eventname[80];
 };
 
 class sev_item {
@@ -122,6 +142,7 @@ class sev_db {
                        pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx) { return 0;} 
   virtual int store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
                                 pwr_tDeltaTime storagetime, char *description, pwr_tFloat32 scantime, pwr_tFloat32 deadband, pwr_tMask options) { return 0;}
+  virtual int store_event( pwr_tStatus *sts, int item_idx, sev_event *ep) { return 0;}
   virtual int get_item( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename) { return 0;}
   virtual int get_objectitem( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename) { return 0;}
   virtual int get_objectitems( pwr_tStatus *sts) { return 0;}
@@ -135,6 +156,7 @@ class sev_db {
   virtual int handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject) { return 0;}
   virtual int repair_table( pwr_tStatus *sts, char *tablename) { return 0;}
   virtual int alter_engine( pwr_tStatus *sts, char *tablename) { return 0;}
+  virtual int store_stat( sev_sStat *stat) { return 0;}
 
 };
 #endif

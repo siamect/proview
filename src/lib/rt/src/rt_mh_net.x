@@ -168,7 +168,8 @@ enum mh_eOutunitType{
   mh_eOutunitType_Terminal  = 4,
   mh_eOutunitType_Logger    = 5,
   mh_eOutunitType_Post      = 6,
-  mh_eOutunitType_  	    = 7
+  mh_eOutunitType_SevHistEvents = 7,
+  mh_eOutunitType_  	    = 8
 };
 
 enum mh_eSource {

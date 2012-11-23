@@ -47,6 +47,8 @@
 #include "rt_ini_event.h"
 #include "rt_errh.h"
 #include "rt_aproc.h"
+#include "rt_mh_outunit.h"
+#include "rt_mh_util.h"
 #include "rt_sev_net.h"
 #include "rt_sevhistmon.h"
 #include "rt_sev_msg.h"
@@ -54,7 +56,22 @@
 #include <iostream>
 
 #define sevclient_cQix 121
+
+#define evbuf_next_idx(idx)\
+  idx++;\
+  if ( idx >= sizeof(event_buffer)/sizeof(event_buffer[0]))\
+    idx = 0;
+
+#define evbuf_previous_idx(idx)\
+  if ( idx == 0) \
+    idx = sizeof(event_buffer)/sizeof(event_buffer[0]) - 1;	\
+  else \
+  idx--;
+
 using namespace std;
+
+static rt_sevhistmon *shm;
+
 int rt_sevhistmon::init()
 {
   pwr_tStatus sts;
@@ -62,7 +79,6 @@ int rt_sevhistmon::init()
   qcom_sQid     qini;
   qcom_sNode    node;
   pwr_tNid    nid;
-  pwr_tOid    conf_oid;
   pwr_tOName oname;
 
   errh_Init("pwr_sevhistmon", errh_eAnix_sevhistmon);
@@ -72,20 +88,20 @@ int rt_sevhistmon::init()
   if ( EVEN(sts)) throw co_error(sts);
 
   // Get the config object
-  sts = gdh_GetClassList( pwr_cClass_SevHistMonitor, &conf_oid);
+  sts = gdh_GetClassList( pwr_cClass_SevHistMonitor, &m_confoid);
   if ( EVEN(sts)) {
     errh_SetStatus( 0);
     errh_CErrLog( PWR__SRVNOTCONF, 0);
     exit(0);
   }
 
-  m_sts = gdh_ObjidToName( conf_oid, oname, sizeof(oname), cdh_mName_volumeStrict);
+  m_sts = gdh_ObjidToName( m_confoid, oname, sizeof(oname), cdh_mName_volumeStrict);
   if ( EVEN(m_sts)) throw co_error(m_sts);
 
   m_sts = gdh_RefObjectInfo( oname, (void **)&m_confp, &m_conf_refid, sizeof(*m_confp));
   if ( EVEN(m_sts)) throw co_error(m_sts);
 
-  aproc_RegisterObject( conf_oid);
+  aproc_RegisterObject( m_confoid);
 
   m_confp->Status = m_server_status = PWR__SRVSTARTUP;
   m_scantime = m_confp->ScanTime;
@@ -137,7 +153,10 @@ int rt_sevhistmon::init()
   while (EVEN(gdh_NethandlerRunning()))
     sleep(1);
 
-  return init_objects();
+  init_objects();
+  init_events();
+
+  return 1;
 }
 
 int rt_sevhistmon::init_objects()
@@ -903,6 +922,9 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
       }
     }
   }
+  if ( m_sevhistevents) {
+    item_cnt++;
+  }
 
   if ( item_cnt == 0 && objectitem_cnt == 0 )
     return 1;
@@ -914,7 +936,6 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
   else {
     size += sizeof(sev_sMsgHistItems) + (objectitem_cnt - 1) * (sizeof(sev_sHistItem) - sizeof(sev_sHistAttr)) + histobjectsize;  
   }
-
 
   put.size = size;
   put.data = qcom_Alloc(&lsts, put.size);
@@ -941,7 +962,7 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
         strcpy( ((sev_sMsgHistItems *)put.data)->Items[k].oname, aname);
         strcpy( ((sev_sMsgHistItems *)put.data)->Items[k].attr[0].aname, s + 1);
         ((sev_sMsgHistItems *)put.data)->Items[k].storagetime = 
-        net_DeltaTimeToNetTime( &m_hs[i].sevhistlist[j].storagetime);
+	  net_DeltaTimeToNetTime( &m_hs[i].sevhistlist[j].storagetime);
         ((sev_sMsgHistItems *)put.data)->Items[k].deadband = m_hs[i].sevhistlist[j].deadband;
         ((sev_sMsgHistItems *)put.data)->Items[k].options = m_hs[i].sevhistlist[j].options;
         ((sev_sMsgHistItems *)put.data)->Items[k].attr[0].type = m_hs[i].sevhistlist[j].type;
@@ -957,6 +978,25 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
         k++;
       }
     }
+  }
+
+  if ( m_sevhistevents) {
+    ((sev_sMsgHistItems *)put.data)->Items[k].attrnum = 0;
+    ((sev_sMsgHistItems *)put.data)->Items[k].oid = m_sevhistevents->hs_oid;
+    strcpy( ((sev_sMsgHistItems *)put.data)->Items[k].oname, m_sevhistevents->oname);
+    ((sev_sMsgHistItems *)put.data)->Items[k].storagetime = net_DeltaTimeToNetTime( &m_sevhistevents->storagetime);
+    ((sev_sMsgHistItems *)put.data)->Items[k].deadband = 0;
+    ((sev_sMsgHistItems *)put.data)->Items[k].options = m_sevhistevents->options;
+    ((sev_sMsgHistItems *)put.data)->Items[k].attr[0].type = (pwr_eType)0;
+    ((sev_sMsgHistItems *)put.data)->Items[k].attr[0].size = 0;
+    ((sev_sMsgHistItems *)put.data)->Items[k].sevid.nid = m_nodes[0].nid;
+    ((sev_sMsgHistItems *)put.data)->Items[k].sevid.rix = 0;
+    strncpy( ((sev_sMsgHistItems *)put.data)->Items[k].description,
+	     m_sevhistevents->description, 
+	     sizeof(((sev_sMsgHistItems *)put.data)->Items[0].description));
+    strcpy( ((sev_sMsgHistItems *)put.data)->Items[k].attr[0].unit, "");
+    ((sev_sMsgHistItems *)put.data)->Items[k].scantime = 0;
+    k++;
   }
 
   //Add the objectitems at the end of the message
@@ -1033,6 +1073,330 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
   return 1;
 }
 
+pwr_tStatus rt_sevhistmon::mh_ack_bc( mh_sAck *msg)
+{
+  sev_sEvent ed;
+
+  ed.type = sev_eEventType_Ack;
+  ed.time = msg->Info.EventTime;
+  strcpy( ed.eventtext, "");
+  strncpy( ed.eventname, msg->EventName, sizeof(ed.eventname));
+  ed.eventprio = msg->Info.EventPrio;
+  ed.eventid_idx = msg->Info.Id.Idx;
+  ed.eventid_nix = msg->Info.Id.Nix;
+  ed.eventid_birthtime = msg->Info.Id.BirthTime.tv_sec;
+  
+  if ( shm->m_sevhistevents)
+    shm->m_sevhistevents->evbuf_insert( &ed);
+  printf( "Ack\n");
+  return 1;
+}
+
+pwr_tStatus rt_sevhistmon::mh_return_bc( mh_sReturn *msg)
+{
+  sev_sEvent ed;
+
+  ed.type = sev_eEventType_Return;
+  ed.time = msg->Info.EventTime;
+  strncpy( ed.eventtext, msg->EventText, sizeof(ed.eventtext));
+  strncpy( ed.eventname, msg->EventName, sizeof(ed.eventname));
+  ed.eventprio = msg->Info.EventPrio;
+  ed.eventid_idx = msg->Info.Id.Idx;
+  ed.eventid_nix = msg->Info.Id.Nix;
+  ed.eventid_birthtime = msg->Info.Id.BirthTime.tv_sec;
+  
+  if ( shm->m_sevhistevents)
+    shm->m_sevhistevents->evbuf_insert( &ed);
+
+  printf( "Return\n");
+  return 1;
+}
+
+pwr_tStatus rt_sevhistmon::mh_alarm_bc( mh_sMessage *msg)
+{
+  sev_sEvent ed;
+
+  ed.type = sev_eEventType_Alarm;
+  ed.time = msg->Info.EventTime;
+  strncpy( ed.eventtext, msg->EventText, sizeof(ed.eventtext));
+  strncpy( ed.eventname, msg->EventName, sizeof(ed.eventname));
+  ed.eventprio = msg->Info.EventPrio;
+  ed.eventid_idx = msg->Info.Id.Idx;
+  ed.eventid_nix = msg->Info.Id.Nix;
+  ed.eventid_birthtime = msg->Info.Id.BirthTime.tv_sec;
+  
+  if ( shm->m_sevhistevents)
+    shm->m_sevhistevents->evbuf_insert( &ed);
+
+  printf( "Alarm\n");
+  return 1;
+}
+
+pwr_tStatus rt_sevhistmon::mh_block_bc( mh_sBlock *msg)
+{
+  sev_sEvent ed;
+
+  ed.type = sev_eEventType_Block;
+  ed.time = msg->Info.EventTime;
+  strcpy( ed.eventtext, "");
+  strncpy( ed.eventname, msg->EventName, sizeof(ed.eventname));
+  ed.eventprio = msg->Info.EventPrio;
+  ed.eventid_idx = msg->Info.Id.Idx;
+  ed.eventid_nix = msg->Info.Id.Nix;
+  ed.eventid_birthtime = msg->Info.Id.BirthTime.tv_sec;
+  
+  if ( shm->m_sevhistevents)
+    shm->m_sevhistevents->evbuf_insert( &ed);
+
+  printf( "Block\n");
+  return 1;
+}
+
+pwr_tStatus rt_sevhistmon::mh_cancel_bc( mh_sReturn *msg)
+{
+  sev_sEvent ed;
+
+  ed.type = sev_eEventType_Cancel;
+  ed.time = msg->Info.EventTime;
+  strcpy( ed.eventtext, "");
+  strncpy( ed.eventname, msg->EventName, sizeof(ed.eventname));
+  ed.eventprio = msg->Info.EventPrio;
+  ed.eventid_idx = msg->Info.Id.Idx;
+  ed.eventid_nix = msg->Info.Id.Nix;
+  ed.eventid_birthtime = msg->Info.Id.BirthTime.tv_sec;
+  
+  if ( shm->m_sevhistevents)
+    shm->m_sevhistevents->evbuf_insert( &ed);
+
+  printf( "Cancel\n");
+  return 1;
+}
+
+pwr_tStatus rt_sevhistmon::mh_info_bc( mh_sMessage *msg)
+{
+  sev_sEvent ed;
+
+  ed.type = sev_eEventType_Info;
+  ed.time = msg->Info.EventTime;
+  strncpy( ed.eventtext, msg->EventText, sizeof(ed.eventtext));
+  strncpy( ed.eventname, msg->EventName, sizeof(ed.eventname));
+  ed.eventprio = msg->Info.EventPrio;
+  ed.eventid_idx = msg->Info.Id.Idx;
+  ed.eventid_nix = msg->Info.Id.Nix;
+  ed.eventid_birthtime = msg->Info.Id.BirthTime.tv_sec;
+  
+  if ( shm->m_sevhistevents)
+    shm->m_sevhistevents->evbuf_insert( &ed);
+
+  printf( "Info\n");
+  return 1;
+}
+
+pwr_tStatus rt_sevhistmon::mh_clear_alarmlist_bc( pwr_tNodeIndex nix)
+{
+  printf( "Clearalarmlist\n");
+  return 1;
+}
+
+pwr_tStatus rt_sevhistmon::mh_clear_blocklist_bc( pwr_tNodeIndex nix)
+{
+  printf( "Clearblocklist\n");
+  return 1;
+}
+
+void sev_sevhistevents::evbuf_insert( sev_sEvent *ev)
+{
+  // Check if event already exist
+  if ( evbuf_last != ev_cInit) {
+    for ( unsigned int idx = evbuf_last; ;) {
+      if ( event_buffer[idx].eventid_idx == ev->eventid_idx && 
+	   event_buffer[idx].eventid_nix == ev->eventid_nix && 
+	   event_buffer[idx].eventid_birthtime == ev->eventid_birthtime) {
+	printf( "Rejected                       type %d id %d \"%s\"\n", ev->type,
+		ev->eventid_idx,  ev->eventtext);
+	return;
+      }
+      if ( idx == evbuf_oldest)
+        break;
+      evbuf_previous_idx(idx);
+    }
+  }
+
+  if ( evbuf_last == ev_cInit) {
+    // First insert
+    evbuf_last = 0;
+    evbuf_oldest = 0;
+    memcpy( &event_buffer[evbuf_last], ev, sizeof(event_buffer[0]));
+  }
+  else {
+    unsigned int idx = evbuf_last;
+    evbuf_next_idx( idx);
+    if ( idx == evbuf_oldest &&
+	 ((evbuf_sent == evbuf_oldest) || evbuf_sent == ev_cInit))
+      evbuf_send();
+
+    evbuf_next_idx( evbuf_last);
+    if ( evbuf_oldest == evbuf_last) {
+      evbuf_next_idx( evbuf_oldest);
+    }
+    memcpy( &event_buffer[evbuf_last], ev, sizeof(event_buffer[0]));
+  }
+  printf( "Insert last %d oldest %d type %d id %d \"%s\"\n", evbuf_last, evbuf_oldest, event_buffer[evbuf_last].type,
+	  event_buffer[evbuf_last].eventid_idx,  event_buffer[evbuf_last].eventtext);
+}
+
+void sev_sevhistevents::evbuf_send()
+{
+  if ( evbuf_last == ev_cInit)
+    return;
+
+  unsigned int num;
+  if ( evbuf_sent == ev_cInit) {
+    if ( evbuf_oldest <= evbuf_last)
+      num = evbuf_last - evbuf_oldest + 1;
+    else
+      num = sizeof(event_buffer)/sizeof(event_buffer[0]) + evbuf_last - evbuf_oldest + 1;
+  }
+  else {
+    if ( evbuf_sent <= evbuf_last)
+      num = evbuf_last - evbuf_sent;
+    else
+      num = sizeof(event_buffer)/sizeof(event_buffer[0]) + evbuf_last - evbuf_sent;
+  }
+  if ( !num)
+    return;
+    
+  pwr_tStatus sts;
+  qcom_sPut put;
+  qcom_sQid tgt;
+
+  put.size = sizeof(sev_sMsgEventsStore) + (num - 1) * sizeof(sev_sEvent);
+  put.data = qcom_Alloc(&sts, put.size);
+
+  ((sev_sMsgEventsStore *)put.data)->Type = sev_eMsgType_EventsStore;
+  ((sev_sMsgEventsStore *)put.data)->Oid = monitor->m_sevhistevents->hs_oid;
+  ((sev_sMsgEventsStore *)put.data)->NumEvents = num;
+
+  unsigned int ev_cnt = 0;
+  if ( evbuf_sent == ev_cInit) {
+    for ( unsigned int idx = evbuf_oldest;;) {      
+      printf("Send idx %d id %d\n", idx, event_buffer[idx].eventid_idx);
+      memcpy( &((sev_sMsgEventsStore *)put.data)->Events[ev_cnt], &event_buffer[idx], sizeof(sev_sEvent));
+      ev_cnt++;
+      evbuf_sent = idx;
+      if ( idx == evbuf_last)
+	break;
+      evbuf_next_idx(idx);
+    }
+  }
+  else if ( evbuf_sent != evbuf_last) {
+    unsigned int start_idx = evbuf_sent;
+    evbuf_next_idx(start_idx);
+    for ( unsigned int idx = start_idx;;) {
+      printf("Send idx %d id %d\n", idx, event_buffer[idx].eventid_idx);
+      memcpy( &((sev_sMsgEventsStore *)put.data)->Events[ev_cnt], &event_buffer[idx], sizeof(sev_sEvent));
+      ev_cnt++;
+      evbuf_sent = idx;
+      if ( idx == evbuf_last)
+	break;
+      evbuf_next_idx(idx);
+    }
+  }
+  printf( "Send num: %d  cnt: %d\n", num, ev_cnt);
+
+  tgt.nid = monitor->m_hs[event_thread_idx].nid;
+  tgt.qix = sev_eProcSevServer;
+
+  put.reply.nid = monitor->m_nodes[0].nid;
+  put.reply.qix = sev_eProcSevClient;
+  put.type.b = (qcom_eBtype) sev_cMsgClass;
+  put.type.s = (qcom_eStype) sev_eMsgType_EventsStore;
+  put.msg_id = monitor->m_msg_id++;
+
+  if ( !qcom_Put( &sts, &tgt, &put)) {
+    monitor->m_hs[event_thread_idx].threadp->ErrorCount++;
+    monitor->m_hs[event_thread_idx].threadp->Status = sts;
+    qcom_Free( &sts, put.data);
+  }
+  monitor->m_hs[event_thread_idx].threadp->SendCount++;
+  monitor->m_hs[event_thread_idx].threadp->Status = sts;
+}
+
+
+int rt_sevhistmon::init_events()
+{
+  pwr_tOid he_oid;
+  pwr_tStatus sts;
+  pwr_tOName oname;
+  int he_cnt = 0;
+
+  // Get SevHistEvents objects
+  for ( sts = gdh_GetClassList( pwr_cClass_SevHistEvents, &he_oid);
+      ODD(sts);
+      sts = gdh_GetNextObject( he_oid, &he_oid)) {
+    he_cnt++;
+
+    sts = gdh_ObjidToName( he_oid, oname, sizeof(oname), cdh_mName_volumeStrict);
+    if ( EVEN(m_sts)) throw co_error(m_sts);
+
+    if ( he_cnt > 1) {
+      errh_Error( "SevHistEvents object ignored, %s", oname);
+      continue;
+    }
+    
+    sev_sevhistevents *h = new sev_sevhistevents( this);
+    int hs_idx;
+
+    pwr_tAttrRef aref = cdh_ObjidToAref( he_oid);
+
+    sts = gdh_DLRefObjectInfoAttrref( &aref, (void **)&h->hsp, &h->hs_refid);
+    if ( EVEN(sts)) throw co_error(sts);
+
+    hs_idx = -1;
+    for ( int i = 0; i < (int) m_hs.size(); i++) {
+      if ( cdh_ObjidIsEqual( h->hsp->ThreadObject, m_hs[i].oid)) {
+        hs_idx = i;
+        break;
+      }
+    }
+    if ( hs_idx == -1) {
+      errh_Error( "Invalid thread object in SevHistEvents, %s", oname);
+      continue;
+    }
+
+    h->storagetime = h->hsp->StorageTime;
+    h->options = h->hsp->Options;
+    strcpy( h->description, h->hsp->Description);
+    h->disabled = h->hsp->Disable;
+    h->event_thread_idx = hs_idx;
+    h->hs_oid = he_oid;
+    strcpy( h->oname, oname);
+
+    m_hs[hs_idx].threadp->NoOfItems++;
+    
+    // Wait for mh has flagged initizated
+    mh_UtilWaitForMh();
+
+    sts = mh_OutunitConnect( he_oid,
+			     mh_eOutunitType_SevHistEvents,
+			     0,
+			     mh_ack_bc,
+			     mh_alarm_bc,
+			     mh_block_bc,
+			     mh_cancel_bc,
+			     mh_clear_alarmlist_bc,
+			     mh_clear_blocklist_bc,
+			     mh_info_bc,
+			     mh_return_bc);
+    if (EVEN(sts)) return sts;
+
+    m_sevhistevents = h;
+  }
+
+  return 1;
+}
+
+
 int rt_sevhistmon::mainloop()
 {
   qcom_sQid qid;
@@ -1043,6 +1407,8 @@ int rt_sevhistmon::mainloop()
 
   qid.nid = 0;
   qid.qix = sev_eProcSevClient;
+
+  shm = this;
 
   for (;;) {
     memset( &get, 0, sizeof(get));
@@ -1059,6 +1425,15 @@ int rt_sevhistmon::mainloop()
 	  retry_connect();
       }
       aproc_TimeStamp( m_scantime, 5);
+
+      if ( m_sevhistevents) {
+	sts = mh_OutunitReceive();     
+	while (ODD(sts))
+	  sts = mh_OutunitReceive();
+
+	m_sevhistevents->evbuf_send();
+      }
+
       continue;
     }
 
