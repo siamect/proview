@@ -966,7 +966,7 @@ pool_InPool (
     pr.m = 0;
     pr.b.seg = psp->seg;
     pr.b.offs = (char *)adrs - (char *)psp->base;
-    if (pr.b.offs + size >= gpsp->size) break;
+    if (pr.b.offs + size > gpsp->size) break;
     return pr.m;
   }
 
