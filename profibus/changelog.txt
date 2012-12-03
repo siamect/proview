@@ -52,3 +52,7 @@
 120615 cs  profinet   Profinet configurator, sorting of moduletypes and iodata length settings
 120813 cs  profibus   Profibus configurator in xtt, bugfix in errorhandling for empty gsd-file (refs #112)
 120813 cs  profibus   Profibus device Janitza umg961 added
+120829 rk  profinet   IO offset caclulation bugfix for modules with both in- and output.
+121130 rk  profibus   Handling of large prm data areas. 
+121130 rk  profibus   Moved event handling to separate thread. Not dependant on io-read cycle time. 
+

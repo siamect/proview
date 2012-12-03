@@ -276,18 +276,18 @@ static pwr_tStatus IoAgentInit (
 	    for (ll = 0; ll < local->device_data[ii]->module_data[kk]->submodule_data.size(); ll++) {
 	      PnSubmoduleData *submodule;
 	      submodule = local->device_data[ii]->module_data[kk]->submodule_data[ll];
-	      if (submodule->type & type) {
-		if ((submodule->type == PROFINET_IO_SUBMODULE_TYPE_INPUT) ||
-		    (submodule->type == PROFINET_IO_SUBMODULE_TYPE_INPUT_AND_OUTPUT)) {
-		  submodule->offset_clean_io_in = offset_inputs;
-		  offset_inputs += submodule->io_in_data_length;
-		}
-		if ((submodule->type == PROFINET_IO_SUBMODULE_TYPE_OUTPUT) ||
-		    (submodule->type == PROFINET_IO_SUBMODULE_TYPE_INPUT_AND_OUTPUT)) {
-		  submodule->offset_clean_io_out = offset_outputs;
-		  offset_outputs += submodule->io_out_data_length;
-		}
-	      }
+              if ((type == PROFINET_IO_CR_TYPE_INPUT) &&
+                  ((submodule->type == PROFINET_IO_SUBMODULE_TYPE_INPUT) ||
+                   (submodule->type == PROFINET_IO_SUBMODULE_TYPE_INPUT_AND_OUTPUT))) {
+                submodule->offset_clean_io_in = offset_inputs;
+                offset_inputs += submodule->io_in_data_length;
+              }
+              else if ((type == PROFINET_IO_CR_TYPE_OUTPUT) &&
+                       ((submodule->type == PROFINET_IO_SUBMODULE_TYPE_OUTPUT) ||
+                        (submodule->type == PROFINET_IO_SUBMODULE_TYPE_INPUT_AND_OUTPUT))) {
+                submodule->offset_clean_io_out = offset_outputs;
+                offset_outputs += submodule->io_out_data_length;
+              }
 	    }
 	  }
 	  local->device_data[ii]->iocr_data[jj]->clean_io_data = (unsigned char *) calloc(1, offset_inputs + offset_outputs);
@@ -296,7 +296,7 @@ static pwr_tStatus IoAgentInit (
       } else {
 	errh_Error( "Download of Profinet Device configuration failed for: %s", device_vect[ii]->device_name);
 	/* Setup a dummy i/o area. Depending on exisiting channels this area needs to exist */
-
+        
 	for (jj = 0; jj <  local->device_data[ii]->iocr_data.size(); jj++) {
 	  local->device_data[ii]->iocr_data[jj]->clean_io_data = (unsigned char *) calloc(1, PROFINET_IO_DATA_MAX_LENGTH);
 	}
