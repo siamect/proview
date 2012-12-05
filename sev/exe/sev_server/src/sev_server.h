@@ -71,10 +71,8 @@ typedef struct {
 class sev_server {
  public:
 
-  //TODO should this really be in this file?
-  static const unsigned int constSevVersion = 3;
-
-  sev_server() : m_server_status(0), m_refid(0), m_msg_id(0) {memset(&m_stat,0,sizeof(m_stat));}
+  sev_server() : m_server_status(0), m_refid(0), m_msg_id(0), m_storage_cnt(0),
+    m_db_type(sev_eDbType_Sqlite) {memset(&m_stat,0,sizeof(m_stat));}
 
   pwr_tStatus m_sts;
   pwr_tStatus m_server_status;
@@ -83,7 +81,9 @@ class sev_server {
   unsigned int m_msg_id;
   sev_db *m_db;
   int m_noneth;
+  unsigned int m_storage_cnt;
   sev_sStat m_stat;
+  sev_eDbType m_db_type;
 
   int init( int noneth);
   int connect();
@@ -99,5 +99,6 @@ class sev_server {
   int receive_events( sev_sMsgEventsStore *msg, unsigned int size);
   void garbage_collector();
   void garbage_item( int idx);
+  void set_dbtype( sev_eDbType type) { m_db_type = type;}
 };
 #endif

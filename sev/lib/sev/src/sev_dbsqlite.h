@@ -34,101 +34,39 @@
  * General Public License plus this exception.
  */
 
-#ifndef sev_dbms_h
-#define sev_dbms_h
-#if defined PWRE_CONF_MYSQL
+#ifndef sev_dbsqlite_h
+#define sev_dbsqlite_h
+#if defined PWRE_CONF_SQLITE3
 
 #include <vector>
 
 #include "pwr.h"
 #include "pwr_class.h"
 #include "sev_db.h"
-#include <mysql/mysql.h>
+#include <sqlite3.h>
 
 using namespace std;
 
-class sev_dbms_env;
+class sev_dbsqlite_env;
 
-
-class sev_dbms_env
-{
+class sev_dbsqlite : public sev_db {
  public:
-  MYSQL *m_con;
 
-  char *m_fileName;
-  static char m_systemName[40];
-  
-  char *m_host;
-  char *m_user;
-  char *m_passwd;
-  char *m_dbName;
-  unsigned int m_port;
-  char *m_socket;
-  bool m_exists;
-  
+  static const unsigned int constMaxColNameLength = 64;
 
-  sev_dbms_env();
-  sev_dbms_env(const char *fileName);
-  sev_dbms_env(const char *host, const char *user, const char *passwd,
-                const char *dbName, unsigned int port, const char *socket);
+  sqlite3 *m_con;
+  char m_systemName[80];
 
-  sev_dbms_env(const sev_dbms_env &);
-  void operator = (const sev_dbms_env &);
-  virtual ~sev_dbms_env() { close();}
-
-  int create(const char *fileName, const char *host, const char *user, const char *passwd,
-             const char *dbName, unsigned int port, const char *socket);  
-  
-  int open(void);
-  int open(const char *fileName);
-  int open(const char *host, const char *user, const char *passwd,
-	   const char *dbName, unsigned int port, const char *socket);
+  sev_dbsqlite() { strcpy(m_systemName,"");}
+  ~sev_dbsqlite();
 
   int checkAndUpdateVersion(unsigned int version);
   int updateDBToSevVersion2(void);
   int createSevVersion2Tables(void);
   int createSevVersion3Tables(void);
-  MYSQL *createDb(void);
-  MYSQL *openDb(void);
-  bool exists() { return m_exists;}    
-  int close(void);
-  static int get_systemname();
+  int get_systemname();
 
-  void fileName(const char *fileName);
-  void host(const char *host);
-  void user(const char *user);
-  void passwd(const char *passwd);
-  void dbName(const char *dbName);
-  void port(unsigned int port);  
-  void socket(const char *socket);
-  
-  static char *dbName(void);
-  inline char *fileName(void) { return m_fileName;}
-  char *host(void);
-  inline char *user(void) { return m_user;}
-  inline char *passwd(void) { return m_passwd;}
-  inline unsigned int port(void) { return m_port;}
-  inline char *socket(void) { return m_socket;}  
-  
-
-  inline MYSQL *con(void) {
-    return m_con;
-  }
-  
- private:
-  int create();
-};
-
-class sev_dbms : public sev_db {
- public:
-
-  static const unsigned int constMaxColNameLength = 64;
-
-  sev_dbms_env *m_env;
-
-  sev_dbms( sev_dbms_env *env) : m_env(env) {}
-  ~sev_dbms();
-
+  int open_db();
   int check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname, 
 		  pwr_tDeltaTime storagetime, pwr_eType type, unsigned int size, 
 		  char *description, char *unit, pwr_tFloat32 scantime, 
@@ -158,7 +96,7 @@ class sev_dbms : public sev_db {
   int remove_item( pwr_tStatus *sts, pwr_tOid oid, char *aname);
   static sev_db *open_database();
   static char *oid_to_table( pwr_tOid oid, char *aname);
-  char *dbName() { return sev_dbms_env::dbName();}
+  char *dbName();
   char *pwrtype_to_type( pwr_eType type, unsigned int size);
   static int timestr_to_time( char *tstr, pwr_tTime *ts);
   int check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 

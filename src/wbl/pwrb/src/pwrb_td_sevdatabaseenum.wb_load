@@ -33,54 +33,46 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_sevserver.wb_load -- Defines the class SevServer.
+!  pwrb_td_sevdatabaseenum.wb_load -- Defines the enum type SevDatabase
 !
-SObject pwrb:Class
+SObject pwrb:Type
 !/**
 !  @Version 1.0
-!  @Group Servers,NodeConfiguration
-!  Configures the Sev server process.
-!  
-!  Configures the server process for historical data storage.
-!  
-!  This object is used when the server is started on a node with
-!  the runtime environment started.
-!  The the server can also be started without the runtime
-!  environment, but with the storage environment (Sev) installed.
-!  See the documentation for the storage environment on how to
-!  start the server in this case.
-!
-! @b See also
-!  @classlink SevHistThread pwrb_sevhistthread.html
-!  @classlink SevHistMonitor pwrb_sevhistmonitor.html
-!  @classlink SevHist pwrb_sevhist.html
-!  @classlink SevHistObject pwrb_sevhistobject.html
+!  @Group Types
+!  Enumeration for Sev database.
 !*/
-  Object SevServer $ClassDef 535 
+  Object SevDatabaseEnum $TypeDef 67
     Body SysBody
-      Attr Editor = pwr_eEditor_AttrEd
-      Attr Method = pwr_eMethod_Standard
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "SevDatabaseEnum"
     EndBody
-    Object RtBody $ObjBodyDef 1 
-      Body SysBody
-        Attr StructName = "SevServer"
-      EndBody
-      !/**
-      !  Optional description.
-      !*/
-      Object Description $Attribute 1 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String80"
-        EndBody
-      EndObject
-      !/**
-      !  Database type.
-      !*/
-      Object Database $Attribute 2 
-        Body SysBody
-          Attr TypeRef = "pwrb:Type-SevDatabaseEnum"
-        EndBody
-      EndObject
+    !/**
+    !  Mysql.
+    !*/
+    Object MySQL $Value
+     Body SysBody
+       Attr PgmName = "MySQL"
+       Attr Text = "MySQL"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  SQLite.
+    !*/
+    Object SQLite $Value
+     Body SysBody
+       Attr PgmName = "SQLite"
+       Attr Text = "SQLite"
+       Attr Value = 1
+     EndBody
     EndObject
   EndObject
 EndSObject
+
+
+
+
+
+
+
+

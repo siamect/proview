@@ -45,9 +45,19 @@
 
 using namespace std;
 
+#define sev_cVersion 3
+
+typedef enum {
+  sev_eDbType_,
+  sev_eDbType_Mysql,
+  sev_eDbType_Sqlite
+} sev_eDbType;
+
 typedef struct {
   float current_load;
   float medium_load;
+  float storage_rate;
+  float medium_storage_rate;
   unsigned int datastore_msg_cnt;
   unsigned int dataget_msg_cnt;
   unsigned int items_msg_cnt;
@@ -157,6 +167,10 @@ class sev_db {
   virtual int repair_table( pwr_tStatus *sts, char *tablename) { return 0;}
   virtual int alter_engine( pwr_tStatus *sts, char *tablename) { return 0;}
   virtual int store_stat( sev_sStat *stat) { return 0;}
-
+  virtual int begin_transaction() { return 0;}
+  virtual int commit_transaction() { return 0;}
+  virtual char *dbName() { return 0;}
+  
+  static sev_db *open_database( sev_eDbType type);
 };
 #endif

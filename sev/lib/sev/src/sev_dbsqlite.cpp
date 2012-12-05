@@ -34,7 +34,7 @@
  * General Public License plus this exception.
  **/
 
-#if defined PWRE_CONF_MYSQL
+#if defined PWRE_CONF_SQLITE3
 
 #include <string.h>
 #include <sys/stat.h>
@@ -45,6 +45,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <sqlite3.h>
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"
@@ -54,579 +55,14 @@
 #include "co_time.h"
 #include "co_cnf.h"
 #include "rt_load.h"
-#include "sev_dbms.h"
+#include "sev_dbsqlite.h"
 #include "rt_sev_msg.h"
 #include "rt_errh.h"
 
 using namespace std;
-char sev_dbms_env::m_systemName[40];
 
-sev_dbms_env::sev_dbms_env(const char *v_fileName) : 
-  m_con(0), m_fileName(0), m_host(0), m_user(0), m_passwd(0), m_dbName(0), m_port(0), m_socket(0), m_exists(false)
-{
-  fileName(v_fileName);
-  strcpy( m_systemName, "");
 
-  get_systemname();
-}
-
-sev_dbms_env::sev_dbms_env(const char *v_host, const char *v_user, const char *v_passwd,
-			   const char *v_dbName, unsigned int v_port, const char *v_socket) :
-  m_con(0), m_fileName(0), m_host(0), m_user(0), m_passwd(0), m_dbName(0), m_port(0), 
-  m_socket(0), m_exists(false)
-{
-  strcpy( m_systemName, "");
-  host(v_host);
-  user(v_user);
-  passwd(v_passwd);
-  dbName(v_dbName);
-  port(v_port);
-  socket(v_socket);
-  get_systemname();
-}
-
-void sev_dbms_env::host(const char *host)
-{
-  if (!host)
-    return;
-  
-  m_host = (char *)realloc(m_host, strlen(host)+1);
-  strcpy(m_host, host);
-}
-
-void sev_dbms_env::user(const char *user)
-{
-  if (!user)
-    return;
-  
-  m_user = (char *)realloc(m_user, strlen(user)+1);
-  strcpy(m_user, user);
-}
-
-void sev_dbms_env::passwd(const char *passwd)
-{
-  if (!passwd)
-    return;
-  
-  m_passwd = (char *)realloc(m_passwd, strlen(passwd)+1);
-  strcpy(m_passwd, passwd);
-}
-
-void sev_dbms_env::dbName(const char *dbName)
-{
-  if (!dbName)
-    return;
-  
-  m_dbName = (char *)realloc(m_dbName, strlen(dbName)+1);
-  strcpy(m_dbName, dbName);
-}
-
-void sev_dbms_env::fileName(const char *fileName)
-{
-  if (!fileName)
-    return;
-  
-  m_fileName = (char *)realloc(m_fileName, strlen(fileName)+1);
-  strcpy(m_fileName, fileName);
-}
-
-char *sev_dbms_env::dbName(void) 
-{ 
-  static char dbname[80];
-
-  get_systemname();
-  strcpy( dbname, "pwrp__");
-  strcat( dbname, m_systemName);
-  cdh_ToLower( dbname, dbname);
-
-  return dbname;
-}
-
-char *sev_dbms_env::host(void) 
-{ 
-  char nodename[80];
-  pwr_tStatus sts;
-  static char host[80];
-
-  syi_NodeName( &sts, nodename, sizeof(nodename));
-  if ( ODD(sts) && cdh_NoCaseStrcmp( nodename, m_host) == 0)
-    strcpy( host, "localhost");
-  else
-    strcpy( host, m_host);
-
-  return host;
-}
-
-void sev_dbms_env::port(const unsigned int port)
-{
-  m_port = port;
-}
-
-void sev_dbms_env::socket(const char *socket)
-{
-  if (!socket)
-    return;
-  
-  m_socket = (char *)realloc(m_socket, strlen(socket)+1);
-  strcpy(m_socket, socket);
-}
-
-sev_dbms_env::sev_dbms_env() :
-  m_con(0), m_fileName(0), m_host(0), m_user(0), m_passwd(0), m_dbName(0), m_port(0), m_socket(0), m_exists(false)
-{
-
-};
-
-int sev_dbms_env::close()
-{
-
-  return 0;
-}
-
-int sev_dbms_env::open(const char *v_host, const char *v_user, const char *v_passwd,
-                        const char *v_dbName, unsigned int v_port, const char *v_socket)
-{
-
-  host(v_host);
-  user(v_user);
-  passwd(v_passwd);
-  dbName(v_dbName);
-  port(v_port);
-  socket(v_socket);
-
-  m_con = mysql_init(NULL);
-    
-  MYSQL *con = mysql_real_connect(m_con, host(), user(), passwd(), dbName(), port(), socket(), 0);
-  if (con == 0) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf("Failed to connect to database: Error: %s\n", mysql_error(m_con));
-    return 1;
-  }
-
-  char sql[255];
-      
-  sprintf(sql, "use %s", dbName());
-  int rc = mysql_query(m_con, sql);
-  if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf("%s\n", mysql_error(m_con));
-    printf("%s\n", sql);
-    return rc;
-  } else {
-    printf("database open %s\n", sql);
-  }  
-
-  return 0;
-}
-
-int sev_dbms_env::create(const char *v_fileName, const char *v_host, const char *v_user,
-			 const char *v_passwd, const char *v_dbName, unsigned int v_port,
-			 const char *v_socket)
-{
-  fileName(v_fileName);
-  host(v_host);
-  user(v_user);
-  passwd(v_passwd);
-  dbName(v_dbName);
-  port(v_port);
-  socket(v_socket);
-  
-  create();
-  
-  return 0;
-}
-
-MYSQL *sev_dbms_env::createDb(void)
-{
-  m_con = mysql_init(NULL);
-
-  MYSQL *con = mysql_real_connect(m_con, host(), user(), passwd(), 0, port(), socket(), 0);
-  // printf("Tried to connect to database, con %x: Status: %s\n", (int)con, mysql_error(m_con));
-  if (con == 0) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf("Failed to connect to database: Error: %s\n", mysql_error(m_con));
-    return 0;
-  }
-
-  char query[400];
-      
-  sprintf(query, "create database %s", dbName());
-  int rc = mysql_query(m_con, query);
-  if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf("%s\n", mysql_error(m_con));
-    printf("%s\n", query);
-    return 0;
-  }      
-      
-  sprintf(query, "use %s", dbName());
-  rc = mysql_query(m_con, query);
-  if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf("%s\n", mysql_error(m_con));
-    printf("%s\n", query);
-    return 0;
-  }      
-
-  sprintf( query, "create table items ("
-	   "id int unsigned not null primary key auto_increment,"
-	   "tablename varchar(255),"
-	   "vid int unsigned,"
-	   "oix int unsigned,"
-	   "oname varchar(255),"
-	   "aname varchar(255),"
-	   "uptime datetime,"
-	   "cretime datetime,"
-	   "storagetime int unsigned,"
-	   "deadband float,"
-	   "options int unsigned,"
-	   "scantime float,"
-	   "description varchar(80),"
-	   "vtype int unsigned,"
-	   "vsize int unsigned,"
-	   "unit varchar(16));");
-
-  rc = mysql_query( m_con, query);
-  if (rc) printf( "Create items table: %s\n", mysql_error(m_con));
-
-  createSevVersion2Tables();
-  createSevVersion3Tables();
-
-  return con;
-}
-
-int sev_dbms_env::checkAndUpdateVersion(unsigned int version)
-{
-  unsigned int old_version=1; //Proview 4.6.0.0 was first release with sev
-  int rc = mysql_query( m_con, "select * from sev_version");
-  if (rc) {
-    printf( "table sev_version do no exist\n");
-  }
-  else {
-  
-    MYSQL_ROW row;
-    MYSQL_RES *result = mysql_store_result( m_con);
-  
-    if ( !result) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "selecting sev_version Error\n");
-      return 0;
-    }
-  
-    row = mysql_fetch_row( result);
-    if (!row) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "selecting sev_version Error\n");
-      return 0;
-    }
-  
-    old_version= strtoul( row[0], 0, 10);
-    mysql_free_result( result);
-  }
-
-  printf("old sev_version: %d, new sev_version: %d\n", old_version, version);
-
-  //add code for new versions here
-  if(old_version < 2 ) {
-    printf("Updating database tables to sev version 2\n");
-    updateDBToSevVersion2();
-  }
-  if (old_version < 3) {
-    printf("Updating database tables to sev version 3\n");
-    createSevVersion3Tables();
-  }
-
-  if(old_version != version) {
-    char query[100];
-    sprintf( query, "update sev_version set version = %d", version);
-    rc = mysql_query( m_con, query);
-    if (rc) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "Update sev_version: %s\n", mysql_error(m_con));
-    }
-  }
-  return 1;
-}
-
-int sev_dbms_env::updateDBToSevVersion2(void)
-{
-  createSevVersion2Tables();
-
-  int rc;
-  char query[300];
-
-  sprintf( query, "select id,tablename,vid,oix from items order by id");
-
-  rc = mysql_query( con(), query);
-  if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__, mysql_error(con()));
-    return 0;
-  }
-
-  MYSQL_ROW row;
-  MYSQL_RES *result = mysql_store_result( con());
-  if ( !result) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "GetValues Result Error\n");
-    return 0;
-  }
-  int rows = mysql_num_rows( result);
-
-  vector<sev_item> itemsVec;
-  for ( int i = 0; i < rows; i++) {
-    sev_item item;
-    row = mysql_fetch_row( result);
-    if (!row) break;
-    item.id = atoi( row[0]);
-    strncpy( item.tablename, row[1], sizeof(item.tablename));
-    item.oid.vid = strtoul( row[2], 0, 10);
-    item.oid.oix = strtoul( row[3], 0, 10);
-    itemsVec.push_back( item);
-  }
-  mysql_free_result( result);
-
-  char newTableName[256];
-  for(size_t i=0; i < itemsVec.size(); i++) {
-    sprintf(newTableName, "%s_%d", sev_dbms::oid_to_table(itemsVec[i].oid, (char*)""), itemsVec[i].id);
-
-    printf("UPDATE TO SEV_VERSION 2: Renaming table %s to %s \n", itemsVec[i].tablename, newTableName);
-    errh_Info("UPDATE TO SEV_VERSION 2: Renaming table %s to %s", itemsVec[i].tablename, newTableName);
-
-    sprintf(query, "RENAME TABLE %s to %s", itemsVec[i].tablename, newTableName);
-    rc = mysql_query( con(), query);
-    if (rc) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "%s: %s\n", __FUNCTION__, mysql_error(con()));
-      return 0;
-    }
-
-    sprintf(query, "update items set tablename='%s' where id=%d", newTableName, itemsVec[i].id);
-    rc = mysql_query( con(), query);
-    if (rc) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "%s: %s\n", __FUNCTION__, mysql_error(con()));
-      return 0;
-    }
-  }
-  return 1;
-}
-int sev_dbms_env::createSevVersion2Tables(void)
-{
-  char query[400];
-
-  sprintf( query, "create table sev_version ("
-     "version int unsigned not null primary key);");
-  int rc = mysql_query( m_con, query);
-  if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Create sev_version table: %s\n", mysql_error(m_con));
-  }
-
-  sprintf( query, "insert into sev_version (version) values(%d)", sev_cVersion);
-  rc = mysql_query( m_con, query);
-  if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Insert into table sev_version: %s\n", mysql_error(m_con));
-  }
-
-
-	sprintf( query, "create table objectitems ("
-		 "id int unsigned not null primary key auto_increment,"
-		 "tablename varchar(255),"
-		 "vid int unsigned,"
-		 "oix int unsigned,"
-		 "oname varchar(255),"
-		 "aname varchar(255),"
-		 "uptime datetime,"
-		 "cretime datetime,"
-		 "storagetime int unsigned,"
-		 "deadband float,"
-		 "options int unsigned,"
-		 "scantime float,"
-		 "description varchar(80));");
-
-	rc = mysql_query( m_con, query);
-	if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Create objectitems table: %s\n", mysql_error(m_con));
-  }
-
-  sprintf( query, "create table objectitemattributes ("
-     "tablename varchar(255) not null,"
-     "attributename varchar(255) not null,"
-     "attributeidx int unsigned not null,"
-     "attributetype int unsigned not null,"
-     "attributesize int unsigned not null,"
-     "PRIMARY KEY(tablename, attributename));");
-
-  rc = mysql_query( m_con, query);
-  if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Create objectitemattributes table: %s\n", mysql_error(m_con));
-  }
-
-  return 1;
-}
-
-int sev_dbms_env::createSevVersion3Tables(void)
-{
-  char query[400];
-
-  sprintf( query, "create table sev_stat (current_load float,medium_load float,"
-	   "storage_rate float,medium_storage_rate float,"
-	   "datastore_msg_cnt int unsigned,dataget_msg_cnt int unsigned,"
-	   "items_msg_cnt int unsigned,eventstore_msg_cnt int unsigned);");
-  int rc = mysql_query( m_con, query);
-  if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Create sev_stat table: %s\n", mysql_error(m_con));
-  }
-  sprintf( query, "insert into sev_stat (current_load, medium_load) values(0,0)");
-  rc = mysql_query( m_con, query);
-  if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Insert into table sev_stat: %s\n", mysql_error(m_con));
-  }
-  return 1;
-}
-
-MYSQL *sev_dbms_env::openDb()
-{
-  m_con = mysql_init(NULL);
-
-  MYSQL *con = mysql_real_connect(m_con, host(), user(), passwd(), dbName(), port(), socket(), 0);
-  // printf("Tried to connect to database, con %x: Status: %s\n", (int)con, mysql_error(m_con));
-  if (con == 0) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf("Failed to connect to database: Error: %s\n", mysql_error(m_con));
-    return 0;
-  }
-
-  return con;
-}
-
-int sev_dbms_env::create()
-{
-  struct stat sb;
-  char name[512];
-
-  cdh_ToLower(m_fileName, m_fileName);
-
-  printf("sev_dbms_env::create: %s\n", m_fileName);
-  /* Create the directory, read/write/access owner and group. */
-  if (stat(m_fileName, &sb) != 0) {
-    if (mkdir(m_fileName, S_IRWXU | S_IRWXG) != 0) {
-      fprintf(stderr, "sev_dbms_env::create: mkdir: %s, %s\n", m_fileName, strerror(errno));
-      return errno;
-    }
-  }
-
-  sprintf(name, "%s/%s", m_fileName, "connection.dmsql");
-
-  if (stat(name, &sb) != 0) {
-    FILE *fp;    
-    
-    fp = fopen(name, "w+b");
-    if (fp == NULL) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf("** Cannot open file: %s, %s\n", name, strerror(errno));
-      return errno;
-    }
-
-    fprintf(fp, "HOST...: %s\n", m_host);
-    fprintf(fp, "USER...: %s\n", user());
-    if ( !passwd() || strcmp( passwd(), "") == 0)
-      fprintf(fp, "PASSWD.: (null)\n");
-    else
-      fprintf(fp, "PASSWD.: %s\n", passwd());
-    fprintf(fp, "DB_NAME: %s\n", m_dbName);
-    fprintf(fp, "PORT...: %d\n", port());
-    fprintf(fp, "SOCKET.: %s\n", socket());
-
-    fclose(fp);
-  }
-
-  return 0;
-}
-
-int sev_dbms_env::open(const char* v_fileName)
-{
-  fileName(v_fileName);
-  
-  return open();
-}
-
-int sev_dbms_env::open(void)
-{
-  char var[32];
-  char value[32];
-  char buf[512];
-  char *s;
-  char *valp;
-  int rc;
-  
-  cdh_ToLower(m_fileName, m_fileName);
-
-  sprintf(buf, "%s/%s", m_fileName, "connection.dmsql");
-
-  FILE *fp = fopen(buf, "r");
-  if (fp == NULL) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf("** Cannot open file: %s, %s\n", buf, strerror(errno));
-    return errno;
-  }
-
-  while ((s = fgets(buf, sizeof(buf) - 1, fp))) {
-    if (*s == '#')
-      continue;
-    
-    rc = sscanf(s, " %[A-Z_] %*[^ ] %s", var, value);
-    if (rc < 1)
-      continue;
-    if (rc == 1)
-      valp = 0;
-    else
-      valp = value;
-    
-    if (strcmp(valp, "(null)") == 0)
-      valp = 0;
-    
-    if (strcmp(var, "HOST") == 0) {
-      host(valp);
-    }
-    else if (strcmp(var, "USER") == 0) {
-      user(valp);
-    }
-    else if (strcmp(var, "PASSWD") == 0) {
-      passwd(valp);
-    }
-    else if (strcmp(var, "DB_NAME") == 0) {
-      dbName(valp);
-    }
-    else if (strcmp(var, "PORT") == 0) {
-      if (valp == 0)
-        port(0);
-      else
-        port(atoi(valp));
-    }
-    else if (strcmp(var, "SOCKET") == 0) {
-      socket(valp);
-    }
-    else {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf("Unknown connection parameter! : %s\n", var);
-    }
-  }
-  
-  fclose(fp);
-
-  m_exists = true;
-  
-  return 0;
-}
-
-int sev_dbms_env::get_systemname()
+int sev_dbsqlite::get_systemname()
 {
   FILE 	*file;
   pwr_tFileName	fname;
@@ -666,91 +102,268 @@ int sev_dbms_env::get_systemname()
   return 1;
 }
 
+char *sev_dbsqlite::dbName(void) 
+{ 
+  static char dbname[80];
 
-sev_db *sev_dbms::open_database()
+  get_systemname();
+  strcpy( dbname, "pwrp__");
+  strcat( dbname, m_systemName);
+  cdh_ToLower( dbname, dbname);
+
+  return dbname;
+}
+
+sev_db *sev_dbsqlite::open_database()
 {
-  pwr_tFileName 	envname;
-  char 			socket[200];
-  sev_dbms_env 		*env;
-  sev_dbms		*db;
+  sev_dbsqlite		*db;
 
-  sprintf( envname, "$pwrp_db/%s.db", sev_dbms_env::dbName());
-  dcli_translate_filename( envname, envname);
-  
-  env = new sev_dbms_env( envname);
-  env->open( envname);
-  if ( !env->exists()) {
-    cnf_get_value( "mysqlSocket", socket, sizeof(socket));
-    env->create( envname, "localhost", "pwrp", "", sev_dbms_env::dbName(), 50, 
-		 socket);
-
-    env->open( envname);
-
-    if ( !env->createDb()) {
-      errh_Fatal("Failed to create to database '%s'", sev_dbms_env::dbName());
-      exit(0);
-    }
-  }
-  else {    
-    if ( !env->openDb()) {
-      errh_Fatal("Failed to connect to database '%s'", sev_dbms_env::dbName());
-      exit(0);
-    }
-  }
-
-  if( !env->checkAndUpdateVersion(sev_cVersion) ) {
-    errh_Fatal("Failed to upgrade tables to sev version %d db:'%s'", sev_cVersion, sev_dbms_env::dbName());
-    exit(0);
-  }
-    
-  db = new sev_dbms( env);
+  db = new sev_dbsqlite();
+      
+  db->open_db();
 
   errh_Info("Database opened '%s'", db->dbName());
 
   return db;
 }
 
-int sev_dbms::create_table( pwr_tStatus *sts, char *tablename, pwr_eType type, 
-			    unsigned int size, pwr_tMask options, float deadband)
+int sev_dbsqlite::open_db()
+{
+  pwr_tFileName dbname;
+  char query[400];
+  char *errmsg;
+  int rc;
+      
+  sprintf( dbname, "$pwrp_db/%s.dbsqlite", dbName());
+  dcli_translate_filename( dbname, dbname);
+
+  rc = sqlite3_open_v2( dbname, &m_con, SQLITE_OPEN_READWRITE, 0);
+  if ( rc != SQLITE_OK) {
+    // Not yet created
+    rc = sqlite3_open_v2( dbname, &m_con, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0);
+    if ( rc != SQLITE_OK) {
+      printf( "Open database error\n");
+      exit(0);
+    }
+
+
+    sprintf( query, "create table items ("
+	     "id integer not null primary key autoincrement,"
+	     "tablename varchar(255),"
+	     "vid int unsigned,"
+	     "oix int unsigned,"
+	     "oname varchar(255),"
+	     "aname varchar(255),"
+	     "uptime datetime,"
+	     "cretime datetime,"
+	     "storagetime int unsigned,"
+	     "deadband float,"
+	     "options int unsigned,"
+	     "scantime float,"
+	     "description varchar(80),"
+	     "vtype int unsigned,"
+	     "vsize int unsigned,"
+	     "unit varchar(16));");
+    
+    rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+    if ( rc != SQLITE_OK) {
+      printf( "Create items table, %s\n", errmsg);
+      sqlite3_free(errmsg);
+    }
+    createSevVersion2Tables();
+    createSevVersion3Tables();
+  }
+
+
+  errh_Info("Database opened '%s'", dbName());
+
+  return 1;
+}
+
+int sev_dbsqlite::checkAndUpdateVersion(unsigned int version)
+{
+#if 0
+  unsigned int old_version=1; //Proview 4.6.0.0 was first release with sev
+  int rc = sqlite_exec( m_con, "select * from sev_version");
+  if (rc != SQLITE_OK) {
+    printf( "table sev_version do no exist\n");
+  }
+  else {
+  
+    MYSQL_ROW row;
+    MYSQL_RES *result = mysql_store_result( m_con);
+  
+    if ( !result) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf( "selecting sev_version Error\n");
+      return 0;
+    }
+  
+    row = mysql_fetch_row( result);
+    if (!row) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf( "selecting sev_version Error\n");
+      return 0;
+    }
+  
+    old_version= strtoul( row[0], 0, 10);
+    mysql_free_result( result);
+  }
+
+  printf("old sev_version: %d, new sev_version: %d\n", old_version, version);
+
+  //add code for new versions here
+  if(old_version < 2 ) {
+    printf("Updating database tables to sev version 2\n");
+    updateDBToSevVersion2();
+  }
+  if (old_version < 3) {
+    printf("Updating database tables to sev version 3\n");
+    createSevVersion3Tables();
+  }
+
+  if(old_version != version) {
+    char query[100];
+    char *errmsg;
+    sprintf( query, "update sev_version set version = %d", version);
+    rc = mysql_query( m_con, 0, 0, &errmsg);
+    if (rc != SQLITE_OK) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf( "Update sev_version: %s\n", errmsg);
+      sqlite3_free(errmsg);
+    }
+  }
+#endif
+  return 1;
+}
+
+int sev_dbsqlite::createSevVersion2Tables(void)
+{
+  char query[400];
+  char *errmsg;
+
+  sprintf( query, "create table sev_version ("
+     "version int unsigned not null primary key);");
+  int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Create sev_version table: %s\n", errmsg);
+    sqlite3_free(errmsg);
+  }
+
+  sprintf( query, "insert into sev_version (version) values(%d)", sev_cVersion);
+  rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Insert into table sev_version: %s\n", errmsg);
+    sqlite3_free(errmsg);
+  }
+
+
+  sprintf( query, "create table objectitems ("
+	   "id integer not null primary key autoincrement,"
+	   "tablename varchar(255),"
+	   "vid int unsigned,"
+	   "oix int unsigned,"
+	   "oname varchar(255),"
+	   "aname varchar(255),"
+	   "uptime datetime,"
+	   "cretime datetime,"
+	   "storagetime int unsigned,"
+	   "deadband float,"
+	   "options int unsigned,"
+	   "scantime float,"
+	   "description varchar(80));");
+  
+  rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Create objectitems table: %s\n", errmsg);
+    sqlite3_free(errmsg);
+  }
+
+  sprintf( query, "create table objectitemattributes ("
+     "tablename varchar(255) not null,"
+     "attributename varchar(255) not null,"
+     "attributeidx int unsigned not null,"
+     "attributetype int unsigned not null,"
+     "attributesize int unsigned not null,"
+     "PRIMARY KEY(tablename, attributename));");
+
+  rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Create objectitemattributes table: %s\n", errmsg);
+    sqlite3_free(errmsg);
+  }
+
+  return 1;
+}
+
+int sev_dbsqlite::createSevVersion3Tables(void)
+{
+  char query[400];
+  char *errmsg;
+
+  sprintf( query, "create table sev_stat (current_load float,medium_load float,"
+	   "storage_rate float,medium_storage_rate float,"
+	   "datastore_msg_cnt int unsigned,dataget_msg_cnt int unsigned,"
+	   "items_msg_cnt int unsigned,eventstore_msg_cnt int unsigned);");
+  int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Create sev_stat table: %s\n", errmsg);
+    sqlite3_free(errmsg);
+  }
+  sprintf( query, "insert into sev_stat (current_load, medium_load) values(0,0)");
+  rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Insert into table sev_stat: %s\n", errmsg);
+    sqlite3_free(errmsg);
+  }
+  return 1;
+}
+
+
+int sev_dbsqlite::create_table( pwr_tStatus *sts, char *tablename, pwr_eType type, 
+				unsigned int size, pwr_tMask options, float deadband)
 {
   char query[200];
+  char *errmsg;
   char timeformatstr[80];
   char jumpstr[80];
   char idtypestr[20];
   char readoptstr[80];
-  char engine[80];
   char enginestr[100] = "";
-
-  if ( cnf_get_value( "sevMysqlEngine", engine, sizeof(engine)) != 0)
-    snprintf( enginestr, sizeof(enginestr), " engine=%s", engine);
 
   if ( options & pwr_mSevOptionsMask_PosixTime) {
     if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
       // Posix time, high resolution
       strcpy( timeformatstr, "time int unsigned, ntime int unsigned");
-      strcpy( idtypestr, "bigint");
+      strcpy( idtypestr, "integer");
     }
     else {
       // Posix time, low resolution
       strcpy( timeformatstr, "time int unsigned");
-      strcpy( idtypestr, "int");
+      strcpy( idtypestr, "integer");
     }
   }
   else {
     if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
       // Sql time, high resolution
       strcpy( timeformatstr, "time datetime not null, ntime int unsigned");
-      strcpy( idtypestr, "bigint");
+      strcpy( idtypestr, "integer");
     }
     else {
       // Sql time, low resolution
       strcpy( timeformatstr, "time datetime not null");
-      strcpy( idtypestr, "int");
+      strcpy( idtypestr, "integer");
     }
   }
 
   if ( options & pwr_mSevOptionsMask_ReadOptimized)
-    sprintf( readoptstr, "id %s unsigned not null primary key auto_increment,", idtypestr);
+    sprintf( readoptstr, "id %s not null primary key autoincrement,", idtypestr);
   else
     strcpy( readoptstr, "");
 
@@ -760,47 +373,59 @@ int sev_dbms::create_table( pwr_tStatus *sts, char *tablename, pwr_eType type,
     strcpy( jumpstr, "");
 
   sprintf( query, "create table %s ( %s"
-	   "%s, value %s %s, index (time))%s;",
+	   "%s, value %s %s)%s;",
 	   tablename, readoptstr, timeformatstr, pwrtype_to_type( type, size), jumpstr, enginestr);
 
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Create table: %s\n", mysql_error(m_env->con()));
+    printf( "Create table: %s\n", errmsg);
+    sqlite3_free(errmsg);
     *sts = SEV__DBERROR;
     return 0;
   }
+
+  sprintf( query, "create index %s_time_idx on %s (time)", tablename, tablename);
+
+  rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Create table: %s\n", errmsg);
+    sqlite3_free(errmsg);
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+
   return 1;
 }
 
-int sev_dbms::delete_table( pwr_tStatus *sts, char *tablename)
+int sev_dbsqlite::delete_table( pwr_tStatus *sts, char *tablename)
 {
   char query[200];
+  char *errmsg;
 
   sprintf( query, "drop table %s;", tablename);
 
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Delete table: %s\n", mysql_error(m_env->con()));
+    printf( "Delete table: %s\n", errmsg);
+    sqlite3_free(errmsg);
     *sts = SEV__DBERROR;
     return 0;
   }
   return 1;
 }
 
-int sev_dbms::create_event_table( pwr_tStatus *sts, char *tablename, pwr_tMask options)
+int sev_dbsqlite::create_event_table( pwr_tStatus *sts, char *tablename, pwr_tMask options)
 {
   char query[400];
+  char *errmsg;
   char timeformatstr[80];
   char jumpstr[80];
   char idtypestr[20];
   char readoptstr[80];
-  char engine[80];
   char enginestr[100] = "";
-
-  if ( cnf_get_value( "sevMysqlEngine", engine, sizeof(engine)) != 0)
-    snprintf( enginestr, sizeof(enginestr), " engine=%s", engine);
 
   if ( options & pwr_mSevOptionsMask_PosixTime) {
     if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
@@ -836,42 +461,56 @@ int sev_dbms::create_event_table( pwr_tStatus *sts, char *tablename, pwr_tMask o
 
   sprintf( query, "create table %s ( %s"
 	   "%s, eventtype int, eventprio int, eventid_nix int, eventid_birthtime int, eventid_idx int,"
-	   "eventtext varchar(80), eventname varchar(80), index (time))%s;",
+	   "eventtext varchar(80), eventname varchar(80))%s;",
 	   tablename, readoptstr, timeformatstr, enginestr);
 
-
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Create table: %s\n", mysql_error(m_env->con()));
+    printf( "Create table: %s\n", errmsg);
+    sqlite3_free(errmsg);
     *sts = SEV__DBERROR;
     return 0;
   }
+
+  sprintf( query, "create index %s_time_idx on %s (time)", tablename, tablename);
+  rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Create table: %s\n", errmsg);
+    sqlite3_free(errmsg);
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+
   return 1;
 }
 
-int sev_dbms::delete_event_table( pwr_tStatus *sts, char *tablename)
+int sev_dbsqlite::delete_event_table( pwr_tStatus *sts, char *tablename)
 {
   char query[200];
+  char *errmsg;
 
   sprintf( query, "drop table %s;", tablename);
 
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Delete table: %s\n", mysql_error(m_env->con()));
+    printf( "Delete table: %s\n", errmsg);
+    sqlite3_free(errmsg);
     *sts = SEV__DBERROR;
     return 0;
   }
   return 1;
 }
 
-int sev_dbms::store_item( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, 
+int sev_dbsqlite::store_item( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, 
 			  char *aname, pwr_tDeltaTime storagetime, pwr_eType vtype, 
 			  unsigned int vsize, char *description, char *unit, pwr_tFloat32 scantime,
 			  pwr_tFloat32 deadband, pwr_tMask options)
 {
   char query[800];
+  char *errmsg;
   char timestr[40];
   pwr_tTime creatime;
 
@@ -894,14 +533,15 @@ int sev_dbms::store_item( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char 
 
   sprintf(tablename, "%s_%d", oid_to_table(oid, (char*)""), next_id);
   
-  sprintf( query, "insert into items (id,tablename,vid,oix,oname,aname,uptime,cretime,storagetime,vtype,vsize,description,unit,scantime,deadband,options) "
-	   "values (0,'%s',%d,%d,'%s','%s','%s','%s',%ld,%d,%d,'%s','%s',%f,%f,%d);",
+  sprintf( query, "insert into items (tablename,vid,oix,oname,aname,uptime,cretime,storagetime,vtype,vsize,description,unit,scantime,deadband,options) "
+	   "values ('%s',%d,%d,'%s','%s','%s','%s',%ld,%d,%d,'%s','%s',%f,%f,%d);",
 	   tablename, oid.vid, oid.oix, oname, aname, timestr, timestr, (long int)storagetime.tv_sec, vtype, 
 	   vsize, description, unit, scantime, deadband, options);
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Store item: %s\n", mysql_error(m_env->con()));
+    printf( "Store item: %s\n", errmsg);
+    sqlite3_free(errmsg);
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -910,16 +550,18 @@ int sev_dbms::store_item( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char 
   return 1;
 }
 
-int sev_dbms::remove_item( pwr_tStatus *sts, pwr_tOid oid, char *aname)
+int sev_dbsqlite::remove_item( pwr_tStatus *sts, pwr_tOid oid, char *aname)
 {
   char query[800];
+  char *errmsg;
 
   sprintf( query, "delete from items where vid = %u and oix = %u and aname = '%s';",
 	   oid.vid, oid.oix, aname);
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Remove item: %s\n", mysql_error(m_env->con()));
+    printf( "Remove item: %s\n", errmsg);
+    sqlite3_free(errmsg);
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -928,64 +570,74 @@ int sev_dbms::remove_item( pwr_tStatus *sts, pwr_tOid oid, char *aname)
   return 1;
 }
 
-int sev_dbms::get_items( pwr_tStatus *sts)
+int sev_dbsqlite::get_items( pwr_tStatus *sts)
 {
   m_items.clear();
   char query[300];
+  sqlite3_stmt *stmt;
 
   sprintf( query, "select id,tablename,vid,oix,oname,aname,uptime,cretime,storagetime,vtype,vsize,description,unit,scantime,deadband,options "
 	   "from items");
 
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_prepare_v2( m_con, query, -1, &stmt, 0);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Get Items: %s\n", mysql_error(m_env->con()));
-    *sts = SEV__DBERROR;
+    printf( "%s\n", __FUNCTION__);
     return 0;
   }
 
-  MYSQL_ROW row;
-  MYSQL_RES *result = mysql_store_result( m_env->con());
-  if ( !result) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "GetValues Result Error\n");
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-  int rows = mysql_num_rows( result);
+  for ( int i = 0;; i++) {
+    int col = 0;
+    char *text;
 
-  for ( int i = 0; i < rows; i++) {
+    rc = sqlite3_step(stmt);
+    if ( rc != SQLITE_ROW)
+      break;
+
     sev_item item;
     sev_attr attr;
     item.attr.push_back(attr);
-    row = mysql_fetch_row( result);
-    if (!row) break;
-
+    
     //printf( "%d %s %s\n", i, row[0], row[1]);
 
-    item.id = atoi( row[0]);
-    strncpy( item.tablename, row[1], sizeof(item.tablename));
-    item.oid.vid = strtoul( row[2], 0, 10);
-    item.oid.oix = strtoul( row[3], 0, 10);
-    strncpy( item.oname, row[4], sizeof(item.oname));
-    strncpy( item.attr[0].aname, row[5], sizeof(item.attr[0].aname));
-    timestr_to_time( row[6], &item.modtime);
-    timestr_to_time( row[7], &item.creatime);
-    item.storagetime.tv_sec = strtoul( row[8], 0, 10);
+    
+    item.id = sqlite3_column_int( stmt, col++);
+    text = (char *)sqlite3_column_text( stmt, col++);
+    if ( text)
+      strncpy( item.tablename, text, sizeof(item.tablename));
+    item.oid.vid = sqlite3_column_int( stmt, col++);
+    item.oid.oix = sqlite3_column_int( stmt, col++);
+    text = (char *)sqlite3_column_text( stmt, col++);
+    if ( text)
+      strncpy( item.oname, text, sizeof(item.oname));
+    text = (char *)sqlite3_column_text( stmt, col++);
+    if ( text)
+      strncpy( item.attr[0].aname, text, sizeof(item.attr[0].aname));
+    text = (char *)sqlite3_column_text( stmt, col++);
+    if ( text)
+      timestr_to_time( text, &item.modtime);
+    text = (char *)sqlite3_column_text( stmt, col++);
+    if ( text)
+      timestr_to_time( text, &item.creatime);
+    item.storagetime.tv_sec = sqlite3_column_int( stmt, col++);
     item.storagetime.tv_nsec = 0;
-    item.attr[0].type = (pwr_eType) strtoul( row[9], 0, 10);
-    item.attr[0].size = strtoul( row[10], 0, 10);
-    strncpy( item.description, row[11], sizeof(item.description));
-    strncpy( item.attr[0].unit, row[12], sizeof(item.attr[0].unit));
-    item.scantime = atof(row[13]);
-    item.deadband = atof(row[14]);
-    item.options = strtoul(row[15], 0, 10);
+    item.attr[0].type = (pwr_eType) sqlite3_column_int( stmt, col++);
+    item.attr[0].size = sqlite3_column_int( stmt, col++);
+    text = (char *)sqlite3_column_text( stmt, col++);
+    if ( text)
+      strncpy( item.description, text, sizeof(item.description));
+    text = (char *)sqlite3_column_text( stmt, col++);
+    if ( text)
+      strncpy( item.attr[0].unit, text, sizeof(item.attr[0].unit));
+    item.scantime = sqlite3_column_double( stmt, col++);
+    item.deadband = sqlite3_column_double( stmt, col++);
+    item.options = sqlite3_column_int( stmt, col++);
 
     item.attrnum = 1;
 
     m_items.push_back( item);
   }
-  mysql_free_result( result);
+  sqlite3_finalize( stmt);
   
   //for ( int i = 0; i < (int)m_items.size(); i++)
   //  printf( "Item: %d %s\n", m_items[i].id, m_items[i].tablename);
@@ -994,7 +646,7 @@ int sev_dbms::get_items( pwr_tStatus *sts)
   return 1;
 }
 
-int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
+int sev_dbsqlite::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
                            pwr_tTime time, void *buf, unsigned int size)
 {
   if(size != m_items[item_idx].value_size) {
@@ -1008,6 +660,7 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
     return store_objectvalue(sts, item_idx, attr_idx, time, buf, m_items[item_idx].old_value, size);
   }
   char query[200];
+  char *errmsg;
   char bufstr[512];
   char timstr[40];
   int update_time_only = 0;
@@ -1232,10 +885,11 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
       sprintf( query, "update %s set jump = 1 where id = %d",
                m_items[item_idx].tablename, 
                m_items[item_idx].last_id);
-      int rc = mysql_query( m_env->con(), query);
-      if (rc) {
+      int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+      if (rc != SQLITE_OK) {
         printf("In %s row %d:\n", __FILE__, __LINE__);
-        printf( "Update jump: %s\n", mysql_error(m_env->con()));
+        printf( "Update jump: %s\n", errmsg);
+	sqlite3_free(errmsg);
       }
     }
   }
@@ -1341,20 +995,23 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
         }
       }
     }
-    int rc = mysql_query( m_env->con(), query);
-    if (rc) {
-      // printf( "Store value: %s \"%s\"\n", mysql_error(m_env->con()), query);
+    int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+    if (rc != SQLITE_OK) {
+      // printf( "Store value: %s \"%s\"\n", errmsg, query);
       *sts = SEV__DBERROR;
       m_items[item_idx].status = *sts;
       if ( m_items[item_idx].status != m_items[item_idx].logged_status) {
         m_items[item_idx].logged_status = m_items[item_idx].status;
         errh_Error( "Database store error: %s, table: %s object: %s", 
-                    mysql_error(m_env->con()),  m_items[item_idx].tablename, m_items[item_idx].oname);
+                    errmsg,  m_items[item_idx].tablename, m_items[item_idx].oname);
       }
+      sqlite3_free(errmsg);
       return 0;
     }
+#if 0 // TODO
     if ( m_items[item_idx].options & pwr_mSevOptionsMask_ReadOptimized)
-      m_items[item_idx].last_id = mysql_insert_id( m_env->con());
+      m_items[item_idx].last_id = mysql_insert_id( m_con);
+#endif
   }
   else {
     if ( m_items[item_idx].options & pwr_mSevOptionsMask_PosixTime) {
@@ -1386,16 +1043,17 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
       }
     }
 
-    int rc = mysql_query( m_env->con(), query);
-    if (rc) {
-      // printf( "Update value: %s\n", mysql_error(m_env->con()));
+    int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+    if (rc != SQLITE_OK) {
+      // printf( "Update value: %s\n", errmsg);
       *sts = SEV__DBERROR;
       m_items[item_idx].status = *sts;
       if ( m_items[item_idx].status != m_items[item_idx].logged_status) {
         m_items[item_idx].logged_status = m_items[item_idx].status;
         errh_Error( "Database update error: %s, table: %s object: %s", 
-                    mysql_error(m_env->con()), m_items[item_idx].tablename, m_items[item_idx].oname);
+                    errmsg, m_items[item_idx].tablename, m_items[item_idx].oname);
       }
+      sqlite3_free(errmsg);
       return 0;
     }
   }
@@ -1406,7 +1064,7 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
   return 1;
 }
 
-int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, float deadband, 
+int sev_dbsqlite::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, float deadband, 
 			  char *aname, pwr_eType type, 
 			  unsigned int size, pwr_tFloat32 scantime, pwr_tTime *creatime, 
 			  pwr_tTime *starttime, pwr_tTime *endtime, 
@@ -1423,6 +1081,7 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
   char starttimstr[40];
   char endtimstr[40];
   int total_rows;
+  int max_id;
   int div;
   pwr_tDeltaTime dt;
   pwr_tTime stime, etime;
@@ -1430,6 +1089,10 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
   char orderby_part[80];
   char jumpstr[40];
   char where_part[200];
+  char last_update[20] = "";
+  char create_time_str[20] = "2012-01-01 01:00:00";
+  const char *text;
+  sqlite3_stmt *stmt;
 
   if ( starttime && starttime->tv_sec == 0 && starttime->tv_nsec == 0)
     starttime = 0;
@@ -1442,80 +1105,82 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
     etime = *endtime;
 
   // Get number of rows
-  sprintf( query, "show table status where name = '%s';", item.tablename);
+  if ( item.options & pwr_mSevOptionsMask_ReadOptimized) {
+    sprintf( query, "select coalesce(max(id)+1,0) from %s", item.tablename);
+    int rc = sqlite3_prepare_v2( m_con, query, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf( "GetValues Query Error\n");
+      *sts = SEV__DBERROR;
+      return 0;
+    }
 
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "GetValues Query Error\n");
-    *sts = SEV__DBERROR;
+    rc = sqlite3_step(stmt);
+    if ( rc != SQLITE_ROW) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      *sts = SEV__DBERROR;
+      return 0;
+    }
+
+    max_id = sqlite3_column_int( stmt, 0);
+    sqlite3_finalize( stmt);
+  }
+  else {
+    // TODO
+    *sts = SEV__NYI;
     return 0;
   }
 
-  MYSQL_ROW row;
-  MYSQL_RES *result = mysql_store_result( m_env->con());
-
-  if ( !result) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "GetValues Status Result Error\n");
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-
-  row = mysql_fetch_row( result);
-  if (!row) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "GetValues Status Result Error\n");
-    *sts = SEV__DBERROR;
-    return 0;
-  }
   if ( starttime && endtime) {
     pwr_tTime update_time;
-    if ( row[12])
-      timestr_to_time( row[12], &update_time);
+    if ( strcpy( last_update, "") != 0)
+      timestr_to_time( last_update, &update_time);
 
     if ( time_Acomp( creatime, &stime) == 1)
       stime = *creatime;
 
-    if ( row[12] && time_Acomp( &etime, &update_time) == 1)
+    if ( strcmp( last_update, "") != 0 && time_Acomp( &etime, &update_time) == 1)
       etime = update_time;
 
     time_Adiff( &dt, &etime, &stime);
     total_rows = int (time_DToFloat( 0, &dt) / scantime);
+    if ( max_id < total_rows)
+      total_rows = max_id;
 
     div = total_rows / maxsize + 1;
   }
   else if ( starttime) {
     pwr_tTime update_time;
-    if ( row[12])
-      timestr_to_time( row[12], &update_time);
+    if ( strcmp( last_update, "") != 0)
+      timestr_to_time( last_update, &update_time);
     else
       time_GetTime( &update_time);
 
     if ( time_Acomp( &update_time, starttime) != 1) {
-      mysql_free_result( result);
       *sts = SEV__NODATATIME;
       return 0;
     }
     time_Adiff( &dt, &update_time, starttime);
     total_rows = int (time_DToFloat( 0, &dt) / scantime);
+    if ( max_id < total_rows)
+      total_rows = max_id;
   }
   else if ( endtime) {
     pwr_tTime create_time;
-    timestr_to_time( row[11], &create_time);
+    timestr_to_time( create_time_str, &create_time);
 
     if ( time_Acomp( endtime, &create_time) != 1) {
-      mysql_free_result( result);
       *sts = SEV__NODATATIME;
       return 0;
     }
     time_Adiff( &dt, endtime, &create_time);
     total_rows = int (time_DToFloat( 0, &dt) / scantime);
+    if ( max_id < total_rows)
+      total_rows = max_id;
   }
   else {
-    total_rows = atoi(row[4]);
+    total_rows = max_id;
   }
-  mysql_free_result( result);
 
   div = total_rows / maxsize + 1;
 
@@ -1633,24 +1298,16 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
   sprintf( query, "select %s from %s %s order by %s",
            column_part, item.tablename, where_part, orderby_part);
 
-  rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_prepare_v2( m_con, query, -1, &stmt, 0);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Get Values: %s\n", mysql_error(m_env->con()));
+    printf( "%s\n", __FUNCTION__);
     *sts = SEV__DBERROR;
     return 0;
   }
 
-  result = mysql_store_result( m_env->con());
-  if ( !result) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "GetValues Result Error\n");
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-  int rows = mysql_num_rows( result);
-  int bufrows = rows;
-
+  int bufrows = total_rows / div;
+  int row_cnt = 0;
 
   if ( options & pwr_mSevOptionsMask_ReadOptimized) {
 
@@ -1658,37 +1315,50 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
     *vbuf = calloc( bufrows, size);
 
     int bcnt = 0;
-    for ( int i = 0; i < rows; i ++) {
+    for ( int i = 0;; i ++) {
+      rc = sqlite3_step(stmt);
+      if ( rc != SQLITE_ROW)
+	break;
+
+      row_cnt++;
+      if ( row_cnt > bufrows)
+	break;
+
       int j = 0;
-
-      // if ( div > 1)
-      //   mysql_data_seek( result, i);
-
-      row = mysql_fetch_row( result);
-      if (!row) break;
 
       if ( options & pwr_mSevOptionsMask_PosixTime) {
         if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
           // Posix time, high resolution
-          (*tbuf)[bcnt].tv_sec = strtoul( row[j++], 0, 10);
-          (*tbuf)[bcnt].tv_nsec = strtoul( row[j++], 0, 10);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+          (*tbuf)[bcnt].tv_nsec = sqlite3_column_int( stmt, j++);
         }
-        else
+        else {
           // Posix time, low resolution
-          (*tbuf)[bcnt].tv_sec = strtoul( row[j++], 0, 10);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+	}
       }
       else {
         if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
           // Sql time, high resolution
-          timestr_to_time( row[j++], &(*tbuf)[bcnt]);
-          (*tbuf)[bcnt].tv_nsec = strtoul( row[j++], 0, 10);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+          (*tbuf)[bcnt].tv_nsec = sqlite3_column_int( stmt, j++);
         }
-        else
+        else {
           // Sql time, low resolution
-          timestr_to_time( row[j++], &(*tbuf)[bcnt]);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+	}
       }
 
-      if(row[j] == 0) {
+      const char *value_str = (const char *)sqlite3_column_text( stmt, j++);
+      if( !value_str || strcmp(value_str, "") == 0) {
         //Null value
         switch(type) {
           case pwr_eType_Float32:
@@ -1717,7 +1387,7 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
         j++;
       }
       else
-        cdh_StringToAttrValue( type, row[j++], ((char *)*vbuf)+ bcnt * size);
+        cdh_StringToAttrValue( type, value_str, ((char *)*vbuf)+ bcnt * size);
 
       bcnt++;
       //if ( options & pwr_mSevOptionsMask_HighTimeResolution)
@@ -1725,9 +1395,9 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
       //else
       //  printf( "%5d %5d %s %s\n", i, bcnt, row[0], row[1]);
     }
-    printf( "bcnt %d bufrows %d\n", bcnt, bufrows);
+    printf( "bcnt %d bufrows %d\n", bcnt, row_cnt);
     *bsize = bcnt;
-    mysql_free_result( result);
+    sqlite3_finalize( stmt);
   }
   else {
 
@@ -1735,37 +1405,58 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
     *vbuf = calloc( bufrows, size);
 
     int bcnt = 0;
-    for ( int i = 0; i < rows; i += div) {
+    for ( int i = 0;; i++) {
+      if ( i == 0) {
+	rc = sqlite3_step(stmt);
+	if ( rc != SQLITE_ROW)
+	  break;
+      }
+      else {
+	for ( int k = 0; k < div; k++) {
+	  rc = sqlite3_step(stmt);
+	  if ( rc != SQLITE_ROW)
+	    break;
+	}
+	if ( rc != SQLITE_ROW)
+	  break;
+      }
+
+      bufrows++;
       int j = 0;
-
-      if ( div > 1)
-        mysql_data_seek( result, i);
-
-      row = mysql_fetch_row( result);
-      if (!row) break;
 
       if ( options & pwr_mSevOptionsMask_PosixTime) {
         if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
           // Posix time, high resolution
-          (*tbuf)[bcnt].tv_sec = strtoul( row[j++], 0, 10);
-          (*tbuf)[bcnt].tv_nsec = strtoul( row[j++], 0, 10);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+          (*tbuf)[bcnt].tv_nsec = sqlite3_column_int( stmt, j++);
         }
-        else
+        else {
           // Posix time, low resolution
-          (*tbuf)[bcnt].tv_sec = strtoul( row[j++], 0, 10);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+	}
       }
       else {
         if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
           // Sql time, high resolution
-          timestr_to_time( row[j++], &(*tbuf)[bcnt]);
-          (*tbuf)[bcnt].tv_nsec = strtoul( row[j++], 0, 10);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+          (*tbuf)[bcnt].tv_nsec = sqlite3_column_int( stmt, j++);
         }
-        else
+        else {
           // Sql time, low resolution
-          timestr_to_time( row[j++], &(*tbuf)[bcnt]);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+	}
       }
 
-      if(row[j] == 0) {
+      const char *value_str = (const char *)sqlite3_column_text( stmt, j++);
+      if(strcmp( value_str, "") == 0) {
         //Null value
         switch(type) {
           case pwr_eType_Float32:
@@ -1794,7 +1485,7 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
         j++;
       }
       else
-        cdh_StringToAttrValue( type, row[j++], ((char *)*vbuf)+ bcnt * size);
+        cdh_StringToAttrValue( type, value_str, ((char *)*vbuf)+ bcnt * size);
 
       bcnt++;
       //if ( options & pwr_mSevOptionsMask_HighTimeResolution)
@@ -1804,15 +1495,16 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
     }
     printf( "bcnt %d bufrows %d\n", bcnt, bufrows);
     *bsize = bcnt;
-    mysql_free_result( result);
+    sqlite3_finalize( stmt);
   }
   *sts = SEV__SUCCESS;
   return 1;
 }
 
-int sev_dbms::store_event( pwr_tStatus *sts, int item_idx, sev_event *ep)
+int sev_dbsqlite::store_event( pwr_tStatus *sts, int item_idx, sev_event *ep)
 {
   char query[400];
+  char *errmsg;
   char timstr[40];
 
 
@@ -1861,16 +1553,17 @@ int sev_dbms::store_event( pwr_tStatus *sts, int item_idx, sev_event *ep)
       
     }
   }
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
-    // printf( "Store value: %s \"%s\"\n", mysql_error(m_env->con()), query);
+  int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
+    // printf( "Store value: %s \"%s\"\n", errmsg, query);
     *sts = SEV__DBERROR;
     m_items[item_idx].status = *sts;
     if ( m_items[item_idx].status != m_items[item_idx].logged_status) {
       m_items[item_idx].logged_status = m_items[item_idx].status;
       errh_Error( "Database store error: %s, table: %s object: %s", 
-		  mysql_error(m_env->con()),  m_items[item_idx].tablename, m_items[item_idx].oname);
+		  errmsg,  m_items[item_idx].tablename, m_items[item_idx].oname);
     }
+    sqlite3_free(errmsg);
     return 0;
   }
 
@@ -1881,10 +1574,10 @@ int sev_dbms::store_event( pwr_tStatus *sts, int item_idx, sev_event *ep)
 }
 
 
-int sev_dbms::check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname, 
-                          pwr_tDeltaTime storagetime, pwr_eType type, unsigned int size, 
-                          char *description, char *unit, pwr_tFloat32 scantime, 
-                          pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx)
+int sev_dbsqlite::check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname, 
+			      pwr_tDeltaTime storagetime, pwr_eType type, unsigned int size, 
+			      char *description, char *unit, pwr_tFloat32 scantime, 
+			      pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx)
 {
   char timestr[40];
   pwr_tTime uptime;
@@ -1900,6 +1593,7 @@ int sev_dbms::check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *ana
     if ( cdh_ObjidIsEqual( oid, m_items[i].oid) && 
          cdh_NoCaseStrcmp( aname, m_items[i].attr[0].aname) == 0) {
       char query[600];
+      char *errmsg;
 
       bool itemdefchange = false;
       if ( type != m_items[i].attr[0].type ||
@@ -1949,10 +1643,11 @@ int sev_dbms::check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *ana
       //m_items[i].options = options;
 
 
-      int rc = mysql_query( m_env->con(), query);
-      if (rc) {
+      int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+      if (rc != SQLITE_OK) {
         printf("In %s row %d:\n", __FILE__, __LINE__);
-        printf( "Store item: %s\n", mysql_error(m_env->con()));
+        printf( "Store item: %s\n", errmsg);
+	sqlite3_free(errmsg);
         *sts = SEV__DBERROR;
         return 0;
       }
@@ -1971,7 +1666,7 @@ int sev_dbms::check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *ana
   return 0;
 }
 
-int sev_dbms::add_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname, 
+int sev_dbsqlite::add_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname, 
 			pwr_tDeltaTime storagetime, pwr_eType type, unsigned int size, 
 			char *description, char *unit, pwr_tFloat32 scantime, 
 			pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx)
@@ -2008,6 +1703,9 @@ int sev_dbms::add_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname
   item.options = options;
   item.attrnum = 1;
 
+  // Only tables with id are implemented 
+  item.options |= pwr_mSevOptionsMask_ReadOptimized;
+
   m_items.push_back( item);
   *idx = m_items.size() - 1;
 
@@ -2015,7 +1713,7 @@ int sev_dbms::add_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname
   return 1;
 }
 
-int sev_dbms::delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname)
+int sev_dbsqlite::delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname)
 {
   sev_item item;
   get_item(sts, &item, oid, aname);
@@ -2042,10 +1740,11 @@ int sev_dbms::delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname)
   return 1;
 }
 
-int sev_dbms::delete_old_data( pwr_tStatus *sts, char *tablename, 
+int sev_dbsqlite::delete_old_data( pwr_tStatus *sts, char *tablename, 
 			       pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle)
 {
   char query[300];
+  char *errmsg;
   char timstr[40];
 
   *sts = time_AtoAscii( &limit, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
@@ -2077,10 +1776,11 @@ int sev_dbms::delete_old_data( pwr_tStatus *sts, char *tablename,
       sprintf( query, "delete from %s where time < '%s';",
          tablename, timstr);
   }
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Delete old data: %s\n", mysql_error(m_env->con()));
+    printf( "Delete old data: %s\n", errmsg);
+    sqlite3_free(errmsg);
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -2089,7 +1789,7 @@ int sev_dbms::delete_old_data( pwr_tStatus *sts, char *tablename,
   return 1;  
 }
 
-int sev_dbms::timestr_to_time( char *tstr, pwr_tTime *ts)
+int sev_dbsqlite::timestr_to_time( char *tstr, pwr_tTime *ts)
 {
   struct tm tt;
 
@@ -2110,7 +1810,7 @@ int sev_dbms::timestr_to_time( char *tstr, pwr_tTime *ts)
   return 1;
 }
 
-char *sev_dbms::oid_to_table( pwr_tOid oid, char *aname)
+char *sev_dbsqlite::oid_to_table( pwr_tOid oid, char *aname)
 {
   static char tbl[40];
   unsigned char	vid[4];
@@ -2131,7 +1831,7 @@ char *sev_dbms::oid_to_table( pwr_tOid oid, char *aname)
   return tbl;
 }
 
-char *sev_dbms::pwrtype_to_type( pwr_eType type, unsigned int size)
+char *sev_dbsqlite::pwrtype_to_type( pwr_eType type, unsigned int size)
 {
   static char stype[40];
 
@@ -2185,7 +1885,7 @@ char *sev_dbms::pwrtype_to_type( pwr_eType type, unsigned int size)
 }
 
 
-int sev_dbms::check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
+int sev_dbsqlite::check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
                                  pwr_tDeltaTime storagetime,
                                  char *description, pwr_tFloat32 scantime, 
                                  pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx)
@@ -2205,6 +1905,7 @@ int sev_dbms::check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid,
          cdh_NoCaseStrcmp( oname, m_items[i].oname) == 0) {
 
       char query[400];
+      char *errmsg;
       sprintf( query, "update objectitems set ");
       sprintf( &query[strlen(query)], "storagetime=%ld,", (long int)storagetime.tv_sec);
       sprintf( &query[strlen(query)], "description=\'%s\',", description);
@@ -2216,10 +1917,11 @@ int sev_dbms::check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid,
 
       //printf("%s query:%s\n", __FUNCTION__, query);
 
-      int rc = mysql_query( m_env->con(), query);
-      if (rc) {
+      int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+      if (rc != SQLITE_OK) {
         printf("In %s row %d:\n", __FILE__, __LINE__);
-        printf( "%s : %s\n", __FUNCTION__, mysql_error(m_env->con()));
+        printf( "%s : %s\n", __FUNCTION__, errmsg);
+	sqlite3_free(errmsg);
         *sts = SEV__DBERROR;
         return 0;
       }
@@ -2242,7 +1944,7 @@ int sev_dbms::check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid,
 
 }
 
-int sev_dbms::add_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
+int sev_dbsqlite::add_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
 			pwr_tDeltaTime storagetime,
 			char *description, pwr_tFloat32 scantime, 
 			pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx)
@@ -2270,16 +1972,20 @@ int sev_dbms::add_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, c
   item.options = options;
   item.attrnum = 0;
 
+  // Only tables with id are implemented 
+  item.options |= pwr_mSevOptionsMask_ReadOptimized;
+
   m_items.push_back( item);
   *idx = m_items.size() - 1;
 
   return 1;
 }
-int sev_dbms::store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, 
+int sev_dbsqlite::store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, 
 			  char *aname, pwr_tDeltaTime storagetime, char *description, pwr_tFloat32 scantime,
 			  pwr_tFloat32 deadband, pwr_tMask options)
 {
   char query[800];
+  char *errmsg;
   char timestr[40];
   pwr_tTime creatime;
 
@@ -2302,13 +2008,14 @@ int sev_dbms::store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid,
 */
   sprintf(tablename, "obj_%s_%d", oid_to_table(oid, (char*)""), next_id);
 
-  sprintf( query, "insert into objectitems (id,tablename,vid,oix,oname,aname,uptime,cretime,storagetime,description,scantime,deadband,options) "
-	   "values (0,'%s',%d,%d,'%s','%s','%s','%s',%ld,'%s',%f,%f,%d);",
+  sprintf( query, "insert into objectitems (tablename,vid,oix,oname,aname,uptime,cretime,storagetime,description,scantime,deadband,options) "
+	   "values ('%s',%d,%d,'%s','%s','%s','%s',%ld,'%s',%f,%f,%d);",
 	   tablename, oid.vid, oid.oix, oname, aname, timestr, timestr, (long int)storagetime.tv_sec, description, scantime, deadband, options);
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+    printf( "%s: %s\n", __FUNCTION__, errmsg);
+    sqlite3_free(errmsg);
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -2317,46 +2024,43 @@ int sev_dbms::store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid,
   return 1;
 }
 
-int sev_dbms::create_objecttable( pwr_tStatus *sts, char *tablename, pwr_tMask options, float deadband)
+int sev_dbsqlite::create_objecttable( pwr_tStatus *sts, char *tablename, pwr_tMask options, float deadband)
 {
   char query[2000];
-	char timeformatstr[80];
+  char *errmsg;
+  char timeformatstr[80];
   char jumpstr[80];
   char idtypestr[20];
   char readoptstr[80];
-  char engine[80];
   char enginestr[100] = "";
-
-  if ( cnf_get_value( "sevMysqlEngine", engine, sizeof(engine)) != 0)
-    snprintf( enginestr, sizeof(enginestr), " engine=%s", engine);
 
   if ( options & pwr_mSevOptionsMask_PosixTime) {
     if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
       // Posix time, high resolution
       strcpy( timeformatstr, "sev__time int unsigned, sev__ntime int unsigned");
-      strcpy( idtypestr, "bigint");
+      strcpy( idtypestr, "integer");
     }
     else {
       // Posix time, low resolution
       strcpy( timeformatstr, "sev__time int unsigned");
-      strcpy( idtypestr, "int");
+      strcpy( idtypestr, "integer");
     }
   }
   else {
     if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
       // Sql time, high resolution
       strcpy( timeformatstr, "sev__time datetime not null, sev__ntime int unsigned");
-      strcpy( idtypestr, "bigint");
+      strcpy( idtypestr, "integer");
     }
     else {
       // Sql time, low resolution
       strcpy( timeformatstr, "sev__time datetime not null");
-      strcpy( idtypestr, "int");
+      strcpy( idtypestr, "integer");
     }
   }
 
   if ( options & pwr_mSevOptionsMask_ReadOptimized)
-    sprintf( readoptstr, "sev__id %s unsigned not null primary key auto_increment,", idtypestr);
+    sprintf( readoptstr, "sev__id %s not null primary key autoincrement,", idtypestr);
   else
     strcpy( readoptstr, "");
 
@@ -2366,21 +2070,34 @@ int sev_dbms::create_objecttable( pwr_tStatus *sts, char *tablename, pwr_tMask o
     strcpy( jumpstr, "");
 
   sprintf( query, "create table %s ( %s"
-	   "%s %s, index (sev__time) )%s;",
+	   "%s %s)%s;",
 	   tablename, readoptstr, timeformatstr, jumpstr, enginestr);
 
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__ ,mysql_error(m_env->con()));
+    printf( "%s: %s\n", __FUNCTION__ ,errmsg);
+    sqlite3_free(errmsg);
     *sts = SEV__DBERROR;
     return 0;
   }
+
+  sprintf( query, "create index %s_sev__time_idx on %s (sev__time)", tablename, tablename);
+
+  rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__ ,errmsg);
+    sqlite3_free(errmsg);
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+
   *sts = SEV__SUCCESS;
   return 1;
 }
 
-int sev_dbms::check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
+int sev_dbsqlite::check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
 																	  pwr_eType type, unsigned int size, unsigned int *idx)
 {
   sev_item *item = &m_items[*idx];
@@ -2409,110 +2126,93 @@ int sev_dbms::check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid 
   return 0;
 }
 
-pwr_tUInt64 sev_dbms::get_minFromIntegerColumn( char *tablename, char *colname )
+pwr_tUInt64 sev_dbsqlite::get_minFromIntegerColumn( char *tablename, char *colname )
 {
-	char query[2000];
+  char query[2000];
   pwr_tUInt64 retVal = 0;
+  sqlite3_stmt *stmt;
   sprintf( query, "select min(`%s`) from %s", colname, tablename);
 
   //printf( "%s: %s\n", __FUNCTION__ ,query);
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_prepare_v2( m_con, query, -1, &stmt, 0);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+    printf( "%s\n", __FUNCTION__);
     return 0;
   }
-  MYSQL_RES *result = mysql_store_result( m_env->con());
-  if ( !result) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s Result Error\n", __FUNCTION__);
-    return retVal;
+
+  rc = sqlite3_step(stmt);
+  if ( rc != SQLITE_ROW) {
+    sqlite3_finalize( stmt);
+    return 0;
   }
 
-  int rows = mysql_num_rows( result);
-  if(rows <= 0) {
-    mysql_free_result( result);
-    return retVal;
+  const char *text = (const char *)sqlite3_column_text( stmt, 0);
+  if ( !text) {
+    sqlite3_finalize( stmt);
+    return 0;
   }
-  MYSQL_ROW row;
-  row = mysql_fetch_row( result);
-  if(row[0] != NULL) {
-    retVal = strtoull(row[0], 0, 10);
-  }
-  mysql_free_result( result);
+  retVal = strtoull(text, 0, 10);
+  sqlite3_finalize( stmt);
   return retVal;
 }
 
-pwr_tUInt64 sev_dbms::get_maxFromIntegerColumn( char *tablename, char *colname )
+pwr_tUInt64 sev_dbsqlite::get_maxFromIntegerColumn( char *tablename, char *colname )
 {
-	char query[2000];
+  char query[2000];
   pwr_tUInt64 retVal = 0;
+  sqlite3_stmt *stmt;
   sprintf( query, "select max(`%s`) from %s", colname, tablename);
 
-  //printf( "%s: %s\n", __FUNCTION__ ,query);
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_prepare_v2( m_con, query, -1, &stmt, 0);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+    printf( "%s\n", __FUNCTION__);
     return 0;
   }
-  MYSQL_RES *result = mysql_store_result( m_env->con());
-  if ( !result) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s Result Error\n", __FUNCTION__);
+
+  rc = sqlite3_step(stmt);
+  if ( rc != SQLITE_ROW) {
+    sqlite3_finalize( stmt);
     return retVal;
   }
 
-  int rows = mysql_num_rows( result);
-  if(rows <= 0) {
-    mysql_free_result( result);
-    return retVal;
-  }
-  MYSQL_ROW row;
-  row = mysql_fetch_row( result);
-  if(row[0] != NULL) {
-    retVal = strtoull(row[0], 0, 10);
-  }
-  mysql_free_result( result);
+  const char *text = (const char *)sqlite3_column_text( stmt, 0);
+  retVal = strtoull(text, 0, 10);
+  sqlite3_finalize( stmt);
   return retVal;
 }
 
-pwr_tUInt64 sev_dbms::get_nextAutoIncrement( char *tablename )
+pwr_tUInt64 sev_dbsqlite::get_nextAutoIncrement( char *tablename )
 {
-	char query[200];
+  char query[200];
   pwr_tUInt64 retVal = 0;
-  sprintf( query, "SELECT Auto_increment FROM information_schema.tables WHERE table_name='%s' && table_schema='%s'", tablename, m_env->dbName());
+  sqlite3_stmt *stmt;
+  sprintf( query, "SELECT seq FROM SQLITE_SEQUENCE WHERE name='%s'", tablename);
   //printf( "%s: %s\n", __FUNCTION__ ,query);
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+
+  int rc = sqlite3_prepare_v2( m_con, query, -1, &stmt, 0);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+    printf( "%s\n", __FUNCTION__);
     return 0;
   }
-  MYSQL_RES *result = mysql_store_result( m_env->con());
-  if ( !result) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s Result Error\n", __FUNCTION__);
+
+  rc = sqlite3_step(stmt);
+  if ( rc != SQLITE_ROW) {
+    sqlite3_finalize( stmt);
     return retVal;
   }
 
-  int rows = mysql_num_rows( result);
-  if(rows <= 0) {
-    mysql_free_result( result);
-    return retVal;
-  }
-  MYSQL_ROW row;
-  row = mysql_fetch_row( result);
-  if(row[0] != NULL) {
-    retVal = strtoull(row[0], 0, 10);
-  }
-  mysql_free_result( result);
-  return retVal;
+  const char *text = (const char *)sqlite3_column_text( stmt, 0);
+  retVal = strtoull(text, 0, 10);
+  sqlite3_finalize( stmt);
+  return ++retVal;
 }
 
 
-int sev_dbms::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
-                           pwr_tTime time, void *buf, void *oldbuf, unsigned int size)
+int sev_dbsqlite::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
+				     pwr_tTime time, void *buf, void *oldbuf, unsigned int size)
 {
   void *data = buf;
   void *olddata = oldbuf;
@@ -2523,8 +2223,8 @@ int sev_dbms::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
   ostringstream queryOStr;
 
   char query[constQueryLength];
+  char *errmsg;
   char bufstr[512];
-  char bufInclEscCharstr[1025];
   char timstr[40];
 
   *sts = time_AtoAscii( &time, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
@@ -2577,9 +2277,8 @@ int sev_dbms::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
       if ( EVEN(*sts)) return 0;
       if(m_items[item_idx].attr[i].type == pwr_eType_String ||
          m_items[item_idx].attr[i].type == pwr_eType_Text) {
-        mysql_real_escape_string(m_env->con(), bufInclEscCharstr, bufstr, strlen(bufstr) );
         valuesStr.append("'");
-        valuesStr.append(bufInclEscCharstr);
+        valuesStr.append(bufstr);
         valuesStr.append("',");
       }
       else {  
@@ -2666,19 +2365,20 @@ int sev_dbms::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
     sprintf( query, "update %s set sev__jump = 1 where sev__id = %d",
              m_items[item_idx].tablename, 
              m_items[item_idx].last_id);
-    int rc = mysql_query( m_env->con(), query);
-    if (rc) {
+    int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+    if (rc != SQLITE_OK) {
       printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "Update jump: %s\n", mysql_error(m_env->con()));
+      printf( "Update jump: %s\n", errmsg);
+      sqlite3_free(errmsg);
     }
   }
 
   //printf( "Store_objectvalue: %s\n", queryOStr.str().c_str());
 
-  int rc = mysql_query( m_env->con(), queryOStr.str().c_str());
-  if (rc) {
+  int rc = sqlite3_exec( m_con, queryOStr.str().c_str(), 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+    printf( "%s: %s\n", __FUNCTION__, errmsg);
     printf( "Error in: %s\n", queryOStr.str().c_str());
 
     *sts = SEV__DBERROR;
@@ -2686,210 +2386,212 @@ int sev_dbms::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
     if ( m_items[item_idx].status != m_items[item_idx].logged_status) {
       m_items[item_idx].logged_status = m_items[item_idx].status;
       errh_Error( "Database update error: %s, table: %s object: %s", 
-                  mysql_error(m_env->con()), m_items[item_idx].tablename, m_items[item_idx].oname);
+                  errmsg, m_items[item_idx].tablename, m_items[item_idx].oname);
     }
+    sqlite3_free(errmsg);
     return 0;
   }
 
+#if 0 // TODO
   if ( (m_items[item_idx].options & pwr_mSevOptionsMask_ReadOptimized) &&
        !updateOnlyTime)
-    m_items[item_idx].last_id = mysql_insert_id( m_env->con());
+    m_items[item_idx].last_id = mysql_insert_id( m_con);
+#endif
 
   m_items[item_idx].first_storage = 0;
 
   *sts = SEV__SUCCESS;
   m_items[item_idx].status = *sts;
   m_items[item_idx].logged_status = 1;
+
   return 1;
 }
 
-int sev_dbms::get_item( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename)
+int sev_dbsqlite::get_item( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename)
 {
   char query[300];
+  sqlite3_stmt *stmt;
 
   sprintf( query, "select id,tablename,vid,oix,oname,aname,uptime,cretime,storagetime,vtype,vsize,description,unit,scantime,deadband,options "
 	   "from items where vid=%d and oix=%d and aname='%s'", oid.vid, oid.oix, attributename);
 
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_prepare_v2( m_con, query, -1, &stmt, 0);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
-    *sts = SEV__DBERROR;
+    printf( "%s\n", __FUNCTION__);
     return 0;
   }
 
-  MYSQL_ROW row;
-  MYSQL_RES *result = mysql_store_result( m_env->con());
-  if ( !result) {
+  rc = sqlite3_step(stmt);
+  if ( rc != SQLITE_ROW) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "%s Result Error\n", __FUNCTION__);
+    sqlite3_finalize( stmt);
     *sts = SEV__DBERROR;
     return 0;
   }
-  int rows = mysql_num_rows( result);
 
-  if(rows > 1) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s Duplicate items Error\n", __FUNCTION__);
-    *sts = SEV__DBERROR;
-    mysql_free_result( result);
-    return 0;
-  }
-  if(rows == 0) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s No item Error\n", __FUNCTION__);
-    *sts = SEV__DBERROR;
-    mysql_free_result( result);
-    return 0;
-  }
+  int col=0;
+  const char *text;
 
-  int col;
-  for ( int i = 0; i < rows; i++) {
-    row = mysql_fetch_row( result);
-    if (!row) break;
-    col=0;
-    sev_attr attr;
-    item->attr.push_back(attr);
+  sev_attr attr;
+  item->attr.push_back(attr);
 
-    item->id = atoi( row[col++]);
-    strncpy( item->tablename, row[col++], sizeof(item->tablename));
-    item->oid.vid = strtoul( row[col++], 0, 10);
-    item->oid.oix = strtoul( row[col++], 0, 10);
-    strncpy( item->oname, row[col++], sizeof(item->oname));
-    strncpy( item->attr[0].aname, row[col++], sizeof(item->attr[0].aname));
-    timestr_to_time( row[col++], &item->modtime);
-    timestr_to_time( row[col++], &item->creatime);
-    item->storagetime.tv_sec = strtoul( row[col++], 0, 10);
-    item->storagetime.tv_nsec = 0;
-    item->attr[0].type = (pwr_eType) strtoul( row[col++], 0, 10);
-    item->attr[0].size = strtoul( row[col++], 0, 10);
-    strncpy( item->description, row[col++], sizeof(item->description));
-    strncpy( item->attr[0].unit, row[col++], sizeof(item->attr[0].unit));
-    item->scantime = atof(row[col++]);
-    item->deadband = atof(row[col++]);
-    item->options = strtoul(row[col++], 0, 10);
-
-    item->attrnum = 1;
-  }
-  mysql_free_result( result);
+  item->id = sqlite3_column_int( stmt, col++);
+  text = (char *)sqlite3_column_text( stmt, col++);
+  if ( text)
+    strncpy( item->tablename, text, sizeof(item->tablename));
+  item->oid.vid = sqlite3_column_int( stmt, col++);
+  item->oid.oix = sqlite3_column_int( stmt, col++);
+  text = (char *)sqlite3_column_text( stmt, col++);
+  if ( text)
+    strncpy( item->oname, text, sizeof(item->oname));
+  text = (char *)sqlite3_column_text( stmt, col++);
+  if ( text)
+    strncpy( item->attr[0].aname, text, sizeof(item->attr[0].aname));
+  text = (char *)sqlite3_column_text( stmt, col++);
+  if ( text)
+    timestr_to_time( (char *)text, &item->modtime);
+  text = (char *)sqlite3_column_text( stmt, col++);
+  if ( text)
+    timestr_to_time( (char *)text, &item->creatime);
+  item->storagetime.tv_sec = sqlite3_column_int( stmt, col++);
+  item->storagetime.tv_nsec = 0;
+  item->attr[0].type = (pwr_eType) sqlite3_column_int( stmt, col++);
+  item->attr[0].size = sqlite3_column_int( stmt, col++);
+  text = (char *)sqlite3_column_text( stmt, col++);
+  if ( text)
+    strncpy( item->description, text, sizeof(item->description));
+  text = (char *)sqlite3_column_text( stmt, col++);
+  if ( text)
+    strncpy( item->attr[0].unit, text, sizeof(item->attr[0].unit));
+  item->scantime = sqlite3_column_double( stmt, col++);
+  item->deadband = sqlite3_column_double( stmt, col++);
+  item->options = sqlite3_column_int( stmt, col++);
   
+  item->attrnum = 1;
+
+  sqlite3_finalize( stmt);
+
   *sts = SEV__SUCCESS;
   return 1;
 }
 
-int sev_dbms::get_objectitem( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename)
+int sev_dbsqlite::get_objectitem( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename)
 {
   char query[300];
+  sqlite3_stmt *stmt;
 
   sprintf( query, "select id,tablename,vid,oix,oname,aname,uptime,cretime,storagetime,description,scantime,deadband,options "
      "from objectitems where vid=%d and oix=%d and aname='%s'", oid.vid, oid.oix, attributename);
 
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_prepare_v2( m_con, query, -1, &stmt, 0);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
-    *sts = SEV__DBERROR;
+    printf( "%s\n", __FUNCTION__);
     return 0;
   }
 
-  MYSQL_ROW row;
-  MYSQL_RES *result = mysql_store_result( m_env->con());
-  if ( !result) {
+  rc = sqlite3_step(stmt);
+  if ( rc != SQLITE_ROW) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "%s Result Error\n", __FUNCTION__);
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-  int rows = mysql_num_rows( result);
-  if(!rows) {
-    mysql_free_result( result);
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s Row Error\n", __FUNCTION__);
-    printf( "%s: %s\n", __FUNCTION__, query);
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-  row = mysql_fetch_row( result);
-  if (!row) {
-    mysql_free_result( result);
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s Row Error\n", __FUNCTION__);
+    sqlite3_finalize( stmt);
     *sts = SEV__DBERROR;
     return 0;
   }
 
   int col = 0;
-  item->id = atoi( row[col++]);
-  strncpy( item->tablename, row[col++], sizeof(item->tablename));
-  item->oid.vid = strtoul( row[col++], 0, 10);
-  item->oid.oix = strtoul( row[col++], 0, 10);
-  strncpy( item->oname, row[col++], sizeof(item->oname));
+  const char *text;
+
+  item->id = sqlite3_column_int( stmt, col++);
+  text = (char *)sqlite3_column_text( stmt, col++);
+  if ( text)
+    strncpy( item->tablename, text, sizeof(item->tablename));
+  item->oid.vid = sqlite3_column_int( stmt, col++);
+  item->oid.oix = sqlite3_column_int( stmt, col++);
+  text = (char *)sqlite3_column_text( stmt, col++);
+  if ( text)
+    strncpy( item->oname, text, sizeof(item->oname));
   col++; //No aname in sev_item TODO add aname to sev_item??
-  timestr_to_time( row[col++], &item->modtime);
-  timestr_to_time( row[col++], &item->creatime);
-  item->storagetime.tv_sec = strtoul( row[col++], 0, 10);
+  text = (char *)sqlite3_column_text( stmt, col++);
+  if ( text)
+    timestr_to_time( (char *)text, &item->modtime);
+  text = (char *)sqlite3_column_text( stmt, col++);
+  if ( text)
+    timestr_to_time( (char *)text, &item->creatime);
+  item->storagetime.tv_sec = sqlite3_column_int( stmt, col++);
   item->storagetime.tv_nsec = 0;
-  strncpy( item->description, row[col++], sizeof(item->description));
-  item->scantime = atof(row[col++]);
-  item->deadband = atof(row[col++]);
-  item->options = strtoul(row[col++], 0, 10);
+  text = (char *)sqlite3_column_text( stmt, col++);
+  if ( text)
+    strncpy( item->description, text, sizeof(item->description));
+  item->scantime = sqlite3_column_double( stmt, col++);
+  item->deadband = sqlite3_column_double( stmt, col++);
+  item->options = sqlite3_column_int( stmt, col++);
   //Time to fetch all attributes for this item
   get_objectitemattributes(sts, item, item->tablename);
 
   item->attrnum = item->attr.size();
   
-  mysql_free_result( result);
+  sqlite3_finalize( stmt);
 
   *sts = SEV__SUCCESS;
   return 1;
 }
 
-int sev_dbms::get_objectitems( pwr_tStatus *sts)
+int sev_dbsqlite::get_objectitems( pwr_tStatus *sts)
 {
   char query[300];
+  sqlite3_stmt *stmt;
 
   sprintf( query, "select id,tablename,vid,oix,oname,aname,uptime,cretime,storagetime,description,scantime,deadband,options "
 	   "from objectitems");
 
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_prepare_v2( m_con, query, -1, &stmt, 0);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
-    *sts = SEV__DBERROR;
+    printf( "%s\n", __FUNCTION__);
     return 0;
   }
 
-  MYSQL_ROW row;
-  MYSQL_RES *result = mysql_store_result( m_env->con());
-  if ( !result) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s Result Error\n", __FUNCTION__);
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-  int rows = mysql_num_rows( result);
+
   int col;
-  for ( int i = 0; i < rows; i++) {
+  for ( int i = 0;; i++) {
+    char *text;
+
+    rc = sqlite3_step(stmt);
+    if ( rc != SQLITE_ROW)
+      break;
+
     sev_item item;
-    row = mysql_fetch_row( result);
-    if (!row) break;
 
     //printf( "%d %s %s\n", i, row[0], row[1]);
     col=0;
-    item.id = atoi( row[col++]);
-    strncpy( item.tablename, row[col++], sizeof(item.tablename));
-    item.oid.vid = strtoul( row[col++], 0, 10);
-    item.oid.oix = strtoul( row[col++], 0, 10);
-    strncpy( item.oname, row[col++], sizeof(item.oname));
+    item.id = sqlite3_column_int( stmt, col++);
+    text = (char *)sqlite3_column_text( stmt, col++);
+    if ( text)
+      strncpy( item.tablename, text, sizeof(item.tablename));
+    item.oid.vid = sqlite3_column_int( stmt, col++);
+    item.oid.oix = sqlite3_column_int( stmt, col++);
+    text = (char *)sqlite3_column_text( stmt, col++);
+    if ( text)
+      strncpy( item.oname, text, sizeof(item.oname));
     col++; //No aname in sev_item TODO add aname to sev_item??
-    timestr_to_time( row[col++], &item.modtime);
-    timestr_to_time( row[col++], &item.creatime);
-    item.storagetime.tv_sec = strtoul( row[col++], 0, 10);
+    text = (char *)sqlite3_column_text( stmt, col++);
+    if ( text)
+      timestr_to_time( text, &item.modtime);
+    text = (char *)sqlite3_column_text( stmt, col++);
+    if ( text)
+      timestr_to_time( text, &item.creatime);
+    item.storagetime.tv_sec = sqlite3_column_int( stmt, col++);
     item.storagetime.tv_nsec = 0;
-    strncpy( item.description, row[col++], sizeof(item.description));
-    item.scantime = atof(row[col++]);
-    item.deadband = atof(row[col++]);
-    item.options = strtoul(row[col++], 0, 10);
+    text = (char *)sqlite3_column_text( stmt, col++);
+    if ( text)
+      strncpy( item.description, text, sizeof(item.description));
+    text = (char *)sqlite3_column_text( stmt, col++);
+    item.scantime = sqlite3_column_double( stmt, col++);
+    item.deadband = sqlite3_column_double( stmt, col++);
+    item.options = sqlite3_column_int( stmt, col++);
     //Time to fetch all attributes for this item
     get_objectitemattributes(sts, &item, item.tablename);
 
@@ -2897,60 +2599,56 @@ int sev_dbms::get_objectitems( pwr_tStatus *sts)
 
     m_items.push_back( item);
   }
-  mysql_free_result( result);
+  sqlite3_finalize( stmt);
   
-
   *sts = SEV__SUCCESS;
   return 1;
 }
 
-int sev_dbms::get_objectitemattributes( pwr_tStatus *sts, sev_item *item, char *tablename)
+int sev_dbsqlite::get_objectitemattributes( pwr_tStatus *sts, sev_item *item, char *tablename)
 {
   char query[300];
+  sqlite3_stmt *stmt;
 
   sprintf( query, "select attributename, attributetype, attributesize from objectitemattributes where tablename='%s'order by attributeidx asc", tablename);
 
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_prepare_v2( m_con, query, -1, &stmt, 0);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
-    *sts = SEV__DBERROR;
+    printf( "%s\n", __FUNCTION__);
     return 0;
   }
 
-  MYSQL_ROW row;
-  MYSQL_RES *result = mysql_store_result( m_env->con());
-  if ( !result) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: Result Error\n", __FUNCTION__);
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-  int rows = mysql_num_rows( result);
   int col;
-  for ( int i = 0; i < rows; i++) {
+  for ( int i = 0;; i++) {
+    char *text;
+
+    rc = sqlite3_step(stmt);
+    if ( rc != SQLITE_ROW)
+      break;
+
     sev_attr attr;
-    row = mysql_fetch_row( result);
-    if (!row) break;
     col=0;
-    strncpy( attr.aname, row[col++], sizeof(attr.aname));
-    attr.type = (pwr_eType) strtoul( row[col++], 0, 10);
-    attr.size = strtoul( row[col++], 0, 10);
+    text = (char *)sqlite3_column_text( stmt, col++);
+    if ( text)
+      strncpy( attr.aname, text, sizeof(attr.aname));
+    attr.type = (pwr_eType)sqlite3_column_int( stmt, col++);
+    attr.size = sqlite3_column_int( stmt, col++);
     attr.unit[0] = '\0'; //No unit present TODO add??
     item->value_size += attr.size;
     item->attr.push_back( attr);
   }
-  mysql_free_result( result);
+  sqlite3_finalize( stmt);
   
-
   *sts = SEV__SUCCESS;
   return 1;
 }
 
-int sev_dbms::delete_old_objectdata( pwr_tStatus *sts, char *tablename, 
-			                               pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle)
+int sev_dbsqlite::delete_old_objectdata( pwr_tStatus *sts, char *tablename, 
+			                 pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle)
 {
   char query[300];
+  char *errmsg;
   char timstr[40];
 
   *sts = time_AtoAscii( &limit, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
@@ -2982,10 +2680,11 @@ int sev_dbms::delete_old_objectdata( pwr_tStatus *sts, char *tablename,
          tablename, timstr);
   }
 
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+    printf( "%s: %s\n", __FUNCTION__, errmsg);
+    sqlite3_free(errmsg);
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -2995,7 +2694,7 @@ int sev_dbms::delete_old_objectdata( pwr_tStatus *sts, char *tablename,
 }
 
 
-int sev_dbms::check_deadband(pwr_eType type, unsigned int size, pwr_tFloat32 deadband, void *value, void *oldvalue)
+int sev_dbsqlite::check_deadband(pwr_eType type, unsigned int size, pwr_tFloat32 deadband, void *value, void *oldvalue)
 {
   int deadband_active = 0;
   switch ( type) {
@@ -3062,7 +2761,7 @@ int sev_dbms::check_deadband(pwr_eType type, unsigned int size, pwr_tFloat32 dea
   return deadband_active;
 }
 
-int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
+int sev_dbsqlite::get_objectvalues( pwr_tStatus *sts, sev_item *item,
 			  unsigned int size, pwr_tTime *starttime, pwr_tTime *endtime, 
 			  int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize)
 {
@@ -3071,6 +2770,7 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   char starttimstr[40];
   char endtimstr[40];
   int total_rows;
+  int max_id;
   int div;
   pwr_tDeltaTime dt;
   pwr_tTime stime, etime;
@@ -3078,6 +2778,10 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   char orderby_part[80];
   char jumpstr[40];
   char where_part[200];
+  char last_update[20] = "";
+  char create_time_str[20] = "2012-01-01 01:00:00";
+  const char *text;
+  sqlite3_stmt *stmt;
 
   if ( starttime && starttime->tv_sec == 0 && starttime->tv_nsec == 0)
     starttime = 0;
@@ -3090,58 +2794,58 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
     etime = *endtime;
 
   // Get number of rows
-  sprintf( query, "show table status where name = '%s';", item->tablename);
+  if ( item->options & pwr_mSevOptionsMask_ReadOptimized) {
+    sprintf( query, "select coalesce(max(sev__id)+1,0) from %s", item->tablename);
+    int rc = sqlite3_prepare_v2( m_con, query, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf( "GetValues Query Error\n");
+      *sts = SEV__DBERROR;
+      return 0;
+    }
 
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s Query Error\n", __FUNCTION__);
-    *sts = SEV__DBERROR;
-    return 0;
+    rc = sqlite3_step(stmt);
+    if ( rc != SQLITE_ROW) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      *sts = SEV__DBERROR;
+      return 0;
+    }
+
+    max_id = sqlite3_column_int( stmt, 0);
+    sqlite3_finalize( stmt);
+  }
+  else {
+    // TODO
+    *sts = SEV__NYI;
+    return 1;
   }
 
-  MYSQL_ROW row;
-  MYSQL_RES *result = mysql_store_result( m_env->con());
-
-  if ( !result) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s Status Result Error\n", __FUNCTION__);
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-
-  row = mysql_fetch_row( result);
-  if (!row) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s Status Result Error\n", __FUNCTION__);
-    *sts = SEV__DBERROR;
-    return 0;
-  }
   if ( starttime && endtime) {
     pwr_tTime update_time;
-    if ( row[12])
-      timestr_to_time( row[12], &update_time);
+    if ( strcmp( last_update, "") != 0)
+      timestr_to_time( last_update, &update_time);
 
     if ( time_Acomp( &item->creatime, &stime) == 1)
       stime = item->creatime;
 
-    if ( row[12] && time_Acomp( &etime, &update_time) == 1)
+    if ( strcmp( last_update, "") != 0 && time_Acomp( &etime, &update_time) == 1)
       etime = update_time;
 
     time_Adiff( &dt, &etime, &stime);
     total_rows = int (time_DToFloat( 0, &dt) / item->scantime);
+    if ( max_id < total_rows)
+      total_rows = max_id;
 
     div = total_rows / maxsize + 1;
   }
   else if ( starttime) {
     pwr_tTime update_time;
-    if ( row[12])
-      timestr_to_time( row[12], &update_time);
+    if ( strcmp( last_update, "") != 0)
+      timestr_to_time( last_update, &update_time);
     else
       time_GetTime( &update_time);
 
     if ( time_Acomp( &update_time, starttime) != 1) {
-      mysql_free_result( result);
       *sts = SEV__NODATATIME;
       return 0;
     }
@@ -3150,20 +2854,21 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   }
   else if ( endtime) {
     pwr_tTime create_time;
-    timestr_to_time( row[11], &create_time);
+    timestr_to_time( create_time_str, &create_time);
 
     if ( time_Acomp( endtime, &create_time) != 1) {
-      mysql_free_result( result);
+      sqlite3_finalize( stmt);
       *sts = SEV__NODATATIME;
       return 0;
     }
     time_Adiff( &dt, endtime, &create_time);
     total_rows = int (time_DToFloat( 0, &dt) / item->scantime);
+    if ( max_id < total_rows)
+      total_rows = max_id;
   }
   else {
-    total_rows = atoi(row[4]);
+    total_rows = max_id;
   }
-  mysql_free_result( result);
 
   div = total_rows / maxsize + 1;
 
@@ -3299,26 +3004,17 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   errh_Info("Before query in get_objectvalues");
   printf("%s: %s\n", __FUNCTION__, queryStr.c_str());
 
-  rc = mysql_query( m_env->con(), queryStr.c_str());
-  if (rc) {
+  int rc = sqlite3_prepare_v2( m_con, queryStr.c_str(), -1, &stmt, 0);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+    printf( "%s\n", __FUNCTION__);
     *sts = SEV__DBERROR;
     return 0;
   }
   errh_Info("After query in get_objectvalues");
 
-  result = mysql_store_result( m_env->con());
-  if ( !result) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s Result Error\n", __FUNCTION__);
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-  errh_Info("After store result in get_objectvalues");
-
-  int rows = mysql_num_rows( result);
-  int bufrows = rows;
+  int bufrows = total_rows / div;
+  int row_cnt = 0;
 
 
   if ( item->options & pwr_mSevOptionsMask_ReadOptimized) {
@@ -3327,38 +3023,51 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
     *vbuf = calloc( bufrows, item->value_size);
 
     int bcnt = 0;
-    for ( int i = 0; i < rows; i ++) {
+    for ( int i = 0;; i ++) {
+      rc = sqlite3_step(stmt);
+      if ( rc != SQLITE_ROW)
+	break;
+
+      row_cnt++;
+      if ( row_cnt > bufrows)
+	break;
+
       int j = 0;
-
-      // if ( div > 1)
-      //   mysql_data_seek( result, i);
-
-      row = mysql_fetch_row( result);
-      if (!row) break;
 
       if ( item->options & pwr_mSevOptionsMask_PosixTime) {
         if ( item->options & pwr_mSevOptionsMask_HighTimeResolution) {
           // Posix time, high resolution
-          (*tbuf)[bcnt].tv_sec = strtoul( row[j++], 0, 10);
-          (*tbuf)[bcnt].tv_nsec = strtoul( row[j++], 0, 10);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+          (*tbuf)[bcnt].tv_nsec = sqlite3_column_int( stmt, j++);
         }
-        else
+        else {
           // Posix time, low resolution
-          (*tbuf)[bcnt].tv_sec = strtoul( row[j++], 0, 10);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+	}
       }
       else {
         if ( item->options & pwr_mSevOptionsMask_HighTimeResolution) {
           // Sql time, high resolution
-          timestr_to_time( row[j++], &(*tbuf)[bcnt]);
-          (*tbuf)[bcnt].tv_nsec = strtoul( row[j++], 0, 10);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+          (*tbuf)[bcnt].tv_nsec = sqlite3_column_int( stmt, j++);
         }
-        else
+        else {
           // Sql time, low resolution
-          timestr_to_time( row[j++], &(*tbuf)[bcnt]);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+	}
       }
       int read_size = 0;
       for(size_t k = 0; k < item->attr.size(); k++) {
-        if(row[j] == 0) {
+	const char *value_str = (const char *)sqlite3_column_text( stmt, j++);
+	if( !value_str || strcmp(value_str, "") == 0) {
           //Null value
           switch(item->attr[k].type) {
             case pwr_eType_Float32:
@@ -3387,7 +3096,7 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
           j++;
         }
         else {
-          cdh_StringToAttrValue( item->attr[k].type, row[j++], ((char *)*vbuf)+ bcnt * item->value_size + read_size);
+          cdh_StringToAttrValue( item->attr[k].type, value_str, ((char *)*vbuf)+ bcnt * item->value_size + read_size);
         }
         read_size += item->attr[k].size;
       }
@@ -3399,7 +3108,7 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
     }
     printf( "bcnt %d bufrows %d\n", bcnt, bufrows);
     *bsize = bcnt;
-    mysql_free_result( result);
+    sqlite3_finalize( stmt);
   }
   else {
 
@@ -3407,39 +3116,60 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
     *vbuf = calloc( bufrows, size);
 
     int bcnt = 0;
-    for ( int i = 0; i < rows; i += div) {
+    for ( int i = 0;; i++) {
+      if ( i == 0) {
+	rc = sqlite3_step(stmt);
+	if ( rc != SQLITE_ROW)
+	  break;
+      }
+      else {
+	for ( int k = 0; k < div; k++) {
+	  rc = sqlite3_step(stmt);
+	  if ( rc != SQLITE_ROW)
+	    break;
+	}
+	if ( rc != SQLITE_ROW)
+	  break;
+      }
+
+      bufrows++;
       int j = 0;
-
-      if ( div > 1)
-        mysql_data_seek( result, i);
-
-      row = mysql_fetch_row( result);
-      if (!row) break;
 
       if ( item->options & pwr_mSevOptionsMask_PosixTime) {
         if ( item->options & pwr_mSevOptionsMask_HighTimeResolution) {
           // Posix time, high resolution
-          (*tbuf)[bcnt].tv_sec = strtoul( row[j++], 0, 10);
-          (*tbuf)[bcnt].tv_nsec = strtoul( row[j++], 0, 10);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+          (*tbuf)[bcnt].tv_nsec = sqlite3_column_int( stmt, j++);
         }
-        else
+        else {
           // Posix time, low resolution
-          (*tbuf)[bcnt].tv_sec = strtoul( row[j++], 0, 10);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+	}
       }
       else {
         if ( item->options & pwr_mSevOptionsMask_HighTimeResolution) {
           // Sql time, high resolution
-          timestr_to_time( row[j++], &(*tbuf)[bcnt]);
-          (*tbuf)[bcnt].tv_nsec = strtoul( row[j++], 0, 10);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+          (*tbuf)[bcnt].tv_nsec = sqlite3_column_int( stmt, j++);
         }
-        else
+        else {
           // Sql time, low resolution
-          timestr_to_time( row[j++], &(*tbuf)[bcnt]);
+	  text = (const char *)sqlite3_column_text( stmt, j++);
+	  if ( text)
+	    timestr_to_time( (char *)text, (pwr_tTime *)&(*tbuf)[bcnt].tv_sec);
+	}
       }
 
       int read_size = 0;
       for(size_t k = 0; k < item->attr.size(); k++) {
-        if(row[j] == 0) {
+	const char *value_str = (const char *)sqlite3_column_text( stmt, j++);
+	if(strcmp( value_str, "") == 0) {
           //Null value
           switch(item->attr[k].type) {
             case pwr_eType_Float32:
@@ -3468,7 +3198,7 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
           j++;
         }
         else {
-          cdh_StringToAttrValue( item->attr[k].type, row[j++], ((char *)*vbuf)+ bcnt * item->value_size + read_size);
+          cdh_StringToAttrValue( item->attr[k].type, value_str, ((char *)*vbuf)+ bcnt * item->value_size + read_size);
         }
         read_size += item->attr[k].size;
       }
@@ -3480,7 +3210,7 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
     }
     printf( "bcnt %d bufrows %d\n", bcnt, bufrows);
     *bsize = bcnt;
-    mysql_free_result( result);
+    sqlite3_finalize( stmt);
   }
   errh_Info("After copying values in get_objectvalues");
 
@@ -3488,7 +3218,7 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   return 1;
 }
 
-int sev_dbms::handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx)
+int sev_dbsqlite::handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx)
 {
 
   char timestr[40];
@@ -3515,11 +3245,13 @@ int sev_dbms::handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int 
   errh_Warning("Recreating table %s due to attribute definition changes, old table saved to %s", tablename, newTableName);
 
   char query[600];
+  char *errmsg;
   sprintf(query, "RENAME TABLE %s to %s", tablename, newTableName);
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  int rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+    printf( "%s: %s\n", __FUNCTION__, errmsg);
+    sqlite3_free(errmsg);
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -3535,10 +3267,11 @@ int sev_dbms::handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int 
     if(autoIncrValue) 
       autoIncrValue++;
     sprintf(query, "ALTER TABLE %s AUTO_INCREMENT = " pwr_dFormatUInt64, tablename, autoIncrValue);
-    rc = mysql_query( m_env->con(), query);
-    if (rc) {
+    rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+    if (rc != SQLITE_OK) {
       printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+      printf( "%s: %s\n", __FUNCTION__, errmsg);
+      sqlite3_free(errmsg);
       *sts = SEV__DBERROR;
       return 0;
     }
@@ -3550,10 +3283,11 @@ int sev_dbms::handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int 
 
 
 
-int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject)
+int sev_dbsqlite::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject)
 {
   char newTableName[64];
   char query[600];
+  char *errmsg;
   int rc;
 
   sev_item *item = &m_items[item_idx];
@@ -3582,10 +3316,11 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
     errh_Warning("Recreating table %s due to attribute definition changes, old table saved to %s", tablename, newTableName);
 
     sprintf(query, "RENAME TABLE %s to %s", tablename, newTableName);
-    rc = mysql_query( m_env->con(), query);
-    if (rc) {
+    rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+    if (rc != SQLITE_OK) {
       printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+      printf( "%s: %s\n", __FUNCTION__, errmsg);
+      sqlite3_free(errmsg);
       *sts = SEV__DBERROR;
       return 0;
     }
@@ -3600,20 +3335,22 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
       if (autoIncrValue)
         autoIncrValue++;
       sprintf(query, "ALTER TABLE %s AUTO_INCREMENT = " pwr_dFormatUInt64, tablename, autoIncrValue);
-      rc = mysql_query( m_env->con(), query);
-      if (rc) {
+      rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+      if (rc != SQLITE_OK) {
         printf("In %s row %d:\n", __FILE__, __LINE__);
-        printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+        printf( "%s: %s\n", __FUNCTION__, errmsg);
+	sqlite3_free(errmsg);
         *sts = SEV__DBERROR;
         return 0;
       }
     }
 
     sprintf(query, "delete from objectitemattributes where tablename = '%s'", tablename);
-    rc = mysql_query( m_env->con(), query);
-    if (rc) {
+    rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+    if (rc != SQLITE_OK) {
       printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+      printf( "%s: %s\n", __FUNCTION__, errmsg);
+      sqlite3_free(errmsg);
       *sts = SEV__DBERROR;
       return 0;
     }
@@ -3624,20 +3361,22 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
     strncpy(colName, create_colName(i, item->attr[i].aname), sizeof(colName));
     //sprintf(colName, "col_%d", i);
     sprintf( query, "alter table %s add `%s` %s;", tablename, colName, pwrtype_to_type( item->attr[i].type, item->attr[i].size));
-    rc = mysql_query( m_env->con(), query);
-    if (rc) {
+    rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+    if (rc != SQLITE_OK) {
       printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+      printf( "%s: %s\n", __FUNCTION__,errmsg);
+      sqlite3_free(errmsg);
       *sts = SEV__DBERROR;
       return 0;
     }
     int aidx = i;
     sprintf( query, "insert into objectitemattributes (tablename, attributename, attributeidx, attributetype, attributesize) "
              "values('%s', '%s', %d, %d, %d)", tablename, item->attr[i].aname, aidx, item->attr[i].type, item->attr[i].size);
-    rc = mysql_query( m_env->con(), query);
-    if (rc) {
+    rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+    if (rc != SQLITE_OK) {
       printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+      printf( "%s: %s\n", __FUNCTION__,errmsg);
+      sqlite3_free(errmsg);
       *sts = SEV__DBERROR;
       return 0;
     }
@@ -3646,135 +3385,23 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
   return 1;
 }
 
-int sev_dbms::repair_table( pwr_tStatus *sts, char *tablename)
+int sev_dbsqlite::repair_table( pwr_tStatus *sts, char *tablename)
 {  
-  char query[200];
-  int rc;
-  int repair_table;
-  int repair_failed;
-
-  // Check table
-  printf( "-- Checking table %s...\n", tablename);
-
-  sprintf( query, "check table %s", tablename);
-  rc = mysql_query( m_env->con(), query);
-  if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-  else {
-    MYSQL_ROW row;
-    MYSQL_RES *result = mysql_store_result( m_env->con());
-
-    if ( !result) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "%s Status Result Error\n", __FUNCTION__);
-      *sts = SEV__DBERROR;
-      return 0;
-    }
-    
-    int rows = mysql_num_rows( result);
-
-    for ( int i = 0; i < rows; i++) {
-      row = mysql_fetch_row( result);
-      if (!row) break;
-
-      printf( "-- Check result '%s %s %s %s'\n", row[0], row[1], row[2], row[3]);
-    }
-    if ( cdh_NoCaseStrcmp( row[3], "ok") == 0)
-      repair_table = 0;
-    else
-      repair_table = 1;
-
-    mysql_free_result( result);
-  }
-
-  if ( !repair_table) {
-    *sts = SEV__SUCCESS;
-    return *sts;
-  }
-
-  // Repair table
-  printf( "-- Repairing %s...\n", tablename);
-
-  sprintf( query, "repair table %s", tablename);
-  rc = mysql_query( m_env->con(), query);
-  if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-  else {
-    MYSQL_ROW row;
-    MYSQL_RES *result = mysql_store_result( m_env->con());
-
-    if ( !result) {
-      printf("In %s row %d:\n", __FILE__, __LINE__);
-      printf( "%s Status Result Error\n", __FUNCTION__);
-      *sts = SEV__DBERROR;
-      return 0;
-    }
-    
-    int rows = mysql_num_rows( result);
-
-    for ( int i = 0; i < rows; i++) {
-      row = mysql_fetch_row( result);
-      if (!row) break;
-
-      printf( "-- Repair result '%s %s %s %s'\n", row[0], row[1], row[2], row[3]);
-    }
-    if ( cdh_NoCaseStrcmp( row[3], "ok") != 0) {
-      printf( "** Error, repair failure %s\n", row[0]);
-      repair_failed = 1;
-    }
-    else
-      repair_failed = 0;
-
-    mysql_free_result( result);
-  }
-
-
-  if ( repair_failed)
-    *sts = SEV__REPAIR_FAILED;
-  else
-    *sts = SEV__SUCCESS;
+  *sts = SEV__SUCCESS;
 
   return ODD(*sts);
 }
 
-int sev_dbms::alter_engine( pwr_tStatus *sts, char *tablename)
+int sev_dbsqlite::alter_engine( pwr_tStatus *sts, char *tablename)
 {  
-  char query[200];
-  int rc;
-  char engine[80];
-
-  if ( cnf_get_value( "sevMysqlEngine", engine, sizeof(engine)) == 0) {
-    printf( "** No engine specified in /etc/proview.cnf\n");
-    return 0;
-  }
-
-  // Check table
-  printf( "-- Altering engine to %s table %s...\n", engine, tablename);
-
-  sprintf( query, "alter table %s engine=%s", tablename, engine);
-  rc = mysql_query( m_env->con(), query);
-  if (rc) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-
   *sts = SEV__SUCCESS;
   return 1;
 }
 
-int sev_dbms::store_stat( sev_sStat *stat)
+int sev_dbsqlite::store_stat( sev_sStat *stat)
 {
   char query[250];
+  char *errmsg;
   int rc;
 
   sprintf( query, "update sev_stat set current_load = %f,medium_load = %f,"
@@ -3783,46 +3410,51 @@ int sev_dbms::store_stat( sev_sStat *stat)
 	   stat->current_load, stat->medium_load, stat->storage_rate, 
 	   stat->medium_storage_rate, stat->datastore_msg_cnt, 
 	   stat->dataget_msg_cnt, stat->items_msg_cnt, stat->eventstore_msg_cnt);
-  rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Update sev_stat: %s\n", mysql_error(m_env->con()));
+    printf( "Update sev_stat: %s\n", errmsg);
+    sqlite3_free(errmsg);
     return 0;
   }
   return 1;
 }
 
-int sev_dbms::begin_transaction()
+int sev_dbsqlite::begin_transaction()
 {
   char query[20];
+  char *errmsg;
   int rc;
 
-  strcpy( query, "start transaction");
-  rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  strcpy( query, "begin transaction");
+  rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Begin transaction: %s\n", mysql_error(m_env->con()));
+    printf( "Begin transaction: %s\n", errmsg);
+    sqlite3_free(errmsg);
     return 0;
   }
   return 1;
 }
 
-int sev_dbms::commit_transaction()
+int sev_dbsqlite::commit_transaction()
 {
   char query[20];
+  char *errmsg;
   int rc;
 
-  strcpy( query, "commit");
-  rc = mysql_query( m_env->con(), query);
-  if (rc) {
+  strcpy( query, "commit transaction");
+  rc = sqlite3_exec( m_con, query, 0, 0, &errmsg);
+  if (rc != SQLITE_OK) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf( "Begin transaction: %s\n", mysql_error(m_env->con()));
+    printf( "Begin transaction: %s\n", errmsg);
+    sqlite3_free(errmsg);
     return 0;
   }
   return 1;
 }
 
-sev_dbms::~sev_dbms()
+sev_dbsqlite::~sev_dbsqlite()
 {
   printf("Freeing memory\n");
   for(size_t idx = 0; idx < m_items.size(); idx++) {
@@ -3834,6 +3466,6 @@ sev_dbms::~sev_dbms()
 }
 
 #else
-extern int no_sev_dbms;
-int no_sev_dbms = 0;
+extern int no_sev_dbsqlite;
+int no_sev_dbsqlite = 0;
 #endif

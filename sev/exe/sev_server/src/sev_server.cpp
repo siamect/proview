@@ -34,8 +34,6 @@
  * General Public License plus this exception.
  **/
 
-#if defined PWRE_CONF_MYSQL
-
 #include <math.h>
 
 #include "pwr.h"
@@ -88,9 +86,6 @@ int sev_server::init( int noneth)
   pwr_tStatus		sts;
   qcom_sAid		aid;
   qcom_sQid 		qini;
-  sev_dbms_env 		*env;
-  pwr_tFileName 	envname;
-  char 			socket[200];
 
   m_server_status = PWR__SRVSTARTUP;
 
@@ -112,40 +107,34 @@ int sev_server::init( int noneth)
       errh_CErrLog( PWR__SRVNOTCONF, 0);
       exit(0);
     }
-  }
 
-  sprintf( envname, "$pwrp_db/%s.db", sev_dbms_env::dbName());
-  dcli_translate_filename( envname, envname);
-  
-  env = new sev_dbms_env( envname);
-  env->open( envname);
-  if ( !env->exists()) {
-    cnf_get_value( "mysqlSocket", socket, sizeof(socket));
-    env->create( envname, "localhost", "pwrp", "", sev_dbms_env::dbName(), 50, 
-		 socket);
-
-    env->open( envname);
-
-    if ( !env->createDb()) {
-      errh_Fatal("Failed to create to database '%s'", sev_dbms_env::dbName());
-      exit(0);
+    // Get configured database
+    pwr_tAttrRef daref;
+    pwr_eSevDatabaseEnum db_enum;
+    pwr_tAttrRef aref = cdh_ObjidToAref( conf_oid);
+    sts = gdh_ArefANameToAref( &aref, "Database", &daref);
+    if ( ODD(sts)) {
+      sts = gdh_GetObjectInfoAttrref( &daref, (void *)&db_enum, sizeof(db_enum));
+      if ( ODD(sts)) {
+	switch ( db_enum) {
+	case pwr_eSevDatabaseEnum_MySQL:
+	  set_dbtype( sev_eDbType_Mysql);
+	  break;
+	case pwr_eSevDatabaseEnum_SQLite:
+	  set_dbtype( sev_eDbType_Sqlite);
+	  break;
+	}
+      }
     }
-  }
-  else {    
-    if ( !env->openDb()) {
-      errh_Fatal("Failed to connect to database '%s'", sev_dbms_env::dbName());
-      exit(0);
-    }
+
   }
 
-  if( !env->checkAndUpdateVersion(constSevVersion) ) {
-    errh_Fatal("Failed to upgrade tables to sev version %d db:'%s'", constSevVersion, sev_dbms_env::dbName());
+  m_db = sev_db::open_database( m_db_type);
+  if ( !m_db) {
+    errh_Fatal( "Database open error");
     exit(0);
   }
-    
-  m_db = new sev_dbms( env);
-
-  errh_Info("Database opened '%s'", sev_dbms_env::dbName());
+  errh_Info("Database opened '%s'", m_db->dbName());
 
   m_db->get_items( &m_sts);
   m_db->get_objectitems(&m_sts);
@@ -448,6 +437,12 @@ int sev_server::mainloop()
 	m_stat.medium_load = m_stat.current_load;
       else
 	m_stat.medium_load = a * m_stat.medium_load + (1.0-a) * m_stat.current_load;
+      m_stat.storage_rate = (float)m_storage_cnt / (time_DToFloat(0, &busy)+time_DToFloat(0, &idle));
+      if ( m_stat.medium_storage_rate == 0)
+	m_stat.medium_storage_rate = m_stat.storage_rate;
+      else
+	m_stat.medium_storage_rate = a * m_stat.medium_storage_rate + (1.0-a) * m_stat.storage_rate;
+      m_storage_cnt = 0;
       m_db->store_stat( &m_stat); 
       time_Aadd( &next_stat, &next_stat, &stat_interval);
       busy = pwr_cNDeltaTime;
@@ -733,6 +728,8 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
   sev_sHistData *dp = (sev_sHistData *)&msg->Data;
   pwr_tTime time;
 
+  m_db->begin_transaction();
+
   while ( (char *)dp - (char *)msg < (int)size) {
     sev_sRefid *rp;
     pwr_tRefId rk = dp->sevid;
@@ -746,9 +743,13 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
 
     time = net_NetTimeToTime( &msg->Time);
     m_db->store_value( &m_sts, idx, 0, time, &dp->data, dp->size);
+    m_storage_cnt++;
 
     dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
   }
+
+  m_db->commit_transaction();
+  
   return 1;
 }
 
@@ -981,16 +982,32 @@ void sev_server::garbage_item( int idx)
 int main (int argc, char *argv[])
 {
   sev_server srv;
-
   int noneth = 0;
+  sev_eDbType dbtype = sev_eDbType_;
 
   if ( argc > 1 && strcmp( argv[1], "-n") == 0)
     noneth = 1;
+  if ( argc > 2 + noneth && strcmp( argv[1+noneth], "-d") == 0 && strcmp( argv[2+noneth], "sqlite") == 0)
+    dbtype = sev_eDbType_Sqlite;
+  else if ( argc > 2 + noneth && strcmp( argv[1+noneth], "-d") == 0 && strcmp( argv[2+noneth], "mysql") == 0)
+    dbtype = sev_eDbType_Mysql;
+
+  if ( dbtype == sev_eDbType_) {
+    char type[80];
+    if ( cnf_get_value( "sevDatabaseType", type, sizeof(type))) {
+      if ( cdh_NoCaseStrcmp( type, "sqlite") == 0)
+	dbtype = sev_eDbType_Sqlite;
+      else if ( cdh_NoCaseStrcmp( type, "mysql") == 0)
+	dbtype = sev_eDbType_Mysql;	
+    }
+  }
+
+  if ( dbtype == sev_eDbType_)
+    dbtype = sev_eDbType_Mysql;	
+
+  srv.set_dbtype( dbtype);
 
   srv.init( noneth);
   srv.connect();
   srv.mainloop();
 }
-#else
-int main(){}
-#endif
