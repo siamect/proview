@@ -13728,6 +13728,7 @@ void GePulldownMenu::save( ofstream& fp)
 {
 
   int b_mask = ge_mInstance_1;
+#if 0
   for ( int j = 0; j < 32; j++) {
     if ( b_mask & button_mask) {
       if ( !items_dyn[j])
@@ -13735,14 +13736,17 @@ void GePulldownMenu::save( ofstream& fp)
     }
     b_mask = b_mask << 1;
   }
+#endif
 
   fp << int(ge_eSave_PulldownMenu) << endl;  
   fp << int(ge_eSave_PulldownMenu_button_mask) << FSPACE << int(button_mask) << endl;
+  b_mask = ge_mInstance_1;
   for ( int j = 0; j < 32; j++) {
     if ( b_mask & button_mask) {
       fp << int(ge_eSave_PulldownMenu_items_text0+j) << FSPACE << items_text[j] << endl;
       fp << int(ge_eSave_PulldownMenu_items_dyn0+j) << endl;
-      items_dyn[j]->save( fp);
+      if ( items_dyn[j])
+	items_dyn[j]->save( fp);
     }
     b_mask = b_mask << 1;
   }
