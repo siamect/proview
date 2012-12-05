@@ -4254,48 +4254,78 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
 
     if ( strcmp( oname, "") == 0) {
       strcpy( out, str);
-      return;
     }
     s0 = str;
   }
   else if ( strcmp( oname, "") == 0) {
     cdh_Strcpy( out, in);
-    return;
   }
 
-  t0 = out;
-  while ( (s = strstr( s0, "$object"))) {
-    cdh_Strncpy( t0, s0, s-s0);
-    t0 += s - s0;
-    strcpy( t0, oname); 
-    t0 += strlen(oname);
-    s0 = s + strlen("$object");
-  }
-  cdh_Strcpy( t0, s0);
+  if ( strcmp( oname, "") != 0) {
+    t0 = out;
+    while ( (s = strstr( s0, "$object"))) {
+      cdh_Strncpy( t0, s0, s-s0);
+      t0 += s - s0;
+      strcpy( t0, oname); 
+      t0 += strlen(oname);
+      s0 = s + strlen("$object");
+    }
+    cdh_Strcpy( t0, s0);
 
-  t0 = out;
-  if ( (s = strchr( out, '&')) && *(s+1) == '(') {
+    t0 = out;
+  }
+  if ( (s = strchr( out, '&'))) {
+    if ( *(s+1) == '(') {
     // Replace attribute in parenthesis with its value
-    pwr_tAName refname;
-    pwr_sAttrRef aref;
-    pwr_tStatus sts;
-    char *start, *end;
+      pwr_tAName refname;
+      pwr_sAttrRef aref;
+      pwr_tStatus sts;
+      char *start, *end;
  
-    start = s;
-    strcpy( refname, s+2);
-    if ( (s = strchr( refname, ')')) == 0)
-      return;
+      start = s;
+      strcpy( refname, s+2);
+      if ( (s = strchr( refname, ')')) == 0)
+	return;
 
-    *s = 0;
-    end = start + strlen(refname) + 3;
-    sts = gdh_GetObjectInfo( refname, &aref, sizeof(aref));
-    if ( EVEN(sts)) return;
+      *s = 0;
+      end = start + strlen(refname) + 3;
+      sts = gdh_GetObjectInfo( refname, &aref, sizeof(aref));
+      if ( EVEN(sts)) return;
+      
+      sts = gdh_AttrrefToName( &aref, str, sizeof(str), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return;
 
-    sts = gdh_AttrrefToName( &aref, str, sizeof(str), cdh_mName_volumeStrict);
-    if ( EVEN(sts)) return;
+      strcat( str, end);
+      strcpy( start, str);
+    }
+    else if ( *(s+1) == '&' && *(s+2) == '(') {
+      pwr_tAName refname;
+      pwr_sAttrRef aref;
+      pwr_tStatus sts;
+      char *start, *end;
+ 
+      start = s;
+      strcpy( refname, s+3);
+      if ( (s = strchr( refname, ')')) == 0)
+	return;
 
-    strcat( str, end);
-    strcpy( start, str);
+      *s = 0;
+      end = start + strlen(refname) + 4;
+      sts = gdh_GetObjectInfo( refname, &aref, sizeof(aref));
+      if ( EVEN(sts)) return;
+      
+      sts = gdh_AttrrefToName( &aref, str, sizeof(str), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return;
+
+      sts = gdh_GetObjectInfo( str, &aref, sizeof(aref));
+      if ( EVEN(sts)) return;
+      
+      sts = gdh_AttrrefToName( &aref, str, sizeof(str), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return;
+
+      strcat( str, end);
+      strcpy( start, str);
+    }    
   }
 }
 
