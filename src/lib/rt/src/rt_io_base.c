@@ -498,7 +498,7 @@ pwr_tStatus io_init_di_signals(
 	  errh_Error("IO init: Signal SigChanCon error '%s'", buf);
 	}	
 	else {
-	  if ( class == pwr_cClass_Di) {
+	  if ( class == pwr_cClass_ChanDi) {
 	    if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
 	      pwr_tAName oldsig;
 	      sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
