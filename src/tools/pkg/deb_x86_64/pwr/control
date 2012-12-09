@@ -1,5 +1,5 @@
 Package: pwr48
-Version: 4.8.6-1
+Version: 4.8.6-3
 Section: base
 Priority: optional
 Architecture: amd64
@@ -47,3 +47,6 @@ Description: Proview development and runtime environment package
    - Configure operator log in OpPlace object.
    - Plc, several processes, handling of error log and process status.
    - DataArithmL with 8191 characters added.
+ 4.8.6-3
+   - Ge axis with dynamic scale.
+   - sqlite history database.
