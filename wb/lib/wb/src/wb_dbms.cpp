@@ -292,37 +292,37 @@ int wb_dbms::createDb()
                          "  oid  bigint not null,"
                          "  head longblob not null,"
                          "  primary key (oid)"
-                         ") type = innodb;");
+                         ") engine = innodb;");
 
   rc = m_t_rbody->create("create table rbody ("
                          "  oid  bigint not null,"
                          "  body longblob,"
                          "  primary key (oid)"
-                         ") type = innodb;");
+                         ") engine = innodb;");
 
   rc = m_t_dbody->create("create table dbody ("
                          "  oid  bigint not null,"
                          "  body longblob,"
                          "  primary key (oid)"
-                         ") type = innodb;");
+                         ") engine = innodb;");
 
   rc = m_t_class->create("create table class ("
                          "  cidoix bigint not null,"
                          "  primary key (cidoix)"
-                         ") type = innodb;");
+                         ") engine = innodb;");
 
   rc = m_t_name->create("create table name ("
                         "  poid     bigint not null,"
                         "  normname tinyblob not null,"
                         "  oid      bigint not null,"
                         "  primary key (poid, normname(31))"
-                        ") type = innodb;");
+                        ") engine = innodb;");
 
   rc = m_t_info->create("create table info ("
                         "  id     int not null,"
                         "  volume longblob not null,"
                         "  primary key (id)"
-                        ") type = innodb;");
+                        ") engine = innodb;");
 
 #if 0
   try {
