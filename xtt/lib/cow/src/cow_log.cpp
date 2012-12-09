@@ -39,6 +39,7 @@
 #include <fstream>
 #include <iomanip>
 #include <string.h>
+#include <unistd.h>
 #include "pwr.h"
 #include "co_cdh.h"
 #include "co_time.h"

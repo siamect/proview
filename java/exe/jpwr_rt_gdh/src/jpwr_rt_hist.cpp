@@ -210,7 +210,7 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Hist_getHistList
     printf(" Fel vid skapande av databashandtag avslutar\n");
     goto err;
   }
-#if DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR > 0
+#if DB_VERSION_MAJOR >= 4 && DB_VERSION_MINOR > 0
   ret = dataBaseP->open(dataBaseP, NULL, dbName, NULL, DATABASETYPE, DB_RDONLY, 0);
 #else
   ret = dataBaseP->open(dataBaseP, dbName, NULL, DATABASETYPE, DB_RDONLY, 0);

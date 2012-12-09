@@ -1,9 +1,9 @@
 Package: pwrrt
-Version: 4.8.6-1
+Version: 4.8.6-3
 Section: base
 Priority: optional
 Architecture: i386
-Depends: libc6 (>= 2.15-0ubuntu10), libgtk2.0-0 (>= 2.24.10-0ubuntu5), libasound2 (>= 1.0.25-1ubuntu10), libdb5.1 (>=5.1.25-11build1), xfonts-100dpi
+Depends: libc6 (>= 2.15-0ubuntu20), libgtk2.0-0 (>= 2.24.13-0ubuntu2), libasound2 (>= 1.0.25-3ubuntu3), libdb5.1 (>=5.1.29-5ubuntu2), libsqlite3-0 (>= 3.7.13-1), xfonts-100dpi
 Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48
 Maintainer: Proview <postmaster@proview.se>
 Homepage: http://www.proview.se
@@ -37,3 +37,6 @@ Description:
    - Configure operator log in OpPlace object.
    - Plc, several processes, handling of error log and process status.
    - DataArithmL with 8191 characters added.
+ 4.8.6-3
+   - Ge axis with dynamic scale.
+   - sqlite history database.

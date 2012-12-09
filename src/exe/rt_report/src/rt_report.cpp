@@ -460,15 +460,15 @@ void rt_report::create_report( pwr_sClass_Report *o)
 	return;
       }
 
-      unsigned int i = 0;
-      while( ftext.good() && i < sizeof(text) - 1) {
-	text[i++] = ftext.get();
+      unsigned int j = 0;
+      while( ftext.good() && j < sizeof(text) - 1) {
+	text[j++] = ftext.get();
       }
       ftext.close();
 
-      if ( i == 0)
+      if ( j == 0)
 	return;
-      text[i-1] = 0;
+      text[j-1] = 0;
       
       // snprintf( text, sizeof(text), "Proview report\n%s\n", o->Subject);
       // strcpy( text, "Proview report");

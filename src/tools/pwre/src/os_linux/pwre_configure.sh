@@ -238,6 +238,10 @@ let inc_cnt=0
 let lib_cnt=0
 let i=0
 hwpl=`eval uname -i`
+ubuntu_ver=`cat /etc/issue | grep Ubuntu | awk '{ print $2 }'`
+if [ "$ubuntu_ver" != "" ] &&[ "$ubuntu_ver" != "12.04" ] && [ $hwpl == "i686" ] ; then
+  hwpl=i386
+fi
 
 # Bash
 if [ "$SHELL" != "/bin/bash" ] && [ "$SHELL" != "/usr/local/bin/bash" ]; then
@@ -368,7 +372,7 @@ else
   pwre_config_check_lib libz      LIBZ     lib lib 0 "/usr/lib/libz.so:/usr/lib/libz.a:/usr/lib/$hwpl-linux-gnu/libz.so"
   pwre_config_check_lib libcrypt  LIBCRYPT lib lib 0 "/usr/lib/libcrypt.so:/usr/lib/libcrypt.a:/usr/lib/$hwpl-linux-gnu/libcrypt.so"
   pwre_config_check_lib librt     LIBRT    lib lib 0 "/usr/lib/librt.so:/usr/lib/librt.a:/usr/lib/$hwpl-linux-gnu/librt.so"
-  pwre_config_check_lib libfl     LIBFL    lib lib 0 "/usr/lib/libfl.so:/usr/lib/libfl.a"
+  pwre_config_check_lib libfl     LIBFL    lib lib 0 "/usr/lib/libfl.so:/usr/lib/libfl.a:/usr/lib/$hwpl-linux-gnu/libfl.so"
   pwre_config_check_lib libX11    LIBX11   lib lib 0 "/usr/lib/libX11.so:/usr/lib/$hwpl-linux-gnu/libX11.so"
 
   pwre_config_check_include antlr ANTLR 1 "/usr/include/antlr/CommonAST.hpp:/usr/local/include/antlr/CommonAST.hpp"
