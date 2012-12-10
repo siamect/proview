@@ -2657,6 +2657,11 @@ Axis
 <image> geref_fig12.png
 
 Axis shows the range for a curve or bar in x or y direction.
+There are two variants of Axis, one with static min and max
+values, and one with dynamic min and max values, where min and
+max are connected to signals in the database. For a dynamic
+Axis object, the values of Lines, LongQuotient, ValueQuotient and
+Format are calculated automatically in runtime.
 
 <h2>Attributes
 <b>Attribute  <t>Description
@@ -2669,6 +2674,10 @@ ValueQuotient <t>How often a value is to be written. For example 4 impies that a
 	     <t>written at every fourth line.
 Format       <t>Format in c syntax of written values.
 Dynamic      <t>Not implemented.
+
+<b>Dynamic Axis
+Axis.MinValueAttr <t>Min value signal.
+Axis.MaxValueAttr <t>Max value signal.
 </topic>
 
 <topic>geref_windowobject <style>function
@@ -3525,6 +3534,32 @@ Execute a xtt command by clicking MB1 on the object.
 <b>Attribute <t><t>Description
 Command.Command <t><t>Xtt command that is executed when the 
                 <t><t>object is activated.
+
+Additions to the xtt command syntax
+
+<b>$object
+
+$object will be replaced by the current object in an object graph
+or by the stated hierarchy in an hierarchy graph.
+
+<b>$hostobject
+
+A special syntax for HostObject dynamics where $hostobject will be
+replaced by the current host object.
+
+<b>&(attribute-reference)
+
+The string for an attribute reference of type &(attribute-reference) 
+will be replaced by the content of the attribute reference. Suppose 
+there is an array, H1-ObjectList.ObjArray, with attriute references 
+that points to objects, which object graphs is going to be shown. 
+With the command
+
+<c>> open graph /class /instance=&(H1-ObjectList.ObjArray[0])
+
+the object graph is opened for the object in the first element. It is also
+possible to state double steps of attribute references with the syntax
+'&&(attribute-reference)'.
 </topic>
 
 <topic>GeDynCommandDoubleClick <style>function

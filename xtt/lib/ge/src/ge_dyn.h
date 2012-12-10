@@ -2684,22 +2684,28 @@ class GeAxis : public GeDynElem {
 
   double min_value;
   double max_value;
+  int imin_value;
+  int imax_value;
   pwr_tAName minvalue_attr;
   pwr_tAName maxvalue_attr;
 
   pwr_tFloat32 *min_value_p;
   pwr_tFloat32 *max_value_p;
+  pwr_tInt32 *imin_value_p;
+  pwr_tInt32 *imax_value_p;
   pwr_tSubid min_value_subid;
   pwr_tSubid max_value_subid;
+  int attr_type;
 
   GeAxis( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_Axis, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Axis),
-    min_value(0), max_value(100), min_value_p(0), max_value_p(0)
+    min_value(0), max_value(100), imin_value(0), imax_value(0), min_value_p(0), max_value_p(0), imin_value_p(0),
+    imax_value_p(0), attr_type(0)
     { strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");}
   GeAxis( const GeAxis& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), 
     min_value(x.min_value),max_value(x.max_value),
-    min_value_p(0), max_value_p(0)
+    min_value_p(0), max_value_p(0), imin_value_p(0), imax_value_p(0)
     { strcpy( minvalue_attr, x.minvalue_attr); strcpy( maxvalue_attr, x.maxvalue_attr);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);

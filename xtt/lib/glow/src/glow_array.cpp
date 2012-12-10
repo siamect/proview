@@ -239,6 +239,9 @@ void GlowArray::copy_from( const GlowArray& array)
         GrowAxis *n = new GrowAxis(*(GrowAxis *)array.a[i]);
         n->highlight = 0;
         n->hot = 0;
+	if ( n->ctx->userdata_copy_callback)
+	  (n->ctx->userdata_copy_callback)( n, 
+	     ((GrowAxis *)(array.a[i]))->user_data, &n->user_data, glow_eUserdataCbType_Node);
         insert( n);
         break;
       }
@@ -247,6 +250,9 @@ void GlowArray::copy_from( const GlowArray& array)
         GrowAxisArc *n = new GrowAxisArc(*(GrowAxisArc *)array.a[i]);
         n->highlight = 0;
         n->hot = 0;
+	if ( n->ctx->userdata_copy_callback)
+	  (n->ctx->userdata_copy_callback)( n, 
+	     ((GrowAxisArc *)(array.a[i]))->user_data, &n->user_data, glow_eUserdataCbType_Node);
         insert( n);
         break;
       }
