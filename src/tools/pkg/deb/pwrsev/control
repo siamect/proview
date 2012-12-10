@@ -9,6 +9,8 @@ Maintainer: Proview <postmaster@proview.se>
 Description:
  Proview storage environment
  4.8.0-1 Base release
+ 4.8.6-2
+   - Statistic table added.
+   - Pool bugfix, reference with exact segment size wasn't recognized.
  4.8.6-3
-   - sqlite history database.
-   - statistic table.
+   - Sev support for SQLite database added.
