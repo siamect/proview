@@ -10343,9 +10343,11 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
 
     if ( ref_object[0] == '&') {
       // Refobject starting with '&' indicates reference
-      dyn->parse_attr_name( &ref_object[1], parsed_name, &inverted,
-				 &attr_type, &attr_size);
-      reference = 1;
+      pwr_tAName refname;
+      dyn->parse_attr_name( ref_object, refname, &inverted,
+			    &attr_type, &attr_size);
+      dyn->graph->get_reference_name( refname, parsed_name); 
+      // reference = 1;
     }
     else {
       dyn->parse_attr_name( ref_object, parsed_name, &inverted,

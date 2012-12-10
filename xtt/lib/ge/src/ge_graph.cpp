@@ -4274,9 +4274,45 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
 
     t0 = out;
   }
-  if ( (s = strchr( out, '&'))) {
-    if ( *(s+1) == '(') {
+  if ( (s = strchr( out, '&')) && *(s+1) == '(') {
     // Replace attribute in parenthesis with its value
+    if ( *(s+2) == '&' && *(s+3) == '(') {
+      pwr_tAName refname;
+      pwr_sAttrRef aref;
+      pwr_tStatus sts;
+      char *start, *end, *start2;
+ 
+      start = s;
+      strcpy( refname, s+4);
+      if ( (s = strchr( refname, ')')) == 0)
+	return;
+
+      *s = 0;
+      end = start + strlen(refname) + 5;
+      start2 = s + 1;
+      sts = gdh_GetObjectInfo( refname, &aref, sizeof(aref));
+      if ( EVEN(sts)) return;
+      
+      sts = gdh_AttrrefToName( &aref, str, sizeof(str), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return;
+
+      if ( (s = strchr( start2, ')')) == 0)
+	return;
+      
+      *s = 0;
+      end = start2 + strlen(start2) + 1;
+      strncat( str, start2, sizeof(str));
+
+      sts = gdh_GetObjectInfo( str, &aref, sizeof(aref));
+      if ( EVEN(sts)) return;
+      
+      sts = gdh_AttrrefToName( &aref, str, sizeof(str), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return;
+
+      strcat( str, end);
+      strcpy( start, str);
+    }
+    else {
       pwr_tAName refname;
       pwr_sAttrRef aref;
       pwr_tStatus sts;
@@ -4298,34 +4334,6 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
       strcat( str, end);
       strcpy( start, str);
     }
-    else if ( *(s+1) == '&' && *(s+2) == '(') {
-      pwr_tAName refname;
-      pwr_sAttrRef aref;
-      pwr_tStatus sts;
-      char *start, *end;
- 
-      start = s;
-      strcpy( refname, s+3);
-      if ( (s = strchr( refname, ')')) == 0)
-	return;
-
-      *s = 0;
-      end = start + strlen(refname) + 4;
-      sts = gdh_GetObjectInfo( refname, &aref, sizeof(aref));
-      if ( EVEN(sts)) return;
-      
-      sts = gdh_AttrrefToName( &aref, str, sizeof(str), cdh_mName_volumeStrict);
-      if ( EVEN(sts)) return;
-
-      sts = gdh_GetObjectInfo( str, &aref, sizeof(aref));
-      if ( EVEN(sts)) return;
-      
-      sts = gdh_AttrrefToName( &aref, str, sizeof(str), cdh_mName_volumeStrict);
-      if ( EVEN(sts)) return;
-
-      strcat( str, end);
-      strcpy( start, str);
-    }    
   }
 }
 

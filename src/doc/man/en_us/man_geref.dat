@@ -2676,8 +2676,8 @@ Format       <t>Format in c syntax of written values.
 Dynamic      <t>Not implemented.
 
 <b>Dynamic Axis
-Axis.MinValueAttr <t>Min value signal.
-Axis.MaxValueAttr <t>Max value signal.
+Axis.MinValueAttr <t>Min value signal of type Float32 or Int32.
+Axis.MaxValueAttr <t>Max value signal of type Float32 of Int32.
 </topic>
 
 <topic>geref_windowobject <style>function
@@ -3559,7 +3559,7 @@ With the command
 
 the object graph is opened for the object in the first element. It is also
 possible to state double steps of attribute references with the syntax
-'&&(attribute-reference)'.
+'&(&(attribute-reference))'.
 </topic>
 
 <topic>GeDynCommandDoubleClick <style>function

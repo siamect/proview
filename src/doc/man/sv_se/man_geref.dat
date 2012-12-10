@@ -2657,8 +2657,8 @@ Format       <t>Format i c-syntax för utskrivna värden.
 Dynamic      <t>Ej implementerat.
 
 <b>Dynamisk Axis
-Axis.MinValueAttr <t>Signal för minvärde.
-Axis.MaxValueAttr <t>Signal för maxvärde.
+Axis.MinValueAttr <t>Signal för minvärde av typ Float32 eller Int32.
+Axis.MaxValueAttr <t>Signal för maxvärde av typ Float32 eller Int32.
 
 </topic>
 
@@ -3519,7 +3519,7 @@ Med kommandot
 > open graph /class /instance=&(H1-ObjectList.ObjArray[0])
 
 öppnas objektgrafen för objektet i första elementet. Man kan även age dubbla led av
-attributreferenser med syntaxen &&(attribut-referens).
+attributreferenser med syntaxen &(&(attribut-referens)).
 
 </topic>
 
