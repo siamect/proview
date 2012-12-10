@@ -40,6 +40,9 @@ Description:
    - Configure operator log in OpPlace object.
    - Plc, several processes, handling of error log and process status.
    - DataArithmL with 8191 characters added.
+ 4.8.6-2
+   - Ge axis dynamic implemented.
+   - Pool bugfix, reference with exact size wasn't recognized.
  4.8.6-3
-   - Ge axis with dynamic scale.
-   - sqlite history database.
+   - Sev support for SQLite database added.
+   - Ge action commands with double references added.
