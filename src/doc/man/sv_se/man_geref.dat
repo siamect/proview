@@ -2638,6 +2638,11 @@ Axis
 <image> geref_fig12.png
 
 Axis visar skalområdet på kurva eller stapel i x- eller y-led.
+Axis finns i två varanter, en med med fasta min och max värden,
+och en med dynamiska min och max värden, där min och max kopplas
+till signaler i databasen. För ett dynamiskt Axis objekt beräknas
+värden på Lines, LongQuotient, ValueQuotient och Format automatiskt
+i runtime.
 
 <h2>Attribut
 <b>Attribut  <t>Beskrivning
@@ -2648,8 +2653,13 @@ LongQuotient <t>Hur stor del av linjerna som ska vara långa. T ex 4 innebär
              <t>att var 4:e linje är längre
 ValueQuotient <t>Hur ofta värden ska skrivas ut. T ex 4 innebär att ett värde 
              <t>skrivs ut vid var 4:e linje.
-Format       <t>Format i c-syntax för utskrivna väden.
+Format       <t>Format i c-syntax för utskrivna värden.
 Dynamic      <t>Ej implementerat.
+
+<b>Dynamisk Axis
+Axis.MinValueAttr <t>Signal för minvärde.
+Axis.MaxValueAttr <t>Signal för maxvärde.
+
 </topic>
 
 <topic>geref_windowobject <style>function
@@ -3486,6 +3496,31 @@ Exekverar ett xtt-kommando vid Klick MB1 på objektet.
 <b>Attribut <t><t>Beskrivning
 Command.Command <t><t>Xtt-kommando som exekveras vid mus-klick 
                 <t><t>på objektet.
+
+Tillägg till xtt-kommando syntaxen
+
+<b>$object
+
+$object kommer att ersättas av det aktuella objektet i en objekts bild,
+eller av den aktuella hierarkin i en hierarki-bild.
+
+<b>$hostobject
+
+En speciell syntax for HostObject dynamik där $hostobject kommer att
+ersättas av det aktuella host objektet.
+
+<b>&(attribut-referens)
+
+Strängen för attribut-referenser av typen '&(attributnamn)' kommer att ersättas av 
+innehållet i attributreferensen. Antag att det finns en vektor,  H1-ObjectList.ObjArray, 
+med attributreferenser som pekar på objekt för vilka  objektsbilden ska visas. 
+Med kommandot
+
+> open graph /class /instance=&(H1-ObjectList.ObjArray[0])
+
+öppnas objektgrafen för objektet i första elementet. Man kan även age dubbla led av
+attributreferenser med syntaxen &&(attribut-referens).
+
 </topic>
 
 <topic>GeDynCommandDoubleClick <style>function

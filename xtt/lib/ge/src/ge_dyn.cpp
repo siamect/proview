@@ -376,8 +376,9 @@ void GeDyn::replace_attribute( char *attribute, int attr_size, char *from, char 
 }
 
 GeDyn::GeDyn( const GeDyn& x) : 
-  elements(0), graph(x.graph), dyn_type1(x.dyn_type1), total_dyn_type1(x.total_dyn_type1),
-  action_type1(x.action_type1), total_action_type1(x.total_action_type1), access(x.access),
+  elements(0), graph(x.graph), dyn_type1(x.dyn_type1), dyn_type2(x.dyn_type2), total_dyn_type1(x.total_dyn_type1),
+  total_dyn_type2(x.total_dyn_type2), action_type1(x.action_type1), action_type2(x.action_type2), 
+  total_action_type1(x.total_action_type1), total_action_type2(x.total_action_type2), access(x.access),
   cycle(x.cycle), attr_editor(x.attr_editor)
 {
   GeDynElem *elem, *e;
@@ -447,6 +448,11 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeAxis((const GeAxis&) *elem); break;
     default: ;
     }
+    switch( elem->dyn_type2) {
+    case ge_mDynType2_Axis:
+      e = new GeAxis((const GeAxis&) *elem); break;
+    default: ;
+    }
     switch( elem->action_type1) {
     case ge_mActionType1_PopupMenu:
       e = new GePopupMenu((const GePopupMenu&) *elem); break;
@@ -490,6 +496,9 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeOptionMenu((const GeOptionMenu&) *elem); break;
     case ge_mActionType1_SetValue:
       e = new GeSetValue((const GeSetValue&) *elem); break;
+    default: ;
+    }
+    switch( elem->action_type2) {
     default: ;
     }
     if ( e)
@@ -9295,28 +9304,66 @@ void GeAxis::open( ifstream& fp)
 
 int GeAxis::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
-  int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
+  int		attr_size;
   int		sts;
   int		inverted;
+  int 		attr_type_min, attr_type_max;
+  int		min_found = 0;
+  int		max_found = 0;
 
+  imin_value = (int)(min_value + (min_value>= 0?1:-1) * 0.5);
+  imax_value = (int)(max_value + (max_value>= 0?1:-1) * 0.5);
   min_value_p = 0;
+  imin_value_p = 0;
+
   dyn->parse_attr_name( minvalue_attr, parsed_name,
-				    &inverted, &attr_type, &attr_size);
-  if ( strcmp(parsed_name, "") != 0 && 
-       attr_type == pwr_eType_Float32) {
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
-				       &min_value_subid, attr_size);
+				    &inverted, &attr_type_min, &attr_size);
+  if ( strcmp(parsed_name, "") != 0) {
+    switch ( attr_type_min) {
+    case pwr_eType_Float32:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
+					 &min_value_subid, attr_size);
+      min_found = 1;
+      break;
+    case pwr_eType_Int32:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&imin_value_p, 
+					 &min_value_subid, attr_size);
+      min_found = 1;
+      break;
+    default: ;
+    }
   }
 
   max_value_p = 0;
+  imax_value_p = 0;
   dyn->parse_attr_name( maxvalue_attr, parsed_name,
-				    &inverted, &attr_type, &attr_size);
-  if ( strcmp(parsed_name, "") != 0 && 
-       attr_type == pwr_eType_Float32) {
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
-				       &max_value_subid, attr_size);
+				    &inverted, &attr_type_max, &attr_size);
+  if ( strcmp(parsed_name, "") != 0) {
+    switch ( attr_type_max) {
+    case pwr_eType_Float32:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
+					 &max_value_subid, attr_size);
+      max_found = 1;
+      break;
+    case pwr_eType_Int32:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&imax_value_p, 
+					 &max_value_subid, attr_size);
+      max_found = 1;
+      break;
+    default: ;
+    }
   }
+  if ( min_found && max_found) {
+    if ( attr_type_min != attr_type_max)
+      attr_type = 0;
+    else
+      attr_type = attr_type_max;
+  }
+  else if ( max_found)
+    attr_type = attr_type_max;
+  else if ( min_found)
+    attr_type = attr_type_min;
 
   trace_data->p = &pdummy;
   first_scan = true;
@@ -9326,11 +9373,11 @@ int GeAxis::connect( grow_tObject object, glow_sTraceData *trace_data)
 
 int GeAxis::disconnect( grow_tObject object)
 {
-  if ( min_value_p) {
+  if ( min_value_p || imin_value_p) {
     gdh_UnrefObjectInfo( min_value_subid);
     min_value_p = 0;
   }
-  if ( max_value_p) {
+  if ( max_value_p || imax_value_p) {
     gdh_UnrefObjectInfo( max_value_subid);
     max_value_p = 0;
   }
@@ -9339,26 +9386,55 @@ int GeAxis::disconnect( grow_tObject object)
 
 int GeAxis::scan( grow_tObject object)
 {
-  if ( !(max_value_p || min_value_p))
-    return 1;
+  switch ( attr_type) {
+  case pwr_eType_Float32: {
+    if ( !(max_value_p || min_value_p))
+      return 1;
   
-  if ( !(first_scan ||
-	 (max_value_p && ( *max_value_p != max_value)) ||
-	 (min_value_p && ( *min_value_p != min_value)))) {
-    return 1;
+    if ( !(first_scan ||
+	   (max_value_p && ( *max_value_p != max_value)) ||
+	   (min_value_p && ( *min_value_p != min_value)))) {
+      return 1;
+    }
+    if ( first_scan)
+      first_scan = 0;
+
+    if ( min_value_p)
+      min_value = *min_value_p;
+    if ( max_value_p)
+      max_value = *max_value_p;
+    
+    if ( max_value == min_value)
+      return 1;
+
+    grow_SetAxisRange( object, min_value, max_value);
+    break;
   }
-  if ( first_scan)
-    first_scan = 0;
+  case pwr_eType_Int32: {
+    if ( !(imax_value_p || imin_value_p))
+      return 1;
+  
+    if ( !(first_scan ||
+	   (imax_value_p && ( *imax_value_p != imax_value)) ||
+	   (imin_value_p && ( *imin_value_p != imin_value)))) {
+      return 1;
+    }
+    if ( first_scan)
+      first_scan = 0;
 
-  if ( min_value_p)
-    min_value = *min_value_p;
-  if ( max_value_p)
-    max_value = *max_value_p;
+    if ( imin_value_p)
+      imin_value = *imin_value_p;
+    if ( imax_value_p)
+      imax_value = *imax_value_p;
+    
+    if ( imax_value == imin_value)
+      return 1;
 
-  if ( max_value == min_value)
-    return 1;
-
-  grow_SetAxisRange( object, min_value, max_value);
+    grow_SetAxisRange( object, (double)imin_value, (double)imax_value);
+    break;
+  }
+  default: ;
+  }
   return 1;
 }
 
