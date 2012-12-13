@@ -62,6 +62,84 @@
 #include "co_dcli.h"
 #include "wb_dblock.h"
 
+bool mem_object::exportHead(wb_import &i)
+{
+  mem_object *lch = get_lch();
+  pwr_tOid fthoid;
+  if ( !fth) {
+    fthoid.oix = 0;
+    if ( m_oid.oix != 0)
+      // Root object
+      fthoid.vid = m_oid.vid;
+    else 
+      // Volume object
+      fthoid.vid = 0;
+  }
+  else
+    fthoid = fth->m_oid;
+  pwr_tOid fwsoid = fws ? fws->m_oid : pwr_cNOid;
+  pwr_tOid bwsoid = bws ? bws->m_oid : pwr_cNOid;
+  pwr_tOid fchoid = fch ? fch->m_oid : pwr_cNOid;
+  pwr_tOid lchoid = lch ? lch->m_oid : pwr_cNOid;
+  wb_name n = wb_name(name());
+
+  i.importHead( m_oid, m_cid, fthoid, bwsoid, fwsoid, fchoid, lchoid, name(), 
+		n.normName(cdh_mName_object), m_flags,
+                m_ohtime, m_rbtime, m_dbtime, rbody_size, dbody_size);
+  
+  if ( fch)
+    fch->exportHead( i);
+
+  if ( fws)
+    fws->exportHead( i);
+
+  return true;
+}
+
+bool mem_object::exportDbody( wb_import &i)
+{
+  i.importDbody( m_oid, dbody_size, dbody);
+  
+  if ( fch)
+    fch->exportDbody( i);
+
+  if ( fws)
+    fws->exportDbody( i);
+
+  return true;
+}
+
+bool mem_object::exportRbody( wb_import &i)
+{
+  i.importRbody( m_oid, rbody_size, rbody);
+  
+  if ( fch)
+    fch->exportRbody( i);
+
+  if ( fws)
+    fws->exportRbody( i);
+
+  return true;
+}
+
+bool mem_object::exportDocBlock( wb_import &i)
+{
+  char *block;
+  int size;
+
+  if ( docblock && docBlock( &block, &size)) {
+    i.importDocBlock( m_oid, size, block);
+    free( block); 
+  }
+  
+  if ( fch)
+    fch->exportDocBlock( i);
+
+  if ( fws)
+    fws->exportDocBlock( i);
+
+  return true;
+}
 
 wb_vrepmem::wb_vrepmem( wb_erep *erep, pwr_tVid vid) :
   wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), m_nRef(0), root_object(0), volume_object(0),
@@ -251,6 +329,11 @@ wb_vrepmem::exportVolume(wb_import &i)
 
 bool wb_vrepmem::exportHead(wb_import &i)
 {
+  if ( m_cloned)
+    return volume_object->exportHead(i);
+  else if ( volume_object)
+    volume_object->exportHead(i);
+
   if ( root_object)
     return root_object->exportHead(i);
   else
@@ -259,6 +342,11 @@ bool wb_vrepmem::exportHead(wb_import &i)
 
 bool wb_vrepmem::exportDbody(wb_import &i)
 {
+  if ( m_cloned)
+    return volume_object->exportDbody(i);
+  else if ( volume_object)
+    volume_object->exportDbody(i);
+
   if ( root_object)
     return root_object->exportDbody(i);
   else
@@ -268,6 +356,11 @@ bool wb_vrepmem::exportDbody(wb_import &i)
 
 bool wb_vrepmem::exportRbody(wb_import &i)
 {
+  if ( m_cloned)
+    return volume_object->exportRbody(i);
+  else if ( volume_object)
+    volume_object->exportRbody(i);
+
   if ( root_object)
     return root_object->exportRbody(i);
   else
@@ -709,12 +802,13 @@ void wb_vrepmem::clear()
 
 void wb_vrepmem::freeObject( mem_object *memo)
 {
-  // Free all children and siblings
-  if ( memo->fch)
-    freeObject( memo->fch);
-  if ( memo->fws)
-    freeObject( memo->fws);
-
+  if ( memo != volume_object) {
+    // Free all children and siblings
+    if ( memo->fch)
+      freeObject( memo->fch);
+    if ( memo->fws)
+      freeObject( memo->fws);
+  }
   unregisterObject( memo->m_oid.oix);
   delete memo;
 }
@@ -881,6 +975,42 @@ bool wb_vrepmem::createVolumeObject( char *name)
 
   volume_object = memo;
   strcpy( volume_name, name);
+  registerObject( memo->m_oid.oix, memo);
+  return true;
+}
+
+bool wb_vrepmem::createClonedVolumeObject( wb_object vo, const char *vname)
+{
+  pwr_tStatus sts = LDH__SUCCESS;
+
+  mem_object *memo = new mem_object();
+  if ( vname)
+    strcpy( memo->m_name, vname);
+  else
+    strcpy( memo->m_name, vo.name());
+  memo->m_oid.vid = m_vid;
+  memo->m_oid.oix = 0;
+  memo->m_cid = vo.cid();
+  memo->m_flags = vo.flags();
+  memo->m_ohtime = vo.ohTime();
+  memo->rbody_size = vo.rbSize();
+  if ( memo->rbody_size) {
+    wb_attribute a( sts, (wb_orep *)vo, "SysBody");
+    if ( !a) return false;
+
+    memo->rbody = malloc( memo->rbody_size);
+    a.value( memo->rbody);
+    if ( !a) return false;
+  }
+  memo->dbody_size = 0;
+
+  if ( root_object) {
+    memo->fch = root_object;
+    memo->fchoid = root_object->m_oid;
+  }
+  volume_object = memo;
+  m_cloned = 1;
+  strcpy( volume_name, vname);
   registerObject( memo->m_oid.oix, memo);
   return true;
 }
@@ -1951,6 +2081,11 @@ bool wb_vrepmem::importDocBlock(pwr_tOid oid, size_t size, char *block)
 bool wb_vrepmem::commit(pwr_tStatus *sts) 
 {
   pwr_tCmd cmd;
+
+  if ( m_cloned) {
+    *sts = LDH__SUCCESS;
+    return true;
+  }
 
   if ( m_classeditor) {
     classeditorCheckCommit();

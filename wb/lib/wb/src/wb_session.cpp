@@ -369,10 +369,41 @@ bool wb_session::writeAttribute(wb_attribute &a, void *p)
   return sts;
 }
 
-bool wb_session::copyOset( pwr_sAttrRef *arp, bool keepref, bool keepsym, bool ignore_errors)
+bool wb_session::clone( const char *vname, pwr_tVid vid, wb_vrepmem **vmem)
+{
+  wb_vrepmem *mem;
+
+  m_sts = LDH__SUCCESS;
+  int cnt = 0;
+  for ( wb_object o = object(); ODD(o.sts()); o = o.after())
+    cnt++;
+
+  pwr_tAttrRef *arp = (pwr_tAttrRef *)calloc( cnt+1, sizeof(*arp));
+
+  cnt = 0;
+  for ( wb_object o = object(); ODD(o.sts()); o = o.after()) {
+    arp[cnt++] = cdh_ObjidToAref( o.oid());
+  }
+  copyOset( arp, true, true, false, vid, vname, &mem);
+
+  pwr_tOid voloid;
+  voloid.oix = 0;
+  voloid.vid = m_vrep->vid();
+
+  wb_object vo = object( voloid);
+
+  mem->createClonedVolumeObject( vo, vname);
+  *vmem = mem;
+
+  return true;
+}
+
+bool wb_session::copyOset( pwr_sAttrRef *arp, bool keepref, bool keepsym, bool ignore_errors, pwr_tVid vvid,
+			   const char *vname, wb_vrepmem **vmem)
 {
   char name[32];
   pwr_tStatus sts;
+  pwr_tVid vid;
   m_sts = LDH__SUCCESS;
 
   // Avoid copying objects in plcprograms
@@ -395,11 +426,19 @@ bool wb_session::copyOset( pwr_sAttrRef *arp, bool keepref, bool keepsym, bool i
     ap++;
   }
 
-  pwr_tVid vid = m_vrep->erep()->nextVolatileVid( &m_sts, name);
-  if ( EVEN(m_sts)) return false;
+  if ( vvid)
+    vid = vvid;
+  else {
+    vid = m_vrep->erep()->nextVolatileVid( &m_sts, name);
+    if ( EVEN(m_sts)) return false;
+  }
 
   wb_vrepmem *mem = new wb_vrepmem( m_vrep->erep(), vid);
-  mem->name( name);
+  if ( vvid)
+    mem->name( vname);
+  else
+    mem->name( name);
+
   m_vrep->erep()->addBuffer( &sts, mem);
   if ( ignore_errors)
     mem->importIgnoreErrors();
@@ -439,6 +478,10 @@ bool wb_session::copyOset( pwr_sAttrRef *arp, bool keepref, bool keepsym, bool i
     }
     ap++;
   }
+
+  if ( vmem)
+    *vmem = mem;
+
   return mem->importTree( keepref, keepsym);  
 }
 

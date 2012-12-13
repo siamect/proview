@@ -54,6 +54,7 @@
 #include "xnav_bitmap_package12.h"
 #include "xnav_bitmap_copy12.h"
 #include "xnav_bitmap_export12.h"
+#include "xnav_bitmap_clone12.h"
 
 #include "cow_logwnav.h"
 #include "cow_log.h"
@@ -68,6 +69,7 @@ void CoLogWNavBrow::free_pixmaps()
   brow_FreeAnnotPixmap( ctx, pixmap_package);
   brow_FreeAnnotPixmap( ctx, pixmap_copy);
   brow_FreeAnnotPixmap( ctx, pixmap_export);
+  brow_FreeAnnotPixmap( ctx, pixmap_clone);
 }
 
 //
@@ -117,6 +119,14 @@ void CoLogWNavBrow::allocate_pixmaps()
   }
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_export);
+
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_clone12_width;
+    pixmap_data[i].height =xnav_bitmap_clone12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_clone12_bits;
+  }
+
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_clone);
 }
 
 //
@@ -439,6 +449,8 @@ ItemLog::ItemLog( CoLogWNav *item_logwnav, const char *item_name,
     brow_SetAnnotPixmap( node, 0, logwnav->brow->pixmap_package);
   else if ( (s = strstr( category, "Export")))
     brow_SetAnnotPixmap( node, 0, logwnav->brow->pixmap_export);
+  else if ( (s = strstr( category, "Clone")))
+    brow_SetAnnotPixmap( node, 0, logwnav->brow->pixmap_clone);
            
 }
 

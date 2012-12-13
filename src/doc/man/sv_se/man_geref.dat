@@ -3518,7 +3518,7 @@ Med kommandot
 
 > open graph /class /instance=&(H1-ObjectList.ObjArray[0])
 
-öppnas objektgrafen för objektet i första elementet. Man kan även age dubbla led av
+öppnas objektgrafen för objektet i första elementet. Man kan även ange dubbla led av
 attributreferenser med syntaxen &(&(attribut-referens)).
 
 </topic>

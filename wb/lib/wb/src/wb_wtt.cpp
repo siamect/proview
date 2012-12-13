@@ -2101,6 +2101,27 @@ void Wtt::activate_updateclasses()
   reset_cursor();
 }
 
+void Wtt::activate_clonevolume()
+{
+  char cmd[80] = "clone volume";
+  if ( !focused_wnav)
+    set_focus_default();
+  set_clock_cursor();
+
+#if 0
+  unsigned int opt;
+  if ( focused_wnav->gbl.enable_comment)
+    opt = log_mOption_Comment;
+  else
+    opt = 0;
+  wb_log::log( (wb_session *)ldhses, wlog_eCategory_VolumeClone, volid, opt);
+#endif
+
+  focused_wnav->command( cmd);
+
+  reset_cursor();
+}
+
 void Wtt::activate_zoom_in()
 {
   double zoom_factor;

@@ -125,6 +125,9 @@ void wb_log::category_to_string( wlog_eCategory category, char *str)
   case wlog_eCategory_WbLoad:
     strcpy( str, "WbLoad");
     break;
+  case wlog_eCategory_VolumeClone:
+    strcpy( str, "VolumeClone");
+    break;
   default:
     strcpy( str, "");
   }
@@ -158,6 +161,8 @@ void wb_log::string_to_category( char *str, wlog_eCategory *category)
     *category = wlog_eCategory_UpdateClasses;
   else if ( strcmp( str, "WbLoad") == 0)
     *category = wlog_eCategory_WbLoad;
+  else if ( strcmp( str, "VolumeClone") == 0)
+    *category = wlog_eCategory_VolumeClone;
   else
     *category = wlog_eCategory_;
 }

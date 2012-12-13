@@ -77,7 +77,9 @@ noplc		<Object is not a plc object>			/error
 nofreevid	<No free volume identity>			/error
 videxist	<Volume identity already exist>			/error
 volnameexist	<Volume name already exist>			/error
-
+createdbs	<Create loadfile error>				/error
+edit		<In edit mode>					/error
+notauthorized	<User not authorized for requested operation>	/error
 
 
 

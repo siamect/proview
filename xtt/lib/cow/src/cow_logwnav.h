@@ -72,6 +72,7 @@ class CoLogWNavBrow {
     flow_sAnnotPixmap 	*pixmap_package;
     flow_sAnnotPixmap 	*pixmap_copy;
     flow_sAnnotPixmap 	*pixmap_export;
+    flow_sAnnotPixmap 	*pixmap_clone;
 
     void free_pixmaps();
     void allocate_pixmaps();

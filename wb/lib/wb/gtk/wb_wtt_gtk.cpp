@@ -157,6 +157,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, TRUE);
+      gtk_widget_set_sensitive( menu_clonevolume_w, FALSE);
     }
     else {
       gtk_widget_set_sensitive( menu_save_w, FALSE);
@@ -187,6 +188,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( tools_buildnode_w, TRUE);
       gtk_widget_set_sensitive( menu_classeditor_w, TRUE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
+      gtk_widget_set_sensitive( menu_clonevolume_w, FALSE);
     }
     break;
   case wb_eType_Volume:
@@ -222,6 +224,7 @@ void WttGtk::menu_setup()
 	gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
       else
 	gtk_widget_set_sensitive( menu_updateclasses_w, TRUE);
+      gtk_widget_set_sensitive( menu_clonevolume_w, FALSE);
     }
     else {
       gtk_widget_set_sensitive( menu_save_w, FALSE);
@@ -255,6 +258,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( tools_buildnode_w, TRUE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
+      gtk_widget_set_sensitive( menu_clonevolume_w, TRUE);
     }
     break; 
   case wb_eType_Class:
@@ -287,6 +291,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
+      gtk_widget_set_sensitive( menu_clonevolume_w, FALSE);
     }
     else {
       gtk_widget_set_sensitive( menu_save_w, FALSE);
@@ -317,6 +322,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
+      gtk_widget_set_sensitive( menu_clonevolume_w, FALSE);
     }
     break;
   case wb_eType_ClassEditor:
@@ -356,6 +362,7 @@ void WttGtk::menu_setup()
 	gtk_widget_set_sensitive( menu_updateclasses_w, TRUE);
       else
 	gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
+      gtk_widget_set_sensitive( menu_clonevolume_w, FALSE);
     }
     else {
       gtk_widget_set_sensitive( menu_save_w, FALSE);
@@ -386,6 +393,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( tools_buildnode_w, TRUE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
+      gtk_widget_set_sensitive( menu_clonevolume_w, FALSE);
     }
     break;
   case wb_eType_Buffer:
@@ -418,6 +426,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
+      gtk_widget_set_sensitive( menu_clonevolume_w, FALSE);
     }
     else {
       gtk_widget_set_sensitive( menu_save_w, FALSE);
@@ -448,6 +457,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
+      gtk_widget_set_sensitive( menu_clonevolume_w, FALSE);
     }
     break; 
   case wb_eType_ExternVolume:
@@ -480,6 +490,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
+      gtk_widget_set_sensitive( menu_clonevolume_w, FALSE);
     }
     else {
       gtk_widget_set_sensitive( menu_save_w, FALSE);
@@ -510,6 +521,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
+      gtk_widget_set_sensitive( menu_clonevolume_w, FALSE);
     }
     break;
   default:
@@ -1062,7 +1074,7 @@ void WttGtk::activate_history( GtkWidget *w, gpointer data)
 {
   Wtt *wtt = (Wtt *)data;
   pwr_tStatus sts;
-  char categories[3][20];
+  char categories[4][20];
   pwr_tObjName vname;
   pwr_tOid oid;
   int size;
@@ -1070,7 +1082,8 @@ void WttGtk::activate_history( GtkWidget *w, gpointer data)
 
   wb_log::category_to_string( wlog_eCategory_ConfiguratorSave, categories[0]);
   wb_log::category_to_string( wlog_eCategory_VolumeBuild, categories[1]);
-  strcpy( categories[2], "");
+  wb_log::category_to_string( wlog_eCategory_VolumeClone, categories[2]);
+  strcpy( categories[3], "");
 
   oid.oix = 0;
   oid.vid = wtt->volid;
@@ -1319,6 +1332,12 @@ void WttGtk::activate_updateclasses( GtkWidget *w, gpointer data)
 {
   Wtt *wtt = (Wtt *)data;
   wtt->activate_updateclasses();
+}
+
+void WttGtk::activate_clonevolume( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  wtt->activate_clonevolume();
 }
 
 void WttGtk::activate_zoom_in( GtkWidget *w, gpointer data)
@@ -2470,6 +2489,10 @@ WttGtk::WttGtk(
   g_signal_connect( menu_updateclasses_w, "activate", 
 		    G_CALLBACK(WttGtk::activate_updateclasses), this);
 
+  menu_clonevolume_w = gtk_menu_item_new_with_mnemonic( "C_lone Volume");
+  g_signal_connect( menu_clonevolume_w, "activate", 
+		    G_CALLBACK(WttGtk::activate_clonevolume), this);
+
   GtkWidget *functions_showcrossref = gtk_menu_item_new_with_mnemonic( "Show C_rossreferences");
   g_signal_connect( functions_showcrossref, "activate", 
 		    G_CALLBACK(WttGtk::activate_showcrossref), this);
@@ -2506,6 +2529,7 @@ WttGtk::WttGtk(
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_openge);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_classeditor_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_updateclasses_w);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_clonevolume_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_showcrossref);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_syntax);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_change_value_w);

@@ -840,6 +840,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		cid == pwr_cClass_ClassVolumeConfig ||
 		cid == pwr_cClass_DetachedClassVolumeConfig ||
 		cid == pwr_cClass_SharedVolumeConfig ||
+		cid == pwr_cClass_CloneVolumeConfig ||
 		cid == pwr_cClass_ExternVolumeConfig ) {
 	if ( ! (cid == pwr_cClass_ClassVolumeConfig || cid == pwr_cClass_DetachedClassVolumeConfig) && 
 	     k == 0)
@@ -895,6 +896,12 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      break;
 	    case pwr_cClass_ExternVolumeConfig :
 	      strcpy( classname, "ExternVolume");
+	      if ( volumelist_ptr->volume_id < cdh_cUserVolMin ||
+		   volumelist_ptr->volume_id > cdh_cUserVolMax)
+		out_of_range = true;
+	      break;
+	    case pwr_cClass_CloneVolumeConfig :
+	      strcpy( classname, "RootVolume");
 	      if ( volumelist_ptr->volume_id < cdh_cUserVolMin ||
 		   volumelist_ptr->volume_id > cdh_cUserVolMax)
 		out_of_range = true;
@@ -961,6 +968,36 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		       classname, devprovider, rtprovider);
 	      free( devprovider);
 	      free( rtprovider);
+	      break;
+	    }
+	    case pwr_cClass_CloneVolumeConfig : {
+	      char *parentvolume;
+	      
+	      sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
+				      "ParentVolume", (char **)&parentvolume, &size);
+	      if ( EVEN(sts)) return sts;
+
+	      // Check parent volume
+	      int parent_found = 0;
+	      for ( int j = 0; j < volumecount; j++) {
+		if ( cdh_NoCaseStrcmp( parentvolume, volumelist[j].volume_name) == 0) {
+		  parent_found = 1;
+		  break;
+		}
+	      }
+	      if ( !parent_found) {
+		char msg[200];
+		sprintf( msg, "Error in VolumeConfig object '%s', parent volume is not configured in the global\
+ volume list", name);
+		MsgWindow::message( 'E', msg, msgw_ePop_Default);
+		syntax_error = 1;
+	      }
+
+	      fprintf( file, "%s %s %s clone %s\n",
+		       volume_name,
+		       cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
+		       classname, parentvolume);
+	      free( parentvolume);
 	      break;
 	    }
 	    }

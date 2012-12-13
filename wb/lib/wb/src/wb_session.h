@@ -57,6 +57,7 @@ class wb_cdef;
 class wb_destination;
 class wb_volume;
 class wb_recix;
+class wb_vrepmem;
 
 
 class wb_session : public wb_volume
@@ -101,11 +102,13 @@ public:
   bool writeAttribute(wb_attribute &a, void *p);
   bool writeBody() {return false;} // Fix
 
-  bool copyOset( pwr_sAttrRef *arp, bool keepref, bool keepsym, bool ignore_errors);
+  bool copyOset( pwr_sAttrRef *arp, bool keepref, bool keepsym, bool ignore_errors, pwr_tVid vid = 0, 
+		 const char *vname = 0, wb_vrepmem **vmem = 0);
   bool cutOset( pwr_sAttrRef *arp, bool keepref);
   bool pasteOset( pwr_tOid doid, ldh_eDest dest, 
 		  bool keepoid, bool recycleix, char *buffer);
 
+  bool clone( const char *vname, pwr_tVid vid, wb_vrepmem **vmem);
 
   void getAllMenuItems( ldh_sMenuCall	*ip, ldh_sMenuItem **Item, wb_cdrep *cdrep,
 			wb_orep *o, void *o_body, pwr_tUInt32 Level,

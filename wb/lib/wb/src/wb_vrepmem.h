@@ -96,10 +96,10 @@ class mem_object
     return c;
   }
 
-  bool exportHead(wb_import &i) { return false;}
-  bool exportDbody(wb_import &i) { return false;}
-  bool exportRbody(wb_import &i) { return false;}
-  bool exportDocBlock(wb_import &i) { return false;}
+  bool exportHead(wb_import &i);
+  bool exportDbody(wb_import &i);
+  bool exportRbody(wb_import &i);
+  bool exportDocBlock(wb_import &i);
   bool exportTree( wb_treeimport &i, bool isRoot) {
     pwr_tOid fthoid = (fth && !isRoot) ? fth->m_oid : pwr_cNOid;
     pwr_tOid bwsoid = (bws && !isRoot) ? bws->m_oid : pwr_cNOid;
@@ -241,6 +241,7 @@ class wb_vrepmem : public wb_vrep, public wb_import
   unsigned int m_nRef;
   mem_object *root_object;
   mem_object *volume_object;
+  int m_cloned;
   int m_nextOix;
   pwr_tVid m_source_vid;
   char m_filename[200];
@@ -254,7 +255,7 @@ class wb_vrepmem : public wb_vrep, public wb_import
 public:
   wb_vrepmem( wb_erep *erep) : 
     m_erep(erep), m_merep(erep->merep()), m_nRef(0), root_object(0), 
-    volume_object(0), m_nextOix(0), m_source_vid(0), m_classeditor(false),
+    volume_object(0), m_cloned(0), m_nextOix(0), m_source_vid(0), m_classeditor(false),
     m_ignore(false) 
       { strcpy( m_filename, "");}
 
@@ -288,6 +289,7 @@ public:
   void registerVolume( const char *name, pwr_tCid cid, pwr_tVid vid, mem_object *node);
   void info();
   bool createVolumeObject( char *name);
+  bool createClonedVolumeObject( wb_object vo, const char *vname);
 
   virtual pwr_tOid oid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOid;}
     

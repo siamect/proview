@@ -63,6 +63,7 @@
 #include "wb_utl_api.h"
 #include "wb_genstruct.h"
 #include "wb_lfu.h"
+#include "wb_gcg.h"
 #include "wb_dir.h"
 #include "wb_trv.h"
 #include "wb_crrgen.h"
@@ -129,6 +130,8 @@ static int	wnav_print_func(	void		*client_data,
 					void		*client_flag);
 static int	wnav_redraw_func(	void		*client_data,
 					void		*client_flag);
+static int	wnav_rename_func(	void		*client_data,
+					void		*client_flag);
 static int	wnav_list_func(		void		*client_data,
 					void		*client_flag);
 static int	wnav_configure_func(	void		*client_data,
@@ -187,6 +190,8 @@ static int	wnav_check_func(	void		*client_data,
 					void		*client_flag);
 static int	wnav_update_func(	void		*client_data,
 					void		*client_flag);
+static int	wnav_clone_func(	void		*client_data,
+					void		*client_flag);
 
 dcli_tCmdTable	wnav_command_table[] = {
 		{
@@ -204,7 +209,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			&wnav_compile_func,
 			{ "/MODIFIED", "/DEBUG", 
 			"/HIERARCHY", "/PLCPGM" , "/WINDOW", 
-			"/FROM_PLCPGM", "/ALLVOLUMES", "/VOLUMES", 
+			"/FROM_PLCPGM", "/ALLPLCPGM", "/ALLVOLUMES", "/VOLUMES", 
 			""}
 		},
 		{
@@ -220,6 +225,11 @@ dcli_tCmdTable	wnav_command_table[] = {
 			{ "/ALL",
 			"/HIERARCHY", "/PLCPGM", "/FROM_PLCPGM", "/TEMPLATE",
 			""}
+		},
+		{
+			"RENAME",
+			&wnav_rename_func,
+			{ "/SOURCE", "/NAME", ""}
 		},
 		{
 			"LIST",
@@ -248,7 +258,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			&wnav_copy_func,
 			{ "dcli_arg1", "/FIRST", "/LAST", "/AFTER", "/BEFORE",
 			"/HIERARCHY", "/SOURCE", "/DESTINATION", "/NAME",
-			"/KEEPREFERENCES", "/IGNORE_ERRORS", ""}
+			"/KEEPREFERENCES", "/IGNORE_ERRORS", "/KEEPOID", ""}
 		},
 		{
 			"CUT",
@@ -450,6 +460,11 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"UPDATE",
 			&wnav_update_func,
 			{ "dcli_arg1", ""}
+		},
+		{
+			"CLONE",
+			&wnav_clone_func,
+			{ "dcli_arg1", "/NAME", "/VID", ""}
 		},
 		{"",}};
 
@@ -2161,6 +2176,7 @@ static int	wnav_compile_func(	void		*client_data,
   int		modified;
   int		debug;
   int		allvolumes;
+  int		allplcpgm;
   char		volumestr[80] ;
   char		*volumestr_p;
   int		sts_plcpgm, sts_hier, sts_window, sts_from, sts_volumes;
@@ -2193,6 +2209,7 @@ static int	wnav_compile_func(	void		*client_data,
     fromstr_p = NULL;
  
   allvolumes = ODD( dcli_get_qualifier( "/ALLVOLUMES", 0, 0));
+  allplcpgm = ODD( dcli_get_qualifier( "/ALLPLCPGM", 0, 0));
 
   if (( sts_volumes = ODD( dcli_get_qualifier( "/VOLUMES", volumestr, sizeof(volumestr)))))
     volumestr_p = volumestr;
@@ -2200,7 +2217,7 @@ static int	wnav_compile_func(	void		*client_data,
     volumestr_p = NULL;
 
   if ( !( sts_plcpgm || sts_hier || sts_window || sts_from || sts_volumes ||
-	allvolumes))
+	allvolumes || allplcpgm))
   {
     // Compile selected plcpgm or window
     pwr_sAttrRef 	*sel_list;
@@ -3265,12 +3282,17 @@ static int	wnav_copy_func(	void		*client_data,
     pwr_tOName	sourcestr;
     pwr_tOName	destinationstr;
     pwr_tObjName namestr;
-    int		hier;
     int		last;
     int		first;
     int		after;
     int		before;
+    int		keepref;
+    int		keepoid;
+    int		ignore_errors;
     pwr_tStatus	sts;
+    pwr_tOid	destoid;
+    pwr_tAttrRef source_aref[2];
+    ldh_eDest	      dest;
 
     // command  is "COPY OBJECT"
 
@@ -3280,6 +3302,56 @@ static int	wnav_copy_func(	void		*client_data,
       return WNAV__NOEDIT;
     }
 
+    keepref = ODD( dcli_get_qualifier( "/KEEPREFERENCES", 0, 0));
+    ignore_errors = ODD( dcli_get_qualifier( "/IGNORE_ERRORS", 0, 0));
+    keepoid = ODD( dcli_get_qualifier( "/KEEPOID", 0, 0));
+    first = ODD( dcli_get_qualifier( "/FIRST", 0, 0));
+    last = ODD( dcli_get_qualifier( "/LAST", 0, 0));
+    after = ODD( dcli_get_qualifier( "/AFTER", 0, 0));
+    before = ODD( dcli_get_qualifier( "/BEFORE", 0, 0));
+
+    sts = 1;
+    if ( EVEN( dcli_get_qualifier( "/SOURCE", sourcestr, sizeof(sourcestr))))
+      sts = 0;
+    if ( EVEN( dcli_get_qualifier( "/DESTINATION", destinationstr, sizeof(destinationstr))))
+      sts = 0;
+    if ( EVEN( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr))))
+      sts = 0;
+
+    sts = ldh_NameToAttrRef( wnav->ldhses, sourcestr, &source_aref[0]);
+    if ( EVEN(sts)) {
+      wnav->message(' ', wnav_get_message(sts));
+      return WNAV__SUCCESS;
+    }
+
+    sts = ldh_Copy( wnav->ldhses, source_aref, keepref, 0, ignore_errors);
+    if ( EVEN(sts)) {
+      wnav->message(' ', wnav_get_message(sts));
+      return WNAV__SUCCESS;
+    }
+
+    if ( first)
+      dest = ldh_eDest_IntoFirst;
+    else if ( last)
+      dest = ldh_eDest_IntoLast;
+    else if ( before)
+      dest = ldh_eDest_Before;
+    else
+      dest = ldh_eDest_After;      
+
+    sts = ldh_NameToObjid( wnav->ldhses, &destoid, destinationstr);
+    if ( EVEN(sts)) {
+      wnav->message(' ', wnav_get_message(sts));
+      return WNAV__SUCCESS;
+    }
+      
+    sts = ldh_Paste( wnav->ldhses, destoid, dest, keepoid, 0, 0);
+    if ( EVEN(sts)) {
+      wnav->message(' ', wnav_get_message(sts));
+      return sts;
+    }
+
+#if 0
     first = ODD( dcli_get_qualifier( "/FIRST", 0, 0));
     last = ODD( dcli_get_qualifier( "/LAST", 0, 0));
     after = ODD( dcli_get_qualifier( "/AFTER", 0, 0));
@@ -3310,6 +3382,7 @@ static int	wnav_copy_func(	void		*client_data,
       wnav->message(' ', wnav_get_message(sts));
       return sts;
     }
+#endif
   }
   else
   {
@@ -3422,6 +3495,54 @@ static int	wnav_paste_func(	void		*client_data,
   if ( EVEN(sts)) {
     wnav->message(' ', wnav_get_message(sts));
     return sts;
+  }
+  return WNAV__SUCCESS;
+}
+
+static int	wnav_rename_func(	void		*client_data,
+					void		*client_flag)
+{
+  WNav *wnav = (WNav *)client_data;
+
+  char	arg1_str[80];
+  int	arg1_sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( cdh_NoCaseStrncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
+  {
+    pwr_tOName	sourcestr;
+    pwr_tObjName namestr;
+    pwr_tStatus	sts;
+    pwr_tCmd cmd;
+
+    // command  is "RENAME OBJECT"
+
+    if ( !wnav->editmode)
+    {
+      wnav->message('E', "Not in edit mode");
+      return WNAV__NOEDIT;
+    }
+
+    sts = 1;
+    if ( EVEN( dcli_get_qualifier( "/SOURCE", sourcestr, sizeof(sourcestr)))) {
+      wnav->message('E', "Qualifer required");
+      return WNAV__QUAL;
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr)))) {
+      wnav->message('E', "Qualifer required");
+      return WNAV__QUAL;
+    }
+
+    sprintf( cmd, "move object/source=%s /rename=%s", sourcestr, namestr);
+    sts = wnav->command( cmd);
+    return sts;
+  }
+  else
+  {
+    wnav->message('E', "Syntax error");
+    return WNAV__SYNTAX;
   }
   return WNAV__SUCCESS;
 }
@@ -5116,6 +5237,268 @@ static int	wnav_update_func(	void		*client_data,
     return WNAV__SYNTAX;
   }
   return 1;
+}
+
+static void wnav_clone_volume_cb( void *ctx, char *text)
+{
+  WNav *wnav = (WNav *)ctx;
+  pwr_tObjName vname;
+  pwr_tVid vid;
+  pwr_tStatus sts;
+
+  // Get vid from project volume list
+  lfu_t_volumelist * volumelist;
+  int volumecount;
+  sts = lfu_volumelist_load( load_cNameVolumeList, (lfu_t_volumelist **) &volumelist,
+			     &volumecount);
+  if ( EVEN(sts)) {
+    wnav->message('E', "Volumelist load error");
+    return;
+  }
+
+  int found = 0;
+  for ( int idx = 0; idx < volumecount; idx++) {
+    if ( cdh_NoCaseStrcmp( volumelist[idx].volume_name, text) == 0) {
+      found = 1;
+      strncpy( vname, volumelist[idx].volume_name, sizeof(vname));
+      vid = volumelist[idx].volume_id;
+      break;
+    }
+  }
+  free( (char *)volumelist);
+  if ( !found) {
+    wnav->message('E', "Volume is not configured");
+    return;
+  }
+  sts = wnav->clone_volume( vname, vid);
+  if ( EVEN(sts))
+    wnav->message(' ', wnav_get_message(sts));
+}
+
+static int	wnav_clone_func(	void		*client_data,
+					void		*client_flag)
+{
+  WNav *wnav = (WNav *)client_data;
+  char	arg1_str[80];
+  pwr_tStatus sts;
+
+  sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+  if ( EVEN(sts)) {
+    wnav->message('E', "Syntax error");
+    return WNAV__SYNTAX;
+  }
+
+  if ( cdh_NoCaseStrncmp( arg1_str, "VOLUME", strlen( arg1_str)) == 0) {
+    pwr_tObjName namestr;
+    pwr_tStatus	sts;
+    pwr_tVid vid;
+    int clone_cnt = 0;
+
+    // command  is "CLONE VOLUME"
+
+    if ( wnav->editmode) {
+      wnav->message('E', "In edit mode");
+      return WNAV__EDIT;
+    }
+
+    if ( !(CoLogin::privilege() & pwr_mPrv_DevConfig)) {
+      wnav->message( 'E', "User is not authorized to clone");
+      return WNAV__NOTAUTHORIZED;
+    }
+
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+    if ( EVEN(sts)) return sts;
+
+    // Load the project volume list
+    lfu_t_volumelist * volumelist;
+    int volumecount;
+    sts = lfu_volumelist_load( load_cNameVolumeList, (lfu_t_volumelist **) &volumelist,
+			       &volumecount);
+    if ( EVEN(sts)) {
+      wnav->message('E', "Volumelist load error");
+      return sts;
+    }
+
+    if ( ODD( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr)))) {
+      int found = 0;
+      for ( int idx = 0; idx < volumecount; idx++) {
+	if ( cdh_NoCaseStrcmp( volumelist[idx].volume_name, namestr) == 0) {
+	  found = 1;
+	  strncpy( namestr, volumelist[idx].volume_name, sizeof(namestr));
+	  vid = volumelist[idx].volume_id;
+	  break;
+	}
+      }
+      if ( !found) {
+	wnav->message('E', "Volume is not configured");
+	free( (char *)volumelist);
+	return WNAV__QUAL;
+      }
+      clone_cnt = 1;
+    }
+    else {
+      pwr_tObjName volname;
+      ldh_sVolumeInfo	info;
+      int size;
+
+      sts = ldh_GetVolumeInfo( ldh_SessionToVol(wnav->ldhses), &info);
+      if ( EVEN(sts)) return sts;
+
+      sts = ldh_VolumeIdToName( ldh_SessionToWB(wnav->ldhses),
+				info.Volume, volname, sizeof(volname), &size);
+      if ( EVEN(sts)) return sts;
+
+      clone_cnt = 0;
+      for ( int idx = 0; idx < volumecount; idx++) {
+	if ( strcmp( "clone", volumelist[idx].p2) == 0 &&
+	     cdh_NoCaseStrcmp( volumelist[idx].p3, volname) == 0) {
+	  strncpy( namestr, volumelist[idx].volume_name, sizeof(namestr));
+	  vid = volumelist[idx].volume_id;
+	  clone_cnt++;
+	}
+      }
+      if ( !clone_cnt) {
+	wnav->message('E', "No clones configured for this volume");
+	free( (char *)volumelist);
+	return WNAV__QUAL;
+      }
+
+      if ( clone_cnt > 1) {
+	// Open list dialog
+	char (*clone_vect)[80];
+	
+	clone_vect = (char (*)[80]) calloc( clone_cnt + 1, 80);
+	clone_cnt = 0;
+	for ( int idx = 0; idx < volumecount; idx++) {
+	  if ( strcmp( "clone", volumelist[idx].p2) == 0 &&
+	       cdh_NoCaseStrcmp( volumelist[idx].p3, volname) == 0) {
+	    strncpy( clone_vect[clone_cnt++], volumelist[idx].volume_name, sizeof(clone_vect[0]));
+	  }
+	}
+	strcpy( clone_vect[clone_cnt], "");
+
+	wnav->wow->CreateList( "Create clone", (char *)clone_vect, sizeof(clone_vect[0]), wnav_clone_volume_cb, 
+			       0, (void *)wnav);			       
+      }
+    }
+
+    free( (char *)volumelist);
+
+    if ( clone_cnt == 1) {
+      sts = wnav->clone_volume( namestr, vid);
+      if ( EVEN(sts)) return sts;
+    }
+  }
+  else
+  {
+    wnav->message('E', "Syntax error");
+    return WNAV__SYNTAX;
+  }
+
+  return WNAV__SUCCESS;
+}
+
+int WNav::clone_volume( char *vname, pwr_tVid vid)
+{
+  wb_vrepmem *mem;
+  pwr_tCmd cmd;
+  pwr_tStatus sts;
+  int size;
+  ldh_sVolumeInfo info;
+  pwr_tObjName pname;
+  char comment[80];
+
+  // Log
+  unsigned int opt;
+  if ( gbl.enable_comment)
+    opt = log_mOption_Comment;
+  else
+    opt = 0;
+  sts = ldh_GetVolumeInfo( ldh_SessionToVol(ldhses), &info);
+  if ( EVEN(sts)) return sts;
+
+  sts = ldh_VolumeIdToName( ldh_SessionToWB(ldhses),
+	info.Volume, pname, sizeof(pname), &size);
+  if ( EVEN(sts)) return sts;
+
+  snprintf( comment, sizeof(comment), "-> %s", vname);
+  wb_log::log( wlog_eCategory_VolumeClone, pname, comment);
+  wb_log::log( (wb_session *)ldhses, wlog_eCategory_VolumeClone, vid, opt);
+  wb_log::push();
+
+  wb_session *sp = (wb_session *)ldhses;
+  sp->clone( vname, vid, &mem);
+  if ( EVEN(sp->sts()))
+    return sp->sts();
+  
+  // Create a new session
+  wb_volume v = wb_volume(mem);
+  wb_session memsp(v);
+
+  memsp.access( ldh_eAccess_ReadWrite);
+  if ( memsp.evenSts()) {
+    wb_log::pull();
+    return memsp.sts();
+  }
+
+  ldhses = &memsp;
+  editmode = 1;
+  
+  // Execute script
+  sprintf( cmd, "@$pwrp_cnf/%s_clone.pwr_com", cdh_Low(vname));
+  sts = command( cmd);
+  if ( EVEN(sts)) {
+    ldhses = sp;
+    wb_log::pull();
+    editmode = 0;
+    return sts;
+  }
+  memsp.commit();
+  
+  // Redraw plc windows
+  sprintf( cmd, "redraw /all");
+  sts = command( cmd);
+  if ( EVEN(sts)) {
+    ldhses = sp;
+    wb_log::pull();
+    editmode = 0;
+    return sts;
+  }
+  memsp.commit();
+  
+  // Compile
+  sprintf( cmd, "compile /allplcpgm");
+  sts = command( cmd);
+  if ( EVEN(sts)) {
+    ldhses = sp;
+    wb_log::pull();
+    editmode = 0;
+    return sts;
+  }
+  
+  // Create crossreference files
+  sprintf( cmd, "create cross");
+  sts = command( cmd);
+  
+  // Create plc archive
+  sts = gcg_comp_volume( ldhses);
+  if ( EVEN(sts)) {
+    ldhses = sp;
+    wb_log::pull();
+    editmode = 0;
+    return sts;
+  }
+  
+  // Create dbs files
+  ldhses = sp;
+  editmode = 0;
+  if ( !mem->createSnapshot( 0, 0, 0)) {
+    wb_log::pull();
+    return WNAV__CREATEDBS;
+  }  
+
+  wb_log::pull();
+  return WNAV__SUCCESS;
 }
 
 int WNav::show_database()

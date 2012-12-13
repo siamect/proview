@@ -1097,11 +1097,11 @@ int wb_utl::redraw_plc(
 		ldhses, plc, ldh_eName_Objid,
 		plc_objid_str, sizeof( plc_objid_str), &size);
 
-  /* Redraw the plc */
-  printf( "Plcpgm  %s		%s\n",
-	  plcstring, plc_objid_str);
 
+  /* Redraw the plc */
   sts = redraw_windows( plc, ldhses, ldhwb);
+
+  printf( "-- Plc redrawn %s\n", plcstring);
 
   /* Return to session access ReadWrite */ 
   sts2 = ldh_SetSession( ldhses, ldh_eAccess_ReadWrite);
@@ -1479,8 +1479,7 @@ int wb_utl::exec_plcpgms( ldh_tSesContext ldhses,
 		plc_objid_str, sizeof( plc_objid_str), &size);
     if ( EVEN (sts)) goto error_return;
 
-    printf( "Plcpgm  %s		%s\n", 
-	    plcname, plc_objid_str);
+    printf( "-- Executing Plcpgm  %s\n", plcname);
 
     sts = exec_plcpgm_windows( list_ptr->objid,
 			    ldhses, ldhwb, no_focode, cb);
@@ -1665,6 +1664,7 @@ int wb_utl::redraw_plc_hier( ldh_tSesContext ldhses,
 			     int		all,
 			     int		templ)
 {
+  printf( "-- Redraw plc\n");
   return exec_plcpgms( ldhses, ldhwb, hiername,fromname, all, templ, 1,
 		       plc_redraw_cb);
 }

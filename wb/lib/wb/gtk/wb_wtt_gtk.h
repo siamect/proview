@@ -117,6 +117,7 @@ class WttGtk : public Wtt {
     GtkWidget	*menu_edit_w;
     GtkWidget	*menu_classeditor_w;
     GtkWidget	*menu_updateclasses_w;
+    GtkWidget	*menu_clonevolume_w;
     GtkWidget	*menu_creaobjafter_w;
     GtkWidget	*menu_creaobjfirst_w;
     GtkWidget	*menu_deleteobj_w;
@@ -238,6 +239,7 @@ class WttGtk : public Wtt {
     static void activate_distribute( GtkWidget *w, gpointer data);
     static void activate_showcrossref( GtkWidget *w, gpointer data);
     static void activate_updateclasses( GtkWidget *w, gpointer data);
+    static void activate_clonevolume( GtkWidget *w, gpointer data);
     static void activate_zoom_in( GtkWidget *w, gpointer data);
     static void activate_zoom_out( GtkWidget *w, gpointer data);
     static void activate_zoom_reset( GtkWidget *w, gpointer data);

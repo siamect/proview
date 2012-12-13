@@ -255,6 +255,7 @@ class Wtt : public WUtility {
     void activate_distribute();
     void activate_showcrossref();
     void activate_updateclasses();
+    void activate_clonevolume();
     void activate_zoom_in();
     void activate_zoom_out();
     void activate_zoom_reset();

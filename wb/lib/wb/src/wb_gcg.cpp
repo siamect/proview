@@ -2512,8 +2512,9 @@ int	gcg_wind_comp_all(
 	free((char *) loaded_windlist);
 	free((char *) loaded_list);
 
-	if ( !wind_compiled)
+	if ( !wind_compiled && ODD(sumsts))
 	  return GSX__NOMODIF;
+
 	return sumsts;
 }
 

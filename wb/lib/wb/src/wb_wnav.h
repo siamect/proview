@@ -408,6 +408,7 @@ class WNav : public WUtility{
     int unselect_objid( pwr_tObjid objid);
     void enable_events( WNavBrow *brow);
 
+    int clone_volume( char *vname, pwr_tVid vid);
     int show_database();
     int show_volume( int pop);
     int get_rootlist();
