@@ -5418,12 +5418,17 @@ int WNav::clone_volume( char *vname, pwr_tVid vid)
   if ( EVEN(sts)) return sts;
 
   sts = ldh_VolumeIdToName( ldh_SessionToWB(ldhses),
-	info.Volume, pname, sizeof(pname), &size);
+			    info.Volume, pname, sizeof(pname), &size);
   if ( EVEN(sts)) return sts;
 
   snprintf( comment, sizeof(comment), "-> %s", vname);
   wb_log::log( wlog_eCategory_VolumeClone, pname, comment);
-  wb_log::log( (wb_session *)ldhses, wlog_eCategory_VolumeClone, vid, opt);
+  sts = ldh_VolumeIdToName( ldh_SessionToWB(ldhses),
+			    vid, pname, sizeof(pname), &size);
+  if ( ODD(sts))
+    wb_log::log( (wb_session *)ldhses, wlog_eCategory_VolumeClone, vid, opt);
+  else
+    wb_log::log( wlog_eCategory_VolumeClone, vname, "");
   wb_log::push();
 
   wb_session *sp = (wb_session *)ldhses;

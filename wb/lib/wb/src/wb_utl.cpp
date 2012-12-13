@@ -62,6 +62,7 @@
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_version.h"
+#include "pwr_systemclasses.h"
 #include "pwr_baseclasses.h"
 #include "flow_ctx.h"
 #include "co_cdh.h"
@@ -340,6 +341,10 @@ static int utl_list_print_columnheader (
   utl_t_listbody	*listbody_ptr
 );
 
+static int utl_in_libhier( 
+  ldh_tSesContext ldhses, 
+  pwr_tOid oid
+);
 
 
 
@@ -1481,10 +1486,11 @@ int wb_utl::exec_plcpgms( ldh_tSesContext ldhses,
 
     printf( "-- Executing Plcpgm  %s\n", plcname);
 
-    sts = exec_plcpgm_windows( list_ptr->objid,
-			    ldhses, ldhwb, no_focode, cb);
-    if ( EVEN (sts)) goto error_return;
-	  
+    if ( !utl_in_libhier( ldhses, list_ptr->objid)) {
+      sts = exec_plcpgm_windows( list_ptr->objid,
+				 ldhses, ldhwb, no_focode, cb);
+      if ( EVEN (sts)) goto error_return;
+    }	  
     list_ptr = list_ptr->next;
   }
   utl_objidlist_free( plcpgmlist);
@@ -12527,3 +12533,20 @@ pwr_tStatus utl_read_line(	char	*line,
 	return 1;
 }
 
+static int utl_in_libhier( ldh_tSesContext ldhses, pwr_tOid oid)
+{
+  pwr_tStatus sts;
+  pwr_tOid parent;
+  pwr_tCid cid;
+
+  for ( sts = ldh_GetParent( ldhses, oid, &parent);
+	ODD(sts);
+	sts = ldh_GetParent( ldhses, parent, &parent)) {
+    sts = ldh_GetObjectClass( ldhses, parent, &cid);
+    if ( EVEN(sts)) return 0;
+
+    if ( cid == pwr_cClass_LibHier)
+      return 1;
+  }
+  return 0;
+}
