@@ -136,6 +136,7 @@
 # define cPrio_plc_init		(cPrio_base + 5)
 # define cPrio_remh		(cPrio_base + 5)
 # define cPrio_remotelogg	(cPrio_base + 5)
+# define cPrio_sim		(cPrio_base + 5)
 #endif
 
 static pwr_tBoolean	checkSect (pwr_tStatus*, ini_sContext*, int, int);
@@ -2122,6 +2123,9 @@ ini_ProcTable (
   pp->proc.flags.b.system = 1;
 
   pp = ini_ProcInsert(sts, cp, "pwr_sev_server", "pwr_sev_server_%d", 0, 1, "sev_server", cPrio_sev_server, 0, pwr_cClass_SevServer, "", 0);
+  pp->proc.flags.b.system = 1;
+
+  pp = ini_ProcInsert(sts, cp, "pwr_sim", "pwr_sim_%d", 0, 1, "rt_sim", cPrio_sim, 0, pwr_cClass_SimulateConfig, "", 0);
   pp->proc.flags.b.system = 1;
 #endif
 

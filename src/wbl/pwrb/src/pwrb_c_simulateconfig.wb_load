@@ -75,6 +75,8 @@ SObject pwrb:Class
       Object InitDone $Attribute 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
       !/**
