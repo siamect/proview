@@ -751,7 +751,8 @@ activeListRemove (
 
     LstRem(&aap->active_l); /* Remove from application alarm list */
     LstNul(&aap->active_l);
-    --aap->ap->activeMessages;
+    if ( aap->ap->activeMessages > 0)
+      --aap->ap->activeMessages;
     if (ap->source == mh_eSource_Application)
       free(ap);
     else
