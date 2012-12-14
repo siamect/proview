@@ -147,6 +147,16 @@ SObject pwrb:Type
        Attr Value = 256
      EndBody
     EndObject
+    !/**
+    !  DetectTime is set by user when alarm condition is set.
+    !*/
+    Object UserDetectTime $Bit
+     Body SysBody
+       Attr PgmName = "UserDetectTime"
+       Attr Text = "UserDetectTime"
+       Attr Value = 512
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

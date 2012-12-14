@@ -1308,7 +1308,8 @@ dSup_exec (
       if (o->DetectCheck) {
         o->ActualValue = In;
         timerIn(sp, (sTimer *)&o->TimerFlag);
-        time_GetTime(&o->DetectTime);
+	if ( !(o->EventFlags & pwr_mEventFlagsMask_UserDetectTime))
+	  time_GetTime(&o->DetectTime);
         o->DetectCheck = FALSE;
       }
       if (!o->TimerFlag) {
