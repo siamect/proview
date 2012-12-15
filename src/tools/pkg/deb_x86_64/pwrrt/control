@@ -3,7 +3,7 @@ Version: 4.8.6-3
 Section: base
 Priority: optional
 Architecture: amd64
-Depends: libc6 (>= 2.11.2-7), libgtk2.0-0 (>= 2.20.1-2), libasound2 (>= 1.0.23-2.1), libdb4.8 (>=4.8.30-2)
+Depends: libc6 (>= 2.11.2-7), libgtk2.0-0 (>= 2.20.1-2), libasound2 (>= 1.0.23-2.1), libdb4.8 (>=4.8.30-2), libsqlite3-0 (>= 3.7.3-1)
 Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48
 Maintainer: Proview <postmaster@proview.se>
 Description:
