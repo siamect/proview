@@ -209,7 +209,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			&wnav_compile_func,
 			{ "/MODIFIED", "/DEBUG", 
 			"/HIERARCHY", "/PLCPGM" , "/WINDOW", 
-			"/FROM_PLCPGM", "/ALLPLCPGM", "/ALLVOLUMES", "/VOLUMES", 
+			"/FROM_PLCPGM", "/ALLPLCPGM", "/VOLALL", "/VOLUMES", 
 			""}
 		},
 		{
@@ -2208,7 +2208,7 @@ static int	wnav_compile_func(	void		*client_data,
   else
     fromstr_p = NULL;
  
-  allvolumes = ODD( dcli_get_qualifier( "/ALLVOLUMES", 0, 0));
+  allvolumes = ODD( dcli_get_qualifier( "/VOLALL", 0, 0));
   allplcpgm = ODD( dcli_get_qualifier( "/ALLPLCPGM", 0, 0));
 
   if (( sts_volumes = ODD( dcli_get_qualifier( "/VOLUMES", volumestr, sizeof(volumestr)))))
