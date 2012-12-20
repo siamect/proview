@@ -142,7 +142,7 @@ bool mem_object::exportDocBlock( wb_import &i)
 }
 
 wb_vrepmem::wb_vrepmem( wb_erep *erep, pwr_tVid vid) :
-  wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), m_nRef(0), root_object(0), volume_object(0),
+  wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), m_nRef(0), root_object(0), volume_object(0), m_cloned(0),
   m_nextOix(0), m_source_vid(0), m_classeditor(false), m_ignore(false)
 {
   strcpy( m_filename, "");
