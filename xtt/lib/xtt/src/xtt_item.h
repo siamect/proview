@@ -501,6 +501,7 @@ class ItemEnum : public ItemBaseAttr {
 	int attr_size, int attr_flags,
 	unsigned int item_num, int item_is_element, int item_element);
   int set_value();
+  int open_children( XNavBrow *brow, double x, double y) {return 0;}
 
   int num;
   char enum_name[32];
@@ -520,6 +521,7 @@ class ItemMask : public ItemBaseAttr {
 	unsigned int item_num, int item_is_element, int item_element);
   int set_value( int bittrue);
   int toggle_value();
+  int open_children( XNavBrow *brow, double x, double y) {return 0;}
 
   int num;
   char mask_name[32];
