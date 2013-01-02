@@ -53,7 +53,7 @@ static void usage( const char *txt)
   cout << txt << endl;
 }
 
-void ldlist_print( const char *text, pwr_tVid vid, const char *name, pwr_tTime *time) 
+void ldlist_print( const char *text, pwr_tVid vid, pwr_tCid cid, const char *name, pwr_tTime *time) 
 {
   char timestr[40];
 
@@ -69,8 +69,31 @@ void ldlist_print( const char *text, pwr_tVid vid, const char *name, pwr_tTime *
     cout << " ";
   cout << " ";
 
-  cout << timestr  << " (" << time->tv_sec << "," << time->tv_nsec <<  ") ";
-  cout << vid << endl;
+  cout << timestr << "  ";
+
+  char vid_str[40];
+  strcpy( vid_str, cdh_VolumeIdToString( 0, vid, 0, 0));
+  cout << vid_str;
+  for ( int i = 0; i < (int)(15 - strlen(vid_str)); i++)
+    cout << " ";
+  cout << " ";
+
+  if ( cid) {
+    pwr_tObjName cname;
+
+    switch ( cid) {
+    case pwr_eClass_RootVolume: strcpy( cname, "RootVolume"); break;
+    case pwr_eClass_SubVolume: strcpy( cname, "SubVolume"); break;
+    case pwr_eClass_SharedVolume: strcpy( cname, "SharedVolume"); break;
+    case pwr_eClass_ClassVolume: strcpy( cname, "ClassVolume"); break;
+    case pwr_eClass_DetachedClassVolume: strcpy( cname, "DetachedVolume"); break;
+    case pwr_eClass_VolatileVolume: strcpy( cname, "RootVolume"); break;
+    default: strcpy( cname, "Unknown class");
+    }
+    cout << " " << cname << endl;
+  }
+  else
+    cout << endl;
 }
 
 int main (
@@ -110,12 +133,12 @@ int main (
   vrep->load();
   vrep->time( &time);
 
-  ldlist_print( "Volume", vrep->vid(), vrep->name(), &time);
+  ldlist_print( "Volume", vrep->vid(), vrep->cid(), vrep->name(), &time);
 
   for ( int i = 0; i < (int) vrep->m_dbsmep->nVolRef+1; i++) {
     time = vrep->m_dbsmep->venv[i].vp->time;
-    ldlist_print( "VolRef", vrep->m_dbsmep->venv[i].vp->vid, vrep->m_dbsmep->venv[i].vp->name, 
-		  &time);
+    ldlist_print( "VolRef", vrep->m_dbsmep->venv[i].vp->vid, vrep->m_dbsmep->venv[i].vp->cid, 
+		  vrep->m_dbsmep->venv[i].vp->name, &time);
   }
 }
 
