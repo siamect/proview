@@ -300,6 +300,10 @@ bool
 wb_vrepmem::createSnapshot(const char *fileName, const pwr_tTime *time, const int rtonly)
 {
   try {
+    pwr_tCid vcid = m_cid;
+    if ( m_cloned && volume_object)
+      m_cid = volume_object->m_cid;
+
     wb_dbs dbs(this);
         
     if ( fileName)
@@ -307,7 +311,11 @@ wb_vrepmem::createSnapshot(const char *fileName, const pwr_tTime *time, const in
     if ( time)
       dbs.setTime( *time);
 
+
     dbs.importVolume(*this);
+
+    if ( m_cloned && volume_object)
+      m_cid = vcid;
 
     return true;
   } catch (wb_error& e) {
