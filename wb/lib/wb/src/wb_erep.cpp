@@ -75,7 +75,8 @@ pwr_dImport pwr_BindClasses(Base);
 typedef enum {
   eDbType_db,
   eDbType_dbms,
-  eDbType_wbl
+  eDbType_wbl,
+  eDbType_none
 } eDbType;
 
 wb_erep::wb_erep( unsigned int options) : m_nRef(0), m_dir_cnt(0), m_volatile_idx(0), m_buffer_max(10),
@@ -756,6 +757,8 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	  else
 	    db_type = eDbType_wbl;
 	}
+	else if ( strcmp( vol_array[3], "clone") == 0)
+	  db_type = eDbType_none;
 	else {
 	  if ( nr >= 5 && vol_array[4][0] == '1')
 	    db_type = eDbType_dbms;
@@ -774,8 +777,14 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	}
 	dcli_translate_filename( vname, vname);
 
-	sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
-	dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
+	if ( db_type == eDbType_none) {
+	  m_options |= ldh_mWbOption_OpenDbs;
+	  sts = 1;
+	}
+	else {
+	  sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
+	  dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
+	}
 	if ( EVEN(sts)) {
 	  MsgWindow::message( 'E', "Database not found", vname);
 	}
