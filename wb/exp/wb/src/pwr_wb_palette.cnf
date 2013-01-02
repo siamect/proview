@@ -509,6 +509,7 @@ palette ClassNavigatorPalette
     class $Menu
     class $MenuButton
     class $MenuCascade
+    class $MenuRef
     class $MenuSeparator
     class $RtMenu
   }
