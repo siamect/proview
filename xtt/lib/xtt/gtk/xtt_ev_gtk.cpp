@@ -778,17 +778,21 @@ EvGtk::~EvGtk()
 {
   if ( connected)
     mh_OutunitDisconnect();
+  if ( eve)
+    delete eve;
+  if ( ala)
+    delete ala;
+  if ( blk)
+    delete blk;
+  ala = NULL;
+  ev = NULL;
+  blk = NULL;
   if ( parent_wid_eve)
     gtk_widget_destroy( parent_wid_eve);
   if ( parent_wid_ala)
     gtk_widget_destroy( parent_wid_ala);
   if ( parent_wid_blk)
     gtk_widget_destroy( parent_wid_blk);
-  if ( eve)
-    delete eve;
-  if ( ala)
-    delete ala;
-  ev = NULL;
 }
 
 void EvGtk::map_eve()
