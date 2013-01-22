@@ -1161,8 +1161,8 @@ void CnvToPdf::incr_headerlevel()
 void CnvToPdf::decr_headerlevel()
 {
   ci--;
-  if ( ci < pdf_eId_TopicL1)
-    ci = pdf_eId_TopicL1;
+  if ( ci < pdf_eId_Chapter)
+    ci = pdf_eId_Chapter;
 }
 
 void CnvToPdf::reset_headernumbers( int level)

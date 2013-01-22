@@ -144,8 +144,9 @@ void *CnvXtthelpToPdf::insert( navh_eItemType item_type, const char *text1,
 	    topdf.y = pdf_cPageHeight - pdf_cTopMargin;
 	  }
 	}
-	else
-	  topdf.set_ci( pdf_eId_TopicL1);
+	else {
+	  // topdf.set_ci( pdf_eId_TopicL1);
+	}
       }
 
       if ( first_topic) {
