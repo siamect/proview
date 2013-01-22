@@ -3731,7 +3731,7 @@ när värdet ändras från 0 till 1.
 <b>Attribut <t><t>Beskrivning
 OptionMenu.Type	      <t><t>Typ av optionmeny. Statisk eller dynamisk.
 
-Statisk meny
+<b>Statisk meny
 
 OptionMenu.Attribute  <t><t>Databas attribut av typen Float32, Float64, Int32, 
                       <t><t>UInt32, Int16, UInt16, Int8 eller UInt8. Värdet i 
@@ -3742,7 +3742,7 @@ OptionMenu.ItemEnum1  <t><t>Uppräkningsvärdet för första menyalternativet.
 OptionMenu.ItemText2  <t><t>Text för andra menyalternativet.
 OptionMenu.ItemEnum2  <t><t>Uppräkningsvärdet för andra menyalternativet.
 
-Dynamisk meny
+<b>Dynamisk meny
 
 OptionMenu.Attribute  <t><t>Databas attribut av typen Float32, Float64, Int32, 
                       <t><t>UInt32, Int16, UInt16, Int8 eller UInt8. Index för

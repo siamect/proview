@@ -42,7 +42,7 @@ SObject pwrs:Type
 !  @Group BasicTypes,Types
 !  Class identity. Basic type.
 !
-!  Every class has a unic identity, derived from the classvolume
+!  Every class has a unique identity, derived from the classvolume
 !  identity and the class index.
 !
 !  A class is described by classdefinition objects in a class volume. These

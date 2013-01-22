@@ -156,7 +156,7 @@ typedef float           pwr_tFloat32;		//!< 32-bit float.
 /*_*
   @aref float64 Float64
 */
-typedef double          pwr_tFloat64;		//!< 64-big float.
+typedef double          pwr_tFloat64;		//!< 64-bit float.
 /*_*
   @aref char Char
 */

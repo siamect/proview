@@ -42,7 +42,7 @@ SObject pwrs:Type
 !  @Group BasicTypes,Types
 !  Type identity. Basic type.
 !
-!  Every type has a unic identity, derived from the classvolume
+!  Every type has a unique identity, derived from the classvolume
 !  identity and the type index.
 !
 !  A type is described by a typedefinition object in a class volume. This

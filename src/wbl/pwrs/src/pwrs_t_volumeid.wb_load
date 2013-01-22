@@ -42,7 +42,7 @@ SObject pwrs:Type
 !  @Group BasicTypes,Types
 !  Volume identity. Basic type.
 !
-!  Every volume has a unic identity, a 32-bit word usually specified in the form
+!  Every volume has a unique identity, a 32-bit word usually specified in the form
 !  v1.v2.v3.v4 where v1, v2, v3 and v4 are numbers in the interval 0-255.
 !  Dependent of the class of the volume, the numbers is choosen in separate
 !  intervals:
@@ -61,7 +61,7 @@ SObject pwrs:Type
 !  In runtime 1-127 are used for system volumes
 !     1    pwrNode    Volume used by Proview.
 !
-!  128-253 are used to create unic identities:
+!  128-253 are used to create unique identities:
 !     128  Subid
 !     129  Dlid
 !

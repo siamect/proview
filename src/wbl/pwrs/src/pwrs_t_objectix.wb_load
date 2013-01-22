@@ -42,7 +42,7 @@ SObject pwrs:Type
 !  @Group BasicTypes,Types
 !  Object index. Basic type.
 !
-!  Every object has an unic index within a volume. The index is a 32-bit word.
+!  Every object has an unique index within a volume. The index is a 32-bit word.
 !  Together with the volume identity it constitutes the object identity.
 !
 !  Object index 

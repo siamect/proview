@@ -42,7 +42,7 @@ SObject pwrs:Type
 !  @Group BasicTypes,Types
 !  Object identity. Basic type.
 !
-!  Every object has an unic identity.
+!  Every object has an unique identity.
 !  The object identity consists of the volume identity and
 !  the object index.
 !

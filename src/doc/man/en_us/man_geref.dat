@@ -3770,9 +3770,9 @@ that indicates that new texts should be loaded. This attribute should be of type
 and the new texts are loaded when the value is changed from 0 to 1.
 
 <b>Attribute <t><t>Description
-OptionMenu.Type	      <t><t>Type of option menu. Static eller dynamic.
+OptionMenu.Type	      <t><t>Type of option menu. Static or dynamic.
 
-Static menu
+<b>Static menu
 
 OptionMenu.Attribute  <t><t>Database attribute of type Float32, Float64, Int32,
                       <t><t>UInt32, Int16, UInt16, Int8 or UInt8. The value in
@@ -3784,7 +3784,7 @@ OptionMenu.ItemEnum1  <t><t>Enumeration value of the first menu alternative.
 OptionMenu.ItemText2  <t><t>Text of the second menu alternative.
 OptionMenu.ItemEnum2  <t><t>Enumeration value of the second menu alternative.
 
-Dynamic menu
+<b>Dynamic menu
 
 OptionMenu.Attribute  <t><t>Database attribute of type Float32, Float64, Int32,
                       <t><t>UInt32, Int16, UInt16, Int8 or UInt8. The value in
@@ -3795,8 +3795,8 @@ OptionMenu.TextAttribute <t><t>Database attribute of type array of String80. The
 OptionMenu.SizeAttribute <t><t>Database attribute of type Int32. States the number of
 		      <t><t>alternative in the menu.
 OptionMenu.UpdateAttribute <t><t>Database attribute of type Boolean. Should be set to 
-		      <t><t>1 when new texts are present in the TextAttribute. New text 
-		      <t><t>are loaded when the value is changed from 0 to 1.
+		      <t><t>1 when new texts are present in the TextAttribute. New 
+		      <t><t>texts are loaded when the value is changed from 0 to 1.
 </topic>
 </headerlevel>
 <pagebreak>
@@ -5335,8 +5335,8 @@ BackgroundImage <t>String
 <b>Name <t>Type
 TraceAttrType
 TraceType
-TraceColor <t>ColorIndex eller ColorTone
-TraceColor2 <t>ColorIndex eller ColorTone
+TraceColor <t>ColorIndex or ColorTone
+TraceColor2 <t>ColorIndex or ColorTone
 NoConObstacle <t>Int
 Slider <t>Int
 NextSubgraph <t>Int
