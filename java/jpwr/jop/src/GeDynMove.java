@@ -55,6 +55,10 @@ public  String moveYAttribute;
   boolean attrMoveYFound;
   boolean attrScaleXFound;
   boolean attrScaleYFound;
+  int moveXTypeid;
+  int moveYTypeid;
+  int scaleXTypeid;
+  int scaleYTypeid;
   PwrtRefId moveXSubid;
   PwrtRefId moveYSubid;
   PwrtRefId scaleXSubid;
@@ -104,6 +108,7 @@ public  String moveYAttribute;
 	attrMoveXFound = true;
 	moveXp = ret.id;
 	moveXSubid = ret.refid;
+	moveXTypeid = ret.typeId;
       }
     }
     attrName = dyn.getAttrName( moveYAttribute);
@@ -115,6 +120,7 @@ public  String moveYAttribute;
 	attrMoveYFound = true;
 	moveYp = ret.id;
 	moveYSubid = ret.refid;
+	moveYTypeid = ret.typeId;
       }
     }
     attrName = dyn.getAttrName( scaleXAttribute);
@@ -126,6 +132,7 @@ public  String moveYAttribute;
 	attrScaleXFound = true;
 	scaleXp = ret.id;
 	scaleXSubid = ret.refid;
+	scaleXTypeid = ret.typeId;
       }
     }
     attrName = dyn.getAttrName( scaleYAttribute);
@@ -137,6 +144,7 @@ public  String moveYAttribute;
 	attrScaleYFound = true;
 	scaleYp = ret.id;
 	scaleYSubid = ret.refid;
+	scaleYTypeid = ret.typeId;
       }
     }
   }
@@ -175,14 +183,30 @@ public  String moveYAttribute;
       float valueMoveY = 0;
 
       if ( attrMoveXFound) {
-	valueMoveX = dyn.en.gdh.getObjectRefInfoFloat( moveXp);
+	switch ( moveXTypeid) {
+	case Pwr.eType_Float32: 
+	  valueMoveX = dyn.en.gdh.getObjectRefInfoFloat( moveXp);
+	  break;
+	case Pwr.eType_Int32: 
+	case Pwr.eType_UInt32: 
+	  valueMoveX = (float)dyn.en.gdh.getObjectRefInfoInt( moveXp);
+	  break;
+	}
 	if ( valueMoveX != moveXOldValue  || firstScan) {
 	  repaintNow = true;
 	  moveXOldValue = valueMoveX;
         }
       }
       if ( attrMoveYFound) {
-	valueMoveY = dyn.en.gdh.getObjectRefInfoFloat( moveYp);
+	switch ( moveYTypeid) {
+	case Pwr.eType_Float32: 
+	  valueMoveY = dyn.en.gdh.getObjectRefInfoFloat( moveYp);
+	  break;
+	case Pwr.eType_Int32: 
+	case Pwr.eType_UInt32: 
+	  valueMoveY = (float)dyn.en.gdh.getObjectRefInfoInt( moveYp);
+	  break;
+	}
 	if ( valueMoveY != moveYOldValue || firstScan) {
 	  repaintNow = true;
 	  moveYOldValue = valueMoveY;
@@ -210,14 +234,30 @@ public  String moveYAttribute;
       float valueScaleY = 0;
 
       if ( attrScaleXFound) {
-        valueScaleX = (float) (dyn.en.gdh.getObjectRefInfoFloat( scaleXp) * scaleXFactor);
+	switch ( scaleXTypeid) {
+	case Pwr.eType_Float32: 
+	  valueScaleX = (float) (dyn.en.gdh.getObjectRefInfoFloat( scaleXp) * scaleXFactor);
+	  break;
+	case Pwr.eType_Int32: 
+	case Pwr.eType_UInt32: 
+          valueScaleX = (float) (dyn.en.gdh.getObjectRefInfoInt( scaleXp) * scaleXFactor);
+	  break;
+	}
         if ( valueScaleX != scaleXOldValue  || firstScan || wRoot != wRootOld) {
           repaintNow = true;
  	  scaleXOldValue = valueScaleX;
         }
       }
       if ( attrScaleYFound) {
-        valueScaleY = (float) (dyn.en.gdh.getObjectRefInfoFloat( scaleYp) * scaleYFactor);
+	switch ( scaleXTypeid) {
+	case Pwr.eType_Float32: 
+          valueScaleY = (float) (dyn.en.gdh.getObjectRefInfoFloat( scaleYp) * scaleYFactor);
+	  break;
+	case Pwr.eType_Int32: 
+	case Pwr.eType_UInt32: 
+          valueScaleY = (float) (dyn.en.gdh.getObjectRefInfoInt( scaleYp) * scaleYFactor);
+	  break;
+	}
         if ( valueScaleY != scaleYOldValue  || firstScan || wRoot != wRootOld) {
 	  repaintNow = true;
 	  scaleYOldValue = valueScaleY;
