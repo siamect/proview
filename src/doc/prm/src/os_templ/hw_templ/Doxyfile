@@ -589,6 +589,7 @@ INPUT                  = $(pwre_sroot)/doc/prm/src/doxygen.dx \
                          $(pwre_sroot)/lib/rt/src/rt_errh.h \
                          $(pwre_sroot)/lib/rt/src/rt_mh_appl.h \
                          $(pwre_sroot)/lib/rt/src/rt_qcom.h \
+                         $(pwre_sroot)/lib/rt/src/rt_sevcli.h \
                          $(pwre_croot)/nmps/lib/nmps/src/nmps_appl.h \
                          $(pwre_sroot)/lib/rt/src/rt_appl.h \
                          $(pwre_sroot)/lib/rt/src/rt_appl.cpp \
@@ -598,6 +599,7 @@ INPUT                  = $(pwre_sroot)/doc/prm/src/doxygen.dx \
                          $(pwre_sroot)/lib/rt/src/rt_errh.c \
                          $(pwre_sroot)/lib/rt/src/rt_mh_appl.c \
                          $(pwre_sroot)/lib/rt/src/rt_qcom.c \
+                         $(pwre_sroot)/lib/rt/src/rt_sevcli.c \
                          $(pwre_croot)/nmps/lib/nmps/src/nmps_appl.c \
                          $(pwre_sroot)/doc/prm/src/ra_appl.cpp \
                          $(pwre_sroot)/doc/prm/src/ra_advappl.cpp \

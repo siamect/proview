@@ -23,6 +23,7 @@ This manual will give a description of the following API's
 - Time Functions to convert and compare time values.
 - Cdh  Convert and compare object attributes.
 - Errh Print messages on system log.
+- Sevcli Storage environment client interface.
 - NMps Interface to NMps Cell objects.
 - rt_appl A base class for applications i c++.
 */
@@ -316,6 +317,12 @@ This manual will give a description of the following API's
 /*! \defgroup Errh Errh System log messages
   \ingroup PRM
   This module contains functions for logging error messages.
+*/
+
+/*! \defgroup SEVCLI Sevcli SEV Client interface
+  \ingroup PRM
+  This module contains for the SEV cilent and is used to fetch historical
+  data from the database.
 */
 
 /*! \defgroup NMpsAppl NMpsAppl NMps API

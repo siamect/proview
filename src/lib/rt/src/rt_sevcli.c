@@ -45,6 +45,13 @@
 #include "rt_sev_net.h"
 
 
+/**
+ * @brief Initialization of the client. Creates a context and opens a Qcom queue for 
+ * the communication. The function returns a context that is used in all subsequent 
+ * sevcli calls.
+ *
+ * @return pwr_tStatus
+ */
 int sevcli_init( pwr_tStatus *sts, sevcli_tCtx *ctx)
 {
   // Create a queue to server
@@ -64,6 +71,11 @@ int sevcli_init( pwr_tStatus *sts, sevcli_tCtx *ctx)
   return 1;
 }
 
+/**
+ * @brief Close the communication. Removes the Qcom queue and frees the context.
+ *
+ * @return pwr_tStatus
+ */
 int sevcli_close( pwr_tStatus *sts, sevcli_tCtx ctx)
 {
   // Delete queue
@@ -75,11 +87,25 @@ int sevcli_close( pwr_tStatus *sts, sevcli_tCtx ctx)
   return 1;
 }
 
+/**
+ * @brief Set server from node id.
+ * This function is called to state which server node you want to communicate with. 
+ * The server is stated with node identity.
+ *
+ * @return pwr_tStatus
+ */
 void sevcli_set_servernid( sevcli_tCtx ctx, pwr_tNid nid)
 {
   ctx->server = nid;
 }
 
+/**
+ * @brief Set server from node name.
+ * This function is called to state which server node you want to communicate with. 
+ * The server is stated with node name.
+ *
+ * @return pwr_tStatus
+ */
 int sevcli_set_servernode( pwr_tStatus *sts, sevcli_tCtx ctx, char *nodename)
 {
   qcom_sNode		node;
@@ -114,6 +140,10 @@ int sevcli_set_servernode( pwr_tStatus *sts, sevcli_tCtx ctx, char *nodename)
   return 0;
 }
 
+/**
+ * @brief Fetches a list with the stored attributes of the server.
+ * @return pwr_tStatus
+ */
 int sevcli_get_itemlist( pwr_tStatus *sts, sevcli_tCtx ctx, sevcli_sHistItem **list, 
 			 unsigned int *cnt)
 {
@@ -296,6 +326,11 @@ int sevcli_get_itemlist( pwr_tStatus *sts, sevcli_tCtx ctx, sevcli_sHistItem **l
 }
 */
 
+/**
+ * @brief Fetch stored historical data for an attribute.
+ *
+ * @return pwr_tStatus
+ */
 int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, 
 			 char *aname, pwr_tTime starttime, pwr_tTime endtime, int numpoints,
 			 pwr_tTime **tbuf, void **vbuf, int *rows,
@@ -387,6 +422,11 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
 }
 
 
+/**
+ * @brief Fetch stored historical data for an object item.
+ *
+ * @return pwr_tStatus
+ */
 int sevcli_get_objectitemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, char *aname,
 			 pwr_tTime starttime, pwr_tTime endtime, int numpoints,
 			 pwr_tTime **tbuf, void **vbuf, int *rows,
@@ -498,7 +538,11 @@ int sevcli_get_objectitemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, 
   return 1;
 }
 
-
+/**
+ * @brief Removes all data for a stored attribute in the storage database.
+ *
+ * @return pwr_tStatus
+ */
 int sevcli_delete_item( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, char *aname)
 {
   sev_sMsgHistItemDelete	*msg;

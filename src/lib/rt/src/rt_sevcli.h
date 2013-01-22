@@ -39,6 +39,9 @@
 
 /* rt_sevcli.h -- Storage client */
 
+/** @addtogroup SEVCLI */
+/*@{*/
+
 #ifndef pwr_h
 # include "pwr.h"
 #endif
@@ -52,33 +55,42 @@ extern "C"
 {
 #endif
 
+/**
+ * Sevcli context
+ */
 typedef struct {
-  qcom_sQid  qid;
-  pwr_tNid   server;
-  unsigned int msg_id;
+  qcom_sQid  qid;		/**< QCOM queue id */
+  pwr_tNid   server;		/**< Server node id */
+  unsigned int msg_id;		/**< Counter for message id */
 } sevcli_sCtx, *sevcli_tCtx;
 
+/**
+ * Sevcli attribute data
+ */
 typedef struct {
-  pwr_tAName	aname;
-  pwr_eType	type;
-  unsigned int	size;
-  unsigned int  elem;
-  pwr_tString16 unit;
+  pwr_tAName	aname;		/**< Attribute name */
+  pwr_eType	type;		/**< Attribute type */
+  unsigned int	size;		/**< Attribute size */
+  unsigned int  elem;		/**< Number of elements */
+  pwr_tString16 unit;		/**< Attribute unit */
 }
 sevcli_sHistAttr;
 
+/**
+ * Sevcli item data
+ */
 typedef struct {
-  pwr_tOid 	oid;
-  pwr_tAName	oname;
-  pwr_tDeltaTime storagetime;
-  pwr_tTime	creatime;
-  pwr_tTime	modtime;
-  pwr_tString80 description;
-  pwr_tFloat32  scantime;
-  pwr_tFloat32  deadband;
-  pwr_tMask  	options;
-  unsigned int  attrnum;
-  sevcli_sHistAttr attr[1];
+  pwr_tOid 	oid;		/**< Object identity */
+  pwr_tAName	oname;		/**< Object name */
+  pwr_tDeltaTime storagetime;  	/**< Storage time from SevHist object */
+  pwr_tTime	creatime;      	/**< Creation time */
+  pwr_tTime	modtime;       	/**< Modification time */
+  pwr_tString80 description;   	/**< Description from SevHist object */
+  pwr_tFloat32  scantime;      	/**< Scantime from SevHist object */
+  pwr_tFloat32  deadband;      	/**< Deadband from SevHist object */
+  pwr_tMask  	options;       	/**< Options from SevHist object */
+  unsigned int  attrnum;       	/**< Number of attributes */
+  sevcli_sHistAttr attr[1];    	/**< Array of attribute data */
 } sevcli_sHistItem;
 
 
@@ -97,6 +109,8 @@ int sevcli_get_objectitemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, 
 			 pwr_tTime starttime, pwr_tTime endtime, int numpoints,
 			 pwr_tTime **tbuf, void **vbuf, int *rows,
 			 sevcli_sHistAttr **histattr, int *numattributes);
+
+/** @} */
 
 #ifdef __cplusplus
 }
