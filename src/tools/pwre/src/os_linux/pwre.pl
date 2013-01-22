@@ -339,6 +339,10 @@ sub ebuild # args: pass flavour
     merge("exe/tools_cmsg2c");
     merge("exe/tools_msg2cmsg");
     merge("exe/tools_pdrgen");
+    _module("nmps");
+    _build("lib","nmps","src","copy");
+    merge();
+    _module("rt");
     _build("msg", "*", "src", "all");
     _build("lib", "rt", "src", "init copy");
     _build("lib", "rt", $flavour, "copy");
