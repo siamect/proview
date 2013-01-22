@@ -151,6 +151,12 @@ public class GeDyn {
     public void setActionType( int actionType) {
 	this.actionType = actionType;
     }
+    public void setDynType1( int dynType) {
+	this.dynType = dynType;
+    }
+    public void setActionType1( int actionType) {
+	this.actionType = actionType;
+    }
     public void setAccess( int access) {
 	this.access = access;
     }
