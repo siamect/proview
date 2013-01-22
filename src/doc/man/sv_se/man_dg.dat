@@ -107,6 +107,7 @@ Konfigurera rotvolymen <link> configure_rootvolume
 Plc programmering <link>plc_programming
 Skapa processbilder <link> ge_man
 Java operatörsmiljö <link> dg_web_iterface
+Datalagring <link> dg_datastorage
 Starta och testa systemet <link> conf_test
 
 <b>Referens manualer
@@ -420,7 +421,7 @@ PLCeditorn eller i operatörsmiljön.
 Varje klass har ett template objekt, en instans av klassen som innehåller defaultvärden
 för olika attribut i klassen.
 
-Proview's bassystem innehåller ca 900 klasser. Se Objektshandboken för närmare beskrivning.
+Proview's bassystem innehåller ca 1000 klasser. Se Objektshandboken för närmare beskrivning.
 Konstruktören kan även skapa egna klasser inom ett projekt.
 </topic>
 
@@ -843,7 +844,7 @@ Skapa processbilder.
 
 <chapter>
 <topic>dg_create_project
-Skapa ett project
+Skapa ett projekt
 
 <h1>Installation av utvecklingsmiljön
 
@@ -1423,7 +1424,7 @@ Startupfil för Proview.
 <c>ld_appl_<nodename>_<bus_no>.txt
 
 Fil för att ange bibliotek som länkas med plc-programmet.
-<c>plc_<nodename>_<bus_no>.opt
+<c>plc_<nodename>_<bus_no>_<plc_name>.opt
 
 Fil för att sätta initialvärden vid Proview uppstart.
 <c>pwrp_alias.dat
@@ -1576,7 +1577,7 @@ Startupfil för Proview.
 ld_appl_<nodename>_<bus_no>.txt <link> file_ld_appl
 
 Fil för att ange vilka bibliotek som ska länkas med plc-programmet.
-plc_<nodename>_<bus_no>.opt <link> file_plc_opt
+plc_<nodename>_<bus_no>_<plc_name>.opt <link> file_plc_opt
 
 Fil för att ange initialvärden vid Proview startup.
 pwrp_alias.dat <link> file_pwrp_alias
@@ -1713,12 +1714,13 @@ har mellan 17 och 19.
 </topic>
 
 <topic> file_plc_opt
-plc_<node>_<bus_no>.opt
+plc_<node>_<bus_no>_<plc_name>.opt
 Den är filen (om den existerar) används för att addera bibliotek och objektsmoduler vid
 länkningen av plc-programmet. Några bibliotek och objektsmoduler måste finnas med, och
 en default option-fil ska se ut så här:
 
 <c>$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_pnak_dummy
+<c> -lpwr_cifx_dummy -lpwr_nodave_dummy
 
 Till detta adderas de bibliotek och moduler som behövs. Syntaxen är den som gäller för ld 
 (The GNU linker). Proview genererar en template option-fil .opt_template som kan användas som
@@ -1773,6 +1775,7 @@ också kan behöva startas.
 </topic>
 
 
+</headerlevel>
 </headerlevel>
 
 </chapter>
@@ -2170,14 +2173,14 @@ Anropet av funktionen sker från ett CArithm, DataArithm, AArithm eller DArithm o
 Vid kompileringen skapades objektsmodulen $pwrp_obj/ra_myfunction.o. Denna måste länkas med
 när plcprogrammet byggs, och det sker genom att objektsmodulen läggs in i en option fil som
 skickas med som indata till länkaren. Optionfilen ligger på $pwrp_exe och har namnet
-plc_'nodename'_'qbus'.opt, t ex
+plc_'nodename'_'qbus'_'plcname'.opt, t ex
 
-<c>$pwrp_exe/plc_mynode_0999.opt
+<c>$pwrp_exe/plc_mynode_0999_plc.opt
 
 I denna läggs följande rad in
 
 <c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy 
-<c> -lpwr_pnak_dummy -lpwr_cifx_dummy
+<c> -lpwr_pnak_dummy -lpwr_cifx_dummy -lpwr_nodave_dummy
 
 Vi kan nu bygga noden och starta Proview runtime.
 
@@ -2920,6 +2923,7 @@ Funktions-objekt som används i plc-program för att skicka meddelanden.
 <h2>RemTransRcv
 Funktions-objekt som används i plc-program för att ta emot meddelanden.
 </topic>
+</headerlevel>
 
 <topic> protocols
 Protokoll
@@ -3256,6 +3260,278 @@ räcker till adderar man flera DataArithm-objekt och fortsätter på samma sätt.
 </chapter>
 
 <chapter>
+<topic> dg_datastorage
+Datalagring
+
+Det finns tre typer av datalagring i Proview, trendkurvor, fastkurvor och historisk lagring.
+Trendkurvurna lagrar cycliskt data under en kortare period i realtidsdatabasen.
+Fastkurvor triggas av någon händelse och lagrar data under en period efter triggningen, och i
+vissa fall även före. Historiska lagringen sker på disk i en relationsdatabas och kan cykliskt
+lagra data under flera år.
+
+<option> printdisable
+Trendkurvor <link> dg_trend
+Fastkurvor <link> dg_dsfastcurve
+Historisk lagring <link> dg_sev
+<option> printenable
+</topic>
+
+<topic> dg_trend
+Trendkurvor
+Trendkurvor finns i två varianter 
+- DsTrend med en intern databuffer som kan lagra ca 500
+  mätvärden, och med en lägsta scantid på 1 s. 
+- DsTrendCurve, med konfigurerbar bufferstorlek och med en lägsta scantid på 20 ms.
+
+<option> printdisable
+DsTrend <link> dg_dstrend
+DsTrendCurve <link> dg_dstrendcurve
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> dg_dstrend
+DsTrend
+
+DsTrend objektet har en intern databuffer på 1912 byte som t ex kan lagra 478 mätvärden av 
+typen Float32. Även andra datatyper är möjliga. Konfigureringen är lite udda eftersom 
+bufferten är uppdelad i två delar, men normal behöver man endast ange det attribut som ska 
+lagras i DataName, och eventuellt ett värde i Multiple för att ange scantiden.
+
+Se även DsTrend i Object Reference Manual.
+</topic>
+
+<topic> dg_dstrendcurve
+DsTrendCurve
+
+<image> dg_fig109.png
+<b>Fig Trendkurva med DsTrendCurve
+
+DsTrendCurve objektet lagrar trendkurvor med externa bufferobjekt, där storleken på 
+bufferobjekten begränsar antalet mätvärden som kan lagras. Ett CircBuff100k som i exemplet
+nedan kan innehålla 25000 mätvärden. Lagringen kan ske med scantider ner till 20 ms. Det finns
+också en snapshot funktion där den aktuella kurvan lagras och visas i ett fönster där den kan 
+analyseras i detalj. Snapshot kurvan kan lagras på fil och öppnas vid ett senare tillfälle.
+
+Trendkurvan konfigureras med ett DsTrendCurve objekt. 10 olika attribut som ska lagras kan 
+anges i Attribute vektorn. För varje attribut ska en lagrings-buffer av typ CircBuffer skapas 
+och anges i Buffer attributet. Storleken på bufferobjektet ska anpassas till antalet mätvärden.
+Också en tidbuffer kan anges, men denna behövs endast om snapshot funktionen ska användas. 
+Tidupplösningen bestämmer storleken på tidsbufferten. Med en upplösning på 1 sekund, används 4
+bytes per mätvärde, och men en upplösning på nanosekund 8 bytes.
+
+<image> dg_fig107.png
+<b>Fig Konfigurering av DsTrendCurve med bufferobjekt
+
+<image> dg_fig108.png
+<b>Fig Konfigurering av DsTrendCurve
+
+Snapshot innebär att man tar en kopia av den lagrade datamängden och visar upp i ett separat
+fönster. Man kan konfigurera så att trendkurvan bara visar en begränsad del av den lagrade
+datamängden och att det finns data lagrade för en längre tid, och även med högre upplösning. 
+I Snapshot fönstret kan man då gå längre tillbaka i tiden eller zooma in och öka upplösningen 
+på kurvan.
+
+Attributen DisplayTime och DisplayResolution i DsTrendCurve objektet används för att 
+specificera den del av datamängden som ska visas i trend-fönstret. I exemplet ovan är det
+totala lagringstiden (StorageTime) 500 s, medan det endast är de 20 sista sekunderna 
+(DisplayTime) som visas i trendfönstret. DisplayResolution är satt till 4, vilket innebär
+att var fjärde mätvärde visas. Eftersom scantiden är 20 ms visas ett värde varje 80 ms, och 
+total visas 20 s/0.08s = 250 värden. Hela datamängden innehåller 500 s/0.02 s = 25000 värden
+vilka alltså blir tillgängliga i snapshot fönstret.
+
+Se även DsTrendCurve i Object Reference Manual.
+</topic>
+</headerlevel>
+
+<topic> dg_dsfastcurve
+Fast kurvor
+
+En Fast kurva triggas av en viss händelse och lagrar sedan data under en viss tid som sedan
+visas upp i ett kurvfönster. Trigg-villkoret kan vara en digital signal som blir hög, ett
+analog värde som passerar en nivå, eller manuell triggning. Fastkurvan kan konfigureras att
+kontinuerligt lagra data så att även data före triggpunkten kan visas upp.
+
+En fast kurva konfigureras med ett DsFastCurve objekt. Upp till 10 attribut kan anges i
+Attribute vektorn, och för varje attribut ska ett buffer-objekt skapas och anges i Buffers 
+attributet. Även ett buffer-objekt for tiden ska skapas och anges i TimeBuffer attributet.
+Storleken på på bufferobjekten ska anpassas till den datamängd som ska lagras.
+
+En fast-kurva kan visas i det ordinare kurvfönstret, som t ex öppnas med Fast alternativet i 
+popup-menyn. Det kan även visas i en Ge graph med en FastCurve komponent.
+
+Se även DsFastCurve i Object Reference Manual.
+</topic>
+
+<topic> dg_sev
+Historisk datalagring
+Sev är lagrings miljön, där historisk data lagras i en databas. Det är ett komplement 
+till de andra miljöerna i Proview, runtime och operatörsmiljön. Sev innehåller server
+processer som hanterar hämtning och lagring av historisk data. Sev kan installeras separat
+i en lagringsstation, men är även inkluderad i runtime-paketet och kan startas i
+runtime miljön.
+
+<h1>Lagringstation
+En lagringsstation är en server nod med sev-paketet (pwrsev) installerat. Den här noden
+kommunicerar via Qcom med klient-noder och tar emot historisk data som lagras i en 
+MySQL eller SQLite databas. Lagrade kurvor kan visas på lagringsstationen med programmet 
+sev_xtt. Det kan ocksä skickas till klient-noder för att visas av rt_xtt i operatörsmiljön.
+
+<h2>Konfigurering
+Konfigureringen av en lagringsstation görs i Directoryvolymen genom att skapa ett
+SevNodeConfig objekt under ett BusConfig objekt. Noden kan placeras i ett projekt med
+process och operatörsstationer, eller den kan placeras i ett projekt med endast 
+lagringsstationen. Om lagringsstationen ska kommunicera med klient-noder i andra projekt 
+ska dessa konfigureras som friend nodes, med FriendNodeConfig objekt. Lagringsstationen ska 
+också konfigureras som en friend node till klient noderna. Attributet Connection i 
+FriendNodeConfig objektet ska sättas till QcomOnly. Det ska göras i FriendNodeConfig 
+objekten på båda sidor.
+
+<image> dg_fig110.png
+<b>Fig Konfigurering av en lagringsstation
+
+<h1>Historisk datalagring
+Den historiska datalagringen är uppdelad i en server process, sev_server, som hanterar
+lagring av historisk data, och en klient process, rt_sevhistmon, som samlar ihop data
+på klient-noden och skickar till servern. Server processen är en del av lagringsmiljön
+och klient processen är en del av runtimemiljön. Server processen är även inkluderad i
+runtimemiljön, vilket gör det möjligt att skapa en kombinerad process och lagringsstation.
+
+<h2>Konfigurering
+<b>SevHist
+
+Attribut som ska lagras i den historiska databasen konfigureras med SevHist objekt. 
+SevHist objekten placeras i en rot eller sub volym, och attributet anges i Attribute i 
+SevHist objektet. SevHist objektet läggs normalt under det objekt som ska lagras. Om 
+objektet har ett ActualValue attribut, läggs detta automatiskt in i SevHist objektet.
+
+<image> dg_fig111.png
+<b>Fig Konfigurering i en rootvolyme med SevHist, DsHistMonitor och SevHistThread objekt
+
+<b>SevHistObject
+
+SevHistObject liknar SevHist men lagrar alla attribut i ett objekt i databasen. Alla
+attributen lagras i en tabell med samma tid.
+
+<b>SevHistMonitor
+
+Klient processen, rt_sevhistmon, konfigureras med ett SevHistMonitor objekt i nod
+hierarkin. rt_sevhistmon skannar av SevHist och SevHistObject objekt och sänder historisk
+data till sev servern.
+
+<b>SevHistThread
+
+SevHistThread objekt placeras under SevHistMonitor objektet för att konfigurera tidbaser
+och server noder i klienten. Varje SevHist och SevHistObject objekt är kopplat till ett
+SevHistThread objekt som bestämmer till vilken servernod och hur ofta data sänds.
+
+<image> dg_fig111.png
+<b>Fig Konfigurering i en rotvolym med SevHist, SevHistMonitor och SevHistThread objekt
+
+<h1>Server process
+Server processen, sev_server, hanterar databasen som lagrar historisk data, och kommunicerar
+med klienter som tillhandahåller data, eller efterfrågar data för att till exempel visa 
+upp i ett kurvfönster. Server processen kan startas i runtime miljön, och konfigureras
+med ett SevServer objekt i nod hierarkin. I storage miljön startas server processen
+automatiskt vid Proview start
+
+
+<h1>Databas
+MySQL och SQLite kan väljas som databas i sev servern. Valet görs i SevServer objektet
+om Proview runtime är startat, eller i filen /etc/proview.cnf med parametern
+'sevDatabaseType', som kan vara 'sqlite' eller 'mysql'.
+
+<c>sevDatabaseType sqlite
+
+MySQL är mer uttestad och ska användas för större databaser.
+
+<h1>sev_xtt
+Sev_xtt är ett vertyg för att navigera och visa data i den historiska databasen. Det 
+startas på server noden och kan enbart visa data från denna nod. Vid start, hämtas en
+lista på posterna för alla lagrade attribut och visas i en trädstruktur. Genom att öppna 
+en post, visas egenskaperna för posten.
+
+<image> dg_fig112.png
+<b>Fig En post visas i Sev_xtt
+
+Om man väljer ut en post och aktiverar kurv-knappen, hämtas lagrade värden och visas i ett
+kurvfönster. När posten öppnas hämtas ca 500 värden från senast sparade data. Det är 
+sedan möjligt att zooma in eller ut med högre eller lägre upplösning, och och gä längre
+tillbaka i tiden.
+
+<image> dg_fig113.png
+<b>Fig Kurvfönster i sev_xtt
+
+Gamla poster kan tas bort ur databasen från sev_xtt genom att välja ut posten och aktivera
+'Function/Delete Item' i menyn. Endast användare med SevAdmin privilegier är auktoriserade
+att göra detta.
+
+<h2>Behörighet
+Det är två privilegier som avgör behörigheten i sev_xtt: SevRead krävs för att visa 
+innehållet i databasen. och SevAdmin krävs för att påverka databasen (att ta bort poster).
+Det finns två sätt att erhålla dessa privilegier:
+
+1. Att logga med en användare som har privilegiet SevRead eller SevAdmin.
+
+2. Att sätta default privilegier för sev_xtt i /etc/proview.cnf. Parametern
+   SevXttDefaultPriv kan ha värdena Read, Admin eller None. Om värdet är Read kommer
+   sev_xtt att ha SevRead privilegiet som default, om det är Admin, kommer sev_xtt att
+   ha SevAdmin som default, och om det är None krävs en inlogging med användare och 
+   passerord i sev_xtt.
+
+<h1>rt_xtt
+Historisk data kan även visas i rt_xtt i operatörsmiljön. För objekt med ett SevHist objekt
+som barn, adderas ett 'Historik' alternativ i popupmenyn. Historik metoden visar samma
+kurvfönster som sev_xtt.
+
+<image> dg_fig114.png
+<b>Fig Historik metoden in operatörsmiljön
+
+<h1>Installation av en lagringsstation
+<h2>MySQL
+Installera mysql-server på lagringstationen och addera användaren pwrp i mysql
+
+<c>> mysql
+<c>mysql> grant all privileges on *.* to pwrp@localhost;
+
+Det finns många parametrar för att trimma mysql. Ett tips är att öka storlekarna på 
+innodb poolen genom att addera följande rader i /etc/mysql/my.cnf
+
+<c>innodb_buffer_pool_size=1G
+<c>innodb_additional_mem_pool_size=20M
+
+<h2>SQLite
+Installera libsqlite3-0 på lagringsstationen.
+
+<h2>pwrsev
+Installera pwrsev paketet, distribuera och starta lagringsmiljön med
+
+<c>> pwrsev start 
+
+Belastningen på lagringsstationen beror huvudsakligen på antalet lagrade poster, deras
+skantider och diskarnas prestanda. Belastingen beräknas kontinuerligt av sev servern
+och lagras i databasen in tabellen sev_stat. Nedan visas ett exempel på hur man kan
+läsa statitiktabellen i en mysql databas, där pojektnamnet är opg7.
+
+<c>>mysql -u pwrp
+<c>mysql> use pwrp__opg7;
+<c>mysql> select * form set_stat;
+<c>| 7.24149 | 7.90368 | 907.713 | 908.8 | 32321 | 0 | 1 | 0 | 
+<c>1 row in set (0.00 sec)
+
+De första fyra värdena visar
+
+1. Nuvarand belastning, dvs exekvering av databasen in procent.
+2. Medel belastning.
+3. Antal lagrade poster per sekund, momentant värde.
+4. Antal lagrade poster per sekund, medelvärde.
+
+Medelvärdet på belastningen bör ligga en bra bit under 100 %.
+</topic>
+
+</chapter>
+
+<chapter>
 <topic> dg_application
 Applikationsprogrammering
 
@@ -3263,7 +3539,7 @@ Det här kapitlet handlar om hur man skriver applikations program, dvs program i 
 java som knyter upp sig mot Proview. Det förutsätts all läsaren har grundkunskaper i dessa
 språk.
 
-För många tillämningar går det utmärkt att koda all styrning grafisk med hjälp av plceditorn.
+För många tillämpningar går det utmärkt att koda all styrning grafisk med hjälp av plceditorn.
 Men det finns även tillämpningar som med grafisk programmering blir onödigt komplexa som t ex
 avancerade modeller, databashantering och materialstyning. Man skriver då ett applikationsprogram
 i c, c++ eller java som knyter upp sig mot realtids databasen rtdb. Programmet läser indata från
@@ -3329,7 +3605,7 @@ något är fel, udda att anropet gick bra. Status kan även översättas till en strä
 mer information om vad som är fel, vilket beskrivs närmare längre fram.
 
 <h1>Läsa och skriva värden
-Om vi vill skriva och läsa ett attribut i ett object kan man använda funktionerna 
+Om vi vill skriva och läsa ett attribut i ett objekt kan man använda funktionerna 
 gdh_SetObjectInfo() och gdh_GetObjectInfo().  
 
 En läsning resp skrivning av Dv'n H1-H2-Start kan se ut så här. Notera att värdet av Dv'n 
@@ -4059,7 +4335,6 @@ java-applikationen. Scriptet läggs in i appl-filen på samma sätt som en c-applik
 </topic>
 
 </headerlevel>
-</headerlevel>
 </chapter>
 
 <chapter>
@@ -4627,7 +4902,7 @@ Förutsättningen för att man ska kunna starta runtime-miljön är att utvecklingsno
 
 <c>  export PWR_BUS_ID=999
 
-För att runtime monitorn ska fungera krävs dessutom att det finns ett StatusMontitorConfig
+För att runtime monitorn ska fungera krävs dessutom att det finns ett StatusServerConfig
 objekt under $Node objektet i den volym som startas.
 
 Runtime Monitorn startas från Tools/Runtime Monitor i menyn. Här finns knappar för att
@@ -4684,7 +4959,7 @@ angivna som inte finns genererade resulterar det i varningsutskrifter vid distri
 <image> dg_fig106.png
 <b>Fig Distribute objektet
 
-Om man t ex har andra filer, t ex applikations-program, som ska ingå i paketet, lägger man ett
+Om man har andra filer, t ex applikations-program, som ska ingå i paketet, lägger man ett
 objekt av typen ApplDistribute under Distribute objektet. I ApplDistribute objektet kan man
 ange den eller de filer (specification med wildcard är tillåten) som ska adderas, samt till
 vilken katalog de ska kopieras.
@@ -5070,9 +5345,7 @@ Functions/Change value <t><t>öppna inmatningsfält för utvalt objekt.
 Functions/Close change value <t><t>stäng inmatningsfältet.
 
 </topic>
-</chapter>
 
-<chapter>
 <topic> helpwindow_refman
 Hjälp fönster
 
@@ -5080,9 +5353,7 @@ Hjälpfönstret används för att visa och navigera i hjälptexter. Hjälptexterna kan
 typer av manualer och handböcker som följer med Proview, eller hjälptexter som skrivs av
 konstruktören för att beskriva anläggningen och ge operatörerna assistans.
 </topic>
-</chapter>
 
-<chapter>
 <topic> messagewindow_refman
 Meddelande fönster
 
@@ -5098,9 +5369,7 @@ F <t>Fatalt fel (Fatal) <t>röd
 Om en pil visas före meddelandet innehåller meddelandet en länk till ett objekt. Genom att 
 klicka på pilen letas det aktuella objektet upp.
 </topic>
-</chapter>
 
-<chapter>
 <topic> utilities_refman
 Utilities fönstret
 
@@ -5563,7 +5832,7 @@ från popup-menyn för ett objekt i operatörsmiljön (metod 'Help').
 <option> printenable
 </topic>
 
-</headerlevel>
+<headerlevel>
 <topic> helpfile conversion
 Konvertering
 Hjälptexterna kan konverteras till html, PDF och PostScript format. Vid konvertering till
@@ -6764,12 +7033,13 @@ I kod exemplet nedan är In1 och In2 ingångar, Factor ett internt attribut och Ou
 Observera att pekar-elementet för ingångarna In1 och In2 används i koden.
 
 Modulen för c-koden kompileras och länkas ihop med plc-programmet genom att en länk-fil 
-skapas på katalogen $pwrp_exe. Filen ska namnges plc_'nodenamn'_'busnr'.opt, t ex 
-plc_mynode_0999.opt. Innehållet i filen skickas med som indata till länkaren, ld, och man 
+skapas på katalogen $pwrp_exe. Filen ska namnges plc_'nodenamn'_'busnr'_'plcname'.opt, t ex 
+plc_mynode_0999_plc.opt. Innehållet i filen skickas med som indata till länkaren, ld, och man 
 lägger även in modulerna för plc-koden. I exemplet nedan antas att dessa moduler ligger i 
 arkivet $pwrp_lib/libpwrp.a.
 
 <c>$pwr_obj/rt_io_user.o -lpwrp -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_pnak_dummy
+<c> -lpwr_cifx_dummy -lpwr_nodave_dummy
 
 </topic>
 
@@ -7615,9 +7885,10 @@ inte hanteras vid konverteringen.
 <b>Syntax
 <c>@aref 'bookmark' 'text' 
 </topic>
-
+</headerlevel>
 </chapter>
 
+<chapter>
 <topic>administrator
 Administration
 
@@ -7907,7 +8178,7 @@ för volymsobjektet i externvolymen i Objekt attributet. I exemplet ovan är denna
 _O0.1.99.55:0.
 
 <h2>Tips
-Applikationsfilen ligger på $pwrp_load och har nament
+Applikationsfilen ligger på $pwrp_load och har namnet
 
 <c>$pwrp_load/ld_appl_'nodename'_'busnumber'.txt 
 

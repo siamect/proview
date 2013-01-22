@@ -110,6 +110,7 @@ Plc programming <link>plc_programming
 Components and Aggregates <link>dg_components
 Call functions from the plc program <link>dg_plc_functions
 Communication <link> communication
+Data storage <link> dg_datastorage
 Application programming <link>dg_application
 Creating Process Graphics  <link> ge_man
 Java operator interface <link> dg_web_interface
@@ -421,7 +422,7 @@ in the PLCeditor or in the operator environment.
 Each class has a template object, i.e. an instance of the class that contains default values
 for the attributes of the class.
 
-Proview's basesystem contains about 900 classes. See Object Reference Manual for detailed
+Proview's basesystem contains about 1000 classes. See Object Reference Manual for detailed
 description. The designer can also create his own classes within a project.
 </topic>
 
@@ -1434,7 +1435,7 @@ Startup file for Proview.
 <c>ld_appl_<nodename>_<bus_no>.txt
 
 File to decide which libraries to link with the plc-program.
-<c>plc_<nodename>_<bus_no>.opt
+<c>plc_<nodename>_<bus_no>_<plc_name>.opt
 
 File to control setting of initial values when starting Proview.
 <c>pwrp_alias.dat
@@ -1589,7 +1590,7 @@ Startup file for Proview.
 ld_appl_<nodename>_<bus_no>.txt <link> file_ld_appl
 
 File to decide which libraries to link with the plc-program.
-plc_<nodename>_<bus_no>.opt <link> file_plc_opt
+plc_<nodename>_<bus_no>_<plc_name>.opt <link> file_plc_opt
 
 File to control setting of initial values when starting Proview.
 pwrp_alias.dat <link> file_pwrp_alias
@@ -1727,12 +1728,13 @@ want this application to interfere with the kernel applications and they run bet
 </topic>
 
 <topic> file_plc_opt
-plc_<node>_<bus_no>.opt
+plc_<node>_<bus_no>_<plc_name>.opt
 This file (if it exists) will be used as the link options when I build the plc-program.
 Proview by default links against some libraries and object-files. If you have your own
 opt-file you need to include these. A default opt-file would look like:
 
 <c>$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_pnak_dummy
+<c> -lpwr_cifx_dummy -lpwr_nodave_dummy
 
 Add your own libraries at will. The syntax to be used is the syntax for ld (The GNU linker). Proview 
 will create a template option file .opt_template that can be renamed to .opt and used as a template.
@@ -2192,14 +2194,14 @@ When the source code of the function was compiled, the object module
 $pwrp_obj/ra_myfunction.o was created. This has to be added to the link command when the
 plc program is built, which is achieved by adding the objectmodule to an option file that
 is input to the linker. The optionfile resides on the directory $pwrp_exe and is named
-plc_'nodename'_'qbus'.opt, for example
+plc_'nodename'_'qbus'_'plcname'.opt, for example
 
-<c>$pwrp_exe/plc_mynode_0999.opt
+<c>$pwrp_exe/plc_mynode_0999_plc.opt
 
 The following line is inserted into this file
 
 <c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy
-<c> -lpwr_usb_dummy -lpwr_pnak_dummmy -lpwr_cifx_dummy
+<c> -lpwr_usb_dummy -lpwr_pnak_dummmy -lpwr_cifx_dummy -lpwr_nodave_dummy
 
 We can now build the node and startup Proview runtime.
 
@@ -3291,6 +3293,286 @@ the parameters we just add more DataArithm's and continue in the same way.
 <image> dg_fig75.png
 
 </topic>
+</chapter>
+
+<chapter>
+<topic> dg_datastorage
+Data Storage
+
+There are three different types of data storage in Proview, trends, fast curves and historical
+data storage. Trends are storing data cyclic during a shorter period of time in the realtime
+database. Fast curves are triggered by some event and stores data for a period of time after
+the trigg event, and in some cases also before. The historical storage is made on disk in a 
+relation database and is able to cyclically store data in several years.
+
+<option> printdisable
+Trends <link> dg_trend
+Fast curves <link> dg_dsfastcurve
+Historical storage <link> dg_sev
+<option> printenable
+</topic>
+
+<topic> dg_trend
+Trends
+There are two types of trends
+- DsTrend with an internal data buffer that can store about 500 samples with a minimum
+  scan time of 1 s.
+- DsTrendCurve, with configurable buffer size and with a minimum scan time of 20 ms.
+
+<option> printdisable
+DsTrend <link> dg_dstrend
+DsTrendCurve <link> dg_dstrendcurve
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> dg_dstrend
+DsTrend
+
+The DsTrend object has an internal data buffer of 1912 byte that can for example store
+478 samples of type Float32. Also other data types are possible. The configuration is a
+bit odd because the buffer is divided into two parts, but normally you just have to state
+the attribute that is to be stored in DataName, and possibly insert a value into 
+Multiple to state the scan time.
+
+See also DsTrend in Object Reference Manual.
+</topic>
+
+<topic> dg_dstrendcurve
+DsTrendCurve
+
+<image> dg_fig109.png
+<b>Fig Trend configured with DsTrendCurve
+
+The DsTrendCurve object store trends with external buffer objects, where the size of the
+Buffer objects limits the number of samples that can be stored. A CricBuff100k object, as
+in the example below, can contain 25000 samples. The storing can be done with scantimes
+down to 20 ms. There are also a snapshot function where the current trend is frozen and
+displayed in a curve window where it can be analyzed in detail. The snapshot curve can be 
+stored to files and opened at a later occasion.
+
+The trend is configured with a DsTrendCure object. Up to 10 different attributes that is 
+to be stored, can specified in the Attribute array. For each attribute, a buffer object of
+type CircBuffer is created and stated in the Buffer attribute. The size of the buffer object
+should be adapted to the number of samples in the trend. Also a time buffer can be stated,
+but this is only necessary if the snapshot function is to be used. The time resolution
+determines the size fo the time buffer. For a resolution of 1 s, 4 bytes per sample is 
+used, and for a resolution of 1 ns 8 bytes is needed.
+
+<image> dg_fig107.png
+<b>Fig Configuration of DsTrendCurve with buffer objects
+
+<image> dg_fig108.png
+<b>Fig Configuration of DsTrendCurve
+
+Snapshot means that you take a copy of the data, and display it in a separate window. You 
+can configure the trend to show only a limited part of the stored data and that data is 
+stored for a longer period of time, and also with higher resolution. In the snapshot window
+it is then possible to go further back in time or to zoom in and increase the resolution of
+the curve.
+
+The attributes DisplayTime and DisplayResolution in the DsTrendCurve object is used to
+specify the part of the data that is displayed in the trend window. In the example above
+the total storage time is 500 s, while only the last 20 s (DisplayTime) is shown in the
+trend window. DisplayResolution is set to 4, which states that every forth sample is
+displayed. As the scan time is 20 ms a value i shown every 80 ms, and to totally
+20 s/0.08 s = 250 samples is viewed. The total data contains 500 s/0.02 s = 25000 samples
+that thus are available in the snapshot window.
+
+See also DsTrendCurve in Object Reference Manual.
+</topic>
+</headerlevel>
+
+<topic> dg_dsfastcurve
+Fast curves
+
+A Fast curve is triggered by a certain event and then stores data for a certain period of
+time than is then displayed in a curve window. The trigger event can be a digital signal
+that goes high, an analog value reaching a limit value, or a manual triggering. The fast curve
+can be configured to continuously store data so that also data before the trigger point can
+be viewed.
+
+A fast curve is configured with a DsFastCurve object. Up to 10 attributes can be handled by
+one DsFastCurve object and the attributes are stated in the Attribute array. For each 
+attribute a buffer object should be created and stated in the Buffers array. Also a buffer
+object for the time should be created and stated in the TimeBuffer attribute.
+The size of the buffer objects should be adapted to the data quantity that is to be stored.
+
+A fast curve can be viewed in the ordinary curve window, that is opened for example from the
+Fast item in the popup menu. It can also be viewed in a Ge graph with a FastCurve component.
+
+See also DsFastCurve in Object Reference Manual.
+</topic>
+
+<topic> dg_sev
+Historical data storage
+Sev is the storage environment, where historical data is stored in a database. It is a 
+complement to the other environments in Proview, the development, runtime and operator 
+environment. Sev contains server processes that handles fetching and storage of historical 
+data. Sev can be installed as a separate unit on a storage station, but it is also included 
+in the runtime package and can be started in the runtime environment.
+
+<h1>Storage Station
+A Storage station is a server node where the sev package (pwrsev) is installed. This node 
+communicates via Qcom with client nodes and receives historical data which is stored in a 
+MySQL or SQLite database. The historical data can be handled and displayed on the storage 
+station by the program sev_xtt, or it can be sent to the client nodes and viewed by rt_xtt 
+in the operator environment.
+
+<h2>Configuration
+The configuration of a storage station is made in the Directory Volume, by creating a 
+SevNodeConfig object below a BusConfig object. The node can be placed in a project with 
+process and operator stations, or it be be placed in a separate project with the storage 
+station alone. If the storage station will communicate with client nodes in other projects, 
+they should be configured as friend nodes, with FriendNodeConfig objects. The storage station 
+should also be configured as a friend node to the client nodes. The attribute Connection
+in the FriendNodeConfig should be set to QcomOnly. This should be done in the FriendNodeConfig 
+objects on both sides.
+
+<image> dg_fig110.png
+<b>Fig Configuration of a Storage Station
+
+<h1>Historical Data Storage
+The historical data storage is divided in a server process, sev_server, that handles the 
+storage of the historical data, and a client process, rt_sevhistmon, that collects the data on 
+the client node, and sends it to the server. The server process is a part of the storage 
+environment and the client process a part of the runtime environment. The server process is 
+also included in the runtime environment, which makes is possible to create a combined 
+process/storage station.
+
+<h2>Configuration
+<b>SevHist
+
+Attributes that are to be stored in the historical database are configured with SevHist 
+objects. The SevHist objects are placed in a root or sub volume, and the attribute is stated 
+in Attribute in the SevHist object. The SevHist object is normally placed below the object 
+that is to be stored, and if this object has an ActualValue attribute, this is automatically 
+inserted into the SevHist object.
+
+<image> dg_fig111.png
+<b>Fig Configuration in a rootvolume with SevHist, DsHistMonitor and SevHistThread objects
+
+<b>SevHistObject
+
+SevHistObject is similar to SevHist but will store all the attributes in one object in 
+the database. All attributes will be saved in on table with the same time.
+
+<b>SevHistMonitor
+
+The client process, rt_sevhistmon, is configured with a SevHistMonitor object in the node 
+hierarchy. rt_sevhistmon scans SevHist and SevHistObject objects and send historical data 
+to the sev server.
+
+<b>SevHistThread
+
+SevHistThread object are placed under the SevHistMonitor object to configure time bases and 
+server nodes in the client. Each SevHist and SevHistObject object is connected to a 
+SevHistThread object that determines to which server node, and how often data is sent.
+
+<image> dg_fig111.png
+<b>Fig Configuration in a rootvolume with SevHist, SevHistMonitor and SevHistThread objects
+
+<h1>Server process
+The server process, sev_server, handles the database that stores the historica data, and 
+communicates with the clients that supplies data, or request data to, for example, display in 
+a curve window. The server can be started in the runtime environment, and is the configured 
+by a SevServer object in the node hierarchy. In the storage environment, the server process 
+is started automatically at Proview startup.
+
+
+<h1>Database
+MySQL or SQLite can be chosen as database in the sev server. The choice is made in
+the SevServer object, if Proview runtime is started, or in the /etc/proview.cnf file with 
+the parameter 'sevDatabaseType' which can have the value 'sqlite' or 'mysql'.
+
+<c>sevDatabaseType sqlite
+
+MySQL is more tested and should be used for larger databases.
+
+<h1>sev_xtt
+Sev_xtt is a tool to navigate and display data in the historical database. It is started on 
+the server node and can only view data in this node. At start, a list of all stored attributes 
+is fetched and viewed in a tree structure. By opening an item (a stored attribute) the 
+properties for the item is viewed.
+
+<image> dg_fig112.png
+<b>Fig An item viewed in Sev_xtt
+
+If you select an item and activate the curve button, stored values are fetched and viewed in a 
+curve window. When the item is opened, about 500 values are fetched from the latest stored 
+data. It is then possible to zoom in or out with higher or lower resolution, and go further 
+back in time.
+
+<image> dg_fig113.png
+<b>Fig Curve window in sev_xtt
+
+Old items can be removed from the data base from sev_xtt by selecting the item and activate 
+'Function/Delete Item' in the menu. Only users with the SevAdmin privilege are authorized to 
+do this.
+
+<h2>Access
+There are two privileges that controls the access in sev_xtt: SevRead is required to view the 
+content of the storage database, and SevAdmin is required to affect the storage database (so 
+far to delete storage items). There are two ways to gain these privileges:
+
+1. To login as a user that is granted the privileges SevRead or SevAdmin.
+
+2. To set a default privilege for sev_xtt in /etc/proview.cnf. The parameter sevXttDefaultPriv 
+   can have the values Read, Admin or None. If the value is Read, sev_xtt will have the 
+   SevRead privilege as default, if the value is Admin, sev_xtt will have the SevAdmin 
+   privilege as default, and if the value is None, a login with username and password in
+   sev_xtt is required.
+
+<h1>rt_xtt
+Historical data can also be viewed by rt_xtt in the operator environment. For objects that 
+have a SevHist object as a child, a 'History' menu item is added to the popup menu. The 
+history method views the same curve window as sev_xtt.
+
+<image> dg_fig114.png
+<b>Fig History method in the operator environment
+
+<h1>Installation of a storage station
+<h2>MySQL
+Install mysql-server on the storage station, and add the mysql user pwrp
+
+<c>> mysql
+<c>mysql> grant all privileges on *.* to pwrp@localhost;
+
+There are lots of parameters to tune mysql. One hint is to increase the innodb pool
+sizes by adding these lines in /etc/mysql/my.cnf
+
+<c>innodb_buffer_pool_size=1G
+<c>innodb_additional_mem_pool_size=20M
+
+<h2>SQLite
+Install libsqlite3-0 on the storage station.
+
+<h2>pwrsev
+Install pwrsev package, distribute and then start the storage environment with
+
+<c>> pwrsev start 
+
+The load of a storage station is mainly dependent of the number of stored items, their
+scan times and performance of the disk drive. The load is continuously calculated by the 
+sev_server and stored in the database in the sev_stat table. Below is an example of how
+to read the statistic table in a mysql database, where the project name is opg7.
+
+<c>>mysql -u pwrp
+<c>mysql> use pwrp__opg7;
+<c>mysql> select * form set_stat;
+<c>| 7.24149 | 7.90368 | 907.713 | 908.8 | 32321 | 0 | 1 | 0 | 
+<c>1 row in set (0.00 sec)
+
+The four first values shows 
+1. The current load, ie database execution time in percentage.
+2. Medium load.
+3. Number of data items stored per second, current value.
+4. Number of data items stored per second, medium value.
+
+The medium load should be well below 100 %.
+
+</topic>
+
 </chapter>
 
 <chapter>
@@ -4671,7 +4953,7 @@ have to be fulfilled
   PWR_BUS_ID to the buss stated in the BusConfig object in the project volume, for example
 <c>  export PWR_BUS_ID=999
 
-The runtime monitor also requires a StatusMontorConfig object to be configured below
+The runtime monitor also requires a StatusServerConfig object to be configured below
 the $Node object in the volume to start.
 
 The Runtime Monitor is started from Tools/Runtime Monitor in the menu. There are buttons
@@ -5122,9 +5404,7 @@ Functions/Change value <t><t>Open an input field for the selected object.
 Functions/Close change value <t><t>Close the input field.
 
 </topic>
-</chapter>
 
-<chapter>
 <topic> helpwindow_refman
 Help window
 
@@ -5132,9 +5412,7 @@ The helpwindow is used to view and navigate in help texts. The help texts can be
 manuals and guides that comes with Proview, or helptexts written by the constructor to
 describe the plant and to give assistance to the operators.
 </topic>
-</chapter>
 
-<chapter>
 <topic> messagewindow_refman
 Message window
 
@@ -5151,9 +5429,7 @@ F <t>Fatal    <t>red
 If  an arrow is displayed in front of the message, the message contains a link to an object.
 By clicking the arrow, the object is displayed.
 </topic>
-</chapter>
 
-<chapter>
 <topic> utilities_refman
 Utilities
 
@@ -6859,13 +7135,13 @@ output.
 Note that the pointer element for the inputs In1 and In2 are used in the code.
 
 The module of the c-code is compiled and linked with the plc program. This requires a link
-file to be placed on the directory $pwrp_exe. The file is named plc_'nodename'_'busnumber'.opt,
-e.g. plc_mynode_0999.opt. The content of the file is input to the linker, ld, and here you
-add the modules of the plc-code. In the example below these modules are placed in the archive
-$pwrp_lib/libpwrp.a
+file to be placed on the directory $pwrp_exe. The file is named 
+plc_'nodename'_'busnumber'_'plcname'.opt, e.g. plc_mynode_0999_plc.opt. The content of the 
+file is input to the linker, ld, and here you add the modules of the plc-code. In the example 
+below these modules are placed in the archive $pwrp_lib/libpwrp.a
 
 <c>$pwr_obj/rt_io_user.o -lpwrp -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_pnak_dummy
-
+<c> -lpwr_cifx_dummy -lpwr_nodave_dummy
 
 
 </topic>
