@@ -332,7 +332,7 @@ void wb_crrgen::load( pwr_tStatus *rsts, int sim)
 
     a.value( action);
     if ( strstr( action, ".pwg")) {
-      sprintf( fname, "$pwrp_exe/%s", action);
+      sprintf( fname, "$pwrp_exe/%s", cdh_Low(action));
 
       dcli_translate_filename( fname, fname);
 
