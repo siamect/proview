@@ -232,11 +232,12 @@ int GrowImage::update()
 
   if ( date == info.st_ctime)
     return 0;
-  date = info.st_ctime;
 
   ctx->gdraw->image_load( filename, &original_image, &image);
   if ( !original_image) 
     return 0;
+
+  date = info.st_ctime;
 
   set_image_color( image, NULL);
   ctx->gdraw->image_scale( current_width, current_height,

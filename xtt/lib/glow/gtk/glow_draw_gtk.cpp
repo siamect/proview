@@ -2893,6 +2893,11 @@ int GlowDrawGtk::image_load( char *imagefile,
   if ( *orig_im)
     gdk_pixbuf_unref( (GdkPixbuf *)*orig_im);
   *orig_im = (glow_tImImage *) gdk_pixbuf_new_from_file( imagefile, 0);
+  if ( !*orig_im) {
+    if ( im)
+      *im = 0;
+    return 0;
+  }
 
   if ( im)
     *im = (glow_tImImage *) gdk_pixbuf_copy( (GdkPixbuf *)*orig_im);
