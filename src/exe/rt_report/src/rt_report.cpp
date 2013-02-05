@@ -302,15 +302,23 @@ void rt_report::create_report( pwr_sClass_Report *o)
     switch ( o->DocumentFormat) {
     case pwr_eDocumentFormatEnum_PDF:
       // Convert to pdf
-      sprintf( cmd, "co_convert -f -d %s %s", 
+      if ( strcmp( display, "") != 0)
+	sprintf( cmd, "export DISPLAY=%s;co_convert -f -d %s %s", 
+		 display, "$pwrp_lis", tmpfile);
+      else
+	sprintf( cmd, "co_convert -f -d %s %s", 
 	       "$pwrp_lis", tmpfile);
       system( cmd);
       strcpy( cnvfile, "$pwrp_lis/report.pdf");
       break;
     case pwr_eDocumentFormatEnum_Html:
       // Convert to pdf
-      sprintf( cmd, "co_convert -s -d %s %s", 
-	       "$pwrp_lis", tmpfile);
+      if ( strcmp( display, "") != 0)
+	sprintf( cmd, "export DISPLAY=%s;co_convert -s -d %s %s", 
+		 display, "$pwrp_lis", tmpfile);
+      else
+	sprintf( cmd, "co_convert -s -d %s %s", 
+		 "$pwrp_lis", tmpfile);
       system( cmd);
       strcpy( cnvfile, "$pwrp_lis/report_index.html");
       break;
@@ -504,8 +512,12 @@ void rt_report::create_report( pwr_sClass_Report *o)
     pwr_tCmd cmd;
     pwr_tFileName target_file;
 
-    sprintf( cmd, "co_convert -n -d %s %s", 
-	     "$pwrp_lis", tmpfile);
+    if ( strcmp( display, "") != 0)
+      sprintf( cmd, "export DISPLAY=%s;co_convert -n -d %s %s", 
+	       display, "$pwrp_lis", tmpfile);
+    else
+      sprintf( cmd, "co_convert -n -d %s %s", 
+	       "$pwrp_lis", tmpfile);
     system( cmd);
 
     strcpy( cnvfile, "$pwrp_lis/report.ps");
@@ -540,22 +552,34 @@ void rt_report::create_report( pwr_sClass_Report *o)
     switch ( o->DocumentFormat) {
     case pwr_eDocumentFormatEnum_PDF:
       // Convert to pdf
-      sprintf( cmd, "co_convert -f -d %s %s", 
-	       "$pwrp_lis", tmpfile);
+      if ( strcmp( display, "") != 0)
+	sprintf( cmd, "export DISPLAY=%s;co_convert -f -d %s %s", 
+		 display, "$pwrp_lis", tmpfile);
+      else
+	sprintf( cmd, "co_convert -f -d %s %s", 
+		 "$pwrp_lis", tmpfile);
       system( cmd);
       strcpy( cnvfile, "$pwrp_lis/report.pdf");
       break;
     case pwr_eDocumentFormatEnum_Html:
       // Convert to pdf
-      sprintf( cmd, "co_convert -s -d %s %s", 
-	       "$pwrp_lis", tmpfile);
+      if ( strcmp( display, "") != 0)
+	sprintf( cmd, "export DISPLAY=%s;co_convert -s -d %s %s", 
+		 display, "$pwrp_lis", tmpfile);
+      else
+	sprintf( cmd, "co_convert -s -d %s %s", 
+		 "$pwrp_lis", tmpfile);
       system( cmd);
       strcpy( cnvfile, "$pwrp_lis/report_index.html");
       break;
     case pwr_eDocumentFormatEnum_Postscript:
       // Convert to Postscript
-      sprintf( cmd, "co_convert -n -d %s %s", 
-	       "$pwrp_lis", tmpfile);
+      if ( strcmp( display, "") != 0)
+	sprintf( cmd, "export DISPLAY=%s;co_convert -n -d %s %s", 
+		 display, "$pwrp_lis", tmpfile);
+      else
+	sprintf( cmd, "co_convert -n -d %s %s", 
+		 "$pwrp_lis", tmpfile);
       system( cmd);
       strcpy( cnvfile, "$pwrp_lis/report.ps");
       break;
