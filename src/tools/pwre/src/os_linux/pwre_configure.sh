@@ -221,6 +221,7 @@ pwre_create_makedir()
 #pwre_os="os_linux"
 #pwre_hw="hw_x86"
 
+let ebuild=0
 cfile="$pwre_broot/pwre_${pwre_hw:3}_${pwre_os:3}.cnf"
 dos=`eval echo ${pwre_os} | tr [:lower:] [:upper:]`
 dhw=`eval echo ${pwre_hw} | tr [:lower:] [:upper:]`
@@ -238,11 +239,15 @@ let inc_cnt=0
 let lib_cnt=0
 let i=0
 hwpl=`eval uname -i`
-ubuntu_ver=`cat /etc/issue | grep Ubuntu | awk '{ print $2 }'`
-if [ "$ubuntu_ver" != "" ] &&[ "$ubuntu_ver" != "12.04" ] && [ $hwpl == "i686" ] ; then
-  hwpl=i386
+machine=`eval uname -m`
+if [ ${machine:0:3} == "arm" ]; then
+  hwpl=arm
+else
+  ubuntu_ver=`cat /etc/issue | grep Ubuntu | awk '{ print $2 }'`
+  if [ "$ubuntu_ver" != "" ] &&[ "$ubuntu_ver" != "12.04" ] && [ $hwpl == "i686" ] ; then
+    hwpl=i386
+  fi
 fi
-
 # Bash
 if [ "$SHELL" != "/bin/bash" ] && [ "$SHELL" != "/usr/local/bin/bash" ]; then
     echo "Config error: Default shell has to be bash"
@@ -283,6 +288,8 @@ elif [ "$1" = "--version" ] && [ "$2" != "" ] && [ "$3" != "" ]; then
   buildversion=$2" "$3
 elif [ "$1" = "--reset-version" ]; then
   buildversion=""
+elif [ "$1" = "--ebuild" ]; then
+  ebuild=1
 elif [ "$1" != "" ]; then
   echo "Unknown option \"$1\""
   exit
@@ -308,8 +315,8 @@ else
   echo "export PWRE_CONF_BUILDVERSION=\"0\"" >> $cfile
 fi
       
-if test $pwre_hw == "hw_arm"; then
-
+if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
+  echo "Arm ebuild"
   pwre_config_check_include jni   JNI   1 $jdk/include/jni.h
   pwre_config_check_include jni   JNI   0 $jdk/include/linux/jni_md.h
 
@@ -357,23 +364,29 @@ if test $pwre_hw == "hw_arm"; then
   echo "export pwre_conf_dtt_platform=\"arm_linux\"" >> $cfile
 else
 
+  if [ $pwre_hw == "hw_arm" ]; then
+    gnu=gnueabihf
+  else
+    gnu=gnu
+  fi
+
   #Gtk
-  echo ""
+  echo "$hwpl $gnu"
   echo "Mandatory :"
-  pwre_config_check_lib gtk    	  GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-gnu/libgtk-x11-2.0.so"
+  pwre_config_check_lib gtk    	  GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so"
 
   pwre_config_check_lib libantlr  LIBANTLR lib wb 0 "/usr/lib/libantlr.a:/usr/local/lib/libantlr.a"
-  pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 "/usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a:/usr/lib/$hwpl-linux-gnu/librpcsvc.a"
-  pwre_config_check_lib libasound LIBASOUND lib lib 0 "/usr/lib/libasound.so:/usr/lib/libasound.a:/usr/lib/$hwpl-linux-gnu/libasound.so"
-  pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 "/usr/lib/libpthread.so:/usr/lib/libpthread.a:/usr/lib/$hwpl-linux-gnu/libpthread.so"
-  pwre_config_check_lib libm      LIBM     lib lib 0 "/usr/lib/libm.so:/usr/lib/libm.a:/usr/lib/$hwpl-linux-gnu/libm.so"
-  pwre_config_check_lib libdb     LIBDB    lib lib 0 "/usr/lib/libdb.so:/usr/lib/$hwpl-linux-gnu/libdb.so"
-  pwre_config_check_lib libdb_cxx LIBDB_CXX lib wb 1 "/usr/lib/libdb_cxx.so:/usr/lib/$hwpl-linux-gnu/libdb_cxx.so"
-  pwre_config_check_lib libz      LIBZ     lib lib 0 "/usr/lib/libz.so:/usr/lib/libz.a:/usr/lib/$hwpl-linux-gnu/libz.so"
-  pwre_config_check_lib libcrypt  LIBCRYPT lib lib 0 "/usr/lib/libcrypt.so:/usr/lib/libcrypt.a:/usr/lib/$hwpl-linux-gnu/libcrypt.so"
-  pwre_config_check_lib librt     LIBRT    lib lib 0 "/usr/lib/librt.so:/usr/lib/librt.a:/usr/lib/$hwpl-linux-gnu/librt.so"
-  pwre_config_check_lib libfl     LIBFL    lib lib 0 "/usr/lib/libfl.so:/usr/lib/libfl.a:/usr/lib/$hwpl-linux-gnu/libfl.so"
-  pwre_config_check_lib libX11    LIBX11   lib lib 0 "/usr/lib/libX11.so:/usr/lib/$hwpl-linux-gnu/libX11.so"
+  pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 "/usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a:/usr/lib/$hwpl-linux-$gnu/librpcsvc.a"
+  pwre_config_check_lib libasound LIBASOUND lib lib 0 "/usr/lib/libasound.so:/usr/lib/libasound.a:/usr/lib/$hwpl-linux-$gnu/libasound.so"
+  pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 "/usr/lib/libpthread.so:/usr/lib/libpthread.a:/usr/lib/$hwpl-linux-$gnu/libpthread.so"
+  pwre_config_check_lib libm      LIBM     lib lib 0 "/usr/lib/libm.so:/usr/lib/libm.a:/usr/lib/$hwpl-linux-$gnu/libm.so"
+  pwre_config_check_lib libdb     LIBDB    lib lib 0 "/usr/lib/libdb.so:/usr/lib/$hwpl-linux-$gnu/libdb.so"
+  pwre_config_check_lib libdb_cxx LIBDB_CXX lib wb 1 "/usr/lib/libdb_cxx.so:/usr/lib/$hwpl-linux-$gnu/libdb_cxx.so"
+  pwre_config_check_lib libz      LIBZ     lib lib 0 "/usr/lib/libz.so:/usr/lib/libz.a:/usr/lib/$hwpl-linux-$gnu/libz.so"
+  pwre_config_check_lib libcrypt  LIBCRYPT lib lib 0 "/usr/lib/libcrypt.so:/usr/lib/libcrypt.a:/usr/lib/$hwpl-linux-$gnu/libcrypt.so"
+  pwre_config_check_lib librt     LIBRT    lib lib 0 "/usr/lib/librt.so:/usr/lib/librt.a:/usr/lib/$hwpl-linux-$gnu/librt.so"
+  pwre_config_check_lib libfl     LIBFL    lib lib 0 "/usr/lib/libfl.so:/usr/lib/libfl.a:/usr/lib/$hwpl-linux-$gnu/libfl.so"
+  pwre_config_check_lib libX11    LIBX11   lib lib 0 "/usr/lib/libX11.so:/usr/lib/$hwpl-linux-$gnu/libX11.so"
 
   pwre_config_check_include antlr ANTLR 1 "/usr/include/antlr/CommonAST.hpp:/usr/local/include/antlr/CommonAST.hpp"
   pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
@@ -384,13 +397,13 @@ else
   echo ""
   echo "Optional :"
   pwre_config_check_lib motif     MRM      motif motif 0 "/usr/lib/libMrm.so"
-  pwre_config_check_lib mysql     MYSQL    lib lib 1 "/usr/lib/libmysqlclient.so:/usr/lib/mysql/libmysqlclient.so:/usr/lib/$hwpl-linux-gnu/libmysqlclient.so"
+  pwre_config_check_lib mysql     MYSQL    lib lib 1 "/usr/lib/libmysqlclient.so:/usr/lib/mysql/libmysqlclient.so:/usr/lib/$hwpl-linux-$gnu/libmysqlclient.so"
   pwre_config_check_include sqlite3 SQLITE3   1 "/usr/include/sqlite3.h"
-  pwre_config_check_lib libsqlite3   LIBSQLITE3  lib lib 0 "/usr/lib/libsqlite3.so:/usr/lib/$hwpl-linux-gnu/libsqlite3.so"
+  pwre_config_check_lib libsqlite3   LIBSQLITE3  lib lib 0 "/usr/lib/libsqlite3.so:/usr/lib/$hwpl-linux-$gnu/libsqlite3.so"
   pwre_config_check_lib mq        MQ       lib mq  1 "/usr/lib/libdmq.so:/usr/local/dmq/lib/libdmq.so"
   pwre_config_check_lib wmq       WMQ      lib wmq 1 "/usr/lib/libmqic.so"
   pwre_config_check_lib libpnioif PNAK     lib pnak 1 "/usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a"
-  pwre_config_check_lib libusb    LIBUSB   lib libusb 1 "/usr/lib/libusb-1.0.so:/usr/lib/$hwpl-linux-gnu/libusb-1.0.so"
+  pwre_config_check_lib libusb    LIBUSB   lib libusb 1 "/usr/lib/libusb-1.0.so:/usr/lib/$hwpl-linux-$gnu/libusb-1.0.so"
 
   pwre_config_check_include mq    MQ    0 "/usr/local/dmq/include/p_entry.h"
   pwre_config_check_include wmq   WMQ   1 "/opt/mqm/inc/cmqc.h"

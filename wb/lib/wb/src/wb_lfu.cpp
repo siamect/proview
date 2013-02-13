@@ -1356,6 +1356,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		 os == pwr_mOpSys_PPC_LINUX ||
 		 os == pwr_mOpSys_X86_LINUX ||
 		 os == pwr_mOpSys_X86_64_LINUX ||
+		 os == pwr_mOpSys_ARM_LINUX ||
 		 os == pwr_mOpSys_X86_64_MACOS ||
 		 os == pwr_mOpSys_X86_64_FREEBSD ||
 		 os == pwr_mOpSys_X86_64_OPENBSD ||
@@ -3162,6 +3163,7 @@ pwr_tStatus lfu_check_opt_file( ldh_tSesContext ldhses, char *nodename, int bus_
     case pwr_mOpSys_PPC_LINUX:
     case pwr_mOpSys_X86_LINUX:
     case pwr_mOpSys_X86_64_LINUX:
+    case pwr_mOpSys_ARM_LINUX:
     case pwr_mOpSys_X86_64_MACOS:
     case pwr_mOpSys_CustomBuild:
       fp << 

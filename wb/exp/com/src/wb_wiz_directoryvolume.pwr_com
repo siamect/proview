@@ -561,11 +561,16 @@ page_4:
     attr = name + ".NodeName";
     SetAttribute( attr, node_name[i]);
     attr = name + ".OperatingSystem";
+
     if ( os == "Linux")
       if ( hw == "x86_64")
         SetAttribute( attr, 128);
       else
-        SetAttribute( attr, 64);
+        if ( hw == "ARM")
+          SetAttribute( attr, 512);
+        else
+          SetAttribute( attr, 64);
+        endif
       endif
     endif
     if ( os == "MacOS")

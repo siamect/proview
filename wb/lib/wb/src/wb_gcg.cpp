@@ -129,6 +129,7 @@ extern "C" {
 #define IS_LINUX(os) ((os & pwr_mOpSys_PPC_LINUX) \
 		     || (os & pwr_mOpSys_X86_LINUX) \
 		     || (os & pwr_mOpSys_X86_64_LINUX) \
+		     || (os & pwr_mOpSys_ARM_LINUX) \
 		     || (os & pwr_mOpSys_CustomBuild))
 
 #define IS_UNIX(os) (IS_LINUX(os) || IS_LYNX(os) || IS_MACOS(os) || IS_FREEBSD(os) || IS_OPENBSD(os) || IS_CYGWIN(os))
@@ -848,6 +849,8 @@ static pwr_tStatus gcg_get_build_host(
 	  strcpy(logname, "pwr_build_host_x86_linux");
 	else if (os & pwr_mOpSys_X86_64_LINUX)
 	  strcpy(logname, "pwr_build_host_x86_64_linux");
+	else if (os & pwr_mOpSys_ARM_LINUX)
+	  strcpy(logname, "pwr_build_host_arm_linux");
 	else if (os & pwr_mOpSys_X86_64_MACOS)
 	  strcpy(logname, "pwr_build_host_x86_64_macos");
 	else if (os & pwr_mOpSys_X86_64_FREEBSD)
@@ -5543,6 +5546,11 @@ int	gcg_comp_rtnode(
     strcpy( os_str, "X86_64_LINUX"); /* Not used */
     max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
     break;
+  case pwr_mOpSys_ARM_LINUX:
+    strcpy( objdir, "xxx");
+    strcpy( os_str, "ARM_LINUX"); /* Not used */
+    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
+    break;
   case pwr_mOpSys_X86_64_MACOS:
     strcpy( objdir, "xxx");
     strcpy( os_str, "X86_64_MACOS"); /* Not used */
@@ -5789,6 +5797,7 @@ int	gcg_comp_rtnode(
 	  case pwr_mOpSys_PPC_LINUX:
 	  case pwr_mOpSys_X86_LINUX:
 	  case pwr_mOpSys_X86_64_LINUX:
+	  case pwr_mOpSys_ARM_LINUX:
 	  case pwr_mOpSys_X86_64_MACOS:
 	  case pwr_mOpSys_X86_64_FREEBSD:
 	  case pwr_mOpSys_X86_64_OPENBSD:

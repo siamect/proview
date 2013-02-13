@@ -132,7 +132,11 @@ pwra_parse ()
     os="os_cygwin"
     hw="hw_x86"
   else
-    if [ $machine != "x86_64" ]; then
+    if [ $machine == "x86_64" ]; then
+      machine="x86_64"
+    elif [ ${machine:0:3} == "arm" ]; then
+      machine="arm"
+    else
       machine="x86"
     fi
     os="os_linux"  

@@ -271,8 +271,8 @@ let OpSys_X86_LYNX=5
 let OpSys_PPC_LINUX=6
 let OpSys_X86_LINUX=7
 let OpSys_X86_64_LINUX=8
-let OpSys_ARM_LINUX=9
-let OpSys__High=10
+let OpSys_ARM_LINUX=10
+let OpSys__High=11
 
 vOpSys="custombuild,vax_vms,axp_vms,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux,arm_linux"
 
@@ -332,6 +332,8 @@ fi
 machine=`eval uname -m`
 if [ $machine = "x86_64" ]; then
   CurrentOpSys=$OpSys_X86_64_LINUX
+elif [ ${machine:0:3} = "arm" ]; then
+  CurrentOpSys=$OpSys_ARM_LINUX
 else
   CurrentOpSys=$OpSys_X86_LINUX
 fi
@@ -394,8 +396,6 @@ elif [ $OpSys -eq $OpSys_X86_64_LINUX ]; then
 
 elif [ $OpSys -eq $OpSys_ARM_LINUX ]; then
   pwrp_gc="$pwrp_tmp"
-
-  echo "-- Cross compilation ARM_LINUX"
 
 # Suppress all warnings, -x
   cc_cmd="$cc -c -x c -Wall $cc_debug -D_REENTRANT -DOS_LINUX -DOS_POSIX -I$pwrinc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"

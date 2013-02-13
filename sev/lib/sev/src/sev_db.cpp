@@ -49,13 +49,14 @@ sev_db *sev_db::open_database( sev_eDbType type)
     return 0;
 #endif
   }
-  else if ( type == sev_eDbType_Sqlite)
+  else if ( type == sev_eDbType_Sqlite) {
 #if defined PWRE_CONF_SQLITE3
     return sev_dbsqlite::open_database();
 #else
     printf( "** Release is not built with sqlite3\n");
     return 0;
 #endif
+  }
   else
     return 0;
 }

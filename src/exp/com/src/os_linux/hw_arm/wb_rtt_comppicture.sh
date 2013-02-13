@@ -54,7 +54,11 @@ then
   then
     ar_name_pict=${pwrp_lib}/ra_rtt_${pgmname}_pict.a
 
-    cc=$pwre_cc
+    if [ "$pwre_cc" != "" ]; then
+      cc=$pwre_cc
+    else
+      cc=gcc
+    fi
     cinc="-I$pwr_inc -I$pwrp_rttbld"
     cflags="-DOS_LINUX -DOS_POSIX -DOS=linux -DHW_ARM=1 -DPOSIX_SOURCE -DWall" 
     ${cc} -c -o $pwrp_obj/${name}.o $pwrp_rttbld/${name}.c ${cinc} ${cflags}
@@ -65,7 +69,11 @@ then
     bld_dir=$pwre_broot/$pwre_os/$pwre_hw/bld/lib/dtt
 #   echo $ar_name $ar_name_pict
 
-    cc=$pwre_cc
+    if [ "$pwre_cc" != "" ]; then
+      cc=$pwre_cc
+    else
+      cc=gcc
+    fi
     cinc="-I$pwr_inc -I${bld_dir}"
     cflags="-DOS_LINUX -DOS_POSIX -DOS=linux -DHW_ARM=1 -DPOSIX_SOURCE -DWall" 
     ${cc} -c -o ${bld_dir}/${name}.o \
