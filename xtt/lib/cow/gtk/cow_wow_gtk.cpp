@@ -617,6 +617,7 @@ int CoWowGtk::DisplayWarranty()
   char 	title[80];
   FILE 	*fp;
   int 	i;
+  int   c;
   pwr_tFileName fname;
   wow_t_question_cb *cbdata;
 
@@ -636,9 +637,10 @@ int CoWowGtk::DisplayWarranty()
   }
 
   for ( i = 0; i < (int)sizeof(text) - 1; i++) {
-    text[i] = fgetc( fp);
-    if ( text[i] == EOF)
+    c = fgetc( fp);
+    if ( c == EOF)
       break;
+    text[i] = c;
   }
   text[i] = 0;
   fclose( fp);
@@ -702,6 +704,7 @@ void CoWowGtk::DisplayLicense()
   FILE *fp;
   char fname[200];
   int i;
+  int c;
 
   strcpy( title, translate_utf8("License"));
 
@@ -718,9 +721,10 @@ void CoWowGtk::DisplayLicense()
   }
 
   for ( i = 0; i < (int)sizeof(text) - 1; i++) {
-    text[i] = fgetc( fp);
-    if ( text[i] == EOF)
+    c = fgetc( fp);
+    if ( c == EOF)
       break;
+    text[i] = c;
   }
   fclose( fp);
   text[i] = 0;

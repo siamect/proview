@@ -1570,7 +1570,11 @@ pwrc_parse ()
     hw="hw_x86_64"
     platform="x86_64_freebsd"
   else
-    if [ $machine != "x86_64" ]; then
+    if [ $machine == "x86_64" ]; then
+      machine="x86_64"
+    elif [ ${machine:0:3} == "arm" ]; then
+      machine="arm"
+    else
       machine="x86"
     fi
     platform=$machine"_linux"

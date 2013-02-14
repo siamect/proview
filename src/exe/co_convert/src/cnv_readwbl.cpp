@@ -1285,7 +1285,7 @@ char *CnvReadWbl::low( char *in)
 int CnvReadWbl::copy_tmp_file( const char *tmpfilename, ofstream& fp_to)
 {
   FILE *fp;
-  char c;
+  int c;
   char cmd[80];
 
   fp = fopen( tmpfilename, "r");

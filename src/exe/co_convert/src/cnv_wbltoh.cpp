@@ -121,7 +121,7 @@ endl;
   dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
 
   FILE *fp_template = fopen( found_file, "r");
-  char c;
+  int c;
   while( (c = fgetc( fp_template)) != EOF)
     fp_struct.put(c);
   fclose( fp_template);

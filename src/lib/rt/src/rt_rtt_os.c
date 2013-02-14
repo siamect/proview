@@ -1528,6 +1528,8 @@ int	rtt_get_hw( char *hw)
 	  strcpy( hw, "x86_64");
 	else if (strstr( buf.machine, "86") != 0)
 	  strcpy( hw, "x86");
+	else if (strstr( buf.machine, "arm") != 0)
+	  strcpy( hw, "arm");
 	return 1;
 #elif defined OS_MACOS || defined OS_FREEBSD || OS_OPENBSD
 	strcpy( hw, "x86_64");
