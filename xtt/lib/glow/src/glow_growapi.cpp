@@ -625,12 +625,13 @@ void grow_SetTraceData( grow_tObject object, void *trace_data)
 }
 
 extern "C" int grow_TraceInit( grow_tCtx ctx, 
-	int (*trace_connect_func)( grow_tObject, GlowTraceData *),
-	int (*trace_disconnect_func)( grow_tObject),
-	int (*trace_scan_func)( grow_tObject, void *))
+			       int (*trace_connect_func)( grow_tObject, GlowTraceData *),
+			       int (*trace_disconnect_func)( grow_tObject),
+			       int (*trace_scan_func)( grow_tObject, void *),
+			       int (*trace_ctrl_func)( int, void *))
 {
   return ctx->trace_init( trace_connect_func, trace_disconnect_func,
-	trace_scan_func);
+			  trace_scan_func, trace_ctrl_func);
 }
 
 void grow_TraceClose( grow_tCtx ctx)

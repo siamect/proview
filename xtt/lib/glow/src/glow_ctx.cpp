@@ -1701,14 +1701,16 @@ void GlowCtx::remove_trace_objects()
 }
 
 int GlowCtx::trace_init( int (*connect_func)( void *, GlowTraceData *),
-	int (*disconnect_func)( void *), 
-	int (*scan_func)( void *, void *))
+			 int (*disconnect_func)( void *), 
+			 int (*scan_func)( void *, void *),
+			 int (*ctrl_func)( int, void *))
 {
   int sts;
 
   trace_connect_func = connect_func;
   trace_disconnect_func = disconnect_func;
   trace_scan_func = scan_func;
+  trace_ctrl_func = ctrl_func;
 
   sts = a.trace_init();
 

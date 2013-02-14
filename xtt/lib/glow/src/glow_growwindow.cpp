@@ -399,7 +399,13 @@ void GrowWindow::trace_scan()
     // window_ctx->draw_buffer_only = ctx->draw_buffer_only;
     ctx->gdraw->set_clip_rectangle( &ctx->mw, ll_x, ll_y, ur_x, ur_y);
 
+    if ( ctx->trace_ctrl_func)
+      (ctx->trace_ctrl_func) ( glow_eTraceCtrl_CtxPop, window_ctx);
+
     window_ctx->trace_scan();
+
+    if ( ctx->trace_ctrl_func)
+      (ctx->trace_ctrl_func) ( glow_eTraceCtrl_CtxPush, window_ctx);
 
     ctx->gdraw->reset_clip_rectangle( &ctx->mw);
   }
@@ -437,7 +443,8 @@ int GrowWindow::trace_init()
     window_ctx->event_move_node = ctx->event_move_node;
     window_ctx->trace_init( ctx->trace_connect_func, 
 			    ctx->trace_disconnect_func, 
-			    ctx->trace_scan_func);
+			    ctx->trace_scan_func,
+			    ctx->trace_ctrl_func);
   }
     
   return sts;

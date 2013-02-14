@@ -409,6 +409,7 @@ typedef enum {
   glow_eHotIndication_LightColor  //!< Lighter color for hot objects
 } glow_eHotIndication;
 
+
 //! Color index for a color
 /*! The drawtype is index in an array that contains the gc for colors in the color palette. 
  The 300 first are the colors in the color palette, the seven last are used for erase, and texts. */
@@ -1007,6 +1008,11 @@ typedef enum {
 	glow_eTraceType_Float32,
 	glow_eTraceType_User
 	} glow_eTraceType;
+
+typedef enum {
+	glow_eTraceCtrl_CtxPop,
+	glow_eTraceCtrl_CtxPush
+	} glow_eTraceCtrl;
 
 //! Type of item in a pulldown menu
 typedef enum {

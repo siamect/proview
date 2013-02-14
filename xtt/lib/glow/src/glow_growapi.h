@@ -658,9 +658,10 @@ extern "C" {
     \param trace_scan_func	Backcall function for trace scan of on object.
   */
   int grow_TraceInit( grow_tCtx ctx, 
-	int (*trace_connect_func)( grow_tObject, GlowTraceData *),
-	int (*trace_disconnect_func)( grow_tObject),
-	int (*trace_scan_func)( grow_tObject, void *));
+		      int (*trace_connect_func)( grow_tObject, GlowTraceData *),
+		      int (*trace_disconnect_func)( grow_tObject),
+		      int (*trace_scan_func)( grow_tObject, void *),
+		      int (*trace_ctrl_func)( int, void *));
 
   //! Close trace.
   /*! \param ctx	Grow context. */

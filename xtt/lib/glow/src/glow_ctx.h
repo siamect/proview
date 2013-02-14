@@ -691,6 +691,7 @@ class GlowCtx {
   int (*trace_connect_func)( void *, GlowTraceData *); //!< Backcall function for trace connect of an object.
   int (*trace_disconnect_func)( void *);	//!< Backcall function for trace disconnect of an object.
   int (*trace_scan_func)( void *, void *);	//!< Backcall function for trace scan of an object.
+  int (*trace_ctrl_func)( int, void *);	//!< Backcall function for trace control.
   int trace_started;				//!< Trace is started.
 
   void remove_trace_objects();
@@ -702,8 +703,9 @@ class GlowCtx {
     \param scan_func		Backcall function for trace scan of an object.
   */
   int trace_init( int (*connect_func)( void *, GlowTraceData *), 
-	int (*disconnect_func)( void *),
-	int (*scan_func)( void *, void *));
+		  int (*disconnect_func)( void *),
+		  int (*scan_func)( void *, void *),
+		  int (*ctrl_func)( int, void *));
 
   //! Trace close.
   /*! Calls the disconnect backcall function for all connected objects. */

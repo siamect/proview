@@ -113,6 +113,7 @@ static int graph_trace_disconnect_bc( grow_tObject object);
 static int graph_trace_scan_bc( grow_tObject object, void *p);
 static int graph_trace_connect_bc( grow_tObject object, 
 	glow_sTraceData *trace_data);
+static int graph_trace_ctrl_bc( int type, void *data);
 static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event);
 static int graph_get_subgraph_info_cb( void *g, char *name, 
 	attr_sItem **itemlist, int *itemlist_cnt);
@@ -3430,7 +3431,8 @@ int Graph::init_trace()
       init_object_graph(0);
 
     sts = grow_TraceInit( grow->ctx, graph_trace_connect_bc, 
-		graph_trace_disconnect_bc, graph_trace_scan_bc);
+			  graph_trace_disconnect_bc, graph_trace_scan_bc,
+			  graph_trace_ctrl_bc);
 
     // Look for object graph
     if ( strcmp( object_name, "") != 0)
@@ -3580,6 +3582,29 @@ static int graph_trace_disconnect_bc( grow_tObject object)
   return 1;
 }
 
+
+static int graph_trace_ctrl_bc( int type, void *data)
+{
+
+  switch ( type) {
+  case glow_eTraceCtrl_CtxPop: {
+    Graph *graph;
+
+    grow_GetCtxUserData( (GrowCtx *)data, (void **) &graph);
+    graph->grow->pop((GrowCtx *)data);
+    break;
+  }
+  case glow_eTraceCtrl_CtxPush: {
+    Graph *graph;
+
+    grow_GetCtxUserData( (GrowCtx *)data, (void **) &graph);
+    graph->grow->push();
+    break;
+  }
+  default: ;
+  }
+  return 1;
+}
 
 static int graph_trace_scan_bc( grow_tObject object, void *p)
 {
@@ -5205,7 +5230,7 @@ void Graph::swap( int mode)
     // Swap done
     if ( !trace_started) {
       grow_TraceInit( grow->ctx, graph_trace_connect_bc, 
-			    graph_trace_disconnect_bc, graph_trace_scan_bc);
+		      graph_trace_disconnect_bc, graph_trace_scan_bc, graph_trace_ctrl_bc);
       trace_started = 1;
       trace_scan( this);
     }
