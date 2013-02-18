@@ -19,7 +19,7 @@ pwra_set_func()
     # Command is "set base"
     basename=$2
     basename=${basename//\./\\.}
-    baseroot=`eval cat $pwra_db/pwr_projectlist.dat | grep "\b"$basename"\b" | grep "\b"base"\b" | awk '{print $3}'`
+    baseroot=`eval cat $pwra_db/pwr_projectlist.dat | grep "\s"$basename"\s" | grep "^"%base"\s" | awk '{print $3}'`
     if [ -z $baseroot ]; then
       echo "Unable to find base '$2'"
       return
@@ -67,7 +67,7 @@ pwra_set_func()
       return
     fi
     
-    baseroot=`eval cat $pwra_db/pwr_projectlist.dat | grep "\b"$basename"\b" | grep "\b"base"\b" | awk '{print $3}'`
+    baseroot=`eval cat $pwra_db/pwr_projectlist.dat | grep "\s"$basename"\s" | grep "^"%base"\s" | awk '{print $3}'`
     if [ -z $baseroot ]; then
       echo "Unable to find base '$2'"
       return
@@ -117,6 +117,7 @@ EOF
 pwra_parse ()
 {
   unamestr=`eval uname`
+  onamestr=`eval uname -o`
   machine=`eval uname -m`
   if [ $unamestr == "Darwin" ]; then
     os="os_macos"
@@ -124,8 +125,18 @@ pwra_parse ()
   elif [ $unamestr == "FreeBSD" ]; then
     os="os_freebsd"
     hw="hw_x86_64"
+  elif [ $unamestr == "OpenBSD" ]; then
+    os="os_openbsd"
+    hw="hw_x86_64"
+  elif [ $onamestr == "Cygwin" ]; then
+    os="os_cygwin"
+    hw="hw_x86"
   else
-    if [ $machine != "x86_64" ]; then
+    if [ $machine == "x86_64" ]; then
+      machine="x86_64"
+    elif [ ${machine:0:3} == "arm" ]; then
+      machine="arm"
+    else
       machine="x86"
     fi
     os="os_linux"  
