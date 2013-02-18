@@ -39,7 +39,7 @@
 
 /* xtt_hist_gtk.h -- Historical event window in xtt */
 
-#if defined OS_POSIX
+#if defined OS_POSIX && defined PWRE_CONF_LIBDB
 
 #ifndef xtt_hist_h
 # include "xtt_hist.h"
@@ -115,20 +115,17 @@ class HistGtk : public Hist {
 
 #else
 // Dummy for other platforms then OS_LINUX
-class HistGtk {
+#ifndef xtt_hist_h
+# include "xtt_hist.h"
+#endif
+
+class HistGtk : public Hist {
   public:
   HistGtk( void *hist_parent_ctx,
 	   GtkWidget *hist_parent_wid,
 	   char *hist_name, pwr_tObjid objid,
-	   pwr_tStatus *status) {}
+	   pwr_tStatus *status) : Hist(hist_parent_ctx,hist_name,objid,status) {}
   ~HistGtk() {}
-  void 		(*close_cb)( void *) {}
-  void 		(*start_trace_cb)( void *, pwr_tObjid, char *) {}
-  void 		(*display_in_xnav_cb)( void *, pwr_tObjid) {}
-  void 		(*update_info_cb)( void *) {}
-  void 		(*help_cb)( void *, char *) {}
-  void 		(*popup_menu_cb)( void *, pwr_sAttrRef, unsigned long,
-				  unsigned long, char *, Widget * ) {}
 };
 
 #endif

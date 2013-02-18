@@ -40,7 +40,7 @@
    Last modification: 030217
 */
 
-#if defined OS_POSIX
+#if defined OS_POSIX && defined PWRE_CONF_LIBDB
 
 using namespace std;
 

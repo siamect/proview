@@ -41,6 +41,7 @@
 */
 
 #if defined OS_POSIX
+#if defined PWRE_CONF_LIBDB
 
 using namespace std;
 
@@ -874,7 +875,7 @@ pwr_tStatus Hist::AdjustForDayBreak( Hist *histOP, pwr_tTime *Time,
 
     return 1;
 } /* AdjustForDayBreak */
-
+#endif
 #endif
 
 

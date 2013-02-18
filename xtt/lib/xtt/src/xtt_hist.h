@@ -39,7 +39,7 @@
 
 /* xtt_hist.h -- Historical event window in xtt */
 
-#if defined OS_POSIX
+#if defined OS_POSIX && defined PWRE_CONF_LIBDB
 
 #if defined __cplusplus
 extern "C" {
@@ -150,19 +150,17 @@ class Hist {
 // Dummy for other platforms then OS_LINUX
 class Hist {
   public:
-    Hist(
-	void *hist_parent_ctx,
-	Widget	hist_parent_wid,
-	char *hist_name, pwr_tObjid objid,
-	pwr_tStatus *status) : parent_ctx(hist_parent_ctx) {}
+    Hist( void *hist_parent_ctx,
+	  char *hist_name, pwr_tObjid objid,
+	  pwr_tStatus *status) : parent_ctx(hist_parent_ctx) {}
     void 		*parent_ctx;
     void 		(*close_cb)( void *);
     void 		(*start_trace_cb)( void *, pwr_tObjid, char *);
-    void 		(*display_in_xnav_cb)( void *, pwr_tObjid);
+    void 		(*display_in_xnav_cb)( void *, pwr_sAttrRef *);
     void 		(*update_info_cb)( void *);
-    void 		(*help_cb)( void *, char *);
+    void 		(*help_cb)( void *, const char *);
     void 		(*popup_menu_cb)( void *, pwr_sAttrRef, unsigned long,
-					  unsigned long, char *, Widget * );
+					  unsigned long, char *, int x, int y);
 };
 
 #endif
