@@ -2565,7 +2565,7 @@ int GeDigWarning::scan( grow_tObject object)
   if ( !first_scan) {
     if ( old_value == val && !dyn->reset_color) {
       // No change since last time
-      if ( (!inverted && val) || (inverted && !val))
+      if ( val)
 	dyn->ignore_color = true;
       return 1;
     }
