@@ -108,6 +108,9 @@ static attrnav_sEnumElement elem_dyn_type1[] = {
 	{ (int) ge_mDynType1_DigCommand		, "DigCommand"},
 	{ 0, ""}};
 
+static attrnav_sEnumElement elem_dyn_type2[] = {
+	{ 0, ""}};
+
 static attrnav_sEnumElement elem_dyn_type1_tone[] = {
 	{ (int) ge_mDynType1_Inherit		, "Inherit"},
 	{ (int) ge_mDynType1_Tone		, "Tone"},
@@ -999,6 +1002,7 @@ static attrnav_sEnum enum_types[] = {
 static attrnav_sEnum mask_types[] = {
 	{ (int) glow_eType_Access, 	(attrnav_sEnumElement *) &elem_access},
 	{ (int) ge_eAttrType_DynType1, 	(attrnav_sEnumElement *) &elem_dyn_type1},
+	{ (int) ge_eAttrType_DynType2, 	(attrnav_sEnumElement *) &elem_dyn_type2},
 	{ (int) ge_eAttrType_DynTypeTone, (attrnav_sEnumElement *) &elem_dyn_type1_tone},
 	{ (int) ge_eAttrType_ActionType1, (attrnav_sEnumElement *) &elem_action_type},
 	{ (int) ge_eAttrType_InstanceMask, (attrnav_sEnumElement *) &elem_instance_mask},
@@ -1060,6 +1064,7 @@ int  attrnav_attr_string_to_value( int type_id, char *value_str,
     case glow_eType_Gradient: 
     case glow_eType_HotIndication: 
     case ge_eAttrType_DynType1:
+    case ge_eAttrType_DynType2:
     case ge_eAttrType_DynTypeTone:
     case ge_eAttrType_ActionType1:
     case ge_eAttrType_AnimSequence:
@@ -1195,6 +1200,7 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
     }
     case glow_eType_Access:
     case ge_eAttrType_DynType1:
+    case ge_eAttrType_DynType2:
     case ge_eAttrType_DynTypeTone:
     case ge_eAttrType_ActionType1:
     case ge_eAttrType_InstanceMask:
@@ -1645,6 +1651,7 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 			((ItemMask *)item)->mask;
           }
 	  if ( (((ItemMask *)item)->type_id == ge_eAttrType_DynType1 ||
+	        ((ItemMask *)item)->type_id == ge_eAttrType_DynType2 ||
 	        ((ItemMask *)item)->type_id == ge_eAttrType_DynTypeTone ||
 		((ItemMask *)item)->type_id == ge_eAttrType_ActionType1 ||
 		((ItemMask *)item)->type_id == ge_eAttrType_InstanceMask) &&
@@ -1747,6 +1754,7 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 			((ItemMask *)item)->mask;
 
 	       if ( (((ItemMask *)item)->type_id == ge_eAttrType_DynType1 ||
+	             ((ItemMask *)item)->type_id == ge_eAttrType_DynType2 ||
 	             ((ItemMask *)item)->type_id == ge_eAttrType_DynTypeTone ||
 		     ((ItemMask *)item)->type_id == ge_eAttrType_ActionType1 ||
 		     ((ItemMask *)item)->type_id == ge_eAttrType_OptionMenuType ||
@@ -2215,6 +2223,7 @@ ItemLocal::ItemLocal( AttrNav *attrnav, const char *item_name, const char *attr,
     case glow_eType_Gradient: 
     case glow_eType_HotIndication: 
     case ge_eAttrType_DynType1:
+    case ge_eAttrType_DynType2:
     case ge_eAttrType_DynTypeTone:
     case ge_eAttrType_ActionType1:
     case ge_eAttrType_AnimSequence:

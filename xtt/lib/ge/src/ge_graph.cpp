@@ -2079,7 +2079,8 @@ int Graph::get_subgraph_attr_items( attr_sItem **itemlist,
   int			dyn_action_type1;
   int			dyn_action_type2;
   char transtab[][32] = {	 	"DynType1",		"DynType1",
-					"DynActionType",	"Action",
+					"DynType2",		"DynType2",
+					"DynActionType1",	"Action",
 					"DynColor1",		"Color1",
 					"DynColor2",		"Color2",
 					"DynColor3",		"Color3",
