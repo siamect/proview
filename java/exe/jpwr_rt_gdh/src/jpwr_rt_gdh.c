@@ -68,6 +68,12 @@ typedef struct {
   pwr_tRefId 	refid;
 } sJid;
 
+typedef struct {
+  char buf[4000];
+  int len;
+  int truncated;
+} gdh_sCrrCtx;
+
 #if ( defined OS_POSIX) && defined HW_X86_64
 static tree_sTable *jid_table = 0;
 static int jid_next = 1;
@@ -2365,27 +2371,42 @@ static void gdh_crr_insert_cb( void *ctx, void *parent_node,
 				navc_eItemType item_type,
 				char *text1, char *text2, int write)
 {
-  char *buf = (char *)ctx;
+  gdh_sCrrCtx *crrctx = (gdh_sCrrCtx *)ctx;
 
+  if ( crrctx->truncated)
+    return;
+
+  if ( crrctx->len > sizeof(crrctx->buf) - 260) {
+    strcat( crrctx->buf, "\n0 ** List truncated **\n");
+    crrctx->truncated = 1;
+    return;
+  }
+    
   switch( item_type) {
     case navc_eItemType_Crossref:
-      if ( strcmp( buf, "") != 0)
-        strcat( buf, "\n");
+      if ( strcmp( crrctx->buf, "") != 0) {
+        strcat( crrctx->buf, "\n");
+	crrctx->len++;x
+      }
       switch ( write) {
       case 0: 
-        strcat( buf, "0");
+        strcat( crrctx->buf, "0");
+	crrctx->len++;
 	break;
       case 1:
-	strcat( buf, "1");
+	strcat( crrctx->buf, "1");
+	crrctx->len++;
 	break;
       case 2:
-	strcat( buf, "2");
+	strcat( crrctx->buf, "2");
+	crrctx->len++;
 	break;
       }
       // printf( "Insert %s %s\n", text1, text2);
-      strcat( buf, text1);
-      strcat( buf, "  ");
-      strcat( buf, text2);
+      strcat( crrctx->buf, text1);
+      strcat( crrctx->buf, "  ");
+      strcat( crrctx->buf, text2);
+      crrctx->len += strlen(text1) + 2 + strlen(text2);
       // new ItemCrossref( brow, text1, text2, 
       //		write, parent_node, flow_eDest_IntoLast);
       break;
@@ -2427,7 +2448,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_crrObject
   jobject return_obj;
   jint jsts;
   jstring	jbuf = NULL;
-  char          *buf;
+  gdh_sCrrCtx   *crrctx;
   jclass cdhrString_id;
   static jmethodID cdhrString_cid = NULL;
 
@@ -2439,20 +2460,20 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_crrObject
     //printf("cdhrString_cid initierad\n");
   }
 
-  buf = (char *)calloc( 1, 2000);
+  crrctx = (gdh_sCrrCtx *)calloc( 1, sizeof(gdh_sCrrCtx));
 
   str = (*env)->GetStringUTFChars( env, name, 0);
   cstr = (char *)str;
   gdh_ConvertUTFstring( cstr, cstr);
   // printf( "crrObject name: %s %s\n", str, cstr);
-  sts = crr_object( buf, cstr, gdh_crr_insert_cb, gdh_crr_name_to_objid_cb,
+  sts = crr_object( crrctx, cstr, gdh_crr_insert_cb, gdh_crr_name_to_objid_cb,
 		    gdh_crr_get_volume_cb);
   (*env)->ReleaseStringUTFChars( env, name, cstr);
 
   if ( ODD(sts))
-    jbuf = (*env)->NewStringUTF( env, buf);
+    jbuf = (*env)->NewStringUTF( env, crrctx->buf);
   
-  free( buf);
+  free( crrctx);
 
   jsts = (jint) sts;
   return_obj = (*env)->NewObject( env, cdhrString_id,
@@ -2469,7 +2490,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_crrSignal
   jobject return_obj;
   jint jsts;
   jstring	jbuf = NULL;
-  char          *buf;
+  gdh_sCrrCtx          *crrctx;
   jclass cdhrString_id;
   static jmethodID cdhrString_cid = NULL;
 
@@ -2481,20 +2502,20 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_crrSignal
     //printf("cdhrString_cid initierad\n");
   }
 
-  buf = (char *)calloc( 1, 2000);
+  crrctx = (gdh_sCrrCtx *)calloc( 1, sizeof(gdh_sCrrCtx));
 
   str = (*env)->GetStringUTFChars( env, name, 0);
   cstr = (char *)str;
   gdh_ConvertUTFstring( cstr, cstr);
   // printf( "crrObject name: %s %s\n", str, cstr);
-  sts = crr_signal( buf, cstr, gdh_crr_insert_cb, gdh_crr_name_to_objid_cb,
+  sts = crr_signal( crrctx, cstr, gdh_crr_insert_cb, gdh_crr_name_to_objid_cb,
 		    gdh_crr_get_volume_cb);
   (*env)->ReleaseStringUTFChars( env, name, cstr);
 
   if ( ODD(sts))
-    jbuf = (*env)->NewStringUTF( env, buf);
+    jbuf = (*env)->NewStringUTF( env, crrctx->buf);
   
-  free( buf);
+  free( crrctx);
 
   jsts = (jint) sts;
   return_obj = (*env)->NewObject( env, cdhrString_id,
