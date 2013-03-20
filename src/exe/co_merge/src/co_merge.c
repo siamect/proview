@@ -100,9 +100,9 @@ int main(  int argc, char *argv[])
   pwr_tFileName incdir;
   pwr_tFileName cfile;
   pwr_tFileName ofile;
-  char pwre_cc[80];
-  char pwre_cxx[80];
-  char pwre_ar[80];
+  char pwre_cc[250];
+  char pwre_cxx[250];
+  char pwre_ar[250];
   char *s;
   int arg_keep = 0;
   int arg_verbose = 0;
