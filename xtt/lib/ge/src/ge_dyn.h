@@ -1922,7 +1922,7 @@ class GeIncrAnalog : public GeDynElem {
     { strcpy( attribute, "");}
   GeIncrAnalog( const GeIncrAnalog& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), increment(x.increment),
-    min_value(min_value), max_value(max_value)
+    min_value(x.min_value), max_value(x.max_value)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
