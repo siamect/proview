@@ -3133,6 +3133,11 @@ int grow_GetSubGraphAttrInfo( grow_tCtx ctx, char *transtab, grow_sAttrInfo **in
   attrinfo[i].type = glow_eType_InputFocusMark;
   attrinfo[i++].size = sizeof( ctx->input_focus_mark);
       
+  strcpy( attrinfo[i].name, "RecursiveTrace");
+  attrinfo[i].value_p = &ctx->recursive_trace;
+  attrinfo[i].type = glow_eType_Int;
+  attrinfo[i++].size = sizeof( ctx->recursive_trace);
+      
   strcpy( attrinfo[i].name, "Dynamic");
   ctx->get_dynamic( &dynamic, &dynsize);
   attrinfo[i].value_p = malloc( 1024);
@@ -5248,6 +5253,18 @@ void grow_EventLogEnable( int enable)
 {
   GlowCtx::eventlog_enabled = enable;
 }
+
+void grow_GetObjectClass( grow_tObject object, grow_tNodeClass *nodeclass)
+{
+  *nodeclass = ((GrowNode *)object)->nc->get_base_nc();
+}
+
+int grow_GetObjectRecursiveTrace( grow_tObject object)
+{
+  GlowNodeClass *nodeclass = ((GrowNode *)object)->nc->get_base_nc();
+  return nodeclass->recursive_trace;
+}
+
 
 /*@}*/
 

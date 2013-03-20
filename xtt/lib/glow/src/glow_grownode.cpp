@@ -105,6 +105,11 @@ GrowNode::~GrowNode()
     if ( annotsize[i] > 0)
       free( annotv[i]);
   }
+
+  if ( local_nc) {
+    delete nc;
+    nc = 0;
+  }
 }
 
 void GrowNode::copy_from( const GrowNode& n) 
@@ -572,7 +577,7 @@ int GrowNode::event_handler( GlowWind *w, glow_eEvent event, int x, int y, doubl
           sts = 0;
         else {
           if ( !is_sensitive()) {
-            if ( type() == glow_eObjectType_GrowGroup) {
+            if ( type() == glow_eObjectType_GrowGroup || nc->recursive_trace) {
               sts = nc->a.event_handler( w, event, x, y, rx, ry);
               sts = 0;
             }
@@ -640,7 +645,7 @@ int GrowNode::event_handler( GlowWind *w, glow_eEvent event, int x, int y, doubl
       sts = nc->event_handler( w, event, rx, ry);
   }
   if ( sts) {
-    if ( ctx->trace_started && type() == glow_eObjectType_GrowGroup) {
+    if ( (ctx->trace_started && type() == glow_eObjectType_GrowGroup) || nc->recursive_trace) {
       // If group, only register i sensitive (group member might be sensitive)
       if ( is_sensitive())
         ctx->register_callback_object( glow_eObjectType_Node, this);

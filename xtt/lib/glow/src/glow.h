@@ -1162,6 +1162,7 @@ typedef enum {
 	glow_eSave_NodeClass_userdata_cb	= 329,
 	glow_eSave_NodeClass_dyn_type2		= 330,
 	glow_eSave_NodeClass_dyn_action_type2   = 331,
+	glow_eSave_NodeClass_recursive_trace    = 332,
 	glow_eSave_ConClass_cc_name		= 400,
 	glow_eSave_ConClass_con_type		= 401,
 	glow_eSave_ConClass_corner		= 402,
@@ -1367,6 +1368,7 @@ typedef enum {
 	glow_eSave_GrowCtx_bitmap_fonts	        = 2245,
 	glow_eSave_GrowCtx_dyn_type2		= 2246,
 	glow_eSave_GrowCtx_dyn_action_type2    	= 2247,
+	glow_eSave_GrowCtx_recursive_trace    	= 2248,
 	glow_eSave_GrowSubAnnot_x_right		= 2300,
 	glow_eSave_GrowSubAnnot_x_left		= 2301,
 	glow_eSave_GrowSubAnnot_y_high		= 2302,
@@ -1869,8 +1871,7 @@ typedef enum {
 
 
 /*@}*/
-/** \addtogroup GlowStruct */
-/*@{*/
+/** \addtogroup GlowStruct *//*@{*/
 
 //! Default data structure for events
 typedef struct {

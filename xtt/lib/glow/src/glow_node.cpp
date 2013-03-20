@@ -55,7 +55,7 @@ GlowNode::GlowNode( GrowCtx *glow_ctx, const char *name, GlowNodeClass *node_cla
 	obst_x_right(x1), obst_x_left(x1), obst_y_high(y1), obst_y_low(y1),
 	hot(0), ctx(glow_ctx), nc(node_class), nc_root(node_class), 
 	pos(glow_ctx, x1,y1), stored_pos(glow_ctx, x1, y1),
-	highlight(0), inverse(0), user_data(0), level(0), node_open(0),
+	highlight(0), inverse(0), local_nc(0), user_data(0), level(0), node_open(0),
 	relative_annot_pos(rel_annot_pos), relative_annot_x(0), input_active(0),
 	input_focus(0)
 {
@@ -237,6 +237,12 @@ void GlowNode::open( ifstream& fp)
           }
           if ( !nc) 
             cout << "GlowNode:nodeclass not found: " << nc_name << endl;
+	  
+	  if ( nc && ctx->environment == glow_eEnv_Runtime && nc->recursive_trace) {
+	    // Create local copy of nodeclass
+	    nc = new GlowNodeClass(*nc);
+	    local_nc = 1;
+	  }
           nc_root = nc;
         }
         break;
@@ -402,6 +408,9 @@ void GlowNode::trace_scan()
 {
   if ( ctx->trace_scan_func && trace.p)
     ctx->trace_scan_func( (void *) this, trace.p);
+
+  if ( nc->recursive_trace)
+    nc->a.trace_scan();
 }
 
 int GlowNode::trace_init()
@@ -412,6 +421,10 @@ int GlowNode::trace_init()
   //  return 1;
 
   sts = ctx->trace_connect_func( (void *) this, &trace);
+
+  if ( nc->recursive_trace)
+    nc->a.trace_init();
+
   return sts;
 }
 
@@ -422,6 +435,9 @@ void GlowNode::trace_close()
 
   if ( trace.p)
     ctx->trace_disconnect_func( (void *) this);
+
+  if ( nc->recursive_trace)
+    nc->a.trace_close();
 }
 
 

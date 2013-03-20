@@ -426,6 +426,7 @@ class GlowNodeClass : public GlowArrayElem {
   glow_eCycle 	cycle;		//!< Cycle, i.e. if dynamics is executed at fast or slow scantime.
   glow_eInputFocusMark input_focus_mark; //!< How input focus in marked.
   void		*user_data;	//!< User data.
+  int		recursive_trace; //!< Call trace callback also for nodeclass elements.
 };
 
 /*@}*/

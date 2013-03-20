@@ -383,6 +383,8 @@ GeDyn::GeDyn( const GeDyn& x) :
 {
   GeDynElem *elem, *e;
 
+  strcpy(recursive_hostobject, x.recursive_hostobject);
+
   for ( elem = x.elements; elem; elem = elem->next) {
     e = 0;
     switch( elem->dyn_type1) {
@@ -909,12 +911,17 @@ void GeDyn::set_hostobject( char *hostobject)
 
 void GeDyn::get_hostobject( char *hostobject)
 {
+  bool found = false;
+
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
     if ( elem->dyn_type1 == ge_mDynType1_HostObject) {
       strcpy( hostobject, ((GeHostObject *)elem)->hostobject);
+      found = true;
       break;
     }
   }
+  if ( !found && strcmp(recursive_hostobject, "") != 0)
+    strcpy( hostobject, recursive_hostobject);
 }
 
 // Replace " by \"
@@ -937,7 +944,7 @@ graph_eDatabase GeDyn::parse_attr_name( char *name, char *parsed_name,
 {
   char *s;
 
-  if ( total_dyn_type1 & ge_mDynType1_HostObject &&
+  if ( (total_dyn_type1 & ge_mDynType1_HostObject || strcmp(recursive_hostobject, "") != 0) &&
        (s = strstr( name, "$hostobject"))) {
     // Replace string $hostobject with host object
     pwr_tAName hostobject;
@@ -9513,6 +9520,29 @@ void GeHostObject::open( ifstream& fp)
     if ( end_found)
       break;
   }  
+}
+
+int GeHostObject::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+  if ( grow_GetObjectRecursiveTrace(object)) {
+    grow_tObject 	*objectlist, *object_p;
+    int 		object_cnt;
+    grow_tNodeClass	nodeclass;
+
+    grow_GetObjectClass( object, &nodeclass);
+    grow_GetNodeClassObjectList( nodeclass, &objectlist, &object_cnt);
+    object_p = objectlist;
+    for ( int i = 0; i < object_cnt; i++) {
+      if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowNode) {
+	GeDyn *gm_dyn;
+	
+        grow_GetUserData( *object_p, (void **)&gm_dyn);
+	strncpy( gm_dyn->recursive_hostobject, hostobject, sizeof(gm_dyn->recursive_hostobject));
+      }
+      object_p++;
+    }
+  }
+  return 1;
 }
 
 int GeHostObject::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)

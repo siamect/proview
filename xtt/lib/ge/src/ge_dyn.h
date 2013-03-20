@@ -731,6 +731,7 @@ class GeDyn {
   glow_eCycle	cycle;			//!< Cycle in which the scan is executed.
   bool		display_access;		//!< Display acess in attrbute editor.
   ge_eDynAttr	attr_editor;		//!< Controls attributes displayed in attribute editor.
+  pwr_tAName	recursive_hostobject;	//!< Hostobject from parent dynamics.
 
   //! Constructor.
   /*! \param d_graph	Graph. 
@@ -743,7 +744,9 @@ class GeDyn {
     total_dyn_type2(ge_mDynType2_No), action_type1(ge_mActionType1_Inherit), action_type2(ge_mActionType2_No),
     total_action_type1(ge_mActionType1_Inherit), total_action_type2(ge_mActionType2_No),
     access(glow_mAccess_RtDefault), cycle(glow_eCycle_Inherit), attr_editor( d_attr_editor)
-    {}
+    {
+      strcpy(recursive_hostobject, "");
+    }
 
   //! Copy constructor.
   GeDyn( const GeDyn& x); 
@@ -1693,6 +1696,7 @@ class GeHostObject : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);

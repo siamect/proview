@@ -939,6 +939,7 @@ class GrowCtx : public GlowCtx {
   int		bitmap_fonts;		//!< Use bitmap fonts
   glow_eEnv	environment;		//!< Environment Development or Runtime.
   glow_eTextCoding text_coding;		//!< Text coding
+  int		 recursive_trace;      	//!< Subgraph recursive trace
 };
 
 void grow_auto_scrolling( GrowCtx *ctx);

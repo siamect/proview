@@ -55,7 +55,7 @@ GlowNodeClass::GlowNodeClass( GrowCtx *glow_ctx, const char *name,
     arg_cnt(0), nc_extern(0), dyn_type1(0), dyn_type2(0), dyn_action_type1(0), dyn_action_type2(0),
     no_con_obstacle(0), slider(0), animation_count(1),
     y0(0), y1(0), x0(0), x1(0),
-    next_nc(0), prev_nc(0), cycle(glow_eCycle_Slow), user_data(0)
+    next_nc(0), prev_nc(0), cycle(glow_eCycle_Slow), user_data(0), recursive_trace(0)
 {
   memset( dyn_color, 0, sizeof( dyn_color));
   memset( dyn_attr, 0, sizeof( dyn_attr));
@@ -164,6 +164,7 @@ void GlowNodeClass::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_NodeClass_x0) << FSPACE << x0 << endl;
   fp << int(glow_eSave_NodeClass_x1) << FSPACE << x1 << endl;
   fp << int(glow_eSave_NodeClass_input_focus_mark) << FSPACE << int(input_focus_mark) << endl;
+  fp << int(glow_eSave_NodeClass_recursive_trace) << FSPACE << recursive_trace << endl;
   if ( user_data && ctx->userdata_save_callback) {
     fp << int(glow_eSave_NodeClass_userdata_cb) << endl;
     (ctx->userdata_save_callback)(&fp, this, glow_eUserdataCbType_NodeClass);
@@ -281,6 +282,7 @@ void GlowNodeClass::open( ifstream& fp)
         fp >> tmp;
 	input_focus_mark = (glow_eInputFocusMark)tmp;
         break;
+      case glow_eSave_NodeClass_recursive_trace: fp >> recursive_trace; break;
       case glow_eSave_NodeClass_userdata_cb:
 	if ( ctx->userdata_open_callback)
 	  (ctx->userdata_open_callback)(&fp, this, glow_eUserdataCbType_NodeClass);

@@ -224,7 +224,7 @@ class GrowNode : public GlowNode {
   glow_eGradient gradient;      //!< Type of gradient.
   glow_eDrawType text_type;	//!< Text type, bold or normal.
   glow_eFont	text_font;	//!< Text font.
-    
+  
   //! Set dynamic code
   /*!
     \param code		Dynamic code.

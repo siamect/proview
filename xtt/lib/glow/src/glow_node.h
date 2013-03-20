@@ -154,6 +154,7 @@ class GlowNode : public GlowArrayElem {
   int			refcon_cnt[MAX_CONPOINTS]; //!< Number of reference connections for each connection point.
   GlowTraceData		trace;
   GlowNode		*link;		//!< Link in list used for routing of connections.
+  int			local_nc;	//!< Local nodeclass instance.
 
   //! Insert in list used for routing of connections.
   /*!

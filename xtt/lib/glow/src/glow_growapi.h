@@ -3063,6 +3063,8 @@ void grow_GetObjectClassDynType( grow_tObject object, int *dyn_type1, int *dyn_t
   void grow_SetTextCoding( grow_tCtx ctx, glow_eTextCoding coding);
   void grow_EventExec( grow_tCtx ctx, void *event, unsigned int size);
   void grow_EventLogEnable( int enable);
+  void grow_GetObjectClass( grow_tObject object, grow_tNodeClass *nodeclass);
+  int grow_GetObjectRecursiveTrace( grow_tObject object);
   
 /*@}*/
 #if defined __cplusplus
