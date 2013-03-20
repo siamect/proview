@@ -375,7 +375,6 @@ else
   fi
 
   #Gtk
-  echo "$hwpl $gnu"
   echo "Mandatory :"
   pwre_config_check_lib gtk    	  GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so"
 
