@@ -8831,6 +8831,8 @@ Skriv ut plc dokument.
 		<t>att skrivas ut.
 /nodocument	<t>Plc dokumentet skrivs ej ut.
 /nooverview	<t>Översikten över plc-fönstret skrivs ej ut.
+/pdf		<t>Skriv till pdf-fil.
+/all		<t>Skriv ut alla plcpgm.
 </TOPIC>
 
 <TOPIC> release subwindow <style> function

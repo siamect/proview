@@ -8943,6 +8943,8 @@ Print plc documents.
 		<t>be printed.
 /nodocument	<t>The plc-documents will not be printed.
 /nooverview	<t>The overview of the plc-window will not be printed.
+/pdf		<t>Print to pdf file.
+/all		<t>Print all plcpgms.
 </TOPIC>
 
 <TOPIC> release subwindow <style> function
