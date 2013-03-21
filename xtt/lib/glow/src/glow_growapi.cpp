@@ -3133,7 +3133,7 @@ int grow_GetSubGraphAttrInfo( grow_tCtx ctx, char *transtab, grow_sAttrInfo **in
   attrinfo[i].type = glow_eType_InputFocusMark;
   attrinfo[i++].size = sizeof( ctx->input_focus_mark);
       
-  strcpy( attrinfo[i].name, "RecursiveTrace");
+  strcpy( attrinfo[i].name, "RecursiveDynamic");
   attrinfo[i].value_p = &ctx->recursive_trace;
   attrinfo[i].type = glow_eType_Int;
   attrinfo[i++].size = sizeof( ctx->recursive_trace);
