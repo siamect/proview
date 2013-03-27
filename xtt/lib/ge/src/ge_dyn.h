@@ -2602,7 +2602,7 @@ class GeOptionMenu : public GeDynElem {
 
   GeOptionMenu( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_OptionMenu, ge_mActionType2_No, ge_eDynPrio_OptionMenu),
-    button_mask(1), menu_object(0)
+    button_mask(1), menu_object(0), optionmenu_type(ge_eOptionMenuType_Static)
     { 
       strcpy( attribute, "");
       strcpy( text_attribute, "");
@@ -2614,7 +2614,8 @@ class GeOptionMenu : public GeDynElem {
       memset( &focus_gained_time, 0, sizeof( focus_gained_time));
     }
   GeOptionMenu( const GeOptionMenu& x) : 
-    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), button_mask(x.button_mask), menu_object(0)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), button_mask(x.button_mask), menu_object(0),
+    optionmenu_type(x.optionmenu_type)
     {
       memset( &focus_gained_time, 0, sizeof( focus_gained_time));
       strcpy( attribute, x.attribute);
