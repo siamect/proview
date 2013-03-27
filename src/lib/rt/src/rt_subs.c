@@ -124,7 +124,8 @@ subs_UnlinkObject (
       sp->data	= pool_cNRef;
       sp->sts	= GDH__NOSUCHOBJ;
 
-      op->u.n.subcount--;
+      if ( op->u.n.subcount > 0) /* Subscriptions on invalid offset will allocate buffer without increasing count */
+	op->u.n.subcount--;
     }
   }
 
