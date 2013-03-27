@@ -38,6 +38,7 @@
 package jpwr.jopg;
 import jpwr.rt.*;
 import java.io.*;
+import java.util.*;
 
 public class Graph implements GraphIfc, GrowApplIfc {
     public static final int eType_Bit = (1 << 15) + 1;
@@ -61,6 +62,12 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	cmn.setGdraw(gdraw);
     }
 
+    public int getWidth() {
+	return appl.getWidth();
+    }
+    public int getHeight() {
+	return appl.getHeight();
+    }
     public Gdh getGdh() {
 	return gdh;
     }
@@ -158,6 +165,9 @@ public class Graph implements GraphIfc, GrowApplIfc {
     }
 
     public DynParsedAttrName parseAttrName( String name) {
+	if ( name == null)
+	    return null;
+
 	int idx, tidx, eidx;
 	DynParsedAttrName pname = new DynParsedAttrName();
 
@@ -222,10 +232,74 @@ public class Graph implements GraphIfc, GrowApplIfc {
     }
 
     public void eventHandler(GlowEvent e) {
-	if ( e.object != null) {
-	    int sts;
-	    Dyn dyn = (Dyn)((GrowNode)e.object).getUserData();
-	    sts = dyn.action((GrowNode)e.object, e);	    	    
+	switch ( e.event) {
+	case Glow.eEvent_MB1Click:
+	    if ( e.object_type == Glow.eObjectType_NoObject ||
+		 e.object.type() != Glow.eObjectType_GrowMenu) {
+		// Close any open menu, if not click in menu
+		GlowEventMenu event = new GlowEventMenu();
+		event.event = Glow.eEvent_MenuDelete;
+		event.type = Glow.eEventType_Menu;
+		event.object = null;
+		System.out.println("Graph: delete any menu");		
+		Vector<GlowArrayElem> list = ctx.get_object_list();
+		for ( int i = 0; i < list.size(); i++) {
+		    GlowArrayElem o = list.get(i);
+		    if ( (o.type() == Glow.eObjectType_GrowNode ||
+			  o.type() == Glow.eObjectType_GrowGroup) &&
+			 (e.object_type == Glow.eObjectType_NoObject ||
+			  o != e.object)) {
+			Dyn dyn = (Dyn)o.getUserData();
+			if ( dyn != null)
+			    dyn.action( (GrowNode)o, (GlowEvent)event);
+			int old_size = list.size(); 
+			list = ctx.get_object_list();
+			if ( old_size != list.size())
+			    // Something is deleted
+			    break;
+		    }
+		}
+	    }
+	    // Note! no break
+	case Glow.eEvent_MB1Up:
+	case Glow.eEvent_MB1Down:
+	case Glow.eEvent_ValueChanged:
+	    if ( e.object != null) {
+		int sts;
+		Dyn dyn = (Dyn)((GlowArrayElem)e.object).getUserData();
+		if ( dyn != null)
+		    sts = dyn.action((GrowNode)e.object, e);	    	    
+	    }
+	    break;
+	case Glow.eEvent_MenuActivated:
+	case Glow.eEvent_MenuCreate:
+	case Glow.eEvent_MenuDelete: {
+	    int		old_size;
+	    int		sts;
+
+	    Vector<GlowArrayElem> list = ctx.get_object_list();
+
+	    for ( int i = 0; i < list.size(); i++) {
+		GlowArrayElem o = list.get(i);
+		if ( o.type() == Glow.eObjectType_GrowNode ||
+		     o.type() == Glow.eObjectType_GrowGroup) {
+		    		    
+		    Dyn dyn = (Dyn)o.getUserData();
+		    if ( dyn != null) {
+			sts = dyn.action((GrowNode)o, e);
+			if ( sts == Glow.GLOW__TERMINATED)
+			    return;
+		    
+			// Check if anything is deleted
+			old_size = list.size();
+			list = ctx.get_object_list();
+			if ( old_size != list.size())
+			    break;
+		    }
+		}
+	    }
+	    break;
+	}
 	}
     }
 

@@ -57,4 +57,6 @@ public interface GlowDrawIfc {
     public  int gradient_rotate(double rotate, int gradient);
     public GlowDimension getTextExtent( String text, int idx, int type);
     public Color getColor(int gc_type);
+    public int set_clip_rectangle( int x1, int y1, int x2, int y2);
+    public void reset_clip_rectangle();
 }

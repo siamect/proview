@@ -43,4 +43,5 @@ public class GlowArrayElem {
     public void draw() {}
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {}
     public int eventHandler(GlowEvent e, double fx, double fy) {return 0;}
+    public Object getUserData() { return null;}
 }

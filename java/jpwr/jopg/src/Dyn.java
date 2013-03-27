@@ -956,8 +956,8 @@ public class Dyn {
 	    return;
 
 	GlowEvent e = new GlowEvent();
-	e.type = event;
-	e.object = object;
+	e.event = event;	
+	e.object = (GlowArrayElem)object;
 	action_type1 &= ~mActionType1_Confirm;
 	for ( int i = 0; i < elements.size(); i++)
 	    elements.get(i).action((GrowNode)object,  e);
@@ -1150,7 +1150,7 @@ public class Dyn {
 		return 0;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.isEmpty()) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
@@ -1300,7 +1300,7 @@ public class Dyn {
 
 	public int connect(GrowNode object) {
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.isEmpty()) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
@@ -1433,7 +1433,7 @@ public class Dyn {
 
 	public int connect(GrowNode object) {
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.isEmpty()) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
@@ -1569,7 +1569,7 @@ public class Dyn {
 
 	public int connect(GrowNode object) {
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.isEmpty()) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
@@ -1739,7 +1739,7 @@ public class Dyn {
 	    }
 	    else {
 		DynParsedAttrName pname = dyn.parseAttrName(attribute);
-		if ( pname.name.isEmpty()) 
+		if ( pname == null || pname.name.isEmpty()) 
 		    return 1;
 
 		GdhrRefObjectInfo ret = null;
@@ -1886,7 +1886,7 @@ public class Dyn {
 
 	public int connect(GrowNode object) {
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.isEmpty()) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
@@ -2008,7 +2008,7 @@ public class Dyn {
 	public int connect(GrowNode object) {
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.isEmpty()) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
@@ -2142,7 +2142,7 @@ public class Dyn {
 		return 1;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.isEmpty()) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
@@ -2464,7 +2464,7 @@ public class Dyn {
 	    if ( mainInstance != null) {
 		if ( !mainInstance.attrFound) {
 		    DynParsedAttrName pname = dyn.parseAttrName(mainInstance.attribute);
-		    if ( pname.name.isEmpty()) 
+		    if ( pname == null || pname.name.isEmpty()) 
 			return 1;
 
 		    GdhrRefObjectInfo ret = null;
@@ -2700,7 +2700,7 @@ public class Dyn {
 	public int connect(GrowNode object) {
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.isEmpty()) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
@@ -2899,7 +2899,7 @@ public class Dyn {
 	public int connect(GrowNode object) {
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.isEmpty()) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
@@ -3036,7 +3036,7 @@ public class Dyn {
  	public int connect(GrowNode object) {
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.isEmpty()) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
@@ -4030,9 +4030,168 @@ public class Dyn {
 	double min_value;
 	String minvalue_attr;
 	String maxvalue_attr;
+ 	PwrtRefId subid;
+	int p;
+	int database;
+	boolean inverted;
+	boolean attrFound = false;
+	boolean firstScan = true;
+	int a_typeid;
+        float oldValue;
+	boolean limits_found = false;
+	double limit_min;
+	double limit_max;
+	int max_value_p;
+	int min_value_p;
+	PwrtRefId max_value_subid;
+	PwrtRefId min_value_subid;
 
 	public DynFillLevel( Dyn dyn) {
 	    super(dyn, Dyn.mDynType1_FillLevel, 0, 0, 0);
+	}
+
+	public int connect(GrowNode object) {
+	    color = dyn.getColor2(object, color);
+	    if ( color < 0 || color >= Glow.eDrawType__)
+		return 0;
+
+	    if ( attribute == null)
+		return 0;
+
+	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
+	    if ( pname == null || pname.name.isEmpty()) 
+		return 1;
+
+	    GdhrRefObjectInfo ret = null;
+
+	    switch( pname.database) {
+	    case GraphIfc.eDatabase_Gdh:
+		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		break;
+	    default:
+		ret = null;
+	    }
+
+	    if ( ret == null || ret.evenSts()) {
+		System.out.println("FillLevel: " + attribute);
+		return 1;
+	    }
+
+	    p = ret.id;
+	    subid = ret.refid;
+	    inverted = pname.inverted;
+	    a_typeid = pname.type;
+	    attrFound = true;
+
+	    if ( (dyn.total_dyn_type1 & Dyn.mDynType1_Tone) != 0) {
+		if ( color >= Glow.eDrawTone__)
+		    object.setLevelFillColor(color);
+		else
+		    object.setLevelColorTone(color);
+	    }
+	    else
+		object.setLevelFillColor(color);
+
+	    GlowFillLevelLimits limits = object.getLimits();
+	    if ( (limits.status & 1) != 0) {
+		limits_found = true;
+		limit_min = limits.min;
+		limit_max = limits.max;
+		direction = limits.direction;
+	    }
+	    object.setLevelDirection( direction);
+
+	    min_value_p = 0;
+	    pname = dyn.parseAttrName(minvalue_attr);
+	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && database == GraphIfc.eDatabase_Gdh) {
+		
+		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		if ( ret != null && ret.oddSts()) {
+		    min_value_p = ret.id;
+		    min_value_subid = ret.refid;
+		}
+	    }
+
+	    max_value_p = 0;
+	    pname = dyn.parseAttrName(minvalue_attr);
+	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && database == GraphIfc.eDatabase_Gdh) {
+		
+		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		if ( ret != null && ret.oddSts()) {
+		    max_value_p = ret.id;
+		    max_value_subid = ret.refid;
+		}
+	    }
+
+	    return 1;
+	}
+
+	public void disconnect() {
+	    if ( attrFound && database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid);
+	    if ( min_value_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(min_value_subid);
+	    if ( max_value_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(max_value_subid);
+	}
+
+	public void scan(GrowNode object) {
+	    if ( !attrFound)
+		return;
+  
+	    float minval, maxval;
+	    float pvalue = dyn.graph.getGdh().getObjectRefInfoFloat( p);
+	    if ( max_value_p != 0 && min_value_p != 0) {
+		minval = dyn.graph.getGdh().getObjectRefInfoFloat( min_value_p);
+		maxval = dyn.graph.getGdh().getObjectRefInfoFloat( max_value_p);
+		if ( minval != min_value ||
+		     maxval != max_value) {
+		    min_value = minval;
+		    max_value = maxval;
+		    firstScan = true;
+		}
+	    }
+
+	    if ( !firstScan) {
+		if ( Math.abs( oldValue - pvalue) < Float.MIN_VALUE)
+		    // No change since last time
+		    return;
+	    }
+	    else
+		firstScan = false;
+
+	    if ( max_value == min_value)
+		return;
+
+	    double value = 0;
+	    if ( !limits_found)
+		value = (pvalue - min_value) / (max_value - min_value);
+	    else {
+		GlowGeometry geom = object.measure();
+    
+		switch ( direction) {
+		case Glow.eDirection_Right:
+		    value = ((pvalue - min_value) / (max_value - min_value) * ( limit_max - limit_min) 
+			     + (limit_min - geom.ll_x)) / (geom.ur_x - geom.ll_x);
+		    break;
+		case Glow.eDirection_Left:
+		    value = ((pvalue - min_value) / (max_value - min_value) * ( limit_max - limit_min) 
+			     + (geom.ur_x - limit_max)) / (geom.ur_x - geom.ll_x);
+		    break;
+		case Glow.eDirection_Up:
+		    value = ((pvalue - min_value) / (max_value - min_value) * ( limit_max - limit_min) 
+			     + (limit_min - geom.ll_y)) / (geom.ur_y - geom.ll_y);
+		    break;
+		case Glow.eDirection_Down:
+		    value = ((pvalue - min_value) / (max_value - min_value) * ( limit_max - limit_min) 
+			     + (geom.ur_y - limit_max)) / (geom.ur_y - geom.ll_y);
+		    break;
+		default: ;
+		}
+	    }
+	    System.out.println("FillLevel: " + value);
+	    object.setFillLevel( value);
+	    oldValue = pvalue;
 	}
 
 	public void open( BufferedReader reader) {
@@ -4095,9 +4254,78 @@ public class Dyn {
     public class DynDigCommand extends DynElem {
 	String attribute;
 	String command;
+  	PwrtRefId subid;
+	int p;
+	int database;
+	boolean inverted;
+	boolean attrFound = false;
+	boolean firstScan = true;
+	int bitmask;
+	int a_typeid;
+	boolean oldValue;
 
 	public DynDigCommand( Dyn dyn) {
 	    super(dyn, Dyn.mDynType1_DigCommand, 0, 0, 0);
+	}
+
+ 	public int connect(GrowNode object) {
+
+	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
+	    if ( pname == null || pname.name.isEmpty()) 
+		return 1;
+
+	    GdhrRefObjectInfo ret = null;
+
+	    switch( pname.database) {
+	    case GraphIfc.eDatabase_Gdh:
+		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		break;
+	    case GraphIfc.eDatabase_Ccm:
+		// TODO
+		break;
+	    default:
+		ret = null;
+	    }
+
+	    if ( ret == null || ret.evenSts()) {
+		System.out.println("DigLowColor: " + attribute);
+		return 1;
+	    }
+
+	    p = ret.id;
+	    subid = ret.refid;
+	    inverted = pname.inverted;
+	    a_typeid = pname.type;
+	    bitmask = pname.bitmask;
+	    attrFound = true;
+	    return 1;
+	}
+
+	public void disconnect() {
+	    if ( attrFound && database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid);
+	}
+
+	
+	public void scan( GrowNode object) {
+	    if ( !attrFound)
+		return;
+	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
+
+	    if ( inverted)
+		value = !value;
+
+	    if ( !firstScan) {
+		if ( oldValue == value)
+		    return;
+	    }
+	    else
+		firstScan = false;
+	    System.out.println("DigCommand: value " + value);	
+	    if ( value && !oldValue) {
+		dyn.graph.command(command);
+	    }
+	    oldValue = value;
 	}
 
 	public void open( BufferedReader reader) {
@@ -4199,7 +4427,7 @@ public class Dyn {
 	}
 
 	public int action( GrowNode object, GlowEvent e) {
-	    switch ( e.type) {
+	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
 		dyn.repaintNow = true;
@@ -4280,7 +4508,7 @@ public class Dyn {
 	}
 
 	public int action( GrowNode object, GlowEvent e) {
-	    switch ( e.type) {
+	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
 		dyn.repaintNow = true;
@@ -4361,7 +4589,7 @@ public class Dyn {
 	}
 
 	public int action( GrowNode object, GlowEvent e) {
-	    switch ( e.type) {
+	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
 		dyn.repaintNow = true;
@@ -4436,7 +4664,7 @@ public class Dyn {
 	}
 
 	public int action( GrowNode object, GlowEvent e) {
-	    switch ( e.type) {
+	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down: {
 		object.setColorInverse( 1);
 		dyn.repaintNow = true;
@@ -4528,7 +4756,7 @@ public class Dyn {
 	}
 
 	public int action( GrowNode object, GlowEvent e) {
-	    switch ( e.type) {
+	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
 		dyn.repaintNow = true;
@@ -4592,7 +4820,7 @@ public class Dyn {
 	}
 
 	public int action( GrowNode object, GlowEvent e) {
-	    switch ( e.type) {
+	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
 		dyn.repaintNow = true;
@@ -4659,7 +4887,7 @@ public class Dyn {
 	    if ( (dyn.action_type1 & Dyn.mActionType1_Confirm) == 0)
 		return 1;
 
-	    switch ( e.type) {
+	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		break;
 	    case Glow.eEvent_MB1Click:
@@ -4718,7 +4946,7 @@ public class Dyn {
 	}
 
 	public int action(GrowNode object, GlowEvent e) {
-	    switch ( e.type) {
+	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
 		dyn.repaintNow = true;
@@ -4842,7 +5070,7 @@ public class Dyn {
  	public int connect(GrowNode object) {
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.isEmpty()) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
@@ -4902,7 +5130,7 @@ public class Dyn {
 	}
 
 	public int action(GrowNode object, GlowEvent e) {
-	    switch ( e.type) {
+	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
 		dyn.repaintNow = true;
@@ -5061,7 +5289,7 @@ public class Dyn {
 	}
 
 	public int action( GrowNode object, GlowEvent e) {
-	    switch ( e.type) {
+	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
 		dyn.repaintNow = true;
@@ -5136,7 +5364,7 @@ public class Dyn {
 	}
 
 	public int action( GrowNode object, GlowEvent e) {
-	    switch ( e.type) {
+	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
 		dyn.repaintNow = true;
@@ -5223,7 +5451,7 @@ public class Dyn {
 	}
 
 	public int action( GrowNode object, GlowEvent e) {
-	    switch ( e.type) {
+	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
 		dyn.repaintNow = true;
@@ -5497,6 +5725,35 @@ public class Dyn {
 
 	public DynPulldownMenu( Dyn dyn) {
 	    super(dyn, 0, 0, Dyn.mActionType1_PulldownMenu, 0);
+	}
+
+	public int action( GrowNode object, GlowEvent e) {
+	    /*
+	    switch ( e.event) {
+	    case Glow.eEvent_MB1Click:
+		break;
+	    case Glow.eEvent_MenuActivated:
+		if ( menu_object == null)
+		    break;
+		if ( e.object == menu_object) {
+		    if ( items_dyn[e.item] != null) {
+			GlowEvent event;
+			event.event = Glow.eEvent_MB1Click;
+			return items_dyn[event.item].action( e.object, event);
+		    }
+		}
+		else {
+		    for ( int j = 0; j < 32; j++) {
+			if ( items_dyn[j] != null && 
+			     items_dyn[j].action_type1 & Dyn.mActionType1_PulldownMenu != 0)
+			    items_dyn[j].action( null, e);
+		    }
+		}
+		break;
+	    default: ;
+	    }
+	    */
+	    return 1;
 	}
 
 	public void open( BufferedReader reader) {
@@ -5800,9 +6057,309 @@ public class Dyn {
 	int button_mask;
 	String[] items_text = new String[32];
 	int[] items_enum = new int[32];
+ 	PwrtRefId subid;
+	int p;
+	int database;
+	boolean inverted;
+	boolean attrFound = false;
+	boolean firstScan = true;
+	int bitmask;
+	int a_typeid;
+        float oldValueF;
+	int oldValueI;
+ 	PwrtRefId update_subid;
+	int update_p;
+	int update_database;
+	boolean update_inverted;
+	boolean update_attrFound = false;
+	int update_bitmask;
+	int update_a_typeid;
+        boolean update_oldValue;
+	GrowMenu menu_object;
+	int text_size;
 
 	public DynOptionMenu( Dyn dyn) {
 	    super(dyn, 0, 0, Dyn.mActionType1_OptionMenu, 0);
+	}
+
+	public int connect(GrowNode object) {
+
+	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
+	    if ( pname == null || pname.name.isEmpty()) 
+		return 1;
+
+	    GdhrRefObjectInfo ret = null;
+
+	    switch( pname.database) {
+	    case GraphIfc.eDatabase_Gdh:
+		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		break;
+	    case GraphIfc.eDatabase_Local:
+		ret = dyn.graph.getLdb().refObjectInfo( graph, pname.name);
+		break;
+	    default:
+		ret = null;
+	    }
+
+	    if ( ret == null || ret.evenSts()) {
+		System.out.println("OptionMenu: " + attribute);
+		return 1;
+	    }
+
+	    p = ret.id;
+	    subid = ret.refid;
+	    inverted = pname.inverted;
+	    a_typeid = pname.type;
+	    bitmask = pname.bitmask;
+	    attrFound = true;
+
+	    if ( text_attribute != null && !text_attribute.isEmpty() && 
+		 update_attribute != null && !update_attribute.isEmpty()) {
+
+		pname = dyn.parseAttrName(update_attribute);
+		if ( pname != null && !pname.name.isEmpty()) {
+		    ret = null;
+
+		    switch( pname.database) {
+		    case GraphIfc.eDatabase_Gdh:
+			ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+			break;
+		    default:
+			ret = null;
+		    }
+
+		    if ( ret == null || ret.evenSts()) {
+			System.out.println("OptionsMenu: " + update_attribute);
+			return 1;
+		    }
+
+		    update_p = ret.id;
+		    update_subid = ret.refid;
+		    update_inverted = pname.inverted;
+		    update_a_typeid = pname.type;
+		    update_bitmask = pname.bitmask;
+		    update_database = pname.database;
+		}
+	    }
+	    return 1;
+	}
+
+	public void disconnect() {
+	    if ( attrFound && database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid);
+	}
+
+	public void scan( GrowNode object) {
+	    if ( !attrFound)
+		return;
+
+	    boolean update_texts = false;
+	    if ( update_p != 0) {
+
+		boolean value = dyn.getDig(p, update_a_typeid, update_bitmask, update_database);
+
+		if (update_inverted)
+		    value = !value;
+
+		if ( !firstScan) {
+		    if ( update_oldValue != value)
+			update_texts = true;
+		}
+		else {
+		    firstScan = false;
+		    update_texts = false;
+		}
+		update_oldValue = value;
+	    }
+
+
+	    if ( update_texts) {
+	    }
+
+	    int enum_value = 0;
+	    switch ( a_typeid) {
+	    case Pwr.eType_Float32: {
+		float value = dyn.graph.getGdh().getObjectRefInfoFloat( p);
+		int i;
+
+		if ( !firstScan) {
+		    if ( value == oldValueF) {
+			return;
+		    }
+		}
+		else
+		    firstScan = false;
+
+		enum_value = (int)( value + 0.5);
+		oldValueF = value;
+
+		break;
+	    }
+	    case Pwr.eType_UInt32:
+	    case Pwr.eType_Int32: {
+		int value = dyn.graph.getGdh().getObjectRefInfoInt( p);
+		int i;
+
+		if ( !firstScan) {
+		    if ( value == oldValueI) {
+			return;
+		    }
+		}
+		else
+		    firstScan = false;
+
+		enum_value = value;
+		oldValueI = value;
+
+		break;
+	    }
+	    default:
+		return;
+	    }
+	    
+	    if ( update_p == 0) {
+		    boolean found = false;
+		    for ( int i = 0; i < 32; i++) {
+			if ( items_enum[i] == enum_value) {
+			    object.setAnnotation(1, items_text[i]);
+			    found = true;
+			    break;
+			}
+		    }
+		    if ( !found)
+			object.setAnnotation(1, "");
+	    }
+	    else {
+	    }
+
+	}
+
+	public int action( GrowNode object, GlowEvent e) {
+	    switch ( e.event) {
+	    case Glow.eEvent_MB1Click:
+		if ( menu_object != null) {
+		    // Close, delete this menu
+		    System.out.println("Remove menu" + menu_object);
+		    dyn.graph.getCtx().remove(menu_object);
+		    menu_object = null;
+		}
+		else {
+		    double	ll_x, ll_y, ur_x, ur_y;
+		    GlowMenuInfo info = new GlowMenuInfo();
+
+		    if ( update_p == 0) {
+			int b_mask = 1;
+			for ( int i = 0; i < 32; i++) {
+			    if ( (b_mask & button_mask) != 0) {
+				info.item[i].occupied = true;
+				info.item[i].text = new String(items_text[i]);
+	    
+				// Check access
+				info.item[i].type = Glow.eMenuItem_Button;
+			    }
+			    else
+				info.item[i].occupied = false;
+			    b_mask = b_mask << 1;
+			}
+		    }
+		    else {
+			for ( int i = 0; i < 32; i++) {
+			    if ( i < text_size) {
+			        info.item[i].text = new String(items_text[i]);
+				info.item[i].type = Glow.eMenuItem_Button;
+				info.item[i].occupied = true;
+			    }
+			    else
+				info.item[i].occupied = false;
+			}
+		    }
+
+		    // Get fillcolor, and textattributes from object
+		    int text_drawtype = 4, text_color = Glow.eDrawType_Line, bg_color = Glow.eDrawType_Color32;
+		    int tsize = 2;
+		    int sts;
+		    double scale = 1;
+		    int text_font = Glow.eFont_Helvetica;
+
+		    sts = 0; //grow_GetObjectAnnotInfo( object, 1, &tsize, &text_drawtype, &text_color, &bg_color, &scale, &text_font);
+		    if ( (sts & 1) == 0) {
+			tsize = 2;
+			text_drawtype = Glow.eDrawType_TextHelveticaBold;
+			text_color = Glow.eDrawType_Line;
+			bg_color = Glow.eDrawType_LightGray;
+		    }
+		    else if ( bg_color == Glow.eDrawType_No || bg_color == Glow.eDrawType_Inherit)
+			bg_color = Glow.eDrawType_LightGray;
+	
+		    GlowGeometry g = object.measure();
+		    menu_object = new GrowMenu( dyn.graph.getCtx().cmn, "__Menu", info, g.ll_x, g.ur_y, g.ur_x - g.ll_x,
+						Glow.eDrawType_Line, 0, 1, 1, bg_color, tsize,
+						text_drawtype, text_color,
+						Glow.eDrawType_MediumGray, text_font);
+		    menu_object.set_scale( scale, scale, 0, 0, Glow.eScaleType_LowerLeft);
+		    System.out.println("Insert menu" + menu_object);
+		    dyn.graph.getCtx().insert(menu_object);
+		}
+		break;
+	    case Glow.eEvent_MenuActivated:
+		if ( menu_object == null)
+		    break;
+		if ( e.object == menu_object) {
+		    // Set enum value to attribute
+      
+		    DynParsedAttrName pname = dyn.parseAttrName(attribute);
+		    if ( pname == null || pname.name.isEmpty()) 
+			return 1;
+
+		    PwrtStatus sts = null;
+
+		    switch ( pname.database) {
+		    case GraphIfc.eDatabase_Gdh:
+			switch ( pname.type) {
+			case Pwr.eType_Float32: {
+			    float value = items_enum[((GlowEventMenu)e).item];
+			    sts = dyn.graph.getGdh().setObjectInfo( pname.name, value);
+			    break;
+			}
+			case Pwr.eType_Int32:
+			case Pwr.eType_UInt32:
+			case Pwr.eType_Int16:
+			case Pwr.eType_UInt16:
+			case Pwr.eType_Int8:
+			case Pwr.eType_UInt8: {
+			    int value = items_enum[((GlowEventMenu)e).item];
+			    sts = dyn.graph.getGdh().setObjectInfo( pname.name, value);
+			    break;
+			}
+			default: ;
+			}
+			break;
+		    case GraphIfc.eDatabase_Ccm: {
+			/* TODO
+			pwr_tInt32 value = items_enum[event->menu.item];
+			sts = dyn->graph->ccm_set_variable( parsed_name, type_id, &value);
+			*/
+			break;
+		    }
+		    default : ;
+		    }
+
+		    if ( sts == null || sts.evenSts()) System.out.println("Option menu error: " + pname.name);
+		}
+		break;
+	    case Glow.eEvent_MenuDelete:
+		if ( menu_object == null)
+		    break;
+		if ( e.object == null || e.object == menu_object) {
+		    // Delete this menu
+		    dyn.graph.getCtx().remove(menu_object);
+		    menu_object = null;
+		}
+		break;
+	    default: ;
+	    }
+
+	    return 1;
 	}
 
 	public void open( BufferedReader reader) {
@@ -6089,6 +6646,10 @@ public class Dyn {
 	public DynAnalogText( Dyn dyn) {
 	    super(dyn);
 	    dyn_type1 = Dyn.mDynType1_AnalogText; 
+	}
+
+	public int action( GrowNode object, GlowEvent e) {
+	    return 1;
 	}
 
 	public void open( BufferedReader reader) {

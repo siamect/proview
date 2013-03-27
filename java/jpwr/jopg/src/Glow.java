@@ -39,7 +39,8 @@ package jpwr.jopg;
 
 public class Glow {
     public static final int GLOW__TERMINATED	       	= 21001;
-    public static final int GLOW__SUBTERMINATED        = 21003;
+    public static final int GLOW__SUBTERMINATED        	= 21003;
+    public static final int GLOW__NO_PROPAGATE        	= 21005;
 
     public static final int DRAW_MP			= 6;
     public static final int DRAW_TYPE_SIZE		= 9;
@@ -1466,10 +1467,16 @@ public class Glow {
     public static final int ePosition_Absolute			= 0;
     public static final int ePosition_Relative			= 1;
 
+    public static final int eEventType_Object 			= 0;
+    public static final int eEventType_Menu 			= 1;
+
     public static final int eEvent_MB1Click 			= 0;
     public static final int eEvent_MB1Up 			= 2;
     public static final int eEvent_MB1Down 			= 3;
     public static final int eEvent_MB1DoubleClick 	       	= 4;
     public static final int eEvent_CursorMotion 		= 5;
     public static final int eEvent_ValueChanged 		= 7;
+    public static final int eEvent_MenuCreate 			= 8;
+    public static final int eEvent_MenuActivated 		= 9;
+    public static final int eEvent_MenuDelete 			= 10;
 }

@@ -57,6 +57,10 @@ public class GlowTransform {
     boolean stored;
 
     public GlowTransform() {
+	a11 = 1;
+	a22 = 1;
+	s_a11 = 1;
+	s_a22 = 1;
     }
 
     public void store() { 

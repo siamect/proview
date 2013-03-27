@@ -1,4 +1,4 @@
- /* 
+/* 
  * Proview   Open Source Process Control.
  * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
@@ -185,7 +185,7 @@ public class GrowText extends GlowArrayElem {
 	/*
 	GlowPoint rp;
 
-	switch ( event.type) {
+	switch ( event.event) {
 	case Glow.eEvent_CursorMotion:		
 	    return 0;
 	default: ;
@@ -193,8 +193,6 @@ public class GrowText extends GlowArrayElem {
 
 	rp = trf.reverse( fx, fy);
 
-	System.out.println( "Event handler: " + fx + " " + fy + " reverse: " + rp.x + " " + rp.y);
-	System.out.println(  "   p: " + p.x + " " + p.y);
 	if ( ll.x <= rp.x && rp.x <= ur.x &&
 	     ll.y <= rp.y && rp.y <= ur.y) {
 	    System.out.println( "Event handler: Hit in text");

@@ -241,7 +241,7 @@ public class GrowArc extends GlowArrayElem {
     public int eventHandler( GlowEvent event, double fx, double fy) {
 	GlowPoint rp;
 
-	switch ( event.type) {
+	switch ( event.event) {
 	case Glow.eEvent_CursorMotion:		
 	    return 0;
 	default: ;
@@ -251,8 +251,6 @@ public class GrowArc extends GlowArrayElem {
 	//rp = new GlowPoint(null);
 	//rp.x = fx;
 	//rp.y = fy;
-	System.out.println( "Event handler: " + fx + " " + fy + " reverse: " + rp.x + " " + rp.y);
-	System.out.println(  "   ll: " + ll.x + " " + ll.y + "  ur: " + ur.x + " " + ur.y);
 	if ( ll.x <= rp.x && rp.x <= ur.x &&
 	     ll.y <= rp.y && rp.y <= ur.y) {
 	    System.out.println( "Event handler: Hit in arc");

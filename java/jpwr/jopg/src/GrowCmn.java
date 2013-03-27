@@ -49,6 +49,10 @@ public class GrowCmn {
 	public double base_zoom_factor;
 	public int offset_x;
 	public int offset_y;
+	public int window_width;
+	public int window_height;
+	public int subwindow_x;
+	public int subwindow_y;
     }
 
     public GrowApplIfc appl;
@@ -96,6 +100,9 @@ public class GrowCmn {
     int hot_indication;
     Object userdata;
     GlowArrayElem callback_object;
+    int callback_object_type;
+    int hot_mode;
+    int hot_found;
 
     Vector<GlowArrayElem> a = new Vector<GlowArrayElem>();
     Vector<GlowArrayElem> a_nc = new Vector<GlowArrayElem>();
@@ -106,8 +113,16 @@ public class GrowCmn {
 	this.appl = appl;
 	this.debug = true;
 	this.antiAliasing = true;
+	mw.window_width = getWidth();
+	mw.window_height = getHeight();
     }
 
+    public int getWidth() {
+	return appl.getWidth();
+    }
+    public int getHeight() {
+	return appl.getHeight();
+    }
     public void setGdraw(GlowDrawIfc gdraw) {
 	this.gdraw = gdraw;
     }

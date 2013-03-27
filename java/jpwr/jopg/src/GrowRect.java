@@ -78,6 +78,33 @@ public class GrowRect extends GlowArrayElem {
 	ur = new GlowPoint(cmn);
     }
 
+    public GrowRect( GrowCmn cmn, String n_name, double x, double y, 
+		     double w, double h, int draw_type, int line_width, 
+		     int fill, int border, int shadow,
+		     int fill_drawtype) {
+	this.cmn = cmn;
+	trf = new GlowTransform();
+	ll = new GlowPoint(cmn);
+	ll.x = x;
+	ll.y = y;
+	ur = new GlowPoint(cmn);
+	ur.x = x + w;
+	ur.y = y + h;
+	this.draw_type = draw_type;
+	this.line_width = line_width;
+	this.fill = fill;
+	this.border = border;
+	this.shadow = shadow;
+	this.fill_drawtype = fill_drawtype;
+	this.n_name = n_name;
+	shadow_width = 5;
+	relief = Glow.eRelief_Up;
+	shadow_contrast = 2;
+	gradient = Glow.eGradient_No;	
+	gradient_contrast = 4;
+    }
+
+
     public int type() {
 	return Glow.eObjectType_GrowRect;
     }
@@ -240,7 +267,7 @@ public class GrowRect extends GlowArrayElem {
     public int eventHandler( GlowEvent event, double fx, double fy) {
 	GlowPoint rp;
 
-	switch ( event.type) {
+	switch ( event.event) {
 	case Glow.eEvent_CursorMotion:		
 	    return 0;
 	default: ;
@@ -250,8 +277,6 @@ public class GrowRect extends GlowArrayElem {
 	//rp = new GlowPoint(null);
 	//rp.x = fx;
 	//rp.y = fy;
-	System.out.println( "Event handler: " + fx + " " + fy + " reverse: " + rp.x + " " + rp.y);
-	System.out.println(  "   ll: " + ll.x + " " + ll.y + "  ur: " + ur.x + " " + ur.y);
 	if ( ll.x <= rp.x && rp.x <= ur.x &&
 	     ll.y <= rp.y && rp.y <= ur.y) {
 	    System.out.println( "Event handler: Hit in rect");
@@ -425,5 +450,124 @@ public class GrowRect extends GlowArrayElem {
 	}
     }
 
+    public void get_borders( GlowTransform t, GlowGeometry g) {
+	double ll_x, ur_x, ll_y, ur_y, x1, x2, y1, y2;
 
+	if ( t != null) {
+	    x1 = trf.x( t, ll.x, ll.y);
+	    x2 = trf.x( t, ur.x, ur.y);
+	    y1 = trf.y( t, ll.x, ll.y);
+	    y2 = trf.y( t, ur.x, ur.y);
+	}
+	else {
+	    x1 = trf.x( ll.x, ll.y);
+	    x2 = trf.x( ur.x, ur.y);
+	    y1 = trf.y( ll.x, ll.y);
+	    y2 = trf.y( ur.x, ur.y);
+	}
+
+	ll_x = Math.min( x1, x2);
+	ur_x = Math.max( x1, x2);
+	ll_y = Math.min( y1, y2);
+	ur_y = Math.max( y1, y2);
+
+	if ( ll_x < g.ll_x)
+	    g.ll_x = ll_x;
+	if ( ur_x > g.ur_x)
+	    g.ur_x = ur_x;
+	if ( ll_y < g.ll_y)
+	    g.ll_y = ll_y;
+	if ( ur_y > g.ur_y)
+	    g.ur_y = ur_y;
+    }
+
+    public void get_node_borders() { 
+	GlowGeometry g = new GlowGeometry();
+	g.ll_x = g.ll_y = 1e37;
+	g.ur_x = g.ur_y = -1e37;
+	get_borders( null, g);
+	x_left = g.ll_x;
+	x_right = g.ur_x;
+	y_low = g.ll_y;
+	y_high = g.ur_y;
+    }
+
+    void set_scale( double scale_x, double scale_y, 
+		    double x0, double y0, int type) {
+	double old_x_left, old_x_right, old_y_low, old_y_high;
+
+	if ( trf.s_a11 != 0 && trf.s_a22 != 0 &&
+	     Math.abs( scale_x - trf.a11 / trf.s_a11) < Float.MIN_VALUE &&
+	     Math.abs( scale_y - trf.a22 / trf.s_a22) < Float.MIN_VALUE)
+	    return;
+
+	switch( type) {
+	case Glow.eScaleType_LowerLeft:
+	    x0 = x_left;
+	    y0 = y_low;
+	    break;
+	case Glow.eScaleType_LowerRight:
+	    x0 = x_right;
+	    y0 = y_low;
+	    break;
+	case Glow.eScaleType_UpperRight:
+	    x0 = x_right;
+	    y0 = y_high;
+	    break;
+	case Glow.eScaleType_UpperLeft:
+	    x0 = x_left;
+	    y0 = y_high;
+	    break;
+	case Glow.eScaleType_FixPoint:
+	    break;
+	case Glow.eScaleType_Center:
+	    x0 = (x_left + x_right) / 2;
+	    y0 = (y_low + y_high) /2;
+	    break;
+	default:
+	    ;
+	}
+	
+	old_x_left = x_left;
+	old_x_right = x_right;
+	old_y_low = y_low;
+	old_y_high = y_high;
+	trf.scale_from_stored( scale_x, scale_y, x0, y0);
+	get_node_borders();
+
+	switch( type) {
+	case Glow.eScaleType_LowerLeft:
+	    x_left = old_x_left;
+	    y_low = old_y_low;
+	    break;
+	case Glow.eScaleType_LowerRight:
+	    x_right = old_x_right;
+	    y_low = old_y_low;
+	    break;
+	case Glow.eScaleType_UpperRight:
+	    x_right = old_x_right;
+	    y_high = old_y_high;
+	    break;
+	case Glow.eScaleType_UpperLeft:
+	    x_left = old_x_left;
+	    y_high = old_y_high;
+	    break;
+	case Glow.eScaleType_FixPoint:
+	    break;
+	case Glow.eScaleType_Center:
+	    x0 = (x_left + x_right) / 2;
+	    y0 = (y_low + y_high) /2;
+	    break;
+	default:
+	    ;
+	}
+	cmn.ctx.draw( old_x_left * cmn.mw.zoom_factor_x - cmn.mw.offset_x - Glow.DRAW_MP,
+		      old_y_low * cmn.mw.zoom_factor_y - cmn.mw.offset_y - Glow.DRAW_MP,
+		      old_x_right * cmn.mw.zoom_factor_x - cmn.mw.offset_x + Glow.DRAW_MP,
+		      old_y_high * cmn.mw.zoom_factor_y - cmn.mw.offset_y + Glow.DRAW_MP);
+	cmn.ctx.draw( x_left * cmn.mw.zoom_factor_x - cmn.mw.offset_x - Glow.DRAW_MP,
+		      y_low * cmn.mw.zoom_factor_y - cmn.mw.offset_y - Glow.DRAW_MP,
+		      x_right * cmn.mw.zoom_factor_x - cmn.mw.offset_x + Glow.DRAW_MP,
+		      y_high * cmn.mw.zoom_factor_y - cmn.mw.offset_y + Glow.DRAW_MP);
+    }
 }

@@ -349,12 +349,33 @@ public class GrowCtx implements GrowCtxIfc {
 	}
     }
 
-    public void register_callback_object(GlowArrayElem o) {
+    public void register_callback_object(int type, GlowArrayElem o) {
 	cmn.callback_object = o;
+	cmn.callback_object_type = type;
     }
+    public int send_menu_callback( GlowArrayElem object, int item, int event,
+				   double x, double y) {
+	/* Send a host request callback */
+	GlowEventMenu e = new GlowEventMenu();
+
+	e.event = event;
+	e.type = Glow.eEventType_Menu;
+	// e.any.x_pixel = int( x * mw.zoom_factor_x) - mw.offset_x;
+	// e.any.y_pixel = int( y * mw.zoom_factor_y) - mw.offset_y;
+	e.x = x;
+	e.y = y;
+	e.object_type = object.type();
+	e.object = object;
+	e.item = item;
+	cmn.appl.eventHandler(e);
+ 
+	return 1;
+    }
+
     public void eventHandler(GlowEvent e) {
 	int sts = 0;
 	cmn.callback_object = null;
+	cmn.callback_object_type = Glow.eObjectType_NoObject;
 	for ( int i = cmn.a.size() - 1; i >= 0; i--) {
 	    sts = ((GlowArrayElem)cmn.a.get(i)).eventHandler(e, e.x, e.y);
 	    if ( sts == 1) {
@@ -364,6 +385,7 @@ public class GrowCtx implements GrowCtxIfc {
 
 	if ( sts == 1 && cmn.appl != null) {
 	    e.object = cmn.callback_object;
+	    e.object_type = cmn.callback_object_type;
 	    cmn.appl.eventHandler(e);
 	}
     }
@@ -446,6 +468,18 @@ public class GrowCtx implements GrowCtxIfc {
 	return null;
     }
 
+    public void insert(GlowArrayElem e) {
+	cmn.a.add(e);
+    }
+    public void remove(GlowArrayElem e) {
+	cmn.a.remove(e);
+    }
+    public void pop(GlowArrayElem e) {
+	// TODO
+    }
+    public Vector<GlowArrayElem> get_object_list() {
+	return cmn.a;
+    }
 }
 
 

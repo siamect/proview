@@ -49,6 +49,10 @@ public class GlowPoint {
 	this.cmn = cmn;
     }
 
+    public void posit(double x, double y) {
+	this.x = x;
+	this.y = y;
+    }
     public void open(BufferedReader reader) {
 	String line;
 	StringTokenizer token;

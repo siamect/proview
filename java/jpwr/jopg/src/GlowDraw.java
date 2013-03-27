@@ -461,4 +461,13 @@ public class GlowDraw implements GlowDrawIfc {
 	}
 	return fonts[idx];
     }
+
+    public int set_clip_rectangle( int x1, int y1, int x2, int y2) {
+	g2.setClip(new Rectangle2D.Float((float)x1, (float)y1, (float)x2, (float)y2));
+	return 1;
+    }
+
+    public void reset_clip_rectangle() {
+	g2.setClip(null);
+    }
 }

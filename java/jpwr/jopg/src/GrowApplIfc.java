@@ -43,4 +43,6 @@ public interface GrowApplIfc {
     public void traceDisconnect(GrowNode object);
     public void traceScan(GrowNode object);
     public void eventHandler(GlowEvent e);
+    public int getWidth();
+    public int getHeight();
 }

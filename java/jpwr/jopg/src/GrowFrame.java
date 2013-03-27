@@ -129,14 +129,14 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	setSize();
 	enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 	setDefaultCloseOperation( DISPOSE_ON_CLOSE);
-
-        localPanel.addMouseListener(new MouseAdapter() {
+	
+	MouseAdapter adapter = new MouseAdapter() {
 		public void mouseClicked(MouseEvent e) {
 		    System.out.println("MouseListener");
 		    GlowEvent event = new GlowEvent();
 		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
 		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
-		    event.type = Glow.eEvent_MB1Click;
+		    event.event = Glow.eEvent_MB1Click;
 		    graph.ctx.eventHandler( event);
 		}
 		public void mousePressed(MouseEvent e) {
@@ -144,7 +144,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 		    GlowEvent event = new GlowEvent();
 		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
 		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
-		    event.type = Glow.eEvent_MB1Down;
+		    event.event = Glow.eEvent_MB1Down;
 		    graph.ctx.eventHandler( event);
 		}
 		public void mouseReleased(MouseEvent e) {
@@ -152,21 +152,31 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 		    GlowEvent event = new GlowEvent();
 		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
 		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
-		    event.type = Glow.eEvent_MB1Up;
+		    event.event = Glow.eEvent_MB1Up;
 		    graph.ctx.eventHandler( event);
 		}
 		public void mouseMoved(MouseEvent e) {
-		    System.out.println("MouseListener");
 		    GlowEvent event = new GlowEvent();
 		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
 		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
-		    event.type = Glow.eEvent_CursorMotion;
+		    event.event = Glow.eEvent_CursorMotion;
 		    graph.ctx.eventHandler( event);
 		}
-	    });
+	    };
+
+        localPanel.addMouseListener(adapter);
+        localPanel.addMouseMotionListener(adapter);
 
 	timer = new Timer( scanTime, this); 
 	timer.start();
+    }
+
+
+    public int getWidth() {
+	return localPanel.getWidth();
+    }
+    public int getHeight() {
+	return localPanel.getHeight();
     }
 
     public void actionPerformed( ActionEvent e) {

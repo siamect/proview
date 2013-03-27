@@ -93,6 +93,9 @@ public class GrowNode extends GlowArrayElem {
     public int input_selected;
     public int annotv_inputmode[] = new int[10];
     public double fill_level = 1;
+    public int level_fill_drawtype;
+    public int level_color_tone;
+    public int level_direction;
 
     GrowCmn cmn;
 
@@ -343,7 +346,7 @@ public class GrowNode extends GlowArrayElem {
 	GlowPoint rp;
 	int sts;
 
-	switch ( event.type) {
+	switch ( event.event) {
 	case Glow.eEvent_CursorMotion:		
 	    return 0;
 	default: ;
@@ -354,12 +357,10 @@ public class GrowNode extends GlowArrayElem {
 	if ( sts != 0) {
 	    System.out.println( "Hit in node " + sts);
 	    if ( type() != Glow.eObjectType_GrowGroup)
-		cmn.ctx.register_callback_object(this);
+		cmn.ctx.register_callback_object(Glow.eObjectType_Node, this);
 	    return sts;
 	}
 	/*
-	System.out.println( "Event handler: " + fx + " " + fy + " reverse: " + rp.x + " " + rp.y);
-	System.out.println(  "   ll: " + ll.x + " " + ll.y + "  ur: " + ur.x + " " + ur.y);
 	if ( ll.x <= rp.x && rp.x <= ur.x &&
 	     ll.y <= rp.y && rp.y <= ur.y) {
 	    System.out.println( "Event handler: Hit in rect");
@@ -372,7 +373,8 @@ public class GrowNode extends GlowArrayElem {
 
     public void draw() {
 	if ( visible != 0)
-	    nc.draw( trf, highlight, hot, this, this);
+	    //nc.draw( trf, highlight, hot, this, this);
+	    draw(null, highlight, hot, null, null);
     }
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {
 
@@ -396,7 +398,145 @@ public class GrowNode extends GlowArrayElem {
 	    else
 		nc.draw( trf, highlight, hot, node, node);
 	}
-	
+	else {
+	    int x1, x2, y1, y2;
+	    int x_level = 0;
+	    int y_level = 0;
+	    int clip_sts = 0;
+	    int old_color_tone = 0;
+	    int old_fill_drawtype = 0;
+	    
+	    if (t == null) {
+		x1 = (int)( x_left * cmn.mw.zoom_factor_x + 0.5) - cmn.mw.offset_x;
+		y1 = (int)( y_low * cmn.mw.zoom_factor_y + 0.5) - cmn.mw.offset_y;
+		x2 = (int)( x_right * cmn.mw.zoom_factor_x + 0.5) - cmn.mw.offset_x;
+		y2 = (int)( y_high * cmn.mw.zoom_factor_y + 0.5) - cmn.mw.offset_y;
+	    }
+	    else {
+		x1 = (int)( t.x( x_left, y_low) * cmn.mw.zoom_factor_x + 0.5) - cmn.mw.offset_x;
+		y1 = (int)( t.y( x_left, y_low) * cmn.mw.zoom_factor_y + 0.5) - cmn.mw.offset_y;
+		x2 = (int)( t.x( x_right, y_high) * cmn.mw.zoom_factor_x + 0.5) - cmn.mw.offset_x;
+		y2 = (int)( t.y( x_right, y_high) * cmn.mw.zoom_factor_y + 0.5) - cmn.mw.offset_y;
+	    }
+	    switch ( level_direction) {
+	    case Glow.eDirection_Right:
+		x_level = (int)( fill_level * (x2 - x1) + 0.5);
+		clip_sts = cmn.gdraw.set_clip_rectangle( x1 - 1, y1 - 1, x1 + x_level, y2 + 1);
+		break;
+	    case Glow.eDirection_Left:
+		x_level = (int)( (1 - fill_level) * ( x2 - x1) + 0.5);
+		clip_sts = cmn.gdraw.set_clip_rectangle( x1 - 1, y1 - 1, x1 + x_level, y2 + 1);
+		if ( level_color_tone != Glow.eDrawTone_No) {
+		    old_color_tone = color_tone;
+		    color_tone = level_color_tone;
+		}
+		else if ( level_fill_drawtype != Glow.eDrawType_No) {
+		    old_fill_drawtype = fill_drawtype;
+		    fill_drawtype = level_fill_drawtype;
+		}
+		break;
+	    case Glow.eDirection_Up:
+		y_level = (int)( fill_level * (y2 - y1) + 0.5);
+		clip_sts = cmn.gdraw.set_clip_rectangle( x1 - 1, y1 - 1, x2 + 1, y1 + y_level);
+		break;
+	    case Glow.eDirection_Down:
+		y_level = (int)( (1 - fill_level) * ( y2 - y1) + 0.5);
+		clip_sts = cmn.gdraw.set_clip_rectangle( x1 - 1, y1 - 1, x2 + 1, y1 + y_level);
+		if ( level_color_tone != Glow.eDrawTone_No) {
+		    old_color_tone = color_tone;
+		    color_tone = level_color_tone;
+		}
+		else if ( level_fill_drawtype != Glow.eDrawType_No) {
+		    old_fill_drawtype = fill_drawtype;
+		    fill_drawtype = level_fill_drawtype;
+		}
+		break;
+	    default: ;
+	    }
+	    
+	    if ( t != null) {
+		GlowTransform trf_tot = t.multiply( trf);
+
+		// If this node has a trace pointer, use colors for this node
+		nc.draw( trf_tot, highlight, hot, this, this);
+	    }
+	    else
+		nc.draw( trf, highlight, hot, node, node);
+	    if ( (clip_sts & 1) != 0)
+		cmn.gdraw.reset_clip_rectangle();
+	    
+	    switch ( level_direction) {
+	    case Glow.eDirection_Right:
+		if ( level_color_tone != Glow.eDrawTone_No) {
+		    old_color_tone = color_tone;
+		    color_tone = level_color_tone;
+		}
+		else if ( level_fill_drawtype != Glow.eDrawType_No) {
+		    old_fill_drawtype = fill_drawtype;
+		    fill_drawtype = level_fill_drawtype;
+		}
+		clip_sts = cmn.gdraw.set_clip_rectangle( x1 + x_level, y1 - 1, x2 + 1, y2 + 1);
+		break;
+	    case Glow.eDirection_Left:
+		if ( level_color_tone != Glow.eDrawTone_No)
+		    color_tone = old_color_tone;
+		else if ( level_fill_drawtype != Glow.eDrawType_No)
+		    fill_drawtype = old_fill_drawtype;
+		clip_sts = cmn.gdraw.set_clip_rectangle( x1 + x_level, y1 - 1, x2 + 1, y2 + 1);
+		break;
+	    case Glow.eDirection_Up:
+		if ( level_color_tone != Glow.eDrawTone_No) {
+		    old_color_tone = color_tone;
+		    color_tone = level_color_tone;
+		}
+		else if ( level_fill_drawtype != Glow.eDrawType_No) {
+		    old_fill_drawtype = fill_drawtype;
+		    fill_drawtype = level_fill_drawtype;
+		}
+		clip_sts = cmn.gdraw.set_clip_rectangle( x1 - 1, y1 + y_level, x2 + 1, y2 + 1);
+		break;
+	    case Glow.eDirection_Down:
+		if ( level_color_tone != Glow.eDrawTone_No)
+		    color_tone = old_color_tone;
+		else if ( level_fill_drawtype != Glow.eDrawType_No)
+		    fill_drawtype = old_fill_drawtype;
+		clip_sts = cmn.gdraw.set_clip_rectangle( x1 - 1, y1 + y_level, x2 + 1, y2 + 1);
+		break;
+	    default: ;
+	    }
+
+	    if ( t != null) {
+		GlowTransform trf_tot = t.multiply( trf);
+
+		// If this node has a trace pointer, use colors for this node
+		nc.draw( trf_tot, highlight, hot, this, this);
+	    }
+	    else
+		nc.draw( trf, highlight, hot, node, node);
+	    if ( (clip_sts & 1) != 0)
+		cmn.gdraw.reset_clip_rectangle();
+
+	    switch ( level_direction) {
+	    case Glow.eDirection_Right:
+		if ( level_color_tone != Glow.eDrawTone_No)
+		    color_tone = old_color_tone;
+		else if ( level_fill_drawtype != Glow.eDrawType_No)
+		    fill_drawtype = old_fill_drawtype;
+		break;
+	    case Glow.eDirection_Left:
+		break;
+	    case Glow.eDirection_Up:
+		if ( level_color_tone != Glow.eDrawTone_No)
+		    color_tone = old_color_tone;
+		else if ( level_fill_drawtype != Glow.eDrawType_No)
+		    fill_drawtype = old_fill_drawtype;
+		break;
+	    case Glow.eDirection_Down:
+		break;
+	    default: ;
+	    }
+	}
+
     }
 
     public int getClassTraceColor1() {
@@ -443,6 +583,18 @@ public class GrowNode extends GlowArrayElem {
     }
     public void setColorInverse(int color_inverse) {
 	this.color_inverse = color_inverse;
+    }
+    public void setLevelFillColor(int color) {
+	level_fill_drawtype = color;
+    }
+    public void setLevelColorTone(int tone) {
+	level_color_tone = tone;
+    }
+    public void setLevelDirection( int level_direction) {
+	this.level_direction = level_direction;
+    }
+    public void setFillLevel(double fill_level) {
+	this.fill_level = fill_level;
     }
     public String getAnnotation(int number) {
 	return annotv[number];
@@ -587,5 +739,64 @@ public class GrowNode extends GlowArrayElem {
 		      old_y_low * cmn.mw.zoom_factor_y - cmn.mw.offset_y - Glow.DRAW_MP,
 		      old_x_right * cmn.mw.zoom_factor_x - cmn.mw.offset_x + Glow.DRAW_MP,
 		      old_y_high * cmn.mw.zoom_factor_y - cmn.mw.offset_y + Glow.DRAW_MP);
+    }
+
+    public GlowFillLevelLimits getLimits()
+    {
+	GlowFillLevelLimits limits = new GlowFillLevelLimits();
+
+	if ( nc.y0 == 0 && nc.y1 == 0) {
+	    limits.status = 0;
+	    return limits;
+	}
+	if ( !(nc.x0 == 0 && nc.x1 == 0)) {
+	    limits.status = 0;
+	    return limits;
+	}
+
+	double x1, x2, y1, y2;
+	double rotation;
+
+	// Calculate max and min koordinates
+
+	x1 = trf.x( 0, nc.y0);
+	y1 = trf.y( 0, nc.y0);
+	x2 = trf.x( 0, nc.y1);
+	y2 = trf.y( 0, nc.y1);
+
+	rotation = (trf.rot() / 360 - Math.floor( trf.rot() / 360)) * 360;
+
+	if ( 45 >= rotation || rotation > 315) {
+	    limits.direction = Glow.eDirection_Down;
+	    limits.min = y1;
+	    limits.max = y2;
+	}
+	else if ( 45 < rotation && rotation <= 135) {
+	    limits.direction = Glow.eDirection_Right;
+	    limits.min = x2;
+	    limits.max = x1;
+	}
+	else if ( 135 < rotation && rotation <= 225) {
+	    limits.direction = Glow.eDirection_Up;
+	    limits.min = y2;
+	    limits.max = y1;
+	}
+	else if ( 225 < rotation && rotation <= 315) {
+	    limits.direction = Glow.eDirection_Left;
+	    limits.min = x1;
+	    limits.max = x2;
+	}
+	limits.status = 1;
+	return limits;
+    }
+
+    public GlowGeometry measure() {
+	GlowGeometry geom = new GlowGeometry();
+	geom.ll_x = x_left;
+	geom.ll_y = y_low;
+	geom.ur_x = x_right;
+	geom.ur_y = y_high;
+
+	return geom;
     }
 }

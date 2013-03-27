@@ -1,4 +1,4 @@
- /* 
+/* 
  * Proview   Open Source Process Control.
  * Copyright (C) 2005-2012 SSAB EMEA AB.
  *
@@ -37,10 +37,12 @@
 package jpwr.jopg;
 
 public class GlowEvent {
+    public int event;
     public int type;
     public double x;
     public double y;
-    Object object;
+    public GlowArrayElem object;
+    public int object_type;
 
     public GlowEvent() {}
 }

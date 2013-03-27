@@ -4,16 +4,19 @@ local_java_sources := \
 	Glow.java,\
 	PrintfFormat.java,\
 	GlowCFormat.java,\
-	GlowEvent.java,\
+	GlowFillLevelLimits.java,\
+	GlowGeometry.java,\
 	GlowPointX.java,\
 	GlowDimension.java,\
+	GlowMenuInfo.java,\
 	GrowApplIfc.java,\
 	GlowColorRgb.java,\
 	GlowColor.java,\
 	GlowDrawIfc.java,\
 	GlowDraw.java,\
-	GrowNodeIfc.java,\
 	GlowArrayElem.java,\
+	GlowEvent.java,\
+	GlowEventMenu.java,\
 	GrowCtxIfc.java,\
 	GrowCmn.java,\
 	GlowTransform.java,\
@@ -30,6 +33,7 @@ local_java_sources := \
 	GrowPolyline.java,\
 	GrowText.java,\
 	GrowAnnot.java,\
+	GrowMenu.java,\
 	GlowVector.java,\
 	GrowCtx.java,\
 	DynParsedAttrName.java,\
