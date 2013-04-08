@@ -4262,7 +4262,8 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
     }
   }
   s0 = in;
-  if ( dyn && dyn->total_dyn_type1 & ge_mDynType1_HostObject) {
+  if ( dyn && (dyn->total_dyn_type1 & ge_mDynType1_HostObject || 
+	       strcmp( dyn->recursive_hostobject, "") != 0)) {
     pwr_tAName hostobject;
 
     dyn->get_hostobject( hostobject);
