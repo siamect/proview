@@ -931,8 +931,8 @@ void *handle_events(void *ptr) {
       op->Status = PB__NOTINIT;
     } else {
       if (local->slave_diag_requested) {
-	errh_Info( "Profibus - Diag re-request");
-	dp_get_slave_diag(hDevice);
+	//	errh_Info( "Profibus - Diag re-request");
+	//	dp_get_slave_diag(hDevice);
       }
     }    
     pthread_mutex_unlock(&local->mutex);

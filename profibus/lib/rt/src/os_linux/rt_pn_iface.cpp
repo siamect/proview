@@ -643,9 +643,9 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
     pIOCR->SequenceHighByte = 0;
     pIOCR->SequenceLowByte  = 0;
     pIOCR->WatchdogFactorHighByte = 0;
-    pIOCR->WatchdogFactorLowByte  = 3;
+    pIOCR->WatchdogFactorLowByte  = 10;
     pIOCR->DataHoldFactorHighByte = 0;
-    pIOCR->DataHoldFactorLowByte  = 3;
+    pIOCR->DataHoldFactorLowByte  = 10;
     pIOCR->FrameSendOffsetHighWordHighByte = 0xFF; // As fast as possible
     pIOCR->FrameSendOffsetHighWordLowByte  = 0xFF;
     pIOCR->FrameSendOffsetLowWordHighByte  = 0xFF;
