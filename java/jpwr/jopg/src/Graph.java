@@ -50,6 +50,8 @@ public class Graph implements GraphIfc, GrowApplIfc {
     public GraphApplIfc appl;
     public Gdh gdh;
     public GraphLocalDb ldb;
+    public GrowSlider currentSlider;
+    public double scan_time = 1;
 
     public Graph(GraphApplIfc appl, Gdh gdh) {
 	this.appl = appl;
@@ -83,19 +85,22 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	ctx.traceConnect();
     }
 
-    public void traceConnect(GrowNode object) {
+    public void traceConnect(GlowArrayElem object) {
 	Dyn dyn = (Dyn)object.getUserData();
-	dyn.connect(object);
+	if ( dyn != null)
+	    dyn.connect(object);
     }
 
-    public void traceDisconnect(GrowNode object) {
+    public void traceDisconnect(GlowArrayElem object) {
 	Dyn dyn = (Dyn)object.getUserData();
-	dyn.disconnect();
+	if ( dyn != null)
+	    dyn.disconnect();
     }
 
-    public void traceScan(GrowNode object) {
+    public void traceScan(GlowArrayElem object) {
 	Dyn dyn = (Dyn)object.getUserData();
-	dyn.scan(object);
+	if ( dyn != null)
+	    dyn.scan(object);
     }
 
     int stringToType( String str) {
@@ -141,6 +146,8 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	    return Pwr.eType_Mask;
 	if ( str.equalsIgnoreCase("bit"))
 	    return Graph.eType_Bit;
+	if ( str.substring(0,6).equalsIgnoreCase("string"))
+	     return Pwr.eType_String;
 	return 0;
     }
 
@@ -172,7 +179,72 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	DynParsedAttrName pname = new DynParsedAttrName();
 
 	String str = name.trim();
-  
+  	
+	if ( (idx = str.indexOf("$local.")) != -1) {
+	    if ( (tidx = str.indexOf('#')) == -1)
+		pname.name = str.substring(idx+1);
+	    else {
+		pname.name = str.substring(idx+7, tidx);
+		String type = str.substring(tidx);
+		if ( type.equals("##Float32"))
+		    pname.type = Pwr.eType_Float32;
+		else if ( type.equals("##Float64"))
+		    pname.type = Pwr.eType_Float64;
+		else if ( type.equals("##Int32"))
+		    pname.type = Pwr.eType_Int32;
+		else if ( type.equals("##Boolean"))
+		    pname.type = Pwr.eType_Boolean;
+		else
+		    pname.type = Pwr.eType_String;
+	    }
+	    if ( str.startsWith("!")) {
+		str = str.substring(1);
+		str = str.trim();
+		pname.inverted = true;
+	    }
+	    else
+		pname.inverted = false;
+
+	    pname.database = GraphIfc.eDatabase_Local;
+	    return pname;
+	}
+
+	if ( (idx = str.indexOf("$ccm.")) != -1) {
+	    if ( (tidx = str.indexOf('#')) == -1)
+		pname.name = str.substring(idx+1);
+	    else {
+		pname.name = str.substring(idx+5, tidx);
+		String type = str.substring(tidx);
+		if ( type.equals("##Float32"))
+		    pname.type = Pwr.eType_Float32;
+		else if ( type.equals("##Int32"))
+		    pname.type = Pwr.eType_Int32;
+		else if ( type.equals("##Boolean"))
+		    pname.type = Pwr.eType_Boolean;
+		else
+		    pname.type = Pwr.eType_String;
+	    }
+	    if ( str.startsWith("!")) {
+		str = str.substring(1);
+		str = str.trim();
+		pname.inverted = true;
+	    }
+	    else
+		pname.inverted = false;
+
+	    pname.database = GraphIfc.eDatabase_Ccm;
+	    return pname;
+	}
+
+
+	if ( (idx = str.indexOf("$object")) != -1) {
+	    if ( appl != null) {
+		String oname = appl.getObject();
+		str = str.substring(0, idx) + oname + str.substring(idx+7);
+		System.out.println("Parse name $object " + oname + " str " + str);
+	    }
+	}
+
 	if ( (idx = str.indexOf('[')) != -1 &&
 	     (eidx = str.lastIndexOf('#')) != -1 &&
 	     str.charAt(eidx-1) != '#') {
@@ -212,6 +284,19 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	return pname;
     }
 
+    public String getCommand(String cmd) {
+
+	String str = new String(cmd);
+	int idx;
+
+	while ( (idx = str.indexOf("$object")) != -1) {
+	    if ( appl != null) {
+		String oname = appl.getObject();
+		str = str.substring(0, idx) + oname + str.substring(idx+7);
+	    }
+	}
+	return str;
+    }
 
     public Object growUserdataOpen( BufferedReader reader, Object object, int type) {
 	switch ( type) {
@@ -264,6 +349,9 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	case Glow.eEvent_MB1Up:
 	case Glow.eEvent_MB1Down:
 	case Glow.eEvent_ValueChanged:
+	case Glow.eEvent_SliderMoveStart:
+	case Glow.eEvent_SliderMoveEnd:
+	case Glow.eEvent_SliderMoved:
 	    if ( e.object != null) {
 		int sts;
 		Dyn dyn = (Dyn)((GlowArrayElem)e.object).getUserData();
@@ -316,5 +404,20 @@ public class Graph implements GraphIfc, GrowApplIfc {
     public String get_reference_name(String name) {
 	// TODO
 	return null;
+    }
+
+    public GrowSlider getCurrentSlider() {
+	return currentSlider;
+    }
+    public void setCurrentSlider(GrowSlider currentSlider) {
+	this.currentSlider = currentSlider;
+    }
+
+    public boolean isAuthorized(int access) {
+	return true;
+    }
+
+    public double getScanTime() {
+	return scan_time;
     }
 }

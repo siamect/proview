@@ -8,6 +8,8 @@ local_java_sources := \
 	GlowGeometry.java,\
 	GlowPointX.java,\
 	GlowDimension.java,\
+	GlowSliderInfo.java,\
+	GlowBackgroundObject.java,\
 	GlowMenuInfo.java,\
 	GrowApplIfc.java,\
 	GlowColorRgb.java,\
@@ -27,6 +29,7 @@ local_java_sources := \
 	GlowConPoint.java,\
 	GrowNode.java,\
 	GrowGroup.java,\
+	GrowSlider.java,\
 	GrowRect.java,\
 	GrowArc.java,\
 	GrowLine.java,\
@@ -34,6 +37,8 @@ local_java_sources := \
 	GrowText.java,\
 	GrowAnnot.java,\
 	GrowMenu.java,\
+	GrowBar.java,\
+	GrowTrend.java,\
 	GlowVector.java,\
 	GrowCtx.java,\
 	DynParsedAttrName.java,\
@@ -42,6 +47,7 @@ local_java_sources := \
 	Dyn.java,\
 	GraphApplIfc.java,\
 	Graph.java,\
+	GrowFrameApplIfc.java,\
 	GrowFrame.java
 
 -include $(pwre_kroot)/tools/bld/src/$(os_name)/$(hw_name)/$(type_name)_generic.mk

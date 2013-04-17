@@ -51,4 +51,9 @@ public interface GraphIfc {
     public int command(String cmd);
     public void openConfirmDialog(Object dyn, String text, Object object);
     public String get_reference_name(String name);
+    public Object getCurrentSlider();
+    public void setCurrentSlider(GrowSlider currentSlider);
+    public boolean isAuthorized(int access);
+    public double getScanTime();
+    public String getCommand(String cmd);
 }

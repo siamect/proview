@@ -86,6 +86,37 @@ public class GrowPolyline extends GlowArrayElem {
 	trf = new GlowTransform();
     }
 
+
+    public GrowPolyline( GrowCmn cmn, String name, 
+			 GlowPoint[] pointarray, int point_cnt,
+			 int border_d_type, int line_w, 
+			 int fix_line_w, int fill, int display_border, int display_shadow,
+			 int fill_d_type) {
+	this.cmn = cmn;
+	original_border_drawtype = border_d_type;
+	fill_drawtype = fill_d_type;
+	border = display_border;
+	shadow = display_shadow;
+	shadow_width = 5;
+	relief = Glow.eRelief_Up;
+	shadow_contrast = 2;
+	gradient = Glow.eGradient_No;
+	gradient_contrast = 4;
+	n_name = name;
+	draw_type = border_d_type;
+	line_width = line_w;
+	this.fill = fill;
+
+	for ( int i = 0; i < point_cnt; i++)
+	    a_points.add(new GlowPoint(pointarray[i]));
+
+	points = new GlowPointX[a_points.size()];
+	for ( int i = 0; i < a_points.size(); i++)
+	    points[i] = new GlowPointX();
+
+	trf = new GlowTransform();
+    }
+
     public int type() {
 	return Glow.eObjectType_GrowPolyLine;
     }
@@ -105,7 +136,8 @@ public class GrowPolyline extends GlowArrayElem {
 		case Glow.eSave_GrowPolyLine: 
 		    break;
 		case Glow.eSave_GrowPolyLine_n_name:
-		    n_name = token.nextToken();
+		    if ( token.hasMoreTokens())
+			n_name = token.nextToken();
 		    break;
 		case Glow.eSave_GrowPolyLine_x_right: 
 		    x_right = new Double(token.nextToken()).doubleValue(); 
@@ -282,7 +314,6 @@ public class GrowPolyline extends GlowArrayElem {
 
 
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {
-
 	int chot = 0;
 	if ( hot != 0) {
 	    if ( cmn.hot_indication == Glow.eHotIndication_No)
@@ -322,7 +353,6 @@ public class GrowPolyline extends GlowArrayElem {
 		x1 = trf.x( t, a_points.get(i).x, a_points.get(i).y);
 		y1 = trf.y( t, a_points.get(i).x, a_points.get(i).y);
 	    }
-
 	    points[i].x = (int)( x1 * cmn.mw.zoom_factor_x + 0.5) - cmn.mw.offset_x;
 	    points[i].y = (int)( y1 * cmn.mw.zoom_factor_y + 0.5) - cmn.mw.offset_y;
 	}
@@ -647,4 +677,68 @@ public class GrowPolyline extends GlowArrayElem {
 	}
 	return dir;
     }
+
+    public void add_and_shift_y_value( double value) {
+	for ( int i = a_points.size() - 1; i > 0; i--) {
+	    a_points.get(i).y = a_points.get(i-1).y;
+	}
+	a_points.get(0).y = value;
+    }
+
+    public void add_and_shift_y_value_filled( double value) {
+	for ( int i = a_points.size() - 2; i > 1; i--) {
+	    a_points.get(i).y = a_points.get(i-1).y;
+	}
+	a_points.get(1).y = value;
+    }
+
+    public void get_borders( GlowTransform t, GlowGeometry g) {
+	int i;
+	double x1, y1, x2=0, y2=0;
+
+	for ( i = 0; i < a_points.size() - 1; i++) {
+	    if  ( t != null) {
+		if ( i == 0) {
+		    x1 = trf.x( t, a_points.get(i).x, a_points.get(i).y);
+		    y1 = trf.y( t, a_points.get(i).x, a_points.get(i).y);
+		}
+		else {
+		    x1 = x2;
+		    y1 = y2;
+		}
+		x2 = trf.x( t, a_points.get(i).x, a_points.get(i).y);
+		y2 = trf.y( t, a_points.get(i).x, a_points.get(i).y);
+	    }
+	    else {
+		if ( i == 0) {
+		    x1 = trf.x( a_points.get(i).x, a_points.get(i).y);
+		    y1 = trf.y( a_points.get(i).x, a_points.get(i).y);
+		}
+		else {
+		    x1 = x2;
+		    y1 = y2;
+		}
+		x2 = trf.x( a_points.get(i+1).x, a_points.get(i+1).y);
+		y2 = trf.y( a_points.get(i+1).x, a_points.get(i+1).y);
+	    }
+
+	    if ( x1 < g.ll_x)
+		g.ll_x = x1;
+	    if ( x2 < g.ll_x)
+		g.ll_x = x2;
+	    if ( x1 > g.ur_x)
+		g.ur_x = x1;
+	    if ( x2 > g.ur_x)
+		g.ur_x = x2;
+	    if ( y1 < g.ll_y)
+		g.ll_y = y1;
+	    if ( y2 < g.ll_y)
+		g.ll_y = y2;
+	    if ( y1 > g.ur_y)
+		g.ur_y = y1;
+	    if ( y2 > g.ur_y)
+		g.ur_y = y2;
+	}
+    }
+
 }

@@ -46,7 +46,7 @@ import java.awt.event.*;
 
 public class GlowDraw implements GlowDrawIfc {
     Graphics2D g2;
-    boolean nodraw;
+    boolean nodraw = true;
     Font fonts[] = new Font[9];
 
         
@@ -56,6 +56,7 @@ public class GlowDraw implements GlowDrawIfc {
 
     public void setGraphics( Graphics2D g2) {
 	this.g2 = g2;
+	nodraw = false;
     }
 
     public void rect(int border, int fill, double x, double y, double width, double height) {
@@ -244,6 +245,8 @@ public class GlowDraw implements GlowDrawIfc {
 
     public void text( int x, int y, String text, int gc_type, int color, int idx, int highlight, int line, 
 		      int font_idx, double size, int rot) {
+	if ( nodraw)
+	    return;
 
 	Color c = getColor(color);
 

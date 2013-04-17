@@ -84,6 +84,12 @@ public class GlowVector {
 	  a.add( n);
 	  break;
 	}
+	case Glow.eSave_GrowSlider: {
+	  GrowSlider n = new GrowSlider( cmn);
+	  n.open( reader);
+	  a.add( n);
+	  break;
+	}
 	case Glow.eSave_GrowGroup: {
 	  GrowGroup n = new GrowGroup( cmn);
 	  n.open( reader);
@@ -128,6 +134,18 @@ public class GlowVector {
 	}
 	case Glow.eSave_GrowAnnot: {
 	  GrowAnnot c = new GrowAnnot( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
+	case Glow.eSave_GrowBar: {
+	  GrowBar c = new GrowBar( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
+	case Glow.eSave_GrowTrend: {
+	  GrowTrend c = new GrowTrend( cmn);
 	  c.open( reader);
 	  a.add( c);
 	  break;

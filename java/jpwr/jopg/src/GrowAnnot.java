@@ -158,6 +158,8 @@ public class GrowAnnot extends GlowArrayElem {
 
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {
 	int x1, y1;
+	if ( cmn.nodraw != 0)
+	    return;
 
 	if ( ((GrowNode)node).annotv[number] ==  null)
 	    return;

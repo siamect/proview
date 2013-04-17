@@ -82,7 +82,8 @@ public class GrowLine extends GlowArrayElem {
 		case Glow.eSave_GrowLine: 
 		    break;
 		case Glow.eSave_GrowLine_n_name:
-		    n_name = token.nextToken();
+		    if ( token.hasMoreTokens())
+			n_name = token.nextToken();
 		    break;
 		case Glow.eSave_GrowLine_x_right: 
 		    x_right = new Double(token.nextToken()).doubleValue(); 

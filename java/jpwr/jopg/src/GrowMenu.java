@@ -134,15 +134,15 @@ public class GrowMenu extends GrowRect {
 	    // Outside window border
 	    ur_y = cmn.getHeight() + cmn.mw.subwindow_y;
 	    ll_y = ur_y - (int)(tot_z_height);
-	    ll.posit( ll.x, ll_y * cmn.mw.zoom_factor_x + cmn.mw.offset_y);
-	    ur.posit( ur.x, ur_y * cmn.mw.zoom_factor_y + cmn.mw.offset_y); // Might not always be correct?
+	    ll.posit( ll.x, (ll_y  + cmn.mw.offset_y) / cmn.mw.zoom_factor_x);
+	    ur.posit( ur.x, (ur_y + cmn.mw.offset_y) / cmn.mw.zoom_factor_y); // Might not always be correct?
 	    ll_x = (int)( ll.x * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
 	    ll_y = (int)( ll.y * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
 	    ur_x = ll_x + max_z_width + 15 + (int)(pulldown_found * arrow_size);
 	    ur_y = ll_y + (int)(tot_z_height);
 	}
 	else
-	    ur.posit( ur_x * cmn.mw.zoom_factor_x + cmn.mw.offset_x, ur_y *cmn.mw.zoom_factor_y + cmn.mw.offset_y);
+	    ur.posit( (ur_x  + cmn.mw.offset_x)/ cmn.mw.zoom_factor_x, (ur_y  + cmn.mw.offset_y)/ cmn.mw.zoom_factor_y);
 	ll_y = (int)( ll.y * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
 	get_node_borders();
 	System.out.println("Menu borders: (" + x_left + "," + y_low + ") (" + x_right + "," + y_high + ")");

@@ -887,7 +887,7 @@ public class Dyn {
 	return graph.parseAttrName( name);
     }
 
-    public int connect(GrowNode object) {
+    public int connect(GlowArrayElem object) {
 
 	if ( (dyn_type1 & Dyn.mDynType1_Inherit) != 0) {
 	    int inherit_dyn_type1 = object.getClassDynType1();
@@ -927,7 +927,7 @@ public class Dyn {
 	}
     }
 
-    public void scan(GrowNode object) {
+    public void scan(GlowArrayElem object) {
 	repaintNow = false;
 	ignoreColor = false;
 	resetColor = false;
@@ -939,9 +939,9 @@ public class Dyn {
 	    object.draw();
     }
 
-    int action(GrowNode object, GlowEvent event) {
+    int action(GlowArrayElem object, GlowEvent event) {
 	int sts;
-
+	System.out.println("Dyn Action " + event.event + " object " + event.object);
 	for ( int i = 0; i < elements.size(); i++) {
 	    sts = elements.get(i).action(object, event);
 	    if ( sts == Dyn.DYN__NO_PROPAGATE || sts == Glow.GLOW__TERMINATED ||
@@ -960,7 +960,7 @@ public class Dyn {
 	e.object = (GlowArrayElem)object;
 	action_type1 &= ~mActionType1_Confirm;
 	for ( int i = 0; i < elements.size(); i++)
-	    elements.get(i).action((GrowNode)object,  e);
+	    elements.get(i).action((GlowArrayElem)object,  e);
 	action_type1 |= mActionType1_Confirm;
     }
     
@@ -983,10 +983,10 @@ public class Dyn {
 	}
 	public int getDynType1() {return dyn_type1;}
 	public void open( BufferedReader reader) {}
-	public int connect(GrowNode object) {return 0;}
+	public int connect(GlowArrayElem object) {return 0;}
 	public void disconnect() {}
-	public void scan(GrowNode object) {}
-	public int action(GrowNode object, GlowEvent event) {return 0;}
+	public void scan(GlowArrayElem object) {}
+	public int action(GlowArrayElem object, GlowEvent event) {return 0;}
     }
 
     public class DynDigLowColor extends DynElem {
@@ -1006,7 +1006,8 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_DigLowColor, 0, 0, 0);
 	}
 
-	public int connect(GrowNode object) {
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    color = dyn.getColor1(object, color);
 	    if ( color < 0 || color >= Glow.eDrawType__)
 		return 0;
@@ -1014,6 +1015,7 @@ public class Dyn {
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 	    if ( pname.name.isEmpty()) 
 		return 1;
+	    System.out.println("DigLowColor: " + attribute + " pname " + pname.name + " db " + pname.database);
 
 	    GdhrRefObjectInfo ret = null;
 
@@ -1038,17 +1040,19 @@ public class Dyn {
 	    inverted = pname.inverted;
 	    a_typeid = pname.type;
 	    bitmask = pname.bitmask;
+	    database = pname.database;
 	    attrFound = true;
 	    return 1;
 	}
 
 	public void disconnect() {
-	    if ( attrFound && database != GraphIfc.eDatabase_Local)
+	    if ( attrFound && database == GraphIfc.eDatabase_Gdh)
 		dyn.graph.getGdh().unrefObjectInfo(subid);
 	}
 
 	
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound || dyn.ignoreColor)
 		return;
 	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
@@ -1144,7 +1148,8 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_DigColor, 0, 0, 0);
 	}
 
-	public int connect(GrowNode object) {
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    color = dyn.getColor2(object, color);
 	    if ( color < 0 || color >= Glow.eDrawType__)
 		return 0;
@@ -1173,17 +1178,19 @@ public class Dyn {
 	    inverted = pname.inverted;
 	    a_typeid = pname.type;
 	    bitmask = pname.bitmask;
+	    database = pname.database;
 	    attrFound = true;
 	    return 1;
 	}
 
 	public void disconnect() {
-	    if ( attrFound && database != GraphIfc.eDatabase_Local)
+	    if ( attrFound && database == GraphIfc.eDatabase_Gdh)
 		dyn.graph.getGdh().unrefObjectInfo(subid);
 	}
 
 	
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound || dyn.ignoreColor)
 		return;
 	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
@@ -1298,7 +1305,8 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_DigWarning, 0, 0, 0);
 	}
 
-	public int connect(GrowNode object) {
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 	    if ( pname == null || pname.name.isEmpty()) 
 		return 1;
@@ -1323,17 +1331,19 @@ public class Dyn {
 	    inverted = pname.inverted;
 	    a_typeid = pname.type;
 	    bitmask = pname.bitmask;
+	    database = pname.database;
 	    attrFound = true;
 	    return 1;
 	}
 
 	public void disconnect() {
-	    if ( attrFound && database != GraphIfc.eDatabase_Local)
+	    if ( attrFound && database == GraphIfc.eDatabase_Gdh)
 		dyn.graph.getGdh().unrefObjectInfo(subid);
 	}
 
 	
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound || dyn.ignoreColor)
 		return;
 	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
@@ -1431,7 +1441,8 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_DigError, 0, 0, 0);
 	}
 
-	public int connect(GrowNode object) {
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 	    if ( pname == null || pname.name.isEmpty()) 
 		return 1;
@@ -1456,6 +1467,7 @@ public class Dyn {
 	    inverted = pname.inverted;
 	    a_typeid = pname.type;
 	    bitmask = pname.bitmask;
+	    database = pname.database;
 	    attrFound = true;
 	    return 1;
 	}
@@ -1466,7 +1478,8 @@ public class Dyn {
 	}
 
 	
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound || dyn.ignoreColor)
 		return;
 	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
@@ -1567,7 +1580,8 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_DigFlash, 0, 0, 0);
 	}
 
-	public int connect(GrowNode object) {
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 	    if ( pname == null || pname.name.isEmpty()) 
 		return 1;
@@ -1592,6 +1606,7 @@ public class Dyn {
 	    inverted = pname.inverted;
 	    a_typeid = pname.type;
 	    bitmask = pname.bitmask;
+	    database = pname.database;
 	    attrFound = true;
 	    return 1;
 	}
@@ -1602,7 +1617,8 @@ public class Dyn {
 	}
 
 	
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound || dyn.ignoreColor)
 		return;
 	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
@@ -1732,10 +1748,16 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_Invisible, 0, 0, 0);
 	}
 
-	public int connect(GrowNode object) {
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( attribute.toLowerCase().startsWith("$cmd(")) {
 		cmd = true;
-		command = attribute.substring(5, attribute.length()-1);
+		int idx = attribute.lastIndexOf(')');
+		if ( idx != -1 && idx > 5)
+		    command = attribute.substring(5, idx);
+		else
+		    command = attribute.substring(5);
+		command = graph.getCommand(command);
 	    }
 	    else {
 		DynParsedAttrName pname = dyn.parseAttrName(attribute);
@@ -1765,6 +1787,7 @@ public class Dyn {
 		inverted = pname.inverted;
 		a_typeid = pname.type;
 		bitmask = pname.bitmask;
+		database = pname.database;
 		attrFound = true;
 	    }
 	    return 1;
@@ -1775,10 +1798,11 @@ public class Dyn {
 		dyn.graph.getGdh().unrefObjectInfo(subid);
 	}
 
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( cmd) {
 		if ( firstScan) {
-		    int sts = 0; // TODO Jop.executeCommand( dyn.session, command);
+		    int sts = dyn.graph.command(command);
 		    System.out.println( "DynInvisible: " + command + ", value: " + sts);
 		    if ( sts == 0) {
 			if ( dimmed == 0)
@@ -1794,6 +1818,9 @@ public class Dyn {
 	    if ( !attrFound || dyn.ignoreColor)
 		return;
 	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
+
+	    if ( a_typeid == Pwr.eType_String)
+		value = !value;
 
 	    if ( inverted)
 		value = !value;
@@ -1837,7 +1864,7 @@ public class Dyn {
 			break;
 		    case Dyn.eSave_Invisible_attribute: 
 			if ( token.hasMoreTokens())
-			    attribute = token.nextToken();
+			    attribute = line.substring(4);
 			break;
 		    case Dyn.eSave_Invisible_dimmed: 
 			dimmed = new Integer(token.nextToken()).intValue();
@@ -1884,7 +1911,8 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_DigBorder, 0, 0, 0);
 	}
 
-	public int connect(GrowNode object) {
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 	    if ( pname == null || pname.name.isEmpty()) 
 		return 1;
@@ -1909,6 +1937,7 @@ public class Dyn {
 	    inverted = pname.inverted;
 	    a_typeid = pname.type;
 	    bitmask = pname.bitmask;
+	    database = pname.database;
 	    attrFound = true;
 	    return 1;
 	}
@@ -1919,7 +1948,8 @@ public class Dyn {
 	}
 
 	
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound)
 		return;
 	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
@@ -2005,7 +2035,8 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_DigText, 0, 0, 0);
 	}
 
-	public int connect(GrowNode object) {
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 	    if ( pname == null || pname.name.isEmpty()) 
@@ -2031,6 +2062,7 @@ public class Dyn {
 	    inverted = pname.inverted;
 	    a_typeid = pname.type;
 	    bitmask = pname.bitmask;
+	    database = pname.database;
 	    attrFound = true;
 	    high_text = object.getAnnotation(1);
 	    if ( high_text == null)
@@ -2043,7 +2075,8 @@ public class Dyn {
 		dyn.graph.getGdh().unrefObjectInfo(subid);
 	}
 	
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound)
 		return;
 	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
@@ -2137,7 +2170,8 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_Value, 0, 0, 0);
 	}
 
-	public int connect(GrowNode object) {
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( format == null)
 		return 1;
 
@@ -2168,6 +2202,7 @@ public class Dyn {
 	    inverted = pname.inverted;
 	    a_typeid = pname.type;
 	    bitmask = pname.bitmask;
+	    database = pname.database;
 	    attrFound = true;
 	    return 1;
 	}
@@ -2177,7 +2212,8 @@ public class Dyn {
 		dyn.graph.getGdh().unrefObjectInfo(subid);
 	}
 
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound)
 		return;
 
@@ -2257,7 +2293,7 @@ public class Dyn {
 		    break;
 		}
 
-		if ( firstScan || value0.compareTo( oldValueS) != 0) {
+		if ( firstScan || !value0.equals( oldValueS)) {
 		    sb = cFormat.format( value0, sb);
 		    object.setAnnotation(1, new String(sb));
 		    dyn.repaintNow = true;
@@ -2451,7 +2487,8 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_AnalogColor, 0, 0, 0);
 	}
 
-	public int connect(GrowNode object) {
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    // Find the main instance
 	    DynAnalogColor mainInstance = null;
 	    for ( int i = dyn.elements.size() - 1; i >= 0; i--) {
@@ -2505,7 +2542,8 @@ public class Dyn {
 		dyn.graph.getGdh().unrefObjectInfo(subid);
 	}
 	
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound || dyn.ignoreColor)
 		return;
 
@@ -2697,7 +2735,8 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_Rotate, 0, 0, 0);
 	}
 
-	public int connect(GrowNode object) {
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 	    if ( pname == null || pname.name.isEmpty()) 
@@ -2723,6 +2762,7 @@ public class Dyn {
 	    inverted = pname.inverted;
 	    a_typeid = pname.type;
 	    bitmask = pname.bitmask;
+	    database = pname.database;
 	    attrFound = true;
 
 	    if ( x0 != 0 || y0 != 0)
@@ -2739,7 +2779,8 @@ public class Dyn {
 		dyn.graph.getGdh().unrefObjectInfo(subid);
 	}
 	
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound)
 		return;
 	    float value0 = dyn.graph.getGdh().getObjectRefInfoFloat( p);
@@ -2896,7 +2937,8 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_AnalogShift, 0, 0, 0);
 	}
 
-	public int connect(GrowNode object) {
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 	    if ( pname == null || pname.name.isEmpty()) 
@@ -2925,6 +2967,7 @@ public class Dyn {
 	    inverted = pname.inverted;
 	    a_typeid = pname.type;
 	    bitmask = pname.bitmask;
+	    database = pname.database;
 	    attrFound = true;
 	    return 1;
 	}
@@ -2935,7 +2978,8 @@ public class Dyn {
 	}
 
 	
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound)
 		return;
 
@@ -3033,7 +3077,8 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_DigShift, 0, 0, 0);
 	}
 
- 	public int connect(GrowNode object) {
+ 	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 	    if ( pname == null || pname.name.isEmpty()) 
@@ -3062,6 +3107,7 @@ public class Dyn {
 	    inverted = pname.inverted;
 	    a_typeid = pname.type;
 	    bitmask = pname.bitmask;
+	    database = pname.database;
 	    attrFound = true;
 	    return 1;
 	}
@@ -3072,7 +3118,8 @@ public class Dyn {
 	}
 
 	
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound)
 		return;
 	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
@@ -3224,9 +3271,143 @@ public class Dyn {
 	String attribute;
 	String minvalue_attr;
 	String maxvalue_attr;
+	float maxval;
+	float minval;
+ 	PwrtRefId subid;
+	int p;
+	int database;
+	boolean inverted;
+	boolean attrFound = false;
+	boolean firstScan = true;
+	int a_typeid;
+        float old_value;
+	int old_ivalue;
+	int max_value_p;
+	int min_value_p;
+	PwrtRefId max_value_subid;
+	PwrtRefId min_value_subid;
+	float old_max_value;
+	float old_min_value;
 
 	public DynBar( Dyn dyn) {
 	    super(dyn, Dyn.mDynType1_Bar, 0, 0, 0);
+	}
+
+	public int connect(GlowArrayElem o) {
+	    GrowBar object = (GrowBar)o;
+
+	    if ( attribute == null)
+		return 0;
+
+	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
+	    if ( pname == null || pname.name.isEmpty()) 
+		return 1;
+
+	    GdhrRefObjectInfo ret = null;
+
+	    switch( pname.database) {
+	    case GraphIfc.eDatabase_Gdh:
+		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		break;
+	    default:
+		ret = null;
+	    }
+
+	    if ( ret == null || ret.evenSts()) {
+		System.out.println("Bar: " + attribute);
+		return 1;
+	    }
+
+	    p = ret.id;
+	    subid = ret.refid;
+	    inverted = pname.inverted;
+	    a_typeid = pname.type;
+	    attrFound = true;
+
+	    min_value_p = 0;
+	    pname = dyn.parseAttrName(minvalue_attr);
+	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && database == GraphIfc.eDatabase_Gdh) {
+		
+		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		if ( ret != null && ret.oddSts()) {
+		    min_value_p = ret.id;
+		    min_value_subid = ret.refid;
+		}
+	    }
+
+	    max_value_p = 0;
+	    pname = dyn.parseAttrName(maxvalue_attr);
+	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && database == GraphIfc.eDatabase_Gdh) {
+		
+		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		if ( ret != null && ret.oddSts()) {
+		    max_value_p = ret.id;
+		    max_value_subid = ret.refid;
+		}
+	    }
+
+	    return 1;
+	}
+
+	public void disconnect() {
+	    if ( attrFound && database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid);
+	    if ( min_value_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(min_value_subid);
+	    if ( max_value_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(max_value_subid);
+	}
+
+	public void scan( GlowArrayElem o) {
+	    GrowBar object = (GrowBar)o;
+	    if ( !attrFound)
+		return;
+  
+	    float minval, maxval;
+	    if ( max_value_p != 0 && min_value_p != 0) {
+		minval = dyn.graph.getGdh().getObjectRefInfoFloat( min_value_p);
+		maxval = dyn.graph.getGdh().getObjectRefInfoFloat( max_value_p);
+		if ( minval != old_min_value ||
+		     maxval != old_max_value) {
+		    System.out.println("Bar set range min : " + minval + "   max : " + maxval);
+ 		    object.set_range(minval, maxval);
+		    old_min_value = minval;
+		    old_max_value = maxval;
+		}
+	    }
+
+	    switch (a_typeid) {
+	    case Pwr.eType_Float32: {
+		float value = dyn.graph.getGdh().getObjectRefInfoFloat( p);
+
+		if ( !firstScan) {
+		    if ( Math.abs( old_value - value) < Float.MIN_VALUE)
+			// No change since last time
+			return;
+		}
+		else
+		    firstScan = false;
+
+		object.set_value(value);
+		old_value = value;
+		break;
+	    }
+	    case Pwr.eType_Int32:
+	    case Pwr.eType_UInt32: {
+		int value = dyn.graph.getGdh().getObjectRefInfoInt( p);
+		if ( !firstScan) {
+		    if ( old_ivalue == value)
+			// No change since last time
+			return;
+		}
+		else
+		    firstScan = false;
+
+		object.set_value(value);
+		old_ivalue = value;
+		break;
+	    }
+	    }
 	}
 
 	public void open( BufferedReader reader) {
@@ -3281,9 +3462,234 @@ public class Dyn {
 	String maxvalue_attr1;
 	String minvalue_attr2;
 	String maxvalue_attr2;
+	int p1;
+	int database1;
+	boolean inverted1;
+	int a_typeid1;
+ 	PwrtRefId subid1;
+	int p2;
+	int database2;
+	boolean inverted2;
+	int a_typeid2;
+ 	PwrtRefId subid2;
+	boolean attrFound = false;
+	boolean firstScan = true;
+	int max_value1_p;
+	int min_value1_p;
+	PwrtRefId max_value1_subid;
+	PwrtRefId min_value1_subid;
+	float old_max_value1;
+	float old_min_value1;
+	int max_value2_p;
+	int min_value2_p;
+	PwrtRefId max_value2_subid;
+	PwrtRefId min_value2_subid;
+	float old_max_value2;
+	float old_min_value2;
+	double scan_time;
+	double acc_time;
+	int trend_hold;
 
 	public DynTrend( Dyn dyn) {
 	    super(dyn, Dyn.mDynType1_Trend, 0, 0, 0);
+	}
+
+	public int connect(GlowArrayElem o) {
+	    GrowTrend object = (GrowTrend)o;
+
+	    if ( attribute1 == null)
+		return 0;
+
+	    DynParsedAttrName pname = dyn.parseAttrName(attribute1);
+	    if ( pname == null || pname.name.isEmpty()) 
+		return 1;
+
+	    GdhrRefObjectInfo ret = null;
+
+	    switch( pname.database) {
+	    case GraphIfc.eDatabase_Gdh:
+		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		break;
+	    default:
+		ret = null;
+	    }
+
+	    if ( ret == null || ret.evenSts()) {
+		System.out.println("Trend: " + attribute1);
+		return 1;
+	    }
+
+	    p1 = ret.id;
+	    subid1 = ret.refid;
+	    inverted1 = pname.inverted;
+	    a_typeid1 = pname.type;
+	    attrFound = true;
+
+	    pname = dyn.parseAttrName(attribute2);
+	    if ( pname != null && !pname.name.isEmpty()) {
+		ret = null;
+
+		switch( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		    break;
+		default:
+		    ret = null;
+		}
+
+		if ( ret == null || ret.evenSts()) {
+		    System.out.println("Trend: " + attribute2);
+		    return 1;
+
+		}
+		else {
+		    p2 = ret.id;
+		    subid2 = ret.refid;
+		    inverted2 = pname.inverted;
+		    a_typeid2 = pname.type;
+		}
+	    }
+
+	    scan_time = object.get_scan_time();
+	    acc_time = scan_time;
+	    trend_hold = 0;
+
+	    min_value1_p = 0;
+	    pname = dyn.parseAttrName(minvalue_attr1);
+	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
+		
+		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		if ( ret != null && ret.oddSts()) {
+		    min_value1_p = ret.id;
+		    min_value1_subid = ret.refid;
+		}
+	    }
+
+	    max_value1_p = 0;
+	    pname = dyn.parseAttrName(maxvalue_attr1);
+	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
+		
+		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		if ( ret != null && ret.oddSts()) {
+		    max_value1_p = ret.id;
+		    max_value1_subid = ret.refid;
+		}
+	    }
+
+	    min_value2_p = 0;
+	    pname = dyn.parseAttrName(minvalue_attr2);
+	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
+		
+		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		if ( ret != null && ret.oddSts()) {
+		    min_value2_p = ret.id;
+		    min_value2_subid = ret.refid;
+		}
+	    }
+
+	    max_value2_p = 0;
+	    pname = dyn.parseAttrName(maxvalue_attr2);
+	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
+		
+		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		if ( ret != null && ret.oddSts()) {
+		    max_value2_p = ret.id;
+		    max_value2_subid = ret.refid;
+		}
+	    }
+
+	    return 1;
+	}
+
+	public void disconnect() {
+	    if ( attrFound && database1 == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid1);
+	    if ( p2 != 0 && database2 == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid2);
+	    if ( min_value1_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(min_value1_subid);
+	    if ( max_value1_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(max_value1_subid);
+	    if ( min_value2_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(min_value2_subid);
+	    if ( max_value2_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(max_value2_subid);
+	}
+
+	public void scan( GlowArrayElem o) {
+	    GrowTrend object = (GrowTrend)o;
+
+	    if ( !attrFound)
+		return;
+  
+	    float minval, maxval;
+	    if ( max_value1_p != 0 && min_value1_p != 0) {
+		minval = dyn.graph.getGdh().getObjectRefInfoFloat( min_value1_p);
+		maxval = dyn.graph.getGdh().getObjectRefInfoFloat( max_value1_p);
+		if ( minval != old_min_value1 ||
+		     maxval != old_max_value1) {
+ 		    object.set_range_y(0, minval, maxval);
+		    old_min_value1 = minval;
+		    old_max_value1 = maxval;
+		}
+	    }
+
+	    if ( firstScan)
+		firstScan = false;
+
+	    acc_time += dyn.graph.getScanTime();
+	    if ( acc_time + Double.MIN_VALUE >= scan_time) {
+		if ( p1 != 0) {
+		    switch ( a_typeid1) {
+		    case Pwr.eType_Boolean: {
+			boolean value = dyn.graph.getGdh().getObjectRefInfoBoolean( p1);
+			if ( value)
+			    object.add_value(1, 0);
+			else
+			    object.add_value(0, 0);
+			break;
+		    }
+		    case Pwr.eType_Float32: {
+			float value = dyn.graph.getGdh().getObjectRefInfoFloat( p1);
+			object.add_value((double)value, 0);
+			break;
+		    }
+		    case Pwr.eType_Int32:
+		    case Pwr.eType_UInt32: {
+			int value = dyn.graph.getGdh().getObjectRefInfoInt( p1);
+			object.add_value((double)value, 0);
+			break;
+		    }
+		    default: ;
+		    }
+		}
+		if ( p2 != 0) {
+		    switch ( a_typeid2) {
+		    case Pwr.eType_Boolean: {
+			boolean value = dyn.graph.getGdh().getObjectRefInfoBoolean( p2);
+			if ( value)
+			    object.add_value(1, 1);
+			else
+			    object.add_value(0, 1);
+			break;
+		    }
+		    case Pwr.eType_Float32: {
+			float value = dyn.graph.getGdh().getObjectRefInfoFloat( p2);
+			object.add_value((double)value, 1);
+			break;
+		    }
+		    case Pwr.eType_Int32:
+		    case Pwr.eType_UInt32: {
+			int value = dyn.graph.getGdh().getObjectRefInfoInt( p2);
+			object.add_value((double)value, 1);
+			break;
+		    }
+		    default: ;
+		    }
+		}
+
+	    }
+	    acc_time = 0;
 	}
 
 	public void open( BufferedReader reader) {
@@ -4050,7 +4456,8 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_FillLevel, 0, 0, 0);
 	}
 
-	public int connect(GrowNode object) {
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    color = dyn.getColor2(object, color);
 	    if ( color < 0 || color >= Glow.eDrawType__)
 		return 0;
@@ -4113,7 +4520,7 @@ public class Dyn {
 	    }
 
 	    max_value_p = 0;
-	    pname = dyn.parseAttrName(minvalue_attr);
+	    pname = dyn.parseAttrName(maxvalue_attr);
 	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && database == GraphIfc.eDatabase_Gdh) {
 		
 		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
@@ -4135,7 +4542,8 @@ public class Dyn {
 		dyn.graph.getGdh().unrefObjectInfo(max_value_subid);
 	}
 
-	public void scan(GrowNode object) {
+	public void scan(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound)
 		return;
   
@@ -4268,7 +4676,8 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_DigCommand, 0, 0, 0);
 	}
 
- 	public int connect(GrowNode object) {
+ 	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 	    if ( pname == null || pname.name.isEmpty()) 
@@ -4297,7 +4706,9 @@ public class Dyn {
 	    inverted = pname.inverted;
 	    a_typeid = pname.type;
 	    bitmask = pname.bitmask;
+	    database = pname.database;
 	    attrFound = true;
+
 	    return 1;
 	}
 
@@ -4307,7 +4718,8 @@ public class Dyn {
 	}
 
 	
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound)
 		return;
 	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
@@ -4323,7 +4735,9 @@ public class Dyn {
 		firstScan = false;
 	    System.out.println("DigCommand: value " + value);	
 	    if ( value && !oldValue) {
-		dyn.graph.command(command);
+		String cmd = graph.getCommand(command);
+
+		dyn.graph.command(cmd);
 	    }
 	    oldValue = value;
 	}
@@ -4348,7 +4762,7 @@ public class Dyn {
 			break;
 		    case Dyn.eSave_DigCommand_command: 
 			if ( token.hasMoreTokens())
-			    command = token.nextToken();
+			    command = line.substring(5);
 			break;
 		    case Dyn.eSave_DigCommand_instance: 
 			instance = new Integer(token.nextToken()).intValue();
@@ -4426,7 +4840,8 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_SetDig, 0);
 	}
 
-	public int action( GrowNode object, GlowEvent e) {
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -4507,7 +4922,8 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_ResetDig, 0);
 	}
 
-	public int action( GrowNode object, GlowEvent e) {
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -4588,7 +5004,8 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_ToggleDig, 0);
 	}
 
-	public int action( GrowNode object, GlowEvent e) {
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -4663,7 +5080,8 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_StoDig, 0);
 	}
 
-	public int action( GrowNode object, GlowEvent e) {
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down: {
 		object.setColorInverse( 1);
@@ -4755,7 +5173,8 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_Command, 0);
 	}
 
-	public int action( GrowNode object, GlowEvent e) {
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -4769,7 +5188,9 @@ public class Dyn {
 		if ( (dyn.action_type1 & Dyn.mActionType1_Confirm) != 0)
 		    break;
 		
-		dyn.graph.command(command);
+		String cmd = graph.getCommand(command);
+
+		dyn.graph.command(cmd);
 		break;
 	    }
 	    return 1;
@@ -4803,8 +5224,7 @@ public class Dyn {
 
 		    if ( end_found)
 			break;
-		}
-		
+		}		
 	    } catch ( Exception e) {
 		System.out.println( "IOException DynCommand");
 	    }
@@ -4819,7 +5239,8 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_CommandDoubleClick, 0);
 	}
 
-	public int action( GrowNode object, GlowEvent e) {
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -4833,7 +5254,9 @@ public class Dyn {
 		if ( (dyn.action_type1 & Dyn.mActionType1_Confirm) != 0)
 		    break;
 		
-		dyn.graph.command(command);
+		String cmd = graph.getCommand(command);
+
+		dyn.graph.command(cmd);
 		break;
 	    }
 	    return 1;
@@ -4855,7 +5278,7 @@ public class Dyn {
 			break;
 		    case Dyn.eSave_CommandDC_command: 
 			if ( token.hasMoreTokens())
-			    command = token.nextToken();
+			    command = line.substring(5);
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -4883,7 +5306,8 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_Confirm, 0);
 	}
 
-	public int action( GrowNode object, GlowEvent e) {
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
 	    if ( (dyn.action_type1 & Dyn.mActionType1_Confirm) == 0)
 		return 1;
 
@@ -4945,7 +5369,8 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_IncrAnalog, 0);
 	}
 
-	public int action(GrowNode object, GlowEvent e) {
+	public int action(GrowNode o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -5067,7 +5492,8 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_RadioButton, 0);
 	}
 
- 	public int connect(GrowNode object) {
+ 	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 	    if ( pname == null || pname.name.isEmpty()) 
@@ -5096,6 +5522,7 @@ public class Dyn {
 	    inverted = pname.inverted;
 	    a_typeid = pname.type;
 	    bitmask = pname.bitmask;
+	    database = pname.database;
 	    attrFound = true;
 	    return 1;
 	}
@@ -5106,7 +5533,8 @@ public class Dyn {
 	}
 
 	
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound)
 		return;
 	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
@@ -5129,7 +5557,8 @@ public class Dyn {
 	    oldValue = value;
 	}
 
-	public int action(GrowNode object, GlowEvent e) {
+	public int action(GrowNode o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -5150,9 +5579,9 @@ public class Dyn {
 		Vector<GlowArrayElem> list = group.get_object_list();
 
 		for ( int i = 0; i < list.size(); i++) {
-		    GlowArrayElem o = list.get(i);
-		    if ( o != e.object &&
-			 o.type() == Glow.eObjectType_GrowNode) {
+		    GlowArrayElem oe = list.get(i);
+		    if ( oe != e.object &&
+			 oe.type() == Glow.eObjectType_GrowNode) {
 			value = false;
 
 			Dyn gm_dyn = (Dyn)((GrowNode)o).getUserData();
@@ -5288,7 +5717,8 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_Help, 0);
 	}
 
-	public int action( GrowNode object, GlowEvent e) {
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -5363,7 +5793,8 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_OpenGraph, 0);
 	}
 
-	public int action( GrowNode object, GlowEvent e) {
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -5450,7 +5881,8 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_OpenURL, 0);
 	}
 
-	public int action( GrowNode object, GlowEvent e) {
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -5612,10 +6044,431 @@ public class Dyn {
 	String minvalue_attr;
 	String maxvalue_attr;
 	String insensitive_attr;
+	PwrtRefId subid;
+	int p;
+	int database;
+	boolean inverted;
+	boolean attrFound = false;
+	float old_value;
+	int old_ivalue;
+	boolean firstScan = true;
+	int bitmask;
+	int a_typeid;
+	int max_value_p;
+	PwrtRefId max_value_subid;
+	int min_value_p;
+	PwrtRefId min_value_subid;
+	int insensitive_p;
+	PwrtRefId insensitive_subid;
+	int insensitive_db;
+	boolean insensitive_inverted;
+	float min_value;
+	float max_value;
+	float old_min_value;
+	float old_max_value;
+	boolean slider_disabled = true;
+	int direction;
 
 	public DynSlider( Dyn dyn) {
 	    super(dyn, 0, 0, Dyn.mActionType1_Slider, 0);
 	}
+
+	public int connect(GlowArrayElem o) {
+	    GrowSlider object = (GrowSlider)o;
+	    System.out.println("Slider connect");
+	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
+	    if ( pname == null || pname.name.isEmpty()) 
+		return 1;
+
+	    GdhrRefObjectInfo ret = null;
+
+	    switch( pname.database) {
+	    case GraphIfc.eDatabase_Gdh:
+		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		break;
+	    default:
+		ret = null;
+	    }
+
+	    if ( ret == null || ret.evenSts()) {
+		System.out.println("Slider: " + attribute);
+		return 1;
+	    }
+
+	    p = ret.id;
+	    subid = ret.refid;
+	    inverted = pname.inverted;
+	    a_typeid = pname.type;
+	    bitmask = pname.bitmask;
+	    database = pname.database;
+	    attrFound = true;
+
+	    // Get min and max position from slider background
+	    double max_value, min_value, max_pos, min_pos;
+	    Object background;
+	    double origo;
+
+	    if ( !object.transformIsStored()) {
+		object.storeTransform();
+		GlowGeometry g = object.measure();
+		System.out.println("Slider measure: (" + g.ll_x + "," + g.ll_y + ") (" +  g.ur_x + "," + g.ur_y + ")");
+		GlowSliderInfo info = ((GrowSlider)object).get_info();
+		GlowBackgroundObject b = dyn.graph.getCtx().getBackgroundObjectLimits(Dyn.mDynType1_SliderBackground,
+								 (g.ll_x + g.ur_x) / 2, (g.ll_y + g.ur_y) / 2);
+		System.out.println("Slider background sts: " + b.sts + " direction " + b.direction);
+		if ( (b.sts & 1) != 0) {
+		    direction = b.direction;
+		    origo = ((GrowSlider)object).get_origo(info.direction);
+
+		    switch( direction) {
+		    case Glow.eDirection_Down:
+			info.max_position = b.max - origo;
+			info.min_position = b.min - origo;
+			((GrowSlider)object).set_info(info);
+
+			object.move_to(g.ll_x, info.min_position);
+			break;
+		    case Glow.eDirection_Up:
+			info.max_position = b.max - (g.ur_y - g.ll_y - origo);
+			info.min_position = b.min - (g.ur_y - g.ll_y - origo);
+			((GrowSlider)object).set_info(info);
+			object.move_to(g.ll_x, info.min_position);
+			break;
+		    case Glow.eDirection_Left:
+			info.max_position = b.max - (g.ur_x - g.ll_x - origo);
+			info.min_position = b.min - (g.ur_x - g.ll_x - origo);
+			((GrowSlider)object).set_info(info);
+			object.move_to(info.min_position, g.ll_y);
+			break;
+		    case Glow.eDirection_Right:
+			info.max_position = b.max - origo;
+			info.min_position = b.min - origo;
+			((GrowSlider)object).set_info(info);
+			object.move_to(info.min_position, g.ll_y);
+			break;
+		    default:
+			;
+		    }
+		}
+		else
+		    direction = info.direction;
+
+		object.storeTransform();
+	    }
+	    
+	    max_value_p = 0;
+	    pname = dyn.parseAttrName(maxvalue_attr);
+	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 ) {
+		ret = null;
+		
+		switch( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		    break;
+		default:
+		    ret = null;
+		}
+		if ( ret != null) {
+		    max_value_p = ret.id;
+		    max_value_subid = ret.refid;		    
+		}
+	    }
+
+	    min_value_p = 0;
+	    pname = dyn.parseAttrName(minvalue_attr);
+	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 ) {
+		ret = null;
+
+		switch( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		    break;
+		default:
+		    ret = null;
+		}
+		if ( ret != null) {
+		    min_value_p = ret.id;
+		    min_value_subid = ret.refid;
+		}
+	    }
+
+	    insensitive_p = 0;
+	    pname = dyn.parseAttrName(insensitive_attr);
+		    System.out.println("Slider insensitive " + pname.name + " type : " + pname.type);
+	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Boolean) {
+		ret = null;
+		
+		switch( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		    break;
+		case GraphIfc.eDatabase_Local:
+		    ret = dyn.graph.getLdb().refObjectInfo( graph, pname.name);
+		    System.out.println("Slider insensitive " + pname.name + " ret : " + ret);
+		    break;
+		default:
+		    ret = null;
+		}
+		if ( ret != null) {
+		    insensitive_p = ret.id;
+		    insensitive_subid = ret.refid;
+		    insensitive_inverted = pname.inverted;
+		    insensitive_db = pname.database;
+		}
+	    }
+	    return 1;
+	}
+
+	public void disconnect() {
+	    if ( attrFound && database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid);
+	    if ( min_value_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(min_value_subid);
+	    if ( max_value_p != 0)
+		dyn.graph.getGdh().unrefObjectInfo(max_value_subid);
+	    if ( insensitive_p != 0 && insensitive_db == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(insensitive_subid);
+	}
+	
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+	    if ( !attrFound)
+		return;
+	    
+	    float value = 0;
+	    int ivalue = 0;
+
+	    switch ( a_typeid) {
+	    case Pwr.eType_Float32:
+		value = dyn.graph.getGdh().getObjectRefInfoFloat( p);
+		break;
+	    case Pwr.eType_Int32:
+		ivalue = dyn.graph.getGdh().getObjectRefInfoInt( p);
+		break;
+	    case Pwr.eType_Boolean: {
+		boolean b;
+		b = dyn.graph.getGdh().getObjectRefInfoBoolean( p);
+		ivalue = b ? 1 : 0;
+		break;
+	    }
+	    }
+
+	    if ( insensitive_p != 0) {
+		switch ( insensitive_db) {
+		case GraphIfc.eDatabase_Gdh:
+		    slider_disabled = dyn.graph.getGdh().getObjectRefInfoBoolean( insensitive_p);
+		    break;
+		case GraphIfc.eDatabase_Local:
+		    slider_disabled = dyn.graph.getLdb().getObjectRefInfoBoolean( insensitive_p);
+		    break;
+		}
+		if ( insensitive_inverted)
+		    slider_disabled = !slider_disabled;
+	    }
+	    else
+		slider_disabled = false;
+	    
+	    if ( max_value_p != 0 && min_value_p != 0) {
+		max_value = dyn.graph.getGdh().getObjectRefInfoFloat( max_value_p);
+		min_value = dyn.graph.getGdh().getObjectRefInfoFloat( min_value_p);
+		if ( max_value != old_max_value ||
+		     min_value != old_min_value) {
+		    if ( Math.abs( max_value - min_value) > Double.MIN_VALUE)
+			firstScan = true;
+		}
+		old_min_value = min_value;
+		old_max_value = max_value;
+	    }      
+	    
+	    if ( !firstScan) {
+		switch ( a_typeid) {
+		case Pwr.eType_Float32:
+		    if ( Math.abs( old_value - value) < Double.MIN_VALUE)
+			// No change since last time
+			return;
+		    break;
+		case Pwr.eType_Int32:
+		case Pwr.eType_Boolean:
+		    if ( ivalue == old_ivalue)
+			return;
+		    break;
+		default: ;
+		}
+	    }
+	    else
+		firstScan = false;
+
+	    switch ( a_typeid) {
+	    case Pwr.eType_Float32:
+		old_value = value;
+		break;
+	    case Pwr.eType_Int32:
+	    case Pwr.eType_Boolean:
+		old_ivalue = ivalue;
+		break;
+	    default: ;
+	    }
+
+	    GlowSliderInfo info = ((GrowSlider)object).get_info();
+
+	    System.out.println("info.min_pos " + info.min_position + "  max_pos " + info.max_position);
+	    if ( !(max_value_p != 0 && min_value_p != 0 && max_value != min_value)) {
+		max_value = (float)info.max_value;
+		min_value = (float)info.min_value;
+	    }
+	    if ( info.min_position != info.max_position) {
+		if ( dyn.graph.getCurrentSlider() != object &&
+		     max_value != min_value) {
+		    double pos_x, pos_y;
+
+		    switch ( a_typeid) {
+		    case Pwr.eType_Float32:
+			break;
+		    default:
+			value = (float) (ivalue);
+			break;
+		    }
+          
+		    switch ( direction) {
+		    case Glow.eDirection_Down:
+			pos_y = (max_value - value) / (max_value - min_value) *
+			    (info.max_position - info.min_position);
+			if ( pos_y < 0)
+			    pos_y = 0;
+			else if ( pos_y > info.max_position - info.min_position)
+			    pos_y = info.max_position - info.min_position;
+			pos_x = 0;
+			break;
+		    case Glow.eDirection_Right:
+			pos_x = info.max_position - info.min_position - 
+			    (value - min_value) / (max_value - min_value) *
+			    (info.max_position - info.min_position);
+			if ( pos_x < 0)
+			    pos_x = 0;
+			else if ( pos_x > info.max_position - info.min_position)
+			    pos_x = info.max_position - info.min_position;
+			pos_y = 0;
+			break;
+		    case Glow.eDirection_Left:
+			pos_x = info.max_position - info.min_position - 
+			    (max_value - value) / (max_value - min_value) *
+			    (info.max_position - info.min_position);
+			if ( pos_x < 0)
+			    pos_x = 0;
+			else if ( pos_x > info.max_position - info.min_position)
+			    pos_x = info.max_position - info.min_position;
+			pos_y = 0;
+			break;
+		    default:   // Up
+			pos_y = (value - min_value) / (max_value - min_value) *
+			    (info.max_position - info.min_position);
+			if ( pos_y < 0)
+			    pos_y = 0;
+			else if ( pos_y > info.max_position - info.min_position)
+			    pos_y = info.max_position - info.min_position;
+			pos_x = 0;
+		    }
+		    System.out.println("Slider ivalue " + ivalue + " pos_y " + pos_y);
+		    object.set_position(pos_x, pos_y);
+		}
+	    }
+
+	}
+
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
+	    if ( slider_disabled)
+		return 1;
+
+	    switch ( e.event) {
+	    case Glow.eEvent_SliderMoveStart: {
+		if ( !dyn.graph.isAuthorized( dyn.access) ||
+		     slider_disabled) {
+		    dyn.graph.getCtx().setMoveRestrictions(Glow.eMoveRestriction_Disable, 0, 0, null);
+		    dyn.graph.setCurrentSlider(null);
+		    break;
+		}
+		GlowSliderInfo info = ((GrowSlider)object).get_info();
+		System.out.println("Slider start direction " + info.direction);
+		if ( direction == Glow.eDirection_Right || 
+		     direction == Glow.eDirection_Left)
+		    dyn.graph.getCtx().setMoveRestrictions( Glow.eMoveRestriction_HorizontalSlider,
+							    info.max_position, info.min_position, e.object);
+		else
+		    dyn.graph.getCtx().setMoveRestrictions( Glow.eMoveRestriction_VerticalSlider,
+							    info.max_position, info.min_position, e.object);
+
+		dyn.graph.setCurrentSlider((GrowSlider)object);
+		break;
+	    }
+	    case Glow.eEvent_SliderMoveEnd: {
+		if ( dyn.graph.getCurrentSlider() == object)
+		    dyn.graph.setCurrentSlider(null);
+		break;
+	    }
+	    case Glow.eEvent_SliderMoved: {
+		float 		value;
+    
+		GlowSliderInfo info = ((GrowSlider)object).get_info();
+		if ( info.min_position != info.max_position) {
+		    if ( !(max_value_p != 0 && min_value_p != 0 && max_value != min_value)) {
+			max_value = (float)info.max_value;
+			min_value = (float)info.min_value;
+		    }
+		    GlowGeometry g = object.measure();
+        
+		    switch ( direction) {
+		    case Glow.eDirection_Down:
+			value = (float)( (info.max_position - g.ll_y) / (info.max_position - info.min_position) *
+				       (max_value - min_value) + min_value);
+			break;
+		    case Glow.eDirection_Right:
+			value = (float)( (info.max_position - g.ll_x) / (info.max_position - info.min_position) *
+				       (max_value - min_value) + min_value);
+			break;
+		    case Glow.eDirection_Left:
+			value = (float)( (g.ll_x - info.min_position) / (info.max_position - info.min_position) *
+				       (max_value - min_value) + min_value);
+			break;
+		    default:
+			value = (float)( (g.ll_y - info.min_position) / (info.max_position - info.min_position) *
+				       (max_value - min_value) + min_value);
+		    }
+		    System.out.println("Slider value " + value + "  minpos " + info.min_position + " maxpos " + info.max_position);
+		    if ( value > max_value)
+			value = max_value;
+		    if ( value < min_value)
+			value = min_value;
+      
+		    DynParsedAttrName pname = dyn.parseAttrName(attribute);
+		    if ( pname == null || pname.name.isEmpty()) 
+			return 1;
+
+		    PwrtStatus sts;
+
+		    switch ( pname.type) {
+		    case Pwr.eType_Float32:
+			sts = dyn.graph.getGdh().setObjectInfo( pname.name, value);
+			break;
+		    case Pwr.eType_Boolean: {
+			boolean bvalue = (value > 0.5 ? true : false);
+			sts = dyn.graph.getGdh().setObjectInfo( pname.name, bvalue);
+			break;
+		    }
+		    default: {
+			int ivalue = (int) (value > 0 ? value + 0.5 : value - 0.5);
+			sts = dyn.graph.getGdh().setObjectInfo( pname.name, ivalue);
+		    }
+		    }
+		    if ( sts.evenSts()) System.out.println("Slider error: " + attribute);
+		}
+		break;
+	    }
+	    default: ;    
+	    }
+	    return 1;
+	}
+
 
 	public void open( BufferedReader reader) {
 	    String line;
@@ -5727,7 +6580,8 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_PulldownMenu, 0);
 	}
 
-	public int action( GrowNode object, GlowEvent e) {
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
 	    /*
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Click:
@@ -6082,7 +6936,8 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_OptionMenu, 0);
 	}
 
-	public int connect(GrowNode object) {
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 	    if ( pname == null || pname.name.isEmpty()) 
@@ -6111,6 +6966,7 @@ public class Dyn {
 	    inverted = pname.inverted;
 	    a_typeid = pname.type;
 	    bitmask = pname.bitmask;
+	    database = pname.database;
 	    attrFound = true;
 
 	    if ( text_attribute != null && !text_attribute.isEmpty() && 
@@ -6149,7 +7005,8 @@ public class Dyn {
 		dyn.graph.getGdh().unrefObjectInfo(subid);
 	}
 
-	public void scan( GrowNode object) {
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
 	    if ( !attrFound)
 		return;
 
@@ -6234,7 +7091,8 @@ public class Dyn {
 
 	}
 
-	public int action( GrowNode object, GlowEvent e) {
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Click:
 		if ( menu_object != null) {
@@ -6648,7 +7506,7 @@ public class Dyn {
 	    dyn_type1 = Dyn.mDynType1_AnalogText; 
 	}
 
-	public int action( GrowNode object, GlowEvent e) {
+	public int action( GlowArrayElem o, GlowEvent e) {
 	    return 1;
 	}
 

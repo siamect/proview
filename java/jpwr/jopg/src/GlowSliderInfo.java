@@ -36,10 +36,10 @@
 
 package jpwr.jopg;
 
-public interface GraphApplIfc {
-    public int command(String cmd);
-    public void openConfirmDialog( Object dyn, String text, Object object);
-    public int getWidth();
-    public int getHeight();
-    public String getObject();
+public class GlowSliderInfo {
+    public int direction;
+    public double max_value;
+    public double min_value;
+    public double max_position;
+    public double min_position;
 }

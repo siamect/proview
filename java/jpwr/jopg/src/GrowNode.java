@@ -256,7 +256,8 @@ public class GrowNode extends GlowArrayElem {
 		    nc_root = nc;
 		    break;
 		case Glow.eSave_Node_n_name:
-		    n_name = token.nextToken();
+		    if ( token.hasMoreTokens())
+			n_name = token.nextToken();
 		    break;
 		case Glow.eSave_Node_refcon_cnt: 
 		    for ( int i = 0; i < MAX_CONPOINTS; i++)
@@ -668,10 +669,34 @@ public class GrowNode extends GlowArrayElem {
 	get_node_borders();
     }
     
-    void storeTransform() {
+    public void storeTransform() {
 	trf.store();
     }
+    public boolean transformIsStored() {
+	return trf.is_stored();
+    }
     void get_node_borders() {
+	GlowGeometry g = new GlowGeometry();
+
+	g.ur_x = 10e-37;
+	g.ll_x = 10e37;
+	g.ur_y = 10e-37;
+	g.ll_y = 10e37;
+
+	nc.get_borders( trf, g);
+	x_left = g.ll_x;
+	x_right = g.ur_x;
+	y_low = g.ll_y;
+	y_high = g.ur_y;
+    }
+
+    public void get_borders( GlowTransform t, GlowGeometry g) {
+	if ( t != null) {
+	    GlowTransform t2 = t.multiply(trf);
+	    nc.get_borders(t2, g);
+	}
+	else
+	    nc.get_borders(trf, g);
     }
 
     int set_next_nodeclass() {
@@ -798,5 +823,141 @@ public class GrowNode extends GlowArrayElem {
 	geom.ur_y = y_high;
 
 	return geom;
+    }
+
+    public void move_to( double x, double y) {
+	double old_x_left = x_left;
+	double old_x_right = x_right;
+	double old_y_low = y_low;
+	double old_y_high = y_high;
+
+	trf.move( x - x_left, y - y_low);
+	get_node_borders();
+
+	//draw();
+	cmn.ctx.draw( old_x_left * cmn.mw.zoom_factor_x - cmn.mw.offset_x - Glow.DRAW_MP,
+		      old_y_low * cmn.mw.zoom_factor_y - cmn.mw.offset_y - Glow.DRAW_MP,
+		      old_x_right * cmn.mw.zoom_factor_x - cmn.mw.offset_x + Glow.DRAW_MP,
+		      old_y_high * cmn.mw.zoom_factor_y - cmn.mw.offset_y + Glow.DRAW_MP);
+	cmn.ctx.draw( x_left * cmn.mw.zoom_factor_x - cmn.mw.offset_x - Glow.DRAW_MP,
+		      y_low * cmn.mw.zoom_factor_y - cmn.mw.offset_y - Glow.DRAW_MP,
+		      x_right * cmn.mw.zoom_factor_x - cmn.mw.offset_x + Glow.DRAW_MP,
+		      y_high * cmn.mw.zoom_factor_y - cmn.mw.offset_y + Glow.DRAW_MP);
+    }
+
+    public void move( double x, double y) {
+	double old_x_left = x_left;
+	double old_x_right = x_right;
+	double old_y_low = y_low;
+	double old_y_high = y_high;
+
+	trf.move( x, y);
+	get_node_borders();
+
+	//draw();
+	cmn.ctx.draw( old_x_left * cmn.mw.zoom_factor_x - cmn.mw.offset_x - Glow.DRAW_MP,
+		      old_y_low * cmn.mw.zoom_factor_y - cmn.mw.offset_y - Glow.DRAW_MP,
+		      old_x_right * cmn.mw.zoom_factor_x - cmn.mw.offset_x + Glow.DRAW_MP,
+		      old_y_high * cmn.mw.zoom_factor_y - cmn.mw.offset_y + Glow.DRAW_MP);
+	cmn.ctx.draw( x_left * cmn.mw.zoom_factor_x - cmn.mw.offset_x - Glow.DRAW_MP,
+		      y_low * cmn.mw.zoom_factor_y - cmn.mw.offset_y - Glow.DRAW_MP,
+		      x_right * cmn.mw.zoom_factor_x - cmn.mw.offset_x + Glow.DRAW_MP,
+		      y_high * cmn.mw.zoom_factor_y - cmn.mw.offset_y + Glow.DRAW_MP);
+    }
+
+    public void set_position( double x, double y) {
+	double old_x_left, old_x_right, old_y_low, old_y_high;
+
+	if ( trf.a13 == trf.s_a13 + x && trf.a23 == trf.s_a23 + y)
+	    return;
+	old_x_left = x_left;
+	old_x_right = x_right;
+	old_y_low = y_low;
+	old_y_high = y_high;
+	trf.move_from_stored( x, y);
+	get_node_borders();
+	cmn.ctx.draw( old_x_left * cmn.mw.zoom_factor_x - cmn.mw.offset_x - Glow.DRAW_MP,
+		      old_y_low * cmn.mw.zoom_factor_y - cmn.mw.offset_y - Glow.DRAW_MP,
+		      old_x_right * cmn.mw.zoom_factor_x - cmn.mw.offset_x + Glow.DRAW_MP,
+		      old_y_high * cmn.mw.zoom_factor_y - cmn.mw.offset_y + Glow.DRAW_MP);
+	cmn.ctx.draw( x_left * cmn.mw.zoom_factor_x - cmn.mw.offset_x - Glow.DRAW_MP,
+		      y_low * cmn.mw.zoom_factor_y - cmn.mw.offset_y - Glow.DRAW_MP,
+		      x_right * cmn.mw.zoom_factor_x - cmn.mw.offset_x + Glow.DRAW_MP,
+		      y_high * cmn.mw.zoom_factor_y - cmn.mw.offset_y + Glow.DRAW_MP);
+    }
+
+    public int get_background_object_limits(GlowTransform t, int type, double x, double y, GlowBackgroundObject b) {
+	int dyn_type;
+	GlowNodeClass base_nc = nc.get_base_nc();
+	dyn_type = base_nc.dyn_type1;
+
+	if ( (type & dyn_type) == 0)
+	    return 0;
+	if ( nc.y0 == 0 && nc.y1 == 0)
+	    return 0;
+
+	double x1, x2, y1, y2;
+	double rotation;
+	GlowGeometry g = new GlowGeometry();
+
+	g.ur_x = 10e-37;
+	g.ll_x = 10e37;
+	g.ur_y = 10e-37;
+	g.ll_y = 10e37;
+
+	get_borders( t, g);
+	double x1_right = g.ur_x;
+	double x1_left = g.ll_x;
+	double y1_high = g.ur_y;
+	double y1_low = g.ll_y;
+
+	System.out.println("Slider background: ("+x+","+y+")  ("+x1_left+","+y1_low+") ("+x1_right+","+y1_high+")");
+	if ( x <= x1_right && x >= x1_left && y <= y1_high && y >= y1_low) {
+	    // Hit, calculate max and min koordinates
+
+	    if (t == null) {
+		x1 = trf.x( 0, nc.y0);
+		y1 = trf.y( 0, nc.y0);
+		x2 = trf.x( 0, nc.y1);
+		y2 = trf.y( 0, nc.y1);
+	    }
+	    else {
+		x1 = trf.x( t, 0, nc.y0);
+		y1 = trf.y( t, 0, nc.y0);
+		x2 = trf.x( t, 0, nc.y1);
+		y2 = trf.y( t, 0, nc.y1);
+	    }
+	    
+	    if ( t != null)
+		rotation = (trf.rot( t) / 360 - Math.floor( trf.rot( t) / 360)) * 360;
+	    else {
+		rotation = (trf.rot() / 360 - Math.floor( trf.rot() / 360)) * 360;
+		System.out.println("trf.rotation" + trf.rotation + "   floor: " + Math.floor( trf.rot() / 360)); 
+	    }
+	    if ( 45 >= rotation || rotation > 315) {
+		b.direction = Glow.eDirection_Down;
+		b.min = y1;
+		b.max = y2;
+	    }
+	    else if ( 45 < rotation && rotation <= 135) {
+		b.direction = Glow.eDirection_Left;
+		b.min = x2;
+		b.max = x1;
+	    }
+	    else if ( 135 < rotation && rotation <= 225) {
+		b.direction = Glow.eDirection_Up;
+		b.min = y2;
+		b.max = y1;
+	    }
+	    else if ( 225 < rotation && rotation <= 315) {
+		b.direction = Glow.eDirection_Right;
+		b.min = x1;
+		b.max = x2;
+	    }
+	    b.background = this;
+	    System.out.println("Background limits (" + g.ll_x + "," + g.ll_y + ") (" + g.ur_x + "," + g.ur_y + ") rot " + rotation);
+	    return 1;
+	}
+	return 0;
     }
 }

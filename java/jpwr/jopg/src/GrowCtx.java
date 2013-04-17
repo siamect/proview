@@ -44,6 +44,11 @@ import jpwr.rt.*;
 public class GrowCtx implements GrowCtxIfc {
     GrowCmn cmn;
     String name;
+    boolean sliderActive;
+    GrowSlider sliderObject;
+    double node_move_last_x;
+    double node_move_last_y;
+    double slider_cursor_offset;
 
     public GrowCtx(GrowApplIfc appl) {
 	cmn = new GrowCmn( this, appl);
@@ -168,6 +173,18 @@ public class GrowCtx implements GrowCtxIfc {
     }
 
     public void open_comment( BufferedReader reader) {
+	String line;
+	try {
+	    while( (line = reader.readLine()) != null) {
+		if ( !line.startsWith("!"))
+		     break;
+		if ( line.startsWith("!*/"))
+		     break;
+	    }
+	} catch ( Exception e) {
+	    System.out.println( "IOException GlowCtx comment");
+	}
+
     }
 
     public void open_grow( BufferedReader reader) {
@@ -318,6 +335,9 @@ public class GrowCtx implements GrowCtxIfc {
 		case Glow.eSave_GrowCtx_input_focus_mark: 
 		    cmn.input_focus_mark = new Integer(token.nextToken()).intValue();
 		    break;
+		case Glow.eSave_GrowCtx_recursive_trace:
+		    cmn.recursive_trace = new Integer(token.nextToken()).intValue();
+		    break;
 		case Glow.eSave_GrowCtx_userdata_cb:
 		    if ( cmn.appl != null)
 			cmn.userdata = cmn.appl.growUserdataOpen(reader, cmn, Glow.eUserdataCbType_Ctx);
@@ -331,6 +351,9 @@ public class GrowCtx implements GrowCtxIfc {
 		if ( end_found)
 		    break;
 	    }
+	    cmn.mw.offset_x = (int)(cmn.x0 * cmn.mw.zoom_factor_x);
+	    cmn.mw.offset_y = (int)(cmn.y0 * cmn.mw.zoom_factor_y);
+
 	} catch ( Exception e) {
 	    System.out.println( "IOException GrowCtx");
 	}
@@ -374,6 +397,9 @@ public class GrowCtx implements GrowCtxIfc {
 
     public void eventHandler(GlowEvent e) {
 	int sts = 0;
+	double x = e.x * cmn.mw.zoom_factor_x - cmn.mw.offset_x;
+	double y = e.y * cmn.mw.zoom_factor_y - cmn.mw.offset_y;
+
 	cmn.callback_object = null;
 	cmn.callback_object_type = Glow.eObjectType_NoObject;
 	for ( int i = cmn.a.size() - 1; i >= 0; i--) {
@@ -382,6 +408,159 @@ public class GrowCtx implements GrowCtxIfc {
 		break;
 	    }
 	}	
+
+	switch ( e.event) {
+	case Glow.eEvent_MB1Down:
+	    if ( sts == 1 && cmn.callback_object.type() == Glow.eObjectType_GrowSlider) {
+		System.out.println("Slider start");
+		sliderActive = true;
+		sliderObject = (GrowSlider)cmn.callback_object;
+
+		GlowEvent se = new GlowEvent();
+		se.event = Glow.eEvent_SliderMoveStart;
+		se.type = Glow.eEventType_Object;
+		se.x = e.x;
+		se.y = e.y;
+		se.object = cmn.callback_object;
+		se.object_type = cmn.callback_object.type();
+		cmn.appl.eventHandler(se);
+
+		if ( cmn.restriction_object != null) {
+		    GlowGeometry g = ((GrowSlider)cmn.restriction_object).measure();
+		    if (cmn.move_restriction == Glow.eMoveRestriction_VerticalSlider)
+			slider_cursor_offset = g.ll_y - e.y;
+		    else
+			slider_cursor_offset = g.ll_x - e.x;
+		}
+		node_move_last_x = e.x;
+		node_move_last_y = e.y;
+	    }
+	    break;
+	case Glow.eEvent_MB1Up:
+	    if ( sliderActive) {
+		if ( cmn.restriction_object != null) {
+		    System.out.println("Slider end");
+
+		    GlowEvent se = new GlowEvent();
+		    se.event = Glow.eEvent_SliderMoveEnd;
+		    se.type = Glow.eEventType_Object;
+		    se.x = e.x;
+		    se.y = e.y;
+		    se.object = cmn.restriction_object;
+		    se.object_type = cmn.restriction_object.type();
+		    cmn.appl.eventHandler(se);
+
+		    cmn.restriction_object = null;
+		}
+		sliderObject = null;
+		sliderActive = false;
+	    }
+	    break;
+	case Glow.eEvent_ButtonMotion:
+	    if ( sliderActive && cmn.restriction_object != null) {
+
+		double move_x, move_y;
+		double cursor_y, cursor_x;
+
+		switch( cmn.move_restriction) {
+		case Glow.eMoveRestriction_VerticalSlider: {
+		    cursor_y = e.y;
+		    if ( cursor_y + slider_cursor_offset > cmn.restriction_max_limit) {
+			if ( node_move_last_y + slider_cursor_offset > cmn.restriction_max_limit)
+			    break;
+			else {
+			    move_y = cmn.restriction_max_limit - node_move_last_y -
+				slider_cursor_offset;
+			    System.out.println("Slider max limit: " + move_y + " limit " + cmn.restriction_max_limit);
+			}
+		    }
+		    else if ( cursor_y + slider_cursor_offset < cmn.restriction_min_limit) {
+			if ( node_move_last_y + slider_cursor_offset < cmn.restriction_min_limit)
+			    break;
+			else
+			    move_y = cmn.restriction_min_limit - node_move_last_y -
+				slider_cursor_offset;
+		    }
+		    else {
+			if ( node_move_last_y + slider_cursor_offset > cmn.restriction_max_limit)
+			    move_y = cursor_y + slider_cursor_offset - 
+				cmn.restriction_max_limit;
+			else if ( node_move_last_y + slider_cursor_offset < cmn.restriction_min_limit)
+			    move_y = cursor_y + slider_cursor_offset - 
+				cmn.restriction_min_limit;
+			else
+			    move_y = e.y - node_move_last_y;
+		    }
+		    if ( move_y == 0)
+			break;
+		    // set_defered_redraw();
+		    ((GrowSlider)cmn.restriction_object).move( 0, move_y);
+		    // redraw_defered();
+		    
+		    GlowEvent se = new GlowEvent();
+		    se.event = Glow.eEvent_SliderMoved;
+		    se.type = Glow.eEventType_Object;
+		    se.x = e.x;
+		    se.y = node_move_last_y + move_y;
+		    se.object = cmn.restriction_object;
+		    se.object_type = cmn.restriction_object.type();
+		    cmn.appl.eventHandler(se);
+		    
+		    node_move_last_x = e.x;
+		    node_move_last_y = e.y;
+		    break;
+		}
+		case Glow.eMoveRestriction_HorizontalSlider: {
+		    cursor_x = e.x;
+		    if ( cursor_x + slider_cursor_offset > cmn.restriction_max_limit) {
+			if ( node_move_last_x +
+			     slider_cursor_offset > cmn.restriction_max_limit)
+			    break;
+			else
+			    move_x = cmn.restriction_max_limit - 
+				node_move_last_x - slider_cursor_offset;
+		    }
+		    else if ( cursor_x + slider_cursor_offset < cmn.restriction_min_limit) {
+			if ( node_move_last_x +
+			     slider_cursor_offset < cmn.restriction_min_limit)
+			    break;
+			else
+			    move_x = cmn.restriction_min_limit - 
+				node_move_last_x - slider_cursor_offset;
+		    }
+		    else {
+			if ( node_move_last_x + slider_cursor_offset > cmn.restriction_max_limit)
+			    move_x = cursor_x + slider_cursor_offset - 
+				cmn.restriction_max_limit;
+			else if ( node_move_last_x + slider_cursor_offset < cmn.restriction_min_limit)
+			    move_x = cursor_x + slider_cursor_offset - 
+				cmn.restriction_min_limit;
+		    else
+			move_x = e.x - node_move_last_x;
+		    }
+		    if ( move_x == 0)
+			break;
+		    // set_defered_redraw();
+		    ((GrowSlider)cmn.restriction_object).move( move_x, 0);
+		    GlowGeometry g = ((GrowSlider)cmn.restriction_object).measure();
+		    // redraw_defered();
+		    
+		    GlowEvent se = new GlowEvent();
+		    se.event = Glow.eEvent_SliderMoved;
+		    se.type = Glow.eEventType_Object;
+		    se.x = node_move_last_x + move_x;
+		    se.y = e.y;
+		    se.object = cmn.restriction_object;
+		    se.object_type = cmn.restriction_object.type();
+		    cmn.appl.eventHandler(se);
+		    
+		    node_move_last_x = e.x;
+		    node_move_last_y = e.y;
+		}		    
+		break;
+	    }
+	    }
+	}
 
 	if ( sts == 1 && cmn.appl != null) {
 	    e.object = cmn.callback_object;
@@ -392,10 +571,14 @@ public class GrowCtx implements GrowCtxIfc {
 
     public void traceConnect() {
 	int sts;
+	cmn.nodraw++;
 	for ( int i = 0; i < cmn.a.size(); i++) {
 	    if ( cmn.a.get(i).type() == Glow.eObjectType_GrowNode ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
-		cmn.appl.traceConnect((GrowNode)cmn.a.get(i));
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowGroup ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowBar ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowTrend ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider) {
+		cmn.appl.traceConnect(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {
 			if ( ((GrowNode)cmn.a.get(i)).nc.a.get(j).type() == Glow.eObjectType_GrowNode ||
@@ -407,14 +590,18 @@ public class GrowCtx implements GrowCtxIfc {
 		}
 	    }
 	}		
+	cmn.nodraw--;
     }
 
     public void traceDisconnect() {
 	int sts;
 	for ( int i = 0; i < cmn.a.size(); i++) {
 	    if ( cmn.a.get(i).type() == Glow.eObjectType_GrowNode ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
-		cmn.appl.traceDisconnect((GrowNode)cmn.a.get(i));
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowGroup ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowBar ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowTrend ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider) {
+		cmn.appl.traceDisconnect(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {
 			if ( ((GrowNode)cmn.a.get(i)).nc.a.get(j).type() == Glow.eObjectType_GrowNode ||
@@ -431,8 +618,11 @@ public class GrowCtx implements GrowCtxIfc {
 	int sts;
 	for ( int i = 0; i < cmn.a.size(); i++) {
 	    if ( cmn.a.get(i).type() == Glow.eObjectType_GrowNode ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
-		cmn.appl.traceScan((GrowNode)cmn.a.get(i));
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowGroup ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowBar ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowTrend ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider) {
+		cmn.appl.traceScan(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {
 			if ( ((GrowNode)cmn.a.get(i)).nc.a.get(j).type() == Glow.eObjectType_GrowNode ||
@@ -480,6 +670,27 @@ public class GrowCtx implements GrowCtxIfc {
     public Vector<GlowArrayElem> get_object_list() {
 	return cmn.a;
     }
+
+    public GlowBackgroundObject getBackgroundObjectLimits(int type, double x, double y) {
+	int sts = 0;
+	GlowBackgroundObject b = new GlowBackgroundObject();
+
+	for ( int i = 0; i < cmn.a.size(); i++) {
+	    sts = cmn.a.get(i).get_background_object_limits(null, type, x, y, b);
+	    if ( (sts & 1) != 0)
+		break;
+	}
+	b.sts = sts;
+	return b;
+    }
+
+    public void setMoveRestrictions( int restriction, double max_limit, double min_limit, GlowArrayElem object) {
+	cmn.move_restriction = restriction;
+	cmn.restriction_max_limit = max_limit;
+	cmn.restriction_min_limit = min_limit;
+	cmn.restriction_object = object;
+    }
+
 }
 
 

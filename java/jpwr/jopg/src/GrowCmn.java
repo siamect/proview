@@ -103,7 +103,13 @@ public class GrowCmn {
     int callback_object_type;
     int hot_mode;
     int hot_found;
-
+    GlowArrayElem restriction_object;
+    int move_restriction;
+    double restriction_max_limit;
+    double restriction_min_limit;
+    int recursive_trace;
+    public int nodraw;
+    
     Vector<GlowArrayElem> a = new Vector<GlowArrayElem>();
     Vector<GlowArrayElem> a_nc = new Vector<GlowArrayElem>();
     Vector<GlowArrayElem> a_cc = new Vector<GlowArrayElem>();

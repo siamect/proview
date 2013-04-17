@@ -48,7 +48,7 @@ public class GrowText extends GlowArrayElem {
     double y_low;
     int original_color_drawtype;
     int font;
-    int adjustment;
+    int adjustment = Glow.eAdjustment_Left;
     int dynamicsize;
     GlowTransform trf;
 
@@ -80,7 +80,8 @@ public class GrowText extends GlowArrayElem {
 		case Glow.eSave_GrowText: 
 		    break;
 		case Glow.eSave_GrowText_n_name:
-		    n_name = token.nextToken();
+		    if ( token.hasMoreTokens())
+			n_name = token.nextToken();
 		    break;
 		case Glow.eSave_GrowText_x_right: 
 		    x_right = new Double(token.nextToken()).doubleValue(); 

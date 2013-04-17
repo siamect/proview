@@ -45,6 +45,7 @@ import java.applet.*;
 import java.util.*;
 import jpwr.rt.*;
 import java.awt.event.*;
+import jpwr.jopg.*;
 
 public class JopSpider {
   int qcom_qix;
@@ -59,6 +60,20 @@ public class JopSpider {
   static String methObject;
   static PwrtAttrRef methAref;
   static int methClassId;
+  static JopSpider spider;
+
+  private static class GrowFrameCb implements GrowFrameApplIfc {
+    JopSession session;
+
+    GrowFrameCb( JopSession session) {
+      this.session = session;
+    }
+
+    public int command( String cmd) {
+	System.out.println("JopSpider command callback : " + cmd);
+	return JopSpider.command( session, cmd);
+    }
+  }
 
   public JopSpider( int op_qcom_qix) {
     JopSpider.op_qcom_qix = op_qcom_qix;
@@ -760,44 +775,53 @@ System.out.println( "JopSpiderCmd start");
 
   public static Object loadFrame( JopSession session, String className, 
 				  String instance, boolean scrollbar) throws ClassNotFoundException {
-    Object frame;
-    if ( instance == null)
-      instance = "";
-    
-    JopLog.log("JopSpider.loadFrame: Loading frame \"" + className + "\" instance \"" + instance + "\"");
-    try {
-      Class clazz = Class.forName( className);
-      try {
-	Class argTypeList[] = new Class[] { session.getClass(), instance.getClass(),
-	                                    boolean.class}; 
-        Object argList[] = new Object[] { session, instance, new Boolean(scrollbar)};
-	System.out.println( "JopSpider.loadFrame getConstructor");
-        Constructor constructor = clazz.getConstructor( argTypeList);
 
-	try {
-          frame = constructor.newInstance( argList);
-	}
-	catch ( Exception e) {
-	  System.out.println("Class instanciation error: " + className + " " + e.getMessage() + " " + constructor);
+      if ( className.indexOf(".pwg") != -1) {
+	  GrowFrame frame = new GrowFrame(className, session.getGdh(), instance, new GrowFrameCb(session));
+	  frame.validate();
+	  frame.setVisible(true);
+      }
+      else {
+	  Object frame;
+	  if ( instance == null)
+	      instance = "";
+    
+	  JopLog.log("JopSpider.loadFrame: Loading frame \"" + className + "\" instance \"" + instance + "\"");
+	  try {
+	      Class clazz = Class.forName( className);
+	      try {
+		  Class argTypeList[] = new Class[] { session.getClass(), instance.getClass(),
+						      boolean.class}; 
+		  Object argList[] = new Object[] { session, instance, new Boolean(scrollbar)};
+		  System.out.println( "JopSpider.loadFrame getConstructor");
+		  Constructor constructor = clazz.getConstructor( argTypeList);
+		  
+		  try {
+		      frame = constructor.newInstance( argList);
+		  }
+		  catch ( Exception e) {
+		      System.out.println("Class instanciation error: " + className + " " + e.getMessage() + " " + constructor);
+		      return null;
+		  }
+		  // frame = clazz.newInstance();
+		  JopLog.log( "JopSpider.loadFrame openFrame");
+		  openFrame( frame);
+		  return frame;
+	      }
+	      catch ( NoSuchMethodException e) {
+		  System.out.println("NoSuchMethodException: Unable to get frame constructor " + className);
+	      }
+	      catch ( Exception e) {
+		  System.out.println("Exception: Unable to get frame class " + className + " " + e.getMessage());
+	      }
+	  }
+	  catch (ClassNotFoundException e) {
+	      System.out.println("Class not found: " + className);
+	      throw new ClassNotFoundException();
+	  }
 	  return null;
-	}
-        // frame = clazz.newInstance();
-	JopLog.log( "JopSpider.loadFrame openFrame");
-        openFrame( frame);
-        return frame;
       }
-      catch ( NoSuchMethodException e) {
-        System.out.println("NoSuchMethodException: Unable to get frame constructor " + className);
-      }
-      catch ( Exception e) {
-        System.out.println("Exception: Unable to get frame class " + className + " " + e.getMessage());
-      }
-    }
-    catch (ClassNotFoundException e) {
-      System.out.println("Class not found: " + className);
-      throw new ClassNotFoundException();
-    }
-    return null;
+      return null;
   }
 
   public static void openFrame( Object frame) {
@@ -1027,6 +1051,7 @@ System.out.println( "JopSpiderCmd start");
     }
     return null;
   }
+
 }
 
 

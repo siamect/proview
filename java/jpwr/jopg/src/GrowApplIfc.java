@@ -39,9 +39,9 @@ import java.io.*;
 
 public interface GrowApplIfc {
     public Object growUserdataOpen( BufferedReader reader, Object object, int type);
-    public void traceConnect(GrowNode object);
-    public void traceDisconnect(GrowNode object);
-    public void traceScan(GrowNode object);
+    public void traceConnect(GlowArrayElem object);
+    public void traceDisconnect(GlowArrayElem object);
+    public void traceScan(GlowArrayElem object);
     public void eventHandler(GlowEvent e);
     public int getWidth();
     public int getHeight();

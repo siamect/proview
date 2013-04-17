@@ -49,6 +49,12 @@ public class GlowPoint {
 	this.cmn = cmn;
     }
 
+    public GlowPoint(GlowPoint p) {
+	cmn = p.cmn;
+	x = p.x;
+	y = p.y;
+    }
+
     public void posit(double x, double y) {
 	this.x = x;
 	this.y = y;

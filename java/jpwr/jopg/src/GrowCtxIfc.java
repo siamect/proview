@@ -50,4 +50,6 @@ public interface GrowCtxIfc {
     public void remove(GlowArrayElem e);
     public void pop(GlowArrayElem e);
     public Vector<GlowArrayElem> get_object_list();
+    public GlowBackgroundObject getBackgroundObjectLimits(int type, double x, double y);
+    public void setMoveRestrictions( int restriction, double max_limit, double min_limit, GlowArrayElem object);
 }

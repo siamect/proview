@@ -44,4 +44,11 @@ public class GlowArrayElem {
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {}
     public int eventHandler(GlowEvent e, double fx, double fy) {return 0;}
     public Object getUserData() { return null;}
+    public void get_borders( GlowTransform t, GlowGeometry g) {}
+    public int get_background_object_limits(GlowTransform t, int type, double x, double y, GlowBackgroundObject b) {return 0;}
+    public int getClassDynType1() { return 0;}
+    public int getClassDynType2() { return 0;}
+    public int getClassActionType1() { return 0;}
+    public int getClassActionType2() { return 0;}
+    public int getClassCycle() { return 0;}
 }

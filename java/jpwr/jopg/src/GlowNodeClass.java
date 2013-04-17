@@ -64,6 +64,7 @@ public class GlowNodeClass extends GlowArrayElem {
     String[] dyn_attr = new String[4];
     GlowArrayElem next_nc;
     GlowArrayElem prev_nc;
+    int recursive_trace;
 
     public GlowNodeClass(GrowCmn cmn) {
 	this.cmn = cmn;
@@ -168,6 +169,9 @@ public class GlowNodeClass extends GlowArrayElem {
 		case Glow.eSave_NodeClass_input_focus_mark:
 		    input_focus_mark = new Integer(token.nextToken()).intValue();
 		    break;
+		case Glow.eSave_NodeClass_recursive_trace:
+		    recursive_trace = new Integer(token.nextToken()).intValue();
+		    break;
 		case Glow.eSave_NodeClass_dynamicsize:
 		    dynamicsize = new Integer(token.nextToken()).intValue();
 		    break;
@@ -215,8 +219,9 @@ public class GlowNodeClass extends GlowArrayElem {
     }
 
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {
-	for ( int i = 0; i < a.size(); i++)
+	for ( int i = 0; i < a.size(); i++) {
 	    a.get(i).draw(t, highlight, hot, node, colornode);
+	}
     }
 
     public int eventHandler( GlowEvent event, double fx, double fy) {
@@ -228,5 +233,56 @@ public class GlowNodeClass extends GlowArrayElem {
 		return sts;
 	}
 	return 0;
+    }
+
+    public void get_borders( GlowTransform t, GlowGeometry g) {
+	GlowNodeClass base = get_base_nc();
+
+	if ( (t == null || ( t != null && Math.abs( t.rotation/90 - (int)(t.rotation/90)) < Double.MIN_VALUE)) &&
+	     !(Math.abs( base.x0 - base.x1) < Double.MIN_VALUE || 
+	       Math.abs( base.y0 - base.y1) < Double.MIN_VALUE)) {
+	    // Borders are given i x0, y0, x1, y1 
+	    // Will not work in rotated nodes
+	    double ll_x, ur_x, ll_y, ur_y, kx1, kx2, ky1, ky2;
+
+	    if ( t != null) {
+		kx1 = t.x( base.x0, base.y0);
+		kx2 = t.x( base.x1, base.y1);
+		ky1 = t.y( base.x0, base.y0);
+		ky2 = t.y( base.x1, base.y1);
+	    }
+	    else {
+		kx1 = base.x0;
+		kx2 = base.x1;
+		ky1 = base.y0;
+		ky2 = base.y1;
+	    }
+
+	    ll_x = Math.min( kx1, kx2);
+	    ur_x = Math.max( kx1, kx2);
+	    ll_y = Math.min( ky1, ky2);
+	    ur_y = Math.max( ky1, ky2);
+
+	    if ( ll_x < g.ll_x)
+		g.ll_x = ll_x;
+	    if ( ur_x > g.ur_x)
+		g.ur_x = ur_x;
+	    if ( ll_y < g.ll_y)
+		g.ll_y = ll_y;
+	    if ( ur_y > g.ur_y)
+		g.ur_y = ur_y;
+	}
+	else {
+	    for ( int i = 0; i < a.size(); i++)
+		a.get(i).get_borders(t, g);
+	}
+    }
+
+    GlowNodeClass get_base_nc() {
+	GlowNodeClass base;
+
+	for ( base = this; base.prev_nc != null; base = (GlowNodeClass)base.prev_nc)
+	    ;
+	return base;
     }
 }

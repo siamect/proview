@@ -98,7 +98,8 @@ public class GrowArc extends GlowArrayElem {
 		case Glow.eSave_GrowArc: 
 		    break;
 		case Glow.eSave_GrowArc_n_name:
-		    n_name = token.nextToken();
+		    if ( token.hasMoreTokens())
+			n_name = token.nextToken();
 		    break;
 		case Glow.eSave_GrowArc_x_right: 
 		    x_right = new Double(token.nextToken()).doubleValue(); 

@@ -34,12 +34,9 @@
  * General Public License plus this exception.
  */
 
+
 package jpwr.jopg;
 
-public interface GraphApplIfc {
+public interface GrowFrameApplIfc {
     public int command(String cmd);
-    public void openConfirmDialog( Object dyn, String text, Object object);
-    public int getWidth();
-    public int getHeight();
-    public String getObject();
 }

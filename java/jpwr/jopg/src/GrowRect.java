@@ -124,7 +124,8 @@ public class GrowRect extends GlowArrayElem {
 		case Glow.eSave_GrowRect: 
 		    break;
 		case Glow.eSave_GrowRect_n_name:
-		    n_name = token.nextToken();
+		    if ( token.hasMoreTokens())
+			n_name = token.nextToken();			 
 		    break;
 		case Glow.eSave_GrowRect_x_right: 
 		    x_right = new Double(token.nextToken()).doubleValue(); 

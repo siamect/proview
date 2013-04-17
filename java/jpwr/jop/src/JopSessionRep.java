@@ -197,32 +197,45 @@ public class JopSessionRep implements JopSessionIfc {
 	  if ( gcret.value > 0)
 	    suffix = Integer.toString(gcret.value);
 	}
-	if ( coid.objid.vid < Cdh.cUserClassVolMin ||
-	     (coid.objid.vid >= Cdh.cManufactClassVolMin && 
-	      coid.objid.vid <= Cdh.cManufactClassVolMax)) {
-	  // Class is a base class, java classname starts with JopC
-	  if ( coid.objid.vid == 1)
-	    name = "jpwr.jopc.Jopc" + sret.str.substring(1,2).toUpperCase() + 
-		sret.str.substring(2).toLowerCase() + suffix;
-	  else if ( coid.objid.vid == 64002)
-	    name = "jpwr.abb.Jopc" + sret.str.substring(0,1).toUpperCase() + 
-		sret.str.substring(1).toLowerCase() + suffix;
-	  else if ( coid.objid.vid == 10) {
-	    if ( sret.str.startsWith( "BaseFcPPO"))
-	      name = "jpwr.bcompfc.Jopc" + sret.str.substring(0,1).toUpperCase() + 
-		  sret.str.substring(1).toLowerCase() + suffix;
+	name = "pwr_c_" + sret.str.toLowerCase() + ".pwg";  // Pwg test
+	int pwgidx = name.lastIndexOf( ".pwg");
+	if (  pwgidx == -1) {
+	    if ( coid.objid.vid < Cdh.cUserClassVolMin ||
+		 (coid.objid.vid >= Cdh.cManufactClassVolMin && 
+		  coid.objid.vid <= Cdh.cManufactClassVolMax)) {
+		// Class is a base class, java classname starts with JopC
+		if ( coid.objid.vid == 1)
+		    name = "jpwr.jopc.Jopc" + sret.str.substring(1,2).toUpperCase() + 
+			sret.str.substring(2).toLowerCase() + suffix;
+		else if ( coid.objid.vid == 64002)
+		    name = "jpwr.abb.Jopc" + sret.str.substring(0,1).toUpperCase() + 
+			sret.str.substring(1).toLowerCase() + suffix;
+		else if ( coid.objid.vid == 10) {
+		    if ( sret.str.startsWith( "BaseFcPPO"))
+			name = "jpwr.bcompfc.Jopc" + sret.str.substring(0,1).toUpperCase() + 
+			    sret.str.substring(1).toLowerCase() + suffix;
+		    else
+			name = "jpwr.bcomp.Jopc" + sret.str.substring(0,1).toUpperCase() + 
+			    sret.str.substring(1).toLowerCase() + suffix;
+		}
+		else
+		    name = "jpwr.jopc.Jopc" + sret.str.substring(0,1).toUpperCase() + 
+			sret.str.substring(1).toLowerCase() + suffix;
+	    }
 	    else
-	      name = "jpwr.bcomp.Jopc" + sret.str.substring(0,1).toUpperCase() + 
-		  sret.str.substring(1).toLowerCase() + suffix;
-	  }
-	  else
-	    name = "jpwr.jopc.Jopc" + sret.str.substring(0,1).toUpperCase() + 
-		sret.str.substring(1).toLowerCase() + suffix;
+		// Java name equals class name
+		name = sret.str.substring(0,1).toUpperCase() + sret.str.substring(1).toLowerCase() +
+		    suffix;
 	}
-	else
-	  // Java name equals class name
-	  name = sret.str.substring(0,1).toUpperCase() + sret.str.substring(1).toLowerCase() +
-	      suffix;
+	else {
+	    if ( coid.objid.vid < Cdh.cUserClassVolMin ||
+		 (coid.objid.vid >= Cdh.cManufactClassVolMin && 
+		  coid.objid.vid <= Cdh.cManufactClassVolMax)) {
+		name = "$pwr_exe/" + name;
+	    }
+	    if ( suffix.length() > 0)
+		name = name.substring(0, pwgidx) + suffix + name.substring(pwgidx+1);
+	}
 	JopLog.log("openGraphFrame classgraph " + name);
 
 	Object graph;

@@ -36,7 +36,6 @@
 
 
 package jpwr.jopg;
-import jpwr.jop.*;
 import jpwr.rt.*;
 import java.io.*;
 import java.awt.*;
@@ -64,13 +63,17 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
     JLabel confirmLabel;
     Object confirmDyn;
     Object confirmObject;
+    String instance;
+    GrowFrameApplIfc appl;
 
-    public GrowFrame( String file) {
+    public GrowFrame( String file, Gdh gdh, String instance, GrowFrameApplIfc appl) {
 	root = (Object) this;
-	init( file);
+	this.instance = instance;
+	this.appl = appl;
+	init( file, gdh);
     }
 
-    private void init( String file) {
+    private void init( String file, Gdh gdh) {
 	contentPane = (JPanel) this.getContentPane();
 	contentPane.setLayout(borderLayout1);
 	contentPane.add(localPanel, BorderLayout.CENTER);
@@ -86,7 +89,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	BufferedReader reader = null;
 	String fname = file;
 
-	if ( root != null && root instanceof JopApplet) {
+	if ( root != null && root instanceof JApplet) {
 	    try {
 		URL current = ((JApplet) root).getCodeBase();
 		String current_str = current.toString();
@@ -109,7 +112,10 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	    }
 	}
 	else {
-	    filename = "$pwrp_exe/" + fname;
+	    if ( fname.lastIndexOf('/') == -1)
+		filename = "$pwrp_exe/" + fname;
+	    else
+		filename = fname;
 	    filename = Gdh.translateFilename( filename);
 
 	    System.out.println( "Fname: " + filename);
@@ -120,9 +126,33 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 		System.out.println( "Unable to open file " + filename);
 		return;
 	    }
+	    // Read size info
+	    String line;
+	    int defaultWidth = 0;
+	    int defaultHeight = 0;
+	    
+	    try {
+		for ( int i = 0; i < 2; i++) {
+		    line = reader.readLine();
+		    if ( line == null || !line.startsWith("0! "))
+			break;
+		    if ( line.substring(3, 15).equals("DefaultWidth"))
+			defaultWidth = new Integer(line.substring(16)).intValue();
+		    else if ( line.substring(3, 16).equals("DefaultHeight"))
+			defaultHeight = new Integer(line.substring(17)).intValue();
+		}
+	    } catch ( Exception e) {
+		System.out.println( "IOException GlowFrame");
+	    }
+	    System.out.println("GraphFrame size " + defaultWidth + "  " + defaultHeight);
+	    if ( defaultWidth != 0 && defaultHeight != 0) {
+		size = new Dimension( defaultWidth + 5, defaultHeight + 40);
+		setSize( size);
+	    }		
 	}
 
-	Gdh gdh = new Gdh(this);
+	if ( gdh == null)
+	    gdh = new Gdh(this);
 	graph = new Graph(this, gdh);
 	graph.open(reader);
 
@@ -162,6 +192,13 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 		    event.event = Glow.eEvent_CursorMotion;
 		    graph.ctx.eventHandler( event);
 		}
+		public void mouseDragged(MouseEvent e) {
+		    GlowEvent event = new GlowEvent();
+		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
+		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
+		    event.event = Glow.eEvent_ButtonMotion;
+		    graph.ctx.eventHandler( event);
+		}
 	    };
 
         localPanel.addMouseListener(adapter);
@@ -173,10 +210,10 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 
 
     public int getWidth() {
-	return localPanel.getWidth();
+	return localPanel.getWidth() + 5;
     }
     public int getHeight() {
-	return localPanel.getHeight();
+	return localPanel.getHeight() + 40;
     }
 
     public void actionPerformed( ActionEvent e) {
@@ -189,8 +226,8 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
     }
 
     void setSize() {
-	size = new Dimension( (int)((graph.ctx.cmn.x_right - graph.ctx.cmn.x_left) * graph.ctx.cmn.mw.zoom_factor_x) + Flow.DRAWOFFSET * 2,
-			      (int)((graph.ctx.cmn.y_high - graph.ctx.cmn.y_low) * graph.ctx.cmn.mw.zoom_factor_y) + Flow.DRAWOFFSET * 2);
+	size = new Dimension( (int)((graph.ctx.cmn.x_right - graph.ctx.cmn.x_left) * graph.ctx.cmn.mw.zoom_factor_x) + Glow.DRAWOFFSET * 2,
+			      (int)((graph.ctx.cmn.y_high - graph.ctx.cmn.y_low) * graph.ctx.cmn.mw.zoom_factor_y) + Glow.DRAWOFFSET * 2);
 	localPanel.setPreferredSize( size);
 	localPanel.revalidate();
     }
@@ -224,7 +261,9 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 
     public int command(String cmd) {
 	System.out.println("Ge command : " + cmd);
-	return 1;
+	if ( appl != null)
+	    return appl.command(cmd);
+	return 0;
     }
 
     public void confirmNo() {}
@@ -281,7 +320,9 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	}
     }
 
-
+    public String getObject() {
+	return instance;
+    }
 }
 
 

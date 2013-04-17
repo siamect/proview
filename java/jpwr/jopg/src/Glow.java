@@ -45,6 +45,9 @@ public class Glow {
     public static final int DRAW_MP			= 6;
     public static final int DRAW_TYPE_SIZE		= 9;
     public static final int DRAW_FONT_SIZE		= 9;
+    public static final int DRAWOFFSET			= 2;
+    public static final int TREND_MAX_CURVES 		= 11;
+
     public static final int eType_Boolean		= 0;
     public static final int eType_Int			= 1;
     public static final int eType_Double		= 2;
@@ -803,6 +806,7 @@ public class Glow {
     public static final int eSave_NodeClass_userdata_cb		= 329;
     public static final int eSave_NodeClass_dyn_type2		= 330;
     public static final int eSave_NodeClass_dyn_action_type2   	= 331;
+    public static final int eSave_NodeClass_recursive_trace    	= 332;
     public static final int eSave_ConClass_cc_name		= 400;
     public static final int eSave_ConClass_con_type		= 401;
     public static final int eSave_ConClass_corner		= 402;
@@ -1008,6 +1012,7 @@ public class Glow {
     public static final int eSave_GrowCtx_bitmap_fonts	        = 2245;
     public static final int eSave_GrowCtx_dyn_type2		= 2246;
     public static final int eSave_GrowCtx_dyn_action_type2    	= 2247;
+    public static final int eSave_GrowCtx_recursive_trace    	= 2248;
     public static final int eSave_GrowSubAnnot_x_right		= 2300;
     public static final int eSave_GrowSubAnnot_x_left		= 2301;
     public static final int eSave_GrowSubAnnot_y_high		= 2302;
@@ -1467,6 +1472,10 @@ public class Glow {
     public static final int ePosition_Absolute			= 0;
     public static final int ePosition_Relative			= 1;
 
+    public static final int eMoveRestriction_VerticalSlider     = 0;
+    public static final int eMoveRestriction_HorizontalSlider   = 1;
+    public static final int eMoveRestriction_Disable   		= 2;
+
     public static final int eEventType_Object 			= 0;
     public static final int eEventType_Menu 			= 1;
 
@@ -1475,8 +1484,12 @@ public class Glow {
     public static final int eEvent_MB1Down 			= 3;
     public static final int eEvent_MB1DoubleClick 	       	= 4;
     public static final int eEvent_CursorMotion 		= 5;
+    public static final int eEvent_ButtonMotion 		= 6;
     public static final int eEvent_ValueChanged 		= 7;
     public static final int eEvent_MenuCreate 			= 8;
     public static final int eEvent_MenuActivated 		= 9;
     public static final int eEvent_MenuDelete 			= 10;
+    public static final int eEvent_SliderMoveStart     		= 11;
+    public static final int eEvent_SliderMoved 			= 12;
+    public static final int eEvent_SliderMoveEnd       		= 13;
 }

@@ -83,7 +83,7 @@ public class GlowTransform {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
 		int key = new Integer(token.nextToken()).intValue();
-		// if ( cmn.debug) System.out.println( "GlowTransform : " + line);
+		if ( true) System.out.println( "GlowTransform : " + line);
 
 		switch ( key) {
 		case Glow.eSave_Transform: break;
@@ -285,6 +285,10 @@ public class GlowTransform {
 	GlowTransform tmp = t.multiply(this);
 
 	return Math.sqrt( tmp.a12*tmp.a12 + tmp.a22*tmp.a22);
+    }
+
+    public boolean is_stored() { 
+	return stored;
     }
 
 }
