@@ -13004,6 +13004,7 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
   switch ( attr_type) {
   case pwr_eType_Float32:
   case pwr_eType_Int32:
+  case pwr_eType_Boolean:
     break;
   default:
     return 1;
@@ -13160,6 +13161,10 @@ int GeSlider::scan( grow_tObject object)
       if ( *(pwr_tInt32 *)p == old_ivalue)
 	return 1;
       break;
+    case pwr_eType_Boolean:
+      if ( *(pwr_tBoolean *)p == (pwr_tBoolean)old_ivalue)
+	return 1;
+      break;
     default: ;
     }
   }
@@ -13181,6 +13186,9 @@ int GeSlider::scan( grow_tObject object)
       switch ( attr_type) {
       case pwr_eType_Float32:
 	value = *p;
+	break;
+      case pwr_eType_Boolean:
+	value = (*(pwr_tBoolean *)p) ? 1 : 0;
 	break;
       default:
 	value = (float) (*(pwr_tInt32 *)p);
@@ -13236,6 +13244,9 @@ int GeSlider::scan( grow_tObject object)
     break;
   case pwr_eType_Int32:
     old_ivalue = *(pwr_tInt32 *)p;
+    break;
+  case pwr_eType_Boolean:
+    old_ivalue = *(pwr_tBoolean *)p;
     break;
   default: ;
   }
@@ -13327,10 +13338,15 @@ int GeSlider::action( grow_tObject object, glow_tEvent event)
 	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
 	old_value = value;
 	break;
+      case pwr_eType_Boolean: {
+	pwr_tBoolean ivalue = (pwr_tBoolean) (value > 0.5 ? 1 : 0);
+	sts = gdh_SetObjectInfo( parsed_name, &ivalue, sizeof(ivalue));
+	break;
+      }
       default: {
 	pwr_tInt32 ivalue = (pwr_tInt32) (value > 0 ? value + 0.5 : value - 0.5);
 	sts = gdh_SetObjectInfo( parsed_name, &ivalue, sizeof(ivalue));
-	}
+      }
       }
       if ( EVEN(sts)) printf("Slider error: %s\n", attribute);
     }
