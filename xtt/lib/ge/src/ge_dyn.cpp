@@ -446,8 +446,6 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GePie((const GePie&) *elem); break;
     case ge_mDynType1_BarChart:
       e = new GeBarChart((const GeBarChart&) *elem); break;
-    case ge_mDynType2_Axis:
-      e = new GeAxis((const GeAxis&) *elem); break;
     default: ;
     }
     switch( elem->dyn_type2) {
