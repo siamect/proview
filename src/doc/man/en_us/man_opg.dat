@@ -2057,6 +2057,11 @@ a XttGraph object.
 /focus  <t>Name of a value input object. The object will gain input focus 
         <t>when the graph is opened.
 /inputempty <t>The input label of the input focus object will be empty.
+/pwindow <t>Filename of another window that this graph should be placed
+        <t>on top of. The string $current will denote the current window
+	<t>when the graph is opened from a push button in this window.
+/pinstance <t>Instance name for the pwindow graph, if pwindow is an object 
+	<t>graph.
 </TOPIC>
 
 <TOPIC> open jgraph <style> function

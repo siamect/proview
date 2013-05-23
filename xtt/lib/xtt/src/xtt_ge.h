@@ -57,7 +57,7 @@ class XttGe {
   void		*current_confirm_object;
   int		value_input_open;
   int		confirm_open;
-  int		(*command_cb)(XttGe *, char *);
+  int		(*command_cb)(XttGe *, char *, void *);
   void		(*close_cb)(XttGe *);
   void		(*help_cb)(XttGe *, const char *key);
   void		(*display_in_xnav_cb)(void *, pwr_sAttrRef *);
@@ -76,7 +76,7 @@ class XttGe {
 	 int scrollbar, int menu, int navigator, int width, int height,
 	 int x, int y, double scan_time, const char *object_name, int use_default_access,
 	 unsigned int access,
-	 int (*xg_command_cb) (XttGe *, char *),
+	 int (*xg_command_cb) (XttGe *, char *, void *),
 	 int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 	 int (*xg_is_authorized_cb) (void *, unsigned int));
   virtual ~XttGe();
@@ -84,6 +84,7 @@ class XttGe {
   virtual void pop() {}
   virtual void set_size( int width, int height) {}
   virtual void confirm_reply( int ok) {}
+  virtual void *get_widget() { return 0;}
 
   void message( char severity, const char *msg);
   void print();

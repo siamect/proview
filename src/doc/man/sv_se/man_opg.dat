@@ -2018,6 +2018,10 @@ XttGraph objekt.
 /focus  <t>Namn på ett inmatnings objekt. Objektet kommer att ges input focus
         <t>när grafen öppnas.
 /inputempty <t>Texten i inmatningsfältet töms.
+/pwindow <t>Filnamn för ett annat fönster som grafen ska placera ovanför. 
+        <t>Strängen $current anger nuvarande fönster när grafen öppnas från en
+	<t>tryckknapp i detta fönster.
+/pinstance <t>Instance namn för pwindow grafen, om pwindow är en objektsbild.
 </TOPIC>
 
 <TOPIC> open jgraph <style> function

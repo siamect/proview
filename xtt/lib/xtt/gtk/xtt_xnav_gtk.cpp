@@ -286,14 +286,14 @@ XttGe *XNavGtk::xnav_ge_new( const char *name, const char *filename, int scrollb
 			     int navigator, int width, int height, int x, int y, 
 			     double scan_time, const char *object_name, 
 			     int use_default_access, unsigned int access,
-			     unsigned int options,
-			     int (*command_cb) (XttGe *, char *),
+			     unsigned int options, void *basewidget,
+			     int (*command_cb) (XttGe *, char *, void *),
 			     int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 			     int (*is_authorized_cb) (void *, unsigned int))
 {
   return new XttGeGtk( parent_wid, this, name, filename, scrollbar, menu, navigator,
 		       width, height, x, y, scan_time, object_name, use_default_access,
-		       access, options, command_cb, get_current_objects_cb, is_authorized_cb);
+		       access, options, basewidget, command_cb, get_current_objects_cb, is_authorized_cb);
 }
 
 GeCurve *XNavGtk::gecurve_new( char *name, char *filename, GeCurveData *data,

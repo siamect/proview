@@ -66,8 +66,8 @@ class XttGeGtk : public XttGe {
   XttGeGtk( GtkWidget *parent_wid, void *parent_ctx, const char *name, const char *filename,
 	    int scrollbar, int menu, int navigator, int width, int height,
 	    int x, int y, double scan_time, const char *object_name, int use_default_access,
-	    unsigned int access, unsigned int options,
-	    int (*xg_command_cb) (XttGe *, char *),
+	    unsigned int access, unsigned int options, void *basewidget,
+	    int (*xg_command_cb) (XttGe *, char *, void *),
 	    int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 	    int (*xg_is_authorized_cb) (void *, unsigned int));
   ~XttGeGtk();
@@ -76,6 +76,7 @@ class XttGeGtk : public XttGe {
   void set_size( int width, int height);
   void create_confirm_dialog();
   void confirm_reply( int ok);
+  void *get_widget() { return toplevel;}
 
   static void ge_change_value_cb( void *ge_ctx, void *value_object, char *text);
   static void confirm_cb( void *ge_ctx, void *confirm_object, char *text);

@@ -158,7 +158,7 @@ static int xnav_attribute_func (
   ccm_tFloat   	*return_float,
   ccm_tInt     	*return_int,
   char		*return_string);
-static int xnav_ge_command_cb( XttGe *gectx, char *command);
+static int xnav_ge_command_cb( XttGe *gectx, char *command, void *caller);
 static void xnav_ge_close_cb( XttGe *gectx);
 //new code by Jonas Nylund 030131
 static void xnav_hist_close_cb( void *ctx);
@@ -262,7 +262,8 @@ dcli_tCmdTable	xnav_command_table[] = {
 			  "/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", 
 			  "/NAVIGATOR", "/CENTER", "/OBJECT", "/NEW", 
 			  "/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", 
-			  "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/PARENT", "/BYPASS", 
+			  "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/PARENT", "/PWINDOW", 
+			  "/PINSTANCE", "/BYPASS", 
 			  "/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", "/FTYPE", 
 			  "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE", "/ICONIFY", "/HIDE", ""}
 		},
@@ -2528,6 +2529,10 @@ static int	xnav_open_func(	void		*client_data,
     int		parent;
     pwr_tStatus sts;
     unsigned int options = 0;
+    pwr_tFileName pwindow_str;
+    pwr_tAName	pinstance_str;
+    void 	*basewidget = 0;
+      
 
     parent = ODD( dcli_get_qualifier( "/PARENT", 0, 0));
 
@@ -2542,6 +2547,27 @@ static int	xnav_open_func(	void		*client_data,
     if ( ODD( dcli_get_qualifier( "/HIDE", 0, 0)))
       options |= ge_mOptions_Invisible;	   
 
+    if ( ODD( dcli_get_qualifier( "/PWINDOW", pwindow_str, sizeof(pwindow_str)))) {
+      char *pinstance_p = 0;
+      XttGe *gectx;
+
+      if ( cdh_NoCaseStrcmp(pwindow_str, "$current") == 0) {
+	pwr_tFileName name;
+	pwr_tAName inst;
+
+	if ( xnav->appl.find( applist_eType_Graph, xnav->current_gectx, name, inst))
+	  basewidget = ((XttGe *)xnav->current_gectx)->get_widget();
+      }
+      else {
+	if ( ODD( dcli_get_qualifier( "/PINSTANCE", pinstance_str, sizeof(pinstance_str)))) {
+	  pinstance_p = pinstance_str;
+	}
+
+	if ( xnav->appl.find( applist_eType_Graph, pwindow_str, pinstance_p, 
+			      (void **) &gectx))
+	  basewidget = gectx->get_widget();
+      }
+    }
 
     if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str)))) {
       instance_p = instance_str;
@@ -2677,7 +2703,7 @@ static int	xnav_open_func(	void		*client_data,
         use_default_access = 0;
 
       xnav->exec_xttgraph( objid, instance_p, focus_p, inputempty, use_default_access, access,
-			   options);
+			   options, basewidget);
     }
     else {
       pwr_tFileName file_str;
@@ -2700,7 +2726,7 @@ static int	xnav_open_func(	void		*client_data,
         navigator =  ODD( dcli_get_qualifier( "/NAVIGATOR", 0, 0));
 
         xnav->open_graph( "Collect", "_none_", scrollbar, menu, navigator,
-			  0, 0, 0, 0, "collect", NULL, 0, 0, 0, options);
+			  0, 0, 0, 0, "collect", NULL, 0, 0, 0, options, basewidget);
         return XNAV__SUCCESS;
       }
       if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str, sizeof(file_str)))) {
@@ -2834,7 +2860,7 @@ static int	xnav_open_func(	void		*client_data,
 
       xnav->open_graph( name_str, file_str, scrollbar, menu, navigator,
 			width, height, 0, 0, instance_p, focus_p, inputempty,
-			use_default_access, access, options);
+			use_default_access, access, options, basewidget);
       return XNAV__SUCCESS;	
     }
   }
@@ -4235,8 +4261,9 @@ static void xnav_ge_help_cb( XttGe *gectx, const char *key)
     xnav->message( ' ', null_str);
 }
 
-static int xnav_ge_command_cb( XttGe *gectx, char *command)
+static int xnav_ge_command_cb( XttGe *gectx, char *command, void *caller)
 {
+  ((XNav *)gectx->parent_ctx)->current_gectx = caller;
   ((XNav *)gectx->parent_ctx)->command( command);
   return ((XNav *)gectx->parent_ctx)->get_command_sts();
 }
@@ -7586,7 +7613,7 @@ static int xnav_ge_get_current_objects_cb( void *vxnav, pwr_sAttrRef **alist,
 void XNav::open_graph( const char *name, const char *filename, int scrollbar, int menu, 
 	int navigator, int width, int height, int x, int y,
 	const char *object_name, const char *focus_name, int input_focus_empty,
-	int use_default_access, unsigned int access, unsigned int options)
+	int use_default_access, unsigned int access, unsigned int options, void *basewidget)
 {
   XttGe *gectx;
 
@@ -7600,7 +7627,7 @@ void XNav::open_graph( const char *name, const char *filename, int scrollbar, in
   {
     gectx = xnav_ge_new( name, filename, 
 			 scrollbar, menu, navigator, width, height, x, y, gbl.scantime,
-			 object_name, use_default_access, access, options,
+			 object_name, use_default_access, access, options, basewidget,
 			 &xnav_ge_command_cb,
 			 &xnav_ge_get_current_objects_cb, &xnav_ge_is_authorized_cb);
     gectx->close_cb = xnav_ge_close_cb;
@@ -7632,7 +7659,7 @@ void XNav::close_graph( char *filename, char *object_name)
 int XNav::exec_xttgraph( pwr_tObjid xttgraph, char *instance,
 			 char *focus, int inputempty,
 			 int use_default_access, unsigned int access, 
-			 unsigned int options)
+			 unsigned int options, void *basewidget)
 {
   pwr_sClass_XttGraph xttgraph_o;
   char	action[80];
@@ -7678,7 +7705,7 @@ int XNav::exec_xttgraph( pwr_tObjid xttgraph, char *instance,
     open_graph( xttgraph_o.Title, action, scrollbars, 
 	menu, navigator, xttgraph_o.Width,
 	xttgraph_o.Height, xttgraph_o.X, xttgraph_o.Y, instance, 
-		focus, inputempty, use_default_access, access, options);
+		focus, inputempty, use_default_access, access, options, basewidget);
   }
   else if ( (strstr( action, ".class")))
   {

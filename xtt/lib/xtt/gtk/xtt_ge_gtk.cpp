@@ -284,8 +284,8 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
 		    const char *xg_filename, int xg_scrollbar, int xg_menu, int xg_navigator, 
 		    int xg_width, int xg_height, int x, int y, double scan_time, 
 		    const char *object_name, int use_default_access, unsigned int access,
-		    unsigned int options,
-		    int (*xg_command_cb) (XttGe *, char *),
+		    unsigned int options, void *basewidget,
+		    int (*xg_command_cb) (XttGe *, char *, void *),
 		    int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 		    int (*xg_is_authorized_cb) (void *, unsigned int)) :
   XttGe( xg_parent_ctx, xg_name, xg_filename, xg_scrollbar, xg_menu, xg_navigator, xg_width,
@@ -332,6 +332,10 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
   g_signal_connect( toplevel, "focus-in-event", G_CALLBACK(action_inputfocus), this);
 
   CoWowGtk::SetWindowIcon( toplevel);
+
+  if ( basewidget) {
+    gtk_window_set_transient_for(GTK_WINDOW(toplevel), GTK_WINDOW(basewidget));
+  }
 
   if ( xg_menu) {
     GtkAccelGroup *accel_g = (GtkAccelGroup *) g_object_new(GTK_TYPE_ACCEL_GROUP, NULL);

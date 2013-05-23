@@ -360,6 +360,7 @@ class XNav {
     CoLogin		*cologin;
     sevcli_tCtx 	scctx;
     XColWind		*last_xcolwind;
+    void 		*current_gectx;
 
     virtual void set_inputfocus() {}
     virtual void pop() {}
@@ -394,7 +395,8 @@ class XNav {
 				int navigator, int width, int height, int x, int y, 
 				double scan_time, const char *object_name, 
 				int use_default_access, unsigned int access, unsigned int options,
-				int (*xg_command_cb) (XttGe *, char *),
+				void *basewidget,
+				int (*xg_command_cb) (XttGe *, char *, void *),
 				int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 				int (*xg_is_authorized_cb) (void *, unsigned int)) {return 0;}
     virtual GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
@@ -538,11 +540,11 @@ class XNav {
     void open_graph( const char *name, const char *filename, int scrollbar, int menu, 
 	int navigator, int width, int height, int x, int y, const char *object_name,
         const char *focus, int inputempty, int use_default_access, 
-	unsigned int access, unsigned int options);
+	unsigned int access, unsigned int options, void *basewidget);
     void close_graph( char *filename, char *object_name);
     int exec_xttgraph( pwr_tObjid xttgraph, char *instance,
-		       char *focus, int inputempty,
-		       int use_default_access, unsigned int access, unsigned int options);
+		       char *focus, int inputempty, int use_default_access, unsigned int access, 
+		       unsigned int options, void *basewidget);
     void ge_event_exec( int type, char *name, char *instance, void *event, unsigned int size);
     int set_parameter( char *name_str, char *value_str, int bypass);
     void open_rttlog( char *name, char *filename);
