@@ -139,14 +139,14 @@ GrowImage::~GrowImage()
     if ( hot)
       ctx->gdraw->set_cursor( &ctx->mw, glow_eDrawCursor_Normal);
   }
-#if defined IMLIB
+  //#if defined IMLIB
   if ( original_image)
     ctx->gdraw->image_free( original_image);
   if ( image)
     ctx->gdraw->image_free( image);
   if ( pixmap)
     ctx->gdraw->pixmap_free( pixmap);
-#endif
+  //#endif
 }
 
 int GrowImage::insert_image( const char *imagefile)
