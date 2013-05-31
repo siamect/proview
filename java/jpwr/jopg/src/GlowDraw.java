@@ -60,6 +60,9 @@ public class GlowDraw implements GlowDrawIfc {
     }
 
     public void rect(int border, int fill, double x, double y, double width, double height) {
+	if ( nodraw)
+	    return;
+
 	Rectangle2D r = new Rectangle2D.Double(x, y, width, height);
 	g2.setPaint(Color.black);
 	g2.setStroke(new BasicStroke(1));
@@ -111,7 +114,7 @@ public class GlowDraw implements GlowDrawIfc {
 
 	Arc2D a = new Arc2D.Float((float)x, (float)y, (float)width, (float)height, angle1, angle2, Arc2D.OPEN);
 	g2.setPaint(color);
-	g2.setStroke(new BasicStroke(1));
+	g2.setStroke(new BasicStroke(idx+1));
 	g2.draw(a);
     }
 
@@ -177,7 +180,7 @@ public class GlowDraw implements GlowDrawIfc {
 	    dash = new float[] {(float)idx, (float)idx * 4, (float)idx * 8, (float)idx * 4};
 	    break;
 	}
-	if ( dash == null)
+	if ( dash == null || idx == 0)
 	    g2.setStroke(new BasicStroke(idx+1));
 	else
 	    g2.setStroke( new BasicStroke((float)idx, BasicStroke.CAP_BUTT,
@@ -466,7 +469,7 @@ public class GlowDraw implements GlowDrawIfc {
     }
 
     public int set_clip_rectangle( int x1, int y1, int x2, int y2) {
-	g2.setClip(new Rectangle2D.Float((float)x1, (float)y1, (float)x2, (float)y2));
+	g2.setClip(new Rectangle2D.Float((float)x1, (float)y1, (float)(x2-x1), (float)(y2-y1)));
 	return 1;
     }
 

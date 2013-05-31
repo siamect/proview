@@ -50,7 +50,7 @@ import java.awt.event.*;
 import java.awt.*;
 import jpwr.rt.*;
 
-public class JopFrame extends JFrame
+public class JopFrame extends JFrame implements GdhApplIfc
 {
   public JopSession session;
   public JopEngine engine;
@@ -81,7 +81,7 @@ public class JopFrame extends JFrame
   }
 
   private void jbInit() throws Exception {
-    engine = new JopEngine(1000, (Object)this);
+    engine = new JopEngine(1000, this);
     session = new JopSession( engine, (Object) this);
     enableEvents(AWTEvent.WINDOW_EVENT_MASK);
     setDefaultCloseOperation( DISPOSE_ON_CLOSE);
@@ -98,6 +98,10 @@ public class JopFrame extends JFrame
     }
   }
 
+  // GdhApplIfc function
+  public String getPwrHost() {
+    return (String)null;
+  }
 }
 
 

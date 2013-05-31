@@ -48,7 +48,7 @@ import java.awt.event.*;
 import java.net.*;
 import java.applet.*;
 
-public class FlowFrame extends JFrame implements JopUtilityIfc {
+public class FlowFrame extends JFrame implements JopUtilityIfc, GdhApplIfc {
   JScrollPane scrollPane;
   JPanel contentPane;
   JMenuBar menuBar;
@@ -62,7 +62,7 @@ public class FlowFrame extends JFrame implements JopUtilityIfc {
   PwrtObjid utilityObjid;
 
   public FlowFrame( PwrtObjid oid, String center) {
-    engine = new JopEngine( 1000, (Object)this);
+    engine = new JopEngine( 1000, this);
     session = new JopSession( engine, (Object)this);
     session.addUtility( this);
     root = (Object) this;
@@ -351,6 +351,11 @@ public class FlowFrame extends JFrame implements JopUtilityIfc {
     if (e.getID() == WindowEvent.WINDOW_CLOSING) {
       closeFlow();
     }
+  }
+
+  // GdhApplIfc function
+  public String getPwrHost() {
+    return (String)null;
   }
 }
 

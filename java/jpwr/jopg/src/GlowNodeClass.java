@@ -78,7 +78,7 @@ public class GlowNodeClass extends GlowArrayElem {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GlowNodeClass : " + line);
 
 		switch ( key) {
@@ -88,10 +88,10 @@ public class GlowNodeClass extends GlowArrayElem {
 		    nc_name = token.nextToken();
 		    break;
 		case Glow.eSave_NodeClass_a:
-		    GlowVector.open(reader, cmn, a);
+		    cmn.ctx.openVector(reader, cmn, a);
 		    break;
 		case Glow.eSave_NodeClass_group:
-		    group = new Integer(token.nextToken()).intValue();
+		    group = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_arg_cnt:
 		case Glow.eSave_NodeClass_argname:
@@ -99,29 +99,29 @@ public class GlowNodeClass extends GlowArrayElem {
 		case Glow.eSave_NodeClass_no_con_obstacle:
 		    break;
 		case Glow.eSave_NodeClass_dyn_type1:		    
-		    dyn_type1 = new Integer(token.nextToken()).intValue();
+		    dyn_type1 = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_dyn_type2:
-		    dyn_type2 = new Integer(token.nextToken()).intValue();
+		    dyn_type2 = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_dyn_action_type1:
-		    action_type1 = new Integer(token.nextToken()).intValue();
+		    action_type1 = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_dyn_action_type2:
-		    action_type2 = new Integer(token.nextToken()).intValue();
+		    action_type2 = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_dyn_color1:
-		    dyn_color[0] = new Integer(token.nextToken()).intValue();
+		    dyn_color[0] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_dyn_color2:
-		    dyn_color[1] = new Integer(token.nextToken()).intValue();
+		    dyn_color[1] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_dyn_color3:
-		    dyn_color[2] = new Integer(token.nextToken()).intValue();
+		    dyn_color[2] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_dyn_color4:
 		    if ( token.hasMoreTokens())
-			dyn_color[3] = new Integer(token.nextToken()).intValue();
+			dyn_color[3] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_dyn_attr1:
 		    if ( token.hasMoreTokens())
@@ -142,17 +142,17 @@ public class GlowNodeClass extends GlowArrayElem {
 		case Glow.eSave_NodeClass_java_name:
 		    break;
 		case Glow.eSave_NodeClass_slider:
-		    slider = new Integer(token.nextToken()).intValue();
+		    slider = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_next_nodeclass:
 		    if ( token.hasMoreTokens())
 			next_nodeclass = token.nextToken();
 		    break;
 		case Glow.eSave_NodeClass_animation_count:
-		    animation_count = new Integer(token.nextToken()).intValue();
+		    animation_count = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_cycle:
-		    cycle = new Integer(token.nextToken()).intValue();
+		    cycle = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_y0:
 		    y0 = new Double(token.nextToken()).doubleValue();
@@ -167,13 +167,13 @@ public class GlowNodeClass extends GlowArrayElem {
 		    x1 = new Double(token.nextToken()).doubleValue();
 		    break;
 		case Glow.eSave_NodeClass_input_focus_mark:
-		    input_focus_mark = new Integer(token.nextToken()).intValue();
+		    input_focus_mark = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_recursive_trace:
-		    recursive_trace = new Integer(token.nextToken()).intValue();
+		    recursive_trace = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_dynamicsize:
-		    dynamicsize = new Integer(token.nextToken()).intValue();
+		    dynamicsize = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_dynamic:
 		    if ( cmn.dynamicsize > 0) {

@@ -78,7 +78,7 @@ public class JopSpider {
   public JopSpider( int op_qcom_qix) {
     JopSpider.op_qcom_qix = op_qcom_qix;
 
-    engine = new JopEngine( 1000, (Object)null);
+    engine = new JopEngine( 1000, (GdhApplIfc)null);
     session = new JopSession( engine, (Object)this);
 
     // Attatch to qcom
@@ -343,15 +343,23 @@ System.out.println( "qcom put finished");
 		}
 	      }
 	      if ( !classGraph) {
-		if ( ! cli.qualifierFound("cli_arg2")) {
+		if ( cli.qualifierFound("/FILE")) {
+		  frameName = cli.getQualValue("/FILE");
+		  if ( frameName.indexOf(".pwg") == -1)
+		      frameName = frameName + ".pwg";
+		}
+		else if ( cli.qualifierFound("cli_arg2")) {
+		  frameName = cli.getQualValue("cli_arg2").toLowerCase();
+		      
+		  frameName = frameName.substring(0,1).toUpperCase() +
+			  frameName.substring(1);
+		}
+		else {
 		  System.out.println("Syntax error");
 		  return 0;
 		}
-		frameName = cli.getQualValue("cli_arg2").toLowerCase();
-
-		frameName = frameName.substring(0,1).toUpperCase() +
-		    frameName.substring(1);
-		System.out.println( "Open frame " + frameName);
+	      
+	        System.out.println( "Open frame " + frameName);
 	      }
 	      session.openGraphFrame( frameName, instanceValue, scrollbar, classGraph);
 	    }

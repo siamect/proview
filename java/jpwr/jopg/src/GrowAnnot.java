@@ -55,7 +55,7 @@ public class GrowAnnot extends GlowArrayElem {
 
     public GrowAnnot(GrowCmn cmn) {
 	this.cmn = cmn;
-	p = new GlowPoint(cmn);
+	p = new GlowPoint();
 	trf = new GlowTransform();
     }
 
@@ -67,14 +67,14 @@ public class GrowAnnot extends GlowArrayElem {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GrowAnnot : " + line);
 
 		switch ( key) {
 		case Glow.eSave_GrowAnnot: 
 		    break;
 		case Glow.eSave_GrowAnnot_adjustment:
-		    adjustment = new Integer(token.nextToken()).intValue();
+		    adjustment = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowAnnot_annot_part:
 		    glowannot_open(reader);
@@ -107,7 +107,7 @@ public class GrowAnnot extends GlowArrayElem {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GlowAnnot : " + line);
 
 		switch ( key) {
@@ -115,28 +115,28 @@ public class GrowAnnot extends GlowArrayElem {
 		case Glow.eSave_Annot: 
 		    break;
 		case Glow.eSave_Annot_number: 
-		    number = new Integer(token.nextToken()).intValue();
+		    number = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Annot_draw_type: 
-		    draw_type = new Integer(token.nextToken()).intValue();
+		    draw_type = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Annot_color_drawtype:
-		    color_drawtype = new Integer(token.nextToken()).intValue();
+		    color_drawtype = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Annot_text_size:
-		    text_size = new Integer(token.nextToken()).intValue();
+		    text_size = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Annot_display_level:
-		    display_level = new Integer(token.nextToken()).intValue();
+		    display_level = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Annot_p:
 		    p.open( reader);
 		    break;
 		case Glow.eSave_Annot_annot_type:
-		    annot_type = new Integer(token.nextToken()).intValue();
+		    annot_type = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Annot_font:
-		    font = new Integer(token.nextToken()).intValue();
+		    font = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_End:
 		    end_found = true;

@@ -63,14 +63,14 @@ public class GrowSlider extends GrowNode {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GrowSlider : " + line);
 
 		switch ( key) {
 		case Glow.eSave_GrowSlider: 
 		    break;
 		case Glow.eSave_GrowSlider_direction: 
-		    direction = new Integer(token.nextToken()).intValue(); 
+		    direction = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowSlider_max_value: 
 		    max_value = new Double(token.nextToken()).doubleValue(); 

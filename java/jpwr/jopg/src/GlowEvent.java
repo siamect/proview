@@ -41,7 +41,7 @@ public class GlowEvent {
     public int type;
     public double x;
     public double y;
-    public GlowArrayElem object;
+    public Object object;
     public int object_type;
 
     public GlowEvent() {}

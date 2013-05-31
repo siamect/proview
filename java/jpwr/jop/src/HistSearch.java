@@ -56,7 +56,7 @@ import java.applet.Applet;
  *strings.
  */
 
-public class HistSearch extends JFrame implements ActionListener
+public class HistSearch extends JFrame implements ActionListener, GdhApplIfc
 {
         
     public JopEngine engine;
@@ -161,7 +161,7 @@ public class HistSearch extends JFrame implements ActionListener
     
     //Default constructor
     public HistSearch(){
-    engine = new JopEngine( 1000, (Object)this);
+    engine = new JopEngine( 1000, this);
     session = new JopSession( engine, (Object)this);
     root = (Object) this;
     setup();
@@ -744,6 +744,10 @@ public class HistSearch extends JFrame implements ActionListener
     
     }
     
+    // GdhApplIfc function
+    public String getPwrHost() {
+	return (String)null;
+    }
     
     //Testprogram   
     public static void main(String args[]){

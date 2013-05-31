@@ -48,7 +48,7 @@ import java.awt.event.*;
 import java.net.*;
 import java.applet.*;
 
-public class JopOpWindowFrame extends JFrame {
+public class JopOpWindowFrame extends JFrame implements GdhApplIfc {
   JScrollPane scrollPane;
   JPanel contentPane;
   BorderLayout borderLayout1 = new BorderLayout();
@@ -60,7 +60,7 @@ public class JopOpWindowFrame extends JFrame {
   PwrtObjid utilityObjid;
 
   public JopOpWindowFrame() {
-    engine = new JopEngine( 1000, (Object)this);
+    engine = new JopEngine( 1000, this);
     session = new JopSession( engine, (Object)this);
     root = (Object) this;
     localPanel = new JopOpWindow( session, (Object)this);
@@ -97,6 +97,11 @@ public class JopOpWindowFrame extends JFrame {
     if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 	//  System.exit(0);
     }
+  }
+
+  // GdhApplIfc function
+  public String getPwrHost() {
+    return (String)null;
   }
 }
 

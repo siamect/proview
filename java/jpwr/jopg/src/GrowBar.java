@@ -82,7 +82,7 @@ public class GrowBar extends GrowRect {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GrowBar : " + line);
 
 		switch ( key) {
@@ -99,13 +99,13 @@ public class GrowBar extends GrowRect {
 		    bar_value = new Double(token.nextToken()).doubleValue(); 
 		    break;
 		case Glow.eSave_GrowBar_bar_bordercolor: 
-		    bar_bordercolor = new Integer(token.nextToken()).intValue(); 
+		    bar_bordercolor = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowBar_bar_borderwidth: 
-		    bar_borderwidth = new Integer(token.nextToken()).intValue(); 
+		    bar_borderwidth = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowBar_bar_drawtype: 
-		    bar_drawtype = new Integer(token.nextToken()).intValue(); 
+		    bar_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowBar_rect_part: 
 		    super.open( reader);
@@ -151,16 +151,16 @@ public class GrowBar extends GrowRect {
 			trace.data[9] = token.nextToken();			 
 		    break;
 		case Glow.eSave_GrowBar_trace_attr_type: 
-		    trace.attr_type = new Integer(token.nextToken()).intValue(); 
+		    trace.attr_type = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowBar_trace_color: 
-		    trace.color = new Integer(token.nextToken()).intValue(); 
+		    trace.color = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowBar_access:
-		    trace.access = new Integer(token.nextToken()).intValue();
+		    trace.access = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowBar_cycle:
-		    trace.cycle = new Integer(token.nextToken()).intValue();
+		    trace.cycle = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowBar_ref_object:
 		    if ( token.hasMoreTokens())
@@ -188,6 +188,9 @@ public class GrowBar extends GrowRect {
     }    
 
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {
+	if ( cmn.nodraw != 0)
+	    return;
+
 	int idx;
 	int drawtype;
 	double rotation;

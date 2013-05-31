@@ -53,7 +53,7 @@ public class GlowVector {
     try {
       while( (line = reader.readLine()) != null) {
 	token = new StringTokenizer(line);
-	int key = new Integer(token.nextToken()).intValue();
+	int key = Integer.valueOf(token.nextToken());
 	if ( cmn.debug) System.out.println( "GlowVector : " + line);
 
 	switch ( key) {
@@ -78,9 +78,18 @@ public class GlowVector {
 	  cc.open( reader);
 	  a.add( (Object) cc);
 	  break;
+	case Glow.eSave_Con: {
+	  GlowCon c = new GlowCon( cmn);
+	  c.open( reader);
+	  a.add( (Object) c);
+	  break;
+	}
 	case Glow.eSave_GrowNode: {
 	  GrowNode n = new GrowNode( cmn);
 	  n.open( reader);
+	  if ( n.nc == null)
+	      break;
+
 	  a.add( n);
 	  break;
 	}
@@ -96,8 +105,32 @@ public class GlowVector {
 	  a.add( n);
 	  break;
 	}
+	case Glow.eSave_GrowConGlue: {
+	  GrowConGlue n = new GrowConGlue( cmn);
+	  n.open( reader);
+	  a.add( n);
+	  break;
+	}
 	case Glow.eSave_GrowRect: {
 	  GrowRect c = new GrowRect( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
+	case Glow.eSave_Line: {
+	  GlowLine c = new GlowLine( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
+	case Glow.eSave_Arc: {
+	  GlowArc c = new GlowArc( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
+	case Glow.eSave_Arrow: {
+	  GlowArrow c = new GlowArrow( cmn);
 	  c.open( reader);
 	  a.add( c);
 	  break;
@@ -150,8 +183,20 @@ public class GlowVector {
 	  a.add( c);
 	  break;
 	}
+	case Glow.eSave_GrowTable: {
+	  GrowTable c = new GrowTable( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
+	case Glow.eSave_GrowAxis: {
+	  GrowAxis c = new GrowAxis( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
 	case Glow.eSave_Point: {
-	  GlowPoint c = new GlowPoint( cmn);
+	  GlowPoint c = new GlowPoint();
 	  c.open( reader);
 	  a.add( c);
 	  break;

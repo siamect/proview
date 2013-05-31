@@ -1006,9 +1006,10 @@ sub build_all ()
   elsif ( $module eq "java") {
     if ( $lib == 1) {
       _build("jpwr", "rt", "src", "all");
+      _build("jpwr", "jopg", "src", "all");
       _build("jpwr", "jop", "src", "all");
-      _build("jpwr", "jopc", "src", "all");
-      _build("jpwr", "beans", "src", "all");
+#      _build("jpwr", "jopc", "src", "all");
+#      _build("jpwr", "beans", "src", "all");
       _build("jpwr", "rt_client", "src", "all");
     }
     if ( $exe == 1) {

@@ -92,7 +92,7 @@ public class JopSpiderFrame {
     catch(Exception e) {
       e.printStackTrace();
     }
-    new Gdh( (Object)null);
+    new Gdh( (GdhApplIfc)null);
     new JopSpiderFrame("Frame");
   }
 

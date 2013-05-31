@@ -47,6 +47,7 @@ public class Glow {
     public static final int DRAW_FONT_SIZE		= 9;
     public static final int DRAWOFFSET			= 2;
     public static final int TREND_MAX_CURVES 		= 11;
+    public static final int TABLE_MAX_COL 		= 30;
 
     public static final int eType_Boolean		= 0;
     public static final int eType_Int			= 1;
@@ -186,17 +187,16 @@ public class Glow {
     public static final int eConType_Straight		= 0;
     public static final int eConType_Fixed		= 1;
     public static final int eConType_AllFixed		= 2;
+    public static final int eConType_Routed		= 3;
+    public static final int eConType_StepDiv		= 4;
+    public static final int eConType_StepConv		= 5;
+    public static final int eConType_TransDiv		= 6;
+    public static final int eConType_TransConv		= 7;
+    public static final int eConType_StraightOneArrow  	= 8;
+    public static final int eConType_Reference		= 9;
 
-    public static final int eConType_Routed		= 0;
-    public static final int eConType_StepDiv		= 1;
-    public static final int eConType_StepConv		= 2;
-    public static final int eConType_TransDiv		= 3;
-    public static final int eConType_TransConv		= 4;
-    public static final int eConType_StraightOneArrow  	= 5;
-    public static final int eConType_Reference		= 6;
-
-    public static final int eCorner_Rounded		= 7;
-    public static final int eCorner_Right		= 8;
+    public static final int eCorner_Rounded		= 0;
+    public static final int eCorner_Right		= 1;
 
     public static final int eVisible_Full		= 0;
     public static final int eVisible_Partial		= 1;

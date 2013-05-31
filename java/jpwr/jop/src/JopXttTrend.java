@@ -50,7 +50,7 @@ import javax.swing.Timer;
 import java.net.URL;
 import jpwr.rt.*;
 
-public class JopXttTrend implements ActionListener, JopCurveIfc {
+public class JopXttTrend implements ActionListener, JopCurveIfc, GdhApplIfc {
     public static final int XTT_TREND_MAX = 20;
 
     JopSession session;
@@ -109,7 +109,7 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
     }
 
     public JopXttTrend( String[] trendList) {
-	engine = new JopEngine( 1000, (Object)this);
+	engine = new JopEngine( 1000, this);
 	session = new JopSession( engine, (Object)this);
 
 	init( trendList);
@@ -663,6 +663,10 @@ public class JopXttTrend implements ActionListener, JopCurveIfc {
 	}
     }
 
+    // GdhApplIfc function
+    public String getPwrHost() {
+	return (String)null;
+    }
 
     public static void main(String[] args)
     {

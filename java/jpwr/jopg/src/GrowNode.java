@@ -39,24 +39,26 @@ import jpwr.rt.*;
 import java.io.*;
 import java.util.*;
 
-public class GrowNode extends GlowArrayElem {
+public class GrowNode extends GlowArrayElem implements GlowColorNode {
     public static final int MAX_CONPOINTS = 32;
     
     public int original_border_drawtype;
     public int border_drawtype;
     public int original_fill_drawtype;
+    public int original_text_drawtype;
+    public int original_color_tone;
+    public int original_color_lightness;
+    public int original_color_intensity;
+    public int original_color_shift;
+    public int color_inverse;
+    public int color_lightness;
+    public int color_intensity;
+    public int color_shift;
+    public int color_tone;
     public int fill_drawtype;
     public int text_drawtype;
-    public int original_text_drawtype;
     public int draw_type;
-    public int original_color_tone;
-    public int color_tone;
-    public int original_color_lightness;
-    public int color_lightness;
-    public int original_color_intensity;
-    public int color_intensity;
-    public int original_color_shift;
-    public int color_shift;
+    public int dimmed;
     public int invisible;
     int flip_horizontal;
     int flip_vertical;
@@ -85,11 +87,9 @@ public class GrowNode extends GlowArrayElem {
     String ref_object;
     Object userdata;
 
-    public int dimmed;
     public int visible;
     public int highlight;
     public int hot;
-    public int color_inverse;
     public int input_selected;
     public int annotv_inputmode[] = new int[10];
     public double fill_level = 1;
@@ -101,7 +101,7 @@ public class GrowNode extends GlowArrayElem {
 
     public GrowNode(GrowCmn cmn) {
 	this.cmn = cmn;
-	pos = new GlowPoint(cmn);
+	pos = new GlowPoint();
 	visible = 1;
     }
 
@@ -117,65 +117,65 @@ public class GrowNode extends GlowArrayElem {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GrowNode : " + line);
 
 		switch ( key) {
 		case Glow.eSave_GrowNode: 
 		    break;
 		case Glow.eSave_GrowNode_original_border_drawtype: 
-		    original_border_drawtype = new Integer(token.nextToken()).intValue(); 
+		    original_border_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_original_fill_drawtype: 
-		    original_fill_drawtype = new Integer(token.nextToken()).intValue(); 
+		    original_fill_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_fill_drawtype: 
-		    fill_drawtype = new Integer(token.nextToken()).intValue(); 
+		    fill_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_text_drawtype: 
-		    text_drawtype = new Integer(token.nextToken()).intValue(); 
+		    text_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_original_text_drawtype: 
-		    original_text_drawtype = new Integer(token.nextToken()).intValue(); 
+		    original_text_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_draw_type: 
-		    draw_type = new Integer(token.nextToken()).intValue(); 
+		    draw_type = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_original_color_tone: 
-		    original_color_tone = new Integer(token.nextToken()).intValue(); 
+		    original_color_tone = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_color_tone: 
-		    color_tone = new Integer(token.nextToken()).intValue(); 
+		    color_tone = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_original_color_lightness: 
-		    original_color_lightness = new Integer(token.nextToken()).intValue(); 
+		    original_color_lightness = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_color_lightness: 
-		    color_lightness = new Integer(token.nextToken()).intValue(); 
+		    color_lightness = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_original_color_intensity: 
-		    original_color_intensity = new Integer(token.nextToken()).intValue(); 
+		    original_color_intensity = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_color_intensity: 
-		    color_intensity = new Integer(token.nextToken()).intValue(); 
+		    color_intensity = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_original_color_shift: 
-		    original_color_shift = new Integer(token.nextToken()).intValue(); 
+		    original_color_shift = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_color_shift: 
-		    color_shift = new Integer(token.nextToken()).intValue(); 
+		    color_shift = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_invisible: 
-		    invisible = new Integer(token.nextToken()).intValue(); 
+		    invisible = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_flip_horizontal: 
-		    flip_horizontal = new Integer(token.nextToken()).intValue(); 
+		    flip_horizontal = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_flip_vertical: 
-		    flip_vertical = new Integer(token.nextToken()).intValue(); 
+		    flip_vertical = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_dynamicsize:
-		    dynamicsize = new Integer(token.nextToken()).intValue();
+		    dynamicsize = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowNode_dynamic:
 		    if ( dynamicsize > 0) {
@@ -190,7 +190,7 @@ public class GrowNode extends GlowArrayElem {
 		    trf.open( reader);
 		    break;
 		case Glow.eSave_GrowNode_arg_cnt:
-		    arg_cnt = new Integer(token.nextToken()).intValue();
+		    arg_cnt = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowNode_argsize:
 		    for ( int j = 0; j < arg_cnt; j++) 
@@ -201,19 +201,19 @@ public class GrowNode extends GlowArrayElem {
 			reader.readLine();
 		    break;
 		case Glow.eSave_GrowNode_line_width: 
-		    line_width = new Integer(token.nextToken()).intValue(); 
+		    line_width = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_shadow: 
-		    shadow = new Integer(token.nextToken()).intValue(); 
+		    shadow = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_gradient:
-		    gradient = new Integer(token.nextToken()).intValue();
+		    gradient = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowNode_text_type:
-		    text_type = new Integer(token.nextToken()).intValue();
+		    text_type = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowNode_text_font:
-		    text_font = new Integer(token.nextToken()).intValue();
+		    text_font = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowNode_userdata_cb:
 		    if ( cmn.appl != null)
@@ -243,7 +243,7 @@ public class GrowNode extends GlowArrayElem {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GlowNode : " + line);
 
 		switch ( key) {
@@ -254,6 +254,8 @@ public class GrowNode extends GlowArrayElem {
 		    nc_name = token.nextToken();
 		    nc = (GlowNodeClass)cmn.ctx.get_nodeclass_from_name( nc_name);
 		    nc_root = nc;
+		    if ( nc == null)
+			System.out.println( "GlowNode : " + line + ", node class not found: " + nc_name);
 		    break;
 		case Glow.eSave_Node_n_name:
 		    if ( token.hasMoreTokens())
@@ -284,7 +286,7 @@ public class GrowNode extends GlowArrayElem {
 		    for ( int i = 0; i < 10; i++) {
 			line = reader.readLine();
 			token = new StringTokenizer(line);
-			annotsize[i] = new Integer(token.nextToken()).intValue();
+			annotsize[i] = Integer.valueOf(token.nextToken());
 			if (cmn.debug)
 			    System.out.println("GlowNode  annotsize: " + annotsize[i]);
 		    }
@@ -317,10 +319,10 @@ public class GrowNode extends GlowArrayElem {
 		case Glow.eSave_Node_trace_color2: 
 		    break;
 		case Glow.eSave_Node_access:
-		    access = new Integer(token.nextToken()).intValue();
+		    access = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Node_cycle:
-		    cycle = new Integer(token.nextToken()).intValue();
+		    cycle = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Node_ref_object:
 		    if ( token.hasMoreTokens())
@@ -357,7 +359,7 @@ public class GrowNode extends GlowArrayElem {
 	sts = nc.eventHandler(event, rp.x, rp.y);
 	if ( sts != 0) {
 	    System.out.println( "Hit in node " + sts);
-	    if ( type() != Glow.eObjectType_GrowGroup)
+	    if ( !(type() == Glow.eObjectType_GrowGroup && cmn.callback_object != null))
 		cmn.ctx.register_callback_object(Glow.eObjectType_Node, this);
 	    return sts;
 	}
@@ -378,6 +380,8 @@ public class GrowNode extends GlowArrayElem {
 	    draw(null, highlight, hot, null, null);
     }
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {
+	if ( cmn.nodraw != 0)
+	    return;
 
 	if ( node == null)
 	    node = this;
@@ -465,7 +469,7 @@ public class GrowNode extends GlowArrayElem {
 		nc.draw( trf, highlight, hot, node, node);
 	    if ( (clip_sts & 1) != 0)
 		cmn.gdraw.reset_clip_rectangle();
-	    
+
 	    switch ( level_direction) {
 	    case Glow.eDirection_Right:
 		if ( level_color_tone != Glow.eDrawTone_No) {
@@ -547,6 +551,7 @@ public class GrowNode extends GlowArrayElem {
 	return nc.dyn_color[1];
     }
     public int getClassDynType1() {
+	System.out.println("GrowNode getClassDynType1 nc : "  + nc);
 	return nc.dyn_type1;
     }
     public int getClassDynType2() {
@@ -886,8 +891,9 @@ public class GrowNode extends GlowArrayElem {
 		      y_high * cmn.mw.zoom_factor_y - cmn.mw.offset_y + Glow.DRAW_MP);
     }
 
-    public int get_background_object_limits(GlowTransform t, int type, double x, double y, GlowBackgroundObject b) {
+    public int get_background_object_limits(GlowTransform t, int type, double x, double y, Object bo) {
 	int dyn_type;
+	GlowBackgroundObject b = (GlowBackgroundObject)bo;
 	GlowNodeClass base_nc = nc.get_base_nc();
 	dyn_type = base_nc.dyn_type1;
 
@@ -954,10 +960,39 @@ public class GrowNode extends GlowArrayElem {
 		b.min = x1;
 		b.max = x2;
 	    }
-	    b.background = this;
+	    ((GlowBackgroundObject)b).background = this;
 	    System.out.println("Background limits (" + g.ll_x + "," + g.ll_y + ") (" + g.ur_x + "," + g.ur_y + ") rot " + rotation);
 	    return 1;
 	}
 	return 0;
     }
+
+    public int getColorInverse() {
+	return color_inverse;
+    }
+    public int getColorLightness(){
+	return color_lightness;
+    }
+    public int getColorIntensity(){
+	return color_intensity;
+    }
+    public int getColorShift(){
+	return color_shift;
+    }
+    public int getColorTone(){
+	return color_tone;
+    }
+    public int getFillDrawtype(){
+	return fill_drawtype;
+    }
+    public int getTextDrawtype(){
+	return text_drawtype;
+    }
+    public int getDrawtype(){
+	return draw_type;
+    }
+    public int getDimmed(){
+	return dimmed;
+    }
+
 }

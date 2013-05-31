@@ -67,7 +67,7 @@ public class JopEngine implements ActionListener {
   boolean closingDown = false;
   String instance = null;
    
-  public JopEngine( int scantime, Object root) {
+  public JopEngine( int scantime, GdhApplIfc root) {
     scanTime = scantime;
     animationScanTime = scantime;
     //updateVector = new Vector<Object>( 50, 50);

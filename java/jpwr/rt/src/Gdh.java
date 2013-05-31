@@ -58,7 +58,7 @@ public class Gdh {
   private static int currentPrivilege = Pwr.mAccess_AllPwr;
 
 
-  public Gdh( Object root) {
+  public Gdh( GdhApplIfc root) {
 
     if ( !initDone) {
       init();

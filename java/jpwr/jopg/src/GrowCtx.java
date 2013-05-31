@@ -42,7 +42,7 @@ import jpwr.rt.*;
 
 
 public class GrowCtx implements GrowCtxIfc {
-    GrowCmn cmn;
+    public GrowCmn cmn;
     String name;
     boolean sliderActive;
     GrowSlider sliderObject;
@@ -69,7 +69,7 @@ public class GrowCtx implements GrowCtxIfc {
 		     continue;
 
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GlowCtx : " + line);
 
 		System.out.println("GrowCtx key: " + key);
@@ -87,10 +87,10 @@ public class GrowCtx implements GrowCtxIfc {
 		    cmn.mw.base_zoom_factor = new Double(token.nextToken()).doubleValue();
 		    break;
 		case Glow.eSave_Ctx_offset_x: 
-		    cmn.mw.offset_x = new Integer(token.nextToken()).intValue();
+		    cmn.mw.offset_x = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Ctx_offset_y: 
-		    cmn.mw.offset_y = new Integer(token.nextToken()).intValue();
+		    cmn.mw.offset_y = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Ctx_nav_zoom_factor_x: 
 		case Glow.eSave_Ctx_nav_zoom_factor_y: 
@@ -130,10 +130,10 @@ public class GrowCtx implements GrowCtxIfc {
 		case Glow.eSave_Ctx_refcon_linewidth: 
 		    break;
 		case Glow.eSave_Ctx_version: 
-		    cmn.version = new Integer(token.nextToken()).intValue();
+		    cmn.version = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Ctx_hot_indication: 
-		    cmn.hot_indication = new Integer(token.nextToken()).intValue();
+		    cmn.hot_indication = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Ctx_tiptext_size: 
 		    break;
@@ -195,7 +195,7 @@ public class GrowCtx implements GrowCtxIfc {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GrowCtx : " + line);
 
 		switch ( key) {
@@ -207,10 +207,10 @@ public class GrowCtx implements GrowCtxIfc {
 		    cmn.name = token.nextToken();
 		    break;
 		case Glow.eSave_GrowCtx_background_color: 
-		    cmn.background_color = new Integer(token.nextToken()).intValue();
+		    cmn.background_color = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_dynamicsize: 
-		    cmn.dynamicsize = new Integer(token.nextToken()).intValue();
+		    cmn.dynamicsize = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_dynamic:
 		    if ( cmn.dynamicsize > 0) {
@@ -219,7 +219,7 @@ public class GrowCtx implements GrowCtxIfc {
 		    }
 		    break;
 		case Glow.eSave_GrowCtx_arg_cnt: 
-		    cmn.arg_cnt = new Integer(token.nextToken()).intValue();
+		    cmn.arg_cnt = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_argname:
 		    for ( int i = 0; i < cmn.arg_cnt; i++)
@@ -227,7 +227,7 @@ public class GrowCtx implements GrowCtxIfc {
 		    break;
 		case Glow.eSave_GrowCtx_argtype:
 		    for ( int i = 0; i < cmn.arg_cnt; i++)
-			cmn.argtype[i] = new Integer(token.nextToken()).intValue();
+			cmn.argtype[i] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_x0: 
 		    cmn.x0 = new Double(token.nextToken()).doubleValue();
@@ -245,55 +245,55 @@ public class GrowCtx implements GrowCtxIfc {
 		    end_found = true; 
 		    break;
 		case Glow.eSave_GrowCtx_path_cnt: 
-		    cmn.path_cnt = new Integer(token.nextToken()).intValue();
+		    cmn.path_cnt = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_path:
 		    for ( int i = 0; i < cmn.path_cnt; i++)
 			cmn.path[i] = reader.readLine();
 		    break;
 		case Glow.eSave_GrowCtx_dyn_type1: 
-		    cmn.dyn_type1 = new Integer(token.nextToken()).intValue();
+		    cmn.dyn_type1 = Integer.valueOf(token.nextToken());
 		    break; 
 		case Glow.eSave_GrowCtx_dyn_type2: 
-		    cmn.dyn_type2 = new Integer(token.nextToken()).intValue();
+		    cmn.dyn_type2 = Integer.valueOf(token.nextToken());
 		    break; 
 		case Glow.eSave_GrowCtx_dyn_action_type1: 
-		    cmn.dyn_action_type1 = new Integer(token.nextToken()).intValue();
+		    cmn.dyn_action_type1 = Integer.valueOf(token.nextToken());
 		    break; 
 		case Glow.eSave_GrowCtx_dyn_action_type2: 
-		    cmn.dyn_action_type2 = new Integer(token.nextToken()).intValue();
+		    cmn.dyn_action_type2 = Integer.valueOf(token.nextToken());
 		    break; 
 		case Glow.eSave_GrowCtx_dyn_color1:
-		    cmn.dyn_color[0] = new Integer(token.nextToken()).intValue();
+		    cmn.dyn_color[0] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_dyn_color2:
-		    cmn.dyn_color[1] = new Integer(token.nextToken()).intValue();
+		    cmn.dyn_color[1] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_dyn_color3:
-		    cmn.dyn_color[2] = new Integer(token.nextToken()).intValue();
+		    cmn.dyn_color[2] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_dyn_color4:
-		    cmn.dyn_color[3] = new Integer(token.nextToken()).intValue();
+		    cmn.dyn_color[3] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_dyn_attr1: 
-		    cmn.dyn_attr[0] = new Integer(token.nextToken()).intValue();
+		    cmn.dyn_attr[0] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_dyn_attr2: 
-		    cmn.dyn_attr[1] = new Integer(token.nextToken()).intValue();
+		    cmn.dyn_attr[1] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_dyn_attr3: 
-		    cmn.dyn_attr[2] = new Integer(token.nextToken()).intValue();
+		    cmn.dyn_attr[2] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_dyn_attr4: 
-		    cmn.dyn_attr[3] = new Integer(token.nextToken()).intValue();
+		    cmn.dyn_attr[3] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_no_con_obstacle: 
 		    break;
 		case Glow.eSave_GrowCtx_slider: 
-		    cmn.slider = new Integer(token.nextToken()).intValue(); 
+		    cmn.slider = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowCtx_subgraph: 
-		    cmn.subgraph = new Integer(token.nextToken()).intValue(); 
+		    cmn.subgraph = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowCtx_java_name:
 		case Glow.eSave_GrowCtx_is_javaapplet: 
@@ -311,32 +311,32 @@ public class GrowCtx implements GrowCtxIfc {
 		    cmn.animation_scantime = new Double(token.nextToken()).doubleValue(); 
 		    break;
 		case Glow.eSave_GrowCtx_java_width: 
-		    cmn.java_width = new Integer(token.nextToken()).intValue(); 
+		    cmn.java_width = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowCtx_background_image:
 		    if ( token.hasMoreTokens())
 			cmn.background_image = token.nextToken();
 		    break;
 		case Glow.eSave_GrowCtx_background_tiled: 
-		    cmn.background_tiled = new Integer(token.nextToken()).intValue(); 
+		    cmn.background_tiled = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowCtx_double_buffered: 
-		    cmn.double_buffered = new Integer(token.nextToken()).intValue(); 
+		    cmn.double_buffered = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowCtx_cycle:
-		    cmn.cycle = new Integer(token.nextToken()).intValue();
+		    cmn.cycle = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_mb3_action: 
-		    cmn.mb3_action = new Integer(token.nextToken()).intValue();
+		    cmn.mb3_action = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_translate_on: 
-		    cmn.translate_on = new Integer(token.nextToken()).intValue();
+		    cmn.translate_on = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_input_focus_mark: 
-		    cmn.input_focus_mark = new Integer(token.nextToken()).intValue();
+		    cmn.input_focus_mark = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_recursive_trace:
-		    cmn.recursive_trace = new Integer(token.nextToken()).intValue();
+		    cmn.recursive_trace = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowCtx_userdata_cb:
 		    if ( cmn.appl != null)
@@ -361,14 +361,24 @@ public class GrowCtx implements GrowCtxIfc {
 
     public void draw() {
 	for ( int i = 0; i < cmn.a.size(); i++) {
-	    ((GlowArrayElem)cmn.a.get(i)).draw();
+	    if ( ((GlowArrayElem)cmn.a.get(i)).type() == Glow.eObjectType_Con)
+		((GlowArrayElem)cmn.a.get(i)).draw();
+	}
+	for ( int i = 0; i < cmn.a.size(); i++) {
+	    if ( ((GlowArrayElem)cmn.a.get(i)).type() != Glow.eObjectType_Con)
+		((GlowArrayElem)cmn.a.get(i)).draw();
 	}
     }
 
     public void draw( double ll_x, double ll_y, double ur_x, double ur_y) {
 	// TODO
 	for ( int i = 0; i < cmn.a.size(); i++) {
-	    ((GlowArrayElem)cmn.a.get(i)).draw();
+	    if ( ((GlowArrayElem)cmn.a.get(i)).type() == Glow.eObjectType_Con)
+		((GlowArrayElem)cmn.a.get(i)).draw();
+	}
+	for ( int i = 0; i < cmn.a.size(); i++) {
+	    if ( ((GlowArrayElem)cmn.a.get(i)).type() != Glow.eObjectType_Con)
+		((GlowArrayElem)cmn.a.get(i)).draw();
 	}
     }
 
@@ -411,7 +421,7 @@ public class GrowCtx implements GrowCtxIfc {
 
 	switch ( e.event) {
 	case Glow.eEvent_MB1Down:
-	    if ( sts == 1 && cmn.callback_object.type() == Glow.eObjectType_GrowSlider) {
+	    if ( sts == 1 && cmn.callback_object != null && cmn.callback_object.type() == Glow.eObjectType_GrowSlider) {
 		System.out.println("Slider start");
 		sliderActive = true;
 		sliderObject = (GrowSlider)cmn.callback_object;
@@ -577,7 +587,9 @@ public class GrowCtx implements GrowCtxIfc {
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowGroup ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowBar ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowTrend ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowTable ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider) {
+		System.out.println("GrowCtx connect " + i + " (" + cmn.a.size() + ") " + cmn.a.get(i));
 		cmn.appl.traceConnect(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {
@@ -600,6 +612,7 @@ public class GrowCtx implements GrowCtxIfc {
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowGroup ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowBar ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowTrend ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowTable ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider) {
 		cmn.appl.traceDisconnect(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
@@ -621,8 +634,9 @@ public class GrowCtx implements GrowCtxIfc {
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowGroup ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowBar ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowTrend ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowTable ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider) {
-		cmn.appl.traceScan(cmn.a.get(i));
+	    	cmn.appl.traceScan(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {
 			if ( ((GrowNode)cmn.a.get(i)).nc.a.get(j).type() == Glow.eObjectType_GrowNode ||
@@ -640,6 +654,24 @@ public class GrowCtx implements GrowCtxIfc {
 	for ( int i = 0; i < cmn.a_nc.size(); i++) {
 	    if ( name.equals(((GlowNodeClass)cmn.a_nc.get(i)).nc_name))
 		return (GlowNodeClass)cmn.a_nc.get(i);
+	}   
+	return null;
+    }
+
+    public GlowArrayElem get_conclass_from_name(String name) {
+	for ( int i = 0; i < cmn.a_cc.size(); i++) {
+	    if ( name.equals(((GlowConClass)cmn.a_cc.get(i)).cc_name))
+		return (GlowConClass)cmn.a_cc.get(i);
+	}   
+	return null;
+    }
+
+    public GlowArrayElem get_node_from_name(String name) {
+	for ( int i = 0; i < cmn.a.size(); i++) {
+	    if ( cmn.a.get(i).type() == Glow.eObjectType_GrowNode) {
+		if ( name.equals(((GrowNode)cmn.a.get(i)).n_name))
+		    return (GrowNode)cmn.a.get(i);
+	    }
 	}   
 	return null;
     }
@@ -689,6 +721,21 @@ public class GrowCtx implements GrowCtxIfc {
 	cmn.restriction_max_limit = max_limit;
 	cmn.restriction_min_limit = min_limit;
 	cmn.restriction_object = object;
+    }
+    
+    public void zoom( double factor) { 
+      if ( Math.abs(factor) < Double.MIN_VALUE)
+        return;
+
+      cmn.mw.zoom_factor_x *= factor;
+      cmn.mw.zoom_factor_y *= factor;
+      // cmn.mw.offset_x = (int)( (cmn.mw.offset_x - cmn.mw.window_width / 2.0 * ( 1.0/factor - 1)) * factor);
+      // cmn.mw.offset_y = (int)( (cmn.mw.offset_y  - cmn.mw.window_height / 2.0 * ( 1.0/factor - 1)) * factor);
+      draw();
+    }
+
+    public void openVector( BufferedReader reader, Object cmn, Vector a) {
+	GlowVector.open(reader, (GrowCmn)cmn, a);
     }
 
 }

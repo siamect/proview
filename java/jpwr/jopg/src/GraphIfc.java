@@ -44,6 +44,8 @@ public interface GraphIfc {
     public static final int eDatabase_Local 	= 2;
     public static final int eDatabase_Ccm 	= 3;
 
+    public static final int eType_Bit 		= (1 << 15) + 1;
+
     public DynParsedAttrName parseAttrName( String name);    
     public Gdh getGdh();
     public GraphLocalDb getLdb();

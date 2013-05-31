@@ -59,8 +59,7 @@ import java.awt.event.*;
  *@author     JN3920
  *@created    November 12, 2002
  */
-public class MhFrame extends JFrame
-{
+public class MhFrame extends JFrame implements GdhApplIfc {
   JopSession session;
   JopEngine engine;
   XttTree xttTree;
@@ -114,7 +113,7 @@ public class MhFrame extends JFrame
 
   public MhFrame()
   {
-    engine = new JopEngine( 1000, (Object)this);
+    engine = new JopEngine( 1000, this);
     session = new JopSession( engine, (Object)this);
     root = (Object) this;
     init();
@@ -191,6 +190,11 @@ public class MhFrame extends JFrame
     */
     this.labelMessage.setText(mess);
   }
+
+  public String getPwrHost() {
+    return new String("");
+  }
+
   public static void main(String[] args)
   {
     boolean debug = false;

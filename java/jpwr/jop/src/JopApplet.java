@@ -49,9 +49,10 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.applet.*;
+import java.net.*;
 import jpwr.rt.*;
 
-public class JopApplet extends JApplet
+public class JopApplet extends JApplet implements GdhApplIfc
 {
   public JopSession session;
   public JopEngine engine;
@@ -66,7 +67,7 @@ public class JopApplet extends JApplet
     pwrHost = getParameter( "pwrhost");
     System.out.println( "Parameter pwrhost: " + pwrHost);
 
-    engine = new JopEngine(1000, (Object)this);
+    engine = new JopEngine(1000, this);
     session = new JopSession( engine, (Object)this);
     if ( instance != null && instance.length() != 0) {
       // Substitutes for едц because of mozilla...
@@ -93,6 +94,10 @@ public class JopApplet extends JApplet
     return null;
   }
   public String getPwrHost() {
+    if ( pwrHost == null) {
+      URL url = getDocumentBase();
+      pwrHost = url.getHost();
+    }
     return pwrHost;
   }
 }

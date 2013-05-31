@@ -85,6 +85,9 @@ public class GrowMenu extends GrowRect {
     }
 
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {
+	if ( cmn.nodraw != 0)
+	    return;
+
 	int idx;
 	int text_idx = (int)( trf.vertical_scale(t) * cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * (text_size +4) - 4);
 	double tsize =  trf.vertical_scale(t) * cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * (8+2*text_size);

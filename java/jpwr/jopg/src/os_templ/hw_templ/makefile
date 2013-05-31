@@ -9,28 +9,35 @@ local_java_sources := \
 	GlowPointX.java,\
 	GlowDimension.java,\
 	GlowSliderInfo.java,\
-	GlowBackgroundObject.java,\
+	GlowTableInfo.java,\
 	GlowMenuInfo.java,\
+	GlowPoint.java,\
+	GlowTransform.java,\
+	GlowEvent.java,\
+	GlowArrayElem.java,\
 	GrowApplIfc.java,\
+	GlowColorNode.java,\
 	GlowColorRgb.java,\
 	GlowColor.java,\
 	GlowDrawIfc.java,\
 	GlowDraw.java,\
-	GlowArrayElem.java,\
-	GlowEvent.java,\
+	GlowBackgroundObject.java,\
 	GlowEventMenu.java,\
 	GrowCtxIfc.java,\
 	GrowCmn.java,\
-	GlowTransform.java,\
-	GlowPoint.java,\
 	GlowNodeClass.java,\
 	GlowNodeGroup.java,\
 	GlowConClass.java,\
 	GlowConPoint.java,\
 	GrowNode.java,\
+	GlowLine.java,\
+	GlowArc.java,\
+	GlowArrow.java,\
+	GlowCon.java,\
+	GrowRect.java,\
 	GrowGroup.java,\
 	GrowSlider.java,\
-	GrowRect.java,\
+	GrowAxis.java,\
 	GrowArc.java,\
 	GrowLine.java,\
 	GrowPolyline.java,\
@@ -39,6 +46,10 @@ local_java_sources := \
 	GrowMenu.java,\
 	GrowBar.java,\
 	GrowTrend.java,\
+	GrowScrollBarIfc.java,\
+	GrowScrollBar.java,\
+	GrowTable.java,\
+	GrowConGlue.java,\
 	GlowVector.java,\
 	GrowCtx.java,\
 	DynParsedAttrName.java,\

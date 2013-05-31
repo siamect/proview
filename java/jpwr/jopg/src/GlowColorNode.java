@@ -35,26 +35,20 @@
  */
 
 package jpwr.jopg;
-import java.util.*;
+import jpwr.rt.*;
 import java.io.*;
+import java.util.*;
 
+public interface GlowColorNode {
+    
+    public int getColorInverse();
+    public int getColorLightness();
+    public int getColorIntensity();
+    public int getColorShift();
+    public int getColorTone();
+    public int getFillDrawtype();
+    public int getTextDrawtype();
+    public int getDrawtype();
+    public int getDimmed();
 
-public interface GrowCtxIfc {
-    public GlowArrayElem get_nodeclass_from_name(String name);
-    public GlowArrayElem get_conclass_from_name(String name);
-    public GlowArrayElem get_node_from_name(String name);
-    public GlowArrayElem get_object_group( GlowArrayElem object);
-    public void draw();
-    public void draw( double ll_x, double ll_y, double ur_x, double ur_y);
-    public void register_callback_object(int type, GlowArrayElem o);
-    public int send_menu_callback( GlowArrayElem object, int item, int type,
-				   double x, double y);
-    public void insert(GlowArrayElem e);
-    public void remove(GlowArrayElem e);
-    public void pop(GlowArrayElem e);
-    public Vector<GlowArrayElem> get_object_list();
-    public GlowBackgroundObject getBackgroundObjectLimits(int type, double x, double y);
-    public void setMoveRestrictions( int restriction, double max_limit, double min_limit, GlowArrayElem object);
-    public void zoom( double factor);
-    public void openVector( BufferedReader reader, Object cmn, Vector a);
 }

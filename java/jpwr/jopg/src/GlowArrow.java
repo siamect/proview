@@ -39,80 +39,85 @@ import jpwr.rt.*;
 import java.io.*;
 import java.util.*;
 
-public class GlowConClass extends GlowArrayElem {
+public class GlowArrow extends GlowArrayElem {
     GrowCmn cmn;
-    String cc_name;
-    int con_type;
-    int corner;
+    GlowPoint p1;
+    GlowPoint p2;
+    GlowPoint p_dest;
     int draw_type;
-    int	 line_width;
+    int line_width;
     double arrow_width;
     double arrow_length;
-    double round_corner_amount;
-    int group;
 
-    public GlowConClass(GrowCmn cmn) {
+    public GlowArrow(GrowCmn cmn) {
 	this.cmn = cmn;
+	p1 = new GlowPoint();
+	p2 = new GlowPoint();
+	p_dest = new GlowPoint();
+    }
+
+    public int type() {
+	return Glow.eObjectType_Arrow;
     }
 
     public void open(BufferedReader reader) {
 	String line;
 	StringTokenizer token;
 	boolean end_found = false;
-	String name;
-	int i;
 
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
 		int key = Integer.valueOf(token.nextToken());
-		if ( cmn.debug) System.out.println( "GlowConClass : " + line);
+		if ( cmn.debug) System.out.println( "GlowÄrrow : " + line);
 
 		switch ( key) {
-		case Glow.eSave_ConClass: 
-		    break;
 
-		case Glow.eSave_ConClass_cc_name: 
-		    if ( token.hasMoreTokens())
-			cc_name = token.nextToken();
+		case Glow.eSave_Arrow: 
 		    break;
-		case Glow.eSave_ConClass_con_type: 
-		    con_type = Integer.valueOf(token.nextToken()); 
+		case Glow.eSave_Arrow_draw_type: 
+		    draw_type = Integer.valueOf(token.nextToken());
 		    break;
-		case Glow.eSave_ConClass_corner: 
-		    corner = Integer.valueOf(token.nextToken()); 
+		case Glow.eSave_Arrow_line_width:
+		    line_width = Integer.valueOf(token.nextToken());
 		    break;
-		case Glow.eSave_ConClass_draw_type: 
-		    draw_type = Integer.valueOf(token.nextToken()); 
+		case Glow.eSave_Arrow_arrow_width:
+		    arrow_width = new Double(token.nextToken()).doubleValue();
 		    break;
-		case Glow.eSave_ConClass_line_width: 
-		    line_width = Integer.valueOf(token.nextToken()); 
+		case Glow.eSave_Arrow_arrow_length:
+		    arrow_length = new Double(token.nextToken()).doubleValue();
 		    break;
-		case Glow.eSave_ConClass_arrow_width: 
-		    arrow_width = new Double(token.nextToken()).doubleValue(); 
+		case Glow.eSave_Arrow_p1:
+		    p1.open( reader);
 		    break;
-		case Glow.eSave_ConClass_arrow_length: 
-		    arrow_length = new Double(token.nextToken()).doubleValue(); 
+		case Glow.eSave_Arrow_p2:
+		    p2.open( reader);
 		    break;
-		case Glow.eSave_ConClass_round_corner_amount: 
-		    round_corner_amount = new Double(token.nextToken()).doubleValue(); 
-		    break;
-		case Glow.eSave_ConClass_group: 
-		    group = Integer.valueOf(token.nextToken()); 
+		case Glow.eSave_Arrow_p_dest:
+		    p_dest.open( reader);
 		    break;
 		case Glow.eSave_End:
 		    end_found = true;
 		    break;
 		default:
-		    System.out.println( "Syntax error in GlowConClass");
+		    System.out.println( "Syntax error in GlowArrow");
 		    break;
 		}
 		if ( end_found)
 		    break;
+
 	    }
-		
+
 	} catch ( Exception e) {
-	    System.out.println( "IOException GlowConClass");
+	    System.out.println( "IOException GlowArrow");
 	}
     }
+
+    public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {
+    }
+
+
+    public void draw( int hightlight, int hot) {
+    }
+
 }

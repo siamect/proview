@@ -40,17 +40,14 @@ import java.io.*;
 import java.util.*;
 
 public class GlowPoint {
-    GrowCmn cmn;
     
     public double x;
     public double y;
 
-    public GlowPoint(GrowCmn cmn) {
-	this.cmn = cmn;
+    public GlowPoint() {
     }
 
     public GlowPoint(GlowPoint p) {
-	cmn = p.cmn;
 	x = p.x;
 	y = p.y;
     }
@@ -67,8 +64,8 @@ public class GlowPoint {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
-		if ( cmn.debug) System.out.println( "GlowPoint : " + line);
+		int key = Integer.valueOf(token.nextToken());
+		// if ( cmn.debug) System.out.println( "GlowPoint : " + line);
 
 		switch ( key) {
 		case Glow.eSave_Point: 

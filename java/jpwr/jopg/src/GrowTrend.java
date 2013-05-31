@@ -90,7 +90,7 @@ public class GrowTrend extends GrowRect {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GrowTrend : " + line);
 
 		switch ( key) {
@@ -123,31 +123,31 @@ public class GrowTrend extends GrowRect {
 		    x_min_value[1] = new Double(token.nextToken()).doubleValue(); 
 		    break;
 		case Glow.eSave_GrowTrend_horizontal_lines: 
-		    horizontal_lines = new Integer(token.nextToken()).intValue(); 
+		    horizontal_lines = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowTrend_vertical_lines: 
-		    vertical_lines = new Integer(token.nextToken()).intValue(); 
+		    vertical_lines = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowTrend_fill_curve: 
-		    fill_curve = new Integer(token.nextToken()).intValue(); 
+		    fill_curve = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowTrend_curve_drawtype_0: 		    
-			curve_drawtype[0] = new Integer(token.nextToken()).intValue(); 
+			curve_drawtype[0] = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowTrend_curve_drawtype_1: 
-		    curve_drawtype[1] = new Integer(token.nextToken()).intValue(); 
+		    curve_drawtype[1] = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowTrend_curve_fill_drawtype_0: 
-		    curve_fill_drawtype[0] = new Integer(token.nextToken()).intValue(); 
+		    curve_fill_drawtype[0] = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowTrend_curve_fill_drawtype_1: 
-		    curve_fill_drawtype[1] = new Integer(token.nextToken()).intValue(); 
+		    curve_fill_drawtype[1] = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowTrend_no_of_points: 
-		    no_of_points = new Integer(token.nextToken()).intValue(); 
+		    no_of_points = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowTrend_curve_width: 
-		    curve_width = new Integer(token.nextToken()).intValue(); 
+		    curve_width = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowTrend_scan_time: 
 		    scan_time = new Double(token.nextToken()).doubleValue(); 
@@ -196,16 +196,16 @@ public class GrowTrend extends GrowRect {
 			trace.data[9] = token.nextToken();			 
 		    break;
 		case Glow.eSave_GrowTrend_trace_attr_type: 
-		    trace.attr_type = new Integer(token.nextToken()).intValue(); 
+		    trace.attr_type = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowTrend_trace_color: 
-		    trace.color = new Integer(token.nextToken()).intValue(); 
+		    trace.color = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowTrend_access:
-		    trace.access = new Integer(token.nextToken()).intValue();
+		    trace.access = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowTrend_cycle:
-		    trace.cycle = new Integer(token.nextToken()).intValue();
+		    trace.cycle = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowTrend_ref_object:
 		    if ( token.hasMoreTokens())
@@ -399,7 +399,7 @@ public class GrowTrend extends GrowRect {
 
 	pointarray = new GlowPoint[points];
 	for ( i = 0; i < points; i++) {
-	    pointarray[i] = new GlowPoint(cmn);
+	    pointarray[i] = new GlowPoint();
 	    point_p = pointarray[i];
 	    if ( fill_curve == 0) {
 		point_p.y = ur.y;

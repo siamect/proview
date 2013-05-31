@@ -74,8 +74,8 @@ public class GrowRect extends GlowArrayElem {
     public GrowRect(GrowCmn cmn) {
 	this.cmn = cmn;
 	trf = new GlowTransform();
-	ll = new GlowPoint(cmn);
-	ur = new GlowPoint(cmn);
+	ll = new GlowPoint();
+	ur = new GlowPoint();
     }
 
     public GrowRect( GrowCmn cmn, String n_name, double x, double y, 
@@ -84,10 +84,10 @@ public class GrowRect extends GlowArrayElem {
 		     int fill_drawtype) {
 	this.cmn = cmn;
 	trf = new GlowTransform();
-	ll = new GlowPoint(cmn);
+	ll = new GlowPoint();
 	ll.x = x;
 	ll.y = y;
-	ur = new GlowPoint(cmn);
+	ur = new GlowPoint();
 	ur.x = x + w;
 	ur.y = y + h;
 	this.draw_type = draw_type;
@@ -117,7 +117,7 @@ public class GrowRect extends GlowArrayElem {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GrowRect : " + line);
 
 		switch ( key) {
@@ -140,52 +140,52 @@ public class GrowRect extends GlowArrayElem {
 		    y_low = new Double(token.nextToken()).doubleValue(); 
 		    break;
 		case Glow.eSave_GrowRect_original_border_drawtype: 
-		    original_border_drawtype = new Integer(token.nextToken()).intValue(); 
+		    original_border_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowRect_original_fill_drawtype: 
-		    original_fill_drawtype = new Integer(token.nextToken()).intValue(); 
+		    original_fill_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowRect_fill_drawtype: 
-		    fill_drawtype = new Integer(token.nextToken()).intValue(); 
+		    fill_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowRect_border: 
-		    border = new Integer(token.nextToken()).intValue(); 
+		    border = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowRect_shadow_width: 
 		    shadow_width = new Double(token.nextToken()).doubleValue(); 
 		    break;
 		case Glow.eSave_GrowRect_shadow_contrast: 
-		    shadow_contrast = new Integer(token.nextToken()).intValue(); 
+		    shadow_contrast = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowRect_shadow: 
-		    shadow = new Integer(token.nextToken()).intValue(); 
+		    shadow = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowRect_relief: 
-		    relief = new Integer(token.nextToken()).intValue(); 
+		    relief = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowRect_disable_shadow: 
-		    disable_shadow = new Integer(token.nextToken()).intValue(); 
+		    disable_shadow = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowRect_invisible: 
-		    invisible = new Integer(token.nextToken()).intValue();
+		    invisible = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowRect_fixcolor:
-		    fixcolor = new Integer(token.nextToken()).intValue();
+		    fixcolor = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowRect_fixposition:
-		    fixposition = new Integer(token.nextToken()).intValue();
+		    fixposition = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowRect_gradient:
-		    gradient = new Integer(token.nextToken()).intValue();
+		    gradient = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowRect_gradient_contrast:
-		    gradient_contrast = new Integer(token.nextToken()).intValue();
+		    gradient_contrast = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowRect_disable_gradient:
-		    disable_gradient = new Integer(token.nextToken()).intValue();
+		    disable_gradient = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowRect_dynamicsize:
-		    dynamicsize = new Integer(token.nextToken()).intValue();
+		    dynamicsize = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowRect_dynamic:
 		    if ( cmn.dynamicsize > 0) {
@@ -223,7 +223,7 @@ public class GrowRect extends GlowArrayElem {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GlowRect : " + line);
 
 		switch ( key) {
@@ -231,16 +231,16 @@ public class GrowRect extends GlowArrayElem {
 		case Glow.eSave_Rect: 
 		    break;
 		case Glow.eSave_Rect_draw_type: 
-		    draw_type = new Integer(token.nextToken()).intValue();
+		    draw_type = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Rect_line_width:
-		    line_width = new Integer(token.nextToken()).intValue();
+		    line_width = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Rect_display_level:
-		    display_level = new Integer(token.nextToken()).intValue();
+		    display_level = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Rect_fill:
-		    fill = new Integer(token.nextToken()).intValue();
+		    fill = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Rect_ll:
 		    ll.open( reader);
@@ -275,7 +275,7 @@ public class GrowRect extends GlowArrayElem {
 	}
 
 	rp = trf.reverse( fx, fy);
-	//rp = new GlowPoint(null);
+	//rp = new GlowPoint();
 	//rp.x = fx;
 	//rp.y = fy;
 	if ( ll.x <= rp.x && rp.x <= ur.x &&
@@ -293,6 +293,9 @@ public class GrowRect extends GlowArrayElem {
 
 
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {
+	if ( cmn.nodraw != 0)
+	    return;
+
 	if ( invisible != 0 && !(highlight != 0 && node == null))
 	    return;
 	int chot = 0;

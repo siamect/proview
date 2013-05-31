@@ -57,7 +57,7 @@ public class GrowGroup extends GrowNode {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GrowGroup : " + line);
 
 		switch ( key) {

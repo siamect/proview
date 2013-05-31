@@ -62,7 +62,7 @@ public class GrowText extends GlowArrayElem {
     public GrowText(GrowCmn cmn) {
 	this.cmn = cmn;
 	trf = new GlowTransform();
-	p = new GlowPoint(cmn);
+	p = new GlowPoint();
     }
 
     public void open(BufferedReader reader) {
@@ -73,7 +73,7 @@ public class GrowText extends GlowArrayElem {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GrowText : " + line);
 
 		switch ( key) {
@@ -96,16 +96,16 @@ public class GrowText extends GlowArrayElem {
 		    y_low = new Double(token.nextToken()).doubleValue(); 
 		    break;
 		case Glow.eSave_GrowText_original_color_drawtype: 
-		    original_color_drawtype = new Integer(token.nextToken()).intValue(); 
+		    original_color_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowText_font: 
-		    font = new Integer(token.nextToken()).intValue(); 
+		    font = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowText_adjustment: 
-		    adjustment = new Integer(token.nextToken()).intValue(); 
+		    adjustment = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowText_dynamicsize:
-		    dynamicsize = new Integer(token.nextToken()).intValue();
+		    dynamicsize = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowText_dynamic:
 		    if ( cmn.dynamicsize > 0) {
@@ -143,7 +143,7 @@ public class GrowText extends GlowArrayElem {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GlowText : " + line);
 
 		switch ( key) {
@@ -151,13 +151,13 @@ public class GrowText extends GlowArrayElem {
 		case Glow.eSave_Text: 
 		    break;
 		case Glow.eSave_Text_draw_type: 
-		    draw_type = new Integer(token.nextToken()).intValue();
+		    draw_type = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Text_text_size:
-		    text_size = new Integer(token.nextToken()).intValue();
+		    text_size = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Text_color_drawtype:
-		    color_drawtype = new Integer(token.nextToken()).intValue();
+		    color_drawtype = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Text_text:
 		    text = token.nextToken();
@@ -210,6 +210,9 @@ public class GrowText extends GlowArrayElem {
 
 
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {
+	if ( cmn.nodraw != 0)
+	    return;
+
 	int x1, y1, rx1, ry1;
 	int z_width, z_height, z_descent;
 	int rot;

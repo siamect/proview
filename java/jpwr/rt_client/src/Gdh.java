@@ -128,21 +128,18 @@ public class Gdh
   private boolean locked = false;
 
 
-  public Gdh(Object root)
+  public Gdh(GdhApplIfc root)
   {
     init(root);
   }
 
 
-  private void init(Object root)
+  private void init(GdhApplIfc root)
   {
     try
     {
-      String pwrHost = ((jpwr.jop.JopApplet)root).getPwrHost();
-      if ( pwrHost == null) {
-	URL url = ((JApplet)root).getDocumentBase();
-	pwrHost = url.getHost();
-      }
+      String pwrHost = root.getPwrHost();
+
       System.out.println("Opening socket to " + pwrHost);
       gdhSocket = new Socket(pwrHost, 4445);
       out = new ObjectOutputStream(new BufferedOutputStream(gdhSocket.getOutputStream()));
@@ -512,7 +509,7 @@ public class Gdh
         subscriptionCount++;
         refid = new PwrtRefId(id, 0);
         subLate++;
-        return new GdhrRefObjectInfo(refid, id, sts, typeId, size, elements);
+        return new GdhrRefObjectInfo(refid, id, sts, typeId, elements, size);
       }
       catch(IOException e)
       {

@@ -266,7 +266,7 @@ public class GdhServer
       return;
     }
 
-    gdh = new Gdh((Object)null);
+    gdh = new Gdh((GdhApplIfc)null);
     errh = new Errh("GdhServer", Errh.eAnix_webmon);
     errh.setStatus( Errh.PWR__SRVSTARTUP);
     

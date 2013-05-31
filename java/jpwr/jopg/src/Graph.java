@@ -41,7 +41,6 @@ import java.io.*;
 import java.util.*;
 
 public class Graph implements GraphIfc, GrowApplIfc {
-    public static final int eType_Bit = (1 << 15) + 1;
 
 
     public GrowCmn cmn;
@@ -80,7 +79,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	return ctx;
     }
 
-    void open(BufferedReader reader) {
+    public void open(BufferedReader reader) {
 	ctx.open( reader);
 	ctx.traceConnect();
     }
@@ -104,6 +103,10 @@ public class Graph implements GraphIfc, GrowApplIfc {
     }
 
     int stringToType( String str) {
+	int idx;
+	if ( (idx = str.indexOf('#')) != -1)
+	    str = str.substring(0, idx);
+	System.out.println("type: " + str);
 	if ( str.equalsIgnoreCase("boolean"))
 	    return Pwr.eType_Boolean;
 	if ( str.equalsIgnoreCase("float32"))
@@ -145,7 +148,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	if ( str.equalsIgnoreCase("mask"))
 	    return Pwr.eType_Mask;
 	if ( str.equalsIgnoreCase("bit"))
-	    return Graph.eType_Bit;
+	    return GraphIfc.eType_Bit;
 	if ( str.substring(0,6).equalsIgnoreCase("string"))
 	     return Pwr.eType_String;
 	return 0;
@@ -206,6 +209,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 		pname.inverted = false;
 
 	    pname.database = GraphIfc.eDatabase_Local;
+	    pname.tname = new String(name);
 	    return pname;
 	}
 
@@ -233,6 +237,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 		pname.inverted = false;
 
 	    pname.database = GraphIfc.eDatabase_Ccm;
+	    pname.tname = new String(pname.name);
 	    return pname;
 	}
 
@@ -245,6 +250,8 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	    }
 	}
 
+	pname.tname = new String(str);
+	
 	if ( (idx = str.indexOf('[')) != -1 &&
 	     (eidx = str.lastIndexOf('#')) != -1 &&
 	     str.charAt(eidx-1) != '#') {
@@ -272,6 +279,8 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	    str = str.substring(1);
 	    str = str.trim();
 	    pname.inverted = true;
+	    pname.tname = pname.tname.substring(1);
+	    pname.tname = pname.tname.trim();
 	}
 	else
 	    pname.inverted = false;
@@ -320,7 +329,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	switch ( e.event) {
 	case Glow.eEvent_MB1Click:
 	    if ( e.object_type == Glow.eObjectType_NoObject ||
-		 e.object.type() != Glow.eObjectType_GrowMenu) {
+		 ((GlowArrayElem)e.object).type() != Glow.eObjectType_GrowMenu) {
 		// Close any open menu, if not click in menu
 		GlowEventMenu event = new GlowEventMenu();
 		event.event = Glow.eEvent_MenuDelete;

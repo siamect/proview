@@ -75,8 +75,8 @@ public class GrowArc extends GlowArrayElem {
     public GrowArc(GrowCmn cmn) {
 	this.cmn = cmn;
 	trf = new GlowTransform();
-	ll = new GlowPoint(cmn);
-	ur = new GlowPoint(cmn);
+	ll = new GlowPoint();
+	ur = new GlowPoint();
     }
 
     public int type() {
@@ -91,7 +91,7 @@ public class GrowArc extends GlowArrayElem {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GrowArc : " + line);
 
 		switch ( key) {
@@ -114,49 +114,49 @@ public class GrowArc extends GlowArrayElem {
 		    y_low = new Double(token.nextToken()).doubleValue(); 
 		    break;
 		case Glow.eSave_GrowArc_original_border_drawtype: 
-		    original_border_drawtype = new Integer(token.nextToken()).intValue(); 
+		    original_border_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowArc_original_fill_drawtype: 
-		    original_fill_drawtype = new Integer(token.nextToken()).intValue(); 
+		    original_fill_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowArc_fill_drawtype: 
-		    fill_drawtype = new Integer(token.nextToken()).intValue(); 
+		    fill_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowArc_border: 
-		    border = new Integer(token.nextToken()).intValue(); 
+		    border = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowArc_shadow_width: 
 		    shadow_width = new Double(token.nextToken()).doubleValue(); 
 		    break;
 		case Glow.eSave_GrowArc_shadow_contrast: 
-		    shadow_contrast = new Integer(token.nextToken()).intValue(); 
+		    shadow_contrast = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowArc_shadow: 
-		    shadow = new Integer(token.nextToken()).intValue(); 
+		    shadow = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowArc_relief: 
-		    relief = new Integer(token.nextToken()).intValue(); 
+		    relief = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowArc_disable_shadow: 
-		    disable_shadow = new Integer(token.nextToken()).intValue(); 
+		    disable_shadow = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowArc_fixcolor:
-		    fixcolor = new Integer(token.nextToken()).intValue();
+		    fixcolor = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowArc_fixposition:
-		    fixposition = new Integer(token.nextToken()).intValue();
+		    fixposition = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowArc_gradient:
-		    gradient = new Integer(token.nextToken()).intValue();
+		    gradient = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowArc_gradient_contrast:
-		    gradient_contrast = new Integer(token.nextToken()).intValue();
+		    gradient_contrast = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowArc_disable_gradient:
-		    disable_gradient = new Integer(token.nextToken()).intValue();
+		    disable_gradient = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowArc_dynamicsize:
-		    dynamicsize = new Integer(token.nextToken()).intValue();
+		    dynamicsize = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowArc_dynamic:
 		    if ( cmn.dynamicsize > 0) {
@@ -194,7 +194,7 @@ public class GrowArc extends GlowArrayElem {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GlowArc : " + line);
 
 		switch ( key) {
@@ -202,19 +202,19 @@ public class GrowArc extends GlowArrayElem {
 		case Glow.eSave_Arc: 
 		    break;
 		case Glow.eSave_Arc_draw_type: 
-		    draw_type = new Integer(token.nextToken()).intValue();
+		    draw_type = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Arc_angle1: 
-		    angle1 = new Integer(token.nextToken()).intValue();
+		    angle1 = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Arc_angle2: 
-		    angle2 = new Integer(token.nextToken()).intValue();
+		    angle2 = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Arc_line_width:
-		    line_width = new Integer(token.nextToken()).intValue();
+		    line_width = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Arc_fill:
-		    fill = new Integer(token.nextToken()).intValue();
+		    fill = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Arc_ll:
 		    ll.open( reader);
@@ -249,7 +249,7 @@ public class GrowArc extends GlowArrayElem {
 	}
 
 	rp = trf.reverse( fx, fy);
-	//rp = new GlowPoint(null);
+	//rp = new GlowPoint();
 	//rp.x = fx;
 	//rp.y = fy;
 	if ( ll.x <= rp.x && rp.x <= ur.x &&
@@ -267,6 +267,8 @@ public class GrowArc extends GlowArrayElem {
 
 
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {
+	if ( cmn.nodraw != 0)
+	    return;
 
 	int drawtype;
 	int idx;

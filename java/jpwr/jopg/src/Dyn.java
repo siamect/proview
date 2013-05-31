@@ -524,6 +524,12 @@ public class Dyn {
     public static final int eLimitType_Le		= 3;
     public static final int eLimitType_Eq		= 4;
 
+    public static final int ePwrStatus_No		= 0;
+    public static final int ePwrStatus_Success		= 1;
+    public static final int ePwrStatus_Warning		= 2;
+    public static final int ePwrStatus_Error		= 3;
+    public static final int ePwrStatus_Fatal		= 4;
+
     public static final boolean debug = true;
 
     Vector<DynElem> elements = new Vector<DynElem>();
@@ -556,7 +562,7 @@ public class Dyn {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( Dyn.debug) System.out.println( "Dyn : " + line);
 
 		elem = null;
@@ -564,22 +570,22 @@ public class Dyn {
 		case Dyn.eSave_Dyn: 
 		    break;
 		case Dyn.eSave_Dyn_dyn_type1: 
-		    dyn_type1 = new Integer(token.nextToken()).intValue();
+		    dyn_type1 = Integer.valueOf(token.nextToken());
 		    break;
 		case Dyn.eSave_Dyn_dyn_type2: 
-		    dyn_type2 = new Integer(token.nextToken()).intValue();
+		    dyn_type2 = Integer.valueOf(token.nextToken());
 		    break;
 		case Dyn.eSave_Dyn_action_type1: 
-		    action_type1 = new Integer(token.nextToken()).intValue();
+		    action_type1 = Integer.valueOf(token.nextToken());
 		    break;
 		case Dyn.eSave_Dyn_action_type2: 
-		    action_type2 = new Integer(token.nextToken()).intValue();
+		    action_type2 = Integer.valueOf(token.nextToken());
 		    break;
 		case Dyn.eSave_Dyn_access: 
-		    access = new Integer(token.nextToken()).intValue();
+		    access = Integer.valueOf(token.nextToken());
 		    break;
 		case Dyn.eSave_Dyn_cycle: 
-		    cycle = new Integer(token.nextToken()).intValue();
+		    cycle = Integer.valueOf(token.nextToken());
 		    break;
 		case Dyn.eSave_DigLowColor: 
 		    elem = (DynElem) new DynDigLowColor(this); 
@@ -821,7 +827,7 @@ public class Dyn {
 	    }	
 	    return value != 0;
 	}
-	case Graph.eType_Bit: {
+	case GraphIfc.eType_Bit: {
 	    int value = 0;
 	    switch ( db) {
 	    case GraphIfc.eDatabase_Gdh:
@@ -850,7 +856,7 @@ public class Dyn {
 	    switch ( db) {
 	    case GraphIfc.eDatabase_Gdh: {
 		String value = graph.getGdh().getObjectRefInfoString( p, a_typeid);
-		return !value.isEmpty();
+		return !value.equals("");
 	    }	
 	    }
 	    return false;
@@ -861,7 +867,7 @@ public class Dyn {
     }
 
     int getBit( String str, int attr_type) {
-	if ( attr_type == Graph.eType_Bit) {
+	if ( attr_type == GraphIfc.eType_Bit) {
 	    // Get bit number from parsed name
 	    int idx1, idx2;
 	    int bitnum;
@@ -888,9 +894,12 @@ public class Dyn {
     }
 
     public int connect(GlowArrayElem object) {
+	System.out.println("Dyn connect object 0 " + object + " elements " + elements.size());
 
 	if ( (dyn_type1 & Dyn.mDynType1_Inherit) != 0) {
+	System.out.println("Dyn connect object 1 " + object + " elements " + elements.size());
 	    int inherit_dyn_type1 = object.getClassDynType1();
+	System.out.println("Dyn connect object 2 " + object + " elements " + elements.size());
 	    int inherit_dyn_type2 = object.getClassDynType2();
 	    total_dyn_type1 = dyn_type1 | inherit_dyn_type1;
 	    total_dyn_type2 = dyn_type2 | inherit_dyn_type2;
@@ -899,6 +908,7 @@ public class Dyn {
 	    total_dyn_type1 = dyn_type1;
 	    total_dyn_type2 = dyn_type2;
 	}
+	System.out.println("Dyn connect object 3 " + object + " elements " + elements.size());
 
 	if ( (action_type1 & Dyn.mActionType1_Inherit) != 0) {
 	    int inherit_action_type1 = object.getClassActionType1();
@@ -915,6 +925,7 @@ public class Dyn {
 	    cycle = object.getClassCycle();
 
 	for ( int i = 0; i < elements.size(); i++) {
+	    System.out.println("Dyn connect " + elements.get(i));
 	    elements.get(i).connect(object);
 	}
 	return 1;
@@ -1013,7 +1024,7 @@ public class Dyn {
 		return 0;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname.name.isEmpty()) 
+	    if ( pname.name.equals("")) 
 		return 1;
 	    System.out.println("DigLowColor: " + attribute + " pname " + pname.name + " db " + pname.database);
 
@@ -1021,7 +1032,7 @@ public class Dyn {
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    case GraphIfc.eDatabase_Local:
 		ret = dyn.graph.getLdb().refObjectInfo( graph, pname.name);
@@ -1099,7 +1110,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynDigLowColor : " + line);
 
 		    switch ( key) {
@@ -1110,7 +1121,7 @@ public class Dyn {
 			    attribute = token.nextToken();
 			break;
 		    case Dyn.eSave_DigLowColor_color: 
-			color = new Integer(token.nextToken()).intValue();
+			color = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -1155,14 +1166,14 @@ public class Dyn {
 		return 0;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    default:
 		ret = null;
@@ -1250,7 +1261,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynDigColor : " + line);
 
 		    switch ( key) {
@@ -1261,13 +1272,13 @@ public class Dyn {
 			    attribute = token.nextToken();
 			break;
 		    case Dyn.eSave_DigColor_color: 
-			color = new Integer(token.nextToken()).intValue();
+			color = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_DigColor_instance: 
-			instance = new Integer(token.nextToken()).intValue();
+			instance = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_DigColor_instance_mask: 
-			instance_mask = new Integer(token.nextToken()).intValue();
+			instance_mask = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -1308,14 +1319,14 @@ public class Dyn {
 	public int connect(GlowArrayElem o) {
 	    GrowNode object = (GrowNode)o;
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    default:
 		ret = null;
@@ -1396,7 +1407,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynWarning : " + line);
 
 		    switch ( key) {
@@ -1444,14 +1455,14 @@ public class Dyn {
 	public int connect(GlowArrayElem o) {
 	    GrowNode object = (GrowNode)o;
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    default:
 		ret = null;
@@ -1532,7 +1543,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynError : " + line);
 
 		    switch ( key) {
@@ -1583,14 +1594,14 @@ public class Dyn {
 	public int connect(GlowArrayElem o) {
 	    GrowNode object = (GrowNode)o;
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    default:
 		ret = null;
@@ -1694,7 +1705,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynDigFlash : " + line);
 
 		    switch ( key) {
@@ -1705,10 +1716,10 @@ public class Dyn {
 			    attribute = token.nextToken();
 			break;
 		    case Dyn.eSave_DigFlash_color: 
-			color = new Integer(token.nextToken()).intValue();
+			color = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_DigFlash_color2: 
-			color2 = new Integer(token.nextToken()).intValue();
+			color2 = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -1761,14 +1772,14 @@ public class Dyn {
 	    }
 	    else {
 		DynParsedAttrName pname = dyn.parseAttrName(attribute);
-		if ( pname == null || pname.name.isEmpty()) 
+		if ( pname == null || pname.name.equals("")) 
 		    return 1;
 
 		GdhrRefObjectInfo ret = null;
 		
 		switch( pname.database) {
 		case GraphIfc.eDatabase_Gdh:
-		    ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		    break;
 		case GraphIfc.eDatabase_Local:
 		    ret = dyn.graph.getLdb().refObjectInfo( graph, pname.name);
@@ -1856,7 +1867,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynInvisible : " + line);
 
 		    switch ( key) {
@@ -1867,13 +1878,13 @@ public class Dyn {
 			    attribute = line.substring(4);
 			break;
 		    case Dyn.eSave_Invisible_dimmed: 
-			dimmed = new Integer(token.nextToken()).intValue();
+			dimmed = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_Invisible_instance: 
-			instance = new Integer(token.nextToken()).intValue();
+			instance = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_Invisible_instance_mask: 
-			instance_mask = new Integer(token.nextToken()).intValue();
+			instance_mask = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -1914,14 +1925,14 @@ public class Dyn {
 	public int connect(GlowArrayElem o) {
 	    GrowNode object = (GrowNode)o;
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    default:
 		ret = null;
@@ -1985,7 +1996,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynDigBorder : " + line);
 
 		    switch ( key) {
@@ -1996,7 +2007,7 @@ public class Dyn {
 			    attribute = token.nextToken();
 			break;
 		    case Dyn.eSave_DigBorder_color: 
-			color = new Integer(token.nextToken()).intValue();
+			color = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -2039,14 +2050,14 @@ public class Dyn {
 	    GrowNode object = (GrowNode)o;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    default:
 		ret = null;
@@ -2107,7 +2118,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynDigText : " + line);
 
 		    switch ( key) {
@@ -2122,10 +2133,10 @@ public class Dyn {
 			    low_text = token.nextToken();
 			break;
 		    case Dyn.eSave_DigText_instance: 
-			instance = new Integer(token.nextToken()).intValue();
+			instance = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_DigText_instance_mask: 
-			instance_mask = new Integer(token.nextToken()).intValue();
+			instance_mask = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -2176,14 +2187,14 @@ public class Dyn {
 		return 1;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    case GraphIfc.eDatabase_Local:
 		ret = dyn.graph.getLdb().refObjectInfo( graph, pname.name);
@@ -2344,7 +2355,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynValue : " + line);
 
 		    switch ( key) {
@@ -2359,13 +2370,13 @@ public class Dyn {
 			    format = token.nextToken();
 			break;
 		    case Dyn.eSave_Value_instance: 
-			instance = new Integer(token.nextToken()).intValue();
+			instance = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_Value_instance_mask: 
-			instance_mask = new Integer(token.nextToken()).intValue();
+			instance_mask = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_Value_zero_blank: 
-			zero_blank = new Integer(token.nextToken()).intValue();
+			zero_blank = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -2412,7 +2423,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynValueInput : " + line);
 
 		    switch ( key) {
@@ -2429,10 +2440,10 @@ public class Dyn {
 			max_value = new Double(token.nextToken()).doubleValue();
 			break;
 		    case Dyn.eSave_ValueInput_clear: 
-			clear = new Integer(token.nextToken()).intValue();
+			clear = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_ValueInput_popup: 
-			popup = new Integer(token.nextToken()).intValue();
+			popup = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_ValueInput_minvalue_attr: 
 			if ( token.hasMoreTokens())
@@ -2443,7 +2454,7 @@ public class Dyn {
 			    maxvalue_attr = token.nextToken();
 			break;
 		    case Dyn.eSave_ValueInput_escape_store: 
-			escape_store = new Integer(token.nextToken()).intValue();
+			escape_store = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -2501,14 +2512,14 @@ public class Dyn {
 	    if ( mainInstance != null) {
 		if ( !mainInstance.attrFound) {
 		    DynParsedAttrName pname = dyn.parseAttrName(mainInstance.attribute);
-		    if ( pname == null || pname.name.isEmpty()) 
+		    if ( pname == null || pname.name.equals("")) 
 			return 1;
 
 		    GdhrRefObjectInfo ret = null;
 
 		    switch( pname.database) {
 		    case GraphIfc.eDatabase_Gdh:
-			ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+			ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 			break;
 		    default:
 			ret = null;
@@ -2671,7 +2682,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynAnalogColor : " + line);
 
 		    switch ( key) {
@@ -2685,16 +2696,16 @@ public class Dyn {
 			limit = new Double(token.nextToken()).doubleValue();
 			break;
 		    case Dyn.eSave_AnalogColor_limit_type: 
-			limit_type = new Integer(token.nextToken()).intValue();
+			limit_type = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_AnalogColor_color: 
-			color = new Integer(token.nextToken()).intValue();
+			color = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_AnalogColor_instance: 
-			instance = new Integer(token.nextToken()).intValue();
+			instance = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_AnalogColor_instance_mask: 
-			instance_mask = new Integer(token.nextToken()).intValue();
+			instance_mask = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -2739,14 +2750,14 @@ public class Dyn {
 	    GrowNode object = (GrowNode)o;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    default:
 		ret = null;
@@ -2803,7 +2814,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynRotate : " + line);
 
 		    switch ( key) {
@@ -2864,7 +2875,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynMove : " + line);
 
 		    switch ( key) {
@@ -2899,7 +2910,7 @@ public class Dyn {
 			scale_y_factor = new Double(token.nextToken()).doubleValue();
 			break;
  		    case Dyn.eSave_Move_scale_type: 
-			scale_type = new Integer(token.nextToken()).intValue();
+			scale_type = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -2941,14 +2952,14 @@ public class Dyn {
 	    GrowNode object = (GrowNode)o;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    case GraphIfc.eDatabase_Ccm:
 		// TODO
@@ -3032,7 +3043,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynAnalogShift : " + line);
 
 		    switch ( key) {
@@ -3081,14 +3092,14 @@ public class Dyn {
 	    GrowNode object = (GrowNode)o;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    case GraphIfc.eDatabase_Ccm:
 		// TODO
@@ -3151,7 +3162,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynDigShift : " + line);
 
 		    switch ( key) {
@@ -3196,7 +3207,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynAnimation : " + line);
 
 		    switch ( key) {
@@ -3207,7 +3218,7 @@ public class Dyn {
 			    attribute = token.nextToken();
 			break;
 		    case Dyn.eSave_Animation_sequence: 
-			sequence = new Integer(token.nextToken()).intValue();
+			sequence = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -3242,7 +3253,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynVideo : " + line);
 
 		    switch ( key) {
@@ -3300,14 +3311,14 @@ public class Dyn {
 		return 0;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    default:
 		ret = null;
@@ -3326,9 +3337,9 @@ public class Dyn {
 
 	    min_value_p = 0;
 	    pname = dyn.parseAttrName(minvalue_attr);
-	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && database == GraphIfc.eDatabase_Gdh) {
+	    if ( pname != null && !pname.name.equals("") && pname.type == Pwr.eType_Float32 && database == GraphIfc.eDatabase_Gdh) {
 		
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		if ( ret != null && ret.oddSts()) {
 		    min_value_p = ret.id;
 		    min_value_subid = ret.refid;
@@ -3337,9 +3348,9 @@ public class Dyn {
 
 	    max_value_p = 0;
 	    pname = dyn.parseAttrName(maxvalue_attr);
-	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && database == GraphIfc.eDatabase_Gdh) {
+	    if ( pname != null && !pname.name.equals("") && pname.type == Pwr.eType_Float32 && database == GraphIfc.eDatabase_Gdh) {
 		
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		if ( ret != null && ret.oddSts()) {
 		    max_value_p = ret.id;
 		    max_value_subid = ret.refid;
@@ -3418,7 +3429,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynBar : " + line);
 
 		    switch ( key) {
@@ -3462,12 +3473,12 @@ public class Dyn {
 	String maxvalue_attr1;
 	String minvalue_attr2;
 	String maxvalue_attr2;
-	int p1;
+	int p1 = -1;
 	int database1;
 	boolean inverted1;
 	int a_typeid1;
  	PwrtRefId subid1;
-	int p2;
+	int p2 = -1;
 	int database2;
 	boolean inverted2;
 	int a_typeid2;
@@ -3501,14 +3512,14 @@ public class Dyn {
 		return 0;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute1);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    default:
 		ret = null;
@@ -3526,12 +3537,12 @@ public class Dyn {
 	    attrFound = true;
 
 	    pname = dyn.parseAttrName(attribute2);
-	    if ( pname != null && !pname.name.isEmpty()) {
+	    if ( pname != null && !pname.name.equals("")) {
 		ret = null;
 
 		switch( pname.database) {
 		case GraphIfc.eDatabase_Gdh:
-		    ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		    break;
 		default:
 		    ret = null;
@@ -3556,9 +3567,9 @@ public class Dyn {
 
 	    min_value1_p = 0;
 	    pname = dyn.parseAttrName(minvalue_attr1);
-	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
+	    if ( pname != null && !pname.name.equals("") && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
 		
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		if ( ret != null && ret.oddSts()) {
 		    min_value1_p = ret.id;
 		    min_value1_subid = ret.refid;
@@ -3567,9 +3578,9 @@ public class Dyn {
 
 	    max_value1_p = 0;
 	    pname = dyn.parseAttrName(maxvalue_attr1);
-	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
+	    if ( pname != null && !pname.name.equals("") && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
 		
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		if ( ret != null && ret.oddSts()) {
 		    max_value1_p = ret.id;
 		    max_value1_subid = ret.refid;
@@ -3578,9 +3589,9 @@ public class Dyn {
 
 	    min_value2_p = 0;
 	    pname = dyn.parseAttrName(minvalue_attr2);
-	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
+	    if ( pname != null && !pname.name.equals("") && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
 		
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		if ( ret != null && ret.oddSts()) {
 		    min_value2_p = ret.id;
 		    min_value2_subid = ret.refid;
@@ -3589,22 +3600,21 @@ public class Dyn {
 
 	    max_value2_p = 0;
 	    pname = dyn.parseAttrName(maxvalue_attr2);
-	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
+	    if ( pname != null && !pname.name.equals("") && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
 		
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		if ( ret != null && ret.oddSts()) {
 		    max_value2_p = ret.id;
 		    max_value2_subid = ret.refid;
 		}
 	    }
-
 	    return 1;
 	}
 
 	public void disconnect() {
 	    if ( attrFound && database1 == GraphIfc.eDatabase_Gdh)
 		dyn.graph.getGdh().unrefObjectInfo(subid1);
-	    if ( p2 != 0 && database2 == GraphIfc.eDatabase_Gdh)
+	    if ( p2 != -1 && database2 == GraphIfc.eDatabase_Gdh)
 		dyn.graph.getGdh().unrefObjectInfo(subid2);
 	    if ( min_value1_p != 0)
 		dyn.graph.getGdh().unrefObjectInfo(min_value1_subid);
@@ -3639,7 +3649,7 @@ public class Dyn {
 
 	    acc_time += dyn.graph.getScanTime();
 	    if ( acc_time + Double.MIN_VALUE >= scan_time) {
-		if ( p1 != 0) {
+		if ( p1 != -1) {
 		    switch ( a_typeid1) {
 		    case Pwr.eType_Boolean: {
 			boolean value = dyn.graph.getGdh().getObjectRefInfoBoolean( p1);
@@ -3647,6 +3657,7 @@ public class Dyn {
 			    object.add_value(1, 0);
 			else
 			    object.add_value(0, 0);
+			System.out.println("DynTrend add : " + value);
 			break;
 		    }
 		    case Pwr.eType_Float32: {
@@ -3663,7 +3674,7 @@ public class Dyn {
 		    default: ;
 		    }
 		}
-		if ( p2 != 0) {
+		if ( p2 != -1) {
 		    switch ( a_typeid2) {
 		    case Pwr.eType_Boolean: {
 			boolean value = dyn.graph.getGdh().getObjectRefInfoBoolean( p2);
@@ -3700,7 +3711,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynTrend : " + line);
 
 		    switch ( key) {
@@ -3778,7 +3789,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynXY_Curve : " + line);
 
 		    switch ( key) {
@@ -3829,19 +3840,19 @@ public class Dyn {
 			x_max_value = new Double(token.nextToken()).doubleValue();
 			break;
 		    case Dyn.eSave_XY_Curve_datatype: 
-			datatype = new Integer(token.nextToken()).intValue();
+			datatype = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_XY_Curve_instance: 
-			instance = new Integer(token.nextToken()).intValue();
+			instance = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_XY_Curve_instance_mask: 
-			instance_mask = new Integer(token.nextToken()).intValue();
+			instance_mask = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_XY_Curve_curve_color: 
-			curve_color = new Integer(token.nextToken()).intValue();
+			curve_color = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_XY_Curve_fill_color: 
-			fill_color = new Integer(token.nextToken()).intValue();
+			fill_color = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -3866,6 +3877,24 @@ public class Dyn {
 	String[] attribute = new String[12];
 	String[] format = new String[12];
 	String[] sel_attribute = new String[12];
+	public GlowCFormat[] cFormat;
+	boolean firstScan = true;
+	public boolean[][] oldValueB;
+	public float[][] oldValueF;
+	public int[][] oldValueI;
+	public String[][] oldValueS;
+	int[] p;
+	int[][] hp;
+	int[] db;
+	int[] elements;
+	int[] type_id;
+	int[] size;
+	boolean[] headerRef;
+	PwrtRefId[] subid;
+	PwrtRefId[][] hsubid;
+	int columns;
+	int rows;
+	StringBuffer sb = new StringBuffer();
 
 	public DynTable( Dyn dyn) {
 	    super(dyn, Dyn.mDynType1_Table, 0, 0, 0);
@@ -3879,7 +3908,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynTable : " + line);
 
 		    switch ( key) {
@@ -4046,14 +4075,490 @@ public class Dyn {
 	    }
 	}
 
+	public int connect(GlowArrayElem o) {
+	    GrowTable object = (GrowTable)o;
+	    int		sts;
+	    String	aname0 = null;
+
+	    GlowTableInfo info = object.getTableInfo();
+	    columns = info.columns;
+	    rows = info.rows;
+
+	    db = new int[columns];
+	    size = new int[columns];
+	    elements = new int[columns];
+	    type_id = new int[columns];
+	    subid = new PwrtRefId[columns];
+	    headerRef = new boolean[columns];
+	    p = new int[columns];
+	    for ( int i = 0; i < columns; i++)
+		p[i] = -1;
+	    oldValueB = new boolean[columns][];
+	    oldValueF = new float[columns][];
+	    oldValueI = new int[columns][];
+	    oldValueS = new String[columns][];
+	    cFormat = new GlowCFormat[columns];
+	    for ( int i = 0; i < columns; i++)
+		cFormat[i] = new GlowCFormat( format[i]);
+
+	    for ( int i = 0; i < columns; i++) {
+		DynParsedAttrName pname = dyn.parseAttrName(attribute[i]);
+		if ( pname == null || pname.name.equals("")) 
+		    continue;
+
+		if ( pname.elements == 0)
+		    continue;
+
+		db[i] = pname.database;
+
+		GdhrRefObjectInfo ret = null;
+
+		if ( !pname.tname.startsWith("$header")) { 
+		    switch ( db[i]) {
+		    case GraphIfc.eDatabase_Gdh:
+			ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+			System.out.println("Table ret.sts " + ret.getSts());
+			if ( i == 0)
+			    aname0 = pname.name;
+			break;
+		    default:
+			;
+		    }
+		    if ( ret == null || ret.evenSts())
+			continue;
+
+		    p[i] = ret.id;
+		    size[i] = ret.size;
+		    type_id[i] = pname.type;
+		    subid[i] = ret.refid;
+		    elements[i] = Math.min(ret.getElements(), rows);
+		    System.out.println("Table ret p: " + p[i] + " type_id: " + type_id[i]);
+		}
+		else {
+		    headerRef[i] = true;
+
+		    if ( aname0 == null)
+			continue;
+		    
+		    for ( int j = 0; j < elements[0]; j++) {
+			String hname = aname0 + "[" + j + "]";
+			CdhrString sret = dyn.graph.getGdh().getObjectInfoString(hname);
+			if ( sret.evenSts() || sret.str.equals(""))
+			    continue;
+
+			String aname = sret.str + pname.tname.substring(7);
+
+			ret = dyn.graph.getGdh().refObjectInfo( aname);
+			System.out.println("Table $header " + i + " ret.sts " + ret.getSts());
+
+			if ( ret.evenSts())
+			    continue;
+
+			if ( hp == null) {
+			    hp = new int[columns][];
+			    hsubid = new PwrtRefId[columns][];
+			}
+			if ( hp[i] == null) {
+			    hp[i] = new int[elements[0]];
+			    hsubid[i] = new PwrtRefId[elements[0]];
+			    for ( int k = 0; k < elements[0]; k++) 
+				hp[i][k] = -1;
+			}
+
+			hp[i][j] = ret.id;
+			hsubid[i][j] = ret.refid;
+			if ( j == 0) {
+			    size[i] = ret.size;
+			    type_id[i] = pname.type;
+			    elements[i] = elements[0];
+			}
+		    }
+		}
+
+		switch ( type_id[i]) {
+		case Pwr.eType_Float32:
+		    oldValueF[i] = new float[rows];
+		    break;
+		case Pwr.eType_Boolean:
+		    oldValueB[i] = new boolean[rows];
+		    break;
+		case Pwr.eType_Int32:
+		case Pwr.eType_Int16:
+		case Pwr.eType_Int8:
+		case Pwr.eType_UInt32:
+		case Pwr.eType_UInt16:
+		case Pwr.eType_UInt8:
+		    oldValueI[i] = new int[rows];
+		    break;
+		case Pwr.eType_String:
+		case Pwr.eType_Objid:
+		case Pwr.eType_AttrRef:
+		case Pwr.eType_Time:
+		case Pwr.eType_DeltaTime:
+		    oldValueS[i] = new String[rows];
+		    break;
+		}
+
+    
+	    }
+	    object.setTableInfo(info);
+
+	    return 1;
+	}
+
+	public void disconnect() {
+	    for ( int i = 0; i < columns; i++) {
+		if ( !headerRef[i]) {
+		    if ( p[i] != -1 && db[i] == GraphIfc.eDatabase_Gdh)
+			dyn.graph.getGdh().unrefObjectInfo(subid[i]);
+		    p[i] = -1;
+		}
+		else {
+		    for ( int j = 0; j < elements[i]; j++) {
+			if ( hp[i][j] != -1)
+			    dyn.graph.getGdh().unrefObjectInfo(hsubid[i][j]);
+		    }
+		}
+		switch (type_id[i]) {
+		case Pwr.eType_Float32:
+		    if ( oldValueF[i] != null)
+			oldValueF[i] = null;
+		    break;
+		case Pwr.eType_Boolean:
+		    if ( oldValueB[i] != null)
+			oldValueB[i] = null;
+		    break;
+		case Pwr.eType_Int32:
+		case Pwr.eType_Int16:
+		case Pwr.eType_Int8:
+		case Pwr.eType_UInt32:
+		case Pwr.eType_UInt16:
+		case Pwr.eType_UInt8:
+		    if ( oldValueI[i] != null)
+			oldValueI[i] = null;
+		    break;
+		case Pwr.eType_String:
+		case Pwr.eType_Objid:
+		case Pwr.eType_AttrRef:
+		case Pwr.eType_Time:
+		case Pwr.eType_DeltaTime:
+		    if ( oldValueS[i] != null)
+			oldValueS[i] = null;
+		    break;
+		}
+	    }
+	}
+
+	public void scan( GlowArrayElem o) {
+	    GrowTable object = (GrowTable)o;
+
+	    if ( p[0] == -1)
+		return;
+
+	    for ( int i = 0; i < columns; i++) {
+		if ( !headerRef[i]) {
+		    if ( p[i] == -1)
+			continue;
+		
+		    switch ( type_id[i]) {
+		    case Pwr.eType_Float32: {
+			float[] val = dyn.graph.getGdh().getObjectRefInfoFloatArray(p[i], elements[i]);
+			for ( int j = 0; j < Math.min(elements[i], val.length); j++) {
+			    if ( oldValueF[i][j] != val[j] || firstScan) {
+				sb = cFormat[i].format( val[j], sb);
+				object.setValue(new String(sb), i, j);
+				oldValueF[i][j] = val[j];
+			    }
+			}
+			break;
+		    }
+		    case Pwr.eType_Boolean: {
+			boolean[] val = dyn.graph.getGdh().getObjectRefInfoBooleanArray(p[i], elements[i]);
+			for ( int j = 0; j < Math.min(elements[i], val.length); j++) {
+			    if ( firstScan || oldValueB[i][j] != val[j]) {
+				if ( val[j])
+				    object.setValue(new String("1"), i, j);
+				else
+				    object.setValue(new String("0"), i, j);
+				object.setValue(new String(sb), i, j);
+				oldValueB[i][j] = val[j];
+			    }
+			}
+			break;
+		    }
+		    case Pwr.eType_Int32:
+		    case Pwr.eType_Int16:
+		    case Pwr.eType_Int8:
+		    case Pwr.eType_UInt32:
+		    case Pwr.eType_UInt16:
+		    case Pwr.eType_UInt8: {
+			int[] val = dyn.graph.getGdh().getObjectRefInfoIntArray(p[i], elements[i]);
+			for ( int j = 0; j < Math.min(elements[i], val.length); j++) {
+			    if ( oldValueI[i][j] != val[j] || firstScan) {
+				sb = cFormat[i].format( val[j], sb);
+				object.setValue(new String(sb), i, j);
+				oldValueI[i][j] = val[j];
+			    }
+			}
+			break;
+		    }
+		    case Pwr.eType_String:
+		    case Pwr.eType_Objid:
+		    case Pwr.eType_AttrRef:
+		    case Pwr.eType_Time:
+		    case Pwr.eType_DeltaTime: {
+			String[] val = dyn.graph.getGdh().getObjectRefInfoStringArray(p[i], type_id[i],
+										      size[i], elements[i]);
+			for ( int j = 0; j < Math.min(elements[i], val.length); j++) {
+			    if ( firstScan || !oldValueS[i][j].equals(val[j])) {
+				switch ( type_id[i]) {
+				case Pwr.eType_AttrRef:
+				case Pwr.eType_Objid: {
+				    if ( format[i].equals("%1o"))
+					object.setValue(val[j], i, j);
+				    else {
+					int idx = val[j].lastIndexOf('-');
+					if ( idx == -1)
+					    object.setValue(val[j], i, j);
+					else
+					    object.setValue(val[j].substring(idx+1), i, j);
+				    }
+					
+				    break;
+				}
+				default:
+				    object.setValue(val[j], i, j);
+				}
+				oldValueS[i][j] = val[j];
+			    }
+			}
+			break;
+		    }
+		    }
+		}
+		else {
+		    // $header reference
+		    for ( int j = 0; j < elements[i]; j++) {
+			if ( hp[i][j] == -1)
+			    continue;
+
+			switch ( type_id[i]) {
+			case Pwr.eType_Float32: {
+			    float val = dyn.graph.getGdh().getObjectRefInfoFloat(hp[i][j]);
+			    if ( oldValueF[i][j] != val || firstScan) {
+				sb = cFormat[i].format( val, sb);
+				object.setValue(new String(sb), i, j);
+				oldValueF[i][j] = val;
+			    }
+			    break;
+			}
+			case Pwr.eType_Boolean: {
+			    boolean val = dyn.graph.getGdh().getObjectRefInfoBoolean(hp[i][j]);
+			    if ( firstScan || oldValueB[i][j] != val) {
+				if ( val)
+				    object.setValue(new String("1"), i, j);
+				else
+				    object.setValue(new String("0"), i, j);
+				object.setValue(new String(sb), i, j);
+				oldValueB[i][j] = val;
+			    }
+			    break;
+			}
+			case Pwr.eType_Int32:
+			case Pwr.eType_Int16:
+			case Pwr.eType_Int8:
+			case Pwr.eType_UInt32:
+			case Pwr.eType_UInt16:
+			case Pwr.eType_UInt8: {
+			    int val = dyn.graph.getGdh().getObjectRefInfoInt(hp[i][j]);
+			    if ( oldValueI[i][j] != val || firstScan) {
+				sb = cFormat[i].format( val, sb);
+				object.setValue(new String(sb), i, j);
+				oldValueI[i][j] = val;
+			    }
+			    break;
+			}
+			case Pwr.eType_String:
+			case Pwr.eType_Objid:
+			case Pwr.eType_AttrRef:
+			case Pwr.eType_Time:
+			case Pwr.eType_DeltaTime: {
+			    String val = dyn.graph.getGdh().getObjectRefInfoString(hp[i][j], type_id[i]);
+			    if ( firstScan || !oldValueS[i][j].equals(val)) {
+				object.setValue(val, i, j);
+				oldValueS[i][j] = val;
+			    }
+			    break;
+			}
+			}			
+		    }
+		}
+	    }
+
+	    if ( firstScan)
+		firstScan = false;
+	}
     }
 
     public class DynStatusColor extends DynElem {
 	String attribute;
 	int nostatus_color;
+	PwrtRefId subid;
+	int p;
+	int database;
+	boolean inverted;
+	boolean attrFound = false;
+	int oldValue;
+	boolean firstScan = true;
+	int a_typeid;
+	int oldStatus;
+	boolean on;
+
 
 	public DynStatusColor( Dyn dyn) {
 	    super(dyn, Dyn.mDynType1_StatusColor, 0, 0, 0);
+	}
+
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+
+	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
+	    if ( pname == null || pname.name.equals("")) 
+		return 1;
+
+	    GdhrRefObjectInfo ret = null;
+
+	    switch( pname.database) {
+	    case GraphIfc.eDatabase_Gdh:
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		break;
+	    default:
+		ret = null;
+	    }
+
+	    if ( ret == null || ret.evenSts()) {
+		System.out.println("StatusColor: " + attribute);
+		return 1;
+	    }
+
+	    attrFound = true;
+	    p = ret.id;
+	    subid = ret.refid;
+	    a_typeid = pname.type;
+	    database = pname.database;
+
+	    return 1;
+	}
+
+
+	public void disconnect() {
+	    if ( attrFound && database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid);
+	}
+	
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+	    if ( !attrFound || dyn.ignoreColor)
+		return;
+
+	    if ( database == GraphIfc.eDatabase_Gdh && a_typeid == Pwr.eType_NetStatus) {
+		// TODO get subscription oldness
+	    }
+
+	    int value = dyn.graph.getGdh().getObjectRefInfoInt( p);
+
+	    if ( !firstScan && oldStatus != Dyn.ePwrStatus_Fatal) {
+		if ( oldValue == value && dyn.resetColor)
+		    // No change since last time
+		    return;
+	    }
+
+	    oldValue = value;
+
+	    if ( value == 0)
+		value = Dyn.ePwrStatus_No;
+	    else {
+		switch ( value & 7) {
+		case 3:
+		case 1:
+		    value = Dyn.ePwrStatus_Success;
+		    break;
+		case 0:
+		    value = Dyn.ePwrStatus_Warning;
+		    break;
+		case 2:
+		    value = Dyn.ePwrStatus_Error;
+		    break;
+		case 4:
+		    value = Dyn.ePwrStatus_Fatal;
+		    break;
+		default:
+		    value = Dyn.ePwrStatus_No;
+		}
+	    }
+	    if ( !firstScan && oldStatus == value && oldStatus != Dyn.ePwrStatus_Fatal)
+		return;
+	    else
+		firstScan = false;
+
+	    if ( (dyn.total_dyn_type1 & Dyn.mDynType1_Tone) != 0) {
+		switch ( value) {
+		case Dyn.ePwrStatus_No:
+		    if ( nostatus_color >= Glow.eDrawTone__)
+			object.setFillColor( nostatus_color);
+		    else
+			object.setColorTone( nostatus_color);
+		    break;
+		case Dyn.ePwrStatus_Success:
+		    if ( nostatus_color >= Glow.eDrawTone__)
+			object.resetFillColor();
+		    object.resetColorTone();
+		    break;
+		case Dyn.ePwrStatus_Warning:
+		    object.setColorTone( Glow.eDrawTone_Yellow);
+		    break;
+		case Dyn.ePwrStatus_Error:
+		    object.setColorTone( Glow.eDrawTone_Red);
+		    break;
+		case Dyn.ePwrStatus_Fatal:
+		    on = !on;
+		    if ( on)
+			object.setColorTone( Glow.eDrawTone_Red);
+		    else {
+			if ( nostatus_color >= Glow.eDrawTone__)
+			    object.setFillColor( nostatus_color);
+			else
+			    object.setColorTone( nostatus_color);
+		    }
+		    break;
+		}
+		dyn.repaintNow = true;
+	    }
+	    else {
+		switch ( value) {
+		case Dyn.ePwrStatus_No:
+		    object.setFillColor( nostatus_color);
+		    break;
+		case Dyn.ePwrStatus_Success:
+		    object.resetFillColor();
+		    break;
+		case Dyn.ePwrStatus_Warning:
+		    object.setFillColor( Glow.eDrawType_ColorYellow);
+		    break;
+		case Dyn.ePwrStatus_Error:
+		    object.setFillColor( Glow.eDrawType_ColorRed);
+		    break;
+		case Dyn.ePwrStatus_Fatal:
+		    on = !on;
+		    if ( on)
+			object.setFillColor( Glow.eDrawType_ColorRed);
+		    else
+			object.setFillColor( nostatus_color);
+		    break;
+		}
+		dyn.repaintNow = true;
+	    }
+	    oldStatus = value;
 	}
 
 	public void open( BufferedReader reader) {
@@ -4064,7 +4569,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynStatusColor : " + line);
 
 		    switch ( key) {
@@ -4075,7 +4580,7 @@ public class Dyn {
 			    attribute = token.nextToken();
 			break;
 		    case Dyn.eSave_StatusColor_nostatus_color: 
-			nostatus_color = new Integer(token.nextToken()).intValue();
+			nostatus_color = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -4111,7 +4616,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynPie : " + line);
 
 		    switch ( key) {
@@ -4199,7 +4704,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynBarChart : " + line);
 
 		    switch ( key) {
@@ -4288,7 +4793,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynAxis : " + line);
 
 		    switch ( key) {
@@ -4336,7 +4841,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynHostObject : " + line);
 
 		    switch ( key) {
@@ -4383,7 +4888,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynDigSound : " + line);
 
 		    switch ( key) {
@@ -4398,16 +4903,16 @@ public class Dyn {
 			    soundobject = token.nextToken();
 			break;
 		    case Dyn.eSave_DigSound_level: 
-			level = new Integer(token.nextToken()).intValue();
+			level = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_DigSound_interval: 
-			interval = new Integer(token.nextToken()).intValue();
+			interval = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_DigSound_instance: 
-			instance = new Integer(token.nextToken()).intValue();
+			instance = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_DigSound_instance_mask: 
-			instance_mask = new Integer(token.nextToken()).intValue();
+			instance_mask = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -4466,14 +4971,14 @@ public class Dyn {
 		return 0;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    default:
 		ret = null;
@@ -4510,9 +5015,9 @@ public class Dyn {
 
 	    min_value_p = 0;
 	    pname = dyn.parseAttrName(minvalue_attr);
-	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && database == GraphIfc.eDatabase_Gdh) {
+	    if ( pname != null && !pname.name.equals("") && pname.type == Pwr.eType_Float32 && database == GraphIfc.eDatabase_Gdh) {
 		
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		if ( ret != null && ret.oddSts()) {
 		    min_value_p = ret.id;
 		    min_value_subid = ret.refid;
@@ -4521,9 +5026,9 @@ public class Dyn {
 
 	    max_value_p = 0;
 	    pname = dyn.parseAttrName(maxvalue_attr);
-	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 && database == GraphIfc.eDatabase_Gdh) {
+	    if ( pname != null && !pname.name.equals("") && pname.type == Pwr.eType_Float32 && database == GraphIfc.eDatabase_Gdh) {
 		
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		if ( ret != null && ret.oddSts()) {
 		    max_value_p = ret.id;
 		    max_value_subid = ret.refid;
@@ -4610,7 +5115,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynFillLevel : " + line);
 
 		    switch ( key) {
@@ -4621,10 +5126,10 @@ public class Dyn {
 			    attribute = token.nextToken();
 			break;
 		    case Dyn.eSave_FillLevel_color: 
-			color = new Integer(token.nextToken()).intValue();
+			color = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_FillLevel_direction: 
-			direction = new Integer(token.nextToken()).intValue();
+			direction = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_FillLevel_min_value: 
 			min_value = new Double(token.nextToken()).doubleValue();
@@ -4680,14 +5185,14 @@ public class Dyn {
 	    GrowNode object = (GrowNode)o;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    case GraphIfc.eDatabase_Ccm:
 		// TODO
@@ -4750,7 +5255,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynDigCommand : " + line);
 
 		    switch ( key) {
@@ -4765,10 +5270,10 @@ public class Dyn {
 			    command = line.substring(5);
 			break;
 		    case Dyn.eSave_DigCommand_instance: 
-			instance = new Integer(token.nextToken()).intValue();
+			instance = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_DigCommand_instance_mask: 
-			instance_mask = new Integer(token.nextToken()).intValue();
+			instance_mask = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -4804,7 +5309,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynPopupMenu : " + line);
 
 		    switch ( key) {
@@ -4840,8 +5345,7 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_SetDig, 0);
 	}
 
-	public int action( GlowArrayElem o, GlowEvent e) {
-	    GrowNode object = (GrowNode)o;
+	public int action( GlowArrayElem object, GlowEvent e) {
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -4880,7 +5384,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynSetDig : " + line);
 
 		    switch ( key) {
@@ -4891,10 +5395,10 @@ public class Dyn {
 			    attribute = token.nextToken();
 			break;
 		    case Dyn.eSave_SetDig_instance: 
-			instance = new Integer(token.nextToken()).intValue();
+			instance = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_SetDig_instance_mask: 
-			instance_mask = new Integer(token.nextToken()).intValue();
+			instance_mask = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -4922,8 +5426,7 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_ResetDig, 0);
 	}
 
-	public int action( GlowArrayElem o, GlowEvent e) {
-	    GrowNode object = (GrowNode)o;
+	public int action( GlowArrayElem object, GlowEvent e) {
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -4962,7 +5465,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynResetDig : " + line);
 
 		    switch ( key) {
@@ -4973,10 +5476,10 @@ public class Dyn {
 			    attribute = token.nextToken();
 			break;
 		    case Dyn.eSave_ResetDig_instance: 
-			instance = new Integer(token.nextToken()).intValue();
+			instance = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_ResetDig_instance_mask: 
-			instance_mask = new Integer(token.nextToken()).intValue();
+			instance_mask = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -5004,8 +5507,7 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_ToggleDig, 0);
 	}
 
-	public int action( GlowArrayElem o, GlowEvent e) {
-	    GrowNode object = (GrowNode)o;
+	public int action( GlowArrayElem object, GlowEvent e) {
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -5044,7 +5546,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynToggleDig : " + line);
 
 		    switch ( key) {
@@ -5080,8 +5582,7 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_StoDig, 0);
 	}
 
-	public int action( GlowArrayElem o, GlowEvent e) {
-	    GrowNode object = (GrowNode)o;
+	public int action( GlowArrayElem object, GlowEvent e) {
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down: {
 		object.setColorInverse( 1);
@@ -5137,7 +5638,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynStoDig : " + line);
 
 		    switch ( key) {
@@ -5173,8 +5674,7 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_Command, 0);
 	}
 
-	public int action( GlowArrayElem o, GlowEvent e) {
-	    GrowNode object = (GrowNode)o;
+	public int action( GlowArrayElem object, GlowEvent e) {
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -5204,7 +5704,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynCommand : " + line);
 
 		    switch ( key) {
@@ -5239,8 +5739,7 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_CommandDoubleClick, 0);
 	}
 
-	public int action( GlowArrayElem o, GlowEvent e) {
-	    GrowNode object = (GrowNode)o;
+	public int action( GlowArrayElem object, GlowEvent e) {
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -5270,7 +5769,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynCommandDoubleClick : " + line);
 
 		    switch ( key) {
@@ -5330,7 +5829,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynConfirm : " + line);
 
 		    switch ( key) {
@@ -5369,7 +5868,7 @@ public class Dyn {
 	    super(dyn, 0, 0, Dyn.mActionType1_IncrAnalog, 0);
 	}
 
-	public int action(GrowNode o, GlowEvent e) {
+	public int action( GlowArrayElem o, GlowEvent e) {
 	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
@@ -5438,7 +5937,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynIncrAnalog : " + line);
 
 		    switch ( key) {
@@ -5496,14 +5995,14 @@ public class Dyn {
 	    GrowNode object = (GrowNode)o;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    case GraphIfc.eDatabase_Ccm:
 		// TODO
@@ -5557,7 +6056,7 @@ public class Dyn {
 	    oldValue = value;
 	}
 
-	public int action(GrowNode o, GlowEvent e) {
+	public int action( GlowArrayElem o, GlowEvent e) {
 	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
@@ -5636,7 +6135,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynRadioButton : " + line);
 
 		    switch ( key) {
@@ -5680,7 +6179,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynTipText : " + line);
 
 		    switch ( key) {
@@ -5753,7 +6252,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynHelp : " + line);
 
 		    switch ( key) {
@@ -5845,7 +6344,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynOpenGraph : " + line);
 
 		    switch ( key) {
@@ -5912,7 +6411,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynOpenURL : " + line);
 
 		    switch ( key) {
@@ -5959,14 +6458,14 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynInputFocus : " + line);
 
 		    switch ( key) {
 		    case Dyn.eSave_InputFocus: 
 			break;
 		    case Dyn.eSave_InputFocus_initial_focus: 
-			initial_focus = new Integer(token.nextToken()).intValue();
+			initial_focus = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_InputFocus_next_horizontal: 
 			if ( token.hasMoreTokens())
@@ -6013,7 +6512,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynCloseGraph : " + line);
 
 		    switch ( key) {
@@ -6077,14 +6576,14 @@ public class Dyn {
 	    GrowSlider object = (GrowSlider)o;
 	    System.out.println("Slider connect");
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    default:
 		ret = null;
@@ -6158,12 +6657,12 @@ public class Dyn {
 	    
 	    max_value_p = 0;
 	    pname = dyn.parseAttrName(maxvalue_attr);
-	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 ) {
+	    if ( pname != null && !pname.name.equals("") && pname.type == Pwr.eType_Float32 ) {
 		ret = null;
 		
 		switch( pname.database) {
 		case GraphIfc.eDatabase_Gdh:
-		    ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		    break;
 		default:
 		    ret = null;
@@ -6176,12 +6675,12 @@ public class Dyn {
 
 	    min_value_p = 0;
 	    pname = dyn.parseAttrName(minvalue_attr);
-	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Float32 ) {
+	    if ( pname != null && !pname.name.equals("") && pname.type == Pwr.eType_Float32 ) {
 		ret = null;
 
 		switch( pname.database) {
 		case GraphIfc.eDatabase_Gdh:
-		    ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		    break;
 		default:
 		    ret = null;
@@ -6194,13 +6693,13 @@ public class Dyn {
 
 	    insensitive_p = 0;
 	    pname = dyn.parseAttrName(insensitive_attr);
-		    System.out.println("Slider insensitive " + pname.name + " type : " + pname.type);
-	    if ( pname != null && !pname.name.isEmpty() && pname.type == Pwr.eType_Boolean) {
+	    if ( pname != null && !pname.name.equals("") && pname.type == Pwr.eType_Boolean) {
+		System.out.println("Slider insensitive " + pname.name + " type : " + pname.type);
 		ret = null;
 		
 		switch( pname.database) {
 		case GraphIfc.eDatabase_Gdh:
-		    ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		    break;
 		case GraphIfc.eDatabase_Local:
 		    ret = dyn.graph.getLdb().refObjectInfo( graph, pname.name);
@@ -6216,6 +6715,7 @@ public class Dyn {
 		    insensitive_db = pname.database;
 		}
 	    }
+	    System.out.println("Slider connect end");
 	    return 1;
 	}
 
@@ -6370,6 +6870,7 @@ public class Dyn {
 		    }
 		    System.out.println("Slider ivalue " + ivalue + " pos_y " + pos_y);
 		    object.set_position(pos_x, pos_y);
+		    System.out.println("Slider positioned");
 		}
 	    }
 
@@ -6393,10 +6894,10 @@ public class Dyn {
 		if ( direction == Glow.eDirection_Right || 
 		     direction == Glow.eDirection_Left)
 		    dyn.graph.getCtx().setMoveRestrictions( Glow.eMoveRestriction_HorizontalSlider,
-							    info.max_position, info.min_position, e.object);
+							    info.max_position, info.min_position, (GlowArrayElem)e.object);
 		else
 		    dyn.graph.getCtx().setMoveRestrictions( Glow.eMoveRestriction_VerticalSlider,
-							    info.max_position, info.min_position, e.object);
+							    info.max_position, info.min_position, (GlowArrayElem)e.object);
 
 		dyn.graph.setCurrentSlider((GrowSlider)object);
 		break;
@@ -6441,7 +6942,7 @@ public class Dyn {
 			value = min_value;
       
 		    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-		    if ( pname == null || pname.name.isEmpty()) 
+		    if ( pname == null || pname.name.equals("")) 
 			return 1;
 
 		    PwrtStatus sts;
@@ -6478,7 +6979,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynSlider : " + line);
 
 		    switch ( key) {
@@ -6536,7 +7037,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynFastCurve : " + line);
 
 		    switch ( key) {
@@ -6547,10 +7048,10 @@ public class Dyn {
 			    fast_object = token.nextToken();
 			break;
 		    case Dyn.eSave_FastCurve_curve_index1: 
-			curve_index1 = new Integer(token.nextToken()).intValue();
+			curve_index1 = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_FastCurve_curve_index2: 
-			curve_index2 = new Integer(token.nextToken()).intValue();
+			curve_index2 = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -6575,6 +7076,8 @@ public class Dyn {
 	int button_mask;
 	String[] items_text = new String[32];
 	Dyn[] items_dyn = new Dyn[32];
+	GrowMenu menu_object;
+	int text_size;
 
 	public DynPulldownMenu( Dyn dyn) {
 	    super(dyn, 0, 0, Dyn.mActionType1_PulldownMenu, 0);
@@ -6582,31 +7085,143 @@ public class Dyn {
 
 	public int action( GlowArrayElem o, GlowEvent e) {
 	    GrowNode object = (GrowNode)o;
-	    /*
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Click:
+		if ( menu_object != null) {
+		    // Close, delete this menu and all childmenues
+		    for ( int j = 0; j < 32; j++) {
+			if ( items_dyn[j]  != null &&
+			     (items_dyn[j].action_type1 & Dyn.mActionType1_PulldownMenu) != 0)
+			    items_dyn[j].action( null, e);
+		    }
+		    dyn.graph.getCtx().remove(menu_object);
+		    menu_object = null;
+		}
+		else if ( object != null) {
+		    double	ll_x, ll_y, ur_x, ur_y;
+		    GlowMenuInfo info = new GlowMenuInfo();
+
+		    int b_mask = 1;
+		    for ( int i = 0; i < 32; i++) {
+			if ( (b_mask & button_mask) != 0) {
+			    info.item[i].occupied = true;
+			    info.item[i].text = new String(items_text[i]);
+			    
+			    // Check access
+			    if ( (items_dyn[i].action_type1 & Dyn.mActionType1_PulldownMenu) != 0)
+				info.item[i].type = Glow.eMenuItem_PulldownMenu;
+			    else {
+				// Check access
+				if ( dyn.graph.isAuthorized( items_dyn[i].access)) {
+				    info.item[i].type = Glow.eMenuItem_Button;
+				    if ( (items_dyn[i].dyn_type1 & Dyn.mDynType1_Invisible) != 0) {
+					int		sts;
+					DynInvisible 	invis_element = null;
+					String 		command;
+
+					for ( int j = 0; j < dyn.elements.size(); j++) {
+					    if ( dyn.elements.get(j).dyn_type1 == Dyn.mDynType1_Invisible) {
+						invis_element = (DynInvisible)dyn.elements.get(j);
+					    }
+					}
+					if ( invis_element != null) {
+					    DynParsedAttrName pname = dyn.parseAttrName(invis_element.attribute);
+					    if ( (pname != null) && !pname.name.equals("")) {
+						if ( pname.name.startsWith("$cmd(")) {
+						    int idx = pname.name.lastIndexOf(")");
+						    if ( idx != -1) {
+							command = pname.name.substring(5, idx);
+							command = dyn.graph.getCommand(command);
+							sts = dyn.graph.command(command);
+							if ( (sts & 1) == 0)
+							    info.item[i].type = Glow.eMenuItem_ButtonDisabled;
+						    }
+						}
+					    }
+					    else {
+						CdhrBoolean ret = dyn.graph.getGdh().getObjectInfoBoolean( pname.name);
+						if (ret.oddSts()) {
+						    if ( (!pname.inverted && ret.value) || (pname.inverted && !ret.value)) {
+							if ( invis_element.dimmed != 0) 
+							    info.item[i].type = Glow.eMenuItem_ButtonDisabled;
+							else
+							    info.item[i].occupied = false;
+						    }		      
+						}
+					    }
+					}
+				    }
+				}
+				else
+				    info.item[i].type = Glow.eMenuItem_ButtonDisabled;
+			    }
+			}
+			else
+			    info.item[i].occupied = false;
+			b_mask = b_mask << 1;
+		    }
+
+		    // Get fillcolor, and textattributes from object
+		    int text_drawtype = 0, text_color = 0, bg_color = 0;
+		    int text_size = 0;
+		    int sts;
+		    double scale = 1;
+		    int text_font = 0;
+		    
+		    sts = 0; // TODO sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, &bg_color, &scale, &text_font);
+		    if ( (sts & 1) == 0) {
+			text_size = 2;
+			text_drawtype = Glow.eDrawType_TextHelveticaBold;
+			text_font = Glow.eFont_Helvetica;
+			text_color = Glow.eDrawType_Line;
+			bg_color = Glow.eDrawType_LightGray;
+		    }
+		    else if ( bg_color == Glow.eDrawType_No || bg_color == Glow.eDrawType_Inherit)
+			bg_color = Glow.eDrawType_LightGray;
+		    
+		    GlowGeometry g = object.measure();
+		    menu_object = new GrowMenu( dyn.graph.getCtx().cmn, "__Menu", info, g.ll_x, g.ur_y, g.ur_x - g.ll_x,
+						Glow.eDrawType_Line, 0, 1, 1, bg_color, text_size,
+						text_drawtype, text_color,
+						Glow.eDrawType_MediumGray, text_font);
+		    menu_object.set_scale( scale, scale, 0, 0, Glow.eScaleType_LowerLeft);
+		    System.out.println("Insert menu" + menu_object);
+		    dyn.graph.getCtx().insert(menu_object);
+
+		    // grow_SetMenuInputFocus( menu_object, 1);
+		}
+
 		break;
 	    case Glow.eEvent_MenuActivated:
 		if ( menu_object == null)
 		    break;
 		if ( e.object == menu_object) {
-		    if ( items_dyn[e.item] != null) {
-			GlowEvent event;
+		    if ( items_dyn[((GlowEventMenu)e).item] != null) {
+			GlowEvent event = new GlowEvent();
 			event.event = Glow.eEvent_MB1Click;
-			return items_dyn[event.item].action( e.object, event);
+			return items_dyn[((GlowEventMenu)e).item].action( (GlowArrayElem)e.object, event);
 		    }
 		}
 		else {
 		    for ( int j = 0; j < 32; j++) {
 			if ( items_dyn[j] != null && 
-			     items_dyn[j].action_type1 & Dyn.mActionType1_PulldownMenu != 0)
+			     (items_dyn[j].action_type1 & Dyn.mActionType1_PulldownMenu) != 0)
 			    items_dyn[j].action( null, e);
 		    }
 		}
 		break;
+	    case Glow.eEvent_MenuDelete:
+		if ( menu_object == null)
+		    break;
+		if ( e.object == null || e.object == menu_object) {
+		    // Delete this menu
+		    dyn.graph.getCtx().remove(menu_object);
+		    menu_object = null;
+		}
+		break;
+
 	    default: ;
 	    }
-	    */
 	    return 1;
 	}
 
@@ -6618,14 +7233,14 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynPulldownMenu : " + line);
 
 		    switch ( key) {
 		    case Dyn.eSave_PulldownMenu: 
 			break;
 		    case Dyn.eSave_PulldownMenu_button_mask: 
-			button_mask = new Integer(token.nextToken()).intValue();
+			button_mask = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_PulldownMenu_items_text0: 
 			if ( token.hasMoreTokens())
@@ -6940,14 +7555,14 @@ public class Dyn {
 	    GrowNode object = (GrowNode)o;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname == null || pname.name.isEmpty()) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 
 	    GdhrRefObjectInfo ret = null;
 
 	    switch( pname.database) {
 	    case GraphIfc.eDatabase_Gdh:
-		ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 		break;
 	    case GraphIfc.eDatabase_Local:
 		ret = dyn.graph.getLdb().refObjectInfo( graph, pname.name);
@@ -6969,16 +7584,16 @@ public class Dyn {
 	    database = pname.database;
 	    attrFound = true;
 
-	    if ( text_attribute != null && !text_attribute.isEmpty() && 
-		 update_attribute != null && !update_attribute.isEmpty()) {
+	    if ( text_attribute != null && !text_attribute.equals("") && 
+		 update_attribute != null && !update_attribute.equals("")) {
 
 		pname = dyn.parseAttrName(update_attribute);
-		if ( pname != null && !pname.name.isEmpty()) {
+		if ( pname != null && !pname.name.equals("")) {
 		    ret = null;
 
 		    switch( pname.database) {
 		    case GraphIfc.eDatabase_Gdh:
-			ret = dyn.graph.getGdh().refObjectInfo( pname.name);
+			ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
 			break;
 		    default:
 			ret = null;
@@ -7166,7 +7781,7 @@ public class Dyn {
 		    // Set enum value to attribute
       
 		    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-		    if ( pname == null || pname.name.isEmpty()) 
+		    if ( pname == null || pname.name.equals("")) 
 			return 1;
 
 		    PwrtStatus sts = null;
@@ -7228,7 +7843,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynOptionMenu : " + line);
 
 		    switch ( key) {
@@ -7251,10 +7866,10 @@ public class Dyn {
 			    update_attribute = token.nextToken();
 			break;
 		    case Dyn.eSave_OptionMenu_optionmenu_type: 
-			optionmenu_type = new Integer(token.nextToken()).intValue();
+			optionmenu_type = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_button_mask: 
-			button_mask = new Integer(token.nextToken()).intValue();
+			button_mask = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_text0: 
 			if ( token.hasMoreTokens())
@@ -7385,100 +8000,100 @@ public class Dyn {
 			    items_text[31] = token.nextToken();
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum0: 
-			items_enum[0] = new Integer(token.nextToken()).intValue();
+			items_enum[0] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum1: 
-			items_enum[1] = new Integer(token.nextToken()).intValue();
+			items_enum[1] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum2: 
-			items_enum[2] = new Integer(token.nextToken()).intValue();
+			items_enum[2] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum3: 
-			items_enum[3] = new Integer(token.nextToken()).intValue();
+			items_enum[3] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum4: 
-			items_enum[4] = new Integer(token.nextToken()).intValue();
+			items_enum[4] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum5: 
-			items_enum[5] = new Integer(token.nextToken()).intValue();
+			items_enum[5] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum6: 
-			items_enum[6] = new Integer(token.nextToken()).intValue();
+			items_enum[6] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum7: 
-			items_enum[7] = new Integer(token.nextToken()).intValue();
+			items_enum[7] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum8: 
-			items_enum[8] = new Integer(token.nextToken()).intValue();
+			items_enum[8] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum9: 
-			items_enum[9] = new Integer(token.nextToken()).intValue();
+			items_enum[9] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum10: 
-			items_enum[10] = new Integer(token.nextToken()).intValue();
+			items_enum[10] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum11: 
-			items_enum[11] = new Integer(token.nextToken()).intValue();
+			items_enum[11] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum12: 
-			items_enum[12] = new Integer(token.nextToken()).intValue();
+			items_enum[12] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum13: 
-			items_enum[13] = new Integer(token.nextToken()).intValue();
+			items_enum[13] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum14: 
-			items_enum[14] = new Integer(token.nextToken()).intValue();
+			items_enum[14] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum15: 
-			items_enum[15] = new Integer(token.nextToken()).intValue();
+			items_enum[15] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum16: 
-			items_enum[16] = new Integer(token.nextToken()).intValue();
+			items_enum[16] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum17: 
-			items_enum[17] = new Integer(token.nextToken()).intValue();
+			items_enum[17] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum18: 
-			items_enum[18] = new Integer(token.nextToken()).intValue();
+			items_enum[18] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum19: 
-			items_enum[19] = new Integer(token.nextToken()).intValue();
+			items_enum[19] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum20: 
-			items_enum[20] = new Integer(token.nextToken()).intValue();
+			items_enum[20] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum21: 
-			items_enum[21] = new Integer(token.nextToken()).intValue();
+			items_enum[21] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum22: 
-			items_enum[22] = new Integer(token.nextToken()).intValue();
+			items_enum[22] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum23: 
-			items_enum[23] = new Integer(token.nextToken()).intValue();
+			items_enum[23] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum24: 
-			items_enum[24] = new Integer(token.nextToken()).intValue();
+			items_enum[24] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum25: 
-			items_enum[25] = new Integer(token.nextToken()).intValue();
+			items_enum[25] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum26: 
-			items_enum[26] = new Integer(token.nextToken()).intValue();
+			items_enum[26] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum27: 
-			items_enum[27] = new Integer(token.nextToken()).intValue();
+			items_enum[27] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum28: 
-			items_enum[28] = new Integer(token.nextToken()).intValue();
+			items_enum[28] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum29: 
-			items_enum[29] = new Integer(token.nextToken()).intValue();
+			items_enum[29] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum30: 
-			items_enum[30] = new Integer(token.nextToken()).intValue();
+			items_enum[30] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum31: 
-			items_enum[31] = new Integer(token.nextToken()).intValue();
+			items_enum[31] = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -7518,7 +8133,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynAnalogText : " + line);
 
 		    switch ( key) {
@@ -7562,7 +8177,7 @@ public class Dyn {
 	    try {
 		while( (line = reader.readLine()) != null) {
 		    token = new StringTokenizer(line);
-		    int key = new Integer(token.nextToken()).intValue();
+		    int key = Integer.valueOf(token.nextToken());
 		    if ( Dyn.debug) System.out.println( "DynSetValue : " + line);
 
 		    switch ( key) {
@@ -7577,10 +8192,10 @@ public class Dyn {
 			    value = token.nextToken();
 			break;
 		    case Dyn.eSave_SetValue_instance: 
-			instance = new Integer(token.nextToken()).intValue();
+			instance = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_SetValue_instance_mask: 
-			instance_mask = new Integer(token.nextToken()).intValue();
+			instance_mask = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;

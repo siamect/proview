@@ -78,12 +78,13 @@ public class GlowTransform {
 	String line;
 	StringTokenizer token;
 	boolean end_found = false;
+	boolean debug = false;
 
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
-		if ( true) System.out.println( "GlowTransform : " + line);
+		int key = Integer.valueOf(token.nextToken());
+		if ( debug) System.out.println( "GlowTransform : " + line);
 
 		switch ( key) {
 		case Glow.eSave_Transform: break;
@@ -261,7 +262,7 @@ public class GlowTransform {
     }
 
     public GlowPoint reverse( double x, double y) {
-	GlowPoint p = new GlowPoint(null);
+	GlowPoint p = new GlowPoint();
 	if ( a11 == 0 || ( a12 * a21 - a11 * a22) == 0) {
 	    if ( a11 == 0 && a22 == 0 && a12 != 0 && a21 != 0) {
 		p.y = (x - a13) / a12;

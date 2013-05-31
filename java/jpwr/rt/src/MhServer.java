@@ -233,7 +233,7 @@ public class MhServer
       System.exit(1);
     }
 
-    gdh = new Gdh((Object)null);
+    gdh = new Gdh((GdhApplIfc)null);
     errh = new Errh("MhServer", Errh.eAnix_webmonmh);
     errh.setStatus( Errh.PWR__SRVSTARTUP);
     int sts = getHandlerObject();

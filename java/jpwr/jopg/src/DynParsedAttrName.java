@@ -39,6 +39,7 @@ package jpwr.jopg;
 
 public class DynParsedAttrName {
     public String name;
+    public String tname;
     public boolean inverted;
     public int elements;
     public int type;

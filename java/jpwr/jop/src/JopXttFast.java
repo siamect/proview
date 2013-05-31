@@ -50,7 +50,7 @@ import javax.swing.Timer;
 import java.net.URL;
 import jpwr.rt.*;
 
-public class JopXttFast implements ActionListener, JopCurveIfc {
+public class JopXttFast implements ActionListener, JopCurveIfc, GdhApplIfc {
     public static final int XTT_FAST_MAX = 20;
     public static final int FAST_CURVES = 10;
 
@@ -89,7 +89,7 @@ public class JopXttFast implements ActionListener, JopCurveIfc {
     boolean oldNewCurve;
 
     public JopXttFast( String fastObject) {
-	engine = new JopEngine( 1000, (Object)this);
+	engine = new JopEngine( 1000, this);
 	session = new JopSession( engine, (Object)this);
 
 	this.fastObject = fastObject;
@@ -313,6 +313,11 @@ public class JopXttFast implements ActionListener, JopCurveIfc {
 	    }
 	    oldNewCurve = newCurve;
 	}	
+    }
+
+    // GdhApplIfc function
+    public String getPwrHost() {
+	return (String)null;
     }
 
 

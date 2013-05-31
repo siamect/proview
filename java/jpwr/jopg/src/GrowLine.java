@@ -59,8 +59,8 @@ public class GrowLine extends GlowArrayElem {
     public GrowLine(GrowCmn cmn) {
 	this.cmn = cmn;
 	trf = new GlowTransform();
-	p1 = new GlowPoint(cmn);
-	p2 = new GlowPoint(cmn);
+	p1 = new GlowPoint();
+	p2 = new GlowPoint();
     }
 
     public int type() {
@@ -75,7 +75,7 @@ public class GrowLine extends GlowArrayElem {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GrowLine : " + line);
 
 		switch ( key) {
@@ -98,13 +98,13 @@ public class GrowLine extends GlowArrayElem {
 		    y_low = new Double(token.nextToken()).doubleValue(); 
 		    break;
 		case Glow.eSave_GrowLine_line_type: 
-		    line_type = new Integer(token.nextToken()).intValue(); 
+		    line_type = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowLine_original_border_drawtype: 
-		    original_border_drawtype = new Integer(token.nextToken()).intValue(); 
+		    original_border_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowLine_dynamicsize:
-		    dynamicsize = new Integer(token.nextToken()).intValue();
+		    dynamicsize = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowLine_dynamic:
 		    if ( cmn.dynamicsize > 0) {
@@ -142,7 +142,7 @@ public class GrowLine extends GlowArrayElem {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GlowRect : " + line);
 
 		switch ( key) {
@@ -150,10 +150,10 @@ public class GrowLine extends GlowArrayElem {
 		case Glow.eSave_Line: 
 		    break;
 		case Glow.eSave_Line_draw_type: 
-		    draw_type = new Integer(token.nextToken()).intValue();
+		    draw_type = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Line_line_width:
-		    line_width = new Integer(token.nextToken()).intValue();
+		    line_width = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Line_p1:
 		    p1.open( reader);
@@ -205,6 +205,9 @@ public class GrowLine extends GlowArrayElem {
 
 
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {
+	if ( cmn.nodraw != 0)
+	    return;
+
 	if ( hot != 9 &&
 	     cmn.hot_indication != Glow.eHotIndication_LineWidth)
 	    hot = 0;

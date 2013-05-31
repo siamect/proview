@@ -53,7 +53,7 @@ import jpwr.rt.*;
  *@author     JN3920
  *@created    November 12, 2002
  */
-public class JopXttFrame extends JFrame
+public class JopXttFrame extends JFrame implements GdhApplIfc
 {
   JopSession session;
   JopEngine engine;
@@ -62,7 +62,7 @@ public class JopXttFrame extends JFrame
   /**  Description of the Method */
   public JopXttFrame()
   {
-    engine = new JopEngine( 1000, (Object)this);
+    engine = new JopEngine( 1000, this);
     session = new JopSession( engine, (Object)this);
     root = (Object) this;
     init((PwrtObjid)null);
@@ -101,6 +101,11 @@ public class JopXttFrame extends JFrame
     {
       this.xttTree.find(oid);
     }
+  }
+
+  // GdhApplIfc function
+  public String getPwrHost() {
+    return (String)null;
   }
 
   public static void main(String[] args)

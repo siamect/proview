@@ -2386,7 +2386,7 @@ static void gdh_crr_insert_cb( void *ctx, void *parent_node,
     case navc_eItemType_Crossref:
       if ( strcmp( crrctx->buf, "") != 0) {
         strcat( crrctx->buf, "\n");
-	crrctx->len++;x
+	crrctx->len++;
       }
       switch ( write) {
       case 0: 

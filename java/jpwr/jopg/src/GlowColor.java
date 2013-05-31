@@ -130,7 +130,7 @@ public class GlowColor {
 	int base_drawtype;
 	int drawtype;
 
-	if ( node != null && ((GrowNode)node).color_inverse != 0)
+	if ( node != null && ((GlowColorNode)node).getColorInverse() != 0)
 	    shift = - shift;
 
 	if ( dt >= 20) {
@@ -159,8 +159,8 @@ public class GlowColor {
 	int	intensity = 0;
 
 	if ( node != null) {
-	    lightness = ((GrowNode)node).color_lightness;
-	    intensity = ((GrowNode)node).color_intensity;
+	    lightness = ((GlowColorNode)node).getColorLightness();
+	    intensity = ((GlowColorNode)node).getColorIntensity();
 	}
 
 	if ( highlight != 0 && highlight_disabled == 0) {
@@ -171,8 +171,8 @@ public class GlowColor {
 	    drawtype = highlight_drawtype;
 	}
 	else {
-	    if ( node != null && ((GrowNode)node).color_tone != Glow.eDrawTone_No) {
-		int tone = ((GrowNode)node).color_tone;
+	    if ( node != null && ((GlowColorNode)node).getColorTone() != Glow.eDrawTone_No) {
+		int tone = ((GlowColorNode)node).getColorTone();
 
 		if ( local_drawtype > 30) {
 		    if ( tone == Glow.eDrawTone_LightGrayHighSaturation)
@@ -206,14 +206,14 @@ public class GlowColor {
 		else
 		    drawtype = local_drawtype;
 	    }
-	    else if ( node != null && fill == 1 && ((GrowNode)node).fill_drawtype != Glow.eDrawType_No) {
-		drawtype = ((GrowNode)node).fill_drawtype;
+	    else if ( node != null && fill == 1 && ((GlowColorNode)node).getFillDrawtype() != Glow.eDrawType_No) {
+		drawtype = ((GlowColorNode)node).getFillDrawtype();
 	    }
-	    else if ( node != null && fill == 2 && ((GrowNode)node).text_drawtype != Glow.eDrawType_No) {
-		drawtype = ((GrowNode)node).text_drawtype;
+	    else if ( node != null && fill == 2 && ((GlowColorNode)node).getTextDrawtype() != Glow.eDrawType_No) {
+		drawtype = ((GlowColorNode)node).getTextDrawtype();
 	    }
-	    else if ( node != null && fill == 0 && ((GrowNode)node).draw_type != Glow.eDrawType_No) {
-		drawtype = ((GrowNode)node).draw_type;
+	    else if ( node != null && fill == 0 && ((GlowColorNode)node).getDrawtype() != Glow.eDrawType_No) {
+		drawtype = ((GlowColorNode)node).getDrawtype();
 	    }
 	    else
 		drawtype = local_drawtype;
@@ -239,10 +239,10 @@ public class GlowColor {
 			drawtype = ( Glow.eDrawType_Color41 + incr);
 		}
 	    }
-	    if ( node != null && ((GrowNode)node).color_shift != 0) {
+	    if ( node != null && ((GlowColorNode)node).getColorShift() != 0) {
 		if ( drawtype >= 60) {
-		    incr = ((GrowNode)node).color_shift - 
-			((GrowNode)node).color_shift / 8 * 8;
+		    incr = ((GlowColorNode)node).getColorShift() - 
+			((GlowColorNode)node).getColorShift() / 8 * 8;
 		    if ( incr < 0)
 			incr += 8;
 
@@ -252,11 +252,11 @@ public class GlowColor {
 		    drawtype = incr;
 		}
 	    }
-	    if ( node != null && ((GrowNode)node).color_inverse != 0) {
+	    if ( node != null && ((GlowColorNode)node).getColorInverse() != 0) {
 		if ( drawtype >= 30)
 		    drawtype = drawtype + 10 - 2 * (drawtype % 10) - 1;      
 	    }
-	    if ( node != null && ((GrowNode)node).dimmed != 0) {
+	    if ( node != null && ((GlowColorNode)node).getDimmed() != 0) {
 		if ( drawtype == 0)
 		    drawtype = 25;
 		else if ( 26 <= drawtype && drawtype <= 29)

@@ -42,7 +42,7 @@ import java.util.*;
 
 public class GrowCmn {
 
-    GlowDrawIfc gdraw;
+    public GlowDrawIfc gdraw;
     public class GrowWindow {
 	public double zoom_factor_x;
 	public double zoom_factor_y;
@@ -60,14 +60,14 @@ public class GrowCmn {
     boolean antiAliasing;
     public GrowCtxIfc ctx;
 
-    GrowWindow mw = new GrowWindow();
+    public GrowWindow mw = new GrowWindow();
     double x_right;
     double x_left;
     double y_high;
     double y_low;
     String name;
     int version;
-    int background_color;
+    public int background_color;
     int dynamicsize;
     int arg_cnt;
     String argname[] = new String[20];
@@ -131,6 +131,13 @@ public class GrowCmn {
     }
     public void setGdraw(GlowDrawIfc gdraw) {
 	this.gdraw = gdraw;
+    }
+    public void setNodraw() {
+    	nodraw++;
+    }
+    public void resetNodraw() {
+    	if ( nodraw > 0)
+    		nodraw--;
     }
 
 }

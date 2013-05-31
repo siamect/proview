@@ -49,7 +49,7 @@ import javax.swing.border.*;
 import java.net.URL;
 import jpwr.rt.*;
 
-public class JopCurve extends JFrame
+public class JopCurve extends JFrame implements GdhApplIfc
 {
 
     static final int COLUMN_COLOR		= 0;
@@ -94,7 +94,7 @@ public class JopCurve extends JFrame
 	this.caller = caller;
 	this.gcd = gcd;
 
-	engine = new JopEngine( 1000, (Object)this);
+	engine = new JopEngine( 1000, this);
 	session = new JopSession( engine, (Object)this);
 
 	init();
@@ -856,6 +856,11 @@ public class JopCurve extends JFrame
 	}
 	
 
+    }
+
+    // GdhApplIfc function
+    public String getPwrHost() {
+	return (String)null;
     }
 }
 

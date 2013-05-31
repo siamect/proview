@@ -44,7 +44,7 @@ import java.awt.font.*;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class JopLoginApplet extends JApplet {
+public class JopLoginApplet extends JApplet implements GdhApplIfc {
   JPanel contentPane;
   BorderLayout borderLayout1 = new BorderLayout();
   BorderLayout borderLayout3 = new BorderLayout();
@@ -171,5 +171,9 @@ public class JopLoginApplet extends JApplet {
       textUser.setText("");
       textPassword.setText("");
     }
+  }
+
+  public String getPwrHost() {
+    return new String("");
   }
 }

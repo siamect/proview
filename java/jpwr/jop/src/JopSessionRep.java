@@ -197,7 +197,10 @@ public class JopSessionRep implements JopSessionIfc {
 	  if ( gcret.value > 0)
 	    suffix = Integer.toString(gcret.value);
 	}
-	name = "pwr_c_" + sret.str.toLowerCase() + ".pwg";  // Pwg test
+	if (sret.str.startsWith("$"))
+	    name = "pwr_c_" + sret.str.toLowerCase().substring(1) + ".pwg";  // Pwg test
+	else
+	    name = "pwr_c_" + sret.str.toLowerCase() + ".pwg";  // Pwg test
 	int pwgidx = name.lastIndexOf( ".pwg");
 	if (  pwgidx == -1) {
 	    if ( coid.objid.vid < Cdh.cUserClassVolMin ||

@@ -129,7 +129,7 @@ public class GrowPolyline extends GlowArrayElem {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GrowPolyline : " + line);
 
 		switch ( key) {
@@ -152,58 +152,58 @@ public class GrowPolyline extends GlowArrayElem {
 		    y_low = new Double(token.nextToken()).doubleValue(); 
 		    break;
 		case Glow.eSave_GrowPolyLine_original_border_drawtype: 
-		    original_border_drawtype = new Integer(token.nextToken()).intValue(); 
+		    original_border_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowPolyLine_original_fill_drawtype: 
-		    original_fill_drawtype = new Integer(token.nextToken()).intValue(); 
+		    original_fill_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowPolyLine_fill_drawtype: 
-		    fill_drawtype = new Integer(token.nextToken()).intValue(); 
+		    fill_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowPolyLine_border: 
-		    border = new Integer(token.nextToken()).intValue(); 
+		    border = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowPolyLine_shadow_width: 
 		    shadow_width = new Double(token.nextToken()).doubleValue(); 
 		    break;
 		case Glow.eSave_GrowPolyLine_shadow_contrast: 
-		    shadow_contrast = new Integer(token.nextToken()).intValue(); 
+		    shadow_contrast = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowPolyLine_shadow: 
-		    shadow = new Integer(token.nextToken()).intValue(); 
+		    shadow = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowPolyLine_relief: 
-		    relief = new Integer(token.nextToken()).intValue(); 
+		    relief = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowPolyLine_disable_shadow: 
-		    disable_shadow = new Integer(token.nextToken()).intValue(); 
+		    disable_shadow = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowPolyLine_fixcolor:
-		    fixcolor = new Integer(token.nextToken()).intValue();
+		    fixcolor = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowPolyLine_fixposition:
-		    fixposition = new Integer(token.nextToken()).intValue();
+		    fixposition = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowPolyLine_gradient:
-		    gradient = new Integer(token.nextToken()).intValue();
+		    gradient = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowPolyLine_gradient_contrast:
-		    gradient_contrast = new Integer(token.nextToken()).intValue();
+		    gradient_contrast = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowPolyLine_disable_gradient:
-		    disable_gradient = new Integer(token.nextToken()).intValue();
+		    disable_gradient = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowPolyLine_fill_eq_border:
-		    fill_eq_border = new Integer(token.nextToken()).intValue();
+		    fill_eq_border = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowPolyLine_fill_eq_light:
-		    fill_eq_light = new Integer(token.nextToken()).intValue();
+		    fill_eq_light = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowPolyLine_fill_eq_shadow:
-		    fill_eq_shadow = new Integer(token.nextToken()).intValue();
+		    fill_eq_shadow = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowPolyLine_dynamicsize:
-		    dynamicsize = new Integer(token.nextToken()).intValue();
+		    dynamicsize = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowPolyLine_dynamic:
 		    if ( cmn.dynamicsize > 0) {
@@ -245,7 +245,7 @@ public class GrowPolyline extends GlowArrayElem {
 	try {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
-		int key = new Integer(token.nextToken()).intValue();
+		int key = Integer.valueOf(token.nextToken());
 		if ( cmn.debug) System.out.println( "GlowPolyline : " + line);
 
 		switch ( key) {
@@ -253,19 +253,19 @@ public class GrowPolyline extends GlowArrayElem {
 		case Glow.eSave_PolyLine: 
 		    break;
 		case Glow.eSave_PolyLine_draw_type: 
-		    draw_type = new Integer(token.nextToken()).intValue();
+		    draw_type = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_PolyLine_line_width:
-		    line_width = new Integer(token.nextToken()).intValue();
+		    line_width = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_PolyLine_fill:
-		    fill = new Integer(token.nextToken()).intValue();
+		    fill = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_PolyLine_closed_line:
-		    closed_line = new Integer(token.nextToken()).intValue();
+		    closed_line = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_PolyLine_a_points:
-		    GlowVector.open( reader, cmn, a_points);
+		    cmn.ctx.openVector( reader, cmn, a_points);
 		    break;
 		case Glow.eSave_End:
 		    end_found = true;
@@ -295,7 +295,7 @@ public class GrowPolyline extends GlowArrayElem {
 	}
 
 	rp = trf.reverse( fx, fy);
-	//rp = new GlowPoint(null);
+	//rp = new GlowPoint();
 	//rp.x = fx;
 	//rp.y = fy;
 	if ( ll.x <= rp.x && rp.x <= ur.x &&
@@ -314,6 +314,9 @@ public class GrowPolyline extends GlowArrayElem {
 
 
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {
+	if ( cmn.nodraw != 0)
+	    return;
+
 	int chot = 0;
 	if ( hot != 0) {
 	    if ( cmn.hot_indication == Glow.eHotIndication_No)

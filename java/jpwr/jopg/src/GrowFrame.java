@@ -112,8 +112,12 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	    }
 	}
 	else {
-	    if ( fname.lastIndexOf('/') == -1)
-		filename = "$pwrp_exe/" + fname;
+	    if ( fname.lastIndexOf('/') == -1) {
+		if ( fname.startsWith("pwr_c_"))
+		    filename = "$pwr_exe/" + fname;
+		else
+		    filename = "$pwrp_exe/" + fname;
+	    }
 	    else
 		filename = fname;
 	    filename = Gdh.translateFilename( filename);
@@ -151,8 +155,8 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	    }		
 	}
 
-	if ( gdh == null)
-	    gdh = new Gdh(this);
+	// if ( gdh == null)
+	//    gdh = new Gdh(this);
 	graph = new Graph(this, gdh);
 	graph.open(reader);
 
