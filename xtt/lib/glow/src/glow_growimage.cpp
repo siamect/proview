@@ -1185,8 +1185,10 @@ void GrowImage::export_javabean( GlowTransform *t, void *node,
 int GrowImage::set_image_color( glow_tImImage om, void *n)
 {
   GrowNode *node = (GrowNode *) n;
+  int inverse;
 
   if ( node) {
+    inverse = c_color_inverse != node->color_inverse;
     c_color_lightness = node->color_lightness;
     c_color_tone = node->color_tone;
     c_color_inverse = node->color_inverse;
@@ -1194,6 +1196,7 @@ int GrowImage::set_image_color( glow_tImImage om, void *n)
     c_color_intensity = node->color_intensity;
   }
   else {
+    inverse = c_color_inverse != color_inverse;
     c_color_lightness = color_lightness;
     c_color_tone = color_tone;
     c_color_inverse = color_inverse;
@@ -1213,7 +1216,7 @@ int GrowImage::set_image_color( glow_tImImage om, void *n)
     factor_light = 1 + 0.1 * c_color_lightness;
 
   if ( !(c_color_tone == glow_eDrawTone_No || c_color_tone >= glow_eDrawTone__) ||
-       c_color_shift || c_color_intensity || c_color_lightness || c_color_inverse) {
+       c_color_shift || c_color_intensity || c_color_lightness || inverse) {
     ctx->gdraw->image_pixel_iter( om, &image, pixel_cb, this);
   }
   return 1;
