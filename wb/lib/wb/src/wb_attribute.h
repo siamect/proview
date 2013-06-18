@@ -86,7 +86,7 @@ public:
   wb_attribute(pwr_tStatus, wb_orep*, wb_adrep*, int idx = -1);
   wb_attribute(pwr_tStatus, wb_orep*, const char *bname);
   wb_attribute(pwr_tStatus, wb_orep*, const char *bname, const char *aname);
-  wb_attribute(const wb_attribute& pa, int idx, const char *aname);
+  wb_attribute(const wb_attribute& pa, int pidx, const char *aname, int aidx = 0);
 
   ~wb_attribute();
   wb_attribute& operator=(const wb_attribute&);

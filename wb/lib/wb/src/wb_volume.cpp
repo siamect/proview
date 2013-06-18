@@ -531,7 +531,7 @@ pwr_tStatus wb_volume::syntaxCheckAttr(wb_attribute& a, int *errorcount, int *wa
 
       if ( adef.flags() & PWR_MASK_ARRAY) {
 	for ( int i = 0; i < adef.nElement(); i++) {
-	  wb_attribute attr( a, i, adef.name());
+	  wb_attribute attr( a, -1, adef.name(), i);
 	  
 	  asts = syntaxCheckAttr( attr, errorcount, warningcount);
 	  if ( EVEN(asts)) sts = asts;

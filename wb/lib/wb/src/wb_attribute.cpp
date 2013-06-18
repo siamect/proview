@@ -231,7 +231,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname, co
   }
 }
 
-wb_attribute::wb_attribute(const wb_attribute& pa, int idx, const char *aname) :
+wb_attribute::wb_attribute(const wb_attribute& pa, int pidx, const char *aname, int aidx) :
   wb_status(LDH__NOSUCHATTR), m_orep(0), m_adrep(0), m_size(0), m_offset(0), m_tid(0),
   m_elements(1), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), m_shadowed(false)
 {
@@ -243,20 +243,23 @@ wb_attribute::wb_attribute(const wb_attribute& pa, int idx, const char *aname) :
     return;
 
   if ( pa.m_flags & PWR_MASK_ARRAY && 
-       (idx < 0 || idx >= pa.m_elements))
+       (pidx < 0 || pidx >= pa.m_elements))
     throw wb_error_str("Invalid subscript");
     
+  if ( pidx == -1)
+    pidx = pa.m_idx;
+
   strcpy( attrname, pa.attrName());
   if ( pa.m_flags & PWR_MASK_ARRAY) {
     if ( attrname[strlen(attrname)-1] == ']') {
       // Replace the index
       char *s = strrchr( attrname, '[');
       if ( s)
-	sprintf( s, "[%d]", idx);
+	sprintf( s, "[%d]", pidx);
     }
     else
       // Add index
-      sprintf( &attrname[strlen(attrname)], "[%d]", idx);
+      sprintf( &attrname[strlen(attrname)], "[%d]", pidx);
   }
   strcat( attrname, ".");
   if ( aname != 0)
@@ -312,7 +315,7 @@ wb_attribute::wb_attribute(const wb_attribute& pa, int idx, const char *aname) :
   m_elements = m_adrep->nElement();
   m_flags = m_adrep->flags();
   m_type = m_adrep->type();  
-  m_idx = idx;
+  m_idx = aidx;
 
   m_orep = pa.m_orep;
   m_orep->ref();
