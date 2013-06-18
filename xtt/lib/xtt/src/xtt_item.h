@@ -504,7 +504,7 @@ class ItemEnum : public ItemBaseAttr {
   int open_children( XNavBrow *brow, double x, double y) {return 0;}
 
   int num;
-  char enum_name[32];
+  char enum_name[80];
   int is_element;
   int element;
 };
