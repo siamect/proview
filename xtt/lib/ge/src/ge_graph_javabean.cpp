@@ -1790,7 +1790,6 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
     fp << 
 "import jpwr.rt.*;" << endl <<
 "import jpwr.jop.*;" << endl <<
-"import jpwr.jopc.*;" << endl <<
 "import java.awt.*;" << endl <<
 "import java.awt.geom.*;" << endl <<
 "import java.awt.image.*;" << endl <<
