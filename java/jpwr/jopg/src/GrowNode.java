@@ -346,7 +346,7 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
     }
 
     public int eventHandler( GlowEvent event, double fx, double fy) {
-	GlowPoint rp;
+	GlowPointDX rp;
 	int sts;
 
 	switch ( event.event) {

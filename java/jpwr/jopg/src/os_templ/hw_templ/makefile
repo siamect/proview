@@ -7,14 +7,15 @@ local_java_sources := \
 	GlowFillLevelLimits.java,\
 	GlowGeometry.java,\
 	GlowPointX.java,\
+	GlowPointDX.java,\
 	GlowDimension.java,\
 	GlowSliderInfo.java,\
 	GlowTableInfo.java,\
 	GlowMenuInfo.java,\
-	GlowPoint.java,\
 	GlowTransform.java,\
 	GlowEvent.java,\
 	GlowArrayElem.java,\
+	GlowPoint.java,\
 	GrowApplIfc.java,\
 	GlowColorNode.java,\
 	GlowColorRgb.java,\
@@ -35,6 +36,7 @@ local_java_sources := \
 	GlowArrow.java,\
 	GlowCon.java,\
 	GrowRect.java,\
+	GrowRectRounded.java,\
 	GrowGroup.java,\
 	GrowSlider.java,\
 	GrowAxis.java,\

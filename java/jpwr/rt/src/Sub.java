@@ -35,7 +35,7 @@
  */
 
   /**
-   * Objekt som lagras i vektorn som sköter varje tråds, i GdhServer, prenumerationer
+   * Object stored in supscription array for each thread in GdhServer
    *
    *@author     JN3920
    *@created    den 18 november 2002

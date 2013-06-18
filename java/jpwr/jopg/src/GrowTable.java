@@ -643,7 +643,7 @@ public class GrowTable extends GrowRect implements GrowScrollBarIfc {
 			     column_adjustment[0] == Glow.eAdjustment_Center) {
 			    int width, height, descent;
 			    GlowDimension dim = cmn.gdraw.getTextExtent( cell_value[offs], 
-									 text_idx, font);
+									 text_idx, font, text_drawtype);
 			    width = dim.width;
 			    height = dim.height;
 			    descent = height/4;
@@ -769,7 +769,7 @@ public class GrowTable extends GrowRect implements GrowScrollBarIfc {
 				 column_adjustment[i] == Glow.eAdjustment_Center) {
 				int width, height, descent;
 				GlowDimension dim = cmn.gdraw.getTextExtent( cell_value[offs], 
-									     text_idx, font);
+									     text_idx, font, text_drawtype);
 				width = dim.width;
 				height = dim.height;
 				descent = height/4;

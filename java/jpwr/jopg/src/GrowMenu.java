@@ -110,7 +110,7 @@ public class GrowMenu extends GrowRect {
 	item_cnt = 0;
 	for ( i = 0; i < info.item.length; i++) {
 	    if ( info.item[i].occupied) {
-		GlowDimension dim = cmn.gdraw.getTextExtent( info.item[i].text, Math.max( 0, text_idx), font);
+		GlowDimension dim = cmn.gdraw.getTextExtent( info.item[i].text, Math.max( 0, text_idx), font, text_drawtype);
 		z_width = dim.width;
 		z_height = dim.height;
 		z_descent = z_height/4;		
@@ -249,7 +249,7 @@ public class GrowMenu extends GrowRect {
 	double rx, ry;
 
 	// Convert koordinates to local koordinates
-	GlowPoint rp = trf.reverse( fx, fy);
+	GlowPointDX rp = trf.reverse( fx, fy);
 
 	sts = 0;
 	switch ( event.event) {

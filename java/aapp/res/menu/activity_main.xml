@@ -1,0 +1,64 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+   <item
+	 android:id="@+id/close_option"
+	 android:title="Close"
+	 android:icon="@drawable/xnav_close"
+	 android:showAsAction="ifRoom"/>
+   <item
+	 android:id="@+id/pageup_option"
+	 android:title="Page up"
+	 android:icon="@drawable/xnav_pageup"
+	 android:showAsAction="ifRoom"/>
+   <item
+	 android:id="@+id/pagedown_option"
+	 android:title="Page down"
+	 android:icon="@drawable/xnav_pagedown"
+	 android:showAsAction="ifRoom"/>
+   <item
+	 android:id="@+id/zoomin_option"
+	 android:title="Zoom in"
+	 android:icon="@drawable/xnav_zoomin"
+	 android:showAsAction="ifRoom"/>
+   <item
+	 android:id="@+id/zoomout_option"
+     android:title="Zoom out"
+	 android:icon="@drawable/xnav_zoomout"
+	 android:showAsAction="ifRoom"/>
+   <item
+	 android:id="@+id/openobject_option"
+     android:title="Open Object"
+	 android:icon="@drawable/xnav_openobject"/>
+   <item
+	 android:id="@+id/openplc_option"
+     android:title="Open Plc"
+	 android:icon="@drawable/xnav_openobject"/>
+   <item
+	 android:id="@+id/opengraph_option"
+     android:title="Open Graph"
+	 android:icon="@drawable/xnav_openobject"/>
+   <item
+	 android:id="@+id/openclassgraph_option"
+     android:title="Open ObjectGraph"
+	 android:icon="@drawable/xnav_openobject"/>
+   <item
+	 android:id="@+id/opencrr_option"
+     android:title="Crossreferences"
+	 android:icon="@drawable/xnav_openobject"/>
+   <item
+	 android:id="@+id/alarmlist_option"
+     android:title="Alarm List"
+	 android:icon="@drawable/xnav_openobject"/>
+   <item
+	 android:id="@+id/eventlist_option"
+     android:title="Event List"
+	 android:icon="@drawable/xnav_openobject"/>
+   <item
+	 android:id="@+id/alarmack_option"
+     android:title="Alarm Acknowledge"
+	 android:icon="@drawable/xnav_openobject"/>
+   <item
+	 android:id="@+id/changevalue_option"
+     android:title="Change Value"/>
+   
+</menu>

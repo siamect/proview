@@ -116,7 +116,8 @@ System.out.println( "qcom put finished");
   static CliTable[] cliTable = new CliTable[] { 
     new CliTable( "OPEN", new String[] {"cli_arg1", "cli_arg2", "/NAME", 
 	"/FILE", "/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", "/NAVIGATOR", 
-	"/CENTER", "/OBJECT", "/INSTANCE", "/NEW", "/CLASSGRAPH", "/ACCESS", "/PARENT"}),
+	"/CENTER", "/OBJECT", "/INSTANCE", "/NEW", "/CLASSGRAPH", "/ACCESS", "/PARENT",
+	"/ACCESS"}),
     new CliTable( "EXIT", null),
     new CliTable( "HELP", new String[] {"cli_arg1", "cli_arg2", "cli_arg3",
 	"cli_arg4", "/HELPFILE", "/POPNAVIGATOR", "/BOOKMARK", "/INDEX",
@@ -222,8 +223,10 @@ System.out.println( "qcom put finished");
                   return 0;
                 }
                 int idx = cdhr.str.lastIndexOf( ".pwg");
-                if ( idx != -1)
-                  appletName = cdhr.str.substring(0, idx);
+                if ( idx != -1) {
+		    // appletName = cdhr.str.substring(0, idx);
+		    appletName = cdhr.str;  // atest
+		}
                 else {
                   idx = cdhr.str.lastIndexOf( ".class");
 		  if ( idx != -1)
@@ -240,8 +243,8 @@ System.out.println( "qcom put finished");
 		  instance = cdhr.str;
 
                 if ( session.isOpWindowApplet()) {
-	          appletName = appletName.substring(0,1).toUpperCase() +
-		      appletName.substring(1);
+		  // atest  appletName = appletName.substring(0,1).toUpperCase() +
+		  //       appletName.substring(1);
 	          System.out.println( "Open frame " + appletName);
 		  session.openGraphFrame( appletName, instance, false, false);
 		}
@@ -341,6 +344,53 @@ System.out.println( "qcom put finished");
 		    instanceValue = instanceValue.substring( 0, idx);
 		  System.out.println( "open graph /parent: " + instanceValue);
 		}
+	      }
+              if ( cli.qualifierFound("/OBJECT")) {
+	        String objectValue = cli.getQualValue("/OBJECT");
+                String objectName;
+                String appletName;
+		String instance = null;
+
+                // Replace * by node object
+                if ( objectValue.charAt(0) == '*') {
+                  CdhrObjid cdhr_node = gdh.getNodeObject(0);
+                  if ( cdhr_node.evenSts())
+                    return 0;
+                  CdhrString cdhr_nodestr = gdh.objidToName( cdhr_node.objid, Cdh.mName_volumeStrict);
+                  objectName = cdhr_nodestr.str + objectValue.substring(1);
+                }
+                else
+                  objectName = objectValue;
+
+                String attrName = objectName + ".Action";
+                CdhrString cdhr = gdh.getObjectInfoString( attrName);
+                if ( cdhr.evenSts()) {
+	          System.out.println("Object name error");
+                  return 0;
+                }
+                int idx = cdhr.str.lastIndexOf( ".pwg");
+                if ( idx != -1) {
+		    // appletName = cdhr.str.substring(0, idx);
+		    appletName = cdhr.str;  // atest
+		}
+                else {
+                  idx = cdhr.str.lastIndexOf( ".class");
+		  if ( idx != -1)
+                    appletName = cdhr.str.substring(0, idx);
+		  else {
+		    // This is a command
+		    return command( session, cdhr.str);
+		  }
+		}
+
+		attrName = objectName + ".Object";
+		cdhr = gdh.getObjectInfoString( attrName);
+		if ( cdhr.oddSts() && !cdhr.str.equals(""))
+		    instance = cdhr.str;
+
+		System.out.println( "Open frame " + appletName);
+		session.openGraphFrame( appletName, instance, false, false);
+                local_cmd = true;
 	      }
 	      if ( !classGraph) {
 		if ( cli.qualifierFound("/FILE")) {
@@ -785,7 +835,8 @@ System.out.println( "JopSpiderCmd start");
 				  String instance, boolean scrollbar) throws ClassNotFoundException {
 
       if ( className.indexOf(".pwg") != -1) {
-	  GrowFrame frame = new GrowFrame(className, session.getGdh(), instance, new GrowFrameCb(session));
+	  GrowFrame frame = new GrowFrame(className, session.getGdh(), instance, new GrowFrameCb(session),
+					  session.getRoot());
 	  frame.validate();
 	  frame.setVisible(true);
       }

@@ -261,8 +261,8 @@ public class GlowTransform {
 	return tmp.y( x1, y1);
     }
 
-    public GlowPoint reverse( double x, double y) {
-	GlowPoint p = new GlowPoint();
+    public GlowPointDX reverse( double x, double y) {
+	GlowPointDX p = new GlowPointDX();
 	if ( a11 == 0 || ( a12 * a21 - a11 * a22) == 0) {
 	    if ( a11 == 0 && a22 == 0 && a12 != 0 && a21 != 0) {
 		p.y = (x - a13) / a12;

@@ -117,6 +117,12 @@ public class GlowVector {
 	  a.add( c);
 	  break;
 	}
+	case Glow.eSave_GrowRectRounded: {
+	  GrowRectRounded c = new GrowRectRounded( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
 	case Glow.eSave_Line: {
 	  GlowLine c = new GlowLine( cmn);
 	  c.open( reader);

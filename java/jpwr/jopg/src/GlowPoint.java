@@ -39,7 +39,7 @@ import jpwr.rt.*;
 import java.io.*;
 import java.util.*;
 
-public class GlowPoint {
+public class GlowPoint extends GlowArrayElem {
     
     public double x;
     public double y;

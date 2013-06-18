@@ -207,7 +207,8 @@ public class GrowAxis extends GrowRect {
 		    if ( i % valuequotient == 0) {
 			text = format_text( format, max_value - i * increment);
 			GlowDimension d = cmn.gdraw.getTextExtent( text,
-						     Math.max( 0, text_idx), Glow.eFont_Helvetica);
+						   Math.max( 0, text_idx), Glow.eFont_Helvetica,
+						   text_drawtype);
 			z_width = d.width;
 			z_height = d.height;
 			z_descent = z_height/4;
@@ -259,7 +260,7 @@ public class GrowAxis extends GrowRect {
 	    // Calculate max value text height
 	    if ( draw_text) {
 		GlowDimension d = cmn.gdraw.getTextExtent( "0",
-							   Math.max( 0, text_idx), Glow.eFont_Helvetica);
+				     Math.max( 0, text_idx), Glow.eFont_Helvetica, text_drawtype);
 
 		z_width = d.width;
 		z_height = d.height;
@@ -284,7 +285,7 @@ public class GrowAxis extends GrowRect {
 		if ( draw_text && i % valuequotient == 0) {
 		    text = format_text( format, max_value - i * increment);
 		    GlowDimension d = cmn.gdraw.getTextExtent( text, 
-							       Math.max( 0, text_idx), Glow.eFont_Helvetica);
+			       Math.max( 0, text_idx), Glow.eFont_Helvetica, text_drawtype);
 		    z_width = d.width;
 		    z_height = d.height;
 		    z_descent = z_height/4;
@@ -314,7 +315,7 @@ public class GrowAxis extends GrowRect {
 		    if ( i % valuequotient == 0) {
 			text = format_text( format, max_value - i * increment);
 			GlowDimension d = cmn.gdraw.getTextExtent( text, 
-								   Math.max( 0, text_idx), Glow.eFont_Helvetica);
+								   Math.max( 0, text_idx), Glow.eFont_Helvetica, text_drawtype);
 			z_width = d.width;
 			z_height = d.height;
 			z_descent = z_height/4;
@@ -365,7 +366,8 @@ public class GrowAxis extends GrowRect {
 	    // Calculate max value text height
 	    if ( draw_text) {
 		GlowDimension d = cmn.gdraw.getTextExtent( "0", 
-							   Math.max( 0, text_idx), Glow.eFont_Helvetica);
+							   Math.max( 0, text_idx), Glow.eFont_Helvetica,
+							   text_drawtype);
 
 		z_width = d.width;
 		z_height = d.height;
@@ -389,7 +391,7 @@ public class GrowAxis extends GrowRect {
 		if ( draw_text && i % valuequotient == 0) {
 		    text = format_text( format, max_value - i * increment);
 		    GlowDimension d = cmn.gdraw.getTextExtent( text, 
-							       Math.max( 0, text_idx), Glow.eFont_Helvetica);
+							       Math.max( 0, text_idx), Glow.eFont_Helvetica, text_drawtype);
 		    z_width = d.width;
 		    z_height = d.height;
 		    z_descent = z_height/4;

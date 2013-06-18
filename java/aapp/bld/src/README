@@ -1,0 +1,28 @@
+
+Proview Android application PwrXtt build.
+
+The build script java/aapp/bld/src/os_templ/hw_templ/pwrxtt_build.sh and the
+make files under java/appl creates an android application tree under
+$pwre_broot/os_linux/hw_x86/bld/aapp.
+
+As some java code is shared with the web interface under java/jpwr some code is
+fetched from java/jpwr/rt, java/jpwr/rt_client, java/jpwr/jopg and copied to the 
+application archives. The application specific code is copied from  aapp/rt/src, 
+aapp/jopg/src, aapp/app/src and aapp/pwrxtt/src.
+
+To build check that android is in the PATH, and if a keystore should be used,
+define $pwre_keystore to point at the keystore. 
+
+Build with
+
+> pwre build aapp bld src
+
+Eclipse 
+
+The application PwrXtt can be imported to eclipse by stating 
+$pwre_sroot/os_linux/hw_x86/bld/aapp as work directory. Import the project with 
+File/Import/General/Existing Projects... Activate Android Tools/Fix Project Properties 
+in the popup menu for the project. After this the application can be run and debugged.
+Any changed in the java code should be copied back to source code in java/jwpr and 
+java/aapp.
+

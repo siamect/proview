@@ -74,6 +74,29 @@ pwre_config_check_include()
 	echo "...Checking   No    $1"
     fi
 }
+
+pwre_config_check_tool()
+{
+    let i=0
+    let found=0
+    let incfound=0
+    IFS=:
+    for file in $3
+    do
+      if test -e $file; then
+	echo "...Checking   Yes   $1"
+	echo "export PWRE_CONF_$2=1" >> $cfile
+
+        found=1
+        break
+      fi
+    done
+
+    if test $found -eq 0; then
+	echo "...Checking   No    $1"
+    fi
+}
+
 #
 # Search for archive and insert in list
 #
@@ -411,7 +434,8 @@ else
   pwre_config_check_include mq    MQ    0 "/usr/local/dmq/include/p_entry.h"
   pwre_config_check_include wmq   WMQ   1 "/opt/mqm/inc/cmqc.h"
   pwre_config_check_include cifx  CIFX  1 "/usr/local/include/cifx/cifxlinux.h"
-  pwre_config_check_include nodave NODAVE  1 "/usr/include/nodave.h"
+  pwre_config_check_include nodave NODAVE 1 "/usr/include/nodave.h"
+  pwre_config_check_tool android ANDROID "/usr/local/android-sdk-linux/tools/android"
 
 
   export pwre_conf_alsa=1

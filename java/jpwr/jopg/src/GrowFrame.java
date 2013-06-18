@@ -66,8 +66,8 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
     String instance;
     GrowFrameApplIfc appl;
 
-    public GrowFrame( String file, Gdh gdh, String instance, GrowFrameApplIfc appl) {
-	root = (Object) this;
+    public GrowFrame( String file, Gdh gdh, String instance, GrowFrameApplIfc appl, Object root) {
+	this.root = root;
 	this.instance = instance;
 	this.appl = appl;
 	init( file, gdh);
@@ -89,6 +89,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	BufferedReader reader = null;
 	String fname = file;
 
+	System.out.println("GrowFrame root: " + root); 
 	if ( root != null && root instanceof JApplet) {
 	    try {
 		URL current = ((JApplet) root).getCodeBase();
@@ -106,6 +107,31 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 		// in = new BufferedInputStream(in);
 		InputStreamReader r2 = new InputStreamReader(in);
 		reader = new BufferedReader( r2);
+
+		// Read size info
+		String line;
+		int defaultWidth = 0;
+		int defaultHeight = 0;
+	    
+		try {
+		    for ( int i = 0; i < 2; i++) {
+			line = reader.readLine();
+			if ( line == null || !line.startsWith("0! "))
+			    break;
+			if ( line.substring(3, 15).equals("DefaultWidth"))
+			    defaultWidth = new Integer(line.substring(16)).intValue();
+			else if ( line.substring(3, 16).equals("DefaultHeight"))
+			    defaultHeight = new Integer(line.substring(17)).intValue();
+		    }
+		} catch ( Exception e) {
+		    System.out.println( "IOException GlowFrame");
+		}
+		System.out.println("GraphFrame size " + defaultWidth + "  " + defaultHeight);
+		if ( defaultWidth != 0 && defaultHeight != 0) {
+		    size = new Dimension( defaultWidth + 5, defaultHeight + 40);
+		    setSize( size);
+		}		
+		
 	    }
 	    catch ( Exception e) {
 		System.out.println( "Unable to open file");
@@ -253,6 +279,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
     }
 
     public void closeGrow() {
+	timer.stop();
     }
 
     // Exit when window is closed

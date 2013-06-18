@@ -167,7 +167,7 @@ public class GrowAnnot extends GlowArrayElem {
         int color;
 	int rot;
 	double trf_scale = trf.vertical_scale( t);
-	int idx = (int)( trf_scale * cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * (text_size +4) - 4);
+	int idx = (int)( trf_scale * cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * (text_size +4) - 3);
 	double tsize = trf_scale * cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * (8+2*text_size);
 	if ( idx < 0)
 	    return;
@@ -213,7 +213,8 @@ public class GrowAnnot extends GlowArrayElem {
 		 ( !(rot < 45 || rot >= 315)) ||
 		 adjustment == Glow.eAdjustment_Right ||
 		 adjustment == Glow.eAdjustment_Center) {
-		GlowDimension d = cmn.gdraw.getTextExtent( ((GrowNode)node).annotv[number], idx, ldraw_type);
+		GlowDimension d = cmn.gdraw.getTextExtent( ((GrowNode)node).annotv[number], idx, 
+							   lfont, ldraw_type);
 		width = d.width;
 		height = d.height;
 		descent = height/4;
@@ -297,7 +298,7 @@ public class GrowAnnot extends GlowArrayElem {
 	    color = GlowColor.get_drawtype( color_drawtype, Glow.eDrawType_LineHighlight,
 					    highlight, colornode, 2, 0);
 
-	    GlowDimension d = cmn.gdraw.getTextExtent( "", 0, idx, ldraw_type);
+	    GlowDimension d = cmn.gdraw.getTextExtent( "", 0, idx, lfont, ldraw_type);
 	    z_width = d.width;
 	    z_height = d.height;
 	    x_descent = z_height/4;

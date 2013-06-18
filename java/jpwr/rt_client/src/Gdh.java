@@ -38,8 +38,6 @@ package jpwr.rt;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.awt.*;
-import javax.swing.*;
 
 public class Gdh
 {
@@ -546,7 +544,7 @@ public class Gdh
       {
         while(locked)
         {
-          System.out.println("refObjectInfoList Väntar på locked = false");
+          System.out.println("refObjectInfoList Waiting for locked = false");
           wait();
         }
       }
@@ -607,7 +605,7 @@ public class Gdh
     {
       while(locked)
       {
-        System.out.println("refObjectInfo_Vector Väntar på locked = false");
+        System.out.println("refObjectInfo_Vector Waiting for locked = false");
         wait();
       }
     }
@@ -843,22 +841,22 @@ public class Gdh
     {
       while(locked)
       {
-        System.out.println("unrefObjectInfo Väntar på locked = false");
+        System.out.println("unrefObjectInfo Waiting for locked = false");
         wait();
-        System.out.println("unrefObjectInfo Väntat klart");
+        System.out.println("unrefObjectInfo Wait done");
       }
 
     }
     catch(InterruptedException e)
     {
-      System.out.println("Wait avbruten");
+      System.out.println("Wait interrupted");
     }
     //    if ( locked)
 //      return new PwrtStatus(__BUSY);
     locked = true;
     if(refid.rix >= subscriptions.size())
     {
-      //System.out.println("Försöker göra unrefObjectInfo med refid.rix= " +
+      //System.out.println("unrefObjectInfo failed efid.rix " +
       //                    refid.rix + " men sub.size= " + subscriptions.size() );
       locked = false;
       notify();
@@ -904,13 +902,13 @@ public class Gdh
     {
       while(locked)
       {
-        System.out.println("unrefobjectinfo_vector Väntar på locked = false");
+        System.out.println("unrefobjectinfo_vector Waiting for locked = false");
         wait();
       }
     }
     catch(InterruptedException e)
     {
-      System.out.println("Wait avbruten");
+      System.out.println("Wait interrupted");
     }
     locked = true;
     try
@@ -970,13 +968,13 @@ public class Gdh
     {
       while(locked)
       {
-        System.out.println("unrefObjectInfoAll Väntar på locked = false");
+        System.out.println("unrefObjectInfoAll Waiting for locked = false");
         wait();
       }
     }
     catch(InterruptedException e)
     {
-      System.out.println("Wait avbruten");
+      System.out.println("Wait interrupted");
     }
     locked = true;
     subscriptions.removeAllElements();
@@ -1499,13 +1497,13 @@ public class Gdh
     {
       while(locked)
       {
-        System.out.println("getObjectRefInfoAll Väntar på locked = false");
+        System.out.println("getObjectRefInfoAll Waiting for locked = false");
         wait();
       }
     }
     catch(InterruptedException e)
     {
-      System.out.println("Wait avbruten");
+      System.out.println("Wait interrupted");
     }
     try
     {

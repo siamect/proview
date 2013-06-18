@@ -119,7 +119,7 @@ public class MhData
         this.addMessToVectorInSortedOrder(eventVec, ev.getCopy());
         break;
       case Mh.mh_eEvent_Return:
-        //leta reda på objektet i larmlistan och vidta lämplig åtgärd
+        // Find the object in the alarm list
         for(int i = 0; i < alarmVec.size(); i++)
         {
           MhrEvent alEv = (MhrEvent)alarmVec.get(i);

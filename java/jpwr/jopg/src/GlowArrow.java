@@ -69,7 +69,7 @@ public class GlowArrow extends GlowArrayElem {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
 		int key = Integer.valueOf(token.nextToken());
-		if ( cmn.debug) System.out.println( "GlowÄrrow : " + line);
+		if ( cmn.debug) System.out.println( "GlowArrow : " + line);
 
 		switch ( key) {
 

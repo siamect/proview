@@ -160,7 +160,7 @@ public class GrowText extends GlowArrayElem {
 		    color_drawtype = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_Text_text:
-		    text = token.nextToken();
+		    text = line.substring(4);
 		    break;
 		case Glow.eSave_Text_p:
 		    p.open( reader);
@@ -169,7 +169,7 @@ public class GrowText extends GlowArrayElem {
 		    end_found = true;
 		    break;
 		default:
-		    System.out.println( "Syntax error in GlowText");
+		    System.out.println( "Syntax error in GrowText");
 		    break;
 		}
 		if ( end_found)
@@ -184,7 +184,7 @@ public class GrowText extends GlowArrayElem {
 
     public int eventHandler( GlowEvent event, double fx, double fy) {
 	/*
-	GlowPoint rp;
+	GlowPointDX rp;
 
 	switch ( event.event) {
 	case Glow.eEvent_CursorMotion:		
@@ -217,7 +217,7 @@ public class GrowText extends GlowArrayElem {
 	int z_width, z_height, z_descent;
 	int rot;
 	double trf_scale = trf.vertical_scale( t);
-	int idx = (int)( trf_scale * cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * (text_size +4) - 4);
+	int idx = (int)( trf_scale * cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * (text_size +4) - 3);
 	double tsize = trf_scale * cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * (8+2*text_size);
 	idx = Math.min( idx, Glow.DRAW_TYPE_SIZE-1);
 	int highl = highlight;
@@ -254,7 +254,7 @@ public class GrowText extends GlowArrayElem {
 
 	if ( !text.equals("")) {
 	    if ( highl != 0 || (hot != 0 && node == null) || adjustment != Glow.eAdjustment_Left) {
-		GlowDimension dim = cmn.gdraw.getTextExtent( text, Math.max( 0, idx), lfont);
+		GlowDimension dim = cmn.gdraw.getTextExtent( text, Math.max( 0, idx), lfont, ldraw_type);
 		z_width = dim.width;
 		z_height = dim.height;
 		z_descent = z_height/4;
@@ -308,7 +308,7 @@ public class GrowText extends GlowArrayElem {
 	    }
 	}
 	else if ( idx >= 0) {
-	    GlowDimension dim = cmn.gdraw.getTextExtent( "A", Math.max( 0, idx), font);
+	    GlowDimension dim = cmn.gdraw.getTextExtent( "A", Math.max( 0, idx), lfont, ldraw_type);
 	    z_width = dim.width;
 	    z_height = dim.height;
 	    z_descent = z_height/4;

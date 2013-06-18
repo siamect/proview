@@ -44,6 +44,7 @@ public interface GlowDrawIfc {
     public void rect(int x, int y, int width, int height, int gc_type, int idx, int highlight);
     public void fill_rect(int x, int y, int width, int height, int gc_type);
     public void gradient_fill_rect(int x, int y, int width, int height, int gc_type, int f1, int f2, int gradient);
+    public void gradient_fill_rectrounded(int x, int y, int width, int height, int amount, int gc_type, int f1, int f2, int gradient);
     public void arc(int x, int y, int width, int height, int angle1, int angle2, int gc_type, int idx, int highlight);
     public void fill_arc(int x, int y, int width, int height, int angle1, int angle2, int gc_type);
     public void gradient_fill_arc(int x, int y, int width, int height, int angle1, int angle2, int gc_type, int f1, int f2, int gradient);
@@ -55,7 +56,7 @@ public interface GlowDrawIfc {
     public void text( int x, int y, String text, int gc_type, int color, int idx, int highlight, int line, 
 		      int font_idx, double size, int rot);
     public  int gradient_rotate(double rotate, int gradient);
-    public GlowDimension getTextExtent( String text, int idx, int type);
+    public GlowDimension getTextExtent( String text, int idx, int type, int gc_type);
     public Color getColor(int gc_type);
     public int set_clip_rectangle( int x1, int y1, int x2, int y2);
     public void reset_clip_rectangle();

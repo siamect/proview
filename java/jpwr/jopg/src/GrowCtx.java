@@ -67,6 +67,8 @@ public class GrowCtx implements GrowCtxIfc {
 	    while( (line = reader.readLine()) != null) {
 		if ( line.length() > 2 && line.substring(0,2).equals("0!"))
 		     continue;
+		if ( line.length() > 1 && line.substring(0,1).equals("!"))
+		     continue;
 
 		token = new StringTokenizer(line);
 		int key = Integer.valueOf(token.nextToken());

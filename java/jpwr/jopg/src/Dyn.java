@@ -1024,7 +1024,7 @@ public class Dyn {
 		return 0;
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
-	    if ( pname.name.equals("")) 
+	    if ( pname == null || pname.name.equals("")) 
 		return 1;
 	    System.out.println("DigLowColor: " + attribute + " pname " + pname.name + " db " + pname.database);
 
@@ -1078,7 +1078,7 @@ public class Dyn {
 	    else
 		firstScan = false;
 	
-	    if ( (dyn.dyn_type1 & Dyn.mDynType1_Tone) != 0) {
+	    if ( (dyn.total_dyn_type1 & Dyn.mDynType1_Tone) != 0) {
 		if ( !value) {
 		    if ( color >= Glow.eDrawTone__)
 			object.setFillColor( color);
@@ -1220,7 +1220,7 @@ public class Dyn {
 	    else
 		firstScan = false;
 	
-	    if ( (dyn.dyn_type1 & Dyn.mDynType1_Tone) != 0) {
+	    if ( (dyn.total_dyn_type1 & Dyn.mDynType1_Tone) != 0) {
 		if ( value) {
 		    if ( color >= Glow.eDrawTone__) {
 			if ( dyn.resetColor)
@@ -1373,7 +1373,7 @@ public class Dyn {
 	    else
 		firstScan = false;
 	
-	    if ( (dyn.dyn_type1 & Dyn.mDynType1_Tone) != 0) {
+	    if ( (dyn.total_dyn_type1 & Dyn.mDynType1_Tone) != 0) {
 		if ( value) {
 		    object.setColorTone( Glow.eDrawTone_Yellow);
  		    dyn.ignoreColor = true;
@@ -1509,7 +1509,7 @@ public class Dyn {
 	    else
 		firstScan = false;
 	
-	    if ( (dyn.dyn_type1 & Dyn.mDynType1_Tone) != 0) {
+	    if ( (dyn.total_dyn_type1 & Dyn.mDynType1_Tone) != 0) {
 		if ( value) {
 		    object.setColorTone( Glow.eDrawTone_Red);
  		    dyn.ignoreColor = true;
@@ -1647,7 +1647,7 @@ public class Dyn {
 	    else
 		firstScan = false;
 	
-	    if ( (dyn.dyn_type1 & Dyn.mDynType1_Tone) != 0) {
+	    if ( (dyn.total_dyn_type1 & Dyn.mDynType1_Tone) != 0) {
 		if ( value) {
 		    if ( on) {
 			if ( color >= Glow.eDrawTone__)
@@ -2049,6 +2049,9 @@ public class Dyn {
 	public int connect(GlowArrayElem o) {
 	    GrowNode object = (GrowNode)o;
 
+	    if ( low_text == null)
+		return 1;
+
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 	    if ( pname == null || pname.name.equals("")) 
 		return 1;
@@ -2130,7 +2133,7 @@ public class Dyn {
 			break;
 		    case Dyn.eSave_DigText_low_text: 
 			if ( token.hasMoreTokens())
-			    low_text = token.nextToken();
+			    low_text = line.substring(5);
 			break;
 		    case Dyn.eSave_DigText_instance: 
 			instance = Integer.valueOf(token.nextToken());
@@ -2646,7 +2649,7 @@ public class Dyn {
 	    if ( !set_color && !reset_color)
 		return;
 
-	    if ( (dyn.dyn_type1 & Dyn.mDynType1_Tone) != 0) {
+	    if ( (dyn.total_dyn_type1 & Dyn.mDynType1_Tone) != 0) {
 		if ( set_color) {
 		    if ( color < Glow.eDrawTone__)
 			object.setColorTone( color);
@@ -6187,7 +6190,7 @@ public class Dyn {
 			break;
 		    case Dyn.eSave_TipText_text: 
 			if ( token.hasMoreTokens())
-			    text = token.nextToken();
+			    text = line.substring(5);
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -6217,6 +6220,9 @@ public class Dyn {
 	}
 
 	public int action( GlowArrayElem o, GlowEvent e) {
+	    if ( topic == null)
+		return 1;
+
 	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
@@ -6232,7 +6238,7 @@ public class Dyn {
 		    break;
 		
 		String command;
-		if ( !bookmark.equals(""))
+		if ( bookmark != null && !bookmark.equals(""))
 		    command = new String("help " + topic + " /bookmark=" + bookmark);
 		else
 		    command = new String("help " + topic);
@@ -7877,47 +7883,47 @@ public class Dyn {
 			break;
 		    case Dyn.eSave_OptionMenu_items_text1: 
 			if ( token.hasMoreTokens())
-			    items_text[1] = token.nextToken();
+			    items_text[1] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text2: 
 			if ( token.hasMoreTokens())
-			    items_text[2] = token.nextToken();
+			    items_text[2] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text3: 
 			if ( token.hasMoreTokens())
-			    items_text[3] = token.nextToken();
+			    items_text[3] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text4: 
 			if ( token.hasMoreTokens())
-			    items_text[4] = token.nextToken();
+			    items_text[4] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text5: 
 			if ( token.hasMoreTokens())
-			    items_text[5] = token.nextToken();
+			    items_text[5] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text6: 
 			if ( token.hasMoreTokens())
-			    items_text[6] = token.nextToken();
+			    items_text[6] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text7: 
 			if ( token.hasMoreTokens())
-			    items_text[7] = token.nextToken();
+			    items_text[7] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text8: 
 			if ( token.hasMoreTokens())
-			    items_text[8] = token.nextToken();
+			    items_text[8] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text9: 
 			if ( token.hasMoreTokens())
-			    items_text[9] = token.nextToken();
+			    items_text[9] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text10: 
 			if ( token.hasMoreTokens())
-			    items_text[10] = token.nextToken();
+			    items_text[10] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text11: 
 			if ( token.hasMoreTokens())
-			    items_text[11] = token.nextToken();
+			    items_text[11] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text12: 
 			if ( token.hasMoreTokens())
@@ -7925,79 +7931,79 @@ public class Dyn {
 			break;
 		    case Dyn.eSave_OptionMenu_items_text13: 
 			if ( token.hasMoreTokens())
-			    items_text[13] = token.nextToken();
+			    items_text[13] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text14: 
 			if ( token.hasMoreTokens())
-			    items_text[14] = token.nextToken();
+			    items_text[14] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text15: 
 			if ( token.hasMoreTokens())
-			    items_text[15] = token.nextToken();
+			    items_text[15] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text16: 
 			if ( token.hasMoreTokens())
-			    items_text[16] = token.nextToken();
+			    items_text[16] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text17: 
 			if ( token.hasMoreTokens())
-			    items_text[17] = token.nextToken();
+			    items_text[17] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text18: 
 			if ( token.hasMoreTokens())
-			    items_text[18] = token.nextToken();
+			    items_text[18] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text19: 
 			if ( token.hasMoreTokens())
-			    items_text[19] = token.nextToken();
+			    items_text[19] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text20: 
 			if ( token.hasMoreTokens())
-			    items_text[20] = token.nextToken();
+			    items_text[20] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text21: 
 			if ( token.hasMoreTokens())
-			    items_text[21] = token.nextToken();
+			    items_text[21] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text22: 
 			if ( token.hasMoreTokens())
-			    items_text[22] = token.nextToken();
+			    items_text[22] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text23: 
 			if ( token.hasMoreTokens())
-			    items_text[23] = token.nextToken();
+			    items_text[23] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text24: 
 			if ( token.hasMoreTokens())
-			    items_text[24] = token.nextToken();
+			    items_text[24] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text25: 
 			if ( token.hasMoreTokens())
-			    items_text[25] = token.nextToken();
+			    items_text[25] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text26: 
 			if ( token.hasMoreTokens())
-			    items_text[26] = token.nextToken();
+			    items_text[26] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text27: 
 			if ( token.hasMoreTokens())
-			    items_text[27] = token.nextToken();
+			    items_text[27] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text28: 
 			if ( token.hasMoreTokens())
-			    items_text[28] = token.nextToken();
+			    items_text[28] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text29: 
 			if ( token.hasMoreTokens())
-			    items_text[29] = token.nextToken();
+			    items_text[29] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text30: 
 			if ( token.hasMoreTokens())
-			    items_text[30] = token.nextToken();
+			    items_text[30] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_text31: 
 			if ( token.hasMoreTokens())
-			    items_text[31] = token.nextToken();
+			    items_text[31] = line.substring(5);
 			break;
 		    case Dyn.eSave_OptionMenu_items_enum0: 
 			items_enum[0] = Integer.valueOf(token.nextToken());

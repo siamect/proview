@@ -113,7 +113,7 @@ public class GlowLine extends GlowArrayElem {
 	p1_y = (int)(p1.y * cmn.mw.zoom_factor_y + 0.5) - cmn.mw.offset_y;
 	p2_x = (int)(p2.x * cmn.mw.zoom_factor_x + 0.5) - cmn.mw.offset_x;
 	p2_y = (int)(p2.y * cmn.mw.zoom_factor_y + 0.5) - cmn.mw.offset_y;
-	
+
 	if ( p1_x == p2_x && p1_y == p2_y)
 	    return;
 	int idx = (int)( cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * line_width - 1);

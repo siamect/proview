@@ -197,6 +197,9 @@ public class Pwrb {
   public static final int cClass_inv = 132168;
   public static final int cClass_IOHandler = 132176;
   public static final int cClass_IpMux = 133192;
+  public static final int cClass_Ii = 133664;
+  public static final int cClass_Io = 133672;
+  public static final int cClass_Iv = 133680;
   public static final int cClass_IvArea = 133312;
   public static final int cClass_limit = 132192;
   public static final int cClass_Line_LAT = 132208;
@@ -287,6 +290,7 @@ public class Pwrb {
   public static final int cClass_Store = 132896;
   public static final int cClass_StoreFormat = 132904;
   public static final int cClass_StoreTrig = 132912;
+  public static final int cClass_Sv = 133496;
   public static final int cClass_windowsubstep = 133128;
   public static final int cClass_substep = 132920;
   public static final int cClass_sum = 132944;

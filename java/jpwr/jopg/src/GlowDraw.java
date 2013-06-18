@@ -45,9 +45,10 @@ import javax.swing.border.*;
 import java.awt.event.*;
 
 public class GlowDraw implements GlowDrawIfc {
+    public static final int DRAW_FONT_SIZE = 9;
     Graphics2D g2;
     boolean nodraw = true;
-    Font fonts[] = new Font[9];
+    Font fonts[] = new Font[DRAW_FONT_SIZE * 2];
 
         
     public void setNodraw(boolean nodraw) {
@@ -99,6 +100,16 @@ public class GlowDraw implements GlowDrawIfc {
 	    return;
 
 	Rectangle2D r = new Rectangle2D.Float((float)x, (float)y, (float)width, (float)height);
+	setGradient( gradient, f1, f2, (float)x, (float)y, (float)width, (float)height);
+	g2.fill(r);
+    }
+
+    public void gradient_fill_rectrounded(int x, int y, int width, int height, int amount, int gc_type, int f1, int f2, int gradient) {
+	if ( nodraw)
+	    return;
+
+	RoundRectangle2D r = new RoundRectangle2D.Float((float)x, (float)y, (float)width, (float)height,
+						   (float)amount, (float)amount);
 	setGradient( gradient, f1, f2, (float)x, (float)y, (float)width, (float)height);
 	g2.fill(r);
     }
@@ -253,7 +264,7 @@ public class GlowDraw implements GlowDrawIfc {
 
 	Color c = getColor(color);
 
-	g2.setFont(getFont(font_idx, idx));
+	g2.setFont(getFont(font_idx, idx, gc_type));
 	g2.setPaint(c);
 	g2.drawString(text, x, y);
     }
@@ -440,16 +451,21 @@ public class GlowDraw implements GlowDrawIfc {
 	}
     }	    
 
-    public GlowDimension getTextExtent( String text, int idx, int type) {
-	FontMetrics metrics = g2.getFontMetrics( getFont( type, idx));
+    public GlowDimension getTextExtent( String text, int idx, int type, int gc_type) {
+	FontMetrics metrics = g2.getFontMetrics( getFont( type, idx, gc_type));
 	GlowDimension dim = new GlowDimension();
 	dim.height = metrics.getHeight();
 	dim.width = metrics.stringWidth(text);
 	return dim;
     }
 
-    public Font getFont( int type, int idx) {
-	if ( fonts[idx] == null) {
+    public Font getFont( int type, int idx, int gc_type) {
+	int fidx;
+
+	fidx = idx;
+	if ( gc_type == Glow.eDrawType_TextHelveticaBold)
+	    fidx += DRAW_FONT_SIZE;
+	if ( fonts[fidx] == null) {
 	    int text_size;
 	    switch ( idx) {
 	    case 0: text_size = 8; break;
@@ -463,9 +479,12 @@ public class GlowDraw implements GlowDrawIfc {
 	    default: text_size = 24;
 	    }
 	    text_size *= 0.8;
-	    fonts[idx] = new Font("Helvetica", Font.PLAIN, text_size);
+	    if ( fidx < DRAW_FONT_SIZE)
+		fonts[fidx] = new Font("Helvetica", Font.PLAIN, text_size);
+	    else
+		fonts[fidx] = new Font("Helvetica", Font.BOLD, text_size);
 	}
-	return fonts[idx];
+	return fonts[fidx];
     }
 
     public int set_clip_rectangle( int x1, int y1, int x2, int y2) {

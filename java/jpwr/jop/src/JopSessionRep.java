@@ -234,10 +234,11 @@ public class JopSessionRep implements JopSessionIfc {
 	    if ( coid.objid.vid < Cdh.cUserClassVolMin ||
 		 (coid.objid.vid >= Cdh.cManufactClassVolMin && 
 		  coid.objid.vid <= Cdh.cManufactClassVolMax)) {
-		name = "$pwr_exe/" + name;
+		if ( isApplication())
+		    name = "$pwr_exe/" + name;
 	    }
 	    if ( suffix.length() > 0)
-		name = name.substring(0, pwgidx) + suffix + name.substring(pwgidx+1);
+		name = name.substring(0, pwgidx) + suffix + name.substring(pwgidx);
 	}
 	JopLog.log("openGraphFrame classgraph " + name);
 

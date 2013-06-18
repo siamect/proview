@@ -17,6 +17,7 @@ endif
 
 .SUFFIXES: 
 
+
 $(bld_dir)/%.cmsg $(inc_dir)/%.h: %.msg
 	@ $(log_msg_h)
 	@ $(tools_msg2cmsg) $(source) $(bld_dir)/$(tname).cmsg $(inc_dir)/$(tname).h
@@ -238,6 +239,15 @@ $(doc_dir)/%.html : ../../%.html
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(inc_dir)/%.meth : %.meth
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+# Rules for android apps
+$(app_package_dir)/$(comp_name)/%.java : $(fco_source)/%.java
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(app_package_dir)/$(comp_name)/%.java : $(pwre_sroot)/jpwr/$(comp_name)/src/%.java
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 

@@ -240,7 +240,7 @@ public class GrowArc extends GlowArrayElem {
     }
 
     public int eventHandler( GlowEvent event, double fx, double fy) {
-	GlowPoint rp;
+	GlowPointDX rp;
 
 	switch ( event.event) {
 	case Glow.eEvent_CursorMotion:		
