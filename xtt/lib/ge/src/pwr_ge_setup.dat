@@ -588,6 +588,7 @@ menu Components
   }
   menu ABB
   {
+    subgraph	ABB_ACS880	pwr_exe:mcomp_abb_acs880.pwsg 		5
     subgraph	ABB_ACS800FanAggr  pwr_exe:mcomp_abb_acs800fanaggr.pwsg 71
     subgraph	ABB_ACS800MotorAggr  pwr_exe:mcomp_abb_acs800motoraggr.pwsg 23
     subgraph	ABB_ACS800PumpAggr  pwr_exe:mcomp_abb_acs800pumpaggr.pwsg 72

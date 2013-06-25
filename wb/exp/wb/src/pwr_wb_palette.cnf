@@ -143,6 +143,10 @@ palette NavigatorPalette
           class ABB_ACS800MotorAggr
           class ABB_ACS800PumpAggr
           class ABB_ACS800_1
+          class ABB_ACS880FanAggr
+          class ABB_ACS880MotorAggr
+          class ABB_ACS880PumpAggr
+          class ABB_ACS880_1
           class ABB_CircuitBreaker_MS116
           class ABB_Contactor_A
           class ABB_Converter_ACS800_PPO3
@@ -306,6 +310,7 @@ palette NavigatorPalette
         {
           class Pb_DP_Slave
           class ABB_ACS_Pb_Slave
+          class ABB_ACS880_Pb_Slave
           class Eurotherm_TC3001_PbSlave
           class SEW_Movidrive_Pb_Slave
           class Siemens_DiagRepeater
@@ -1137,6 +1142,8 @@ palette PlcEditorPalette
     {
       class ABB_ACS800_1Fo
       class ABB_ACS800MotorAggrFo
+      class ABB_ACS880_1Fo
+      class ABB_ACS880MotorAggrFo
       class ABB_Sensor_Pb_PA_Fo
       class ABB_TempSensor_TF12Fo
       class ABB_PressureSensor_265GSFo
@@ -1159,6 +1166,8 @@ palette PlcEditorPalette
     {
       class ABB_ACS800_1Sim
       class ABB_ACS800MotorAggrSim
+      class ABB_ACS880_1Sim
+      class ABB_ACS880MotorAggrSim
       class BaseContactorSim
       class BaseCDamperSim
       class BaseCValveSim

@@ -210,6 +210,11 @@ Model "ABB Drives RPBA-01"
 "PPO Type 5" ABB_ACS_PPO5
 }
 
+Model "ABB Drives FPBA-01 DP-V0"
+{
+"PPO-07, 4 PKW + 12 PZD" ABB_ACS880_PPO7
+}
+
 Model "MOVIDRIVE DFP21 (DPV1)"
 {
 "3 PD   (3 words)         " SEW_Movidrive_3PD
