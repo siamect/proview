@@ -46,6 +46,9 @@
 #ifndef xtt_evlist
 # include "xtt_evlist.h"
 #endif
+#ifndef xtt_evala
+# include "xtt_evala.h"
+#endif
 
 class CoWow;
 class XttMethodToolbar;
@@ -54,6 +57,10 @@ typedef struct {
   char Object[120];
   char Alias[8];
 } ev_sAlias;
+
+typedef enum {
+  ev_mAlaOptions_Embedded = 1 << 0
+} ev_mAlaOptions;
 
 class Ev {
   public:
@@ -87,6 +94,7 @@ class Ev {
 					  unsigned long, char *, int x, int y);
     int			(*sound_cb)( void *, pwr_tAttrRef *);
     void       		(*pop_cb)( void *);
+    int			(*is_authorized_cb)(void *, unsigned int);
     EvList		*eve;
     EvList		*ala;
     EvList		*blk;
@@ -107,6 +115,8 @@ class Ev {
     XttMethodToolbar 	*ala_methodtoolbar;
     XttMethodToolbar 	*eve_sup_methodtoolbar;
     XttMethodToolbar 	*ala_sup_methodtoolbar;
+    EvAla		*sala[20];
+    int			sala_cnt;
 
     virtual void map_eve() {}
     virtual void map_ala() {}
@@ -114,6 +124,10 @@ class Ev {
     virtual void unmap_eve() {}
     virtual void unmap_ala() {}
     virtual void unmap_blk() {}
+    virtual void set_title_ala( char *title) {}
+    virtual EvAla *open_alarmlist_satellite( const char *title, pwr_tStatus *sts, 
+					     int width, int height, int x, int y, 
+					     pwr_tObjid view, unsigned int options = 0, void *widget = 0) {return 0;}
 
     int		outunit_connect( pwr_tObjid	user);
     void	update( double scantime);
@@ -127,10 +141,13 @@ class Ev {
 			unsigned long prio);
     void	create_aliaslist( void *up);
     char	*name_to_alias( char *name);
+    pwr_tStatus set_view(pwr_tOid view);
+    void 	view_shift();
 
     void eve_activate_print();
     void ala_activate_print();
     void blk_activate_print();
+    void ala_activate_ack_last();
     void eve_activate_ack_last();
     void eve_activate_ack_all();
     void eve_activate_help();
@@ -152,6 +169,12 @@ class Ev {
     static int ev_sound_cb( void *ctx, pwr_tAttrRef *attrref);
     static void eve_selection_changed_cb( void *ctx);
     static void ala_selection_changed_cb( void *ctx);
+    static void ala_help_cb( void *ctx, const char *key);
+    static int ala_is_authorized_cb( void *ctx, unsigned int access);
+    static int sala_acknowledge_cb( void *ctx, mh_sEventId *id);
+    static void sala_copy_list_cb( void *ctx, EvList *evl);
+    static void sala_close_cb( void *ctx, EvAla *sala);
+
     static pwr_tStatus mh_ack_bc( mh_sAck *MsgP);
     static pwr_tStatus mh_return_bc( mh_sReturn *MsgP);
     static pwr_tStatus mh_alarm_bc( mh_sMessage *MsgP);

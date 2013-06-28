@@ -33,18 +33,18 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_xttgraphoptionsmask.wb_load -- Defines the mask type XttGraphOptionsMask
+!  pwrb_multiviewoptionsmask.wb_load -- Defines the mask type MultiViewOptionsMask
 !
 SObject pwrb:Type
 !/**
 !  @Version 1.0
 !  @Group Types
-!  Bitmask for xtt graph options.
+!  Bitmask for xtt multiview options.
 !
 ! @b See also
-!  @classlink XttGraph pwrb_xttgraph.html
+!  @classlink XttMultiView pwrb_xttmultiview.html
 !*/
-  Object XttGraphOptionsMask $TypeDef 55
+  Object MultiViewOptionsMask $TypeDef 70
     Body SysBody
       Attr Type = pwr_eType_Mask
       Attr Size = 4
@@ -92,32 +92,22 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  Menu.
+    !  Column separators.
     !*/
-    Object Menu $Bit
+    Object ColumnSeparators $Bit
      Body SysBody
-       Attr PgmName = "Menu"
-       Attr Text = "Menu"
+       Attr PgmName = "ColumnSeparators"
+       Attr Text = "ColumnSeparators"
        Attr Value = 16
      EndBody
     EndObject
     !/**
-    !  Scrollbars.
+    !  RowSeparators.
     !*/
-    Object Scrollbars $Bit
+    Object RowSeparators $Bit
      Body SysBody
-       Attr PgmName = "Scrollbars"
-       Attr Text = "Scrollbars"
-       Attr Value = 32
-     EndBody
-    EndObject
-    !/**
-    !  Navigator.
-    !*/
-    Object Navigator $Bit
-     Body SysBody
-       Attr PgmName = "Navigator"
-       Attr Text = "Navigator"
+       Attr PgmName = "RowSeparators"
+       Attr Text = "RowSeparators"
        Attr Value = 64
      EndBody
     EndObject

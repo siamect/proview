@@ -121,12 +121,18 @@ typedef enum {
 	} evlist_eEventType;
 
 typedef enum {
-	evlist_eItemType_Alarm
+	evlist_eItemType_Alarm,
+	evlist_eItemType_Category
 	} evlist_eItemType;
+
+typedef enum {
+	evlist_mOpen_All       	= ~0,
+	evlist_mOpen_Children	= 1 << 0
+	} evlist_mOpen;
 
 class EvListBrow {
   public:
-    EvListBrow( BrowCtx *brow_ctx, void *evl) : ctx(brow_ctx), evlist(evl) {};
+  EvListBrow( BrowCtx *brow_ctx, void *evl) : ctx(brow_ctx), evlist(evl) {};
     ~EvListBrow();
 
     BrowCtx		*ctx;
@@ -135,6 +141,13 @@ class EvListBrow {
     brow_tNodeClass 	nc_a_alarm;
     brow_tNodeClass 	nc_b_alarm;
     brow_tNodeClass 	nc_info;
+    brow_tNodeClass 	nc_category;
+    brow_tNodeClass 	nc_category_a;
+    brow_tNodeClass 	nc_category_b;
+    brow_tNodeClass 	nc_category_c;
+    brow_tNodeClass 	nc_category_d;
+    brow_tNodeClass 	nc_category_i;
+    brow_tNodeClass 	nc_category_flash;
     flow_sAnnotPixmap 	*pixmap_leaf;
     flow_sAnnotPixmap 	*pixmap_map;
     flow_sAnnotPixmap 	*pixmap_openmap;
@@ -159,12 +172,15 @@ class EvList {
     EvList( void *ev_parent_ctx,
 	    ev_eType ev_type,
 	    int ev_size,
-	    int ev_eventname_seg);
+	    int ev_eventname_seg,
+	    void (*ev_init_cb)( void *) = 0);
     virtual ~EvList();
 
     void 		*parent_ctx;
     ev_eType		type;
     EvListBrow		*brow;
+    EvListBrow		*browbase;
+    EvListBrow		*browtree;
     int			size;
     int			max_size;
     int			display_hundredth;
@@ -177,6 +193,7 @@ class EvList {
     char		*(*name_to_alias_cb)( void *, char *);
     int			(*sound_cb)( void *, pwr_tAttrRef *);
     void       		(*selection_changed_cb)( void *);
+    void		(*init_cb)( void *);
     double		acc_beep_time;
     double		beep_interval;
     pwr_tAttrRef	aalarm_sound;
@@ -185,6 +202,8 @@ class EvList {
     pwr_tAttrRef	dalarm_sound;
     pwr_tAttrRef	info_sound;
     int			eventname_seg;
+    pwr_tObjid		current_view;
+    bool 		flash_value;
 
     virtual void set_input_focus() {}
     virtual void bell() {}
@@ -220,15 +239,28 @@ class EvList {
     int get_destination( pwr_tTime time, void **dest);
     void block_remove();
     void print_nodia( char *filename);
+    pwr_tStatus set_view(pwr_tOid view);
+    pwr_tStatus view_init( pwr_tOid view);
+    void view_configure();
+    void view_alarm( ItemAlarm *alarm_item);
+    void flash();
+    void copy_list( EvList* evl);
 
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
+    static int init_browtree_cb( BrowCtx *fctx, void *client_data);
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);
+    static int browtree_cb( FlowCtx *ctx, flow_tEvent event);
     static int get_select( void *ctx, pwr_tAttrRef *attrref, int *is_attr);
     static int get_select_supobject( void *ctx, pwr_tAttrRef *attrref, int *is_attr);
 
 };
 
-class ItemAlarm {
+class ItemEvBase {
+  public:
+    evlist_eItemType type;
+};
+
+class ItemAlarm : public ItemEvBase {
   public:
     ItemAlarm( EvList *evlist, const char *item_name, pwr_tTime item_time,
 	const char *item_eventtext, char *item_eventname, int item_eventflags,
@@ -237,10 +269,10 @@ class ItemAlarm {
         char *item_eventmoretext,unsigned long item_status,
         evlist_eEventType item_event_type, pwr_tAttrRef *item_supobject,
 	brow_tNode dest, flow_eDest dest_code, int *rsts);
-    evlist_eItemType	type;
     evlist_eEventType	event_type;
     EvList		*evlist;
     brow_tNode		node;
+    brow_tNode		tree_node;
     char	 	name[40];
     pwr_tTime		time;
     char		eventtext[80];
@@ -255,7 +287,29 @@ class ItemAlarm {
     pwr_tText256        eventmoretext;
     pwr_tAttrRef       	supobject;
 
-    void	update_text();
+    void	update_text(int tree_node);
+};
+
+class ItemCategory : public ItemEvBase {
+  public:
+    ItemCategory( EvList *evlist, const char *item_name, pwr_sClass_AlarmCategory *cop,
+		  brow_tNode dest, flow_eDest dest_code, int *rsts);
+    EvList		*evlist;
+    brow_tNode		node;
+    char		name[80];
+    char	 	text[80];
+    unsigned int	prio;
+    unsigned int	event_priority;
+    pwr_tAName		members[100];
+    int			member_cnt;
+    brow_tNodeClass 	base_nc;
+    int			notacked_child;
+
+    int open_children( EvList *evlist, double x, double y);
+    void close( EvList *evlist, double x, double y);
+    void configure( EvList *evlist);
+    void alarm( EvList *evlist, ItemAlarm *alarm);
+    void flash( EvList *evlist);
 };
 
 #endif

@@ -1163,6 +1163,11 @@ void XNav::start_trace( pwr_tObjid objid, char *object_str)
     pwr_tClassId classid;
     pwr_tObjid	window_objid;
 
+    if ( !is_authorized(pwr_mAccess_RtPlc | pwr_mAccess_System, 0)) {
+      message('E', "Not authorized to open plc");
+      return;
+    }
+
     sts = gdh_GetObjectClass( objid, &classid);
     if ( EVEN(sts)) return;
     if ( classid == pwr_cClass_plc) {
@@ -1306,7 +1311,7 @@ XNav::XNav(
 	base_priv(pwr_mPrv_System), priv(pwr_mPrv_System), displayed(0),
         current_logging_index(-1), search_last_found(0), search_compiled(0), 
 	attach_audio(0), audio(0), op_close_button(xn_op_close_button), cologin(0), scctx(0),
-	last_xcolwind(0)
+	last_xcolwind(0), current_cmd_ctx(0), elog_enabled(0), elog_checked(0)
 {
   strcpy( name, xn_name);
   strcpy( opplace_name, xn_opplace_name);
@@ -3671,6 +3676,8 @@ int XNav::init_brow_base_cb( FlowCtx *fctx, void *client_data)
   {
     pwr_tCmd cmd;
 
+    xnav->login_from_opplace();
+
     if ( !xnav->gbl.hide_opwind) {
       strcpy( cmd, "open op ");
       strcat( cmd, xnav->opplace_name);
@@ -3681,7 +3688,9 @@ int XNav::init_brow_base_cb( FlowCtx *fctx, void *client_data)
 
       xnav->load_ev_from_opplace();
     }
-    xnav->login_from_opplace();
+    if (xnav->op)
+      xnav->op->set_title( xnav->user);
+
   }
   else
     xnav->login();
@@ -3844,6 +3853,18 @@ void ApplListElem::log_new()
     XttLog::dlog( xttlog_eCategory_ApplNew, cmd, 0, 0);	
     break;
   }
+  case applist_eType_MultiView: {
+    pwr_tCmd cmd;
+    pwr_tStatus sts;
+    pwr_tAName aname;
+
+    sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return;
+
+    snprintf( cmd, sizeof(cmd), "open multiview %s", aname);
+    XttLog::dlog( xttlog_eCategory_ApplNew, cmd, 0, 0);	
+    break;
+  }
   case applist_eType_Trend: {
     pwr_tCmd cmd;
     pwr_tStatus sts;
@@ -3883,6 +3904,18 @@ void ApplListElem::log_delete()
       sprintf( cmd, "close graph \"%s\"", name);
     else
       sprintf( cmd, "close graph \"%s\"/inst=%s", name, instance);
+    XttLog::dlog( xttlog_eCategory_ApplDelete, cmd, 0, 0);	
+    break;
+  }
+  case applist_eType_MultiView: {
+    pwr_tCmd cmd;
+    pwr_tStatus sts;
+    pwr_tAName aname;
+
+    sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return;
+
+    snprintf( cmd, sizeof(cmd), "close multiview %s", aname);
     XttLog::dlog( xttlog_eCategory_ApplDelete, cmd, 0, 0);	
     break;
   }
@@ -4002,6 +4035,33 @@ int ApplList::find( applist_eType type, const char *name, const char *instance, 
   return 0;
 }
 
+int ApplList::find_graph( const char *name, const char *instance, void **ctx)
+{
+  ApplListElem *elem;
+
+  for ( elem = root; elem; elem = elem->next) {
+    if ( elem->type == applist_eType_Graph) {
+      if ( cdh_NoCaseStrcmp( name, elem->name) == 0) {
+	if ( instance && strcmp( elem->instance, "") != 0) {
+	  if ( cdh_NoCaseStrcmp( instance, elem->instance) == 0) {
+	    *ctx = elem->ctx;
+	    return 1;
+	  }
+	}
+	else {
+	  *ctx = elem->ctx;
+	  return 1;
+	}
+      }
+    }
+    else if ( elem->type == applist_eType_MultiView) {
+      if (((XttMultiView *)elem->ctx)->find_graph( name, instance, ctx))
+	return 1;
+    }
+  }
+  return 0;
+}
+
 int ApplList::find( applist_eType type, void *ctx, char *name, char *instance)
 {
   ApplListElem *elem;
@@ -4024,6 +4084,9 @@ void ApplList::swap( int mode)
     switch( elem->type) {
     case applist_eType_Graph:
       ((XttGe *)elem->ctx)->swap( mode);
+      break;
+    case applist_eType_MultiView:
+      ((XttMultiView *)elem->ctx)->swap( mode);
       break;
     case applist_eType_Trace:
       ((RtTrace *)elem->ctx)->swap( mode);
@@ -4170,3 +4233,22 @@ int XNav::sound_attached()
   return 0;
 }
 
+int XNav::eventlog_enabled()
+{
+  if ( !elog_checked) {
+    pwr_sClass_MessageHandler *mhp;
+    pwr_tOid oid;
+    pwr_tStatus sts;
+
+    elog_checked = 1;
+
+    sts = gdh_GetClassList( pwr_cClass_MessageHandler, &oid);
+    if ( EVEN(sts)) return 0;
+
+    sts = gdh_ObjidToPointer( oid, (void **)&mhp);
+    if ( EVEN(sts)) return 0;
+
+    elog_enabled = (mhp->EventLogSize != 0);
+  }
+  return elog_enabled;
+}

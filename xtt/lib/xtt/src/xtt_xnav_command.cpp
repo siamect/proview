@@ -148,6 +148,9 @@ static void xnav_ev_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp);
 static int xnav_ev_sound_cb( void *xnav, pwr_sAttrRef *arp);
 static void xnav_ev_pop_cb( void *xnav);
 static void xnav_ev_update_info_cb( void *xnav);
+static void xnav_ge_help_cb( void *ctx, const char *key);
+static int xnav_ge_get_current_objects_cb( void *vxnav, pwr_sAttrRef **alist,
+					   int **is_areflist);
 static int xnav_ge_sound_cb( void *xnav, pwr_sAttrRef *arp);
 static void xnav_ge_eventlog_cb( void *xnav, void *gectx, int type, void *data, unsigned int size);
 static void xnav_ge_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp);
@@ -158,8 +161,9 @@ static int xnav_attribute_func (
   ccm_tFloat   	*return_float,
   ccm_tInt     	*return_int,
   char		*return_string);
-static int xnav_ge_command_cb( XttGe *gectx, char *command, void *caller);
-static void xnav_ge_close_cb( XttGe *gectx);
+static int xnav_multiview_command_cb( void *gectx, char *command, void *caller);
+static int xnav_ge_command_cb( void *gectx, char *command, void *caller);
+static void xnav_ge_close_cb( void *xnav, void *gectx);
 //new code by Jonas Nylund 030131
 static void xnav_hist_close_cb( void *ctx);
 //end new code by Jonas Nylund 030131
@@ -253,7 +257,8 @@ dcli_tCmdTable	xnav_command_table[] = {
 			  "/HIERARCHY", "/PARAMETER" , "/OBJID", 
 			  "/FILE", "/LOCAL", "/INITSTEP", 
 			  "/MAXOBJECTS", "/VOLUME", "/ALL", "/TYPE", 
-			  "/OPTION", "/ENTRY", "/NEW", "/TITLE", "/WINDOW", ""}
+			  "/OPTION", "/ENTRY", "/NEW", "/TITLE", "/WINDOW", 
+			  "/ALARMVIEW", "/WIDTH", "/HEIGHT", "/XPOSITION", "/YPOSITION",  ""}
 		},
 		{
 			"OPEN",
@@ -262,10 +267,11 @@ dcli_tCmdTable	xnav_command_table[] = {
 			  "/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", 
 			  "/NAVIGATOR", "/CENTER", "/OBJECT", "/NEW", 
 			  "/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", 
-			  "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/PARENT", "/PWINDOW", 
+			  "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/PARENT", "/PWINDOW",
 			  "/PINSTANCE", "/BYPASS", 
 			  "/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", "/FTYPE", 
-			  "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE", "/ICONIFY", "/HIDE", ""}
+			  "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE", "/ICONIFY", "/HIDE", 
+			  "/XPOSITION", "/YPOSITION", ""}
 		},
 		{
 			"CLOSE",
@@ -829,6 +835,7 @@ static int	xnav_set_func(	void		*client_data,
   {    
     // Command is "SET SUBWINDOW"
     XttGe *gectx;
+    XttMultiView *mvctx;
     char graph_str[80];
     char name_str[80];
     pwr_tOName object_str;
@@ -855,12 +862,92 @@ static int	xnav_set_func(	void		*client_data,
     else
       object_p = 0;
 
-    if ( !xnav->appl.find( applist_eType_Graph, graph_str, 0, 
-		  (void **) &gectx)) {
-      xnav->message('E', "Graph is not open");
-      return XNAV__HOLDCOMMAND; 	
+    if ( xnav->appl.find_graph( graph_str, 0, (void **) &gectx)) {
+      return gectx->set_subwindow_source( name_str, source_str, object_p);
     }
-    return gectx->set_subwindow_source( name_str, source_str, object_p);
+    else {
+      pwr_tStatus sts;
+      pwr_tAttrRef aref;
+
+      sts = gdh_NameToAttrref( pwr_cNObjid, graph_str, &aref);
+      if ( ODD(sts) && xnav->appl.find( applist_eType_MultiView, &aref, (void **) &mvctx)) {
+	return mvctx->set_subwindow_source( name_str, source_str, object_p);
+      }
+      else {
+	xnav->message('E', "Graph is not open");
+	return XNAV__HOLDCOMMAND; 	
+      }
+    }
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "NEXTSUBWINDOW", strlen( arg1_str)) == 0)
+  {    
+    // Command is "SET NEXTSUBWINDOW"
+    XttGe *gectx;
+    XttMultiView *mvctx;
+    char graph_str[80];
+    char name_str[80];
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", graph_str, sizeof(graph_str)))) {
+      xnav->message('E', "Graph name is missing");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
+      xnav->message('E', "Object name is missing");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    if ( xnav->appl.find_graph( graph_str, 0, (void **) &gectx)) {
+      // todo
+    }
+    else {
+      pwr_tStatus sts;
+      pwr_tAttrRef aref;
+
+      sts = gdh_NameToAttrref( pwr_cNObjid, graph_str, &aref);
+      if ( ODD(sts) && xnav->appl.find( applist_eType_MultiView, &aref, (void **) &mvctx)) {
+	return mvctx->set_subwindow_next( name_str);
+      }
+      else {
+	xnav->message('E', "Graph is not open");
+	return XNAV__HOLDCOMMAND; 	
+      }
+    }
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "PREVSUBWINDOW", strlen( arg1_str)) == 0)
+  {    
+    // Command is "SET PREVSUBWINDOW"
+    XttGe *gectx;
+    XttMultiView *mvctx;
+    char graph_str[80];
+    char name_str[80];
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", graph_str, sizeof(graph_str)))) {
+      xnav->message('E', "Graph name is missing");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
+      xnav->message('E', "Object name is missing");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    if ( xnav->appl.find_graph( graph_str, 0, (void **) &gectx)) {
+      // todo
+    }
+    else {
+      pwr_tStatus sts;
+      pwr_tAttrRef aref;
+
+      sts = gdh_NameToAttrref( pwr_cNObjid, graph_str, &aref);
+      if ( ODD(sts) && xnav->appl.find( applist_eType_MultiView, &aref, (void **) &mvctx)) {
+	return mvctx->set_subwindow_prev( name_str);
+      }
+      else {
+	xnav->message('E', "Graph is not open");
+	return XNAV__HOLDCOMMAND; 	
+      }
+    }
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "LANGUAGE", strlen( arg1_str)) == 0)
   {    
@@ -919,6 +1006,40 @@ static int	xnav_set_func(	void		*client_data,
     }
 
     xnav->set_select_conversion( conv);
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "ALARMVIEW", strlen( arg1_str)) == 0)
+  {    
+    // Command is "SET ALARMVIEW"
+    pwr_tOName name_str;
+    pwr_tObjid objid;
+    pwr_tStatus sts;
+
+    if ( !xnav->ev) {
+	xnav->message('E', "Alarmlist is not loaded");
+	return XNAV__SUCCESS;
+    }
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
+      if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
+	xnav->message('E', "Object name is missing");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+
+    if ( cdh_NoCaseStrcmp(name_str, "none") == 0) {
+      sts = xnav->ev->set_view( pwr_cNOid);
+      return XNAV__SUCCESS;
+    }
+	 
+    sts = gdh_NameToObjid ( name_str, &objid);
+    if ( EVEN(sts)) {
+      xnav->message('E', "Object not found");
+      return XNAV__SUCCESS;
+    }
+
+    sts = xnav->ev->set_view( objid);
+    if ( EVEN(sts)) return sts;
+    return XNAV__SUCCESS;
   }
   else
     xnav->message('E',"Syntax error");
@@ -1788,6 +1909,7 @@ static int	xnav_show_func(	void		*client_data,
       xnav->ev->popup_menu_cb = xnav_popup_menu_cb;
       xnav->ev->sound_cb = xnav_ev_sound_cb;
       xnav->ev->pop_cb = xnav_ev_pop_cb;
+      xnav->ev->is_authorized_cb = xnav->is_authorized_cb;
     }
     else
       xnav->ev->map_eve();
@@ -1830,9 +1952,10 @@ static int	xnav_show_func(	void		*client_data,
   /*end new code by Jonas Nylund 030122*/
   else if ( cdh_NoCaseStrncmp( arg1_str, "ALARMLIST", strlen( arg1_str)) == 0)
   {
+    char arg2_str[80];
+    int	arg2_sts;
 
-    if ( !xnav->ev)
-    {
+    if ( !xnav->ev) {
       char alarm_title[40], event_title[40], block_title[40];
 
       strcpy( alarm_title, Lng::translate( "Alarm List"));
@@ -1842,8 +1965,7 @@ static int	xnav_show_func(	void		*client_data,
 			       xnav->gbl.OpObject, 1, 0, 0, xnav->gbl.AlarmReturn,
 			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, xnav->gbl.op_wind_pop, 
 			       xnav->gbl.op_wind_eventname_seg, &sts);
-      if ( EVEN(sts))
-      {
+      if ( EVEN(sts)) {
         delete xnav->ev;
         xnav->ev = NULL;
         xnav->message('E', "Unable to load eventlist");
@@ -1856,9 +1978,83 @@ static int	xnav_show_func(	void		*client_data,
       xnav->ev->popup_menu_cb = xnav_popup_menu_cb;
       xnav->ev->sound_cb = xnav_ev_sound_cb;
       xnav->ev->pop_cb = xnav_ev_pop_cb;
+      xnav->ev->is_authorized_cb = xnav->is_authorized_cb;
     }
-    else
-      xnav->ev->map_ala();
+
+
+    arg2_sts = dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str));
+    if ( ODD(arg2_sts)) {
+      if ( cdh_NoCaseStrncmp( arg2_str, "SATELLITE", strlen( arg2_str)) == 0) {
+	pwr_tOName alarmview_str;
+	char tmp_str[40];
+	pwr_tOid alarmview_oid = pwr_cNOid;
+	int width, height, x, y;
+	int nr;
+
+	if ( ODD( dcli_get_qualifier( "/ALARMVIEW", alarmview_str, sizeof(alarmview_str)))) {
+	  sts = gdh_NameToObjid( alarmview_str, &alarmview_oid);
+	  if ( EVEN(sts)) {
+	    xnav->message('E', "Alarmview not found");
+	    return XNAV__SUCCESS;
+	  }
+	}
+
+	if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str, sizeof(tmp_str)))) {
+	  nr = sscanf( tmp_str, "%d", &width);
+	  if ( nr != 1) {
+	    xnav->message('E', "Syntax error in width");
+	    return XNAV__HOLDCOMMAND;
+	  }
+	}
+	else
+	  width = 0;
+	
+	if ( ODD( dcli_get_qualifier( "/HEIGHT", tmp_str, sizeof(tmp_str)))) {
+	  nr = sscanf( tmp_str, "%d", &height);
+	  if ( nr != 1) {
+	    xnav->message('E', "Syntax error in height");
+	    return XNAV__HOLDCOMMAND;
+	  }
+	}
+	else
+	  height = 0;
+
+	if ( ODD( dcli_get_qualifier( "/XPOSITION", tmp_str, sizeof(tmp_str)))) {
+	  nr = sscanf( tmp_str, "%d", &x);
+	  if ( nr != 1) {
+	    xnav->message('E', "Syntax error in x coordinate");
+	    return XNAV__HOLDCOMMAND;
+	  }
+	}
+	else
+	  x = 0;
+
+	if ( ODD( dcli_get_qualifier( "/YPOSITION", tmp_str, sizeof(tmp_str)))) {
+	  nr = sscanf( tmp_str, "%d", &y);
+	  if ( nr != 1) {
+	    xnav->message('E', "Syntax error in y coordinate");
+	    return XNAV__HOLDCOMMAND;
+	  }
+	}
+	else
+	  y = 0;
+
+	if ( xnav->ev)
+	  xnav->ev->open_alarmlist_satellite("Alarmlist Satellite", &sts, 
+					     width, height, x, y, alarmview_oid);
+	else {
+	  xnav->message('E', "Eventlist not loaded");
+	  return XNAV__HOLDCOMMAND;
+	}
+      }
+      else {
+	xnav->message('E', "Syntax error");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else {
+	xnav->ev->map_ala();
+    }
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "BLOCKLIST", strlen( arg1_str)) == 0)
   {
@@ -1888,6 +2084,7 @@ static int	xnav_show_func(	void		*client_data,
       xnav->ev->popup_menu_cb = xnav_popup_menu_cb;
       xnav->ev->sound_cb = xnav_ev_sound_cb;
       xnav->ev->pop_cb = xnav_ev_pop_cb;
+      xnav->ev->is_authorized_cb = xnav->is_authorized_cb;
     }
     else
       xnav->ev->map_blk();
@@ -2164,6 +2361,7 @@ static int	xnav_eventlist_func(	void		*client_data,
       xnav->ev->popup_menu_cb = xnav_popup_menu_cb;
       xnav->ev->sound_cb = xnav_ev_sound_cb;
       xnav->ev->pop_cb = xnav_ev_pop_cb;
+      xnav->ev->is_authorized_cb = xnav->is_authorized_cb;
     }
     else
     {
@@ -2532,7 +2730,6 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tFileName pwindow_str;
     pwr_tAName	pinstance_str;
     void 	*basewidget = 0;
-      
 
     parent = ODD( dcli_get_qualifier( "/PARENT", 0, 0));
 
@@ -2552,11 +2749,15 @@ static int	xnav_open_func(	void		*client_data,
       XttGe *gectx;
 
       if ( cdh_NoCaseStrcmp(pwindow_str, "$current") == 0) {
-	pwr_tFileName name;
-	pwr_tAName inst;
+	if ( xnav->current_cmd_ctx) {
+	  pwr_tFileName name;
+	  pwr_tAName inst;
 
-	if ( xnav->appl.find( applist_eType_Graph, xnav->current_gectx, name, inst))
-	  basewidget = ((XttGe *)xnav->current_gectx)->get_widget();
+	  if ( xnav->appl.find( applist_eType_Graph, xnav->current_cmd_ctx, name, inst))
+	    basewidget = ((XttGe *)xnav->current_cmd_ctx)->get_widget();
+	  else if ( xnav->appl.find( applist_eType_MultiView, xnav->current_cmd_ctx, name, inst))
+	    basewidget = ((XttMultiView *)xnav->current_cmd_ctx)->get_widget();
+	}
       }
       else {
 	if ( ODD( dcli_get_qualifier( "/PINSTANCE", pinstance_str, sizeof(pinstance_str)))) {
@@ -2864,6 +3065,127 @@ static int	xnav_open_func(	void		*client_data,
       return XNAV__SUCCESS;	
     }
   }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "MULTIVIEW", strlen( arg1_str)) == 0) {
+    char tmp_str[80];
+    int width, height;
+    int x, y;
+    unsigned int options = 0;
+    pwr_tAttrRef aref = pwr_cNAttrRef;
+    char name_str[80];
+    char *name_ptr = 0;
+    int nr;
+    pwr_tStatus sts;
+    pwr_tAttrRef aref_vect[2];
+    
+    /* Get the name qualifier */
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
+      if ( name_str[0] != '/')
+        /* Assume that this is the namestring */
+        name_ptr = name_str;
+      else {
+        xnav->message('E', "Syntax error");
+        return XNAV__HOLDCOMMAND; 	
+      } 
+    }
+    else {
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
+        name_ptr = name_str;
+      else {
+        /* Get the selected object */
+        sts = xnav->get_current_aref( &aref_vect[0], name_str, 
+	  sizeof( name_str), cdh_mName_path | cdh_mName_object | cdh_mName_attribute);
+        if ( EVEN(sts)) {
+          xnav->message('E', "Enter name or select an object");
+          return XNAV__SUCCESS;
+        }
+        name_ptr = name_str;
+      }
+    }
+
+    sts = gdh_NameToAttrref( pwr_cNObjid, name_ptr, &aref);
+    if ( EVEN(sts)) {
+      xnav->message('E',"MultiView object not found");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
+      options |= ge_mOptions_FullScreen;
+    if ( ODD( dcli_get_qualifier( "/MAXIMIZE", 0, 0)))
+      options |= ge_mOptions_Maximize;
+    if ( ODD( dcli_get_qualifier( "/FULLMAXIMIZE", 0, 0)))
+      options |= ge_mOptions_FullMaximize;
+    if ( ODD( dcli_get_qualifier( "/ICONIFY", 0, 0)))
+      options |= ge_mOptions_Iconify;	   
+    if ( ODD( dcli_get_qualifier( "/HIDE", 0, 0)))
+      options |= ge_mOptions_Invisible;	   
+
+    if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str, sizeof(tmp_str)))) {
+      nr = sscanf( tmp_str, "%d", &width);
+      if ( nr != 1) {
+	xnav->message('E', "Syntax error in width");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      width = 0;
+
+    if ( ODD( dcli_get_qualifier( "/HEIGHT", tmp_str, sizeof(tmp_str)))) {
+      nr = sscanf( tmp_str, "%d", &height);
+      if ( nr != 1) {
+	xnav->message('E', "Syntax error in height");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      height = 0;
+
+    if ( ODD( dcli_get_qualifier( "/XPOSITION", tmp_str, sizeof(tmp_str)))) {
+      nr = sscanf( tmp_str, "%d", &x);
+      if ( nr != 1) {
+	xnav->message('E', "Syntax error in x coordinate");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      x = 0;
+    
+    if ( ODD( dcli_get_qualifier( "/YPOSITION", tmp_str, sizeof(tmp_str)))) {
+      nr = sscanf( tmp_str, "%d", &y);
+      if ( nr != 1) {
+	xnav->message('E', "Syntax error in y coordinate");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      y = 0;
+
+    XttMultiView *mvctx;
+
+    if ( xnav->appl.find( applist_eType_MultiView, &aref, (void **) &mvctx)) {
+      mvctx->pop();
+    }
+    else {
+      mvctx = xnav->multiview_new( name_str, &aref, width, height, x, y, options, &sts,
+				   &xnav_multiview_command_cb,
+				   &xnav_ge_get_current_objects_cb, 
+				   &xnav_ge_is_authorized_cb);
+      if ( EVEN(sts)) {
+	xnav->message(' ', XNav::get_message(sts));
+	return sts;
+      }
+      mvctx->close_cb = xnav_ge_close_cb;
+      mvctx->help_cb = xnav_ge_help_cb;
+      mvctx->display_in_xnav_cb = xnav_ge_display_in_xnav_cb;
+      mvctx->popup_menu_cb = xnav_popup_menu_cb;
+      mvctx->call_method_cb = xnav_call_method_cb;
+      mvctx->sound_cb = xnav_ge_sound_cb;
+      mvctx->eventlog_cb = xnav_ge_eventlog_cb;
+
+      xnav->appl.insert( applist_eType_MultiView, (void *)mvctx, &aref, "",
+			 NULL);
+    }
+    return XNAV__SUCCESS;	
+  }
   else if ( cdh_NoCaseStrncmp( arg1_str, "TRACE", strlen( arg1_str)) == 0)
   {
     pwr_tOName name_str;
@@ -2944,6 +3266,8 @@ static int	xnav_open_func(	void		*client_data,
       xnav->op->map_cb = xnav_op_map_cb;
       xnav->op->get_alarm_info_cb = xnav_op_get_alarm_info_cb;
       xnav->op->ack_last_cb = xnav_op_ack_last_cb;
+      xnav->op->is_authorized_cb = xnav->is_authorized_cb;
+
       if ( closebutton)
 	xnav->op->add_close_button();
       strcpy( xnav->opplace_name, opplace_str);
@@ -3984,6 +4308,58 @@ static int	xnav_close_func(	void		*client_data,
       return XNAV__SUCCESS;	
     }
   }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "MULTIVIEW", strlen( arg1_str)) == 0)
+  {
+
+    pwr_tAName name_str;
+    char *name_ptr;
+    pwr_tAttrRef aref;
+    int sts;
+    pwr_tClassId classid;
+    XttMultiView *mvctx;
+
+    // Command is "CLOSE MULTIVIEW"
+
+    /* Get the name qualifier */
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
+      if ( name_str[0] != '/')
+        /* Assume that this is the namestring */
+        name_ptr = name_str;
+      else {
+        xnav->message('E', "Syntax error");
+        return XNAV__HOLDCOMMAND; 	
+      } 
+    }
+    else {
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
+        name_ptr = name_str;
+      else {
+        xnav->message('E', "Enter name");
+        return XNAV__SUCCESS;
+      }
+    }
+
+    sts = gdh_NameToAttrref( pwr_cNObjid, name_ptr, &aref);
+    if (EVEN(sts)) {
+      xnav->message('E', "Object not found");
+      return XNAV__HOLDCOMMAND;
+    }
+    sts = gdh_GetAttrRefTid( &aref, &classid);
+    if (EVEN(sts)) return sts;
+
+    switch ( classid) {
+      case pwr_cClass_XttMultiView:
+        break;
+      default:
+        xnav->message('E', "Error in object class");
+        return XNAV__HOLDCOMMAND;
+    }
+
+    if ( xnav->appl.find( applist_eType_MultiView, &aref, (void **) &mvctx)) {
+      xnav->appl.remove( (void *)mvctx);
+      delete mvctx;
+    }
+  }
   else if ( cdh_NoCaseStrncmp( arg1_str, "TREND", strlen( arg1_str)) == 0)
   {
 
@@ -4247,9 +4623,9 @@ static int	xnav_close_func(	void		*client_data,
   return XNAV__SUCCESS;	
 }
 
-static void xnav_ge_help_cb( XttGe *gectx, const char *key)
+static void xnav_ge_help_cb( void *ctx, const char *key)
 {
-  XNav *xnav = (XNav *)gectx->parent_ctx;
+  XNav *xnav = (XNav *)ctx;
   int sts;
 
   sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Project, NULL, 0);
@@ -4261,16 +4637,25 @@ static void xnav_ge_help_cb( XttGe *gectx, const char *key)
     xnav->message( ' ', null_str);
 }
 
-static int xnav_ge_command_cb( XttGe *gectx, char *command, void *caller)
+static int xnav_multiview_command_cb( void *ctx, char *command, void *caller)
 {
-  ((XNav *)gectx->parent_ctx)->current_gectx = caller;
-  ((XNav *)gectx->parent_ctx)->command( command);
-  return ((XNav *)gectx->parent_ctx)->get_command_sts();
+  ((XNav *)ctx)->current_cmd_ctx = caller;
+  ((XNav *)ctx)->command( command);
+  ((XNav *)ctx)->current_cmd_ctx = 0;
+  return ((XNav *)ctx)->get_command_sts();
 }
 
-static void xnav_ge_close_cb( XttGe *gectx)
+static int xnav_ge_command_cb( void *ctx, char *command, void *caller)
 {
-  ((XNav *)gectx->parent_ctx)->appl.remove( (void *)gectx);
+  ((XNav *)ctx)->current_cmd_ctx = caller;
+  ((XNav *)ctx)->command( command);
+  ((XNav *)ctx)->current_cmd_ctx = 0;
+  return ((XNav *)ctx)->get_command_sts();
+}
+
+static void xnav_ge_close_cb( void *xnav, void *ctx)
+{
+  ((XNav *)xnav)->appl.remove( (void *)ctx);
 }
 
 //new code Jonas Nylund 030131

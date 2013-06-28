@@ -106,6 +106,7 @@ class Op {
   void 		(*close_cb)( void *);
   int 		(*get_alarm_info_cb)( void *, evlist_sAlarmInfo *);
   void 		(*ack_last_cb)( void *, unsigned long, unsigned long);
+  int		(*is_authorized_cb)(void *, unsigned int);
   CoWow		*wow;
   pwr_tMask	layout_mask;
   vector<OpSup> sup_vect;

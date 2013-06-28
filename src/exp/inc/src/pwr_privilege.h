@@ -59,11 +59,14 @@ typedef enum {
   pwr_mPrv_Operator8		= 1 << 13,
   pwr_mPrv_Operator9		= 1 << 14,
   pwr_mPrv_Operator10		= 1 << 15,
+  pwr_mPrv_RtEventsAck		= 1 << 18,
+  pwr_mPrv_RtPlc		= 1 << 19,
+  pwr_mPrv_RtNavigator		= 1 << 20,
   pwr_mPrv_DevRead		= 1 << 21,
   pwr_mPrv_DevPlc		= 1 << 22,
   pwr_mPrv_DevConfig		= 1 << 23,
   pwr_mPrv_DevClass		= 1 << 24,
-  pwr_mPrv_RtEvents		= 1 << 25,
+  pwr_mPrv_RtEventsBlock       	= 1 << 25,
   pwr_mPrv_Administrator       	= 1 << 26,
   pwr_mPrv_SevRead     		= 1 << 27,
   pwr_mPrv_SevAdmin     	= 1 << 28
@@ -86,14 +89,20 @@ typedef enum {
   pwr_mAccess_Operator8		= pwr_mPrv_Operator8,
   pwr_mAccess_Operator9		= pwr_mPrv_Operator9,
   pwr_mAccess_Operator10	= pwr_mPrv_Operator10,
-  pwr_mAccess_RtEvents		= pwr_mPrv_RtEvents,
+  pwr_mAccess_RtEventsBlock    	= pwr_mPrv_RtEventsBlock,
+  pwr_mAccess_RtEventsAck    	= pwr_mPrv_RtEventsAck,
+  pwr_mAccess_RtPlc	    	= pwr_mPrv_RtPlc,
+  pwr_mAccess_RtNavigator    	= pwr_mPrv_RtNavigator,
   pwr_mAccess_AllRt		= pwr_mPrv_System |
 				  pwr_mPrv_Maintenance |
 				  pwr_mPrv_Process |
 				  pwr_mPrv_Instrument |
 				  pwr_mPrv_RtRead |
 				  pwr_mPrv_RtWrite |
-				  pwr_mPrv_RtEvents |
+				  pwr_mPrv_RtEventsBlock |
+				  pwr_mPrv_RtEventsAck |
+				  pwr_mPrv_RtPlc |
+				  pwr_mPrv_RtNavigator |
 				  pwr_mPrv_Operator1 |
 				  pwr_mPrv_Operator2 |
 				  pwr_mPrv_Operator3 |
@@ -108,7 +117,10 @@ typedef enum {
 				  pwr_mPrv_Maintenance |
 				  pwr_mPrv_Process |
 				  pwr_mPrv_Instrument |
-				  pwr_mPrv_RtEvents |
+				  pwr_mPrv_RtEventsBlock |
+				  pwr_mPrv_RtEventsAck |
+				  pwr_mPrv_RtPlc |
+				  pwr_mPrv_RtNavigator |
 				  pwr_mPrv_Operator1 |
 				  pwr_mPrv_Operator2 |
 				  pwr_mPrv_Operator3 |

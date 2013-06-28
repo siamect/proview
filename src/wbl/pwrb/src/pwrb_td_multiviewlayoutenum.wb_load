@@ -33,96 +33,58 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_xttgraphoptionsmask.wb_load -- Defines the mask type XttGraphOptionsMask
+!  pwrb_multiviewlayoutenum.wb_load -- Defines the enum type MultiViewLayout
 !
 SObject pwrb:Type
 !/**
 !  @Version 1.0
 !  @Group Types
-!  Bitmask for xtt graph options.
+!  Layout of an XttMultiView window.
 !
 ! @b See also
-!  @classlink XttGraph pwrb_xttgraph.html
+!  @classlink XttMultiView pwrb_xttmultiview.html
 !*/
-  Object XttGraphOptionsMask $TypeDef 55
+  Object MultiViewLayoutEnum $TypeDef 69
     Body SysBody
-      Attr Type = pwr_eType_Mask
-      Attr Size = 4
-      Attr TypeRef = "pwrs:Type-$Mask"
-      Attr Elements = 1
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "MultiViewLayoutEnum"
     EndBody
     !/**
-    !  Full screen.
+    !  Box layout.
     !*/
-    Object FullSceen $Bit
+    Object Box $Value
      Body SysBody
-       Attr PgmName = "FullScreen"
-       Attr Text = "FullScreen"
+       Attr PgmName = "Box"
+       Attr Text = "Box"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  Fix layout.
+    !*/
+    Object Fix $Value
+     Body SysBody
+       Attr PgmName = "Fix"
+       Attr Text = "Fix"
        Attr Value = 1
      EndBody
     EndObject
     !/**
-    !  Maximize.
+    !  Table layout.
     !*/
-    Object Maximize $Bit
+    Object Table $Value
      Body SysBody
-       Attr PgmName = "Maximize"
-       Attr Text = "Maximize"
+       Attr PgmName = "Table"
+       Attr Text = "Table"
        Attr Value = 2
-     EndBody
-    EndObject
-    !/**
-    !  Full maximize.
-    !*/
-    Object FullMaximize $Bit
-     Body SysBody
-       Attr PgmName = "FullMaximize"
-       Attr Text = "FullMaximize"
-       Attr Value = 4
-     EndBody
-    EndObject
-    !/**
-    !  Iconify.
-    !*/
-    Object Iconify $Bit
-     Body SysBody
-       Attr PgmName = "Iconify"
-       Attr Text = "Iconify"
-       Attr Value = 8
-     EndBody
-    EndObject
-    !/**
-    !  Menu.
-    !*/
-    Object Menu $Bit
-     Body SysBody
-       Attr PgmName = "Menu"
-       Attr Text = "Menu"
-       Attr Value = 16
-     EndBody
-    EndObject
-    !/**
-    !  Scrollbars.
-    !*/
-    Object Scrollbars $Bit
-     Body SysBody
-       Attr PgmName = "Scrollbars"
-       Attr Text = "Scrollbars"
-       Attr Value = 32
-     EndBody
-    EndObject
-    !/**
-    !  Navigator.
-    !*/
-    Object Navigator $Bit
-     Body SysBody
-       Attr PgmName = "Navigator"
-       Attr Text = "Navigator"
-       Attr Value = 64
      EndBody
     EndObject
   EndObject
 EndSObject
+
+
+
+
 
 
 

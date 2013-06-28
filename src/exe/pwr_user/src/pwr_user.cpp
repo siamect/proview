@@ -54,19 +54,19 @@ dcli_tCmdTable	user_command_table[] = {
 			{ "dcli_arg1", "dcli_arg2", "/user", "/group", 
 			  "/password", "/privilege" , "/description", "/fullname",
 			  "/email", "/phone", "/sms",
-			  "/rtread", "/rtwrite", "/rtevents", "/system", 
+			  "/rtread", "/rtwrite", "/rteventsblock", "/rteventsack", "/rtplc", "/rtnavigator", "/system", 
 			  "/maintenance", "/process", "/instrument", 
 			  "/operator1", "/operator2", "/operator3", 
 			  "/operator4", "/operator5", "/operator6", 
-			  "/operator7", "/operator8", "/operator9", 
+			  "/operator7", /* "/operator8", "/operator9",*/ 
 			  /* "/oper10",*/ "/devread", "/devplc", 
 			  "/devconfig", "/devclass", "/sevread", "/sevadmin",
-			  "/nortread", "/nortwrite", "/nortevents", 
+			  "/nortread", "/nortwrite", "/norteventsblock", "/norteventsack", "/nortplc", "/nortnavigator",
 			  "/nosystem", 
 			  "/nomaintenance", "/noprocess", "/noinstrument", 
 			  "/nooperator1", "/nooperator2", "/nooperator3", 
 			  "/nooperator4", "/nooperator5", "/nooperator6", 
-			  "/nooperator7", "/nooperator8", "/nooperator9", 
+			  "/nooperator7", /* "/nooperator8", "/nooperator9", */ 
 			  /* "/nooper10",*/ "/nodevread", "/nodevplc", 
 			  "/nodevconfig", "/nodevclass", "/nosevread", "/nosevadmin",
 			  "/nouserinherit", "/userinherit",
@@ -78,7 +78,7 @@ dcli_tCmdTable	user_command_table[] = {
 			{ "dcli_arg1", "dcli_arg2", "/user", "/group", 
 			  "/password", "/privilege" , "/fullname", "/description",
 			  "/email", "/phone", "/sms",
-			  "/rtread", "/rtwrite", "/rtevents", "/system", 
+			  "/rtread", "/rtwrite", "/rteventsblock", "/rteventsack", "/rtplc", "/rtnavigator", "/system", 
 			  "/maintenance", "/process", "/instrument", 
 			  "/operator1", "/operator2", "/operator3", 
 			  "/operator4", "/operator5", "/operator6", 
@@ -193,7 +193,8 @@ static int	user_help_func(	void		*client_data,
 "add group 'systemgroup' /userinherit		Add system group." << endl <<
 "add user 'user' /group= /password= 		Add user." << endl <<
 "	/fullname= /description= /email= /phone= /sms=" << endl <<
-"	/rtread /rtwrite /rtevents /system /maintenance" << endl <<
+"	/rtread /rtwrite /rteventsblock /rteventsack /rtplc /rtnavigator" << 
+"	/system /maintenance" << endl <<
 "	/process /instrument /operator1 /operator2" << endl <<
 "	/operator3 /operator4 /operator5 /operator6" << endl <<
 "	/operator7 /operator8 /operator9 /oper10" << endl <<
@@ -213,7 +214,8 @@ static int	user_help_func(	void		*client_data,
 "pwr_user help" << endl << endl <<
 "modify user 'user' /group= /password= 		Modify user." << endl <<
 "	/fullname= /description= /email= /phone= /sms=" << endl <<
-"	/rtread /rtwrite /rtevents /system /maintenance" << endl <<
+"	/rtread /rtwrite /rteventsblock /rteventsack /rtplc /rtnavigator" << 
+"	/system /maintenance" << endl <<
 "	/process /instrument /operator1 /operator2" << endl <<
 "	/operator3 /operator4 /operator5 /operator6" << endl <<
 "	/operator7 /operator8 /operator9 /oper10" << endl <<
@@ -367,8 +369,14 @@ static int	user_add_func(	void		*client_data,
       privilege |= pwr_mPrv_RtRead;
     if ( ODD( dcli_get_qualifier( "/rtwrite", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_RtWrite;
-    if ( ODD( dcli_get_qualifier( "/rtevents", privilege_str, sizeof(privilege_str))))
-      privilege |= pwr_mPrv_RtEvents;
+    if ( ODD( dcli_get_qualifier( "/rteventsblock", privilege_str, sizeof(privilege_str))))
+      privilege |= pwr_mPrv_RtEventsBlock;
+    if ( ODD( dcli_get_qualifier( "/rteventsack", privilege_str, sizeof(privilege_str))))
+      privilege |= pwr_mPrv_RtEventsAck;
+    if ( ODD( dcli_get_qualifier( "/rtplc", privilege_str, sizeof(privilege_str))))
+      privilege |= pwr_mPrv_RtPlc;
+    if ( ODD( dcli_get_qualifier( "/rtnavigator", privilege_str, sizeof(privilege_str))))
+      privilege |= pwr_mPrv_RtNavigator;
     if ( ODD( dcli_get_qualifier( "/system", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_System;
     if ( ODD( dcli_get_qualifier( "/maintenance", privilege_str, sizeof(privilege_str))))
@@ -600,8 +608,14 @@ static int	user_modify_func( void		*client_data,
       privilege |= pwr_mPrv_RtRead;
     if ( ODD( dcli_get_qualifier( "/rtwrite", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_RtWrite;
-    if ( ODD( dcli_get_qualifier( "/rtevents", privilege_str, sizeof(privilege_str))))
-      privilege |= pwr_mPrv_RtEvents;
+    if ( ODD( dcli_get_qualifier( "/rteventsblock", privilege_str, sizeof(privilege_str))))
+      privilege |= pwr_mPrv_RtEventsBlock;
+    if ( ODD( dcli_get_qualifier( "/rteventsack", privilege_str, sizeof(privilege_str))))
+      privilege |= pwr_mPrv_RtEventsAck;
+    if ( ODD( dcli_get_qualifier( "/rtplc", privilege_str, sizeof(privilege_str))))
+      privilege |= pwr_mPrv_RtPlc;
+    if ( ODD( dcli_get_qualifier( "/rtnavigator", privilege_str, sizeof(privilege_str))))
+      privilege |= pwr_mPrv_RtNavigator;
     if ( ODD( dcli_get_qualifier( "/system", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_System;
     if ( ODD( dcli_get_qualifier( "/maintenance", privilege_str, sizeof(privilege_str))))
@@ -647,8 +661,14 @@ static int	user_modify_func( void		*client_data,
       privilege &= ~pwr_mPrv_RtRead;
     if ( ODD( dcli_get_qualifier( "/nortwrite", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_RtWrite;
-    if ( ODD( dcli_get_qualifier( "/nortevents", privilege_str, sizeof(privilege_str))))
-      privilege &= ~pwr_mPrv_RtEvents;
+    if ( ODD( dcli_get_qualifier( "/norteventsblock", privilege_str, sizeof(privilege_str))))
+      privilege &= ~pwr_mPrv_RtEventsBlock;
+    if ( ODD( dcli_get_qualifier( "/norteventsack", privilege_str, sizeof(privilege_str))))
+      privilege &= ~pwr_mPrv_RtEventsAck;
+    if ( ODD( dcli_get_qualifier( "/nortplc", privilege_str, sizeof(privilege_str))))
+      privilege &= ~pwr_mPrv_RtPlc;
+    if ( ODD( dcli_get_qualifier( "/nortnavigator", privilege_str, sizeof(privilege_str))))
+      privilege &= ~pwr_mPrv_RtNavigator;
     if ( ODD( dcli_get_qualifier( "/nosystem", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_System;
     if ( ODD( dcli_get_qualifier( "/nomaintenance", privilege_str, sizeof(privilege_str))))

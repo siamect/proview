@@ -41,6 +41,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "pwr_privilege.h"
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
@@ -78,9 +79,9 @@ Ev::Ev( void *ev_parent_ctx,
   user(ev_user), eve_display_ack(display_ack), 
   eve_display_return(display_return),
   start_trace_cb(NULL), display_in_xnav_cb(NULL), update_info_cb(NULL),
-  help_cb(NULL), popup_menu_cb(0), sound_cb(0), eve(NULL), ala(NULL),
-  connected(0), ala_displayed(0), eve_displayed(0), beep(ev_beep), pop_mask(ev_pop_mask), 
-  eventname_seg(ev_eventname_seg)
+  help_cb(NULL), popup_menu_cb(0), sound_cb(0), pop_cb(0), is_authorized_cb(0), eve(NULL), ala(NULL),
+  blk(0), connected(0), ala_displayed(0), eve_displayed(0), beep(ev_beep), pop_mask(ev_pop_mask), 
+  eventname_seg(ev_eventname_seg), sala_cnt(0)
 {
 }
 
@@ -161,6 +162,55 @@ void Ev::blk_display_in_xnav_cb( void *ctx, pwr_tAttrRef *arp)
     ((Ev *)ctx)->display_in_xnav_cb( ((Ev *)ctx)->parent_ctx, arp);
 }
 
+
+void Ev::ala_help_cb( void *ctx, const char *key)
+{
+  if ( ((Ev *)ctx)->help_cb)
+    ((Ev *)ctx)->help_cb( ((Ev *)ctx)->parent_ctx, key);
+}
+
+int Ev::ala_is_authorized_cb( void *ctx, unsigned int access)
+{
+  if ( ((Ev *)ctx)->is_authorized_cb)
+    return ((Ev *)ctx)->is_authorized_cb( ((Ev *)ctx)->parent_ctx, access);
+  return 0;
+}
+
+int Ev::sala_acknowledge_cb( void *ctx, mh_sEventId *id)
+{
+  Ev *ev = (Ev *)ctx;
+
+  mh_sEventId lid = *id;
+  ev->ala->ack( id);
+  ev->eve->ack( id);
+  for ( int i = 0; i < ev->sala_cnt; i++)
+    ev->sala[i]->ack( id);
+  mh_OutunitAck( &lid);
+  return 1;
+}
+
+void Ev::sala_copy_list_cb( void *ctx, EvList *evl)
+{
+  Ev *ev = (Ev *)ctx;
+
+  ev->ala->copy_list( evl);
+}
+
+void Ev::sala_close_cb( void *ctx, EvAla *sala)
+{
+  Ev *ev = (Ev *)ctx;
+
+  bool found = false;
+  for ( int i = 0; i < ev->sala_cnt; i++) {
+    if ( ev->sala[i] == sala)
+      found = true;
+    if ( found && i != ev->sala_cnt - 1)
+      ev->sala[i] = ev->sala[i+1];
+  }
+  if ( found)
+    ev->sala_cnt--;
+}
+
 void Ev::eve_activate_print()
 {
   char title[80];
@@ -190,17 +240,63 @@ void Ev::eve_activate_ack_last()
   mh_sEventId *id;
   int sts;
 
+  if (is_authorized_cb && !is_authorized_cb( parent_ctx, pwr_mAccess_RtEventsAck | pwr_mAccess_System))
+    return;
+
   sts = ala->get_last_not_acked( &id);
   if ( EVEN(sts)) return;
 
   mh_sEventId lid = *id;
   ala->ack( id);
   eve->ack( id);
+  for ( int i = 0; i < sala_cnt; i++)
+    sala[i]->ack( id);
+  mh_OutunitAck( &lid);
+}
+
+void Ev::ala_activate_ack_last()
+{
+  mh_sEventId *id;
+  int sts;
+
+  if (is_authorized_cb && !is_authorized_cb( parent_ctx, pwr_mAccess_RtEventsAck | pwr_mAccess_System))
+    return;
+
+  if ( ala->brow == ala->browbase) {
+    // Flat view, acknowledge last
+    sts = ala->get_last_not_acked( &id);
+    if ( EVEN(sts)) return;
+  }
+  else {
+    // Tree view, acknowledge selected
+    ItemAlarm *item;
+    pwr_tAName eventname;
+
+    sts = ala->get_selected_event( eventname, &item);
+    if ( EVEN(sts)) return;
+
+    switch ( item->type) {
+    case evlist_eItemType_Alarm:
+      id = &item->eventid;
+      break;
+    default:
+      return;
+    }
+  }
+
+  mh_sEventId lid = *id;
+  ala->ack( id);
+  eve->ack( id);
+  for ( int i = 0; i < sala_cnt; i++)
+    sala[i]->ack( id);
   mh_OutunitAck( &lid);
 }
 
 void Ev::eve_activate_ack_all()
 {
+  if (is_authorized_cb && !is_authorized_cb( parent_ctx, pwr_mAccess_RtEventsAck | pwr_mAccess_System))
+    return;
+
   ack_all();
 }
 
@@ -303,6 +399,9 @@ void Ev::update( double scantime)
     ala->reset_nodraw();
   }
 
+  ala->flash();
+  for ( int i = 0; i < sala_cnt; i++)
+    sala[i]->update();
   if ( beep)
     ala->beep( scantime);
 }      
@@ -312,6 +411,9 @@ void Ev::ack_last_prio( unsigned long type, unsigned long prio)
   mh_sEventId 	*id;
   int		sts;
 
+  if (is_authorized_cb && !is_authorized_cb( parent_ctx, pwr_mAccess_RtEventsAck | pwr_mAccess_System))
+    return;
+
   sts = ala->get_last_not_acked_prio( &id, type, prio);
   if ( ODD(sts))
   {
@@ -319,6 +421,8 @@ void Ev::ack_last_prio( unsigned long type, unsigned long prio)
 
     ala->ack( id);
     eve->ack( id);
+    for ( int i = 0; i < sala_cnt; i++)
+      sala[i]->ack( id);
     mh_OutunitAck( &lid);
   }
 }
@@ -328,11 +432,16 @@ void Ev::ack_all()
   mh_sEventId *id;
   int sts;
 
+  if (is_authorized_cb && !is_authorized_cb( parent_ctx, pwr_mAccess_RtEventsAck | pwr_mAccess_System))
+    return;
+
   sts = ala->get_last_not_acked( &id);
   while ( ODD(sts)) {
     mh_sEventId lid = *id;
     ala->ack( id);
     eve->ack( id);
+    for ( int i = 0; i < sala_cnt; i++)
+      sala[i]->ack( id);
     mh_OutunitAck( &lid);
 
     sts = ala->get_last_not_acked( &id);
@@ -414,6 +523,8 @@ pwr_tStatus Ev::mh_ack_bc( mh_sAck *MsgP)
     ev->eve->event_ack( MsgP);
   }
   ev->ala->event_ack( MsgP);
+  for ( int i = 0; i < ev->sala_cnt; i++)
+    ev->sala[i]->mh_ack( MsgP);
 
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
@@ -428,6 +539,8 @@ pwr_tStatus Ev::mh_return_bc( mh_sReturn *MsgP)
     ev->eve->event_return( MsgP);
   }
   ev->ala->event_return( MsgP);
+  for ( int i = 0; i < ev->sala_cnt; i++)
+    ev->sala[i]->mh_return( MsgP);
 
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
@@ -438,6 +551,8 @@ pwr_tStatus Ev::mh_alarm_bc( mh_sMessage *MsgP)
 {
   ev->eve->event_alarm( MsgP);
   ev->ala->event_alarm( MsgP);
+  for ( int i = 0; i < ev->sala_cnt; i++)
+    ev->sala[i]->mh_alarm( MsgP);
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
   if ( ev->pop_cb) {
@@ -480,6 +595,9 @@ pwr_tStatus Ev::mh_block_bc( mh_sBlock *MsgP)
 pwr_tStatus Ev::mh_cancel_bc( mh_sReturn *MsgP)
 {
   ev->ala->event_cancel( MsgP);
+  for ( int i = 0; i < ev->sala_cnt; i++)
+    ev->sala[i]->mh_cancel( MsgP);
+
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
   return 1;
@@ -489,6 +607,8 @@ pwr_tStatus Ev::mh_info_bc( mh_sMessage *MsgP)
 {
   ev->eve->event_info( MsgP);
   ev->ala->event_info( MsgP);
+  for ( int i = 0; i < ev->sala_cnt; i++)
+    ev->sala[i]->mh_info( MsgP);
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
   if ( ev->pop_mask & pwr_mOpWindPopMask_InfoMsg)
@@ -500,6 +620,8 @@ pwr_tStatus Ev::mh_info_bc( mh_sMessage *MsgP)
 pwr_tStatus Ev::mh_clear_alarmlist_bc( pwr_tNodeIndex nix)
 {
   ev->ala->event_clear_alarmlist( nix);
+  for ( int i = 0; i < ev->sala_cnt; i++)
+    ev->sala[i]->mh_clear_alarmlist( nix);
   return 1;
 }
 
@@ -509,4 +631,52 @@ pwr_tStatus Ev::mh_clear_blocklist_bc( pwr_tNodeIndex nix)
   return 1;
 }
 
+pwr_tStatus Ev::set_view(pwr_tOid view)
+{
+  pwr_tStatus sts;
 
+  sts = ala->set_view( view);
+  if ( ODD(sts)) {
+    pwr_tString80 name;
+
+    if ( cdh_ObjidIsNull( view)) {
+      strcpy( name, "Alarm List");
+    }
+    else {
+      pwr_tAttrRef name_ar, ar;
+
+      ar = cdh_ObjidToAref( view);
+      sts = gdh_ArefANameToAref( &ar, "Name", &name_ar);
+      if (EVEN(sts)) return sts;
+
+      sts = gdh_GetObjectInfoAttrref( &name_ar, name, sizeof(name));
+      if (EVEN(sts)) return sts;
+    }
+    set_title_ala( name);
+  }
+  return sts;
+}
+
+void Ev::view_shift() 
+{
+  pwr_sClass_OpPlace *opp;
+  pwr_tStatus sts;
+
+  sts = gdh_ObjidToPointer( user, (pwr_tAddress *) &opp);
+  if ( EVEN(sts)) return;
+
+  if ( cdh_ObjidIsNull(ala->current_view)) {
+    set_view( opp->AlarmViews[0]);
+  }
+  else {
+    for ( unsigned int i = 0; i < sizeof(opp->AlarmViews)/sizeof(opp->AlarmViews[0]); i++) {
+      if ( cdh_ObjidIsEqual( ala->current_view, opp->AlarmViews[i])) {
+	if ( i == sizeof(opp->AlarmViews)/sizeof(opp->AlarmViews[0]) - 1)
+	  set_view( pwr_cNObjid);
+	else
+	  set_view( opp->AlarmViews[i+1]);
+	break;
+      }	   
+    }
+  }
+}

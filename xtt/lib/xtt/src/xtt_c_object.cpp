@@ -159,6 +159,9 @@ static pwr_tStatus HistEventFilter( xmenu_sMenuCall *ip)
 {
   pwr_sAttrRef *objar;
 
+  if ( !((XNav *)ip->EditorContext)->eventlog_enabled())
+    return XNAV__INVISIBLE;
+
   if (!ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid))
     objar = &ip->Pointed;
   else
@@ -189,6 +192,9 @@ static pwr_tStatus OpenTrace( xmenu_sMenuCall *ip)
     objar = &ip->Pointed;
   else
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  if ( !((XNav *)ip->EditorContext)->is_authorized( pwr_mAccess_RtPlc | pwr_mAccess_System, 0))
+       return 1;
 
   // Check if object reside in plc
   for ( sts = gdh_GetParent( objar->Objid, &parent);
@@ -245,6 +251,9 @@ static pwr_tStatus OpenTraceFilter( xmenu_sMenuCall *ip)
   if ( ip->Caller == xmenu_mUtility_Trace ||
        ip->Caller == xmenu_mUtility_Simulate)
     return XNAV__INVISIBLE;
+
+  if ( !((XNav *)ip->EditorContext)->is_authorized( pwr_mAccess_RtPlc | pwr_mAccess_System, 0))
+       return XNAV__INVISIBLE;
 
   for ( sts = gdh_GetParent( objar->Objid, &parent);
 	ODD(sts);
@@ -739,6 +748,9 @@ static pwr_tStatus RtNavigator( xmenu_sMenuCall *ip)
 {
   pwr_sAttrRef *objar;
 
+  if ( !((XNav *)ip->EditorContext)->is_authorized( pwr_mAccess_RtNavigator | pwr_mAccess_System, 0))
+       return 1;
+
   if (!ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid))
     objar = &ip->Pointed;
   else
@@ -753,6 +765,8 @@ static pwr_tStatus RtNavigator( xmenu_sMenuCall *ip)
 // Open runtime navigator filter
 static pwr_tStatus RtNavigatorFilter( xmenu_sMenuCall *ip)
 {
+  if ( !((XNav *)ip->EditorContext)->is_authorized( pwr_mAccess_RtNavigator | pwr_mAccess_System, 0))
+       return XNAV__INVISIBLE;
 
   if ( ip->Caller == xmenu_mUtility_XNav &&
        cdh_ObjidIsEqual( ip->Pointed.Objid,
@@ -1337,6 +1351,9 @@ static pwr_tStatus BlockEvents( xmenu_sMenuCall *ip)
 // Block Events Filter
 static pwr_tStatus BlockEventsFilter( xmenu_sMenuCall *ip)
 {
+  if ( !((XNav *)ip->EditorContext)->is_authorized( pwr_mAccess_RtEventsBlock | pwr_mAccess_System, 0))
+       return XNAV__INVISIBLE;
+
   return XNAV__SUCCESS;
 }
 
@@ -1940,6 +1957,9 @@ static pwr_tStatus IsURLAttribute( xmenu_sMenuCall *ip)
 // Open trace
 static pwr_tStatus CrrOpenTrace( xmenu_sMenuCall *ip)
 {
+  if ( !((XNav *)ip->EditorContext)->is_authorized( pwr_mAccess_RtPlc | pwr_mAccess_System, 0))
+       return XNAV__INVISIBLE;
+
   ((XNav *)ip->EditorContext)->start_trace( ip->Pointed.Objid, ip->Arg);
   return XNAV__SUCCESS;
 }
@@ -1950,6 +1970,9 @@ static pwr_tStatus CrrOpenTraceFilter( xmenu_sMenuCall *ip)
 {
   pwr_tStatus sts;
   pwr_tCid cid;
+
+  if ( !((XNav *)ip->EditorContext)->is_authorized( pwr_mAccess_RtPlc | pwr_mAccess_System, 0))
+       return XNAV__INVISIBLE;
 
   sts = gdh_GetObjectClass( ip->Pointed.Objid, &cid);
   if ( ODD(sts) && cid == pwr_cClass_XttGraph)

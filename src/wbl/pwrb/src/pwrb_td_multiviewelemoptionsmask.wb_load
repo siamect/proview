@@ -33,18 +33,18 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_xttgraphoptionsmask.wb_load -- Defines the mask type XttGraphOptionsMask
+!  pwrb_multiviewelemoptionsmask.wb_load -- Defines the mask type MultiViewElemOptionsMask
 !
 SObject pwrb:Type
 !/**
 !  @Version 1.0
 !  @Group Types
-!  Bitmask for xtt graph options.
+!  Bitmask for xtt multiview element options.
 !
 ! @b See also
-!  @classlink XttGraph pwrb_xttgraph.html
+!  @classlink XttMultiView pwrb_xttmultiview.html
 !*/
-  Object XttGraphOptionsMask $TypeDef 55
+  Object MultiViewElemOptionsMask $TypeDef 71
     Body SysBody
       Attr Type = pwr_eType_Mask
       Attr Size = 4
@@ -52,53 +52,13 @@ SObject pwrb:Type
       Attr Elements = 1
     EndBody
     !/**
-    !  Full screen.
-    !*/
-    Object FullSceen $Bit
-     Body SysBody
-       Attr PgmName = "FullScreen"
-       Attr Text = "FullScreen"
-       Attr Value = 1
-     EndBody
-    EndObject
-    !/**
-    !  Maximize.
-    !*/
-    Object Maximize $Bit
-     Body SysBody
-       Attr PgmName = "Maximize"
-       Attr Text = "Maximize"
-       Attr Value = 2
-     EndBody
-    EndObject
-    !/**
-    !  Full maximize.
-    !*/
-    Object FullMaximize $Bit
-     Body SysBody
-       Attr PgmName = "FullMaximize"
-       Attr Text = "FullMaximize"
-       Attr Value = 4
-     EndBody
-    EndObject
-    !/**
-    !  Iconify.
-    !*/
-    Object Iconify $Bit
-     Body SysBody
-       Attr PgmName = "Iconify"
-       Attr Text = "Iconify"
-       Attr Value = 8
-     EndBody
-    EndObject
-    !/**
     !  Menu.
     !*/
     Object Menu $Bit
      Body SysBody
        Attr PgmName = "Menu"
        Attr Text = "Menu"
-       Attr Value = 16
+       Attr Value = 1
      EndBody
     EndObject
     !/**
@@ -108,17 +68,17 @@ SObject pwrb:Type
      Body SysBody
        Attr PgmName = "Scrollbars"
        Attr Text = "Scrollbars"
-       Attr Value = 32
+       Attr Value = 2
      EndBody
     EndObject
     !/**
-    !  Navigator.
+    !  Exchangable.
     !*/
-    Object Navigator $Bit
+    Object Exchangable $Bit
      Body SysBody
-       Attr PgmName = "Navigator"
-       Attr Text = "Navigator"
-       Attr Value = 64
+       Attr PgmName = "Exchangeable"
+       Attr Text = "Exchangeable"
+       Attr Value = 4
      EndBody
     EndObject
   EndObject

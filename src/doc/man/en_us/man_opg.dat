@@ -1547,6 +1547,7 @@ logout      <t>User logout			<LINK> logout
 logging     <t>Logg attributes to file	<LINK> logging
 open fileview <t>Open a fileview		<LINK> open fileview
 open graph  <t>Open a graph			<LINK> open graph
+open multiview  <t>Open a multiview		<LINK> open multiview
 open jgraph <t>Open a java graph		<LINK> open jgraph
 open navigator <t>Open the navigator		<LINK> open navigator
 open operatorwindow<t>Open the operator window 	<LINK> open operatorwindow
@@ -2063,6 +2064,19 @@ a XttGraph object.
 /pinstance <t>Instance name for the pwindow graph, if pwindow is an object 
 	<t>graph.
 </TOPIC>
+Command   open multiview
+
+Open a multiview window specified by an XttMultiView object.
+
+<B>xtt> open multiview 'objectname' /width= /height= /xposition= /yposition=
+<t><t>/fullscreen /maximize /fullmaximize /iconify /hide
+
+/width      <t>Window width in pixels.
+/height     <t>Window height in pixels.
+/xposition  <t>Window x position in pixels.
+/yposition  <t>Window y position in pixels.
+
+</TOPIC>
 
 <TOPIC> open jgraph <style> function
 Command   open jgraph
@@ -2332,8 +2346,18 @@ and then pressing return.
 Command   show alarmlist
 
 Open the alarmlist window.
+With the 'show alarmlist satellite' command multiple alarmlists can 
+be opened with differnt alarmview.
 
 <B>xtt> show alarmlist
+<B>xtt> show alarmlist satellite [/alarmview=] [/width=] [/height=] 
+<t><t>[/xposition=] [/yposition=]
+
+/alarmaview <t>Name of an AlarmView object.
+/width      <t>Window width in pixels.
+/height     <t>Window height in pixels.
+/xposition  <t>Window x position in pixels.
+/yposition  <t>Window y position in pixels.
 </TOPIC>
 
 <TOPIC> show eventlist <style> function

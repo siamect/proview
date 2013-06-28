@@ -1123,7 +1123,10 @@ void GeUser::priv_to_string( unsigned int priv, char *str, int size)
   buff[0] = 0;
   if ( priv & pwr_mPrv_RtRead) strcat(buff, "RtRead ");
   if ( priv & pwr_mPrv_RtWrite) strcat(buff, "RtWrite ");
-  if ( priv & pwr_mPrv_RtEvents) strcat(buff, "RtEvents ");
+  if ( priv & pwr_mPrv_RtEventsBlock) strcat(buff, "RtEventsBlock ");
+  if ( priv & pwr_mPrv_RtEventsAck) strcat(buff, "RtEventsAck ");
+  if ( priv & pwr_mPrv_RtPlc) strcat(buff, "RtPlc ");
+  if ( priv & pwr_mPrv_RtNavigator) strcat(buff, "RtNavigator ");
   if ( priv & pwr_mPrv_System) strcat(buff, "System ");
   if ( priv & pwr_mPrv_Maintenance) strcat(buff, "Maintenance ");
   if ( priv & pwr_mPrv_Process) strcat(buff, "Process ");
@@ -1156,7 +1159,10 @@ void GeUser::rt_priv_to_string( unsigned int priv, char *str, int size)
   buff[0] = 0;
   if ( priv & pwr_mPrv_RtRead) strcat(buff, "RtRead ");
   if ( priv & pwr_mPrv_RtWrite) strcat(buff, "RtWrite ");
-  if ( priv & pwr_mPrv_RtEvents) strcat(buff, "RtEvents ");
+  if ( priv & pwr_mPrv_RtEventsBlock) strcat(buff, "RtEventsBlock ");
+  if ( priv & pwr_mPrv_RtEventsAck) strcat(buff, "RtEventsAck ");
+  if ( priv & pwr_mPrv_RtPlc) strcat(buff, "RtPlc ");
+  if ( priv & pwr_mPrv_RtNavigator) strcat(buff, "RtNavigator ");
   if ( priv & pwr_mPrv_System) strcat(buff, "System ");
   if ( priv & pwr_mPrv_Maintenance) strcat(buff, "Maintenance ");
   if ( priv & pwr_mPrv_Process) strcat(buff, "Process ");

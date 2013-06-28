@@ -208,7 +208,7 @@ BlockGtk::BlockGtk( void *b_parent_ctx,
   gtk_container_add( GTK_CONTAINER(toplevel), vbox);
   gtk_widget_show_all( toplevel);
 
-  if ( !(priv & pwr_mPrv_RtEvents ||
+  if ( !(priv & pwr_mPrv_RtEventsBlock ||
 	 priv & pwr_mPrv_System)) {
     gtk_widget_set_sensitive( buttonOk, FALSE);
     gtk_widget_set_sensitive( buttonApply, FALSE);
@@ -293,7 +293,7 @@ BlockGtk::BlockGtk( void *b_parent_ctx,
 
   XtPopup( parent_wid, XtGrabNone);
 
-  if ( !(priv & pwr_mPrv_RtEvents ||
+  if ( !(priv & pwr_mPrv_RtEventsBlock ||
 	 priv & pwr_mPrv_System)) {
     Arg	sensitive[1];
     // No access to block

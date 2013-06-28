@@ -1433,10 +1433,11 @@ int FlowDrawGtk::pixmaps_create( FlowCtx *ctx, flow_sPixmapData *pixmap_data,
   pms = (draw_sPixmap *) calloc( 1, sizeof( *pms));
   for ( i = 0; i < DRAW_PIXMAP_SIZE; i++) {
     if ( i == 0 || 
-         (i > 0 && pdata->bits != prev_pdata->bits))
+         (i > 0 && pdata->bits != prev_pdata->bits)) {
       pms->pixmap[i] = gdk_pixmap_create_from_data(
 	window, pdata->bits, pdata->width,
 	pdata->height, 1, &foreground, &background);
+    }
     else
       pms->pixmap[i] = pms->pixmap[i-1];
     prev_pdata = pdata;
@@ -1454,8 +1455,9 @@ void FlowDrawGtk::pixmaps_delete( FlowCtx *ctx, void *pixmaps)
   pms = (draw_sPixmap *) pixmaps;
   for ( i = 0; i < DRAW_PIXMAP_SIZE; i++) {
     if ( i == 0 || 
-         (i > 0 && pms->pixmap[i] != pms->pixmap[i-1]))
+         (i > 0 && pms->pixmap[i] != pms->pixmap[i-1])) {
       g_object_unref( pms->pixmap[i]);
+    }
   }
   free ( pixmaps);
 }

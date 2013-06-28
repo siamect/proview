@@ -1084,3 +1084,13 @@ int FlowNode::get_next_conpoint( int cp_num, flow_eDirection dir, double x0, dou
 {
   return nc->get_next_conpoint( cp_num, dir, x0 - pos.x, y0 - pos.y, next_cp_num);
 }
+
+void FlowNode::change_nodeclass( FlowNodeClass *new_nc) 
+{
+    erase();
+    nc = new_nc;
+    if ( !inverse)
+      nc->draw( &pos, highlight, hot, (void *)this);
+    else
+      draw_inverse();
+}

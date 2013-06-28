@@ -1,3 +1,4 @@
+
 /* 
  * Proview   Open Source Process Control.
  * Copyright (C) 2005-2012 SSAB EMEA AB.
@@ -34,38 +35,64 @@
  * General Public License plus this exception.
  */
 
-#ifndef xtt_evlist_gtk_h
-#define xtt_evlist_gtk_h
+#ifndef xtt_applist_h
+#define xtt_applist_h
 
-/* xtt_evlist_gtk.h -- Alarm and event windows in xtt */
 
-#ifndef xtt_evlist_h
-# include "xtt_evlist.h"
-#endif
+typedef enum {
+	applist_eType_Trace,
+	applist_eType_Graph,
+	applist_eType_Attr,
+	applist_eType_AttrOne,
+	applist_eType_Trend,
+	applist_eType_Crossref,
+	applist_eType_Hist,
+	applist_eType_Fast,
+	applist_eType_MultiView
+} applist_eType;
 
-class EvListGtk : public EvList {
+
+class ApplListElem {
   public:
-    EvListGtk(
-	void *ev_parent_ctx,
-	GtkWidget *ev_parent_wid,
-	ev_eType ev_type,
-	int ev_size,
-	int ev_evenname_seg,
-	GtkWidget **w,
-	void (*ev_init_cb)(void *) = 0);
-    ~EvListGtk();
+    ApplListElem( applist_eType al_type, void *al_ctx, pwr_sAttrRef *al_arp,
+	const char *al_name, const char *al_instance);
+    ~ApplListElem() { log_delete();}
+    applist_eType	type;
+    void		*ctx;
+    pwr_sAttrRef       	aref;
+    char		name[80];
+    pwr_tAName          instance;
+    ApplListElem 	*next;
 
-    GtkWidget		*parent_wid;
-    GtkWidget		*brow_widget;
-    GtkWidget		*form_widget;
-    GtkWidget		*toplevel;
-    char		print_title[120];
-
-    void set_input_focus();
-    void bell();
-    void print( const char *title);
-    void popup_position( int x_event, int y_event, int *x, int *y);
+    void log_new();
+    void log_delete();
 };
 
+class ApplList {
+  public:
+    ApplList() :
+       root(NULL) {};
+
+    ~ApplList() {
+      ApplListElem *elem, *next;
+      for ( elem = root; elem; elem = next) {
+	next = elem->next;
+	delete elem;
+      }
+    }
+
+    ApplListElem *root;
+    void insert( applist_eType type, void *ctx, 
+	pwr_sAttrRef *arp, const char *name, const char *instance);
+    void insert( applist_eType type, void *ctx, 
+	pwr_tObjid objid, const char *name, const char *instance);
+    void remove( void *ctx);
+    int find( applist_eType type, const char *name, const char *instance, void **ctx);
+    int find( applist_eType type, pwr_sAttrRef *arp, void **ctx);
+    int find( applist_eType type, pwr_tObjid objid, void **ctx);
+    int find( applist_eType type, void *ctx, char *name, char *instance);
+    int find_graph( const char *name, const char *instance, void **ctx);
+    void swap( int mode);
+};
 
 #endif

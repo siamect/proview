@@ -34,29 +34,46 @@
  * General Public License plus this exception.
  */
 
-#ifndef xtt_ge_h
-#define xtt_ge_h
+#ifndef xtt_multiview_h
+#define xtt_multiview_h
 
 #ifndef pwr_h
 # include "pwr.h"
 #endif
+
 #include "glow.h"
 
-class Graph;
+#ifndef xtt_applist_h
+#include "xtt_applist.h"
+#endif
 
-class XttGe {
+#define MV_SIZE 25
+#define MV_RECALL_SIZE 10
+
+
+class Graph;
+class XNav;
+
+class MVRecall {
+ public:
+  MVRecall() : current_idx(-1), first_idx(0), last_idx(0) {}
+  pwr_tFileName buff[MV_RECALL_SIZE];
+  pwr_tAName object[MV_RECALL_SIZE];
+  int current_idx;
+  int first_idx;
+  int last_idx;
+
+  void insert( char *str, char *object);
+  int get_previous();
+  int get_next();    
+};
+
+class XttMultiView {
  public:
   void 		*parent_ctx;
+  pwr_tAttrRef	aref;
   pwr_tAName   	name;
-  Graph		*graph;
-  pwr_tFileName	filename;
-  int		scrollbar;
-  int		navigator;
-  int		menu;
-  void		*current_value_object;
-  void		*current_confirm_object;
-  int		value_input_open;
-  int		confirm_open;
+  unsigned int	options;
   int		(*command_cb)(void *, char *, void *);
   void		(*close_cb)(void *, void *);
   void		(*help_cb)(void *, const char *key);
@@ -71,46 +88,51 @@ class XttGe {
   void          (*eventlog_cb)(void *, void *, int, void *, unsigned int);
   int		width;
   int		height;
-  unsigned int	options;
+  int		rows;
+  int		cols;
+  ApplList     	appl;
+  MVRecall	recall_buffer[MV_SIZE];
 
-  XttGe( void *parent_ctx, const char *name, const char *filename,
-	 int scrollbar, int menu, int navigator, int width, int height,
-	 int x, int y, double scan_time, const char *object_name, int use_default_access,
-	 unsigned int access, unsigned int options,
-	 int (*xg_command_cb) (void *, char *, void *),
-	 int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-	 int (*xg_is_authorized_cb) (void *, unsigned int));
-  virtual ~XttGe();
+  XttMultiView( void *parent_ctx, const char *name,
+		pwr_tAttrRef *aref, int width, int height,
+		int x, int y, unsigned int options,
+		int (*xg_command_cb) (void *, char *, void *),
+		int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
+		int (*xg_is_authorized_cb) (void *, unsigned int));
+  virtual ~XttMultiView();
 
   virtual void pop() {}
   virtual void set_size( int width, int height) {}
-  virtual void confirm_reply( int ok) {}
   virtual void *get_widget() { return 0;}
+  virtual int set_subwindow_source( const char *name, char *source, char *object, int insert = 1) {return 0;}
 
   void message( char severity, const char *msg);
-  void print();
-  void export_image( char *filename);
   int set_object_focus( const char *name, int empty);
   int set_folder_index( const char *name, int idx);
-  int set_subwindow_source( const char *name, char *source, char *object);
   void swap( int mode);
   void event_exec( int type, void *event, unsigned int size);
+  int find_graph( const char *name, const char *instance, void **ctx);
+  int name_to_idx( const char *name); 
+  int set_subwindow_next( const char *name);
+  int set_subwindow_prev( const char *name);
+  XNav *get_xnav();
 
-  static void graph_init_cb( void *client_data);
-  static void graph_close_cb( void *client_data);
-  static int ge_command_cb( void *ge_ctx, char *command);
-  static int ge_sound_cb( void *ge_ctx, pwr_tAttrRef *aref);
-  static void ge_display_in_xnav_cb( void *ge_ctx, pwr_sAttrRef *arp);
-  static void ge_popup_menu_cb( void *ge_ctx, pwr_sAttrRef attrref,
+  static void multiview_ge_close_cb( void *parent_ctx, void *client_data);
+  static int multiview_ge_command_cb( void *multiview_ctx, char *command, void *caller);
+  static int multiview_ge_sound_cb( void *multiview_ctx, pwr_tAttrRef *aref);
+  static void multiview_ge_display_in_xnav_cb( void *multiview_ctx, pwr_sAttrRef *arp);
+  static void multiview_ge_popup_menu_cb( void *multiview_ctx, pwr_sAttrRef attrref,
 			     unsigned long item_type, unsigned long utility, 
 			     char *arg, int x, int y);
-  static int ge_call_method_cb( void *ge_ctx, char *method, char *filter,
+  static int multiview_ge_call_method_cb( void *multiview_ctx, const char *method, const char *filter,
 			     pwr_sAttrRef attrref, unsigned long item_type, 
 			     unsigned long utility, char *arg);
-  static int ge_is_authorized_cb( void *ge_ctx, unsigned int access);
-  static int ge_get_current_objects_cb( void *ge_ctx, pwr_sAttrRef **alist,
+  static int multiview_ge_is_authorized_cb( void *multiview_ctx, unsigned int access);
+  static int multiview_ge_get_current_objects_cb( void *multiview_ctx, pwr_sAttrRef **alist,
 				     int **is_alist);
-  static void ge_eventlog_cb( void *ge_ctx, void *value, unsigned int size);
+  static void multiview_ge_eventlog_cb( void *multiview_ctx, void *gectx, int category,
+					void *value, unsigned int size);
+  static void multiview_ge_help_cb( void *multiview_ctx, const char *key);
   static void message_cb( void *ctx, char severity, const char *msg);
   static void eventlog_enable( int enable);
 };

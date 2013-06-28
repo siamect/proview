@@ -211,6 +211,36 @@ SObject pwrs:Type
      EndBody
     EndObject
     !/**
+    !  Event acknowledge privilege
+    !*/
+    Object RtEventsAck $Bit
+     Body SysBody
+       Attr PgmName = "RtEventsAck"
+       Attr Text = "RtEventsAck"
+       Attr Value = 262144
+     EndBody
+    EndObject
+    !/**
+    !  Runtime Plc priviledge
+    !*/
+    Object RtPlc $Bit
+     Body SysBody
+       Attr PgmName = "RtPlc"
+       Attr Text = "RtPlc"
+       Attr Value = 524288
+     EndBody
+    EndObject
+    !/**
+    !  Runtime navigator priviledge
+    !*/
+    Object RtNavigator $Bit
+     Body SysBody
+       Attr PgmName = "RtNavigator"
+       Attr Text = "RtNavigator"
+       Attr Value = 1048576
+     EndBody
+    EndObject
+    !/**
     !  Read access in development environment
     !*/
     Object DevRead $Bit
@@ -253,10 +283,10 @@ SObject pwrs:Type
     !/**
     !  Event blocking privilege
     !*/
-    Object RtEvents $Bit
+    Object RtEventsBlock $Bit
      Body SysBody
-       Attr PgmName = "RtEvents"
-       Attr Text = "RtEvents"
+       Attr PgmName = "RtEventsBlock"
+       Attr Text = "RtEventsBlock"
        Attr Value = 33554432
      EndBody
     EndObject

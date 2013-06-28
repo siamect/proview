@@ -97,7 +97,7 @@ int XttGe::ge_command_cb( void *ge_ctx, char *cmd)
 
   if ( ge->command_cb)
   {
-    sts = (ge->command_cb)( ge, cmd, ge_ctx);
+    sts = (ge->command_cb)( ge->parent_ctx, cmd, ge_ctx);
     return sts;
   }
   return 0;
@@ -246,8 +246,8 @@ void XttGe::event_exec( int type, void *event, unsigned int size)
 XttGe::XttGe( void *xg_parent_ctx, const char *xg_name, const char *xg_filename,
 	      int xg_scrollbar, int xg_menu, int xg_navigator, int xg_width, int xg_height,
 	      int x, int y, double scan_time, const char *object_name,
-	      int use_default_access, unsigned int access,
-	      int (*xg_command_cb) (XttGe *, char *, void *),
+	      int use_default_access, unsigned int access, unsigned int xg_options,
+	      int (*xg_command_cb) (void *, char *, void *),
 	      int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 	      int (*xg_is_authorized_cb) (void *, unsigned int)) :
   parent_ctx(xg_parent_ctx), scrollbar(xg_scrollbar),
@@ -256,7 +256,7 @@ XttGe::XttGe( void *xg_parent_ctx, const char *xg_name, const char *xg_filename,
   command_cb(xg_command_cb), close_cb(0), help_cb(0), display_in_xnav_cb(0), 
   is_authorized_cb(xg_is_authorized_cb), popup_menu_cb(0), call_method_cb(0), 
   get_current_objects_cb(xg_get_current_objects_cb), sound_cb(0), eventlog_cb(0),
-  width(xg_width), height(xg_height)
+  width(xg_width), height(xg_height), options(xg_options)
 {
   strcpy( filename, xg_filename);
   strcpy( name, xg_name);

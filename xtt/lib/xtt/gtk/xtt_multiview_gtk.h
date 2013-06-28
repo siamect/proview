@@ -34,50 +34,45 @@
  * General Public License plus this exception.
  */
 
-#ifndef xtt_ge_gtk_h
-#define xtt_ge_gtk_h
+#ifndef xtt_multiview_gtk_h
+#define xtt_multiview_gtk_h
 
-#ifndef xtt_ge_h
-# include "xtt_ge.h"
+#ifndef xtt_multiview_h
+# include "xtt_multiview.h"
 #endif
 
 #ifndef cow_wow_gtk_h
 # include "cow_wow_gtk.h"
 #endif
+#ifndef xtt_evala_gtk_h
+# include "xtt_evala_gtk.h"
+#endif
 
-class XttGeGtk : public XttGe {
+class XttMultiViewGtk : public XttMultiView {
  public:
   GtkWidget	*parent_wid;
-  GtkWidget	*grow_widget;
-  GtkWidget	*form_widget;
+  GtkWidget	*comp_widget[MV_SIZE];
+  GtkWidget	*exchange_widget[MV_SIZE];
+  GtkWidget	*box_widget;
   GtkWidget	*toplevel;
-  GtkWidget	*nav_shell;
-  GtkWidget	*nav_widget;
-  GtkWidget	*menu_widget;
-  GtkWidget	*graph_form;
-  GtkWidget	*value_input;
-  GtkWidget	*value_dialog;
-  GtkWidget	*confirm_widget;
-  GtkWidget	*confirm_label;
-  GtkWidget	*message_dia_widget;
-  GtkWidget	*message_dia_label;
+  XttGeGtk	*gectx[MV_SIZE];
+  XttMultiViewGtk *mvctx[MV_SIZE];
+  EvAlaGtk 	*sala[MV_SIZE];
   CoWowFocusTimerGtk focustimer;
 
-  XttGeGtk( GtkWidget *parent_wid, void *parent_ctx, const char *name, const char *filename,
-	    int scrollbar, int menu, int navigator, int width, int height,
-	    int x, int y, double scan_time, const char *object_name, int use_default_access,
-	    unsigned int access, unsigned int options, void *basewidget,
-	    int (*xg_command_cb) (void *, char *, void *),
-	    int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-	    int (*xg_is_authorized_cb) (void *, unsigned int));
-  ~XttGeGtk();
+  XttMultiViewGtk( GtkWidget *parent_wid, void *parent_ctx, const char *name, pwr_tAttrRef *aref,
+		   int width, int height, int x, int y, unsigned int options, pwr_tStatus *sts,
+		   int (*mv_command_cb) (void *, char *, void *),
+		   int (*mv_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
+		   int (*mv_is_authorized_cb) (void *, unsigned int));
+  ~XttMultiViewGtk();
 
   void pop();
   void set_size( int width, int height);
   void create_confirm_dialog();
   void confirm_reply( int ok);
-  void *get_widget() { return toplevel;}
-  GtkWidget *get_graph_widget() { return graph_form;}
+  void *get_widget();
+  int set_subwindow_source( const char *name, char *source, char *object, int insert = 1);
 
   static void ge_change_value_cb( void *ge_ctx, void *value_object, char *text);
   static void confirm_cb( void *ge_ctx, void *confirm_object, char *text);

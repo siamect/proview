@@ -41,6 +41,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "pwr_privilege.h"
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_syi.h"
@@ -64,7 +65,8 @@ Op::Op( void *op_parent_ctx,
 	pwr_tStatus *status) :
   parent_ctx(op_parent_ctx), start_jop(0), 
   jop(NULL), command_cb(NULL), map_cb(NULL), help_cb(NULL), 
-  close_cb(NULL), get_alarm_info_cb(NULL), ack_last_cb(NULL), wow(0), sup_timerid(0)
+  close_cb(NULL), get_alarm_info_cb(NULL), ack_last_cb(NULL), is_authorized_cb(0),
+  wow(0), sup_timerid(0)
 {
   sup_init();
 }
@@ -190,7 +192,10 @@ void Op::activate_graph()
 }
 
 void Op::activate_navigator()
-{
+{  
+  if (is_authorized_cb && !is_authorized_cb( parent_ctx, pwr_mAccess_RtNavigator | pwr_mAccess_System))
+    return;
+
   if ( map_cb)
     map_cb( parent_ctx);
 }
@@ -371,7 +376,8 @@ void Op::appl_startup()
 
   if ( command_cb) {
 
-    if ( layout_mask & pwr_mOpWindLayoutMask_HideNavigator) {
+    if ( layout_mask & pwr_mOpWindLayoutMask_HideNavigator ||
+	 (is_authorized_cb && !is_authorized_cb( parent_ctx, pwr_mAccess_RtNavigator | pwr_mAccess_System))) {
       strcpy( cmd, "close navigator");
       command_cb( parent_ctx, cmd);
     }

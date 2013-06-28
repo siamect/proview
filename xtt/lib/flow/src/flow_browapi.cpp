@@ -832,3 +832,8 @@ void brow_SetTextCoding( brow_tCtx ctx, flow_eTextCoding coding)
   ctx->set_text_coding( coding);
 }
 
+void brow_ChangeObjectNodeClass( brow_tObject object, brow_tNodeClass new_nc)
+{
+  ((FlowNode *)object)->change_nodeclass( (FlowNodeClass *)new_nc);
+}
+

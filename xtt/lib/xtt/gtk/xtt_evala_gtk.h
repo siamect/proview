@@ -34,99 +34,59 @@
  * General Public License plus this exception.
  */
 
-#ifndef xtt_ev_gtk_h
-#define xtt_ev_gtk_h
+#ifndef xtt_evala_gtk_h
+#define xtt_evala_gtk_h
 
-/* xtt_ev_gtk.h -- Alarm and event windows in xtt */
+/* xtt_evala_gtk.h -- Alarm window in xtt */
 
-#ifndef xtt_ev_h
-# include "xtt_ev.h"
+#ifndef xtt_evala_h
+# include "xtt_evala.h"
 #endif
 
-class EvGtk : public Ev {
+class EvAlaGtk : public EvAla {
   public:
-    EvGtk(
+    EvAlaGtk(
 	void *ev_parent_ctx,
 	GtkWidget *ev_parent_wid,
-	char *eve_name,
 	char *ala_name,
-	char *blk_name,
 	pwr_tObjid ev_user,
-	int display_ala,
-	int display_eve,
-	int display_blk,
-	int display_return,
-	int display_ack,
-	int ev_beep,
-	pwr_tMask ev_pop_mask,
 	int ev_eventname_seg,
+	int ev_width,
+	int ev_height,
+	int ev_x,
+	int ev_y,
+	pwr_tObjid ev_view,
+	unsigned int ev_options,
+	void *widget,
 	pwr_tStatus *status);
-    ~EvGtk();
+    ~EvAlaGtk();
 
     GtkWidget		*parent_wid;
-    GtkWidget 		*parent_wid_eve;
     GtkWidget		*parent_wid_ala;
-    GtkWidget		*parent_wid_blk;
-    GtkWidget		*toplevel_ala;
-    GtkWidget		*toplevel_eve;
-    GtkWidget		*toplevel_blk;
-    GtkWidget		*form_ala;
-    GtkWidget		*form_eve;
-    GtkWidget		*form_blk;
-    GtkWidget		*eve_widget;
+    GtkWidget		*toplevel;
     GtkWidget		*ala_widget;
-    GtkWidget		*blk_widget;
+    GtkWidget		*ala_vbox;
     pwr_tObjid		alarm_views[25];
 
-    void map_eve();
     void map_ala();
-    void map_blk();
-    void unmap_eve();
     void unmap_ala();
-    void unmap_blk();
     void set_title_ala( char *title);
-    EvAla *open_alarmlist_satellite( const char *title, pwr_tStatus *sts,
-				     int width, int height, int x, int y, pwr_tObjid view, 
-				     unsigned int options = 0, void *widget = 0);
+    GtkWidget *get_widget() { return ala_vbox;}
 
-    static gboolean eve_action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
     static gboolean ala_action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
-    static gboolean blk_action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
-    static void eve_activate_exit( GtkWidget *w, gpointer data);
     static void ala_activate_exit( GtkWidget *w, gpointer data);
-    static void blk_activate_exit( GtkWidget *w, gpointer data);
-    static void eve_activate_print( GtkWidget *w, gpointer data);
     static void ala_activate_print( GtkWidget *w, gpointer data);
-    static void blk_activate_print( GtkWidget *w, gpointer data);
-    static void eve_activate_ack_last( GtkWidget *w, gpointer data);
     static void ala_activate_ack_last( GtkWidget *w, gpointer data);
     static void ala_activate_ack_all( GtkWidget *w, gpointer data);
-    static void eve_activate_zoom_in( GtkWidget *w, gpointer data);
     static void ala_activate_zoom_in( GtkWidget *w, gpointer data);
-    static void blk_activate_zoom_in( GtkWidget *w, gpointer data);
-    static void eve_activate_zoom_out( GtkWidget *w, gpointer data);
     static void ala_activate_zoom_out( GtkWidget *w, gpointer data);
-    static void blk_activate_zoom_out( GtkWidget *w, gpointer data);
-    static void eve_activate_zoom_reset( GtkWidget *w, gpointer data);
     static void ala_activate_zoom_reset( GtkWidget *w, gpointer data);
-    static void blk_activate_zoom_reset( GtkWidget *w, gpointer data);
-    static void blk_activate_block_remove( GtkWidget *w, gpointer data);
-    static void eve_activate_open_plc( GtkWidget *w, gpointer data);
     static void ala_activate_open_plc( GtkWidget *w, gpointer data);
-    static void blk_activate_open_plc( GtkWidget *w, gpointer data);
-    static void eve_activate_display_in_xnav( GtkWidget *w, gpointer data);
     static void ala_activate_display_in_xnav( GtkWidget *w, gpointer data);
-    static void blk_activate_display_in_xnav( GtkWidget *w, gpointer data);
-    static void eve_activate_disp_hundredth( GtkWidget *w, gpointer data);
     static void ala_activate_disp_hundredth( GtkWidget *w, gpointer data);
-    static void eve_activate_hide_object( GtkWidget *w, gpointer data);
     static void ala_activate_hide_object( GtkWidget *w, gpointer data);
-    static void eve_activate_hide_text( GtkWidget *w, gpointer data);
     static void ala_activate_hide_text( GtkWidget *w, gpointer data);
-    static void eve_activate_help( GtkWidget *w, gpointer data);
     static void ala_activate_help( GtkWidget *w, gpointer data);
-    static void blk_activate_help( GtkWidget *w, gpointer data);
-    static void eve_activate_helpevent( GtkWidget *w, gpointer data);
     static void ala_activate_helpevent( GtkWidget *w, gpointer data);
     static void ala_activate_shift_view( GtkWidget *w, gpointer data);
     static void ala_activate_select_flat( GtkWidget *w, gpointer data);

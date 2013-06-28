@@ -103,6 +103,14 @@ extern "C" {
 #include "rt_sevcli.h"
 #endif
 
+#ifndef xtt_applist_h
+#include "xtt_applist.h"
+#endif
+
+#ifndef xtt_multiview_h
+#include "xtt_multiview.h"
+#endif
+
 #define xnav_cVersion	"X3.0b"
 #define XNAV_BROW_MAX	25
 #define XNAV_LOGG_MAX   10
@@ -206,56 +214,11 @@ typedef enum {
         ge_mOptions_Maximize     = 1 << 1,
         ge_mOptions_FullMaximize = 1 << 2,
         ge_mOptions_Iconify      = 1 << 3,
-        ge_mOptions_Invisible    = 1 << 4
+        ge_mOptions_Invisible    = 1 << 4,
+        ge_mOptions_Embedded     = 1 << 5
 } ge_mOptions;
 
-typedef enum {
-	applist_eType_Trace,
-	applist_eType_Graph,
-	applist_eType_Attr,
-	applist_eType_AttrOne,
-	applist_eType_Trend,
-	applist_eType_Crossref,
-	applist_eType_Hist,
-	applist_eType_Fast
-} applist_eType;
-
-
 class XNav;
-
-class ApplListElem {
-  public:
-    ApplListElem( applist_eType al_type, void *al_ctx, pwr_sAttrRef *al_arp,
-	const char *al_name, const char *al_instance);
-    ~ApplListElem() { log_delete();}
-    applist_eType	type;
-    void		*ctx;
-    pwr_sAttrRef       	aref;
-    char		name[80];
-    pwr_tAName          instance;
-    ApplListElem 	*next;
-
-    void log_new();
-    void log_delete();
-};
-
-class ApplList {
-  public:
-    ApplList() :
-       root(NULL) {};
-    
-    ApplListElem *root;
-    void insert( applist_eType type, void *ctx, 
-	pwr_sAttrRef *arp, const char *name, const char *instance);
-    void insert( applist_eType type, void *ctx, 
-	pwr_tObjid objid, const char *name, const char *instance);
-    void remove( void *ctx);
-    int find( applist_eType type, const char *name, const char *instance, void **ctx);
-    int find( applist_eType type, pwr_sAttrRef *arp, void **ctx);
-    int find( applist_eType type, pwr_tObjid objid, void **ctx);
-    int find( applist_eType type, void *ctx, char *name, char *instance);
-    void swap( int mode);
-};
 
 class XNavGbl {
   public:
@@ -360,7 +323,9 @@ class XNav {
     CoLogin		*cologin;
     sevcli_tCtx 	scctx;
     XColWind		*last_xcolwind;
-    void 		*current_gectx;
+    void 		*current_cmd_ctx;
+    int 		elog_enabled;
+    int			elog_checked;
 
     virtual void set_inputfocus() {}
     virtual void pop() {}
@@ -396,9 +361,15 @@ class XNav {
 				double scan_time, const char *object_name, 
 				int use_default_access, unsigned int access, unsigned int options,
 				void *basewidget,
-				int (*xg_command_cb) (XttGe *, char *, void *),
+				int (*xg_command_cb) (void *, char *, void *),
 				int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 				int (*xg_is_authorized_cb) (void *, unsigned int)) {return 0;}
+    virtual XttMultiView *multiview_new( const char *name, pwr_tAttrRef *aref, 
+					 int width, int height, int x, int y, unsigned int options,
+					 pwr_tStatus *sts,
+					 int (*command_cb) (void *, char *, void *),
+					 int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
+					 int (*is_authorized_cb) (void *, unsigned int)) {return 0;}
     virtual GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
 				  int pos_right) {return 0;}
     virtual XttFileview *fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,
@@ -478,6 +449,7 @@ class XNav {
     int update_alarminfo();
     int sound( pwr_tAttrRef *arp);
     int sound_attached();
+    int eventlog_enabled();
     
     
     static int init_brow_base_cb( FlowCtx *fctx, void *client_data);
@@ -543,8 +515,8 @@ class XNav {
 	unsigned int access, unsigned int options, void *basewidget);
     void close_graph( char *filename, char *object_name);
     int exec_xttgraph( pwr_tObjid xttgraph, char *instance,
-		       char *focus, int inputempty, int use_default_access, unsigned int access, 
-		       unsigned int options, void *basewidget);
+		       char *focus, int inputempty, int use_default_access, 
+		       unsigned int access, unsigned int options, void *basewidget);
     void ge_event_exec( int type, char *name, char *instance, void *event, unsigned int size);
     int set_parameter( char *name_str, char *value_str, int bypass);
     void open_rttlog( char *name, char *filename);

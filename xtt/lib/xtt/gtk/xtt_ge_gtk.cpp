@@ -203,7 +203,8 @@ void XttGeGtk::activate_exit( GtkWidget *w, gpointer data)
 {
   XttGe *ge = (XttGe *)data;
 
-  delete ge;
+  if ( !(ge->options & ge_mOptions_Embedded))
+    delete ge;
 }
 
 void XttGeGtk::activate_zoom_in( GtkWidget *w, gpointer data)
@@ -235,7 +236,7 @@ void XttGeGtk::activate_help( GtkWidget *w, gpointer data)
 
   if ( ge->help_cb) {
     cdh_ToLower( key, ge->name);
-    (ge->help_cb)( ge, key);
+    (ge->help_cb)( ge->parent_ctx, key);
   }
 }
 
@@ -250,13 +251,14 @@ void XttGeGtk::action_resize( GtkWidget *w, GtkAllocation *allocation, gpointer 
 XttGeGtk::~XttGeGtk()
 {
   if ( close_cb)
-    (close_cb)( this);
+    (close_cb)( parent_ctx, this);
   if ( confirm_widget)
     gtk_widget_destroy( confirm_widget);
   if ( nav_shell)
     gtk_widget_destroy( nav_shell);
   delete graph;
-  gtk_widget_destroy( toplevel);
+  if ( !(options & ge_mOptions_Embedded))
+    gtk_widget_destroy( toplevel);
 }
 
 void XttGeGtk::pop()
@@ -285,11 +287,11 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
 		    int xg_width, int xg_height, int x, int y, double scan_time, 
 		    const char *object_name, int use_default_access, unsigned int access,
 		    unsigned int options, void *basewidget,
-		    int (*xg_command_cb) (XttGe *, char *, void *),
+		    int (*xg_command_cb) (void *, char *, void *),
 		    int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 		    int (*xg_is_authorized_cb) (void *, unsigned int)) :
   XttGe( xg_parent_ctx, xg_name, xg_filename, xg_scrollbar, xg_menu, xg_navigator, xg_width,
-	 xg_height, x, y, scan_time, object_name, use_default_access, access,
+	 xg_height, x, y, scan_time, object_name, use_default_access, access, options,
 	 xg_command_cb, xg_get_current_objects_cb, xg_is_authorized_cb), 
   parent_wid(xg_parent_wid), nav_shell(0), value_dialog(0), confirm_widget(0), message_dia_widget(0)
 {
@@ -315,26 +317,32 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
   char *titleutf8 = g_convert( title, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
 
   // Gtk
-  toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-					 "default-height", window_height,
-					 "default-width", window_width,
-					 "title", titleutf8,
-					 NULL);
-  g_free( titleutf8);
+  if ( !(options & ge_mOptions_Embedded)) {
+    toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
+					   "default-height", window_height,
+					   "default-width", window_width,
+					   "title", titleutf8,
+					   NULL);
+    g_free( titleutf8);
 
-  geometry.min_aspect = gdouble(window_width)/window_height;
-  geometry.max_aspect = gdouble(window_width)/window_height * 1.02;
-  gtk_window_set_geometry_hints( GTK_WINDOW(toplevel), GTK_WIDGET(toplevel),
-  				 &geometry, GDK_HINT_ASPECT);
+    geometry.min_aspect = gdouble(window_width)/window_height;
+    geometry.max_aspect = gdouble(window_width)/window_height * 1.02;
+    gtk_window_set_geometry_hints( GTK_WINDOW(toplevel), GTK_WIDGET(toplevel),
+				   &geometry, GDK_HINT_ASPECT);
 
-  g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
-  g_signal_connect( toplevel, "destroy", G_CALLBACK(destroy_event), this);
-  g_signal_connect( toplevel, "focus-in-event", G_CALLBACK(action_inputfocus), this);
+    g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
+    g_signal_connect( toplevel, "destroy", G_CALLBACK(destroy_event), this);
+    g_signal_connect( toplevel, "focus-in-event", G_CALLBACK(action_inputfocus), this);
+    
+    CoWowGtk::SetWindowIcon( toplevel);
 
-  CoWowGtk::SetWindowIcon( toplevel);
+    if ( basewidget) {
+      gtk_window_set_transient_for(GTK_WINDOW(toplevel), GTK_WINDOW(basewidget));
+    }
 
-  if ( basewidget) {
-    gtk_window_set_transient_for(GTK_WINDOW(toplevel), GTK_WINDOW(basewidget));
+  }
+  else {
+    toplevel = parent_wid;
   }
 
   if ( xg_menu) {
@@ -416,43 +424,49 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
     gtk_box_pack_start( GTK_BOX(graph_form), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(graph_form), GTK_WIDGET(grow_widget), TRUE, TRUE, 0);
 
-  gtk_container_add( GTK_CONTAINER(toplevel), graph_form);
+  if ( !(options & ge_mOptions_Embedded)) {
+    gtk_container_add( GTK_CONTAINER(toplevel), graph_form);
 
-  gtk_widget_show_all( toplevel);
+    gtk_widget_show_all( toplevel);
 
-  if ( navigator) {
-    // Create navigator popup
-    nav_shell = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-					    "default-height", 200,
-					    "default-width", 200,
-					    "title", "Navigator",
-					    NULL);
-    g_signal_connect( nav_shell, "delete_event", G_CALLBACK(nav_delete_event), this);
+    if ( navigator) {
+      // Create navigator popup
+      nav_shell = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
+					      "default-height", 200,
+					      "default-width", 200,
+					      "title", "Navigator",
+					      NULL);
+      g_signal_connect( nav_shell, "delete_event", G_CALLBACK(nav_delete_event), this);
 
-    ((GraphGtk *)graph)->create_navigator( nav_shell);
-    gtk_container_add( GTK_CONTAINER(nav_shell), ((GraphGtk *)graph)->nav_widget);
+      ((GraphGtk *)graph)->create_navigator( nav_shell);
+      gtk_container_add( GTK_CONTAINER(nav_shell), ((GraphGtk *)graph)->nav_widget);
 
-    gtk_widget_show_all( nav_shell);
-    ((Graph *)graph)->set_nav_background_color();
+      gtk_widget_show_all( nav_shell);
+      ((Graph *)graph)->set_nav_background_color();
+    }
+
+    if ( !(x == 0 && y == 0)) {
+      // Set position
+      gtk_window_move( GTK_WINDOW(toplevel), x, y);
+    }
+
+    if ( options & ge_mOptions_FullScreen)
+      gtk_window_fullscreen( GTK_WINDOW(toplevel));
+    else if ( options & ge_mOptions_Maximize)
+      gtk_window_maximize( GTK_WINDOW(toplevel)); // TODO
+    else if ( options & ge_mOptions_FullMaximize)
+      gtk_window_maximize( GTK_WINDOW(toplevel));
+    else if ( options & ge_mOptions_Iconify)
+      gtk_window_iconify( GTK_WINDOW(toplevel));
+    else if ( options & ge_mOptions_Iconify)
+      gtk_window_iconify( GTK_WINDOW(toplevel));
+    else if ( options & ge_mOptions_Invisible)
+      g_object_set( toplevel, "visible", FALSE, NULL);
+  }
+  else {
+    gtk_widget_set_size_request( graph_form, window_width, window_height);
   }
 
-  if ( !(x == 0 && y == 0)) {
-    // Set position
-    gtk_window_move( GTK_WINDOW(toplevel), x, y);
-  }
-
-  if ( options & ge_mOptions_FullScreen)
-    gtk_window_fullscreen( GTK_WINDOW(toplevel));
-  else if ( options & ge_mOptions_Maximize)
-    gtk_window_maximize( GTK_WINDOW(toplevel)); // TODO
-  else if ( options & ge_mOptions_FullMaximize)
-    gtk_window_maximize( GTK_WINDOW(toplevel));
-  else if ( options & ge_mOptions_Iconify)
-    gtk_window_iconify( GTK_WINDOW(toplevel));
-  else if ( options & ge_mOptions_Iconify)
-    gtk_window_iconify( GTK_WINDOW(toplevel));
-  else if ( options & ge_mOptions_Invisible)
-    g_object_set( toplevel, "visible", FALSE, NULL);
 }
 
 static gint confirm_delete_event( GtkWidget *w, GdkEvent *event, gpointer ge)

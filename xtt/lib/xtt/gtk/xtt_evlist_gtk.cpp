@@ -63,8 +63,10 @@ EvListGtk::EvListGtk( void *ev_parent_ctx,
 		      ev_eType ev_type, 
 		      int ev_size,
 		      int ev_eventname_seg,
-		      GtkWidget **w) :
-  EvList( ev_parent_ctx, ev_type, ev_size, ev_eventname_seg), parent_wid(ev_parent_wid)
+		      GtkWidget **w,
+		      void (*ev_init_cb)(void *)) :
+  EvList( ev_parent_ctx, ev_type, ev_size, ev_eventname_seg, ev_init_cb), 
+  parent_wid(ev_parent_wid)
 {
   form_widget = scrolledbrowwidgetgtk_new( init_brow_cb, this, &brow_widget);
 
@@ -79,7 +81,14 @@ EvListGtk::EvListGtk( void *ev_parent_ctx,
 //
 EvListGtk::~EvListGtk()
 {
+  if ( browtree)
+    delete browtree->ctx;
+  if ( browtree && browtree != brow)
+    delete browtree;
+  if ( browbase && browbase != brow)
+    delete browbase;
   delete brow;
+
   gtk_widget_destroy( form_widget);
 }
 

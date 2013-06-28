@@ -6574,6 +6574,11 @@ void GeTrend::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( maxvalue_attr2);
 
+  strcpy( attrinfo[i].name, "Trend.HoldAttr");
+  attrinfo[i].value = hold_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( hold_attr);
+
   *item_count = i;
 }
 
@@ -6607,6 +6612,7 @@ void GeTrend::replace_attribute( char *from, char *to, int *cnt, int strict)
   GeDyn::replace_attribute( maxvalue_attr1, sizeof(maxvalue_attr1), from, to, cnt, strict);
   GeDyn::replace_attribute( minvalue_attr2, sizeof(minvalue_attr2), from, to, cnt, strict);
   GeDyn::replace_attribute( maxvalue_attr2, sizeof(maxvalue_attr2), from, to, cnt, strict);
+  GeDyn::replace_attribute( hold_attr, sizeof(hold_attr), from, to, cnt, strict);
 }
 
 void GeTrend::save( ofstream& fp)
@@ -6618,6 +6624,7 @@ void GeTrend::save( ofstream& fp)
   fp << int(ge_eSave_Trend_maxvalue_attr1) << FSPACE << maxvalue_attr1 << endl;
   fp << int(ge_eSave_Trend_minvalue_attr2) << FSPACE << minvalue_attr2 << endl;
   fp << int(ge_eSave_Trend_maxvalue_attr2) << FSPACE << maxvalue_attr2 << endl;
+  fp << int(ge_eSave_Trend_hold_attr) << FSPACE << hold_attr << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -6662,6 +6669,10 @@ void GeTrend::open( ifstream& fp)
       case ge_eSave_Trend_maxvalue_attr2:
         fp.get();
         fp.getline( maxvalue_attr2, sizeof(maxvalue_attr2));
+        break;
+      case ge_eSave_Trend_hold_attr:
+        fp.get();
+        fp.getline( hold_attr, sizeof(hold_attr));
         break;
       case ge_eSave_End: end_found = 1; break;
       default:
@@ -6762,6 +6773,24 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
 				       &max_value_subid2, attr_size);
   }
 
+  hold_p = 0;
+  hold_db = dyn->parse_attr_name( hold_attr, parsed_name,
+				  &inverted, &attr_type, &attr_size);
+  if ( strcmp( parsed_name,"") != 0 && attr_type == pwr_eType_Boolean) {
+    switch ( hold_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&hold_p, 
+					 &hold_subid, attr_size);
+      if ( EVEN(sts)) return sts;
+      break;
+    case graph_eDatabase_Local:
+      hold_p = (pwr_tBoolean *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
+      break;
+    default:
+      ;
+    }
+  }
+
   trace_data->p = &pdummy;
   first_scan = true;
   return 1;
@@ -6791,6 +6820,10 @@ int GeTrend::disconnect( grow_tObject object)
     gdh_UnrefObjectInfo( max_value_subid2);
     max_value2_p = 0;
   }
+  if ( hold_p && hold_db == graph_eDatabase_Gdh) {
+    gdh_UnrefObjectInfo( hold_subid);
+    hold_p = 0;
+  }
   return 1;
 }
 
@@ -6798,6 +6831,8 @@ int GeTrend::scan( grow_tObject object)
 {
   if ( !p1 && !p2)
     return 1;
+  if ( hold_p)
+    trend_hold = *hold_p;
   if ( trend_hold)
     return 1;
 

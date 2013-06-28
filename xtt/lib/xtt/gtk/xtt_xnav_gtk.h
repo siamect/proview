@@ -90,9 +90,15 @@ class XNavGtk : public XNav {
 			double scan_time, const char *object_name, 
 			int use_default_access, unsigned int access, unsigned int options,
 			void *basewidget,
-			int (*xg_command_cb) (XttGe *, char *, void *),
+			int (*xg_command_cb) (void *, char *, void *),
 			int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 			int (*xg_is_authorized_cb) (void *, unsigned int));
+    XttMultiView *multiview_new( const char *name, pwr_tAttrRef *aref, 
+				 int width, int height, int x, int y, unsigned int options,
+				 pwr_tStatus *sts,
+				 int (*command_cb) (void *, char *, void *),
+				 int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
+				 int (*is_authorized_cb) (void *, unsigned int));
     GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
 			  int pos_right);
     XttFileview *fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,

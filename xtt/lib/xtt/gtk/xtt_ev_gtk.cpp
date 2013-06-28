@@ -56,6 +56,7 @@
 #include "xtt_ev_gtk.h"
 #include "xtt_methodtoolbar_gtk.h"
 #include "rt_xnav_msg.h"
+#include "xtt_evala_gtk.h"
 
 static gint eve_delete_event( GtkWidget *w, GdkEvent *event, gpointer data)
 {
@@ -107,7 +108,7 @@ EvGtk::EvGtk( void *ev_parent_ctx,
   parent_wid(ev_parent_wid), parent_wid_eve(0), parent_wid_ala(0), parent_wid_blk(0)
 {
   pwr_tStatus sts;
-  pwr_sClass_OpPlace *userobject_ptr;
+  pwr_sClass_OpPlace *opp;
   pwr_tFileName fname;
   const int eve_width = 700;
   const int eve_height = 600;
@@ -124,15 +125,15 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     return;
   }
 
-  sts = gdh_ObjidToPointer( user, (pwr_tAddress *) &userobject_ptr);
+  sts = gdh_ObjidToPointer( user, (pwr_tAddress *) &opp);
   if ( EVEN(sts)) {
     *status = XNAV__NOUSER;
     return;
   }
-  ala_size = userobject_ptr->MaxNoOfAlarms;
-  eve_size = userobject_ptr->MaxNoOfEvents;
+  ala_size = opp->MaxNoOfAlarms;
+  eve_size = opp->MaxNoOfEvents;
   blk_size = 0;
-  create_aliaslist( userobject_ptr);
+  create_aliaslist( opp);
 
   // Gtk
   // Eve Window
@@ -213,7 +214,7 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions), GTK_WIDGET(func_menu));
 
     // View entry
-    GtkWidget *view_zoom_in = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Zoom _In"));
+     GtkWidget *view_zoom_in = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Zoom _In"));
     gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(view_zoom_in), 
 				   gtk_image_new_from_stock( "gtk-zoom-in", GTK_ICON_SIZE_MENU));
     g_signal_connect( view_zoom_in, "activate", 
@@ -438,6 +439,13 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions), GTK_WIDGET(func_menu));
 
     // View entry
+     GtkWidget *view_shift_view = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("S_hift View"));
+    g_signal_connect( view_shift_view, "activate", 
+		      G_CALLBACK(ala_activate_shift_view), this);
+    gtk_widget_add_accelerator( view_shift_view, "activate", accel_g,
+				'n', GdkModifierType(GDK_CONTROL_MASK), 
+				GTK_ACCEL_VISIBLE);
+
     GtkWidget *view_zoom_in = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Zoom _In"));
     gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(view_zoom_in), 
 				   gtk_image_new_from_stock( "gtk-zoom-in", GTK_ICON_SIZE_MENU));
@@ -480,7 +488,63 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     g_signal_connect( view_hide_text, "activate", 
 		      G_CALLBACK(ala_activate_hide_text), this);
 
+    // Submenu Select View
+    GtkWidget *view_select_flat = gtk_menu_item_new_with_mnemonic( "_Flat");
+    g_signal_connect( view_select_flat, "activate", 
+		      G_CALLBACK(ala_activate_select_flat), this);
+
+
+    GtkWidget *view_select = gtk_menu_item_new_with_mnemonic( "_Select View");
+    GtkMenu *view_select_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+    gtk_menu_shell_append(GTK_MENU_SHELL(view_select_menu), view_select_flat);
+
+    for ( unsigned int i = 0; i < sizeof(opp->AlarmViews)/sizeof(opp->AlarmViews[0]); i++) {
+      pwr_sClass_AlarmView *viewp;
+
+      if ( cdh_ObjidIsNull( opp->AlarmViews[i]))
+	break;
+      
+      sts = gdh_ObjidToPointer( opp->AlarmViews[i], (void **)&viewp);
+      if ( ODD(sts)) {
+	alarm_views[i] = opp->AlarmViews[i];
+	GtkWidget *view_select_view = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8(viewp->Name));
+	switch ( i) {
+	case 0: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view1), this); break;
+	case 1: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view2), this); break;
+	case 2: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view3), this); break;
+	case 3: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view4), this); break;
+	case 4: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view5), this); break;
+	case 5: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view6), this); break;
+	case 6: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view7), this); break;
+	case 7: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view8), this); break;
+	case 8: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view9), this); break;
+	case 9: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view10), this); break;
+	case 10: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view11), this); break;
+	case 11: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view12), this); break;
+	case 12: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view13), this); break;
+	case 13: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view14), this); break;
+	case 14: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view15), this); break;
+	case 15: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view16), this); break;
+	case 16: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view17), this); break;
+	case 17: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view18), this); break;
+	case 18: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view19), this); break;
+	case 19: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view20), this); break;
+	case 20: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view21), this); break;
+	case 21: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view22), this); break;
+	case 22: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view23), this); break;
+	case 23: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view24), this); break;
+	case 24: g_signal_connect( view_select_view, "activate", G_CALLBACK(ala_activate_select_view25), this); break;
+	}
+	gtk_menu_shell_append(GTK_MENU_SHELL(view_select_menu), view_select_view);
+      }
+    }
+
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(view_select),
+			      GTK_WIDGET(view_select_menu));
+
     GtkMenu *view_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+    gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_shift_view);
+    gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_select);
     gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_in);
     gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_out);
     gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_reset);
@@ -767,9 +831,33 @@ EvGtk::EvGtk( void *ev_parent_ctx,
   sts = outunit_connect( user);
   if ( EVEN(sts))
     *status = sts;
-
 }
 
+EvAla *EvGtk::open_alarmlist_satellite( const char *title, pwr_tStatus *sts, 
+					int width, int height, int x, int y, pwr_tObjid view,
+					unsigned int options, void *widget)
+{
+  if ( sala_cnt >= (int)(sizeof(sala)/sizeof(sala[0])))
+    return 0;
+       
+  sala[sala_cnt++] = new EvAlaGtk( this, parent_wid, (char *)title, user, eventname_seg,
+				   width, height, x, y, view, options, widget, sts);
+  if ( EVEN(*sts)) return 0;
+
+  sala[sala_cnt-1]->start_trace_cb = ala_start_trace_cb;
+  sala[sala_cnt-1]->display_in_xnav_cb = ala_display_in_xnav_cb;
+  sala[sala_cnt-1]->help_cb = ala_help_cb;
+  sala[sala_cnt-1]->popup_menu_cb = ev_popup_menu_cb;
+  sala[sala_cnt-1]->sound_cb = ev_sound_cb;
+  sala[sala_cnt-1]->is_authorized_cb = ala_is_authorized_cb;
+  sala[sala_cnt-1]->acknowledge_cb = sala_acknowledge_cb;
+  sala[sala_cnt-1]->name_to_alias_cb = ev_name_to_alias_cb;
+  sala[sala_cnt-1]->copy_list_cb = sala_copy_list_cb;
+  sala[sala_cnt-1]->close_cb = sala_close_cb;
+  sala[sala_cnt-1]->init();
+
+  return sala[sala_cnt-1];
+}
 
 //
 //  Delete ev
@@ -835,6 +923,12 @@ void EvGtk::unmap_blk()
     g_object_set( parent_wid_blk, "visible", FALSE, NULL);
     blk_displayed = 0;
   }
+}
+
+void EvGtk::set_title_ala( char *title) 
+{
+    g_object_set( parent_wid_ala, "title", title, NULL);
+
 }
 
 gboolean EvGtk::eve_action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data)
@@ -921,7 +1015,9 @@ void EvGtk::eve_activate_ack_last( GtkWidget *w, gpointer data)
 
 void EvGtk::ala_activate_ack_last( GtkWidget *w, gpointer data)
 {
-  eve_activate_ack_last( w, data);
+  Ev *ev = (Ev *)data;
+
+  ev->ala_activate_ack_last();
 }
 
 void EvGtk::ala_activate_ack_all( GtkWidget *w, gpointer data)
@@ -930,6 +1026,46 @@ void EvGtk::ala_activate_ack_all( GtkWidget *w, gpointer data)
 
   ev->eve_activate_ack_all();
 }
+
+void EvGtk::ala_activate_shift_view( GtkWidget *w, gpointer data)
+{
+  Ev *ev = (Ev *)data;
+
+  ev->view_shift();
+}
+
+void EvGtk::ala_activate_select_flat( GtkWidget *w, gpointer data)
+{
+  Ev *ev = (Ev *)data;
+
+  ev->set_view(pwr_cNObjid);
+}
+
+void EvGtk::ala_activate_select_view1( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[0]);}
+void EvGtk::ala_activate_select_view2( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[1]);}
+void EvGtk::ala_activate_select_view3( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[2]);}
+void EvGtk::ala_activate_select_view4( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[3]);}
+void EvGtk::ala_activate_select_view5( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[4]);}
+void EvGtk::ala_activate_select_view6( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[5]);}
+void EvGtk::ala_activate_select_view7( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[6]);}
+void EvGtk::ala_activate_select_view8( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[7]);}
+void EvGtk::ala_activate_select_view9( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[8]);}
+void EvGtk::ala_activate_select_view10( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[9]);}
+void EvGtk::ala_activate_select_view11( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[10]);}
+void EvGtk::ala_activate_select_view12( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[11]);}
+void EvGtk::ala_activate_select_view13( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[12]);}
+void EvGtk::ala_activate_select_view14( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[13]);}
+void EvGtk::ala_activate_select_view15( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[14]);}
+void EvGtk::ala_activate_select_view16( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[15]);}
+void EvGtk::ala_activate_select_view17( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[16]);}
+void EvGtk::ala_activate_select_view18( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[17]);}
+void EvGtk::ala_activate_select_view19( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[18]);}
+void EvGtk::ala_activate_select_view20( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[19]);}
+void EvGtk::ala_activate_select_view21( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[20]);}
+void EvGtk::ala_activate_select_view22( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[21]);}
+void EvGtk::ala_activate_select_view23( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[22]);}
+void EvGtk::ala_activate_select_view24( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[23]);}
+void EvGtk::ala_activate_select_view25( GtkWidget *w, gpointer ev) { ((Ev *)ev)->set_view(((EvGtk *)ev)->alarm_views[24]);}
 
 void EvGtk::eve_activate_zoom_in( GtkWidget *w, gpointer data)
 {

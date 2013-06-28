@@ -66,7 +66,6 @@ static int graph_attr_boolean( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_ix( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_ax( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_dx( Graph *graph, pwr_sAttrRef *attrref);
-static int graph_object_chanxx( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_PID( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_PlcThread( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_collect( Graph *graph, pwr_sAttrRef *attrref);
@@ -82,12 +81,6 @@ static graph_sObjectFunction graph_object_functions[] = {
 	{ pwr_cClass_Dv, &graph_object_dx},
 	{ pwr_cClass_Di, &graph_object_dx},
 	{ pwr_cClass_Do, &graph_object_dx},
-	{ pwr_cClass_ChanAi, &graph_object_chanxx},
-	{ pwr_cClass_ChanAo, &graph_object_chanxx},
-	{ pwr_cClass_ChanIi, &graph_object_chanxx},
-	{ pwr_cClass_ChanIo, &graph_object_chanxx},
-	{ pwr_cClass_ChanDi, &graph_object_chanxx},
-	{ pwr_cClass_ChanDo, &graph_object_chanxx},
 	{ pwr_cClass_pid, &graph_object_PID},
 	{ /* pwr_cClass_CompPID */ 656576UL, &graph_object_PID},
 	{ pwr_cClass_PlcThread, &graph_object_PlcThread},
@@ -840,51 +833,6 @@ static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
   return 1;
 }
 
-
-//
-// Graph for channel
-//
-static int graph_object_chanxx( Graph *graph, pwr_sAttrRef *arp)
-{
-  pwr_sAttrRef attrref;
-  int sts;
-  pwr_tClassId	classid;
-  pwr_sAttrRef	sigchancon;
-  pwr_tClassId	signal_classid;
-  char		classname[40];
-  char		signal_name[120];
-  char		cmd[200];
-
-  sts = gdh_GetAttrRefTid( arp, &classid);
-  if ( EVEN(sts)) return sts;
-
-  // Add command to open signal graph
-
-  sts = gdh_ArefANameToAref( arp, "SigChanCon", &attrref);
-  if ( ODD(sts)) {
-    sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&sigchancon, sizeof(sigchancon));
-    if ( EVEN(sts)) return sts;
-
-    sts = gdh_AttrrefToName( &sigchancon, signal_name, sizeof(signal_name), 
-		cdh_mNName);
-    if ( ODD(sts))
-    {
-      sts = gdh_GetAttrRefTid( &sigchancon, &signal_classid);
-      if ( EVEN(sts)) return sts;
-      sts = gdh_ObjidToName( cdh_ClassIdToObjid( signal_classid),
-		  classname, sizeof(classname), cdh_mName_object);
-      if ( EVEN(sts)) return sts;
-      cdh_ToLower( classname, classname);
-
-      sprintf( cmd, "ope gr pwr_c_%s/ins=%s/nam=\"%s\"", 
-		classname, signal_name, signal_name);
-
-      sts = graph->set_button_command( "OpenSignal", cmd);
-    }
-  }
-
-  return 1;
-}
 
 //
 // Object graph for PID

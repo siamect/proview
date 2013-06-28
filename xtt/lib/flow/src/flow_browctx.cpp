@@ -173,6 +173,7 @@ void BrowCtx::zoom( double factor)
   clear();
   draw( 0, 0, window_width, window_height);
   nav_zoom();
+  a_nc.zoom();  // Zoom inactive nodeclasses
   change_scrollbar();
 }
 
