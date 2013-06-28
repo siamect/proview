@@ -429,7 +429,7 @@ class WItemEnum : public WItemBaseAttr {
 	int attr_flags, char *attr_body,
 	unsigned int item_num, int item_is_element, int item_element,
 	brow_tNode dest, flow_eDest dest_code);
-    char	 	enum_name[40];
+    char	 	enum_name[80];
     unsigned int	num;
     int			is_element;
     int			element;
