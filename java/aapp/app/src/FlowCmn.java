@@ -242,4 +242,8 @@ public class FlowCmn implements PlowCmnIfc {
 	public int remove(Object e) {
 		return 0;
 	}
+        public void setNodraw() {
+	}
+        public void resetNodraw() {
+	}
 }

@@ -410,6 +410,11 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	    appl.openConfirmDialog(dyn, text, object);
     }
 
+    public void openValueInputDialog(Object dyn, String text, Object object) {
+	if ( appl != null)
+	    appl.openValueInputDialog(dyn, text, object);
+    }
+
     public String get_reference_name(String name) {
 	// TODO
 	return null;

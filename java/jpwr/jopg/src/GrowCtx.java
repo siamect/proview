@@ -362,10 +362,14 @@ public class GrowCtx implements GrowCtxIfc {
     }
 
     public void draw() {
+	// Draw background color
+	// draw.fillRect(0, 0, cmn.mw.window_width, cmn.mw.window_height, background_color);
+	// Draw connections
 	for ( int i = 0; i < cmn.a.size(); i++) {
 	    if ( ((GlowArrayElem)cmn.a.get(i)).type() == Glow.eObjectType_Con)
 		((GlowArrayElem)cmn.a.get(i)).draw();
 	}
+	// Draw nodes
 	for ( int i = 0; i < cmn.a.size(); i++) {
 	    if ( ((GlowArrayElem)cmn.a.get(i)).type() != Glow.eObjectType_Con)
 		((GlowArrayElem)cmn.a.get(i)).draw();

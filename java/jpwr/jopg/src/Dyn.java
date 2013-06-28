@@ -43,6 +43,11 @@ import java.util.*;
 public class Dyn {
 
     public static final int DYN__NO_PROPAGATE			= 20001;
+    public static final int eValueInput_Success			= 0;
+    public static final int eValueInput_Error			= 1;
+    public static final int eValueInput_SyntaxError	       	= 2;
+    public static final int eValueInput_MinValueExceeded       	= 3;
+    public static final int eValueInput_MaxValueExceeded       	= 4;
 
     public static final int mDynType1_No			= 0;
     public static final int mDynType1_Inherit      		= 1 << 0;
@@ -229,6 +234,7 @@ public class Dyn {
     public static final int eSave_Trend_maxvalue_attr1     	= 2303;
     public static final int eSave_Trend_minvalue_attr2      	= 2304;
     public static final int eSave_Trend_maxvalue_attr2      	= 2305;
+    public static final int eSave_Trend_hold_attr	      	= 2306;
     public static final int eSave_DigFlash_attribute		= 2600;
     public static final int eSave_DigFlash_color		= 2601;
     public static final int eSave_DigFlash_color2		= 2602;
@@ -952,7 +958,6 @@ public class Dyn {
 
     int action(GlowArrayElem object, GlowEvent event) {
 	int sts;
-	System.out.println("Dyn Action " + event.event + " object " + event.object);
 	for ( int i = 0; i < elements.size(); i++) {
 	    sts = elements.get(i).action(object, event);
 	    if ( sts == Dyn.DYN__NO_PROPAGATE || sts == Glow.GLOW__TERMINATED ||
@@ -973,8 +978,7 @@ public class Dyn {
 	for ( int i = 0; i < elements.size(); i++)
 	    elements.get(i).action((GlowArrayElem)object,  e);
 	action_type1 |= mActionType1_Confirm;
-    }
-    
+    }    
 
     public class DynElem {
 	Dyn dyn;
@@ -2184,7 +2188,7 @@ public class Dyn {
 	    super(dyn, Dyn.mDynType1_Value, 0, 0, 0);
 	}
 
-	public int connect(GlowArrayElem o) {
+ 	public int connect(GlowArrayElem o) {
 	    GrowNode object = (GrowNode)o;
 	    if ( format == null)
 		return 1;
@@ -2403,6 +2407,179 @@ public class Dyn {
 
     }
 
+    public int valueInputAction( Object object, String str) {
+	if ( elements == null)
+	    return Dyn.eValueInput_Error;
+
+	DynValueInput e = (DynValueInput)object;
+
+	System.out.println("Dyn Value input: " + str);
+
+
+	try {
+	    PwrtStatus sts = null;
+	    double minval = 0;
+	    double maxval = 0;
+	    if ( e.minvalue_attr != null) {
+		DynParsedAttrName pname = e.dyn.parseAttrName(e.minvalue_attr);
+		if ( pname != null && pname.type == Pwr.eType_Float32) {
+		    CdhrFloat ret = e.dyn.graph.getGdh().getObjectInfoFloat( pname.name);
+		    if ( ret.evenSts()) {
+			System.out.println( "ValueInput " + pname.name);
+			return Dyn.eValueInput_Error;
+		    }
+		    minval = ret.value;
+		}
+		else 
+		    minval = e.min_value;
+	    }
+	    else
+		minval = e.min_value;
+
+	    if ( e.maxvalue_attr != null) {
+		DynParsedAttrName pname = e.dyn.parseAttrName(e.maxvalue_attr);
+		if ( pname == null || pname.name.equals("")) 
+		    maxval = e.max_value;
+		else {
+		    if ( pname.type == Pwr.eType_Float32) {
+			CdhrFloat ret = e.dyn.graph.getGdh().getObjectInfoFloat( pname.name);
+			if ( ret.evenSts()) {
+			    System.out.println( "ValueInput " + pname.name);
+			    return Dyn.eValueInput_Error;
+			}
+			maxval = ret.value;
+		    }
+		    else
+			maxval = e.max_value;
+		}
+	    }
+	    else
+		maxval = e.max_value;
+
+	    switch ( e.a_typeid) {
+	    case Pwr.eType_Float32: {
+		float inputValue = Float.parseFloat( str.trim());
+		if ( minval != 0 && maxval != 0 && inputValue < minval)
+		    return Dyn.eValueInput_MinValueExceeded;
+		if ( minval != 0 && maxval != 0 && inputValue > maxval )
+		    return Dyn.eValueInput_MaxValueExceeded;
+		
+		DynParsedAttrName pname = e.dyn.parseAttrName(e.value_element.attribute);
+		if ( pname == null || pname.name.equals(""))
+		    break;
+		    
+		switch ( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    sts = e.dyn.graph.getGdh().setObjectInfo( pname.name, inputValue);
+		    break;
+		case GraphIfc.eDatabase_Local:
+		    sts = e.dyn.graph.getLdb().setObjectInfo( graph, pname.name, inputValue);
+		    break;
+		default:
+		    return Dyn.eValueInput_Error;
+		}
+		if ( sts.evenSts()) {
+		    System.out.println( "setObjectInfoError " + sts);
+		    return Dyn.eValueInput_Error;
+		}
+		break;
+	    }
+	    case Pwr.eType_Int32:
+	    case Pwr.eType_UInt32:
+	    case Pwr.eType_Int16:
+	    case Pwr.eType_UInt16:
+	    case Pwr.eType_Int8:
+	    case Pwr.eType_UInt8: {
+		int inputValue = Integer.parseInt( str.trim(), 10);
+		if ( minval != 0 && maxval != 0 && inputValue < minval)
+		    return Dyn.eValueInput_MinValueExceeded;
+		if ( minval != 0 && maxval != 0 && inputValue > maxval )
+		    return Dyn.eValueInput_MaxValueExceeded;
+
+		DynParsedAttrName pname = e.dyn.parseAttrName(e.value_element.attribute);
+		if ( pname == null || pname.name.equals(""))
+		    break;
+		    
+		switch ( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    sts = e.dyn.graph.getGdh().setObjectInfo( pname.name, inputValue);
+		    break;
+		case GraphIfc.eDatabase_Local:
+		    sts = e.dyn.graph.getLdb().setObjectInfo( graph, pname.name, inputValue);
+		    break;
+		default:
+		    return Dyn.eValueInput_Error;
+		}
+		if ( sts.evenSts()) {
+		    System.out.println( "setObjectInfoError " + sts);
+		    return Dyn.eValueInput_Error;
+		}		
+		break;
+	    }
+	    case Pwr.eType_Boolean: {
+		int inputValueInt = Integer.parseInt( str.trim(), 10);
+		boolean inputValue;
+		if ( inputValueInt == 0)
+		    inputValue = false;
+		else if ( inputValueInt == 1)
+		    inputValue = true;
+		else
+		    break;
+
+		// valueElement.oldValueB = inputValue;
+
+		DynParsedAttrName pname = e.dyn.parseAttrName(e.value_element.attribute);
+		if ( pname == null || pname.name.equals(""))
+		    break;
+		    
+		switch ( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    sts = e.dyn.graph.getGdh().setObjectInfo( pname.name, inputValue);
+		    break;
+		case GraphIfc.eDatabase_Local:
+		    sts = e.dyn.graph.getLdb().setObjectInfo( graph, pname.name, inputValue);
+		    break;
+		default:
+		    return Dyn.eValueInput_Error;
+		}
+		if ( sts.evenSts()) {
+		    System.out.println( "setObjectInfoError " + sts);
+		    return Dyn.eValueInput_Error;
+		}
+		break;
+	    }
+	    case Pwr.eType_String: {
+		// valueElement.oldValueS = str;
+
+		DynParsedAttrName pname = e.dyn.parseAttrName(e.value_element.attribute);
+		if ( pname == null || pname.name.equals(""))
+		    break;
+		    
+		switch ( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    sts = e.dyn.graph.getGdh().setObjectInfo( pname.name, str);
+		    break;
+		case GraphIfc.eDatabase_Local:
+		    sts = e.dyn.graph.getLdb().setObjectInfo( graph, pname.name, str);
+		    break;
+		default:
+		    return Dyn.eValueInput_Error;
+		}
+		if ( sts.evenSts()) {
+		    System.out.println( "setObjectInfoError " + sts);
+		    return Dyn.eValueInput_Error;
+		}
+		break;
+	    }
+	    }
+	}
+	catch(NumberFormatException ex) {
+	    System.out.println( ex.toString() );
+ 	    return Dyn.eValueInput_SyntaxError;
+	}	
+	return Dyn.eValueInput_Success;
+    }
+
     public class DynValueInput extends DynElem {
 	String attribute;
 	double min_value;
@@ -2413,9 +2590,36 @@ public class Dyn {
 	String minvalue_attr;
 	String maxvalue_attr;
 	int escape_store;
+	DynValue value_element;
+	int a_typeid;
 
 	public DynValueInput( Dyn dyn) {
 	    super(dyn, 0, 0, Dyn.mActionType1_ValueInput, 0);
+	}
+
+ 	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+
+	    // Get the Value element
+	    value_element = null;
+	    for ( int j = 0; j < dyn.elements.size(); j++) {
+		if ( dyn.elements.get(j).dyn_type1 == Dyn.mDynType1_Value) {
+		    value_element = (DynValue)dyn.elements.get(j);
+		    a_typeid = value_element.a_typeid;
+		    break;
+		}
+	    }
+	    
+	    return 1;
+	}
+
+	public int action( GlowArrayElem object, GlowEvent e) {
+	    switch ( e.event) {
+	    case Glow.eEvent_MB1Click:
+		dyn.graph.openValueInputDialog( dyn, "Enter value", this);
+		break;
+	    }
+	    return 1;
 	}
 
 	public void open( BufferedReader reader) {
@@ -3476,6 +3680,7 @@ public class Dyn {
 	String maxvalue_attr1;
 	String minvalue_attr2;
 	String maxvalue_attr2;
+	String hold_attr;
 	int p1 = -1;
 	int database1;
 	boolean inverted1;
@@ -3503,6 +3708,9 @@ public class Dyn {
 	double scan_time;
 	double acc_time;
 	int trend_hold;
+	int hold_p;
+	int hold_database;
+	PwrtRefId hold_subid;
 
 	public DynTrend( Dyn dyn) {
 	    super(dyn, Dyn.mDynType1_Trend, 0, 0, 0);
@@ -3611,6 +3819,35 @@ public class Dyn {
 		    max_value2_subid = ret.refid;
 		}
 	    }
+
+	    hold_p = 0;
+	    pname = dyn.parseAttrName(hold_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		ret = null;
+
+		switch( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		    break;
+		case GraphIfc.eDatabase_Local:
+		    ret = dyn.graph.getLdb().refObjectInfo( graph, pname.name);
+		    System.out.println("Hold: " + ret + " pname " + pname.name);
+		    break;
+		default:
+		    ret = null;
+		}
+
+		if ( ret == null || ret.evenSts()) {
+		    System.out.println("Trend: " + hold_attr);
+		    return 1;
+		}
+		else {
+		    hold_p = ret.id;
+		    hold_subid = ret.refid;
+		    hold_database = pname.database;
+		}
+	    }
+
 	    return 1;
 	}
 
@@ -3627,6 +3864,8 @@ public class Dyn {
 		dyn.graph.getGdh().unrefObjectInfo(min_value2_subid);
 	    if ( max_value2_p != 0)
 		dyn.graph.getGdh().unrefObjectInfo(max_value2_subid);
+	    if ( hold_p != 0 && hold_database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(hold_subid);
 	}
 
 	public void scan( GlowArrayElem o) {
@@ -3635,6 +3874,20 @@ public class Dyn {
 	    if ( !attrFound)
 		return;
   
+	    if ( hold_p != 0) {
+		boolean holdval = false;
+		switch ( hold_database) {
+		case GraphIfc.eDatabase_Gdh:
+		    holdval = dyn.graph.getGdh().getObjectRefInfoBoolean(hold_p);
+		    break;
+		case GraphIfc.eDatabase_Local:
+		    holdval = dyn.graph.getLdb().getObjectRefInfoBoolean(hold_p);
+		    break;
+		}
+		if ( holdval)
+		    return;
+	    }
+
 	    float minval, maxval;
 	    if ( max_value1_p != 0 && min_value1_p != 0) {
 		minval = dyn.graph.getGdh().getObjectRefInfoFloat( min_value1_p);
@@ -3743,6 +3996,10 @@ public class Dyn {
 		    case Dyn.eSave_Trend_maxvalue_attr2: 
 			if ( token.hasMoreTokens())
 			    maxvalue_attr2 = token.nextToken();
+			break;
+		    case Dyn.eSave_Trend_hold_attr: 
+			if ( token.hasMoreTokens())
+			    hold_attr = token.nextToken();
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -6089,7 +6346,7 @@ public class Dyn {
 			Dyn gm_dyn = (Dyn)((GrowNode)o).getUserData();
 
 			if ( (gm_dyn.total_action_type1 & Dyn.mActionType1_RadioButton) != 0) {
-			    for ( int j = 0; j < gm_dyn.elements.size(); j++) {
+ 			    for ( int j = 0; j < gm_dyn.elements.size(); j++) {
 				if ( gm_dyn.elements.get(j).action_type1 == Dyn.mActionType1_RadioButton) {
 				    DynParsedAttrName pname = dyn.parseAttrName(((DynRadioButton)gm_dyn.elements.get(j)).attribute);
 				    if ( pname.name.startsWith("&"))
@@ -6817,7 +7074,6 @@ public class Dyn {
 
 	    GlowSliderInfo info = ((GrowSlider)object).get_info();
 
-	    System.out.println("info.min_pos " + info.min_position + "  max_pos " + info.max_position);
 	    if ( !(max_value_p != 0 && min_value_p != 0 && max_value != min_value)) {
 		max_value = (float)info.max_value;
 		min_value = (float)info.min_value;
@@ -6874,9 +7130,7 @@ public class Dyn {
 			    pos_y = info.max_position - info.min_position;
 			pos_x = 0;
 		    }
-		    System.out.println("Slider ivalue " + ivalue + " pos_y " + pos_y);
 		    object.set_position(pos_x, pos_y);
-		    System.out.println("Slider positioned");
 		}
 	    }
 

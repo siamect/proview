@@ -5119,6 +5119,7 @@ pwr_exe:
 2303 
 2304 
 2305 
+2306 $local.HoldTrend##Boolean
 99
 99
 99
@@ -8346,11 +8347,11 @@ pwr_exe:
 102 65535
 103 0
 2
-200 !$local.TrendHold##Boolean
+200 !$local.HoldTrend##Boolean
 201 102
 99
 53
-5300 $local.TrendHold##Boolean
+5300 $local.HoldTrend##Boolean
 99
 99
 99

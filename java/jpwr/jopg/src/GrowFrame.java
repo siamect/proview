@@ -63,13 +63,21 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
     JLabel confirmLabel;
     Object confirmDyn;
     Object confirmObject;
+    JDialog valueInputDia = null;
+    JLabel valueInputLabel;
+    JLabel valueInputMessage;
+    Object valueInputDyn;
+    Object valueInputObject;
+    JTextField valueInputText;
     String instance;
     GrowFrameApplIfc appl;
+    GrowFrame frame;
 
     public GrowFrame( String file, Gdh gdh, String instance, GrowFrameApplIfc appl, Object root) {
 	this.root = root;
 	this.instance = instance;
 	this.appl = appl;
+	this.frame = this;
 	init( file, gdh);
     }
 
@@ -307,7 +315,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	confirmDyn = dyn;
 	confirmObject = object;
 	if ( confirmDia == null) {
-	    confirmDia = new JDialog();
+	    confirmDia = new JDialog(frame);
 	    confirmDia.setTitle("Confirm");
 	    confirmDia.setResizable(false);
 	    confirmDia.setDefaultCloseOperation( JDialog.DO_NOTHING_ON_CLOSE);
@@ -341,13 +349,123 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	    panel.add( buttonNo);
 	    panel.add( buttonCancel);
 	    confirmDia.getContentPane().add( panel, BorderLayout.SOUTH);
-	    // confirmDia.setLocationRelativeTo( par);
+	    confirmDia.setLocationRelativeTo(frame);
 	    confirmDia.setVisible( true);
+
+	    confirmDia.addWindowListener(new WindowAdapter() {
+		    public void windowClosing(WindowEvent e) {
+			confirmDia.dispose();
+		    }
+		});
 	}
 	else {
 	    // confirmDia.setLocationRelativeTo( par);
 	    confirmLabel.setText( text);
+	    confirmDia.setLocationRelativeTo(frame);
 	    confirmDia.setVisible( true);
+	}
+    }
+
+    public void valueInputCancel() {
+	valueInputDia.dispose();
+    }
+    public void valueInputOk() {
+	String value = valueInputText.getText();
+	int sts = ((Dyn)valueInputDyn).valueInputAction( valueInputObject, value);
+	switch ( sts) {
+	case Dyn.eValueInput_Success:
+	    valueInputDia.dispose();
+	    break;
+	case Dyn.eValueInput_Error:
+	    valueInputMessage.setText("Unable to set value");
+	    break;
+	case Dyn.eValueInput_SyntaxError:
+	    valueInputMessage.setText("Syntax error");
+	    break;
+	case Dyn.eValueInput_MinValueExceeded:
+	    valueInputMessage.setText("Minimum value exceeded");
+	    break;
+	case Dyn.eValueInput_MaxValueExceeded:
+	    valueInputMessage.setText("Maximum value exceeded");
+	    break;
+	}
+    }
+    public void openValueInputDialog( Object dyn, String text, Object object) {
+	JLabel label = null;
+
+	valueInputDyn = dyn;
+	valueInputObject = object;
+	if ( valueInputDia == null) {
+	    valueInputDia = new JDialog(frame);
+	    valueInputDia.setTitle("Value Input");
+	    valueInputDia.setResizable(false);
+	    valueInputDia.setDefaultCloseOperation( JDialog.DO_NOTHING_ON_CLOSE);
+	    valueInputDia.setSize( 400, 150);
+	    valueInputLabel = new JLabel( text, JLabel.CENTER);
+	    valueInputText = new JTextField(5);
+	    valueInputText.addKeyListener(new java.awt.event.KeyAdapter() {
+		    public void keyPressed(KeyEvent e) {
+			if ( e.getKeyCode() == KeyEvent.VK_ESCAPE ) {
+			    // keyPressedEvent(e);
+			}
+			else if ( e.getKeyCode() == KeyEvent.VK_ENTER ) {
+			    System.out.println("Enter key");
+			    valueInputOk();
+			}
+		    }
+		});
+	    valueInputText.addActionListener( new ActionListener() {
+		    public void actionPerformed( ActionEvent ev) {
+			valueInputOk();
+		    }
+		});
+
+	    JButton buttonOk = new JButton("Ok");
+	    buttonOk.addActionListener( new ActionListener() {
+		    public void actionPerformed( ActionEvent ev) {
+			valueInputOk();
+		    }
+		});
+	    JButton buttonCancel = new JButton("Cancel");
+	    buttonCancel.addActionListener( new ActionListener() {
+		    public void actionPerformed( ActionEvent ev) {
+			valueInputCancel();
+		    }
+		});
+
+	    valueInputDia.getContentPane().setLayout( new BoxLayout(valueInputDia.getContentPane(), 
+								    BoxLayout.Y_AXIS));
+
+	    JPanel panel = new JPanel();
+	    panel.add( valueInputLabel);
+	    panel.add( valueInputText);
+	    valueInputDia.getContentPane().add( panel);
+
+	    valueInputMessage = new JLabel( "", JLabel.CENTER);
+	    valueInputDia.getContentPane().add( valueInputMessage);
+
+	    JPanel panel2 = new JPanel();
+	    panel2.add( buttonOk);
+	    panel2.add( buttonCancel);
+	    valueInputDia.getContentPane().add( panel2);
+	    valueInputDia.setLocationRelativeTo(frame);
+	    valueInputDia.setVisible( true);
+	    valueInputDia.addWindowListener(new WindowAdapter() {
+		    public void windowClosing(WindowEvent e) {
+			valueInputDia.dispose();
+		    }
+		});
+	}
+	else {
+	    if ( valueInputDia.isVisible())
+		valueInputDia.dispose();
+	    else {
+		valueInputLabel.setText(text);
+		valueInputText.setText("");
+		valueInputMessage.setText("");
+		valueInputDia.setLocationRelativeTo(frame);
+		valueInputDia.setVisible(true);
+	    }
 	}
     }
 

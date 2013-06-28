@@ -186,4 +186,8 @@ public class PlowCmn implements PlowCmnIfc {
 		a.a.clear();
 		selectClear();
 	}
+        public void setNodraw() {
+	}
+        public void resetNodraw() {
+	}
 }

@@ -321,6 +321,8 @@ public class GrowFrame implements GraphApplIfc {
 */
     }
 
+    public void openValueInputDialog( Object dyn, String text, Object object) {
+    }
     public String getObject() {
 	return instance;
     }

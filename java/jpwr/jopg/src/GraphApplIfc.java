@@ -39,6 +39,7 @@ package jpwr.jopg;
 public interface GraphApplIfc {
     public int command(String cmd);
     public void openConfirmDialog( Object dyn, String text, Object object);
+    public void openValueInputDialog( Object dyn, String text, Object object);
     public int getWidth();
     public int getHeight();
     public String getObject();

@@ -52,6 +52,7 @@ public interface GraphIfc {
     public GrowCtx getCtx();
     public int command(String cmd);
     public void openConfirmDialog(Object dyn, String text, Object object);
+    public void openValueInputDialog(Object dyn, String text, Object object);
     public String get_reference_name(String name);
     public Object getCurrentSlider();
     public void setCurrentSlider(GrowSlider currentSlider);

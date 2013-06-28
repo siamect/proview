@@ -128,5 +128,10 @@ public class GraphCmn implements PlowCmnIfc {
 		public int remove(Object e) {
 			return 0;
 		}
-
+		public void setNodraw() {
+		    graph.ctx.cmn.setNodraw();
+		}
+		public void resetNodraw() {
+		    graph.ctx.cmn.resetNodraw();
+		}
 }

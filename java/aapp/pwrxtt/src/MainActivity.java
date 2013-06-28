@@ -46,6 +46,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	float downTouchX;
 	float downTouchY;
 	private EditText editInput;
+	private EditText editValueInput;
 	
 	PlowDraw gdraw;
 	PlowCmnIfc currentCmn;
@@ -59,6 +60,14 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	Graph graph = null;
 	Vector<String> graphObject = new Vector<String>();
 	int inputType;
+        AlertDialog valueInputDialog = null;
+        Object valueInputDyn;
+        Object valueInputObject;
+        AlertDialog confirmDialog = null;
+        Object confirmDyn;
+        Object confirmObject;
+        String confirmText;
+        String messageText;
 	AlertDialog inputDialog = null;
 	static private boolean initDone = false;
 	String pwrHost = null;
@@ -86,6 +95,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		
 		editInput = new EditText(this);
 		editInput.setText("10.0.2.2");
+		editInput.setSingleLine();
 		new AlertDialog.Builder(this)
 			.setTitle(R.string.app_name)
 			.setMessage("Enter target node")
@@ -97,20 +107,30 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	
 	public void onClick(DialogInterface dialog, int position) {
 		if ( dialog == inputDialog) {
-			Editable value = editInput.getText();
-			System.out.println( "Change Value: " + value.toString());
-			new GdhTask().execute(new GdhTaskArg(GdhTask.CHANGE_VALUE, value.toString()));			
+		    Editable value = editInput.getText();
+		    System.out.println( "Change Value: " + value.toString());
+		    new GdhTask().execute(new GdhTaskArg(GdhTask.CHANGE_VALUE, value.toString()));
+		}
+		else if ( dialog == valueInputDialog) {
+		    Editable value = editValueInput.getText();
+		    System.out.println( "Change Value: " + value.toString());
+
+		    new GdhTask().execute(new GdhTaskArg(GdhTask.VALUEINPUT_ACTION, value.toString()));
+		}
+		else if ( dialog == confirmDialog) {
+		    System.out.println( "Confirm");
+
+		    new GdhTask().execute(new GdhTaskArg(GdhTask.CONFIRM_ACTION, null));
 		}
 		else {
-			Editable value = editInput.getText();
-			pwrHost = value.toString();
-			System.out.println( "Input: " + value.toString());
-			//MainActivity callingActivity = (MainActivity) this;
-			//callingActivity.onUserSelectValue(value);
-			dialog.dismiss();
+		    Editable value = editInput.getText();
+		    pwrHost = value.toString();
+		    System.out.println( "Input: " + value.toString());
+		    //MainActivity callingActivity = (MainActivity) this;
+		    //callingActivity.onUserSelectValue(value);
+		    dialog.dismiss();
 			
-			new GdhTask().execute(new GdhTaskArg(GdhTask.ROOTLIST,(AXttItemBase)null));
-
+		    new GdhTask().execute(new GdhTaskArg(GdhTask.ROOTLIST,(AXttItemBase)null));
 		}
 	}
 	
@@ -408,6 +428,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 						inputFullName = ((AXttItemAttr)baseItem).getFullName();
 						inputType = ((AXttItemAttr)baseItem).getType();
 						editInput = new EditText(this);
+						editInput.setSingleLine();
 						inputDialog = new AlertDialog.Builder(this)
 						.setTitle(R.string.app_name)
 						.setMessage("Change Value")
@@ -600,6 +621,8 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		public static final int EVENTHANDLER = 16;
 		public static final int OPEN_CLASSGRAPH = 17;
 		public static final int OPEN_CLASSGRAPH_NAME = 18;
+		public static final int VALUEINPUT_ACTION = 19;
+		public static final int CONFIRM_ACTION = 20;
 		
 		@Override
 		protected Void doInBackground(GdhTaskArg... arg) {
@@ -908,6 +931,32 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				currentCmn.eventHandler(event.action, event.x, event.y);
 				break;
 			}
+			case VALUEINPUT_ACTION: {
+			        String value = (String)arg[0].item;
+				int sts = ((Dyn)valueInputDyn).valueInputAction( valueInputObject, value);
+				switch ( sts) {
+				case Dyn.eValueInput_Success:
+				    // valueInputDia.dispose();
+				    break;
+				case Dyn.eValueInput_Error:
+				    openMessageDialog("Unable to set value");
+				    break;
+				case Dyn.eValueInput_SyntaxError:
+				    openMessageDialog("Syntax error");
+				    break;
+				case Dyn.eValueInput_MinValueExceeded:
+				    openMessageDialog("Minimum value exceeded");
+				    break;
+				case Dyn.eValueInput_MaxValueExceeded:
+				    openMessageDialog("Maximum value exceeded");
+				    break;
+				}				
+				break;
+			}
+			case CONFIRM_ACTION: {
+				((Dyn)confirmDyn).confirmedAction( Glow.eEvent_MB1Click, confirmObject);
+				break;
+			}
 			}
 			return null;
 		}
@@ -1183,10 +1232,56 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 
 		// new GdhTask().execute(new GdhTaskArg(GdhTask.DYNAMIC_OPEN, null));
 	}
-	// GraphApplIfc interface
-    public void openConfirmDialog( Object dyn, String text, Object object) {
-      // TODO
+
+    public void openMessageDialog(String text) {
+	messageText = text;
+
+	runOnUiThread( new Runnable() {
+		public void run() {
+		    new AlertDialog.Builder(appl)
+			.setTitle(R.string.app_name)
+			.setMessage(messageText)
+			.setPositiveButton("Ok", null)
+			.show();		    
+		}});		
     }
+
+    // GraphApplIfc interface
+    public void openConfirmDialog( Object dyn, String text, Object object) {
+ 		confirmDyn = dyn;
+		confirmObject = object;
+		confirmText = text;
+
+		runOnUiThread( new Runnable() {
+		public void run() {
+		    confirmDialog = new AlertDialog.Builder(appl)
+			.setTitle(R.string.app_name)
+			.setMessage(confirmText)
+			.setPositiveButton("Yes", appl)
+			.setNegativeButton("No", null)
+			.show();
+		    
+		}});		
+    }
+    public void openValueInputDialog( Object dyn, String text, Object object) {	        
+ 		valueInputDyn = dyn;
+		valueInputObject = object;
+
+		runOnUiThread( new Runnable() {
+		public void run() {
+		    editValueInput = new EditText(appl);
+		    editValueInput.setSingleLine();
+		    valueInputDialog = new AlertDialog.Builder(appl)
+			.setTitle(R.string.app_name)
+			.setMessage("Change Value")
+			.setView(editValueInput)
+			.setPositiveButton("Ok", appl)
+			.setNegativeButton("Cancel", null)
+			.show();
+		    
+		}});		
+    }
+
     public int getWidth() {
     	return 500;
     }
