@@ -708,6 +708,9 @@ int WItemBaseObject::open_crossref( WNav *wnav, double x, double y)
       case pwr_cClass_Iv:
       case pwr_cClass_Ii:
       case pwr_cClass_Io:
+      case pwr_cClass_Sv:
+      case pwr_cClass_ATv:
+      case pwr_cClass_DTv:
         sts = wnav->crr_signal( wnav->brow, wnav->ldhses, NULL, name, node);
         break;
       default:
@@ -2672,6 +2675,9 @@ int WItemAttrObject::open_crossref( WNav *wnav, double x, double y)
       case pwr_cClass_Iv:
       case pwr_cClass_Ii:
       case pwr_cClass_Io:
+      case pwr_cClass_Sv:
+      case pwr_cClass_ATv:
+      case pwr_cClass_DTv:
         sts = wnav->crr_signal( wnav->brow, wnav->ldhses, NULL, aname, node);
         break;
       default:

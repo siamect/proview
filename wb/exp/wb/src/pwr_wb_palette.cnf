@@ -38,6 +38,8 @@ palette NavigatorPalette
       class Av
       class ATv
       class Co
+      class ConstAv
+      class ConstIv
       class Di
       class Do
       class Dv
@@ -875,6 +877,7 @@ palette PlcEditorPalette
       class GetAp
       class GetApPtr
       class GetAv
+      class GetConstAv
       class StoAo
       class StoAp
       class StoApPtr
@@ -935,6 +938,7 @@ palette PlcEditorPalette
       class CStoIo
       class CStoIp
       class CStoIv
+      class GetConstIv
       class GetIi
       class GetIo
       class GetIp

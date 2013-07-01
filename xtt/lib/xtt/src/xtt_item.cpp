@@ -1193,6 +1193,9 @@ int ItemAttrObject::open_crossref( XNavBrow *brow, double x, double y)
       case pwr_cClass_Ii:
       case pwr_cClass_Io:
       case pwr_cClass_Co:
+      case pwr_cClass_Sv:
+      case pwr_cClass_ATv:
+      case pwr_cClass_DTv:
         sts = xnav_crr_signal( brow, file, aname, node);
         break;
       default:

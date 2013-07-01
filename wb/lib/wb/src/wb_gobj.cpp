@@ -559,7 +559,7 @@ int	gobj_get_object_m6( WFoe *foe, vldh_t_node node, unsigned long index)
   sts = ldh_GetAttrRefTid( ldhses, &attrref, &cid);
   if (EVEN(sts)) return sts;
 
-  if ( cid != pwr_cClass_Av) {
+  if ( !(cid == pwr_cClass_Av  || cid == pwr_cClass_ConstAv)) {
     foe->message( "Selected object is not an Av object");
     BEEP;
     return 0;
@@ -1158,6 +1158,10 @@ int	gobj_get_object_m14( WFoe *foe, vldh_t_node node, unsigned long index)
   case pwr_cClass_Av:
     strcpy( parname, "AvObject");
     create_classid = pwr_cClass_GetAv;
+    break;
+  case pwr_cClass_ConstAv:
+    strcpy( parname, "AvObject");
+    create_classid = pwr_cClass_GetConstAv;
     break;
   default:
     foe->message( "Select an analog signal or attribute in the navigator");
@@ -1876,7 +1880,7 @@ int	gobj_get_object_m21( WFoe *foe, vldh_t_node node, unsigned long index)
   sts = ldh_GetAttrRefTid( ldhses, &attrref, &cid);
   if (EVEN(sts)) return sts;
 
-  if ( cid != pwr_cClass_Iv) {
+  if ( !(cid == pwr_cClass_Iv || cid == pwr_cClass_ConstIv)) {
     foe->message( "Selected object is not a Iv object");
     BEEP;
     return 0;
@@ -2071,6 +2075,10 @@ int	gobj_get_object_m24( WFoe *foe, vldh_t_node node, unsigned long index)
   case pwr_cClass_Iv:
     strcpy( parname, "IvObject");
     create_classid = pwr_cClass_GetIv;
+    break;
+  case pwr_cClass_ConstIv:
+    strcpy( parname, "IvObject");
+    create_classid = pwr_cClass_GetConstIv;
     break;
   default:
     foe->message( "Select an integer signal or attribute in the navigator");

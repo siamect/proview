@@ -7135,6 +7135,26 @@ int	gcg_comp_m8( gcg_ctx gcgctx, vldh_t_node node)
 	  /* Insert io object in ioread list */
 	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF, node);
 	  return GSX__SUCCESS;
+	case pwr_cClass_GetConstAv:
+	  if ( cid != pwr_cClass_ConstAv) {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+
+	  /* Insert io object in ioread list */
+	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF, node);
+	  return GSX__SUCCESS;
+	  break;
+	case pwr_cClass_GetConstIv:
+	  if ( cid != pwr_cClass_ConstIv) {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+
+	  /* Insert io object in ioread list */
+	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF, node);
+	  return GSX__SUCCESS;
+	  break;
 	default:
 	  gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	  return GSX__NEXTNODE;

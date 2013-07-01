@@ -734,6 +734,9 @@ int	WAttNav::crossref()
     case pwr_cClass_Ii:
     case pwr_cClass_Io:
     case pwr_cClass_Co:
+    case pwr_cClass_Sv:
+    case pwr_cClass_ATv:
+    case pwr_cClass_DTv:
       sts = WNav::crr_signal( brow, ldhses, NULL, name, NULL);
       break;
     default:

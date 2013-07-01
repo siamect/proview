@@ -144,6 +144,8 @@ static crrgen_tRefList reflist[] = {
     { pwr_cClass_CStoDTp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
     { pwr_cClass_reset_so, "DevBody", "OrderObject", crrgen_eType_Read, crrgen_eTable_Object, 1},
     { pwr_cClass_GetData, "DevBody", "DataObject", crrgen_eType_Ref, crrgen_eTable_Object, 0},
+    { pwr_cClass_GetConstAv, "DevBody", "AvObject", crrgen_eType_Read, crrgen_eTable_Object, 0},
+    { pwr_cClass_GetConstIv, "DevBody", "IvObject", crrgen_eType_Read, crrgen_eTable_Object, 0},
     { pwr_cClass_Di, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0},
     { pwr_cClass_Do, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0},
     { pwr_cClass_Po, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0},
