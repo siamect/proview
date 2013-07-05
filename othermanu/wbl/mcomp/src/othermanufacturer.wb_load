@@ -1,7 +1,7 @@
 Volume OtherManufacturer $ClassVolume 0.0.250.1 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X3262"
-    Attr NextCix = "_X56"
+    Attr NextOix = "_X3266"
+    Attr NextCix = "_X61"
     Attr NextTix[0] = "_X2"
   EndBody
   Object Type $TypeHier 1758 09-OCT-2007 14:20:45.77
@@ -68,6 +68,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Super $Attribute 1 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 2600
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseManValve"
           EndBody
@@ -107,6 +108,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Super $Attribute 2 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 3416
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseMValve"
           EndBody
@@ -148,6 +150,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Super $Attribute 1 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 4504
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseActuatorA"
           EndBody
@@ -198,6 +201,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Super $Attribute 2 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 1680
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseSafetySwitch"
           EndBody
@@ -235,6 +239,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Super $Attribute 3 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 1680
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseSafetySwitch"
           EndBody
@@ -272,6 +277,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Super $Attribute 1 18-MAR-2008 17:03:15.98
           Body SysBody 18-MAR-2008 17:03:53.69
             Attr PgmName = "Super"
+            Attr Size = 9872
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseFcPPO3"
           EndBody
@@ -343,6 +349,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Super $Attribute 1 17-MAR-2008 16:47:32.06
           Body SysBody 17-MAR-2008 16:49:08.27
             Attr PgmName = "Super"
+            Attr Size = 27616
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseFcPPO5"
           EndBody
@@ -583,6 +590,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Super $Attribute 1 03-OCT-2007 10:28:51.73
           Body SysBody 03-OCT-2007 10:29:10.85
             Attr PgmName = "Super"
+            Attr Size = 760
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
@@ -593,6 +601,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object In1 $Attribute 2 03-OCT-2007 10:29:30.68
           Body SysBody 03-OCT-2007 10:29:46.93
             Attr PgmName = "In1"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -603,6 +612,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object In2 $Attribute 3 03-OCT-2007 10:30:05.24
           Body SysBody 03-OCT-2007 10:29:56.30
             Attr PgmName = "In2"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -613,6 +623,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object In3 $Attribute 4 03-OCT-2007 10:30:09.39
           Body SysBody 03-OCT-2007 10:29:58.73
             Attr PgmName = "In3"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -623,6 +634,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object In4 $Attribute 5 03-OCT-2007 10:30:12.68
           Body SysBody 03-OCT-2007 10:29:59.40
             Attr PgmName = "In4"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -633,6 +645,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object In5 $Attribute 6 03-OCT-2007 10:30:16.76
           Body SysBody 03-OCT-2007 10:29:59.91
             Attr PgmName = "In5"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -643,6 +656,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object In6 $Attribute 7 03-OCT-2007 10:30:20.90
           Body SysBody 03-OCT-2007 10:30:01.14
             Attr PgmName = "In6"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -653,6 +667,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object DiagSW $Attribute 41 05-OCT-2007 09:23:22.96
           Body SysBody 05-OCT-2007 09:23:24.14
             Attr PgmName = "DiagSW"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -663,6 +678,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object DiagXS $Attribute 39 03-OCT-2007 13:43:50.92
           Body SysBody 03-OCT-2007 13:44:21.98
             Attr PgmName = "DiagXS"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -673,6 +689,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Out1 $Attribute 8 03-OCT-2007 10:30:33.83
           Body SysBody 03-OCT-2007 10:30:43.38
             Attr PgmName = "Out1"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -683,6 +700,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Out2 $Attribute 11 03-OCT-2007 10:31:11.03
           Body SysBody 03-OCT-2007 10:31:04.98
             Attr PgmName = "Out2"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -693,6 +711,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Out3 $Attribute 10 03-OCT-2007 10:31:14.43
           Body SysBody 03-OCT-2007 10:31:04.78
             Attr PgmName = "Out3"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -703,6 +722,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Out4 $Attribute 9 03-OCT-2007 10:31:19.46
           Body SysBody 03-OCT-2007 10:31:04.41
             Attr PgmName = "Out4"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -710,6 +730,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object DisableEnable $Attribute 44 05-OCT-2007 14:23:01.15
           Body SysBody 05-OCT-2007 13:56:52.90
             Attr PgmName = "DisableEnable"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
@@ -725,6 +746,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Enable $Attribute 43 05-OCT-2007 14:23:03.35
           Body SysBody 05-OCT-2007 14:21:58.92
             Attr PgmName = "Enable"
+            Attr Size = 776
             Attr Flags = 4325376
             Attr TypeRef = "pwrb:Class-Do"
           EndBody
@@ -735,6 +757,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object ConfMaxCurrent $Attribute 12 03-OCT-2007 10:34:08.78
           Body SysBody 03-OCT-2007 10:34:19.74
             Attr PgmName = "ConfMaxCurrent"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -744,6 +767,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object ConfMaxVoltage $Attribute 13 03-OCT-2007 10:34:36.94
           Body SysBody 03-OCT-2007 10:34:23.98
             Attr PgmName = "ConfMaxVoltage"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -754,6 +778,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object OpReset $Attribute 14 03-OCT-2007 10:34:58.37
           Body SysBody 08-OCT-2007 13:02:06.93
             Attr PgmName = "OpReset"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -766,6 +791,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object OpParamWrite $Attribute 16 03-OCT-2007 10:36:23.34
           Body SysBody 08-OCT-2007 13:02:15.09
             Attr PgmName = "OpParamWrite"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -778,6 +804,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object OpParamRead $Attribute 15 03-OCT-2007 10:36:33.95
           Body SysBody 08-OCT-2007 13:02:21.83
             Attr PgmName = "OpParamRead"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -789,6 +816,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object OpParamNumber $Attribute 17 03-OCT-2007 10:36:48.91
           Body SysBody 08-OCT-2007 13:02:32.42
             Attr PgmName = "OpParamNumber"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
@@ -800,6 +828,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object OpParamValue $Attribute 18 03-OCT-2007 10:37:24.36
           Body SysBody 08-OCT-2007 13:02:44.58
             Attr PgmName = "OpParamValue"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
@@ -811,6 +840,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object ParamValue $Attribute 19 03-OCT-2007 10:38:02.01
           Body SysBody 08-OCT-2007 13:02:56.86
             Attr PgmName = "ParamValue"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
@@ -822,6 +852,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object ParamError $Attribute 20 03-OCT-2007 10:38:32.11
           Body SysBody 08-OCT-2007 13:03:07.16
             Attr PgmName = "ParamError"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -833,6 +864,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object ParamErrorCode $Attribute 21 03-OCT-2007 10:38:50.01
           Body SysBody 08-OCT-2007 13:03:17.77
             Attr PgmName = "ParamErrorCode"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
@@ -840,6 +872,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object AnalogSet $Attribute 22 03-OCT-2007 10:39:13.69
           Body SysBody 08-OCT-2007 13:03:33.31
             Attr PgmName = "AnalogSet"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -851,6 +884,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object SetValue $Attribute 23 03-OCT-2007 10:39:26.81
           Body SysBody 03-OCT-2007 10:39:40.81
             Attr PgmName = "SetValue"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -861,6 +895,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object ProcessValue $Attribute 24 03-OCT-2007 10:39:54.64
           Body SysBody 08-OCT-2007 13:03:44.12
             Attr PgmName = "ProcessValue"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -872,6 +907,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Current1 $Attribute 25 03-OCT-2007 10:40:15.57
           Body SysBody 08-OCT-2007 13:03:59.44
             Attr PgmName = "Current1"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -883,6 +919,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Current2 $Attribute 27 03-OCT-2007 10:40:27.06
           Body SysBody 08-OCT-2007 13:04:07.16
             Attr PgmName = "Current2"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -894,6 +931,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Current3 $Attribute 26 03-OCT-2007 10:40:35.34
           Body SysBody 08-OCT-2007 13:04:19.10
             Attr PgmName = "Current3"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -905,6 +943,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object LoadVoltage $Attribute 28 11-OCT-2007 18:11:56.24
           Body SysBody 11-OCT-2007 18:11:57.25
             Attr PgmName = "LoadVoltage"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -916,6 +955,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object LineVoltage $Attribute 29 03-OCT-2007 10:41:04.16
           Body SysBody 08-OCT-2007 13:04:35.33
             Attr PgmName = "LineVoltage"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -926,6 +966,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object PowerOn $Attribute 30 03-OCT-2007 10:41:25.47
           Body SysBody 08-OCT-2007 13:04:44.32
             Attr PgmName = "PowerOn"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -936,6 +977,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object TerminalDi $Attribute 31 11-OCT-2007 14:58:42.50
           Body SysBody 11-OCT-2007 14:58:44.34
             Attr PgmName = "TerminalDi"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -946,6 +988,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object ProfibusError $Attribute 32 03-OCT-2007 10:45:58.43
           Body SysBody 08-OCT-2007 13:05:01.65
             Attr PgmName = "ProfibusError"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -956,6 +999,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object IndError $Attribute 33 05-OCT-2007 09:47:46.73
           Body SysBody 08-OCT-2007 13:05:09.10
             Attr PgmName = "IndError"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -966,6 +1010,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object IndWarning $Attribute 34 05-OCT-2007 09:47:53.39
           Body SysBody 08-OCT-2007 13:05:15.35
             Attr PgmName = "IndWarning"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -976,6 +1021,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object InitDone $Attribute 42 03-OCT-2007 15:35:40.64
           Body SysBody 03-OCT-2007 15:36:08.67
             Attr PgmName = "InitDone"
+            Attr Size = 4
             Attr Flags = 2064
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -983,6 +1029,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object On $Attribute 45 11-OCT-2007 14:59:08.83
           Body SysBody 11-OCT-2007 15:13:08.17
             Attr PgmName = "On"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -990,6 +1037,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object OutPower $Attribute 46 11-OCT-2007 17:56:03.66
           Body SysBody 11-OCT-2007 17:56:03.66
             Attr PgmName = "OutPower"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -997,6 +1045,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object ExtInterlock $Attribute 47 15-OCT-2007 14:55:36.54
           Body SysBody 15-OCT-2007 14:55:48.15
             Attr PgmName = "ExtInterlock"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -1004,6 +1053,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Resistance1 $Attribute 48 23-OCT-2007 09:45:34.34
           Body SysBody 23-OCT-2007 09:45:36.01
             Attr PgmName = "Resistance1"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -1011,6 +1061,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Resistance2 $Attribute 50 23-OCT-2007 09:45:49.52
           Body SysBody 23-OCT-2007 09:45:51.15
             Attr PgmName = "Resistance2"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -1018,6 +1069,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Resistance3 $Attribute 49 23-OCT-2007 09:45:58.31
           Body SysBody 23-OCT-2007 09:45:59.63
             Attr PgmName = "Resistance3"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -1031,6 +1083,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object PlcConnect $Attribute 35 03-OCT-2007 10:47:30.26
           Body SysBody 03-OCT-2007 10:47:30.26
             Attr PgmName = "PlcConnect"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
@@ -1043,6 +1096,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object SimConnect $Attribute 36 03-OCT-2007 10:47:30.26
           Body SysBody 03-OCT-2007 10:47:30.26
             Attr PgmName = "SimConnect"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
@@ -1055,6 +1109,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object IoConnect $Attribute 37 03-OCT-2007 10:47:30.26
           Body SysBody 03-OCT-2007 10:47:30.26
             Attr PgmName = "IoConnect"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
@@ -13908,6 +13963,7 @@ else
         Object Super $Attribute 1 04-OCT-2007 14:04:49.79
           Body SysBody 04-OCT-2007 14:05:18.82
             Attr PgmName = "Super"
+            Attr Size = 2456
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_DP_Slave"
           EndBody
@@ -13939,6 +13995,7 @@ else
         Object Super $Attribute 1 04-OCT-2007 14:07:27.08
           Body SysBody 04-OCT-2007 14:07:36.46
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -13946,6 +14003,7 @@ else
         Object In1 $Attribute 2 04-OCT-2007 14:07:54.96
           Body SysBody 04-OCT-2007 14:08:16.02
             Attr PgmName = "In1"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
@@ -13953,6 +14011,7 @@ else
         Object In2 $Attribute 3 04-OCT-2007 14:08:28.19
           Body SysBody 04-OCT-2007 14:08:22.76
             Attr PgmName = "In2"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
@@ -13960,6 +14019,7 @@ else
         Object In3 $Attribute 4 04-OCT-2007 14:08:32.38
           Body SysBody 04-OCT-2007 14:08:23.70
             Attr PgmName = "In3"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
@@ -13967,6 +14027,7 @@ else
         Object In4 $Attribute 5 04-OCT-2007 14:08:37.17
           Body SysBody 04-OCT-2007 14:08:24.28
             Attr PgmName = "In4"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
@@ -13974,6 +14035,7 @@ else
         Object In5 $Attribute 6 04-OCT-2007 14:08:42.18
           Body SysBody 04-OCT-2007 14:08:24.72
             Attr PgmName = "In5"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
@@ -13981,6 +14043,7 @@ else
         Object In6 $Attribute 7 04-OCT-2007 14:08:47.50
           Body SysBody 04-OCT-2007 14:08:25.12
             Attr PgmName = "In6"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
@@ -13988,6 +14051,7 @@ else
         Object Diag_SW $Attribute 8 04-OCT-2007 14:09:00.50
           Body SysBody 04-OCT-2007 14:08:51.78
             Attr PgmName = "Diag_SW"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
@@ -13995,6 +14059,7 @@ else
         Object Diag_XS $Attribute 9 04-OCT-2007 14:09:26.46
           Body SysBody 04-OCT-2007 14:09:14.51
             Attr PgmName = "Diag_XS"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
@@ -14002,6 +14067,7 @@ else
         Object Out1 $Attribute 10 04-OCT-2007 14:09:48.32
           Body SysBody 04-OCT-2007 14:09:43.35
             Attr PgmName = "Out1"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
@@ -14009,6 +14075,7 @@ else
         Object Out2 $Attribute 11 04-OCT-2007 14:10:14.62
           Body SysBody 04-OCT-2007 14:09:51.95
             Attr PgmName = "Out2"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
@@ -14016,6 +14083,7 @@ else
         Object Out3 $Attribute 12 04-OCT-2007 14:10:18.46
           Body SysBody 04-OCT-2007 14:09:52.69
             Attr PgmName = "Out3"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
@@ -14023,6 +14091,7 @@ else
         Object Out4 $Attribute 13 04-OCT-2007 14:10:26.17
           Body SysBody 04-OCT-2007 14:10:10.15
             Attr PgmName = "Out4"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
@@ -14196,6 +14265,7 @@ else
         Object Super $Attribute 46 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "Super"
+            Attr Size = 760
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-Aggregate"
           EndBody
@@ -14203,12 +14273,14 @@ else
         Object GraphConfiguration $Attribute 47 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 14:24:33.87
             Attr PgmName = "GraphConfiguration"
+            Attr Size = 4
             Attr TypeRef = "OtherManufacturer:Type-Eurotherm_TC3001AggrEnum"
           EndBody
         EndObject
         Object Ready $Attribute 48 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "Ready"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -14216,6 +14288,7 @@ else
         Object ExtInterlock $Attribute 49 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "ExtInterlock"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -14223,6 +14296,7 @@ else
         Object OpPowerOn $Attribute 51 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "OpPowerOn"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -14230,6 +14304,7 @@ else
         Object OpPowerOff $Attribute 52 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "OpPowerOff"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -14237,6 +14312,7 @@ else
         Object PowExtInterlock $Attribute 53 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "PowExtInterlock"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -14244,6 +14320,7 @@ else
         Object PowOnOffDim $Attribute 54 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "PowOnOffDim"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -14251,6 +14328,7 @@ else
         Object IndWarning $Attribute 55 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "IndWarning"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -14258,6 +14336,7 @@ else
         Object IndError $Attribute 56 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "IndError"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -14265,18 +14344,21 @@ else
         Object AlarmTextPowOnNotOk $Attribute 59 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "AlarmTextPowOnNotOk"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object AlarmTextStartNoOk $Attribute 60 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "AlarmTextStartNoOk"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object CastCircuitBreaker $Attribute 61 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "CastCircuitBreaker"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
@@ -14284,6 +14366,7 @@ else
         Object DisableCircuitBreaker $Attribute 62 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "DisableCircuitBreaker"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
@@ -14291,6 +14374,7 @@ else
         Object CircuitBreaker $Attribute 63 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "CircuitBreaker"
+            Attr Size = 1680
             Attr Flags = 4325384
             Attr TypeRef = "BaseComponent:Class-BaseCircuitBreaker"
           EndBody
@@ -14298,6 +14382,7 @@ else
         Object CastContactor $Attribute 64 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "CastContactor"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
@@ -14305,6 +14390,7 @@ else
         Object DisableContactor $Attribute 65 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "DisableContactor"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
@@ -14312,6 +14398,7 @@ else
         Object Contactor $Attribute 66 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "Contactor"
+            Attr Size = 3296
             Attr Flags = 4325384
             Attr TypeRef = "BaseComponent:Class-BaseContactor"
           EndBody
@@ -14319,6 +14406,7 @@ else
         Object TC3001 $Attribute 67 09-OCT-2007 10:54:36.88
           Body SysBody 09-OCT-2007 10:54:51.20
             Attr PgmName = "TC3001"
+            Attr Size = 11152
             Attr Flags = 131072
             Attr TypeRef = "OtherManufacturer:Class-Eurotherm_TC3001"
           EndBody
@@ -14326,6 +14414,7 @@ else
         Object CastHeater $Attribute 71 09-OCT-2007 10:59:22.38
           Body SysBody 09-OCT-2007 10:59:23.51
             Attr PgmName = "CastHeater"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
@@ -14333,6 +14422,7 @@ else
         Object Heater $Attribute 72 09-OCT-2007 10:59:06.55
           Body SysBody 09-OCT-2007 10:59:13.61
             Attr PgmName = "Heater"
+            Attr Size = 6768
             Attr Flags = 131080
             Attr TypeRef = "BaseComponent:Class-BaseElHeater"
           EndBody
@@ -14340,6 +14430,7 @@ else
         Object Mode $Attribute 73 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "Mode"
+            Attr Size = 632
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompModeA"
           EndBody
@@ -14347,12 +14438,14 @@ else
         Object DefTrend $Attribute 74 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "DefTrend"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
         Object SupDisabled $Attribute 75 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "SupDisabled"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -14360,6 +14453,7 @@ else
         Object AggrReady $Attribute 79 15-OCT-2007 08:44:20.10
           Body SysBody 15-OCT-2007 08:44:26.38
             Attr PgmName = "AggrReady"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -14367,12 +14461,14 @@ else
         Object PlcConnect $Attribute 76 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "PlcConnect"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
         Object SimConnect $Attribute 77 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "SimConnect"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
@@ -21371,6 +21467,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 1 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 4216
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseTempSensor"
           EndBody
@@ -21424,6 +21521,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 3 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 1680
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseCircuitBreaker"
           EndBody
@@ -21461,6 +21559,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 4 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 1688
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BasePressureSwitch"
           EndBody
@@ -21499,6 +21598,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 1 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 4216
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseLevelSensor"
           EndBody
@@ -21552,6 +21652,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 1 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 1688
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseLevelSwitch"
           EndBody
@@ -21589,6 +21690,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 2 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 4216
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BasePressureSensor"
           EndBody
@@ -21642,6 +21744,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 4 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 3296
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseContactor"
           EndBody
@@ -21681,6 +21784,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 1 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 760
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BasePump"
           EndBody
@@ -21717,6 +21821,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 1 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 760
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BasePump"
           EndBody
@@ -21753,6 +21858,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 2 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 760
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseFan"
           EndBody
@@ -21779,6 +21885,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 1 28-MAR-2007 16:37:58.76
           Body SysBody 28-MAR-2007 16:38:35.52
             Attr PgmName = "Super"
+            Attr Size = 2456
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_DP_Slave"
           EndBody
@@ -21812,6 +21919,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 1 22-MAR-2007 15:52:19.69
           Body SysBody 30-MAR-2007 08:54:15.29
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -21822,6 +21930,7 @@ Eurotherm TC3001 Aggregate
         Object I_SW $Attribute 2 22-MAR-2007 15:54:13.51
           Body SysBody 22-MAR-2007 15:55:53.46
             Attr PgmName = "I_SW"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
@@ -21832,6 +21941,7 @@ Eurotherm TC3001 Aggregate
         Object I_ACT $Attribute 3 22-MAR-2007 15:56:44.26
           Body SysBody 30-MAR-2007 08:58:36.41
             Attr PgmName = "I_ACT"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -21842,6 +21952,7 @@ Eurotherm TC3001 Aggregate
         Object PI3 $Attribute 4 22-MAR-2007 16:02:39.57
           Body SysBody 22-MAR-2007 16:02:59.89
             Attr PgmName = "PI3"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -21852,6 +21963,7 @@ Eurotherm TC3001 Aggregate
         Object O_CW $Attribute 5 22-MAR-2007 16:04:06.94
           Body SysBody 22-MAR-2007 16:04:34.85
             Attr PgmName = "O_CW"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
@@ -21862,6 +21974,7 @@ Eurotherm TC3001 Aggregate
         Object O_REF $Attribute 6 22-MAR-2007 16:05:00.74
           Body SysBody 22-MAR-2007 16:05:13.62
             Attr PgmName = "O_REF"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -21872,6 +21985,7 @@ Eurotherm TC3001 Aggregate
         Object PO3 $Attribute 7 22-MAR-2007 16:05:26.21
           Body SysBody 22-MAR-2007 16:06:04.05
             Attr PgmName = "PO3"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -21949,6 +22063,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 1 30-MAR-2007 08:53:43.62
           Body SysBody 30-MAR-2007 08:54:27.40
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -21956,6 +22071,7 @@ Eurotherm TC3001 Aggregate
         Object I_SW $Attribute 3 30-MAR-2007 08:56:15.45
           Body SysBody 30-MAR-2007 08:57:31.65
             Attr PgmName = "I_SW"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
@@ -21963,6 +22079,7 @@ Eurotherm TC3001 Aggregate
         Object I_ACTPOS $Attribute 4 30-MAR-2007 09:09:41.68
           Body SysBody 30-MAR-2007 09:09:43.58
             Attr PgmName = "I_ACTPOS"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -21970,6 +22087,7 @@ Eurotherm TC3001 Aggregate
         Object I_ACTSPEED $Attribute 5 30-MAR-2007 09:10:01.30
           Body SysBody 30-MAR-2007 09:10:08.50
             Attr PgmName = "I_ACTSPEED"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -21977,6 +22095,7 @@ Eurotherm TC3001 Aggregate
         Object I_ACTCURR $Attribute 6 30-MAR-2007 09:10:30.98
           Body SysBody 13-APR-2007 14:40:30.77
             Attr PgmName = "I_ACTCURR"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -21984,6 +22103,7 @@ Eurotherm TC3001 Aggregate
         Object I_DEVUTI $Attribute 7 30-MAR-2007 09:10:53.76
           Body SysBody 13-APR-2007 14:40:36.71
             Attr PgmName = "I_DEVUTI"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -21991,6 +22111,7 @@ Eurotherm TC3001 Aggregate
         Object O_CW $Attribute 8 30-MAR-2007 09:11:41.78
           Body SysBody 13-APR-2007 14:40:47.23
             Attr PgmName = "O_CW"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
@@ -21998,6 +22119,7 @@ Eurotherm TC3001 Aggregate
         Object O_POSREF $Attribute 9 30-MAR-2007 09:12:39.35
           Body SysBody 30-MAR-2007 09:12:57.91
             Attr PgmName = "O_POSREF"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -22005,6 +22127,7 @@ Eurotherm TC3001 Aggregate
         Object O_SPREF $Attribute 10 30-MAR-2007 09:13:24.80
           Body SysBody 30-MAR-2007 09:13:34.88
             Attr PgmName = "O_SPREF"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -22012,6 +22135,7 @@ Eurotherm TC3001 Aggregate
         Object O_RAMPUP $Attribute 11 30-MAR-2007 09:14:04.16
           Body SysBody 30-MAR-2007 09:14:15.73
             Attr PgmName = "O_RAMPUP"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -22019,6 +22143,7 @@ Eurotherm TC3001 Aggregate
         Object O_RAMPDW $Attribute 12 30-MAR-2007 09:14:24.65
           Body SysBody 30-MAR-2007 09:14:34.57
             Attr PgmName = "O_RAMPDW"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -22130,12 +22255,14 @@ Eurotherm TC3001 Aggregate
         Object Description $Attribute 1 23-MAR-2007 11:45:31.35
           Body SysBody 30-MAR-2007 14:28:10.36
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object Specification $Attribute 2 30-MAR-2007 14:28:29.64
           Body SysBody 23-MAR-2007 11:45:28.57
             Attr PgmName = "Specification"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -22145,6 +22272,7 @@ Eurotherm TC3001 Aggregate
         Object ActSpeed $Attribute 3 30-MAR-2007 14:28:55.52
           Body SysBody 30-MAR-2007 14:28:59.06
             Attr PgmName = "ActSpeed"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -22155,6 +22283,7 @@ Eurotherm TC3001 Aggregate
         Object ActCurrent $Attribute 4 23-MAR-2007 11:49:04.48
           Body SysBody 23-MAR-2007 11:49:18.67
             Attr PgmName = "ActCurrent"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -22165,6 +22294,7 @@ Eurotherm TC3001 Aggregate
         Object StatusWordSW $Attribute 5 30-MAR-2007 14:29:53.53
           Body SysBody 30-MAR-2007 14:29:56.68
             Attr PgmName = "StatusWordSW"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -22175,6 +22305,7 @@ Eurotherm TC3001 Aggregate
         Object ControlWordCW $Attribute 6 30-MAR-2007 14:30:54.13
           Body SysBody 30-MAR-2007 14:30:37.06
             Attr PgmName = "ControlWordCW"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -22185,6 +22316,7 @@ Eurotherm TC3001 Aggregate
         Object RefSpeed $Attribute 7 23-MAR-2007 11:54:35.59
           Body SysBody 23-MAR-2007 11:54:51.32
             Attr PgmName = "RefSpeed"
+            Attr Size = 808
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
@@ -22195,6 +22327,7 @@ Eurotherm TC3001 Aggregate
         Object IndWarning $Attribute 8 23-MAR-2007 14:32:42.09
           Body SysBody 23-MAR-2007 14:33:36.44
             Attr PgmName = "IndWarning"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -22204,6 +22337,7 @@ Eurotherm TC3001 Aggregate
         Object IndError $Attribute 9 23-MAR-2007 14:33:50.64
           Body SysBody 23-MAR-2007 14:33:59.44
             Attr PgmName = "IndError"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -22213,6 +22347,7 @@ Eurotherm TC3001 Aggregate
         Object OpReset $Attribute 10 23-MAR-2007 14:36:08.30
           Body SysBody 23-MAR-2007 14:36:34.08
             Attr PgmName = "OpReset"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22223,6 +22358,7 @@ Eurotherm TC3001 Aggregate
         Object CommOk $Attribute 11 23-MAR-2007 14:37:57.24
           Body SysBody 23-MAR-2007 14:38:12.31
             Attr PgmName = "CommOk"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22233,6 +22369,7 @@ Eurotherm TC3001 Aggregate
         Object AlarmOk $Attribute 12 23-MAR-2007 14:39:27.36
           Body SysBody 23-MAR-2007 14:39:43.20
             Attr PgmName = "AlarmOk"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22243,6 +22380,7 @@ Eurotherm TC3001 Aggregate
         Object PowerStartUp $Attribute 13 23-MAR-2007 14:42:04.65
           Body SysBody 23-MAR-2007 14:42:14.92
             Attr PgmName = "PowerStartUp"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22250,6 +22388,7 @@ Eurotherm TC3001 Aggregate
         Object ReadyRemot $Attribute 14 23-MAR-2007 14:46:48.82
           Body SysBody 26-MAR-2007 10:52:27.24
             Attr PgmName = "ReadyRemote"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22260,6 +22399,7 @@ Eurotherm TC3001 Aggregate
         Object ConverterReady $Attribute 15 26-MAR-2007 08:47:02.23
           Body SysBody 26-MAR-2007 08:47:03.93
             Attr PgmName = "ConverterReady"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22270,6 +22410,7 @@ Eurotherm TC3001 Aggregate
         Object ConverterRun $Attribute 16 26-MAR-2007 08:45:48.42
           Body SysBody 26-MAR-2007 08:46:19.02
             Attr PgmName = "ConverterRun"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22280,6 +22421,7 @@ Eurotherm TC3001 Aggregate
         Object ConverterFault $Attribute 17 26-MAR-2007 08:47:32.81
           Body SysBody 26-MAR-2007 08:47:44.12
             Attr PgmName = "ConverterFault"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22290,6 +22432,7 @@ Eurotherm TC3001 Aggregate
         Object ConverterWarning $Attribute 18 26-MAR-2007 08:48:46.50
           Body SysBody 26-MAR-2007 08:48:59.98
             Attr PgmName = "ConverterWarning"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22297,6 +22440,7 @@ Eurotherm TC3001 Aggregate
         Object ConverterRemote $Attribute 19 26-MAR-2007 08:52:25.46
           Body SysBody 26-MAR-2007 08:52:36.25
             Attr PgmName = "ConverterRemote"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22307,6 +22451,7 @@ Eurotherm TC3001 Aggregate
         Object PowerUpTime $Attribute 20 26-MAR-2007 08:53:07.82
           Body SysBody 26-MAR-2007 08:53:37.42
             Attr PgmName = "PowerUpTime"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -22316,6 +22461,7 @@ Eurotherm TC3001 Aggregate
         Object AlarmTripped $Attribute 21 26-MAR-2007 08:55:37.40
           Body SysBody 26-MAR-2007 08:56:14.52
             Attr PgmName = "AlarmTripped"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -22325,6 +22471,7 @@ Eurotherm TC3001 Aggregate
         Object AlarmWarning $Attribute 22 26-MAR-2007 08:56:30.63
           Body SysBody 26-MAR-2007 08:56:37.45
             Attr PgmName = "AlarmWarning"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -22334,6 +22481,7 @@ Eurotherm TC3001 Aggregate
         Object TrippOvCurr $Attribute 37 26-MAR-2007 14:33:33.72
           Body SysBody 26-MAR-2007 14:33:35.29
             Attr PgmName = "TrippOvCurr"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -22343,6 +22491,7 @@ Eurotherm TC3001 Aggregate
         Object TrippGrFlt $Attribute 38 26-MAR-2007 14:05:08.01
           Body SysBody 26-MAR-2007 14:28:54.26
             Attr PgmName = "TrippGrFlt"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -22352,6 +22501,7 @@ Eurotherm TC3001 Aggregate
         Object TrippBrChop $Attribute 39 26-MAR-2007 14:29:31.92
           Body SysBody 26-MAR-2007 14:29:38.05
             Attr PgmName = "TrippBrChop"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -22361,6 +22511,7 @@ Eurotherm TC3001 Aggregate
         Object TrippPhaseFlt $Attribute 40 26-MAR-2007 14:29:55.09
           Body SysBody 13-APR-2007 09:27:54.89
             Attr PgmName = "TrippPhaseFlt"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -22370,48 +22521,56 @@ Eurotherm TC3001 Aggregate
         Object TrippN_MonFlt $Attribute 41 13-APR-2007 09:27:45.06
           Body SysBody 13-APR-2007 09:27:59.00
             Attr PgmName = "TrippN_MonFlt"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object DefTrend $Attribute 23 26-MAR-2007 08:58:22.66
           Body SysBody 26-MAR-2007 08:58:56.55
             Attr PgmName = "DefTrend"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
         Object HelpTopic $Attribute 24 26-MAR-2007 08:59:31.26
           Body SysBody 26-MAR-2007 08:59:47.06
             Attr PgmName = "HelpTopic"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         Object DataSheet $Attribute 25 26-MAR-2007 09:00:09.67
           Body SysBody 26-MAR-2007 09:00:36.21
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
         Object CircuitDiagram $Attribute 26 26-MAR-2007 09:00:58.67
           Body SysBody 26-MAR-2007 09:01:18.14
             Attr PgmName = "CircuitDiagram"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
         Object Note $Attribute 27 26-MAR-2007 09:01:35.58
           Body SysBody 26-MAR-2007 09:01:48.39
             Attr PgmName = "Note"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object Photo $Attribute 28 26-MAR-2007 09:02:04.36
           Body SysBody 26-MAR-2007 09:02:11.96
             Attr PgmName = "Photo"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
         Object TrendActSpeed $Attribute 29 26-MAR-2007 09:02:41.33
           Body SysBody 26-MAR-2007 09:03:19.69
             Attr PgmName = "TrendActSpeed"
+            Attr Size = 2112
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-DsTrend"
           EndBody
@@ -22419,6 +22578,7 @@ Eurotherm TC3001 Aggregate
         Object TrendActCurrent $Attribute 30 26-MAR-2007 09:03:55.55
           Body SysBody 26-MAR-2007 09:04:08.31
             Attr PgmName = "TrendActCurrent"
+            Attr Size = 2112
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-DsTrend"
           EndBody
@@ -22426,6 +22586,7 @@ Eurotherm TC3001 Aggregate
         Object TrendRefSpeed $Attribute 31 26-MAR-2007 09:04:19.92
           Body SysBody 26-MAR-2007 09:04:30.52
             Attr PgmName = "TrendRefSpeed"
+            Attr Size = 2112
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-DsTrend"
           EndBody
@@ -22433,6 +22594,7 @@ Eurotherm TC3001 Aggregate
         Object PlotGroup $Attribute 32 26-MAR-2007 09:05:01.93
           Body SysBody 26-MAR-2007 09:05:30.86
             Attr PgmName = "PlotGroup"
+            Attr Size = 1112
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-PlotGroup"
           EndBody
@@ -22440,18 +22602,21 @@ Eurotherm TC3001 Aggregate
         Object PlcConnect $Attribute 33 26-MAR-2007 09:05:55.65
           Body SysBody 26-MAR-2007 09:06:19.53
             Attr PgmName = "PlcConnect"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
         Object SimConnect $Attribute 34 26-MAR-2007 09:06:43.25
           Body SysBody 26-MAR-2007 09:06:49.39
             Attr PgmName = "SimConnect"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
         Object IoConnect $Attribute 35 26-MAR-2007 09:07:22.01
           Body SysBody 26-MAR-2007 09:07:36.07
             Attr PgmName = "IoConnect"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
@@ -22546,18 +22711,21 @@ Eurotherm TC3001 Aggregate
         Object Description $Attribute 1 30-MAR-2007 14:27:52.18
           Body SysBody 30-MAR-2007 14:28:20.19
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object Specification $Attribute 2 30-MAR-2007 14:28:38.19
           Body SysBody 30-MAR-2007 14:28:44.07
             Attr PgmName = "Specification"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object StatusWordSW $Attribute 5 30-MAR-2007 14:37:56.03
           Body SysBody 30-MAR-2007 14:31:57.44
             Attr PgmName = "StatusWordSW"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -22565,6 +22733,7 @@ Eurotherm TC3001 Aggregate
         Object ActPos $Attribute 45 30-MAR-2007 14:37:31.35
           Body SysBody 30-MAR-2007 14:37:32.76
             Attr PgmName = "ActPos"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -22572,6 +22741,7 @@ Eurotherm TC3001 Aggregate
         Object ActSpeed $Attribute 3 30-MAR-2007 14:29:15.01
           Body SysBody 30-MAR-2007 14:31:40.79
             Attr PgmName = "ActSpeed"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -22579,6 +22749,7 @@ Eurotherm TC3001 Aggregate
         Object ActCurrent $Attribute 4 30-MAR-2007 14:29:33.47
           Body SysBody 30-MAR-2007 14:31:46.44
             Attr PgmName = "ActCurrent"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -22586,6 +22757,7 @@ Eurotherm TC3001 Aggregate
         Object DevUtil $Attribute 46 30-MAR-2007 14:38:49.79
           Body SysBody 30-MAR-2007 14:39:05.01
             Attr PgmName = "DevUtil"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -22593,6 +22765,7 @@ Eurotherm TC3001 Aggregate
         Object ControlWordCW $Attribute 6 30-MAR-2007 14:31:01.24
           Body SysBody 30-MAR-2007 14:32:02.96
             Attr PgmName = "ControlWordCW"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -22600,6 +22773,7 @@ Eurotherm TC3001 Aggregate
         Object RefPos $Attribute 12 30-MAR-2007 14:39:16.25
           Body SysBody 30-MAR-2007 14:35:01.98
             Attr PgmName = "RefPos"
+            Attr Size = 808
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
@@ -22607,6 +22781,7 @@ Eurotherm TC3001 Aggregate
         Object RefSpeed $Attribute 10 30-MAR-2007 14:32:50.67
           Body SysBody 30-MAR-2007 14:34:53.23
             Attr PgmName = "RefSpeed"
+            Attr Size = 808
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
@@ -22614,6 +22789,7 @@ Eurotherm TC3001 Aggregate
         Object RampUp $Attribute 48 30-MAR-2007 14:39:54.07
           Body SysBody 30-MAR-2007 14:39:55.48
             Attr PgmName = "RampUp"
+            Attr Size = 808
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
@@ -22621,6 +22797,7 @@ Eurotherm TC3001 Aggregate
         Object RampDw $Attribute 47 30-MAR-2007 14:40:02.35
           Body SysBody 30-MAR-2007 14:40:04.65
             Attr PgmName = "RampDw"
+            Attr Size = 808
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
@@ -22628,36 +22805,42 @@ Eurotherm TC3001 Aggregate
         Object IndWarning $Attribute 11 30-MAR-2007 14:34:20.51
           Body SysBody 30-MAR-2007 14:34:20.51
             Attr PgmName = "IndWarning"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndError $Attribute 13 30-MAR-2007 14:36:26.29
           Body SysBody 02-APR-2007 13:58:22.79
             Attr PgmName = "IndError"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndAuto $Attribute 49 02-APR-2007 13:58:13.34
           Body SysBody 02-APR-2007 13:58:29.57
             Attr PgmName = "IndAuto"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndJog $Attribute 50 02-APR-2007 13:59:00.12
           Body SysBody 02-APR-2007 13:59:02.12
             Attr PgmName = "IndJog"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndRef $Attribute 51 02-APR-2007 13:59:08.09
           Body SysBody 02-APR-2007 13:59:09.69
             Attr PgmName = "IndRef"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpReset $Attribute 14 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "OpReset"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22665,6 +22848,7 @@ Eurotherm TC3001 Aggregate
         Object CommOk $Attribute 15 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "CommOk"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22672,6 +22856,7 @@ Eurotherm TC3001 Aggregate
         Object AlarmOk $Attribute 16 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "AlarmOk"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22679,6 +22864,7 @@ Eurotherm TC3001 Aggregate
         Object PowerStartUp $Attribute 17 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "PowerStartUp"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22686,6 +22872,7 @@ Eurotherm TC3001 Aggregate
         Object ReadyRemot $Attribute 18 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "ReadyRemote"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22693,6 +22880,7 @@ Eurotherm TC3001 Aggregate
         Object ConverterReady $Attribute 19 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "ConverterReady"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22700,6 +22888,7 @@ Eurotherm TC3001 Aggregate
         Object ConverterRun $Attribute 20 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "ConverterRun"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22707,6 +22896,7 @@ Eurotherm TC3001 Aggregate
         Object ConverterFault $Attribute 21 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "ConverterFault"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22714,6 +22904,7 @@ Eurotherm TC3001 Aggregate
         Object ConverterWarning $Attribute 22 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "ConverterWarning"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22721,6 +22912,7 @@ Eurotherm TC3001 Aggregate
         Object ConverterRemote $Attribute 23 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "ConverterRemote"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -22728,90 +22920,105 @@ Eurotherm TC3001 Aggregate
         Object PowerUpTime $Attribute 24 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "PowerUpTime"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object AlarmTripped $Attribute 25 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "AlarmTripped"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object AlarmWarning $Attribute 26 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "AlarmWarning"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object TrippOvCurr $Attribute 27 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "TrippOvCurr"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object TrippGrFlt $Attribute 28 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "TrippGrFlt"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object TrippBrChop $Attribute 29 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "TrippBrChop"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object TrippPhaseFlt $Attribute 30 30-MAR-2007 14:36:26.29
           Body SysBody 13-APR-2007 10:53:47.79
             Attr PgmName = "TrippPhaseFlt"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object TrippN_MonFlt $Attribute 52 13-APR-2007 10:53:34.65
           Body SysBody 13-APR-2007 10:53:53.01
             Attr PgmName = "TrippN_MonFlt"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object DefTrend $Attribute 31 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "DefTrend"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
         Object HelpTopic $Attribute 32 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "HelpTopic"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         Object DataSheet $Attribute 33 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
         Object CircuitDiagram $Attribute 34 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "CircuitDiagram"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
         Object Note $Attribute 35 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "Note"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object Photo $Attribute 36 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "Photo"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
         Object TrendActSpeed $Attribute 37 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "TrendActSpeed"
+            Attr Size = 2112
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-DsTrend"
           EndBody
@@ -22819,6 +23026,7 @@ Eurotherm TC3001 Aggregate
         Object TrendActCurrent $Attribute 38 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "TrendActCurrent"
+            Attr Size = 2112
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-DsTrend"
           EndBody
@@ -22826,6 +23034,7 @@ Eurotherm TC3001 Aggregate
         Object TrendRefSpeed $Attribute 39 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "TrendRefSpeed"
+            Attr Size = 2112
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-DsTrend"
           EndBody
@@ -22833,6 +23042,7 @@ Eurotherm TC3001 Aggregate
         Object PlotGroup $Attribute 40 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "PlotGroup"
+            Attr Size = 1112
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-PlotGroup"
           EndBody
@@ -22840,18 +23050,21 @@ Eurotherm TC3001 Aggregate
         Object PlcConnect $Attribute 41 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "PlcConnect"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
         Object SimConnect $Attribute 42 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "SimConnect"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
         Object IoConnect $Attribute 43 30-MAR-2007 14:36:26.29
           Body SysBody 30-MAR-2007 14:36:26.29
             Attr PgmName = "IoConnect"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
@@ -37962,6 +38175,7 @@ Low = 0"
         Object Super $Attribute 104 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Super"
+            Attr Size = 760
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
@@ -37973,6 +38187,7 @@ Low = 0"
         Object Out_Profile $Attribute 105 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Out_Profile"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -37989,6 +38204,7 @@ Low = 0"
         Object Out_Outputs $Attribute 106 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Out_Outputs"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
@@ -38000,6 +38216,7 @@ Low = 0"
         Object In_Profile $Attribute 107 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "In_Profile"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -38021,6 +38238,7 @@ Low = 0"
         Object In_Comparators $Attribute 108 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "In_Comparators"
+            Attr Size = 784
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
@@ -38031,6 +38249,7 @@ Low = 0"
         Object FREQ $Attribute 109 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "FREQ"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38041,6 +38260,7 @@ Low = 0"
         Object U_L1 $Attribute 110 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "U_L1"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38051,6 +38271,7 @@ Low = 0"
         Object U_L2 $Attribute 111 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "U_L2"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38061,6 +38282,7 @@ Low = 0"
         Object U_L3 $Attribute 112 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "U_L3"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38071,6 +38293,7 @@ Low = 0"
         Object I_L1 $Attribute 113 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_L1"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38081,6 +38304,7 @@ Low = 0"
         Object I_L2 $Attribute 114 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_L2"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38091,6 +38315,7 @@ Low = 0"
         Object I_L3 $Attribute 115 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_L3"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38101,6 +38326,7 @@ Low = 0"
         Object P_L1 $Attribute 116 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "P_L1"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38111,6 +38337,7 @@ Low = 0"
         Object P_L2 $Attribute 117 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "P_L2"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38121,6 +38348,7 @@ Low = 0"
         Object P_L3 $Attribute 118 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "P_L3"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38131,6 +38359,7 @@ Low = 0"
         Object S_L1 $Attribute 119 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "S_L1"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38141,6 +38370,7 @@ Low = 0"
         Object S_L2 $Attribute 120 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "S_L2"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38151,6 +38381,7 @@ Low = 0"
         Object S_L3 $Attribute 121 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "S_L3"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38161,6 +38392,7 @@ Low = 0"
         Object Q_L1 $Attribute 122 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Q_L1"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38171,6 +38403,7 @@ Low = 0"
         Object Q_L2 $Attribute 123 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Q_L2"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38181,6 +38414,7 @@ Low = 0"
         Object Q_L3 $Attribute 124 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Q_L3"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38192,6 +38426,7 @@ Low = 0"
         Object COSPHI_L1 $Attribute 125 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "COSPHI_L1"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38203,6 +38438,7 @@ Low = 0"
         Object COSPHI_L2 $Attribute 126 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "COSPHI_L2"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38214,6 +38450,7 @@ Low = 0"
         Object COSPHI_L3 $Attribute 127 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "COSPHI_L3"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38224,6 +38461,7 @@ Low = 0"
         Object THDU_L1 $Attribute 128 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "THDU_L1"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38234,6 +38472,7 @@ Low = 0"
         Object THDU_L2 $Attribute 129 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "THDU_L2"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38244,6 +38483,7 @@ Low = 0"
         Object THDU_L3 $Attribute 130 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "THDU_L3"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38254,6 +38494,7 @@ Low = 0"
         Object THDI_L1 $Attribute 131 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "THDI_L1"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38264,6 +38505,7 @@ Low = 0"
         Object THDI_L2 $Attribute 132 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "THDI_L2"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38274,6 +38516,7 @@ Low = 0"
         Object THDI_L3 $Attribute 133 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "THDI_L3"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38284,6 +38527,7 @@ Low = 0"
         Object U_L1L2 $Attribute 134 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "U_L1L2"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38294,6 +38538,7 @@ Low = 0"
         Object U_L2L3 $Attribute 135 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "U_L2L3"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38304,6 +38549,7 @@ Low = 0"
         Object U_L1L3 $Attribute 136 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "U_L1L3"
+            Attr Size = 832
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
@@ -38314,6 +38560,7 @@ Low = 0"
         Object Input1 $Attribute 137 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Input1"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -38323,6 +38570,7 @@ Low = 0"
         Object Input2 $Attribute 138 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Input2"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -38332,6 +38580,7 @@ Low = 0"
         Object Comp_1A $Attribute 139 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Comp_1A"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -38341,6 +38590,7 @@ Low = 0"
         Object Comp_1B $Attribute 140 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Comp_1B"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -38350,6 +38600,7 @@ Low = 0"
         Object Comp_1C $Attribute 141 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Comp_1C"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -38359,6 +38610,7 @@ Low = 0"
         Object Comp_2A $Attribute 142 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Comp_2A"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -38368,6 +38620,7 @@ Low = 0"
         Object Comp_2B $Attribute 143 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Comp_2B"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -38377,6 +38630,7 @@ Low = 0"
         Object Comp_2C $Attribute 144 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Comp_2C"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -38386,6 +38640,7 @@ Low = 0"
         Object IndError $Attribute 145 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "IndError"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -38396,6 +38651,7 @@ Low = 0"
         Object IndWarning $Attribute 146 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "IndWarning"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -38406,6 +38662,7 @@ Low = 0"
         Object LimitHH_Voltage $Attribute 147 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitHH_Voltage"
+            Attr Size = 104
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38416,6 +38673,7 @@ Low = 0"
         Object LimitH_Voltage $Attribute 148 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitH_Voltage"
+            Attr Size = 104
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38426,6 +38684,7 @@ Low = 0"
         Object LimitL_Voltage $Attribute 149 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitL_Voltage"
+            Attr Size = 104
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38436,6 +38695,7 @@ Low = 0"
         Object LimitLL_Voltage $Attribute 150 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitLL_Voltage"
+            Attr Size = 104
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38446,6 +38706,7 @@ Low = 0"
         Object LimitHH_Current $Attribute 151 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitHH_Current"
+            Attr Size = 104
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38456,6 +38717,7 @@ Low = 0"
         Object LimitH_Current $Attribute 152 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitH_Current"
+            Attr Size = 104
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38466,6 +38728,7 @@ Low = 0"
         Object LimitL_Current $Attribute 153 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitL_Current"
+            Attr Size = 104
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38476,6 +38739,7 @@ Low = 0"
         Object LimitLL_Current $Attribute 154 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitLL_Current"
+            Attr Size = 104
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38487,6 +38751,7 @@ Low = 0"
         Object SupDisabled $Attribute 155 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "SupDisabled"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -38499,12 +38764,14 @@ Low = 0"
         Object PlcConnect $Attribute 156 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "PlcConnect"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
         Object IoConnect $Attribute 157 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "IoConnect"
+            Attr Size = 24
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
@@ -49461,6 +49728,7 @@ Alarm HH, H, L, LL"
         Object O_PROFILE $Attribute 33 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "O_PROFILE"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
@@ -49468,6 +49736,7 @@ Alarm HH, H, L, LL"
         Object O_OUTPUTS $Attribute 34 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "O_OUTPUTS"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
@@ -49475,6 +49744,7 @@ Alarm HH, H, L, LL"
         Object I_PROFILE $Attribute 35 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_PROFILE"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
@@ -49482,6 +49752,7 @@ Alarm HH, H, L, LL"
         Object I_COMP $Attribute 36 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_COMP"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
@@ -49489,6 +49760,7 @@ Alarm HH, H, L, LL"
         Object I_Q1 $Attribute 37 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_Q1"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49496,6 +49768,7 @@ Alarm HH, H, L, LL"
         Object I_Q2 $Attribute 38 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_Q2"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49503,6 +49776,7 @@ Alarm HH, H, L, LL"
         Object I_Q3 $Attribute 39 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_Q3"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49510,6 +49784,7 @@ Alarm HH, H, L, LL"
         Object I_S1 $Attribute 40 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_S1"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49517,6 +49792,7 @@ Alarm HH, H, L, LL"
         Object I_S2 $Attribute 41 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_S2"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49524,6 +49800,7 @@ Alarm HH, H, L, LL"
         Object I_S3 $Attribute 42 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_S3"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49531,6 +49808,7 @@ Alarm HH, H, L, LL"
         Object I_FREQ $Attribute 43 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_FREQ"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49538,6 +49816,7 @@ Alarm HH, H, L, LL"
         Object I_UIN_L1 $Attribute 44 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_UIN_L1"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49545,6 +49824,7 @@ Alarm HH, H, L, LL"
         Object I_UIN_L2 $Attribute 45 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_UIN_L2"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49552,6 +49832,7 @@ Alarm HH, H, L, LL"
         Object I_UIN_L3 $Attribute 46 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_UIN_L3"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49559,6 +49840,7 @@ Alarm HH, H, L, LL"
         Object I_U_L1L2 $Attribute 47 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_U_L1L2"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49566,6 +49848,7 @@ Alarm HH, H, L, LL"
         Object I_U_L2L3 $Attribute 48 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_U_L2L3"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49573,6 +49856,7 @@ Alarm HH, H, L, LL"
         Object I_U_L1L3 $Attribute 49 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_U_L1L3"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49580,6 +49864,7 @@ Alarm HH, H, L, LL"
         Object I_I_L1 $Attribute 50 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_I_L1"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49587,6 +49872,7 @@ Alarm HH, H, L, LL"
         Object I_I_L2 $Attribute 51 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_I_L2"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49594,6 +49880,7 @@ Alarm HH, H, L, LL"
         Object I_I_L3 $Attribute 52 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_I_L3"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49601,6 +49888,7 @@ Alarm HH, H, L, LL"
         Object I_P1 $Attribute 53 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_P1"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49608,6 +49896,7 @@ Alarm HH, H, L, LL"
         Object I_P2 $Attribute 54 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_P2"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49615,6 +49904,7 @@ Alarm HH, H, L, LL"
         Object I_P3 $Attribute 55 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_P3"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49622,6 +49912,7 @@ Alarm HH, H, L, LL"
         Object I_COSPHI_L1 $Attribute 56 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_COSPHI_L1"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49629,6 +49920,7 @@ Alarm HH, H, L, LL"
         Object I_COSPHI_L2 $Attribute 57 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_COSPHI_L2"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49636,6 +49928,7 @@ Alarm HH, H, L, LL"
         Object I_COSPHI_L3 $Attribute 58 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_COSPHI_L3"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49643,6 +49936,7 @@ Alarm HH, H, L, LL"
         Object I_THDU_L1 $Attribute 59 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_THDU_L1"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49650,6 +49944,7 @@ Alarm HH, H, L, LL"
         Object I_THDU_L2 $Attribute 60 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_THDU_L2"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49657,6 +49952,7 @@ Alarm HH, H, L, LL"
         Object I_THDU_L3 $Attribute 61 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_THDU_L3"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49664,6 +49960,7 @@ Alarm HH, H, L, LL"
         Object I_THDI_L1 $Attribute 62 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_THDI_L1"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49671,6 +49968,7 @@ Alarm HH, H, L, LL"
         Object I_THDI_L2 $Attribute 63 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_THDI_L2"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49678,6 +49976,7 @@ Alarm HH, H, L, LL"
         Object I_THDI_L3 $Attribute 64 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "I_THDI_L3"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -49923,6 +50222,7 @@ Alarm HH, H, L, LL"
         Object Super $Attribute 2 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Super"
+            Attr Size = 2456
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_DP_Slave"
           EndBody
@@ -49968,6 +50268,7 @@ Alarm HH, H, L, LL"
         Object Super $Attribute 3 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -49975,6 +50276,7 @@ Alarm HH, H, L, LL"
         Object Io $Attribute 4 12-JUL-2012 07:53:40.56
           Body SysBody 16-JUL-2012 09:26:41.18
             Attr PgmName = "Io"
+            Attr Size = 7376
             Attr Flags = 131072
             Attr TypeRef = "OtherManufacturer:Class-Janitza_UMG96S_Pro1_IoModule"
           EndBody
@@ -50187,6 +50489,449 @@ Alarm HH, H, L, LL"
           Attr Io.I_THDI_L3.ChannelSigValRangeHigh = 1.000000e+00
           Attr Io.I_THDI_L3.SigValueUnit = "%"
           Attr Io.I_THDI_L3.Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object BR_Di4_EplModule $ClassDef 56 04-JUL-2013 11:24:56.70
+      Body SysBody 04-JUL-2013 12:42:14.60
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 04-JUL-2013 11:24:10.48
+        Body SysBody 04-JUL-2013 11:24:10.48
+          Attr StructName = "BR_Di4_EplModule"
+          Attr NextAix = "_X13"
+        EndBody
+        Object Super $Attribute 7 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Super"
+            Attr Size = 352
+            Attr Flags = 393216
+            Attr TypeRef = "OtherIO:Class-Epl_Module"
+          EndBody
+        EndObject
+        Object ChanNetworkStatus $Attribute 8 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "ChanNetworkStatus"
+            Attr Size = 160
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object Chan01 $Attribute 9 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan01"
+            Attr Size = 160
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Chan02 $Attribute 10 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan02"
+            Attr Size = 160
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Chan03 $Attribute 11 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan03"
+            Attr Size = 160
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Chan04 $Attribute 12 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan04"
+            Attr Size = 160
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template BR_Di4_EplModule 2162393088 04-JUL-2013 11:24:10.48
+        Body RtBody 04-JUL-2013 11:24:10.48
+          Attr Super.Process = 128
+          Attr ChanNetworkStatus.ConversionOn = 1
+          Attr ChanNetworkStatus.Representation = 5
+          Attr Chan01.ConversionOn = 1
+          Attr Chan01.Representation = 8
+          Attr Chan02.Number = 1
+          Attr Chan02.ConversionOn = 1
+          Attr Chan02.Representation = 8
+          Attr Chan03.Number = 2
+          Attr Chan03.ConversionOn = 1
+          Attr Chan03.Representation = 8
+          Attr Chan04.Number = 3
+          Attr Chan04.ConversionOn = 1
+          Attr Chan04.Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object BR_Do4_EplModule $ClassDef 58 05-JUL-2013 08:30:13.85
+      Body SysBody 04-JUL-2013 12:42:30.45
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 04-JUL-2013 11:24:10.48
+        Body SysBody 04-JUL-2013 11:24:10.48
+          Attr StructName = "BR_Do4_EplModule"
+          Attr NextAix = "_X14"
+        EndBody
+        Object Super $Attribute 8 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Super"
+            Attr Size = 352
+            Attr Flags = 393216
+            Attr TypeRef = "OtherIO:Class-Epl_Module"
+          EndBody
+        EndObject
+        Object ChanNetworkStatus $Attribute 9 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "ChanNetworkStatus"
+            Attr Size = 160
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object Chan01 $Attribute 10 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan01"
+            Attr Size = 168
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Chan02 $Attribute 11 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan02"
+            Attr Size = 168
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Chan03 $Attribute 12 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan03"
+            Attr Size = 168
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Chan04 $Attribute 13 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan04"
+            Attr Size = 168
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template BR_Do4_EplModule 2162917376 04-JUL-2013 11:24:10.48
+        Body RtBody 04-JUL-2013 11:24:10.48
+          Attr Super.Process = 128
+          Attr ChanNetworkStatus.ConversionOn = 1
+          Attr ChanNetworkStatus.Representation = 5
+          Attr Chan01.Representation = 8
+          Attr Chan02.Number = 1
+          Attr Chan02.Representation = 8
+          Attr Chan03.Number = 2
+          Attr Chan03.Representation = 8
+          Attr Chan04.Number = 3
+          Attr Chan04.Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object BR_Ai4_EplModule $ClassDef 59 05-JUL-2013 08:30:16.05
+      Body SysBody 04-JUL-2013 12:42:38.19
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 04-JUL-2013 11:24:10.48
+        Body SysBody 04-JUL-2013 11:24:10.48
+          Attr StructName = "BR_Ai4_EplModule"
+          Attr NextAix = "_X13"
+        EndBody
+        Object Super $Attribute 7 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Super"
+            Attr Size = 352
+            Attr Flags = 393216
+            Attr TypeRef = "OtherIO:Class-Epl_Module"
+          EndBody
+        EndObject
+        Object ChanNetworkStatus $Attribute 8 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "ChanNetworkStatus"
+            Attr Size = 160
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object Chan01 $Attribute 9 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan01"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Chan02 $Attribute 10 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan02"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Chan03 $Attribute 11 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan03"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Chan04 $Attribute 12 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan04"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template BR_Ai4_EplModule 2163179520 04-JUL-2013 11:24:10.48
+        Body RtBody 04-JUL-2013 12:57:45.54
+          Attr Super.Process = 128
+          Attr ChanNetworkStatus.ConversionOn = 1
+          Attr ChanNetworkStatus.Representation = 5
+          Attr Chan01.ConversionOn = 1
+          Attr Chan01.ScanInterval = 1
+          Attr Chan01.RawValRangeLow = -3.276800e+04
+          Attr Chan01.RawValRangeHigh = 3.276700e+04
+          Attr Chan01.ChannelSigValRangeLow = -1.000000e+01
+          Attr Chan01.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Chan01.SigValueUnit = "V"
+          Attr Chan01.SensorPolyType = 1
+          Attr Chan01.SensorSigValRangeLow = -1.000000e+01
+          Attr Chan01.SensorSigValRangeHigh = 1.000000e+01
+          Attr Chan01.ActValRangeLow = -1.000000e+02
+          Attr Chan01.ActValRangeHigh = 1.000000e+02
+          Attr Chan01.Representation = 2
+          Attr Chan02.ConversionOn = 1
+          Attr Chan02.ScanInterval = 1
+          Attr Chan02.RawValRangeLow = -3.276800e+04
+          Attr Chan02.RawValRangeHigh = 3.276700e+04
+          Attr Chan02.ChannelSigValRangeLow = -1.000000e+01
+          Attr Chan02.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Chan02.SigValueUnit = "V"
+          Attr Chan02.SensorPolyType = 1
+          Attr Chan02.SensorSigValRangeLow = -1.000000e+01
+          Attr Chan02.SensorSigValRangeHigh = 1.000000e+01
+          Attr Chan02.ActValRangeLow = -1.000000e+02
+          Attr Chan02.ActValRangeHigh = 1.000000e+02
+          Attr Chan02.Representation = 2
+          Attr Chan03.ConversionOn = 1
+          Attr Chan03.ScanInterval = 1
+          Attr Chan03.RawValRangeLow = -3.276800e+04
+          Attr Chan03.RawValRangeHigh = 3.276700e+04
+          Attr Chan03.ChannelSigValRangeLow = -1.000000e+01
+          Attr Chan03.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Chan03.SigValueUnit = "V"
+          Attr Chan03.SensorPolyType = 1
+          Attr Chan03.SensorSigValRangeLow = -1.000000e+01
+          Attr Chan03.SensorSigValRangeHigh = 1.000000e+01
+          Attr Chan03.ActValRangeLow = -1.000000e+02
+          Attr Chan03.ActValRangeHigh = 1.000000e+02
+          Attr Chan03.Representation = 2
+          Attr Chan04.ConversionOn = 1
+          Attr Chan04.ScanInterval = 1
+          Attr Chan04.RawValRangeLow = -3.276800e+04
+          Attr Chan04.RawValRangeHigh = 3.276700e+04
+          Attr Chan04.ChannelSigValRangeLow = -1.000000e+01
+          Attr Chan04.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Chan04.SigValueUnit = "V"
+          Attr Chan04.SensorPolyType = 1
+          Attr Chan04.SensorSigValRangeLow = -1.000000e+01
+          Attr Chan04.SensorSigValRangeHigh = 1.000000e+01
+          Attr Chan04.ActValRangeLow = -1.000000e+02
+          Attr Chan04.ActValRangeHigh = 1.000000e+02
+          Attr Chan04.Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object BR_Ao4_EplModule $ClassDef 57 04-JUL-2013 11:25:16.80
+      Body SysBody 04-JUL-2013 12:42:24.41
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 04-JUL-2013 11:24:10.48
+        Body SysBody 04-JUL-2013 11:24:10.48
+          Attr StructName = "BR_Ao4_EplModule"
+          Attr NextAix = "_X13"
+        EndBody
+        Object Super $Attribute 7 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Super"
+            Attr Size = 352
+            Attr Flags = 393216
+            Attr TypeRef = "OtherIO:Class-Epl_Module"
+          EndBody
+        EndObject
+        Object ChanNetworkStatus $Attribute 8 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "ChanNetworkStatus"
+            Attr Size = 160
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object Chan01 $Attribute 9 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan01"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Chan02 $Attribute 10 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan02"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Chan03 $Attribute 11 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan03"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Chan04 $Attribute 12 04-JUL-2013 11:24:10.48
+          Body SysBody 04-JUL-2013 11:24:10.48
+            Attr PgmName = "Chan04"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template BR_Ao4_EplModule 2162655232 04-JUL-2013 11:24:10.48
+        Body RtBody 04-JUL-2013 12:56:58.14
+          Attr Super.Process = 128
+          Attr ChanNetworkStatus.ConversionOn = 1
+          Attr ChanNetworkStatus.Representation = 5
+          Attr Chan01.OutPolyType = 1
+          Attr Chan01.ActValRangeLow = -1.000000e+02
+          Attr Chan01.ActValRangeHigh = 1.000000e+02
+          Attr Chan01.SensorSigValRangeLow = -1.000000e+01
+          Attr Chan01.SensorSigValRangeHigh = 1.000000e+01
+          Attr Chan01.SigValueUnit = "V"
+          Attr Chan01.ChannelSigValRangeLow = -1.000000e+01
+          Attr Chan01.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Chan01.RawValRangeLow = -3.276800e+04
+          Attr Chan01.RawValRangeHigh = 3.276700e+04
+          Attr Chan01.Representation = 2
+          Attr Chan02.OutPolyType = 1
+          Attr Chan02.ActValRangeLow = -1.000000e+02
+          Attr Chan02.ActValRangeHigh = 1.000000e+02
+          Attr Chan02.SensorSigValRangeLow = -1.000000e+01
+          Attr Chan02.SensorSigValRangeHigh = 1.000000e+01
+          Attr Chan02.SigValueUnit = "V"
+          Attr Chan02.ChannelSigValRangeLow = -1.000000e+01
+          Attr Chan02.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Chan02.RawValRangeLow = -3.276800e+04
+          Attr Chan02.RawValRangeHigh = 3.276700e+04
+          Attr Chan02.Representation = 2
+          Attr Chan03.OutPolyType = 1
+          Attr Chan03.ActValRangeLow = -1.000000e+02
+          Attr Chan03.ActValRangeHigh = 1.000000e+02
+          Attr Chan03.SensorSigValRangeLow = -1.000000e+01
+          Attr Chan03.SensorSigValRangeHigh = 1.000000e+01
+          Attr Chan03.SigValueUnit = "V"
+          Attr Chan03.ChannelSigValRangeLow = -1.000000e+01
+          Attr Chan03.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Chan03.RawValRangeLow = -3.276800e+04
+          Attr Chan03.RawValRangeHigh = 3.276700e+04
+          Attr Chan03.Representation = 2
+          Attr Chan04.OutPolyType = 1
+          Attr Chan04.ActValRangeLow = -1.000000e+02
+          Attr Chan04.ActValRangeHigh = 1.000000e+02
+          Attr Chan04.SensorSigValRangeLow = -1.000000e+01
+          Attr Chan04.SensorSigValRangeHigh = 1.000000e+01
+          Attr Chan04.SigValueUnit = "V"
+          Attr Chan04.ChannelSigValRangeLow = -1.000000e+01
+          Attr Chan04.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Chan04.RawValRangeLow = -3.276800e+04
+          Attr Chan04.RawValRangeHigh = 3.276700e+04
+          Attr Chan04.Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object BR_PowerSupply_EplModule $ClassDef 60 05-JUL-2013 08:30:41.91
+      Body SysBody 05-JUL-2013 08:30:49.22
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 05-JUL-2013 08:30:53.58
+        Body SysBody 05-JUL-2013 08:30:53.58
+          Attr StructName = "BR_PowerSupply_EplModule"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 1 05-JUL-2013 08:31:00.33
+          Body SysBody 05-JUL-2013 08:33:14.18
+            Attr PgmName = "Super"
+            Attr Size = 352
+            Attr Flags = 393216
+            Attr TypeRef = "OtherIO:Class-Epl_Module"
+          EndBody
+        EndObject
+        Object NetworkStatus $Attribute 2 05-JUL-2013 08:31:38.85
+          Body SysBody 05-JUL-2013 08:33:08.67
+            Attr PgmName = "NetworkStatus"
+            Attr Size = 160
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object Chan01 $Attribute 3 05-JUL-2013 08:32:28.64
+          Body SysBody 05-JUL-2013 08:33:02.72
+            Attr PgmName = "Chan01"
+            Attr Size = 160
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Chan03 $Attribute 4 05-JUL-2013 08:32:42.09
+          Body SysBody 05-JUL-2013 08:32:56.54
+            Attr PgmName = "Chan03"
+            Attr Size = 160
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template BR_PowerSupply_EplModule 2163441664 01-JAN-1970 01:00:00.00
+        Body RtBody 05-JUL-2013 08:34:04.47
+          Attr Super.Process = 128
+          Attr NetworkStatus.ConversionOn = 1
+          Attr NetworkStatus.Representation = 5
+          Attr Chan01.ConversionOn = 1
+          Attr Chan01.Representation = 8
+          Attr Chan03.Number = 2
+          Attr Chan03.ConversionOn = 1
+          Attr Chan03.Representation = 8
         EndBody
       EndObject
     EndObject

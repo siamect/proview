@@ -105,6 +105,7 @@ typedef enum {
   io_mProcess_User2	= 1 << 4,
   io_mProcess_User3	= 1 << 5,
   io_mProcess_User4	= 1 << 6,
+  io_mProcess_Powerlink	= 1 << 7,
   io_mProcess_All      	= ~0
 } io_mProcess;
 

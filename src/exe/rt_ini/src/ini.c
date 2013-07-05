@@ -50,6 +50,8 @@
 #include "pwr_baseclasses.h"
 #include "pwr_remoteclasses.h"
 #include "pwr_nmpsclasses.h"
+#include "pwr_basecomponentclasses.h"
+#include "pwr_otherioclasses.h"
 #include "pwr_opcclasses.h"
 #include "co_dbs.h"
 #include "co_tree.h"
@@ -133,6 +135,7 @@
 # define cPrio_report      	(cPrio_base + 5)
 # define cPrio_sevhistmon      	(cPrio_base + 15)
 # define cPrio_sev_server      	(cPrio_base + 15)
+# define cPrio_powerlink      	(cPrio_base + 15)
 # define cPrio_plc_init		(cPrio_base + 5)
 # define cPrio_remh		(cPrio_base + 5)
 # define cPrio_remotelogg	(cPrio_base + 5)
@@ -2123,6 +2126,9 @@ ini_ProcTable (
   pp->proc.flags.b.system = 1;
 
   pp = ini_ProcInsert(sts, cp, "pwr_sev_server", "pwr_sev_server_%d", 0, 1, "sev_server", cPrio_sev_server, 0, pwr_cClass_SevServer, "", 0);
+  pp->proc.flags.b.system = 1;
+
+  pp = ini_ProcInsert(sts, cp, "pwr_powerlink", "pwr_powerlink_%d", 0, 1, "rt_powerlink", cPrio_powerlink, 0, pwr_cClass_EplHandler, "", 0);
   pp->proc.flags.b.system = 1;
 
   pp = ini_ProcInsert(sts, cp, "pwr_sim", "pwr_sim_%d", 0, 1, "rt_sim", cPrio_sim, 0, pwr_cClass_SimulateConfig, "", 0);

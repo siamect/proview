@@ -131,7 +131,7 @@ static pwr_tStatus IoRackInit (
 
       io_bus_card_init( ctx, cardp, &input_area_offset, &input_area_chansize,
 			&output_area_offset, &output_area_chansize, 
-			pwr_eByteOrderingEnum_BigEndian);
+			pwr_eByteOrderingEnum_BigEndian, io_eAlignment_Packed);
 
       /* Count number of di and do */
       for (i = 0; i < cardp->ChanListSize; i++) {

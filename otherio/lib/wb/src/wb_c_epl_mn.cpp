@@ -32,94 +32,75 @@
  * the source code of Proview (the version used to produce the 
  * combined work), being distributed under the terms of the GNU 
  * General Public License plus this exception.
- */
+ **/
 
-#ifndef rt_io_bus_h
-#define rt_io_bus_h
+/* wb_c_epl_mn.c -- work bench methods of the Epl_MN class. */
 
-/* rt_io_bus.h -- includefile for io bus. */
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-#ifndef pwr_h
 #include "pwr.h"
-#endif
-
-#ifndef pwr_class_h
-#include "pwr_class.h"
-#endif
-
-#ifndef PWR_BASECLASSES_H
 #include "pwr_baseclasses.h"
-#endif
+#include "pwr_basecomponentclasses.h"
+#include "pwr_otherioclasses.h"
 
-#ifdef __cplusplus
-extern "C"
+
+
+#include "wb_pwrs.h"
+#include "wb_ldh_msg.h"
+#include "wb_ldh.h"
+#include "wb_pwrb_msg.h"
+#include "wb_wnav.h"
+#include "wb_wsx.h"
+
+using namespace std;
+
+static pwr_tStatus Configure (
+  ldh_sMenuCall *ip
+)
 {
-#endif
+  pwr_tCmd cmd = "openCONFIGURATOR";
 
-#ifndef rt_io_supervise_h
-#include "rt_io_supervise.h"
-#endif
+  system( cmd);
 
-#ifndef rt_io_methods_h
-#include "rt_io_methods.h"
-#endif
+  return 1;
+}
 
-#ifndef NULL
-#define NULL (void *) 0
-#endif
+static pwr_tStatus ConfigureFilter (
+  ldh_sMenuCall *ip
+)
+{
+  return 1;
+}
 
-#if defined OS_OPENBSD
-# ifdef swap16
-#  undef swap16
-# endif
-# ifdef swap32
-#  undef swap32
-# endif
-#endif
+//
+//  Syntax check.
+//
 
-typedef enum {
-  io_eAlignment_Packed,
-  io_eAlignment_Powerlink
-} io_eAlignment;
-
-/*----------------------------------------------------------------------------*\
-  Io functions
-\*----------------------------------------------------------------------------*/
-
-
-int is_diag( pwr_tAttrRef *aref);
-
-pwr_tInt32 GetChanSize(pwr_eDataRepEnum rep);
-
-unsigned short swap16(unsigned short in);
-
-unsigned int swap32(unsigned int in);
-
-pwr_tStatus io_bus_card_init( io_tCtx ctx,
-			      io_sCard *cp, 
-			      unsigned int *input_area_offset, 
-			      unsigned int *input_area_chansize, 
-			      unsigned int *output_area_offset, 
-			      unsigned int *output_area_chansize, 
-			      pwr_tByteOrderingEnum byte_order,
-			      io_eAlignment alignment);
-
-void io_bus_card_read( io_tCtx ctx,
-		       io_sRack *rp, 
-		       io_sCard *cp, 
-		       void *input_area, 
-		       void *diag_area,
-		       pwr_tByteOrderingEnum byte_order,
-		       pwr_tFloatRepEnum float_rep);
-
-void io_bus_card_write( io_tCtx ctx,
-			io_sCard *cp, 
-			void *output_area, 
-			pwr_tByteOrderingEnum byte_order,
-			pwr_tFloatRepEnum float_rep);
-
-#ifdef __cplusplus
+#if 0
+static pwr_tStatus SyntaxCheck (
+  ldh_tSesContext Session,
+  pwr_tAttrRef Object,	      /* current object */
+  int *ErrorCount,	      /* accumulated error count */
+  int *WarningCount	      /* accumulated waring count */
+) {
+  return wsx_CheckIoDevice( Session, Object, ErrorCount, WarningCount, wsx_mCardOption_None);
 }
 #endif
 
-#endif
+
+/*----------------------------------------------------------------------------*\
+  Every method to be exported to the workbench should be registred here.
+\*----------------------------------------------------------------------------*/
+
+pwr_dExport pwr_BindMethods(Epl_MN) = {
+  pwr_BindMethod(Configure),
+  pwr_BindMethod(ConfigureFilter),
+  pwr_NullMethod
+};
+
+
+
+

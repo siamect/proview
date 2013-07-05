@@ -28,4 +28,6 @@ UDP_IO
 SPI_Slave
 Nodave_PLC
 Nodave_Transaction
+Epl_MN
+Epl_Module
 #endif

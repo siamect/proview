@@ -246,7 +246,7 @@ static pwr_tStatus IoRackInit (
 
       io_bus_card_init( ctx, cardp, &input_area_offset, &input_area_chansize,
 			&output_area_offset, &output_area_chansize, 
-			op->ByteOrdering);
+			op->ByteOrdering, io_eAlignment_Packed);
       break;
     }      
     }
@@ -293,7 +293,7 @@ static pwr_tStatus IoRackInit (
 
       io_bus_card_init( ctx, cardp, &input_area_offset, &input_area_chansize,
 			&output_area_offset, &output_area_chansize, 
-			op->ByteOrdering);
+			op->ByteOrdering, io_eAlignment_Packed);
 
       local_card->input_size = input_area_offset + input_area_chansize - 
 	prev_input_area_offset;

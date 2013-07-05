@@ -310,7 +310,8 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
   local->byte_ordering = op->ByteOrdering;
   
   io_bus_card_init( ctx, cp, &input_area_offset, &input_area_chansize,
-		    &output_area_offset, &output_area_chansize, local->byte_ordering);
+		    &output_area_offset, &output_area_chansize, local->byte_ordering,
+		    io_eAlignment_Packed);
 
   local->input_area_size = input_area_offset + input_area_chansize;
   local->output_area_size = output_area_offset + output_area_chansize;

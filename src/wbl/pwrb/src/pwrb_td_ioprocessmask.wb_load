@@ -118,6 +118,16 @@ SObject pwrb:Type
        Attr Value = 64
      EndBody
     EndObject
+    !/**
+    !  Powerlink. Device is handled by a rt_powerlink process.
+    !*/
+    Object Powerlink $Bit
+     Body SysBody
+       Attr PgmName = "Powerlink"
+       Attr Text = "Powerlink"
+       Attr Value = 128
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

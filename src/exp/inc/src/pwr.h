@@ -126,6 +126,7 @@ extern "C" {
 #endif
 #define pwr_AlignW(offs) (((offs) + (pwr_cAlignW-1)) & ~(pwr_cAlignW-1))
 #define pwr_AlignLW(offs) (((offs) + (pwr_cAlignLW-1)) & ~(pwr_cAlignLW-1))
+#define pwr_Align(offs, align) ((offs + (align-1)) & ~(align-1))
 
 /* PROVIEW/R types  */
 

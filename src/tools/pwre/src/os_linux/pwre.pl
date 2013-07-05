@@ -254,6 +254,7 @@ sub build_kernel # args: flavour
   _build("lib","usb_dummy","src","init lib");
   _build("lib","cifx_dummy","src","init lib");
   _build("lib","nodave_dummy","src","init lib");
+  _build("lib","epl_dummy","src","init lib");
   merge();
   _module("xtt");
   build_all("exe", $flavour);
@@ -369,6 +370,7 @@ sub ebuild # args: pass flavour
     _build("lib","usb_dummy","src","init lib");
     _build("lib","cifx_dummy","src","init lib");
     _build("lib","nodave_dummy","src","init lib");
+    _build("lib","epl_dummy","src","init lib");
     merge();
     _module("rt");
     _build("exe", "rt*", "src", "all");
@@ -762,12 +764,12 @@ sub build_all_wbl ()
   system( "rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");
   merge();
-  _module("othermanu");
+  _module("otherio");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");
   merge();
-  _module("otherio");
+  _module("othermanu");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");

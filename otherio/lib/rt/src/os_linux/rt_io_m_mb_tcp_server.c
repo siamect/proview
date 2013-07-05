@@ -890,7 +890,7 @@ static pwr_tStatus mb_init_channels( io_tCtx ctx, io_sAgent *ap, io_sRack *rp)
 
     io_bus_card_init( ctx, cardp, &input_area_offset, &input_area_chansize,
 		      &output_area_offset, &output_area_chansize, 
-		      pwr_eByteOrderingEnum_BigEndian);
+		      pwr_eByteOrderingEnum_BigEndian, io_eAlignment_Packed);
 
     for (i = 0; i < cardp->ChanListSize; i++) {
       chanp = &cardp->chanlist[i];

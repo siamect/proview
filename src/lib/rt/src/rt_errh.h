@@ -124,6 +124,7 @@ typedef enum {
   errh_eAnix_report  	= 22,
   errh_eAnix_sevhistmon = 23,
   errh_eAnix_sim 	= 24,
+  errh_eAnix_powerlink 	= 25,
   errh_eAnix_plc1	= 41,
   errh_eAnix_plc2	= 42,
   errh_eAnix_plc3	= 43,

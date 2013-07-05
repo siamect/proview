@@ -1,8 +1,8 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X369"
-    Attr NextCix = "_X38"
-    Attr NextTix[0] = "_X15"
+    Attr NextOix = "_X549"
+    Attr NextCix = "_X43"
+    Attr NextTix[0] = "_X17"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
     Object MotionControl_StatusEnum $TypeDef 1 15-NOV-2007 14:36:24.17
@@ -898,6 +898,1003 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    Object EplStatusEnum $TypeDef 15 01-JUL-2013 17:25:45.71
+      Body SysBody 01-JUL-2013 17:25:45.71
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object EplSuccessful $Value 370 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSuccessful"
+          Attr PgmName = "EplSuccessful"
+        EndBody
+      EndObject
+      Object EplIllegalInstance $Value 371 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplIllegalInstance"
+          Attr PgmName = "EplIllegalInstance"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object EplInvalidInstanceParam $Value 372 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplInvalidInstanceParam"
+          Attr PgmName = "EplInvalidInstanceParam"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object EplNoFreeInstance $Value 373 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNoFreeInstance"
+          Attr PgmName = "EplNoFreeInstance"
+          Attr Value = 3
+        EndBody
+      EndObject
+      Object EplWrongSignature $Value 374 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplWrongSignature"
+          Attr PgmName = "EplWrongSignature"
+          Attr Value = 4
+        EndBody
+      EndObject
+      Object EplInvalidOperation $Value 375 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplInvalidOperation"
+          Attr PgmName = "EplInvalidOperation"
+          Attr Value = 5
+        EndBody
+      EndObject
+      Object EplInvalidNodeId $Value 376 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplInvalidNodeId"
+          Attr PgmName = "EplInvalidNodeId"
+          Attr Value = 7
+        EndBody
+      EndObject
+      Object EplNoResource $Value 377 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNoResource"
+          Attr PgmName = "EplNoResource"
+          Attr Value = 8
+        EndBody
+      EndObject
+      Object EplShutdown $Value 378 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplShutdown"
+          Attr PgmName = "EplShutdown"
+          Attr Value = 9
+        EndBody
+      EndObject
+      Object EplReject $Value 379 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplReject"
+          Attr PgmName = "EplReject"
+          Attr Value = 10
+        EndBody
+      EndObject
+      Object EplRetry $Value 380 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplRetry"
+          Attr PgmName = "EplRetry"
+          Attr Value = 11
+        EndBody
+      EndObject
+      Object EplInvalidEvent $Value 381 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplInvalidEvent"
+          Attr PgmName = "EplInvalidEvent"
+          Attr Value = 12
+        EndBody
+      EndObject
+      Object EplEdrvNoFreeTxDesc $Value 382 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplEdrvNoFreeTxDesc"
+          Attr PgmName = "EplEdrvNoFreeTxDesc"
+          Attr Value = 17
+        EndBody
+      EndObject
+      Object EplEdrvInvalidCycleLen $Value 383 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplEdrvInvalidCycleLen"
+          Attr PgmName = "EplEdrvInvalidCycleLen"
+          Attr Value = 18
+        EndBody
+      EndObject
+      Object EplEdrvInitError $Value 384 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplEdrvInitError"
+          Attr PgmName = "EplEdrvInitError"
+          Attr Value = 19
+        EndBody
+      EndObject
+      Object EplEdrvNoFreeBufEntry $Value 385 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplEdrvNoFreeBufEntry"
+          Attr PgmName = "EplEdrvNoFreeBufEntry"
+          Attr Value = 20
+        EndBody
+      EndObject
+      Object EplEdrvBufNotExisting $Value 386 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplEdrvBufNotExisting"
+          Attr PgmName = "EplEdrvBufNotExisting"
+          Attr Value = 21
+        EndBody
+      EndObject
+      Object EplEdrvInvalidRxBuf $Value 387 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplEdrvInvalidRxBuf"
+          Attr PgmName = "EplEdrvInvalidRxBuf"
+          Attr Value = 22
+        EndBody
+      EndObject
+      Object EplEdrvInvalidParam $Value 388 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplEdrvInvalidParam"
+          Attr PgmName = "EplEdrvInvalidParam"
+          Attr Value = 28
+        EndBody
+      EndObject
+      Object EplEdrvNextTxListNotEmpty $Value 389 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplEdrvNextTxListNotEmpty"
+          Attr PgmName = "EplEdrvNextTxListNotEmpty"
+          Attr Value = 29
+        EndBody
+      EndObject
+      Object EplEdrvCurTxListEmpty $Value 390 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplEdrvCurTxListEmpty"
+          Attr PgmName = "EplEdrvCurTxListEmpty"
+          Attr Value = 30
+        EndBody
+      EndObject
+      Object EplEdrvTxListNotFinishedYet $Value 391 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplEdrvTxListNotFinishedYet"
+          Attr PgmName = "EplEdrvTxListNotFinishedYet"
+          Attr Value = 31
+        EndBody
+      EndObject
+      Object EplDllOutOfMemory $Value 392 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplDllOutOfMemory"
+          Attr PgmName = "EplDllOutOfMemory"
+          Attr Value = 33
+        EndBody
+      EndObject
+      Object EplDllIllegalHdl $Value 393 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplDllIllegalHdl"
+          Attr PgmName = "EplDllIllegalHdl"
+          Attr Value = 34
+        EndBody
+      EndObject
+      Object EplDllCbAsyncRegistered $Value 394 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplDllCbAsyncRegistered"
+          Attr PgmName = "EplDllCbAsyncRegistered"
+          Attr Value = 35
+        EndBody
+      EndObject
+      Object EplDllAsyncSyncReqFull $Value 395 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplDllAsyncSyncReqFull"
+          Attr PgmName = "EplDllAsyncSyncReqFull"
+          Attr Value = 36
+        EndBody
+      EndObject
+      Object EplDllAsyncTxBufferEmpty $Value 396 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplDllAsyncTxBufferEmpty"
+          Attr PgmName = "EplDllAsyncTxBufferEmpty"
+          Attr Value = 37
+        EndBody
+      EndObject
+      Object EplDllAsyncTxBufferFull $Value 397 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplDllAsyncTxBufferFull"
+          Attr PgmName = "EplDllAsyncTxBufferFull"
+          Attr Value = 38
+        EndBody
+      EndObject
+      Object EplDllNoNodeInfo $Value 398 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplDllNoNodeInfo"
+          Attr PgmName = "EplDllNoNodeInfo"
+          Attr Value = 39
+        EndBody
+      EndObject
+      Object EplDllInvalidParam $Value 399 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplDllInvalidParam"
+          Attr PgmName = "EplDllInvalidParam"
+          Attr Value = 40
+        EndBody
+      EndObject
+      Object EplDllInvalidAsndServiceId $Value 400 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplDllInvalidAsndServiceId"
+          Attr PgmName = "EplDllInvalidAsndServiceId"
+          Attr Value = 41
+        EndBody
+      EndObject
+      Object EplDllTxBufNotReady $Value 401 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplDllTxBufNotReady"
+          Attr PgmName = "EplDllTxBufNotReady"
+          Attr Value = 46
+        EndBody
+      EndObject
+      Object EplDllTxFrameInvalid $Value 402 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplDllTxFrameInvalid"
+          Attr PgmName = "EplDllTxFrameInvalid"
+          Attr Value = 47
+        EndBody
+      EndObject
+      Object EplObdIllegalPart $Value 403 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplObdIllegalPart"
+          Attr PgmName = "EplObdIllegalPart"
+          Attr Value = 48
+        EndBody
+      EndObject
+      Object EplObdIndexNotExist $Value 404 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplObdIndexNotExist"
+          Attr PgmName = "EplObdIndexNotExist"
+          Attr Value = 49
+        EndBody
+      EndObject
+      Object EplObdSubindexNotExist $Value 405 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplObdSubindexNotExist"
+          Attr PgmName = "EplObdSubindexNotExist"
+          Attr Value = 50
+        EndBody
+      EndObject
+      Object EplObdReadViolation $Value 406 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplObdReadViolation"
+          Attr PgmName = "EplObdReadViolation"
+          Attr Value = 51
+        EndBody
+      EndObject
+      Object EplObdWriteViolation $Value 407 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplObdWriteViolation"
+          Attr PgmName = "EplObdWriteViolation"
+          Attr Value = 52
+        EndBody
+      EndObject
+      Object EplObdAccessViolation $Value 408 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplObdAccessViolation"
+          Attr PgmName = "EplObdAccessViolation"
+          Attr Value = 53
+        EndBody
+      EndObject
+      Object EplObdUnknownObjectType $Value 409 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplObdUnknownObjectType"
+          Attr PgmName = "EplObdUnknownObjectType"
+          Attr Value = 54
+        EndBody
+      EndObject
+      Object EplObdVarEntryNotExist $Value 410 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplObdVarEntryNotExist"
+          Attr PgmName = "EplObdVarEntryNotExist"
+          Attr Value = 55
+        EndBody
+      EndObject
+      Object EplObdValueTooLow $Value 411 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplObdValueTooLow"
+          Attr PgmName = "EplObdValueTooLow"
+          Attr Value = 56
+        EndBody
+      EndObject
+      Object EplObdValueTooHigh $Value 412 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplObdValueTooHigh"
+          Attr PgmName = "EplObdValueTooHigh"
+          Attr Value = 57
+        EndBody
+      EndObject
+      Object EplObdValueLengthError $Value 413 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplObdValueLengthError"
+          Attr PgmName = "EplObdValueLengthError"
+          Attr Value = 58
+        EndBody
+      EndObject
+      Object EplObdErrnoSet $Value 414 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplObdErrnoSet"
+          Attr PgmName = "EplObdErrnoSet"
+          Attr Value = 59
+        EndBody
+      EndObject
+      Object EplObdInvalidDcf $Value 415 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplObdInvalidDcf"
+          Attr PgmName = "EplObdInvalidDcf"
+          Attr Value = 60
+        EndBody
+      EndObject
+      Object EplObdOutOfMemory $Value 416 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplObdOutOfMemory"
+          Attr PgmName = "EplObdOutOfMemory"
+          Attr Value = 61
+        EndBody
+      EndObject
+      Object EplObdNoConfigData $Value 417 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplObdNoConfigData"
+          Attr PgmName = "EplObdNoConfigData"
+          Attr Value = 62
+        EndBody
+      EndObject
+      Object EplNmtUnknownCommand $Value 418 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtUnknownCommand"
+          Attr PgmName = "EplNmtUnknownCommand"
+          Attr Value = 64
+        EndBody
+      EndObject
+      Object EplNmtInvalidFramePointer $Value 419 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtInvalidFramePointer"
+          Attr PgmName = "EplNmtInvalidFramePointer"
+          Attr Value = 65
+        EndBody
+      EndObject
+      Object EplNmtInvalidEvent $Value 420 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtInvalidEvent"
+          Attr PgmName = "EplNmtInvalidEvent"
+          Attr Value = 66
+        EndBody
+      EndObject
+      Object EplNmtInvalidState $Value 421 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtInvalidState"
+          Attr PgmName = "EplNmtInvalidState"
+          Attr Value = 67
+        EndBody
+      EndObject
+      Object EplNmtInvalidParam $Value 422 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtInvalidParam"
+          Attr PgmName = "EplNmtInvalidParam"
+          Attr Value = 68
+        EndBody
+      EndObject
+      Object EplNmtSyncReqRejected $Value 423 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtSyncReqRejected"
+          Attr PgmName = "EplNmtSyncReqRejected"
+          Attr Value = 69
+        EndBody
+      EndObject
+      Object EplSdoUdpMissCb $Value 424 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoUdpMissCb"
+          Attr PgmName = "EplSdoUdpMissCb"
+          Attr Value = 80
+        EndBody
+      EndObject
+      Object EplSdoUdpNoSocket $Value 425 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoUdpNoSocket"
+          Attr PgmName = "EplSdoUdpNoSocket"
+          Attr Value = 81
+        EndBody
+      EndObject
+      Object EplSdoUdpSocketError $Value 426 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoUdpSocketError"
+          Attr PgmName = "EplSdoUdpSocketError"
+          Attr Value = 82
+        EndBody
+      EndObject
+      Object EplSdoUdpThreadError $Value 427 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoUdpThreadError"
+          Attr PgmName = "EplSdoUdpThreadError"
+          Attr Value = 83
+        EndBody
+      EndObject
+      Object EplSdoUdpNoFreeHandle $Value 428 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoUdpNoFreeHandle"
+          Attr PgmName = "EplSdoUdpNoFreeHandle"
+          Attr Value = 84
+        EndBody
+      EndObject
+      Object EplSdoUdpSendError $Value 429 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoUdpSendError"
+          Attr PgmName = "EplSdoUdpSendError"
+          Attr Value = 85
+        EndBody
+      EndObject
+      Object EplSdoUdpInvalidHdl $Value 430 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoUdpInvalidHdl"
+          Attr PgmName = "EplSdoUdpInvalidHdl"
+          Attr Value = 86
+        EndBody
+      EndObject
+      Object EplSdoSeqMissCb $Value 431 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoSeqMissCb"
+          Attr PgmName = "EplSdoSeqMissCb"
+          Attr Value = 96
+        EndBody
+      EndObject
+      Object EplSdoSeqNoFreeHandle $Value 432 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoSeqNoFreeHandle"
+          Attr PgmName = "EplSdoSeqNoFreeHandle"
+          Attr Value = 97
+        EndBody
+      EndObject
+      Object EplSdoSeqInvalidHdl $Value 433 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoSeqInvalidHdl"
+          Attr PgmName = "EplSdoSeqInvalidHdl"
+          Attr Value = 98
+        EndBody
+      EndObject
+      Object EplSdoSeqUnsupportedProt $Value 434 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoSeqUnsupportedProt"
+          Attr PgmName = "EplSdoSeqUnsupportedProt"
+          Attr Value = 99
+        EndBody
+      EndObject
+      Object EplSdoSeqNoFreeHistory $Value 435 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoSeqNoFreeHistory"
+          Attr PgmName = "EplSdoSeqNoFreeHistory"
+          Attr Value = 100
+        EndBody
+      EndObject
+      Object EplSdoSeqFrameSizeError $Value 436 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoSeqFrameSizeError"
+          Attr PgmName = "EplSdoSeqFrameSizeError"
+          Attr Value = 101
+        EndBody
+      EndObject
+      Object EplSdoSeqRequestAckNeeded $Value 437 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoSeqRequestAckNeeded"
+          Attr PgmName = "EplSdoSeqRequestAckNeeded"
+          Attr Value = 102
+        EndBody
+      EndObject
+      Object EplSdoSeqInvalidFrame $Value 438 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoSeqInvalidFrame"
+          Attr PgmName = "EplSdoSeqInvalidFrame"
+          Attr Value = 103
+        EndBody
+      EndObject
+      Object EplSdoSeqConnectionBusy $Value 439 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoSeqConnectionBusy"
+          Attr PgmName = "EplSdoSeqConnectionBusy"
+          Attr Value = 104
+        EndBody
+      EndObject
+      Object EplSdoSeqInvalidEvent $Value 440 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoSeqInvalidEvent"
+          Attr PgmName = "EplSdoSeqInvalidEvent"
+          Attr Value = 105
+        EndBody
+      EndObject
+      Object EplSdoComUnsupportedProt $Value 441 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoComUnsupportedProt"
+          Attr PgmName = "EplSdoComUnsupportedProt"
+          Attr Value = 112
+        EndBody
+      EndObject
+      Object EplSdoComNoFreeHandle $Value 442 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoComNoFreeHandle"
+          Attr PgmName = "EplSdoComNoFreeHandle"
+          Attr Value = 113
+        EndBody
+      EndObject
+      Object EplSdoComInvalidServiceType $Value 443 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoComInvalidServiceType"
+          Attr PgmName = "EplSdoComInvalidServiceType"
+          Attr Value = 114
+        EndBody
+      EndObject
+      Object EplSdoComInvalidHandle $Value 444 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoComInvalidHandle"
+          Attr PgmName = "EplSdoComInvalidHandle"
+          Attr Value = 115
+        EndBody
+      EndObject
+      Object EplSdoComInvalidSendType $Value 445 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoComInvalidSendType"
+          Attr PgmName = "EplSdoComInvalidSendType"
+          Attr Value = 116
+        EndBody
+      EndObject
+      Object EplSdoComNotResponsible $Value 446 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoComNotResponsible"
+          Attr PgmName = "EplSdoComNotResponsible"
+          Attr Value = 117
+        EndBody
+      EndObject
+      Object EplSdoComHandleExists $Value 447 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoComHandleExists"
+          Attr PgmName = "EplSdoComHandleExists"
+          Attr Value = 118
+        EndBody
+      EndObject
+      Object EplSdoComHandleBusy $Value 448 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoComHandleBusy"
+          Attr PgmName = "EplSdoComHandleBusy"
+          Attr Value = 119
+        EndBody
+      EndObject
+      Object EplSdoComInvalidParam $Value 449 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoComInvalidParam"
+          Attr PgmName = "EplSdoComInvalidParam"
+          Attr Value = 120
+        EndBody
+      EndObject
+      Object EplEventUnknownSink $Value 450 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplEventUnknownSink"
+          Attr PgmName = "EplEventUnknownSink"
+          Attr Value = 128
+        EndBody
+      EndObject
+      Object EplEventPostError $Value 451 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplEventPostError"
+          Attr PgmName = "EplEventPostError"
+          Attr Value = 129
+        EndBody
+      EndObject
+      Object EplEventReadError $Value 452 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplEventReadError"
+          Attr PgmName = "EplEventReadError"
+          Attr Value = 130
+        EndBody
+      EndObject
+      Object EplEventWrongSize $Value 453 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplEventWrongSize"
+          Attr PgmName = "EplEventWrongSize"
+          Attr Value = 131
+        EndBody
+      EndObject
+      Object EplTimerInvalidHandle $Value 454 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplTimerInvalidHandle"
+          Attr PgmName = "EplTimerInvalidHandle"
+          Attr Value = 144
+        EndBody
+      EndObject
+      Object EplTimerNoTimerCreated $Value 455 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplTimerNoTimerCreated"
+          Attr PgmName = "EplTimerNoTimerCreated"
+          Attr Value = 145
+        EndBody
+      EndObject
+      Object EplTimerThreadError $Value 456 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplTimerThreadError"
+          Attr PgmName = "EplTimerThreadError"
+          Attr Value = 146
+        EndBody
+      EndObject
+      Object EplSdoAsndInvalidNodeId $Value 457 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoAsndInvalidNodeId"
+          Attr PgmName = "EplSdoAsndInvalidNodeId"
+          Attr Value = 160
+        EndBody
+      EndObject
+      Object EplSdoAsndNoFreeHandle $Value 458 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoAsndNoFreeHandle"
+          Attr PgmName = "EplSdoAsndNoFreeHandle"
+          Attr Value = 161
+        EndBody
+      EndObject
+      Object EplSdoAsndInvalidHandle $Value 459 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplSdoAsndInvalidHandle"
+          Attr PgmName = "EplSdoAsndInvalidHandle"
+          Attr Value = 162
+        EndBody
+      EndObject
+      Object EplPdoNotExist $Value 460 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplPdoNotExist"
+          Attr PgmName = "EplPdoNotExist"
+          Attr Value = 176
+        EndBody
+      EndObject
+      Object EplPdoLengthExceeded $Value 461 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplPdoLengthExceeded"
+          Attr PgmName = "EplPdoLengthExceeded"
+          Attr Value = 177
+        EndBody
+      EndObject
+      Object EplPdoGranularityMismatch $Value 462 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplPdoGranularityMismatch"
+          Attr PgmName = "EplPdoGranularityMismatch"
+          Attr Value = 178
+        EndBody
+      EndObject
+      Object EplPdoInitError $Value 463 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplPdoInitError"
+          Attr PgmName = "EplPdoInitError"
+          Attr Value = 179
+        EndBody
+      EndObject
+      Object EplPdoConfWhileEnabled $Value 464 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplPdoConfWhileEnabled"
+          Attr PgmName = "EplPdoConfWhileEnabled"
+          Attr Value = 183
+        EndBody
+      EndObject
+      Object EplPdoErrorMapp $Value 465 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplPdoErrorMapp"
+          Attr PgmName = "EplPdoErrorMapp"
+          Attr Value = 184
+        EndBody
+      EndObject
+      Object EplPdoVarNotFound $Value 466 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplPdoVarNotFound"
+          Attr PgmName = "EplPdoVarNotFound"
+          Attr Value = 185
+        EndBody
+      EndObject
+      Object EplPdoVarNotMappable $Value 467 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplPdoVarNotMappable"
+          Attr PgmName = "EplPdoVarNotMappable"
+          Attr Value = 186
+        EndBody
+      EndObject
+      Object EplPdoSizeMismatch $Value 468 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplPdoSizeMismatch"
+          Attr PgmName = "EplPdoSizeMismatch"
+          Attr Value = 188
+        EndBody
+      EndObject
+      Object EplPdoTooManyTxPdos $Value 469 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplPdoTooManyTxPdos"
+          Attr PgmName = "EplPdoTooManyTxPdos"
+          Attr Value = 189
+        EndBody
+      EndObject
+      Object EplPdoInvalidObjIndex $Value 470 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplPdoInvalidObjIndex"
+          Attr PgmName = "EplPdoInvalidObjIndex"
+          Attr Value = 190
+        EndBody
+      EndObject
+      Object EplPdoTooManyPdos $Value 471 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplPdoTooManyPdos"
+          Attr PgmName = "EplPdoTooManyPdos"
+          Attr Value = 191
+        EndBody
+      EndObject
+      Object EplCfmConfigError $Value 472 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplCfmConfigError"
+          Attr PgmName = "EplCfmConfigError"
+          Attr Value = 192
+        EndBody
+      EndObject
+      Object EplCfmSdocTimeOutError $Value 473 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplCfmSdocTimeOutError"
+          Attr PgmName = "EplCfmSdocTimeOutError"
+          Attr Value = 193
+        EndBody
+      EndObject
+      Object EplCfmInvalidDcf $Value 474 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplCfmInvalidDcf"
+          Attr PgmName = "EplCfmInvalidDcf"
+          Attr Value = 194
+        EndBody
+      EndObject
+      Object EplCfmUnsupportedDcf $Value 475 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplCfmUnsupportedDcf"
+          Attr PgmName = "EplCfmUnsupportedDcf"
+          Attr Value = 195
+        EndBody
+      EndObject
+      Object EplCfmConfigWithErrors $Value 476 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplCfmConfigWithErrors"
+          Attr PgmName = "EplCfmConfigWithErrors"
+          Attr Value = 196
+        EndBody
+      EndObject
+      Object EplCfmNoFreeConfig $Value 477 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplCfmNoFreeConfig"
+          Attr PgmName = "EplCfmNoFreeConfig"
+          Attr Value = 197
+        EndBody
+      EndObject
+      Object EplCfmNoConfigData $Value 478 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplCfmNoConfigData"
+          Attr PgmName = "EplCfmNoConfigData"
+          Attr Value = 198
+        EndBody
+      EndObject
+      Object EplCfmUnsuppDatatypeDcf $Value 479 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplCfmUnsuppDatatypeDcf"
+          Attr PgmName = "EplCfmUnsuppDatatypeDcf"
+          Attr Value = 199
+        EndBody
+      EndObject
+      Object EplApiTaskDeferred $Value 480 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplApiTaskDeferred"
+          Attr PgmName = "EplApiTaskDeferred"
+          Attr Value = 320
+        EndBody
+      EndObject
+      Object EplApiInvalidParam $Value 481 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplApiInvalidParam"
+          Attr PgmName = "EplApiInvalidParam"
+          Attr Value = 322
+        EndBody
+      EndObject
+      Object EplApiNoObdInitRam $Value 482 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplApiNoObdInitRam"
+          Attr PgmName = "EplApiNoObdInitRam"
+          Attr Value = 323
+        EndBody
+      EndObject
+      Object EplApiSdoBusyIntern $Value 483 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplApiSdoBusyIntern"
+          Attr PgmName = "EplApiSdoBusyIntern"
+          Attr Value = 324
+        EndBody
+      EndObject
+      Object EplApiPIAlreadyAllocated $Value 484 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplApiPIAlreadyAllocated"
+          Attr PgmName = "EplApiPIAlreadyAllocated"
+          Attr Value = 325
+        EndBody
+      EndObject
+      Object EplApiPIOutOfMemory $Value 485 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplApiPIOutOfMemory"
+          Attr PgmName = "EplApiPIOutOfMemory"
+          Attr Value = 326
+        EndBody
+      EndObject
+      Object EplApiPISizeExceeded $Value 486 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplApiPISizeExceeded"
+          Attr PgmName = "EplApiPISizeExceeded"
+          Attr Value = 327
+        EndBody
+      EndObject
+      Object EplApiPINotAllocated $Value 487 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplApiPINotAllocated"
+          Attr PgmName = "EplApiPINotAllocated"
+          Attr Value = 328
+        EndBody
+      EndObject
+      Object EplApiPIJobQueueFull $Value 488 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplApiPIJobQueueFull"
+          Attr PgmName = "EplApiPIJobQueueFull"
+          Attr Value = 329
+        EndBody
+      EndObject
+      Object EplApiPIJobQueueEmpty $Value 489 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplApiPIJobQueueEmpty"
+          Attr PgmName = "EplApiPIJobQueueEmpty"
+          Attr Value = 330
+        EndBody
+      EndObject
+      Object EplApiPIInvalidJobSize $Value 490 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplApiPIInvalidJobSize"
+          Attr PgmName = "EplApiPIInvalidJobSize"
+          Attr Value = 331
+        EndBody
+      EndObject
+      Object EplApiPIInvalidPIPointer $Value 491 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplApiPIInvalidPIPointer"
+          Attr PgmName = "EplApiPIInvalidPIPointer"
+          Attr Value = 332
+        EndBody
+      EndObject
+      Object EplApiPINonBlockingNotSupp $Value 492 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplApiPINonBlockingNotSupp"
+          Attr PgmName = "EplApiPINonBlockingNotSupp"
+          Attr Value = 333
+        EndBody
+      EndObject
+    EndObject
+    Object EplNmtState $TypeDef 16 04-JUL-2013 08:16:11.60
+      Body SysBody 01-JUL-2013 17:25:45.71
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object EplNmtGsOff $Value 493 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtGsOff"
+          Attr PgmName = "EplNmtGsOff"
+        EndBody
+      EndObject
+      Object EplNmtGsInitialising $Value 494 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtGsInitialising"
+          Attr PgmName = "EplNmtGsInitialising"
+          Attr Value = 25
+        EndBody
+      EndObject
+      Object EplNmtGsResetApplication $Value 495 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtGsResetApplication"
+          Attr PgmName = "EplNmtGsResetApplication"
+          Attr Value = 41
+        EndBody
+      EndObject
+      Object EplNmtGsResetCommunication $Value 496 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtGsResetCommunication"
+          Attr PgmName = "EplNmtGsResetCommunication"
+          Attr Value = 57
+        EndBody
+      EndObject
+      Object EplNmtGsResetConfiguration $Value 497 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtGsResetConfiguration"
+          Attr PgmName = "EplNmtGsResetConfiguration"
+          Attr Value = 121
+        EndBody
+      EndObject
+      Object EplNmtCsNotActive $Value 498 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtCsNotActive"
+          Attr PgmName = "EplNmtCsNotActive"
+          Attr Value = 284
+        EndBody
+      EndObject
+      Object EplNmtCsPreOperational1 $Value 499 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtCsPreOperational1"
+          Attr PgmName = "EplNmtCsPreOperational1"
+          Attr Value = 285
+        EndBody
+      EndObject
+      Object EplNmtCsStopped $Value 500 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtCsStopped"
+          Attr PgmName = "EplNmtCsStopped"
+          Attr Value = 333
+        EndBody
+      EndObject
+      Object EplNmtCsPreOperational2 $Value 501 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtCsPreOperational2"
+          Attr PgmName = "EplNmtCsPreOperational2"
+          Attr Value = 349
+        EndBody
+      EndObject
+      Object EplNmtCsReadyToOperate $Value 502 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtCsReadyToOperate"
+          Attr PgmName = "EplNmtCsReadyToOperate"
+          Attr Value = 365
+        EndBody
+      EndObject
+      Object EplNmtCsOperational $Value 503 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtCsOperational"
+          Attr PgmName = "EplNmtCsOperational"
+          Attr Value = 509
+        EndBody
+      EndObject
+      Object EplNmtCsBasicEthernet $Value 504 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtCsBasicEthernet"
+          Attr PgmName = "EplNmtCsBasicEthernet"
+          Attr Value = 286
+        EndBody
+      EndObject
+      Object EplNmtMsNotActive $Value 505 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtMsNotActive"
+          Attr PgmName = "EplNmtMsNotActive"
+          Attr Value = 540
+        EndBody
+      EndObject
+      Object EplNmtMsPreOperational1 $Value 506 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtMsPreOperational1"
+          Attr PgmName = "EplNmtMsPreOperational1"
+          Attr Value = 541
+        EndBody
+      EndObject
+      Object EplNmtMsPreOperational2 $Value 507 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtMsPreOperational2"
+          Attr PgmName = "EplNmtMsPreOperational2"
+          Attr Value = 605
+        EndBody
+      EndObject
+      Object EplNmtMsReadyToOperate $Value 508 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtMsReadyToOperate"
+          Attr PgmName = "EplNmtMsReadyToOperate"
+          Attr Value = 621
+        EndBody
+      EndObject
+      Object EplNmtMsOperational $Value 509 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtMsOperational"
+          Attr PgmName = "EplNmtMsOperational"
+          Attr Value = 765
+        EndBody
+      EndObject
+      Object EplNmtMsBasicEthernet $Value 510 01-JUL-2013 17:25:45.71
+        Body SysBody 01-JUL-2013 17:25:45.71
+          Attr Text = "EplNmtMsBasicEthernet"
+          Attr PgmName = "EplNmtMsBasicEthernet"
+          Attr Value = 542
+        EndBody
+      EndObject
+    EndObject
   EndObject
   Object Class $ClassHier 2 15-NOV-2007 14:35:40.72
     !/**
@@ -926,6 +1923,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 9 15-NOV-2007 14:36:42.44
           Body SysBody 15-NOV-2007 14:36:42.44
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -941,6 +1939,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 10 15-NOV-2007 14:36:42.44
           Body SysBody 30-MAY-2008 15:06:38.05
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -952,6 +1951,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 11 15-NOV-2007 14:36:42.44
           Body SysBody 15-NOV-2007 14:36:42.44
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -961,6 +1961,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 12 15-NOV-2007 14:36:42.44
           Body SysBody 08-FEB-2008 11:23:01.09
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "OtherIO:Type-MotionControl_StatusEnum"
           EndBody
@@ -1093,6 +2094,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Super $Attribute 7 15-NOV-2007 14:36:59.65
           Body SysBody 06-JUN-2010 14:27:15.66
             Attr PgmName = "Super"
+            Attr Size = 352
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseIOCard"
           EndBody
@@ -1103,6 +2105,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 8 15-NOV-2007 14:36:59.65
           Body SysBody 15-NOV-2007 14:37:35.55
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "OtherIO:Type-MotionControl_StatusEnum"
           EndBody
@@ -1115,6 +2118,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object WatchdogTime $Attribute 9 15-NOV-2007 14:36:59.65
           Body SysBody 15-NOV-2007 14:36:59.65
             Attr PgmName = "WatchdogTime"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -1183,6 +2187,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 1 08-FEB-2008 10:26:53.62
           Body SysBody 08-FEB-2008 10:27:28.51
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -1193,6 +2198,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DataSheet $Attribute 2 08-FEB-2008 10:29:10.98
           Body SysBody 08-FEB-2008 10:29:22.41
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -1203,6 +2209,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 3 08-FEB-2008 10:29:48.44
           Body SysBody 04-DEC-2009 17:14:32.80
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
@@ -1219,6 +2226,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 4 08-FEB-2008 10:43:19.48
           Body SysBody 30-MAY-2008 15:07:17.32
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -1230,17 +2238,19 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 5 08-FEB-2008 10:44:05.30
           Body SysBody 08-FEB-2008 10:44:16.17
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
         !/**
         ! @Summary IP-address for the remote node.
         ! IP-address for the remote node, or host name.
-	! Dynamic change is not possible.
+        ! Dynamic change is not possible.
         !*/
         Object Address $Attribute 6 08-FEB-2008 10:44:42.47
           Body SysBody 14-MAY-2012 13:53:27.76
             Attr PgmName = "Address"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -1251,6 +2261,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Port $Attribute 19 04-DEC-2009 17:22:45.73
           Body SysBody 04-DEC-2009 17:23:01.72
             Attr PgmName = "Port"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -1261,6 +2272,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DisableSlave $Attribute 16 20-FEB-2008 15:38:59.22
           Body SysBody 08-SEP-2008 14:45:03.01
             Attr PgmName = "DisableSlave"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-YesNoEnum"
           EndBody
         EndObject
@@ -1274,6 +2286,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object StallAction $Attribute 20 27-OCT-2011 08:54:41.57
           Body SysBody 27-OCT-2011 08:54:45.34
             Attr PgmName = "StallAction"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-StallActionEnum"
           EndBody
         EndObject
@@ -1285,6 +2298,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorCount $Attribute 7 08-FEB-2008 10:50:15.18
           Body SysBody 04-DEC-2009 17:14:50.70
             Attr PgmName = "ErrorCount"
+            Attr Size = 2
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -1297,6 +2311,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorLimit $Attribute 8 08-FEB-2008 10:55:37.72
           Body SysBody 08-FEB-2008 10:55:53.80
             Attr PgmName = "ErrorLimit"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -1310,6 +2325,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ReconnectCount $Attribute 9 08-FEB-2008 10:56:12.51
           Body SysBody 04-DEC-2009 17:15:01.53
             Attr PgmName = "ReconnectCount"
+            Attr Size = 2
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -1322,6 +2338,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ReconnectLimit $Attribute 10 08-FEB-2008 10:56:28.05
           Body SysBody 04-SEP-2008 10:32:26.94
             Attr PgmName = "ReconnectLimit"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -1333,6 +2350,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ResponseTime $Attribute 17 04-SEP-2008 10:31:37.00
           Body SysBody 04-SEP-2008 10:32:36.01
             Attr PgmName = "ResponseTime"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -1346,6 +2364,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object SingleOp $Attribute 18 04-SEP-2008 10:33:01.37
           Body SysBody 04-SEP-2008 13:15:42.30
             Attr PgmName = "SingleOp"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-YesNoEnum"
           EndBody
         EndObject
@@ -1356,6 +2375,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object RX_packets $Attribute 11 08-FEB-2008 10:57:16.79
           Body SysBody 04-DEC-2009 17:15:16.28
             Attr PgmName = "RX_packets"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -1367,6 +2387,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object TX_packets $Attribute 12 08-FEB-2008 10:57:31.03
           Body SysBody 04-DEC-2009 17:15:24.38
             Attr PgmName = "TX_packets"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -1378,6 +2399,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Inputs $Attribute 14 08-FEB-2008 10:59:26.76
           Body SysBody 08-FEB-2008 11:00:29.99
             Attr PgmName = "Inputs"
+            Attr Size = 256
             Attr Flags = 3074
             Attr Elements = 256
             Attr TypeRef = "pwrs:Type-$UInt8"
@@ -1390,6 +2412,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Outputs $Attribute 15 08-FEB-2008 11:00:48.44
           Body SysBody 08-FEB-2008 11:00:44.86
             Attr PgmName = "Outputs"
+            Attr Size = 256
             Attr Flags = 3074
             Attr Elements = 256
             Attr TypeRef = "pwrs:Type-$UInt8"
@@ -1509,6 +2532,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 2 08-FEB-2008 11:18:16.99
           Body SysBody 03-SEP-2008 13:44:34.00
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -1529,6 +2553,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object FunctionCode $Attribute 5 08-FEB-2008 11:19:38.05
           Body SysBody 08-FEB-2008 11:30:37.32
             Attr PgmName = "FunctionCode"
+            Attr Size = 4
             Attr TypeRef = "OtherIO:Type-Modbus_FCEnum"
           EndBody
         EndObject
@@ -1539,6 +2564,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Address $Attribute 6 08-FEB-2008 11:20:03.39
           Body SysBody 04-SEP-2008 14:12:29.49
             Attr PgmName = "Address"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -1551,6 +2577,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object UnitId $Attribute 8 04-SEP-2008 14:12:23.85
           Body SysBody 08-SEP-2008 15:15:06.16
             Attr PgmName = "UnitId"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -1560,6 +2587,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 7 08-FEB-2008 11:20:34.93
           Body SysBody 04-DEC-2009 17:15:47.85
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "OtherIO:Type-ModbusModule_StatusEnum"
           EndBody
@@ -1573,6 +2601,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Continous $Attribute 9 08-SEP-2008 14:44:22.43
           Body SysBody 08-SEP-2008 14:45:19.10
             Attr PgmName = "Continous"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-YesNoEnum"
           EndBody
         EndObject
@@ -1583,6 +2612,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object SendOp $Attribute 10 08-SEP-2008 15:14:49.43
           Body SysBody 08-SEP-2008 15:15:14.92
             Attr PgmName = "SendOp"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -1596,6 +2626,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ScanInterval $Attribute 11 17-OCT-2011 08:08:42.29
           Body SysBody 16-MAR-2010 08:26:09.35
             Attr PgmName = "ScanInterval"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -1611,6 +2642,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 3 08-FEB-2008 11:19:22.97
           Body SysBody 05-OCT-2010 12:36:41.90
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -1622,6 +2654,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 4 08-FEB-2008 11:19:22.97
           Body SysBody 03-SEP-2008 16:03:01.41
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -1697,6 +2730,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object FunctionCode $Attribute 13 17-OCT-2011 08:03:36.21
           Body SysBody 17-OCT-2011 08:03:36.21
             Attr PgmName = "FunctionCode"
+            Attr Size = 4
             Attr TypeRef = "OtherIO:Type-Modbus_FCEnum"
           EndBody
         EndObject
@@ -1707,6 +2741,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Address $Attribute 14 17-OCT-2011 08:03:36.21
           Body SysBody 17-OCT-2011 08:03:36.21
             Attr PgmName = "Address"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -1719,12 +2754,14 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object UnitId $Attribute 15 17-OCT-2011 08:03:36.21
           Body SysBody 17-OCT-2011 08:03:36.21
             Attr PgmName = "UnitId"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object Status $Attribute 16 17-OCT-2011 08:03:36.21
           Body SysBody 17-OCT-2011 08:03:36.21
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "OtherIO:Type-ModbusModule_StatusEnum"
           EndBody
@@ -1738,6 +2775,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Continous $Attribute 17 17-OCT-2011 08:03:36.21
           Body SysBody 17-OCT-2011 08:03:36.21
             Attr PgmName = "Continous"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-YesNoEnum"
           EndBody
         EndObject
@@ -1748,6 +2786,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object SendOp $Attribute 18 17-OCT-2011 08:03:36.21
           Body SysBody 17-OCT-2011 08:03:36.21
             Attr PgmName = "SendOp"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -1761,6 +2800,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ScanInterval $Attribute 21 17-OCT-2011 08:03:36.21
           Body SysBody 17-OCT-2011 08:03:36.21
             Attr PgmName = "ScanInterval"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -1801,6 +2841,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 3 17-OCT-2011 08:05:42.00
           Body SysBody 17-OCT-2011 08:05:42.00
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -1816,6 +2857,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 4 17-OCT-2011 08:06:12.09
           Body SysBody 17-OCT-2011 08:06:12.09
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -1827,6 +2869,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 5 17-OCT-2011 08:06:12.09
           Body SysBody 17-OCT-2011 08:06:12.09
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -1836,6 +2879,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Read $Attribute 1 17-OCT-2011 07:57:03.88
           Body SysBody 17-OCT-2011 08:05:22.17
             Attr PgmName = "Read"
+            Attr Size = 32
             Attr Flags = 131072
             Attr TypeRef = "OtherIO:Class-Modbus_ModuleMsg"
           EndBody
@@ -1846,6 +2890,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Write $Attribute 2 17-OCT-2011 07:57:26.66
           Body SysBody 17-OCT-2011 08:05:27.68
             Attr PgmName = "Write"
+            Attr Size = 32
             Attr Flags = 131072
             Attr TypeRef = "OtherIO:Class-Modbus_ModuleMsg"
           EndBody
@@ -1909,6 +2954,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 1 03-SEP-2008 13:44:26.99
           Body SysBody 03-SEP-2008 13:44:40.72
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -1918,6 +2964,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Disable $Attribute 2 03-SEP-2008 13:45:29.86
           Body SysBody 03-SEP-2008 13:45:42.30
             Attr PgmName = "Disable"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -1933,6 +2980,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 3 03-SEP-2008 16:02:28.05
           Body SysBody 05-OCT-2010 12:36:50.82
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -1944,6 +2992,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 4 03-SEP-2008 16:03:14.03
           Body SysBody 03-SEP-2008 16:03:06.72
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -2011,6 +3060,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 19 25-NOV-2009 10:30:31.66
           Body SysBody 25-NOV-2009 10:30:31.66
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -2020,6 +3070,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DataSheet $Attribute 20 25-NOV-2009 10:30:31.66
           Body SysBody 25-NOV-2009 10:30:31.66
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -2029,6 +3080,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 21 25-NOV-2009 10:30:31.66
           Body SysBody 04-DEC-2009 17:14:06.15
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
@@ -2045,6 +3097,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 22 25-NOV-2009 10:30:31.66
           Body SysBody 25-NOV-2009 10:30:31.66
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -2056,6 +3109,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 23 25-NOV-2009 10:30:31.66
           Body SysBody 25-NOV-2009 10:30:31.66
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -2069,6 +3123,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Port $Attribute 38 04-DEC-2009 16:56:46.71
           Body SysBody 04-DEC-2009 16:56:55.46
             Attr PgmName = "Port"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -2078,6 +3133,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DisableServer $Attribute 25 25-NOV-2009 10:33:08.29
           Body SysBody 25-NOV-2009 10:33:10.93
             Attr PgmName = "DisableServer"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-YesNoEnum"
           EndBody
         EndObject
@@ -2089,6 +3145,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorCount $Attribute 26 25-NOV-2009 10:30:31.66
           Body SysBody 04-DEC-2009 16:55:35.20
             Attr PgmName = "ErrorCount"
+            Attr Size = 2
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -2101,6 +3158,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorLimit $Attribute 27 25-NOV-2009 10:30:31.66
           Body SysBody 25-NOV-2009 10:30:31.66
             Attr PgmName = "ErrorLimit"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -2110,6 +3168,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Connections $Attribute 31 25-NOV-2009 11:03:25.72
           Body SysBody 25-NOV-2009 11:04:00.16
             Attr PgmName = "Connections"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -2120,6 +3179,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object RX_packets $Attribute 32 25-NOV-2009 10:30:31.66
           Body SysBody 04-DEC-2009 16:55:52.73
             Attr PgmName = "RX_packets"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -2130,6 +3190,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object TX_packets $Attribute 33 25-NOV-2009 10:30:31.66
           Body SysBody 04-DEC-2009 16:56:00.02
             Attr PgmName = "TX_packets"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -2141,6 +3202,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Inputs $Attribute 36 27-NOV-2009 09:42:27.83
           Body SysBody 27-NOV-2009 09:42:46.12
             Attr PgmName = "Inputs"
+            Attr Size = 256
             Attr Flags = 3090
             Attr Elements = 256
             Attr TypeRef = "pwrs:Type-$UInt8"
@@ -2153,6 +3215,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Outputs $Attribute 37 27-NOV-2009 09:42:27.83
           Body SysBody 27-NOV-2009 09:43:03.16
             Attr PgmName = "Outputs"
+            Attr Size = 256
             Attr Flags = 3090
             Attr Elements = 256
             Attr TypeRef = "pwrs:Type-$UInt8"
@@ -2222,6 +3285,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 11 25-NOV-2009 11:05:23.49
           Body SysBody 25-NOV-2009 11:05:23.49
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -2237,6 +3301,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ReadAddress $Attribute 12 04-DEC-2009 16:53:13.17
           Body SysBody 04-DEC-2009 16:53:32.47
             Attr PgmName = "ReadAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -2253,6 +3318,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object WriteAddress $Attribute 13 04-DEC-2009 16:53:43.87
           Body SysBody 04-DEC-2009 16:53:45.81
             Attr PgmName = "WriteAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -2266,6 +3332,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object UnitId $Attribute 14 25-NOV-2009 11:05:23.49
           Body SysBody 25-NOV-2009 11:05:23.49
             Attr PgmName = "UnitId"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -2275,6 +3342,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 15 25-NOV-2009 11:05:23.49
           Body SysBody 04-DEC-2009 17:13:22.55
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "OtherIO:Type-ModbusSever_StatusEnum"
           EndBody
@@ -2291,6 +3359,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 18 25-NOV-2009 11:05:23.49
           Body SysBody 25-NOV-2009 11:05:23.49
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -2302,6 +3371,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 19 25-NOV-2009 11:05:23.49
           Body SysBody 25-NOV-2009 11:05:23.49
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -2360,6 +3430,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 5 18-OCT-2011 11:07:05.53
           Body SysBody 18-OCT-2011 11:07:05.53
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -2369,6 +3440,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Disable $Attribute 6 18-OCT-2011 11:07:05.53
           Body SysBody 18-OCT-2011 11:07:05.53
             Attr PgmName = "Disable"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2384,6 +3456,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 7 18-OCT-2011 11:07:05.53
           Body SysBody 18-OCT-2011 11:07:05.53
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -2395,6 +3468,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 8 18-OCT-2011 11:07:05.53
           Body SysBody 18-OCT-2011 11:07:05.53
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -2404,6 +3478,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Device $Attribute 9 18-OCT-2011 11:08:23.34
           Body SysBody 18-OCT-2011 11:08:38.79
             Attr PgmName = "Device"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -2413,6 +3488,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Speed $Attribute 10 18-OCT-2011 11:09:05.07
           Body SysBody 18-OCT-2011 11:09:12.39
             Attr PgmName = "Speed"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -2422,6 +3498,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Parity $Attribute 11 18-OCT-2011 11:09:38.47
           Body SysBody 27-FEB-2012 10:57:54.49
             Attr PgmName = "Parity"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-ParityEnum"
           EndBody
         EndObject
@@ -2431,6 +3508,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object StopBits $Attribute 12 18-OCT-2011 11:10:26.72
           Body SysBody 18-OCT-2011 11:10:34.59
             Attr PgmName = "StopBits"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-StopBitsEnum"
           EndBody
         EndObject
@@ -2440,6 +3518,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DataBits $Attribute 13 18-OCT-2011 11:10:46.95
           Body SysBody 18-OCT-2011 11:10:53.17
             Attr PgmName = "DataBits"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-DataBitsEnum"
           EndBody
         EndObject
@@ -2449,6 +3528,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object CharTimeout $Attribute 14 25-OCT-2011 13:26:58.49
           Body SysBody 25-OCT-2011 13:27:00.56
             Attr PgmName = "CharTimeout"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -2458,6 +3538,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object FrameTimeout $Attribute 15 25-OCT-2011 13:27:08.81
           Body SysBody 25-OCT-2011 13:27:09.97
             Attr PgmName = "FrameTimeout"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -2467,6 +3548,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ReceiveTimeout $Attribute 16 26-OCT-2011 16:57:52.50
           Body SysBody 26-OCT-2011 16:57:53.52
             Attr PgmName = "ReceiveTimeout"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -2476,6 +3558,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Debug $Attribute 17 27-OCT-2011 08:55:53.85
           Body SysBody 27-OCT-2011 08:58:09.11
             Attr PgmName = "Debug"
+            Attr Size = 4
             Attr Flags = 8390656
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -2547,6 +3630,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 20 18-OCT-2011 11:14:17.41
           Body SysBody 18-OCT-2011 11:14:17.41
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -2557,6 +3641,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DataSheet $Attribute 21 18-OCT-2011 11:14:17.41
           Body SysBody 18-OCT-2011 11:14:17.41
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -2567,6 +3652,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 22 18-OCT-2011 11:14:17.41
           Body SysBody 18-OCT-2011 11:14:17.41
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
@@ -2583,6 +3669,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 23 18-OCT-2011 11:14:17.41
           Body SysBody 18-OCT-2011 11:14:17.41
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -2594,6 +3681,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 24 18-OCT-2011 11:14:17.41
           Body SysBody 18-OCT-2011 11:14:17.41
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -2607,6 +3695,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object StallAction $Attribute 38 27-OCT-2011 08:52:20.96
           Body SysBody 27-OCT-2011 08:53:31.33
             Attr PgmName = "StallAction"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-StallActionEnum"
           EndBody
         EndObject
@@ -2617,6 +3706,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DisableSlave $Attribute 27 18-OCT-2011 11:14:17.41
           Body SysBody 18-OCT-2011 11:14:17.41
             Attr PgmName = "DisableSlave"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-YesNoEnum"
           EndBody
         EndObject
@@ -2628,6 +3718,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorCount $Attribute 28 18-OCT-2011 11:14:17.41
           Body SysBody 18-OCT-2011 11:14:17.41
             Attr PgmName = "ErrorCount"
+            Attr Size = 2
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -2640,6 +3731,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorLimit $Attribute 29 18-OCT-2011 11:14:17.41
           Body SysBody 18-OCT-2011 11:14:17.41
             Attr PgmName = "ErrorLimit"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -2650,6 +3742,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object RX_packets $Attribute 34 18-OCT-2011 11:14:17.41
           Body SysBody 18-OCT-2011 11:14:17.41
             Attr PgmName = "RX_packets"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -2661,6 +3754,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object TX_packets $Attribute 35 18-OCT-2011 11:14:17.41
           Body SysBody 18-OCT-2011 11:14:17.41
             Attr PgmName = "TX_packets"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -2672,6 +3766,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Inputs $Attribute 36 18-OCT-2011 11:14:17.41
           Body SysBody 18-OCT-2011 11:14:17.41
             Attr PgmName = "Inputs"
+            Attr Size = 256
             Attr Flags = 3074
             Attr Elements = 256
             Attr TypeRef = "pwrs:Type-$UInt8"
@@ -2684,6 +3779,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Outputs $Attribute 37 18-OCT-2011 11:14:17.41
           Body SysBody 18-OCT-2011 11:14:17.41
             Attr PgmName = "Outputs"
+            Attr Size = 256
             Attr Flags = 3074
             Attr Elements = 256
             Attr TypeRef = "pwrs:Type-$UInt8"
@@ -2802,6 +3898,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 12 18-OCT-2011 11:18:07.74
           Body SysBody 18-OCT-2011 11:18:07.74
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -2822,6 +3919,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object FunctionCode $Attribute 13 18-OCT-2011 11:18:07.74
           Body SysBody 18-OCT-2011 11:18:07.74
             Attr PgmName = "FunctionCode"
+            Attr Size = 4
             Attr TypeRef = "OtherIO:Type-Modbus_FCEnum"
           EndBody
         EndObject
@@ -2832,6 +3930,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Address $Attribute 14 18-OCT-2011 11:18:07.74
           Body SysBody 18-OCT-2011 11:18:07.74
             Attr PgmName = "Address"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -2842,6 +3941,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object UnitId $Attribute 15 18-OCT-2011 11:18:07.74
           Body SysBody 18-OCT-2011 11:18:07.74
             Attr PgmName = "UnitId"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -2851,6 +3951,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 16 18-OCT-2011 11:18:07.74
           Body SysBody 18-OCT-2011 11:18:07.74
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "OtherIO:Type-ModbusModule_StatusEnum"
           EndBody
@@ -2864,6 +3965,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Continous $Attribute 17 18-OCT-2011 11:18:07.74
           Body SysBody 18-OCT-2011 11:18:07.74
             Attr PgmName = "Continous"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-YesNoEnum"
           EndBody
         EndObject
@@ -2874,6 +3976,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object SendOp $Attribute 18 18-OCT-2011 11:18:07.74
           Body SysBody 18-OCT-2011 11:18:07.74
             Attr PgmName = "SendOp"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -2887,6 +3990,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ScanInterval $Attribute 19 18-OCT-2011 11:18:07.74
           Body SysBody 18-OCT-2011 11:18:07.74
             Attr PgmName = "ScanInterval"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -2902,6 +4006,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 20 18-OCT-2011 11:18:07.74
           Body SysBody 18-OCT-2011 11:18:07.74
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -2913,6 +4018,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 21 18-OCT-2011 11:18:07.74
           Body SysBody 18-OCT-2011 11:18:07.74
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -2977,6 +4083,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 39 24-OCT-2011 08:03:46.50
           Body SysBody 24-OCT-2011 08:03:46.50
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -2986,6 +4093,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DataSheet $Attribute 40 24-OCT-2011 08:03:46.50
           Body SysBody 24-OCT-2011 08:03:46.50
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -2995,6 +4103,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 41 24-OCT-2011 08:03:46.50
           Body SysBody 24-OCT-2011 08:03:46.50
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
@@ -3011,6 +4120,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 42 24-OCT-2011 08:03:46.50
           Body SysBody 24-OCT-2011 08:03:46.50
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -3022,6 +4132,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 43 24-OCT-2011 08:03:46.50
           Body SysBody 24-OCT-2011 08:03:46.50
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -3031,6 +4142,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Device $Attribute 53 24-OCT-2011 08:07:11.01
           Body SysBody 24-OCT-2011 08:07:11.01
             Attr PgmName = "Device"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -3040,6 +4152,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Speed $Attribute 54 24-OCT-2011 08:07:11.01
           Body SysBody 24-OCT-2011 08:07:11.01
             Attr PgmName = "Speed"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -3049,6 +4162,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Parity $Attribute 55 24-OCT-2011 08:07:11.01
           Body SysBody 24-OCT-2011 08:07:11.01
             Attr PgmName = "Parity"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-ParityEnum"
           EndBody
         EndObject
@@ -3058,6 +4172,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object StopBits $Attribute 56 24-OCT-2011 08:07:11.01
           Body SysBody 24-OCT-2011 08:07:11.01
             Attr PgmName = "StopBits"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-StopBitsEnum"
           EndBody
         EndObject
@@ -3067,6 +4182,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DataBits $Attribute 57 24-OCT-2011 08:07:11.01
           Body SysBody 24-OCT-2011 08:07:11.01
             Attr PgmName = "DataBits"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-DataBitsEnum"
           EndBody
         EndObject
@@ -3076,6 +4192,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DisableServer $Attribute 45 24-OCT-2011 08:03:46.50
           Body SysBody 24-OCT-2011 08:03:46.50
             Attr PgmName = "DisableServer"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-YesNoEnum"
           EndBody
         EndObject
@@ -3087,6 +4204,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorCount $Attribute 46 24-OCT-2011 08:03:46.50
           Body SysBody 24-OCT-2011 08:03:46.50
             Attr PgmName = "ErrorCount"
+            Attr Size = 2
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -3099,6 +4217,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorLimit $Attribute 47 24-OCT-2011 08:03:46.50
           Body SysBody 24-OCT-2011 08:03:46.50
             Attr PgmName = "ErrorLimit"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -3108,6 +4227,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object CharTimeout $Attribute 48 25-OCT-2011 13:28:00.42
           Body SysBody 25-OCT-2011 13:30:14.63
             Attr PgmName = "CharTimeout"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -3117,6 +4237,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object FrameTimeout $Attribute 58 26-OCT-2011 16:59:58.07
           Body SysBody 26-OCT-2011 16:59:59.48
             Attr PgmName = "FrameTimeout"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -3126,6 +4247,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object RX_packets $Attribute 49 24-OCT-2011 08:03:46.50
           Body SysBody 24-OCT-2011 08:03:46.50
             Attr PgmName = "RX_packets"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -3136,6 +4258,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object TX_packets $Attribute 50 24-OCT-2011 08:03:46.50
           Body SysBody 24-OCT-2011 08:03:46.50
             Attr PgmName = "TX_packets"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -3147,6 +4270,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Inputs $Attribute 51 24-OCT-2011 08:03:46.50
           Body SysBody 24-OCT-2011 08:03:46.50
             Attr PgmName = "Inputs"
+            Attr Size = 256
             Attr Flags = 3090
             Attr Elements = 256
             Attr TypeRef = "pwrs:Type-$UInt8"
@@ -3159,6 +4283,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Outputs $Attribute 52 24-OCT-2011 08:03:46.50
           Body SysBody 24-OCT-2011 08:03:46.50
             Attr PgmName = "Outputs"
+            Attr Size = 256
             Attr Flags = 3090
             Attr Elements = 256
             Attr TypeRef = "pwrs:Type-$UInt8"
@@ -3170,6 +4295,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Debug $Attribute 60 27-OCT-2011 08:57:19.86
           Body SysBody 27-OCT-2011 08:57:53.68
             Attr PgmName = "Debug"
+            Attr Size = 4
             Attr Flags = 8390656
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -3243,6 +4369,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 21 24-OCT-2011 08:04:13.86
           Body SysBody 24-OCT-2011 08:04:13.86
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -3258,6 +4385,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ReadAddress $Attribute 22 24-OCT-2011 08:04:13.86
           Body SysBody 24-OCT-2011 08:04:13.86
             Attr PgmName = "ReadAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -3274,6 +4402,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object WriteAddress $Attribute 23 24-OCT-2011 08:04:13.86
           Body SysBody 24-OCT-2011 08:04:13.86
             Attr PgmName = "WriteAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -3284,6 +4413,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object UnitId $Attribute 24 24-OCT-2011 08:04:13.86
           Body SysBody 24-OCT-2011 08:04:13.86
             Attr PgmName = "UnitId"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -3293,6 +4423,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 25 24-OCT-2011 08:04:13.86
           Body SysBody 24-OCT-2011 08:04:13.86
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "OtherIO:Type-ModbusSever_StatusEnum"
           EndBody
@@ -3309,6 +4440,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 26 24-OCT-2011 08:04:13.86
           Body SysBody 24-OCT-2011 08:04:13.86
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -3320,6 +4452,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 27 24-OCT-2011 08:04:13.86
           Body SysBody 24-OCT-2011 08:04:13.86
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -3369,6 +4502,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 13 15-APR-2010 21:46:16.74
           Body SysBody 15-APR-2010 21:46:16.74
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -3384,6 +4518,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 14 15-APR-2010 21:46:16.74
           Body SysBody 15-APR-2010 21:54:44.41
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -3395,12 +4530,14 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 15 15-APR-2010 21:46:16.74
           Body SysBody 15-APR-2010 21:46:16.74
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
         Object Status $Attribute 16 15-APR-2010 21:46:16.74
           Body SysBody 15-APR-2010 21:55:29.27
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
@@ -3461,6 +4598,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 10 15-APR-2010 21:53:54.03
           Body SysBody 15-APR-2010 21:54:16.96
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -3476,6 +4614,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 11 15-APR-2010 21:54:37.62
           Body SysBody 15-APR-2010 21:54:53.56
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -3487,18 +4626,21 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 13 15-APR-2010 21:55:05.81
           Body SysBody 15-APR-2010 21:55:05.81
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
         Object Status $Attribute 12 15-APR-2010 21:55:37.33
           Body SysBody 15-APR-2010 21:55:45.30
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
         Object ScanInterval $Attribute 14 16-APR-2010 16:09:01.24
           Body SysBody 16-APR-2010 16:09:02.20
             Attr PgmName = "ScanInterval"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -3551,24 +4693,28 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 17 06-JUN-2010 13:05:26.98
           Body SysBody 06-JUN-2010 13:05:26.98
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object Process $Attribute 18 06-JUN-2010 13:05:26.98
           Body SysBody 06-JUN-2010 13:05:26.98
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         Object ThreadObject $Attribute 19 06-JUN-2010 13:05:26.98
           Body SysBody 06-JUN-2010 13:05:26.98
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
         Object Status $Attribute 20 06-JUN-2010 13:05:26.98
           Body SysBody 06-JUN-2010 13:05:26.98
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
@@ -3614,6 +4760,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Super $Attribute 15 06-JUN-2010 14:27:43.39
           Body SysBody 06-JUN-2010 14:27:21.38
             Attr PgmName = "Super"
+            Attr Size = 352
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseIOCard"
           EndBody
@@ -3621,30 +4768,35 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 18 06-JUN-2010 13:05:26.98
           Body SysBody 06-JUN-2010 13:05:26.98
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
         Object Family $Attribute 22 06-JUN-2010 13:56:28.16
           Body SysBody 06-JUN-2010 13:56:08.04
             Attr PgmName = "Family"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object Resolution $Attribute 21 06-JUN-2010 13:54:53.59
           Body SysBody 06-JUN-2010 13:13:46.70
             Attr PgmName = "Resolution"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ScanInterval $Attribute 19 06-JUN-2010 13:05:26.98
           Body SysBody 06-JUN-2010 13:05:26.98
             Attr PgmName = "ScanInterval"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ChAi $Attribute 20 06-JUN-2010 13:08:41.78
           Body SysBody 06-JUN-2010 13:09:01.03
             Attr PgmName = "ChAi"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -3710,6 +4862,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Super $Attribute 24 08-JUN-2011 14:01:02.86
           Body SysBody 08-JUN-2011 14:01:02.86
             Attr PgmName = "Super"
+            Attr Size = 352
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseIOCard"
           EndBody
@@ -3717,48 +4870,56 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 25 08-JUN-2011 14:01:02.86
           Body SysBody 08-JUN-2011 14:01:02.86
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
         Object Family $Attribute 26 08-JUN-2011 14:01:02.86
           Body SysBody 08-JUN-2011 14:01:02.86
             Attr PgmName = "Family"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object Resolution $Attribute 27 08-JUN-2011 14:01:02.86
           Body SysBody 08-JUN-2011 14:01:02.86
             Attr PgmName = "Resolution"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ScanInterval $Attribute 28 08-JUN-2011 14:01:02.86
           Body SysBody 08-JUN-2011 14:01:02.86
             Attr PgmName = "ScanInterval"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object DataFile $Attribute 31 08-JUN-2011 14:05:03.02
           Body SysBody 08-JUN-2011 14:05:27.07
             Attr PgmName = "DataFile"
+            Attr Size = 256
             Attr TypeRef = "pwrs:Type-$String256"
           EndBody
         EndObject
         Object ValueSearchString $Attribute 30 08-JUN-2011 14:05:38.41
           Body SysBody 08-JUN-2011 14:05:50.55
             Attr PgmName = "ValueSearchString"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object ErrorValue $Attribute 32 08-JUN-2011 14:06:48.22
           Body SysBody 08-JUN-2011 14:06:49.35
             Attr PgmName = "ErrorValue"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object ChAi $Attribute 29 08-JUN-2011 14:01:02.86
           Body SysBody 08-JUN-2011 14:01:02.86
             Attr PgmName = "ChAi"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -3823,6 +4984,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Super $Attribute 33 01-NOV-2011 13:31:33.55
           Body SysBody 01-NOV-2011 13:31:33.55
             Attr PgmName = "Super"
+            Attr Size = 352
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseIOCard"
           EndBody
@@ -3830,48 +4992,56 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 34 01-NOV-2011 13:31:33.55
           Body SysBody 01-NOV-2011 13:31:33.55
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
         Object Family $Attribute 35 01-NOV-2011 13:31:33.55
           Body SysBody 01-NOV-2011 13:31:33.55
             Attr PgmName = "Family"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object Resolution $Attribute 36 01-NOV-2011 13:31:33.55
           Body SysBody 01-NOV-2011 13:31:33.55
             Attr PgmName = "Resolution"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ScanInterval $Attribute 37 01-NOV-2011 13:31:33.55
           Body SysBody 01-NOV-2011 13:31:33.55
             Attr PgmName = "ScanInterval"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object DataFile $Attribute 38 01-NOV-2011 13:31:33.55
           Body SysBody 01-NOV-2011 13:31:33.55
             Attr PgmName = "DataFile"
+            Attr Size = 256
             Attr TypeRef = "pwrs:Type-$String256"
           EndBody
         EndObject
         Object Format $Attribute 39 01-NOV-2011 13:32:10.45
           Body SysBody 01-NOV-2011 13:32:11.28
             Attr PgmName = "Format"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object ErrorValue $Attribute 40 01-NOV-2011 13:31:33.55
           Body SysBody 01-NOV-2011 13:31:33.55
             Attr PgmName = "ErrorValue"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object ChAo $Attribute 41 01-NOV-2011 13:32:25.24
           Body SysBody 01-NOV-2011 13:32:30.71
             Attr PgmName = "ChAo"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -3944,6 +5114,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 17 23-MAY-2010 11:38:08.72
           Body SysBody 23-MAY-2010 11:38:08.72
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -3959,6 +5130,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 18 23-MAY-2010 11:38:08.72
           Body SysBody 23-MAY-2010 11:38:08.72
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -3970,6 +5142,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 19 23-MAY-2010 11:38:08.72
           Body SysBody 23-MAY-2010 11:38:08.72
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -3979,6 +5152,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 20 23-MAY-2010 11:38:08.72
           Body SysBody 23-MAY-2010 11:38:08.72
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
@@ -4052,6 +5226,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 13 23-MAY-2010 11:43:07.03
           Body SysBody 23-MAY-2010 11:43:07.03
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -4067,6 +5242,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 14 23-MAY-2010 11:43:07.03
           Body SysBody 23-MAY-2010 11:43:07.03
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -4078,6 +5254,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 15 23-MAY-2010 11:43:07.03
           Body SysBody 23-MAY-2010 11:43:07.03
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -4087,6 +5264,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 16 23-MAY-2010 11:43:07.03
           Body SysBody 23-MAY-2010 11:45:18.68
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
@@ -4167,6 +5345,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Super $Attribute 10 23-MAY-2010 11:43:07.03
           Body SysBody 23-MAY-2010 11:43:07.03
             Attr PgmName = "Super"
+            Attr Size = 352
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseIOCard"
           EndBody
@@ -4177,6 +5356,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 11 23-MAY-2010 11:43:07.03
           Body SysBody 23-MAY-2010 11:47:51.85
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
@@ -4187,6 +5367,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ChAi $Attribute 13 23-MAY-2010 11:51:21.44
           Body SysBody 23-MAY-2010 11:53:02.11
             Attr PgmName = "ChAi"
+            Attr Size = 480
             Attr Flags = 131074
             Attr Elements = 2
             Attr TypeRef = "pwrb:Class-ChanAi"
@@ -4198,6 +5379,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ChDi $Attribute 14 23-MAY-2010 11:51:27.84
           Body SysBody 23-MAY-2010 11:53:07.07
             Attr PgmName = "ChDi"
+            Attr Size = 800
             Attr Flags = 131074
             Attr Elements = 5
             Attr TypeRef = "pwrb:Class-ChanDi"
@@ -4209,6 +5391,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ChAo $Attribute 15 23-MAY-2010 11:51:32.07
           Body SysBody 23-MAY-2010 11:53:13.45
             Attr PgmName = "ChAo"
+            Attr Size = 480
             Attr Flags = 131074
             Attr Elements = 2
             Attr TypeRef = "pwrb:Class-ChanAo"
@@ -4220,6 +5403,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ChDo $Attribute 16 23-MAY-2010 11:51:46.23
           Body SysBody 23-MAY-2010 11:53:24.70
             Attr PgmName = "ChDo"
+            Attr Size = 1344
             Attr Flags = 131074
             Attr Elements = 8
             Attr TypeRef = "pwrb:Class-ChanDo"
@@ -4332,6 +5516,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 13 13-DEC-2010 21:36:40.01
           Body SysBody 13-DEC-2010 21:36:40.01
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -4347,6 +5532,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 14 13-DEC-2010 21:36:40.01
           Body SysBody 13-DEC-2010 21:36:40.01
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -4358,6 +5544,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 15 13-DEC-2010 21:36:40.01
           Body SysBody 13-DEC-2010 21:36:40.01
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -4416,6 +5603,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 10 13-DEC-2010 21:49:28.15
           Body SysBody 13-DEC-2010 21:49:49.98
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -4425,6 +5613,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Specification $Attribute 13 13-DEC-2010 21:50:02.59
           Body SysBody 13-DEC-2010 21:50:03.79
             Attr PgmName = "Specification"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -4434,6 +5623,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DataSheet $Attribute 14 13-DEC-2010 21:50:26.25
           Body SysBody 13-DEC-2010 21:50:34.28
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -4443,6 +5633,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Device $Attribute 15 13-DEC-2010 21:51:06.35
           Body SysBody 13-DEC-2010 21:51:16.23
             Attr PgmName = "Device"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -4458,6 +5649,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 16 13-DEC-2010 21:51:43.37
           Body SysBody 13-DEC-2010 21:51:43.37
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -4469,6 +5661,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 17 13-DEC-2010 21:51:43.37
           Body SysBody 13-DEC-2010 21:51:43.37
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -4480,6 +5673,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorCount $Attribute 18 13-DEC-2010 21:52:48.18
           Body SysBody 13-DEC-2010 21:52:57.58
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -4489,6 +5683,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorSoftLimit $Attribute 19 13-DEC-2010 21:53:15.14
           Body SysBody 13-DEC-2010 21:53:20.46
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -4498,6 +5693,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorHardLimit $Attribute 20 13-DEC-2010 21:53:29.66
           Body SysBody 13-DEC-2010 21:53:34.59
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -4507,6 +5703,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 11 13-DEC-2010 21:36:40.01
           Body SysBody 13-DEC-2010 21:46:18.05
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "OtherIO:Type-Arduino_StatusEnum"
           EndBody
@@ -4520,6 +5717,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object WatchdogTime $Attribute 12 13-DEC-2010 21:36:40.01
           Body SysBody 13-DEC-2010 21:36:40.01
             Attr PgmName = "WatchdogTime"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -4530,6 +5728,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object BaudRate $Attribute 21 03-JAN-2011 21:18:39.87
           Body SysBody 03-JAN-2011 21:19:00.44
             Attr PgmName = "BaudRate"
+            Attr Size = 4
             Attr TypeRef = "OtherIO:Type-Arduino_BaudRateEnum"
           EndBody
         EndObject
@@ -4542,6 +5741,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Options $Attribute 22 06-JAN-2011 15:50:22.78
           Body SysBody 06-JAN-2011 15:51:32.48
             Attr PgmName = "Options"
+            Attr Size = 4
             Attr TypeRef = "OtherIO:Type-Arduino_OptionsMask"
           EndBody
         EndObject
@@ -4555,6 +5755,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object AiScanInterval $Attribute 23 09-JAN-2011 10:37:58.02
           Body SysBody 09-JAN-2011 10:38:12.99
             Attr PgmName = "AiScanInterval"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -4568,24 +5769,28 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object AoScanInterval $Attribute 24 19-JAN-2011 18:24:34.75
           Body SysBody 19-JAN-2011 18:24:35.83
             Attr PgmName = "AoScanInterval"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object StallAction $Attribute 25 05-FEB-2012 16:31:41.97
           Body SysBody 05-FEB-2012 16:31:41.97
             Attr PgmName = "StallAction"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-StallActionEnum"
           EndBody
         EndObject
         Object Timeout $Attribute 26 05-FEB-2012 18:33:56.70
           Body SysBody 05-FEB-2012 18:33:53.26
             Attr PgmName = "Timeout"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object FirmwareVersion $Attribute 27 05-FEB-2012 16:33:33.69
           Body SysBody 05-FEB-2012 16:33:52.27
             Attr PgmName = "FirmwareVersion"
+            Attr Size = 40
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
@@ -4670,6 +5875,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DeviceNumber $Attribute 3 04-MAR-2011 14:29:58.06
           Body SysBody 11-MAR-2011 10:01:35.56
             Attr PgmName = "DeviceNumber"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -4680,6 +5886,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object SerialNumber $Attribute 4 04-MAR-2011 14:30:15.60
           Body SysBody 11-MAR-2011 10:01:42.88
             Attr PgmName = "SerialNumber"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -4690,6 +5897,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object FirmwareName $Attribute 15 11-MAR-2011 11:13:13.95
           Body SysBody 11-MAR-2011 11:13:29.65
             Attr PgmName = "FirmwareName"
+            Attr Size = 40
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
@@ -4700,6 +5908,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object FirmwareVersion $Attribute 16 11-MAR-2011 11:13:42.31
           Body SysBody 11-MAR-2011 11:13:32.93
             Attr PgmName = "FirmwareVersion"
+            Attr Size = 40
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
@@ -4710,6 +5919,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object SystemError $Attribute 5 04-MAR-2011 14:30:29.02
           Body SysBody 11-MAR-2011 10:01:48.67
             Attr PgmName = "SystemError"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -4723,6 +5933,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object SystemStatus $Attribute 6 04-MAR-2011 14:31:01.22
           Body SysBody 11-MAR-2011 10:01:55.81
             Attr PgmName = "SystemStatus"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -4733,6 +5944,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object TimeSinceStart $Attribute 7 11-MAR-2011 09:53:27.01
           Body SysBody 11-MAR-2011 10:02:03.22
             Attr PgmName = "TimeSinceStart"
+            Attr Size = 16
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$DeltaTime"
           EndBody
@@ -4743,6 +5955,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object CpuLoad $Attribute 8 11-MAR-2011 09:53:50.36
           Body SysBody 11-MAR-2011 10:02:09.47
             Attr PgmName = "CpuLoad"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -4753,6 +5966,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object CommState $Attribute 9 11-MAR-2011 09:54:28.93
           Body SysBody 11-MAR-2011 10:02:14.79
             Attr PgmName = "CommState"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "OtherIO:Type-Hilscher_cifX_CommStateEnum"
           EndBody
@@ -4763,6 +5977,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object CommError $Attribute 10 11-MAR-2011 09:54:46.70
           Body SysBody 11-MAR-2011 10:02:19.62
             Attr PgmName = "CommError"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -4773,6 +5988,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorCount $Attribute 11 11-MAR-2011 09:55:06.60
           Body SysBody 11-MAR-2011 10:02:24.52
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -4783,6 +5999,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ConfigSlaves $Attribute 12 11-MAR-2011 09:55:20.72
           Body SysBody 11-MAR-2011 10:02:29.55
             Attr PgmName = "ConfigSlaves"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -4793,6 +6010,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ActiveSlaves $Attribute 13 11-MAR-2011 09:55:28.90
           Body SysBody 11-MAR-2011 10:02:38.38
             Attr PgmName = "ActiveSlaves"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -4803,6 +6021,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object SlaveState $Attribute 14 11-MAR-2011 09:55:39.61
           Body SysBody 11-MAR-2011 10:10:14.15
             Attr PgmName = "SlaveState"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "OtherIO:Type-Hilscher_cifX_SlaveStateEnum"
           EndBody
@@ -4813,6 +6032,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object HostState $Attribute 1 04-MAR-2011 14:17:52.72
           Body SysBody 11-MAR-2011 10:17:10.58
             Attr PgmName = "HostState"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrb:Type-ReadyNotReadyEnum"
           EndBody
@@ -4823,6 +6043,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object BusState $Attribute 2 04-MAR-2011 14:17:45.36
           Body SysBody 11-MAR-2011 10:03:59.20
             Attr PgmName = "BusState"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrb:Type-OnOffEnum"
           EndBody
@@ -4869,6 +6090,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 14 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -4878,6 +6100,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Specification $Attribute 15 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "Specification"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -4887,6 +6110,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DataSheet $Attribute 16 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -4896,6 +6120,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object IP_Address $Attribute 27 24-MAY-2011 08:21:37.53
           Body SysBody 24-MAY-2011 08:21:12.63
             Attr PgmName = "IP_Address"
+            Attr Size = 32
             Attr TypeRef = "pwrs:Type-$String32"
           EndBody
         EndObject
@@ -4905,6 +6130,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object SubnetMask $Attribute 28 24-MAY-2011 08:21:57.03
           Body SysBody 24-MAY-2011 08:23:57.17
             Attr PgmName = "SubnetMask"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -4914,6 +6140,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DeviceName $Attribute 29 24-MAY-2011 08:22:20.62
           Body SysBody 24-MAY-2011 08:24:00.64
             Attr PgmName = "DeviceName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -4923,6 +6150,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DeviceType $Attribute 30 24-MAY-2011 08:22:25.89
           Body SysBody 24-MAY-2011 08:24:03.36
             Attr PgmName = "DeviceType"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -4933,6 +6161,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Alias $Attribute 17 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "Alias"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -4942,6 +6171,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Channel $Attribute 18 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "Channel"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -4955,6 +6185,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 19 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -4970,6 +6201,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 20 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -4981,6 +6213,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 21 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -4992,6 +6225,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorCount $Attribute 22 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5002,6 +6236,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorStr $Attribute 23 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "ErrorStr"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -5011,6 +6246,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorSoftLimit $Attribute 24 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -5020,6 +6256,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorHardLimit $Attribute 25 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -5029,6 +6266,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Diag $Attribute 26 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "Diag"
+            Attr Size = 152
             Attr Flags = 131072
             Attr TypeRef = "OtherIO:Class-Hilscher_cifX_Diag"
           EndBody
@@ -5133,6 +6371,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 1 23-FEB-2011 13:53:04.77
           Body SysBody 23-FEB-2011 13:53:04.77
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -5142,6 +6381,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Specification $Attribute 12 09-MAR-2011 17:28:57.42
           Body SysBody 09-MAR-2011 17:28:57.42
             Attr PgmName = "Specification"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -5151,6 +6391,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DataSheet $Attribute 13 09-MAR-2011 17:28:57.42
           Body SysBody 09-MAR-2011 17:28:57.42
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -5161,6 +6402,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Alias $Attribute 4 23-FEB-2011 13:53:17.54
           Body SysBody 23-FEB-2011 13:53:27.97
             Attr PgmName = "Alias"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -5170,6 +6412,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Channel $Attribute 5 23-FEB-2011 13:53:43.84
           Body SysBody 23-FEB-2011 13:53:53.75
             Attr PgmName = "Channel"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -5183,6 +6426,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 11 07-MAR-2011 09:01:35.86
           Body SysBody 07-MAR-2011 09:01:37.24
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -5198,6 +6442,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 2 23-FEB-2011 13:53:04.77
           Body SysBody 23-FEB-2011 13:53:04.77
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -5209,6 +6454,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 3 23-FEB-2011 13:53:04.77
           Body SysBody 23-FEB-2011 13:53:04.77
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -5220,6 +6466,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorCount $Attribute 8 07-MAR-2011 08:39:54.17
           Body SysBody 07-MAR-2011 08:40:02.94
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5230,6 +6477,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorStr $Attribute 6 07-MAR-2011 09:01:18.62
           Body SysBody 07-MAR-2011 09:01:19.70
             Attr PgmName = "ErrorStr"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -5239,6 +6487,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorSoftLimit $Attribute 9 07-MAR-2011 08:40:26.77
           Body SysBody 07-MAR-2011 08:40:28.83
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -5248,6 +6497,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorHardLimit $Attribute 10 07-MAR-2011 08:40:39.64
           Body SysBody 07-MAR-2011 08:40:40.71
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -5257,6 +6507,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Diag $Attribute 7 04-MAR-2011 14:19:32.00
           Body SysBody 04-MAR-2011 14:19:50.47
             Attr PgmName = "Diag"
+            Attr Size = 152
             Attr Flags = 131072
             Attr TypeRef = "OtherIO:Class-Hilscher_cifX_Diag"
           EndBody
@@ -5344,6 +6595,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 6 23-FEB-2011 14:01:08.18
           Body SysBody 23-FEB-2011 14:01:08.18
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -5353,6 +6605,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ByteOrdering $Attribute 15 09-MAR-2011 17:31:00.41
           Body SysBody 09-MAR-2011 17:31:17.44
             Attr PgmName = "ByteOrdering"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-ByteOrderingEnum"
           EndBody
         EndObject
@@ -5362,6 +6615,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object FloatRepresentation $Attribute 16 09-MAR-2011 17:32:02.70
           Body SysBody 09-MAR-2011 17:33:34.38
             Attr PgmName = "FloatRepresentation"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-FloatRepEnum"
           EndBody
         EndObject
@@ -5377,6 +6631,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 9 23-FEB-2011 14:01:08.18
           Body SysBody 23-FEB-2011 14:01:08.18
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -5388,6 +6643,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 10 23-FEB-2011 14:01:08.18
           Body SysBody 23-FEB-2011 14:01:08.18
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -5400,6 +6656,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object InputAreaOffset $Attribute 11 04-MAR-2011 10:18:56.35
           Body SysBody 04-MAR-2011 10:19:17.94
             Attr PgmName = "InputAreaOffset"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5410,6 +6667,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object InputAreaSize $Attribute 12 04-MAR-2011 10:19:46.95
           Body SysBody 04-MAR-2011 10:19:37.75
             Attr PgmName = "InputAreaSize"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5420,6 +6678,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object OutputAreaOffset $Attribute 13 04-MAR-2011 10:20:07.15
           Body SysBody 04-MAR-2011 10:19:58.64
             Attr PgmName = "OutputAreaOffset"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5430,6 +6689,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object OutputAreaSize $Attribute 14 04-MAR-2011 10:20:18.60
           Body SysBody 04-MAR-2011 10:19:58.64
             Attr PgmName = "OutputAreaSize"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5492,6 +6752,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 6 23-FEB-2011 14:02:24.06
           Body SysBody 23-FEB-2011 14:02:24.06
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -5507,6 +6768,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 9 23-FEB-2011 14:02:24.06
           Body SysBody 23-FEB-2011 14:02:24.06
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -5518,6 +6780,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 10 23-FEB-2011 14:02:24.06
           Body SysBody 23-FEB-2011 14:02:24.06
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -5530,6 +6793,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object InputAreaOffset $Attribute 11 04-MAR-2011 10:20:33.79
           Body SysBody 04-MAR-2011 10:20:33.79
             Attr PgmName = "InputAreaOffset"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5540,6 +6804,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object InputAreaSize $Attribute 12 04-MAR-2011 10:20:33.79
           Body SysBody 04-MAR-2011 10:20:33.79
             Attr PgmName = "InputAreaSize"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5550,6 +6815,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object OutputAreaOffset $Attribute 13 04-MAR-2011 10:20:33.79
           Body SysBody 04-MAR-2011 10:20:33.79
             Attr PgmName = "OutputAreaOffset"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5560,6 +6826,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object OutputAreaSize $Attribute 14 04-MAR-2011 10:20:33.79
           Body SysBody 04-MAR-2011 10:20:33.79
             Attr PgmName = "OutputAreaSize"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5654,6 +6921,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 25 13-MAY-2011 13:04:51.42
           Body SysBody 13-MAY-2011 13:04:51.42
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -5663,6 +6931,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Specification $Attribute 26 13-MAY-2011 13:04:51.42
           Body SysBody 13-MAY-2011 13:04:51.42
             Attr PgmName = "Specification"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -5672,6 +6941,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DataSheet $Attribute 27 13-MAY-2011 13:04:51.42
           Body SysBody 13-MAY-2011 13:04:51.42
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -5681,6 +6951,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Device $Attribute 28 13-MAY-2011 13:04:51.42
           Body SysBody 13-MAY-2011 13:04:51.42
             Attr PgmName = "Device"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -5696,6 +6967,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 29 13-MAY-2011 13:04:51.42
           Body SysBody 13-MAY-2011 13:04:51.42
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -5707,6 +6979,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 30 13-MAY-2011 13:04:51.42
           Body SysBody 13-MAY-2011 13:04:51.42
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -5718,6 +6991,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorCount $Attribute 31 13-MAY-2011 13:04:51.42
           Body SysBody 13-MAY-2011 13:04:51.42
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -5727,6 +7001,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorSoftLimit $Attribute 32 13-MAY-2011 13:04:51.42
           Body SysBody 13-MAY-2011 13:04:51.42
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -5736,6 +7011,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorHardLimit $Attribute 33 13-MAY-2011 13:04:51.42
           Body SysBody 13-MAY-2011 13:04:51.42
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -5745,6 +7021,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 34 13-MAY-2011 13:04:51.42
           Body SysBody 13-MAY-2011 13:06:42.48
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5822,6 +7099,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Super $Attribute 1 13-MAY-2011 17:19:58.91
           Body SysBody 13-MAY-2011 17:20:14.58
             Attr PgmName = "Super"
+            Attr Size = 392
             Attr Flags = 393216
             Attr TypeRef = "OtherIO:Class-USB_Joystick"
           EndBody
@@ -5832,6 +7110,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object AiX $Attribute 2 13-MAY-2011 17:20:55.28
           Body SysBody 13-MAY-2011 17:21:09.93
             Attr PgmName = "AiX"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -5842,6 +7121,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object AiY $Attribute 4 13-MAY-2011 17:21:20.84
           Body SysBody 13-MAY-2011 17:21:14.27
             Attr PgmName = "AiY"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -5852,6 +7132,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object AiZ $Attribute 3 13-MAY-2011 17:21:30.36
           Body SysBody 13-MAY-2011 17:21:13.24
             Attr PgmName = "AiZ"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -5862,6 +7143,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Di1 $Attribute 5 13-MAY-2011 17:53:59.29
           Body SysBody 13-MAY-2011 17:54:00.33
             Attr PgmName = "Di1"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -5872,6 +7154,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Di2 $Attribute 6 13-MAY-2011 17:53:53.66
           Body SysBody 13-MAY-2011 17:53:55.30
             Attr PgmName = "Di2"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -5882,6 +7165,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Di3 $Attribute 7 13-MAY-2011 17:53:44.08
           Body SysBody 13-MAY-2011 17:53:46.78
             Attr PgmName = "Di3"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -5892,6 +7176,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Di4 $Attribute 8 13-MAY-2011 17:53:34.34
           Body SysBody 13-MAY-2011 17:53:38.23
             Attr PgmName = "Di4"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -5902,6 +7187,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Di5 $Attribute 9 13-MAY-2011 17:53:29.14
           Body SysBody 13-MAY-2011 17:53:30.49
             Attr PgmName = "Di5"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -5912,6 +7198,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Di6 $Attribute 10 13-MAY-2011 17:53:10.76
           Body SysBody 13-MAY-2011 17:53:12.72
             Attr PgmName = "Di6"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -5922,6 +7209,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Di7 $Attribute 11 13-MAY-2011 17:53:02.95
           Body SysBody 13-MAY-2011 17:53:04.10
             Attr PgmName = "Di7"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -5932,6 +7220,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Di8 $Attribute 12 13-MAY-2011 17:52:56.04
           Body SysBody 13-MAY-2011 17:52:57.21
             Attr PgmName = "Di8"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -6041,6 +7330,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 1 18-MAY-2011 07:46:23.42
           Body SysBody 18-MAY-2011 07:46:34.66
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -6056,6 +7346,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 18 18-MAY-2011 08:11:20.37
           Body SysBody 18-MAY-2011 08:11:20.37
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -6067,6 +7358,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 19 18-MAY-2011 08:11:20.45
           Body SysBody 18-MAY-2011 08:11:20.45
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -6076,6 +7368,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Device $Attribute 2 18-MAY-2011 07:46:57.02
           Body SysBody 18-MAY-2011 07:47:17.37
             Attr PgmName = "Device"
+            Attr Size = 32
             Attr TypeRef = "pwrs:Type-$String32"
           EndBody
         EndObject
@@ -6085,6 +7378,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object RemoteHostName $Attribute 3 18-MAY-2011 07:47:46.07
           Body SysBody 18-MAY-2011 07:48:06.35
             Attr PgmName = "RemoteHostName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -6094,6 +7388,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object RemoteAddress $Attribute 4 18-MAY-2011 07:48:27.99
           Body SysBody 18-MAY-2011 07:48:40.22
             Attr PgmName = "RemoteAddress"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -6103,6 +7398,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object RemotePort $Attribute 5 18-MAY-2011 07:49:24.89
           Body SysBody 18-MAY-2011 07:49:32.49
             Attr PgmName = "RemotePort"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -6112,6 +7408,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object LocalPort $Attribute 6 18-MAY-2011 07:49:42.02
           Body SysBody 18-MAY-2011 08:08:29.57
             Attr PgmName = "LocalPort"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -6121,6 +7418,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ByteOrdering $Attribute 20 18-MAY-2011 09:20:56.59
           Body SysBody 18-MAY-2011 09:20:56.59
             Attr PgmName = "ByteOrdering"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-ByteOrderingEnum"
           EndBody
         EndObject
@@ -6130,6 +7428,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object FloatRepresentation $Attribute 25 20-MAY-2011 14:28:22.26
           Body SysBody 20-MAY-2011 14:28:16.72
             Attr PgmName = "FloatRepresentation"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrb:Type-FloatRepEnum"
           EndBody
@@ -6140,6 +7439,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Link $Attribute 7 18-MAY-2011 07:56:48.39
           Body SysBody 18-MAY-2011 08:30:57.24
             Attr PgmName = "Link"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrb:Type-UpDownEnum"
           EndBody
@@ -6150,6 +7450,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object LinkTimeout $Attribute 16 18-MAY-2011 08:05:56.37
           Body SysBody 18-MAY-2011 08:06:01.94
             Attr PgmName = "LinkTimeout"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -6159,6 +7460,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ReconnectTime $Attribute 26 20-MAY-2011 14:29:16.22
           Body SysBody 20-MAY-2011 14:28:38.85
             Attr PgmName = "ReconnectTime"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -6168,6 +7470,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 17 18-MAY-2011 08:07:25.83
           Body SysBody 18-MAY-2011 08:31:10.19
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
@@ -6178,6 +7481,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object RX_Packets $Attribute 27 18-MAY-2011 16:44:26.32
           Body SysBody 18-MAY-2011 16:44:35.97
             Attr PgmName = "RX_Packets"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -6188,6 +7492,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object TX_Packets $Attribute 29 18-MAY-2011 16:44:47.12
           Body SysBody 18-MAY-2011 16:44:39.29
             Attr PgmName = "TX_Packets"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -6198,6 +7503,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object EnableHeader $Attribute 8 18-MAY-2011 07:57:46.56
           Body SysBody 18-MAY-2011 07:57:52.66
             Attr PgmName = "EnableHeader"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -6207,6 +7513,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object MessageId $Attribute 23 18-MAY-2011 13:18:27.54
           Body SysBody 18-MAY-2011 13:20:04.49
             Attr PgmName = "MessageId"
+            Attr Size = 4
             Attr Flags = 2
             Attr Elements = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
@@ -6218,6 +7525,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object UseKeepAlive $Attribute 9 18-MAY-2011 07:58:13.34
           Body SysBody 18-MAY-2011 07:58:16.49
             Attr PgmName = "UseKeepAlive"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -6227,6 +7535,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object KeepAliveTime $Attribute 10 18-MAY-2011 07:58:36.77
           Body SysBody 18-MAY-2011 07:58:43.14
             Attr PgmName = "KeepAliveTime"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -6236,6 +7545,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object KeepAliveDiff $Attribute 11 18-MAY-2011 07:59:05.34
           Body SysBody 18-MAY-2011 08:31:23.43
             Attr PgmName = "KeepAliveDiff"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
@@ -6246,6 +7556,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorCount $Attribute 13 18-MAY-2011 08:04:23.30
           Body SysBody 18-MAY-2011 08:31:32.05
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -6256,6 +7567,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorSoftLimit $Attribute 14 18-MAY-2011 08:05:05.42
           Body SysBody 18-MAY-2011 08:05:08.80
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -6265,6 +7577,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorHardLimit $Attribute 15 18-MAY-2011 08:05:13.78
           Body SysBody 18-MAY-2011 08:05:16.85
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -6274,6 +7587,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object InputAreaSize $Attribute 21 18-MAY-2011 09:21:36.79
           Body SysBody 18-MAY-2011 09:22:16.57
             Attr PgmName = "InputAreaSize"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -6284,6 +7598,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object OutputAreaSize $Attribute 22 18-MAY-2011 09:21:59.29
           Body SysBody 18-MAY-2011 09:22:22.58
             Attr PgmName = "OutputAreaSize"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -6370,6 +7685,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Super $Attribute 1 15-JAN-2012 10:38:35.30
           Body SysBody 15-JAN-2012 10:40:19.18
             Attr PgmName = "Super"
+            Attr Size = 352
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseIORack"
           EndBody
@@ -6412,6 +7728,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 30 10-JUL-2011 07:17:08.04
           Body SysBody 10-JUL-2011 07:17:08.04
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -6427,6 +7744,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 31 10-JUL-2011 07:17:08.04
           Body SysBody 10-JUL-2011 07:17:08.04
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -6438,6 +7756,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 32 10-JUL-2011 07:17:08.04
           Body SysBody 10-JUL-2011 07:17:08.04
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -6447,6 +7766,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Device $Attribute 33 10-JUL-2011 07:17:08.04
           Body SysBody 10-JUL-2011 07:17:08.04
             Attr PgmName = "Device"
+            Attr Size = 32
             Attr TypeRef = "pwrs:Type-$String32"
           EndBody
         EndObject
@@ -6464,6 +7784,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Mode $Attribute 56 15-JAN-2012 10:14:40.11
           Body SysBody 15-JAN-2012 10:19:28.91
             Attr PgmName = "Mode"
+            Attr Size = 4
             Attr TypeRef = "OtherIO:Type-SPI_ModeEnum"
           EndBody
         EndObject
@@ -6473,6 +7794,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object BitsPerWord $Attribute 57 15-JAN-2012 10:15:07.96
           Body SysBody 15-JAN-2012 10:15:29.14
             Attr PgmName = "BitsPerWord"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -6483,6 +7805,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object LSB_First $Attribute 58 15-JAN-2012 10:15:46.96
           Body SysBody 15-JAN-2012 10:16:06.24
             Attr PgmName = "LSB_First"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -6493,6 +7816,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object MaxSpeed $Attribute 59 15-JAN-2012 10:16:16.00
           Body SysBody 15-JAN-2012 10:16:29.49
             Attr PgmName = "MaxSpeed"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -6502,6 +7826,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ByteOrdering $Attribute 38 10-JUL-2011 07:17:08.04
           Body SysBody 10-JUL-2011 07:17:08.04
             Attr PgmName = "ByteOrdering"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-ByteOrderingEnum"
           EndBody
         EndObject
@@ -6511,6 +7836,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object FloatRepresentation $Attribute 39 10-JUL-2011 07:17:08.04
           Body SysBody 10-JUL-2011 07:17:08.04
             Attr PgmName = "FloatRepresentation"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrb:Type-FloatRepEnum"
           EndBody
@@ -6521,6 +7847,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 43 10-JUL-2011 07:17:08.04
           Body SysBody 10-JUL-2011 07:17:08.04
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
@@ -6531,6 +7858,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorCount $Attribute 51 10-JUL-2011 07:17:08.04
           Body SysBody 10-JUL-2011 07:17:08.04
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -6541,6 +7869,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorSoftLimit $Attribute 52 10-JUL-2011 07:17:08.04
           Body SysBody 10-JUL-2011 07:17:08.04
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -6550,6 +7879,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorHardLimit $Attribute 53 10-JUL-2011 07:17:08.04
           Body SysBody 10-JUL-2011 07:17:08.04
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -6559,6 +7889,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object InputAreaSize $Attribute 54 10-JUL-2011 07:17:08.04
           Body SysBody 10-JUL-2011 07:17:08.04
             Attr PgmName = "InputAreaSize"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -6569,6 +7900,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object OutputAreaSize $Attribute 55 10-JUL-2011 07:17:08.04
           Body SysBody 10-JUL-2011 07:17:08.04
             Attr PgmName = "OutputAreaSize"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -6657,6 +7989,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 2 27-FEB-2012 10:54:34.29
           Body SysBody 27-FEB-2012 10:54:34.29
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -6666,6 +7999,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 12 28-FEB-2012 08:50:54.98
           Body SysBody 27-FEB-2012 13:25:54.45
             Attr PgmName = "Status"
+            Attr Size = 80
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
@@ -6682,6 +8016,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 3 27-FEB-2012 10:54:34.29
           Body SysBody 27-FEB-2012 10:54:34.29
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -6693,6 +8028,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 4 27-FEB-2012 10:54:34.29
           Body SysBody 27-FEB-2012 10:54:34.29
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -6702,6 +8038,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Connection $Attribute 1 27-FEB-2012 10:54:53.89
           Body SysBody 27-FEB-2012 10:55:22.28
             Attr PgmName = "Connection"
+            Attr Size = 4
             Attr TypeRef = "OtherIO:Type-Nodave_ConnectionEnum"
           EndBody
         EndObject
@@ -6712,6 +8049,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object SerialDevice $Attribute 5 27-FEB-2012 10:55:47.87
           Body SysBody 27-FEB-2012 10:56:00.85
             Attr PgmName = "SerialDevice"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -6722,6 +8060,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object SerialSpeed $Attribute 6 27-FEB-2012 10:56:24.61
           Body SysBody 27-FEB-2012 10:56:47.23
             Attr PgmName = "SerialSpeed"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -6732,6 +8071,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object SerialParity $Attribute 7 27-FEB-2012 10:57:02.36
           Body SysBody 27-FEB-2012 10:58:03.88
             Attr PgmName = "SerialParity"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-ParityEnum"
           EndBody
         EndObject
@@ -6743,6 +8083,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Port $Attribute 8 27-FEB-2012 10:58:23.89
           Body SysBody 27-FEB-2012 10:58:28.52
             Attr PgmName = "Port"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -6753,6 +8094,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object IP_Address $Attribute 9 27-FEB-2012 10:58:40.12
           Body SysBody 27-FEB-2012 10:59:40.59
             Attr PgmName = "IP_Address"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -6777,6 +8119,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Protocol $Attribute 10 27-FEB-2012 11:00:54.94
           Body SysBody 27-FEB-2012 11:01:10.58
             Attr PgmName = "Protocol"
+            Attr Size = 4
             Attr TypeRef = "OtherIO:Type-Nodave_ProtocolEnum"
           EndBody
         EndObject
@@ -6787,6 +8130,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Speed $Attribute 11 27-FEB-2012 11:01:25.21
           Body SysBody 27-FEB-2012 11:02:50.69
             Attr PgmName = "Speed"
+            Attr Size = 4
             Attr TypeRef = "OtherIO:Type-Nodave_SpeedEnum"
           EndBody
         EndObject
@@ -6796,6 +8140,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object MPI_Address $Attribute 16 27-FEB-2012 11:24:22.58
           Body SysBody 27-FEB-2012 11:27:11.83
             Attr PgmName = "MPI_Address"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -6805,6 +8150,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object MPI_Local $Attribute 22 27-FEB-2012 16:05:07.48
           Body SysBody 27-FEB-2012 16:05:07.48
             Attr PgmName = "MPI_Local"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -6814,6 +8160,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Rack $Attribute 17 27-FEB-2012 11:27:47.91
           Body SysBody 27-FEB-2012 11:27:52.50
             Attr PgmName = "Rack"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -6823,6 +8170,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Slot $Attribute 18 27-FEB-2012 11:27:56.30
           Body SysBody 27-FEB-2012 11:28:02.01
             Attr PgmName = "Slot"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -6833,6 +8181,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ByteOrdering $Attribute 19 27-FEB-2012 13:22:36.34
           Body SysBody 27-FEB-2012 13:22:36.34
             Attr PgmName = "ByteOrdering"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-ByteOrderingEnum"
           EndBody
         EndObject
@@ -6842,6 +8191,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object FloatRepresentation $Attribute 23 28-FEB-2012 08:57:55.13
           Body SysBody 28-FEB-2012 08:57:55.13
             Attr PgmName = "FloatRepresentation"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-FloatRepEnum"
           EndBody
         EndObject
@@ -6851,6 +8201,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Timeout $Attribute 20 27-FEB-2012 13:24:57.87
           Body SysBody 27-FEB-2012 13:25:25.02
             Attr PgmName = "Timeout"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -6864,6 +8215,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object StallAction $Attribute 13 27-FEB-2012 11:04:38.73
           Body SysBody 27-FEB-2012 11:04:27.83
             Attr PgmName = "StallAction"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-StallActionEnum"
           EndBody
         EndObject
@@ -6875,6 +8227,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorCount $Attribute 14 27-FEB-2012 11:04:27.83
           Body SysBody 27-FEB-2012 16:04:40.30
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -6887,6 +8240,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ErrorLimit $Attribute 15 27-FEB-2012 11:04:27.83
           Body SysBody 27-FEB-2012 16:04:44.77
             Attr PgmName = "ErrorLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -6896,12 +8250,14 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Debug $Attribute 24 28-FEB-2012 13:43:24.06
           Body SysBody 28-FEB-2012 13:43:25.34
             Attr PgmName = "Debug"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object Inputs $Attribute 25 28-FEB-2012 13:43:38.60
           Body SysBody 28-FEB-2012 13:44:39.78
             Attr PgmName = "Inputs"
+            Attr Size = 200
             Attr Flags = 2066
             Attr Elements = 200
             Attr TypeRef = "pwrs:Type-$UInt8"
@@ -6910,6 +8266,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Outputs $Attribute 26 28-FEB-2012 13:44:12.16
           Body SysBody 28-FEB-2012 13:44:30.91
             Attr PgmName = "Outputs"
+            Attr Size = 200
             Attr Flags = 2066
             Attr Elements = 200
             Attr TypeRef = "pwrs:Type-$UInt8"
@@ -7003,6 +8360,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 1 27-FEB-2012 11:06:54.14
           Body SysBody 27-FEB-2012 11:06:54.14
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -7012,6 +8370,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Status $Attribute 7 28-FEB-2012 08:50:44.69
           Body SysBody 27-FEB-2012 13:26:24.31
             Attr PgmName = "Status"
+            Attr Size = 80
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
@@ -7028,6 +8387,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Process $Attribute 2 27-FEB-2012 11:06:54.14
           Body SysBody 27-FEB-2012 11:06:54.14
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -7039,6 +8399,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ThreadObject $Attribute 3 27-FEB-2012 11:06:54.14
           Body SysBody 27-FEB-2012 11:06:54.14
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -7068,6 +8429,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Area $Attribute 4 27-FEB-2012 11:07:07.46
           Body SysBody 27-FEB-2012 11:07:24.24
             Attr PgmName = "Area"
+            Attr Size = 4
             Attr TypeRef = "OtherIO:Type-Nodave_AreaEnum"
           EndBody
         EndObject
@@ -7077,6 +8439,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object DataBlock $Attribute 5 27-FEB-2012 11:07:39.57
           Body SysBody 27-FEB-2012 11:07:47.90
             Attr PgmName = "DataBlock"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -7086,6 +8449,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Address $Attribute 6 27-FEB-2012 11:07:57.32
           Body SysBody 27-FEB-2012 11:08:02.20
             Attr PgmName = "Address"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -7099,6 +8463,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object ScanInterval $Attribute 8 27-FEB-2012 13:24:07.85
           Body SysBody 27-FEB-2012 13:24:07.85
             Attr PgmName = "ScanInterval"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -7111,6 +8476,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Continous $Attribute 9 28-FEB-2012 08:50:33.38
           Body SysBody 28-FEB-2012 08:50:33.38
             Attr PgmName = "Continous"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-YesNoEnum"
           EndBody
         EndObject
@@ -7121,6 +8487,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object SendOp $Attribute 10 28-FEB-2012 08:50:33.38
           Body SysBody 28-FEB-2012 08:52:07.30
             Attr PgmName = "SendOp"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -7173,6 +8540,614 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr Process = 1
           Attr Area = 132
           Attr Continous = 1
+        EndBody
+      EndObject
+    EndObject
+    Object Epl_Module $ClassDef 38 04-JUL-2013 08:10:46.69
+      Body SysBody 01-JUL-2013 17:26:15.35
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18512
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-JUL-2013 17:26:15.35
+        Body SysBody 04-JUL-2013 08:10:55.59
+          Attr StructName = "Epl_Module"
+          Attr NextAix = "_X33"
+        EndBody
+        Object Description $Attribute 24 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Specification $Attribute 25 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "Specification"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 26 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "DataSheet"
+            Attr Size = 160
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        Object Process $Attribute 27 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "Process"
+            Attr Size = 4
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 28 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "ThreadObject"
+            Attr Size = 8
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object InputAreaOffset $Attribute 29 01-JUL-2013 17:26:15.35
+          Body SysBody 02-JUL-2013 13:34:25.87
+            Attr PgmName = "InputAreaOffset"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object InputAreaSize $Attribute 30 01-JUL-2013 17:26:15.35
+          Body SysBody 02-JUL-2013 13:34:32.58
+            Attr PgmName = "InputAreaSize"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object OutputAreaOffset $Attribute 31 01-JUL-2013 17:26:15.35
+          Body SysBody 02-JUL-2013 13:34:38.90
+            Attr PgmName = "OutputAreaOffset"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object OutputAreaSize $Attribute 32 01-JUL-2013 17:26:15.35
+          Body SysBody 02-JUL-2013 13:34:44.96
+            Attr PgmName = "OutputAreaSize"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 511 01-JUL-2013 17:26:15.35
+        Object IoCardInit $Method 512 01-JUL-2013 17:26:15.35
+          Body SysBody 04-JUL-2013 08:11:17.14
+            Attr MethodName = "Epl_Module-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 513 01-JUL-2013 17:26:15.35
+          Body SysBody 04-JUL-2013 08:11:23.95
+            Attr MethodName = "Epl_Module-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 514 01-JUL-2013 17:26:15.35
+          Body SysBody 04-JUL-2013 08:11:31.76
+            Attr MethodName = "Epl_Module-IoCardRead"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 515 01-JUL-2013 17:26:15.35
+          Body SysBody 04-JUL-2013 08:11:37.86
+            Attr MethodName = "Epl_Module-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Epl_Module 2157674496 01-JAN-1970 01:00:00.00
+        Body RtBody 04-JUL-2013 08:54:19.42
+          Attr Process = 128
+        EndBody
+      EndObject
+    EndObject
+    Object Epl_CN $ClassDef 39 04-JUL-2013 08:12:46.72
+      Body SysBody 01-JUL-2013 17:26:15.35
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10320
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-JUL-2013 17:26:15.35
+        Body SysBody 04-JUL-2013 08:12:39.28
+          Attr StructName = "Epl_CN"
+          Attr NextAix = "_X41"
+        EndBody
+        Object Description $Attribute 23 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Specification $Attribute 24 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "Specification"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 25 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "DataSheet"
+            Attr Size = 160
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        Object NodeId $Attribute 26 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "NodeId"
+            Attr Size = 2
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object NmtState $Attribute 27 01-JUL-2013 17:26:15.35
+          Body SysBody 04-JUL-2013 15:49:45.28
+            Attr PgmName = "NmtState"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "OtherIO:Type-EplNmtState"
+          EndBody
+        EndObject
+        Object Status $Attribute 40 04-JUL-2013 15:49:32.37
+          Body SysBody 04-JUL-2013 15:49:57.04
+            Attr PgmName = "Status"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        Object Process $Attribute 28 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "Process"
+            Attr Size = 4
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 29 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "ThreadObject"
+            Attr Size = 8
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object StallAction $Attribute 30 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "StallAction"
+            Attr Size = 4
+            Attr TypeRef = "pwrb:Type-StallActionEnum"
+          EndBody
+        EndObject
+        Object Timeout $Attribute 31 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "Timeout"
+            Attr Size = 2
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 32 01-JUL-2013 17:26:15.35
+          Body SysBody 02-JUL-2013 13:34:02.07
+            Attr PgmName = "ErrorCount"
+            Attr Size = 2
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 33 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 2
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 34 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "ErrorHardLimit"
+            Attr Size = 2
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ByteOrdering $Attribute 35 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "ByteOrdering"
+            Attr Size = 4
+            Attr TypeRef = "pwrb:Type-ByteOrderingEnum"
+          EndBody
+        EndObject
+        Object InputAreaOffset $Attribute 36 01-JUL-2013 17:26:15.35
+          Body SysBody 02-JUL-2013 13:33:23.67
+            Attr PgmName = "InputAreaOffset"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object InputAreaSize $Attribute 37 01-JUL-2013 17:26:15.35
+          Body SysBody 02-JUL-2013 13:33:35.75
+            Attr PgmName = "InputAreaSize"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object OutputAreaOffset $Attribute 38 01-JUL-2013 17:26:15.35
+          Body SysBody 02-JUL-2013 13:33:43.30
+            Attr PgmName = "OutputAreaOffset"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object OutputAreaSize $Attribute 39 01-JUL-2013 17:26:15.35
+          Body SysBody 02-JUL-2013 13:33:51.10
+            Attr PgmName = "OutputAreaSize"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Epl_CN 2157936640 01-JAN-1970 01:00:00.00
+        Body RtBody 04-JUL-2013 08:54:39.24
+          Attr Process = 128
+          Attr ErrorSoftLimit = 25
+          Attr ErrorHardLimit = 50
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    ! @Author  JackE SixtenI
+    ! @Version   1.0
+    ! 
+    ! Before the use of a Powerlink agent object a configuration
+    ! file must be created (cdc-file).
+    ! 
+    ! The prefered software for building the cdc-file is openCONFIGURATOR.
+    ! When using openCONFIGURATOR you must provide the device
+    ! description files (.xdd) for all the slaves that will be used in the 
+    ! Powerlink network. 
+    ! 
+    ! The mapping of the in- and outputareas will be made with help of 
+    ! openCONFIGURATOR. All communication parameters such as cycle time 
+    ! will be configured using openCONFIGURATOR.
+    ! 
+    ! 
+    ! When the configuration is complete you build the cdc-file and transfer
+    ! it to your project. Prefered location of the cdc-file is $pwrp_exe of the
+    ! current project. Then all you have to do is to specify the path in the
+    ! CDCfile attribute.
+    ! 
+    ! When building the cdc-file you will also get a file named xap.h, this
+    ! file contains two structs that represents the in- and outputareas.
+    ! You use this as a map when you add channel objects to the module
+    ! object, when done this file should coincide with the channel objects
+    ! you put under the module objects.
+    ! 
+    ! The NodeId is always 240 for a Powerlinkmaster. The address range
+    ! 1-239 is used for slaves, you specify the address of a slave in
+    ! the openCONFIGURATOR. 
+    ! 
+    ! A basic setup would be: first put a Pl_MN object in the node hierarchy
+    ! and under the Pl_MN object you put a Pl_CN object and under the Pl_CN
+    ! object you put a Pl_Module object and under the Pl_Module object you
+    ! put channel objects, with the chan-in objects first and the chan-out objects
+    ! last.
+    ! 
+    ! Example:
+    ! 
+    ! Pl_MN
+    !  -Pl_CN
+    !   -Pl_Module
+    !    -ChanAi
+    !    -ChanAi
+    !    -ChanAi
+    !    -ChanIo
+    !    -ChanAo
+    !  -Pl_CN
+    !   -Pl_Module
+    !    -ChanAi
+    !    -ChanAo
+    ! 
+    !*/
+    Object Epl_MN $ClassDef 40 04-JUL-2013 08:13:16.20
+      Body SysBody 01-JUL-2013 17:26:15.35
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 6224
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-JUL-2013 17:26:15.35
+        Body SysBody 04-JUL-2013 08:13:20.05
+          Attr StructName = "Epl_MN"
+          Attr NextAix = "_X47"
+        EndBody
+        !/**
+        ! Used to add a short description of the master
+        !*/
+        Object Description $Attribute 31 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! This attribute should contain a path to a cdc-file.
+        ! Example: /home/pwrp/mnobd.cdc
+        !*/
+        Object CDCfile $Attribute 32 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "CDCfile"
+            Attr Size = 256
+            Attr TypeRef = "pwrs:Type-$String256"
+          EndBody
+        EndObject
+        !/**
+        ! The network device used by the Powerlinkstack
+        ! Example: eth0
+        !*/
+        Object Device $Attribute 33 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "Device"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! The NodeId of the master, should always be 240.
+        !*/
+        Object NodeId $Attribute 34 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "NodeId"
+            Attr Size = 2
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! The Proview process the agent object is associated with
+        !*/
+        Object Process $Attribute 35 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "Process"
+            Attr Size = 4
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 36 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "ThreadObject"
+            Attr Size = 8
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object StallAction $Attribute 37 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "StallAction"
+            Attr Size = 4
+            Attr TypeRef = "pwrb:Type-StallActionEnum"
+          EndBody
+        EndObject
+        Object Timeout $Attribute 38 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "Timeout"
+            Attr Size = 2
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object NmtState $Attribute 43 04-JUL-2013 15:51:16.16
+          Body SysBody 02-JUL-2013 13:32:27.47
+            Attr PgmName = "NmtState"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "OtherIO:Type-EplNmtState"
+          EndBody
+        EndObject
+        Object Status $Attribute 46 04-JUL-2013 15:51:19.18
+          Body SysBody 04-JUL-2013 15:50:47.27
+            Attr PgmName = "Status"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 39 01-JUL-2013 17:26:15.35
+          Body SysBody 02-JUL-2013 13:32:57.21
+            Attr PgmName = "ErrorCount"
+            Attr Size = 2
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 40 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 2
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 41 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "ErrorHardLimit"
+            Attr Size = 2
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object InputAreaSize $Attribute 44 02-JUL-2013 13:30:51.46
+          Body SysBody 02-JUL-2013 13:32:16.05
+            Attr PgmName = "InputAreaSize"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object OutputAreaSize $Attribute 45 02-JUL-2013 13:31:22.63
+          Body SysBody 02-JUL-2013 13:31:54.57
+            Attr PgmName = "OutputAreaSize"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object NumberOfSlaves $Attribute 42 01-JUL-2013 17:26:15.35
+          Body SysBody 02-JUL-2013 13:32:44.74
+            Attr PgmName = "NumberOfSlaves"
+            Attr Size = 2
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 525 05-JUL-2013 08:38:07.59
+        Object Pointed $Menu 526 05-JUL-2013 08:38:07.59
+          Object ConfigureEpl $MenuButton 527 05-JUL-2013 08:41:03.54
+            Body SysBody 05-JUL-2013 08:41:04.59
+              Attr ButtonName = "ConfigureEpl"
+              Attr MethodName = "Epl_MN-Configure"
+              Attr FilterName = "Epl_MN-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoscn $Menu 528 05-JUL-2013 08:38:07.59
+        Object Pointed $Menu 529 05-JUL-2013 08:38:07.59
+          Object ConfigureEpl $MenuButton 530 05-JUL-2013 08:40:56.80
+            Body SysBody 05-JUL-2013 08:40:55.49
+              Attr ButtonName = "ConfigureEpl"
+              Attr MethodName = "Epl_MN-Configure"
+              Attr FilterName = "Epl_MN-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 531 05-JUL-2013 08:38:07.59
+        Object Pointed $Menu 532 05-JUL-2013 08:38:07.59
+          Object ConfigureEpl $MenuButton 533 05-JUL-2013 08:41:22.83
+            Body SysBody 05-JUL-2013 08:41:23.88
+              Attr ButtonName = "ConfigureEpl"
+              Attr MethodName = "Epl_MN-Configure"
+              Attr FilterName = "Epl_MN-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 534 05-JUL-2013 08:38:07.59
+        Object Pointed $Menu 535 05-JUL-2013 08:38:07.59
+          Object ConfigureEpl $MenuButton 536 05-JUL-2013 08:41:30.09
+            Body SysBody 05-JUL-2013 08:41:30.87
+              Attr ButtonName = "ConfigureEpl"
+              Attr MethodName = "Epl_MN-Configure"
+              Attr FilterName = "Epl_MN-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPosnn $Menu 538 05-JUL-2013 08:38:07.59
+        Object Pointed $Menu 539 05-JUL-2013 08:38:07.59
+          Object ConfigureEpl $MenuButton 540 05-JUL-2013 08:41:49.68
+            Body SysBody 05-JUL-2013 08:41:50.62
+              Attr ButtonName = "ConfigureEpl"
+              Attr MethodName = "Epl_MN-Configure"
+              Attr FilterName = "Epl_MN-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPoscn $Menu 541 05-JUL-2013 08:38:07.59
+        Object Pointed $Menu 542 05-JUL-2013 08:38:07.59
+          Object ConfigureEpl $MenuButton 543 05-JUL-2013 08:41:57.22
+            Body SysBody 05-JUL-2013 08:41:58.03
+              Attr ButtonName = "ConfigureEpl"
+              Attr MethodName = "Epl_MN-Configure"
+              Attr FilterName = "Epl_MN-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPosos $Menu 544 05-JUL-2013 08:38:07.59
+        Object Pointed $Menu 545 05-JUL-2013 08:38:07.59
+          Object ConfigureEpl $MenuButton 546 05-JUL-2013 08:42:03.62
+            Body SysBody 05-JUL-2013 08:42:04.40
+              Attr ButtonName = "ConfigureEpl"
+              Attr MethodName = "Epl_MN-Configure"
+              Attr FilterName = "Epl_MN-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPoson $Menu 547 05-JUL-2013 08:38:07.59
+        Object Pointed $Menu 548 05-JUL-2013 08:38:07.59
+          Object ConfigureEpl $MenuButton 549 05-JUL-2013 08:42:10.44
+            Body SysBody 05-JUL-2013 08:42:11.32
+              Attr ButtonName = "ConfigureEpl"
+              Attr MethodName = "Epl_MN-Configure"
+              Attr FilterName = "Epl_MN-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 518 01-JUL-2013 17:26:15.35
+        Object IoAgentInit $Method 519 01-JUL-2013 17:26:15.35
+          Body SysBody 04-JUL-2013 08:13:31.41
+            Attr MethodName = "Epl_MN-IoAgentInit"
+          EndBody
+        EndObject
+        Object IoAgentClose $Method 520 01-JUL-2013 17:26:15.35
+          Body SysBody 04-JUL-2013 08:13:38.26
+            Attr MethodName = "Epl_MN-IoAgentClose"
+          EndBody
+        EndObject
+        Object IoAgentRead $Method 521 01-JUL-2013 17:26:15.35
+          Body SysBody 04-JUL-2013 08:13:44.35
+            Attr MethodName = "Epl_MN-IoAgentRead"
+          EndBody
+        EndObject
+        Object IoAgentWrite $Method 522 01-JUL-2013 17:26:15.35
+          Body SysBody 04-JUL-2013 08:13:49.93
+            Attr MethodName = "Epl_MN-IoAgentWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Epl_MN 2158198784 01-JAN-1970 01:00:00.00
+        Body RtBody 04-JUL-2013 08:54:52.00
+          Attr CDCfile = "$pwrp_exe/mnobd.cdc"
+          Attr Device = "eth0"
+          Attr NodeId = 240
+          Attr Process = 128
+          Attr ErrorSoftLimit = 25
+          Attr ErrorHardLimit = 50
+        EndBody
+      EndObject
+    EndObject
+    Object EplHandler $ClassDef 41 04-JUL-2013 08:14:02.80
+      Body SysBody 01-JUL-2013 17:26:15.35
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-JUL-2013 17:26:15.35
+        Body SysBody 04-JUL-2013 08:14:08.05
+          Attr StructName = "EplHandler"
+          Attr NextAix = "_X4"
+        EndBody
+        Object CycleTime $Attribute 3 01-JUL-2013 17:26:15.35
+          Body SysBody 01-JUL-2013 17:26:15.35
+            Attr PgmName = "CycleTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template EplHandler 2158460928 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr CycleTime = 1.000000e-01
         EndBody
       EndObject
     EndObject

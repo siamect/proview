@@ -182,6 +182,10 @@ if getent group dialout > /dev/null; then
 fi
 chown root /usr/pwrrt/exe/rt_prio
 chmod u+s /usr/pwrrt/exe/rt_prio
+if [ -e /usr/pwrrt/exe/rt_powerlink ]; then
+  chown root /usr/pwrrt/exe/rt_powerlink
+  chmod u+s /usr/pwrrt/exe/rt_powerlink
+fi
 chown root /usr/pwrrt/exe/rt_mozilla
 chmod u+s /usr/pwrrt/exe/rt_mozilla
 

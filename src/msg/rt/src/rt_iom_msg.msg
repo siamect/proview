@@ -49,6 +49,8 @@ spi_init	<SPI initialization error>				/error
 spi_normal	<SPI normal operating state>				/info
 spi_readerror	<SPI read error>					/error
 spi_writeerror	<SPI write error>					/error
+epl_oper 	<EPL Operational>					/succ
+epl_nooper 	<EPL Not in operational state>				/error
 .end
 
 

@@ -280,27 +280,62 @@ palette NavigatorPalette
         class ChanIi
         class ChanIo
       }
-      menu PSS9000
+      menu GPIO
       {
-        menu Rack 
-        {
-          class Rack_SSAB
-          class Ssab_RemoteRack
-        }
-        menu Cards 
-        {
-          class Ssab_AI32uP
-          class Ssab_AI16uP
-          class Ssab_Ai8uP
-          class Ssab_AO8uP
-          class Ssab_AO8uPL
-          class Ssab_AO16uP_Logger
-          class Ssab_Co4uP
-          class Ssab_DI32D
-          class Ssab_DO32DKS
-          class Ssab_DO32DKS_Stall
-        }
+        class GPIO
+        class GPIO_Module
       }
+      menu Hilscher_cifX
+      {
+        class Hilscher_cifX_Master
+        class Hilscher_cifX_Device
+        class Hilscher_cifX_Module
+      }
+      menu Modbus_TCP 
+      {
+	class Modbus_Master
+        class Modbus_TCP_Slave
+        class Modbus_Module
+	menu Server
+	{
+	  class Modbus_TCP_Server
+          class Modbus_TCP_ServerModule
+	}
+      } 
+      menu Modbus_RTU 
+      {
+	class Modbus_RTU_Master
+        class Modbus_RTU_Slave
+        class Modbus_RTU_Module
+	menu Server
+	{
+	  class Modbus_RTU_Server
+          class Modbus_RTU_ServerModule
+	}
+      } 
+      menu Nodave
+      {
+        class Nodave_PLC
+	class Nodave_Transaction
+      }
+      menu OneWire
+      {
+        class OneWire
+        class OneWire_AiDevice
+        class OneWire_AoDevice
+        class Maxim_DS18B20
+      }
+      menu Powerlink 
+      {
+	class Epl_MN
+        class Epl_CN
+        class EPl_Module
+	menu Server
+	{
+	  class Epl_Server
+          class Epl_ServerModule
+	}
+      } 
       menu Profibus
       {
         menu Masters
@@ -337,54 +372,35 @@ palette NavigatorPalette
           class ABB_ACS_PnDevice
         }
       }
-      menu Modbus_TCP 
+      menu PSS9000
       {
-	class Modbus_Master
-        class Modbus_TCP_Slave
-        class Modbus_Module
-	menu Server
-	{
-	  class Modbus_TCP_Server
-          class Modbus_TCP_ServerModule
-	}
-      } 
-      menu Modbus_RTU 
+        menu Rack 
+        {
+          class Rack_SSAB
+          class Ssab_RemoteRack
+        }
+        menu Cards 
+        {
+          class Ssab_AI32uP
+          class Ssab_AI16uP
+          class Ssab_Ai8uP
+          class Ssab_AO8uP
+          class Ssab_AO8uPL
+          class Ssab_AO16uP_Logger
+          class Ssab_Co4uP
+          class Ssab_DI32D
+          class Ssab_DO32DKS
+          class Ssab_DO32DKS_Stall
+        }
+      }
+      menu SPI
       {
-	class Modbus_RTU_Master
-        class Modbus_RTU_Slave
-        class Modbus_RTU_Module
-	menu Server
-	{
-	  class Modbus_RTU_Server
-          class Modbus_RTU_ServerModule
-	}
-      } 
-      menu Hilscher_cifX
-      {
-        class Hilscher_cifX_Master
-        class Hilscher_cifX_Device
-        class Hilscher_cifX_Module
+        class SPI_Slave
       }
       menu UDP
       {
         class UDP_IO
         class BaseIORack
-      }
-      menu GPIO
-      {
-        class GPIO
-        class GPIO_Module
-      }
-      menu OneWire
-      {
-        class OneWire
-        class OneWire_AiDevice
-        class OneWire_AoDevice
-        class Maxim_DS18B20
-      }
-      menu SPI
-      {
-        class SPI_Slave
       }
       menu USB
       {
@@ -409,11 +425,6 @@ palette NavigatorPalette
           class USB_Joystick
           class BaseIORack
         }
-      }
-      menu Nodave
-      {
-        class Nodave_PLC
-	class Nodave_Transaction
       }
     }
     menu Remote

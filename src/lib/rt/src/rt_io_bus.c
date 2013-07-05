@@ -254,7 +254,8 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
 			      unsigned int *input_area_chansize, 
 			      unsigned int *output_area_offset, 
 			      unsigned int *output_area_chansize, 
-			      pwr_tByteOrderingEnum byte_order)
+			      pwr_tByteOrderingEnum byte_order,
+			      io_eAlignment alignment)
 {
   int i;
 
@@ -271,6 +272,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       }
       if ( !chanp->sop)
 	continue;
+
+      if( alignment == io_eAlignment_Powerlink)
+	*input_area_offset = pwr_Align(*input_area_offset, *input_area_chansize);
 
       chanp->offset = *input_area_offset;
       chanp->mask = 1 << chan_di->Number;
@@ -290,6 +294,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       if ( !chanp->sop)
 	continue;
 
+      if( alignment == io_eAlignment_Powerlink)
+	*input_area_offset = pwr_Align(*input_area_offset, *input_area_chansize);
+
       chanp->offset = *input_area_offset;
       chanp->size = *input_area_chansize;
       chanp->mask = 0;
@@ -303,6 +310,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       *input_area_chansize = GetChanSize(chan_ai->Representation);
       if ( !chanp->sop)
 	continue;
+
+      if( alignment == io_eAlignment_Powerlink)
+	*input_area_offset = pwr_Align(*input_area_offset, *input_area_chansize);
 
       chanp->offset = *input_area_offset;
       chanp->size = *input_area_chansize;
@@ -318,6 +328,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       if ( !chanp->sop)
 	continue;
 
+      if( alignment == io_eAlignment_Powerlink)
+	*input_area_offset = pwr_Align(*input_area_offset, *input_area_chansize);
+
       chanp->offset = *input_area_offset;
       chanp->size = *input_area_chansize;
       chanp->mask = 0;
@@ -330,6 +343,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       *input_area_chansize = chan_bi->Size;
       if ( !chanp->sop || !chan_bi->Size)
 	continue;
+
+      if( alignment == io_eAlignment_Powerlink)
+	*input_area_offset = pwr_Align(*input_area_offset, *input_area_chansize);
 
       chanp->offset = *input_area_offset;
       chanp->size = *input_area_chansize;
@@ -348,6 +364,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       if ( !chanp->sop || !chan_bo->Size)
 	continue;
 
+      if( alignment == io_eAlignment_Powerlink)
+	*output_area_offset = pwr_Align(*output_area_offset, *output_area_chansize);
+
       chanp->offset = *output_area_offset;
       chanp->size = *output_area_chansize;
       chanp->mask = 0;
@@ -364,6 +383,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       if ( !chanp->sop || !chan_bi->Size)
 	continue;
 
+      if( alignment == io_eAlignment_Powerlink)
+	*input_area_offset = pwr_Align(*input_area_offset, *input_area_chansize);
+
       chanp->offset = *input_area_offset;
       chanp->size = *input_area_chansize;
       chanp->mask = 0;
@@ -377,6 +399,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       *output_area_chansize = chan_bo->Size;
       if ( !chanp->sop || !chan_bo->Size)
 	continue;
+
+      if( alignment == io_eAlignment_Powerlink)
+	*output_area_offset = pwr_Align(*output_area_offset, *output_area_chansize);
 
       chanp->offset = *output_area_offset;
       chanp->size = *output_area_chansize;
@@ -393,6 +418,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       }
       if ( !chanp->sop)
 	continue;
+
+      if( alignment == io_eAlignment_Powerlink)
+	*output_area_offset = pwr_Align(*output_area_offset, *output_area_chansize);
 
       chanp->offset = *output_area_offset;
       chanp->mask = 1 << chan_do->Number;
@@ -412,6 +440,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       if ( !chanp->sop)
 	continue;
 
+      if( alignment == io_eAlignment_Powerlink)
+	*output_area_offset = pwr_Align(*output_area_offset, *output_area_chansize);
+
       chanp->offset = *output_area_offset;
       chanp->size = *output_area_chansize;
       chanp->mask = 0;
@@ -425,6 +456,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       *output_area_chansize = GetChanSize(chan_io->Representation);
       if ( !chanp->sop)
 	continue;
+
+      if( alignment == io_eAlignment_Powerlink)
+	*output_area_offset = pwr_Align(*output_area_offset, *output_area_chansize);
 
       chanp->offset = *output_area_offset;
       chanp->size = *output_area_chansize;
@@ -443,6 +477,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
 	if ( !chanp->sop)
 	  continue;
 
+	if( alignment == io_eAlignment_Powerlink)
+	  *input_area_offset = pwr_Align(*input_area_offset, *input_area_chansize);
+
 	chanp->offset = *input_area_offset;
 	chanp->mask = 1 << chan_d->Number;
 	if ( byte_order == pwr_eByteOrderingEnum_BigEndian) {
@@ -460,6 +497,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
 	}
 	if ( !chanp->sop)
 	  continue;
+
+	if( alignment == io_eAlignment_Powerlink)
+	  *output_area_offset = pwr_Align(*output_area_offset, *output_area_chansize);
 
 	chanp->offset = *output_area_offset;
 	chanp->mask = 1 << chan_d->Number;

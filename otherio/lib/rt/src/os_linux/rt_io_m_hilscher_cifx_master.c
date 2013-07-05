@@ -233,7 +233,8 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
       }
 
       io_bus_card_init( ctx, cp, &input_area_offset, &input_area_chansize,
-			&output_area_offset, &output_area_chansize, byte_ordering);
+			&output_area_offset, &output_area_chansize, byte_ordering,
+			io_eAlignment_Packed);
 
       // Show module offset and size
       if ( cp->Class == pwr_cClass_Hilscher_cifX_Module && cp->op) {

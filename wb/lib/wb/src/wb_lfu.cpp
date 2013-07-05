@@ -3115,7 +3115,8 @@ pwr_tStatus lfu_check_appl_file( ldh_tSesContext ldhses,
     "#pwr_statussrv,  , noload, norun, , 5, debug, \"\"" << endl <<
     "#pwr_post,       , noload, norun, , 5, debug, \"\"" << endl <<
     "#pwr_sevhistmon, , noload, norun, , 5, debug, \"\"" << endl <<
-    "#pwr_sev_server, , noload, norun, , 5, debug, \"\"" << endl;
+    "#pwr_sev_server, , noload, norun, , 5, debug, \"\"" << endl <<
+    "#rt_powerlink,   , noload, norun, , 5, debug, \"\"" << endl;
 
   fp.close();
   return LFU__SUCCESS;
