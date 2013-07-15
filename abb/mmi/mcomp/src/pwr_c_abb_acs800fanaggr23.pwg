@@ -19041,7 +19041,7 @@ pwr_exe:
 103 0
 68
 6800 993
-6801 ASC800.ActSpeed
+6801 ACS800.ActSpeed
 6833
 1
 100 1
@@ -19052,7 +19052,7 @@ pwr_exe:
 5500 open graph /class /inst=$object.ACS800.ActSpeed
 99
 99
-6806 ASC800.ActTorque
+6806 ACS800.ActTorque
 6838
 1
 100 1
@@ -19063,7 +19063,7 @@ pwr_exe:
 5500 open graph /class /inst=$object.ACS800.ActTorque
 99
 99
-6807 ASC800.ActCurrent
+6807 ACS800.ActCurrent
 6839
 1
 100 1
@@ -19074,7 +19074,7 @@ pwr_exe:
 5500 open graph /class /inst=$object.ACS800.ActCurrent
 99
 99
-6808 ASC800.RefSpeed
+6808 ACS800.RefSpeed
 6840
 1
 100 1

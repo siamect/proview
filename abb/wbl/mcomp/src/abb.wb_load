@@ -1,7 +1,7 @@
 Volume ABB $ClassVolume 0.0.250.2 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X5130"
-    Attr NextCix = "_X52"
+    Attr NextOix = "_X5199"
+    Attr NextCix = "_X63"
     Attr NextTix[0] = "_X6"
   EndBody
   Object Type $TypeHier 1749 12-OCT-2005 13:25:10.29
@@ -51364,13 +51364,13 @@ if (I1 >= 0 && I1 <= 9) {
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1 24-JUN-2013 10:53:43.33
+      Object RtBody $ObjBodyDef 1 09-JUL-2013 09:32:48.62
         Body SysBody 24-JUN-2013 10:53:43.33
           Attr StructName = "ABB_ACS880_PPO7_IoModule"
-          Attr NextAix = "_X115"
+          Attr NextAix = "_X121"
         EndBody
         Object I_ID $Attribute 86 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 09-JUL-2013 09:40:07.75
             Attr PgmName = "I_ID"
             Attr Size = 160
             Attr Flags = 131072
@@ -51378,7 +51378,7 @@ if (I1 >= 0 && I1 <= 9) {
           EndBody
         EndObject
         Object I_IND $Attribute 87 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 09-JUL-2013 09:40:12.58
             Attr PgmName = "I_IND"
             Attr Size = 160
             Attr Flags = 131072
@@ -51386,7 +51386,7 @@ if (I1 >= 0 && I1 <= 9) {
           EndBody
         EndObject
         Object I_VALUE $Attribute 88 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 09-JUL-2013 09:40:19.11
             Attr PgmName = "I_VALUE"
             Attr Size = 160
             Attr Flags = 131072
@@ -51482,7 +51482,7 @@ if (I1 >= 0 && I1 <= 9) {
           EndBody
         EndObject
         Object O_ID $Attribute 100 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 09-JUL-2013 09:40:26.33
             Attr PgmName = "O_ID"
             Attr Size = 168
             Attr Flags = 131072
@@ -51490,7 +51490,7 @@ if (I1 >= 0 && I1 <= 9) {
           EndBody
         EndObject
         Object O_IND $Attribute 101 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 09-JUL-2013 09:40:30.62
             Attr PgmName = "O_IND"
             Attr Size = 168
             Attr Flags = 131072
@@ -51498,7 +51498,7 @@ if (I1 >= 0 && I1 <= 9) {
           EndBody
         EndObject
         Object O_VALUE $Attribute 102 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 09-JUL-2013 09:40:34.39
             Attr PgmName = "O_VALUE"
             Attr Size = 168
             Attr Flags = 131072
@@ -51936,10 +51936,10 @@ if (I1 >= 0 && I1 <= 9) {
         Attr Method = 0
         Attr Flags = 144
       EndBody
-      Object RtBody $ObjBodyDef 1 24-JUN-2013 10:53:43.33
+      Object RtBody $ObjBodyDef 1 11-JUL-2013 10:56:33.99
         Body SysBody 24-JUN-2013 10:53:43.33
           Attr StructName = "ABB_ACS880_1"
-          Attr NextAix = "_X201"
+          Attr NextAix = "_X223"
         EndBody
         Object Description $Attribute 136 24-JUN-2013 10:53:43.33
           Body SysBody 24-JUN-2013 10:53:43.33
@@ -51955,27 +51955,51 @@ if (I1 >= 0 && I1 <= 9) {
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        Object DisableInIdPar $Attribute 204 05-JUL-2013 13:14:18.26
+          Body SysBody 05-JUL-2013 13:14:05.57
+            Attr PgmName = "DisableInIdPar"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$DisableAttr"
+          EndBody
+        EndObject
         Object InIdPar $Attribute 138 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 05-JUL-2013 14:33:29.76
             Attr PgmName = "InIdPar"
             Attr Size = 784
-            Attr Flags = 131072
+            Attr Flags = 4325376
             Attr TypeRef = "pwrb:Class-Ii"
+          EndBody
+        EndObject
+        Object DisableInIndPar $Attribute 205 05-JUL-2013 13:14:35.05
+          Body SysBody 05-JUL-2013 13:14:22.73
+            Attr PgmName = "DisableInIndPar"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
         Object InIndPar $Attribute 139 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 05-JUL-2013 14:33:39.89
             Attr PgmName = "InIndPar"
             Attr Size = 784
-            Attr Flags = 131072
+            Attr Flags = 4325376
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
         EndObject
+        Object DisableInValuePar $Attribute 206 05-JUL-2013 13:14:59.88
+          Body SysBody 05-JUL-2013 13:14:45.07
+            Attr PgmName = "DisableInValuePar"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$DisableAttr"
+          EndBody
+        EndObject
         Object InValuePar $Attribute 140 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 05-JUL-2013 14:33:47.83
             Attr PgmName = "InValuePar"
             Attr Size = 784
-            Attr Flags = 131072
+            Attr Flags = 4325376
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
         EndObject
@@ -52035,27 +52059,51 @@ if (I1 >= 0 && I1 <= 9) {
             Attr TypeRef = "pwrb:Class-Ii"
           EndBody
         EndObject
+        Object DisableOutIdPar $Attribute 201 05-JUL-2013 13:11:31.16
+          Body SysBody 05-JUL-2013 13:12:52.19
+            Attr PgmName = "DisableOutIdPar"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$DisableAttr"
+          EndBody
+        EndObject
         Object OutIdPar $Attribute 148 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 05-JUL-2013 14:33:59.51
             Attr PgmName = "OutIdPar"
             Attr Size = 784
-            Attr Flags = 131072
+            Attr Flags = 4325376
             Attr TypeRef = "pwrb:Class-Io"
+          EndBody
+        EndObject
+        Object DisableOutIndPar $Attribute 202 05-JUL-2013 13:13:28.21
+          Body SysBody 05-JUL-2013 13:13:05.03
+            Attr PgmName = "DisableOutIndPar"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
         Object OutIndPar $Attribute 149 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 05-JUL-2013 14:34:06.75
             Attr PgmName = "OutIndPar"
             Attr Size = 784
-            Attr Flags = 131072
+            Attr Flags = 4325376
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
         EndObject
+        Object DisableValuePar $Attribute 203 05-JUL-2013 13:13:52.56
+          Body SysBody 05-JUL-2013 13:13:36.95
+            Attr PgmName = "DisableValuePar"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$DisableAttr"
+          EndBody
+        EndObject
         Object OutValuePar $Attribute 150 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 05-JUL-2013 14:34:13.54
             Attr PgmName = "OutValuePar"
             Attr Size = 784
-            Attr Flags = 131072
+            Attr Flags = 4325376
             Attr TypeRef = "pwrb:Class-Io"
           EndBody
         EndObject
@@ -52104,27 +52152,51 @@ if (I1 >= 0 && I1 <= 9) {
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        Object DisableOpWritePar $Attribute 220 11-JUL-2013 11:20:11.69
+          Body SysBody 11-JUL-2013 11:20:13.85
+            Attr PgmName = "DisableOpWritePar"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$DisableAttr"
+          EndBody
+        EndObject
         Object OpWritePar $Attribute 157 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 11-JUL-2013 11:20:21.94
             Attr PgmName = "OpWritePar"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 4195344
             Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object DisableOpReadPar $Attribute 221 11-JUL-2013 11:20:36.60
+          Body SysBody 11-JUL-2013 11:20:38.09
+            Attr PgmName = "DisableOpReadPar"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
         Object OpReadPar $Attribute 158 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 11-JUL-2013 11:20:42.69
             Attr PgmName = "OpReadPar"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 4195344
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        Object DisableOpBackupPar $Attribute 222 11-JUL-2013 11:20:57.01
+          Body SysBody 11-JUL-2013 11:20:58.55
+            Attr PgmName = "DisableOpBackupPar"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$DisableAttr"
+          EndBody
+        EndObject
         Object OpBackupPar $Attribute 159 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 11-JUL-2013 11:21:04.30
             Attr PgmName = "OpBackupPar"
             Attr Size = 4
-            Attr Flags = 1040
+            Attr Flags = 4195344
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -52253,43 +52325,83 @@ if (I1 >= 0 && I1 <= 9) {
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        Object DisableRequestPar $Attribute 212 11-JUL-2013 10:50:46.99
+          Body SysBody 11-JUL-2013 10:50:48.94
+            Attr PgmName = "DisableRequestPar"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$DisableAttr"
+          EndBody
+        EndObject
         Object RequestPar $Attribute 176 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 11-JUL-2013 10:50:55.91
             Attr PgmName = "RequestPar"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 4195328
             Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object DisableWriteValuePar $Attribute 213 11-JUL-2013 10:52:54.79
+          Body SysBody 11-JUL-2013 10:53:00.27
+            Attr PgmName = "DisableWriteValuePar"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
         Object WriteValuePar $Attribute 177 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 11-JUL-2013 10:53:07.58
             Attr PgmName = "WriteValuePar"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 4195328
             Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object DisableReadValuePar $Attribute 217 11-JUL-2013 10:56:01.31
+          Body SysBody 11-JUL-2013 10:56:02.39
+            Attr PgmName = "DisableReadValuePar"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
         Object ReadValuePar $Attribute 178 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 11-JUL-2013 10:53:57.28
             Attr PgmName = "ReadValuePar"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 4195328
             Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object DisableReadCodePar $Attribute 218 11-JUL-2013 10:56:24.86
+          Body SysBody 11-JUL-2013 10:56:25.91
+            Attr PgmName = "DisableReadCodePar"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
         Object ReadCodePar $Attribute 179 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 11-JUL-2013 10:54:30.53
             Attr PgmName = "ReadCodePar"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 4195328
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        Object DisableReadCodeSubPar $Attribute 219 11-JUL-2013 10:56:35.90
+          Body SysBody 11-JUL-2013 10:56:36.85
+            Attr PgmName = "DisableReadCodeSubPar"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$DisableAttr"
+          EndBody
+        EndObject
         Object ReadCodeSubPar $Attribute 180 24-JUN-2013 10:53:43.33
-          Body SysBody 24-JUN-2013 10:53:43.33
+          Body SysBody 11-JUL-2013 10:54:58.41
             Attr PgmName = "ReadCodeSubPar"
             Attr Size = 4
-            Attr Flags = 1024
+            Attr Flags = 4195328
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
@@ -52436,7 +52548,7 @@ if (I1 >= 0 && I1 <= 9) {
             Attr PgmName = "IoStatus"
             Attr Size = 4
             Attr Flags = 1
-            Attr ParamIndex = 64
+            Attr ParamIndex = 78
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
@@ -52455,7 +52567,7 @@ if (I1 >= 0 && I1 <= 9) {
         EndObject
       EndObject
       Object Template ABB_ACS880_1 2159247360 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 09-JUL-2013 12:03:09.31
           Attr Specification = "ABB ACS880 Frequency converter"
           Attr InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.I_ID"
           Attr InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.I_IND"
@@ -52753,12 +52865,12 @@ if (I1 >= 0 && I1 <= 9) {
       Object Code PlcTemplate 4164 24-JUN-2013 10:53:43.33
         Body RtBody 24-JUN-2013 10:53:43.33
         EndBody
-        Body DevBody 24-JUN-2013 16:04:28.75
+        Body DevBody 08-JUL-2013 09:17:54.65
           Buffer PlcProgram
             Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
-            Attr defnamecount[2] = 5
-            Attr defnamecount[11] = 106
+            Attr defnamecount[2] = 6
+            Attr defnamecount[11] = 109
             Attr defnamecount[72] = 1
             Attr defnamecount[90] = 18
             Attr defnamecount[91] = 6
@@ -52786,15 +52898,15 @@ if (I1 >= 0 && I1 <= 9) {
             Attr defnamecount[266] = 2
             Attr defnamecount[267] = 1
             Attr defnamecount[271] = 5
-            Attr connamecount = 329
+            Attr connamecount = 330
           EndBuffer
         EndBody
         Object W WindowPlc 4165 24-JUN-2013 10:53:43.33
-          Body RtBody 24-JUN-2013 16:04:28.75
-            Attr Version = 1372082668
+          Body RtBody 08-JUL-2013 09:17:54.65
+            Attr Version = 1373267874
           EndBody
-          Body DevBody 24-JUN-2013 16:04:28.75
-            Attr Modified = "24-JUN-2013 16:04:28.75"
+          Body DevBody 08-JUL-2013 09:17:54.65
+            Attr Modified = "08-JUL-2013 09:17:54.65"
             Buffer PlcWindow
               Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -52804,6 +52916,56 @@ if (I1 >= 0 && I1 <= 9) {
               Attr refconcount = 1
             EndBuffer
           EndBody
+          Object cn329 ConDigital 5139 08-JUL-2013 09:13:05.67
+            Body DevBody 08-JUL-2013 09:17:54.65
+              Buffer PlcConnection
+                Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn329"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-Disabled107"
+                Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-CArea106"
+                Attr point_count = 6
+                Buffer point[0]
+                  Attr x = 1.038445e+00
+                  Attr y = 1.000000e+01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.450000e+00
+                  Attr y = 1.000000e+01
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.450000e+00
+                  Attr y = 1.017650e+01
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 5.500000e-01
+                  Attr y = 1.017650e+01
+                EndBuffer
+                Buffer point[4]
+                  Attr x = 5.500000e-01
+                  Attr y = 1.040000e+01
+                EndBuffer
+                Buffer point[5]
+                  Attr x = 5.700000e-01
+                  Attr y = 1.040000e+01
+                EndBuffer
+                Buffer point[6]
+                  Attr x = 6.000000e-01
+                  Attr y = 1.040000e+01
+                EndBuffer
+                Buffer point[7]
+                  Attr x = 6.200000e-01
+                  Attr y = 1.040000e+01
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn328 ConDigital 5127 24-JUN-2013 16:04:00.02
             Body DevBody 24-JUN-2013 16:04:28.75
               Buffer PlcConnection
@@ -54036,7 +54198,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn266 ConDigital 4195 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.35
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn266"
                 Attr object_type = 23
@@ -54048,19 +54210,19 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-NoConn"
                 Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 1.355111e+00
+                  Attr x = 3.105111e+00
                   Attr y = 1.025000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.389167e+00
+                  Attr x = 3.137556e+00
                   Attr y = 1.025000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.389167e+00
+                  Attr x = 3.137556e+00
                   Attr y = 1.020000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 1.420000e+00
+                  Attr x = 3.170000e+00
                   Attr y = 1.020000e+01
                 EndBuffer
                 Buffer point[4]
@@ -54080,7 +54242,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn265 ConDigital 4196 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.35
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn265"
                 Attr object_type = 23
@@ -54091,11 +54253,11 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-NoConn"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.420000e+00
+                  Attr x = 3.170000e+00
                   Attr y = 1.015000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.073111e+00
+                  Attr x = 2.823111e+00
                   Attr y = 1.015000e+01
                 EndBuffer
                 Buffer point[2]
@@ -54454,7 +54616,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn251 ConDigital 4205 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn251"
                 Attr object_type = 23
@@ -54465,11 +54627,11 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-StoDp27"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.670000e+00
+                  Attr x = 3.420000e+00
                   Attr y = 1.025000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.355111e+00
+                  Attr x = 3.105111e+00
                   Attr y = 1.025000e+01
                 EndBuffer
                 Buffer point[2]
@@ -54497,7 +54659,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn249 ConDigital 4206 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn249"
                 Attr object_type = 23
@@ -54508,11 +54670,11 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-CStoSp5"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.670000e+00
+                  Attr x = 3.420000e+00
                   Attr y = 1.005000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 8.800000e-01
+                  Attr x = 2.630000e+00
                   Attr y = 1.005000e+01
                 EndBuffer
                 Buffer point[2]
@@ -54536,7 +54698,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn247 ConDigital 4207 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn247"
                 Attr object_type = 23
@@ -54547,11 +54709,11 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-DSup5"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.670000e+00
+                  Attr x = 3.420000e+00
                   Attr y = 1.010000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.611778e+00
+                  Attr x = 3.361778e+00
                   Attr y = 1.010000e+01
                 EndBuffer
                 Buffer point[2]
@@ -54579,7 +54741,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn246 ConAnalog 4208 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn246"
                 Attr object_type = 24
@@ -54589,11 +54751,11 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-CStoSp5"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.670000e+00
+                  Attr x = 3.420000e+00
                   Attr y = 1.000000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.113111e+00
+                  Attr x = 2.863111e+00
                   Attr y = 1.000000e+01
                 EndBuffer
                 Buffer point[2]
@@ -54625,7 +54787,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn242 ConDigital 4209 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn242"
                 Attr object_type = 23
@@ -54635,11 +54797,11 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetDp30"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 9.842222e-01
+                  Attr x = 2.734222e+00
                   Attr y = 1.010000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.420000e+00
+                  Attr x = 3.170000e+00
                   Attr y = 1.010000e+01
                 EndBuffer
                 Buffer point[2]
@@ -54663,7 +54825,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn240 ConAnalog 4210 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn240"
                 Attr object_type = 24
@@ -54673,11 +54835,11 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-NoCom"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.170000e+00
+                  Attr x = 2.920000e+00
                   Attr y = 1.025000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.106222e+00
+                  Attr x = 2.856222e+00
                   Attr y = 1.025000e+01
                 EndBuffer
                 Buffer point[2]
@@ -55245,7 +55407,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn207 ConDigital 4224 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn207"
                 Attr object_type = 23
@@ -55255,26 +55417,30 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr source_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-Timer3"
                 Attr dest_point = 2
                 Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-Parameter"
-                Attr point_count = 2
+                Attr point_count = 6
                 Buffer point[0]
-                  Attr x = 2.220000e+00
-                  Attr y = 1.065000e+01
+                  Attr x = 1.426889e+00
+                  Attr y = 1.075000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.426889e+00
-                  Attr y = 1.065000e+01
+                  Attr x = 1.488444e+00
+                  Attr y = 1.075000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.860444e+00
-                  Attr y = 1.090000e+01
+                  Attr x = 1.488444e+00
+                  Attr y = 1.047500e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.120000e+00
-                  Attr y = 1.090000e+01
+                  Attr x = 2.155568e+00
+                  Attr y = 1.047500e+01
                 EndBuffer
                 Buffer point[4]
+                  Attr x = 2.155568e+00
+                  Attr y = 1.065000e+01
                 EndBuffer
                 Buffer point[5]
+                  Attr x = 2.220000e+00
+                  Attr y = 1.065000e+01
                 EndBuffer
                 Buffer point[6]
                 EndBuffer
@@ -55289,7 +55455,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn206 ConDigital 4225 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn206"
                 Attr object_type = 23
@@ -55300,11 +55466,11 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.170000e+00
-                  Attr y = 1.065000e+01
+                  Attr y = 1.075000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.068667e+00
-                  Attr y = 1.065000e+01
+                  Attr x = 1.118667e+00
+                  Attr y = 1.075000e+01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -55327,7 +55493,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn205 ConAnalog 4226 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn205"
                 Attr object_type = 24
@@ -55346,12 +55512,12 @@ if (I1 >= 0 && I1 <= 9) {
                   Attr y = 1.085000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.070942e+00
-                  Attr y = 1.050000e+01
+                  Attr x = 2.192500e+00
+                  Attr y = 1.085000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.120000e+00
-                  Attr y = 1.050000e+01
+                  Attr x = 2.220000e+00
+                  Attr y = 1.085000e+01
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -55370,7 +55536,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn203 ConAnalog 4227 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn203"
                 Attr object_type = 24
@@ -55389,12 +55555,12 @@ if (I1 >= 0 && I1 <= 9) {
                   Attr y = 1.090000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.095471e+00
-                  Attr y = 1.055000e+01
+                  Attr x = 2.155568e+00
+                  Attr y = 1.090000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.120000e+00
-                  Attr y = 1.055000e+01
+                  Attr x = 2.220000e+00
+                  Attr y = 1.090000e+01
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -55452,7 +55618,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn200 ConDigital 4229 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn200"
                 Attr object_type = 23
@@ -55462,12 +55628,12 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetDp25"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.039778e+00
-                  Attr y = 1.045000e+01
+                  Attr x = 1.089778e+00
+                  Attr y = 1.055000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.170000e+00
-                  Attr y = 1.045000e+01
+                  Attr y = 1.055000e+01
                 EndBuffer
                 Buffer point[2]
                   Attr x = 9.931667e-01
@@ -55494,7 +55660,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn199 ConDigital 4230 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn199"
                 Attr object_type = 23
@@ -55504,12 +55670,12 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetDp24"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.039778e+00
-                  Attr y = 1.055000e+01
+                  Attr x = 1.089778e+00
+                  Attr y = 1.065000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.170000e+00
-                  Attr y = 1.055000e+01
+                  Attr y = 1.065000e+01
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.028778e+00
@@ -55739,7 +55905,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn193 ConAnalog 4236 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn193"
                 Attr object_type = 24
@@ -55758,12 +55924,12 @@ if (I1 >= 0 && I1 <= 9) {
                   Attr y = 1.080000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.959804e+00
-                  Attr y = 1.050000e+01
+                  Attr x = 1.443620e+00
+                  Attr y = 1.100000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 1.802000e+00
-                  Attr y = 1.050000e+01
+                  Attr x = 1.036444e+00
+                  Attr y = 1.100000e+01
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -55782,7 +55948,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn191 ConAnalog 4237 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn191"
                 Attr object_type = 24
@@ -55793,7 +55959,7 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetIp5"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.970889e+00
+                  Attr x = 1.968667e+00
                   Attr y = 1.075000e+01
                 EndBuffer
                 Buffer point[1]
@@ -55801,12 +55967,12 @@ if (I1 >= 0 && I1 <= 9) {
                   Attr y = 1.075000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.925347e+00
-                  Attr y = 1.045000e+01
+                  Attr x = 1.759013e+00
+                  Attr y = 1.095000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 1.890889e+00
-                  Attr y = 1.045000e+01
+                  Attr x = 1.118667e+00
+                  Attr y = 1.095000e+01
                 EndBuffer
                 Buffer point[4]
                   Attr x = 1.580444e+00
@@ -55829,7 +55995,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn187 ConAnalog 4238 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn187"
                 Attr object_type = 24
@@ -55840,7 +56006,7 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetIp2"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.944222e+00
+                  Attr x = 1.970889e+00
                   Attr y = 1.070000e+01
                 EndBuffer
                 Buffer point[1]
@@ -55848,12 +56014,12 @@ if (I1 >= 0 && I1 <= 9) {
                   Attr y = 1.070000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.889861e+00
-                  Attr y = 1.100000e+01
+                  Attr x = 1.560735e+00
+                  Attr y = 1.090000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 1.862000e+00
-                  Attr y = 1.100000e+01
+                  Attr x = 1.120889e+00
+                  Attr y = 1.090000e+01
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -55872,7 +56038,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn181 ConDigital 4239 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn181"
                 Attr object_type = 23
@@ -55885,14 +56051,14 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.426889e+00
-                  Attr y = 1.055000e+01
+                  Attr y = 1.065000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.095444e+00
-                  Attr y = 1.055000e+01
+                  Attr x = 2.091136e+00
+                  Attr y = 1.065000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.095444e+00
+                  Attr x = 2.091136e+00
                   Attr y = 1.060000e+01
                 EndBuffer
                 Buffer point[3]
@@ -55920,7 +56086,7 @@ if (I1 >= 0 && I1 <= 9) {
             EndBody
           EndObject
           Object cn180 ConDigital 4240 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn180"
                 Attr object_type = 23
@@ -55929,14 +56095,14 @@ if (I1 >= 0 && I1 <= 9) {
                 Attr source_point = 1
                 Attr source_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-Timer1"
                 Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-Parameter"
-                Attr point_count = 4
+                Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.426889e+00
-                  Attr y = 1.045000e+01
+                  Attr x = 2.220000e+00
+                  Attr y = 1.055000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.198833e+00
-                  Attr y = 1.045000e+01
+                  Attr x = 1.426889e+00
+                  Attr y = 1.055000e+01
                 EndBuffer
                 Buffer point[2]
                   Attr x = 2.198833e+00
@@ -58109,14 +58275,14 @@ Safe Tourque Off (digtal In1 & In2) = sto
             EndBody
           EndObject
           Object BodyText8 BodyText 4296 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr TextAttribute = 2
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-BodyText8"
-                Attr x = 9.000000e-01
-                Attr y = -1.091900e+01
+                Attr x = 1.350000e+00
+                Attr y = -1.186900e+01
                 Attr width = 1.274667e+00
                 Attr heigth = 9.400000e-02
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
@@ -58128,14 +58294,14 @@ The attribute below must always placed last in this PlcPgm."
           Object ResDp0 ResDp 4297 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr Object = "$PlcMain:ABB-Class-ABB_ACS880_1.OpReset"
               Buffer PlcNode
                 Attr object_type = 258
                 Attr cid = "pwrb:Class-ResDp"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-ResDp0"
-                Attr x = 1.250000e+00
-                Attr y = -1.102500e+01
+                Attr x = 1.700000e+00
+                Attr y = -1.197500e+01
                 Attr width = 3.774444e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
@@ -59622,14 +59788,14 @@ signals are connected to converters digitala input."
           Object ResDp1 ResDp 4380 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr Object = "$PlcMain:ABB-Class-ABB_ACS880_1.OpWritePar"
               Buffer PlcNode
                 Attr object_type = 258
                 Attr cid = "pwrb:Class-ResDp"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-ResDp1"
-                Attr x = 1.250000e+00
-                Attr y = -1.107500e+01
+                Attr x = 1.700000e+00
+                Attr y = -1.202500e+01
                 Attr width = 4.107778e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
@@ -59639,14 +59805,14 @@ signals are connected to converters digitala input."
           Object ResDp2 ResDp 4381 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr Object = "$PlcMain:ABB-Class-ABB_ACS880_1.OpReadPar"
               Buffer PlcNode
                 Attr object_type = 258
                 Attr cid = "pwrb:Class-ResDp"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-ResDp2"
-                Attr x = 1.250000e+00
-                Attr y = -1.112500e+01
+                Attr x = 1.700000e+00
+                Attr y = -1.207500e+01
                 Attr width = 4.107778e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
@@ -59708,13 +59874,13 @@ else {
             Body RtBody 24-JUN-2013 10:53:43.33
               Attr TimerTime = 1.000000e-01
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcNode
                 Attr object_type = 98
                 Attr cid = "pwrb:Class-Timer"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-Timer1"
                 Attr x = 1.150000e+00
-                Attr y = -9.525000e+00
+                Attr y = -9.625000e+00
                 Attr width = 2.568889e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
@@ -59727,13 +59893,13 @@ else {
             Body RtBody 24-JUN-2013 10:53:43.33
               Attr TimerTime = 1.000000e-01
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcNode
                 Attr object_type = 98
                 Attr cid = "pwrb:Class-Timer"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-Timer2"
                 Attr x = 1.150000e+00
-                Attr y = -9.625000e+00
+                Attr y = -9.724999e+00
                 Attr width = 2.568889e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
@@ -59745,7 +59911,7 @@ else {
           Object GetIi8 GetIi 4385 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr IiObject = "$PlcMain:ABB-Class-ABB_ACS880_1.InValuePar"
               Buffer PlcNode
                 Attr object_type = 143
@@ -59763,7 +59929,7 @@ else {
           Object GetIp2 GetIp 4386 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr IpObject = "$PlcMain:ABB-Class-ABB_ACS880_1.ReadValuePar"
               Buffer PlcNode
                 Attr object_type = 252
@@ -59771,7 +59937,7 @@ else {
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetIp2"
                 Attr x = 1.500000e+00
                 Attr y = -9.675000e+00
-                Attr width = 3.942222e-01
+                Attr width = 4.208889e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
                 Attr mask[1] = 1
@@ -59781,7 +59947,7 @@ else {
           Object GetIp5 GetIp 4387 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr IpObject = "$PlcMain:ABB-Class-ABB_ACS880_1.ReadCodePar"
               Buffer PlcNode
                 Attr object_type = 252
@@ -59789,7 +59955,7 @@ else {
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetIp5"
                 Attr x = 1.500000e+00
                 Attr y = -9.725000e+00
-                Attr width = 4.208889e-01
+                Attr width = 4.186667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
                 Attr mask[1] = 1
@@ -59799,7 +59965,7 @@ else {
           Object GetIi9 GetIi 4388 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr IiObject = "$PlcMain:ABB-Class-ABB_ACS880_1.InIdPar"
               Buffer PlcNode
                 Attr object_type = 143
@@ -59907,14 +60073,14 @@ else {
           Object GetDp24 GetDp 4394 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr DpObject = "$PlcMain:ABB-Class-ABB_ACS880_1.OpWritePar"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetDp24"
-                Attr x = 6.500000e-01
-                Attr y = -9.575000e+00
+                Attr x = 7.000000e-01
+                Attr y = -9.674999e+00
                 Attr width = 3.897778e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
@@ -59925,14 +60091,14 @@ else {
           Object GetDp25 GetDp 4395 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr DpObject = "$PlcMain:ABB-Class-ABB_ACS880_1.OpReadPar"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetDp25"
-                Attr x = 6.500000e-01
-                Attr y = -9.474999e+00
+                Attr x = 7.000000e-01
+                Attr y = -9.575000e+00
                 Attr width = 3.897778e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
@@ -59984,7 +60150,7 @@ value = 1 = I8
           Object GetIi10 GetIi 4398 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr IiObject = "$PlcMain:ABB-Class-ABB_ACS880_1.InIndPar"
               Buffer PlcNode
                 Attr object_type = 143
@@ -60003,13 +60169,13 @@ value = 1 = I8
             Body RtBody 24-JUN-2013 10:53:43.33
               Attr TimerTime = 1.000000e-01
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcNode
                 Attr object_type = 98
                 Attr cid = "pwrb:Class-Timer"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-Timer3"
                 Attr x = 1.150000e+00
-                Attr y = -9.724999e+00
+                Attr y = -9.825000e+00
                 Attr width = 2.568889e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
@@ -60021,14 +60187,14 @@ value = 1 = I8
           Object GetDp26 GetDp 4400 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr DpObject = "$PlcMain:ABB-Class-ABB_ACS880_1.OpBackupPar"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetDp26"
-                Attr x = 6.500000e-01
-                Attr y = -9.674999e+00
+                Attr x = 7.000000e-01
+                Attr y = -9.775000e+00
                 Attr width = 4.186667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
@@ -60039,14 +60205,14 @@ value = 1 = I8
           Object ResDp3 ResDp 4401 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr Object = "$PlcMain:ABB-Class-ABB_ACS880_1.OpBackupPar"
               Buffer PlcNode
                 Attr object_type = 258
                 Attr cid = "pwrb:Class-ResDp"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-ResDp3"
-                Attr x = 1.250000e+00
-                Attr y = -1.117500e+01
+                Attr x = 1.700000e+00
+                Attr y = -1.212500e+01
                 Attr width = 4.396667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
@@ -60236,12 +60402,12 @@ value = 1 = I8
             Body RtBody 24-JUN-2013 10:53:43.34
               Attr IpPtrObject = "$PlcMain:ABB-Class-ABB_ACS880_1.IoStatus"
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-GetIpPtr"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetIpPtr65"
-                Attr x = 6.000000e-01
+                Attr x = 2.350000e+00
                 Attr y = -9.225000e+00
                 Attr width = 4.562222e-01
                 Attr heigth = 5.000000e-02
@@ -60253,12 +60419,12 @@ value = 1 = I8
           Object NoCom Even 4413 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Even"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-NoCom"
-                Attr x = 1.150000e+00
+                Attr x = 2.900000e+00
                 Attr y = -9.275000e+00
                 Attr width = 1.851111e-01
                 Attr heigth = 1.000000e-01
@@ -60271,12 +60437,12 @@ value = 1 = I8
           Object NoConn And 4414 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-NoConn"
-                Attr x = 1.400000e+00
+                Attr x = 3.150000e+00
                 Attr y = -9.225000e+00
                 Attr width = 1.917778e-01
                 Attr heigth = 1.500000e-01
@@ -60290,13 +60456,13 @@ value = 1 = I8
           Object GetDp30 GetDp 4415 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr DpObject = "$PlcFo:ABB-Class-ABB_ACS880_1Fo.PowerOn"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetDp30"
-                Attr x = 6.500000e-01
+                Attr x = 2.400000e+00
                 Attr y = -9.125000e+00
                 Attr width = 3.342222e-01
                 Attr heigth = 5.000000e-02
@@ -60308,13 +60474,13 @@ value = 1 = I8
           Object GetDp31 GetDp 4416 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr DpObject = "$PlcMain:ABB-Class-ABB_ACS880_1.PowerStartUp"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetDp31"
-                Attr x = 6.500000e-01
+                Attr x = 2.400000e+00
                 Attr y = -9.174999e+00
                 Attr width = 4.231111e-01
                 Attr heigth = 5.000000e-02
@@ -60329,13 +60495,13 @@ value = 1 = I8
               Attr MoreText = ""
               Attr TimerTime = 3.000000e+00
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr LockAttribute = 1
               Buffer PlcNode
                 Attr object_type = 99
                 Attr cid = "pwrb:Class-DSup"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-DSup5"
-                Attr x = 1.650000e+00
+                Attr x = 3.400000e+00
                 Attr y = -9.125000e+00
                 Attr width = 4.600000e-01
                 Attr heigth = 5.000000e-02
@@ -60347,13 +60513,13 @@ value = 1 = I8
           Object CStoSp5 CStoSp 4418 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr Object = "ABB:Class-ABB_ACS880_1Fo-Code-W-DSup5.DetectText"
               Buffer PlcNode
                 Attr object_type = 265
                 Attr cid = "pwrb:Class-CStoSp"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-CStoSp5"
-                Attr x = 1.650000e+00
+                Attr x = 3.400000e+00
                 Attr y = -9.025000e+00
                 Attr width = 4.200000e-01
                 Attr heigth = 1.000000e-01
@@ -60365,13 +60531,13 @@ value = 1 = I8
           Object GetSp5 GetSp 4419 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr SpObject = "$PlcMain:ABB-Class-ABB_ACS880_1.AlarmConnection"
               Buffer PlcNode
                 Attr object_type = 263
                 Attr cid = "pwrb:Class-GetSp"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetSp5"
-                Attr x = 6.000000e-01
+                Attr x = 2.350000e+00
                 Attr y = -8.975000e+00
                 Attr width = 4.631111e-01
                 Attr heigth = 5.000000e-02
@@ -60383,12 +60549,12 @@ value = 1 = I8
           Object FirstScan68 FirstScan 4420 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-FirstScan"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-FirstScan68"
-                Attr x = 6.000000e-01
+                Attr x = 2.350000e+00
                 Attr y = -9.025001e+00
                 Attr width = 2.300000e-01
                 Attr heigth = 5.000000e-02
@@ -60400,13 +60566,13 @@ value = 1 = I8
           Object StoDp27 StoDp 4421 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr Object = "$PlcMain:ABB-Class-ABB_ACS880_1.CommOk"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-StoDp27"
-                Attr x = 1.650000e+00
+                Attr x = 3.400000e+00
                 Attr y = -9.275000e+00
                 Attr width = 4.163333e-01
                 Attr heigth = 5.000000e-02
@@ -60513,14 +60679,14 @@ Profibus communication."
             EndBody
           EndObject
           Object BodyText76 BodyText 4427 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 08-JUL-2013 09:17:54.65
               Attr TextAttribute = 2
               Attr FrameAttribute = 1
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-BodyText76"
-                Attr x = 2.950000e+00
+                Attr x = 2.800000e+00
                 Attr y = -1.101900e+01
                 Attr width = 8.746667e-01
                 Attr heigth = 1.940000e-01
@@ -61383,6 +61549,83 @@ to enable SW bit0 to be true, i.e. CW bit0 is edge sensitive in some cases."
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
+            EndBody
+          EndObject
+          Object CArea106 CArea 5137 08-JUL-2013 09:10:44.71
+            Body RtBody 08-JUL-2013 09:10:44.71
+            EndBody
+            Body DevBody 08-JUL-2013 09:17:54.65
+              Attr AreaWidth = 3.100000e+00
+              Attr AreaHeight = 1.670000e+00
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-CArea"
+                Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-CArea106"
+                Attr x = 5.500000e-01
+                Attr y = -1.099500e+01
+                Attr width = 3.130000e+00
+                Attr heigth = 1.670000e+00
+                Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
+                Attr mask[0] = 1
+                Attr mask[2] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Disabled107 Disabled 5138 08-JUL-2013 09:12:59.13
+            Body RtBody 08-JUL-2013 09:12:59.13
+            EndBody
+            Body DevBody 08-JUL-2013 09:17:54.65
+              Attr Object = "$PlcMain:ABB-Class-ABB_ACS880_1.InIdPar"
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Disabled"
+                Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-Disabled107"
+                Attr x = 5.500000e-01
+                Attr y = -8.975000e+00
+                Attr width = 4.384445e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Document5 Document 5140 08-JUL-2013 09:14:52.81
+            Body DevBody 08-JUL-2013 09:17:54.65
+              Buffer PlcNode
+                Attr object_type = 2
+                Attr cid = "pwrb:Class-Document"
+                Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-Document5"
+                Attr x = 5.000000e-01
+                Attr y = -1.357500e+01
+                Attr width = 3.400000e+00
+                Attr heigth = 2.300000e+00
+                Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
+                Attr mask[0] = 4
+              EndBuffer
+              Attr Page = "5"
+              Attr Signature = "JE"
+              Attr DocumentOrientation = 1
+              Attr DocumentSize = 3
+            EndBody
+          EndObject
+          Object BodyText108 BodyText 5141 08-JUL-2013 09:15:08.62
+            Body DevBody 08-JUL-2013 09:17:54.65
+              Attr TextAttribute = 2
+              Attr FrameAttribute = 1
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-BodyText"
+                Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-BodyText108"
+                Attr x = 2.800000e+00
+                Attr y = -1.321900e+01
+                Attr width = 8.746667e-01
+                Attr heigth = 1.940000e-01
+                Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
+              EndBuffer
+              Attr Text = "Functionobject
+ABB ACS880 Type 1 version 1
+Speedcontrol, ABB drives comm. profile,
+Profibus communication."
             EndBody
           EndObject
         EndObject
@@ -65215,7 +65458,7 @@ bit 10 (d11) replace fan"
         Object ACS880 $Attribute 101 24-JUN-2013 10:53:43.34
           Body SysBody 24-JUN-2013 11:03:08.68
             Attr PgmName = "ACS880"
-            Attr Size = 22864
+            Attr Size = 23008
             Attr Flags = 131072
             Attr TypeRef = "ABB:Class-ABB_ACS880_1"
           EndBody
@@ -77031,7 +77274,7 @@ ABB ACS880 Aggregate
         Object Super $Attribute 7 24-JUN-2013 10:53:43.34
           Body SysBody 24-JUN-2013 11:01:43.09
             Attr PgmName = "Super"
-            Attr Size = 38344
+            Attr Size = 38488
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_ACS880MotorAggr"
           EndBody
@@ -77187,7 +77430,7 @@ ABB ACS880 Aggregate
         Object Super $Attribute 10 24-JUN-2013 10:53:43.34
           Body SysBody 24-JUN-2013 11:01:24.66
             Attr PgmName = "Super"
-            Attr Size = 38344
+            Attr Size = 38488
             Attr Flags = 393216
             Attr TypeRef = "ABB:Class-ABB_ACS880MotorAggr"
           EndBody
@@ -77326,6 +77569,1323 @@ ABB ACS880 Aggregate
           Attr Super.Mode.Alarm2LocalMod = "Local mode is activated for"
           Attr Super.Mode.AlarmNotManOrd = "Automode active! Manual start/stop order is not allowed"
           Attr Super.DefTrend = "ABB:Class-ABB_ACS880FanAggr-Template.Super.ACS880.PlotGroup"
+        EndBody
+      EndObject
+    EndObject
+    Object ABB_ACS880_Epl_IoModule $ClassDef 54 05-JUL-2013 14:54:04.65
+      Body SysBody 05-JUL-2013 14:53:53.08
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 09-JUL-2013 10:43:54.33
+        Body SysBody 05-JUL-2013 14:54:21.39
+          Attr StructName = "ABB_ACS880_Epl_IoModule"
+          Attr NextAix = "_X173"
+        EndBody
+        Object I_SW $Attribute 147 09-JUL-2013 09:32:58.52
+          Body SysBody 09-JUL-2013 09:32:58.52
+            Attr PgmName = "I_SW"
+            Attr Size = 160
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object I_ACT $Attribute 148 09-JUL-2013 09:32:58.52
+          Body SysBody 09-JUL-2013 09:32:58.52
+            Attr PgmName = "I_ACT"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object I_PZD3_4 $Attribute 149 09-JUL-2013 09:32:58.52
+          Body SysBody 09-JUL-2013 09:32:58.52
+            Attr PgmName = "I_PZD3_4"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object I_PZD5 $Attribute 150 09-JUL-2013 09:32:58.52
+          Body SysBody 09-JUL-2013 09:32:58.52
+            Attr PgmName = "I_PZD5"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object I_PZD6 $Attribute 151 09-JUL-2013 09:32:58.52
+          Body SysBody 09-JUL-2013 09:32:58.52
+            Attr PgmName = "I_PZD6"
+            Attr Size = 160
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object I_PZD7 $Attribute 152 09-JUL-2013 09:32:58.52
+          Body SysBody 09-JUL-2013 09:32:58.52
+            Attr PgmName = "I_PZD7"
+            Attr Size = 160
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object I_PZD8 $Attribute 153 09-JUL-2013 09:32:58.52
+          Body SysBody 09-JUL-2013 09:32:58.52
+            Attr PgmName = "I_PZD8"
+            Attr Size = 160
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object O_CW $Attribute 161 09-JUL-2013 09:32:58.52
+          Body SysBody 09-JUL-2013 09:32:58.52
+            Attr PgmName = "O_CW"
+            Attr Size = 168
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIo"
+          EndBody
+        EndObject
+        Object O_REF $Attribute 162 09-JUL-2013 09:32:58.52
+          Body SysBody 09-JUL-2013 09:32:58.52
+            Attr PgmName = "O_REF"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template ABB_ACS880_Epl_IoModule 2161868800 05-JUL-2013 14:53:53.08
+        Body RtBody 09-JUL-2013 11:53:21.21
+          Attr I_SW.ConversionOn = 1
+          Attr I_SW.Representation = 3
+          Attr I_ACT.ConversionOn = 1
+          Attr I_ACT.RawValRangeLow = -2.000000e+04
+          Attr I_ACT.RawValRangeHigh = 2.000000e+04
+          Attr I_ACT.ChannelSigValRangeLow = -2.000000e+04
+          Attr I_ACT.ChannelSigValRangeHigh = 2.000000e+04
+          Attr I_ACT.SensorPolyType = 1
+          Attr I_ACT.SensorSigValRangeLow = -2.000000e+04
+          Attr I_ACT.SensorSigValRangeHigh = 2.000000e+04
+          Attr I_ACT.ActValRangeLow = -1.500000e+03
+          Attr I_ACT.ActValRangeHigh = 1.500000e+03
+          Attr I_ACT.Representation = 2
+          Attr I_PZD3_4.ConversionOn = 1
+          Attr I_PZD3_4.RawValRangeLow = -3.000000e+06
+          Attr I_PZD3_4.RawValRangeHigh = 3.000000e+06
+          Attr I_PZD3_4.ChannelSigValRangeLow = -3.000000e+06
+          Attr I_PZD3_4.ChannelSigValRangeHigh = 3.000000e+06
+          Attr I_PZD3_4.SensorPolyType = 1
+          Attr I_PZD3_4.SensorSigValRangeLow = -3.000000e+06
+          Attr I_PZD3_4.SensorSigValRangeHigh = 3.000000e+06
+          Attr I_PZD3_4.ActValRangeLow = -3.000000e+04
+          Attr I_PZD3_4.ActValRangeHigh = 3.000000e+04
+          Attr I_PZD5.ConversionOn = 1
+          Attr I_PZD5.RawValRangeLow = -3.000000e+06
+          Attr I_PZD5.RawValRangeHigh = 3.000000e+06
+          Attr I_PZD5.ChannelSigValRangeLow = -3.000000e+06
+          Attr I_PZD5.ChannelSigValRangeHigh = 3.000000e+06
+          Attr I_PZD5.SensorPolyType = 1
+          Attr I_PZD5.SensorSigValRangeLow = -3.000000e+06
+          Attr I_PZD5.SensorSigValRangeHigh = 3.000000e+06
+          Attr I_PZD5.ActValRangeLow = -3.000000e+04
+          Attr I_PZD5.ActValRangeHigh = 3.000000e+04
+          Attr I_PZD6.ConversionOn = 1
+          Attr I_PZD6.Representation = 3
+          Attr I_PZD7.ConversionOn = 1
+          Attr I_PZD7.Representation = 3
+          Attr I_PZD8.ConversionOn = 1
+          Attr I_PZD8.Representation = 3
+          Attr O_CW.Representation = 3
+          Attr O_REF.ActValRangeLow = -1.500000e+03
+          Attr O_REF.ActValRangeHigh = 1.500000e+03
+          Attr O_REF.SensorSigValRangeLow = -2.000000e+04
+          Attr O_REF.SensorSigValRangeHigh = 2.000000e+04
+          Attr O_REF.ChannelSigValRangeLow = -2.000000e+04
+          Attr O_REF.ChannelSigValRangeHigh = 2.000000e+04
+          Attr O_REF.RawValRangeLow = -2.000000e+04
+          Attr O_REF.RawValRangeHigh = 2.000000e+04
+          Attr O_REF.Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object ABB_ACS880_Epl $ClassDef 53 05-JUL-2013 14:51:32.51
+      Body SysBody 05-JUL-2013 14:50:09.15
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 05-JUL-2013 14:50:09.15
+        Body SysBody 05-JUL-2013 14:52:56.46
+          Attr StructName = "ABB_ACS880_Epl"
+          Attr NextAix = "_X34"
+        EndBody
+        Object Super $Attribute 32 05-JUL-2013 14:50:09.15
+          Body SysBody 09-JUL-2013 10:22:59.12
+            Attr PgmName = "Super"
+            Attr Size = 352
+            Attr Flags = 393216
+            Attr TypeRef = "OtherIO:Class-Epl_Module"
+          EndBody
+        EndObject
+        Object Io $Attribute 33 05-JUL-2013 14:50:09.15
+          Body SysBody 05-JUL-2013 14:55:18.11
+            Attr PgmName = "Io"
+            Attr Size = 1768
+            Attr Flags = 131072
+            Attr TypeRef = "ABB:Class-ABB_ACS880_Epl_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template ABB_ACS880_Epl 2161606656 05-JUL-2013 14:50:09.15
+        Body RtBody 09-JUL-2013 13:19:08.99
+          Attr Super.Specification = "ABB ACS880, PPO message type 7"
+          Attr Super.DataSheet = "$pwr_lang/dsh/abb_acs880.html"
+          Attr Super.Process = 128
+          Attr Io.I_SW.ConversionOn = 1
+          Attr Io.I_SW.Representation = 3
+          Attr Io.I_ACT.ConversionOn = 1
+          Attr Io.I_ACT.RawValRangeLow = -2.000000e+04
+          Attr Io.I_ACT.RawValRangeHigh = 2.000000e+04
+          Attr Io.I_ACT.ChannelSigValRangeLow = -2.000000e+04
+          Attr Io.I_ACT.ChannelSigValRangeHigh = 2.000000e+04
+          Attr Io.I_ACT.SensorPolyType = 1
+          Attr Io.I_ACT.SensorSigValRangeLow = -2.000000e+04
+          Attr Io.I_ACT.SensorSigValRangeHigh = 2.000000e+04
+          Attr Io.I_ACT.ActValRangeLow = -1.500000e+03
+          Attr Io.I_ACT.ActValRangeHigh = 1.500000e+03
+          Attr Io.I_ACT.Representation = 2
+          Attr Io.I_PZD3_4.ConversionOn = 1
+          Attr Io.I_PZD3_4.RawValRangeLow = -3.000000e+06
+          Attr Io.I_PZD3_4.RawValRangeHigh = 3.000000e+06
+          Attr Io.I_PZD3_4.ChannelSigValRangeLow = -3.000000e+06
+          Attr Io.I_PZD3_4.ChannelSigValRangeHigh = 3.000000e+06
+          Attr Io.I_PZD3_4.SensorPolyType = 1
+          Attr Io.I_PZD3_4.SensorSigValRangeLow = -3.000000e+06
+          Attr Io.I_PZD3_4.SensorSigValRangeHigh = 3.000000e+06
+          Attr Io.I_PZD3_4.ActValRangeLow = -3.000000e+04
+          Attr Io.I_PZD3_4.ActValRangeHigh = 3.000000e+04
+          Attr Io.I_PZD5.ConversionOn = 1
+          Attr Io.I_PZD5.RawValRangeLow = -3.000000e+06
+          Attr Io.I_PZD5.RawValRangeHigh = 3.000000e+06
+          Attr Io.I_PZD5.ChannelSigValRangeLow = -3.000000e+06
+          Attr Io.I_PZD5.ChannelSigValRangeHigh = 3.000000e+06
+          Attr Io.I_PZD5.SensorPolyType = 1
+          Attr Io.I_PZD5.SensorSigValRangeLow = -3.000000e+06
+          Attr Io.I_PZD5.SensorSigValRangeHigh = 3.000000e+06
+          Attr Io.I_PZD5.ActValRangeLow = -3.000000e+04
+          Attr Io.I_PZD5.ActValRangeHigh = 3.000000e+04
+          Attr Io.I_PZD6.ConversionOn = 1
+          Attr Io.I_PZD6.Representation = 3
+          Attr Io.I_PZD7.ConversionOn = 1
+          Attr Io.I_PZD7.Representation = 3
+          Attr Io.I_PZD8.ConversionOn = 1
+          Attr Io.I_PZD8.Representation = 3
+          Attr Io.O_CW.Representation = 3
+          Attr Io.O_REF.ActValRangeLow = -1.500000e+03
+          Attr Io.O_REF.ActValRangeHigh = 1.500000e+03
+          Attr Io.O_REF.SensorSigValRangeLow = -2.000000e+04
+          Attr Io.O_REF.SensorSigValRangeHigh = 2.000000e+04
+          Attr Io.O_REF.ChannelSigValRangeLow = -2.000000e+04
+          Attr Io.O_REF.ChannelSigValRangeHigh = 2.000000e+04
+          Attr Io.O_REF.RawValRangeLow = -2.000000e+04
+          Attr Io.O_REF.RawValRangeHigh = 2.000000e+04
+          Attr Io.O_REF.Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object ABB_ACS880_Epl_1 $ClassDef 52 05-JUL-2013 15:25:03.14
+      Body SysBody 05-JUL-2013 15:40:45.67
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 09-JUL-2013 10:22:17.37
+        Body SysBody 08-JUL-2013 08:58:55.26
+          Attr StructName = "ABB_ACS880_Epl_1"
+          Attr NextAix = "_X73"
+        EndBody
+        Object Super $Attribute 2 09-JUL-2013 10:22:22.83
+          Body SysBody 09-JUL-2013 13:09:55.50
+            Attr PgmName = "Super"
+            Attr Size = 23008
+            Attr Flags = 393216
+            Attr TypeRef = "ABB:Class-ABB_ACS880_1"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 5142 09-JUL-2013 09:41:12.35
+        Object Pointed $Menu 5143 09-JUL-2013 09:41:12.35
+          Object IoConnect $MenuButton 5144 09-JUL-2013 09:41:12.35
+            Body SysBody 09-JUL-2013 09:41:27.82
+              Attr ButtonName = "Connect IO"
+              Attr MethodName = "$AttrRef-IoConnect"
+              Attr MethodArguments[0] = "ABB_ACS880_Epl_IoModule"
+              Attr FilterName = "$AttrRef-IoConnectFilter"
+              Attr FilterArguments[0] = "ABB_ACS880_Epl_IoModule"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object Template ABB_ACS880_Epl_1 2161344512 01-JAN-1970 01:00:00.00
+        Body RtBody 11-JUL-2013 11:23:26.03
+          Attr Super.DisableInIdPar = 1
+          Attr Super.DisableInIndPar = 1
+          Attr Super.DisableInValuePar = 1
+          Attr Super.MainStatusSW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_SW"
+          Attr Super.ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_ACT"
+          Attr Super.ActSpeed.Unit = "r/m"
+          Attr Super.ActSpeed.NoOfDecimals = 1
+          Attr Super.ActSpeed.PresMaxLimit = 3.000000e+03
+          Attr Super.ActSpeed.PresMinLimit = -3.000000e+03
+          Attr Super.ActSpeed.DefTrend = "ABB:Class-ABB_ACS880_1-Template.TrendActSpeed"
+          Attr Super.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD3_4"
+          Attr Super.ActCurrent.Unit = "A"
+          Attr Super.ActCurrent.NoOfDecimals = 2
+          Attr Super.ActCurrent.PresMaxLimit = 3.000000e+02
+          Attr Super.ActCurrent.PresMinLimit = -3.000000e+02
+          Attr Super.ActCurrent.DefTrend = "ABB:Class-ABB_ACS880_1-Template.TrendActCurrent"
+          Attr Super.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD5"
+          Attr Super.ActTorque.Unit = "%"
+          Attr Super.ActTorque.NoOfDecimals = 1
+          Attr Super.ActTorque.PresMaxLimit = 3.000000e+02
+          Attr Super.ActTorque.PresMinLimit = -3.000000e+02
+          Attr Super.ActTorque.DefTrend = "ABB:Class-ABB_ACS880_1-Template.TrendActTorque"
+          Attr Super.UserStatusSW1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD6"
+          Attr Super.ActiveWarning1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD7"
+          Attr Super.ActiveFault1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD8"
+          Attr Super.DisableOutIdPar = 1
+          Attr Super.DisableOutIndPar = 1
+          Attr Super.DisableValuePar = 1
+          Attr Super.MainControlCW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.O_CW"
+          Attr Super.RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.O_REF"
+          Attr Super.RefSpeed.Unit = "r/m"
+          Attr Super.RefSpeed.NoOfDecimals = 1
+          Attr Super.RefSpeed.PresMaxLimit = 3.000000e+03
+          Attr Super.RefSpeed.PresMinLimit = -3.000000e+03
+          Attr Super.RefSpeed.DefTrend = "ABB:Class-ABB_ACS880_1-Template.TrendRefSpeed"
+          Attr Super.DisableOpWritePar = 1
+          Attr Super.DisableOpReadPar = 1
+          Attr Super.DisableOpBackupPar = 1
+          Attr Super.PowerUpTime = 1.500000e+01
+          Attr Super.DisableRequestPar = 1
+          Attr Super.DisableWriteValuePar = 1
+          Attr Super.DisableReadValuePar = 1
+          Attr Super.DisableReadCodePar = 1
+          Attr Super.DisableReadCodeSubPar = 1
+          Attr Super.AlarmLocalMod = "Frequency converter is in local mode"
+          Attr Super.AlarmTripped = "Frequency converter tripped, reset is required"
+          Attr Super.AlarmFanOld = "Maintenance replace of cooling fan in converter required"
+          Attr Super.AlarmWarning = "Frequency converter warning"
+          Attr Super.AlarmConnection = "No connection"
+          Attr Super.DefTrend = "ABB:Class-ABB_ACS880_1-Template.PlotGroup"
+          Attr Super.DataSheet = "$pwr_lang/dsh/abb_acs880.html"
+          Attr Super.TrendActSpeed.Multiple = 1
+          Attr Super.TrendActSpeed.DataName = "ABB:Class-ABB_ACS880_1-Template.ActSpeed.ActualValue"
+          Attr Super.TrendActSpeed.StorageTime = 239
+          Attr Super.TrendActTorque.Multiple = 1
+          Attr Super.TrendActTorque.DataName = "ABB:Class-ABB_ACS880_1-Template.ActTorque.ActualValue"
+          Attr Super.TrendActTorque.StorageTime = 239
+          Attr Super.TrendActCurrent.Multiple = 1
+          Attr Super.TrendActCurrent.DataName = "ABB:Class-ABB_ACS880_1-Template.ActCurrent.ActualValue"
+          Attr Super.TrendActCurrent.StorageTime = 239
+          Attr Super.TrendRefSpeed.Multiple = 1
+          Attr Super.TrendRefSpeed.DataName = "ABB:Class-ABB_ACS880_1-Template.RefSpeed.ActualValue"
+          Attr Super.TrendRefSpeed.StorageTime = 239
+          Attr Super.PlotGroup.YObjectName[0] = "ABB:Class-ABB_ACS880_1-Template.TrendActSpeed"
+          Attr Super.PlotGroup.YObjectName[1] = "ABB:Class-ABB_ACS880_1-Template.TrendRefSpeed"
+          Attr Super.PlotGroup.YObjectName[2] = "ABB:Class-ABB_ACS880_1-Template.TrendActTorque"
+          Attr Super.PlotGroup.YObjectName[3] = "ABB:Class-ABB_ACS880_1-Template.TrendActCurrent"
+          Attr Super.PlotGroup.YUnit[1] = "%"
+          Attr Super.PlotGroup.YUnit[2] = "A"
+          Attr Super.PlotGroup.NumPoints = 478
+        EndBody
+      EndObject
+    EndObject
+    Object ABB_ACS880EplMotorAggr $ClassDef 60 11-JUL-2013 09:30:41.89
+      Body SysBody 11-JUL-2013 09:30:30.87
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 11-JUL-2013 09:30:55.21
+        Body SysBody 11-JUL-2013 09:30:55.21
+          Attr StructName = "ABB_ACS880EplMotorAggr"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1 11-JUL-2013 09:31:02.11
+          Body SysBody 11-JUL-2013 10:46:13.87
+            Attr PgmName = "Super"
+            Attr Size = 38488
+            Attr Flags = 393216
+            Attr TypeRef = "ABB:Class-ABB_ACS880MotorAggr"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 5146 11-JUL-2013 10:22:45.84
+        Object Pointed $Menu 5147 11-JUL-2013 10:22:45.85
+          Object ConfigureComponent $MenuCascade 5148 11-JUL-2013 10:22:45.85
+            Body SysBody 11-JUL-2013 10:22:45.85
+              Attr ButtonName = "ConfigureComponent"
+            EndBody
+            Object CbCoFcSs $MenuButton 5149 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:24:38.89
+                Attr ButtonName = "CbCoFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "0, ACS880 16383"
+                Attr MethodArguments[1] = "0"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbCoFcSl $MenuButton 5150 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:25:11.37
+                Attr ButtonName = "CbCoFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "0, ACS880 16383"
+                Attr MethodArguments[1] = "1"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbCoFc $MenuButton 5151 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:25:19.64
+                Attr ButtonName = "CbCoFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "4, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "2"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbFcSs $MenuButton 5152 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:25:26.87
+                Attr ButtonName = "CbFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "2, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "3"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbFcSl $MenuButton 5153 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:25:33.04
+                Attr ButtonName = "CbFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "2, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "4"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbFc $MenuButton 5154 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:25:40.45
+                Attr ButtonName = "CbFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "6, Contactor 3, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "5"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CoFcSs $MenuButton 5155 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:25:47.52
+                Attr ButtonName = "CoFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "1, CircuitBreaker 1, ACS880 16383"
+                Attr MethodArguments[1] = "6"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CoFcSl $MenuButton 5156 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:25:54.45
+                Attr ButtonName = "CoFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "1, CircuitBreaker 1, ACS880 16383"
+                Attr MethodArguments[1] = "7"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CoFc $MenuButton 5157 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:26:01.04
+                Attr ButtonName = "CoFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "5, CircuitBreaker 1, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "8"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FcSs $MenuButton 5158 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:26:07.89
+                Attr ButtonName = "FcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "3, CircuitBreaker 1, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "9"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FcSl $MenuButton 5159 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:26:13.96
+                Attr ButtonName = "FcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "3, CircuitBreaker 1, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "10"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object Fc $MenuButton 5160 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:26:19.72
+                Attr ButtonName = "Fc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "7, CircuitBreaker 1, Contactor 3, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "11"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbCoFcSs $MenuButton 5161 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:26:25.44
+                Attr ButtonName = "FuCbCoFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "0, ACS880 16383"
+                Attr MethodArguments[1] = "12"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbCoFcSl $MenuButton 5162 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:26:31.65
+                Attr ButtonName = "FuCbCoFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "0, ACS880 16383"
+                Attr MethodArguments[1] = "13"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbCoFc $MenuButton 5163 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:26:37.54
+                Attr ButtonName = "FuCbCoFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "4, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "14"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbFcSs $MenuButton 5164 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:26:43.48
+                Attr ButtonName = "FuCbFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "2, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "15"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbFcSl $MenuButton 5165 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:26:49.27
+                Attr ButtonName = "FuCbFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "2, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "16"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbFc $MenuButton 5166 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:26:56.04
+                Attr ButtonName = "FuCbFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "6, Contactor 3, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "17"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCoFcSs $MenuButton 5167 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:27:03.07
+                Attr ButtonName = "FuCoFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "1, CircuitBreaker 1, ACS880 16383"
+                Attr MethodArguments[1] = "18"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCoFcSl $MenuButton 5168 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:27:08.24
+                Attr ButtonName = "FuCoFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "1, CircuitBreaker 1, ACS880 16383"
+                Attr MethodArguments[1] = "19"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCoFc $MenuButton 5169 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:27:13.42
+                Attr ButtonName = "FuCoFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "5, CircuitBreaker 1, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "20"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuFcSs $MenuButton 5170 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:27:18.95
+                Attr ButtonName = "FuFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "3, CircuitBreaker 1, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "21"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuFcSl $MenuButton 5171 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:27:24.20
+                Attr ButtonName = "FuFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "3, CircuitBreaker 1, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "22"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuFc $MenuButton 5172 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:27:30.53
+                Attr ButtonName = "FuFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "7, CircuitBreaker 1, Contactor 3, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "23"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 5173 11-JUL-2013 10:22:45.85
+        Object Pointed $Menu 5174 11-JUL-2013 10:22:45.85
+          Object ConfigureComponent $MenuCascade 5175 11-JUL-2013 10:22:45.85
+            Body SysBody 11-JUL-2013 10:22:45.85
+              Attr ButtonName = "ConfigureComponent"
+            EndBody
+            Object CbCoFcSs $MenuButton 5176 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:27:40.16
+                Attr ButtonName = "CbCoFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "0, ACS880 16383"
+                Attr MethodArguments[1] = "0"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbCoFcSl $MenuButton 5177 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:27:45.84
+                Attr ButtonName = "CbCoFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "0, ACS880 16383"
+                Attr MethodArguments[1] = "1"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbCoFc $MenuButton 5178 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:27:51.71
+                Attr ButtonName = "CbCoFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "4, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "2"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbFcSs $MenuButton 5179 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:27:57.72
+                Attr ButtonName = "CbFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "2, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "3"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbFcSl $MenuButton 5180 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:28:03.13
+                Attr ButtonName = "CbFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "2, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "4"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbFc $MenuButton 5181 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:28:08.07
+                Attr ButtonName = "CbFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "6, Contactor 3, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "5"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CoFcSs $MenuButton 5182 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:28:13.41
+                Attr ButtonName = "CoFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "1, CircuitBreaker 1, ACS880 16383"
+                Attr MethodArguments[1] = "6"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CoFcSl $MenuButton 5183 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:28:18.86
+                Attr ButtonName = "CoFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "1, CircuitBreaker 1, ACS880 16383"
+                Attr MethodArguments[1] = "7"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CoFc $MenuButton 5184 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:28:24.08
+                Attr ButtonName = "CoFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "5, CircuitBreaker 1, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "8"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FcSs $MenuButton 5185 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:28:29.44
+                Attr ButtonName = "FcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "3, CircuitBreaker 1, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "9"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FcSl $MenuButton 5186 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:28:34.77
+                Attr ButtonName = "FcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "3, CircuitBreaker 1, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "10"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object Fc $MenuButton 5187 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:28:39.61
+                Attr ButtonName = "Fc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "7, CircuitBreaker 1, Contactor 3, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "11"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbCoFcSs $MenuButton 5188 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:28:44.52
+                Attr ButtonName = "FuCbCoFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "0, ACS880 16383"
+                Attr MethodArguments[1] = "12"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbCoFcSl $MenuButton 5189 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:28:49.50
+                Attr ButtonName = "FuCbCoFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "0, ACS880 16383"
+                Attr MethodArguments[1] = "13"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbCoFc $MenuButton 5190 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:28:54.62
+                Attr ButtonName = "FuCbCoFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "4, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "14"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbFcSs $MenuButton 5191 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:29:00.07
+                Attr ButtonName = "FuCbFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "2, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "15"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbFcSl $MenuButton 5192 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:29:12.82
+                Attr ButtonName = "FuCbFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "2, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "16"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbFc $MenuButton 5193 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:29:18.39
+                Attr ButtonName = "FuCbFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "6, Contactor 3, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "17"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCoFcSs $MenuButton 5194 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:29:22.99
+                Attr ButtonName = "FuCoFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "1, CircuitBreaker 1, ACS880 16383"
+                Attr MethodArguments[1] = "18"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCoFcSl $MenuButton 5195 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:29:27.68
+                Attr ButtonName = "FuCoFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "1, CircuitBreaker 1, ACS880 16383"
+                Attr MethodArguments[1] = "19"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCoFc $MenuButton 5196 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:29:32.40
+                Attr ButtonName = "FuCoFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "5, CircuitBreaker 1, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "20"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuFcSs $MenuButton 5197 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:29:37.66
+                Attr ButtonName = "FuFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "3, CircuitBreaker 1, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "21"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuFcSl $MenuButton 5198 11-JUL-2013 10:22:45.85
+              Body SysBody 11-JUL-2013 11:29:44.70
+                Attr ButtonName = "FuFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "3, CircuitBreaker 1, Contactor 3, ACS880 16383"
+                Attr MethodArguments[1] = "22"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuFc $MenuButton 5199 11-JUL-2013 11:29:47.12
+              Body SysBody 11-JUL-2013 11:29:51.26
+                Attr ButtonName = "FuFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "7, CircuitBreaker 1, Contactor 3, SafetySwitch 1, ACS880 16383"
+                Attr MethodArguments[1] = "23"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+          EndObject
+        EndObject
+      EndObject
+      Object Template ABB_ACS880EplMotorAggr 2163441664 01-JAN-1970 01:00:00.00
+        Body RtBody 11-JUL-2013 11:39:17.11
+          Attr Super.AlarmTextToOften = "Power not yet ready for restart, wait before retry"
+          Attr Super.AlarmTextPowOnNotOk = "Power interlocked"
+          Attr Super.AlarmTextStartNoOk = "Power is not on"
+          Attr Super.CircuitBreaker.AlarmText = "Circuit breaker tripped"
+          Attr Super.Contactor.DisableOffControl = 1
+          Attr Super.Contactor.FbTimeLimit = 1.000000e+00
+          Attr Super.Contactor.AlarmText = "Feedback contactor lost"
+          Attr Super.ACS880.Description = "Frequency converter"
+          Attr Super.ACS880.Specification = "ABB Frequency converter ASC880"
+          Attr Super.ACS880.DisableInIdPar = 1
+          Attr Super.ACS880.InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.I_ID"
+          Attr Super.ACS880.DisableInIndPar = 1
+          Attr Super.ACS880.InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.I_IND"
+          Attr Super.ACS880.DisableInValuePar = 1
+          Attr Super.ACS880.InValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.I_VALUE"
+          Attr Super.ACS880.MainStatusSW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_SW"
+          Attr Super.ACS880.ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_ACT"
+          Attr Super.ACS880.ActSpeed.Unit = "r/m"
+          Attr Super.ACS880.ActSpeed.NoOfDecimals = 1
+          Attr Super.ACS880.ActSpeed.PresMaxLimit = 3.000000e+03
+          Attr Super.ACS880.ActSpeed.PresMinLimit = -3.000000e+03
+          Attr Super.ACS880.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD3_4"
+          Attr Super.ACS880.ActCurrent.Unit = "A"
+          Attr Super.ACS880.ActCurrent.PresMaxLimit = 3.000000e+02
+          Attr Super.ACS880.ActCurrent.PresMinLimit = -3.000000e+02
+          Attr Super.ACS880.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD5"
+          Attr Super.ACS880.ActTorque.Unit = "%"
+          Attr Super.ACS880.ActTorque.PresMaxLimit = 3.000000e+02
+          Attr Super.ACS880.ActTorque.PresMinLimit = -3.000000e+02
+          Attr Super.ACS880.UserStatusSW1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD6"
+          Attr Super.ACS880.ActiveWarning1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD7"
+          Attr Super.ACS880.ActiveFault1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD8"
+          Attr Super.ACS880.DisableOutIdPar = 1
+          Attr Super.ACS880.OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.O_ID"
+          Attr Super.ACS880.DisableOutIndPar = 1
+          Attr Super.ACS880.OutIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.O_IND"
+          Attr Super.ACS880.DisableValuePar = 1
+          Attr Super.ACS880.OutValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.O_VALUE"
+          Attr Super.ACS880.MainControlCW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.O_CW"
+          Attr Super.ACS880.RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.O_REF"
+          Attr Super.ACS880.RefSpeed.Unit = "r/m"
+          Attr Super.ACS880.RefSpeed.PresMaxLimit = 3.000000e+03
+          Attr Super.ACS880.RefSpeed.PresMinLimit = -3.000000e+03
+          Attr Super.ACS880.DisableOpWritePar = 1
+          Attr Super.ACS880.DisableOpReadPar = 1
+          Attr Super.ACS880.DisableOpBackupPar = 1
+          Attr Super.ACS880.PowerUpTime = 1.500000e+01
+          Attr Super.ACS880.DisableRequestPar = 1
+          Attr Super.ACS880.DisableWriteValuePar = 1
+          Attr Super.ACS880.DisableReadValuePar = 1
+          Attr Super.ACS880.DisableReadCodePar = 1
+          Attr Super.ACS880.DisableReadCodeSubPar = 1
+          Attr Super.ACS880.AlarmLocalMod = "Frequency converter is in local mode"
+          Attr Super.ACS880.AlarmTripped = "Frequency converter tripped, reset is required"
+          Attr Super.ACS880.AlarmFanOld = "Maintenance replace of cooling fan in converter required"
+          Attr Super.ACS880.AlarmWarning = "Frequency converter warning"
+          Attr Super.ACS880.DefTrend = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.PlotGroup"
+          Attr Super.ACS880.DataSheet = "$pwr_lang/dsh/abb_acs880.html"
+          Attr Super.ACS880.TrendActSpeed.Multiple = 1
+          Attr Super.ACS880.TrendActSpeed.DataName = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.ActSpeed.ActualValue"
+          Attr Super.ACS880.TrendActSpeed.StorageTime = 239
+          Attr Super.ACS880.TrendActSpeed.BufferStatus[0] = 1
+          Attr Super.ACS880.TrendActSpeed.BufferStatus[1] = 1
+          Attr Super.ACS880.TrendActSpeed.NoOfBuffers = 2
+          Attr Super.ACS880.TrendActSpeed.NoOfBufElement = 239
+          Attr Super.ACS880.TrendActTorque.Multiple = 1
+          Attr Super.ACS880.TrendActTorque.DataName = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.ActTorque.ActualValue"
+          Attr Super.ACS880.TrendActTorque.StorageTime = 239
+          Attr Super.ACS880.TrendActTorque.BufferStatus[0] = 1
+          Attr Super.ACS880.TrendActTorque.BufferStatus[1] = 1
+          Attr Super.ACS880.TrendActTorque.NoOfBuffers = 2
+          Attr Super.ACS880.TrendActTorque.NoOfBufElement = 239
+          Attr Super.ACS880.TrendActCurrent.Multiple = 1
+          Attr Super.ACS880.TrendActCurrent.DataName = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.ActCurrent.ActualValue"
+          Attr Super.ACS880.TrendActCurrent.StorageTime = 239
+          Attr Super.ACS880.TrendActCurrent.BufferStatus[0] = 1
+          Attr Super.ACS880.TrendActCurrent.BufferStatus[1] = 1
+          Attr Super.ACS880.TrendActCurrent.NoOfBuffers = 2
+          Attr Super.ACS880.TrendActCurrent.NoOfBufElement = 239
+          Attr Super.ACS880.TrendRefSpeed.Multiple = 1
+          Attr Super.ACS880.TrendRefSpeed.DataName = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.RefSpeed.ActualValue"
+          Attr Super.ACS880.TrendRefSpeed.StorageTime = 239
+          Attr Super.ACS880.TrendRefSpeed.BufferStatus[0] = 1
+          Attr Super.ACS880.TrendRefSpeed.BufferStatus[1] = 1
+          Attr Super.ACS880.TrendRefSpeed.NoOfBuffers = 2
+          Attr Super.ACS880.TrendRefSpeed.NoOfBufElement = 239
+          Attr Super.ACS880.PlotGroup.YObjectName[0] = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.TrendActSpeed"
+          Attr Super.ACS880.PlotGroup.YObjectName[1] = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.TrendRefSpeed"
+          Attr Super.ACS880.PlotGroup.YObjectName[2] = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.TrendActTorque"
+          Attr Super.ACS880.PlotGroup.YObjectName[3] = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.TrendActCurrent"
+          Attr Super.ACS880.PlotGroup.YUnit[1] = "%"
+          Attr Super.ACS880.PlotGroup.YUnit[2] = "A"
+          Attr Super.ACS880.PlotGroup.NumPoints = 478
+          Attr Super.SafetySwitch.AlarmText = "Safety switch is off"
+          Attr Super.Motor.GraphConfiguration = 2
+          Attr Super.Motor.DisableTempSwitch = 1
+          Attr Super.Motor.TempSwitch.Super.DisableSwitch = 1
+          Attr Super.Motor.TempSwitch.Super.AlarmText = "High motor temperature"
+          Attr Super.Motor.DisableTempSensor = 1
+          Attr Super.Motor.TempSensor.Super.DisableValue = 1
+          Attr Super.Motor.TempSensor.Super.Value.Unit = "C"
+          Attr Super.Motor.TempSensor.Super.Value.PresMaxLimit = 1.500000e+02
+          Attr Super.Motor.TempSensor.Super.LimitHH.AlarmText = "High High motor temperature"
+          Attr Super.Motor.TempSensor.Super.LimitHH.Limit = 1.300000e+02
+          Attr Super.Motor.TempSensor.Super.LimitHH.Hysteres = 3.000000e+00
+          Attr Super.Motor.TempSensor.Super.LimitHH.TimeDelay = 1.000000e+00
+          Attr Super.Motor.TempSensor.Super.LimitHH.Used = 1
+          Attr Super.Motor.TempSensor.Super.LimitH.AlarmText = "High motor temperature"
+          Attr Super.Motor.TempSensor.Super.LimitH.Limit = 1.150000e+02
+          Attr Super.Motor.TempSensor.Super.LimitH.Hysteres = 3.000000e+00
+          Attr Super.Motor.TempSensor.Super.LimitH.TimeDelay = 1.000000e+00
+          Attr Super.Motor.TempSensor.Super.LimitH.Used = 1
+          Attr Super.Motor.TempSensor.Super.Trend.Multiple = 1
+          Attr Super.Motor.TempSensor.Super.Trend.DataName = "ABB:Class-ABB_ACS880MotorAggr-Template.Motor.TempSensor.Super.Value.ActualValue"
+          Attr Super.Motor.TempSensor.Super.Trend.StorageTime = 239
+          Attr Super.Motor.TempSensor.Super.Trend.BufferStatus[0] = 1
+          Attr Super.Motor.TempSensor.Super.Trend.BufferStatus[1] = 1
+          Attr Super.Motor.TempSensor.Super.Trend.NoOfBuffers = 2
+          Attr Super.Motor.TempSensor.Super.Trend.NoOfBufElement = 239
+          Attr Super.Motor.TempSensor.Super.DefTrend = "ABB:Class-ABB_ACS880MotorAggr-Template.Motor.TempSensor.Super.Trend"
+          Attr Super.Mode.AlarmNotReadyM = "Check interlocks! Manual start is not allowed, not ready"
+          Attr Super.Mode.AlarmNotReadyA = "Check interlocks! Automode start is not allowed, not ready"
+          Attr Super.Mode.Alarm1LocalMod = "Local mode is activated, remote control is not allowed"
+          Attr Super.Mode.Alarm2LocalMod = "Local mode is activated for"
+          Attr Super.Mode.AlarmNotManOrd = "Automode active! Manual start/stop order is not allowed"
+          Attr Super.DefTrend = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.PlotGroup"
+          Attr Super.PlcConnect = "ABB:Class-ABB_ACS880MotorAggrFo-Code-W-ACS880"
+        EndBody
+      EndObject
+    EndObject
+    Object ABB_ACS880EplPumpAggr $ClassDef 61 11-JUL-2013 10:45:45.73
+      Body SysBody 11-JUL-2013 10:45:30.15
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 11-JUL-2013 10:45:52.33
+        Body SysBody 11-JUL-2013 10:45:52.33
+          Attr StructName = "ABB_ACS880EplPumpAggr"
+          Attr NextAix = "_X4"
+        EndBody
+        Object Super $Attribute 1 11-JUL-2013 10:45:59.23
+          Body SysBody 11-JUL-2013 10:47:52.79
+            Attr PgmName = "Super"
+            Attr Size = 38488
+            Attr Flags = 393216
+            Attr TypeRef = "ABB:Class-ABB_ACS880EplMotorAggr"
+          EndBody
+        EndObject
+        Object CastPump $Attribute 2 11-JUL-2013 10:46:40.32
+          Body SysBody 11-JUL-2013 10:46:40.32
+            Attr PgmName = "CastPump"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$CastId"
+          EndBody
+        EndObject
+        Object Pump $Attribute 3 11-JUL-2013 10:46:40.32
+          Body SysBody 11-JUL-2013 10:46:40.32
+            Attr PgmName = "Pump"
+            Attr Size = 760
+            Attr Flags = 131080
+            Attr TypeRef = "BaseComponent:Class-BasePump"
+          EndBody
+        EndObject
+      EndObject
+      Object Template ABB_ACS880EplPumpAggr 2163703808 01-JAN-1970 01:00:00.00
+        Body RtBody 11-JUL-2013 11:34:12.64
+          Attr Super.Super.AlarmTextToOften = "Power not yet ready for restart, wait before retry"
+          Attr Super.Super.AlarmTextPowOnNotOk = "Power interlocked"
+          Attr Super.Super.AlarmTextStartNoOk = "Power is not on"
+          Attr Super.Super.CircuitBreaker.AlarmText = "Circuit breaker tripped"
+          Attr Super.Super.Contactor.DisableOffControl = 1
+          Attr Super.Super.Contactor.FbTimeLimit = 1.000000e+00
+          Attr Super.Super.Contactor.AlarmText = "Feedback contactor lost"
+          Attr Super.Super.ACS880.Description = "Frequency converter"
+          Attr Super.Super.ACS880.Specification = "ABB Frequency converter ASC880"
+          Attr Super.Super.ACS880.DisableInIdPar = 1
+          Attr Super.Super.ACS880.InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.I_ID"
+          Attr Super.Super.ACS880.DisableInIndPar = 1
+          Attr Super.Super.ACS880.InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.I_IND"
+          Attr Super.Super.ACS880.DisableInValuePar = 1
+          Attr Super.Super.ACS880.InValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.I_VALUE"
+          Attr Super.Super.ACS880.MainStatusSW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_SW"
+          Attr Super.Super.ACS880.ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_ACT"
+          Attr Super.Super.ACS880.ActSpeed.Unit = "r/m"
+          Attr Super.Super.ACS880.ActSpeed.NoOfDecimals = 1
+          Attr Super.Super.ACS880.ActSpeed.PresMaxLimit = 3.000000e+03
+          Attr Super.Super.ACS880.ActSpeed.PresMinLimit = -3.000000e+03
+          Attr Super.Super.ACS880.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD3_4"
+          Attr Super.Super.ACS880.ActCurrent.Unit = "A"
+          Attr Super.Super.ACS880.ActCurrent.PresMaxLimit = 3.000000e+02
+          Attr Super.Super.ACS880.ActCurrent.PresMinLimit = -3.000000e+02
+          Attr Super.Super.ACS880.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD5"
+          Attr Super.Super.ACS880.ActTorque.Unit = "%"
+          Attr Super.Super.ACS880.ActTorque.PresMaxLimit = 3.000000e+02
+          Attr Super.Super.ACS880.ActTorque.PresMinLimit = -3.000000e+02
+          Attr Super.Super.ACS880.UserStatusSW1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD6"
+          Attr Super.Super.ACS880.ActiveWarning1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD7"
+          Attr Super.Super.ACS880.ActiveFault1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD8"
+          Attr Super.Super.ACS880.DisableOutIdPar = 1
+          Attr Super.Super.ACS880.OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.O_ID"
+          Attr Super.Super.ACS880.DisableOutIndPar = 1
+          Attr Super.Super.ACS880.OutIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.O_IND"
+          Attr Super.Super.ACS880.DisableValuePar = 1
+          Attr Super.Super.ACS880.OutValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.O_VALUE"
+          Attr Super.Super.ACS880.MainControlCW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.O_CW"
+          Attr Super.Super.ACS880.RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.O_REF"
+          Attr Super.Super.ACS880.RefSpeed.Unit = "r/m"
+          Attr Super.Super.ACS880.RefSpeed.PresMaxLimit = 3.000000e+03
+          Attr Super.Super.ACS880.RefSpeed.PresMinLimit = -3.000000e+03
+          Attr Super.Super.ACS880.DisableOpWritePar = 1
+          Attr Super.Super.ACS880.DisableOpReadPar = 1
+          Attr Super.Super.ACS880.DisableOpBackupPar = 1
+          Attr Super.Super.ACS880.PowerUpTime = 1.500000e+01
+          Attr Super.Super.ACS880.DisableRequestPar = 1
+          Attr Super.Super.ACS880.DisableWriteValuePar = 1
+          Attr Super.Super.ACS880.DisableReadValuePar = 1
+          Attr Super.Super.ACS880.DisableReadCodePar = 1
+          Attr Super.Super.ACS880.DisableReadCodeSubPar = 1
+          Attr Super.Super.ACS880.AlarmLocalMod = "Frequency converter is in local mode"
+          Attr Super.Super.ACS880.AlarmTripped = "Frequency converter tripped, reset is required"
+          Attr Super.Super.ACS880.AlarmFanOld = "Maintenance replace of cooling fan in converter required"
+          Attr Super.Super.ACS880.AlarmWarning = "Frequency converter warning"
+          Attr Super.Super.ACS880.DefTrend = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.PlotGroup"
+          Attr Super.Super.ACS880.DataSheet = "$pwr_lang/dsh/abb_acs880.html"
+          Attr Super.Super.ACS880.TrendActSpeed.Multiple = 1
+          Attr Super.Super.ACS880.TrendActSpeed.DataName = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.ActSpeed.ActualValue"
+          Attr Super.Super.ACS880.TrendActSpeed.StorageTime = 239
+          Attr Super.Super.ACS880.TrendActSpeed.BufferStatus[0] = 1
+          Attr Super.Super.ACS880.TrendActSpeed.BufferStatus[1] = 1
+          Attr Super.Super.ACS880.TrendActSpeed.NoOfBuffers = 2
+          Attr Super.Super.ACS880.TrendActSpeed.NoOfBufElement = 239
+          Attr Super.Super.ACS880.TrendActTorque.Multiple = 1
+          Attr Super.Super.ACS880.TrendActTorque.DataName = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.ActTorque.ActualValue"
+          Attr Super.Super.ACS880.TrendActTorque.StorageTime = 239
+          Attr Super.Super.ACS880.TrendActTorque.BufferStatus[0] = 1
+          Attr Super.Super.ACS880.TrendActTorque.BufferStatus[1] = 1
+          Attr Super.Super.ACS880.TrendActTorque.NoOfBuffers = 2
+          Attr Super.Super.ACS880.TrendActTorque.NoOfBufElement = 239
+          Attr Super.Super.ACS880.TrendActCurrent.Multiple = 1
+          Attr Super.Super.ACS880.TrendActCurrent.DataName = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.ActCurrent.ActualValue"
+          Attr Super.Super.ACS880.TrendActCurrent.StorageTime = 239
+          Attr Super.Super.ACS880.TrendActCurrent.BufferStatus[0] = 1
+          Attr Super.Super.ACS880.TrendActCurrent.BufferStatus[1] = 1
+          Attr Super.Super.ACS880.TrendActCurrent.NoOfBuffers = 2
+          Attr Super.Super.ACS880.TrendActCurrent.NoOfBufElement = 239
+          Attr Super.Super.ACS880.TrendRefSpeed.Multiple = 1
+          Attr Super.Super.ACS880.TrendRefSpeed.DataName = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.RefSpeed.ActualValue"
+          Attr Super.Super.ACS880.TrendRefSpeed.StorageTime = 239
+          Attr Super.Super.ACS880.TrendRefSpeed.BufferStatus[0] = 1
+          Attr Super.Super.ACS880.TrendRefSpeed.BufferStatus[1] = 1
+          Attr Super.Super.ACS880.TrendRefSpeed.NoOfBuffers = 2
+          Attr Super.Super.ACS880.TrendRefSpeed.NoOfBufElement = 239
+          Attr Super.Super.ACS880.PlotGroup.YObjectName[0] = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.TrendActSpeed"
+          Attr Super.Super.ACS880.PlotGroup.YObjectName[1] = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.TrendRefSpeed"
+          Attr Super.Super.ACS880.PlotGroup.YObjectName[2] = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.TrendActTorque"
+          Attr Super.Super.ACS880.PlotGroup.YObjectName[3] = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.TrendActCurrent"
+          Attr Super.Super.ACS880.PlotGroup.YUnit[1] = "%"
+          Attr Super.Super.ACS880.PlotGroup.YUnit[2] = "A"
+          Attr Super.Super.ACS880.PlotGroup.NumPoints = 478
+          Attr Super.Super.SafetySwitch.AlarmText = "Safety switch is off"
+          Attr Super.Super.Motor.GraphConfiguration = 2
+          Attr Super.Super.Motor.DisableTempSwitch = 1
+          Attr Super.Super.Motor.TempSwitch.Super.DisableSwitch = 1
+          Attr Super.Super.Motor.TempSwitch.Super.AlarmText = "High motor temperature"
+          Attr Super.Super.Motor.DisableTempSensor = 1
+          Attr Super.Super.Motor.TempSensor.Super.DisableValue = 1
+          Attr Super.Super.Motor.TempSensor.Super.Value.Unit = "C"
+          Attr Super.Super.Motor.TempSensor.Super.Value.PresMaxLimit = 1.500000e+02
+          Attr Super.Super.Motor.TempSensor.Super.LimitHH.AlarmText = "High High motor temperature"
+          Attr Super.Super.Motor.TempSensor.Super.LimitHH.Limit = 1.300000e+02
+          Attr Super.Super.Motor.TempSensor.Super.LimitHH.Hysteres = 3.000000e+00
+          Attr Super.Super.Motor.TempSensor.Super.LimitHH.TimeDelay = 1.000000e+00
+          Attr Super.Super.Motor.TempSensor.Super.LimitHH.Used = 1
+          Attr Super.Super.Motor.TempSensor.Super.LimitH.AlarmText = "High motor temperature"
+          Attr Super.Super.Motor.TempSensor.Super.LimitH.Limit = 1.150000e+02
+          Attr Super.Super.Motor.TempSensor.Super.LimitH.Hysteres = 3.000000e+00
+          Attr Super.Super.Motor.TempSensor.Super.LimitH.TimeDelay = 1.000000e+00
+          Attr Super.Super.Motor.TempSensor.Super.LimitH.Used = 1
+          Attr Super.Super.Motor.TempSensor.Super.Trend.Multiple = 1
+          Attr Super.Super.Motor.TempSensor.Super.Trend.DataName = "ABB:Class-ABB_ACS880MotorAggr-Template.Motor.TempSensor.Super.Value.ActualValue"
+          Attr Super.Super.Motor.TempSensor.Super.Trend.StorageTime = 239
+          Attr Super.Super.Motor.TempSensor.Super.Trend.BufferStatus[0] = 1
+          Attr Super.Super.Motor.TempSensor.Super.Trend.BufferStatus[1] = 1
+          Attr Super.Super.Motor.TempSensor.Super.Trend.NoOfBuffers = 2
+          Attr Super.Super.Motor.TempSensor.Super.Trend.NoOfBufElement = 239
+          Attr Super.Super.Motor.TempSensor.Super.DefTrend = "ABB:Class-ABB_ACS880MotorAggr-Template.Motor.TempSensor.Super.Trend"
+          Attr Super.Super.Mode.AlarmNotReadyM = "Check interlocks! Manual start is not allowed, not ready"
+          Attr Super.Super.Mode.AlarmNotReadyA = "Check interlocks! Automode start is not allowed, not ready"
+          Attr Super.Super.Mode.Alarm1LocalMod = "Local mode is activated, remote control is not allowed"
+          Attr Super.Super.Mode.Alarm2LocalMod = "Local mode is activated for"
+          Attr Super.Super.Mode.AlarmNotManOrd = "Automode active! Manual start/stop order is not allowed"
+          Attr Super.Super.DefTrend = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.PlotGroup"
+          Attr Super.Super.PlcConnect = "ABB:Class-ABB_ACS880MotorAggrFo-Code-W-ACS880"
+        EndBody
+      EndObject
+    EndObject
+    Object ABB_ACS880EplFanAggr $ClassDef 62 11-JUL-2013 10:47:29.75
+      Body SysBody 11-JUL-2013 10:47:18.22
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 11-JUL-2013 10:47:40.27
+        Body SysBody 11-JUL-2013 10:47:40.27
+          Attr StructName = "ABB_ACS880EplFanAggr"
+          Attr NextAix = "_X4"
+        EndBody
+        Object Super $Attribute 1 11-JUL-2013 10:47:45.31
+          Body SysBody 11-JUL-2013 10:48:08.35
+            Attr PgmName = "Super"
+            Attr Size = 38488
+            Attr Flags = 393216
+            Attr TypeRef = "ABB:Class-ABB_ACS880EplMotorAggr"
+          EndBody
+        EndObject
+        Object CastFan $Attribute 2 11-JUL-2013 10:48:19.81
+          Body SysBody 11-JUL-2013 10:48:19.81
+            Attr PgmName = "CastFan"
+            Attr Size = 4
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$CastId"
+          EndBody
+        EndObject
+        Object Fan $Attribute 3 11-JUL-2013 10:48:19.81
+          Body SysBody 11-JUL-2013 10:48:19.81
+            Attr PgmName = "Fan"
+            Attr Size = 760
+            Attr Flags = 131080
+            Attr TypeRef = "BaseComponent:Class-BaseFan"
+          EndBody
+        EndObject
+      EndObject
+      Object Template ABB_ACS880EplFanAggr 2163965952 01-JAN-1970 01:00:00.00
+        Body RtBody 11-JUL-2013 11:34:43.92
+          Attr Super.Super.AlarmTextToOften = "Power not yet ready for restart, wait before retry"
+          Attr Super.Super.AlarmTextPowOnNotOk = "Power interlocked"
+          Attr Super.Super.AlarmTextStartNoOk = "Power is not on"
+          Attr Super.Super.CircuitBreaker.AlarmText = "Circuit breaker tripped"
+          Attr Super.Super.Contactor.DisableOffControl = 1
+          Attr Super.Super.Contactor.FbTimeLimit = 1.000000e+00
+          Attr Super.Super.Contactor.AlarmText = "Feedback contactor lost"
+          Attr Super.Super.ACS880.Description = "Frequency converter"
+          Attr Super.Super.ACS880.Specification = "ABB Frequency converter ASC880"
+          Attr Super.Super.ACS880.DisableInIdPar = 1
+          Attr Super.Super.ACS880.InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.I_ID"
+          Attr Super.Super.ACS880.DisableInIndPar = 1
+          Attr Super.Super.ACS880.InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.I_IND"
+          Attr Super.Super.ACS880.DisableInValuePar = 1
+          Attr Super.Super.ACS880.InValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.I_VALUE"
+          Attr Super.Super.ACS880.MainStatusSW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_SW"
+          Attr Super.Super.ACS880.ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_ACT"
+          Attr Super.Super.ACS880.ActSpeed.Unit = "r/m"
+          Attr Super.Super.ACS880.ActSpeed.NoOfDecimals = 1
+          Attr Super.Super.ACS880.ActSpeed.PresMaxLimit = 3.000000e+03
+          Attr Super.Super.ACS880.ActSpeed.PresMinLimit = -3.000000e+03
+          Attr Super.Super.ACS880.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD3_4"
+          Attr Super.Super.ACS880.ActCurrent.Unit = "A"
+          Attr Super.Super.ACS880.ActCurrent.PresMaxLimit = 3.000000e+02
+          Attr Super.Super.ACS880.ActCurrent.PresMinLimit = -3.000000e+02
+          Attr Super.Super.ACS880.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD5"
+          Attr Super.Super.ACS880.ActTorque.Unit = "%"
+          Attr Super.Super.ACS880.ActTorque.PresMaxLimit = 3.000000e+02
+          Attr Super.Super.ACS880.ActTorque.PresMinLimit = -3.000000e+02
+          Attr Super.Super.ACS880.UserStatusSW1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD6"
+          Attr Super.Super.ACS880.ActiveWarning1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD7"
+          Attr Super.Super.ACS880.ActiveFault1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD8"
+          Attr Super.Super.ACS880.DisableOutIdPar = 1
+          Attr Super.Super.ACS880.OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.O_ID"
+          Attr Super.Super.ACS880.DisableOutIndPar = 1
+          Attr Super.Super.ACS880.OutIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.O_IND"
+          Attr Super.Super.ACS880.DisableValuePar = 1
+          Attr Super.Super.ACS880.OutValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.O_VALUE"
+          Attr Super.Super.ACS880.MainControlCW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.O_CW"
+          Attr Super.Super.ACS880.RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.O_REF"
+          Attr Super.Super.ACS880.RefSpeed.Unit = "r/m"
+          Attr Super.Super.ACS880.RefSpeed.PresMaxLimit = 3.000000e+03
+          Attr Super.Super.ACS880.RefSpeed.PresMinLimit = -3.000000e+03
+          Attr Super.Super.ACS880.DisableOpWritePar = 1
+          Attr Super.Super.ACS880.DisableOpReadPar = 1
+          Attr Super.Super.ACS880.DisableOpBackupPar = 1
+          Attr Super.Super.ACS880.PowerUpTime = 1.500000e+01
+          Attr Super.Super.ACS880.DisableRequestPar = 1
+          Attr Super.Super.ACS880.DisableWriteValuePar = 1
+          Attr Super.Super.ACS880.DisableReadValuePar = 1
+          Attr Super.Super.ACS880.DisableReadCodePar = 1
+          Attr Super.Super.ACS880.DisableReadCodeSubPar = 1
+          Attr Super.Super.ACS880.AlarmLocalMod = "Frequency converter is in local mode"
+          Attr Super.Super.ACS880.AlarmTripped = "Frequency converter tripped, reset is required"
+          Attr Super.Super.ACS880.AlarmFanOld = "Maintenance replace of cooling fan in converter required"
+          Attr Super.Super.ACS880.AlarmWarning = "Frequency converter warning"
+          Attr Super.Super.ACS880.DefTrend = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.PlotGroup"
+          Attr Super.Super.ACS880.DataSheet = "$pwr_lang/dsh/abb_acs880.html"
+          Attr Super.Super.ACS880.TrendActSpeed.Multiple = 1
+          Attr Super.Super.ACS880.TrendActSpeed.DataName = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.ActSpeed.ActualValue"
+          Attr Super.Super.ACS880.TrendActSpeed.StorageTime = 239
+          Attr Super.Super.ACS880.TrendActSpeed.BufferStatus[0] = 1
+          Attr Super.Super.ACS880.TrendActSpeed.BufferStatus[1] = 1
+          Attr Super.Super.ACS880.TrendActSpeed.NoOfBuffers = 2
+          Attr Super.Super.ACS880.TrendActSpeed.NoOfBufElement = 239
+          Attr Super.Super.ACS880.TrendActTorque.Multiple = 1
+          Attr Super.Super.ACS880.TrendActTorque.DataName = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.ActTorque.ActualValue"
+          Attr Super.Super.ACS880.TrendActTorque.StorageTime = 239
+          Attr Super.Super.ACS880.TrendActTorque.BufferStatus[0] = 1
+          Attr Super.Super.ACS880.TrendActTorque.BufferStatus[1] = 1
+          Attr Super.Super.ACS880.TrendActTorque.NoOfBuffers = 2
+          Attr Super.Super.ACS880.TrendActTorque.NoOfBufElement = 239
+          Attr Super.Super.ACS880.TrendActCurrent.Multiple = 1
+          Attr Super.Super.ACS880.TrendActCurrent.DataName = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.ActCurrent.ActualValue"
+          Attr Super.Super.ACS880.TrendActCurrent.StorageTime = 239
+          Attr Super.Super.ACS880.TrendActCurrent.BufferStatus[0] = 1
+          Attr Super.Super.ACS880.TrendActCurrent.BufferStatus[1] = 1
+          Attr Super.Super.ACS880.TrendActCurrent.NoOfBuffers = 2
+          Attr Super.Super.ACS880.TrendActCurrent.NoOfBufElement = 239
+          Attr Super.Super.ACS880.TrendRefSpeed.Multiple = 1
+          Attr Super.Super.ACS880.TrendRefSpeed.DataName = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.RefSpeed.ActualValue"
+          Attr Super.Super.ACS880.TrendRefSpeed.StorageTime = 239
+          Attr Super.Super.ACS880.TrendRefSpeed.BufferStatus[0] = 1
+          Attr Super.Super.ACS880.TrendRefSpeed.BufferStatus[1] = 1
+          Attr Super.Super.ACS880.TrendRefSpeed.NoOfBuffers = 2
+          Attr Super.Super.ACS880.TrendRefSpeed.NoOfBufElement = 239
+          Attr Super.Super.ACS880.PlotGroup.YObjectName[0] = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.TrendActSpeed"
+          Attr Super.Super.ACS880.PlotGroup.YObjectName[1] = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.TrendRefSpeed"
+          Attr Super.Super.ACS880.PlotGroup.YObjectName[2] = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.TrendActTorque"
+          Attr Super.Super.ACS880.PlotGroup.YObjectName[3] = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.TrendActCurrent"
+          Attr Super.Super.ACS880.PlotGroup.YUnit[1] = "%"
+          Attr Super.Super.ACS880.PlotGroup.YUnit[2] = "A"
+          Attr Super.Super.ACS880.PlotGroup.NumPoints = 478
+          Attr Super.Super.SafetySwitch.AlarmText = "Safety switch is off"
+          Attr Super.Super.Motor.GraphConfiguration = 2
+          Attr Super.Super.Motor.DisableTempSwitch = 1
+          Attr Super.Super.Motor.TempSwitch.Super.DisableSwitch = 1
+          Attr Super.Super.Motor.TempSwitch.Super.AlarmText = "High motor temperature"
+          Attr Super.Super.Motor.DisableTempSensor = 1
+          Attr Super.Super.Motor.TempSensor.Super.DisableValue = 1
+          Attr Super.Super.Motor.TempSensor.Super.Value.Unit = "C"
+          Attr Super.Super.Motor.TempSensor.Super.Value.PresMaxLimit = 1.500000e+02
+          Attr Super.Super.Motor.TempSensor.Super.LimitHH.AlarmText = "High High motor temperature"
+          Attr Super.Super.Motor.TempSensor.Super.LimitHH.Limit = 1.300000e+02
+          Attr Super.Super.Motor.TempSensor.Super.LimitHH.Hysteres = 3.000000e+00
+          Attr Super.Super.Motor.TempSensor.Super.LimitHH.TimeDelay = 1.000000e+00
+          Attr Super.Super.Motor.TempSensor.Super.LimitHH.Used = 1
+          Attr Super.Super.Motor.TempSensor.Super.LimitH.AlarmText = "High motor temperature"
+          Attr Super.Super.Motor.TempSensor.Super.LimitH.Limit = 1.150000e+02
+          Attr Super.Super.Motor.TempSensor.Super.LimitH.Hysteres = 3.000000e+00
+          Attr Super.Super.Motor.TempSensor.Super.LimitH.TimeDelay = 1.000000e+00
+          Attr Super.Super.Motor.TempSensor.Super.LimitH.Used = 1
+          Attr Super.Super.Motor.TempSensor.Super.Trend.Multiple = 1
+          Attr Super.Super.Motor.TempSensor.Super.Trend.DataName = "ABB:Class-ABB_ACS880MotorAggr-Template.Motor.TempSensor.Super.Value.ActualValue"
+          Attr Super.Super.Motor.TempSensor.Super.Trend.StorageTime = 239
+          Attr Super.Super.Motor.TempSensor.Super.Trend.BufferStatus[0] = 1
+          Attr Super.Super.Motor.TempSensor.Super.Trend.BufferStatus[1] = 1
+          Attr Super.Super.Motor.TempSensor.Super.Trend.NoOfBuffers = 2
+          Attr Super.Super.Motor.TempSensor.Super.Trend.NoOfBufElement = 239
+          Attr Super.Super.Motor.TempSensor.Super.DefTrend = "ABB:Class-ABB_ACS880MotorAggr-Template.Motor.TempSensor.Super.Trend"
+          Attr Super.Super.Mode.AlarmNotReadyM = "Check interlocks! Manual start is not allowed, not ready"
+          Attr Super.Super.Mode.AlarmNotReadyA = "Check interlocks! Automode start is not allowed, not ready"
+          Attr Super.Super.Mode.Alarm1LocalMod = "Local mode is activated, remote control is not allowed"
+          Attr Super.Super.Mode.Alarm2LocalMod = "Local mode is activated for"
+          Attr Super.Super.Mode.AlarmNotManOrd = "Automode active! Manual start/stop order is not allowed"
+          Attr Super.Super.DefTrend = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.PlotGroup"
+          Attr Super.Super.PlcConnect = "ABB:Class-ABB_ACS880MotorAggrFo-Code-W-ACS880"
         EndBody
       EndObject
     EndObject

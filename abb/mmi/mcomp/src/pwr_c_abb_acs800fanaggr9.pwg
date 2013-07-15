@@ -19735,7 +19735,7 @@ pwr_exe:
 5500 open graph /class /inst=$object.SafetySwitch.On
 99
 99
-6805 ASC800.ActSpeed
+6805 ACS800.ActSpeed
 6837
 1
 100 1
@@ -19746,7 +19746,7 @@ pwr_exe:
 5500 open graph /class /inst=$object.ACS800.ActSpeed
 99
 99
-6806 ASC800.ActTorque
+6806 ACS800.ActTorque
 6838
 1
 100 1
@@ -19757,7 +19757,7 @@ pwr_exe:
 5500 open graph /class /inst=$object.ACS800.ActTorque
 99
 99
-6807 ASC800.ActCurrent
+6807 ACS800.ActCurrent
 6839
 1
 100 1
@@ -19768,7 +19768,7 @@ pwr_exe:
 5500 open graph /class /inst=$object.ACS800.ActCurrent
 99
 99
-6808 ASC800.RefSpeed
+6808 ACS800.RefSpeed
 6840
 1
 100 1
