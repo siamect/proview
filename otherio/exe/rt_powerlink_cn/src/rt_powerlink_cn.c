@@ -45,6 +45,13 @@
 #include "pwr_basecomponentclasses.h"
 #include "pwr_otherioclasses.h"
 
+// Test for CN build
+#include "Epl.h"
+tEplKernel EplApiSetCdcFilename(char* pszCdcFilename_p) 
+{
+  return 0;
+}
+
 pwr_tStatus io_get_plhandler_object (  
   pwr_sClass_EplHandler	**o,
   pwr_tObjid		*roid
@@ -88,12 +95,6 @@ int main()
     errh_Fatal("rt_powerlink aborted, gdh_Init failed\n%m", sts);
     errh_SetStatus( PWR__SRVTERM);
     exit(sts);
-  }
-
-  sts = gdh_GetClassList(pwr_cClass_Epl_CNServer, &oid);
-  if ( ODD(sts)) {
-    system("rt_powerlink_cn &");
-    exit(0);
   }
 
   // Get Powerlink handler object

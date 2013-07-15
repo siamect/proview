@@ -1,0 +1,18 @@
+Instructions to build openPOWERLINK for Proview:
+
+Define enviroment variable epl to the root of the openPOWERLINK
+installation
+
+> export epl=/usr/local/openPOWERLINK-Vx.x.x
+
+Copy otherio/exp/powerlink/src/objdict.h to $epl/ObjDicts/CiA401_CN/.
+
+Create one build directory for MN (build) and one for CN (buildcn)
+
+> mkdir $epl/build
+> mkdir $epl/buildcn
+
+Go to $epl/build and build for MN, then go to $epl/buildcn and build for CN.
+
+Execute 'pwre configure' and check powerlink includes and archives are found,
+and finally build Proview.

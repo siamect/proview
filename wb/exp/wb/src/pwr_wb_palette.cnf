@@ -332,8 +332,8 @@ palette NavigatorPalette
         class EPl_Module
 	menu Server
 	{
-	  class Epl_Server
-          class Epl_ServerModule
+	  class Epl_CNServer
+          class Epl_CNServerModule
 	}
       } 
       menu Profibus

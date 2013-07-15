@@ -33,74 +33,88 @@
  * combined work), being distributed under the terms of the GNU 
  * General Public License plus this exception.
  **/
-
-/* wb_c_epl_mn.c -- work bench methods of the Epl_MN class. */
-
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
-
 #include "pwr.h"
-#include "pwr_baseclasses.h"
 #include "pwr_basecomponentclasses.h"
+#include "rt_io_base.h"
+#include "rt_io_card_init.h"
+#include "rt_io_card_close.h"
+#include "rt_io_card_read.h"
+#include "rt_io_card_write.h"
+#include "rt_io_msg.h"
+
 #include "pwr_otherioclasses.h"
 
 
-
-#include "wb_pwrs.h"
-#include "wb_ldh_msg.h"
-#include "wb_ldh.h"
-#include "wb_pwrb_msg.h"
-#include "wb_wnav.h"
-#include "wb_wsx.h"
-
-using namespace std;
-
-static pwr_tStatus Configure (
-  ldh_sMenuCall *ip
-)
+/*----------------------------------------------------------------------------*\
+   Init method for the Powerlink module
+\*----------------------------------------------------------------------------*/
+static pwr_tStatus IoCardInit (
+  io_tCtx	ctx,
+  io_sAgent	*ap,
+  io_sRack	*rp,
+  io_sCard	*cp
+) 
 {
-  pwr_tCmd cmd = "export HOME=$pwrp_login;openCONFIGURATOR";
+	
+	return IO__SUCCESS;
 
-  system( cmd);
-
-  return 1;
 }
 
-static pwr_tStatus ConfigureFilter (
-  ldh_sMenuCall *ip
-)
+
+/*----------------------------------------------------------------------------*\
+   Read method for the Powerlink module
+\*----------------------------------------------------------------------------*/
+static pwr_tStatus IoCardRead (
+  io_tCtx	ctx,
+  io_sAgent	*ap,
+  io_sRack	*rp,
+  io_sCard	*cp
+) 
 {
-  return 1;
+
+	return IO__SUCCESS;
 }
 
-//
-//  Syntax check.
-//
 
-#if 0
-static pwr_tStatus SyntaxCheck (
-  ldh_tSesContext Session,
-  pwr_tAttrRef Object,	      /* current object */
-  int *ErrorCount,	      /* accumulated error count */
-  int *WarningCount	      /* accumulated waring count */
-) {
-  return wsx_CheckIoDevice( Session, Object, ErrorCount, WarningCount, wsx_mCardOption_None);
+/*----------------------------------------------------------------------------*\
+   Write method for the Powerlink module
+\*----------------------------------------------------------------------------*/
+static pwr_tStatus IoCardWrite (
+  io_tCtx	ctx,
+  io_sAgent	*ap,
+  io_sRack	*rp,
+  io_sCard	*cp
+) 
+{
+
+
+	return IO__SUCCESS;
+
 }
-#endif
 
-
+/*----------------------------------------------------------------------------*\
+   Close method for the Powerlink module
+\*----------------------------------------------------------------------------*/
+static pwr_tStatus IoCardClose (
+  io_tCtx	ctx,
+  io_sAgent	*ap,
+  io_sRack	*rp,
+  io_sCard	*cp
+) 
+{
+
+	return IO__SUCCESS;
+
+}
+
+
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/
-
-pwr_dExport pwr_BindMethods(Epl_MN) = {
-  pwr_BindMethod(Configure),
-  pwr_BindMethod(ConfigureFilter),
+pwr_dExport pwr_BindIoMethods(Epl_CNServerModule) = {
+  pwr_BindIoMethod(IoCardInit),
+  pwr_BindIoMethod(IoCardRead),
+  pwr_BindIoMethod(IoCardWrite),
+  pwr_BindIoMethod(IoCardClose),
   pwr_NullMethod
 };
-
-
-
-

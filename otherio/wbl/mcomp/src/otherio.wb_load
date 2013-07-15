@@ -1,7 +1,7 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X549"
-    Attr NextCix = "_X43"
+    Attr NextOix = "_X585"
+    Attr NextCix = "_X45"
     Attr NextTix[0] = "_X17"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
@@ -8866,7 +8866,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object RtBody $ObjBodyDef 1 01-JUL-2013 17:26:15.35
         Body SysBody 04-JUL-2013 08:13:20.05
           Attr StructName = "Epl_MN"
-          Attr NextAix = "_X47"
+          Attr NextAix = "_X48"
         EndBody
         !/**
         ! Used to add a short description of the master
@@ -8933,6 +8933,13 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr PgmName = "StallAction"
             Attr Size = 4
             Attr TypeRef = "pwrb:Type-StallActionEnum"
+          EndBody
+        EndObject
+        Object Priority $Attribute 47 05-JUL-2013 12:21:40.90
+          Body SysBody 05-JUL-2013 12:21:56.73
+            Attr PgmName = "Priority"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object Timeout $Attribute 38 01-JUL-2013 17:26:15.35
@@ -9116,13 +9123,275 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
       EndObject
       Object Template Epl_MN 2158198784 01-JAN-1970 01:00:00.00
-        Body RtBody 04-JUL-2013 08:54:52.00
+        Body RtBody 05-JUL-2013 12:22:16.05
           Attr CDCfile = "$pwrp_exe/mnobd.cdc"
           Attr Device = "eth0"
           Attr NodeId = 240
           Attr Process = 128
+          Attr Priority = 20
           Attr ErrorSoftLimit = 25
           Attr ErrorHardLimit = 50
+        EndBody
+      EndObject
+    EndObject
+    Object Epl_CNServer $ClassDef 43 08-JUL-2013 10:32:46.08
+      Body SysBody 08-JUL-2013 10:33:43.41
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10320
+      EndBody
+      Object RtBody $ObjBodyDef 1 08-JUL-2013 10:33:15.71
+        Body SysBody 08-JUL-2013 10:35:31.78
+          Attr StructName = "Epl_CNServer"
+          Attr NextAix = "_X65"
+        EndBody
+        Object Description $Attribute 48 08-JUL-2013 10:17:49.38
+          Body SysBody 08-JUL-2013 10:17:49.38
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Device $Attribute 50 08-JUL-2013 10:17:49.38
+          Body SysBody 08-JUL-2013 10:17:49.38
+            Attr PgmName = "Device"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object NodeId $Attribute 51 08-JUL-2013 10:17:49.38
+          Body SysBody 08-JUL-2013 15:17:29.33
+            Attr PgmName = "NodeId"
+            Attr Size = 2
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object Process $Attribute 52 08-JUL-2013 10:17:49.38
+          Body SysBody 08-JUL-2013 10:17:49.38
+            Attr PgmName = "Process"
+            Attr Size = 4
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 53 08-JUL-2013 10:17:49.38
+          Body SysBody 08-JUL-2013 10:17:49.38
+            Attr PgmName = "ThreadObject"
+            Attr Size = 8
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object StallAction $Attribute 54 08-JUL-2013 10:17:49.38
+          Body SysBody 08-JUL-2013 10:17:49.38
+            Attr PgmName = "StallAction"
+            Attr Size = 4
+            Attr TypeRef = "pwrb:Type-StallActionEnum"
+          EndBody
+        EndObject
+        Object Priority $Attribute 55 08-JUL-2013 10:17:49.38
+          Body SysBody 08-JUL-2013 10:17:49.38
+            Attr PgmName = "Priority"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Timeout $Attribute 56 08-JUL-2013 10:17:49.38
+          Body SysBody 08-JUL-2013 10:17:49.38
+            Attr PgmName = "Timeout"
+            Attr Size = 2
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object NmtState $Attribute 57 08-JUL-2013 10:17:49.38
+          Body SysBody 08-JUL-2013 10:17:49.38
+            Attr PgmName = "NmtState"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "OtherIO:Type-EplNmtState"
+          EndBody
+        EndObject
+        Object Status $Attribute 58 08-JUL-2013 10:17:49.38
+          Body SysBody 08-JUL-2013 10:17:49.38
+            Attr PgmName = "Status"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 59 08-JUL-2013 10:17:49.38
+          Body SysBody 08-JUL-2013 10:17:49.38
+            Attr PgmName = "ErrorCount"
+            Attr Size = 2
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 60 08-JUL-2013 10:17:49.38
+          Body SysBody 08-JUL-2013 10:17:49.38
+            Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 2
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 61 08-JUL-2013 10:17:49.38
+          Body SysBody 08-JUL-2013 10:17:49.38
+            Attr PgmName = "ErrorHardLimit"
+            Attr Size = 2
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object InputAreaSize $Attribute 62 08-JUL-2013 10:17:49.38
+          Body SysBody 08-JUL-2013 10:17:49.38
+            Attr PgmName = "InputAreaSize"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object OutputAreaSize $Attribute 63 08-JUL-2013 10:17:49.38
+          Body SysBody 08-JUL-2013 10:17:49.38
+            Attr PgmName = "OutputAreaSize"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 574 08-JUL-2013 10:17:49.38
+        Object IoRackInit $Method 575 08-JUL-2013 15:30:22.45
+          Body SysBody 08-JUL-2013 15:29:51.66
+            Attr MethodName = "Epl_CNServer-IoRackInit"
+          EndBody
+        EndObject
+        Object IoRackClose $Method 576 08-JUL-2013 15:30:30.65
+          Body SysBody 08-JUL-2013 15:30:00.15
+            Attr MethodName = "Epl_CNServer-IoRackClose"
+          EndBody
+        EndObject
+        Object IoRackRead $Method 577 08-JUL-2013 15:30:45.85
+          Body SysBody 08-JUL-2013 15:30:07.91
+            Attr MethodName = "Epl_CNServer-IoRackRead"
+          EndBody
+        EndObject
+        Object IoRackWrite $Method 578 08-JUL-2013 15:30:54.23
+          Body SysBody 08-JUL-2013 15:30:15.18
+            Attr MethodName = "Epl_CNServer-IoRackWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Epl_CNServer 2158985216 01-JAN-1970 01:00:00.00
+        Body RtBody 08-JUL-2013 10:37:34.48
+          Attr Device = "eth0"
+          Attr Process = 128
+          Attr Priority = 20
+          Attr ErrorSoftLimit = 25
+          Attr ErrorHardLimit = 50
+        EndBody
+      EndObject
+    EndObject
+    Object Epl_CnServerModule $ClassDef 44 08-JUL-2013 14:47:28.97
+      Body SysBody 08-JUL-2013 10:33:59.56
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18512
+      EndBody
+      Object RtBody $ObjBodyDef 1 08-JUL-2013 10:33:59.56
+        Body SysBody 08-JUL-2013 10:35:44.53
+          Attr StructName = "Epl_CNServerModule"
+          Attr NextAix = "_X42"
+        EndBody
+        Object Description $Attribute 33 08-JUL-2013 10:33:59.56
+          Body SysBody 08-JUL-2013 10:33:59.56
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Specification $Attribute 34 08-JUL-2013 10:33:59.56
+          Body SysBody 08-JUL-2013 10:33:59.56
+            Attr PgmName = "Specification"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 35 08-JUL-2013 10:33:59.56
+          Body SysBody 08-JUL-2013 10:33:59.56
+            Attr PgmName = "DataSheet"
+            Attr Size = 160
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        Object Process $Attribute 36 08-JUL-2013 10:33:59.56
+          Body SysBody 08-JUL-2013 10:33:59.56
+            Attr PgmName = "Process"
+            Attr Size = 4
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 37 08-JUL-2013 10:33:59.56
+          Body SysBody 08-JUL-2013 10:33:59.56
+            Attr PgmName = "ThreadObject"
+            Attr Size = 8
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object InputAreaOffset $Attribute 38 08-JUL-2013 10:33:59.56
+          Body SysBody 08-JUL-2013 10:33:59.56
+            Attr PgmName = "InputAreaOffset"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object InputAreaSize $Attribute 39 08-JUL-2013 10:33:59.56
+          Body SysBody 08-JUL-2013 10:33:59.56
+            Attr PgmName = "InputAreaSize"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object OutputAreaOffset $Attribute 40 08-JUL-2013 10:33:59.56
+          Body SysBody 08-JUL-2013 10:33:59.56
+            Attr PgmName = "OutputAreaOffset"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object OutputAreaSize $Attribute 41 08-JUL-2013 10:33:59.56
+          Body SysBody 08-JUL-2013 10:33:59.56
+            Attr PgmName = "OutputAreaSize"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 580 08-JUL-2013 10:33:59.56
+        Object IoCardInit $Method 581 08-JUL-2013 10:33:59.56
+          Body SysBody 08-JUL-2013 10:35:54.02
+            Attr MethodName = "Epl_CNServerModule-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 582 08-JUL-2013 10:33:59.56
+          Body SysBody 08-JUL-2013 10:36:02.20
+            Attr MethodName = "Epl_CNServerModule-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 583 08-JUL-2013 10:33:59.56
+          Body SysBody 08-JUL-2013 10:36:09.91
+            Attr MethodName = "Epl_CNServerModule-IoCardRead"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 584 08-JUL-2013 10:33:59.56
+          Body SysBody 08-JUL-2013 10:36:16.80
+            Attr MethodName = "Epl_CNServerModule-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Epl_CnServerModule 2159247360 01-JAN-1970 01:00:00.00
+        Body RtBody 08-JUL-2013 10:37:52.25
+          Attr Process = 128
         EndBody
       EndObject
     EndObject

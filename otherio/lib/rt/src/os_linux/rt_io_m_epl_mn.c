@@ -147,15 +147,6 @@ tEplKernel PUBLIC AppCbEvent(
 			     io_sAgent*           pUserArg_p);
 tEplKernel PUBLIC AppCbSync(void);
 
-pwr_tStatus io_bus_card_init_pl( io_tCtx ctx,
-				 io_sCard *cp, 
-				 unsigned int *input_area_offset, 
-				 unsigned int *input_area_chansize, 
-				 unsigned int *output_area_offset, 
-				 unsigned int *output_area_chansize, 
-				 pwr_tByteOrderingEnum byte_order
-				 );
-
 
 /*----------------------------------------------------------------------------*\
   Init method for the Powerlink module
@@ -281,15 +272,16 @@ static pwr_tStatus IoAgentInit (io_tCtx ctx, io_sAgent *ap) {
   struct sched_param          schedParam;
 
   // adjust process priority
-  if (nice (-20) == -1)         // push nice level in case we have no RTPreempt
-    {
-      errh_Error("%s() couldn't set nice value! (%s)", __func__, strerror(errno));
-    }
-  schedParam.__sched_priority = MAIN_THREAD_PRIORITY;
-  if (pthread_setschedparam(pthread_self(), SCHED_RR, &schedParam) != 0)
-    {
-      errh_Error("%s() couldn't set thread scheduling parameters! %d", __func__, schedParam.__sched_priority);
-    }
+  // push nice level in case we have no RTPreempt
+  if (nice (-20) == -1) {
+    errh_Error("%s() couldn't set nice value! (%s)", __func__, strerror(errno));
+  }
+  //schedParam.sched_priority = MIN(sched_get_priority_max(SCHED_FIFO), 
+  //				  sched_get_priority_min(SCHED_FIFO) + op->Priority);
+  schedParam.__sched_priority = op->Priority;
+  if (pthread_setschedparam(pthread_self(), SCHED_RR, &schedParam) != 0) {
+    errh_Error("%s() couldn't set thread scheduling parameters! %d", __func__, schedParam.__sched_priority);
+  }
     
   // binds all openPOWERLINK threads to the second CPU core
   cpu_set_t                   affinity;

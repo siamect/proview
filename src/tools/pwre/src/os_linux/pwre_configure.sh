@@ -142,8 +142,14 @@ pwre_config_check_lib()
 	  fi
 
 	  if test $libfound -eq 0; then
-	    lib_array[$lib_cnt]=$libdir
-            lib_cnt=$((lib_cnt+1))
+	    if test $4 == "powerlink"; then
+              lib_path=$libdir
+            elif test $4 == "powerlinkcn"; then
+              lib_path=$libdir
+	    else
+	      lib_array[$lib_cnt]=$libdir
+	      lib_cnt=$((lib_cnt+1))
+	    fi
           fi
 
 	  lib=${file##/*/lib}
@@ -162,7 +168,9 @@ pwre_config_check_lib()
           elif test $4 == "libusb"; then
 	    conf_lib=$conf_lib" -lusb-1.0"
           elif test $4 == "powerlink"; then
-	    conf_libpowerlink=$conf_libpowerlink" -l${lib%.*}"
+	    conf_libpowerlink=$conf_libpowerlink" -L$lib_path -l${lib%.*}"
+          elif test $4 == "powerlinkcn"; then
+	    conf_libpowerlinkcn=$conf_libpowerlinkcn" -L$lib_path -l${lib%.*}"
           else
 	    conf_lib=$conf_lib" -l${lib%%.*}"
           fi
@@ -433,7 +441,8 @@ else
   pwre_config_check_lib libpnioif PNAK     lib pnak 1 "/usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a"
   pwre_config_check_lib libusb    LIBUSB   lib libusb 1 "/usr/lib/libusb-1.0.so:/usr/lib/$hwpl-linux-$gnu/libusb-1.0.so"
   pwre_config_check_lib powerlink POWERLINK lib powerlink 1 "$epl/build/Examples/X86/Generic/powerlink_user_lib/libpowerlink.a"
-
+  pwre_config_check_lib powerlinkcn POWERLINKCN lib powerlinkcn 1 "$epl/buildcn/Examples/X86/Generic/powerlink_user_lib/libpowerlink.a"
+        
   pwre_config_check_include mq    MQ    0 "/usr/local/dmq/include/p_entry.h"
   pwre_config_check_include wmq   WMQ   1 "/opt/mqm/inc/cmqc.h"
   pwre_config_check_include cifx  CIFX  1 "/usr/local/include/cifx/cifxlinux.h"
@@ -465,6 +474,7 @@ else
   echo "export pwre_conf_libpwrotherio=\"-lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_cifx_dummy -lpwr_nodave_dummy -lpwr_epl_dummy\"" >> $cfile
   echo "export pwre_conf_libpwrprofibus=\"-lpwr_pnak_dummy\"" >> $cfile
   echo "export pwre_conf_libpwrpowerlink=\"$conf_libpowerlink\"" >> $cfile
+  echo "export pwre_conf_libpwrpowerlinkcn=\"$conf_libpowerlinkcn\"" >> $cfile
   echo "export pwre_conf_libpwrxtt=\"-lpwr_xtt -lpwr_ge -lpwr_cow -lpwr_flow -lpwr_glow\"" >> $cfile
   echo "export pwre_conf_libpwrxttgtk=\" -lpwr_xtt_gtk -lpwr_ge_gtk -lpwr_cow_gtk -lpwr_flow_gtk -lpwr_glow_gtk\"" >> $cfile
   echo "export pwre_conf_libpwrxttmotif=\" -lpwr_xtt_motif -lpwr_ge_motif -lpwr_cow_motif -lpwr_flow_motif -lpwr_glow_motif\"" >> $cfile

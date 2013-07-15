@@ -30,4 +30,6 @@ Nodave_PLC
 Nodave_Transaction
 Epl_MN
 Epl_Module
+Epl_CNServer
+Epl_CNServerModule
 #endif

@@ -55,4 +55,16 @@ typedef struct {
 	struct timespec tpe, tps;
 } io_sLocalEpl_CN;
 
+typedef struct {
+	int byte_ordering;
+	int float_representation;
+	struct timespec tpe, tps;
+	int input_area_size;
+	int output_area_size;
+	void *input_area;
+	void *output_area;
+	void *tmp_area;
+	short inputResetEnabled;
+} io_sLocalEpl_CNServer;
+
 #endif
