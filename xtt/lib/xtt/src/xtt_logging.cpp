@@ -186,7 +186,7 @@ XttLogging::~XttLogging()
 **************************************************************************/
 
 int XttLogging::logging_set(
-			int		a_logg_time,
+			float		a_logg_time,
 			char		*filename,
 			char		*parameter,
 			char		*condition,
@@ -467,7 +467,7 @@ int XttLogging::show_entry(
 		"   Type:      Cont\n");
 
 	(*buff_cnt) += sprintf( buff + *buff_cnt, 
-		"   Time:      %d ms\n", logg_time);
+		"   Time:      %5.1f ms\n", logg_time);
 	(*buff_cnt) += sprintf( buff + *buff_cnt, 
 		"   Buffer:    %d pages\n", buffer_size);
 	(*buff_cnt) += sprintf( buff + *buff_cnt, 
@@ -543,7 +543,7 @@ int XttLogging::store(
 	fprintf( outfile, "logging set/create/entry=current/file=\"%s\"\n",
 		logg_filename);
 	if ( logg_time != 0)
-	  fprintf( outfile, "logging set/entry=current/time=%d\n",
+	  fprintf( outfile, "logging set/entry=current/time=%f\n",
 		logg_time);
 	fprintf( outfile, "logging set/entry=current/buffer=%d\n", 
 		wanted_buffer_size);
@@ -1014,7 +1014,7 @@ static void	*xtt_logproc( void *arg)
 	    break;
 	}
 
-	time_MsToD( &deltatime, logg->logg_time);
+	time_FloatToD( &deltatime, logg->logg_time / 1000);
 
 	if ( logg->logg_priority != 0)
 	  sts = logg->set_prio( logg->logg_priority);
@@ -1073,7 +1073,7 @@ static void	*xtt_logproc( void *arg)
 	      if ( first_scan)
 	        time_float = 0.;
 	      /* Print time and the value of the parameter on the file */
-	      char_cnt += logg->log_print( "%11.3f", time_float);
+	      char_cnt += logg->log_print( "%12.4f", time_float);
 	      for ( i = 0; i < RTT_LOGG_MAXPAR; i++)
 	      {
 	        if ( logg->parameterstr[i][0] != 0)

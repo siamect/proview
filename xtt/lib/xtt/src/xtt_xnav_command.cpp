@@ -5591,7 +5591,7 @@ static int	xnav_logging_func(	void		*client_data,
     int 	entry;
     int 	line_size;
     char	*parameter_ptr;
-    int 	logg_time;
+    float 	logg_time;
     char	*file_ptr;
     char	*condition_ptr;
     int 	buffer_size;
@@ -5632,7 +5632,7 @@ static int	xnav_logging_func(	void		*client_data,
     if ( ODD( dcli_get_qualifier( "/TIME", time_str, sizeof(time_str))))
     {
       /* convert to integer */
-      nr = sscanf( time_str, "%d", &logg_time);
+      nr = sscanf( time_str, "%f", &logg_time);
       if ( nr != 1)
       {
         xnav->message('E', "Time syntax error");

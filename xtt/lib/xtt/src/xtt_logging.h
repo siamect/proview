@@ -82,7 +82,7 @@ class XttLogging {
     pwr_tAName	conditionstr;
     char	*condition_ptr;
     gdh_tDlid	condition_subid;
-    int		logg_time;
+    float      	logg_time;
     pwr_tFileName logg_filename;
     FILE	*logg_file;	
     char	old_value[RTT_LOGG_MAXPAR][8];
@@ -105,7 +105,7 @@ class XttLogging {
     
     void init( int logg_index, void *logg_xnav);
     int logging_set(
-			int		logg_time,
+			float		logg_time,
 			char		*filename,
 			char		*parameterstr,
 			char		*conditionstr,
