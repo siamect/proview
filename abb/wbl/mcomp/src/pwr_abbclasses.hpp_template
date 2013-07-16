@@ -2,6 +2,10 @@
 #include "pwr_basecomponentclasses.hpp"
 #endif
 
+#ifndef pwr_otherioclasses_hpp
+#include "pwr_otherioclasses.hpp"
+#endif
+
 #ifndef pwr_profibusclasses_hpp
 #include "pwr_profibusclasses.hpp"
 #endif
