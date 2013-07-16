@@ -86,6 +86,7 @@
 ****************************************************************************/
 #include "pwr.h"
 #include "pwr_basecomponentclasses.h"
+#include "co_dcli.h"
 #include "rt_io_base.h"
 #include "rt_io_agent_init.h"
 #include "rt_io_agent_close.h"
@@ -163,9 +164,16 @@ static pwr_tStatus IoAgentInit (io_tCtx ctx, io_sAgent *ap) {
 	
   static tEplApiInitParam EplApiInitParam;
   tEplKernel EplRet = kEplSuccessful;
-  char* pszCdcFilename_g = op->CDCfile;
+  pwr_tFileName cdc_file;
   char* sHostname = malloc(1023);
     
+  if ( strchr(op->CDCfile, '/') != 0)
+    strcpy( cdc_file, op->CDCfile);
+  else {
+    strcpy( cdc_file, "$pwrp_load/");
+    strcat( cdc_file, op->CDCfile);
+  }
+  dcli_translate_filename( cdc_file, cdc_file);
   gethostname(sHostname, 1023);
 	
   if( op->StallAction == pwr_eStallActionEnum_ResetInputs)
@@ -364,7 +372,7 @@ static pwr_tStatus IoAgentInit (io_tCtx ctx, io_sAgent *ap) {
       goto Exit;
     }
 
-  EplRet = EplApiSetCdcFilename(pszCdcFilename_g);
+  EplRet = EplApiSetCdcFilename(cdc_file);
   if(EplRet != kEplSuccessful)
     {
       goto Exit;
