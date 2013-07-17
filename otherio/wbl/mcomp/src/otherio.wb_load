@@ -8866,7 +8866,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object RtBody $ObjBodyDef 1 01-JUL-2013 17:26:15.35
         Body SysBody 04-JUL-2013 08:13:20.05
           Attr StructName = "Epl_MN"
-          Attr NextAix = "_X48"
+          Attr NextAix = "_X51"
         EndBody
         !/**
         ! Used to add a short description of the master
@@ -8896,6 +8896,20 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Device $Attribute 33 01-JUL-2013 17:26:15.35
           Body SysBody 01-JUL-2013 17:26:15.35
             Attr PgmName = "Device"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object IpAddress $Attribute 48 17-JUL-2013 15:58:27.54
+          Body SysBody 17-JUL-2013 15:58:28.36
+            Attr PgmName = "IpAddress"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object IpNetmask $Attribute 49 17-JUL-2013 15:58:29.78
+          Body SysBody 17-JUL-2013 15:58:30.54
+            Attr PgmName = "IpNetmask"
             Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
@@ -8940,6 +8954,13 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr PgmName = "Priority"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object StartupTimeout $Attribute 50 17-JUL-2013 15:58:34.30
+          Body SysBody 17-JUL-2013 15:58:35.25
+            Attr PgmName = "StartupTimeout"
+            Attr Size = 2
+            Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object Timeout $Attribute 38 01-JUL-2013 17:26:15.35
@@ -9143,7 +9164,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object RtBody $ObjBodyDef 1 08-JUL-2013 10:33:15.71
         Body SysBody 08-JUL-2013 10:35:31.78
           Attr StructName = "Epl_CNServer"
-          Attr NextAix = "_X65"
+          Attr NextAix = "_X68"
         EndBody
         Object Description $Attribute 48 08-JUL-2013 10:17:49.38
           Body SysBody 08-JUL-2013 10:17:49.38
@@ -9155,6 +9176,20 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Device $Attribute 50 08-JUL-2013 10:17:49.38
           Body SysBody 08-JUL-2013 10:17:49.38
             Attr PgmName = "Device"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object IpAddress $Attribute 65 17-JUL-2013 15:58:19.17
+          Body SysBody 17-JUL-2013 15:58:19.98
+            Attr PgmName = "IpAddress"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object IpNetmask $Attribute 66 17-JUL-2013 15:58:21.44
+          Body SysBody 17-JUL-2013 15:58:22.46
+            Attr PgmName = "IpNetmask"
             Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
@@ -9192,6 +9227,13 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr PgmName = "Priority"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object StartupTimeout $Attribute 67 17-JUL-2013 15:58:15.30
+          Body SysBody 17-JUL-2013 15:58:16.19
+            Attr PgmName = "StartupTimeout"
+            Attr Size = 2
+            Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object Timeout $Attribute 56 08-JUL-2013 10:17:49.38
