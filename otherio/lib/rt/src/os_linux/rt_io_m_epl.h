@@ -39,23 +39,30 @@
 #define rt_io_m_epl_h
 
 typedef struct {
+	short init;
+	short timeoutStatus;
+	int prevState;
 	int input_area_size;
 	int output_area_size;
 	void *input_area;
 	void *output_area;
 	void *tmp_area;
-	struct timespec tpe, tps;
+	struct timespec tpe, tps, boot;
 	short inputResetEnabled;
 } io_sLocalEpl_MN;
 
 
 typedef struct {
+	int prevState;
+	short timeoutStatus;
 	int byte_ordering;
 	int float_representation;
 	struct timespec tpe, tps;
 } io_sLocalEpl_CN;
 
 typedef struct {
+	int prevState;
+	short timeoutStatus;
 	int byte_ordering;
 	int float_representation;
 	struct timespec tpe, tps;

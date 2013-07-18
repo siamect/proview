@@ -101,6 +101,11 @@
 #include "Epl.h"
 #include <errno.h>
 #include <math.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <rt_pwr_msg.h>
+
 
 #define pl_Align(offs, align) ((offs + (align - 1)) & ~(align - 1))
 
@@ -111,13 +116,6 @@
 /*                                                                         */
 /*                                                                         */
 /***************************************************************************/
-
-//---------------------------------------------------------------------------
-// const defines
-//---------------------------------------------------------------------------
-#define IP_ADDR     			0xc0a86401          // 192.168.100.1
-#define SUBNET_MASK				0xFFFFFF00          // 255.255.255.0 "
-#define MAIN_THREAD_PRIORITY	20
 
 //---------------------------------------------------------------------------
 // module global vars
@@ -310,7 +308,8 @@ static pwr_tStatus IoAgentInit (io_tCtx ctx, io_sAgent *ap) {
 
   // Get nodeid from attribute in agent
   EplApiInitParam.m_uiNodeId = op->NodeId;
-  EplApiInitParam.m_dwIpAddress = (0xFFFFFF00 & IP_ADDR) | EplApiInitParam.m_uiNodeId;
+  
+  EplApiInitParam.m_dwIpAddress = ntohl( inet_addr( op->IpAddress));
 
   // write 00:00:00:00:00:00 to MAC address, so that the driver uses the real hardware address 
   EPL_MEMCPY(EplApiInitParam.m_abMacAddress, abMacAddr, sizeof (EplApiInitParam.m_abMacAddress));
@@ -352,7 +351,7 @@ static pwr_tStatus IoAgentInit (io_tCtx ctx, io_sAgent *ap) {
   // NMT_IdentityObject_REC.SerialNo_U32               
   EplApiInitParam.m_dwSerialNumber            = -1;              
 
-  EplApiInitParam.m_dwSubnetMask              = SUBNET_MASK;
+  EplApiInitParam.m_dwSubnetMask              = ntohl( inet_addr( op->IpNetmask));
   EplApiInitParam.m_dwDefaultGateway          = 0;
   EPL_MEMCPY(EplApiInitParam.m_sHostname, sHostname, sizeof(EplApiInitParam.m_sHostname));
   EplApiInitParam.m_uiSyncNodeId              = EPL_C_ADR_SYNC_ON_SOA;
@@ -799,6 +798,7 @@ static pwr_tStatus IoAgentClose( io_tCtx ctx, io_sAgent *ap) {
   io_sRack *rp;
 	
   free(local);
+  ap->Local = 0;
   for ( rp = ap->racklist; rp; rp = rp->next) 
     free( (io_sLocalEpl_CN *)rp->Local);
 	
@@ -824,29 +824,37 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
   io_sCard *cp;
   pwr_tUInt32 error_count = 0;
   int ret = IO__SUCCESS;
+  
+  if(!ap->Local)
+	return ret;
 	
+  // Remeber the time when this functions was called the first time
+  if( local->init == 0) {
+    clock_gettime(CLOCK_REALTIME, &local->boot);
+    local->init = 1;
+  }
+
   // Time now (tps = time when bad state occurred)
   clock_gettime(CLOCK_REALTIME, &local->tpe);
+  
+   error_count = op->ErrorCount;
+  // Add to error count if agent changed from good to bad state and setup is complete
+  if( local->prevState == pwr_eEplNmtState_EplNmtMsOperational && op->NmtState != pwr_eEplNmtState_EplNmtMsOperational && ( (local->tpe).tv_sec - (local->boot).tv_sec) >= op->StartupTimeout)
+    op->ErrorCount++;
   
   // Copy Powerlink process image to temp memory (only if stallaction=resetinputs else tmp_area=input_area)
   if( op->StallAction == pwr_eStallActionEnum_ResetInputs)
     memcpy( local->tmp_area , local->input_area, local->input_area_size);
 	
-  // Save time when bad state occurs
-  if( op->NmtState == pwr_eEplNmtState_EplNmtMsOperational)
-    {
-      op->ErrorCount = 0;
+  // If no bad state and were still in startup there can be no error (else remember when error occurred)
+  if( op->NmtState == pwr_eEplNmtState_EplNmtMsOperational || ( (local->tpe).tv_sec - (local->boot).tv_sec) < op->StartupTimeout) {
       (local->tps).tv_sec = 0;
-    }
-  else if( (local->tps).tv_sec == 0)
-    {
+      local->timeoutStatus = 0;
+  }
+  else if( (local->tps).tv_sec == 0) {
       clock_gettime(CLOCK_REALTIME, &local->tps);
-    }
-	
-  // If Timeout time has passed and still in bad state, start adding to ErrorCount 
-  if( (local->tpe).tv_sec - (local->tps).tv_sec >= op->Timeout && (local->tps).tv_sec != 0)
-    op->ErrorCount++;
-	
+  }
+
   // Agent error soft limit reached, tell log (once)
   if ( op->ErrorCount >= op->ErrorSoftLimit && error_count < op->ErrorSoftLimit) {
     errh_Warning( "IO Agent ErrorSoftLimit reached, '%s'", ap->Name);
@@ -864,20 +872,38 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
     else
       errh_Error( "IO Agent ErrorHardLimit reached '%s'", ap->Name);
   }
+
+  // Agent timeout has elapsed, tell log (once)	
+  if( ( (local->tpe).tv_sec - (local->tps).tv_sec) >= op->Timeout && local->timeoutStatus == 0 && (local->tps).tv_sec != 0) {
+	  
+	local->timeoutStatus = 1;
+	if( op->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
+      errh_Error( "IO Agent timeout time elapsed '%s', IO stopped", ap->Name);
+    }
+    else if( op->StallAction == pwr_eStallActionEnum_ResetInputs) {
+      errh_Error( "IO Agent timeout time elapsed '%s', IO input area reset", ap->Name);
+    }
+    else
+      errh_Error( "IO Agent timeout time elapsed '%s'", ap->Name);
+	
+  }
 		
-  // Agent error hard limit reached, take action (always)	
-  if ( op->ErrorCount >= op->ErrorHardLimit) {
+  // Agent error hard limit reached or timeout time elapsed, take action (always)	
+  if ( op->ErrorCount >= op->ErrorHardLimit || ( (local->tpe).tv_sec - (local->tps).tv_sec) >= op->Timeout && (local->tps).tv_sec != 0) {
 		
     if( op->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
       ctx->Node->EmergBreakTrue = 1;
+      errh_SetStatus(PWR__SRVFATAL);
+      IoAgentClose(ctx, ap);
     }
     else if( op->StallAction == pwr_eStallActionEnum_ResetInputs) {
       memset( local->tmp_area, 0, local->input_area_size);
     }
     ret = IO__ERRDEVICE;
   }
-	
-	
+  
+  // Remember agent state til next scan
+  local->prevState = op->NmtState;
 	
   // Loop through all slaves
   for ( rp = ap->racklist; rp; rp = rp->next) {
@@ -886,49 +912,66 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
     // Time now (tps = time when bad state occurred)
     clock_gettime(CLOCK_REALTIME, &local1->tpe);
 		
-    pwr_tUInt32 error_count = ((pwr_sClass_Epl_CN *)rp->op)->ErrorCount;
-		
+    error_count = ((pwr_sClass_Epl_CN *)rp->op)->ErrorCount;
+	// Add to error count if slave changed from good to bad state and setup is complete
+	if( local1->prevState == pwr_eEplNmtState_EplNmtCsOperational && ((pwr_sClass_Epl_CN *)rp->op)->NmtState != pwr_eEplNmtState_EplNmtCsOperational && ( (local1->tpe).tv_sec - (local->boot).tv_sec) >= op->StartupTimeout)
+		((pwr_sClass_Epl_CN *)rp->op)->ErrorCount++;
+	  	
     // Save time when bad state occurs
-    if( ( (pwr_sClass_Epl_CN *)rp->op)->NmtState == pwr_eEplNmtState_EplNmtCsOperational) {
-      ( (pwr_sClass_Epl_CN *)rp->op)->ErrorCount = 0;
-      (local1->tps).tv_sec = 0;	
+    if( ( (pwr_sClass_Epl_CN *)rp->op)->NmtState == pwr_eEplNmtState_EplNmtCsOperational || ( (local1->tpe).tv_sec - (local->boot).tv_sec) < op->StartupTimeout) {
+      (local1->tps).tv_sec = 0;
+      local1->timeoutStatus = 0;	
     }
     else if( (local1->tps).tv_sec == 0)
       clock_gettime(CLOCK_REALTIME, &local1->tps);
-					
-    // If Timeout time has passed and still in bad state, start adding to ErrorCount 
-    if( (local1->tpe).tv_sec - (local1->tps).tv_sec >= ((pwr_sClass_Epl_CN *)rp->op)->Timeout && (local1->tps).tv_sec != 0)
-      ( (pwr_sClass_Epl_CN *)rp->op)->ErrorCount++;
-		
+						
     // Slave error soft limit reached, tell log (once)
     if ( ((pwr_sClass_Epl_CN *)rp->op)->ErrorCount >= ((pwr_sClass_Epl_CN *)rp->op)->ErrorSoftLimit && error_count < ((pwr_sClass_Epl_CN *)rp->op)->ErrorSoftLimit) {
-      errh_Warning( "IO Card ErrorSoftLimit reached, '%s'", rp->Name);
+      errh_Warning( "IO Rack ErrorSoftLimit reached, '%s'", rp->Name);
     }
 			
     // Slave error hard limit reached, tell log (once)
     if ( ((pwr_sClass_Epl_CN *)rp->op)->ErrorCount >= ((pwr_sClass_Epl_CN *)rp->op)->ErrorHardLimit && error_count < ((pwr_sClass_Epl_CN *)rp->op)->ErrorHardLimit) {
 		
       if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
-	errh_Error( "IO Card ErrorHardLimit reached '%s', IO stopped", rp->Name);
+	    errh_Error( "IO Rack ErrorHardLimit reached '%s', IO stopped", rp->Name);
       }
       else if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_ResetInputs) {
-	errh_Error( "IO Card ErrorHardLimit reached '%s', IO input area reset", rp->Name);
+	    errh_Error( "IO Rack ErrorHardLimit reached '%s', IO input area reset", rp->Name);
       }
       else
-	errh_Error( "IO Card ErrorHardLimit reached '%s'", rp->Name);
+	    errh_Error( "IO Rack ErrorHardLimit reached '%s'", rp->Name);
     }
-		
-    // Slave error hard limit reached, take action (always)
-    if ( ((pwr_sClass_Epl_CN *)rp->op)->ErrorCount >= ((pwr_sClass_Epl_CN *)rp->op)->ErrorHardLimit) {
-		
-      if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
-	ctx->Node->EmergBreakTrue = 1;
+    
+    // Slave timeout has elapsed, tell log (once)	
+    if( ( (local1->tpe).tv_sec - (local1->tps).tv_sec) >= ((pwr_sClass_Epl_CN *)rp->op)->Timeout && local1->timeoutStatus == 0 && (local1->tps).tv_sec != 0) {
+	  local1->timeoutStatus = 1;	
+	  if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
+	    errh_Error( "Rack timeout time elapsed '%s', IO stopped", rp->Name);
       }
       else if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_ResetInputs) {
-	memset( local->tmp_area + ((pwr_sClass_Epl_CN *)rp->op)->InputAreaOffset, 0, ((pwr_sClass_Epl_CN *)rp->op)->InputAreaSize);
+	    errh_Error( "Rack timeout time elapsed '%s', IO input area reset", rp->Name);
+      }
+      else
+	    errh_Error( "Rack timeout time elapsed '%s'", rp->Name);
+    }
+		
+    // Slave error hard limit reached or timeout time elapsed, take action (always)
+    if ( ((pwr_sClass_Epl_CN *)rp->op)->ErrorCount >= ((pwr_sClass_Epl_CN *)rp->op)->ErrorHardLimit || ( (local1->tpe).tv_sec - (local1->tps).tv_sec) >= ((pwr_sClass_Epl_CN *)rp->op)->Timeout && (local1->tps).tv_sec != 0) {
+		
+      if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
+	    ctx->Node->EmergBreakTrue = 1;
+	    errh_SetStatus(PWR__SRVFATAL);
+	    IoAgentClose(ctx, ap);
+      }
+      else if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_ResetInputs) {
+	    memset( local->tmp_area + ((pwr_sClass_Epl_CN *)rp->op)->InputAreaOffset, 0, ((pwr_sClass_Epl_CN *)rp->op)->InputAreaSize);
       }
       ret = IO__ERRDEVICE;
     }
+	
+	// Remeber slave state til next scan	
+	local1->prevState = ((pwr_sClass_Epl_CN *)rp->op)->NmtState;
 		
     // Update Proview chan-objects with data from Powerlink process image
     for ( cp = rp->cardlist; cp; cp = cp->next) {
@@ -946,6 +989,9 @@ static pwr_tStatus IoAgentWrite( io_tCtx ctx, io_sAgent *ap) {
   //pwr_sClass_Epl_MN *op = (pwr_sClass_Epl_MN *)ap->op;
   io_sRack *rp;
   io_sCard *cp;
+  
+  if(!ap->Local)
+	return IO__SUCCESS;
     
   for ( rp = ap->racklist; rp; rp = rp->next) {
     for ( cp = rp->cardlist; cp; cp = cp->next) {
