@@ -893,9 +893,6 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
       errh_SetStatus(PWR__SRVFATAL);
       IoAgentClose(ctx, ap);
     }
-    else if( op->StallAction == pwr_eStallActionEnum_ResetInputs) {
-      memset( local->tmp_area, 0, local->input_area_size);
-    }
     ret = IO__ERRDEVICE;
   }
   
@@ -906,6 +903,9 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
       ctx->Node->EmergBreakTrue = 1;
       errh_SetStatus(PWR__SRVFATAL);
       IoAgentClose(ctx, ap);
+    }
+    else if( op->StallAction == pwr_eStallActionEnum_ResetInputs) {
+      memset( local->tmp_area, 0, local->input_area_size);
     }
     ret = IO__ERRDEVICE;
   }
@@ -968,9 +968,6 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
 	    ctx->Node->EmergBreakTrue = 1;
 	    errh_SetStatus(PWR__SRVFATAL);
 	    IoAgentClose(ctx, ap);
-      }
-      else if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_ResetInputs) {
-	    memset( local->tmp_area + ((pwr_sClass_Epl_CN *)rp->op)->InputAreaOffset, 0, ((pwr_sClass_Epl_CN *)rp->op)->InputAreaSize);
       }
       ret = IO__ERRDEVICE;
     }
