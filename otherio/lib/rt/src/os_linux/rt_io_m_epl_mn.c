@@ -318,7 +318,7 @@ static pwr_tStatus IoAgentInit (io_tCtx ctx, io_sAgent *ap) {
 
   EplApiInitParam.m_dwFeatureFlags            = -1;
   // required for error detection
-  EplApiInitParam.m_dwCycleLen                = 5000;
+  EplApiInitParam.m_dwCycleLen                = uiCycleLen_g;
   // const     
   EplApiInitParam.m_uiIsochrTxMaxPayload      = 256;
   // const              
@@ -644,7 +644,7 @@ tEplKernel PUBLIC AppCbEvent (
 	      for ( rp = pUserArg_p->racklist; rp; rp = rp->next)
 		if(((pwr_sClass_Epl_CN *)rp->op)->NodeId == pEventArg_p->m_Node.m_uiNodeId) {
 		  ((pwr_sClass_Epl_CN *)rp->op)->NmtState = pEventArg_p->m_Node.m_NmtState;
-		  ((pwr_sClass_Epl_CN *)rp->op)->Status = ((pwr_sClass_Epl_CN *)rp->op)->NmtState == pwr_eEplNmtState_EplNmtCsOperational ? IOM__EPL_OPER : IOM__EPL_NOOPER;
+		  
 		}
 					
 	      switch (pEventArg_p->m_Node.m_NmtState)
@@ -916,6 +916,7 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
   // Loop through all slaves
   for ( rp = ap->racklist; rp; rp = rp->next) {
 		
+    ((pwr_sClass_Epl_CN *)rp->op)->Status = ((pwr_sClass_Epl_CN *)rp->op)->NmtState == pwr_eEplNmtState_EplNmtCsOperational ? IOM__EPL_OPER : IOM__EPL_NOOPER;
     local1 = (io_sLocalEpl_CN *)rp->Local;
     // Time now (tps = time when bad state occurred)
     clock_gettime(CLOCK_REALTIME, &local1->tpe);
