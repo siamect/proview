@@ -52,6 +52,7 @@
 #include "Epl.h"
 #include <errno.h>
 #include <math.h>
+#include <rt_pwr_msg.h>
 
 /***************************************************************************/
 /*                                                                         */
@@ -60,14 +61,6 @@
 /*                                                                         */
 /*                                                                         */
 /***************************************************************************/
-
-//---------------------------------------------------------------------------
-// const defines
-//---------------------------------------------------------------------------
-#define IP_ADDR     			0xc0a86401          // 192.168.100.1
-#define SUBNET_MASK				0xFFFFFF00          // 255.255.255.0 "
-#define MAIN_THREAD_PRIORITY	20
-
 //---------------------------------------------------------------------------
 // module global vars
 //---------------------------------------------------------------------------
@@ -578,7 +571,7 @@ static pwr_tStatus IoRackInit (
 
   // Get nodeid from attribute in agent
   EplApiInitParam.m_uiNodeId = op->NodeId;
-  EplApiInitParam.m_dwIpAddress = (0xFFFFFF00 & IP_ADDR) | EplApiInitParam.m_uiNodeId;
+  EplApiInitParam.m_dwIpAddress = ntohl( inet_addr( op->IpAddress));
 
   // write 00:00:00:00:00:00 to MAC address, so that the driver uses the real hardware address 
   EPL_MEMCPY(EplApiInitParam.m_abMacAddress, abMacAddr, sizeof (EplApiInitParam.m_abMacAddress));
@@ -622,7 +615,7 @@ static pwr_tStatus IoRackInit (
   EplApiInitParam.m_dwApplicationSwDate       = 0;
   EplApiInitParam.m_dwApplicationSwTime       = 0;
 
-  EplApiInitParam.m_dwSubnetMask              = SUBNET_MASK;
+  EplApiInitParam.m_dwSubnetMask              = ntohl( inet_addr( op->IpNetmask));
   EplApiInitParam.m_dwDefaultGateway          = 0;
   EPL_MEMCPY(EplApiInitParam.m_sHostname, sHostname, sizeof(EplApiInitParam.m_sHostname));
   EplApiInitParam.m_uiSyncNodeId              = EPL_C_ADR_SYNC_ON_SOA;
@@ -881,59 +874,97 @@ static pwr_tStatus IoRackRead (
   io_sLocalEpl_CNServer *local = (io_sLocalEpl_CNServer *)rp->Local;
   pwr_sClass_Epl_CNServer *op = (pwr_sClass_Epl_CNServer *)rp->op;
   io_sCard *cp;
-  pwr_tUInt32 error_count = op->ErrorCount;
+  pwr_tUInt32 error_count = 0;
+  
+  
 
   int ret = IO__SUCCESS;
 	
+  if(!rp->Local)
+	return ret;
+	
+  // Remeber the time when this functions was called the first time
+  if( local->init == 0) {
+    clock_gettime(CLOCK_REALTIME, &local->boot);
+    local->init = 1;
+  }
+  	
   // Time now (tps = time when bad state occurred)
   clock_gettime(CLOCK_REALTIME, &local->tpe);
+  
+  error_count = op->ErrorCount;
+  // Add to error count if server changed from good to bad state and setup is complete
+  if( local->prevState == pwr_eEplNmtState_EplNmtCsOperational && op->NmtState != pwr_eEplNmtState_EplNmtCsOperational && ( (local->tpe).tv_sec - (local->boot).tv_sec) >= op->StartupTimeout)
+    op->ErrorCount++;
   
   // Copy Powerlink process image to temp memory (only if stallaction=resetinputs else tmp_area=input_area)
   if( op->StallAction == pwr_eStallActionEnum_ResetInputs)
     memcpy( local->tmp_area , local->input_area, local->input_area_size);
-	
-  // Save time when bad state occurs
-  if( op->NmtState == pwr_eEplNmtState_EplNmtCsOperational) {
-    op->ErrorCount = 0;
-    (local->tps).tv_sec = 0;
+
+
+  // If no bad state and were still in startup there can be no error (else remember when error occurred)
+  if( op->NmtState == pwr_eEplNmtState_EplNmtMsOperational || ( (local->tpe).tv_sec - (local->boot).tv_sec) < op->StartupTimeout) {
+      (local->tps).tv_sec = 0;
+      local->timeoutStatus = 0;
   }
   else if( (local->tps).tv_sec == 0) {
-    clock_gettime(CLOCK_REALTIME, &local->tps);
+      clock_gettime(CLOCK_REALTIME, &local->tps);
   }
-	
-  // If Timeout time has passed and still in bad state, start adding to ErrorCount 
-  if( (local->tpe).tv_sec - (local->tps).tv_sec >= op->Timeout && (local->tps).tv_sec != 0)
-    op->ErrorCount++;
-	
-  // Agent error soft limit reached, tell log (once)
+
+  // Server error soft limit reached, tell log (once)
   if ( op->ErrorCount >= op->ErrorSoftLimit && error_count < op->ErrorSoftLimit) {
-    errh_Warning( "IO Agent ErrorSoftLimit reached, '%s'", rp->Name);
+    errh_Warning( "IO Server ErrorSoftLimit reached, '%s'", rp->Name);
   }	
 	
-  // Agent error hard limit reached, tell log (once)	
+  // Server error hard limit reached, tell log (once)	
   if ( op->ErrorCount >= op->ErrorHardLimit && error_count < op->ErrorHardLimit) {
 		
     if( op->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
-      errh_Error( "IO Agent ErrorHardLimit reached '%s', IO stopped", rp->Name);
-    }
-    else if( op->StallAction == pwr_eStallActionEnum_ResetInputs) {
-      errh_Error( "IO Agent ErrorHardLimit reached '%s', IO input area reset", rp->Name);
+      errh_Error( "IO Server ErrorHardLimit reached '%s', IO stopped", rp->Name);
     }
     else
-      errh_Error( "IO Agent ErrorHardLimit reached '%s'", rp->Name);
+      errh_Error( "IO Server ErrorHardLimit reached '%s'", rp->Name);
   }
-		
-  // Agent error hard limit reached, take action (always)	
+  
+  // Server timeout has elapsed, tell log (once)	
+  if( ( (local->tpe).tv_sec - (local->tps).tv_sec) >= op->Timeout && local->timeoutStatus == 0 && (local->tps).tv_sec != 0) {
+	  
+	local->timeoutStatus = 1;
+	if( op->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
+      errh_Error( "IO Server timeout time elapsed '%s', IO stopped", rp->Name);
+    }
+    else if( op->StallAction == pwr_eStallActionEnum_ResetInputs) {
+      errh_Error( "IO Server timeout time elapsed '%s', IO input area reset", rp->Name);
+    }
+    else
+      errh_Error( "IO Server timeout time elapsed '%s'", rp->Name);
+  }
+  
+  // Server error hard limit reached, take action (always)	
   if ( op->ErrorCount >= op->ErrorHardLimit) {
-		
     if( op->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
       ctx->Node->EmergBreakTrue = 1;
+      errh_SetStatus(PWR__SRVFATAL);
+      IoRackClose(ctx, ap, rp);
+    }
+    ret = IO__ERRDEVICE;
+  }
+  
+  // Server timeout time elapsed, take action (always)	
+  if ( ( (local->tpe).tv_sec - (local->tps).tv_sec) >= op->Timeout && (local->tps).tv_sec != 0) {
+    if( op->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
+      ctx->Node->EmergBreakTrue = 1;
+      errh_SetStatus(PWR__SRVFATAL);
+      IoRackClose(ctx, ap, rp);
     }
     else if( op->StallAction == pwr_eStallActionEnum_ResetInputs) {
       memset( local->tmp_area, 0, local->input_area_size);
     }
     ret = IO__ERRDEVICE;
-  }	
+  }
+  
+  // Remember server state til next scan
+  local->prevState = op->NmtState;
 		
   // Update Proview chan-objects with data from Powerlink process image
   for ( cp = rp->cardlist; cp; cp = cp->next) {
@@ -952,6 +983,9 @@ static pwr_tStatus IoRackWrite (
 {
   io_sLocalEpl_CNServer *local = (io_sLocalEpl_CNServer *)rp->Local;
   io_sCard *cp;
+  
+  if(!rp->Local)
+	return IO__SUCCESS;
     
   for ( cp = rp->cardlist; cp; cp = cp->next) {
     io_bus_card_write( ctx, cp, local->output_area, local->byte_ordering, pwr_eFloatRepEnum_FloatIEEE);

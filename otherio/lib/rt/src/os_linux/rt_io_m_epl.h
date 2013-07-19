@@ -61,11 +61,12 @@ typedef struct {
 } io_sLocalEpl_CN;
 
 typedef struct {
-	int prevState;
+	short init;
 	short timeoutStatus;
+	int prevState;
 	int byte_ordering;
 	int float_representation;
-	struct timespec tpe, tps;
+	struct timespec tpe, tps, boot;
 	int input_area_size;
 	int output_area_size;
 	void *input_area;

@@ -866,9 +866,6 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
     if( op->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
       errh_Error( "IO Agent ErrorHardLimit reached '%s', IO stopped", ap->Name);
     }
-    else if( op->StallAction == pwr_eStallActionEnum_ResetInputs) {
-      errh_Error( "IO Agent ErrorHardLimit reached '%s', IO input area reset", ap->Name);
-    }
     else
       errh_Error( "IO Agent ErrorHardLimit reached '%s'", ap->Name);
   }
@@ -888,8 +885,8 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
 	
   }
 		
-  // Agent error hard limit reached or timeout time elapsed, take action (always)	
-  if ( op->ErrorCount >= op->ErrorHardLimit || ( (local->tpe).tv_sec - (local->tps).tv_sec) >= op->Timeout && (local->tps).tv_sec != 0) {
+  // Agent error hard limit reached, take action (always)	
+  if ( op->ErrorCount >= op->ErrorHardLimit) {
 		
     if( op->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
       ctx->Node->EmergBreakTrue = 1;
@@ -898,6 +895,17 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
     }
     else if( op->StallAction == pwr_eStallActionEnum_ResetInputs) {
       memset( local->tmp_area, 0, local->input_area_size);
+    }
+    ret = IO__ERRDEVICE;
+  }
+  
+  // Agent timeout time elapsed, take action (always)	
+  if ( ( (local->tpe).tv_sec - (local->tps).tv_sec) >= op->Timeout && (local->tps).tv_sec != 0) {
+		
+    if( op->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
+      ctx->Node->EmergBreakTrue = 1;
+      errh_SetStatus(PWR__SRVFATAL);
+      IoAgentClose(ctx, ap);
     }
     ret = IO__ERRDEVICE;
   }
@@ -934,13 +942,10 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
     if ( ((pwr_sClass_Epl_CN *)rp->op)->ErrorCount >= ((pwr_sClass_Epl_CN *)rp->op)->ErrorHardLimit && error_count < ((pwr_sClass_Epl_CN *)rp->op)->ErrorHardLimit) {
 		
       if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
-	    errh_Error( "IO Rack ErrorHardLimit reached '%s', IO stopped", rp->Name);
-      }
-      else if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_ResetInputs) {
-	    errh_Error( "IO Rack ErrorHardLimit reached '%s', IO input area reset", rp->Name);
+				errh_Error( "IO Rack ErrorHardLimit reached '%s', IO stopped", rp->Name);
       }
       else
-	    errh_Error( "IO Rack ErrorHardLimit reached '%s'", rp->Name);
+				errh_Error( "IO Rack ErrorHardLimit reached '%s'", rp->Name);
     }
     
     // Slave timeout has elapsed, tell log (once)	
@@ -956,9 +961,8 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
 	    errh_Error( "Rack timeout time elapsed '%s'", rp->Name);
     }
 		
-    // Slave error hard limit reached or timeout time elapsed, take action (always)
-    if ( ((pwr_sClass_Epl_CN *)rp->op)->ErrorCount >= ((pwr_sClass_Epl_CN *)rp->op)->ErrorHardLimit || ( (local1->tpe).tv_sec - (local1->tps).tv_sec) >= ((pwr_sClass_Epl_CN *)rp->op)->Timeout && (local1->tps).tv_sec != 0) {
-		
+    // Slave error hard limit reached, take action (always)
+    if ( ((pwr_sClass_Epl_CN *)rp->op)->ErrorCount >= ((pwr_sClass_Epl_CN *)rp->op)->ErrorHardLimit) {
       if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
 	    ctx->Node->EmergBreakTrue = 1;
 	    errh_SetStatus(PWR__SRVFATAL);
@@ -966,6 +970,19 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
       }
       else if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_ResetInputs) {
 	    memset( local->tmp_area + ((pwr_sClass_Epl_CN *)rp->op)->InputAreaOffset, 0, ((pwr_sClass_Epl_CN *)rp->op)->InputAreaSize);
+      }
+      ret = IO__ERRDEVICE;
+    }
+    
+    // Slave timeout elapsed, take action (always)
+    if( ( (local1->tpe).tv_sec - (local1->tps).tv_sec) >= ((pwr_sClass_Epl_CN *)rp->op)->Timeout && (local1->tps).tv_sec != 0) {
+			if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
+				ctx->Node->EmergBreakTrue = 1;
+				errh_SetStatus(PWR__SRVFATAL);
+				IoAgentClose(ctx, ap);
+      }
+      else if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_ResetInputs) {
+				memset( local->tmp_area + ((pwr_sClass_Epl_CN *)rp->op)->InputAreaOffset, 0, ((pwr_sClass_Epl_CN *)rp->op)->InputAreaSize);
       }
       ret = IO__ERRDEVICE;
     }
