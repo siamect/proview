@@ -206,7 +206,21 @@ int io_connect_status( pwr_sAttrRef *sig_aref, pwr_sAttrRef *chan_aref)
     strcat( sname, ".Status");
 
     sts = gdh_NameToAttrref( pwr_cNObjid, sname, &status_aref);
-    if ( EVEN(sts)) return 0;
+    if ( EVEN(sts)) {
+      /* Try parent object */
+      pwr_tOid parent;
+
+      sts = gdh_GetParent( card_aref.Objid, &parent);
+      if ( EVEN(sts)) return 0;
+
+      sts = gdh_ObjidToName( parent, sname, sizeof(sname),
+			     cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return 0;
+      strcat( sname, ".Status");
+
+      sts = gdh_NameToAttrref( pwr_cNObjid, sname, &status_aref);
+      if ( EVEN(sts)) return 0;
+    }
   }
 
   /* Store status pointer in IoStatus */
