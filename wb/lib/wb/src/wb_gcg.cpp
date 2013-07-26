@@ -14525,7 +14525,7 @@ int	gcg_comp_m55( gcg_ctx gcgctx, vldh_t_node node)
 
 	/* Print the execute command */
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		"%s_exec( %c%s);",
+		"%s_exec( %c%s);\n",
 		name,
 		GCG_PREFIX_REF,
 		vldh_IdToStr(0, node->ln.oid));
