@@ -1,3 +1,4 @@
 #if OS_LINUX
 Epl_MN
+Epl_CNServer
 #endif

@@ -145,6 +145,10 @@ palette NavigatorPalette
           class ABB_ACS800MotorAggr
           class ABB_ACS800PumpAggr
           class ABB_ACS800_1
+          class ABB_ACS880EplFanAggr
+          class ABB_ACS880EplMotorAggr
+          class ABB_ACS880EplPumpAggr
+          class ABB_ACS880_Epl_1
           class ABB_ACS880FanAggr
           class ABB_ACS880MotorAggr
           class ABB_ACS880PumpAggr
@@ -330,6 +334,15 @@ palette NavigatorPalette
 	class Epl_MN
         class Epl_CN
         class EPl_Module
+	menu Modules
+        {
+          class ABB_ACS880_Epl
+	  class BR_Ai4_EplModule
+	  class BR_Ao4_EplModule
+	  class BR_Di4_EplModule
+	  class BR_Do4_EplModule
+	  class BR_PowerSupply_EplModule
+        }
 	menu Server
 	{
 	  class Epl_CNServer

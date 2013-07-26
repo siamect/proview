@@ -34,56 +34,6 @@
  * General Public License plus this exception.
  **/
  
- /****************************************************************************
-
-  (c) SYSTEC electronic GmbH, D-07973 Greiz, August-Bebel-Str. 29
-      www.systec-electronic.com
-
-  (c) Bernecker + Rainer Industrie-Elektronik Ges.m.b.H.
-      B&R Strasse 1, A-5142 Eggelsberg
-      www.br-automation.com
-
-  License:
-
-    Redistribution and use in source and binary forms, with or without
-    modification, are permitted provided that the following conditions
-    are met:
-
-    1. Redistributions of source code must retain the above copyright
-       notice, this list of conditions and the following disclaimer.
-
-    2. Redistributions in binary form must reproduce the above copyright
-       notice, this list of conditions and the following disclaimer in the
-       documentation and/or other materials provided with the distribution.
-
-    3. Neither the name of the copyright holders nor the names of its
-       contributors may be used to endorse or promote products derived
-       from this software without prior written permission. For written
-       permission, please contact info@systec-electronic.com.
-
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-    COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-    POSSIBILITY OF SUCH DAMAGE.
-
-    Severability Clause:
-
-        If a provision of this License is or becomes illegal, invalid or
-        unenforceable in any jurisdiction, that shall not affect:
-        1. the validity or enforceability in that jurisdiction of any other
-           provision of this License; or
-        2. the validity or enforceability in other jurisdictions of that or
-           any other provision of this License.
-
-****************************************************************************/
 #include "pwr.h"
 #include "pwr_basecomponentclasses.h"
 #include "co_dcli.h"
@@ -106,8 +56,6 @@
 #include <arpa/inet.h>
 #include <rt_pwr_msg.h>
 
-
-#define pl_Align(offs, align) ((offs + (align - 1)) & ~(align - 1))
 
 /***************************************************************************/
 /*                                                                         */
@@ -365,18 +313,16 @@ static pwr_tStatus IoAgentInit (io_tCtx ctx, io_sAgent *ap) {
 
   // initialize POWERLINK stack
   EplRet = EplApiInitialize(&EplApiInitParam);
-  if(EplRet != kEplSuccessful)
-    {
-      errh_Error("EplApiInitialize() failed (Error:0x%x!", EplRet);
-      goto Exit;
-    }
+  if(EplRet != kEplSuccessful) {
+    errh_Error("EplApiInitialize() failed (Error:0x%x!", EplRet);
+    goto Exit;
+  }
 
   EplRet = EplApiSetCdcFilename(cdc_file);
-  if(EplRet != kEplSuccessful)
-    {
-      goto Exit;
-    }
-
+  if(EplRet != kEplSuccessful) {
+    goto Exit;
+  }
+  
   // Allocate memory for the in- and outputareas
   if( local->output_area_size > 0)
     AppProcessImageIn_g = malloc(local->output_area_size);
@@ -403,24 +349,21 @@ static pwr_tStatus IoAgentInit (io_tCtx ctx, io_sAgent *ap) {
   AppProcessImageCopyJob_g.m_Out.m_uiSize = local->input_area_size;
 
   EplRet = EplApiProcessImageAlloc(local->output_area_size, local->input_area_size, 2, 2);
-  if (EplRet != kEplSuccessful)
-    {
-      goto Exit;
-    }
+  if (EplRet != kEplSuccessful) {
+    goto Exit;
+  }
 
   EplRet = EplApiProcessImageSetup();
-  if (EplRet != kEplSuccessful)
-    {
-      goto Exit;
-    }
+  if (EplRet != kEplSuccessful) {
+    goto Exit;
+  }
 
   // start processing
   EplRet = EplApiExecNmtCommand(kEplNmtEventSwReset);
-  if (EplRet != kEplSuccessful)
-    {
-      IoAgentClose(NULL, NULL);
-      goto Exit;
-    }
+  if (EplRet != kEplSuccessful) {
+    IoAgentClose(NULL, NULL);
+    goto Exit;
+  }
     
   errh_Success ("Powerlink init successfull");
   return IO__SUCCESS;
@@ -464,302 +407,256 @@ tEplKernel PUBLIC AppCbEvent (
   io_sRack *rp;
 	
   // check if NMT_GS_OFF is reached
-  switch (EventType_p)
-    {
-    case kEplApiEventNmtStateChange:
-      {
-	op->NmtState = pEventArg_p->m_NmtStateChange.m_NewNmtState;
-	op->Status = op->NmtState == pwr_eEplNmtState_EplNmtMsOperational ? IOM__EPL_OPER : IOM__EPL_NOOPER;
+  switch (EventType_p) {
+  case kEplApiEventNmtStateChange: {
+    op->NmtState = pEventArg_p->m_NmtStateChange.m_NewNmtState;
+    op->Status = op->NmtState == pwr_eEplNmtState_EplNmtMsOperational ? IOM__EPL_OPER : IOM__EPL_NOOPER;
 			
-	switch (pEventArg_p->m_NmtStateChange.m_NewNmtState)
-	  {
-	  case kEplNmtGsOff:
-	    {
-	      // NMT state machine was shut down,
-	      // because of user signal (CTRL-C) or critical EPL stack error
-	      // -> also shut down EplApiProcess() and main()
-	      EplRet = kEplShutdown;
+    switch (pEventArg_p->m_NmtStateChange.m_NewNmtState) {
+    case kEplNmtGsOff: {
+      // NMT state machine was shut down,
+      // because of user signal (CTRL-C) or critical EPL stack error
+      // -> also shut down EplApiProcess() and main()
+      EplRet = kEplShutdown;
 					
-	      errh_Fatal("Event:kEplNmtGsOff originating event = 0x%X (%s)", pEventArg_p->m_NmtStateChange.m_NmtEvent,
-			 EplGetNmtEventStr(pEventArg_p->m_NmtStateChange.m_NmtEvent));
+      errh_Fatal("Event:kEplNmtGsOff originating event = 0x%X (%s)", pEventArg_p->m_NmtStateChange.m_NmtEvent,
+		 EplGetNmtEventStr(pEventArg_p->m_NmtStateChange.m_NmtEvent));
                     
-	      break;
-	    }
-
-	  case kEplNmtGsResetCommunication:
-	    {
-	      break;
-	    }
-
-	  case kEplNmtGsResetConfiguration:
-	    {
-	      if (uiCycleLen_g != 0)
-		{
-		  EplRet = EplApiWriteLocalObject(0x1006, 0x00, &uiCycleLen_g, sizeof (uiCycleLen_g));
-		  uiCurCycleLen_g = uiCycleLen_g;
-		}
-	      else
-		{
-		  uiVarLen = sizeof(uiCurCycleLen_g);
-		  EplApiReadLocalObject(0x1006, 0x00, &uiCurCycleLen_g, &uiVarLen);
-		}
-	      break;
-	    }
-	  case kEplNmtCsPreOperational1:
-	  case kEplNmtMsPreOperational1:
-	    {
-	      errh_Info("AppCbEvent(0x%X) originating event = 0x%X (%s)", pEventArg_p->m_NmtStateChange.m_NewNmtState, pEventArg_p->m_NmtStateChange.m_NmtEvent, EplGetNmtEventStr(pEventArg_p->m_NmtStateChange.m_NmtEvent));
-	      break;
-	    }
-				
-	  case kEplNmtCsPreOperational2:
-	  case kEplNmtMsPreOperational2:
-	    {
-	      break;
-	    }
-	  case kEplNmtCsReadyToOperate:
-	  case kEplNmtMsReadyToOperate:
-	    {
-	      break;
-	    }
-	  case kEplNmtGsInitialising:
-	    {
-	      break;
-	    }
-	  case kEplNmtGsResetApplication:
-	    {
-	      break;
-	    }
-	  case kEplNmtMsNotActive:
-	  case kEplNmtCsNotActive:
-	    {
-	      break;
-	    }
-	  case kEplNmtCsOperational:
-	  case kEplNmtMsOperational:
-	    {
-	      break;
-	    }
-	  case kEplNmtCsBasicEthernet:
-	  case kEplNmtMsBasicEthernet:
-	    {
-	      break;
-	    }
-
-	  default:
-	    {
-	    }
-	  }
-            
-
-	break;
-      }
-
-    case kEplApiEventCriticalError:
-    case kEplApiEventWarning:
-      {   // error or warning occurred within the stack or the application
-	// on error the API layer stops the NMT state machine
-			
-	errh_Error( "%s(Err/Warn): Source = %s (%02X) EplError = %s (0x%03X)",
-		    __func__,
-		    EplGetEventSourceStr(pEventArg_p->m_InternalError.m_EventSource),
-		    pEventArg_p->m_InternalError.m_EventSource,
-		    EplGetEplKernelStr(pEventArg_p->m_InternalError.m_EplError),
-		    pEventArg_p->m_InternalError.m_EplError);
-            
-	// check additional argument
-	switch (pEventArg_p->m_InternalError.m_EventSource)
-	  {
-	  case kEplEventSourceEventk:
-	  case kEplEventSourceEventu:
-	    {   // error occurred within event processing
-	      // either in kernel or in user part
-                    
-	      errh_Error(" OrgSource = %s %02X",  EplGetEventSourceStr(pEventArg_p->m_InternalError.m_Arg.m_EventSource),
-			 pEventArg_p->m_InternalError.m_Arg.m_EventSource);
-                    
-	      break;
-	    }
-
-	  case kEplEventSourceDllk:
-	    {   // error occurred within the data link layer (e.g. interrupt processing)
-	      // the DWORD argument contains the DLL state and the NMT event
-                    
-	      errh_Error(" val = %X", pEventArg_p->m_InternalError.m_Arg.m_dwArg);
-                    
-	      break;
-	    }
-
-	  default:
-	    {
-	      break;
-	    }
-	  }
-	break;
-      }
-
-    case kEplApiEventHistoryEntry:
-      {   // new history entry
-			
-	errh_Info("%s(HistoryEntry): Type=0x%04X Code=0x%04X (0x%02X %02X %02X %02X %02X %02X %02X %02X)",
-		  __func__,
-		  pEventArg_p->m_ErrHistoryEntry.m_wEntryType,
-		  pEventArg_p->m_ErrHistoryEntry.m_wErrorCode,
-		  (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[0],
-		  (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[1],
-		  (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[2],
-		  (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[3],
-		  (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[4],
-		  (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[5],
-		  (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[6],
-		  (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[7]);
-            
-	break;
-      }
-        
-    case kEplApiEventNode:
-      {
-	switch (pEventArg_p->m_Node.m_NodeEvent)
-	  {
-	  case kEplNmtNodeEventCheckConf:
-	    {
-	      errh_Info("%s(Node=0x%X, CheckConf)", __func__, pEventArg_p->m_Node.m_uiNodeId);
-	      break;
-	    }
-
-	  case kEplNmtNodeEventUpdateConf:
-	    {
-	      errh_Info("%s(Node=0x%X, UpdateConf)", __func__, pEventArg_p->m_Node.m_uiNodeId);
-	      break;
-	    }
-
-	  case kEplNmtNodeEventFound:
-	    {
-                    
-	      break;
-	    }
-
-	  case kEplNmtNodeEventNmtState:
-	    {
-	      for ( rp = pUserArg_p->racklist; rp; rp = rp->next)
-		if(((pwr_sClass_Epl_CN *)rp->op)->NodeId == pEventArg_p->m_Node.m_uiNodeId) {
-		  ((pwr_sClass_Epl_CN *)rp->op)->NmtState = pEventArg_p->m_Node.m_NmtState;
-		  
-		}
-					
-	      switch (pEventArg_p->m_Node.m_NmtState)
-		{
-		case kEplNmtGsOff:
-		case kEplNmtGsInitialising:
-		case kEplNmtGsResetApplication:
-		case kEplNmtGsResetCommunication:
-		case kEplNmtGsResetConfiguration:
-		case kEplNmtCsNotActive:
-		  {
-                           
-		    break;
-		  }
-		case kEplNmtCsPreOperational1:
-		case kEplNmtCsPreOperational2:
-		case kEplNmtCsReadyToOperate:
-		  {
-                            
-		    break;
-		  }
-		case kEplNmtCsOperational:
-		  {
-                            
-		    break;
-		  }
-		case kEplNmtCsBasicEthernet:
-		case kEplNmtCsStopped:
-		default:
-		  {
-                            
-		    break;
-		  }
-		}
-	      break;
-	    }
-
-	  case kEplNmtNodeEventError:
-	    {
-                    
-	      errh_Error("AppCbEvent (Node=0x%X): Error = %s (0x%.4X)",
-			 pEventArg_p->m_Node.m_uiNodeId,
-			 EplGetEmergErrCodeStr(pEventArg_p->m_Node.m_wErrorCode),
-			 pEventArg_p->m_Node.m_wErrorCode);
-	      break;
-	    }
-
-	  default:
-	    {
-	      break;
-	    }
-	  }
-	break;
-      }
-
-    case kEplApiEventCfmProgress:
-      {
-	errh_Info("%s(Node=0x%X, CFM-Progress: Object 0x%X/%u,  %lu/%lu Bytes", __func__, pEventArg_p->m_CfmProgress.m_uiNodeId, pEventArg_p->m_CfmProgress.m_uiObjectIndex, pEventArg_p->m_CfmProgress.m_uiObjectSubIndex, (ULONG) pEventArg_p->m_CfmProgress.m_dwBytesDownloaded, (ULONG) pEventArg_p->m_CfmProgress.m_dwTotalNumberOfBytes);
-
-	if ((pEventArg_p->m_CfmProgress.m_dwSdoAbortCode != 0)
-	    || (pEventArg_p->m_CfmProgress.m_EplError != kEplSuccessful))
-	  {
-	    errh_Error(" -> SDO Abort=0x%lX, Error=0x%X)", (unsigned long) pEventArg_p->m_CfmProgress.m_dwSdoAbortCode,
-		       pEventArg_p->m_CfmProgress.m_EplError);
-	  }
-	else
-	  {
-
-	  }
-	break;
-      }
-
-    case kEplApiEventCfmResult:
-      {
-	switch (pEventArg_p->m_CfmResult.m_NodeCommand)
-	  {
-	  case kEplNmtNodeCommandConfOk:
-	    {
-	      errh_Info("%s(Node=0x%X, ConfOk)", __func__, pEventArg_p->m_CfmResult.m_uiNodeId);
-	      break;
-	    }
-
-	  case kEplNmtNodeCommandConfErr:
-	    {
-	      errh_Info("%s(Node=0x%X, ConfErr)", __func__, pEventArg_p->m_CfmResult.m_uiNodeId);
-	      break;
-	    }
-
-	  case kEplNmtNodeCommandConfReset:
-	    {
-	      errh_Info("%s(Node=0x%X, ConfReset)", __func__, pEventArg_p->m_CfmResult.m_uiNodeId);
-	      break;
-	    }
-
-	  case kEplNmtNodeCommandConfRestored:
-	    {
-	      errh_Info("%s(Node=0x%X, ConfRestored)", __func__, pEventArg_p->m_CfmResult.m_uiNodeId);
-	      break;
-	    }
-
-	  default:
-	    {
-	      errh_Info("%s(Node=0x%X, CfmResult=0x%X)", __func__, pEventArg_p->m_CfmResult.m_uiNodeId, pEventArg_p->m_CfmResult.m_NodeCommand);
-	      break;
-	    }
-	  }
-	break;
-      }
-
-    default:
       break;
     }
 
+    case kEplNmtGsResetCommunication: {
+      break;
+    }
+
+    case kEplNmtGsResetConfiguration: {
+      if (uiCycleLen_g != 0) {
+	EplRet = EplApiWriteLocalObject(0x1006, 0x00, &uiCycleLen_g, sizeof (uiCycleLen_g));
+	uiCurCycleLen_g = uiCycleLen_g;
+      }
+      else {
+	uiVarLen = sizeof(uiCurCycleLen_g);
+	EplApiReadLocalObject(0x1006, 0x00, &uiCurCycleLen_g, &uiVarLen);
+      }
+      break;
+    }
+    case kEplNmtCsPreOperational1:
+    case kEplNmtMsPreOperational1: {
+      errh_Info("AppCbEvent(0x%X) originating event = 0x%X (%s)", pEventArg_p->m_NmtStateChange.m_NewNmtState, pEventArg_p->m_NmtStateChange.m_NmtEvent, EplGetNmtEventStr(pEventArg_p->m_NmtStateChange.m_NmtEvent));
+      break;
+    }
+				
+    case kEplNmtCsPreOperational2:
+    case kEplNmtMsPreOperational2: {
+      break;
+    }
+    case kEplNmtCsReadyToOperate:
+    case kEplNmtMsReadyToOperate: {
+      break;
+    }
+    case kEplNmtGsInitialising: {
+      break;
+    }
+    case kEplNmtGsResetApplication: {
+      break;
+    }
+    case kEplNmtMsNotActive:
+    case kEplNmtCsNotActive: {
+      break;
+    }
+    case kEplNmtCsOperational:
+    case kEplNmtMsOperational: {
+      break;
+    }
+    case kEplNmtCsBasicEthernet:
+    case kEplNmtMsBasicEthernet: {
+      break;
+    }
+
+    default: {
+    }
+    }
+            
+
+    break;
+  }
+
+  case kEplApiEventCriticalError:
+  case kEplApiEventWarning: {   
+    // error or warning occurred within the stack or the application
+    // on error the API layer stops the NMT state machine
+			
+    errh_Error( "%s(Err/Warn): Source = %s (%02X) EplError = %s (0x%03X)",
+		__func__,
+		EplGetEventSourceStr(pEventArg_p->m_InternalError.m_EventSource),
+		pEventArg_p->m_InternalError.m_EventSource,
+		EplGetEplKernelStr(pEventArg_p->m_InternalError.m_EplError),
+		pEventArg_p->m_InternalError.m_EplError);
+            
+    // check additional argument
+    switch (pEventArg_p->m_InternalError.m_EventSource) {
+    case kEplEventSourceEventk:
+    case kEplEventSourceEventu: {   
+      // error occurred within event processing
+      // either in kernel or in user part
+                    
+      errh_Error(" OrgSource = %s %02X",  EplGetEventSourceStr(pEventArg_p->m_InternalError.m_Arg.m_EventSource),
+		 pEventArg_p->m_InternalError.m_Arg.m_EventSource);
+                    
+      break;
+    }
+
+    case kEplEventSourceDllk: {   
+      // error occurred within the data link layer (e.g. interrupt processing)
+      // the DWORD argument contains the DLL state and the NMT event
+                    
+      errh_Error(" val = %X", pEventArg_p->m_InternalError.m_Arg.m_dwArg);
+                    
+      break;
+    }
+
+    default: {
+      break;
+    }
+    }
+    break;
+  }
+
+  case kEplApiEventHistoryEntry: {   
+    // new history entry
+			
+    errh_Info("%s(HistoryEntry): Type=0x%04X Code=0x%04X (0x%02X %02X %02X %02X %02X %02X %02X %02X)",
+	      __func__,
+	      pEventArg_p->m_ErrHistoryEntry.m_wEntryType,
+	      pEventArg_p->m_ErrHistoryEntry.m_wErrorCode,
+	      (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[0],
+	      (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[1],
+	      (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[2],
+	      (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[3],
+	      (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[4],
+	      (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[5],
+	      (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[6],
+	      (WORD) pEventArg_p->m_ErrHistoryEntry.m_abAddInfo[7]);
+            
+    break;
+  }
+        
+  case kEplApiEventNode: {
+    switch (pEventArg_p->m_Node.m_NodeEvent) {
+    case kEplNmtNodeEventCheckConf: {
+      errh_Info("%s(Node=0x%X, CheckConf)", __func__, pEventArg_p->m_Node.m_uiNodeId);
+      break;
+    }
+
+    case kEplNmtNodeEventUpdateConf: {
+      errh_Info("%s(Node=0x%X, UpdateConf)", __func__, pEventArg_p->m_Node.m_uiNodeId);
+      break;
+    }
+
+    case kEplNmtNodeEventFound: {
+                    
+      break;
+    }
+
+    case kEplNmtNodeEventNmtState: {
+      for ( rp = pUserArg_p->racklist; rp; rp = rp->next)
+	if(((pwr_sClass_Epl_CN *)rp->op)->NodeId == pEventArg_p->m_Node.m_uiNodeId) {
+	  ((pwr_sClass_Epl_CN *)rp->op)->NmtState = pEventArg_p->m_Node.m_NmtState;
+		  
+	}
+					
+      switch (pEventArg_p->m_Node.m_NmtState) {
+      case kEplNmtGsOff:
+      case kEplNmtGsInitialising:
+      case kEplNmtGsResetApplication:
+      case kEplNmtGsResetCommunication:
+      case kEplNmtGsResetConfiguration:
+      case kEplNmtCsNotActive: {                           
+	break;
+      }
+      case kEplNmtCsPreOperational1:
+      case kEplNmtCsPreOperational2:
+      case kEplNmtCsReadyToOperate: {                            
+	break;
+      }
+      case kEplNmtCsOperational: {                            
+	break;
+      }
+      case kEplNmtCsBasicEthernet:
+      case kEplNmtCsStopped:
+      default: {                            
+	break;
+      }
+      }
+      break;
+    }
+
+    case kEplNmtNodeEventError: {
+                    
+      errh_Error("AppCbEvent (Node=0x%X): Error = %s (0x%.4X)",
+		 pEventArg_p->m_Node.m_uiNodeId,
+		 EplGetEmergErrCodeStr(pEventArg_p->m_Node.m_wErrorCode),
+		 pEventArg_p->m_Node.m_wErrorCode);
+      break;
+    }
+
+    default: {
+      break;
+    }
+    }
+    break;
+  }
+
+  case kEplApiEventCfmProgress: {
+    errh_Info("%s(Node=0x%X, CFM-Progress: Object 0x%X/%u,  %lu/%lu Bytes", __func__, pEventArg_p->m_CfmProgress.m_uiNodeId, pEventArg_p->m_CfmProgress.m_uiObjectIndex, pEventArg_p->m_CfmProgress.m_uiObjectSubIndex, (ULONG) pEventArg_p->m_CfmProgress.m_dwBytesDownloaded, (ULONG) pEventArg_p->m_CfmProgress.m_dwTotalNumberOfBytes);
+
+    if ((pEventArg_p->m_CfmProgress.m_dwSdoAbortCode != 0)
+	|| (pEventArg_p->m_CfmProgress.m_EplError != kEplSuccessful)) {
+      errh_Error(" -> SDO Abort=0x%lX, Error=0x%X)", (unsigned long) pEventArg_p->m_CfmProgress.m_dwSdoAbortCode,
+		 pEventArg_p->m_CfmProgress.m_EplError);
+    }
+    else {
+    }
+    break;
+  }
+
+  case kEplApiEventCfmResult: {
+    switch (pEventArg_p->m_CfmResult.m_NodeCommand) {
+    case kEplNmtNodeCommandConfOk: {
+      errh_Info("%s(Node=0x%X, ConfOk)", __func__, pEventArg_p->m_CfmResult.m_uiNodeId);
+      break;
+    }
+
+    case kEplNmtNodeCommandConfErr: {
+      errh_Info("%s(Node=0x%X, ConfErr)", __func__, pEventArg_p->m_CfmResult.m_uiNodeId);
+      break;
+    }
+
+    case kEplNmtNodeCommandConfReset: {
+      errh_Info("%s(Node=0x%X, ConfReset)", __func__, pEventArg_p->m_CfmResult.m_uiNodeId);
+      break;
+    }
+
+    case kEplNmtNodeCommandConfRestored: {
+      errh_Info("%s(Node=0x%X, ConfRestored)", __func__, pEventArg_p->m_CfmResult.m_uiNodeId);
+      break;
+    }
+
+    default: {
+      errh_Info("%s(Node=0x%X, CfmResult=0x%X)", __func__, pEventArg_p->m_CfmResult.m_uiNodeId, pEventArg_p->m_CfmResult.m_NodeCommand);
+      break;
+    }
+    }
+    break;
+  }
+
+  default:
+    break;
+  }
+
   return EplRet;
 }
+
 //---------------------------------------------------------------------------
 //
 // Function:    AppCbSync
@@ -783,10 +680,9 @@ tEplKernel PUBLIC AppCbSync(void)
   tEplKernel EplRet = kEplSuccessful;
   EplRet = EplApiProcessImageExchange(&AppProcessImageCopyJob_g);
     
-  if (EplRet != kEplSuccessful)
-    {
-      return EplRet;
-    }
+  if (EplRet != kEplSuccessful) {
+    return EplRet;
+  }
   return EplRet;
 }
 /*----------------------------------------------------------------------------*\
@@ -826,7 +722,7 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
   int ret = IO__SUCCESS;
   
   if(!ap->Local)
-	return ret;
+    return ret;
 	
   // Remeber the time when this functions was called the first time
   if( local->init == 0) {
@@ -837,22 +733,22 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
   // Time now (tps = time when bad state occurred)
   clock_gettime(CLOCK_REALTIME, &local->tpe);
   
-   error_count = op->ErrorCount;
+  error_count = op->ErrorCount;
   // Add to error count if agent changed from good to bad state and setup is complete
   if( local->prevState == pwr_eEplNmtState_EplNmtMsOperational && op->NmtState != pwr_eEplNmtState_EplNmtMsOperational && ( (local->tpe).tv_sec - (local->boot).tv_sec) >= op->StartupTimeout)
     op->ErrorCount++;
   
   // Copy Powerlink process image to temp memory (only if stallaction=resetinputs else tmp_area=input_area)
-  if( op->StallAction == pwr_eStallActionEnum_ResetInputs)
+  if( local->inputResetEnabled)
     memcpy( local->tmp_area , local->input_area, local->input_area_size);
 	
   // If no bad state and were still in startup there can be no error (else remember when error occurred)
   if( op->NmtState == pwr_eEplNmtState_EplNmtMsOperational || ( (local->tpe).tv_sec - (local->boot).tv_sec) < op->StartupTimeout) {
-      (local->tps).tv_sec = 0;
-      local->timeoutStatus = 0;
+    (local->tps).tv_sec = 0;
+    local->timeoutStatus = 0;
   }
   else if( (local->tps).tv_sec == 0) {
-      clock_gettime(CLOCK_REALTIME, &local->tps);
+    clock_gettime(CLOCK_REALTIME, &local->tps);
   }
 
   // Agent error soft limit reached, tell log (once)
@@ -873,8 +769,8 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
   // Agent timeout has elapsed, tell log (once)	
   if( ( (local->tpe).tv_sec - (local->tps).tv_sec) >= op->Timeout && local->timeoutStatus == 0 && (local->tps).tv_sec != 0) {
 	  
-	local->timeoutStatus = 1;
-	if( op->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
+    local->timeoutStatus = 1;
+    if( op->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
       errh_Error( "IO Agent timeout time elapsed '%s', IO stopped", ap->Name);
     }
     else if( op->StallAction == pwr_eStallActionEnum_ResetInputs) {
@@ -922,9 +818,9 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
     clock_gettime(CLOCK_REALTIME, &local1->tpe);
 		
     error_count = ((pwr_sClass_Epl_CN *)rp->op)->ErrorCount;
-	// Add to error count if slave changed from good to bad state and setup is complete
-	if( local1->prevState == pwr_eEplNmtState_EplNmtCsOperational && ((pwr_sClass_Epl_CN *)rp->op)->NmtState != pwr_eEplNmtState_EplNmtCsOperational && ( (local1->tpe).tv_sec - (local->boot).tv_sec) >= op->StartupTimeout)
-		((pwr_sClass_Epl_CN *)rp->op)->ErrorCount++;
+    // Add to error count if slave changed from good to bad state and setup is complete
+    if( local1->prevState == pwr_eEplNmtState_EplNmtCsOperational && ((pwr_sClass_Epl_CN *)rp->op)->NmtState != pwr_eEplNmtState_EplNmtCsOperational && ( (local1->tpe).tv_sec - (local->boot).tv_sec) >= op->StartupTimeout)
+      ((pwr_sClass_Epl_CN *)rp->op)->ErrorCount++;
 	  	
     // Save time when bad state occurs
     if( ( (pwr_sClass_Epl_CN *)rp->op)->NmtState == pwr_eEplNmtState_EplNmtCsOperational || ( (local1->tpe).tv_sec - (local->boot).tv_sec) < op->StartupTimeout) {
@@ -943,50 +839,50 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
     if ( ((pwr_sClass_Epl_CN *)rp->op)->ErrorCount >= ((pwr_sClass_Epl_CN *)rp->op)->ErrorHardLimit && error_count < ((pwr_sClass_Epl_CN *)rp->op)->ErrorHardLimit) {
 		
       if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
-				errh_Error( "IO Rack ErrorHardLimit reached '%s', IO stopped", rp->Name);
+	errh_Error( "IO Rack ErrorHardLimit reached '%s', IO stopped", rp->Name);
       }
       else
-				errh_Error( "IO Rack ErrorHardLimit reached '%s'", rp->Name);
+	errh_Error( "IO Rack ErrorHardLimit reached '%s'", rp->Name);
     }
     
     // Slave timeout has elapsed, tell log (once)	
     if( ( (local1->tpe).tv_sec - (local1->tps).tv_sec) >= ((pwr_sClass_Epl_CN *)rp->op)->Timeout && local1->timeoutStatus == 0 && (local1->tps).tv_sec != 0) {
-	  local1->timeoutStatus = 1;	
-	  if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
-	    errh_Error( "Rack timeout time elapsed '%s', IO stopped", rp->Name);
+      local1->timeoutStatus = 1;	
+      if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
+	errh_Error( "Rack timeout time elapsed '%s', IO stopped", rp->Name);
       }
       else if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_ResetInputs) {
-	    errh_Error( "Rack timeout time elapsed '%s', IO input area reset", rp->Name);
+	errh_Error( "Rack timeout time elapsed '%s', IO input area reset", rp->Name);
       }
       else
-	    errh_Error( "Rack timeout time elapsed '%s'", rp->Name);
+	errh_Error( "Rack timeout time elapsed '%s'", rp->Name);
     }
 		
     // Slave error hard limit reached, take action (always)
     if ( ((pwr_sClass_Epl_CN *)rp->op)->ErrorCount >= ((pwr_sClass_Epl_CN *)rp->op)->ErrorHardLimit) {
       if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
-	    ctx->Node->EmergBreakTrue = 1;
-	    errh_SetStatus(PWR__SRVFATAL);
-	    IoAgentClose(ctx, ap);
+	ctx->Node->EmergBreakTrue = 1;
+	errh_SetStatus(PWR__SRVFATAL);
+	IoAgentClose(ctx, ap);
       }
       ret = IO__ERRDEVICE;
     }
     
     // Slave timeout elapsed, take action (always)
     if( ( (local1->tpe).tv_sec - (local1->tps).tv_sec) >= ((pwr_sClass_Epl_CN *)rp->op)->Timeout && (local1->tps).tv_sec != 0) {
-			if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
-				ctx->Node->EmergBreakTrue = 1;
-				errh_SetStatus(PWR__SRVFATAL);
-				IoAgentClose(ctx, ap);
+      if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
+	ctx->Node->EmergBreakTrue = 1;
+	errh_SetStatus(PWR__SRVFATAL);
+	IoAgentClose(ctx, ap);
       }
       else if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_ResetInputs) {
-				memset( local->tmp_area + ((pwr_sClass_Epl_CN *)rp->op)->InputAreaOffset, 0, ((pwr_sClass_Epl_CN *)rp->op)->InputAreaSize);
+	memset( local->tmp_area + ((pwr_sClass_Epl_CN *)rp->op)->InputAreaOffset, 0, ((pwr_sClass_Epl_CN *)rp->op)->InputAreaSize);
       }
       ret = IO__ERRDEVICE;
     }
 	
-	// Remeber slave state til next scan	
-	local1->prevState = ((pwr_sClass_Epl_CN *)rp->op)->NmtState;
+    // Remeber slave state til next scan	
+    local1->prevState = ((pwr_sClass_Epl_CN *)rp->op)->NmtState;
 		
     // Update Proview chan-objects with data from Powerlink process image
     for ( cp = rp->cardlist; cp; cp = cp->next) {
@@ -1006,7 +902,7 @@ static pwr_tStatus IoAgentWrite( io_tCtx ctx, io_sAgent *ap) {
   io_sCard *cp;
   
   if(!ap->Local)
-	return IO__SUCCESS;
+    return IO__SUCCESS;
     
   for ( rp = ap->racklist; rp; rp = rp->next) {
     for ( cp = rp->cardlist; cp; cp = cp->next) {

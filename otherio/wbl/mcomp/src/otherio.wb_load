@@ -1,6 +1,6 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X585"
+    Attr NextOix = "_X609"
     Attr NextCix = "_X45"
     Attr NextTix[0] = "_X17"
   EndBody
@@ -8796,8 +8796,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
       EndObject
       Object Template Epl_CN 2157936640 01-JAN-1970 01:00:00.00
-        Body RtBody 04-JUL-2013 08:54:39.24
+        Body RtBody 25-JUL-2013 15:23:16.85
           Attr Process = 128
+          Attr Timeout = 2
           Attr ErrorSoftLimit = 25
           Attr ErrorHardLimit = 50
         EndBody
@@ -8866,7 +8867,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object RtBody $ObjBodyDef 1 01-JUL-2013 17:26:15.35
         Body SysBody 04-JUL-2013 08:13:20.05
           Attr StructName = "Epl_MN"
-          Attr NextAix = "_X51"
+          Attr NextAix = "_X52"
         EndBody
         !/**
         ! Used to add a short description of the master
@@ -8874,6 +8875,13 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Description $Attribute 31 01-JUL-2013 17:26:15.35
           Body SysBody 01-JUL-2013 17:26:15.35
             Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Specification $Attribute 51 18-JUL-2013 10:41:25.41
+          Body SysBody 18-JUL-2013 10:41:25.41
+            Attr PgmName = "Specification"
             Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
@@ -9144,12 +9152,14 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
       EndObject
       Object Template Epl_MN 2158198784 01-JAN-1970 01:00:00.00
-        Body RtBody 05-JUL-2013 12:22:16.05
+        Body RtBody 25-JUL-2013 15:23:45.03
           Attr CDCfile = "$pwrp_exe/mnobd.cdc"
           Attr Device = "eth0"
           Attr NodeId = 240
           Attr Process = 128
           Attr Priority = 20
+          Attr StartupTimeout = 30
+          Attr Timeout = 2
           Attr ErrorSoftLimit = 25
           Attr ErrorHardLimit = 50
         EndBody
@@ -9298,6 +9308,94 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ConfiguratorPosnn $Menu 586 17-JUL-2013 16:46:27.38
+        Object Pointed $Menu 587 17-JUL-2013 16:46:27.38
+          Object GenerateXddFile $MenuButton 588 17-JUL-2013 16:46:44.93
+            Body SysBody 17-JUL-2013 16:47:07.86
+              Attr ButtonName = "GenerateXddFile"
+              Attr MethodName = "Epl_CNServer-GenerateXddFile"
+              Attr FilterName = "Epl_CNServer-GenerateXddFileFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoscn $Menu 589 17-JUL-2013 16:46:27.38
+        Object Pointed $Menu 590 17-JUL-2013 16:46:27.38
+          Object GenerateXddFile $MenuButton 591 17-JUL-2013 16:47:26.79
+            Body SysBody 17-JUL-2013 16:47:34.61
+              Attr ButtonName = "GenerateXddFile"
+              Attr MethodName = "Epl_CNServer-GenerateXddFile"
+              Attr FilterName = "Epl_CNServer-GenerateXddFileFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 592 17-JUL-2013 16:46:27.38
+        Object Pointed $Menu 593 17-JUL-2013 16:46:27.38
+          Object GenerateXddFile $MenuButton 594 17-JUL-2013 16:47:43.47
+            Body SysBody 17-JUL-2013 16:48:02.26
+              Attr ButtonName = "GenerateXddFile"
+              Attr MethodName = "Epl_CNServer-GenerateXddFile"
+              Attr FilterName = "Epl_CNServer-GenerateXddFileFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 595 17-JUL-2013 16:46:27.38
+        Object Pointed $Menu 596 17-JUL-2013 16:46:27.38
+          Object GenerateXddFile $MenuButton 597 17-JUL-2013 16:48:17.47
+            Body SysBody 17-JUL-2013 16:48:29.42
+              Attr ButtonName = "GenerateXddFile"
+              Attr MethodName = "Epl_CNServer-GenerateXddFile"
+              Attr FilterName = "Epl_CNServer-GenerateXddFileFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPosnn $Menu 598 17-JUL-2013 16:46:27.38
+        Object Pointed $Menu 599 17-JUL-2013 16:46:27.38
+          Object GenerateXddFile $MenuButton 600 17-JUL-2013 16:48:39.94
+            Body SysBody 17-JUL-2013 16:48:45.35
+              Attr ButtonName = "GenerateXddFile"
+              Attr MethodName = "Epl_CNServer-GenerateXddFile"
+              Attr FilterName = "Epl_CNServer-GenerateXddFileFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPoscn $Menu 601 17-JUL-2013 16:46:27.38
+        Object Pointed $Menu 602 17-JUL-2013 16:46:27.38
+          Object GenerateXddFile $MenuButton 603 17-JUL-2013 16:48:59.97
+            Body SysBody 17-JUL-2013 16:49:09.08
+              Attr ButtonName = "GenerateXddFile"
+              Attr MethodName = "Epl_CNServer-GenerateXddFile"
+              Attr FilterName = "Epl_CNServer-GenerateXddFileFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPosos $Menu 604 17-JUL-2013 16:46:27.38
+        Object Pointed $Menu 605 17-JUL-2013 16:46:27.38
+          Object GenerateXddFile $MenuButton 606 17-JUL-2013 16:49:15.98
+            Body SysBody 17-JUL-2013 16:49:24.44
+              Attr ButtonName = "GenerateXddFile"
+              Attr MethodName = "Epl_CNServer-GenerateXddFile"
+              Attr FilterName = "Epl_CNServer-GenerateXddFileFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPoson $Menu 607 17-JUL-2013 16:46:27.38
+        Object Pointed $Menu 608 17-JUL-2013 16:46:27.38
+          Object GenerateXddFile $MenuButton 609 17-JUL-2013 16:49:30.45
+            Body SysBody 17-JUL-2013 16:49:37.26
+              Attr ButtonName = "GenerateXddFile"
+              Attr MethodName = "Epl_CNServer-GenerateXddFile"
+              Attr FilterName = "Epl_CNServer-GenerateXddFileFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
       Object IoMethods $RtMethod 574 08-JUL-2013 10:17:49.38
         Object IoRackInit $Method 575 08-JUL-2013 15:30:22.45
           Body SysBody 08-JUL-2013 15:29:51.66
@@ -9321,10 +9419,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
       EndObject
       Object Template Epl_CNServer 2158985216 01-JAN-1970 01:00:00.00
-        Body RtBody 08-JUL-2013 10:37:34.48
+        Body RtBody 25-JUL-2013 15:24:48.33
           Attr Device = "eth0"
           Attr Process = 128
           Attr Priority = 20
+          Attr StartupTimeout = 30
+          Attr Timeout = 2
           Attr ErrorSoftLimit = 25
           Attr ErrorHardLimit = 50
         EndBody

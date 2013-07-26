@@ -51,6 +51,10 @@ spi_readerror	<SPI read error>					/error
 spi_writeerror	<SPI write error>					/error
 epl_oper 	<EPL Operational>					/succ
 epl_nooper 	<EPL Not in operational state>				/error
+epl_off 	<EPL Off>						/error
+epl_basicethernet <EPL Basic ethernet state>				/error
+epl_preoper1 	<EPL Pre operational 1>					/error
+epl_preoper2 	<EPL Pre operational 2>					/error
 .end
 
 

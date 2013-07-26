@@ -61,7 +61,7 @@ static pwr_tStatus Configure (
   ldh_sMenuCall *ip
 )
 {
-  pwr_tCmd cmd = "export HOME=$pwrp_login;openCONFIGURATOR";
+  pwr_tCmd cmd = "open_powerlink_configurator.sh &";
 
   system( cmd);
 
