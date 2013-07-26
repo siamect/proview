@@ -189,6 +189,7 @@ static void xnav_open_shist_cb( void *ctx, char *text);
 static void xnav_open_shist_cancel_cb( void *ctx);
 static void xnav_show_objectlist_cb( void *ctx, char *text);
 static void xnav_show_objectlist_cancel_cb( void *ctx);
+static int xnav_replace_node_str( char *out, char *object_str);
 
 static int	xnav_help_func(		void		*client_data,
 					void		*client_flag);
@@ -836,11 +837,11 @@ static int	xnav_set_func(	void		*client_data,
     // Command is "SET SUBWINDOW"
     XttGe *gectx;
     XttMultiView *mvctx;
-    char graph_str[80];
+    pwr_tOName graph_str;
     char name_str[80];
     pwr_tOName object_str;
     char *object_p;
-    char source_str[80];
+    pwr_tOName source_str;
 
     if ( EVEN( dcli_get_qualifier( "dcli_arg2", graph_str, sizeof(graph_str)))) {
       xnav->message('E', "Graph name is missing");
@@ -862,12 +863,17 @@ static int	xnav_set_func(	void		*client_data,
     else
       object_p = 0;
 
+    if ( object_p)
+      xnav_replace_node_str( object_p, object_p);
+
     if ( xnav->appl.find_graph( graph_str, 0, (void **) &gectx)) {
       return gectx->set_subwindow_source( name_str, source_str, object_p);
     }
     else {
       pwr_tStatus sts;
       pwr_tAttrRef aref;
+
+      xnav_replace_node_str( graph_str, graph_str);
 
       sts = gdh_NameToAttrref( pwr_cNObjid, graph_str, &aref);
       if ( ODD(sts) && xnav->appl.find( applist_eType_MultiView, &aref, (void **) &mvctx)) {
@@ -884,7 +890,7 @@ static int	xnav_set_func(	void		*client_data,
     // Command is "SET NEXTSUBWINDOW"
     XttGe *gectx;
     XttMultiView *mvctx;
-    char graph_str[80];
+    pwr_tOName graph_str;
     char name_str[80];
 
     if ( EVEN( dcli_get_qualifier( "dcli_arg2", graph_str, sizeof(graph_str)))) {
@@ -903,6 +909,8 @@ static int	xnav_set_func(	void		*client_data,
     else {
       pwr_tStatus sts;
       pwr_tAttrRef aref;
+
+      xnav_replace_node_str( graph_str, graph_str);
 
       sts = gdh_NameToAttrref( pwr_cNObjid, graph_str, &aref);
       if ( ODD(sts) && xnav->appl.find( applist_eType_MultiView, &aref, (void **) &mvctx)) {
@@ -919,7 +927,7 @@ static int	xnav_set_func(	void		*client_data,
     // Command is "SET PREVSUBWINDOW"
     XttGe *gectx;
     XttMultiView *mvctx;
-    char graph_str[80];
+    pwr_tOName graph_str;
     char name_str[80];
 
     if ( EVEN( dcli_get_qualifier( "dcli_arg2", graph_str, sizeof(graph_str)))) {
@@ -938,6 +946,8 @@ static int	xnav_set_func(	void		*client_data,
     else {
       pwr_tStatus sts;
       pwr_tAttrRef aref;
+
+      xnav_replace_node_str( graph_str, graph_str);
 
       sts = gdh_NameToAttrref( pwr_cNObjid, graph_str, &aref);
       if ( ODD(sts) && xnav->appl.find( applist_eType_MultiView, &aref, (void **) &mvctx)) {
@@ -2851,7 +2861,6 @@ static int	xnav_open_func(	void		*client_data,
     
     if ( ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
       pwr_tObjid objid;
-      pwr_tObjid node_objid;
       pwr_tAName xttgraph_name;
       int 	sts;
       char focus_str[80];
@@ -2863,21 +2872,8 @@ static int	xnav_open_func(	void		*client_data,
       int nr;
 
       IF_NOGDH_RETURN;
-      if ( strncmp( object_str, "*-", 2) == 0 || 
-	   cdh_NoCaseStrncmp( object_str, "$node-", 6) == 0) {
-        // Replace * by the node object
-        sts = gdh_GetNodeObject( 0, &node_objid);
-        if ( EVEN(sts)) return sts;
-        sts = gdh_ObjidToName( node_objid, xttgraph_name, sizeof(xttgraph_name), 
-			cdh_mNName);
-        if ( EVEN(sts)) return sts;
-	if ( object_str[0] == '*')
-	  strcat( xttgraph_name, &object_str[1]);
-	else
-	  strcat( xttgraph_name, &object_str[5]);	  
-      }
-      else
-        strcpy( xttgraph_name, object_str);
+
+      xnav_replace_node_str( xttgraph_name, object_str);
         
       sts = gdh_NameToObjid( xttgraph_name, &objid);
       if (EVEN(sts)) {
@@ -3071,7 +3067,7 @@ static int	xnav_open_func(	void		*client_data,
     int x, y;
     unsigned int options = 0;
     pwr_tAttrRef aref = pwr_cNAttrRef;
-    char name_str[80];
+    pwr_tOName name_str;
     char *name_ptr = 0;
     int nr;
     pwr_tStatus sts;
@@ -3101,6 +3097,8 @@ static int	xnav_open_func(	void		*client_data,
         name_ptr = name_str;
       }
     }
+
+    xnav_replace_node_str( name_ptr, name_ptr);
 
     sts = gdh_NameToAttrref( pwr_cNObjid, name_ptr, &aref);
     if ( EVEN(sts)) {
@@ -4222,7 +4220,6 @@ static int	xnav_close_func(	void		*client_data,
     if ( ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str))))
     {
       pwr_tObjid objid;
-      pwr_tObjid node_objid;
       pwr_tAName xttgraph_name;
       int 	sts;
       pwr_sClass_XttGraph *xttgraph_p;
@@ -4230,18 +4227,8 @@ static int	xnav_close_func(	void		*client_data,
       char	*s;
 
       IF_NOGDH_RETURN;
-      if ( strncmp( object_str, "*-", 2) == 0)
-      {
-        // Replace * by the node object
-        sts = gdh_GetNodeObject( 0, &node_objid);
-        if ( EVEN(sts)) return sts;
-        sts = gdh_ObjidToName( node_objid, xttgraph_name, sizeof(xttgraph_name), 
-			cdh_mNName);
-        if ( EVEN(sts)) return sts;
-        strcat( xttgraph_name, &object_str[1]);
-      }
-      else
-        strcpy( xttgraph_name, object_str);
+
+      xnav_replace_node_str( xttgraph_name, object_str);
         
       sts = gdh_NameToObjid( xttgraph_name, &objid);
       if (EVEN(sts))
@@ -4338,6 +4325,9 @@ static int	xnav_close_func(	void		*client_data,
         return XNAV__SUCCESS;
       }
     }
+
+    xnav_replace_node_str( name_ptr, name_ptr);
+
 
     sts = gdh_NameToAttrref( pwr_cNObjid, name_ptr, &aref);
     if (EVEN(sts)) {
@@ -8635,3 +8625,31 @@ int XNav::collect_window( int copy, int type)
   return XNAV__SUCCESS;
 }
 
+static int xnav_replace_node_str( char *out, char *object_str) 
+{
+
+  if ( strncmp( object_str, "*-", 2) == 0 || 
+       cdh_NoCaseStrncmp( object_str, "$node-", 6) == 0) {
+    // Replace * by the node object
+    pwr_tObjid node_objid;
+    pwr_tAName str;
+    pwr_tStatus sts;
+
+    sts = gdh_GetNodeObject( 0, &node_objid);
+    if ( EVEN(sts)) return sts;
+    sts = gdh_ObjidToName( node_objid, str, sizeof(str), 
+			   cdh_mNName);
+    if ( EVEN(sts)) return sts;
+    if ( object_str[0] == '*')
+      strcat( str, &object_str[1]);
+    else
+      strcat( str, &object_str[5]);	  
+
+    strcpy( out, str);
+    return 1;
+  }
+
+  if ( out != object_str)
+    strcpy( out, object_str);
+  return 0;
+}
