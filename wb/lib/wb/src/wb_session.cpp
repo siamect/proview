@@ -923,6 +923,23 @@ void wb_session::getAllMenuItems( ldh_sMenuCall	*ip, ldh_sMenuItem **Item, wb_cd
   } 
   else if ( o->cid() == pwr_eClass_MenuButton) {
     mbp = (pwr_sMenuButton *)o_body;
+
+    if ( Level == 1) {
+      // Check if method is overridden, ie name already exist      
+      for ( int i = 0; i < *nItems; i++) {
+	if ( ldh_lMenuItem[i].Level == Level && 
+	     strcmp( ldh_lMenuItem[i].Name, mbp->ButtonName) == 0) {
+	  ldh_lMenuItem[i].Disabled = 1;	  
+	  for ( int j = i + 1; j < *nItems; j++) {
+	    if ( ldh_lMenuItem[j].Level > ldh_lMenuItem[i].Level)
+	      ldh_lMenuItem[j].Disabled = 1;
+	    else if ( ldh_lMenuItem[j].Level == ldh_lMenuItem[i].Level)
+	      break;
+	  }
+	}
+      }
+    }
+
     (*Item)->Level = Level;
     (*Item)->Item = ldh_eMenuItem_Button;
     (*Item)->MenuObject = o->oid();
@@ -952,6 +969,23 @@ void wb_session::getAllMenuItems( ldh_sMenuCall	*ip, ldh_sMenuItem **Item, wb_cd
     (*nItems)++;
   } else if (o->cid() == pwr_eClass_MenuCascade) {
     mcp = (pwr_sMenuCascade *)o_body;
+
+    if ( Level == 1) {
+      // Check if method is overridden, ie name already exist      
+      for ( int i = 0; i < *nItems; i++) {
+	if ( ldh_lMenuItem[i].Level == Level && 
+	     strcmp( ldh_lMenuItem[i].Name, mcp->ButtonName) == 0) {
+	  ldh_lMenuItem[i].Disabled = 1;
+	  for ( int j = i + 1; j < *nItems; j++) {
+	    if ( ldh_lMenuItem[j].Level > ldh_lMenuItem[i].Level)
+	      ldh_lMenuItem[j].Disabled = 1;
+	    else if ( ldh_lMenuItem[j].Level == ldh_lMenuItem[i].Level)
+	      break;
+	  }
+	}
+      }
+    }
+
     (*Item)->Level = Level;
     (*Item)->Item = ldh_eMenuItem_Cascade;
     (*Item)->Flags.f.Sensitive = 1;

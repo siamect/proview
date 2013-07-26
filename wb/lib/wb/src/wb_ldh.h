@@ -349,6 +349,7 @@ struct ldh_s_MenuItem {
   ldh_mMenuFlags	Flags;
   pwr_tStatus		(*Method)();
   pwr_tObjid		MenuObject;
+  int			Disabled;
 };
 
 #ifdef __cplusplus

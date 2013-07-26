@@ -3227,6 +3227,9 @@ GtkWidget *WttGtk::build_submenu( GtkWidget *Parent, int MenuType,
 
 
   for (; Items[*idx].Level != 0 && Items[*idx].Level >= Level; (*idx)++) {
+    if ( Items[*idx].Disabled)
+      continue;
+
     if (Items[*idx].Item == ldh_eMenuItem_Cascade) {
       if (MenuType == MENU_OPTION)  {
         printf("You can't have submenus from option menu items.");

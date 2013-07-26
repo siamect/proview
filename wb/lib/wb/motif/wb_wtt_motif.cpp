@@ -2452,6 +2452,9 @@ Widget WttMotif::build_submenu( Widget Parent, int MenuType,
   Level = Items[*idx].Level;
 
   for (; Items[*idx].Level != 0 && Items[*idx].Level >= Level; (*idx)++) {
+    if ( Items[*idx].Disabled)
+      continue;
+
     if (Items[*idx].Item == ldh_eMenuItem_Cascade) {
       if (MenuType == MENU_OPTION)  {
         XtWarning("You can't have submenus from option menu items.");
