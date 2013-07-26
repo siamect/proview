@@ -79,13 +79,14 @@ void WGe::graph_init_cb( void *client_data)
 
 }
 
-void WGe::graph_close_cb( void *client_data)
+int WGe::graph_close_cb( void *client_data)
 {
   WGe *ge = (WGe *) client_data;
   if ( ge->modal)
     ge->terminated = 1;
   else
     delete ge;
+  return 1;
 }
 
 int WGe::wge_command_cb( void *ge_ctx, char *command)
