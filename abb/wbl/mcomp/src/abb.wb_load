@@ -1,6 +1,6 @@
 Volume ABB $ClassVolume 0.0.250.2 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X5199"
+    Attr NextOix = "_X5206"
     Attr NextCix = "_X63"
     Attr NextTix[0] = "_X6"
   EndBody
@@ -51603,7 +51603,7 @@ if (I1 >= 0 && I1 <= 9) {
         EndObject
       EndObject
       Object Template ABB_ACS880_PPO7_IoModule 2158723072 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 18-JUL-2013 14:26:17.76
           Attr I_ID.Description = "Parameter identification"
           Attr I_ID.ConversionOn = 1
           Attr I_ID.Representation = 2
@@ -51653,8 +51653,8 @@ if (I1 >= 0 && I1 <= 9) {
           Attr I_PZD5.SensorPolyType = 1
           Attr I_PZD5.SensorSigValRangeLow = -3.276800e+04
           Attr I_PZD5.SensorSigValRangeHigh = 3.276700e+04
-          Attr I_PZD5.ActValRangeLow = -3.276700e+02
-          Attr I_PZD5.ActValRangeHigh = 3.276700e+02
+          Attr I_PZD5.ActValRangeLow = -3.276800e+02
+          Attr I_PZD5.ActValRangeHigh = 3.276800e+02
           Attr I_PZD5.Representation = 2
           Attr I_PZD6.Description = "Status word or 16 bits from converter"
           Attr I_PZD6.Identity = "5112"
@@ -51780,7 +51780,7 @@ if (I1 >= 0 && I1 <= 9) {
         EndObject
       EndObject
       Object Template ABB_ACS880_PPO7 2158985216 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 18-JUL-2013 14:25:03.86
           Attr Super.Specification = "ABB ACS880, PPO message type 7"
           Attr Super.Process = 1
           Attr Super.DataSheet = "$pwr_lang/dsh/abb_acs880.html"
@@ -52865,21 +52865,21 @@ if (I1 >= 0 && I1 <= 9) {
       Object Code PlcTemplate 4164 24-JUN-2013 10:53:43.33
         Body RtBody 24-JUN-2013 10:53:43.33
         EndBody
-        Body DevBody 08-JUL-2013 09:17:54.65
+        Body DevBody 19-JUL-2013 14:54:24.70
           Buffer PlcProgram
             Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
             Attr defnamecount[2] = 6
             Attr defnamecount[11] = 109
             Attr defnamecount[72] = 1
-            Attr defnamecount[90] = 18
+            Attr defnamecount[90] = 19
             Attr defnamecount[91] = 6
             Attr defnamecount[97] = 2
             Attr defnamecount[98] = 4
             Attr defnamecount[99] = 7
             Attr defnamecount[102] = 1
             Attr defnamecount[136] = 1
-            Attr defnamecount[137] = 24
+            Attr defnamecount[137] = 25
             Attr defnamecount[138] = 2
             Attr defnamecount[139] = 16
             Attr defnamecount[140] = 9
@@ -52889,7 +52889,7 @@ if (I1 >= 0 && I1 <= 9) {
             Attr defnamecount[252] = 6
             Attr defnamecount[253] = 2
             Attr defnamecount[255] = 42
-            Attr defnamecount[256] = 40
+            Attr defnamecount[256] = 41
             Attr defnamecount[258] = 4
             Attr defnamecount[259] = 1
             Attr defnamecount[263] = 6
@@ -52898,15 +52898,15 @@ if (I1 >= 0 && I1 <= 9) {
             Attr defnamecount[266] = 2
             Attr defnamecount[267] = 1
             Attr defnamecount[271] = 5
-            Attr connamecount = 330
+            Attr connamecount = 334
           EndBuffer
         EndBody
         Object W WindowPlc 4165 24-JUN-2013 10:53:43.33
-          Body RtBody 08-JUL-2013 09:17:54.65
-            Attr Version = 1373267874
+          Body RtBody 19-JUL-2013 14:54:24.70
+            Attr Version = 1374238464
           EndBody
-          Body DevBody 08-JUL-2013 09:17:54.65
-            Attr Modified = "08-JUL-2013 09:17:54.65"
+          Body DevBody 19-JUL-2013 14:54:24.70
+            Attr Modified = "19-JUL-2013 14:54:24.70"
             Buffer PlcWindow
               Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -52916,6 +52916,144 @@ if (I1 >= 0 && I1 <= 9) {
               Attr refconcount = 1
             EndBuffer
           EndBody
+          Object cn333 ConDigital 5206 19-JUL-2013 14:53:00.03
+            Body DevBody 19-JUL-2013 14:54:24.70
+              Buffer PlcConnection
+                Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn333"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-And18"
+                Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetDp40"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.083111e+00
+                  Attr y = 9.350000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.720000e+00
+                  Attr y = 9.350000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.611167e+00
+                  Attr y = 9.350000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.083111e+00
+                  Attr y = 9.350000e+00
+                EndBuffer
+                Buffer point[4]
+                  Attr x = 1.176556e+00
+                  Attr y = 9.350000e+00
+                EndBuffer
+                Buffer point[5]
+                  Attr x = 1.083111e+00
+                  Attr y = 9.350000e+00
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn331 ConDigital 5202 19-JUL-2013 14:52:28.11
+            Body DevBody 19-JUL-2013 14:54:24.70
+              Buffer PlcConnection
+                Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn331"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-UserSW1_3"
+                Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-And18"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.553556e+00
+                  Attr y = 9.250000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.670611e+00
+                  Attr y = 9.250000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.670611e+00
+                  Attr y = 9.300000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.720000e+00
+                  Attr y = 9.300000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn330 ConDigital 5201 19-JUL-2013 14:52:21.21
+            Body DevBody 19-JUL-2013 14:54:24.70
+              Buffer PlcConnection
+                Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn330"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-And18"
+                Attr dest_point = 1
+                Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-Running"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.902889e+00
+                  Attr y = 9.300000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.311125e+00
+                  Attr y = 9.300000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.311125e+00
+                  Attr y = 8.750000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.320000e+00
+                  Attr y = 8.750000e+00
+                EndBuffer
+                Buffer point[4]
+                  Attr x = 2.311125e+00
+                  Attr y = 8.750000e+00
+                EndBuffer
+                Buffer point[5]
+                  Attr x = 2.320000e+00
+                  Attr y = 8.750000e+00
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn329 ConDigital 5139 08-JUL-2013 09:13:05.67
             Body DevBody 08-JUL-2013 09:17:54.65
               Buffer PlcConnection
@@ -53668,58 +53806,6 @@ if (I1 >= 0 && I1 <= 9) {
                 Buffer point[6]
                 EndBuffer
                 Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn286 ConDigital 4183 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.35
-              Buffer PlcConnection
-                Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-cn286"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 2
-                Attr source_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-UserSW1_3"
-                Attr dest_point = 1
-                Attr dest_oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-Running"
-                Attr point_count = 4
-                Buffer point[0]
-                  Attr x = 1.540222e+00
-                  Attr y = 9.250000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 2.288611e+00
-                  Attr y = 9.250000e+00
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 2.288611e+00
-                  Attr y = 8.750000e+00
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 2.320000e+00
-                  Attr y = 8.750000e+00
-                EndBuffer
-                Buffer point[4]
-                  Attr x = 1.598472e+00
-                  Attr y = 8.775000e+00
-                EndBuffer
-                Buffer point[5]
-                  Attr x = 2.105444e+00
-                  Attr y = 8.775000e+00
-                EndBuffer
-                Buffer point[6]
-                  Attr x = 2.105444e+00
-                  Attr y = 8.700000e+00
-                EndBuffer
-                Buffer point[7]
-                  Attr x = 2.170000e+00
-                  Attr y = 8.700000e+00
                 EndBuffer
                 Buffer point[8]
                 EndBuffer
@@ -58838,14 +58924,14 @@ SW bit:
             EndBody
           EndObject
           Object BodyText25 BodyText 4327 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.34
+            Body DevBody 19-JUL-2013 14:53:53.33
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-BodyText25"
-                Attr x = 9.000000e-01
-                Attr y = -8.019000e+00
-                Attr width = 3.791111e-01
+                Attr x = 7.500000e-01
+                Attr y = -7.969000e+00
+                Attr width = 4.191111e-01
                 Attr heigth = 2.440000e-01
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
               EndBuffer
@@ -60940,14 +61026,14 @@ showed in text format in picture objectgraph."
             EndBody
           EndObject
           Object BodyText85 BodyText 4442 24-JUN-2013 10:53:43.33
-            Body DevBody 24-JUN-2013 10:53:43.35
+            Body DevBody 19-JUL-2013 14:53:53.33
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-BodyText85"
-                Attr x = 1.550000e+00
-                Attr y = -8.369000e+00
-                Attr width = 4.102222e-01
+                Attr x = 7.500000e-01
+                Attr y = -8.119000e+00
+                Attr width = 4.457778e-01
                 Attr heigth = 9.400000e-02
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
               EndBuffer
@@ -60959,14 +61045,14 @@ showed in text format in picture objectgraph."
           Object UserSW1_3 MaskToD 4443 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.35
+            Body DevBody 19-JUL-2013 14:53:53.33
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-MaskToD"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-UserSW1_3"
                 Attr x = 1.250000e+00
                 Attr y = -8.325000e+00
-                Attr width = 2.702222e-01
+                Attr width = 2.835556e-01
                 Attr heigth = 2.000000e-01
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
                 Attr mask[0] = 1
@@ -61031,19 +61117,18 @@ showed in text format in picture objectgraph."
           Object Running Or 4447 24-JUN-2013 10:53:43.33
             Body RtBody 24-JUN-2013 10:53:43.33
             EndBody
-            Body DevBody 24-JUN-2013 10:53:43.35
+            Body DevBody 19-JUL-2013 14:53:53.33
               Buffer PlcNode
                 Attr object_type = 91
                 Attr cid = "pwrb:Class-Or"
                 Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-Running"
                 Attr x = 2.300000e+00
                 Attr y = -7.775000e+00
-                Attr width = 1.940000e-01
+                Attr width = 2.051111e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
-                Attr mask[2] = 2
               EndBuffer
             EndBody
           EndObject
@@ -61626,6 +61711,43 @@ to enable SW bit0 to be true, i.e. CW bit0 is edge sensitive in some cases."
 ABB ACS880 Type 1 version 1
 Speedcontrol, ABB drives comm. profile,
 Profibus communication."
+            EndBody
+          EndObject
+          Object And18 And 5200 19-JUL-2013 14:52:10.91
+            Body RtBody 19-JUL-2013 14:52:10.91
+            EndBody
+            Body DevBody 19-JUL-2013 14:54:24.70
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-And18"
+                Attr x = 1.700000e+00
+                Attr y = -8.375000e+00
+                Attr width = 1.828889e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp40 GetDp 5205 19-JUL-2013 14:53:00.03
+            Body RtBody 19-JUL-2013 14:53:00.03
+            EndBody
+            Body DevBody 19-JUL-2013 14:53:53.33
+              Attr DpObject = "$PlcMain:ABB-Class-ABB_ACS880_1.CommOk"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "ABB:Class-ABB_ACS880_1Fo-Code-W-GetDp40"
+                Attr x = 7.000000e-01
+                Attr y = -8.375000e+00
+                Attr width = 3.831111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "ABB:Class-ABB_ACS880_1Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
             EndBody
           EndObject
         EndObject
@@ -77599,41 +77721,41 @@ ABB ACS880 Aggregate
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
         EndObject
-        Object I_PZD3_4 $Attribute 149 09-JUL-2013 09:32:58.52
-          Body SysBody 09-JUL-2013 09:32:58.52
-            Attr PgmName = "I_PZD3_4"
+        Object I_CURR_0107 $Attribute 149 18-JUL-2013 11:22:59.64
+          Body SysBody 18-JUL-2013 11:23:11.66
+            Attr PgmName = "I_CURR_0107"
             Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
         EndObject
-        Object I_PZD5 $Attribute 150 09-JUL-2013 09:32:58.52
-          Body SysBody 09-JUL-2013 09:32:58.52
-            Attr PgmName = "I_PZD5"
+        Object I_TORQ_0110 $Attribute 150 18-JUL-2013 11:23:40.17
+          Body SysBody 18-JUL-2013 11:23:45.62
+            Attr PgmName = "I_TORQ_0110"
             Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
         EndObject
-        Object I_PZD6 $Attribute 151 09-JUL-2013 09:32:58.52
-          Body SysBody 09-JUL-2013 09:32:58.52
-            Attr PgmName = "I_PZD6"
+        Object I_USW1_0650 $Attribute 151 18-JUL-2013 11:24:09.15
+          Body SysBody 18-JUL-2013 11:24:14.79
+            Attr PgmName = "I_USW1_0650"
             Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        Object I_PZD7 $Attribute 152 09-JUL-2013 09:32:58.52
-          Body SysBody 09-JUL-2013 09:32:58.52
-            Attr PgmName = "I_PZD7"
+        Object I_WARN1_0406 $Attribute 152 18-JUL-2013 11:24:34.62
+          Body SysBody 18-JUL-2013 11:24:36.41
+            Attr PgmName = "I_WARN1_0406"
             Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        Object I_PZD8 $Attribute 153 09-JUL-2013 09:32:58.52
-          Body SysBody 09-JUL-2013 09:32:58.52
-            Attr PgmName = "I_PZD8"
+        Object I_FAULT1_0401 $Attribute 153 18-JUL-2013 11:24:56.44
+          Body SysBody 18-JUL-2013 11:24:58.67
+            Attr PgmName = "I_FAULT1_0401"
             Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
@@ -77657,7 +77779,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880_Epl_IoModule 2161868800 05-JUL-2013 14:53:53.08
-        Body RtBody 09-JUL-2013 11:53:21.21
+        Body RtBody 18-JUL-2013 14:18:08.56
           Attr I_SW.ConversionOn = 1
           Attr I_SW.Representation = 3
           Attr I_ACT.ConversionOn = 1
@@ -77671,32 +77793,32 @@ ABB ACS880 Aggregate
           Attr I_ACT.ActValRangeLow = -1.500000e+03
           Attr I_ACT.ActValRangeHigh = 1.500000e+03
           Attr I_ACT.Representation = 2
-          Attr I_PZD3_4.ConversionOn = 1
-          Attr I_PZD3_4.RawValRangeLow = -3.000000e+06
-          Attr I_PZD3_4.RawValRangeHigh = 3.000000e+06
-          Attr I_PZD3_4.ChannelSigValRangeLow = -3.000000e+06
-          Attr I_PZD3_4.ChannelSigValRangeHigh = 3.000000e+06
-          Attr I_PZD3_4.SensorPolyType = 1
-          Attr I_PZD3_4.SensorSigValRangeLow = -3.000000e+06
-          Attr I_PZD3_4.SensorSigValRangeHigh = 3.000000e+06
-          Attr I_PZD3_4.ActValRangeLow = -3.000000e+04
-          Attr I_PZD3_4.ActValRangeHigh = 3.000000e+04
-          Attr I_PZD5.ConversionOn = 1
-          Attr I_PZD5.RawValRangeLow = -3.000000e+06
-          Attr I_PZD5.RawValRangeHigh = 3.000000e+06
-          Attr I_PZD5.ChannelSigValRangeLow = -3.000000e+06
-          Attr I_PZD5.ChannelSigValRangeHigh = 3.000000e+06
-          Attr I_PZD5.SensorPolyType = 1
-          Attr I_PZD5.SensorSigValRangeLow = -3.000000e+06
-          Attr I_PZD5.SensorSigValRangeHigh = 3.000000e+06
-          Attr I_PZD5.ActValRangeLow = -3.000000e+04
-          Attr I_PZD5.ActValRangeHigh = 3.000000e+04
-          Attr I_PZD6.ConversionOn = 1
-          Attr I_PZD6.Representation = 3
-          Attr I_PZD7.ConversionOn = 1
-          Attr I_PZD7.Representation = 3
-          Attr I_PZD8.ConversionOn = 1
-          Attr I_PZD8.Representation = 3
+          Attr I_CURR_0107.ConversionOn = 1
+          Attr I_CURR_0107.RawValRangeLow = -3.000000e+06
+          Attr I_CURR_0107.RawValRangeHigh = 3.000000e+06
+          Attr I_CURR_0107.ChannelSigValRangeLow = -3.000000e+06
+          Attr I_CURR_0107.ChannelSigValRangeHigh = 3.000000e+06
+          Attr I_CURR_0107.SensorPolyType = 1
+          Attr I_CURR_0107.SensorSigValRangeLow = -3.000000e+06
+          Attr I_CURR_0107.SensorSigValRangeHigh = 3.000000e+06
+          Attr I_CURR_0107.ActValRangeLow = -3.000000e+04
+          Attr I_CURR_0107.ActValRangeHigh = 3.000000e+04
+          Attr I_TORQ_0110.ConversionOn = 1
+          Attr I_TORQ_0110.RawValRangeLow = -1.600000e+04
+          Attr I_TORQ_0110.RawValRangeHigh = 1.600000e+04
+          Attr I_TORQ_0110.ChannelSigValRangeLow = -1.600000e+04
+          Attr I_TORQ_0110.ChannelSigValRangeHigh = 1.600000e+04
+          Attr I_TORQ_0110.SensorPolyType = 1
+          Attr I_TORQ_0110.SensorSigValRangeLow = -1.600000e+04
+          Attr I_TORQ_0110.SensorSigValRangeHigh = 1.600000e+04
+          Attr I_TORQ_0110.ActValRangeLow = -1.600000e+03
+          Attr I_TORQ_0110.ActValRangeHigh = 1.600000e+03
+          Attr I_USW1_0650.ConversionOn = 1
+          Attr I_USW1_0650.Representation = 3
+          Attr I_WARN1_0406.ConversionOn = 1
+          Attr I_WARN1_0406.Representation = 3
+          Attr I_FAULT1_0401.ConversionOn = 1
+          Attr I_FAULT1_0401.Representation = 3
           Attr O_CW.Representation = 3
           Attr O_REF.ActValRangeLow = -1.500000e+03
           Attr O_REF.ActValRangeHigh = 1.500000e+03
@@ -77739,8 +77861,8 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880_Epl 2161606656 05-JUL-2013 14:50:09.15
-        Body RtBody 09-JUL-2013 13:19:08.99
-          Attr Super.Specification = "ABB ACS880, PPO message type 7"
+        Body RtBody 19-JUL-2013 14:02:26.28
+          Attr Super.Specification = "ABB ACS880, ABB Drives communication profile"
           Attr Super.DataSheet = "$pwr_lang/dsh/abb_acs880.html"
           Attr Super.Process = 128
           Attr Io.I_SW.ConversionOn = 1
@@ -77756,32 +77878,32 @@ ABB ACS880 Aggregate
           Attr Io.I_ACT.ActValRangeLow = -1.500000e+03
           Attr Io.I_ACT.ActValRangeHigh = 1.500000e+03
           Attr Io.I_ACT.Representation = 2
-          Attr Io.I_PZD3_4.ConversionOn = 1
-          Attr Io.I_PZD3_4.RawValRangeLow = -3.000000e+06
-          Attr Io.I_PZD3_4.RawValRangeHigh = 3.000000e+06
-          Attr Io.I_PZD3_4.ChannelSigValRangeLow = -3.000000e+06
-          Attr Io.I_PZD3_4.ChannelSigValRangeHigh = 3.000000e+06
-          Attr Io.I_PZD3_4.SensorPolyType = 1
-          Attr Io.I_PZD3_4.SensorSigValRangeLow = -3.000000e+06
-          Attr Io.I_PZD3_4.SensorSigValRangeHigh = 3.000000e+06
-          Attr Io.I_PZD3_4.ActValRangeLow = -3.000000e+04
-          Attr Io.I_PZD3_4.ActValRangeHigh = 3.000000e+04
-          Attr Io.I_PZD5.ConversionOn = 1
-          Attr Io.I_PZD5.RawValRangeLow = -3.000000e+06
-          Attr Io.I_PZD5.RawValRangeHigh = 3.000000e+06
-          Attr Io.I_PZD5.ChannelSigValRangeLow = -3.000000e+06
-          Attr Io.I_PZD5.ChannelSigValRangeHigh = 3.000000e+06
-          Attr Io.I_PZD5.SensorPolyType = 1
-          Attr Io.I_PZD5.SensorSigValRangeLow = -3.000000e+06
-          Attr Io.I_PZD5.SensorSigValRangeHigh = 3.000000e+06
-          Attr Io.I_PZD5.ActValRangeLow = -3.000000e+04
-          Attr Io.I_PZD5.ActValRangeHigh = 3.000000e+04
-          Attr Io.I_PZD6.ConversionOn = 1
-          Attr Io.I_PZD6.Representation = 3
-          Attr Io.I_PZD7.ConversionOn = 1
-          Attr Io.I_PZD7.Representation = 3
-          Attr Io.I_PZD8.ConversionOn = 1
-          Attr Io.I_PZD8.Representation = 3
+          Attr Io.I_CURR_0107.ConversionOn = 1
+          Attr Io.I_CURR_0107.RawValRangeLow = -3.000000e+06
+          Attr Io.I_CURR_0107.RawValRangeHigh = 3.000000e+06
+          Attr Io.I_CURR_0107.ChannelSigValRangeLow = -3.000000e+06
+          Attr Io.I_CURR_0107.ChannelSigValRangeHigh = 3.000000e+06
+          Attr Io.I_CURR_0107.SensorPolyType = 1
+          Attr Io.I_CURR_0107.SensorSigValRangeLow = -3.000000e+06
+          Attr Io.I_CURR_0107.SensorSigValRangeHigh = 3.000000e+06
+          Attr Io.I_CURR_0107.ActValRangeLow = -3.000000e+04
+          Attr Io.I_CURR_0107.ActValRangeHigh = 3.000000e+04
+          Attr Io.I_TORQ_0110.ConversionOn = 1
+          Attr Io.I_TORQ_0110.RawValRangeLow = -1.600000e+04
+          Attr Io.I_TORQ_0110.RawValRangeHigh = 1.600000e+04
+          Attr Io.I_TORQ_0110.ChannelSigValRangeLow = -1.600000e+04
+          Attr Io.I_TORQ_0110.ChannelSigValRangeHigh = 1.600000e+04
+          Attr Io.I_TORQ_0110.SensorPolyType = 1
+          Attr Io.I_TORQ_0110.SensorSigValRangeLow = -1.600000e+04
+          Attr Io.I_TORQ_0110.SensorSigValRangeHigh = 1.600000e+04
+          Attr Io.I_TORQ_0110.ActValRangeLow = -1.600000e+03
+          Attr Io.I_TORQ_0110.ActValRangeHigh = 1.600000e+03
+          Attr Io.I_USW1_0650.ConversionOn = 1
+          Attr Io.I_USW1_0650.Representation = 3
+          Attr Io.I_WARN1_0406.ConversionOn = 1
+          Attr Io.I_WARN1_0406.Representation = 3
+          Attr Io.I_FAULT1_0401.ConversionOn = 1
+          Attr Io.I_FAULT1_0401.Representation = 3
           Attr Io.O_CW.Representation = 3
           Attr Io.O_REF.ActValRangeLow = -1.500000e+03
           Attr Io.O_REF.ActValRangeHigh = 1.500000e+03
@@ -77829,7 +77951,8 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880_Epl_1 2161344512 01-JAN-1970 01:00:00.00
-        Body RtBody 11-JUL-2013 11:23:26.03
+        Body RtBody 18-JUL-2013 11:30:40.91
+          Attr Super.Specification = "ABB ACS880 Frequency converter"
           Attr Super.DisableInIdPar = 1
           Attr Super.DisableInIndPar = 1
           Attr Super.DisableInValuePar = 1
@@ -77840,21 +77963,21 @@ ABB ACS880 Aggregate
           Attr Super.ActSpeed.PresMaxLimit = 3.000000e+03
           Attr Super.ActSpeed.PresMinLimit = -3.000000e+03
           Attr Super.ActSpeed.DefTrend = "ABB:Class-ABB_ACS880_1-Template.TrendActSpeed"
-          Attr Super.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD3_4"
+          Attr Super.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_CURR_0107"
           Attr Super.ActCurrent.Unit = "A"
           Attr Super.ActCurrent.NoOfDecimals = 2
           Attr Super.ActCurrent.PresMaxLimit = 3.000000e+02
           Attr Super.ActCurrent.PresMinLimit = -3.000000e+02
           Attr Super.ActCurrent.DefTrend = "ABB:Class-ABB_ACS880_1-Template.TrendActCurrent"
-          Attr Super.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD5"
+          Attr Super.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_TORQ_0110"
           Attr Super.ActTorque.Unit = "%"
           Attr Super.ActTorque.NoOfDecimals = 1
           Attr Super.ActTorque.PresMaxLimit = 3.000000e+02
           Attr Super.ActTorque.PresMinLimit = -3.000000e+02
           Attr Super.ActTorque.DefTrend = "ABB:Class-ABB_ACS880_1-Template.TrendActTorque"
-          Attr Super.UserStatusSW1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD6"
-          Attr Super.ActiveWarning1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD7"
-          Attr Super.ActiveFault1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD8"
+          Attr Super.UserStatusSW1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_USW1_0650"
+          Attr Super.ActiveWarning1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_WARN1_0406"
+          Attr Super.ActiveFault1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_FAULT1_0401"
           Attr Super.DisableOutIdPar = 1
           Attr Super.DisableOutIndPar = 1
           Attr Super.DisableValuePar = 1
@@ -78422,7 +78545,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880EplMotorAggr 2163441664 01-JAN-1970 01:00:00.00
-        Body RtBody 11-JUL-2013 11:39:17.11
+        Body RtBody 25-JUL-2013 08:53:32.30
           Attr Super.AlarmTextToOften = "Power not yet ready for restart, wait before retry"
           Attr Super.AlarmTextPowOnNotOk = "Power interlocked"
           Attr Super.AlarmTextStartNoOk = "Power is not on"
@@ -78444,17 +78567,17 @@ ABB ACS880 Aggregate
           Attr Super.ACS880.ActSpeed.NoOfDecimals = 1
           Attr Super.ACS880.ActSpeed.PresMaxLimit = 3.000000e+03
           Attr Super.ACS880.ActSpeed.PresMinLimit = -3.000000e+03
-          Attr Super.ACS880.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD3_4"
+          Attr Super.ACS880.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_CURR_0107"
           Attr Super.ACS880.ActCurrent.Unit = "A"
           Attr Super.ACS880.ActCurrent.PresMaxLimit = 3.000000e+02
           Attr Super.ACS880.ActCurrent.PresMinLimit = -3.000000e+02
-          Attr Super.ACS880.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD5"
+          Attr Super.ACS880.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_TORQ_0110"
           Attr Super.ACS880.ActTorque.Unit = "%"
           Attr Super.ACS880.ActTorque.PresMaxLimit = 3.000000e+02
           Attr Super.ACS880.ActTorque.PresMinLimit = -3.000000e+02
-          Attr Super.ACS880.UserStatusSW1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD6"
-          Attr Super.ACS880.ActiveWarning1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD7"
-          Attr Super.ACS880.ActiveFault1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD8"
+          Attr Super.ACS880.UserStatusSW1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_USW1_0650"
+          Attr Super.ACS880.ActiveWarning1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_WARN1_0406"
+          Attr Super.ACS880.ActiveFault1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_FAULT1_0401"
           Attr Super.ACS880.DisableOutIdPar = 1
           Attr Super.ACS880.OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.O_ID"
           Attr Super.ACS880.DisableOutIndPar = 1
@@ -78479,6 +78602,7 @@ ABB ACS880 Aggregate
           Attr Super.ACS880.AlarmTripped = "Frequency converter tripped, reset is required"
           Attr Super.ACS880.AlarmFanOld = "Maintenance replace of cooling fan in converter required"
           Attr Super.ACS880.AlarmWarning = "Frequency converter warning"
+          Attr Super.ACS880.AlarmConnection = "No connection"
           Attr Super.ACS880.DefTrend = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.PlotGroup"
           Attr Super.ACS880.DataSheet = "$pwr_lang/dsh/abb_acs880.html"
           Attr Super.ACS880.TrendActSpeed.Multiple = 1
@@ -78590,7 +78714,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880EplPumpAggr 2163703808 01-JAN-1970 01:00:00.00
-        Body RtBody 11-JUL-2013 11:34:12.64
+        Body RtBody 25-JUL-2013 08:53:45.88
           Attr Super.Super.AlarmTextToOften = "Power not yet ready for restart, wait before retry"
           Attr Super.Super.AlarmTextPowOnNotOk = "Power interlocked"
           Attr Super.Super.AlarmTextStartNoOk = "Power is not on"
@@ -78612,17 +78736,17 @@ ABB ACS880 Aggregate
           Attr Super.Super.ACS880.ActSpeed.NoOfDecimals = 1
           Attr Super.Super.ACS880.ActSpeed.PresMaxLimit = 3.000000e+03
           Attr Super.Super.ACS880.ActSpeed.PresMinLimit = -3.000000e+03
-          Attr Super.Super.ACS880.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD3_4"
+          Attr Super.Super.ACS880.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_CURR_0107"
           Attr Super.Super.ACS880.ActCurrent.Unit = "A"
           Attr Super.Super.ACS880.ActCurrent.PresMaxLimit = 3.000000e+02
           Attr Super.Super.ACS880.ActCurrent.PresMinLimit = -3.000000e+02
-          Attr Super.Super.ACS880.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD5"
+          Attr Super.Super.ACS880.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_TORQ_0110"
           Attr Super.Super.ACS880.ActTorque.Unit = "%"
           Attr Super.Super.ACS880.ActTorque.PresMaxLimit = 3.000000e+02
           Attr Super.Super.ACS880.ActTorque.PresMinLimit = -3.000000e+02
-          Attr Super.Super.ACS880.UserStatusSW1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD6"
-          Attr Super.Super.ACS880.ActiveWarning1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD7"
-          Attr Super.Super.ACS880.ActiveFault1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD8"
+          Attr Super.Super.ACS880.UserStatusSW1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_USW1_0650"
+          Attr Super.Super.ACS880.ActiveWarning1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_WARN1_0406"
+          Attr Super.Super.ACS880.ActiveFault1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_FAULT1_0401"
           Attr Super.Super.ACS880.DisableOutIdPar = 1
           Attr Super.Super.ACS880.OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.O_ID"
           Attr Super.Super.ACS880.DisableOutIndPar = 1
@@ -78647,6 +78771,7 @@ ABB ACS880 Aggregate
           Attr Super.Super.ACS880.AlarmTripped = "Frequency converter tripped, reset is required"
           Attr Super.Super.ACS880.AlarmFanOld = "Maintenance replace of cooling fan in converter required"
           Attr Super.Super.ACS880.AlarmWarning = "Frequency converter warning"
+          Attr Super.Super.ACS880.AlarmConnection = "No connection"
           Attr Super.Super.ACS880.DefTrend = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.PlotGroup"
           Attr Super.Super.ACS880.DataSheet = "$pwr_lang/dsh/abb_acs880.html"
           Attr Super.Super.ACS880.TrendActSpeed.Multiple = 1
@@ -78758,7 +78883,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880EplFanAggr 2163965952 01-JAN-1970 01:00:00.00
-        Body RtBody 11-JUL-2013 11:34:43.92
+        Body RtBody 25-JUL-2013 08:53:59.47
           Attr Super.Super.AlarmTextToOften = "Power not yet ready for restart, wait before retry"
           Attr Super.Super.AlarmTextPowOnNotOk = "Power interlocked"
           Attr Super.Super.AlarmTextStartNoOk = "Power is not on"
@@ -78780,17 +78905,17 @@ ABB ACS880 Aggregate
           Attr Super.Super.ACS880.ActSpeed.NoOfDecimals = 1
           Attr Super.Super.ACS880.ActSpeed.PresMaxLimit = 3.000000e+03
           Attr Super.Super.ACS880.ActSpeed.PresMinLimit = -3.000000e+03
-          Attr Super.Super.ACS880.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD3_4"
+          Attr Super.Super.ACS880.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_CURR_0107"
           Attr Super.Super.ACS880.ActCurrent.Unit = "A"
           Attr Super.Super.ACS880.ActCurrent.PresMaxLimit = 3.000000e+02
           Attr Super.Super.ACS880.ActCurrent.PresMinLimit = -3.000000e+02
-          Attr Super.Super.ACS880.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD5"
+          Attr Super.Super.ACS880.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_TORQ_0110"
           Attr Super.Super.ACS880.ActTorque.Unit = "%"
           Attr Super.Super.ACS880.ActTorque.PresMaxLimit = 3.000000e+02
           Attr Super.Super.ACS880.ActTorque.PresMinLimit = -3.000000e+02
-          Attr Super.Super.ACS880.UserStatusSW1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD6"
-          Attr Super.Super.ACS880.ActiveWarning1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD7"
-          Attr Super.Super.ACS880.ActiveFault1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_PZD8"
+          Attr Super.Super.ACS880.UserStatusSW1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_USW1_0650"
+          Attr Super.Super.ACS880.ActiveWarning1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_WARN1_0406"
+          Attr Super.Super.ACS880.ActiveFault1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_Epl_IoModule.I_FAULT1_0401"
           Attr Super.Super.ACS880.DisableOutIdPar = 1
           Attr Super.Super.ACS880.OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.O_ID"
           Attr Super.Super.ACS880.DisableOutIndPar = 1
@@ -78815,6 +78940,7 @@ ABB ACS880 Aggregate
           Attr Super.Super.ACS880.AlarmTripped = "Frequency converter tripped, reset is required"
           Attr Super.Super.ACS880.AlarmFanOld = "Maintenance replace of cooling fan in converter required"
           Attr Super.Super.ACS880.AlarmWarning = "Frequency converter warning"
+          Attr Super.Super.ACS880.AlarmConnection = "No connection"
           Attr Super.Super.ACS880.DefTrend = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.PlotGroup"
           Attr Super.Super.ACS880.DataSheet = "$pwr_lang/dsh/abb_acs880.html"
           Attr Super.Super.ACS880.TrendActSpeed.Multiple = 1
