@@ -634,10 +634,10 @@ sub build_all_modules ()
   _module("ssabox");
   build_all( $flavour);
   merge();
-  _module("othermanu");
+  _module("otherio");
   build_all( $flavour);
   merge();
-  _module("otherio");
+  _module("othermanu");
   build_all( $flavour);
   merge();
   _module("sev");
@@ -729,6 +729,11 @@ sub build_all_wbl ()
   system( "rm $load_dir/*.dbs");
   _build("wbl", "bcomp", "src", "lib");
   merge();
+  _module("otherio");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "mcomp", "src", "lib");
+  merge();
   _module("misc");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
@@ -760,11 +765,6 @@ sub build_all_wbl ()
   _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("klocknermoeller");
-  my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
-  _build("wbl", "mcomp", "src", "lib");
-  merge();
-  _module("otherio");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");
@@ -934,6 +934,9 @@ sub build_all ()
   my($einc) = $ENV{"pwr_einc"};
   my($remoteclasses) = $einc . "/pwr_remoteclasses.h";
   my($nmpsclasses) = $einc . "/pwr_nmpsclasses.h";
+  my($profibusclasses) = $einc . "/pwr_profibussclasses.h";
+  my($bcompclasses) = $einc . "/pwr_basecomponentsclasses.h";
+  my($otherioclasses) = $einc . "/pwr_otherioclasses.h";
 
   printf("--\n");
   printf("-- Build all\n");
@@ -971,6 +974,21 @@ sub build_all ()
         _module("remote");
         _build("wbl", "remote", "src", "init copy");
         merge("inc/pwr_remoteclasses.h");
+      }
+      if ( ! -e $profibusclasses ) {
+        _module("profibus");
+        _build("wbl", "mcomp", "src", "init copy");
+        merge("inc/pwr_profibusclasses.h");
+      }
+      if ( ! -e $bcompclasses ) {
+        _module("bcomp");
+        _build("wbl", "bcomp", "src", "init copy");
+        merge("inc/pwr_basecomponentclasses.h");
+      }
+      if ( ! -e $otherioclasses ) {
+        _module("otherio");
+        _build("wbl", "mcomp", "src", "init copy");
+        merge("inc/pwr_otherioclasses.h");
       }
       _module("rt");
       _build("lib", "rt", "src", "all");
