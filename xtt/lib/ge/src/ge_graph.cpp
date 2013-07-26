@@ -3810,8 +3810,8 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	  case glow_eMB3Action_Both:
             // Close
             if ( graph->close_cb) {
-              (graph->close_cb)( graph->parent_ctx);
-	      return GLOW__TERMINATED;
+              if ( (graph->close_cb)( graph->parent_ctx))
+		return GLOW__TERMINATED;
 	    }
             break;
 	  default:
@@ -4024,8 +4024,8 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
       if ( event->key.ascii == 23) {
 	// Ctrl W, close graph
 	if ( graph->close_cb) {
-	  (graph->close_cb)( graph->parent_ctx);
-	  return GLOW__TERMINATED;
+	  if ( (graph->close_cb)( graph->parent_ctx))
+	    return GLOW__TERMINATED;
 	}
       }
       if ( event->object.object_type != glow_eObjectType_NoObject) {

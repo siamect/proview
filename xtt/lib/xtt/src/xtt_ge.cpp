@@ -84,10 +84,15 @@ void XttGe::graph_init_cb( void *client_data)
 
 }
 
-void XttGe::graph_close_cb( void *client_data)
+int XttGe::graph_close_cb( void *client_data)
 {
   XttGe *ge = (XttGe *) client_data;
+
+  if ( ge->options & ge_mOptions_Embedded)
+    return 0;
+
   delete ge;
+  return 1;
 }
 
 int XttGe::ge_command_cb( void *ge_ctx, char *cmd)

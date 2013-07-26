@@ -453,7 +453,7 @@ class Graph {
 
   void 		(*message_cb)( void *, char, const char *);
   int 		(*get_current_subgraph_cb)( void *, char *, char *);
-  void 		(*close_cb)( void *);
+  int 		(*close_cb)( void *);
   void 		(*get_current_colors_cb)( void *, glow_eDrawType *, glow_eDrawType *, glow_eDrawType *);
   void 		(*set_current_colors_cb)( void *, glow_eDrawType, glow_eDrawType, glow_eDrawType);
   void 		(*init_cb)( void *);

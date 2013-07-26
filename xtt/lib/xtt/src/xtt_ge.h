@@ -97,7 +97,7 @@ class XttGe {
   void event_exec( int type, void *event, unsigned int size);
 
   static void graph_init_cb( void *client_data);
-  static void graph_close_cb( void *client_data);
+  static int graph_close_cb( void *client_data);
   static int ge_command_cb( void *ge_ctx, char *command);
   static int ge_sound_cb( void *ge_ctx, pwr_tAttrRef *aref);
   static void ge_display_in_xnav_cb( void *ge_ctx, pwr_sAttrRef *arp);
