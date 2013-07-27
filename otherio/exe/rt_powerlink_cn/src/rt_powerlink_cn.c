@@ -34,6 +34,7 @@
  * General Public License plus this exception.
  **/
 
+#if defined EPL
 
 #include "pwr.h"
 #include "rt_io_msg.h"
@@ -128,8 +129,17 @@ int main()
     sts = io_read(io_ctx);
     sts = io_write(io_ctx); 
     nanosleep(&tim1, &tim2);
-    aproc_TimeStamp( plhp->CycleTime, 5.0);
+    aproc_''TimeStamp( plhp->CycleTime, 5.0);
   }
 }
 
+#else
+
+#include <stdio.h>
+
+int main() 
+{
+  printf("** Not built with Powerlink\n");
+}
+#endif
 
