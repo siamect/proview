@@ -63,6 +63,7 @@ class wb_build : public wb_status
   void webhandler( pwr_tOid oid);
   void webbrowserconfig( pwr_tOid oid);
   void webgraph( pwr_tOid oid);
+  void appgraph( pwr_tOid oid);
   void application( pwr_tOid oid);
   void classdef( pwr_tOid oid);
 

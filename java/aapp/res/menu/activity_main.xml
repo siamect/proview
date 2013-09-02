@@ -9,12 +9,12 @@
 	 android:id="@+id/pageup_option"
 	 android:title="Page up"
 	 android:icon="@drawable/xnav_pageup"
-	 android:showAsAction="ifRoom"/>
+	 android:showAsAction="never"/>
    <item
 	 android:id="@+id/pagedown_option"
 	 android:title="Page down"
 	 android:icon="@drawable/xnav_pagedown"
-	 android:showAsAction="ifRoom"/>
+	 android:showAsAction="never"/>
    <item
 	 android:id="@+id/zoomin_option"
 	 android:title="Zoom in"
@@ -24,6 +24,11 @@
 	 android:id="@+id/zoomout_option"
      android:title="Zoom out"
 	 android:icon="@drawable/xnav_zoomout"
+	 android:showAsAction="ifRoom"/>
+   <item
+	 android:id="@+id/navigator_option"
+     android:title="Navigator"
+	 android:icon="@drawable/xnav_navigator"
 	 android:showAsAction="ifRoom"/>
    <item
 	 android:id="@+id/openobject_option"
@@ -48,11 +53,13 @@
    <item
 	 android:id="@+id/alarmlist_option"
      android:title="Alarm List"
-	 android:icon="@drawable/xnav_openobject"/>
+	 android:icon="@drawable/xnav_alarmlist"
+	 android:showAsAction="ifRoom"/>
    <item
 	 android:id="@+id/eventlist_option"
      android:title="Event List"
-	 android:icon="@drawable/xnav_openobject"/>
+	 android:icon="@drawable/xnav_eventlist"
+   	 android:showAsAction="ifRoom"/>
    <item
 	 android:id="@+id/alarmack_option"
      android:title="Alarm Acknowledge"

@@ -83,6 +83,9 @@ void wb_build::classlist( pwr_tCid cid)
     case pwr_cClass_WebGraph:
       webgraph( o.oid());
       break;
+    case pwr_cClass_AppGraph:
+      appgraph( o.oid());
+      break;
     case pwr_cClass_Application:
       application( o.oid());
       break;
@@ -362,6 +365,12 @@ void wb_build::rootvolume( pwr_tVid vid)
     if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
       sumsts = m_sts;
 
+    // Build all AppGraph
+    classlist( pwr_cClass_AppGraph);
+    if ( evenSts()) return;
+    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+      sumsts = m_sts;
+
     classlist( pwr_cClass_Application);
     if ( evenSts()) return;
     if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
@@ -586,6 +595,11 @@ void wb_build::nodehier( pwr_tOid oid)
     sumsts = m_sts;
 
   classlist( pwr_cClass_WebGraph);
+  if ( evenSts()) return;
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+
+  classlist( pwr_cClass_AppGraph);
   if ( evenSts()) return;
   if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
     sumsts = m_sts;
@@ -936,6 +950,91 @@ void wb_build::webgraph( pwr_tOid oid)
       m_sts = PWRB__SUCCESS;
     }
   }
+}
+
+void wb_build::appgraph( pwr_tOid oid)
+{
+  pwr_tFileName dest_fname;
+  pwr_tFileName src_fname;
+  pwr_tCmd	cmd;
+  pwr_tString80	graph_name;
+  pwr_tString80	name;
+  pwr_tTime	dest_time, src_time;
+  int 		check_hierarchy = cdh_ObjidIsNotNull( m_hierarchy);
+  int 		hierarchy_found = 0;
+  char		*s;
+
+  wb_object o = m_session.object(oid);
+  if ( !o) {
+    m_sts = o.sts();
+    return;
+  }
+
+  // Check that no ancestor is a LibHier
+  for ( wb_object p = o.parent(); p.oddSts(); p = p.parent()) {
+    if ( p.cid() == pwr_eClass_LibHier) {
+      m_sts = PWRB__INLIBHIER;
+      return;
+    }
+    if ( check_hierarchy && cdh_ObjidIsEqual( m_hierarchy, p.oid()))
+      hierarchy_found = 1;
+  }
+
+  if ( check_hierarchy && !hierarchy_found) {
+    m_sts = PWRB__NOBUILT;
+    return;
+  }
+
+  wb_attribute a = m_session.attribute( oid, "RtBody", "Name");
+  if ( !a) {
+    m_sts = a.sts();
+    return;
+  }
+
+  a.value( graph_name);
+  if ( !a) {
+    m_sts = a.sts();
+    return;
+  }
+
+  cdh_ToLower( graph_name, graph_name);
+
+
+  strcpy( src_fname, "$pwrp_pop/");
+  strcat( src_fname, graph_name);
+
+  if ( strstr( src_fname, ".pwg") == 0)
+    strcat( src_fname, ".pwg");
+
+  dcli_translate_filename( src_fname, src_fname);
+  m_sts = dcli_file_time( src_fname, &src_time);
+  if ( evenSts()) {
+    m_sts = PWRB__NOBUILT;
+    return;
+  }
+
+  strcpy( dest_fname, "$pwrp_exe/");
+  strcat( dest_fname, graph_name);
+
+  if ( strstr( dest_fname, ".pwg") == 0)
+    strcat( dest_fname, ".pwg");
+
+  dcli_translate_filename( dest_fname, dest_fname);
+  m_sts = dcli_file_time( dest_fname, &dest_time);
+  if ( opt.force || evenSts() || src_time.tv_sec > dest_time.tv_sec) {
+    sprintf( cmd, "cp %s %s", src_fname, dest_fname);
+    system( cmd);
+    sprintf( cmd, "Build:    AppGraph copy $pwrp_pop/%s -> $pwrp_exe", graph_name);
+    MsgWindow::message( 'I', cmd, msgw_ePop_No, oid);
+
+    strcpy( name, graph_name);
+    if (( s = strrchr( name, '.')))
+      *s = 0;
+    wb_log::log( wlog_eCategory_GeBuild, name, 0);
+    m_sts = PWRB__SUCCESS;
+  }
+  else
+    m_sts = PWRB__NOBUILT;
 }
 
 void wb_build::webhandler( pwr_tOid oid)

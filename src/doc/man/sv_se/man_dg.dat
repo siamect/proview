@@ -3515,7 +3515,7 @@ läsa statitiktabellen i en mysql databas, där pojektnamnet är opg7.
 
 <c>>mysql -u pwrp
 <c>mysql> use pwrp__opg7;
-<c>mysql> select * form set_stat;
+<c>mysql> select * from set_stat;
 <c>| 7.24149 | 7.90368 | 907.713 | 908.8 | 32321 | 0 | 1 | 0 | 
 <c>1 row in set (0.00 sec)
 

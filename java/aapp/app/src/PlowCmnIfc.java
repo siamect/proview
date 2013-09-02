@@ -7,6 +7,7 @@ public interface PlowCmnIfc {
 	public static final int TYPE_FLOW = 2;
 	public static final int TYPE_GRAPH = 3;
 	public static final int TYPE_EV = 4;
+	public static final int TYPE_OPWIN = 5;
 	
 	public int type();
 	public Object getUserData();

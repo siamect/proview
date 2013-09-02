@@ -3559,7 +3559,7 @@ to read the statistic table in a mysql database, where the project name is opg7.
 
 <c>>mysql -u pwrp
 <c>mysql> use pwrp__opg7;
-<c>mysql> select * form set_stat;
+<c>mysql> select * from set_stat;
 <c>| 7.24149 | 7.90368 | 907.713 | 908.8 | 32321 | 0 | 1 | 0 | 
 <c>1 row in set (0.00 sec)
 

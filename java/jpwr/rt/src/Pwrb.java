@@ -68,6 +68,7 @@ public class Pwrb {
   public static final int cClass_Ao_Vmic4800 = 133176;
   public static final int cClass_ApCollect = 133224;
   public static final int cClass_ApDistribute = 133232;
+  public static final int cClass_AppGraph = 135960;
   public static final int cClass_ApplDistribute = 131208;
   public static final int cClass_ASup = 131216;
   public static final int cClass_Av = 131224;
