@@ -807,10 +807,12 @@ void GrowNode::set_scale( double scale_x, double scale_y,
 {
   double old_x_left, old_x_right, old_y_low, old_y_high;
 
-  if ( scale_x < 0)
-    scale_x = 0;
-  if ( scale_y < 0)
-    scale_y = 0;
+  if ( !((scale_x == -1 && scale_y == 1) || (scale_x == 1 && scale_y == -1))) {
+    if ( scale_x < 0)
+      scale_x = 0;
+    if ( scale_y < 0)
+      scale_y = 0;
+  }
 
   if ( trf.s_a11 && trf.s_a22 &&
        fabs( scale_x - trf.a11 / trf.s_a11) < FLT_EPSILON &&
