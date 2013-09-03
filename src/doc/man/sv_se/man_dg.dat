@@ -9009,12 +9009,17 @@ nod hierarkin.
 <TOPIC> set subwindow <style> function
 Kommando   set subwindow
 
-Öppna en graf i ett window objekt i en tidigare öppnad graf.
+Öppna en graf i ett window objekt i en tidigare öppnad graf, eller
+skifta graf i en multiwindow cell.
 
 <B>wtt> set subwindow 'graph' /name= /source=
+<B>wtt> set subwindow 'multiview-object' /name= /source= [/continue]
 
 /name	<t>Namn på window objektet.
 /source	<t>Namn på grafen som ska öppnas i window objektet.
+/continue <t>Kan användas om kommandot exekveras från en Ge knapp
+          <t>med annan dynamik som ska exekveras. Ska inte användas
+          <t>om grafen med knappen själv skiftas.
 </TOPIC>
 
 <TOPIC> set template <style> function

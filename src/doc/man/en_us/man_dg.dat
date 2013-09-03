@@ -9122,12 +9122,18 @@ plant and node hierarchy.
 <TOPIC> set subwindow <style> function
 Command   set subwindow
 
-Open a graph in a window object in a previously opened graph.
+Open a graph in a window object in a previously opened graph, or
+exchange a graph in a multiview cell.
 
 <B>wtt> set subwindow 'graph' /name= /source=
+<B>wtt> set subwindow 'multiview-object' /name= /source= [/continue]
 
 /name	<t>Name of the window object.
-/source	<t>Name of graph that is to be opened in the window object.
+/source	<t>Name of graph that is to be opened in the window object or
+        <t>in the multiview cell.
+/continue <t>Can be used if the command is executed from a Ge button with
+          <t>other dynamics to execute. Should not be used if the graph
+          <t>with the button itself is exchanged.
 </TOPIC>
 
 <TOPIC> set template <style> function

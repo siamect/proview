@@ -104,7 +104,7 @@ class XttMultiView {
   virtual void pop() {}
   virtual void set_size( int width, int height) {}
   virtual void *get_widget() { return 0;}
-  virtual int set_subwindow_source( const char *name, char *source, char *object, int insert = 1) {return 0;}
+  virtual int set_subwindow_source( const char *name, char *source, char *object, int insert = 1, int cont = 0) {return 0;}
 
   void message( char severity, const char *msg);
   int set_object_focus( const char *name, int empty);

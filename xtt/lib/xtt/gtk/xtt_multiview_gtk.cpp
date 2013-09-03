@@ -63,6 +63,7 @@ typedef void *Widget;
 #include "xtt_log.h"
 #include "pwr_baseclasses.h"
 #include "rt_xnav_msg.h"
+#include "glow_msg.h"
 
 gboolean XttMultiViewGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data)
 {
@@ -406,7 +407,7 @@ void *XttMultiViewGtk::get_widget()
 }
 
 int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char *object,
-					   int insert)
+					   int insert, int cont)
 {
   pwr_sClass_XttMultiView mv;
   pwr_tStatus sts;
@@ -546,6 +547,9 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
       }
     }
   }
-  return 1;
+  if ( cont)
+    return 1;
+  else
+    return GLOW__TERMINATED;
 }
 

@@ -354,7 +354,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"SET",
 			&xnav_set_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/VALUE",
-			  "/BYPASS", "/INDEX", "/SOURCE", "/OBJECT", ""}
+			  "/BYPASS", "/INDEX", "/SOURCE", "/OBJECT", "/CONTINUE", ""}
 		},
 		{
 			"SETUP",
@@ -842,6 +842,7 @@ static int	xnav_set_func(	void		*client_data,
     pwr_tOName object_str;
     char *object_p;
     pwr_tOName source_str;
+    int cont;
 
     if ( EVEN( dcli_get_qualifier( "dcli_arg2", graph_str, sizeof(graph_str)))) {
       xnav->message('E', "Graph name is missing");
@@ -866,6 +867,8 @@ static int	xnav_set_func(	void		*client_data,
     if ( object_p)
       xnav_replace_node_str( object_p, object_p);
 
+    cont = ODD( dcli_get_qualifier( "/CONTINUE", 0, 0));
+
     if ( xnav->appl.find_graph( graph_str, 0, (void **) &gectx)) {
       return gectx->set_subwindow_source( name_str, source_str, object_p);
     }
@@ -877,7 +880,7 @@ static int	xnav_set_func(	void		*client_data,
 
       sts = gdh_NameToAttrref( pwr_cNObjid, graph_str, &aref);
       if ( ODD(sts) && xnav->appl.find( applist_eType_MultiView, &aref, (void **) &mvctx)) {
-	return mvctx->set_subwindow_source( name_str, source_str, object_p);
+	return mvctx->set_subwindow_source( name_str, source_str, object_p, cont);
       }
       else {
 	xnav->message('E', "Graph is not open");
