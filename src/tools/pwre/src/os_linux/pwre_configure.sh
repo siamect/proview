@@ -277,6 +277,9 @@ if [ ${machine:0:3} == "arm" ]; then
   hwpl=arm
 else
   ubuntu_ver=`cat /etc/issue | grep Ubuntu | awk '{ print $2 }'`
+  if [ "$ubuntu_ver" == "" ]; then
+    ubuntu_ver=`cat /etc/issue | grep Mint | awk '{ print $3 }'`
+  fi
   if [ "$ubuntu_ver" != "" ] &&[ "$ubuntu_ver" != "12.04" ] && [ $hwpl == "i686" ] ; then
     hwpl=i386
   fi
