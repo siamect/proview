@@ -45,6 +45,7 @@ class FlowPscript : public FlowPrint {
   public:
     FlowPscript( char *filename, void *flow_ctx, int page_border, int *sts);
     ~FlowPscript();
+     int type() { return print_eType_Postscript;}
      int print_page( double ll_x, double ll_y, double ur_x, double ur_y);
      int rect( double x, double y, double width, double height, flow_eDrawType type, double idx, int highlight);
      int filled_rect( double x, double y, double width, double height, flow_eDrawType type, double idx);

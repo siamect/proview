@@ -40,11 +40,18 @@
 #include <stdio.h>
 #include "flow.h"
 
+typedef enum {
+  print_eType__,
+  print_eType_Postscript,
+  print_eType_Pdf
+} print_eType;
+
 class FlowPrint {
  public:
   FlowPrint() {};
   FlowPrint( char *filename, void *flow_ctx, int page_border, int *sts) {}
   virtual ~FlowPrint() {}
+  virtual int type() { return 0;}
   virtual int print_page( double ll_x, double ll_y, double ur_x, double ur_y) {return 1;}
   virtual int rect( double x, double y, double width, double height, flow_eDrawType type, double idx, int highlight) { return 1;}
   virtual int filled_rect( double x, double y, double width, double height, flow_eDrawType type, double idx) {return 1;}

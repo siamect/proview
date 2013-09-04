@@ -105,8 +105,18 @@ void FlowAnnot::print( void *pos, void *node, int highlight)
       int line_cnt = 0;
       char *line = ((FlowNode *) node)->annotv[number];
       char *s;
-      ctx->fdraw->get_text_extent( ctx, "Ag", 2, draw_type, text_size, &z_width, &z_height,
-				   ctx->print_zoom_factor / ctx->base_zoom_factor * (12+2*text_size));
+      switch ( ctx->current_print->type()) {
+      case print_eType_Pdf: {
+	ctx->fdraw->get_text_extent( ctx, "Ag", 2, draw_type, text_size, &z_width, &z_height,
+				     ctx->print_zoom_factor / ctx->base_zoom_factor * (12+2*text_size));
+	float k = - 2.5 * ctx->print_zoom_factor / ctx->base_zoom_factor + 2.62;
+	z_height *= k;
+	break;
+      }
+      default:
+	ctx->fdraw->get_text_extent( ctx, "Ag", 2, draw_type, text_size, &z_width, &z_height,
+				     ctx->print_zoom_factor / ctx->base_zoom_factor * (12+2*text_size));
+      }
       z_h = ctx->print_zoom_factor / ctx->base_zoom_factor * z_height;
       for ( s = ((FlowNode *) node)->annotv[number]; *s; s++)
       {
