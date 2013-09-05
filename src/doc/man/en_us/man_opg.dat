@@ -1577,7 +1577,7 @@ show graph <t>Show graph-files		<LINK> show graph
 show time  <t>Show current time		<LINK> show time
 show default<t>Show default directory	<LINK> show default
 show children<t>Show the children of an object <LINK> show children
-show object<t>Show the content of an object	<LINK> show object
+show objectlist<t>Show all objects of a specific class<LINK> show objectlist
 show objid <t>Show object identity		<LINK> show objid
 show parameter<t>Show an object attribute	<LINK> show parameter
 show logging<t>Show a logging entry		<LINK> show logging
@@ -2374,6 +2374,21 @@ Command   show user
 Show the current user and his privileges.
 
 <B>xtt> show user
+</TOPIC>
+
+<TOPIC> show objectlist <style> function
+Command   show objectlist
+
+Open a list dialog with all objects of a specific class or
+a number of specific classes. When an object in the list is
+activated, the object graph for the object is opened.
+
+<B>xtt> show objectlist /class= [/title=] [/sort]
+
+/class <t>The name of a class, or serveral class names
+       <t>separated by comma.
+/title <t>Title of the list dialog.
+/sort  <t>The objects are sorted in alphabetical order.
 </TOPIC>
 
 <TOPIC> sound <style> function

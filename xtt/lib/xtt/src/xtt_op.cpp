@@ -162,7 +162,7 @@ void Op::activate_blocklist()
 
 void Op::activate_trend()
 {
-  char cmd[200] = "show objectlist/class=dstrend/title=\"Trend List\"";
+  char cmd[200] = "show objectlist/class=dstrend,dstrendcurve/title=\"Trend List\"/sort";
 
   if ( command_cb)
     command_cb( parent_ctx, cmd);
@@ -178,7 +178,7 @@ void Op::activate_fast()
 
 void Op::activate_history()
 {
-  char cmd[200] = "show objectlist/class=sevhist/title=\"Process History List\"";
+  char cmd[200] = "show objectlist/class=sevhist,sevhistobject/title=\"Process History List\"/sort";
   if ( command_cb)
     command_cb( parent_ctx, cmd);
 }

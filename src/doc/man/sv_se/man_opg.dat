@@ -1585,7 +1585,7 @@ show graph <t>Visa graf-filer			<LINK> show graph
 show time  <t>Visa aktuell tid			<LINK> show time
 show default<t>Visa default katalog		<LINK> show default
 show children<t>Visa ett objekts barn 		<LINK> show children
-show object<t>Visa innehållet i ett objekt	<LINK> show object
+show objectlist<t>Visa alla objects av en specifik klass<LINK> show objectlist
 show objid <t>Visa ett objekts identitet	<LINK> show objid
 show parameter<t>Visa ett objektsattribut	<LINK> show parameter
 show logging<t>Vissa ett loggingentry		<LINK> show logging
@@ -1983,6 +1983,21 @@ att hämtas från användardatabasen. Dessa avgör användarens behörighet.
 <H2>Se även
 logout <LINK> logout
 show user <LINK> show user
+</TOPIC>
+
+<TOPIC> show objectlist <style> function
+Command   show objectlist
+
+Öppna ett fönster med en lista på all objekt av en specific klass eller
+att antal specifika klasser. När ett objekt i listan aktiveras öppnas
+objektsbilden för objektet.
+
+<B>xtt> show objectlist /class= [/title=] [/sort]
+
+/class <t>Namn på en klass, eller flera klasser avgränsade med
+       <t>komma-tecken.
+/title <t>Titel på fönstret.
+/sort  <t>Objekten sorteras i alfabetisk ordning.
 </TOPIC>
 
 <TOPIC> logout <style> function

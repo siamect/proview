@@ -259,7 +259,8 @@ dcli_tCmdTable	xnav_command_table[] = {
 			  "/FILE", "/LOCAL", "/INITSTEP", 
 			  "/MAXOBJECTS", "/VOLUME", "/ALL", "/TYPE", 
 			  "/OPTION", "/ENTRY", "/NEW", "/TITLE", "/WINDOW", 
-			  "/ALARMVIEW", "/WIDTH", "/HEIGHT", "/XPOSITION", "/YPOSITION",  ""}
+			  "/ALARMVIEW", "/WIDTH", "/HEIGHT", "/XPOSITION", "/YPOSITION",  
+			  "/SORT", ""}
 		},
 		{
 			"OPEN",
@@ -2265,56 +2266,86 @@ static int	xnav_show_func(	void		*client_data,
     char title_str[80];
     pwr_tOName *names;
     xnav_sObjectList *ctx;
-    pwr_tCid cid;
+    pwr_tCid cid[10];
     pwr_tVid root_vid;
+    pwr_tObjName class_array[10];
+    int class_num;
+    int i;
 
     if ( EVEN( dcli_get_qualifier( "/CLASS", class_str, sizeof(class_str)))) {
       xnav->message('E', "Class is missing");
       return XNAV__HOLDCOMMAND;
     }
 
-    sts = gdh_ClassNameToId( class_str, &cid);
-    if ( EVEN(sts)) {
-      xnav->message('E', "Unknown class");
-      return XNAV__HOLDCOMMAND;
-    }
+    // The class string can contain several classes separated by ','
+    class_num = dcli_parse( class_str, ",", "",
+	     (char *) class_array, sizeof( class_array)/sizeof( class_array[0]), 
+	     sizeof( class_array[0]), 0);
 
     gdh_GetRootVolume( &root_vid);
 
-    for ( sts = gdh_GetClassListAttrRef( cid, &aref);
-	  ODD(sts);
-	  sts = gdh_GetNextAttrRef( cid, &aref, &aref)) {
-      cnt++;
+    for ( i = 0; i < class_num; i++) {
+
+      sts = gdh_ClassNameToId( class_array[i], &cid[i]);
+      if ( EVEN(sts)) {
+	xnav->message('E', "Unknown class");
+	return XNAV__HOLDCOMMAND;
+      }
+
+
+      for ( sts = gdh_GetClassListAttrRef( cid[i], &aref);
+	    ODD(sts);
+	    sts = gdh_GetNextAttrRef( cid[i], &aref, &aref)) {
+	cnt++;
+      }
     }
+
     names = (pwr_tOName *)calloc( cnt + 1, sizeof(pwr_tOName));
 
     int idx = 0;
-    for ( sts = gdh_GetClassListAttrRef( cid, &aref);
-	  ODD(sts);
-	  sts = gdh_GetNextAttrRef( cid, &aref, &aref)) {
-      if ( aref.Objid.vid == root_vid)
-	sts = gdh_AttrrefToName( &aref, names[idx], sizeof(names[0]),
-				 cdh_mNName);
-      else
-	sts = gdh_AttrrefToName( &aref, names[idx], sizeof(names[0]),
-				 cdh_mName_volumeStrict);
-      if ( EVEN(sts)) continue;
+    for ( i = 0; i < class_num; i++) {
+      for ( sts = gdh_GetClassListAttrRef( cid[i], &aref);
+	    ODD(sts);
+	    sts = gdh_GetNextAttrRef( cid[i], &aref, &aref)) {
+	if ( aref.Objid.vid == root_vid)
+	  sts = gdh_AttrrefToName( &aref, names[idx], sizeof(names[0]),
+				   cdh_mNName);
+	else
+	  sts = gdh_AttrrefToName( &aref, names[idx], sizeof(names[0]),
+				   cdh_mName_volumeStrict);
+	if ( EVEN(sts)) continue;
 
-      idx++;
-      if ( idx > cnt)
-	break;
+	idx++;
+	if ( idx > cnt)
+	  break;
+      }
     }
 
     if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str)))) {
-      sts = gdh_ObjidToName( cdh_ClassIdToObjid( cid), title_str, sizeof(title_str),
+      sts = gdh_ObjidToName( cdh_ClassIdToObjid( cid[i]), title_str, sizeof(title_str),
 			     cdh_mName_object);
       if ( EVEN(sts)) return sts;
 
       strcat( title_str, Lng::translate(" List"));
     }
 
+    int sort = ODD( dcli_get_qualifier( "/SORT", 0, 0));
+    if ( sort) {
+      // Sort
+      pwr_tOName tmp;
+      for ( unsigned int i = cnt - 1; i > 0; i--) {
+	for ( unsigned int j = 0; j < i; j++) {
+	  if ( strcmp(names[j], names[j+1]) > 0) {
+	    strcpy( tmp, names[j+1]);
+	    strcpy( names[j+1], names[j]);
+	    strcpy( names[j], tmp);
+	  }
+	}
+      }
+    }
+
     ctx = (xnav_sObjectList *) calloc( 1, sizeof(xnav_sObjectList));
-    ctx->cid = cid;
+    ctx->cid = cid[0];
     ctx->xnav = xnav;
 
     xnav->wow->CreateList( title_str, (char *)names, sizeof(names[0]), xnav_show_objectlist_cb, 
@@ -8467,6 +8498,7 @@ static void xnav_show_objectlist_cb( void *ctx, char *text)
     sprintf( cmd, "open fast/name=%s/title=\"%s\"", text, text);
     break;
   case pwr_cClass_SevHist:
+  case pwr_cClass_SevHistObject:
     sprintf( cmd, "open history/name=%s/title=\"%s\"", text, text);
     break;
   case pwr_cClass_XttGraph:
