@@ -969,7 +969,7 @@ static void insertCattObject( pwr_tStatus *sts, pwr_tCid cid, gdb_sAttribute *ap
 
     /* Look for class attributes in this class */
     for (i=0; i < cp->acount; i++) {
-      if ( cp->attr[i].flags.b.isclass && cdh_tidIsCid( cp->attr[i].tid)) {
+      if ( cp->attr[i].flags.b.isclass && cdh_tidIsCid( cp->attr[i].tid) && !cp->attr[i].flags.b.pointer) {
 	insertCattObject( sts, cid, &cp->attr[i], offset + ap->offs);
 	if ( EVEN(*sts)) return;
       }      
@@ -998,7 +998,7 @@ static void insertCattObject( pwr_tStatus *sts, pwr_tCid cid, gdb_sAttribute *ap
 
       /* Look for class attributes in this class */
       for (i=0; i < cp->acount; i++) {
-	if ( cp->attr[i].flags.b.isclass && cdh_tidIsCid( cp->attr[i].tid)) {
+	if ( cp->attr[i].flags.b.isclass && cdh_tidIsCid( cp->attr[i].tid) && !cp->attr[i].flags.b.pointer) {
 	  insertCattObject( sts, cid, &cp->attr[i], 
 			    offset + ap->offs + j * ap->size / ap->elem);
 	  if ( EVEN(*sts)) return;
@@ -1024,7 +1024,7 @@ void mvol_BuildCatt( pwr_tStatus *sts)
     if (cp == NULL) return;
 
     for (i=0; i < cp->acount; i++) {
-      if ( cp->attr[i].flags.b.isclass && cdh_tidIsCid( cp->attr[i].tid)) {
+      if ( cp->attr[i].flags.b.isclass && cdh_tidIsCid( cp->attr[i].tid) && !cp->attr[i].flags.b.pointer) {
 	insertCattObject( sts, cid, &cp->attr[i], 0);
 	if ( EVEN(*sts)) return;
       }
