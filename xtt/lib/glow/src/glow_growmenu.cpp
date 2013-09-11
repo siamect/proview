@@ -345,8 +345,8 @@ int GrowMenu::local_event_handler( GlowWind *w, glow_eEvent event, double x, dou
   if ( ll_x <= x && x <= ur_x &&
        ll_y <= y && y <= ur_y) {
     int item;
-    double vscale = trf.vertical_scale(0);
-    //cout << "Event handler: Hit in menu" << endl;
+    double vscale = 1; // trf.vertical_scale(0);
+    //cout << "Event handler: Hit in menu " << this << endl;
 
     item = int((y - ll.y) / ( item_height / vscale / w->zoom_factor_y));
     if ( item > item_cnt - 1)
@@ -381,10 +381,10 @@ int GrowMenu::local_event_handler( GlowWind *w, glow_eEvent event, double x, dou
 
 int GrowMenu::event_handler( GlowWind *w, glow_eEvent event, double fx, double fy)
 {
-  double x, y;
+  //double x, y;
 
-  trf.reverse( fx, fy, &x, &y);
-  return local_event_handler( w, event, x, y);
+  //trf.reverse( fx, fy, &x, &y);
+  return local_event_handler( w, event, fx, fy);
 }
 
 int GrowMenu::event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx,
@@ -396,7 +396,8 @@ int GrowMenu::event_handler( GlowWind *w, glow_eEvent event, int x, int y, doubl
   double rx, ry;
 
   // Convert koordinates to local koordinates
-  trf.reverse( fx, fy, &rx, &ry);
+  //trf.reverse( fx, fy, &rx, &ry);
+  rx = fx; ry = fy;
 
   sts = 0;
   if ( event == ctx->event_move_node) {
@@ -494,7 +495,7 @@ void GrowMenu::get_menu_char( int *t_size, glow_eDrawType *fill_color, glow_eDra
 			      glow_eDrawType *t_color, glow_eDrawType *t_color_disabled,
 			      glow_eFont *t_font)
 {
-  *t_size = text_size;
+  *t_size = (int)( trf.vertical_scale(0) * (text_size +4) - 4);
   *fill_color = fill_drawtype;
   *t_drawtype = text_drawtype;
   *t_color = text_color;
