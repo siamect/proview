@@ -167,7 +167,7 @@ static pwr_tStatus HistEventFilter( xmenu_sMenuCall *ip)
   else
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  if ( objar->Flags.b.Object)
+  if ( objar->Flags.b.Object || objar->Flags.b.ObjectAttr) 
     return 1;
   return 0;
 }

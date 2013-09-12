@@ -1932,22 +1932,23 @@ static int	xnav_show_func(	void		*client_data,
   else if ( cdh_NoCaseStrncmp( arg1_str, "HISTLIST", strlen( arg1_str)) == 0)
   {
     char hist_title[40];
-    pwr_tOName name_str;
-    pwr_tObjid objid = pwr_cNObjid;
+    pwr_tAName name_str;
+    pwr_tAttrRef *arp = 0;
+    pwr_tAttrRef aref;
 
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str))))
-    {
-      sts = gdh_NameToObjid ( name_str, &objid);
-      if (EVEN(sts))
-      {
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
+
+      sts = gdh_NameToAttrref( pwr_cNOid, name_str, &aref);
+      if (EVEN(sts)) {
         xnav->message('E', "Object not found");
         return XNAV__HOLDCOMMAND;
       }
+      arp = &aref;
     }
 
     strcpy( hist_title, Lng::translate( "Hist list"));
     Hist *hist;
-    hist = xnav->hist_new( hist_title, objid, &sts);
+    hist = xnav->hist_new( hist_title, arp, &sts);
     if ( EVEN(sts))
     {
       delete hist;

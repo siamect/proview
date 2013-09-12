@@ -226,9 +226,9 @@ Ev *XNavGtk::ev_new( char *eve_name, char *ala_name, char *blk_name,
 		    status);
 }
 
-Hist *XNavGtk::hist_new( char *title, pwr_tOid oid, pwr_tStatus *sts)
+Hist *XNavGtk::hist_new( char *title, pwr_tAttrRef *arp, pwr_tStatus *sts)
 {
-  return new HistGtk( this, parent_wid, title, oid, sts);
+  return new HistGtk( this, parent_wid, title, arp, sts);
 }
 
 Block *XNavGtk::block_new( pwr_tAttrRef *arp, char *name, unsigned int priv,

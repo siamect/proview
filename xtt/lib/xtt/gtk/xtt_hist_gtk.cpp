@@ -92,9 +92,9 @@ static void destroy_event( GtkWidget *w, gpointer data)
 
 HistGtk::HistGtk( void *hist_parent_ctx,
 		  GtkWidget *hist_parent_wid,
-		  char *hist_name, pwr_tObjid objid,
+		  char *hist_name, pwr_tAttrRef *arp,
 		  pwr_tStatus *status) :
-  Hist( hist_parent_ctx, hist_name, objid, status),
+  Hist( hist_parent_ctx, hist_name, arp, status),
   parent_wid(hist_parent_wid), parent_wid_hist(NULL)
 {
   const int hist_width = 800;
@@ -438,19 +438,21 @@ HistGtk::HistGtk( void *hist_parent_ctx,
 
   // Init start and stop time
   pwr_tStatus sts;
-  pwr_tOName name_str;
+  pwr_tAName name_str;
   gint pos = 0;
 
   ((Hist *)this)->all_cb();
 
   // If objid is applied, search for this object
   pos = 0;
-  sts = gdh_ObjidToName( objid, name_str, sizeof(name_str), cdh_mName_pathStrict);
-  if (ODD(sts)) {
-    gtk_editable_insert_text( GTK_EDITABLE(event_name_entry_w), name_str, 
-			      strlen(name_str), &pos);
-    this->eventName_str = name_str;
-    get_hist_list();
+  if ( arp && cdh_ObjidIsNotNull(arp->Objid)) {
+    sts = gdh_AttrrefToName( arp, name_str, sizeof(name_str), cdh_mName_pathStrict);
+    if (ODD(sts)) {
+      gtk_editable_insert_text( GTK_EDITABLE(event_name_entry_w), name_str, 
+				strlen(name_str), &pos);
+      this->eventName_str = name_str;
+      get_hist_list();
+    }
   }
 
   wow = new CoWowGtk( parent_wid_hist);

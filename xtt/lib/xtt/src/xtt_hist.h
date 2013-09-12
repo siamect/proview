@@ -61,7 +61,7 @@ class CoWow;
 class Hist {
   public:
     Hist( void *hist_parent_ctx,
-	  char *hist_name, pwr_tObjid objid,
+	  char *hist_name, pwr_tAttrRef *arp,
 	  pwr_tStatus *status);
     virtual ~Hist();
 

@@ -92,9 +92,9 @@ extern "C" {
 
 HistMotif::HistMotif( void *hist_parent_ctx,
 		      Widget	hist_parent_wid,
-		      char *hist_name, pwr_tObjid objid,
+		      char *hist_name, pwr_tAttrRef *arp,
 		      pwr_tStatus *status) :
-  Hist( hist_parent_ctx, hist_name, objid, status),
+  Hist( hist_parent_ctx, hist_name, arp, status),
   parent_wid(hist_parent_wid), parent_wid_hist(NULL)
 {
   char		uid_filename[120] = {"xtt_hist.uid"};
@@ -252,15 +252,16 @@ HistMotif::HistMotif( void *hist_parent_ctx,
   flow_AddCloseVMProtocolCb( parent_wid_hist, 
 	(XtCallbackProc)activate_exit, this);
 
-  char name_str[80];
-  sts = gdh_ObjidToName ( objid, name_str, sizeof(name_str), cdh_mName_pathStrict);
-  if (ODD(sts))
-  {
-    if(this->event_name_entry_w != NULL)
-    {
-      XmTextSetString(this->event_name_entry_w, name_str);
-      this->eventName_str = name_str;
-      this->get_hist_list();
+  pwr_tAName name_str;
+
+  if ( arp && cdh_ObjidIsNotNull(arp->Objid)) {
+    sts = gdh_AttrrefToName( arp, name_str, sizeof(name_str), cdh_mName_pathStrict);
+    if (ODD(sts)) {
+      if(this->event_name_entry_w != NULL) {
+	XmTextSetString(this->event_name_entry_w, name_str);
+	this->eventName_str = name_str;
+	this->get_hist_list();
+      }
     }
   }
 

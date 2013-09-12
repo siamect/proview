@@ -83,7 +83,7 @@ pwr_tStatus mh_clear_alarmlist_bc( pwr_tNodeIndex nix);
 bool compDate(sEvent ev1, sEvent ev2);
 
 Hist::Hist( void *hist_parent_ctx,
-	    char *hist_name, pwr_tObjid objid,
+	    char *hist_name, pwr_tAttrRef *arp,
 	    pwr_tStatus *status) :
   parent_ctx(hist_parent_ctx),
   start_trace_cb(NULL), display_in_xnav_cb(NULL), update_info_cb(NULL),

@@ -49,7 +49,7 @@ class HistGtk : public Hist {
  public:
   HistGtk( void *hist_parent_ctx,
 	   GtkWidget *hist_parent_wid,
-	   char *hist_name, pwr_tObjid objid,
+	   char *hist_name, pwr_tAttrRef *arp,
 	   pwr_tStatus *status);
   ~HistGtk();
 

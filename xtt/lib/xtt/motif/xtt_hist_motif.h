@@ -53,7 +53,7 @@ class HistMotif : public Hist {
  public:
   HistMotif( void *hist_parent_ctx,
 	     Widget	hist_parent_wid,
-	     char *hist_name, pwr_tObjid objid,
+	     char *hist_name, pwr_tAttrRef *arp,
 	     pwr_tStatus *status);
   ~HistMotif();
 

@@ -246,9 +246,9 @@ Ev *XNavMotif::ev_new( char *eve_name, char *ala_name, char *blk_name,
 		      display_return, display_ack, ev_beep, ev_pop_mask, ev_eventname_seg, status);
 }
 
-Hist *XNavMotif::hist_new( char *title, pwr_tOid oid, pwr_tStatus *sts)
+Hist *XNavMotif::hist_new( char *title, pwr_tAttrRef *arp, pwr_tStatus *sts)
 {
-  return new HistMotif( this, parent_wid, title, oid, sts);
+  return new HistMotif( this, parent_wid, title, arp, sts);
 }
 
 Block *XNavMotif::block_new( pwr_tAttrRef *arp, char *name, unsigned int priv,
