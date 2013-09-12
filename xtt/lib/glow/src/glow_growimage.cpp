@@ -198,6 +198,7 @@ int GrowImage::insert_image( const char *imagefile)
   ctx->gdraw->image_load( filename, &original_image, &image);
   if ( !original_image) 
     return 0;
+
   current_width = int( ctx->mw.zoom_factor_x / ctx->mw.base_zoom_factor *
 		       ctx->gdraw->image_get_width( image));
   current_height = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor *
@@ -1219,6 +1220,9 @@ int GrowImage::set_image_color( glow_tImImage om, void *n)
        c_color_shift || c_color_intensity || c_color_lightness || inverse) {
     ctx->gdraw->image_pixel_iter( om, &image, pixel_cb, this);
   }
+  else if ( image != om)
+    ctx->gdraw->image_copy( om, &image);
+  
   return 1;
 }
 

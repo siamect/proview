@@ -201,6 +201,7 @@ class GlowDrawGtk : public GlowDraw {
   int image_get_height( glow_tImImage image);
   int image_get_rowstride( glow_tImImage image);
   unsigned char *image_get_data( glow_tImImage image);
+  void image_copy( glow_tImImage orig_image, glow_tImImage *image);
   void image_rotate( glow_tImImage *image, int to_rotation, int from_rotation);
   void image_flip_vertical( glow_tImImage *image);
   void image_flip_horizontal( glow_tImImage *image);

@@ -2812,6 +2812,14 @@ unsigned char *GlowDrawGtk::image_get_data( glow_tImImage image)
   return (unsigned char *) gdk_pixbuf_get_pixels( (GdkPixbuf *)image);
 }
 
+void GlowDrawGtk::image_copy( glow_tImImage orig_image, glow_tImImage *image)
+{
+  if ( *image)
+    gdk_pixbuf_unref( (GdkPixbuf *)*image);
+
+  *(GdkPixbuf **)image = gdk_pixbuf_copy( (GdkPixbuf *)orig_image);
+}
+
 void GlowDrawGtk::image_rotate( glow_tImImage *image, int to_rotation, int from_rotation) 
 {
 #if GDK_PIXBUF_MAJOR == 2 && GDK_PIXBUF_MINOR < 8
@@ -2899,8 +2907,9 @@ int GlowDrawGtk::image_load( char *imagefile,
     return 0;
   }
 
-  if ( im)
+  if ( im) {
     *im = (glow_tImImage *) gdk_pixbuf_copy( (GdkPixbuf *)*orig_im);
+  }
   return 1;
 }
 
