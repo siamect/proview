@@ -1147,8 +1147,8 @@ int dcli_wildcard(	char	*wildname,
 	char	upper_name[400];
 
 	/* Convert to upper case */
-	// cdh_ToUpper( upper_name, name);
-	strcpy( upper_name, name);
+	cdh_ToLower( upper_name, name);
+	// strcpy( upper_name, name);
 
 	t = wildname;
 	u = upper_name;
@@ -1180,7 +1180,7 @@ int dcli_wildcard(	char	*wildname,
 	  {
 	    strncpy ( checkstr, t, len);
 	    checkstr[len] = '\0';
-	    u = strstr( u, checkstr);
+	    u = strstr( u, cdh_Low(checkstr));
 	    if ( u == 0)
 	      return 1;
 	    u += len;

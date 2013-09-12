@@ -503,10 +503,13 @@ void HistGtk::ok_btn( GtkWidget *w, gpointer data)
 
   histOP->maxTime_str = gtk_editable_get_chars( GTK_EDITABLE(((HistGtk *)histOP)->stop_time_entry_w), 0, -1);
 
-  histOP->eventText_str = gtk_editable_get_chars( GTK_EDITABLE(((HistGtk *)histOP)->event_text_entry_w), 0, -1);
+  char *textutf8 = gtk_editable_get_chars( GTK_EDITABLE(((HistGtk *)histOP)->event_text_entry_w), 0, -1);
+  histOP->eventText_str = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
 
-  histOP->eventName_str = gtk_editable_get_chars( GTK_EDITABLE(((HistGtk *)histOP)->event_name_entry_w), 0, -1);
-
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(((HistGtk *)histOP)->event_name_entry_w), 0, -1);
+  histOP->eventName_str = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
 
   histOP->get_hist_list();
   
