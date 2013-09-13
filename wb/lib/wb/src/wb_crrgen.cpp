@@ -34,6 +34,7 @@
  * General Public License plus this exception.
  **/
 
+#include "pwr_systemclasses.h"
 #include "pwr_baseclasses.h"
 #include "wb_crrgen.h"
 #include "flow_ctx.h"
@@ -162,7 +163,8 @@ static crrgen_tRefList reflist[] = {
     { pwr_cClass_cstoai, "DevBody", "AiObject", crrgen_eType_Write, crrgen_eTable_SimSignal, 0},
     { pwr_cClass_stoai, "DevBody", "AiObject", crrgen_eType_Write, crrgen_eTable_SimSignal, 0},
     { pwr_cClass_cstoii, "DevBody", "IiObject", crrgen_eType_Write, crrgen_eTable_SimSignal, 0},
-    { pwr_cClass_stoii, "DevBody", "IiObject", crrgen_eType_Write, crrgen_eTable_SimSignal, 0}};
+    { pwr_cClass_stoii, "DevBody", "IiObject", crrgen_eType_Write, crrgen_eTable_SimSignal, 0},
+    { pwr_cClass_MountObject, "SysBody", "Object", crrgen_eType_Ref, crrgen_eTable_Object, 0}};
 
 static crrgen_tRefList codelist[] = {
     { pwr_cClass_dataarithm, "DevBody", "Code", crrgen_eType_, crrgen_eTable_, 0},
@@ -546,7 +548,10 @@ void wb_crrgen::write( pwr_tStatus *rsts)
     wb_attribute a_target = m_sp->attribute( &crr->key.target);
     wb_object o = m_sp->object( crr->key.reference.Objid);
     if ( !a_target) {
-      printf( "** Undefined reference in: %s\n", o.longName().name(cdh_mName_volume | cdh_mName_path | cdh_mName_attribute));
+      if ( crr->key.target.Objid.vid == crr->key.reference.Objid.vid)
+        printf( "** Undefined reference in: %s\n", o.longName().name(cdh_mName_volume | cdh_mName_path | cdh_mName_attribute));
+      else
+        printf( "-- External reference in: %s\n", o.longName().name(cdh_mName_volume | cdh_mName_path | cdh_mName_attribute));
       crr = (sCrr *)tree_Successor(&sts, m_signal_th, crr);
       continue;
     }
@@ -636,7 +641,10 @@ void wb_crrgen::write( pwr_tStatus *rsts)
     wb_attribute a_target = m_sp->attribute( &crr->key.target);
     wb_object o = m_sp->object( crr->key.reference.Objid);
     if ( !a_target) {
-      printf( "** Undefined reference in: %s\n", o.longName().name(cdh_mName_volume | cdh_mName_path | cdh_mName_attribute));
+      if ( crr->key.target.Objid.vid == crr->key.reference.Objid.vid)
+	printf( "** Undefined reference in: %s\n", o.longName().name(cdh_mName_volume | cdh_mName_path | cdh_mName_attribute));
+      else
+        printf( "-- External reference in: %s\n", o.longName().name(cdh_mName_volume | cdh_mName_path | cdh_mName_attribute));
       crr = (sCrr *)tree_Successor(&sts, m_object_th, crr);
       continue;
     }
