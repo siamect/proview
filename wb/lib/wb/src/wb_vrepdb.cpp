@@ -2114,6 +2114,18 @@ pwr_tStatus wb_vrepdb::updateMeta()
   if (ODD(db_sts) && tree_Cardinality(&sts, m_class_th) != 0 && totalObjectCount > 0) {
     char buff[256];
 
+    // Change modification time
+    pwr_tOid oid = pwr_cNOid;
+    pwr_tTime time;
+    pwr_tStatus sts;
+
+    time_GetTime( &time);
+    oid.vid = m_vid;
+
+    wb_orep *orep = object( &sts, oid);
+    writeAttribute( &sts, orep, pwr_eBix_rt, offsetof(pwr_sRootVolume, Modified), sizeof(pwr_tTime), 
+		    &time);
+
     commit(&rc);
 
     if (EVEN(rc)) {
@@ -2141,6 +2153,19 @@ pwr_tStatus wb_vrepdb::updateMeta()
     m_merep->copyFiles(m_fileName, m_erep->merep());
     delete m_merep;
     m_merep = new wb_merep(m_fileName, m_erep, this);
+
+    // Change modification time
+    pwr_tOid oid = pwr_cNOid;
+    pwr_tTime time;
+    pwr_tStatus sts;
+
+    time_GetTime( &time);
+    oid.vid = m_vid;
+
+    wb_orep *orep = object( &sts, oid);
+    writeAttribute( &sts, orep, pwr_eBix_rt, offsetof(pwr_sRootVolume, Modified), sizeof(pwr_tTime), 
+		    &time);
+    commit(&rc);
   }
   
   tree_DeleteTable(&sts, m_attribute_th);
