@@ -41,6 +41,7 @@
 #include "wb_ldh_msg.h"
 #include "wb_pwrb_msg.h"
 #include "pwr_baseclasses.h"
+#include "pwr_basecomponentclasses.h"
 #include "wb_ldh.h"
 #include "wb_session.h"
 #include "wb_wsx.h"
@@ -62,6 +63,8 @@ static pwr_tStatus PostCreate (
   pwr_sAttrRef Attribute;
   pwr_tOid oid;
   pwr_tOid toid;
+  pwr_tCid fcid, scid, cid;
+  pwr_tOName AName;
   int cnt = 0;
 
   
@@ -69,12 +72,33 @@ static pwr_tStatus PostCreate (
     If father of SevHist has an "ActualValue" attribute, then make this SevHist
     refer to this attribute.
   */
+  sts = ldh_GetObjectClass(Session, Father, &fcid);
+  if (EVEN(sts)) return PWRB__SUCCESS;
+
+  scid = cid = fcid;
+  sts = ldh_GetSuperClass(Session, scid, &scid);
+  while( ODD(sts) && cid != pwr_cClass_Component && cid != pwr_cClass_Aggregate) {
+    scid = cid;
+    sts = ldh_GetSuperClass(Session, scid, &cid);
+  }
+
+  switch ( scid) {
+  case pwr_cClass_BaseSensor:
+    strcpy( AName, ".Value.ActualValue");
+    break;
+  case pwr_cClass_BaseSupSwitch:
+  case pwr_cClass_BaseSwitch:
+    strcpy( AName, ".Switch.ActualValue");
+    break;
+  default:
+    strcpy( AName, ".ActualValue");
+  }
 
   sts = ldh_ObjidToName(Session, Father, ldh_eName_Hierarchy, Name,
     sizeof(Name), &size);
   if (EVEN(sts)) return PWRB__SUCCESS;
 
-  strcat(Name, ".ActualValue");
+  strcat(Name, AName);
 
   sts = ldh_NameToAttrRef(Session, Name, &Attribute);
   if (EVEN(sts)) {
