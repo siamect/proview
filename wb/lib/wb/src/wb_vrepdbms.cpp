@@ -2114,8 +2114,21 @@ pwr_tStatus wb_vrepdbms::updateMeta()
     oid.vid = m_vid;
 
     wb_orep *orep = object( &sts, oid);
-    writeAttribute( &sts, orep, pwr_eBix_rt, offsetof(pwr_sRootVolume, Modified), sizeof(pwr_tTime), 
-		    &time);
+    switch ( m_cid) {
+    case pwr_eClass_RootVolume:
+      writeAttribute( &sts, orep, pwr_eBix_rt, offsetof(pwr_sRootVolume, Modified), sizeof(pwr_tTime), 
+		      &time);
+      break;
+    case pwr_eClass_SubVolume:
+      writeAttribute( &sts, orep, pwr_eBix_rt, offsetof(pwr_sSubVolume, Modified), sizeof(pwr_tTime), 
+		      &time);
+      break;
+    case pwr_eClass_SharedVolume:
+      writeAttribute( &sts, orep, pwr_eBix_rt, offsetof(pwr_sSharedVolume, Modified), sizeof(pwr_tTime), 
+		      &time);
+      break;
+    default: ;
+    }
 
     commit(&rc);
 
@@ -2154,9 +2167,24 @@ pwr_tStatus wb_vrepdbms::updateMeta()
     oid.vid = m_vid;
 
     wb_orep *orep = object( &sts, oid);
-    writeAttribute( &sts, orep, pwr_eBix_rt, offsetof(pwr_sRootVolume, Modified), sizeof(pwr_tTime), 
-		    &time);
-    commit(&rc);
+    switch ( m_cid) {
+    case pwr_eClass_RootVolume:
+      writeAttribute( &sts, orep, pwr_eBix_rt, offsetof(pwr_sRootVolume, Modified), sizeof(pwr_tTime), 
+		      &time);
+      commit(&rc);
+      break;
+    case pwr_eClass_SubVolume:
+      writeAttribute( &sts, orep, pwr_eBix_rt, offsetof(pwr_sSubVolume, Modified), sizeof(pwr_tTime), 
+		      &time);
+      commit(&rc);
+      break;
+    case pwr_eClass_SharedVolume:
+      writeAttribute( &sts, orep, pwr_eBix_rt, offsetof(pwr_sSharedVolume, Modified), sizeof(pwr_tTime), 
+		      &time);
+      commit(&rc);
+      break;
+    default: ;
+    }
   }
   
   tree_DeleteTable(&sts, m_attribute_th);
