@@ -181,7 +181,16 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
   }
   wb_log::pull();
 
+  if ( m_wnav && m_wnav->ldhses) {
+    wb_erep *erep = *(wb_env *)ldh_SessionToWB( m_wnav->ldhses);
+    erep->checkVolumes( &m_sts, nodename);
+
+    if ( evenSts())
+      return;
+  }
+
   if ( opt.force || opt.manual || rebuild) {
+
     m_sts = lfu_create_bootfile( nodename, (lfu_t_volumelist *)volumelist, volumecnt,
 				 opt.debug);
     if ( ODD(m_sts))

@@ -40,17 +40,35 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <string.h>
 #include "wb_pwrs.h"
 
 using namespace std;
 
 class wb_merep;
 class wb_vrep;
+
 class wb_cdrep;
 class wb_orep;
 class wb_tdrep;
 class wb_adrep;
 class wb_name;
+
+class wb_volcheck 
+{ 
+ public:
+  wb_volcheck() {}
+  wb_volcheck( char *vname, char *filename, pwr_tVid vid, pwr_tTime time) :
+    m_vid(vid), m_time(time) 
+  {
+    strncpy( m_vname, vname, sizeof(m_vname));
+    strncpy( m_filename, filename, sizeof(m_filename));
+  }
+  char m_vname[80];
+  char m_filename[80];
+  pwr_tVid m_vid;
+  pwr_tTime m_time;
+};
 
 class wb_erep
 {
@@ -114,7 +132,7 @@ public:
   bool refMerepOccupied() { return m_ref_merep_occupied;}
   void printMethods();
   bool check_lock( char *name, ldh_eVolDb type);
-
+  void checkVolumes( pwr_tStatus *sts, char *nodeconfigname);
   static void volumeNameToFilename( pwr_tStatus *sts, char *name, char *filename);
 
 private:
@@ -123,6 +141,7 @@ private:
   void loadMeta( pwr_tStatus *status, char *db);
   void loadLocalWb( pwr_tStatus *sts);
   void bindMethods();
+  void checkVolume( pwr_tStatus *sts, pwr_tVid vid, vector<wb_volcheck> &carray, int *err_cnt);
 
   static void at_exit();
 };

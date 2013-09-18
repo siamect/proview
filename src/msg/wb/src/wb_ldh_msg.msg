@@ -152,3 +152,5 @@ maxwblfiles     <Max number of wb_load files exceeded>			/error
 compsyntax	<Configure component syntax error>			/error
 numaref		<Attribute referens in numeric format>			/info
 numobjid	<Objid in numeric format>				/info
+volversion	<Volume version mismatch>				/error
+volerr		<Volume check errors>					/error

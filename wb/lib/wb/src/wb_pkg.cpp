@@ -339,10 +339,6 @@ void pkg_node::checkVolume( char *filename)
   sts = lfu_GetVolume( filename, vol_name, &vol_vid, &vol_cid, &vol_time);
   if ( EVEN(sts)) throw wb_error(sts);
 
-  if ( vol_cid == pwr_eClass_DetachedClassVolume)
-    // No check
-    return;
-
   found = false;
   for ( int i = 0; i < (int)m_volumelist.size(); i++) {
     if ( m_volumelist[i].m_vid == vol_vid) {
@@ -360,6 +356,10 @@ void pkg_node::checkVolume( char *filename)
     pkg_volume vol( vol_name, filename, vol_vid, vol_time);
     m_volumelist.push_back( vol);
   }
+
+  if ( vol_cid == pwr_eClass_DetachedClassVolume)
+    // No check of referenced volumes
+    return;
 
   sts = lfu_GetVolRef( filename, &volref, &volref_cnt);
   if ( EVEN(sts)) throw wb_error(sts);
@@ -380,7 +380,7 @@ void pkg_node::checkVolume( char *filename)
       if ( m_volumelist[j].m_vid == (volref+i)->vid) {
 	if ( m_volumelist[j].m_time.tv_sec != (volref+i)->version.tv_sec) {
 	  char msg[200];
-	  sprintf( msg, "Version mismatch volume %s in %s", (volref+i)->name, filename);
+	  sprintf( msg, "Version mismatch volume %s in %s and %s", (volref+i)->name, filename, m_volumelist[j].m_filename);
 	  MsgWindow::message( 'E', msg, msgw_ePop_No);
 	  m_errors++;
 	}

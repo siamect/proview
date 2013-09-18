@@ -454,7 +454,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 		{
 			"CHECK",
 			&wnav_check_func,
-			{ "dcli_arg1", "/VOLUME", "/NAME", ""}
+			{ "dcli_arg1", "/VOLUME", "/NAME", "/NODE", ""}
 		},
 		{
 			"UPDATE",
@@ -5196,6 +5196,20 @@ static int	wnav_check_func(	void		*client_data,
       else
 	wnav->message( 'I', "Successfull syntax check, no errors or warnings found");
     }
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "BOOTFILE", strlen( arg1_str)) == 0) {
+    char nodestr[80];
+    wb_erep *erep = *(wb_env *)wnav->wbctx;
+
+    if ( EVEN( dcli_get_qualifier( "/NODE", nodestr, sizeof(nodestr)))) {
+      wnav->message('E', "Syntax error");
+      return WNAV__SYNTAX;
+    }
+    erep->checkVolumes( &sts, nodestr);
+    if ( EVEN(sts))
+      wnav->message(' ', wnav_get_message(sts));
+    else 
+      wnav->message('I', "Bootfile check successful");
   }
   else {
     wnav->message('E', "Syntax error");

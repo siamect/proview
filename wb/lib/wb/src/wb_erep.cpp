@@ -1327,3 +1327,143 @@ bool wb_erep::check_lock( char *name, ldh_eVolDb type)
   dcli_translate_filename( vname, vname);
   return wb_dblock::check(vname);
 }
+
+
+void wb_erep::checkVolume( pwr_tStatus *sts, pwr_tVid vid, vector<wb_volcheck> &carray, int *err_cnt)
+{
+  lfu_t_volref *volref;
+  int volref_cnt;
+  pwr_tFileName fname;
+  
+  wb_vrep *vol = volume( sts, vid);
+  if ( EVEN(*sts)) {
+    MsgWindow::message( 'E', "Volume not loaded: ", cdh_VolumeIdToString( 0, vid, 0, 0));
+    (*err_cnt)++;
+    return;
+  }
+
+  wb_volcheck vcheck;
+  
+  switch ( vol->type()) {
+  case ldh_eVolRep_Dbs: {
+    vcheck.m_vid = vid;
+    vcheck.m_time = ((wb_vrepdbs *)vol)->m_dbsvep->vp->time;
+    strcpy( vcheck.m_vname, vol->name());
+    strcpy( vcheck.m_filename, vol->fileName());
+    break;
+  }
+  case ldh_eVolRep_Wbl:
+  case ldh_eVolRep_Db:
+  case ldh_eVolRep_Dbms: {    
+    // Find dbs-file on $pwrp_load
+    pwr_tFileName filestr;
+    pwr_tVid vol_vid;
+    pwr_tCid vol_cid;
+    pwr_tTime vol_time;
+    pwr_tObjName vol_name;
+
+    volumeNameToFilename( sts, (char *)vol->name(), filestr);
+	   
+    *sts = lfu_GetVolume( filestr, vol_name, &vol_vid, &vol_cid, &vol_time);
+    if ( EVEN(*sts)) {
+      MsgWindow::message( 'E', "Dbs file not found for volume ", cdh_VolumeIdToString( 0, vid, 0, 0));
+      (*err_cnt)++;
+      return;
+    }
+
+    vcheck.m_vid = vid;
+    vcheck.m_time = vol_time;
+    strcpy( vcheck.m_vname, vol->name());
+    strcpy( vcheck.m_filename, filestr);
+
+    break;
+  }
+  default:
+    MsgWindow::message( 'E', "Strange volume type: ", cdh_VolumeIdToString( 0, vid, 0, 0));
+    (*err_cnt)++;
+  }
+
+  // Check if volume is stored
+  bool found = false;
+  for ( int i = 0; i < (int) carray.size(); i++) {
+    if ( carray[i].m_vid == vcheck.m_vid) {
+      found = true;
+      if ( carray[i].m_time.tv_sec != vcheck.m_time.tv_sec) {
+      	char msg[200];
+	sprintf( msg, "Version mismatch volume %s in %s and %s", vcheck.m_vname, vcheck.m_filename, carray[i].m_filename);
+	MsgWindow::message( 'E', msg, msgw_ePop_No);
+	(*err_cnt)++;
+	*sts = LDH__VOLVERSION;
+      }
+    }
+  }
+
+  if ( !found)
+    carray.push_back( vcheck);
+  
+  if ( vol->cid() == pwr_eClass_DetachedClassVolume)
+    // No check of referenced volumes
+    return;
+
+  *sts = lfu_GetVolRef( vcheck.m_filename, &volref, &volref_cnt);
+  if ( EVEN(*sts)) return;
+
+  for ( int i = 0; i < volref_cnt; i++) {
+    volumeNameToFilename( sts, volref[i].name, fname);
+    if ( EVEN(*sts)) {
+      char msg[200];
+      sprintf( msg, "Loadfile not found: %s", volref[i].name);
+      MsgWindow::message( 'E', msg, msgw_ePop_No);
+      (*err_cnt)++;
+      continue;
+    }
+
+    checkVolume( sts, volref[i].vid, carray, err_cnt);
+
+    for ( int j = 0; j < (int)carray.size(); j++) {
+      if ( carray[j].m_vid == volref[i].vid) {
+	if ( carray[j].m_time.tv_sec != volref[i].version.tv_sec) {
+	  char msg[200];
+	  sprintf( msg, "Version mismatch volume %s in %s and %s", volref[i].name, vcheck.m_filename, carray[j].m_filename);
+	  MsgWindow::message( 'E', msg, msgw_ePop_No);
+	  (*err_cnt)++;
+	  *sts = LDH__VOLVERSION;
+	}
+	break;
+      }
+    }
+  }
+  free( (char *)volref);
+  
+}
+
+void wb_erep::checkVolumes( pwr_tStatus *sts, char *nodeconfigname)
+{
+  lfu_t_volumelist	*vollist;
+  int			volcnt;
+  vector<wb_volcheck>   carray;
+  int 			err_cnt = 0;
+
+  // Load the bootlist
+  *sts = lfu_volumelist_load( load_cNameBootList, &vollist, &volcnt);
+  if ( EVEN(*sts)) return;
+  
+  bool found = false;
+  for ( int i = 0; i < volcnt; i++) {
+    if ( cdh_NoCaseStrcmp( vollist[i].p1, nodeconfigname) == 0) {
+      found = true;
+      checkVolume( sts, vollist[i].volume_id, carray, &err_cnt);      
+    }
+  }
+
+  if ( !found) {
+    char msg[200];
+    sprintf( msg, "No root volume found for node %s", nodeconfigname);
+    MsgWindow::message( 'E', msg, msgw_ePop_Yes);
+    *sts = LDH__NOSUCHVOL;
+  }
+  if ( err_cnt) {
+    MsgWindow::map_default();
+    *sts = LDH__VOLERR;
+  }
+}
