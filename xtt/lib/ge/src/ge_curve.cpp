@@ -1343,7 +1343,7 @@ int GeCurve::read_file( char *filename)
           break;
         }
         else
-          cd->y_data[i][j] = 0;
+          cd->y_data[i-1][j] = 0;
       }
     }
     if ( skip_line)

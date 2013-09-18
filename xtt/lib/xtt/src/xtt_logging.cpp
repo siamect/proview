@@ -623,7 +623,8 @@ int XttLogging::start()
 	  return XNAV__HOLDCOMMAND;
 	} 
 
-	if ( wanted_buffer_size != buffer_size) {
+	if ( wanted_buffer_size != buffer_size ||
+	     buffer_ptr == 0) {
 	  // Reallocate
 	  if ( buffer_ptr != 0)
 	    free( buffer_ptr);
