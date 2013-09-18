@@ -1946,7 +1946,7 @@ static int	xnav_show_func(	void		*client_data,
       arp = &aref;
     }
 
-    strcpy( hist_title, Lng::translate( "Hist list"));
+    strcpy( hist_title, Lng::translate( "Event Log"));
     Hist *hist;
     hist = xnav->hist_new( hist_title, arp, &sts);
     if ( EVEN(sts))

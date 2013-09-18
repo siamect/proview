@@ -1036,7 +1036,7 @@ SObject pwrs:Class
       EndObject
       Object HistEvent $MenuButton
 	Body SysBody
-	  Attr ButtonName = "Hist Event..."
+	  Attr ButtonName = "Event Log..."
 	  Attr MethodName = "$Object-HistEvent"
 	  Attr FilterName = "$Object-HistEventFilter"
 	EndBody
@@ -1173,7 +1173,7 @@ SObject pwrs:Class
       EndObject
       Object HistEvent $MenuButton
 	Body SysBody
-	  Attr ButtonName = "Hist Event..."
+	  Attr ButtonName = "Event Log..."
 	  Attr MethodName = "$Object-HistEvent"
 	  Attr FilterName = "$Object-HistEventFilter"
 	EndBody

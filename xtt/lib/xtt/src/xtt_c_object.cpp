@@ -128,19 +128,41 @@ static pwr_tStatus OpenCrossrefFilter( xmenu_sMenuCall *ip)
 }
 
 //
-// Hist event
+// Event history
 //
 static pwr_tStatus HistEvent( xmenu_sMenuCall *ip)
 {
   char cmd[420];
   pwr_tAName name;
   int sts;
-  pwr_sAttrRef *objar;
+  pwr_tAttrRef *objar;
+  pwr_tCid cid;
+  pwr_tAttrRef aref;
 
   if (!ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid))
     objar = &ip->Pointed;
   else
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  sts = gdh_GetAttrRefTid( objar, &cid);
+  if ( EVEN(sts)) return sts;
+
+  switch ( cid) {
+  case pwr_cClass_DSup:
+  case pwr_cClass_ASup: {
+    // Show events for Attribute instead
+    sts = gdh_ArefANameToAref( objar, "Attribute", &aref);
+    if ( EVEN(sts)) return sts;
+    
+    sts = gdh_GetObjectInfoAttrref( &aref, &aref, sizeof(aref));
+    if ( EVEN(sts)) return sts;
+
+    objar = &aref;
+    break;
+  }
+  default: ;
+  }
+
 
   sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			   cdh_mName_volumeStrict);
@@ -153,7 +175,7 @@ static pwr_tStatus HistEvent( xmenu_sMenuCall *ip)
 }
 
 //
-// Open crossref filter
+// Event history filter
 //
 static pwr_tStatus HistEventFilter( xmenu_sMenuCall *ip)
 {

@@ -54,7 +54,7 @@ xtt_sMethodButton XttMethodToolbar::m_data[XttMethodToolbar::m_size] =
    {"Object Graph", 	"$Object-OpenObjectGraph","$Object-OpenObjectGraphFilter", "$pwr_exe/xtt_meth_classgraph.png", 	"Object Graph"},
    {"Open Plc",		"$Object-OpenTrace",	"$Object-OpenTraceFilter", 	"$pwr_exe/xtt_meth_trace.png", 	        "Open Plc"},
    {"DataSheet",	"$Object-DataSheet",	"$Object-DataSheetFilter", 	"$pwr_exe/xtt_meth_datasheet.png", 	"DataSheet"},
-   {"Hist Event...",	"$Object-HistEvent",	"$Object-HistEventFilter", 	"$pwr_exe/xtt_meth_histevent.png", 	"Hist Event..."},
+   {"Event Log...",	"$Object-HistEvent",	"$Object-HistEventFilter", 	"$pwr_exe/xtt_meth_histevent.png", 	"Event Log..."},
    {"Block Events...",	"$Object-BlockEvents",	"$Object-BlockEventsFilter", 	"$pwr_exe/xtt_meth_block.png", 		"Block Events..."},
    {"Open Object", 	"$Object-OpenObject",	"$Object-OpenObjectFilter", 	"$pwr_exe/xtt_meth_openobject.png", 	"Open Object"},
    {"Crossreferences", 	"$Object-OpenCrossref",	"$Object-OpenCrossrefFilter", 	"$pwr_exe/xtt_meth_crossref.png", 	"Crossreferences"},
