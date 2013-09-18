@@ -141,7 +141,10 @@ int XttSevHist::get_data( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
   gcd->x_axis_type[0] = curve_eAxis_x;
   strcpy( gcd->x_format[0], "%10t");
 
-  strcpy( gcd->y_name[0], anamev[0]);
+  strcpy( gcd->y_name[0], onamev[0]);
+  if ( strcmp( onamev[0], "") != 0)
+    strcat( gcd->y_name[0], ".");
+  strcat( gcd->y_name[0], anamev[0]);
   gcd->y_data[0] = (double *) calloc( 1, 8 * rows);
 
   for ( int i = 0; i < rows; i++) {
@@ -283,7 +286,10 @@ int XttSevHist::get_objectdata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
 
     gcd->cols++;
 
-    strcpy( gcd->y_name[gcd->cols-1], histattrbuf[i].aname);
+    strcpy( gcd->y_name[gcd->cols-1], onamev[0]);
+    if ( strcmp( onamev[0], "") != 0)
+      strcat( gcd->y_name[gcd->cols-1], ".");
+    strcat( gcd->y_name[gcd->cols-1], histattrbuf[i].aname);
     gcd->y_data[gcd->cols-1] = (double *) calloc( 1, 8 * rows);
     gcd->y_axis_type[gcd->cols-1] = curve_eAxis_y;
 

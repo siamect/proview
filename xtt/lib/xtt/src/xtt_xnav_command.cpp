@@ -3884,6 +3884,8 @@ static int	xnav_open_func(	void		*client_data,
         oidv[oid_cnt] = aref.Objid;
 	sevhistobjectv[oid_cnt] = false;
 	strcpy( onamev[oid_cnt], "");
+	sts = gdh_ObjidToName( aref.Objid, onamev[oid_cnt], sizeof(onamev[0]), 
+			       cdh_mNName);
 	oid_cnt++;
       }
 
