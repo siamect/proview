@@ -713,7 +713,7 @@ sev_db *sev_dbms::open_database()
 int sev_dbms::create_table( pwr_tStatus *sts, char *tablename, pwr_eType type, 
 			    unsigned int size, pwr_tMask options, float deadband)
 {
-  char query[200];
+  char query[400];
   char timeformatstr[80];
   char jumpstr[80];
   char idtypestr[20];
@@ -1007,7 +1007,7 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
   if(m_items[item_idx].attrnum > 1) {
     return store_objectvalue(sts, item_idx, attr_idx, time, buf, m_items[item_idx].old_value, size);
   }
-  char query[200];
+  char query[400];
   char bufstr[512];
   char timstr[40];
   int update_time_only = 0;
@@ -1419,7 +1419,7 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
   }
 
 
-  char query[200];
+  char query[400];
   char starttimstr[40];
   char endtimstr[40];
   int total_rows;

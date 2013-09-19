@@ -329,7 +329,7 @@ int sev_dbsqlite::createSevVersion3Tables(void)
 int sev_dbsqlite::create_table( pwr_tStatus *sts, char *tablename, pwr_eType type, 
 				unsigned int size, pwr_tMask options, float deadband)
 {
-  char query[200];
+  char query[400];
   char *errmsg;
   char timeformatstr[80];
   char jumpstr[80];
@@ -659,7 +659,7 @@ int sev_dbsqlite::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
   if(m_items[item_idx].attrnum > 1) {
     return store_objectvalue(sts, item_idx, attr_idx, time, buf, m_items[item_idx].old_value, size);
   }
-  char query[200];
+  char query[400];
   char *errmsg;
   char bufstr[512];
   char timstr[40];
