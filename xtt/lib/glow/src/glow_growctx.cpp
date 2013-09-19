@@ -1105,6 +1105,18 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 		scale_x * (select_rect_stored_ur_x - select_rect_stored_ll_x);
             y2 = select_rect_stored_ll_y + 
 		scale_y * (select_rect_stored_ur_y - select_rect_stored_ll_y);
+
+	    if ( grid_on) {
+	      double fx, fy;
+	      find_grid( (double)(x2 + mw.offset_x) / mw.zoom_factor_x, 
+			 (double)(y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+	      x2 = fx * mw.zoom_factor_x + mw.offset_x;
+	      y2 = fy * mw.zoom_factor_y + mw.offset_y;
+
+	      scale_x = (x2 - select_rect_stored_ll_x) / (select_rect_stored_ur_x - select_rect_stored_ll_x);
+	      scale_y = (y2 - select_rect_stored_ll_y) / (select_rect_stored_ur_y - select_rect_stored_ll_y);
+	    }
+
             break;
           case glow_eScaleType_Down:
 	    if ( select_rect_start_y == select_rect_stored_ll_y)
@@ -1118,6 +1130,15 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
             x2 = select_rect_stored_ur_x;
             y2 = select_rect_stored_ll_y + 
 		scale_y * (select_rect_stored_ur_y - select_rect_stored_ll_y);
+
+	    if ( grid_on) {
+	      double fx, fy;
+	      find_grid( (double)(x2 + mw.offset_x) / mw.zoom_factor_x, 
+			 (double)(y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+	      y2 = fy * mw.zoom_factor_y + mw.offset_y;
+
+	      scale_y = (y2 - select_rect_stored_ll_y) / (select_rect_stored_ur_y - select_rect_stored_ll_y);
+	    }
 	    break;
           case glow_eScaleType_UpperLeft:
 	    if ( select_rect_start_x == select_rect_stored_ll_x)
@@ -1145,6 +1166,17 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 		scale_x * (select_rect_stored_ur_x - select_rect_stored_ll_x);
             y2 = select_rect_stored_ur_y - 
 		scale_y * (select_rect_stored_ur_y - select_rect_stored_ll_y);
+
+	    if ( grid_on) {
+	      double fx, fy;
+	      find_grid( (double)(x2 + mw.offset_x) / mw.zoom_factor_x, 
+			 (double)(y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+	      x2 = fx * mw.zoom_factor_x + mw.offset_x;
+	      y2 = fy * mw.zoom_factor_y + mw.offset_y;
+
+	      scale_x = (x2 - select_rect_stored_ll_x) / (select_rect_stored_ur_x - select_rect_stored_ll_x);
+	      scale_y = -(y2 - select_rect_stored_ur_y) / (select_rect_stored_ur_y - select_rect_stored_ll_y);
+	    }
             break;
           case glow_eScaleType_Left:
 	    if ( select_rect_start_x == select_rect_stored_ll_x)
@@ -1158,6 +1190,15 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
             x2 = select_rect_stored_ll_x +
 		scale_x * (select_rect_stored_ur_x - select_rect_stored_ll_x);
             y2 = select_rect_stored_ur_y;
+
+	    if ( grid_on) {
+	      double fx, fy;
+	      find_grid( (double)(x2 + mw.offset_x) / mw.zoom_factor_x, 
+			 (double)(y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+	      x2 = fx * mw.zoom_factor_x + mw.offset_x;
+
+	      scale_x = (x2 - select_rect_stored_ll_x) / (select_rect_stored_ur_x - select_rect_stored_ll_x);
+	    }
             break;
           case glow_eScaleType_Right:
 	    if ( select_rect_start_x == select_rect_stored_ur_x)
@@ -1171,6 +1212,15 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
             x2 = select_rect_stored_ur_x -
 		scale_x * (select_rect_stored_ur_x - select_rect_stored_ll_x);
             y2 = select_rect_stored_ur_y;
+
+	    if ( grid_on) {
+	      double fx, fy;
+	      find_grid( (double)(x2 + mw.offset_x) / mw.zoom_factor_x, 
+			 (double)(y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+	      x2 = fx * mw.zoom_factor_x + mw.offset_x;
+
+	      scale_x = -(x2 - select_rect_stored_ur_x) / (select_rect_stored_ur_x - select_rect_stored_ll_x);
+	    }
             break;
           case glow_eScaleType_LowerRight:
 	    if ( select_rect_start_x == select_rect_stored_ur_x)
@@ -1198,6 +1248,17 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 		scale_x * (select_rect_stored_ur_x - select_rect_stored_ll_x);
             y2 = select_rect_stored_ll_y + 
 		scale_y * (select_rect_stored_ur_y - select_rect_stored_ll_y);
+
+	    if ( grid_on) {
+	      double fx, fy;
+	      find_grid( (double)(x2 + mw.offset_x) / mw.zoom_factor_x, 
+			 (double)(y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+	      x2 = fx * mw.zoom_factor_x + mw.offset_x;
+	      y2 = fy * mw.zoom_factor_y + mw.offset_y;
+
+	      scale_x = -(x2 - select_rect_stored_ur_x) / (select_rect_stored_ur_x - select_rect_stored_ll_x);
+	      scale_y = (y2 - select_rect_stored_ll_y) / (select_rect_stored_ur_y - select_rect_stored_ll_y);
+	    }
             break;
           case glow_eScaleType_Up:
 	    if ( select_rect_start_y == select_rect_stored_ur_y)
@@ -1211,6 +1272,15 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
             x2 = select_rect_stored_ur_x;
             y2 = select_rect_stored_ur_y -
 		scale_y * (select_rect_stored_ur_y - select_rect_stored_ll_y);
+
+	    if ( grid_on) {
+	      double fx, fy;
+	      find_grid( (double)(x2 + mw.offset_x) / mw.zoom_factor_x, 
+			 (double)(y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+	      y2 = fy * mw.zoom_factor_y + mw.offset_y;
+
+	      scale_y = -(y2 - select_rect_stored_ur_y) / (select_rect_stored_ur_y - select_rect_stored_ll_y);
+	    }
             break;
           case glow_eScaleType_UpperRight:
 	    if ( select_rect_start_x == select_rect_stored_ur_x)
@@ -1238,6 +1308,17 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 		scale_x * (select_rect_stored_ur_x - select_rect_stored_ll_x);
             y2 = select_rect_stored_ur_y - 
 		scale_y * (select_rect_stored_ur_y - select_rect_stored_ll_y);
+
+	    if ( grid_on) {
+	      double fx, fy;
+	      find_grid( (double)(x2 + mw.offset_x) / mw.zoom_factor_x, 
+			 (double)(y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+	      x2 = fx * mw.zoom_factor_x + mw.offset_x;
+	      y2 = fy * mw.zoom_factor_y + mw.offset_y;
+
+	      scale_x = -(x2 - select_rect_stored_ur_x) / (select_rect_stored_ur_x - select_rect_stored_ll_x);
+	      scale_y = -(y2 - select_rect_stored_ur_y) / (select_rect_stored_ur_y - select_rect_stored_ll_y);
+	    }
             break;
           default:
             ;
