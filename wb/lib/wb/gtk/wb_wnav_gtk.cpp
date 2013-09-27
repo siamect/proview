@@ -71,6 +71,7 @@ extern "C" {
 #include "wb_foe_gtk.h"
 #include "wb_utl_gtk.h"
 #include "wb_xcrr_gtk.h"
+#include "wb_bckw_gtk.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -461,6 +462,11 @@ CoLogin *WNavGtk::login_new( const char		*name,
 WCrr *WNavGtk::wcrr_new( pwr_tAttrRef *aref, pwr_tStatus  *status)
 {
   return new WCrrGtk( parent_wid, this, ldhses, aref, gbl.advanced_user, status);
+}
+
+WbBckW *WNavGtk::bckw_new( char *name, wb_bck_list *list, pwr_tStatus  *status)
+{
+  return new WbBckWGtk( this, parent_wid, ldhses, name, list, editmode, status);
 }
 
 void WNavGtk::wge_subwindow_loop( WGe *wge)

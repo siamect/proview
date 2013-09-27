@@ -128,7 +128,7 @@ int main (int argc, char **argv)
       fread (&dh, sizeof dh, 1, f);
       printf ("    Valid:            %x\n", dh.valid);
       printf ("    Dynamic:          %x\n", dh.dynamic);
-      printf ("    Class:            %x\n", dh.class);
+      printf ("    Class:            %x\n", dh.cid);
       printf ("    Attrref.Vid:      %x\n", dh.attrref.Objid.vid);
       printf ("    Attrref.Oix:      %x\n", dh.attrref.Objid.oix);
       printf ("    Attrref.Offset:   %x\n", dh.attrref.Offset);

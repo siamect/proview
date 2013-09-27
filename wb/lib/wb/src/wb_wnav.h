@@ -87,6 +87,10 @@
 #include "wb_log.h"
 #endif
 
+#ifndef wb_bckw_h
+#include "wb_bckw.h"
+#endif
+
 
 #define wnav_cVersion	"X3.3a"
 #define wnav_cScriptDescKey	"!** Description"
@@ -342,6 +346,7 @@ class WNav : public WUtility{
 				void (* bc_success)( void *), void (* bc_cancel)( void *), 
 				pwr_tStatus *status) { return 0;}
     virtual WCrr *wcrr_new( pwr_tAttrRef *aref, pwr_tStatus  *status) { return 0;}
+    virtual WbBckW *bckw_new( char *name, wb_bck_list *list, pwr_tStatus  *status) { return 0;}
 
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);
     static int init_brow_base_cb( FlowCtx *fctx, void *client_data);

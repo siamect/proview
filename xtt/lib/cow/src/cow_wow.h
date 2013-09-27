@@ -51,6 +51,7 @@ typedef enum {
   wow_eFileSelType_Graph,
   wow_eFileSelType_Image,
   wow_eFileSelType_History,
+  wow_eFileSelType_Backup,
   wow_eFileSelType__
 } wow_eFileSelType;
 

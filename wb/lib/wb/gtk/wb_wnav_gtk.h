@@ -96,6 +96,7 @@ class WNavGtk : public WNav {
     CoLogin *login_new( const char *name, const char *groupname,
 			void (* bc_success)( void *), void (* bc_cancel)( void *), pwr_tStatus *status);
     WCrr *wcrr_new( pwr_tAttrRef *aref, pwr_tStatus  *status);
+    WbBckW *bckw_new( char *name, wb_bck_list *list, pwr_tStatus  *status);
       
     static void trace_scan( WNavGtk *wnav);
     static void sel_lose_cb( GtkWidget *w, GdkEventSelection *event,

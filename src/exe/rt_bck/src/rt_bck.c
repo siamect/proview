@@ -905,7 +905,7 @@ bck_insert_listentry (
 
   if (dynamic) {
     blep->datablk.head.dynamic = dynamic;
-    gdh_GetObjectClass(attrref->Objid, &blep->datablk.head.class);
+    gdh_GetObjectClass(attrref->Objid, &blep->datablk.head.cid);
     blep->datablk.name = calloc(1, strlen(objectname) + 1);
     strcpy(blep->datablk.name, objectname);
     blep->datablk.head.namesize = strlen(objectname);
@@ -1324,7 +1324,7 @@ void *bck_coll_process (
       dhp = (bck_t_writeheader *)p;	/* dhp points to data header */
       p += sizeof *dhp;		/* p points to data part */
       dhp->objid    = blep->datablk.head.attrref.Objid;
-      dhp->class    = blep->datablk.head.class;
+      dhp->cid    = blep->datablk.head.cid;
       dhp->dynamic  = blep->datablk.head.dynamic;
       dhp->namesize = blep->datablk.head.namesize;
       dhp->size     = blep->datablk.head.attrref.Size;

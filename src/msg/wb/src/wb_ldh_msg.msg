@@ -154,3 +154,4 @@ numaref		<Attribute referens in numeric format>			/info
 numobjid	<Objid in numeric format>				/info
 volversion	<Volume version mismatch>				/error
 volerr		<Volume check errors>					/error
+bckversion	<Backup version mismatch>				/error

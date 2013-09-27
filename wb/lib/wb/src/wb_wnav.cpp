@@ -1954,7 +1954,7 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	        ((WItemEnum *)item)->set();
               break;
             case wnav_eItemType_Mask: 
-	      ((WItemMask *)item)->set( !event->radiobutton.value);
+	      ((WItemMask *)item)->set( event->radiobutton.value);
               break;
             default:
               ;

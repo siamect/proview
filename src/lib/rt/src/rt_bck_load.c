@@ -171,7 +171,7 @@ bck_LoadBackup ()
               strp = strchr(dh_old.dataname, '.');	/* always is a full object! */
               if (strp != NULL) *strp = '\0';	/* Just make sure... */
 
-	      sts = gdh_CreateObject(dh_old.dataname, dh_old.class, dh_old.attrref.Size,
+	      sts = gdh_CreateObject(dh_old.dataname, dh_old.cid, dh_old.attrref.Size,
 		&objid, dh_old.attrref.Objid, 0, pwr_cNObjid);
 
               if (strp != NULL) *strp = '.';
@@ -228,7 +228,7 @@ bck_LoadBackup ()
               strp = strchr(namep, '.');	/* always is a full object! */
               if (strp != NULL) *strp = '\0';	/* Just make sure... */
 
-	      sts = gdh_CreateObject(namep, dh.class, dh.size,
+	      sts = gdh_CreateObject(namep, dh.cid, dh.size,
 		&objid, dh.objid, 0, pwr_cNObjid);
 
               if (strp != NULL) *strp = '.';
@@ -295,7 +295,7 @@ bck_LoadBackup ()
               strp = strchr(namep, '.');	/* always is a full object! */
               if (strp != NULL) *strp = '\0';	/* Just make sure... */
 
-	      sts = gdh_CreateObject(namep, dh.class, dh.size,
+	      sts = gdh_CreateObject(namep, dh.cid, dh.size,
 		&objid, dh.objid, 0, pwr_cNObjid);
 
               if (strp != NULL) *strp = '.';

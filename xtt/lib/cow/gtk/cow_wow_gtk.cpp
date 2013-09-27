@@ -906,6 +906,21 @@ void CoWowGtk::CreateFileSelDia( const char *title, void *parent_ctx,
     gtk_file_filter_add_pattern( filter, "*");
     gtk_file_chooser_add_filter( GTK_FILE_CHOOSER(dialog), filter);
   }
+  else if ( file_type == wow_eFileSelType_Backup) {
+    pwr_tFileName folder;
+    dcli_translate_filename( folder, "$pwrp_load");
+    gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER(dialog), folder);
+
+    GtkFileFilter *filter = gtk_file_filter_new();
+    gtk_file_filter_set_name( filter,  "*.bck");
+    gtk_file_filter_add_pattern( filter, "*.bck");
+    gtk_file_chooser_add_filter( GTK_FILE_CHOOSER(dialog), filter);
+
+    filter = gtk_file_filter_new();
+    gtk_file_filter_set_name( filter,  "All Files");
+    gtk_file_filter_add_pattern( filter, "*");
+    gtk_file_chooser_add_filter( GTK_FILE_CHOOSER(dialog), filter);
+  }
 
   if ( gtk_dialog_run( GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
     char *filename;

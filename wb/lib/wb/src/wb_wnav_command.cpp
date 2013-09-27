@@ -94,6 +94,7 @@
 #include "wb_xcrr.h"
 #include "ge.h"
 #include "wb_utl.h"
+#include "wb_bck.h"
 
 #define	WNAV_MENU_CREATE	0
 #define	WNAV_MENU_ADD		1
@@ -191,6 +192,8 @@ static int	wnav_check_func(	void		*client_data,
 static int	wnav_update_func(	void		*client_data,
 					void		*client_flag);
 static int	wnav_clone_func(	void		*client_data,
+					void		*client_flag);
+static int	wnav_backup_func(	void		*client_data,
 					void		*client_flag);
 
 dcli_tCmdTable	wnav_command_table[] = {
@@ -465,6 +468,12 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"CLONE",
 			&wnav_clone_func,
 			{ "dcli_arg1", "/NAME", "/VID", ""}
+		},
+		{
+			"BACKUP",
+			&wnav_backup_func,
+			{ "dcli_arg1", "dcli_arg2", "dcli_arg13", "/FILE", "/FILE1", "/FILE2", "/OUT", 
+			  "/WINDOW", ""}
 		},
 		{"",}};
 
@@ -5245,6 +5254,237 @@ static int	wnav_update_func(	void		*client_data,
     wb_vrep *vrep = (wb_vrep *) *v;
     vrep->updateMeta();
     wnav->message('I', "Classvolumes updated");
+  }
+  else {
+    wnav->message('E', "Syntax error");
+    return WNAV__SYNTAX;
+  }
+  return 1;
+}
+
+static int	wnav_backup_func(	void		*client_data,
+					void		*client_flag)
+{
+  WNav *wnav = (WNav *)client_data;
+  char	arg1_str[80];
+  pwr_tStatus sts;
+
+  sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+  if ( EVEN(sts)) {
+    wnav->message('E', "Syntax error");
+    return WNAV__SYNTAX;
+  }
+
+  if ( cdh_NoCaseStrncmp( arg1_str, "DUMP", strlen( arg1_str)) == 0) {
+    pwr_tFileName filestr;
+    pwr_tFileName outstr;
+    pwr_tStatus	sts;
+
+    // command  is "BACKUP DUMP"
+
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+    if ( EVEN(sts)) return sts;
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", filestr, sizeof(filestr)))) {
+      if ( EVEN( dcli_get_qualifier( "/FILE" , filestr, sizeof(filestr)))) {
+	wnav->message('E', "Enter file");
+	return WNAV__QUAL;
+      }
+    }
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg3", outstr, sizeof(outstr)))) {
+      if ( EVEN( dcli_get_qualifier( "/OUT" , outstr, sizeof(outstr)))) {
+	wnav->message('E', "Enter out file");
+	return WNAV__QUAL;
+      }
+    }
+
+    sts = bck_dump( wnav->ldhses, filestr, outstr);
+    if ( EVEN(sts))
+      wnav->message(' ', wnav_get_message(sts));
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "SHOW", strlen( arg1_str)) == 0) {
+    pwr_tFileName filestr;
+    char *filep = filestr;
+    pwr_tFileName outstr;
+    char *outp = outstr;
+    pwr_tStatus	sts;
+
+    // command  is "BACKUP SHOW"
+
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+    if ( EVEN(sts)) return sts;
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", filestr, sizeof(filestr)))) {
+      if ( EVEN( dcli_get_qualifier( "/FILE" , filestr, sizeof(filestr)))) {
+	filep = 0;
+      }
+    }
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg3", outstr, sizeof(outstr)))) {
+      if ( EVEN( dcli_get_qualifier( "/OUT" , outstr, sizeof(outstr)))) {
+	outp = 0;
+      }
+    }
+
+    if ( filep == 0) {
+      wnav->bckw_new( (char *)"Backup file", 0, &sts);
+    }
+    else if ( outp == 0) {
+      wb_bck_list *list = new wb_bck_list( wnav->ldhses, filestr);
+
+      sts = list->read();
+      if ( EVEN(sts)) {
+	wnav->message(' ', wnav_get_message(sts));
+	return sts;
+      }
+
+      wnav->bckw_new( (char *)"Backup file", list, &sts);
+      if ( EVEN(sts))
+	wnav->message(' ', wnav_get_message(sts));
+    }
+    else {
+      wb_bck_list list( wnav->ldhses, filestr);
+
+      sts = list.read();
+      if ( EVEN(sts)) {
+	wnav->message(' ', wnav_get_message(sts));
+	return sts;
+      }
+
+      sts = list.print( outstr);
+      if ( EVEN(sts))
+	wnav->message(' ', wnav_get_message(sts));
+    }
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "DIFFERENCE", strlen( arg1_str)) == 0) {
+    pwr_tFileName file1str;
+    pwr_tFileName file2str;
+    char *file2p = file2str;
+    pwr_tFileName outstr;
+    char *outp = outstr;
+    pwr_tStatus	sts;
+
+    // command  is "BACKUP DIFFERENCE"
+
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+    if ( EVEN(sts)) return sts;
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", file1str, sizeof(file1str)))) {
+      if ( EVEN( dcli_get_qualifier( "/FILE1" , file1str, sizeof(file1str)))) {
+	wnav->message('E', "Enter file");
+	return WNAV__QUAL;
+      }
+    }
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg3", file2str, sizeof(file2str)))) {
+      if ( EVEN( dcli_get_qualifier( "/FILE2" , file2str, sizeof(file2str)))) {
+	file2p = 0;
+      }
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/OUT" , outstr, sizeof(outstr)))) {
+      outp = 0;
+    }
+
+    if ( outp) {
+      if ( file2p) {
+	// Compare two files
+	wb_bck_list list1( wnav->ldhses, file1str);
+	wb_bck_list list2( wnav->ldhses, file2str);
+	
+	sts = list1.read();
+	if ( EVEN(sts)) {
+	  wnav->message(' ', wnav_get_message(sts));
+	  return sts;
+	}
+	
+	sts = list2.read();
+	if ( EVEN(sts)) {
+	  wnav->message(' ', wnav_get_message(sts));
+	  return sts;
+	}
+	
+	sts = list1.diff( &list2, outstr);
+	if ( EVEN(sts))
+	  wnav->message(' ', wnav_get_message(sts));
+      }
+      else {
+	// Compare file with database
+	wb_bck_list list1( wnav->ldhses, file1str);
+	wb_bck_list listdb( wnav->ldhses, (char *)"Workbench");
+	
+	sts = list1.read();
+	if ( EVEN(sts)) {
+	  wnav->message(' ', wnav_get_message(sts));
+	  return sts;
+	}
+	
+	sts = listdb.read_db( &list1);
+	if ( EVEN(sts)) {
+	  wnav->message(' ', wnav_get_message(sts));
+	  return sts;
+	}
+	
+	sts = list1.diff( &listdb, outstr);
+	if ( EVEN(sts))
+	wnav->message(' ', wnav_get_message(sts));
+      }
+    }
+    else {
+      if ( file2p) {
+	// Compare two files
+	wb_bck_list list1( wnav->ldhses, file1str);
+	wb_bck_list list2( wnav->ldhses, file2str);
+	wb_bck_list *outlist  = new wb_bck_list( wnav->ldhses, (char *)"Difference list");
+	
+	sts = list1.read();
+	if ( EVEN(sts)) {
+	  wnav->message(' ', wnav_get_message(sts));
+	  return sts;
+	}
+	
+	sts = list2.read();
+	if ( EVEN(sts)) {
+	  wnav->message(' ', wnav_get_message(sts));
+	  return sts;
+	}
+	
+	sts = list1.diff( &list2, outlist);
+	if ( EVEN(sts))
+	  wnav->message(' ', wnav_get_message(sts));
+
+	wnav->bckw_new( (char *)"Difference list", outlist, &sts);
+	if ( EVEN(sts))
+	  wnav->message(' ', wnav_get_message(sts));
+      }
+      else {
+	// Compare file with database
+	wb_bck_list list1( wnav->ldhses, file1str);
+	wb_bck_list listdb( wnav->ldhses, (char *)"Workbench");
+	wb_bck_list *outlist = new wb_bck_list( wnav->ldhses, (char *)"Difference list");
+	
+	sts = list1.read();
+	if ( EVEN(sts)) {
+	  wnav->message(' ', wnav_get_message(sts));
+	  return sts;
+	}
+	
+	sts = listdb.read_db( &list1);
+	if ( EVEN(sts)) {
+	  wnav->message(' ', wnav_get_message(sts));
+	  return sts;
+	}
+	
+	sts = list1.diff( &listdb, outlist);
+	if ( EVEN(sts))
+	  wnav->message(' ', wnav_get_message(sts));
+
+	wnav->bckw_new( (char *)"Difference list", outlist, &sts);
+	if ( EVEN(sts))
+	  wnav->message(' ', wnav_get_message(sts));
+      }
+    }
   }
   else {
     wnav->message('E', "Syntax error");

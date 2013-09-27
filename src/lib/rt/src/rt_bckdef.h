@@ -118,7 +118,7 @@ typedef struct {
 
 typedef struct {
 	pwr_sAttrRef	attrref;	/* Objid for the object */
-	pwr_tClassId	class;		/* Class of object */
+	pwr_tClassId	cid;		/* Class of object */
 	pwr_tBoolean	valid;		/* Validity flag */
 	pwr_tBoolean	dynamic;	/* Dynamic object */
 	pwr_tString80	dataname;	/* Name of object[.attribute] */
@@ -126,7 +126,7 @@ typedef struct {
 
 typedef struct {
 	pwr_sAttrRef	attrref;	/* Objid for the object */
-	pwr_tClassId	class;		/* Class of object */
+	pwr_tClassId	cid;		/* Class of object */
 	pwr_tBoolean	valid;		/* Validity flag */
 	pwr_tBoolean	dynamic;	/* Dynamic object */
 	pwr_tInt16	namesize;	/* Name of attribute [.attribute] */
@@ -134,7 +134,7 @@ typedef struct {
 
 typedef struct {
         pwr_tObjid      objid;          /* Objid for the object */
-	pwr_tClassId	class;		/* Class of object */
+	pwr_tClassId	cid;		/* Class of object */
 	pwr_tBoolean	valid;		/* Validity flag */
 	pwr_tBoolean	dynamic;	/* Dynamic object */
 	pwr_tInt16	namesize;	/* Size of name of attribute [.attribute] */
