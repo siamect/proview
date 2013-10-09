@@ -202,20 +202,39 @@ pwr_tStatus mb_recv_data(io_sRackLocal *local,
 			sts = select((int)local->s+1, &fdr, NULL, NULL, &tv);
 			
 			if (sts<=0) { // Timeout or error.
-				if ((sts == 0) && (local->expected_msgs > 0)) { // Timeout but there are messages pending
-					local->msgs_lost++;
-					if (local->msgs_lost > MAX_MSGS_LOST) {
-						sp->Status = MB__CONNDOWN;
-						close(local->s);
-						errh_Error( "Data expected but timeout. Connection down to modbus slave, %s", rp->Name);
-					}
-					return IO__SUCCESS;
+				if ((sts == 0) && (local->expected_msgs > 0)) { // Timeout but there are messages pending				        
+				  local->msgs_lost++;
+
+				  if ( !local->timeout) {
+				    time_GetTimeMonotonic( &local->timeout_time);				    
+				    local->timeout = 1;
+				  }
+				  else {
+				    pwr_tTime now;
+				    pwr_tDeltaTime dt;
+				    pwr_tDeltaTime max_dt;
+				    float max_timeout = sp->MaxTimeout;
+
+				    if ( max_timeout == 0)
+				      max_timeout = 2;
+				    time_FloatToD( &max_dt, max_timeout);
+				    time_GetTimeMonotonic( &now);
+				    time_Adiff(&dt, &now, &local->timeout_time);
+				    if ( time_Dcomp( &dt, &max_dt) > 0) {
+				      sp->Status = MB__CONNDOWN;
+				      close(local->s);
+				      errh_Error( "Data expected but timeout. Connection down to modbus slave, %s", rp->Name);
+				      local->timeout = 0;
+				    }
+				  }				  
+				  return IO__SUCCESS;
 				}
 				
 				if (sts < 0) { // Error in the socket
 					sp->Status = MB__CONNLOST;
 					close(local->s);
 					errh_Error( "Socket Error. Connection lost to modbus slave, %s", rp->Name);
+					local->timeout = 0;
 					return IO__SUCCESS;
 				}
 				
@@ -226,12 +245,14 @@ pwr_tStatus mb_recv_data(io_sRackLocal *local,
 					sp->Status = MB__CONNLOST;
 					close(local->s);
 					errh_Error( "Error reading data. Connection lost to modbus slave, %s", rp->Name);
+					local->timeout = 0;
 					return IO__SUCCESS;
 				}
 				
 				if (data_size == 0) {
 					sp->Status = MB__CONNDOWN;
 					close(local->s);
+					local->timeout = 0;
 					errh_Error( "Error reading data. Connection down to modbus slave, %s", rp->Name);
 					return IO__SUCCESS;
 				}
@@ -249,6 +270,7 @@ pwr_tStatus mb_recv_data(io_sRackLocal *local,
 						sp->Status = MB__CONNDOWN;
 						close(local->s);
 						errh_Error( "Invalid Modbus packet. Connection down to modbus slave, %s", rp->Name);
+						local->timeout = 0;
 						return IO__SUCCESS;
 					}
 					
@@ -261,6 +283,8 @@ pwr_tStatus mb_recv_data(io_sRackLocal *local,
 		if (sts > 0) { // processing packet...
 		
 			local->msgs_lost = 0;
+			local->timeout = 0;
+				
 			sp->RX_packets++;
 			local->expected_msgs--;
 			cardp = rp->cardlist;
@@ -631,7 +655,7 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
     if (sp->SingleOp)    
       sts = mb_recv_data(local, rp, sp);
 
-    if (sp->Status != MB__NORMAL) return IO__SUCCESS;
+    if ( sp->Status != MB__NORMAL) return IO__SUCCESS;
 
     cardp = cardp->next;
 
@@ -841,8 +865,8 @@ static pwr_tStatus IoRackRead (
     /* Reconnect */
 
     time_GetTimeMonotonic( &now);
-    time_Adiff(&dt, &now, &local->last_try_connect_time);
-    if (dt.tv_sec >= (1 << MIN(sp->ReconnectCount, 6))) {
+    time_Adiff(&dt, &now, &local->last_try_connect_time); 
+   if (dt.tv_sec >= (1 << MIN(sp->ReconnectCount, 6))) {
       sts = connect_slave(local, rp);
       if (sts >= 0) {
 	sp->ReconnectCount = 0;
@@ -855,7 +879,7 @@ static pwr_tStatus IoRackRead (
   }
 
   /* Receive data */
-  if ((sp->Status == MB__NORMAL) && !sp->SingleOp) {
+  if ( sp->Status == MB__NORMAL && !sp->SingleOp) {
     sts = mb_recv_data(local, rp, sp);
   }  
   
@@ -900,7 +924,7 @@ static pwr_tStatus IoRackWrite (
   
   local->expected_msgs = 0;
 
-  if (sp->Status == MB__NORMAL && sp->DisableSlave != 1) {
+  if ( sp->Status == MB__NORMAL && sp->DisableSlave != 1) {
     sts = mb_send_data(local, rp, sp, mb_mSendMask_WriteReq);
   }
 

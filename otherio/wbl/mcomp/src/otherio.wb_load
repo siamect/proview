@@ -2179,7 +2179,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object RtBody $ObjBodyDef 1 08-FEB-2008 10:26:36.84
         Body SysBody 08-FEB-2008 10:26:36.85
           Attr StructName = "Modbus_TCP_Slave"
-          Attr NextAix = "_X21"
+          Attr NextAix = "_X22"
         EndBody
         !/**
         ! Description of slave
@@ -2355,6 +2355,18 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
         !/**
+        ! Maximum timeout. I no messages is received within this time the
+        ! connection to the slave is closed, and a new connection is opened.
+        ! The value should be greater than the TCP retransmit time.
+        !*/
+        Object MaxTimeout $Attribute 21 09-OCT-2013 11:00:36.49
+          Body SysBody 09-OCT-2013 11:00:46.65
+            Attr PgmName = "MaxTimeout"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
         ! @Summary Single operation.
         ! Depending on the tcp stack used in the slave and also the size of its receive
         ! buffer it may not be possible to send several requests at a time to a slave.
@@ -2447,11 +2459,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
       Object Template Modbus_TCP_Slave 2148499456 01-JAN-1970 01:00:00.00
-        Body RtBody 05-SEP-2008 11:08:41.87
+        Body RtBody 09-OCT-2013 11:01:20.19
           Attr Process = 1
           Attr ErrorLimit = 50
           Attr ReconnectLimit = 5
           Attr ResponseTime = 200
+          Attr MaxTimeout = 2.000000e+00
         EndBody
       EndObject
     EndObject

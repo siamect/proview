@@ -39,7 +39,6 @@
 #endif
 
 #define IO_MAXCHAN 96
-#define MAX_MSGS_LOST 5
 
 // These constants are obsolete from V4.1, except for the old style
 // (Pb_Di, Pb_Do etc)
@@ -99,6 +98,8 @@ typedef struct {
   int expected_msgs;
   int msgs_lost;
   pwr_tTime last_try_connect_time;
+  pwr_tTime timeout_time;
+  int timeout;
 } io_sRackLocal;
 
 typedef struct {
