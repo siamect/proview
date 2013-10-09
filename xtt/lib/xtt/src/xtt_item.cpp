@@ -2195,7 +2195,8 @@ static void xnav_set_sigchan_flags( XNavBrow *brow, pwr_tAttrRef *arp, pwr_tCid 
   case pwr_cClass_ChanAit:
   case pwr_cClass_ChanAo:
   case pwr_cClass_ChanIi:
-  case pwr_cClass_ChanIo: {
+  case pwr_cClass_ChanIo:
+  case pwr_cClass_ChanCo: {
     break;
   }
   default:
@@ -2304,6 +2305,25 @@ static void xnav_set_sigchan_flags( XNavBrow *brow, pwr_tAttrRef *arp, pwr_tCid 
 
     conv = convmask & mask ? 1 : 0;
     inv = invmask & mask ? 1 : 0;
+    test = 0;
+    break;
+  }
+  case pwr_cClass_Ssab_CO4uP: {
+    pwr_tMask convmask, mask;
+
+    unsigned int chan_idx = (chanaref.Offset - offsetof(pwr_sClass_Ssab_CO4uP,Ch1)) / pwr_AlignLW(sizeof(pwr_sClass_ChanCo));
+
+    aref = cdh_ObjidToAref( chanaref.Objid);
+    sts = gdh_ArefANameToAref( &aref, "ConvMask", &aref);
+    if ( EVEN(sts)) return;
+
+    sts = gdh_GetObjectInfoAttrref( &aref, &convmask, sizeof(convmask));
+    if ( EVEN(sts)) return;
+
+    mask = 1 << chan_idx;
+
+    conv = convmask & mask ? 1 : 0;
+    inv = 0;
     test = 0;
     break;
   }
@@ -2431,6 +2451,7 @@ static void xnav_set_sigchan_flags( XNavBrow *brow, pwr_tAttrRef *arp, pwr_tCid 
       break;
     case pwr_cClass_ChanAi:
     case pwr_cClass_ChanIi:
+    case pwr_cClass_ChanCo:
       sts = gdh_ArefANameToAref( &chanaref, "ConversionOn", &aref);
       if ( EVEN(sts)) {
 	brow_SetAnnotPixmap( node, annot, brow->pixmap_offline);

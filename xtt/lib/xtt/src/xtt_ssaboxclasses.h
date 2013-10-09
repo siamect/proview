@@ -68,4 +68,39 @@ typedef struct {
 
 #endif
 
+#ifndef pwr_cClass_Ssab_CO4uP
+#define pwr_cClass_Ssab_CO4uP 4194631752UL
+
+typedef struct {
+  pwr_tString80                       Description pwr_dAlignLW;
+  pwr_tString40                       DevName pwr_dAlignW;
+  pwr_tUInt32                         ErrorCount pwr_dAlignW;
+  pwr_tUInt32                         ErrorSoftLimit pwr_dAlignW;
+  pwr_tUInt32                         ErrorHardLimit pwr_dAlignW;
+  pwr_tMask                           ConvMask pwr_dAlignW;
+  pwr_tUInt16                         MaxNoOfCounters pwr_dAlignW;
+  pwr_tBoolean                        COAbsFlag[4] pwr_dAlignW;
+  pwr_tEnum             	      NoOfBits[4] pwr_dAlignW;
+  pwr_tBoolean                        COWrFlag[4] pwr_dAlignW;
+  pwr_tEnum             	      MulCount[4] pwr_dAlignW;
+  pwr_tEnum             	      DivCount[4] pwr_dAlignW;
+  pwr_tBoolean                        CopWrRough[4] pwr_dAlignW;
+  pwr_tBoolean                        CopWrFine[4] pwr_dAlignW;
+  pwr_tBoolean                        LoadWrReg[4] pwr_dAlignW;
+  pwr_tBoolean                        LengthMeasurement[4] pwr_dAlignW;
+  pwr_tBoolean                        SpeedMeasurement[4] pwr_dAlignW;
+  pwr_tUInt32                         SyncRawValue[4] pwr_dAlignW;
+  pwr_tUInt32                         RegAddress pwr_dAlignW;
+  pwr_tUInt32                         VectAddress pwr_dAlignW;
+  pwr_tIoProcessMask                  Process pwr_dAlignW;
+  pwr_tObjid                          ThreadObject pwr_dAlignW;
+  pwr_tURL                            DataSheet pwr_dAlignW;
+  pwr_sClass_ChanCo                   Ch1 pwr_dAlignLW;
+  pwr_sClass_ChanCo                   Ch2 pwr_dAlignLW;
+  pwr_sClass_ChanCo                   Ch3 pwr_dAlignLW;
+  pwr_sClass_ChanCo                   Ch4 pwr_dAlignLW;
+} pwr_sClass_Ssab_CO4uP;
+
+#endif
+
 #endif
