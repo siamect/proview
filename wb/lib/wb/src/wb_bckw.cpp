@@ -190,7 +190,7 @@ void WbBckW::activate_diff_wb()
 
   sts = listdb->read_db( list);
   if ( EVEN(sts)) {    
-    bckw->wow->DisplayError( "Error Message", "Read error");
+    wow->DisplayError( "Error Message", "Read error");
     return;
   }
 
