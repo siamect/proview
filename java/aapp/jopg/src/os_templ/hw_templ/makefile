@@ -2,6 +2,7 @@ include $(pwre_dir_symbols)
 
 extern_java_sources := \
 	Glow.java,\
+	GlowCrypt.java, \
 	PrintfFormat.java,\
 	GlowCFormat.java,\
 	GlowFillLevelLimits.java,\

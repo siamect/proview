@@ -31,6 +31,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.view.*;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.graphics.*;
 import jpwr.rt.*;
 import jpwr.app.*;
@@ -52,6 +53,8 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	float downTouchY;
 	private EditText editInput;
 	private EditText editValueInput;
+	private EditText editUsername;
+	private EditText editPassword;
 	
 	PlowDraw gdraw;
 	PlowCmnIfc currentCmn;
@@ -74,9 +77,12 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
         String confirmText;
         String messageText;
         AlertDialog inputDialog = null;
+        AlertDialog loginDialog = null;
         Context context;
         static private boolean initDone = false;
-	String pwrHost = null;
+        String currentUser = null;
+        boolean newCurrentUser = false;
+        String pwrHost = null;
 	AEv aev = null;
 	OpwinCmn opwinCmn = null;
 	Menu menu = null;
@@ -115,7 +121,6 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			.setNegativeButton("Cancel", null)
 			.show();
 	}
-	
 	public void onClick(DialogInterface dialog, int position) {
 		if ( dialog == inputDialog) {
 		    Editable value = editInput.getText();
@@ -127,6 +132,16 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		    System.out.println( "Change Value: " + value.toString());
 
 		    new GdhTask().execute(new GdhTaskArg(GdhTask.VALUEINPUT_ACTION, value.toString()));
+		}
+		else if ( dialog == loginDialog) {
+		    Editable usernameValue = editUsername.getText();
+		    Editable passwordValue = editPassword.getText();
+
+		    String[] item = new String[2];
+		    item[0] = usernameValue.toString();
+		    item[1] = GlowCrypt.crypt( "aa", passwordValue.toString());
+			
+		    new GdhTask().execute(new GdhTaskArg(GdhTask.LOGIN, item));
 		}
 		else if ( dialog == confirmDialog) {
 		    System.out.println( "Confirm");
@@ -140,7 +155,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		    //MainActivity callingActivity = (MainActivity) this;
 		    //callingActivity.onUserSelectValue(value);
 		    dialog.dismiss();
-			
+			setTitle("PwrXtt on " + pwrHost);
 		    new GdhTask().execute(new GdhTaskArg(GdhTask.ROOTLIST,(AXttItemBase)null));
 			new GdhTask().execute(new GdhTaskArg(GdhTask.OPWIN, null));
 		}
@@ -370,6 +385,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			break;
 		case R.id.openobject_option: {
 			System.out.println("Open object");
+			if ( !gdh.isAuthorized(Pwr.mAccess_AllRt)) {
+			    openMessageDialog("Not authorized");
+			    break;
+			}
 			switch (currentCmn.type()) {
 			case PlowCmnIfc.TYPE_PLOW: {
 				PlowNode selectedNode = (PlowNode)currentCmn.getSelect();
@@ -390,6 +409,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		}
 		case R.id.opencrr_option: {
 			System.out.println("Open object");
+			if ( !gdh.isAuthorized(Pwr.mAccess_AllRt)) {
+			    openMessageDialog("Not authorized");
+			    break;
+			}
 			switch (currentCmn.type()) {
 			case PlowCmnIfc.TYPE_PLOW: {
 				PlowNode selectedNode = (PlowNode)currentCmn.getSelect();
@@ -412,6 +435,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		}
 		case R.id.openplc_option: {
 			System.out.println("Open plc");					
+			if ( !gdh.isAuthorized(Pwr.mAccess_AllRt)) {
+			    openMessageDialog("Not authorized");
+			    break;
+			}
 			switch (currentCmn.type()) {
 			case PlowCmnIfc.TYPE_PLOW: {
 				PlowNode selectedNode = (PlowNode)currentCmn.getSelect();
@@ -446,6 +473,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		}
 		case R.id.opengraph_option: {
 			System.out.println("Open graph");					
+			if ( !gdh.isAuthorized(Pwr.mAccess_AllRt)) {
+			    openMessageDialog("Not authorized");
+			    break;
+			}
 			switch (currentCmn.type()) {
 			case PlowCmnIfc.TYPE_PLOW: {
 				PlowNode selectedNode = (PlowNode)currentCmn.getSelect();
@@ -466,6 +497,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		}
 		case R.id.openclassgraph_option: {
 			System.out.println("Open Object graph " + currentCmn.type());								
+			if ( !gdh.isAuthorized(Pwr.mAccess_AllRt)) {
+			    openMessageDialog("Not authorized");
+			    break;
+			}
 			switch (currentCmn.type()) {
 			case PlowCmnIfc.TYPE_PLOW: {
 				PlowNode selectedNode = (PlowNode)currentCmn.getSelect();
@@ -485,24 +520,29 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			break;
 		}
 		case R.id.changevalue_option: {
-			System.out.println("Change value");					
 			switch (currentCmn.type()) {
 			case PlowCmnIfc.TYPE_PLOW: {
-				PlowNode selectedNode = (PlowNode)currentCmn.getSelect();
-				if ( selectedNode != null) {
-					AXttItemBase baseItem = (AXttItemBase)selectedNode.getUserData();
-					if ( baseItem instanceof AXttItemAttr) {
-						inputFullName = ((AXttItemAttr)baseItem).getFullName();
-						inputType = ((AXttItemAttr)baseItem).getType();
-						editInput = new EditText(this);
-						editInput.setSingleLine();
-						inputDialog = new AlertDialog.Builder(this)
-						.setTitle(R.string.app_name)
-						.setMessage("Change Value")
-						.setView(editInput)
-						.setPositiveButton("Ok", this)
-						.setNegativeButton("Cancel", null)
-						.show();
+				if ( !gdh.isAuthorized(Pwr.mPrv_RtWrite | Pwr.mPrv_System)) {
+				    openMessageDialog("Not authorized to change value");
+				    break;
+				}
+				else {					
+					PlowNode selectedNode = (PlowNode)currentCmn.getSelect();
+					if ( selectedNode != null) {
+						AXttItemBase baseItem = (AXttItemBase)selectedNode.getUserData();
+						if ( baseItem instanceof AXttItemAttr) {
+							inputFullName = ((AXttItemAttr)baseItem).getFullName();
+							inputType = ((AXttItemAttr)baseItem).getType();
+							editInput = new EditText(this);
+							editInput.setSingleLine();
+							inputDialog = new AlertDialog.Builder(this)
+							.setTitle(R.string.app_name)
+							.setMessage("Change Value")
+							.setView(editInput)
+							.setPositiveButton("Ok", this)
+							.setNegativeButton("Cancel", null)
+							.show();
+						}
 					}
 				}
 				break;
@@ -510,8 +550,41 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			}
 			break;
 		}
+		case R.id.login_option: {
+			System.out.println("Login");					
+
+			editUsername = new EditText(this);
+			editUsername.setHint("Username");
+			editUsername.setSingleLine();
+			editPassword = new EditText(this);
+			editPassword.setHint("Password");
+			editPassword.setSingleLine();
+			editPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+			LinearLayout layout = new LinearLayout(context);
+			layout.setOrientation(LinearLayout.VERTICAL);
+			layout.addView(editUsername);
+			layout.addView(editPassword);
+			
+			loginDialog = new AlertDialog.Builder(this)
+							.setTitle(R.string.app_name)
+							.setMessage("Login")
+							.setView(layout)
+							.setPositiveButton("Ok", this)
+							.setNegativeButton("Cancel", null)
+							.show();
+			break;
+		}
+		case R.id.logout_option: {
+			gdh.logout();
+			appl.setTitle("PwrXtt on " + pwrHost);
+			break;
+		}
 		case R.id.navigator_option: {
 			System.out.println("Open Navigator");
+			if ( !gdh.isAuthorized(Pwr.mAccess_AllRt)) {
+			    openMessageDialog("Not authorized");
+			    break;
+			}
 
 			int xttCmnIdx = 0;
 				
@@ -522,6 +595,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		}
 		case R.id.alarmlist_option: {
 			System.out.println("Open Alarmlist");					
+			if ( !gdh.isAuthorized(Pwr.mAccess_AllRt)) {
+			    openMessageDialog("Not authorized");
+			    break;
+			}
 
 			if ( aev == null) {
 				PlowCmnEv cmnAla = new PlowCmnEv(appl, 15D);		
@@ -542,6 +619,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		}
 		case R.id.eventlist_option: {
 			System.out.println("Open Eventlist");					
+			if ( !gdh.isAuthorized(Pwr.mAccess_AllRt)) {
+			    openMessageDialog("Not authorized");
+			    break;
+			}
 
 			if ( aev == null) {
 				PlowCmnEv cmnAla = new PlowCmnEv(appl, 15D);		
@@ -561,6 +642,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			break;
 		}
 		case R.id.alarmack_option: {
+			if ( !gdh.isAuthorized(Pwr.mAccess_AllRt)) {
+			    openMessageDialog("Not authorized");
+			    break;
+			}
 
 			if ( aev != null && currentCmn == aev.getCmnAla()) {
 				aev.acknowledge();
@@ -704,6 +789,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		public static final int VALUEINPUT_ACTION = 19;
 		public static final int CONFIRM_ACTION = 20;
 		public static final int OPWIN = 21;
+		public static final int LOGIN = 22;
 		
 		@Override
 		protected Void doInBackground(GdhTaskArg... arg) {
@@ -1038,6 +1124,18 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				((Dyn)confirmDyn).confirmedAction( Glow.eEvent_MB1Click, confirmObject);
 				break;
 			}
+			case LOGIN: {
+				String[] item = (String[])arg[0].item;
+				int sts = gdh.login( item[0], item[1]);
+				if ( sts % 2 == 0) {
+					openMessageDialog("Authorization error");
+				}
+				else {
+					currentUser = item[0];
+					newCurrentUser = true;
+				}
+				break;
+			}
 			case OPWIN: {
 				// If plc window open flow for window, else for first child
 				CdhrObjid oret = gdh.getClassList( Pwrb.cClass_WebHandler);
@@ -1109,7 +1207,14 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		@Override
 		protected void onPostExecute(Void params) {
 			super.onPostExecute(params);
-			view.invalidate();
+			if ( newCurrentUser) {
+				newCurrentUser = false;
+				if ( currentUser != null)
+					appl.setTitle("PwrXtt " + currentUser + " on " + pwrHost);
+				else
+					appl.setTitle("PwrXtt on " + pwrHost);
+			}
+				view.invalidate();
 		}
 	}
 	private class ReaderTaskArg {
@@ -1503,6 +1608,11 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
     public int command(String cmd) {
     	System.out.println("Command: " + cmd);
         boolean local_cmd = false;
+
+        if ( !appl.gdh.isAuthorized(Pwr.mAccess_AllRt)) {
+		    openMessageDialog("Not authorized");
+		    return 0;
+		}
 
         Cli cli = new Cli( cliTable);
         String command = cli.parse( cmd);
