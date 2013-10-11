@@ -2947,7 +2947,7 @@ void GlowDrawGtk::image_pixel_iter( glow_tImImage orig_image, glow_tImImage *ima
 
   
   if ( orig_image) {
-    if ( image)
+    if ( image && *image != orig_image)
       gdk_pixbuf_unref( (GdkPixbuf *)*image);
     *image = (glow_tImImage *) gdk_pixbuf_copy( (GdkPixbuf *)orig_image);
   }

@@ -936,12 +936,12 @@ void GrowImage::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 			     ((GrowNode *)node)->color_intensity ||
 			     ((GrowNode *)node)->color_shift ||
 			     ((GrowNode *)node)->color_inverse)) ||  
-	      ( !colornode && (glow_eDrawTone_No == color_tone ||
+	      ( !colornode && (glow_eDrawTone_No != color_tone ||
 			     color_lightness ||
 			     color_intensity ||
 			     color_shift ||
 			     color_inverse))))) {
-	set_image_color( om, colornode);
+	set_image_color( original_image, colornode);
 	if ( ctx->gdraw->image_get_width( image) != current_width ||
 	     ctx->gdraw->image_get_height( image) != current_height) {
 	  ctx->gdraw->image_scale( ur_x - ll_x, ur_y - ll_y, 0,
@@ -965,7 +965,7 @@ void GrowImage::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
       }
 
       if ( sts) {
-	ctx->gdraw->image_render( ur_x - ll_x, ur_y - ll_y, om,
+	ctx->gdraw->image_render( ur_x - ll_x, ur_y - ll_y, &original_image,
 				  &image, &pixmap, &clip_mask);
 	om = 0;
 	current_width = ctx->gdraw->image_get_width( image);
