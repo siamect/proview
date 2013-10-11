@@ -2004,6 +2004,17 @@ void Wtt::activate_buildnode()
 
   message(' ',"");
 
+  if ( focused_wnav->gbl.build.force) {
+    int res = focused_wnav->wow->CreateModalDialog( "Force selected", "Do you want to build with force", "Yes", 
+				      "Cancel", 0, 0);
+    switch( res) {
+    case wow_eModalDialogReturn_Button1:
+      break;
+    default:
+      return;
+    }
+  }
+
   // Check if there is only one node configured for the current volume
   sts = lfu_volumelist_load( load_cNameBootList, 
 		(lfu_t_volumelist **) &boot_volumelist,
