@@ -138,7 +138,9 @@ void ColPalCtx::configure()
   sprintf( name, "ToneEntry%d", 0);
   rect = new GrowRect( this, name, x, y, 
 	tone_entry_width * 2, entry_height, glow_eDrawType_Line, 1, 0, 
-        glow_mDisplayLevel_1, 1, 1, 0, glow_eDrawType_Color34);
+        glow_mDisplayLevel_1, 1, 1, 1, glow_eDrawType_Color34);
+  rect->shadow_width = 15;
+  rect->relief = glow_eRelief_Down;
   insert( rect);
   text = new GrowText( this, name, "Reset", x + 0.15, 
 		       y + entry_height / 2 + 0.25, 
@@ -148,7 +150,9 @@ void ColPalCtx::configure()
   sprintf( name, "ColorEntryBg");
   rect = new GrowRect( this, name, x, y, 
 	tone_entry_width * 2, entry_height, glow_eDrawType_Line, 1, 0, 
-        glow_mDisplayLevel_1, 1, 1, 0, glow_eDrawType_Color34);
+        glow_mDisplayLevel_1, 1, 1, 1, glow_eDrawType_Color34);
+  rect->shadow_width = 15;
+  rect->relief = glow_eRelief_Down;
   insert( rect);
   text = new GrowText( this, name, " Bg", x + 0.15, 
 		       y + entry_height / 2 + 0.25, 
@@ -374,6 +378,42 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 		    event == glow_eEvent_MB1Click) {
 	    set_active( colpal_eActive_TextColor);
 	  }
+          else if ( strncmp( name, "ToneEntry", 9) == 0 &&
+                event == glow_eEvent_MB1Click) {
+            glow_eDrawTone tone;
+
+            sscanf( &name[9], "%d", (int *) &tone);
+            if ( event_callback[event] &&
+	         sts != GLOW__NO_PROPAGATE)
+            {
+              static glow_sEvent e;
+
+              e.event = event;
+              e.any.type = glow_eEventType_ColorTone;
+              e.any.x_pixel = x;
+              e.any.y_pixel = y;
+              e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+              e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
+              e.colortone.tone = tone;
+              event_callback[event]( this, &e);
+            }
+            break;
+          }
+          if ( strcmp( name, "ColorEntryBg") == 0) {
+	    if ( event == glow_eEvent_MB1Click) {
+	      current_fill = glow_eDrawType_LineErase;
+	      ((GrowRect *)display_fill)->set_fill_color( glow_eDrawType_Color4);
+	    }
+	    else if ( event == glow_eEvent_MB1ClickShift) {
+	      current_text = glow_eDrawType_LineErase;
+	      ((GrowRect *)display_text)->set_fill_color( glow_eDrawType_Color4);
+	    }
+	    else {
+	      current_border = glow_eDrawType_LineErase;
+	      ((GrowRect *)display_border)->set_fill_color( glow_eDrawType_Color4);
+	    }	    
+	    callback = 1;
+          }
 	}
         else if ( callback_object->type() == glow_eObjectType_GrowRect) {
           GrowRect *rect;
@@ -458,48 +498,6 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 	  }
         }
         else if ( callback_object->type() == glow_eObjectType_GrowText) {
-          GrowText *text;
-          char name[32];
-
-          text = (GrowText *)callback_object;
-          text->get_object_name( name);
-          if ( strncmp( name, "ToneEntry", 9) == 0 &&
-                event == glow_eEvent_MB1Click)
-          {
-            glow_eDrawTone tone;
-
-            sscanf( &name[9], "%d", (int *) &tone);
-            if ( event_callback[event] &&
-	         sts != GLOW__NO_PROPAGATE)
-            {
-              static glow_sEvent e;
-
-              e.event = event;
-              e.any.type = glow_eEventType_ColorTone;
-              e.any.x_pixel = x;
-              e.any.y_pixel = y;
-              e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
-              e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
-              e.colortone.tone = tone;
-              event_callback[event]( this, &e);
-            }
-            break;
-          }
-          if ( strcmp( name, "ColorEntryBg") == 0) {
-	    if ( event == glow_eEvent_MB1Click) {
-	      current_fill = glow_eDrawType_LineErase;
-	      ((GrowRect *)display_fill)->set_fill_color( glow_eDrawType_Color4);
-	    }
-	    else if ( event == glow_eEvent_MB1ClickShift) {
-	      current_text = glow_eDrawType_LineErase;
-	      ((GrowRect *)display_text)->set_fill_color( glow_eDrawType_Color4);
-	    }
-	    else {
-	      current_border = glow_eDrawType_LineErase;
-	      ((GrowRect *)display_border)->set_fill_color( glow_eDrawType_Color4);
-	    }	    
-	    callback = 1;
-          }
         }
       }
       break;
