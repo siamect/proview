@@ -91,6 +91,7 @@ class HistGtk : public Hist {
   static void activate_zoom_out( GtkWidget *w, gpointer data);
   static void activate_zoom_reset( GtkWidget *w, gpointer data);
   static void activate_open_plc( GtkWidget *w, gpointer data);
+  static void activate_stat( GtkWidget *w, gpointer data);
   static void activate_display_in_xnav( GtkWidget *w, gpointer data);
   static void activate_disp_hundredth( GtkWidget *w, gpointer data);
   static void activate_hide_object( GtkWidget *w, gpointer data);

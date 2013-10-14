@@ -50,6 +50,7 @@ using namespace std;
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <vector>
 
 extern "C" {
 #include "co_cdh.h"
@@ -425,6 +426,137 @@ void Hist::get_hist_list()
     it++;
   }
   hist->reset_nodraw();   
+}
+
+typedef struct {
+  sEvent event;
+  int cnt;
+} sStat;
+
+struct evv_greater_than{
+  inline bool operator() (const sStat& struct1, const sStat& struct2) {
+    return (struct1.cnt > struct2.cnt);
+  }
+};
+
+void Hist::stat()
+{
+  DB *dataBaseP = NULL;
+  pwr_tInt32 ret;
+  char dbName[200];
+  int event_cnt = 0;
+  
+  brow_DeleteAll( hist->brow->ctx);
+
+  dcli_translate_filename( dbName, DATABASE);
+  
+  printSearchStr();
+
+  /*create the database if it's not already created*/
+  if((ret = db_create(&dataBaseP, NULL, 0)) != 0)
+  {
+    /*error creating db-handle send the mess to errh, then exit*/
+    printf("error db_create: %s\n", db_strerror(ret));
+    printf(" Fel vid skapande av databashandtag avslutar\n");
+    return;
+  }
+
+#if DB_VERSION_MAJOR > 3 && DB_VERSION_MINOR > 0
+  //        int  (*open) __P((DB *, DB_TXN *,
+  //              const char *, const char *, DBTYPE, u_int32_t, int));
+
+  ret = dataBaseP->open(dataBaseP, NULL, dbName, NULL, DATABASETYPE, DB_RDONLY, 0);
+#else
+  ret = dataBaseP->open(dataBaseP, dbName, NULL, DATABASETYPE, DB_RDONLY, 0);
+#endif
+  if(ret != 0)
+  {
+    /*error opening/creating db send the mess to errh, then exit*/
+    printf("error db_open: %s\n", db_strerror(ret));
+    //goto err;
+  }
+
+  sEvent *eventp;
+  DBT data, key;
+  DBC *dbcp;
+  vector<sStat> evv;
+  int found;
+    
+  /* Acquire a cursor for the database. */ 
+  if ((ret = dataBaseP->cursor(dataBaseP, NULL, &dbcp, 0)) != 0) 
+  {
+    printf("error dataBaseP->cursor: %s\n", db_strerror(ret)); 
+    return;
+  }
+
+  /* Initialize the key/data return pair. */
+  memset(&key, 0, sizeof(key));
+  memset(&data, 0, sizeof(data));
+  
+  for ( ret = dbcp->c_get(dbcp, &key, &data, DB_FIRST); 
+	ret == 0;
+	ret = dbcp->c_get(dbcp, &key, &data, DB_NEXT)) {
+    eventp = (sEvent *)data.data;
+
+    switch ( eventp->EventType) {
+    case mh_eEvent_Alarm:
+    case mh_eEvent_Info:
+      event_cnt++;
+      found = 0;
+      for ( unsigned int i = 0; i < evv.size(); i++) {
+	if ( strcmp( eventp->Mess.message.EventText, evv[i].event.Mess.message.EventText) == 0 &&
+	     strcmp( eventp->Mess.message.EventName, evv[i].event.Mess.message.EventName) == 0) {
+	  evv[i].cnt++;
+	  found = 1;
+	}
+      }
+      if ( !found) {
+	sStat stat;
+	stat.event = *eventp;
+	stat.cnt = 1;
+	evv.push_back(stat);
+      }
+      break;
+    case mh_eEvent_Ack:
+    case mh_eEvent_Cancel:
+    case mh_eEvent_Return:
+    case mh_eEvent_Block:
+    case mh_eEvent_Unblock:
+    case mh_eEvent_Reblock:
+    case mh_eEvent_CancelBlock:
+      break;
+    default: ;
+    }
+  }
+
+  std::sort( evv.begin(), evv.end(), evv_greater_than());
+
+  hist->set_nodraw();
+  for ( unsigned int i = 0; i < evv.size(); i++) {
+    char tmp[80];
+
+    memset( &evv[i].event.Mess.message.Info.EventTime, 0, sizeof(evv[i].event.Mess.message.Info.EventTime));
+    evv[i].event.Mess.message.Status = 0;
+
+    // Print count in beginning of event text
+    strncpy( tmp, evv[i].event.Mess.message.EventText, sizeof(tmp));
+    sprintf( evv[i].event.Mess.message.EventText, "%-5d ", evv[i].cnt);
+    strncpy( &evv[i].event.Mess.message.EventText[6], tmp, sizeof(evv[i].event.Mess.message.EventText)-6);
+    evv[i].event.Mess.message.EventText[sizeof(evv[i].event.Mess.message.EventText)-1] = 0;
+
+    switch (evv[i].event.EventType) {
+    case mh_eEvent_Alarm:
+      hist_add_alarm_mess( &evv[i].event.Mess.message);
+      break;
+    case mh_eEvent_Info:
+      hist_add_info_mess( &evv[i].event.Mess.message);
+      break;
+    default: ;
+    }
+  }
+  hist->reset_nodraw();   
+  set_num_of_events( event_cnt);
+  set_search_string( "Statistics", "", "", "");
 }
 
 //sorting function that might be more complicated in the future

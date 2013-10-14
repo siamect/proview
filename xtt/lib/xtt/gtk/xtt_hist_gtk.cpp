@@ -168,10 +168,15 @@ HistGtk::HistGtk( void *hist_parent_ctx,
 			      'f', GdkModifierType(GDK_CONTROL_MASK), 
 			      GTK_ACCEL_VISIBLE);
 
+  GtkWidget *functions_stat = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("S_tatistics"));
+  g_signal_connect( functions_stat, "activate", 
+		    G_CALLBACK(activate_stat), this);
+
   GtkMenu *func_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(func_menu), functions_open_plc);
   gtk_menu_shell_append(GTK_MENU_SHELL(func_menu), functions_display_object);
   gtk_menu_shell_append(GTK_MENU_SHELL(func_menu), functions_search);
+  gtk_menu_shell_append(GTK_MENU_SHELL(func_menu), functions_stat);
 
   GtkWidget *functions = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Functions"));
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), functions);
@@ -569,6 +574,13 @@ void HistGtk::activate_display_in_xnav( GtkWidget *w, gpointer data)
   Hist *histOP = (Hist *)data;
 
   histOP->hist->display_in_xnav();
+}
+
+void HistGtk::activate_stat( GtkWidget *w, gpointer data)
+{
+  Hist *histOP = (Hist *)data;
+
+  histOP->stat();
 }
 
 void HistGtk::activate_disp_hundredth( GtkWidget *w, gpointer data)

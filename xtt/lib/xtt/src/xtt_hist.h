@@ -129,6 +129,7 @@ class Hist {
     void thisw_cb();
     void all_cb();
     void time_cb();
+    void stat();
     
     static int GoBackMonth( pwr_tTime TimeIn, pwr_tTime *FromTime,
 			    pwr_tTime *ToTime);
