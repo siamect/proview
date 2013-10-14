@@ -916,6 +916,8 @@ System.out.println( "JopSpiderCmd start");
       if ( name.substring(0,5).equals("http:")) {
 	  url_str = name;
         if ( url_str.lastIndexOf(".html") == -1 &&
+	     url_str.lastIndexOf(".shtml") == -1 &&
+	     url_str.lastIndexOf(".htm") == -1 &&
 	     url_str.lastIndexOf(".pdf") == -1)
           url_str = url_str + ".html";
       }
@@ -930,6 +932,8 @@ System.out.println( "JopSpiderCmd start");
 	    if ( idx1 != -1 && current_str.length() > idx1 + 1) {
 	      url_str = current_str.substring(0,idx1 + 1) + "pwr_doc/" + name.substring(9);	      
 	      if ( url_str.lastIndexOf(".html") == -1 &&
+		   url_str.lastIndexOf(".shtml") == -1 &&
+		   url_str.lastIndexOf(".htm") == -1 &&
 		   url_str.lastIndexOf(".pdf") == -1)
 		url_str = url_str + ".html";
 	    }
@@ -946,6 +950,8 @@ System.out.println( "JopSpiderCmd start");
           idx = idx2;
         String path = current_str.substring(0,idx + 1);
         if ( name.lastIndexOf(".html") == -1 &&
+	     name.lastIndexOf(".shtml") == -1 &&
+	     name.lastIndexOf(".htm") == -1 &&
 	     name.lastIndexOf(".pdf") == -1)
           url_str = new String( path + name + ".html");
         else
