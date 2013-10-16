@@ -7032,6 +7032,11 @@ I kod exemplet nedan är In1 och In2 ingångar, Factor ett internt attribut och Ou
 
 Observera att pekar-elementet för ingångarna In1 och In2 används i koden.
 
+En prototyp-deklaration av exec funktionen läggs in i ra_plc_user.h
+
+<c>void 'StructName'_exec( plc_sThread *tp,
+<c>                        pwr_sClass_'StructName' *o);
+
 Modulen för c-koden kompileras och länkas ihop med plc-programmet genom att en länk-fil 
 skapas på katalogen $pwrp_exe. Filen ska namnges plc_'nodenamn'_'busnr'_'plcname'.opt, t ex 
 plc_mynode_0999_plc.opt. Innehållet i filen skickas med som indata till länkaren, ld, och man 

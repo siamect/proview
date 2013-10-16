@@ -7134,6 +7134,11 @@ output.
 
 Note that the pointer element for the inputs In1 and In2 are used in the code.
 
+You should also add prototype declaration of the exec function in ra_plc_user.h
+
+<c>void 'StructName'_exec( plc_sThread *tp,
+<c>                        pwr_sClass_'StructName' *o);
+
 The module of the c-code is compiled and linked with the plc program. This requires a link
 file to be placed on the directory $pwrp_exe. The file is named 
 plc_'nodename'_'busnumber'_'plcname'.opt, e.g. plc_mynode_0999_plc.opt. The content of the 
