@@ -1927,6 +1927,27 @@ int FlowCtx::radiobutton_cb( FlowArrayElem *object, int number,
   return 1;
 }
 
+int FlowCtx::pixmapbutton_cb( FlowArrayElem *object, int number)
+{
+  
+  if ( event_callback[flow_eEvent_PixmapButton] )
+  {
+    /* Send an pixmapbutton callback */
+    static flow_sEvent e;
+
+    e.event = flow_eEvent_PixmapButton;
+    e.any.type = flow_eEventType_PixmapButton;
+    e.any.x_pixel = 0;
+    e.any.y_pixel = 0;
+    e.any.x = 0;
+    e.any.y = 0;
+    e.pixmapbutton.object_type = object->type();
+    e.pixmapbutton.object = object;
+    e.pixmapbutton.number = number;
+    return event_callback[flow_eEvent_PixmapButton]( this, &e);
+  }
+  return 1;
+}
 
 int FlowCtx::get_next_object( FlowArrayElem *object, flow_eDirection dir,
 			      FlowArrayElem **next)

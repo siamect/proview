@@ -429,6 +429,7 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   hist->start_trace_cb = &hist_start_trace_cb;
   hist->display_in_xnav_cb = &hist_display_in_xnav_cb;
   hist->popup_menu_cb = &hist_popup_menu_cb;
+  hist->help_event_cb = &help_event_cb;
 
   gtk_paned_pack1( GTK_PANED(hist_pane), GTK_WIDGET(sea_vbox), TRUE, TRUE);
   gtk_paned_pack2( GTK_PANED(hist_pane), GTK_WIDGET(hist_widget), TRUE, TRUE);

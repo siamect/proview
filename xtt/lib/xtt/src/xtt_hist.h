@@ -145,6 +145,7 @@ class Hist {
     static void hist_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
 			      unsigned long item_type, unsigned long utility,
 			      char *arg, int x, int y);
+    static void help_event_cb( void *ctx, void *item);
 };
 
 #else

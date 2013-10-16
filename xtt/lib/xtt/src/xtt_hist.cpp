@@ -122,6 +122,19 @@ void Hist::hist_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
 				   utility, arg, x, y);
 }
 
+void Hist::help_event_cb( void *ctx, void *item)
+{
+  ItemAlarm *aitem = (ItemAlarm *)item;
+
+  switch ( aitem->type) {
+  case evlist_eItemType_Alarm:
+    ((Hist *)ctx)->wow->DisplayText( "Event MoreText", aitem->eventmoretext);
+    break;
+  default:
+    return;
+  }
+}
+
 void Hist::hist_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp)
 {
   if ( ((Hist *)ctx)->display_in_xnav_cb)

@@ -149,6 +149,19 @@ char *EvAla::ala_name_to_alias_cb( void *ctx, char *name)
   return ((EvAla *)ctx)->name_to_alias_cb( ((EvAla *)ctx)->parent_ctx, name);
 }
 
+void EvAla::help_event_cb( void *ctx, void *item)
+{
+  ItemAlarm *aitem = (ItemAlarm *)item;
+
+  switch ( aitem->type) {
+  case evlist_eItemType_Alarm:
+    ((EvAla *)ctx)->wow->DisplayText( "Event MoreText", aitem->eventmoretext);
+    break;
+  default:
+    return;
+  }
+}
+
 void EvAla::ala_activate_print()
 {
   char title[80];

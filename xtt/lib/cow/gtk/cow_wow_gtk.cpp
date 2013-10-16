@@ -349,12 +349,14 @@ void CoWowGtk::DisplayError( const char *title, const char *text)
 *
 *************************************************************************/
 
-static void displaytext_ok_cb( GtkWidget *w, gint arg1, gpointer data)
+static void displaytext_close_cb( GtkWidget *w, gint arg1, gpointer data)
 {
+  while( !GTK_IS_WINDOW(w))
+    w = gtk_widget_get_parent( w);
   gtk_widget_destroy( w);
 }
 
-void CoWowGtk::DisplayText( const char *title, const char *text)
+void CoWowGtk::DisplayText( const char *title, const char *text, int width, int height)
 {
   GtkWidget *parent = m_parent;
   if ( parent) {
@@ -362,16 +364,49 @@ void CoWowGtk::DisplayText( const char *title, const char *text)
       parent = gtk_widget_get_parent( parent);
   }
 
+  if ( width == 0)
+    width = 400;
+  if ( height == 0)
+    height = 150;
+
+  // Create a displaytext window
+  GtkWidget *dialog = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
+			   "default-height", height,
+			   "default-width", width,
+			   "title", CoWowGtk::translate_utf8(title),
+			   NULL);
+  g_signal_connect( dialog, "delete_event", G_CALLBACK(displaytext_close_cb), dialog);
+
   char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-  GtkWidget *dialog = gtk_message_dialog_new( GTK_WINDOW(parent),
-					      GTK_DIALOG_DESTROY_WITH_PARENT, 
-					      GTK_MESSAGE_OTHER,
-					      GTK_BUTTONS_CLOSE, textutf8);
+  GtkWidget *displaytext_label = gtk_label_new(textutf8);
   g_free( textutf8);
-  g_signal_connect( dialog, "response", 
- 		    G_CALLBACK(displaytext_ok_cb), NULL);
-  gtk_window_set_title( GTK_WINDOW(dialog), title);
+
+  GtkWidget *displaytext_image = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
+				"stock", GTK_STOCK_DIALOG_INFO,
+				"icon-size", GTK_ICON_SIZE_DIALOG,
+				"xalign", 0.5,
+				"yalign", 1.0,
+				NULL);
+
+  GtkWidget *displaytext_close = gtk_button_new_with_label( CoWowGtk::translate_utf8("Close"));
+  gtk_widget_set_size_request( displaytext_close, 70, 25);
+  g_signal_connect( displaytext_close, "clicked", 
+  		    G_CALLBACK(displaytext_close_cb), dialog);
+
+  GtkWidget *displaytext_hboxtext = gtk_hbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(displaytext_hboxtext), displaytext_image, FALSE, FALSE, 15);
+  gtk_box_pack_start( GTK_BOX(displaytext_hboxtext), displaytext_label, TRUE, TRUE, 15);
+
+  GtkWidget *displaytext_hboxbuttons = gtk_hbox_new( TRUE, 40);
+  gtk_box_pack_end( GTK_BOX(displaytext_hboxbuttons), displaytext_close, FALSE, FALSE, 0);
+
+  GtkWidget *displaytext_vbox = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(displaytext_vbox), displaytext_hboxtext, TRUE, TRUE, 30);
+  gtk_box_pack_start( GTK_BOX(displaytext_vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
+  gtk_box_pack_end( GTK_BOX(displaytext_vbox), displaytext_hboxbuttons, FALSE, FALSE, 15);
+  gtk_container_add( GTK_CONTAINER(dialog), displaytext_vbox);
   gtk_widget_show_all( dialog);
+
 }
 
 /************************************************************************

@@ -99,6 +99,14 @@
 #include "xnav_bitmap_eventreturn18.h"
 #include "xnav_bitmap_eventreturn20.h"
 #include "xnav_bitmap_eventreturn24.h"
+#include "xnav_bitmap_info8.h"
+#include "xnav_bitmap_info10.h"
+#include "xnav_bitmap_info12.h"
+#include "xnav_bitmap_info14.h"
+#include "xnav_bitmap_info16.h"
+#include "xnav_bitmap_info18.h"
+#include "xnav_bitmap_info20.h"
+#include "xnav_bitmap_info24.h"
 #include "xnav_bitmap_blockr_12.h"
 #include "xnav_bitmap_blockl_12.h"
 
@@ -128,6 +136,7 @@ void EvListBrow::free_pixmaps()
   brow_FreeAnnotPixmap( ctx, pixmap_eventalarm);
   brow_FreeAnnotPixmap( ctx, pixmap_eventacked);
   brow_FreeAnnotPixmap( ctx, pixmap_eventreturn);
+  brow_FreeAnnotPixmap( ctx, pixmap_info);
   brow_FreeAnnotPixmap( ctx, pixmap_blockr);
   brow_FreeAnnotPixmap( ctx, pixmap_blockl);
 }
@@ -337,6 +346,38 @@ void EvListBrow::allocate_pixmaps()
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_eventreturn);
 
+  i = 0;
+  pixmap_data[i].width =xnav_bitmap_info8_width;
+  pixmap_data[i].height =xnav_bitmap_info8_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_info8_bits;
+  pixmap_data[i].width =xnav_bitmap_info10_width;
+  pixmap_data[i].height =xnav_bitmap_info10_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_info10_bits;
+  pixmap_data[i].width =xnav_bitmap_info12_width;
+  pixmap_data[i].height =xnav_bitmap_info12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_info12_bits;
+  pixmap_data[i].width =xnav_bitmap_info14_width;
+  pixmap_data[i].height =xnav_bitmap_info14_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_info14_bits;
+  pixmap_data[i].width =xnav_bitmap_info16_width;
+  pixmap_data[i].height =xnav_bitmap_info16_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_info16_bits;
+  pixmap_data[i].width =xnav_bitmap_info18_width;
+  pixmap_data[i].height =xnav_bitmap_info18_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_info18_bits;
+  pixmap_data[i].width =xnav_bitmap_info20_width;
+  pixmap_data[i].height =xnav_bitmap_info20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_info20_bits;
+  pixmap_data[i].width =xnav_bitmap_info20_width;
+  pixmap_data[i].height =xnav_bitmap_info20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_info20_bits;
+  pixmap_data[i].width =xnav_bitmap_info24_width;
+  pixmap_data[i].height =xnav_bitmap_info24_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_info24_bits;
+
+
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_info);
+
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_blockr_12_width;
     pixmap_data[i].height =xnav_bitmap_blockr_12_height;
@@ -369,16 +410,17 @@ void EvListBrow::create_nodeclasses()
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnotPixmap( nc_event, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_event, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnot( nc_event, 3.3, 0.6, 1,
+  brow_AddAnnotPixmapButton( nc_event, 2, 3.0, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnot( nc_event, 4.3, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddAnnot( nc_event, 10, 0.6, 2,
+  brow_AddAnnot( nc_event, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddAnnot( nc_event, 12, 0.6, 3,
+  brow_AddAnnot( nc_event, 13, 0.6, 3,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddAnnot( nc_event, 28, 0.6, 4,
+  brow_AddAnnot( nc_event, 29, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddFrame( nc_event, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
@@ -392,13 +434,14 @@ void EvListBrow::create_nodeclasses()
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnotPixmap( nc_a_alarm, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_a_alarm, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnot( nc_a_alarm, 3.3, 0.6, 1,
+  brow_AddAnnotPixmapButton( nc_a_alarm, 2, 3.0, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnot( nc_a_alarm, 4.3, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_a_alarm, 10, 0.6, 2,
+  brow_AddAnnot( nc_a_alarm, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_a_alarm, 12, 0.6, 3,
+  brow_AddAnnot( nc_a_alarm, 13, 0.6, 3,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
-  brow_AddAnnot( nc_a_alarm, 28, 0.6, 4,
+  brow_AddAnnot( nc_a_alarm, 29, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
   brow_AddFrame( nc_a_alarm, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -411,13 +454,14 @@ void EvListBrow::create_nodeclasses()
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnotPixmap( nc_b_alarm, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_b_alarm, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnot( nc_b_alarm, 3.3, 0.6, 1,
+  brow_AddAnnotPixmapButton( nc_b_alarm, 2, 3.0, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnot( nc_b_alarm, 4.3, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_b_alarm, 10, 0.6, 2,
+  brow_AddAnnot( nc_b_alarm, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_b_alarm, 12, 0.6, 3,
+  brow_AddAnnot( nc_b_alarm, 13, 0.6, 3,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
-  brow_AddAnnot( nc_b_alarm, 28, 0.6, 4,
+  brow_AddAnnot( nc_b_alarm, 29, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
   brow_AddFrame( nc_b_alarm, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -430,13 +474,14 @@ void EvListBrow::create_nodeclasses()
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnotPixmap( nc_info, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_info, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnot( nc_info, 3.3, 0.6, 1,
+  brow_AddAnnotPixmapButton( nc_info, 2, 3.0, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnot( nc_info, 4.3, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_info, 10, 0.6, 2,
+  brow_AddAnnot( nc_info, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_info, 12, 0.6, 3,
+  brow_AddAnnot( nc_info, 13, 0.6, 3,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
-  brow_AddAnnot( nc_info, 28, 0.6, 4,
+  brow_AddAnnot( nc_info, 29, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
   brow_AddFrame( nc_info, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -448,9 +493,9 @@ void EvListBrow::create_nodeclasses()
   brow_AddRect( nc_category, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_LineGray, 0, 0);
   brow_AddAnnot( nc_category, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category, 3.3, 0.6, 1,
+  brow_AddAnnot( nc_category, 4.3, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category, 10, 0.6, 2,
+  brow_AddAnnot( nc_category, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddFrame( nc_category, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -463,9 +508,9 @@ void EvListBrow::create_nodeclasses()
   brow_AddRect( nc_category_a, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_a, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_a, 3.3, 0.6, 1,
+  brow_AddAnnot( nc_category_a, 4.3, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_a, 10, 0.6, 2,
+  brow_AddAnnot( nc_category_a, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddFrame( nc_category_a, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -478,9 +523,9 @@ void EvListBrow::create_nodeclasses()
   brow_AddRect( nc_category_b, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_b, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_b, 3.3, 0.6, 1,
+  brow_AddAnnot( nc_category_b, 4.3, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_b, 10, 0.6, 2,
+  brow_AddAnnot( nc_category_b, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddFrame( nc_category_b, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -493,9 +538,9 @@ void EvListBrow::create_nodeclasses()
   brow_AddRect( nc_category_c, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_c, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_c, 3.3, 0.6, 1,
+  brow_AddAnnot( nc_category_c, 4.3, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_c, 10, 0.6, 2,
+  brow_AddAnnot( nc_category_c, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddFrame( nc_category_c, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -508,9 +553,9 @@ void EvListBrow::create_nodeclasses()
   brow_AddRect( nc_category_d, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_d, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_d, 3.3, 0.6, 1,
+  brow_AddAnnot( nc_category_d, 4.3, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_d, 10, 0.6, 2,
+  brow_AddAnnot( nc_category_d, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddFrame( nc_category_d, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -523,9 +568,9 @@ void EvListBrow::create_nodeclasses()
   brow_AddRect( nc_category_i, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_i, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_i, 3.3, 0.6, 1,
+  brow_AddAnnot( nc_category_i, 4.3, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_i, 10, 0.6, 2,
+  brow_AddAnnot( nc_category_i, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddFrame( nc_category_i, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -538,9 +583,9 @@ void EvListBrow::create_nodeclasses()
   brow_AddRect( nc_category_flash, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_flash, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_flash, 3.3, 0.6, 1,
+  brow_AddAnnot( nc_category_flash, 4.3, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_flash, 10, 0.6, 2,
+  brow_AddAnnot( nc_category_flash, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddFrame( nc_category_flash, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 }
@@ -584,6 +629,8 @@ void EvListBrow::brow_setup()
   brow_EnableEvent( ctx, flow_eEvent_Key_PF3, flow_eEventType_CallBack, 
 	EvList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Radiobutton, flow_eEventType_CallBack, 
+	EvList::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_PixmapButton, flow_eEventType_CallBack, 
 	EvList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, 
 	EvList::brow_cb);
@@ -644,7 +691,7 @@ EvList::EvList(
   type(ev_type), browbase(0), browtree(0), size(0), max_size(ev_size), display_hundredth(0),
   hide_object(0), hide_text(0),
   start_trace_cb(0), display_in_xnav_cb(0), name_to_alias_cb(0), 
-  sound_cb(0), selection_changed_cb(0), init_cb(ev_init_cb), acc_beep_time(0),
+  sound_cb(0), selection_changed_cb(0), init_cb(ev_init_cb), help_event_cb(0), acc_beep_time(0),
   beep_interval(4), eventname_seg(ev_eventname_seg), current_view(pwr_cNOid), 
   flash_value(false)
 {
@@ -1617,6 +1664,20 @@ int EvList::brow_cb( FlowCtx *ctx, flow_tEvent event)
       }
       break;
     }
+    case flow_eEvent_PixmapButton: {
+      brow_GetUserData( event->object.object, (void **)&item);
+      switch( item->type) {
+        case evlist_eItemType_Alarm:
+	  if ( strcmp( ((ItemAlarm *)item)->eventmoretext, "") != 0) {
+	    if ( evlist->help_event_cb)
+	      evlist->help_event_cb( evlist->parent_ctx, item);
+	  }
+          break;
+        default:
+          ;
+      }
+      break;
+    }
     default:
       ;
   }
@@ -1821,6 +1882,10 @@ void ItemAlarm::update_text( int use_treenode)
     brow_SetAnnotation( n, 4, eventname, strlen(eventname));
   else
     brow_SetAnnotation( n, 4, "", 0);
+
+  if ( strcmp( eventmoretext, "") != 0)
+    brow_SetAnnotPixmap( n, 2, evlist->browbase->pixmap_info);
+
 }
 
 ItemCategory::ItemCategory( EvList *item_evlist, const char *item_name, pwr_sClass_AlarmCategory *cop,

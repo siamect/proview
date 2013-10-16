@@ -158,6 +158,7 @@ class EvListBrow {
     flow_sAnnotPixmap 	*pixmap_eventalarm;
     flow_sAnnotPixmap 	*pixmap_eventacked;
     flow_sAnnotPixmap 	*pixmap_eventreturn;
+    flow_sAnnotPixmap 	*pixmap_info;
     flow_sAnnotPixmap 	*pixmap_blockr;
     flow_sAnnotPixmap 	*pixmap_blockl;
 
@@ -194,6 +195,7 @@ class EvList {
     int			(*sound_cb)( void *, pwr_tAttrRef *);
     void       		(*selection_changed_cb)( void *);
     void		(*init_cb)( void *);
+    void		(*help_event_cb)( void *, void *);
     double		acc_beep_time;
     double		beep_interval;
     pwr_tAttrRef	aalarm_sound;

@@ -56,6 +56,7 @@
 #include "flow_array.h"
 #include "flow_pixmap.h"
 #include "flow_annotpixmap.h"
+#include "flow_annotpixmapbutton.h"
 #include "flow_radiobutton.h"
 #include "flow_msg.h"
 
@@ -195,6 +196,12 @@ void FlowArray::copy_from( const FlowArray& array)
       case flow_eObjectType_AnnotPixmap:
       {
         FlowAnnotPixmap *n = new FlowAnnotPixmap(*(FlowAnnotPixmap *)array.a[i]);
+        insert( n);
+        break;
+      }
+      case flow_eObjectType_AnnotPixmapButton:
+      {
+        FlowAnnotPixmapButton *n = new FlowAnnotPixmapButton(*(FlowAnnotPixmapButton *)array.a[i]);
         insert( n);
         break;
       }
@@ -691,6 +698,13 @@ void FlowArray::open( void *ctx, ifstream& fp)
       case flow_eSave_AnnotPixmap: 
       {
         FlowAnnotPixmap *n = new FlowAnnotPixmap( (FlowCtx *) ctx, 0);
+	n->open( fp);
+        insert( n);
+        break;
+      }
+      case flow_eSave_AnnotPixmapButton: 
+      {
+        FlowAnnotPixmapButton *n = new FlowAnnotPixmapButton( (FlowCtx *) ctx, 0);
 	n->open( fp);
         insert( n);
         break;

@@ -166,6 +166,8 @@ void brow_AddAnnot( brow_tNodeClass nc, double x, double y, int number,
 	int relative_pos);
 void brow_AddAnnotPixmap( brow_tNodeClass nc, int number,
 	double x, double y, flow_eDrawType draw_type, int size, int relative_pos);
+void brow_AddAnnotPixmapButton( brow_tNodeClass nc, int number,
+	double x, double y, flow_eDrawType draw_type, int size, int relative_pos);
 void brow_AddRadiobutton( brow_tNodeClass nc, double x, double y, 
 	double width, double height, int number,
 	flow_eDrawType draw_type, int line_width);

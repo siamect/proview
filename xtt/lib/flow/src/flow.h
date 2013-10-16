@@ -112,7 +112,8 @@ typedef enum {
 	flow_eObjectType_AnnotPixmap,
 	flow_eObjectType_Radiobutton,
 	flow_eObjectType_Frame,
-	flow_eObjectType_Image
+	flow_eObjectType_Image,
+	flow_eObjectType_AnnotPixmapButton
 	} flow_eObjectType;
 
 typedef enum {
@@ -214,7 +215,8 @@ typedef enum {
 	flow_eEventType_Object,
 	flow_eEventType_AnnotationInput,
 	flow_eEventType_Radiobutton,
-	flow_eEventType_SelectConPoint
+	flow_eEventType_SelectConPoint,
+	flow_eEventType_PixmapButton,
 	} flow_eEventType;
 
 typedef enum {
@@ -260,6 +262,7 @@ typedef enum {
 	flow_eEvent_ObjectDeleted,
 	flow_eEvent_AnnotationInput,
 	flow_eEvent_Radiobutton,
+	flow_eEvent_PixmapButton,
 	flow_eEvent_Key_Return,
 	flow_eEvent_Key_Up,
 	flow_eEvent_Key_Down,
@@ -351,6 +354,18 @@ typedef struct {
 	int			value;
 	} flow_sEventRadiobutton, *flow_tEventRadiobutton;
 
+typedef struct {
+	flow_eEvent		event;
+	flow_eEventType		type;
+	int			x_pixel;
+	int			y_pixel;
+	double			x;
+	double			y;
+	flow_eObjectType	object_type;
+	void			*object;
+	int			number;
+	} flow_sEventPixmapButton, *flow_tEventPixmapButton;
+
 typedef union {
 	flow_eEvent		event;
 	flow_sEventAny		any;
@@ -358,6 +373,7 @@ typedef union {
 	flow_sEventConCreate	con_create;
 	flow_sEventAnnotInput	annot_input;
 	flow_sEventRadiobutton	radiobutton;
+  	flow_sEventPixmapButton	pixmapbutton;
 	} flow_sEvent, *flow_tEvent;
 
 typedef enum {
@@ -399,6 +415,7 @@ typedef enum {
 	flow_eSave_AnnotPixmap			= 16,
 	flow_eSave_Radiobutton			= 17,
 	flow_eSave_Frame			= 18,
+	flow_eSave_AnnotPixmapButton   		= 19,
 	flow_eSave_End				= 99,
 	flow_eSave_Ctx_zoom_factor		= 100,
 	flow_eSave_Ctx_base_zoom_factor		= 101,

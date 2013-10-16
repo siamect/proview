@@ -211,6 +211,19 @@ void Ev::sala_close_cb( void *ctx, EvAla *sala)
     ev->sala_cnt--;
 }
 
+void Ev::help_event_cb( void *ctx, void *item)
+{
+  ItemAlarm *aitem = (ItemAlarm *)item;
+
+  switch ( aitem->type) {
+  case evlist_eItemType_Alarm:
+    ((Ev *)ctx)->wow->DisplayText( "Event MoreText", aitem->eventmoretext);
+    break;
+  default:
+    return;
+  }
+}
+
 void Ev::eve_activate_print()
 {
   char title[80];

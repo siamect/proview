@@ -322,6 +322,7 @@ class FlowCtx {
 	char *text);
     int radiobutton_cb( FlowArrayElem *object, int number, 
 	int value);
+    int pixmapbutton_cb( FlowArrayElem *object, int number);
     int type() { return ctx_type;};
     void move_widgets( int x, int y) { if ( widget_cnt) a.move_widgets( x, y);};
     int display_level;

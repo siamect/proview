@@ -50,6 +50,7 @@
 #include "flow_text.h"
 #include "flow_pixmap.h"
 #include "flow_annotpixmap.h"
+#include "flow_annotpixmapbutton.h"
 #include "flow_image.h"
 #include "flow_pushbutton.h"
 #include "flow_array_elem.h"
@@ -407,6 +408,15 @@ void brow_AddAnnotPixmap( brow_tNodeClass nc, int number,
 	double x, double y, flow_eDrawType draw_type, int size, int relative_pos)
 {
    FlowAnnotPixmap *annotpixmap = new FlowAnnotPixmap( 
+	((FlowNodeClass *)nc)->ctx, number, x, y, draw_type, 
+	size, relative_pos);
+  ((FlowNodeClass *)nc)->insert( annotpixmap);
+}
+
+void brow_AddAnnotPixmapButton( brow_tNodeClass nc, int number,
+	double x, double y, flow_eDrawType draw_type, int size, int relative_pos)
+{
+   FlowAnnotPixmapButton *annotpixmap = new FlowAnnotPixmapButton( 
 	((FlowNodeClass *)nc)->ctx, number, x, y, draw_type, 
 	size, relative_pos);
   ((FlowNodeClass *)nc)->insert( annotpixmap);

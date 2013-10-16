@@ -207,21 +207,24 @@ void FlowPixmap::nav_erase( void *pos, void *node)
 int FlowPixmap::event_handler( void *pos, flow_eEvent event, int x, int y,
 	void *node)
 {
-  FlowPoint *p;
+#if 0
+  int idx = int( ctx->zoom_factor / ctx->base_zoom_factor * (pixmap_size + 4) -
+	 4);
+  if ( idx < 0)
+    return 0;
 
-  p = (FlowPoint *) pos;
-/**
-  if ( p1.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x < x && 
-       x < p2.z_x  + ((FlowPoint *)pos)->z_x - ctx->offset_x &&
-       p1.z_y  + ((FlowPoint *)pos)->z_y - ctx->offset_y < y && 
-       y < p2.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y)
+  if ( p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x < x && 
+       x < p.z_x  + ((FlowPoint *)pos)->z_x - ctx->offset_x + pixmap_data[idx].width &&
+       p.z_y  + ((FlowPoint *)pos)->z_y - ctx->offset_y < y && 
+       y < p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y + pixmap_data[idx].height)
   {
-    cout << "Event handler: Hit in text" << endl;
+    cout << "Event handler: Hit in pixmap" << endl;
     return 1;
   }  
   else
-***/
     return 0;
+#endif
+  return 0;
 }
 
 void FlowPixmap::get_borders( double pos_x, double pos_y, double *x_right, 

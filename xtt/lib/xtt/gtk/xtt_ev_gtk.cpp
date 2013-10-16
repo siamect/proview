@@ -296,6 +296,7 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     eve->name_to_alias_cb = &ev_name_to_alias_cb;
     eve->popup_menu_cb = &ev_popup_menu_cb;
     eve->selection_changed_cb = &eve_selection_changed_cb;
+    eve->help_event_cb = &help_event_cb;
 
     // Toolbar
     GtkToolbar *tools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
@@ -586,6 +587,7 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     ala->popup_menu_cb = &ev_popup_menu_cb;
     ala->sound_cb = &ev_sound_cb;
     ala->selection_changed_cb = &ala_selection_changed_cb;
+    ala->help_event_cb = &help_event_cb;
 
     // Toolbar
     GtkToolbar *tools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);

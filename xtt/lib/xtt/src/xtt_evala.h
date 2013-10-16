@@ -133,6 +133,7 @@ class EvAla {
     static void ala_selection_changed_cb( void *ctx);
     static char *ala_name_to_alias_cb( void *ctx, char *name);
     static void ala_init_cb( void *ctx);
+    static void help_event_cb( void *ctx, void *item);
 };
 
 #endif

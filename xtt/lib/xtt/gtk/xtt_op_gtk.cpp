@@ -524,21 +524,21 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gtk_container_add( GTK_CONTAINER(tools_alarmlist), 
 	  gtk_image_new_from_file( fname));
   g_signal_connect(tools_alarmlist, "clicked", G_CALLBACK(activate_alarmlist), this);
-  gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_alarmlist, CoWowGtk::translate_utf8("AlarmList"), "");
+  gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_alarmlist, CoWowGtk::translate_utf8("Alarm List"), "");
 
   GtkWidget *tools_eventlist = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_eventlist.png");
   gtk_container_add( GTK_CONTAINER(tools_eventlist), 
 	  gtk_image_new_from_file( fname));
   g_signal_connect(tools_eventlist, "clicked", G_CALLBACK(activate_eventlist), this);
-  gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_eventlist, CoWowGtk::translate_utf8("EventList"), "");
+  gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_eventlist, CoWowGtk::translate_utf8("Event List"), "");
 
   GtkWidget *tools_eventlog = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_eventlog.png");
   gtk_container_add( GTK_CONTAINER(tools_eventlog), 
 	  gtk_image_new_from_file( fname));
   g_signal_connect(tools_eventlog, "clicked", G_CALLBACK(activate_eventlog), this);
-  gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_eventlog, CoWowGtk::translate_utf8("EventLog"), "");
+  gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_eventlog, CoWowGtk::translate_utf8("Event Log"), "");
 
   GtkWidget *tools_blocklist = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_blocklist.png");

@@ -174,6 +174,7 @@ class Ev {
     static int sala_acknowledge_cb( void *ctx, mh_sEventId *id);
     static void sala_copy_list_cb( void *ctx, EvList *evl);
     static void sala_close_cb( void *ctx, EvAla *sala);
+    static void help_event_cb( void *ctx, void *item);
 
     static pwr_tStatus mh_ack_bc( mh_sAck *MsgP);
     static pwr_tStatus mh_return_bc( mh_sReturn *MsgP);

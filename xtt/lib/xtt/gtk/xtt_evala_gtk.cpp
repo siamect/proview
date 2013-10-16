@@ -348,6 +348,7 @@ EvAlaGtk::EvAlaGtk( void *ev_parent_ctx,
     ala->name_to_alias_cb = &ala_name_to_alias_cb;
     ala->popup_menu_cb = &ala_popup_menu_cb;
     ala->sound_cb = &ala_sound_cb;
+    ala->help_event_cb = &help_event_cb;
     ala->selection_changed_cb = &ala_selection_changed_cb;
   
     // Toolbar
