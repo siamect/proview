@@ -637,6 +637,8 @@ void XttGtk::valchanged_cmd_input( GtkWidget *w, gpointer data)
     xtt->set_prompt( "");
     xtt->input_open = 0;
     xtt->xnav->set_inputfocus();
+    if ( EVEN(sts))
+      xtt->message( 'E', XNav::get_message(sts));
   }
   else if ( xtt->command_open) {
     sts = xtt->xnav->command( text);

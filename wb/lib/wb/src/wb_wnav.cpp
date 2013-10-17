@@ -74,10 +74,11 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
 	void *buffer_ptr, int buff_size, int attr_size)
 {
   int		sts;
+  char		s[100];
 
   switch ( type_id ) {
   case pwr_eType_Boolean: {
-    if ( sscanf( value_str, "%d", (pwr_tBoolean *)buffer_ptr) != 1)
+    if ( sscanf( value_str, "%d%s", (pwr_tBoolean *)buffer_ptr, s) != 1)
       return WNAV__INPUT_SYNTAX;
     if ( *(pwr_tBoolean *)buffer_ptr > 1)
       return WNAV__INPUT_SYNTAX;
@@ -92,14 +93,14 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
       *(float *)buffer_ptr = FLT_MAX;
     else if ( strcmp( value_str, "FLT_NMAX") == 0)
       *(float *)buffer_ptr = -FLT_MAX;
-    else if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
+    else if ( sscanf( value_str, "%f%s", (float *)buffer_ptr, s) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
   case pwr_eType_Float64: {
     pwr_tFloat32 f;
     pwr_tFloat64 d;
-    if ( sscanf( value_str, "%f", &f) != 1)
+    if ( sscanf( value_str, "%f%s", &f, s) != 1)
       return WNAV__INPUT_SYNTAX;
     d = f;
     memcpy( buffer_ptr, (char *) &d, sizeof(d));
@@ -112,21 +113,21 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
       c = '\0';
       memcpy( buffer_ptr, &c, sizeof(c));
     }
-    else if ( sscanf( value_str, "%c", (char *)buffer_ptr) != 1)
+    else if ( sscanf( value_str, "%c%s", (char *)buffer_ptr, s) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
   case pwr_eType_Int8: {
     pwr_tInt8 	i8;
     pwr_tInt16	i16;
-    if ( sscanf( value_str, "%hd", &i16) != 1)
+    if ( sscanf( value_str, "%hd%s", &i16, s) != 1)
       return WNAV__INPUT_SYNTAX;
     i8 = i16;
     memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
     break;
   }
   case pwr_eType_Int16: {
-    if ( sscanf( value_str, "%hd", (short *)buffer_ptr) != 1)
+    if ( sscanf( value_str, "%hd%s", (short *)buffer_ptr, s) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
@@ -135,47 +136,47 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
       *(int *)buffer_ptr = INT_MIN;
     else if ( strcmp( value_str, "INT_MAX") == 0)
       *(int *)buffer_ptr = INT_MAX;
-    else if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
+    else if ( sscanf( value_str, "%d%s", (int *)buffer_ptr, s) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
   case pwr_eType_Int64: {
-    if ( sscanf( value_str, pwr_dFormatInt64, (pwr_tUInt64 *)buffer_ptr) != 1)
+    if ( sscanf( value_str, pwr_dFormatInt64 "%s", (pwr_tUInt64 *)buffer_ptr, s) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
   case pwr_eType_UInt8: {
     pwr_tUInt8 	i8;
     pwr_tUInt16	i16;
-    if ( sscanf( value_str, "%hu", &i16) != 1)
+    if ( sscanf( value_str, "%hu%s", &i16, s) != 1)
       return WNAV__INPUT_SYNTAX;
     i8 = i16;
     memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
     break;
   }
   case pwr_eType_UInt16: {
-    if ( sscanf( value_str, "%hu", (pwr_tUInt16 *)buffer_ptr) != 1)
+    if ( sscanf( value_str, "%hu%s", (pwr_tUInt16 *)buffer_ptr, s) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
   case pwr_eType_UInt32:
   case pwr_eType_DisableAttr: {
-    if ( sscanf( value_str, "%u", (pwr_tDisableAttr *)buffer_ptr) != 1)
+    if ( sscanf( value_str, "%u%s", (pwr_tDisableAttr *)buffer_ptr, s) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
   case pwr_eType_UInt64: {
-    if ( sscanf( value_str, pwr_dFormatUInt64, (pwr_tUInt64 *)buffer_ptr) != 1)
+    if ( sscanf( value_str, pwr_dFormatUInt64 "%s", (pwr_tUInt64 *)buffer_ptr, s) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
   case pwr_eType_Enum: {
-    if ( sscanf( value_str, "%d", (pwr_tEnum *)buffer_ptr) != 1)
+    if ( sscanf( value_str, "%d%s", (pwr_tEnum *)buffer_ptr, s) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
   case pwr_eType_Mask: {
-    if ( sscanf( value_str, "%u", (pwr_tMask *)buffer_ptr) != 1)
+    if ( sscanf( value_str, "%u%s", (pwr_tMask *)buffer_ptr, s) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }

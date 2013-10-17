@@ -5337,12 +5337,13 @@ int  graph_attr_string_to_value( int type_id, const char *value_str,
 	void *buffer_ptr, int buff_size, int attr_size)
 {
   int		sts;
+  char		s[100];
 
   switch ( type_id )
   {
     case pwr_eType_Boolean:
     {
-      if ( sscanf( value_str, "%d", (pwr_tBoolean *)buffer_ptr) != 1)
+      if ( sscanf( value_str, "%d%s", (pwr_tBoolean *)buffer_ptr, s) != 1)
         return GE__INPUT_SYNTAX;
       if ( *(pwr_tBoolean *)buffer_ptr > 1)
         return GE__INPUT_SYNTAX;
@@ -5350,7 +5351,7 @@ int  graph_attr_string_to_value( int type_id, const char *value_str,
     }
     case pwr_eType_Float32:
     {
-      if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
+      if ( sscanf( value_str, "%f%s", (float *)buffer_ptr, s) != 1)
         return GE__INPUT_SYNTAX;
       break;
     }
@@ -5358,7 +5359,7 @@ int  graph_attr_string_to_value( int type_id, const char *value_str,
     {
       pwr_tFloat32 f;
       pwr_tFloat64 d;
-      if ( sscanf( value_str, "%f", &f) != 1)
+      if ( sscanf( value_str, "%f%s", &f, s) != 1)
         return GE__INPUT_SYNTAX;
       d = f;
       memcpy( buffer_ptr, (char *) &d, sizeof(d));
@@ -5367,7 +5368,7 @@ int  graph_attr_string_to_value( int type_id, const char *value_str,
     }
     case pwr_eType_Char:
     {
-      if ( sscanf( value_str, "%c", (char *)buffer_ptr) != 1)
+      if ( sscanf( value_str, "%c%s", (char *)buffer_ptr, s) != 1)
         return GE__INPUT_SYNTAX;
       break;
     }
@@ -5375,7 +5376,7 @@ int  graph_attr_string_to_value( int type_id, const char *value_str,
     {
       pwr_tInt8 	i8;
       pwr_tInt16	i16;
-      if ( sscanf( value_str, "%hd", &i16) != 1)
+      if ( sscanf( value_str, "%hd%s", &i16, s) != 1)
         return GE__INPUT_SYNTAX;
       i8 = i16;
       memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
@@ -5383,20 +5384,20 @@ int  graph_attr_string_to_value( int type_id, const char *value_str,
     }
     case pwr_eType_Int16:
     {
-      if ( sscanf( value_str, "%hd", (short *)buffer_ptr) != 1)
+      if ( sscanf( value_str, "%hd%s", (short *)buffer_ptr, s) != 1)
         return GE__INPUT_SYNTAX;
       break;
     }
     case pwr_eType_Int32:
     case pwr_eType_Enum:
     {
-      if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
+      if ( sscanf( value_str, "%d%s", (int *)buffer_ptr, s) != 1)
         return GE__INPUT_SYNTAX;
       break;
     }
     case pwr_eType_Int64:
     {
-      if ( sscanf( value_str, pwr_dFormatInt64, (pwr_tInt64 *)buffer_ptr) != 1)
+      if ( sscanf( value_str, pwr_dFormatInt64 "%s", (pwr_tInt64 *)buffer_ptr, s) != 1)
         return GE__INPUT_SYNTAX;
       break;
     }
@@ -5404,7 +5405,7 @@ int  graph_attr_string_to_value( int type_id, const char *value_str,
     {
       pwr_tUInt8 	i8;
       pwr_tUInt16	i16;
-      if ( sscanf( value_str, "%hu", &i16) != 1)
+      if ( sscanf( value_str, "%hu%s", &i16, s) != 1)
         return GE__INPUT_SYNTAX;
       i8 = i16;
       memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
@@ -5412,20 +5413,20 @@ int  graph_attr_string_to_value( int type_id, const char *value_str,
     }
     case pwr_eType_UInt16:
     {
-      if ( sscanf( value_str, "%hu", (unsigned short *)buffer_ptr) != 1)
+      if ( sscanf( value_str, "%hu%s", (unsigned short *)buffer_ptr, s) != 1)
         return GE__INPUT_SYNTAX;
       break;
     }
     case pwr_eType_UInt32:
     case pwr_eType_Mask:
     {
-      if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
+      if ( sscanf( value_str, "%lu%s", (unsigned long *)buffer_ptr, s) != 1)
         return GE__INPUT_SYNTAX;
       break;
     }
     case pwr_eType_UInt64:
     {
-      if ( sscanf( value_str, pwr_dFormatUInt64, (pwr_tUInt64 *)buffer_ptr) != 1)
+      if ( sscanf( value_str, pwr_dFormatUInt64 "%s", (pwr_tUInt64 *)buffer_ptr, s) != 1)
         return GE__INPUT_SYNTAX;
       break;
     }
