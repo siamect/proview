@@ -569,7 +569,7 @@ void Hist::stat()
   }
   hist->reset_nodraw();   
   set_num_of_events( event_cnt);
-  set_search_string( "Statistics", "", "", "");
+  set_search_string( Lng::translate("Statistics"), "", "", "");
 }
 
 //sorting function that might be more complicated in the future
