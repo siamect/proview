@@ -1116,7 +1116,6 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 	      scale_x = (x2 - select_rect_stored_ll_x) / (select_rect_stored_ur_x - select_rect_stored_ll_x);
 	      scale_y = (y2 - select_rect_stored_ll_y) / (select_rect_stored_ur_y - select_rect_stored_ll_y);
 	    }
-
             break;
           case glow_eScaleType_Down:
 	    if ( select_rect_start_y == select_rect_stored_ll_y)
@@ -1190,7 +1189,7 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
             x2 = select_rect_stored_ll_x +
 		scale_x * (select_rect_stored_ur_x - select_rect_stored_ll_x);
             y2 = select_rect_stored_ur_y;
-
+            break;
 	    if ( grid_on) {
 	      double fx, fy;
 	      find_grid( (double)(x2 + mw.offset_x) / mw.zoom_factor_x, 
@@ -1199,7 +1198,6 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 
 	      scale_x = (x2 - select_rect_stored_ll_x) / (select_rect_stored_ur_x - select_rect_stored_ll_x);
 	    }
-            break;
           case glow_eScaleType_Right:
 	    if ( select_rect_start_x == select_rect_stored_ur_x)
               return 1;
@@ -2555,7 +2553,7 @@ void GrowCtx::draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y)
   if ( redraw_callback)
     (redraw_callback) ( redraw_data);
   if ( w->double_buffer_on())
-    gdraw->buffer_background( w);
+    gdraw->buffer_background( w->window);
   for ( i = 0; i < a.a_size; i++) {
     if ( a.a[i]->type() == glow_eObjectType_Con)
       a.a[i]->draw( w, ll_x, ll_y, ur_x, ur_y);
