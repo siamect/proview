@@ -91,6 +91,7 @@ class GeCurveGtk : public GeCurve {
     GtkWidget	*timebox_timecombo;
     CoWowFocusTimerGtk focustimer;
     int disable_timecombo_callback;
+    GdkCursor   *clock_cursor;
 
     void pop();
     void write_title( char *str);
@@ -107,6 +108,8 @@ class GeCurveGtk : public GeCurve {
     pwr_tStatus get_times( pwr_tTime *from, pwr_tTime *to);
     int get_period( time_ePeriod *period);
     void set_period( time_ePeriod period, int nocallback);
+    void set_clock_cursor();
+    void reset_cursor();
 
     ~GeCurveGtk();
 
@@ -140,6 +143,7 @@ class GeCurveGtk : public GeCurve {
     static void activate_help( GtkWidget *w, gpointer data);
     static void activate_minmax_ok( GtkWidget *w, gpointer data);
     static void activate_minmax_cancel( GtkWidget *w, gpointer data);
+    static void activate_minmax_save( GtkWidget *w, gpointer data);
     static void activate_export_ok( GtkWidget *w, gpointer data);
     static void activate_export_cancel( GtkWidget *w, gpointer data);
     static void activate_export_browse( GtkWidget *w, gpointer data);

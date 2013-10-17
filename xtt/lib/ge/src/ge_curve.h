@@ -78,6 +78,7 @@ class GeCurveData {
     int     cols;
     pwr_tAName y_name[CURVE_MAX_COLS];
     pwr_tAName x_name;
+    char    y_description[CURVE_MAX_COLS][80];
     char    y_unit[CURVE_MAX_COLS][16];
     char    x_unit[CURVE_MAX_COLS][16];
     double  *y_data[CURVE_MAX_COLS];
@@ -198,6 +199,8 @@ class GeCurve {
     virtual pwr_tStatus get_times( pwr_tTime *from, pwr_tTime *to) {return 0;}
     virtual int get_period( time_ePeriod *period) {return 0;}
     virtual void set_period( time_ePeriod period, int nocallback) {}
+    virtual void set_clock_cursor() {}
+    virtual void reset_cursor() {}
     void set_inputfocus() {}
 
     int read_file( char *filename);
@@ -224,6 +227,7 @@ class GeCurve {
     void activate_period( time_ePeriod);
     void activate_edit();
     void activate_minmax_ok( double min_value, double max_value);
+    void activate_minmax_save( double min_value, double max_value);
     void set_curvedata( GeCurveData *curve_data);
     void redraw();
     void x_to_points( double x, double *time, double *values);
@@ -236,6 +240,8 @@ class GeCurve {
     static int grownames_cb( GlowCtx *ctx, glow_tEvent event);
     static int init_growaxis_cb( GlowCtx *fctx, void *client_data);
     static int init_grownames_cb( GlowCtx *fctx, void *client_data);
+    static int get_saved_minmax( char *name, double *min_value, double *max_value);
+    static char *minmax_filename( char *aname);
 };
 
 /*@}*/

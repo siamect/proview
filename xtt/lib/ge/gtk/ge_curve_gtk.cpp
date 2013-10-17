@@ -375,6 +375,28 @@ void GeCurveGtk::activate_minmax_ok( GtkWidget *w, gpointer data)
   g_object_set( ((GeCurveGtk *)curve)->minmax_widget, "visible", FALSE, NULL);
 }
 
+void GeCurveGtk::activate_minmax_save( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+  char *value;
+  double min_value, max_value;
+  int nr;
+
+  value = gtk_editable_get_chars( GTK_EDITABLE(((GeCurveGtk *)curve)->minmax_textmin_widget), 0, -1);
+  nr = sscanf( value, "%lf", &min_value);
+  g_free( value);
+  if ( nr != 1)
+    return;
+
+  value = gtk_editable_get_chars( GTK_EDITABLE(((GeCurveGtk *)curve)->minmax_textmax_widget), 0, -1);
+  nr = sscanf( value, "%lf", &max_value);
+  g_free( value);
+  if ( nr != 1)
+    return;
+
+  curve->activate_minmax_save( min_value, max_value);
+}
+
 void GeCurveGtk::activate_minmax_cancel( GtkWidget *w, gpointer data)
 {
   GeCurve *curve = (GeCurve *)data;
@@ -396,10 +418,14 @@ void GeCurveGtk::activate_export_ok( GtkWidget *w, gpointer data)
   value = gtk_combo_box_get_active_text( GTK_COMBO_BOX(((GeCurveGtk *)curve)->export_attrcombo_widget));
   if ( !value) return;
 
-  for ( int i = 0; i < curve->cd->cols; i++) {
-    if ( strcmp( value, CoWowGtk::convert_utf8(curve->cd->y_name[i])) == 0) {
-      idx = i;
+  if ( strcmp( value, CoWowGtk::translate_utf8("All Attributes")) == 0)
+    idx = -1;
+  else {
+    for ( int i = 0; i < curve->cd->cols; i++) {
+      if ( strcmp( value, CoWowGtk::convert_utf8(curve->cd->y_name[i])) == 0) {
+	idx = i;
       break;
+      }
     }
   }
   g_free( value);
@@ -627,6 +653,21 @@ void GeCurveGtk::set_inputfocus()
   gtk_widget_grab_focus( growcurve_main_widget);
 }
 
+void GeCurveGtk::set_clock_cursor()
+{
+  if ( !clock_cursor)
+    clock_cursor = gdk_cursor_new_for_display( gtk_widget_get_display( toplevel),
+					       GDK_WATCH);
+
+  gdk_window_set_cursor( toplevel->window, clock_cursor);
+  gdk_display_flush( gtk_widget_get_display( toplevel));
+}
+
+void GeCurveGtk::reset_cursor()
+{
+  gdk_window_set_cursor( toplevel->window, NULL);
+}
+
 GeCurveGtk::~GeCurveGtk()
 {
   delete wow;
@@ -666,7 +707,7 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
 			GeCurveData *curve_data,
 			int pos_right) :
   GeCurve( gc_parent_ctx, curve_name, filename, curve_data, pos_right),
-  minmax_widget(0), export_widget(0), disable_timecombo_callback(0)
+  minmax_widget(0), export_widget(0), disable_timecombo_callback(0), clock_cursor(0)
 
 {
   const int	window_width = 900;
@@ -1081,6 +1122,11 @@ void GeCurveGtk::create_minmax_dialog()
   g_signal_connect( minmax_cancel, "clicked", 
   		    G_CALLBACK(activate_minmax_cancel), this);
 
+  GtkWidget *minmax_save = gtk_button_new_with_label( CoWowGtk::translate_utf8("Save"));
+  gtk_widget_set_size_request( minmax_cancel, 70, 25);
+  g_signal_connect( minmax_save, "clicked", 
+  		    G_CALLBACK(activate_minmax_save), this);
+
   GtkWidget *minmax_hbox1 = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(minmax_hbox1), min_label, FALSE, FALSE, 15);
   gtk_box_pack_start( GTK_BOX(minmax_hbox1), minmax_textmin_widget, TRUE, TRUE, 30);
@@ -1091,7 +1137,8 @@ void GeCurveGtk::create_minmax_dialog()
 
   GtkWidget *minmax_hboxbuttons = gtk_hbox_new( TRUE, 40);
   gtk_box_pack_start( GTK_BOX(minmax_hboxbuttons), minmax_ok, FALSE, FALSE, 0);
-  gtk_box_pack_end( GTK_BOX(minmax_hboxbuttons), minmax_cancel, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(minmax_hboxbuttons), minmax_cancel, FALSE, FALSE, 0);
+  gtk_box_pack_end( GTK_BOX(minmax_hboxbuttons), minmax_save, FALSE, FALSE, 0);
 
   GtkWidget *minmax_vbox = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(minmax_vbox), minmax_hbox1, FALSE, FALSE, 15);
@@ -1127,6 +1174,7 @@ void GeCurveGtk::create_export_dialog()
   GtkWidget *attr_label = gtk_label_new(CoWowGtk::translate_utf8("Attribute"));
   gtk_widget_set_size_request( attr_label, 90, -1);
   export_attrcombo_widget = gtk_combo_box_new_text();
+  gtk_combo_box_append_text( GTK_COMBO_BOX(export_attrcombo_widget), CoWowGtk::translate_utf8("All Attributes"));
   for ( int i = 0; i < cd->cols; i++) {
     gtk_combo_box_append_text( GTK_COMBO_BOX(export_attrcombo_widget), CoWowGtk::convert_utf8(cd->y_name[i]));
   }

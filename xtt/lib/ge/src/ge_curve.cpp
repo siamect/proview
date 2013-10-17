@@ -265,6 +265,52 @@ void GeCurve::activate_minmax_ok( double min_value, double max_value)
 
 }
 
+void GeCurve::activate_minmax_save( double min_value, double max_value)
+{
+  FILE *fp;
+  int i = minmax_idx;
+
+  fp = fopen( minmax_filename(cd->y_name[i]), "w");
+  if ( !fp)
+    return;
+  
+  fprintf( fp, "%lf %lf\n", min_value, max_value);
+  fclose( fp);
+}
+
+int GeCurve::get_saved_minmax( char *name, double *min_value, double *max_value)
+{
+  FILE *fp;
+
+  fp = fopen( minmax_filename( name), "r");
+  if ( !fp)
+    return 0;
+  
+  fscanf( fp, "%lf %lf\n", min_value, max_value);
+  fclose( fp);
+  return 1;
+}
+
+char *GeCurve::minmax_filename( char *aname) 
+{
+  static pwr_tFileName fname;
+  pwr_tAName attrname;
+
+  strcpy( attrname, aname);
+  cdh_ToLower( attrname, attrname);
+  for ( char *s = attrname; *s; s++) {
+    if ( *s == '-')
+      *s = '_';
+    if ( *s == '.')
+      *s = '_';
+  }	 
+  strcpy( fname, "$HOME/pwr_curve_");
+  strcat( fname, attrname);
+  strcat( fname, ".dat");
+
+  dcli_translate_filename( fname, fname);
+  return fname;
+}
 
 //
 // Callbacks from growcurve
@@ -820,6 +866,12 @@ int GeCurve::config_names()
 		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   
+  x += 14;
+  grow_CreateGrowText( grownames_ctx, "", Lng::translate("Description"),
+		       x, 0.6, glow_eDrawType_TextHelvetica, 
+		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+		       glow_mDisplayLevel_1, NULL, &o1);
+  
   for ( int i = 0; i < cd->cols; i++) {
     // Draw shadowed frame
     grow_CreateGrowRect( grownames_ctx, "", 0, (i+0.8), 60, 1,
@@ -873,6 +925,23 @@ int GeCurve::config_names()
 			 x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica,
 			 glow_eDrawType_Line, 2, glow_eFont_LucidaSans,
 			 glow_mDisplayLevel_1, NULL, &t1);
+
+    if ( strcmp( cd->y_description[i], "") != 0) {
+      double w, h, descent;
+
+      grow_GetTextExtent( grownames_ctx, cd->y_name[i], strlen(cd->y_name[i]),
+			  glow_eDrawType_TextHelvetica, 2, glow_eFont_LucidaSans, &w, &h, &descent);
+      if ( w < 13)
+	x += 14;
+      else
+	x += w + 1;
+
+      grow_CreateGrowText( grownames_ctx, "", cd->y_description[i],
+			   x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica,
+			   glow_eDrawType_Line, 2, glow_eFont_LucidaSans,
+			   glow_mDisplayLevel_1, NULL, &t1);
+    }
+
     grow_SetAnnotation( cursor_annot[i], 0, "0", 1);
     grow_SetAnnotation( mark1_annot[i], 0, "0", 1);
     grow_SetAnnotation( mark2_annot[i], 0, "0", 1);
@@ -1443,6 +1512,7 @@ GeCurveData::GeCurveData( curve_eDataType datatype) :
     strcpy( y_unit[i], "");
     strcpy( y_format[i], "");
     strcpy( y_name[i], "");
+    strcpy( y_description[i], "");
     rows[i] = 0;
     y_max_value[i] = 0;
     y_min_value[i] = 0;
@@ -1533,13 +1603,19 @@ void GeCurveData::get_borders()
 
 void GeCurveData::get_default_axis()
 {
+  double min_value, max_value;
 
   for ( int i = 0; i < cols; i++) {
-
-    scale( y_axis_type[i], y_value_type[i], y_min_value[i],  y_max_value[i], 
-       &y_min_value_axis[i], &y_max_value_axis[i], &y_trend_lines[i], &y_axis_lines[i], 
-       &y_axis_linelongq[i], &y_axis_valueq[i], y_format[i], 
-       &y_axis_width[i], 0, 0);
+    if ( GeCurve::get_saved_minmax( y_name[i], &min_value, &max_value))
+      scale( y_axis_type[i], y_value_type[i], min_value,  max_value, 
+	     &y_min_value_axis[i], &y_max_value_axis[i], &y_trend_lines[i], &y_axis_lines[i], 
+	     &y_axis_linelongq[i], &y_axis_valueq[i], y_format[i], 
+	     &y_axis_width[i], 0, 0);
+    else 
+      scale( y_axis_type[i], y_value_type[i], y_min_value[i],  y_max_value[i], 
+	     &y_min_value_axis[i], &y_max_value_axis[i], &y_trend_lines[i], &y_axis_lines[i], 
+	     &y_axis_linelongq[i], &y_axis_valueq[i], y_format[i], 
+	     &y_axis_width[i], 0, 0);
   }
   int i = 0;
   double axis_width;
