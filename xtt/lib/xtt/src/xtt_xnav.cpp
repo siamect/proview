@@ -4167,6 +4167,9 @@ int XNav::show_object_as_struct(
     sprintf( attr_str, "_A_ %d %d %d %d", objid.vid, objid.oix,
 		(int)(parameter_ptr - object_ptr), e_ptr->size);
 
+    if ( e_ptr->alignment)
+      parameter_ptr = (char *)pwr_Align( (size_t)parameter_ptr, e_ptr->alignment);
+
     new ItemObjectStruct( brow, e_ptr->name, attr_str, 
 	e_ptr->type, e_ptr->size, 0,
 	(void *) parameter_ptr, objid, subid, NULL, flow_eDest_IntoLast);

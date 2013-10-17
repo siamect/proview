@@ -138,6 +138,7 @@ typedef struct s_element {
 	int		type;
 	int		size;
 	int		elements;
+	int		alignment;
 	int		undefined;
 	char		typestr[40];
 	char		struct_begin;

@@ -467,6 +467,7 @@ static int add_element( 	t_ctx		ctx,
 	int	undefined;
 	int	struct_begin;
 	unsigned int mask;
+	int 	alignment = 0;
 
 	memset( line_elem, 0, sizeof(line_elem));
 	nr = dcli_parse( line, " 	;", "",
@@ -488,8 +489,6 @@ static int add_element( 	t_ctx		ctx,
 	}
 	if ( nr == 0)
 	  return DCLI__SUCCESS;
-
-
 
 	undefined = 0;
 	if ( strncmp( line_elem[0], "/*", 2) == 0)
@@ -742,6 +741,15 @@ static int add_element( 	t_ctx		ctx,
 	  size = 0;
 	}
 
+	/* Third arg is alignment */
+	alignment = 0;
+	if ( nr > 2) {
+	  if ( strcmp( line_elem[2], "pwr_dAlignLW") == 0)
+	    alignment = 8;
+	  else if ( strcmp( line_elem[2], "pwr_dAlignW") == 0)
+	    alignment = 4;
+	}
+
 	/* Second arg is name */
 	if ( nr < 2)
 	  return DCLI__SUCCESS;
@@ -792,6 +800,7 @@ static int add_element( 	t_ctx		ctx,
 	  strcpy( element_ptr->name, line_elem[1]);
 	  element_ptr->type = type;
 	  element_ptr->size = size;
+	  element_ptr->alignment = alignment;
           strcpy( element_ptr->filename, filectx->filename);
           element_ptr->line_nr = filectx->lines;
 	  element_ptr->mask = mask;
@@ -890,7 +899,7 @@ static int add_element( 	t_ctx		ctx,
 *
 **************************************************************************/
 
-static int	find_struct( 	t_ctx	ctx,	
+static int	find_struct( 	t_ctx	ctx,
 				char *filename,
 				char *struct_name, 
 				dcli_sStructElement **e_list, 
@@ -902,15 +911,17 @@ static int	find_struct( 	t_ctx	ctx,
 	int	sts;
 	int	struct_found;
 	int	name_found;
+	int 	type_found;
 	int	start_found;
 	int	typedef_line;
 	int	begin_line;
 	int	begin_typedef, end_typedef;
 	int	end_of_typedef;
 	int	parlevel;
-	char	*s, *t;
+	char	*s, *t, *u;
 	char	*begin_addr, *end_addr;
-	char	name[40];
+	char	name[80];
+	char	typename[80];
 	int	i, j, k;
 	dcli_sStructElement *element_p, *e_p, *e_ptr, *element_ptr;
 	dcli_sStructElement *element_list;
@@ -1032,6 +1043,7 @@ static int	find_struct( 	t_ctx	ctx,
 	    parlevel = 0;
 	    end_of_typedef = 0;
 	    name_found = 0;
+	    type_found = 0;
 	    begin_line = filectx->lines;
 	    begin_typedef = filectx->lines;
 	    begin_addr = s + strlen("typedef");
@@ -1075,18 +1087,33 @@ static int	find_struct( 	t_ctx	ctx,
 	        *end_addr = 0;
 	        begin_addr++;
 	        start_found = 0;
+		int space_found = 0;
 	        t = name;
-	        for ( s = begin_addr; *s; s++)	        
+	        for ( s = begin_addr; *s; s++)
 	        {
 	          if ( *s == ' ' || *s == 9)
 	          {
-	            if ( !start_found)
+	            if ( !name_found)
 	              continue;
 	            else
-	              break;
+	              space_found = 1;
 	          }
 	          else
 	          {
+		    if ( name_found && space_found) {
+		      /* Type name */
+		      *t = 0;
+		      strncpy( typename, name, sizeof(typename));
+		      type_found = 1;
+		      for ( u = typename; *u; u++) {
+			if ( *u == ' ' || *u == 9) {
+			  *u = 0;
+			  break;
+			}
+		      }
+		      t = name;
+		      space_found = 0;
+		    }
 	            name_found = 1;
 	            *t = *s;
 	            t++;
@@ -1125,6 +1152,27 @@ static int	find_struct( 	t_ctx	ctx,
 	  free_filectx( filectx);
 	  return_sts = DCLI__STRUCTNOTFOUND;
 	  goto readstruct_error_return;	  
+	}
+
+	if ( type_found) {
+	  dcli_sStructElement *e = calloc( 1, sizeof( *element_ptr));
+	  *e_list = e;
+
+	  if  ( strcmp( typename, "pwr_tEnum") == 0 ||
+		strcmp( typename, "pwr_tMask") == 0) {
+	    e->type = pwr_eType_UInt32;
+	    e->size = sizeof(pwr_tUInt32);
+	    strcpy( e->typestr, typename);
+	  }
+	  else {
+	    free_filectx( filectx);
+	    return_sts = DCLI__STRUCTNOTFOUND;
+	    goto readstruct_error_return;	  
+	  }
+	  free_filectx( filectx);
+	  if ( caller == READSTRUCT_CALLER_ROOT)
+	    free( ctx);
+	  return DCLI__NOSTRUCT;
 	}
 
 	file = fopen( normfilename, "r");
@@ -1206,140 +1254,130 @@ static int	find_struct( 	t_ctx	ctx,
 	      return_sts = DCLI__TYPEUNDEF;
 	      goto readstruct_error_return;
 	    }
-	    e_ptr->undefined = 0;
-	    e_ptr->struct_begin = 1;
+	    if ( sts == DCLI__NOSTRUCT) {
+	      e_ptr->size = element_list->size;
+	      e_ptr->type = element_list->type;
+	      strcpy( e_ptr->typestr, element_list->typestr);
+	      e_ptr->undefined = 0;
+	      free( element_list);
+	      element_list = 0;		
+	    }
+	    else {
+	      e_ptr->undefined = 0;
+	      e_ptr->struct_begin = 1;
 	
-	    /* Add the name and insert the list */
+	      /* Add the name and insert the list */
 
-	    s1 = e_ptr->name;
-	    elnumcount = 0;
-	    struct_element = element_list;
-	    i = 0;
-	    while ( (s2 = strchr( s1, '[')) != 0)
-	    {
-	      /* Extract number of elements */
-	      *s2 = 0;
-	      s2++;
-	      if ( (s1 = strchr( s2, ']')) == 0)
-	      {
-	        strcpy( ctx->error_file, filectx->filename);
-	        ctx->error_line = filectx->lines;
-	        return_sts = DCLI__ELEMSYNTAX;
-	        goto readstruct_error_return;
+	      s1 = e_ptr->name;
+	      elnumcount = 0;
+	      struct_element = element_list;
+	      i = 0;
+	      while ( (s2 = strchr( s1, '[')) != 0) {
+		/* Extract number of elements */
+		*s2 = 0;
+		s2++;
+		if ( (s1 = strchr( s2, ']')) == 0) {
+		  strcpy( ctx->error_file, filectx->filename);
+		  ctx->error_line = filectx->lines;
+		  return_sts = DCLI__ELEMSYNTAX;
+		  goto readstruct_error_return;
+		}
+		*s1 = 0;
+		s1++;
+		nr = sscanf( s2, "%d", &elnum[i]);
+		if ( nr != 1) {
+		  sts = find_define( filectx, s2, &elnum[i]);
+		  if ( EVEN(sts)) {
+		    strcpy( ctx->error_file, filectx->filename);
+		    ctx->error_line = filectx->lines;
+		    return_sts = DCLI__ELEMSYNTAX;
+		    goto readstruct_error_return;
+		  }
+		}
+		i++;
+		elnumcount++;
 	      }
-	      *s1 = 0;
-	      s1++;
-	      nr = sscanf( s2, "%d", &elnum[i]);
-	      if ( nr != 1)
-	      {
-	        sts = find_define( filectx, s2, &elnum[i]);
-	        if ( EVEN(sts))
-	        {
-	          strcpy( ctx->error_file, filectx->filename);
-	          ctx->error_line = filectx->lines;
-	          return_sts = DCLI__ELEMSYNTAX;
-	          goto readstruct_error_return;
-	        }
-	      }
-	      i++;
-	      elnumcount++;
-	    }
-	    count = 0;
-	    for ( element_p = struct_element; element_p; element_p = element_p->next)
-	      count++;
-	    if ( elnumcount == 0)
-	    {
+	      count = 0;
 	      for ( element_p = struct_element; element_p; element_p = element_p->next)
-	      {
-	        strcpy( tmp, element_p->name);
-	        strcpy( element_p->name, e_ptr->name);
-	        strcat( element_p->name, ".");
-	        strcat( element_p->name, tmp);
+		count++;
+	      if ( elnumcount == 0) {
+		for ( element_p = struct_element; element_p; element_p = element_p->next) {
+		  strcpy( tmp, element_p->name);
+		  strcpy( element_p->name, e_ptr->name);
+		  strcat( element_p->name, ".");
+		  strcat( element_p->name, tmp);
+		}
 	      }
-	    }
-	    else if ( elnumcount == 1)
-	    {
-	      for ( i = 1; i < elnum[0]; i++)
-	      {
-	        element_p = struct_element;
-	        for ( j = 0; j < count; j++)
-		{
+	      else if ( elnumcount == 1) {
+		for ( i = 1; i < elnum[0]; i++) {
+		  element_p = struct_element;
+		  for ( j = 0; j < count; j++) {
 	          
-	          element_ptr = calloc( 1, sizeof( *element_ptr));
-	          memcpy( element_ptr, element_p, sizeof(*element_p));
-	          for ( e_p = element_list; e_p->next; e_p = e_p->next) ;
-	          e_p->next= element_ptr;
-	          element_ptr->prev = e_p;
-	          element_ptr->next = 0;
+		    element_ptr = calloc( 1, sizeof( *element_ptr));
+		    memcpy( element_ptr, element_p, sizeof(*element_p));
+		    for ( e_p = element_list; e_p->next; e_p = e_p->next) ;
+		    e_p->next= element_ptr;
+		    element_ptr->prev = e_p;
+		    element_ptr->next = 0;
 
-	          element_p = element_p->next;
-	        }
+		    element_p = element_p->next;
+		  }
+		}
+		element_p = struct_element;
+		for ( i = 0; i < elnum[0]; i++) {
+		  for ( j = 0; j < count; j++) {
+		    strcpy( tmp, element_p->name);
+		    sprintf( element_p->name, "%s[%d].%s", e_ptr->name, i, tmp);
+		    element_p = element_p->next;
+		  }
+		}
 	      }
-	      element_p = struct_element;
-	      for ( i = 0; i < elnum[0]; i++)
-	      {
-	        for ( j = 0; j < count; j++)
-		{
-	          strcpy( tmp, element_p->name);
-	          sprintf( element_p->name, "%s[%d].%s", e_ptr->name, i, tmp);
-	          element_p = element_p->next;
-	        }
-	      }
-	    }
-	    else if ( elnumcount == 2)
-	    {
-	      for ( i = 0; i < elnum[0]; i++)
-	      {
-	        for ( k = 0; k < elnum[1]; k++)
-	        {
-	          if ( i == 0 && k == 0)
-	            continue;
-	          element_p = struct_element;
-	          for ( j = 0; j < count; j++)
-		  {
+	      else if ( elnumcount == 2) {
+		for ( i = 0; i < elnum[0]; i++) {
+		  for ( k = 0; k < elnum[1]; k++) {
+		    if ( i == 0 && k == 0)
+		      continue;
+		    element_p = struct_element;
+		    for ( j = 0; j < count; j++) {
 	          
-	            element_ptr = calloc( 1, sizeof( *element_ptr));
-	            memcpy( element_ptr, element_p, sizeof(*element_p));
-	            for ( e_p = element_list; e_p->next; e_p = e_p->next) ;
-	            e_p->next= element_ptr;
-	            element_ptr->prev = e_p;
-	            element_ptr->next = 0;
+		      element_ptr = calloc( 1, sizeof( *element_ptr));
+		      memcpy( element_ptr, element_p, sizeof(*element_p));
+		      for ( e_p = element_list; e_p->next; e_p = e_p->next) ;
+		      e_p->next= element_ptr;
+		      element_ptr->prev = e_p;
+		      element_ptr->next = 0;
 
-	            element_p = element_p->next;
-	          }
-	        }
+		      element_p = element_p->next;
+		    }
+		  }
+		}
+
+		element_p = struct_element;
+		for ( i = 0; i < elnum[0]; i++) {
+		  for ( k = 0; k < elnum[1]; k++) {
+		    for ( j = 0; j < count; j++) {
+		      strcpy( tmp, element_p->name);
+		      sprintf( element_p->name, "%s[%d][%d].%s", e_ptr->name, i, k,tmp);
+		      element_p = element_p->next;
+		    }
+		  }
+		}
+	      }
+	      else {
+		strcpy( ctx->error_file, filectx->filename);
+		ctx->error_line = filectx->lines;
+		return_sts = DCLI__ARRAYDIM;
+		goto readstruct_error_return;
 	      }
 
-	      element_p = struct_element;
-	      for ( i = 0; i < elnum[0]; i++)
-	      {
-	        for ( k = 0; k < elnum[1]; k++)
-	        {
-	          for ( j = 0; j < count; j++)
-		  {
-	            strcpy( tmp, element_p->name);
-	            sprintf( element_p->name, "%s[%d][%d].%s", e_ptr->name, i, k,tmp);
-	            element_p = element_p->next;
-	          }
-	        }
-	      }
+	      next_ptr = e_ptr->next;
+	      e_ptr->next = element_list;
+	      element_list->prev = e_ptr;
+	      for ( e_p = element_list; e_p->next; e_p = e_p->next) ;
+	      e_p->next = next_ptr;
+	      if ( next_ptr)
+		next_ptr->prev = e_p;
 	    }
-	    else
-	    {
-	      strcpy( ctx->error_file, filectx->filename);
-	      ctx->error_line = filectx->lines;
-	      return_sts = DCLI__ARRAYDIM;
-	      goto readstruct_error_return;
-	    }
-
-	    next_ptr = e_ptr->next;
-	    e_ptr->next = element_list;
-	    element_list->prev = e_ptr;
-	    for ( e_p = element_list; e_p->next; e_p = e_p->next) ;
-	    e_p->next = next_ptr;
-	    if ( next_ptr)
-	      next_ptr->prev = e_p;
-
 	  }
 	}
 
