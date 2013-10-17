@@ -57,6 +57,12 @@ class XttSevHistGtk : public XttSevHist {
 		 bool *sevhistobjectv,
 		 sevcli_tCtx xn_scctx,
 		 int *sts);
+  XttSevHistGtk( void *parent_ctx,
+		 GtkWidget *parent_wid,
+		 const char *name,
+		 GtkWidget **w,
+		 char *filename,
+		 int *sts);
   ~XttSevHistGtk();
 };
 

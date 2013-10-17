@@ -104,6 +104,10 @@ class XttSevHist {
 	     bool *sevhistobjectv,
 	     sevcli_tCtx xn_scctx,
 	     int *sts);
+  XttSevHist( void *parent_ctx,
+	      const char *name,
+	      char *filename,
+	      int *sts);
 
   //! Destructor
   virtual ~XttSevHist();
@@ -115,6 +119,7 @@ class XttSevHist {
   int get_multidata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to);
   void curve_add( pwr_tOid oid, pwr_tOName aname, pwr_tOName oname,
 		  bool sevhistobject);
+  int read_export( char *filename);
 
   static void sevhist_close_cb( void *ctx);
   static void sevhist_increase_period_cb( void *ctx);

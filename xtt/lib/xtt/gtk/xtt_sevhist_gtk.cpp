@@ -102,6 +102,35 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
   timerid->add( 1000, sevhist_scan, this);
 }
 
+XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
+			      GtkWidget *parent_wid,
+			      const char *name,
+			      GtkWidget **w,
+			      char *filename,
+			      int *sts) :
+  XttSevHist( parent_ctx, name, filename, sts), 
+  parent_widget(parent_wid)
+{
+  char title[250];
+  strncpy(title, name, sizeof(title));
+      
+  if ( EVEN(*sts))
+    // Error from XttSevHist
+    return;
+
+  *sts = XNAV__SUCCESS;
+
+  curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 1);
+  curve->close_cb = sevhist_close_cb;
+  curve->help_cb = sevhist_help_cb;
+  curve->enable(0);
+
+  wow = new CoWowGtk( parent_widget);
+  timerid = wow->timer_new();
+
+  timerid->add( 1000, sevhist_scan, this);
+}
+
 XttSevHistGtk::~XttSevHistGtk()
 {
   timerid->remove();

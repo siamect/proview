@@ -262,6 +262,31 @@ XttTrend::XttTrend( void *parent_ctx,
     gcd->get_default_axis();
     gcd->select_color( 0);
     
+    // Try to find unit and descripion
+    for ( i = 0; i < trend_cnt; i++) {
+      pwr_tAName aname;
+      char unit[40];
+      char description[80];
+      pwr_tStatus lsts;
+      char *s;
+
+      strcpy( aname, object_name[i]);
+      if ( (s = strrchr( aname, '.')))
+	*s = 0;
+      strcat( aname, ".Unit");
+      lsts = gdh_GetObjectInfo( aname, unit, sizeof(unit));
+      if ( ODD(lsts))
+	strncpy( gcd->y_unit[i], unit, sizeof(gcd->y_unit[0]));
+
+      strcpy( aname, object_name[i]);
+      if ( (s = strrchr( aname, '.')))
+	*s = 0;
+      strcat( aname, ".Description");
+      lsts = gdh_GetObjectInfo( aname, description, sizeof(description));
+      if ( ODD(lsts))
+	strncpy( gcd->y_description[i], description, sizeof(gcd->y_description[0]));
+    }
+
     if ( !trend_list) {
       // Use axis values from plotgroup object
       for ( i = 0; i < trend_cnt; i++) {
@@ -353,6 +378,31 @@ XttTrend::XttTrend( void *parent_ctx,
     }
     gcd->x_axis_type[0] = curve_eAxis_x;
     
+    // Try to find unit
+    for ( i = 0; i < trend_cnt; i++) {
+      pwr_tAName aname;
+      char unit[40];
+      char description[80];
+      pwr_tStatus lsts;
+      char *s;
+
+      strcpy( aname, object_name[i]);
+      if ( (s = strrchr( aname, '.')))
+	*s = 0;
+      strcat( aname, ".Unit");
+      lsts = gdh_GetObjectInfo( aname, unit, sizeof(unit));
+      if ( ODD(lsts))
+	strncpy( gcd->y_unit[i], unit, sizeof(gcd->y_unit[0]));
+
+      strcpy( aname, object_name[i]);
+      if ( (s = strrchr( aname, '.')))
+	*s = 0;
+      strcat( aname, ".Description");
+      lsts = gdh_GetObjectInfo( aname, description, sizeof(description));
+      if ( ODD(lsts))
+	strncpy( gcd->y_description[i], description, sizeof(gcd->y_description[0]));
+    }
+
     for ( i = 0; i < trend_cnt; i++) {
       gcd->y_data[i] = (double *) calloc( 1, 8 * max_points);
       

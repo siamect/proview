@@ -3689,8 +3689,19 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tAName aname;
     char *s;
     bool sevHistObjectFound = false;
+    pwr_tFileName file_str;
 
     // Command is "OPEN HISTORY"
+
+    if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
+      // Open exported history file
+      hist = xnav->xttsevhist_new( title_str, 0, 0, 0, 0, 0, file_str, &sts);
+      if ( ODD(sts)) {
+        hist->help_cb = xnav_sevhist_help_cb;
+	hist->get_select_cb = xnav_sevhist_get_select_cb;
+      }
+      return XNAV__SUCCESS;
+    }
 
     /* Get the name qualifier */
     if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
@@ -3930,21 +3941,21 @@ static int	xnav_open_func(	void		*client_data,
     }
 
     if ( plotgroup_found) {
-      hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, &sts);
+      hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, 0, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
 	hist->get_select_cb = xnav_sevhist_get_select_cb;
       }
     }
     else if( sevHistObjectFound ) {
-      hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, &sts);
+      hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, 0, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
 	hist->get_select_cb = xnav_sevhist_get_select_cb;
       }
     }
     else {
-      hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, &sts);
+      hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, 0, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
 	hist->get_select_cb = xnav_sevhist_get_select_cb;

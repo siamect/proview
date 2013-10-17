@@ -105,6 +105,18 @@ XttSevHist::XttSevHist( void *parent_ctx,
   cdh_StrncpyCutOff( title, name, sizeof(title), 1);
 }
 
+XttSevHist::XttSevHist( void *parent_ctx,
+			const char *name,
+			char *filename,
+			int *sts) :
+  xnav(parent_ctx), gcd(0), curve(0), rows(0), vsize(0), timerid(0), close_cb(0), help_cb(0), 
+  get_select_cb(0), first_scan(1), scctx(0), time_low_old(0), time_high_old(0)
+{
+  strncpy( title, filename, sizeof(title));
+  
+  *sts = read_export( filename);
+}
+
 XttSevHist::~XttSevHist()
 {
 }
@@ -120,8 +132,12 @@ int XttSevHist::get_data( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
   void *vbuf;
   pwr_tDeltaTime trange;
 
+  if ( curve)
+    curve->set_clock_cursor();
   sevcli_get_itemdata( sts, scctx, oidv[0], anamev[0], from, to, 1000, &tbuf, &vbuf,
   		       &rows, &vtype, &vsize);
+  if ( curve)
+    curve->reset_cursor();
   if ( EVEN(*sts))
     return 0;
 
@@ -230,8 +246,12 @@ int XttSevHist::get_objectdata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
 
   pwr_tDeltaTime trange;
 
+  if ( curve)
+    curve->set_clock_cursor();
   sevcli_get_objectitemdata( sts, scctx, oidv[0], anamev[0], from, to, 1000, &tbuf, &vbuf,
   		       &rows, &histattrbuf, &numAttributes);
+  if ( curve)
+    curve->reset_cursor();
   if ( EVEN(*sts))
     return 0;
 
@@ -393,8 +413,12 @@ int XttSevHist::get_multidata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
     }
       
     if ( !sevhistobjectv[k]) {
+      if ( curve)
+	curve->set_clock_cursor();
       sevcli_get_itemdata( sts, scctx, oidv[k], anamev[k], from, to, 1000, &tbuf, &vbuf,
 			 &rows, &vtype, &vsize);
+      if ( curve)
+	curve->reset_cursor();
       if ( EVEN(*sts))
 	return 0;
 
@@ -864,63 +888,221 @@ int XttSevHist::sevhist_export_cb( void *ctx, pwr_tTime *from, pwr_tTime *to, in
   int rrows;
   char timestr[40];
   FILE *fp;
+  pwr_tOName oname;
 
   dcli_translate_filename( fname, filename);
 
+  if ( idx == -1) {
+    // Export all attributes
+    fp = fopen( fname, "w");
+    if ( !fp)
+      return SEV__EXPORTFILE;
 
-  sevcli_get_itemdata( &sts, sevhist->scctx, sevhist->oidv[idx], sevhist->anamev[idx], *from, *to, 
-		       rows, &tbuf, &vbuf, &rrows, &vtype, &vsize);
-  if ( EVEN(sts))
-    return sts;
+    for ( int j = 0; j < sevhist->oid_cnt; j++) {
+      sts = gdh_ObjidToName ( sevhist->oidv[j], oname, sizeof(oname),
+			      cdh_mName_volumeStrict);
+      if ( EVEN(sts)) continue;
 
-  if( rrows == 0 ) {
-    return SEV__NODATATIME;
-  }
+      fprintf( fp, "# Attribute %s.%s\n", oname, sevhist->anamev[j]);
 
-  fp = fopen( fname, "w");
-  if ( !fp)
-    return SEV__EXPORTFILE;
+      sevhist->curve->set_clock_cursor();
+      sevcli_get_itemdata( &sts, sevhist->scctx, sevhist->oidv[j], sevhist->anamev[j], *from, *to, 
+			   rows, &tbuf, &vbuf, &rrows, &vtype, &vsize);
+      sevhist->curve->reset_cursor();
+      if ( EVEN(sts))
+	return sts;
+    
+      if( rrows == 0 )
+	continue;
 
-  for ( int i = 0; i < rrows; i++) {
-    time_AtoAscii( &tbuf[i], time_eFormat_DateAndTime, timestr, sizeof(timestr));
-    fprintf( fp, "%s, ", timestr);
-    switch ( vtype) {
-    case pwr_eType_Int32:
-    case pwr_eType_Int64:
-    case pwr_eType_Int16:
-    case pwr_eType_Int8:
-      fprintf( fp, "%d", ((pwr_tInt32 *)vbuf)[i]);
-      break;
-    case pwr_eType_UInt64:
-    case pwr_eType_UInt32:
-    case pwr_eType_UInt16:
-    case pwr_eType_UInt8:
-      fprintf( fp, "%u", ((pwr_tUInt32 *)vbuf)[i]);
-      break;
-    case pwr_eType_Float32:
-      fprintf( fp, "%g", ((pwr_tFloat32 *)vbuf)[i]);
-      break;
-    case pwr_eType_Float64:
-      fprintf( fp, "%g", ((pwr_tFloat64 *)vbuf)[i]);
-      break;
-    case pwr_eType_Boolean:
-      fprintf( fp, "%d", ((pwr_tBoolean *)vbuf)[i]);
-      break;
-    default: 
-      sts = SEV__CURVETYPE;
+      fprintf( fp, "# Rows %d\n", rrows);
+
+      for ( int i = 0; i < rrows; i++) {
+	time_AtoAscii( &tbuf[i], time_eFormat_DateAndTime, timestr, sizeof(timestr));
+	fprintf( fp, "%s, ", timestr);
+	switch ( vtype) {
+	case pwr_eType_Int32:
+	case pwr_eType_Int64:
+	case pwr_eType_Int16:
+	case pwr_eType_Int8:
+	  fprintf( fp, "%d", ((pwr_tInt32 *)vbuf)[i]);
+	  break;
+	case pwr_eType_UInt64:
+	case pwr_eType_UInt32:
+	case pwr_eType_UInt16:
+	case pwr_eType_UInt8:
+	  fprintf( fp, "%u", ((pwr_tUInt32 *)vbuf)[i]);
+	  break;
+	case pwr_eType_Float32:
+	  fprintf( fp, "%g", ((pwr_tFloat32 *)vbuf)[i]);
+	  break;
+	case pwr_eType_Float64:
+	  fprintf( fp, "%g", ((pwr_tFloat64 *)vbuf)[i]);
+	  break;
+	case pwr_eType_Boolean:
+	  fprintf( fp, "%d", ((pwr_tBoolean *)vbuf)[i]);
+	  break;
+	default: 
+	  sts = SEV__CURVETYPE;
+	}
+	fprintf( fp, "\n");
+      }
+      free( tbuf);
+      free( vbuf);
     }
-    fprintf( fp, "\n");
+    fclose( fp);
   }
-  free( tbuf);
-  free( vbuf);
-  fclose( fp);
+  else {
+    sevhist->curve->set_clock_cursor();
+    sevcli_get_itemdata( &sts, sevhist->scctx, sevhist->oidv[idx], sevhist->anamev[idx], *from, *to, 
+			 rows, &tbuf, &vbuf, &rrows, &vtype, &vsize);
+    sevhist->curve->reset_cursor();
+    if ( EVEN(sts))
+      return sts;
+    
+    if( rrows == 0 ) {
+      return SEV__NODATATIME;
+    }
 
-  printf( "Exported %d rows to file \"%s\" (%d)\n", rrows, fname, idx);
+    fp = fopen( fname, "w");
+    if ( !fp)
+      return SEV__EXPORTFILE;
 
-  if ( EVEN(sts))
-    return sts;
+    for ( int i = 0; i < rrows; i++) {
+      time_AtoAscii( &tbuf[i], time_eFormat_DateAndTime, timestr, sizeof(timestr));
+      fprintf( fp, "%s, ", timestr);
+      switch ( vtype) {
+      case pwr_eType_Int32:
+      case pwr_eType_Int64:
+      case pwr_eType_Int16:
+      case pwr_eType_Int8:
+	fprintf( fp, "%d", ((pwr_tInt32 *)vbuf)[i]);
+	break;
+      case pwr_eType_UInt64:
+      case pwr_eType_UInt32:
+      case pwr_eType_UInt16:
+      case pwr_eType_UInt8:
+	fprintf( fp, "%u", ((pwr_tUInt32 *)vbuf)[i]);
+	break;
+      case pwr_eType_Float32:
+	fprintf( fp, "%g", ((pwr_tFloat32 *)vbuf)[i]);
+	break;
+      case pwr_eType_Float64:
+	fprintf( fp, "%g", ((pwr_tFloat64 *)vbuf)[i]);
+	break;
+      case pwr_eType_Boolean:
+	fprintf( fp, "%d", ((pwr_tBoolean *)vbuf)[i]);
+	break;
+      default: 
+	sts = SEV__CURVETYPE;
+      }
+      fprintf( fp, "\n");
+    }
+    free( tbuf);
+    free( vbuf);
+    fclose( fp);
 
+    printf( "Exported %d rows to file \"%s\" (%d)\n", rrows, fname, idx);
+
+    if ( EVEN(sts))
+      return sts;
+  }
   return SEV__SUCCESS;
+}
+
+int XttSevHist::read_export( char *filename)
+{
+  pwr_tFileName fname;
+  FILE *fp;
+  char line[200];
+  int idx = -1;
+  int rowcnt = 0;
+  int rows;
+  char timstr[40];
+  double y;
+  char *s;
+  pwr_tStatus sts;
+  pwr_tTime t;
+
+  dcli_translate_filename( fname, filename);
+
+  fp = fopen( fname, "r");
+  if ( !fp)
+    return 0;
+
+  gcd = new GeCurveData( curve_eDataType_DsTrend);
+
+  while( 1) {
+    sts = dcli_read_line( line, sizeof(line), fp);
+    if ( !sts)
+      break;
+
+    if ( line[0] == '#') {
+      if ( strncmp( &line[2], "Attribute", 9) == 0) {
+	// New attribute
+	idx++;
+	strncpy( onamev[idx], &line[12], sizeof(onamev[0]));
+	s = strchr( onamev[idx], '.');
+	if ( s) {
+	  *s = 0;
+	  strncpy( anamev[idx], s+1, sizeof(anamev[0]));
+	}		
+	rowcnt = 0;
+
+	gcd->y_axis_type[idx] = curve_eAxis_y;
+	gcd->x_axis_type[idx] = curve_eAxis_x;
+	strcpy( gcd->x_format[idx], "%11t");
+
+	strcpy( gcd->y_name[idx], onamev[idx]);
+	strcat( gcd->y_name[idx], ".");
+	strcat( gcd->y_name[idx], anamev[idx]);
+      }
+      else if ( strncmp( &line[2], "Rows", 4) == 0) {
+	if ( idx < 0)
+	  continue;
+
+	sscanf( &line[7], "%d", &rows);
+	gcd->rows[idx] = rows;
+	gcd->x_data[idx] = (double *) calloc( 1, 8 * rows);
+	gcd->y_data[idx] = (double *) calloc( 1, 8 * rows);
+      }
+    }
+    else {
+      if ( idx < 0)
+	continue;
+
+      strncpy( timstr, line, 23);
+      timstr[23] = 0;
+      sscanf( &line[25], "%lf", &y);
+      if ( rowcnt > gcd->rows[idx])
+	continue;
+
+      time_AsciiToA( timstr, &t);
+      
+      gcd->x_data[idx][rowcnt] = (double)t.tv_sec + (double)1e-9 * t.tv_nsec;
+      gcd->y_data[idx][rowcnt] = y;
+      rowcnt++;
+    }
+  }
+  if ( idx > 0)
+    gcd->rows[idx-1] = rowcnt;
+  gcd->cols = idx + 1;
+
+  fclose(fp);
+
+  gcd->get_borders();
+  gcd->get_default_axis();
+  gcd->select_color( 0);
+  strcpy( gcd->x_format[0], "%11t");
+
+  if ( curve) {
+    curve->set_curvedata( gcd);  // This will free the old gcd 
+    curve->configure_curves();
+    curve->configure_axes();
+    curve->redraw();
+  }
+
+  return 1;
 }
 
 void XttSevHist::sevhist_help_cb( void *ctx)

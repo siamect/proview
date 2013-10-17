@@ -79,7 +79,7 @@ class XNavGtk : public XNav {
 			    pwr_tStatus *sts);
     XttSevHist *xttsevhist_new( char *name, pwr_tOid *oidv, pwr_tOName *anamev,
 				pwr_tOName *onamev, bool *sevhistobjectv, sevcli_tCtx scctx, 
-				pwr_tStatus *sts);
+				char *filename, pwr_tStatus *sts);
     XttTCurve *xtttcurve_new( char *name, pwr_tAttrRef *arefv, pwr_tStatus *sts);
     XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts);
     XAttOne *xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,

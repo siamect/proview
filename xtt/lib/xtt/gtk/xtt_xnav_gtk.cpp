@@ -251,11 +251,14 @@ XttTrend *XNavGtk::xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *
 }
 
 XttSevHist *XNavGtk::xttsevhist_new( char *name, pwr_tOid *oidv, pwr_tOName *anamev, pwr_tOName *onamev,
-				     bool *sevhistobjectv, sevcli_tCtx scctx, pwr_tStatus *sts)
+				     bool *sevhistobjectv, sevcli_tCtx scctx, char *filename, pwr_tStatus *sts)
 {
   GtkWidget *w;
 
-  return new XttSevHistGtk( this, parent_wid, name, &w, oidv, anamev, onamev, sevhistobjectv, scctx, sts);
+  if ( !filename)
+    return new XttSevHistGtk( this, parent_wid, name, &w, oidv, anamev, onamev, sevhistobjectv, scctx, sts);
+  else
+    return new XttSevHistGtk( this, parent_wid, name, &w, filename, sts);
 }
 
 XttTCurve *XNavGtk::xtttcurve_new( char *name, pwr_tAttrRef *arefv, pwr_tStatus *sts)
