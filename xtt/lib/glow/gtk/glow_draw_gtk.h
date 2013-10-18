@@ -194,6 +194,7 @@ class GlowDrawGtk : public GlowDraw {
   virtual void remove_timer( void *id);
   int init_nav( GtkWidget *nav_widget);
   GdkPoint *points_to_gdk_points( glow_sPointX *points, int point_cnt);
+  GdkPoint *points_to_gdk_points_curve( GlowWind *w, glow_sPointX *points, int point_cnt, int *cnt);
   int get_font_type( int gc_type);
   void load_font( glow_eFont font_idx, int font_type, int idx);
 

@@ -499,8 +499,17 @@ void GrowTrend::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 
     drawtype = ctx->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 highlight, (GrowNode *)colornode, 1);
-    if ( grad == glow_eGradient_No)
-      ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype);
+    if ( grad == glow_eGradient_No) {
+      int width = ur_x - ll_x;
+      int x = ll_x;
+      if ( x < 0) {
+	x  = 0;
+	width += ll_x;
+      }
+      if ( ur_x > w->window_width)
+	width -= ur_x - w->window_width;
+      ctx->gdraw->fill_rect( w, x, ll_y, width, ur_y - ll_y, drawtype);
+    }
     else {
       glow_eDrawType f1, f2;
       double rotation;
@@ -557,7 +566,15 @@ void GrowTrend::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 
   for ( i = 0; i < horizontal_lines; i++) {
     int y = int( ll_y + double(ur_y - ll_y) / (horizontal_lines + 1) * (i + 1)); 
-    ctx->gdraw->line( w, ll_x, y, ur_x, y, drawtype, 0, 0);
+    int width = ur_x - ll_x;
+    int x = ll_x;
+    if ( x < 0) {
+      x  = 0;
+	width += ll_x;
+    }
+    if ( ur_x > w->window_width)
+      width -= ur_x - w->window_width;
+    ctx->gdraw->line( w, x, y, x + width, y, drawtype, 0, 0);
   }
 
   if ( fill_curve)

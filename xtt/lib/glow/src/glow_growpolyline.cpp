@@ -40,6 +40,7 @@
 #include <iostream>
 #include <float.h>
 #include <math.h>
+#include <limits.h>
 #include <stdlib.h>
 #include "glow_growpolyline.h"
 #include "glow_draw.h"
@@ -389,7 +390,12 @@ void GrowPolyLine::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, 
       y1 = trf.y( t, ((GlowPoint *)a_points[i])->x, ((GlowPoint *)a_points[i])->y);
     }
 
-    point_p->x = int( x1 * w->zoom_factor_x + 0.5) - w->offset_x;
+    if ( x1 * w->zoom_factor_x - w->offset_x > SHRT_MAX)
+      point_p->x = SHRT_MAX;
+    else if (x1 * w->zoom_factor_x - w->offset_x < SHRT_MIN)
+      point_p->x = SHRT_MIN;
+    else
+      point_p->x = int( x1 * w->zoom_factor_x + 0.5) - w->offset_x;
     point_p->y = int( y1 * w->zoom_factor_y + 0.5) - w->offset_y;
     point_p++;
   }

@@ -1574,15 +1574,16 @@ int GlowDrawGtk::polyline( GlowWind *wind, glow_sPointX *points, int point_cnt,
   if ( w->clip_on)
     set_clip( w, get_gc( this, gc_type+highlight, idx));
 
-  GdkPoint* gpoints = points_to_gdk_points( points, point_cnt);
+  int cnt;
+  GdkPoint* gpoints = points_to_gdk_points_curve( wind, points, point_cnt, &cnt);
   if ( !w->draw_buffer_only)
     gdk_draw_lines( w->window,
 	get_gc( this, gc_type+highlight, idx), 
-	gpoints, point_cnt);
+	gpoints, cnt);
   if ( w->double_buffer_on)
     gdk_draw_lines( w->buffer,
 	get_gc( this, gc_type+highlight, idx), 
-	gpoints, point_cnt);
+	gpoints, cnt);
 
   free( gpoints);
   if ( w->clip_on)
@@ -1626,15 +1627,16 @@ int GlowDrawGtk::polyline_erase( GlowWind *wind, glow_sPointX *points, int point
   if ( w->clip_on)
     set_clip( w, get_gc( this, glow_eDrawType_LineErase, idx));
 
-  GdkPoint* gpoints = points_to_gdk_points( points, point_cnt);
+  int cnt;
+  GdkPoint* gpoints = points_to_gdk_points_curve( wind, points, point_cnt, &cnt);
   if ( !w->draw_buffer_only)
     gdk_draw_lines( w->window,
 	get_gc( this, glow_eDrawType_LineErase, idx), 
-	gpoints, point_cnt);
+	gpoints, cnt);
   if ( w->double_buffer_on)
     gdk_draw_lines( w->buffer,
 	get_gc( this, glow_eDrawType_LineErase, idx), 
-	gpoints, point_cnt);
+	gpoints, cnt);
 
   free( gpoints);
   if ( w->clip_on)
@@ -2764,6 +2766,34 @@ GdkPoint *GlowDrawGtk::points_to_gdk_points( glow_sPointX *points, int point_cnt
     gpoints[i].x = points[i].x;
     gpoints[i].y = points[i].y;
   }
+  return gpoints;
+}
+
+//
+// Points outside window in x direction excluded
+//
+GdkPoint *GlowDrawGtk::points_to_gdk_points_curve( GlowWind *w, glow_sPointX *points, int point_cnt, int *cnt)
+{
+  GdkPoint *gpoints = (GdkPoint *)malloc( point_cnt * sizeof(GdkPoint));
+  int idx = 0;
+  int last_idx = 0;
+  for ( int i = 0; i < point_cnt; i++) {
+    if ( idx == 0 && i != point_cnt - 1 && 
+	 ((points[i].x < 0 && points[i+1].x < 0) ||
+	  (points[i].x > w->window_width && points[i+1].x > w->window_width)))
+      
+      continue;
+    if ( idx != 0 && 
+	 !((points[i].x < 0 && points[i-1].x < 0) ||
+	   (points[i].x > w->window_width && points[i-1].x > w->window_width)))
+      last_idx = idx;
+    gpoints[idx].x = points[i].x;
+    gpoints[idx].y = points[i].y;
+    idx++;
+  }
+  *cnt = idx;
+  if ( last_idx != 0)
+    *cnt = last_idx + 1;
   return gpoints;
 }
 
