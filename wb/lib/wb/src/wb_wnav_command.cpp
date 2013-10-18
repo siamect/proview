@@ -41,10 +41,11 @@
 #include "flow_std.h"
 
 
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-# include <ctype.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string>
 
 #include "pwr_class.h"
 #include "pwr_version.h"
@@ -430,7 +431,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 		{
 			"GENERATE",
 			&wnav_generate_func,
-			{ "dcli_arg1", ""}
+			{ "dcli_arg1", "/FILE", ""}
 		},
 		{
 			"CROSSREFERENCE",
@@ -2574,8 +2575,7 @@ static int	wnav_generate_func(	void		*client_data,
     return WNAV__SYNTAX;
   }
 
-  if ( cdh_NoCaseStrncmp( arg1_str, "WEB", strlen( arg1_str)) == 0)
-  {
+  if ( cdh_NoCaseStrncmp( arg1_str, "WEB", strlen( arg1_str)) == 0) {
     int sts;
 
     sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
@@ -2587,6 +2587,27 @@ static int	wnav_generate_func(	void		*client_data,
       wnav->message(' ', wnav_get_message(sts));
       return sts;
     }
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "HISTORY", strlen( arg1_str)) == 0) {
+    pwr_tFileName filestr;
+    pwr_tStatus sts;
+
+    if ( EVEN( dcli_get_qualifier( "/FILE", filestr, sizeof(filestr)))) {
+      strcpy( filestr, "$pwrp_web/wb_history.html");
+    }
+    else {
+      wnav->message('E', "File is missing");
+      return WNAV__SYNTAX;
+    }
+
+    wb_log::generate_html( filestr, &sts);
+    if ( EVEN(sts))
+      wnav->message(' ', wnav_get_message(sts));
+    else {
+      char msg[200];
+      sprintf( msg, "History html file generated, %s", filestr);
+      wnav->message('I', msg); 
+    }    
   }
   else {
     wnav->message('E', "Syntax error");
@@ -3747,41 +3768,40 @@ static int	wnav_open_func(	void		*client_data,
   {
     char		categoriesstr[80];
     pwr_tAName		itemstr;
+    char		*itemp = itemstr;
     int			showitem;
     char 		cvect[10][20];
     wlog_eCategory	categories[10];
+    wlog_eCategory	*catp = categories;
     int nr;
 
     // Command is "OPEN HISTORY" 
 
-    if ( EVEN( dcli_get_qualifier( "/ITEM", itemstr, sizeof(itemstr)))) {
-      wnav->message('E', "Item is missing");
-      return WNAV__SYNTAX;
-    }
-
+    if ( EVEN( dcli_get_qualifier( "/ITEM", itemstr, sizeof(itemstr))))
+      itemp = 0;
+      
     showitem = ODD( dcli_get_qualifier( "/SHOWITEM", 0, 0));
 
-    if ( EVEN( dcli_get_qualifier( "/CATEGORIES", categoriesstr, sizeof(categoriesstr)))) {
-      wnav->message('E', "Categories are missing");
-      return WNAV__SYNTAX;
-    }
-
+    if ( EVEN( dcli_get_qualifier( "/CATEGORIES", categoriesstr, sizeof(categoriesstr))))
+      catp = 0;
       
-    nr = dcli_parse( categoriesstr, ",", "", (char *)cvect, 
-		     sizeof( cvect) / sizeof( cvect[0]), sizeof( cvect[0]), 0);
-    if ( nr == 0) {
-      wnav->message('E',"Syntax error");
-      return WNAV__SYNTAX;
+    if ( catp) {
+      nr = dcli_parse( categoriesstr, ",", "", (char *)cvect, 
+		       sizeof( cvect) / sizeof( cvect[0]), sizeof( cvect[0]), 0);
+      if ( nr == 0) {
+	wnav->message('E',"Syntax error");
+	return WNAV__SYNTAX;
+      }
+      if ( nr > 9)
+	nr = 9;
+      
+      for ( int i = 0; i < nr; i++) {
+	wb_log::string_to_category( cvect[i], &categories[i]);
+      }
+      categories[nr] = wlog_eCategory_;
     }
-    if ( nr > 9)
-      nr = 9;
 
-    for ( int i = 0; i < nr; i++) {
-      wb_log::string_to_category( cvect[i], &categories[i]);
-    }
-    categories[nr] = wlog_eCategory_;
-
-    wnav->logw_new( itemstr, categories, showitem);
+    wnav->logw_new( itemp, catp, showitem);
   }
   else
   {

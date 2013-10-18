@@ -132,12 +132,17 @@ void CoLog::get( char categories[][20], char *item,
       continue;
 
     int found = 0;
-    for ( int i = 0; strcmp( categories[i], "") != 0; i++) {
-      if ( strcmp( categories[i], line_array[4]) == 0) {
-	found = 1;
-	break;
+    if ( categories) {
+      for ( int i = 0; strcmp( categories[i], "") != 0; i++) {
+	if ( strcmp( categories[i], line_array[4]) == 0) {
+	  found = 1;
+	  break;
+	}
       }
     }
+    else
+      found = 1;
+
     if ( !found)
       continue;
 

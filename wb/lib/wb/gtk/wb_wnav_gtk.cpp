@@ -298,21 +298,28 @@ void WNavGtk::logw_new( char *item, wlog_eCategory *categories, int show_item)
   char title[300];
   pwr_tStatus sts;
   
-  for ( unsigned int i = 0; i < sizeof(categories_str)/sizeof(categories_str[0]); i++) {
-    if ( categories[i] == wlog_eCategory_) {
-      strcpy( categories_str[i], "");
-      break;
+  if ( categories) {
+    for ( unsigned int i = 0; i < sizeof(categories_str)/sizeof(categories_str[0]); i++) {
+      if ( categories[i] == wlog_eCategory_) {
+	strcpy( categories_str[i], "");
+	break;
+      }
+      else
+	wb_log::category_to_string( categories[i], categories_str[i]);
     }
-    else
-      wb_log::category_to_string( categories[i], categories_str[i]);
   }
+
   strcpy( title, "History ");
-  strcat( title, item);
+  if ( item)
+    strcat( title, item);
   if ( title[strlen(title)-1] == '*')
     title[strlen(title)-1] = 0;
 
   CoLogWGtk *logw = new CoLogWGtk( this, parent_wid, title, show_item, &sts);
-  logw->show( categories_str, item);
+  if ( categories)
+    logw->show( categories_str, item);
+  else
+    logw->show( 0, item);
 }
 
 void WNavGtk::sel_convert_cb( GtkWidget  *w, GtkSelectionData *selection_data,

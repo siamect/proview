@@ -77,6 +77,9 @@ class wb_log
   static void string_to_category( char *str, wlog_eCategory *category);
   static void push() { CoLog::dpush();}
   static void pull() { CoLog::dpull();}
+  static void generate_html( char *filename, pwr_tStatus *sts);
+  static void gen_cb( void *ctx, pwr_tTime time, char *s1, char *s2, char *s3, char *s4);
+
 };
 
 #endif

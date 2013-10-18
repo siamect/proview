@@ -1115,6 +1115,12 @@ void wb_build::webhandler( pwr_tOid oid)
     MsgWindow::message( 'I', msg, msgw_ePop_No, oid);
     m_sts = PWRB__SUCCESS;
   }
+
+  // Generate wb history html file
+  pwr_tCmd cmd;
+  strcpy( cmd, "generate history");
+  m_wnav->command( cmd);
+
 }
 
 void wb_build::application( pwr_tOid oid)
