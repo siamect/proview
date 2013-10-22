@@ -46,6 +46,13 @@
 static pwr_sNode *proc_np = 0;
 
 
+/**
+ * @brief Register Application object.
+ * The Application object is stored in the $Node object and be opened from the node graph.
+ *
+ *    \param oid	Objid for Application object.
+ *    \return           Status or operation.
+ */
 pwr_tStatus aproc_RegisterObject( 
   pwr_tOid oid
 )
@@ -69,6 +76,15 @@ pwr_tStatus aproc_RegisterObject(
   return PROC__SUCCESS;
 }
 
+/**
+ * @brief Set application timestamp.
+ * The timestamp is supervised by the event monitor and if the timestamp is delayed more
+ * than the max delay, timeout status is set for the process.
+ *
+ *    \param cycletime	Application cycle time in seconds.
+ *    \param maxdelay	Max delay in seconds.
+ *    \return           Status or operation.
+ */
 pwr_tStatus aproc_TimeStamp( float cycletime, float maxdelay)
 {
   pwr_tStatus sts;

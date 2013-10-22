@@ -25,6 +25,7 @@ This manual will give a description of the following API's
 - Errh Print messages on system log.
 - Sevcli Storage environment client interface.
 - NMps Interface to NMps Cell objects.
+- AProc Application process interface.
 - rt_appl A base class for applications i c++.
 */
 
@@ -328,6 +329,11 @@ This manual will give a description of the following API's
 /*! \defgroup NMpsAppl NMpsAppl NMps API
   \ingroup PRM
   This module contains interface functions for application access to NMps.
+*/
+
+/*! \defgroup AProc AProc Application process interface
+  \ingroup PRM
+  This module contains functions to handle application processes.
 */
 
 /*! \defgroup rt rt_appl Base class for applications

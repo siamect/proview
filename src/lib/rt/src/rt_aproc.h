@@ -44,8 +44,13 @@ extern "C" {
 #include "pwr.h"
 #include "rt_errh.h"
 
+/** @addtogroup AProc */
+/*@{*/
+
 pwr_tStatus	aproc_RegisterObject(pwr_tOid);
 pwr_tStatus	aproc_TimeStamp( float scantime, float maxdelay);
+
+/** @} */
 
 #if defined __cplusplus
 }

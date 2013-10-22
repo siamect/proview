@@ -591,6 +591,8 @@ INPUT                  = $(pwre_sroot)/doc/prm/src/doxygen.dx \
                          $(pwre_sroot)/lib/rt/src/rt_qcom.h \
                          $(pwre_sroot)/lib/rt/src/rt_sevcli.h \
                          $(pwre_croot)/nmps/lib/nmps/src/nmps_appl.h \
+                         $(pwre_sroot)/lib/rt/src/rt_aproc.h \
+                         $(pwre_sroot)/lib/rt/src/rt_aproc.c \
                          $(pwre_sroot)/lib/rt/src/rt_appl.h \
                          $(pwre_sroot)/lib/rt/src/rt_appl.cpp \
                          $(pwre_sroot)/lib/co/src/co_time.c \
