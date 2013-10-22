@@ -35,6 +35,12 @@
      android:title="Open Object"
 	 android:icon="@drawable/xnav_openobject"/>
    <item
+	 android:id="@+id/login_option"
+     android:title="Login"/>
+   <item
+	 android:id="@+id/logout_option"
+     android:title="Logout"/>
+   <item
 	 android:id="@+id/openplc_option"
      android:title="Open Plc"
 	 android:icon="@drawable/xnav_openobject"/>
