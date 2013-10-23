@@ -66,6 +66,9 @@ XttTrendGtk::XttTrendGtk( void *parent_ctx,
 			  GtkWidget **w,
 			  pwr_sAttrRef *trend_list,
 			  pwr_sAttrRef *plotgroup,
+			  int width,
+			  int height,
+			  unsigned int options,
 			  int *sts) :
   XttTrend( parent_ctx, name, trend_list, plotgroup, sts), parent_widget(parent_wid)
 {
@@ -73,10 +76,13 @@ XttTrendGtk::XttTrendGtk( void *parent_ctx,
     return;
   *sts = XNAV__SUCCESS;
 
-  curve = new GeCurveGtk( this, parent_widget, name, NULL, gcd, 1);
+  curve = new GeCurveGtk( this, parent_widget, name, NULL, gcd, 1, width, height, 
+			  options);
   curve->close_cb = trend_close_cb;
   curve->help_cb = trend_help_cb;
   curve->snapshot_cb = trend_snapshot_cb;
+  if ( w)
+    *w = (GtkWidget *)curve->get_widget();
 
   if ( trend_tid == pwr_cClass_DsTrendCurve)
     curve->enable( curve_mEnable_Snapshot);

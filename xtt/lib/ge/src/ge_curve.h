@@ -51,6 +51,24 @@
 #define CURVE_MAX_COLS 101
 
 typedef enum {
+        curve_mOptions_FullScreen   = 1 << 0,
+        curve_mOptions_Maximize     = 1 << 1,
+        curve_mOptions_FullMaximize = 1 << 2,
+        curve_mOptions_Iconify      = 1 << 3,
+        curve_mOptions_Invisible    = 1 << 4,
+        curve_mOptions_Embedded     = 1 << 5
+} curve_mOptions;
+
+typedef enum {
+  curve_mEnable_New 	= 1 << 0,
+  curve_mEnable_Save 	= 1 << 1,
+  curve_mEnable_Open 	= 1 << 2,
+  curve_mEnable_Snapshot = 1 << 3,
+  curve_mEnable_Export	= 1 << 4,
+  curve_mEnable_Timebox = 1 << 5
+} curve_mEnable;
+
+typedef enum {
   curve_eDataType_LogFile,
   curve_eDataType_DsTrend,
   curve_eDataType_MultiTrend,
@@ -125,6 +143,7 @@ class GeCurveData {
 };
 
 class CoWow;
+class CurveCtx;
 
 //! A curve window used for trends and logging curves.
 class GeCurve {
@@ -183,9 +202,11 @@ class GeCurve {
     int		 deferred_configure_axes;
     CoWow	 *wow;
     int		 center_from_window;
+    unsigned int options;
 
     GeCurve( void *gc_parent_ctx, char *curve_name,
-         char *filename, GeCurveData *curve_data, int pos_right);
+	     char *filename, GeCurveData *curve_data, int pos_right, 
+	     int gc_width, int gc_height, unsigned int options);
     virtual ~GeCurve();
     virtual void write_title( char *str) {}
     virtual void pop() {}
@@ -194,6 +215,7 @@ class GeCurve {
     virtual void open_export( pwr_tTime *from, pwr_tTime *to, int rows, char *filename) {}
     virtual void axis_set_width( int width) {}  
     virtual void enable( unsigned int mask) {}
+    virtual void setup( unsigned int mask) {}
     virtual void set_times( pwr_tTime *from, pwr_tTime *to) {}
     virtual void set_times_sensitivity( int sensitive) {}
     virtual pwr_tStatus get_times( pwr_tTime *from, pwr_tTime *to) {return 0;}
@@ -201,6 +223,7 @@ class GeCurve {
     virtual void set_period( time_ePeriod period, int nocallback) {}
     virtual void set_clock_cursor() {}
     virtual void reset_cursor() {}
+    virtual void *get_widget() {return 0;}
     void set_inputfocus() {}
 
     int read_file( char *filename);

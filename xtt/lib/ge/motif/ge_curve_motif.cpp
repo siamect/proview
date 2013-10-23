@@ -260,8 +260,11 @@ GeCurveMotif::GeCurveMotif( void 	*gc_parent_ctx,
 			    char	*curve_name,
 			    char  *filename,
 			    GeCurveData *curve_data,
-			    int   pos_right) :
-  GeCurve( gc_parent_ctx, curve_name, filename, curve_data, pos_right)
+			    int   pos_right,
+			    int gc_width,
+			    int gc_height,
+			    unsigned int gc_options) :
+  GeCurve( gc_parent_ctx, curve_name, filename, curve_data, pos_right, gc_options)
 {
   char		uid_filename[120] = {"xtt_curve.uid"};
   char		*uid_filename_p = uid_filename;
@@ -327,9 +330,14 @@ GeCurveMotif::GeCurveMotif( void 	*gc_parent_ctx,
 
   MrmCloseHierarchy(s_DRMh);
 
+  if ( gc_width == 0)
+    gc_width = 800;
+  if ( gc_height == 0)
+    gc_height = 600;
+
   i = 0;
-  XtSetArg(args[i],XmNwidth,800);i++;
-  XtSetArg(args[i],XmNheight,600);i++;
+  XtSetArg(args[i],XmNwidth,gc_width);i++;
+  XtSetArg(args[i],XmNheight,gc_height);i++;
   XtSetArg(args[i], XmNdeleteResponse, XmDO_NOTHING);i++;
   XtSetValues( toplevel ,args,i);
       

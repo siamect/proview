@@ -53,6 +53,9 @@ class XttTrendGtk : public XttTrend {
 	       GtkWidget **w,
 	       pwr_sAttrRef *objid,
 	       pwr_sAttrRef *plotgroup,
+	       int width,
+	       int height,
+	       unsigned int options,
 	       int *sts);
   ~XttTrendGtk();
 };

@@ -458,8 +458,6 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
       gtk_window_maximize( GTK_WINDOW(toplevel));
     else if ( options & ge_mOptions_Iconify)
       gtk_window_iconify( GTK_WINDOW(toplevel));
-    else if ( options & ge_mOptions_Iconify)
-      gtk_window_iconify( GTK_WINDOW(toplevel));
     else if ( options & ge_mOptions_Invisible)
       g_object_set( toplevel, "visible", FALSE, NULL);
   }

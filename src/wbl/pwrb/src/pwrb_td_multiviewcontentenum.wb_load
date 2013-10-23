@@ -89,6 +89,46 @@ SObject pwrb:Type
        Attr Value = 3
      EndBody
     EndObject
+    !/**
+    !  Event list.
+    !*/
+    Object EventList $Value
+     Body SysBody
+       Attr PgmName = "EventList"
+       Attr Text = "EventList"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  Trend curve.
+    !*/
+    Object TrendCurve $Value
+     Body SysBody
+       Attr PgmName = "TrendCurve"
+       Attr Text = "TrendCurve"
+       Attr Value = 5
+     EndBody
+    EndObject
+    !/**
+    !  Fast curve.
+    !*/
+    Object FastCurve $Value
+     Body SysBody
+       Attr PgmName = "FastCurve"
+       Attr Text = "FastCurve"
+       Attr Value = 6
+     EndBody
+    EndObject
+    !/**
+    !  Sev History.
+    !*/
+    Object SevHistory $Value
+     Body SysBody
+       Attr PgmName = "SevHistory"
+       Attr Text = "SevHistory"
+       Attr Value = 7
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

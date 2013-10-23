@@ -76,12 +76,12 @@ class XNavGtk : public XNav {
 		      pwr_tStatus *sts);
     Op *op_new( char *opplace, pwr_tStatus *sts);
     XttTrend *xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *plotgroup,
-			    pwr_tStatus *sts);
+			    int width, int height, unsigned int options, pwr_tStatus *sts);
     XttSevHist *xttsevhist_new( char *name, pwr_tOid *oidv, pwr_tOName *anamev,
 				pwr_tOName *onamev, bool *sevhistobjectv, sevcli_tCtx scctx, 
-				char *filename, pwr_tStatus *sts);
-    XttTCurve *xtttcurve_new( char *name, pwr_tAttrRef *arefv, pwr_tStatus *sts);
-    XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts);
+				char *filename, int width, int height, unsigned int options, pwr_tStatus *sts);
+    XttTCurve *xtttcurve_new( char *name, pwr_tAttrRef *arefv, int width, int height, unsigned int options, pwr_tStatus *sts);
+    XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, unsigned int options, pwr_tStatus *sts);
     XAttOne *xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
 			  pwr_tStatus *sts);
     CLog *clog_new( const char *name, pwr_tStatus *sts);
@@ -100,7 +100,7 @@ class XNavGtk : public XNav {
 				 int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 				 int (*is_authorized_cb) (void *, unsigned int));
     GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
-			  int pos_right);
+			  int pos_right, unsigned int options);
     XttFileview *fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,
 			       int type, char *target_attr, char *trigger_attr, char *filetype);
     CoLogin *login_new( const char     	*wl_name,

@@ -50,6 +50,7 @@
 #include "glow_growapi.h"
 #include "co_lng.h"
 #include "xtt_ge.h"
+#include "xtt_trend.cpp"
 #include "xtt_multiview.h"
 #include "xtt_log.h"
 
@@ -197,6 +198,38 @@ void XttMultiView::multiview_ge_help_cb( void *multiview_ctx, const char *key)
     (multiview->help_cb)( multiview->parent_ctx, key);
 }
 
+void XttMultiView::multiview_trend_close_cb( void *ctx, XttTrend *trend)
+{
+}
+
+void XttMultiView::multiview_trend_command_cb( void *ctx, const char *cmd)
+{
+  XttMultiView *multiview = (XttMultiView *) ctx;
+  int		sts;
+
+  if ( multiview->command_cb) {
+    sts = (multiview->command_cb)( multiview->parent_ctx, (char *)cmd, ctx);
+    return;
+  }
+}
+
+void XttMultiView::multiview_trend_help_cb( void *ctx, const char *key)
+{
+  XttMultiView	*multiview = (XttMultiView *)ctx;
+
+  if ( multiview->help_cb)
+    (multiview->help_cb)( multiview->parent_ctx, key);
+}
+
+int XttMultiView::multiview_sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, char *oname)
+{
+  XttMultiView	*multiview = (XttMultiView *)ctx;
+
+  if ( multiview->get_select_cb)
+    return (multiview->get_select_cb)( multiview->parent_ctx, oid, aname, oname);
+  return 0;
+}
+
 void XttMultiView::message_cb( void *ctx, char severity, const char *msg)
 {
   ((XttMultiView *)ctx)->message( severity, msg);
@@ -299,6 +332,7 @@ XttMultiView::XttMultiView( void *mv_parent_ctx, const char *mv_name,
   command_cb(mv_command_cb), close_cb(0), help_cb(0), display_in_xnav_cb(0), 
   is_authorized_cb(mv_is_authorized_cb), popup_menu_cb(0), call_method_cb(0), 
   get_current_objects_cb(mv_get_current_objects_cb), sound_cb(0), eventlog_cb(0),
+  get_select_cb(0),
   width(mv_width), height(mv_height)
 {
   strcpy( name, mv_name);

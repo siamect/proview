@@ -52,6 +52,9 @@ class XttFastGtk : public XttFast {
 	      char *xn_name,
 	      GtkWidget **w,
 	      pwr_sAttrRef *fast_arp,
+	      int width,
+	      int height,
+	      unsigned int xn_options,
 	      int *sts);
   ~XttFastGtk();
 };

@@ -69,13 +69,15 @@ class XNavMotif : public XNav {
 		pwr_tObjid ev_user, int display_ala, int display_eve,
 		int display_blk, int display_return, int display_ack,
 		int ev_beep, pwr_tMask ev_pop_mask, int ev_eventname_seg, pwr_tStatus *status);
-    Hist *hist_new( char *title, pwr_tAttrRef *arp, pwr_tStatus *sts);
+    Hist *hist_new( char *title, pwr_tOid oid, pwr_tStatus *sts);
     Block *block_new( pwr_tAttrRef *arp, char *name, unsigned int priv,
 		      pwr_tStatus *sts);
     Op *op_new( char *opplace, pwr_tStatus *sts);
     XttTrend *xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *plotgroup,
+			    int width, int height, unsigned int options, 
 			    pwr_tStatus *sts);
-    XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts);
+    XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, 
+			  unsigned int options, pwr_tStatus *sts);
     XAttOne *xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
 			  pwr_tStatus *sts);
     CLog *clog_new( const char *name, pwr_tStatus *sts);
@@ -83,12 +85,11 @@ class XNavMotif : public XNav {
 			int navigator, int width, int height, int x, int y, 
 			double scan_time, const char *object_name, 
 			int use_default_access, unsigned int access, unsigned int options,
-			void *basewidget,
-			int (*xg_command_cb) (XttGe *, char *, void *),
+			int (*xg_command_cb) (XttGe *, char *),
 			int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 			int (*xg_is_authorized_cb) (void *, unsigned int));
     GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
-			  int pos_right);
+			  unsigned int options, int pos_right);
     CoLogin *login_new( const char     	*wl_name,
 			const char     	*wl_groupname,
 			void		(* wl_bc_success)( void *),

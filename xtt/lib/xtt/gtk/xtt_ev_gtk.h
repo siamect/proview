@@ -78,9 +78,9 @@ class EvGtk : public Ev {
     GtkWidget		*blk_widget;
     pwr_tObjid		alarm_views[25];
 
-    void map_eve();
-    void map_ala();
-    void map_blk();
+    void map_eve( unsigned int options);
+    void map_ala( unsigned int options);
+    void map_blk( unsigned int options);
     void unmap_eve();
     void unmap_ala();
     void unmap_blk();

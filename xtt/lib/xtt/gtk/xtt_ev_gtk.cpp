@@ -885,22 +885,44 @@ EvGtk::~EvGtk()
     gtk_widget_destroy( parent_wid_blk);
 }
 
-void EvGtk::map_eve()
+void EvGtk::map_eve( unsigned int options)
 {
   gtk_window_present( GTK_WINDOW(parent_wid_eve));
   eve_displayed = 1;
+
+  if ( options & ev_mAlaOptions_FullScreen)
+    gtk_window_fullscreen( GTK_WINDOW(parent_wid_eve));
+  else if ( options & ev_mAlaOptions_Maximize)
+    gtk_window_maximize( GTK_WINDOW(parent_wid_eve)); // TODO
+  else if ( options & ev_mAlaOptions_FullMaximize)
+    gtk_window_maximize( GTK_WINDOW(parent_wid_eve));
 }
 
-void EvGtk::map_ala()
+void EvGtk::map_ala( unsigned int options)
 {
   gtk_window_present( GTK_WINDOW(parent_wid_ala));
   ala_displayed = 1;
+
+  if ( options & ev_mAlaOptions_FullScreen)
+    gtk_window_fullscreen( GTK_WINDOW(parent_wid_ala));
+  else if ( options & ev_mAlaOptions_Maximize)
+    gtk_window_maximize( GTK_WINDOW(parent_wid_ala)); // TODO
+  else if ( options & ev_mAlaOptions_FullMaximize)
+    gtk_window_maximize( GTK_WINDOW(parent_wid_ala));
+
 }
 
-void EvGtk::map_blk()
+void EvGtk::map_blk( unsigned int options)
 {
   gtk_window_present( GTK_WINDOW(parent_wid_blk));
   blk_displayed = 1;
+
+  if ( options & ev_mAlaOptions_FullScreen)
+    gtk_window_fullscreen( GTK_WINDOW(parent_wid_blk));
+  else if ( options & ev_mAlaOptions_Maximize)
+    gtk_window_maximize( GTK_WINDOW(parent_wid_blk)); // TODO
+  else if ( options & ev_mAlaOptions_FullMaximize)
+    gtk_window_maximize( GTK_WINDOW(parent_wid_blk));
 }
 
 void EvGtk::unmap_eve()

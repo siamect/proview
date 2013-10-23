@@ -120,6 +120,7 @@ class XttSevHist {
   void curve_add( pwr_tOid oid, pwr_tOName aname, pwr_tOName oname,
 		  bool sevhistobject);
   int read_export( char *filename);
+  void setup();
 
   static void sevhist_close_cb( void *ctx);
   static void sevhist_increase_period_cb( void *ctx);

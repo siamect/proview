@@ -90,6 +90,7 @@ class XttTrend {
 	    int *sts);
   virtual ~XttTrend();
   void pop();
+  void setup();
 
   static void trend_close_cb( void *ctx);
   static void trend_help_cb( void *ctx);

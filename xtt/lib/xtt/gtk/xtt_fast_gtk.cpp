@@ -67,6 +67,9 @@ XttFastGtk::XttFastGtk( void *parent_ctx,
 			char *name,
 			GtkWidget **w,
 			pwr_sAttrRef *fast_arp,
+			int width,
+			int height,
+			unsigned int options,
 			int *sts) :
   XttFast( parent_ctx, name, fast_arp, sts), parent_widget(parent_wid)
 {
@@ -74,7 +77,8 @@ XttFastGtk::XttFastGtk( void *parent_ctx,
     
   *sts = XNAV__SUCCESS;
 
-  curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 0);
+  curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 0, width, height,
+			  options);
   curve->close_cb = fast_close_cb;
   curve->help_cb = fast_help_cb;
 

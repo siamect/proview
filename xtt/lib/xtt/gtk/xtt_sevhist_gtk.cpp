@@ -70,6 +70,9 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
 			      pwr_tOName *xn_onamev,
 			      bool *sevhistobjectv,
 			      sevcli_tCtx xn_scctx,
+			      int xn_width,
+			      int xn_height,
+			      unsigned int xn_options,
 			      int *sts) :
   XttSevHist( parent_ctx, name, xn_oidv, xn_anamev, xn_onamev, sevhistobjectv, xn_scctx, sts), 
   parent_widget(parent_wid)
@@ -83,7 +86,8 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
 
   *sts = XNAV__SUCCESS;
 
-  curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 1);
+  curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 1, 
+			  xn_width, xn_height, xn_options);
   curve->close_cb = sevhist_close_cb;
   curve->help_cb = sevhist_help_cb;
   curve->increase_period_cb = sevhist_increase_period_cb;
@@ -95,6 +99,9 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
   curve->remove_cb = sevhist_remove_cb;
   curve->export_cb = sevhist_export_cb;
   curve->enable( curve_mEnable_Timebox | curve_mEnable_Export);
+
+  if ( w)
+    *w = (GtkWidget *)curve->get_widget();
 
   wow = new CoWowGtk( parent_widget);
   timerid = wow->timer_new();
@@ -120,7 +127,7 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
 
   *sts = XNAV__SUCCESS;
 
-  curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 1);
+  curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 1, 0, 0, 0);
   curve->close_cb = sevhist_close_cb;
   curve->help_cb = sevhist_help_cb;
   curve->enable(0);

@@ -56,6 +56,9 @@ class XttSevHistGtk : public XttSevHist {
 		 pwr_tOName *xn_onamev,
 		 bool *sevhistobjectv,
 		 sevcli_tCtx xn_scctx,
+		 int width,
+		 int height,
+		 unsigned int options,
 		 int *sts);
   XttSevHistGtk( void *parent_ctx,
 		 GtkWidget *parent_wid,

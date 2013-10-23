@@ -493,6 +493,11 @@ void XttTrend::pop()
   curve->pop();
 }
 
+void XttTrend::setup()
+{
+  curve->setup( curve_mEnable_Snapshot);
+}
+
 void XttTrend::trend_close_cb( void *ctx)
 {
   XttTrend *trend = (XttTrend *) ctx;

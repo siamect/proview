@@ -46,7 +46,8 @@
 class GeCurveMotif : public GeCurve {
   public:
     GeCurveMotif( void *gc_parent_ctx, Widget parent_widget, char *curve_name,
-		  char *filename, GeCurveData *curve_data, int pos_right);
+		  char *filename, GeCurveData *curve_data, int pos_right, 
+		  int gc_width, int gc_height, unsigned int gc_options);
     Widget	parent_wid;
     Widget	grow_widget;
     Widget	curve_widget;

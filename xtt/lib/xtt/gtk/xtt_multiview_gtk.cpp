@@ -56,6 +56,8 @@ typedef void *Widget;
 #include "glow_growapi.h"
 #include "co_lng.h"
 #include "xtt_ge_gtk.h"
+#include "xtt_trend_gtk.h"
+#include "xtt_sevhist_gtk.h"
 #include "xtt_multiview_gtk.h"
 #include "ge_graph_gtk.h"
 #include "xtt_ev_gtk.h"
@@ -131,6 +133,15 @@ XttMultiViewGtk::~XttMultiViewGtk()
     if ( mvctx[i])
       delete mvctx[i];
   }
+  for ( unsigned int i = 0; i < MV_SIZE; i++) {
+    if ( trend[i])
+      delete trend[i];
+  }
+	  
+  for ( unsigned int i = 0; i < MV_SIZE; i++) {
+    if ( sevhist[i])
+      delete sevhist[i];
+  }
 	  
   // delete widget;
   if ( !(options & ge_mOptions_Embedded))
@@ -174,6 +185,8 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
   memset( gectx, 0, sizeof(gectx));
   memset( mvctx, 0, sizeof(mvctx));
   memset( sala, 0, sizeof(sala));
+  memset( trend, 0, sizeof(trend));
+  memset( sevhist, 0, sizeof(sevhist));
   memset( comp_widget, 0, sizeof(comp_widget));
   memset( exchange_widget, 0, sizeof(exchange_widget));
 
@@ -338,6 +351,270 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
 	  break;
 	}
+	case pwr_eMultiViewContentEnum_TrendCurve: {
+
+	  int plotgroup_found = 0;
+	  pwr_tAttrRef plotgroup;
+	  pwr_tCid classid;
+      	  GtkWidget *widget;
+	  pwr_tAttrRef arefv[2];
+	  int skip = 0;
+
+	  lsts = gdh_GetAttrRefTid( &mv.Action[i*rows+j].Object, &classid);
+	  if (EVEN(lsts)) break;
+
+	  switch ( classid) {
+	  case pwr_cClass_DsTrend:
+	  case pwr_cClass_DsTrendCurve:
+	    break;
+	  case pwr_cClass_PlotGroup:
+	    plotgroup_found = 1;
+	    plotgroup = mv.Action[i*rows+j].Object;
+	    arefv[0] = plotgroup;
+	    break;
+	  default:
+	    skip = 1;
+	  }
+
+	  if ( skip)
+	    break;
+
+	  if ( plotgroup_found) {
+	    trend[i*rows + j] = new XttTrendGtk( this, toplevel, (char *)"No title", &widget,
+						 0, &plotgroup, w, h, (unsigned int)curve_mOptions_Embedded, sts);
+	  }
+	  else {
+	    arefv[0] = mv.Action[i*rows+j].Object;
+	    memset( &arefv[1], 0, sizeof(arefv[0]));
+	    trend[i*rows + j] = new XttTrendGtk( this, toplevel, (char *)"No title", &widget,
+						 arefv, 0, w, h, (unsigned int)curve_mOptions_Embedded, sts);
+	  }
+	  if ( EVEN(*sts)) break;
+
+	  trend[i*rows + j]->close_cb = multiview_trend_close_cb;
+	  trend[i*rows + j]->command_cb = multiview_trend_command_cb;
+	  trend[i*rows + j]->help_cb = multiview_trend_help_cb;
+
+	  comp_widget[i*rows + j] = widget;
+
+	  // recall_buffer[i*rows + j].insert(graph_name, objectname_p);
+
+	  appl.insert( applist_eType_Trend, (void *)trend[i*rows + j], &arefv[0], 
+		       "",  NULL);
+	
+
+	  if ( mv.Action[i*rows+j].Options & pwr_mMultiViewElemOptionsMask_Exchangeable) {
+	    exchange_widget[i*rows+j] = gtk_hbox_new( FALSE, 0);
+	    gtk_box_pack_start( GTK_BOX(exchange_widget[i*rows+j]), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
+	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(exchange_widget[i*rows + j]), TRUE, TRUE, 0);
+	  }
+	  else
+	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
+	  break;
+	}
+	case pwr_eMultiViewContentEnum_SevHistory: {
+	  pwr_tOid oidv[11];
+	  pwr_tOName anamev[11];
+	  pwr_tOName onamev[11];
+	  bool sevhistobjectv[11];
+	  pwr_tAttrRef attr_aref, sevhist_aref, histthread_aref;
+	  pwr_tOid histthread_oid;
+	  char server_node[40];
+	  char *s;
+	  pwr_tAName aname;
+	  int plotgroup_found = 0;
+	  int sevHistObjectFound = 0;
+	  int oid_cnt = 0;
+	  pwr_tCid classid;
+	  int skip = 0;
+
+	  if ( cdh_ObjidIsNull(mv.Action[i*rows+j].Object.Objid))
+	    break;
+
+	  GtkWidget *widget;
+	  pwr_tAttrRef arefv[2];
+	  pwr_tAttrRef plotgroup;
+	  arefv[0] = mv.Action[i*rows+j].Object;
+	  memset( &arefv[1], 0, sizeof(arefv[0]));
+
+
+	  lsts = gdh_GetAttrRefTid( &arefv[0], &classid);
+	  if (EVEN(lsts)) break;;
+
+	  switch ( classid) {
+	  case pwr_cClass_SevHist:
+	    break;
+	  case pwr_cClass_SevHistObject:
+	    sevHistObjectFound = true;
+	    break;
+	  case pwr_cClass_PlotGroup:
+	    plotgroup = mv.Action[i*rows+j].Object;
+	    plotgroup_found = 1;
+	    break;
+	  default:
+	    skip = 1;
+	  }
+
+	  if ( skip)
+	    break;
+
+	  if ( plotgroup_found) {
+	    pwr_sClass_PlotGroup plot;
+	    pwr_tCid cid;
+	    int j;
+
+	    lsts = gdh_GetObjectInfoAttrref( &plotgroup, &plot, sizeof(plot));
+	    if ( EVEN(lsts)) break;
+	
+	    for ( j = 0; j < 20; j++) {
+	      if ( cdh_ObjidIsNull( plot.YObjectName[j].Objid))
+		break;
+	  
+	      sevhist_aref = plot.YObjectName[j];
+	      lsts = gdh_GetAttrRefTid( &sevhist_aref, &cid);
+	      if ( EVEN(lsts)) break;
+
+	      if ( cid == pwr_cClass_SevHist) {
+		lsts = gdh_ArefANameToAref( &sevhist_aref, "Attribute", &attr_aref);
+		if ( EVEN(lsts)) break;
+  
+		lsts = gdh_GetObjectInfoAttrref( &attr_aref, &attr_aref, sizeof(attr_aref));
+		if ( EVEN(lsts)) break;
+  
+		lsts = gdh_AttrrefToName( &attr_aref, aname, sizeof(aname), cdh_mNName);
+		if ( EVEN(lsts)) break;
+
+		s = strchr( aname, '.');
+		if ( !s) break;
+  
+		*s = 0;
+		strcpy( onamev[oid_cnt], aname);
+		strcpy( anamev[oid_cnt], s+1);
+		oidv[oid_cnt] = attr_aref.Objid;
+		sevhistobjectv[oid_cnt] = false;
+		oid_cnt++;
+	      }
+	      else if ( cid == pwr_cClass_SevHistObject) {
+		lsts = gdh_ArefANameToAref( &sevhist_aref, "Object", &attr_aref);
+		if ( EVEN(lsts)) break;
+  
+		lsts = gdh_GetObjectInfoAttrref( &attr_aref, &attr_aref, sizeof(attr_aref));
+		if ( EVEN(lsts)) break;
+
+		lsts = gdh_AttrrefToName( &attr_aref, aname, sizeof(aname), cdh_mNName);
+		if ( EVEN(lsts)) break;
+
+		s = strchr( aname, '.');
+		if ( !s) {
+		  //It is a complete object
+		  anamev[oid_cnt][0] = '\0';
+		}
+		else {  
+		  strcpy( anamev[oid_cnt], s+1);
+		  *s = 0;
+		}
+		strcpy( onamev[oid_cnt], aname);
+		oidv[oid_cnt] = attr_aref.Objid;
+		sevhistobjectv[oid_cnt] = true;
+		oid_cnt++;
+	      }
+	    }
+	  }
+	  else if ( sevHistObjectFound ) {
+	    lsts = gdh_ArefANameToAref( &mv.Action[i*rows+j].Object, "Object", &attr_aref);
+	    if ( EVEN(lsts)) break;
+
+	    lsts = gdh_GetObjectInfoAttrref( &attr_aref, &attr_aref, sizeof(attr_aref));
+	    if ( EVEN(lsts)) break;
+
+	    lsts = gdh_AttrrefToName( &attr_aref, aname, sizeof(aname), cdh_mNName);
+	    if ( EVEN(lsts)) break;
+
+	    s = strchr( aname, '.');
+	    if ( !s) {
+	      //It is a complete object
+	      anamev[oid_cnt][0] = '\0';
+	    }
+	    else {  
+	      strcpy( anamev[oid_cnt], s+1);
+	    }
+	    oidv[oid_cnt] = attr_aref.Objid;
+	    sevhistobjectv[oid_cnt] = true;
+	    strcpy( onamev[oid_cnt], "");
+	    sevhist_aref = mv.Action[i*rows+j].Object;
+	    oid_cnt = 1;
+	  }
+	  else {
+	    lsts = gdh_ArefANameToAref( &mv.Action[i*rows+j].Object, "Attribute", &attr_aref);
+	    if ( EVEN(lsts)) break;
+  
+	    lsts = gdh_GetObjectInfoAttrref( &attr_aref, &attr_aref, sizeof(attr_aref));
+	    if ( EVEN(lsts)) break;
+  
+	    lsts = gdh_AttrrefToName( &attr_aref, aname, sizeof(aname), cdh_mNName);
+	    if ( EVEN(lsts)) break;
+
+	    s = strchr( aname, '.');
+	    if ( !s) break;
+	    *s = 0;
+  
+	    strcpy( onamev[0], aname);
+	    strcpy( anamev[0], s+1);
+	    oidv[0] = attr_aref.Objid;
+	    sevhistobjectv[0] = false;
+	    oid_cnt = 1;
+	    sevhist_aref = mv.Action[i*rows+j].Object;
+	  }
+	  
+	  oidv[oid_cnt] = pwr_cNOid;
+
+	  // Get server and connect to server
+	  lsts = gdh_ArefANameToAref( &sevhist_aref, "ThreadObject", &attr_aref);
+	  if ( EVEN(lsts)) break;
+
+	  lsts = gdh_GetObjectInfoAttrref( &attr_aref, &histthread_oid, sizeof(histthread_oid));
+	  if ( EVEN(lsts)) break;
+
+	  histthread_aref = cdh_ObjidToAref( histthread_oid);
+	  lsts = gdh_ArefANameToAref( &histthread_aref, "ServerNode", &attr_aref);
+	  if ( EVEN(lsts)) break;
+
+	  lsts = gdh_GetObjectInfoAttrref( &attr_aref, server_node, sizeof(server_node));
+	  if ( EVEN(lsts)) break;
+
+	  if ( !xnav->scctx) {
+	    sevcli_init( &lsts, &xnav->scctx);
+	    if ( EVEN(lsts)) break;
+	  }
+	  sevcli_set_servernode( &lsts, xnav->scctx, server_node);
+	  if ( EVEN(lsts)) break;
+
+	  sevhist[i*rows + j] = new XttSevHistGtk( this, toplevel, (char *)"No title", &widget,
+					    oidv, anamev, onamev, sevhistobjectv, 
+					    xnav->scctx, w, h, 
+					    (unsigned int)curve_mOptions_Embedded, sts);
+	  if ( EVEN(*sts)) break;
+
+	  sevhist[i*rows + j]->help_cb = multiview_trend_help_cb;
+	  sevhist[i*rows + j]->get_select_cb = multiview_sevhist_get_select_cb;
+
+	  comp_widget[i*rows + j] = widget;
+
+	  // recall_buffer[i*rows + j].insert(graph_name, objectname_p);
+
+	  //appl.insert( applist_eType_Trend, (void *)trend[i*rows + j], &arefv[0], 
+	  //	       "",  NULL);
+	
+
+	  if ( mv.Action[i*rows+j].Options & pwr_mMultiViewElemOptionsMask_Exchangeable) {
+	    exchange_widget[i*rows+j] = gtk_hbox_new( FALSE, 0);
+	    gtk_box_pack_start( GTK_BOX(exchange_widget[i*rows+j]), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
+	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(exchange_widget[i*rows + j]), TRUE, TRUE, 0);
+	  }
+	  else
+	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
+	  break;
+	}
 	default: ;
 	}
 	if ( (j + 1) % rows != 0 && mv.Options & pwr_mMultiViewOptionsMask_RowSeparators)
@@ -375,7 +652,14 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
       gtk_window_move( GTK_WINDOW(toplevel), mv.X, mv.Y);
     }
   
-
+    for ( int i = 0; i < MV_SIZE; i++) {
+      if ( trend[i])
+	trend[i]->setup();
+    }
+    for ( int i = 0; i < MV_SIZE; i++) {
+      if ( sevhist[i])
+	sevhist[i]->setup();
+    }
     if ( options & ge_mOptions_FullScreen || 
 	 mv.Options & pwr_mMultiViewOptionsMask_FullScreen)
       gtk_window_fullscreen( GTK_WINDOW(toplevel));
@@ -523,6 +807,266 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
 	      recall_buffer[i*rows + j].insert( source, object);
 	    appl.insert( applist_eType_MultiView, (void *)mvctx[i*rows + j], &source_aref, "", NULL);
 	    break;
+	  }
+	  case pwr_eMultiViewContentEnum_TrendCurve: {
+	    int plotgroup_found = 0;
+	    pwr_tAttrRef plotgroup;
+	    pwr_tCid classid;
+	    GtkWidget *comp_w;
+	    pwr_tAttrRef arefv[2];
+	    int skip = 0;
+	    pwr_tStatus lsts;
+	    pwr_tAttrRef object_aref;
+	    
+	    lsts = gdh_NameToAttrref( pwr_cNObjid, object, &object_aref);
+	    if ( EVEN(lsts)) break;
+
+	    lsts = gdh_GetAttrRefTid( &object_aref, &classid);
+	    if (EVEN(lsts)) break;
+
+	    switch ( classid) {
+	    case pwr_cClass_DsTrend:
+	    case pwr_cClass_DsTrendCurve:
+	      break;
+	    case pwr_cClass_PlotGroup:
+	      plotgroup_found = 1;
+	      plotgroup = object_aref;
+	      arefv[0] = plotgroup;
+	      break;
+	    default:
+	      skip = 1;
+	    }
+	    
+	    if ( skip)
+	      break;
+
+	    XttTrendGtk *ctx;
+	    if ( plotgroup_found) {
+	      ctx = new XttTrendGtk( this, toplevel, (char *)"No title", &comp_w,
+						 0, &plotgroup, w, h, (unsigned int)curve_mOptions_Embedded, &lsts);
+	    }
+	    else {
+	      arefv[0] = object_aref;
+	      memset( &arefv[1], 0, sizeof(arefv[0]));
+	      ctx = new XttTrendGtk( this, toplevel, (char *)"No title", &comp_w,
+						   arefv, 0, w, h, (unsigned int)curve_mOptions_Embedded, &lsts);
+	    }
+	    if ( EVEN(lsts)) break;
+
+	    ctx->close_cb = multiview_trend_close_cb;
+	    ctx->command_cb = multiview_trend_command_cb;
+	    ctx->help_cb = multiview_trend_help_cb;
+	    	
+	    appl.remove( (void *)trend[i*rows+j]);
+	    delete trend[i*rows+j];
+
+	    gtk_widget_destroy( comp_widget[i*rows+j]);
+	    gtk_box_pack_start( GTK_BOX(exchange_widget[i*rows+j]), GTK_WIDGET(comp_w), TRUE, TRUE, 0);
+	    gtk_widget_show_all( exchange_widget[i*rows + j]);
+	    ctx->setup();
+	    gtk_box_reorder_child( GTK_BOX(exchange_widget[i*rows+j]), comp_w, 0);
+
+	    comp_widget[i*rows + j] = comp_w;	
+	    trend[i*rows+j] = ctx;	  
+
+	    if ( insert)
+	      recall_buffer[i*rows + j].insert( source, object);
+	    appl.insert( applist_eType_Trend, (void *)trend[i*rows + j], &arefv[0], 
+			 "",  NULL);
+
+	    mv.Action[i*rows+j].Object = object_aref;
+	    break;
+	  }
+
+	  case pwr_eMultiViewContentEnum_SevHistory: {
+	    pwr_tOid oidv[11];
+	    pwr_tOName anamev[11];
+	    pwr_tOName onamev[11];
+	    bool sevhistobjectv[11];
+	    pwr_tAttrRef attr_aref, sevhist_aref;
+	    char *s;
+	    pwr_tAName aname;
+	    int plotgroup_found = 0;
+	    int sevHistObjectFound = 0;
+	    int oid_cnt = 0;
+	    pwr_tCid classid;
+	    int skip = 0;
+	    pwr_tStatus lsts;
+	    GtkWidget *comp_w;
+	    pwr_tAttrRef arefv[2];
+	    pwr_tAttrRef plotgroup;
+	    pwr_tAttrRef object_aref;
+	    
+	    lsts = gdh_NameToAttrref( pwr_cNObjid, object, &object_aref);
+	    if ( EVEN(lsts)) break;
+
+	    arefv[0] = object_aref;
+	    memset( &arefv[1], 0, sizeof(arefv[0]));
+
+
+	    lsts = gdh_GetAttrRefTid( &arefv[0], &classid);
+	    if (EVEN(lsts)) break;;
+
+	    switch ( classid) {
+	    case pwr_cClass_SevHist:
+	      break;
+	    case pwr_cClass_SevHistObject:
+	      sevHistObjectFound = true;
+	      break;
+	    case pwr_cClass_PlotGroup:
+	      plotgroup = object_aref;
+	      plotgroup_found = 1;
+	      break;
+	    default:
+	      skip = 1;
+	    }
+
+	    if ( skip)
+	      break;
+	    
+	    if ( plotgroup_found) {
+	      pwr_sClass_PlotGroup plot;
+	      pwr_tCid cid;
+	      int j;
+
+	      lsts = gdh_GetObjectInfoAttrref( &plotgroup, &plot, sizeof(plot));
+	      if ( EVEN(lsts)) break;
+	
+	      for ( j = 0; j < 20; j++) {
+		if ( cdh_ObjidIsNull( plot.YObjectName[j].Objid))
+		  break;
+		
+		sevhist_aref = plot.YObjectName[j];
+		lsts = gdh_GetAttrRefTid( &sevhist_aref, &cid);
+		if ( EVEN(lsts)) break;
+
+		if ( cid == pwr_cClass_SevHist) {
+		  lsts = gdh_ArefANameToAref( &sevhist_aref, "Attribute", &attr_aref);
+		  if ( EVEN(lsts)) break;
+		  
+		  lsts = gdh_GetObjectInfoAttrref( &attr_aref, &attr_aref, sizeof(attr_aref));
+		  if ( EVEN(lsts)) break;
+		  
+		  lsts = gdh_AttrrefToName( &attr_aref, aname, sizeof(aname), cdh_mNName);
+		  if ( EVEN(lsts)) break;
+		  
+		  s = strchr( aname, '.');
+		  if ( !s) break;
+  
+		  *s = 0;
+		  strcpy( onamev[oid_cnt], aname);
+		  strcpy( anamev[oid_cnt], s+1);
+		  oidv[oid_cnt] = attr_aref.Objid;
+		  sevhistobjectv[oid_cnt] = false;
+		  oid_cnt++;
+		}
+		else if ( cid == pwr_cClass_SevHistObject) {
+		  lsts = gdh_ArefANameToAref( &sevhist_aref, "Object", &attr_aref);
+		  if ( EVEN(lsts)) break;
+		  
+		  lsts = gdh_GetObjectInfoAttrref( &attr_aref, &attr_aref, sizeof(attr_aref));
+		  if ( EVEN(lsts)) break;
+		  
+		  lsts = gdh_AttrrefToName( &attr_aref, aname, sizeof(aname), cdh_mNName);
+		  if ( EVEN(lsts)) break;
+
+		  s = strchr( aname, '.');
+		  if ( !s) {
+		    //It is a complete object
+		    anamev[oid_cnt][0] = '\0';
+		  }
+		  else {  
+		    strcpy( anamev[oid_cnt], s+1);
+		    *s = 0;
+		  }
+		  strcpy( onamev[oid_cnt], aname);
+		  oidv[oid_cnt] = attr_aref.Objid;
+		  sevhistobjectv[oid_cnt] = true;
+		  oid_cnt++;
+		}
+	      }
+	    }
+	    else if ( sevHistObjectFound ) {
+	      lsts = gdh_ArefANameToAref( &object_aref, "Object", &attr_aref);
+	      if ( EVEN(lsts)) break;
+
+	      lsts = gdh_GetObjectInfoAttrref( &attr_aref, &attr_aref, sizeof(attr_aref));
+	      if ( EVEN(lsts)) break;
+	      
+	      lsts = gdh_AttrrefToName( &attr_aref, aname, sizeof(aname), cdh_mNName);
+	      if ( EVEN(lsts)) break;
+
+	      s = strchr( aname, '.');
+	      if ( !s) {
+		//It is a complete object
+		anamev[oid_cnt][0] = '\0';
+	      }
+	      else {  
+		strcpy( anamev[oid_cnt], s+1);
+	      }
+	      oidv[oid_cnt] = attr_aref.Objid;
+	      sevhistobjectv[oid_cnt] = true;
+	      strcpy( onamev[oid_cnt], "");
+	      sevhist_aref = object_aref;
+	      oid_cnt = 1;
+	    }
+	    else {
+	      lsts = gdh_ArefANameToAref( &object_aref, "Attribute", &attr_aref);
+	      if ( EVEN(lsts)) break;
+  
+	      lsts = gdh_GetObjectInfoAttrref( &attr_aref, &attr_aref, sizeof(attr_aref));
+	      if ( EVEN(lsts)) break;
+  
+	      lsts = gdh_AttrrefToName( &attr_aref, aname, sizeof(aname), cdh_mNName);
+	      if ( EVEN(lsts)) break;
+
+	      s = strchr( aname, '.');
+	      if ( !s) break;
+	      *s = 0;
+  
+	      strcpy( onamev[0], aname);
+	      strcpy( anamev[0], s+1);
+	      oidv[0] = attr_aref.Objid;
+	      sevhistobjectv[0] = false;
+	      oid_cnt = 1;
+	      sevhist_aref = object_aref;
+	    }
+	  
+	    oidv[oid_cnt] = pwr_cNOid;
+
+	    XNav 	*xnav = get_xnav();
+	    XttSevHistGtk *ctx;
+
+	    if ( !xnav->scctx)
+	      break;
+
+	    ctx = new XttSevHistGtk( this, toplevel, (char *)"No title", &comp_w,
+				     oidv, anamev, onamev, sevhistobjectv, 
+				     xnav->scctx, w, h, 
+				     (unsigned int)curve_mOptions_Embedded, &lsts);
+	    if ( EVEN(lsts)) break;
+
+	    ctx->help_cb = multiview_trend_help_cb;
+	    ctx->get_select_cb = multiview_sevhist_get_select_cb;
+
+	    appl.remove( (void *)trend[i*rows+j]);
+	    delete sevhist[i*rows+j];
+
+	    gtk_widget_destroy( comp_widget[i*rows+j]);
+	    gtk_box_pack_start( GTK_BOX(exchange_widget[i*rows+j]), GTK_WIDGET(comp_w), TRUE, TRUE, 0);
+	    gtk_widget_show_all( exchange_widget[i*rows + j]);
+	    ctx->setup();
+	    gtk_box_reorder_child( GTK_BOX(exchange_widget[i*rows+j]), comp_w, 0);
+
+	    comp_widget[i*rows + j] = comp_w;	
+	    sevhist[i*rows+j] = ctx;	  
+
+	    //if ( insert)
+	    //  recall_buffer[i*rows + j].insert( source, object);
+	    //appl.insert( applist_eType_Trend, (void *)trend[i*rows + j], &arefv[0], 
+	    //		 "",  NULL);
+
+	    mv.Action[i*rows+j].Object = object_aref;
 	  }
 	  default: ;
 	  }

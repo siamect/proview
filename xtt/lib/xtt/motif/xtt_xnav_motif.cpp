@@ -246,9 +246,9 @@ Ev *XNavMotif::ev_new( char *eve_name, char *ala_name, char *blk_name,
 		      display_return, display_ack, ev_beep, ev_pop_mask, ev_eventname_seg, status);
 }
 
-Hist *XNavMotif::hist_new( char *title, pwr_tAttrRef *arp, pwr_tStatus *sts)
+Hist *XNavMotif::hist_new( char *title, pwr_tOid oid, pwr_tStatus *sts)
 {
-  return new HistMotif( this, parent_wid, title, arp, sts);
+  return new HistMotif( this, parent_wid, title, oid, sts);
 }
 
 Block *XNavMotif::block_new( pwr_tAttrRef *arp, char *name, unsigned int priv,
@@ -263,18 +263,18 @@ Op *XNavMotif::op_new( char *opplace, pwr_tStatus *sts)
 }
 
 XttTrend *XNavMotif::xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *plotgroup,
-				  pwr_tStatus *sts)
+				   int width, int height, unsigned int options, pwr_tStatus *sts)
 {
   Widget w;
 
-  return new XttTrendMotif( this, parent_wid, name, &w, objar, plotgroup, sts);
+  return new XttTrendMotif( this, parent_wid, name, &w, objar, plotgroup, width, height, options, sts);
 }
 
-XttFast *XNavMotif::xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts)
+XttFast *XNavMotif::xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, unsigned int options, pwr_tStatus *sts)
 {
   Widget w;
 
-  return new XttFastMotif( this, parent_wid, name, &w, objar, sts);
+  return new XttFastMotif( this, parent_wid, name, &w, objar, width, height, options, sts);
 }
 
 XAttOne *XNavMotif::xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
@@ -292,8 +292,7 @@ XttGe *XNavMotif::xnav_ge_new( const char *name, const char *filename, int scrol
 			       int navigator, int width, int height, int x, int y, 
 			       double scan_time, const char *object_name, 
 			       int use_default_access, unsigned int access, unsigned int options,
-			       void *basewidget,
-			       int (*command_cb) (XttGe *, char *, void *),
+			       int (*command_cb) (XttGe *, char *),
 			       int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 			       int (*is_authorized_cb) (void *, unsigned int))
 {
@@ -303,9 +302,9 @@ XttGe *XNavMotif::xnav_ge_new( const char *name, const char *filename, int scrol
 }
 
 GeCurve *XNavMotif::gecurve_new( char *name, char *filename, GeCurveData *data,
-				 int pos_right)
+				 int pos_right, unsigned int options)
 {
-  return new GeCurveMotif( this, parent_wid, name, filename, data, pos_right);
+  return new GeCurveMotif( this, parent_wid, name, filename, data, pos_right, options);
 }
 
 CoLogin *XNavMotif::login_new( const char      	*name,

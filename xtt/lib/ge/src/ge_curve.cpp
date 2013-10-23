@@ -798,6 +798,9 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
 
 int GeCurve::config_names()
 {
+  if ( !cd)
+    return 0;
+
   grow_tObject t1;
   glow_eDrawType color;
   double x;
@@ -1027,6 +1030,9 @@ int GeCurve::configure_axes()
   double x = 0;
   int i, idx;
 
+  if ( !cd)
+    return 0;
+
   grow_SetNodraw( growaxis_ctx);
   grow_New( growaxis_ctx);
   memset( axis_object, 0, sizeof( axis_object));
@@ -1100,6 +1106,9 @@ int GeCurve::configure_curves()
   glow_sCurveData gcd;
   int max_index, min_index;
   double minval, maxval;
+
+  if ( !cd)
+    return 0;
 
   if ( cd->type == curve_eDataType_LogFile || 
        cd->type == curve_eDataType_DsTrend) {
@@ -1461,7 +1470,10 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
 		  char	*curve_name,
 		  char  *filename,
                   GeCurveData *curve_data,
-                  int   pos_right) :
+                  int   pos_right,
+		  int 	gc_width,
+		  int	gc_height,
+		  unsigned int gc_options) :
   parent_ctx(gc_parent_ctx), growcurve_ctx(0), background_dark(glow_eDrawType_Color29),
   background_bright(glow_eDrawType_Color21),
   border_dark(glow_eDrawType_Color28),
@@ -1471,7 +1483,7 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
   prev_period_cb(0), next_period_cb(0), add_cb(0), remove_cb(0), export_cb(0), new_cb(0),
   save_cb(0), open_cb(0), snapshot_cb(0),
   initial_right_position(pos_right), last_cursor_x(0), last_mark1_x(0), last_mark2_x(0),
-  deferred_configure_axes(0), center_from_window(0)
+  deferred_configure_axes(0), center_from_window(0), options(gc_options)
 {
   pwr_tStatus sts;
 

@@ -48,6 +48,9 @@
 # include "xtt_evala_gtk.h"
 #endif
 
+class XttTrendGtk;
+class XttSevHistGtk;
+
 class XttMultiViewGtk : public XttMultiView {
  public:
   GtkWidget	*parent_wid;
@@ -58,6 +61,8 @@ class XttMultiViewGtk : public XttMultiView {
   XttGeGtk	*gectx[MV_SIZE];
   XttMultiViewGtk *mvctx[MV_SIZE];
   EvAlaGtk 	*sala[MV_SIZE];
+  XttTrendGtk	*trend[MV_SIZE];
+  XttSevHistGtk	*sevhist[MV_SIZE];
   CoWowFocusTimerGtk focustimer;
 
   XttMultiViewGtk( GtkWidget *parent_wid, void *parent_ctx, const char *name, pwr_tAttrRef *aref,

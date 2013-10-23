@@ -45,19 +45,11 @@
 
 #include "cow_wow_gtk.h"
 
-typedef enum {
-  curve_mEnable_New 	= 1 << 0,
-  curve_mEnable_Save 	= 1 << 1,
-  curve_mEnable_Open 	= 1 << 2,
-  curve_mEnable_Snapshot = 1 << 3,
-  curve_mEnable_Export	= 1 << 4,
-  curve_mEnable_Timebox = 1 << 5
-} curve_mEnable;
-
 class GeCurveGtk : public GeCurve {
   public:
     GeCurveGtk( void *gc_parent_ctx, GtkWidget *parent_widget, char *curve_name,
-		char *filename, GeCurveData *curve_data, int pos_right);
+		char *filename, GeCurveData *curve_data, int pos_right,
+		int gc_width, int gc_height, unsigned int gc_options);
     GtkWidget	*parent_wid;
     GtkWidget	*grow_widget;
     GtkWidget	*curve_widget;
@@ -66,6 +58,7 @@ class GeCurveGtk : public GeCurve {
     GtkWidget	*curveform_widget;
     GtkWidget	*pane_widget;
     GtkWidget	*toplevel;
+    GtkWidget   *vbox;
     GtkWidget   *growcurve_main_widget;
     GtkWidget   *growaxis_main_widget;
     GtkWidget   *grownames_main_widget;
@@ -103,6 +96,7 @@ class GeCurveGtk : public GeCurve {
     void create_export_dialog();
     void set_inputfocus();
     void enable( unsigned int mask);
+    void setup( unsigned int mask);
     void set_times( pwr_tTime *from, pwr_tTime *to);
     void set_times_sensitivity( int sensitive);
     pwr_tStatus get_times( pwr_tTime *from, pwr_tTime *to);
@@ -110,6 +104,7 @@ class GeCurveGtk : public GeCurve {
     void set_period( time_ePeriod period, int nocallback);
     void set_clock_cursor();
     void reset_cursor();
+    void *get_widget();
 
     ~GeCurveGtk();
 

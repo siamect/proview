@@ -138,7 +138,8 @@ void GeCurveGtk::activate_exit( GtkWidget *w, gpointer data)
 {
   GeCurve *curve = (GeCurve *)data;
 
-  curve->activate_exit();
+  if ( !(curve->options & curve_mOptions_Embedded))
+    curve->activate_exit();
 }
 
 void GeCurveGtk::activate_configure( GtkWidget *w, gpointer data)
@@ -511,6 +512,17 @@ void GeCurveGtk::enable( unsigned int mask)
     g_object_set( sea_timebox, "visible", TRUE, NULL);
 }
 
+void GeCurveGtk::setup( unsigned int mask)
+{
+  g_object_set( menu_new, "visible", mask & curve_mEnable_New ? TRUE : FALSE, NULL);
+  g_object_set( menu_save, "visible", mask & curve_mEnable_Save ? TRUE : FALSE, NULL);
+  g_object_set( menu_open, "visible", mask & curve_mEnable_Open ? TRUE : FALSE, NULL);
+  g_object_set( menu_snapshot, "visible", mask & curve_mEnable_Snapshot ? TRUE : FALSE, NULL);
+  g_object_set( tools_snapshot, "visible", mask & curve_mEnable_Snapshot ? TRUE : FALSE, NULL);
+  g_object_set( menu_export, "visible", mask & curve_mEnable_Export ? TRUE : FALSE, NULL);
+  g_object_set( sea_timebox, "visible", mask & curve_mEnable_Timebox ? TRUE : FALSE, NULL);
+}
+
 
 void GeCurveGtk::pop()
 {
@@ -668,12 +680,21 @@ void GeCurveGtk::reset_cursor()
   gdk_window_set_cursor( toplevel->window, NULL);
 }
 
+void *GeCurveGtk::get_widget()
+{
+  if ( options & curve_mOptions_Embedded)
+    return vbox;
+  else
+    return toplevel;
+}
+
 GeCurveGtk::~GeCurveGtk()
 {
   delete wow;
   if ( minmax_widget)
     gtk_widget_destroy( minmax_widget);
-  gtk_widget_destroy( toplevel);
+  if ( !(options & curve_mOptions_Embedded))
+    gtk_widget_destroy( toplevel);
 }
 
 static gboolean delete_event( GtkWidget *w, GdkEvent *event, gpointer data)
@@ -705,34 +726,48 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
 			char *curve_name,
 			char *filename,
 			GeCurveData *curve_data,
-			int pos_right) :
-  GeCurve( gc_parent_ctx, curve_name, filename, curve_data, pos_right),
+			int pos_right,
+			int gc_width,
+			int gc_height,
+			unsigned int gc_options) :
+  GeCurve( gc_parent_ctx, curve_name, filename, curve_data, pos_right, 
+	   gc_width, gc_height, gc_options),
   minmax_widget(0), export_widget(0), disable_timecombo_callback(0), clock_cursor(0)
 
 {
-  const int	window_width = 900;
-  const int    	window_height = 700;
+  int	window_width = 900;
+  int   window_height = 700;
   const int    	names_height = 150;
   const int    	nav_height = 120;
   pwr_tFileName fname;
+  float height_scale = 1;
 
-  if ( !cd)
-    return;
+  if ( gc_width != 0)
+    window_width = gc_width;
+  if ( gc_height != 0) {
+    height_scale = (float)gc_height / window_height;
+    window_height = gc_height;
+  }
 
   cdh_StrncpyCutOff( title, curve_name, sizeof(title), 1);
 
   // Gtk
-  toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-					 "default-height", window_height,
-					 "default-width", window_width,
-					 "title", CoWowGtk::convert_utf8(title),
-					 NULL);
+  if ( !(options & curve_mOptions_Embedded)) {
+    toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
+					   "default-height", window_height,
+					   "default-width", window_width,
+					   "title", CoWowGtk::convert_utf8(title),
+					   NULL);
 
-  g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
-  g_signal_connect( toplevel, "destroy", G_CALLBACK(destroy_event), this);
-  g_signal_connect( toplevel, "focus-in-event", G_CALLBACK(action_inputfocus), this);
-
-  CoWowGtk::SetWindowIcon( toplevel);
+    g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
+    g_signal_connect( toplevel, "destroy", G_CALLBACK(destroy_event), this);
+    g_signal_connect( toplevel, "focus-in-event", G_CALLBACK(action_inputfocus), this);
+    
+    CoWowGtk::SetWindowIcon( toplevel);
+  }
+  else {
+    toplevel = parent_widget;
+  }
 
   GtkAccelGroup *accel_g = (GtkAccelGroup *) g_object_new(GTK_TYPE_ACCEL_GROUP, NULL);
   gtk_window_add_accel_group(GTK_WINDOW(toplevel), accel_g);
@@ -1057,18 +1092,22 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   gtk_box_pack_start( GTK_BOX(tools_box), GTK_WIDGET(tools), FALSE, FALSE, 0);
   //  gtk_box_pack_start( GTK_BOX(tools_box), GTK_WIDGET(sea_timebox), FALSE, FALSE, 0);
 
-  GtkWidget *vbox = gtk_vbox_new( FALSE, 0);
+  vbox = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(tools_box), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(sea_timebox), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(vpaned1), TRUE, TRUE, 0);
 
-  gtk_container_add( GTK_CONTAINER(toplevel), vbox);
+  if ( !(options & curve_mOptions_Embedded)) {
+    gtk_container_add( GTK_CONTAINER(toplevel), vbox);
 
-  gtk_widget_show_all( toplevel);
+    gtk_widget_show_all( toplevel);
+  }
+  else
+    gtk_widget_set_size_request( vbox, window_width, window_height);
 
-  gtk_paned_set_position( GTK_PANED(vpaned1), names_height);
-  gtk_paned_set_position( GTK_PANED(vpaned2), window_height - names_height - nav_height - 50);
+  gtk_paned_set_position( GTK_PANED(vpaned1), names_height * height_scale);
+  gtk_paned_set_position( GTK_PANED(vpaned2), (window_height - names_height - nav_height - 50) * height_scale);
   g_object_set( sea_timebox, "visible", FALSE, NULL);
   g_object_set( menu_new, "visible", FALSE, NULL);
   g_object_set( menu_save, "visible", FALSE, NULL);
@@ -1081,6 +1120,18 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
 
   gtk_combo_box_set_active( GTK_COMBO_BOX(timebox_timecombo), 2);
 
+  if ( !(options & curve_mOptions_Embedded)) {
+    if ( options & curve_mOptions_FullScreen)
+      gtk_window_fullscreen( GTK_WINDOW(toplevel));
+    else if ( options & curve_mOptions_Maximize)
+      gtk_window_maximize( GTK_WINDOW(toplevel)); // TODO
+    else if ( options & curve_mOptions_FullMaximize)
+      gtk_window_maximize( GTK_WINDOW(toplevel));
+    else if ( options & curve_mOptions_Iconify)
+      gtk_window_iconify( GTK_WINDOW(toplevel));
+    else if ( options & curve_mOptions_Invisible)
+      g_object_set( toplevel, "visible", FALSE, NULL);
+  }  
 }
 
 static gint minmax_delete_event( GtkWidget *w, GdkEvent *event, gpointer curve)
@@ -1148,6 +1199,7 @@ void GeCurveGtk::create_minmax_dialog()
   gtk_container_add( GTK_CONTAINER(minmax_widget), minmax_vbox);
 
   gtk_widget_show_all( minmax_widget);
+
 }
 
 static gint export_delete_event( GtkWidget *w, GdkEvent *event, gpointer curve)
@@ -1158,6 +1210,9 @@ static gint export_delete_event( GtkWidget *w, GdkEvent *event, gpointer curve)
 
 void GeCurveGtk::create_export_dialog()
 {
+  if ( !cd)
+    return;
+
   if ( export_widget) {
     g_object_set( export_widget, "visible", TRUE, NULL);
     return;

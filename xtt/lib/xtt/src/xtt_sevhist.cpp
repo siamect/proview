@@ -694,6 +694,11 @@ void XttSevHist::pop()
   curve->pop();
 }
 
+void XttSevHist::setup()
+{
+  curve->setup( curve_mEnable_Timebox | curve_mEnable_Export);
+}
+
 void XttSevHist::sevhist_close_cb( void *ctx)
 {
   XttSevHist *sevhist = (XttSevHist *) ctx;

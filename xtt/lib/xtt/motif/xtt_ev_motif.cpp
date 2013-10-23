@@ -344,7 +344,7 @@ EvMotif::~EvMotif()
   ev = NULL;
 }
 
-void EvMotif::map_eve()
+void EvMotif::map_eve( unsigned int options)
 {
   if ( !eve_displayed) {
     flow_MapWidget( parent_wid_eve);
@@ -356,7 +356,7 @@ void EvMotif::map_eve()
   }
 }
 
-void EvMotif::map_ala()
+void EvMotif::map_ala( unsigned int options)
 {
   if ( !ala_displayed) {
     flow_MapWidget( parent_wid_ala);
@@ -368,7 +368,7 @@ void EvMotif::map_ala()
   }
 }
 
-void EvMotif::map_blk()
+void EvMotif::map_blk( unsigned int options)
 {
   if ( !blk_displayed) {
     flow_MapWidget( parent_wid_blk);

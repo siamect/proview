@@ -52,6 +52,9 @@ class XttFastMotif : public XttFast {
 		 char *xn_name,
 		 Widget *w,
 		 pwr_sAttrRef *fast_arp,
+		 int xn_width,
+		 int xn_height,
+		 unsigned int xn_options,
 		 int *sts);
   ~XttFastMotif();
 };

@@ -53,6 +53,9 @@ class XttTrendMotif : public XttTrend {
 		 Widget *w,
 		 pwr_sAttrRef *objid,
 		 pwr_sAttrRef *plotgroup,
+		 int width,
+		 int height,
+		 unsigned int options,
 		 int *sts);
   ~XttTrendMotif();
 };

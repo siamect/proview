@@ -81,6 +81,9 @@ XttTrendMotif::XttTrendMotif( void *parent_ctx,
 			      Widget *w,
 			      pwr_sAttrRef *trend_list,
 			      pwr_sAttrRef *plotgroup,
+			      int width,
+			      int height,
+			      unsigned int options,
 			      int *sts) :
   XttTrend( parent_ctx, name, trend_list, plotgroup, sts), parent_widget(parent_wid)
 {
@@ -88,7 +91,8 @@ XttTrendMotif::XttTrendMotif( void *parent_ctx,
     return;
   *sts = XNAV__SUCCESS;
 
-  curve = new GeCurveMotif( this, parent_widget, name, NULL, gcd, 1);
+  curve = new GeCurveMotif( this, parent_widget, name, NULL, gcd, 1, 
+			    width, height, options);
   curve->close_cb = trend_close_cb;
   curve->help_cb = trend_help_cb;
 

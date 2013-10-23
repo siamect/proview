@@ -82,6 +82,9 @@ XttFastMotif::XttFastMotif( void *parent_ctx,
 			    char *name,
 			    Widget *w,
 			    pwr_sAttrRef *fast_arp,
+			    int width,
+			    int height,
+			    unsigned int options,
 			    int *sts) :
   XttFast( parent_ctx, name, fast_arp, sts), parent_widget(parent_wid)
 {
@@ -89,7 +92,8 @@ XttFastMotif::XttFastMotif( void *parent_ctx,
     
   *sts = XNAV__SUCCESS;
 
-  curve = new GeCurveMotif( this, parent_widget, title, NULL, gcd, 0);
+  curve = new GeCurveMotif( this, parent_widget, title, NULL, gcd, 0, 
+			    width, height, options);
   curve->close_cb = fast_close_cb;
   curve->help_cb = fast_help_cb;
 

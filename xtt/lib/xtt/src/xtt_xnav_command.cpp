@@ -260,6 +260,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			  "/MAXOBJECTS", "/VOLUME", "/ALL", "/TYPE", 
 			  "/OPTION", "/ENTRY", "/NEW", "/TITLE", "/WINDOW", 
 			  "/ALARMVIEW", "/WIDTH", "/HEIGHT", "/XPOSITION", "/YPOSITION",  
+			  "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE",
 			  "/SORT", ""}
 		},
 		{
@@ -855,10 +856,8 @@ static int	xnav_set_func(	void		*client_data,
       return XNAV__HOLDCOMMAND;
     }
 
-    if ( EVEN( dcli_get_qualifier( "/SOURCE", source_str, sizeof(source_str)))) {
-      xnav->message('E',"Syntax error");
-      return XNAV__HOLDCOMMAND;
-    }
+    if ( EVEN( dcli_get_qualifier( "/SOURCE", source_str, sizeof(source_str)))) 
+      strcpy( source_str, "");
 
     if ( ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str))))
       object_p = object_str;
@@ -871,6 +870,11 @@ static int	xnav_set_func(	void		*client_data,
     cont = ODD( dcli_get_qualifier( "/CONTINUE", 0, 0));
 
     if ( xnav->appl.find_graph( graph_str, 0, (void **) &gectx)) {
+      if ( strcmp( source_str, "") == 0) {
+	xnav->message('E',"Syntax error");
+	return XNAV__HOLDCOMMAND;
+      }
+
       return gectx->set_subwindow_source( name_str, source_str, object_p);
     }
     else {
@@ -1897,6 +1901,16 @@ static int	xnav_show_func(	void		*client_data,
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "EVENTLIST", strlen( arg1_str)) == 0)
   {
+    unsigned int options = 0;
+
+    if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
+      options |= ev_mAlaOptions_FullScreen;
+    if ( ODD( dcli_get_qualifier( "/MAXIMIZE", 0, 0)))
+      options |= ev_mAlaOptions_Maximize;
+    if ( ODD( dcli_get_qualifier( "/FULLMAXIMIZE", 0, 0)))
+      options |= ev_mAlaOptions_FullMaximize;
+    if ( ODD( dcli_get_qualifier( "/ICONIFY", 0, 0)))
+      options |= ev_mAlaOptions_Iconify;	   
 
     if ( !xnav->ev)
     {
@@ -1926,7 +1940,7 @@ static int	xnav_show_func(	void		*client_data,
       xnav->ev->is_authorized_cb = xnav->is_authorized_cb;
     }
     else
-      xnav->ev->map_eve();
+      xnav->ev->map_eve( options);
   }
   /*new code by Jonas Nylund 030122*/
   else if ( cdh_NoCaseStrncmp( arg1_str, "HISTLIST", strlen( arg1_str)) == 0)
@@ -1969,6 +1983,16 @@ static int	xnav_show_func(	void		*client_data,
   {
     char arg2_str[80];
     int	arg2_sts;
+    unsigned int options = 0;
+
+    if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
+      options |= ev_mAlaOptions_FullScreen;
+    if ( ODD( dcli_get_qualifier( "/MAXIMIZE", 0, 0)))
+      options |= ev_mAlaOptions_Maximize;
+    if ( ODD( dcli_get_qualifier( "/FULLMAXIMIZE", 0, 0)))
+      options |= ev_mAlaOptions_FullMaximize;
+    if ( ODD( dcli_get_qualifier( "/ICONIFY", 0, 0)))
+      options |= ev_mAlaOptions_Iconify;	   
 
     if ( !xnav->ev) {
       char alarm_title[40], event_title[40], block_title[40];
@@ -2068,11 +2092,21 @@ static int	xnav_show_func(	void		*client_data,
       }
     }
     else {
-	xnav->ev->map_ala();
+	xnav->ev->map_ala( options);
     }
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "BLOCKLIST", strlen( arg1_str)) == 0)
   {
+    unsigned int options = 0;
+
+    if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
+      options |= ev_mAlaOptions_FullScreen;
+    if ( ODD( dcli_get_qualifier( "/MAXIMIZE", 0, 0)))
+      options |= ev_mAlaOptions_Maximize;
+    if ( ODD( dcli_get_qualifier( "/FULLMAXIMIZE", 0, 0)))
+      options |= ev_mAlaOptions_FullMaximize;
+    if ( ODD( dcli_get_qualifier( "/ICONIFY", 0, 0)))
+      options |= ev_mAlaOptions_Iconify;	   
 
     if ( !xnav->ev)
     {
@@ -2102,7 +2136,7 @@ static int	xnav_show_func(	void		*client_data,
       xnav->ev->is_authorized_cb = xnav->is_authorized_cb;
     }
     else
-      xnav->ev->map_blk();
+      xnav->ev->map_blk( options);
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "USER", strlen( arg1_str)) == 0)
   {
@@ -3213,6 +3247,7 @@ static int	xnav_open_func(	void		*client_data,
       mvctx->call_method_cb = xnav_call_method_cb;
       mvctx->sound_cb = xnav_ge_sound_cb;
       mvctx->eventlog_cb = xnav_ge_eventlog_cb;
+      mvctx->get_select_cb = xnav_sevhist_get_select_cb;
 
       xnav->appl.insert( applist_eType_MultiView, (void *)mvctx, &aref, "",
 			 NULL);
@@ -3399,8 +3434,42 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tObjid node_objid;
     pwr_tAName trend_name;
     XttTrend *trend;
+    unsigned int options = 0;
+    int width, height, nr;
+    char tmp_str[40];
 
     // Command is "OPEN TREND"
+
+    if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
+      options |= curve_mOptions_FullScreen;
+    if ( ODD( dcli_get_qualifier( "/MAXIMIZE", 0, 0)))
+      options |= curve_mOptions_Maximize;
+    if ( ODD( dcli_get_qualifier( "/FULLMAXIMIZE", 0, 0)))
+      options |= curve_mOptions_FullMaximize;
+    if ( ODD( dcli_get_qualifier( "/ICONIFY", 0, 0)))
+      options |= curve_mOptions_Iconify;	   
+    if ( ODD( dcli_get_qualifier( "/HIDE", 0, 0)))
+      options |= curve_mOptions_Invisible;	   
+
+    if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str, sizeof(tmp_str)))) {
+      nr = sscanf( tmp_str, "%d", &width);
+      if ( nr != 1) {
+	xnav->message('E', "Syntax error in width");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      width = 0;
+
+    if ( ODD( dcli_get_qualifier( "/HEIGHT", tmp_str, sizeof(tmp_str)))) {
+      nr = sscanf( tmp_str, "%d", &height);
+      if ( nr != 1) {
+	xnav->message('E', "Syntax error in height");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      height = 0;
 
     /* Get the name qualifier */
     if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
@@ -3494,7 +3563,7 @@ static int	xnav_open_func(	void		*client_data,
         trend->pop();
       }
       else {
-        trend = xnav->xtttrend_new( title_str, NULL, &plotgroup, &sts);
+        trend = xnav->xtttrend_new( title_str, NULL, &plotgroup, width, height, options, &sts);
         if ( EVEN(sts))
           xnav->message('E',"Error in trend configuration");
         else {
@@ -3513,7 +3582,7 @@ static int	xnav_open_func(	void		*client_data,
 	  trend->pop();
 	}
 	else {
-	  trend = xnav->xtttrend_new( title_str, aref_vect, 0, &sts);
+	  trend = xnav->xtttrend_new( title_str, aref_vect, 0, width, height, options, &sts);
 	  if ( EVEN(sts))
 	    xnav->message('E',"Error in trend configuration");
 	  else {
@@ -3526,7 +3595,7 @@ static int	xnav_open_func(	void		*client_data,
 	}
       }
       else {
-	trend = xnav->xtttrend_new( title_str, aref_vect, 0, &sts);
+	trend = xnav->xtttrend_new( title_str, aref_vect, 0, width, height, options, &sts);
 	if ( ODD(sts)) {
 	  trend->close_cb = xnav_trend_close_cb;
 	  trend->command_cb = xnav_trend_command_cb;
@@ -3608,13 +3677,48 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tAttrRef aref_vect[2];
     pwr_tStatus sts;
     char title_str[80];
+    unsigned int options = 0;
+    int width, height, nr;
+    char tmp_str[40];
+
+    if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
+      options |= curve_mOptions_FullScreen;
+    if ( ODD( dcli_get_qualifier( "/MAXIMIZE", 0, 0)))
+      options |= curve_mOptions_Maximize;
+    if ( ODD( dcli_get_qualifier( "/FULLMAXIMIZE", 0, 0)))
+      options |= curve_mOptions_FullMaximize;
+    if ( ODD( dcli_get_qualifier( "/ICONIFY", 0, 0)))
+      options |= curve_mOptions_Iconify;	   
+    if ( ODD( dcli_get_qualifier( "/HIDE", 0, 0)))
+      options |= curve_mOptions_Invisible;	   
+
+    if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str, sizeof(tmp_str)))) {
+      nr = sscanf( tmp_str, "%d", &width);
+      if ( nr != 1) {
+	xnav->message('E', "Syntax error in width");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      width = 0;
+
+    if ( ODD( dcli_get_qualifier( "/HEIGHT", tmp_str, sizeof(tmp_str)))) {
+      nr = sscanf( tmp_str, "%d", &height);
+      if ( nr != 1) {
+	xnav->message('E', "Syntax error in height");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      height = 0;
 
     if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str)))) {
       strcpy( title_str, "Trend");
     }
 
     if ( ODD( dcli_get_qualifier( "/NEW", 0, 0))) {
-      XttTCurve *tcurve = xnav->xtttcurve_new( title_str, 0, &sts);
+      XttTCurve *tcurve = xnav->xtttcurve_new( title_str, 0, width, height, 
+					       options, &sts);
       if ( ODD(sts)) {
 	tcurve->close_cb = xnav_tcurve_close_cb;
 	tcurve->command_cb = xnav_trend_command_cb;
@@ -3654,7 +3758,8 @@ static int	xnav_open_func(	void		*client_data,
       xnav->message('E', "Object not found");
       return XNAV__HOLDCOMMAND;
     }
-    XttTCurve *tcurve = xnav->xtttcurve_new( title_str, aref_vect, &sts);
+    XttTCurve *tcurve = xnav->xtttcurve_new( title_str, aref_vect, 
+					     width, height, options, &sts);
     if ( ODD(sts)) {
       tcurve->close_cb = xnav_tcurve_close_cb;
       tcurve->command_cb = xnav_trend_command_cb;
@@ -3690,12 +3795,47 @@ static int	xnav_open_func(	void		*client_data,
     char *s;
     bool sevHistObjectFound = false;
     pwr_tFileName file_str;
+    unsigned int options = 0;
+    int width, height, nr;
+    char tmp_str[40];
 
     // Command is "OPEN HISTORY"
 
+    if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
+      options |= curve_mOptions_FullScreen;
+    if ( ODD( dcli_get_qualifier( "/MAXIMIZE", 0, 0)))
+      options |= curve_mOptions_Maximize;
+    if ( ODD( dcli_get_qualifier( "/FULLMAXIMIZE", 0, 0)))
+      options |= curve_mOptions_FullMaximize;
+    if ( ODD( dcli_get_qualifier( "/ICONIFY", 0, 0)))
+      options |= curve_mOptions_Iconify;	   
+    if ( ODD( dcli_get_qualifier( "/HIDE", 0, 0)))
+      options |= curve_mOptions_Invisible;	   
+
+    if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str, sizeof(tmp_str)))) {
+      nr = sscanf( tmp_str, "%d", &width);
+      if ( nr != 1) {
+	xnav->message('E', "Syntax error in width");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      width = 0;
+
+    if ( ODD( dcli_get_qualifier( "/HEIGHT", tmp_str, sizeof(tmp_str)))) {
+      nr = sscanf( tmp_str, "%d", &height);
+      if ( nr != 1) {
+	xnav->message('E', "Syntax error in height");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      height = 0;
+
     if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
       // Open exported history file
-      hist = xnav->xttsevhist_new( title_str, 0, 0, 0, 0, 0, file_str, &sts);
+      hist = xnav->xttsevhist_new( title_str, 0, 0, 0, 0, 0, file_str, 
+				   width, height, options, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
 	hist->get_select_cb = xnav_sevhist_get_select_cb;
@@ -3941,21 +4081,24 @@ static int	xnav_open_func(	void		*client_data,
     }
 
     if ( plotgroup_found) {
-      hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, 0, &sts);
+      hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, 
+				   xnav->scctx, 0, width, height, options, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
 	hist->get_select_cb = xnav_sevhist_get_select_cb;
       }
     }
     else if( sevHistObjectFound ) {
-      hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, 0, &sts);
+      hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, 
+				   xnav->scctx, 0, width, height, options, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
 	hist->get_select_cb = xnav_sevhist_get_select_cb;
       }
     }
     else {
-      hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, 0, &sts);
+      hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, 
+				   xnav->scctx, 0, width, height, options, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
 	hist->get_select_cb = xnav_sevhist_get_select_cb;
@@ -3970,8 +4113,42 @@ static int	xnav_open_func(	void		*client_data,
     pwr_sAttrRef aref;
     int sts;
     pwr_tClassId classid;
+    unsigned int options = 0;
+    int width, height, nr;
+    char tmp_str[40];
 
     // Command is "OPEN FAST"
+
+    if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
+      options |= curve_mOptions_FullScreen;
+    if ( ODD( dcli_get_qualifier( "/MAXIMIZE", 0, 0)))
+      options |= curve_mOptions_Maximize;
+    if ( ODD( dcli_get_qualifier( "/FULLMAXIMIZE", 0, 0)))
+      options |= curve_mOptions_FullMaximize;
+    if ( ODD( dcli_get_qualifier( "/ICONIFY", 0, 0)))
+      options |= curve_mOptions_Iconify;	   
+    if ( ODD( dcli_get_qualifier( "/HIDE", 0, 0)))
+      options |= curve_mOptions_Invisible;	   
+
+    if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str, sizeof(tmp_str)))) {
+      nr = sscanf( tmp_str, "%d", &width);
+      if ( nr != 1) {
+	xnav->message('E', "Syntax error in width");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      width = 0;
+
+    if ( ODD( dcli_get_qualifier( "/HEIGHT", tmp_str, sizeof(tmp_str)))) {
+      nr = sscanf( tmp_str, "%d", &height);
+      if ( nr != 1) {
+	xnav->message('E', "Syntax error in height");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      height = 0;
 
     /* Get the name qualifier */
     if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str))))
@@ -4028,7 +4205,7 @@ static int	xnav_open_func(	void		*client_data,
       fast->pop();
     }
     else {
-      fast = xnav->xttfast_new( title_str, &aref, &sts);
+      fast = xnav->xttfast_new( title_str, &aref, width, height, options, &sts);
       if ( EVEN(sts))
 	xnav->message('E',"Error in fast configuration");
       else {
@@ -8255,7 +8432,7 @@ int XNav::set_parameter( char *name_str, char *value_str, int bypass)
 
 void XNav::open_rttlog( char *name, char *filename)
 {
-  gecurve_new( name, filename, NULL, 0);
+  gecurve_new( name, filename, NULL, 0, 0);
 }
 
 

@@ -243,36 +243,38 @@ Op *XNavGtk::op_new( char *opplace, pwr_tStatus *sts)
 }
 
 XttTrend *XNavGtk::xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *plotgroup,
-				  pwr_tStatus *sts)
+				 int width, int height, unsigned int options,  pwr_tStatus *sts)
 {
   GtkWidget *w;
 
-  return new XttTrendGtk( this, parent_wid, name, &w, objar, plotgroup, sts);
+  return new XttTrendGtk( this, parent_wid, name, &w, objar, plotgroup, width, height, options, sts);
 }
 
 XttSevHist *XNavGtk::xttsevhist_new( char *name, pwr_tOid *oidv, pwr_tOName *anamev, pwr_tOName *onamev,
-				     bool *sevhistobjectv, sevcli_tCtx scctx, char *filename, pwr_tStatus *sts)
+				     bool *sevhistobjectv, sevcli_tCtx scctx, char *filename, 
+				     int width, int height, unsigned int options, pwr_tStatus *sts)
 {
   GtkWidget *w;
 
   if ( !filename)
-    return new XttSevHistGtk( this, parent_wid, name, &w, oidv, anamev, onamev, sevhistobjectv, scctx, sts);
+    return new XttSevHistGtk( this, parent_wid, name, &w, oidv, anamev, onamev, sevhistobjectv, scctx, width, height, options, sts);
   else
     return new XttSevHistGtk( this, parent_wid, name, &w, filename, sts);
 }
 
-XttTCurve *XNavGtk::xtttcurve_new( char *name, pwr_tAttrRef *arefv, pwr_tStatus *sts)
+XttTCurve *XNavGtk::xtttcurve_new( char *name, pwr_tAttrRef *arefv, int width, int height, unsigned int options, pwr_tStatus *sts)
 {
   GtkWidget *w;
 
-  return new XttTCurveGtk( this, parent_wid, name, &w, arefv, sts);
+  return new XttTCurveGtk( this, parent_wid, name, &w, arefv, width, height, options, sts);
 }
 
-XttFast *XNavGtk::xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts)
+XttFast *XNavGtk::xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, 
+			       unsigned int options, pwr_tStatus *sts)
 {
   GtkWidget *w;
 
-  return new XttFastGtk( this, parent_wid, name, &w, objar, sts);
+  return new XttFastGtk( this, parent_wid, name, &w, objar, width, height, options, sts);
 }
 
 XAttOne *XNavGtk::xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
@@ -313,9 +315,9 @@ XttMultiView *XNavGtk::multiview_new( const char *name, pwr_tAttrRef *aref,
 }
 
 GeCurve *XNavGtk::gecurve_new( char *name, char *filename, GeCurveData *data,
-				 int pos_right)
+			       int pos_right, unsigned int options)
 {
-  return new GeCurveGtk( this, parent_wid, name, filename, data, pos_right);
+  return new GeCurveGtk( this, parent_wid, name, filename, data, pos_right, 0, 0, options);
 }
 
 XttFileview *XNavGtk::fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,

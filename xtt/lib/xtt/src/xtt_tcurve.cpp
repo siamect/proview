@@ -957,6 +957,7 @@ int XttTCurve::load_data( pwr_tStatus *sts, pwr_tAttrRef *aref)
       break;
     }
     default:
+      *sts = 0;
       return 0;
     }
   }

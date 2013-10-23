@@ -59,7 +59,11 @@ typedef struct {
 } ev_sAlias;
 
 typedef enum {
-  ev_mAlaOptions_Embedded = 1 << 0
+  ev_mAlaOptions_Embedded     = 1 << 0,
+  ev_mAlaOptions_FullScreen   = 1 << 1,
+  ev_mAlaOptions_Maximize     = 1 << 2,
+  ev_mAlaOptions_FullMaximize = 1 << 3,
+  ev_mAlaOptions_Iconify      = 1 << 4
 } ev_mAlaOptions;
 
 class Ev {
@@ -118,9 +122,9 @@ class Ev {
     EvAla		*sala[20];
     int			sala_cnt;
 
-    virtual void map_eve() {}
-    virtual void map_ala() {}
-    virtual void map_blk() {}
+    virtual void map_eve( unsigned int options) {}
+    virtual void map_ala( unsigned int options) {}
+    virtual void map_blk( unsigned int options) {}
     virtual void unmap_eve() {}
     virtual void unmap_ala() {}
     virtual void unmap_blk() {}

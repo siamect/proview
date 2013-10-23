@@ -53,6 +53,7 @@
 
 class Graph;
 class XNav;
+class XttTrend;
 
 class MVRecall {
  public:
@@ -86,6 +87,7 @@ class XttMultiView {
   int           (*get_current_objects_cb)(void *, pwr_sAttrRef **, int **);
   int           (*sound_cb)(void *, pwr_tAttrRef *);
   void          (*eventlog_cb)(void *, void *, int, void *, unsigned int);
+  int		(*get_select_cb)(void *, pwr_tOid *, char *, char *);
   int		width;
   int		height;
   int		rows;
@@ -133,6 +135,10 @@ class XttMultiView {
   static void multiview_ge_eventlog_cb( void *multiview_ctx, void *gectx, int category,
 					void *value, unsigned int size);
   static void multiview_ge_help_cb( void *multiview_ctx, const char *key);
+  static void multiview_trend_close_cb( void *ctx, XttTrend *trend);
+  static void multiview_trend_command_cb( void *ctx, const char *cmd);
+  static void multiview_trend_help_cb( void *ctx, const char *key);
+  static int multiview_sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, char *oname);
   static void message_cb( void *ctx, char severity, const char *msg);
   static void eventlog_enable( int enable);
 };
