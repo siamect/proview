@@ -264,7 +264,8 @@ GeCurveMotif::GeCurveMotif( void 	*gc_parent_ctx,
 			    int gc_width,
 			    int gc_height,
 			    unsigned int gc_options) :
-  GeCurve( gc_parent_ctx, curve_name, filename, curve_data, pos_right, gc_options)
+  GeCurve( gc_parent_ctx, curve_name, filename, curve_data, pos_right, 
+	   gc_width, gc_height, gc_options)
 {
   char		uid_filename[120] = {"xtt_curve.uid"};
   char		*uid_filename_p = uid_filename;

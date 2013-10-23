@@ -69,7 +69,7 @@ class XNavMotif : public XNav {
 		pwr_tObjid ev_user, int display_ala, int display_eve,
 		int display_blk, int display_return, int display_ack,
 		int ev_beep, pwr_tMask ev_pop_mask, int ev_eventname_seg, pwr_tStatus *status);
-    Hist *hist_new( char *title, pwr_tOid oid, pwr_tStatus *sts);
+    Hist *hist_new( char *title, pwr_tAttrRef *arp, pwr_tStatus *sts);
     Block *block_new( pwr_tAttrRef *arp, char *name, unsigned int priv,
 		      pwr_tStatus *sts);
     Op *op_new( char *opplace, pwr_tStatus *sts);
@@ -85,11 +85,11 @@ class XNavMotif : public XNav {
 			int navigator, int width, int height, int x, int y, 
 			double scan_time, const char *object_name, 
 			int use_default_access, unsigned int access, unsigned int options,
-			int (*xg_command_cb) (XttGe *, char *),
+			int (*xg_command_cb) (void *, char *, void *),
 			int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 			int (*xg_is_authorized_cb) (void *, unsigned int));
     GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
-			  unsigned int options, int pos_right);
+			  int pos_right, unsigned int options);
     CoLogin *login_new( const char     	*wl_name,
 			const char     	*wl_groupname,
 			void		(* wl_bc_success)( void *),

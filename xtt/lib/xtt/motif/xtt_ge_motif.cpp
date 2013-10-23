@@ -296,7 +296,7 @@ void XttGeMotif::action_resize( Widget w, XmAnyCallbackStruct *data)
 XttGeMotif::~XttGeMotif()
 {
   if ( close_cb)
-    (close_cb)( this);
+    (close_cb)( parent_ctx, this);
   if ( set_focus_disabled)
     XtRemoveTimeOut( focus_timerid);
   delete graph;
@@ -314,11 +314,11 @@ XttGeMotif::XttGeMotif( Widget xg_parent_wid, void *xg_parent_ctx, const char *x
 			int xg_navigator, int xg_width, int xg_height, int x, int y, 
 			double scan_time, const char *object_name,
 			int use_default_access, unsigned int access, unsigned int options,
-			int (*xg_command_cb) (XttGe *, char *, void *),
+			int (*xg_command_cb) (void *, char *, void *),
 			int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 			int (*xg_is_authorized_cb) (void *, unsigned int)) :
   XttGe( xg_parent_ctx, xg_name, xg_filename, xg_scrollbar, xg_menu, xg_navigator, xg_width,
-	 xg_height, x, y, scan_time, object_name, use_default_access, access,
+	 xg_height, x, y, scan_time, object_name, use_default_access, access, options,
 	 xg_command_cb, xg_get_current_objects_cb, xg_is_authorized_cb), 
   parent_wid(xg_parent_wid), set_focus_disabled(0), focus_timerid(0)
 {
