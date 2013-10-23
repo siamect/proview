@@ -347,7 +347,7 @@ static pwr_tStatus OpenTrend( xmenu_sMenuCall *ip)
   strcat( name, ".DefTrend");
   sts = gdh_GetObjectInfo( name, (void *)&deftrend, sizeof(deftrend));
   if ( ODD(sts) && cdh_ObjidIsNotNull( deftrend.Objid)) {
-    // Default XttGraph found
+    // Default Trend found
     sts = gdh_GetAttrRefTid( &deftrend, &classid);
     if ( ODD(sts) &&
          (classid == pwr_cClass_DsTrend || 
@@ -426,7 +426,7 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
     strcat( name, ".YObjectName[0]");
     sts = gdh_GetObjectInfo( name, (void *)&deftrend, sizeof(deftrend));
     if ( ODD(sts) && cdh_ObjidIsNotNull( deftrend.Objid)) {
-      // Default XttGraph found
+      // Default Trend found
       sts = gdh_GetAttrRefTid( &deftrend, &classid);
       if ( ODD(sts) && classid == pwr_cClass_DsTrend)
 	return XNAV__SUCCESS;
@@ -443,7 +443,7 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
   strcat( name, ".DefTrend");
   sts = gdh_GetObjectInfo( name, (void *)&deftrend, sizeof(deftrend));
   if ( ODD(sts) && cdh_ObjidIsNotNull( deftrend.Objid)) {
-    // Default XttGraph found
+    // Default Trend found
     sts = gdh_GetAttrRefTid( &deftrend, &classid);
     if ( ODD(sts) &&
          (classid == pwr_cClass_DsTrend || 
@@ -514,7 +514,7 @@ static pwr_tStatus OpenHistory( xmenu_sMenuCall *ip)
   strcat( name, ".DefHistory");
   sts = gdh_GetObjectInfo( name, (void *)&defhist, sizeof(defhist));
   if ( ODD(sts) && cdh_ObjidIsNotNull( defhist.Objid)) {
-    // Default XttGraph found
+    // Default History found
     sts = gdh_GetAttrRefTid( &defhist, &classid);
     if ( ODD(sts) &&
          (classid == pwr_cClass_SevHist || classid == pwr_cClass_SevHistObject || classid == pwr_cClass_PlotGroup)) {
@@ -601,7 +601,7 @@ static pwr_tStatus OpenHistoryFilter( xmenu_sMenuCall *ip)
   strcat( name, ".DefHist");
   sts = gdh_GetObjectInfo( name, (void *)&defhist, sizeof(defhist));
   if ( ODD(sts) && cdh_ObjidIsNotNull( defhist.Objid)) {
-    // Default XttGraph found
+    // Default History found
     sts = gdh_GetAttrRefTid( &defhist, &classid);
     if ( ODD(sts) &&
          (classid == pwr_cClass_SevHist || classid == pwr_cClass_SevHistObject || classid == pwr_cClass_PlotGroup))
@@ -666,7 +666,7 @@ static pwr_tStatus OpenFast( xmenu_sMenuCall *ip)
   strcat( name, ".DefFast");
   sts = gdh_GetObjectInfo( name, (void *)&deffast, sizeof(deffast));
   if ( ODD(sts) && cdh_ObjidIsNotNull( deffast.Objid)) {
-    // Default XttGraph found
+    // Default Fast found
     sts = gdh_GetAttrRefTid( &deffast, &classid);
     if ( ODD(sts) &&
          classid == pwr_cClass_DsFastCurve) {
@@ -741,7 +741,7 @@ static pwr_tStatus OpenFastFilter( xmenu_sMenuCall *ip)
   strcat( name, ".DefFast");
   sts = gdh_GetObjectInfo( name, (void *)&deffast, sizeof(deffast));
   if ( ODD(sts) && cdh_ObjidIsNotNull( deffast.Objid)) {
-    // Default XttGraph found
+    // Default Fast found
     sts = gdh_GetAttrRefTid( &deffast, &classid);
     if ( ODD(sts) &&
          classid == pwr_cClass_DsFastCurve)
@@ -900,6 +900,13 @@ static pwr_tStatus OpenGraph( xmenu_sMenuCall *ip)
     sts = ((XNav *)ip->EditorContext)->command( cmd);
     return XNAV__SUCCESS;
   }
+  else if ( classid == pwr_cClass_XttMultiView) {
+    sts = gdh_AttrrefToName( objar, name, sizeof(name), cdh_mNName);
+    strcpy( cmd, "ope mult/name=");
+    strcat( cmd, name);
+    sts = ((XNav *)ip->EditorContext)->command( cmd);
+    return XNAV__SUCCESS;
+  }
 
   while( ODD(sts)) {
     sts = gdh_AttrrefToName( &aref, name, sizeof(name),
@@ -916,6 +923,13 @@ static pwr_tStatus OpenGraph( xmenu_sMenuCall *ip)
       if ( classid == pwr_cClass_XttGraph) {
         sts = gdh_AttrrefToName( &defgraph, name, sizeof(name), cdh_mNName);
         strcpy( cmd, "ope gra/obj=");
+        strcat( cmd, name);
+        sts = ((XNav *)ip->EditorContext)->command( cmd);
+        break;
+      }
+      else if ( classid == pwr_cClass_XttMultiView) {
+        sts = gdh_AttrrefToName( &defgraph, name, sizeof(name), cdh_mNName);
+        strcpy( cmd, "ope mult/name=");
         strcat( cmd, name);
         sts = ((XNav *)ip->EditorContext)->command( cmd);
         break;
@@ -957,7 +971,8 @@ static pwr_tStatus OpenGraphFilter( xmenu_sMenuCall *ip)
   sts = gdh_GetAttrRefTid( objar, &classid);
   if ( EVEN(sts)) return sts;
 
-  if ( classid == pwr_cClass_XttGraph)
+  if ( classid == pwr_cClass_XttGraph ||
+       classid == pwr_cClass_XttMultiView)
     return XNAV__SUCCESS;
 
   while( ODD(sts)) {
@@ -990,6 +1005,8 @@ static pwr_tStatus OpenGraphFilter( xmenu_sMenuCall *ip)
         }
         return XNAV__SUCCESS;
       }
+      else if ( classid == pwr_cClass_XttMultiView)
+	return XNAV__SUCCESS;
     }
 
     if ( aref.Flags.b.Object) {

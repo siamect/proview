@@ -361,6 +361,11 @@ void Xtt::activate_opengraph()
 
   if ( cdh_tidIsCid( classid)) {
     switch ( classid) {
+    case pwr_cClass_XttMultiView:
+      // Open multiview
+      sprintf( cmd, "open mult /name=%s", vname);
+      xnav->command( cmd);
+      return;
     case pwr_cClass_DsTrend:
     case pwr_cClass_DsTrendCurve:
       // Open trend
