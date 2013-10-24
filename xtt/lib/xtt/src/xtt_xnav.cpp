@@ -1388,7 +1388,7 @@ int XNav::set_attr_value( char *value_str)
   if ( !((priv & pwr_mPrv_RtWrite) ||
          (priv & pwr_mPrv_System))) {
     message('E', "Not authorized for this operation");
-    return 0;
+    return XNAV__NOTAUTHORIZED;
   }
   brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
   if ( !node_count)
