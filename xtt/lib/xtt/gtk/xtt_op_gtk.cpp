@@ -61,6 +61,24 @@
 #define OP_HEIGHT_MAX (OP_HEIGHT_MIN + 3 * OP_HEIGHT_INC)
 #define OP_HEIGHT_STATUSBAR 30
 
+static GtkWidget *image_button( const char *filename)
+{
+  
+  GtkWidget *image, *box;
+  pwr_tFileName fname;
+
+  box = gtk_button_new();
+  // gtk_container_set_border_width(GTK_CONTAINER(box), 2);
+  
+  dcli_translate_filename( fname, filename);
+  image = gtk_image_new_from_file( fname);
+
+  gtk_container_add( GTK_CONTAINER( box), image);
+  g_object_set( box, "can-focus", FALSE, NULL);
+  gtk_widget_show( image);
+
+  return box;
+}
 
 static void cnv_pango_text( char *in, char *out, int size)
 {
@@ -135,72 +153,96 @@ OpGtk::OpGtk( void *op_parent_ctx,
   alarmcnt_label = gtk_label_new("");
   GtkWidget *aalarm_mark = gtk_label_new("A");
 
+  dcli_translate_filename( fname, "$pwr_exe/xtt_alarm_active.png");
   balarm_active = gtk_image_new_from_file( fname);
+  dcli_translate_filename( fname, "$pwr_exe/xtt_alarm_info.png");
+  balarm_info = gtk_image_new_from_file( fname);
   balarm_mark = gtk_label_new("");
   balarm_label = gtk_label_new("");
   gtk_misc_set_alignment( GTK_MISC(balarm_label), 0.02, 0.5);
   gtk_label_set_use_markup( GTK_LABEL(balarm_label), TRUE);
 
 
-  aalarm_box[0] = gtk_hbox_new( FALSE, 0);
+  aalarm_box[0] = gtk_fixed_new();
   GtkWidget *ebox1 = gtk_event_box_new();
   gtk_container_add( GTK_CONTAINER(ebox1), aalarm_label[0]);
   gtk_widget_modify_bg( ebox1, GTK_STATE_NORMAL, &red_color);
   GtkWidget *abox1 = gtk_event_box_new();
   gtk_widget_set_size_request( abox1, 20, 20);
   gtk_container_add( GTK_CONTAINER(abox1), aalarm_active[0]);
-  gtk_box_pack_start( GTK_BOX(aalarm_box[0]), abox1, FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(aalarm_box[0]), ebox1, TRUE, TRUE, 0);
+  aalarm_info[0] = image_button( "$pwr_exe/xtt_alarm_info.png");
+  gtk_fixed_put( GTK_FIXED(aalarm_box[0]), abox1, 0, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_box[0]), aalarm_info[0], 21, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_box[0]), ebox1, 43, 0);
   gtk_widget_set_size_request( aalarm_label[0], -1, 20);
   gtk_widget_set_size_request( aalarm_active[0], -1, 20);
+  gtk_widget_set_size_request( aalarm_info[0], 20, 20);
+  g_signal_connect(aalarm_info[0], "clicked", G_CALLBACK(activate_info), this);
 
-  aalarm_box[1] = gtk_hbox_new( FALSE, 0);
+  aalarm_box[1] = gtk_fixed_new();
   GtkWidget *ebox2 = gtk_event_box_new();
   gtk_container_add( GTK_CONTAINER(ebox2), aalarm_label[1]);
   gtk_widget_modify_bg( ebox2, GTK_STATE_NORMAL, &red_color);
   GtkWidget *abox2 = gtk_event_box_new();
   gtk_widget_set_size_request( abox2, 20, 20);
+  aalarm_info[1] = image_button( "$pwr_exe/xtt_alarm_info.png");
   gtk_container_add( GTK_CONTAINER(abox2), aalarm_active[1]);
-  gtk_box_pack_start( GTK_BOX(aalarm_box[1]), abox2, FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(aalarm_box[1]), ebox2, TRUE, TRUE, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_box[1]), abox2, 0, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_box[1]), aalarm_info[1], 21, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_box[1]), ebox2, 43, 0);
   gtk_widget_set_size_request( aalarm_label[1], -1, 20);
   gtk_widget_set_size_request( aalarm_active[1], -1, 20);
+  gtk_widget_set_size_request( aalarm_info[1], 20, 20);
+  g_signal_connect(aalarm_info[1], "clicked", G_CALLBACK(activate_info), this);
   
-  aalarm_box[2] = gtk_hbox_new( FALSE, 0);
+  aalarm_box[2] = gtk_fixed_new();
   GtkWidget *ebox3 = gtk_event_box_new();
   gtk_container_add( GTK_CONTAINER(ebox3), aalarm_label[2]);
   gtk_widget_modify_bg( ebox3, GTK_STATE_NORMAL, &red_color);
   GtkWidget *abox3 = gtk_event_box_new();
   gtk_widget_set_size_request( abox3, 20, 20);
   gtk_container_add( GTK_CONTAINER(abox3), aalarm_active[2]);
-  gtk_box_pack_start( GTK_BOX(aalarm_box[2]), abox3, FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(aalarm_box[2]), ebox3, TRUE, TRUE, 0);
+  aalarm_info[2] = image_button( "$pwr_exe/xtt_alarm_info.png");
+  gtk_fixed_put( GTK_FIXED(aalarm_box[2]), abox3, 0, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_box[2]), aalarm_info[2], 21, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_box[2]), ebox3, 43, 0);
   gtk_widget_set_size_request( aalarm_label[2], -1, 20);
   gtk_widget_set_size_request( aalarm_active[2], -1, 20);
+  gtk_widget_set_size_request( aalarm_info[2], 20, 20);
+  g_signal_connect(aalarm_info[2], "clicked", G_CALLBACK(activate_info), this);
   
-  aalarm_box[3] = gtk_hbox_new( FALSE, 0);
+  aalarm_box[3] = gtk_fixed_new();
   GtkWidget *ebox4 = gtk_event_box_new();
   gtk_container_add( GTK_CONTAINER(ebox4), aalarm_label[3]);
   gtk_widget_modify_bg( ebox4, GTK_STATE_NORMAL, &red_color);
   GtkWidget *abox4 = gtk_event_box_new();
   gtk_widget_set_size_request( abox4, 20, 20);
   gtk_container_add( GTK_CONTAINER(abox4), aalarm_active[3]);
-  gtk_box_pack_start( GTK_BOX(aalarm_box[3]), abox4, FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(aalarm_box[3]), ebox4, TRUE, TRUE, 0);
+  aalarm_info[3] = image_button( "$pwr_exe/xtt_alarm_info.png");
+  gtk_fixed_put( GTK_FIXED(aalarm_box[3]), abox4, 0, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_box[3]), aalarm_info[3], 21, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_box[3]), ebox4, 43, 0);
   gtk_widget_set_size_request( aalarm_label[3], -1, 20);
   gtk_widget_set_size_request( aalarm_active[3], -1, 20);
+  gtk_widget_set_size_request( aalarm_info[3], -1, 20);
+  gtk_widget_set_size_request( aalarm_info[3], 20, 20);
+  g_signal_connect(aalarm_info[3], "clicked", G_CALLBACK(activate_info), this);
   
-  aalarm_box[4] = gtk_hbox_new( FALSE, 0);
+  aalarm_box[4] = gtk_fixed_new();
   GtkWidget *ebox5 = gtk_event_box_new();
   gtk_container_add( GTK_CONTAINER(ebox5), aalarm_label[4]);
   gtk_widget_modify_bg( ebox5, GTK_STATE_NORMAL, &red_color);
   GtkWidget *abox5 = gtk_event_box_new();
   gtk_widget_set_size_request( abox5, 20, 20);
+  aalarm_info[4] = image_button( "$pwr_exe/xtt_alarm_info.png");
   gtk_container_add( GTK_CONTAINER(abox5), aalarm_active[4]);
-  gtk_box_pack_start( GTK_BOX(aalarm_box[4]), abox5, FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(aalarm_box[4]), ebox5, TRUE, TRUE, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_box[4]), abox5, 0, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_box[4]), aalarm_info[4], 21, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_box[4]), ebox5, 43, 0);
   gtk_widget_set_size_request( aalarm_label[4], -1, 20);
   gtk_widget_set_size_request( aalarm_active[4], -1, 20);
+  gtk_widget_set_size_request( aalarm_info[4], 20, 20);
+  g_signal_connect(aalarm_info[4], "clicked", G_CALLBACK(activate_info), this);
   
   GtkWidget *vbox_aalarm = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox_aalarm), aalarm_box[0], FALSE, FALSE, 1);
@@ -214,10 +256,14 @@ OpGtk::OpGtk( void *op_parent_ctx,
   GtkWidget *bbox = gtk_event_box_new();
   gtk_container_add( GTK_CONTAINER(bbox), balarm_active);
   gtk_widget_set_size_request( bbox, 20, 20);
+  balarm_info = image_button( "$pwr_exe/xtt_alarm_info.png");
 
-  balarm_box = gtk_hbox_new( FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(balarm_box), bbox, FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(balarm_box), balarm_ebox, TRUE, TRUE, 0);
+  balarm_box = gtk_fixed_new();
+  gtk_fixed_put( GTK_FIXED(balarm_box), bbox, 0, 0);
+  gtk_fixed_put( GTK_FIXED(balarm_box), balarm_info, 21, 0);
+  gtk_fixed_put( GTK_FIXED(balarm_box), balarm_ebox, 43, 0);
+  gtk_widget_set_size_request( balarm_info, 20, 20);
+  g_signal_connect(balarm_info, "clicked", G_CALLBACK(activate_info), this);
 
   // Acknowledge button for a alarms
   GtkWidget *aalarm_ack = gtk_button_new();
@@ -785,6 +831,7 @@ void  OpGtk::update_alarm_info()
     for ( i = 0; i < 5; i++) {
       a_exist[i] = info.a_alarm_exist[i];
       a_active[i] = info.a_alarm_active[i];
+      strcpy( a_alarm_moretext[i], info.a_alarm_moretext[i]);
 
       if ( info.a_alarm_exist[i]) {
 
@@ -816,6 +863,12 @@ void  OpGtk::update_alarm_info()
 	  else {
 	    g_object_set( aalarm_active[i], "visible", FALSE, NULL);
 	  }
+	  if ( strcmp(info.a_alarm_moretext[i], "") != 0) {
+	    g_object_set( aalarm_info[i], "visible", TRUE, NULL);
+	  }
+	  else {
+	    g_object_set( aalarm_info[i], "visible", FALSE, NULL);
+	  }
 	}
       }
       else {
@@ -832,6 +885,7 @@ void  OpGtk::update_alarm_info()
 
       balarm_type = evlist_eEventType_Alarm;
       balarm_prio = mh_eEventPrio_B;
+      strcpy( b_alarm_moretext, info.b_alarm_moretext[0]);
 
       cnv_pango_text( info.b_alarm_text[0], ctext, sizeof(ctext));
 
@@ -859,6 +913,12 @@ void  OpGtk::update_alarm_info()
       else {
 	g_object_set( balarm_active, "visible", FALSE, NULL);
       }
+      if ( strcmp(info.b_alarm_moretext[0], "") != 0) {
+	g_object_set( balarm_info, "visible", TRUE, NULL);
+      }
+      else {
+	g_object_set( balarm_info, "visible", FALSE, NULL);
+      }
     }
     else if ( info.c_alarm_exist[0]) {
       GdkColor blue_color;
@@ -866,6 +926,7 @@ void  OpGtk::update_alarm_info()
 
       balarm_type = evlist_eEventType_Alarm;
       balarm_prio = mh_eEventPrio_C;
+      strcpy( b_alarm_moretext, info.c_alarm_moretext[0]);
       cnv_pango_text( info.c_alarm_text[0], ctext, sizeof(ctext));
       if ( show_time) {
 	sts = time_AtoAscii( &info.c_alarm_time[0], time_format, timestr, sizeof(timestr));
@@ -884,11 +945,17 @@ void  OpGtk::update_alarm_info()
 
       gtk_label_set_text( GTK_LABEL(balarm_mark), "C");
 
-      if ( info.b_alarm_active[0]) {
+      if ( info.c_alarm_active[0]) {
 	g_object_set( balarm_active, "visible", TRUE, NULL);
       }
       else {
 	g_object_set( balarm_active, "visible", FALSE, NULL);
+      }
+      if ( strcmp(info.c_alarm_moretext[0], "") != 0) {
+	g_object_set( balarm_info, "visible", TRUE, NULL);
+      }
+      else {
+	g_object_set( balarm_info, "visible", FALSE, NULL);
       }
     }
     else if ( info.d_alarm_exist[0])
@@ -898,6 +965,7 @@ void  OpGtk::update_alarm_info()
 
       balarm_type = evlist_eEventType_Alarm;
       balarm_prio = mh_eEventPrio_D;
+      strcpy( b_alarm_moretext, info.d_alarm_moretext[0]);
       cnv_pango_text( info.d_alarm_text[0], ctext, sizeof(ctext));
       if ( show_time) {
 	sts = time_AtoAscii( &info.d_alarm_time[0], time_format, timestr, sizeof(timestr));
@@ -922,6 +990,12 @@ void  OpGtk::update_alarm_info()
       else {
 	g_object_set( balarm_active, "visible", FALSE, NULL);
       }
+      if ( strcmp(info.d_alarm_moretext [0], "") != 0) {
+	g_object_set( balarm_info, "visible", TRUE, NULL);
+      }
+      else {
+	g_object_set( balarm_info, "visible", FALSE, NULL);
+      }
     }
     else if ( info.i_alarm_exist[0])
     {
@@ -929,6 +1003,7 @@ void  OpGtk::update_alarm_info()
       gdk_color_parse( "Green", &green_color);
 
       balarm_type = evlist_eEventType_Info;
+      strcpy( b_alarm_moretext, info.i_alarm_moretext[0]);
       cnv_pango_text( info.i_alarm_text[0], ctext, sizeof(ctext));
       if ( show_time) {
 	sts = time_AtoAscii( &info.i_alarm_time[0], time_format, timestr, sizeof(timestr));
@@ -947,11 +1022,17 @@ void  OpGtk::update_alarm_info()
 
       gtk_label_set_text( GTK_LABEL(balarm_mark), "I");
 
-      if ( info.b_alarm_active[0]) {
+      if ( info.i_alarm_active[0]) {
 	g_object_set( balarm_active, "visible", TRUE, NULL);
       }
       else {
 	g_object_set( balarm_active, "visible", FALSE, NULL);
+      }
+      if ( strcmp(info.i_alarm_moretext[0], "") != 0) {
+	g_object_set( balarm_info, "visible", TRUE, NULL);
+      }
+      else {
+	g_object_set( balarm_info, "visible", FALSE, NULL);
       }
     }
     else {
@@ -961,6 +1042,7 @@ void  OpGtk::update_alarm_info()
       g_object_set( balarm_box, "visible", FALSE, NULL);
 
       g_object_set( balarm_active, "visible", FALSE, NULL);
+      g_object_set( balarm_info, "visible", FALSE, NULL);
     }
   }
 }
@@ -1270,6 +1352,7 @@ void OpGtk::activate_aalarm_decr( GtkWidget *w, gpointer data)
       if ( op->a_exist[i]) {
 	g_object_set( op->aalarm_box[i], "visible", FALSE, NULL);
 	g_object_set( op->aalarm_active[i], "visible", FALSE, NULL);
+	g_object_set( op->aalarm_info[i], "visible", FALSE, NULL);
       }
     }
   }
@@ -1580,6 +1663,29 @@ void OpGtk::activate_appl25( GtkWidget *w, gpointer data)
   Op *op = (Op*)data;
 
   op->appl_action(24);
+}
+
+void OpGtk::activate_info( GtkWidget *w, gpointer data)
+{
+  OpGtk *op = (OpGtk*)data;
+  char *more;
+
+  if ( w == op->aalarm_info[0])
+    more = op->a_alarm_moretext[0];
+  else if ( w == op->aalarm_info[1])
+    more = op->a_alarm_moretext[1];
+  else if ( w == op->aalarm_info[2])
+    more = op->a_alarm_moretext[2];
+  else if ( w == op->aalarm_info[3])
+    more = op->a_alarm_moretext[3];
+  else if ( w == op->aalarm_info[4])
+    more = op->a_alarm_moretext[4];
+  else if ( w == op->balarm_info)
+    more = op->b_alarm_moretext;
+  else
+    return;
+
+  op->wow->DisplayText( "Event MoreText", more);
 }
 
 int OpGtk::get_cmd( GtkWidget *w, char *cmd)

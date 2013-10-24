@@ -72,9 +72,12 @@ class OpGtk : public Op {
   GtkWidget		*alarmcnt_label;
   GtkWidget		*aalarm_label[5];
   GtkWidget		*aalarm_active[5];
+  GtkWidget		*aalarm_info[5];
+  GtkWidget		*aalarm_filler[5];
   GtkWidget		*aalarm_box[5];
   GtkWidget		*balarm_label;
   GtkWidget		*balarm_active;
+  GtkWidget		*balarm_info;
   GtkWidget		*balarm_box;
   GtkWidget		*balarm_ebox;
   GtkWidget		*balarm_mark;
@@ -88,6 +91,8 @@ class OpGtk : public Op {
   int			a_height;
   int			a_exist[5];
   int			a_active[5];
+  char			a_alarm_moretext[5][256];
+  char			b_alarm_moretext[256];
   int			text_size;
   CoWowFocusTimerGtk 	poptimer;
   vector<OpCmd> cmd_vect;
@@ -152,6 +157,7 @@ class OpGtk : public Op {
   static void activate_appl23( GtkWidget *w, gpointer data);
   static void activate_appl24( GtkWidget *w, gpointer data);
   static void activate_appl25( GtkWidget *w, gpointer data);
+  static void activate_info( GtkWidget *w, gpointer data);
 };
 
 #endif
