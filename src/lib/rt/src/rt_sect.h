@@ -45,6 +45,10 @@
 
 #include "pwr.h"
 
+typedef enum {
+  sect_mFlags_Create = 1 << 0
+} sect_mFlags;
+
 #if defined OS_LYNX
 # include <semaphore.h>
 
@@ -123,7 +127,8 @@ sect_Alloc (
   pwr_tBoolean		*created,
   sect_sHead		*shp,
   size_t		size,
-  char			*name
+  char			*name,
+  unsigned int		flags
 );
 
 pwr_tBoolean

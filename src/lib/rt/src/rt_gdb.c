@@ -653,7 +653,8 @@ gdb_CreateDb (
 
   /* Create lock section.  */
 
-  gdbroot->lock = sect_Alloc(sts, &created, &gdbroot->h.lock, sizeof(sect_sMutex), gdb_cNameDbLock);
+  gdbroot->lock = sect_Alloc(sts, &created, &gdbroot->h.lock, sizeof(sect_sMutex), 
+			     gdb_cNameDbLock, sect_mFlags_Create);
   if (gdbroot->lock == NULL) errh_Bugcheck(*sts, "creating database lock");
   if (!created) errh_Bugcheck(GDH__WEIRD, "database lock was allready created");
 
@@ -1123,7 +1124,7 @@ gdb_MapDb (
 
   /* Map lock sections.  */
 
-  gdbroot->lock = sect_Alloc(sts, &created, &gdbroot->h.lock, sizeof(sect_sMutex), gdb_cNameDbLock);
+  gdbroot->lock = sect_Alloc(sts, &created, &gdbroot->h.lock, sizeof(sect_sMutex), gdb_cNameDbLock, 0);
   if (gdbroot->lock == NULL) errh_Bugcheck(*sts, "mapping db lock");
   if (created) {
     sect_Free(&lsts, gdbroot->lock); 
