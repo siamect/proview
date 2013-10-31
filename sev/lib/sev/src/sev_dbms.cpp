@@ -3772,6 +3772,26 @@ int sev_dbms::alter_engine( pwr_tStatus *sts, char *tablename)
   return 1;
 }
 
+int sev_dbms::optimize( pwr_tStatus *sts, char *tablename)
+{  
+  char query[200];
+  int rc;
+
+  sprintf( query, "optimize table %s", tablename);
+  rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+  MYSQL_RES *result = mysql_store_result( m_env->con());
+  mysql_free_result( result);
+
+  *sts = SEV__SUCCESS;
+  return 1;
+}
+
 int sev_dbms::store_stat( sev_sStat *stat)
 {
   char query[250];

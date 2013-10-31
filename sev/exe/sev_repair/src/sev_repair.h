@@ -55,6 +55,14 @@ class sev_repair {
 
   int init();
   int check();
+  int check( char *table);
   int alter_engine();
+  int optimize();
+  int optimize( char *table);
+  void clean();
+  void clean( char *table);
+  void clean_item( int idx, int print_idx);
+  int list();
+  int list( char *table);
 };
 #endif
