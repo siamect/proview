@@ -50,7 +50,7 @@
 #include "wb_wnav_msg.h"
 
 typedef struct {
-  vector<string> v;
+  vector<VItem> v;
 } log_sCbCtx;
 
 
@@ -187,6 +187,8 @@ void wb_log::generate_html( char *filename, pwr_tStatus *sts)
 
   CoLog::dget( 0, 0, gen_cb, &cbctx);
 
+  filter( cbctx.v);
+
   dcli_translate_filename( fname, filename);
 
   strcpy( help_fname, fname);
@@ -217,8 +219,10 @@ void wb_log::generate_html( char *filename, pwr_tStatus *sts)
   fprintf( fp, "<h2>Workbench History</h2>\n<xmp> %s %s</xmp><br>\n<a href=\"%s\">Help</a>\n<XMP>\n\n", pname, timstr, help_filename);
   fprintf( fp, "%-20s  %-10s %-20s %-20s %s\n", "Date", "User", "Action", "Item", "Comment");
   fprintf( fp, "----------------------------------------------------------------------------------------------\n");
-  for ( int i = cbctx.v.size() - 1; i >= 0; i--)
-    fprintf( fp, "%s\n", cbctx.v[i].c_str());
+  for ( int i = cbctx.v.size() - 1; i >= 0; i--) {
+    if ( !cbctx.v[i].disable)
+      fprintf( fp, "%s\n", cbctx.v[i].text.c_str());
+  }
   fprintf( fp, "</XMP>\n</BODY>\n</HTML>\n");
   fclose( fp);
 
@@ -253,13 +257,32 @@ GeBuild		Ge graph built. Built graph displayed in item.\n\
 GeExport	Ge graph exported to java. Exported graph displayed in item.\n\
 UpdateClasses	Classes updated.\n\
 CreatePackage	Distribution package created. Created package displayed in item.\n\
-CopyPackage	Package distributed to process or operator station. Package displayed in item.\n\
+ &CopyPackage	Package distributed to process or operator station. Package displayed in item.\n\
 </XMP>\n\
   </body>\n\
 </html>\n");
     fclose( fp);
 	     
   }
+}
+
+void wb_log::filter( vector<VItem> &v)
+{
+#if 0
+  int last_volumebuild = 0;
+
+  for ( int i = 0; i < (int)v.size(); i++) {    
+    if ( strncmp( v[0].text.c_str(), "VolumeBuild", 9) == 0) {
+      for ( int j = i - 1; j > last_config_save; j--) {
+	
+      }
+      last_volumebuild = i;
+    }
+     
+    if ( !v[i].has_comment)
+      v[i].disable = true;
+  }
+#endif
 }
 
 void wb_log::gen_cb( void *ctx, pwr_tTime time, char *s1, char *s2, char *s3, char *s4)
@@ -271,7 +294,10 @@ void wb_log::gen_cb( void *ctx, pwr_tTime time, char *s1, char *s2, char *s3, ch
   time_AtoAscii( &time, time_eFormat_DateAndTime, timstr, sizeof(timstr));
 
   snprintf( str, sizeof(str), "%-20s  %-10s %-20s %-20s %s", timstr, s2, s1, s3, s4 ? s4 : "");
-  string s(str);
+
+  VItem s(str);
+  if ( s4 && strcmp( s4, "") != 0)
+    s.has_comment = true;
   cbctx->v.push_back(s);
 }
 

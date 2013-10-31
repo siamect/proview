@@ -39,6 +39,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <vector>
 
 #include "pwr.h"
 

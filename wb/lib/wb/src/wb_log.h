@@ -37,10 +37,14 @@
 #ifndef wb_log_h
 #define wb_log_h
 
+#include <vector>
+#include <string>
 #include "pwr.h"
 #include "cow_log.h"
 
 #define wlog_cLogFile "$pwrp_db/wb_history.log"
+
+using namespace std;
 
 typedef enum {
   wlog_eCategory_,
@@ -61,6 +65,13 @@ typedef enum {
   wlog_eCategory__,
 } wlog_eCategory;
 
+class VItem {
+public:
+  VItem( char *t) : text(t), has_comment(false), disable(false) {}
+  string text;
+  bool	has_comment;
+  bool	disable;
+};
 
 class wb_log;
 class wb_session;
@@ -79,6 +90,7 @@ class wb_log
   static void pull() { CoLog::dpull();}
   static void generate_html( char *filename, pwr_tStatus *sts);
   static void gen_cb( void *ctx, pwr_tTime time, char *s1, char *s2, char *s3, char *s4);
+  static void filter( vector<VItem> &v);
 
 };
 
