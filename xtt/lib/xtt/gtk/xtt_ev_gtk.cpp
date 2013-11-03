@@ -57,6 +57,7 @@
 #include "xtt_methodtoolbar_gtk.h"
 #include "rt_xnav_msg.h"
 #include "xtt_evala_gtk.h"
+#include "xtt_eveve_gtk.h"
 
 static gint eve_delete_event( GtkWidget *w, GdkEvent *event, gpointer data)
 {
@@ -859,6 +860,32 @@ EvAla *EvGtk::open_alarmlist_satellite( const char *title, pwr_tStatus *sts,
   sala[sala_cnt-1]->init();
 
   return sala[sala_cnt-1];
+}
+
+EvEve *EvGtk::open_eventlist_satellite( const char *title, pwr_tStatus *sts, 
+					int width, int height, int x, int y, pwr_tObjid view,
+					unsigned int options, void *widget)
+{
+  if ( seve_cnt >= (int)(sizeof(seve)/sizeof(seve[0])))
+    return 0;
+       
+  seve[seve_cnt++] = new EvEveGtk( this, parent_wid, (char *)title, user, eventname_seg,
+				   width, height, x, y, view, options, widget, sts);
+  if ( EVEN(*sts)) return 0;
+
+  seve[seve_cnt-1]->start_trace_cb = eve_start_trace_cb;
+  seve[seve_cnt-1]->display_in_xnav_cb = eve_display_in_xnav_cb;
+  seve[seve_cnt-1]->help_cb = ala_help_cb;
+  seve[seve_cnt-1]->popup_menu_cb = ev_popup_menu_cb;
+  seve[seve_cnt-1]->sound_cb = ev_sound_cb;
+  seve[seve_cnt-1]->is_authorized_cb = ala_is_authorized_cb;
+  seve[seve_cnt-1]->acknowledge_cb = seve_acknowledge_cb;
+  seve[seve_cnt-1]->name_to_alias_cb = ev_name_to_alias_cb;
+  seve[seve_cnt-1]->copy_list_cb = seve_copy_list_cb;
+  seve[seve_cnt-1]->close_cb = seve_close_cb;
+  seve[seve_cnt-1]->init();
+
+  return seve[seve_cnt-1];
 }
 
 //

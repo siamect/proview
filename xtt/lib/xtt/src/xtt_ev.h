@@ -49,6 +49,9 @@
 #ifndef xtt_evala
 # include "xtt_evala.h"
 #endif
+#ifndef xtt_eveve
+# include "xtt_eveve.h"
+#endif
 
 class CoWow;
 class XttMethodToolbar;
@@ -121,6 +124,8 @@ class Ev {
     XttMethodToolbar 	*ala_sup_methodtoolbar;
     EvAla		*sala[20];
     int			sala_cnt;
+    EvEve		*seve[20];
+    int			seve_cnt;
 
     virtual void map_eve( unsigned int options) {}
     virtual void map_ala( unsigned int options) {}
@@ -130,6 +135,9 @@ class Ev {
     virtual void unmap_blk() {}
     virtual void set_title_ala( char *title) {}
     virtual EvAla *open_alarmlist_satellite( const char *title, pwr_tStatus *sts, 
+					     int width, int height, int x, int y, 
+					     pwr_tObjid view, unsigned int options = 0, void *widget = 0) {return 0;}
+    virtual EvEve *open_eventlist_satellite( const char *title, pwr_tStatus *sts, 
 					     int width, int height, int x, int y, 
 					     pwr_tObjid view, unsigned int options = 0, void *widget = 0) {return 0;}
 
@@ -178,6 +186,9 @@ class Ev {
     static int sala_acknowledge_cb( void *ctx, mh_sEventId *id);
     static void sala_copy_list_cb( void *ctx, EvList *evl);
     static void sala_close_cb( void *ctx, EvAla *sala);
+    static int seve_acknowledge_cb( void *ctx, mh_sEventId *id);
+    static void seve_copy_list_cb( void *ctx, EvList *evl);
+    static void seve_close_cb( void *ctx, EvEve *seve);
     static void help_event_cb( void *ctx, void *item);
 
     static pwr_tStatus mh_ack_bc( mh_sAck *MsgP);
