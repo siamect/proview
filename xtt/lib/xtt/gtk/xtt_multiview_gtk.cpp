@@ -58,10 +58,11 @@ typedef void *Widget;
 #include "xtt_ge_gtk.h"
 #include "xtt_trend_gtk.h"
 #include "xtt_sevhist_gtk.h"
-#include "xtt_multiview_gtk.h"
 #include "ge_graph_gtk.h"
 #include "xtt_ev_gtk.h"
 #include "xtt_evala_gtk.h"
+#include "xtt_eveve_gtk.h"
+#include "xtt_multiview_gtk.h"
 #include "xtt_log.h"
 #include "pwr_baseclasses.h"
 #include "rt_xnav_msg.h"
@@ -126,6 +127,10 @@ XttMultiViewGtk::~XttMultiViewGtk()
       delete sala[i];
   }
   for ( unsigned int i = 0; i < MV_SIZE; i++) {
+    if ( seve[i])
+      delete seve[i];
+  }
+  for ( unsigned int i = 0; i < MV_SIZE; i++) {
     if ( gectx[i])
       delete gectx[i];
   }
@@ -185,6 +190,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
   memset( gectx, 0, sizeof(gectx));
   memset( mvctx, 0, sizeof(mvctx));
   memset( sala, 0, sizeof(sala));
+  memset( seve, 0, sizeof(seve));
   memset( trend, 0, sizeof(trend));
   memset( sevhist, 0, sizeof(sevhist));
   memset( comp_widget, 0, sizeof(comp_widget));
@@ -263,6 +269,17 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	    if ( !sala[i*rows + j])
 	      continue;
 	    comp_widget[i*rows + j] = sala[i*rows + j]->get_widget();
+	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
+	  }
+	  break;
+	}
+	case pwr_eMultiViewContentEnum_EventList: {
+	  if ( xnav->ev) {
+	    seve[i*rows + j] = (EvEveGtk *)xnav->ev->open_eventlist_satellite( "No title", 
+		    &lsts, w, h, 0, 0, mv.Action[i*rows+j].Object.Objid, ev_mAlaOptions_Embedded, toplevel);
+	    if ( !seve[i*rows + j])
+	      continue;
+	    comp_widget[i*rows + j] = seve[i*rows + j]->get_widget();
 	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
 	  }
 	  break;

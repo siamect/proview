@@ -88,6 +88,9 @@ class EvGtk : public Ev {
     EvAla *open_alarmlist_satellite( const char *title, pwr_tStatus *sts,
 				     int width, int height, int x, int y, pwr_tObjid view, 
 				     unsigned int options = 0, void *widget = 0);
+    EvEve *open_eventlist_satellite( const char *title, pwr_tStatus *sts,
+				     int width, int height, int x, int y, pwr_tObjid view, 
+				     unsigned int options = 0, void *widget = 0);
 
     static gboolean eve_action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
     static gboolean ala_action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);

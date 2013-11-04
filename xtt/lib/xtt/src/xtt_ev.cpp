@@ -81,7 +81,7 @@ Ev::Ev( void *ev_parent_ctx,
   start_trace_cb(NULL), display_in_xnav_cb(NULL), update_info_cb(NULL),
   help_cb(NULL), popup_menu_cb(0), sound_cb(0), pop_cb(0), is_authorized_cb(0), eve(NULL), ala(NULL),
   blk(0), connected(0), ala_displayed(0), eve_displayed(0), beep(ev_beep), pop_mask(ev_pop_mask), 
-  eventname_seg(ev_eventname_seg), sala_cnt(0)
+  eventname_seg(ev_eventname_seg), sala_cnt(0), seve_cnt(0)
 {
 }
 
@@ -185,6 +185,8 @@ int Ev::sala_acknowledge_cb( void *ctx, mh_sEventId *id)
   ev->eve->ack( id);
   for ( int i = 0; i < ev->sala_cnt; i++)
     ev->sala[i]->ack( id);
+  for ( int i = 0; i < ev->seve_cnt; i++)
+    ev->seve[i]->ack( id);
   mh_OutunitAck( &lid);
   return 1;
 }
@@ -209,6 +211,43 @@ void Ev::sala_close_cb( void *ctx, EvAla *sala)
   }
   if ( found)
     ev->sala_cnt--;
+}
+
+int Ev::seve_acknowledge_cb( void *ctx, mh_sEventId *id)
+{
+  Ev *ev = (Ev *)ctx;
+
+  mh_sEventId lid = *id;
+  ev->ala->ack( id);
+  ev->eve->ack( id);
+  for ( int i = 0; i < ev->seve_cnt; i++)
+    ev->seve[i]->ack( id);
+  for ( int i = 0; i < ev->sala_cnt; i++)
+    ev->sala[i]->ack( id);
+  mh_OutunitAck( &lid);
+  return 1;
+}
+
+void Ev::seve_copy_list_cb( void *ctx, EvList *evl)
+{
+  Ev *ev = (Ev *)ctx;
+
+  ev->eve->copy_list( evl);
+}
+
+void Ev::seve_close_cb( void *ctx, EvEve *seve)
+{
+  Ev *ev = (Ev *)ctx;
+
+  bool found = false;
+  for ( int i = 0; i < ev->seve_cnt; i++) {
+    if ( ev->seve[i] == seve)
+      found = true;
+    if ( found && i != ev->seve_cnt - 1)
+      ev->seve[i] = ev->seve[i+1];
+  }
+  if ( found)
+    ev->seve_cnt--;
 }
 
 void Ev::help_event_cb( void *ctx, void *item)
@@ -264,6 +303,8 @@ void Ev::eve_activate_ack_last()
   eve->ack( id);
   for ( int i = 0; i < sala_cnt; i++)
     sala[i]->ack( id);
+  for ( int i = 0; i < seve_cnt; i++)
+    seve[i]->ack( id);
   mh_OutunitAck( &lid);
 }
 
@@ -302,6 +343,8 @@ void Ev::ala_activate_ack_last()
   eve->ack( id);
   for ( int i = 0; i < sala_cnt; i++)
     sala[i]->ack( id);
+  for ( int i = 0; i < seve_cnt; i++)
+    seve[i]->ack( id);
   mh_OutunitAck( &lid);
 }
 
@@ -436,6 +479,8 @@ void Ev::ack_last_prio( unsigned long type, unsigned long prio)
     eve->ack( id);
     for ( int i = 0; i < sala_cnt; i++)
       sala[i]->ack( id);
+    for ( int i = 0; i < seve_cnt; i++)
+      seve[i]->ack( id);
     mh_OutunitAck( &lid);
   }
 }
@@ -455,6 +500,8 @@ void Ev::ack_all()
     eve->ack( id);
     for ( int i = 0; i < sala_cnt; i++)
       sala[i]->ack( id);
+    for ( int i = 0; i < seve_cnt; i++)
+      seve[i]->ack( id);
     mh_OutunitAck( &lid);
 
     sts = ala->get_last_not_acked( &id);
@@ -534,6 +581,8 @@ pwr_tStatus Ev::mh_ack_bc( mh_sAck *MsgP)
   {
     // Insert in eve
     ev->eve->event_ack( MsgP);
+    for ( int i = 0; i < ev->seve_cnt; i++)
+      ev->seve[i]->mh_ack( MsgP);
   }
   ev->ala->event_ack( MsgP);
   for ( int i = 0; i < ev->sala_cnt; i++)
@@ -550,6 +599,8 @@ pwr_tStatus Ev::mh_return_bc( mh_sReturn *MsgP)
   {
     // Insert in eve
     ev->eve->event_return( MsgP);
+    for ( int i = 0; i < ev->seve_cnt; i++)
+      ev->seve[i]->mh_return( MsgP);
   }
   ev->ala->event_return( MsgP);
   for ( int i = 0; i < ev->sala_cnt; i++)
@@ -563,6 +614,8 @@ pwr_tStatus Ev::mh_return_bc( mh_sReturn *MsgP)
 pwr_tStatus Ev::mh_alarm_bc( mh_sMessage *MsgP)
 {
   ev->eve->event_alarm( MsgP);
+  for ( int i = 0; i < ev->seve_cnt; i++)
+    ev->seve[i]->mh_alarm( MsgP);
   ev->ala->event_alarm( MsgP);
   for ( int i = 0; i < ev->sala_cnt; i++)
     ev->sala[i]->mh_alarm( MsgP);
@@ -619,6 +672,8 @@ pwr_tStatus Ev::mh_cancel_bc( mh_sReturn *MsgP)
 pwr_tStatus Ev::mh_info_bc( mh_sMessage *MsgP)
 {
   ev->eve->event_info( MsgP);
+  for ( int i = 0; i < ev->seve_cnt; i++)
+    ev->seve[i]->mh_info( MsgP);
   ev->ala->event_info( MsgP);
   for ( int i = 0; i < ev->sala_cnt; i++)
     ev->sala[i]->mh_info( MsgP);
