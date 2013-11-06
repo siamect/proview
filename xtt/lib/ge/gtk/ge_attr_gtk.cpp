@@ -187,6 +187,8 @@ int AttrGtk::reconfigure_attr()
 		&Attr::get_plant_select_c;
   attrnav->get_current_colors_cb = 
 		&Attr::get_current_colors_c;
+  attrnav->get_current_color_tone_cb = 
+		&Attr::get_current_color_tone_c;
 
 
   return 1;
@@ -443,6 +445,8 @@ AttrGtk::AttrGtk( GtkWidget *a_parent_wid,
 		&Attr::get_plant_select_c;
   attrnav->get_current_colors_cb = 
 		&Attr::get_current_colors_c;
+  attrnav->get_current_color_tone_cb = 
+		&Attr::get_current_color_tone_c;
 
   GtkWidget *statusbar = gtk_hbox_new( FALSE, 0);
   // msg_label = gtk_statusbar_new();

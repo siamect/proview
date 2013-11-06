@@ -128,15 +128,18 @@ class ColPalCtx : public GrowCtx {
   glow_eDrawType current_fill;	//!< The currently selected fill color.
   glow_eDrawType current_border; //!< The currently selected border color.
   glow_eDrawType current_text;	//!< The currently selected text color.
+  glow_eDrawType current_tone;	//!< The currently selected color tone.
   GlowArrayElem *display_fill;	//!< The rectangle object to display the current fillcolor.
   GlowArrayElem *display_border; //!< The rectangle object to display the current border color.
   GlowArrayElem *display_text;	//!< The rectangle object to display the current text color.
   GlowArrayElem *active_fill;	//!< The rectangle object to mark fill color active. 
   GlowArrayElem *active_border;	//!< The rectangle object to mark border color active. 
   GlowArrayElem *active_text;	//!< The rectangle object to mark text color active. 
+  GlowArrayElem *active_tone;	//!< The rectangle object to mark colortone active.  
   GlowArrayElem *text_fill;	//!< The fill color text object. 
   GlowArrayElem *text_border;	//!< The border color text object. 
   GlowArrayElem *text_text;	//!< The text color text object. 
+  GlowArrayElem *text_tone;	//!< The text tone text object. 
   double entry_width;		//!< Width of a color palette entry.
   double entry_height;		//!< Height of a color palette entry.
   double display_entry_width;	//!< Width of a display entry.

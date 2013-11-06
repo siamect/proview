@@ -2967,6 +2967,8 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   graph->get_current_subgraph_cb = &Ge::subpalette_get_select;
   graph->get_current_colors_cb = &Ge::colorpalette_get_current;
   graph->set_current_colors_cb = &Ge::colorpalette_set_current;
+  graph->get_current_color_tone_cb = &Ge::colorpalette_get_current_tone;
+  graph->set_current_color_tone_cb = &Ge::colorpalette_set_current_tone;
   graph->cursor_motion_cb = &Ge::status_msg;
   graph->change_text_cb = &change_text_cb;
   graph->change_name_cb = &change_name_cb;

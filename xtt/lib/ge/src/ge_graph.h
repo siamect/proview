@@ -456,6 +456,8 @@ class Graph {
   int 		(*close_cb)( void *);
   void 		(*get_current_colors_cb)( void *, glow_eDrawType *, glow_eDrawType *, glow_eDrawType *);
   void 		(*set_current_colors_cb)( void *, glow_eDrawType, glow_eDrawType, glow_eDrawType);
+  void 		(*get_current_color_tone_cb)( void *, glow_eDrawType *);
+  void 		(*set_current_color_tone_cb)( void *, glow_eDrawType);
   void 		(*init_cb)( void *);
   void 		(*cursor_motion_cb)( void *, double, double);
   void 		(*change_text_cb)( void *, void *, const char *);

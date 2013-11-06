@@ -636,6 +636,16 @@ void Ge::colorpalette_set_current( void *gectx, glow_eDrawType fill_color,
 	fill_color, border_color, text_color);
 }
 
+void Ge::colorpalette_get_current_tone( void *gectx, glow_eDrawType *color_tone)
+{
+  colpal_GetCurrentColorTone( ((Ge *)gectx)->colorpalette_ctx, color_tone);
+}
+
+void Ge::colorpalette_set_current_tone( void *gectx, glow_eDrawType color_tone)
+{
+  colpal_SetCurrentColorTone( ((Ge *)gectx)->colorpalette_ctx, color_tone);
+}
+
 void Ge::subgraphs_close_cb( SubGraphs *subgraphs)
 {
   ((Ge *) subgraphs->parent_ctx)->subgraphs = NULL;

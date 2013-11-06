@@ -90,6 +90,7 @@ class Attr {
     int		(*get_plant_select_cb) (void *, char *, int);
     int 	(*get_current_colors_cb)( void *, glow_eDrawType *, glow_eDrawType *,
 						  glow_eDrawType *);
+    int 	(*get_current_color_tone_cb)( void *, glow_eDrawType *);
     void	*client_data;
     int         recall_idx;
     GeDyn 	*original_data;
@@ -105,6 +106,7 @@ class Attr {
     static int get_current_colors_c( void *attr_ctx, glow_eDrawType *fill_color, 
 				      glow_eDrawType *border_color, 
 				      glow_eDrawType *text_color);    
+    static int get_current_color_tone_c( void *attr_ctx, glow_eDrawType *tone_color);
     static int get_subgraph_info_c( void *attr_ctx, char *name, 
 				     attr_sItem **itemlist, int *item_cnt);
     static int get_dyn_info_c( void *attr_ctx, GeDyn *dyn, 

@@ -115,6 +115,10 @@ typedef ColPalCtx *colpal_tCtx;
   void colpal_SetCurrentColors( colpal_tCtx ctx, glow_eDrawType fill_color, 
 				glow_eDrawType border_color, glow_eDrawType text_color);
 
+  void colpal_GetCurrentColorTone( colpal_tCtx ctx, glow_eDrawType *tone);
+
+  void colpal_SetCurrentColorTone( colpal_tCtx ctx, glow_eDrawType tone);
+
   colpal_eActive colpal_GetActive( colpal_tCtx ctx);
 
 /*@}*/
