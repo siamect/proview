@@ -929,10 +929,10 @@ void wb_session::getAllMenuItems( ldh_sMenuCall	*ip, ldh_sMenuItem **Item, wb_cd
       for ( int i = 0; i < *nItems; i++) {
 	if ( ldh_lMenuItem[i].Level == Level && 
 	     strcmp( ldh_lMenuItem[i].Name, mbp->ButtonName) == 0) {
-	  ldh_lMenuItem[i].Disabled = 1;	  
+	  (*Item)->Disabled = 1;	  
 	  for ( int j = i + 1; j < *nItems; j++) {
 	    if ( ldh_lMenuItem[j].Level > ldh_lMenuItem[i].Level)
-	      ldh_lMenuItem[j].Disabled = 1;
+	      (*Item)->Disabled = 1;
 	    else if ( ldh_lMenuItem[j].Level == ldh_lMenuItem[i].Level)
 	      break;
 	  }
