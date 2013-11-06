@@ -614,7 +614,7 @@ localsubgraphs Ssab ssab_exe:*.pwsg
 menu Local
 {
   localsubgraphs Subgraphs pwrp_pop:*.pwsg
-  localsubgraphs Images pwrp_pop:*.png,pwrp_pop:*.gif,pwrp_pop:*.jpg
+  localsubgraphs Images pwrp_pop:*.png,pwrp_pop:*.gif,pwrp_pop:*.jpg,pwrp_pop:*.svg
 }
 
 

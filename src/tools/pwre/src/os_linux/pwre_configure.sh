@@ -445,6 +445,7 @@ else
   pwre_config_check_lib libusb    LIBUSB   lib libusb 1 "/usr/lib/libusb-1.0.so:/usr/lib/$hwpl-linux-$gnu/libusb-1.0.so"
   pwre_config_check_lib powerlink POWERLINK lib powerlink 1 "$epl/build/Examples/X86/Generic/powerlink_user_lib/libpowerlink.a"
   pwre_config_check_lib powerlinkcn POWERLINKCN lib powerlinkcn 1 "$epl/buildcn/Examples/X86/Generic/powerlink_user_lib/libpowerlink.a"
+  pwre_config_check_lib librsvg   LIBRSVG  lib librsvg 1 "/usr/lib/librsvg-2.so"
         
   pwre_config_check_include mq    MQ    0 "/usr/local/dmq/include/p_entry.h"
   pwre_config_check_include wmq   WMQ   1 "/opt/mqm/inc/cmqc.h"
@@ -452,6 +453,7 @@ else
   pwre_config_check_include nodave NODAVE 1 "/usr/include/nodave.h"
   pwre_config_check_include powerlink EPL 1 "$epl/Include/Epl.h"
   pwre_config_check_include powerlinkuser EPLU 0 "$epl/Examples/X86/Generic/powerlink_user_lib/EplCfg.h"
+  pwre_config_check_include rsvg  RSVG  1 "/usr/include/librsvg-2/librsvg/rsvg.h:/usr/include/librsvg-2.0/librsvg/rsvg.h"
   pwre_config_check_tool android ANDROID "/usr/local/android-sdk-linux/tools/android"
 
 

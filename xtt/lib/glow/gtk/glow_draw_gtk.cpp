@@ -47,6 +47,9 @@ using namespace std;
 #include <math.h>
 #include <gdk/gdkkeysyms.h>
 #include <gdk/gdkx.h>
+#if defined PWRE_CONF_RSVG
+# include <rsvg.h>
+#endif
 
 #include "glow.h"
 #include "glow_ctx.h"
@@ -2900,11 +2903,16 @@ void GlowDrawGtk::image_flip_horizontal( glow_tImImage *image)
 }
 
 void GlowDrawGtk::image_scale( int width, int height, glow_tImImage orig_im, glow_tImImage *im, 
+			       glow_tImData *im_data,
 			       glow_tPixmap *im_pixmap, glow_tPixmap *im_mask)
 {
   if ( width == gdk_pixbuf_get_width((GdkPixbuf *)*im) &&
        height == gdk_pixbuf_get_height((GdkPixbuf *)*im))
     return;
+  if ( width == 0 && height == 0) {
+    width = gdk_pixbuf_get_width((GdkPixbuf *)*im);
+    height = gdk_pixbuf_get_height((GdkPixbuf *)*im);    
+  }
 
   if ( !orig_im) {
     // Scale from im
@@ -2919,24 +2927,53 @@ void GlowDrawGtk::image_scale( int width, int height, glow_tImImage orig_im, glo
     // Scale from orig_im
     if ( *im)
       gdk_pixbuf_unref( (GdkPixbuf *)*im);
-    *im = gdk_pixbuf_scale_simple( (GdkPixbuf *)orig_im, width, height, GDK_INTERP_NEAREST);
+
+#if defined PWRE_CONF_RSVG
+    if (im_data && *im_data && *im) {
+      RsvgHandle *handle;
+      const char *imagefile;
+
+      handle = (RsvgHandle *) *im_data;
+      imagefile = rsvg_handle_get_base_uri( handle);
+      *im = rsvg_pixbuf_from_file_at_size(imagefile, width, height, NULL);
+    }
+#else
+    {
+#endif
+    else {
+      *im = gdk_pixbuf_scale_simple( (GdkPixbuf *)orig_im, width, height, GDK_INTERP_NEAREST);
+    }
   }
 }
 
 int GlowDrawGtk::image_load( char *imagefile, 
-			     glow_tImImage *orig_im, glow_tImImage *im)
+			     glow_tImImage *orig_im, glow_tImImage *im,
+			     glow_tImData *im_data)
 {
   if ( im && *im)
     gdk_pixbuf_unref( (GdkPixbuf *)*im);
   if ( *orig_im)
     gdk_pixbuf_unref( (GdkPixbuf *)*orig_im);
-  *orig_im = (glow_tImImage *) gdk_pixbuf_new_from_file( imagefile, 0);
-  if ( !*orig_im) {
-    if ( im)
-      *im = 0;
-    return 0;
-  }
+#if defined PWRE_CONF_RSVG
+  if ( im_data &&
+       strcmp(strchr(imagefile, '.'), ".svg") == 0) {
+    RsvgHandle *handle;
 
+    handle = rsvg_handle_new_from_file( imagefile, NULL);
+    *im_data = (glow_tImImage *) handle;
+    *orig_im = (glow_tImImage *) rsvg_pixbuf_from_file( imagefile, NULL);
+  } 
+  else {
+#else
+  {
+#endif
+    *orig_im = (glow_tImImage *) gdk_pixbuf_new_from_file( imagefile, 0);
+    if ( !*orig_im) {
+      if ( im)
+	*im = 0;
+      return 0;
+    }
+  }
   if ( im) {
     *im = (glow_tImImage *) gdk_pixbuf_copy( (GdkPixbuf *)*orig_im);
   }

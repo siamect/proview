@@ -67,7 +67,7 @@ GrowImage::GrowImage( GrowCtx *glow_ctx, const char *name, double x, double y,
                 ll(glow_ctx,x,y), ur(glow_ctx,x+1,y+1),
     		hot(0), pzero(glow_ctx), stored_pos(glow_ctx), 
                 highlight(0), inverse(0), user_data(NULL),
-		dynamic(0), dynamicsize(0), image(0), original_image(0), 
+		dynamic(0), dynamicsize(0), image_data(0), image(0), original_image(0), 
                 pixmap(0), nav_pixmap(0), clip_mask(0), nav_clip_mask(0),
                 ctx(glow_ctx), display_level(display_lev), 
 		color_tone(glow_eDrawTone_No), color_lightness(0),
@@ -195,7 +195,7 @@ int GrowImage::insert_image( const char *imagefile)
 
   date = info.st_ctime;
 
-  ctx->gdraw->image_load( filename, &original_image, &image);
+  ctx->gdraw->image_load( filename, &original_image, &image, &image_data);
   if ( !original_image) 
     return 0;
 
@@ -212,7 +212,7 @@ int GrowImage::insert_image( const char *imagefile)
   set_image_color( image, NULL);
 
   ctx->gdraw->image_scale( current_width, current_height,
-			   original_image, &image, &pixmap, &clip_mask);
+			   original_image, &image, &image_data, &pixmap, &clip_mask);
   ctx->gdraw->image_render( current_width, current_height,
 			    original_image, &image, &pixmap, &clip_mask);
 
@@ -234,7 +234,7 @@ int GrowImage::update()
   if ( date == info.st_ctime)
     return 0;
 
-  ctx->gdraw->image_load( filename, &original_image, &image);
+  ctx->gdraw->image_load( filename, &original_image, &image, &image_data);
   if ( !original_image) 
     return 0;
 
@@ -242,7 +242,7 @@ int GrowImage::update()
 
   set_image_color( image, NULL);
   ctx->gdraw->image_scale( current_width, current_height,
-			   original_image, &image, &pixmap, &clip_mask);
+			   original_image, &image, &image_data, &pixmap, &clip_mask);
   ctx->gdraw->image_render( current_width, current_height,
 			    original_image, &image, &pixmap, &clip_mask);
 
@@ -904,7 +904,7 @@ void GrowImage::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 
       if ( ur_x - ll_x != current_width || ur_y - ll_y != current_height) {
 	ctx->gdraw->image_scale( ur_x - ll_x, ur_y - ll_y, om,
-				 &image, &pixmap, &clip_mask);
+				 &image, &image_data, &pixmap, &clip_mask);
 	current_width = ctx->gdraw->image_get_width( image);
 	current_height = ctx->gdraw->image_get_height( image);
 	sts = 1;
@@ -945,7 +945,7 @@ void GrowImage::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 	if ( ctx->gdraw->image_get_width( image) != current_width ||
 	     ctx->gdraw->image_get_height( image) != current_height) {
 	  ctx->gdraw->image_scale( ur_x - ll_x, ur_y - ll_y, 0,
-				   &image, &pixmap, &clip_mask);
+				   &image, &image_data, &pixmap, &clip_mask);
 	  current_width = ctx->gdraw->image_get_width( image);
 	  current_height = ctx->gdraw->image_get_height( image);
 	}
@@ -1747,7 +1747,7 @@ int grow_image_to_pixmap( GrowCtx *ctx, char *imagefile,
       return 0;
   }
 
-  ctx->gdraw->image_load( filename, image, 0);
+  ctx->gdraw->image_load( filename, image, 0, 0);
   if ( !*image)
     return 0;
 
@@ -1757,7 +1757,7 @@ int grow_image_to_pixmap( GrowCtx *ctx, char *imagefile,
   }
   else {
     ctx->gdraw->image_scale( width, height,
-			     0, image, pixmap, 0);
+			     0, image, 0, pixmap, 0);
   }
   ctx->gdraw->image_render( width, height,
 			    0, image, pixmap, 0);
