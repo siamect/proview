@@ -96,7 +96,7 @@ class GrowCtx : public GlowCtx {
         enable_bg_pixmap(0), background_tiled(0), scale_active(0),
         initial_position(glow_eDirection_Up), is_javaapplet(0),
         is_javaapplication(0), cycle(glow_eCycle_Slow),
-        mb3_action(glow_eMB3Action_Close), scale_equal(0), translate_on(0),
+        mb3_action(glow_eMB3Action_PopupMenu), scale_equal(0), translate_on(0),
         input_focus_mark(glow_eInputFocusMark_Relief), background_disabled(0),
         redraw_callback(0), redraw_data(0), has_subwindows(-1), bitmap_fonts(0),
         environment(glow_eEnv_Runtime), text_coding(glow_eTextCoding_ISO8859_1)

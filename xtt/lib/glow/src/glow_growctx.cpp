@@ -2461,7 +2461,7 @@ void GrowCtx::clear_all( int keep_paste)
   is_javaapplet = 0;
   is_javaapplication = 0;
   cycle = glow_eCycle_Slow;
-  mb3_action = glow_eMB3Action_Close;
+  mb3_action = glow_eMB3Action_PopupMenu;
   translate_on = 0;
   inputfocus_object = 0;
   x0 = y0 = x1 = y1 = 0;
