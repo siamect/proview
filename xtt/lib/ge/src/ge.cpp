@@ -302,6 +302,7 @@ void Ge::clear_all()
   graph->set_gridsize( 1);
   graph->set_grid( 0);
   graph->clear_all();
+  graph->set_modified(0);
   subpalette->get_path( &path_cnt, &path);
   graph->set_subgraph_path( path_cnt, path);
   update();
@@ -1068,7 +1069,13 @@ void Ge::activate_print()
 
 void Ge::activate_new()
 {
-  clear_all();
+  if ( graph->is_modified()) {
+    int rv = create_modal_dialog( "New", "Graph is not saved.\nDo you want to continue?", "Yes", "Cancel", NULL, NULL);
+    if ( rv == wow_eModalDialogReturn_Button1)
+      clear_all();
+  }
+  else
+    clear_all();
 }
 
 void Ge::activate_save()

@@ -2560,6 +2560,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
       }
       else if ( strcmp( type, ".gif") == 0 || 
 		strcmp( type, ".jpg") == 0 || 
+		strcmp( type, ".svg") == 0 || 
 		strcmp( type, ".png") == 0) {
 	grow_tObject i1;
 	char 	       name[80];

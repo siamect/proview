@@ -993,6 +993,8 @@ class Graph {
   /*! \return 	1 if modified, 0 if not modified. */
   int is_modified();
 
+  void set_modified( int mod) { grow_SetModified( grow->ctx, mod);}
+
   //! Set scantime for slow cycle.
   /*! \param time	Scantime in seconds. */
   void set_scantime( double time) { scan_time = time;};

@@ -77,6 +77,7 @@
 #include "ge_subgraphs_gtk.h"
 #include "ge_util.h"
 #include "ge_msg.h"
+#include "ge_item_view_gtk.h"
 #include "wb_wnav_selformat.h"
 #include "cow_wow_gtk.h"
 #include "cow_logw_gtk.h"
@@ -1270,6 +1271,25 @@ void GeGtk::activate_view_plant(GtkWidget *w, gpointer data)
 #endif
 }
 
+void GeGtk::activate_view_graphlist(GtkWidget *w, gpointer data)
+{
+  Ge *ge = (Ge *)data;
+
+  int set = (int) gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM( ((GeGtk *)ge)->view_graphlist_w));
+  if ( w != ((GeGtk *)ge)->view_graphlist_w) {
+    set = !set;
+    gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( ((GeGtk *)ge)->view_graphlist_w), set ? TRUE : FALSE);
+  }
+
+  if ( set) {
+    g_object_set( ((GeGtk *)ge)->graph_list, "visible", TRUE, NULL);
+  }
+  else {
+    g_object_set( ((GeGtk *)ge)->graph_list, "visible", FALSE, NULL);
+  }
+  ge->set_focus(0);
+}
+
 
 void GeGtk::activate_concorner_right(GtkWidget *w, gpointer gectx)
 {
@@ -2209,6 +2229,10 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_widget_add_accelerator( view_plant_w, "activate", accel_g,
 			      'p', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
+  view_graphlist_w = gtk_check_menu_item_new_with_mnemonic( "Vie_w graph list");
+  g_signal_connect( view_graphlist_w, "activate", 
+		    G_CALLBACK(activate_view_graphlist), this);
+
   GtkMenu *view_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_preview_start);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_preview_stop);
@@ -2216,6 +2240,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_out);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_reset);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_plant_w);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_graphlist_w);
 
   GtkWidget *view = gtk_menu_item_new_with_mnemonic("_View");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), view);
@@ -3003,12 +3028,19 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_paned_pack2( GTK_PANED(hpaned), vpaned2, FALSE, TRUE);
   gtk_widget_show( vpaned1);
 
+  GeItemViewGtk *item_view = new GeItemViewGtk( this);
+  GtkWidget *hpaned2 = gtk_hpaned_new();
+  graph_list = item_view->widget();
+  gtk_paned_pack1( GTK_PANED(hpaned2), graph_list, FALSE, FALSE);
+  gtk_paned_pack2( GTK_PANED(hpaned2), hpaned, TRUE, TRUE);
+  gtk_widget_show( hpaned2);
+
   GtkWidget *vbox = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(tools3), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(tools2), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(tools), FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(hpaned), TRUE, TRUE, 0);
+  gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(hpaned2), TRUE, TRUE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(statusbar), FALSE, FALSE, 0);
 
   gtk_container_add( GTK_CONTAINER(toplevel), vbox);
@@ -3025,6 +3057,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 #endif
   g_object_set( cmd_prompt, "visible", FALSE, NULL);
   g_object_set( cmd_input, "visible", FALSE, NULL);
+  g_object_set( graph_list, "visible", FALSE, NULL);
 
   subpalette->get_path( &path_cnt, &path);
   graph->set_subgraph_path( path_cnt, path);
