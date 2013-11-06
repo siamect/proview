@@ -640,8 +640,8 @@ void EvListBrow::brow_setup()
 	EvList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
 	EvList::brow_cb);
-  brow_EnableEvent( ctx, flow_eEvent_TipText, flow_eEventType_CallBack, 
-	EvList::brow_cb);
+  //brow_EnableEvent( ctx, flow_eEvent_TipText, flow_eEventType_CallBack, 
+  //	EvList::brow_cb);
 }
 
 //
