@@ -3023,7 +3023,6 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_paned_pack2( GTK_PANED(vpaned2), ((GraphGtk *)graph)->nav_widget, FALSE, TRUE);
   gtk_widget_show( ((GraphGtk *)graph)->nav_widget);
 
-
   // Horizontal pane
   GtkWidget *hpaned = gtk_hpaned_new();
   gtk_paned_pack1( GTK_PANED(hpaned), grow_widget, TRUE, TRUE);
@@ -3049,7 +3048,10 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 
   gtk_widget_show_all( toplevel);
 
-  gtk_paned_set_position( GTK_PANED(hpaned), window_width - palette_width);
+  g_object_set( graph_list, "visible", FALSE, NULL);
+
+  gtk_paned_set_position( GTK_PANED(hpaned2), 150);
+  gtk_paned_set_position( GTK_PANED(hpaned), window_width - palette_width - 45);
   gtk_paned_set_position( GTK_PANED(vpaned1), window_height - 380);
   gtk_paned_set_position( GTK_PANED(vpaned2), window_height - 290);
 
@@ -3059,7 +3061,6 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 #endif
   g_object_set( cmd_prompt, "visible", FALSE, NULL);
   g_object_set( cmd_input, "visible", FALSE, NULL);
-  g_object_set( graph_list, "visible", FALSE, NULL);
 
   subpalette->get_path( &path_cnt, &path);
   graph->set_subgraph_path( path_cnt, path);

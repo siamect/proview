@@ -213,12 +213,20 @@ void GeItemViewGtk::activate_menu_open( GtkWidget *w, gpointer data)
     char message[64];
 
     sprintf( message, "Your changes will be lost. Do you want to save?");
-    rv = ge->create_modal_dialog( title, message, "Yes", "No", NULL, NULL);
-    if ( rv == wow_eModalDialogReturn_Button1) {
+    rv = ge->create_modal_dialog( title, message, "Yes", "Discard", "Cancel", NULL);
+    switch ( rv) {      
+    case wow_eModalDialogReturn_Button1:
+      // Yes
       GeGtk::activate_save( NULL, item_view->ge_ctx);
+      break;
+    case wow_eModalDialogReturn_Button2:
+      // Discard
+      break;
+    default:
+      // Cancel
+      return;
     }
   }
-
   activate_tree_widget( GTK_TREE_VIEW(item_view->tree_widget), NULL, NULL, ge);
 }
 
@@ -385,9 +393,17 @@ void GeItemViewGtk::activate_tree_widget( GtkTreeView *tree_widget, GtkTreePath 
 	char message[64];
 	
 	sprintf( message, "Your changes will be lost.\nDo you want to save?");
-	rv = ge->create_modal_dialog( title, message, "Yes", "No", NULL, NULL);
-	if ( rv == wow_eModalDialogReturn_Button1) {
+	rv = ge->create_modal_dialog( title, message, "Yes", "Discard", "Cancel", NULL);
+	switch ( rv) {
+	case wow_eModalDialogReturn_Button1:
+	  // Yes
 	  GeGtk::activate_save( NULL, item_view->ge_ctx);
+	  break;
+	case wow_eModalDialogReturn_Button2:
+	  // Discard
+	  break;
+	default:
+	  return;
 	}
       }
     }
