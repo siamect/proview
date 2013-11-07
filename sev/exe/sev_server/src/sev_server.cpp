@@ -489,7 +489,6 @@ int sev_server::mainloop()
 	    m_stat.dataget_msg_cnt++;
             break;
           case sev_eMsgType_EventsStore:
-	    printf( "sev_server Events received\n");
             receive_events( (sev_sMsgEventsStore *) mp, get.size);
 	    m_stat.eventstore_msg_cnt++;
             break;
@@ -704,7 +703,6 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
     }
     else {
       // SevHistEvents item
-      printf( "Event item received\n");
 
       if ( !m_db->check_item( &m_sts, msg->Items[i].oid, msg->Items[i].oname, (char *)"Events",
 			      storagetime, (pwr_eType)0, 0, 
@@ -718,7 +716,6 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
       }
     }
   }
-  printf( "----  Node up (%d) ----\n", nid);
   return 1;
 }
 
@@ -901,8 +898,6 @@ int sev_server::receive_events( sev_sMsgEventsStore *msg, unsigned int size)
 
   for ( unsigned int i = 0; i < msg->NumEvents; i++) {
     sev_event ev;
-
-    printf( "Event Type %d Id %d text \"%s\"\n", ep->type, ep->eventid_idx, ep->eventtext); 
 
     ev.type = ep->type;
     ev.eventprio = ep->eventprio;

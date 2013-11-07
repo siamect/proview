@@ -1814,11 +1814,67 @@ int sev_dbms::store_event( pwr_tStatus *sts, int item_idx, sev_event *ep)
 {
   char query[400];
   char timstr[40];
-
+  int rc;
 
   *sts = time_AtoAscii( &ep->time, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
   if ( EVEN(*sts)) return 0;
   timstr[19] = 0;
+
+  // Check if event already exist
+  if ( m_items[item_idx].options & pwr_mSevOptionsMask_PosixTime) {
+    if ( m_items[item_idx].options & pwr_mSevOptionsMask_HighTimeResolution)
+      // Posix time, high resolution
+      sprintf( query, "select eventid_nix,eventid_idx,ntime from %s where time = %ld", m_items[item_idx].tablename, (long int)ep->time.tv_sec);
+    else
+      // Posix time, low resolution
+      sprintf( query, "select eventid_nix,eventid_idx from %s where time = %ld", m_items[item_idx].tablename, (long int)ep->time.tv_sec);
+  }
+  else {
+    if ( m_items[item_idx].options & pwr_mSevOptionsMask_HighTimeResolution)
+      // Sql time, high resolution
+      sprintf( query, "select eventid_nix,eventid_idx,ntime from %s where time = '%s'", m_items[item_idx].tablename, timstr);
+    else
+      // Sql time, low resolution
+      sprintf( query, "select eventid_nix,eventid_idx from %s where time = '%s'", m_items[item_idx].tablename, timstr);
+  }
+  rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+  }
+  MYSQL_RES *result = mysql_store_result( m_env->con());
+  if ( !result) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Result Error\n", __FUNCTION__);
+  }
+
+  int rows = mysql_num_rows( result);
+  int found = 0;
+  unsigned int idx, nix, ntime;
+  for ( int i = 0; i < rows; i++) {
+    MYSQL_ROW row;
+    ntime = 0;
+    row = mysql_fetch_row( result);
+    if(row[0] != NULL) {
+      nix = strtoul(row[0], 0, 10);
+      idx = strtoul(row[1], 0, 10);
+      if ( m_items[item_idx].options & pwr_mSevOptionsMask_HighTimeResolution)
+	ntime = strtoul(row[2], 0, 10);
+    }
+    if ( ep->eventid.Nix == nix && ep->eventid.Idx == idx) {
+      if ( m_items[item_idx].options & pwr_mSevOptionsMask_HighTimeResolution) {
+	if ( ntime == ep->time.tv_nsec)
+	  found = 1;
+      }
+      else
+	found = 1;
+      break;
+    }
+  }
+  mysql_free_result( result);
+
+  if ( found)
+    return 1;
 
   if ( m_items[item_idx].options & pwr_mSevOptionsMask_PosixTime) {
     if ( m_items[item_idx].options & pwr_mSevOptionsMask_HighTimeResolution) {
@@ -1846,7 +1902,7 @@ int sev_dbms::store_event( pwr_tStatus *sts, int item_idx, sev_event *ep)
       sprintf( query, "insert into %s (time, ntime, eventtype, eventprio, eventid_nix, eventid_birthtime,"
 	       "eventid_idx, eventtext, eventname) values ('%s',%ld,%d,%d,%d,%d,%d,'%s','%s')",
 	       m_items[item_idx].tablename,
-	       timstr, (long int)ep->time.tv_sec,
+	       timstr, (long int)ep->time.tv_nsec,
 	       ep->type, ep->eventprio, ep->eventid.Nix, ep->eventid.BirthTime.tv_sec, ep->eventid.Idx, ep->eventtext,
 	       ep->eventname);
     }
@@ -1861,7 +1917,7 @@ int sev_dbms::store_event( pwr_tStatus *sts, int item_idx, sev_event *ep)
       
     }
   }
-  int rc = mysql_query( m_env->con(), query);
+  rc = mysql_query( m_env->con(), query);
   if (rc) {
     // printf( "Store value: %s \"%s\"\n", mysql_error(m_env->con()), query);
     *sts = SEV__DBERROR;
