@@ -84,7 +84,8 @@ typedef struct {
   int             hDpsInputDataDevice;              // Handle for DP-Slave Input-Data device
   int             hDpsOutputDataDevice;             // Handle for DP-Slave Output-Data device
   unsigned char   CurrentBoardNumber;
-  int             slave_diag_requested;
+  int             slave_diag_requested;             // Slave diag requested
+  int             parallel_service;                 // parallel activity
   int             hDpsBoardDevice;                  // Handle for DP-Slave Output-Data device
   pthread_t       events;
   pthread_mutex_t mutex;
@@ -791,6 +792,14 @@ void *handle_events(void *ptr) {
 	    else if (op->Status == PB__CLEARED) {
 	      errh_Info( "Profibus DP Master %s to state OPERATE", ap->Name);
 	      op->Status = PB__NORMAL;
+
+              if (!local->slave_diag_requested && local->parallel_service) {
+                if (dp_get_slave_diag(hDevice)) {
+                  local->slave_diag_requested = op->Diag[3] = PB_TRUE;
+                  local->parallel_service = PB_FALSE;
+                } 
+              }
+
 	    }
 	    
 	    break;
@@ -905,11 +914,15 @@ void *handle_events(void *ptr) {
 	    
 	    if ( (get_slave_diag_con_ptr->diag_entries) &&
 		 (! local->slave_diag_requested              ) ) {
-	      if (dp_get_slave_diag(hDevice)) {
-		local->slave_diag_requested = op->Diag[3] = PB_TRUE;
-	      } else {
-		errh_Warning( "Profibus - Request for diag failed.");
-	      }
+              if (op->Status == PB__NORMAL) {
+                if (dp_get_slave_diag(hDevice)) {
+                  local->slave_diag_requested = op->Diag[3] = PB_TRUE;
+                } else {
+                  errh_Warning( "Profibus - Request for diag failed.");
+                }
+              } else {
+                local->parallel_service = PB_TRUE;
+              }
 	    }
 	    
 	    break;
@@ -1121,21 +1134,6 @@ static pwr_tStatus IoAgentInit (
         return IO__ERRINIDEVICE;
       }
     } */
-
-    /* Active supervision thread */
-  
-    pthread_attr_t attr;
-    pthread_mutexattr_t mutexattr;
-  
-    local->args.local = local;
-    local->args.ap = ap;
-    
-    pthread_mutexattr_init(&mutexattr);
-    pthread_mutex_init(&local->mutex, &mutexattr);
-    pthread_mutexattr_destroy(&mutexattr);
-    pthread_attr_init(&attr);
-    pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED);
-    pthread_create(&local->events, &attr, handle_events, &local->args);    
   }    
   else
     op->Status = PB__DISABLED;
@@ -1216,6 +1214,24 @@ static pwr_tStatus IoAgentRead (
   hDevice = (T_PROFI_DEVICE_HANDLE *) ap->Local;
   local = (io_sAgentLocal *) ap->Local;
   op = (pwr_sClass_Pb_Profiboard *) ap->op;
+
+  /* Activate supervision thread, first cycle */
+
+  if (!local->args.local) {
+  
+    pthread_attr_t attr;
+    pthread_mutexattr_t mutexattr;
+  
+    local->args.local = local;
+    local->args.ap = ap;
+    
+    pthread_mutexattr_init(&mutexattr);
+    pthread_mutex_init(&local->mutex, &mutexattr);
+    pthread_mutexattr_destroy(&mutexattr);
+    pthread_attr_init(&attr);
+    pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED);
+    pthread_create(&local->events, &attr, handle_events, &local->args);    
+  }
 
   pthread_mutex_lock(&local->mutex);
 
