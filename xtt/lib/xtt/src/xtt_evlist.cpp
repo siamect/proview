@@ -640,8 +640,8 @@ void EvListBrow::brow_setup()
 	EvList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
 	EvList::brow_cb);
-  brow_EnableEvent( ctx, flow_eEvent_TipText, flow_eEventType_CallBack, 
-	EvList::brow_cb);
+  //brow_EnableEvent( ctx, flow_eEvent_TipText, flow_eEventType_CallBack, 
+  //	EvList::brow_cb);
 }
 
 //
@@ -2395,6 +2395,8 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                     break;
                   strncpy( info->a_alarm_text[a_cnt], eventtext, 
 			   sizeof(info->a_alarm_text[0]));
+                  strncpy( info->a_alarm_moretext[a_cnt], object_item->eventmoretext, 
+			   sizeof(info->a_alarm_moretext[0]));
 		  info->a_alarm_text[a_cnt][sizeof(info->a_alarm_text[0])-1] = 0;
                   strncpy( info->a_alarm_alias[a_cnt], object_item->alias, 
 			  sizeof(info->a_alarm_alias[0]));
@@ -2408,6 +2410,8 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                     break;
                   strncpy( info->b_alarm_text[b_cnt], eventtext,
 			   sizeof(info->b_alarm_text[0]));
+                  strncpy( info->b_alarm_moretext[b_cnt], object_item->eventmoretext, 
+			   sizeof(info->b_alarm_moretext[0]));
 		  info->b_alarm_text[b_cnt][sizeof(info->b_alarm_text[0])-1] = 0;
                   strncpy( info->b_alarm_alias[b_cnt], object_item->alias,
 			   sizeof(info->b_alarm_alias[0]));
@@ -2421,6 +2425,8 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                     break;
                   strncpy( info->c_alarm_text[c_cnt], eventtext,
 			   sizeof(info->c_alarm_text[0]));
+                  strncpy( info->c_alarm_moretext[c_cnt], object_item->eventmoretext, 
+			   sizeof(info->c_alarm_moretext[0]));
 		  info->c_alarm_text[c_cnt][sizeof(info->c_alarm_text[0])-1] = 0;
                   strncpy( info->c_alarm_alias[c_cnt], object_item->alias,
 			   sizeof(info->c_alarm_alias[0]));
@@ -2434,6 +2440,8 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                     break;
                   strncpy( info->d_alarm_text[d_cnt], eventtext,
 			   sizeof(info->d_alarm_text[0]));
+                  strncpy( info->d_alarm_moretext[d_cnt], object_item->eventmoretext, 
+			   sizeof(info->d_alarm_moretext[0]));
 		  info->d_alarm_text[d_cnt][sizeof(info->d_alarm_text[0])-1] = 0;
                   strncpy( info->d_alarm_alias[d_cnt], object_item->alias,
 			   sizeof(info->d_alarm_alias[0]));
@@ -2455,6 +2463,8 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                 break;
               strncpy( info->i_alarm_text[i_cnt], object_item->eventtext,
 		       sizeof(info->i_alarm_text[0]));
+	      strncpy( info->i_alarm_moretext[i_cnt], object_item->eventmoretext, 
+		       sizeof(info->i_alarm_moretext[0]));
               strncpy( info->i_alarm_alias[i_cnt], object_item->alias,
 		       sizeof(info->i_alarm_alias[0]));
 	      info->i_alarm_time[i_cnt] = object_item->time;

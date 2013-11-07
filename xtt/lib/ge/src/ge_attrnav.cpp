@@ -1713,6 +1713,19 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 
 	    *(glow_eDrawType *)item->value_p = fill_color;
 	  }
+	  else if ( item->type_id == glow_eType_Tone ||
+	            item->type_id == glow_eType_ToneOrColor) {
+	    int sts;
+	    glow_eDrawType color_tone;
+
+	    if ( ! attrnav->get_current_color_tone_cb)
+	      break;
+	    sts = (attrnav->get_current_color_tone_cb) (attrnav->parent_ctx,
+                                                    &color_tone);
+	    if ( EVEN(sts)) break;
+
+	    *(glow_eDrawType *)item->value_p = color_tone;
+	  }
 	  break;
 	default: ;
 	}

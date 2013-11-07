@@ -287,6 +287,7 @@ class GrowImage : public GlowArrayElem {
   int 		dynamicsize;	//!< Size of dynamic code.
   GlowTransform trf;		//!< Transformation matrix of object.
   glow_tImData  imlib;		//!< Pointer to imlib
+  glow_tImData  image_data;	//!< Information about an svg image.
   glow_tImImage image;		//!< The rendered and scaled image.
   glow_tImImage original_image; //!< The original image.
   glow_tPixmap  pixmap;		//!< Pixmap of the image.

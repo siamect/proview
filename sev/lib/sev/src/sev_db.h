@@ -166,6 +166,7 @@ class sev_db {
   virtual int handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject) { return 0;}
   virtual int repair_table( pwr_tStatus *sts, char *tablename) { return 0;}
   virtual int alter_engine( pwr_tStatus *sts, char *tablename) { return 0;}
+  virtual int optimize( pwr_tStatus *sts, char *tablename) { return 0;}
   virtual int store_stat( sev_sStat *stat) { return 0;}
   virtual int begin_transaction() { return 0;}
   virtual int commit_transaction() { return 0;}

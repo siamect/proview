@@ -159,6 +159,7 @@ class AttrNav {
     int 		(*get_plant_select_cb)( void *, char *, int);
     int 		(*get_current_colors_cb)( void *, glow_eDrawType *, glow_eDrawType *,
 						  glow_eDrawType *);
+    int 		(*get_current_color_tone_cb)( void *, glow_eDrawType *);
 
     virtual int set_attr_value( char *value_str);
     virtual int check_attr_value( int *multiline, char **value);

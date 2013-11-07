@@ -156,9 +156,10 @@ class GlowDraw {
   virtual void image_flip_vertical( glow_tImImage *image) {}
   virtual void image_flip_horizontal( glow_tImImage *image) {}
   virtual void image_scale( int width, int height, glow_tImImage orig_im, glow_tImImage *im, 
+			    glow_tImData *im_data,
 			    glow_tPixmap *im_pixmap, glow_tPixmap *im_mask) {}
   virtual int image_load( char *imagefile,
-			  glow_tImImage *orig_im, glow_tImImage *im) {return 0;}
+			  glow_tImImage *orig_im, glow_tImImage *im, glow_tImData *im_data) {return 0;}
   virtual int image_render( int width, int height,
 			    glow_tImImage orig_im, glow_tImImage *im,
 			    glow_tPixmap *im_pixmap, glow_tPixmap *im_mask) {return 0;}

@@ -302,6 +302,7 @@ void Ge::clear_all()
   graph->set_gridsize( 1);
   graph->set_grid( 0);
   graph->clear_all();
+  graph->set_modified(0);
   subpalette->get_path( &path_cnt, &path);
   graph->set_subgraph_path( path_cnt, path);
   update();
@@ -633,6 +634,16 @@ void Ge::colorpalette_set_current( void *gectx, glow_eDrawType fill_color,
 {
   colpal_SetCurrentColors( ((Ge *)gectx)->colorpalette_ctx, 
 	fill_color, border_color, text_color);
+}
+
+void Ge::colorpalette_get_current_tone( void *gectx, glow_eDrawType *color_tone)
+{
+  colpal_GetCurrentColorTone( ((Ge *)gectx)->colorpalette_ctx, color_tone);
+}
+
+void Ge::colorpalette_set_current_tone( void *gectx, glow_eDrawType color_tone)
+{
+  colpal_SetCurrentColorTone( ((Ge *)gectx)->colorpalette_ctx, color_tone);
 }
 
 void Ge::subgraphs_close_cb( SubGraphs *subgraphs)
@@ -1068,7 +1079,13 @@ void Ge::activate_print()
 
 void Ge::activate_new()
 {
-  clear_all();
+  if ( graph->is_modified()) {
+    int rv = create_modal_dialog( "New", "Graph is not saved.\nDo you want to continue?", "Yes", "Cancel", NULL, NULL);
+    if ( rv == wow_eModalDialogReturn_Button1)
+      clear_all();
+  }
+  else
+    clear_all();
 }
 
 void Ge::activate_save()

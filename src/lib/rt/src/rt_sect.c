@@ -127,7 +127,8 @@ sect_Alloc (
   pwr_tBoolean		*created,
   sect_sHead		*shp,
   size_t		size,
-  char			*name
+  char			*name,
+  unsigned int		flags
 )
 {
   pwr_tStatus		lsts = 1;
@@ -290,6 +291,11 @@ sect_Alloc (
         *created = 1;
       } else if(shm_fd == -1) {
         if (errno == ENOENT) { /* It didn't exist */
+	  if ( !(flags & sect_mFlags_Create)) {
+	    lsts = 2;
+	    errh_Error("sect_Alloc: Couldn't attach shm section size");
+	    break;
+	  }
           shMemFlags |= O_CREAT | O_EXCL; 
           shm_fd = open(shp->name, shMemFlags, shMemMode); 
           if(shm_fd == -1) {

@@ -124,6 +124,7 @@ static int graph_reconfigure_attr_cb( void *g, grow_tObject object,
 static int graph_get_plant_select_cb( void *g, char *value, int size);
 static int graph_get_current_colors_cb( void *g, glow_eDrawType *fill_color, 
 					glow_eDrawType *border_color, glow_eDrawType *text_color);
+static int graph_get_current_color_tone_cb( void *g, glow_eDrawType *color_tone);
 static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event);
 static void graph_free_dyn( grow_tObject object);
 
@@ -1881,6 +1882,7 @@ int Graph::edit_attributes( grow_tObject object)
   attr->set_data_cb = &graph_attr_set_data_cb;
   attr->get_plant_select_cb = &graph_get_plant_select_cb;
   attr->get_current_colors_cb = &graph_get_current_colors_cb;
+  attr->get_current_color_tone_cb = &graph_get_current_color_tone_cb;
   attr_list.insert( (void *)object, (void *) attr);
   grow_SetModified( grow->ctx, 1);
 
@@ -1905,6 +1907,17 @@ static int graph_get_current_colors_cb( void *g, glow_eDrawType *fill_color,
 
   if ( graph->get_current_colors_cb) {
     (graph->get_current_colors_cb) (graph->parent_ctx, fill_color, border_color, text_color);
+    return 1;
+  }
+  return 0;
+}
+
+static int graph_get_current_color_tone_cb( void *g, glow_eDrawType *color_tone)
+{
+  Graph	*graph = (Graph *)g;
+
+  if ( graph->get_current_color_tone_cb) {
+    (graph->get_current_color_tone_cb) (graph->parent_ctx, color_tone);
     return 1;
   }
   return 0;
@@ -2560,6 +2573,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
       }
       else if ( strcmp( type, ".gif") == 0 || 
 		strcmp( type, ".jpg") == 0 || 
+		strcmp( type, ".svg") == 0 || 
 		strcmp( type, ".png") == 0) {
 	grow_tObject i1;
 	char 	       name[80];

@@ -345,7 +345,8 @@ mapSegment (
 
   segName(name, gphp->name, psp->gpsp->generation);
 
-  shp = sect_Alloc(&lsts, &created, &psp->sect, psp->gpsp->size << pool_cOffsGranul, name);
+  shp = sect_Alloc(&lsts, &created, &psp->sect, psp->gpsp->size << pool_cOffsGranul, name,
+		   sect_mFlags_Create);
   if (shp == NULL) errh_ReturnOrBugcheck(NULL, sts, lsts, "");
 
   if (created) errh_Bugcheck(POOL__NOTCREATED, "pool was not created"); 
@@ -397,7 +398,7 @@ newSegment (
 
   segName(name, gphp->name, gphp->generation);
 
-  shp = sect_Alloc(sts, &created, &psp->sect, size << pool_cOffsAlign, name);
+  shp = sect_Alloc(sts, &created, &psp->sect, size << pool_cOffsAlign, name, sect_mFlags_Create);
   if (shp == NULL) return NULL;
   if (!created) errh_Bugcheck(POOL__ALLREXIST, ""); 
 
@@ -769,7 +770,7 @@ pool_Create (
     pwr_Return(NULL, sts, POOL__ALLRMAPPED);
 
   do {
-    shp = sect_Alloc(&lsts, &created, &php->sect, sizeof(*gphp), name);
+    shp = sect_Alloc(&lsts, &created, &php->sect, sizeof(*gphp), name, sect_mFlags_Create);
     if (shp == NULL) break;
 
     gphp = (pool_sGhead *) shp->base;

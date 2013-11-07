@@ -51,7 +51,7 @@ void nmps_create_lock( pwr_tStatus *sts)
 
   if ( !nmps_locksect) {
     nmps_locksect = sect_Alloc( sts, &created, 0, sizeof(sect_sMutex), 
-				nmps_cName_Lock);
+				nmps_cName_Lock, sect_mFlags_Create);
     if ( ODD(*sts) && created)
       sect_InitLock( sts, nmps_locksect, (sect_sMutex *)nmps_locksect->base);
   }

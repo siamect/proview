@@ -154,6 +154,14 @@ int Attr::get_current_colors_c( void *attr_ctx, glow_eDrawType *fill_color,
   return 0;
 }
 
+int Attr::get_current_color_tone_c( void *attr_ctx, glow_eDrawType *color_tone)
+{
+  Attr *attr = (Attr *) attr_ctx;
+  if ( attr->get_current_color_tone_cb)
+    return attr->get_current_color_tone_cb( attr->parent_ctx, color_tone);
+  return 0;
+}
+
 int Attr::get_subgraph_info_c( void *attr_ctx, char *name, 
 	attr_sItem **itemlist, int *item_cnt)
 {

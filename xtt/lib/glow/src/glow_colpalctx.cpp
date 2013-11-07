@@ -58,6 +58,7 @@
 #include "glow_draw.h"
 #include "glow_msg.h"
 
+static int tone_color_match( int tone);
 
 void ColPalCtx::configure()
 {
@@ -130,10 +131,16 @@ void ColPalCtx::configure()
   double tone_entry_width = 3 * entry_width;
   y += entry_height;
   x = 0;
-  text = new GrowText( this, "ToneText", "Tone", x + 0.15, 
-		       y + entry_height / 2 + 0.25, 
-	glow_eDrawType_TextHelveticaBold, glow_eDrawType_Line, 2);
-  insert( (GlowArrayElem *)text);
+
+  active_tone = new GrowRect( this, "ToneRect", x, y, 
+	tone_entry_width * 2, entry_height, glow_eDrawType_Line, 1, 0, 
+        glow_mDisplayLevel_1, 1, 1, 0, glow_eDrawType_Color34);
+  insert( active_tone);
+  text_tone = new GrowText( this, "ToneText", "Tone", x + 0.15, 
+ 		       y + entry_height / 2 + 0.25, 
+ 	glow_eDrawType_TextHelveticaBold, glow_eDrawType_Line, 2);
+  insert( text_tone);
+
   x += 2 * tone_entry_width;
   sprintf( name, "ToneEntry%d", 0);
   rect = new GrowRect( this, name, x, y, 
@@ -165,36 +172,7 @@ void ColPalCtx::configure()
     char name[16];
     glow_eDrawType drawtype;
 
-    switch( i) {
-      case glow_eDrawTone_No:       	drawtype = glow_eDrawType_Color32; break;
-      case glow_eDrawTone_Gray:     	drawtype = glow_eDrawType_Color35; break;
-      case glow_eDrawTone_YellowGreen:  drawtype = glow_eDrawType_Color85; break;
-      case glow_eDrawTone_Yellow:     	drawtype = glow_eDrawType_Color115; break;
-      case glow_eDrawTone_Orange:   	drawtype = glow_eDrawType_Color145; break;
-      case glow_eDrawTone_Red:      	drawtype = glow_eDrawType_Color175; break;
-      case glow_eDrawTone_Magenta:  	drawtype = glow_eDrawType_Color205; break;
-      case glow_eDrawTone_Blue:     	drawtype = glow_eDrawType_Color235; break;
-      case glow_eDrawTone_Seablue:  	drawtype = glow_eDrawType_Color265; break;
-      case glow_eDrawTone_Green:    	drawtype = glow_eDrawType_Color295; break;
-      case glow_eDrawTone_DarkGray: 	drawtype = glow_eDrawType_Color38; break;
-      case glow_eDrawTone_DarkYellowGreen:   drawtype = glow_eDrawType_Color88; break;
-      case glow_eDrawTone_DarkYellow:     drawtype = glow_eDrawType_Color118; break;
-      case glow_eDrawTone_DarkOrange:   drawtype = glow_eDrawType_Color148; break;
-      case glow_eDrawTone_DarkRed:      drawtype = glow_eDrawType_Color178; break;
-      case glow_eDrawTone_DarkMagenta:  drawtype = glow_eDrawType_Color208; break;
-      case glow_eDrawTone_DarkBlue:     drawtype = glow_eDrawType_Color238; break;
-      case glow_eDrawTone_DarkSeablue:  drawtype = glow_eDrawType_Color268; break;
-      case glow_eDrawTone_DarkGreen:    drawtype = glow_eDrawType_Color298; break;
-      case glow_eDrawTone_LightGray: 	drawtype = glow_eDrawType_Color32; break;
-      case glow_eDrawTone_LightYellowGreen:  drawtype = glow_eDrawType_Color82; break;
-      case glow_eDrawTone_LightYellow:    drawtype = glow_eDrawType_Color112; break;
-      case glow_eDrawTone_LightOrange:  drawtype = glow_eDrawType_Color142; break;
-      case glow_eDrawTone_LightRed:     drawtype = glow_eDrawType_Color172; break;
-      case glow_eDrawTone_LightMagenta: drawtype = glow_eDrawType_Color202; break;
-      case glow_eDrawTone_LightBlue:    drawtype = glow_eDrawType_Color232; break;
-      case glow_eDrawTone_LightSeablue: drawtype = glow_eDrawType_Color262; break;
-      case glow_eDrawTone_LightGreen:   drawtype = glow_eDrawType_Color292; break;
-    }
+    drawtype = (glow_eDrawType) tone_color_match( i);
     if ( i == glow_eDrawTone_Gray || 
 	 i == glow_eDrawTone_LightGray || 
 	 i == glow_eDrawTone_DarkGray) {
@@ -397,6 +375,7 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
               e.colortone.tone = tone;
               event_callback[event]( this, &e);
             }
+            current_tone = (glow_eDrawType) tone;
             break;
           }
           if ( strcmp( name, "ColorEntryBg") == 0) {
@@ -452,6 +431,9 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
               e.colortone.tone = tone;
               event_callback[event]( this, &e);
             }
+	    current_tone = (glow_eDrawType) tone;
+	    ((GrowRect *)active_tone)->set_fill_color(
+				(glow_eDrawType) tone_color_match( (int)tone));
             break;
           }
           if ( strncmp( name, "ColorEntry", 10) != 0)
@@ -668,4 +650,43 @@ void ColPalCtx::set_colors()
   text_text->set_text_color( textcolor);
 
   draw( &mw, 0, 0, mw.window_width, mw.window_height);
+}
+
+int tone_color_match( int tone)
+{
+  int drawtype;
+
+  switch( tone) {
+  case glow_eDrawTone_No:       	drawtype = glow_eDrawType_Color32; break;
+  case glow_eDrawTone_Gray:     	drawtype = glow_eDrawType_Color35; break;
+  case glow_eDrawTone_YellowGreen:  drawtype = glow_eDrawType_Color85; break;
+  case glow_eDrawTone_Yellow:     	drawtype = glow_eDrawType_Color115; break;
+  case glow_eDrawTone_Orange:   	drawtype = glow_eDrawType_Color145; break;
+  case glow_eDrawTone_Red:      	drawtype = glow_eDrawType_Color175; break;
+  case glow_eDrawTone_Magenta:  	drawtype = glow_eDrawType_Color205; break;
+  case glow_eDrawTone_Blue:     	drawtype = glow_eDrawType_Color235; break;
+  case glow_eDrawTone_Seablue:  	drawtype = glow_eDrawType_Color265; break;
+  case glow_eDrawTone_Green:    	drawtype = glow_eDrawType_Color295; break;
+  case glow_eDrawTone_DarkGray: 	drawtype = glow_eDrawType_Color38; break;
+  case glow_eDrawTone_DarkYellowGreen:   drawtype = glow_eDrawType_Color88; break;
+  case glow_eDrawTone_DarkYellow:     drawtype = glow_eDrawType_Color118; break;
+  case glow_eDrawTone_DarkOrange:   drawtype = glow_eDrawType_Color148; break;
+  case glow_eDrawTone_DarkRed:      drawtype = glow_eDrawType_Color178; break;
+  case glow_eDrawTone_DarkMagenta:  drawtype = glow_eDrawType_Color208; break;
+  case glow_eDrawTone_DarkBlue:     drawtype = glow_eDrawType_Color238; break;
+  case glow_eDrawTone_DarkSeablue:  drawtype = glow_eDrawType_Color268; break;
+  case glow_eDrawTone_DarkGreen:    drawtype = glow_eDrawType_Color298; break;
+  case glow_eDrawTone_LightGray: 	drawtype = glow_eDrawType_Color32; break;
+  case glow_eDrawTone_LightYellowGreen:  drawtype = glow_eDrawType_Color82; break;
+  case glow_eDrawTone_LightYellow:    drawtype = glow_eDrawType_Color112; break;
+  case glow_eDrawTone_LightOrange:  drawtype = glow_eDrawType_Color142; break;
+  case glow_eDrawTone_LightRed:     drawtype = glow_eDrawType_Color172; break;
+  case glow_eDrawTone_LightMagenta: drawtype = glow_eDrawType_Color202; break;
+  case glow_eDrawTone_LightBlue:    drawtype = glow_eDrawType_Color232; break;
+  case glow_eDrawTone_LightSeablue: drawtype = glow_eDrawType_Color262; break;
+  case glow_eDrawTone_LightGreen:   drawtype = glow_eDrawType_Color292; break;
+  default: return glow_eDrawType_No;
+  }
+
+  return drawtype;
 }

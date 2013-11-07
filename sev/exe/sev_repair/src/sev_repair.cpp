@@ -44,6 +44,7 @@
 #include "co_time.h"
 #include "sev_repair.h"
 #include "sev_dbms.h"
+#include "pwr_baseclasses.h"
 #include "rt_sev_msg.h"
 
 
@@ -51,10 +52,15 @@ static void usage()
 {
   cout << endl << endl <<
     "sev_repair   Maintain sev database" << endl << endl <<
-    "> sev_repair [-e] [-r] [-h]" << endl << endl <<
+    "> sev_repair [-e] [-r] [-c] [-o] [-l] [-t 'tablename'] [-h]" << endl << endl <<
     "-r   Repair database" << endl <<
     "-e   Alter database engine to engine specified in /etc/proview.cnf, " << endl <<
-    "     eg \"sevMysqlEngine innodb\"" << endl << endl;
+    "     eg \"sevMysqlEngine innodb\"" << endl <<
+    "-c   Clean tables" << endl <<
+    "-o   Optimize tables" << endl <<
+    "-l   List tables" << endl <<
+    "-t   Table name when a single table is to be repaired, cleaned or optimized." << endl <<
+    "     Default is all tables." << endl << endl;
 }
 
 int sev_repair::init()
@@ -106,6 +112,32 @@ int sev_repair::check()
   return 1;
 }
 
+int sev_repair::check( char *table)
+{
+  pwr_tStatus sts;
+  int fail_cnt = 0;
+  int found = 0;
+
+  for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
+    if ( cdh_NoCaseStrcmp( table, m_db->m_items[i].tablename) == 0) {
+
+      printf( "\n-- Processing %s\n", m_db->m_items[i].tablename);
+      m_db->repair_table( &sts, m_db->m_items[i].tablename);
+      if ( EVEN(sts))
+	fail_cnt++;
+      found = 1;
+      break;
+    }
+  }
+  if ( !found)
+    printf( "** No such table\n");
+  else if ( fail_cnt)
+    printf( "** Repair failed on table\n");
+  else
+    printf( "-- Table successfully repaired\n");
+  return 1;
+}
+
 int sev_repair::alter_engine()
 {
   pwr_tStatus sts;
@@ -126,19 +158,268 @@ int sev_repair::alter_engine()
   return 1;
 }
 
+int sev_repair::optimize()
+{
+  pwr_tStatus sts;
+  int fail_cnt = 0;
+
+
+  printf( "-- Number of tables to optimize: %u\n", m_db->m_items.size());
+  for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
+    printf( "-- Processing %u (%u) %s\n", i, m_db->m_items.size(), m_db->m_items[i].tablename);
+    m_db->optimize( &sts, m_db->m_items[i].tablename);
+    if ( EVEN(sts))
+      fail_cnt++;
+  }
+  if ( fail_cnt)
+    printf( "** Optimize failed on %d tables\n", fail_cnt);
+  else
+    printf( "-- Tables successfully optimized\n");
+  return 1;
+}
+
+int sev_repair::optimize( char *table)
+{
+  pwr_tStatus sts;
+  int fail_cnt = 0;
+  int found = 0;
+
+
+  for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
+    if ( cdh_NoCaseStrcmp( table, m_db->m_items[i].tablename) == 0) {
+      printf( "-- Processing %s\n", m_db->m_items[i].tablename);
+      m_db->optimize( &sts, m_db->m_items[i].tablename);
+      if ( EVEN(sts))
+	fail_cnt++;
+      found = 1;
+      break;
+    }
+  }
+  if ( !found)
+    printf( "** No such table\n");
+  else if ( fail_cnt)
+    printf( "** Optimize on table\n");
+  else
+    printf( "-- Table successfully optimized\n");
+  return 1;
+}
+
+void sev_repair::clean()
+{
+  int i;
+
+  printf( " \n-- Number of tables to clean: %u\n", m_db->m_items.size());
+  for ( i = 0; i < (int)m_db->m_items.size(); i++) {
+    clean_item( i, 1);
+  }
+}
+
+void sev_repair::clean( char *table)
+{
+  int found = 0;
+
+  for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
+    if ( cdh_NoCaseStrcmp( table, m_db->m_items[i].tablename) == 0) {
+      clean_item(i, 0);
+      found = 1;
+      break;
+    }
+  }
+  if ( !found)
+    printf( "** No such table\n");
+  else
+    printf( "-- Table successfully cleaned\n");
+}
+
+void sev_repair::clean_item( int idx, int print_idx)
+{
+  pwr_tTime currenttime, limit;
+
+  time_GetTime(&currenttime);
+
+  if ( m_db->m_items[idx].deleted)
+    return;
+  if ( m_db->m_items[idx].storagetime.tv_sec == 0)
+    return;
+
+  time_Asub( &limit, &currenttime, &m_db->m_items[idx].storagetime);
+
+  if( m_db->m_items[idx].attrnum > 1 ) {
+    if ( print_idx)
+      printf( "-- Processing %d (%u) %s\n", idx, m_db->m_items.size(), m_db->m_items[idx].tablename);
+    else
+      printf( "-- Processing %s\n", m_db->m_items[idx].tablename);
+    m_db->delete_old_objectdata( &m_sts, m_db->m_items[idx].tablename, 
+                                 m_db->m_items[idx].options, limit, m_db->m_items[idx].scantime, (float)0xEFFFFFFF);
+  }
+  else {
+    if ( print_idx)
+      printf( "-- Processing %d (%u) %s\n", idx, m_db->m_items.size(), m_db->m_items[idx].tablename);
+    else
+      printf( "-- Processing %s\n", m_db->m_items[idx].tablename);
+    m_db->delete_old_data( &m_sts, m_db->m_items[idx].tablename, 
+         m_db->m_items[idx].options, limit, m_db->m_items[idx].scantime, (float)0xEFFFFFFF);
+  }
+}
+
+int sev_repair::list()
+{
+  for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
+    printf( "-- %-4u %s", i, m_db->m_items[i].tablename);
+    for ( int j = 0; j < 40 - (int)strlen(m_db->m_items[i].tablename); j++)
+      printf( " ");
+    printf( " %s\n", m_db->m_items[i].oname);
+  }
+  printf( "-- Number of tables: %u\n", m_db->m_items.size());
+  return 1;
+}
+
+int sev_repair::list( char *table)
+{
+  int found = 0;
+  char timstr[40];
+
+  for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
+    if ( cdh_NoCaseStrcmp( table, m_db->m_items[i].tablename) == 0) {
+      printf( "-- %s\n", m_db->m_items[i].tablename);
+      printf( "    Object:            %s\n", m_db->m_items[i].oname);
+      for ( int j = 0; j < (int)m_db->m_items[i].attr.size(); j++) {
+	printf( "    Attribute:         %s ", m_db->m_items[i].attr[j].aname);
+	for ( int k = 0; k < 19 - (int)strlen( m_db->m_items[i].attr[j].aname); k++)
+	  printf( " ");
+	switch ( m_db->m_items[i].attr[j].type) {
+	case pwr_eType_Boolean:
+	  printf( "Boolean\n");
+	  break;
+	case pwr_eType_Float32:
+	  printf( "Float32\n");
+	  break;
+	case pwr_eType_Float64:
+	  printf( "Float64\n");
+	  break;
+	case pwr_eType_Int64:
+	  printf( "Int64\n");
+	  break;
+	case pwr_eType_Int32:
+	  printf( "Int32\n");
+	  break;
+	case pwr_eType_Int16:
+	  printf( "Int16\n");
+	  break;
+	case pwr_eType_Int8:
+	  printf( "Int8\n");
+	  break;
+	case pwr_eType_UInt64:
+	  printf( "UInt64\n");
+	  break;
+	case pwr_eType_UInt32:
+	  printf( "UInt32\n");
+	  break;
+	case pwr_eType_UInt16:
+	  printf( "UInt16\n");
+	  break;
+	case pwr_eType_UInt8:
+	  printf( "UInt8\n");
+	  break;
+	case pwr_eType_String:
+	  printf( "String\n");
+	  break;
+	default:
+	  printf( "Unknown\n");
+	}
+      }
+      time_AtoAscii( &m_db->m_items[i].creatime, time_eFormat_DateAndTime, timstr, sizeof(timstr));
+      printf( "    Creation time:     %s\n", timstr);
+      time_AtoAscii( &m_db->m_items[i].modtime, time_eFormat_DateAndTime, timstr, sizeof(timstr));
+      printf( "    Modification time: %s\n", timstr);
+      time_DtoAscii( &m_db->m_items[i].storagetime, time_eFormat_DateAndTime, timstr, sizeof(timstr));
+      printf( "    Storage time:      %s\n", timstr);
+      printf( "    Scantime:          %f\n", m_db->m_items[i].scantime);
+      printf( "    Deadband:          %f\n", m_db->m_items[i].deadband);
+      printf( "    Options:           ");
+      if ( m_db->m_items[i].options & pwr_mSevOptionsMask_PosixTime)
+	printf( "PosixTime ");
+      if ( m_db->m_items[i].options & pwr_mSevOptionsMask_HighTimeResolution)
+	printf( "HighTimeResoltion ");
+      if ( m_db->m_items[i].options & pwr_mSevOptionsMask_ReadOptimized)
+	printf( "ReadOptimized ");
+      if ( m_db->m_items[i].options & pwr_mSevOptionsMask_UseDeadBand)
+	printf( "UseDeadBand ");
+      if ( m_db->m_items[i].options & pwr_mSevOptionsMask_Parameter)
+	printf( "Parameter ");
+      if ( m_db->m_items[i].options & pwr_mSevOptionsMask_Event)
+	printf( "Event ");
+      printf( "\n");
+      found = 1;
+      break;
+    }
+  }
+  if ( !found)
+    printf( "** No such table\n");
+  return 1;
+}
+
+
 int main (int argc, char *argv[])
 {
   sev_repair rep;
 
-  if ( argc > 1 && strcmp( argv[1], "-e") == 0) {
+  if ( argc > 1 && (strcmp( argv[1], "-e") == 0 || strcmp( argv[1], "--engine") == 0)) {
     // Alter engine
     rep.init();
     rep.alter_engine();
   }
-  else if ( argc > 1 && strcmp( argv[1], "-r") == 0) {
+  else if ( argc > 1 && (strcmp( argv[1], "-r") == 0 || strcmp( argv[1], "--repair") == 0)) {
     // Repair
-    rep.init();
-    rep.check();
+    if ( argc == 2) {
+      rep.init();
+      rep.check();
+    }
+    else if ( argc == 4 && strcmp( argv[2], "-t") == 0) {
+      rep.init();
+      rep.check( argv[3]);
+    }
+    else
+      usage();
+  }
+  else if ( argc > 1 && (strcmp( argv[1], "-c") == 0 || strcmp( argv[1], "--clean") == 0)) {
+    // Clean
+    if ( argc == 2) {
+      rep.init();
+      rep.clean();
+    }
+    else if ( argc == 4 && strcmp( argv[2], "-t") == 0) {
+      rep.init();
+      rep.clean( argv[3]);
+    }
+    else
+      usage();
+  }
+  else if ( argc > 1 && (strcmp( argv[1], "-o") == 0 || strcmp( argv[1], "--optimize") == 0)) {
+    // Optimize
+    if ( argc == 2) {
+      rep.init();
+      rep.optimize();
+    }
+    else if ( argc == 4 && strcmp( argv[2], "-t") == 0) {
+      rep.init();
+      rep.optimize( argv[3]);
+    }
+    else
+      usage();
+  }
+  else if ( argc > 1 && (strcmp( argv[1], "-l") == 0 || strcmp( argv[1], "--list") == 0)) {
+    if ( argc == 2) {
+      // List
+      rep.init();
+      rep.list();
+    }
+    else if ( argc == 4 && strcmp( argv[2], "-t") == 0) {
+      rep.init();
+      rep.list( argv[3]);
+    }
+    else
+      usage();
   }
   else
     usage();

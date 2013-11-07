@@ -196,6 +196,7 @@ class sev_dbms : public sev_db {
   int handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject);
   int repair_table( pwr_tStatus *sts, char *tablename);
   int alter_engine( pwr_tStatus *sts, char *tablename);
+  int optimize( pwr_tStatus *sts, char *tablename);
   int store_stat( sev_sStat *stat);
   int begin_transaction();
   int commit_transaction();

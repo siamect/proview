@@ -678,7 +678,8 @@ qdb_CreateDb (
 
   /* Create lock section.  */
 
-  sp = sect_Alloc(sts, &created, &qdb->lock, sizeof(sect_sMutex), qdb_cNameDbLock);
+  sp = sect_Alloc(sts, &created, &qdb->lock, sizeof(sect_sMutex), qdb_cNameDbLock,
+		  sect_mFlags_Create);
   if (sp == NULL) errh_Bugcheck(*sts, "creating db lock");
   if (!created) errh_Bugcheck(QCOM__WEIRD, "db lock was allready created");
 
@@ -916,7 +917,7 @@ qdb_MapDb (
 
   /* Map lock sections.  */
 
-  sp = sect_Alloc(sts, &created, &qdb->lock, sizeof(sect_sMutex), qdb_cNameDbLock);
+  sp = sect_Alloc(sts, &created, &qdb->lock, sizeof(sect_sMutex), qdb_cNameDbLock, 0);
   if (sp == NULL) errh_Bugcheck(*sts, "mapping db lock");
   if (created) errh_Bugcheck(QCOM__WEIRD, "db lock was not created");
   *sts = sync_MutexInit(&qdb->thread_lock.mutex);

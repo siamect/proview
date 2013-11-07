@@ -1901,6 +1901,8 @@ static int	xnav_show_func(	void		*client_data,
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "EVENTLIST", strlen( arg1_str)) == 0)
   {
+    char arg2_str[80];
+    int	arg2_sts;
     unsigned int options = 0;
 
     if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
@@ -1939,8 +1941,80 @@ static int	xnav_show_func(	void		*client_data,
       xnav->ev->pop_cb = xnav_ev_pop_cb;
       xnav->ev->is_authorized_cb = xnav->is_authorized_cb;
     }
-    else
+
+    arg2_sts = dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str));
+    if ( ODD(arg2_sts)) {
+      if ( cdh_NoCaseStrncmp( arg2_str, "SATELLITE", strlen( arg2_str)) == 0) {
+	pwr_tOName alarmview_str;
+	char tmp_str[40];
+	pwr_tOid alarmview_oid = pwr_cNOid;
+	int width, height, x, y;
+	int nr;
+
+	if ( ODD( dcli_get_qualifier( "/ALARMVIEW", alarmview_str, sizeof(alarmview_str)))) {
+	  sts = gdh_NameToObjid( alarmview_str, &alarmview_oid);
+	  if ( EVEN(sts)) {
+	    xnav->message('E', "Alarmview not found");
+	    return XNAV__SUCCESS;
+	  }
+	}
+
+	if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str, sizeof(tmp_str)))) {
+	  nr = sscanf( tmp_str, "%d", &width);
+	  if ( nr != 1) {
+	    xnav->message('E', "Syntax error in width");
+	    return XNAV__HOLDCOMMAND;
+	  }
+	}
+	else
+	  width = 0;
+	
+	if ( ODD( dcli_get_qualifier( "/HEIGHT", tmp_str, sizeof(tmp_str)))) {
+	  nr = sscanf( tmp_str, "%d", &height);
+	  if ( nr != 1) {
+	    xnav->message('E', "Syntax error in height");
+	    return XNAV__HOLDCOMMAND;
+	  }
+	}
+	else
+	  height = 0;
+
+	if ( ODD( dcli_get_qualifier( "/XPOSITION", tmp_str, sizeof(tmp_str)))) {
+	  nr = sscanf( tmp_str, "%d", &x);
+	  if ( nr != 1) {
+	    xnav->message('E', "Syntax error in x coordinate");
+	    return XNAV__HOLDCOMMAND;
+	  }
+	}
+	else
+	  x = 0;
+
+	if ( ODD( dcli_get_qualifier( "/YPOSITION", tmp_str, sizeof(tmp_str)))) {
+	  nr = sscanf( tmp_str, "%d", &y);
+	  if ( nr != 1) {
+	    xnav->message('E', "Syntax error in y coordinate");
+	    return XNAV__HOLDCOMMAND;
+	  }
+	}
+	else
+	  y = 0;
+
+	if ( xnav->ev)
+	  xnav->ev->open_eventlist_satellite("Eventlist Satellite", &sts, 
+					     width, height, x, y, alarmview_oid);
+	else {
+	  xnav->message('E', "Eventlist not loaded");
+	  return XNAV__HOLDCOMMAND;
+	}
+      }
+      else {
+	xnav->message('E', "Syntax error");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else {
       xnav->ev->map_eve( options);
+    }
   }
   /*new code by Jonas Nylund 030122*/
   else if ( cdh_NoCaseStrncmp( arg1_str, "HISTLIST", strlen( arg1_str)) == 0)
