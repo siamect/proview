@@ -246,7 +246,8 @@ copy : $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se) \
        $(doc_dir)/en_us/man_exlib.pdf \
        $(doc_dir)/en_us/man_exlib.ps \
        $(mediatargets) $(csstargets) \
-       $(export_html) $(export_html_en_us) $(export_html_sv_se)
+       $(export_html) $(export_html_en_us) $(export_html_sv_se) \
+       $(doc_dir)/en_us/changelog.html
 
 lib :
 
@@ -436,6 +437,28 @@ $(doc_dir)/en_us/man_exlib.pdf : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
 	@ echo "Generating pdf for en_us/man_exlib"
 	@ $(co_convert) -f -d $(doc_dir)/en_us $(source)
 
+$(doc_dir)/en_us/changelog.html : $(pwre_croot)/src/changelog.txt \
+                                  $(pwre_croot)/xtt/changelog.txt \
+                                  $(pwre_croot)/wb/changelog.txt \
+                                  $(pwre_croot)/nmps/changelog.txt \
+                                  $(pwre_croot)/remote/changelog.txt \
+                                  $(pwre_croot)/misc/changelog.txt \
+                                  $(pwre_croot)/profibus/changelog.txt \
+                                  $(pwre_croot)/opc/changelog.txt \
+                                  $(pwre_croot)/java/changelog.txt \
+                                  $(pwre_croot)/tlog/changelog.txt \
+                                  $(pwre_croot)/bcomp/changelog.txt \
+                                  $(pwre_croot)/otherio/changelog.txt \
+                                  $(pwre_croot)/sev/changelog.txt \
+                                  $(pwre_croot)/othermanu/changelog.txt \
+                                  $(pwre_croot)/abb/changelog.txt \
+                                  $(pwre_croot)/siemens/changelog.txt \
+                                  $(pwre_croot)/ssabox/changelog.txt \
+                                  $(pwre_croot)/telemecanique/changelog.txt \
+                                  $(pwre_croot)/klocknermoeller/changelog.txt
+	@ echo "Generating changelog html file"
+	@ $(co_convert) -e
+	@ mv $(pwre_croot)/src/doc/man/en_us/changelog.html $(target)
 
 # implicit rules, docbook-related, added by jonas_h 2006-04-nn
 

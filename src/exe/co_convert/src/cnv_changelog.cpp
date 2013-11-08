@@ -84,7 +84,7 @@ CnvChangeLog::CnvChangeLog( CnvCtx *cnv_ctx, char *from_str) :
   read( "telemecanique");
   read( "inor");
   read( "klocknermoeller");
-  print();
+  // print();
   print_html();
 }
 
