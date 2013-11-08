@@ -25,3 +25,14 @@
 120615 cs  jop       Java piechart and barchart implemented
 120712 cs  jop       Java trend and fast curves implemented
 120821 cs  rt        Java eventlog wasn't built with db++
+130122 cs  java      Java move and scale dynamics for integer types added
+130122 cs  java      Java fix for dyntype1 and actiontype1
+130320 cs  java      Java read of pwg-files.
+130320 cs  web       Web crossref list, size max limit added
+130618 cs  java      Ge java, import of jopc removed
+130628 cs  aapp      PwrXtt android application 
+130902 cs  aapp      Android app, operator window added
+130903 cs  aapp      Android app, default graph icon added
+130905 cs  aapp      Android app graph object added
+131011 cs  aapp      Android app, login and athourity check added
+131022 cs  aapp      Android add menu, login/logout was missing

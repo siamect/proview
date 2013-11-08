@@ -3,3 +3,6 @@
 080318 cs  -         ACS800 frequency converter with PPO3 or PPO5 profibus protocol added.
 090623 cs  -         ACS800_1: bit 1 and 4 in CW used to stop, previously only bit 1 was used. 
 091111 cs  -         ACS800_1Sim adapted to changed CW function. 
+130626 cs  abb       ABB ACS800 ConvertFault changed to ConvertInhibit
+130625 cs  abb       ABB ACS880 with Profibus PPO7 communication added
+130726 cs  abb       ABB ACS880 Powerlink modifications

@@ -221,5 +221,43 @@
 120823 cs  plc       Plc, serveral processes, handling of error log and process status
 120824 cs  plc       Plc, several plc processes, signal handling with rt_ini at start and restart
 120926 cs  neth      Size check in subscription client message to avoid rt_neth crash at bad network
+120926 cs  rt        pwr_stop.sh, opc_provider added
+121011 cs  rtt       rt_rtt, fix for show nmps picture
+121017 cs  co        co_convert, image search path for postscript motified
+121017 cs  tools     Wireshark qcom dissector, CircBuff messages added, and handling of middle and last segments
+121031 cs  rt        Report server, display needed when reporting GeGraphs can be configured
+121031 cs  rt        Simulate server implemented
+121031 cs  rt        Qdb bugfix in qdb_Wait(), couldn't be called twice
+121031 cs  doc       Release notes for 4.8.6
+121101 cs  rt        Simulate config, reset function added
+121102 cs  rt        rt_ini, start only system servers with config objects
+121112 cs  rt        Nethandler and event monitor bugfix, reconnect request from sev server wasn't handle correctly
+121121 cs  rtt       rt_rtt bugfix, qcomonly argument didn't work
+121123 cs  rtt       rt_rtt, show pool added for qcomonly
+121123 cs  rt        Pool bugfix in pool_InPool(), reference with exact segment size wasn't recognized
 121203 rk  elog      Added executable rt_elog_dump that will dump historical event log to text-file.
+121205 cs  pwre      pwre configure fix for sqlite
+121206 cs  rt        IO erroneous error message removed for ChanDi
+121206 cs  rt        rt_elog_dump makefile was missing
+121213 cs  rt        Messagehandler, bugfix in application alarm count
+121213 cs  doc       Releasenotes 4.8.6
+121213 cs  rt        rt_sim added to startup
+121214 cs  rt        UserDetectTime added to EventFlags
+121215 cs  pkg       Debian pkg control files sqlite3 added
+130122 cs  doc       Programmer's referense manual, sevcli API added
+130122 cs  co        Helpfile chapter and headerlevel bugfix
+130122 cs  doc       Designer's Guide new data storage chapter
+130122 cs  pwre      pwre ebuild fix
+130205 cs  rt        Report display fix
+130213 cs  pwre      Full ARM build
+130218 cs  pwre      ebuild fix for berkeley db
+130320 cs  doc       Doc wtt command print /pdf and /all added
+130327 cs  rt        Bugfix for subscription buffer mismatch
+130628 cs  rt        Runtime priviliges for plc, navigator and alarm ack
+130726 cs  rt        IO init, IO Status also searched for in parent object to connected module
+130905 cs  rt        gdh_GetClassListAttrref also returned attributes defined as pointers to the class (refs #149)
+130906 cs  doc       Releasenotes 5.0 added
+131017 cs  co        Remote buffer include file parser, support for alignment in classes (refs #138)
+131022 cs  doc       Programmer's Guide, aproc added
+131031 cs  rt        pwr_db_lock-file was created by xtt if Proview wasn't started
 

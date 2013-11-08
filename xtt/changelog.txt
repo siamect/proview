@@ -251,3 +251,75 @@
 120912 cs  xtt       Xtt, alarm beep wasn't controled by OpPlace AlarmBell attribute
 120919 cs  xtt       Xtt, bugfix in display of Do channel flags (refs #116)
 120920 cs  xtt       Xtt bugfix, Hold and Scantime didn't work in Dv object graph
+121004 cs  xtt       Print dialog added to most windows
+121009 cs  xtt       Xtt block list, object name wasn't displayed
+121009 cs  xtt       Print dialog in trace and plc editor
+121011 cs  xtt       Xtt help, modified search path for help topics
+121011 cs  xtt       Plc trace, version check and warning added
+121011 cs  xtt       Print draw, position for multiline texts adjusted
+121016 cs  ge        Ge dyn bit dynamics bugfix for array of objects
+121101 cs  ge        Ge, mouse scrolling added to tables, tabbed windows and windows with vertical scrollbar
+121102 cs  ge        Ge scroll events transmitted to objects in sub windows
+121112 cs  ge        Ge optionmenu, functionality for dynamic texts added
+121113 cs  xtt       Help class method, abbreviation of class names removed
+121121 cs  ge        Ge axis dynamic implemeted
+121123 cs  ge        Ge axis dynamic fix
+121205 cs  ge        Ge fix for pulldown menu
+121205 cs  ge        Ge support for double references in Ge action commands
+121210 cs  ge        Ge fix in command and popupmenu dynamics reference object syntax
+121210 cs  ge        Ge Axis dynamics fix
+130102 cs  xtt       Xtt bugfix for doubleclick on enum or mask element (refs #124)
+130102 cs  xtt       Xtt command 'evenlist unload' bugfix (refs #127)
+130205 cs  ge        Ge video dynamic fix for image reading fault
+130214 cs  ge        Ge dynamic DigCommand with  in window object bugfix
+130220 cs  xtt       Xtt scaleable bitmaps for crossref read and write added
+130320 cs  ge        Ge dyntype2 fix
+130320 cs  ge        Ge IncrAnalog copy bugfix
+130320 cs  ge        Ge DigWarning for inverted signal bugfix
+130321 cs  ge        Ge, implementation of dynamics for subgraphs in subgraphs
+130408 cs  ge        Ge, implementation of command dynamics for subgraphs in subgraphs
+130417 cs  ge        Ge slider, type boolean added
+130523 cs  ge        Ge fix for DynType2
+130523 cs  ge        Ge, transient for graphs implemented
+130523 cs  ge        Ge image wasn't freed
+130618 cs  xtt       Xtt enum name buffer to small
+130618 cs  ge        Ge image bugfix for inverse drawing
+130628 cs  xtt       Xtt multiview windows
+130628 cs  xtt       Alarmlist satellites
+130628 cs  ge        Ge trend hold dynamics
+130715 cs  xtt       Xtt logging scantime min limit 10 ms removed
+130726 cs  xtt       Multiview MB3 close disabled for ge cells fix
+130726 cs  xtt       Xtt commands, symbol added to 'close graph/multiview' and 'set subwindow'
+130726 cs  xtt       Multiview MB3 close disabled for ge cells
+130903 cs  ge        Ge sugraph flip bugfix (refs #162)
+130903 cs  xtt       Multiview command 'set subwindow on own graph bugfix (refs #163)
+130905 cs  xtt       Opwindow menu curve/trend also shows DsTrendCurve objects (refs #150)
+130911 cs  ge        Ge pulldown menu, submenu textsize and event coordinates bugfix (refs #165)
+130912 cs  xtt       Eventlog search was somtimes case sensitive and couldn't handle едц (refs #166)
+130912 cs  ge        Ge image, reset color tone didn't work
+130912 cs  xtt       Xtt methods menu, hist event for attribute objects added (refs #136)
+130918 cs  xtt       Sev curve window, full parameter name displayed for first curve
+130918 cs  xtt       Event log method for asup and dsup displays events for attribute, and HistEvent changed to EventLog (refs #156)
+130919 cs  ge        Ge scale to grid implemented (refs #154)
+131009 cs  xtt       Xtt display of signal and channel status, Co channels added
+131011 cs  ge        Ge image tone bugfix
+131011 cs  ge        Ge color palette bugfix, Reset and Bg buttons text wasn't sensitive
+131014 cs  xtt       Xtt event log statistics (refs #160)
+131014 cs  web       Java command open url added .html on .shtml links
+131016 cs  xtt       Xtt show existance of event moretext in alarmlist (refs #143)
+131017 cs  xtt       Xtt sevhist export all, and read exported file
+131017 cs  xtt       Ge curve, unit wasn't displayed, show description, save scale min/max
+131017 cs  xtt       Xtt and wb, input syntax check for erroneous characters at end (refs #147)
+131017 cs  glow      Glow buffer_background virtual function bugfix
+131018 cs  xtt       Xtt curve bugfix for large zooming
+131023 cs  xtt       Xtt method open graph for multiview
+131023 cs  xtt       Xtt, Unit shown in trend, Description added in curve window, Save scale added, Export all attributes in sevhist
+131024 cs  xtt       Xtt authorization error message fix
+131024 cs  xtt       Xtt operator window, alarm info button for moretext added
+131103 cs  xtt       Xtt eventlist satellite implemented
+131106 cs  ge        Ge default MB3 action changed to popup menu
+131106 eb  ge        Ge graph view added
+131106 eb  ge        Ge svg image support added
+131106 eb  ge        Ge colorpalette current tone, and insert current tone in attribute editor with ctrl+double click added
+131106 cs  xtt       Xtt opwindow alarm moretext as tooltip removed
+131107 cs  ge        Ge graph list save confirm options added
