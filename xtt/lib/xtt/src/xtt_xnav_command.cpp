@@ -3645,6 +3645,7 @@ static int	xnav_open_func(	void		*client_data,
           trend->help_cb = xnav_trend_command_cb;
           trend->help_cb = xnav_trend_help_cb;
           trend->command_cb = xnav_trend_command_cb;
+	  trend->get_select_cb = xnav_get_select_cb;
           xnav->appl.insert( applist_eType_Trend, (void *)trend, &plotgroup, "",
 		   NULL);
         }
@@ -3663,6 +3664,7 @@ static int	xnav_open_func(	void		*client_data,
 	    trend->close_cb = xnav_trend_close_cb;
 	    trend->command_cb = xnav_trend_command_cb;
 	    trend->help_cb = xnav_trend_help_cb;
+	    trend->get_select_cb = xnav_get_select_cb;
 	    xnav->appl.insert( applist_eType_Trend, (void *)trend, &aref_vect[0], "",
 			       NULL);
 	  }
@@ -3674,6 +3676,7 @@ static int	xnav_open_func(	void		*client_data,
 	  trend->close_cb = xnav_trend_close_cb;
 	  trend->command_cb = xnav_trend_command_cb;
 	  trend->help_cb = xnav_trend_help_cb;
+	  trend->get_select_cb = xnav_get_select_cb;
 	}
       }
     }

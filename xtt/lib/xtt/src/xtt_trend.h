@@ -74,6 +74,7 @@ class XttTrend {
   int        max_points;
   pwr_tTid   trend_tid;
   int	     update_time;
+  unsigned int options;
   cbuf_sCircBuffInfo cb_info[XTT_TREND_MAX];
   CoWowTimer *timerid;
   int        last_buffer[XTT_TREND_MAX];
@@ -81,20 +82,25 @@ class XttTrend {
   void       (*close_cb)( void *, XttTrend *);
   void       (*help_cb)( void *, const char *);
   void       (*command_cb)( void *, const char *);
+  int        (*get_select_cb)( void *, pwr_tAttrRef *, int *); //!< Get selected trend object.
   CoWow	     *wow;
 
   XttTrend( void *xn_parent_ctx,
 	    char *xn_name,
 	    pwr_sAttrRef *objid,
 	    pwr_sAttrRef *plotgroup,
+	    unsigned int options,
 	    int *sts);
   virtual ~XttTrend();
   void pop();
   void setup();
+  void curve_add( pwr_tAttrRef *arp, pwr_tAttrRef *trend_arp, pwr_tStatus *sts);
 
   static void trend_close_cb( void *ctx);
   static void trend_help_cb( void *ctx);
   static void trend_snapshot_cb( void *ctx);
+  static void trend_add_cb( void *ctx);
+  static void trend_madd_cb( void *ctx);
   static void trend_scan( void *data);
 
 };

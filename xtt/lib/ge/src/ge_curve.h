@@ -56,7 +56,8 @@ typedef enum {
         curve_mOptions_FullMaximize = 1 << 2,
         curve_mOptions_Iconify      = 1 << 3,
         curve_mOptions_Invisible    = 1 << 4,
-        curve_mOptions_Embedded     = 1 << 5
+        curve_mOptions_Embedded     = 1 << 5,
+        curve_mOptions_ShowDescrFirst = 1 << 6
 } curve_mOptions;
 
 typedef enum {
@@ -65,7 +66,8 @@ typedef enum {
   curve_mEnable_Open 	= 1 << 2,
   curve_mEnable_Snapshot = 1 << 3,
   curve_mEnable_Export	= 1 << 4,
-  curve_mEnable_Timebox = 1 << 5
+  curve_mEnable_Timebox = 1 << 5,
+  curve_mEnable_Add     = 1 << 6
 } curve_mEnable;
 
 typedef enum {
@@ -188,6 +190,7 @@ class GeCurve {
     void 	 (*prev_period_cb)( void *);
     void 	 (*next_period_cb)( void *);
     void 	 (*add_cb)( void *);
+    void 	 (*madd_cb)( void *);
     void 	 (*remove_cb)( void *);
     int 	 (*export_cb)( void *, pwr_tTime *, pwr_tTime *, int, int, char *);
     void 	 (*new_cb)( void *);

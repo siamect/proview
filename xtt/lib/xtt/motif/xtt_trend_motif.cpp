@@ -85,7 +85,8 @@ XttTrendMotif::XttTrendMotif( void *parent_ctx,
 			      int height,
 			      unsigned int options,
 			      int *sts) :
-  XttTrend( parent_ctx, name, trend_list, plotgroup, sts), parent_widget(parent_wid)
+  XttTrend( parent_ctx, name, trend_list, plotgroup, options, sts), 
+  parent_widget(parent_wid)
 {
   if ( EVEN(*sts))
     return;
