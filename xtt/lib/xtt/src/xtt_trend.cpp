@@ -38,6 +38,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"
@@ -66,8 +67,10 @@ XttTrend::XttTrend( void *parent_ctx,
 		    char *name,
 		    pwr_sAttrRef *trend_list,
 		    pwr_sAttrRef *plotgroup,
+		    unsigned int x_options,
 		    int *sts) :
-  xnav(parent_ctx), trend_cnt(0), update_time(1000), close_cb(0), help_cb(0), command_cb(0)
+  xnav(parent_ctx), trend_cnt(0), update_time(1000), options(x_options), 
+  close_cb(0), help_cb(0), command_cb(0), get_select_cb(0)
 {
   pwr_sAttrRef *aref_list;
   pwr_sAttrRef *aref_p;
@@ -348,6 +351,8 @@ XttTrend::XttTrend( void *parent_ctx,
 	  if ( actual_data_size[i] > cb_info[i].bufsize)
 	    printf( "** Sample size error !!!\n");
 
+	  if ( tcp[tcp_i].Function & 2)
+	    options |= curve_mOptions_ShowDescrFirst;
 	  i++;
 	}
       }
@@ -495,7 +500,10 @@ void XttTrend::pop()
 
 void XttTrend::setup()
 {
-  curve->setup( curve_mEnable_Snapshot);
+  if ( trend_tid == pwr_cClass_DsTrendCurve)
+    curve->setup( curve_mEnable_Snapshot | curve_mEnable_Add);
+  else
+    curve->setup( curve_mEnable_Add);
 }
 
 void XttTrend::trend_close_cb( void *ctx)
@@ -517,6 +525,162 @@ void XttTrend::trend_snapshot_cb( void *ctx)
 
   if ( trend->command_cb)
     (trend->command_cb)( trend->xnav, cmd);
+}
+
+class AttrList {
+public:
+  AttrList( char *a, char *t) : attr(a), trend(t) {}
+  string attr;
+  string trend;
+};
+
+class AttrListCtx {
+public:
+  AttrListCtx( XttTrend *t) : trend(t) {}
+  XttTrend *trend;
+  vector<AttrList> v;
+};
+  
+static void add_objectlist_cb( void *ctx, char *text)
+{
+  printf( "%s\n", text);
+
+  pwr_tStatus sts;
+  pwr_tAttrRef trend_aref, attr_aref;
+  AttrListCtx *vctx = (AttrListCtx *)ctx;
+  unsigned int i;
+  int found = 0;
+
+  for ( i = 0; i < vctx->v.size(); i++) {
+    if ( strcmp( vctx->v[i].attr.c_str(), text) == 0) {
+      found = 1;
+      break;
+    }
+  }
+  if ( !found)
+    return;
+
+  sts = gdh_NameToAttrref( pwr_cNOid, vctx->v[i].attr.c_str(), &attr_aref);
+  if ( EVEN(sts)) return;
+
+  sts = gdh_NameToAttrref( pwr_cNOid, vctx->v[i].trend.c_str(), &trend_aref);
+  if ( EVEN(sts)) return;
+
+  vctx->trend->curve_add( &attr_aref, &trend_aref, &sts);
+  if ( EVEN(sts))
+    printf( "Trend add failure\n");
+
+  delete vctx;
+}
+
+static void add_objectlist_cancel_cb( void *ctx)
+{
+  delete (AttrListCtx *)ctx;
+}
+
+void XttTrend::trend_madd_cb( void *ctx)
+{
+  XttTrend *trend = (XttTrend *) ctx;
+  pwr_tAttrRef trend_aref, attr_aref;
+  pwr_tAName trend_name, attr_name;
+  pwr_tStatus sts;
+  pwr_tAName *names;
+  
+  printf( "Madd\n");
+
+  AttrListCtx *vctx = new AttrListCtx(trend);
+
+  for ( sts = gdh_GetClassListAttrRef( trend->trend_tid, &trend_aref);
+	ODD(sts);
+	sts = gdh_GetNextAttrRef( trend->trend_tid, &trend_aref, &trend_aref)) {
+    switch ( trend->trend_tid) {
+    case pwr_cClass_DsTrend: {      
+      pwr_tAttrRef dataname_aref;
+
+      sts = gdh_ArefANameToAref( &trend_aref, "DataName", &dataname_aref);
+      if ( EVEN(sts)) return;
+
+      sts = gdh_GetObjectInfoAttrref( &dataname_aref, &attr_aref, sizeof(attr_aref));  
+      if ( EVEN(sts)) return;
+
+      sts = gdh_AttrrefToName( &attr_aref, attr_name, sizeof(attr_name),
+			       cdh_mNName);
+      if ( EVEN(sts)) continue;
+
+      sts = gdh_AttrrefToName( &trend_aref, trend_name, sizeof(trend_name),
+			       cdh_mNName);
+      if ( EVEN(sts)) continue;
+
+      AttrList l( attr_name, trend_name);
+      vctx->v.push_back(l);
+      break;
+    }      
+    case pwr_cClass_DsTrendCurve: {      
+      pwr_sClass_DsTrendCurve tp;
+      unsigned int asize = sizeof(tp.Attribute)/sizeof(tp.Attribute[0]);
+
+      sts = gdh_GetObjectInfoAttrref( &trend_aref, &tp, sizeof(tp));
+      if ( EVEN(sts)) return;
+
+      sts = gdh_AttrrefToName( &trend_aref, trend_name, sizeof(trend_name),
+			       cdh_mNName);
+      if ( EVEN(sts)) continue;
+
+      for ( unsigned int j = 0; j < asize; j++) {
+	if ( cdh_ObjidIsNull(tp.Attribute[j].Objid))
+	  break;
+
+	sts = gdh_AttrrefToName( &tp.Attribute[j], attr_name, sizeof(attr_name), 
+				 cdh_mNName);
+	if (EVEN(sts)) continue;
+
+	AttrList l( attr_name, trend_name);
+	vctx->v.push_back(l);
+      }
+      break;
+    }
+    default: ;
+    }
+  }
+
+  names = (pwr_tAName *)calloc( vctx->v.size() + 1, sizeof(pwr_tAName));
+  for ( unsigned int i = 0; i < vctx->v.size(); i++) {
+    strcpy( names[i], vctx->v[i].attr.c_str());
+  }
+
+  // Sort
+  pwr_tAName tmp;
+  for ( unsigned int i = vctx->v.size() - 1; i > 0; i--) {
+    for ( unsigned int j = 0; j < i; j++) {
+      if ( strcmp(names[j], names[j+1]) > 0) {
+	strcpy( tmp, names[j+1]);
+	strcpy( names[j+1], names[j]);
+	strcpy( names[j], tmp);
+      }
+    }
+  }
+
+  trend->wow->CreateList( "Add attribute", (char *)names, sizeof(names[0]), 
+			  add_objectlist_cb, add_objectlist_cancel_cb, vctx);
+  free( names);  
+}
+
+void XttTrend::trend_add_cb( void *ctx)
+{
+  XttTrend *trend = (XttTrend *) ctx;
+  pwr_tAttrRef aref;
+  int is_attr;
+  pwr_tStatus sts;
+
+  if ( !trend->get_select_cb)
+    return;
+
+  sts = trend->get_select_cb( trend->xnav, &aref, &is_attr);
+  if ( EVEN(sts)) return;
+
+  trend->curve_add( &aref, 0, &sts);
+  if ( EVEN(sts))
+    printf( "Trend add failure\n");
 }
 
 void XttTrend::trend_help_cb( void *ctx)
@@ -644,6 +808,499 @@ void XttTrend::trend_scan( void *data)
   trend->timerid->add( trend->update_time, trend_scan, trend);
 }
 
+void XttTrend::curve_add( pwr_tAttrRef *arp, pwr_tAttrRef *trend_arp, pwr_tStatus *sts)
+{
+  pwr_tTid tid;
+  pwr_tAttrRef defaref, deftrend;
+  pwr_tAttrRef trend_aref, attr_aref;
+  pwr_tStatus lsts;
+  pwr_tObjid child;
+  int trend_found = 0;
+  int attr_found = 0;
+  unsigned int trend_idx[20];
+  unsigned int trend_idx_cnt = 0;
+    
+
+  *sts = XNAV__SUCCESS;
+
+  if ( trend_cnt == XTT_TREND_MAX) {
+    *sts = 0;
+    return;
+  }
+
+  if ( trend_arp) {
+    trend_aref = *trend_arp;
+    trend_found = 1;
+    if ( arp) {
+      attr_found = 1;
+      attr_aref = *arp;
+    }
+  }
+
+  if ( !trend_found) {
+    *sts = gdh_GetAttrRefTid( arp, &tid);
+    if ( EVEN(*sts)) return;
+
+    switch( tid) {
+    case pwr_cClass_DsTrend:
+      trend_aref = *arp;
+      trend_found = 1;
+      break;
+    case pwr_cClass_DsTrendCurve:
+      trend_aref = *arp;
+      trend_found = 1;
+      break;
+    default:
+      // Get DefaultTrend
+      *sts = gdh_ArefANameToAref( arp, "DefTrend", &defaref);
+      if ( ODD(*sts)) {
+	*sts = gdh_GetObjectInfoAttrref( &defaref, &deftrend, sizeof(deftrend));  
+	if ( EVEN(*sts)) return;
+	
+	*sts = gdh_GetAttrRefTid( &deftrend, &tid);
+	if ( ODD(*sts)) {
+	  
+	  switch( tid) {
+	  case pwr_cClass_DsTrend:
+	  case pwr_cClass_DsTrendCurve:
+	    trend_aref = deftrend;
+	    attr_aref = *arp;
+	    trend_found = 1;
+	    attr_found = 1;
+	    break;
+	  case pwr_cClass_PlotGroup: {
+	    pwr_sClass_PlotGroup plot;
+	    pwr_tAName vname;
+	    pwr_tAName attr_name;
+	    unsigned int vsize = sizeof(plot.YObjectName)/sizeof(plot.YObjectName[0]);
+	    
+	    *sts = gdh_GetObjectInfoAttrref( &deftrend, &plot, sizeof(plot));
+	    if ( EVEN(*sts)) return;
+	    
+	    for ( unsigned int i = 0; i < vsize; i++) {
+	    
+	      if ( cdh_ObjidIsNull(plot.YObjectName[i].Objid))
+		break;
+	    	      
+	      *sts = gdh_GetAttrRefTid( &plot.YObjectName[i], &tid);
+	      if ( EVEN(*sts)) continue;
+
+	      if ( tid != trend_tid) {
+		*sts = 0;
+		return;
+	      }
+		
+	      switch ( tid) {
+	      case pwr_cClass_DsTrend: {
+		pwr_sClass_DsTrend tp;
+
+		*sts = gdh_GetObjectInfoAttrref( &plot.YObjectName[i], &tp, sizeof(tp));
+		if ( EVEN(*sts)) return;
+
+		*sts = gdh_AttrrefToName( arp, attr_name, sizeof(attr_name), 
+					  cdh_mName_volumeStrict);
+		if ( EVEN(*sts)) return;
+		
+		*sts = gdh_AttrrefToName( &tp.DataName, vname, sizeof(vname), 
+					  cdh_mName_volumeStrict);
+		if (EVEN(*sts)) return;
+
+		if ( strncmp( attr_name, vname, strlen(attr_name)) == 0) {
+		  trend_aref = plot.YObjectName[i];
+		  trend_found = 1;
+		  attr_aref = *arp;
+		  attr_found = 1;
+		}
+		break;
+	      }
+	      case pwr_cClass_DsTrendCurve: {
+		pwr_sClass_DsTrendCurve tp;
+		pwr_tAName vname;
+		unsigned int asize = sizeof(tp.Attribute)/sizeof(tp.Attribute[0]);
+
+		*sts = gdh_GetObjectInfoAttrref( &plot.YObjectName[i], &tp, sizeof(tp));
+		if ( EVEN(*sts)) return;
+
+		*sts = gdh_AttrrefToName( arp, attr_name, sizeof(attr_name), 
+					  cdh_mName_volumeStrict);
+
+		for ( unsigned int j = 0; j < asize; j++) {
+		  if ( cdh_ObjidIsNull(tp.Attribute[j].Objid))
+		    break;
+		  
+		  *sts = gdh_AttrrefToName( &tp.Attribute[j], vname, sizeof(vname), 
+					    cdh_mName_volumeStrict);
+		  if (EVEN(*sts)) return;
+
+		  if ( strncmp( attr_name, vname, strlen(attr_name)) == 0) {
+		    trend_aref = plot.YObjectName[i];
+		    trend_found = 1;
+		    attr_aref = *arp;
+		    attr_found = 1;
+		    trend_idx[trend_idx_cnt] = j;
+		    trend_idx_cnt++;
+		  }
+		}
+		break;
+	      }
+	      default: ;
+	      }
+	      if ( trend_found)
+		break;
+	    }	    
+	    break;
+	  }
+	  default:
+	    // Search children
+	    for ( lsts = gdh_GetChild( arp->Objid, &child); ODD(lsts); lsts = gdh_GetNextSibling( child, &child)) {
+	      *sts = gdh_GetObjectClass( child, &tid);
+	      if ( EVEN(*sts)) return;
+	      
+	      switch( tid) {
+	      case pwr_cClass_DsTrend:
+	      case pwr_cClass_DsTrendCurve:
+		trend_aref = cdh_ObjidToAref( child);
+		attr_aref = *arp;
+		trend_found = 1;
+		attr_found = 1;
+		break;
+	      default: ;
+	      }
+	      if ( trend_found)
+		break;
+	    }
+	  }
+	}
+      }
+    }
+  }
+  if (!trend_found) {
+    *sts = 0;
+    return;
+  }
+
+  *sts = gdh_GetAttrRefTid( &trend_aref, &tid);
+  if ( EVEN(*sts)) return;
+
+  if ( tid != trend_tid) {
+    *sts = 0;
+    return;
+  }
+  
+  if ( trend_tid == pwr_cClass_DsTrendCurve && attr_found && trend_idx_cnt == 0) {
+    // Find index for attribute
+    pwr_sClass_DsTrendCurve tp;
+    pwr_tAName attr_name, vname;
+    unsigned int asize = sizeof(tp.Attribute)/sizeof(tp.Attribute[0]);
+
+    *sts = gdh_GetObjectInfoAttrref( &trend_aref, &tp, sizeof(tp));
+    if ( EVEN(*sts)) return;
+
+    *sts = gdh_AttrrefToName( &attr_aref, attr_name, sizeof(attr_name), 
+			      cdh_mName_volumeStrict);
+    
+    for ( unsigned int j = 0; j < asize; j++) {
+      if ( cdh_ObjidIsNull(tp.Attribute[j].Objid))
+	break;
+		  
+      *sts = gdh_AttrrefToName( &tp.Attribute[j], vname, sizeof(vname), 
+				cdh_mName_volumeStrict);
+      if (EVEN(*sts)) return;
+
+      if ( strncmp( attr_name, vname, strlen(attr_name)) == 0) {
+	trend_idx[trend_idx_cnt] = j;
+	trend_idx_cnt++;
+      }
+    }    
+  }
+
+  if ( trend_tid == pwr_cClass_DsTrend) {
+    pwr_sClass_DsTrend tp;
+    pwr_tAName object_name;
+    int start_idx;
+    int trend_buff_size = (int) sizeof( tp.DataBuffer) /
+      sizeof( tp.DataBuffer[0]);
+
+    // Get current status of the trend objects
+    int i = trend_cnt;
+    *sts = gdh_AttrrefToName( &trend_aref, trend_name[i], sizeof(trend_name[0]), 
+			      cdh_mNName);
+    if (EVEN(*sts)) return;
+      
+    *sts = gdh_GetObjectInfo( trend_name[i], &tp, sizeof(tp));
+    if ( EVEN(*sts)) return;
+      
+    *sts = gdh_AttrrefToName( &tp.DataName, object_name, 
+			      sizeof(object_name), cdh_mNName);
+    if (EVEN(*sts)) return;
+    trend_cnt++;
+
+
+    gcd->y_data[i] = (double *) calloc( 1, 8 * max_points);
+      
+    interval[i] = tp.Multiple * tp.ScanTime / min_interval;
+
+    int write_buffer = (int) tp.WriteBuffer;
+    start_idx = write_buffer * trend_buff_size / 2
+      + int( tp.NextWriteIndex[write_buffer]);
+    if ( start_idx == 0) {
+      start_idx = tp.NoOfSample - 1 + trend_buff_size / 2;
+      write_buffer = 1;
+    }
+    else if ( start_idx == trend_buff_size / 2) {
+      start_idx = tp.NoOfSample - 1;
+      write_buffer = 0;
+    }
+    else
+      start_idx--;
+      
+    int idx = 0;
+    for ( int j = start_idx; j >= write_buffer * trend_buff_size/2; j--) {
+
+      for ( int k = 0; k < interval[i]; k++) {
+	gcd->y_data[i][idx] = tp.DataBuffer[j];
+	idx++;
+      }
+    }
+    for ( int j = tp.NoOfSample - 1 + (!write_buffer) * trend_buff_size/2;
+	  j >= (!write_buffer) * trend_buff_size/2; j--) {
+      for ( int k = 0; k < interval[i]; k++) {
+	gcd->y_data[i][idx] = tp.DataBuffer[j];
+	idx++;
+      }
+    }
+    if ( start_idx != (int) tp.NoOfSample - 1 + 
+	 write_buffer * trend_buff_size/2) {
+      for ( int j = tp.NoOfSample - 1 + write_buffer * trend_buff_size/2; 
+	    j > start_idx; j--) {
+	for ( int k = 0; k < interval[i]; k++) {
+	  gcd->y_data[i][idx] = tp.DataBuffer[j];
+	  idx++;
+	}
+      }
+    }
+    last_buffer[i] = tp.WriteBuffer;
+    last_next_index[i] = tp.NextWriteIndex[last_buffer[i]];
+    gcd->y_axis_type[i] = curve_eAxis_y; 
+
+    // Subscribe to object
+    *sts = gdh_RefObjectInfo( trend_name[i], (pwr_tAddress *)&trend_p[i], 
+			      &subid[i], sizeof(pwr_sClass_DsTrend));
+    if ( EVEN(*sts)) return;
+      
+    strcpy( gcd->y_name[i], object_name);
+      
+    switch( trend_p[i]->DataType) {
+    case pwr_eType_Float32:
+    case pwr_eType_Int32:
+    case pwr_eType_UInt32:
+      element_size[i] = 4;
+      break;
+    case pwr_eType_Float64:
+    case pwr_eType_Int64:
+    case pwr_eType_UInt64:
+      element_size[i] = 8;
+      break;
+    case pwr_eType_Int16:
+    case pwr_eType_UInt16:
+      element_size[i] = 2;
+      break;
+    case pwr_eType_Int8:
+    case pwr_eType_UInt8:
+      element_size[i] = 1;
+      break;
+    default:
+      element_size[i] = 4;
+    }
+    gcd->rows[i] = max_points;
+
+    gcd->cols = trend_cnt;
+    gcd->get_borders();
+    gcd->get_default_axis();
+    gcd->select_color( 0);
+    
+    // Try to find unit and descripion
+    pwr_tAName aname;
+    char unit[40];
+    char description[80];
+    pwr_tStatus lsts;
+    char *s;
+      
+    strcpy( aname, object_name);
+    if ( (s = strrchr( aname, '.')))
+      *s = 0;
+    strcat( aname, ".Unit");
+    lsts = gdh_GetObjectInfo( aname, unit, sizeof(unit));
+    if ( ODD(lsts))
+      strncpy( gcd->y_unit[i], unit, sizeof(gcd->y_unit[0]));
+
+    strcpy( aname, object_name);
+    if ( (s = strrchr( aname, '.')))
+      *s = 0;
+    strcat( aname, ".Description");
+    lsts = gdh_GetObjectInfo( aname, description, sizeof(description));
+    if ( ODD(lsts))
+      strncpy( gcd->y_description[i], description, sizeof(gcd->y_description[0]));
+
+    curve->config_names();
+    curve->configure_curves();
+    curve->configure_axes();
+  }
+  else if ( trend_tid == pwr_cClass_DsTrendCurve) {
+    pwr_sClass_DsTrendCurve tcp;
+    unsigned int actual_data_size[XTT_TREND_MAX];
+    pwr_tAName object_name[XTT_TREND_MAX];
+    int i, start_idx;
+    
+    // Get current status of the trend objects
+    i = start_idx = trend_cnt;
+
+    *sts = gdh_AttrrefToName( &trend_aref, trend_name[i], sizeof(trend_name[0]), 
+			      cdh_mNName);
+    if (EVEN(*sts)) return;
+      
+    *sts = gdh_GetObjectInfo( trend_name[i], &tcp, sizeof(tcp));
+    if ( EVEN(*sts)) return;
+      
+    i = start_idx;
+    for ( unsigned int j = 0; j < 10; j++) {
+      if ( cdh_ObjidIsNotNull( tcp.Attribute[j].Objid) &&
+	   cdh_ObjidIsNotNull( tcp.Buffers[j].Objid)) {
+	if ( trend_idx_cnt > 0) {
+	  // Add only specific indexes
+	  int found = 0;
+	  for ( unsigned int k = 0; k < trend_idx_cnt; k++) {
+	    if ( trend_idx[k] == j) {
+	      found = 1;
+	      break;
+	    }
+	  }
+	  if ( !found)
+	    continue;
+	}
+
+	*sts = gdh_AttrrefToName( &tcp.Buffers[j], object_name[i],
+				  sizeof(object_name[0]), cdh_mNName);
+	if (EVEN(*sts)) return;
+
+	*sts = gdh_AttrrefToName( &tcp.Attribute[j], object_name[i], 
+				  sizeof(object_name[0]), cdh_mNName);
+	if (EVEN(*sts)) return;
+	
+	  
+	element_size[i] = cdh_TypeToSize( (pwr_eType)tcp.AttributeType[j]);
+	element_type[i] = (pwr_eType)tcp.AttributeType[j];
+	cb_info[i].resolution = tcp.DisplayResolution;
+	if ( cb_info[i].resolution <= 0)
+	  cb_info[i].resolution = 1;
+	cb_info[i].samples = tcp.DisplayTime / tcp.ScanTime / cb_info[i].resolution;
+	cb_info[i].bufsize = cb_info[i].samples * element_size[i];
+	cb_info[i].bufp = (char *) calloc( 1, cb_info[i].bufsize);
+	cb_info[i].circ_aref = tcp.Buffers[j];
+	*sts = cbuf_GetCircBuffInfo( &cb_info[i], 1); 
+	if ( EVEN(*sts))
+	  continue;
+
+	actual_data_size[i] = cb_info[i].size;
+	if ( actual_data_size[i] > cb_info[i].bufsize)
+	  printf( "** Sample size error !!!\n");
+	
+	i++;
+      }
+    }
+    trend_cnt = i;
+
+
+    // Try to find unit
+    for ( i = start_idx; i < trend_cnt; i++) {
+      pwr_tAName aname;
+      char unit[40];
+      char description[80];
+      pwr_tStatus lsts;
+      char *s;
+
+      strcpy( aname, object_name[i]);
+      if ( (s = strrchr( aname, '.')))
+	*s = 0;
+      strcat( aname, ".Unit");
+      lsts = gdh_GetObjectInfo( aname, unit, sizeof(unit));
+      if ( ODD(lsts))
+	strncpy( gcd->y_unit[i], unit, sizeof(gcd->y_unit[0]));
+
+      strcpy( aname, object_name[i]);
+      if ( (s = strrchr( aname, '.')))
+	*s = 0;
+      strcat( aname, ".Description");
+      lsts = gdh_GetObjectInfo( aname, description, sizeof(description));
+      if ( ODD(lsts))
+	strncpy( gcd->y_description[i], description, sizeof(gcd->y_description[0]));
+    }
+
+    for ( i = start_idx; i < trend_cnt; i++) {
+      gcd->y_data[i] = (double *) calloc( 1, 8 * max_points);
+      
+      switch ( element_type[i]) {
+      case pwr_eType_Float32:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tFloat32 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tFloat32));
+	break;
+      case pwr_eType_Float64:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tFloat64 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tFloat64));
+	break;
+      case pwr_eType_Boolean:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tBoolean *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tBoolean));
+	break;
+      case pwr_eType_Int64:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tInt64 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tInt64));
+	break;
+      case pwr_eType_UInt64:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tUInt64 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tUInt64));
+	break;
+      case pwr_eType_Int32:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tInt32 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tInt32));
+	break;
+      case pwr_eType_UInt32:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tUInt32 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tUInt32));
+	break;
+      case pwr_eType_Int16:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tInt16 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tInt16));
+	break;
+      case pwr_eType_UInt16:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tUInt16 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tUInt16));
+	break;
+      case pwr_eType_Int8:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tInt8 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tInt8));
+	break;
+      case pwr_eType_UInt8:
+	for ( unsigned int j = 0; j < actual_data_size[i]; j++)
+	  gcd->y_data[i][j] = *(pwr_tUInt8 *)((char *)cb_info[i].bufp + (actual_data_size[i] - j - 1) * sizeof(pwr_tUInt8));
+	break;
+      default: ;
+      }
+      
+      gcd->y_axis_type[i] = curve_eAxis_y;
+      strcpy( gcd->y_name[i], object_name[i]);      
+      gcd->rows[i] = max_points;
+    }
+
+    gcd->cols = trend_cnt;
+    gcd->get_borders();
+    gcd->get_default_axis();
+    gcd->select_color( 0);
+    curve->config_names();
+    curve->configure_curves();
+    curve->configure_axes();
+  }
+}
 
 
 
