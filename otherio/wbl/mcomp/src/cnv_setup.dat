@@ -1,0 +1,14 @@
+#
+# Setup file for co_convert
+#
+
+# Definition of groups
+group NodeConfiguration nmps_nmpsmirrorconfig.html
+group Powerlink otherio_epl_module.html
+group USB otherio_motioncontrol_usb.html
+group Modbus otherio_modbus_tcp_slave.html
+group Arduino otherio_arduino_usb.html
+group Hilscher otherio_hilscher_cifx_diag.html
+group UDP otherio_udp_io.html
+group SPI otherio_spi_master.html
+group Nodave otherio_nodave_plc.html

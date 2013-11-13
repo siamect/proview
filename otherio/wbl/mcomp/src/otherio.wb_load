@@ -1899,7 +1899,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
   Object Class $ClassHier 2 15-NOV-2007 14:35:40.72
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group USB
     !  @Summary Rack object for Motion Control USB I/O.
     !  Rack object for Motion Control USB I/O.
     ! 	
@@ -2007,7 +2007,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group USB
     !  @Summary Card object for Motion Control USB I/O.
     !  Card object for Motion Control USB I/O.
     ! 	
@@ -2164,7 +2164,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.1
-    !  @Group IO
+    !  @Group Modbus
     !  @Summary Slave object for Modbus TCP I/O.
     !  Slave object for Modbus TCP I/O.
     ! 	
@@ -2179,7 +2179,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object RtBody $ObjBodyDef 1 08-FEB-2008 10:26:36.84
         Body SysBody 08-FEB-2008 10:26:36.85
           Attr StructName = "Modbus_TCP_Slave"
-          Attr NextAix = "_X22"
+          Attr NextAix = "_X21"
         EndBody
         !/**
         ! Description of slave
@@ -2459,7 +2459,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
       Object Template Modbus_TCP_Slave 2148499456 01-JAN-1970 01:00:00.00
-        Body RtBody 09-OCT-2013 11:01:20.19
+        Body RtBody 05-SEP-2008 11:08:41.87
           Attr Process = 1
           Attr ErrorLimit = 50
           Attr ReconnectLimit = 5
@@ -2470,7 +2470,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Modbus
     !  @Summary Module object for Modbus TCP I/O.
     !  Module object for Modbus TCP I/O.
     !  Defines the type of Modbus action that is to be performed and at which address on the slave.
@@ -2704,7 +2704,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Modbus
     !  @Summary Message specification for module object for Modbus TCP I/O.
     !  Message specification for module object for Modbus TCP I/O.
     ! 
@@ -2825,7 +2825,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Modbus
     !  @Summary Module object for Modbus TCP I/O for both read and write.
     !  Module object for Modbus TCP I/O for both read and write.
     ! 
@@ -2943,7 +2943,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Modbus
     !  @Summary Master object for Modbus TCP I/O.
     !  Master object for Modbus TCP I/O.
     ! 	
@@ -3045,7 +3045,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group IO,Modbus
     !  @Summary Server object for Modbus TCP I/O.
     !  Server object for Modbus TCP I/O.
     ! 	
@@ -3271,7 +3271,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group IO,Modbus
     !  @Summary Server Module object for Modbus TCP I/O.
     !  Server Module object for Modbus TCP I/O.
     ! 	
@@ -3419,7 +3419,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group IO,Modbus
     !  @Summary Master object for Modbus RTU I/O.
     !  Master object for Modbus RTU I/O.
     ! 	
@@ -3619,7 +3619,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group IO,Modbus
     !  @Summary Slave object for Modbus RTU I/O.
     !  Slave object for Modbus RTU I/O.
     ! 	
@@ -3835,7 +3835,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Modbus
     !  @Summary Module object for Modbus RTU I/O.
     !  Module object for Modbus RTU I/O.
     !  Defines the type of Modbus action that is to be performed and at which address on the slave.
@@ -4068,7 +4068,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Modbus
     !  @Summary Server object for Modbus RTU I/O.
     !  Server object for Modbus RTU I/O.
     ! 	
@@ -4355,7 +4355,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Modbus
     !  @Summary Server Module object for Modbus RTU I/O.
     !  Server Module object for Modbus RTU I/O.
     ! 	
@@ -5103,7 +5103,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group USB
     !  @Summary Agent object for USB devices.
     !  Agent object for USB devices.
     ! 	
@@ -5211,7 +5211,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group USB
     !  @Summary Rack object for USB board Velleman K8055/VM110
     !  Rack object for USB board Velleman K8055/VM110.
     ! 
@@ -5311,7 +5311,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group USB
     !  @Summary Card object for USB board Velleman K8055/VM110
     !  Card object for USB board Velleman K8055/VM110.
     ! 
@@ -5504,7 +5504,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Arduino
     !  @Summary Rack object for Arduino USB devices.
     !  Rack object for Arduino USB devices.
     !  This object is configured below the Node object.
@@ -5590,7 +5590,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Arduino
     !  @Summary Card object for Arduino USB boards, e.g Uno and Mega2560
     !  Card object for Arduino USB boards, e.g. Uno and Mega2560.
     ! 
@@ -5865,7 +5865,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Hilscher
     !  @Summary Diagnosis data for Hilscher cifX board.
     !  Diagnosis data for Hilscher cifX board.
     ! 
@@ -6069,7 +6069,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Hilscher
     !  @Summary Hilscher cifX Profinet controller.
     !  Agent object for a Hilscher cifX board with Profnet controller
     !  firmware.
@@ -6341,7 +6341,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Hilscher
     !  @Summary Hilscher cifX Master.
     !  Agent object for a Hilscher cifX board configured with SYCON.net.
     ! 
@@ -6578,7 +6578,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Hilscher
     !  @Summary Hilscher cifX Device.
     !  Rack object for a Hilscher cifX device configured with SYCON.net.
     ! 
@@ -6736,7 +6736,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Hilscher
     !  @Summary Hilscher cifX Module.
     !  Card object for a Hilscher cifX device configured with SYCON.net.
     ! 
@@ -6885,7 +6885,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group USB
     !  @Summary Card object for USB Joystick
     !  Card object for USB Joystick.
     ! 
@@ -7084,7 +7084,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group USB
     !  @Summary Card object for USB Joystick Code Mercanaries JoyWarrior
     !  Card object for USB Joystick Code Marcenaries JoyWarrior with
     !  3 axes and 8 buttons.
@@ -7316,7 +7316,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group UDP
     !  @Summary Card object for UDP communication.
     !  Card object for UDP communication where the message structure 	
     !  is defined with channel objects.
@@ -7673,7 +7673,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group SPI
     !  @Summary Rack object for SPI Master.
     !  Rack object for SPI Master.
     !  The object represents the SPI master.
@@ -7714,7 +7714,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group SPI
     !  @Summary Card object for SPI Slave.
     !  Card object for SPI Slave.
     !  The object represents a SPI slave connected by the SPI bus.
@@ -7972,7 +7972,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Nodave
     !  @Summary Rack object for libnodave connection to Siemens PLC.
     !  Rack object for libnodave connection to Siemens PLC.
     ! 
@@ -8342,7 +8342,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Nodave
     !  @Summary Card object for libnodave connection to Siemens PLC.
     !  Card object for libnodave connection to Siemens PLC.
     ! 
@@ -8556,6 +8556,33 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Powerlink
+    !  @Author je
+    !  @Creator Jack E, Sixten I
+    !  @Summary Ethernet Powerlink Module 
+    !
+    !  The Powerlink module object configures a module in Controlled Node (CN).
+    !
+    !  The Epl_Module object is placed as a child to a Epl_CN object. It can have
+    !  channel objects as children, defining the input and output area for the module,
+    !  but the channels can also be internal attributes in the module object. In this
+    !  case a subclass to the Epl_Module class is created containing the channels.
+    !
+    !  @b Example Epl_Module settings
+    !
+    !  @image orm_otherio_epl_example5.png
+    !
+    !  @b Example Module with channels
+    !
+    !  @image orm_otherio_epl_example4.png
+    !
+    !
+    !  @b See also
+    !  @classlink Epl_MN otherio_epl_mn.html
+    !  @classlink Epl_CN otherio_epl_cn.html
+    !*/
     Object Epl_Module $ClassDef 38 04-JUL-2013 08:10:46.69
       Body SysBody 01-JUL-2013 17:26:15.35
         Attr Editor = 0
@@ -8663,6 +8690,46 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Powerlink
+    !  @Author je
+    !  @Creator Jack E, Sixten I
+    !  @Summary Ethernet Powerlink Controlled node
+    !  Ethernet Powerlink Controlled Node (CN).
+    !  
+    !  This object configurates a CN in a Powerlink circuit where Proview acts as the
+    !  managing node (MN). The Epl_CN is placed as child to an Epl_MN object and the 
+    !  modules of the CN are configured with Epl_Module objects placed as children to
+    !  the Epl_CN.
+    ! 
+    !  See class Epl_MN fore more information about the Powerlink configuration.
+    !
+    !  You will also find a case study in the documentation for ABB_ACS880_Epl.
+    !
+    !  @b Example CN settings
+    !
+    !  @image orm_otherio_epl_example7.png
+    !   
+    !
+    !  @b Example Configuration of ABB_ACS880_Epl
+    !
+    !  The figure below shows an example with an ABB ACS880 frequency converter.
+    !  Below the Epl_CN object a special EPL module object is used containing
+    !  the channels in the Io attribute of class ABB_ACS880_Epl_IoModule.
+    !
+    !  @image orm_abb_acs880_epl_example1.gif
+    !
+    !  The Epl_CN object is used when Proview act as a managing node. In circuits where
+    !  Proview acts as a controlled node the Epl_CNServer object is used instead.
+    !
+    !  @b See also
+    !  @classlink EplHandler otherio_eplhandler.html
+    !  @classlink Epl_MN otherio_epl_mn.html
+    !  @classlink Epl_Module otherio_epl_module.html
+    !  @classlink Epl_CNServer otherio_epl_cnserver.html
+    !  @classlink ABB_ACS880_Epl abb_abb_acs880_epl_1.html
+    !*/
     Object Epl_CN $ClassDef 39 04-JUL-2013 08:12:46.72
       Body SysBody 01-JUL-2013 17:26:15.35
         Attr Editor = 0
@@ -8818,58 +8885,113 @@ Volume OtherIO $ClassVolume 0.0.250.10
       EndObject
     EndObject
     !/**
-    ! @Author  JackE SixtenI
-    ! @Version   1.0
+    !  @Version 1.0
+    !  @Group Powerlink
+    !  @Author je
+    !  @Creator Jack E, Sixten I
+    !  @Summary Ethernet Powerlink Managing node
+    !  Ethernet Powerlink Managing node.
     ! 
-    ! Before the use of a Powerlink agent object a configuration
-    ! file must be created (cdc-file).
+    !  A Powerlink network consists of two device types, an MN (Managing Node)
+    !  and one or several CN (Controlled Node). The Epl_MN object is used when
+    !  Proview acts as an MN in a Powerlink network.
     ! 
-    ! The prefered software for building the cdc-file is openCONFIGURATOR.
-    ! When using openCONFIGURATOR you must provide the device
-    ! description files (.xdd) for all the slaves that will be used in the 
-    ! Powerlink network. 
+    !  The Powerlink circuit is configured in the node hierarchy with Epl_MN, Epl_CN
+    !  and Epl_Module objects. But a corresponding configuration also has to be done
+    !  in the openCONFIGURATOR. The openCONFIGURATOR imports xdd and xdc files provided
+    !  by the CN vendors, and will generate a cdc-file that is used by the Powerlink
+    !  stack to initiate the communication.
+    !
+    !  @h1 Configuration
+    !  Before the use of a Powerlink agent object a configuration
+    !  file must be created (cdc-file).
     ! 
-    ! The mapping of the in- and outputareas will be made with help of 
-    ! openCONFIGURATOR. All communication parameters such as cycle time 
-    ! will be configured using openCONFIGURATOR.
+    !  The preferred software for building the cdc-file is openCONFIGURATOR.
+    !  When using openCONFIGURATOR you have to provide the device description 
+    !  files (.xdd) for all the slaves that will be used in the  Powerlink network. 
+    !  See section "Case study Powerlink tool openCONFIGURATOR" below for more 
+    !  information.
     ! 
+    !  The mapping of the input and output areas will be made by the 
+    !  openCONFIGURATOR. All communication parameters such as cycle time 
+    !  will be configured using openCONFIGURATOR.
     ! 
-    ! When the configuration is complete you build the cdc-file and transfer
-    ! it to your project. Prefered location of the cdc-file is $pwrp_exe of the
-    ! current project. Then all you have to do is to specify the path in the
-    ! CDCfile attribute.
+    !  When the configuration is complete you build the cdc-file and transfer
+    !  it to your project. Preferred location of the cdc-file is $pwrp_exe in the
+    !  current project. Then all you have to do is to specify the path in the
+    !  CDCfile attribute.
     ! 
-    ! When building the cdc-file you will also get a file named xap.h, this
-    ! file contains two structs that represents the in- and outputareas.
-    ! You use this as a map when you add channel objects to the module
-    ! object, when done this file should coincide with the channel objects
-    ! you put under the module objects.
+    !  When building the cdc-file you will also get a file named xap.h. This
+    !  file contains two structs that represents the input  and output areas.
+    !  You can use this as a map when you configure the  channel objects for 
+    !  the module. The channel types and representation has to match the area
+    !  descriptions in the xap.h file.
     ! 
-    ! The NodeId is always 240 for a Powerlinkmaster. The address range
-    ! 1-239 is used for slaves, you specify the address of a slave in
-    ! the openCONFIGURATOR. 
+    !  The NodeId is always 240 for a Powerlink MN. The address range
+    !  1-239 is used for CN. The address of a CN is specified in the 
+    !  openCONFIGURATOR. 
+    !
+    !  Epl_MN object also requires configuration of an EplHandler object, see 
+    !  figure below.
+    !
+    !  @b Example Epl_MN settings
+    !
+    !  @image orm_otherio_epl_example3.png
+    !
+    !  @b Example 1
     ! 
-    ! A basic setup would be: first put a Pl_MN object in the node hierarchy
-    ! and under the Pl_MN object you put a Pl_CN object and under the Pl_CN
-    ! object you put a Pl_Module object and under the Pl_Module object you
-    ! put channel objects, with the chan-in objects first and the chan-out objects
-    ! last.
+    !  A basic configuration with the Proview managing node configured with an
+    !  Epl_MN object. Below this two controlled node with one module each,
+    !  configured with Epl_CN and Epl_Module objects. Below the module objects
+    !  channel object are configured with input channels first and output 
+    !  channels last.
     ! 
-    ! Example:
+    !  Epl_MN
+    !   Epl_CN
+    !    Epl_Module
+    !     ChanAi
+    !     ChanAi
+    !     ChanAi
+    !     ChanIo
+    !     ChanAo
+    !   Epl_CN
+    !    Epl_Module
+    !     ChanAi
+    !     ChanAo
     ! 
-    ! Pl_MN
-    !  -Pl_CN
-    !   -Pl_Module
-    !    -ChanAi
-    !    -ChanAi
-    !    -ChanAi
-    !    -ChanIo
-    !    -ChanAo
-    !  -Pl_CN
-    !   -Pl_Module
-    !    -ChanAi
-    !    -ChanAo
+    !  @b Example 2
+    !
+    !  This is an example with an ABB ACS880 frequency converter.
+    !  Note that the channels are contained in the Io attribute
+    !  of the module object M1.
     ! 
+    !  @b The result will be like this three class object
+    !
+    !  @image orm_otherio_epl_example2.png
+    !
+    !
+    !  @h1 Case study Powerlink tool openCONFIGURATOR
+    !  openCONFIGURATOR is an open source tool contributed by www.Kalycito.com. 
+    !  openCONFIGURATION is used for easy setup, configuration and maintenance
+    !  of any POWERLINK network. openCONFIGURATOR ideally complements openPOWERLINK,
+    !  the open source POWERLINK protocol stack for master and slave.
+    !  
+    !  Every node in a Powerlink network must be configure through this tool.
+    !  In a Proview project all Powerlink CN nodes is a reflection of this memory
+    !  mapping.
+    !
+    !  @image orm_otherio_epl_example1.png
+    !
+    !  @bThe Case
+    !  The case study is found in class help for object ABB_ACS880_Epl, see this
+    !  class for more information.
+    !
+    !  @b See also
+    !  @classlink EplHandler otherio_eplhandler.html
+    !  @classlink Epl_CN otherio_epl_cn.html
+    !  @classlink Epl_Module otherio_epl_module.html
+    !  @classlink ABB_ACS880_Epl abb_abb_acs880_epl_1.html
+    !  @classlink Epl_CNServer otherio_epl_cnserver.html
     !*/
     Object Epl_MN $ClassDef 40 04-JUL-2013 08:13:16.20
       Body SysBody 01-JUL-2013 17:26:15.35
@@ -9178,6 +9300,103 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Powerlink
+    !  @Author je
+    !  @Summary Ethernet Powerlink CN Server
+    !  
+    !  The Epl_CNServer object configures Powerlink when the Proview system acts
+    !  as a controlled node (CN).
+    !
+    !  @h1 Configuration
+    !  The Epl_CNServer object is placed in the node hierarchy under the node object.
+    !
+    !  The CNServer object requires that the powerlink process is configured with an
+    !  EplHandler object, see example 1.
+    !
+    !  @b Example 1, Epl_CNServer settings
+    !  Shows network device and CN node NodeId number (14) etc.
+    !
+    !
+    !  @image orm_otherio_epl_example8.png
+    !
+    !
+    !  The Server object needs also a Epl_ServerModule object as a child, and
+    !  under Epl_ServerModule object, channel objects are configured. The channel
+    !  objects reflect the IO mapping between the CN and MN nodes, see example 2.
+    !
+    !  @b Example 2, CN and Module with channels
+    !  Shows IO channels i.e. the IO interface. The meaning of name bit8, int32 etc.
+    !  are the setting for attribute "Representation" and nb0, nb1 etc. is the attribute
+    !  "Number" setting.
+    !
+    !  @image orm_otherio_epl_example6.png
+    !
+    !  @h1 Powerlink Configuration in openCONFIGURATOR
+    !  When the configuration is finished, it is possible to create an xdd-file from
+    !  "GenerateXttFile" in the popup menu for the Epl_CNServer object. The name and 
+    !  location for the generated file is $pwrp_cnf/cnserver.xdd. The xdd file is 
+    !  used when configuring the Powerlink circuit for the MN. See also class Epl_MN 
+    !  for more information about openCONFIGURATOR xdd/xdc files and how to create a 
+    !  cdc-file for a Powerlink configuration.
+    !
+    !
+    !  @image orm_otherio_epl_example10.png
+    !  @b Fig Generate an xdd file
+    !
+    !
+    !  @b openCONFIGURATOR
+    !  Example 3 to 5 below shows screenshots from openConfigurator tool and the influence
+    !  the imported xdd file from Proview have on the IO mapping.
+    !
+    !  The xdd file is generated with the same settings as in example 2 i.e. nine digital
+    !  inputs divided in two bytes, two analog inputs, two digital outputs and three analog
+    !  outputs.
+    !
+    !  Note the digital bit settings in ChanDi and ChanDo attribute "Number" is important
+    !  for a correctly generated xdd file. In the example 2 the number is named nb0, nb1
+    !  nb3 etc. Attribute "Representation" reflect the byte/word length of the channel.
+    !
+    !  In the example below the CN node (Epl_CNServer) has id number 14.
+    !  
+    !  @b Example 3 
+    !  RPDO memory mapping in openCONFIGURATOR based on the xdd file generated from Proview.
+    !  The MN receives data from CN that are outputs in Proview CNServer (Do00, Do01, Ao00, 
+    !  Ao01 and Ao04 in that order, see example 2)
+    !
+    !  @image orm_otherio_epl_example11.png
+    !
+    !
+    !  @b Example 4, TPDO memory mapping in openCONFIGURATOR
+    !  @b based on xdd file generated from Proview.
+    !  MN node transmit data to CN node, inputs in Proview CNServer
+    !  (Di00 to Di09, Ai04 and Ai00 in that order, see example 2)
+    !
+    !  @image orm_otherio_epl_example12.png
+    !
+    !
+    !  @b Example 5, Structfile xap.h autogenerated by openCONFIGURATOR tool
+    !  If you compare your node hierarchy (example 2) with the xap.h file, they
+    !  should match.
+    !
+    !  openCONFIGURATOR will align 16 bit words on 16 bit bounary, and 32 bit words
+    !  on 32 bit boundary. The Proview channels will automatically be aligned in 
+    !  this way and there is no need for padding.
+    !
+    !  The example 2 over is an example of a node hierarchy that matches the
+    !  xap.h file below. Note that no padding variables are inserted in the
+    !  node hierarchy in example 2. Note also that input is output and output
+    !  is input in CN slave node.
+    !
+    !  @image orm_otherio_epl_example13.png
+    !
+    !  @b See also
+    !  @classlink EplHandler otherio_eplhandler.html
+    !  @classlink Epl_CNServerModule otherio_epl_cnservermodule.html
+    !  @classlink Epl_MN otherio_epl_mn.html
+    !  @classlink Epl_CN otherio_epl_cn.html
+    !*/
     Object Epl_CNServer $ClassDef 43 08-JUL-2013 10:32:46.08
       Body SysBody 08-JUL-2013 10:33:43.41
         Attr Editor = 0
@@ -9189,6 +9408,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr StructName = "Epl_CNServer"
           Attr NextAix = "_X68"
         EndBody
+        !/**
+        ! Optional description.
+        !*/
         Object Description $Attribute 48 08-JUL-2013 10:17:49.38
           Body SysBody 08-JUL-2013 10:17:49.38
             Attr PgmName = "Description"
@@ -9196,6 +9418,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Ethernet device.
+        !*/
         Object Device $Attribute 50 08-JUL-2013 10:17:49.38
           Body SysBody 08-JUL-2013 10:17:49.38
             Attr PgmName = "Device"
@@ -9217,6 +9442,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Node id for the controlled node.
+        !*/
         Object NodeId $Attribute 51 08-JUL-2013 10:17:49.38
           Body SysBody 08-JUL-2013 15:17:29.33
             Attr PgmName = "NodeId"
@@ -9224,6 +9452,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! Process that handles the module. Should be set to Powerlink.
+        !*/
         Object Process $Attribute 52 08-JUL-2013 10:17:49.38
           Body SysBody 08-JUL-2013 10:17:49.38
             Attr PgmName = "Process"
@@ -9231,6 +9462,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
+        !/**
+        ! Not used for powerlink process.
+        !*/
         Object ThreadObject $Attribute 53 08-JUL-2013 10:17:49.38
           Body SysBody 08-JUL-2013 10:17:49.38
             Attr PgmName = "ThreadObject"
@@ -9238,6 +9472,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
+        !/**
+        ! Action when stall is detected.
+        !*/
         Object StallAction $Attribute 54 08-JUL-2013 10:17:49.38
           Body SysBody 08-JUL-2013 10:17:49.38
             Attr PgmName = "StallAction"
@@ -9245,6 +9482,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Type-StallActionEnum"
           EndBody
         EndObject
+        !/**
+        ! Priority of Powerlink process.
+        !*/
         Object Priority $Attribute 55 08-JUL-2013 10:17:49.38
           Body SysBody 08-JUL-2013 10:17:49.38
             Attr PgmName = "Priority"
@@ -9443,6 +9683,32 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Powerlink
+    !  @Author je
+    !  @Summary Ethernet Powerlink Server Module
+    !  
+    !  The server module configures a CN module where Proview acts as a CN.
+    !
+    !  The Epl_CnServerModule object is placed as a child to an Epl_CNServer 
+    !  object and is the father of channel objects that defines the input and 
+    !  output areas for the module.
+    !
+    !  @b Example Epl_CNServerModule settings
+    !
+    !  @image orm_otherio_epl_example9.png
+    !
+    !  @b Example CN Server and Module with channels
+    !
+    !  @image orm_otherio_epl_example6.png
+    !
+    !  @b See also
+    !  @classlink EplHandler otherio_eplhandler.html
+    !  @classlink Epl_CNServer otherio_epl_cnserver.html
+    !  @classlink Epl_MN otherio_epl_mn.html
+    !  @classlink Epl_CN otherio_epl_cn.html
+    !*/
     Object Epl_CnServerModule $ClassDef 44 08-JUL-2013 14:47:28.97
       Body SysBody 08-JUL-2013 10:33:59.56
         Attr Editor = 0
@@ -9550,6 +9816,33 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Powerlink
+    !  @Author je
+    !  @Creator Jack E, Sixten I
+    !  @Summary Ethernet Powerlink Handler  
+    !  
+    !  The Ethernet Powerlink handler object configures the process rt_powerlink
+    !  running the Powerlink stack and handling the Powerlink IO.
+    !
+    !  Any Powerlink configuration, with Proview as managing node or controlled node,
+    !  requires that the EplHandler object is created and configured.
+    !   
+    !  @b Example Powerlink handler with Proview as managing node
+    !
+    !  @image orm_otherio_epl_example3.png
+    !
+    !  @b  Example Powerlink handler with Proview as controlled node
+    !
+    !  @image orm_otherio_epl_example8.png
+    !
+    !  @b See also
+    !  @classlink Epl_CNServer otherio_epl_cnserver.html
+    !  @classlink Epl_CnServerModule otherio_epl_cnservermodule.html
+    !  @classlink Epl_MN otherio_epl_mn.html
+    !  @classlink Epl_CN otherio_epl_cn.html
+    !*/
     Object EplHandler $ClassDef 41 04-JUL-2013 08:14:02.80
       Body SysBody 01-JUL-2013 17:26:15.35
         Attr Editor = 0
@@ -9561,6 +9854,10 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr StructName = "EplHandler"
           Attr NextAix = "_X4"
         EndBody
+        !/**
+        ! Scantime for the main thread in the process rt_powerlink.
+        ! A good setvalue is 0.001 s.
+        !*/
         Object CycleTime $Attribute 3 01-JUL-2013 17:26:15.35
           Body SysBody 01-JUL-2013 17:26:15.35
             Attr PgmName = "CycleTime"
