@@ -1,0 +1,7 @@
+#
+# Setup file for co_convert
+#
+
+# Definition of groups
+group Profibus profibus_pb_profiboard.html
+group Profinet profibus_pncontrollersoftingpnak.html

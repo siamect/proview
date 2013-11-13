@@ -503,6 +503,9 @@ Volume Profibus $ClassVolume 0.0.250.7
     EndObject
   EndObject
   Object Class $ClassHier 1 16-JAN-2006 10:07:45.26
+    !/**
+    !  This class is deprecated from V4.2.0
+    !*/
     Object Pb_Ai $ClassDef 2 16-JAN-2006 09:46:40.49
       Body SysBody 16-JAN-2006 09:46:40.49
         Attr Editor = 0
@@ -597,6 +600,9 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndBody
       EndObject
     EndObject
+    !/**
+    !  This class is deprecated from V4.2.0
+    !*/
     Object Pb_Ao $ClassDef 3 16-JAN-2006 09:46:40.50
       Body SysBody 16-JAN-2006 09:46:40.50
         Attr Editor = 0
@@ -691,6 +697,9 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndBody
       EndObject
     EndObject
+    !/**
+    !  This class is deprecated from V4.2.0
+    !*/
     Object Pb_Di $ClassDef 4 16-JAN-2006 09:46:40.50
       Body SysBody 16-JAN-2006 09:46:40.50
         Attr Editor = 0
@@ -805,6 +814,9 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndBody
       EndObject
     EndObject
+    !/**
+    !  This class is deprecated from V4.2.0
+    !*/
     Object Pb_Do $ClassDef 5 16-JAN-2006 09:46:40.50
       Body SysBody 16-JAN-2006 09:46:40.50
         Attr Editor = 0
@@ -944,8 +956,8 @@ Volume Profibus $ClassVolume 0.0.250.7
     !/**
     !  @Author Robert Karlsson
     !  @Version 1.0
-    !  @Group IO,IO_Profibus
-    !  Object that configure one Profibus DP slave.
+    !  @Group Profibus
+    !  Object that configures one Profibus DP slave.
     !*/
     Object Pb_DP_Slave $ClassDef 6 16-JAN-2006 09:46:40.50
       Body SysBody 16-JAN-2006 09:46:40.50
@@ -1545,6 +1557,9 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndBody
       EndObject
     EndObject
+    !/**
+    !  This class is deprecated from V4.2.0
+    !*/
     Object Pb_Ii $ClassDef 9 16-JAN-2006 09:46:40.50
       Body SysBody 16-JAN-2006 09:46:40.50
         Attr Editor = 0
@@ -1639,6 +1654,9 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndBody
       EndObject
     EndObject
+    !/**
+    !  This class is deprecated from V4.2.0
+    !*/
     Object Pb_Io $ClassDef 10 16-JAN-2006 09:46:40.50
       Body SysBody 16-JAN-2006 09:46:40.50
         Attr Editor = 0
@@ -1735,7 +1753,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     EndObject
     !/**
     !  @Version 1.0
-    !  @Group IO
+    !  @Group Profibus
     !  @Summary Configuration of a Profibus module
     !  Configuration of a Profibus module.
     ! 
@@ -1873,7 +1891,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     !/**
     ! @Author Claes Jurstrand
     ! @Version 1.0
-    ! @Group IO
+    ! @Group Profibus
     ! @Summary Configurates a Profibus PCI master card (Softing profiboard)
     ! Configurates a Profibus PCI master card (Softing Profiboard). Available on LynxOS and Linux.
     ! The object should be named Px, where x is the number of the device, eg P1.
@@ -2267,7 +2285,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     !/**
     ! @Author Ferdinand Hauck
     ! @Version 1.0
-    ! @Group IO
+    ! @Group Profibus
     ! @Summary Configures a Hilscher CIF 50-PB (Profibus DP master board)
     ! Configuresa Hilscher CIF 50-PB (Profibus DP master board).
     ! Available on GNU/Linux.  The object should be named Px, where x is
@@ -2621,7 +2639,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     !/**
     ! @Author Robert Karlsson
     ! @Version 1.0
-    ! @Group IO
+    ! @Group Profinet
     ! @Summary Information received on a Profinet alarm event
     ! Shows the last occured alarm from the Profinet device.
     ! It gives information about what type of alarm it is and
@@ -2906,7 +2924,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     !/**
     ! @Author Robert Karlsson
     ! @Version 1.0
-    ! @Group IO
+    ! @Group Profinet
     ! @Summary Defines that a Profinet controller stack is installed.
     ! Configures a Profinet controller stack.
     ! 
@@ -3013,7 +3031,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     !/**
     ! @Author Robert Karlsson
     ! @Version 1.0
-    ! @Group IO
+    ! @Group Profinet
     ! @Summary Configures one Profinet device.
     ! Configures one Profinet device.
     ! 
@@ -3392,7 +3410,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     !/**
     ! @Author Robert Karlsson
     ! @Version 1.0
-    ! @Group IO
+    ! @Group Profinet
     ! @Summary Configures one Profinet module.
     ! Configures one Profinet module.
     !*/
