@@ -1556,6 +1556,16 @@ static int wccm_attribute_func (
 	    decl = CCM_DECL_STRING;
 	    break;
           }
+          case pwr_eType_DeltaTime:
+          {
+	    /* Convert time to ascii */	
+	    sts = time_DtoAscii((pwr_tDeltaTime *)object_element, 
+                      1,
+                      string_val, sizeof(string_val));
+	    string_val[20] = 0;
+	    decl = CCM_DECL_STRING;
+	    break;
+          }
           default:
             ;
         }
