@@ -592,6 +592,11 @@ endl <<
     html_clf->f <<
 "<DT><B>" << Lng::translate("Author") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->doc_author << "<DT>" << endl;
   }
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_creator, "") != 0)
+  {
+    html_clf->f <<
+"<DT><B>" << Lng::translate("Creator") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->doc_creator << "<DT>" << endl;
+  }
 
   if ( ctx->rw->doc_fresh && (strcmp( ctx->rw->doc_version, "") != 0 || 
 			      strcmp( ctx->rw->class_version, "") != 0))

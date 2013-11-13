@@ -138,6 +138,11 @@ int CnvWblToPs::class_exec()
     tops.print_text( txt, tops.style[tops.ci].text);
   }
 
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_creator, "") != 0) {
+    sprintf( txt, "%s %s", Lng::translate("Creator"), ctx->rw->doc_creator);
+    tops.print_text( txt, tops.style[tops.ci].text);
+  }
+
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_version, "") != 0) {
     sprintf( txt, "%s %s", Lng::translate("Version"), ctx->rw->doc_version);
     tops.print_text( txt, tops.style[tops.ci].text);

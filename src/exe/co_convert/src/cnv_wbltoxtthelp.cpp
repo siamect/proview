@@ -129,6 +129,12 @@ Lng::translate("Class") << " " << full_class_name << endl <<
 "<B>" << Lng::translate("Author") << "<T>" << ctx->rw->doc_author << endl;
   }
 
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_creator, "") != 0)
+  {
+    fp_tmp <<
+"<B>" << Lng::translate("Creator") << "<T>" << ctx->rw->doc_creator << endl;
+  }
+
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_version, "") != 0)
   {
     fp_tmp <<
