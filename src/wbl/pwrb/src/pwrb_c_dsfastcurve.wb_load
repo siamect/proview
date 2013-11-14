@@ -318,6 +318,14 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Curve window layout.
+      !*/
+      Object Layout $Attribute 24 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-CurveLayoutMask"
+        EndBody
+      EndObject
+      !/**
       !  Specifies the first element in DataBuffer since the
       !  triggering has taken place.
       !*/

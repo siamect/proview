@@ -226,6 +226,14 @@ SObject pwrb:Class
           Attr Flags = 0
         EndBody
       EndObject
+      !/**
+      !  Curve window layout.
+      !*/
+      Object Layout $Attribute 16 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-CurveLayoutMask"
+        EndBody
+      EndObject
     EndObject
   EndObject
 EndSObject

@@ -209,6 +209,14 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Curve window layout.
+      !*/
+      Object Layout $Attribute 18 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-CurveLayoutMask"
+        EndBody
+      EndObject
+      !/**
       !  Number of samples per sub-buffer.
       !*/
       Object NoOfSample $Attribute 10 

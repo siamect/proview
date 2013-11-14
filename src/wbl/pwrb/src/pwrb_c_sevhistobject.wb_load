@@ -146,6 +146,14 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Curve window layout.
+      !*/
+      Object Layout $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-CurveLayoutMask"
+        EndBody
+      EndObject
     EndObject
     Object Template SevHistObject
       Body RtBody
