@@ -1,7 +1,7 @@
 
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
