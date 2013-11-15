@@ -234,8 +234,8 @@ if [ -e /etc/proview.cnf ]; then
     chown pwrp $web_dir/pwr_rt_client.jar
     cp /usr/pwrrt/lib/pwr_jop.jar $web_dir
     chown pwrp $web_dir/pwr_jop.jar
-    cp /usr/pwrrt/lib/pwr_jopc.jar $web_dir
-    chown pwrp $web_dir/pwr_jopc.jar
+    cp /usr/pwrrt/lib/pwr_jopg.jar $web_dir
+    chown pwrp $web_dir/pwr_jopg.jar
   fi
 fi
 

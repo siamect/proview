@@ -105,7 +105,7 @@ if [ -e /etc/proview.cnf ]; then
   if [ -e "$web_dir" ]; then
     cp /usr/pwrrt/lib/pwr_rt_client.jar $web_dir
     cp /usr/pwrrt/lib/pwr_jop.jar $web_dir
-    cp /usr/pwrrt/lib/pwr_jopc.jar $web_dir
+    cp /usr/pwrrt/lib/pwr_jopg.jar $web_dir
   fi
 fi
 
