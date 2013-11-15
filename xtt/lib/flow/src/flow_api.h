@@ -284,6 +284,7 @@ int flow_PendingPaste( flow_tCtx ctx);
 int flow_PendingPasteStop( flow_tCtx ctx);
 int flow_GetConCreateActive( flow_tCtx ctx);
 int flow_ConCreateStop( flow_tCtx ctx);
+int flow_ConIsReference( flow_tCon con);
 
 
 #if defined __cplusplus

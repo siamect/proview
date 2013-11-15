@@ -854,4 +854,8 @@ int flow_ConCreateStop( flow_tCtx ctx)
   return ctx->con_create_stop();
 }
 
+int flow_ConIsReference( flow_tCon con)
+{
+  return ((FlowCon *)con)->is_reference();
+}
 

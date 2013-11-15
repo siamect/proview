@@ -730,6 +730,14 @@ int RtTrace::flow_cb( FlowCtx *ctx, flow_tEvent event)
 	flow_SelectInsert( ctx, event->object.object);
       }
       break;
+    case flow_eObjectType_Con:
+      if ( flow_ConIsReference( event->object.object)) {
+	int val;
+
+	flow_GetHighlight( event->object.object, &val);
+	flow_SetHighlight( event->object.object, !val);
+      }
+      break;
     default:
       flow_SelectClear( ctx);
     }
