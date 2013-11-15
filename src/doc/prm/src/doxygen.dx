@@ -177,13 +177,17 @@ This manual will give a description of the following API's
      <tr><td>gdh_Init()</td>
 	<td>Initialize the process to the Proview runtime environment.</td></tr>
     </table>
-
+ 
   <h3>Miscellaneous</h3><h4> </h4>
     <table border="1" cellspacing="0">
      <tr><td>gdh_NethandlerRunning()</td>
 	<td>Check if the Nethandler has started.</td></tr>
      <tr><td>gdh_GetSecurityInfo()</td>
 	<td>Get security information.</td></tr>
+     <tr><td>gdh_StoreRtdbPointer()</td>
+	<td>Convert pointer to rtdb relative pointer.</td></tr>
+     <tr><td>gdh_TranslateRtdbPointer()</td>
+	<td>Convert rtdb relative pointer to absolute pointer.</td></tr>
     </table>
 
   <h3>Node information</h3><h4> </h4>

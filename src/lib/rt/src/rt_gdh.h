@@ -735,6 +735,27 @@ gdh_VolumeIdToName(
   int size
 );
 
+/*
+ * Translation between Rtdb reference and job context virtual address formats.
+ */
+
+void gdh_StoreRtdbPointer (
+  unsigned long		*rtdbReference,
+  void			*virtualAddress
+);
+
+void *
+gdh_TranslateRtdbPointer (
+  unsigned long		rtdbReference
+);
+
+pwr_tStatus
+gdh_GetObjectBodyDef(
+  pwr_tCid cid,
+  gdh_sAttrDef **bodydef,
+  int *rows,
+  pwr_tOid oid
+);
 
 /** @} */
 
@@ -768,28 +789,6 @@ gdh_ExclusiveModeOn ();
 
 void
 gdh_ExclusiveModeOff ();
-
-/*
- * Translation between Rtdb reference and job context virtual address formats.
- */
-
-void gdh_StoreRtdbPointer (
-  unsigned long		*rtdbReference,
-  void			*virtualAddress
-);
-
-void *
-gdh_TranslateRtdbPointer (
-  unsigned long		rtdbReference
-);
-
-pwr_tStatus
-gdh_GetObjectBodyDef(
-  pwr_tCid cid,
-  gdh_sAttrDef **bodydef,
-  int *rows,
-  pwr_tOid oid
-);
 
 pwr_tStatus
 gdh_GetTrueObjectBodyDef(
