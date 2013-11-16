@@ -281,18 +281,16 @@ if [ ${machine:0:3} == "arm" ]; then
 else
   ubuntu_ver=`cat /etc/issue | grep Ubuntu | awk '{ print $2 }'`
   debian_ver=`cat /etc/issue | grep Debian | awk '{ print $3 }'`
-echo "Ver: " $hwpl $debian_ver
   if [ "$ubuntu_ver" == "" ]; then
     ubuntu_ver=`cat /etc/issue | grep Mint | awk '{ print $3 }'`
   fi
-  if [ "$ubuntu_ver" != "" ] &&[ "$ubuntu_ver" != "12.04" ] && [ $hwpl == "i686" ] ; then
+  if [ "$ubuntu_ver" != "" ] && [ $hwpl == "i686" ] ; then
     hwpl=i386
   fi
-  if [ "$debian_ver" != "" ] &&[ "$debian_ver" != "6" ] && [ $hwpl == "i686" ] ; then
+  if [ "$debian_ver" != "" ] && [ "$debian_ver" != "6" ] && [ $hwpl == "i686" ] ; then
     hwpl=i386
   fi
 fi
-echo "hwpl $hwpl $gnu"
 
 # Bash
 if [ "$SHELL" != "/bin/bash" ] && [ "$SHELL" != "/usr/local/bin/bash" ]; then
