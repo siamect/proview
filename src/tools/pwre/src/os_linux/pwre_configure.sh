@@ -445,7 +445,7 @@ else
   pwre_config_check_lib libusb    LIBUSB   lib libusb 1 "/usr/lib/libusb-1.0.so:/usr/lib/$hwpl-linux-$gnu/libusb-1.0.so"
   pwre_config_check_lib powerlink POWERLINK lib powerlink 1 "$epl/build/Examples/X86/Generic/powerlink_user_lib/libpowerlink.a"
   pwre_config_check_lib powerlinkcn POWERLINKCN lib powerlinkcn 1 "$epl/buildcn/Examples/X86/Generic/powerlink_user_lib/libpowerlink.a"
-  pwre_config_check_lib librsvg   LIBRSVG  lib librsvg 1 "/usr/lib/librsvg-2.so"
+  pwre_config_check_lib librsvg   LIBRSVG  lib librsvg 1 "/usr/lib/librsvg-2.so:/usr/lib/$hwpl-linux-$gnu/librsvg-2.so"
         
   pwre_config_check_include mq    MQ    0 "/usr/local/dmq/include/p_entry.h"
   pwre_config_check_include wmq   WMQ   1 "/opt/mqm/inc/cmqc.h"

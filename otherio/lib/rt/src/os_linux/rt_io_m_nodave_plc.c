@@ -163,7 +163,7 @@ static pwr_tStatus IoRackInit (
     protocol = daveProtoISOTCP243;
     break;
   case pwr_eNodave_ProtocolEnum_ISOTCPR:
-    protocol = daveProtoISOTCPR;
+    protocol = daveProtoISOTCP;
     break;
   case pwr_eNodave_ProtocolEnum_MPI_IBH:
     protocol = daveProtoMPI_IBH;
