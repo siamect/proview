@@ -1,42 +1,13 @@
 Package: pwrrt
-Version: 4.8.6-3
+Version: 5.0.0-1
 Section: base
 Priority: optional
 Architecture: i386
-Depends: libc6 (>= 2.15-0ubuntu20), libgtk2.0-0 (>= 2.24.13-0ubuntu2), libasound2 (>= 1.0.25-3ubuntu3), libdb5.1 (>=5.1.29-5ubuntu2), libsqlite3-0 (>= 3.7.13-1), xfonts-100dpi
+Depends: libc6 (>= 2.17-93ubuntu4), libgtk2.0-0 (>= 2.24.20-1ubuntu1), libasound2 (>= 1.0.27.2-1ubuntu6), libdb5.3 (>=5.3.21-2), libsqlite3-0 (>= 3.7.17-1ubuntu1), librsvg2-2 (>= 2.36.4-2), xfonts-100dpi
 Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48
 Maintainer: Proview <postmaster@proview.se>
 Homepage: http://www.proview.se
 Installed-Size: 955344
 Description:
  Proview runtime environment
- 4.8.0-1 Base release
- 4.8.1-1 
-   - I/O support for Arduino USB board.
-   - Remote support for Websphere Message Queue.
-   - Operator event logging and replay.
-   - Chinese translation of operator enivornment.
- 4.8.1-2
-   - Curve window, second mark and export dialog added.
-   - Xtt, problems with OpPlace and XttGraph objects in SharedVolume fixed.
-   - Flow alloc color problem fixed.
- 4.8.3-1
-   - Post server for sending emails and sms.
-   - Report server.
- 4.8.4-1
-   - Buffer input and output channels and signals.
- 4.8.5-1
-   - Display of invert, test and conversion for channels and signals.
-   - Support for several plc processes.
-   - Ge pie chart and bar chart.
-   - Trend curves with larger buffers and shorter scantimes. Snapshot function.
- 4.8.6-1
-   - Trend and fast curves in web interface.
-   - Pie chart and bar chart in web interface.
-   - Display values as hex, octal or binary in xtt.
-   - Configure operator log in OpPlace object.
-   - Plc, several processes, handling of error log and process status.
-   - DataArithmL with 8191 characters added.
- 4.8.6-3
-   - Ge axis with dynamic scale.
-   - sqlite history database.
+ 5.0.0-1 Base release
