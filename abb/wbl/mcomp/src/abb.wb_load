@@ -2431,7 +2431,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
       EndObject
       Object Template ABB_ACS800_1 2148237312 12-OCT-2005 12:58:20.00
-        Body RtBody 18-MAR-2010 15:59:01.55
+        Body RtBody 19-NOV-2013 11:20:17.38
           Attr Specification = "ABB ACS800 Frequency converter"
           Attr InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_ID"
           Attr InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_IND"
@@ -25853,7 +25853,7 @@ ABB ACC800"
         EndObject
       EndObject
       Object Template ABB_ACS800MotorAggr 2148761600 12-OCT-2005 12:58:20.00
-        Body RtBody 11-NOV-2013 11:16:43.43
+        Body RtBody 19-NOV-2013 11:20:45.98
           Attr AlarmTextToOften = "Power not yet ready for restart, wait before retry"
           Attr AlarmTextPowOnNotOk = "Power interlocked"
           Attr AlarmTextStartNoOk = "Power is not on"
@@ -25889,6 +25889,7 @@ ABB ACC800"
           Attr ACS800.AlarmTripped = "Frequency converter tripped, reset is required"
           Attr ACS800.AlarmFanOld = "Maintenance replace of cooling fan in converter required"
           Attr ACS800.AlarmWarning = "Frequency converter warning"
+          Attr ACS800.AlarmConnection = "No connection"
           Attr ACS800.DefTrend = "ABB:Class-ABB_ACS800MotorAggr-Template.ACS800.PlotGroup"
           Attr ACS800.DataSheet = "$pwr_lang/dsh/abb_acs800.html"
           Attr ACS800.TrendActSpeed.Multiple = 1
@@ -36442,7 +36443,7 @@ ABB ACS800 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS800PumpAggr 2151120896 01-JAN-1970 01:00:00.00
-        Body RtBody 11-NOV-2013 11:17:58.47
+        Body RtBody 19-NOV-2013 11:21:00.86
           Attr Super.AlarmTextToOften = "Power not yet ready for restart, wait before retry"
           Attr Super.AlarmTextPowOnNotOk = "Power interlocked"
           Attr Super.AlarmTextStartNoOk = "Power is not on"
@@ -36478,6 +36479,7 @@ ABB ACS800 Aggregate
           Attr Super.ACS800.AlarmTripped = "Frequency converter tripped, reset is required"
           Attr Super.ACS800.AlarmFanOld = "Maintenance replace of cooling fan in converter required"
           Attr Super.ACS800.AlarmWarning = "Frequency converter warning"
+          Attr Super.ACS800.AlarmConnection = "No connection"
           Attr Super.ACS800.DefTrend = "ABB:Class-ABB_ACS800PumpAggr-Template.Super.ACS800.PlotGroup"
           Attr Super.ACS800.DataSheet = "$pwr_lang/dsh/abb_acs800.html"
           Attr Super.ACS800.TrendActSpeed.Multiple = 1
@@ -36659,7 +36661,7 @@ ABB ACS800 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS800FanAggr 2151383040 01-JAN-1970 01:00:00.00
-        Body RtBody 11-NOV-2013 11:18:55.14
+        Body RtBody 19-NOV-2013 11:21:13.58
           Attr Super.AlarmTextToOften = "Power not yet ready for restart, wait before retry"
           Attr Super.AlarmTextPowOnNotOk = "Power interlocked"
           Attr Super.AlarmTextStartNoOk = "Power is not on"
@@ -36695,6 +36697,7 @@ ABB ACS800 Aggregate
           Attr Super.ACS800.AlarmTripped = "Frequency converter tripped, reset is required"
           Attr Super.ACS800.AlarmFanOld = "Maintenance replace of cooling fan in converter required"
           Attr Super.ACS800.AlarmWarning = "Frequency converter warning"
+          Attr Super.ACS800.AlarmConnection = "No connection"
           Attr Super.ACS800.DefTrend = "ABB:Class-ABB_ACS800FanAggr-Template.Super.ACS800.PlotGroup"
           Attr Super.ACS800.DataSheet = "$pwr_lang/dsh/abb_acs800.html"
           Attr Super.ACS800.TrendActSpeed.Multiple = 1
@@ -67933,7 +67936,7 @@ bit 10 (d11) replace fan"
         EndObject
       EndObject
       Object Template ABB_ACS880MotorAggr 2160033792 01-JAN-1970 01:00:00.00
-        Body RtBody 11-NOV-2013 11:11:10.09
+        Body RtBody 19-NOV-2013 11:21:37.88
           Attr AlarmTextToOften = "Power not yet ready for restart, wait before retry"
           Attr AlarmTextPowOnNotOk = "Power interlocked"
           Attr AlarmTextStartNoOk = "Power is not on"
@@ -67976,6 +67979,7 @@ bit 10 (d11) replace fan"
           Attr ACS880.AlarmTripped = "Frequency converter tripped, reset is required"
           Attr ACS880.AlarmFanOld = "Maintenance replace of cooling fan in converter required"
           Attr ACS880.AlarmWarning = "Frequency converter warning"
+          Attr ACS880.AlarmConnection = "No connection"
           Attr ACS880.DefTrend = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880.PlotGroup"
           Attr ACS880.DataSheet = "$pwr_lang/dsh/abb_acs880.html"
           Attr ACS880.TrendActSpeed.Multiple = 1
@@ -79394,7 +79398,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880PumpAggr 2160820224 01-JAN-1970 01:00:00.00
-        Body RtBody 11-NOV-2013 11:12:05.05
+        Body RtBody 19-NOV-2013 11:21:55.87
           Attr Super.AlarmTextToOften = "Power not yet ready for restart, wait before retry"
           Attr Super.AlarmTextPowOnNotOk = "Power interlocked"
           Attr Super.AlarmTextStartNoOk = "Power is not on"
@@ -79440,6 +79444,7 @@ ABB ACS880 Aggregate
           Attr Super.ACS880.AlarmTripped = "Frequency converter tripped, reset is required"
           Attr Super.ACS880.AlarmFanOld = "Maintenance replace of cooling fan in converter required"
           Attr Super.ACS880.AlarmWarning = "Frequency converter warning"
+          Attr Super.ACS880.AlarmConnection = "No connection"
           Attr Super.ACS880.DefTrend = "ABB:Class-ABB_ACS880PumpAggr-Template.Super.ACS880.PlotGroup"
           Attr Super.ACS880.DataSheet = "$pwr_lang/dsh/abb_acs880.html"
           Attr Super.ACS880.TrendActSpeed.Multiple = 1
@@ -79587,7 +79592,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880FanAggr 2161082368 01-JAN-1970 01:00:00.00
-        Body RtBody 11-NOV-2013 11:13:07.94
+        Body RtBody 19-NOV-2013 11:22:12.95
           Attr Super.AlarmTextToOften = "Power not yet ready for restart, wait before retry"
           Attr Super.AlarmTextPowOnNotOk = "Power interlocked"
           Attr Super.AlarmTextStartNoOk = "Power is not on"
@@ -79633,6 +79638,7 @@ ABB ACS880 Aggregate
           Attr Super.ACS880.AlarmTripped = "Frequency converter tripped, reset is required"
           Attr Super.ACS880.AlarmFanOld = "Maintenance replace of cooling fan in converter required"
           Attr Super.ACS880.AlarmWarning = "Frequency converter warning"
+          Attr Super.ACS880.AlarmConnection = "No connection"
           Attr Super.ACS880.DefTrend = "ABB:Class-ABB_ACS880FanAggr-Template.Super.ACS880.PlotGroup"
           Attr Super.ACS880.DataSheet = "$pwr_lang/dsh/abb_acs880.html"
           Attr Super.ACS880.TrendActSpeed.Multiple = 1
@@ -79932,7 +79938,7 @@ ABB ACS880 Aggregate
     !  object contains an ABB_ACS880_Epl_IoModule object, reflecting the
     !  the Powerlink message. The IoModule object should be connected on 
     !  object of class ABB_ACS880_Epl_1 in the plant hierarchy.
-    !
+    ! 
     !  ABB_ACS880_Epl object also need a EplHandler object, See object
     !  EplHandler or Epl_MN for more information.
     ! 
