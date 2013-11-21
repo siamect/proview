@@ -2785,7 +2785,26 @@ int WGre::node_update( vldh_t_node object)
       deleted_connections = 0;
       for ( j = 0; j < (int)con_count; j++) {
 	/* Convert connection point */
-	if ( (*con_ptr)->hc.source_node == object) {
+	if ( (*con_ptr)->hc.source_node == object &&
+	     (*con_ptr)->hc.dest_node == object) {
+	  int source_point = point_conv[(*con_ptr)->lc.source_point];
+	  int dest_point = point_conv[(*con_ptr)->lc.dest_point];
+	  if (( source_point != (int)(*con_ptr)->lc.source_point && source_point != -1) ||
+	      ( dest_point != (int)(*con_ptr)->lc.dest_point && dest_point != -1)) {
+	    vldh_node_con_delete( object, (*con_ptr)->lc.source_point, 
+				  *con_ptr);
+	    vldh_node_con_delete( object, (*con_ptr)->lc.dest_point, 
+				  *con_ptr);
+	    (*con_ptr)->lc.source_point = source_point;
+	    (*con_ptr)->lc.dest_point = dest_point;
+	    vldh_conmodified( *con_ptr);
+	    vldh_node_con_insert( object, (*con_ptr)->lc.source_point, 
+				  *con_ptr, VLDH_NODE_SOURCE);
+	    vldh_node_con_insert( object, (*con_ptr)->lc.dest_point, 
+				  *con_ptr, VLDH_NODE_DESTINATION);
+	  }
+	}
+	else if ( (*con_ptr)->hc.source_node == object) {
 	  point = point_conv[(*con_ptr)->lc.source_point];
 	  if ( point != (int)(*con_ptr)->lc.source_point && point != -1) {
 	    vldh_node_con_delete( object, (*con_ptr)->lc.source_point, 
