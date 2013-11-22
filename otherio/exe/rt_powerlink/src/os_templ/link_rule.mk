@@ -5,5 +5,5 @@ link_rule_mk := 1
 	$(export_obj) $(pwr_eobj)/rt_io_user.o \
 	$(pwre_conf_libdir) $(pwre_conf_libpwrrt) $(pwre_conf_lib) \
 	-lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_cifx_dummy -lpwr_nodave_dummy \
-	$(pwre_conf_libpwrprofibus) $(pwre_conf_libpwrpowerlink) -lpcap
+	$(pwre_conf_libpwrprofibus) $(pwre_conf_libpwrpowerlink)
 endif

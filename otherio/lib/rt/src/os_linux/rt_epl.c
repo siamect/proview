@@ -1,4 +1,4 @@
-#if defined PWRE_CONF_EPL
+#if defined PWRE_CONF_EPL && defined PWRE_CONF_LIBPCAP
 
 #include "Epl.h"
 

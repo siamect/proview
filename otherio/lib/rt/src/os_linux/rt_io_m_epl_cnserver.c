@@ -52,7 +52,7 @@
 #include "rt_io_m_epl.h"
 #include "rt_io_bus.h"
 
-#if defined PWRE_CONF_EPL
+#if defined PWRE_CONF_EPL && defined PWRE_CONF_LIBPCAP
 
 #include "Epl.h"
 #include <errno.h>

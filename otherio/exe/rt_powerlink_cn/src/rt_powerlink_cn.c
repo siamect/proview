@@ -34,7 +34,7 @@
  * General Public License plus this exception.
  **/
 
-#if defined PWRE_CONF_EPL
+#if defined PWRE_CONF_EPL && defined PWRE_CONF_LIBPCAP
 
 #include "pwr.h"
 #include "rt_io_msg.h"
