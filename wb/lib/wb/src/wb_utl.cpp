@@ -6309,6 +6309,29 @@ static int utl_set_parameter (
 	        printf( "%%FOE-W-LONG_STRING, parameter size is exceeded\n");
 	      break;
 	    }
+	    case pwr_eType_Text:
+	    {
+	      p_String = object_element;
+	      sprintf( logstrptr + strlen(logstr), "( %s ) ", p_String);
+	      char *s = p_String;
+	      for ( char *c = valuestr; *c; c++) {
+		if ( *c == '\\' && *(c+1) == 'n') {
+		  *s = 10;
+		  c++;
+		}
+		else
+		  *s = *c;
+		s++;
+		if ( s - p_String >= info.size/info.nElement)
+		  break;
+	      }
+	      *s = 0;
+	      *(p_String + info.size/info.nElement - 1) = 0;
+	      sprintf( logstrptr + strlen(logstr), "%s", p_String);
+	      if ( (int) strlen( valuestr) > (info.size/info.nElement -1))
+	        printf( "%%FOE-W-LONG_STRING, parameter size is exceeded\n");
+	      break;
+	    }
 	    case pwr_eType_Time:
 	    {
 	      sts = time_AsciiToA( valuestr, (pwr_tTime *)object_element);
