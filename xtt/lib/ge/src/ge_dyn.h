@@ -154,7 +154,6 @@
     ge_eDynPrio_ResetDig,
     ge_eDynPrio_ToggleDig,
     ge_eDynPrio_StoDig,
-    ge_eDynPrio_Command,
     ge_eDynPrio_Help,
     ge_eDynPrio_OpenGraph,
     ge_eDynPrio_OpenURL,
@@ -173,6 +172,7 @@
     ge_eDynPrio_Axis,
 
     // This should always be last
+    ge_eDynPrio_Command  = 9999,
     ge_eDynPrio_CloseGraph = 10000
   } ge_eDynPrio;
 
