@@ -41,6 +41,7 @@ doxygen
 libmysql++-dev (optional)
 libantlr-dev (version 2.7.7)
 
+
 java:  Download jdk-6u10-linux-i586.bin from java.sun.com. Define the 
        environment variable jdk to the path where the package is 
        extracted (e.g. /usr/local) and put $jdk/bin in the PATH.
@@ -53,7 +54,7 @@ Optional:
 libmysql++-dev
 libsqlite3-dev
 libusb-1.0-1-dev
-librsvb2-dev
+librsvg2-dev
 
 There has to be a valid display when building proview.
 
