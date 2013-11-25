@@ -28,3 +28,12 @@
 120411 cs  modbus    Modbus RTU higher baudrate added
 120514 cs  modbus    Modbus TCP, configuration with hostname instead of IP address
 120522 ab  modbus    Modbus TCP receive bugfix
+130705 cs  epl       Powerlink implemented
+130715 cs  epl       ABB_ACS880Epl classes for Powerlink
+130715 cs  epl       Powerlink CN server added
+130716 cs  app       ABB struct files including otherio
+130716 cs  epl       Powerlink cdc file is fetched from ./ by default
+130717 cs  epl       Powerlink SetupTimeout added
+130718 cs  epl       Powerlink new stall action logic
+130905 cs  epl       Powerlink added to Guide to IO systems
+131009 cs  modbus    Modbus TCP, configuration of max slave timeout added

@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -1551,6 +1551,16 @@ static int wccm_attribute_func (
 	    /* Convert time to ascii */	
 	    sts = time_AtoAscii((pwr_tTime *)object_element, 
                       time_eFormat_DateAndTime, 
+                      string_val, sizeof(string_val));
+	    string_val[20] = 0;
+	    decl = CCM_DECL_STRING;
+	    break;
+          }
+          case pwr_eType_DeltaTime:
+          {
+	    /* Convert time to ascii */	
+	    sts = time_DtoAscii((pwr_tDeltaTime *)object_element, 
+                      1,
                       string_val, sizeof(string_val));
 	    string_val[20] = 0;
 	    decl = CCM_DECL_STRING;

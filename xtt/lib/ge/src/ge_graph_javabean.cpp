@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -1708,13 +1708,13 @@ int Graph::export_javaframe( char *filename, char *bean_name, int applet,
 "      codebase=\"" << codebase << "\">" << endl <<
 "      <PARAM NAME = CODE VALUE = " << bean_name << "_A.class >" << endl <<
 "      <PARAM NAME =\"archive\" VALUE =\"pwrp_" << systemname << "_web.jar," <<
-"pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar\">" << endl <<
+"pwr_rt_client.jar,pwr_jop.jar,pwr_jopg.jar\">" << endl <<
 "      <PARAM NAME=\"type\" VALUE=\"application/x-java-applet;version=1.3\">" << endl <<
 "      <PARAM NAME=\"scriptable\" VALUE=\"false\">" << endl <<
 "      <PARAM NAME=\"instance\" VALUE=\"\">" << endl <<
 "    <embed type=\"application/x-java-applet;version=1.3\"" << endl <<
 "      code = " << bean_name << "_A.class" << endl <<
-"      archive =\"pwrp_" << systemname << "_web.jar," <<"pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar\"" << endl <<
+"      archive =\"pwrp_" << systemname << "_web.jar," <<"pwr_rt_client.jar,pwr_jop.jar,pwr_jopg.jar\"" << endl <<
 "      width=" << int(x1-x0) + 2*glow_cJBean_Offset << endl <<
 "      height=" << int(y1-y0) + 2*glow_cJBean_Offset << ">" << endl <<
 "      height=" << int(y1-y0) + 2*glow_cJBean_Offset << endl <<
@@ -2013,13 +2013,13 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
 "      codebase=\"" << codebase << "\">" << endl <<
 "      <PARAM NAME = CODE VALUE = " << bean_name << "_A.class >" << endl <<
 "      <PARAM NAME =\"archive\" VALUE =\"pwrp_" << systemname << "_web.jar," <<
-"pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar\">" << endl <<
+"pwr_rt_client.jar,pwr_jop.jar,pwr_jopg.jar\">" << endl <<
 "      <PARAM NAME=\"type\" VALUE=\"application/x-java-applet;version=1.3\">" << endl <<
 "      <PARAM NAME=\"scriptable\" VALUE=\"false\">" << endl <<
 "      <PARAM NAME=\"instance\" VALUE=\"\">" << endl <<
 "    <embed type=\"application/x-java-applet;version=1.3\"" << endl <<
 "      code = " << bean_name << "_A.class" << endl <<
-"      archive =\"pwrp_" << systemname << "_web.jar," <<"pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar\"" << endl <<
+"      archive =\"pwrp_" << systemname << "_web.jar," <<"pwr_rt_client.jar,pwr_jop.jar,pwr_jopg.jar\"" << endl <<
 "      width=" << int(x1-x0) + 2*glow_cJBean_Offset << endl <<
 "      height=" << int(y1-y0) + 2*glow_cJBean_Offset << endl <<
 "      instance=\"\">" << endl <<

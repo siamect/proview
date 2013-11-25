@@ -55,4 +55,9 @@
 120829 rk  profinet   IO offset caclulation bugfix for modules with both in- and output.
 121130 rk  profibus   Handling of large prm data areas. 
 121130 rk  profibus   Moved event handling to separate thread. Not dependant on io-read cycle time. 
+121031 cs  profibus  Profbus configurator, fix for gsd list with space
+121203 rk  profibus  Profibus/Profinet fixes, added rt_elog_dump utility
+130415 rk  profibus  Increased Watchdog/DataHold-Factor to 10 (from 3)
+130415 rk  profibus  Removed re-request for diagnostics
+131107 rk  profibus  Fixed problem with profibus diagnostic messages handling
 

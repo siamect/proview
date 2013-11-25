@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -3449,6 +3449,10 @@ gdh_SetAlarmBlockLevel (
   return sts;
 }
 
+/**
+ * @brief  Convert pointer to rtdb relative pointer.
+ * @return pwr_tStatus
+ */
 void
 gdh_StoreRtdbPointer (
   unsigned long		*rp,
@@ -3468,6 +3472,10 @@ gdh_StoreRtdbPointer (
   *rp = r;
 }
 
+/**
+ * @brief  Convert rtdb relative pointer to absolute pointer.
+ * @return pwr_tStatus
+ */
 void *
 gdh_TranslateRtdbPointer (
   unsigned long		r

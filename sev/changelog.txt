@@ -3,3 +3,9 @@
 110324 cs  sev       Check/repair program for mysql history database added.
 110831 cs  sev       Sev bootfile name bugfix
 120302 cs  sev       Sev altering of database engine added to sev_repair
+121123 cs  sev       Sev stat table added
+121205 cs  sev       Sev SQLite database implemented
+130919 cs  sev       Sev, sql query buffer for create table was to small
+131031 cs  sev       sev_xtt xttsevhist constructor changed
+131031 cs  sev       Sev repair options for list, clean and optimize database added
+131107 cs  sev       Sev event storage, check that event is not already stored added

@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -135,6 +135,11 @@ int CnvWblToPs::class_exec()
 
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_author, "") != 0) {
     sprintf( txt, "%s %s", Lng::translate("Author"), ctx->rw->doc_author);
+    tops.print_text( txt, tops.style[tops.ci].text);
+  }
+
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_creator, "") != 0) {
+    sprintf( txt, "%s %s", Lng::translate("Creator"), ctx->rw->doc_creator);
     tops.print_text( txt, tops.style[tops.ci].text);
   }
 

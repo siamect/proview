@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -85,7 +85,8 @@ XttTrendMotif::XttTrendMotif( void *parent_ctx,
 			      int height,
 			      unsigned int options,
 			      int *sts) :
-  XttTrend( parent_ctx, name, trend_list, plotgroup, sts), parent_widget(parent_wid)
+  XttTrend( parent_ctx, name, trend_list, plotgroup, options, sts), 
+  parent_widget(parent_wid)
 {
   if ( EVEN(*sts))
     return;

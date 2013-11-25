@@ -13,8 +13,6 @@ group Supervision pwrb_asup.html
 group IO pwrb_chanai.html
 group Signals pwrb_ai.html
 group Channels pwrb_chanai.html
-group IO_Profibus pwrb_pb_profiboard.html
-group IO_PSS9000 pwrb_ai_ai32up.html
 group PlcGrafcet pwrb_initstep.html
 group PlcIO pwrb_apcollect.html
 group PlcLogic pwrb_and.html

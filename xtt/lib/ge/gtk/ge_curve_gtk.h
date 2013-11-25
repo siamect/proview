@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -71,7 +71,9 @@ class GeCurveGtk : public GeCurve {
     GtkWidget   *menu_open;
     GtkWidget   *menu_snapshot;
     GtkWidget   *menu_export;
+    GtkWidget   *menu_add;
     GtkWidget   *tools_snapshot;
+    GtkWidget   *tools_add;
     GtkWidget   *export_widget;
     GtkWidget   *export_attrcombo_widget;
     GtkWidget   *export_fromtime_widget;
@@ -129,6 +131,7 @@ class GeCurveGtk : public GeCurve {
     static void activate_prev_period( GtkWidget *w, gpointer data);
     static void activate_next_period( GtkWidget *w, gpointer data);
     static void activate_add( GtkWidget *w, gpointer data);
+    static void activate_madd( GtkWidget *w, gpointer data);
     static void activate_remove( GtkWidget *w, gpointer data);
     static void activate_timecombo( GtkWidget *w, gpointer data);
     static void activate_background( GtkWidget *w, gpointer data);

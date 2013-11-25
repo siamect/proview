@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -147,6 +147,14 @@ void GeCurveGtk::activate_configure( GtkWidget *w, gpointer data)
   GeCurve *curve = (GeCurve *)data;
 
   curve->activate_configure();
+}
+
+void GeCurveGtk::activate_madd( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  if ( curve->madd_cb)
+    (curve->madd_cb)( curve->parent_ctx);
 }
 
 void GeCurveGtk::activate_print( GtkWidget *w, gpointer data)
@@ -510,6 +518,8 @@ void GeCurveGtk::enable( unsigned int mask)
     g_object_set( menu_export, "visible", TRUE, NULL);
   if ( mask & curve_mEnable_Timebox)
     g_object_set( sea_timebox, "visible", TRUE, NULL);
+  if ( mask & curve_mEnable_Add)
+    g_object_set( tools_add, "visible", TRUE, NULL);
 }
 
 void GeCurveGtk::setup( unsigned int mask)
@@ -521,6 +531,7 @@ void GeCurveGtk::setup( unsigned int mask)
   g_object_set( tools_snapshot, "visible", mask & curve_mEnable_Snapshot ? TRUE : FALSE, NULL);
   g_object_set( menu_export, "visible", mask & curve_mEnable_Export ? TRUE : FALSE, NULL);
   g_object_set( sea_timebox, "visible", mask & curve_mEnable_Timebox ? TRUE : FALSE, NULL);
+  g_object_set( tools_add, "visible", mask & curve_mEnable_Add ? TRUE : FALSE, NULL);
 }
 
 
@@ -775,6 +786,10 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   GtkMenuBar *menu_bar = (GtkMenuBar *) g_object_new(GTK_TYPE_MENU_BAR, NULL);
 
   // File Entry
+  menu_add = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Add"));
+  g_signal_connect( menu_add, "activate", 
+		    G_CALLBACK(activate_madd), this);
+
   GtkWidget *file_refresh = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Refresh"));
   g_signal_connect( file_refresh, "activate", 
 		    G_CALLBACK(activate_configure), this);
@@ -813,6 +828,7 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
 			      GTK_ACCEL_VISIBLE);
 
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), menu_add);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_refresh);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), menu_new);
@@ -959,6 +975,14 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   g_signal_connect(tools_snapshot, "clicked", G_CALLBACK(activate_snapshot), this);
   g_object_set( tools_snapshot, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_snapshot, CoWowGtk::translate_utf8("Snapshot"), "");
+
+  tools_add = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_add.png");
+  gtk_container_add( GTK_CONTAINER(tools_add), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_add, "clicked", G_CALLBACK(activate_add), this);
+  g_object_set( tools_add, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_add, CoWowGtk::translate_utf8("Add"), "");
 
   // Time box
   GtkToolbar *timetools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
@@ -1115,6 +1139,7 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   g_object_set( menu_snapshot, "visible", FALSE, NULL);
   g_object_set( menu_export, "visible", FALSE, NULL);
   g_object_set( tools_snapshot, "visible", FALSE, NULL);
+  g_object_set( tools_add, "visible", FALSE, NULL);
 
   wow = new CoWowGtk( toplevel);
 

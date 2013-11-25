@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -127,6 +127,12 @@ Lng::translate("Class") << " " << full_class_name << endl <<
   {
     fp_tmp <<
 "<B>" << Lng::translate("Author") << "<T>" << ctx->rw->doc_author << endl;
+  }
+
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_creator, "") != 0)
+  {
+    fp_tmp <<
+"<B>" << Lng::translate("Creator") << "<T>" << ctx->rw->doc_creator << endl;
   }
 
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_version, "") != 0)

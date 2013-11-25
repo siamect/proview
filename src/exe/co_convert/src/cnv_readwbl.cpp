@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -1016,6 +1016,7 @@ void CnvReadWbl::doc_init()
 {
   doc_cnt = 0;
   strcpy( doc_author, "");
+  strcpy( doc_creator, "");
   strcpy( doc_version, "");
   strcpy( doc_code, "");
   strcpy( doc_summary, "");
@@ -1038,7 +1039,7 @@ void CnvReadWbl::doc_init_keep()
 
 int CnvReadWbl::doc_add( char *line)
 {
-  char	line_part[4][80];
+  char	line_part[10][80];
   int nr;
   int i;
 
@@ -1051,6 +1052,13 @@ int CnvReadWbl::doc_add( char *line)
       if ( i != 2)
         strcat( doc_author, " ");
       strcat( doc_author, line_part[i]);
+    }
+  }
+  else if ( strcmp( low(line_part[1]), "@creator") == 0) {
+    for ( i = 2; i < nr; i++) {
+      if ( i != 2)
+        strcat( doc_creator, " ");
+      strcat( doc_creator, line_part[i]);
     }
   }
   else if ( strcmp( low(line_part[1]), "@version") == 0) {

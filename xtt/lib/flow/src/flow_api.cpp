@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -854,4 +854,8 @@ int flow_ConCreateStop( flow_tCtx ctx)
   return ctx->con_create_stop();
 }
 
+int flow_ConIsReference( flow_tCon con)
+{
+  return ((FlowCon *)con)->is_reference();
+}
 

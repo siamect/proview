@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -58,6 +58,7 @@
 #include "co_dcli.h"
 #include "cow_wow.h"
 #include "co_lng.h"
+#include "co_cnf.h"
 
 #include "glow_growctx.h"
 #include "glow_growapi.h"
@@ -110,7 +111,18 @@ void GeCurve::activate_export()
   pwr_tTime to = pwr_cNTime;
   pwr_tTime from = pwr_cNTime;
   double from_time, to_time;
-  char filename[] = "~/history.txt";
+  pwr_tFileName filename;
+  pwr_tFileName dir;
+
+  // Get directory from proview.cnf
+  if ( cnf_get_value( "curveExportDirectory", dir, sizeof(dir))) {
+    strcpy( filename, dir);
+    if ( filename[strlen(filename)-1] != '/')
+      strcat( filename, "/");
+  }
+  else
+    strcpy( filename, "~/");
+  strcat( filename, "history.txt");
 
   grow_MeasureWindow( growcurve_ctx, &ll_x, &ll_y, &ur_x, &ur_y);
 
@@ -863,17 +875,32 @@ int GeCurve::config_names()
 		       x, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
-  x += 3;
-  grow_CreateGrowText( grownames_ctx, "", Lng::translate("Attribute"),
-		       x, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
-		       glow_mDisplayLevel_1, NULL, &o1);
+  if ( options & curve_mOptions_ShowDescrFirst) {
+    x += 3;
+    grow_CreateGrowText( grownames_ctx, "", Lng::translate("Description"),
+			 x, 0.6, glow_eDrawType_TextHelvetica, 
+			 glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+			 glow_mDisplayLevel_1, NULL, &o1);
   
-  x += 14;
-  grow_CreateGrowText( grownames_ctx, "", Lng::translate("Description"),
-		       x, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
-		       glow_mDisplayLevel_1, NULL, &o1);
+    x += 14;
+    grow_CreateGrowText( grownames_ctx, "", Lng::translate("Attribute"),
+			 x, 0.6, glow_eDrawType_TextHelvetica, 
+			 glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+			 glow_mDisplayLevel_1, NULL, &o1);
+  }
+  else {
+    x += 3;
+    grow_CreateGrowText( grownames_ctx, "", Lng::translate("Attribute"),
+			 x, 0.6, glow_eDrawType_TextHelvetica, 
+			 glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+			 glow_mDisplayLevel_1, NULL, &o1);
+  
+    x += 14;
+    grow_CreateGrowText( grownames_ctx, "", Lng::translate("Description"),
+			 x, 0.6, glow_eDrawType_TextHelvetica, 
+			 glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+			 glow_mDisplayLevel_1, NULL, &o1);
+  }
   
   for ( int i = 0; i < cd->cols; i++) {
     // Draw shadowed frame
@@ -923,26 +950,53 @@ int GeCurve::config_names()
 			 glow_eDrawType_Color33, NULL, &scale_rect[i]);
     grow_SetObjectShadowWidth( scale_rect[i], 20);
     // Draw attribute name
-    x += 3;
-    grow_CreateGrowText( grownames_ctx, "", cd->y_name[i],
-			 x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica,
-			 glow_eDrawType_Line, 2, glow_eFont_LucidaSans,
-			 glow_mDisplayLevel_1, NULL, &t1);
-
-    if ( strcmp( cd->y_description[i], "") != 0) {
+    if ( options & curve_mOptions_ShowDescrFirst) {
       double w, h, descent;
 
-      grow_GetTextExtent( grownames_ctx, cd->y_name[i], strlen(cd->y_name[i]),
-			  glow_eDrawType_TextHelvetica, 2, glow_eFont_LucidaSans, &w, &h, &descent);
-      if ( w < 13)
-	x += 14;
-      else
-	x += w + 1;
+      x += 3;
+      if ( strcmp( cd->y_description[i], "") != 0) {
+	grow_CreateGrowText( grownames_ctx, "", cd->y_description[i],
+			     x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica,
+			     glow_eDrawType_Line, 2, glow_eFont_LucidaSans,
+			     glow_mDisplayLevel_1, NULL, &t1);
 
-      grow_CreateGrowText( grownames_ctx, "", cd->y_description[i],
+	grow_GetTextExtent( grownames_ctx, cd->y_name[i], strlen(cd->y_name[i]),
+			    glow_eDrawType_TextHelvetica, 2, glow_eFont_LucidaSans, &w, &h, &descent);
+	if ( w < 13)
+	  x += 14;
+	else
+	  x += w + 1;
+      }	
+      else
+	x += 14;
+	
+      grow_CreateGrowText( grownames_ctx, "", cd->y_name[i],
 			   x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica,
 			   glow_eDrawType_Line, 2, glow_eFont_LucidaSans,
 			   glow_mDisplayLevel_1, NULL, &t1);
+    }
+    else {
+      x += 3;
+      grow_CreateGrowText( grownames_ctx, "", cd->y_name[i],
+			   x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica,
+			   glow_eDrawType_Line, 2, glow_eFont_LucidaSans,
+			   glow_mDisplayLevel_1, NULL, &t1);
+
+      if ( strcmp( cd->y_description[i], "") != 0) {
+	double w, h, descent;
+
+	grow_GetTextExtent( grownames_ctx, cd->y_name[i], strlen(cd->y_name[i]),
+			    glow_eDrawType_TextHelvetica, 2, glow_eFont_LucidaSans, &w, &h, &descent);
+	if ( w < 13)
+	  x += 14;
+	else
+	  x += w + 1;
+	
+	grow_CreateGrowText( grownames_ctx, "", cd->y_description[i],
+			     x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica,
+			     glow_eDrawType_Line, 2, glow_eFont_LucidaSans,
+			     glow_mDisplayLevel_1, NULL, &t1);
+      }
     }
 
     grow_SetAnnotation( cursor_annot[i], 0, "0", 1);
@@ -1480,7 +1534,7 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
   border_bright(glow_eDrawType_Color22),
   cd(0), axis_window_width(0), auto_refresh(1), axis_displayed(1),
   minmax_idx(0), close_cb(0), help_cb(0), increase_period_cb(0), decrease_period_cb(0), reload_cb(0),
-  prev_period_cb(0), next_period_cb(0), add_cb(0), remove_cb(0), export_cb(0), new_cb(0),
+  prev_period_cb(0), next_period_cb(0), add_cb(0), madd_cb(0), remove_cb(0), export_cb(0), new_cb(0),
   save_cb(0), open_cb(0), snapshot_cb(0),
   initial_right_position(pos_right), last_cursor_x(0), last_mark1_x(0), last_mark2_x(0),
   deferred_configure_axes(0), center_from_window(0), options(gc_options)

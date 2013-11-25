@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -1019,7 +1019,7 @@ void EvList::event_ack( mh_sAck *msg)
       dest_code = flow_eDest_IntoLast;
       dest_node = NULL;
     }
-    new ItemAlarm( this, "Alarm",
+    ItemAlarm *item = new ItemAlarm( this, "Alarm",
 		   net_NetTimeToTime( &event->Info.EventTime), "",
 	event->Ack.EventName, event->Info.EventFlags,
 	event->Info.EventPrio, event->Info.Id,
@@ -1027,6 +1027,9 @@ void EvList::event_ack( mh_sAck *msg)
 	&event->Ack.SupObject, dest_node, dest_code, &sts);
     if ( EVEN(sts)) return;
     size++;
+
+    view_alarm( item);
+    view_configure();
   }
   
   else {
@@ -1095,7 +1098,7 @@ void EvList::event_return( mh_sReturn *msg)
       dest_code = flow_eDest_IntoLast;
       dest_node = NULL;
     }
-    new ItemAlarm( this, "Alarm",
+    ItemAlarm *item = new ItemAlarm( this, "Alarm",
 		   net_NetTimeToTime( &event->Info.EventTime), event->Msg.EventText,
 		   event->Return.EventName, event->Info.EventFlags,
 		   event->Info.EventPrio, event->Info.Id,
@@ -1103,6 +1106,9 @@ void EvList::event_return( mh_sReturn *msg)
 		   &event->Return.SupObject, dest_node, dest_code, &sts);
     if ( EVEN(sts)) return;
     size++;
+
+    view_alarm( item);
+    view_configure();
   }
 
   else {
@@ -2041,7 +2047,7 @@ void ItemCategory::alarm( EvList *evlist, ItemAlarm *item)
 	}
 	
 	brow_CreateNode( evlist->brow->ctx, name, nc,
-			 node, flow_eDest_IntoLast, item, 1, &item->tree_node);
+			 node, flow_eDest_IntoFirst, item, 1, &item->tree_node);
 	item->update_text( 1);
 	brow_SetAnnotPixmap( node, 0, evlist->brow->pixmap_openmap);
       }

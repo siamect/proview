@@ -193,7 +193,7 @@ mkdir		:= mkdir
 wblflags	:= 
 
 ifeq ($(pwre_btype),rls)			 
-  cflags	:= -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT -fPIC
+  cflags	:= -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT -fPIC -Wno-deprecated-declarations -Wno-unused-but-set-variable -Wno-narrowing
   cxxflags	:= $(cflags) 
   linkflags	:= -O3 -L$(lib_dir)
   elinkflags	:= -O3 -L$(lib_dir) -L$(elib_dir)
@@ -202,7 +202,7 @@ ifeq ($(pwre_btype),rls)
   dolist	= /lis=$(list)
   domap		= -Xlinker -Map -Xlinker $(map)
 else
-  cflags	:= -c -g -Wall -D_GNU_SOURCE -D_REENTRANT -fPIC
+  cflags	:= -c -g -Wall -D_GNU_SOURCE -D_REENTRANT -fPIC -Wno-deprecated-declarations -Wno-unused-but-set-variable -Wno-narrowing
   cxxflags	:= $(cflags) -Wno-deprecated
   mmflags	:= -Wno-deprecated
   linkflags	:= -g -L$(lib_dir)

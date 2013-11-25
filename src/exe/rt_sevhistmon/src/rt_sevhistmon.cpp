@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -1088,7 +1088,6 @@ pwr_tStatus rt_sevhistmon::mh_ack_bc( mh_sAck *msg)
   
   if ( shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert( &ed);
-  printf( "Ack\n");
   return 1;
 }
 
@@ -1108,7 +1107,6 @@ pwr_tStatus rt_sevhistmon::mh_return_bc( mh_sReturn *msg)
   if ( shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert( &ed);
 
-  printf( "Return\n");
   return 1;
 }
 
@@ -1128,7 +1126,6 @@ pwr_tStatus rt_sevhistmon::mh_alarm_bc( mh_sMessage *msg)
   if ( shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert( &ed);
 
-  printf( "Alarm\n");
   return 1;
 }
 
@@ -1148,7 +1145,6 @@ pwr_tStatus rt_sevhistmon::mh_block_bc( mh_sBlock *msg)
   if ( shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert( &ed);
 
-  printf( "Block\n");
   return 1;
 }
 
@@ -1168,7 +1164,6 @@ pwr_tStatus rt_sevhistmon::mh_cancel_bc( mh_sReturn *msg)
   if ( shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert( &ed);
 
-  printf( "Cancel\n");
   return 1;
 }
 
@@ -1188,19 +1183,16 @@ pwr_tStatus rt_sevhistmon::mh_info_bc( mh_sMessage *msg)
   if ( shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert( &ed);
 
-  printf( "Info\n");
   return 1;
 }
 
 pwr_tStatus rt_sevhistmon::mh_clear_alarmlist_bc( pwr_tNodeIndex nix)
 {
-  printf( "Clearalarmlist\n");
   return 1;
 }
 
 pwr_tStatus rt_sevhistmon::mh_clear_blocklist_bc( pwr_tNodeIndex nix)
 {
-  printf( "Clearblocklist\n");
   return 1;
 }
 
@@ -1212,8 +1204,6 @@ void sev_sevhistevents::evbuf_insert( sev_sEvent *ev)
       if ( event_buffer[idx].eventid_idx == ev->eventid_idx && 
 	   event_buffer[idx].eventid_nix == ev->eventid_nix && 
 	   event_buffer[idx].eventid_birthtime == ev->eventid_birthtime) {
-	printf( "Rejected                       type %d id %d \"%s\"\n", ev->type,
-		ev->eventid_idx,  ev->eventtext);
 	return;
       }
       if ( idx == evbuf_oldest)
@@ -1241,8 +1231,6 @@ void sev_sevhistevents::evbuf_insert( sev_sEvent *ev)
     }
     memcpy( &event_buffer[evbuf_last], ev, sizeof(event_buffer[0]));
   }
-  printf( "Insert last %d oldest %d type %d id %d \"%s\"\n", evbuf_last, evbuf_oldest, event_buffer[evbuf_last].type,
-	  event_buffer[evbuf_last].eventid_idx,  event_buffer[evbuf_last].eventtext);
 }
 
 void sev_sevhistevents::evbuf_send()
@@ -1280,7 +1268,6 @@ void sev_sevhistevents::evbuf_send()
   unsigned int ev_cnt = 0;
   if ( evbuf_sent == ev_cInit) {
     for ( unsigned int idx = evbuf_oldest;;) {      
-      printf("Send idx %d id %d\n", idx, event_buffer[idx].eventid_idx);
       memcpy( &((sev_sMsgEventsStore *)put.data)->Events[ev_cnt], &event_buffer[idx], sizeof(sev_sEvent));
       ev_cnt++;
       evbuf_sent = idx;
@@ -1293,7 +1280,6 @@ void sev_sevhistevents::evbuf_send()
     unsigned int start_idx = evbuf_sent;
     evbuf_next_idx(start_idx);
     for ( unsigned int idx = start_idx;;) {
-      printf("Send idx %d id %d\n", idx, event_buffer[idx].eventid_idx);
       memcpy( &((sev_sMsgEventsStore *)put.data)->Events[ev_cnt], &event_buffer[idx], sizeof(sev_sEvent));
       ev_cnt++;
       evbuf_sent = idx;
@@ -1302,7 +1288,6 @@ void sev_sevhistevents::evbuf_send()
       evbuf_next_idx(idx);
     }
   }
-  printf( "Send num: %d  cnt: %d\n", num, ev_cnt);
 
   tgt.nid = monitor->m_hs[event_thread_idx].nid;
   tgt.qix = sev_eProcSevServer;
@@ -1445,7 +1430,6 @@ int rt_sevhistmon::mainloop()
             send_itemlist( get.sender.nid);
             break;
           case sev_eMsgType_HistItemsRequest:
-            printf("rt_sevhistmon: HistitemsRequest received\n");
             send_itemlist( get.sender.nid);
             break;
           case sev_eMsgType_ServerStatus:

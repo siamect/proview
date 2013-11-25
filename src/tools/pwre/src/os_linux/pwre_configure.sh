@@ -273,17 +273,25 @@ let lib_cnt=0
 let i=0
 hwpl=`eval uname -i`
 machine=`eval uname -m`
+if [ $machine == "i686" ]; then
+  hwpl=$machine
+fi
 if [ ${machine:0:3} == "arm" ]; then
   hwpl=arm
 else
   ubuntu_ver=`cat /etc/issue | grep Ubuntu | awk '{ print $2 }'`
+  debian_ver=`cat /etc/issue | grep Debian | awk '{ print $3 }'`
   if [ "$ubuntu_ver" == "" ]; then
     ubuntu_ver=`cat /etc/issue | grep Mint | awk '{ print $3 }'`
   fi
-  if [ "$ubuntu_ver" != "" ] &&[ "$ubuntu_ver" != "12.04" ] && [ $hwpl == "i686" ] ; then
+  if [ "$ubuntu_ver" != "" ] && [ $hwpl == "i686" ] ; then
+    hwpl=i386
+  fi
+  if [ "$debian_ver" != "" ] && [ "$debian_ver" != "6" ] && [ $hwpl == "i686" ] ; then
     hwpl=i386
   fi
 fi
+
 # Bash
 if [ "$SHELL" != "/bin/bash" ] && [ "$SHELL" != "/usr/local/bin/bash" ]; then
     echo "Config error: Default shell has to be bash"
@@ -445,7 +453,7 @@ else
   pwre_config_check_lib libusb    LIBUSB   lib libusb 1 "/usr/lib/libusb-1.0.so:/usr/lib/$hwpl-linux-$gnu/libusb-1.0.so"
   pwre_config_check_lib powerlink POWERLINK lib powerlink 1 "$epl/build/Examples/X86/Generic/powerlink_user_lib/libpowerlink.a"
   pwre_config_check_lib powerlinkcn POWERLINKCN lib powerlinkcn 1 "$epl/buildcn/Examples/X86/Generic/powerlink_user_lib/libpowerlink.a"
-  pwre_config_check_lib librsvg   LIBRSVG  lib librsvg 1 "/usr/lib/librsvg-2.so"
+  pwre_config_check_lib librsvg   LIBRSVG  lib librsvg 1 "/usr/lib/librsvg-2.so:/usr/lib/$hwpl-linux-$gnu/librsvg-2.so"
         
   pwre_config_check_include mq    MQ    0 "/usr/local/dmq/include/p_entry.h"
   pwre_config_check_include wmq   WMQ   1 "/opt/mqm/inc/cmqc.h"

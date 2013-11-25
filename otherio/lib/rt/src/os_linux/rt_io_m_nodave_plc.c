@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -163,7 +163,7 @@ static pwr_tStatus IoRackInit (
     protocol = daveProtoISOTCP243;
     break;
   case pwr_eNodave_ProtocolEnum_ISOTCPR:
-    protocol = daveProtoISOTCPR;
+    protocol = daveProtoISOTCP;
     break;
   case pwr_eNodave_ProtocolEnum_MPI_IBH:
     protocol = daveProtoMPI_IBH;

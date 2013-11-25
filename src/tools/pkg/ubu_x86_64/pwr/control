@@ -1,55 +1,14 @@
 Source: pwrsrc
 Section: devel
-Package: pwr48
+Package: pwr50
 Priority: optional
 Maintainer: Proview <postmaster@proview.se>
-Version: 4.8.6-3
+Version: 5.0.0-1
 Architecture: amd64
-Depends: libc6 (>= 2.15-0ubuntu20), libgtk2.0-0 (>= 2.24.13-0ubuntu2), libasound2 (>= 1.0.25-3ubuntu3), libdb5.1 (>=5.1.29-5ubuntu2), libdb5.1++ (>=5.1.29-5ubuntu2), libmysql++3 (>= 3.1.0-2), libsqlite3-0 (>= 3.7.13-1), g++ (>= 4:4.7.2-1ubuntu2), xfonts-100dpi
-Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47
+Depends: libc6 (>= 2.17-93ubuntu4), libgtk2.0-0 (>= 2.24.20-1ubuntu1), libasound2 (>= 1.0.27.2-1ubuntu6), libdb5.3 (>=5.3.21-2), libdb5.3++ (>=5.3.21-2), libmysql++3 (>= 3.1.0-2), libsqlite3-0 (>= 3.7.17-1ubuntu1), librsvg2-2 (>= 2.36.4-2), g++ (>= 4:4.8.1-2ubuntu3), xfonts-100dpi
+Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48
 Homepage: http://www.proview.se
 Installed-Size: 1114020
 Description: Proview development and runtime environment package
  Proview development and runtime environment
- 4.8.0-1 Base release 
- 4.8.1-1
-   - I/O support for Arduino USB board.
-   - Remote support for Websphere Message Queue.
-   - Operator event logging and replay.
-   - Chinese translation in operator environment.
- 4.8.1-2
-   - Profinet configurator, ordernumber showed in module enum list. 
-   - Curve window, second mark and export dialog added.
-   - Profibus/Profinet configurator, default module class setting added, and Appl button added.
-   - Configurator fix, Delete, Create and Move object menu items were not insensive in view mode.
-   - Plc link, problem with uppercase nodename for opt-file fixed.
-   - Xtt, problems with OpPlace and XttGraph objects in SharedVolume fixed.
-   - Plc compile, problem with compile of component subwindows fixed.
-   - Wb object editor, Ctrl DoubleClick MB1 didn't work on attribute references.
-   - Flow alloc color problem fixed.
-   - wb locale fix for ubuntu.
- 4.8.2-1
-   - Support for Hilscher cifX boards.
-   - Support for Hilscher cifX Profinet Controller.
-   - UDP communication configured with IO objects.
-   - Support for USB joystick.
- 4.8.3-1
-   - Post server for sending emails and sms.
-   - Report server.
- 4.8.4-1
-   - Buffer input and output channels and signals.
- 4.8.5-1
-   - Display of invert, test and conversion for channels and signals.
-   - Support for several plc processes.
-   - Ge pie chart and bar chart.
-   - Trend curves with larger buffers and shorter scantimes. Snapshot function.
- 4.8.6-1
-   - Trend and fast curves in web interface.
-   - Pie chart and bar chart in web interface.
-   - Display values as hex, octal or binary in xtt.
-   - Configure operator log in OpPlace object.
-   - Plc, several processes, handling of error log and process status.
-   - DataArithmL with 8191 characters added.
- 4.8.6-3
-   - Ge axis with dynamic scale.
-   - sqlite history database.
+ 5.0.0-1 Base release 

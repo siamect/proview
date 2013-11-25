@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -176,6 +176,7 @@ class CnvReadWbl {
     char		bit_text[80];
     char		bit_pgmname[80];
     char		doc_author[200];
+    char		doc_creator[200];
     char		doc_version[80];
     char		doc_groups[10][40];
     int			doc_group_cnt;

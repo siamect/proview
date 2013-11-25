@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -68,9 +68,10 @@ XttTrendGtk::XttTrendGtk( void *parent_ctx,
 			  pwr_sAttrRef *plotgroup,
 			  int width,
 			  int height,
-			  unsigned int options,
+			  unsigned int x_options,
 			  int *sts) :
-  XttTrend( parent_ctx, name, trend_list, plotgroup, sts), parent_widget(parent_wid)
+  XttTrend( parent_ctx, name, trend_list, plotgroup, x_options, sts), 
+  parent_widget(parent_wid)
 {
   if ( EVEN(*sts))
     return;
@@ -81,11 +82,15 @@ XttTrendGtk::XttTrendGtk( void *parent_ctx,
   curve->close_cb = trend_close_cb;
   curve->help_cb = trend_help_cb;
   curve->snapshot_cb = trend_snapshot_cb;
+  curve->add_cb = trend_add_cb;
+  curve->madd_cb = trend_madd_cb;
   if ( w)
     *w = (GtkWidget *)curve->get_widget();
 
   if ( trend_tid == pwr_cClass_DsTrendCurve)
-    curve->enable( curve_mEnable_Snapshot);
+    curve->enable( curve_mEnable_Snapshot | curve_mEnable_Add);
+  else
+    curve->enable( curve_mEnable_Add);
 
   wow = new CoWowGtk( parent_widget);
   timerid = wow->timer_new();

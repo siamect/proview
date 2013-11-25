@@ -1,6 +1,6 @@
 ! 
 !  Proview   Open Source Process Control.
-!  Copyright (C) 2005-2012 SSAB EMEA AB.
+!  Copyright (C) 2005-2013 SSAB EMEA AB.
 ! 
 !  This file is part of Proview.
 !
@@ -315,6 +315,14 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
           Attr Flags |= PWR_MASK_BACKUP
+        EndBody
+      EndObject
+      !/**
+      !  Curve window layout.
+      !*/
+      Object Layout $Attribute 24 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-CurveLayoutMask"
         EndBody
       EndObject
       !/**

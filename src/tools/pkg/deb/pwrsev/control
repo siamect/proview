@@ -1,16 +1,11 @@
 Package: pwrsev
-Version: 4.8.6-3
+Version: 5.0.0-1
 Section: base
 Priority: optional
 Architecture: i386
-Depends: libc6 (>= 2.11.2-7), libgtk2.0-0 (>= 2.20.1-2), libasound2 (>= 1.0.23-2.1), libdb4.8 (>=4.8.30-2), libmysqlclient16 (>= 5.1.49-2), libsqlite3-0 (>= 3.7.3-1)
+Depends: libc6 (>= 2.13-38), libgtk2.0-0 (>= 2.24.10-2), libasound2 (>= 1.0.25-4), libsqlite3-0 (>= 3.7.13-1+deb7u1), libdb5.1 (>=5.1.29-5), libmysqlclient18 (>= 5.5.31+dfsg-0+wheezy1)
 Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48
 Maintainer: Proview <postmaster@proview.se>
 Description:
  Proview storage environment
- 4.8.0-1 Base release
- 4.8.6-2
-   - Statistic table added.
-   - Pool bugfix, reference with exact segment size wasn't recognized.
- 4.8.6-3
-   - Sev support for SQLite database added.
+ 5.0.0-1 Base release

@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -728,6 +728,14 @@ int RtTrace::flow_cb( FlowCtx *ctx, flow_tEvent event)
 	flow_SelectClear( ctx);
 	flow_SetInverse( event->object.object, 1);
 	flow_SelectInsert( ctx, event->object.object);
+      }
+      break;
+    case flow_eObjectType_Con:
+      if ( flow_ConIsReference( event->object.object)) {
+	int val;
+
+	flow_GetHighlight( event->object.object, &val);
+	flow_SetHighlight( event->object.object, !val);
       }
       break;
     default:

@@ -157,7 +157,7 @@
 100121 cs  plc       Toolbar buttons in plc editor to create texts and documents and to redraw.
 100417 cs  wb        Distribution to other users than pwrp.
 100420 cs  wb        Custom build configuration object and generation of custom_build.sh file.
-100520     plc       Bugfix in plc editor, channels wasn't viewed in subvolumes.
+100520 cs  plc       Bugfix in plc editor, channels wasn't viewed in subvolumes.
 100617 cs  script    Wb script function GetAttribute didn't work for attribute objects.
 100618 cs  wb        Crossreferences in LibHier not inserted into crossreferece list.  
 100827 cs  wb        Alignment bugfix class array attributes.
@@ -215,4 +215,37 @@
 120919 cs  wb        QCom disable auto connect between nodes in a project (refs #117)
 120920 cs  dist      Distributor, display version info for package (refs #118)
 120920 cs  dist      Distributor, next page, prev page and scroll events added
+120926 cs  wb        Plc compile warnings removed
+121011 cs  wb        wb_gcg.sh for ARM, -DOS_POSIX was missing
+121012 cs  wb        Plc compile type check for GetXxPtr and StoXxPtr (refs #66)
+121031 cs  wb        Backup restore script modified for attribute objects
+121031 cs  wb        Class editor syntax fix for not filled in pgmname
+121031 cs  wb        History sevhist selection list size increased
+121113 cs  wb        Wbl print bugfix for text attributes in attribute objects
+121213 cs  wb        Cloned volumes implemented
+121215 cs  wb        Wb command compile/all changed to /volall
+121209 cs  wb        wb mysql type -> engine in create table statement
+121220 cs  wb        Mem volume initialization error
+130102 cs  wb        Class editor, MenuRef added to palette
+130102 cs  wb        wb opening of cloned volumes added
+130102 cs  wb        Cloned volumes, exported volume class corrected
+130102 cs  wb        Wb_ldlist, volume class displayed
+130122 cs  wb        Crossreferences for graphs, pwg-file in lower case
+130603 cs  wb        Cloned volumes bugfix for mount objects
+130618 cs  wb        wb_attribute contstructor element index ambiguity fix
+130628 cs  wb        Wb enum long text bugfix
+130701 cs  wb        Classes for constant analog and integer values added, ConstAv and ConstIv
+130726 cs  wb        Plc compile, line feed was missing after ScanTime_exec
+130726 cs  wb        Wb menu methods, subclass override of method implemented
+130904 cs  wb        Plc editor print pdf, distance between multitext lines adjustement (refs #151)
+130913 cs  wb        Cross references, MountObject.Object added (refs #137)
+130918 cs  wb        SevHist.Attribute set when object created under sensors and switches (refs #146)
+130918 cs  wb        Loadfile version check when node is built (refs #140)
+130918 cs  wb        Update classes, volume modification time was not updated (refs #167)
+130927 cs  wb        Backup file display window and list command added
+130927 cs  wb        Wb method for class AppGraph
+131011 cs  wb        Wb, confirm for build node with force added (refs #171)
+131018 cs  wb        Wb history to html conversion added
+131022 cs  wb        Wb history to html conversion, help text added
+131106 cs  wb        Wb fix for overridden methods
 

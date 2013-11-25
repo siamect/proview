@@ -6,3 +6,4 @@
 110517 cs  -         NMps cells added with size 60 and 120.
 111103 cs  -         DataCopy, DataReset bugfix, didn't work for attribute object references
 111108 cs  wbl       NMpsCellData visibility of attributes changed
+121031 cs  nmps      NMpsCell object graphs, layout fix

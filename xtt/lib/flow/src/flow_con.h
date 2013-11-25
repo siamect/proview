@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2012 SSAB EMEA AB.
+ * Copyright (C) 2005-2013 SSAB EMEA AB.
  *
  * This file is part of Proview.
  *
@@ -118,6 +118,8 @@ class FlowCon : public FlowArrayElem {
     void select_region_insert( double ll_x, double ll_y, double ur_x, 
 			double ur_y);
     flow_eObjectType type() { return flow_eObjectType_Con;};
+    int is_reference() { return temporary_ref || cc->con_type == flow_eConType_Reference;}
+
     double	x_right;
     double	x_left;
     double	y_high;
