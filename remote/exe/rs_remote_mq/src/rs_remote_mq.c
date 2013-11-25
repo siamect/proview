@@ -253,11 +253,22 @@ unsigned int bmq_send(remnode_item *remnode,
 		          &put_psb,
 		          &put_uma, 
 		          NULL, NULL, NULL, NULL);
-  if (mq_sts != PAMS__SUCCESS) {
+  if (mq_sts == PAMS__SUCCESS) {
+    if (put_psb.del_psb_status < 0) {
+      if (put_psb.uma_psb_status < 0) {
+        remtrans->ErrCount++;
+        errh_Error("Send failed, message not recoverable. Queue %d, UMA status %d", rn_mq->MyQueue, put_psb.uma_psb_status, 0);
+      } else {
+        errh_Error("Message not deliverable, UMA action taken. Queue %d, PSB status %d", rn_mq->MyQueue, put_psb.del_psb_status, 0);
+      }
+    }
+    if (debug) printf("Sent message sts:%d psb:%d uma:%d\n", (int) mq_sts, (int) put_psb.del_psb_status, (int) put_psb.uma_psb_status);
+  } else {
     remtrans->ErrCount++;
     errh_Error("Send failed, queue %d, MQ status %d", rn_mq->MyQueue, mq_sts, 0);
+    if (debug) printf("Send failed sts:%d\n", (int) mq_sts);
   }  
-  if (debug) printf("Sent message %d\n", (int) mq_sts);
+
 			
   return( STATUS_OK );
 }
