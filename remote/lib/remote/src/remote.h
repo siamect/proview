@@ -234,3 +234,6 @@ typedef struct {
   int			maxremao;		/* Number of Ao in subsystem */
   int			maxremco;		/* Number of Pi in subsystem */
 } remnode_item;
+
+
+pwr_tStatus remote_logg( int identity, char *str, int size);

@@ -36,9 +36,46 @@
 !  remote_c_RemTrans.wb_load -- Defines the class RemTrans.
 !
 SObject Remote:Class
-  !
-  ! RemTrans -	Remote Trans descripton
-  !
+!/**
+!  @Version 1.0
+!  @Group Servers,NodeConfiguration
+!  @Summary Configures a remote message.
+!  Configures a remote message.
+!
+!  The object describes a data message to or from another system. We can
+!  communicate with other Proview systems or with foreign systems in
+!  different ways, according to Transport type.
+!
+!  The RemTrans object must be hierarchically placed directly under the
+!  RemNode object. The message data is fetched from, or stored into an object
+!  that is the only child of the RemTrans object.
+!
+!  For certain messages, you can allow a limited number of buffered messages,
+!  both for sending and receiving.Buffered sending is used when we don't have
+!  connection to the remote node. Buffered receive is used if the final user of
+!  data is not fast enough to treat several incoming messages.
+! 
+!  For certain transports you can use built in acknowledgement for messages.
+!  Generic class that defines a specific message to or from a specific 
+!  remote node on a specific protocol. Should be placed below the 
+!  RemNode-object. The size of a message to be sent is specified in the 
+!  RemTrans-object. The data to be sent however resides in a buffer that 
+!  is configured as a child to the remtrans-object. When a message is to 
+!  be sent, data of the length specified in the remtrans-object is fetched 
+!  from the buffer. Sometimes however a header of some length is added to 
+!  the message.
+!
+! @b See also
+!  @classlink RemoteConfig remote_remoteconfig.html
+!  @classlink RemnodeALCM remote_remnodealcm.html
+!  @classlink RemnodeModbus remote_remnodemodbus.html
+!  @classlink RemnodeMQ remote_remnodemq.html
+!  @classlink RemnodeRK512 remote_remnoderk512.html
+!  @classlink RemnodeSerial remote_remnodeserial.html
+!  @classlink RemnodeTCP remote_remnodetcp.html
+!  @classlink RemnodeUDB remote_remnodeudp.html
+!  @classlink RemnodeWMQ remote_remnodewmq.html
+!*/
   Object RemTrans $ClassDef 25
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
@@ -51,30 +88,86 @@ SObject Remote:Class
       Body SysBody
         Attr StructName = "RemTrans"
       EndBody
-      !
-      ! Parameter Description
-      !
+      !/**
+      ! Optional description.
+      !*/
       Object Description $Attribute 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
-      !
-      ! Parameter TransName	May be used for trans-identification
-      !		VNET Taskname 6 letters
-      !		ALCM Taskname 6 letters
-      !		PAMS Not used
-      !
+      !/**
+      !  For most transports this is only documentation.
+      !  For ALCM sending messages you must store receiving task
+      !  name (6 characters) here.
+      !  For ALCM receive you store message id (6 characters) here.
+      !*/
       Object TransName $Attribute 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String40"
         EndBody
       EndObject
+      !/**
+      ! @Summary Message address. Used different for different transports.
+      ! Message address. Used different for different transports.
       !
-      ! Parameter Address 	May be used for trans-identification
-      !		PAMS: Class, Type, ProccessNr.
-      !		ALCM, VNET TransName is translated into this parameter
-      !
+      ! ALCM
+      ! Not used
+      ! 
+      ! PAMS
+      ! [0] - Class (0 - 255)
+      ! [1] - Type (0 - 255)
+      ! [2] - Processnumber for receiver (Only if we are sending)
+      ! 
+      ! DMQ
+      ! [0] - Class (0 - 255)
+      ! [1] - Type (0 - 255)
+      ! [2] - Processnumber for receiver (Only if we are sending)
+      ! [3] - Used in DMQ to control delivery mode for outgoing
+      !       messages:
+      ! 0 Use delivery modes WF_DQF and SAF
+      ! 1 Use delivery modes NN_MEM and DISC
+      ! 2 Use delivery modes WF_DQF and DISC
+      ! The WF_DQF delivery mode delivers the message to the remote
+      ! recovery journal and blocks for verification or timeout.
+      ! The NN_MEM delivery mode delivers the message to the
+      ! destination queue and doesn\u2019t wait for any verification at all.
+      ! The SAF function puts the message in the local recovery journal
+      ! if the link is down. When using SAF, DMQ handles the
+      ! retransmission meaning that we (Proview) can forget the
+      ! message and treat it as sent. This works on DMQ 3.2 but is not
+      ! supported in the earlier version 3.0.
+      ! The DISC function tells DMQ to discard the message if it isn\u2019t
+      ! deliverable. Can be used with WF_DQF along with the remote
+      ! buffering mechanism.
+      ! For a deeper description of delivery modes, consult the DMQ
+      ! documentation.
+      ! 3964R - VNET
+      ! [0] - First 3 letters of Trans name / Task name in RAD50
+      ! [1] - Next 3 letters of Trans name / Task name in RAD50
+      ! 
+      ! 3964R
+      ! Not used.
+      ! 
+      ! RK512
+      ! [0] - Address High byte (0 - 255)
+      ! [1] - Address Low byte (0 - 255)
+      ! 
+      ! TCP/ip and UDP/ip
+      ! [0] - Message address part 1 ( 0 - 65535)
+      ! [1] - Message address part 2 ( 0 - 65535)
+      ! 
+      ! MODBUS
+      ! [0] - Slave address
+      ! [1] - Function code 
+      ! 
+      ! Serial
+      ! [0] - Ascii number (decimal) for termination character #1
+      ! [1] - Ascii number (decimal) for termination character #2
+      ! [2] - Ascii number (decimal) for termination character #3
+      ! [3] - Used to set the use of 7 or 8 bit character length. Set a value
+      !       of 1 to use 7 bits and a value of 0 to use 8 bits.
+      !*/
       Object Address $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt16"
@@ -82,130 +175,185 @@ SObject Remote:Class
           Attr Elements = 4
         EndBody
       EndObject
-      !
-      ! Parameter Direction. (IN = 1, OUT = 2)
-      !
+      !/**
+      ! Direction. Receive (1) or Send (2).
+      !*/
       Object Direction $Attribute 4
         Body SysBody
           Attr TypeRef = "Remote:Type-TransDirectionEnum"
         EndBody
       EndObject
-      !
-      ! Parameter DataLength
-      !
+      !/**
+      ! Number of Bytes in message data. For outgoing messages this
+      ! parameter must be set, either statically in the development
+      ! system or dynamically via an application, before sending the
+      ! message. For incoming messages this parameter is set by the
+      ! transport when each message is received and shows the received
+      ! length of this message.
+      !*/
       Object DataLength $Attribute 5
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
+      !/**
+      ! Each message can be logged to file by specifying a LoggLevel.
+      ! 0: No logging.
+      ! 1: Logging of time, message lenght and status when an error
+      !    has occured.
+      ! 2: Logging of time, message lenght and status for every message.
+      ! 3: Logging of time, length, status and the first 48 bytes
+      !    in hexadecimal code.
+      ! 4: Logging of time, length, status and the whole message
+      !    in hex code.
       !
-      ! Parameter LoggLevel
-      !
+      ! The log-file is configured with a LoggConfig object with 
+      ! Identity set to 90.
+      !*/
       Object LoggLevel $Attribute 6
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
+      !/**
+      ! If MaxBuffers is > 0, send messages will be stored if the connection
+      ! is down, and resent when the connection is up again.
+      ! 
+      ! MaxBuffers is the maximum number of stored messages.
       !
-      ! Parameter Maxbuffers	(0 = no buffering)
-      !
+      ! In Remote UDP, when the message is outgoing, a value > 0 indicates 
+      ! that the message should be sent with wanted acknowledge.
+      !*/
       Object MaxBuffers $Attribute 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-      !
-      ! Parameter Buffers	Number of used buffers
-      !
+      !/**
+      ! Current number or stored messages.
+      ! For incoming messages this indicates the number of messages waiting 
+      ! to be taken by the PLC-process. For outgoing messages it tells the 
+      ! number of buffered messages waiting to be acked.
+      !*/
       Object Buffers $Attribute 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
           Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
-      !
-      ! Parameter MaxLength	Length of data-object
-      !
+      !/**
+      ! Size of data receiving object, or data sending object.
+      ! RemTrans can't handle messages bigger than this. Messages
+      ! exceeding this size will be discarded. 
+      ! The attribute is updated by the transport and should be left
+      ! blank in configuring.
+      !*/
       Object MaxLength $Attribute 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
           Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
-      !
-      ! Parameter LastSts. (Returkod)
-      !
+      !/**
+      ! Status of last transaction.
+      ! 
+      ! 1: Success.
+      ! 3: Receive data has been buffered.
+      ! 0: Send failure.
+      ! 2: Data length exceeds buffer object size.
+      ! 4: Receive data has been lost.
+      ! 6: Waiting for acknowledgement on message with auto ack.
+      !*/
       Object LastSts $Attribute 10
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
           Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
-      !
-      ! Parameter TransTime Date and time for send / receive
-      !
+      !/**
+      ! Transaction time for last received or sent/buffered message.
+      !*/
       Object TransTime $Attribute 11
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Time"
           Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
-      !
-      ! Parameter TransCount
-      !
+      !/**
+      ! Number of successful transactions since start or restart.
+      !*/
       Object TransCount $Attribute 12
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
           Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
-      !
-      ! Parameter BuffCount Number of buffered transactions
-      !
+      !/**
+      ! Number of messages sent/received through buffering since start
+      ! or restart.
+      !*/
       Object BuffCount $Attribute 13
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
           Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
-      !
-      ! Parameter LostCount Received but not treated
-      !
+      !/**
+      ! Number of received messages that were lost because they
+      ! couldn't be buffered.
+      !*/
       Object LostCount $Attribute 14
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
           Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
-      !
-      ! Parameter ErrCount Couldn't send
-      !
+      !/**
+      ! Number of send failures.
+      !*/
       Object ErrCount $Attribute 15
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
           Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
+      !/**
+      ! Flag for new data in data-object.
       !
-      ! Parameter DataValid
+      ! When we receive a new message, it is stored into the data-object.
+      ! Then the DataValid is set. The next message can not be stored
+      ! before the final user has treated this message, and then reset the
+      ! DataValid signal. When using RemTransRcv in the PLCprogram,
+      ! this is handled automatically.
       !
+      ! When the original sender want to send a new message, he fills in
+      ! the data, and then sets DataValid. The Remote transport will
+      ! search for DataValid set, and send the message and then Reset
+      ! the DataValid. Next message shouldn't be filled into the data
+      ! object before the DataValid is reset. When using RemTransSend
+      ! in the PLC-program, this is handled automatically.
+      !*/
       Object DataValid $Attribute 16
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
-      !
-      ! Parameter StructName
-      !
+      !/**
+      ! C struct name for the message.
+      ! When a StructName and StructFile is supplied, the content of
+      ! buffer object can be interpreted and displayed in accordance with
+      ! this struct from System/Communication/RemTrans in rt_xtt.
+      !*/
       Object StructName $Attribute 17
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String40"
         EndBody
       EndObject
-      !
-      ! Parameter StructFile
-      !
+      !/**
+      ! C include file that contains the struct specified in StructName.
+      ! Default directory is $pwrp_inc.
+      !*/
       Object StructFile $Attribute 18
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"

@@ -54,8 +54,8 @@ SObject Remote:Class
 !  @image orm_remnodewmq_og.gif
 !
 ! @b See also
-!  @classlink RemoteConfig pwrp_remoteconfig.html
-!  @classlink RemTrans ssab_remtrans.html
+!  @classlink RemoteConfig remote_remoteconfig.html
+!  @classlink RemTrans remote_remtrans.html
 !*/
   Object RemnodeWMQ $ClassDef 33
     Body SysBody

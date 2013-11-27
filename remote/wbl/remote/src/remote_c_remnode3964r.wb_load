@@ -46,8 +46,8 @@ SObject Remote:Class
 !  @image orm_remnode3964r_og.gif
 !
 ! @b See also
-!  @classlink RemoteConfig pwrp_remoteconfig.html
-!  @classlink RemTrans ssab_remtrans.html
+!  @classlink RemoteConfig remote_remoteconfig.html
+!  @classlink RemTrans remote_remtrans.html
 !*/
   Object Remnode3964R $ClassDef 1
     Body SysBody

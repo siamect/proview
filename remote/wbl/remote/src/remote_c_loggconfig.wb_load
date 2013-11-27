@@ -33,9 +33,66 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  remote_c_LoggConfig.wb_load -- Defines the class LoggConfig.
+!  remote_c_loggconfig.wb_load -- Defines the class LoggConfig.
 !
 SObject Remote:Class
+!/**
+!  @Version 1.0
+!  @Group Servers,NodeConfiguration
+!  @Summary Configures logging of remote messages and other logging.
+!  Configures logging of remote messages and other logging.
+!
+!  @b Remote logging
+!  Remote messages can be logged to file by setting LoggLevel in the
+!  RemTrans object to a value between 1 and 4.
+!
+!  LoggLevel Description
+!
+!   0        No logging.
+!   1        Logging of time, message lenght and status when an error
+!            has occured.
+!   2        Logging of time, message lenght and status for every message.
+!   3        Logging of time, length, status and the first 48 bytes
+!            in hexadecimal code.
+!   4        Logging of time, length, status and the whole message
+!            in hex code.
+!
+!  The Identity for a LoggConfig object handling the remote logging should 
+!  be set to 90.
+!
+!  @ Other logging
+!  Other loggings can be made by sending a QCom message to queue
+!  rs_pwr_logg_qix. The first 32-bit word in the message should be the
+!  Identity of the LoggConfig object, and the following data the string 
+!  to be logged.
+!
+!  @b Example Logging to LoggConfig with Identity 100
+!
+!  qcom_sPut put;
+!  qcom_sQid qid;
+!  char *logmsg;
+!  int logsize = 80;
+!  int identity = 100;
+!  pwr_tStatus sts;
+!  
+!  logmsg = malloc(logsize);
+!  *(int *)logmsg = identity;
+!  strcpy( &logmsg[4], "Some message");
+!  put.data = logmsg;
+!  put.size = logsize;
+!  put.type.b = qcom_eBtype__;
+!  put.type.s = qcom_eStype__;
+!  put.reply.qix = 0;
+!  put.reply.nid = 0;
+!  qid = qcom_cNQid;
+!  qid.qix = rs_pwr_logg_qix;
+!  qcom_Put(&sts, &qid, &put);
+!
+!  free(logmsg);
+!
+!  @b See also
+!   @classlink RemTrans remote_remtrans.html
+!*/
   Object LoggConfig $ClassDef 27
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
@@ -48,14 +105,17 @@ SObject Remote:Class
       Body SysBody
         Attr StructName = "LoggConfig"
       EndBody
-      !
-      ! Parameter Description
-      !
+      !/**
+      !  Name of log file, eg $pwrp_log/remote.log
+      !*/
       Object LoggFile $Attribute 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String40"
         EndBody
       EndObject
+      !/**
+      !  Obsolete.
+      !*/
       Object NewVersion $Attribute 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -63,11 +123,21 @@ SObject Remote:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      !  Identity is used to direct the logging to a specific 
+      !  LoggConfig object. The first word in the log message should 
+      !  correspond to this value.
+      !
+      !  Identity 90 is used for remote logging.
+      !*/
       Object Identity $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
+      !/**
+      !  Number of loggings written to file since startup.
+      !*/
       Object LoggCount $Attribute 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -75,6 +145,9 @@ SObject Remote:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      !  Obsolete.
+      !*/
       Object FileOpenCount $Attribute 5
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
