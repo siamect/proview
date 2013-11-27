@@ -111,7 +111,9 @@ typedef struct s_SaveBlock sSaveBlock;
 typedef struct s_Sup sSup;
 typedef struct s_Timer sTimer;	
 typedef struct s_ASup sASup;
+typedef struct s_ASupComp sASupComp;
 typedef struct s_DSup sDSup;
+typedef struct s_DSupComp sDSupComp;
 typedef union u_Event uEvent;
 
 LstType(sActive);
@@ -291,6 +293,7 @@ struct s_SupActive {
   void		  *supInfoP;
   void		  *op;
   sTimer	  *timer;
+  pwr_tCid	  cid;		      
   void		  (*detect_exec)(sSupActive *sp);
 };
 
@@ -302,9 +305,21 @@ struct s_ASup {
   sTimer	  Timer pwr_dAlignLW;
 };
 
+struct s_ASupComp {
+  sSup	  	  Sup   pwr_dAlignLW;
+  mh_sASupInfo    Info  pwr_dAlignW;
+  sTimer	  Timer pwr_dAlignLW;
+};
+
 struct s_DSup {
   pwr_tBoolean    *InP   pwr_dAlignLW;
   pwr_tBoolean    In     pwr_dAlignLW;
+  sSup	  	  Sup	 pwr_dAlignLW;
+  mh_sDSupInfo    Info   pwr_dAlignW;
+  sTimer	  Timer  pwr_dAlignLW;
+};
+
+struct s_DSupComp {
   sSup	  	  Sup	 pwr_dAlignLW;
   mh_sDSupInfo    Info   pwr_dAlignW;
   sTimer	  Timer  pwr_dAlignLW;
@@ -2611,6 +2626,8 @@ initSupActiveCB (
   pwr_tStatus sts;
   sASup *asp;
   sDSup *dsp;
+  sASupComp *ascompp;
+  sDSupComp *dscompp;
   pwr_sClass_NodeLinkSup *nlsp;
   pwr_sClass_CycleSup *csp;
   pwr_tAttrRef Object;
@@ -2629,6 +2646,12 @@ initSupActiveCB (
     break;
   case pwr_cClass_DSup:
     sts = gdh_DLRefObjectInfoAttrref(SupObject, (pwr_tAddress *)&dsp, &Dlid);
+    break;
+  case pwr_cClass_ASupComp:
+    sts = gdh_DLRefObjectInfoAttrref(SupObject, (pwr_tAddress *)&ascompp, &Dlid);
+    break;
+  case pwr_cClass_DSupComp:
+    sts = gdh_DLRefObjectInfoAttrref(SupObject, (pwr_tAddress *)&dscompp, &Dlid);
     break;
   case pwr_cClass_NodeLinkSup:
     sts = gdh_DLRefObjectInfoAttrref(SupObject, (pwr_tAddress *)&nlsp, &Dlid);
@@ -2652,6 +2675,12 @@ initSupActiveCB (
     break;
   case pwr_cClass_DSup:
     Object = dsp->Sup.Attribute;
+    break;
+  case pwr_cClass_ASupComp:
+    Object = ascompp->Sup.Attribute;  
+    break;
+  case pwr_cClass_DSupComp:
+    Object = dscompp->Sup.Attribute;
     break;
   case pwr_cClass_NodeLinkSup:
     Object = *SupObject;
@@ -2696,6 +2725,7 @@ initSupActiveCB (
     sp->timer = &asp->Timer;
     sp->op = (void *) asp;
     sp->agent = getAgent(sp);
+    sp->cid = cid;
     if (sp->agent == mh_eAgent_MH)
       sp->detect_exec = aSup_exec;
     break;
@@ -2710,8 +2740,35 @@ initSupActiveCB (
     sp->timer = &dsp->Timer;
     sp->op = (void *) dsp;
     sp->agent = getAgent(sp);
+    sp->cid = cid;
     if (sp->agent == mh_eAgent_MH)
       sp->detect_exec = dSup_exec;
+    break;
+  case pwr_cClass_ASupComp:
+    sp->supType = mh_eSupType_Analog;
+    sp->supDlid = Dlid;
+    sp->sup = &ascompp->Sup;
+    sp->supInfoSize = sizeof(mh_sASupInfo);
+    sp->supInfoP = &ascompp->Info; 
+    sp->attribute = ascompp->Sup.Attribute; 
+    sp->link.eventSound = ascompp->Sup.Sound; 
+    sp->timer = &ascompp->Timer;
+    sp->op = (void *) ascompp;
+    sp->agent = getAgent(sp);
+    sp->cid = cid;
+    break;
+  case pwr_cClass_DSupComp:
+    sp->supType = mh_eSupType_Digital;
+    sp->supDlid = Dlid;
+    sp->sup = &dscompp->Sup;
+    sp->supInfoSize = sizeof(mh_sDSupInfo);
+    sp->supInfoP = &dscompp->Info; 
+    sp->attribute = dscompp->Sup.Attribute;
+    sp->link.eventSound = dscompp->Sup.Sound;
+    sp->timer = &dscompp->Timer;
+    sp->op = (void *) dscompp;
+    sp->agent = getAgent(sp);
+    sp->cid = cid;
     break;
   case pwr_cClass_NodeLinkSup:
     sp->supType = mh_eSupType_Link;
@@ -2728,6 +2785,7 @@ initSupActiveCB (
     sp->timer = (sTimer *)&nlsp->TimerFlag;
     sp->op = (void *) nlsp;
     sp->agent = mh_eAgent_None;
+    sp->cid = cid;
     break;
   case pwr_cClass_CycleSup:
     sp->supType = mh_eSupType_Cycle;
@@ -2745,6 +2803,7 @@ initSupActiveCB (
     sp->op = (void *) csp;
     sp->agent = mh_eAgent_MH;
     sp->detect_exec = cSup_exec;
+    sp->cid = cid;
     break;
   default:
     errh_Error("initSupActiveCB, program error, cid: %s", cdh_ClassIdToString(NULL, cid, 0));
@@ -2799,6 +2858,14 @@ initSupList ()
   sts = initSupListClass(pwr_cClass_DSup);
   if (EVEN(sts))
     errh_Error("Initialize list of DSup's\n%m", sts);
+
+  sts = initSupListClass(pwr_cClass_ASupComp);
+  if (EVEN(sts))
+    errh_Error("Initiate list of ASupComp's\n%m", sts);
+
+  sts = initSupListClass(pwr_cClass_DSupComp);
+  if (EVEN(sts))
+    errh_Error("Initialize list of DSupComp's\n%m", sts);
 
   sts = initSupListClass(pwr_cClass_NodeLinkSup);
   if (EVEN(sts))
@@ -4184,6 +4251,8 @@ updateSupActive (
   sActive	*ap;
   sASup		*asp;
   sDSup		*dsp;
+  sASupComp    	*ascompp;
+  sDSupComp    	*dscompp;
   sSup		*sup;
   mh_eAgent	agent;
   pwr_tClassId	cid;
@@ -4193,13 +4262,31 @@ updateSupActive (
   /* Get pointer to supervisory object */
 
   if (sp->supType == mh_eSupType_Analog) {
-    sts = gdh_AttrRefToPointer(&sp->link.supObject, (pwr_tAddress *)&asp);
-    sup =  &asp->Sup;
-    cid = pwr_cClass_ASup;
+    switch ( sp->cid) {
+    case pwr_cClass_ASup:
+      sts = gdh_AttrRefToPointer(&sp->link.supObject, (pwr_tAddress *)&asp);
+      sup =  &asp->Sup;
+      cid = sp->cid;
+      break;
+    case pwr_cClass_ASupComp:
+      sts = gdh_AttrRefToPointer(&sp->link.supObject, (pwr_tAddress *)&ascompp);
+      sup =  &ascompp->Sup;
+      cid = sp->cid;
+      break;
+    }
   } else if (sp->supType == mh_eSupType_Digital) {
-    sts = gdh_AttrRefToPointer(&sp->link.supObject, (pwr_tAddress *)&dsp);
-    sup = &dsp->Sup;
-    cid = pwr_cClass_DSup;
+    switch ( sp->cid) {
+    case pwr_cClass_DSup:
+      sts = gdh_AttrRefToPointer(&sp->link.supObject, (pwr_tAddress *)&dsp);
+      sup = &dsp->Sup;
+      cid = sp->cid;
+      break;
+    case pwr_cClass_DSupComp:
+      sts = gdh_AttrRefToPointer(&sp->link.supObject, (pwr_tAddress *)&dscompp);
+      sup = &dscompp->Sup;
+      cid = sp->cid;
+      break;
+    }
   } else if (sp->supType == mh_eSupType_Link) {
     return; /* Supervised attribute can't change. */
   } else if (sp->supType == mh_eSupType_Cycle) {

@@ -1,6 +1,8 @@
 
 Proview Android application PwrXtt build.
 
+The android-sdk has to be installed under /usr/local.
+
 The build script java/aapp/bld/src/os_templ/hw_templ/pwrxtt_build.sh and the
 make files under java/appl creates an android application tree under
 $pwre_broot/os_linux/hw_x86/bld/aapp.
@@ -23,6 +25,6 @@ The application PwrXtt can be imported to eclipse by stating
 $pwre_sroot/os_linux/hw_x86/bld/aapp as work directory. Import the project with 
 File/Import/General/Existing Projects... Activate Android Tools/Fix Project Properties 
 in the popup menu for the project. After this the application can be run and debugged.
-Any changed in the java code should be copied back to source code in java/jwpr and 
+Any changes in the java code should be copied back to source code in java/jpwr and 
 java/aapp.
 

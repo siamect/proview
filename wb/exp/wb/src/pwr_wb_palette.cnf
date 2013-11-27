@@ -1165,6 +1165,8 @@ palette PlcEditorPalette
       class BaseMotorAggrFo
       class BaseMotorIncrDecrAggrFo
       class RunTimeCounterFo
+      class DSupCompFo
+      class ASupCompFo
     }
     menu ABB
     {

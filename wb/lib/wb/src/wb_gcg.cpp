@@ -256,6 +256,7 @@ int	gcg_comp_m63( gcg_ctx gcgctx, vldh_t_node node);
 int	gcg_comp_m64( gcg_ctx gcgctx, vldh_t_node node);
 int	gcg_comp_m65( gcg_ctx gcgctx, vldh_t_node node);
 int	gcg_comp_m66( gcg_ctx gcgctx, vldh_t_node node);
+int	gcg_comp_m67( gcg_ctx gcgctx, vldh_t_node node);
 
 gcg_tMethod gcg_comp_m[70] = {
 	(gcg_tMethod)gcg_comp_m0,
@@ -324,7 +325,8 @@ gcg_tMethod gcg_comp_m[70] = {
 	gcg_comp_m63,
 	gcg_comp_m64,
 	gcg_comp_m65,
-	gcg_comp_m66
+	gcg_comp_m66,
+	gcg_comp_m67
 	};
 
 
@@ -16156,6 +16158,185 @@ int	gcg_comp_m66( gcg_ctx gcgctx, vldh_t_node node)
 
 	/* Insert object in ref list */
 	gcg_ref_insert( gcgctx, refattrref.Objid, GCG_PREFIX_REF, node);
+
+	return GSX__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		gcg_comp_m67()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* gcg_ctx	gcgctx		I	gcg context.
+* vldh_t_node	node		I	vldh node.
+*
+* Description:
+*	Compile method for DSupComp and ASupComp.
+*	Generated code:
+*	Declares and links a rtdb pointer to the sup object.
+*	Prints an exec call.
+*	If the enable input is not connected it is set to true.
+*	Inits the object by putting the supervised object and parameter 
+*	into the object and setting AckFlg to true.
+*
+**************************************************************************/
+
+int	gcg_comp_m67( gcg_ctx gcgctx, vldh_t_node node)
+{
+	int 			sts;
+	pwr_sAttrRef		output_aref;
+	int			output_type;
+	char			output_prefix;
+	char			output_par[80];
+	unsigned long		point;
+	unsigned long		par_inverted;
+	vldh_t_node		output_node;
+	unsigned long		output_count;
+	unsigned long		output_point;
+	ldh_sParDef 		output_bodydef;
+	pwr_sAttrRef 		aref;
+	pwr_tBoolean		locked;
+	int			size;
+	gcg_t_nocondef		nocondef[2];
+	unsigned long		nocontype[2] = { GCG_BOOLEAN, GCG_BOOLEAN };
+	pwr_tAttrRef		*connect_arp, connect_aref;
+	pwr_tAttrRef		attribute_aref;
+	pwr_tAttrRef		aaref;
+	pwr_tCid		connect_cid;
+	ldh_tSesContext 	ldhses = (node->hn.wind)->hw.ldhses;  
+	char 			*name;
+
+	nocondef[0].bo = FALSE;
+	nocondef[1].bo = TRUE;
+
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
+
+	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
+	if (EVEN(sts)) return sts; 
+
+	sts = gcg_print_inputs( gcgctx, node, ", ", GCG_PRINT_ALLPAR, 
+		nocondef, nocontype);
+	if ( EVEN(sts)) return sts;
+
+	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+	");\n");
+
+	/* Print init call */
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
+	if( EVEN(sts)) return sts;
+
+	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
+		"%s_init( %c%s);\n",
+		name,
+		GCG_PREFIX_REF,
+		vldh_IdToStr(0, node->ln.oid));
+
+	/* Get PlcConnect object */
+	sts = ldh_GetObjectPar( gcgctx->ldhses, node->ln.oid, "RtBody", "PlcConnect",
+				(char **)&connect_arp, &size);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFCONNECT, node);
+	  return GSX__NEXTNODE;
+	}
+
+	connect_aref = *connect_arp;
+	free( connect_arp);
+
+	sts = gcg_replace_ref( gcgctx, &connect_aref, node);
+	if ( sts == GSX__REPLACED) {
+	  /* Store the converted aref */
+	  sts = ldh_SetObjectPar( gcgctx->ldhses, node->ln.oid, "RtBody", 
+				  "PlcConnect", (char *)&connect_aref, sizeof(connect_aref));
+	  if ( EVEN(sts)) return sts;	      
+	}
+
+	if ( cdh_ObjidIsNull(connect_aref.Objid)) {	
+	  gcg_error_msg( gcgctx, GSX__REFCONNECT, node);  
+	  return GSX__NEXTNODE;
+	}
+
+	// Check class of connected object
+	sts = ldh_GetAttrRefOrigTid( gcgctx->ldhses, &connect_aref, &connect_cid);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFCONNECT, node);
+	  return GSX__NEXTNODE;
+	}
+
+	switch ( node->ln.cid) {
+	case pwr_cClass_DSupCompFo:
+	  if ( connect_cid != pwr_cClass_DSupComp) {
+	    gcg_error_msg( gcgctx, GSX__REFCONNECT, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  break;
+	case pwr_cClass_ASupCompFo:
+	  if ( connect_cid != pwr_cClass_ASupComp) {
+	    gcg_error_msg( gcgctx, GSX__REFCONNECT, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  break;
+	default: ;
+	}
+
+	sts = ldh_ArefANameToAref( ldhses, &connect_aref, "LockAttribute", &aaref);
+	if ( EVEN(sts)) return sts;
+
+	sts = ldh_ReadAttribute( ldhses, &aaref, &locked, sizeof(locked));
+	if ( EVEN(sts)) return sts;
+
+	if ( locked) {
+	  sts = ldh_ArefANameToAref( ldhses, &connect_aref, "Attribute", &attribute_aref);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = ldh_ReadAttribute( ldhses, &attribute_aref, &aref, sizeof(aref));
+	  if ( EVEN(sts)) return sts;
+
+	  if ( !cdh_ObjidIsNull( aref.Objid)) {
+	    sts = gcg_replace_ref( gcgctx, &aref, node);
+	    if ( sts == GSX__REPLACED) {
+	      sts = ldh_WriteAttribute( ldhses, &attribute_aref, &aref, sizeof(aref));
+	      if ( EVEN(sts)) return sts;	      
+	    }
+	  }
+	}
+	else {
+	  sts = ldh_ArefANameToAref( ldhses, &connect_aref, "Attribute", &aaref);
+          if ( EVEN(sts)) return sts;
+
+	  /* Print the supervised object and parameter in the object */
+	  sts = gcg_get_inputpoint( node, 0, &point, &par_inverted);
+	  if ( ODD( sts)) {
+	    /* Look for an output connected to this point */
+	    sts = gcg_get_output( node, point, &output_count, &output_node,
+				  &output_point, &output_bodydef,
+				  GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
+	    if ( EVEN(sts)) return sts;
+	    
+	    if ( output_count > 0 ) {
+	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
+					  &output_aref, &output_type, &output_prefix, output_par);
+	      if ( sts == GSX__NEXTPAR ) return sts;
+	      if ( EVEN(sts)) return sts;
+
+	      /* Put the attribut reference in the sup object */
+	      IF_PR {
+		sts = ldh_ArefANameToAref( ldhses, &connect_aref, "Attribute", &attribute_aref);
+		if ( EVEN(sts)) return sts;
+
+		sts = ldh_WriteAttribute( ldhses, &attribute_aref, &output_aref, sizeof(output_aref));
+		if ( EVEN(sts)) return sts;	      
+	      }
+	    }
+	    else {
+	      /* Point not connected, errormessage */
+	      gcg_error_msg( gcgctx, GSX__NOTCON, node);  
+	    }
+	  }
+	}
+
+	// gcg_timer_print( gcgctx, node->ln.oid);
 
 	return GSX__SUCCESS;
 }

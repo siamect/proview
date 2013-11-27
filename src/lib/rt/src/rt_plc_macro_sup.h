@@ -181,3 +181,131 @@
     o->TimerCount = 0;					\
     o->DetectCheck = TRUE;				\
   }    
+
+/*_*
+  Name:
+    DSupCompFo_exec(object, In, con)
+
+  Description:
+    Supervise digital parameter
+
+  @aref dsupcompfo DSupCompFo
+*/
+#define	DSupCompFo_init(o)\
+{\
+  pwr_tDlid dlid;\
+  pwr_tStatus sts;\
+  sts = gdh_DLRefObjectInfoAttrref( &o->PlcConnect, (void **)&o->PlcConnectP, &dlid);\
+  if ( EVEN(sts))\
+    o->PlcConnectP = 0;\
+  else\
+    ((pwr_sClass_DSupComp *)o->PlcConnectP)->TimerDO = &(((pwr_sClass_DSupComp *)o->PlcConnectP)->TimerDODum);\
+}
+
+#define	DSupCompFo_exec(o, In, con)\
+{\
+  pwr_sClass_DSupComp *co = (pwr_sClass_DSupComp *)o->PlcConnectP;\
+  if ( !co)\
+    return;\
+  if (In != co->CtrlPosition) {\
+    if (co->Action) co->Action = FALSE;\
+    if (co->ReturnCheck) {\
+      time_GetTime( &co->ReturnTime);\
+      co->ReturnCheck = FALSE;\
+      co->ReturnSend = TRUE;\
+    }\
+    if (co->AlarmCheck && !co->DetectCheck) {\
+      co->TimerCount = 0;\
+      co->DetectCheck = TRUE;\
+    }\
+  } else if (con) {\
+    if (!co->Action) co->Action = TRUE;\
+    if (co->AlarmCheck && co->DetectOn && !co->Blocked) {\
+      if (co->DetectCheck) {\
+	co->ActualValue = In;\
+	timer_in(tp, co);\
+        time_GetTime(&co->DetectTime);\
+	co->DetectCheck = FALSE;\
+      }\
+      if (!co->TimerFlag) {\
+	co->DetectSend = TRUE;\
+	co->ReturnCheck = TRUE;\
+	co->Acked = FALSE;\
+	co->AlarmCheck = FALSE;\
+      }\
+    }\
+  }\
+  if (co->Blocked) {\
+    co->TimerCount = 0;\
+    co->DetectCheck = TRUE;\
+  }\
+  o->Action = co->Action;\
+  o->Acked = co->Acked;\
+  o->Blocked = co->Blocked;\
+}
+
+/*_*
+  Name:
+    ASupCompFo_exec(object, In, con)				
+
+  Description:
+    Supervise analog parameter
+
+  @aref asupcompfo ASupCompFo
+*/
+#define	ASupCompFo_init(o)\
+{\
+  pwr_tDlid dlid;\
+  pwr_tStatus sts;\
+  sts = gdh_DLRefObjectInfoAttrref( &o->PlcConnect, (void **)&o->PlcConnectP, &dlid);\
+  if ( EVEN(sts))\
+    o->PlcConnectP = 0;\
+  else\
+    ((pwr_sClass_ASupComp *)o->PlcConnectP)->TimerDO = &(((pwr_sClass_ASupComp *)o->PlcConnectP)->TimerDODum);\
+}
+
+#define	ASupCompFo_exec(o, In, con)\
+{\
+  pwr_sClass_ASupComp *co = (pwr_sClass_ASupComp *)o->PlcConnectP;\
+  if ( !co)\
+    return;\
+  if ((co->High && In <= co->CtrlLimit - co->Hysteres) ||\
+      (!co->High && In >= co->CtrlLimit + co->Hysteres)\
+  ) {\
+    if (co->Action) co->Action = FALSE;\
+    if (co->ReturnCheck) {\
+      time_GetTime(&co->ReturnTime);\
+      co->ReturnCheck = FALSE;\
+      co->ReturnSend = TRUE;\
+    }\
+    if (co->AlarmCheck && !co->DetectCheck) {\
+      co->TimerCount = 0;\
+      co->DetectCheck = TRUE;\
+    }\
+  } else if (con &&\
+	     ((co->High && In > co->CtrlLimit) ||\
+	      (!co->High && In < co->CtrlLimit))) {\
+    if (!co->Action) co->Action = TRUE;\
+    if (co->AlarmCheck && co->DetectOn && !co->Blocked) {\
+      if (co->DetectCheck) {\
+	co->ActualValue = In;\
+	timer_in(tp, co);\
+	time_GetTime(&co->DetectTime);\
+	co->DetectCheck = FALSE;\
+      }\
+      if (!co->TimerFlag) {\
+	co->DetectSend = TRUE;\
+	co->ReturnCheck = TRUE;\
+	co->Acked = FALSE;\
+	co->AlarmCheck = FALSE;\
+      }\
+    }\
+  }\
+  if (co->Blocked) {\
+    co->TimerCount = 0;\
+    co->DetectCheck = TRUE;\
+  }\
+  o->Action = co->Action;\
+  o->Acked = co->Acked;\
+  o->Blocked = co->Blocked;\
+}
