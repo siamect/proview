@@ -913,10 +913,11 @@ void CoWowGtk::CreateFileSelDia( const char *title, void *parent_ctx,
     gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER(dialog), folder);
 
     GtkFileFilter *filter = gtk_file_filter_new();
-    gtk_file_filter_set_name( filter,  "*.png,*.jpg,*.gif");
+    gtk_file_filter_set_name( filter,  "*.png,*.jpg,*.gif,*.svg");
     gtk_file_filter_add_pattern( filter, "*.png");
     gtk_file_filter_add_pattern( filter, "*.jpg");
     gtk_file_filter_add_pattern( filter, "*.gif");
+    gtk_file_filter_add_pattern( filter, "*.svg");
     gtk_file_chooser_add_filter( GTK_FILE_CHOOSER(dialog), filter);
 
     filter = gtk_file_filter_new();
