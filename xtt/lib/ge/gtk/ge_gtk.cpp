@@ -150,11 +150,7 @@ void GeGtk::open_input_dialog( const char *text, const char *title,
 			    const char *init_text,
 			    void (*x_india_ok_cb)( Ge *, char *))
 {
-  g_object_set( india_widget, 
-		"visible", TRUE, 
-		"title", title,
-		NULL);
-
+  gtk_window_set_title( GTK_WINDOW(india_widget), title);
   gtk_label_set_text( GTK_LABEL(india_label), text);
 
   gint pos = 0;
@@ -162,6 +158,7 @@ void GeGtk::open_input_dialog( const char *text, const char *title,
   gtk_editable_insert_text( GTK_EDITABLE(india_text), init_text, 
 			    strlen(init_text), &pos);
   india_ok_cb = x_india_ok_cb;
+  gtk_dialog_run( GTK_DIALOG(india_widget));
 }
 
 void GeGtk::message( char severity, const char *message)
@@ -1513,13 +1510,6 @@ static gint delete_event( GtkWidget *w, GdkEvent *event, gpointer gectx)
 {
   ((Ge *)gectx)->activate_exit();
 
-  return TRUE;
-}
-
-static gint india_delete_event( GtkWidget *w, GdkEvent *event, gpointer gectx)
-{
-  // Hide
-  g_object_set( w, "visible", FALSE, NULL);
   return TRUE;
 }
 
@@ -3090,14 +3080,13 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   wow = new CoWowGtk( toplevel);
 
   // Create an input dialog
-  india_widget = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
+  india_widget = (GtkWidget *) g_object_new( GTK_TYPE_DIALOG, 
 					     "default-height", 150,
 					     "default-width", 350,
-					     "title", "Input Dialog",
 					     "window-position", GTK_WIN_POS_CENTER,
 					     NULL);
+  gtk_window_set_modal( GTK_WINDOW(india_widget), TRUE);
 
-  g_signal_connect( india_widget, "delete_event", G_CALLBACK(india_delete_event), this);
   india_text = gtk_entry_new();
   g_signal_connect( india_text, "activate", 
   		    G_CALLBACK(activate_india_ok), this);
@@ -3108,7 +3097,6 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 				"xalign", 0.5,
 				"yalign", 1.0,
 				NULL);
-
   GtkWidget *india_ok = gtk_button_new_with_label( "Ok");
   gtk_widget_set_size_request( india_ok, 70, 25);
   g_signal_connect( india_ok, "clicked", 
@@ -3127,11 +3115,10 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_box_pack_start( GTK_BOX(india_hboxbuttons), india_ok, FALSE, FALSE, 0);
   gtk_box_pack_end( GTK_BOX(india_hboxbuttons), india_cancel, FALSE, FALSE, 0);
 
-  GtkWidget *india_vbox = gtk_vbox_new( FALSE, 0);
+  GtkWidget *india_vbox = gtk_dialog_get_content_area( GTK_DIALOG(india_widget));
   gtk_box_pack_start( GTK_BOX(india_vbox), india_hboxtext, TRUE, TRUE, 30);
   gtk_box_pack_start( GTK_BOX(india_vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
   gtk_box_pack_end( GTK_BOX(india_vbox), india_hboxbuttons, FALSE, FALSE, 15);
-  gtk_container_add( GTK_CONTAINER(india_widget), india_vbox);
   gtk_widget_show_all( india_widget);
   g_object_set( india_widget, "visible", FALSE, NULL);
   gtk_window_set_transient_for( GTK_WINDOW(gtk_widget_get_toplevel(india_widget)), 
