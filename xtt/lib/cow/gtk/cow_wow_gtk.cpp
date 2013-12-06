@@ -1269,6 +1269,8 @@ int CoWowGtk::CreateModalDialog( const char *title, const char *text, const char
 				NULL);
   }
 
+  gtk_window_set_modal(GTK_WINDOW(dialog_w), TRUE);
+
   GtkWidget *hboxtext = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(hboxtext), image_w, FALSE, FALSE, 15);
   gtk_box_pack_start( GTK_BOX(hboxtext), text_w, TRUE, TRUE, 15);
