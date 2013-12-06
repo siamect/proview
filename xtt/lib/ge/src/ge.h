@@ -218,6 +218,7 @@ class Ge {
   void activate_graph_attr();
   void activate_open();
   void activate_subgraphs();
+  void activate_reset_mode();
   void activate_rect( bool keep);
   void activate_rectrounded( bool keep);
   void activate_line( bool keep);

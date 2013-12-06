@@ -236,6 +236,7 @@ class GeGtk : public Ge {
   static void activate_gradient_radlowerleft( GtkWidget *w, gpointer gectx);
   static void activate_gradient_radupperright( GtkWidget *w, gpointer gectx);
   static void activate_gradient_radlowerright( GtkWidget *w, gpointer gectx);
+  static void activate_reset_mode( GtkWidget *w, gpointer gectx);
   static void activate_scale( GtkWidget *w, gpointer gectx);
   static void activate_scale_double( GtkWidget *w, gpointer gectx);
   static void activate_scale_half( GtkWidget *w, gpointer gectx);

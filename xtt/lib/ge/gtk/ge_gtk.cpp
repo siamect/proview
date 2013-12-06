@@ -773,7 +773,7 @@ void GeGtk::image_file_selected_cb( void *ctx, char *filename, wow_eFileSelType 
   char *s;
 
   dcli_translate_filename( str, "$pwrp_pop/");
-  sprintf( cmd, "cp %s %s", filename, str);
+  sprintf( cmd, "cp \'%s\' %s", filename, str);
   
   system( cmd);
   sprintf( str, "Image imported, %s", filename);
@@ -1053,6 +1053,11 @@ void GeGtk::activate_gradient_radupperright(GtkWidget *w, gpointer gectx)
 void GeGtk::activate_gradient_radlowerright(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_gradient( glow_eGradient_RadialLowerRight);
+}
+
+void GeGtk::activate_reset_mode(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_reset_mode();
 }
 
 void GeGtk::activate_scale(GtkWidget *w, gpointer gectx)
@@ -1536,6 +1541,14 @@ static gint yesnodia_delete_event( GtkWidget *w, GdkEvent *event, gpointer gectx
 
 static void destroy_event( GtkWidget *w, gpointer data)
 {
+}
+
+static void set_widget_font( GtkWidget *w, const char *font_name)
+{
+  PangoFontDescription *desc;
+
+  desc = pango_font_description_from_string( font_name);
+  gtk_widget_modify_font( w, desc);
 }
 
 gboolean GeGtk::ge_action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data)
@@ -2431,6 +2444,11 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   g_signal_connect(tools_open_object, "clicked", G_CALLBACK(activate_objectattributes), this);
   gtk_toolbar_append_widget( tools, tools_open_object, "Open selected object", "");
 
+  // Ordinary edit mode button
+  GtkWidget *tools_reset_mode = image_button( "$pwr_exe/ge_reset.png");
+  g_signal_connect(tools_reset_mode, "clicked", G_CALLBACK(activate_reset_mode), this);
+  gtk_toolbar_append_widget( tools2, tools_reset_mode, "Mode reset", "");
+
   // Scale button
   GtkWidget *tools_scale = image_button( "$pwr_exe/ge_scale.png");
   g_signal_connect(tools_scale, "clicked", G_CALLBACK(activate_scale), this);
@@ -2648,18 +2666,23 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 
   // Text font options menu
   GtkWidget *tools_textfont_1 = gtk_image_menu_item_new_with_label( "Helvetica");
+  set_widget_font( gtk_bin_get_child( GTK_BIN(tools_textfont_1)), "Helvetica");
   g_signal_connect(tools_textfont_1, "activate", G_CALLBACK(activate_textfont_1), this);
 
   GtkWidget *tools_textfont_2 = gtk_image_menu_item_new_with_label( "Times");
+  set_widget_font( gtk_bin_get_child( GTK_BIN(tools_textfont_2)), "Times");
   g_signal_connect(tools_textfont_2, "activate", G_CALLBACK(activate_textfont_2), this);
 
   GtkWidget *tools_textfont_3 = gtk_image_menu_item_new_with_label( "New Century Schoolbook");
+  set_widget_font( gtk_bin_get_child( GTK_BIN(tools_textfont_3)), "New Century Schoolbook");
   g_signal_connect(tools_textfont_3, "activate", G_CALLBACK(activate_textfont_3), this);
 
   GtkWidget *tools_textfont_4 = gtk_image_menu_item_new_with_label( "Courier");
+  set_widget_font( gtk_bin_get_child( GTK_BIN(tools_textfont_4)), "Courier");
   g_signal_connect(tools_textfont_4, "activate", G_CALLBACK(activate_textfont_4), this);
 
   GtkWidget *tools_textfont_5 = gtk_image_menu_item_new_with_label( "Lucida Sans");
+  set_widget_font( gtk_bin_get_child( GTK_BIN(tools_textfont_5)), "Lucida Sans");
   g_signal_connect(tools_textfont_5, "activate", G_CALLBACK(activate_textfont_5), this);
 
   GtkMenu *textfont_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);

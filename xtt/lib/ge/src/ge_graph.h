@@ -833,6 +833,11 @@ class Graph {
   /*! /return 	Always 1 */
   int edit_graph_attributes();
 
+  //! Reset mode.
+  /*! \param reset_clear	Clear selection. */
+  /*! \param keep		Do not reset the edit mode when an object is created */
+  void reset_mode( bool reset_clear, bool keep);
+
   //! Clear the graph.
   /*! Remove all objects and reset the graph. */
   void clear_all();

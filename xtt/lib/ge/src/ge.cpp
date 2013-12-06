@@ -1539,6 +1539,12 @@ void Ge::activate_subgraphs()
   subgraphs_new();
 }
 
+void Ge::activate_reset_mode()
+{
+  graph->reset_mode( false, false);
+  status_msg( this, 0, 0);
+}
+
 void Ge::activate_rect( bool keep)
 {
   graph->set_mode( grow_eMode_Rect, keep);

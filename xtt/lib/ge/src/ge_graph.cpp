@@ -2238,6 +2238,33 @@ int Graph::edit_graph_attributes()
   was_subgraph = is_subgraph();
   return 1;
 }
+
+void Graph::reset_mode( bool select_clear, bool keep) 
+{
+  if ( grow_Mode( grow->ctx) == grow_eMode_PolyLine && current_polyline) {
+    if ( fill)
+      grow_SetObjectFill( current_polyline, 1);
+    if ( shadow)
+      grow_SetObjectShadow( current_polyline, 1);
+    
+    journal_store( journal_eAction_CreateObject, current_polyline);
+  }
+  else if ( grow_Mode( grow->ctx) == grow_eMode_EditPolyLine ||
+	    grow_Mode( grow->ctx) == grow_eMode_Scale) {
+    journal_store( journal_eAction_PostPropertiesSelect, 0);
+  }
+  
+  grow_PolylineEnd( grow->ctx);
+  current_polyline = 0;
+  grow_SetMode( grow->ctx, grow_eMode_Edit);
+  grow_EnableHighlight( grow->ctx);
+  // grow_SelectClear( grow->ctx);
+  grow_SetMoveRestrictions( grow->ctx, glow_eMoveRestriction_No, 0, 0, NULL);
+  grow_SetScaleEqual( grow->ctx, 0);
+  keep_mode = keep;
+  if ( select_clear)
+    grow_SelectClear( grow->ctx);
+}
 //
 // Callbacks from grow
 //
@@ -2464,27 +2491,8 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
       break;
     }
     case glow_eEvent_MB3Click:
-      if ( grow_Mode( graph->grow->ctx) == grow_eMode_PolyLine && graph->current_polyline) {
-	if ( graph->fill)
-	  grow_SetObjectFill( graph->current_polyline, 1);
-	if ( graph->shadow)
-	  grow_SetObjectShadow( graph->current_polyline, 1);
+      graph->reset_mode( true, false);
 
-	graph->journal_store( journal_eAction_CreateObject, graph->current_polyline);
-      }
-      else if ( grow_Mode( graph->grow->ctx) == grow_eMode_EditPolyLine ||
-		grow_Mode( graph->grow->ctx) == grow_eMode_Scale) {
-	graph->journal_store( journal_eAction_PostPropertiesSelect, 0);
-      }
-
-      grow_PolylineEnd( graph->grow->ctx);
-      graph->current_polyline = 0;
-      grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
-      grow_EnableHighlight( graph->grow->ctx);
-      grow_SelectClear( graph->grow->ctx);
-      grow_SetMoveRestrictions( graph->grow->ctx, glow_eMoveRestriction_No, 0, 0, NULL);
-      grow_SetScaleEqual( graph->grow->ctx, 0);
-      graph->keep_mode = false;
       if ( graph->cursor_motion_cb)
         (graph->cursor_motion_cb) (graph->parent_ctx, event->any.x, 
 		event->any.y);
