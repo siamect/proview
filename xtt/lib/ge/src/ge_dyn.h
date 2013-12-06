@@ -549,6 +549,7 @@
     ge_eSave_AnalogColor_color       	= 6103,
     ge_eSave_AnalogColor_instance      	= 6104,
     ge_eSave_AnalogColor_instance_mask 	= 6105,
+    ge_eSave_AnalogColor_border       	= 6106,
     ge_eSave_TipText_text              	= 6200,
     ge_eSave_Help_topic        		= 6300,
     ge_eSave_Help_bookmark             	= 6400,
@@ -1332,6 +1333,7 @@ class GeAnalogColor : public GeDynElem {
   double limit;			//!< Limit value.
   ge_eLimitType limit_type;	//!< Type of limit.
   glow_eDrawType color;		//!< Color to set when limit value is exceeded.
+  int border;
 
   bool old_state;
   pwr_tFloat32 *p;
@@ -1345,12 +1347,12 @@ class GeAnalogColor : public GeDynElem {
 
   GeAnalogColor( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType1_AnalogColor, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_AnalogColor),
-    limit(0), limit_type(ge_eLimitType_Gt), color(glow_eDrawType_Inherit), 
+    limit(0), limit_type(ge_eLimitType_Gt), color(glow_eDrawType_Inherit), border(0),
     old_state(false), p(0), old_value(FLT_INI), e(0)
     { strcpy( attribute, ""); instance = e_instance;}
   GeAnalogColor( const GeAnalogColor& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), limit(x.limit), 
-    limit_type(x.limit_type), color(x.color), old_state(false), p(0), 
+    limit_type(x.limit_type), color(x.color), border(x.border), old_state(false), p(0), 
     old_value(FLT_INI), e(0)
     { strcpy( attribute, x.attribute);
     instance = x.instance; instance_mask = x.instance_mask;}

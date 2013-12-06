@@ -4725,6 +4725,11 @@ void GeAnalogColor::get_attributes( attr_sItem *attrinfo, int *item_count)
       attrinfo[i].type = glow_eType_String;
       attrinfo[i++].size = sizeof( attribute);
 
+      strcpy( attrinfo[i].name, "AnalogColor.Border");
+      attrinfo[i].value = &border;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( border);
+
       strcpy( attrinfo[i].name, "AnalogColor.Instances");
       attrinfo[i].value = &instance_mask;
       attrinfo[i].type = ge_eAttrType_InstanceMask;
@@ -4753,6 +4758,11 @@ void GeAnalogColor::get_attributes( attr_sItem *attrinfo, int *item_count)
       attrinfo[i].value = &limit_type;
       attrinfo[i].type = ge_eAttrType_LimitType;
       attrinfo[i++].size = sizeof( limit_type);
+
+      sprintf( attrinfo[i].name, "AnalogColor%d.Border", inst);
+      attrinfo[i].value = &border;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( border);
     }
   }
   *item_count = i;
@@ -4835,6 +4845,7 @@ void GeAnalogColor::save( ofstream& fp)
   fp << int(ge_eSave_AnalogColor_color) << FSPACE << (int)color << endl;
   fp << int(ge_eSave_AnalogColor_instance) << FSPACE << int(instance) << endl;
   fp << int(ge_eSave_AnalogColor_instance_mask) << FSPACE << int(instance_mask) << endl;
+  fp << int(ge_eSave_AnalogColor_border) << FSPACE << border << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -4866,6 +4877,7 @@ void GeAnalogColor::open( ifstream& fp)
       case ge_eSave_AnalogColor_color: fp >> tmp; color = (glow_eDrawType)tmp; break;
       case ge_eSave_AnalogColor_instance: fp >> tmp; instance = (ge_mInstance)tmp; break;
       case ge_eSave_AnalogColor_instance_mask: fp >> tmp; instance_mask = (ge_mInstance)tmp; break;
+      case ge_eSave_AnalogColor_border: fp >> tmp; border = (int)tmp; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeAnalogColor:open syntax error" << endl;
@@ -5045,26 +5057,40 @@ int GeAnalogColor::scan( grow_tObject object)
   }
   if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
     if ( set_color) {
-      if ( color >= (glow_eDrawType) glow_eDrawTone__)
-	grow_SetObjectFillColor( object, color);
+      if ( color >= (glow_eDrawType) glow_eDrawTone__) {
+        if ( !border)
+          grow_SetObjectFillColor( object, color);
+        else
+          grow_SetObjectBorderColor( object, color);
+      }
       else
 	grow_SetObjectColorTone( object, (glow_eDrawTone) color);
       dyn->ignore_color = true;
     }
     else {
-      if ( color >= (glow_eDrawType) glow_eDrawTone__)
-	grow_ResetObjectFillColor( object);
+      if ( color >= (glow_eDrawType) glow_eDrawTone__) {
+        if ( !border)
+          grow_ResetObjectFillColor( object);
+        else
+          grow_ResetObjectBorderColor( object);
+      }
       grow_ResetObjectColorTone( object);
       dyn->reset_color = true;
     }
   }
   else {
     if ( set_color) {
-      grow_SetObjectFillColor( object, color);
+      if ( !border)
+	grow_SetObjectFillColor( object, color);
+      else
+	grow_SetObjectBorderColor( object, color);
       dyn->ignore_color = true;
     }
     else {
-      grow_ResetObjectFillColor( object);
+      if ( !border)
+	grow_ResetObjectFillColor( object);
+      else
+	grow_ResetObjectBorderColor( object);
       dyn->reset_color = true;
     }
   }
