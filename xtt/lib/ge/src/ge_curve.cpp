@@ -115,14 +115,8 @@ void GeCurve::activate_export()
   pwr_tFileName dir;
 
   // Get directory from proview.cnf
-  if ( cnf_get_value( "curveExportDirectory", dir, sizeof(dir))) {
-    strcpy( filename, dir);
-    if ( filename[strlen(filename)-1] != '/')
-      strcat( filename, "/");
-  }
-  else
-    strcpy( filename, "~/");
-  strcat( filename, "history.txt");
+  if ( !cnf_get_value( "curveExportFile", filename, sizeof(filename)))
+    strcpy( filename, "~/history.txt");
 
   grow_MeasureWindow( growcurve_ctx, &ll_x, &ll_y, &ur_x, &ur_y);
 
