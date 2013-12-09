@@ -1153,6 +1153,11 @@ gboolean CoWowEntryGtk::event_cb( GtkWidget *w, GdkEvent *event, gpointer data)
     sts = TRUE;
     break;
   }
+  case GDK_Escape:
+    if ( en->m_hide_on_esc)
+      gtk_widget_hide( w);
+    sts = FALSE;
+    break;
   default:
     sts = FALSE;
   }

@@ -68,6 +68,7 @@ class CoWowEntryGtk {
   CoWowRecall	*m_re;
   GtkWidget	*w;
   bool		m_re_alloc;
+  bool		m_hide_on_esc;
   
   CoWowEntryGtk( CoWowRecall *re = 0);
   ~CoWowEntryGtk();
@@ -75,6 +76,9 @@ class CoWowEntryGtk {
   void set_recall_buffer( CoWowRecall *re) { 
     if ( !m_re_alloc) 
       m_re = re;
+  }
+  void set_hide_on_esc( bool hide) {
+    m_hide_on_esc = hide;
   }
   static gboolean event_cb( GtkWidget *w, GdkEvent *event, gpointer data);
 };

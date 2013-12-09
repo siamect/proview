@@ -128,6 +128,7 @@ class WttGtk : public Wtt {
     GtkWidget	*tools_edit_w;
     GtkWidget	*tools_buildnode_w;
     GtkWidget	*tools_save_w;
+    GtkAccelGroup *accel_g;
     int		set_focus_disabled;
     gint 	disfocus_timerid;
     gint 	selection_timerid;
@@ -281,6 +282,8 @@ class WttGtk : public Wtt {
     static void reset_avoid_deadlock( Wtt *wtt);
     static void set_avoid_deadlock( Wtt *wtt, int time);
     static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
+    static gboolean focused_cmd_input( GtkWidget *w, GdkEvent *event, gpointer data);
+    static gboolean hide_cmd_input( GtkWidget *w, gpointer data);
     static void menu_position_func( GtkMenu *menu, gint *x, gint *y, gboolean *push_in,
 				    gpointer data);
     static void popup_button_cb( GtkWidget *w, gpointer data);

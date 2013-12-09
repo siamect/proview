@@ -1541,6 +1541,31 @@ gboolean WttGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data
   return FALSE;
 }
 
+gboolean WttGtk::focused_cmd_input( GtkWidget *w, GdkEvent *event, gpointer data)
+{
+  WttGtk *wtt = (WttGtk *)data;
+
+  if ( wtt->accel_g->acceleratables)
+    gtk_window_remove_accel_group( GTK_WINDOW(wtt->toplevel), wtt->accel_g);
+
+  return FALSE;
+}
+
+gboolean WttGtk::hide_cmd_input( GtkWidget *w, gpointer data)
+{
+  WttGtk *wtt = (WttGtk *)data;
+
+  if ( wtt->input_open) {
+    wtt->input_wnav->select_object( wtt->input_node);
+    wtt->set_prompt( "");
+    wtt->input_open = 0;
+    gtk_window_add_accel_group( GTK_WINDOW(wtt->toplevel), wtt->accel_g);
+  }
+  else if ( wtt->command_open)
+    gtk_window_add_accel_group( GTK_WINDOW(wtt->toplevel), wtt->accel_g);
+  return FALSE;
+}
+
 void WttGtk::open_input_dialog( const char *text, const char *title,
 			     const char *init_text,
 			     void (*ok_cb)( Wtt *, char *))
@@ -2145,7 +2170,7 @@ WttGtk::WttGtk(
 
   CoWowGtk::SetWindowIcon( toplevel);
 
-  GtkAccelGroup *accel_g = (GtkAccelGroup *) g_object_new(GTK_TYPE_ACCEL_GROUP, NULL);
+  accel_g = (GtkAccelGroup *) g_object_new(GTK_TYPE_ACCEL_GROUP, NULL);
   gtk_window_add_accel_group(GTK_WINDOW(toplevel), accel_g);
 
   GtkMenuBar *menu_bar = (GtkMenuBar *) g_object_new(GTK_TYPE_MENU_BAR, NULL);
@@ -2855,10 +2880,15 @@ WttGtk::WttGtk(
   cmd_prompt = gtk_label_new( "value > ");
   gtk_widget_set_size_request( cmd_prompt, -1, 25);
   cmd_entry = new CoWowEntryGtk( &cmd_recall);
+  cmd_entry->set_hide_on_esc( true);
   cmd_input = cmd_entry->widget();
   gtk_widget_set_size_request( cmd_input, -1, 25);
   g_signal_connect( cmd_input, "activate", 
   		    G_CALLBACK(WttGtk::valchanged_cmd_input), this);
+  g_signal_connect( cmd_input, "focus-in-event",
+  		    G_CALLBACK(WttGtk::focused_cmd_input), this);
+  g_signal_connect( cmd_input, "hide",
+  		    G_CALLBACK(WttGtk::hide_cmd_input), this);
 
   gtk_box_pack_start( GTK_BOX(statusbar), msg_label, FALSE, FALSE, 20);
   gtk_box_pack_start( GTK_BOX(statusbar), cmd_prompt, FALSE, FALSE, 20);

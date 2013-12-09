@@ -240,6 +240,18 @@ gboolean WAttGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer dat
   return FALSE;
 }
 
+void WAttGtk::hide_cmd_input( GtkWidget *w, gpointer data)
+{
+  WAttGtk *watt = (WAttGtk *)data;
+
+  watt->wattnav->set_inputfocus();
+
+  if ( watt->input_open) {
+    g_object_set( watt->cmd_prompt, "visible", FALSE, NULL);
+    watt->input_open = 0;
+  }
+}
+
 void WAttGtk::print( const char *title)
 {
   pwr_tStatus sts;
@@ -350,9 +362,6 @@ void WAttGtk::activate_cmd_input( GtkWidget *w, gpointer data)
   WAttGtk *watt = (WAttGtk *)data;
   int sts;
 
-  g_object_set( watt->cmd_prompt, "visible", FALSE, NULL);
-  g_object_set( watt->cmd_input, "visible", FALSE, NULL);
-
   watt->wattnav->set_inputfocus();
 
   textutf8 = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
@@ -368,6 +377,9 @@ void WAttGtk::activate_cmd_input( GtkWidget *w, gpointer data)
       (watt->redraw_cb)( watt);
   }
   g_free( text);
+
+  g_object_set( watt->cmd_prompt, "visible", FALSE, NULL);
+  g_object_set( watt->cmd_input, "visible", FALSE, NULL);
 
   if ( watt->pending_close) {
     if ( watt->close_cb)
@@ -584,10 +596,13 @@ WAttGtk::WAttGtk(
   cmd_prompt = gtk_label_new( "value > ");
   gtk_widget_set_size_request( cmd_prompt, -1, 25);
   cmd_entry = new CoWowEntryGtk( &value_recall);
+  cmd_entry->set_hide_on_esc(true);
   cmd_input = cmd_entry->widget();
   gtk_widget_set_size_request( cmd_input, -1, 25);
   g_signal_connect( cmd_input, "activate", 
 		    G_CALLBACK(activate_cmd_input), this);
+  g_signal_connect( cmd_input, "hide",
+		    G_CALLBACK(hide_cmd_input), this);
 
   gtk_box_pack_start( GTK_BOX(statusbar), msg_label, FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(statusbar), cmd_prompt, FALSE, FALSE, 0);

@@ -96,6 +96,7 @@ class WAttGtk : public WAtt {
   static void activate_cmd_scrolled_ok( GtkWidget *w, gpointer data);
   static void activate_cmd_scrolled_ca( GtkWidget *w, gpointer data);
   static void action_text_inserted( GtkTextBuffer *w, GtkTextIter *arg1, gchar *arg2, gint arg3, gpointer data);
+  static void hide_cmd_input( GtkWidget *w, gpointer data);
 };
 
 #endif
