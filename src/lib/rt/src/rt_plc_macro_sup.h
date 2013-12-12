@@ -207,6 +207,7 @@
   pwr_sClass_DSupComp *co = (pwr_sClass_DSupComp *)o->PlcConnectP;\
   if ( !co)\
     return;\
+  co->Control = con;\
   if (In != co->CtrlPosition) {\
     if (co->Action) co->Action = FALSE;\
     if (co->ReturnCheck) {\
@@ -269,6 +270,7 @@
   pwr_sClass_ASupComp *co = (pwr_sClass_ASupComp *)o->PlcConnectP;\
   if ( !co)\
     return;\
+  co->Control = con;\
   if ((co->High && In <= co->CtrlLimit - co->Hysteres) ||\
       (!co->High && In >= co->CtrlLimit + co->Hysteres)\
   ) {\

@@ -198,6 +198,7 @@ SObject pwrb:Class
     EndObject
     Object Template ASupCompFo
       Body RtBody
+        Attr Control = 1
       EndBody
       Body DevBody
         Attr ShowDetectText = 1

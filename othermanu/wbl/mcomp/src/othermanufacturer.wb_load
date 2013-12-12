@@ -1,6 +1,6 @@
 Volume OtherManufacturer $ClassVolume 0.0.250.1 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X3266"
+    Attr NextOix = "_X3282"
     Attr NextCix = "_X61"
     Attr NextTix[0] = "_X2"
   EndBody
@@ -68,7 +68,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Super $Attribute 1 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 2600
+            Attr Size = 3320
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseManValve"
           EndBody
@@ -80,7 +80,15 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/ventim_valve_vm3001.pdf"
           Attr Super.SwitchOpen.Description = "Valve is open"
           Attr Super.SwitchClosed.Description = "Valve is closed"
-          Attr Super.AlarmText = "Valve error"
+          Attr Super.Alarm.DetectOn = 1
+          Attr Super.Alarm.DetectText = "Switch error"
+          Attr Super.Alarm.EventType = 64
+          Attr Super.Alarm.EventPriority = 67
+          Attr Super.Alarm.EventFlags = 7
+          Attr Super.Alarm.MoreText = ""
+          Attr Super.Alarm.Attribute = "OtherManufacturer:Class-Ventim_Valve_VM3001-Template"
+          Attr Super.Alarm.CtrlPosition = 1
+          Attr Super.Alarm.LockAttribute = 1
         EndBody
       EndObject
     EndObject
@@ -108,7 +116,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Super $Attribute 2 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 3416
+            Attr Size = 4136
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseMValve"
           EndBody
@@ -122,7 +130,8 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.DisableSwitchOpen = 1
           Attr Super.DisableSwitchClosed = 1
           Attr Super.DisableSwitchAlarmDelay = 1
-          Attr Super.DisableSwitchAlarmText = 1
+          Attr Super.DisableSwitchAlarm = 1
+          Attr Super.SwitchAlarm.MoreText = ""
         EndBody
       EndObject
     EndObject
@@ -150,7 +159,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Super $Attribute 1 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 4504
+            Attr Size = 6664
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseActuatorA"
           EndBody
@@ -167,11 +176,36 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.Position.PresMaxLimit = 1.000000e+02
           Attr Super.Mode.OpNoLocal = 1
           Attr Super.Mode.OpMaxRefMan = 1.000000e+02
-          Attr Super.Mode.AlarmLocalMode = "Local mode is activated"
+          Attr Super.Mode.AlarmLocalMode.DetectOn = 1
+          Attr Super.Mode.AlarmLocalMode.DetectText = "Local mode is activated"
+          Attr Super.Mode.AlarmLocalMode.EventType = 64
+          Attr Super.Mode.AlarmLocalMode.EventPriority = 67
+          Attr Super.Mode.AlarmLocalMode.EventFlags = 7
+          Attr Super.Mode.AlarmLocalMode.MoreText = ""
+          Attr Super.Mode.AlarmLocalMode.Attribute = "OtherManufacturer:Class-Bernard_Actuator_OA-Template"
+          Attr Super.Mode.AlarmLocalMode.CtrlPosition = 1
+          Attr Super.Mode.AlarmLocalMode.LockAttribute = 1
           Attr Super.MaxPosDiff = 5.000000e+00
           Attr Super.DiffAlarmDelay = 1.000000e+01
-          Attr Super.DiffAlarmText = "Position error"
-          Attr Super.SwitchAlarmText = "Switch error"
+          Attr Super.DiffAlarm.DetectOn = 1
+          Attr Super.DiffAlarm.DetectText = "Position error"
+          Attr Super.DiffAlarm.EventType = 64
+          Attr Super.DiffAlarm.EventPriority = 67
+          Attr Super.DiffAlarm.EventFlags = 7
+          Attr Super.DiffAlarm.MoreText = ""
+          Attr Super.DiffAlarm.Attribute = "OtherManufacturer:Class-Bernard_Actuator_OA-Template"
+          Attr Super.DiffAlarm.CtrlPosition = 1
+          Attr Super.DiffAlarm.LockAttribute = 1
+          Attr Super.SwitchAlarmDelay = 1.000000e+01
+          Attr Super.SwitchAlarm.DetectOn = 1
+          Attr Super.SwitchAlarm.DetectText = "Switch error"
+          Attr Super.SwitchAlarm.EventType = 64
+          Attr Super.SwitchAlarm.EventPriority = 67
+          Attr Super.SwitchAlarm.EventFlags = 7
+          Attr Super.SwitchAlarm.MoreText = ""
+          Attr Super.SwitchAlarm.Attribute = "OtherManufacturer:Class-Bernard_Actuator_OA-Template"
+          Attr Super.SwitchAlarm.CtrlPosition = 1
+          Attr Super.SwitchAlarm.LockAttribute = 1
           Attr Super.PosSwitchOpen = 9.500000e+01
           Attr Super.PosSwitchClosed = 5.000000e+00
         EndBody
@@ -201,7 +235,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Super $Attribute 2 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 1680
+            Attr Size = 2400
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseSafetySwitch"
           EndBody
@@ -211,7 +245,15 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Body RtBody 01-JAN-1970 01:00:00.00
           Attr Super.Super.Specification = "Safety switch "
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/cewe_safetyswitch_ksa_lbas.pdf"
-          Attr Super.AlarmText = "Safety switch is off"
+          Attr Super.Alarm.DetectOn = 1
+          Attr Super.Alarm.DetectText = "Safety switch is not on"
+          Attr Super.Alarm.EventType = 64
+          Attr Super.Alarm.EventPriority = 67
+          Attr Super.Alarm.EventFlags = 7
+          Attr Super.Alarm.MoreText = ""
+          Attr Super.Alarm.Attribute = "OtherManufacturer:Class-Cewe_SafetySwitch_KSA_LBAS-Template"
+          Attr Super.Alarm.CtrlPosition = 1
+          Attr Super.Alarm.LockAttribute = 1
         EndBody
       EndObject
     EndObject
@@ -239,7 +281,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Super $Attribute 3 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 1680
+            Attr Size = 2400
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseSafetySwitch"
           EndBody
@@ -249,7 +291,15 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Body RtBody 01-JAN-1970 01:00:00.00
           Attr Super.Super.Specification = "Safety switch "
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/cewe_safetyswitch_bas.pdf"
-          Attr Super.AlarmText = "Safety switch is not on "
+          Attr Super.Alarm.DetectOn = 1
+          Attr Super.Alarm.DetectText = "Safety switch is not on"
+          Attr Super.Alarm.EventType = 64
+          Attr Super.Alarm.EventPriority = 67
+          Attr Super.Alarm.EventFlags = 7
+          Attr Super.Alarm.MoreText = ""
+          Attr Super.Alarm.Attribute = "OtherManufacturer:Class-Cewe_SafetySwitch_BAS-Template"
+          Attr Super.Alarm.CtrlPosition = 1
+          Attr Super.Alarm.LockAttribute = 1
         EndBody
       EndObject
     EndObject
@@ -277,7 +327,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Super $Attribute 1 18-MAR-2008 17:03:15.98
           Body SysBody 18-MAR-2008 17:03:53.69
             Attr PgmName = "Super"
-            Attr Size = 9872
+            Attr Size = 13472
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseFcPPO3"
           EndBody
@@ -299,10 +349,43 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.RefSpeed.PresMinLimit = 1.000000e+02
           Attr Super.RefSpeed.DefTrend = "_O0.0.0.0:0"
           Attr Super.PowerUpTime = 1.500000e+01
-          Attr Super.AlarmLocalMod = "Frequency converter is in local mode"
-          Attr Super.AlarmTripped = "Frequency converter tripped, reset is required"
-          Attr Super.AlarmWarning = "Frequency converter warning"
-          Attr Super.AlarmError = "Frequency converter error"
+          Attr Super.AlarmLocalMod.DetectOn = 1
+          Attr Super.AlarmLocalMod.DetectText = "Frequency converter is in local mode"
+          Attr Super.AlarmLocalMod.EventType = 64
+          Attr Super.AlarmLocalMod.EventPriority = 66
+          Attr Super.AlarmLocalMod.EventFlags = 7
+          Attr Super.AlarmLocalMod.MoreText = ""
+          Attr Super.AlarmLocalMod.Attribute = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO3-Template"
+          Attr Super.AlarmLocalMod.CtrlPosition = 1
+          Attr Super.AlarmLocalMod.LockAttribute = 1
+          Attr Super.AlarmTripped.DetectOn = 1
+          Attr Super.AlarmTripped.DetectText = "Frequency converter tripped, reset is required"
+          Attr Super.AlarmTripped.EventType = 64
+          Attr Super.AlarmTripped.EventPriority = 67
+          Attr Super.AlarmTripped.EventFlags = 7
+          Attr Super.AlarmTripped.MoreText = ""
+          Attr Super.AlarmTripped.Attribute = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO3-Template"
+          Attr Super.AlarmTripped.CtrlPosition = 1
+          Attr Super.AlarmTripped.LockAttribute = 1
+          Attr Super.AlarmWarning.DetectOn = 1
+          Attr Super.AlarmWarning.DetectText = "Frequency converter warning"
+          Attr Super.AlarmWarning.EventType = 64
+          Attr Super.AlarmWarning.EventPriority = 66
+          Attr Super.AlarmWarning.EventFlags = 7
+          Attr Super.AlarmWarning.MoreText = ""
+          Attr Super.AlarmWarning.Attribute = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO3-Template"
+          Attr Super.AlarmWarning.CtrlPosition = 1
+          Attr Super.AlarmWarning.LockAttribute = 1
+          Attr Super.AlarmError.DetectOn = 1
+          Attr Super.AlarmError.DetectText = "Frequency converter error"
+          Attr Super.AlarmError.EventType = 64
+          Attr Super.AlarmError.EventPriority = 67
+          Attr Super.AlarmError.EventFlags = 7
+          Attr Super.AlarmError.MoreText = ""
+          Attr Super.AlarmError.Attribute = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO3-Template"
+          Attr Super.AlarmError.CtrlPosition = 1
+          Attr Super.AlarmError.LockAttribute = 1
+          Attr Super.AlarmConnection.MoreText = ""
           Attr Super.DefTrend = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO3-Template.Super.PlotGroup"
           Attr Super.DataSheet = "$pwr_lang/dsh/danfoss_converter_fc300.pdf"
           Attr Super.TrendActSpeed.Multiple = 1
@@ -349,7 +432,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object Super $Attribute 1 17-MAR-2008 16:47:32.06
           Body SysBody 17-MAR-2008 16:49:08.27
             Attr PgmName = "Super"
-            Attr Size = 27616
+            Attr Size = 31216
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseFcPPO5"
           EndBody
@@ -412,10 +495,43 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.OPZD6.Description = "Process Data 6 to converter"
           Attr Super.OPZD6.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_PZD6"
           Attr Super.PowerUpTime = 1.500000e+01
-          Attr Super.AlarmLocalMod = "Frequency converter is in local mode"
-          Attr Super.AlarmTripped = "Frequency converter tripped, reset is required"
-          Attr Super.AlarmWarning = "Frequency converter warning"
-          Attr Super.AlarmError = "Frequency converter error"
+          Attr Super.AlarmLocalMod.DetectOn = 1
+          Attr Super.AlarmLocalMod.DetectText = "Frequency converter is in local mode"
+          Attr Super.AlarmLocalMod.EventType = 64
+          Attr Super.AlarmLocalMod.EventPriority = 66
+          Attr Super.AlarmLocalMod.EventFlags = 7
+          Attr Super.AlarmLocalMod.MoreText = ""
+          Attr Super.AlarmLocalMod.Attribute = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template"
+          Attr Super.AlarmLocalMod.CtrlPosition = 1
+          Attr Super.AlarmLocalMod.LockAttribute = 1
+          Attr Super.AlarmTripped.DetectOn = 1
+          Attr Super.AlarmTripped.DetectText = "Frequency converter tripped, reset is required"
+          Attr Super.AlarmTripped.EventType = 64
+          Attr Super.AlarmTripped.EventPriority = 67
+          Attr Super.AlarmTripped.EventFlags = 7
+          Attr Super.AlarmTripped.MoreText = ""
+          Attr Super.AlarmTripped.Attribute = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template"
+          Attr Super.AlarmTripped.CtrlPosition = 1
+          Attr Super.AlarmTripped.LockAttribute = 1
+          Attr Super.AlarmWarning.DetectOn = 1
+          Attr Super.AlarmWarning.DetectText = "Frequency converter warning"
+          Attr Super.AlarmWarning.EventType = 64
+          Attr Super.AlarmWarning.EventPriority = 66
+          Attr Super.AlarmWarning.EventFlags = 7
+          Attr Super.AlarmWarning.MoreText = ""
+          Attr Super.AlarmWarning.Attribute = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template"
+          Attr Super.AlarmWarning.CtrlPosition = 1
+          Attr Super.AlarmWarning.LockAttribute = 1
+          Attr Super.AlarmError.DetectOn = 1
+          Attr Super.AlarmError.DetectText = "Frequency converter error"
+          Attr Super.AlarmError.EventType = 64
+          Attr Super.AlarmError.EventPriority = 67
+          Attr Super.AlarmError.EventFlags = 7
+          Attr Super.AlarmError.MoreText = ""
+          Attr Super.AlarmError.Attribute = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template"
+          Attr Super.AlarmError.CtrlPosition = 1
+          Attr Super.AlarmError.LockAttribute = 1
+          Attr Super.AlarmConnection.MoreText = ""
           Attr Super.DefTrend = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template.Super.PlotGroup"
           Attr Super.DataSheet = "$pwr_lang/dsh/danfoss_converter_fc300.pdf"
           Attr Super.TrendActSpeed.Multiple = 1
@@ -14374,7 +14490,7 @@ else
         Object CircuitBreaker $Attribute 63 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "CircuitBreaker"
-            Attr Size = 1680
+            Attr Size = 2400
             Attr Flags = 4325384
             Attr TypeRef = "BaseComponent:Class-BaseCircuitBreaker"
           EndBody
@@ -14398,7 +14514,7 @@ else
         Object Contactor $Attribute 66 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "Contactor"
-            Attr Size = 3296
+            Attr Size = 4016
             Attr Flags = 4325384
             Attr TypeRef = "BaseComponent:Class-BaseContactor"
           EndBody
@@ -14422,7 +14538,7 @@ else
         Object Heater $Attribute 72 09-OCT-2007 10:59:06.55
           Body SysBody 09-OCT-2007 10:59:13.61
             Attr PgmName = "Heater"
-            Attr Size = 6768
+            Attr Size = 10376
             Attr Flags = 131080
             Attr TypeRef = "BaseComponent:Class-BaseElHeater"
           EndBody
@@ -14430,7 +14546,7 @@ else
         Object Mode $Attribute 73 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "Mode"
-            Attr Size = 632
+            Attr Size = 4232
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompModeA"
           EndBody
@@ -14573,13 +14689,29 @@ else
       EndObject
       Object Template Eurotherm_TC3001Aggr 2157150208 01-JAN-1970 01:00:00.00
         Body RtBody 23-MAR-2010 16:49:08.68
-          Attr CircuitBreaker.AlarmText = "Circuit breaker tripped"
+          Attr CircuitBreaker.Alarm.DetectOn = 1
+          Attr CircuitBreaker.Alarm.DetectText = "Circuit breaker tripped"
+          Attr CircuitBreaker.Alarm.EventType = 64
+          Attr CircuitBreaker.Alarm.EventPriority = 67
+          Attr CircuitBreaker.Alarm.EventFlags = 7
+          Attr CircuitBreaker.Alarm.MoreText = ""
+          Attr CircuitBreaker.Alarm.Attribute = "OtherManufacturer:Class-Eurotherm_TC3001Aggr-Template.CircuitBreaker"
+          Attr CircuitBreaker.Alarm.CtrlPosition = 1
+          Attr CircuitBreaker.Alarm.LockAttribute = 1
           Attr Contactor.Super.Specification = "Contactor"
           Attr Contactor.Order.Description = "Energize contactor"
           Attr Contactor.DisableOffControl = 1
           Attr Contactor.Feedback.Description = "Contactor is energized"
           Attr Contactor.FbTimeLimit = 1.000000e+00
-          Attr Contactor.AlarmText = "Contactor feedback lost"
+          Attr Contactor.Alarm.DetectOn = 1
+          Attr Contactor.Alarm.DetectText = "Contactor feedback lost"
+          Attr Contactor.Alarm.EventType = 64
+          Attr Contactor.Alarm.EventPriority = 67
+          Attr Contactor.Alarm.EventFlags = 7
+          Attr Contactor.Alarm.MoreText = ""
+          Attr Contactor.Alarm.Attribute = "OtherManufacturer:Class-Eurotherm_TC3001Aggr-Template.Contactor"
+          Attr Contactor.Alarm.CtrlPosition = 1
+          Attr Contactor.Alarm.LockAttribute = 1
           Attr TC3001.In1.SigChanCon = "$IoConnect:OtherManufacturer-Class-Eurotherm_TC3001_PbModule.In1"
           Attr TC3001.In2.SigChanCon = "$IoConnect:OtherManufacturer-Class-Eurotherm_TC3001_PbModule.In2"
           Attr TC3001.In3.SigChanCon = "$IoConnect:OtherManufacturer-Class-Eurotherm_TC3001_PbModule.In3"
@@ -14598,22 +14730,58 @@ else
           Attr Heater.DisableTempSwitch = 1
           Attr Heater.TempSwitch.Super.DisableSwitch = 1
           Attr Heater.TempSwitch.Super.Switch.Description = "Switch digital input"
-          Attr Heater.TempSwitch.Super.AlarmText = "High heater temperatur"
+          Attr Heater.TempSwitch.Super.Alarm.DetectOn = 1
+          Attr Heater.TempSwitch.Super.Alarm.DetectText = "High heager temperature"
+          Attr Heater.TempSwitch.Super.Alarm.EventType = 64
+          Attr Heater.TempSwitch.Super.Alarm.EventPriority = 67
+          Attr Heater.TempSwitch.Super.Alarm.EventFlags = 7
+          Attr Heater.TempSwitch.Super.Alarm.MoreText = ""
+          Attr Heater.TempSwitch.Super.Alarm.Attribute = "OtherManufacturer:Class-Eurotherm_TC3001Aggr-Template"
+          Attr Heater.TempSwitch.Super.Alarm.CtrlPosition = 1
+          Attr Heater.TempSwitch.Super.Alarm.LockAttribute = 1
           Attr Heater.DisableTempSensor = 1
           Attr Heater.TempSensor.Super.Super.Specification = "TemperatureSensor"
           Attr Heater.TempSensor.Super.DisableValue = 1
           Attr Heater.TempSensor.Super.Value.PresMaxLimit = 1.000000e+02
-          Attr Heater.TempSensor.Super.LimitHH.AlarmText = "High High heater temperature"
-          Attr Heater.TempSensor.Super.LimitHH.Limit = 1.300000e+02
-          Attr Heater.TempSensor.Super.LimitHH.Hysteres = 3.000000e+00
-          Attr Heater.TempSensor.Super.LimitHH.Used = 1
-          Attr Heater.TempSensor.Super.LimitH.AlarmText = "High heater temperature"
-          Attr Heater.TempSensor.Super.LimitH.Limit = 1.150000e+02
-          Attr Heater.TempSensor.Super.LimitH.Hysteres = 3.000000e+00
-          Attr Heater.TempSensor.Super.LimitH.Used = 1
-          Attr Heater.TempSensor.Super.LimitL.AlarmText = "Below Low limit, tempsensor"
+          Attr Heater.TempSensor.Super.LimitHH.Alarm.DetectOn = 1
+          Attr Heater.TempSensor.Super.LimitHH.Alarm.DetectText = "Temperature HighHigh limit exceeded"
+          Attr Heater.TempSensor.Super.LimitHH.Alarm.EventType = 64
+          Attr Heater.TempSensor.Super.LimitHH.Alarm.EventPriority = 67
+          Attr Heater.TempSensor.Super.LimitHH.Alarm.EventFlags = 7
+          Attr Heater.TempSensor.Super.LimitHH.Alarm.MoreText = ""
+          Attr Heater.TempSensor.Super.LimitHH.Alarm.Attribute = "OtherManufacturer:Class-Eurotherm_TC3001Aggr-Template"
+          Attr Heater.TempSensor.Super.LimitHH.Alarm.CtrlPosition = 1
+          Attr Heater.TempSensor.Super.LimitHH.Alarm.LockAttribute = 1
+          Attr Heater.TempSensor.Super.LimitHH.Limit = 9.500000e+01
+          Attr Heater.TempSensor.Super.LimitH.Alarm.DetectOn = 1
+          Attr Heater.TempSensor.Super.LimitH.Alarm.DetectText = "Temperature High limit exceeded"
+          Attr Heater.TempSensor.Super.LimitH.Alarm.EventType = 64
+          Attr Heater.TempSensor.Super.LimitH.Alarm.EventPriority = 66
+          Attr Heater.TempSensor.Super.LimitH.Alarm.EventFlags = 7
+          Attr Heater.TempSensor.Super.LimitH.Alarm.MoreText = ""
+          Attr Heater.TempSensor.Super.LimitH.Alarm.Attribute = "OtherManufacturer:Class-Eurotherm_TC3001Aggr-Template"
+          Attr Heater.TempSensor.Super.LimitH.Alarm.CtrlPosition = 1
+          Attr Heater.TempSensor.Super.LimitH.Alarm.LockAttribute = 1
+          Attr Heater.TempSensor.Super.LimitH.Limit = 9.000000e+01
+          Attr Heater.TempSensor.Super.LimitL.Alarm.DetectOn = 1
+          Attr Heater.TempSensor.Super.LimitL.Alarm.DetectText = "Temperature below Low limit"
+          Attr Heater.TempSensor.Super.LimitL.Alarm.EventType = 64
+          Attr Heater.TempSensor.Super.LimitL.Alarm.EventPriority = 66
+          Attr Heater.TempSensor.Super.LimitL.Alarm.EventFlags = 7
+          Attr Heater.TempSensor.Super.LimitL.Alarm.MoreText = ""
+          Attr Heater.TempSensor.Super.LimitL.Alarm.Attribute = "OtherManufacturer:Class-Eurotherm_TC3001Aggr-Template"
+          Attr Heater.TempSensor.Super.LimitL.Alarm.CtrlPosition = 1
+          Attr Heater.TempSensor.Super.LimitL.Alarm.LockAttribute = 1
           Attr Heater.TempSensor.Super.LimitL.Limit = 1.000000e+01
-          Attr Heater.TempSensor.Super.LimitLL.AlarmText = "Below Low limit, tempsensor"
+          Attr Heater.TempSensor.Super.LimitLL.Alarm.DetectOn = 1
+          Attr Heater.TempSensor.Super.LimitLL.Alarm.DetectText = "Temperature below LowLow limit"
+          Attr Heater.TempSensor.Super.LimitLL.Alarm.EventType = 64
+          Attr Heater.TempSensor.Super.LimitLL.Alarm.EventPriority = 67
+          Attr Heater.TempSensor.Super.LimitLL.Alarm.EventFlags = 7
+          Attr Heater.TempSensor.Super.LimitLL.Alarm.MoreText = ""
+          Attr Heater.TempSensor.Super.LimitLL.Alarm.Attribute = "OtherManufacturer:Class-Eurotherm_TC3001Aggr-Template"
+          Attr Heater.TempSensor.Super.LimitLL.Alarm.CtrlPosition = 1
+          Attr Heater.TempSensor.Super.LimitLL.Alarm.LockAttribute = 1
           Attr Heater.TempSensor.Super.LimitLL.Limit = 5.000000e+00
           Attr Heater.TempSensor.Super.Trend.Multiple = 1
           Attr Heater.TempSensor.Super.Trend.DataName = "_O0.0.0.0:0"
@@ -14626,11 +14794,51 @@ else
           Attr Mode.OpNoLocal = 1
           Attr Mode.OpNoAutoToMan = 1
           Attr Mode.OpMaxRefMan = 1.000000e+02
-          Attr Mode.AlarmNotReadyM = "Check interlocks. Manual start is not allowed, not ready"
-          Attr Mode.AlarmNotReadyA = "Check interlocks. Automode is not allowed, not ready"
-          Attr Mode.Alarm1LocalMod = "Local mode is activated, remote control is not allowed"
-          Attr Mode.Alarm2LocalMod = "Local mode is activated"
-          Attr Mode.AlarmNotManOrd = "Automode active. Manual start/stop order is not allowed"
+          Attr Mode.AlarmNotReadyM.DetectOn = 1
+          Attr Mode.AlarmNotReadyM.DetectText = "Check interlocks. Manual start is not allowed, not ready"
+          Attr Mode.AlarmNotReadyM.EventType = 64
+          Attr Mode.AlarmNotReadyM.EventPriority = 66
+          Attr Mode.AlarmNotReadyM.EventFlags = 7
+          Attr Mode.AlarmNotReadyM.MoreText = ""
+          Attr Mode.AlarmNotReadyM.Attribute = "OtherManufacturer:Class-Eurotherm_TC3001Aggr-Template"
+          Attr Mode.AlarmNotReadyM.CtrlPosition = 1
+          Attr Mode.AlarmNotReadyM.LockAttribute = 1
+          Attr Mode.AlarmNotReadyA.DetectOn = 1
+          Attr Mode.AlarmNotReadyA.DetectText = "Check interlocks. Automode is not allowed, not ready"
+          Attr Mode.AlarmNotReadyA.EventType = 64
+          Attr Mode.AlarmNotReadyA.EventPriority = 66
+          Attr Mode.AlarmNotReadyA.EventFlags = 7
+          Attr Mode.AlarmNotReadyA.MoreText = ""
+          Attr Mode.AlarmNotReadyA.Attribute = "OtherManufacturer:Class-Eurotherm_TC3001Aggr-Template"
+          Attr Mode.AlarmNotReadyA.CtrlPosition = 1
+          Attr Mode.AlarmNotReadyA.LockAttribute = 1
+          Attr Mode.Alarm1LocalMod.DetectOn = 1
+          Attr Mode.Alarm1LocalMod.DetectText = "Local mode is activated, remote control is not allowed"
+          Attr Mode.Alarm1LocalMod.EventType = 64
+          Attr Mode.Alarm1LocalMod.EventPriority = 66
+          Attr Mode.Alarm1LocalMod.EventFlags = 7
+          Attr Mode.Alarm1LocalMod.MoreText = ""
+          Attr Mode.Alarm1LocalMod.Attribute = "OtherManufacturer:Class-Eurotherm_TC3001Aggr-Template"
+          Attr Mode.Alarm1LocalMod.CtrlPosition = 1
+          Attr Mode.Alarm1LocalMod.LockAttribute = 1
+          Attr Mode.Alarm2LocalMod.DetectOn = 1
+          Attr Mode.Alarm2LocalMod.DetectText = "Local mode is activated"
+          Attr Mode.Alarm2LocalMod.EventType = 64
+          Attr Mode.Alarm2LocalMod.EventPriority = 66
+          Attr Mode.Alarm2LocalMod.EventFlags = 7
+          Attr Mode.Alarm2LocalMod.MoreText = ""
+          Attr Mode.Alarm2LocalMod.Attribute = "OtherManufacturer:Class-Eurotherm_TC3001Aggr-Template"
+          Attr Mode.Alarm2LocalMod.CtrlPosition = 1
+          Attr Mode.Alarm2LocalMod.LockAttribute = 1
+          Attr Mode.AlarmNotManOrd.DetectOn = 1
+          Attr Mode.AlarmNotManOrd.DetectText = "Automode active. Manual order is not allowed"
+          Attr Mode.AlarmNotManOrd.EventType = 64
+          Attr Mode.AlarmNotManOrd.EventPriority = 66
+          Attr Mode.AlarmNotManOrd.EventFlags = 7
+          Attr Mode.AlarmNotManOrd.MoreText = ""
+          Attr Mode.AlarmNotManOrd.Attribute = "OtherManufacturer:Class-Eurotherm_TC3001Aggr-Template"
+          Attr Mode.AlarmNotManOrd.CtrlPosition = 1
+          Attr Mode.AlarmNotManOrd.LockAttribute = 1
         EndBody
       EndObject
     EndObject
@@ -21467,7 +21675,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 1 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 4216
+            Attr Size = 7096
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseTempSensor"
           EndBody
@@ -21478,13 +21686,45 @@ Eurotherm TC3001 Aggregate
           Attr Super.Super.Super.Specification = "Impac compact pyrometer IN300"
           Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/impac_tempsensor_in300.pdf"
           Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
-          Attr Super.Super.LimitHH.AlarmText = "HighHigh limit exceeded, levelsensor "
+          Attr Super.Super.LimitHH.Alarm.DetectOn = 1
+          Attr Super.Super.LimitHH.Alarm.DetectText = "Temperature HighHigh limit exceeded"
+          Attr Super.Super.LimitHH.Alarm.EventType = 64
+          Attr Super.Super.LimitHH.Alarm.EventPriority = 67
+          Attr Super.Super.LimitHH.Alarm.EventFlags = 7
+          Attr Super.Super.LimitHH.Alarm.MoreText = ""
+          Attr Super.Super.LimitHH.Alarm.Attribute = "OtherManufacturer:Class-Impac_TempSensor_IN300-Template"
+          Attr Super.Super.LimitHH.Alarm.CtrlPosition = 1
+          Attr Super.Super.LimitHH.Alarm.LockAttribute = 1
           Attr Super.Super.LimitHH.Limit = 9.500000e+01
-          Attr Super.Super.LimitH.AlarmText = "High limit exceeded, levelsensor "
+          Attr Super.Super.LimitH.Alarm.DetectOn = 1
+          Attr Super.Super.LimitH.Alarm.DetectText = "Temperature High limit exceeded"
+          Attr Super.Super.LimitH.Alarm.EventType = 64
+          Attr Super.Super.LimitH.Alarm.EventPriority = 66
+          Attr Super.Super.LimitH.Alarm.EventFlags = 7
+          Attr Super.Super.LimitH.Alarm.MoreText = ""
+          Attr Super.Super.LimitH.Alarm.Attribute = "OtherManufacturer:Class-Impac_TempSensor_IN300-Template"
+          Attr Super.Super.LimitH.Alarm.CtrlPosition = 1
+          Attr Super.Super.LimitH.Alarm.LockAttribute = 1
           Attr Super.Super.LimitH.Limit = 9.000000e+01
-          Attr Super.Super.LimitL.AlarmText = "Below Low limit, levelsensor "
+          Attr Super.Super.LimitL.Alarm.DetectOn = 1
+          Attr Super.Super.LimitL.Alarm.DetectText = "Temperature below Low limit"
+          Attr Super.Super.LimitL.Alarm.EventType = 64
+          Attr Super.Super.LimitL.Alarm.EventPriority = 66
+          Attr Super.Super.LimitL.Alarm.EventFlags = 7
+          Attr Super.Super.LimitL.Alarm.MoreText = ""
+          Attr Super.Super.LimitL.Alarm.Attribute = "OtherManufacturer:Class-Impac_TempSensor_IN300-Template"
+          Attr Super.Super.LimitL.Alarm.CtrlPosition = 1
+          Attr Super.Super.LimitL.Alarm.LockAttribute = 1
           Attr Super.Super.LimitL.Limit = 1.000000e+01
-          Attr Super.Super.LimitLL.AlarmText = "Below LowLow limit, levelsensor "
+          Attr Super.Super.LimitLL.Alarm.DetectOn = 1
+          Attr Super.Super.LimitLL.Alarm.DetectText = "Temperature below LowLow limit"
+          Attr Super.Super.LimitLL.Alarm.EventType = 64
+          Attr Super.Super.LimitLL.Alarm.EventPriority = 67
+          Attr Super.Super.LimitLL.Alarm.EventFlags = 7
+          Attr Super.Super.LimitLL.Alarm.MoreText = ""
+          Attr Super.Super.LimitLL.Alarm.Attribute = "OtherManufacturer:Class-Impac_TempSensor_IN300-Template"
+          Attr Super.Super.LimitLL.Alarm.CtrlPosition = 1
+          Attr Super.Super.LimitLL.Alarm.LockAttribute = 1
           Attr Super.Super.LimitLL.Limit = 5.000000e+00
           Attr Super.Super.Trend.Multiple = 1
           Attr Super.Super.Trend.DataName = "OtherManufacturer:Class-Impac_TempSensor_IN300-Template.Super.Super.Value.ActualValue"
@@ -21521,7 +21761,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 3 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 1680
+            Attr Size = 2400
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseCircuitBreaker"
           EndBody
@@ -21531,7 +21771,15 @@ Eurotherm TC3001 Aggregate
         Body RtBody 01-JAN-1970 01:00:00.00
           Attr Super.Super.Specification = "Legrand Circuit breaker DX"
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/legrand_circuitbreaker_dx.pdf"
-          Attr Super.AlarmText = "Overload, circuit breaker tripped"
+          Attr Super.Alarm.DetectOn = 1
+          Attr Super.Alarm.DetectText = "Circuit breaker tripped"
+          Attr Super.Alarm.EventType = 64
+          Attr Super.Alarm.EventPriority = 67
+          Attr Super.Alarm.EventFlags = 7
+          Attr Super.Alarm.MoreText = ""
+          Attr Super.Alarm.Attribute = "OtherManufacturer:Class-Legrand_CircuitBreaker_DX-Template"
+          Attr Super.Alarm.CtrlPosition = 1
+          Attr Super.Alarm.LockAttribute = 1
         EndBody
       EndObject
     EndObject
@@ -21559,7 +21807,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 4 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 1688
+            Attr Size = 2416
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BasePressureSwitch"
           EndBody
@@ -21570,7 +21818,15 @@ Eurotherm TC3001 Aggregate
           Attr Super.Super.Super.Specification = "Suco Pressure switch 27 AF"
           Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/suco_presswitch_27af.pdf"
           Attr Super.Super.Switch.Description = "Switch digital input"
-          Attr Super.Super.AlarmText = "Pressure switch"
+          Attr Super.Super.Alarm.DetectOn = 1
+          Attr Super.Super.Alarm.DetectText = "Pressure switch"
+          Attr Super.Super.Alarm.EventType = 64
+          Attr Super.Super.Alarm.EventPriority = 67
+          Attr Super.Super.Alarm.EventFlags = 7
+          Attr Super.Super.Alarm.MoreText = ""
+          Attr Super.Super.Alarm.Attribute = "OtherManufacturer:Class-Suco_PresSwitch_27AF-Template"
+          Attr Super.Super.Alarm.CtrlPosition = 1
+          Attr Super.Super.Alarm.LockAttribute = 1
         EndBody
       EndObject
     EndObject
@@ -21598,7 +21854,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 1 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 4216
+            Attr Size = 7096
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseLevelSensor"
           EndBody
@@ -21609,13 +21865,45 @@ Eurotherm TC3001 Aggregate
           Attr Super.Super.Super.Specification = "Mobrey Supersonic Leveltransmitter MSP422"
           Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/mobrey_levelsensor_msp422.pdf"
           Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
-          Attr Super.Super.LimitHH.AlarmText = "HighHigh limit exceeded, levelsensor "
+          Attr Super.Super.LimitHH.Alarm.DetectOn = 1
+          Attr Super.Super.LimitHH.Alarm.DetectText = "Level HighHigh limit exceeded"
+          Attr Super.Super.LimitHH.Alarm.EventType = 64
+          Attr Super.Super.LimitHH.Alarm.EventPriority = 67
+          Attr Super.Super.LimitHH.Alarm.EventFlags = 7
+          Attr Super.Super.LimitHH.Alarm.MoreText = ""
+          Attr Super.Super.LimitHH.Alarm.Attribute = "OtherManufacturer:Class-Mobrey_LevelSensor_MSP422-Template"
+          Attr Super.Super.LimitHH.Alarm.CtrlPosition = 1
+          Attr Super.Super.LimitHH.Alarm.LockAttribute = 1
           Attr Super.Super.LimitHH.Limit = 9.500000e+01
-          Attr Super.Super.LimitH.AlarmText = "High limit exceeded, levelsensor "
+          Attr Super.Super.LimitH.Alarm.DetectOn = 1
+          Attr Super.Super.LimitH.Alarm.DetectText = "Level High limit exceeded"
+          Attr Super.Super.LimitH.Alarm.EventType = 64
+          Attr Super.Super.LimitH.Alarm.EventPriority = 66
+          Attr Super.Super.LimitH.Alarm.EventFlags = 7
+          Attr Super.Super.LimitH.Alarm.MoreText = ""
+          Attr Super.Super.LimitH.Alarm.Attribute = "OtherManufacturer:Class-Mobrey_LevelSensor_MSP422-Template"
+          Attr Super.Super.LimitH.Alarm.CtrlPosition = 1
+          Attr Super.Super.LimitH.Alarm.LockAttribute = 1
           Attr Super.Super.LimitH.Limit = 9.000000e+01
-          Attr Super.Super.LimitL.AlarmText = "Below Low limit, levelsensor "
+          Attr Super.Super.LimitL.Alarm.DetectOn = 1
+          Attr Super.Super.LimitL.Alarm.DetectText = "Level below Low limit"
+          Attr Super.Super.LimitL.Alarm.EventType = 64
+          Attr Super.Super.LimitL.Alarm.EventPriority = 66
+          Attr Super.Super.LimitL.Alarm.EventFlags = 7
+          Attr Super.Super.LimitL.Alarm.MoreText = ""
+          Attr Super.Super.LimitL.Alarm.Attribute = "OtherManufacturer:Class-Mobrey_LevelSensor_MSP422-Template"
+          Attr Super.Super.LimitL.Alarm.CtrlPosition = 1
+          Attr Super.Super.LimitL.Alarm.LockAttribute = 1
           Attr Super.Super.LimitL.Limit = 1.000000e+01
-          Attr Super.Super.LimitLL.AlarmText = "Below LowLow limit, levelsensor "
+          Attr Super.Super.LimitLL.Alarm.DetectOn = 1
+          Attr Super.Super.LimitLL.Alarm.DetectText = "Level below LowLow limit"
+          Attr Super.Super.LimitLL.Alarm.EventType = 64
+          Attr Super.Super.LimitLL.Alarm.EventPriority = 67
+          Attr Super.Super.LimitLL.Alarm.EventFlags = 7
+          Attr Super.Super.LimitLL.Alarm.MoreText = ""
+          Attr Super.Super.LimitLL.Alarm.Attribute = "OtherManufacturer:Class-Mobrey_LevelSensor_MSP422-Template"
+          Attr Super.Super.LimitLL.Alarm.CtrlPosition = 1
+          Attr Super.Super.LimitLL.Alarm.LockAttribute = 1
           Attr Super.Super.LimitLL.Limit = 5.000000e+00
           Attr Super.Super.Trend.Multiple = 1
           Attr Super.Super.Trend.DataName = "OtherManufacturer:Class-Mobrey_LevelSensor_MSP422-Template.Super.Super.Value.ActualValue"
@@ -21652,7 +21940,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 1 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 1688
+            Attr Size = 2416
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseLevelSwitch"
           EndBody
@@ -21662,7 +21950,15 @@ Eurotherm TC3001 Aggregate
         Body RtBody 01-JAN-1970 01:00:00.00
           Attr Super.Super.Super.Specification = "Mobrey Levelswitch model EC"
           Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/mobrey_levelswitch_ec.pdf"
-          Attr Super.Super.AlarmText = "Level switch"
+          Attr Super.Super.Alarm.DetectOn = 1
+          Attr Super.Super.Alarm.DetectText = "Level switch"
+          Attr Super.Super.Alarm.EventType = 64
+          Attr Super.Super.Alarm.EventPriority = 67
+          Attr Super.Super.Alarm.EventFlags = 7
+          Attr Super.Super.Alarm.MoreText = ""
+          Attr Super.Super.Alarm.Attribute = "OtherManufacturer:Class-Mobrey_LevelSwitch_EC-Template"
+          Attr Super.Super.Alarm.CtrlPosition = 1
+          Attr Super.Super.Alarm.LockAttribute = 1
         EndBody
       EndObject
     EndObject
@@ -21690,7 +21986,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 2 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 4216
+            Attr Size = 7096
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BasePressureSensor"
           EndBody
@@ -21701,13 +21997,44 @@ Eurotherm TC3001 Aggregate
           Attr Super.Super.Super.Specification = "Klay Instrument Pressuretransmitter series 2000"
           Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/klay_pressuresensor_series2000.pdf"
           Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
-          Attr Super.Super.LimitHH.AlarmText = "HighHigh limit exceeded, pressuresensor "
+          Attr Super.Super.LimitHH.Alarm.DetectOn = 1
+          Attr Super.Super.LimitHH.Alarm.DetectText = "Pressure HighHigh limit exceeded"
+          Attr Super.Super.LimitHH.Alarm.EventType = 64
+          Attr Super.Super.LimitHH.Alarm.EventPriority = 67
+          Attr Super.Super.LimitHH.Alarm.EventFlags = 7
+          Attr Super.Super.LimitHH.Alarm.MoreText = ""
+          Attr Super.Super.LimitHH.Alarm.Attribute = "OtherManufacturer:Class-Klay_PressureSensor_Series2000-Template"
+          Attr Super.Super.LimitHH.Alarm.CtrlPosition = 1
+          Attr Super.Super.LimitHH.Alarm.LockAttribute = 1
           Attr Super.Super.LimitHH.Limit = 9.500000e+01
-          Attr Super.Super.LimitH.AlarmText = "High limit exceeded, pressuresensor "
+          Attr Super.Super.LimitH.Alarm.DetectOn = 1
+          Attr Super.Super.LimitH.Alarm.EventType = 64
+          Attr Super.Super.LimitH.Alarm.EventPriority = 66
+          Attr Super.Super.LimitH.Alarm.EventFlags = 7
+          Attr Super.Super.LimitH.Alarm.MoreText = ""
+          Attr Super.Super.LimitH.Alarm.Attribute = "OtherManufacturer:Class-Klay_PressureSensor_Series2000-Template"
+          Attr Super.Super.LimitH.Alarm.CtrlPosition = 1
+          Attr Super.Super.LimitH.Alarm.LockAttribute = 1
           Attr Super.Super.LimitH.Limit = 9.000000e+01
-          Attr Super.Super.LimitL.AlarmText = "Below Low limit, pressuresensor "
+          Attr Super.Super.LimitL.Alarm.DetectOn = 1
+          Attr Super.Super.LimitL.Alarm.DetectText = "Pressure below Low limit"
+          Attr Super.Super.LimitL.Alarm.EventType = 64
+          Attr Super.Super.LimitL.Alarm.EventPriority = 66
+          Attr Super.Super.LimitL.Alarm.EventFlags = 7
+          Attr Super.Super.LimitL.Alarm.MoreText = ""
+          Attr Super.Super.LimitL.Alarm.Attribute = "OtherManufacturer:Class-Klay_PressureSensor_Series2000-Template"
+          Attr Super.Super.LimitL.Alarm.CtrlPosition = 1
+          Attr Super.Super.LimitL.Alarm.LockAttribute = 1
           Attr Super.Super.LimitL.Limit = 1.000000e+01
-          Attr Super.Super.LimitLL.AlarmText = "Below LowLow limit, pressuresensor "
+          Attr Super.Super.LimitLL.Alarm.DetectOn = 1
+          Attr Super.Super.LimitLL.Alarm.DetectText = "Pressure below LowLow limit"
+          Attr Super.Super.LimitLL.Alarm.EventType = 64
+          Attr Super.Super.LimitLL.Alarm.EventPriority = 67
+          Attr Super.Super.LimitLL.Alarm.EventFlags = 7
+          Attr Super.Super.LimitLL.Alarm.MoreText = ""
+          Attr Super.Super.LimitLL.Alarm.Attribute = "OtherManufacturer:Class-Klay_PressureSensor_Series2000-Template"
+          Attr Super.Super.LimitLL.Alarm.CtrlPosition = 1
+          Attr Super.Super.LimitLL.Alarm.LockAttribute = 1
           Attr Super.Super.LimitLL.Limit = 5.000000e+00
           Attr Super.Super.Trend.Multiple = 1
           Attr Super.Super.Trend.DataName = "OtherManufacturer:Class-Klay_PressureSensor_Series2000-Template.Super.Super.Value.ActualValue"
@@ -21744,7 +22071,7 @@ Eurotherm TC3001 Aggregate
         Object Super $Attribute 4 06-OCT-2005 09:28:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 3296
+            Attr Size = 4016
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseContactor"
           EndBody
@@ -21756,7 +22083,15 @@ Eurotherm TC3001 Aggregate
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/omron_contactor_j7kn.pdf"
           Attr Super.DisableOffControl = 1
           Attr Super.FbTimeLimit = 1.000000e+00
-          Attr Super.AlarmText = "Feedback contactor lost"
+          Attr Super.Alarm.DetectOn = 1
+          Attr Super.Alarm.DetectText = "Contactor feedback lost"
+          Attr Super.Alarm.EventType = 64
+          Attr Super.Alarm.EventPriority = 67
+          Attr Super.Alarm.EventFlags = 7
+          Attr Super.Alarm.MoreText = ""
+          Attr Super.Alarm.Attribute = "OtherManufacturer:Class-Omron_Contactor_J7KN-Template"
+          Attr Super.Alarm.CtrlPosition = 1
+          Attr Super.Alarm.LockAttribute = 1
         EndBody
       EndObject
     EndObject
@@ -38662,7 +38997,7 @@ Low = 0"
         Object LimitHH_Voltage $Attribute 147 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitHH_Voltage"
-            Attr Size = 104
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38673,7 +39008,7 @@ Low = 0"
         Object LimitH_Voltage $Attribute 148 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitH_Voltage"
-            Attr Size = 104
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38684,7 +39019,7 @@ Low = 0"
         Object LimitL_Voltage $Attribute 149 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitL_Voltage"
-            Attr Size = 104
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38695,7 +39030,7 @@ Low = 0"
         Object LimitLL_Voltage $Attribute 150 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitLL_Voltage"
-            Attr Size = 104
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38706,7 +39041,7 @@ Low = 0"
         Object LimitHH_Current $Attribute 151 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitHH_Current"
-            Attr Size = 104
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38717,7 +39052,7 @@ Low = 0"
         Object LimitH_Current $Attribute 152 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitH_Current"
-            Attr Size = 104
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38728,7 +39063,7 @@ Low = 0"
         Object LimitL_Current $Attribute 153 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitL_Current"
-            Attr Size = 104
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38739,7 +39074,7 @@ Low = 0"
         Object LimitLL_Current $Attribute 154 12-JUL-2012 07:53:40.56
           Body SysBody 12-JUL-2012 07:53:40.56
             Attr PgmName = "LimitLL_Current"
-            Attr Size = 104
+            Attr Size = 824
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
@@ -38924,14 +39259,86 @@ Low = 0"
           Attr U_L1L3.SigChanCon = "$IoConnect:OtherManufacturer-Class-Janitza_UMG96S_Pro1_IoModule.I_U_L1L3"
           Attr U_L1L3.Unit = "V"
           Attr U_L1L3.PresMaxLimit = 1.000000e+03
-          Attr LimitHH_Voltage.AlarmText = "HighHigh phase voltage limit exceeded, sensor"
-          Attr LimitH_Voltage.AlarmText = "High phase voltage limit exceeded, sensor"
-          Attr LimitL_Voltage.AlarmText = "Phase voltage below Low limit, sensor"
-          Attr LimitLL_Voltage.AlarmText = "Phase voltage below LowLow limit, sensor"
-          Attr LimitHH_Current.AlarmText = "HighHigh current limit exceeded, sensor"
-          Attr LimitH_Current.AlarmText = "High current limit exceeded, sensor"
-          Attr LimitL_Current.AlarmText = "Current below Low limit, sensor"
-          Attr LimitLL_Current.AlarmText = "Current below LowLow limit, sensor"
+          Attr LimitHH_Voltage.Alarm.DetectOn = 1
+          Attr LimitHH_Voltage.Alarm.DetectText = "HighHigh phase voltage limit exceeded"
+          Attr LimitHH_Voltage.Alarm.EventType = 64
+          Attr LimitHH_Voltage.Alarm.EventPriority = 67
+          Attr LimitHH_Voltage.Alarm.EventFlags = 7
+          Attr LimitHH_Voltage.Alarm.MoreText = ""
+          Attr LimitHH_Voltage.Alarm.Attribute = "OtherManufacturer:Class-Janitza_UMG96S_1-Template"
+          Attr LimitHH_Voltage.Alarm.CtrlPosition = 1
+          Attr LimitHH_Voltage.Alarm.LockAttribute = 1
+          Attr LimitHH_Voltage.Limit = 9.500000e+01
+          Attr LimitH_Voltage.Alarm.DetectOn = 1
+          Attr LimitH_Voltage.Alarm.DetectText = "High  phase voltagelimit exceeded"
+          Attr LimitH_Voltage.Alarm.EventType = 64
+          Attr LimitH_Voltage.Alarm.EventPriority = 66
+          Attr LimitH_Voltage.Alarm.EventFlags = 7
+          Attr LimitH_Voltage.Alarm.MoreText = ""
+          Attr LimitH_Voltage.Alarm.Attribute = "OtherManufacturer:Class-Janitza_UMG96S_1-Template"
+          Attr LimitH_Voltage.Alarm.CtrlPosition = 1
+          Attr LimitH_Voltage.Alarm.LockAttribute = 1
+          Attr LimitH_Voltage.Limit = 9.000000e+01
+          Attr LimitL_Voltage.Alarm.DetectOn = 1
+          Attr LimitL_Voltage.Alarm.DetectText = "Phase voltage Below Low limit"
+          Attr LimitL_Voltage.Alarm.EventType = 64
+          Attr LimitL_Voltage.Alarm.EventPriority = 66
+          Attr LimitL_Voltage.Alarm.EventFlags = 7
+          Attr LimitL_Voltage.Alarm.MoreText = ""
+          Attr LimitL_Voltage.Alarm.Attribute = "OtherManufacturer:Class-Janitza_UMG96S_1-Template"
+          Attr LimitL_Voltage.Alarm.CtrlPosition = 1
+          Attr LimitL_Voltage.Alarm.LockAttribute = 1
+          Attr LimitL_Voltage.Limit = 1.000000e+01
+          Attr LimitLL_Voltage.Alarm.DetectOn = 1
+          Attr LimitLL_Voltage.Alarm.DetectText = "Phase voltage below LowLow limit"
+          Attr LimitLL_Voltage.Alarm.EventType = 64
+          Attr LimitLL_Voltage.Alarm.EventPriority = 67
+          Attr LimitLL_Voltage.Alarm.EventFlags = 7
+          Attr LimitLL_Voltage.Alarm.MoreText = ""
+          Attr LimitLL_Voltage.Alarm.Attribute = "OtherManufacturer:Class-Janitza_UMG96S_1-Template"
+          Attr LimitLL_Voltage.Alarm.CtrlPosition = 1
+          Attr LimitLL_Voltage.Alarm.LockAttribute = 1
+          Attr LimitLL_Voltage.Limit = 5.000000e+00
+          Attr LimitHH_Current.Alarm.DetectOn = 1
+          Attr LimitHH_Current.Alarm.DetectText = "HighHigh current limit exceeded"
+          Attr LimitHH_Current.Alarm.EventType = 64
+          Attr LimitHH_Current.Alarm.EventPriority = 67
+          Attr LimitHH_Current.Alarm.EventFlags = 7
+          Attr LimitHH_Current.Alarm.MoreText = ""
+          Attr LimitHH_Current.Alarm.Attribute = "OtherManufacturer:Class-Janitza_UMG96S_1-Template"
+          Attr LimitHH_Current.Alarm.CtrlPosition = 1
+          Attr LimitHH_Current.Alarm.LockAttribute = 1
+          Attr LimitHH_Current.Limit = 9.500000e+01
+          Attr LimitH_Current.Alarm.DetectOn = 1
+          Attr LimitH_Current.Alarm.DetectText = "High current limit exceeded"
+          Attr LimitH_Current.Alarm.EventType = 64
+          Attr LimitH_Current.Alarm.EventPriority = 66
+          Attr LimitH_Current.Alarm.EventFlags = 7
+          Attr LimitH_Current.Alarm.MoreText = ""
+          Attr LimitH_Current.Alarm.Attribute = "OtherManufacturer:Class-Janitza_UMG96S_1-Template"
+          Attr LimitH_Current.Alarm.CtrlPosition = 1
+          Attr LimitH_Current.Alarm.LockAttribute = 1
+          Attr LimitH_Current.Limit = 9.000000e+01
+          Attr LimitL_Current.Alarm.DetectOn = 1
+          Attr LimitL_Current.Alarm.DetectText = "Current below Low limit"
+          Attr LimitL_Current.Alarm.EventType = 64
+          Attr LimitL_Current.Alarm.EventPriority = 66
+          Attr LimitL_Current.Alarm.EventFlags = 7
+          Attr LimitL_Current.Alarm.MoreText = ""
+          Attr LimitL_Current.Alarm.Attribute = "OtherManufacturer:Class-Janitza_UMG96S_1-Template"
+          Attr LimitL_Current.Alarm.CtrlPosition = 1
+          Attr LimitL_Current.Alarm.LockAttribute = 1
+          Attr LimitL_Current.Limit = 1.000000e+01
+          Attr LimitLL_Current.Alarm.DetectOn = 1
+          Attr LimitLL_Current.Alarm.DetectText = "Current below LowLow limit"
+          Attr LimitLL_Current.Alarm.EventType = 64
+          Attr LimitLL_Current.Alarm.EventPriority = 67
+          Attr LimitLL_Current.Alarm.EventFlags = 7
+          Attr LimitLL_Current.Alarm.MoreText = ""
+          Attr LimitLL_Current.Alarm.Attribute = "OtherManufacturer:Class-Janitza_UMG96S_1-Template"
+          Attr LimitLL_Current.Alarm.CtrlPosition = 1
+          Attr LimitLL_Current.Alarm.LockAttribute = 1
+          Attr LimitLL_Current.Limit = 5.000000e+00
         EndBody
       EndObject
     EndObject
@@ -39145,12 +39552,12 @@ Low = 0"
       Object Code PlcTemplate 2890 12-JUL-2012 07:53:40.56
         Body RtBody 12-JUL-2012 07:53:40.56
         EndBody
-        Body DevBody 12-JUL-2012 08:49:34.98
+        Body DevBody 10-DEC-2013 16:00:21.67
           Buffer PlcProgram
             Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
             Attr defnamecount[2] = 9
-            Attr defnamecount[11] = 52
+            Attr defnamecount[11] = 60
             Attr defnamecount[64] = 18
             Attr defnamecount[90] = 26
             Attr defnamecount[91] = 19
@@ -39170,14 +39577,15 @@ Low = 0"
             Attr defnamecount[263] = 13
             Attr defnamecount[265] = 15
             Attr defnamecount[266] = 3
-            Attr connamecount = 354
+            Attr connamecount = 362
           EndBuffer
         EndBody
         Object W WindowPlc 2891 12-JUL-2012 07:53:40.56
-          Body RtBody 12-JUL-2012 07:53:40.56
+          Body RtBody 10-DEC-2013 16:00:21.67
+            Attr Version = 1386687621
           EndBody
-          Body DevBody 12-JUL-2012 08:49:34.98
-            Attr Modified = "12-JUL-2012 08:49:34.98"
+          Body DevBody 10-DEC-2013 16:00:21.67
+            Attr Modified = "10-DEC-2013 16:00:21.67"
             Buffer PlcWindow
               Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -39187,160 +39595,32 @@ Low = 0"
               Attr refconcount = 1
             EndBuffer
           EndBody
-          Object cn353 ConDigital 2892 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.59
+          Object cn361 ConDigital 3282 10-DEC-2013 15:59:51.09
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn353"
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn361"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-FirstScan51"
-                Attr dest_point = 1
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp14"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.360000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 8.800000e-01
-                  Attr y = 1.360000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 2.151250e+00
-                  Attr y = 1.360000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.360000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn352 ConAnalog 2893 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.59
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn352"
-                Attr object_type = 24
-                Attr cid = "pwrb:Class-ConAnalog"
-                Attr attributes = 90
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp12"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp14"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.355000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.213111e+00
-                  Attr y = 1.355000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 1.366590e+00
-                  Attr y = 1.355000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.355000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn351 ConAnalog 2894 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.59
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn351"
-                Attr object_type = 24
-                Attr cid = "pwrb:Class-ConAnalog"
-                Attr attributes = 90
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp13"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp11"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 1.208667e+00
-                  Attr y = 1.365000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.365000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 1.511306e+00
-                  Attr y = 1.370000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 1.208667e+00
-                  Attr y = 1.370000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn350 ConDigital 2895 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.59
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn350"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 1
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp13"
-                Attr dest_point = 1
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp14"
+                Attr source_point = 2
+                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And17"
+                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitLL_Current_AlarmFo"
                 Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.370000e+01
+                  Attr x = 1.752889e+00
+                  Attr y = 1.285000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.095000e+00
-                  Attr y = 1.370000e+01
+                  Attr x = 2.128309e+00
+                  Attr y = 1.285000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.095000e+00
-                  Attr y = 1.360000e+01
+                  Attr x = 2.128309e+00
+                  Attr y = 1.280000e+01
                 EndBuffer
                 Buffer point[3]
                   Attr x = 2.170000e+00
-                  Attr y = 1.360000e+01
+                  Attr y = 1.280000e+01
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -39358,75 +39638,118 @@ Low = 0"
               EndBuffer
             EndBody
           EndObject
-          Object cn349 ConAnalog 2896 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.59
+          Object cn360 ConDigital 3280 10-DEC-2013 15:59:15.30
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn349"
-                Attr object_type = 24
-                Attr cid = "pwrb:Class-ConAnalog"
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn360"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp9"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp12"
-                Attr point_count = 2
+                Attr source_point = 2
+                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And7"
+                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitHH_Current_AlarmFo"
+                Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.375000e+01
+                  Attr x = 1.749000e+00
+                  Attr y = 1.275000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.217556e+00
-                  Attr y = 1.375000e+01
+                  Attr x = 2.086618e+00
+                  Attr y = 1.275000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.833000e+00
+                  Attr x = 2.086618e+00
+                  Attr y = 1.270000e+01
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.170000e+00
+                  Attr y = 1.270000e+01
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn359 ConDigital 3278 10-DEC-2013 15:59:06.24
+            Body DevBody 10-DEC-2013 16:00:21.67
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn359"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And16"
+                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitLL_Voltage_AlarmFo"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.752889e+00
+                  Attr y = 1.265000e+01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.149154e+00
+                  Attr y = 1.265000e+01
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.149154e+00
+                  Attr y = 1.260000e+01
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.170000e+00
+                  Attr y = 1.260000e+01
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn358 ConDigital 3276 10-DEC-2013 15:58:38.18
+            Body DevBody 10-DEC-2013 16:00:21.67
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn358"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And4"
+                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitHH_Voltage_AlarmFo"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.749000e+00
                   Attr y = 1.255000e+01
                 EndBuffer
-                Buffer point[3]
-                  Attr x = 2.070000e+00
+                Buffer point[1]
+                  Attr x = 2.128309e+00
                   Attr y = 1.255000e+01
                 EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn348 ConDigital 2897 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.59
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn348"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 1
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp13"
-                Attr dest_point = 1
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp12"
-                Attr point_count = 4
-                Buffer point[0]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.370000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 2.132500e+00
-                  Attr y = 1.370000e+01
-                EndBuffer
                 Buffer point[2]
-                  Attr x = 2.132500e+00
-                  Attr y = 1.380000e+01
+                  Attr x = 2.128309e+00
+                  Attr y = 1.250000e+01
                 EndBuffer
                 Buffer point[3]
                   Attr x = 2.170000e+00
-                  Attr y = 1.380000e+01
+                  Attr y = 1.250000e+01
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -39444,74 +39767,31 @@ Low = 0"
               EndBuffer
             EndBody
           EndObject
-          Object cn347 ConAnalog 2898 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+          Object cn357 ConDigital 3274 10-DEC-2013 15:56:32.72
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn347"
-                Attr object_type = 24
-                Attr cid = "pwrb:Class-ConAnalog"
-                Attr attributes = 90
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp10"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp11"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.385000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.213111e+00
-                  Attr y = 1.385000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 2.132500e+00
-                  Attr y = 1.385000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.385000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn346 ConDigital 2899 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn346"
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn357"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_point = 1
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp12"
-                Attr dest_point = 1
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp11"
+                Attr source_point = 2
+                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And22"
+                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitL_Current_AlarmFo"
                 Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.380000e+01
+                  Attr x = 1.752889e+00
+                  Attr y = 1.395000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.151250e+00
-                  Attr y = 1.380000e+01
+                  Attr x = 1.840722e+00
+                  Attr y = 1.395000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.151250e+00
+                  Attr x = 1.840722e+00
                   Attr y = 1.390000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.170000e+00
+                  Attr x = 1.870000e+00
                   Attr y = 1.390000e+01
                 EndBuffer
                 Buffer point[4]
@@ -39530,33 +39810,32 @@ Low = 0"
               EndBuffer
             EndBody
           EndObject
-          Object cn345 ConDigital 2900 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+          Object cn356 ConDigital 3272 10-DEC-2013 15:55:52.77
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn345"
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn356"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_point = 1
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp10"
-                Attr dest_point = 1
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp9"
+                Attr source_point = 2
+                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And25"
+                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitH_Current_AlarmFo"
                 Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.265000e+01
+                  Attr x = 1.752889e+00
+                  Attr y = 1.385000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.095000e+00
-                  Attr y = 1.265000e+01
+                  Attr x = 1.811444e+00
+                  Attr y = 1.385000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.095000e+00
-                  Attr y = 1.275000e+01
+                  Attr x = 1.811444e+00
+                  Attr y = 1.380000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.275000e+01
+                  Attr x = 1.870000e+00
+                  Attr y = 1.380000e+01
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -39574,33 +39853,32 @@ Low = 0"
               EndBuffer
             EndBody
           EndObject
-          Object cn344 ConDigital 2901 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+          Object cn355 ConDigital 3270 10-DEC-2013 15:55:38.18
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn344"
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn355"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_point = 1
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp4"
-                Attr dest_point = 1
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp10"
+                Attr source_point = 2
+                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And23"
+                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitL_Voltage_AlarmFo"
                 Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.255000e+01
+                  Attr x = 1.752889e+00
+                  Attr y = 1.375000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.152399e+00
-                  Attr y = 1.255000e+01
+                  Attr x = 1.782167e+00
+                  Attr y = 1.375000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.152399e+00
-                  Attr y = 1.265000e+01
+                  Attr x = 1.782167e+00
+                  Attr y = 1.370000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.265000e+01
+                  Attr x = 1.870000e+00
+                  Attr y = 1.370000e+01
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -39618,115 +39896,32 @@ Low = 0"
               EndBuffer
             EndBody
           EndObject
-          Object cn342 ConAnalog 2902 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+          Object cn354 ConDigital 3268 10-DEC-2013 15:54:43.78
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn342"
-                Attr object_type = 24
-                Attr cid = "pwrb:Class-ConAnalog"
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn354"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp7"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp9"
-                Attr point_count = 2
+                Attr source_point = 2
+                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And24"
+                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitH_Voltage_AlarmFo"
+                Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.270000e+01
+                  Attr x = 1.752889e+00
+                  Attr y = 1.365000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.226444e+00
-                  Attr y = 1.270000e+01
+                  Attr x = 1.782194e+00
+                  Attr y = 1.365000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.959500e+00
-                  Attr y = 1.265000e+01
+                  Attr x = 1.782194e+00
+                  Attr y = 1.360000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.070000e+00
-                  Attr y = 1.265000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn341 ConAnalog 2903 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn341"
-                Attr object_type = 24
-                Attr cid = "pwrb:Class-ConAnalog"
-                Attr attributes = 90
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp8"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp10"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.260000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.235333e+00
-                  Attr y = 1.260000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 1.833000e+00
-                  Attr y = 1.255000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 2.070000e+00
-                  Attr y = 1.255000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn340 ConAnalog 2904 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn340"
-                Attr object_type = 24
-                Attr cid = "pwrb:Class-ConAnalog"
-                Attr attributes = 90
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp4"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp6"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 1.222000e+00
-                  Attr y = 1.250000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.250000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 1.584389e+00
-                  Attr y = 1.250000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 1.122000e+00
-                  Attr y = 1.250000e+01
+                  Attr x = 1.870000e+00
+                  Attr y = 1.360000e+01
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -39745,7 +39940,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn337 ConDigital 2905 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn337"
                 Attr object_type = 23
@@ -39756,12 +39951,12 @@ Low = 0"
                 Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp93"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.262000e+00
-                  Attr y = 1.430000e+01
+                  Attr x = 1.302000e+00
+                  Attr y = 1.390000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.570000e+00
-                  Attr y = 1.430000e+01
+                  Attr y = 1.390000e+01
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.376000e+00
@@ -39792,7 +39987,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn336 ConDigital 2906 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn336"
                 Attr object_type = 23
@@ -39803,11 +39998,11 @@ Low = 0"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.570000e+00
-                  Attr y = 1.425000e+01
+                  Attr y = 1.385000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.177556e+00
-                  Attr y = 1.425000e+01
+                  Attr x = 1.213111e+00
+                  Attr y = 1.385000e+01
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.540500e+00
@@ -39834,7 +40029,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn335 ConDigital 2907 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn335"
                 Attr object_type = 23
@@ -39845,12 +40040,12 @@ Low = 0"
                 Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp92"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.257555e+00
-                  Attr y = 1.410000e+01
+                  Attr x = 1.302000e+00
+                  Attr y = 1.370000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.570000e+00
-                  Attr y = 1.410000e+01
+                  Attr y = 1.370000e+01
                 EndBuffer
                 Buffer point[2]
                   Attr x = 5.750000e-01
@@ -39881,7 +40076,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn332 ConDigital 2908 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn332"
                 Attr object_type = 23
@@ -39892,11 +40087,11 @@ Low = 0"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.570000e+00
-                  Attr y = 1.405000e+01
+                  Attr y = 1.365000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.173111e+00
-                  Attr y = 1.405000e+01
+                  Attr x = 1.213111e+00
+                  Attr y = 1.365000e+01
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.544944e+00
@@ -39923,7 +40118,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn331 ConDigital 2909 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn331"
                 Attr object_type = 23
@@ -39934,11 +40129,11 @@ Low = 0"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.570000e+00
-                  Attr y = 1.415000e+01
+                  Attr y = 1.375000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.168667e+00
-                  Attr y = 1.415000e+01
+                  Attr x = 1.206444e+00
+                  Attr y = 1.375000e+01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -39961,7 +40156,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn330 ConDigital 2910 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn330"
                 Attr object_type = 23
@@ -39973,11 +40168,11 @@ Low = 0"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.570000e+00
-                  Attr y = 1.420000e+01
+                  Attr y = 1.380000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.253111e+00
-                  Attr y = 1.420000e+01
+                  Attr x = 1.295333e+00
+                  Attr y = 1.380000e+01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -40000,7 +40195,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn329 ConDigital 2911 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn329"
                 Attr object_type = 23
@@ -40009,22 +40204,22 @@ Low = 0"
                 Attr source_point = 2
                 Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And24"
                 Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-Or18"
-                Attr point_count = 2
+                Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 2.770000e+00
-                  Attr y = 1.405000e+01
+                  Attr x = 1.752889e+00
+                  Attr y = 1.365000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.749000e+00
-                  Attr y = 1.405000e+01
+                  Attr x = 2.716000e+00
+                  Attr y = 1.365000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.200556e+00
-                  Attr y = 7.900000e+00
+                  Attr x = 2.716000e+00
+                  Attr y = 1.370000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.320000e+00
-                  Attr y = 7.900000e+00
+                  Attr x = 2.770000e+00
+                  Attr y = 1.370000e+01
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -40043,7 +40238,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn328 ConDigital 2912 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn328"
                 Attr object_type = 23
@@ -40053,26 +40248,30 @@ Low = 0"
                 Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And23"
                 Attr dest_point = 1
                 Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-Or18"
-                Attr point_count = 4
+                Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.749000e+00
-                  Attr y = 1.415000e+01
+                  Attr x = 2.770000e+00
+                  Attr y = 1.375000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.319451e+00
-                  Attr y = 1.415000e+01
+                  Attr x = 1.752889e+00
+                  Attr y = 1.375000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.319451e+00
-                  Attr y = 1.410000e+01
+                  Attr x = 1.782167e+00
+                  Attr y = 1.397500e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.770000e+00
-                  Attr y = 1.410000e+01
+                  Attr x = 2.743000e+00
+                  Attr y = 1.397500e+01
                 EndBuffer
                 Buffer point[4]
+                  Attr x = 2.743000e+00
+                  Attr y = 1.370000e+01
                 EndBuffer
                 Buffer point[5]
+                  Attr x = 2.770000e+00
+                  Attr y = 1.370000e+01
                 EndBuffer
                 Buffer point[6]
                 EndBuffer
@@ -40087,7 +40286,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn327 ConDigital 2913 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn327"
                 Attr object_type = 23
@@ -40100,19 +40299,19 @@ Low = 0"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 2.770000e+00
-                  Attr y = 1.415000e+01
+                  Attr y = 1.380000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.371125e+00
-                  Attr y = 1.415000e+01
+                  Attr x = 2.590222e+00
+                  Attr y = 1.380000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.371125e+00
-                  Attr y = 1.425000e+01
+                  Attr x = 2.590222e+00
+                  Attr y = 1.385000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 1.749000e+00
-                  Attr y = 1.425000e+01
+                  Attr x = 1.752889e+00
+                  Attr y = 1.385000e+01
                 EndBuffer
                 Buffer point[4]
                   Attr x = 1.909500e+00
@@ -40135,7 +40334,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn326 ConDigital 2914 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn326"
                 Attr object_type = 23
@@ -40147,19 +40346,19 @@ Low = 0"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 3.020000e+00
-                  Attr y = 1.405000e+01
+                  Attr y = 1.370000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 2.949000e+00
-                  Attr y = 1.405000e+01
+                  Attr y = 1.370000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.951000e+00
-                  Attr y = 1.400000e+01
+                  Attr x = 2.984500e+00
+                  Attr y = 1.365000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 3.070000e+00
-                  Attr y = 1.400000e+01
+                  Attr x = 3.020000e+00
+                  Attr y = 1.365000e+01
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -40178,7 +40377,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn325 ConDigital 2915 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn325"
                 Attr object_type = 23
@@ -40190,19 +40389,19 @@ Low = 0"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 2.770000e+00
-                  Attr y = 1.425000e+01
+                  Attr y = 1.390000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.474472e+00
-                  Attr y = 1.425000e+01
+                  Attr x = 2.472583e+00
+                  Attr y = 1.390000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.474472e+00
-                  Attr y = 1.450000e+01
+                  Attr x = 2.472583e+00
+                  Attr y = 1.410000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 9.353333e-01
-                  Attr y = 1.450000e+01
+                  Attr x = 9.508889e-01
+                  Attr y = 1.410000e+01
                 EndBuffer
                 Buffer point[4]
                   Attr x = 3.460333e+00
@@ -40225,7 +40424,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn324 ConDigital 2916 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn324"
                 Attr object_type = 23
@@ -40236,12 +40435,12 @@ Low = 0"
                 Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp86"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.257555e+00
-                  Attr y = 1.440000e+01
+                  Attr x = 1.295333e+00
+                  Attr y = 1.400000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.570000e+00
-                  Attr y = 1.440000e+01
+                  Attr y = 1.400000e+01
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.376000e+00
@@ -40272,7 +40471,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn323 ConDigital 2917 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn323"
                 Attr object_type = 23
@@ -40282,12 +40481,12 @@ Low = 0"
                 Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp87"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.173111e+00
-                  Attr y = 1.435000e+01
+                  Attr x = 1.206444e+00
+                  Attr y = 1.395000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.570000e+00
-                  Attr y = 1.435000e+01
+                  Attr y = 1.395000e+01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -40310,7 +40509,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn322 ConDigital 2918 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn322"
                 Attr object_type = 23
@@ -40322,368 +40521,20 @@ Low = 0"
                 Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-Or18"
                 Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 1.749000e+00
-                  Attr y = 1.435000e+01
+                  Attr x = 1.752889e+00
+                  Attr y = 1.395000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.681167e+00
-                  Attr y = 1.435000e+01
+                  Attr x = 2.741222e+00
+                  Attr y = 1.395000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.681167e+00
-                  Attr y = 1.420000e+01
+                  Attr x = 2.741222e+00
+                  Attr y = 1.385000e+01
                 EndBuffer
                 Buffer point[3]
                   Attr x = 2.770000e+00
-                  Attr y = 1.420000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn321 ConDigital 2919 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn321"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 2
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And24"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup13"
-                Attr point_count = 4
-                Buffer point[0]
-                  Attr x = 1.749000e+00
-                  Attr y = 1.405000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.824625e+00
-                  Attr y = 1.405000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 1.824625e+00
-                  Attr y = 1.400000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 1.870000e+00
-                  Attr y = 1.400000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn320 ConDigital 2920 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn320"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 2
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And23"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup12"
-                Attr point_count = 4
-                Buffer point[0]
-                  Attr x = 1.749000e+00
-                  Attr y = 1.415000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.779250e+00
-                  Attr y = 1.415000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 1.779250e+00
-                  Attr y = 1.410000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 1.870000e+00
-                  Attr y = 1.410000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn319 ConDigital 2921 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn319"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 2
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And25"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup14"
-                Attr point_count = 4
-                Buffer point[0]
-                  Attr x = 1.749000e+00
-                  Attr y = 1.425000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.847312e+00
-                  Attr y = 1.425000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 1.847312e+00
-                  Attr y = 1.420000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 1.870000e+00
-                  Attr y = 1.420000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn318 ConDigital 2922 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn318"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 2
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And22"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup11"
-                Attr point_count = 4
-                Buffer point[0]
-                  Attr x = 1.749000e+00
-                  Attr y = 1.435000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.809500e+00
-                  Attr y = 1.435000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 1.809500e+00
-                  Attr y = 1.430000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 1.870000e+00
-                  Attr y = 1.430000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn295 ConDigital 2923 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn295"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 2
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And17"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup6"
-                Attr point_count = 6
-                Buffer point[0]
-                  Attr x = 1.749000e+00
-                  Attr y = 1.325000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.763200e+00
-                  Attr y = 1.325000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 1.763200e+00
-                  Attr y = 1.326250e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 2.090528e+00
-                  Attr y = 1.326250e+01
-                EndBuffer
-                Buffer point[4]
-                  Attr x = 2.090528e+00
-                  Attr y = 1.320000e+01
-                EndBuffer
-                Buffer point[5]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.320000e+01
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn294 ConDigital 2924 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn294"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 2
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And7"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup3"
-                Attr point_count = 4
-                Buffer point[0]
-                  Attr x = 1.749000e+00
-                  Attr y = 1.315000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.849806e+00
-                  Attr y = 1.315000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 1.849806e+00
-                  Attr y = 1.310000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.310000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn293 ConDigital 2925 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn293"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 2
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And16"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup5"
-                Attr point_count = 4
-                Buffer point[0]
-                  Attr x = 1.749000e+00
-                  Attr y = 1.305000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 2.161200e+00
-                  Attr y = 1.305000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 2.161200e+00
-                  Attr y = 1.300000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.300000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn292 ConDigital 2926 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn292"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 2
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And4"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup0"
-                Attr point_count = 4
-                Buffer point[0]
-                  Attr x = 1.749000e+00
-                  Attr y = 1.295000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 2.152399e+00
-                  Attr y = 1.295000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 2.152399e+00
-                  Attr y = 1.290000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.290000e+01
+                  Attr y = 1.385000e+01
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -40702,7 +40553,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn289 ConDigital 2927 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn289"
                 Attr object_type = 23
@@ -40712,22 +40563,22 @@ Low = 0"
                 Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And17"
                 Attr dest_point = 3
                 Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-Or0"
-                Attr point_count = 6
+                Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 1.749000e+00
-                  Attr y = 1.325000e+01
+                  Attr x = 1.752889e+00
+                  Attr y = 1.285000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.777399e+00
-                  Attr y = 1.325000e+01
+                  Attr x = 2.678889e+00
+                  Attr y = 1.285000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.777399e+00
-                  Attr y = 1.326250e+01
+                  Attr x = 2.678889e+00
+                  Attr y = 1.310000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.716000e+00
-                  Attr y = 1.326250e+01
+                  Attr x = 2.770000e+00
+                  Attr y = 1.310000e+01
                 EndBuffer
                 Buffer point[4]
                   Attr x = 2.716000e+00
@@ -40750,7 +40601,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn288 ConDigital 2928 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn288"
                 Attr object_type = 23
@@ -40760,12 +40611,12 @@ Low = 0"
                 Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp75"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.186444e+00
-                  Attr y = 1.325000e+01
+                  Attr x = 1.219778e+00
+                  Attr y = 1.285000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.570000e+00
-                  Attr y = 1.325000e+01
+                  Attr y = 1.285000e+01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -40788,7 +40639,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn287 ConDigital 2929 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn287"
                 Attr object_type = 23
@@ -40799,12 +40650,12 @@ Low = 0"
                 Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp76"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.270889e+00
-                  Attr y = 1.330000e+01
+                  Attr x = 1.308667e+00
+                  Attr y = 1.290000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.570000e+00
-                  Attr y = 1.330000e+01
+                  Attr y = 1.290000e+01
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.376000e+00
@@ -40835,7 +40686,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn286 ConDigital 2930 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn286"
                 Attr object_type = 23
@@ -40850,16 +40701,16 @@ Low = 0"
                   Attr y = 1.315000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.978056e+00
+                  Attr x = 1.260444e+00
                   Attr y = 1.315000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.978056e+00
-                  Attr y = 1.340000e+01
+                  Attr x = 1.260444e+00
+                  Attr y = 1.300000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 9.353333e-01
-                  Attr y = 1.340000e+01
+                  Attr x = 9.508889e-01
+                  Attr y = 1.300000e+01
                 EndBuffer
                 Buffer point[4]
                   Attr x = 3.460333e+00
@@ -40882,7 +40733,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn283 ConDigital 2931 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn283"
                 Attr object_type = 23
@@ -40894,15 +40745,15 @@ Low = 0"
                 Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-Or0"
                 Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 1.749000e+00
-                  Attr y = 1.305000e+01
+                  Attr x = 1.752889e+00
+                  Attr y = 1.265000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.599779e+00
-                  Attr y = 1.305000e+01
+                  Attr x = 2.724444e+00
+                  Attr y = 1.265000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.599779e+00
+                  Attr x = 2.724444e+00
                   Attr y = 1.300000e+01
                 EndBuffer
                 Buffer point[3]
@@ -40926,7 +40777,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn282 ConDigital 2932 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn282"
                 Attr object_type = 23
@@ -40936,22 +40787,22 @@ Low = 0"
                 Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-Or0"
                 Attr dest_point = 2
                 Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And7"
-                Attr point_count = 6
+                Attr point_count = 4
                 Buffer point[0]
                   Attr x = 2.770000e+00
                   Attr y = 1.305000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.629557e+00
+                  Attr x = 1.794681e+00
                   Attr y = 1.305000e+01
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.629557e+00
-                  Attr y = 1.324361e+01
+                  Attr x = 1.794681e+00
+                  Attr y = 1.275000e+01
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 1.777399e+00
-                  Attr y = 1.324361e+01
+                  Attr x = 1.749000e+00
+                  Attr y = 1.275000e+01
                 EndBuffer
                 Buffer point[4]
                   Attr x = 1.777399e+00
@@ -40974,7 +40825,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn279 ConDigital 2933 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn279"
                 Attr object_type = 23
@@ -40986,11 +40837,11 @@ Low = 0"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.570000e+00
-                  Attr y = 1.310000e+01
+                  Attr y = 1.270000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.266444e+00
-                  Attr y = 1.310000e+01
+                  Attr x = 1.308667e+00
+                  Attr y = 1.270000e+01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -41013,7 +40864,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn278 ConDigital 2934 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn278"
                 Attr object_type = 23
@@ -41024,11 +40875,11 @@ Low = 0"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.570000e+00
-                  Attr y = 1.305000e+01
+                  Attr y = 1.265000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.182000e+00
-                  Attr y = 1.305000e+01
+                  Attr x = 1.219778e+00
+                  Attr y = 1.265000e+01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -41051,7 +40902,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn277 ConDigital 2935 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn277"
                 Attr object_type = 23
@@ -41062,11 +40913,11 @@ Low = 0"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.570000e+00
-                  Attr y = 1.295000e+01
+                  Attr y = 1.255000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.190889e+00
-                  Attr y = 1.295000e+01
+                  Attr x = 1.233111e+00
+                  Attr y = 1.255000e+01
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.544944e+00
@@ -41075,50 +40926,6 @@ Low = 0"
                 Buffer point[3]
                   Attr x = 1.570000e+00
                   Attr y = 1.280000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn270 ConDigital 2936 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn270"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 1
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp4"
-                Attr dest_point = 1
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp0"
-                Attr point_count = 4
-                Buffer point[0]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.255000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 2.152399e+00
-                  Attr y = 1.255000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 2.152399e+00
-                  Attr y = 1.245000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.245000e+01
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -44126,7 +43933,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn79 ConDigital 3008 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.57
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn79"
                 Attr object_type = 23
@@ -44137,12 +43944,12 @@ Low = 0"
                 Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp31"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.275333e+00
-                  Attr y = 1.300000e+01
+                  Attr x = 1.322000e+00
+                  Attr y = 1.260000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.570000e+00
-                  Attr y = 1.300000e+01
+                  Attr y = 1.260000e+01
                 EndBuffer
                 Buffer point[2]
                   Attr x = 5.750000e-01
@@ -44173,7 +43980,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn70 ConDigital 3009 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.57
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn70"
                 Attr object_type = 23
@@ -44184,11 +43991,11 @@ Low = 0"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.570000e+00
-                  Attr y = 1.315000e+01
+                  Attr y = 1.275000e+01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.195333e+00
-                  Attr y = 1.315000e+01
+                  Attr x = 1.233111e+00
+                  Attr y = 1.275000e+01
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.540500e+00
@@ -44215,7 +44022,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn68 ConDigital 3010 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.57
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn68"
                 Attr object_type = 23
@@ -44226,12 +44033,12 @@ Low = 0"
                 Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp34"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.279778e+00
-                  Attr y = 1.320000e+01
+                  Attr x = 1.322000e+00
+                  Attr y = 1.280000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.570000e+00
-                  Attr y = 1.320000e+01
+                  Attr y = 1.280000e+01
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.376000e+00
@@ -44262,7 +44069,7 @@ Low = 0"
             EndBody
           EndObject
           Object cn67 ConDigital 3011 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.57
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn67"
                 Attr object_type = 23
@@ -44271,107 +44078,22 @@ Low = 0"
                 Attr source_point = 2
                 Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And4"
                 Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-Or0"
-                Attr point_count = 2
+                Attr point_count = 4
                 Buffer point[0]
+                  Attr x = 1.749000e+00
+                  Attr y = 1.255000e+01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.749444e+00
+                  Attr y = 1.255000e+01
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.749444e+00
+                  Attr y = 1.295000e+01
+                EndBuffer
+                Buffer point[3]
                   Attr x = 2.770000e+00
                   Attr y = 1.295000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.749000e+00
-                  Attr y = 1.295000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 2.200556e+00
-                  Attr y = 7.900000e+00
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 2.320000e+00
-                  Attr y = 7.900000e+00
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn61 ConAnalog 3012 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.57
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn61"
-                Attr object_type = 24
-                Attr cid = "pwrb:Class-ConAnalog"
-                Attr attributes = 90
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp0"
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp0"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.240000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.230889e+00
-                  Attr y = 1.240000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 1.577667e+00
-                  Attr y = 1.235000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 2.070000e+00
-                  Attr y = 1.235000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn60 ConDigital 3013 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.57
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-cn60"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-FirstScan17"
-                Attr dest_point = 1
-                Attr dest_oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp0"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 2.170000e+00
-                  Attr y = 1.245000e+01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 8.800000e-01
-                  Attr y = 1.245000e+01
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 2.042375e+00
-                  Attr y = 1.240000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 2.070000e+00
-                  Attr y = 1.240000e+01
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -46982,44 +46704,6 @@ Alarm HH, H, L, LL"
               EndBuffer
             EndBody
           EndObject
-          Object DSup0 DSup 3113 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-              Attr DetectText = "Alarm HH"
-              Attr MoreText = ""
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.57
-              Attr LockAttribute = 1
-              Buffer PlcNode
-                Attr object_type = 99
-                Attr cid = "pwrb:Class-DSup"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup0"
-                Attr x = 2.150000e+00
-                Attr y = -1.192500e+01
-                Attr width = 4.000000e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object GetSp0 GetSp 3114 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
-              Attr SpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitHH_Voltage.AlarmText"
-              Buffer PlcNode
-                Attr object_type = 263
-                Attr cid = "pwrb:Class-GetSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp0"
-                Attr x = 6.000000e-01
-                Attr y = -1.137500e+01
-                Attr width = 5.808889e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
           Object BodyText8 BodyText 3115 12-JUL-2012 07:53:40.56
             Body DevBody 12-JUL-2012 07:53:40.57
               Attr TextAttribute = 3
@@ -47058,53 +46742,33 @@ Alarm HH, H, L, LL"
           Object GetDp27 GetDp 3117 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitHH_Voltage.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp27"
                 Attr x = 6.500000e-01
-                Attr y = -1.197500e+01
-                Attr width = 5.408888e-01
+                Attr y = -1.157500e+01
+                Attr width = 5.831111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object DSup3 DSup 3118 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-              Attr DetectText = "Alarm HH"
-              Attr MoreText = ""
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.57
-              Attr LockAttribute = 1
-              Buffer PlcNode
-                Attr object_type = 99
-                Attr cid = "pwrb:Class-DSup"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup3"
-                Attr x = 2.150000e+00
-                Attr y = -1.212500e+01
-                Attr width = 4.000000e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 1
-              EndBuffer
-            EndBody
-          EndObject
           Object GetDp30 GetDp 3119 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitHH_Current.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp30"
                 Attr x = 6.500000e-01
-                Attr y = -1.217500e+01
-                Attr width = 5.453333e-01
+                Attr y = -1.177500e+01
+                Attr width = 5.831111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
@@ -47166,13 +46830,13 @@ Alarm HH, H, L, LL"
           Object And4 And 3123 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 07:53:40.57
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And4"
                 Attr x = 1.550000e+00
-                Attr y = -1.202500e+01
+                Attr y = -1.162500e+01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
@@ -47185,15 +46849,15 @@ Alarm HH, H, L, LL"
           Object GetDp31 GetDp 3124 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitHH_Voltage.DisableAlarm"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp31"
                 Attr x = 6.500000e-01
-                Attr y = -1.202500e+01
-                Attr width = 6.253333e-01
+                Attr y = -1.162500e+01
+                Attr width = 6.720000e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
@@ -47203,13 +46867,13 @@ Alarm HH, H, L, LL"
           Object And7 And 3125 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 07:53:40.57
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And7"
                 Attr x = 1.550000e+00
-                Attr y = -1.222500e+01
+                Attr y = -1.182500e+01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
@@ -47222,15 +46886,15 @@ Alarm HH, H, L, LL"
           Object GetDp34 GetDp 3126 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitHH_Current.DisableAlarm"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp34"
                 Attr x = 6.500000e-01
-                Attr y = -1.222500e+01
-                Attr width = 6.297777e-01
+                Attr y = -1.182500e+01
+                Attr width = 6.720000e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
@@ -47240,53 +46904,18 @@ Alarm HH, H, L, LL"
           Object GetDp35 GetDp 3127 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcFo:OtherManufacturer-Class-Janitza_UMG96S_1Fo.Error"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp35"
                 Attr x = 6.500000e-01
-                Attr y = -1.242500e+01
-                Attr width = 2.853333e-01
+                Attr y = -1.202500e+01
+                Attr width = 3.008889e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object FirstScan17 FirstScan 3128 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.57
-              Buffer PlcNode
-                Attr object_type = 11
-                Attr cid = "pwrb:Class-FirstScan"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-FirstScan17"
-                Attr x = 6.000000e-01
-                Attr y = -1.142500e+01
-                Attr width = 2.300000e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object CStoSp0 CStoSp 3129 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.57
-              Attr Object = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup0.DetectText"
-              Buffer PlcNode
-                Attr object_type = 265
-                Attr cid = "pwrb:Class-CStoSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp0"
-                Attr x = 2.150000e+00
-                Attr y = -1.142500e+01
-                Attr width = 4.200000e-01
-                Attr heigth = 1.000000e-01
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 3
               EndBuffer
             EndBody
           EndObject
@@ -48884,36 +48513,18 @@ Alarm HH, H, L, LL"
               EndBuffer
             EndBody
           EndObject
-          Object CStoSp4 CStoSp 3218 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Attr Object = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup5.DetectText"
-              Buffer PlcNode
-                Attr object_type = 265
-                Attr cid = "pwrb:Class-CStoSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp4"
-                Attr x = 2.150000e+00
-                Attr y = -1.152500e+01
-                Attr width = 4.200000e-01
-                Attr heigth = 1.000000e-01
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 3
-              EndBuffer
-            EndBody
-          EndObject
           Object GetDp73 GetDp 3219 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitLL_Voltage.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp73"
                 Attr x = 6.500000e-01
-                Attr y = -1.207500e+01
-                Attr width = 5.320000e-01
+                Attr y = -1.167500e+01
+                Attr width = 5.697777e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
@@ -48923,15 +48534,15 @@ Alarm HH, H, L, LL"
           Object GetDp74 GetDp 3220 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitLL_Voltage.DisableAlarm"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp74"
                 Attr x = 6.500000e-01
-                Attr y = -1.212500e+01
-                Attr width = 6.164444e-01
+                Attr y = -1.172500e+01
+                Attr width = 6.586667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
@@ -48941,14 +48552,14 @@ Alarm HH, H, L, LL"
           Object And16 And 3221 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And16"
                 Attr x = 1.550000e+00
-                Attr y = -1.212500e+01
-                Attr width = 1.790000e-01
+                Attr y = -1.172500e+01
+                Attr width = 1.828889e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[0] = 3
@@ -48957,38 +48568,18 @@ Alarm HH, H, L, LL"
               EndBuffer
             EndBody
           EndObject
-          Object DSup5 DSup 3222 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-              Attr DetectText = "Alarm LL"
-              Attr MoreText = ""
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Attr LockAttribute = 1
-              Buffer PlcNode
-                Attr object_type = 99
-                Attr cid = "pwrb:Class-DSup"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup5"
-                Attr x = 2.150000e+00
-                Attr y = -1.202500e+01
-                Attr width = 3.911111e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 1
-              EndBuffer
-            EndBody
-          EndObject
           Object GetDp75 GetDp 3223 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitLL_Current.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp75"
                 Attr x = 6.500000e-01
-                Attr y = -1.227500e+01
-                Attr width = 5.364444e-01
+                Attr y = -1.187500e+01
+                Attr width = 5.697777e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
@@ -48998,14 +48589,14 @@ Alarm HH, H, L, LL"
           Object And17 And 3224 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And17"
                 Attr x = 1.550000e+00
-                Attr y = -1.232500e+01
-                Attr width = 1.790000e-01
+                Attr y = -1.192500e+01
+                Attr width = 1.828889e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[0] = 3
@@ -49017,38 +48608,18 @@ Alarm HH, H, L, LL"
           Object GetDp76 GetDp 3225 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitLL_Current.DisableAlarm"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp76"
                 Attr x = 6.500000e-01
-                Attr y = -1.232500e+01
-                Attr width = 6.208889e-01
+                Attr y = -1.192500e+01
+                Attr width = 6.586667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object DSup6 DSup 3226 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-              Attr DetectText = "Alarm LL"
-              Attr MoreText = ""
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Attr LockAttribute = 1
-              Buffer PlcNode
-                Attr object_type = 99
-                Attr cid = "pwrb:Class-DSup"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup6"
-                Attr x = 2.150000e+00
-                Attr y = -1.222500e+01
-                Attr width = 3.911111e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
@@ -49068,38 +48639,18 @@ Alarm HH, H, L, LL"
               Attr Text = "H L"
             EndBody
           EndObject
-          Object DSup11 DSup 3228 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-              Attr DetectText = "Alarm L"
-              Attr MoreText = ""
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Attr LockAttribute = 1
-              Buffer PlcNode
-                Attr object_type = 99
-                Attr cid = "pwrb:Class-DSup"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup11"
-                Attr x = 1.850000e+00
-                Attr y = -1.332500e+01
-                Attr width = 3.933333e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 1
-              EndBuffer
-            EndBody
-          EndObject
           Object GetDp86 GetDp 3229 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitL_Current.DisableAlarm"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp86"
                 Attr x = 6.500000e-01
-                Attr y = -1.342500e+01
-                Attr width = 6.075555e-01
+                Attr y = -1.302500e+01
+                Attr width = 6.453333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
@@ -49109,14 +48660,14 @@ Alarm HH, H, L, LL"
           Object And22 And 3230 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And22"
                 Attr x = 1.550000e+00
-                Attr y = -1.342500e+01
-                Attr width = 1.790000e-01
+                Attr y = -1.302500e+01
+                Attr width = 1.828889e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[0] = 3
@@ -49128,15 +48679,15 @@ Alarm HH, H, L, LL"
           Object GetDp87 GetDp 3231 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitL_Current.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp87"
                 Attr x = 6.500000e-01
-                Attr y = -1.337500e+01
-                Attr width = 5.231111e-01
+                Attr y = -1.297500e+01
+                Attr width = 5.564444e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
@@ -49146,13 +48697,13 @@ Alarm HH, H, L, LL"
           Object Or18 Or 3232 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcNode
                 Attr object_type = 91
                 Attr cid = "pwrb:Class-Or"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-Or18"
                 Attr x = 2.750000e+00
-                Attr y = -1.327500e+01
+                Attr y = -1.292500e+01
                 Attr width = 1.790000e-01
                 Attr heigth = 2.500000e-01
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
@@ -49161,37 +48712,17 @@ Alarm HH, H, L, LL"
               EndBuffer
             EndBody
           EndObject
-          Object DSup12 DSup 3233 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-              Attr DetectText = "Alarm L"
-              Attr MoreText = ""
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Attr LockAttribute = 1
-              Buffer PlcNode
-                Attr object_type = 99
-                Attr cid = "pwrb:Class-DSup"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup12"
-                Attr x = 1.850000e+00
-                Attr y = -1.312500e+01
-                Attr width = 3.933333e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 1
-              EndBuffer
-            EndBody
-          EndObject
           Object And23 And 3234 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And23"
                 Attr x = 1.550000e+00
-                Attr y = -1.322500e+01
-                Attr width = 1.790000e-01
+                Attr y = -1.282500e+01
+                Attr width = 1.828889e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[0] = 3
@@ -49203,15 +48734,15 @@ Alarm HH, H, L, LL"
           Object GetDp88 GetDp 3235 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitL_Voltage.DisableAlarm"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp88"
                 Attr x = 6.500000e-01
-                Attr y = -1.322500e+01
-                Attr width = 6.031111e-01
+                Attr y = -1.282500e+01
+                Attr width = 6.453333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
@@ -49221,91 +48752,51 @@ Alarm HH, H, L, LL"
           Object GetDp89 GetDp 3236 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitL_Voltage.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp89"
                 Attr x = 6.500000e-01
-                Attr y = -1.317500e+01
-                Attr width = 5.186667e-01
+                Attr y = -1.277500e+01
+                Attr width = 5.564444e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object DSup13 DSup 3237 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-              Attr DetectText = "Alarm H"
-              Attr MoreText = ""
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Attr LockAttribute = 1
-              Buffer PlcNode
-                Attr object_type = 99
-                Attr cid = "pwrb:Class-DSup"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup13"
-                Attr x = 1.850000e+00
-                Attr y = -1.302500e+01
-                Attr width = 3.977778e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
           Object GetDp90 GetDp 3238 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitH_Voltage.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp90"
                 Attr x = 6.500000e-01
-                Attr y = -1.307500e+01
-                Attr width = 5.231111e-01
+                Attr y = -1.267500e+01
+                Attr width = 5.631111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object DSup14 DSup 3239 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-              Attr DetectText = "Alarm H"
-              Attr MoreText = ""
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Attr LockAttribute = 1
-              Buffer PlcNode
-                Attr object_type = 99
-                Attr cid = "pwrb:Class-DSup"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup14"
-                Attr x = 1.850000e+00
-                Attr y = -1.322500e+01
-                Attr width = 3.977778e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 1
-              EndBuffer
-            EndBody
-          EndObject
           Object GetDp91 GetDp 3240 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitH_Current.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp91"
                 Attr x = 6.500000e-01
-                Attr y = -1.327500e+01
-                Attr width = 5.275555e-01
+                Attr y = -1.287500e+01
+                Attr width = 5.631111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
@@ -49313,15 +48804,15 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText47 BodyText 3241 12-JUL-2012 07:53:40.56
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-BodyText47"
                 Attr x = 3.100000e+00
-                Attr y = -1.296900e+01
-                Attr width = 1.346667e-01
+                Attr y = -1.256900e+01
+                Attr width = 1.413333e-01
                 Attr heigth = 9.400000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
               EndBuffer
@@ -49331,15 +48822,15 @@ Alarm HH, H, L, LL"
           Object StoDp39 StoDp 3242 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr Object = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.IndWarning"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-StoDp39"
                 Attr x = 3.000000e+00
-                Attr y = -1.307500e+01
-                Attr width = 4.363333e-01
+                Attr y = -1.272500e+01
+                Attr width = 4.674444e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[0] = 1
@@ -49349,14 +48840,14 @@ Alarm HH, H, L, LL"
           Object And24 And 3243 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And24"
                 Attr x = 1.550000e+00
-                Attr y = -1.312500e+01
-                Attr width = 1.790000e-01
+                Attr y = -1.272500e+01
+                Attr width = 1.828889e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[0] = 3
@@ -49368,15 +48859,15 @@ Alarm HH, H, L, LL"
           Object GetDp92 GetDp 3244 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitH_Voltage.DisableAlarm"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp92"
                 Attr x = 6.500000e-01
-                Attr y = -1.312500e+01
-                Attr width = 6.075555e-01
+                Attr y = -1.272500e+01
+                Attr width = 6.520000e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
@@ -49386,14 +48877,14 @@ Alarm HH, H, L, LL"
           Object And25 And 3245 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-And25"
                 Attr x = 1.550000e+00
-                Attr y = -1.332500e+01
-                Attr width = 1.790000e-01
+                Attr y = -1.292500e+01
+                Attr width = 1.828889e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[0] = 3
@@ -49405,15 +48896,15 @@ Alarm HH, H, L, LL"
           Object GetDp93 GetDp 3246 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitH_Current.DisableAlarm"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp93"
                 Attr x = 6.500000e-01
-                Attr y = -1.332500e+01
-                Attr width = 6.120000e-01
+                Attr y = -1.292500e+01
+                Attr width = 6.520000e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
@@ -49423,33 +48914,15 @@ Alarm HH, H, L, LL"
           Object GetDp94 GetDp 3247 12-JUL-2012 07:53:40.56
             Body RtBody 12-JUL-2012 07:53:40.56
             EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
+            Body DevBody 10-DEC-2013 16:00:21.67
               Attr DpObject = "$PlcFo:OtherManufacturer-Class-Janitza_UMG96S_1Fo.Error"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetDp94"
                 Attr x = 6.500000e-01
-                Attr y = -1.352500e+01
-                Attr width = 2.853333e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object GetSp6 GetSp 3248 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
-              Attr SpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitLL_Voltage.AlarmText"
-              Buffer PlcNode
-                Attr object_type = 263
-                Attr cid = "pwrb:Class-GetSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp6"
-                Attr x = 6.000000e-01
-                Attr y = -1.147500e+01
-                Attr width = 5.720000e-01
+                Attr y = -1.312500e+01
+                Attr width = 3.008889e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
                 Attr mask[1] = 1
@@ -49472,236 +48945,147 @@ Alarm HH, H, L, LL"
               Attr Text = "HH LL"
             EndBody
           EndObject
-          Object CStoSp9 CStoSp 3250 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
+          Object LimitH_Voltage_AlarmFo DSupCompFo 3267 10-DEC-2013 15:54:30.91
+            Body RtBody 10-DEC-2013 15:53:53.66
+              Attr PlcConnect = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitH_Voltage.Alarm"
             EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Attr Object = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup6.DetectText"
-              Buffer PlcNode
-                Attr object_type = 265
-                Attr cid = "pwrb:Class-CStoSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp9"
-                Attr x = 2.150000e+00
-                Attr y = -1.172500e+01
-                Attr width = 4.200000e-01
-                Attr heigth = 1.000000e-01
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 3
-              EndBuffer
-            EndBody
-          EndObject
-          Object CStoSp10 CStoSp 3251 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Attr Object = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup3.DetectText"
-              Buffer PlcNode
-                Attr object_type = 265
-                Attr cid = "pwrb:Class-CStoSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp10"
-                Attr x = 2.150000e+00
-                Attr y = -1.162500e+01
-                Attr width = 4.200000e-01
-                Attr heigth = 1.000000e-01
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 3
-              EndBuffer
-            EndBody
-          EndObject
-          Object GetSp7 GetSp 3252 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
-              Attr SpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitLL_Current.AlarmText"
-              Buffer PlcNode
-                Attr object_type = 263
-                Attr cid = "pwrb:Class-GetSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp7"
-                Attr x = 6.000000e-01
-                Attr y = -1.167500e+01
-                Attr width = 5.764444e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object GetSp8 GetSp 3253 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
-              Attr SpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitHH_Current.AlarmText"
-              Buffer PlcNode
-                Attr object_type = 263
-                Attr cid = "pwrb:Class-GetSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp8"
-                Attr x = 6.000000e-01
-                Attr y = -1.157500e+01
-                Attr width = 5.853333e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object CStoSp11 CStoSp 3254 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Attr Object = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup11.DetectText"
-              Buffer PlcNode
-                Attr object_type = 265
-                Attr cid = "pwrb:Class-CStoSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp11"
-                Attr x = 2.150000e+00
-                Attr y = -1.287500e+01
-                Attr width = 4.355556e-01
-                Attr heigth = 1.000000e-01
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 3
-              EndBuffer
-            EndBody
-          EndObject
-          Object CStoSp12 CStoSp 3255 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Attr Object = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup14.DetectText"
-              Buffer PlcNode
-                Attr object_type = 265
-                Attr cid = "pwrb:Class-CStoSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp12"
-                Attr x = 2.150000e+00
-                Attr y = -1.277500e+01
-                Attr width = 4.355556e-01
-                Attr heigth = 1.000000e-01
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 3
-              EndBuffer
-            EndBody
-          EndObject
-          Object CStoSp13 CStoSp 3256 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Attr Object = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup12.DetectText"
-              Buffer PlcNode
-                Attr object_type = 265
-                Attr cid = "pwrb:Class-CStoSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp13"
-                Attr x = 2.150000e+00
-                Attr y = -1.267500e+01
-                Attr width = 4.355556e-01
-                Attr heigth = 1.000000e-01
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 3
-              EndBuffer
-            EndBody
-          EndObject
-          Object GetSp9 GetSp 3257 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
-              Attr SpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitH_Current.AlarmText"
-              Buffer PlcNode
-                Attr object_type = 263
-                Attr cid = "pwrb:Class-GetSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp9"
-                Attr x = 6.000000e-01
-                Attr y = -1.272500e+01
-                Attr width = 5.675555e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object GetSp10 GetSp 3258 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
-              Attr SpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitL_Current.AlarmText"
-              Buffer PlcNode
-                Attr object_type = 263
-                Attr cid = "pwrb:Class-GetSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp10"
-                Attr x = 6.000000e-01
-                Attr y = -1.282500e+01
-                Attr width = 5.631111e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object GetSp11 GetSp 3259 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
-              Attr SpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitL_Voltage.AlarmText"
-              Buffer PlcNode
-                Attr object_type = 263
-                Attr cid = "pwrb:Class-GetSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp11"
-                Attr x = 6.000000e-01
-                Attr y = -1.262500e+01
-                Attr width = 5.586666e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object GetSp12 GetSp 3260 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 08:49:04.08
-              Attr SpObject = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitH_Voltage.AlarmText"
-              Buffer PlcNode
-                Attr object_type = 263
-                Attr cid = "pwrb:Class-GetSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-GetSp12"
-                Attr x = 6.000000e-01
-                Attr y = -1.252500e+01
-                Attr width = 5.631111e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object FirstScan51 FirstScan 3261 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
-            EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcNode
                 Attr object_type = 11
-                Attr cid = "pwrb:Class-FirstScan"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-FirstScan51"
-                Attr x = 6.000000e-01
+                Attr cid = "pwrb:Class-DSupCompFo"
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitH_Voltage_AlarmFo"
+                Attr x = 1.850000e+00
                 Attr y = -1.257500e+01
-                Attr width = 2.300000e-01
+                Attr width = 5.924444e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[1] = 1
+                Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object CStoSp14 CStoSp 3262 12-JUL-2012 07:53:40.56
-            Body RtBody 12-JUL-2012 07:53:40.56
+          Object LimitL_Voltage_AlarmFo DSupCompFo 3269 10-DEC-2013 15:55:32.25
+            Body RtBody 10-DEC-2013 15:55:25.38
+              Attr PlcConnect = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitL_Voltage.Alarm"
             EndBody
-            Body DevBody 12-JUL-2012 07:53:40.58
-              Attr Object = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-DSup13.DetectText"
+            Body DevBody 10-DEC-2013 16:00:21.67
               Buffer PlcNode
-                Attr object_type = 265
-                Attr cid = "pwrb:Class-CStoSp"
-                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-CStoSp14"
-                Attr x = 2.150000e+00
-                Attr y = -1.257500e+01
-                Attr width = 4.355556e-01
-                Attr heigth = 1.000000e-01
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-DSupCompFo"
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitL_Voltage_AlarmFo"
+                Attr x = 1.850000e+00
+                Attr y = -1.267500e+01
+                Attr width = 5.857778e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
-                Attr mask[0] = 3
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object LimitH_Current_AlarmFo DSupCompFo 3271 10-DEC-2013 15:56:12.64
+            Body RtBody 10-DEC-2013 15:56:23.80
+              Attr PlcConnect = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitH_Current.Alarm"
+            EndBody
+            Body DevBody 10-DEC-2013 16:00:21.67
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-DSupCompFo"
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitH_Current_AlarmFo"
+                Attr x = 1.850000e+00
+                Attr y = -1.277500e+01
+                Attr width = 5.924444e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object LimitL_Current_AlarmFo DSupCompFo 3273 10-DEC-2013 15:56:47.57
+            Body RtBody 10-DEC-2013 15:57:03.12
+              Attr PlcConnect = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitL_Current.Alarm"
+            EndBody
+            Body DevBody 10-DEC-2013 16:00:21.67
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-DSupCompFo"
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitL_Current_AlarmFo"
+                Attr x = 1.850000e+00
+                Attr y = -1.287500e+01
+                Attr width = 5.857778e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object LimitHH_Voltage_AlarmFo DSupCompFo 3275 10-DEC-2013 15:58:17.72
+            Body RtBody 10-DEC-2013 15:58:29.45
+              Attr PlcConnect = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitHH_Voltage.Alarm"
+            EndBody
+            Body DevBody 10-DEC-2013 16:00:21.67
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-DSupCompFo"
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitHH_Voltage_AlarmFo"
+                Attr x = 2.150000e+00
+                Attr y = -1.147500e+01
+                Attr width = 6.124444e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object LimitLL_Voltage_AlarmFo DSupCompFo 3277 10-DEC-2013 15:58:52.72
+            Body RtBody 10-DEC-2013 15:58:59.84
+              Attr PlcConnect = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitLL_Voltage.Alarm"
+            EndBody
+            Body DevBody 10-DEC-2013 16:00:21.67
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-DSupCompFo"
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitLL_Voltage_AlarmFo"
+                Attr x = 2.150000e+00
+                Attr y = -1.157500e+01
+                Attr width = 5.991111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object LimitHH_Current_AlarmFo DSupCompFo 3279 10-DEC-2013 15:59:34.63
+            Body RtBody 10-DEC-2013 15:59:44.11
+              Attr PlcConnect = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitHH_Current.Alarm"
+            EndBody
+            Body DevBody 10-DEC-2013 16:00:21.67
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-DSupCompFo"
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitHH_Current_AlarmFo"
+                Attr x = 2.150000e+00
+                Attr y = -1.167500e+01
+                Attr width = 6.124444e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object LimitLL_Current_AlarmFo DSupCompFo 3281 10-DEC-2013 15:59:58.57
+            Body RtBody 10-DEC-2013 16:00:05.11
+              Attr PlcConnect = "$PlcMain:OtherManufacturer-Class-Janitza_UMG96S_1.LimitLL_Current.Alarm"
+            EndBody
+            Body DevBody 10-DEC-2013 16:00:21.67
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-DSupCompFo"
+                Attr oid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W-LimitLL_Current_AlarmFo"
+                Attr x = 2.150000e+00
+                Attr y = -1.177500e+01
+                Attr width = 5.991111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Janitza_UMG96S_1Fo-Code-W"
+                Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject

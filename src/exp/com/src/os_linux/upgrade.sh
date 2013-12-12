@@ -576,7 +576,7 @@ usage()
 {
   cat << EOF
 
-  upgrade.sh  Upgrade from V4.7.0 to V4.7.1
+  upgrade.sh  Upgrade from V5.0.0 to V5.1.0
 
 
   Pass

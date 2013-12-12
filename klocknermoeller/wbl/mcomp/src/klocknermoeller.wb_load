@@ -37,7 +37,15 @@ Volume KlocknerMoeller $ClassVolume 0.0.250.6
         Body RtBody
           Attr Super.Super.Specification = "Klockner Moeller type PKZ"
           Attr Super.NotTripped.Description = "CircuitBreaker is tripped"
-          Attr Super.AlarmText = "Circuit breaker tripped"
+          Attr Super.Alarm.DetectOn = 1
+          Attr Super.Alarm.DetectText = "Circuit breaker tripped"
+          Attr Super.Alarm.EventType = 64
+          Attr Super.Alarm.EventPriority = 67
+          Attr Super.Alarm.EventFlags = 7
+          Attr Super.Alarm.MoreText = ""
+          Attr Super.Alarm.Attribute = "KlocknerMoeller:Class-KM_CircuitBreaker_PKZ-Template"
+          Attr Super.Alarm.CtrlPosition = 1
+          Attr Super.Alarm.LockAttribute = 1
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/km_motor_protective_pkz.pdf"
         EndBody
       EndObject
@@ -77,7 +85,15 @@ Volume KlocknerMoeller $ClassVolume 0.0.250.6
           Attr Super.Feedback.Description = "Contactor is energized"
           Attr Super.Order.Description = "Energize contactor"
           Attr Super.FbTimeLimit = 1.000000e+00
-          Attr Super.AlarmText = "Contactor feedback lost "
+          Attr Super.Alarm.DetectOn = 1
+          Attr Super.Alarm.DetectText = "Contactor feedback lost"
+          Attr Super.Alarm.EventType = 64
+          Attr Super.Alarm.EventPriority = 67
+          Attr Super.Alarm.EventFlags = 7
+          Attr Super.Alarm.MoreText = ""
+          Attr Super.Alarm.Attribute = "KlocknerMoeller:Class-KM_Contactor_PKZ-Template"
+          Attr Super.Alarm.CtrlPosition = 1
+          Attr Super.Alarm.LockAttribute = 1
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/km_motor_protective_pkz.pdf"
         EndBody
       EndObject
