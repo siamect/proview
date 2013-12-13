@@ -2937,10 +2937,10 @@ void GlowDrawGtk::image_scale( int width, int height, glow_tImImage orig_im, glo
       imagefile = rsvg_handle_get_base_uri( handle);
       *im = rsvg_pixbuf_from_file_at_size(imagefile, width, height, NULL);
     }
+    else {
 #else
     {
 #endif
-    else {
       *im = gdk_pixbuf_scale_simple( (GdkPixbuf *)orig_im, width, height, GDK_INTERP_NEAREST);
     }
   }
