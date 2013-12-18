@@ -112,7 +112,6 @@ void GeCurve::activate_export()
   pwr_tTime from = pwr_cNTime;
   double from_time, to_time;
   pwr_tFileName filename;
-  pwr_tFileName dir;
 
   // Get directory from proview.cnf
   if ( !cnf_get_value( "curveExportFile", filename, sizeof(filename)))
