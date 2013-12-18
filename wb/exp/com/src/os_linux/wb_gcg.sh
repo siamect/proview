@@ -271,14 +271,14 @@ let OpSys_X86_LYNX=5
 let OpSys_PPC_LINUX=6
 let OpSys_X86_LINUX=7
 let OpSys_X86_64_LINUX=8
-let OpSys_ARM_LINUX=9
-let OpSys_X86_64_MACOS=10
+let OpSys_X86_64_MACOS=9
+let OpSys_ARM_LINUX=10
 let OpSys_X86_64_FREEBSD=11
 let OpSys_X86_64_OPENBSD=12
 let OpSys_X86_CYGWIN=13
 let OpSys__High=14
 
-vOpSys="custombuild,vax_vms,axp_vms,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux,arm_linux,x86_64_macos,x86_64_freebsd,x86_64_openbsd,x86_cygwin"
+vOpSys="custombuild,vax_vms,axp_vms,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux,x86_64_macos,arm_linux,x86_64_freebsd,x86_64_openbsd,x86_cygwin"
 
 let FileType__Low=-1
 let FileType_Process=0

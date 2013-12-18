@@ -271,10 +271,11 @@ let OpSys_X86_LYNX=5
 let OpSys_PPC_LINUX=6
 let OpSys_X86_LINUX=7
 let OpSys_X86_64_LINUX=8
+let OpSys_X86_64_MACOS=9
 let OpSys_ARM_LINUX=10
 let OpSys__High=11
 
-vOpSys="custombuild,vax_vms,axp_vms,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux,arm_linux"
+vOpSys="custombuild,vax_vms,axp_vms,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux,x86_64_macos,arm_linux"
 
 let FileType__Low=-1
 let FileType_Process=0

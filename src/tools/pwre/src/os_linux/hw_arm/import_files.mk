@@ -79,7 +79,7 @@ op_motif_modules = \
 java_modules = \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_rt.jar \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_jop.jar \
-		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_jopc.jar \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_jopg.jar \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_rt_client.jar
 
 

@@ -2456,6 +2456,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	pwr_tString40 platform;
 	pwr_tString40 release;
 	FILE *fp;
+	char expdir[80];
 
 	// Get NodeName
 	wb_attribute a = sp->attribute( nodeo.oid(), "RtBody", "NodeName");
@@ -2542,10 +2543,24 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	fprintf( fp, "#!/bin/bash\n\n");
 	fprintf( fp, "let OpSys_PPC_LINUX=32\n");
 	fprintf( fp, "let OpSys_X86_LINUX=64\n");
-	fprintf( fp, "let OpSys_ARM_LINUX=256\n\n");
+	fprintf( fp, "let OpSys_ARM_LINUX=512\n\n");
+
+	switch ( opsys) {
+	case pwr_mOpSys_PPC_LINUX:
+	  strcpy( expdir, "os_linux/hw_ppc");
+	  break;
+	case pwr_mOpSys_X86_LINUX:
+	  strcpy( expdir, "os_linux/hw_x86");
+	  break;
+	case pwr_mOpSys_ARM_LINUX:
+	  strcpy( expdir, "os_linux/hw_arm");
+	  break;
+	default: ;
+	  strcpy( expdir, "");
+	}
 
 	if ( strcmp( release, "") != 0)
-	  fprintf( fp, "source $pwra_db/pwra_env.sh set base %s cross\n\n", release);
+	  fprintf( fp, "source $pwra_db/pwra_env.sh set base %s %s\n\n", release, expdir);
 
 	if ( strcmp( cc, "") != 0) {
 	  fprintf( fp, "export pwre_cc=%s\n", cc);
