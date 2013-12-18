@@ -68,7 +68,8 @@ void CoLog::log( const char *category, const char *str, const char *cmt, unsigne
   else if ( m_level == 1 && m_wow && opt & log_mOption_Comment) {
     wow_sModalInputDialog *ret;
 
-    ret = m_wow->CreateModalInputDialog( "Log Comment", "Comment", "Ok", "Cancel", 0, 0, sizeof(comment)-1);
+    ret = m_wow->CreateModalInputDialog( "Log Comment", "Comment", "Ok", "Cancel", 0, 0, sizeof(comment)-1,
+					 m_recall);
     if ( ret->status == wow_eModalDialogReturn_Button1 ||
 	 ret->status == wow_eModalDialogReturn_ReturnPressed)
       strncpy( comment, ret->input_str, sizeof(comment));

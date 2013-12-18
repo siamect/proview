@@ -1347,9 +1347,17 @@ static gboolean modaldia_keypress_cb( GtkWidget *w, GdkEvent *event, gpointer da
   return sts;
 }
 
+static gboolean modaldia_activate_cb( GtkWidget *w, gpointer data)
+{
+  *(int *)data = wow_eModalDialogReturn_ReturnPressed;
+  gtk_main_quit();
+  return FALSE;
+}
+
 wow_sModalInputDialog *CoWowGtk::CreateModalInputDialog( const char *title, const char *text, const char *button1, 
 							 const char *button2, const char *button3,
-							 const char *image, int input_length)
+							 const char *image, int input_length,
+							 CoWowRecall *recall)
 {
   int status = 0;
   GtkWidget *image_w;
@@ -1380,9 +1388,18 @@ wow_sModalInputDialog *CoWowGtk::CreateModalInputDialog( const char *title, cons
 				NULL);
   }
 
-  GtkWidget *textinput = gtk_entry_new_with_max_length( input_length);
-  g_signal_connect( textinput, "key-press-event", 
-  		    G_CALLBACK(modaldia_keypress_cb), &status);
+  GtkWidget *textinput;
+  if ( !recall) {
+    textinput = gtk_entry_new_with_max_length( input_length);
+    g_signal_connect( textinput, "key-press-event", 
+		      G_CALLBACK(modaldia_keypress_cb), &status);
+  }
+  else {
+    CoWowEntryGtk *entry = new CoWowEntryGtk( recall);
+    textinput = entry->widget();
+    g_signal_connect( textinput, "activate", 
+		      G_CALLBACK(modaldia_activate_cb), &status);
+  }
 
   GtkWidget *hboxtext = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(hboxtext), image_w, FALSE, FALSE, 15);

@@ -137,7 +137,8 @@ class CoWow {
   virtual wow_sModalInputDialog *CreateModalInputDialog( const char *title, const char *text, 
 							 const char *button1, const char *button2, 
 							 const char *button3, const char *image, 
-							 int input_length) { return 0;}
+							 int input_length,
+							 CoWowRecall *recall = 0) { return 0;}
   virtual void Wait( float time) {}
 
   static int HideWarranty();

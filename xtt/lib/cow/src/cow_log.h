@@ -41,6 +41,7 @@
 #include "pwr.h"
 #include "co_dcli.h"
 #include "co_syi.h"
+#include "cow_wow.h"
 
 typedef enum {
   log_mOption_Comment = 1
@@ -57,13 +58,19 @@ class CoLog
   CoWow *m_wow;
   static CoLog *m_default_log;
   int m_level;
-
+  CoWowRecall *m_recall;
 
  public:
-  CoLog( const char *filename) : m_wow(0), m_level(1)
-    { dcli_translate_filename( m_filename, filename); 
-      strncpy(m_pid,syi_ProcessId(),sizeof(m_pid));}
-  ~CoLog() { if ( this == m_default_log) m_default_log = 0;}
+  CoLog( const char *filename) : m_wow(0), m_level(1) { 
+    dcli_translate_filename( m_filename, filename); 
+    strncpy(m_pid,syi_ProcessId(),sizeof(m_pid));
+    m_recall = new CoWowRecall();
+  }
+  ~CoLog() { 
+    if ( this == m_default_log) 
+      m_default_log = 0; 
+    delete m_recall;
+  }
 
   void set_default() { m_default_log = this;}
   void log( const char *category, const char *str, const char *cmt, unsigned int opt = 0);

@@ -147,7 +147,8 @@ class CoWowGtk : public CoWow {
   wow_sModalInputDialog *CreateModalInputDialog( const char *title, const char *text, 
 						 const char *button1, const char *button2, 
 						 const char *button3, const char *image,
-						 int input_length);
+						 int input_length,
+						 CoWowRecall *recall = 0);
   int DisplayWarranty();
   void DisplayLicense();
   pwr_tStatus CreateMenuItem( const char *name, void *menu, int pixmap, int append, void *w);
