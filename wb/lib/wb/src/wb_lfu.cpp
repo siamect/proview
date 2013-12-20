@@ -2169,6 +2169,9 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      else
 		sprintf( &str[strlen(str)], "-lpwr_nodave_dummy ");
 
+	      // Powerlink can't be called from plc yet, always use the dummy
+	      sprintf( &str[strlen(str)], "-lpwr_epl_dummy ");
+
 	      if ( strcmp( bop->PlcProcess, "") == 0) {
 		char msg[200];
 		sprintf( msg, "Error in BuildOptions object '%s', PlcProcess is missing\n",
@@ -3183,7 +3186,7 @@ pwr_tStatus lfu_check_opt_file( ldh_tSesContext ldhses, char *nodename, int bus_
     case pwr_mOpSys_X86_64_MACOS:
     case pwr_mOpSys_CustomBuild:
       fp << 
-	"$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_pnak_dummy -lpwr_cifx_dummy -lpwr_usb_dummy -lpwr_usbio_dummy -lpwr_nodave_dummy" << endl;
+	"$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_pnak_dummy -lpwr_cifx_dummy -lpwr_usb_dummy -lpwr_usbio_dummy -lpwr_nodave_dummy -lpwr_epl_dummy" << endl;
       break;
     default : ;
     }
