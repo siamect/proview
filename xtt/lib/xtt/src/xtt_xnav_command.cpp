@@ -4193,7 +4193,8 @@ static int	xnav_open_func(	void		*client_data,
     unsigned int options = 0;
     int width, height, nr;
     char tmp_str[40];
-
+    pwr_tFileName file_str;
+    
     // Command is "OPEN FAST"
 
     if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
@@ -4226,6 +4227,18 @@ static int	xnav_open_func(	void		*client_data,
     }
     else
       height = 0;
+
+    if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
+      // Open exported fast file
+      XttFast *fast = xnav->xttfast_new( title_str, 0, width, height, 0, file_str, &sts);
+      if ( EVEN(sts))
+	xnav->message('E',"Error in fast configuration");
+      else {
+	fast->close_cb = xnav_fast_close_cb;
+	fast->help_cb = xnav_fast_help_cb;
+      }
+      return XNAV__SUCCESS;
+    }
 
     /* Get the name qualifier */
     if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str))))
@@ -4274,7 +4287,7 @@ static int	xnav_open_func(	void		*client_data,
     }
 
     if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str)))) {
-      strcpy( title_str, "Fast");
+      strcpy( title_str, "");
     }
 
     XttFast *fast;
@@ -4282,7 +4295,7 @@ static int	xnav_open_func(	void		*client_data,
       fast->pop();
     }
     else {
-      fast = xnav->xttfast_new( title_str, &aref, width, height, options, &sts);
+      fast = xnav->xttfast_new( title_str, &aref, width, height, options, 0, &sts);
       if ( EVEN(sts))
 	xnav->message('E',"Error in fast configuration");
       else {

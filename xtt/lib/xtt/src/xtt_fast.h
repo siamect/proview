@@ -105,15 +105,23 @@ class XttFast {
 	   char *xn_name,
 	   pwr_sAttrRef *fast_arp,
 	   int *sts);
+  XttFast( void *parent_ctx,
+	   const char *name,
+	   char *filename,
+	   int *sts);
 
   //! Destructor
   virtual ~XttFast();
 
   //! Pop fast window.
   void pop();
+  void setup();
+  int read_export( char *filename);
 
   static void fast_close_cb( void *ctx);
   static void fast_help_cb( void *ctx);
+  static int fast_export_cb( void *ctx, pwr_tTime *from, pwr_tTime *to, 
+			     int rows, int idx, char *filename);
   static void fast_scan( void *data);
 
 };

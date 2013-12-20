@@ -77,15 +77,51 @@ XttFastGtk::XttFastGtk( void *parent_ctx,
     
   *sts = XNAV__SUCCESS;
 
+  if ( strcmp( name, "") != 0)
+    strncpy( title, name, sizeof(title));
+  else
+    gdh_AttrrefToName( fast_arp, title, sizeof(title), cdh_mNName);
+
   curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 0, width, height,
 			  options);
   curve->close_cb = fast_close_cb;
   curve->help_cb = fast_help_cb;
+  curve->export_cb = fast_export_cb;
+  setup();
 
   wow = new CoWowGtk( parent_widget);
   timerid = wow->timer_new();
 
   timerid->add( 1000, fast_scan, this);
+}
+
+XttFastGtk::XttFastGtk( void *parent_ctx,
+			GtkWidget *parent_wid,
+			const char *name,
+			GtkWidget **w,
+			char *filename,
+			int *sts) :
+  XttFast( parent_ctx, name, filename, sts), 
+  parent_widget(parent_wid)
+{
+  char title[250];
+  strncpy(title, filename, sizeof(title));
+      
+  if ( EVEN(*sts))
+    // Error from XttFast
+    return;
+
+  *sts = XNAV__SUCCESS;
+
+  curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 1, 0, 0, 0);
+  curve->close_cb = fast_close_cb;
+  curve->help_cb = fast_help_cb;
+  curve->enable(0);
+
+  wow = new CoWowGtk( parent_widget);
+  timerid = wow->timer_new();
+
+  // timerid->add( 1000, fast_scan, this);
 }
 
 XttFastGtk::~XttFastGtk()

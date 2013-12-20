@@ -439,28 +439,30 @@ void GeCurveGtk::activate_export_ok( GtkWidget *w, gpointer data)
   }
   g_free( value);
 
-  value = gtk_editable_get_chars( GTK_EDITABLE(((GeCurveGtk *)curve)->export_fromtime_widget), 0, -1);
-  sts = time_AsciiToA( value, &from); 
-  g_free( value);
+  if ( ((GeCurveGtk *)curve)->layout_mask & curve_mEnable_ExportTime) {
+    value = gtk_editable_get_chars( GTK_EDITABLE(((GeCurveGtk *)curve)->export_fromtime_widget), 0, -1);
+    sts = time_AsciiToA( value, &from); 
+    g_free( value);
 
-  if ( EVEN(sts)) {
-    curve->wow->DisplayError( "Syntax Error", "From time syntax error");
-    return;
+    if ( EVEN(sts)) {
+      curve->wow->DisplayError( "Syntax Error", "From time syntax error");
+      return;
+    }
+
+    value = gtk_editable_get_chars( GTK_EDITABLE(((GeCurveGtk *)curve)->export_totime_widget), 0, -1);
+    sts = time_AsciiToA( value, &to); 
+    g_free( value);
+    if ( EVEN(sts)) {
+      curve->wow->DisplayError( "Syntax Error", "To time syntax error");
+      return;
+    }
+
+    value = gtk_editable_get_chars( GTK_EDITABLE(((GeCurveGtk *)curve)->export_rows_widget), 0, -1);
+    nr = sscanf( value, "%d", &rows);
+    g_free( value);
+    if ( nr != 1)
+      return;
   }
-
-  value = gtk_editable_get_chars( GTK_EDITABLE(((GeCurveGtk *)curve)->export_totime_widget), 0, -1);
-  sts = time_AsciiToA( value, &to); 
-  g_free( value);
-  if ( EVEN(sts)) {
-    curve->wow->DisplayError( "Syntax Error", "To time syntax error");
-    return;
-  }
-
-  value = gtk_editable_get_chars( GTK_EDITABLE(((GeCurveGtk *)curve)->export_rows_widget), 0, -1);
-  nr = sscanf( value, "%d", &rows);
-  g_free( value);
-  if ( nr != 1)
-    return;
 
   value = gtk_editable_get_chars( GTK_EDITABLE(((GeCurveGtk *)curve)->export_filename_widget), 0, -1);
   strcpy( filename, value);
@@ -520,6 +522,7 @@ void GeCurveGtk::enable( unsigned int mask)
     g_object_set( sea_timebox, "visible", TRUE, NULL);
   if ( mask & curve_mEnable_Add)
     g_object_set( tools_add, "visible", TRUE, NULL);
+  layout_mask = mask;
 }
 
 void GeCurveGtk::setup( unsigned int mask)
@@ -532,6 +535,7 @@ void GeCurveGtk::setup( unsigned int mask)
   g_object_set( menu_export, "visible", mask & curve_mEnable_Export ? TRUE : FALSE, NULL);
   g_object_set( sea_timebox, "visible", mask & curve_mEnable_Timebox ? TRUE : FALSE, NULL);
   g_object_set( tools_add, "visible", mask & curve_mEnable_Add ? TRUE : FALSE, NULL);
+  layout_mask = mask;
 }
 
 
@@ -602,19 +606,21 @@ void GeCurveGtk::open_export( pwr_tTime *from, pwr_tTime *to, int rows, char *fi
 
   create_export_dialog();
 
-  time_AtoAscii( from, time_eFormat_DateAndTime, fromtime_str, sizeof(fromtime_str));
-  time_AtoAscii( to, time_eFormat_DateAndTime, totime_str, sizeof(totime_str));
-  sprintf( rows_str, "%d", rows);
+  if ( layout_mask & curve_mEnable_ExportTime) {
+    time_AtoAscii( from, time_eFormat_DateAndTime, fromtime_str, sizeof(fromtime_str));
+    time_AtoAscii( to, time_eFormat_DateAndTime, totime_str, sizeof(totime_str));
+    sprintf( rows_str, "%d", rows);
 
-  gtk_editable_delete_text( GTK_EDITABLE(export_fromtime_widget), 0, -1);
-  gtk_editable_insert_text( GTK_EDITABLE(export_fromtime_widget), 
+    gtk_editable_delete_text( GTK_EDITABLE(export_fromtime_widget), 0, -1);
+    gtk_editable_insert_text( GTK_EDITABLE(export_fromtime_widget), 
 			    fromtime_str, strlen(fromtime_str), &pos);
-  gtk_editable_delete_text( GTK_EDITABLE(export_totime_widget), 0, -1);
-  gtk_editable_insert_text( GTK_EDITABLE(export_totime_widget), 
+    gtk_editable_delete_text( GTK_EDITABLE(export_totime_widget), 0, -1);
+    gtk_editable_insert_text( GTK_EDITABLE(export_totime_widget), 
 			    totime_str, strlen(totime_str), &pos);
-  gtk_editable_delete_text( GTK_EDITABLE(export_rows_widget), 0, -1);
-  gtk_editable_insert_text( GTK_EDITABLE(export_rows_widget), 
+    gtk_editable_delete_text( GTK_EDITABLE(export_rows_widget), 0, -1);
+    gtk_editable_insert_text( GTK_EDITABLE(export_rows_widget), 
 			    rows_str, strlen(rows_str), &pos);
+  }
   gtk_editable_delete_text( GTK_EDITABLE(export_filename_widget), 0, -1);
   gtk_editable_insert_text( GTK_EDITABLE(export_filename_widget), 
 			    filename, strlen(filename), &pos);
@@ -1260,20 +1266,25 @@ void GeCurveGtk::create_export_dialog()
   }
   gtk_combo_box_set_active( GTK_COMBO_BOX(export_attrcombo_widget), 0);
 
-  export_fromtime_widget = gtk_entry_new();
-  gtk_widget_set_size_request( export_fromtime_widget, 200, -1);
-  GtkWidget *fromtime_label = gtk_label_new(CoWowGtk::translate_utf8("From"));
-  gtk_widget_set_size_request( fromtime_label, 90, -1);
+  GtkWidget *fromtime_label;
+  GtkWidget *totime_label;
+  GtkWidget *rows_label;
+  if ( layout_mask & curve_mEnable_ExportTime) {
+    export_fromtime_widget = gtk_entry_new();
+    gtk_widget_set_size_request( export_fromtime_widget, 200, -1);
+    fromtime_label = gtk_label_new(CoWowGtk::translate_utf8("From"));
+    gtk_widget_set_size_request( fromtime_label, 90, -1);
 
-  export_totime_widget = gtk_entry_new();
-  gtk_widget_set_size_request( export_totime_widget, 200, -1);
-  GtkWidget *totime_label = gtk_label_new(CoWowGtk::translate_utf8("To"));
-  gtk_widget_set_size_request( totime_label, 90, -1);
+    export_totime_widget = gtk_entry_new();
+    gtk_widget_set_size_request( export_totime_widget, 200, -1);
+    totime_label = gtk_label_new(CoWowGtk::translate_utf8("To"));
+    gtk_widget_set_size_request( totime_label, 90, -1);
 
-  export_rows_widget = gtk_entry_new();
-  gtk_widget_set_size_request( export_rows_widget, 80, -1);
-  GtkWidget *rows_label = gtk_label_new(CoWowGtk::translate_utf8("Max number of rows"));
-  gtk_widget_set_size_request( rows_label, 150, -1);
+    export_rows_widget = gtk_entry_new();
+    gtk_widget_set_size_request( export_rows_widget, 80, -1);
+    rows_label = gtk_label_new(CoWowGtk::translate_utf8("Max number of rows"));
+    gtk_widget_set_size_request( rows_label, 150, -1);
+  }
 
   export_filename_widget = gtk_entry_new();
   GtkWidget *filename_label = gtk_label_new(CoWowGtk::translate_utf8("Filename"));
@@ -1297,14 +1308,18 @@ void GeCurveGtk::create_export_dialog()
   gtk_box_pack_start( GTK_BOX(export_hbox1), export_attrcombo_widget, TRUE, TRUE, 30);
 
   GtkWidget *export_hbox2 = gtk_hbox_new( FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(export_hbox2), fromtime_label, FALSE, FALSE, 15);
-  gtk_box_pack_start( GTK_BOX(export_hbox2), export_fromtime_widget, FALSE, FALSE, 30);
-  gtk_box_pack_start( GTK_BOX(export_hbox2), totime_label, FALSE, FALSE, 15);
-  gtk_box_pack_start( GTK_BOX(export_hbox2), export_totime_widget, FALSE, FALSE, 30);
+  if ( layout_mask & curve_mEnable_ExportTime) {
+    gtk_box_pack_start( GTK_BOX(export_hbox2), fromtime_label, FALSE, FALSE, 15);
+    gtk_box_pack_start( GTK_BOX(export_hbox2), export_fromtime_widget, FALSE, FALSE, 30);
+    gtk_box_pack_start( GTK_BOX(export_hbox2), totime_label, FALSE, FALSE, 15);
+    gtk_box_pack_start( GTK_BOX(export_hbox2), export_totime_widget, FALSE, FALSE, 30);
+  }
 
   GtkWidget *export_hbox4 = gtk_hbox_new( FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(export_hbox4), rows_label, FALSE, FALSE, 15);
-  gtk_box_pack_start( GTK_BOX(export_hbox4), export_rows_widget, FALSE, FALSE, 30);
+  if ( layout_mask & curve_mEnable_ExportTime) {
+    gtk_box_pack_start( GTK_BOX(export_hbox4), rows_label, FALSE, FALSE, 15);
+    gtk_box_pack_start( GTK_BOX(export_hbox4), export_rows_widget, FALSE, FALSE, 30);
+  }
 
   GtkWidget *export_hbox5 = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(export_hbox5), filename_label, FALSE, FALSE, 15);

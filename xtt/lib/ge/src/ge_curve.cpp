@@ -113,9 +113,15 @@ void GeCurve::activate_export()
   double from_time, to_time;
   pwr_tFileName filename;
 
-  // Get directory from proview.cnf
-  if ( !cnf_get_value( "curveExportFile", filename, sizeof(filename)))
-    strcpy( filename, "~/history.txt");
+  // Get default file from proview.cnf
+  if ( layout_mask & curve_mEnable_ExportTime) {
+    if ( !cnf_get_value( "curveExportFile", filename, sizeof(filename)))
+      strcpy( filename, "~/history_$date.txt");
+  }
+  else {
+    if ( !cnf_get_value( "curveExportFile", filename, sizeof(filename)))
+      strcpy( filename, "~/fast_$date.txt");
+  }
 
   grow_MeasureWindow( growcurve_ctx, &ll_x, &ll_y, &ur_x, &ur_y);
 
@@ -1530,7 +1536,7 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
   prev_period_cb(0), next_period_cb(0), add_cb(0), madd_cb(0), remove_cb(0), export_cb(0), new_cb(0),
   save_cb(0), open_cb(0), snapshot_cb(0),
   initial_right_position(pos_right), last_cursor_x(0), last_mark1_x(0), last_mark2_x(0),
-  deferred_configure_axes(0), center_from_window(0), options(gc_options)
+  deferred_configure_axes(0), center_from_window(0), options(gc_options), layout_mask(0)
 {
   pwr_tStatus sts;
 

@@ -352,7 +352,8 @@ class XNav {
 					pwr_tOName *oname, bool *sevhistobjectv, sevcli_tCtx scctx, 
 					char *filename, int width, int height, unsigned int options, pwr_tStatus *sts) {return 0;}
     virtual XttTCurve *xtttcurve_new( char *name, pwr_tAttrRef *arefv, int width, int height, unsigned int options, pwr_tStatus *sts) {return 0;}
-    virtual XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, unsigned int options, pwr_tStatus *sts) {return 0;}
+    virtual XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, unsigned int options,
+				  char *filename, pwr_tStatus *sts) {return 0;}
     virtual XAttOne *xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
 			  pwr_tStatus *sts) {return 0;}
     virtual CLog *clog_new( const char *name, pwr_tStatus *sts) {return 0;}

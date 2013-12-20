@@ -67,7 +67,8 @@ typedef enum {
   curve_mEnable_Snapshot = 1 << 3,
   curve_mEnable_Export	= 1 << 4,
   curve_mEnable_Timebox = 1 << 5,
-  curve_mEnable_Add     = 1 << 6
+  curve_mEnable_Add     = 1 << 6,
+  curve_mEnable_ExportTime = 1 << 7
 } curve_mEnable;
 
 typedef enum {
@@ -206,6 +207,7 @@ class GeCurve {
     CoWow	 *wow;
     int		 center_from_window;
     unsigned int options;
+    unsigned int layout_mask;
 
     GeCurve( void *gc_parent_ctx, char *curve_name,
 	     char *filename, GeCurveData *curve_data, int pos_right, 

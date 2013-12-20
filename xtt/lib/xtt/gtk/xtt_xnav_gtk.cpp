@@ -270,11 +270,14 @@ XttTCurve *XNavGtk::xtttcurve_new( char *name, pwr_tAttrRef *arefv, int width, i
 }
 
 XttFast *XNavGtk::xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, 
-			       unsigned int options, pwr_tStatus *sts)
+			       unsigned int options, char *filename, pwr_tStatus *sts)
 {
   GtkWidget *w;
 
-  return new XttFastGtk( this, parent_wid, name, &w, objar, width, height, options, sts);
+  if ( !filename)
+    return new XttFastGtk( this, parent_wid, name, &w, objar, width, height, options, sts);
+  else
+    return new XttFastGtk( this, parent_wid, name, &w, filename, sts);
 }
 
 XAttOne *XNavGtk::xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,

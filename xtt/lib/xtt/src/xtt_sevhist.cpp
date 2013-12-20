@@ -113,7 +113,7 @@ XttSevHist::XttSevHist( void *parent_ctx,
   get_select_cb(0), first_scan(1), scctx(0), time_low_old(0), time_high_old(0)
 {
   strncpy( title, filename, sizeof(title));
-  
+
   *sts = read_export( filename);
 }
 
@@ -696,7 +696,7 @@ void XttSevHist::pop()
 
 void XttSevHist::setup()
 {
-  curve->setup( curve_mEnable_Timebox | curve_mEnable_Export);
+  curve->setup( curve_mEnable_Timebox | curve_mEnable_Export | curve_mEnable_ExportTime);
 }
 
 void XttSevHist::sevhist_close_cb( void *ctx)

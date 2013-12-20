@@ -56,6 +56,12 @@ class XttFastGtk : public XttFast {
 	      int height,
 	      unsigned int xn_options,
 	      int *sts);
+  XttFastGtk( void *parent_ctx,
+	      GtkWidget *parent_wid,
+	      const char *name,
+	      GtkWidget **w,
+	      char *filename,
+	      int *sts);
   ~XttFastGtk();
 };
 

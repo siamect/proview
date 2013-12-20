@@ -46,6 +46,7 @@
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_dcli.h"
 #include "cow_wow.h"
 #include "rt_xnav_msg.h"
 
@@ -204,6 +205,16 @@ XttFast::XttFast( void *parent_ctx,
   //	(XtTimerCallbackProc)fast_scan, this);
 }
 
+XttFast::XttFast( void *parent_ctx,
+		  const char *name,
+		  char *filename,
+		  int *sts) :  xnav(parent_ctx), fast_cnt(0), timerid(0), close_cb(0), help_cb(0),
+			       first_scan(1), axis_configured(false)
+
+{
+  *sts = read_export( filename);
+}
+
 XttFast::~XttFast()
 {
 }
@@ -211,6 +222,11 @@ XttFast::~XttFast()
 void XttFast::pop()
 {
   curve->pop();
+}
+
+void XttFast::setup()
+{
+  curve->setup( curve_mEnable_Export);
 }
 
 void XttFast::fast_close_cb( void *ctx)
@@ -295,7 +311,7 @@ void XttFast::fast_scan( void *data)
 	if ( EVEN(sts)) return;
 
 	k = first_index;
-	for ( j = 0; j < fast->max_points; j++) {
+ 	for ( j = 0; j < fast->max_points; j++) {
 	  if ( k >= fast->max_points)
 	    k = 0;
 	  switch( fast->type[i]) {
@@ -461,9 +477,146 @@ void XttFast::fast_scan( void *data)
     fast->timerid->add( 1000, fast_scan, fast);
 }
 
+int XttFast::fast_export_cb( void *ctx, pwr_tTime *from, pwr_tTime *to, int rows, int idx, 
+			     char *filename)
+{
+  XttFast *fast = (XttFast *)ctx;
+  pwr_tFileName fname;
+  pwr_tStatus sts;
+  FILE *fp;
 
+  // Replace $date with date
+  strncpy( fname, filename, sizeof(fname));
+  char *s1 = strstr( fname, "$date");
+  if ( s1) {
+    char timstr[40];
+    pwr_tFileName str;
 
+    sts = time_AtoAscii( 0, time_eFormat_FileDateAndTime,
+			 timstr, sizeof(timstr));
 
+    strncpy( str, s1 + strlen("$date"), sizeof(str));
+    *s1 = 0;
+    strncat( fname, timstr, sizeof(fname));
+    strncat( fname, str, sizeof(fname));
+  }
 
+  dcli_translate_filename( fname, fname);
 
+  if ( idx == -1) {
+    // Export all attributes
+    fp = fopen( fname, "w");
+    if ( !fp)
+      return XNAV__NOFILE;
+    
+    fprintf( fp, "# Columns %d\n", fast->fast_cnt);
+    fprintf( fp, "# Rows %d\n", fast->max_points);
+    for ( int i = 0; i < fast->fast_cnt; i++)
+      fprintf( fp, "# Attribute %s\n", fast->gcd->y_name[i]);
+      
+    for ( int j = 0; j < fast->max_points; j++) {
+      fprintf( fp, "%f ", fast->gcd->x_data[0][j]);
+      for ( int i = 0; i < fast->fast_cnt; i++) {
+	fprintf( fp, "%f ", fast->gcd->y_data[i][j]);
+      }
+      fprintf( fp, "\n");
+    }
+    fclose(fp);
+  }
+  else {
+    fp = fopen( fname, "w");
+    if ( !fp)
+      return XNAV__NOFILE;
+    
+    fprintf( fp, "# Columns %d\n", 1);
+    fprintf( fp, "# Rows %d\n", fast->max_points);
+    fprintf( fp, "# Attribute %s\n", fast->gcd->y_name[idx]);
+      
+    for ( int j = 0; j < fast->max_points; j++) {
+      fprintf( fp, "%f ", fast->gcd->x_data[0][j]);
+      fprintf( fp, "%f ", fast->gcd->y_data[idx][j]);
+      fprintf( fp, "\n");
+    }
+    fclose(fp);
+  }
+      
+  return XNAV__SUCCESS;
+}
 
+int XttFast::read_export( char *filename)
+{
+  pwr_tFileName fname;
+  FILE *fp;
+  char line[200];
+  int idx = -1;
+  int rowcnt = 0;
+  pwr_tStatus sts;
+  char line_part[40][20];
+
+  dcli_translate_filename( fname, filename);
+
+  fp = fopen( fname, "r");
+  if ( !fp)
+    return 0;
+
+  gcd = new GeCurveData( curve_eDataType_DsTrend);
+
+  while( 1) {
+    sts = dcli_read_line( line, sizeof(line), fp);
+    if ( !sts)
+      break;
+
+    if ( line[0] == '#') {
+      if ( strncmp( &line[2], "Attribute", 9) == 0) {
+	// New attribute
+	idx++;
+	strncpy( gcd->y_name[idx], &line[12], sizeof(gcd->y_name[idx]));
+	gcd->y_data[idx] = (double *) calloc( 1, 8 * max_points);
+	gcd->y_axis_type[idx] = curve_eAxis_y;
+      }
+      else if ( strncmp( &line[2], "Rows", 4) == 0) {
+	sscanf( &line[7], "%d", &max_points);
+	gcd->rows[0] = max_points;
+	gcd->x_data[0] = (double *) calloc( 1, 8 * max_points);
+      }
+      else if ( strncmp( &line[2], "Columns", 4) == 0) {
+	sscanf( &line[10], "%d", &fast_cnt);
+      }
+    }
+    else {
+      if ( idx < 0 || fast_cnt != idx + 1)
+	continue;
+
+      if ( rowcnt >= max_points)
+	continue;
+
+      int nr = dcli_parse( line, " 	", "",
+	     (char *) line_part, sizeof( line_part)/sizeof( line_part[0]), 
+	     sizeof( line_part[0]), 0);
+      if ( nr < fast_cnt + 1)
+	return 0;
+
+      sscanf( line_part[0], "%lf", &gcd->x_data[0][rowcnt]);
+      for ( int i = 0; i < fast_cnt; i++)
+	sscanf( line_part[i+1], "%lf", &gcd->y_data[i][rowcnt]);
+
+      rowcnt++;
+    }
+  }
+  if ( fast_cnt == 0)
+    return 0;
+
+  for ( int i = 0; i < fast_cnt; i++)
+    gcd->rows[i] = max_points;
+  gcd->cols = fast_cnt;
+  strcpy( gcd->x_name, "Time");
+  gcd->x_axis_type[0] = curve_eAxis_x;
+
+  fclose(fp);
+
+  gcd->select_color( 0);
+  gcd->get_borders();
+  gcd->get_default_axis();
+  
+  return 1;
+}
