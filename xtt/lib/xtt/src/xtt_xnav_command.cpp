@@ -6043,18 +6043,24 @@ static int	xnav_logging_func(	void		*client_data,
     int	entry;
     int	nr;
 
-    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str, sizeof(entry_str))))
-    {
-      /* convert to integer */
-      nr = sscanf( entry_str, "%d", &entry);
-      if ( nr != 1)
-      {
-        xnav->message('E', "Entry syntax error");
-        return XNAV__HOLDCOMMAND;
+    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str, sizeof(entry_str)))) {
+      if ( !cdh_NoCaseStrcmp( entry_str, "CURRENT")) {
+        if ( xnav->current_logging_index == -1) {
+          xnav->message('E', "No current logging entry");
+          return XNAV__HOLDCOMMAND;
+        }
+        entry = xnav->current_logging_index + 1;
+      }
+      else {
+        /* convert to integer */
+        nr = sscanf( entry_str, "%d", &entry);
+        if ( nr != 1) {
+          xnav->message('E', "Entry syntax error");
+          return XNAV__HOLDCOMMAND;
+        }
       }
     }
-    else
-    {
+    else {
       xnav->message('E',"Enter entry");  
       return XNAV__HOLDCOMMAND;
     }
@@ -6064,12 +6070,15 @@ static int	xnav_logging_func(	void		*client_data,
       return XNAV__HOLDCOMMAND;
     }
 
-    if ( ODD( dcli_get_qualifier( "/PARAMETER", parameter_str, sizeof(parameter_str))))
+    if ( ODD( dcli_get_qualifier( "/ALL", 0, 0)))
+      parameter_ptr = 0;
+    else if ( ODD( dcli_get_qualifier( "/PARAMETER", parameter_str, sizeof(parameter_str))))
       parameter_ptr = parameter_str;
     else
       return XNAV__SUCCESS;
 
     sts = xnav->logg[entry-1].remove( parameter_ptr);
+
     return sts;
   }
 

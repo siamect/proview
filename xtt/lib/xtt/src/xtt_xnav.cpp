@@ -1318,6 +1318,9 @@ XNav::XNav(
   strcpy( opplace_name, xn_opplace_name);
   strcpy( base_user, "");
   strcpy( user, "");
+
+  for ( int i = 0; i < XNAV_LOGG_MAX; i++)
+    sprintf(logg[i].logg_filename, "rtt_logging%d.rtt_log", i+1);
   *status = 1;
 }
 
@@ -3124,34 +3127,34 @@ int	XNav::show_logging( int index)
 	(void *) &logg[index].active, NULL, flow_eDest_IntoLast);
 
   sprintf( command, "logging set/insert/entry=%d", entry);
-  new ItemCommand( brow, Lng::translate("Insert"), 0, NULL,
+  new ItemCommand( brow, Lng::translate("Insert collected parameters"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);
 
   sprintf( command, "logging start/entry=%d", entry);
-  new ItemCommand( brow, Lng::translate("Start"), 0, NULL,
+  new ItemCommand( brow, Lng::translate("Start logging"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);
 
   sprintf( command, "logging stop/entry=%d", entry);
-  new ItemCommand( brow, Lng::translate("Stop"), 0, NULL,
+  new ItemCommand( brow, Lng::translate("Stop logging"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);
 
   sprintf( command, "logging store/entry=%d/file=\"rtt_store_logg%d.rtt_com\"",
          entry, entry);
-  new ItemCommand( brow, Lng::translate("Store"), 0, NULL,
+  new ItemCommand( brow, Lng::translate("Store settings"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);
 
   sprintf( command, "@rtt_store_logg%d", entry);
-  new ItemCommand( brow, Lng::translate("Restore"), 0, NULL,
+  new ItemCommand( brow, Lng::translate("Restore settings"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);
 
   sprintf( command, "open loggfile/entry=current");
-  new ItemCommand( brow, Lng::translate("ShowFile"), 0, NULL,
+  new ItemCommand( brow, Lng::translate("Show curve"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);
 
-  new ItemLocal( brow, Lng::translate("Time (ms)"), "logg_Time", 
+  new ItemLocal( brow, Lng::translate("Scantime (ms)"), "logg_Time", 
 	pwr_eType_Float32, sizeof( logg[0].logg_time), 0, 100000, 0,
 	(void *) &logg[index].logg_time, NULL, flow_eDest_IntoLast);
-  new ItemLocal( brow, Lng::translate("File "), "logg_File", 
+  new ItemLocal( brow, Lng::translate("Log file "), "logg_File", 
 	pwr_eType_String, sizeof( logg[0].logg_filename), 0, 0, 0,
 	(void *) logg[index].logg_filename, NULL, flow_eDest_IntoLast);
   new ItemLocal( brow, Lng::translate("Type"), "logg_Type",

@@ -542,6 +542,7 @@ int XttLogging::store(
 
 	fprintf( outfile, "logging set/create/entry=current/file=\"%s\"\n",
 		logg_filename);
+	fprintf( outfile, "logging delete/entry=current/all\n");
 	if ( logg_time != 0)
 	  fprintf( outfile, "logging set/entry=current/time=%f\n",
 		logg_time);
@@ -848,23 +849,27 @@ int XttLogging::remove( char		*parameter)
 	int		i;
 	int		found;
 	
-	/* Remove this parameter */
-	found = 0;
-	for ( i = 0; i < RTT_LOGG_MAXPAR; i++)
-	{
-	  if ( strcmp( parameterstr[i], parameter) == 0)
-	  {
-	    /* Parmeter is found, remove it */
-	    parameterstr[i][0] = 0;
-	    message('I', "Parameter removed");
-	    found = 1;
-	    break;
+	if ( parameter) {
+	  /* Remove this parameter */
+	  found = 0;
+	  for ( i = 0; i < RTT_LOGG_MAXPAR; i++) {
+	    if ( cdh_NoCaseStrcmp( parameterstr[i], parameter) == 0) {
+	      /* Parmeter is found, remove it */
+	      parameterstr[i][0] = 0;
+	      message('I', "Parameter removed");
+	      found = 1;
+	      break;
+	    }
 	  }
 	}
-        if ( !found)
-	{
+        if ( !found) {
 	  message('E',"Parameter not found");
 	  return XNAV__HOLDCOMMAND;
+	}
+	else {
+	  /* Clear all parameters */
+	  for ( i = 0; i < RTT_LOGG_MAXPAR; i++)
+	    parameterstr[i][0] = 0;
 	}
 
         return XNAV__SUCCESS;
