@@ -31,6 +31,8 @@ extern_java_sources := \
 	GlowConPoint.java,\
 	GrowNode.java,\
 	GlowLine.java,\
+	GlowRect.java,\
+	GlowText.java,\
 	GlowArc.java,\
 	GlowArrow.java,\
 	GlowCon.java,\
@@ -50,6 +52,8 @@ extern_java_sources := \
 	GrowScrollBarIfc.java,\
 	GrowScrollBar.java,\
 	GrowTable.java,\
+	GrowImage.java,\
+	GrowWindow.java,\
 	GrowConGlue.java,\
 	GlowVector.java,\
 	GrowCtx.java,\

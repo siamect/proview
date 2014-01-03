@@ -246,15 +246,15 @@ public class GlowCon extends GlowArrayElem {
 	    // ref_a.draw( w, &cc->zero, highlight, hot, NULL);
 	}
 	else {
-	    for ( i = 0; i < line_a.size(); i++) 
+	    for ( i = 0; i < l_num; i++) 
 		((GlowLine)line_a.get(i)).draw( highlight, hot);
-	    for ( i = 0; i < arc_a.size(); i++)
+	    for ( i = 0; i < a_num; i++)
 		((GlowArc)arc_a.get(i)).draw( highlight, hot);
 	    // arrow_a.draw( highlight, hot);
 	    if ( (shadow != 0 || border != 0) && cc.con_type == Glow.eConType_Routed && cc.corner == Glow.eCorner_Rounded) {
-		for ( i = 0; i < line_a.size(); i++)
+		for ( i = 0; i < l_num; i++)
 		    ((GlowLine)line_a.get(i)).draw_shadow( border, shadow, highlight, hot);
-		for ( i = 0; i < arc_a.size(); i++)
+		for ( i = 0; i < a_num; i++)
 		    ((GlowArc)arc_a.get(i)).draw_shadow( border, shadow, highlight, hot);
 	    }
 	}

@@ -33,6 +33,8 @@ local_java_sources := \
 	GrowNode.java,\
 	GlowLine.java,\
 	GlowArc.java,\
+	GlowRect.java,\
+	GlowText.java,\
 	GlowArrow.java,\
 	GlowCon.java,\
 	GrowRect.java,\
@@ -52,6 +54,8 @@ local_java_sources := \
 	GrowScrollBar.java,\
 	GrowTable.java,\
 	GrowConGlue.java,\
+	GrowImage.java,\
+	GrowWindow.java,\
 	GlowVector.java,\
 	GrowCtx.java,\
 	DynParsedAttrName.java,\

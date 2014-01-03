@@ -135,6 +135,18 @@ public class GlowVector {
 	  a.add( c);
 	  break;
 	}
+	case Glow.eSave_Rect: {
+	  GlowRect c = new GlowRect( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
+	case Glow.eSave_Text: {
+	  GlowText c = new GlowText( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
 	case Glow.eSave_Arrow: {
 	  GlowArrow c = new GlowArrow( cmn);
 	  c.open( reader);
@@ -197,6 +209,18 @@ public class GlowVector {
 	}
 	case Glow.eSave_GrowAxis: {
 	  GrowAxis c = new GrowAxis( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
+	case Glow.eSave_GrowImage: {
+	  GrowImage c = new GrowImage( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
+	case Glow.eSave_GrowWindow: {
+	  GrowWindow c = new GrowWindow( cmn);
 	  c.open( reader);
 	  a.add( c);
 	  break;
