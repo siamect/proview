@@ -3084,7 +3084,7 @@ pwr_tStatus lfu_check_appl_file( ldh_tSesContext ldhses,
   pwr_tFileName fname;
   pwr_tTime t;
 
-  sprintf( fname, load_cNameAppl, "$pwrp_cnf/", nodename, bus_number);
+  sprintf( fname, load_cNameAppl, "$pwrp_cnf/", cdh_Low(nodename), bus_number);
   dcli_translate_filename( fname, fname);
 
   if ( ODD(dcli_file_time( fname, &t)))

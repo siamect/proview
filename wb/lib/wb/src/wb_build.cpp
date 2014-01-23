@@ -274,19 +274,19 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
       sumsts = m_sts;
 
     // Copy ld_appl_...txt from $pwrp_cnf to $pwrp_load
-    sprintf( src_fname, load_cNameAppl, "$pwrp_cnf", node, bussid);
+    sprintf( src_fname, load_cNameAppl, "$pwrp_cnf", cdh_Low(node), bussid);
     dcli_translate_filename( src_fname, src_fname);
     m_sts = dcli_file_time( src_fname, &src_time);
     if ( evenSts()) {
       char dir[80];
       strcpy( dir, "$pwrp_cnf/");
-      sprintf( src_fname, load_cNameAppl, dir, node, bussid);
+      sprintf( src_fname, load_cNameAppl, dir, cdh_Low(node), bussid);
       dcli_translate_filename( src_fname, src_fname);
       m_sts = dcli_file_time( src_fname, &src_time);
     }
 
     if ( oddSts()) {
-      sprintf( dest_fname, load_cNameAppl, "$pwrp_load/", node, bussid);
+      sprintf( dest_fname, load_cNameAppl, "$pwrp_load/", cdh_Low(node), bussid);
       dcli_translate_filename( dest_fname, dest_fname);
       m_sts = dcli_file_time( dest_fname, &dest_time);
       if ( opt.force || evenSts() || src_time.tv_sec > dest_time.tv_sec) {
