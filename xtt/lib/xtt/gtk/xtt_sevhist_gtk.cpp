@@ -143,6 +143,9 @@ XttSevHistGtk::~XttSevHistGtk()
   timerid->remove();
 
   delete curve;
+  if ( gcd)
+    delete gcd;
+  delete wow;
 }
 
 

@@ -111,6 +111,9 @@ XttTCurveGtk::~XttTCurveGtk()
   timerid->remove();
 
   delete curve;
+  if ( gcd)
+    delete gcd;
+  delete wow;
 }
 
 

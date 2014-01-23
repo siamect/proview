@@ -130,8 +130,11 @@ XttFastGtk::~XttFastGtk()
 
   for ( int i = 0; i < fast_cnt; i++) {
     gdh_UnrefObjectInfo( new_subid);
-  }
+  }  
   delete curve;
+  if ( gcd)
+    delete gcd;
+  delete wow;
 }
 
 

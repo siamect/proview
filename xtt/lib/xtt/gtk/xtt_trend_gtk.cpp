@@ -105,6 +105,9 @@ XttTrendGtk::~XttTrendGtk()
     gdh_UnrefObjectInfo( subid[i]);
   }
   delete curve;
+  if ( gcd)
+    delete gcd;
+  delete wow;
 }
 
 
