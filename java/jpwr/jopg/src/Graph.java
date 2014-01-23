@@ -51,6 +51,8 @@ public class Graph implements GraphIfc, GrowApplIfc {
     public GraphLocalDb ldb;
     public GrowSlider currentSlider;
     public double scan_time = 1;
+    GrowCmn[] cmnStack = new GrowCmn[10];
+    int cmnStackCnt = 0;
 
     public Graph(GraphApplIfc appl, Gdh gdh) {
 	this.appl = appl;
@@ -78,6 +80,9 @@ public class Graph implements GraphIfc, GrowApplIfc {
     public GrowCtx getCtx() {
 	return ctx;
     }
+    public GrowCmn getCmn() {
+	return cmn;
+    }
 
     public void open(BufferedReader reader) {
 	ctx.open( reader);
@@ -85,9 +90,46 @@ public class Graph implements GraphIfc, GrowApplIfc {
     }
 
     public void traceConnect(GlowArrayElem object) {
+	boolean cmn_popped = false;
+
+	// Check if new ctx
+	GrowCmn ocmn = (GrowCmn)object.getCmn();
+
+	if ( cmn != ocmn) {
+	    cmnPop( ocmn);
+	    cmn_popped = true;
+	}  
+
 	Dyn dyn = (Dyn)object.getUserData();
-	if ( dyn != null)
-	    dyn.connect(object);
+	if ( dyn == null) {
+	    if ( cmn_popped)
+		cmnPush();
+	    return;
+	}
+
+	if ( object.type() == Glow.eObjectType_GrowNode && dyn != null) {
+	    int dyn_type1 = ((GrowNode)object).getClassDynType1();
+
+	    if ( (((dyn_type1 & Dyn.mDynType1_HostObject) != 0 && 
+		   (dyn.dyn_type1 & Dyn.mDynType1_Inherit) != 0)) || 
+		 (dyn.dyn_type1 & Dyn.mDynType1_HostObject) != 0) {
+		Dyn nodeclass_dyn = (Dyn)((GrowNode)object).getClassUserData();
+		dyn.setTotal(null);
+		if ( nodeclass_dyn != null) {
+		    Dyn old_dyn = dyn;
+		    dyn = new Dyn( nodeclass_dyn);
+		    dyn.merge( old_dyn);
+		    object.setUserData( dyn);
+		    dyn.setTotal(object);
+		}
+	    }
+	}
+	System.out.println("before connect total_dyn_type1 : " + dyn.total_dyn_type1);
+
+	dyn.connect(object);
+
+	if ( cmn_popped)
+	    cmnPush();
     }
 
     public void traceDisconnect(GlowArrayElem object) {
@@ -244,7 +286,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 
 	if ( (idx = str.indexOf("$object")) != -1) {
 	    if ( appl != null) {
-		String oname = appl.getObject();
+		String oname = cmn.getOwner();
 		str = str.substring(0, idx) + oname + str.substring(idx+7);
 		System.out.println("Parse name $object " + oname + " str " + str);
 	    }
@@ -326,6 +368,18 @@ public class Graph implements GraphIfc, GrowApplIfc {
     }
 
     public void eventHandler(GlowEvent e) {
+	boolean cmn_popped = false;
+
+	if (e.object_type != Glow.eObjectType_NoObject &&
+	    e.object != null) {
+	    GrowCmn ocmn = (GrowCmn)((GlowArrayElem)e.object).getCmn();
+
+	    if ( ocmn != null && cmn != ocmn) {
+		cmnPop( ocmn);
+		cmn_popped = true;
+	    }  
+	}
+
 	switch ( e.event) {
 	case Glow.eEvent_MB1Click:
 	    if ( e.object_type == Glow.eObjectType_NoObject ||
@@ -335,7 +389,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 		event.event = Glow.eEvent_MenuDelete;
 		event.type = Glow.eEventType_Menu;
 		event.object = null;
-		System.out.println("Graph: delete any menu");		
+
 		Vector<GlowArrayElem> list = ctx.get_object_list();
 		for ( int i = 0; i < list.size(); i++) {
 		    GlowArrayElem o = list.get(i);
@@ -398,6 +452,22 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	    break;
 	}
 	}
+	if ( cmn_popped)
+	    cmnPush();
+    }
+
+    public Object loadCtx( String file) {
+	return appl.loadGrowCtx( file);
+    }
+
+    public Object loadGrowCtx( BufferedReader reader) {
+	GrowCtx ctx = new GrowCtx(this);
+	GrowCmn cmn = ctx.getCmn();
+	cmn.setGdraw(gdraw);
+	ctx.open( reader);
+	ctx.traceConnect();
+
+	return ctx;
     }
 
     public int command(String cmd) {
@@ -405,6 +475,12 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	    return appl.command(cmd);
 	return 0;
     }
+
+    public void closeGraph() {
+	if ( appl != null)
+	    appl.closeGraph();
+    }
+
     public void openConfirmDialog(Object dyn, String text, Object object) {
 	if ( appl != null)
 	    appl.openConfirmDialog(dyn, text, object);
@@ -433,5 +509,33 @@ public class Graph implements GraphIfc, GrowApplIfc {
 
     public double getScanTime() {
 	return scan_time;
+    }
+
+    public void setOwner( String owner) {
+	cmn.setOwner( owner);
+    }
+
+    public void setSubwindowSource( String name, String source, String owner) {
+	GrowCtxIfc ctx = cmn.ctx;
+	if ( cmnStackCnt > 0)
+	    ctx = cmnStack[cmnStackCnt-1].ctx;
+	ctx.setSubwindowSource( name, source, owner);
+    }
+
+    public void cmnPop( GrowCmn ncmn) {
+	if ( cmnStackCnt >= 10) {
+	    System.out.println("** Graph cmn stack overflow");
+	    return;
+	}
+	cmnStack[cmnStackCnt++] = cmn;
+	cmn = ncmn;
+	ctx = (GrowCtx)cmn.ctx;
+    }
+
+    public void cmnPush() {
+	if ( cmnStackCnt > 0) {
+	    cmn = cmnStack[--cmnStackCnt];
+	    ctx = (GrowCtx)cmn.ctx;
+	}
     }
 }

@@ -314,7 +314,7 @@ public class GrowRectRounded extends GlowArrayElem {
 	    if ( !display_shadow && ish == 0) {
 		if ( grad == Glow.eGradient_No) {
 		    if ( chot != 0)
-			drawtype = GlowColor.shift_drawtype( fillcolor, chot, 0);
+			drawtype = GlowColor.shift_drawtype( fillcolor, chot, null);
 		    else
 			drawtype = fillcolor;
 
@@ -339,12 +339,12 @@ public class GrowRectRounded extends GlowArrayElem {
 			rotation = trf.rot();
 
 		    if ( gradient_contrast >= 0) {
-			f2 = GlowColor.shift_drawtype( fillcolor, -gradient_contrast/2 + chot, 0);
-			f1 = GlowColor.shift_drawtype( fillcolor, (int)((float)(gradient_contrast)/2+0.6) + chot, 0);
+			f2 = GlowColor.shift_drawtype( fillcolor, -gradient_contrast/2 + chot, null);
+			f1 = GlowColor.shift_drawtype( fillcolor, (int)((float)(gradient_contrast)/2+0.6) + chot, null);
 		    }
 		    else {
-			f2 = GlowColor.shift_drawtype( fillcolor, -(int)((float)(gradient_contrast)/2-0.6) + chot, 0);
-			f1 = GlowColor.shift_drawtype( fillcolor, gradient_contrast/2 + chot, 0);
+			f2 = GlowColor.shift_drawtype( fillcolor, -(int)((float)(gradient_contrast)/2-0.6) + chot, null);
+			f1 = GlowColor.shift_drawtype( fillcolor, gradient_contrast/2 + chot, null);
 		    }
 		    cmn.gdraw.gradient_fill_rectrounded( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, amount,
 							   fillcolor, f1, f2, cmn.gdraw.gradient_rotate( rotation, grad));	
@@ -379,7 +379,7 @@ public class GrowRectRounded extends GlowArrayElem {
 
 		if ( grad == Glow.eGradient_No) {
 		    if ( chot != 0)
-			drawtype = GlowColor.shift_drawtype( fillcolor, chot, 0);
+			drawtype = GlowColor.shift_drawtype( fillcolor, chot, null);
 		    else
 			drawtype = fillcolor;
 		    
@@ -410,12 +410,12 @@ public class GrowRectRounded extends GlowArrayElem {
 			rotation = trf.rot();
 
 		    if ( gradient_contrast >= 0) {
-			f2 = GlowColor.shift_drawtype( fillcolor, -gradient_contrast/2 + chot, 0);
-			f1 = GlowColor.shift_drawtype( fillcolor, (int)((float)(gradient_contrast)/2+0.6) + chot, 0);
+			f2 = GlowColor.shift_drawtype( fillcolor, -gradient_contrast/2 + chot, null);
+			f1 = GlowColor.shift_drawtype( fillcolor, (int)((float)(gradient_contrast)/2+0.6) + chot, null);
 		    }
 		    else {
-			f2 = GlowColor.shift_drawtype( fillcolor, -(int)((float)(gradient_contrast)/2-0.6) + chot, 0);
-			f1 = GlowColor.shift_drawtype( fillcolor, gradient_contrast/2 + chot, 0);
+			f2 = GlowColor.shift_drawtype( fillcolor, -(int)((float)(gradient_contrast)/2-0.6) + chot, null);
+			f1 = GlowColor.shift_drawtype( fillcolor, gradient_contrast/2 + chot, null);
 		    }
 		    cmn.gdraw.gradient_fill_rectrounded( ll_x + ish, ll_y + ish, ur_x - ll_x - 2 * ish, ur_y - ll_y - 2 * ish,
 							 amount - ish, fillcolor, f1, f2, cmn.gdraw.gradient_rotate( rotation, grad));	
@@ -560,5 +560,9 @@ public class GrowRectRounded extends GlowArrayElem {
 		      y_low * cmn.mw.zoom_factor_y - cmn.mw.offset_y - Glow.DRAW_MP,
 		      x_right * cmn.mw.zoom_factor_x - cmn.mw.offset_x + Glow.DRAW_MP,
 		      y_high * cmn.mw.zoom_factor_y - cmn.mw.offset_y + Glow.DRAW_MP);
+    }
+
+    public String getName() {
+	return n_name;
     }
 }

@@ -53,6 +53,7 @@ public class GrowCmn {
 	public int window_height;
 	public int subwindow_x;
 	public int subwindow_y;
+	public double subwindow_scale = 1;
     }
 
     public GrowApplIfc appl;
@@ -109,6 +110,7 @@ public class GrowCmn {
     double restriction_min_limit;
     int recursive_trace;
     public int nodraw;
+    public String owner = new String();
     
     Vector<GlowArrayElem> a = new Vector<GlowArrayElem>();
     Vector<GlowArrayElem> a_nc = new Vector<GlowArrayElem>();
@@ -117,7 +119,7 @@ public class GrowCmn {
     public GrowCmn( GrowCtxIfc ctx, GrowApplIfc appl) {
 	this.ctx = ctx;
 	this.appl = appl;
-	this.debug = true;
+	this.debug = false;
 	this.antiAliasing = true;
 	mw.window_width = getWidth();
 	mw.window_height = getHeight();
@@ -140,4 +142,10 @@ public class GrowCmn {
     		nodraw--;
     }
 
+    public void setOwner( String owner) {
+	this.owner = owner;
+    }
+    public String getOwner() {
+	return owner;
+    }
 }

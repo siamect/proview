@@ -442,4 +442,8 @@ public class GrowArc extends GlowArrayElem {
 	}
 	
     }
+
+    public String getName() {
+	return n_name;
+    }
 }

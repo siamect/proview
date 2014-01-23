@@ -50,7 +50,11 @@ public interface GraphIfc {
     public Gdh getGdh();
     public GraphLocalDb getLdb();
     public GrowCtx getCtx();
+    public GrowCmn getCmn();
+    public void cmnPop( GrowCmn cmn);
+    public void cmnPush();
     public int command(String cmd);
+    public void closeGraph();
     public void openConfirmDialog(Object dyn, String text, Object object);
     public void openValueInputDialog(Object dyn, String text, Object object);
     public String get_reference_name(String name);

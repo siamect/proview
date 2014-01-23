@@ -49,6 +49,11 @@ public class GlowDraw implements GlowDrawIfc {
     Graphics2D g2;
     boolean nodraw = true;
     Font fonts[] = new Font[DRAW_FONT_SIZE * 2];
+    int clip_x1[] = new int[10];
+    int clip_y1[] = new int[10];
+    int clip_x2[] = new int[10];
+    int clip_y2[] = new int[10];
+    int clipCount = 0;
 
         
     public void setNodraw(boolean nodraw) {
@@ -488,11 +493,40 @@ public class GlowDraw implements GlowDrawIfc {
     }
 
     public int set_clip_rectangle( int x1, int y1, int x2, int y2) {
-	g2.setClip(new Rectangle2D.Float((float)x1, (float)y1, (float)(x2-x1), (float)(y2-y1)));
+	if ( clipCount > 0) {
+	    if ( clipCount >= 10)
+		return 0;
+	    if ( x1 < clip_x1[clipCount-1])
+		x1 = clip_x1[clipCount-1];
+	    if ( y1 < clip_y1[clipCount-1])
+		y1 = clip_y1[clipCount-1];
+	    if ( x2 > clip_x2[clipCount-1])
+		x2 = clip_x2[clipCount-1];
+	    if ( y2 > clip_y2[clipCount-1])
+		y2 = clip_y2[clipCount-1];
+	}
+	clip_x1[clipCount] = x1;
+	clip_y1[clipCount] = y1;
+	clip_x2[clipCount] = x2;
+	clip_y2[clipCount] = y2;
+	clipCount++;
+
+	g2.setClip(new Rectangle2D.Float((float)x1, (float)y1, (float)(x2-x1+1), (float)(y2-y1+1)));
 	return 1;
     }
 
     public void reset_clip_rectangle() {
-	g2.setClip(null);
+	if ( clipCount == 0) {
+	    System.out.println("Clip mismatch");
+	    return;
+	}
+	clipCount--;
+	if ( clipCount > 0) {
+	    g2.setClip(new Rectangle2D.Float((float)clip_x1[clipCount-1], (float)clip_y1[clipCount-1], 
+					     (float)(clip_x2[clipCount-1]-clip_x1[clipCount-1]), 
+					     (float)(clip_y2[clipCount-1]-clip_y1[clipCount-1])));	    
+	}	    
+	else
+	    g2.setClip(null);
     }
 }

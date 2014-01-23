@@ -33,7 +33,12 @@ public class GraphCmn implements PlowCmnIfc {
 		public void zoom(double factor) {
 			graph.ctx.zoom(factor);
 		}
-		public void scroll( int x, int y) {}
+                public void zoom(double factor, double x, double y) {
+		    graph.ctx.zoom(factor, x, y);
+		}
+		public void scroll( int x, int y) {
+		    graph.ctx.scroll( x, y);
+		}
 		public void pageUp() {}
 		public void pageDown() {}
 		public synchronized void eventHandler(int action, double fx, double fy) {

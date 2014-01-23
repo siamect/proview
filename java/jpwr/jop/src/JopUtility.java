@@ -42,4 +42,18 @@ public class JopUtility {
     public static final int GRAPH = 2;
     public static final int NAVIGATOR = 3;
     public static final int ALARMLIST = 4;
+
+    public static String fileToName( String file) {
+	String name;
+	int idx = file.lastIndexOf('/');
+	if ( idx == -1)
+	    name = file;
+	else
+	    name = file.substring(idx+1);
+	idx = name.indexOf('.');
+	if ( idx != -1)
+	    name = name.substring( 0, idx);
+
+	return name;
+    }
 }

@@ -16,6 +16,7 @@ public interface PlowCmnIfc {
 	public void setNodraw();
 	public void resetNodraw();
 	public void zoom(double factor);
+        public void zoom(double factor, double x, double y);
 	public void scroll( int x, int y);
 	public void pageUp();
 	public void pageDown();

@@ -112,6 +112,60 @@ public class Dyn {
 
     public static final int mActionType2_No			= 0;
     
+  //! Priority order for dyntypes and actiontypes. Lower value gives higher priority.
+    public static final int eDynPrio_DigSound			= 0;
+    public static final int eDynPrio_HostObject			= 1;
+    public static final int eDynPrio_Invisible			= 2;
+    public static final int eDynPrio_DigFlash			= 3;
+    public static final int eDynPrio_DigError			= 4;
+    public static final int eDynPrio_DigWarning			= 5;
+    public static final int eDynPrio_AnalogColor	       	= 6;
+    public static final int eDynPrio_DigColor			= 7;
+    public static final int eDynPrio_DigLowColor	       	= 8;
+    public static final int eDynPrio_DigBorder			= 9;
+    public static final int eDynPrio_DigText			= 10;
+    public static final int eDynPrio_FillLevel			= 11;
+    public static final int eDynPrio_Value			= 12;
+    public static final int eDynPrio_ValueInput			= 13;
+    public static final int eDynPrio_Rotate			= 14;
+    public static final int eDynPrio_Move			= 15;
+    public static final int eDynPrio_AnalogShift	       	= 16;
+    public static final int eDynPrio_DigShift			= 17;
+    public static final int eDynPrio_Animation			= 18;
+    public static final int eDynPrio_Bar			= 19;
+    public static final int eDynPrio_Trend			= 20;
+    public static final int eDynPrio_FastCurve			= 21;
+    public static final int eDynPrio_XY_Curve			= 22;
+    public static final int eDynPrio_AnalogText			= 23;
+    public static final int eDynPrio_Table			= 24;
+    public static final int eDynPrio_SliderBackground	       	= 25;
+    public static final int eDynPrio_Video			= 26;
+    public static final int eDynPrio_StatusColor	       	= 27;
+    public static final int eDynPrio_PopupMenu			= 28;
+    public static final int eDynPrio_Confirm			= 29;
+    public static final int eDynPrio_SetDig			= 30;
+    public static final int eDynPrio_ResetDig			= 31;
+    public static final int eDynPrio_ToggleDig			= 32;
+    public static final int eDynPrio_StoDig			= 33;
+    public static final int eDynPrio_Help			= 34;
+    public static final int eDynPrio_OpenGraph			= 35;
+    public static final int eDynPrio_OpenURL			= 36;
+    public static final int eDynPrio_CommandDoubleClick	       	= 37;
+    public static final int eDynPrio_IncrAnalog			= 38;
+    public static final int eDynPrio_RadioButton	       	= 39;
+    public static final int eDynPrio_Slider			= 40;
+    public static final int eDynPrio_TipText			= 41;
+    public static final int eDynPrio_PulldownMenu	       	= 42;
+    public static final int eDynPrio_OptionMenu			= 43;
+    public static final int eDynPrio_InputFocus			= 44;
+    public static final int eDynPrio_DigCommand			= 45;
+    public static final int eDynPrio_SetValue			= 46;
+    public static final int eDynPrio_Pie			= 47;
+    public static final int eDynPrio_BarChart			= 48;
+    public static final int eDynPrio_Axis			= 49;
+    public static final int eDynPrio_Command  			= 9999;
+    public static final int eDynPrio_CloseGraph 		= 10000;
+
     public static final int eSave_Dyn		       		= 1;
     public static final int eSave_DigLowColor	       		= 2;
     public static final int eSave_DigColor	       		= 3;
@@ -371,6 +425,7 @@ public class Dyn {
     public static final int eSave_AnalogColor_color       	= 6103;
     public static final int eSave_AnalogColor_instance      	= 6104;
     public static final int eSave_AnalogColor_instance_mask 	= 6105;
+    public static final int eSave_AnalogColor_border	 	= 6106;
     public static final int eSave_TipText_text              	= 6200;
     public static final int eSave_Help_topic        		= 6300;
     public static final int eSave_Help_bookmark             	= 6400;
@@ -536,10 +591,11 @@ public class Dyn {
     public static final int ePwrStatus_Error		= 3;
     public static final int ePwrStatus_Fatal		= 4;
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
 
     Vector<DynElem> elements = new Vector<DynElem>();
     GraphIfc graph;
+    GlowArrayElem object;
     int dyn_type1;
     int dyn_type2;
     int action_type1;
@@ -557,6 +613,355 @@ public class Dyn {
 
     public Dyn(GraphIfc graph) {
 	this.graph = graph;
+    }
+
+    public Dyn(Dyn x) {
+	this.graph = x.graph;
+	this.dyn_type1 = x.dyn_type1;
+	this.dyn_type2 = x.dyn_type2;
+	this.total_dyn_type1 = x.total_dyn_type1;
+	this.total_dyn_type2 = x.total_dyn_type2;
+	this.action_type1 = x.action_type1;
+	this.action_type2 = x.action_type2;
+	this.total_action_type1 = x.total_action_type1;
+	this.total_action_type2 = x.total_action_type2;
+	this.access = x.access;
+	this.cycle = x.cycle;
+
+	for ( int i = 0; i < x.elements.size(); i++) {
+	    DynElem e = null;
+	    switch( x.elements.get(i).dyn_type1) {
+	    case Dyn.mDynType1_DigLowColor:
+		e = new DynDigLowColor((DynDigLowColor) x.elements.get(i)); break;
+	    case Dyn.mDynType1_DigColor:
+		e = new DynDigColor((DynDigColor) x.elements.get(i)); break;
+	    case Dyn.mDynType1_DigError:
+		e = new DynDigError((DynDigError) x.elements.get(i)); break;
+	    case Dyn.mDynType1_DigWarning:
+		e = new DynDigWarning((DynDigWarning) x.elements.get(i)); break;
+	    case Dyn.mDynType1_DigFlash:
+		e = new DynDigFlash((DynDigFlash) x.elements.get(i)); break;
+	    case Dyn.mDynType1_Invisible:
+		e = new DynInvisible((DynInvisible) x.elements.get(i)); break;
+	    case Dyn.mDynType1_DigBorder:
+		e = new DynDigBorder((DynDigBorder) x.elements.get(i)); break;
+	    case Dyn.mDynType1_DigText:
+		e = new DynDigText((DynDigText) x.elements.get(i)); break;
+	    case Dyn.mDynType1_Value:
+		e = new DynValue((DynValue) x.elements.get(i)); break;
+	    case Dyn.mDynType1_AnalogColor:
+		e = new DynAnalogColor((DynAnalogColor) x.elements.get(i)); break;
+	    case Dyn.mDynType1_Rotate:
+		e = new DynRotate((DynRotate) x.elements.get(i)); break;
+	    case Dyn.mDynType1_Move:
+		e = new DynMove((DynMove) x.elements.get(i)); break;
+	    case Dyn.mDynType1_DigShift:
+		e = new DynDigShift((DynDigShift) x.elements.get(i)); break;
+	    case Dyn.mDynType1_AnalogShift:
+		e = new DynAnalogShift((DynAnalogShift) x.elements.get(i)); break;
+	    case Dyn.mDynType1_Video:
+		e = new DynVideo((DynVideo) x.elements.get(i)); break;
+	    case Dyn.mDynType1_Animation:
+		e = new DynAnimation((DynAnimation) x.elements.get(i)); break;
+	    case Dyn.mDynType1_Bar:
+		e = new DynBar((DynBar) x.elements.get(i)); break;
+	    case Dyn.mDynType1_Trend:
+		e = new DynTrend((DynTrend) x.elements.get(i)); break;
+	    case Dyn.mDynType1_FillLevel:
+		e = new DynFillLevel((DynFillLevel) x.elements.get(i)); break;
+	    case Dyn.mDynType1_FastCurve:
+		e = new DynFastCurve((DynFastCurve) x.elements.get(i)); break;
+	    case Dyn.mDynType1_AnalogText:
+		e = new DynAnalogText((DynAnalogText) x.elements.get(i)); break;
+	    case Dyn.mDynType1_Table:
+		e = new DynTable((DynTable) x.elements.get(i)); break;
+	    case Dyn.mDynType1_StatusColor:
+		e = new DynStatusColor((DynStatusColor) x.elements.get(i)); break;
+	    case Dyn.mDynType1_HostObject:
+		e = new DynHostObject((DynHostObject) x.elements.get(i)); break;
+	    case Dyn.mDynType1_DigSound:
+		e = new DynDigSound((DynDigSound) x.elements.get(i)); break;
+	    case Dyn.mDynType1_XY_Curve:
+		e = new DynXY_Curve((DynXY_Curve) x.elements.get(i)); break;
+	    case Dyn.mDynType1_DigCommand:
+		e = new DynDigCommand((DynDigCommand) x.elements.get(i)); break;
+	    case Dyn.mDynType1_Pie:
+		e = new DynPie((DynPie) x.elements.get(i)); break;
+	    case Dyn.mDynType1_BarChart:
+		e = new DynBarChart((DynBarChart) x.elements.get(i)); break;
+	    default: ;
+	    }
+	    switch( x.elements.get(i).dyn_type2) {
+	    case Dyn.mDynType2_Axis:
+		e = new DynAxis((DynAxis) x.elements.get(i)); break;
+	    default: ;
+	    }
+	    switch( x.elements.get(i).action_type1) {
+	    case Dyn.mActionType1_PopupMenu:
+		e = new DynPopupMenu((DynPopupMenu) x.elements.get(i)); break;
+	    case Dyn.mActionType1_SetDig:
+		e = new DynSetDig((DynSetDig) x.elements.get(i)); break;
+	    case Dyn.mActionType1_ResetDig:
+		e = new DynResetDig((DynResetDig) x.elements.get(i)); break;
+	    case Dyn.mActionType1_ToggleDig:
+		e = new DynToggleDig((DynToggleDig) x.elements.get(i)); break;
+	    case Dyn.mActionType1_StoDig:
+		e = new DynStoDig((DynStoDig) x.elements.get(i)); break;
+	    case Dyn.mActionType1_Command:
+		e = new DynCommand((DynCommand) x.elements.get(i)); break;
+	    case Dyn.mActionType1_CommandDoubleClick: 
+		e = new DynCommandDoubleClick((DynCommandDoubleClick) x.elements.get(i)); break;
+	    case Dyn.mActionType1_Confirm:
+		e = new DynConfirm((DynConfirm) x.elements.get(i)); break;
+	    case Dyn.mActionType1_IncrAnalog:
+		e = new DynIncrAnalog((DynIncrAnalog) x.elements.get(i)); break;
+	    case Dyn.mActionType1_RadioButton:
+		e = new DynRadioButton((DynRadioButton) x.elements.get(i)); break;
+	    case Dyn.mActionType1_Slider:
+		e = new DynSlider((DynSlider) x.elements.get(i)); break;
+	    case Dyn.mActionType1_ValueInput:
+		e = new DynValueInput((DynValueInput) x.elements.get(i)); break;
+	    case Dyn.mActionType1_TipText:
+		e = new DynTipText((DynTipText) x.elements.get(i)); break;
+	    case Dyn.mActionType1_Help:
+		e = new DynHelp((DynHelp) x.elements.get(i)); break;
+	    case Dyn.mActionType1_OpenGraph:
+		e = new DynOpenGraph((DynOpenGraph) x.elements.get(i)); break;
+	    case Dyn.mActionType1_OpenURL:
+		e = new DynOpenURL((DynOpenURL) x.elements.get(i)); break;
+	    case Dyn.mActionType1_InputFocus:
+		e = new DynInputFocus((DynInputFocus) x.elements.get(i)); break;
+	    case Dyn.mActionType1_CloseGraph:
+		e = new DynCloseGraph((DynCloseGraph) x.elements.get(i)); break;
+	    case Dyn.mActionType1_PulldownMenu:
+		e = new DynPulldownMenu((DynPulldownMenu) x.elements.get(i)); break;
+	    case Dyn.mActionType1_OptionMenu:
+		e = new DynOptionMenu((DynOptionMenu) x.elements.get(i)); break;
+	    case Dyn.mActionType1_SetValue:
+		e = new DynSetValue((DynSetValue) x.elements.get(i)); break;
+	    default: ;
+	    }
+	    switch( x.elements.get(i).action_type2) {
+	    default: ;
+	    }
+	    if ( e != null) {
+		e.dyn = this;
+		elements.add(e);
+	    }
+	}
+    }
+
+    DynElem copy_element( DynElem x) {
+	DynElem e = null;
+
+	if ( x.action_type1 != 0) {
+	    switch ( x.action_type1) {
+	    case mActionType1_PopupMenu:
+		e = (DynElem) new DynPopupMenu((DynPopupMenu) x);
+		break;
+	    case mActionType1_SetDig:
+		e = (DynElem) new DynSetDig((DynSetDig) x);
+		break;
+	    case mActionType1_ResetDig:
+		e = (DynElem) new DynResetDig((DynResetDig) x);
+		break;
+	    case mActionType1_ToggleDig:
+		e = (DynElem) new DynToggleDig((DynToggleDig) x);
+		break;
+	    case mActionType1_StoDig:
+		e = (DynElem) new DynStoDig((DynStoDig) x);
+		break;
+	    case mActionType1_Command:
+		e = (DynElem) new DynCommand((DynCommand) x);
+		break;
+	    case mActionType1_CommandDoubleClick:
+		e = (DynElem) new DynCommandDoubleClick((DynCommandDoubleClick) x);
+		break;
+	    case mActionType1_Confirm:
+		e = (DynElem) new DynConfirm((DynConfirm) x);
+		break;
+	    case mActionType1_IncrAnalog:
+		e = (DynElem) new DynIncrAnalog((DynIncrAnalog) x);
+		break;
+	    case mActionType1_RadioButton:
+		e = (DynElem) new DynRadioButton((DynRadioButton) x);
+		break;
+	    case mActionType1_Slider:
+		e = (DynElem) new DynSlider((DynSlider) x);
+		break;
+	    case mActionType1_ValueInput:
+		e = (DynElem) new DynValueInput((DynValueInput) x);
+		break;
+	    case mActionType1_TipText:
+		e = (DynElem) new DynTipText((DynTipText) x);
+		break;
+	    case mActionType1_Help:
+		e = (DynElem) new DynHelp((DynHelp ) x);
+		break;
+	    case mActionType1_OpenGraph:
+		e = (DynElem) new DynOpenGraph((DynOpenGraph) x);
+		break;
+	    case mActionType1_OpenURL:
+		e = (DynElem) new DynOpenURL((DynOpenURL) x);
+		break;
+	    case mActionType1_InputFocus:
+		e = (DynElem) new DynInputFocus((DynInputFocus) x);
+		break;
+	    case mActionType1_CloseGraph:
+		e = (DynElem) new DynCloseGraph((DynCloseGraph) x);
+		break;
+	    case mActionType1_PulldownMenu:
+		e = (DynElem) new DynPulldownMenu((DynPulldownMenu) x);
+		break;
+	    case mActionType1_OptionMenu:
+		e = (DynElem) new DynOptionMenu((DynOptionMenu) x);
+		break;
+	    case mActionType1_SetValue:
+		e = (DynElem) new DynSetValue((DynSetValue) x);
+		break;
+	    default: ;
+	    }
+	}
+	else if ( x.action_type2 != 0) {
+	    switch ( x.action_type2) {
+	    default: ;
+	    }
+	}
+	else if ( x.dyn_type1 != 0) {
+	    switch ( x.dyn_type1) {
+	    case mDynType1_DigLowColor:
+		e = (DynElem) new DynDigLowColor((DynDigLowColor) x);
+		break;
+	    case mDynType1_DigColor:
+		e = (DynElem) new DynDigColor((DynDigColor) x);
+		break;
+	    case mDynType1_DigWarning:
+		e = (DynElem) new DynDigWarning((DynDigWarning) x);
+		break;
+	    case mDynType1_DigError:
+		e = (DynElem) new DynDigError((DynDigError) x);
+		break;
+	    case mDynType1_DigFlash:
+		e = (DynElem) new DynDigFlash((DynDigFlash) x);
+		break;
+	    case mDynType1_Invisible:
+		e = (DynElem) new DynInvisible((DynInvisible) x);
+		break;
+	    case mDynType1_DigBorder:
+		e = (DynElem) new DynDigBorder((DynDigBorder) x);
+		break;
+	    case mDynType1_DigText:
+		e = (DynElem) new DynDigText((DynDigText) x);
+		break;
+	    case mDynType1_Value:
+		e = (DynElem) new DynValue((DynValue) x);
+		break;
+	    case mDynType1_AnalogColor:
+		e = (DynElem) new DynAnalogColor((DynAnalogColor) x);
+		break;
+	    case mDynType1_Rotate:
+		e = (DynElem) new DynRotate((DynRotate) x);
+		break;
+	    case mDynType1_Move:
+		e = (DynElem) new DynMove((DynMove) x);
+		break;
+	    case mDynType1_AnalogShift:
+		e = (DynElem) new DynAnalogShift((DynAnalogShift) x);
+		break;
+	    case mDynType1_DigShift:
+		e = (DynElem) new DynDigShift((DynDigShift) x);
+		break;
+	    case mDynType1_Animation:
+		e = (DynElem) new DynAnimation((DynAnimation) x);
+		break;
+	    case mDynType1_Video:
+		e = (DynElem) new DynVideo((DynVideo) x);
+		break;
+	    case mDynType1_Bar:
+		e = (DynElem) new DynBar((DynBar) x);
+		break;
+	    case mDynType1_Trend:
+		e = (DynElem) new DynTrend((DynTrend) x);
+		break;
+	    case mDynType1_XY_Curve:
+		e = (DynElem) new DynXY_Curve((DynXY_Curve) x);
+		break;
+	    case mDynType1_DigCommand:
+		e = (DynElem) new DynDigCommand((DynDigCommand) x);
+		break;
+	    case mDynType1_FillLevel:
+		e = (DynElem) new DynFillLevel((DynFillLevel) x);
+		break;
+	    case mDynType1_FastCurve:
+		e = (DynElem) new DynFastCurve((DynFastCurve) x);
+		break;
+	    case mDynType1_AnalogText:
+		e = (DynElem) new DynAnalogText((DynAnalogText) x);
+		break;
+	    case mDynType1_Table:
+		e = (DynElem) new DynTable((DynTable) x);
+		break;
+	    case mDynType1_StatusColor:
+		e = (DynElem) new DynStatusColor((DynStatusColor) x);
+		break;
+	    case mDynType1_Pie:
+		e = (DynElem) new DynPie((DynPie) x);
+		break;
+	    case mDynType1_BarChart:
+		e = (DynElem) new DynBarChart((DynBarChart) x);
+		break;
+	    case mDynType1_HostObject:
+		e = (DynElem) new DynHostObject((DynHostObject) x);
+		break;
+	    case mDynType1_DigSound:
+		e = (DynElem) new DynDigSound((DynDigSound) x);
+		break;
+	    default: ;
+	    }
+	}
+	else if ( x.dyn_type2 != 0) {
+	    switch ( x.dyn_type2) {
+	    case mDynType2_Axis:
+		e = (DynElem) new DynAxis((DynAxis) x);
+		break;
+	    default: ;
+	    }
+	}
+
+	if ( e != null)
+	    e.dyn = this;
+	return e;
+    }
+
+    public void merge( Dyn x) {
+	DynElem elem, xelem;
+	DynElem e;
+
+	dyn_type1 = dyn_type1 | x.dyn_type1;
+	total_dyn_type1 = total_dyn_type1 | x.total_dyn_type1;
+	action_type1 = action_type1 | x.action_type1;
+	total_action_type1 = total_action_type1 | x.total_action_type1;
+  
+	for ( int i = 0; i < x.elements.size(); i++) {
+	    xelem = x.elements.get(i);
+
+	    for ( int j = 0; j < elements.size(); j++) {
+		elem = elements.get(j);
+		if ( elem.dyn_type1 == xelem.dyn_type1 && 
+		     elem.dyn_type2 == xelem.dyn_type2 && 		     
+		     elem.action_type1 == xelem.action_type1 &&
+		     elem.action_type2 == xelem.action_type2) {
+		    // Element exists in both, use element in x, i.e. remove current element
+		    elements.remove(j);
+		    break;
+		}
+	    }
+	    // Insert copy of x element
+	    e = copy_element( xelem);
+	    if ( e != null) {
+		elements.add( e);
+	    }
+	}
     }
 
     public void open( BufferedReader reader) {
@@ -804,6 +1209,14 @@ public class Dyn {
 	return action_type2;
     }
 
+    String getHostObject() {
+	for ( int i = 0; i < elements.size(); i++) {
+	    if ( (elements.get(i).dyn_type1 & Dyn.mDynType1_HostObject) != 0)
+		return ((DynHostObject)elements.get(i)).hostobject;
+	}
+	return "";
+    }
+
     boolean getDig( int p, int a_typeid, int bitmask, int db) {
 	switch ( a_typeid) {
 	case Pwr.eType_Boolean: {
@@ -895,17 +1308,55 @@ public class Dyn {
 	return 0;
     }
 
+    public void setTotal( GlowArrayElem object) {
+	if ( object == null) {
+	    total_dyn_type1 = dyn_type1;
+	    total_dyn_type2 = dyn_type2;
+	    total_action_type1 = action_type1;
+	    total_action_type2 = action_type2;
+	}
+	else {
+	    if ( (dyn_type1 & Dyn.mDynType1_Inherit) != 0) {
+		int inherit_dyn_type1 = object.getClassDynType1();
+		int inherit_dyn_type2 = object.getClassDynType2();
+		total_dyn_type1 = dyn_type1 | inherit_dyn_type1;
+		total_dyn_type2 = dyn_type2 | inherit_dyn_type2;
+	    }
+	    else {
+		total_dyn_type1 = dyn_type1;
+		total_dyn_type2 = dyn_type2;
+	    }
+	    
+	    if ( (action_type1 & Dyn.mActionType1_Inherit) != 0) {
+		int inherit_action_type1 = object.getClassActionType1();
+		int inherit_action_type2 = object.getClassActionType2();
+		total_action_type1 = action_type1 | inherit_action_type1;
+		total_action_type2 = action_type2 | inherit_action_type2;
+	    }
+	    else {
+		total_action_type1 = action_type1;
+		total_action_type2 = action_type2;
+	    }
+	}
+    }
+
     public DynParsedAttrName parseAttrName(String name) {
+	if ( (total_dyn_type1 & Dyn.mDynType1_HostObject) != 0) {
+	    int idx = name.indexOf("$hostobject");
+	    if ( idx != -1) {
+		String hostobject = getHostObject();
+		String n = name.substring(0, idx) + hostobject + name.substring(idx+11);
+		return graph.parseAttrName( n);
+	    }	    
+	}
+
 	return graph.parseAttrName( name);
     }
 
     public int connect(GlowArrayElem object) {
-	System.out.println("Dyn connect object 0 " + object + " elements " + elements.size());
 
 	if ( (dyn_type1 & Dyn.mDynType1_Inherit) != 0) {
-	System.out.println("Dyn connect object 1 " + object + " elements " + elements.size());
 	    int inherit_dyn_type1 = object.getClassDynType1();
-	System.out.println("Dyn connect object 2 " + object + " elements " + elements.size());
 	    int inherit_dyn_type2 = object.getClassDynType2();
 	    total_dyn_type1 = dyn_type1 | inherit_dyn_type1;
 	    total_dyn_type2 = dyn_type2 | inherit_dyn_type2;
@@ -914,7 +1365,6 @@ public class Dyn {
 	    total_dyn_type1 = dyn_type1;
 	    total_dyn_type2 = dyn_type2;
 	}
-	System.out.println("Dyn connect object 3 " + object + " elements " + elements.size());
 
 	if ( (action_type1 & Dyn.mActionType1_Inherit) != 0) {
 	    int inherit_action_type1 = object.getClassActionType1();
@@ -931,7 +1381,6 @@ public class Dyn {
 	    cycle = object.getClassCycle();
 
 	for ( int i = 0; i < elements.size(); i++) {
-	    System.out.println("Dyn connect " + elements.get(i));
 	    elements.get(i).connect(object);
 	}
 	return 1;
@@ -986,15 +1435,26 @@ public class Dyn {
 	int dyn_type2;
 	int action_type1;
 	int action_type2;
+	int prio;
 	int instance_mask;
 	int instance;
 
-	DynElem(Dyn dyn, int dyn_type1, int dyn_type2, int action_type1, int action_type2) {
+	DynElem(Dyn dyn, int dyn_type1, int dyn_type2, int action_type1, int action_type2, int prio) {
 	    this.dyn = dyn;
 	    this.dyn_type1 = dyn_type1;
 	    this.dyn_type2 = dyn_type2;
 	    this.action_type1 = action_type1;
 	    this.action_type2 = action_type2;
+	    this.prio = prio;
+	}
+	DynElem( DynElem x) {
+	    this.dyn = x.dyn;
+	    this.dyn_type1 = x.dyn_type1;
+	    this.dyn_type2 = x.dyn_type2;
+	    this.action_type1 = x.action_type1;
+	    this.action_type2 = x.action_type2;
+	    this.instance_mask = x.instance_mask;
+	    this.instance = x.instance;
 	}
 	public int getDynType1() {return dyn_type1;}
 	public void open( BufferedReader reader) {}
@@ -1018,7 +1478,13 @@ public class Dyn {
 	int a_typeid;
 	
 	public DynDigLowColor( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_DigLowColor, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_DigLowColor, 0, 0, 0, Dyn.eDynPrio_DigLowColor);
+	}
+
+	public DynDigLowColor( DynDigLowColor x) {
+	    super(x);
+	    color = x.color;
+	    attribute = x.attribute;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -1030,7 +1496,6 @@ public class Dyn {
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 	    if ( pname == null || pname.name.equals("")) 
 		return 1;
-	    System.out.println("DigLowColor: " + attribute + " pname " + pname.name + " db " + pname.database);
 
 	    GdhrRefObjectInfo ret = null;
 
@@ -1160,7 +1625,13 @@ public class Dyn {
 	int a_typeid;
 
 	public DynDigColor( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_DigColor, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_DigColor, 0, 0, 0, Dyn.eDynPrio_DigColor);
+	}
+
+	public DynDigColor( DynDigColor x) {
+	    super(x);
+	    color = x.color;
+	    attribute = x.attribute;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -1317,7 +1788,12 @@ public class Dyn {
 	
 
 	public DynDigWarning( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_DigWarning, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_DigWarning, 0, 0, 0, Dyn.eDynPrio_DigWarning);
+	}
+
+	public DynDigWarning( DynDigWarning x) {
+	    super(x);
+	    attribute = x.attribute;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -1453,7 +1929,12 @@ public class Dyn {
 	int a_typeid;
 
 	public DynDigError( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_DigError, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_DigError, 0, 0, 0, Dyn.eDynPrio_DigError);
+	}
+
+	public DynDigError( DynDigError x) {
+	    super(x);
+	    attribute = x.attribute;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -1592,7 +2073,15 @@ public class Dyn {
 	boolean on;
 
 	public DynDigFlash( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_DigFlash, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_DigFlash, 0, 0, 0, Dyn.eDynPrio_DigFlash);
+	}
+
+	public DynDigFlash( DynDigFlash x) {
+	    super(x);
+	    color = x.color;
+	    color2 = x.color2;
+	    on = x.on;
+	    attribute = x.attribute;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -1760,7 +2249,12 @@ public class Dyn {
 	String command;
 
 	public DynInvisible( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_Invisible, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_Invisible, 0, 0, 0, Dyn.eDynPrio_Invisible);
+	}
+
+	public DynInvisible( DynInvisible x) {
+	    super(x);
+	    attribute = x.attribute;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -1923,7 +2417,13 @@ public class Dyn {
 	int a_typeid;
 
 	public DynDigBorder( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_DigBorder, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_DigBorder, 0, 0, 0, Dyn.eDynPrio_DigBorder);
+	}
+
+	public DynDigBorder( DynDigBorder x) {
+	    super(x);
+	    color = x.color;
+	    attribute = x.attribute;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -1981,7 +2481,6 @@ public class Dyn {
 	    else
 		firstScan = false;
 	
-	    System.out.println("DigBorder " + value + "  color " + color);
 	    if ( value) {
 		object.setBorderColor(color);
 	    }
@@ -2047,7 +2546,13 @@ public class Dyn {
 	int a_typeid;
 
 	public DynDigText( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_DigText, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_DigText, 0, 0, 0, Dyn.eDynPrio_DigText);
+	}
+
+	public DynDigText( DynDigText x) {
+	    super(x);
+	    attribute = x.attribute;
+	    low_text = x.low_text;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -2185,7 +2690,15 @@ public class Dyn {
 	StringBuffer sb = new StringBuffer();
 
 	public DynValue( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_Value, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_Value, 0, 0, 0, Dyn.eDynPrio_Value);
+	}
+
+	public DynValue( DynValue x) {
+	    super(x);
+	    attribute = x.attribute;
+	    zero_blank = x.zero_blank;
+	    format = x.format;
+	    cFormat = new GlowCFormat(format);
 	}
 
  	public int connect(GlowArrayElem o) {
@@ -2413,8 +2926,13 @@ public class Dyn {
 
 	DynValueInput e = (DynValueInput)object;
 
-	System.out.println("Dyn Value input: " + str);
-
+	boolean cmn_popped = false;
+	GrowCmn ocmn = (GrowCmn)((DynElem)object).dyn.object.getCmn();
+	if ( e.dyn.graph.getCmn() != ocmn) {
+	    e.dyn.graph.cmnPop( ocmn);
+	    cmn_popped = true;
+	}
+	
 
 	try {
 	    PwrtStatus sts = null;
@@ -2425,7 +2943,8 @@ public class Dyn {
 		if ( pname != null && pname.type == Pwr.eType_Float32) {
 		    CdhrFloat ret = e.dyn.graph.getGdh().getObjectInfoFloat( pname.name);
 		    if ( ret.evenSts()) {
-			System.out.println( "ValueInput " + pname.name);
+			if ( cmn_popped)
+			    e.dyn.graph.cmnPush();
 			return Dyn.eValueInput_Error;
 		    }
 		    minval = ret.value;
@@ -2444,7 +2963,8 @@ public class Dyn {
 		    if ( pname.type == Pwr.eType_Float32) {
 			CdhrFloat ret = e.dyn.graph.getGdh().getObjectInfoFloat( pname.name);
 			if ( ret.evenSts()) {
-			    System.out.println( "ValueInput " + pname.name);
+			    if ( cmn_popped)
+				e.dyn.graph.cmnPush();
 			    return Dyn.eValueInput_Error;
 			}
 			maxval = ret.value;
@@ -2459,10 +2979,16 @@ public class Dyn {
 	    switch ( e.a_typeid) {
 	    case Pwr.eType_Float32: {
 		float inputValue = Float.parseFloat( str.trim());
-		if ( minval != 0 && maxval != 0 && inputValue < minval)
+		if ( minval != 0 && maxval != 0 && inputValue < minval) {
+		    if ( cmn_popped)
+			e.dyn.graph.cmnPush();
 		    return Dyn.eValueInput_MinValueExceeded;
-		if ( minval != 0 && maxval != 0 && inputValue > maxval )
+		}
+		if ( minval != 0 && maxval != 0 && inputValue > maxval) {
+		    if ( cmn_popped)
+			e.dyn.graph.cmnPush();
 		    return Dyn.eValueInput_MaxValueExceeded;
+		}
 		
 		DynParsedAttrName pname = e.dyn.parseAttrName(e.value_element.attribute);
 		if ( pname == null || pname.name.equals(""))
@@ -2476,10 +3002,14 @@ public class Dyn {
 		    sts = e.dyn.graph.getLdb().setObjectInfo( graph, pname.name, inputValue);
 		    break;
 		default:
+		    if ( cmn_popped)
+			e.dyn.graph.cmnPush();
 		    return Dyn.eValueInput_Error;
 		}
 		if ( sts.evenSts()) {
 		    System.out.println( "setObjectInfoError " + sts);
+		    if ( cmn_popped)
+			e.dyn.graph.cmnPush();
 		    return Dyn.eValueInput_Error;
 		}
 		break;
@@ -2491,10 +3021,16 @@ public class Dyn {
 	    case Pwr.eType_Int8:
 	    case Pwr.eType_UInt8: {
 		int inputValue = Integer.parseInt( str.trim(), 10);
-		if ( minval != 0 && maxval != 0 && inputValue < minval)
+		if ( minval != 0 && maxval != 0 && inputValue < minval) {
+		    if ( cmn_popped)
+			e.dyn.graph.cmnPush();
 		    return Dyn.eValueInput_MinValueExceeded;
-		if ( minval != 0 && maxval != 0 && inputValue > maxval )
+		}
+		if ( minval != 0 && maxval != 0 && inputValue > maxval ) {
+		    if ( cmn_popped)
+			e.dyn.graph.cmnPush();
 		    return Dyn.eValueInput_MaxValueExceeded;
+		}
 
 		DynParsedAttrName pname = e.dyn.parseAttrName(e.value_element.attribute);
 		if ( pname == null || pname.name.equals(""))
@@ -2508,10 +3044,14 @@ public class Dyn {
 		    sts = e.dyn.graph.getLdb().setObjectInfo( graph, pname.name, inputValue);
 		    break;
 		default:
+		    if ( cmn_popped)
+			e.dyn.graph.cmnPush();
 		    return Dyn.eValueInput_Error;
 		}
 		if ( sts.evenSts()) {
 		    System.out.println( "setObjectInfoError " + sts);
+		    if ( cmn_popped)
+			e.dyn.graph.cmnPush();
 		    return Dyn.eValueInput_Error;
 		}		
 		break;
@@ -2544,6 +3084,8 @@ public class Dyn {
 		}
 		if ( sts.evenSts()) {
 		    System.out.println( "setObjectInfoError " + sts);
+		    if ( cmn_popped)
+			e.dyn.graph.cmnPush();
 		    return Dyn.eValueInput_Error;
 		}
 		break;
@@ -2563,15 +3105,21 @@ public class Dyn {
 		    sts = e.dyn.graph.getLdb().setObjectInfo( graph, pname.name, str);
 		    break;
 		default:
+		    if ( cmn_popped)
+			e.dyn.graph.cmnPush();
 		    return Dyn.eValueInput_Error;
 		}
 		if ( sts.evenSts()) {
 		    System.out.println( "setObjectInfoError " + sts);
+		    if ( cmn_popped)
+			e.dyn.graph.cmnPush();
 		    return Dyn.eValueInput_Error;
 		}
 		break;
 	    }
 	    }
+	    if ( cmn_popped)
+		e.dyn.graph.cmnPush();
 	}
 	catch(NumberFormatException ex) {
 	    System.out.println( ex.toString() );
@@ -2594,7 +3142,19 @@ public class Dyn {
 	int a_typeid;
 
 	public DynValueInput( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_ValueInput, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_ValueInput, 0, Dyn.eDynPrio_ValueInput);
+	}
+
+	public DynValueInput( DynValueInput x) {
+	    super(x);
+	    min_value = x.min_value;
+	    max_value = x.max_value;
+	    clear = x.clear;
+	    popup = x.popup;
+	    unselect = x.unselect;
+	    escape_store = x.escape_store;	    
+	    minvalue_attr = x.minvalue_attr;
+	    maxvalue_attr = x.maxvalue_attr;
 	}
 
  	public int connect(GlowArrayElem o) {
@@ -2616,6 +3176,7 @@ public class Dyn {
 	public int action( GlowArrayElem object, GlowEvent e) {
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Click:
+		dyn.object = object;
 		dyn.graph.openValueInputDialog( dyn, "Enter value", this);
 		break;
 	    }
@@ -2687,6 +3248,7 @@ public class Dyn {
 	double limit;
 	int limit_type;
 	int color;
+	int border;
 	PwrtRefId subid;
 	int p;
 	int database;
@@ -2702,7 +3264,16 @@ public class Dyn {
 	boolean isMainInstance = false;
 
 	public DynAnalogColor( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_AnalogColor, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_AnalogColor, 0, 0, 0, Dyn.eDynPrio_AnalogColor);
+	}
+
+	public DynAnalogColor( DynAnalogColor x) {
+	    super(x);
+	    attribute = x.attribute;
+	    limit = x.limit;
+	    limit_type = x.limit_type;
+	    color = x.color;
+	    border = x.border;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -2914,6 +3485,9 @@ public class Dyn {
 		    case Dyn.eSave_AnalogColor_instance_mask: 
 			instance_mask = Integer.valueOf(token.nextToken());
 			break;
+		    case Dyn.eSave_AnalogColor_border: 
+			border = Integer.valueOf(token.nextToken());
+			break;
 		    case Dyn.eSave_End:
 			end_found = true;
 			break;
@@ -2950,7 +3524,15 @@ public class Dyn {
 	int rotation_point;
 
 	public DynRotate( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_Rotate, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_Rotate, 0, 0, 0, Dyn.eDynPrio_Rotate);
+	}
+
+	public DynRotate( DynRotate x) {
+	    super(x);
+	    attribute = x.attribute;
+	    x0 = x.x0;
+	    y0 = x.y0;
+	    factor = x.factor;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -3064,6 +3646,8 @@ public class Dyn {
 	String move_y_attribute;
 	String scale_x_attribute;
 	String scale_y_attribute;
+	double x_factor;
+	double y_factor;
 	double x_offset;
 	double y_offset;
 	double scale_x_factor;
@@ -3071,7 +3655,20 @@ public class Dyn {
 	int scale_type;
 
 	public DynMove( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_Move, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_Move, 0, 0, 0, Dyn.eDynPrio_Move);
+	}
+
+	public DynMove( DynMove x) {
+	    super(x);
+	    x_offset = x.x_offset;
+	    y_offset = x.y_offset;
+	    x_factor = x.x_factor;
+	    y_factor = x.y_factor;
+	    scale_type = x.scale_type;
+	    move_x_attribute = x.move_x_attribute;
+	    move_y_attribute = x.move_y_attribute;
+	    scale_x_attribute = x.scale_x_attribute;
+	    scale_y_attribute = x.scale_y_attribute;
 	}
 
 	public void open( BufferedReader reader) {
@@ -3109,6 +3706,12 @@ public class Dyn {
 			break;
 		    case Dyn.eSave_Move_y_offset: 
 			y_offset = new Double(token.nextToken()).doubleValue();
+			break;
+		    case Dyn.eSave_Move_x_factor: 
+			x_factor = new Double(token.nextToken()).doubleValue();
+			break;
+		    case Dyn.eSave_Move_y_factor: 
+			y_factor = new Double(token.nextToken()).doubleValue();
 			break;
 		    case Dyn.eSave_Move_scale_x_factor: 
 			scale_x_factor = new Double(token.nextToken()).doubleValue();
@@ -3152,7 +3755,12 @@ public class Dyn {
 	int oldValueI;
 
 	public DynAnalogShift( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_AnalogShift, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_AnalogShift, 0, 0, 0, Dyn.eDynPrio_AnalogShift);
+	}
+
+	public DynAnalogShift( DynAnalogShift x) {
+	    super(x);
+	    attribute = x.attribute;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -3292,7 +3900,12 @@ public class Dyn {
 	boolean oldValue;
 
 	public DynDigShift( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_DigShift, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_DigShift, 0, 0, 0, Dyn.eDynPrio_DigShift);
+	}
+
+	public DynDigShift( DynDigShift x) {
+	    super(x);
+	    attribute = x.attribute;
 	}
 
  	public int connect(GlowArrayElem o) {
@@ -3403,7 +4016,13 @@ public class Dyn {
 	int sequence;
 
 	public DynAnimation( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_Animation, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_Animation, 0, 0, 0, Dyn.eDynPrio_Animation);
+	}
+
+	public DynAnimation( DynAnimation x) {
+	    super(x);
+	    attribute = x.attribute;
+	    sequence = x.sequence;
 	}
 
 	public void open( BufferedReader reader) {
@@ -3449,7 +4068,11 @@ public class Dyn {
     public class DynVideo extends DynElem {
 
 	public DynVideo( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_Video, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_Video, 0, 0, 0, Dyn.eDynPrio_Video);
+	}
+
+	public DynVideo( DynVideo x) {
+	    super(x);
 	}
 
 	public void open( BufferedReader reader) {
@@ -3508,7 +4131,14 @@ public class Dyn {
 	float old_min_value;
 
 	public DynBar( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_Bar, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_Bar, 0, 0, 0, Dyn.eDynPrio_Bar);
+	}
+
+	public DynBar( DynBar x) {
+	    super(x);
+	    attribute = x.attribute;
+	    minvalue_attr = x.minvalue_attr;
+	    maxvalue_attr = x.maxvalue_attr;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -3713,7 +4343,18 @@ public class Dyn {
 	PwrtRefId hold_subid;
 
 	public DynTrend( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_Trend, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_Trend, 0, 0, 0, Dyn.eDynPrio_Trend);
+	}
+
+	public DynTrend( DynTrend x) {
+	    super(x);
+	    attribute1 = x.attribute1;
+	    attribute2 = x.attribute2;
+	    minvalue_attr1 = x.minvalue_attr1;
+	    minvalue_attr2 = x.minvalue_attr2;
+	    maxvalue_attr1 = x.maxvalue_attr1;
+	    maxvalue_attr2 = x.maxvalue_attr2;
+	    hold_attr = x.hold_attr;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -3913,7 +4554,6 @@ public class Dyn {
 			    object.add_value(1, 0);
 			else
 			    object.add_value(0, 0);
-			System.out.println("DynTrend add : " + value);
 			break;
 		    }
 		    case Pwr.eType_Float32: {
@@ -4036,9 +4676,30 @@ public class Dyn {
 	int datatype;
 	int curve_color;
 	int fill_color;
+	int noofpoints;
 
 	public DynXY_Curve( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_XY_Curve, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_XY_Curve, 0, 0, 0, Dyn.eDynPrio_XY_Curve);
+	}
+
+	public DynXY_Curve( DynXY_Curve x) {
+	    super(x);
+	    x_attr = x.x_attr;
+	    y_attr = x.y_attr;
+	    y_minvalue_attr = x.y_minvalue_attr;
+	    y_maxvalue_attr = x.y_maxvalue_attr;
+	    x_minvalue_attr = x.x_minvalue_attr;
+	    x_maxvalue_attr = x.x_maxvalue_attr;
+	    noofpoints_attr = x.noofpoints_attr;
+	    update_attr = x.update_attr;
+	    y_min_value = x.y_min_value;
+	    y_max_value = x.y_max_value;
+	    x_min_value = x.x_min_value;
+	    x_max_value = x.x_max_value;
+	    noofpoints = x.noofpoints;
+	    datatype = x.datatype;
+	    curve_color = x.curve_color;
+	    fill_color = x.fill_color;
 	}
 
 	public void open( BufferedReader reader) {
@@ -4157,7 +4818,14 @@ public class Dyn {
 	StringBuffer sb = new StringBuffer();
 
 	public DynTable( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_Table, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_Table, 0, 0, 0, Dyn.eDynPrio_Table);
+	}
+
+	public DynTable( DynTable x) {
+	    super(x);
+	    attribute = x.attribute;
+	    format = x.format;
+	    sel_attribute = x.sel_attribute;
 	}
 
 	public void open( BufferedReader reader) {
@@ -4676,7 +5344,13 @@ public class Dyn {
 
 
 	public DynStatusColor( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_StatusColor, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_StatusColor, 0, 0, 0, Dyn.eDynPrio_StatusColor);
+	}
+
+	public DynStatusColor( DynStatusColor x) {
+	    super(x);
+	    attribute = x.attribute;
+	    nostatus_color = x.nostatus_color;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -4862,10 +5536,25 @@ public class Dyn {
     }
 
     public class DynPie extends DynElem {
+	public static final int MAX_SECTORS = 12;
 	String[] attribute = new String[12];
+	int sectors;
+	double min_value;
+	double max_value;
+	int fix_range;
 
 	public DynPie( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_Pie, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_Pie, 0, 0, 0, Dyn.eDynPrio_Pie);
+	}
+
+	public DynPie( DynPie x) {
+	    super(x);
+	    for ( int i = 0; i < MAX_SECTORS; i++)
+		attribute[i] = x.attribute[i];
+	    sectors = x.sectors;
+	    min_value = x.min_value;
+	    max_value = x.max_value;
+	    fix_range = x.fix_range;
 	}
 
 	public void open( BufferedReader reader) {
@@ -4950,10 +5639,27 @@ public class Dyn {
     }
 
     public class DynBarChart extends DynElem {
+	public static final int MAX_BARSEGMENTS = 12;
 	String[] attribute = new String[12];
+	int bars;
+	int barsegments;
+	double min_value;
+	double max_value;
+	boolean fix_range;
 
 	public DynBarChart( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_BarChart, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_BarChart, 0, 0, 0, Dyn.eDynPrio_BarChart);
+	}
+
+	public DynBarChart( DynBarChart x) {
+	    super(x);	    
+	    bars = x.bars;
+	    barsegments = x.barsegments;
+	    min_value = x.min_value;
+	    max_value = x.max_value;
+	    fix_range = x.fix_range;
+	    for ( int i = 0; i < MAX_BARSEGMENTS; i++)
+		attribute[i] = x.attribute[i];
 	}
 
 	public void open( BufferedReader reader) {
@@ -5040,9 +5746,19 @@ public class Dyn {
     public class DynAxis extends DynElem {
 	String minvalue_attr;
 	String maxvalue_attr;
+	double min_value;
+	double max_value;
 
 	public DynAxis( Dyn dyn) {
-	    super(dyn, 0, Dyn.mDynType2_Axis, 0, 0);
+	    super(dyn, 0, Dyn.mDynType2_Axis, 0, 0, Dyn.eDynPrio_Axis);
+	}
+
+	public DynAxis( DynAxis x) {
+	    super(x);
+	    minvalue_attr = x.minvalue_attr;
+	    maxvalue_attr = x.maxvalue_attr;
+	    min_value = x.min_value;
+	    max_value = x.max_value;	    
 	}
 
 	public void open( BufferedReader reader) {
@@ -5090,7 +5806,12 @@ public class Dyn {
 	String hostobject;
 
 	public DynHostObject( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_HostObject, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_HostObject, 0, 0, 0, Dyn.eDynPrio_HostObject);
+	}
+
+	public DynHostObject( DynHostObject x) {
+	    super(x);
+	    hostobject = x.hostobject;
 	}
 
 	public void open( BufferedReader reader) {
@@ -5137,7 +5858,15 @@ public class Dyn {
 	int interval;
 
 	public DynDigSound( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_DigSound, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_DigSound, 0, 0, 0, Dyn.eDynPrio_DigSound);
+	}
+
+	public DynDigSound( DynDigSound x) {
+	    super(x);
+	    level = x.level;
+	    interval = x.interval;
+	    attribute = x.attribute;
+	    soundobject = x.soundobject;
 	}
 
 	public void open( BufferedReader reader) {
@@ -5218,7 +5947,18 @@ public class Dyn {
 	PwrtRefId min_value_subid;
 
 	public DynFillLevel( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_FillLevel, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_FillLevel, 0, 0, 0, Dyn.eDynPrio_FillLevel);
+	}
+
+	public DynFillLevel( DynFillLevel x) {
+	    super(x);
+	    color = x.color;
+	    direction = x.direction;
+	    min_value = x.min_value;
+	    max_value = x.max_value;
+	    attribute = x.attribute;
+	    minvalue_attr = x.minvalue_attr;
+	    maxvalue_attr = x.maxvalue_attr;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -5362,7 +6102,6 @@ public class Dyn {
 		default: ;
 		}
 	    }
-	    System.out.println("FillLevel: " + value);
 	    object.setFillLevel( value);
 	    oldValue = pvalue;
 	}
@@ -5438,7 +6177,13 @@ public class Dyn {
 	boolean oldValue;
 
 	public DynDigCommand( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_DigCommand, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_DigCommand, 0, 0, 0, Dyn.eDynPrio_DigCommand);
+	}
+
+	public DynDigCommand( DynDigCommand x) {
+	    super(x);
+	    attribute = x.attribute;
+	    command = x.command;
 	}
 
  	public int connect(GlowArrayElem o) {
@@ -5558,7 +6303,12 @@ public class Dyn {
 	String ref_object;
 
 	public DynPopupMenu( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_PopupMenu, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_PopupMenu, 0, Dyn.eDynPrio_PopupMenu);
+	}
+
+	public DynPopupMenu( DynPopupMenu x) {
+	    super(x);
+	    ref_object = x.ref_object;
 	}
 
 	public void open( BufferedReader reader) {
@@ -5602,7 +6352,12 @@ public class Dyn {
 	String attribute;
 
 	public DynSetDig( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_SetDig, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_SetDig, 0, Dyn.eDynPrio_SetDig);
+	}
+
+	public DynSetDig( DynSetDig x) {
+	    super(x);
+	    attribute = x.attribute;
 	}
 
 	public int action( GlowArrayElem object, GlowEvent e) {
@@ -5683,7 +6438,12 @@ public class Dyn {
 	String attribute;
 
 	public DynResetDig( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_ResetDig, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_ResetDig, 0, Dyn.eDynPrio_ResetDig);
+	}
+
+	public DynResetDig( DynResetDig x) {
+	    super(x);
+	    attribute = x.attribute;
 	}
 
 	public int action( GlowArrayElem object, GlowEvent e) {
@@ -5764,7 +6524,12 @@ public class Dyn {
 	String attribute;
 
 	public DynToggleDig( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_ToggleDig, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_ToggleDig, 0, Dyn.eDynPrio_ToggleDig);
+	}
+
+	public DynToggleDig( DynToggleDig x) {
+	    super(x);
+	    attribute = x.attribute;
 	}
 
 	public int action( GlowArrayElem object, GlowEvent e) {
@@ -5839,7 +6604,12 @@ public class Dyn {
 	String attribute;
 
 	public DynStoDig( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_StoDig, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_StoDig, 0, Dyn.eDynPrio_StoDig);
+	}
+
+	public DynStoDig( DynStoDig x) {
+	    super(x);
+	    attribute = x.attribute;
 	}
 
 	public int action( GlowArrayElem object, GlowEvent e) {
@@ -5931,7 +6701,12 @@ public class Dyn {
 	String command;
 
 	public DynCommand( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_Command, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_Command, 0, Dyn.eDynPrio_Command);
+	}
+
+	public DynCommand( DynCommand x) {
+	    super(x);
+	    command = x.command;
 	}
 
 	public int action( GlowArrayElem object, GlowEvent e) {
@@ -5948,6 +6723,9 @@ public class Dyn {
 		if ( (dyn.action_type1 & Dyn.mActionType1_Confirm) != 0)
 		    break;
 		
+		if ( command == null)
+		    return 1;
+
 		String cmd = graph.getCommand(command);
 
 		dyn.graph.command(cmd);
@@ -5996,7 +6774,12 @@ public class Dyn {
 	String command;
 
 	public DynCommandDoubleClick( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_CommandDoubleClick, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_CommandDoubleClick, 0, Dyn.eDynPrio_CommandDoubleClick);
+	}
+
+	public DynCommandDoubleClick( DynCommandDoubleClick x) {
+	    super(x);
+	    command = x.command;
 	}
 
 	public int action( GlowArrayElem object, GlowEvent e) {
@@ -6062,7 +6845,12 @@ public class Dyn {
 	String text;
 
 	public DynConfirm( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_Confirm, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_Confirm, 0, Dyn.eDynPrio_Confirm);
+	}
+
+	public DynConfirm( DynConfirm x) {
+	    super(x);
+	    text = x.text;
 	}
 
 	public int action( GlowArrayElem o, GlowEvent e) {
@@ -6125,7 +6913,15 @@ public class Dyn {
 	double max_value;
 
 	public DynIncrAnalog( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_IncrAnalog, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_IncrAnalog, 0, Dyn.eDynPrio_IncrAnalog);
+	}
+
+	public DynIncrAnalog( DynIncrAnalog x) {
+	    super(x);
+	    attribute = x.attribute;
+	    increment = x.increment;
+	    min_value = x.min_value;
+	    max_value = x.max_value;
 	}
 
 	public int action( GlowArrayElem o, GlowEvent e) {
@@ -6248,7 +7044,12 @@ public class Dyn {
 	boolean oldValue;
 
 	public DynRadioButton( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_RadioButton, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_RadioButton, 0, Dyn.eDynPrio_RadioButton);
+	}
+
+	public DynRadioButton( DynRadioButton x) {
+	    super(x);
+	    attribute = x.attribute;
 	}
 
  	public int connect(GlowArrayElem o) {
@@ -6343,7 +7144,7 @@ public class Dyn {
 			 oe.type() == Glow.eObjectType_GrowNode) {
 			value = false;
 
-			Dyn gm_dyn = (Dyn)((GrowNode)o).getUserData();
+			Dyn gm_dyn = (Dyn)((GrowNode)oe).getUserData();
 
 			if ( (gm_dyn.total_action_type1 & Dyn.mActionType1_RadioButton) != 0) {
  			    for ( int j = 0; j < gm_dyn.elements.size(); j++) {
@@ -6355,6 +7156,7 @@ public class Dyn {
 				    switch ( pname.database) {
 				    case GraphIfc.eDatabase_Gdh:
 					PwrtStatus sts = dyn.graph.getGdh().setObjectInfo( pname.name, value);
+					System.out.println("setObjectInfo: " + sts.getSts());
 					break;
 				    case GraphIfc.eDatabase_Ccm:
 					// TODO
@@ -6428,7 +7230,12 @@ public class Dyn {
 	String text;
 
 	public DynTipText( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_TipText, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_TipText, 0, Dyn.eDynPrio_TipText);
+	}
+
+	public DynTipText( DynTipText x) {
+	    super(x);
+	    text = x.text;
 	}
 
 	public void open( BufferedReader reader) {
@@ -6473,7 +7280,13 @@ public class Dyn {
 	String bookmark;
 
 	public DynHelp( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_Help, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_Help, 0, Dyn.eDynPrio_Help);
+	}
+
+	public DynHelp( DynHelp x) {
+	    super(x);
+	    topic = x.topic;
+	    bookmark = x.bookmark;
 	}
 
 	public int action( GlowArrayElem o, GlowEvent e) {
@@ -6552,18 +7365,22 @@ public class Dyn {
 	String graph_object;
 
 	public DynOpenGraph( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_OpenGraph, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_OpenGraph, 0, Dyn.eDynPrio_OpenGraph);
+	}
+
+	public DynOpenGraph( DynOpenGraph x) {
+	    super(x);
+	    graph_object = x.graph_object;
 	}
 
 	public int action( GlowArrayElem o, GlowEvent e) {
-	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
-		object.setColorInverse( 1);
+		o.setColorInverse( 1);
 		dyn.repaintNow = true;
 		break;
 	    case Glow.eEvent_MB1Up:
-		object.setColorInverse( 0);
+		o.setColorInverse( 0);
 		dyn.repaintNow = true;
 		break;
 	    case Glow.eEvent_MB1Click:
@@ -6640,7 +7457,12 @@ public class Dyn {
 	String url;
 
 	public DynOpenURL( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_OpenURL, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_OpenURL, 0, Dyn.eDynPrio_OpenURL);
+	}
+
+	public DynOpenURL( DynOpenURL x) {
+	    super(x);
+	    url = x.url;
 	}
 
 	public int action( GlowArrayElem o, GlowEvent e) {
@@ -6710,7 +7532,15 @@ public class Dyn {
 	String next_tab;
 
 	public DynInputFocus( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_InputFocus, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_InputFocus, 0, Dyn.eDynPrio_InputFocus);
+	}
+
+	public DynInputFocus( DynInputFocus x) {
+	    super(x);
+	    initial_focus = x.initial_focus;
+	    next_horizontal = x.next_horizontal;
+	    next_vertical = x.next_vertical;
+	    next_tab = x.next_tab;
 	}
 
 	public void open( BufferedReader reader) {
@@ -6764,7 +7594,32 @@ public class Dyn {
     public class DynCloseGraph extends DynElem {
 
 	public DynCloseGraph( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_CloseGraph, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_CloseGraph, 0, Dyn.eDynPrio_CloseGraph);
+	}
+
+	public DynCloseGraph( DynCloseGraph x) {
+	    super(x);
+	}
+
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
+	    switch ( e.event) {
+	    case Glow.eEvent_MB1Down:
+		object.setColorInverse( 1);
+		dyn.repaintNow = true;
+		break;
+	    case Glow.eEvent_MB1Up:
+		object.setColorInverse( 0);
+		dyn.repaintNow = true;
+		break;
+	    case Glow.eEvent_MB1Click:
+		if ( (dyn.action_type1 & Dyn.mActionType1_Confirm) != 0)
+		    break;
+
+		dyn.graph.closeGraph();
+		break;
+	    }
+	    return 1;
 	}
 
 	public void open( BufferedReader reader) {
@@ -6832,7 +7687,15 @@ public class Dyn {
 	int direction;
 
 	public DynSlider( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_Slider, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_Slider, 0, Dyn.eDynPrio_Slider);
+	}
+
+	public DynSlider( DynSlider x) {
+	    super(x);
+	    attribute = x.attribute;
+	    minvalue_attr = x.minvalue_attr;
+	    maxvalue_attr = x.maxvalue_attr;
+	    insensitive_attr = x.insensitive_attr;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -7286,7 +8149,14 @@ public class Dyn {
 	int curve_index2;
 
 	public DynFastCurve( Dyn dyn) {
-	    super(dyn, Dyn.mDynType1_FastCurve, 0, 0, 0);
+	    super(dyn, Dyn.mDynType1_FastCurve, 0, 0, 0, Dyn.eDynPrio_FastCurve);
+	}
+
+	public DynFastCurve( DynFastCurve x) {
+	    super(x);
+	    curve_index1 = x.curve_index1;
+	    curve_index2 = x.curve_index2;
+	    fast_object = x.fast_object;
 	}
 
 	public void open( BufferedReader reader) {
@@ -7340,7 +8210,16 @@ public class Dyn {
 	int text_size;
 
 	public DynPulldownMenu( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_PulldownMenu, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_PulldownMenu, 0, Dyn.eDynPrio_PulldownMenu);
+	}
+
+	public DynPulldownMenu( DynPulldownMenu x) {
+	    super(x);
+	    button_mask = x.button_mask;
+	    items_text = x.items_text;
+	    for ( int i = 0; i < 32; i++) {
+		items_dyn[i] = new Dyn(x.items_dyn[i]);
+	    }
 	}
 
 	public int action( GlowArrayElem o, GlowEvent e) {
@@ -7808,7 +8687,19 @@ public class Dyn {
 	int text_size;
 
 	public DynOptionMenu( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_OptionMenu, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_OptionMenu, 0, Dyn.eDynPrio_OptionMenu);
+	}
+
+	public DynOptionMenu( DynOptionMenu x) {
+	    super(x);
+	    attribute = x.attribute;
+	    text_attribute = x.text_attribute;
+	    size_attribute = x.size_attribute;
+	    update_attribute = x.update_attribute;
+	    items_text = x.items_text;
+	    items_enum = x.items_enum;
+	    button_mask = x.button_mask;
+	    optionmenu_type = x.optionmenu_type;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -8379,6 +9270,11 @@ public class Dyn {
 	public DynAnalogText( Dyn dyn) {
 	    super(dyn);
 	    dyn_type1 = Dyn.mDynType1_AnalogText; 
+	    prio = Dyn.eDynPrio_AnalogText;
+	}
+
+	public DynAnalogText( DynAnalogText x) {
+	    super(x);
 	}
 
 	public int action( GlowArrayElem o, GlowEvent e) {
@@ -8426,7 +9322,13 @@ public class Dyn {
 	String value;
 
 	public DynSetValue( Dyn dyn) {
-	    super(dyn, 0, 0, Dyn.mActionType1_SetValue, 0);
+	    super(dyn, 0, 0, Dyn.mActionType1_SetValue, 0, Dyn.eDynPrio_SetValue);
+	}
+
+	public DynSetValue( DynSetValue x) {
+	    super(x);
+	    attribute = x.attribute;
+	    value = x.value;
 	}
 
 	public void open( BufferedReader reader) {
@@ -8474,6 +9376,132 @@ public class Dyn {
 	    }
 	}
 
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
+
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
+	    switch ( e.event) {
+	    case Glow.eEvent_MB1Down:
+		object.setColorInverse( 1);
+		break;
+	    case Glow.eEvent_MB1Up:
+		object.setColorInverse( 0);
+		break;
+	    case Glow.eEvent_MB1Click: {
+		PwrtStatus sts = null;
+		
+		try {
+
+		    if ( (dyn.action_type1 & Dyn.mActionType1_Confirm) != 0)
+			break;
+		
+		    DynParsedAttrName pname = dyn.parseAttrName(attribute);
+		
+		    switch ( pname.type) {
+		    case Pwr.eType_Float32: {
+			float inputValue = Float.parseFloat( value.trim());
+		    
+			switch ( pname.database) {
+			case GraphIfc.eDatabase_Gdh:
+			    sts = dyn.graph.getGdh().setObjectInfo( pname.name, inputValue);
+			    break;
+			case GraphIfc.eDatabase_Local:
+			    sts = dyn.graph.getLdb().setObjectInfo( graph, pname.name, inputValue);
+			    break;
+			default: 
+			    return 0;
+			}
+			if ( sts.evenSts()) {			
+			    System.out.println( "setObjectInfoError " + sts);
+			    return 0;
+			}
+			break;
+		    }
+		    case Pwr.eType_Int32:
+		    case Pwr.eType_UInt32:
+		    case Pwr.eType_Int16:
+		    case Pwr.eType_UInt16:
+		    case Pwr.eType_Int8:
+		    case Pwr.eType_UInt8: {
+			int inputValue = Integer.parseInt( value.trim(), 10);
+		    
+			switch ( pname.database) {
+			case GraphIfc.eDatabase_Gdh:
+			    sts = dyn.graph.getGdh().setObjectInfo( pname.name, inputValue);
+			    break;
+			case GraphIfc.eDatabase_Local:
+			    sts = dyn.graph.getLdb().setObjectInfo( graph, pname.name, inputValue);
+			    break;
+			default: 
+			    return 0;
+			}
+			if ( sts.evenSts()) {
+			    System.out.println( "setObjectInfoError " + sts);
+			    return 0;
+			}		
+			break;
+		    }
+		    case Pwr.eType_Boolean: {
+			int inputValueInt = Integer.parseInt( value.trim(), 10);
+			boolean inputValue;
+			if ( inputValueInt == 0)
+			    inputValue = false;
+			else if ( inputValueInt == 1)
+			    inputValue = true;
+			else
+			    break;
+		    
+			switch ( pname.database) {
+			case GraphIfc.eDatabase_Gdh:
+			    sts = dyn.graph.getGdh().setObjectInfo( pname.name, inputValue);
+			    break;
+			case GraphIfc.eDatabase_Local:
+			    sts = dyn.graph.getLdb().setObjectInfo( graph, pname.name, inputValue);
+			    break;
+			default:
+			    return 0;
+			}
+			if ( sts.evenSts()) {
+			    System.out.println( "setObjectInfoError " + sts);
+			    return 0;
+			}
+			break;
+		    }
+		    case Pwr.eType_String: {
+			switch ( pname.database) {
+			case GraphIfc.eDatabase_Gdh:
+			    sts = dyn.graph.getGdh().setObjectInfo( pname.name, value);
+			    break;
+			case GraphIfc.eDatabase_Local:
+			    sts = dyn.graph.getLdb().setObjectInfo( graph, pname.name, value);
+			    break;
+			default:
+			    return 0;
+			}
+			if ( sts.evenSts()) {
+			    System.out.println( "setObjectInfoError " + sts);
+			    return 0;
+			}
+			break;
+		    }		    
+		    default:
+			;
+		    }
+		}
+		catch(NumberFormatException ex) {
+		    System.out.println( ex.toString() );
+		    return 0;
+		}	    
+	       
+		break;
+	    }
+	    default:
+		return 0;
+	    }
+	    return 1;
+	}
     }
 
 

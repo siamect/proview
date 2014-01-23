@@ -109,6 +109,10 @@ public class GrowRect extends GlowArrayElem {
 	return Glow.eObjectType_GrowRect;
     }
 
+    public Object getCmn() { 
+	return cmn;
+    }
+
     public void open(BufferedReader reader) {
 	String line;
 	StringTokenizer token;
@@ -280,7 +284,6 @@ public class GrowRect extends GlowArrayElem {
 	//rp.y = fy;
 	if ( ll.x <= rp.x && rp.x <= ur.x &&
 	     ll.y <= rp.y && rp.y <= ur.y) {
-	    System.out.println( "Event handler: Hit in rect");
 	    return 1;
 	}  
 	else
@@ -573,5 +576,9 @@ public class GrowRect extends GlowArrayElem {
 		      y_low * cmn.mw.zoom_factor_y - cmn.mw.offset_y - Glow.DRAW_MP,
 		      x_right * cmn.mw.zoom_factor_x - cmn.mw.offset_x + Glow.DRAW_MP,
 		      y_high * cmn.mw.zoom_factor_y - cmn.mw.offset_y + Glow.DRAW_MP);
+    }
+
+    public String getName() {
+	return n_name;
     }
 }

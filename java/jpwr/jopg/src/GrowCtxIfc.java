@@ -56,5 +56,14 @@ public interface GrowCtxIfc {
     public GlowBackgroundObject getBackgroundObjectLimits(int type, double x, double y);
     public void setMoveRestrictions( int restriction, double max_limit, double min_limit, GlowArrayElem object);
     public void zoom( double factor);
+    public void zoom( double factor, double x, double y);
+    public void scroll( int delta_x, int delta_y);
     public void openVector( BufferedReader reader, Object cmn, Vector a);
+    public int eventHandler(GlowEvent e, double fx, double fy);
+    public GrowCmn getCmn();
+    public void traceConnect();
+    public void traceDisconnect();
+    public void traceScan();
+    public boolean traceStarted();
+    public void setSubwindowSource( String name, String source, String owner);
 }

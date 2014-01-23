@@ -288,12 +288,12 @@ public class GrowTrend extends GrowRect {
 		else
 		    rotation = trf.rot();
 		if ( gradient_contrast >= 0) {
-		    f2 = GlowColor.shift_drawtype( drawtype, -gradient_contrast/2, 0);
-		    f1 = GlowColor.shift_drawtype( drawtype, (int)((float)(gradient_contrast)/2+0.6), 0);
+		    f2 = GlowColor.shift_drawtype( drawtype, -gradient_contrast/2, null);
+		    f1 = GlowColor.shift_drawtype( drawtype, (int)((float)(gradient_contrast)/2+0.6), null);
 		}
 		else {
-		    f2 = GlowColor.shift_drawtype( drawtype, -(int)((float)(gradient_contrast)/2-0.6), 0);
-		    f1 = GlowColor.shift_drawtype( drawtype, gradient_contrast/2, 0);
+		    f2 = GlowColor.shift_drawtype( drawtype, -(int)((float)(gradient_contrast)/2-0.6), null);
+		    f1 = GlowColor.shift_drawtype( drawtype, gradient_contrast/2, null);
 		}
 		cmn.gdraw.gradient_fill_rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, f1, f2, cmn.gdraw.gradient_rotate( rotation, grad));
 	    }

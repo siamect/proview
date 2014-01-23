@@ -362,4 +362,8 @@ public class GrowImage extends GlowArrayElem {
 		      x_right * cmn.mw.zoom_factor_x - cmn.mw.offset_x + Glow.DRAW_MP,
 		      y_high * cmn.mw.zoom_factor_y - cmn.mw.offset_y + Glow.DRAW_MP);
     }
+
+    public String getName() {
+	return n_name;
+    }
 }

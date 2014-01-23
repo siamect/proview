@@ -168,6 +168,10 @@ public class JopSession {
   public void openFast( String fastObject) {
     ((JopSessionIfc) sessionRep).openFast( fastObject);
   }
+
+  public Object getUtility( int type, PwrtObjid objid, String name) {
+      return ((JopSessionIfc) sessionRep).getUtility( type, objid, name);
+  }
 }
 
 

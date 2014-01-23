@@ -1558,6 +1558,7 @@ open graph  <t>Öppna en graf			<LINK> open graph
 open jgraph <t>Öppna en java graf		<LINK> open jgraph
 open fileview <t>Öppna en fileview		<LINK> open fileview
 open navigator <t>Öppna navigatorn		<LINK> open navigator
+open trace  <t>Öppna trace för ett plc-fönster  <LINK> open trace
 open trend  <t>Öppna en trendkurva		<LINK> open trend
 open operatorwindow<t>Öppna operatörsfönstret 	<LINK> open operatorwindow
 read object <t>Läs innehållet av ett objekt från fil <LINK> read object

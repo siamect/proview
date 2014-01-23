@@ -43,4 +43,6 @@ public interface GraphApplIfc {
     public int getWidth();
     public int getHeight();
     public String getObject();
+    public Object loadGrowCtx( String file);
+    public void closeGraph();
 }

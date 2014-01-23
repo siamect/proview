@@ -54,6 +54,7 @@ extern_java_sources := \
 	GrowTable.java,\
 	GrowImage.java,\
 	GrowWindow.java,\
+	GrowFolder.java,\
 	GrowConGlue.java,\
 	GlowVector.java,\
 	GrowCtx.java,\

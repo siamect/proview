@@ -49,6 +49,7 @@ public class GrowCtx implements GrowCtxIfc {
     double node_move_last_x;
     double node_move_last_y;
     double slider_cursor_offset;
+    boolean trace_started = false;
 
     public GrowCtx(GrowApplIfc appl) {
 	cmn = new GrowCmn( this, appl);
@@ -411,7 +412,11 @@ public class GrowCtx implements GrowCtxIfc {
 	return 1;
     }
 
-    public void eventHandler(GlowEvent e) {
+    public int eventHandler(GlowEvent e, double fx, double fy) {
+	return eventHandler( e);
+    }
+
+    public int eventHandler(GlowEvent e) {
 	int sts = 0;
 	double x = e.x * cmn.mw.zoom_factor_x - cmn.mw.offset_x;
 	double y = e.y * cmn.mw.zoom_factor_y - cmn.mw.offset_y;
@@ -583,6 +588,7 @@ public class GrowCtx implements GrowCtxIfc {
 	    e.object_type = cmn.callback_object_type;
 	    cmn.appl.eventHandler(e);
 	}
+	return sts;
     }
 
     public void traceConnect() {
@@ -594,7 +600,9 @@ public class GrowCtx implements GrowCtxIfc {
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowBar ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowTrend ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowTable ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider) {
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowWindow ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowFolder) {
 		System.out.println("GrowCtx connect " + i + " (" + cmn.a.size() + ") " + cmn.a.get(i));
 		cmn.appl.traceConnect(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
@@ -606,20 +614,28 @@ public class GrowCtx implements GrowCtxIfc {
 		    }		
 		    
 		}
+		else if ( cmn.a.get(i).type() == Glow.eObjectType_GrowWindow ||
+			  cmn.a.get(i).type() == Glow.eObjectType_GrowFolder) {
+		    ((GrowWindow)cmn.a.get(i)).traceConnect();
+		}
 	    }
 	}		
 	cmn.nodraw--;
+	trace_started = true;
     }
 
     public void traceDisconnect() {
 	int sts;
+	trace_started = false;
 	for ( int i = 0; i < cmn.a.size(); i++) {
 	    if ( cmn.a.get(i).type() == Glow.eObjectType_GrowNode ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowGroup ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowBar ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowTrend ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowTable ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider) {
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowWindow ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowFolder) {
 		cmn.appl.traceDisconnect(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {
@@ -629,6 +645,10 @@ public class GrowCtx implements GrowCtxIfc {
 			}
 		    }		
 		    
+		}
+		else if ( cmn.a.get(i).type() == Glow.eObjectType_GrowWindow ||
+			  cmn.a.get(i).type() == Glow.eObjectType_GrowFolder) {
+		    ((GrowWindow)cmn.a.get(i)).traceDisconnect();
 		}
 	    }
 	}		
@@ -641,7 +661,9 @@ public class GrowCtx implements GrowCtxIfc {
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowBar ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowTrend ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowTable ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider) {
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowWindow ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowFolder) {
 	    	cmn.appl.traceScan(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {
@@ -652,8 +674,16 @@ public class GrowCtx implements GrowCtxIfc {
 		    }		
 		    
 		}
+		else if ( cmn.a.get(i).type() == Glow.eObjectType_GrowWindow ||
+			  cmn.a.get(i).type() == Glow.eObjectType_GrowFolder) {
+		    ((GrowWindow)cmn.a.get(i)).traceScan();
+		}
 	    }
 	}		
+    }
+
+    public boolean traceStarted() {
+	return trace_started;
     }
 
     public GlowArrayElem get_nodeclass_from_name(String name) {
@@ -740,10 +770,62 @@ public class GrowCtx implements GrowCtxIfc {
       draw();
     }
 
+    public void zoom( double factor, double x, double y) { 
+	if ( Math.abs(factor) < Double.MIN_VALUE)
+	    return;
+
+
+	double scrollX = (x + cmn.mw.offset_x) * factor - (x + cmn.mw.offset_x);
+	double scrollY = (y + cmn.mw.offset_y) * factor - (y + cmn.mw.offset_y);
+      
+	cmn.mw.zoom_factor_x *= factor;
+	cmn.mw.zoom_factor_y *= factor;
+	scroll( (int)scrollX, (int)scrollY);
+
+	draw();
+    }
+
+    public void scroll( int delta_x, int delta_y) {
+	cmn.mw.offset_x += delta_x;
+	cmn.mw.offset_y += delta_y;
+
+	if ( !((cmn.x0 == 0 && cmn.x1 == 0) || (cmn.y0 == 0 && cmn.y1 == 0) 
+	       || cmn.mw.window_width == 0 || cmn.mw.window_height == 0)) {
+	    if ( cmn.mw.offset_x + cmn.mw.window_width > cmn.x1 * cmn.mw.zoom_factor_x)
+		cmn.mw.offset_x = (int)(cmn.x1 * cmn.mw.zoom_factor_x - cmn.mw.window_width);
+	    if ( cmn.mw.offset_x < cmn.x0 * cmn.mw.zoom_factor_x)
+		cmn.mw.offset_x = (int)(cmn.x0 * cmn.mw.zoom_factor_x);
+	    if ( cmn.mw.offset_y + cmn.mw.window_height > cmn.y1 * cmn.mw.zoom_factor_y)
+		cmn.mw.offset_y = (int)(cmn.y1 * cmn.mw.zoom_factor_y - cmn.mw.window_height);
+	    if ( cmn.mw.offset_y < cmn.y0 * cmn.mw.zoom_factor_y)
+		cmn.mw.offset_y = (int)(cmn.y0 * cmn.mw.zoom_factor_y);
+	}
+	System.out.println("Scroll: offset (" + cmn.mw.offset_x + "," + cmn.mw.offset_y + ") window (" + cmn.mw.window_width + "," + cmn.mw.window_height);
+	draw();
+    }
+
     public void openVector( BufferedReader reader, Object cmn, Vector a) {
 	GlowVector.open(reader, (GrowCmn)cmn, a);
     }
 
+    public GlowArrayElem findByName( String name) {
+	for ( int i = 0; i < cmn.a.size(); i++) {
+	    System.out.println("findByName: " + ((GlowArrayElem)cmn.a.get(i)).getName());
+	    if ( ((GlowArrayElem)cmn.a.get(i)).getName().equalsIgnoreCase(name))
+		return (GlowArrayElem)cmn.a.get(i);
+	}
+	return null;
+    }
+
+    public void setSubwindowSource( String name, String source, String owner) {
+	GrowWindow e = (GrowWindow)findByName( name);
+	if ( e == null || e.type() != Glow.eObjectType_GrowWindow) {
+	    System.out.println("Window " + name + " not found " + e);
+	    return;
+	}
+
+	e.setSource( source, owner);
+    }
 }
 
 

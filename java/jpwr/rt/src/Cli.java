@@ -311,7 +311,6 @@ public class Cli {
       if ( verb[0].length() > cliTable[i].command.length())
         continue;
       if ( verb[0].equals( cliTable[i].command.substring( 0, verb[0].length()))) {
-//        System.out.println("Verb found: " + cliTable[i].command);
 	verb[0] = cliTable[i].command;
         found = true;
         break;
@@ -349,7 +348,6 @@ public class Cli {
 	  if ( qualifier[j].length() > cliTable[cliTableIndex].qualifier[i].length())
             continue;
           if ( qualifier[j].equals( cliTable[cliTableIndex].qualifier[i].substring( 0, qualifier[j].length()))) {
-//            System.out.println("Qualifier found: " + cliTable[cliTableIndex].qualifier[i]);
             cliQualifierIndex[j] = i;
             found = true;
 	    qualifier[j] = cliTable[cliTableIndex].qualifier[i];

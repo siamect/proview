@@ -109,15 +109,14 @@ public class GrowScrollBar extends GrowRect {
 	//	System.out.println("ScrollBar bdraw: (" + ll_x + "," + ll_y + ") w: " + (ur_x-ll_x) + " h: " + (ur_y-ll_y) + " color: " + fdrawtype);
 	cmn.gdraw.fill_rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fdrawtype);
 	if ( shadow != 0) {
-	    shift_drawtype = GlowColor.shift_drawtype( fill_drawtype, 2, 0); // Dark
+	    shift_drawtype = GlowColor.shift_drawtype( fill_drawtype, 2, null); // Dark
 	    cmn.gdraw.line( ll_x+1, ll_y+1, ll_x+1, ur_y-1, shift_drawtype, 0, 0);
 	    cmn.gdraw.line( ll_x+1, ll_y+1, ur_x-1, ll_y+1, shift_drawtype, 0, 0);
-	    shift_drawtype = GlowColor.shift_drawtype( fill_drawtype, -2, 0); // Light
+	    shift_drawtype = GlowColor.shift_drawtype( fill_drawtype, -2, null); // Light
 	    cmn.gdraw.line( ll_x+1, ur_y-1, ur_x-1, ur_y-1, shift_drawtype, 0, 0);
 	    cmn.gdraw.line( ur_x-1, ll_y+1, ur_x-1, ur_y-1, shift_drawtype, 0, 0);
 	}
  
-		System.out.println("ScrollBar direction: " + direction + " max-min: " + (max_value - min_value));
 	if ( max_value != min_value) {
 
 	    switch ( direction) {
@@ -142,10 +141,10 @@ public class GrowScrollBar extends GrowRect {
 	    //	    System.out.println("ScrollBar fdraw: (" + x0 + "," + y0 + ") w: " + width + " h: " + height + " color: " + bar_color);
 	    cmn.gdraw.fill_rect( x0, y0, width, height, bar_color);
 	    if ( shadow != 0) {
-		shift_drawtype = GlowColor.shift_drawtype( bar_color, -2, 0); // Light
+		shift_drawtype = GlowColor.shift_drawtype( bar_color, -2, null); // Light
 		cmn.gdraw.line( x0+1, y0+1, x0+1, y0+height-1, shift_drawtype, 0, 0);
 		cmn.gdraw.line( x0+1, y0+1, x0+width-1, y0+1, shift_drawtype, 0, 0);
-		shift_drawtype = GlowColor.shift_drawtype( bar_color, 2, 0); // Dark
+		shift_drawtype = GlowColor.shift_drawtype( bar_color, 2, null); // Dark
 		cmn.gdraw.line( x0+1, y0+height-1, x0+width-1, y0+height-1, shift_drawtype, 0, 0);
 		cmn.gdraw.line( x0+width-1, y0+1, x0+width-1, y0+height-1, shift_drawtype, 0, 0);
 	    }

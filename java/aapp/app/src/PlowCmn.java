@@ -110,13 +110,21 @@ public class PlowCmn implements PlowCmnIfc {
 		zoom_factor *= factor;
 		draw();
 	}
+        public void zoom(double factor, double x, double y) {
+		zoom_factor *= factor;
+		scroll( 0, (int)((y + offset_y) * factor - (y + offset_y)));
+		draw();
+	}
 	public void scroll( int x, int y) {
 		offset_y += y;
 		// offset_x += x;
 		if ( offset_y < borders.y_low * zoom_factor)
 			offset_y = (int)(borders.y_low * zoom_factor);
-		if ( offset_y > borders.y_high * zoom_factor - canvasHeight + 80)
+		if ( offset_y > borders.y_high * zoom_factor - canvasHeight + 80) {
 			offset_y = (int)(borders.y_high * zoom_factor - canvasHeight + 80);
+			if ( offset_y < borders.y_low * zoom_factor)
+			    offset_y = (int)(borders.y_low * zoom_factor);
+		}
 	}
 	public void pageUp() {
 		offset_y -= canvasHeight * 0.8;
@@ -166,6 +174,10 @@ public class PlowCmn implements PlowCmnIfc {
 	}
 	public void setCanvas(Canvas canvas) {
 		gdraw.setCanvas(canvas);
+		if ( canvasWidth == 0) {
+		    canvasWidth = gdraw.getCanvasWidth();
+		    canvasHeight = gdraw.getCanvasHeight();
+		}
 	}
 	public Object getFirst() {
 		return a.get_first();

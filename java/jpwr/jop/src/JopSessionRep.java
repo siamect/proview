@@ -275,9 +275,9 @@ public class JopSessionRep implements JopSessionIfc {
     else {
       Object graph;
       if ( aref == null)
-        graph = getUtility( JopUtility.GRAPH, (PwrtObjid)null, name);
+	  graph = getUtility( JopUtility.GRAPH, (PwrtObjid)null, JopUtility.fileToName(name));
       else
-        graph = getUtility( JopUtility.GRAPH, aref.aref, name);
+	  graph = getUtility( JopUtility.GRAPH, aref.aref, JopUtility.fileToName(name));
       if ( graph != null) {
 	((JFrame)graph).setState(Frame.NORMAL);
 	((JFrame)graph).toFront();
@@ -285,6 +285,8 @@ public class JopSessionRep implements JopSessionIfc {
       else {
         try {
           graph = JopSpider.loadFrame( session, name, instance, scrollbar);
+	  System.out.println("openGraphFrame graph: " + graph);
+
 	  if ( graph != null) {
             addUtility( graph);
 	    System.out.println( "Add utility graph " + name);
@@ -294,6 +296,7 @@ public class JopSessionRep implements JopSessionIfc {
 	}
       }
     }
+    System.out.println("openGraphFrame end");
   }
 
   public void openCrrFrame( String name) {
@@ -343,6 +346,7 @@ public class JopSessionRep implements JopSessionIfc {
 	    return o;    
         }
         else {
+	    System.out.println( "Utility: " + utilityName);
 	  if ( ((JopUtilityIfc) o).getUtilityType() == type &&
 	       utilityName.equals( name))
 	    return o;    

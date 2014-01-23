@@ -45,4 +45,5 @@ public interface GrowApplIfc {
     public void eventHandler(GlowEvent e);
     public int getWidth();
     public int getHeight();
+    public Object loadCtx( String file);
 }

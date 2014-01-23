@@ -67,6 +67,8 @@ public class FlowCmn implements PlowCmnIfc {
   FlowNode selectedNode;
   boolean opened = false;
   Object userData;
+  double storedScrollX = 0;
+  double storedScrollY = 0;
   
   Vector<FlowArrayElem> a = new Vector<FlowArrayElem>();
   Vector<FlowArrayElem> a_nc = new Vector<FlowArrayElem>();
@@ -106,6 +108,20 @@ public class FlowCmn implements PlowCmnIfc {
 	  zoom_factor *= factor;
 	  draw();
   }
+
+  @Override
+  public void zoom(double factor, double x, double y) {
+          double scrollX = (x + offset_x) * factor - (x + offset_x) + storedScrollX;
+          double scrollY = (y + offset_y) * factor - (y + offset_y) + storedScrollY;
+	  storedScrollX = scrollX - (double)((int)scrollX);
+	  storedScrollY = scrollY - (double)((int)scrollY);
+      
+	  zoom_factor *= factor;
+	  scroll( (int)scrollX, (int)scrollY);
+
+	  draw();
+  }
+
   @Override
   public void scroll( int x, int y) {
 	  offset_y += y;

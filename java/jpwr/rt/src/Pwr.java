@@ -132,15 +132,37 @@ public class Pwr {
   public static final int mPrv_Operator8	= 1 << 13;
   public static final int mPrv_Operator9	= 1 << 14;
   public static final int mPrv_Operator10	= 1 << 15;
+  public static final int mPrv_RtEventsAck     	= 1 << 18;
+  public static final int mPrv_RtPlc		= 1 << 19;
+  public static final int mPrv_RtNavigator     	= 1 << 20;
   public static final int mPrv_DevRead		= 1 << 21;
   public static final int mPrv_DevPlc		= 1 << 22;
   public static final int mPrv_DevConfig	= 1 << 23;
   public static final int mPrv_DevClass		= 1 << 24;
+  public static final int mPrv_RtEventsBlock   	= 1 << 25;
+  public static final int mPrv_Administrator   	= 1 << 26;
+  public static final int mPrv_SevRead		= 1 << 27;
+  public static final int mPrv_SevAdmin		= 1 << 28;
 
+  public static final int mAccess_RtRead       	= mPrv_RtRead;
+  public static final int mAccess_RtWrite      	= mPrv_RtWrite;
+  public static final int mAccess_System       	= mPrv_System;
+  public static final int mAccess_Process      	= mPrv_Process;
+  public static final int mAccess_Instrument    = mPrv_Instrument;
+  public static final int mAccess_RtEventsBlock = mPrv_RtEventsBlock;
+  public static final int mAccess_RtEventsAck 	= mPrv_RtEventsAck;
+  public static final int mAccess_RtPlc 	= mPrv_RtPlc;
+  public static final int mAccess_RtNavigator 	= mPrv_RtNavigator;
   public static final int mAccess_AllRt		= mPrv_System |
 				  		  mPrv_Maintenance |
 				  		  mPrv_Process |
-						  mPrv_Instrument |
+                                                  mPrv_Instrument |
+				                  mPrv_RtRead |
+				                  mPrv_RtWrite |
+				                  mPrv_RtEventsBlock |
+				                  mPrv_RtEventsAck |
+				                  mPrv_RtPlc |
+				                  mPrv_RtNavigator |
 						  mPrv_Operator1 |
 						  mPrv_Operator2 |
 						  mPrv_Operator3 |

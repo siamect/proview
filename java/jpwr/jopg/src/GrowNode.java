@@ -108,6 +108,9 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
     public int type() {
 	return Glow.eObjectType_GrowNode;
     }
+    public Object getCmn() { 
+	return cmn;
+    }
 
     public void open(BufferedReader reader) {
 	String line;
@@ -319,7 +322,7 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 		case Glow.eSave_Node_trace_color2: 
 		    break;
 		case Glow.eSave_Node_access:
-		    access = Integer.valueOf(token.nextToken());
+		    access = Long.valueOf(token.nextToken()).intValue();
 		    break;
 		case Glow.eSave_Node_cycle:
 		    cycle = Integer.valueOf(token.nextToken());
@@ -349,6 +352,9 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 	GlowPointDX rp;
 	int sts;
 
+	if ( visible == 0 || dimmed != 0)
+	    return 0;
+
 	switch ( event.event) {
 	case Glow.eEvent_CursorMotion:		
 	    return 0;
@@ -358,7 +364,6 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 	rp = trf.reverse( fx, fy);
 	sts = nc.eventHandler(event, rp.x, rp.y);
 	if ( sts != 0) {
-	    System.out.println( "Hit in node " + sts);
 	    if ( !(type() == Glow.eObjectType_GrowGroup && cmn.callback_object != null))
 		cmn.ctx.register_callback_object(Glow.eObjectType_Node, this);
 	    return sts;
@@ -566,8 +571,14 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
     public int getClassCycle() {
 	return nc.cycle;
     }
+    public Object getClassUserData() {
+	return nc.userdata;
+    }
     public Object getUserData() {
 	return userdata;
+    }
+    public void setUserData( Object userdata) {
+	this.userdata = userdata;
     }
     public void setColorTone(int color_tone) {
 	this.color_tone = color_tone;
@@ -995,4 +1006,7 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 	return dimmed;
     }
 
+    public String getName() {
+	return n_name;
+    }
 }

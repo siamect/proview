@@ -86,6 +86,7 @@ public class OpwinCmn implements PlowCmnIfc {
 	  public void setNodraw() {}
 	  public void resetNodraw() {}
 	  public void zoom(double factor) {}
+          public void zoom(double factor, double x, double y) {}
 	  public void scroll( int x, int y) {
 		  if ( borderY < canvasHeight)
 			  return;

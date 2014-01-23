@@ -179,6 +179,8 @@ public class GrowMenu extends GrowRect {
 		if ( info.item[i].type == Glow.eMenuItem_PulldownMenu) {
 		    // Draw arrow
 		    GlowPointX[] p = new GlowPointX[4];
+		    for ( int j = 0; j < 4; j++)
+			p[j] = new GlowPointX();
 		    p[0].x = ur_x - arrow_size - 2;
 		    p[0].y = (int)(ll_y + item_idx * item_height + item_height/2 - arrow_size/2);
 		    p[1].x = ur_x - 2;

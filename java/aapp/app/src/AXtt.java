@@ -70,11 +70,13 @@ public class AXtt {
 		PlowRect r1 = new PlowRect(cmn, 0D, 0D, 50D, 1.5D, Plow.COLOR_WHITE, Plow.COLOR_BLACK,true,false,false);
 		PlowAnnot a1 = new PlowAnnot(cmn, 3D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.NEXT_RELATIVE_POSITION, 0);
 		PlowAnnot a11 = new PlowAnnot(cmn, 9D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.RELATIVE_POSITION, 1);
+		PlowAnnot a12 = new PlowAnnot(cmn, 15D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.RELATIVE_POSITION, 2);
 		PlowAnnotPixmap p1 = new PlowAnnotPixmap(cmn, 1D, 0.28D, 0);
 		ncObject = new PlowNodeClass(cmn);
 		ncObject.insert(r1);
 		ncObject.insert(a1);
 		ncObject.insert(a11);
+		ncObject.insert(a12);
 		ncObject.insert(p1);
 		cmn.insert_nc(ncObject);		
 	}

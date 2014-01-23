@@ -73,7 +73,10 @@ public class JopSpider {
 	System.out.println("JopSpider command callback : " + cmd);
 	return JopSpider.command( session, cmd);
     }
-  }
+    public void frameClosed( Object utility) {
+	session.removeUtility( utility);
+    }
+  }    
 
   public JopSpider( int op_qcom_qix) {
     JopSpider.op_qcom_qix = op_qcom_qix;
@@ -122,12 +125,11 @@ System.out.println( "qcom put finished");
     new CliTable( "HELP", new String[] {"cli_arg1", "cli_arg2", "cli_arg3",
 	"cli_arg4", "/HELPFILE", "/POPNAVIGATOR", "/BOOKMARK", "/INDEX",
         "/BASE", "/RETURNCOMMAND", "/WIDTH", "/HEIGHT", "/VERSION"}),
-    new CliTable( "SET", new String[] {"cli_arg1",
-    	"/NAME", "/VALUE", "/BYPASS"}),
+    new CliTable( "SET", new String[] {"cli_arg1", "cli_arg2", "/NAME", 
+	"/SOURCE", "/OBJECT", "/VALUE", "/BYPASS"}), 
     new CliTable( "EXAMPLE", new String[] {"/NAME", "/HIERARCHY"}),
     new CliTable( "CHECK", new String[] {"cli_arg1", "/METHOD", "/OBJECT"}),
-    new CliTable( "CALL", new String[] {"cli_arg1", "/METHOD", "/OBJECT"}),
-    new CliTable( "SET", new String[] {"cli_arg1", "dcli_arg2"}) 
+    new CliTable( "CALL", new String[] {"cli_arg1", "/METHOD", "/OBJECT"})
   };
 
   static int command( JopSession session, String cmd) {
@@ -594,6 +596,56 @@ System.out.println( "qcom put finished");
                  System.out.println( "setObjectInfoError " + sts);
             }
           }
+
+          String subwindow = "SUBWINDOW";
+          if ( subwindow.length() >= cli_arg1.length() &&
+               subwindow.substring(0,cli_arg1.length()).equals(cli_arg1)) {
+	    // Command is "SET SUBWINDOW"
+
+            String name;
+	    String graphstr;
+	    String source;
+	    String object;
+	    PwrtStatus sts;
+
+	    System.out.println("Command: set subwindow");
+	    local_cmd = true;
+	    if ( cli.qualifierFound("/NAME"))
+	      name = cli.getQualValue("/NAME");
+	    else {
+              System.out.println( "Cmd: name is missing\n");
+	      return 0;
+	    }
+	    if ( cli.qualifierFound("/SOURCE"))
+	      source = cli.getQualValue("/SOURCE");
+	    else {
+              System.out.println( "Cmd: source is missing\n");
+	      return 0;
+	    }
+	    if ( cli.qualifierFound("/OBJECT"))
+	      object = cli.getQualValue("/OBJECT");
+	    else
+	      object = null;
+            if ( cli.qualifierFound("cli_arg2"))
+	      graphstr = cli.getQualValue("cli_arg2").toLowerCase();
+	    else {
+	      System.out.println("Syntax error");
+              return 0;
+            }
+
+	    if ( source.indexOf('.') == -1)
+		source = source + ".pwg";
+
+	    Object graph = session.getUtility( JopUtility.GRAPH, (PwrtObjid)null, JopUtility.fileToName(graphstr));
+	    if ( graph != null) {
+	      System.out.println("JopSpider, " + graphstr + " found");
+	      ((JopGrowFrame)graph).setSubwindowSource( name, source, object);
+	    }
+	    else {
+	      System.out.println("Graph " + graphstr + " is not opened");
+	      return 0;
+	    }
+          }
         }
       }
       else if ( command.equals("CHECK")) {
@@ -835,10 +887,11 @@ System.out.println( "JopSpiderCmd start");
 				  String instance, boolean scrollbar) throws ClassNotFoundException {
 
       if ( className.indexOf(".pwg") != -1) {
-	  GrowFrame frame = new GrowFrame(className, session.getGdh(), instance, new GrowFrameCb(session),
-					  session.getRoot());
+	  JopGrowFrame frame = new JopGrowFrame(className, session.getGdh(), instance, new GrowFrameCb(session),
+						session.getRoot());
 	  frame.validate();
 	  frame.setVisible(true);
+	  return frame;
       }
       else {
 	  Object frame;
@@ -880,7 +933,6 @@ System.out.println( "JopSpiderCmd start");
 	  }
 	  return null;
       }
-      return null;
   }
 
   public static void openFrame( Object frame) {

@@ -1,19 +1,25 @@
 package jpwr.pwrxtt;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MotionEventCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.util.FloatMath;
@@ -26,12 +32,15 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.view.*;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.graphics.*;
 import jpwr.rt.*;
 import jpwr.app.*;
@@ -42,6 +51,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	static final int MODE_SCROLL = 1;
 	static final int MODE_ZOOM = 2;
 
+        String dataFile = "pwrdata";
 	Timer timer = new Timer();
 	MainView view;
 	Gdh gdh = null;
@@ -51,6 +61,12 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	float lastTouchY;
 	float downTouchX;
 	float downTouchY;
+        int lastTouchId;
+        double lastXSpeed;
+        double lastYSpeed;
+	MotionEvent lastMotionEvent = null;
+        int eventCnt = 0;
+	Timer eventTimer = new Timer();
 	private EditText editInput;
 	private EditText editValueInput;
 	private EditText editUsername;
@@ -79,7 +95,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
         AlertDialog inputDialog = null;
         AlertDialog loginDialog = null;
         Context context;
-        static private boolean initDone = false;
+        boolean initDone = false;
         String currentUser = null;
         boolean newCurrentUser = false;
         String pwrHost = null;
@@ -91,7 +107,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	float eventDistance;
 	Vector<AGraphInfo> graphList = new Vector<AGraphInfo>();	
 	Vector<PlowCmnIfc> cmnList = new Vector<PlowCmnIfc>();
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -111,7 +127,19 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		cmnList.add(cmn);
 		
 		editInput = new EditText(this);
-		editInput.setText("10.0.2.2");
+
+		// Get stored host
+		String host = "10.0.2.2";		
+		try {
+			SharedPreferences hostPrefs = getSharedPreferences("prefs", MODE_PRIVATE);
+			if ( hostPrefs != null)
+			  host = hostPrefs.getString("host", "10.0.2.2");
+		}
+		catch ( ClassCastException e) {
+		}
+	       
+		editInput.setText( host, TextView.BufferType.EDITABLE);
+
 		editInput.setSingleLine();
 		new AlertDialog.Builder(this)
 			.setTitle(R.string.app_name)
@@ -158,6 +186,14 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			setTitle("PwrXtt on " + pwrHost);
 		    new GdhTask().execute(new GdhTaskArg(GdhTask.ROOTLIST,(AXttItemBase)null));
 			new GdhTask().execute(new GdhTaskArg(GdhTask.OPWIN, null));
+
+			// Store entered host for next session
+			SharedPreferences settings = getSharedPreferences("prefs", MODE_PRIVATE);
+			if ( settings != null) {
+			  SharedPreferences.Editor editor = settings.edit();
+			  editor.putString("host", pwrHost);
+			  editor.commit();
+			}
 		}
 	}
 	
@@ -408,7 +444,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			break;			
 		}
 		case R.id.opencrr_option: {
-			System.out.println("Open object");
+			System.out.println("Open cross");
 			if ( !gdh.isAuthorized(Pwr.mAccess_AllRt)) {
 			    openMessageDialog("Not authorized");
 			    break;
@@ -435,7 +471,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		}
 		case R.id.openplc_option: {
 			System.out.println("Open plc");					
-			if ( !gdh.isAuthorized(Pwr.mAccess_AllRt)) {
+			if ( !gdh.isAuthorized(Pwr.mAccess_RtPlc | Pwr.mAccess_System)) {
 			    openMessageDialog("Not authorized");
 			    break;
 			}
@@ -581,7 +617,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		}
 		case R.id.navigator_option: {
 			System.out.println("Open Navigator");
-			if ( !gdh.isAuthorized(Pwr.mAccess_AllRt)) {
+			if ( !gdh.isAuthorized(Pwr.mAccess_RtNavigator | Pwr.mAccess_System)) {
 			    openMessageDialog("Not authorized");
 			    break;
 			}
@@ -642,7 +678,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			break;
 		}
 		case R.id.alarmack_option: {
-			if ( !gdh.isAuthorized(Pwr.mAccess_AllRt)) {
+			if ( !gdh.isAuthorized(Pwr.mAccess_RtEventsAck | Pwr.mAccess_System)) {
 			    openMessageDialog("Not authorized");
 			    break;
 			}
@@ -1143,53 +1179,26 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 					
 					for ( oret = gdh.getChild(oret.objid); oret.oddSts(); oret = gdh.getNextSibling(oret.objid)) {
 						CdhrClassId cret = gdh.getObjectClass(oret.objid);
-						if (cret.oddSts() && cret.getClassId() == Pwrb.cClass_AppGraph) {
-							CdhrString sret = gdh.objidToName(oret.objid, Cdh.mName_volumeStrict);
-							
-							String name = sret.str;
-							AGraphInfo info = new AGraphInfo();
-							String aName = name + ".Image";
-							sret = gdh.getObjectInfoString(aName);
-							if ( sret.evenSts())
-								continue;
+						if (cret.evenSts())
+						    break;
 
-							String image = sret.str;
-							if ( image.equals("")) {
-								info.bpm = BitmapFactory.decodeResource(getResources(), R.drawable.graph_icon);
-							}
-							else {
-								URL url = null;
-								try {
-									if ( image.startsWith("$pwr_exe/")) {
-										// url = new URL("http://10.0.2.2/data0/x4-8-6/rls/os_linux/hw_x86/exp/exe/" + filename.substring(9));
-										url = new URL("http://" + pwrHost + "/pwr_exe/" + image.substring(9));
-									}
-									else {
-										// url = new URL("http://10.0.2.2/data0/pwrp/opg7/bld/x86_linux/exe/" + filename);
-										url = new URL("http://" + pwrHost + "/pwrp_exe/" + image);
-									}
-									info.bpm = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-								} catch ( IOException e) {
-									info.bpm = BitmapFactory.decodeResource(getResources(), R.drawable.graph_icon);
-									System.out.println( "Unable to open file " + image  + " " + url);
-								}
-							}
-							aName = name + ".Name";
-							sret = gdh.getObjectInfoString(aName);
-							if ( sret.evenSts())
-								continue;
-
-							info.graph = sret.str;
-
-							aName = name + ".Text";
-							sret = gdh.getObjectInfoString(aName);
-							if ( sret.evenSts())
-								continue;
-
-							info.text = sret.str;
-
-							graphList.add(info);
+						switch ( cret.getClassId()) {
+						case Pwrb.cClass_AppGraph:
+						    addGraphList(oret.objid);
+						    break;
+						case Pwrs.cClass_PlantHier:
+						case Pwrs.cClass_NodeHier:
+						    for ( CdhrObjid oret2 = gdh.getChild(oret.objid); 
+							  oret2.oddSts(); 
+							  oret2 = gdh.getNextSibling(oret2.objid)) {
+							CdhrClassId cret2 = gdh.getObjectClass(oret2.objid);
+							if (cret2.oddSts() && cret2.getClassId() == Pwrb.cClass_AppGraph)
+							    addGraphList(oret2.objid);
+						    }
+						    break;
+						default: ;
 						}
+						    
 					}					
 					if ( graphList.size() > 0) {
  						opwinCmn = new OpwinCmn(appl, graphList);
@@ -1217,6 +1226,55 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				view.invalidate();
 		}
 	}
+
+    private void addGraphList( PwrtObjid objid) {
+	CdhrString sret = gdh.objidToName(objid, Cdh.mName_volumeStrict);
+	
+	String name = sret.str;
+	AGraphInfo info = new AGraphInfo();
+	String aName = name + ".Image";
+	sret = gdh.getObjectInfoString(aName);
+	if ( sret.evenSts())
+	    return;
+
+	String image = sret.str;
+	if ( image.equals("")) {
+	    info.bpm = BitmapFactory.decodeResource(getResources(), R.drawable.graph_icon);
+	}
+	else {
+	    URL url = null;
+	    try {
+		if ( image.startsWith("$pwr_exe/")) {
+		    // url = new URL("http://10.0.2.2/data0/x4-8-6/rls/os_linux/hw_x86/exp/exe/" + filename.substring(9));
+		    url = new URL("http://" + pwrHost + "/pwr_exe/" + image.substring(9));
+		}
+		else {
+		    // url = new URL("http://10.0.2.2/data0/pwrp/opg7/bld/x86_linux/exe/" + filename);
+		    url = new URL("http://" + pwrHost + "/pwrp_exe/" + image);
+		}
+		info.bpm = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+	    } catch ( IOException e) {
+		info.bpm = BitmapFactory.decodeResource(getResources(), R.drawable.graph_icon);
+		System.out.println( "Unable to open file " + image  + " " + url);
+	    }
+	}
+	aName = name + ".Name";
+	sret = gdh.getObjectInfoString(aName);
+	if ( sret.evenSts())
+	    return;
+	
+	info.graph = sret.str;
+
+	aName = name + ".Text";
+	sret = gdh.getObjectInfoString(aName);
+	if ( sret.evenSts())
+	    return;
+	
+	info.text = sret.str;
+							
+	graphList.add(info);
+    }
+
 	private class ReaderTaskArg {
 		int action;
 		Object data1;
@@ -1261,10 +1319,43 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent me) {
-		int action = me.getAction();
-		float x = me.getX();
-		float y = me.getY();
-		
+		if ( me == null)
+		    return true;
+
+		int action = MotionEventCompat.getActionMasked( me);
+		float x = MotionEventCompat.getX(me, 0);
+		float y = MotionEventCompat.getY(me, 0);
+		boolean isSustained = false;		
+
+		if ( lastMotionEvent == me && eventCnt > 0) {
+		    isSustained = true;
+		    x = me.getX();
+		    y = me.getY();
+		    System.out.println("Sustain motion event: " + eventCnt + " " + lastXSpeed + " " + lastYSpeed);
+		    System.out.println("x,y " + lastMotionEvent.getX() + " " + lastMotionEvent.getY());
+		    eventCnt--;
+		    if ( eventCnt == 0) {
+			lastMotionEvent = null;
+			lastXSpeed = 0;
+			lastYSpeed = 0;
+			eventMode = MODE_NO;
+		    }
+		    else {
+			lastXSpeed = 0.8 * lastXSpeed;
+			lastYSpeed = 0.8 * lastYSpeed;
+		    	lastMotionEvent = MotionEvent.obtain( lastMotionEvent.getDownTime(), 
+		    			lastMotionEvent.getEventTime(),
+		    			lastMotionEvent.getAction(),
+		    			(float)(lastMotionEvent.getX() + lastXSpeed * 50),
+		    			(float)(lastMotionEvent.getY() + lastYSpeed * 50),
+		    			lastMotionEvent.getMetaState());
+		    	
+			System.out.println("x,y " + lastMotionEvent.getX() + " " + lastMotionEvent.getY());
+			eventMode = MODE_SCROLL;
+		    	eventTimer.schedule( new EventTimerTask(), new Date(System.currentTimeMillis() + 50));
+		    }
+		}
+
 		if ( viewOffsetY == 0) {
 			if ( context != null) {
 				TypedValue tv = new TypedValue();
@@ -1273,35 +1364,58 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				int id = getResources().getIdentifier("status_bar_height", "dimen", "android");
 				if ( id > 0)
 					viewOffsetY += getResources().getDimensionPixelSize(id);
+				viewOffsetY = 60;
 			}
 			else
 				viewOffsetY = 80;
 		}
-		System.out.println("offset : " + viewOffsetY);
+		// System.out.println("offset : " + viewOffsetY);
 
 		switch (action) {
 		case MotionEvent.ACTION_MOVE:
-			System.out.println("Event Move " + action + " (" + x + "," + y + ")");
+		    if ( isSustained)
+			System.out.println("Sustained scroll");
 			if ( eventMode == MODE_SCROLL) {
-				if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH){
+	  		        if ( lastTouchId != me.getPointerId(0)) {
+					lastTouchX = x;
+					lastTouchY = y;
+					lastTouchId = me.getPointerId(0);
+					break;
+				}
+				if ( false /* currentCmn.type() == PlowCmnIfc.TYPE_GRAPH */){
 					new GdhTask().execute(new GdhTaskArg(GdhTask.EVENTHANDLER, 
 							new GdhEventArg(GraphCmn.ACTION_MOVE, x, y-viewOffsetY)));					
 				}
 				else {
+				    System.out.println("Scroll " + x + " " + y);
 					if ( (int)(lastTouchY - y) != 0) {
 						currentCmn.scroll((int)(lastTouchX -x), (int)(lastTouchY - y));
 						view.invalidate();
 					}
 					lastTouchX = x;
 					lastTouchY = y;
-
+					lastTouchId = me.getPointerId(0);
 				}
+				if ( !isSustained) {
+				    if ( lastMotionEvent != null) {
+					lastXSpeed = 0.5 * lastXSpeed + 0.5 * (x - lastMotionEvent.getX()) / (me.getEventTime() - lastMotionEvent.getEventTime());
+					lastYSpeed = 0.5 * lastYSpeed + 0.5 * (y - lastMotionEvent.getY()) / (me.getEventTime() - lastMotionEvent.getEventTime());			  			
+				    }
+				    lastMotionEvent = MotionEvent.obtain( me.getDownTime(), me.getEventTime(),
+								      me.getAction(), me.getX(), me.getY(),
+								      me.getMetaState());				    
+				}
+				
 			}
 			else if ( eventMode == MODE_ZOOM) {
 				float distance = eventDistance(me);
 
-				currentCmn.zoom(distance/eventDistance);
+				currentCmn.zoom(distance/eventDistance,
+						(MotionEventCompat.getX(me, 0) + MotionEventCompat.getX(me, 1))/2, 
+						(MotionEventCompat.getY(me, 0) + MotionEventCompat.getY(me, 1))/2 + viewOffsetY);
 				eventDistance = distance;
+
+				view.invalidate();
 			}
 			
 			break;
@@ -1323,15 +1437,37 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				if ( Math.abs(x - downTouchX) < 10 && Math.abs(y - downTouchY) < 10 && currentCmn != null) {
 					currentCmn.eventHandler(action, x, y-viewOffsetY);
 				}
-			}	
+			}
+			view.invalidate();
 			eventMode = MODE_NO;
+
+			if ( lastMotionEvent != null) {
+			    System.out.println("ACTION UP, sustained motion event scheduled");
+ 			    //lastXSpeed = (downTouchX - x) / (me.getDownTime() - me.getEventTime());
+			    //lastYSpeed = (downTouchY - y) / (me.getDownTime() - me.getEventTime());			  			
+			    eventCnt = (int)(10 * FloatMath.sqrt((float)(lastXSpeed * lastXSpeed + lastYSpeed * lastYSpeed)));
+			    long dt = me.getEventTime() - lastMotionEvent.getEventTime();
+			    lastMotionEvent = MotionEvent.obtain( lastMotionEvent.getDownTime(), 
+								  lastMotionEvent.getEventTime(),
+								  lastMotionEvent.getAction(),
+								  (float)(lastMotionEvent.getX() + lastXSpeed * dt),
+								  (float)(lastMotionEvent.getY() + lastYSpeed * dt),
+								  lastMotionEvent.getMetaState());
+			    
+			    eventTimer.schedule( new EventTimerTask(), new Date(System.currentTimeMillis() + 50));
+			    eventMode = MODE_SCROLL;
+			}
 			break;
 		case MotionEvent.ACTION_DOWN:
 			System.out.println("Event Down " + action + " (" + x + "," + y + ")");
+			lastMotionEvent = null;
+			lastXSpeed = 0;
+			lastYSpeed = 0;
 			if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH){
 				new GdhTask().execute(new GdhTaskArg(GdhTask.EVENTHANDLER, 
 						new GdhEventArg(GraphCmn.ACTION_DOWN, x, y-viewOffsetY)));					
 			}
+			lastTouchId = me.getPointerId(0);
 			lastTouchX = x;
 			lastTouchY = y;
 			downTouchX = x;
@@ -1340,6 +1476,9 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			break;
 		case MotionEvent.ACTION_POINTER_DOWN:
 			System.out.println("Event Action Pointer Down");
+			lastMotionEvent = null;
+			lastXSpeed = 0;
+			lastYSpeed = 0;
 
 			eventDistance = eventDistance(me);
 			if ( eventDistance > 10)
@@ -1347,18 +1486,29 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			break;
 		case MotionEvent.ACTION_POINTER_UP:
 			System.out.println("Event Action Pointer Up");
-			eventMode = MODE_NO;
+			eventMode = MODE_SCROLL;
 			break;
 		}
 		return true;
 	}
 	private float eventDistance(MotionEvent me) {
-		float x = me.getX(0) - me.getX(1);
-		float y = me.getY(0) - me.getY(1);
+	        float x = MotionEventCompat.getX(me, 0) - MotionEventCompat.getX(me, 1);
+	        float y = MotionEventCompat.getY(me, 0) - MotionEventCompat.getY(me, 1);
 		
 		return FloatMath.sqrt(x * x + y * y);
 	}
 	
+	class EventTimerTask extends TimerTask {
+		@Override
+		public void run() {
+		runOnUiThread( new Runnable() {
+		public void run() {
+		    if ( lastMotionEvent != null)
+			onTouchEvent( lastMotionEvent);
+		}});
+		}
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -1518,6 +1668,7 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 		}
 		graph = new Graph(this, gdh);
 		graphObject.add(instance);
+		graph.setOwner(instance);
 		graph.open(reader);
 	    graph.gdraw.setActivity(this);
 	    GraphCmn cmn = new GraphCmn(graph);
@@ -1589,6 +1740,27 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
     		return null;
     }
     
+    public Object loadGrowCtx( String fname) {
+	String filename = fname;
+	BufferedReader reader;
+	URL url = null;
+	try {
+	    if ( filename.startsWith("$pwr_exe/")) {
+		// url = new URL("http://10.0.2.2/data0/x4-8-6/rls/os_linux/hw_x86/exp/exe/" + filename.substring(9));
+		url = new URL("http://" + pwrHost + "/pwr_exe/" + filename.substring(9));
+	    }
+	    else {
+		// url = new URL("http://10.0.2.2/data0/pwrp/opg7/bld/x86_linux/exe/" + filename);
+		url = new URL("http://" + pwrHost + "/pwrp_exe/" + filename);
+	    }
+	    reader = new BufferedReader(new InputStreamReader(url.openStream()));
+	} catch ( IOException e) {
+	    System.out.println( "Unable to open file " + filename  + " " + url);
+	    return null;			
+	}
+	return graph.loadGrowCtx(reader);
+    }
+
     static CliTable[] cliTable = new CliTable[] { 
         new CliTable( "OPEN", new String[] {"cli_arg1", "cli_arg2", "/NAME", 
     	"/FILE", "/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", "/NAVIGATOR", 
@@ -1597,8 +1769,8 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
         new CliTable( "HELP", new String[] {"cli_arg1", "cli_arg2", "cli_arg3",
     	"cli_arg4", "/HELPFILE", "/POPNAVIGATOR", "/BOOKMARK", "/INDEX",
             "/BASE", "/RETURNCOMMAND", "/WIDTH", "/HEIGHT", "/VERSION"}),
-        new CliTable( "SET", new String[] {"cli_arg1",
-        	"/NAME", "/VALUE", "/BYPASS"}),
+        new CliTable( "SET", new String[] {"cli_arg1", "cli_arg2",
+        	"/NAME", "/VALUE", "/BYPASS", "/SOURCE", "/OBJECT"}),
         new CliTable( "EXAMPLE", new String[] {"/NAME", "/HIERARCHY"}),
         new CliTable( "CHECK", new String[] {"cli_arg1", "/METHOD", "/OBJECT"}),
         new CliTable( "CALL", new String[] {"cli_arg1", "/METHOD", "/OBJECT"}),
@@ -1682,8 +1854,13 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
         				Boolean newFrame = true;
         				String frameName = null;
         				String urlValue = cli.getQualValue("cli_arg2");
+					if (!urlValue.startsWith("http://") && !urlValue.startsWith("https://"))
+					    urlValue = "http://" + urlValue;
         				System.out.println("open url " + urlValue);
-        			}
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlValue));
+					startActivity(browserIntent);
+ 
+				}
         			else if ( trend.length() >= cli_arg1.length() &&
         					trend.substring(0,cli_arg1.length()).equals(cli_arg1)) {
         				// Command is "OPEN TREND"
@@ -1698,7 +1875,51 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
         	}
         	else if ( command.equals("SET")) {
         		if ( cli.qualifierFound("cli_arg1")) {
-        		}
+			    String cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
+			    String subwindow = "SUBWINDOW";
+			    if ( subwindow.length() >= cli_arg1.length() &&
+				 subwindow.substring(0,cli_arg1.length()).equals(cli_arg1)) {
+				// Command is "SET SUBWINDOW"
+				if ( currentCmn.type() != PlowCmnIfc.TYPE_GRAPH)
+				    return 0;
+
+				String name;
+				String graphstr;
+				String source;
+				String object;
+				PwrtStatus sts;
+
+				System.out.println("Command: set subwindow");
+				local_cmd = true;
+				if ( cli.qualifierFound("/NAME"))
+				    name = cli.getQualValue("/NAME");
+				else {
+				    System.out.println( "Cmd: name is missing\n");
+				    return 0;
+				}
+				if ( cli.qualifierFound("/SOURCE"))
+				    source = cli.getQualValue("/SOURCE");
+				else {
+				    System.out.println( "Cmd: source is missing\n");
+				    return 0;
+				}
+				if ( cli.qualifierFound("/OBJECT"))
+				    object = cli.getQualValue("/OBJECT");
+				else
+				    object = null;
+				if ( cli.qualifierFound("cli_arg2"))
+				    graphstr = cli.getQualValue("cli_arg2").toLowerCase();
+				else {
+				    System.out.println("Syntax error");
+				    return 0;
+				}
+				
+				if ( source.indexOf('.') == -1)
+				    source = source + ".pwg";
+
+				((GraphCmn)currentCmn).graph.setSubwindowSource( name, source, object);
+			    }
+			}
         	}
         	else if ( command.equals("CHECK")) {
         		if ( cli.qualifierFound("cli_arg1")) {
@@ -1778,6 +1999,15 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
         	}
         }
         return 1;
+    }
+
+    public void closeGraph() {
+	new GdhTask().execute(new GdhTaskArg(GdhTask.DYNAMIC_CLOSE, currentCmn));
+	if (graphObject.size() > 0)
+	    graphObject.removeElementAt(graphObject.size()-1);
+	currentCmn = cmnList.get(cmnList.size()-2);
+	cmnList.removeElementAt(cmnList.size()-1);
+	view.invalidate();
     }
 
     public void invalidateView() {

@@ -21,6 +21,7 @@ local_java_sources := \
 	JopConfirm.java \
 	JopConfirmDialog.java \
 	JopFrame.java \
+	JopGrowFrame.java \
 	JopApplet.java \
 	JopSpider.java \
 	Jop.java \

@@ -53,6 +53,11 @@ public class AXttItemObject extends AXttItemBase {
 			node.setAnnotPixmap(0, axtt.iconLeaf);			
 		node.setAnnotation(0, ret.str, 22);
 		node.setAnnotation(1, cnameret.str, 11);
+
+		ret = axtt.gdh.getObjectInfoString( fullName + ".Description");
+		if ( ret.oddSts())
+		    node.setAnnotation(2, ret.str, 0);
+
 		axtt.cmn.insertNode(node, destination, destCode);
 		y += 1.5D;
 

@@ -225,6 +225,12 @@ public class GlowVector {
 	  a.add( c);
 	  break;
 	}
+	case Glow.eSave_GrowFolder: {
+	  GrowFolder c = new GrowFolder( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
 	case Glow.eSave_Point: {
 	  GlowPoint c = new GlowPoint();
 	  c.open( reader);

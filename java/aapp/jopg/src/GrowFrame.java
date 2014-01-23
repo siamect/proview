@@ -38,8 +38,8 @@
 package jpwr.jopg;
 import jpwr.rt.*;
 import java.io.*;
-import java.awt.*;
-import java.awt.font.*;
+//import java.awt.*;
+//import java.awt.font.*;
 import java.net.*;
 
 public class GrowFrame implements GraphApplIfc {
@@ -326,6 +326,10 @@ public class GrowFrame implements GraphApplIfc {
     public String getObject() {
 	return instance;
     }
+    public Object loadGrowCtx( String fname) {
+	return null;
+    }
+    public void closeGraph() {}
 }
 
 

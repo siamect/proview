@@ -56,6 +56,7 @@ local_java_sources := \
 	GrowConGlue.java,\
 	GrowImage.java,\
 	GrowWindow.java,\
+	GrowFolder.java,\
 	GlowVector.java,\
 	GrowCtx.java,\
 	DynParsedAttrName.java,\

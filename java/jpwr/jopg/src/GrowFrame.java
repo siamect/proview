@@ -89,7 +89,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	localPanel.setLayout(null);
 	localPanel.setOpaque(true);
 	localPanel.setBackground( Color.white);
-	this.setTitle("GrowFrame");
+	setTitle( file, instance);
 	size = new Dimension( 1100, 900);
 	setSize( size);
 
@@ -192,6 +192,8 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	// if ( gdh == null)
 	//    gdh = new Gdh(this);
 	graph = new Graph(this, gdh);
+	if ( instance != null)
+	    graph.setOwner( instance);
 	graph.open(reader);
 
 	setSize();
@@ -200,7 +202,6 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	
 	MouseAdapter adapter = new MouseAdapter() {
 		public void mouseClicked(MouseEvent e) {
-		    System.out.println("MouseListener");
 		    GlowEvent event = new GlowEvent();
 		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
 		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
@@ -208,7 +209,6 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 		    graph.ctx.eventHandler( event);
 		}
 		public void mousePressed(MouseEvent e) {
-		    System.out.println("MouseListener");
 		    GlowEvent event = new GlowEvent();
 		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
 		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
@@ -216,7 +216,6 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 		    graph.ctx.eventHandler( event);
 		}
 		public void mouseReleased(MouseEvent e) {
-		    System.out.println("MouseListener");
 		    GlowEvent event = new GlowEvent();
 		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
 		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
@@ -303,6 +302,10 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	if ( appl != null)
 	    return appl.command(cmd);
 	return 0;
+    }
+
+    public void closeGraph() {
+	dispatchEvent(new WindowEvent( this, WindowEvent.WINDOW_CLOSING));
     }
 
     public void confirmNo() {}
@@ -471,6 +474,81 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 
     public String getObject() {
 	return instance;
+    }
+
+    public Object loadGrowCtx( String fname) {
+	String filename;
+	BufferedReader reader = null;
+
+	if ( root != null && root instanceof JApplet) {
+	    try {
+		URL current = ((JApplet) root).getCodeBase();
+		String current_str = current.toString();
+		int idx1 = current_str.lastIndexOf('/');
+		int idx2 = current_str.lastIndexOf(':');
+		int idx = idx1;
+		if ( idx2 > idx)
+		    idx = idx2;
+		String path = current_str.substring(0,idx + 1);
+		filename = path + fname;
+		System.out.println( "Opening file " + filename);
+		URL fileURL = new URL( filename);
+		InputStream in = fileURL.openStream();
+		// in = new BufferedInputStream(in);
+		InputStreamReader r2 = new InputStreamReader(in);
+		reader = new BufferedReader( r2);
+	    }
+	    catch ( Exception e) {
+		System.out.println( "Unable to open file");
+	    }
+	}
+	else {
+	    if ( fname.lastIndexOf('/') == -1) {
+		if ( fname.startsWith("pwr_c_"))
+		    filename = "$pwr_exe/" + fname;
+		else
+		    filename = "$pwrp_exe/" + fname;
+	    }
+	    else
+		filename = fname;
+	    filename = Gdh.translateFilename( filename);
+
+	    System.out.println( "Fname: " + filename);
+	    try {
+		reader = new BufferedReader(new FileReader(filename));
+	    }
+	    catch ( Exception e) {
+		System.out.println( "Unable to open file " + filename);
+		return null;
+	    }
+	}
+	return graph.loadGrowCtx( reader);
+    }
+
+    public void setTitle( String file, String instance) {
+	if ( instance != null)
+	    super.setTitle( instance);
+	else {
+	    String name;
+
+	    int idx = file.lastIndexOf('/');
+	    if ( idx == -1)
+		name = file;
+	    else
+		name = file.substring(idx+1);
+	    idx = name.lastIndexOf('.');
+	    if ( idx != -1)
+		name = name.substring(0, idx);
+	    super.setTitle(name);
+	}
+    }
+
+    public void setSubwindowSource( String name, String source, String object) {
+	graph.setSubwindowSource( name, source, object);
+    }
+
+    public GrowFrameApplIfc getAppl() {
+	return appl;
     }
 }
 

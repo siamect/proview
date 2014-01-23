@@ -1551,6 +1551,7 @@ open multiview  <t>Open a multiview		<LINK> open multiview
 open jgraph <t>Open a java graph		<LINK> open jgraph
 open navigator <t>Open the navigator		<LINK> open navigator
 open operatorwindow<t>Open the operator window 	<LINK> open operatorwindow
+open trace  <t>Open trace for a plc window      <LINK> open trace
 open trend  <t>Open DsTrend or PlotGroup graph	<LINK> open trend
 read object <t>Read the content of an object from file <LINK> read object
 search	<t>Search for an object or a string 	<LINK> search

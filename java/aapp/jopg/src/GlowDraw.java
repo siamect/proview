@@ -61,10 +61,14 @@ public class GlowDraw implements GlowDrawIfc {
     Activity activity;
     Canvas canvas;
     Paint paint;
+    int clip_x1[] = new int[10];
+    int clip_y1[] = new int[10];
+    int clip_x2[] = new int[10];
+    int clip_y2[] = new int[10];
+    int clipCount = 0;
     
     public GlowDraw() {
     	paint = new Paint();
-
 
     }
         
@@ -511,11 +515,39 @@ public class GlowDraw implements GlowDrawIfc {
     }
 
     public int set_clip_rectangle( int x1, int y1, int x2, int y2) {
+	if ( clipCount > 0) {
+	    if ( clipCount >= 10)
+		return 0;
+	    if ( x1 < clip_x1[clipCount-1])
+		x1 = clip_x1[clipCount-1];
+	    if ( y1 < clip_y1[clipCount-1])
+		y1 = clip_y1[clipCount-1];
+	    if ( x2 > clip_x2[clipCount-1])
+		x2 = clip_x2[clipCount-1];
+	    if ( y2 > clip_y2[clipCount-1])
+		y2 = clip_y2[clipCount-1];
+	}
+	clip_x1[clipCount] = x1;
+	clip_y1[clipCount] = y1;
+	clip_x2[clipCount] = x2;
+	clip_y2[clipCount] = y2;
+	clipCount++;
+
     	canvas.clipRect(x1, y1, x2, y2, Region.Op.REPLACE);
 	return 1;
     }
 
     public void reset_clip_rectangle() {
-    	canvas.clipRect(0, 0, canvas.getWidth(), canvas.getHeight(), Region.Op.REPLACE);
+	if ( clipCount == 0) {
+	    System.out.println("Clip mismatch");
+	    return;
+	}
+	clipCount--;
+	if ( clipCount > 0) {
+	    canvas.clipRect( clip_x1[clipCount-1], clip_y1[clipCount-1], 
+			     clip_x2[clipCount-1], clip_y2[clipCount-1], Region.Op.REPLACE);	    
+	}	    
+	else
+	    canvas.clipRect(0, 0, canvas.getWidth(), canvas.getHeight(), Region.Op.REPLACE);
     }
 }

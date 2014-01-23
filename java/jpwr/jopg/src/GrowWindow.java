@@ -39,17 +39,28 @@ import jpwr.rt.*;
 import java.io.*;
 import java.util.*;
 
-public class GrowWindow extends GrowRect {
+public class GrowWindow extends GrowRect implements GrowScrollBarIfc {
 
     String file_name;
+    String input_file_name = new String();
     double scrollbar_width;
     int scrollbar_color;
     int scrollbar_bg_color;
     int vertical_scrollbar;
     int horizontal_scrollbar;
     double window_scale;
-    String owner;
+    String owner = new String();
     Object userdata;
+    GrowCmn windowCmn;
+    double wctx_x0;
+    double wctx_x1;
+    double wctx_y0;
+    double wctx_y1;
+    double y_low_offs = 0;
+    double h_value = 0;
+    double v_value = 0;
+    GrowScrollBar v_scrollbar;
+    GrowScrollBar h_scrollbar;
 
     public GrowWindow(GrowCmn cmn) {
 	super(cmn);
@@ -125,6 +136,9 @@ public class GrowWindow extends GrowRect {
 		    break;
 	    }
 		
+	    if ( file_name != null && !file_name.equals(""))
+		new_ctx();
+
 	} catch ( Exception e) {
 	    System.out.println( "IOException GrowWindow");
 	}
@@ -134,6 +148,384 @@ public class GrowWindow extends GrowRect {
 	if ( cmn.nodraw != 0)
 	    return;
 
+	int idx;
+	int drawtype;
+
+	idx = (int)( cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * line_width - 1);
+	idx += hot;
+	idx = Math.max( 0, idx);
+	idx = Math.min( idx, Glow.DRAW_TYPE_SIZE-1);
+	int ll_x, ll_y, ur_x, ur_y;
+	double dx1, dy1, dx2, dy2;
+
+	if ( t == null) {
+	    dx1 = trf.x( ll.x, ll.y);
+	    dy1 = trf.y( ll.x, ll.y);
+	    dx2 = trf.x( ur.x, ur.y);
+	    dy2 = trf.y( ur.x, ur.y);
+	}
+	else {
+	    dx1 = trf.x( t, ll.x, ll.y);
+	    dy1 = trf.y( t, ll.x, ll.y);
+	    dx2 = trf.x( t, ur.x, ur.y);
+	    dy2 = trf.y( t, ur.x, ur.y);
+	}
+	dx1 = Math.min( dx1, dx2);
+	dx2 = Math.max( dx1, dx2);
+	dy1 = Math.min( dy1, dy2);
+	dy2 = Math.max( dy1, dy2);
+
+	if ( v_scrollbar != null) {
+	    if ( h_scrollbar == null)
+		v_scrollbar.set_position( dx2 - scrollbar_width, dy1 + y_low_offs, scrollbar_width, 
+					  dy2 - (dy1 + y_low_offs));
+	    else
+		v_scrollbar.set_position( dx2 - scrollbar_width, dy1 + y_low_offs, scrollbar_width, 
+					  dy2 - (dy1 + y_low_offs) - scrollbar_width);
+	    v_scrollbar.draw( null, 0, 0, null, null);
+
+	}
+	if ( h_scrollbar != null) {
+	    if ( v_scrollbar == null)
+		h_scrollbar.set_position( dx1, dy2 - scrollbar_width, dx2 - dx1, scrollbar_width);
+	    else
+		h_scrollbar.set_position( dx1, dy2 - scrollbar_width, dx2 - dx1 - scrollbar_width, scrollbar_width);
+	    h_scrollbar.draw( null, 0, 0, null, null);
+	}
+
+	ll_x = (int)( dx1 * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
+	ll_y = (int)( (dy1 + y_low_offs) * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
+
+	if ( windowCmn != null) {
+	    ur_x = (int)( (dx2 - vertical_scrollbar * scrollbar_width) * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
+	    ur_y = (int)( (dy2 - horizontal_scrollbar * scrollbar_width) * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
+
+
+	    windowCmn.mw.window_width = (int)((x_right - x_left) * cmn.mw.zoom_factor_x);
+	    windowCmn.mw.window_height = (int)((y_high - y_low) * cmn.mw.zoom_factor_y);
+	    windowCmn.mw.subwindow_x = (int)(x_left * cmn.mw.zoom_factor_x - cmn.mw.offset_x);
+	    windowCmn.mw.subwindow_y = (int)(y_low * cmn.mw.zoom_factor_y - cmn.mw.offset_y);
+	    windowCmn.mw.offset_x = - ll_x + (int)( h_value * cmn.mw.zoom_factor_x);
+	    windowCmn.mw.offset_y = - ll_y + (int)( v_value * cmn.mw.zoom_factor_y);
+	    windowCmn.mw.zoom_factor_x = windowCmn.mw.subwindow_scale * cmn.mw.zoom_factor_x;
+	    windowCmn.mw.zoom_factor_y = windowCmn.mw.subwindow_scale * cmn.mw.zoom_factor_y;
+	    // window_ctx->draw_buffer_only = ctx->draw_buffer_only;
+
+	    if ( fill != 0)
+		cmn.gdraw.fill_rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fill_drawtype);
+
+	    cmn.gdraw.set_clip_rectangle( ll_x, ll_y, ur_x-1, ur_y-1);
+
+	    windowCmn.ctx.draw( ll_x, ll_y, ur_x, ur_y);
+
+	    cmn.gdraw.reset_clip_rectangle();
+	}
+
+
+	ur_x = (int)( dx2 * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
+	ur_y = (int)( dy2 * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
+
+	drawtype = GlowColor.get_drawtype( draw_type, Glow.eDrawType_LineHighlight,
+					   highlight, (GrowNode)colornode, 0, 0);
+	cmn.gdraw.rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx, 0);
     }
 
+
+    public void new_ctx() {
+	if ( file_name.equals("_no_"))
+	    return;
+
+	if ( file_name.indexOf('.') == -1)
+	    file_name = file_name + ".pwg";
+
+	System.out.println("GrowWindow loading " + file_name);
+	GrowCtxIfc ctx = (GrowCtxIfc)cmn.appl.loadCtx( file_name);
+	if ( ctx == null) 
+	    return;
+
+	windowCmn = ctx.getCmn();
+	windowCmn.appl = cmn.appl;
+
+	windowCmn.owner = owner;
+	windowCmn.mw.subwindow_scale = window_scale;
+	windowCmn.mw.zoom_factor_x = windowCmn.mw.zoom_factor_y = 
+  	    windowCmn.mw.subwindow_scale * cmn.mw.zoom_factor_x;
+
+	input_file_name = file_name;
+	if ( windowCmn.background_color != Glow.eDrawType_Inherit) {
+	    fill_drawtype = original_fill_drawtype = windowCmn.background_color;
+	    fill = 1;
+	}
+	if ( windowCmn.x0 != windowCmn.x1 && windowCmn.y0 != windowCmn.y1) {
+	    wctx_x0 = windowCmn.x0;
+	    wctx_x1 = windowCmn.x1;
+	    wctx_y0 = windowCmn.y0;
+	    wctx_y1 = windowCmn.y1;
+	}
+	else {
+	    wctx_x0 = windowCmn.x_left;
+	    wctx_x1 = windowCmn.x_right;
+	    wctx_y0 = windowCmn.y_low;
+	    wctx_y1 = windowCmn.y_high;
+	}      
+	windowCmn.mw.window_width = (int)((x_right - x_left) * cmn.mw.zoom_factor_x);
+	windowCmn.mw.window_height = (int)((y_high - y_low) * cmn.mw.zoom_factor_y);
+	windowCmn.mw.subwindow_x = (int)(x_left * cmn.mw.zoom_factor_x - cmn.mw.offset_x);
+	windowCmn.mw.subwindow_y = (int)(y_low * cmn.mw.zoom_factor_y - cmn.mw.offset_y);
+	windowCmn.mw.subwindow_scale = cmn.mw.subwindow_scale * window_scale;
+	windowCmn.mw.zoom_factor_x = windowCmn.mw.zoom_factor_y = 
+	    cmn.mw.zoom_factor_x * windowCmn.mw.subwindow_scale;
+	
+	configureScrollbars();
+    }
+
+    public int eventHandler( GlowEvent event, double fx, double fy) {
+	int sts, v_sts, h_sts;
+	GlowPointDX rp;
+
+
+/*
+	switch ( event.event) {
+	case Glow.eEvent_Key_Right:
+	case Glow.eEvent_Key_Left:
+	case Glow.eEvent_Key_Up:
+	case Glow.eEvent_Key_Down:
+	case Glow.eEvent_Key_BackSpace:
+	case Glow.eEvent_Key_Return:
+	case Glow.eEvent_Key_Tab:
+	case Glow.eEvent_Key_ShiftTab:
+	case Glow.eEvent_Key_Escape:
+	case Glow.eEvent_Key_Ascii:
+	    if ( input_focus) {
+		windowCmn.eventHandler( event, fx, 0);
+		if ( !windowCmn.inputfocus_object) {
+		    cmn.register_inputfocus( this, 0);
+		    input_focus = 0;
+		}
+		return 1;
+	    }
+	    else
+		return 0;
+	case Glow.eEvent_ScrollUp:
+	    if ( !cmn.trace_started)
+		return 0;
+	    if ( v_scrollbar) {
+		double rx, ry;
+
+		// Convert koordinates to local koordinates
+		rp = trf.reverse( fx, fy);
+		sts = local_event_handler( event, rp.x, rp.y);
+		if ( sts) {
+		    v_value -= (wctx_y1 - wctx_y0) * window_scale/50;
+		    if ( v_value < wctx_y0 * window_scale)
+			v_value = wctx_y0 * window_scale;
+		    draw();
+		    v_scrollbar.set_value( v_value, y_high - 
+					    (y_low + y_low_offs) - scrollbar_width * horizontal_scrollbar);
+		    return 1;
+		}
+		else
+		    return 0;
+	    }
+	    break;
+	case Glow.eEvent_ScrollDown:
+	    if ( !cmn.trace_started)
+		return 0;
+	    if ( v_scrollbar) {
+		double rx, ry;
+
+		// Convert koordinates to local koordinates
+		rp = trf.reverse( fx, fy);
+		sts = local_event_handler( event);
+		if ( sts) {
+		    v_value += (wctx_y1 - wctx_y0) * window_scale/50;
+		    if ( v_value > wctx_y1 * window_scale - ((y_high - (y_low + y_low_offs) - scrollbar_width * horizontal_scrollbar)))
+			v_value = wctx_y1 * window_scale - ((y_high - (y_low + y_low_offs) - scrollbar_width * horizontal_scrollbar));
+		    draw();
+		    v_scrollbar.set_value( v_value, y_high - 
+					    (y_low + y_low_offs) - scrollbar_width * horizontal_scrollbar);
+		    return 1;
+		}
+		else
+		    return 0;
+	    }
+	    break;
+	default:
+	    ;
+	}
+
+*/
+
+	v_sts = h_sts = 0;
+	if ( v_scrollbar != null)
+	    v_sts = v_scrollbar.eventHandler( event, fx, fy);
+	if (h_scrollbar != null)
+	    h_sts = h_scrollbar.eventHandler( event, fx, fy);
+	if ( v_sts != 0 || h_sts != 0) {
+	    return 1;
+	}
+
+	sts = super.eventHandler( event, fx, fy);
+
+	if ( cmn.callback_object == this) {
+	    // Disable event callback for this object, let the window ctx handle it
+	    cmn.callback_object = null;
+	    cmn.callback_object_type = Glow.eObjectType_NoObject;
+	}
+
+	if ( windowCmn != null && sts != 0) {
+
+	    int ur_x = (int)( (x_right - vertical_scrollbar * scrollbar_width) * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
+	    int	ll_x = (int)( x_left * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
+	    int	ur_y = (int)( (y_high - horizontal_scrollbar * scrollbar_width) * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
+	    int ll_y = (int)( (y_low + y_low_offs) * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
+
+	    // window_ctx->draw_buffer_only = ctx->draw_buffer_only;
+	    cmn.gdraw.set_clip_rectangle( ll_x, ll_y, ur_x, ur_y);
+
+	    // Set callback to redraw the background
+	    // windowCmn.redraw_callback = redraw_cb;
+	    // windowCmn.redraw_data = (Object)this;
+
+	    GlowEvent e = new GlowEvent();
+	    e.event = event.event;
+	    e.type = event.type;
+
+	    e.x = (event.x - x_left) / windowCmn.mw.subwindow_scale + h_value / windowCmn.mw.subwindow_scale;
+	    e.y = (event.y - y_low) / windowCmn.mw.subwindow_scale + v_value / windowCmn.mw.subwindow_scale;
+	    e.object = event.object;
+	    e.object_type = event.object_type;
+	    sts = windowCmn.ctx.eventHandler( e, fx, fy);
+	    if ( sts == Glow.GLOW__TERMINATED)
+		return sts;
+
+	    // windowCmn.redraw_callback = 0;
+	    // windowCmn.redraw_data = 0;
+	    cmn.gdraw.reset_clip_rectangle();
+
+	    /*
+	    if ( windowCmn.inputfocus_object && !input_focus) {
+		cmn.register_inputfocus( this, 1);
+		input_focus = 1;
+	    }
+	    else if ( !windowCmn.inputfocus_object && input_focus) {
+		cmn.register_inputfocus( this, 0);
+		input_focus = 0;
+	    }
+	    */
+	    // if ( window_ctx->callback_object)
+	    //  ctx->register_callback_object( window_ctx->callback_object_type, window_ctx->callback_object);
+	}
+	return sts;
+    }
+
+    void configureScrollbars() {
+	double x0, y0, width, height;
+
+	if ( vertical_scrollbar != 0 && v_scrollbar == null) {
+	    x0 = x_right - scrollbar_width;
+	    y0 = y_low + y_low_offs;
+	    width = scrollbar_width;
+	    if ( horizontal_scrollbar != 0)
+		height = y_high - (y_low + y_low_offs) - scrollbar_width;
+	    else
+		height = y_high - (y_low + y_low_offs);
+
+	    v_scrollbar = new GrowScrollBar( cmn, "vScrollbar", x0, y0, width, height,
+					     Glow.eDir_Vertical, Glow.eDrawType_Line, 1, display_level, 
+					     scrollbar_bg_color, scrollbar_color, 1, this);
+	    if ( windowCmn != null) {
+		v_scrollbar.set_range( wctx_y0 * windowCmn.mw.subwindow_scale, wctx_y1 * window_scale);
+		v_scrollbar.set_value( wctx_y0 * windowCmn.mw.subwindow_scale, y_high - 
+				       (y_low + y_low_offs) - scrollbar_width * horizontal_scrollbar);
+		v_value = wctx_y0 * windowCmn.mw.subwindow_scale;
+	    }
+	    v_scrollbar.set_shadow( shadow);
+	}
+	else {
+	    if ( windowCmn != null)
+		v_value = wctx_y0 * windowCmn.mw.subwindow_scale;
+	}
+
+	if ( horizontal_scrollbar != 0 && h_scrollbar == null) {
+	    x0 = x_left;
+	    y0 = y_high - scrollbar_width;
+	    height = scrollbar_width;
+	    if ( vertical_scrollbar != 0)
+		width = x_right - x_left - scrollbar_width;
+	    else
+		width = x_right - x_left;
+
+	    h_scrollbar = new GrowScrollBar( cmn, "vScrollbar", x0, y0, width, height,
+					     Glow.eDir_Horizontal, Glow.eDrawType_Line, 1, display_level, 
+					     scrollbar_bg_color, scrollbar_color, 1, this);
+	    if ( windowCmn != null) {
+		h_scrollbar.set_range( wctx_x0 * windowCmn.mw.subwindow_scale, wctx_x1 * windowCmn.mw.subwindow_scale);
+		h_scrollbar.set_value( wctx_x0 * windowCmn.mw.subwindow_scale, 
+				       x_right - x_left - scrollbar_width * vertical_scrollbar);
+		h_value = wctx_x0 * windowCmn.mw.subwindow_scale;
+	    }
+	    h_scrollbar.set_shadow( shadow);
+	}
+	else {
+	    if ( windowCmn != null)
+		h_value = wctx_x0 * windowCmn.mw.subwindow_scale;    
+	}
+    }
+
+    public void verticalScrollValueChanged(double value) {
+	if ( v_value != value) {
+	    v_value = value;
+	    draw();
+	}
+    }
+
+    public void horizontalScrollValueChanged(double value) {
+	if ( h_value != value) {
+	    h_value = value;
+	    draw();
+	}
+    }
+
+    public void update_attributes() {
+	if ( owner == null)
+	    owner = new String();
+	if ( !input_file_name.equals( file_name) ||
+	     !windowCmn.owner.equals( owner)) {
+	    // New graph, create new context
+	    int ur_x = (int)( x_right * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
+	    int	ll_x = (int)( x_left * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
+	    int	ur_y = (int)( y_high * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
+	    int ll_y = (int)( y_low * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
+	    cmn.gdraw.set_clip_rectangle( ll_x, ll_y, ur_x-1, ur_y-1);
+
+	    if ( windowCmn != null) {
+		if ( windowCmn.ctx.traceStarted())
+		    windowCmn.ctx.traceDisconnect();
+		fill_drawtype = original_fill_drawtype = Glow.eDrawType_Inherit;
+		fill = 0;
+	    }
+	    file_name = input_file_name;
+	    new_ctx();
+
+	    windowCmn.ctx.traceConnect();
+	    cmn.gdraw.reset_clip_rectangle();
+	}
+    }
+
+    public void traceConnect() {
+	windowCmn.ctx.traceConnect();
+    }
+    public void traceDisconnect() {
+	windowCmn.ctx.traceDisconnect();
+    }
+    public void traceScan() {
+	windowCmn.ctx.traceScan();
+    }
+
+    public void setSource( String file_name, String owner) {
+	this.input_file_name = file_name;
+	this.owner = owner;
+	update_attributes();
+    }
 }

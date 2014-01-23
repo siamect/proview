@@ -318,5 +318,8 @@ public class GrowText extends GlowArrayElem {
 
     }
 
+    public String getName() {
+	return n_name;
+    }
 
 }

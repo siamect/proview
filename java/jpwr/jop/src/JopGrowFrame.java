@@ -34,20 +34,60 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	CS
- * @version	1.0
- */
 
-package jpwr.rt;
+package jpwr.jop;
+import jpwr.rt.*;
+import jpwr.jopg.*;
+import java.io.*;
+import java.awt.*;
+import java.awt.geom.*;
+import java.awt.image.*;
+import java.awt.font.*;
+import javax.swing.*;
+import javax.swing.border.*;
+import java.awt.event.*;
+import java.net.*;
+import java.applet.*;
 
-public class Pwrs {
-  public static final int cClass_Node = 65784;
-  public static final int cClass_Security = 66080;
-  public static final int cClass_PlantHier = 65672;
-  public static final int cClass_NodeHier = 65768;
+public class JopGrowFrame extends GrowFrame implements JopUtilityIfc {
+    String utilityName;
+    PwrtAttrRef utilityAref;
+
+    public JopGrowFrame( String file, Gdh gdh, String instance, GrowFrameApplIfc appl, Object root) {
+	super(file, gdh, instance, appl, root);
+
+	utilityName = JopUtility.fileToName( file);
+
+	if ( instance != null && !instance.equals("")) {
+	    CdhrAttrRef oret = gdh.nameToAttrRef( instance);
+	    if ( oret.oddSts()) {
+		utilityAref = oret.aref;
+	    }
+	}
+    }
+
+    protected void processWindowEvent(WindowEvent e) {
+	super.processWindowEvent(e);
+	if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+	    System.out.println("JopGrowFrame closing");
+	    getAppl().frameClosed( (Object)this);
+	}
+    }
+
+    // JopUtility interface
+    public int getUtilityType() {
+	return JopUtility.GRAPH;
+    }
+
+    public PwrtObjid getUtilityObjid() {
+	return null;
+    }
+
+    public PwrtAttrRef getUtilityAttrRef() {
+	return utilityAref;
+    }
+
+    public String getUtilityName() {
+	return utilityName;
+    }  
 }

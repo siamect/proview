@@ -39,4 +39,5 @@ package jpwr.jopg;
 
 public interface GrowFrameApplIfc {
     public int command(String cmd);
+    public void frameClosed( Object utility);
 }

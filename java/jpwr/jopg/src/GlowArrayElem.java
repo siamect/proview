@@ -44,6 +44,7 @@ public class GlowArrayElem {
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {}
     public int eventHandler(GlowEvent e, double fx, double fy) {return 0;}
     public Object getUserData() { return null;}
+    public void setUserData( Object userdata) {}
     public void get_borders( GlowTransform t, GlowGeometry g) {}
     public int get_background_object_limits(GlowTransform t, int type, double x, double y, Object b) {return 0;}
     public int getClassDynType1() { return 0;}
@@ -52,4 +53,6 @@ public class GlowArrayElem {
     public int getClassActionType2() { return 0;}
     public int getClassCycle() { return 0;}
     public void setColorInverse(int color_inverse) {}
+    public Object getCmn() { return null;}
+    public String getName() { return null;}
 }
