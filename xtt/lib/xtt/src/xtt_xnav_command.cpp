@@ -4641,6 +4641,19 @@ static int	xnav_close_func(	void		*client_data,
       }
     }
 
+    if ( cdh_NoCaseStrcmp(name_str, "$current") == 0) {
+	if ( xnav->current_cmd_ctx) {
+	  xnav->appl.remove( (void *)xnav->current_cmd_ctx);
+	  delete (XttMultiView *)xnav->current_cmd_ctx;
+	  return GLOW__TERMINATED;
+	}
+	else {
+	  xnav->message('E', "No current multiview");
+	  return XNAV__SUCCESS;
+	}
+    }
+
+
     xnav_replace_node_str( name_ptr, name_ptr);
 
 
