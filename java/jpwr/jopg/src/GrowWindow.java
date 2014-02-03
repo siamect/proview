@@ -442,9 +442,13 @@ public class GrowWindow extends GrowRect implements GrowScrollBarIfc {
 	    }
 	    v_scrollbar.set_shadow( shadow);
 	}
-	else {
-	    if ( windowCmn != null)
+	else if ( v_scrollbar != null) {
+	    if ( windowCmn != null) {
+		v_scrollbar.set_range( wctx_y0 * windowCmn.mw.subwindow_scale, wctx_y1 * window_scale);
+		v_scrollbar.set_value( wctx_y0 * windowCmn.mw.subwindow_scale, y_high - 
+				       (y_low + y_low_offs) - scrollbar_width * horizontal_scrollbar);
 		v_value = wctx_y0 * windowCmn.mw.subwindow_scale;
+	    }
 	}
 
 	if ( horizontal_scrollbar != 0 && h_scrollbar == null) {
@@ -467,9 +471,13 @@ public class GrowWindow extends GrowRect implements GrowScrollBarIfc {
 	    }
 	    h_scrollbar.set_shadow( shadow);
 	}
-	else {
-	    if ( windowCmn != null)
+	else if ( h_scrollbar != null) {
+	    if ( windowCmn != null) {
+		h_scrollbar.set_range( wctx_x0 * windowCmn.mw.subwindow_scale, wctx_x1 * windowCmn.mw.subwindow_scale);
+		h_scrollbar.set_value( wctx_x0 * windowCmn.mw.subwindow_scale, 
+				       x_right - x_left - scrollbar_width * vertical_scrollbar);
 		h_value = wctx_x0 * windowCmn.mw.subwindow_scale;    
+	    }
 	}
     }
 

@@ -6,6 +6,7 @@ import jpwr.pwrxtt.MainActivity;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.view.MotionEvent;
 
 public class OpwinCmn implements PlowCmnIfc {
 	  Object userData;
@@ -17,10 +18,15 @@ public class OpwinCmn implements PlowCmnIfc {
 	  int canvasWidth;
 	  int offsetY = 0;
 	  int borderY = 0;
+          AGraphInfo currentGraph = null;
+          double downX;
+          double downY;
+          float density;
 	  
-	  public OpwinCmn( MainActivity appl, Vector<AGraphInfo> graphList) {
+          public OpwinCmn( MainActivity appl, Vector<AGraphInfo> graphList, float density) {
 		  this.graphList = graphList;
 		  this.appl = appl;
+		  this.density = density;
 	  }
 	  public int type() {
 			return TYPE_OPWIN;
@@ -41,10 +47,10 @@ public class OpwinCmn implements PlowCmnIfc {
 			  if (graph.iconHeight > iconHeightMax)
 				  iconHeightMax = graph.iconHeight;
 		  }
-		  int offsetX = 100;
-		  int offsetY = 100;
-		  int distX = iconWidthMax + 50;
-		  int distY = iconHeightMax + 70;
+		  int offsetX = (int)(density * 100);
+		  int offsetY = (int)(density * 100);
+		  int distX = iconWidthMax + (int)(density * 50);
+		  int distY = iconHeightMax + (int)(density * 70);
 		  int x = offsetX;
 		  int y = offsetY;
 		  for ( int i = 0; i < graphList.size(); i++) {
@@ -52,7 +58,7 @@ public class OpwinCmn implements PlowCmnIfc {
 			  graph.iconX = x;
 			  graph.iconY = y;
 			  graph.textX = graph.iconX + graph.iconWidth/2;
-			  graph.textY = graph.iconY + graph.iconHeight + 15;
+			  graph.textY = graph.iconY + graph.iconHeight + (int)(density * 15);
 
 			  borderY = graph.textY + 100;
 
@@ -78,7 +84,12 @@ public class OpwinCmn implements PlowCmnIfc {
 		  
 		  for ( int i = 0; i < graphList.size(); i++) {
 			  AGraphInfo graph = graphList.get(i);
-			  canvas.drawBitmap(graph.bpm, graph.iconX, graph.iconY - offsetY, p);
+			  if ( graph.inverted)
+			      canvas.drawBitmap(graph.bpmInverted, graph.iconX, graph.iconY - offsetY, p);
+			  else
+			      canvas.drawBitmap(graph.bpm, graph.iconX, graph.iconY - offsetY, p);
+
+			  p.setTextSize( density * 15);
 			  int textWidth = (int) p.measureText(graph.text);
 			  canvas.drawText(graph.text, graph.textX - textWidth/2, graph.textY - offsetY, p);
 		  }
@@ -100,14 +111,23 @@ public class OpwinCmn implements PlowCmnIfc {
 	  public void pageDown() {}
 	  public void eventHandler(int action, double fx, double fy) {
 		  switch (action) {
-		  case PlowEvent.TYPE_CLICK:
-			  System.out.println("Opwin click " + fx + " " + fy);
+		  case PlowCmnIfc.ACTION_UP:
+		      if ( currentGraph != null) {
+			  String cmd = "open graph " + currentGraph.graph;
+			  if ( Math.abs(fx - downX) < 10 && Math.abs(fy - downY) < 10)
+			      appl.command(cmd);
+			  currentGraph.inverted = false;
+			  currentGraph = null;
+		      }
+		      break;
+		  case PlowCmnIfc.ACTION_DOWN:
 			  for ( int i = 0; i < graphList.size(); i++) {
 				  if ( fx > graphList.get(i).iconX && fx <= graphList.get(i).iconX + graphList.get(i).iconWidth &&
 					   fy > graphList.get(i).iconY - offsetY && fy <= graphList.get(i).iconY + graphList.get(i).iconHeight - offsetY) {
-					System.out.println("Hit in icon");	  
-					String cmd = "open graph " + graphList.get(i).graph;
-					appl.command(cmd);
+					currentGraph = graphList.get(i);
+					currentGraph.inverted = true;
+					downX = fx;
+					downY = fy;
 				  }
 			  }
 			  break;

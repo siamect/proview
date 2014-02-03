@@ -13,5 +13,5 @@ public interface PlowDrawIfc {
 	public int getCanvasWidth();
 	public int getCanvasHeight();
 	public void setCanvas(Canvas canvas);
-
+        public void setDensity(float textDensity, float lineDensity);
 }

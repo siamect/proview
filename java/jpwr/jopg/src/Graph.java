@@ -53,6 +53,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
     public double scan_time = 1;
     GrowCmn[] cmnStack = new GrowCmn[10];
     int cmnStackCnt = 0;
+    int clickActive = 0;
 
     public Graph(GraphApplIfc appl, Gdh gdh) {
 	this.appl = appl;
@@ -504,7 +505,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
     }
 
     public boolean isAuthorized(int access) {
-	return true;
+	return appl.isAuthorized(access);
     }
 
     public double getScanTime() {
@@ -537,5 +538,13 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	    cmn = cmnStack[--cmnStackCnt];
 	    ctx = (GrowCtx)cmn.ctx;
 	}
+    }
+
+    public void setClickActive(int active) {
+	clickActive = active;
+    }
+
+    public int getClickActive() {
+	return clickActive;
     }
 }

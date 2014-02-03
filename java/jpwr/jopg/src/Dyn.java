@@ -591,7 +591,7 @@ public class Dyn {
     public static final int ePwrStatus_Error		= 3;
     public static final int ePwrStatus_Fatal		= 4;
 
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
     Vector<DynElem> elements = new Vector<DynElem>();
     GraphIfc graph;
@@ -3174,6 +3174,9 @@ public class Dyn {
 	}
 
 	public int action( GlowArrayElem object, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Click:
 		dyn.object = object;
@@ -6361,6 +6364,9 @@ public class Dyn {
 	}
 
 	public int action( GlowArrayElem object, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -6447,6 +6453,9 @@ public class Dyn {
 	}
 
 	public int action( GlowArrayElem object, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -6533,14 +6542,19 @@ public class Dyn {
 	}
 
 	public int action( GlowArrayElem object, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
 		dyn.repaintNow = true;
+		dyn.graph.setClickActive(1);
 		break;
 	    case Glow.eEvent_MB1Up:
 		object.setColorInverse( 0);
 		dyn.repaintNow = true;
+		dyn.graph.setClickActive( 0);
 		break;
 	    case Glow.eEvent_MB1Click:
 		if ( (dyn.action_type1 & Dyn.mActionType1_Confirm) != 0)
@@ -6613,6 +6627,9 @@ public class Dyn {
 	}
 
 	public int action( GlowArrayElem object, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down: {
 		object.setColorInverse( 1);
@@ -6632,7 +6649,7 @@ public class Dyn {
 		    break;
 		}
 		if ( sts.evenSts())
-		    System.out.println( "SetDig: " + pname.name);
+		    System.out.println( "StoDig: " + pname.name);
 		break;
 	    }
 	    case Glow.eEvent_MB1Up: {
@@ -6710,6 +6727,9 @@ public class Dyn {
 	}
 
 	public int action( GlowArrayElem object, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -6783,6 +6803,9 @@ public class Dyn {
 	}
 
 	public int action( GlowArrayElem object, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -6858,6 +6881,9 @@ public class Dyn {
 	    if ( (dyn.action_type1 & Dyn.mActionType1_Confirm) == 0)
 		return 1;
 
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		break;
@@ -6926,6 +6952,10 @@ public class Dyn {
 
 	public int action( GlowArrayElem o, GlowEvent e) {
 	    GrowNode object = (GrowNode)o;
+
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -7119,6 +7149,10 @@ public class Dyn {
 
 	public int action( GlowArrayElem o, GlowEvent e) {
 	    GrowNode object = (GrowNode)o;
+
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -7374,6 +7408,9 @@ public class Dyn {
 	}
 
 	public int action( GlowArrayElem o, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		o.setColorInverse( 1);
@@ -7466,6 +7503,9 @@ public class Dyn {
 	}
 
 	public int action( GlowArrayElem o, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
 	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
@@ -7602,7 +7642,9 @@ public class Dyn {
 	}
 
 	public int action( GlowArrayElem o, GlowEvent e) {
-	    GrowNode object = (GrowNode)o;
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Down:
 		object.setColorInverse( 1);
@@ -8223,6 +8265,9 @@ public class Dyn {
 	}
 
 	public int action( GlowArrayElem o, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
 	    GrowNode object = (GrowNode)o;
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Click:
@@ -8859,6 +8904,10 @@ public class Dyn {
 
 	public int action( GlowArrayElem o, GlowEvent e) {
 	    GrowNode object = (GrowNode)o;
+
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
 	    switch ( e.event) {
 	    case Glow.eEvent_MB1Click:
 		if ( menu_object != null) {

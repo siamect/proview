@@ -198,6 +198,7 @@ public class GrowScrollBar extends GrowRect {
 		    start_pos = fy;
 		    start_value = bar_value;
 		    movement_active = 1;
+		    cmn.ctx.setSliderActive(true);
 		}
 		break;
 	    case Glow.eDir_Horizontal:
@@ -206,12 +207,14 @@ public class GrowScrollBar extends GrowRect {
 		    start_pos = fx;
 		    start_value = bar_value;
 		    movement_active = 1;
+		    cmn.ctx.setSliderActive(true);
 		}
 		break;
 	    }
 	    break;
 	case Glow.eEvent_MB1Up:
 	    movement_active = 0;
+	    cmn.ctx.setSliderActive(false);
 	    break;
 	case Glow.eEvent_ButtonMotion:
 	    if ( movement_active != 0) {

@@ -101,7 +101,8 @@ typedef enum {
   glow_eType_HotIndication,    	//!< Type is glow_eHotIndication
   glow_eType_AnnotType,     	//!< Type is glow_eAnnotType
   glow_eType_DynType2, 		//!< Type of dynamics mask 2
-  glow_eType_ActionType2  	//!< Type of action mask 2
+  glow_eType_ActionType2,  	//!< Type of action mask 2
+  glow_eType_AppMotion    	//!< Type is glow_eAppMotion
 } glow_eType;
 
 //! Type of Ctx class
@@ -408,6 +409,13 @@ typedef enum {
   glow_eHotIndication_DarkColor,  //!< Darker color for hot objects
   glow_eHotIndication_LightColor  //!< Lighter color for hot objects
 } glow_eHotIndication;
+
+//! Action for app motion event
+typedef enum {
+  glow_eAppMotion_Scroll, 	//!< Scrolling
+  glow_eAppMotion_Slider,  	//!< Slider
+  glow_eAppMotion_Both   	//!< Both slider and scrolling  
+} glow_eAppMotion;
 
 
 //! Color index for a color
@@ -1128,6 +1136,7 @@ typedef enum {
 	glow_eSave_Ctx_version			= 137,
 	glow_eSave_Ctx_hot_indication  		= 138,
 	glow_eSave_Ctx_tiptext_size  		= 139,
+	glow_eSave_Ctx_app_motion  		= 140,
 	glow_eSave_Ctx_comment			= 199,
 	glow_eSave_Array_a			= 200,
 	glow_eSave_NodeClass_nc_name		= 300,

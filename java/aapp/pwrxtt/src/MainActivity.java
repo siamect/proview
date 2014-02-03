@@ -22,6 +22,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MotionEventCompat;
 import android.text.Editable;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.util.FloatMath;
 import android.util.Log;
 import android.util.TypedValue;
@@ -37,6 +38,7 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.view.*;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -51,7 +53,9 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	static final int MODE_SCROLL = 1;
 	static final int MODE_ZOOM = 2;
 
-        String dataFile = "pwrdata";
+        String pwrp_exe = "pwrp_exe/";
+        String pwrp_load = "pwrp_load/";
+        String pwr_exe = "pwr_exe/";
 	Timer timer = new Timer();
 	MainView view;
 	Gdh gdh = null;
@@ -107,6 +111,8 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	float eventDistance;
 	Vector<AGraphInfo> graphList = new Vector<AGraphInfo>();	
 	Vector<PlowCmnIfc> cmnList = new Vector<PlowCmnIfc>();
+        Canvas currentCanvas = null;
+        float density;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,8 +125,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		view.invalidate();
 		timer.schedule( new MyTask(), 0, 2000);
 
+		DisplayMetrics metrics = getResources().getDisplayMetrics();
+		density = metrics.densityDpi / 150;
 		
-		PlowCmn cmn = new PlowCmn(this, 15D);		
+		PlowCmn cmn = new PlowCmn(this, density * 15);		
 		gdraw = new PlowDraw(this);
 		cmn.setGDraw(gdraw);
 		currentCmn = cmn;
@@ -196,7 +204,25 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			}
 		}
 	}
-	
+
+        public void onBackPressed() {
+	    if ( (opwinCmn != null && currentCmn == opwinCmn) ||
+		 (opwinCmn == null && currentCmn == cmnList.get(0))) {
+		super.onBackPressed();
+		return;
+	    }
+
+	    // Back to opwind
+	    if ( opwinCmn != null) {
+		while ( currentCmn != opwinCmn)
+		    pushCmn();	       
+	    }
+	    else {
+		while ( currentCmn != cmnList.get(0))
+		    pushCmn();	       
+	    }
+        }
+
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		
@@ -230,10 +256,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		if ( aev != null && currentCmn == aev.getCmnAla()) {
 			// Alarm list
 			item_close.setVisible(true);
-			item_zoomin.setVisible(true);
-			item_zoomout.setVisible(true);
-			item_pageup.setVisible(true);
-			item_pagedown.setVisible(true);
+			item_zoomin.setVisible(false);
+			item_zoomout.setVisible(false);
+			item_pageup.setVisible(false);
+			item_pagedown.setVisible(false);
 			item_openobject.setVisible(true);
 			item_opengraph.setVisible(true);
 			item_openclassgraph.setVisible(true);
@@ -246,10 +272,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		else if ( aev != null && currentCmn == aev.getCmnEve()) {
 			// Event list
 			item_close.setVisible(true);
-			item_zoomin.setVisible(true);
-			item_zoomout.setVisible(true);
-			item_pageup.setVisible(true);
-			item_pagedown.setVisible(true);
+			item_zoomin.setVisible(false);
+			item_zoomout.setVisible(false);
+			item_pageup.setVisible(false);
+			item_pagedown.setVisible(false);
 			item_openobject.setVisible(true);
 			item_opengraph.setVisible(true);
 			item_openclassgraph.setVisible(true);
@@ -262,10 +288,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		else if ( currentCmn == cmnList.get(0)) {
 			// Navigator
 			item_close.setVisible(true);
-			item_zoomin.setVisible(true);
-			item_zoomout.setVisible(true);
-			item_pageup.setVisible(true);
-			item_pagedown.setVisible(true);
+			item_zoomin.setVisible(false);
+			item_zoomout.setVisible(false);
+			item_pageup.setVisible(false);
+			item_pagedown.setVisible(false);
 			item_openobject.setVisible(true);
 			item_opengraph.setVisible(true);
 			item_openclassgraph.setVisible(true);
@@ -278,10 +304,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		else if ( currentCmn.type() == PlowCmnIfc.TYPE_FLOW) {
 			// Plc
 			item_close.setVisible(true);
-			item_zoomin.setVisible(true);
-			item_zoomout.setVisible(true);
-			item_pageup.setVisible(true);
-			item_pagedown.setVisible(true);
+			item_zoomin.setVisible(false);
+			item_zoomout.setVisible(false);
+			item_pageup.setVisible(false);
+			item_pagedown.setVisible(false);
 			item_openobject.setVisible(true);
 			item_opengraph.setVisible(true);
 			item_openclassgraph.setVisible(true);
@@ -294,8 +320,8 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		else if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH) {
 			// Graph
 			item_close.setVisible(true);
-			item_zoomin.setVisible(true);
-			item_zoomout.setVisible(true);
+			item_zoomin.setVisible(false);
+			item_zoomout.setVisible(false);
 			item_pageup.setVisible(false);
 			item_pagedown.setVisible(false);
 			item_openobject.setVisible(false);
@@ -310,8 +336,8 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		else if ( currentCmn.type() == PlowCmnIfc.TYPE_OPWIN) {
 			// Operator window
 			item_close.setVisible(true);
-			item_zoomin.setVisible(true);
-			item_zoomout.setVisible(true);
+			item_zoomin.setVisible(false);
+			item_zoomout.setVisible(false);
 			item_pageup.setVisible(false);
 			item_pagedown.setVisible(false);
 			item_openobject.setVisible(false);
@@ -325,10 +351,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		}
 		else {
 			// Default
-			item_pageup.setVisible(true);
-			item_zoomin.setVisible(true);
-			item_zoomout.setVisible(true);
-			item_pagedown.setVisible(true);
+			item_pageup.setVisible(false);
+			item_zoomin.setVisible(false);
+			item_zoomout.setVisible(false);
+			item_pagedown.setVisible(false);
 			item_openobject.setVisible(true);
 			item_opengraph.setVisible(true);
 			item_openclassgraph.setVisible(true);
@@ -364,60 +390,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			System.out.println("Page down");
 			break;			
 		case R.id.close_option:
-			switch(currentCmn.type()) {
-			case PlowCmnIfc.TYPE_PLOW: {
-				if ( cmnList.size() == 1) {
-					// Open opwin
-					if ( opwinCmn != null) {
-						currentCmn = opwinCmn;
-						cmnList.add(opwinCmn);
-						view.invalidate();
-					}
-					break;
-				}
-
-				PlowCmn cmn = (PlowCmn)currentCmn;
-				AXtt axtt = (AXtt)currentCmn.getUserData();
-				PlowNode o = (PlowNode)cmn.get(0);
-				AXttItemObject itemo = (AXttItemObject)o.getUserData();
-				itemo.close(axtt);
-				currentCmn = cmnList.get(cmnList.size()-2);
-				cmnList.removeElementAt(cmnList.size()-1);
-				System.out.println( "cmnList.size() " + cmnList.size());
-				view.invalidate();				
-				break;
-			}
-			case PlowCmnIfc.TYPE_FLOW:
-				new GdhTask().execute(new GdhTaskArg(GdhTask.DYNAMIC_CLOSE, currentCmn));
-				System.out.println( "cmnList.size() " + cmnList.size());
-				currentCmn = cmnList.get(cmnList.size()-2);
-				cmnList.removeElementAt(cmnList.size()-1);
-				System.out.println( "cmnList.size() " + cmnList.size());
-				view.invalidate();
-				System.out.println("Close flow");
-				break;
-			case PlowCmnIfc.TYPE_EV:
-				System.out.println( "cmnList.size() " + cmnList.size());				
-				currentCmn = cmnList.get(cmnList.size()-1);
-				aev = null;
-				view.invalidate();
-				System.out.println("Close ev");
-				break;
-			case PlowCmnIfc.TYPE_GRAPH:
-				new GdhTask().execute(new GdhTaskArg(GdhTask.DYNAMIC_CLOSE, currentCmn));
-				System.out.println( "cmnList.size() " + cmnList.size());
-				if (graphObject.size() > 0)
-					graphObject.removeElementAt(graphObject.size()-1);
-				currentCmn = cmnList.get(cmnList.size()-2);
-				cmnList.removeElementAt(cmnList.size()-1);
-				System.out.println( "cmnList.size() " + cmnList.size());
-				view.invalidate();
-				System.out.println("Close graph");
-				break;
-			case PlowCmnIfc.TYPE_OPWIN:
-				// Close app ?
-				break;
-			}
+		        pushCmn();
 			break;
 		case R.id.openobject_option: {
 			System.out.println("Open object");
@@ -546,6 +519,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 						PwrtAttrRef aref = new PwrtAttrRef(((AXttItemObject)baseItem).getObjid());
 						new GdhTask().execute(new GdhTaskArg(GdhTask.OPEN_CLASSGRAPH, aref));
 					}
+					else if ( baseItem instanceof AXttItemAttrObject) {
+						PwrtAttrRef aref = ((AXttItemAttrObject)baseItem).getAttrRef();
+						new GdhTask().execute(new GdhTaskArg(GdhTask.OPEN_CLASSGRAPH, aref));
+					}
 				}
 				break;
 			}
@@ -637,9 +614,9 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			}
 
 			if ( aev == null) {
-				PlowCmnEv cmnAla = new PlowCmnEv(appl, 15D);		
+				PlowCmnEv cmnAla = new PlowCmnEv(appl, density * 15);		
 				cmnAla.setGDraw(gdraw);
-				PlowCmnEv cmnEve = new PlowCmnEv(appl, 15D);		
+				PlowCmnEv cmnEve = new PlowCmnEv(appl, density * 15);		
 				cmnEve.setGDraw(gdraw);
 				currentCmn = cmnAla;
 				aev = new AEv(cmnAla, cmnEve, appl);
@@ -661,9 +638,9 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			}
 
 			if ( aev == null) {
-				PlowCmnEv cmnAla = new PlowCmnEv(appl, 15D);		
+				PlowCmnEv cmnAla = new PlowCmnEv(appl, density * 15);		
 				cmnAla.setGDraw(gdraw);
-				PlowCmnEv cmnEve = new PlowCmnEv(appl, 15D);		
+				PlowCmnEv cmnEve = new PlowCmnEv(appl, density * 15);		
 				cmnEve.setGDraw(gdraw);
 				currentCmn = cmnEve;
 				aev = new AEv(cmnAla, cmnEve, appl);
@@ -766,6 +743,36 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				break;
 			case PlowCmnIfc.TYPE_OPWIN:
 				currentCmn.eventHandler(e.type, e.x, e.y);
+				break;
+			}
+			break;
+		case PlowEvent.TYPE_LONG_CLICK:
+			if ( e.object == null)
+				return;
+			
+			switch(currentCmn.type()) {
+			case PlowCmnIfc.TYPE_PLOW:
+				if ( e.inIcon) {
+					// Open object
+					System.out.println("Long click event");
+					AXttItemBase item = (AXttItemBase)((PlowNode)e.object).getUserData();
+					new GdhTask().execute(new GdhTaskArg(GdhTask.OPEN_ATTRIBUTES, item));
+				}
+				else {
+					// Open plc
+					System.out.println("Long click event");
+					AXttItemBase item = (AXttItemBase)((PlowNode)e.object).getUserData();
+					if ( item instanceof AXttItemObject) {
+					    PwrtObjid oid = ((AXttItemObject)item).getObjid();
+					    new GdhTask().execute(new GdhTaskArg(GdhTask.OPEN_FLOW, oid));
+					}
+				}	
+				break;
+			case PlowCmnIfc.TYPE_EV:
+				break;
+			case PlowCmnIfc.TYPE_FLOW:
+				break;
+			case PlowCmnIfc.TYPE_OPWIN:
 				break;
 			}
 			break;
@@ -905,7 +912,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				String oName = node.getTraceObject();
 				CdhrObjid oret = gdh.nameToObjid(oName);
 
-				PlowCmn cmn = new PlowCmn(appl, 15D);		
+				PlowCmn cmn = new PlowCmn(appl, density * 15);		
 				cmn.setGDraw(gdraw);
 				currentCmn = cmn;
 				cmnList.add(cmn);
@@ -976,7 +983,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				String oName = node.getTraceObject();
 				CdhrObjid oret = gdh.nameToObjid(oName);
 
-				PlowCmn cmn = new PlowCmn(appl, 15D);		
+				PlowCmn cmn = new PlowCmn(appl, density * 15);		
 				cmn.setGDraw(gdraw);
 				currentCmn = cmn;
 				cmnList.add(cmn);
@@ -1173,10 +1180,21 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				break;
 			}
 			case OPWIN: {
-				// If plc window open flow for window, else for first child
+				// Find AppGraph object under WebHandler, search on two hierarchy levels
 				CdhrObjid oret = gdh.getClassList( Pwrb.cClass_WebHandler);
 				if (oret.oddSts()) {
 					
+				        CdhrString sret = gdh.objidToName(oret.objid, Cdh.mName_volumeStrict);
+					if ( sret.evenSts()) break;
+				        String appUseWebDir = sret.str + ".AppUseWebDir";
+
+				        CdhrBoolean bret = gdh.getObjectInfoBoolean(appUseWebDir);
+				        if ( bret.oddSts() && bret.value == true) {
+					    pwr_exe="pwrp_web/";
+					    pwrp_exe="pwrp_web/";
+					    pwrp_load="pwrp_web/";
+				        }
+
 					for ( oret = gdh.getChild(oret.objid); oret.oddSts(); oret = gdh.getNextSibling(oret.objid)) {
 						CdhrClassId cret = gdh.getObjectClass(oret.objid);
 						if (cret.evenSts())
@@ -1201,7 +1219,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 						    
 					}					
 					if ( graphList.size() > 0) {
- 						opwinCmn = new OpwinCmn(appl, graphList);
+					        opwinCmn = new OpwinCmn(appl, graphList, density);
 						currentCmn = opwinCmn;
 						cmnList.add(opwinCmn);
 					}
@@ -1240,21 +1258,24 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	String image = sret.str;
 	if ( image.equals("")) {
 	    info.bpm = BitmapFactory.decodeResource(getResources(), R.drawable.graph_icon);
+	    info.bpmInverted = invertBitmap(info.bpm);
 	}
 	else {
 	    URL url = null;
 	    try {
 		if ( image.startsWith("$pwr_exe/")) {
 		    // url = new URL("http://10.0.2.2/data0/x4-8-6/rls/os_linux/hw_x86/exp/exe/" + filename.substring(9));
-		    url = new URL("http://" + pwrHost + "/pwr_exe/" + image.substring(9));
+		    url = new URL("http://" + pwrHost + "/" + pwr_exe + image.substring(9));
 		}
 		else {
 		    // url = new URL("http://10.0.2.2/data0/pwrp/opg7/bld/x86_linux/exe/" + filename);
-		    url = new URL("http://" + pwrHost + "/pwrp_exe/" + image);
+		    url = new URL("http://" + pwrHost + "/" + pwrp_exe + image);
 		}
 		info.bpm = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+		info.bpmInverted = invertBitmap(info.bpm);
 	    } catch ( IOException e) {
 		info.bpm = BitmapFactory.decodeResource(getResources(), R.drawable.graph_icon);
+		info.bpmInverted = invertBitmap(info.bpm);
 		System.out.println( "Unable to open file " + image  + " " + url);
 	    }
 	}
@@ -1319,177 +1340,204 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent me) {
-		if ( me == null)
-		    return true;
+	    if ( me == null)
+		return true;
 
-		int action = MotionEventCompat.getActionMasked( me);
-		float x = MotionEventCompat.getX(me, 0);
-		float y = MotionEventCompat.getY(me, 0);
-		boolean isSustained = false;		
+	    int action = MotionEventCompat.getActionMasked( me);
+	    float x = MotionEventCompat.getX(me, 0);
+	    float y = MotionEventCompat.getY(me, 0);
+	    boolean isSustained = false;		
+	    boolean sliderActive = false;
 
-		if ( lastMotionEvent == me && eventCnt > 0) {
-		    isSustained = true;
-		    x = me.getX();
-		    y = me.getY();
-		    System.out.println("Sustain motion event: " + eventCnt + " " + lastXSpeed + " " + lastYSpeed);
+	    if ( lastMotionEvent == me && eventCnt > 0) {
+		isSustained = true;
+		x = me.getX();
+		y = me.getY();
+		System.out.println("Sustain motion event: " + eventCnt + " " + lastXSpeed + " " + lastYSpeed);
+		System.out.println("x,y " + lastMotionEvent.getX() + " " + lastMotionEvent.getY());
+		eventCnt--;
+		if ( eventCnt == 0) {
+		    lastMotionEvent = null;
+		    lastXSpeed = 0;
+		    lastYSpeed = 0;
+		    eventMode = MODE_NO;
+		}
+		else {
+		    lastXSpeed = 0.8 * lastXSpeed;
+		    lastYSpeed = 0.8 * lastYSpeed;
+		    lastMotionEvent = MotionEvent.obtain( lastMotionEvent.getDownTime(), 
+							  lastMotionEvent.getEventTime(),
+							  lastMotionEvent.getAction(),
+							  (float)(lastMotionEvent.getX() + lastXSpeed * 50),
+							  (float)(lastMotionEvent.getY() + lastYSpeed * 50),
+							  lastMotionEvent.getMetaState());
+		    
 		    System.out.println("x,y " + lastMotionEvent.getX() + " " + lastMotionEvent.getY());
-		    eventCnt--;
-		    if ( eventCnt == 0) {
-			lastMotionEvent = null;
-			lastXSpeed = 0;
-			lastYSpeed = 0;
-			eventMode = MODE_NO;
-		    }
-		    else {
-			lastXSpeed = 0.8 * lastXSpeed;
-			lastYSpeed = 0.8 * lastYSpeed;
-		    	lastMotionEvent = MotionEvent.obtain( lastMotionEvent.getDownTime(), 
-		    			lastMotionEvent.getEventTime(),
-		    			lastMotionEvent.getAction(),
-		    			(float)(lastMotionEvent.getX() + lastXSpeed * 50),
-		    			(float)(lastMotionEvent.getY() + lastYSpeed * 50),
-		    			lastMotionEvent.getMetaState());
-		    	
-			System.out.println("x,y " + lastMotionEvent.getX() + " " + lastMotionEvent.getY());
-			eventMode = MODE_SCROLL;
-		    	eventTimer.schedule( new EventTimerTask(), new Date(System.currentTimeMillis() + 50));
-		    }
+		    eventMode = MODE_SCROLL;
+		    eventTimer.schedule( new EventTimerTask(), new Date(System.currentTimeMillis() + 50));
 		}
-
-		if ( viewOffsetY == 0) {
-			if ( context != null) {
-				TypedValue tv = new TypedValue();
-				context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
-				viewOffsetY = getResources().getDimensionPixelSize(tv.resourceId);
-				int id = getResources().getIdentifier("status_bar_height", "dimen", "android");
-				if ( id > 0)
-					viewOffsetY += getResources().getDimensionPixelSize(id);
-				viewOffsetY = 60;
-			}
-			else
-				viewOffsetY = 80;
+	    }
+	    
+	    if ( viewOffsetY == 0) {
+		if ( context != null) {
+		    Window window= getWindow();
+		    viewOffsetY = window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
+		
 		}
-		// System.out.println("offset : " + viewOffsetY);
+		else
+		    viewOffsetY = 56;
+	    }
 
-		switch (action) {
-		case MotionEvent.ACTION_MOVE:
-		    if ( isSustained)
-			System.out.println("Sustained scroll");
-			if ( eventMode == MODE_SCROLL) {
-	  		        if ( lastTouchId != me.getPointerId(0)) {
-					lastTouchX = x;
-					lastTouchY = y;
-					lastTouchId = me.getPointerId(0);
-					break;
-				}
-				if ( false /* currentCmn.type() == PlowCmnIfc.TYPE_GRAPH */){
-					new GdhTask().execute(new GdhTaskArg(GdhTask.EVENTHANDLER, 
-							new GdhEventArg(GraphCmn.ACTION_MOVE, x, y-viewOffsetY)));					
-				}
-				else {
-				    System.out.println("Scroll " + x + " " + y);
-					if ( (int)(lastTouchY - y) != 0) {
-						currentCmn.scroll((int)(lastTouchX -x), (int)(lastTouchY - y));
-						view.invalidate();
-					}
-					lastTouchX = x;
-					lastTouchY = y;
-					lastTouchId = me.getPointerId(0);
-				}
-				if ( !isSustained) {
-				    if ( lastMotionEvent != null) {
-					lastXSpeed = 0.5 * lastXSpeed + 0.5 * (x - lastMotionEvent.getX()) / (me.getEventTime() - lastMotionEvent.getEventTime());
-					lastYSpeed = 0.5 * lastYSpeed + 0.5 * (y - lastMotionEvent.getY()) / (me.getEventTime() - lastMotionEvent.getEventTime());			  			
-				    }
-				    lastMotionEvent = MotionEvent.obtain( me.getDownTime(), me.getEventTime(),
-								      me.getAction(), me.getX(), me.getY(),
-								      me.getMetaState());				    
-				}
-				
-			}
-			else if ( eventMode == MODE_ZOOM) {
-				float distance = eventDistance(me);
+	    switch (action) {
+	    case MotionEvent.ACTION_MOVE:
 
-				currentCmn.zoom(distance/eventDistance,
-						(MotionEventCompat.getX(me, 0) + MotionEventCompat.getX(me, 1))/2, 
-						(MotionEventCompat.getY(me, 0) + MotionEventCompat.getY(me, 1))/2 + viewOffsetY);
-				eventDistance = distance;
+		if ( isSustained)
+		    System.out.println("Sustained scroll");
+		if ( eventMode == MODE_SCROLL) {
+		    if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH &&
+			 ((GraphCmn)currentCmn).graph.getClickActive() == 1) {
+			//eventMode = MODE_NO;
+		    }
 
-				view.invalidate();
-			}
-			
-			break;
-		case MotionEvent.ACTION_UP:
-			if ( currentCmn != null && currentCmn.type() == PlowCmnIfc.TYPE_GRAPH){
-				System.out.println("Event Up   " + action + " (" + x + "," + y + ") cmn " + currentCmn.type());
-				if ( Math.abs(x - downTouchX) < 10 && Math.abs(y - downTouchY) < 10 && 
-						me.getEventTime() - me.getDownTime() < 700) {
-					System.out.println("Event Click   " + action + " (" + x + "," + y + ") cmn " + currentCmn.type());
-					new GdhTask().execute(new GdhTaskArg(GdhTask.EVENTHANDLER, 
-							new GdhEventArg(GraphCmn.ACTION_CLICK, x, y-viewOffsetY)));					
-				}
-				else {
-					new GdhTask().execute(new GdhTaskArg(GdhTask.EVENTHANDLER, 
-							new GdhEventArg(GraphCmn.ACTION_UP, x, y-viewOffsetY)));
-				}
-			}
-			else {
-				if ( Math.abs(x - downTouchX) < 10 && Math.abs(y - downTouchY) < 10 && currentCmn != null) {
-					currentCmn.eventHandler(action, x, y-viewOffsetY);
-				}
-			}
-			view.invalidate();
-			eventMode = MODE_NO;
-
-			if ( lastMotionEvent != null) {
-			    System.out.println("ACTION UP, sustained motion event scheduled");
- 			    //lastXSpeed = (downTouchX - x) / (me.getDownTime() - me.getEventTime());
-			    //lastYSpeed = (downTouchY - y) / (me.getDownTime() - me.getEventTime());			  			
-			    eventCnt = (int)(10 * FloatMath.sqrt((float)(lastXSpeed * lastXSpeed + lastYSpeed * lastYSpeed)));
-			    long dt = me.getEventTime() - lastMotionEvent.getEventTime();
-			    lastMotionEvent = MotionEvent.obtain( lastMotionEvent.getDownTime(), 
-								  lastMotionEvent.getEventTime(),
-								  lastMotionEvent.getAction(),
-								  (float)(lastMotionEvent.getX() + lastXSpeed * dt),
-								  (float)(lastMotionEvent.getY() + lastYSpeed * dt),
-								  lastMotionEvent.getMetaState());
-			    
-			    eventTimer.schedule( new EventTimerTask(), new Date(System.currentTimeMillis() + 50));
-			    eventMode = MODE_SCROLL;
-			}
-			break;
-		case MotionEvent.ACTION_DOWN:
-			System.out.println("Event Down " + action + " (" + x + "," + y + ")");
-			lastMotionEvent = null;
-			lastXSpeed = 0;
-			lastYSpeed = 0;
-			if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH){
-				new GdhTask().execute(new GdhTaskArg(GdhTask.EVENTHANDLER, 
-						new GdhEventArg(GraphCmn.ACTION_DOWN, x, y-viewOffsetY)));					
-			}
-			lastTouchId = me.getPointerId(0);
+		    if ( lastTouchId != me.getPointerId(0)) {
 			lastTouchX = x;
 			lastTouchY = y;
-			downTouchX = x;
-			downTouchY = y;
-			eventMode = MODE_SCROLL;
+			lastTouchId = me.getPointerId(0);
 			break;
-		case MotionEvent.ACTION_POINTER_DOWN:
-			System.out.println("Event Action Pointer Down");
-			lastMotionEvent = null;
-			lastXSpeed = 0;
-			lastYSpeed = 0;
-
-			eventDistance = eventDistance(me);
-			if ( eventDistance > 10)
-			  eventMode = MODE_ZOOM;
-			break;
-		case MotionEvent.ACTION_POINTER_UP:
-			System.out.println("Event Action Pointer Up");
-			eventMode = MODE_SCROLL;
-			break;
+		    }
+		    boolean scroll = true;
+		    if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH ) {
+			if ( ((GraphCmn)currentCmn).getAppMotion() == Glow.eAppMotion_Slider || 
+			     (((GraphCmn)currentCmn).getAppMotion() == Glow.eAppMotion_Both &&
+			      ((GraphCmn)currentCmn).getSliderActive())) {
+			    new GdhTask().execute(new GdhTaskArg(GdhTask.EVENTHANDLER, 
+								 new GdhEventArg(GraphCmn.ACTION_MOVE, x, y-viewOffsetY)));
+			    scroll = false;
+			    sliderActive = true;
+			}
+		    }
+		    if ( scroll && !sliderActive) {
+			System.out.println("Scroll " + x + " " + y);
+			if ( (int)(lastTouchY - y) != 0) {
+			    currentCmn.scroll((int)(lastTouchX -x), (int)(lastTouchY - y));
+			    view.invalidate();
+			}
+			lastTouchX = x;
+			lastTouchY = y;
+			lastTouchId = me.getPointerId(0);
+		    }
+		    if ( !isSustained && !sliderActive) {
+			if ( lastMotionEvent != null) {
+			    lastXSpeed = 0.5 * lastXSpeed + 0.5 * (x - lastMotionEvent.getX()) / (me.getEventTime() - lastMotionEvent.getEventTime());
+			    lastYSpeed = 0.5 * lastYSpeed + 0.5 * (y - lastMotionEvent.getY()) / (me.getEventTime() - lastMotionEvent.getEventTime());			  			
+			}
+			lastMotionEvent = MotionEvent.obtain( me.getDownTime(), me.getEventTime(),
+							      me.getAction(), me.getX(), me.getY(),
+							      me.getMetaState());				    
+		    }
+		    
 		}
-		return true;
+		else if ( eventMode == MODE_ZOOM) {
+		    float distance = eventDistance(me);
+
+		    if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH &&
+			 ((GraphCmn)currentCmn).getAppMotion() == Glow.eAppMotion_Slider)
+			currentCmn.zoom(distance/eventDistance);
+		    else
+			currentCmn.zoom(distance/eventDistance,
+					(MotionEventCompat.getX(me, 0) + MotionEventCompat.getX(me, 1))/2, 
+					(MotionEventCompat.getY(me, 0) + MotionEventCompat.getY(me, 1))/2 + viewOffsetY);
+		    eventDistance = distance;
+		    view.invalidate();
+		}
+		
+		break;
+	    case MotionEvent.ACTION_UP:
+		if ( currentCmn == null)
+		    break;
+		
+		if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH){
+		    System.out.println("Event Up   " + action + " (" + x + "," + y + ") cmn " + currentCmn.type());
+		    if ( Math.abs(x - downTouchX) < 10 && Math.abs(y - downTouchY) < 10 && 
+			 me.getEventTime() - me.getDownTime() < 700) {
+			System.out.println("Event Click   " + action + " (" + x + "," + y + ") cmn " + currentCmn.type());
+			new GdhTask().execute(new GdhTaskArg(GdhTask.EVENTHANDLER, 
+							     new GdhEventArg(GraphCmn.ACTION_CLICK, x, y-viewOffsetY)));					
+		    }
+		    else {
+			new GdhTask().execute(new GdhTaskArg(GdhTask.EVENTHANDLER, 
+							     new GdhEventArg(GraphCmn.ACTION_UP, x, y-viewOffsetY)));
+		    }
+		}
+		else if ( currentCmn.type() == PlowCmnIfc.TYPE_OPWIN){
+		    currentCmn.eventHandler(PlowCmnIfc.ACTION_UP, x, y-viewOffsetY);
+		}
+		else {
+		    if ( Math.abs(x - downTouchX) < 10 && Math.abs(y - downTouchY) < 10 && currentCmn != null &&
+			 me.getEventTime() - me.getDownTime() > 500) {
+			currentCmn.eventHandler(PlowCmnIfc.ACTION_LONG_CLICK, x, y-viewOffsetY);
+		    }
+		    else if ( Math.abs(x - downTouchX) < 10 && Math.abs(y - downTouchY) < 10 && currentCmn != null) {
+			currentCmn.eventHandler(PlowCmnIfc.ACTION_CLICK, x, y-viewOffsetY);
+		    }
+		}
+		view.invalidate();
+		eventMode = MODE_NO;
+		sliderActive = false;
+		
+		if ( lastMotionEvent != null) {
+		    System.out.println("ACTION UP, sustained motion event scheduled");
+		    //lastXSpeed = (downTouchX - x) / (me.getDownTime() - me.getEventTime());
+		    //lastYSpeed = (downTouchY - y) / (me.getDownTime() - me.getEventTime());			  			
+		    eventCnt = (int)(10 * FloatMath.sqrt((float)(lastXSpeed * lastXSpeed + lastYSpeed * lastYSpeed)));
+		    long dt = me.getEventTime() - lastMotionEvent.getEventTime();
+		    lastMotionEvent = MotionEvent.obtain( lastMotionEvent.getDownTime(), 
+							  lastMotionEvent.getEventTime(),
+							  lastMotionEvent.getAction(),
+							  (float)(lastMotionEvent.getX() + lastXSpeed * dt),
+							  (float)(lastMotionEvent.getY() + lastYSpeed * dt),
+							  lastMotionEvent.getMetaState());
+		    
+		    eventTimer.schedule( new EventTimerTask(), new Date(System.currentTimeMillis() + 50));
+		    eventMode = MODE_SCROLL;
+		}
+		break;
+	    case MotionEvent.ACTION_DOWN:
+	    System.out.println("offset : " + viewOffsetY + " (x,y) (" + x + "," + y + ")");
+		lastMotionEvent = null;
+		lastXSpeed = 0;
+		lastYSpeed = 0;
+		if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH) {
+		    new GdhTask().execute(new GdhTaskArg(GdhTask.EVENTHANDLER, 
+							 new GdhEventArg(GraphCmn.ACTION_DOWN, x, y-viewOffsetY)));					
+		}
+		else if ( currentCmn.type() == PlowCmnIfc.TYPE_OPWIN) {
+		    currentCmn.eventHandler(PlowCmnIfc.ACTION_DOWN, x, y-viewOffsetY);
+		    view.invalidate();
+		}
+		lastTouchId = me.getPointerId(0);
+		lastTouchX = x;
+		lastTouchY = y;
+		downTouchX = x;
+		downTouchY = y;
+		eventMode = MODE_SCROLL;
+		break;
+	    case MotionEvent.ACTION_POINTER_DOWN:
+		System.out.println("Event Action Pointer Down");
+		lastMotionEvent = null;
+		lastXSpeed = 0;
+		lastYSpeed = 0;
+		
+		eventDistance = eventDistance(me);
+		if ( eventDistance > 10)
+		    eventMode = MODE_ZOOM;
+		break;
+	    case MotionEvent.ACTION_POINTER_UP:
+		System.out.println("Event Action Pointer Up");
+		eventMode = MODE_SCROLL;
+		break;
+	    }
+	    return true;
 	}
 	private float eventDistance(MotionEvent me) {
 	        float x = MotionEventCompat.getX(me, 0) - MotionEventCompat.getX(me, 1);
@@ -1535,7 +1583,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		protected void onDraw( Canvas canvas) {
 	    	if ( currentCmn != null) {
 
-	    		if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH) {
+		    if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH) {
 	    			if ( bitmap == null) {
 	    				bitmap = Bitmap.createBitmap(canvas.getWidth(), canvas.getHeight(), Bitmap.Config.ARGB_8888);
 	    				drawCanvas = new Canvas(bitmap);
@@ -1546,24 +1594,40 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	    			drawCanvas.drawColor(graph.cmn.gdraw.getColor(graph.cmn.background_color));
 	    			currentCmn.draw();
 	    			canvas.drawBitmap(bitmap,  0F, 0F, null);
+				
 	    		}
 	    		else {
 
-	    			Canvas c = getHolder().lockCanvas();
-	    			if ( c != null) {
-	    				
-	    				if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH)
-	    	    			c.drawColor(graph.cmn.gdraw.getColor(graph.cmn.background_color));
-	    	    		else
-	    	    			c.drawColor(Color.WHITE);
+			    Canvas currentCanvas = getHolder().lockCanvas();
+			    //if ( currentCanvas == null)
+			    //	currentCanvas = getHolder().lockCanvas();
 
-	    				currentCmn.setCanvas(c);
-	    				currentCmn.draw();
-	    				getHolder().unlockCanvasAndPost(c);
-	    			}
+			    if ( currentCanvas != null) {
+				    
+				if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH)
+				    currentCanvas.drawColor(graph.cmn.gdraw.getColor(graph.cmn.background_color));
+				else
+				    currentCanvas.drawColor(Color.WHITE);
+				
+				if ( currentCmn.type() == PlowCmnIfc.TYPE_FLOW)
+				    gdraw.setDensity(1, density);
+				else
+				    gdraw.setDensity(density, density);
+				currentCmn.setCanvas(currentCanvas);
+				currentCmn.draw();
+	    	
+				/* Test 
+				   Paint paint = new Paint();
+				   currentCanvas.drawText( "Density " + density, 10, 100, paint);
+				*/
+
+				getHolder().unlockCanvasAndPost(currentCanvas);
+				// currentCanvas = getHolder().lockCanvas(); 
+			    }
 	    		}
 	    	}	
-	    }
+
+	    	}
 	}
 	
 	
@@ -1612,8 +1676,8 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 		URL url = null;
 		try {
 			// url = new URL("http://10.0.2.2/data0/pwrp/opg7/bld/common/load/" + filename);
-			url = new URL("http://" + pwrHost + "/pwrp_load/" + filename);
-			reader = new BufferedReader(new InputStreamReader(url.openStream()));
+			url = new URL("http://" + pwrHost + "/" + pwrp_load + filename);
+			reader = new BufferedReader(new InputStreamReader(url.openStream(), "ISO-8859-1"));
 		} catch ( IOException e) {
 			System.out.println( "Unable to open file " + filename  + " " + url);
 			return;			
@@ -1627,9 +1691,11 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 
 		if ( object != null) {
 			FlowNode node = (FlowNode)ctx.getObject(object);
-			fcmn.select(node);
-			node.setSelect(true);
-			ctx.centerObject(node);			
+			if ( node != null) {
+			    fcmn.select(node);
+			    node.setSelect(true);
+			    ctx.centerObject(node);			
+			}
 		}
 		
 		
@@ -1655,13 +1721,13 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 		try {
 			if ( filename.startsWith("$pwr_exe/")) {
 				// url = new URL("http://10.0.2.2/data0/x4-8-6/rls/os_linux/hw_x86/exp/exe/" + filename.substring(9));
-				url = new URL("http://" + pwrHost + "/pwr_exe/" + filename.substring(9));
+				url = new URL("http://" + pwrHost + "/" + pwr_exe + filename.substring(9));
 			}
 			else {
 				// url = new URL("http://10.0.2.2/data0/pwrp/opg7/bld/x86_linux/exe/" + filename);
-				url = new URL("http://" + pwrHost + "/pwrp_exe/" + filename);
+				url = new URL("http://" + pwrHost + "/" + pwrp_exe + filename);
 			}
-			reader = new BufferedReader(new InputStreamReader(url.openStream()));
+			reader = new BufferedReader(new InputStreamReader(url.openStream(), "ISO-8859-1"));
 		} catch ( IOException e) {
 			System.out.println( "Unable to open file " + filename  + " " + url);
 			return;			
@@ -1747,13 +1813,13 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 	try {
 	    if ( filename.startsWith("$pwr_exe/")) {
 		// url = new URL("http://10.0.2.2/data0/x4-8-6/rls/os_linux/hw_x86/exp/exe/" + filename.substring(9));
-		url = new URL("http://" + pwrHost + "/pwr_exe/" + filename.substring(9));
+		url = new URL("http://" + pwrHost + "/" + pwr_exe + filename.substring(9));
 	    }
 	    else {
 		// url = new URL("http://10.0.2.2/data0/pwrp/opg7/bld/x86_linux/exe/" + filename);
-		url = new URL("http://" + pwrHost + "/pwrp_exe/" + filename);
+		url = new URL("http://" + pwrHost + "/" + pwrp_exe + filename);
 	    }
-	    reader = new BufferedReader(new InputStreamReader(url.openStream()));
+	    reader = new BufferedReader(new InputStreamReader(url.openStream(), "ISO-8859-1"));
 	} catch ( IOException e) {
 	    System.out.println( "Unable to open file " + filename  + " " + url);
 	    return null;			
@@ -2007,7 +2073,11 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 	    graphObject.removeElementAt(graphObject.size()-1);
 	currentCmn = cmnList.get(cmnList.size()-2);
 	cmnList.removeElementAt(cmnList.size()-1);
-	view.invalidate();
+	//view.invalidate();
+    }
+
+    public boolean isAuthorized(int access) {
+	return gdh.isAuthorized(access);
     }
 
     public void invalidateView() {
@@ -2022,5 +2092,85 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
     
     public PlowCmnIfc getCurrentCmn() {
     	return currentCmn;
+    }
+
+    public Bitmap invertBitmap(Bitmap src) {
+	Bitmap output = Bitmap.createBitmap(src.getWidth(), src.getHeight(), src.getConfig());
+	int A, R, G, B;
+	int pixelColor;
+	int height = src.getHeight();
+	int width = src.getWidth();
+
+	for (int y = 0; y < height; y++) {
+	    for (int x = 0; x < width; x++) {
+		pixelColor = src.getPixel(x, y);
+		A = Color.alpha(pixelColor);
+                
+		R = Math.max( Color.red(pixelColor) - 50, 0);
+		G = Math.max( Color.green(pixelColor) - 50, 0);
+		B = Math.max( Color.blue(pixelColor) - 50, 0);
+                
+		output.setPixel(x, y, Color.argb(A, R, G, B));
+	    }
+	}
+	
+	return output;
+    }  
+
+    public void pushCmn() {
+	switch(currentCmn.type()) {
+	case PlowCmnIfc.TYPE_PLOW: {
+	    if ( cmnList.size() == 1) {
+		// Open opwin
+		if ( opwinCmn != null) {
+		    currentCmn = opwinCmn;
+		    cmnList.add(opwinCmn);
+		    view.invalidate();
+		}
+		break;
+	    }
+
+	    PlowCmn cmn = (PlowCmn)currentCmn;
+	    AXtt axtt = (AXtt)currentCmn.getUserData();
+	    PlowNode o = (PlowNode)cmn.get(0);
+	    AXttItemObject itemo = (AXttItemObject)o.getUserData();
+	    itemo.close(axtt);
+	    currentCmn = cmnList.get(cmnList.size()-2);
+	    cmnList.removeElementAt(cmnList.size()-1);
+	    System.out.println( "cmnList.size() " + cmnList.size());
+	    view.invalidate();				
+	    break;
+	}
+	case PlowCmnIfc.TYPE_FLOW:
+	    new GdhTask().execute(new GdhTaskArg(GdhTask.DYNAMIC_CLOSE, currentCmn));
+	    System.out.println( "cmnList.size() " + cmnList.size());
+	    currentCmn = cmnList.get(cmnList.size()-2);
+	    cmnList.removeElementAt(cmnList.size()-1);
+	    System.out.println( "cmnList.size() " + cmnList.size());
+	    view.invalidate();
+	    System.out.println("Close flow");
+	    break;
+	case PlowCmnIfc.TYPE_EV:
+	    System.out.println( "cmnList.size() " + cmnList.size());				
+	    currentCmn = cmnList.get(cmnList.size()-1);
+	    aev = null;
+	    view.invalidate();
+	    System.out.println("Close ev");
+	    break;
+	case PlowCmnIfc.TYPE_GRAPH:
+	    new GdhTask().execute(new GdhTaskArg(GdhTask.DYNAMIC_CLOSE, currentCmn));
+	    System.out.println( "cmnList.size() " + cmnList.size());
+	    if (graphObject.size() > 0)
+		graphObject.removeElementAt(graphObject.size()-1);
+	    currentCmn = cmnList.get(cmnList.size()-2);
+	    cmnList.removeElementAt(cmnList.size()-1);
+	    System.out.println( "cmnList.size() " + cmnList.size());
+	    view.invalidate();
+	    System.out.println("Close graph");
+	    break;
+	case PlowCmnIfc.TYPE_OPWIN:
+	    // Close app ?
+	    break;
+	}
     }
 }

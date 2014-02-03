@@ -99,6 +99,7 @@ public class GrowCmn {
     int translate_on;
     int input_focus_mark;
     int hot_indication;
+    int app_motion = Glow.eAppMotion_Both;
     Object userdata;
     GlowArrayElem callback_object;
     int callback_object_type;
@@ -119,7 +120,7 @@ public class GrowCmn {
     public GrowCmn( GrowCtxIfc ctx, GrowApplIfc appl) {
 	this.ctx = ctx;
 	this.appl = appl;
-	this.debug = false;
+	this.debug = true;
 	this.antiAliasing = true;
 	mw.window_width = getWidth();
 	mw.window_height = getHeight();
@@ -147,5 +148,8 @@ public class GrowCmn {
     }
     public String getOwner() {
 	return owner;
+    }
+    public int getAppMotion() {
+	return app_motion;
     }
 }

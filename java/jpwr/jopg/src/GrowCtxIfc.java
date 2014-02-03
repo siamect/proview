@@ -66,4 +66,5 @@ public interface GrowCtxIfc {
     public void traceScan();
     public boolean traceStarted();
     public void setSubwindowSource( String name, String source, String owner);
+    public void setSliderActive( boolean active);
 }

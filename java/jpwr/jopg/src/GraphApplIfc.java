@@ -45,4 +45,5 @@ public interface GraphApplIfc {
     public String getObject();
     public Object loadGrowCtx( String file);
     public void closeGraph();
+    public boolean isAuthorized(int access);
 }

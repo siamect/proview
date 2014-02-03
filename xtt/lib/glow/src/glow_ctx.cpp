@@ -98,7 +98,8 @@ GlowCtx::GlowCtx( const char *ctx_name, double zoom_fact, int offs_x, int offs_y
     default_hot_mode(glow_eHotMode_SingleObject), hot_found(0),
     userdata_save_callback(0), userdata_open_callback(0), userdata_copy_callback(0),
     version(GLOW_VERSION), inputfocus_object(0), is_component(0), comment(0),
-    hot_indication(glow_eHotIndication_LightColor), tiptext_size(2), eventlog_callback(0)
+    hot_indication(glow_eHotIndication_LightColor), tiptext_size(2), app_motion(glow_eAppMotion_Both), 
+    eventlog_callback(0)
 { 
   strcpy(name, ctx_name);
   memset( (void *)event_callback, 0, sizeof(event_callback));
@@ -214,6 +215,7 @@ int GlowCtx::save( char *filename, glow_eSaveMode mode)
   fp <<	int(glow_eSave_Ctx_version) << FSPACE << version << endl;
   fp <<	int(glow_eSave_Ctx_hot_indication) << FSPACE << hot_indication << endl;
   fp <<	int(glow_eSave_Ctx_tiptext_size) << FSPACE << tiptext_size << endl;
+  fp <<	int(glow_eSave_Ctx_app_motion) << FSPACE << app_motion << endl;
   if ( ctx_type == glow_eCtxType_Grow)
   {
     fp << int(glow_eSave_Ctx_grow) << endl;
@@ -361,6 +363,7 @@ int GlowCtx::open( char *filename, glow_eSaveMode mode)
       case glow_eSave_Ctx_version: fp >> version; break;
       case glow_eSave_Ctx_hot_indication: fp >> tmp; hot_indication = (glow_eHotIndication)tmp; break;
       case glow_eSave_Ctx_tiptext_size: fp >> tiptext_size; break;
+      case glow_eSave_Ctx_app_motion: fp >> tmp; app_motion = (glow_eAppMotion)tmp; break;
       case glow_eSave_Ctx_grow:
         ((GrowCtx *)this)->open_grow( fp);
         grow_loaded = 1;

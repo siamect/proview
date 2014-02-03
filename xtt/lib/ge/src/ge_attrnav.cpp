@@ -862,6 +862,12 @@ static attrnav_sEnumElement elem_hot_indication[] = {
 	{ (int) glow_eHotIndication_LightColor, "LightColor"},
 	{ 0, ""}};
 
+static attrnav_sEnumElement elem_app_motion[] = {
+	{ (int) glow_eAppMotion_Scroll, "Scroll"},
+	{ (int) glow_eAppMotion_Slider, "Slider"},
+	{ (int) glow_eAppMotion_Both, "Both"},
+	{ 0, ""}};
+
 static attrnav_sEnumElement elem_annot_type[] = {
 	{ (int) glow_eAnnotType_OneLine, "OneLine"},
 	{ (int) glow_eAnnotType_MultiLine, "MultiLine"},
@@ -995,6 +1001,7 @@ static attrnav_sEnum enum_types[] = {
 	{ (int) ge_eAttrType_CurveDataType, (attrnav_sEnumElement *) &elem_curve_datatype},
 	{ (int) glow_eType_Gradient, 	(attrnav_sEnumElement *) &elem_gradient},
 	{ (int) glow_eType_HotIndication, (attrnav_sEnumElement *) &elem_hot_indication},
+	{ (int) glow_eType_AppMotion, (attrnav_sEnumElement *) &elem_app_motion},
 	{ (int) glow_eType_AnnotType, 	(attrnav_sEnumElement *) &elem_annot_type},
 	{ (int) ge_eAttrType_OptionMenuType, (attrnav_sEnumElement *) &elem_optionmenu_type},
 	{ 0, NULL}};
@@ -1063,6 +1070,7 @@ int  attrnav_attr_string_to_value( int type_id, char *value_str,
     case glow_eType_TextSize: 
     case glow_eType_Gradient: 
     case glow_eType_HotIndication: 
+    case glow_eType_AppMotion: 
     case ge_eAttrType_DynType1:
     case ge_eAttrType_DynType2:
     case ge_eAttrType_DynTypeTone:
@@ -1150,6 +1158,7 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
     case glow_eType_TextSize:
     case glow_eType_Gradient: 
     case glow_eType_HotIndication: 
+    case glow_eType_AppMotion: 
     case ge_eAttrType_AnimSequence:
     case ge_eAttrType_LimitType:
     case ge_eAttrType_ScaleType:
@@ -2235,6 +2244,7 @@ ItemLocal::ItemLocal( AttrNav *attrnav, const char *item_name, const char *attr,
     case glow_eType_TextSize:
     case glow_eType_Gradient: 
     case glow_eType_HotIndication: 
+    case glow_eType_AppMotion: 
     case ge_eAttrType_DynType1:
     case ge_eAttrType_DynType2:
     case ge_eAttrType_DynTypeTone:

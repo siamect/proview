@@ -11,6 +11,8 @@ public class AXttItemAttrObject extends AXttItemBase {
 	String name;
 	int flags;
 	int type;
+        PwrtAttrRef aref;
+    
 	
 	AXttItemAttrObject(AXtt axtt, PwrtObjid objid, String name, String fullName, int flags, int type,
 			 PlowNode destination, int destCode) {
@@ -20,9 +22,24 @@ public class AXttItemAttrObject extends AXttItemBase {
 		this.flags = flags;
 		this.type = type;
 		
+		CdhrAttrRef ar = axtt.gdh.nameToAttrRef( fullName);
+		if ( ar.evenSts()) return;
+
+		aref = ar.aref;
+
+		CdhrTypeId cr = axtt.gdh.getAttrRefTid( ar.aref);
+		if ( cr.evenSts()) return;
+
+		CdhrObjid coidret = axtt.gdh.classIdToObjid(cr.typeId);
+		if ( coidret.evenSts()) return;
+		
+		CdhrString cnameret = axtt.gdh.objidToName(coidret.objid, Cdh.mName_object);
+		if ( cnameret.evenSts()) return;
+
 		node = new PlowNode(axtt.cmn, 0, 0, axtt.ncObject);
 		node.setAnnotPixmap(0, axtt.iconObject);
 		node.setAnnotation(0, name, 22);
+		node.setAnnotation(1, cnameret.str, 22);
 		axtt.cmn.insertNode(node, destination, destCode);
 
 		node.setUserData(this);		
@@ -89,4 +106,8 @@ public class AXttItemAttrObject extends AXttItemBase {
 		}
 		axtt.cmn.configure();
 	}
+
+        public PwrtAttrRef getAttrRef() {
+	    return aref;	    
+        }
 }

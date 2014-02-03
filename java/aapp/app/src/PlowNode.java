@@ -126,7 +126,7 @@ public class PlowNode implements PlowComponent, PlowArrayElem, PlowNodeIfc {
 		  if ( invert == this.invert)
 			  return;
 		  this.invert = invert;
-		  draw();
+		  // draw();
 	  }
 
 	  public void configure(PlowNode previous) {

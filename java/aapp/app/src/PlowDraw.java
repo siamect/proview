@@ -10,6 +10,7 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 
 public class PlowDraw implements PlowDrawIfc {
@@ -26,12 +27,14 @@ public class PlowDraw implements PlowDrawIfc {
 	Typeface[] fonts = new Typeface[6];
 	int canvasWidth;
 	int canvasHeight;
+        float textDensity = 1;
+        float lineDensity = 1;
 	static float[] inv = {	-1f, 0f, 0f, 1f, 1f,
 		0f,-1f, 0f, 1f, 1f,
 		0f, 0f,-1f, 1f, 1f,
 		0f, 0f, 0f, 1f, 0f};
 	
-	public PlowDraw(Activity activity) {
+        public PlowDraw(Activity activity) {
 		this.activity = activity;
 		paint = new Paint();
 
@@ -61,7 +64,7 @@ public class PlowDraw implements PlowDrawIfc {
 		if ( border) {
 			paint.setColor(getColor(color));
 			paint.setStyle(Paint.Style.STROKE);
-			paint.setStrokeWidth(1);
+			paint.setStrokeWidth(lineDensity < 1 ? 1 : lineDensity);
 			canvas.drawRect(x1, y1, x2, y2, paint);			
 		}
 		else {
@@ -78,7 +81,7 @@ public class PlowDraw implements PlowDrawIfc {
 		if ( border) {
 			paint.setColor(getColor(color));
 			paint.setStyle(Paint.Style.STROKE);
-			paint.setStrokeWidth(1);
+			paint.setStrokeWidth(lineDensity < 1 ? 1 : lineDensity);
 			canvas.drawArc(new RectF(x1, y1, x2, y2), 360-angel1, -angel2, false, paint);			
 		}
 		else {
@@ -93,7 +96,7 @@ public class PlowDraw implements PlowDrawIfc {
 
 		paint.setColor(getColor(color));
 		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeWidth(1);
+		paint.setStrokeWidth(lineDensity < 1 ? 1 : lineDensity);
 		canvas.drawLine(x1, y1, x2, y2, paint);			
 	}
 
@@ -114,16 +117,33 @@ public class PlowDraw implements PlowDrawIfc {
 	
 	@Override
 	public void drawText( String text, int textColor, int textSize, int font, float x, float y) {
-		paint.setTextSize(textSize);
-    	paint.setTypeface(fonts[font]);
+		paint.setTextSize(textDensity * textSize);
+		paint.setTypeface(fonts[font]);
 		paint.setColor(getColor(textColor));		
 		paint.setStyle(Paint.Style.FILL);
-		canvas.drawText( text, x, y, paint);
+
+		int idx;
+		if ( (idx = text.indexOf('\n')) != -1) {
+		    Rect tsize = new Rect();
+		    paint.getTextBounds("A", 0, 1, tsize);
+		    String row = text.substring(0,idx);
+		    String rest = text.substring(idx+1);
+		    canvas.drawText( row, x, y, paint);
+		    while ( (idx = rest.indexOf('\n')) != -1) {
+			row = rest.substring(0,idx);
+			rest = rest.substring(idx+1);
+			y += tsize.height() * 1.65;
+			canvas.drawText( row, x, y, paint);
+		    }
+		}
+		else
+		  canvas.drawText( text, x, y, paint);
+
 	}
 
 	@Override
 	public float measureText( String text, int textSize, int font) {
-    	paint.setTextSize(textSize);
+    	paint.setTextSize(textDensity * textSize);
     	paint.setTypeface(null);
 
     	return paint.measureText(text);
@@ -170,4 +190,9 @@ public class PlowDraw implements PlowDrawIfc {
 			return Color.BLACK;
 		}
 	}
+
+    public void setDensity( float textDensity, float lineDensity) {
+	   this.textDensity = textDensity;
+	   this.lineDensity = lineDensity;
+        }
 }

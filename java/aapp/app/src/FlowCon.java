@@ -227,8 +227,8 @@ public class FlowCon implements FlowArrayElem {
   public void draw( FlowPoint p0, String[] annotv, boolean highlight) {
 	  // Adjust pos to javabean koordinates
 	  FlowPoint p = new FlowPoint(cmn);
-	  p.x = x_left / cmn.zoom_factor;
-	  p.y = y_low / cmn.zoom_factor;
+	  p.x = 0;
+	  p.y = 0;
 	  if ( temporary_ref != 0 || cc.con_type == Flow.eConType_Reference)
 		  ref_a.draw( p, null, highlight);
 	  else {

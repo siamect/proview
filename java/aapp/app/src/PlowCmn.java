@@ -77,10 +77,15 @@ public class PlowCmn implements PlowCmnIfc {
 		double x = (fx + offset_x) / zoom_factor;
 		double y = (fy + offset_y) / zoom_factor;
 		int type;
+		boolean long_click = false;
 
 		switch( action) {
-		case MotionEvent.ACTION_UP:
+		case PlowCmnIfc.ACTION_CLICK:
 			type = PlowEvent.TYPE_CLICK;
+			break;
+		case PlowCmnIfc.ACTION_LONG_CLICK:
+			type = PlowEvent.TYPE_CLICK;
+			long_click = true;
 			break;
 		default:
 			return;
@@ -92,6 +97,8 @@ public class PlowCmn implements PlowCmnIfc {
 		currentNode = null;
 		a.eventHandler(e);
 
+		if ( long_click)
+		    e.type = PlowEvent.TYPE_LONG_CLICK;
 		appl.eventHandler(e);
 
 		switch (e.type) {

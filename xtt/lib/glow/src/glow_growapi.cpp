@@ -3261,6 +3261,11 @@ int grow_GetGraphAttrInfo( grow_tCtx ctx, grow_sAttrInfo **info,
   attrinfo[i].type = glow_eType_TextSize;
   attrinfo[i++].size = sizeof( ctx->tiptext_size);
       
+  strcpy( attrinfo[i].name, "AppMotion");
+  attrinfo[i].value_p = &ctx->app_motion;
+  attrinfo[i].type = glow_eType_AppMotion;
+  attrinfo[i++].size = sizeof( ctx->app_motion);
+      
   attrinfo[i].info_type = grow_eInfoType_End;
   *attr_cnt = i;
   *info = attrinfo;

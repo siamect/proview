@@ -140,6 +140,9 @@ public class GrowCtx implements GrowCtxIfc {
 		    break;
 		case Glow.eSave_Ctx_tiptext_size: 
 		    break;
+		case Glow.eSave_Ctx_app_motion: 
+		    cmn.app_motion = Integer.valueOf(token.nextToken());
+		    break;
 		case Glow.eSave_Ctx_grow:
 		    open_grow( reader);
 		    grow_loaded = true;
@@ -825,6 +828,14 @@ public class GrowCtx implements GrowCtxIfc {
 	}
 
 	e.setSource( source, owner);
+    }
+
+    public boolean getSliderActive() {
+	return sliderActive;
+    }
+
+    public void setSliderActive( boolean active) {
+	sliderActive = active;
     }
 }
 

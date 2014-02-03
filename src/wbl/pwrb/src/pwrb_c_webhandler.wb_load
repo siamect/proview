@@ -329,6 +329,15 @@ SObject pwrb:Class
           Attr Flags = 0
         EndBody
       EndObject
+      !/**
+      !  If AppUseWebDir is set all files used by the Android application is
+      !  read from pwrp_web. 
+      !*/
+      Object AppUseWebDir $Attribute 42
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
     EndObject
     !
     ! Template for WebHandler

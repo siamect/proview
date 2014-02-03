@@ -73,6 +73,7 @@ public class Glow {
     public static final int eType_AnnotType		= 21;
     public static final int eType_DynType2		= 22; 
     public static final int eType_ActionType2		= 23;
+    public static final int eType_AppMotion		= 24;
 
     public static final int eCtxType_Glow		= 0;
     public static final int eCtxType_Brow		= 1;
@@ -242,6 +243,10 @@ public class Glow {
     public static final int eHotIndication_LineWidth   	= 1;
     public static final int eHotIndication_DarkColor   	= 2;
     public static final int eHotIndication_LightColor  	= 3;
+
+    public static final int eAppMotion_Scroll		= 0;
+    public static final int eAppMotion_Slider   	= 1;
+    public static final int eAppMotion_Both	   	= 2;
 
     public static final int eDrawType_Line		= 0;
     public static final int eDrawType_LineRed		= 1;
@@ -772,6 +777,7 @@ public class Glow {
     public static final int eSave_Ctx_version			= 137;
     public static final int eSave_Ctx_hot_indication  		= 138;
     public static final int eSave_Ctx_tiptext_size  		= 139;
+    public static final int eSave_Ctx_app_motion  		= 140;
     public static final int eSave_Ctx_comment			= 199;
     public static final int eSave_Array_a			= 200;
     public static final int eSave_NodeClass_nc_name		= 300;

@@ -69,7 +69,6 @@ public class GlowDraw implements GlowDrawIfc {
     
     public GlowDraw() {
     	paint = new Paint();
-
     }
         
     public void setActivity(Activity activity) {

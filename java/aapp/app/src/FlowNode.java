@@ -131,7 +131,7 @@ public class FlowNode implements FlowArrayElem {
 	  break;
 	case Flow.eSave_Node_n_name:
 	  if ( token.hasMoreTokens())
-	    n_name = token.nextToken();
+	      n_name = token.nextToken();
           else
 	    n_name = new String();
 	  break;
@@ -178,7 +178,7 @@ public class FlowNode implements FlowArrayElem {
 	    		  else
 	    			  break;
 	    	  }
-	    	  buf.append(c); // TODO convert to UTF-8
+	    	  buf.append(c);
 	    	  c_old = c;
 	      }
 	      annotv[i] = new String( buf);

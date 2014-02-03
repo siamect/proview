@@ -139,4 +139,11 @@ public class GraphCmn implements PlowCmnIfc {
 		public void resetNodraw() {
 		    graph.ctx.cmn.resetNodraw();
 		}
+    		public int getAppMotion() {
+		    return graph.cmn.getAppMotion();
+    		}
+    		public boolean getSliderActive() {
+		    return graph.ctx.getSliderActive();
+    		}
+    
 }

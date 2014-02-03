@@ -126,14 +126,14 @@ public class FlowCmn implements PlowCmnIfc {
   public void scroll( int x, int y) {
 	  offset_y += y;
 	  offset_x += x;
-	  if ( offset_x < x_left * zoom_factor - scrollOffset)
-		  offset_x = (int)(x_left * zoom_factor) - scrollOffset;
 	  if ( offset_x > x_right * zoom_factor - canvasWidth + scrollOffset)
 		  offset_x = (int)(x_right * zoom_factor - canvasWidth) + scrollOffset;
-	  if ( offset_y < y_low * zoom_factor - scrollOffset)
-		  offset_y = (int)(y_low * zoom_factor) - scrollOffset;
+	  if ( offset_x < x_left * zoom_factor - scrollOffset)
+		  offset_x = (int)(x_left * zoom_factor) - scrollOffset;
 	  if ( offset_y > y_high * zoom_factor - canvasHeight + 80 + scrollOffset)
 		  offset_y = (int)(y_high * zoom_factor - canvasHeight + 80) + scrollOffset;
+	  if ( offset_y < y_low * zoom_factor - scrollOffset)
+		  offset_y = (int)(y_low * zoom_factor) - scrollOffset;
   }
   @Override
   public void pageUp() {
@@ -155,8 +155,11 @@ public class FlowCmn implements PlowCmnIfc {
 		int type;
 
 		switch( action) {
-		case MotionEvent.ACTION_UP:
-			type = PlowEvent.TYPE_CLICK;
+		case PlowCmnIfc.ACTION_CLICK:
+ 			type = PlowEvent.TYPE_CLICK;
+			break;
+		case PlowCmnIfc.ACTION_LONG_CLICK:
+ 			type = PlowEvent.TYPE_LONG_CLICK;
 			break;
 		default:
 			return;

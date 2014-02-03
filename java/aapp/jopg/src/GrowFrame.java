@@ -38,174 +38,16 @@
 package jpwr.jopg;
 import jpwr.rt.*;
 import java.io.*;
-//import java.awt.*;
-//import java.awt.font.*;
 import java.net.*;
 
 public class GrowFrame implements GraphApplIfc {
-/*
-	JScrollPane scrollPane;
-    JPanel contentPane;
-    BorderLayout borderLayout1 = new BorderLayout();
-    Dimension size;
-    Object root;
-    Graph graph;
-    Timer timer;
-    LocalPanel localPanel = new LocalPanel();
-    int scanTime = 1000;
-    int scanCount = 0;
-    JDialog confirmDia = null;
-    JLabel confirmLabel;
-    Object confirmDyn;
-    Object confirmObject;
-*/
     String instance;
     GrowFrameApplIfc appl;
 
     public GrowFrame( String file, Gdh gdh, String instance, GrowFrameApplIfc appl) {
-/*
-    root = (Object) this;
-	this.instance = instance;
-	this.appl = appl;
-	init( file, gdh);
-*/
     }
 
     private void init( String file, Gdh gdh) {
-/*
-    	contentPane = (JPanel) this.getContentPane();
-	contentPane.setLayout(borderLayout1);
-	contentPane.add(localPanel, BorderLayout.CENTER);
-	contentPane.setOpaque(true);
-	localPanel.setLayout(null);
-	localPanel.setOpaque(true);
-	localPanel.setBackground( Color.white);
-	this.setTitle("GrowFrame");
-	size = new Dimension( 1100, 900);
-	setSize( size);
-
-	String filename;
-	BufferedReader reader = null;
-	String fname = file;
-
-	if ( root != null && root instanceof JApplet) {
-	    try {
-		URL current = ((JApplet) root).getCodeBase();
-		String current_str = current.toString();
-		int idx1 = current_str.lastIndexOf('/');
-		int idx2 = current_str.lastIndexOf(':');
-		int idx = idx1;
-		if ( idx2 > idx)
-		    idx = idx2;
-		String path = current_str.substring(0,idx + 1);
-		filename = path + fname;
-		System.out.println( "Opening file " + filename);
-		URL fileURL = new URL( filename);
-		InputStream in = fileURL.openStream();
-		// in = new BufferedInputStream(in);
-		InputStreamReader r2 = new InputStreamReader(in);
-		reader = new BufferedReader( r2);
-	    }
-	    catch ( Exception e) {
-		System.out.println( "Unable to open file");
-	    }
-	}
-	else {
-	    if ( fname.lastIndexOf('/') == -1)
-		filename = "$pwrp_exe/" + fname;
-	    else
-		filename = fname;
-	    filename = Gdh.translateFilename( filename);
-
-	    System.out.println( "Fname: " + filename);
-	    try {
-		reader = new BufferedReader(new FileReader(filename));
-	    }
-	    catch ( Exception e) {
-		System.out.println( "Unable to open file " + filename);
-		return;
-	    }
-	    // Read size info
-	    String line;
-	    int defaultWidth = 0;
-	    int defaultHeight = 0;
-	    
-	    try {
-		for ( int i = 0; i < 2; i++) {
-		    line = reader.readLine();
-		    if ( line == null || !line.startsWith("0! "))
-			break;
-		    if ( line.substring(3, 15).equals("DefaultWidth"))
-			defaultWidth = new Integer(line.substring(16)).intValue();
-		    else if ( line.substring(3, 16).equals("DefaultHeight"))
-			defaultHeight = new Integer(line.substring(17)).intValue();
-		}
-	    } catch ( Exception e) {
-		System.out.println( "IOException GlowFrame");
-	    }
-	    System.out.println("GraphFrame size " + defaultWidth + "  " + defaultHeight);
-	    if ( defaultWidth != 0 && defaultHeight != 0) {
-		size = new Dimension( defaultWidth + 5, defaultHeight + 40);
-		setSize( size);
-	    }		
-	}
-
-	if ( gdh == null)
-	    gdh = new Gdh(this);
-	graph = new Graph(this, gdh);
-	graph.open(reader);
-
-	setSize();
-	enableEvents(AWTEvent.WINDOW_EVENT_MASK);
-	setDefaultCloseOperation( DISPOSE_ON_CLOSE);
-	
-	MouseAdapter adapter = new MouseAdapter() {
-		public void mouseClicked(MouseEvent e) {
-		    System.out.println("MouseListener");
-		    GlowEvent event = new GlowEvent();
-		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
-		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
-		    event.event = Glow.eEvent_MB1Click;
-		    graph.ctx.eventHandler( event);
-		}
-		public void mousePressed(MouseEvent e) {
-		    System.out.println("MouseListener");
-		    GlowEvent event = new GlowEvent();
-		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
-		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
-		    event.event = Glow.eEvent_MB1Down;
-		    graph.ctx.eventHandler( event);
-		}
-		public void mouseReleased(MouseEvent e) {
-		    System.out.println("MouseListener");
-		    GlowEvent event = new GlowEvent();
-		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
-		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
-		    event.event = Glow.eEvent_MB1Up;
-		    graph.ctx.eventHandler( event);
-		}
-		public void mouseMoved(MouseEvent e) {
-		    GlowEvent event = new GlowEvent();
-		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
-		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
-		    event.event = Glow.eEvent_CursorMotion;
-		    graph.ctx.eventHandler( event);
-		}
-		public void mouseDragged(MouseEvent e) {
-		    GlowEvent event = new GlowEvent();
-		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
-		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
-		    event.event = Glow.eEvent_ButtonMotion;
-		    graph.ctx.eventHandler( event);
-		}
-	    };
-
-        localPanel.addMouseListener(adapter);
-        localPanel.addMouseMotionListener(adapter);
-
-	timer = new Timer( scanTime, this); 
-	timer.start();
-*/
     }
 
 
@@ -218,111 +60,23 @@ public class GrowFrame implements GraphApplIfc {
     	return 100;
     }
 
-    /*
-    public void actionPerformed( ActionEvent e) {
-	scanCount++;
-	if ( scanCount == 1)
-	    graph.gdh.getObjectRefInfoAll();
-
-	graph.ctx.traceScan();
-	localPanel.repaint();
-    }
-*/
-
     void setSize() {
-/*
-    	size = new Dimension( (int)((graph.ctx.cmn.x_right - graph.ctx.cmn.x_left) * graph.ctx.cmn.mw.zoom_factor_x) + Glow.DRAWOFFSET * 2,
-			      (int)((graph.ctx.cmn.y_high - graph.ctx.cmn.y_low) * graph.ctx.cmn.mw.zoom_factor_y) + Glow.DRAWOFFSET * 2);
-	localPanel.setPreferredSize( size);
-	localPanel.revalidate();
-*/
     }
-/*
-    class LocalPanel extends JPanel {
-	public LocalPanel() {}
-	public Dimension getPreferredSize() { return size;}
-	public Dimension getMinimumSize() { return size;}
-	public void paint(Graphics g) {
-	    Graphics2D g2 = (Graphics2D)g;
 
-	    g2.setPaint(graph.ctx.cmn.gdraw.getColor(graph.ctx.cmn.background_color));
-	    g2.fill(new Rectangle2D.Double(0,0,getWidth(),getHeight()));
-
-	    graph.gdraw.setGraphics(g2);
-	    graph.ctx.draw();
-
-	}
-    }
-*/
     public void closeGrow() {
     }
 
     public int command(String cmd) {
-	System.out.println("Ge command : " + cmd);
 	if ( appl != null)
 	    return appl.command(cmd);
 	return 0;
     }
 
     public void confirmNo() {}
-    public void confirmYes() {
-	// ((Dyn)confirmDyn).confirmedAction( Glow.eEvent_MB1Click, confirmObject);
-    }
-    
-    public void openConfirmDialog( Object dyn, String text, Object object) {
-/*
-    	JLabel label = null;
+    public void confirmYes() {}    
+    public void openConfirmDialog( Object dyn, String text, Object object) {}
 
-	confirmDyn = dyn;
-	confirmObject = object;
-	if ( confirmDia == null) {
-	    confirmDia = new JDialog();
-	    confirmDia.setTitle("Confirm");
-	    confirmDia.setResizable(false);
-	    confirmDia.setDefaultCloseOperation( JDialog.DO_NOTHING_ON_CLOSE);
-	    confirmDia.setSize( 400, 150);
-	    confirmLabel = new JLabel( text, JLabel.CENTER);
-	    confirmDia.getContentPane().setLayout( new BorderLayout());
-	    confirmDia.getContentPane().add( confirmLabel, BorderLayout.CENTER);
-	    JButton buttonYes = new JButton("Yes");
-	    buttonYes.addActionListener( new ActionListener() {
-		    public void actionPerformed( ActionEvent ev) {
-			confirmYes();
-			confirmDia.dispose();
-		    }
-		});
-	    JButton buttonNo = new JButton("No");
-	    buttonNo.addActionListener( new ActionListener() {
-		    public void actionPerformed( ActionEvent ev) {
-			confirmNo();
-			confirmDia.dispose();
-		    }
-		});
-	    JButton buttonCancel = new JButton("Cancel");
-	    buttonCancel.addActionListener( new ActionListener() {
-		    public void actionPerformed( ActionEvent ev) {
-			confirmNo();
-			confirmDia.dispose();
-		    }
-		});
-	    JPanel panel = new JPanel();
-	    panel.add( buttonYes);
-	    panel.add( buttonNo);
-	    panel.add( buttonCancel);
-	    confirmDia.getContentPane().add( panel, BorderLayout.SOUTH);
-	    // confirmDia.setLocationRelativeTo( par);
-	    confirmDia.setVisible( true);
-	}
-	else {
-	    // confirmDia.setLocationRelativeTo( par);
-	    confirmLabel.setText( text);
-	    confirmDia.setVisible( true);
-	}
-*/
-    }
-
-    public void openValueInputDialog( Object dyn, String text, Object object) {
-    }
+    public void openValueInputDialog( Object dyn, String text, Object object) {}
     public String getObject() {
 	return instance;
     }
@@ -330,6 +84,9 @@ public class GrowFrame implements GraphApplIfc {
 	return null;
     }
     public void closeGraph() {}
+    public boolean isAuthorized(int access) {
+	return false;
+    }
 }
 
 

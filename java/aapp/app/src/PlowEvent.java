@@ -3,6 +3,7 @@ package jpwr.app;
 public class PlowEvent {
 	public static final int TYPE_CLICK = 1;
 	public static final int TYPE_OBJECT_DELETED = 2;
+	public static final int TYPE_LONG_CLICK = 3;
 	
 	public int type;
 	public double x;

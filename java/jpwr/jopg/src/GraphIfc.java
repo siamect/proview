@@ -63,4 +63,5 @@ public interface GraphIfc {
     public boolean isAuthorized(int access);
     public double getScanTime();
     public String getCommand(String cmd);
+    public void setClickActive(int active);
 }

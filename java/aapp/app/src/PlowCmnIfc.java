@@ -8,6 +8,11 @@ public interface PlowCmnIfc {
 	public static final int TYPE_GRAPH = 3;
 	public static final int TYPE_EV = 4;
 	public static final int TYPE_OPWIN = 5;
+	public static final int ACTION_CLICK = 0;
+	public static final int ACTION_LONG_CLICK = 1;
+	public static final int ACTION_DOWN = 2;
+	public static final int ACTION_UP = 3;
+
 	
 	public int type();
 	public Object getUserData();
