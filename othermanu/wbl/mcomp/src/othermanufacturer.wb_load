@@ -334,7 +334,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndObject
       EndObject
       Object Template Danfoss_Converter_FC300_PPO3 2158198784 01-JAN-1970 01:00:00.00
-        Body RtBody 18-MAR-2008 17:06:08.88
+        Body RtBody 27-JAN-2014 10:47:32.95
           Attr Super.Specification = "Danfoss Frequency converter FC300 with Profibus PPO3 protocol"
           Attr Super.StatusWordSW.Description = "Status Word, from converter"
           Attr Super.StatusWordSW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3IoModule.I_SW"
@@ -357,6 +357,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.AlarmLocalMod.MoreText = ""
           Attr Super.AlarmLocalMod.Attribute = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO3-Template"
           Attr Super.AlarmLocalMod.CtrlPosition = 1
+          Attr Super.AlarmLocalMod.TimerTime = 3.000000e+00
           Attr Super.AlarmLocalMod.LockAttribute = 1
           Attr Super.AlarmTripped.DetectOn = 1
           Attr Super.AlarmTripped.DetectText = "Frequency converter tripped, reset is required"
@@ -375,6 +376,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.AlarmWarning.MoreText = ""
           Attr Super.AlarmWarning.Attribute = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO3-Template"
           Attr Super.AlarmWarning.CtrlPosition = 1
+          Attr Super.AlarmWarning.TimerTime = 5.000000e+00
           Attr Super.AlarmWarning.LockAttribute = 1
           Attr Super.AlarmError.DetectOn = 1
           Attr Super.AlarmError.DetectText = "Frequency converter error"
@@ -386,6 +388,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.AlarmError.CtrlPosition = 1
           Attr Super.AlarmError.LockAttribute = 1
           Attr Super.AlarmConnection.MoreText = ""
+          Attr Super.AlarmConnection.TimerTime = 3.000000e+00
           Attr Super.DefTrend = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO3-Template.Super.PlotGroup"
           Attr Super.DataSheet = "$pwr_lang/dsh/danfoss_converter_fc300.pdf"
           Attr Super.TrendActSpeed.Multiple = 1
@@ -439,7 +442,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndObject
       EndObject
       Object Template Danfoss_Converter_FC300_PPO5 2157936640 01-JAN-1970 01:00:00.00
-        Body RtBody 18-MAR-2008 17:04:31.24
+        Body RtBody 27-JAN-2014 10:48:02.60
           Attr Super.Specification = "Frequency converter Danfoss FC300 with Profibus PPO5 protocol"
           Attr Super.InIdPar.Description = "Parameter Identification, from converter"
           Attr Super.InIdPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_ID"
@@ -503,6 +506,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.AlarmLocalMod.MoreText = ""
           Attr Super.AlarmLocalMod.Attribute = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template"
           Attr Super.AlarmLocalMod.CtrlPosition = 1
+          Attr Super.AlarmLocalMod.TimerTime = 3.000000e+00
           Attr Super.AlarmLocalMod.LockAttribute = 1
           Attr Super.AlarmTripped.DetectOn = 1
           Attr Super.AlarmTripped.DetectText = "Frequency converter tripped, reset is required"
@@ -521,6 +525,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.AlarmWarning.MoreText = ""
           Attr Super.AlarmWarning.Attribute = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template"
           Attr Super.AlarmWarning.CtrlPosition = 1
+          Attr Super.AlarmWarning.TimerTime = 5.000000e+00
           Attr Super.AlarmWarning.LockAttribute = 1
           Attr Super.AlarmError.DetectOn = 1
           Attr Super.AlarmError.DetectText = "Frequency converter error"
@@ -532,6 +537,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.AlarmError.CtrlPosition = 1
           Attr Super.AlarmError.LockAttribute = 1
           Attr Super.AlarmConnection.MoreText = ""
+          Attr Super.AlarmConnection.TimerTime = 3.000000e+00
           Attr Super.DefTrend = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template.Super.PlotGroup"
           Attr Super.DataSheet = "$pwr_lang/dsh/danfoss_converter_fc300.pdf"
           Attr Super.TrendActSpeed.Multiple = 1
