@@ -1720,7 +1720,7 @@ länkningen av plc-programmet. Några bibliotek och objektsmoduler måste finnas me
 en default option-fil ska se ut så här:
 
 <c>$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_pnak_dummy
-<c> -lpwr_cifx_dummy -lpwr_nodave_dummy
+<c> -lpwr_cifx_dummy -lpwr_nodave_dummy -lpwr_epl_dummy
 
 Till detta adderas de bibliotek och moduler som behövs. Syntaxen är den som gäller för ld 
 (The GNU linker). Proview genererar en template option-fil .opt_template som kan användas som
@@ -2180,7 +2180,7 @@ plc_'nodename'_'qbus'_'plcname'.opt, t ex
 I denna läggs följande rad in
 
 <c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy 
-<c> -lpwr_pnak_dummy -lpwr_cifx_dummy -lpwr_nodave_dummy
+<c> -lpwr_pnak_dummy -lpwr_cifx_dummy -lpwr_nodave_dummy -lpwr_epl_dummy
 
 Vi kan nu bygga noden och starta Proview runtime.
 
@@ -7044,7 +7044,7 @@ lägger även in modulerna för plc-koden. I exemplet nedan antas att dessa moduler
 arkivet $pwrp_lib/libpwrp.a.
 
 <c>$pwr_obj/rt_io_user.o -lpwrp -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_pnak_dummy
-<c> -lpwr_cifx_dummy -lpwr_nodave_dummy
+<c> -lpwr_cifx_dummy -lpwr_nodave_dummy -lpwr_epl_dummy
 
 </topic>
 

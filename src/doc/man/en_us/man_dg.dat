@@ -1734,7 +1734,7 @@ Proview by default links against some libraries and object-files. If you have yo
 opt-file you need to include these. A default opt-file would look like:
 
 <c>$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_pnak_dummy
-<c> -lpwr_cifx_dummy -lpwr_nodave_dummy
+<c> -lpwr_cifx_dummy -lpwr_nodave_dummy -lpwr_epl_dummy
 
 Add your own libraries at will. The syntax to be used is the syntax for ld (The GNU linker). Proview 
 will create a template option file .opt_template that can be renamed to .opt and used as a template.
@@ -2201,7 +2201,7 @@ plc_'nodename'_'qbus'_'plcname'.opt, for example
 The following line is inserted into this file
 
 <c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy
-<c> -lpwr_usb_dummy -lpwr_pnak_dummmy -lpwr_cifx_dummy -lpwr_nodave_dummy
+<c> -lpwr_usb_dummy -lpwr_pnak_dummmy -lpwr_cifx_dummy -lpwr_nodave_dummy -lpwr_epl_dummy
 
 We can now build the node and startup Proview runtime.
 
@@ -7146,7 +7146,7 @@ file is input to the linker, ld, and here you add the modules of the plc-code. I
 below these modules are placed in the archive $pwrp_lib/libpwrp.a
 
 <c>$pwr_obj/rt_io_user.o -lpwrp -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_pnak_dummy
-<c> -lpwr_cifx_dummy -lpwr_nodave_dummy
+<c> -lpwr_cifx_dummy -lpwr_nodave_dummy -lpwr_epl_dummy
 
 
 </topic>
