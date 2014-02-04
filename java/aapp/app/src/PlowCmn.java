@@ -209,4 +209,7 @@ public class PlowCmn implements PlowCmnIfc {
 	}
         public void resetNodraw() {
 	}
+        public int getNodraw() {
+	    return 0;
+	}
 }

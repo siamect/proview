@@ -1592,7 +1592,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	    		
 	    			currentCmn.setCanvas(drawCanvas);
 	    			drawCanvas.drawColor(graph.cmn.gdraw.getColor(graph.cmn.background_color));
+				// if ( currentCmn.getNodraw() > 0)
+				//   currentCmn.resetNodraw();
 	    			currentCmn.draw();
+				// currentCmn.setNodraw();
 	    			canvas.drawBitmap(bitmap,  0F, 0F, null);
 				
 	    		}

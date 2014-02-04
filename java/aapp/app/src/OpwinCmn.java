@@ -96,6 +96,9 @@ public class OpwinCmn implements PlowCmnIfc {
 	  }
 	  public void setNodraw() {}
 	  public void resetNodraw() {}
+          public int getNodraw() {
+	      return 0;
+	  }
 	  public void zoom(double factor) {}
           public void zoom(double factor, double x, double y) {}
 	  public void scroll( int x, int y) {

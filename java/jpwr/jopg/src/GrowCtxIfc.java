@@ -60,7 +60,7 @@ public interface GrowCtxIfc {
     public void scroll( int delta_x, int delta_y);
     public void openVector( BufferedReader reader, Object cmn, Vector a);
     public int eventHandler(GlowEvent e, double fx, double fy);
-    public GrowCmn getCmn();
+    public Object getCmn();
     public void traceConnect();
     public void traceDisconnect();
     public void traceScan();

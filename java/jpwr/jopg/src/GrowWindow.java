@@ -243,7 +243,7 @@ public class GrowWindow extends GrowRect implements GrowScrollBarIfc {
 	if ( ctx == null) 
 	    return;
 
-	windowCmn = ctx.getCmn();
+	windowCmn = (GrowCmn)ctx.getCmn();
 	windowCmn.appl = cmn.appl;
 
 	windowCmn.owner = owner;

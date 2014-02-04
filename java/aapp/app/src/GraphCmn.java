@@ -139,6 +139,9 @@ public class GraphCmn implements PlowCmnIfc {
 		public void resetNodraw() {
 		    graph.ctx.cmn.resetNodraw();
 		}
+                public int getNodraw() {
+		    return graph.ctx.cmn.getNodraw();
+		}
     		public int getAppMotion() {
 		    return graph.cmn.getAppMotion();
     		}

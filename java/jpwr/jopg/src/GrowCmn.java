@@ -142,6 +142,9 @@ public class GrowCmn {
     	if ( nodraw > 0)
     		nodraw--;
     }
+    public int getNodraw() {
+    	return nodraw;
+    }
 
     public void setOwner( String owner) {
 	this.owner = owner;
