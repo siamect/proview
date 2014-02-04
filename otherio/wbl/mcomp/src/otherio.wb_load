@@ -8705,7 +8705,8 @@ Volume OtherIO $ClassVolume 0.0.250.10
     ! 
     !  See class Epl_MN fore more information about the Powerlink configuration.
     !
-    !  You will also find a case study in the documentation for ABB_ACS880_Epl.
+    !  You will also find a case study in the documentation for object ABB_ACS880_Epl
+    !  and B&R I/O X20 system object BR_PowerSupply_EplModule.
     !
     !  @b Example CN settings
     !
@@ -8728,7 +8729,8 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @classlink Epl_MN otherio_epl_mn.html
     !  @classlink Epl_Module otherio_epl_module.html
     !  @classlink Epl_CNServer otherio_epl_cnserver.html
-    !  @classlink ABB_ACS880_Epl abb_abb_acs880_epl_1.html
+    !  @classlink ABB_ACS880_Epl abb_abb_acs880_epl.html
+    !  @classlink BR_PowerSupply_EplModule othermanufacturer_br_powersupply_eplmodule.html
     !*/
     Object Epl_CN $ClassDef 39 04-JUL-2013 08:12:46.72
       Body SysBody 01-JUL-2013 17:26:15.35
@@ -8990,7 +8992,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @classlink EplHandler otherio_eplhandler.html
     !  @classlink Epl_CN otherio_epl_cn.html
     !  @classlink Epl_Module otherio_epl_module.html
-    !  @classlink ABB_ACS880_Epl abb_abb_acs880_epl_1.html
+    !  @classlink ABB_ACS880_Epl abb_abb_acs880_epl.html
     !  @classlink Epl_CNServer otherio_epl_cnserver.html
     !*/
     Object Epl_MN $ClassDef 40 04-JUL-2013 08:13:16.20

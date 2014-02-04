@@ -2922,14 +2922,40 @@ Volume Profibus $ClassVolume 0.0.250.7
       EndObject
     EndObject
     !/**
-    ! @Author Robert Karlsson
+    ! @Author RK/JE
     ! @Version 1.0
     ! @Group Profinet
-    ! @Summary Defines that a Profinet controller stack is installed.
-    ! Configures a Profinet controller stack.
+    ! @Summary Configures a Softing Profinet controller stack.
+    ! Configures a Sofing Profinet controller stack.
+    !
+    ! Proview has support for a Profinet stack from Softing (www.softing.com). 
+    ! The Profinet stack is implemented as three Linux kernel modules. The stack 
+    ! is configured by the current object and is placed below the $Node object.
+    !
+    ! See Proview documentation 'Guide to I/O System! for more information. See also
+    ! a Case Study in class help class ABB_ACS880_PnDevice
+    !
+    ! Note due to Softing licens requirements the NIC must have a specific macadress.
+    !
+    ! Example: 
     ! 
+    !  auto eth1
+    !  iface eth1 inet static
+    !                  address 10.0.0.1
+    !                  netmask 255.255.255.0
+    !                  hwaddress ether xx:xx:xx:xx:xx:xx
+    !
+    !  where  xx:xx:xx:xx:xx:xx needs to be:
+    !
+    !        AA:00:04:00:xx:14 where xx is 21-52 (hex, i.e. max 50 device available)
+    !
+    !  See also an example 9 'Ethernet interface settings in file' /etc/network/interfaces
+    !  in class ABB_ACS880_PnDevice.
+    !
     ! @b See also
     ! @classlink PnDevice profibus_pndevice.html
+    ! @classlink PnModule profibus_pnmodule.html
+    ! @classlink ABB_ACS880_PnDevice abb_abb_acs880_pndevice.html
     !*/
     Object PnControllerSoftingPNAK $ClassDef 15 21-APR-2009 13:41:08.17
       Body SysBody 21-APR-2009 13:41:08.17
@@ -3029,15 +3055,39 @@ Volume Profibus $ClassVolume 0.0.250.7
       EndObject
     EndObject
     !/**
-    ! @Author Robert Karlsson
+    ! @Author RK/JE
     ! @Version 1.0
     ! @Group Profinet
-    ! @Summary Configures one Profinet device.
-    ! Configures one Profinet device.
+    ! @Summary Configures a Profinet device.
+    ! Configures a Profinet device.
+    ! 
+    ! Baseobject for a profinet device. Reside below a profinet agent object.
+    ! In the attribute GSDMfile the gsdmlfile for the current device is stated.
+    ! When the gsdml­file is supplied the device can be configured by the Profinet
+    ! configurator. See Proview documentation 'Guide to I/O System' for more
+    ! information. See also a Case Study class ABB_ACS880_PnDevice.
+    !
+    ! Note 'DeviceName' is the most important setting and defines the device on
+    ! the network. When IO communication starts the Profinet stack will first
+    ! look up all the devices on the network by the name.
+    !
+    ! There is a viewer tool for searching a network for Profinet devices and to set the
+    ! 'DeviceName'. The viewer is started from a terminal window with the shell command:
+    !
+    ! > profinet_viewer [device]
+    !
+    ! Where 'device' is the network device, eg eth0. By default the profinet_viewer will
+    ! connect to eth1.
+    ! 
+    ! @bNote. 
+    ! The Proview runtime environment should be stopped on the current node before the 
+    ! the viewer is started.
     ! 
     ! @b See also
     ! @classlink PnControllerSoftingPNAK profibus_pncontrollersoftingpnak.html
     ! @classlink Hilscher_cifX_PnController otherio_hilscher_cifx_pncontroller.html
+    ! @classlink PnModule profibus_pnmodule.html
+    ! @classlink ABB_ACS880_PnDevice abb_abb_acs880_pndevice.html
     !*/
     Object PnDevice $ClassDef 16 21-APR-2009 13:41:08.17
       Body SysBody 21-APR-2009 13:41:08.17
@@ -3112,7 +3162,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Plc-thread that will run the Profinet i/o.
+        ! Plc-thread that will run the Profinet I/O.
         !*/
         Object ThreadObject $Attribute 93 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
@@ -3408,11 +3458,30 @@ Volume Profibus $ClassVolume 0.0.250.7
       EndObject
     EndObject
     !/**
-    ! @Author Robert Karlsson
+    ! @Author RK/JE
     ! @Version 1.0
     ! @Group Profinet
-    ! @Summary Configures one Profinet module.
-    ! Configures one Profinet module.
+    ! @Summary Configures a Profinet module.
+    ! Configures a Profinet module.
+    !
+    ! This object configures the data exchange between a Profinet Slave Device and a
+    ! Profinet Master.
+    !
+    ! The class PnModule will be valid for all types of modules. In many cases there exist
+    ! prepared subclasses of the PnModuleÂ­class for the specific module. This is for example
+    ! the case for a Siemens ET200M device. For the prepared classes the IO channels will
+    ! exist as a part of the module­object. The prepared classes should be used if they exist.
+    ! See Proview documentation 'Guide to I/O System! for more information.
+    !
+    ! @bConfiguration (prepared subclasses)
+    ! One device object (not this module object) are placed as children to the master. For
+    ! the device object, a profinet configurator is opened, that configures the device object
+    ! and creates this module objects for the modules handled by the device. See
+    ! a Case Study in class ABB_ACS880_PnDevice for more information.
+    !
+    ! @classlink PnControllerSoftingPNAK profibus_pncontrollersoftingpnak.html
+    ! @classlink PnDevice profibus_pndevice.html
+    ! @classlink ABB_ACS880_PnDevice abb_abb_acs880_pndevice.html
     !*/
     Object PnModule $ClassDef 17 21-APR-2009 13:41:08.17
       Body SysBody 21-APR-2009 13:41:08.17

@@ -334,7 +334,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndObject
       EndObject
       Object Template Danfoss_Converter_FC300_PPO3 2158198784 01-JAN-1970 01:00:00.00
-        Body RtBody 27-JAN-2014 10:47:32.95
+        Body RtBody 04-FEB-2014 12:41:27.65
           Attr Super.Specification = "Danfoss Frequency converter FC300 with Profibus PPO3 protocol"
           Attr Super.StatusWordSW.Description = "Status Word, from converter"
           Attr Super.StatusWordSW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3IoModule.I_SW"
@@ -442,7 +442,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndObject
       EndObject
       Object Template Danfoss_Converter_FC300_PPO5 2157936640 01-JAN-1970 01:00:00.00
-        Body RtBody 27-JAN-2014 10:48:02.60
+        Body RtBody 04-FEB-2014 12:41:50.68
           Attr Super.Specification = "Frequency converter Danfoss FC300 with Profibus PPO5 protocol"
           Attr Super.InIdPar.Description = "Parameter Identification, from converter"
           Attr Super.InIdPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_ID"
@@ -22212,6 +22212,10 @@ Eurotherm TC3001 Aggregate
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary SEW_Movidrive Profibus slave object.
+    !*/
     Object SEW_Movidrive_Pb_Slave $ClassDef 25 28-MAR-2007 16:36:51.82
       Body SysBody 28-MAR-2007 16:37:01.19
         Attr Editor = 0
@@ -22246,6 +22250,10 @@ Eurotherm TC3001 Aggregate
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary SEW_Movidrive 3PD Profibus Plant object.
+    !*/
     Object SEW_Movidrive_3PD $ClassDef 21 30-MAR-2007 08:52:17.66
       Body SysBody 22-MAR-2007 15:51:07.57
         Attr Editor = 0
@@ -22390,6 +22398,10 @@ Eurotherm TC3001 Aggregate
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary SEW_Movidrive 6PD Profibus Plant object.
+    !*/
     Object SEW_Movidrive_6PD $ClassDef 28 30-MAR-2007 09:15:33.26
       Body SysBody 19-APR-2007 11:28:25.10
         Attr Editor = 0
@@ -38465,7 +38477,7 @@ Low = 0"
     ! 
     ! <B>Author<T><T>JackE PetterC
     ! <B>Version<T><T>1.0
-    ! 
+    ! @Summary Main object Janitza UMG96S Measuring Device
     ! Main object Janitza UMG96S Measuring Device.
     ! 
     ! The UMG96S has been designed for a fixed in-
@@ -39350,8 +39362,7 @@ Low = 0"
     EndObject
     !/**
     ! <B>Version<T><T>1.0
-    ! 
-    ! 
+    ! @Summary Function object Janitza UMG96s Measuring Device
     ! Function object Janitza UMG96s Measuring Device. This
     ! function object is made for use with the Janitza_UMG96S_1
     ! class.
@@ -49104,6 +49115,18 @@ Alarm HH, H, L, LL"
         EndBody
       EndObject
     EndObject
+    !/**
+    ! <B>Version<T><T>1.0
+    ! @Summary Janitza UMG96S profibus IO module.
+    ! Janitza UMG96S profibus slave module IO object.
+    ! 
+    ! <h1>See also:
+    ! <B>Janitza_UMG96S_1<T><T>  <LINK> Janitza_UMG96S_1
+    ! <B>Janitza_UMG96S_1Fo<T><T>  <LINK> Janitza_UMG96S_1Fo
+    ! <B>Janitza_UMG96S_Pb_Slave<T><T>  <LINK> Janitza_UMG96S_Pb_Slave
+    ! <B>Janitza_UMG96S_Pro1<T><T>  <LINK> Janitza_UMG96S_Pro1
+    ! 
+    !*/
     Object Janitza_UMG96S_Pro1_IoModule $ClassDef 53 12-JUL-2012 07:53:40.56
       Body SysBody 12-JUL-2012 07:53:40.56
         Attr Editor = 0
@@ -49584,7 +49607,7 @@ Alarm HH, H, L, LL"
     EndObject
     !/**
     ! <B>Version<T><T>1.0
-    ! 
+    ! @Summary Janitza UMG96S profibus slave object.
     ! Janitza UMG96S profibus slave object.
     ! This is a profibus slave object for the Janitza UMG96S.
     ! This object contains the path to the GSD-file which 
@@ -49634,7 +49657,7 @@ Alarm HH, H, L, LL"
     EndObject
     !/**
     ! <B>Version<T><T>1.0
-    ! 
+    ! @Summary Janitza UMG96S profibus slave module.
     ! Janitza UMG96S profibus slave module.
     ! 
     ! 
@@ -49882,6 +49905,60 @@ Alarm HH, H, L, LL"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Powerlink
+    !  @Creator CS/JEH    
+    !  @Author je
+    !  @Summary Powerlink module for B&R Digital Input 4 channels
+    !  Powerlink communication I/O module object for Bernecker & Rainer
+    !  digital input unit with 4 channels. 
+    ! 
+    !  The module object is configured below a Powerlink Controlled Node object
+    !  in the Node hierarchy. This module object also contains input channels to
+    !  be connected to signals in Plant hierarchy.
+    ! 
+    !  @b Configuration
+    !  Place the object under a Powerlink controlled node object of class
+    !  Epl_CN (Fig 1) and connect the channels to signals in Plant hierarchy.
+    !  The location under the Epl_CN object is dependent on the hardware
+    !  configuration. See B&R Case Study in class BR_PowerSupply_EplModule
+    !  for more information.
+    ! 
+    !  The Epl_CN object also needs an Epl_MN and an EplHandler object, see these
+    !  objects for more information.
+    ! 
+    ! 
+    !  @image orm_br_proview_cn_node_io_modules.gif
+    !  @b Fig 1 Example B&R Modules objects under a Epl_CN node object.
+    ! 
+    ! 
+    !  @b Example B&R  digital input unit
+    !  One example of a digital input unit working with object BR_Di4_EplModule
+    !  is the X20DI4371 (Fig 2) together with X20 Bus controller, in this case
+    !  Powerlink Bus Controller X20BC0083 (Fig 3).
+    ! 
+    !  Description and figures from B&R X20 System Manual.
+    ! 
+    !  @image orm_br_x20di4371.gif  
+    !  @b Fig 2 Pin assignment and connection example for X20DI4371
+    ! 
+    ! 
+    ! 
+    !  @image orm_br_x20bc0083.gif  
+    !  @b Fig 3 Bus Controller X20BX0083
+    ! 
+    ! 
+    !  @b See also
+    !  @classlink EplHandler otherio_eplhandler.html
+    !  @classlink Epl_MN otherio_epl_mn.html
+    !  @classlink Epl_CN otherio_epl_cn.html
+    !  @classlink BR_PowerSupply_EplModule othermanufacturer_br_powersupply_eplmodule.html
+    !  @classlink BR_Do4_EplModule othermanufacturer_br_do4_eplmodule.html
+    !  @classlink BR_Ai4_EplModule othermanufacturer_br_ai4_eplmodule.html
+    !  @classlink BR_Ao4_EplModule othermanufacturer_br_ao4_eplmodule.html
+    !  @link Datasheet X20 system ../dsh/br_x20_manual.pdf
+    !*/
     Object BR_Di4_EplModule $ClassDef 56 04-JUL-2013 11:24:56.70
       Body SysBody 04-JUL-2013 12:42:14.60
         Attr Editor = 0
@@ -49961,6 +50038,60 @@ Alarm HH, H, L, LL"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Powerlink
+    !  @Creator CS/JEH    
+    !  @Author je
+    !  @Summary Powerlink module for B&R Digital Output 4 channels
+    !  Powerlink communication I/O module object for Bernecker & Rainer
+    !  digital output unit with 4 channels. 
+    ! 
+    !  The module object is configured below a Powerlink Controlled Node object
+    !  in the Node hierarchy. This module object also contains output channels to
+    !  be connected to signals in Plant hierarchy.
+    ! 
+    !  @b Configuration
+    !  Place the object under a Powerlink controlled node object of class
+    !  Epl_CN (Fig 1) and connect the channels to signals in Plant hierarchy.
+    !  The location under the Epl_CN object is dependent on the hardware
+    !  configuration. See B&R Case Study in class BR_PowerSupply_EplModule
+    !  for more information. Note that the Do module is not mentioned in the Case Study.
+    ! 
+    !  The Epl_CN object also needs an Epl_MN and an EplHandler object, See these
+    !  objects for more information.
+    ! 
+    ! 
+    !  @image orm_br_proview_cn_node_io_modules.gif
+    !  @b Fig 1 Example B&R modules under a Epl_CN object. 
+    ! 
+    ! 
+    !  @b Example of a B&R  digital output unit
+    !  One example of a digital output unit working with object BR_Do4_EplModule
+    !  is the X20DO4322 (Fig 2) together with X20 Bus controller, in this case
+    !  Powerlink Bus Controller X20BC0083 (Fig 3).
+    ! 
+    !  Description and figures from B&R X20 System Manual.
+    ! 
+    !  @image orm_br_x20do4322.gif  
+    !  @b Fig 2 Pin assignment and connection example for X20DO4322
+    ! 
+    ! 
+    ! 
+    !  @image orm_br_x20bc0083.gif  
+    !  @b Fig 3 Bus Controller X20BX0083 
+    ! 
+    ! 
+    !  @b See also
+    !  @classlink EplHandler otherio_eplhandler.html
+    !  @classlink Epl_MN otherio_epl_mn.html
+    !  @classlink Epl_CN otherio_epl_cn.html
+    !  @classlink BR_PowerSupply_EplModule othermanufacturer_br_powersupply_eplmodule.html
+    !  @classlink BR_Di4_EplModule othermanufacturer_br_di4_eplmodule.html
+    !  @classlink BR_Ai4_EplModule othermanufacturer_br_ai4_eplmodule.html
+    !  @classlink BR_Ao4_EplModule othermanufacturer_br_ao4_eplmodule.html
+    !  @link Datasheet X20 system ../dsh/br_x20_manual.pdf
+    !*/
     Object BR_Do4_EplModule $ClassDef 58 05-JUL-2013 08:30:13.85
       Body SysBody 04-JUL-2013 12:42:30.45
         Attr Editor = 0
@@ -50036,6 +50167,60 @@ Alarm HH, H, L, LL"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Powerlink
+    !  @Creator CS/JEH    
+    !  @Author je
+    !  @Summary Powerlink module for B&R Analog Input 4 channels
+    !  Powerlink communication I/O module object for Bernecker & Rainer
+    !  analog input unit with 4 channels. 
+    ! 
+    !  The module object is configured below a Powerlink Controlled Node object
+    !  in the Node hierarchy. This module object also contains input channels to
+    !  be connected to signals in Plant hierarchy.
+    ! 
+    !  @b Configuration
+    !  Place the object under a Powerlink controlled node object of class
+    !  Epl_CN (Fig 1) and connect the channels to signals in Plant hierarchy.
+    !  The location under the Epl_CN object is dependent on the hardware
+    !  configuration. See B&R Case Study in class BR_PowerSupply_EplModule
+    !  for more information.
+    ! 
+    !  The Epl_CN object also needs an Epl_MN and an EplHandler object, see these
+    !  objects for more information.
+    ! 
+    ! 
+    !  @image orm_br_proview_cn_node_io_modules.gif
+    !  @b Fig 1 Example B&R modules under a Epl_CN node object. 
+    ! 
+    ! 
+    !  @b Example of a B&R  analog input unit
+    !  One example of a analog input unit working with object BR_Ai4_EplModule
+    !  is the X20AI4632 (Fig 2) together with X20 Bus controller, in this case
+    !  Powerlink Bus Controller X20BC0083 (Fig 3).
+    ! 
+    !  Description and figures from B&R X20 System Manual.
+    ! 
+    !  @image orm_br_x20ai4632.gif  
+    !  @b Fig 2 Pin assignment and connection example X20AI4632
+    ! 
+    ! 
+    ! 
+    !  @image orm_br_x20bc0083.gif  
+    !  @b Fig 3 Bus Controller X20BX0083 
+    ! 
+    ! 
+    !  @b See also
+    !  @classlink EplHandler otherio_eplhandler.html
+    !  @classlink Epl_MN otherio_epl_mn.html
+    !  @classlink Epl_CN otherio_epl_cn.html
+    !  @classlink BR_PowerSupply_EplModule othermanufacturer_br_powersupply_eplmodule.html
+    !  @classlink BR_Di4_EplModule othermanufacturer_br_di4_eplmodule.html
+    !  @classlink BR_Do4_EplModule othermanufacturer_br_do4_eplmodule.html
+    !  @classlink BR_Ao4_EplModule othermanufacturer_br_ao4_eplmodule.html
+    !  @link Datasheet X20 system ../dsh/br_x20_manual.pdf
+    !*/
     Object BR_Ai4_EplModule $ClassDef 59 05-JUL-2013 08:30:16.05
       Body SysBody 04-JUL-2013 12:42:38.19
         Attr Editor = 0
@@ -50156,6 +50341,60 @@ Alarm HH, H, L, LL"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Powerlink
+    !  @Creator CS/JEH    
+    !  @Author je
+    !  @Summary Powerlink module for B&R Analog Output 4 channels 
+    !  Powerlink communication  I/O module object for Bernecker + Rainer
+    !  analog output unit with 4 channels. 
+    ! 
+    !  The module object is configured below a Powerlink Controlled Node object
+    !  in the Node hierarchy. This module object also contains output channels to
+    !  be connected to signals in Plant hierarchy.
+    ! 
+    !  @b Configuration
+    !  Place the object under a Powerlink controlled node object of class
+    !  Epl_CN (Fig 1) and connect the channels to signals in Plant hierarchy.
+    !  The location under the Epl_CN object is dependent on the hardware
+    !  configuration. See B&R Case Study in class BR_PowerSupply_EplModule
+    !  for more information.
+    ! 
+    !  The Epl_CN object also needs an Epl_MN and an EplHandler object, see these
+    !  objects for more information.
+    ! 
+    ! 
+    !  @image orm_br_proview_cn_node_io_modules.gif
+    !  @b Fig 1 Example B&R modules under a Epl_CN node object. 
+    ! 
+    ! 
+    !  @b Example of a B&R  analog output unit
+    !  One example of a analog output unit working with object BR_Ao4_EplModule
+    !  is the X20AO4632 (Fig 2) together with X20 Bus controller, in this case
+    !  Powerlink Bus Controller X20BC0083 (Fig 3).
+    ! 
+    !  Description and figures from B&R X20 System Manual.
+    ! 
+    !  @image orm_br_x20ao4632.gif  
+    !  @b Fig 2 Pin assignment and connection example X20AO4632
+    ! 
+    ! 
+    ! 
+    !  @image orm_br_x20bc0083.gif  
+    !  @b Fig 3 Bus Controller X20BX0083 
+    ! 
+    ! 
+    !  @b See also
+    !  @classlink EplHandler otherio_eplhandler.html
+    !  @classlink Epl_MN otherio_epl_mn.html
+    !  @classlink Epl_CN otherio_epl_cn.html
+    !  @classlink BR_PowerSupply_EplModule othermanufacturer_br_powersupply_eplmodule.html
+    !  @classlink BR_Di4_EplModule othermanufacturer_br_di4_eplmodule.html
+    !  @classlink BR_Do4_EplModule othermanufacturer_br_do4_eplmodule.html
+    !  @classlink BR_Ai4_EplModule othermanufacturer_br_ai4_eplmodule.html
+    !  @link Datasheet X20 system ../dsh/br_x20_manual.pdf
+    !*/
     Object BR_Ao4_EplModule $ClassDef 57 04-JUL-2013 11:25:16.80
       Body SysBody 04-JUL-2013 12:42:24.41
         Attr Editor = 0
@@ -50268,6 +50507,207 @@ Alarm HH, H, L, LL"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Powerlink
+    !  @Creator CS/JEH    
+    !  @Author je
+    !  @Summary Powerlink module for B&R Power supply 
+    !  Powerlink communication  I/O module object for Bernecker + Rainer
+    !  Power supply units. 
+    ! 
+    !  The module object is configured below a Powerlink Controlled Node object
+    !  in the Node hierarchy. This module object also contains input channels to
+    !  be connected to signals in Plant hierarchy.
+    ! 
+    !  @b Configuration
+    !  Place the object under a Powerlink controlled node object of class
+    !  Epl_CN and connect the channels to signals in Plant hierarchy. The
+    !  location under the Epl_CN object is dependent on the hardware
+    !  configuration. See B&R Case Study below for more information.
+    ! 
+    !  The Epl_CN object also needs an Epl_MN and an EplHandler object, see these
+    !  objects for more information.
+    ! 
+    !  @b Example of a B&R Power Supply unit
+    !  One example of a Power Supply unit working with object BR_PowerSupply_EplModule
+    !  is the X20PS9400 (Fig 1) together with X20 Bus controller, in this case
+    !  Powerlink Bus Controller X20BC0083 (Fig 2).
+    ! 
+    !  Description and figures from B&R X20 System Manual.
+    ! 
+    ! 
+    !  @image orm_br_x20ps9400.gif  
+    !  @b Fig 1 Pin assignment and connection example PS9400
+    ! 
+    ! 
+    ! 
+    !  @image orm_br_x20bc0083.gif  
+    !  @b Fig 2 Bus Controller X20BX0083 
+    ! 
+    !  @h1B&R Case Study
+    !  This study explain a lot of steps needed to configurate an X20 system with
+    !  Powerlink communication to a Proview system. The case (Fig 3) is based on the
+    !  B&R hardware:
+    !  
+    !  - X20 Bus Controller POWERLINK (Slave id = 15).
+    !  - 24 VDC Powersupply unit.
+    !  - 4 Digital input unit.
+    !  - 4 Analog input unit, channel 01 is set to 0-20 mA.
+    !  - 4 Analog output unit.
+    ! 
+    !  All I/O hardware settings through FieldbusDESIGNER tool except Ai channel 01
+    !  are default values, bus controller id is set to 15 (not necessary).
+    ! 
+    !  @image orm_br_foto_study_case.gif  
+    !  @bFig 3 Photo Case Study hardware units, bus controller unit id is set to 15. 
+    ! 
+    ! 
+    !  @bShort step by step description to configure a B&R X20 Powerlink controlled node (CN):
+    ! 
+    !  - Use the Windows PC tool FieldbusDESIGNER from B&R to configure the hardware and 
+    !    create the XDC file (XML Device Configuration).
+    ! 
+    !  - In a Proview project create and configure the Proview Powerlink objects and the B&R module
+    !    objects corresponding to the X20 hardware configuration in FieldbusDESIGNER tool and
+    !    openCONFIGURATOR tool. i.e. memory mapping and node id.
+    ! 
+    !  - Use the Linux PC tool openCONFIGURATOR and import the XDC file from FieldbusDESIGNER
+    !    to create and configure a new X20 Controlled node and create the mnobd.cdc
+    !    binary file used by the Powerlink stack. Transfer the mnobd.cdc to $pwrp_load.
+    ! 
+    !  - Build the Proview project and distribute.
+    ! 
+    !  @h1FieldbusDESIGNER Tool (WINDOWS PC)
+    !  Example 1 below shows the hardware solution in this Case Study i.e. all IO modules,
+    !  Power supply and Bus controller are created. After the hardware configuration is done
+    !  and the node adress is set to 15 (not necessary) the project is built to create the XDC
+    !  file, in this case 0100006C_X20BC0083_15.xdc (suffix 15 = node id). Example 2 shows the 
+    !  I/O configuration for the analog inputs, channel 01 and 02. 
+    ! 
+    !  @bExample 1 Windows PC tool Fielbus Designer from B&R 
+    !  Hardware configuration in the B&R Case study, units are marked with yellow color. 
+    ! 
+    !  @image orm_br_field_designer_modules.gif  
+    ! 
+    ! 
+    !  @b Example 2 I/O configuration of analog inputs
+    !  Yellow marked Channel 01 value 'channel type' is changed to 0-20 mA,
+    !  default value is +/- 10 V.
+    ! 
+    !  @image orm_br_field_designer_ai_settings.gif  
+    ! 
+    !  @h1Proview  
+    !  The B&R Case Study contains a Proview project ACS880Pn and one MN and two CN nodes.
+    !  The first CN node is an ABB frequency converter ACS880 and the second is B&R Bus
+    !  Controller node. The Examples 10-13 below shows the Proview settings.
+    ! 
+    !  @b Example 10 Settings in Proview Powerlink MN node 
+    !  Settings needed in Proview class Epl_MN node. Node id
+    !  for MN node is always 240.
+    ! 
+    !  @image orm_br_proview_mn_node_settings.gif 
+    ! 
+    ! 
+    !  @b Example 11 Settings in Proview node CN
+    !  Settings needed in Proview for class Epl_CN. The 'NodeId'
+    !  shall be the same as in the openCONFIGURATOR, i.e 15, see 
+    !  also example 15 below.
+    ! 
+    !  @image orm_br_proview_cn_node_settings.gif
+    ! 
+    ! 
+    !  @b Example 12 Create 'IO mapping' modules 
+    !  Modules needed in Proview to match the I/O mapping, i.e. hardware
+    !  configuration in FieldbusDESIGNER tool, see also example 1.
+    ! 
+    !  @image orm_br_proview_cn_node_io_modules.gif
+    ! 
+    ! 
+    !  @b Example 13 Connect IO and Channel settings 
+    !  All the used channels in modules ST1, ST2, ST3 and ST4 shoud be connected
+    !  to signals in the plant hierarchy with the 'IO Connect' function. In this 
+    !  case also the ST3 analog input O1 settings is changed to 0-20 mA and connected 
+    !  to signal ST3_Ai1. See also example 2.
+    ! 
+    !  @image orm_br_proview_cn_node_io_connect.gif
+    ! 
+    !  @h1openCONFIGURATOR Tool (Linux PC)
+    !  openCONFIGURATOR is an open source tool contributed by www.kalycito.com. 
+    !  openCONFIGURATION is used for easy setup, configuration and maintenance
+    !  of any POWERLINK network. openCONFIGURATOR ideally complements openPOWERLINK,
+    !  the open source POWERLINK protocol stack for master and slave nodes.
+    !  
+    !  Every node in a Powerlink network must be configured in this tool.
+    !  In a Proview project all Powerlink CN nodes memory mapping is a reflection
+    !  of the memory mapping in a openCONFIGURATOR project.
+    ! 
+    !  From the openCONFIGURATOR tool a CDC file is generated. This file is used by
+    !  the Powerlink stack. The name of the cdc-file shall be specified in the Epl_MN
+    !  object, attribute CDCfile. The default name is $pwrp_load/mnodb.cdc.
+    ! 
+    !  A Powerlink network consists of two device types, MN (Managing Node)
+    !  and one or several CN (Controlled Node). 
+    ! 
+    !  Note It is recommended to study the help in the openCONFIGURATOR tool and a detailed
+    !  Case Study in Proview class help for class object ABB_ACS880_Epl, see link below.
+    ! 
+    !  @bShort description step by step:
+    ! 
+    !    - Use the popup menu for an object of class Epl_MN to start openCONFIGURATOR tool.
+    !    - Open existing or a new project.
+    !    - Create a new CN node and import the 0100006C_X20BC0083_15.xdc file.
+    !    - Build the project. This will generate the binary cdc-file.
+    !    - Transfer cdc file to $pwrp_load folder.
+    !    - In Proview distribute function a copy command is needed for file mnobd.cdc
+    ! 
+    !  @bConfiguration
+    !  Create a new CN node and import the 0100006C_X20BC0083_15.xdc file generated
+    !  from tool FieldbusDESIGNER. This file is prepared with all memory mapping
+    !  (TPDO, RPDO) needed for the Proview class object BR_Di4_EplModule,
+    !  BR_PowerSupply_EplModule, BR_Ai_EplModule and BR_Ao4_EplModule. Build the
+    !  project with project settings "auto generate" set to YES, then transfer the
+    !  new mnobd.cdc file to Proview project $pwrp_load folder.
+    ! 
+    !  Example 14 to 17 below shows some screenshots from openCONFIGURATOR tool.
+    ! 
+    !  @bExample 14 
+    !  The figure shows the openCONFIGURATOR settings for master MN node and
+    !  default path for project files. The two CN nodes is also visible in the
+    !  figure, CN_15 is the B&R bus controller slave node.
+    !  @image orm_br_open_conf_mn_node_settings.gif 
+    ! 
+    ! 
+    !  @bExample 15 
+    !  openCONFIGURATOR settings for slave node 15, i.e. Bus Controller X20BC0083.
+    !  This Id must be the same as in the Proview object Epl_CN, see also example 11.  
+    !  @image orm_br_open_conf_node_id.gif
+    ! 
+    ! 
+    !  @bExample 16
+    !  Memory mapping settings TPDO, reads data from the B&R bus controller, i.e Power Supply, 
+    !  Di and Ai in this order. For example the yellow marked address 0x2102 is the
+    !  address specification for analog input X20AI4632.
+    !  @image orm_br_open_conf_input_mapping.gif
+    ! 
+    ! 
+    !  @bExample 17 
+    !  Memory mapping settings RPDO, writes data to the B&R bus controller, i.e Ao word. The
+    !  yellow marked address 0x2103 is the analog output X20AO4632.
+    !  @image orm_br_open_conf_output_mapping.gif
+    ! 
+    ! 
+    !  @b See also
+    !  @classlink EplHandler otherio_eplhandler.html
+    !  @classlink Epl_MN otherio_epl_mn.html
+    !  @classlink Epl_CN otherio_epl_cn.html
+    !  @classlink BR_Di4_EplModule othermanufacturer_br_di4_eplmodule.html
+    !  @classlink BR_Do4_EplModule othermanufacturer_br_do4_eplmodule.html
+    !  @classlink BR_Ai4_EplModule othermanufacturer_br_ai4_eplmodule.html
+    !  @classlink BR_Ao4_EplModule othermanufacturer_br_ao4_eplmodule.html
+    !  @classlink ABB_ACS880_Epl abb_abb_acs880_epl.html
+    !  @link Datasheet X20 system ../dsh/br_x20_manual.pdf
+    !*/
     Object BR_PowerSupply_EplModule $ClassDef 60 05-JUL-2013 08:30:41.91
       Body SysBody 05-JUL-2013 08:30:49.22
         Attr Editor = 0
