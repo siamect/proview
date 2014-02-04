@@ -1,11 +1,11 @@
 Package: pwrsev
-Version: 5.0.0-1
+Version: 5.1.0-1
 Section: base
 Priority: optional
 Architecture: i386
 Depends: libc6 (>= 2.13-38), libgtk2.0-0 (>= 2.24.10-2), libasound2 (>= 1.0.25-4), libsqlite3-0 (>= 3.7.13-1+deb7u1), libdb5.1 (>=5.1.29-5), libmysqlclient18 (>= 5.5.31+dfsg-0+wheezy1)
-Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48
+Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48,pwr50
 Maintainer: Proview <postmaster@proview.se>
 Description:
  Proview storage environment
- 5.0.0-1 Base release
+ 5.1.0-1 Base release

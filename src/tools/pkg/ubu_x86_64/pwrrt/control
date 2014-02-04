@@ -1,13 +1,13 @@
 Package: pwrrt
-Version: 5.0.0-1
+Version: 5.1.0-1
 Section: base
 Priority: optional
 Architecture: amd64
 Depends: libc6 (>= 2.17-93ubuntu4), libgtk2.0-0 (>= 2.24.20-1ubuntu1), libasound2 (>= 1.0.27.2-1ubuntu6), libdb5.3 (>=5.3.21-2), libsqlite3-0 (>= 3.7.17-1ubuntu1), librsvg2-2 (>= 2.36.4-2), xfonts-100dpi
-Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48
+Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48,pwr50
 Maintainer: Proview <postmaster@proview.se>
 Homepage: http://www.proview.se
 Installed-Size: 955344
 Description:
  Proview runtime environment
- 5.0.0-1 Base release
+ 5.1.0-1 Base release

@@ -1,10 +1,10 @@
-Package: pwrdemo50
-Version: 5.0.0-1
+Package: pwrdemo51
+Version: 5.1.0-1
 Section: base
 Priority: optional
 Architecture: i386
-Depends: pwr50 (>= 5.0.0-1)
+Depends: pwr51 (>= 5.1.0-1)
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview Demo Project package
  Proview Demo Project
- 5.0.0-1 Base release 
+ 5.1.0-1 Base release 

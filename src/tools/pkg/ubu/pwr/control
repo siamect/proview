@@ -1,14 +1,14 @@
 Source: pwrsrc
 Section: devel
-Package: pwr50
+Package: pwr51
 Priority: optional
 Maintainer: Proview <postmaster@proview.se>
-Version: 5.0.0-1
+Version: 5.1.0-1
 Architecture: i386
 Depends: libc6 (>= 2.17-93ubuntu4), libgtk2.0-0 (>= 2.24.20-1ubuntu1), libasound2 (>= 1.0.27.2-1ubuntu6), libdb5.3 (>=5.3.21-2), libdb5.3++ (>=5.3.21-2), libmysql++3 (>= 3.1.0-2), libsqlite3-0 (>= 3.7.17-1ubuntu1), librsvg2-2 (>= 2.36.4-2), g++ (>= 4:4.8.1-2ubuntu3), xfonts-100dpi
-Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48
+Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48,pwr50
 Homepage: http://www.proview.se
 Installed-Size: 1114020
 Description: Proview development and runtime environment package
  Proview development and runtime environment
- 5.0.0-1 Base release 
+ 5.1.0-1 Base release 
