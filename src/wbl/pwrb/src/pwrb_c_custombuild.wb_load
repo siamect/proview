@@ -57,7 +57,7 @@ SObject pwrb:Class
       !*/
       Object cc $Attribute 1 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String80"
+          Attr TypeRef = "pwrs:Type-$String256"
         EndBody
       EndObject
       !/**
@@ -65,7 +65,7 @@ SObject pwrb:Class
       !*/
       Object cxx $Attribute 2 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String80"
+          Attr TypeRef = "pwrs:Type-$String256"
         EndBody
       EndObject
       !/**
@@ -73,7 +73,7 @@ SObject pwrb:Class
       !*/
       Object ar $Attribute 3 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String80"
+          Attr TypeRef = "pwrs:Type-$String256"
         EndBody
       EndObject
       !/**
