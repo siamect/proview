@@ -52,6 +52,7 @@
 #include "rt_gdh.h"
 #include "pwr_privilege.h"
 #include "rt_gdh_msg.h"
+#include "glow_msg.h"
 #include "co_cdh.h"
 #include "co_ccm.h"
 #include "co_time.h"
