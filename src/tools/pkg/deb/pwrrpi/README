@@ -1,0 +1,45 @@
+
+	Package pwrrpi containing runtime archives compiled with crosscompiler for raspbian on Raspberry PI.
+
+	1. Setup toolchain
+
+	Download rpi-tools from https://github.com/rasperrypi/tools 'Download zip'
+
+	Unpack the zip-file under /usr/local/rpi.
+
+	2. Define pwre links to the compiler tools
+
+	export pwre_cc=/usr/local/rpi/tools-master/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-gcc
+	export pwre_cxx=/usr/local/rpi/tools-master/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-g++
+	export pwre_ar=/usr/local/rpi/tools-master/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-ar
+
+	3. Define a link to the exe directory of the host release
+
+	export pwre_host_exe=/data1/x5-0-0/rls/os_linux/hw_x86/exp/exe
+
+	4. Create an pwre environment for the rpi release with hardware arm
+
+	pwre add x500rpi
+	Source root? /data0/x5-0-0/pwr/src
+	Import root? /data0/x5-0-0/rls/os_linux/hw_x86
+	Build root? /data0/x5-0-0/rls
+	Build type?
+	OS? linux
+	Hardware? arm
+
+	5. Build arm release
+
+	pwre init x500rpi
+	mkdir $pwre_broot
+	pwre configure --ebuild
+	pwre create_all_modules
+	pwre import rt
+	pwre import java
+	pwre ebuild rt
+
+	6. Build the package
+
+	Set version in the control file and build with
+
+	pwre build tools/pkg deb rpi
+
