@@ -52,6 +52,7 @@
 #include "rt_gdh.h"
 #include "pwr_privilege.h"
 #include "rt_gdh_msg.h"
+#include "glow_msg.h"
 #include "co_cdh.h"
 #include "co_ccm.h"
 #include "co_time.h"
@@ -4603,6 +4604,18 @@ static int	xnav_close_func(	void		*client_data,
       else {
         xnav->message('E',"Enter file");
         return XNAV__HOLDCOMMAND;
+      }
+
+      if ( cdh_NoCaseStrcmp(file_str, "$current") == 0) {
+	if ( xnav->current_cmd_ctx) {
+	  xnav->appl.remove( (void *)xnav->current_cmd_ctx);
+	  delete (XttGe *)xnav->current_cmd_ctx;
+	  return GLOW__TERMINATED;
+	}
+	else {
+	  xnav->message('E', "No current graph");
+	  return XNAV__SUCCESS;
+	}
       }
 
 
