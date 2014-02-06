@@ -50611,7 +50611,7 @@ Alarm HH, H, L, LL"
     ! 
     !  @b Example 11 Settings in Proview node CN
     !  Settings needed in Proview for class Epl_CN. The 'NodeId'
-    !  shall be the same as in the openCONFIGURATOR, i.e 15, see 
+    !  shall be the same as in the openCONFIGURATOR, i.e. 15, see 
     !  also example 15 below.
     ! 
     !  @image orm_br_proview_cn_node_settings.gif
@@ -50685,15 +50685,17 @@ Alarm HH, H, L, LL"
     ! 
     ! 
     !  @bExample 16
-    !  Memory mapping settings TPDO, reads data from the B&R bus controller, i.e Power Supply, 
-    !  Di and Ai in this order. For example the yellow marked address 0x2102 is the
-    !  address specification for analog input X20AI4632.
+    !  Memory mapping settings TPDO, reads data from the B&R bus controller, i.e. Power Supply, 
+    !  Di, Ai and Ao in this order. For example the yellow marked address 0x2102 is the
+    !  address specification for analog input X20AI4632 slot ST3. Note that the Ao unit
+    !  X20AO4632(0x2003) slot ST4 also is mapped here becouse the unit have one input ChanIi
+    !  ChanNetworkStatus attribute.
     !  @image orm_br_open_conf_input_mapping.gif
     ! 
     ! 
     !  @bExample 17 
-    !  Memory mapping settings RPDO, writes data to the B&R bus controller, i.e Ao word. The
-    !  yellow marked address 0x2103 is the analog output X20AO4632.
+    !  Memory mapping settings RPDO, writes data to the B&R bus controller, i.e. Ao word. The
+    !  yellow marked address 0x2103 is the analog output X20AO4632 slot ST4.
     !  @image orm_br_open_conf_output_mapping.gif
     ! 
     ! 

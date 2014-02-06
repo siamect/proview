@@ -2462,7 +2462,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
       EndObject
       Object Template ABB_ACS800_1 2148237312 12-OCT-2005 12:58:20.00
-        Body RtBody 27-JAN-2014 10:47:40.34
+        Body RtBody 06-FEB-2014 14:25:41.14
           Attr Specification = "ABB ACS800 Frequency converter"
           Attr InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_ID"
           Attr InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_IND"
@@ -51770,7 +51770,11 @@ if (I1 >= 0 && I1 <= 9) {
     !  
     !  @b Settings 3 
     !  Parameter group 33 to 50 settings to be performed.
-    !  NoteGroup 50 index 2 "comm loss func" is important.
+    !  Note Group 50 index 2 "comm loss func" is important.
+    !  Warning message 'change fan' in the driver need some settings in
+    !  parameter group 33. 'On-time 1 Warn limit 33.11 is set to two
+    !  years run time (63072000 seconds). 'On-time 1 source' 33.13 is
+    !  pointing to bit status when fan is running i.e. P.5.22.11. 
     !  @image orm_abb_acs880_param_setting3.gif
     !  
     !  
@@ -53005,6 +53009,11 @@ if (I1 >= 0 && I1 <= 9) {
         EndObject
         !/**
         !    Alarm text converter internal fan need maintenance.
+        !    
+        !    Reset alarm 'change fan' in the driver, see parameter 33.10 
+        !    'On-time 1 actual' in the drivers control panel. The timer will
+        !    be reset if the 'reset' are depressed for over 3 seconds in
+        !    this parameter settings menu.
         !*/
         Object AlarmFanOld $Attribute 183 24-JUN-2013 10:53:43.33
           Body SysBody 24-JUN-2013 10:53:43.33
@@ -53219,7 +53228,7 @@ if (I1 >= 0 && I1 <= 9) {
         EndObject
       EndObject
       Object Template ABB_ACS880_1 2159247360 01-JAN-1970 01:00:00.00
-        Body RtBody 27-JAN-2014 10:54:36.95
+        Body RtBody 06-FEB-2014 16:03:46.20
           Attr Specification = "ABB ACS880 Frequency converter"
           Attr InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.I_ID"
           Attr InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS880_PPO7_IoModule.I_IND"
@@ -53281,7 +53290,12 @@ if (I1 >= 0 && I1 <= 9) {
           Attr AlarmFanOld.EventType = 64
           Attr AlarmFanOld.EventPriority = 66
           Attr AlarmFanOld.EventFlags = 7
-          Attr AlarmFanOld.MoreText = ""
+          Attr AlarmFanOld.MoreText = "Check the drivers internal fan.
+
+Reset alarm 'change fan' in the driver, see parameter 33.10 
+'On-time 1 actual' in the drivers control panel. The timer will
+be reset if the 'reset' are depressed for over 3 seconds in
+this parameter settings menu."
           Attr AlarmFanOld.Attribute = "ABB:Class-ABB_ACS880_1-Template"
           Attr AlarmFanOld.CtrlPosition = 1
           Attr AlarmFanOld.LockAttribute = 1
@@ -69609,6 +69623,8 @@ bit 10 (d11) replace fan"
     !  input RefSpeedLoc [RLO] in local mode, or internal via graph (OpRefMan) in manual mode.
     ! 
     !  @b Example PLC code for ACS880 aggregate
+    !  Note if a contactor with start and stop pulse is used and input pin 'pil' Power Interlock
+    !  goes low/false a stop pulse is generated. 
     !  @image orm_abb_acs880_example6.gif
     ! 
     !  @b Profibus
@@ -70554,7 +70570,7 @@ bit 10 (d11) replace fan"
         EndObject
       EndObject
       Object Template ABB_ACS880MotorAggr 2160033792 01-JAN-1970 01:00:00.00
-        Body RtBody 27-JAN-2014 10:55:22.23
+        Body RtBody 06-FEB-2014 16:04:44.33
           Attr AlarmToOften.DetectOn = 1
           Attr AlarmToOften.DetectText = "Power not yet ready for restart, wait before retry"
           Attr AlarmToOften.EventType = 64
@@ -70657,7 +70673,12 @@ bit 10 (d11) replace fan"
           Attr ACS880.AlarmFanOld.EventType = 64
           Attr ACS880.AlarmFanOld.EventPriority = 66
           Attr ACS880.AlarmFanOld.EventFlags = 7
-          Attr ACS880.AlarmFanOld.MoreText = ""
+          Attr ACS880.AlarmFanOld.MoreText = "Check the drivers internal fan.
+
+Reset alarm 'change fan' in the driver, see parameter 33.10 
+'On-time 1 actual' in the drivers control panel. The timer will
+be reset if the 'reset' are depressed for over 3 seconds in
+this parameter settings menu."
           Attr ACS880.AlarmFanOld.Attribute = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880"
           Attr ACS880.AlarmFanOld.CtrlPosition = 1
           Attr ACS880.AlarmFanOld.LockAttribute = 1
@@ -81791,7 +81812,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880PumpAggr 2160820224 01-JAN-1970 01:00:00.00
-        Body RtBody 27-JAN-2014 10:56:04.75
+        Body RtBody 06-FEB-2014 16:05:11.14
           Attr Super.AlarmToOften.DetectOn = 1
           Attr Super.AlarmToOften.DetectText = "Power not yet ready for restart, wait before retry"
           Attr Super.AlarmToOften.EventType = 64
@@ -81897,7 +81918,12 @@ ABB ACS880 Aggregate
           Attr Super.ACS880.AlarmFanOld.EventType = 64
           Attr Super.ACS880.AlarmFanOld.EventPriority = 66
           Attr Super.ACS880.AlarmFanOld.EventFlags = 7
-          Attr Super.ACS880.AlarmFanOld.MoreText = ""
+          Attr Super.ACS880.AlarmFanOld.MoreText = "Check the drivers internal fan.
+
+Reset alarm 'change fan' in the driver, see parameter 33.10 
+'On-time 1 actual' in the drivers control panel. The timer will
+be reset if the 'reset' are depressed for over 3 seconds in
+this parameter settings menu."
           Attr Super.ACS880.AlarmFanOld.Attribute = "ABB:Class-ABB_ACS880PumpAggr-Template.Super.ACS880"
           Attr Super.ACS880.AlarmFanOld.CtrlPosition = 1
           Attr Super.ACS880.AlarmFanOld.LockAttribute = 1
@@ -82161,7 +82187,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880FanAggr 2161082368 01-JAN-1970 01:00:00.00
-        Body RtBody 27-JAN-2014 10:56:58.57
+        Body RtBody 06-FEB-2014 16:05:49.61
           Attr Super.AlarmToOften.DetectOn = 1
           Attr Super.AlarmToOften.DetectText = "Power not yet ready for restart, wait before retry"
           Attr Super.AlarmToOften.EventType = 64
@@ -82267,7 +82293,12 @@ ABB ACS880 Aggregate
           Attr Super.ACS880.AlarmFanOld.EventType = 64
           Attr Super.ACS880.AlarmFanOld.EventPriority = 66
           Attr Super.ACS880.AlarmFanOld.EventFlags = 7
-          Attr Super.ACS880.AlarmFanOld.MoreText = ""
+          Attr Super.ACS880.AlarmFanOld.MoreText = "Check the drivers internal fan.
+
+Reset alarm 'change fan' in the driver, see parameter 33.10 
+'On-time 1 actual' in the drivers control panel. The timer will
+be reset if the 'reset' are depressed for over 3 seconds in
+this parameter settings menu."
           Attr Super.ACS880.AlarmFanOld.Attribute = "ABB:Class-ABB_ACS880FanAggr-Template.Super.ACS880"
           Attr Super.ACS880.AlarmFanOld.CtrlPosition = 1
           Attr Super.ACS880.AlarmFanOld.LockAttribute = 1
@@ -82779,6 +82810,10 @@ ABB ACS880 Aggregate
     ! 
     !  Parameter group 33 to 50 settings to be performed.
     !  NoteGroup 50 index 2 "comm loss func" is important.
+    !  Warning message 'change fan' in the driver need some settings in
+    !  parameter group 33. 'On-time 1 Warn limit 33.11 is set to two
+    !  years run time (63072000 seconds). 'On-time 1 source' 33.13 is
+    !  pointing to bit status when fan is running i.e. P.5.22.11. 
     !  @image orm_abb_acs880_epl_param_setting3.gif
     !  
     !  
@@ -82809,7 +82844,7 @@ ABB ACS880 Aggregate
     !  Every node in a Powerlink network must be configured in this openCONFIGURATOR
     !  tool. In a Proview project all Powerlink CN nodes memory mapping is a reflection
     !  of the memory mapping in a openCONFIGURATOR project.
-    !
+    ! 
     !  From the openCONFIGURATOR configuration a cdc file is generated. This file is
     !  used by the Powerlink stack to initialize the communication. The name of the
     !  cdc-file should be specified in hte Epl_MN object, attribute CDCfile. The default
@@ -83209,7 +83244,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880_Epl_1 2161344512 01-JAN-1970 01:00:00.00
-        Body RtBody 27-JAN-2014 11:00:21.59
+        Body RtBody 06-FEB-2014 16:06:22.07
           Attr Super.Specification = "ABB ACS880 Frequency converter"
           Attr Super.DisableInIdPar = 1
           Attr Super.DisableInIndPar = 1
@@ -83282,7 +83317,12 @@ ABB ACS880 Aggregate
           Attr Super.AlarmFanOld.EventType = 64
           Attr Super.AlarmFanOld.EventPriority = 66
           Attr Super.AlarmFanOld.EventFlags = 7
-          Attr Super.AlarmFanOld.MoreText = ""
+          Attr Super.AlarmFanOld.MoreText = "Check the drivers internal fan.
+
+Reset alarm 'change fan' in the driver, see parameter 33.10 
+'On-time 1 actual' in the drivers control panel. The timer will
+be reset if the 'reset' are depressed for over 3 seconds in
+this parameter settings menu."
           Attr Super.AlarmFanOld.Attribute = "ABB:Class-ABB_ACS880_Epl_1-Template"
           Attr Super.AlarmFanOld.CtrlPosition = 1
           Attr Super.AlarmFanOld.LockAttribute = 1
@@ -83507,6 +83547,8 @@ ABB ACS880 Aggregate
     !  input RefSpeedLoc [RLO] in local mode, or internal via graph (OpRefMan) in manual mode.
     ! 
     !  @b Example PLC code for ACS880 aggregate
+    !  Note if a contactor with start and stop pulse is used and input pin 'pil' Power Interlock
+    !  goes low/false a stop pulse is generated. 
     !  @image orm_abb_acs880_example6.gif
     ! 
     !  @b Powerlink
@@ -84096,7 +84138,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880EplMotorAggr 2163441664 01-JAN-1970 01:00:00.00
-        Body RtBody 27-JAN-2014 10:58:37.01
+        Body RtBody 06-FEB-2014 16:06:53.92
           Attr Super.AlarmToOften.DetectOn = 1
           Attr Super.AlarmToOften.DetectText = "Power not yet ready for restart, wait before retry"
           Attr Super.AlarmToOften.EventType = 64
@@ -84213,7 +84255,12 @@ ABB ACS880 Aggregate
           Attr Super.ACS880.AlarmFanOld.EventType = 64
           Attr Super.ACS880.AlarmFanOld.EventPriority = 66
           Attr Super.ACS880.AlarmFanOld.EventFlags = 7
-          Attr Super.ACS880.AlarmFanOld.MoreText = ""
+          Attr Super.ACS880.AlarmFanOld.MoreText = "Check the drivers internal fan.
+
+Reset alarm 'change fan' in the driver, see parameter 33.10 
+'On-time 1 actual' in the drivers control panel. The timer will
+be reset if the 'reset' are depressed for over 3 seconds in
+this parameter settings menu."
           Attr Super.ACS880.AlarmFanOld.Attribute = "ABB:Class-ABB_ACS880EplMotorAggr-Template.Super.ACS880"
           Attr Super.ACS880.AlarmFanOld.CtrlPosition = 1
           Attr Super.ACS880.AlarmFanOld.LockAttribute = 1
@@ -84482,7 +84529,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880EplPumpAggr 2163703808 01-JAN-1970 01:00:00.00
-        Body RtBody 27-JAN-2014 10:59:10.71
+        Body RtBody 06-FEB-2014 16:07:19.28
           Attr Super.Super.AlarmToOften.DetectOn = 1
           Attr Super.Super.AlarmToOften.DetectText = "Power not yet ready for restart, wait before retry"
           Attr Super.Super.AlarmToOften.EventType = 64
@@ -84599,7 +84646,12 @@ ABB ACS880 Aggregate
           Attr Super.Super.ACS880.AlarmFanOld.EventType = 64
           Attr Super.Super.ACS880.AlarmFanOld.EventPriority = 66
           Attr Super.Super.ACS880.AlarmFanOld.EventFlags = 7
-          Attr Super.Super.ACS880.AlarmFanOld.MoreText = ""
+          Attr Super.Super.ACS880.AlarmFanOld.MoreText = "Check the drivers internal fan.
+
+Reset alarm 'change fan' in the driver, see parameter 33.10 
+'On-time 1 actual' in the drivers control panel. The timer will
+be reset if the 'reset' are depressed for over 3 seconds in
+this parameter settings menu."
           Attr Super.Super.ACS880.AlarmFanOld.Attribute = "ABB:Class-ABB_ACS880EplPumpAggr-Template.Super.Super.ACS880"
           Attr Super.Super.ACS880.AlarmFanOld.CtrlPosition = 1
           Attr Super.Super.ACS880.AlarmFanOld.LockAttribute = 1
@@ -84868,7 +84920,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880EplFanAggr 2163965952 01-JAN-1970 01:00:00.00
-        Body RtBody 27-JAN-2014 10:59:45.84
+        Body RtBody 06-FEB-2014 16:07:46.60
           Attr Super.Super.AlarmToOften.DetectOn = 1
           Attr Super.Super.AlarmToOften.DetectText = "Power not yet ready for restart, wait before retry"
           Attr Super.Super.AlarmToOften.EventType = 64
@@ -84985,7 +85037,12 @@ ABB ACS880 Aggregate
           Attr Super.Super.ACS880.AlarmFanOld.EventType = 64
           Attr Super.Super.ACS880.AlarmFanOld.EventPriority = 66
           Attr Super.Super.ACS880.AlarmFanOld.EventFlags = 7
-          Attr Super.Super.ACS880.AlarmFanOld.MoreText = ""
+          Attr Super.Super.ACS880.AlarmFanOld.MoreText = "Check the drivers internal fan.
+
+Reset alarm 'change fan' in the driver, see parameter 33.10 
+'On-time 1 actual' in the drivers control panel. The timer will
+be reset if the 'reset' are depressed for over 3 seconds in
+this parameter settings menu."
           Attr Super.Super.ACS880.AlarmFanOld.Attribute = "ABB:Class-ABB_ACS880EplFanAggr-Template.Super.Super.ACS880"
           Attr Super.Super.ACS880.AlarmFanOld.CtrlPosition = 1
           Attr Super.Super.ACS880.AlarmFanOld.LockAttribute = 1
@@ -86011,6 +86068,11 @@ ABB ACS880 Aggregate
     !  
     !  @b Settings 3 
     !  Parameter group 33 to 50 settings to be performed.
+    !  Note Group 50 index 2 "comm loss func" is important.
+    !  Warning message 'change fan' in the driver need some settings in
+    !  parameter group 33. 'On-time 1 Warn limit 33.11 is set to two
+    !  years run time (63072000 seconds). 'On-time 1 source' 33.13 is
+    !  pointing to bit status when fan is running i.e. P.5.22.11. 
     !  @image orm_abb_acs880_param_setting3.gif
     !  
     !  
@@ -86378,7 +86440,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880_Pn_1 2165014528 13-JAN-2014 13:56:27.40
-        Body RtBody 27-JAN-2014 11:00:54.52
+        Body RtBody 06-FEB-2014 16:08:18.93
           Attr Super.Specification = "ABB ACS880 Frequency converter"
           Attr Super.DisableInIdPar = 1
           Attr Super.DisableInIndPar = 1
@@ -86451,7 +86513,12 @@ ABB ACS880 Aggregate
           Attr Super.AlarmFanOld.EventType = 64
           Attr Super.AlarmFanOld.EventPriority = 66
           Attr Super.AlarmFanOld.EventFlags = 7
-          Attr Super.AlarmFanOld.MoreText = ""
+          Attr Super.AlarmFanOld.MoreText = "Check the drivers internal fan.
+
+Reset alarm 'change fan' in the driver, see parameter 33.10 
+'On-time 1 actual' in the drivers control panel. The timer will
+be reset if the 'reset' are depressed for over 3 seconds in
+this parameter settings menu."
           Attr Super.AlarmFanOld.Attribute = "ABB:Class-ABB_ACS880_Pn_1-Template"
           Attr Super.AlarmFanOld.CtrlPosition = 1
           Attr Super.AlarmFanOld.LockAttribute = 1
@@ -86676,6 +86743,8 @@ ABB ACS880 Aggregate
     !  input RefSpeedLoc [RLO] in local mode, or internal via graph (OpRefMan) in manual mode.
     ! 
     !  @b Example PLC code for ACS880 aggregate
+    !  Note if a contactor with start and stop pulse is used and input pin 'pil' Power Interlock
+    !  goes low/false a stop pulse is generated. 
     !  @image orm_abb_acs880_example6.gif
     ! 
     !  @b Profinet
@@ -87268,7 +87337,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880PnMotorAggr 2165538816 01-JAN-1970 01:00:00.00
-        Body RtBody 27-JAN-2014 11:01:24.83
+        Body RtBody 06-FEB-2014 16:08:42.31
           Attr Super.AlarmToOften.DetectOn = 1
           Attr Super.AlarmToOften.DetectText = "Power not yet ready for restart, wait before retry"
           Attr Super.AlarmToOften.EventType = 64
@@ -87386,7 +87455,12 @@ ABB ACS880 Aggregate
           Attr Super.ACS880.AlarmFanOld.EventType = 64
           Attr Super.ACS880.AlarmFanOld.EventPriority = 66
           Attr Super.ACS880.AlarmFanOld.EventFlags = 7
-          Attr Super.ACS880.AlarmFanOld.MoreText = ""
+          Attr Super.ACS880.AlarmFanOld.MoreText = "Check the drivers internal fan.
+
+Reset alarm 'change fan' in the driver, see parameter 33.10 
+'On-time 1 actual' in the drivers control panel. The timer will
+be reset if the 'reset' are depressed for over 3 seconds in
+this parameter settings menu."
           Attr Super.ACS880.AlarmFanOld.Attribute = "ABB:Class-ABB_ACS880MotorAggr-Template.ACS880"
           Attr Super.ACS880.AlarmFanOld.CtrlPosition = 1
           Attr Super.ACS880.AlarmFanOld.LockAttribute = 1
@@ -87661,7 +87735,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880PnPumpAggr 2165800960 23-JAN-2014 08:40:59.50
-        Body RtBody 27-JAN-2014 11:01:56.52
+        Body RtBody 06-FEB-2014 16:09:12.46
           Attr Super.Super.AlarmToOften.DetectOn = 1
           Attr Super.Super.AlarmToOften.DetectText = "Power not yet ready for restart, wait before retry"
           Attr Super.Super.AlarmToOften.EventType = 64
@@ -87778,7 +87852,12 @@ ABB ACS880 Aggregate
           Attr Super.Super.ACS880.AlarmFanOld.EventType = 64
           Attr Super.Super.ACS880.AlarmFanOld.EventPriority = 66
           Attr Super.Super.ACS880.AlarmFanOld.EventFlags = 7
-          Attr Super.Super.ACS880.AlarmFanOld.MoreText = ""
+          Attr Super.Super.ACS880.AlarmFanOld.MoreText = "Check the drivers internal fan.
+
+Reset alarm 'change fan' in the driver, see parameter 33.10 
+'On-time 1 actual' in the drivers control panel. The timer will
+be reset if the 'reset' are depressed for over 3 seconds in
+this parameter settings menu."
           Attr Super.Super.ACS880.AlarmFanOld.Attribute = "ABB:Class-ABB_ACS880PnPumpAggr-Template.Super.Super.ACS880"
           Attr Super.Super.ACS880.AlarmFanOld.CtrlPosition = 1
           Attr Super.Super.ACS880.AlarmFanOld.LockAttribute = 1
@@ -88053,7 +88132,7 @@ ABB ACS880 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS880PnFanAggr 2166063104 23-JAN-2014 08:42:42.17
-        Body RtBody 27-JAN-2014 11:02:33.91
+        Body RtBody 06-FEB-2014 16:09:49.49
           Attr Super.Super.AlarmToOften.DetectOn = 1
           Attr Super.Super.AlarmToOften.DetectText = "Power not yet ready for restart, wait before retry"
           Attr Super.Super.AlarmToOften.EventType = 64
@@ -88170,7 +88249,12 @@ ABB ACS880 Aggregate
           Attr Super.Super.ACS880.AlarmFanOld.EventType = 64
           Attr Super.Super.ACS880.AlarmFanOld.EventPriority = 66
           Attr Super.Super.ACS880.AlarmFanOld.EventFlags = 7
-          Attr Super.Super.ACS880.AlarmFanOld.MoreText = ""
+          Attr Super.Super.ACS880.AlarmFanOld.MoreText = "Check the drivers internal fan.
+
+Reset alarm 'change fan' in the driver, see parameter 33.10 
+'On-time 1 actual' in the drivers control panel. The timer will
+be reset if the 'reset' are depressed for over 3 seconds in
+this parameter settings menu."
           Attr Super.Super.ACS880.AlarmFanOld.Attribute = "ABB:Class-ABB_ACS880PnFanAggr-Template.Super.Super.ACS880"
           Attr Super.Super.ACS880.AlarmFanOld.CtrlPosition = 1
           Attr Super.Super.ACS880.AlarmFanOld.LockAttribute = 1
