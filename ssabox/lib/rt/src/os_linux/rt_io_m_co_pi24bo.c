@@ -309,7 +309,7 @@ static pwr_tStatus IoCardRead (
 	  sts2 = read( local->Qbus_fp, &rb, sizeof(rb));
 	  val = (unsigned short) rb.Data;
 
-	  for ( j = 0; j < 3; j++) {
+	  for ( j = 0; j < 5; j++) {
 	    rb.Address -= 2;
 	    sts1 = read( local->Qbus_fp, &rb, sizeof(rb));
 	    re_data[0] = (unsigned short) rb.Data;
@@ -318,13 +318,13 @@ static pwr_tStatus IoCardRead (
 	    sts2 = read( local->Qbus_fp, &rb, sizeof(rb));
 	    re_data[1] = (unsigned short) rb.Data;
 
-	    if ( val == re_data[1])
+	    if ( val == re_data[1] && val != 0x0100)
 	      break;
 
 	    /* First and second didn't match, try again */
 	    val = re_data[1];
 	  }
-	  if ( val != re_data[1])
+	  if ( val != re_data[1] || val == 0x0100)
 	    continue;
 	}	
       }
