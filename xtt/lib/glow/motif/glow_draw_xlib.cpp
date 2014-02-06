@@ -2898,9 +2898,9 @@ void GlowDrawXLib::image_flip_horizontal( glow_tImImage *image)
 #endif
 }
 
-void GlowDrawXLib::image_scale( int width, int height, glow_tImImage orig_im, glow_tImImage *im, 
-				glow_tImData *im_data,
-				glow_tPixmap *im_pixmap, glow_tPixmap *im_mask)
+int GlowDrawXLib::image_scale( int width, int height, glow_tImImage orig_im, glow_tImImage *im, 
+			       glow_tImData *im_data,
+			       glow_tPixmap *im_pixmap, glow_tPixmap *im_mask)
 {
 #if 0
 #if defined IMLIB
@@ -2915,6 +2915,7 @@ void GlowDrawXLib::image_scale( int width, int height, glow_tImImage orig_im, gl
   *im_mask = (glow_tPixmap) Imlib_move_mask( (ImlibData *)imlib, (ImlibImage *)*im);
 #endif
 #endif
+  return 0;
 }
 
 int GlowDrawXLib::image_load( char *imagefile, 

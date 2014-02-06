@@ -80,7 +80,8 @@ GrowImage::GrowImage( GrowCtx *glow_ctx, const char *name, double x, double y,
 		current_nav_color_inverse(0), current_nav_direction(0), 
 		flip_vertical(false), flip_horizontal(false),
 		current_flip_vertical(false), current_flip_horizontal(false), 
-		rotation(0), current_rotation(0), fixposition(0)
+		rotation(0), current_rotation(0), fixposition(0), 
+		original_width(0), original_height(0)
 {
   strcpy( n_name, name);
   strcpy( image_filename, "");
@@ -112,6 +113,7 @@ void GrowImage::copy_from( const GrowImage& im)
 {
   memcpy( this, &im, sizeof(im));
   image = 0;
+  original_image = 0;
   pixmap = 0;
   nav_pixmap = 0;
   clip_mask = 0;
@@ -200,25 +202,53 @@ int GrowImage::insert_image( const char *imagefile)
     return 0;
 
   current_width = int( ctx->mw.zoom_factor_x / ctx->mw.base_zoom_factor *
-		       ctx->gdraw->image_get_width( image));
+		       ctx->gdraw->image_get_width( image) + 0.5);
   current_height = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor *
-			ctx->gdraw->image_get_height( image));
+			ctx->gdraw->image_get_height( image) + 0.5);
   current_color_tone = color_tone;
   current_color_lightness = color_lightness;
   current_color_intensity = color_intensity;
   current_color_shift = color_shift;
   current_color_inverse = color_inverse;
+  original_width = ctx->gdraw->image_get_width( original_image);
+  original_height = ctx->gdraw->image_get_height( original_image);
 
+#if 0
   set_image_color( image, NULL);
 
   ctx->gdraw->image_scale( current_width, current_height,
 			   original_image, &image, &image_data, &pixmap, &clip_mask);
   ctx->gdraw->image_render( current_width, current_height,
 			    original_image, &image, &pixmap, &clip_mask);
-
+#endif
   ur.posit( ll.x + double( current_width) / ctx->mw.zoom_factor_x,
 	    ll.y + double( current_height) / ctx->mw.zoom_factor_y);
   get_node_borders();
+
+  int w,h;
+  if ( abs(rotation) % 180 == 90) {
+    w = current_height;
+    h = current_width;
+  }
+  else {
+    w = current_width;
+    h = current_height;
+  }
+  ctx->gdraw->image_render( w, h, &original_image, &image, &pixmap, &clip_mask);
+  ctx->gdraw->image_scale( w, h, original_image, &image, &image_data, &pixmap, &clip_mask);
+  if ( current_color_tone != glow_eDrawTone_No ||
+       current_color_lightness != 0 ||
+       current_color_intensity != 0 ||
+       current_color_shift != 0 ||
+       current_color_inverse != 0)
+    set_image_color( image, 0);
+  if ( abs(rotation)%360 != 0)
+    ctx->gdraw->image_rotate( &image, rotation, 0);
+  if ( current_flip_vertical)
+    ctx->gdraw->image_flip_vertical( &image);
+  else if ( current_flip_horizontal)
+    ctx->gdraw->image_flip_horizontal( &image);
+
   return 1;
 }
 
@@ -848,19 +878,19 @@ void GrowImage::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
     hot = 0;
   }
 
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
+  double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t) {    
-    x1 = int( trf.x( ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
+    x1 = ( trf.x( ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = ( trf.y( ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = ( trf.x( ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = ( trf.y( ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
   else {
-    x1 = int( trf.x( t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
+    x1 = ( trf.x( t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = ( trf.y( t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = ( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = ( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
 
   ll_x = min( x1, x2);
@@ -887,9 +917,13 @@ void GrowImage::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
   else {
     if ( pixmap || image) {
       int sts = 0;
+      int sts_rotate = 0;
+      int sts_color = 0;
+      int sts_flip_vert = 0;
+      int sts_flip_horiz = 0;
+      int sts_scale = 0;
       int flip_vert, flip_horiz;
       glow_tImImage om = original_image;
-      glow_tImImage old_image = image;
 
       if ( colornode) {
 	flip_vert = (( ((GrowNode *)node)->flip_vertical && !flip_vertical) ||
@@ -902,22 +936,15 @@ void GrowImage::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 	flip_horiz = flip_horizontal;
       }
 
-      if ( ur_x - ll_x != current_width || ur_y - ll_y != current_height) {
-	ctx->gdraw->image_scale( ur_x - ll_x, ur_y - ll_y, om,
-				 &image, &image_data, &pixmap, &clip_mask);
-	current_width = ctx->gdraw->image_get_width( image);
-	current_height = ctx->gdraw->image_get_height( image);
-	sts = 1;
-	om = 0;
-	if ( rotation != current_rotation)
-	  current_rotation = 0;
+      if ( int(ur_x - ll_x + 0.5) != current_width || int(ur_y - ll_y + 0.5) != current_height) {
+	sts_scale = 1;
+	sts = 1;	
       }	
 
       if ( rotation != current_rotation) {
-	ctx->gdraw->image_rotate( &image, rotation, current_rotation);
 	current_rotation = rotation;
-	om = 0;
-	sts = 1;
+	sts_rotate = 1;
+	sts = 1;	
       }
 
       if ( (colornode && !(current_color_tone == ((GrowNode *)node)->color_tone &&
@@ -929,47 +956,33 @@ void GrowImage::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 			     current_color_lightness == color_lightness &&
 			     current_color_intensity == color_intensity &&
 			     current_color_shift == color_shift &&
-			     current_color_inverse == color_inverse)) ||
-	   ( image != old_image &&
-	     ((colornode && (glow_eDrawTone_No != ((GrowNode *)node)->color_tone ||
-			     ((GrowNode *)node)->color_lightness ||
-			     ((GrowNode *)node)->color_intensity ||
-			     ((GrowNode *)node)->color_shift ||
-			     ((GrowNode *)node)->color_inverse)) ||  
-	      ( !colornode && (glow_eDrawTone_No != color_tone ||
-			     color_lightness ||
-			     color_intensity ||
-			     color_shift ||
-			     color_inverse))))) {
-	set_image_color( original_image, colornode);
-	if ( ctx->gdraw->image_get_width( image) != current_width ||
-	     ctx->gdraw->image_get_height( image) != current_height) {
-	  ctx->gdraw->image_scale( ur_x - ll_x, ur_y - ll_y, 0,
-				   &image, &image_data, &pixmap, &clip_mask);
-	  current_width = ctx->gdraw->image_get_width( image);
-	  current_height = ctx->gdraw->image_get_height( image);
-	}
-	om = 0;
+			     current_color_inverse == color_inverse))) {
+	sts_color = 1;
 	sts = 1;
       }
       
       if ( flip_vert != current_flip_vertical) {
-	ctx->gdraw->image_flip_vertical( &image);
 	current_flip_vertical = flip_vert;
+	sts_flip_vert = 1;
 	sts = 1;
       }
       if ( flip_horiz != current_flip_horizontal) {
-	ctx->gdraw->image_flip_horizontal( &image);
 	current_flip_horizontal = flip_horiz;
+	sts_flip_horiz = 1;
 	sts = 1;
       }
 
       if ( sts) {
-	ctx->gdraw->image_render( ur_x - ll_x, ur_y - ll_y, &original_image,
-				  &image, &pixmap, &clip_mask);
-	om = 0;
-	current_width = ctx->gdraw->image_get_width( image);
-	current_height = ctx->gdraw->image_get_height( image);
+
+	int w,h;
+	if ( abs(rotation) % 180 == 90) {
+	  w = int(ur_y - ll_y + 0.5);
+	  h = int(ur_x - ll_x + 0.5);
+	}
+	else {
+	  w = int(ur_x - ll_x + 0.5);
+	  h = int(ur_y - ll_y + 0.5);
+	}
 	if ( colornode) {
 	  current_color_tone = ((GrowNode *)colornode)->color_tone;
 	  current_color_lightness = ((GrowNode *)colornode)->color_lightness;
@@ -984,9 +997,35 @@ void GrowImage::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 	  current_color_shift = color_shift;
 	  current_color_inverse = color_inverse;
 	}
+
+	ctx->gdraw->image_render( w, h, &original_image, &image, &pixmap, &clip_mask);
+	if ( w != original_width || h != original_height) {
+	  int sts2 = ctx->gdraw->image_scale( w, h, om, &image, &image_data, &pixmap, &clip_mask);
+	  if ( sts2 == 0) {
+	    ctx->gdraw->image_copy( om, &image);
+	    ctx->gdraw->image_scale( w, h, om, &image, &image_data, &pixmap, &clip_mask);
+	  }
+	}
+	else
+	  ctx->gdraw->image_copy( om, &image);
+	if ( current_color_tone != glow_eDrawTone_No ||
+	     current_color_lightness != 0 ||
+	     current_color_intensity != 0 ||
+	     current_color_shift != 0 ||
+	     current_color_inverse != 0)
+	  set_image_color( image, colornode);
+	if ( abs(rotation)%360 != 0)
+	  ctx->gdraw->image_rotate( &image, rotation, 0);
+	if ( flip_vert)
+	  ctx->gdraw->image_flip_vertical( &image);
+	else if ( flip_horiz)
+	  ctx->gdraw->image_flip_horizontal( &image);
+	om = 0;
+	current_width = ctx->gdraw->image_get_width( image);
+	current_height = ctx->gdraw->image_get_height( image);
       }
       
-      ctx->gdraw->image( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 
+      ctx->gdraw->image_d( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 
 			 image, pixmap, clip_mask);
     }
     else
@@ -1218,10 +1257,8 @@ int GrowImage::set_image_color( glow_tImImage om, void *n)
 
   if ( !(c_color_tone == glow_eDrawTone_No || c_color_tone >= glow_eDrawTone__) ||
        c_color_shift || c_color_intensity || c_color_lightness || inverse) {
-    ctx->gdraw->image_pixel_iter( om, &image, pixel_cb, this);
+    ctx->gdraw->image_pixel_iter( 0, &image, pixel_cb, this);
   }
-  else if ( image != om)
-    ctx->gdraw->image_copy( om, &image);
   
   return 1;
 }

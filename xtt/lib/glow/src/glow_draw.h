@@ -113,6 +113,9 @@ class GlowDraw {
 		    void *pixmaps, glow_eDrawType gc_type, int idx, int line) {return 1;}
   virtual int image( GlowWind *w, int x, int y, int width, int height,
 	     glow_tImImage image, glow_tPixmap pixmap, glow_tPixmap clip_mask) {return 1;}
+  virtual int image_d( GlowWind *wind, double x, double y, int width, int height,
+		       glow_tImImage img, glow_tPixmap pixmap, glow_tPixmap clip_mask) {
+    return image(wind,(int)x, (int)y, width, height, img, pixmap, clip_mask);}
   
   virtual void set_cursor( GlowWind *w, glow_eDrawCursor cursor) {}
   virtual void set_nav_cursor( glow_eDrawCursor cursor) {}
@@ -155,9 +158,9 @@ class GlowDraw {
   virtual void image_rotate( glow_tImImage *image, int to_rotation, int from_rotation) {}
   virtual void image_flip_vertical( glow_tImImage *image) {}
   virtual void image_flip_horizontal( glow_tImImage *image) {}
-  virtual void image_scale( int width, int height, glow_tImImage orig_im, glow_tImImage *im, 
-			    glow_tImData *im_data,
-			    glow_tPixmap *im_pixmap, glow_tPixmap *im_mask) {}
+  virtual int image_scale( int width, int height, glow_tImImage orig_im, glow_tImImage *im, 
+			   glow_tImData *im_data,
+			   glow_tPixmap *im_pixmap, glow_tPixmap *im_mask) {return 0;}
   virtual int image_load( char *imagefile,
 			  glow_tImImage *orig_im, glow_tImImage *im, glow_tImData *im_data) {return 0;}
   virtual int image_render( int width, int height,

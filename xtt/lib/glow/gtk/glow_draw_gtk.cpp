@@ -1859,6 +1859,47 @@ int GlowDrawGtk::image( GlowWind *wind, int x, int y, int width, int height,
   return 1;
 }
 
+int GlowDrawGtk::image_d( GlowWind *wind, double x, double y, int width, int height,
+			  glow_tImImage image, glow_tPixmap pixmap, glow_tPixmap clip_mask)
+{
+  DrawWindGtk *w = (DrawWindGtk *) wind->window;
+  cairo_t *cr;
+  if ( ctx->nodraw) return 1;
+
+  if ( width == 0 || height == 0)
+    return 1;
+
+  cr = gdk_cairo_create( w->window);
+
+  if ( clip_mask)
+    set_image_clip_mask( clip_mask, x, y);
+  else if ( w->clip_on) {
+    set_clip( w, get_gc( this, glow_eDrawType_Line, 0));
+    set_cairo_clip( w, cr);
+  }
+
+  if ( !w->draw_buffer_only) {
+    gdk_cairo_set_source_pixbuf( cr, (GdkPixbuf *)image, x, y);
+    cairo_paint( cr);
+  }
+  if ( w->double_buffer_on) {
+    cairo_t *cr2;
+
+    cr2 = gdk_cairo_create( w->buffer);
+    gdk_cairo_set_source_pixbuf( cr2, (GdkPixbuf *)image, x, y);
+    cairo_paint( cr2);
+    cairo_destroy( cr2);
+  }
+  if ( clip_mask)
+    reset_image_clip_mask();
+  else if ( w->clip_on) {
+    reset_clip( w, get_gc( this, glow_eDrawType_Line, 0));
+    reset_cairo_clip( w, cr);
+  }
+  cairo_destroy(cr);
+  return 1;
+}
+
 
 int GlowDrawGtk::fill_rect( GlowWind *wind, int x, int y, int w, int h, 
 	glow_eDrawType gc_type)
@@ -2902,13 +2943,13 @@ void GlowDrawGtk::image_flip_horizontal( glow_tImImage *image)
 #endif
 }
 
-void GlowDrawGtk::image_scale( int width, int height, glow_tImImage orig_im, glow_tImImage *im, 
+int GlowDrawGtk::image_scale( int width, int height, glow_tImImage orig_im, glow_tImImage *im, 
 			       glow_tImData *im_data,
 			       glow_tPixmap *im_pixmap, glow_tPixmap *im_mask)
 {
   if ( width == gdk_pixbuf_get_width((GdkPixbuf *)*im) &&
        height == gdk_pixbuf_get_height((GdkPixbuf *)*im))
-    return;
+    return 0;
   if ( width == 0 && height == 0) {
     width = gdk_pixbuf_get_width((GdkPixbuf *)*im);
     height = gdk_pixbuf_get_height((GdkPixbuf *)*im);    
@@ -2917,7 +2958,7 @@ void GlowDrawGtk::image_scale( int width, int height, glow_tImImage orig_im, glo
   if ( !orig_im) {
     // Scale from im
     if ( !*im)
-      return;
+      return 0;
 
     GdkPixbuf *im_old = (GdkPixbuf *)*im;
     *im = gdk_pixbuf_scale_simple( (GdkPixbuf *)*im, width, height, GDK_INTERP_NEAREST);
@@ -2925,13 +2966,13 @@ void GlowDrawGtk::image_scale( int width, int height, glow_tImImage orig_im, glo
   }
   else {
     // Scale from orig_im
-    if ( *im)
-      gdk_pixbuf_unref( (GdkPixbuf *)*im);
 
 #if defined PWRE_CONF_RSVG
     if (im_data && *im_data && *im) {
       RsvgHandle *handle;
       const char *imagefile;
+
+      gdk_pixbuf_unref( (GdkPixbuf *)*im);
 
       handle = (RsvgHandle *) *im_data;
       imagefile = rsvg_handle_get_base_uri( handle);
@@ -2941,9 +2982,12 @@ void GlowDrawGtk::image_scale( int width, int height, glow_tImImage orig_im, glo
 #else
     {
 #endif
+      if ( *im)
+	gdk_pixbuf_unref( (GdkPixbuf *)*im);
       *im = gdk_pixbuf_scale_simple( (GdkPixbuf *)orig_im, width, height, GDK_INTERP_NEAREST);
     }
   }
+  return 1;
 }
 
 int GlowDrawGtk::image_load( char *imagefile, 

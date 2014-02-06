@@ -160,6 +160,8 @@ class GlowDrawGtk : public GlowDraw {
 		    void *pixmaps, glow_eDrawType gc_type, int idx, int line);
   virtual int image( GlowWind *w, int x, int y, int width, int height,
 	     glow_tImImage image, glow_tPixmap pixmap, glow_tPixmap clip_mask);
+  virtual int image_d( GlowWind *wind, double x, double y, int width, int height,
+		       glow_tImImage image, glow_tPixmap pixmap, glow_tPixmap clip_mask);
   
   virtual void set_cursor( GlowWind *w, glow_eDrawCursor cursor);
   virtual int get_text_extent( const char *text, int len,
@@ -206,7 +208,7 @@ class GlowDrawGtk : public GlowDraw {
   void image_rotate( glow_tImImage *image, int to_rotation, int from_rotation);
   void image_flip_vertical( glow_tImImage *image);
   void image_flip_horizontal( glow_tImImage *image);
-  void image_scale( int width, int height, glow_tImImage orig_im, glow_tImImage *im, 
+  int image_scale( int width, int height, glow_tImImage orig_im, glow_tImImage *im, 
 		    glow_tImData *im_data,
 		    glow_tPixmap *im_pixmap, glow_tPixmap *im_mask);
   int image_load( char *imagefile,
