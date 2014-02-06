@@ -10,3 +10,4 @@
 110905 cs   rt         PSS9000 stall for ao card in remote rack added
 120509 cs   rt         PSS9000 IO, fix for 16 channel di and do cards
 121102 cs   rt         PSS9000 IOM card methods updated
+140206 cs   rt         PSS9000 Pi card, fix for counter value rolling over.

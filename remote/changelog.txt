@@ -5,3 +5,5 @@
 111108 cs  rk512     Remote rk512 ported from ELN
 120427 cs  alcm      Remote ALCM, time increment reduced to 0.005
 121031 cs  mq        Remote mq, message buffer size increased, and prio value set
+131125 rk  mq        Added more error handling to remote mq
+131127 cs  logg      Remote logg function remote_logg() added, and some doc added

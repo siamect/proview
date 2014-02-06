@@ -323,3 +323,24 @@
 131106 eb  ge        Ge colorpalette current tone, and insert current tone in attribute editor with ctrl+double click added
 131106 cs  xtt       Xtt opwindow alarm moretext as tooltip removed
 131107 cs  ge        Ge graph list save confirm options added
+131110 cs  xtt       Xtt trend, add curve function added
+131112 cs  stt       Xtt eventlist satellite fix for ack and return events
+131114 cs  xtt       Xtt curve layout mask added
+131115 cs  xtt       Plc trace, highlight of reference connection when clicked on (refs #174)
+131122 cs  ge        Ge action priority for command lowered to allow close of graph combined with other actions
+131205 cs  ge        Ge import svg images
+131206 cs  ge        Ge analog color, dynamics for border color added
+131206 cs  ge        Ge, fonts displayed in font menu, and reset button added
+131206 cs  ge        Ge input dialog fix
+131206 cs  cow       Cow modal dialog fix
+131208 cs  xtt       Xtt history export,  in filename and default filename in proview.cnf curveExportfile
+131212 cs  ge        Reset button image added
+131213 cs  xtt       No SVG build fix
+131218 cs  ge        ge_curve compile fix
+131220 cs  xtt       Xtt export of fast curve added
+131220 cs  xtt       Xtt logging, default filename and button names changed, entry cleared before restore
+140123 cs  xtt       Xtt curve windows, memory leakage fix
+140125 cs  xtt       Xtt command 'close multiview $current' added to close from a button inside the multiview
+140206 cs  xtt       Xtt command 'close graph $current ' added to close from a button inside the graph
+140206 cs  ge        Ge image bugfix for not keeping rotation and color tone
+140206 eb  ge        Ge image float position implemented.

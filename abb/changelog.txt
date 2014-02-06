@@ -6,3 +6,6 @@
 130626 cs  abb       ABB ACS800 ConvertFault changed to ConvertInhibit
 130625 cs  abb       ABB ACS880 with Profibus PPO7 communication added
 130726 cs  abb       ABB ACS880 Powerlink modifications
+131119 cs  abb       ABB ACS800 alarmtext for no connection was missing
+140203 cs  abb       Frequency converter object, DSUp TimerTime set
+140204 cs  abb       Frequency converter ABB ACS880 with Profinet communication added

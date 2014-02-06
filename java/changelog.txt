@@ -36,3 +36,6 @@
 130905 cs  aapp      Android app graph object added
 131011 cs  aapp      Android app, login and athourity check added
 131022 cs  aapp      Android add menu, login/logout was missing
+131114 cs  java      java jopc.jar -> jopg.jar fix
+140103 cs  java      Java GlowCon fix, and open function for image and window added
+140204 cs  aapp      Java android app work

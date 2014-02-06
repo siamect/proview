@@ -260,4 +260,12 @@
 131017 cs  co        Remote buffer include file parser, support for alignment in classes (refs #138)
 131022 cs  doc       Programmer's Guide, aproc added
 131031 cs  rt        pwr_db_lock-file was created by xtt if Proview wasn't started
-
+131108 cs  pwre      pwre generation of changelog in html added
+131113 je  doc       Doc ORM, ACS880 and Powerlink
+131113 cs  doc       Doc ORM, tag @Creator added
+131113 cs  doc       Doc ORM, groups Profibus and Profinet added
+131113 cs  doc       Releasenotes update
+131115 cs  doc       Doc gdh, gdh_StoreRtdbPointer() and gdh_TranslateRtdbPointer() was missing in PRM
+131122 cs  pwre      pwre build fix for libpcap
+131127 cs  wbl       DSupComp and ASupComp added
+140203 cs  pkg       New package for crosscompiling raspberry pi applications.

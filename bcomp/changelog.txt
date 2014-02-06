@@ -27,3 +27,4 @@
 120228 cs  bcomp      Component BaseFilter delay added
 130320 cs  bcomp     BaseFilter bugfix, alarm was inverted
 131031 cs  bcomp     BaseContactor object graph for two orders added
+131212 cs  bcomp     DSupComp and ASupComp added, all DSup replaced in basecomponents and ABB

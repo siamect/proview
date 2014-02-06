@@ -248,4 +248,13 @@
 131018 cs  wb        Wb history to html conversion added
 131022 cs  wb        Wb history to html conversion, help text added
 131106 cs  wb        Wb fix for overridden methods
+131113 cs  wb        wb script SetAttribute(), set of deltatimes didn't work
+131121 cs  plc       Plc connection point bugfix for connections with both ends connected to the same object (refs #158)
+131122 cs  wb        Wb command 'set par' didn't work for text attributes
+131209 cs  wb        Wb value and command input, escape to close added
+131218 cs  wb        Wb history log, recall in input entry added
+131218 cs  wb        ARM plc cross compile bugfix
+131220 cs  wb        'Build options, pwr_epl_dummy was missing
+140123 cs  wb        wb lowercase name on appl-file fix
+140204 cs  wb        CustomBuild object increased size of cross compiler commands
 

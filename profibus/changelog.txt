@@ -60,4 +60,5 @@
 130415 rk  profibus  Increased Watchdog/DataHold-Factor to 10 (from 3)
 130415 rk  profibus  Removed re-request for diagnostics
 131107 rk  profibus  Fixed problem with profibus diagnostic messages handling
+131113 cs  profibus  Profibus gsd file for ABB ACS880 added
 
