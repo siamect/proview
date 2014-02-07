@@ -1,21 +1,21 @@
-!** Invisible: Script for converting OpPlace and WebHandler objects during upgrading from v4.6 to v4.7.0
+!** Invisible: Script for moving DSup to DSupComp objects during upgrading from V5.0 to V5.1.0
 ! 
 # Proview   Open Source Process Control.
 # Copyright (C) 2005-2014 SSAB EMEA AB.
 #
 # This file is part of Proview.
-!
-!  This program is free software; you can redistribute it and/or 
-!  modify it under the terms of the GNU General Public License as 
-!  published by the Free Software Foundation, either version 2 of 
-!  the License, or (at your option) any later version.
-!
-!  This program is distributed in the hope that it will be useful 
-!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
-!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-!  GNU General Public License for more details.
-!
-!  You should have received a copy of the GNU General Public License 
+#
+# This program is free software; you can redistribute it and/or 
+# modify it under the terms of the GNU General Public License as 
+# published by the Free Software Foundation, either version 2 of 
+# the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful 
+# but WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License 
 # along with Proview. If not, see <http://www.gnu.org/licenses/>
 #
 # Linking Proview statically or dynamically with other modules is
@@ -35,204 +35,72 @@
 # General Public License plus this exception.
 !
 !
-! Script for converting OpPlace and WebHandler objects during upgrading from V4.6 to V4.7.0,
-! and to remove User and RttConfig objects.
+! Script for set Attribute in DSupComp objects during upgrading from V5.0 to V5.1.0,
 !
-! Find all OpPlace objects and move UserName, FastAvail and SelectList from the user object
-! to the opplace object.
-! Replace RttConfig with an OpPlace object named OpDefault.
-! Move SelectList from user object to WebHandler object.
+! Find all DSupComp objects and set Attribute to parent attribute.
 !
 
-main
-  string op;
-  string user;
+main()
+  string name;
+  string oname;
   string aname;
+  string attr;
+  int idx;
+  int idx0 = 0;
   int sts;
-  int opnumber;
-  int usernumber;
-  int found;
-  string value;
-  int ivalue;
-  int i;
-  string rttconfig;
-  string webhandler;
-  string c;
+  int len;
 
-  !verify(1);
+  name = GetClassListAttrRef("DSupComp");
 
-  op = GetNodeObject();
-  op = op + "-OpDefault";
-  c = GetObjectClass( op);
-  if ( c != "")
-    printf( "Database is already converted\n");
-    exit();    
-  endif
+  while ( name != "")
 
-  ! For all OpPlace objects
-  op = GetClassList( "OpPlace");
-  while ( op != "")
+    idx = strrchr( name, ".");
+    idx -= 1;
+    oname = extract( 1, idx, name);
 
-    aname = op + ".OpNumber";
-    opnumber = GetAttribute( aname, sts);
-    if ( !sts)
-      op = GetNextObject( op);
-      continue;
+    len = strlen( oname);    
+    idx = len - 7;
+    if ( len > 0)
+      attr = extract( idx, len, oname);
+      if ( attr == ".LimitHH")
+        idx -= 1;
+        oname = extract( 1, idx, oname);
+      endif
+      if ( attr == ".LimitLL")
+        idx -= 1;
+        oname = extract( 1, idx, oname);
+      endif
     endif
 
-    found = 0;
-    user = GetClassList( "User"); 
-    while ( user != "")
-      aname = user + ".OpNumber";
-      usernumber = GetAttribute( aname, sts);
+    len = strlen( oname);    
+    idx = len - 6;
+    if ( len > 0)
+      attr = extract( idx, len, oname);
 
-      if ( usernumber == opnumber)
-        found = 1;
-        break;
+      if ( attr == ".LimitH")
+        idx -= 1;
+        oname = extract( 1, idx, oname);
       endif
-      user = GetNextObject( user);
-    endwhile
-
-    if ( !found)
-      printf( "No corresponding User object for %s\n", op);
-      op = GetNextObject( op);
-      continue;
+      if ( attr == ".LimitL")
+        idx -= 1;
+        oname = extract( 1, idx, oname);
+      endif
     endif
-    printf( "Processing %s\n", op);
 
-    aname = user + ".UserName";
-    value = GetAttribute( aname, sts);
-    aname = op + ".UserName";
-    SetAttribute( aname, value);
-
-    for ( i = 0; i < 15; i++)
-      aname = user + ".FastAvail[" + i + "]";
-      value = GetAttribute( aname, sts);
-      if ( value != "" && value != "Undefined attribute")
-        aname = op + ".FastAvail[" + i + "]";
-        SetAttribute( aname, value);
+    aname = name + ".Attribute";
+    if ( oname == "")
+      printf( "** Not set %s\n", aname);
+    else
+      sts = SetAttribute( aname, oname);
+      if ( !(sts & 1))
+        printf( "** Unable to set %s sts %d\n", aname, sts);
+      else
+        printf( "-- Set %s = %s\n", aname, oname);
       endif
-    endfor     
+    endif
 
-    for ( i = 0; i < 20; i++)
-      aname = user + ".SelectList[" + i + "]";
-      value = GetAttribute( aname, sts);
-      if ( value != "")
-        aname = op + ".EventSelectList[" + i + "]";
-        SetAttribute( aname, value);
-      endif
-    endfor     
-
-    aname = user + ".MaxNoOfAlarms";
-    ivalue = GetAttribute( aname, sts);
-    aname = op + ".MaxNoOfAlarms";
-    SetAttribute( aname, ivalue);
-
-    aname = user + ".MaxNoOfEvents";
-    ivalue = GetAttribute( aname, sts);
-    aname = op + ".MaxNoOfEvents";
-    SetAttribute( aname, ivalue);
-
-    ivalue = 3;
-    aname = op + ".OpWindPop";
-    SetAttribute( aname, ivalue);
-
-    ivalue = 14;
-    aname = op + ".OpWindLayout";
-    SetAttribute( aname, ivalue);
-
-    ivalue = 1;
-    aname = op + ".AlarmBell";
-    SetAttribute( aname, ivalue);
-
-    delete object/name='user'/noconf
-
-    op = GetNextObject( op);
+    name = GetNextAttrRef("DSupComp", name);
   endwhile
-
-  ! Create OpDefault
-  op = GetNodeObject();
-  create object/name="OpDefault"/class=opplace/dest='op'/last
-  op = op + "-OpDefault";
-
-  ivalue = 1;
-  aname = op + ".OpWindLayout";
-  SetAttribute( aname, ivalue);
-
-  ! For the RttConfig object
-  rttconfig = GetClassList( "RttConfig");
-  if ( rttconfig != "")
-
-    aname = rttconfig + ".UserObject";
-    user = GetAttribute( aname, sts);
-    if ( user != "" && user != "Undefined attribute")
-
-      printf( "Processing %s\n", op);
-
-      aname = rttconfig + ".SymbolFileName";
-      value = GetAttribute( aname, sts);
-      aname = op + ".SetupScript";
-      SetAttribute( aname, value);
-
-      for ( i = 0; i < 20; i++)
-        aname = user + ".SelectList[" + i + "]";
-        value = GetAttribute( aname, sts);
-        if ( value != "")
-          aname = op + ".EventSelectList[" + i + "]";
-          SetAttribute( aname, value);
-        endif
-      endfor     
-
-      aname = user + ".MaxNoOfAlarms";
-      ivalue = GetAttribute( aname, sts);
-      aname = op + ".MaxNoOfAlarms";
-      SetAttribute( aname, ivalue);
-
-      aname = user + ".MaxNoOfEvents";
-      ivalue = GetAttribute( aname, sts);
-      aname = op + ".MaxNoOfEvents";
-      SetAttribute( aname, ivalue);
-
-      delete object/name='user'/noconf
-      delete object/name='rttconfig'/noconf
-    endif
-
-  endif
-
-
-  ! For the WebHandler object
-  webhandler = GetClassList( "WebHandler");
-  if ( webhandler != "")
-
-    aname = webhandler + ".UserObject";
-    user = GetAttribute( aname, sts);
-    if ( user != "" && user != "Undefined attribute")
-
-      printf( "Processing %s\n", webhandler);
-
-      for ( i = 0; i < 20; i++)
-        aname = user + ".SelectList[" + i + "]";
-        value = GetAttribute( aname, sts);
-        if ( value != "")
-          aname = webhandler + ".EventSelectList[" + i + "]";
-          SetAttribute( aname, value);
-        endif
-      endfor     
-
-      aname = user + ".MaxNoOfAlarms";
-      ivalue = GetAttribute( aname, sts);
-      aname = webhandler + ".MaxNoOfAlarms";
-      SetAttribute( aname, ivalue);
-
-      aname = user + ".MaxNoOfEvents";
-      ivalue = GetAttribute( aname, sts);
-      aname = webhandler + ".MaxNoOfEvents";
-      SetAttribute( aname, ivalue);
-
-      delete object/name='user'/noconf
-
-    endif
-  endif
 
   save
 

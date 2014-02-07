@@ -285,29 +285,12 @@ reload_cnvobjects()
     return
   fi
 
-  echo "***"
-  echo "*** Note! "
-  echo "*** This pass should only be executed of you upgrade"
-  echo "*** from V4.6, not if you upgrade from V4.7.0 "
-  echo "***"
 
-  echo -n "Do you want to execute this pass ? [y/n] "
-  read repl
+  reload_continue "Pass convert objects in loaded database"
 
-  if [ "$repl" == "y" ]; then
-
-    reload_continue "Pass convert objects in loaded db"
-
-    list=`eval ls -1d $pwrp_db/*.db`
-    for file in $list; do
-      file=${file##/*/}
-      file=${file%%.*}
-
-      if [ $file != "directory" ] && [ $file != "rt_eventlog" ]; then
-        wb_cmd -v $file @$pwr_exe/upgrade_pb.pwr_com
-      fi
-    done
-  fi
+  for cdb in $databases; do
+     wb_cmd -v $cdb @$pwr_exe/upgrade_pb.pwr_com
+  done
 
   reload_status=$reload__success
 }
@@ -586,6 +569,7 @@ usage()
     cnvdump        Convert the dump files.
     loaddb         Load dumpfiles.
     compile        Compile all plcprograms in the database
+    cnvobjects     Convert objects in loaded database
     createload     Create new loadfiles.
     createboot     Create bootfiles for all nodes in the project.
 
@@ -625,7 +609,7 @@ for db in $tmp; do
   fi
 done
 
-passes="classvolumes renamedb cnvdump loaddb compile createload createboot"
+passes="classvolumes renamedb cnvdump loaddb cnvobjects compile createload createboot"
 #echo "Pass: $passes"
 echo ""
 echo -n "Enter start pass [classvolumes] > "
