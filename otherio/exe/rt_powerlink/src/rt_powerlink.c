@@ -66,7 +66,16 @@ pwr_tStatus io_get_plhandler_object (
 }
 
 
-int main() 
+static void usage()
+{
+  printf( "\
+rt_powerlink   I/O Powerlink Managing node server\n\
+\n\
+     -m        Print loaded I/O methods\n\
+\n");
+}
+
+int main (int argc, char **argv)
 {
   pwr_tStatus sts;
   io_tCtx io_ctx;
@@ -77,6 +86,16 @@ int main()
 	
   struct timespec tim1, tim2;
 	
+  if ( argc > 1) {
+    if ( strcmp( argv[1], "-m") == 0) {
+      io_methods_print();
+      exit(0);
+    }
+    if ( strcmp( argv[1], "-h") == 0) {
+      usage();
+      exit(0);
+    }
+  }
 
   // Make connection to error handler
   errh_Init("pwr_powerlink", errh_eAnix_powerlink);
