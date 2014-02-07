@@ -4631,7 +4631,7 @@ static int ccm_func_extract(
     return CCM__VARTYPE;
 
   if ( arg_p1->value_int > (int)strlen( arg_p3->value_string) ||
-       arg_p1->value_int < 1)
+       arg_p1->value_int < 1 || arg_p2->value_int < 1)
     strcpy( return_string, "");
   else
   {
