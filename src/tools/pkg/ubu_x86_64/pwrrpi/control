@@ -1,0 +1,11 @@
+Package: pwrrpi51
+Version: 5.1.0-1
+Section: base
+Priority: optional
+Architecture: amd64
+Depends: pwr51 (>= 5.1.0-1)
+Replaces: pwr51
+Maintainer: Proview <postmaster@proview.se>
+Description: Proview RPI development package
+ Proview RPI development environment
+ 5.1.0-1 Base release 

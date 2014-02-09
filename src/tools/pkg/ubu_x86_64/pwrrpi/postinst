@@ -1,0 +1,44 @@
+#!/bin/sh
+set -e
+
+# ver=""
+# pwre_target=""
+
+echo "Here in postinst..."
+# Automatically added by dh_installdocs
+if [ "$1" = "configure" ]; then
+        if [ -d /usr/doc -a ! -e /usr/doc/pwrtest -a -d /usr/share/doc/pwrtest ]; then
+                ln -sf ../share/doc/pwrtest /usr/doc/pwrtest
+        fi
+fi
+# End automatically added section
+
+aroot="/usr/pwrp/adm"
+
+
+echo "Change owner of files to pwrp"
+chown -R pwrp /usr/pwr$ver
+chgrp -R pwrp /usr/pwr$ver
+
+chmod u+s /usr/pwr$ver/$pwre_target/exp/exe/rt_ini
+chmod u+s /usr/pwr$ver/$pwre_target/exp/exe/rt_rtt
+
+# Insert base in projectlist
+#if [ ! -e $aroot/db/pwr_projectlist.dat ]; then
+#  echo "%base V${ver:0:1}.${ver:1:1}rpi /usr/pwr$ver" > $aroot/db/pwr_projectlist.dat
+#else
+#  set +e
+#  ptst=`eval grep "^%base" $aroot/db/pwr_projectlist.dat | grep "\bV${ver:0:1}.${ver:1:1}rpi\b"`
+#  set -e
+#  if [ "$ptst" = "" ]; then
+#    echo "%base V${ver:0:1}.${ver:1:1}rpi /usr/pwr$ver" >> $aroot/db/pwr_projectlist.dat
+#  fi
+#fi
+
+# Change group to pwrp
+chmod a+w /usr/pwr$ver/$pwre_target/exp/load/*.dbs
+
+
+
+
+
