@@ -99,7 +99,7 @@ class GrowCtx : public GlowCtx {
         mb3_action(glow_eMB3Action_PopupMenu), scale_equal(0), translate_on(0),
         input_focus_mark(glow_eInputFocusMark_Relief), background_disabled(0),
         redraw_callback(0), redraw_data(0), has_subwindows(-1), bitmap_fonts(0),
-        environment(glow_eEnv_Runtime), text_coding(glow_eTextCoding_ISO8859_1)
+        environment(glow_eEnv_Runtime), text_coding(glow_eTextCoding_ISO8859_1), recursive_trace(0)
 	{ ctx_type = glow_eCtxType_Grow;
 	  strcpy( name, "");
 	  strcpy( java_name, ""); 
