@@ -196,20 +196,19 @@ public class JopOpWindow extends JPanel {
 
       switch( retCid.classId) {
         case Pwrb.cClass_WebGraph:
-          sret = en.gdh.objidToName( oret.objid, Cdh.mName_volumeStrict);            
-          if ( sret.evenSts()) return;
-
-          s = sret.str + ".Name";
-          sretName = en.gdh.getObjectInfoString( s);
-
-          s = sret.str + ".Text";
-          sretText = en.gdh.getObjectInfoString( s);
-
- 
-          button = new OpWindButton( session, sretName.str, sretText.str,
-						  OpWindButton.WEBGRAPH);
-          this.add( button);
+	  addWebGraphButton( oret.objid);
           break;
+        case Pwrs.cClass_PlantHier:
+        case Pwrs.cClass_NodeHier:
+	    for ( CdhrObjid oret2 = en.gdh.getChild(oret.objid); 
+		  oret2.oddSts(); 
+		  oret2 = en.gdh.getNextSibling(oret2.objid)) {
+		CdhrClassId cret2 = en.gdh.getObjectClass(oret2.objid);
+		if (cret2.oddSts() && cret2.getClassId() == Pwrb.cClass_WebGraph)
+		    addWebGraphButton(oret2.objid);
+	    }
+	    break;
+      default: ;
       }
       oret = en.gdh.getNextSibling( oret.objid);
     }
@@ -248,6 +247,22 @@ public class JopOpWindow extends JPanel {
       }
       oret = en.gdh.getNextSibling( oret.objid);
     }
+  }
+
+  void addWebGraphButton( PwrtObjid oid) {
+      CdhrString sret = en.gdh.objidToName( oid, Cdh.mName_volumeStrict);            
+      if ( sret.evenSts()) return;
+
+      String s = sret.str + ".Name";
+      CdhrString sretName = en.gdh.getObjectInfoString( s);
+
+      s = sret.str + ".Text";
+      CdhrString sretText = en.gdh.getObjectInfoString( s);
+
+ 
+      OpWindButton button = new OpWindButton( session, sretName.str, sretText.str,
+					      OpWindButton.WEBGRAPH);
+      this.add( button);
   }
 
   class OpWindButton extends JButton {
