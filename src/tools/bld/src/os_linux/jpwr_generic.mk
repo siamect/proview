@@ -149,7 +149,8 @@ $(export_lib) : $(objects)
 	echo "Inserting png and gif files"; \
 	jar cf $(export_lib) jpwr/$(comp_name)/*.gif; \
 	jar uf $(export_lib) jpwr/$(comp_name)/*.png; \
-	find jpwr/$(comp_name) -name "*.class" -exec jar uf $(export_lib) {} \;;
+	find jpwr/$(comp_name) -name "*.class" -exec jar uf $(export_lib) {} \;; \
+	chmod a+r $(export_lib);
 #	@ jar cvfm $(export_lib) ../../manifest.stub jpwr/$(comp_name)/*.class jpwr/$(comp_name)/*.gif
 
 #-include $(source_dependencies)
