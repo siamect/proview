@@ -57,6 +57,7 @@ public interface GraphIfc {
     public void closeGraph();
     public void openConfirmDialog(Object dyn, String text, Object object);
     public void openValueInputDialog(Object dyn, String text, Object object);
+    public void openPopupMenu(String object, double x, double y);
     public String get_reference_name(String name);
     public Object getCurrentSlider();
     public void setCurrentSlider(GrowSlider currentSlider);

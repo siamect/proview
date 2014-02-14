@@ -1498,4 +1498,5 @@ public class Glow {
     public static final int eEvent_SliderMoveStart     		= 11;
     public static final int eEvent_SliderMoved 			= 12;
     public static final int eEvent_SliderMoveEnd       		= 13;
+    public static final int eEvent_MB3Press       		= 14;
 }

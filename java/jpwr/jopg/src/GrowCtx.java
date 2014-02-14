@@ -788,6 +788,12 @@ public class GrowCtx implements GrowCtxIfc {
 	draw();
     }
 
+    public void zoomAbsolute( double factor) { 
+      cmn.mw.zoom_factor_x = factor;
+      cmn.mw.zoom_factor_y = factor;
+      draw();
+    }
+
     public void scroll( int delta_x, int delta_y) {
 	cmn.mw.offset_x += delta_x;
 	cmn.mw.offset_y += delta_y;
@@ -836,6 +842,19 @@ public class GrowCtx implements GrowCtxIfc {
 
     public void setSliderActive( boolean active) {
 	sliderActive = active;
+    }
+
+    public void setDefaultLayout( int width, int height) {
+	if ( cmn.x0 >= cmn.x1 || cmn.y0 >= cmn.y1)
+	    return;
+
+	cmn.mw.zoom_factor_x = Math.min( width/(cmn.x1 - cmn.x0), 
+					 height/(cmn.y1 - cmn.y0));
+	cmn.mw.zoom_factor_y = cmn.mw.zoom_factor_x;
+	cmn.mw.offset_x = (int)(cmn.x0 * cmn.mw.zoom_factor_x);
+	cmn.mw.offset_y = (int)(cmn.y0 * cmn.mw.zoom_factor_y);
+
+	draw();
     }
 }
 

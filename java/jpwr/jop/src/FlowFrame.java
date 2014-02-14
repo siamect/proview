@@ -147,7 +147,7 @@ public class FlowFrame extends JFrame implements JopUtilityIfc, GdhApplIfc {
         URL fileURL = new URL( filename);
 	InputStream in = fileURL.openStream();
         // in = new BufferedInputStream(in);
-        InputStreamReader r2 = new InputStreamReader(in);
+        InputStreamReader r2 = new InputStreamReader(in, "ISO-8859-1");
         reader = new BufferedReader( r2);
       }
       catch ( Exception e) {

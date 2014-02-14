@@ -275,7 +275,7 @@ public class GrowWindow extends GrowRect implements GrowScrollBarIfc {
 	windowCmn.mw.subwindow_scale = cmn.mw.subwindow_scale * window_scale;
 	windowCmn.mw.zoom_factor_x = windowCmn.mw.zoom_factor_y = 
 	    cmn.mw.zoom_factor_x * windowCmn.mw.subwindow_scale;
-	
+	    	
 	configureScrollbars();
     }
 
@@ -450,6 +450,8 @@ public class GrowWindow extends GrowRect implements GrowScrollBarIfc {
 		v_value = wctx_y0 * windowCmn.mw.subwindow_scale;
 	    }
 	}
+	else
+	    v_value = wctx_y0 * windowCmn.mw.subwindow_scale;
 
 	if ( horizontal_scrollbar != 0 && h_scrollbar == null) {
 	    x0 = x_left;
@@ -479,6 +481,9 @@ public class GrowWindow extends GrowRect implements GrowScrollBarIfc {
 		h_value = wctx_x0 * windowCmn.mw.subwindow_scale;    
 	    }
 	}
+	else
+	    h_value = wctx_x0 * windowCmn.mw.subwindow_scale;
+
     }
 
     public void verticalScrollValueChanged(double value) {

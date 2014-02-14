@@ -40,6 +40,7 @@ public interface GraphApplIfc {
     public int command(String cmd);
     public void openConfirmDialog( Object dyn, String text, Object object);
     public void openValueInputDialog( Object dyn, String text, Object object);
+    public void openPopupMenu( String object, double x, double y);
     public int getWidth();
     public int getHeight();
     public String getObject();

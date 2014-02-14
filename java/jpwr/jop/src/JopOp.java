@@ -38,12 +38,12 @@ public class JopOp {
     if ( args.length > 0)
       System.out.println("Arg: " + args[0]);
     try {
-      // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-      UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-      // UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+      UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+      // UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
     }
     catch(Exception e) {
-      e.printStackTrace();
+      System.out.println("setLookAndFeel exception");
+      // e.printStackTrace();
     }
     new JopOp();
     byte[] buff = new byte[100];

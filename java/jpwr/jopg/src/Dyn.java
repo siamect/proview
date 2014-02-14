@@ -591,7 +591,7 @@ public class Dyn {
     public static final int ePwrStatus_Error		= 3;
     public static final int ePwrStatus_Fatal		= 4;
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
 
     Vector<DynElem> elements = new Vector<DynElem>();
     GraphIfc graph;
@@ -3203,6 +3203,9 @@ public class Dyn {
 		    case Dyn.eSave_ValueInput_attribute: 
 			if ( token.hasMoreTokens())
 			    attribute = token.nextToken();
+			break;
+		    case Dyn.eSave_ValueInput_unselect: 
+			unselect = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_ValueInput_min_value: 
 			min_value = new Double(token.nextToken()).doubleValue();
@@ -6314,6 +6317,18 @@ public class Dyn {
 	    ref_object = x.ref_object;
 	}
 
+	public int action( GlowArrayElem object, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
+	    switch ( e.event) {
+	    case Glow.eEvent_MB3Press:
+		dyn.graph.openPopupMenu( ref_object, e.x, e.y);
+		break;
+	    }
+	    return 1;
+	}
+
 	public void open( BufferedReader reader) {
 	    String line;
 	    StringTokenizer token;
@@ -7423,9 +7438,8 @@ public class Dyn {
 	    case Glow.eEvent_MB1Click:
 		if ( (dyn.action_type1 & Dyn.mActionType1_Confirm) != 0)
 		    break;
-		
 		String command = null;
-		if ( !graph_object.equals(""))
+		if ( !(graph_object == null || graph_object.equals("")))
 		    command = new String("open graph/object=" + graph_object);
 		else {
 		    // Open classgraph for popup menu object

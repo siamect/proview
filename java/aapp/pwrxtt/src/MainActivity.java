@@ -2083,6 +2083,9 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 	return gdh.isAuthorized(access);
     }
 
+    public void openPopupMenu( String object, double x, double y) {
+    }
+
     public void invalidateView() {
     	view.invalidate();
     }

@@ -76,6 +76,9 @@ public class JopSpider {
     public void frameClosed( Object utility) {
 	session.removeUtility( utility);
     }
+    public void openPopupMenu( String object, Object invoker, int x, int y) {
+	JopSpider.openPopupMenu( session, object, invoker, x, y);
+    }
   }    
 
   public JopSpider( int op_qcom_qix) {
@@ -97,16 +100,12 @@ public class JopSpider {
 
     // Send qcom qix to jop
     String set_cmd = "set jop_queid " + qcom_qix;
-System.out.println( "qcom put");
     PwrtStatus sts = qcom.put( op_qcom_qix, op_qcom_nid, set_cmd);
-System.out.println( "qcom put finished");
     if ( sts.evenSts())
       System.out.println( "Qcom put error: " + sts.getSts());
 
     new JopSpiderCmd( session);
 
-//    loadFrame("Frame");
-//    loadFrame("Frame");
   }  
   
   static public void setSystemName( String systemName) {
@@ -114,6 +113,11 @@ System.out.println( "qcom put finished");
   }
   static public String getSystemName() {
     return systemName;
+  }
+
+  static void openPopupMenu( JopSession session, String object, Object invoker, int x, int y) {
+      new JopMethodsMenu( session, object, JopUtility.GRAPH, (Component)invoker, x, y);
+
   }
 
   static CliTable[] cliTable = new CliTable[] { 
@@ -202,6 +206,7 @@ System.out.println( "qcom put finished");
               boolean scrollbar = cli.qualifierFound("/SCROLLBAR");
 
               if ( cli.qualifierFound("/OBJECT")) {
+		// XttGraph object
 	        String objectValue = cli.getQualValue("/OBJECT");
                 String objectName;
                 String appletName;
@@ -257,76 +262,47 @@ System.out.println( "qcom put finished");
                 local_cmd = true;
               }
               else {
-		if ( true /* session.isOpWindowApplet() */) {
-		  String frameName = null;
-		  String instanceValue = null;
-		  boolean classGraph = false;
+		// No XttGraph
+		String frameName = null;
+		String instanceValue = null;
+		boolean classGraph = false;
 
-                  if ( cli.qualifierFound("/INSTANCE")) {
+		if ( cli.qualifierFound("/INSTANCE")) {
 	            instanceValue = cli.getQualValue("/INSTANCE");
 		    classGraph = cli.qualifierFound("/CLASSGRAPH");		      
 		    boolean parent = cli.qualifierFound("/PARENT");
 		    if ( parent) {
-		      int idx = instanceValue.lastIndexOf( '.');
-		      if ( idx != -1 && idx != 0)
-			instanceValue = instanceValue.substring( 0, idx);
-		      System.out.println( "open graph /parent: " + instanceValue);
+			int idx = instanceValue.lastIndexOf( '.');
+			if ( idx != -1 && idx != 0)
+			    instanceValue = instanceValue.substring( 0, idx);
+			System.out.println( "open graph /parent: " + instanceValue);
 		    }
-		  }
-		  if ( !classGraph) {
+		}
+		if ( !classGraph) {
 		    if ( ! cli.qualifierFound("cli_arg2")) {
-		      System.out.println("Syntax error");
-		      return 0;
+			System.out.println("Syntax error");
+			return 0;
 		    }
-		    frameName = cli.getQualValue("cli_arg2").toLowerCase();
 
-		    frameName = frameName.substring(0,1).toUpperCase() +
-			frameName.substring(1);
+		    frameName = cli.getQualValue("cli_arg2");
+		    
+		    if ( Character.isUpperCase(frameName.charAt(0))) {
+			// If first char is upper, open as java class
+			frameName = frameName.toLowerCase();
+		      
+			frameName = frameName.substring(0,1).toUpperCase() +
+			    frameName.substring(1);
+
+		    }
+		    else {
+			// If first char is lower, open as pwg-file
+			if ( frameName.indexOf(".pwg") == -1)
+			    frameName = frameName + ".pwg";
+		    }
 		    System.out.println( "Open frame " + frameName);
-		  }
-		  session.openGraphFrame( frameName, instanceValue, scrollbar, classGraph);
 		}
-		/*************
-		else {
-		  String frameName = null;
-		  if ( ! cli.qualifierFound("cli_arg2")) {
-		    System.out.println("Syntax error");
-		    return 0;
-		  }
-		  frameName = cli.getQualValue("cli_arg2").toLowerCase();
-
-                  if ( cli.qualifierFound("/INSTANCE")) {
-	            String instanceValue = 
-			cli.getQualValue("/INSTANCE").toLowerCase();
-                  
-		    boolean parent = cli.qualifierFound("/PARENT");
-		    if ( parent) {
-		      int idx = instanceValue.lastIndexOf( '.');
-		      if ( idx != -1 && idx != 0)
-			instanceValue = instanceValue.substring( 0, idx);
-		      System.out.println( "open graph /parent: " + instanceValue);
-		    }
-
-                    String tempFile = frameName + "_" + 
-			instanceValue.replace('å','a').replace('ä','a').replace('ö','o');
-		    PwrtStatus psts = 
-			gdh.createInstanceFile( 
-			   "$pwrp_websrv/"+frameName+".html", 
-			   tempFile+".html", instanceValue);
-		    if ( psts.evenSts()) {
-		      System.out.println("createInstanceFile error");
-                      return 0;
-		    }
-                    frameName = tempFile;
-		  }
-
-                  System.out.println( "Loading applet \"" + frameName + "\"");
-
-	          openURL( session, frameName, newFrame, null, null);
-                  local_cmd = true;
-		}
-		***/
-              }
+		session.openGraphFrame( frameName, instanceValue, scrollbar, classGraph);
+	      }
             }
             else {
 	      // Application
@@ -348,6 +324,7 @@ System.out.println( "qcom put finished");
 		}
 	      }
               if ( cli.qualifierFound("/OBJECT")) {
+		// XttGraph object
 	        String objectValue = cli.getQualValue("/OBJECT");
                 String objectName;
                 String appletName;
@@ -401,10 +378,20 @@ System.out.println( "qcom put finished");
 		      frameName = frameName + ".pwg";
 		}
 		else if ( cli.qualifierFound("cli_arg2")) {
-		  frameName = cli.getQualValue("cli_arg2").toLowerCase();
+		  frameName = cli.getQualValue("cli_arg2");
+		  if ( Character.isUpperCase(frameName.charAt(0))) {
+		      // If first char is upper, open as java class
+		      frameName = frameName.toLowerCase();
 		      
-		  frameName = frameName.substring(0,1).toUpperCase() +
+		      frameName = frameName.substring(0,1).toUpperCase() +
 			  frameName.substring(1);
+
+		  }
+		  else {
+		      // If first char is lower, open as pwg-file
+		      if ( frameName.indexOf(".pwg") == -1)
+			  frameName = frameName + ".pwg";
+		  }
 		}
 		else {
 		  System.out.println("Syntax error");

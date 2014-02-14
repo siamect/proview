@@ -283,14 +283,14 @@ public class JopMethods {
     CdhrString actionRet = gdh.getObjectInfoString( attr);
     if ( actionRet.evenSts()) return;
 
-    int idx = actionRet.str.lastIndexOf( '.');
     String action;
-    if ( idx != -1)
-      action = actionRet.str.substring(0,1).toUpperCase() +
-	actionRet.str.substring(1, idx);
-    else
-      action = actionRet.str.substring(0,1).toUpperCase() +
-	actionRet.str.substring(1);
+    if ( actionRet.str.endsWith(".class")) {
+	int idx = actionRet.str.lastIndexOf( '.');
+	action = actionRet.str.substring(0,1).toUpperCase() + actionRet.str.substring(1, idx);
+    }
+    else {
+	action = actionRet.str;
+    }
 
     String instance = null;
     attr = xttgraph.str + ".Object";

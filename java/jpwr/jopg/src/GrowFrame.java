@@ -49,6 +49,8 @@ import java.net.*;
 import java.applet.*;
 
 public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
+    static final int BORDER_WIDTH = 5;
+    static final int BORDER_HEIGHT = 40; 
     JScrollPane scrollPane;
     JPanel contentPane;
     LocalPanel localPanel = new LocalPanel();
@@ -72,6 +74,13 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
     String instance;
     GrowFrameApplIfc appl;
     GrowFrame frame;
+    boolean drawn = false;
+    double baseZoomFactor = 0;
+    int defaultWidth = 0;
+    int defaultHeight = 0;
+    double aspectRatio = 0;
+    Dimension prevSize;
+    int skipResize = 0;
 
     public GrowFrame( String file, Gdh gdh, String instance, GrowFrameApplIfc appl, Object root) {
 	this.root = root;
@@ -113,13 +122,12 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 		URL fileURL = new URL( filename);
 		InputStream in = fileURL.openStream();
 		// in = new BufferedInputStream(in);
-		InputStreamReader r2 = new InputStreamReader(in);
+		InputStreamReader r2 = new InputStreamReader(in, "ISO-8859-1");
 		reader = new BufferedReader( r2);
 
 		// Read size info
+		reader.mark(1000);
 		String line;
-		int defaultWidth = 0;
-		int defaultHeight = 0;
 	    
 		try {
 		    for ( int i = 0; i < 2; i++) {
@@ -136,16 +144,27 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 		}
 		System.out.println("GraphFrame size " + defaultWidth + "  " + defaultHeight);
 		if ( defaultWidth != 0 && defaultHeight != 0) {
-		    size = new Dimension( defaultWidth + 5, defaultHeight + 40);
+		    size = new Dimension( defaultWidth + BORDER_WIDTH, defaultHeight + BORDER_HEIGHT);
+		    System.out.println("defaultWidth: " + defaultWidth + " defaultHeight " + defaultHeight);
 		    setSize( size);
+		    aspectRatio = (double)defaultWidth/defaultHeight;
+		    prevSize = new Dimension(defaultWidth, defaultHeight);
 		}		
-		
+		else {
+		    reader.reset();
+		    /*	    reader.close();
+		    InputStream in3 = fileURL.openStream();
+		    InputStreamReader r3 = new InputStreamReader(in, "ISO-8859-1");
+		    reader = new BufferedReader( r3);		    
+		    */
+		}
 	    }
 	    catch ( Exception e) {
 		System.out.println( "Unable to open file");
 	    }
 	}
 	else {
+	    // Not applet
 	    if ( fname.lastIndexOf('/') == -1) {
 		if ( fname.startsWith("pwr_c_"))
 		    filename = "$pwr_exe/" + fname;
@@ -158,7 +177,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 
 	    System.out.println( "Fname: " + filename);
 	    try {
-		reader = new BufferedReader(new FileReader(filename));
+		reader = new BufferedReader( new InputStreamReader(new FileInputStream(filename), "ISO-8859-1"));
 	    }
 	    catch ( Exception e) {
 		System.out.println( "Unable to open file " + filename);
@@ -166,10 +185,9 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	    }
 	    // Read size info
 	    String line;
-	    int defaultWidth = 0;
-	    int defaultHeight = 0;
 	    
 	    try {
+		reader.mark(1000);
 		for ( int i = 0; i < 2; i++) {
 		    line = reader.readLine();
 		    if ( line == null || !line.startsWith("0! "))
@@ -186,7 +204,23 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	    if ( defaultWidth != 0 && defaultHeight != 0) {
 		size = new Dimension( defaultWidth + 5, defaultHeight + 40);
 		setSize( size);
-	    }		
+		aspectRatio = (double)defaultWidth/defaultHeight;
+		prevSize = new Dimension(defaultWidth, defaultHeight);
+	    }
+	    else {
+		try {
+		    reader.reset();
+		    /*
+		    reader.close();
+		    reader = new BufferedReader( new InputStreamReader(new FileInputStream(filename), "ISO-8859-1"));
+		    */
+		}
+		catch ( Exception e) {
+		    System.out.println( "Unable to open file " + filename);
+		    return;
+		}
+
+	    }
 	}
 
 	// if ( gdh == null)
@@ -196,32 +230,60 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	    graph.setOwner( instance);
 	graph.open(reader);
 
-	setSize();
+	System.out.println("After open " + defaultWidth + " " + defaultHeight);
+	if ( defaultWidth == 0 || defaultHeight == 0)
+	    setSize();
+
 	enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 	setDefaultCloseOperation( DISPOSE_ON_CLOSE);
 	
 	MouseAdapter adapter = new MouseAdapter() {
 		public void mouseClicked(MouseEvent e) {
-		    GlowEvent event = new GlowEvent();
-		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
-		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
-		    event.event = Glow.eEvent_MB1Click;
-		    graph.ctx.eventHandler( event);
+		    System.out.println("GrowFrame click " + e.getModifiers() + " " + MouseEvent.BUTTON1_MASK);
+		    if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
+			System.out.println("GrowFrame click MB1" + e.getModifiers() + " " + MouseEvent.BUTTON1_MASK);
+			GlowEvent event = new GlowEvent();
+			event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
+			event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
+			event.event = Glow.eEvent_MB1Click;
+			graph.ctx.eventHandler( event);
+		    }
+		    else if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0) {
+			System.out.println("GrowFrame click MB3" + e.getModifiers() + " " + MouseEvent.BUTTON3_MASK);
+			GlowEvent event = new GlowEvent();
+			event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
+			event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
+			event.event = Glow.eEvent_MB3Press;
+			graph.ctx.eventHandler( event);
+		    }
 		}
 		public void mousePressed(MouseEvent e) {
-		    GlowEvent event = new GlowEvent();
-		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
-		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
-		    event.event = Glow.eEvent_MB1Down;
-		    graph.ctx.eventHandler( event);
+		    /*
+		    if ( e.isPopupTrigger()) {
+			System.out.println("GrowFrame MB3");
+			GlowEvent event = new GlowEvent();
+			event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
+			event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
+			event.event = Glow.eEvent_MB3Press;
+			graph.ctx.eventHandler( event);
+		    }
+		    else */ if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
+			GlowEvent event = new GlowEvent();
+			event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
+			event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
+			event.event = Glow.eEvent_MB1Down;
+			graph.ctx.eventHandler( event);
+		    }
 		}
 		public void mouseReleased(MouseEvent e) {
-		    GlowEvent event = new GlowEvent();
-		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
-		    event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
-		    event.event = Glow.eEvent_MB1Up;
-		    graph.ctx.eventHandler( event);
-		}
+		    if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
+			GlowEvent event = new GlowEvent();
+			event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
+			event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
+			event.event = Glow.eEvent_MB1Up;
+			graph.ctx.eventHandler( event);
+		    }
+ 		}
 		public void mouseMoved(MouseEvent e) {
 		    GlowEvent event = new GlowEvent();
 		    event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
@@ -237,6 +299,35 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 		    graph.ctx.eventHandler( event);
 		}
 	    };
+ 
+	this.addComponentListener(new ComponentAdapter() {
+		public void componentResized(ComponentEvent e) {
+		    if ( drawn && aspectRatio != 0) {
+			int w = getWidth() - BORDER_WIDTH;
+			int h = getHeight() - BORDER_HEIGHT;
+			
+			if ( skipResize > 0) {
+			    skipResize--;
+			    prevSize = new Dimension(w,h);
+			    graph.ctx.setDefaultLayout( w, h);
+			    return;
+			}
+
+			double ratio = (double)w/h;
+
+			if ( (w > 400 && Math.abs(ratio - aspectRatio) > 0.05) ||
+			     (w > 200 && w <= 400 && Math.abs(ratio - aspectRatio) > 0.10) ||
+			     (w <= 200 && Math.abs(ratio - aspectRatio) > 0.15)) {
+			    h = (int) ((double)w/aspectRatio);
+
+			    prevSize = new Dimension(w,h);
+			    setSize(w + BORDER_WIDTH,h + BORDER_HEIGHT);
+			    skipResize = 1;
+			}
+			graph.ctx.setDefaultLayout( w, h);
+		    }
+		}
+	    });
 
         localPanel.addMouseListener(adapter);
         localPanel.addMouseMotionListener(adapter);
@@ -244,7 +335,6 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	timer = new Timer( scanTime, this); 
 	timer.start();
     }
-
 
     public int getWidth() {
 	return localPanel.getWidth() + 5;
@@ -282,6 +372,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	    graph.gdraw.setGraphics(g2);
 	    graph.ctx.draw();
 
+	    drawn = true;
 	}
     }
 
@@ -300,7 +391,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
     public int command(String cmd) {
 	System.out.println("Ge command : " + cmd);
 	if ( appl != null)
-	    return appl.command(cmd);
+ 	    return appl.command(cmd);
 	return 0;
     }
 
@@ -472,6 +563,14 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	}
     }
 
+    public void openPopupMenu( String object, double x, double y) {
+	if ( appl != null) {
+ 	    appl.openPopupMenu( object, this,
+				(int)(x * graph.ctx.cmn.mw.zoom_factor_x - graph.ctx.cmn.mw.offset_x), 
+				(int)(y * graph.ctx.cmn.mw.zoom_factor_y - graph.ctx.cmn.mw.offset_y)); 
+	}
+    }
+
     public String getObject() {
 	return instance;
     }
@@ -490,12 +589,17 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 		if ( idx2 > idx)
 		    idx = idx2;
 		String path = current_str.substring(0,idx + 1);
+
+		idx = fname.indexOf('/');
+		if ( idx != -1)
+		    fname = fname.substring(idx);
+		
 		filename = path + fname;
 		System.out.println( "Opening file " + filename);
 		URL fileURL = new URL( filename);
 		InputStream in = fileURL.openStream();
 		// in = new BufferedInputStream(in);
-		InputStreamReader r2 = new InputStreamReader(in);
+		InputStreamReader r2 = new InputStreamReader(in, "ISO-8859-1");
 		reader = new BufferedReader( r2);
 	    }
 	    catch ( Exception e) {
@@ -515,7 +619,8 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 
 	    System.out.println( "Fname: " + filename);
 	    try {
-		reader = new BufferedReader(new FileReader(filename));
+		//reader = new BufferedReader(new FileReader(filename));
+		reader = new BufferedReader( new InputStreamReader(new FileInputStream(filename), "ISO-8859-1"));
 	    }
 	    catch ( Exception e) {
 		System.out.println( "Unable to open file " + filename);

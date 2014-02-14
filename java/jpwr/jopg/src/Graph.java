@@ -343,7 +343,8 @@ public class Graph implements GraphIfc, GrowApplIfc {
 
 	while ( (idx = str.indexOf("$object")) != -1) {
 	    if ( appl != null) {
-		String oname = appl.getObject();
+		// String oname = appl.getObject();
+		String oname = cmn.getOwner();
 		str = str.substring(0, idx) + oname + str.substring(idx+7);
 	    }
 	}
@@ -412,6 +413,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	    // Note! no break
 	case Glow.eEvent_MB1Up:
 	case Glow.eEvent_MB1Down:
+	case Glow.eEvent_MB3Press:
 	case Glow.eEvent_ValueChanged:
 	case Glow.eEvent_SliderMoveStart:
 	case Glow.eEvent_SliderMoveEnd:
@@ -490,6 +492,11 @@ public class Graph implements GraphIfc, GrowApplIfc {
     public void openValueInputDialog(Object dyn, String text, Object object) {
 	if ( appl != null)
 	    appl.openValueInputDialog(dyn, text, object);
+    }
+
+    public void openPopupMenu(String object, double x, double y) {
+	if ( appl != null)
+	    appl.openPopupMenu(object, x, y);
     }
 
     public String get_reference_name(String name) {
