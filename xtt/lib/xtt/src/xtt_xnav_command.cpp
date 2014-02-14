@@ -6463,6 +6463,10 @@ static int	xnav_print_func(void		*client_data,
 	xnav->message('E',"Instance object not found");
 	return XNAV__HOLDCOMMAND;
       }
+      sts = gdh_AttrrefToName( &aref, instance_str, sizeof(instance_str),
+			       cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+
       sts = gdh_GetAttrRefTid( &aref, &cid);
       while ( ODD(sts)) {
 	// Try all superclasses
@@ -6489,14 +6493,13 @@ static int	xnav_print_func(void		*client_data,
 	      cdh_NoCaseStrncmp( fname, "pwr_c_", 6) == 0)) {
 	  strcpy( fname, "$pwr_exe/");
 	  strcat( fname, file_str);
-	  strcpy( file_str, fname);
 	}
 	else {
 	  strcpy( fname, "$pwrp_exe/");
 	  strcat( fname, file_str);
-	  strcpy( file_str, fname);
 	}
 	strcat( fname, ".pwg");
+	strcpy( file_str, fname);
 	sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
 	dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
 	if ( ODD(sts)) break;
