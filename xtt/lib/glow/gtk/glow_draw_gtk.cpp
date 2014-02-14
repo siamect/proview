@@ -2823,13 +2823,13 @@ GdkPoint *GlowDrawGtk::points_to_gdk_points_curve( GlowWind *w, glow_sPointX *po
   int last_idx = 0;
   for ( int i = 0; i < point_cnt; i++) {
     if ( idx == 0 && i != point_cnt - 1 && 
-	 ((points[i].x < 0 && points[i+1].x < 0) ||
-	  (points[i].x > w->window_width && points[i+1].x > w->window_width)))
+	 ((points[i].x < w->subwindow_x && points[i+1].x < w->subwindow_x) ||
+	  (points[i].x > w->subwindow_x + w->window_width && points[i+1].x > w->subwindow_x + w->window_width)))
       
       continue;
     if ( idx != 0 && 
-	 !((points[i].x < 0 && points[i-1].x < 0) ||
-	   (points[i].x > w->window_width && points[i-1].x > w->window_width)))
+	 !((points[i].x < w->subwindow_x && points[i-1].x < w->subwindow_x) ||
+	   (points[i].x > w->subwindow_x + w->window_width && points[i-1].x > w->subwindow_x + w->window_width)))
       last_idx = idx;
     gpoints[idx].x = points[i].x;
     gpoints[idx].y = points[i].y;
