@@ -181,6 +181,7 @@ void wb_log::generate_html( char *filename, pwr_tStatus *sts)
   char timstr[24];
   char pname[80];
   pwr_tFileName help_fname, help_filename;
+  unsigned int max_size = 1000;
 
   time_AtoAscii( 0, time_eFormat_DateAndTime, timstr, sizeof(timstr));
   utl_get_projectname( pname);
@@ -219,7 +220,12 @@ void wb_log::generate_html( char *filename, pwr_tStatus *sts)
   fprintf( fp, "<h2>Workbench History</h2>\n<xmp> %s %s</xmp><br>\n<a href=\"%s\">Help</a>\n<XMP>\n\n", pname, timstr, help_filename);
   fprintf( fp, "%-20s  %-10s %-20s %-20s %s\n", "Date", "User", "Action", "Item", "Comment");
   fprintf( fp, "----------------------------------------------------------------------------------------------\n");
-  for ( int i = cbctx.v.size() - 1; i >= 0; i--) {
+
+  unsigned int to = 0;
+  if ( cbctx.v.size() > max_size)
+    to = cbctx.v.size() - max_size;
+
+  for ( unsigned int i = cbctx.v.size() - 1; i >= to; i--) {
     if ( !cbctx.v[i].disable)
       fprintf( fp, "%s\n", cbctx.v[i].text.c_str());
   }
