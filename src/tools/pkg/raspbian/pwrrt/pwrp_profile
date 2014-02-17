@@ -1,0 +1,55 @@
+
+bus_id=""
+if [ -e /etc/proview.cnf ]; then
+  bus_id=`eval cat /etc/proview.cnf | grep "\\bqcomBusId\\b" | awk '{print $2}'`
+fi
+if [ -e /etc/proview.cnf ]; then
+  web_dir=`eval cat /etc/proview.cnf | grep "\\bwebDirectory\\b" | awk '{print $2}'`
+fi
+
+export PWR_BUS_ID=$bus_id
+
+export pwrb_root=/usr/pwrrt
+export pwrp_root=/pwrp
+
+export pwr_exe=$pwrb_root/exe
+export pwr_lib=$pwrb_root/lib
+export pwr_obj=$pwrb_root/obj
+export pwr_inc=$pwrb_root/inc
+export pwr_load=$pwrb_root/load
+export pwr_lis=$pwrb_root/lis
+export pwr_doc=$pwrb_root/doc
+
+export pwrp_exe=$pwrp_root/x86_linux/exe
+export pwrp_lib=$pwrp_root/x86_linux/lib
+export pwrp_obj=$pwrp_root/x86_linux/obj
+export pwrp_lis=$pwrp_root/x86_linux/lis
+export pwrp_inc=$pwrp_root/common/inc
+export pwrp_load=$pwrp_root/common/load
+export pwrp_log=$pwrp_root/common/log
+export pwrp_db=$pwrp_root/common/db
+export pwrp_web=$web_dir
+
+export pwra_db=/usr/pwrp/adm/db
+jdk=`eval ls -t /usr/local | grep -m 1 ^jdk`
+if [ "$jdk" == "" ]; then
+  jdk=`eval ls -t /usr/local | grep -m 1 ^jre`
+fi
+
+export jdk=/usr/local/$jdk
+export jdk_home=$jdk/bin
+PATH=$PATH:$pwr_exe:$pwrp_exe:$jdk_home
+
+#Set display to remote computer
+export DISPLAY=$REMOTEHOST:0.0
+
+#symbols to define start/stop commands for PWR
+alias pwr_stop='/etc/init.d/pwr stop'
+alias pwr_stop.sh="/etc/init.d/pwr stop"
+alias pwr_start="/etc/init.d/pwr start"
+alias pwr="/etc/init.d/pwr"
+alias boot="/usr/bin/sudo /sbin/reboot"
+
+if [ -e $pwrp_exe/profile ]; then
+  source $pwrp_exe/profile
+fi
