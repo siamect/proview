@@ -505,7 +505,7 @@ int sevcli_get_objectitemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, 
   }
   if( rmsg->NumPoints == 0 ) {
     qcom_Free( sts, rmsg);
-    *sts = 0;
+    *sts = SEV__NOPOINTS;
     return 0;
   }
 

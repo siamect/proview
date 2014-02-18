@@ -3352,9 +3352,6 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   queryStr.append(" order by ");
   queryStr.append(orderby_part);
 
-  errh_Info("Before query in get_objectvalues");
-  printf("%s: %s\n", __FUNCTION__, queryStr.c_str());
-
   rc = mysql_query( m_env->con(), queryStr.c_str());
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
@@ -3362,7 +3359,6 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
     *sts = SEV__DBERROR;
     return 0;
   }
-  errh_Info("After query in get_objectvalues");
 
   result = mysql_store_result( m_env->con());
   if ( !result) {
@@ -3371,7 +3367,6 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
     *sts = SEV__DBERROR;
     return 0;
   }
-  errh_Info("After store result in get_objectvalues");
 
   int rows = mysql_num_rows( result);
   int bufrows = rows;
@@ -3538,7 +3533,6 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
     *bsize = bcnt;
     mysql_free_result( result);
   }
-  errh_Info("After copying values in get_objectvalues");
 
   *sts = SEV__SUCCESS;
   return 1;
