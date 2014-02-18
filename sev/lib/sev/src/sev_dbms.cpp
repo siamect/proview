@@ -1469,7 +1469,10 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
     *sts = SEV__DBERROR;
     return 0;
   }
-  if ( starttime && endtime) {
+  if ( item.options & pwr_mSevOptionsMask_Event) {
+    total_rows = atoi(row[4]);
+  }
+  else if ( starttime && endtime) {
     pwr_tTime update_time;
     if ( row[12])
       timestr_to_time( row[12], &update_time);
@@ -3173,7 +3176,10 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
     *sts = SEV__DBERROR;
     return 0;
   }
-  if ( starttime && endtime) {
+  if ( item->options & pwr_mSevOptionsMask_Event) {
+    total_rows = atoi(row[4]);
+  }
+  else if ( starttime && endtime) {
     pwr_tTime update_time;
     if ( row[12])
       timestr_to_time( row[12], &update_time);
