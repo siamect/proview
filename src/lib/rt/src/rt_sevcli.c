@@ -403,6 +403,11 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
     qcom_Free( &lsts, rmsg);
     return 0;
   }
+  if( rmsg->NumPoints == 0 ) {
+    qcom_Free( sts, rmsg);
+    *sts = SEV__NOPOINTS;
+    return 0;
+  }
 
   int item_cnt = rmsg->NumPoints;
 
