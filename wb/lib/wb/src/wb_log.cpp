@@ -225,7 +225,7 @@ void wb_log::generate_html( char *filename, pwr_tStatus *sts)
   if ( cbctx.v.size() > max_size)
     to = cbctx.v.size() - max_size;
 
-  for ( unsigned int i = cbctx.v.size() - 1; i >= to; i--) {
+  for ( int i = (int)cbctx.v.size() - 1; i >= (int)to; i--) {
     if ( !cbctx.v[i].disable)
       fprintf( fp, "%s\n", cbctx.v[i].text.c_str());
   }
