@@ -3729,7 +3729,7 @@ static int	xnav_open_func(	void		*client_data,
       sts = gdh_GetObjectClass( coid, &cid);
       if ( EVEN(sts)) return sts;
 
-      if ( cid != pwr_cClass_SevHist)
+      if ( !(cid == pwr_cClass_SevHist || cid == pwr_cClass_SevHistObject))
 	continue;
 
       sts = gdh_ObjidToName( coid, cname[idx], sizeof(cname[0]), cdh_mName_object);

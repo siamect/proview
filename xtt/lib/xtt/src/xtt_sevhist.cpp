@@ -96,11 +96,23 @@ XttSevHist::XttSevHist( void *parent_ctx,
   time_Period( time_ePeriod_OneHour, &from, &to, 0, 0);
   if ( oid_cnt == 1) {
     get_data( sts, from, to);
-    if ( EVEN(*sts)) return;
+    if ( *sts == SEV__NOPOINTS) {
+      // Try month
+      time_Period( time_ePeriod_OneMonth, &from, &to, 0, 0);
+      get_data( sts, from, to);
+      if ( EVEN(*sts)) return;
+    }
+    else if ( EVEN(*sts)) return;
   }
   else {
     get_multidata( sts, from, to);
-    if ( EVEN(*sts)) return;
+    if ( *sts == SEV__NOPOINTS) {
+      // Try month
+      time_Period( time_ePeriod_OneMonth, &from, &to, 0, 0);
+      get_multidata( sts, from, to);
+      if ( EVEN(*sts)) return;
+    }
+    else if ( EVEN(*sts)) return;
   }
   cdh_StrncpyCutOff( title, name, sizeof(title), 1);
 }
