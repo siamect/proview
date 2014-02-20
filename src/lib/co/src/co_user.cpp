@@ -978,12 +978,12 @@ char *UserList::pwcrypt( const char *str)
   return cstr;
 }
 
-unsigned long UserList::icrypt( unsigned long i)
+unsigned int UserList::icrypt( unsigned int i)
 {
   return ~(i + 123456);
 }
 
-unsigned long UserList::idecrypt( unsigned long i)
+unsigned int UserList::idecrypt( unsigned int i)
 {
   return ~i - 123456;
 }

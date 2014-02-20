@@ -203,8 +203,8 @@ class UserList {
   pwr_tString40		sms;
   UserList		*next;
 
-  unsigned long	icrypt( unsigned long i);
-  unsigned long	idecrypt( unsigned long i);
+  unsigned int	icrypt( unsigned int i);
+  unsigned int	idecrypt( unsigned int i);
 
  public:
   int 		load( ifstream& fp);
