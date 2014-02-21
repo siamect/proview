@@ -3058,10 +3058,16 @@ void graph_userdata_copy_cb( void *object, void *old_data, void **new_data,
   switch ( utype) {
   case glow_eUserdataCbType_NodeClass:
   case glow_eUserdataCbType_Node: {
+    if ( !old_data) {
+      *new_data = 0;
+      break;
+    }
+
     GeDyn *dyn = (GeDyn *)old_data;
     GeDyn *new_dyn = new GeDyn( *dyn);
 
     *new_data = (void *) new_dyn;
+    break;
   }
   case glow_eUserdataCbType_Ctx:
     break;
