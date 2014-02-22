@@ -32,4 +32,5 @@ Epl_MN
 Epl_Module
 Epl_CNServer
 Epl_CNServerModule
+PiFace_Digital
 #endif
