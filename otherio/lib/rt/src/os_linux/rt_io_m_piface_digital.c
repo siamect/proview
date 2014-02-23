@@ -136,6 +136,7 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
 
   // Handle Do
   m = 1;
+  value = 0;
   for ( i = 0; i < 8; i++) {
     if ( cp->chanlist[i+8].sop) {
       if ( *(pwr_tBoolean *)cp->chanlist[i+8].vbp)
