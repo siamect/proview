@@ -1789,6 +1789,41 @@ set the attribute ScanOff to 0. Observe that there might be subwindows in this p
 that also need to be turned on.
 </topic>
 
+<topic> file_proview_cnf
+/etc/proview.cnf
+
+A configuration file for definition of various parameters both in developmen, runtime and 
+storage environment. In the development environment the definitions are valid for all projects
+on the station.
+
+<b>Parameters in the development environment
+mysqlSocket <t><t>mysql socket for volumes with mysql database. Default value
+		<t><t>"/var/run/mysqld/mysqld.sock".
+mysqlServer <t><t>mysql server node.
+defaultProjectRoot <t><t>The default path to projects when creating new projects.
+	 	<t><t>Default value "/usr/local/pwrp".
+defaultProductionBus <t><t>The default production bus when creating new projects.
+	 	<t><t>Default value 1.
+defaultSimulationBus <t><t>The default simulation bus when creating new projects.
+	 	<t><t>Default value 999.
+defaultSystemGroup <t><t>The default system group when creating new projects.
+	 	<t><t>Default value "Common".
+defaultNodeHierRoot <t><t>Default name of the top level object in the node hierarchy when
+		<t><t>creating new projects. Default value "Nodes".
+qcomBusId <t><t>QCom bus identity for simulation.
+
+<b>Parameters in the  runtime environment
+qcomBusId <t><t>QCom bus identity.
+curveExportFile <t><t>Default file name for the history curve export function.
+webDirectory <t><t>Directory where the web files are placed and accessed by the web server.
+
+<b>Parameters in the storage environment
+sevDatabaseType <t><t>Database type, mysql or sqlite.
+sevXttDefaultPriv <t><t>Default privileges for access of the sev databse from sev_xtt.
+sevMysqlEngine <t><t>Mysql engine for created tables, innodb or myisam.
+
+
+</topic>
 
 </headerlevel>
 

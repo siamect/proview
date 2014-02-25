@@ -1532,6 +1532,7 @@ collect open<t>Open a stored collect window	<LINK> collect open
 close alarmlist <t>Close alarmlist		<LINK> close alarmlist
 close eventlist <t>Close eventlist		<LINK> close eventlist
 close graph <t>Close a graph			<LINK> close graph
+close multiview <t>Close a multiview		<LINK> close multiview
 close navigator <t>Close the navigator	<LINK> close navigator
 create item <t>Create a menu item in the Xtt menu <LINK> create item
 create opmenuitem <t>Create a menu item in the operator window menu <LINK> create opmenuitem
@@ -1544,20 +1545,13 @@ exit        <t>close xtt			<LINK> exit
 help        <t>Display help			<LINK> help
 login       <t>User login			<LINK> login
 logout      <t>User logout			<LINK> logout
-logging     <t>Logg attributes to file	<LINK> logging
-open fileview <t>Open a fileview		<LINK> open fileview
-open graph  <t>Open a graph			<LINK> open graph
-open multiview  <t>Open a multiview		<LINK> open multiview
-open jgraph <t>Open a java graph		<LINK> open jgraph
-open navigator <t>Open the navigator		<LINK> open navigator
-open operatorwindow<t>Open the operator window 	<LINK> open operatorwindow
-open trace  <t>Open trace for a plc window      <LINK> open trace
-open trend  <t>Open DsTrend or PlotGroup graph	<LINK> open trend
+logging     <t>Logg attributes to file		<LINK> logging
+open	    <t>Open various windows		<LINK> open
 read object <t>Read the content of an object from file <LINK> read object
 search	<t>Search for an object or a string 	<LINK> search
 set advanceduser<t>Set advanced user		<LINK> set advanceduser
 set display<t>Set format of display for selected attribute <LINK> set display
-set folder	<t>Set a folder in a tabbed window.  <LINK> set folder
+set folder  <t>Set a folder in a tabbed window.  <LINK> set folder
 set parameter<t>Set the value of an attribute  <LINK> set parameter
 set subwindow<t>View a graph in a Ge window object.  <LINK> set subwindow
 setup       <t>Xtt setup			<LINK> setup
@@ -2038,6 +2032,28 @@ Logout a user, and return to the original user.
 login <LINK> login
 </TOPIC>
 
+<TOPIC> open <style> function
+Command   open
+
+Open various windows.
+
+open attribute <t>Open a value change dialog for an attribute <LINK> open attribute
+open consolelog <t>Display system messages	<LINK> open consolelog
+open fast   <t>Open fast curve			<LINK> open fast
+open fileview <t>Open a fileview		<LINK> open fileview
+open graph  <t>Open a graph			<LINK> open graph
+open history <t>Open process history curve      <LINK> open history
+open multiview  <t>Open a multiview		<LINK> open multiview
+open jgraph <t>Open a java graph		<LINK> open jgraph
+open navigator <t>Open the navigator		<LINK> open navigator
+open operatorwindow<t>Open the operator window 	<LINK> open operatorwindow
+open shistory <t>Open a list with all history curves for an object <LINK>open shistory
+open trace  <t>Open trace for a plc window      <LINK> open trace
+open trend  <t>Open DsTrend or PlotGroup graph	<LINK> open trend
+open tcurve <t>Open a trend snapshot		<LINK> open tcurve
+open url    <t>Open an URL in a web browser	<LINK> open url
+</TOPIC>
+
 <TOPIC> open graph <style> function
 Command   open graph
 
@@ -2046,16 +2062,23 @@ a XttGraph object.
 
 <B>xtt> open graph 'filename' /width= /height= /scrollbar /menu /navigator
 <B>                           /instance= /focus= /inputempty
+
 <B>xtt> open graph /object= /focus= /inputempty
+<B>xtt> open graph /class /instance=
 
 /width	<t>Width in pixel.
 /height	<t>Height in pixel.
 /scrollbar<t>Scrollbars will be displayed in the graph window.
 /menu	<t>A menu will be displayed in the graph window.
 /navigator<t>A navigator window will be opened.
-/object	<t>A XttGraph-object. If the namestring begins with '*', * is
+/object	<t>An XttGraph-object. If the name starts with '$node' or '*' this will be
 	<t>replaced by the node object.
-/instance <t>Open the class graph for this instance.
+/instance <t>Open the object graph or an hierarchy graph for this instance. 
+        <t>If /class is supplied the object graph is opened, otherwise a
+        <t>filename can be supplied.
+/class  <t>Open the object graph for the instance object.
+/parent <t>Specifies that the object graph for the parent of the instance object
+        <t>should be opened.
 /focus  <t>Name of a value input object. The object will gain input focus 
         <t>when the graph is opened.
 /inputempty <t>The input label of the input focus object will be empty.
@@ -2064,19 +2087,98 @@ a XttGraph object.
 	<t>when the graph is opened from a push button in this window.
 /pinstance <t>Instance name for the pwindow graph, if pwindow is an object 
 	<t>graph.
+/fullscreen <t>Open the window fullscreen without frame.
+/maximize   <t>Open the window maximized with frame.
+/iconify    <t>Open the window iconified.
+/hide	    <t>Don't display the graph on the screen.
 </TOPIC>
+
+<TOPIC> open multiview <style> function
 Command   open multiview
 
 Open a multiview window specified by an XttMultiView object.
 
 <B>xtt> open multiview 'objectname' /width= /height= /xposition= /yposition=
-<t><t>/fullscreen /maximize /fullmaximize /iconify /hide
+<t><t>/fullscreen /maximize /iconify /hide
 
+'objectname' <t>Name of and XttMultiView object. If the name starts with '$node'
+            <t>or '*' this will be replace by the node object.
 /width      <t>Window width in pixels.
 /height     <t>Window height in pixels.
 /xposition  <t>Window x position in pixels.
 /yposition  <t>Window y position in pixels.
+/fullscreen <t>Open the window fullscreen without frame.
+/maximize   <t>Open the window maximized with frame.
+/iconify    <t>Open the window iconified.
 
+</TOPIC>
+
+<TOPIC> open shistory <style> function
+Command   open shistory
+
+Open a list of history curves for an object.
+Displays a list of all SevHist and SevHistObject storing process history 
+for different attributes in an object.
+
+<B>xtt> open shistory /name=
+
+/name	 <t>Object name.
+
+</TOPIC>
+
+<TOPIC> open history <style> function
+Command   open history
+
+Open process history for an object. Data is fetched from the storage server, 
+but can also read from a file containing history data previously stored with 
+the export function.
+
+<B>xtt> open history [/name=] [/title=]
+<B>xtt> open history /file=
+
+/name	<t>An object with stored process history.
+/file   <t>Open a file containing history data previously stored with the 
+	<t>export function.
+/title  <t>Title of curve window.
+/width  <t>Window width in pixels.
+/height <t>Window height in pixels.
+/fullscreen <t>Open the window fullscreen without frame.
+/maximize   <t>Open the window maximized with frame.
+/iconify    <t>Open the window iconified.
+
+Example
+
+xtt> open history /name=hql-hvk-flow
+</TOPIC>
+
+<TOPIC> open attribute <style> function
+Command   open attribute
+
+Open a value input dialog for an attribute.
+
+<B>xtt> open attribute /name= [/title=]
+
+/name	<t>Attribute name.
+/title	<t>Window title.
+</TOPIC>
+
+<TOPIC> open consolelog <style> function
+Command   open consolelog
+
+Display system messages.
+
+<B>xtt> open consolelog
+</TOPIC>
+
+<TOPIC> open url <style> function
+Command   open url
+
+Open an URL in a web browser.
+
+<B>xtt> open url 'URL'
+
+<B>Example
+xtt> open url http://www.proview.se
 </TOPIC>
 
 <TOPIC> open jgraph <style> function
@@ -2151,17 +2253,70 @@ xtt> open trace /name=hql-hvk-flow /center=Pid0
 <TOPIC> open trend <style> function
 Command   open trend
 
-Open a graph for a DsTrend or PlotGroup object.
+Open a graph for a DsTrend, DsTrendCurve or PlotGroup object.
 
 <B>xtt> open trend [/name=] [/title=]
 
-/name	<t>DsTrend or PlotGroup. Can be a list of DsTrend-objects separated
-        <t>by comma.
-/title  <t>Title of graph window.
+/name	<t>DsTrend, DsTrendCurve or PlotGroup. Can be a list of DsTrend-objects
+        <t>separated by comma.
+/title  <t>Title of curve window.
+/width  <t>Window width in pixels.
+/height <t>Window height in pixels.
+/fullscreen <t>Open the window fullscreen without frame.
+/maximize   <t>Open the window maximized with frame.
+/iconify    <t>Open the window iconified.
 
 Examples
 
 xtt> open trend /name=hql-hvk-flow-Trend,hql-hvk-temperature-Trend
+</TOPIC>
+
+<TOPIC> open fast <style> function
+Command   open fast
+
+Open a fast curve specfied with a DsFastCurve object.
+
+<B>xtt> open fast /name= [/title=]
+<B>xtt> open fast /file=
+
+/name	<t>DsFastCurve or PlotGroup. Can be a list of DsFast-objects
+        <t>separated by comma.
+/file   <t>Opens a file previously created with the export function for fast
+        <t>curves.
+/title  <t>Title of curve window.
+/width  <t>Window width in pixels.
+/height <t>Window height in pixels.
+/fullscreen <t>Open the window fullscreen without frame.
+/maximize   <t>Open the window maximized with frame.
+/iconify    <t>Open the window iconified.
+
+Examples
+
+xtt> open fast /name=hql-hvk-flow-Fast
+</TOPIC>
+
+<TOPIC> open tcurve <style> function
+Command   open tcurve
+
+Takes a snapshot of a trend curve and displays the snapshot. With the /new qualifier
+an empty curve window is opened where a previously stored snapshot curve can be viewed.
+
+<B>xtt> open tcurve /name= [/title=] [/height=] [/width=]
+<B>xtt> open tcurve /new [/title=]
+
+/name	<t>DsTrendCurve object to take a snapshot from.
+/new    <t>Opens an empty tcurve window where a stored snapshot curve can inserted from
+        <t>File/Open in the menu.
+/title  <t>Title of graph window.
+/width  <t>Window width in pixels.
+/height <t>Window height in pixels.
+/fullscreen <t>Open the window fullscreen without frame.
+/maximize   <t>Open the window maximized with frame.
+/iconify    <t>Open the window iconified.
+
+Example
+
+xtt> open tcurve /name=hql-hvk-flow-Trend
 </TOPIC>
 
 <TOPIC> open operatorwindow <style> function
@@ -2176,7 +2331,8 @@ Open the operatorwindow.
 Command   close graph
 
 Close a ge graph. The graph can be supplied as a pwg-file or as
-a XttGraph object.
+a XttGraph object. To close a graph from a button inside the graph
+$current can be used, 'close graph $current'.
 
 <B>xtt> close graph 'filename' /instance=
 <B>xtt> close graph /object=
@@ -2184,6 +2340,18 @@ a XttGraph object.
 /object	<t>A XttGraph-object. If the namestring begins with '*', * is
 	<t>replaced by the node object.
 /instance <t>Open the class graph for this instance.
+</TOPIC>
+
+<TOPIC> close multiview <style> function
+Command   close multiview
+
+Close a multiview window.
+To close a multiview from a button inside the multiview $current can be used
+'close multiview $current'.
+
+<B>xtt> close multiview 'objectname'
+
+'objectname' <t>Name of the XttMuliView object.
 </TOPIC>
 
 <TOPIC> close alarmlist <style> function

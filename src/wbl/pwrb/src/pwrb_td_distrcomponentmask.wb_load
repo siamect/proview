@@ -74,7 +74,7 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  The startup file $pwrp_load/ld_appl_'nodename'_'busnumber'.dat is included.
+    !  The startup file $pwrp_load/ld_appl_'nodename'_'busnumber'.txt is included.
     !*/
     Object ApplFile $Bit
      Body SysBody

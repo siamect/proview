@@ -1507,7 +1507,7 @@ Det här är katalogen där laddata-filer för projektets volymer skapas. Laddata-fi
 <c><volumename>.dbs 
 </topic>
 
-Här läggs även filer som skaöas när man editerar plc-programmet. De innehåller all information
+Här läggs även filer som skapas när man editerar plc-programmet. De innehåller all information
 som behövs för att visa plc-programmet grafiskt och för att köra plc trace. De här filerna
 är av filtyp .flw och kallas flow-filer.
 
@@ -1774,6 +1774,39 @@ objektet (ligger som barn till PlcPgm-objektet) till 0. Observera att eventuella
 också kan behöva startas.
 </topic>
 
+<topic> file_proview_cnf
+/etc/proview.cnf
+
+En konfigurations-fil för definition av diverse parametrar både i utvecklings-, runtime- och 
+lagrings-miljön. På en utvecklings-station gäller definitionerna alla projekt på noden.
+
+<b>Parametrar i utvecklings-miljön
+mysqlSocket <t><t>mysql socket för volymer med mysql databas. Default värde
+		<t><t>"/var/run/mysqld/mysqld.sock".
+mysqlServer <t><t>Server node för mysql.
+defaultProjectRoot <t><t>Default rot-katalog för projekt när nya projekt skapas. 
+	 	<t><t>Default värde "/usr/local/pwrp".
+defaultProductionBus <t><t>Default produktionsbuss när nya projekt skapas.
+	 	<t><t>Default värde 1.
+defaultSimulationBus <t><t>Default simuleringsbuss när nya projekt skapas.
+	 	<t><t>Default värde 999.
+defaultSystemGroup <t><t>Default systemgrupp när nya projekt skapas.
+	 	<t><t>Default värde "Common".
+defaultNodeHierRoot <t><t>Default namn på översta objektet i node-hierarkin när nya
+		<t><t>projekt skapas. Default värde "Nodes".
+qcomBusId <t><t>QCom bus identitet för simulering.
+
+<b>Parameterar i runtime-miljön
+qcomBusId <t><t>QCom bus identitet.
+curveExportFile <t><t>Default fil-namn vid export från en historik kurva.
+webDirectory <t><t>Katalog där web-filer placeras och läses av webservern.
+
+<b>Parameterar i lagrings-miljön
+sevDatabaseType <t><t>Databastyp, mysql eller sqlite.
+sevXttDefaultPriv <t><t>Default priviligier för access av sev-databasen från sev_xtt.
+sevMysqlEngine <t><t>Mysql engine för tabeller som skapas, innodb eller myisam.
+
+</topic>
 
 </headerlevel>
 </headerlevel>

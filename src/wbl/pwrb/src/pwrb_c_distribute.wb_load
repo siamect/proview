@@ -64,7 +64,7 @@ SObject pwrb:Class
 !    - plc file.
 !    - rtt crossreference files.
 ! @b ApplFile
-!  The startup file $pwrp_load/ld_appl_'nodename'_'busnumber'.dat is included.
+!  The startup file $pwrp_load/ld_appl_'nodename'_'busnumber'.txt is included.
 ! @b PwrpAliasFile
 !  $pwrp_load/pwrp_alias.dat is included.
 ! @b IncludeFiles
