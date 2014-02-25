@@ -23039,7 +23039,7 @@ pwr_exe:
 102 65532
 103 0
 57
-5700 NB! The motor meyby restart immediately after reset, Do you want reset converter?
+5700 Note! Maybe the motor is started again immediately after reset. Do you want to reset?
 99
 53
 5300 $object.ACS880.OpReset##Boolean
