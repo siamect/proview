@@ -146,6 +146,7 @@ static void *mb_receive( void *data)
       exception_code = 0;
 
       switch ( fc) {
+      case pwr_eModbus_FCEnum_ReadInputRegisters:
       case pwr_eModbus_FCEnum_ReadHoldingRegisters: {
 	io_sCard *cardp;
 	io_sServerModuleLocal *local_card;
