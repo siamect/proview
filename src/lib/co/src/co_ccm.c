@@ -1116,7 +1116,6 @@ static int operand_found( ccm_tRowCtx rowctx)
   else if ( rowctx->state == K_STATE_NUM)
   {
     /* Numeric found */
-    operand_p = calloc( 1, sizeof(*operand_p));
     operand_p->type = K_OPERAND_VALUE;
     strncpy( operand_p->name, &rowctx->line[rowctx->delim_pos], 
 	rowctx->pos - rowctx->delim_pos);
