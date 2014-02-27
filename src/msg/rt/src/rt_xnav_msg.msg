@@ -73,4 +73,5 @@ filecorrupt	<File is corrupt>				/error
 notcollectw	<Not collect window>				/error
 noclassgraph	<No classgraph found>				/error
 notauthorized   <Not authorized for this operation>		/error
+novalidcurve    <No valid curve found>				/error
 

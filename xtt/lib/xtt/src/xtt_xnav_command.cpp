@@ -2885,6 +2885,8 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tAName	pinstance_str;
     void 	*basewidget = 0;
 
+    // Command is "OPEN GRAPH"
+
     parent = ODD( dcli_get_qualifier( "/PARENT", 0, 0));
 
     if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
@@ -3217,6 +3219,8 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tStatus sts;
     pwr_tAttrRef aref_vect[2];
     
+    // Command is "OPEN MULTIVIEW"
+
     /* Get the name qualifier */
     if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
       if ( name_str[0] != '/')

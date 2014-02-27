@@ -140,6 +140,13 @@ XttFast::XttFast( void *parent_ctx,
     }
   }
 
+  if ( !fast_cnt) {
+    *sts = XNAV__NOVALIDCURVE;
+    free(gcd);
+    gcd = 0;
+    return;
+  }
+
   // Subscribe to object
   strcpy( attr_name, fast_name);
   strcat( attr_name, ".New");

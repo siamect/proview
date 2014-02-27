@@ -75,6 +75,9 @@ XttFastGtk::XttFastGtk( void *parent_ctx,
 {
   char title[250];
     
+  if ( EVEN(*sts))
+    return;
+
   *sts = XNAV__SUCCESS;
 
   if ( strcmp( name, "") != 0)
