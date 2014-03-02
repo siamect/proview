@@ -33,4 +33,5 @@ Epl_Module
 Epl_CNServer
 Epl_CNServerModule
 PiFace_Digital
+Gertboard
 #endif

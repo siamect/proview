@@ -1,7 +1,7 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X620"
-    Attr NextCix = "_X46"
+    Attr NextOix = "_X629"
+    Attr NextCix = "_X47"
     Attr NextTix[0] = "_X17"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
@@ -9878,7 +9878,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Body SysBody 22-FEB-2014 12:13:41.82
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 18512
+        Attr Flags = 51280
       EndBody
       Object RtBody $ObjBodyDef 1 22-FEB-2014 12:13:13.58
         Body SysBody 22-FEB-2014 13:37:10.90
@@ -9992,6 +9992,274 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr ChDi[5].ConversionOn = 1
           Attr ChDi[6].ConversionOn = 1
           Attr ChDi[7].ConversionOn = 1
+        EndBody
+      EndObject
+    EndObject
+    Object Gertboard $ClassDef 46 28-FEB-2014 18:46:15.80
+      Body SysBody 28-FEB-2014 18:46:22.36
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 51280
+      EndBody
+      Object RtBody $ObjBodyDef 1 28-FEB-2014 18:46:28.12
+        Body SysBody 28-FEB-2014 18:46:28.13
+          Attr StructName = "Gertboard"
+          Attr NextAix = "_X21"
+        EndBody
+        Object Description $Attribute 17 28-FEB-2014 18:49:51.47
+          Body SysBody 28-FEB-2014 18:49:51.47
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Process $Attribute 18 28-FEB-2014 18:49:51.47
+          Body SysBody 28-FEB-2014 18:49:51.47
+            Attr PgmName = "Process"
+            Attr Size = 4
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 19 28-FEB-2014 18:49:51.48
+          Body SysBody 28-FEB-2014 18:49:51.48
+            Attr PgmName = "ThreadObject"
+            Attr Size = 8
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object Status $Attribute 20 28-FEB-2014 18:49:51.48
+          Body SysBody 28-FEB-2014 18:49:51.48
+            Attr PgmName = "Status"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        Object Buf1 $Attribute 1 28-FEB-2014 18:46:38.37
+          Body SysBody 28-FEB-2014 18:46:43.24
+            Attr PgmName = "Buf1"
+            Attr Size = 176
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanD"
+          EndBody
+        EndObject
+        Object Buf2 $Attribute 2 28-FEB-2014 18:46:49.97
+          Body SysBody 28-FEB-2014 18:46:49.64
+            Attr PgmName = "Buf2"
+            Attr Size = 176
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanD"
+          EndBody
+        EndObject
+        Object Buf3 $Attribute 3 28-FEB-2014 18:46:51.70
+          Body SysBody 28-FEB-2014 18:46:51.37
+            Attr PgmName = "Buf3"
+            Attr Size = 176
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanD"
+          EndBody
+        EndObject
+        Object Buf4 $Attribute 4 28-FEB-2014 18:46:53.20
+          Body SysBody 28-FEB-2014 18:46:52.86
+            Attr PgmName = "Buf4"
+            Attr Size = 176
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanD"
+          EndBody
+        EndObject
+        Object Buf5 $Attribute 5 28-FEB-2014 18:46:54.58
+          Body SysBody 28-FEB-2014 18:46:54.23
+            Attr PgmName = "Buf5"
+            Attr Size = 176
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanD"
+          EndBody
+        EndObject
+        Object Buf6 $Attribute 6 28-FEB-2014 18:46:56.09
+          Body SysBody 28-FEB-2014 18:46:55.73
+            Attr PgmName = "Buf6"
+            Attr Size = 176
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanD"
+          EndBody
+        EndObject
+        Object Buf7 $Attribute 7 28-FEB-2014 18:46:57.50
+          Body SysBody 28-FEB-2014 18:46:57.14
+            Attr PgmName = "Buf7"
+            Attr Size = 176
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanD"
+          EndBody
+        EndObject
+        Object Buf8 $Attribute 8 28-FEB-2014 18:46:58.94
+          Body SysBody 28-FEB-2014 18:46:58.56
+            Attr PgmName = "Buf8"
+            Attr Size = 176
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanD"
+          EndBody
+        EndObject
+        Object Buf9 $Attribute 9 28-FEB-2014 18:47:00.43
+          Body SysBody 28-FEB-2014 18:47:00.04
+            Attr PgmName = "Buf9"
+            Attr Size = 176
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanD"
+          EndBody
+        EndObject
+        Object Buf10 $Attribute 10 28-FEB-2014 18:47:02.00
+          Body SysBody 28-FEB-2014 18:47:01.61
+            Attr PgmName = "Buf10"
+            Attr Size = 176
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanD"
+          EndBody
+        EndObject
+        Object Buf11 $Attribute 11 28-FEB-2014 18:47:03.69
+          Body SysBody 28-FEB-2014 18:47:03.29
+            Attr PgmName = "Buf11"
+            Attr Size = 176
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanD"
+          EndBody
+        EndObject
+        Object Buf12 $Attribute 12 28-FEB-2014 18:47:05.41
+          Body SysBody 28-FEB-2014 18:47:04.99
+            Attr PgmName = "Buf12"
+            Attr Size = 176
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanD"
+          EndBody
+        EndObject
+        Object AD0 $Attribute 13 28-FEB-2014 18:47:51.90
+          Body SysBody 28-FEB-2014 18:48:06.42
+            Attr PgmName = "AD0"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object AD1 $Attribute 14 28-FEB-2014 18:48:19.95
+          Body SysBody 28-FEB-2014 18:48:19.52
+            Attr PgmName = "AD1"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object DA0 $Attribute 15 28-FEB-2014 18:48:39.25
+          Body SysBody 28-FEB-2014 18:48:46.63
+            Attr PgmName = "DA0"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object DA1 $Attribute 16 28-FEB-2014 18:48:50.79
+          Body SysBody 28-FEB-2014 18:48:50.35
+            Attr PgmName = "DA1"
+            Attr Size = 240
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 621 28-FEB-2014 20:42:04.54
+        Object Pointed $Menu 622 28-FEB-2014 20:42:04.54
+          Object Connect $MenuButton 623 28-FEB-2014 20:42:04.54
+            Body SysBody 28-FEB-2014 20:42:04.54
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object PostCreate $DbCallBack 624 28-FEB-2014 20:42:04.54
+        Body SysBody 28-FEB-2014 20:42:04.54
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
+      EndObject
+      Object IoMethods $RtMethod 625 28-FEB-2014 20:42:04.54
+        Object IoCardInit $Method 626 28-FEB-2014 20:42:04.54
+          Body SysBody 28-FEB-2014 20:42:24.22
+            Attr MethodName = "Gertboard-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 627 28-FEB-2014 20:42:04.54
+          Body SysBody 28-FEB-2014 20:42:34.41
+            Attr MethodName = "Gertboard-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 628 28-FEB-2014 20:42:04.54
+          Body SysBody 28-FEB-2014 20:42:42.22
+            Attr MethodName = "Gertboard-IoCardRead"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 629 28-FEB-2014 20:42:04.54
+          Body SysBody 28-FEB-2014 20:42:50.41
+            Attr MethodName = "Gertboard-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Gertboard 2159771648 01-JAN-1970 00:00:00.00
+        Body RtBody 02-MAR-2014 14:14:58.90
+          Attr Process = 2
+          Attr Buf1.Number = 25
+          Attr Buf1.ConversionOn = 1
+          Attr Buf2.Number = 24
+          Attr Buf2.ConversionOn = 1
+          Attr Buf3.Number = 23
+          Attr Buf3.ConversionOn = 1
+          Attr Buf4.Number = 22
+          Attr Buf4.ConversionOn = 1
+          Attr Buf5.Number = 21
+          Attr Buf5.ConversionOn = 1
+          Attr Buf6.Number = 18
+          Attr Buf6.ConversionOn = 1
+          Attr Buf7.Number = 17
+          Attr Buf7.ConversionOn = 1
+          Attr Buf8.Number = 11
+          Attr Buf8.ConversionOn = 1
+          Attr Buf9.Number = 10
+          Attr Buf9.ConversionOn = 1
+          Attr Buf10.Number = 9
+          Attr Buf10.ConversionOn = 1
+          Attr Buf11.Number = 8
+          Attr Buf11.ConversionOn = 1
+          Attr Buf12.Number = 7
+          Attr Buf12.ConversionOn = 1
+          Attr AD0.ConversionOn = 1
+          Attr AD0.ScanInterval = 1
+          Attr AD0.RawValRangeHigh = 1.023000e+03
+          Attr AD0.ChannelSigValRangeHigh = 3.300000e+00
+          Attr AD0.SigValueUnit = "V"
+          Attr AD0.SensorPolyType = 1
+          Attr AD0.SensorSigValRangeHigh = 3.300000e+00
+          Attr AD0.ActValRangeHigh = 1.000000e+02
+          Attr AD1.ConversionOn = 1
+          Attr AD1.ScanInterval = 1
+          Attr AD1.RawValRangeHigh = 1.023000e+03
+          Attr AD1.ChannelSigValRangeHigh = 3.300000e+00
+          Attr AD1.SigValueUnit = "V"
+          Attr AD1.SensorPolyType = 1
+          Attr AD1.SensorSigValRangeHigh = 3.300000e+00
+          Attr AD1.ActValRangeHigh = 1.000000e+02
+          Attr DA0.OutPolyType = 1
+          Attr DA0.ActValRangeHigh = 1.000000e+02
+          Attr DA0.SensorSigValRangeHigh = 2.048000e+00
+          Attr DA0.SigValueUnit = "V"
+          Attr DA0.ChannelSigValRangeHigh = 2.048000e+00
+          Attr DA0.RawValRangeHigh = 4.095000e+03
+          Attr DA1.OutPolyType = 1
+          Attr DA1.ActValRangeHigh = 1.000000e+02
+          Attr DA1.SensorSigValRangeHigh = 2.048000e+00
+          Attr DA1.SigValueUnit = "V"
+          Attr DA1.ChannelSigValRangeHigh = 2.048000e+00
+          Attr DA1.RawValRangeHigh = 4.095000e+03
         EndBody
       EndObject
     EndObject
