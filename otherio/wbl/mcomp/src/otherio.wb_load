@@ -9874,6 +9874,30 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group RaspberryPi
+    !  @Summary Card object object for PiFace Digital.
+    !  Card object for PiFace Digital.
+    ! 	
+    !  PiFace Digital is an IO interface card to Raspberry Pi.
+    !  The card contains 8 digital inputs and 8 digital outputs.
+    !  The inputs and outputs are configured with internal channel arrays, ChDi and ChDo.
+    !
+    !  The board uses the SPI bus which has to be enabled on the Raspberry Pi. See
+    !  the PiFace manual for more information.
+    !
+    !  The PiFace_Digital object is configured as a child to a generic Rack object of class
+    !  BaseIORack.
+    ! 
+    !  The PiFace Digital interface uses the libpiface-V1.0 archive. If Process is set to Plc
+    !  this archive has to be present in the development enviroment, and specified in a 
+    !  BuildOptions object. If this is not the case, use the default IoComm process.
+    !
+    !  @b See also
+    !  @classlink BaseIORack basecomponent_baseiorack.html
+    !  @link Datasheet ../dsh/piface_digital.pdf
+    !*/
     Object PiFace_Digital $ClassDef 45 22-FEB-2014 13:36:57.56
       Body SysBody 22-FEB-2014 12:13:41.82
         Attr Editor = 0
@@ -9885,6 +9909,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr StructName = "PiFace_Digital"
           Attr NextAix = "_X22"
         EndBody
+        !/**
+        ! Optional description
+        !*/
         Object Description $Attribute 15 22-FEB-2014 12:13:13.58
           Body SysBody 22-FEB-2014 12:13:13.58
             Attr PgmName = "Description"
@@ -9892,6 +9919,10 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Process that handles the board.
+        ! Default IoComm.  
+        !*/
         Object Process $Attribute 16 22-FEB-2014 12:13:13.58
           Body SysBody 22-FEB-2014 12:13:13.58
             Attr PgmName = "Process"
@@ -9899,6 +9930,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
         Object ThreadObject $Attribute 17 22-FEB-2014 12:13:13.58
           Body SysBody 22-FEB-2014 12:13:13.58
             Attr PgmName = "ThreadObject"
@@ -9906,6 +9942,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
+        !/**
+        ! Board status.
+        !*/
         Object Status $Attribute 18 22-FEB-2014 12:13:13.58
           Body SysBody 22-FEB-2014 12:13:13.58
             Attr PgmName = "Status"
@@ -9913,13 +9952,19 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
+        !/**
+        ! Not implemented.
+        !*/
         Object ScanInterval $Attribute 19 22-FEB-2014 12:13:13.58
           Body SysBody 22-FEB-2014 12:13:13.58
             Attr PgmName = "ScanInterval"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
-        EndObject
+        EndObject 
+        !/**
+        ! Digital input channel array.
+        !*/
         Object ChDi $Attribute 20 22-FEB-2014 12:17:16.33
           Body SysBody 22-FEB-2014 12:17:47.35
             Attr PgmName = "ChDi"
@@ -9929,6 +9974,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
         EndObject
+        !/**
+        ! Digital output channel array.
+        !*/
         Object ChDo $Attribute 21 22-FEB-2014 12:18:02.37
           Body SysBody 22-FEB-2014 12:18:10.93
             Attr PgmName = "ChDo"
@@ -9995,6 +10043,41 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group RaspberryPi
+    !  @Summary Card object object for Gertboard.
+    !  Card object for Gertboard.
+    ! 	
+    !  Gertboard is an IO interface card to Raspberry Pi.
+    !  This object handles 12 buffered IO that can be configured as digital inputs or outputs,
+    !  two analog inputs and two analog outputs.
+    !
+    !  @h2 Digital channels
+    !  The buffered IO is configured with internal channel objects Buf1 - Buf12 of type ChanD.
+    !  Each buffered IO is connected to a gpio on the Raspberry Pi and the gpio number should be
+    !  stated in the Number attribute of the ChanD object. If the channels is an input or output
+    !  is stated in the Type attribute.
+    !  Note that the selected gpio and input/output selection also should be made with settings
+    !  on the board. See the Gertboard manual. The available gpio also depends on the Rasperry Pi
+    !  revision. 
+    !  Note also that if the analog input or output is used, five of the gpio are reserved for 
+    !  the SPI bus and these should not be configured for buffered IO. 
+    !
+    !  @h2 Analog channels
+    !  The analog channels uses the SPI bus and thus five of the gpio are used for the bus
+    !  communication. These have to be configured on the board. See the Gertboard manual for more
+    !  information. 
+    !  AD0 and AD1 are analog inputs and is configured by the AD0 and AD1 ChanAi objects.
+    !  DA0 and DA1 are analog outputs and is configured by the DA0 and DA1 ChanAo objects.
+    ! 
+    !  The Gertboard object is configured as a child to a generic Rack object of class
+    !  BaseIORack.
+    ! 
+    !  @b See also
+    !  @classlink BaseIORack basecomponent_baseiorack.html
+    !  @link Datasheet ../dsh/gertboard.pdf
+    !*/
     Object Gertboard $ClassDef 46 28-FEB-2014 18:46:15.80
       Body SysBody 28-FEB-2014 18:46:22.36
         Attr Editor = 0
@@ -10006,6 +10089,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr StructName = "Gertboard"
           Attr NextAix = "_X21"
         EndBody
+        !/**
+        ! Optional description
+        !*/
         Object Description $Attribute 17 28-FEB-2014 18:49:51.47
           Body SysBody 28-FEB-2014 18:49:51.47
             Attr PgmName = "Description"
@@ -10013,6 +10099,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Process that handles the board.
+        !*/
         Object Process $Attribute 18 28-FEB-2014 18:49:51.47
           Body SysBody 28-FEB-2014 18:49:51.47
             Attr PgmName = "Process"
@@ -10020,6 +10109,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
         Object ThreadObject $Attribute 19 28-FEB-2014 18:49:51.48
           Body SysBody 28-FEB-2014 18:49:51.48
             Attr PgmName = "ThreadObject"
@@ -10027,6 +10121,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
+        !/**
+        ! Board status.
+        !*/
         Object Status $Attribute 20 28-FEB-2014 18:49:51.48
           Body SysBody 28-FEB-2014 18:49:51.48
             Attr PgmName = "Status"
@@ -10034,6 +10131,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
+        !/**
+        ! Buffered IO channel.
+        ! The channel can be configured as digital input or output with the 
+        ! Type attribute.
+        ! The gpio number should be stated in the Number attribute.
+        !*/
         Object Buf1 $Attribute 1 28-FEB-2014 18:46:38.37
           Body SysBody 28-FEB-2014 18:46:43.24
             Attr PgmName = "Buf1"
@@ -10042,6 +10145,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanD"
           EndBody
         EndObject
+        !/**
+        ! Buffered IO channel.
+        ! The channel can be configured as digital input or output with the 
+        ! Type attribute.
+        ! The gpio number should be stated in the Number attribute.
+        !*/
         Object Buf2 $Attribute 2 28-FEB-2014 18:46:49.97
           Body SysBody 28-FEB-2014 18:46:49.64
             Attr PgmName = "Buf2"
@@ -10050,6 +10159,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanD"
           EndBody
         EndObject
+        !/**
+        ! Buffered IO channel.
+        ! The channel can be configured as digital input or output with the 
+        ! Type attribute.
+        ! The gpio number should be stated in the Number attribute.
+        !*/
         Object Buf3 $Attribute 3 28-FEB-2014 18:46:51.70
           Body SysBody 28-FEB-2014 18:46:51.37
             Attr PgmName = "Buf3"
@@ -10058,6 +10173,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanD"
           EndBody
         EndObject
+        !/**
+        ! Buffered IO channel.
+        ! The channel can be configured as digital input or output with the 
+        ! Type attribute.
+        ! The gpio number should be stated in the Number attribute.
+        !*/
         Object Buf4 $Attribute 4 28-FEB-2014 18:46:53.20
           Body SysBody 28-FEB-2014 18:46:52.86
             Attr PgmName = "Buf4"
@@ -10066,6 +10187,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanD"
           EndBody
         EndObject
+        !/**
+        ! Buffered IO channel.
+        ! The channel can be configured as digital input or output with the 
+        ! Type attribute.
+        ! The gpio number should be stated in the Number attribute.
+        !*/
         Object Buf5 $Attribute 5 28-FEB-2014 18:46:54.58
           Body SysBody 28-FEB-2014 18:46:54.23
             Attr PgmName = "Buf5"
@@ -10074,6 +10201,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanD"
           EndBody
         EndObject
+        !/**
+        ! Buffered IO channel.
+        ! The channel can be configured as digital input or output with the 
+        ! Type attribute.
+        ! The gpio number should be stated in the Number attribute.
+        !*/
         Object Buf6 $Attribute 6 28-FEB-2014 18:46:56.09
           Body SysBody 28-FEB-2014 18:46:55.73
             Attr PgmName = "Buf6"
@@ -10082,6 +10215,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanD"
           EndBody
         EndObject
+        !/**
+        ! Buffered IO channel.
+        ! The channel can be configured as digital input or output with the 
+        ! Type attribute.
+        ! The gpio number should be stated in the Number attribute.
+        !*/
         Object Buf7 $Attribute 7 28-FEB-2014 18:46:57.50
           Body SysBody 28-FEB-2014 18:46:57.14
             Attr PgmName = "Buf7"
@@ -10090,6 +10229,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanD"
           EndBody
         EndObject
+        !/**
+        ! Buffered IO channel.
+        ! The channel can be configured as digital input or output with the 
+        ! Type attribute.
+        ! The gpio number should be stated in the Number attribute.
+        !*/
         Object Buf8 $Attribute 8 28-FEB-2014 18:46:58.94
           Body SysBody 28-FEB-2014 18:46:58.56
             Attr PgmName = "Buf8"
@@ -10098,6 +10243,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanD"
           EndBody
         EndObject
+        !/**
+        ! Buffered IO channel.
+        ! The channel can be configured as digital input or output with the 
+        ! Type attribute.
+        ! The gpio number should be stated in the Number attribute.
+        !*/
         Object Buf9 $Attribute 9 28-FEB-2014 18:47:00.43
           Body SysBody 28-FEB-2014 18:47:00.04
             Attr PgmName = "Buf9"
@@ -10106,6 +10257,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanD"
           EndBody
         EndObject
+        !/**
+        ! Buffered IO channel.
+        ! The channel can be configured as digital input or output with the 
+        ! Type attribute.
+        ! The gpio number should be stated in the Number attribute.
+        !*/
         Object Buf10 $Attribute 10 28-FEB-2014 18:47:02.00
           Body SysBody 28-FEB-2014 18:47:01.61
             Attr PgmName = "Buf10"
@@ -10114,6 +10271,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanD"
           EndBody
         EndObject
+        !/**
+        ! Buffered IO channel.
+        ! The channel can be configured as digital input or output with the 
+        ! Type attribute.
+        ! The gpio number should be stated in the Number attribute.
+        !*/
         Object Buf11 $Attribute 11 28-FEB-2014 18:47:03.69
           Body SysBody 28-FEB-2014 18:47:03.29
             Attr PgmName = "Buf11"
@@ -10122,6 +10285,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanD"
           EndBody
         EndObject
+        !/**
+        ! Buffered IO channel.
+        ! The channel can be configured as digital input or output with the 
+        ! Type attribute.
+        ! The gpio number should be stated in the Number attribute.
+        !*/
         Object Buf12 $Attribute 12 28-FEB-2014 18:47:05.41
           Body SysBody 28-FEB-2014 18:47:04.99
             Attr PgmName = "Buf12"
@@ -10130,6 +10299,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanD"
           EndBody
         EndObject
+        !/**
+        ! Analog input channel.
+        !*/
         Object AD0 $Attribute 13 28-FEB-2014 18:47:51.90
           Body SysBody 28-FEB-2014 18:48:06.42
             Attr PgmName = "AD0"
@@ -10138,6 +10310,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
         EndObject
+        !/**
+        ! Analog input channel.
+        !*/
         Object AD1 $Attribute 14 28-FEB-2014 18:48:19.95
           Body SysBody 28-FEB-2014 18:48:19.52
             Attr PgmName = "AD1"
@@ -10146,6 +10321,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
         EndObject
+        !/**
+        ! Analog output channel.
+        !*/
         Object DA0 $Attribute 15 28-FEB-2014 18:48:39.25
           Body SysBody 28-FEB-2014 18:48:46.63
             Attr PgmName = "DA0"
@@ -10154,6 +10332,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
+        !/**
+        ! Analog output channel.
+        !*/
         Object DA1 $Attribute 16 28-FEB-2014 18:48:50.79
           Body SysBody 28-FEB-2014 18:48:50.35
             Attr PgmName = "DA1"
