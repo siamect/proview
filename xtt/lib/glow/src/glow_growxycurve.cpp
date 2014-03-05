@@ -234,7 +234,7 @@ void GrowXYCurve::set_xy_data( double *y_data, double *x_data, int curve_idx, in
   ctx->nodraw++;
   curve[j] = new GrowPolyLine( ctx, "", pointarray, cpoints, dt, 
 			       curve_width,
-			       0, fill_curve, 1, 0, dt_fill);
+			       0, fill_curve, 1, 0, dt_fill, 0, 1);
   ctx->nodraw--;
   free( (char *) pointarray);
   draw();

@@ -506,8 +506,8 @@ void GrowTrend::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 	x  = 0;
 	width += ll_x;
       }
-      if ( ur_x > w->window_width)
-	width -= ur_x - w->window_width;
+      if ( ur_x > w->subwindow_x + w->window_width)
+	width -= ur_x - (w->subwindow_x + w->window_width);
       ctx->gdraw->fill_rect( w, x, ll_y, width, ur_y - ll_y, drawtype);
     }
     else {
@@ -570,10 +570,10 @@ void GrowTrend::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
     int x = ll_x;
     if ( x < 0) {
       x  = 0;
-	width += ll_x;
+      width += ll_x;
     }
-    if ( ur_x > w->window_width)
-      width -= ur_x - w->window_width;
+    if ( ur_x > w->subwindow_x + w->window_width)
+      width -= ur_x - (w->subwindow_x + w->window_width);
     ctx->gdraw->line( w, x, y, x + width, y, drawtype, 0, 0);
   }
 
