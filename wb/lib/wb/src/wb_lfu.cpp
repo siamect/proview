@@ -2452,9 +2452,9 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  continue;
 
 	pwr_tString80 nodename;
-	pwr_tString80 cc;
-	pwr_tString80 cxx;
-	pwr_tString80 ar;
+	pwr_tString256 cc;
+	pwr_tString256 cxx;
+	pwr_tString256 ar;
 	pwr_tOpSysEnum opsys;
 	pwr_tString40 platform;
 	pwr_tString40 release;
