@@ -158,7 +158,7 @@ void setup_io()
    else
      clk_mem = clk_mem_orig;
 
-   clk_map = (unsigned char *)mmap(
+   clk_map = (char *)mmap(
       (caddr_t)clk_mem,
       BLOCK_SIZE,
       PROT_READ|PROT_WRITE,
@@ -187,7 +187,7 @@ void setup_io()
    else
      gpio_mem = gpio_mem_orig;
 
-   gpio_map = (unsigned char *)mmap(
+   gpio_map = (char *)mmap(
       (caddr_t)gpio_mem,
       BLOCK_SIZE,
       PROT_READ|PROT_WRITE,
@@ -215,7 +215,7 @@ void setup_io()
    else
      pwm_mem = pwm_mem_orig;
 
-   pwm_map = (unsigned char *)mmap(
+   pwm_map = (char *)mmap(
       (caddr_t)pwm_mem,
       BLOCK_SIZE,
       PROT_READ|PROT_WRITE,
@@ -243,7 +243,7 @@ void setup_io()
    else
      spi0_mem = spi0_mem_orig;
 
-   spi0_map = (unsigned char *)mmap(
+   spi0_map = (char *)mmap(
       (caddr_t)spi0_mem,
       BLOCK_SIZE,
       PROT_READ|PROT_WRITE,
@@ -271,7 +271,7 @@ void setup_io()
    else
      uart_mem = uart_mem_orig;
 
-   uart_map = (unsigned char *)mmap(
+   uart_map = (char *)mmap(
       (caddr_t)uart_mem,
       BLOCK_SIZE,
       PROT_READ|PROT_WRITE,

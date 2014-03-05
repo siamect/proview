@@ -56,8 +56,8 @@ void setup_spi()
 // datasheet of the AD chip (MCP3002)
 //
 int read_adc(int chan) // 'chan' must be 0 or 1. This is not checked!
-{ unsigned char v1,v2,rec_c;
-  int status,w;
+{ unsigned char v1,v2;
+  int status;
   // Set up for single ended, MS comes out first
   v1 = 0xD0 | (chan<<5);
   // Delay to make sure chip select is high for a short while
