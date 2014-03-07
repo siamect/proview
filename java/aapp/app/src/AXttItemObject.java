@@ -229,4 +229,7 @@ public class AXttItemObject extends AXttItemBase {
 		}
 
 	}
+        public int getClassId() {
+	    return classid;
+        }
 }

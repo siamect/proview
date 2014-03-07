@@ -87,6 +87,7 @@ public class GrowFrame implements GraphApplIfc {
     public boolean isAuthorized(int access) {
 	return false;
     }
+    public void openPopupMenu( String object, double x, double y) {}
 }
 
 

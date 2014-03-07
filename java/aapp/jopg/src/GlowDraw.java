@@ -536,6 +536,13 @@ public class GlowDraw implements GlowDrawIfc {
 	return 1;
     }
 
+    public void set_clip() {
+	if ( clipCount > 0) {
+	    canvas.clipRect(clip_x1[clipCount-1], clip_y1[clipCount-1], 
+			    clip_x2[clipCount-1], clip_y2[clipCount-1], Region.Op.REPLACE);
+	}
+    }
+
     public void reset_clip_rectangle() {
 	if ( clipCount == 0) {
 	    System.out.println("Clip mismatch");

@@ -13,13 +13,12 @@ import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
+import java.util.concurrent.Semaphore;
 
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.MotionEventCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.util.DisplayMetrics;
@@ -113,6 +112,9 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	Vector<PlowCmnIfc> cmnList = new Vector<PlowCmnIfc>();
         Canvas currentCanvas = null;
         float density;
+        final Semaphore semDraw = new Semaphore( 1, true);
+        String[] urlSymbols = null;
+        int lang = 45;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -252,6 +254,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		MenuItem item_opencrr = menu.findItem(R.id.opencrr_option);
 		MenuItem item_alarmack = menu.findItem(R.id.alarmack_option);
 		MenuItem item_navigator = menu.findItem(R.id.navigator_option);
+		MenuItem item_helpclass = menu.findItem(R.id.helpclass_option);
 		MenuItem item_changevalue = menu.findItem(R.id.changevalue_option);
 		if ( aev != null && currentCmn == aev.getCmnAla()) {
 			// Alarm list
@@ -267,6 +270,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			item_opencrr.setVisible(true);
 			item_alarmack.setVisible(true);
 			item_navigator.setVisible(true);
+			item_helpclass.setVisible(true);
 			item_changevalue.setVisible(false);
 		}
 		else if ( aev != null && currentCmn == aev.getCmnEve()) {
@@ -283,6 +287,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			item_opencrr.setVisible(true);
 			item_alarmack.setVisible(false);
 			item_navigator.setVisible(true);
+			item_helpclass.setVisible(true);
 			item_changevalue.setVisible(false);
 		}
 		else if ( currentCmn == cmnList.get(0)) {
@@ -299,6 +304,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			item_opencrr.setVisible(true);
 			item_alarmack.setVisible(false);
 			item_navigator.setVisible(true);
+			item_helpclass.setVisible(true);
 			item_changevalue.setVisible(true);
 		}
 		else if ( currentCmn.type() == PlowCmnIfc.TYPE_FLOW) {
@@ -315,6 +321,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			item_opencrr.setVisible(true);
 			item_alarmack.setVisible(false);
 			item_navigator.setVisible(true);
+			item_helpclass.setVisible(true);
 			item_changevalue.setVisible(false);
 		}
 		else if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH) {
@@ -331,6 +338,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			item_opencrr.setVisible(false);
 			item_alarmack.setVisible(false);
 			item_navigator.setVisible(true);
+			item_helpclass.setVisible(false);
 			item_changevalue.setVisible(false);
 		}
 		else if ( currentCmn.type() == PlowCmnIfc.TYPE_OPWIN) {
@@ -347,6 +355,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			item_opencrr.setVisible(false);
 			item_alarmack.setVisible(false);
 			item_navigator.setVisible(true);
+			item_helpclass.setVisible(false);
 			item_changevalue.setVisible(false);
 		}
 		else {
@@ -362,6 +371,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			item_opencrr.setVisible(true);
 			item_alarmack.setVisible(false);
 			item_navigator.setVisible(true);
+			item_helpclass.setVisible(false);
 			item_changevalue.setVisible(false);
 		}
 	}
@@ -393,7 +403,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		        pushCmn();
 			break;
 		case R.id.openobject_option: {
-			System.out.println("Open object");
+ 			System.out.println("Open object");
 			if ( !gdh.isAuthorized(Pwr.mAccess_AllRt)) {
 			    openMessageDialog("Not authorized");
 			    break;
@@ -670,6 +680,30 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			}
 			break;
 		}
+		case R.id.helpclass_option: {
+			System.out.println("Help Class");					
+			if ( !gdh.isAuthorized(Pwr.mAccess_AllRt)) {
+			    openMessageDialog("Not authorized");
+			    break;
+			}
+			switch (currentCmn.type()) {
+			case PlowCmnIfc.TYPE_PLOW: {
+				PlowNode selectedNode = (PlowNode)currentCmn.getSelect();
+				if ( selectedNode != null) {
+				    AXttItemBase baseItem = (AXttItemBase)selectedNode.getUserData();
+				    new GdhTask().execute(new GdhTaskArg(GdhTask.CLASS_HELP, baseItem));
+				}
+				break;
+			}
+			case PlowCmnIfc.TYPE_FLOW: {
+			    // TODO
+				FlowNode selectedNode = (FlowNode)currentCmn.getSelect();
+				new GdhTask().execute(new GdhTaskArg(GdhTask.FLOW_CLASSHELP, selectedNode));
+				break;
+			}
+			}
+			break;			
+		}
 		}
 		return true;
 	}
@@ -763,8 +797,32 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 					System.out.println("Long click event");
 					AXttItemBase item = (AXttItemBase)((PlowNode)e.object).getUserData();
 					if ( item instanceof AXttItemObject) {
-					    PwrtObjid oid = ((AXttItemObject)item).getObjid();
-					    new GdhTask().execute(new GdhTaskArg(GdhTask.OPEN_FLOW, oid));
+					    switch (((AXttItemObject)item).getClassId()) {
+					    case Pwrb.cClass_plc:
+					    case Pwrb.cClass_windowplc:
+					    case Pwrb.cClass_windowcond:
+					    case Pwrb.cClass_windoworderact:
+ 					    case Pwrb.cClass_windowsubstep: {
+						PwrtObjid oid = ((AXttItemObject)item).getObjid();
+						new GdhTask().execute(new GdhTaskArg(GdhTask.OPEN_FLOW, oid));
+						break;
+					    }
+ 					    case Pwrb.cClass_AppGraph:
+ 					    case Pwrb.cClass_WebGraph:
+ 					    case Pwrb.cClass_XttGraph: {
+						PwrtObjid oid = ((AXttItemObject)item).getObjid();
+						new GdhTask().execute(new GdhTaskArg(GdhTask.OPEN_DEFGRAPH, oid));
+						break;
+					    }
+					    }
+					}
+					else if ( item instanceof AXttItemAttr) {
+					    switch ( ((AXttItemAttr)item).getType()) {
+					    case Pwr.eType_String: {
+						System.out.println("URL found");
+						break;
+					    }
+					    }
 					}
 				}	
 				break;
@@ -833,6 +891,8 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		public static final int CONFIRM_ACTION = 20;
 		public static final int OPWIN = 21;
 		public static final int LOGIN = 22;
+    	        public static final int CLASS_HELP = 23;
+    	        public static final int FLOW_CLASSHELP = 24;
 		
 		@Override
 		protected Void doInBackground(GdhTaskArg... arg) {
@@ -851,6 +911,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				System.out.println("Open rootlist");
 				AXttItemObject.openRoot(axtt);
 				currentCmn.configure();
+				loadUrlSymbols();
 				initDone = true;
 				break;
 			}
@@ -905,7 +966,14 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				break;
 			case DYNAMIC_UPDATE:
 				gdh.getObjectRefInfoAll();
+				try {
+				    semDraw.acquire();
+				}
+				catch ( InterruptedException e) {
+				    System.out.println("InterruptedException");
+				}
 				currentCmn.dynamicUpdate();
+				semDraw.release();
 				break;
 			case OPEN_FLOWNODE: {
 				FlowNode node = (FlowNode)arg[0].item;
@@ -1054,30 +1122,79 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			}
 			case OPEN_DEFGRAPH: {
 				PwrtObjid oid = (PwrtObjid)arg[0].item;
-				CdhrString rName = gdh.objidToName(oid, Cdh.mName_pathStrict);
-				if (rName.evenSts())
-					break;
-				String name = rName.str + ".DefGraph";
-				rName = gdh.getObjectInfoString(name);
-				if (rName.evenSts())
-					break;
-				String oname = rName.str;
+				String action = null;
+				String instance = null;
+
+				CdhrClassId cret = gdh.getObjectClass(oid);
+				if (cret.evenSts())
+				    break;
 				
-				name = oname + ".Action";
-				rName = gdh.getObjectInfoString(name);
-				if (rName.evenSts())
+				switch ( cret.getClassId()) {
+				case Pwrb.cClass_XttGraph: {
+				  CdhrString rName = gdh.objidToName(oid, Cdh.mName_pathStrict);
+				  if (rName.evenSts())
+					break;
+				  String oname = rName.str;
+				  String name = oname + ".Action";
+				  rName = gdh.getObjectInfoString(name);
+				  if (rName.evenSts())
 					break;				
-				String action = rName.str;
+				  action = rName.str;
 				
-				name = oname + ".Object";
-				rName = gdh.getObjectInfoString(name);
-				if (rName.evenSts())
+				  name = oname + ".Object";
+				  rName = gdh.getObjectInfoString(name);
+				  if (rName.evenSts())
 					break;
-				String instance = rName.str;
-				if ( instance.equals(""))
+				  instance = rName.str;
+				  if ( instance.equals(""))
 					instance = null;
+				  break;
+				}
+				case Pwrb.cClass_AppGraph:
+				case Pwrb.cClass_WebGraph: {
+				  CdhrString rName = gdh.objidToName(oid, Cdh.mName_pathStrict);
+				  if (rName.evenSts())
+					break;
+				  String oname = rName.str;
+				  String name = oname + ".Name";
+				  rName = gdh.getObjectInfoString(name);
+				  if (rName.evenSts())
+					break;
+				  action = rName.str;
+				  if ( !action.contains(".pwg"))
+				       action = action + ".pwg";
+				  instance = null;
+				  break;
+				}
+				default: {
+				  CdhrString rName = gdh.objidToName(oid, Cdh.mName_pathStrict);
+				  if (rName.evenSts())
+					break;
+				  String name = rName.str + ".DefGraph";
+				  rName = gdh.getObjectInfoString(name);
+				  if (rName.evenSts())
+					break;
+				  String oname = rName.str;
 				
-				System.out.println("Open " + rName.str);
+				  name = oname + ".Action";
+				  rName = gdh.getObjectInfoString(name);
+				  if (rName.evenSts())
+					break;				
+				  action = rName.str;
+				
+				  name = oname + ".Object";
+				  rName = gdh.getObjectInfoString(name);
+				  if (rName.evenSts())
+					break;
+				  instance = rName.str;
+				  if ( instance.equals(""))
+					instance = null;
+				}
+				}				
+				if ( action == null)
+				    break;
+
+				System.out.println("Open " + action);
 				new ReaderTask().execute(new ReaderTaskArg(ReaderTask.GROW_READ, action, instance));
 				break;
 			}
@@ -1138,7 +1255,14 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			}
 			case EVENTHANDLER: {
 				GdhEventArg event = (GdhEventArg)arg[0].item;
+				try {
+				  semDraw.acquire();
+				}
+				catch ( InterruptedException e) {
+				    System.out.println("InterruptedException");
+				}
 				currentCmn.eventHandler(event.action, event.x, event.y);
+				semDraw.release();
 				break;
 			}
 			case VALUEINPUT_ACTION: {
@@ -1165,6 +1289,126 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			}
 			case CONFIRM_ACTION: {
 				((Dyn)confirmDyn).confirmedAction( Glow.eEvent_MB1Click, confirmObject);
+				break;
+			}
+			case CLASS_HELP: {
+			        int classid = 0;
+			        AXttItemBase item = (AXttItemBase)arg[0].item;
+				if ( item instanceof AXttItemObject)
+				    classid = ((AXttItemObject)item).getClassId();
+				else if ( item instanceof AXttItemAttrObject)
+				    classid = ((AXttItemAttrObject)item).getClassId();
+				if ( classid != 0) {
+				    CdhrObjid oret = gdh.classIdToObjid( classid);
+				    if ( oret.evenSts()) break;
+
+				    CdhrString sret = gdh.objidToName( oret.objid, Cdh.mName_volumeStrict); 
+				    if ( sret.evenSts()) break;
+				    
+				    int idx = sret.str.lastIndexOf(":");
+				    if ( idx == -1) break;
+				    
+				    String volume = sret.str.substring( 0, idx);
+				    idx = sret.str.lastIndexOf("-");
+				    if ( idx == -1) break;
+
+				    String className = sret.str.substring(idx + 1);
+
+				    String url;
+
+				    if ( isBaseClassVolume( volume))
+					url = "$pwr_doc/" + getLang() + "/orm/" + volume.toLowerCase() + "_" + 
+					    className.toLowerCase() + ".html";
+				    else
+					url = "http://" + pwrHost + "/pwrp_web/" + volume.toLowerCase() + "_" + 
+					    className.toLowerCase() + ".html";
+
+				    openURL( url, null);
+				}
+				break;
+			}
+			case FLOW_CLASSHELP: {
+			        int classid = 0;
+				FlowNode node = (FlowNode)arg[0].item;
+
+				PwrtObjid nodeObjid = node.getCmn().getObjid();
+				CdhrString rName = gdh.objidToName(nodeObjid, Cdh.mName_pathStrict);
+				if (rName.evenSts())
+					break;
+				String name = rName.str + "-" + node.getName();
+				CdhrObjid oret = gdh.nameToObjid(name);
+				if ( oret.evenSts()) {
+				    String oName = node.getTraceObject();
+
+				    oret = gdh.nameToObjid(oName);
+				    if ( oret.evenSts()) break;
+				}
+
+				CdhrClassId cret = gdh.getObjectClass(oret.objid);
+				if (cret.evenSts())
+				    break;
+
+				switch ( cret.getClassId()) {
+				case Pwrb.cClass_stodv:
+				case Pwrb.cClass_stodi:
+				case Pwrb.cClass_stodo:
+				case Pwrb.cClass_setdv:
+				case Pwrb.cClass_setdi:
+				case Pwrb.cClass_setdo:
+				case Pwrb.cClass_resdv:
+				case Pwrb.cClass_resdi:
+				case Pwrb.cClass_resdo:
+				case Pwrb.cClass_stoav:
+				case Pwrb.cClass_stoai:
+				case Pwrb.cClass_stoao:
+				case Pwrb.cClass_stodp:
+				case Pwrb.cClass_setdp:
+				case Pwrb.cClass_resdp:
+				case Pwrb.cClass_stoap:
+				case Pwrb.cClass_stoip:
+				case Pwrb.cClass_cstoav:
+				case Pwrb.cClass_cstoai:
+				case Pwrb.cClass_cstoao:
+				case Pwrb.cClass_cstoap:
+				case Pwrb.cClass_cstoip:
+				case Pwrb.cClass_GetData:
+				    String oName = node.getTraceObject();
+
+				    oret = gdh.nameToObjid(oName);
+				    break;
+				default: ;
+				}
+
+				if ( oret.evenSts()) break;
+
+				cret = gdh.getObjectClass(oret.objid);
+				if (cret.evenSts())
+				    break;
+
+				oret = gdh.classIdToObjid( cret.getClassId());
+				if ( oret.evenSts()) break;
+
+				CdhrString sret = gdh.objidToName( oret.objid, Cdh.mName_volumeStrict); 
+				if ( sret.evenSts()) break;
+				    
+				int idx = sret.str.lastIndexOf(":");
+				if ( idx == -1) break;
+				    
+				String volume = sret.str.substring( 0, idx);
+				idx = sret.str.lastIndexOf("-");
+				if ( idx == -1) break;
+
+				String className = sret.str.substring(idx + 1);
+				String url;
+
+				if ( isBaseClassVolume( volume))				    
+				    url = "$pwr_doc/" + getLang() + "/orm/" + volume.toLowerCase() + "_" + 
+					className.toLowerCase() + ".html";
+				else
+				    url = "http://" + pwrHost + "/pwrp_web/" + volume.toLowerCase() + "_" + 
+					className.toLowerCase() + ".html";
+
+				openURL( url, null);
 				break;
 			}
 			case LOGIN: {
@@ -1202,7 +1446,8 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 
 						switch ( cret.getClassId()) {
 						case Pwrb.cClass_AppGraph:
-						    addGraphList(oret.objid);
+						case Pwrb.cClass_AppLink:
+						    addGraphList(oret.objid, cret.getClassId());
 						    break;
 						case Pwrs.cClass_PlantHier:
 						case Pwrs.cClass_NodeHier:
@@ -1210,8 +1455,10 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 							  oret2.oddSts(); 
 							  oret2 = gdh.getNextSibling(oret2.objid)) {
 							CdhrClassId cret2 = gdh.getObjectClass(oret2.objid);
-							if (cret2.oddSts() && cret2.getClassId() == Pwrb.cClass_AppGraph)
-							    addGraphList(oret2.objid);
+							if (cret2.oddSts() && 
+							    (cret2.getClassId() == Pwrb.cClass_AppGraph ||
+							     cret2.getClassId() == Pwrb.cClass_AppLink))
+							    addGraphList(oret2.objid, cret2.getClassId());
 						    }
 						    break;
 						default: ;
@@ -1241,11 +1488,12 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				else
 					appl.setTitle("PwrXtt on " + pwrHost);
 			}
-				view.invalidate();
+			// if ( currentCmn.type() != PlowCmnIfc.TYPE_GRAPH )
+			  view.invalidate();
 		}
 	}
 
-    private void addGraphList( PwrtObjid objid) {
+    private void addGraphList( PwrtObjid objid, int cid) {
 	CdhrString sret = gdh.objidToName(objid, Cdh.mName_volumeStrict);
 	
 	String name = sret.str;
@@ -1279,13 +1527,23 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		System.out.println( "Unable to open file " + image  + " " + url);
 	    }
 	}
-	aName = name + ".Name";
-	sret = gdh.getObjectInfoString(aName);
-	if ( sret.evenSts())
-	    return;
+	if ( cid == Pwrb.cClass_AppGraph) {
+	    info.type = AGraphInfo.TYPE_GRAPH;
+	    aName = name + ".Name";
+	    sret = gdh.getObjectInfoString(aName);
+	    if ( sret.evenSts())
+		return;
+	    info.graph = sret.str;
+	}
+	else if ( cid== Pwrb.cClass_AppLink) {
+	    info.type = AGraphInfo.TYPE_LINK; 
+	    aName = name + ".URL";
+	    sret = gdh.getObjectInfoString(aName);
+	    if ( sret.evenSts())
+		return;
+	    info.graph = sret.str;
+	}
 	
-	info.graph = sret.str;
-
 	aName = name + ".Text";
 	sret = gdh.getObjectInfoString(aName);
 	if ( sret.evenSts())
@@ -1343,9 +1601,9 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	    if ( me == null)
 		return true;
 
-	    int action = MotionEventCompat.getActionMasked( me);
-	    float x = MotionEventCompat.getX(me, 0);
-	    float y = MotionEventCompat.getY(me, 0);
+	    int action = me.getActionMasked();
+	    float x = me.getX();
+	    float y = me.getY();
 	    boolean isSustained = false;		
 	    boolean sliderActive = false;
 
@@ -1445,8 +1703,8 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			currentCmn.zoom(distance/eventDistance);
 		    else
 			currentCmn.zoom(distance/eventDistance,
-					(MotionEventCompat.getX(me, 0) + MotionEventCompat.getX(me, 1))/2, 
-					(MotionEventCompat.getY(me, 0) + MotionEventCompat.getY(me, 1))/2 + viewOffsetY);
+					(me.getX(0) + me.getX(1))/2, 
+					(me.getY(0) + me.getY(1))/2 + viewOffsetY);
 		    eventDistance = distance;
 		    view.invalidate();
 		}
@@ -1535,13 +1793,22 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	    case MotionEvent.ACTION_POINTER_UP:
 		System.out.println("Event Action Pointer Up");
 		eventMode = MODE_SCROLL;
+		int idx = me.getActionIndex();
+		if ( idx == 0) {
+		    lastTouchX = me.getX(1);
+		    lastTouchY = me.getY(1);
+		}
+		else {
+		    lastTouchX = x;
+		    lastTouchY = y;
+		}
 		break;
 	    }
 	    return true;
 	}
 	private float eventDistance(MotionEvent me) {
-	        float x = MotionEventCompat.getX(me, 0) - MotionEventCompat.getX(me, 1);
-	        float y = MotionEventCompat.getY(me, 0) - MotionEventCompat.getY(me, 1);
+	        float x = me.getX(0) - me.getX(1);
+	        float y = me.getY(0) - me.getY(1);
 		
 		return FloatMath.sqrt(x * x + y * y);
 	}
@@ -1571,7 +1838,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	}
 	private class MainView extends SurfaceView {
 		Bitmap bitmap = null;
-		Canvas drawCanvas;
+	        Canvas drawCanvas, currentCanvas;
 		
 		public MainView(Context context) {
 			super(context);
@@ -1585,19 +1852,24 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 
 		    if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH) {
 	    			if ( bitmap == null) {
-	    				bitmap = Bitmap.createBitmap(canvas.getWidth(), canvas.getHeight(), Bitmap.Config.ARGB_8888);
-	    				drawCanvas = new Canvas(bitmap);
-    	    			drawCanvas.drawColor(graph.cmn.gdraw.getColor(graph.cmn.background_color));
-	    			}
-	    		
+				    bitmap = Bitmap.createBitmap(canvas.getWidth(), canvas.getHeight(), Bitmap.Config.ARGB_8888);
+				    drawCanvas = new Canvas(bitmap);
+				    drawCanvas.drawColor(graph.cmn.gdraw.getColor(graph.cmn.background_color));
+	    			}	    		
+				try {
+				  semDraw.acquire();
+				}
+				catch ( InterruptedException e) {
+				    System.out.println("InterruptedException");
+				}
 	    			currentCmn.setCanvas(drawCanvas);
-	    			drawCanvas.drawColor(graph.cmn.gdraw.getColor(graph.cmn.background_color));
-				// if ( currentCmn.getNodraw() > 0)
-				//   currentCmn.resetNodraw();
+				graph.cmn.gdraw.set_clip();
+				drawCanvas.drawColor(graph.cmn.gdraw.getColor(graph.cmn.background_color));
 	    			currentCmn.draw();
-				// currentCmn.setNodraw();
-	    			canvas.drawBitmap(bitmap,  0F, 0F, null);
-				
+				currentCanvas = getHolder().lockCanvas();
+	    			currentCanvas.drawBitmap(bitmap,  0F, 0F, null);
+				getHolder().unlockCanvasAndPost(currentCanvas);
+				semDraw.release();
 	    		}
 	    		else {
 
@@ -1923,12 +2195,24 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
         				Boolean newFrame = true;
         				String frameName = null;
         				String urlValue = cli.getQualValue("cli_arg2");
-					if (!urlValue.startsWith("http://") && !urlValue.startsWith("https://"))
-					    urlValue = "http://" + urlValue;
+
+					if ( urlValue.startsWith("pwrb_") ||
+					     urlValue.startsWith("pwrs_") ||
+					     urlValue.startsWith("nmps_") ||
+					     urlValue.startsWith("profibus_") ||
+					     urlValue.startsWith("otherio_") ||
+					     urlValue.startsWith("opc_") ||
+					     urlValue.startsWith("basecomponent_") ||
+					     urlValue.startsWith("abb_") ||
+					     urlValue.startsWith("siemens_") ||
+					     urlValue.startsWith("ssabox_"))
+					    // Object reference manual
+					    urlValue = "$pwr_doc/" + getLang() + "/orm/" + urlValue;
+
         				System.out.println("open url " + urlValue);
-					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlValue));
-					startActivity(browserIntent);
- 
+					// Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlValue));
+					//startActivity(browserIntent);
+					openURL( urlValue, null); 
 				}
         			else if ( trend.length() >= cli_arg1.length() &&
         					trend.substring(0,cli_arg1.length()).equals(cli_arg1)) {
@@ -1990,6 +2274,51 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 			    }
 			}
         	}
+		else if ( command.equals("HELP")) {
+		    String fileName = "xtt_help_";
+		    String bookmarkValue = null;
+
+		    if ( cli.qualifierFound("/VERSION")) {
+			fileName = pwrHost + "/pwr_doc/xtt_version_help_version.html";
+			openURL( fileName, null);
+		    }
+		    else {
+			if ( cli.qualifierFound("/BASE"))
+			    // Not language dependent !! TODO
+			    fileName = pwrHost + "/pwr_doc/help/xtt_help_";
+			else
+			    fileName = pwrHost + "/pwrp_web/xtt_help_";
+			
+			if ( cli.qualifierFound("cli_arg1"))
+			    fileName += cli.getQualValue("cli_arg1").toLowerCase();
+			if ( cli.qualifierFound("cli_arg2"))
+			    fileName += "_" + cli.getQualValue("cli_arg2").toLowerCase();
+			if ( cli.qualifierFound("cli_arg3"))
+			    fileName += "_" + cli.getQualValue("cli_arg3").toLowerCase();
+			if ( cli.qualifierFound("cli_arg4"))
+			    fileName += "_" + cli.getQualValue("cli_arg4").toLowerCase();
+			
+			if ( fileName.startsWith("pwrb_") ||
+			     fileName.startsWith("pwrs_") ||
+			     fileName.startsWith("nmps_") ||
+			     fileName.startsWith("profibus_") ||
+			     fileName.startsWith("otherio_") ||
+			     fileName.startsWith("opc_") ||
+			     fileName.startsWith("basecomponent_") ||
+			     fileName.startsWith("abb_") ||
+			     fileName.startsWith("siemens_") ||
+			     fileName.startsWith("ssabox_"))
+			    // Object reference manual
+			    fileName = "$pwr_doc/orm/" + fileName;
+			
+			if ( cli.qualifierFound("/BOOKMARK"))
+			    bookmarkValue = cli.getQualValue("/BOOKMARK");
+			
+			System.out.println( "Loading helpfile \"" + fileName + "\"");
+			openURL( fileName, bookmarkValue);
+		    }
+		    local_cmd = true;
+		}
         	else if ( command.equals("CHECK")) {
         		if ( cli.qualifierFound("cli_arg1")) {
 
@@ -2177,6 +2506,148 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 	case PlowCmnIfc.TYPE_OPWIN:
 	    // Close app ?
 	    break;
+	}
+    }
+
+    void loadUrlSymbols() {
+
+	// Get language from webhandler object
+	CdhrObjid webHandler = gdh.getClassList( Pwrb.cClass_WebHandler);
+	if ( webHandler.evenSts()) return;
+
+	CdhrString webHandlerName = gdh.objidToName( webHandler.objid, Cdh.mName_volumeStrict);
+	if ( webHandlerName.evenSts()) return;
+
+	String attr = webHandlerName.str + ".Language";
+
+	CdhrInt iAttrValue = gdh.getObjectInfoInt( attr);
+	if ( iAttrValue.evenSts()) return;
+
+	lang = iAttrValue.value;
+
+	// Get URL Symbols
+	CdhrObjid webConfig = gdh.getClassList( Pwrb.cClass_WebBrowserConfig);
+	if ( webConfig.evenSts()) return;
+
+	CdhrString webName = gdh.objidToName( webConfig.objid, Cdh.mName_volumeStrict);
+	if ( webConfig.evenSts()) return;
+
+	urlSymbols = new String[10];
+	for ( int i = 0; i < 10; i++) {
+	    attr = webName.str + ".URL_Symbols[" + i + "]";
+	    CdhrString attrValue = gdh.getObjectInfoString( attr);
+	    if ( attrValue.evenSts()) return;
+	    
+	    urlSymbols[i] = attrValue.str;
+	}
+    }
+	    
+    String replaceUrlSymbol( String url) {
+	if ( urlSymbols == null)
+	    return url;
+
+	for ( int i = 0; i < 10; i++) {
+	    if ( urlSymbols[i].equals(""))
+		continue;
+	    
+	    StringTokenizer token = new StringTokenizer( urlSymbols[i]);
+	    String symbol = "$" + token.nextToken();
+	    if ( !token.hasMoreTokens()) 
+		continue;
+  
+	    String value = token.nextToken();
+
+	    int idx = url.lastIndexOf( symbol);
+	    while ( idx != -1) {
+		url = url.substring( 0, idx) + value + url.substring( idx + symbol.length());
+		idx = url.lastIndexOf( symbol);
+	    }
+	}
+	return url;
+    }
+
+    void openURL( String name, String bookmark) {
+	System.out.println("openURL " + name);
+
+	// Replace any URL symbol
+	name = replaceUrlSymbol( name);
+
+	String url_str = null;
+	if ( name.startsWith("http:") || name.startsWith("https:")) {
+	    url_str = name;
+	    if ( url_str.lastIndexOf(".html") == -1 &&
+		 url_str.lastIndexOf(".shtml") == -1 &&
+		 url_str.lastIndexOf(".htm") == -1 &&
+		 url_str.lastIndexOf(".gif") == -1 &&
+		 url_str.lastIndexOf(".jpg") == -1 &&
+		 url_str.lastIndexOf(".png") == -1 &&
+		 url_str.lastIndexOf(".pdf") == -1)
+		url_str = url_str + ".html";
+	}
+	else if ( name.startsWith("$pwr_doc/")) {
+	    url_str = "http://" + pwrHost + "/pwr_doc/" + name.substring(9);	      
+	    if ( url_str.lastIndexOf(".html") == -1 &&
+		 url_str.lastIndexOf(".shtml") == -1 &&
+		 url_str.lastIndexOf(".htm") == -1 &&
+		 url_str.lastIndexOf(".pdf") == -1)
+		url_str = url_str + ".html";
+	}
+	else {
+	    String path = "http://";
+	    
+	    if ( name.lastIndexOf(".html") == -1 &&
+		 name.lastIndexOf(".shtml") == -1 &&
+		 name.lastIndexOf(".htm") == -1 &&
+		 name.lastIndexOf(".gif") == -1 &&
+		 name.lastIndexOf(".jpg") == -1 &&
+		 name.lastIndexOf(".png") == -1 &&
+		 name.lastIndexOf(".pdf") == -1)
+		url_str = new String( path + name + ".html");
+	    else
+		url_str = new String( path + name);
+	    if ( bookmark != null)
+		url_str += "#" + bookmark;
+	}
+	System.out.println( "Opening URL: " + url_str);
+	
+	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url_str));
+	startActivity(browserIntent);
+    }
+    
+    boolean isBaseClassVolume(String vname) {
+	String v = vname.toLowerCase();
+	if ( v.equals("pwrb") ||
+	     v.equals("pwrs") ||
+	     v.equals("nmps") ||
+	     v.equals("profibus") ||
+	     v.equals("otherio") ||
+	     v.equals("opc") ||
+	     v.equals("basecomponent") ||
+	     v.equals("abb") ||
+	     v.equals("siemens") ||
+	     v.equals("miscellaneous") ||
+	     v.equals("ssabox"))
+	    return true;
+	return false;
+    }
+		
+    String getLang() {
+	final int LANGUAGE_en_US = 45;
+        final int LANGUAGE_de_DE = 31;
+	final int LANGUAGE_fr_FR = 76;
+        final int LANGUAGE_sv_SE = 119;
+
+	switch ( lang) {
+	case LANGUAGE_en_US:
+	    return new String("en_us");
+	case LANGUAGE_de_DE:
+	    return new String("de_de");
+	case LANGUAGE_fr_FR:
+	    return new String("fr_fr");
+	case LANGUAGE_sv_SE:
+	    return new String("sv_se");
+	default:
+	    return new String("en_us");
 	}
     }
 }

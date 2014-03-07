@@ -71,6 +71,10 @@
      android:title="Alarm Acknowledge"
 	 android:icon="@drawable/xnav_openobject"/>
    <item
+	 android:id="@+id/helpclass_option"
+     android:title="Help Class"
+	 android:icon="@drawable/xnav_openobject"/>
+   <item
 	 android:id="@+id/changevalue_option"
      android:title="Change Value"/>
    

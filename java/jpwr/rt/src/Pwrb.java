@@ -70,6 +70,7 @@ public class Pwrb {
   public static final int cClass_ApDistribute = 133232;
   public static final int cClass_AppGraph = 135960;
   public static final int cClass_ApplDistribute = 131208;
+  public static final int cClass_AppLink = 136000;
   public static final int cClass_ASup = 131216;
   public static final int cClass_Av = 131224;
   public static final int cClass_AvArea = 131232;
@@ -318,4 +319,5 @@ public class Pwrb {
   public static final int cClass_WebGraph = 133472;
   public static final int cClass_WebLink = 133480;
   public static final int cClass_xor = 133136;
+  public static final int cClass_XttGraph = 133464;
 }

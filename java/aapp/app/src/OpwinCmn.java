@@ -116,9 +116,16 @@ public class OpwinCmn implements PlowCmnIfc {
 		  switch (action) {
 		  case PlowCmnIfc.ACTION_UP:
 		      if ( currentGraph != null) {
-			  String cmd = "open graph " + currentGraph.graph;
-			  if ( Math.abs(fx - downX) < 10 && Math.abs(fy - downY) < 10)
-			      appl.command(cmd);
+			  if ( currentGraph.type == AGraphInfo.TYPE_GRAPH) {
+			      String cmd = "open graph " + currentGraph.graph;
+			      if ( Math.abs(fx - downX) < 10 && Math.abs(fy - downY) < 10)
+				  appl.command(cmd);
+			  }
+			  else if ( currentGraph.type == AGraphInfo.TYPE_LINK) {
+			      String cmd = new String("open url \"" + currentGraph.graph + "\"");
+			      if ( Math.abs(fx - downX) < 10 && Math.abs(fy - downY) < 10)
+				  appl.command(cmd);
+			  }
 			  currentGraph.inverted = false;
 			  currentGraph = null;
 		      }

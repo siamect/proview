@@ -12,6 +12,8 @@ public class AXttItemAttrObject extends AXttItemBase {
 	int flags;
 	int type;
         PwrtAttrRef aref;
+	int classid;
+        
     
 	
 	AXttItemAttrObject(AXtt axtt, PwrtObjid objid, String name, String fullName, int flags, int type,
@@ -29,6 +31,8 @@ public class AXttItemAttrObject extends AXttItemBase {
 
 		CdhrTypeId cr = axtt.gdh.getAttrRefTid( ar.aref);
 		if ( cr.evenSts()) return;
+
+		classid = cr.typeId;
 
 		CdhrObjid coidret = axtt.gdh.classIdToObjid(cr.typeId);
 		if ( coidret.evenSts()) return;
@@ -109,5 +113,8 @@ public class AXttItemAttrObject extends AXttItemBase {
 
         public PwrtAttrRef getAttrRef() {
 	    return aref;	    
+        }
+        public int getClassId() {
+	    return classid;
         }
 }

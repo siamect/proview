@@ -50,6 +50,7 @@ public class GrowCtx implements GrowCtxIfc {
     double node_move_last_y;
     double slider_cursor_offset;
     boolean trace_started = false;
+    boolean drawing = false;
 
     public GrowCtx(GrowApplIfc appl) {
 	cmn = new GrowCmn( this, appl);
@@ -366,6 +367,7 @@ public class GrowCtx implements GrowCtxIfc {
     }
 
     public void draw() {
+	drawing = true;
 	// Draw background color
 	// draw.fillRect(0, 0, cmn.mw.window_width, cmn.mw.window_height, background_color);
 	// Draw connections
@@ -378,10 +380,14 @@ public class GrowCtx implements GrowCtxIfc {
 	    if ( ((GlowArrayElem)cmn.a.get(i)).type() != Glow.eObjectType_Con)
 		((GlowArrayElem)cmn.a.get(i)).draw();
 	}
+	drawing = false;
     }
 
     public void draw( double ll_x, double ll_y, double ur_x, double ur_y) {
 	// TODO
+	if ( drawing)
+	    return;
+
 	for ( int i = 0; i < cmn.a.size(); i++) {
 	    if ( ((GlowArrayElem)cmn.a.get(i)).type() == Glow.eObjectType_Con)
 		((GlowArrayElem)cmn.a.get(i)).draw();
