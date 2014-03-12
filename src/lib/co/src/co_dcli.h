@@ -142,7 +142,7 @@ typedef struct s_element {
 	int		undefined;
 	char		typestr[40];
 	char		struct_begin;
-	char		name[40];
+	char		name[256];
 	unsigned int	mask;
         char            filename[120];
         int             line_nr;

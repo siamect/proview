@@ -158,7 +158,7 @@ static int	process_struct( 	t_ctx		ctx,
 	int	elnum[5];
 	char	*s, *t;
 	char	*begin_addr, *end_addr;
-	char	name[40];
+	char	name[80];
 	int	i, j, k;
 	dcli_sStructElement *element_p;
 	dcli_sStructElement *e_p;
@@ -166,7 +166,7 @@ static int	process_struct( 	t_ctx		ctx,
 	int	first;
 	int	nr;
 	int	count;
-	char	tmp[40];
+	char	tmp[256];
 	int	highest_struct_proc;
 
 	if ( filectx->struct_proc == 0)
@@ -929,14 +929,14 @@ static int	find_struct( 	t_ctx	ctx,
 	dcli_sStructElement *next_ptr;
 	t_filectx	filectx;
 	char	*s1, *s2;
-	char	tmp[40];
+	char	tmp[256];
 	int	nr;
 	int	count;
 	int	elnumcount;
 	int	elnum[5];
-	char	includename[80];
-	char	normfilename[120];
-	char	fname[120];
+	char	includename[256];
+	char	normfilename[256];
+	char	fname[256];
 	int	return_sts;
 	t_define	*define_ptr;
 	char	define_elem[2][READSTRUCT_DEFINESIZE];
