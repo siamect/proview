@@ -1186,13 +1186,13 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
   ref_wblnode second_child;
   ref_wblnode next_sibling;
   int oper;
-  char value[2048];
+  char value[8192];
   size_t size, offset;
   int elements;
   pwr_tTypeId tid;
   pwr_eType type;
   int flags;
-  char buf[2048];
+  char buf[8192];
   int int_val, current_int_val;
   bool string_continue = false;
 
@@ -1391,12 +1391,12 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
   ref_wblnode second_child;
   ref_wblnode next_sibling;
   int oper;
-  char value[2048];
+  char value[8192];
   size_t size, offset;
   int elements;
   pwr_tTypeId tid;
   pwr_eType type;
-  char buf[2048];
+  char buf[8192];
   int int_val, current_int_val;
   wb_cdrep *cdrep;
   wb_adrep *adrep;
@@ -1910,7 +1910,7 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
   else if (getType() == tokens.STRING_LITERAL)
   {
     // Remove quotes and replace \" with " and also backslash
-    char str[2048];
+    char str[8192];
     const char *s;
     char *t;
     bool first = true;
