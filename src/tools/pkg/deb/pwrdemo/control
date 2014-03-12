@@ -1,9 +1,9 @@
 Package: pwrdemo51
-Version: 5.1.0-1
+Version: 5.1.0-4
 Section: base
 Priority: optional
 Architecture: i386
-Depends: pwr51 (>= 5.1.0-1)
+Depends: pwr51 (>= 5.1.0-4)
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview Demo Project package
  Proview Demo Project

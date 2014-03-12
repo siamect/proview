@@ -1,5 +1,5 @@
 Package: pwrrt
-Version: 5.1.0-1
+Version: 5.1.0-4
 Section: base
 Priority: optional
 Architecture: i386
@@ -9,3 +9,15 @@ Maintainer: Proview <postmaster@proview.se>
 Description:
  Proview runtime environment
  5.1.0-1 Base release
+ 5.1.0-2
+  - Wb history html file size limited to 1000 rows.
+  - Ge polyline draw bugfix for subwindows.
+  - Web, open graph from pwg-files as default, methods for pwg-graphs added.
+ 5.1.0-3
+  - Class AppLink added.
+  - Ge trend and xycurve fix for subwindows.
+ 5.1.0-4
+  - Support for Gertbord and PiFace.
+  - wb load of DataArithmL bugfix.
+  - Ge bugfix for scale with snap to grid.
+  - Xtt read struct fix, element name buffer increased.
