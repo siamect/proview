@@ -406,6 +406,11 @@ palette NavigatorPalette
           class Ssab_DO32DKS_Stall
         }
       }
+      menu RaspberryPI
+      {
+	class Gertboard
+        class PiFace_Digital
+      }
       menu SPI
       {
         class SPI_Slave
