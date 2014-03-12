@@ -213,23 +213,23 @@ pwrc_prlist_read()
     return
   fi
   
-  let i=0
-  let j=0
+  pr_i=0
+  pr_j=0
   while read name base root path descr; do
     if [ -n "$name" ] && [ "${name:0:1}" != "!" ] && [ "${name:0:1}" != "#" ]; then
       if [ "$name" == "%base" ]; then
-        b_name_array[$j]=$base
-	b_root_array[$j]=$root
-        j=$j+1
+        b_name_array[$pr_j]=$base
+	b_root_array[$pr_j]=$root
+        pr_j=$pr_j+1
       else
-        name_array[$i]=$name
-        base_array[$i]=$base
-        root_array[$i]=$root
-        path_array[$i]=$path
+        name_array[$pr_i]=$name
+        base_array[$pr_i]=$base
+        root_array[$pr_i]=$root
+        path_array[$pr_i]=$path
         descr=${descr#\"}
         descr=${descr%\"}
-        desc_array[$i]=$descr
-        i=$i+1
+        desc_array[$pr_i]=$descr
+        pr_i=$pr_i+1
       fi
     fi
       
@@ -290,17 +290,17 @@ pwrc_prlist_list_project()
 
 pwrc_prlist_get_index()
 {
-  let i=0
+  pr_i=0
 
   pwrc_status=$pwrc__noproj
 
-  while [ "${name_array[$i]}" != "" ]; do
-    if [ "${base_array[$i]}" != "" ] && [ "${name_array[$i]}" == $1 ]; then
-      pwrc_current_index=$i
+  while [ "${name_array[$pr_i]}" != "" ]; do
+    if [ "${base_array[$pr_i]}" != "" ] && [ "${name_array[$pr_i]}" == $1 ]; then
+      pwrc_current_index=$pr_i
       pwrc_status=$pwrc__success
       break;
     fi
-    i=$i+1
+    pr_i=$pr_i+1
   done
 }
 
