@@ -250,6 +250,7 @@ palette NavigatorPalette
       class DsFastConf
       class DsTrendConf
       class IOHandler
+      class EplHandler
       class MessageHandler
       class Opc_ServerConfig
       class PlcProcess
@@ -258,11 +259,12 @@ palette NavigatorPalette
       class RemoteConfig
       class ReportConfig
       class Report
-      class SysMonConfig
-      class StatusServerConfig
+      class SimulateConfig
       class SevHistMonitor
       class SevHistThread
       class SevServer
+      class StatusServerConfig
+      class SysMonConfig
       class WebHandler
       class WebBrowserConfig
     }
