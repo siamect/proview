@@ -680,10 +680,11 @@ time_TmToAscii (
     return sts;
 
   if (format == time_eFormat_DateAndTime) {
-    int i;
+    strftime(buf, bufsize, "%d-xxx-%Y %H:%M:%S", tmptr);
+    strncpy( &buf[3], monStr[tmptr->tm_mon], 3);
+  }
+  else if (format == time_eFormat_DateAndTimeLoc) {
     strftime(buf, bufsize, "%d-%b-%Y %H:%M:%S", tmptr);
-    for (i = 3; i < 6; i++)
-      buf[i] = toupper(buf[i]);
   } else if (format == time_eFormat_FileDateAndTime) {
     strftime(buf, bufsize, "%Y%m%d_%H%M%S", tmptr);
   } else if (format == time_eFormat_FileDate) {
