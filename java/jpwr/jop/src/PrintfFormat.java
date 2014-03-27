@@ -487,6 +487,7 @@ public class PrintfFormat {
         if (c == 'i') break;
         if (c == 'd') break;
         if (c == 'f') break;
+        if (c == 'F') break;
         if (c == 'g') break;
         if (c == 'G') break;
         if (c == 'o') break;
@@ -1087,6 +1088,7 @@ public class PrintfFormat {
         throws IllegalArgumentException {
       String s2 = "";
       switch(conversionCharacter) {
+      case 'F':
       case 'f':
         s2 = printFFormat(s);
         break;
@@ -2774,7 +2776,7 @@ public class PrintfFormat {
       conversionCharacter='\0';
       if (pos < fmt.length()) {
         char c = fmt.charAt(pos);
-        if (c=='i'||c=='d'||c=='f'||c=='g'||c=='G'
+        if (c=='i'||c=='d'||c=='f'||c=='F'||c=='g'||c=='G'
         || c=='o' || c=='x' || c=='X' || c=='e'
         || c=='E' || c=='c' || c=='s' || c=='%') {
           conversionCharacter = c;
