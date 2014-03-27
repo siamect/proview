@@ -222,28 +222,19 @@ public class JopOpWindow extends JPanel {
 
       switch( retCid.classId) {
         case Pwrb.cClass_WebLink:
-          sret = en.gdh.objidToName( oret.objid, Cdh.mName_volumeStrict);
-          if ( sret.evenSts()) return;
-
-          s = sret.str + ".URL";
-          sretURL = en.gdh.getObjectInfoString( s);
-
-          s = sret.str + ".Text";
-          sretText = en.gdh.getObjectInfoString( s);
-
-          s = sret.str + ".WebTarget";
-          iretTarget = en.gdh.getObjectInfoInt( s);
-
-	  String cmd = "open url \"" + sretURL.str + "\"";
-	  if ( iretTarget.value == Pwrb.eWebTargetEnum_RightFrame)
-	    cmd = cmd + " /name=\"right\"";
-	  else if ( iretTarget.value == Pwrb.eWebTargetEnum_ParentWindow)
-	    cmd = cmd + " /name=\"_parent\"";
- 
-          button = new OpWindButton( session, cmd, sretText.str,
-				     OpWindButton.WEBLINK);
-          this.add( button);
+	  addWebLinkButton( oret.objid);
           break;
+        case Pwrs.cClass_PlantHier:
+        case Pwrs.cClass_NodeHier:
+	    for ( CdhrObjid oret2 = en.gdh.getChild(oret.objid); 
+		  oret2.oddSts(); 
+		  oret2 = en.gdh.getNextSibling(oret2.objid)) {
+		CdhrClassId cret2 = en.gdh.getObjectClass(oret2.objid);
+		if (cret2.oddSts() && cret2.getClassId() == Pwrb.cClass_WebLink)
+		    addWebLinkButton(oret2.objid);
+	    }
+	    break;
+      default: ;
       }
       oret = en.gdh.getNextSibling( oret.objid);
     }
@@ -264,6 +255,30 @@ public class JopOpWindow extends JPanel {
 					      OpWindButton.WEBGRAPH);
       this.add( button);
   }
+
+  void addWebLinkButton( PwrtObjid oid) {
+      CdhrString sret = en.gdh.objidToName( oid, Cdh.mName_volumeStrict);
+      if ( sret.evenSts()) return;
+
+      String s = sret.str + ".URL";
+      CdhrString sretURL = en.gdh.getObjectInfoString( s);
+
+      s = sret.str + ".Text";
+      CdhrString sretText = en.gdh.getObjectInfoString( s);
+
+      s = sret.str + ".WebTarget";
+      CdhrInt iretTarget = en.gdh.getObjectInfoInt( s);
+
+      String cmd = "open url \"" + sretURL.str + "\"";
+      if ( iretTarget.value == Pwrb.eWebTargetEnum_RightFrame)
+	  cmd = cmd + " /name=\"right\"";
+      else if ( iretTarget.value == Pwrb.eWebTargetEnum_ParentWindow)
+	  cmd = cmd + " /name=\"_parent\"";
+ 
+      OpWindButton button = new OpWindButton( session, cmd, sretText.str,
+				     OpWindButton.WEBLINK);
+      this.add( button);
+}
 
   class OpWindButton extends JButton {
     public static final int WEBGRAPH = 1;
