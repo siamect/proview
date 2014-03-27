@@ -296,7 +296,6 @@ public class JopSessionRep implements JopSessionIfc {
 	}
       }
     }
-    System.out.println("openGraphFrame end");
   }
 
   public void openCrrFrame( String name) {

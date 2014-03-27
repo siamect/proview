@@ -587,13 +587,26 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 	color_tone = original_color_tone;
     }
     public void setFillColor(int fill_drawtype) {
+
 	this.fill_drawtype = fill_drawtype;
+	color_tone = Glow.eDrawTone_No;
+	color_shift = 0;
+	color_lightness = 0;
+	color_intensity = 0;
     }
     public void resetFillColor() {
 	fill_drawtype = original_fill_drawtype;
+	color_tone = original_color_tone;
+	color_shift = original_color_shift;
+	color_lightness = original_color_lightness;
+	color_intensity = original_color_intensity;
     }
     public void setBorderColor(int draw_type) {
 	this.draw_type = draw_type;
+	color_tone = Glow.eDrawTone_No;
+	color_shift = 0;
+	color_lightness = 0;
+	color_intensity = 0;
     }
     public void resetBorderColor() {
 	draw_type = original_border_drawtype;

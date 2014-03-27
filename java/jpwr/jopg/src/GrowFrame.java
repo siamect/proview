@@ -230,7 +230,6 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	    graph.setOwner( instance);
 	graph.open(reader);
 
-	System.out.println("After open " + defaultWidth + " " + defaultHeight);
 	if ( defaultWidth == 0 || defaultHeight == 0)
 	    setSize();
 

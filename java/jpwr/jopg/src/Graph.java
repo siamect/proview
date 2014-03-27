@@ -125,7 +125,6 @@ public class Graph implements GraphIfc, GrowApplIfc {
 		}
 	    }
 	}
-	System.out.println("before connect total_dyn_type1 : " + dyn.total_dyn_type1);
 
 	dyn.connect(object);
 
