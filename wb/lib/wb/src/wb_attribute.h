@@ -72,6 +72,7 @@ class wb_attribute : public wb_status
   pwr_tTid m_tid;
   pwr_tTid m_original_tid;
   int m_elements;
+  int m_is_elem;
   pwr_eType m_type;
   int m_flags;
   
@@ -111,6 +112,7 @@ public:
   pwr_tTid tid() const;
   pwr_tTid originalTid() const;
   int nElement() const;
+  int isElem() const;
   int index() const;
   int flags() const;
   pwr_tAix aix() const;

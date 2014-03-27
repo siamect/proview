@@ -45,7 +45,7 @@
 
 wb_attribute::wb_attribute() : 
   wb_status(LDH__NOSUCHATTR), m_orep(0), m_adrep(0), 
-  m_size(0), m_offset(0), m_idx(0), m_tid(0), m_elements(0),
+  m_size(0), m_offset(0), m_idx(0), m_tid(0), m_elements(0), m_is_elem(0),
   m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), m_shadowed(false)
 {
 }
@@ -53,7 +53,7 @@ wb_attribute::wb_attribute() :
 wb_attribute::wb_attribute(const wb_attribute& x) : 
   wb_status(x.m_sts),m_orep(x.m_orep), m_adrep( x.m_adrep), m_size(x.m_size), 
   m_offset(x.m_offset) , m_idx(x.m_idx), m_tid(x.m_tid), m_original_tid(x.m_original_tid),
-  m_elements(x.m_elements), m_type(x.m_type), 
+  m_elements(x.m_elements), m_is_elem(0), m_type(x.m_type), 
   m_flags(x.m_flags), m_bix(x.m_bix), m_body(0), m_shadowed(x.m_shadowed)
 {
   if ( m_orep)
@@ -64,7 +64,8 @@ wb_attribute::wb_attribute(const wb_attribute& x) :
 
 wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * orep) : 
   wb_status(sts), m_orep(orep), m_adrep(0), m_size(0), m_offset(0), m_idx(0), m_tid(0),
-  m_elements(1), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), m_shadowed(false)
+  m_elements(1), m_is_elem(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), 
+  m_shadowed(false)
 {
   if ( orep == 0)
     m_sts = LDH__NOSUCHATTR;
@@ -94,7 +95,8 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * orep) :
 
 wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, wb_adrep* adrep, int idx) : 
   wb_status(sts), m_orep(orep), m_adrep(adrep), m_size(0), m_offset(0), m_idx(0), m_tid(0),
-  m_elements(1), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), m_shadowed(false)
+  m_elements(1), m_is_elem(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), 
+  m_shadowed(false)
 {
   if ( orep == 0)
     m_sts = LDH__NOSUCHATTR;
@@ -122,6 +124,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, wb_adrep* adrep, int 
 	  else
 	    m_offset = m_adrep->offset() + m_idx * m_size;
           m_elements = 1;
+	  m_is_elem = 1;
         }
       } else
         m_idx = 0;
@@ -159,7 +162,8 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, wb_adrep* adrep, int 
 
 wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname) :
   wb_status(sts), m_orep(orep), m_adrep(0), m_size(0), m_offset(0),  m_idx(0), m_tid(0),
-  m_elements(1), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), m_shadowed(false)
+  m_elements(1), m_is_elem(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), 
+  m_shadowed(false)
 {
   if ( orep == 0)
     m_sts = LDH__NOSUCHATTR;
@@ -182,7 +186,8 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname) :
 
 wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname, const char *aname) :
   wb_status(sts), m_orep(orep), m_adrep(0), m_size(0), m_offset(0), m_idx(0), m_tid(0),
-  m_elements(1), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), m_shadowed(false)
+  m_elements(1), m_is_elem(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), 
+  m_shadowed(false)
 {
   if ( orep == 0)
     m_sts = LDH__NOSUCHATTR;
@@ -233,7 +238,8 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname, co
 
 wb_attribute::wb_attribute(const wb_attribute& pa, int pidx, const char *aname, int aidx) :
   wb_status(LDH__NOSUCHATTR), m_orep(0), m_adrep(0), m_size(0), m_offset(0), m_tid(0),
-  m_elements(1), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), m_shadowed(false)
+  m_elements(1), m_is_elem(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), 
+  m_shadowed(false)
 {
   pwr_tCid cid;
   wb_attrname n;
@@ -242,13 +248,13 @@ wb_attribute::wb_attribute(const wb_attribute& pa, int pidx, const char *aname, 
   if ( !cdh_tidIsCid( pa.tid()) || pa.m_orep == 0)
     return;
 
-  if ( pa.m_flags & PWR_MASK_ARRAY && 
-       (pidx < 0 || pidx >= pa.m_elements))
-    throw wb_error_str("Invalid subscript");
-    
   if ( pidx == -1)
     pidx = pa.m_idx;
 
+  if ( pa.m_flags & PWR_MASK_ARRAY && !pa.m_is_elem &&
+       (pidx < 0 || pidx >= pa.m_elements))
+    throw wb_error_str("Invalid subscript");
+    
   strcpy( attrname, pa.attrName());
   if ( pa.m_flags & PWR_MASK_ARRAY) {
     if ( attrname[strlen(attrname)-1] == ']') {
@@ -394,6 +400,7 @@ wb_attribute& wb_attribute::operator=(const wb_attribute& x)
   m_tid = x.m_tid;
   m_original_tid = x.m_original_tid;
   m_elements = x.m_elements;
+  m_is_elem = x.m_is_elem;
   m_type = x.m_type;
   m_flags = x.m_flags;
   m_bix = x.m_bix;
@@ -502,6 +509,12 @@ int wb_attribute::nElement() const
 {
   check();
   return m_elements;
+}
+
+int wb_attribute::isElem() const
+{
+  check();
+  return m_is_elem;
 }
 
 int wb_attribute::index() const
