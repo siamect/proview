@@ -46,6 +46,7 @@ extern_java_sources := \
 	GrowPolyline.java,\
 	GrowText.java,\
 	GrowAnnot.java,\
+	GrowConPoint.java,\
 	GrowMenu.java,\
 	GrowBar.java,\
 	GrowTrend.java,\

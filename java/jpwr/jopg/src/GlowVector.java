@@ -183,6 +183,12 @@ public class GlowVector {
 	  a.add( c);
 	  break;
 	}
+	case Glow.eSave_GrowConPoint: {
+	  GrowConPoint c = new GrowConPoint( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
 	case Glow.eSave_GrowAnnot: {
 	  GrowAnnot c = new GrowAnnot( cmn);
 	  c.open( reader);

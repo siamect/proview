@@ -1564,8 +1564,8 @@ public class Dyn {
 	    else {
 		if ( !value)
 		    object.setFillColor( color);
-		else
-		    object.resetFillColor();
+		else 
+		    object.resetFillColor();		
 		dyn.repaintNow = true;
 	    }
 	    oldValue = value;
@@ -2760,8 +2760,10 @@ public class Dyn {
 		    break;
 		}
 		if ( value0 != oldValueF  || firstScan) {
-		    sb = cFormat.format( value0, sb);
-		    object.setAnnotation(1, new String(sb));
+		    if ( cFormat != null) {
+		      sb = cFormat.format( value0, sb);
+	  	      object.setAnnotation(1, new String(sb));
+		    }
 		    dyn.repaintNow = true;
 		    oldValueF = value0;
 		}
