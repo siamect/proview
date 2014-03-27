@@ -348,6 +348,7 @@ SObject pwrb:Class
         Attr MaxConnections = 50
         Attr MaxNoOfAlarms = 200
         Attr MaxNoOfEvents = 500
+	Attr AppUseWebDir = 1
       EndBody
     EndObject
     Object PostCreate $DbCallBack
