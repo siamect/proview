@@ -400,6 +400,7 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
   pwr_tCid cid;
   int modules;
   int i;
+  int next_card;
 
   /* Send messages to slave */
 
@@ -429,6 +430,7 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
       continue;
     }
 
+    next_card = 0;
     for ( i = 0; i < modules; i++) {
       sts = 1;
       
@@ -438,8 +440,8 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
       
       local_card = &((io_sCardLocal *)cardp->Local)->msg[i];
       if ( mp->ScanInterval > 1 && local_card->interval_cnt != 0) {
-	cardp = cardp->next;
-	continue;
+	next_card = 1;
+	break;
       }
       
       if (mask & mb_mSendMask_ReadReq) {
@@ -643,6 +645,11 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
       if ( sts < 0)
 	break;
       mp++;
+    }
+
+    if ( next_card) {
+      cardp = cardp->next;
+      continue;
     }
 
     if (sts < 0) {
