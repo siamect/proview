@@ -226,6 +226,7 @@ static int sim_scan( plc_sThread *tp)
 {
   pwr_sClass_SimulateConfig *sp = tp->pp->SimConfig;
   unsigned int i;
+  int select_thread_cnt;
 
 
   if ( !tp->sim_initdone_old && sp->InitDone) {
@@ -278,15 +279,28 @@ static int sim_scan( plc_sThread *tp)
       time_Asub( &tp->one_before_scan_abs, &current, &tp->scan_time);
     }
   }
-  if ( tp->sim_singlestep && sp->PlcStepOrder == 0)
-    tp->sim_singlestep = 0;
 
-  if ( sp->PlcStepOrder && sp->ThreadSelected[tp->sim_idx] && !tp->sim_singlestep) {
+  select_thread_cnt = 0;
+  for ( i = 0; i < sizeof(sp->ThreadSelected)/sizeof(sp->ThreadSelected[0]); i++) {
+    if ( sp->ThreadSelected[i] && sp->ThreadStatus[i] == SIM__THREAD_HALT)
+      select_thread_cnt++;
+  }
+  
+  if ( tp->sim_singlestep && (sp->PlcStepOrder <= select_thread_cnt)) {
+    tp->sim_singlestep = 0;
+    sp->PlcStepOrder--;
+  }       
+
+  if ( sp->PlcStepOrder > select_thread_cnt && 
+       sp->ThreadSelected[tp->sim_idx] && !tp->sim_singlestep) {
     if ( tp->sim_halted) {
       pwr_tTime current;
 
-      tp->sim_singlestep = 1;
       sp->PlcStepOrder--;
+      if ( sp->PlcStepOrder <= select_thread_cnt)
+	sp->PlcStepOrder--;
+      else
+	tp->sim_singlestep = 1;
 
       /* Use nominal scantime as time since last scan */
       time_GetTimeMonotonic( &current);
@@ -317,7 +331,7 @@ scan (
   time_GetTime(&tp->before_scan_abs);
   pp->Node->SystemTime = tp->before_scan_abs;
 
-  if ( pp->SimConfig) {
+  if ( pp->IOHandler->IOSimulFlag && pp->SimConfig) {
     if ( !pp->SimConfig->Disable || !tp->sim_disable_old) {
       if ( sim_scan( tp)) {
 	pwr_tDeltaTime delta;

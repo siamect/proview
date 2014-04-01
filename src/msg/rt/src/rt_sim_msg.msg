@@ -59,6 +59,8 @@ scanoff		<PlcPgm scan off>					/error
 scanon_set      <Scan on set on selected PlcPgms>			/info
 scanoff_set	<Scan off set on selected PlgPgms>			/info
 noselplcpgm	<No PlcPgm selected>					/error
+notready    	<Not ready for request>					/error
+simulflag    	<Simulation not active, IOHandler.IOSimulFlag is not set> /error
 .end
 
 

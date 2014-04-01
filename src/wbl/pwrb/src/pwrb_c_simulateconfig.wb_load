@@ -43,6 +43,19 @@ SObject pwrb:Class
 !  Configuration of the simulation server.
 ! 
 !  The simulation server handles simulation of the database and plc.
+!  The IOHandler.IOSimulFlag has to be set to activate the simulation server.
+!
+!  Simulate sever functions
+!
+!  Plc threads can be halted and single scans can be executed.
+!  The execution of individual PlcPgm can be disabled.
+!  The current state of the database can be stored on file, and the file can be
+!  loaded at a later occasion.
+!
+!  The server is operated from the object graph of the SimulateConfig object.
+!
+! @b Object graph
+!  @image orm_simulateconfig_og.png
 !*/
   Object SimulateConfig $ClassDef 602 
     Body SysBody

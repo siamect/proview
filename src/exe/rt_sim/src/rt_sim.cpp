@@ -632,6 +632,21 @@ void rt_sim::scan()
 {
   pwr_tStatus sts;
 
+  if ( !ioconf->IOSimulFlag) {
+    conf->Message = SIM__SIMULFLAG;
+    conf->PlcHalt = 0;
+    conf->PlcContinue = 0;
+    conf->PlcStep = 0;
+    conf->Load = 0;
+    conf->Store = 0;
+    conf->PlcPgmScanOn = 0;
+    conf->PlcPgmScanOff = 0;
+    conf->Reset = 0;
+    return;
+  }
+  if ( conf->Message == SIM__SIMULFLAG)
+    conf->Message = 0;
+
   // Set PlcPgm thread and plcpgm status
   for ( unsigned int i = 0; i < plcpgm_cnt; i++) {
     conf->PlcPgmThreadStatus[i] = conf->ThreadStatus[plcpgm_thread_idx[i]];
@@ -775,6 +790,7 @@ void rt_sim::scan()
     else {
       conf->Message = SIM__NOHALTED;
     }
+    conf->PlcStepOrder = 0;
   }
 
   if ( continue_order_active) {
@@ -791,20 +807,26 @@ void rt_sim::scan()
     if ( !state_stored)
       store_state();
 
-    // Count selected threads
-    select_thread_cnt = 0;
-    for ( unsigned int i = 0; i < thread_cnt; i++) {
-      if ( conf->ThreadSelected[i] && conf->ThreadStatus[i] == SIM__THREAD_HALT)
-	select_thread_cnt++;
-    }
-    
-    if ( select_thread_cnt > 0) {
-      conf->PlcStepOrder = select_thread_cnt;
-      step_order_active = true;
-      conf->Message = SIM__THREADRESPOND;
+    if ( conf->PlcStepOrder > 0) {
+      // Previous step not ready yet
+      conf->Message = SIM__NOTREADY;
     }
     else {
-      conf->Message = SIM__NOHALTED;
+      // Count selected threads
+      select_thread_cnt = 0;
+      for ( unsigned int i = 0; i < thread_cnt; i++) {
+	if ( conf->ThreadSelected[i] && conf->ThreadStatus[i] == SIM__THREAD_HALT)
+	  select_thread_cnt++;
+      }
+      
+      if ( select_thread_cnt > 0) {
+	conf->PlcStepOrder = select_thread_cnt * 2;
+	step_order_active = true;
+	conf->Message = SIM__THREADRESPOND;
+      }
+      else {
+	conf->Message = SIM__NOHALTED;
+      }
     }
   }
 
@@ -999,6 +1021,18 @@ void rt_sim::open()
   else {
     errh_Info( "No Simulate configuration");
     errh_SetStatus( 0);
+    exit(0);
+  }
+
+  // Find IOHandler
+  sts = gdh_GetClassList( pwr_cClass_IOHandler, &oid);
+  if ( ODD(sts)) {
+    sts = gdh_ObjidToPointer( oid, (void **)&ioconf);
+    if ( EVEN(sts)) throw co_error( sts);
+  }
+  else {
+    errh_Fatal( "Unable to find IOHandler object, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(0);
   }
 
