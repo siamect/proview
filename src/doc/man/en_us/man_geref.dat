@@ -4734,11 +4734,22 @@ create 			<link>gecmd_create
   <t>create rectangle 	<link>gecmd_create_rect
   <t>create text 	<link>gecmd_create_text
   <t>create subgraph 	<link>gecmd_create_subgraph
+exit 			<link>gecmd_exit
 group 			<link>gecmd_group
 move 			<link>gecmd_move
   <t>move currentobject	<link>gecmd_move_currentobject
   <t>move selectedobject <link>gecmd_move_selectedobject
 new 			<link>gecmd_new
+open 			<link>gecmd_open
+quit 			<link>gecmd_quit
+replace 		<link>gecmd_replace
+rotate 			<link>gecmd_rotate
+  <t>rotate currentobject <link>gecmd_rotate_current
+  <t>rotate selectedobject <link>gecmd_rotate_selected
+save 			<link>gecmd_save
+scale 			<link>gecmd_scale
+  <t>scale currentobject <link>gecmd_scale_current
+  <t>scale selectedobject <link>gecmd_scale_selected
 select 			<link>gecmd_select
   <t>select currentobject <link>gecmd_select_currentobject
   <t>select clear	<link>gecmd_select_clear
@@ -4773,16 +4784,6 @@ set 			<link>gecmd_set
   <t>set currentobject attr2 <link>gecmd_set_current_attr1
   <t>set currentobject annotation <link>gecmd_set_current_annotation
   <t>set graphattributes <link>gecmd_set_graphattributes
-rotate 			<link>gecmd_rotate
-  <t>rotate currentobject <link>gecmd_rotate_current
-  <t>rotate selectedobject <link>gecmd_rotate_selected
-scale 			<link>gecmd_scale
-  <t>scale currentobject <link>gecmd_scale_current
-  <t>scale selectedobject <link>gecmd_scale_selected
-save 			<link>gecmd_save
-exit 			<link>gecmd_exit
-quit 			<link>gecmd_quit
-open 			<link>gecmd_open
 show 			<link>gecmd_show
   <t>show version <link>gecmd_show_version
 </topic>
@@ -4915,6 +4916,16 @@ Create a subgraph object.
 /y2
 </topic>
 
+<topic>gecmd_exit
+exit
+
+Save the current graph and close Ge.
+
+<b>Syntax
+
+<c>ge> exit ['filename']
+</topic>
+
 <topic>gecmd_group <style>function
 group
 
@@ -4967,6 +4978,112 @@ Only one object can be selected.
 new
 
 Clear and reset the working area.
+</topic>
+
+<topic>gecmd_open
+open
+
+Open a graph.
+
+<b>Syntax
+
+<c>ge> open ['filename']
+</topic>
+
+<topic>gecmd_quit
+quit
+
+Close without save.
+
+<b>Syntax
+
+<c>ge> quit
+</topic>
+
+<topic>gecmd_replace
+replace attribute
+
+String replacement in dynamic and action properties for selected objects.
+
+<b>Syntax
+
+<c>ge> replace attribute /from= /to= [/strict]
+
+/from <t>String that is to be replaced.
+/to   <t>Replacement string.
+/strict <t>Search of from string is case sensitive.
+</topic>
+
+<topic>gecmd_rotate
+rotate
+</topic>
+
+<topic>gecmd_rotate_current
+rotate currentobject
+
+Rotates the current object around the center of the object.
+
+<b>Syntax
+
+<c>ge> rotate currentobject /angle=
+
+/angle <t>Angle in degrees that the object is rotated.
+</topic>
+
+<topic>gecmd_rotate_selected
+rotate selectedobject
+
+Rotates the selected object around the center of the object.
+
+<b>Syntax
+
+<c>ge> rotate selectedobject /angle=
+
+/angle <t>Angle in degrees that the object is rotated.
+</topic>
+
+<topic>gecmd_save
+save
+
+Save a graph.
+
+<b>Syntax
+
+<c>ge> save ['filename']
+</topic>
+
+<topic>gecmd_scale
+scale
+</topic>
+
+<topic>gecmd_scale_current
+scale currentobject
+
+Scale the current object.
+
+<b>Syntax
+
+<c>ge> scale currentobject /scalex= /scaley= [/x= /y=]
+
+/scalex <t>Scale factor in x direction.
+/scaley <t>Scale factor in y direction.
+/x <t>x coordinate for the reference point of the scaling.
+/y <t>y coordinate for the reference point of the scaling.
+</topic>
+
+<topic>gecmd_scale_selected
+scale selectedobject
+
+Scale the selected object.
+
+<b>Syntax
+
+<c>ge> scale selectedobject /scalex= /scaley= [/x= /y=]
+
+/scalex <t>Scalefactor in x direction.
+/scaley <t>Scalefactor in y direction.
+/x <t>x coordinate for the reference point of the scaling.
+/y <t>y coordinate for the reference point of the scaling.
 </topic>
 
 <topic>gecmd_select <style>function
@@ -5347,108 +5464,6 @@ AnimationCount <t>Int
 <c>ge> set graphattributes 'name' 'value'
 </topic>
 
-<topic>gecmd_rotate
-rotate
-</topic>
-
-<topic>gecmd_rotate_current
-rotate currentobject
-
-Rotates the current object around the center of the object.
-
-<b>Syntax
-
-<c>ge> rotate currentobject /angle=
-
-/angle <t>Angle in degrees that the object is rotated.
-</topic>
-
-<topic>gecmd_rotate_selected
-rotate selectedobject
-
-Rotates the selected object around the center of the object.
-
-<b>Syntax
-
-<c>ge> rotate selectedobject /angle=
-
-/angle <t>Angle in degrees that the object is rotated.
-</topic>
-
-<topic>gecmd_scale
-scale
-</topic>
-
-<topic>gecmd_scale_current
-scale currentobject
-
-Scale the current object.
-
-<b>Syntax
-
-<c>ge> scale currentobject /scalex= /scaley= [/x= /y=]
-
-/scalex <t>Scale factor in x direction.
-/scaley <t>Scale factor in y direction.
-/x <t>x coordinate for the reference point of the scaling.
-/y <t>y coordinate for the reference point of the scaling.
-</topic>
-
-<topic>gecmd_scale_selected
-scale selectedobject
-
-Scale the selected object.
-
-<b>Syntax
-
-<c>ge> scale selectedobject /scalex= /scaley= [/x= /y=]
-
-/scalex <t>Scalefactor in x direction.
-/scaley <t>Scalefactor in y direction.
-/x <t>x coordinate for the reference point of the scaling.
-/y <t>y coordinate for the reference point of the scaling.
-</topic>
-
-<topic>gecmd_save
-save
-
-Save a graph.
-
-<b>Syntax
-
-<c>ge> save ['filename']
-</topic>
-
-<topic>gecmd_exit
-exit
-
-Save the current graph and close Ge.
-
-<b>Syntax
-
-<c>ge> exit ['filename']
-</topic>
-
-<topic>gecmd_quit
-quit
-
-Close without save.
-
-<b>Syntax
-
-<c>ge> quit
-</topic>
-
-<topic>gecmd_open
-open
-
-Open a graph.
-
-<b>Syntax
-
-<c>ge> open ['filename']
-</topic>
-
 <topic>gecmd_show
 show
 </topic>
@@ -5503,6 +5518,7 @@ fgets <t>Read a line from a file.
 fopen <t>Open a file.
 fprintf <t>Formatted write to file.
 fscanf <t>Formatted read from file.
+translate_filename <t>Replace environment variables in a file name.
 
 <h2>Handling of strings
 <b>Function <t>Description
@@ -5515,6 +5531,7 @@ strchr <t>Find the first occurrence of a character in a string.
 strlen <t>The length of a string.
 strrchr <t>Find the last occurrence of a character in a string.
 strstr <t>Find the first occurrence of a character sequence in a string.
+tolower <t>Convert a string to lower case.
 toupper <t>Convert a string to upper case.
 
 <h2>Database functions

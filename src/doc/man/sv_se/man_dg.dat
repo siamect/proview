@@ -101,13 +101,16 @@ Konstruktörs handbok
 Översikt <link> design_overview
 Databas struktur <link> database_structure
 En fallstudie <link> case_study
-Administration <link> administrator
+Navigera i projeketet <link> project_structure
 Konfigurera direktoryvolymen <link> configure_directoryvolume
 Konfigurera rotvolymen <link> configure_rootvolume
 Plc programmering <link>plc_programming
+Komponenter och aggregat <link>dg_components
+Kommunikation <link> communication
+Datalagring <link> dg_datastorage
+Applikations-programmering <link>dg_application
 Skapa processbilder <link> ge_man
 Java operatörsmiljö <link> dg_web_iterface
-Datalagring <link> dg_datastorage
 Starta och testa systemet <link> conf_test
 
 <b>Referens manualer
@@ -116,6 +119,7 @@ Objektseditorn Referensmanual<link> objecteditor_refman
 Spreadsheeteditorn Referensmanual<link> spreadsheeteditor_refman
 Plceditorn Referensmanual <link> plceditor_refman
 Klasseditorn Referensmanual <link> classeditor
+Verktyg <link> dg_tools
 OPC <link> opc_intro
 Commands <link> help command
 Script <link> script
@@ -1250,7 +1254,7 @@ upp till 15 tryckknappar. Oanvända tryckknappar visas ej i Operator Window.
 Se OpPlace i Objektshandboken <classlink>opplace,"",$pwr_lang/pwrb_xtthelp.dat
 
 <b>Operator Window
-<image> dg_fig45.gif
+<image> dg_fig45.png
 
 <h2>XttGraph objekt
 XttGraph objekt används främst för att visa processbilder. I objektet pekar man ut den graf
@@ -1266,6 +1270,21 @@ I XttGraph objektet ska följande attribut fyllas i:
 - Action. Här anges en Ge graph, eller ett Xtt kommando.
 
 Se XttGraph i Objektshandboken <classlink>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
+
+<h2>Multiview objekt
+Multiview är ett operatörs-fönster som är organiserat som en tabell, där varje cell kan
+innehålla en graf, trend, historisk kurva, larmlista, händelselista eller ett annat
+multiview fönster. Figuren nedan visar ett multiview fönster med en kolumn och två rader.
+The första cellen innehåller ett annat multiview fönster med två kolumner och tree rader,
+där den andra cellen innehåller en larmlista. De olika larmlistorna visar larm från olika
+delar av anläggningen, specificerade av AlarmView objekt. En multiview konfigureras med
+ett XttMultiView objekt. Action-vektorn innehåller specifikationerna för varje cell.
+
+Det är också möjlig att byta ut en graf eller kurve i en cell med xtt-kommandot 
+'set subwindow'.
+
+<image> dg_fig115.png
+<b>Fig Multiview window
 </topic>
 </chapter>
 
@@ -1294,7 +1313,7 @@ Figuren nedan visar filkatalogstrukturen för ett projekt.
 
 <image> dg_psfig1.png
 
-Katalogstrukturen är ny i Proview V4.7. Orsaken till detta är att mer särskilja källkods/
+Katalogstrukturen ändrades till Proview V4.7. Orsaken till detta var att mer särskilja källkods/
 konfigureringsfiler och gerenerade filer i projektet. Idén är att att allt som finns i
 byggträdet ska kunna återskapas från källkodsträdet.
 
@@ -1309,7 +1328,7 @@ Till exempel $pwrp_exe för katalogen <project_root>/bld/x86_linux/exe.
 <topic> source_tree
 Källkodsträdet
 Källkodsträdet innehåller alla filer som utgör projektets källkod och konfigureringsfiler.
-Topnivån innehåller enbart två underkataloger och inga källkods eller konfigureringsfiler. 
+Topnivån $pwrp_src innehåller enbart underkataloger och inga källkods eller konfigureringsfiler. 
 Nedan beskrivs innehållet och funktionen för underkatalogerna.
 
 <option> printdisable
@@ -1387,8 +1406,12 @@ En fil av speciellt intressen som ska finnas här är
 Den här filen kommer att inkluderas när plc-koden kompileras. Den är dock inkluderad från
 en katalog i byggträdet (<project_root>/bld/common/inc).
 
+Observera att ra_plc_user.h automatiskt genereras på $pwrp_inc första gången ett PlcPgm
+kompileras. Om du behöver modifera ra_plc_user.h bör du först kopiera filen till $pwrp_appl
+och lagra orginalet där.
+
 Alla header filer som ligger här eller på underkataloger, och som ska inkluderas av
-plc-programmet måste distributeras till $pwrp_inc katalogen (<project_root>/bld/common/inc).
+plc-programmet måste kopieras till $pwrp_inc katalogen (<project_root>/bld/common/inc).
 
 Om man har någon mindre funktion som man enbart länkar med plc-programmet och inte används
 någon annanstans, placerar men koden i filen
@@ -1715,6 +1738,8 @@ har mellan 17 och 19.
 
 <topic> file_plc_opt
 plc_<node>_<bus_no>_<plc_name>.opt
+OBS! Den här filen är ersatt av BuildOptions objektet sen V4.8.2
+
 Den är filen (om den existerar) används för att addera bibliotek och objektsmoduler vid
 länkningen av plc-programmet. Några bibliotek och objektsmoduler måste finnas med, och
 en default option-fil ska se ut så här:
@@ -1822,7 +1847,7 @@ Det här avsnittet beskriver hur man skapar PLC program.
 <h1>Editorn
 Man startar editorn från ett PlcPgm objekt i anläggningshierarkin. Välj ut objektet och
 aktivera 'Functions/Open Program' i menyn. Den första gången programmet öppnas, finns där
-ett tomt dokument objekt. Programmet består av funktionsobjekt och GRAFCET sekvenser.
+ett tomt dokument objekt. Programmet består av funktionsobjekt och Grafcet sekvenser.
 
 Programmering med funktionsblock görs i ett horisontellt nät av noder och förbindningar, från
 vänster till höger i dokumentet. Värden på signaler och attribut hämtas upp på den vänstra
@@ -1830,8 +1855,8 @@ sidan av nätet, och värden överförs med förbindningar från utgångs pinnar till i
 pinnar på funktionsblocken. Funktionsblocken opererar på signalvärdena och i den högra
 sidan av nätet lagras värdena i signaler eller attribut.
 
-GRAFCET sekvenser består av ett vertikalt nät av noder och förbindningar. Ett tillstånd
-överförs mellan stegen i sekvensen via förbindningarna. Nät av GRAFCET och funktionsblock
+Grafcet sekvenser består av ett vertikalt nät av noder och förbindningar. Ett tillstånd
+överförs mellan stegen i sekvensen via förbindningarna. Nät av Grafcet och funktionsblock
 kan samverka med varandra och kombineras till ett nät.
 
 
@@ -1840,7 +1865,7 @@ kan samverka med varandra och kombineras till ett nät.
 
 PLCeditorn består av
 - en arbetsarea.
-- en palett med GRAFCET objekt och funktionsblock, och en palette med förbindningar.
+- en palett med Grafcet objekt och funktionsblock, och en palette med förbindningar.
 - ett navigationsfönster, från vilket arbetsarean kan skrollas och zoomas.
 
 
@@ -1852,10 +1877,10 @@ Ett funktionsobjekt skapas genom att man väljer en klass i paletten, och klickar
 
 <h2>Modifiera ett objekt
 Ett objekt kan modifieras från objektseditorn. Denna öppnas genom att välja ut objektet
-och aktivera 'Functions/Open Object' i menyn. Värden på objektets attribut kan ändras med
-'Functions/Change value' i objekteditorns meny. Om en in- eller ut-gångspinne inte används
-kan den tas bort med en checkbox. Det finns också en checkbox som avgör om en digital ingång
-ska vara inverterad.
+och aktivera 'Functions/Open Object' i menyn. Värden på objektets attribut kan ändras med 
+'Functions/Change value' i objekteditorns meny, eller trycka på tangenten Pil Vänster. Om 
+en in- eller ut-gångspinne inte används kan den tas bort med en checkbox. Det finns också 
+en checkbox som avgör om en digital ingång ska vara inverterad.
 
 <h2>Koppla ihop funktionsobjekt
 En utgångspinne och en ingångspinne kopplas ihop genom att
@@ -2007,6 +2032,13 @@ I figuren ovan visas subsekvensen för ett SubStep. En subsekvens startar alltid 
 SsBegin objekt och slutar med ett SsEnd objekt. En subsekvens kan i sin tur innehålla
 subsekvenser.
 
+<h2>Att bygga Grafcet sekvenser
+Grafcet sekvenser byggs enkelt genom att starta med ett Step eller InitStep objekt.
+Genom att dra ut en koppling från den nedre kopplingspunkten, och släppa den i ett tomt
+område i arbetsarean, skapas ett förbundet Trans objekt. På samma sätt skapas Order objekt
+från den högra kopplingspunkten, och från Trans objektets övre och undre kopplingspunkter
+skapas nya Step objekt.
+
 <h1>Introduktion till funktionsblocks programmering
 
 <h2>Block för att hämta och lagra värden
@@ -2122,7 +2154,8 @@ operativsystem kan väljas. Volymen kan samtidigt köras i produktions-systemet, p
 simulerings-system och i ett utbildnings-system, och alla kan ha olika plattform.
 
 Nu kompileras plcprogrammet genom att välja 'File/Build' i plceditorns meny. Eventuella
-fel och varningar visas i meddelandefönstret.
+fel och varningar visas i meddelandefönstret. Även när man bygger noden, kommer alla
+nya eller modifierade plcpgm att kompileras.
 </topic>
 </chapter>
 
@@ -2132,12 +2165,12 @@ Anropa funktioner från plc programmet
 
 Den funktions-blocks programmering som plc-programmet utgörs av har sina begränsningar, och
 vissa saker kan göras mycket enklare och snyggare med c-kod. För detta finns funktionsblocken
-CArithm och DataArithm där man kan lägga in en viss mängd c-kod, men antal tecken är 1023, och 
-ibland räcker det inte till. Då har man två möjligheter, att skriva en fristående applikation, 
-vilket finns beskrivet i kapitlet Applikationsprogrammering, eller att anropa en c-funktion 
-från en CArithm eller DataArithm. Fördelen med att anropa en funktion är att all initiering och 
-knytning till objekt sköts av plc-programmet. Dessutom  sker anropen synkront med exekveringen 
-av den plc-tråd som anropar funktionen.
+CArithm och DataArithm där man kan lägga in en viss mängd c-kod, men antal tecken är 1023 
+(8191 för DataArithmL), och ibland räcker det inte till. Då har man två möjligheter, att 
+skriva en fristående applikation, vilket finns beskrivet i kapitlet Applikationsprogrammering,
+eller att anropa en c-funktion från en CArithm eller DataArithm. Fördelen med att anropa en 
+funktion är att all initiering och knytning till objekt sköts av plc-programmet. Dessutom 
+sker anropen synkront med exekveringen av den plc-tråd som anropar funktionen.
 
 <h1>Skriva koden
 Koden läggs i en c-fil, som läggs någonstans under $pwrp_src. Vi skapar filen 
@@ -2204,16 +2237,13 @@ Anropet av funktionen sker från ett CArithm, DataArithm, AArithm eller DArithm o
 
 <b>Länka plc-programmet
 Vid kompileringen skapades objektsmodulen $pwrp_obj/ra_myfunction.o. Denna måste länkas med
-när plcprogrammet byggs, och det sker genom att objektsmodulen läggs in i en option fil som
-skickas med som indata till länkaren. Optionfilen ligger på $pwrp_exe och har namnet
-plc_'nodename'_'qbus'_'plcname'.opt, t ex
+när plcprogrammet byggs, och det sker genom att skapa ett BuildOptions objekt i directory
+volymen under NodeConfig objektet. Lägg in namnet på objektsmodulen i ObjectModule vektorn.
+När direktory volymen sparas genereras en opt-fil på $pwrp_exe som inkludeas av länkaren
+när noden byggs.
 
-<c>$pwrp_exe/plc_mynode_0999_plc.opt
-
-I denna läggs följande rad in
-
-<c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy 
-<c> -lpwr_pnak_dummy -lpwr_cifx_dummy -lpwr_nodave_dummy -lpwr_epl_dummy
+<image> dg_fig116.png
+<b>Fig Objektsmodulen inlagd i BuildOptions
 
 Vi kan nu bygga noden och starta Proview runtime.
 
@@ -2231,12 +2261,12 @@ att skicka med pid för processen till gdb med -p. pid kan man se med 'ps x'
 
 <c>> ps x
 <c>...
-<c>5473 pts/0    Sl     0:18 plc_mynode_0999_00003
+<c>5473 pts/0    Sl     0:18 plc_mynode_0999_plc
 
 5473 är pid för plcprogrammet och vi startar debuggern, sätter en brytpunkt i funktionen
 och låter programmet exekvera vidare
 
-<c>> gdb -p 5473 plc_mynode_0999_00003
+<c>> gdb -p 5473 plc_mynode_0999_plc
 <c>(gdb) b MyFunction
 <c>(gdb) c
 
@@ -2245,12 +2275,12 @@ innehållet i variabler (x) mm.
 
 Om plcprogrammet terminerar direkt efter start, kan man starta om det i debug.
 
-<c>> gdb plc_mynode_0999_00003
+<c>> gdb plc_mynode_0999_plc
 
 Det går också bra att döda den gående plc-processen och starta en ny i debug
 
-<c>> killall plc_mynode_0999_00003
-<c>> gdb plc_mynode_0999_00003
+<c>> killall plc_mynode_0999_plc
+<c>> gdb plc_mynode_0999_plc
 
 </topic>
 </chapter>
@@ -2896,7 +2926,83 @@ I simuleringsbilden kan olika händelser man simuleras.
 <topic>communication
 Kommunikation
 
-Remote-konceptet i Proview är ett sätt att standardisera kommuniktionen med andra system.
+<option> printdisable
+Intern kommunikation med QCom <link>com_intern
+Extern kommunikation med Remote <link>com_remote
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>com_intern
+Intern kommunikation 
+
+Den interna kommunikationen i Proview skickar information om volymer, objekt, larm,
+händelser, historisk data mm mellan olika processer och  noder. Det finns tre olika
+protokoll för larmhantering, näthantering och historisk lagring, som alla basera på
+Qcom. 
+
+<h1>Qcom
+Qcom är en meddelande buss som skickar köade meddelanden mellan processer. Alla noder
+som ska kommunicera med varandra måste ligga på samma buss. Vilken buss man använder
+konfigureras i BusConfig objekt genom att ange buss-identiteten, ett tal mellan 1 och 999.
+
+Man måste även konfigurera vilka noder som ska kommunicera med varandra. Med standard-
+inställningen kommera alla noder i samma projekt att kommunicera med varandra. Dessutom
+kan man ange noder i andra projekt med FriendNodeConfig objekt. Det kan vara process-
+stationer som ska monteras av operatörs-stationer eller historiska logg-servrar.
+
+Om man har projekt med flera noder, och inte vill att alla ska kommunicera med varandra, 
+kan man sätta QComAutoConnectDisable i BusConfig och använda FriendNodeConfig objekt för
+definiera länkar mellan noder i projektet.
+
+Alla Qcom meddelanden sker med kvittens. Om kvittensen uteblir skickas meddelandet om
+med fördubblad timeout tid. Efter ett visst antal omsändningar utan svar betraktas
+länken som nere. Beroende på typen av nät och nätets hastighet kan timeout tiderna behöva
+korrigeras. Det görs med ResendTime attributen in NodeConfig och FriendNodeConfig objekten.
+
+Se dokumentet QCOM för mer info.
+ 
+<h1>Näthanterare
+Näthanteraren skickar information om volymer och objekt mellan noder, det can t ex gälla 
+vilka volymer som en node äger, vilka föräldrar, barn eller syskon ett objekt har, eller
+innehållet i object och attribut. Via näthanterare läggs även upp prenumationer, dvs data
+som cyklisk skickas från en nod till en annan, vanligtvis från process-noder till 
+operatörs-stationer för bildvisning. Processerna för näthanteraren är rt_neth, rt_neth_acp
+och rt_tmon.
+
+<h1>Larmhanterare
+Larmhanteraren skannar alla övervaknings-objekt på en nod, och skickar larm och händelser
+till olika utenheter, t ex larm och händelselista i operatörsmiljön. Dessa i sin tur skicka
+meddelanden med larm-kvittens tillbaka till larmhanteraren. Exakt vilka larm och händlser
+som skickas till en utenhet beror på en urvalslista, som för operatörsmiljön anges i OpPlace
+objektet. Endast larm och händelser under angivna hierarkier skickas.
+Processen för larmhantering, rt_emon, konfigureras med MessageHandler objektet.
+
+<h1>Historisk datalagring
+Den historiska datalagringen innebär att data skickas från process-noder och lagras i en 
+databas som ofta ligger på en dedikerad server. På process-noden skannar  rt_sevhistmon 
+alla attribut som markeras för lagring, hämtar upp aktuella värden och skickar över dem 
+till processen sev_server, som lagrar dem i en databas. När kurvor på historiska data
+ska visas, skickas en förfrågan för operatörsmiljön, och ett lämpligt urval av punkter 
+hämtas upp ur databasen och skickas tillbaka till operatörsmiljön.
+Se kapitel Datalagring <link> dg_sev
+
+<h1>Web och app kommunikation
+Web gränssnittet och Android applikationen hämtar information från realtidsdatabasen i
+Proview med hjälp av server-processerna rt_webmon, rt_webmonmh och rt_webmonelog. Den
+här kommunikationen konfigureras med WebHandler objektet.
+
+<h1>Status server
+Runtime monitorn och Supervision center hämtar information från status servern. Den
+här kommunikationen bygger på http och soap, och konfigureras med StatusSeverConfig
+objektet.
+
+</topic>
+
+<topic>com_remote
+Remote
+
+Remote-konceptet i Proview är ett sätt att standardisera kommunikationen med andra system.
 Det utgörs av ett antal transport program och Proview objekt som används för att 
 implementera ett antal olika kommunikations-protokoll och hantera inkommande och utgående
 meddedanden. Remote är designat för att använda olika transport protokoll som TCP/IP eller
@@ -2955,8 +3061,13 @@ Funktions-objekt som används i plc-program för att skicka meddelanden.
 
 <h2>RemTransRcv
 Funktions-objekt som används i plc-program för att ta emot meddelanden.
+
+<h2>Loggning av transaktioner
+Remote transaktioner kan loggas på en text-fil. Hur mycket som ska loggas konfigureras
+i RemTrans objektets LoggLevel attribut, och logfilen konfigureras med ett LoggConfig 
+objekt.
+
 </topic>
-</headerlevel>
 
 <topic> protocols
 Protokoll
@@ -3148,7 +3259,7 @@ Om man inte har kontakt med den andra noden kommer meddelandet att buffras, föru
 finns fria buffrar för meddelandet.
 </topic>
 
-<topic> modbus-serial
+<topic> modbus_serial
 Modbus Serial
 MODBUS formatet som är implementerat är RTU. För att identifiera meddelanden används fälten för
 slav-adress och funktions-kod i MODBUS headern. I RemTrans[0] och [1] anges dessa värden i 
@@ -3222,8 +3333,6 @@ här filen inkluderas automatiskt vid kompilering av plc-koden. Data-strukturen s
 <c>  pwr_tUInt32  Id;
 <c>} d_a_RequestData;
 <c>
-<c>#define pwr_sClass_d_a_RequestData d_a_RequestData
-<c>
 <c>typedef struct {
 <c>  pwr_tUInt32   Id;
 <c>  pwr_tFloat32  data_1;
@@ -3231,8 +3340,6 @@ här filen inkluderas automatiskt vid kompilering av plc-koden. Data-strukturen s
 <c>  pwr_tInt32    data_3;
 <c>  pwr_tInt32    data_4;
 <c>} d_a_Report;
-<c>
-<c>#define pwr_sClass_d_a_Report d_a_Report
 <c>
 <c>typedef struct {
 <c>  pwr_tUInt32   Id;
@@ -3242,15 +3349,11 @@ här filen inkluderas automatiskt vid kompilering av plc-koden. Data-strukturen s
 <c>  pwr_tInt32    data_xx;
 <c>} a_d_Data;
 <c>
-<c>#define pwr_sClass_a_d_Data a_d_Data
-<c>
 <c>typedef struct {
 <c>  pwr_tUInt32   Id;
 <c>  pwr_tInt32    func_no;
 <c>  pwr_tInt16    err_code;
 <c>} a_d_Data;
-<c>
-<c>#define pwr_sClass_a_d_Error a_d_Error
 
 <h2>Plc-koden
 
@@ -3275,9 +3378,8 @@ buffer-objektet med meddelandet och sätter DataValid flaggan. När underfönstret 
 
 <h2>Underfönstret för sändning
 I send underfönstret fyller man i data för sänd-bufferten. Buffer-objektet för meddelandet kopplas
-till en DataArithm. Den speciella 'classdef'-syntaxen castar Da1 till en pekare till en
-d_a_RequestData struct (eller närmare bestämt till en pekare till pwr_sClass_d_a_RequestData,
-därför finns define-satsen för denna i inkludefilen ovan).
+till en DataArithm. Den speciella 'structdef'-syntaxen castar Da1 till en pekare till en
+d_a_RequestData struct.
 
 <image> dg_fig74.png
 
@@ -3290,6 +3392,7 @@ räcker till adderar man flera DataArithm-objekt och fortsätter på samma sätt.
 <image> dg_fig75.png
 
 </topic>
+</headerlevel>
 </chapter>
 
 <chapter>
@@ -3532,6 +3635,17 @@ innodb poolen genom att addera följande rader i /etc/mysql/my.cnf
 
 <c>innodb_buffer_pool_size=1G
 <c>innodb_additional_mem_pool_size=20M
+
+För stora databaser måste storleken på log-filen ökas, och genom att konfigurera
+en fil per tabell får man mer information on kontroll över disk-utrymmet.
+
+<c>innodb_log_file_size=128M
+<c>innodb_log_buffer_size=16M
+<c>innodb_file_per_table
+
+För beräkning av diskutrymme för innodb krävs ca 47 bytes per värde. Lagringen av
+en signal med 10 s cykeltid under ett år använder ca 6 * 60 * 24 * 365 * 47 byte =
+148 Mb. SevHist objektets UseDeadBand option kommer att minska den siffran.
 
 <h2>SQLite
 Installera libsqlite3-0 på lagringsstationen.
@@ -4318,10 +4432,10 @@ Makefilen kan exekveras genom att man ställer sig på den aktuella katalogen och 
 Man kan även lägga in byggkommandot i Application objektet för applikationen i attributet
 BuildCmd. I det här fallet blir byggkommandot
 
-<c>make -f $pwrp_src/myappl/makefile
+<c>make --directory $pwrp_src/myappl -f makefile
 
-Det här kommandot exekveras då i samband med att nod byggs från konfiguratören. På det här 
-sättet kan man försäkra sig om att alla applikationer uppdateras när nod byggs om.
+Det här kommandot exekveras då i samband med att noden byggs från konfiguratören. På det här 
+sättet kan man försäkra sig om att alla applikationer uppdateras när noden byggs om.
 
 </topic>
 
@@ -4774,7 +4888,121 @@ läggs in vid installationen av pwrrt paketet
 </topic>
 </chapter>
 
+<chapter>
+<topic>android_app
+Android application
 
+<image>dg_fig119.png
+<b>Android application
+
+Android applikationen kan köras på mobiltelefoner och surfplattor med operativsystemet 
+Android. Applikationen kopplar upp sig mot en process- eller operatörsstation och kan bl a 
+visa
+
+- Runtima navigatorn.
+- Operatörsbilder.
+- Plc trace.
+- Larm och händelselista.
+- Korsreferenser.
+ 
+För att installera applikationen, ladda ner PwrXtt.apk från Proview's nedladdings-sida på 
+Source Forge och installera på plattan eller mobilen.
+
+Applikationen använder samma server processer som web-gränssninttet, rt_webmon och 
+rt_webmonmh, som konfigureras med ett WebHandler objekt. Se Kapitlet Java Operatörsmiljö för 
+mer info. 
+
+<h1>Start meny
+När man startar applikationen visas först en startmeny, eller om denna inte är konfigurerad 
+runtime navigatorn.
+
+Start menyn konfigureras under WebHandler objektet med AppGraph och AppLink objekt. AppGraph 
+används för att öppna Ge grafer, och AppLink är en länk till en hemsida eller ett dokument. 
+Om man vill separera App-objekten från Web-objekten under WebHandler objektet kan man skapa 
+en under hierarki men ett $NodeHier-objekt.
+
+I AppGraph objeket anges namnet på pwg-filen, en bild-fil för ikonen och en text som skrivs 
+under ikonen. I AppLink objektet anges en URL, samt bild-fil och text.
+
+<image>dg_fig117.png
+<b>Konfigurering av startmeny
+
+<image>dg_fig118.png
+<b>Fig Start meny
+
+<h1>Distribution
+Attributet AppUseWebDir i WebHandler-objektet anger om alla filer ska hämtas från pwrp_web 
+katalogen, eller om vissa filer ska hämtas från $pwrp_exe och $pwrp_load. Om AppUseWebDir 
+är satt fungerar appen analogt med webgränssnittet och pwg och flw filer måste kopieras till 
+$pwrp_web. 
+
+Tabell över filer som används av applikationen. Om AppUseWebDir är satt, ska dessa
+distribueras till $pwrp_web.
+
+<b>Funktion <t>filtyp <t>katalog 
+Ge grafer   <t>pwg    <t>$pwrp_exe
+Plc trace   <t>flw    <t>$pwrp_load
+Korsreferenser <t>rtt_crr*.dat <t>$pwrp_load
+Hjälpfiler  <t>html   <t>$pwrp_web
+Ikoner      <t>png, gif etc <t>$pwrp_exe
+
+<h2>Web server
+Appen läser filer via en webserver, t ex apache, som måste vara startad. Liksom för 
+Web-gränssnittet ska det finnas en alias pwrp_web definerad, som pekar på $pwrp_web. För 
+apache specificeras det i filen /etc/apache2/apache2.conf.
+
+<c>Alias /pwrp_web/ /pwrp/common/web/
+
+<c><Directory /pwrp/common/web>
+<c>    Options Indexes MultiViews
+<c>    AllowOverride None
+<c>    Order allow,deny
+<c>    Allow from all
+<c></Directory>
+
+Om AppUseWebDir inte är satt, måste det dessutom finnas alias för pwrp_exe och pwrp_load. I 
+det här fallet behöver man inte kopiera filer till $pwrp_web utan de läses på pwrp_load eller
+pwrp_exe där de normalt förekommmer. flw-filer och korsreferensfiler läses från $pwrp_load 
+och övriga filer, pwg, png etc, från $pwrp_exe.
+
+Notera att pwrp_exe katalogen olika beroende på plattform.
+
+<c>Alias /pwrp_load/ /pwrp/common/load/
+
+<c><Directory /pwrp/common/load>
+<c>    Options Indexes MultiViews
+<c>    AllowOverride None
+<c>    Order allow,deny
+<c>    Allow from all
+<c></Directory>
+
+<c>Alias /pwrp_exe/ /pwrp/x86_linux/exe/
+
+<c><Directory /pwrp/x86_linux/exe>
+<c>    Options Indexes MultiViews
+<c>    AllowOverride None
+<c>    Order allow,deny
+<c>    Allow from all
+<c></Directory>
+
+För att kunna visa Proview hjälp texter ska det även finnas ett alias för pwr_doc som pekar
+på $pwr_doc. Den adderas normalt vid installationen av pwrrt paketet.
+
+<c>Alias /pwr_doc/ /usr/pwrrt/doc/
+
+<c><Directory /usr/pwrrt/doc>
+<c>    Options Indexes MultiViews
+<c>    AllowOverride None
+<c>    Order allow,deny
+<c>    Allow from all
+<c></Directory>
+
+<image>dg_fig120.png
+<b>Fig Plc trace läser flw-filer från $pwrp_load
+
+
+</topic>
+</chapter>
 <chapter>
 <topic>conf_test
 Starta och testa ett Proview system
@@ -4837,7 +5065,7 @@ ClassVolume <t>Genererar include-filer med c-struct'ar för volymens klasser, sam
 Node     <t>Anropar byggmetoden för rotvolymen om volymen är tillgänglig. Skapar en bootfil
          <t>med info om vilka volymer som ska laddas in och länkar plc-programmet för noden.
 
-Normalt kontrollera byggmetoderna först om något är ändrat, och utför endast bygget om den
+Normalt kontrollerar byggmetoderna först om något är ändrat, och utför endast bygget om den
 hittar någon förändring. I vissa fall vill man tvinga ett bygge, och sätter då 'Force' i
 Build kolumnen i options som öppnas från 'Options/Settings' i menyn. Här kan man även markera 
 om man vill skapa korsreferens-filer vid bygge av en volym, eller om man vill kompilera och
@@ -5279,8 +5507,9 @@ till 'Change value'.
 <bookmark>symbol_file
 <h1>Symbol fil 
 
-Symbol filen är en kommando fil som exekveras vid wtt startup. Det kan innehålla definitioner
-av symboler och andra wtt kommandon. Här följer några exempel på användbara kommandon.
+Symbol filen är en kommando fil som exekveras vid startup av konfiguratören. Det kan innehålla 
+definitioner av symboler och andra wtt kommandon. Här följer några exempel på användbara 
+kommandon.
 
 Genväg till objekt i objektsträdet:
 
@@ -5406,7 +5635,7 @@ klicka på pilen letas det aktuella objektet upp.
 <topic> utilities_refman
 Utilities fönstret
 
-Utilities fönstret är ett grafiskt gränssnitt till olika kommandon i wtt.
+Utilities fönstret är ett grafiskt gränssnitt till olika kommandon i konfiguratören.
 För en närmare beskrivning av respektive kommando, se avsnittet Kommandon.
 </topic>
 </chapter>
@@ -5423,8 +5652,8 @@ sidan av nätet, och värdena skickas vidare med förbindningar från utgångs-pinnar
 ingångs-pinnar på funktionsblocken. Funktionsblocken opererar på värdena och på nätets
 högra sida, lagras värdena i signaler eller attribut.
 
-GRAFCET sekvenser består av ett vertikalt nät av noder och förbindningar. Ett tillstånd
-förflyttas mellan olika steg i sekvensen via förbindningarna. GRAFCET och funktionsblock
+Grafcet sekvenser består av ett vertikalt nät av noder och förbindningar. Ett tillstånd
+förflyttas mellan olika steg i sekvensen via förbindningarna. Grafcet och funktionsblock
 kan samverka med varandra och kombineras till ett enda nät.
 
 <h2>Start
@@ -5726,7 +5955,7 @@ automatiskt. Dokument objekt finns under mappen 'Edit' i objektspaletten.
 
 <b>ShowPlcAttr
 ShowPlcAttr kan användas som som en utökning av dokumenthuvudet. I detta objekt skriv info
-om volym, scantid och resetobjekt för GRAFCET ut.
+om volym, scantid och resetobjekt för Grafcet ut.
 
 <b>Head, Title, Text och BodyText
 Dessa objekt används för att skriva förklarande texter i dokumenten. Head, Title och Text
@@ -5737,11 +5966,11 @@ flerradig text på max 1023 tecken. Objekten återfinns under'Edit' i objektspalet
 Point objektet är en fri kopplingspunkt som kan användas som förgrening av förbindningar
 eller för att styra layouten på förbindningar. Point finns under 'Edit' i objektspaletten.
 
-<b>GRAFCET
-GRAFCET sekvenser är uppbyggda med speciella GRAFCET objekt som InitStep, Step, Trans och 
+<b>Grafcet
+Grafcet sekvenser är uppbyggda med speciella Grafcet objekt som InitStep, Step, Trans och 
 Order. Kopplingarna mellan objektet följer bestämda regler. De vertikala pinnarna på ett
 Step objekt ska t ex kopplas till Trans objekt, och den horisontella pinnen ska kopplas
-till ett Order objekt. Här följer ett exempel på hur men enkelt skapar en GRAFCET sekvens.
+till ett Order objekt. Här följer ett exempel på hur men enkelt skapar en Grafcet sekvens.
 
 Börja med att skapa ett InitStep objekt. Dra ut en förbindning från den undre pinnen och
 släpp den i arbetsarean under InitStep objektet. Nu skapas ett Trans objekt som är
@@ -5888,7 +6117,7 @@ En hjälpfil konverteras till postscript med kommandot
 
 <c>co_convert -n [-d outputdirectory] 'helpfile'
 
-<b>Exampel
+<b>Exempel
 <c>co_convert -n -d $pwrp_lis $pwrp_exe/xtt_help.dat
 
 <h2>Konvertering till PDF
@@ -5896,7 +6125,7 @@ En hjälpfil konverteras til PDF med kommandot
 
 <c>co_convert -f [-d outputdirectory] 'helpfile'
 
-<b>Exampel
+<b>Exempel
 <c>co_convert -f -d $pwrp_lis $pwrp_exe/xtt_help.dat
 </topic>
 
@@ -5911,6 +6140,7 @@ index     <t>Lista över ämnen<link> helpindex
 h1        <t>Rubrik 1 <link> header1
 h2        <t>Rubrik 2 <link> header2
 b         <t>Fet text <link> bold
+c         <t>Kod <link>helpcode
 t         <t>Tab <link> helptab
 hr        <t>Horisontell linje<link> hr
 include   <t>Inkludera andra hjälpfiler<link> include
@@ -5924,8 +6154,9 @@ headerlevel <t>Öka eller minska rubrik nivån <link> headerlevel
 pagebreak <t>Ny sida<link> pagebreak
 option    <t>Optioner<link> option
 style     <t>Specifik text stil <link> style
+Titelsida och dokument info <link> special_topics
 
-<b>Exampel <link> helpfile example
+<b>Exempel <link> helpfile example
 </topic>
 
 <headerlevel>
@@ -6035,6 +6266,18 @@ kommer att visas som
 <b>This is a bold line
 </topic>
 
+<topic> helpcode
+Kod
+<ib><c>
+<i><c> taggen visar en rade med teckensnittet Courier. Taggen ska placeras i början 
+på raden.
+
+<b>Exempel
+<i><c>for ( i = 0; i < 10; i++)
+kommer att visas som
+<c>for ( i = 0; i < 10; i++)
+</topic>
+
 <topic> helptab
 Tab
 <ib><t>
@@ -6112,7 +6355,7 @@ printdisable <t>Ignorera alla taggar och all text till nästa 'printenable' vid k
              <t>och PostScript.
 printenable  <t>Återställ 'printdisable'.
 
-<b>Example
+<b>Exempel
 <i><option> disable
 <i>Some text
 <i>...
@@ -6130,6 +6373,25 @@ function	<t>Stilmall använd för funktioner och kommandon. Större rubrik och
 <b>Exempel
 <i><topic> MyFunction <style> function
 ...
+<i></topic>
+</topic>
+
+<topic> special_topics
+Titelsidan och dokument info
+Titelsida och sida för dokument info kan skapas med två speciella topic.
+
+<h2>__DocumentTitlePage
+Topic för titelsidan. Placeras först i en hjälp-fil.
+
+<i><topic> __DocumentTitlePage
+<i>...
+<i></topic>
+
+<h2>__DocumentInfoPage
+Topic för dokument information, t ex copyright. Placeras efter titelsidan.
+
+<i><topic> __DocumentInfoPage
+<i>...
 <i></topic>
 </topic>
 
@@ -6350,194 +6612,22 @@ och om han inte har något av dem, nekas han access.
 Från xtt kan man med login/logout kommandot logga in som en annan användare och därmed ändra 
 sina privilegier.
 
-<h1>Operatörsbilder på intranätet
-För operatörbilder på webben finns en speciellt inloggningsfönster som kan öppnas om detta
-är konfigurerat i WebHandler objektet. Man kan ange default privileger och även en speciell 
-systemgrupp fpr 
+<h1>Behöriget på web
+För operatörbilder på webben finns en speciellt inloggningsfönster som kan öppnas från 
+web menyn, om detta är konfigurerat i WebHandler objektets EnableLogin attribut. Default
+gruppen är common.web, som inte exsisterar i template användar-databasen. Istället används
+då den första existerande föräldergruppen, dvs common, och användarna i denna grupp får
+tillgång till hemsidan. Om man vill begränsa tillgången, skapar man antingen common.web 
+gruppen utan UserInherit, eller en annan grupp och lägger in den i $Security objektet. 
+Man skapar också lämpliga användare i gruppen.
+
+<h1>Editera användar-databasen
+User-databasen editeras från administratören eller konfiguratören. Det öppnas från 
+File/Open/UserDatabase i menyn. 
+Se kapitel Administration <link>adm_user
+
+Man kan även editera databasen med kommandon i pwr_user, se pwr_user i kapitlet Verktyg. <link>pwr_user
 </topic>
-
-<topic> pwr_user
-pwr_user
-
-pwr_user används för att skapa systemgrupper och användare i användar-databasen. 
-Konfigureringen sker mha kommandon. 
-
-pwr_user startas från kommando-prompten.
-
-Här beskrivs de olika kommandon som finns för att skapa, modifiera och lista systemgrupper 
-och användare.
-
-add group <t>Addera en systemgrupp <link> pwr_user add group
-add user  <t>Addera en användare <link> pwr_user add user
-get       <t>Hämta en användare <link> pwr_user get
-list      <t>Lista systemgrupper och användare <link> pwr_user list
-load      <t>Ladda in senaste sparade databas <link> pwr_user load
-modify group <t>Ändra en systemgrupp <link> pwr_user modify group
-modify user  <t>Ändra en användare <link> pwr_user modify user
-remove group <t>Ta bort en systemgrupp <link> pwr_user remove group
-remove user  <t>Ta bort en användare <link> pwr_user remove user
-save      <t>Spara <link> pwr_user save
-su        <t>Logga in som super user <link> pwr_user su
-</topic>
-
-<headerlevel>
-<topic>pwr_user add
-add
-
-add group <link> pwr_user add group
-add user <link> pwr_user add user
-</topic>
-
-<headerlevel>
-<topic> pwr_user add group
-add group
-
-Skapa en systemgrupp
-
-<c>pwr_user> add group 'name' [/nouserinherit]
-
-/nouserinherit <t>Attributet UserInherit ska inte vara satt för systemgruppen. 
-        <t>UserInherit är default.
-</topic>
-<topic> pwr_user add user
-add user
-Skapa en användare.
-
-pwr_user> add user 'name' /group= /password= [/privilege=]
-	[/rtread][/rtwrite][/system][/maintenance][/process]
-[/instrument][/operator1][/operator2]...[oper10][/devread]
-[/devplc][/devconfig][/devclass]
-
-/group <t>Systemgrupp som användaren ska tillhöra.
-/password <t>Användarens passerord.
-/privilege <t>Privilegier om denna anges anges som en mask, dvs ett heltalsvärde.
-/rtread <t>Användaren tilldelas RtRead.
-/rtwrite <t>Användaren tilldelas RtWrite.
-/system <t>Användaren tilldelas System.
-/maintenance <t>Användaren tilldelas Maintenance.
-/process <t>Användaren tilldelas Process.
-/operator1 <t>Användaren tilldelas Operator1.
-...
-/operator9 <t>Användaren tilldelas Operator9.
-/operator10 <t>Användaren tilldelas Operator10.
-/devread <t>Användaren tilldelas DevRead.
-/devplc <t>Användaren tilldelas DevPlc.
-/devconfig <t>Användaren tilldelas DevConfig.
-/devclass <t>Användaren tilldelas DevClass.
-</topic>
-</headerlevel>
-
-<topic> pwr_user get
-get
-
-Hämtar en användare med en algorithm som används i runtime.
-
-pwr_user> get 'username' /group= /password=
-</topic>
-
-<topic> pwr_user list
-list
-
-Lista systemgrupper och användare.
-
-pwr_user> list
-</topic>
-
-<topic> pwr_user load
-load
-
-Laddar in den senaste sparade databasen och raderar eventuella ändringar sen senaste save.
-</topic>
-<topic> pwr_user modify
-modify
-
-modify group <link> pwr_user modify group
-modify user <link> pwr_user modify user
-</topic>
-
-<headerlevel>
-<topic> pwr_user modify group
-modify group
-
-Ändra data för en systemgrupp. 
-
-<c>pwr_user> modify group 'name' /[no]userinherit
-
-/userinherit <t>Sätter attributet UserInherit som anger att systemgruppen ska 
-             <t>ärva användare från från sin förälder i systemgrupps-hierakin. 
-             <t>Negeras med /nouserinherit
-</topic>
-
-<topic> pwr_user modify user
-modify user
-
-Ändra data för en användare.
-
-<c>pwr_user> modify user 'name' /group= [/password=][/privilege=]
-<c>	[/rtread][/rtwrite][/system][/maintenance][/process]
-<c>     [/instrument][/operator1][/operator2]...[oper10][/devread]
-<c>     [/devplc][/devconfig][/devclass]
-
-/group <t>Systemgrupp som användaren tillhör.
-/password <t>Användarens passerord.
-/privilege <t>Privilegie om denna anges anges som en mask, dvs ett heltalsvärde.
-/rtread <t>Användaren tilldelas RtRead.
-/rtwrite <t>Användaren tilldelas RtWrite.
-/system <t>Användaren tilldelas System.
-/maintenance <t>Användaren tilldelas Maintenance.
-/process <t>Användaren tilldelas Process.
-/operator1 <t>Användaren tilldelas Operator1.
-...
-/operator9 <t>Användaren tilldelas Operator9.
-/oper10 <t>Användaren tilldelas Operator10.
-/devread <t>Användaren tilldelas DevRead.
-/devplc <t>Användaren tilldelas DevPlc.
-/devconfig <t>Användaren tilldelas DevConfig.
-/devclass <t>Användaren tilldelas DevClass.
-</topic>
-</headerlevel>
-
-<topic> pwr_user remove
-remove
-
-remove group <link> pwr_user remove group
-remove user <link> pwr_user remove user
-</topic>
-
-<headerlevel>
-<topic> pwr_user remove group
-remove group
-Ta bort en systemgrupp.
-
-<c>pwr_user> remove group 'name'
-</topic>
-
-<topic> pwr_user remove user
-remove user
-
-Ta bort en användare.
-
-<c>pwr_user> remove user 'name' /group=
-</topic>
-</headerlevel>
-
-<topic> pwr_user save
-save
-Spara.
-
-<c>pwr_user> save
-</topic>
-
-<topic> pwr_user su
-su
-
-Logga in som super-user. Som super-user kan man se se password för användare vid listning.
-su kräver password.
-
-<c>pwr_user> su 'password' 
-</topic>
-</headerlevel>
-</headerlevel>
 </chapter>
 
 <chapter>
@@ -7208,7 +7298,7 @@ objektet, måste man tänka på att attributet är en pekare och hämta upp värdet up
 GetIpPtr.
 
 <b>SequenceReset
-Det är möjligt att använda GRAFCET sekvenser i en komponent. En skillnad från en ordinär
+Det är möjligt att använda Grafcet sekvenser i en komponent. En skillnad från en ordinär
 sekvens är att resetobjektet ska vara definierat med ett attribut av klass Dv med namnet 
 'SequenceReset'i huvudobjektet. SubStep kan inte användas if sekvensen.
 
@@ -7673,18 +7763,18 @@ Dokumentation av klasser
 
 För $ClassDef och $Attribute objekt finns ett dokumentationsblock, som fylls i från 
 objektseditorn. Från dokumentationsblocken och klassbeskrivningen genereras dokumentation
-för klasserna på xtthjälp och html format.
+för klasserna på xtthjälp och html format när klassvolymen byggs.
 
 Dokumentationsblocket för $ClassDef objektet bör innehålla en beskrivning
 av klassens funktion och användningsområde, documentationsblocket för $Attribut en beskrivning
 av det aktuella attributets funktion.
 
 <option> printdisable
-Genererering av Xtt hjälpfiler <link> class generate xtthelp
-Generering av html dokumentation <link> class generate html
 ClassDef <link> docblock classdef
 Attribute <link> docblock attribute
 c- och h-filer <link> docblock ccode
+Genererering av Xtt hjälpfiler <link> class generate xtthelp
+Generering av html dokumentation <link> class generate html
 <option> printenable
 </topic>
 
@@ -8073,6 +8163,285 @@ Path är rot katalogen till det här trädet.
 </chapter>
 
 <chapter>
+<topic> dg_tools
+Verktyg
+
+pwrc 		<t>Kommando gränssnitt till utvecklingsdatabasen.<link> dg_pwrc
+wb_ge 		<t>Ge editor 			<link> wb_ge
+co_help 	<t>Hjälp fönster. 		<link> co_help
+pwr_user 	<t>Command line interface to user database. <link> pwr_user
+wb_ldlist 	<t>Check loadfile versions. 	<link> wb_ldlist
+</topic>
+<headerlevel>
+<topic> dg_pwrc
+pwrc
+
+Kommando gränssnitt till utvecklingsdatabasen.
+
+<c>pwrc        Proview workbench commands
+
+<c>Arguments:
+<c>  -v 'volume'    Load volume 'volume'.
+<c>  -h             Print usage.
+
+<c>  Other arguments are treated as a command and passed to the command parser
+<c>  If a command is given as an argument, the command will be executed and the
+<c>  program is then terminated.
+<c>  If no command is given, pwrc will prompt for a command.
+
+<c>Examples:
+<c>  $ pwrc -v MyVolume
+<c>  pwrc>
+
+<c>  $ pwrc -a show volume
+<c>  directory     Attached Db  $DirectoryVolume 254.254.254.253
+<c>  MyVolume               Db  $RootVolume        0.1.99.20
+
+</topic>
+
+<topic> co_help
+co_help hjälp fönster
+
+Open a Proview help file. By default the project help file is opened.
+
+<c>>co_help
+
+<c>Usage:
+
+<c>  co_help [-t 'topic'] [-s 'sourcefile'] [-b 'bookmark']
+
+<c>Arguments:
+
+<c>  -t    Help topic, default 'index'
+<c>  -s    Source helpfile
+<c>  -b    Bookmark
+<c>  -l    Language, e.g sv_se
+<c>  -c    Open Configuration help
+<c>  -d    Open Designer's Guide
+<c>  -g    Open Ge Reference Manual
+<c>  -o    Open Operator Help
+</topic>
+
+<topic> wb_ge
+wb_ge Ge editor
+Startar Ge editorn utan att öppna någon databas.
+Användbart om man snabbt vill öppna en Ge graph, men inte ska göra några databas
+knytningar.
+
+<c>> wb_ge ['pwg-file'] 
+</topic>
+
+<topic> pwr_user
+pwr_user
+
+pwr_user används för att skapa systemgrupper och användare i användar-databasen. 
+Konfigureringen sker mha kommandon. 
+
+pwr_user startas från kommando-prompten.
+
+<c>> pwr_user
+
+Här beskrivs de olika kommandon som finns för att skapa, modifiera och lista systemgrupper 
+och användare.
+
+add group <t>Addera en systemgrupp <link> pwr_user add group
+add user  <t>Addera en användare <link> pwr_user add user
+get       <t>Hämta en användare <link> pwr_user get
+list      <t>Lista systemgrupper och användare <link> pwr_user list
+load      <t>Ladda in senaste sparade databas <link> pwr_user load
+modify group <t>Ändra en systemgrupp <link> pwr_user modify group
+modify user  <t>Ändra en användare <link> pwr_user modify user
+remove group <t>Ta bort en systemgrupp <link> pwr_user remove group
+remove user  <t>Ta bort en användare <link> pwr_user remove user
+save      <t>Spara <link> pwr_user save
+su        <t>Logga in som super user <link> pwr_user su
+</topic>
+
+<headerlevel>
+<topic>pwr_user add
+add
+
+add group <link> pwr_user add group
+add user <link> pwr_user add user
+</topic>
+
+<headerlevel>
+<topic> pwr_user add group
+add group
+
+Skapa en systemgrupp
+
+<c>pwr_user> add group 'name' [/nouserinherit]
+
+/nouserinherit <t>Attributet UserInherit ska inte vara satt för systemgruppen. 
+        <t>UserInherit är default.
+</topic>
+<topic> pwr_user add user
+add user
+Skapa en användare.
+
+pwr_user> add user 'name' /group= /password= [/privilege=]
+	[/rtread][/rtwrite][/system][/maintenance][/process]
+[/instrument][/operator1][/operator2]...[oper10][/devread]
+[/devplc][/devconfig][/devclass]
+
+/group <t>Systemgrupp som användaren ska tillhöra.
+/password <t>Användarens passerord.
+/privilege <t>Privilegier om denna anges anges som en mask, dvs ett heltalsvärde.
+/rtread <t>Användaren tilldelas RtRead.
+/rtwrite <t>Användaren tilldelas RtWrite.
+/system <t>Användaren tilldelas System.
+/maintenance <t>Användaren tilldelas Maintenance.
+/process <t>Användaren tilldelas Process.
+/operator1 <t>Användaren tilldelas Operator1.
+...
+/operator9 <t>Användaren tilldelas Operator9.
+/operator10 <t>Användaren tilldelas Operator10.
+/devread <t>Användaren tilldelas DevRead.
+/devplc <t>Användaren tilldelas DevPlc.
+/devconfig <t>Användaren tilldelas DevConfig.
+/devclass <t>Användaren tilldelas DevClass.
+</topic>
+</headerlevel>
+
+<topic> pwr_user get
+get
+
+Hämtar en användare med en algorithm som används i runtime.
+
+pwr_user> get 'username' /group= /password=
+</topic>
+
+<topic> pwr_user list
+list
+
+Lista systemgrupper och användare.
+
+pwr_user> list
+</topic>
+
+<topic> pwr_user load
+load
+
+Laddar in den senaste sparade databasen och raderar eventuella ändringar sen senaste save.
+</topic>
+<topic> pwr_user modify
+modify
+
+modify group <link> pwr_user modify group
+modify user <link> pwr_user modify user
+</topic>
+
+<headerlevel>
+<topic> pwr_user modify group
+modify group
+
+Ändra data för en systemgrupp. 
+
+<c>pwr_user> modify group 'name' /[no]userinherit
+
+/userinherit <t>Sätter attributet UserInherit som anger att systemgruppen ska 
+             <t>ärva användare från från sin förälder i systemgrupps-hierakin. 
+             <t>Negeras med /nouserinherit
+</topic>
+
+<topic> pwr_user modify user
+modify user
+
+Ändra data för en användare.
+
+<c>pwr_user> modify user 'name' /group= [/password=][/privilege=]
+<c>	[/rtread][/rtwrite][/system][/maintenance][/process]
+<c>     [/instrument][/operator1][/operator2]...[oper10][/devread]
+<c>     [/devplc][/devconfig][/devclass]
+
+/group <t>Systemgrupp som användaren tillhör.
+/password <t>Användarens passerord.
+/privilege <t>Privilegie om denna anges anges som en mask, dvs ett heltalsvärde.
+/rtread <t>Användaren tilldelas RtRead.
+/rtwrite <t>Användaren tilldelas RtWrite.
+/system <t>Användaren tilldelas System.
+/maintenance <t>Användaren tilldelas Maintenance.
+/process <t>Användaren tilldelas Process.
+/operator1 <t>Användaren tilldelas Operator1.
+...
+/operator9 <t>Användaren tilldelas Operator9.
+/oper10 <t>Användaren tilldelas Operator10.
+/devread <t>Användaren tilldelas DevRead.
+/devplc <t>Användaren tilldelas DevPlc.
+/devconfig <t>Användaren tilldelas DevConfig.
+/devclass <t>Användaren tilldelas DevClass.
+</topic>
+</headerlevel>
+
+<topic> pwr_user remove
+remove
+
+remove group <link> pwr_user remove group
+remove user <link> pwr_user remove user
+</topic>
+
+<headerlevel>
+<topic> pwr_user remove group
+remove group
+Ta bort en systemgrupp.
+
+<c>pwr_user> remove group 'name'
+</topic>
+
+<topic> pwr_user remove user
+remove user
+
+Ta bort en användare.
+
+<c>pwr_user> remove user 'name' /group=
+</topic>
+</headerlevel>
+
+<topic> pwr_user save
+save
+Spara.
+
+<c>pwr_user> save
+</topic>
+
+<topic> pwr_user su
+su
+
+Logga in som super-user. Som super-user kan man se se password för användare vid listning.
+su kräver password.
+
+<c>pwr_user> su 'password' 
+</topic>
+</headerlevel>
+
+<topic> wb_ldlist
+wb_ldlist
+
+Visar version för volymer i dbs-filer. 
+Används för att reda ut version mismatch.
+
+
+> wb_ldlist <dbs-file>
+
+<b>Exempel
+<c>wb_ldlist $pwrp_load/volpwrdemo.dbs
+<c>Volume     VolPwrDemo      27-MAR-2014 11:06:48.67  0.254.254.200    RootVolume
+<c>VolRef     VolPwrDemo      27-MAR-2014 11:06:48.67  0.254.254.200    RootVolume
+<c>VolRef     pwrs            14-FEB-2014 16:57:21.19  0.0.0.1          ClassVolume
+<c>VolRef     pwrb            14-FEB-2014 16:57:24.82  0.0.0.2          ClassVolume
+<c>VolRef     BaseComponent   14-FEB-2014 16:57:52.68  0.0.0.10         ClassVolume
+<c>VolRef     OtherManufacturer 14-FEB-2014 16:58:22.73  0.0.250.1      ClassVolume
+<c>VolRef     ABB             14-FEB-2014 16:58:10.44  0.0.250.2        ClassVolume
+<c>VolRef     Profibus        14-FEB-2014 16:57:34.40  0.0.250.7        ClassVolume
+<c>VolRef     Inor            14-FEB-2014 16:58:16.18  0.0.250.8        ClassVolume
+<c>VolRef     OtherIO         14-FEB-2014 16:57:55.31  0.0.250.10       ClassVolume
+</topic>
+
+</headerlevel>
+</chapter>
+
+<chapter>
 <topic>opc_intro
 OPC
 Proview har implementerat OPC XML/DA protokollet för datautbyte med andra typer av 
@@ -8230,7 +8599,7 @@ där nodename är nodens namn och busnumber Qcombusnumret. Om noden är 'mynode' oc
 
 <chapter>
 <TOPIC> help command
-Wtt kommandon
+Kommandon
 
 <b>build      <t>Bygg nod, volym eller objekt	<LINK> build
 <b>check classes <t>Kontrollera om några klasser behöver updateras <LINK> check classes
@@ -9289,11 +9658,15 @@ symbolfile <LINK> configurator_refman,symbol_file
 <TOPIC> script
 Wtt script
 
-execute script		<LINK> execute script
-datatypes		<LINK> datatypes
-datatype conversions	<LINK> datatype conversions
-variable declarations	<LINK> variable declarations
-operators		<LINK> operators
+Exekvera ett script	<LINK> execute script
+
+<h2>Datatyper och declarationer
+Datatyper		<LINK> datatypes
+Datatyps konvertering	<LINK> datatype conversions
+Variabel deklarationer	<LINK> variable declarations
+Operatorer		<LINK> operators
+
+<h2>Uttryck
 main-endmain		<LINK> main-endmain
 function-endfunction	<LINK> function-endfunction
 if-else-endif		<LINK> if-else-endif
@@ -9303,22 +9676,35 @@ break			<LINK> break
 continue		<LINK> continue
 goto			<LINK> goto
 include			<LINK> include
+
+<h2>In och utmatnings funktioner
+ask()			<LINK> ask()
 printf()		<LINK> printf()
+say()			<LINK> say()
 scanf()			<LINK> scanf()
-fprintf()		<LINK> fprintf()
+
+<h2>Filhanterings funktioner
+fclose()		<LINK> fclose()
+felement()		<LINK> felement()
 fgets()			<LINK> fgets()
 fopen()			<LINK> fopen()
-fclose()		<LINK> fclose()
-exit()			<LINK> exit()
-verify()		<LINK> verify()
-time()			<LINK> time()
+fprintf()		<LINK> fprintf()
+fscanf()		<LINK> fscanf()
+translate_filename()	<LINK> translate_filename()
+
+<h2>Sträng funktioner
 edit()			<LINK> edit()
-extract()		<LINK> extract()
 element()		<LINK> element()
+extract()		<LINK> extract()
+sprintf()		<LINK> sprintf()
+strchr()		<LINK> strchr()
+strrchr()		<LINK> strrchr()
+strlen()		<LINK> strlen()
+strstr()		<LINK> strstr()
 toupper()		<LINK> toupper()
 tolower()		<LINK> tolower()
-translate_filename()	<LINK> translate_filename()
-wtt-commands		<LINK> wtt-commands
+
+<h2>Databas funktioner
 GetAttribute()		<LINK> getattribute()
 GetChild()		<LINK> getchild()
 GetParent()		<LINK> getparent()
@@ -9334,6 +9720,14 @@ GetRootList()		<LINK> getrootlist()
 GetVolumeClass()	<LINK> getvolumeclass()
 GetVolumeList()		<LINK> getvolumelist()
 SetAttribute()		<LINK> setattribute()
+
+<h2>System funktioner
+exit()			<LINK> exit()
+system()		<LINK> system()
+time()			<LINK> time()
+verify()		<LINK> verify()
+
+<h2>Diverse funktioner
 GetProjectName()	<LINK> getprojectname()  
 CheckSystemGroup()	<LINK> checksystemgroup()
 CutObjectName()		<LINK> cutobjectname()
@@ -9352,9 +9746,15 @@ PromptDialog()		<LINK> promptdialog()
 OpenGraph()		<LINK> opengraph()
 CloseGraph()		<LINK> closegraph()
 SetSubwindow()		<LINK> setsubwindow()
+GetIoDeviceData()	<LINK> getiodevicedata()
+SetIoDeviceData()	<LINK> setiodevicedata()
+pwr_get_config()	<LINK> pwr_get_config()
+get_node_name()		<LINK> get_node_name()
+
+<h2>wtt-kommandon
+wtt-kommandon		<LINK> wtt-commands
 
 </TOPIC>
-
 <TOPIC> execute script
 Exekvera ett script
 
@@ -9463,6 +9863,21 @@ Operator	<t>Beskrivning		<t>Datatyper
 |=	 	<t>logisk eller och tilldelning	<t>int
 </TOPIC>
 
+<TOPIC> sc_statements <style> function
+Script uttryck
+
+main-endmain		<t>Main funktion.<LINK> main-endmain
+function-endfunction	<t>Funktions deklaration.<LINK> function-endfunction
+if-else-endif		<t>Villkorlig exekvering.<LINK> if-else-endif
+while-endwhile		<t>While loop.<LINK> while-endwhile
+for-endfor		<t>For loop.<LINK> for-endfor
+break			<t>Avsluta while eller for loop.<LINK> break
+continue		<t>Fortsätt while eller for loop.<LINK> continue
+goto			<t>Hoppa till label.<LINK> goto
+include			<t>Inkludera script fil.<LINK> include
+</TOPIC>
+
+<headerlevel>
 <TOPIC> main-endmain <style> function
 main-endmain
 
@@ -9615,6 +10030,44 @@ En script include-fil xom innehåller funktioner kan inkluderas med
 
 <c>#include <my_functions>
 </TOPIC>
+</headerlevel>
+
+<TOPIC> sc_input_output_functions <style> function
+In och utmatnings funktioner
+
+<b>Funktion <t>Beskrivning
+ask <t>Skriv en fråga och läs ett svar.<link> ask() 
+printf <t>Formaterad utskrift.	<link> printf()
+say <t>Skriv en text.		<link> say()
+scanf  <t>Formaterad läsning.	<link> scanf()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> ask() <style> function
+ask()
+
+int ask( string question, (arbitrary type) reply)
+
+<b>Beskrivning
+
+Promptar för inmatning med den angivna strängen.
+Returnerar antal lästa element, 1 or 0.
+
+<b>Arguments
+
+string 			<t>question	<t>Prompt.
+godtycklig typ		<t>reply	<t>Inmatat svar. Kan vara int,
+			<t>		<t>float eller string.
+
+<b>Exempel
+<c> string reply;
+
+<c> ask( "Do you want to continue? [y/n] ", reply);
+<c> if ( reply != "y")
+<c>   exit();
+<c> endif
+</TOPIC>
 
 <TOPIC> printf() <style> function
 printf()
@@ -9642,6 +10095,23 @@ godtycklig typ		<t>arg2		<t>Värde argument. Valfritt. Kan vara int,
 <c>  printf( "a = %d och str = %s", a, str);
 </TOPIC>
 
+<TOPIC> say() <style> function
+say()
+
+int say( string text)
+
+<b>Beskrivning
+
+Skriver ut en sträng.
+
+<b>Argument
+
+string 			<t>text		<t>Text att skriva ut.
+
+<b>Exempel
+<c> say( "Three quarks for Muster Mark!");
+</TOPIC>
+
 <TOPIC> scanf() <style> function
 scanf()
 
@@ -9663,36 +10133,71 @@ godtycklig typ		<t>arg1		<t>Värde argument. Returnerat. Kan vara int,
 <c>  scanf( "%d", i);
 </TOPIC>
 
-<TOPIC> fprintf() <style> function
-fprintf()
+</headerlevel>
 
-int fprintf( int file, string format [, (godtycklig typ) arg1,
-	(godtycklig typ) arg2])
+<TOPIC> sc_file_handling_functions <style> function
+Filhanterings funktioner
+
+<b>Funktion <t>Beskrivning
+fclose <t>Stäng en fil. 		<link> fclose()
+felement <t>Extrahera ett element från senaste lästa rad. <link> felement()
+fgets <t>Läs en rad från en fil. 	<link> fgets()
+fopen <t>Öppna en fil.			<link> fopen()
+fprintf <t>Formaterad utskrift till fil. <link> fprintf()
+fscanf <t>Formaterad läsning från fil.	<link> fscanf()
+translate_filename <t>Översätt omgivnings-variabler i ett filnamn. <link> translate_filename()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> fclose() <style> function
+fclose()
+
+int fclose( int file)
 
 <b>Beskrivning
 
-Formaterad utskrift på fil. C-syntax. Format argument och inget, ett eller två
-värde argument.
-Returnerarn antal utskrivna tecken.
+Stänger en öppnad fil.
 
 <b>Argument
 
-int 			<t>file		<t>Fil id returnerat av fopen.
-string 			<t>format	<t>Format.
-godtycklig typ		<t>arg1		<t>Värde argument. Valfritt. Kan vara int,
-			<t>		<t>float eller string.
-godtycklig typ		<t>arg2		<t>Värde argument. Valfritt. Kan vara int,
-			<t>		<t>float eller string.
+int		<t>file		<t>fil-id returnerad av fopen.
 
 <b>Exempel
 
-<c>  int outfile;
-<c>  outfile = fopen( "my_file.txt", "w");
-<c>  if (!outfile)
-<c>    exit();
-<c>  fprintf( outfile, "Some text");
-<c>  fprintf( outfile, "a = %d", a);
-<c>  fclose( outfile);
+<c>  int infile;
+<c>  infile = fopen("some_file.txt","r");
+<c>  ...
+<c>  fclose( infile);
+</TOPIC>
+
+<TOPIC> felement() <style> function
+felement()
+
+string felement( int file int number, string delimiter, string str)
+
+<b>Beskrivning
+
+Extraherar ett element från en sträng av element läst från en file med
+fgets() funktionen. felement() kan användas istället för element() när den
+lästa strängen är längre än sträng-storleken 256. felement() kan hantera rader
+upp till 1023 tecken.
+
+<b>Argument
+
+int		<t>number	<t>elementets nummer.
+string		<t>delimiter	<t>avgränsnings tecken.
+
+<b>Exempel
+
+<c>  string elem1;
+<c>  int file;
+<c>  string line;
+
+<c>  file = fopen( "my_file.txt", "r");
+<c>  while( fgets( line, file))
+<c>    elem1 = felement( 1, " ");
+<c>  endwhile
 </TOPIC>
 
 <TOPIC> fgets() <style> function
@@ -9746,76 +10251,108 @@ string		<t>mode		<t>Access mod
 <c>  fclose( outfile);
 </TOPIC>
 
-<TOPIC> fclose() <style> function
-fclose()
+<TOPIC> fprintf() <style> function
+fprintf()
 
-int fclose( int file)
+int fprintf( int file, string format [, (godtycklig typ) arg1,
+	(godtycklig typ) arg2])
 
 <b>Beskrivning
 
-Stänger en öppnad fil.
+Formaterad utskrift på fil. C-syntax. Format argument och inget, ett eller två
+värde argument.
+Returnerarn antal utskrivna tecken.
 
 <b>Argument
 
-int		<t>file		<t>fil-id returnerad av fopen.
+int 			<t>file		<t>Fil id returnerat av fopen.
+string 			<t>format	<t>Format.
+godtycklig typ		<t>arg1		<t>Värde argument. Valfritt. Kan vara int,
+			<t>		<t>float eller string.
+godtycklig typ		<t>arg2		<t>Värde argument. Valfritt. Kan vara int,
+			<t>		<t>float eller string.
 
 <b>Exempel
 
-<c>  int infile;
-<c>  infile = fopen("some_file.txt","r");
-<c>  ...
-<c>  fclose( infile);
+<c>  int outfile;
+<c>  outfile = fopen( "my_file.txt", "w");
+<c>  if (!outfile)
+<c>    exit();
+<c>  fprintf( outfile, "Some text");
+<c>  fprintf( outfile, "a = %d", a);
+<c>  fclose( outfile);
 </TOPIC>
 
-<TOPIC> exit() <style> function
-exit()
+<TOPIC> fscanf() <style> function
+fscanf()
 
-int exit()
+int fscanf( int file, string format, (godtycklig typ) arg1)
 
 <b>Beskrivning
 
-Avslutar exekveringen av en fil.
-
-<b>Exempel
-
-<c>  exit();
-</TOPIC>
-
-<TOPIC> verify() <style> function
-verify()
-
-int verify( [int mode])
-
-<b>Beskrivning
-
-Sätter eller visar verifikatione mod. Om verifiering är till, visas alla 
-exekverade rader på skärmen.
-Returnerar nuvarande verifikations mod.
+Formaterad läsning från fil. C-syntax.
+Returnerar antal inlästa tecken.
 
 <b>Argument
 
-int		<t>mode		<t>verifikaion till (1) eller från (0). Valfri.
+int			<t>file		<t>Fil id.
+string 			<t>format	<t>Format.
+godtycklig typ		<t>arg1		<t>Värde argument. Returnerat. Kan vara int,
+			<t>		<t>float eller string.
 
 <b>Exempel
 
-<c>  verify(1);
+<c>  int file;
+<c>  int i;
+
+<c>  file = fopen( "my_file.txt", "r");
+<c>  if (file)
+<c>    fscanf( file, "%d", i);
+<c>    fclose( file);
+<c>  endif
 </TOPIC>
 
-<TOPIC> time() <style> function
-time()
+<TOPIC> translate_filename() <style> function
+translate_filename()
 
-string time()
+string translate_filename( string fname)
 
 <b>Beskrivning
 
-Returnerar nuvarande tid i strängformat.
+Byter ut omgivnings variabler i ett filnamn.
+
+<b>Argument
+
+string		<t>fname	<t>Ett filnamn.
+
+<b>Returns
+string				<t><t>Sträng med utbytta omgivningsvariabler.
 
 <b>Exempel
 
-<c>  string t;
-<c>  t = time();
+<c>  string fname1 = "$pwrp_db/a.wb_load";
+<c>  string fname2;
+<c>  fname2 = translate_filename( fname1);
+</TOPIC>
+</headerlevel>
+
+<TOPIC> string_functions <style> function
+Sträng funktioner
+
+<b>Funktion <t>Beskrivning
+edit <t>Ta bort överfödiga mellanslag och tab. <link> edit()
+element <t>Extrahera ett element från en sträng. <link> element()
+extract <t>Extrahera en delsträng från en sträng. <link> extract()
+sprintf <t>Formaterad utskrift till en sträng.	<link> sprintf()
+strchr <t>Returnera första förekomsten av ett tecken i en sträng. <link> strchr()
+strrchr <t>Returnera sista förekomsten av ett tecken i en sträng. <link> strrchr()
+strlen <t>Beräkna längden på en sträng.	<link> strlen()
+strstr <t>Returnera första förekomsten av en delsträng i en sträng. <link> strstr()
+tolower <t>Konvertera till små bokstäver. <link> tolower()
+toupper <t>Konveretra till stora bokstäver. <link> toupper()
 </TOPIC>
 
+<headerlevel>
 <TOPIC> edit() <style> function
 edit()
 
@@ -9834,6 +10371,29 @@ string		<t>str		<t>sträng som ska editeras.
 <b>Exempel
 
 <c>  collapsed_str = edit(str);
+</TOPIC>
+
+<TOPIC> element() <style> function
+element()
+
+string element( int number, string delimiter, string str)
+
+<b>Beskrivning
+
+Extraherar ett element från en sträng av element.
+Returnerar det extraherade elementet.
+
+<b>Argument
+
+int		<t>number	<t>elementets nummer.
+string		<t>delimiter	<t>avgränsnings tecken.
+string		<t>str		<t>sträng med element.
+
+<b>Exempel
+
+<c>  string str = "mary, lisa, anna, john";
+<c>  string elem1;
+<c>  elem1 = elment( 1, ",", str);
 </TOPIC>
 
 <TOPIC> extract() <style> function
@@ -9858,27 +10418,157 @@ string		<t>str		<t>sträng som tecknen ska extraheras från.
 <c>  extracted_str = extract( 5, 7, str);
 </TOPIC>
 
-<TOPIC> element() <style> function
-element()
+<TOPIC> sprintf() <style> function
+sprintf()
 
-string element( int number, string delimiter, string str)
+int sprintf( string str, string format [, (arbitrary type) arg1, (arbitrary type) arg2])
 
 <b>Beskrivning
 
-Extraherar ett element från et sträng av element.
-Returnerar det extraherade elementet.
+Formaterad utskrift. C-syntax. Format argument och inget, ett eller två
+värde argument. 
+Returnerar antal utskrivna tecken.
 
 <b>Argument
 
-int		<t>number	<t>elementets nummer.
-string		<t>delimiter	<t>avgränsnings tecken.
-string		<t>str		<t>sträng med element.
+string			<t>str		<t>Sträng att skriva till.
+string 			<t>format	<t>Format.
+godtycklig typ		<t>arg1		<t>Värde argument. Valfritt, Kan vara int,
+			<t>		<t>float eller string.
+godtycklig typ		<t>arg2		<t>Värde argument. Valfritt. Kan vara int,
+			<t>		<t>float eller string.
 
 <b>Exempel
 
-<c>  string str = "mary, lisa, anna, john";
-<c>  string elem1;
-<c>  elem1 = elment( 1, ",", str);
+<c>  string str;
+<c>  int items;
+
+<c>  sprintf( str, "Number of items: %d", items);
+</TOPIC>
+
+<TOPIC> strchr() <style> function
+strchr()
+
+int strchr( string str, string c)
+
+<b>Beskrivning
+
+Returnerar första förekomsten av ett tecken in en sträng.
+
+<b>Argument
+
+string		<t>str		<t>Sträng att söka i.
+string		<t>c		<t>Tecken att söka efter.
+
+<b>Returns
+int				<t><t>Index för första förekomsen av ett tecken.
+				<t><t>Första tecknet har index 1. Returnerar
+				<t><t>noll om tecknet inte hittas.
+<b>Exempel
+
+<c>  string str = "index.html";
+<c>  int idx;
+
+<c>  idx = strchr( str, ".");
+</TOPIC>
+
+<TOPIC> strrchr() <style> function
+strrchr()
+
+int strrchr( string str, string c)
+
+<b>Beskrivning
+
+Returnerar sista förekomsten av ett tecken in en sträng.
+
+<b>Argument
+
+string		<t>str		<t>Sträng att söka i.
+string		<t>c		<t>Tecken att söka efter.
+
+<b>Returns
+int				<t><t>Index för den sista förekomsten av tecknet.
+				<t><t>Första tecknet har index 1. Returnerar
+				<t><t>noll om tecknet inte hittas.
+<b>Exempel
+
+<c>  string str = "/usr/local/pwrrt";
+<c>  int idx;
+
+<c>  idx = strrchr( str, "/");
+</TOPIC>
+
+<TOPIC> strlen() <style> function
+strlen()
+
+int strlen( string str, string c)
+
+<b>Beskrivning
+
+Beräknar längden av en sträng.
+
+<b>Argument
+
+string		<t>str		<t>Sträng att beräkna längden för.
+
+<b>Returns
+int				<t><t>Strängens längd.
+
+<b>Exempel
+
+<c>  string str = "/usr/local/pwrrt";
+<c>  int len;
+
+<c>  len = strlen( str);
+</TOPIC>
+
+<TOPIC> strstr() <style> function
+strchr()
+
+int strstr( string str, string substr)
+
+<b>Beskrivning
+
+Returnar första förekomsten av en delsträng i en sträng.
+
+<b>Arguments
+
+string		<t>str		<t>Sträng att söka i.
+string		<t>substr	<t>Delsträng att söka efter.
+
+<b>Returns
+int				<t><t>Index för första förekomsten av delsträngen.
+				<t><t>Första tecknet har index 1. Returnerar
+				<t><t>noll om delsträngen inte hittas.
+<b>Exempel
+
+<c>  string str = "index.html";
+<c>  int idx;
+
+<c>  idx = strstr( str, ".html");
+</TOPIC>
+
+<TOPIC> tolower() <style> function
+tolower()
+
+string tolower( string str)
+
+<b>Beskrivning
+
+Konverterar en sträng till små bokstäver.
+
+<b>Argument
+
+string		<t>str		<t>sträng som ska konverteras.
+
+<b>Returns
+string				<t><t>sträng med små bokstäver.
+
+<b>Exempel
+
+<c>  string str1 = "Buster Wilson";
+<c>  string str2;
+<c>  str2 = tolower( str);
 </TOPIC>
 
 <TOPIC> toupper() <style> function
@@ -9904,81 +10594,116 @@ string				<t><t>sträng med stora bokstäver.
 <c>  str2 = toupper( str);
 </TOPIC>
 
-<TOPIC> tolower() <style> function
-toupper()
+</headerlevel>
 
-string tolower( string str)
+<TOPIC> system_functions <style> function
+System funktioner
+
+<b>Funktion <t>Beskrivning
+exit <t>Avsluta scriptet. <link> exit()
+system <t>Exekvera ett shell kommando. <link> system()
+time <t>Hämta systemtiden. <link> time()
+verify <t>Skriv ut exekverade rader. <link> verify()
+</TOPIC>
+
+<headerlevel>
+<TOPIC> exit() <style> function
+exit()
+
+int exit()
 
 <b>Beskrivning
 
-Konverterar en sträng till små bokstäver.
-
-<b>Argument
-
-string		<t>str		<t>sträng som ska konverteras.
-
-<b>Returns
-string				<t><t>sträng med små bokstäver.
+Avslutar exekveringen av en fil.
 
 <b>Exempel
 
-<c>  string str1 = "Buster Wilson";
-<c>  string str2;
-<c>  str2 = tolower( str);
+<c>  exit();
 </TOPIC>
 
-<TOPIC> translate_filename() <style> function
-translate_filename()
+<TOPIC> system() <style> function
+system()
 
-string translate_filename( string fname)
+int system( string cmd)
 
 <b>Beskrivning
 
-Byter ut omgivnings variabler i ett filnamn.
+Exekvera ett shell kommando.
 
 <b>Argument
 
-string		<t>fname	<t>A filnamn.
+string		<t>cmd		<t>Shell kommando att exekvera.
 
 <b>Returns
-string				<t><t>Sträng med utbytta omgivningsvariabler.
+int				<t><t>Returvärdet är -1 vid fel eller annars returstatus 
+				<t><t>för kommandot.
 
 <b>Exempel
 
-<c>  string fname1 = "$pwrp_db/a.wb_load";
-<c>  string fname2;
-<c>  fname2 = translate_filename( fname1);
+<c>  string cmd;
+
+<c>  cmd = "firefox http://www.proview.se";
+<c>  system( cmd);
 </TOPIC>
 
-<TOPIC> wtt-commands <style> function
-Wtt kommandon
+<TOPIC> time() <style> function
+time()
 
-Alla wtt kommandon finns tillgängliga i script koden. En wtt-kommando rad
-ska INTE avslutas med semikolon. Variabler kan substitueras i kommandot
-genom add omges av apostrofer.
+string time()
 
-<b>Exempel
- 
-<c>  string name = "PUMP-VALVE-Open";
-<c>  string value = "The valve is open";
-<c>  set attribute/name='name'/attr="Description"/value='value'
+<b>Beskrivning
+
+Returnerar nuvarande tid i strängformat.
 
 <b>Exempel
 
-<c>  string name;
-<c>  string parname;
-<c>  int j;
-<c>  int i;
-<c>  for ( i = 0; i < 3; i++)
-<c>    parname = "vkv-test-obj" + (i+1);
-<c>    create obj/name='parname'
-<c>    for ( j = 0; j < 3; j++)
-<c>      name = parname + "-obj" + (j+1);
-<c>      create obj/name='name'
-<c>    endfor
-<c>  endfor
+<c>  string t;
+<c>  t = time();
 </TOPIC>
 
+<TOPIC> verify() <style> function
+verify()
+
+int verify( [int mode])
+
+<b>Beskrivning
+
+Sätter eller visar verifikatione mod. Om verifiering är till, visas alla 
+exekverade rader på skärmen.
+Returnerar nuvarande verifikations mod.
+
+<b>Argument
+
+int		<t>mode		<t>verifikaion till (1) eller från (0). Valfri.
+
+<b>Exempel
+
+<c>  verify(1);
+</TOPIC>
+</headerlevel>
+
+<TOPIC> database_functions <style> function
+Databas funktioner
+
+<b>Funktion <t>Beskrivning
+GetAttribute()	<t>Hämta värde för ett attribut. <LINK> getattribute()
+GetChild()	<t>Hämta barn till ett objekt.	<LINK> getchild()
+GetParent()	<t>Hämta föräder till ett objekt. <LINK> getparent()
+GetNextSibling()<t>Hämta syskon för ett objekt.	<LINK> getnextsibling()
+GetNextVolume()	<t>Hämta nästa volym.	<LINK> getnextvolume()
+GetClassList()	<t>Hämta första instansen av en klass. <LINK> getclasslist()
+GetNextObject()	<t>Hämta nästa instans av en klass. <LINK> getnextobject()
+GetClassListAttrRef() <t>Hämta första instansen av en klass, attribut-object inkluderade. <LINK> getclasslistattrref()
+GetNextAttrRef() <t>Hämta nästa instans av en klass, attribut-objekt inkluderade. <LINK> getnextattrref()
+GetObjectClass() <t>Hämta klassen för ett objekt. <LINK> getobjectclass()
+GetNodeObject()	<t>Hämta nod-objektet.	<LINK> getnodeobject()
+GetRootList()	<t>Hämta första objektet i rot-listan. <LINK> getrootlist()
+GetVolumeClass() <t>Hämta klassen för en volym. <LINK> getvolumeclass()
+GetVolumeList()	<t>Hämta första volymen. <LINK> getvolumelist()
+SetAttribute()	<t>Sätt värde på ett attribut.	<LINK> setattribute()
+</TOPIC>
+
+<headerlevel>
 <TOPIC> getattribute() <style> function
 GetAttribute()
 
@@ -10085,6 +10810,22 @@ string		<t>name		<t>objektets namn.
 <c> endwhile
 <c> if ( !not_first )
 <c>   MessageError("No objects found");
+</TOPIC>
+
+<TOPIC> getnextvolume() <style> function
+GetNextVolume()
+
+string GetNextVolume( string name)
+
+<b>Beskrivning
+
+Hämta nästa volym. Den första volymen hämtas med GetVolumeList().
+Returnerar namnet på volymen. Om det inte finns någon nästa volym,
+returneras en null-sträng.
+
+Argument
+
+string          name            volymens hamn.
 </TOPIC>
 
 <TOPIC> getclasslist() <style> function
@@ -10245,22 +10986,6 @@ GetNextSibling().
 <c>  endwhile
 </TOPIC>
 
-<TOPIC> getnextvolume() <style> function
-GetNextVolume()
-
-string GetNextVolume( string name)
-
-<b>Beskrivning
-
-Hämta nästa volym. Den första volymen hämtas med GetVolumeList().
-Returnerar namnet på volymen. Om det inte finns någon nästa volym,
-returneras en null-sträng.
-
-Argument
-
-string          name            volymens hamn.
-</TOPIC>
-
 <TOPIC> getvolumeclass() <style> function
 GetVolumeClass()
 
@@ -10309,7 +11034,7 @@ SetAttribute()
 
 int SetAttribute( string name, (godtycklig typ) value)
 
-<b>Description
+<b>Beskrivning
 
 Sätt värde på ett attribut.
 Attributet specificeras med fullt objekts och attributnamn.
@@ -10324,7 +11049,37 @@ godtycklig typ  value		attributets värde.
 
 <c>  SetAttribute( "Pump-V1-Switch.Description", "Valve switch open");
 </TOPIC>
+</headerlevel>
 
+<TOPIC> misc_functions <style> function
+Diverse funktioner
+
+<b>Funktion <t>Beskrivning
+GetProjectName() <t>Hämta projektnamnet. <LINK> getprojectname()  
+CheckSystemGroup() <t>Kontrollera att en systemgrupp existerar. <LINK> checksystemgroup()
+CutObjectName()	<t>Klipp av ett objektsnamn. <LINK> cutobjectname()
+MessageError()	<t>Skriv ett felmeddelande. <LINK> messageerror()
+MessageInfo()	<t>Skriv ett informationsmeddelande. <LINK> messageinfo()
+GetCurrentText()	<LINK> getcurrenttext()
+GetCurrentObject()	<LINK> getcurrentobject()
+GetCurrentVolume()	<LINK> getcurrentvolume()
+IsW1()			<LINK> isw1()
+IsW2()			<LINK> isw2()
+EditMode()		<LINK> editmode()
+MessageDialog()		<LINK> messagedialog()
+ConfirmDialog()		<LINK> confirmdialog()
+ContinueDialog()	<LINK> continuedialog()
+PromptDialog()		<LINK> promptdialog()
+OpenGraph()		<LINK> opengraph()
+CloseGraph()		<LINK> closegraph()
+SetSubwindow()		<LINK> setsubwindow()
+GetIoDeviceData()	<LINK> getiodevicedata()
+SetIoDeviceData()	<LINK> setiodevicedata()
+pwr_get_config()	<LINK> pwr_get_config()
+get_node_name()		<LINK> get_node_name()
+</TOPIC>
+
+<headerlevel>
 <TOPIC> getprojectname() <style> function
 GetProjectName()
 
@@ -10681,6 +11436,110 @@ int		<t>modal	<t>Modal mod.
 <c>  SetSubwindow( "pwr_wizard_frame", "Window1", "MyGraph", 1);
 
 </TOPIC>
+
+<TOPIC> getiodevicedata() <style> function
+GetIoDeviceData()
+
+int GetIoDeviceData( string object, string parameter, string value)
+
+<b>Beskrivning
+
+Hämta data från IO konfigurationen.
+Returnerar status för operatione,. udda vid framgång, jämn vid fel.
+
+Kommandot använder metoder och måste exekveras i pwrs. Det fungerar inte
+i pwrc.
+
+De supportade parametrarna för Profinet enheter är
+
+NetworkSettings-DeviceName
+NetworkSettings-IP Address
+NetworkSettings-Subnet Mask
+NetworkSettings-MAC Address
+NetworkSettings-SendClock
+NetworkSettings-ReductionRatio
+NetworkSettings-Phase
+NetworkSettings-API
+
+<b>Argument
+
+string		<t>object	<t>Namn på device objekt.
+string		<t>parameter	<t>Parameter namn för data.
+string		<t>value	<t>Returnerat parametervärde.
+
+<b>Exempel
+
+<c>  sts = SetIoDeviceData( "Nodes-MyNode-PN-D1", "NetworkSettings-DeviceName", "ET200M-D1");
+
+</TOPIC>
+
+<TOPIC> setiodevicedata() <style> function
+SetIoDeviceData()
+
+int SetIoDeviceData( string object, string parameter, string value)
+
+<b>Beskrivning
+
+Sätt data i IO konfigurationen.
+Returnerar status för operationen, udda för framgång, jämn för fel.
+
+Kommandot använder metoder och måste exekveras i pwrs. Det fungerar inte
+i pwrc.
+
+De supportade parametrarna för Profinet enheter är
+
+NetworkSettings-DeviceName
+NetworkSettings-IP Address
+NetworkSettings-Subnet Mask
+NetworkSettings-MAC Address
+NetworkSettings-SendClock
+NetworkSettings-ReductionRatio
+NetworkSettings-Phase
+NetworkSettings-API
+
+<b>Argument
+
+string		<t>object	<t>Namn på device objekt.
+string		<t>parameter	<t>Parameter namn för data.
+string		<t>value	<t>Värde att sätta.
+
+<b>Exempel
+
+<c>  sts = SetIoDeviceData( "Nodes-MyNode-PN-D1", "NetworkSettings-DeviceName", "ET200M-D1");
+
+</TOPIC>
+</headerlevel>
+
+<TOPIC> wtt-commands <style> function
+Wtt kommandon
+
+Alla wtt kommandon finns tillgängliga i script koden. En wtt-kommando rad
+ska INTE avslutas med semikolon. Variabler kan substitueras i kommandot
+genom add omges av apostrofer.
+
+<b>Exempel
+ 
+<c>  string name = "PUMP-VALVE-Open";
+<c>  string value = "The valve is open";
+<c>  set attribute/name='name'/attr="Description"/value='value'
+
+<b>Exempel
+
+<c>  string name;
+<c>  string parname;
+<c>  int j;
+<c>  int i;
+<c>  for ( i = 0; i < 3; i++)
+<c>    parname = "vkv-test-obj" + (i+1);
+<c>    create obj/name='parname'
+<c>    for ( j = 0; j < 3; j++)
+<c>      name = parname + "-obj" + (j+1);
+<c>      create obj/name='name'
+<c>    endfor
+<c>  endfor
+</TOPIC>
+
+
 </chapter>
 
 

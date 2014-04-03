@@ -263,7 +263,7 @@ GeBuild		Ge graph built. Built graph displayed in item.\n\
 GeExport	Ge graph exported to java. Exported graph displayed in item.\n\
 UpdateClasses	Classes updated.\n\
 CreatePackage	Distribution package created. Created package displayed in item.\n\
- &CopyPackage	Package distributed to process or operator station. Package displayed in item.\n\
+CopyPackage	Package distributed to process or operator station. Package displayed in item.\n\
 </XMP>\n\
   </body>\n\
 </html>\n");

@@ -71,7 +71,7 @@ static void usage()
 {
   printf( "Usage: co_convert -wxsoc -d target_directory source_files\n");
   printf( "      -w:  Create html from wb_load-files\n");
-  printf( "      -x:  Create xtthelp from wb_load-filesfiles\n");
+  printf( "      -x:  Create xtthelp from wb_load-files\n");
   printf( "      -c:  Create html files from c- and -h-files\n");
   printf( "      -s:  Create h files from wb_load-files\n");
   printf( "      -so: Create one common h file from wb_load-files\n");

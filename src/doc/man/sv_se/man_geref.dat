@@ -4698,11 +4698,22 @@ create 			<link>gecmd_create
   <t>create rectangle 	<link>gecmd_create_rect
   <t>create text 	<link>gecmd_create_text
   <t>create subgraph 	<link>gecmd_create_subgraph
+exit 			<link>gecmd_exit
 group 			<link>gecmd_group
 move 			<link>gecmd_move
   <t>move currentobject	<link>gecmd_move_currentobject
   <t>move selectedobject <link>gecmd_move_selectedobject
 new 			<link>gecmd_new
+open 			<link>gecmd_open
+quit 			<link>gecmd_quit
+replace 		<link>gecmd_replace
+rotate 			<link>gecmd_rotate
+  <t>rotate currentobject <link>gecmd_rotate_current
+  <t>rotate selectedobject <link>gecmd_rotate_selected
+save 			<link>gecmd_save
+scale 			<link>gecmd_scale
+  <t>scale currentobject <link>gecmd_scale_current
+  <t>scale selectedobject <link>gecmd_scale_selected
 select 			<link>gecmd_select
   <t>select currentobject <link>gecmd_select_currentobject
   <t>select clear	<link>gecmd_select_clear
@@ -4737,16 +4748,6 @@ set 			<link>gecmd_set
   <t>set currentobject attr2 <link>gecmd_set_current_attr1
   <t>set currentobject annotation <link>gecmd_set_current_annotation
   <t>set graphattributes <link>gecmd_set_graphattributes
-rotate 			<link>gecmd_rotate
-  <t>rotate currentobject <link>gecmd_rotate_current
-  <t>rotate selectedobject <link>gecmd_rotate_selected
-scale 			<link>gecmd_scale
-  <t>scale currentobject <link>gecmd_scale_current
-  <t>scale selectedobject <link>gecmd_scale_selected
-save 			<link>gecmd_save
-exit 			<link>gecmd_exit
-quit 			<link>gecmd_quit
-open 			<link>gecmd_open
 show 			<link>gecmd_show
   <t>show version <link>gecmd_show_version
 </topic>
@@ -4877,6 +4878,16 @@ Skapar ett subgraf-objekt.
 /y2
 </topic>
 
+<topic>gecmd_exit
+exit
+
+Avsluta ge och spara aktuell graf först.
+
+<b>Syntax
+
+<c>ge> exit ['filename']
+</topic>
+
 <topic>gecmd_group <style>function
 group
 
@@ -4925,6 +4936,112 @@ Flyttar utvalt objekt.
 new
 
 Rensar arbetsarean.
+</topic>
+
+<topic>gecmd_open
+open
+
+Öppna en graf.
+
+<b>Syntax
+
+<c>ge> open ['filename']
+</topic>
+
+<topic>gecmd_quit
+quit
+
+Avsluta utan att spara.
+
+<b>Syntax
+
+<c>ge> quit
+</topic>
+
+<topic>gecmd_replace
+replace attribute
+
+Sträng utbyte i dynamic och actino för utvalda object.
+
+<b>Syntax
+
+<c>ge> replace attribute /from= /to= [/strict]
+
+/from <t>Sträng som ska bytas ut.
+/to   <t>Ersättnings sträng.
+/strict <t>Sökning efter 'from' sträng skiljer mellan stora och små bokstäver.
+</topic>
+
+<topic>gecmd_rotate
+rotate
+</topic>
+
+<topic>gecmd_rotate_current
+rotate currentobject
+
+Roterar senast skapade objekt runt objektets mittpunkt.
+
+<b>Syntax
+
+<c>ge> rotate currentobject /angle=
+
+/angle <t>Vinkel i grader som objektet ska roteras.
+</topic>
+
+<topic>gecmd_rotate_selected
+rotate selectedobject
+
+Roterar utvalt objekt runt objektets mittpunkt.
+
+<b>Syntax
+
+<c>ge> rotate selectedobject /angle=
+
+/angle <t>Vinkel i grader som objektet ska roteras.
+</topic>
+
+<topic>gecmd_save
+save
+
+Sparar en graf.
+
+<b>Syntax
+
+<c>ge> save ['filename']
+</topic>
+
+<topic>gecmd_scale
+scale
+</topic>
+
+<topic>gecmd_scale_current
+scale currentobject
+
+Skalar om senast skapade objekt.
+
+<b>Syntax
+
+<c>ge> scale currentobject /scalex= /scaley= [/x= /y=]
+
+/scalex <t>Skalfaktor i x-led
+/scaley <t>Skalfaktor i y-led.
+/x <t>x-koordinat för skalningens referenspunkt.
+/y <t>y-koordinat för skalningens referenspunkt.
+</topic>
+
+<topic>gecmd_scale_selected
+scale selectedobject
+
+Skalar om utvalt objekt.
+
+<b>Syntax
+
+<c>ge> scale selectedobject /scalex= /scaley= [/x= /y=]
+
+/scalex <t>Skalfaktor i x-led
+/scaley <t>Skalfaktor i y-led.
+/x <t>x-koordinat för skalningens referenspunkt.
+/y <t>y-koordinat för skalningens referenspunkt.
 </topic>
 
 <topic>gecmd_select <style>function
@@ -5305,108 +5422,6 @@ AnimationCount <t>Int
 <c>ge> set graphattributes 'name' 'value'
 </topic>
 
-<topic>gecmd_rotate
-rotate
-</topic>
-
-<topic>gecmd_rotate_current
-rotate currentobject
-
-Roterar senast skapade objekt runt objektets mittpunkt.
-
-<b>Syntax
-
-<c>ge> rotate currentobject /angle=
-
-/angle <t>Vinkel i grader som objektet ska roteras.
-</topic>
-
-<topic>gecmd_rotate_selected
-rotate selectedobject
-
-Roterar utvalt objekt runt objektets mittpunkt.
-
-<b>Syntax
-
-<c>ge> rotate selectedobject /angle=
-
-/angle <t>Vinkel i grader som objektet ska roteras.
-</topic>
-
-<topic>gecmd_scale
-scale
-</topic>
-
-<topic>gecmd_scale_current
-scale currentobject
-
-Skalar om senast skapade objekt.
-
-<b>Syntax
-
-<c>ge> scale currentobject /scalex= /scaley= [/x= /y=]
-
-/scalex <t>Skalfaktor i x-led
-/scaley <t>Skalfaktor i y-led.
-/x <t>x-koordinat för skalningens referenspunkt.
-/y <t>y-koordinat för skalningens referenspunkt.
-</topic>
-
-<topic>gecmd_scale_selected
-scale selectedobject
-
-Skalar om utvalt objekt.
-
-<b>Syntax
-
-<c>ge> scale selectedobject /scalex= /scaley= [/x= /y=]
-
-/scalex <t>Skalfaktor i x-led
-/scaley <t>Skalfaktor i y-led.
-/x <t>x-koordinat för skalningens referenspunkt.
-/y <t>y-koordinat för skalningens referenspunkt.
-</topic>
-
-<topic>gecmd_save
-save
-
-Sparar en graf.
-
-<b>Syntax
-
-<c>ge> save ['filename']
-</topic>
-
-<topic>gecmd_exit
-exit
-
-Avsluta ge och spara aktuell graf först.
-
-<b>Syntax
-
-<c>ge> exit ['filename']
-</topic>
-
-<topic>gecmd_quit
-quit
-
-Avsluta utan att spara.
-
-<b>Syntax
-
-<c>ge> quit
-</topic>
-
-<topic>gecmd_open
-open
-
-Öppna en graf.
-
-<b>Syntax
-
-<c>ge> open ['filename']
-</topic>
-
 <topic>gecmd_show
 show
 </topic>
@@ -5461,6 +5476,7 @@ fgets <t>Läsning av en rad från fil
 fopen <t>Öppna en fil
 fprintf <t>Formaterad skrivning på fil
 fscanf <t>Formaterad läsning frän fil
+translate_filename <t>Byt ur miljövariabler i ett filnamn.
 
 <h2>Hantering av strängar
 <b>Funktion <t>Beskrivning
@@ -5473,6 +5489,7 @@ strchr <t>Leta efter första förekomsten av ett tecken i en sträng
 strlen <t>Längden av en sträng
 strrchr <t>Leta efter sista förekomsten av ett tecken i en sträng
 strstr <t>Leta efter första förekomsten av en teckensekvens i en sträng
+tolower <t>Konvertera till gemener
 toupper <t>Konvertera till versaler
 
 <h2>Databas funktioner

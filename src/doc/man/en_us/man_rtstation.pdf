@@ -408,7 +408,7 @@ endobj
 endobj
 
 34 0 obj
-  << /Length 389 >>
+  << /Length 388 >>
 stream
   q
   340.800000 0 0 78.000000 100.000000 492.000000 cm
@@ -416,8 +416,8 @@ stream
   Q
   BT
     /F2 25 Tf
-    185.750000 382.000000 Td
-    ( Designer's Guide) Tj
+    192.000000 382.000000 Td
+    ( Process station) Tj
   ET
   1 w
   50 119.000000 m
@@ -431,7 +431,7 @@ stream
   BT
     /F1 8 Tf
     264.000000 97.000000 Td
-    (Version 4.8.0	) Tj
+    (Version 5.0.0	) Tj
   ET
   1 w
   50 93.000000 m
@@ -446,7 +446,7 @@ stream
   BT
     /F1 10 Tf
     100.000000 546.000000 Td
-    (Copyright \(C\) 2011 SSAB Oxelösund AB) Tj
+    (Copyright \(C\) 2005-2013 SSAB EMEA AB) Tj
   ET
   BT
     /F1 10 Tf
@@ -1537,7 +1537,7 @@ endstream
 endobj
 
 43 0 obj
-  << /Length 4590 >>
+  << /Length 4379 >>
 stream
   BT
     /F4 10 Tf
@@ -1637,82 +1637,87 @@ stream
   BT
     /F4 10 Tf
     100.000000 324.000000 Td
-    (Check that the bootfile $pwrp_load/ld_boot_'nodename'_'busid'.dat exists with the correct bus number.  If the busnumber in the name is not correct, change it in the directory volume.) Tj
+    (Check that the bootfile $pwrp_load/ld_boot_'nodename'_'busid'.dat exists with the correct bus ) Tj
+  ET
+  BT
+    /F4 10 Tf
+    100.000000 312.000000 Td
+    (number.  If the busnumber in the name is not correct, change it in the directory volume.) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 300.000000 Td
+    100.000000 288.000000 Td
     (W Version mismatch for volume: ... ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 287.000000 Td
+    100.000000 275.000000 Td
     (Usually a change is made in a classvolume, but the rootvolume for the node is not rebuilt. ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 275.000000 Td
+    100.000000 263.000000 Td
     (Update the classes and build the rootvolume for the node.) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 251.000000 Td
-    (If the volume is a Proview base volume, check that the installed pwrrt version corresponds to the version in the development environment ) Tj
+    100.000000 239.000000 Td
+    (If the volume is a Proview base volume, check that the installed pwrrt version corresponds to ) Tj
+  ET
+  BT
+    /F4 10 Tf
+    100.000000 227.000000 Td
+    (the version in the development environment ) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 227.000000 Td
+    100.000000 203.000000 Td
     (> cat $pwr_exe/rt_version.dat) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 202.000000 Td
-    (If this doesn't help, the versions for the loadfiles can be viewed with wb_ldlist in the development environment. Check the versions of the .dbs files on $pwrp_load) Tj
+    100.000000 178.000000 Td
+    (If this doesn't help, the versions for the loadfiles can be viewed with wb_ldlist in the ) Tj
+  ET
+  BT
+    /F4 10 Tf
+    100.000000 166.000000 Td
+    (development environment. Check the versions of the .dbs files on $pwrp_load) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 178.000000 Td
+    100.000000 142.000000 Td
     (> wb_ldlist $pwrp_load/volsaturnus7.dbs) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 165.000000 Td
+    100.000000 129.000000 Td
     (Volume     VolSaturnus7    13-FEB-2009 16:16:51.59 \(1234538211,592936184\) 65796 ) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 152.000000 Td
+    100.000000 116.000000 Td
     (VolRef     VolSaturnus7    13-FEB-2009 16:16:51.59 \(1234538211,592936184\) 65796 ) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 139.000000 Td
+    100.000000 103.000000 Td
     (VolRef     pwrs            09-OCT-2008 12:00:00.00 \(1223546400,0\) 1 ) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 126.000000 Td
+    100.000000 90.000000 Td
     (VolRef     pwrb            09-OCT-2008 12:00:00.00 \(1223546400,0\) 2 ) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 113.000000 Td
+    100.000000 77.000000 Td
     (VolRef     BaseComponent   09-OCT-2008 12:00:00.00 \(1223546400,0\) 10 ) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 100.000000 Td
+    100.000000 64.000000 Td
     (VolRef     CVolSaturnus7   13-FEB-2009 16:09:38.61 \(1234537778,610918602\) 25372 ) Tj
-  ET
-  BT
-    /F6 10 Tf
-    100.000000 87.000000 Td
-    (VolRef     Profibus        09-OCT-2008 12:00:00.00 \(1223546400,0\) 64007 ) Tj
-  ET
-  BT
-    /F4 10 Tf
-    100.000000 62.000000 Td
-    (Here the volume rootvolume VolSaturnus7 references the class volume CVolSaturnus7. The time for CvolSaturnus7 has to equal the VolRef time. By listing the .dbs file for the classvolume we can compare) Tj
   ET
   1 w
   10 770 m
@@ -1732,177 +1737,182 @@ endstream
 endobj
 
 44 0 obj
-  << /Length 4308 >>
+  << /Length 4556 >>
 stream
   BT
-    /F4 10 Tf
+    /F6 10 Tf
     100.000000 690.000000 Td
-    ( the times.) Tj
+    (VolRef     Profibus        09-OCT-2008 12:00:00.00 \(1223546400,0\) 64007 ) Tj
+  ET
+  BT
+    /F4 10 Tf
+    100.000000 665.000000 Td
+    (Here the volume rootvolume VolSaturnus7 references the class volume CVolSaturnus7. The time for ) Tj
+  ET
+  BT
+    /F4 10 Tf
+    100.000000 653.000000 Td
+    (CvolSaturnus7 has to equal the VolRef time. By listing the .dbs file for the classvolume we can ) Tj
+  ET
+  BT
+    /F4 10 Tf
+    100.000000 641.000000 Td
+    (compare the times.) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 666.000000 Td
+    100.000000 617.000000 Td
     (> wb_ldlist $pwrp_load/cvolsaturnus7.dbs ) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 653.000000 Td
+    100.000000 604.000000 Td
     (Volume     CVolSaturnus7   22-APR-2009 08:12:08.22 \(1240380728,222698031\) 25372 ) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 640.000000 Td
+    100.000000 591.000000 Td
     (VolRef     CVolSaturnus7   22-APR-2009 08:12:08.22 \(1240380728,222698031\) 25372 ) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 627.000000 Td
+    100.000000 578.000000 Td
     (VolRef     pwrs            09-JAN-2009 14:11:44.30 \(1231506704,308475731\) 1 ) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 614.000000 Td
+    100.000000 565.000000 Td
     (VolRef     pwrb            09-JAN-2009 14:11:57.96 \(1231506717,961138847\) 2 ) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 601.000000 Td
+    100.000000 552.000000 Td
     (VolRef     Profibus        21-APR-2009 13:43:05.27 \(1240314185,278213917\) 64007 ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 576.000000 Td
+    100.000000 527.000000 Td
     (The time  22-APR-2009 08:12:08.22 doesn't match the VolRef time in the rootvolume ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 564.000000 Td
+    100.000000 515.000000 Td
     (3-FEB-2009 16:09:38.61 and this causes the mismatch. Updating the classes and building the ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 552.000000 Td
+    100.000000 503.000000 Td
     (rootvolume will fix the problem.) Tj
   ET
   BT
     /F2 12 Tf
-    50.000000 531.000000 Td
+    50.000000 482.000000 Td
     (3.3.2) Tj
   ET
   BT
     /F2 12 Tf
-    100.000000 531.000000 Td
+    100.000000 482.000000 Td
     (The plcprogram is not starting) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 498.000000 Td
+    100.000000 449.000000 Td
     (Check that there is a plc executable on $pwrp_exe) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 474.000000 Td
+    100.000000 425.000000 Td
     (> ls -l $pwrp_exe/*plc*) Tj
   ET
   BT
     /F2 10 Tf
-    100.000000 444.000000 Td
+    100.000000 395.000000 Td
     (No executable is found) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 413.000000 Td
+    100.000000 364.000000 Td
     (Do you really have any PlcPgm objects in this node? If there are no PlcPgm the executable is ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 401.000000 Td
+    100.000000 352.000000 Td
     (not created for the node.) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 377.000000 Td
+    100.000000 328.000000 Td
     (Otherwise build the node and look for error messages when the plcprogram is linked. Any ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 365.000000 Td
+    100.000000 316.000000 Td
     (undefined references may be caused by plc windows that are not yet compiled, or PlcPgm ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 353.000000 Td
+    100.000000 304.000000 Td
     (objects which are not yet opened and where the plc window object is missing.) Tj
   ET
   BT
     /F2 10 Tf
-    100.000000 324.000000 Td
+    100.000000 275.000000 Td
     (An executable exist) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 293.000000 Td
+    100.000000 244.000000 Td
     (If the plc program terminates with a segmentation fault, it is usually caused by some code ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 281.000000 Td
+    100.000000 232.000000 Td
     (in CArithms, DataArithms or in external functions called by the plc program from arithm blocks.) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 269.000000 Td
+    100.000000 220.000000 Td
     (Erroneous pointers and array index out of bonds are common causes for this, but it can be ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 257.000000 Td
+    100.000000 208.000000 Td
     (quite hard to find where the faulty code is.) Tj
   ET
   BT
     /F2 10 Tf
-    100.000000 229.000000 Td
+    100.000000 180.000000 Td
     (Start PlcPgm's one by one) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 208.000000 Td
+    100.000000 159.000000 Td
     (One way is to stop the execution of all PlcPgm's at the startup of the plcprogram and start ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 196.000000 Td
+    100.000000 147.000000 Td
     (them one by one. This will at least tell you which PlcPgm and which window causes the problem.) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 172.000000 Td
+    100.000000 123.000000 Td
     (The execution of the PlcPgm's are disabled by adding the row ) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 148.000000 Td
+    100.000000 99.000000 Td
     ('nodename'_setval  plcscan = Off) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 123.000000 Td
+    100.000000 74.000000 Td
     (to the file $pwrp_load/pwrp_alias.dat \(replace 'nodename' with the name of the node\). Create ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 111.000000 Td
+    100.000000 62.000000 Td
     (the file if it doesn't exist.) Tj
-  ET
-  BT
-    /F4 10 Tf
-    100.000000 87.000000 Td
-    (The restart the plcprogram, this can be done from the prompt,) Tj
-  ET
-  BT
-    /F6 10 Tf
-    100.000000 63.000000 Td
-    (> plc_aristotle_0517_00014) Tj
   ET
   1 w
   10 770 m
@@ -1922,91 +1932,106 @@ endstream
 endobj
 
 45 0 obj
-  << /Length 2117 >>
+  << /Length 2405 >>
 stream
   BT
     /F4 10 Tf
     100.000000 678.000000 Td
+    (The restart the plcprogram, this can be done from the prompt,) Tj
+  ET
+  BT
+    /F6 10 Tf
+    100.000000 654.000000 Td
+    (> plc_aristotle_0517_00014) Tj
+  ET
+  BT
+    /F4 10 Tf
+    100.000000 629.000000 Td
     (Start rt_xtt from another terminal window and start the PlcPgm's one by one by setting ScanOff ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 666.000000 Td
+    100.000000 617.000000 Td
     (in the PlcWindow object under the PlcPgm object to 0. Check when the plcprogram is terminating.) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 654.000000 Td
+    100.000000 605.000000 Td
     (The PlcPgm you were starting when the program terminated contains the erroneous code.) Tj
   ET
   BT
     /F2 10 Tf
-    100.000000 626.000000 Td
+    100.000000 577.000000 Td
     (Use the debugger) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 605.000000 Td
+    100.000000 556.000000 Td
     (By starting the plcprogram in the debugger, you will get the exact row causing the problem. ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 593.000000 Td
+    100.000000 544.000000 Td
     (First you have to compile suspected programs with debug, and also build the node with debug ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 581.000000 Td
+    100.000000 532.000000 Td
     (\(build with debug is set in Options/Settings in the configurator\). Copy the source files for ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 569.000000 Td
+    100.000000 520.000000 Td
     (the plc windows \($pwrp_tmp/*.gc\) to the process station, and start the debugger from the ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 557.000000 Td
+    100.000000 508.000000 Td
     (directory where the sourcefiles are placed.) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 533.000000 Td
-    ( gdb plc_aristotle_0517_00014) Tj
+    100.000000 484.000000 Td
+    (> gdb plc_aristotle_0517_00014) Tj
+  ET
+  BT
+    /F6 10 Tf
+    100.000000 471.000000 Td
+    (\(gdb\) run) Tj
   ET
   BT
     /F2 10 Tf
-    100.000000 504.000000 Td
+    100.000000 442.000000 Td
     (Core file) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 483.000000 Td
+    100.000000 421.000000 Td
     (By setting the system resource for maximum core file size, a core file will be created when ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 471.000000 Td
+    100.000000 409.000000 Td
     (a program terminates with for example segmentation fault.) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 447.000000 Td
+    100.000000 385.000000 Td
     (ulimit -c unlimited) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 422.000000 Td
+    100.000000 360.000000 Td
     (The core file can be opened by the debugger and the state when the crash occurred can be ) Tj
   ET
   BT
     /F4 10 Tf
-    100.000000 410.000000 Td
+    100.000000 348.000000 Td
     (examined.) Tj
   ET
   BT
     /F6 10 Tf
-    100.000000 386.000000 Td
+    100.000000 324.000000 Td
     (> gdb -c core plc_aristotle_0517_00014) Tj
   ET
   1 w
@@ -2243,31 +2268,31 @@ xref
 0000007405 00000 n 
 0000007842 00000 n 
 0000008279 00000 n 
-0000008722 00000 n 
-0000009463 00000 n 
-0000009813 00000 n 
-0000014006 00000 n 
-0000018892 00000 n 
-0000022378 00000 n 
-0000027340 00000 n 
-0000028378 00000 n 
-0000033095 00000 n 
-0000037740 00000 n 
-0000042103 00000 n 
-0000044433 00000 n 
-0000044465 00000 n 
-0000044598 00000 n 
-0000044736 00000 n 
-0000044877 00000 n 
-0000045014 00000 n 
-0000045156 00000 n 
-0000045287 00000 n 
-0000045591 00000 n 
+0000008721 00000 n 
+0000009462 00000 n 
+0000009812 00000 n 
+0000014005 00000 n 
+0000018891 00000 n 
+0000022377 00000 n 
+0000027339 00000 n 
+0000028377 00000 n 
+0000033094 00000 n 
+0000037528 00000 n 
+0000042139 00000 n 
+0000044757 00000 n 
+0000044789 00000 n 
+0000044922 00000 n 
+0000045060 00000 n 
+0000045201 00000 n 
+0000045338 00000 n 
+0000045480 00000 n 
+0000045611 00000 n 
+0000045915 00000 n 
 
 trailer
   << /Size 52
      /Root 1 0 R
   >>
 startxref
-72099
+72423
 %%EOF

@@ -39,7 +39,7 @@ SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group NodeConfiguration
-!  @Summary Configures the an application
+!  @Summary Configures an application
 !  Configures an application.
 !*/
   Object Application $ClassDef 363
@@ -52,11 +52,18 @@ SObject pwrb:Class
       Body SysBody
         Attr StructName = "Application"
       EndBody 
+      !/**
+      !  Optional description.
+      !*/
       Object Description $Attribute 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
+      !/**
+      !  Application index.
+      !  Should be set by the application with a call to errh_Init().
+      !*/
       Object Anix $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
@@ -66,6 +73,13 @@ SObject pwrb:Class
       EndObject
     EndObject
     Object DevBody $ObjBodyDef 2
+      !/**
+      !  Build command. The command is executed when the node is built from 
+      !  the configurator. This is a way to ensure that the application is updated 
+      !  when the node is built. Example
+      !
+      !  make --directory $pwrp_src/myappl -f makefile
+      !*/
       Object BuildCmd $Attribute 2
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$String80"

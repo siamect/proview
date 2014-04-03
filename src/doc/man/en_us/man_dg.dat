@@ -33,6 +33,7 @@
 
 
 
+
 <hr>
 2013-11-15
 Version 5.0.0	
@@ -123,6 +124,7 @@ The Spreadsheet Editor<link> spreadsheeteditor_refman
 The Plc Editor<link> plceditor_refman
 The Class Editor<link> classeditor
 Administration <link> administrator
+Tools <link> dg_tools
 OPC <link> opc_intro
 Commands <link> help command
 Script <link> script
@@ -222,7 +224,7 @@ information of various objects that are stored in the realtime database, or in d
 systems.
 
 <h1>Process graphics
-Process graphics are build in a graphical editor. The graphics are vector based, which makes all
+Process graphics are built in a graphical editor. The graphics are vector based, which makes all
 graphs and components unlimitedly scalable. Components have a preprogrammed dynamic to change
 color and shape, depending of signals in the realtime database, or to respond to mouse clicks
 and set values in the database. In each component that is sensible to mouse click or input,
@@ -623,25 +625,20 @@ Once the configuring of the project is done, next step is to configure the plant
 configuration is done in the Configuration Editor. The plant is a logical description of the 
 reality, which is to be controlled and supervised. 
 
-The plant is structured hierarchically. Examples of levels in the plant can be plant, process, 
-process part, component, and signal. These are the logical signals represented by signal objects 
-which will be connected to physical channels. 
-
-
 <h2>The Process Station
 The major part of the configuration is done in the volume of the process station, VolTrafficCross1.
 This because all physical hardware is configured here (the I/O), all the signals and the 
 PLC-programs that work with the signals.
 
 The plant is structured hierarchically. Examples of levels in the plant can be plant, process, 
-process part, component, and signal. These are the logical signals represented by signal 
-objects which will be connected to physical channels. 
+process part, component, and signal. These are the logical signals represented by signal objects 
+which will be connected to physical channels. 
 
 Sometimes it can be difficult to configure each signal in an initial stage, but it must at any 
 rate be decided how possible signals shall be grouped. 
 
 The figure below illustrates how a plant has been configured. We see how signals have been 
-configured on different levels, and even how the PLC programs are configured in the plant. 
+configured on different levels, and also how the PLC programs are configured in the plant. 
 
 <image> dg_fig3.gif
 <b>Fig An Example of a Plant Configuration
@@ -1098,7 +1095,7 @@ plant. The following attribute must be given a value:
 
 - ThreadObject indicates the plc thread where the program is executed. It references a 
   PlcThread object in the node configuration.
-- If the program contains a GRAFCET sequence, the ResetObject must be given. This is a Dv, Di 
+- If the program contains a Grafcet sequence, the ResetObject must be given. This is a Dv, Di 
   or Do that resets the sequence to its initial state.
 
 <bookmark> backup_object 
@@ -1174,8 +1171,8 @@ Pb_Ao, Pb_Di, Pb_Do etc, that are placed on the card level. Below the module obj
 the channels are configured with the channel objects ChanDi, ChanDo etc.
 
 <b>Process and thread for I/O objects
-I/O objects of the card level, often contains the attributes Process and ThreadObject. Which process 
-that shall handle the card is defined in Process.
+I/O objects of the card level, often contains the attributes Process and ThreadObject. Which
+process that shall handle the card is defined in Process.
 
 The card can be handled by the PLC program, that is, reading and writing is made synchronized
 with the execution of the PLC. You can also specify a thread in the PLC that should handle the
@@ -1194,8 +1191,8 @@ The MessageHandler object configures the server process rt_emon, that handles th
 objects (DSup, ASup, CycleSup). When an event is detected by the server, a message is sent
 to the outunits that have interests in this specific event.
 
-In the object is indicated for example the number of events that are stored in the node. The object
-is automatically created below a $Node object.
+In the object is indicated for example the number of events that are stored in the node. The 
+object is automatically created below a $Node object.
 See MessageHandler in the Object Reference Manual <classlink>messagehandler,"",$pwr_lang/pwrb_xtthelp.dat
 
 <h2>IOHandler object
@@ -1263,7 +1260,7 @@ buttons. Buttons that are not used become invisible.
 
 See OpPlace in Object Reference Manual <classlink>opplace,"",$pwr_lang/pwrb_xtthelp.dat
 
-<image> dg_fig45.gif
+<image> dg_fig45.png
 <b>Fig Operator Window
 
 <h2>The Plant Graphics Object - the XttGraph Object 
@@ -1280,6 +1277,20 @@ window.
 - Action. States a Ge graph to open, or an Xtt command to execute.
 
 See XttGraph in Object Reference Manual <classlink>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
+
+<h2>Multiview object
+Multiview is an operator window organized as table where each cell can contain a graph, 
+trend, sev history curve, alarm list, event list or another multview window. The example 
+below displays a multiview window with one column and two rows. The first cell contains 
+another multiview with two columns and tree rows, and the second cell contain an alarm window.
+The different alarm windows show alarms from different parts of the plant, specified by 
+AlarmView objects. An multiview window is configured by a XttMultiView object. The Action 
+array contains the specifications for each cell.
+
+It is also possible to exchange a graph or curve in a cell with the 'set subwindow' command.
+
+<image> dg_fig115.png
+<b>Fig Multiview window
 </topic>
 </chapter>
 
@@ -1308,8 +1319,8 @@ The figure below shows a project structure of the directory tree.
 
 <image> dg_psfig1.png
 
-This directory structure is new to Proview v4.6. The reason for this is to make it more clear
-what the sources and configuration files of the project are, and what is generated content.
+This directory structure was modified in Proview V4.7. The reason for this was to make it more 
+clear what the sources and configuration files of the project are, and what is generated content.
 Earlier versions did not make this clear and the idea is that everything that resides in
 the build tree can be regenerated from the source tree.
 
@@ -1322,9 +1333,9 @@ For example $pwrp_exe for the directory <project_root>/bld/x86_linux/exe.
 
 <topic> source_tree
 The source tree
-The source tree contains all the files that are the sources and configuration files of the projects.
-The top level only contains subdirectories and no source or configuration files. In the
-following the contents and purpose of the subdirectories are described.
+The source tree contains all the files that are the sources and configuration files of the 
+projects. The top level $pwrp_src only contains subdirectories and no source or configuration 
+files. In the following the contents and purpose of the subdirectories are described.
 
 <option> printdisable
 The login directory
@@ -1400,11 +1411,16 @@ One file of special interest that should be kept here is the
 This file will by default be included when you compile the plc-code. It is however included
 from a directory in the build-tree (<project_root>/bld/common/inc).
 
-All header-files located here or in subdirectories and which should be included with the
-plc-program must be distributed to the $pwrp_inc-directory (<project_root>/bld/common/inc).
+Note that the ra_plc_user.h is automatically generated on $pwrp_inc when the first PlcPgm
+is compiled. If you need to modify ra_plc_user.h, you should copy it to $pwrp_applcode and
+keep the original there.
+
+All header-files located $pwrp_appl or in subdirectories and which should be included with the
+plc-program must be copied to the $pwrp_inc-directory (<project_root>/bld/common/inc).
 
 If you have some small functions that you only link with the plc-program and nothing else
 then you typically place this code in a file called:
+
 <c>ra_plc_user.c
 </topic>
 
@@ -1536,7 +1552,8 @@ Proview's main log-file is named
 
 <c>pwr_<nodename>.log
 
-If you restart simulation, logging will be appended to this file. Remove it if you want a fresh one.
+If you restart simulation, logging will be appended to this file. Remove it if you want a fresh 
+one.
 </topic>
 
 <topic> project_tmp
@@ -1567,8 +1584,9 @@ documented your classes, a help-file will also be created. The files are named:
 
 <topic> project_web
 $pwrp_web
-This directory contains all files for the web-interface. For example xtt-helpfiles that you generate
-as html-files. Also if you create java-pictures from your ge-graphs they will be created here.
+This directory contains all files for the web-interface. For example xtt-helpfiles that you 
+generate as html-files. Also if you create java-pictures from your ge-graphs they will be created
+here.
 </topic>
 
 </headerlevel>
@@ -1729,6 +1747,8 @@ want this application to interfere with the kernel applications and they run bet
 
 <topic> file_plc_opt
 plc_<node>_<bus_no>_<plc_name>.opt
+Note! This file is deprecated since V4.8.2. A BuildOptions object should be used instead.
+
 This file (if it exists) will be used as the link options when I build the plc-program.
 Proview by default links against some libraries and object-files. If you have your own
 opt-file you need to include these. A default opt-file would look like:
@@ -1819,7 +1839,7 @@ webDirectory <t><t>Directory where the web files are placed and accessed by the 
 
 <b>Parameters in the storage environment
 sevDatabaseType <t><t>Database type, mysql or sqlite.
-sevXttDefaultPriv <t><t>Default privileges for access of the sev databse from sev_xtt.
+sevXttDefaultPriv <t><t>Default privileges for access of the sev database from sev_xtt.
 sevMysqlEngine <t><t>Mysql engine for created tables, innodb or myisam.
 
 
@@ -1869,9 +1889,9 @@ working area.
 <h2>Modify the object
 The object is modified from the object editor. This is opened by selecting the object and 
 activating 'Functions/Open Objects' in the menu. Values of the object attributes are modified 
-with 'Functions/Change value' in the object editor menu. If an input or output is not used, it 
-can be removed with a checkbox. There is also a checkbox which states that the value of a 
-digital input should be inverted.
+with 'Functions/Change value' in the object editor menu, or by pressing the Arrow Right key. 
+If an input or output is not used, it can be removed with a checkbox. There is also a 
+checkbox which states that the value of a digital input should be inverted.
 
 <h2>Connect function objects
 A output pin and a input pin is connected by
@@ -2027,6 +2047,13 @@ The above figure shows the sub sequence of a SubStep. A sub sequence always star
 SsBegin object, and ends with an SsEnd object. In its turn a subsequence can contain 
 subsequences. 
 
+<h2>Building Grafcet sequences
+Grafcet sequences are easily built in the plc editor by starting with a Step or InitStep
+object. By drawing a connection from the lower connection point of the step, and releasing
+the connection in an empty space in the work area, a connected Trans object will be created. 
+In the same way Order objects are created from the right connection point, and from the Trans 
+object, new Step objects will be created from the upper and lower connections points.
+ 
 <h1>An Introduction to Function Block Programming 
 
 <h2>Blocks to fetch and store values
@@ -2144,8 +2171,9 @@ the plc should run. Open the volume attributes editor from the navigator menu:
 system can be chosen. The volume can at the same time be run in the production system, in a 
 simulation system and in a educational system, and the systems can have different platforms.
 
-Now, the plcgpm is compiled, by choosing 'File/Build' in the plc editor. Any warning or error 
-messages will be displayed in the message window.
+The plcgpm is compiled by activating 'File/Build' in the plc editor menu. Any warning or error 
+messages will be displayed in the message window. When building the node, any new or modified
+plcpgm will also be compiled.
 </topic>
 </chapter>
 <chapter>
@@ -2155,11 +2183,11 @@ Call functions from the plc program
 The functionobject programming in the plc editor has its limitations, and some tasks can
 be done much easier and nicer in c-code. c programming can be achieved in CArithm and
 DataArihm where you can put an amount of c-code, but the number of characters are limited
-to 1023, and occasionally this is not enough. Then you have two possibilities; to write a
-detached application, or to call a c-function from a CArithm or DataArithm. The advantage 
-with calling a c-function is that all initialization and linking to objects and attributes 
-are handled by the plc program. The execution of the function is also synchronous with the 
-execution of the plc thread calling the function.  
+to 1023 (8191 for the DataArithmL), and occasionally this is not enough. Then you have two 
+possibilities; to write a detached application, or to call a c-function from a CArithm or 
+DataArithm. The advantage with calling a c-function is that all initialization and linking 
+to objects and attributes are handled by the plc program. The execution of the function is 
+also synchronous with the execution of the plc thread calling the function.  
 
 <h1>Write the code
 The code is put into a c file, created somewhere under $pwrp_src. We create the file
@@ -2227,22 +2255,19 @@ The function is called from a CArithm or DataArithm.
 <b>Link the plc program
 When the source code of the function was compiled, the object module
 $pwrp_obj/ra_myfunction.o was created. This has to be added to the link command when the
-plc program is built, which is achieved by adding the objectmodule to an option file that
-is input to the linker. The optionfile resides on the directory $pwrp_exe and is named
-plc_'nodename'_'qbus'_'plcname'.opt, for example
+plc program is built, which is achieved by creating a BuildOptions object in the 
+directory volume under the NodeConfig object. Insert the name of the object module in 
+the ObjectModules array. When the directory volume is saved, an opt-file is created on 
+$pwrp_exe that will be included by the linker when the node is built.
 
-<c>$pwrp_exe/plc_mynode_0999_plc.opt
-
-The following line is inserted into this file
-
-<c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy
-<c> -lpwr_usb_dummy -lpwr_pnak_dummmy -lpwr_cifx_dummy -lpwr_nodave_dummy -lpwr_epl_dummy
+<image> dg_fig116.png
+<b>Fig The object module inserted in BuildOptions
 
 We can now build the node and startup Proview runtime.
 
 <b>Debug
 One disadvantage when you leave the graphic programming and call c-functions is that you
-can not use trace any more for debugging. If you suspect some error in the  function code, 
+can't use trace any more for debugging. If you suspect some error in the  function code, 
 you occasionally have to start the plc program in debug, set a breakpoint in the function 
 and step forward in the code.
 
@@ -2254,12 +2279,12 @@ starting gdb with the pid for the process. pid is viewed by 'ps x'
 
 <c>> ps x
 <c>...
-<c>5473 pts/0    Sl     0:18 plc_mynode_0999_00003
+<c>5473 pts/0    Sl     0:18 plc_mynode_0999_plc
 
 where 5473 is pid for the plc process, and we start the debugger, set a breakpoint in the
 function and let the program continue to execute
 
-<c>> gdb -p 5473 plc_mynode_0999_00003
+<c>> gdb -p 5473 plc_mynode_0999_plc
 <c>(gdb) b MyFunction
 <c>(gdb) c
 
@@ -2268,12 +2293,12 @@ examine the content in variables (x) etc.
 
 If the plc program is terminated immediately after start, you can restart in debug.
 
-<c>> gdb plc_mynode_0999_00003
+<c>> gdb plc_mynode_0999_plc
 
 You can also kill the current plc process and start a new one in debug.
 
-<c>> killall plc_mynode_0999_00003
-<c>> gdb plc_mynode_0999_00003
+<c>> killall plc_mynode_0999_plc
+<c>> gdb plc_mynode_0999_plc
 
 </topic>
 </chapter>
@@ -2935,6 +2960,84 @@ From the simulate graph various events can be simulated.
 <topic>communication
 Communication
 
+<option> printdisable
+Internal communication with Qcom <link>com_intern
+External communication with Remote <link>com_remote
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>com_intern
+Internal communication
+
+The internal communication in Proview sends information about volumes, objects,
+alarms, events, history data etc. between processes and nodes. There are three 
+different protocols for alarm handling, net handling and history data,  the all are 
+based on Qcom.
+
+<h1>Qcom
+Qcom is a message bus that sends queued messages between processes. Communicating 
+nodes all have to share the QCom bus, and a node can only attach one bus. The bus
+is configured in the BusConfig object by stating the bus identity, a value between 
+1 and 999. 
+
+You also have to configure which nodes are to communicate with each other. With the 
+default configuration, all nodes in the same project will communicate, and additional 
+nodes in other project is configured with FriendNodeConfig objects. This can for example 
+be process stations that are mounted by operator stations.
+
+If you have a project with several nodes, and don't want them all to communicate with
+each other, you can set QComAutoConnectDisable in the BusConfig object, and specify 
+the communcation links with FriendNodeConfig objects.
+
+All Qcom messages are sent with acknowlegement. If the acknowlege doesn't arrive, the
+message is resent with double timeout. After a number of resends without reply the link
+is regarded to be down. Dependent on the type of net and transmission speed, the timeouts
+might have to be adjusted. This can be done with the ResendTime attributes in the 
+NodeConfig and FriendNodeConfig objects.
+
+See the document QCOM for more information about Qcom.
+ 
+<h1>Nethandler
+The nethandler sends information about volumes and objects between nodes, for example
+the volumes in a node, the parent, children or siblings of an object, or the content 
+of an object or attribute. Also subscriptions are set up via the nethandler, that is 
+data cyclically sent from one node to another, usually from process stations to operator 
+stations. The processes for the net handling are rt_neth, rt_neth_acp and rt_tmon.
+
+<h1>Eventhandler
+The event handler scans all the supervision object in a node and sends alarms and
+events to outunits, for example to the alarm and event lists in the operator enviroment.
+They send acknowlegdements back to the event handler. Exactly which alarms and event that
+is sent to an outunit is configured in the select list. The select list  for the operator 
+environment is found in the  the OpPlace object. Only events and alarms below the stated 
+hierachies are sent. The process of the event handling, rt_emon, is configured with a 
+MessageHandler object.
+
+<h1>Historical data storage
+The historical data storage means that data is sent from process stations and stored in 
+a database in a storage server. The server process rt_sevhistmon in the process station
+scans all attributes marked for storage, fetches the corresponding values and sends them 
+to the sev_server process that stores them into the database. When curves of historical data 
+are to be displayed, a request is sent from the operator environment and a suitable 
+selection of points are fetched from the database and sent to the operator environment.
+See chapter Data Storage <link> dg_sev
+
+<h1>Web and app communication
+The web interface and Andriod application fetches information from the Proview realtime
+database through the server processes rt_webmon, rt_webmonmh and rt_webmonelog. This
+communication is configured by the WebHandler object.
+
+<h1>Status server
+The Runtime monitor and Supervision center fetches information from the Status server.
+This communication is based on http and soap, and is configured with the StatusServerConfig 
+object.
+
+</topic>
+
+<topic>com_remote
+Remote
+
 The Remote concept in Proview is a way to standardize the methods of communication with other
 systems. It describes a number of transport programs and Proview objects used to implement
 a variety of different communication protocols and to handle incoming and outgoing messages.
@@ -2992,6 +3095,12 @@ Function object used in a plc-program for sending messages.
 
 <h2>RemTransRcv
 Function object used in a plc-program for receiving messages.
+
+<h2>Logging of transactions
+Remote transactions can be logged to text file. The extent of the logging is configured
+in the LoggLevel attribute of the RemTrans object. The log file is configured with a
+LoggConfig object.
+
 </topic>
 
 <topic> protocols
@@ -3260,8 +3369,6 @@ file is automatically included when you compile the plc-code. The structures loo
 <c>  pwr_tUInt32  Id;
 <c>} d_a_RequestData;
 <c>
-<c>#define pwr_sClass_d_a_RequestData d_a_RequestData
-<c>
 <c>typedef struct {
 <c>  pwr_tUInt32   Id;
 <c>  pwr_tFloat32  data_1;
@@ -3269,8 +3376,6 @@ file is automatically included when you compile the plc-code. The structures loo
 <c>  pwr_tInt32    data_3;
 <c>  pwr_tInt32    data_4;
 <c>} d_a_Report;
-<c>
-<c>#define pwr_sClass_d_a_Report d_a_Report
 <c>
 <c>typedef struct {
 <c>  pwr_tUInt32   Id;
@@ -3280,15 +3385,11 @@ file is automatically included when you compile the plc-code. The structures loo
 <c>  pwr_tInt32    data_xx;
 <c>} a_d_Data;
 <c>
-<c>#define pwr_sClass_a_d_Data a_d_Data
-<c>
 <c>typedef struct {
 <c>  pwr_tUInt32   Id;
 <c>  pwr_tInt32    func_no;
 <c>  pwr_tInt16    err_code;
 <c>} a_d_Data;
-<c>
-<c>#define pwr_sClass_a_d_Error a_d_Error
 
 <h2>The plc code
 
@@ -3313,9 +3414,8 @@ After execution the flag will be reset.
 
 <h2>Send subwindow
 In the send subwindow we fill in the data in the send-buffer. The send-buffer for the message to send
-is connected to a DataArithm. The special 'classdef'-syntax casts Da1 to be a pointer to a
-d_a_RequestData-struct (or actually it will cast this pointer to a pwr_sClass_d_a_RequestData,
-therefore the define-statement as described above).
+is connected to a DataArithm. The special 'structdef'-syntax casts Da1 to be a pointer to a
+d_a_RequestData-struct.
 
 <image> dg_fig74.png
 
@@ -3328,6 +3428,7 @@ the parameters we just add more DataArithm's and continue in the same way.
 <image> dg_fig75.png
 
 </topic>
+</headerlevel>
 </chapter>
 
 <chapter>
@@ -3578,6 +3679,18 @@ sizes by adding these lines in /etc/mysql/my.cnf
 
 <c>innodb_buffer_pool_size=1G
 <c>innodb_additional_mem_pool_size=20M
+
+For large databases the log file size has to be increased, and the one file per table 
+option will give more information and control of the disk space.
+
+<c>innodb_log_file_size=128M
+<c>innodb_log_buffer_size=16M
+<c>innodb_file_per_table
+
+For calculation of disk space for innodb about 47 bytes per stored value is needed.
+The storage of one signal with 10 s cycletime in one year requires about
+6 * 60 * 24 * 365 * 47 bytes = 148 Mb. The UseDeadBand option in the SevHist object
+will reduce this figure.
 
 <h2>SQLite
 Install libsqlite3-0 on the storage station.
@@ -4306,7 +4419,7 @@ setting several bits in the mask. If you, for example, have several cards in a r
 of the cards should be handled by the plc-process and some by an application, the rack unit 
 has to be handled by both the plc and the application. Whether it works, to handle a
 unit from several processes, depends on how the I/O methods for the unit are written.
-For example for Profibus, you can not divide the handling of slaves into different
+For example for Profibus, you can't divide the handling of slaves into different
 processes.
 
 <c>#include rt_io_base.h
@@ -4369,7 +4482,7 @@ The makefile is executed by positioning on the directory and writing make
 You can also insert the build command into the Application object for the application 
 in the attribute BuildCmd. In this case the build command is
 
-<c>make -f $pwrp_src/myappl/makefile
+<c>make --directory $pwrp_src/myappl -f makefile
 
 This command is executed when the node is built from the configurator. This is a
 way to ensure that all applications are updated when the node is built.
@@ -4726,7 +4839,7 @@ IsJavaFrame has to be set in GraphAttributes in the Ge editor.
 
 A java applet is opened from a html file. It is not scalable, and the privileges are fetched
 from the DefaultWebPriv of the Security object, and are not affected of the logged in user.
-Java applets can not be viewed in the local java environment. To be able to export a graph as
+Java applets can't be viewed in the local java environment. To be able to export a graph as
 a java applet, IsJavaApplet has to be set in GraphAttributes in the Ge editor.
 
 <image> dg_fig102.png
@@ -4764,7 +4877,7 @@ in with hierarchies from which alarms and events should be displayed.
 <h2>Help texts
 The help texts for the project in the file xtt_help.dat, is exported to html files on 
 $pwrp_web by the build method of the WebHandler object. The start page for the help texts are
-$wprp_web/xtt_help_index.html. This is showed as default in the right frame of the home page
+$pwrp_web/xtt_help_index.html. This is showed as default in the right frame of the home page
 if no other URL is stated in the StartURL attribute of the WebHandler.
 
 If the helptext contains image tags, the png or gif files have to be copied to $pwrp_web.
@@ -4825,6 +4938,120 @@ at installation of the pwrrt package, would be
 </topic>
 </chapter>
 
+<chapter>
+<topic>android_app
+Android application
+
+<image>dg_fig119.png
+<b>Android application
+
+The Android application can be installed on cell phones and tablet computers with operating
+system Android. The application connects to a process or operator station and can show
+
+- the runtime navigator.
+- process graphs.
+- plc trace.
+- alarm and event lists.
+- cross references.
+ 
+
+To install the app, download PwrXtt.apk from the Proview download page on Source Forge and 
+install on your device.
+
+<h1>Configuration
+The app uses the same server processes as the web interface, rt_webmon and rt_webmonmh, that
+is configured by the WebHandler object. See chapter Java Operator Environment for more info.
+
+<h2>Start menu
+When the application is started a startmenu is displayed, or if this is not configured, the
+runtime navigator is displayed.
+
+The start menu is configured with AppGraph and AppLink objects under the WebHandler object.
+The AppGraph is used to open Ge graphs, and the AppLink is a link to a web page or document.
+If you want to separate the App objects from the Web object under the WebHandler object, you
+can create a sub hierarchy with a $NodeHier object.
+
+In the AppGraph object, the name of the pwg-file is specified, an image file for the icon,
+and a text that is written below the icon. In the AppLink object, an URL is specified, 
+together with image file and text.
+
+<image>dg_fig117.png
+<b>Configuration of start menu
+
+<image>dg_fig118.png
+<b>Fig Start menu
+
+<h2>Distribution
+The attribute AppUseWebDir in the WebHandler object specifies if all files are fetched from
+the $pwrp_web directory, or if com files are fetched from $pwrp_exe and $pwrp_load. If
+AppUseWebDir is set, the app works analogous with the web interface and pwg and flw files
+has to be copied to $pwrp_web. 
+Table over files that are used by the application. If AppUseWebDir is set, these files
+should be distributed to $pwrp_web.
+
+<b>Function <t>Filetype <t>Directory 
+Ge graphs   <t>pwg    <t>$pwrp_exe
+Plc trace   <t>flw    <t>$pwrp_load
+Crossreferenser <t>rtt_crr*.dat <t>$pwrp_load
+Helpfiles  <t>html   <t>$pwrp_web
+Icons      <t>png, gif etc <t>$pwrp_exe
+
+<h2>Web server
+The app reads files through a web server, eg apache, that has to be started. As for the web 
+interface, there is an alias pwrp_web defined, that points to $pwrp_web. For apache this is 
+specified in the file /etc/apache2/apache2.conf.
+
+<c>Alias /pwrp_web/ /pwrp/common/web/
+
+<c><Directory /pwrp/common/web>
+<c>    Options Indexes MultiViews
+<c>    AllowOverride None
+<c>    Order allow,deny
+<c>    Allow from all
+<c></Directory>
+
+If AppUserWebDir is zero, aliases also have to be defined for pwrp_exe and pwrp_load. In
+this case the files doesn't need to be copied to $pwrp_web, but are read from $pwrp_load or
+$pwrp_exe where they normally reside. flw-files and crossreferences files are read from
+$pwrp_load, and other files, pwg, png etc, from $pwrp_exe.
+
+Note the the pwrp_exe directory is platform dependent.
+
+<c>Alias /pwrp_load/ /pwrp/common/load/
+
+<c><Directory /pwrp/common/load>
+<c>    Options Indexes MultiViews
+<c>    AllowOverride None
+<c>    Order allow,deny
+<c>    Allow from all
+<c></Directory>
+
+<c>Alias /pwrp_exe/ /pwrp/x86_linux/exe/
+
+<c><Directory /pwrp/x86_linux/exe>
+<c>    Options Indexes MultiViews
+<c>    AllowOverride None
+<c>    Order allow,deny
+<c>    Allow from all
+<c></Directory>
+
+To display Proview help texts there also has to be an alias for pwr_doc that points at 
+$pwr_doc. Normally this is added at installation of the pwrrt package.
+
+<c>Alias /pwr_doc/ /usr/pwrrt/doc/
+
+<c><Directory /usr/pwrrt/doc>
+<c>    Options Indexes MultiViews
+<c>    AllowOverride None
+<c>    Order allow,deny
+<c>    Allow from all
+<c></Directory>
+
+<image>dg_fig120.png
+<b>Fig Plc trace reads flw-filer from $pwrp_load
+
+</topic>
+</chapter>
 
 <chapter>
 <topic>conf_test
@@ -4847,7 +5074,7 @@ The methods of the signals objects check for example that they are connected to 
 the method for a PlcPgm checks that it is connected to a plc thread object etc. The syntax methods
 captures a great deal of errors, but does not guarantee that everything will work faultlessly.
 
-The syntax methods are executed from 'Functions/Sytax Check' in the Configurator menu.
+The syntax methods are executed from 'Functions/Syntax Check' in the Configurator menu.
 
 </topic>
 
@@ -5335,8 +5562,8 @@ As 'advanced user' you can open the input field with 'ArrowRight', as a faster a
 <bookmark> symbol_file
 <h1>Symbol file 
 
-The symbolfile is a command-file that is executed at wtt startup.
-It can contain definitions of symbols and other wtt commands.
+The symbolfile is a command-file that is executed at configurator startup.
+It can contain definitions of symbols and other configurator commands.
 The default filename of the symbolfile is $pwrp_login/wtt_symbols.pwr_com.
 Here are some examples of useful commands.
 
@@ -5468,7 +5695,7 @@ By clicking the arrow, the object is displayed.
 <topic> utilities_refman
 Utilities
 
-The utilities window is a graphic interface to different commands in wtt.
+The utilities window is a graphic interface to different configurator commands.
 For more information about the commands, see chapter Commands.
 </topic>
 </chapter>
@@ -5800,7 +6027,7 @@ multiline text with max 1023 characters. The objects are found under 'Edit' in t
 The point object is a free connection point that is used to branch a connection or to control
 the layout of a connection. Point is found under 'Edit' in the menu.
 
-<b>GRAFCET
+<b>Grafcet
 Grafcet sequences are built with specific Grafcet objects as InitStep, Step, Trans and Order.
 The connections between the objects follow specific rules. The vertical pins in a Step object
 are for example connected to Trans objects, and the horizontal pin is connected to an order
@@ -5974,6 +6201,7 @@ index     <t>List of topics<link> helpindex
 h1        <t>Header 1 <link> header1
 h2        <t>Header 2 <link> header2
 b         <t>Bold text <link> bold
+c	  <t>Code <link> helpcode
 t         <t>Tab <link> helptab
 hr        <t>Horizontal line<link> hr
 include   <t>Include other helpfiles<link> include
@@ -5986,8 +6214,11 @@ headerlevel <t>Increase or decrease header level <link> headerlevel
 pagebreak <t>New page<link> pagebreak
 option    <t>Options<link> option
 style     <t>Specific text style <link> style
+Titlepage and document info<link> special_topics
 
+<option> disable
 <b>Example <link> helpfile example
+<option> enable
 </topic>
 
 <headerlevel>
@@ -6101,6 +6332,18 @@ will be displayed as
 <b>This is a bold line
 </topic>
 
+<topic> helpcode
+Code
+<ib><c>
+<i>The <c> tag will display a line with the code font Courier.
+<i>The tag should be placed at the beginning of the line. 
+
+<b>Example
+<i><c>for ( i = 0; i < 10; i++)
+will be displayed as
+<c>for ( i = 0; i < 10; i++)
+</topic>
+
 <topic> helptab
 Tab
 <ib><t>
@@ -6198,6 +6441,25 @@ function	<t>Style used for functions and commands. Large title and pagebreak aft
 <b>Example
 <i><topic> MyFunction <style> function
 ...
+<i></topic>
+</topic>
+
+<topic> special_topics
+Title page and document info
+The title page and page for document info can be created with two special topics.
+
+<h2>__DocumentTitlePage
+Topic for title page. Is place first in a help file.
+
+<i><topic> __DocumentTitlePage
+<i>...
+<i></topic>
+
+<h2>__DocumentInfoPage
+Topic for document information, eg copyright. Is placed after the titlepage.
+
+<i><topic> __DocumentInfoPage
+<i>...
 <i></topic>
 </topic>
 
@@ -6419,193 +6681,27 @@ he is denied access.
 From the runtime navigator, you can with the login/logut command, login as another user and
 thereby change your privileges.
 
-<h1>Process graphics on the intranet
+<h1>Web access
 For process graphics on the web there is a special login frame that can be added to the
-start menu of a system page. The login frame checks the username and password. 
+start menu of the project home page. This is enabled in WebHandler.EnableLogin attribute.
+The login frame checks the username and password. 
+
+It's possible to specify a specific system group for web users in the WebSystemGroup 
+attribute in the $Security object. The default group is common.web, which doesn't exist in 
+the template user database. The first existing parent group, common, is then used instead 
+and the users in this group has access to the web. If you want to restrict the web access, 
+either create the common.web group without UserInherit, or create another group and insert 
+this into the $Security object. Also create proper users in the group.
+
+<h1>Edit the user database
+The user database is edited from the adminstrator or configurator. It is opened from
+File/Open/UserDatabase in the menu.
+See chapter Administration <link>adm_user
+
+You can also edit the database by commands in pwr_user, 
+Man kan även editera databasen med kommandon i pwr_user, see pwr_user in chapter Tools. <link>pwr_user
 </topic>
 
-<topic> pwr_user
-pwr_user
-
-You use pwr_user to create systemgroups and users in the user database.
-The configuration is performed with commands.
-
-pwr_user is started from the command prompt.
-
-Below is a description of the different commands available to create, modify and list
-systemgroups and users.
-
-add group <t>Add a system group <link> pwr_user add group
-add user  <t>Add a user <link> pwr_user add user
-get       <t>Get a user<link> pwr_user get
-list      <t>List systemgroups and users <link> pwr_user list
-load      <t>Load the latest saved database <link> pwr_user load
-modify group <t>Modify a system group <link> pwr_user modify group
-modify user  <t>Modify a user <link> pwr_user modify user
-remove group <t>Remove a system group <link> pwr_user remove group
-remove user  <t>Remove a user <link> pwr_user remove user
-save      <t>Save <link> pwr_user save
-su        <t>Login as super user <link> pwr_user su
-</topic>
-
-<headerlevel>
-<topic>pwr_user add
-add
-
-add group <link> pwr_user add group
-add user <link> pwr_user add user
-</topic>
-
-<headerlevel>
-<topic> pwr_user add group
-add group
-
-Create a systemgroup
-
-<c>pwr_user> add group 'name' [/nouserinherit]
-
-/nouserinherit <t>The attribute UserInherit is not set for the systemgroup.
-        <t>As default UserInherit is set.
-</topic>
-<topic> pwr_user add user
-add user
-Create a user.
-
-pwr_user> add user 'name' /group= /password= [/privilege=]
-	[/rtread][/rtwrite][/system][/maintenance][/process]
-[/instrument][/operator1][/operator2]...[oper10][/devread]
-[/devplc][/devconfig][/devclass]
-
-/group <t>Systemgroup of the user
-/password <t>Password of the user
-/privilege <t>Privileges if this is supplied as a mask, i.e an integer value
-/rtread <t>The user is granted RtRead
-/rtwrite <t>The user is granted RtWrite
-/system <t>The user is granted System
-/maintenance <t>The user is granted Maintenance
-/process <t>The user is granted Process
-/operator1 <t>The user is granted Operator1
-...
-/operator9 <t>The user is granted Operator9
-/operator10 <t>The user is granted Operator10
-/devread <t>The user is granted DevRead
-/devplc <t>The user is granted DevPlc
-/devconfig <t>The user is granted DevConfig
-/devclass <t>The user is granted DevClass
-</topic>
-</headerlevel>
-
-<topic> pwr_user get
-get
-
-Fetches a user with an algorithm used in runtime.
-
-pwr_user> get 'username' /group= /password=
-</topic>
-
-<topic> pwr_user list
-list
-
-Lists systemgroups and users.
-
-pwr_user> list
-</topic>
-
-<topic> pwr_user load
-load
-
-Loads the latest saved database and reverts the current session.
-</topic>
-<topic> pwr_user modify
-modify
-
-modify group <link> pwr_user modify group
-modify user <link> pwr_user modify user
-</topic>
-
-<headerlevel>
-<topic> pwr_user modify group
-modify group
-
-Modify a systemgroup.
-
-<c>pwr_user> modify group 'name' /[no]userinherit
-
-/userinherit <t>Sets the attribute UserInherit that states that the systemgroup
-             <t>inherits users form its parent in the systemgroup hierarchy.
-             <t>Negated with /nouserinherit
-</topic>
-
-<topic> pwr_user modify user
-modify user
-
-Modify a user.
-
-<c>pwr_user> modify user 'name' /group= [/password=][/privilege=]
-<c>	[/rtread][/rtwrite][/system][/maintenance][/process]
-<c>     [/instrument][/operator1][/operator2]...[oper10][/devread]
-<c>     [/devplc][/devconfig][/devclass]
-
-/group <t>Systemgroup of the user
-/password <t>Password of the user
-/privilege <t>Privileges if this is supplied as a mask, i.e an integer value
-/rtread <t>The user is granted RtRead
-/rtwrite <t>The user is granted RtWrite
-/system <t>The user is granted System
-/maintenance <t>The user is granted Maintenance
-/process <t>The user is granted Process
-/operator1 <t>The user is granted Operator1
-...
-/operator9 <t>The user is granted Operator9
-/operator10 <t>The user is granted Operator10
-/devread <t>The user is granted DevRead
-/devplc <t>The user is granted DevPlc
-/devconfig <t>The user is granted DevConfig
-/devclass <t>The user is granted DevClass
-</topic>
-</headerlevel>
-
-<topic> pwr_user remove
-remove
-
-remove group <link> pwr_user remove group
-remove user <link> pwr_user remove user
-</topic>
-
-<headerlevel>
-<topic> pwr_user remove group
-remove group
-Remove a system group.
-
-<c>pwr_user> remove group 'name'
-</topic>
-
-<topic> pwr_user remove user
-remove user
-
-Remove a user.
-
-<c>pwr_user> remove user 'name' /group=
-</topic>
-</headerlevel>
-
-<topic> pwr_user save
-save
-Save the current session.
-
-<c>pwr_user> save
-</topic>
-
-<topic> pwr_user su
-su
-
-Login as super user. As super user you can see passwords for users when listing the database.
-su requires password.
-
-<c>pwr_user> su 'password' 
-</topic>
-</headerlevel>
-</headerlevel>
 </chapter>
 
 <chapter>
@@ -7318,7 +7414,7 @@ in the plc code for the object, you have to consider that the attribute is a poi
 fetch the value with GetIpPtr.
 
 <b>SequenceReset
-It is possible to use GRAFCET sequences in a component. One difference from an ordinary
+It is possible to use Grafcet sequences in a component. One difference from an ordinary
 sequence are that the reset object should be defined as an attribute of class Dv in the
 main object, with the name 'SequenceReset'. SubSteps can not be used in the sequence.
 
@@ -7788,17 +7884,18 @@ Documentation of classes
 
 For $ClassDef and $Attribute objects, there is a documentation block, that is filled in from
 the object editor. The documentations block, together with the class description, is used
-when class documentation is generated to xtthelp or html format.
+when class documentation is generated to xtthelp or html format when the class volume is
+built.
 
 The documentation block for the $ClassDef object should contain a description of the class, 
 and the documentation block for the $Attribute object a description of the attribute.
 
 <option> printdisable
-Genererate Xtt helpfiles <link> class generate xtthelp
-Genererate html documentation <link> class generate html
 ClassDef <link> docblock classdef
 Attribute <link> docblock attribute
 c- and h-files <link> docblock ccode
+Genererate Xtt helpfiles <link> class generate xtthelp
+Genererate html documentation <link> class generate html
 <option> printenable
 </topic>
 
@@ -8185,6 +8282,281 @@ The path is the root directory of this tree.
 </chapter>
 
 <chapter>
+<topic> dg_tools
+Verktyg
+
+pwrc 		<t>Command interface to development database. <link> dg_pwrc
+wb_ge 		<t>Ge editor				<link> wb_ge
+co_help 	<t>Help window.			<link> co_help
+pwr_user 	<t>Command line interface to user database. <link> pwr_user
+wb_ldlist 	<t>Check loadfile versions. 		<link> wb_ldlist
+</topic>
+<headerlevel>
+<topic> dg_pwrc
+pwrc
+
+Command interface to development database.
+
+<c>pwrc        Proview workbench commands
+
+<c>Arguments:
+<c>  -v 'volume'    Load volume 'volume'.
+<c>  -h             Print usage.
+
+<c>  Other arguments are treated as a command and passed to the command parser
+<c>  If a command is given as an argument, the command will be executed and the
+<c>  program is then terminated.
+<c>  If no command is given, pwrc will prompt for a command.
+
+<c>Examples:
+<c>  $ pwrc -v MyVolume
+<c>  pwrc>
+
+<c>  $ pwrc -a show volume
+<c>  directory     Attached Db  $DirectoryVolume 254.254.254.253
+<c>  MyVolume               Db  $RootVolume        0.1.99.20
+
+</topic>
+
+<topic> co_help
+co_help Help window
+Open a Proview help file. By default the project help file is opened.
+
+<c>>co_help
+
+<c>Usage:
+
+<c>  co_help [-t 'topic'] [-s 'sourcefile'] [-b 'bookmark']
+
+<c>Arguments:
+
+<c>  -t    Help topic, default 'index'
+<c>  -s    Source helpfile
+<c>  -b    Bookmark
+<c>  -l    Language, e.g sv_se
+<c>  -c    Open Configuration help
+<c>  -d    Open Designer's Guide
+<c>  -g    Open Ge Reference Manual
+<c>  -o    Open Operator Help
+</topic>
+
+<topic> wb_ge
+wb_ge Ge editor
+Start the Ge editor without opening a database.
+Useful when you fast want to open a Ge graph, but will not make any database
+connections.
+
+<c>> wb_ge ['pwg-file'] 
+</topic>
+
+<topic> pwr_user
+pwr_user
+
+You use pwr_user to create systemgroups and users in the user database.
+The configuration is performed with commands.
+
+pwr_user is started from the command prompt.
+
+Below is a description of the different commands available to create, modify and list
+systemgroups and users.
+
+add group <t>Add a system group <link> pwr_user add group
+add user  <t>Add a user <link> pwr_user add user
+get       <t>Get a user<link> pwr_user get
+list      <t>List systemgroups and users <link> pwr_user list
+load      <t>Load the latest saved database <link> pwr_user load
+modify group <t>Modify a system group <link> pwr_user modify group
+modify user  <t>Modify a user <link> pwr_user modify user
+remove group <t>Remove a system group <link> pwr_user remove group
+remove user  <t>Remove a user <link> pwr_user remove user
+save      <t>Save <link> pwr_user save
+su        <t>Login as super user <link> pwr_user su
+</topic>
+
+<headerlevel>
+<topic>pwr_user add
+add
+
+add group <link> pwr_user add group
+add user <link> pwr_user add user
+</topic>
+
+<headerlevel>
+<topic> pwr_user add group
+add group
+
+Create a systemgroup
+
+<c>pwr_user> add group 'name' [/nouserinherit]
+
+/nouserinherit <t>The attribute UserInherit is not set for the systemgroup.
+        <t>As default UserInherit is set.
+</topic>
+<topic> pwr_user add user
+add user
+Create a user.
+
+pwr_user> add user 'name' /group= /password= [/privilege=]
+	[/rtread][/rtwrite][/system][/maintenance][/process]
+[/instrument][/operator1][/operator2]...[oper10][/devread]
+[/devplc][/devconfig][/devclass]
+
+/group <t>Systemgroup of the user
+/password <t>Password of the user
+/privilege <t>Privileges if this is supplied as a mask, i.e an integer value
+/rtread <t>The user is granted RtRead
+/rtwrite <t>The user is granted RtWrite
+/system <t>The user is granted System
+/maintenance <t>The user is granted Maintenance
+/process <t>The user is granted Process
+/operator1 <t>The user is granted Operator1
+...
+/operator9 <t>The user is granted Operator9
+/operator10 <t>The user is granted Operator10
+/devread <t>The user is granted DevRead
+/devplc <t>The user is granted DevPlc
+/devconfig <t>The user is granted DevConfig
+/devclass <t>The user is granted DevClass
+</topic>
+</headerlevel>
+
+<topic> pwr_user get
+get
+
+Fetches a user with an algorithm used in runtime.
+
+pwr_user> get 'username' /group= /password=
+</topic>
+
+<topic> pwr_user list
+list
+
+Lists systemgroups and users.
+
+pwr_user> list
+</topic>
+
+<topic> pwr_user load
+load
+
+Loads the latest saved database and reverts the current session.
+</topic>
+<topic> pwr_user modify
+modify
+
+modify group <link> pwr_user modify group
+modify user <link> pwr_user modify user
+</topic>
+
+<headerlevel>
+<topic> pwr_user modify group
+modify group
+
+Modify a systemgroup.
+
+<c>pwr_user> modify group 'name' /[no]userinherit
+
+/userinherit <t>Sets the attribute UserInherit that states that the systemgroup
+             <t>inherits users form its parent in the systemgroup hierarchy.
+             <t>Negated with /nouserinherit
+</topic>
+
+<topic> pwr_user modify user
+modify user
+
+Modify a user.
+
+<c>pwr_user> modify user 'name' /group= [/password=][/privilege=]
+<c>	[/rtread][/rtwrite][/system][/maintenance][/process]
+<c>     [/instrument][/operator1][/operator2]...[oper10][/devread]
+<c>     [/devplc][/devconfig][/devclass]
+
+/group <t>Systemgroup of the user
+/password <t>Password of the user
+/privilege <t>Privileges if this is supplied as a mask, i.e an integer value
+/rtread <t>The user is granted RtRead
+/rtwrite <t>The user is granted RtWrite
+/system <t>The user is granted System
+/maintenance <t>The user is granted Maintenance
+/process <t>The user is granted Process
+/operator1 <t>The user is granted Operator1
+...
+/operator9 <t>The user is granted Operator9
+/operator10 <t>The user is granted Operator10
+/devread <t>The user is granted DevRead
+/devplc <t>The user is granted DevPlc
+/devconfig <t>The user is granted DevConfig
+/devclass <t>The user is granted DevClass
+</topic>
+</headerlevel>
+
+<topic> pwr_user remove
+remove
+
+remove group <link> pwr_user remove group
+remove user <link> pwr_user remove user
+</topic>
+
+<headerlevel>
+<topic> pwr_user remove group
+remove group
+Remove a system group.
+
+<c>pwr_user> remove group 'name'
+</topic>
+
+<topic> pwr_user remove user
+remove user
+
+Remove a user.
+
+<c>pwr_user> remove user 'name' /group=
+</topic>
+</headerlevel>
+
+<topic> pwr_user save
+save
+Save the current session.
+
+<c>pwr_user> save
+</topic>
+
+<topic> pwr_user su
+su
+
+Login as super user. As super user you can see passwords for users when listing the database.
+su requires password.
+
+<c>pwr_user> su 'password' 
+</topic>
+
+</headerlevel>
+<topic> wb_ldlist
+wb_ldlist
+
+Display version of volumes in dbs-files.
+Used to investigate version mismatch.
+
+
+> wb_ldlist <dbs-file>
+
+<b>Example
+<c>wb_ldlist $pwrp_load/volpwrdemo.dbs
+<c>Volume     VolPwrDemo      27-MAR-2014 11:06:48.67  0.254.254.200    RootVolume
+<c>VolRef     VolPwrDemo      27-MAR-2014 11:06:48.67  0.254.254.200    RootVolume
+<c>VolRef     pwrs            14-FEB-2014 16:57:21.19  0.0.0.1          ClassVolume
+<c>VolRef     pwrb            14-FEB-2014 16:57:24.82  0.0.0.2          ClassVolume
+<c>VolRef     BaseComponent   14-FEB-2014 16:57:52.68  0.0.0.10         ClassVolume
+<c>VolRef     OtherManufacturer 14-FEB-2014 16:58:22.73  0.0.250.1      ClassVolume
+<c>VolRef     ABB             14-FEB-2014 16:58:10.44  0.0.250.2        ClassVolume
+<c>VolRef     Profibus        14-FEB-2014 16:57:34.40  0.0.250.7        ClassVolume
+<c>VolRef     Inor            14-FEB-2014 16:58:16.18  0.0.250.8        ClassVolume
+<c>VolRef     OtherIO         14-FEB-2014 16:57:55.31  0.0.250.10       ClassVolume
+</topic>
+</headerlevel>
+</chapter>
+
+<chapter>
 <topic>opc_intro
 OPC
 Proview has implemented the OPC XML/DA protocol for data exchange with other automation
@@ -8341,7 +8713,7 @@ where nodename is the name of the node, and busnumber the qcom bus number. If th
 
 <chapter>
 <TOPIC> help command
-Wtt commands
+Commands
 
 <b>build      <t>Build node, volume or object	<LINK> build
 <b>check classes <t>Check if any classes need update <LINK> check classes
@@ -9423,11 +9795,15 @@ symbolfile <LINK> configurator_refman,symbol_file
 <TOPIC> script
 Wtt script
 
-execute script		<LINK> execute script
-datatypes		<LINK> datatypes
-datatype conversions	<LINK> datatype conversions
-variable declarations	<LINK> variable declarations
-operators		<LINK> operators
+Execute script		<LINK> execute script
+
+<h2>Datatypes and declarations
+Datatypes		<LINK> datatypes
+Datatype conversions	<LINK> datatype conversions
+Variable declarations	<LINK> variable declarations
+Operators		<LINK> operators
+
+<h2>Statements
 main-endmain		<LINK> main-endmain
 function-endfunction	<LINK> function-endfunction
 if-else-endif		<LINK> if-else-endif
@@ -9437,22 +9813,35 @@ break			<LINK> break
 continue		<LINK> continue
 goto			<LINK> goto
 include			<LINK> include
+
+<h2>Input/output functions
+ask()			<LINK> ask()
 printf()		<LINK> printf()
+say()			<LINK> say()
 scanf()			<LINK> scanf()
-fprintf()		<LINK> fprintf()
+
+<h2>File handling functions
+fclose()		<LINK> fclose()
+felement()		<LINK> felement()
 fgets()			<LINK> fgets()
 fopen()			<LINK> fopen()
-fclose()		<LINK> fclose()
-exit()			<LINK> exit()
-verify()		<LINK> verify()
-time()			<LINK> time()
+fprintf()		<LINK> fprintf()
+fscanf()		<LINK> fscanf()
+translate_filename()	<LINK> translate_filename()
+
+<h2>String functions
 edit()			<LINK> edit()
-extract()		<LINK> extract()
 element()		<LINK> element()
+extract()		<LINK> extract()
+sprintf()		<LINK> sprintf()
+strchr()		<LINK> strchr()
+strrchr()		<LINK> strrchr()
+strlen()		<LINK> strlen()
+strstr()		<LINK> strstr()
 toupper()		<LINK> toupper()
 tolower()		<LINK> tolower()
-translate_filename()	<LINK> translate_filename()
-wtt-commands		<LINK> wtt-commands
+
+<h2>Database functions
 GetAttribute()		<LINK> getattribute()
 GetChild()		<LINK> getchild()
 GetParent()		<LINK> getparent()
@@ -9468,6 +9857,14 @@ GetRootList()		<LINK> getrootlist()
 GetVolumeClass()	<LINK> getvolumeclass()
 GetVolumeList()		<LINK> getvolumelist()
 SetAttribute()		<LINK> setattribute()
+
+<h2>System functions
+exit()			<LINK> exit()
+system()		<LINK> system()
+time()			<LINK> time()
+verify()		<LINK> verify()
+
+<h2>Miscellaneous functions
 GetProjectName()	<LINK> getprojectname()  
 CheckSystemGroup()	<LINK> checksystemgroup()
 CutObjectName()		<LINK> cutobjectname()
@@ -9488,6 +9885,12 @@ CloseGraph()		<LINK> closegraph()
 SetSubwindow()		<LINK> setsubwindow()
 GetIoDeviceData()	<LINK> getiodevicedata()
 SetIoDeviceData()	<LINK> setiodevicedata()
+pwr_get_config()	<LINK> pwr_get_config()
+get_node_name()		<LINK> get_node_name()
+
+<h2>wtt-commands
+wtt-commands		<LINK> wtt-commands
+
 </TOPIC>
 
 <TOPIC> execute script
@@ -9600,6 +10003,21 @@ Operator	<t>Description		<t>Datatypes
 |=	 	<t>logical or and assign	<t>int
 </TOPIC>
 
+<TOPIC> sc_statements <style> function
+Script statements
+
+main-endmain		<t>Main function.<LINK> main-endmain
+function-endfunction	<t>Function declaration.<LINK> function-endfunction
+if-else-endif		<t>Conditional execution.<LINK> if-else-endif
+while-endwhile		<t>While loop.<LINK> while-endwhile
+for-endfor		<t>For loop.<LINK> for-endfor
+break			<t>Terminate while or for loop.<LINK> break
+continue		<t>Continue while or for loop.<LINK> continue
+goto			<t>Jump to label.<LINK> goto
+include			<t>Include script file.<LINK> include
+</TOPIC>
+
+<headerlevel>
 <TOPIC> main-endmain <style> function
 main-endmain
 
@@ -9754,6 +10172,44 @@ An script include-file containing functions can be included with the
 
 <c>#include <my_functions>
 </TOPIC>
+</headerlevel>
+
+<TOPIC> sc_input_output_functions <style> function
+Input/Output functions
+
+<b>Function <t>Description
+ask <t>Print a question an read an answer.<link> ask() 
+printf <t>Formatted print.	<link> printf()
+say <t>Print a text.		<link> say()
+scanf  <t>Formatted read.	<link> scanf()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> ask() <style> function
+ask()
+
+int ask( string question, (arbitrary type) reply)
+
+<b>Description
+
+Prompts for input with supplied string.
+Returns number of read tokens, 1 or 0.
+
+<b>Arguments
+
+string 			<t>question	<t>Prompt.
+arbitrary type		<t>reply	<t>Entered reply. Can be int,
+			<t>		<t>float or string.
+
+<b>Example
+<c> string reply;
+
+<c> ask( "Do you want to continue? [y/n] ", reply);
+<c> if ( reply != "y")
+<c>   exit();
+<c> endif
+</TOPIC>
 
 <TOPIC> printf() <style> function
 printf()
@@ -9780,6 +10236,23 @@ arbitrary type		<t>arg2		<t>Value argument. Optional. Can be int,
 <c>  printf( "a = %d and str = %s", a, str);
 </TOPIC>
 
+<TOPIC> say() <style> function
+say()
+
+int say( string text)
+
+<b>Description
+
+Prints a string.
+
+<b>Arguments
+
+string 			<t>text		<t>Text to print.
+
+<b>Example
+<c> say( "Three quarks for Muster Mark!");
+</TOPIC>
+
 <TOPIC> scanf() <style> function
 scanf()
 
@@ -9787,7 +10260,7 @@ int scanf( string format , (arbitrary type) arg1)
 
 <b>Description
 
-Formatted input. C-syntax
+Formatted input. C-syntax.
 Returns number of read characters.
 
 <b>Arguments
@@ -9800,37 +10273,74 @@ arbitrary type		<t>arg1		<t>Value argument. Returned. Can be int,
 
 <c>  scanf( "%d", i);
 </TOPIC>
+</headerlevel>
 
-<TOPIC> fprintf() <style> function
-fprintf()
+<TOPIC> sc_input_output_functions <style> function
+Input/Output functions
 
-int fprintf( int file, string format [, (arbitrary type) arg1,
-	(arbitrary type) arg2])
+<b>Function <t>Description
+fclose <t>Close a file 			<link> fclose()
+felement <t>Extract one element from the last read line. <link> felement()
+fgets <t>Read a line from a file. 	<link> fgets()
+fopen <t>Open a file.			<link> fopen()
+fprintf <t>Formatted write to file.	<link> fprintf()
+fscanf <t>Formatted read from file.	<link> fscanf()
+translate_filename <t>Replace environment variables in a file name. <link> translate_filename()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> fclose() <style> function
+fclose()
+
+int fclose( int file)
 
 <b>Description
 
-Formatted print on file. C-syntax. Format argument and non, one or two value
-arguments.
-Returns number of printed characters.
+Closes an opened file.
 
 <b>Arguments
 
-int 			<t>file		<t>File id returned by fopen.
-string 			<t>format	<t>Format.
-arbitrary type		<t>arg1		<t>Value argument. Optional. Can be int,
-			<t>		<t>float or string.
-arbitrary type		<t>arg2		<t>Value argument. Optional. Can be int,
-			<t>		<t>float or string.
+int		<t>file		<t>file-id returned by fopen.
 
 <b>Example
 
-<c>  int outfile;
-<c>  outfile = fopen( "my_file.txt", "w");
-<c>  if (!outfile)
-<c>    exit();
-<c>  fprintf( outfile, "Some text");
-<c>  fprintf( outfile, "a = %d", a);
-<c>  fclose( outfile);
+<c>  int infile;
+<c>  infile = fopen("some_file.txt","r");
+<c>  ...
+<c>  fclose( infile);
+</TOPIC>
+
+<TOPIC> felement() <style> function
+felement()
+
+string felement( int number, string delimiter)
+
+<b>Description
+
+Extracts one element from a string of elements read from a file with the
+fgets() function. felement() can be used in favour of element() when the read
+string is larger than the string size 256. felement() can parse lines up to 
+1023 characters.
+
+<b>Arguments
+
+int		<t>number	<t>the number of the element.
+string		<t>delimiter	<t>delimiter character.
+
+<b>Returns
+string				<t><t>The extracted element.
+
+<b>Example
+
+<c>  string elem1;
+<c>  int file;
+<c>  string line;
+
+<c>  file = fopen( "my_file.txt", "r");
+<c>  while( fgets( line, file))
+<c>    elem1 = felement( 1, " ");
+<c>  endwhile
 </TOPIC>
 
 <TOPIC> fgets() <style> function
@@ -9872,6 +10382,9 @@ Returns a file identifier. If the file could not be opened, zero is returned.
 string 		<t>filespec	<t>Name of file. 
 string		<t>mode		<t>Access mode
 
+<b>Returns
+int				<t><t>File identifier, or zero on error.
+
 <b>Example
 
 <c>  int infile;
@@ -9884,76 +10397,108 @@ string		<t>mode		<t>Access mode
 <c>  fclose( outfile);
 </TOPIC>
 
-<TOPIC> fclose() <style> function
-fclose()
+<TOPIC> fprintf() <style> function
+fprintf()
 
-int fclose( int file)
+int fprintf( int file, string format [, (arbitrary type) arg1,
+	(arbitrary type) arg2])
 
 <b>Description
 
-Closes an opened file.
+Formatted print on file. C-syntax. Format argument and non, one or two value
+arguments.
+Returns number of printed characters.
 
 <b>Arguments
 
-int		<t>file		<t>file-id returned by fopen.
+int 			<t>file		<t>File id returned by fopen.
+string 			<t>format	<t>Format.
+arbitrary type		<t>arg1		<t>Value argument. Optional. Can be int,
+			<t>		<t>float or string.
+arbitrary type		<t>arg2		<t>Value argument. Optional. Can be int,
+			<t>		<t>float or string.
 
 <b>Example
 
-<c>  int infile;
-<c>  infile = fopen("some_file.txt","r");
-<c>  ...
-<c>  fclose( infile);
+<c>  int outfile;
+<c>  outfile = fopen( "my_file.txt", "w");
+<c>  if (!outfile)
+<c>    exit();
+<c>  fprintf( outfile, "Some text");
+<c>  fprintf( outfile, "a = %d", a);
+<c>  fclose( outfile);
 </TOPIC>
 
-<TOPIC> exit() <style> function
-exit()
+<TOPIC> fscanf() <style> function
+fscanf()
 
-int exit()
+int fscanf( int file, string format , (arbitrary type) arg1)
 
 <b>Description
 
-Terminates executions of the file.
-
-<b>Example
-
-<c>  exit();
-</TOPIC>
-
-<TOPIC> verify() <style> function
-verify()
-
-int verify( [int mode])
-
-<b>Description
-
-Sets or shows verification mode. If verification is on all executed lines will
-be displayed on the screen.
-Returns the current verification mode.
+Formatted read from file. C-syntax.
+Returns number of read characters.
 
 <b>Arguments
 
-int		<t>mode		<t>verification on (1) or off (0). Optional.
+int 			<t>file		<t>File id.
+string 			<t>format	<t>Format.
+arbitrary type		<t>arg1		<t>Value argument. Returned. Can be int,
+			<t>		<t>float or string.
 
 <b>Example
 
-<c>  verify(1);
+<c>  int file;
+<c>  int i;
+
+<c>  file = fopen( "my_file.txt", "r");
+<c>  if (file)
+<c>    fscanf( file, "%d", i);
+<c>    fclose( file);
+<c>  endif
 </TOPIC>
 
-<TOPIC> time() <style> function
-time()
+<TOPIC> translate_filename() <style> function
+translate_filename()
 
-string time()
+string translate_filename( string fname)
 
 <b>Description
 
-Returns the current time in string format.
+Replace environment variables in filename.
+
+<b>Arguments
+
+string		<t>fname	<t>A filename.
+
+<b>Returns
+string				<t><t>String with expanded env variables.
 
 <b>Example
 
-<c>  string t;
-<c>  t = time();
+<c>  string fname1 = "$pwrp_db/a.wb_load";
+<c>  string fname2;
+<c>  fname2 = translate_filename( fname1);
+</TOPIC>
+</headerlevel>
+
+<TOPIC> string_functions <style> function
+String functions
+
+<b>Function <t>Description
+edit <t>Remove superfluous spaces and tabs. <link> edit()
+element <t>Extract one element from a string. <link> element()
+extract <t>Extract a substring from a string. <link> extract()
+sprintf <t>Formatted print to a string.	<link> sprintf()
+strchr <t>Return the first occurence of a character in a string. <link> strchr()
+strrchr <t>Return the last occurence of a character in a string. <link> strrchr()
+strlen <t>Calculate the length of a string.	<link> strlen()
+strstr <t>Return the first occurence of a substring in a string. <link> strstr()
+tolower <t>Convert string to lower case. <link> tolower()
+toupper <t>Convert string to upper case. <link> toupper()
 </TOPIC>
 
+<headerlevel>
 <TOPIC> edit() <style> function
 edit()
 
@@ -9972,28 +10517,6 @@ string		<t>str		<t>string to be edited.
 <b>Example
 
 <c>  collapsed_str = edit(str);
-</TOPIC>
-
-<TOPIC> extract() <style> function
-extract()
-
-string extract( int start, int length, string str)
-
-<b>Description
-
-Extracts the specified characters from the specified string.
-Returns the extracted characters as a string.
-
-<b>Arguments
-
-int		<t>start	<t>start position of the first character.
-				<t><t>First character has position 1.
-int		<t>length	<t>number of characters to be extracted.
-string		<t>str		<t>string from which characters should be extracted.
-
-<b>Example
-
-<c>  extracted_str = extract( 5, 7, str);
 </TOPIC>
 
 <TOPIC> element() <style> function
@@ -10019,6 +10542,157 @@ string		<t>str		<t>string of elements.
 <c>  elem1 = element( 1, ",", str);
 </TOPIC>
 
+<TOPIC> extract() <style> function
+extract()
+
+string extract( int start, int length, string str)
+
+<b>Description
+
+Extracts the specified characters from the specified string.
+Returns the extracted characters as a string.
+
+<b>Arguments
+
+int		<t>start	<t>start position of the first character.
+				<t><t>First character has position 1.
+int		<t>length	<t>number of characters to be extracted.
+string		<t>str		<t>string from which characters should be extracted.
+
+<b>Example
+
+<c>  extracted_str = extract( 5, 7, str);
+</TOPIC>
+
+<TOPIC> sprintf() <style> function
+sprintf()
+
+int sprintf( string str, string format [, (arbitrary type) arg1, (arbitrary type) arg2])
+
+<b>Description
+
+Formatted print to buffer. C-syntax. Format argument and non, one or two value arguments.
+Returns number of printed characters.
+
+<b>Arguments
+
+string 			<t>str		<t>String to print to.
+string 			<t>format	<t>Format.
+arbitrary type		<t>arg1		<t>Value argument. Optional. Can be int,
+			<t>		<t>float or string.
+arbitrary type		<t>arg2		<t>Value argument. Optional. Can be int,
+			<t>		<t>float or string.
+
+<b>Example
+
+<c>  string str;
+<c>  int items;
+
+<c>  sprintf( str, "Number of items: %d", items);
+</TOPIC>
+
+<TOPIC> strchr() <style> function
+strchr()
+
+int strchr( string str, string c)
+
+<b>Description
+
+Return the first occurence of a character in a string.
+
+<b>Arguments
+
+string		<t>str		<t>String to search in.
+string		<t>c		<t>Character to search for.
+
+<b>Returns
+int				<t><t>Index for first occurence of character.
+				<t><t>First character has index 1. Returns
+				<t><t>zero if the character is not found.
+<b>Example
+
+<c>  string str = "index.html";
+<c>  int idx;
+
+<c>  idx = strchr( str, ".");
+</TOPIC>
+
+<TOPIC> strrchr() <style> function
+strrchr()
+
+int strrchr( string str, string c)
+
+<b>Description
+
+Return the last occurence of a character in a string.
+
+<b>Arguments
+
+string		<t>str		<t>String to search in.
+string		<t>c		<t>Character to search for.
+
+<b>Returns
+int				<t><t>Index for last occurence of character.
+				<t><t>First character has index 1. Returns
+				<t><t>zero if the character is not found.
+<b>Example
+
+<c>  string str = "/usr/local/pwrrt";
+<c>  int idx;
+
+<c>  idx = strrchr( str, "/");
+</TOPIC>
+
+<TOPIC> strlen() <style> function
+strlen()
+
+int strlen( string str, string c)
+
+<b>Description
+
+Calculates the length of a string.
+
+<b>Arguments
+
+string		<t>str		<t>String to calculate length for.
+
+<b>Returns
+int				<t><t>Length of string.
+
+<b>Example
+
+<c>  string str = "/usr/local/pwrrt";
+<c>  int len;
+
+<c>  len = strlen( str);
+</TOPIC>
+
+<TOPIC> strstr() <style> function
+strchr()
+
+int strstr( string str, string substr)
+
+<b>Description
+
+Return the first occurence of a substring in a string.
+
+<b>Arguments
+
+string		<t>str		<t>String to search in.
+string		<t>substr	<t>Substring to search for.
+
+<b>Returns
+int				<t><t>Index for first occurence of substring.
+				<t><t>First character has index 1. Returns
+				<t><t>zero if the substring is not found.
+<b>Example
+
+<c>  string str = "index.html";
+<c>  int idx;
+
+<c>  idx = strstr( str, ".html");
+</TOPIC>
+
 <TOPIC> toupper() <style> function
 toupper()
 
@@ -10030,10 +10704,10 @@ Convert string to upper case.
 
 <b>Arguments
 
-string		<t>str		<t>string to convert.
+string		<t>str		<t>String to convert.
 
 <b>Returns
-string				<t><t>string in upper case.
+string				<t><t>String in upper case.
 
 <b>Example
 
@@ -10043,7 +10717,7 @@ string				<t><t>string in upper case.
 </TOPIC>
 
 <TOPIC> tolower() <style> function
-toupper()
+tolower()
 
 string tolower( string str)
 
@@ -10065,58 +10739,116 @@ string				<t><t>string in lower case.
 <c>  str2 = tolower( str);
 </TOPIC>
 
-<TOPIC> translate_filename() <style> function
-translate_filename()
+</headerlevel>
 
-string translate_filename( string fname)
+<TOPIC> system_functions <style> function
+System functions
+
+<b>Function <t>Description
+exit <t>Exit script. <link> exit()
+system <t>Execute shell command. <link> system()
+time <t>Get system time. <link> time()
+verify <t>Print executed lines. <link> verify()
+</TOPIC>
+
+<headerlevel>
+<TOPIC> exit() <style> function
+exit()
+
+int exit()
 
 <b>Description
 
-Replace environment variables in filename.
+Terminates executions of the file.
+
+<b>Example
+
+<c>  exit();
+</TOPIC>
+
+<TOPIC> system() <style> function
+system()
+
+int system( string cmd)
+
+<b>Description
+
+Execute a shell command.
 
 <b>Arguments
 
-string		<t>fname	<t>A filename.
+string		<t>cmd		<t>Shell command to execute.
 
 <b>Returns
-string				<t><t>String with expanded env variables.
+int				<t><t>The return value is -1 on error and the
+				<t><t>return status of the command otherwise.
 
 <b>Example
 
-<c>  string fname1 = "$pwrp_db/a.wb_load";
-<c>  string fname2;
-<c>  fname2 = translate_filename( fname1);
+<c>  string cmd;
+
+<c>  cmd = "firefox http://www.proview.se";
+<c>  system( cmd);
 </TOPIC>
 
-<TOPIC> wtt-commands <style> function
-Wtt commands
+<TOPIC> time() <style> function
+time()
 
-All the wtt-commands is available in the script code. An wtt-command line
-should NOT be ended with a semicolon. Variables can be substituted in the
-command line by surrounding them with apostrophes.
+string time()
 
-<b>Example
- 
-<c>  string name = "PUMP-VALVE-Open";
-<c>  string value = "The valve is open";
-<c>  set attribute/name='name'/attr="Description"/value='value'
+<b>Description
+
+Returns the current time in string format.
 
 <b>Example
 
-<c>  string name;
-<c>  string parname;
-<c>  int j;
-<c>  int i;
-<c>  for ( i = 0; i < 3; i++)
-<c>    parname = "vkv-test-obj" + (i+1);
-<c>    create obj/name='parname'
-<c>    for ( j = 0; j < 3; j++)
-<c>      name = parname + "-obj" + (j+1);
-<c>      create obj/name='name'
-<c>    endfor
-<c>  endfor
+<c>  string t;
+<c>  t = time();
 </TOPIC>
 
+<TOPIC> verify() <style> function
+verify()
+
+int verify( [int mode])
+
+<b>Description
+
+Sets or shows verification mode. If verification is on all executed lines will
+be displayed on the screen.
+Returns the current verification mode.
+
+<b>Arguments
+
+int		<t>mode		<t>verification on (1) or off (0). Optional.
+
+<b>Example
+
+<c>  verify(1);
+</TOPIC>
+</headerlevel>
+
+<TOPIC> database_functions <style> function
+Database functions
+
+<b>Function <t>Description
+GetAttribute()	<t>Get attribute value. <LINK> getattribute()
+GetChild()	<t>Get object child.	<LINK> getchild()
+GetParent()	<t>Get object parent.	<LINK> getparent()
+GetNextSibling()<t>Get object sibling.	<LINK> getnextsibling()
+GetNextVolume()	<t>Get next volume.	<LINK> getnextvolume()
+GetClassList()	<t>Get first instance of a class. <LINK> getclasslist()
+GetNextObject()	<t>Get next instance of a class. <LINK> getnextobject()
+GetClassListAttrRef() <t>Get first instance of a class, attribute objects included. <LINK> getclasslistattrref()
+GetNextAttrRef() <t>Get next instance of a class, attribute objects included. <LINK> getnextattrref()
+GetObjectClass() <t>Get class of an object. <LINK> getobjectclass()
+GetNodeObject()	<t>Get node object.	<LINK> getnodeobject()
+GetRootList()	<t>Get first object in root list. <LINK> getrootlist()
+GetVolumeClass() <t>Get class of a volume. <LINK> getvolumeclass()
+GetVolumeList()	<t>Get fist volume.	<LINK> getvolumelist()
+SetAttribute()	<t>Set attribute value.	<LINK> setattribute()
+</TOPIC>
+
+<headerlevel>
 <TOPIC> getattribute() <style> function
 GetAttribute()
 
@@ -10460,7 +11192,37 @@ arbitrary type  value		attribute value.
 
 <c>  SetAttribute( "Pump-V1-Switch.Description", "Valve switch open");
 </TOPIC>
+</headerlevel>
 
+<TOPIC> misc_functions <style> function
+Miscellaneous functions
+
+<b>Function <t>Description
+GetProjectName() <t>Get project name. <LINK> getprojectname()  
+CheckSystemGroup() <t>Check that system group exist. <LINK> checksystemgroup()
+CutObjectName()	<t>Cut off an object name. <LINK> cutobjectname()
+MessageError()	<t>Print error message.	<LINK> messageerror()
+MessageInfo()	<t>Print info message.	<LINK> messageinfo()
+GetCurrentText() <t>Get the text of the current item. <LINK> getcurrenttext()
+GetCurrentObject() <t>Get the object associated with the current item. <LINK> getcurrentobject()
+GetCurrentVolume() <t>Get the attached volume. <LINK> getcurrentvolume()
+IsW1() 		<t>Check if Plant hierarchy has focus. <LINK> isw1()
+IsW2()		<t>Check if Node hierarchy has focus. <LINK> isw2()
+EditMode()	<t>Check if in edit mode. <LINK> editmode()
+MessageDialog()	<t>Open a message dialog. <LINK> messagedialog()
+ConfirmDialog()	<t>Open a confirm dialog. <LINK> confirmdialog()
+ContinueDialog() <t>Open a Continue/Quit dialog. <LINK> continuedialog()
+PromptDialog()	<t>Open an input dialog. <LINK> promptdialog()
+OpenGraph()	<t>Open a Ge graph.	<LINK> opengraph()
+CloseGraph()	<t>Close a Ge graph.	<LINK> closegraph()
+SetSubwindow()	<t>Open a graph in a window object. <LINK> setsubwindow()
+GetIoDeviceData() <t>Get data from IO configuration. <LINK> getiodevicedata()
+SetIoDeviceData() <t>Set data in IO configuration. <LINK> setiodevicedata()
+pwr_get_config() <t>Get configuration values. <LINK> pwr_get_config()
+get_node_name()	<t>Get node name. <LINK> get_node_name()
+</TOPIC>
+
+<headerlevel>
 <TOPIC> getprojectname() <style> function
 GetProjectName()
 
@@ -10861,7 +11623,7 @@ int SetIoDeviceData( string object, string parameter, string value)
 
 <b>Description
 
-Set data from IO configuration.
+Set data to IO configuration.
 Returns status of operation, odd if success and even is error.
 
 This command uses methods and has to be executed in pwrs. It does not
@@ -10889,6 +11651,37 @@ string		<t>value	<t>Value to set.
 <c>  sts = SetIoDeviceData( "Nodes-MyNode-PN-D1", "NetworkSettings-DeviceName", "ET200M-D1");
 
 </TOPIC>
+</headerlevel>
+
+<TOPIC> wtt-commands <style> function
+Wtt commands
+
+All the wtt-commands is available in the script code. An wtt-command line
+should NOT be ended with a semicolon. Variables can be substituted in the
+command line by surrounding them with apostrophes.
+
+<b>Example
+ 
+<c>  string name = "PUMP-VALVE-Open";
+<c>  string value = "The valve is open";
+<c>  set attribute/name='name'/attr="Description"/value='value'
+
+<b>Example
+
+<c>  string name;
+<c>  string parname;
+<c>  int j;
+<c>  int i;
+<c>  for ( i = 0; i < 3; i++)
+<c>    parname = "vkv-test-obj" + (i+1);
+<c>    create obj/name='parname'
+<c>    for ( j = 0; j < 3; j++)
+<c>      name = parname + "-obj" + (j+1);
+<c>      create obj/name='name'
+<c>    endfor
+<c>  endfor
+</TOPIC>
+
 </chapter>
 
 

@@ -1235,15 +1235,18 @@ rt_bck <t>Backup process <t>Handles backup of attributes and objects.
 rt_linksup <t>Link supervision <t>Supervision of links to other nodes.
 rt_trend <t>Trend process <t>Handles storing of trend curves.
 rt_fast  <t>Fast process <t>Handles storing of fast curves.
-rt_elog <t>Event log <t>Handles event logging.
+rt_elog  <t>Event log process <t>Logging of events.
 rt_webmon <t>Web monitor <t>Supplies the web interface with database information.
 rt_webmonmh <t>Web mh monitor <t>Supplies the web interface with alarms and events.
 rt_sysmon <t>System monitor <t>Supervises the system.
 plc <t>Plc process <t>Handles I/O and executes the plc code.
 rs_remote <t>Remote process <t>Handles remote communication.
-opc_server <t>Opc server process.
+opc_server <t>Opc server process <t>Handles Opc server communication.
 rt_statussrv <t>Status server <t>Webservice for the runtime monitor and supervision center.
-
+rt_post  <t>Post server <t>Sends alarms via email or sms.
+rt_report  <t>Report server <t>Generates reports.
+rt_sevhistmon <t>Storage monitor <t>Collects and sends process history data to storage server.
+rt_powerlink <t>Ethernet powerlink server <t>Handles Powerlink communication.
 </topic>
 
 <topic> opg_nav_volumes
@@ -2633,11 +2636,16 @@ Write the content of an object to file.
 <TOPIC> script
 Xtt script
 
-execute script		<LINK> execute script
-datatypes		<LINK> datatypes
-datatype conversions	<LINK> datatype conversions
-variable declarations	<LINK> variable declarations
-operators		<LINK> operators
+
+Execute script		<LINK> execute script
+
+<h2>Datatypes and declarations
+Datatypes		<LINK> datatypes
+Datatype conversions	<LINK> datatype conversions
+Variable declarations	<LINK> variable declarations
+Operators		<LINK> operators
+
+<h2>Statements
 main-endmain		<LINK> main-endmain
 function-endfunction	<LINK> function-endfunction
 if-else-endif		<LINK> if-else-endif
@@ -2647,23 +2655,35 @@ break			<LINK> break
 continue		<LINK> continue
 goto			<LINK> goto
 include			<LINK> include
+
+<h2>Input/output functions
+ask()			<LINK> ask()
 printf()		<LINK> printf()
+say()			<LINK> say()
 scanf()			<LINK> scanf()
-fprintf()		<LINK> fprintf()
+
+<h2>File handling functions
+fclose()		<LINK> fclose()
+felement()		<LINK> felement()
 fgets()			<LINK> fgets()
 fopen()			<LINK> fopen()
-fclose()		<LINK> fclose()
-exit()			<LINK> exit()
-verify()		<LINK> verify()
-time()			<LINK> time()
+fprintf()		<LINK> fprintf()
+fscanf()		<LINK> fscanf()
+translate_filename()	<LINK> translate_filename()
+
+<h2>String functions
 edit()			<LINK> edit()
-extract()		<LINK> extract()
 element()		<LINK> element()
+extract()		<LINK> extract()
+sprintf()		<LINK> sprintf()
+strchr()		<LINK> strchr()
+strrchr()		<LINK> strrchr()
+strlen()		<LINK> strlen()
+strstr()		<LINK> strstr()
 toupper()		<LINK> toupper()
 tolower()		<LINK> tolower()
-get_language()		<LINK> get_language()
-translate_filename()	<LINK> translate_filename()
-xtt-commands		<LINK> xtt-commands
+
+<h2>Database functions
 GetAttribute()		<LINK> getattribute()
 GetChild()		<LINK> getchild()
 GetParent()		<LINK> getparent()
@@ -2673,14 +2693,28 @@ GetNextObject()		<LINK> getnextobject()
 GetObjectClass()	<LINK> getobjectclass()
 GetNodeObject()		<LINK> getnodeobject()
 GetRootList()		<LINK> getrootlist()
+
+<h2>System functions
+exit()			<LINK> exit()
+system()		<LINK> system()
+time()			<LINK> time()
+verify()		<LINK> verify()
+
+<h2>Miscellaneous functions
 CutObjectName()		<LINK> cutobjectname()
 MessageError()		<LINK> messageerror()
 MessageInfo()		<LINK> messageinfo()
 GetCurrentText()	<LINK> getcurrenttext()
 GetCurrentObject()	<LINK> getcurrentobject()
+pwr_get_config()	<LINK> pwr_get_config()
+get_node_name()		<LINK> get_node_name()
+get_language()		<LINK> get_language()
+
+<h2>xtt-commands
+xtt-commands		<LINK> xtt-commands
+
 </TOPIC>
 
-<headerlevel>
 <TOPIC> execute script
 Execute a script
 
@@ -2702,7 +2736,7 @@ string	<t>80 character string (null terminated).
 There are three different tables in which a variable can be declared: local, 
 global and extern. A local variable is known inside a function, a global is 
 known in all functions in a file (with include-files), an external is known 
-for all files executed in an rtt session.
+for all files executed in a session.
 
 </TOPIC>
 
@@ -2711,16 +2745,16 @@ Datatype conversions
 
 If an expression consists of variables and functions of different datatypes
 the variables will be converted with the precedence string, float, int. If
-two operands in an expression are of type int and float, the result will be float
-If two operands are of type float and string, or int and string, the result will
+two operands in an expression is of type int and float, the result will be float
+If two operands is of type float and string, or int and string, the result will
 be string. In an assignment the value of an expression will be converted to the
 type of the assignment variable, even if the result is a string and the
 variable is of type float or int.
 
 <b>Example
 
-<c>string  str;
-<c>int     i = 35;
+<c>string str;
+<c>int    i = 35;
 <c>str = "Luthor" + i;
 The value in str will be "Luthor35".
 
@@ -2739,17 +2773,22 @@ A declaration consists of
 - the table (global or extern, if local the table is suppressed)
 - the datatype (int, float or string)
 - the variable name (case sensitive)
+- if array, number of elements
 - equal mark followed by an init value, if omitted the init value is zero or
   null-string
 - semicolon
 
-Example
+An extern variable should be deleted (by the delete statement).
 
-int             i;
-float           flow = 33.4;
-string          str = "Hello";
-extern int      jakob;
-global float	ferdinand = 1234;
+<b>Example
+
+<c>int             i;
+<c>float           flow = 33.4;
+<c>string          str = "Hello";
+<c>extern int      jakob[20];
+<c>global float    ferdinand = 1234;
+<c>...
+<c>delete jakob[20];
 </TOPIC>
 
 <TOPIC> operators
@@ -2768,8 +2807,8 @@ Operator	<t>Description		<t>Datatypes
 --	 	<t>decrement, postfix only	<t>int, float
 >>	 	<t>bits right-shifted		<t>int
 <<	 	<t>bits left-shifted		<t>int
-<		<t>less then			<t>int, float
->		<t>greater then		<t>int, float
+<		<t>less than			<t>int, float
+>		<t>greater than		<t>int, float
 <=	 	<t>less equal			<t>int, float
 >=	 	<t>greater equal		<t>int, float
 ==	 	<t>equal			<t>int, float, string
@@ -2786,11 +2825,26 @@ Operator	<t>Description		<t>Datatypes
 |=	 	<t>logical or and assign	<t>int
 </TOPIC>
 
+<TOPIC> sc_statements <style> function
+Script statements
+
+main-endmain		<t>Main function.<LINK> main-endmain
+function-endfunction	<t>Function declaration.<LINK> function-endfunction
+if-else-endif		<t>Conditional execution.<LINK> if-else-endif
+while-endwhile		<t>While loop.<LINK> while-endwhile
+for-endfor		<t>For loop.<LINK> for-endfor
+break			<t>Terminate while or for loop.<LINK> break
+continue		<t>Continue while or for loop.<LINK> continue
+goto			<t>Jump to label.<LINK> goto
+include			<t>Include script file.<LINK> include
+</TOPIC>
+
+<headerlevel>
 <TOPIC> main-endmain <style> function
 main-endmain
 
-The main and endmain statements control where the execution starts and stops
-If no main and endmain statements are found, the execution will start
+The main and endmain statements controls where the execution starts and stops
+If no main and endmain statements will be found, the execution will start
 att the beginning of the file and stop at the end.
 
 <b>Example
@@ -2812,12 +2866,12 @@ A function declaration consists of
 - an argumentlist delimited by comma and surrounded by parenthesis. The
   argumentlist must include a typedeclaration and a name for each argument.
 
-The arguments supplied by the caller will be converted to the type declared in 
-the argument list. If an argument is changed inside the function, the new value 
-will be transferred to the caller. In this way it is possible to return values 
-other than the return value of the function.A function can contain one or several 
-return statements. The return will hand over the execution to the caller and 
-return the supplied value.
+The arguments supplied by the caller will be converted to the type of the
+to the type declared in the argument list. If an argument is changed inside
+the function, the new value will be transferred to the caller. In this way
+it is possible to return other values then the return value of the function.
+A function can contain one or several return statements. The return will hand
+over the execution to the caller and return the supplied value.
 
 <b>Example
 
@@ -2827,7 +2881,7 @@ return the supplied value.
 <c>  return c;
 <c>endfunction
 
-...
+<c>...
 <c>flow = korr * calculate_flow( v, 35.2);
 </TOPIC>
 
@@ -2871,10 +2925,10 @@ for-endfor
 
 The lines between a for-endfor statement will be executed as long as the
 middle expression in the for-statement is true. The for expression consists
-of three expressions, delimited by semicolon and surrounded by parentheses.
-The first expression will be executed before the first loop, the third
+of three expression, delimited by semicolon and surrounded by parentheses.
+The first expression will be executed the before the first loop, the third
 will be executed after every loop, the middle is executed before every loop
-and if true another loop is done, if false the loop is left.
+and if it is true, another loop is done, if false the loop is leaved.
 
 <b>Example
 
@@ -2934,11 +2988,49 @@ The label line is terminated with colon.
 include
 
 An script include-file containing functions can be included with the
-#include statement. The default file extension is '.rtt_com'
+#include statement. The default file extention is '.pwr_com'
 
 <b>Example
 
 <c>#include <my_functions>
+</TOPIC>
+</headerlevel>
+
+<TOPIC> sc_input_output_functions <style> function
+Input/Output functions
+
+<b>Function <t>Description
+ask <t>Print a question an read an answer.<link> ask() 
+printf <t>Formatted print.	<link> printf()
+say <t>Print a text.		<link> say()
+scanf  <t>Formatted read.	<link> scanf()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> ask() <style> function
+ask()
+
+int ask( string question, (arbitrary type) reply)
+
+<b>Description
+
+Prompts for input with supplied string.
+Returns number of read tokens, 1 or 0.
+
+<b>Arguments
+
+string 			<t>question	<t>Prompt.
+arbitrary type		<t>reply	<t>Entered reply. Can be int,
+			<t>		<t>float or string.
+
+<b>Example
+<c> string reply;
+
+<c> ask( "Do you want to continue? [y/n] ", reply);
+<c> if ( reply != "y")
+<c>   exit();
+<c> endif
 </TOPIC>
 
 <TOPIC> printf() <style> function
@@ -2948,7 +3040,7 @@ int printf( string format [, (arbitrary type) arg1, (arbitrary type) arg2])
 
 <b>Description
 
-Formatted print. C-syntax. Format argument and none, one or two value arguments.
+Formatted print. C-syntax. Format argument and non, one or two value arguments.
 Returns number of printed characters.
 
 <b>Arguments
@@ -2963,7 +3055,24 @@ arbitrary type		<t>arg2		<t>Value argument. Optional. Can be int,
 
 <c>  printf( "Watch out!");
 <c>  printf( "a = %d", a);
-<c>  printf( "a = %d och str = %s", a, str);
+<c>  printf( "a = %d and str = %s", a, str);
+</TOPIC>
+
+<TOPIC> say() <style> function
+say()
+
+int say( string text)
+
+<b>Description
+
+Prints a string.
+
+<b>Arguments
+
+string 			<t>text		<t>Text to print.
+
+<b>Example
+<c> say( "Three quarks for Muster Mark!");
 </TOPIC>
 
 <TOPIC> scanf() <style> function
@@ -2973,7 +3082,7 @@ int scanf( string format , (arbitrary type) arg1)
 
 <b>Description
 
-Formatted input. C-syntax
+Formatted input. C-syntax.
 Returns number of read characters.
 
 <b>Arguments
@@ -2986,37 +3095,74 @@ arbitrary type		<t>arg1		<t>Value argument. Returned. Can be int,
 
 <c>  scanf( "%d", i);
 </TOPIC>
+</headerlevel>
 
-<TOPIC> fprintf() <style> function
-fprintf()
+<TOPIC> sc_input_output_functions <style> function
+Input/Output functions
 
-int fprintf( int file, string format [, (arbitrary type) arg1,
-	(arbitrary type) arg2])
+<b>Function <t>Description
+fclose <t>Close a file 			<link> fclose()
+felement <t>Extract one element from the last read line. <link> felement()
+fgets <t>Read a line from a file. 	<link> fgets()
+fopen <t>Open a file.			<link> fopen()
+fprintf <t>Formatted write to file.	<link> fprintf()
+fscanf <t>Formatted read from file.	<link> fscanf()
+translate_filename <t>Replace environment variables in a file name. <link> translate_filename()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> fclose() <style> function
+fclose()
+
+int fclose( int file)
 
 <b>Description
 
-Formatted print on file. C-syntax. Format argument and none, one or two value
-arguments.
-Returns number of printed characters.
+Closes an opened file.
 
 <b>Arguments
 
-int 			<t>file		<t>File id returned by fopen.
-string 			<t>format	<t>Format.
-arbitrary type		<t>arg1		<t>Value argument. Optional. Can be int,
-			<t>		<t>float or string.
-arbitrary type		<t>arg2		<t>Value argument. Optional. Can be int,
-			<t>		<t>float or string.
+int		<t>file		<t>file-id returned by fopen.
 
 <b>Example
 
-<c>  int outfile;
-<c>  outfile = fopen( "my_file.txt", "w");
-<c>  if (!outfile)
-<c>    exit();
-<c>  fprintf( outfile, "Some text");
-<c>  fprintf( outfile, "a = %d", a);
-<c>  fclose( outfile);
+<c>  int infile;
+<c>  infile = fopen("some_file.txt","r");
+<c>  ...
+<c>  fclose( infile);
+</TOPIC>
+
+<TOPIC> felement() <style> function
+felement()
+
+string felement( int file, int number, string delimiter, string str)
+
+<b>Description
+
+Extracts one element from a string of elements read from a file with the
+fgets() function. felement() can be used in favor of element() when the read
+string is larger than the string size 256. felement() can parse lines up to 
+1023 characters.
+
+<b>Arguments
+
+int		<t>number	<t>the number of the element.
+string		<t>delimiter	<t>delimiter character.
+
+<b>Returns
+string				<t><t>The extracted element.
+
+<b>Example
+
+<c>  string elem1;
+<c>  int file;
+<c>  string line;
+
+<c>  file = fopen( "my_file.txt", "r");
+<c>  while( fgets( line, file))
+<c>    elem1 = felement( 1, " ");
+<c>  endwhile
 </TOPIC>
 
 <TOPIC> fgets() <style> function
@@ -3058,6 +3204,9 @@ Returns a file identifier. If the file could not be opened, zero is returned.
 string 		<t>filespec	<t>Name of file. 
 string		<t>mode		<t>Access mode
 
+<b>Returns
+int				<t><t>File identifier, or zero on error.
+
 <b>Example
 
 <c>  int infile;
@@ -3070,208 +3219,64 @@ string		<t>mode		<t>Access mode
 <c>  fclose( outfile);
 </TOPIC>
 
-<TOPIC> fclose() <style> function
-fclose()
+<TOPIC> fprintf() <style> function
+fprintf()
 
-int fclose( int file)
+int fprintf( int file, string format [, (arbitrary type) arg1,
+	(arbitrary type) arg2])
 
 <b>Description
 
-Closes an opened file.
+Formatted print on file. C-syntax. Format argument and non, one or two value
+arguments.
+Returns number of printed characters.
 
 <b>Arguments
 
-int		<t>file		<t>file-id returned by fopen.
+int 			<t>file		<t>File id returned by fopen.
+string 			<t>format	<t>Format.
+arbitrary type		<t>arg1		<t>Value argument. Optional. Can be int,
+			<t>		<t>float or string.
+arbitrary type		<t>arg2		<t>Value argument. Optional. Can be int,
+			<t>		<t>float or string.
 
 <b>Example
 
-<c>  int infile;
-<c>  infile = fopen("some_file.txt","r");
-<c>  ...
-<c>  fclose( infile);
+<c>  int outfile;
+<c>  outfile = fopen( "my_file.txt", "w");
+<c>  if (!outfile)
+<c>    exit();
+<c>  fprintf( outfile, "Some text");
+<c>  fprintf( outfile, "a = %d", a);
+<c>  fclose( outfile);
 </TOPIC>
 
-<TOPIC> exit() <style> function
-exit()
+<TOPIC> fscanf() <style> function
+fscanf()
 
-int exit()
+int fscanf( int file, string format , (arbitrary type) arg1)
 
 <b>Description
 
-Terminates executions of the file.
-
-<b>Example
-
-<c>  exit();
-</TOPIC>
-
-<TOPIC> verify() <style> function
-verify()
-
-int verify( [int mode])
-
-<b>Description
-
-Sets or shows verification mode. If verification is on, all executed lines will
-be displayed on the screen.
-Returns the current verification mode.
+Formatted read from file. C-syntax.
+Returns number of read characters.
 
 <b>Arguments
 
-int		<t>mode		<t>verification on (1) or off (0). Optional.
+int 			<t>file		<t>File id.
+string 			<t>format	<t>Format.
+arbitrary type		<t>arg1		<t>Value argument. Returned. Can be int,
+			<t>		<t>float or string.
 
 <b>Example
 
-<c>  verify(1);
-</TOPIC>
+<c>  int file;
+<c>  int i;
 
-<TOPIC> time() <style> function
-time()
-
-string time()
-
-<b>Description
-
-Returns the current time in string format.
-
-<b>Example
-
-<c>  string t;
-<c>  t = time();
-</TOPIC>
-
-<TOPIC> edit() <style> function
-edit()
-
-string edit( string str)
-
-<b>Description
-
-Removes leading and trailing spaces and tabs, and replaces multiple tabs and
-spaces with a single space.
-Returns the edited string.
-
-<b>Arguments
-
-string		<t>str		<t>string to be edited.
-
-<b>Example
-
-<c>  collapsed_str = edit(str);
-</TOPIC>
-
-<TOPIC> extract() <style> function
-extract()
-
-string extract( int start, int length, string str)
-
-<b>Description
-
-Extracts the specified characters from the specified string.
-Returns the extracted characters as a string.
-
-<b>Arguments
-
-int		<t>start	<t>start position of the first character.
-int		<t>length	<t>number of characters to be extracted.
-string		<t>str		<t>string from which characters should be extracted.
-
-<b>Example
-
-<c>  extracted_str = extract( 5, 7, str);
-</TOPIC>
-
-<TOPIC> element() <style> function
-element()
-
-string element( int number, string delimiter, string str)
-
-<b>Description
-
-Extracts one element from a string of elements.
-Returns the extracted element.
-
-<b>Arguments
-
-int		<t>number	<t>the number of the element.
-string		<t>delimiter	<t>delimiter character.
-string		<t>str		<t>string of elements.
-
-<b>Example
-
-<c>  string str = "mary, lisa, anna, john";
-<c>  string elem1;
-<c>  elem1 = element( 1, ",", str);
-</TOPIC>
-
-<TOPIC> toupper() <style> function
-toupper()
-
-string toupper( string str)
-
-<b>Description
-
-Convert string to upper case.
-
-<b>Arguments
-
-string		<t>str		<t>string to convert.
-
-<b>Returns
-string				<t><t>string in upper case.
-
-<b>Example
-
-<c>  string str1 = "Buster Wilson";
-<c>  string str2;
-<c>  str2 = toupper( str);
-</TOPIC>
-
-<TOPIC> tolower() <style> function
-toupper()
-
-string tolower( string str)
-
-<b>Description
-
-Convert string to lower case.
-
-<b>Arguments
-
-string		<t>str		<t>string to convert.
-
-<b>Returns
-string				<t><t>string in lower case.
-
-<b>Example
-
-<c>  string str1 = "Buster Wilson";
-<c>  string str2;
-<c>  str2 = tolower( str);
-</TOPIC>
-
-<TOPIC> get_language() <style> function
-translate_filename()
-
-string get_language()
-
-<b>Description
-
-Get the current language.
-
-<b>Returns
-string				<t><t>The current langage, e.g en_us, sv_se, de_de.
-
-<b>Example
-
-<c>  string lng;
-
-<c>  lng = get_language();
-<c>  if ( lng == "sv_se")
-<c>    create opmenu/name="Funktioner-Bilder-Översikt"/command="open graph overview"
-<c>  endif
-<c>  if ( lng == "en_us")
-<c>    create opmenu/name="Functions-ProcessGraphs-Overview"/command="open graph overview"
+<c>  file = fopen( "my_file.txt", "r");
+<c>  if (file)
+<c>    fscanf( file, "%d", i);
+<c>    fclose( file);
 <c>  endif
 </TOPIC>
 
@@ -3297,36 +3302,369 @@ string				<t><t>String with expanded env variables.
 <c>  string fname2;
 <c>  fname2 = translate_filename( fname1);
 </TOPIC>
+</headerlevel>
 
-<TOPIC> xtt-commands <style> function
-Xtt commands
+<TOPIC> string_functions <style> function
+String functions
 
-All the xtt-commands is available in the script code. An rtt-command line
-should NOT be ended with a semicolon. Variables can be substituted in the
-command line by surrounding them with apostrophes.
-
-<b>Example
-
-<c>  string name = "PUMP-VALVE-Open.ActualValue";
-<c>  float  value = 2.2;
-<c>  set parameter/name='name'/value='value'
-
-<b>Example
-
-<c>  string name;
-<c>  string parname;
-<c>  int j;
-<c>  int i;
-<c>  for ( i = 0; i < 3; i++)
-<c>    parname = "vkv-test-obj" + (i+1);
-<c>    create obj/name='parname'
-<c>    for ( j = 0; j < 3; j++)
-<c>      name = parname + "-obj" + (j+1);
-<c>      create obj/name='name'
-<c>    endfor
-<c>  endfor
+<b>Function <t>Description
+edit <t>Remove superfluous spaces and tabs. <link> edit()
+element <t>Extract one element from a string. <link> element()
+extract <t>Extract a substring from a string. <link> extract()
+sprintf <t>Formatted print to a string.	<link> sprintf()
+strchr <t>Return the first occurence of a character in a string. <link> strchr()
+strrchr <t>Return the last occurence of a character in a string. <link> strrchr()
+strlen <t>Calculate the length of a string.	<link> strlen()
+strstr <t>Return the first occurence of a substring in a string. <link> strstr()
+tolower <t>Convert string to lower case. <link> tolower()
+toupper <t>Convert string to upper case. <link> toupper()
 </TOPIC>
 
+<headerlevel>
+<TOPIC> edit() <style> function
+edit()
+
+string edit( string str)
+
+<b>Description
+
+Removes leading and trailing spaces and tabs, and replaces multiple tabs and
+spaces with a single space.
+Returns the edited string.
+
+<b>Arguments
+
+string		<t>str		<t>string to be edited.
+
+<b>Example
+
+<c>  collapsed_str = edit(str);
+</TOPIC>
+
+<TOPIC> element() <style> function
+element()
+
+string element( int number, string delimiter, string str)
+
+<b>Description
+
+Extracts one element from a string of elements.
+Returns the extracted element.
+
+<b>Arguments
+
+int		<t>number	<t>the number of the element.
+string		<t>delimiter	<t>delimiter character.
+string		<t>str		<t>string of elements.
+
+<b>Example
+
+<c>  string str = "mary, lisa, anna, john";
+<c>  string elem1;
+<c>  elem1 = element( 1, ",", str);
+</TOPIC>
+
+<TOPIC> extract() <style> function
+extract()
+
+string extract( int start, int length, string str)
+
+<b>Description
+
+Extracts the specified characters from the specified string.
+Returns the extracted characters as a string.
+
+<b>Arguments
+
+int		<t>start	<t>start position of the first character.
+				<t><t>First character has position 1.
+int		<t>length	<t>number of characters to be extracted.
+string		<t>str		<t>string from which characters should be extracted.
+
+<b>Example
+
+<c>  extracted_str = extract( 5, 7, str);
+</TOPIC>
+
+<TOPIC> sprintf() <style> function
+sprintf()
+
+int sprintf( string str, string format [, (arbitrary type) arg1, (arbitrary type) arg2])
+
+<b>Description
+
+Formatted print to buffer. C-syntax. Format argument and non, one or two value arguments.
+Returns number of printed characters.
+
+<b>Arguments
+
+string 			<t>str		<t>String to print to.
+string 			<t>format	<t>Format.
+arbitrary type		<t>arg1		<t>Value argument. Optional. Can be int,
+			<t>		<t>float or string.
+arbitrary type		<t>arg2		<t>Value argument. Optional. Can be int,
+			<t>		<t>float or string.
+
+<b>Example
+
+<c>  string str;
+<c>  int items;
+
+<c>  sprintf( str, "Number of items: %d", items);
+</TOPIC>
+
+<TOPIC> strchr() <style> function
+strchr()
+
+int strchr( string str, string c)
+
+<b>Description
+
+Return the first occurence of a character in a string.
+
+<b>Arguments
+
+string		<t>str		<t>String to search in.
+string		<t>c		<t>Character to search for.
+
+<b>Returns
+int				<t><t>Index for first occurence of character.
+				<t><t>First character has index 1. Returns
+				<t><t>zero if the character is not found.
+<b>Example
+
+<c>  string str = "index.html";
+<c>  int idx;
+
+<c>  idx = strchr( str, ".");
+</TOPIC>
+
+<TOPIC> strrchr() <style> function
+strrchr()
+
+int strrchr( string str, string c)
+
+<b>Description
+
+Return the last occurence of a character in a string.
+
+<b>Arguments
+
+string		<t>str		<t>String to search in.
+string		<t>c		<t>Character to search for.
+
+<b>Returns
+int				<t><t>Index for last occurence of character.
+				<t><t>First character has index 1. Returns
+				<t><t>zero if the character is not found.
+<b>Example
+
+<c>  string str = "/usr/local/pwrrt";
+<c>  int idx;
+
+<c>  idx = strrchr( str, "/");
+</TOPIC>
+
+<TOPIC> strlen() <style> function
+strlen()
+
+int strlen( string str, string c)
+
+<b>Description
+
+Calculates the length of a string.
+
+<b>Arguments
+
+string		<t>str		<t>String to calculate length for.
+
+<b>Returns
+int				<t><t>Length of string.
+
+<b>Example
+
+<c>  string str = "/usr/local/pwrrt";
+<c>  int len;
+
+<c>  len = strlen( str);
+</TOPIC>
+
+<TOPIC> strstr() <style> function
+strchr()
+
+int strstr( string str, string substr)
+
+<b>Description
+
+Return the first occurence of a substring in a string.
+
+<b>Arguments
+
+string		<t>str		<t>String to search in.
+string		<t>substr	<t>Substring to search for.
+
+<b>Returns
+int				<t><t>Index for first occurence of substring.
+				<t><t>First character has index 1. Returns
+				<t><t>zero if the substring is not found.
+<b>Example
+
+<c>  string str = "index.html";
+<c>  int idx;
+
+<c>  idx = strstr( str, ".html");
+</TOPIC>
+
+<TOPIC> toupper() <style> function
+toupper()
+
+string toupper( string str)
+
+<b>Description
+
+Convert string to upper case.
+
+<b>Arguments
+
+string		<t>str		<t>String to convert.
+
+<b>Returns
+string				<t><t>String in upper case.
+
+<b>Example
+
+<c>  string str1 = "Buster Wilson";
+<c>  string str2;
+<c>  str2 = toupper( str);
+</TOPIC>
+
+<TOPIC> tolower() <style> function
+tolower()
+
+string tolower( string str)
+
+<b>Description
+
+Convert string to lower case.
+
+<b>Arguments
+
+string		<t>str		<t>string to convert.
+
+<b>Returns
+string				<t><t>string in lower case.
+
+<b>Example
+
+<c>  string str1 = "Buster Wilson";
+<c>  string str2;
+<c>  str2 = tolower( str);
+</TOPIC>
+
+</headerlevel>
+
+<TOPIC> system_functions <style> function
+System functions
+
+<b>Function <t>Description
+exit <t>Exit script. <link> exit()
+system <t>Execute shell command. <link> system()
+time <t>Get system time. <link> time()
+verify <t>Print executed lines. <link> verify()
+</TOPIC>
+
+<headerlevel>
+<TOPIC> exit() <style> function
+exit()
+
+int exit()
+
+<b>Description
+
+Terminates executions of the file.
+
+<b>Example
+
+<c>  exit();
+</TOPIC>
+
+<TOPIC> system() <style> function
+system()
+
+int system( string cmd)
+
+<b>Description
+
+Execute a shell command.
+
+<b>Arguments
+
+string		<t>cmd		<t>Shell command to execute.
+
+<b>Returns
+int				<t><t>The return value is -1 on error and the
+				<t><t>return status of the command otherwise.
+
+<b>Example
+
+<c>  string cmd;
+
+<c>  cmd = "firefox http://www.proview.se";
+<c>  system( cmd);
+</TOPIC>
+
+<TOPIC> time() <style> function
+time()
+
+string time()
+
+<b>Description
+
+Returns the current time in string format.
+
+<b>Example
+
+<c>  string t;
+<c>  t = time();
+</TOPIC>
+
+<TOPIC> verify() <style> function
+verify()
+
+int verify( [int mode])
+
+<b>Description
+
+Sets or shows verification mode. If verification is on all executed lines will
+be displayed on the screen.
+Returns the current verification mode.
+
+<b>Arguments
+
+int		<t>mode		<t>verification on (1) or off (0). Optional.
+
+<b>Example
+
+<c>  verify(1);
+</TOPIC>
+</headerlevel>
+
+<TOPIC> database_functions <style> function
+Database functions
+
+<b>Function <t>Description
+GetAttribute()	<t>Get attribute value. <LINK> getattribute()
+GetChild()	<t>Get object child.	<LINK> getchild()
+GetParent()	<t>Get object parent.	<LINK> getparent()
+GetNextSibling()<t>Get object sibling.	<LINK> getnextsibling()
+GetClassList()	<t>Get first instance of a class. <LINK> getclasslist()
+GetNextObject()	<t>Get next instance of a class. <LINK> getnextobject()
+GetObjectClass() <t>Get class of an object. <LINK> getobjectclass()
+GetNodeObject()	<t>Get node object.	<LINK> getnodeobject()
+GetRootList()	<t>Get first object in root list. <LINK> getrootlist()
+</TOPIC>
+
+<headerlevel>
 <TOPIC> getattribute() <style> function
 GetAttribute()
 
@@ -3539,7 +3877,23 @@ fetched with GetNextSibling().
 <c>    name = GetNextSibling(name);
 <c>  endwhile
 </TOPIC>
+</headerlevel>
 
+<TOPIC> misc_functions <style> function
+Miscellaneous functions
+
+<b>Function <t>Description
+CutObjectName()	<t>Cut off an object name. <LINK> cutobjectname()
+MessageError()	<t>Print error message.	<LINK> messageerror()
+MessageInfo()	<t>Print info message.	<LINK> messageinfo()
+GetCurrentText() <t>Get selected text.	<LINK> getcurrenttext()
+GetCurrentObject() <t>Get selected object. <LINK> getcurrentobject()
+pwr_get_config() <t>Get configuration values <LINK> pwr_get_config()
+get_node_name() <t>Get node name <LINK> get_node_name()
+get_language()	<t>Get the current language <LINK> get_language()
+</TOPIC>
+
+<headerlevel>
 <TOPIC> cutobjectname() <style> function
 CutObjectName()
 
@@ -3625,6 +3979,61 @@ If no object is associated, a null-string i returned.
 
 <c>  object = GetCurrentObject();
 </TOPIC>
+
+<TOPIC> get_language() <style> function
+get_language()
+
+string get_language()
+
+<b>Description
+
+Get the current language.
+
+<b>Returns
+string				<t><t>The current langage, e.g en_us, sv_se, de_de.
+
+<b>Example
+
+<c>  string lng;
+
+<c>  lng = get_language();
+<c>  if ( lng == "sv_se")
+<c>    create opmenu/name="Funktioner-Bilder-Översikt"/command="open graph overview"
+<c>  endif
+<c>  if ( lng == "en_us")
+<c>    create opmenu/name="Functions-ProcessGraphs-Overview"/command="open graph overview"
+<c>  endif
+</TOPIC>
 </headerlevel>
+
+<TOPIC> xtt-commands <style> function
+Xtt commands
+
+All the xtt-commands is available in the script code. An rtt-command line
+should NOT be ended with a semicolon. Variables can be substituted in the
+command line by surrounding them with apostrophes.
+
+<b>Example
+
+<c>  string name = "PUMP-VALVE-Open.ActualValue";
+<c>  float  value = 2.2;
+<c>  set parameter/name='name'/value='value'
+
+<b>Example
+
+<c>  string name;
+<c>  string parname;
+<c>  int j;
+<c>  int i;
+<c>  for ( i = 0; i < 3; i++)
+<c>    parname = "vkv-test-obj" + (i+1);
+<c>    create obj/name='parname'
+<c>    for ( j = 0; j < 3; j++)
+<c>      name = parname + "-obj" + (j+1);
+<c>      create obj/name='name'
+<c>    endfor
+<c>  endfor
+</TOPIC>
+
 </chapter>
 

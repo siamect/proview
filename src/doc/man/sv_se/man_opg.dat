@@ -1235,6 +1235,10 @@ plc <t>Plc processen <t>Hanterar I/O och exekverar plc-koden.
 rs_remote <t>Remote processen <t>Hanterar remote kommunikation.
 opc_server <t>Opc server process.
 rt_statussrv <t>Status server <t>Webservice för runtime monitorn och övervakningscentralen.
+rt_post  <t>Post server <t>Sänder larm via email eller sms.
+rt_report  <t>Report server <t>Genererar rapporter.
+rt_sevhistmon <t>Storage monitor <t>Samlar och sänder historisk data till lagringsserver.
+rt_powerlink <t>Ethernet powerlink server <t>Hanterar Powerlink kommunikation.
 
 </topic>
 
@@ -2402,11 +2406,15 @@ Skriv innehållet i ett objekt till en fil.
 <TOPIC> script
 Xtt script
 
-execute script		<LINK> execute script
-datatypes		<LINK> datatypes
-datatype conversions	<LINK> datatype conversions
-variable declarations	<LINK> variable declarations
-operators		<LINK> operators
+Exekvera ett script	<LINK> execute script
+
+<h2>Datatyper och declarationer
+Datatyper		<LINK> datatypes
+Datatyps konvertering	<LINK> datatype conversions
+Variabel deklarationer	<LINK> variable declarations
+Operatorer		<LINK> operators
+
+<h2>Uttryck
 main-endmain		<LINK> main-endmain
 function-endfunction	<LINK> function-endfunction
 if-else-endif		<LINK> if-else-endif
@@ -2416,23 +2424,35 @@ break			<LINK> break
 continue		<LINK> continue
 goto			<LINK> goto
 include			<LINK> include
+
+<h2>In och utmatnings funktioner
+ask()			<LINK> ask()
 printf()		<LINK> printf()
+say()			<LINK> say()
 scanf()			<LINK> scanf()
-fprintf()		<LINK> fprintf()
+
+<h2>Filhanterings funktioner
+fclose()		<LINK> fclose()
+felement()		<LINK> felement()
 fgets()			<LINK> fgets()
 fopen()			<LINK> fopen()
-fclose()		<LINK> fclose()
-exit()			<LINK> exit()
-verify()		<LINK> verify()
-time()			<LINK> time()
+fprintf()		<LINK> fprintf()
+fscanf()		<LINK> fscanf()
+translate_filename()	<LINK> translate_filename()
+
+<h2>Sträng funktioner
 edit()			<LINK> edit()
-extract()		<LINK> extract()
 element()		<LINK> element()
+extract()		<LINK> extract()
+sprintf()		<LINK> sprintf()
+strchr()		<LINK> strchr()
+strrchr()		<LINK> strrchr()
+strlen()		<LINK> strlen()
+strstr()		<LINK> strstr()
 toupper()		<LINK> toupper()
 tolower()		<LINK> tolower()
-get_language()		<LINK> get_language()
-translate_filename()	<LINK> translate_filename()
-xtt-commands		<LINK> xtt-commands
+
+<h2>Databas funktioner
 GetAttribute()		<LINK> getattribute()
 GetChild()		<LINK> getchild()
 GetParent()		<LINK> getparent()
@@ -2442,14 +2462,28 @@ GetNextObject()		<LINK> getnextobject()
 GetObjectClass()	<LINK> getobjectclass()
 GetNodeObject()		<LINK> getnodeobject()
 GetRootList()		<LINK> getrootlist()
+
+<h2>System funktioner
+exit()			<LINK> exit()
+system()		<LINK> system()
+time()			<LINK> time()
+verify()		<LINK> verify()
+
+<h2>Diverse funktioner
 CutObjectName()		<LINK> cutobjectname()
 MessageError()		<LINK> messageerror()
 MessageInfo()		<LINK> messageinfo()
 GetCurrentText()	<LINK> getcurrenttext()
 GetCurrentObject()	<LINK> getcurrentobject()
+pwr_get_config()	<LINK> pwr_get_config()
+get_node_name()		<LINK> get_node_name()
+get_language()		<LINK> get_language()
+
+<h2>xtt-commands
+xtt-commands		<LINK> xtt-commands
+
 </TOPIC>
 
-<headerlevel>
 <TOPIC> execute script
 Exekvera ett script
 
@@ -2556,6 +2590,21 @@ Operator	<t>Beskrivning		<t>Datatyper
 |=	 	<t>logisk eller och tilldelning	<t>int
 </TOPIC>
 
+<TOPIC> sc_statements <style> function
+Script uttryck
+
+main-endmain		<t>Main funktion.<LINK> main-endmain
+function-endfunction	<t>Funktions deklaration.<LINK> function-endfunction
+if-else-endif		<t>Villkorlig exekvering.<LINK> if-else-endif
+while-endwhile		<t>While loop.<LINK> while-endwhile
+for-endfor		<t>For loop.<LINK> for-endfor
+break			<t>Avsluta while eller for loop.<LINK> break
+continue		<t>Fortsätt while eller for loop.<LINK> continue
+goto			<t>Hoppa till label.<LINK> goto
+include			<t>Inkludera script fil.<LINK> include
+</TOPIC>
+
+<headerlevel>
 <TOPIC> main-endmain <style> function
 main-endmain
 
@@ -2708,6 +2757,44 @@ En script include-fil xom innehåller funktioner kan inkluderas med
 
 <c>#include <my_functions>
 </TOPIC>
+</headerlevel>
+
+<TOPIC> sc_input_output_functions <style> function
+In och utmatnings funktioner
+
+<b>Funktion <t>Beskrivning
+ask <t>Skriv en fråga och läs ett svar.<link> ask() 
+printf <t>Formaterad utskrift.	<link> printf()
+say <t>Skriv en text.		<link> say()
+scanf  <t>Formaterad läsning.	<link> scanf()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> ask() <style> function
+ask()
+
+int ask( string question, (arbitrary type) reply)
+
+<b>Beskrivning
+
+Promptar för inmatning med den angivna strängen.
+Returnerar antal lästa element, 1 or 0.
+
+<b>Arguments
+
+string 			<t>question	<t>Prompt.
+godtycklig typ		<t>reply	<t>Inmatat svar. Kan vara int,
+			<t>		<t>float eller string.
+
+<b>Exempel
+<c> string reply;
+
+<c> ask( "Do you want to continue? [y/n] ", reply);
+<c> if ( reply != "y")
+<c>   exit();
+<c> endif
+</TOPIC>
 
 <TOPIC> printf() <style> function
 printf()
@@ -2735,6 +2822,23 @@ godtycklig typ		<t>arg2		<t>Värde argument. Valfritt. Kan vara int,
 <c>  printf( "a = %d och str = %s", a, str);
 </TOPIC>
 
+<TOPIC> say() <style> function
+say()
+
+int say( string text)
+
+<b>Beskrivning
+
+Skriver ut en sträng.
+
+<b>Argument
+
+string 			<t>text		<t>Text att skriva ut.
+
+<b>Exempel
+<c> say( "Three quarks for Muster Mark!");
+</TOPIC>
+
 <TOPIC> scanf() <style> function
 scanf()
 
@@ -2755,37 +2859,71 @@ godtycklig typ		<t>arg1		<t>Värde argument. Returnerat. Kan vara int,
 
 <c>  scanf( "%d", i);
 </TOPIC>
+</headerlevel>
 
-<TOPIC> fprintf() <style> function
-fprintf()
+<TOPIC> sc_file_handling_functions <style> function
+Filhanterings funktioner
 
-int fprintf( int file, string format [, (godtycklig typ) arg1,
-	(godtycklig typ) arg2])
+<b>Funktion <t>Beskrivning
+fclose <t>Stäng en fil. 		<link> fclose()
+felement <t>Extrahera ett element från senaste lästa rad. <link> felement()
+fgets <t>Läs en rad från en fil. 	<link> fgets()
+fopen <t>Öppna en fil.			<link> fopen()
+fprintf <t>Formaterad utskrift till fil. <link> fprintf()
+fscanf <t>Formaterad läsning från fil.	<link> fscanf()
+translate_filename <t>Översätt omgivnings-variabler i ett filnamn. <link> translate_filename()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> fclose() <style> function
+fclose()
+
+int fclose( int file)
 
 <b>Beskrivning
 
-Formaterad utskrift på fil. C-syntax. Format argument och inget, ett eller två
-värde argument.
-Returnerarn antal utskrivna tecken.
+Stänger en öppnad fil.
 
 <b>Argument
 
-int 			<t>file		<t>Fil id returnerat av fopen.
-string 			<t>format	<t>Format.
-godtycklig typ		<t>arg1		<t>Värde argument. Valfritt. Kan vara int,
-			<t>		<t>float eller string.
-godtycklig typ		<t>arg2		<t>Värde argument. Valfritt. Kan vara int,
-			<t>		<t>float eller string.
+int		<t>file		<t>fil-id returnerad av fopen.
 
 <b>Exempel
 
-<c>  int outfile;
-<c>  outfile = fopen( "my_file.txt", "w");
-<c>  if (!outfile)
-<c>    exit();
-<c>  fprintf( outfile, "Some text");
-<c>  fprintf( outfile, "a = %d", a);
-<c>  fclose( outfile);
+<c>  int infile;
+<c>  infile = fopen("some_file.txt","r");
+<c>  ...
+<c>  fclose( infile);
+</TOPIC>
+
+<TOPIC> felement() <style> function
+felement()
+
+string felement( int file int number, string delimiter, string str)
+
+<b>Beskrivning
+
+Extraherar ett element från en sträng av element läst från en file med
+fgets() funktionen. felement() kan användas istället för element() när den
+lästa strängen är längre än sträng-storleken 256. felement() kan hantera rader
+upp till 1023 tecken.
+
+<b>Argument
+
+int		<t>number	<t>elementets nummer.
+string		<t>delimiter	<t>avgränsnings tecken.
+
+<b>Exempel
+
+<c>  string elem1;
+<c>  int file;
+<c>  string line;
+
+<c>  file = fopen( "my_file.txt", "r");
+<c>  while( fgets( line, file))
+<c>    elem1 = felement( 1, " ");
+<c>  endwhile
 </TOPIC>
 
 <TOPIC> fgets() <style> function
@@ -2839,75 +2977,108 @@ string		<t>mode		<t>Access mod
 <c>  fclose( outfile);
 </TOPIC>
 
-<TOPIC> fclose() <style> function
-fclose()
+<TOPIC> fprintf() <style> function
+fprintf()
 
-int fclose( int file)
+int fprintf( int file, string format [, (godtycklig typ) arg1,
+	(godtycklig typ) arg2])
 
 <b>Beskrivning
 
-Stänger en öppnad fil.
+Formaterad utskrift på fil. C-syntax. Format argument och inget, ett eller två
+värde argument.
+Returnerarn antal utskrivna tecken.
 
 <b>Argument
 
-int		<t>file		<t>fil-id returnerad av fopen.
+int 			<t>file		<t>Fil id returnerat av fopen.
+string 			<t>format	<t>Format.
+godtycklig typ		<t>arg1		<t>Värde argument. Valfritt. Kan vara int,
+			<t>		<t>float eller string.
+godtycklig typ		<t>arg2		<t>Värde argument. Valfritt. Kan vara int,
+			<t>		<t>float eller string.
 
 <b>Exempel
 
-<c>  int infile;
-<c>  infile = fopen("some_file.txt","r");
-<c>  ...
-<c>  fclose( infile);
+<c>  int outfile;
+<c>  outfile = fopen( "my_file.txt", "w");
+<c>  if (!outfile)
+<c>    exit();
+<c>  fprintf( outfile, "Some text");
+<c>  fprintf( outfile, "a = %d", a);
+<c>  fclose( outfile);
 </TOPIC>
 
-<TOPIC> exit() <style> function
-exit()
+<TOPIC> fscanf() <style> function
+fscanf()
 
-int exit()
+int fscanf( int file, string format, (godtycklig typ) arg1)
 
 <b>Beskrivning
 
-Avslutar exekveringen av en fil.
-
-<b>Exempel
-
-<c>  exit();
-</TOPIC>
-
-<TOPIC> verify() <style> function
-verify()
-
-int verify( [int mode])
-
-<b>Beskrivning
-
-Sätter eller visar verifikatione mod. Om verifiering är till, visas alla 
-exekverade rader på skärmen.
-Returnerar nuvarande verifikations mod.
+Formaterad läsning från fil. C-syntax.
+Returnerar antal inlästa tecken.
 
 <b>Argument
 
-int		<t>mode		<t>verifikaion till (1) eller från (0). Valfri.
+int			<t>file		<t>Fil id.
+string 			<t>format	<t>Format.
+godtycklig typ		<t>arg1		<t>Värde argument. Returnerat. Kan vara int,
+			<t>		<t>float eller string.
 
 <b>Exempel
 
-<c>  verify(1);
+<c>  int file;
+<c>  int i;
+
+<c>  file = fopen( "my_file.txt", "r");
+<c>  if (file)
+<c>    fscanf( file, "%d", i);
+<c>    fclose( file);
+<c>  endif
 </TOPIC>
 
-<TOPIC> time() <style> function
-time()
+<TOPIC> translate_filename() <style> function
+translate_filename()
 
-string time()
+string translate_filename( string fname)
 
 <b>Beskrivning
 
-Returnerar nuvarande tid i strängformat.
+Byter ut omgivnings variabler i ett filnamn.
+
+<b>Argument
+
+string		<t>fname	<t>Ett filnamn.
+
+<b>Returns
+string				<t><t>Sträng med utbytta omgivningsvariabler.
 
 <b>Exempel
 
-<c>  string t;
-<c>  t = time();
+<c>  string fname1 = "$pwrp_db/a.wb_load";
+<c>  string fname2;
+<c>  fname2 = translate_filename( fname1);
 </TOPIC>
+</headerlevel>
+
+<TOPIC> string_functions <style> function
+Sträng funktioner
+
+<b>Funktion <t>Beskrivning
+edit <t>Ta bort överfödiga mellanslag och tab. <link> edit()
+element <t>Extrahera ett element från en sträng. <link> element()
+extract <t>Extrahera en delsträng från en sträng. <link> extract()
+sprintf <t>Formaterad utskrift till en sträng.	<link> sprintf()
+strchr <t>Returnera första förekomsten av ett tecken i en sträng. <link> strchr()
+strrchr <t>Returnera sista förekomsten av ett tecken i en sträng. <link> strrchr()
+strlen <t>Beräkna längden på en sträng.	<link> strlen()
+strstr <t>Returnera första förekomsten av en delsträng i en sträng. <link> strstr()
+tolower <t>Konvertera till små bokstäver. <link> tolower()
+toupper <t>Konveretra till stora bokstäver. <link> toupper()
+</TOPIC>
+
+<headerlevel>
 <TOPIC> edit() <style> function
 edit()
 
@@ -2926,6 +3097,29 @@ string		<t>str		<t>sträng som ska editeras.
 <b>Exempel
 
 <c>  collapsed_str = edit(str);
+</TOPIC>
+
+<TOPIC> element() <style> function
+element()
+
+string element( int number, string delimiter, string str)
+
+<b>Beskrivning
+
+Extraherar ett element från en sträng av element.
+Returnerar det extraherade elementet.
+
+<b>Argument
+
+int		<t>number	<t>elementets nummer.
+string		<t>delimiter	<t>avgränsnings tecken.
+string		<t>str		<t>sträng med element.
+
+<b>Exempel
+
+<c>  string str = "mary, lisa, anna, john";
+<c>  string elem1;
+<c>  elem1 = elment( 1, ",", str);
 </TOPIC>
 
 <TOPIC> extract() <style> function
@@ -2950,27 +3144,157 @@ string		<t>str		<t>sträng som tecknen ska extraheras från.
 <c>  extracted_str = extract( 5, 7, str);
 </TOPIC>
 
-<TOPIC> element() <style> function
-element()
+<TOPIC> sprintf() <style> function
+sprintf()
 
-string element( int number, string delimiter, string str)
+int sprintf( string str, string format [, (arbitrary type) arg1, (arbitrary type) arg2])
 
 <b>Beskrivning
 
-Extraherar ett element från et sträng av element.
-Returnerar det extraherade elementet.
+Formaterad utskrift. C-syntax. Format argument och inget, ett eller två
+värde argument. 
+Returnerar antal utskrivna tecken.
 
 <b>Argument
 
-int		<t>number	<t>elementets nummer.
-string		<t>delimiter	<t>avgränsnings tecken.
-string		<t>str		<t>sträng med element.
+string			<t>str		<t>Sträng att skriva till.
+string 			<t>format	<t>Format.
+godtycklig typ		<t>arg1		<t>Värde argument. Valfritt, Kan vara int,
+			<t>		<t>float eller string.
+godtycklig typ		<t>arg2		<t>Värde argument. Valfritt. Kan vara int,
+			<t>		<t>float eller string.
 
 <b>Exempel
 
-<c>  string str = "mary, lisa, anna, john";
-<c>  string elem1;
-<c>  elem1 = elment( 1, ",", str);
+<c>  string str;
+<c>  int items;
+
+<c>  sprintf( str, "Number of items: %d", items);
+</TOPIC>
+
+<TOPIC> strchr() <style> function
+strchr()
+
+int strchr( string str, string c)
+
+<b>Beskrivning
+
+Returnerar första förekomsten av ett tecken in en sträng.
+
+<b>Argument
+
+string		<t>str		<t>Sträng att söka i.
+string		<t>c		<t>Tecken att söka efter.
+
+<b>Returns
+int				<t><t>Index för första förekomsen av ett tecken.
+				<t><t>Första tecknet har index 1. Returnerar
+				<t><t>noll om tecknet inte hittas.
+<b>Exempel
+
+<c>  string str = "index.html";
+<c>  int idx;
+
+<c>  idx = strchr( str, ".");
+</TOPIC>
+
+<TOPIC> strrchr() <style> function
+strrchr()
+
+int strrchr( string str, string c)
+
+<b>Beskrivning
+
+Returnerar sista förekomsten av ett tecken in en sträng.
+
+<b>Argument
+
+string		<t>str		<t>Sträng att söka i.
+string		<t>c		<t>Tecken att söka efter.
+
+<b>Returns
+int				<t><t>Index för den sista förekomsten av tecknet.
+				<t><t>Första tecknet har index 1. Returnerar
+				<t><t>noll om tecknet inte hittas.
+<b>Exempel
+
+<c>  string str = "/usr/local/pwrrt";
+<c>  int idx;
+
+<c>  idx = strrchr( str, "/");
+</TOPIC>
+
+<TOPIC> strlen() <style> function
+strlen()
+
+int strlen( string str, string c)
+
+<b>Beskrivning
+
+Beräknar längden av en sträng.
+
+<b>Argument
+
+string		<t>str		<t>Sträng att beräkna längden för.
+
+<b>Returns
+int				<t><t>Strängens längd.
+
+<b>Exempel
+
+<c>  string str = "/usr/local/pwrrt";
+<c>  int len;
+
+<c>  len = strlen( str);
+</TOPIC>
+
+<TOPIC> strstr() <style> function
+strchr()
+
+int strstr( string str, string substr)
+
+<b>Beskrivning
+
+Returnar första förekomsten av en delsträng i en sträng.
+
+<b>Arguments
+
+string		<t>str		<t>Sträng att söka i.
+string		<t>substr	<t>Delsträng att söka efter.
+
+<b>Returns
+int				<t><t>Index för första förekomsten av delsträngen.
+				<t><t>Första tecknet har index 1. Returnerar
+				<t><t>noll om delsträngen inte hittas.
+<b>Exempel
+
+<c>  string str = "index.html";
+<c>  int idx;
+
+<c>  idx = strstr( str, ".html");
+</TOPIC>
+
+<TOPIC> tolower() <style> function
+tolower()
+
+string tolower( string str)
+
+<b>Beskrivning
+
+Konverterar en sträng till små bokstäver.
+
+<b>Argument
+
+string		<t>str		<t>sträng som ska konverteras.
+
+<b>Returns
+string				<t><t>sträng med små bokstäver.
+
+<b>Exempel
+
+<c>  string str1 = "Buster Wilson";
+<c>  string str2;
+<c>  str2 = tolower( str);
 </TOPIC>
 
 <TOPIC> toupper() <style> function
@@ -2996,105 +3320,109 @@ string				<t><t>sträng med stora bokstäver.
 <c>  str2 = toupper( str);
 </TOPIC>
 
-<TOPIC> tolower() <style> function
-toupper()
+</headerlevel>
 
-string tolower( string str)
+<TOPIC> system_functions <style> function
+System funktioner
+
+<b>Funktion <t>Beskrivning
+exit <t>Avsluta scriptet. <link> exit()
+system <t>Exekvera ett shell kommando. <link> system()
+time <t>Hämta systemtiden. <link> time()
+verify <t>Skriv ut exekverade rader. <link> verify()
+</TOPIC>
+
+<headerlevel>
+<TOPIC> exit() <style> function
+exit()
+
+int exit()
 
 <b>Beskrivning
 
-Konverterar en sträng till små bokstäver.
+Avslutar exekveringen av en fil.
+
+<b>Exempel
+
+<c>  exit();
+</TOPIC>
+
+<TOPIC> system() <style> function
+system()
+
+int system( string cmd)
+
+<b>Beskrivning
+
+Exekvera ett shell kommando.
 
 <b>Argument
 
-string		<t>str		<t>sträng som ska konverteras.
+string		<t>cmd		<t>Shell kommando att exekvera.
 
 <b>Returns
-string				<t><t>sträng med små bokstäver.
+int				<t><t>Returvärdet är -1 vid fel eller annars returstatus 
+				<t><t>för kommandot.
 
 <b>Exempel
 
-<c>  string str1 = "Buster Wilson";
-<c>  string str2;
-<c>  str2 = tolower( str);
+<c>  string cmd;
+
+<c>  cmd = "firefox http://www.proview.se";
+<c>  system( cmd);
 </TOPIC>
 
-<TOPIC> get_language() <style> function
-translate_filename()
+<TOPIC> time() <style> function
+time()
 
-string get_language()
+string time()
 
 <b>Beskrivning
 
-Returnerar nuvarande språk.
-
-<b>Returns
-string				<t><t>Aktuellt språk, t ex en_us, sv_se eller de_de.
+Returnerar nuvarande tid i strängformat.
 
 <b>Exempel
 
-<c>  string lng;
-
-<c>  lng = get_language();
-<c>  if ( lng == "sv_se")
-<c>    create opmenu/name="Funktioner-Bilder-Översikt"/command="open graph overview"
-<c>  endif
-<c>  if ( lng == "en_us")
-<c>    create opmenu/name="Functions-ProcessGraphs-Overview"/command="open graph overview"
-<c>  endif
+<c>  string t;
+<c>  t = time();
 </TOPIC>
 
-<TOPIC> translate_filename() <style> function
-translate_filename()
+<TOPIC> verify() <style> function
+verify()
 
-string translate_filename( string fname)
+int verify( [int mode])
 
 <b>Beskrivning
 
-Byter ut omgivnings variabler i ett filnamn.
+Sätter eller visar verifikatione mod. Om verifiering är till, visas alla 
+exekverade rader på skärmen.
+Returnerar nuvarande verifikations mod.
 
 <b>Argument
 
-string		<t>fname	<t>A filnamn.
-
-<b>Returns
-string				<t><t>Sträng med utbytta omgivningsvariabler.
+int		<t>mode		<t>verifikaion till (1) eller från (0). Valfri.
 
 <b>Exempel
 
-<c>  string fname1 = "$pwrp_db/a.wb_load";
-<c>  string fname2;
-<c>  fname2 = translate_filename( fname1);
+<c>  verify(1);
 </TOPIC>
+</headerlevel>
 
-<TOPIC> xtt-commands <style> function
-Xtt kommandon
+<TOPIC> database_functions <style> function
+Databas funktioner
 
-Alla xtt kommandon finns tillgängliga i script koden. En xtt-kommando rad
-ska INTE avslutas med semikolon. Variabler kan substitueras i kommandot
-genom add omges av apostrofer.
-
-<b>Exempel
-
-<c>  string name = "PUMP-VALVE-Open.ActualValue";
-<c>  float  value = 2.2;
-<c>  set parameter/name='name'/value='value'
-
-<b>Exempel
-
-<c>  string name;
-<c>  string parname;
-<c>  int j;
-<c>  int i;
-<c>  for ( i = 0; i < 3; i++)
-<c>    parname = "vkv-test-obj" + (i+1);
-<c>    create obj/name='parname'
-<c>    for ( j = 0; j < 3; j++)
-<c>      name = parname + "-obj" + (j+1);
-<c>      create obj/name='name'
-<c>    endfor
-<c>  endfor
+<b>Function <t>Description
+GetAttribute()	<t>Hämta värde för ett attribut. <LINK> getattribute()
+GetChild()	<t>Hämta barn till ett objekt.	<LINK> getchild()
+GetParent()	<t>Hämta föräder till ett objekt. <LINK> getparent()
+GetNextSibling()<t>Hämta syskon för ett objekt.	<LINK> getnextsibling()
+GetClassList()	<t>Hämta första instansen av en klass. <LINK> getclasslist()
+GetNextObject()	<t>Hämta nästa instans av en klass. <LINK> getnextobject()
+GetObjectClass() <t>Hämta klassen för ett objekt. <LINK> getobjectclass()
+GetNodeObject()	<t>Hämta nod-objektet.	<LINK> getnodeobject()
+GetRootList()	<t>Hämta första objektet i rot-listan. <LINK> getrootlist()
 </TOPIC>
+<headerlevel>
 
 <TOPIC> getattribute() <style> function
 GetAttribute()
@@ -3310,6 +3638,21 @@ GetNextSibling().
 <c>    name = GetNextSibling(name);
 <c>  endwhile
 </TOPIC>
+</headerlevel>
+
+<TOPIC> misc_functions <style> function
+Diverse funktioner
+CutObjectName()	<t>Klipp av ett objektsnamn. <LINK> cutobjectname()
+MessageError()	<t>Skriv ett felmeddelande. <LINK> messageerror()
+MessageInfo()	<t>Skriv ett informationsmeddelande. <LINK> messageinfo()
+GetCurrentText() <t>Hämta text för utvalt alternativ.	<LINK> getcurrenttext()
+GetCurrentObject() <t>Hämta utvalt objekt.	<LINK> getcurrentobject()
+pwr_get_config() <t>Hämta konfigurations-värden <LINK> pwr_get_config()
+get_node_name() <t>Hämta nodnamn <LINK> get_node_name()
+get_language()	<t>Hämta nuvarande språk <LINK> get_language()
+</TOPIC>
+
+<headerlevel>
 
 <TOPIC> cutobjectname() <style> function
 CutObjectName()
@@ -3371,7 +3714,7 @@ string GetCurrentText()
 
 <b>Beskrivning
 
-Hämta texten på det utvalde menyalternativet.
+Hämta texten på det utvalda menyalternativet.
 
 <b>Exempel
 
@@ -3396,6 +3739,61 @@ returneras en null-sträng.
 
 <c>  object = GetCurrentObject();
 </TOPIC>
+
+<TOPIC> get_language() <style> function
+get_language()
+
+string get_language()
+
+<b>Beskrivning
+
+Hämta nuvarande språk.
+
+<b>Returns
+string				<t><t>Nuvarande språk, t.ex. en_us, sv_se, de_de.
+
+<b>Exempel
+
+<c>  string lng;
+
+<c>  lng = get_language();
+<c>  if ( lng == "sv_se")
+<c>    create opmenu/name="Funktioner-Bilder-Översikt"/command="open graph overview"
+<c>  endif
+<c>  if ( lng == "en_us")
+<c>    create opmenu/name="Functions-ProcessGraphs-Overview"/command="open graph overview"
+<c>  endif
+</TOPIC>
 </headerlevel>
+
+<TOPIC> xtt-commands <style> function
+Xtt kommandon
+
+Alla xtt kommandon finns tillgängliga i script koden. En xtt-kommando rad
+ska INTE avslutas med semikolon. Variabler kan substitueras i kommandot
+genom add omges av apostrofer.
+
+<b>Exempel
+
+<c>  string name = "PUMP-VALVE-Open.ActualValue";
+<c>  float  value = 2.2;
+<c>  set parameter/name='name'/value='value'
+
+<b>Exempel
+
+<c>  string name;
+<c>  string parname;
+<c>  int j;
+<c>  int i;
+<c>  for ( i = 0; i < 3; i++)
+<c>    parname = "vkv-test-obj" + (i+1);
+<c>    create obj/name='parname'
+<c>    for ( j = 0; j < 3; j++)
+<c>      name = parname + "-obj" + (j+1);
+<c>      create obj/name='name'
+<c>    endfor
+<c>  endfor
+</TOPIC>
+
 </chapter>
 

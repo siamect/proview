@@ -8,7 +8,7 @@
 
 
 
-<h1> Designer's Guide
+<h1> Process station
 
 
 
@@ -370,17 +370,20 @@ Check the busnumber
 <c>> echo $PWR_BUS_ID
 
 If it is not correct, change the busnumber in /etc/proview.cnf
-Check that the bootfile $pwrp_load/ld_boot_'nodename'_'busid'.dat exists with the correct bus number.  If the busnumber in the name is not correct, change it in the directory volume.
+Check that the bootfile $pwrp_load/ld_boot_'nodename'_'busid'.dat exists with the correct bus 
+number.  If the busnumber in the name is not correct, change it in the directory volume.
 
 <c>W Version mismatch for volume: ... 
 Usually a change is made in a classvolume, but the rootvolume for the node is not rebuilt. 
 Update the classes and build the rootvolume for the node.
 
-If the volume is a Proview base volume, check that the installed pwrrt version corresponds to the version in the development environment 
+If the volume is a Proview base volume, check that the installed pwrrt version corresponds to 
+the version in the development environment 
 
 <c>> cat $pwr_exe/rt_version.dat
 
-If this doesn't help, the versions for the loadfiles can be viewed with wb_ldlist in the development environment. Check the versions of the .dbs files on $pwrp_load
+If this doesn't help, the versions for the loadfiles can be viewed with wb_ldlist in the 
+development environment. Check the versions of the .dbs files on $pwrp_load
 
 <c>> wb_ldlist $pwrp_load/volsaturnus7.dbs
 <c>Volume     VolSaturnus7    13-FEB-2009 16:16:51.59 (1234538211,592936184) 65796 
@@ -391,7 +394,9 @@ If this doesn't help, the versions for the loadfiles can be viewed with wb_ldlis
 <c>VolRef     CVolSaturnus7   13-FEB-2009 16:09:38.61 (1234537778,610918602) 25372 
 <c>VolRef     Profibus        09-OCT-2008 12:00:00.00 (1223546400,0) 64007 
 
-Here the volume rootvolume VolSaturnus7 references the class volume CVolSaturnus7. The time for CvolSaturnus7 has to equal the VolRef time. By listing the .dbs file for the classvolume we can compare the times.
+Here the volume rootvolume VolSaturnus7 references the class volume CVolSaturnus7. The time for 
+CvolSaturnus7 has to equal the VolRef time. By listing the .dbs file for the classvolume we can 
+compare the times.
 
 <c>> wb_ldlist $pwrp_load/cvolsaturnus7.dbs 
 <c>Volume     CVolSaturnus7   22-APR-2009 08:12:08.22 (1240380728,222698031) 25372 
