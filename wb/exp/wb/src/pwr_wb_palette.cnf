@@ -474,8 +474,12 @@ palette NavigatorPalette
     {
       class OpPlace
       class XttGraph
+      class XttMultiView
       class WebBrowserConfig
       class WebGraph
+      class WebLink
+      class AppGraph
+      class AppLink
     }
     class Application
     class PlotGroup
