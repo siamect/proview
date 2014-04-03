@@ -352,7 +352,8 @@ void directory_changed( GFileMonitor *, GFile *file, GFile *,
   case G_FILE_MONITOR_EVENT_DELETED:
   case G_FILE_MONITOR_EVENT_CREATED:
     name = g_file_get_parse_name( file);
-    ((GeItemViewGtk *)item_view)->update( name, event);
+    if ( !strstr( name, "__p"))
+      ((GeItemViewGtk *)item_view)->update( name, event);
     g_free( name);
     break;
 
