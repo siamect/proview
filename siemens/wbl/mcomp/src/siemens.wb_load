@@ -1,7 +1,7 @@
 Volume Siemens $ClassVolume 0.0.250.3 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X95"
-    Attr NextCix = "_X69"
+    Attr NextOix = "_X97"
+    Attr NextCix = "_X71"
     Attr NextTix[0] = "_X3"
   EndBody
   Object Type $TypeHier 5 25-APR-2007 13:44:05.44
@@ -205,6 +205,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 1 06-OCT-2005 14:40:44.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 10376
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseMotor"
           EndBody
@@ -217,8 +218,13 @@ Volume Siemens $ClassVolume 0.0.250.3
           Attr Super.GraphConfiguration = 2
           Attr Super.DisableTempSwitch = 1
           Attr Super.TempSwitch.Super.DisableSwitch = 1
+          Attr Super.TempSwitch.Super.Alarm.MoreText = ""
           Attr Super.DisableTempSensor = 1
           Attr Super.TempSensor.Super.DisableValue = 1
+          Attr Super.TempSensor.Super.LimitHH.Alarm.MoreText = ""
+          Attr Super.TempSensor.Super.LimitH.Alarm.MoreText = ""
+          Attr Super.TempSensor.Super.LimitL.Alarm.MoreText = ""
+          Attr Super.TempSensor.Super.LimitLL.Alarm.MoreText = ""
         EndBody
       EndObject
     EndObject
@@ -236,6 +242,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 6 24-NOV-2010 12:59:40.65
           Body SysBody 24-NOV-2010 12:59:40.65
             Attr PgmName = "Ch"
+            Attr Size = 640
             Attr Flags = 131074
             Attr Elements = 4
             Attr TypeRef = "pwrb:Class-ChanDi"
@@ -272,6 +279,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 8 24-NOV-2010 13:01:07.25
           Body SysBody 24-NOV-2010 13:01:07.25
             Attr PgmName = "Ch"
+            Attr Size = 320
             Attr Flags = 131074
             Attr Elements = 2
             Attr TypeRef = "pwrb:Class-ChanDi"
@@ -302,6 +310,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 6 24-NOV-2010 13:01:27.71
           Body SysBody 24-NOV-2010 13:01:27.71
             Attr PgmName = "Ch"
+            Attr Size = 672
             Attr Flags = 131074
             Attr Elements = 4
             Attr TypeRef = "pwrb:Class-ChanDo"
@@ -334,6 +343,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 8 24-NOV-2010 13:01:54.70
           Body SysBody 24-NOV-2010 13:01:54.70
             Attr PgmName = "Ch"
+            Attr Size = 336
             Attr Flags = 131074
             Attr Elements = 2
             Attr TypeRef = "pwrb:Class-ChanDo"
@@ -362,6 +372,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch00 $Attribute 39 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch00"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -369,6 +380,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch01 $Attribute 40 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch01"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -376,6 +388,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch02 $Attribute 41 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch02"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -383,6 +396,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch03 $Attribute 42 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch03"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -390,6 +404,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch04 $Attribute 43 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch04"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -397,6 +412,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch05 $Attribute 44 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch05"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -404,6 +420,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch06 $Attribute 45 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch06"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -411,6 +428,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch07 $Attribute 46 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch07"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -418,6 +436,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch10 $Attribute 47 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch10"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -425,6 +444,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch11 $Attribute 48 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch11"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -432,6 +452,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch12 $Attribute 49 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch12"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -439,6 +460,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch13 $Attribute 50 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch13"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -446,6 +468,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch14 $Attribute 51 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch14"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -453,6 +476,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch15 $Attribute 52 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch15"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -460,6 +484,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch16 $Attribute 53 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch16"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -467,6 +492,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch17 $Attribute 54 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch17"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -474,6 +500,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch20 $Attribute 55 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch20"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -481,6 +508,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch21 $Attribute 56 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch21"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -488,6 +516,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch22 $Attribute 57 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch22"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -495,6 +524,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch23 $Attribute 58 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch23"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -502,6 +532,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch24 $Attribute 59 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch24"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -509,6 +540,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch25 $Attribute 60 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch25"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -516,6 +548,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch26 $Attribute 61 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch26"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -523,6 +556,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch27 $Attribute 62 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch27"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -530,6 +564,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch30 $Attribute 63 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch30"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -537,6 +572,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch31 $Attribute 64 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch31"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -544,6 +580,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch32 $Attribute 65 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch32"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -551,6 +588,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch33 $Attribute 66 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch33"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -558,6 +596,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch34 $Attribute 67 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch34"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -565,6 +604,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch35 $Attribute 68 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch35"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -572,6 +612,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch36 $Attribute 69 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch36"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -579,6 +620,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch37 $Attribute 70 24-NOV-2010 09:14:55.30
           Body SysBody 24-NOV-2010 09:14:55.30
             Attr PgmName = "Ch37"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -695,6 +737,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch00 $Attribute 26 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch00"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -702,6 +745,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch01 $Attribute 27 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch01"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -709,6 +753,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch02 $Attribute 28 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch02"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -716,6 +761,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch03 $Attribute 29 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch03"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -723,6 +769,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch04 $Attribute 30 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch04"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -730,6 +777,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch05 $Attribute 31 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch05"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -737,6 +785,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch06 $Attribute 32 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch06"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -744,6 +793,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch07 $Attribute 33 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch07"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -751,6 +801,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch10 $Attribute 34 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch10"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -758,6 +809,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch11 $Attribute 35 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch11"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -765,6 +817,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch12 $Attribute 36 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch12"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -772,6 +825,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch13 $Attribute 37 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch13"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -779,6 +833,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch14 $Attribute 38 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch14"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -786,6 +841,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch15 $Attribute 39 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch15"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -793,6 +849,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch16 $Attribute 40 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch16"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -800,6 +857,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch17 $Attribute 41 24-NOV-2010 09:35:07.60
           Body SysBody 24-NOV-2010 09:35:07.60
             Attr PgmName = "Ch17"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -870,6 +928,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi00 $Attribute 59 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi00"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -877,6 +936,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi01 $Attribute 60 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi01"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -884,6 +944,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi02 $Attribute 61 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi02"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -891,6 +952,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi03 $Attribute 62 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi03"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -898,6 +960,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi04 $Attribute 63 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi04"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -905,6 +968,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi05 $Attribute 64 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi05"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -912,6 +976,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi06 $Attribute 65 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi06"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -919,6 +984,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi07 $Attribute 66 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi07"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -926,6 +992,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi10 $Attribute 67 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi10"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -933,6 +1000,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi11 $Attribute 68 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi11"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -940,6 +1008,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi12 $Attribute 69 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi12"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -947,6 +1016,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi13 $Attribute 70 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi13"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -954,6 +1024,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi14 $Attribute 71 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi14"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -961,6 +1032,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi15 $Attribute 72 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi15"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -968,6 +1040,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi16 $Attribute 73 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi16"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -975,6 +1048,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi17 $Attribute 74 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDi17"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -982,6 +1056,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo00 $Attribute 75 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo00"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -989,6 +1064,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo01 $Attribute 76 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo01"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -996,6 +1072,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo02 $Attribute 77 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo02"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1003,6 +1080,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo03 $Attribute 78 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo03"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1010,6 +1088,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo04 $Attribute 79 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo04"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1017,6 +1096,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo05 $Attribute 80 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo05"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1024,6 +1104,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo06 $Attribute 81 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo06"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1031,6 +1112,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo07 $Attribute 82 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo07"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1038,6 +1120,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo10 $Attribute 83 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo10"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1045,6 +1128,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo11 $Attribute 84 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo11"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1052,6 +1136,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo12 $Attribute 85 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo12"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1059,6 +1144,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo13 $Attribute 86 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo13"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1066,6 +1152,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo14 $Attribute 87 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo14"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1073,6 +1160,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo15 $Attribute 88 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo15"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1080,6 +1168,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo16 $Attribute 89 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo16"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1087,6 +1176,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo17 $Attribute 90 24-NOV-2010 09:35:38.65
           Body SysBody 24-NOV-2010 09:35:38.65
             Attr PgmName = "ChDo17"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1187,6 +1277,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 10 24-NOV-2010 09:38:48.75
           Body SysBody 24-NOV-2010 09:38:48.75
             Attr PgmName = "Ch"
+            Attr Size = 1280
             Attr Flags = 131074
             Attr Elements = 8
             Attr TypeRef = "pwrb:Class-ChanDi"
@@ -1235,6 +1326,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch00 $Attribute 39 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch00"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1242,6 +1334,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch01 $Attribute 40 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch01"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1249,6 +1342,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch02 $Attribute 41 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch02"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1256,6 +1350,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch03 $Attribute 42 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch03"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1263,6 +1358,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch04 $Attribute 43 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch04"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1270,6 +1366,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch05 $Attribute 44 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch05"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1277,6 +1374,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch06 $Attribute 45 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch06"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1284,6 +1382,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch07 $Attribute 46 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch07"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1291,6 +1390,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch10 $Attribute 47 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch10"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1298,6 +1398,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch11 $Attribute 48 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch11"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1305,6 +1406,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch12 $Attribute 49 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch12"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1312,6 +1414,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch13 $Attribute 50 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch13"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1319,6 +1422,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch14 $Attribute 51 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch14"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1326,6 +1430,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch15 $Attribute 52 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch15"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1333,6 +1438,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch16 $Attribute 53 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch16"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1340,6 +1446,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch17 $Attribute 54 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch17"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1347,6 +1454,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch20 $Attribute 55 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch20"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1354,6 +1462,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch21 $Attribute 56 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch21"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1361,6 +1470,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch22 $Attribute 57 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch22"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1368,6 +1478,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch23 $Attribute 58 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch23"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1375,6 +1486,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch24 $Attribute 59 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch24"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1382,6 +1494,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch25 $Attribute 60 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch25"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1389,6 +1502,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch26 $Attribute 61 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch26"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1396,6 +1510,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch27 $Attribute 62 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch27"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1403,6 +1518,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch30 $Attribute 63 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch30"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1410,6 +1526,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch31 $Attribute 64 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch31"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1417,6 +1534,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch32 $Attribute 65 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch32"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1424,6 +1542,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch33 $Attribute 66 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch33"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1431,6 +1550,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch34 $Attribute 67 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch34"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1438,6 +1558,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch35 $Attribute 68 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch35"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1445,6 +1566,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch36 $Attribute 69 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch36"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1452,6 +1574,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch37 $Attribute 70 24-NOV-2010 09:39:24.78
           Body SysBody 24-NOV-2010 09:39:24.78
             Attr PgmName = "Ch37"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1536,6 +1659,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch00 $Attribute 25 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch00"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1543,6 +1667,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch01 $Attribute 26 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch01"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1550,6 +1675,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch02 $Attribute 27 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch02"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1557,6 +1683,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch03 $Attribute 28 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch03"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1564,6 +1691,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch04 $Attribute 29 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch04"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1571,6 +1699,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch05 $Attribute 30 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch05"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1578,6 +1707,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch06 $Attribute 31 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch06"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1585,6 +1715,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch07 $Attribute 32 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch07"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1592,6 +1723,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch10 $Attribute 33 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch10"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1599,6 +1731,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch11 $Attribute 34 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch11"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1606,6 +1739,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch12 $Attribute 35 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch12"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1613,6 +1747,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch13 $Attribute 36 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch13"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1620,6 +1755,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch14 $Attribute 37 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch14"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1627,6 +1763,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch15 $Attribute 38 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch15"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1634,6 +1771,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch16 $Attribute 39 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch16"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1641,6 +1779,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch17 $Attribute 40 24-NOV-2010 09:40:02.37
           Body SysBody 24-NOV-2010 09:40:02.37
             Attr PgmName = "Ch17"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -1695,6 +1834,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 10 24-NOV-2010 09:40:28.60
           Body SysBody 24-NOV-2010 09:40:28.60
             Attr PgmName = "Ch"
+            Attr Size = 1344
             Attr Flags = 131074
             Attr Elements = 8
             Attr TypeRef = "pwrb:Class-ChanDo"
@@ -1735,6 +1875,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 6 24-NOV-2010 09:40:53.12
           Body SysBody 24-NOV-2010 09:40:53.12
             Attr PgmName = "Ch"
+            Attr Size = 1920
             Attr Flags = 131074
             Attr Elements = 8
             Attr TypeRef = "pwrb:Class-ChanAi"
@@ -1864,6 +2005,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 8 24-NOV-2010 09:41:22.49
           Body SysBody 24-NOV-2010 09:41:22.49
             Attr PgmName = "Ch"
+            Attr Size = 960
             Attr Flags = 131074
             Attr Elements = 4
             Attr TypeRef = "pwrb:Class-ChanAi"
@@ -1941,6 +2083,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 8 24-NOV-2010 09:43:00.72
           Body SysBody 24-NOV-2010 09:43:00.72
             Attr PgmName = "Ch"
+            Attr Size = 480
             Attr Flags = 131074
             Attr Elements = 2
             Attr TypeRef = "pwrb:Class-ChanAi"
@@ -1992,6 +2135,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 10 24-NOV-2010 09:45:24.46
           Body SysBody 24-NOV-2010 09:45:24.46
             Attr PgmName = "Ch"
+            Attr Size = 1920
             Attr Flags = 131074
             Attr Elements = 8
             Attr TypeRef = "pwrb:Class-ChanAo"
@@ -2105,6 +2249,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 10 24-NOV-2010 09:47:42.82
           Body SysBody 24-NOV-2010 09:47:42.82
             Attr PgmName = "Ch"
+            Attr Size = 960
             Attr Flags = 131074
             Attr Elements = 4
             Attr TypeRef = "pwrb:Class-ChanAo"
@@ -2174,6 +2319,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 8 24-NOV-2010 09:48:31.45
           Body SysBody 24-NOV-2010 09:48:31.45
             Attr PgmName = "Ch"
+            Attr Size = 480
             Attr Flags = 131074
             Attr Elements = 2
             Attr TypeRef = "pwrb:Class-ChanAo"
@@ -2221,6 +2367,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 5 24-NOV-2010 13:15:38.65
           Body SysBody 24-NOV-2010 13:16:19.38
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2228,6 +2375,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 6 24-NOV-2010 13:16:31.15
           Body SysBody 24-NOV-2010 13:17:39.54
             Attr PgmName = "Io"
+            Attr Size = 640
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Di4_IoModule"
           EndBody
@@ -2264,6 +2412,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 7 24-NOV-2010 13:18:37.48
           Body SysBody 24-NOV-2010 13:18:37.48
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2271,6 +2420,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 8 24-NOV-2010 13:18:37.48
           Body SysBody 24-NOV-2010 13:19:28.01
             Attr PgmName = "Io"
+            Attr Size = 320
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Di2_IoModule"
           EndBody
@@ -2301,6 +2451,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 7 24-NOV-2010 13:19:42.05
           Body SysBody 24-NOV-2010 13:19:42.05
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2308,6 +2459,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 8 24-NOV-2010 13:19:42.05
           Body SysBody 24-NOV-2010 13:20:21.12
             Attr PgmName = "Io"
+            Attr Size = 672
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Do4_IoModule"
           EndBody
@@ -2340,6 +2492,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 7 24-NOV-2010 13:20:33.65
           Body SysBody 24-NOV-2010 13:20:33.65
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2347,6 +2500,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 8 24-NOV-2010 13:20:33.65
           Body SysBody 24-NOV-2010 13:21:12.69
             Attr PgmName = "Io"
+            Attr Size = 336
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Do2_IoModule"
           EndBody
@@ -2375,6 +2529,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 7 24-NOV-2010 13:21:24.46
           Body SysBody 24-NOV-2010 13:21:24.46
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2382,6 +2537,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 8 24-NOV-2010 13:21:24.46
           Body SysBody 24-NOV-2010 13:21:52.21
             Attr PgmName = "Io"
+            Attr Size = 5120
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Di32_IoModule"
           EndBody
@@ -2499,6 +2655,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 9 24-NOV-2010 13:22:17.40
           Body SysBody 24-NOV-2010 13:22:17.40
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2506,6 +2663,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 10 24-NOV-2010 13:22:17.40
           Body SysBody 24-NOV-2010 13:22:47.86
             Attr PgmName = "Io"
+            Attr Size = 2560
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Di16_IoModule"
           EndBody
@@ -2577,6 +2735,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 9 24-NOV-2010 13:23:13.91
           Body SysBody 24-NOV-2010 13:23:13.91
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2584,6 +2743,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 10 24-NOV-2010 13:23:13.91
           Body SysBody 24-NOV-2010 13:23:34.99
             Attr PgmName = "Io"
+            Attr Size = 5248
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Dx16_IoModule"
           EndBody
@@ -2685,6 +2845,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 9 24-NOV-2010 13:23:47.05
           Body SysBody 24-NOV-2010 13:23:47.05
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2692,6 +2853,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 10 24-NOV-2010 13:23:47.05
           Body SysBody 24-NOV-2010 13:24:13.37
             Attr PgmName = "Io"
+            Attr Size = 1280
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Di8_IoModule"
           EndBody
@@ -2740,6 +2902,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 9 24-NOV-2010 13:24:59.96
           Body SysBody 24-NOV-2010 13:24:59.96
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2747,6 +2910,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 10 24-NOV-2010 13:24:59.96
           Body SysBody 24-NOV-2010 13:25:21.22
             Attr PgmName = "Io"
+            Attr Size = 5376
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Do32_IoModule"
           EndBody
@@ -2832,6 +2996,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 11 24-NOV-2010 13:25:32.83
           Body SysBody 24-NOV-2010 13:25:32.83
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2839,6 +3004,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 12 24-NOV-2010 13:25:32.83
           Body SysBody 24-NOV-2010 13:26:02.89
             Attr PgmName = "Io"
+            Attr Size = 2688
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Do16_IoModule"
           EndBody
@@ -2894,6 +3060,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 11 24-NOV-2010 13:26:06.33
           Body SysBody 24-NOV-2010 13:26:06.33
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2901,6 +3068,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 12 24-NOV-2010 13:26:06.33
           Body SysBody 28-OCT-2011 10:45:19.69
             Attr PgmName = "Io"
+            Attr Size = 1344
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Do8_IoModule"
           EndBody
@@ -2941,6 +3109,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 11 24-NOV-2010 13:26:27.69
           Body SysBody 24-NOV-2010 13:26:27.69
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -2948,6 +3117,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 12 24-NOV-2010 13:26:27.69
           Body SysBody 24-NOV-2010 13:26:55.09
             Attr PgmName = "Io"
+            Attr Size = 1920
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Ai8_IoModule"
           EndBody
@@ -3077,6 +3247,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 13 24-NOV-2010 13:26:58.08
           Body SysBody 24-NOV-2010 13:26:58.08
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -3084,6 +3255,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 14 24-NOV-2010 13:26:58.08
           Body SysBody 24-NOV-2010 13:27:13.75
             Attr PgmName = "Io"
+            Attr Size = 960
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Ai4_IoModule"
           EndBody
@@ -3161,6 +3333,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 13 24-NOV-2010 13:27:18.55
           Body SysBody 24-NOV-2010 13:27:18.55
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -3168,6 +3341,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 14 24-NOV-2010 13:27:18.55
           Body SysBody 24-NOV-2010 13:27:42.97
             Attr PgmName = "Io"
+            Attr Size = 480
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Ai2_IoModule"
           EndBody
@@ -3219,6 +3393,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 13 24-NOV-2010 13:27:51.44
           Body SysBody 24-NOV-2010 13:27:51.44
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -3226,6 +3401,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 14 24-NOV-2010 13:27:51.44
           Body SysBody 24-NOV-2010 13:28:11.85
             Attr PgmName = "Io"
+            Attr Size = 1920
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Ao8_IoModule"
           EndBody
@@ -3339,6 +3515,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 15 24-NOV-2010 13:28:19.30
           Body SysBody 24-NOV-2010 13:28:19.30
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -3346,6 +3523,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 16 24-NOV-2010 13:28:19.30
           Body SysBody 24-NOV-2010 13:28:40.84
             Attr PgmName = "Io"
+            Attr Size = 960
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Ao4_IoModule"
           EndBody
@@ -3415,6 +3593,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 15 24-NOV-2010 13:28:48.99
           Body SysBody 24-NOV-2010 13:28:48.99
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -3422,6 +3601,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 16 24-NOV-2010 13:28:48.99
           Body SysBody 24-NOV-2010 13:29:08.95
             Attr PgmName = "Io"
+            Attr Size = 480
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_Ao2_IoModule"
           EndBody
@@ -3478,6 +3658,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 1 06-OCT-2005 14:40:44.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -3485,6 +3666,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 2 06-OCT-2005 14:40:44.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch"
+            Attr Size = 480
             Attr Flags = 131074
             Attr Elements = 2
             Attr TypeRef = "pwrb:Class-ChanAi"
@@ -3547,6 +3729,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 3 06-OCT-2005 14:40:44.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -3554,6 +3737,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 4 06-OCT-2005 14:40:44.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch"
+            Attr Size = 480
             Attr Flags = 131074
             Attr Elements = 2
             Attr TypeRef = "pwrb:Class-ChanAo"
@@ -3588,6 +3772,65 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndBody
       EndObject
     EndObject
+    Object Siemens_ET200S_Di8 $ClassDef 69 02-APR-2014 13:29:33.74
+      Body SysBody 02-APR-2014 13:29:06.44
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-APR-2014 13:29:06.46
+        Body SysBody 02-APR-2014 13:29:52.90
+          Attr StructName = "Siemens_ET200S_Di8"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Super $Attribute 5 02-APR-2014 13:29:06.46
+          Body SysBody 02-APR-2014 13:29:06.46
+            Attr PgmName = "Super"
+            Attr Size = 376
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 6 02-APR-2014 13:29:06.46
+          Body SysBody 02-APR-2014 13:30:02.60
+            Attr PgmName = "Ch"
+            Attr Size = 1280
+            Attr Flags = 131074
+            Attr Elements = 8
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200S_Di8 2165800960 02-APR-2014 13:29:06.46
+        Body RtBody 02-APR-2014 13:34:05.05
+          Attr Super.Specification = "Siemens ET200S 8 Di"
+          Attr Super.Process = 1
+          Attr Ch[0].ConversionOn = 1
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].ConversionOn = 1
+          Attr Ch[1].Representation = 8
+          Attr Ch[2].Number = 2
+          Attr Ch[2].ConversionOn = 1
+          Attr Ch[2].Representation = 8
+          Attr Ch[3].Number = 3
+          Attr Ch[3].ConversionOn = 1
+          Attr Ch[3].Representation = 8
+          Attr Ch[4].Number = 4
+          Attr Ch[4].ConversionOn = 1
+          Attr Ch[4].Representation = 8
+          Attr Ch[5].Number = 5
+          Attr Ch[5].ConversionOn = 1
+          Attr Ch[5].Representation = 8
+          Attr Ch[6].Number = 6
+          Attr Ch[6].ConversionOn = 1
+          Attr Ch[6].Representation = 8
+          Attr Ch[7].Number = 7
+          Attr Ch[7].ConversionOn = 1
+          Attr Ch[7].Representation = 8
+        EndBody
+      EndObject
+    EndObject
     !/**
     !  @Version 1.0
     !  @Group Profibus
@@ -3611,6 +3854,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 3 06-OCT-2005 14:40:44.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -3618,6 +3862,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 4 06-OCT-2005 14:40:44.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch"
+            Attr Size = 640
             Attr Flags = 131074
             Attr Elements = 4
             Attr TypeRef = "pwrb:Class-ChanDi"
@@ -3665,6 +3910,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 5 02-MAY-2006 13:06:58.96
           Body SysBody 02-MAY-2006 13:06:58.96
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -3672,6 +3918,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 6 02-MAY-2006 13:06:58.96
           Body SysBody 02-MAY-2006 13:07:14.65
             Attr PgmName = "Ch"
+            Attr Size = 320
             Attr Flags = 131074
             Attr Elements = 2
             Attr TypeRef = "pwrb:Class-ChanDi"
@@ -3687,6 +3934,57 @@ Volume Siemens $ClassVolume 0.0.250.3
           Attr Ch[1].Number = 1
           Attr Ch[1].ConversionOn = 1
           Attr Ch[1].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_ET200S_Do8 $ClassDef 70 02-APR-2014 13:30:24.24
+      Body SysBody 02-APR-2014 13:30:14.43
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-APR-2014 13:30:14.43
+        Body SysBody 02-APR-2014 13:30:31.65
+          Attr StructName = "Siemens_ET200S_Do8"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Super $Attribute 5 02-APR-2014 13:30:14.43
+          Body SysBody 02-APR-2014 13:30:14.43
+            Attr PgmName = "Super"
+            Attr Size = 376
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 6 02-APR-2014 13:30:14.43
+          Body SysBody 02-APR-2014 13:30:39.38
+            Attr PgmName = "Ch"
+            Attr Size = 1344
+            Attr Flags = 131074
+            Attr Elements = 8
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200S_Do8 2166063104 02-APR-2014 13:30:14.43
+        Body RtBody 02-APR-2014 13:35:54.71
+          Attr Super.Specification = "Siemens ET200S 8 Do"
+          Attr Super.Process = 1
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].Representation = 8
+          Attr Ch[2].Number = 2
+          Attr Ch[2].Representation = 8
+          Attr Ch[3].Number = 3
+          Attr Ch[3].Representation = 8
+          Attr Ch[4].Number = 4
+          Attr Ch[4].Representation = 8
+          Attr Ch[5].Number = 5
+          Attr Ch[5].Representation = 8
+          Attr Ch[6].Number = 6
+          Attr Ch[6].Representation = 8
+          Attr Ch[7].Number = 7
+          Attr Ch[7].Representation = 8
         EndBody
       EndObject
     EndObject
@@ -3713,6 +4011,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 3 06-OCT-2005 14:40:44.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -3720,6 +4019,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 4 06-OCT-2005 14:40:44.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch"
+            Attr Size = 672
             Attr Flags = 131074
             Attr Elements = 4
             Attr TypeRef = "pwrb:Class-ChanDo"
@@ -3763,6 +4063,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 5 02-MAY-2006 13:07:29.85
           Body SysBody 02-MAY-2006 13:07:29.85
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -3770,6 +4071,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 6 02-MAY-2006 13:07:29.85
           Body SysBody 02-MAY-2006 13:07:48.96
             Attr PgmName = "Ch"
+            Attr Size = 336
             Attr Flags = 131074
             Attr Elements = 2
             Attr TypeRef = "pwrb:Class-ChanDo"
@@ -3809,6 +4111,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 5 02-MAY-2006 12:53:56.35
           Body SysBody 02-MAY-2006 12:53:56.35
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -3816,6 +4119,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch00 $Attribute 6 04-MAY-2006 16:14:23.12
           Body SysBody 04-MAY-2006 16:14:32.56
             Attr PgmName = "Ch00"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3823,6 +4127,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch01 $Attribute 37 04-MAY-2006 16:14:59.12
           Body SysBody 04-MAY-2006 16:15:00.09
             Attr PgmName = "Ch01"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3830,6 +4135,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch02 $Attribute 36 04-MAY-2006 16:15:03.33
           Body SysBody 04-MAY-2006 16:15:04.81
             Attr PgmName = "Ch02"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3837,6 +4143,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch03 $Attribute 35 04-MAY-2006 16:15:08.04
           Body SysBody 04-MAY-2006 16:15:08.84
             Attr PgmName = "Ch03"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3844,6 +4151,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch04 $Attribute 34 04-MAY-2006 16:15:11.97
           Body SysBody 04-MAY-2006 16:15:12.76
             Attr PgmName = "Ch04"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3851,6 +4159,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch05 $Attribute 33 04-MAY-2006 16:15:18.25
           Body SysBody 04-MAY-2006 16:15:19.48
             Attr PgmName = "Ch05"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3858,6 +4167,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch06 $Attribute 32 04-MAY-2006 16:15:22.67
           Body SysBody 04-MAY-2006 16:15:23.64
             Attr PgmName = "Ch06"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3865,6 +4175,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch07 $Attribute 31 04-MAY-2006 16:15:26.77
           Body SysBody 04-MAY-2006 16:15:28.60
             Attr PgmName = "Ch07"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3872,6 +4183,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch10 $Attribute 30 04-MAY-2006 16:15:33.07
           Body SysBody 04-MAY-2006 16:15:34.31
             Attr PgmName = "Ch10"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3879,6 +4191,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch11 $Attribute 29 04-MAY-2006 16:15:40.44
           Body SysBody 04-MAY-2006 16:15:42.13
             Attr PgmName = "Ch11"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3886,6 +4199,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch12 $Attribute 28 04-MAY-2006 16:15:45.07
           Body SysBody 04-MAY-2006 16:15:46.04
             Attr PgmName = "Ch12"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3893,6 +4207,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch13 $Attribute 27 04-MAY-2006 16:15:50.39
           Body SysBody 04-MAY-2006 16:15:51.26
             Attr PgmName = "Ch13"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3900,6 +4215,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch14 $Attribute 26 04-MAY-2006 16:15:54.25
           Body SysBody 04-MAY-2006 16:15:55.15
             Attr PgmName = "Ch14"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3907,6 +4223,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch15 $Attribute 25 04-MAY-2006 16:15:58.50
           Body SysBody 04-MAY-2006 16:16:01.69
             Attr PgmName = "Ch15"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3914,6 +4231,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch16 $Attribute 24 04-MAY-2006 16:16:04.79
           Body SysBody 04-MAY-2006 16:16:08.53
             Attr PgmName = "Ch16"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3921,6 +4239,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch17 $Attribute 23 04-MAY-2006 16:16:13.86
           Body SysBody 04-MAY-2006 16:16:14.72
             Attr PgmName = "Ch17"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3928,6 +4247,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch20 $Attribute 22 04-MAY-2006 16:16:23.70
           Body SysBody 04-MAY-2006 16:16:25.58
             Attr PgmName = "Ch20"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3935,6 +4255,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch21 $Attribute 21 04-MAY-2006 16:16:30.99
           Body SysBody 04-MAY-2006 16:16:31.85
             Attr PgmName = "Ch21"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3942,6 +4263,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch22 $Attribute 20 04-MAY-2006 16:16:34.71
           Body SysBody 04-MAY-2006 16:16:35.46
             Attr PgmName = "Ch22"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3949,6 +4271,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch23 $Attribute 19 04-MAY-2006 16:16:39.20
           Body SysBody 04-MAY-2006 16:16:39.96
             Attr PgmName = "Ch23"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3956,6 +4279,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch24 $Attribute 18 04-MAY-2006 16:16:42.63
           Body SysBody 04-MAY-2006 16:16:43.40
             Attr PgmName = "Ch24"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3963,6 +4287,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch25 $Attribute 17 04-MAY-2006 16:16:46.45
           Body SysBody 04-MAY-2006 16:16:47.24
             Attr PgmName = "Ch25"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3970,6 +4295,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch26 $Attribute 16 04-MAY-2006 16:16:51.61
           Body SysBody 04-MAY-2006 16:16:52.33
             Attr PgmName = "Ch26"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3977,6 +4303,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch27 $Attribute 15 04-MAY-2006 16:16:56.62
           Body SysBody 04-MAY-2006 16:16:57.43
             Attr PgmName = "Ch27"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3984,6 +4311,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch30 $Attribute 14 04-MAY-2006 16:17:03.42
           Body SysBody 04-MAY-2006 16:17:05.18
             Attr PgmName = "Ch30"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3991,6 +4319,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch31 $Attribute 13 04-MAY-2006 16:17:12.74
           Body SysBody 04-MAY-2006 16:17:13.44
             Attr PgmName = "Ch31"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3998,6 +4327,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch32 $Attribute 12 04-MAY-2006 16:17:18.86
           Body SysBody 04-MAY-2006 16:17:19.70
             Attr PgmName = "Ch32"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4005,6 +4335,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch33 $Attribute 11 04-MAY-2006 16:17:29.66
           Body SysBody 04-MAY-2006 16:17:33.77
             Attr PgmName = "Ch33"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4012,6 +4343,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch34 $Attribute 10 04-MAY-2006 16:17:37.59
           Body SysBody 04-MAY-2006 16:17:38.93
             Attr PgmName = "Ch34"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4019,6 +4351,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch35 $Attribute 9 04-MAY-2006 16:17:42.29
           Body SysBody 04-MAY-2006 16:17:43.10
             Attr PgmName = "Ch35"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4026,6 +4359,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch36 $Attribute 8 04-MAY-2006 16:17:46.38
           Body SysBody 04-MAY-2006 16:17:47.18
             Attr PgmName = "Ch36"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4033,6 +4367,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch37 $Attribute 7 04-MAY-2006 16:17:51.29
           Body SysBody 04-MAY-2006 16:17:52.10
             Attr PgmName = "Ch37"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4160,6 +4495,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 7 02-MAY-2006 12:55:59.86
           Body SysBody 02-MAY-2006 12:55:59.86
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -4167,6 +4503,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch00 $Attribute 8 04-MAY-2006 16:09:41.05
           Body SysBody 04-MAY-2006 16:10:01.72
             Attr PgmName = "Ch00"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4174,6 +4511,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch01 $Attribute 9 04-MAY-2006 16:10:29.85
           Body SysBody 04-MAY-2006 16:10:31.54
             Attr PgmName = "Ch01"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4181,6 +4519,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch02 $Attribute 10 04-MAY-2006 16:10:35.75
           Body SysBody 04-MAY-2006 16:10:36.64
             Attr PgmName = "Ch02"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4188,6 +4527,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch03 $Attribute 11 04-MAY-2006 16:10:40.20
           Body SysBody 04-MAY-2006 16:10:42.06
             Attr PgmName = "Ch03"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4195,6 +4535,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch04 $Attribute 12 04-MAY-2006 16:10:46.60
           Body SysBody 04-MAY-2006 16:10:47.37
             Attr PgmName = "Ch04"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4202,6 +4543,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch05 $Attribute 13 04-MAY-2006 16:10:51.32
           Body SysBody 04-MAY-2006 16:10:52.17
             Attr PgmName = "Ch05"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4209,6 +4551,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch06 $Attribute 14 04-MAY-2006 16:10:55.39
           Body SysBody 04-MAY-2006 16:10:56.23
             Attr PgmName = "Ch06"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4216,6 +4559,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch07 $Attribute 15 04-MAY-2006 16:10:59.88
           Body SysBody 04-MAY-2006 16:11:01.29
             Attr PgmName = "Ch07"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4223,6 +4567,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch10 $Attribute 16 04-MAY-2006 16:11:08.61
           Body SysBody 04-MAY-2006 16:11:10.44
             Attr PgmName = "Ch10"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4230,6 +4575,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch11 $Attribute 17 04-MAY-2006 16:11:13.91
           Body SysBody 04-MAY-2006 16:11:17.33
             Attr PgmName = "Ch11"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4237,6 +4583,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch12 $Attribute 18 04-MAY-2006 16:11:22.42
           Body SysBody 04-MAY-2006 16:11:23.36
             Attr PgmName = "Ch12"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4244,6 +4591,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch13 $Attribute 19 04-MAY-2006 16:11:28.32
           Body SysBody 04-MAY-2006 16:11:29.07
             Attr PgmName = "Ch13"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4251,6 +4599,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch14 $Attribute 20 04-MAY-2006 16:11:32.80
           Body SysBody 04-MAY-2006 16:11:34.71
             Attr PgmName = "Ch14"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4258,6 +4607,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch15 $Attribute 21 04-MAY-2006 16:11:38.82
           Body SysBody 04-MAY-2006 16:11:39.59
             Attr PgmName = "Ch15"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4265,6 +4615,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch16 $Attribute 22 04-MAY-2006 16:11:43.30
           Body SysBody 04-MAY-2006 16:11:44.74
             Attr PgmName = "Ch16"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4272,6 +4623,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch17 $Attribute 23 04-MAY-2006 16:11:51.78
           Body SysBody 04-MAY-2006 16:11:52.55
             Attr PgmName = "Ch17"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4346,13 +4698,14 @@ Volume Siemens $ClassVolume 0.0.250.3
         Attr Flags = 18448
       EndBody
       Object RtBody $ObjBodyDef 1 19-OCT-2007 08:59:54.72
-        Body SysBody 19-OCT-2007 08:59:54.72
-          Attr StructName = "Siemens_ET200M_Di16"
+        Body SysBody 02-APR-2014 13:32:12.29
+          Attr StructName = "Siemens_ET200M_Dx16"
           Attr NextAix = "_X58"
         EndBody
         Object Super $Attribute 25 19-OCT-2007 08:59:54.72
           Body SysBody 19-OCT-2007 08:59:54.72
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -4360,6 +4713,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi00 $Attribute 26 19-OCT-2007 09:03:51.06
           Body SysBody 19-OCT-2007 09:03:52.82
             Attr PgmName = "ChDi00"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4367,6 +4721,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi01 $Attribute 27 19-OCT-2007 09:04:01.13
           Body SysBody 19-OCT-2007 09:04:02.37
             Attr PgmName = "ChDi01"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4374,6 +4729,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi02 $Attribute 28 19-OCT-2007 09:04:07.57
           Body SysBody 19-OCT-2007 09:04:09.56
             Attr PgmName = "ChDi02"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4381,6 +4737,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi03 $Attribute 29 19-OCT-2007 09:04:14.37
           Body SysBody 19-OCT-2007 09:04:15.62
             Attr PgmName = "ChDi03"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4388,6 +4745,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi04 $Attribute 30 19-OCT-2007 09:04:19.19
           Body SysBody 19-OCT-2007 09:04:20.52
             Attr PgmName = "ChDi04"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4395,6 +4753,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi05 $Attribute 31 19-OCT-2007 09:04:24.80
           Body SysBody 19-OCT-2007 09:04:26.08
             Attr PgmName = "ChDi05"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4402,6 +4761,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi06 $Attribute 32 19-OCT-2007 09:04:29.99
           Body SysBody 19-OCT-2007 09:04:32.12
             Attr PgmName = "ChDi06"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4409,6 +4769,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi07 $Attribute 33 19-OCT-2007 09:04:35.26
           Body SysBody 19-OCT-2007 09:04:37.05
             Attr PgmName = "ChDi07"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4416,6 +4777,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi10 $Attribute 34 19-OCT-2007 09:04:41.64
           Body SysBody 19-OCT-2007 09:04:43.75
             Attr PgmName = "ChDi10"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4423,6 +4785,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi11 $Attribute 35 19-OCT-2007 09:06:49.65
           Body SysBody 19-OCT-2007 09:06:50.87
             Attr PgmName = "ChDi11"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4430,6 +4793,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi12 $Attribute 36 19-OCT-2007 09:06:55.07
           Body SysBody 19-OCT-2007 09:06:56.23
             Attr PgmName = "ChDi12"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4437,6 +4801,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi13 $Attribute 37 19-OCT-2007 09:06:59.69
           Body SysBody 19-OCT-2007 09:07:00.75
             Attr PgmName = "ChDi13"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4444,6 +4809,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi14 $Attribute 38 19-OCT-2007 09:07:04.02
           Body SysBody 19-OCT-2007 09:07:05.06
             Attr PgmName = "ChDi14"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4451,6 +4817,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi15 $Attribute 39 19-OCT-2007 09:07:08.28
           Body SysBody 19-OCT-2007 09:07:10.15
             Attr PgmName = "ChDi15"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4458,6 +4825,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi16 $Attribute 40 19-OCT-2007 09:07:25.67
           Body SysBody 19-OCT-2007 09:07:26.77
             Attr PgmName = "ChDi16"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4465,6 +4833,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDi17 $Attribute 41 19-OCT-2007 09:07:33.21
           Body SysBody 19-OCT-2007 09:07:34.73
             Attr PgmName = "ChDi17"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -4472,6 +4841,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo00 $Attribute 42 19-OCT-2007 09:08:13.28
           Body SysBody 19-OCT-2007 09:08:19.08
             Attr PgmName = "ChDo00"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4479,6 +4849,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo01 $Attribute 43 19-OCT-2007 09:08:47.38
           Body SysBody 19-OCT-2007 09:08:48.44
             Attr PgmName = "ChDo01"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4486,6 +4857,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo02 $Attribute 44 19-OCT-2007 09:08:52.74
           Body SysBody 19-OCT-2007 09:08:53.94
             Attr PgmName = "ChDo02"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4493,6 +4865,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo03 $Attribute 45 19-OCT-2007 09:08:56.69
           Body SysBody 19-OCT-2007 09:08:58.14
             Attr PgmName = "ChDo03"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4500,6 +4873,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo04 $Attribute 46 19-OCT-2007 09:09:01.00
           Body SysBody 19-OCT-2007 09:09:04.25
             Attr PgmName = "ChDo04"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4507,6 +4881,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo05 $Attribute 47 19-OCT-2007 09:09:08.43
           Body SysBody 19-OCT-2007 09:09:09.67
             Attr PgmName = "ChDo05"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4514,6 +4889,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo06 $Attribute 48 19-OCT-2007 09:09:12.54
           Body SysBody 19-OCT-2007 09:09:13.81
             Attr PgmName = "ChDo06"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4521,6 +4897,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo07 $Attribute 49 19-OCT-2007 09:09:16.79
           Body SysBody 19-OCT-2007 09:09:18.29
             Attr PgmName = "ChDo07"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4528,6 +4905,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo10 $Attribute 50 19-OCT-2007 09:09:29.72
           Body SysBody 19-OCT-2007 09:09:46.52
             Attr PgmName = "ChDo10"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4535,6 +4913,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo11 $Attribute 51 19-OCT-2007 09:09:35.38
           Body SysBody 19-OCT-2007 09:09:39.18
             Attr PgmName = "ChDo11"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4542,6 +4921,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo12 $Attribute 52 19-OCT-2007 09:09:58.21
           Body SysBody 19-OCT-2007 09:09:59.22
             Attr PgmName = "ChDo12"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4549,6 +4929,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo13 $Attribute 53 19-OCT-2007 09:10:02.17
           Body SysBody 19-OCT-2007 09:10:03.22
             Attr PgmName = "ChDo13"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4556,6 +4937,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo14 $Attribute 54 19-OCT-2007 09:10:06.17
           Body SysBody 19-OCT-2007 09:10:07.41
             Attr PgmName = "ChDo14"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4563,6 +4945,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo15 $Attribute 55 19-OCT-2007 09:10:10.33
           Body SysBody 19-OCT-2007 09:10:11.37
             Attr PgmName = "ChDo15"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4570,6 +4953,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo16 $Attribute 56 19-OCT-2007 09:10:14.25
           Body SysBody 19-OCT-2007 09:10:15.44
             Attr PgmName = "ChDo16"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4577,6 +4961,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object ChDo17 $Attribute 57 19-OCT-2007 09:10:18.17
           Body SysBody 19-OCT-2007 09:10:19.28
             Attr PgmName = "ChDo17"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4688,6 +5073,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 7 02-MAY-2006 12:55:58.53
           Body SysBody 02-MAY-2006 12:55:58.53
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -4695,6 +5081,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 8 02-MAY-2006 12:55:58.53
           Body SysBody 02-MAY-2006 12:56:58.75
             Attr PgmName = "Ch"
+            Attr Size = 1280
             Attr Flags = 131074
             Attr Elements = 8
             Attr TypeRef = "pwrb:Class-ChanDi"
@@ -4754,6 +5141,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 5 02-MAY-2006 12:58:55.53
           Body SysBody 02-MAY-2006 12:58:55.53
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -4761,6 +5149,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch00 $Attribute 6 04-MAY-2006 16:21:01.77
           Body SysBody 04-MAY-2006 16:21:02.85
             Attr PgmName = "Ch00"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4768,6 +5157,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch01 $Attribute 37 04-MAY-2006 16:21:17.82
           Body SysBody 04-MAY-2006 16:21:18.63
             Attr PgmName = "Ch01"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4775,6 +5165,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch02 $Attribute 36 04-MAY-2006 16:21:22.76
           Body SysBody 04-MAY-2006 16:21:24.28
             Attr PgmName = "Ch02"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4782,6 +5173,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch03 $Attribute 35 04-MAY-2006 16:21:27.40
           Body SysBody 04-MAY-2006 16:21:28.17
             Attr PgmName = "Ch03"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4789,6 +5181,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch04 $Attribute 34 04-MAY-2006 16:21:30.93
           Body SysBody 04-MAY-2006 16:21:31.72
             Attr PgmName = "Ch04"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4796,6 +5189,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch05 $Attribute 33 04-MAY-2006 16:21:35.03
           Body SysBody 04-MAY-2006 16:21:35.77
             Attr PgmName = "Ch05"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4803,6 +5197,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch06 $Attribute 32 04-MAY-2006 16:21:38.63
           Body SysBody 04-MAY-2006 16:21:39.44
             Attr PgmName = "Ch06"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4810,6 +5205,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch07 $Attribute 31 04-MAY-2006 16:21:43.04
           Body SysBody 04-MAY-2006 16:21:43.81
             Attr PgmName = "Ch07"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4817,6 +5213,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch10 $Attribute 30 04-MAY-2006 16:22:01.98
           Body SysBody 04-MAY-2006 16:22:02.95
             Attr PgmName = "Ch10"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4824,6 +5221,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch11 $Attribute 29 04-MAY-2006 16:21:53.78
           Body SysBody 04-MAY-2006 16:21:54.62
             Attr PgmName = "Ch11"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4831,6 +5229,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch12 $Attribute 28 04-MAY-2006 16:22:10.35
           Body SysBody 04-MAY-2006 16:22:11.17
             Attr PgmName = "Ch12"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4838,6 +5237,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch13 $Attribute 27 04-MAY-2006 16:22:15.01
           Body SysBody 04-MAY-2006 16:22:15.70
             Attr PgmName = "Ch13"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4845,6 +5245,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch14 $Attribute 26 04-MAY-2006 16:22:18.32
           Body SysBody 04-MAY-2006 16:22:19.07
             Attr PgmName = "Ch14"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4852,6 +5253,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch15 $Attribute 25 04-MAY-2006 16:22:21.68
           Body SysBody 04-MAY-2006 16:22:23.68
             Attr PgmName = "Ch15"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4859,6 +5261,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch16 $Attribute 24 04-MAY-2006 16:22:27.11
           Body SysBody 04-MAY-2006 16:22:27.87
             Attr PgmName = "Ch16"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4866,6 +5269,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch17 $Attribute 23 04-MAY-2006 16:22:30.66
           Body SysBody 04-MAY-2006 16:22:33.14
             Attr PgmName = "Ch17"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4873,6 +5277,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch20 $Attribute 22 04-MAY-2006 16:22:37.98
           Body SysBody 04-MAY-2006 16:22:39.57
             Attr PgmName = "Ch20"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4880,6 +5285,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch21 $Attribute 21 04-MAY-2006 16:22:43.16
           Body SysBody 04-MAY-2006 16:22:43.92
             Attr PgmName = "Ch21"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4887,6 +5293,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch22 $Attribute 20 04-MAY-2006 16:22:47.14
           Body SysBody 04-MAY-2006 16:22:50.48
             Attr PgmName = "Ch22"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4894,6 +5301,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch23 $Attribute 19 04-MAY-2006 16:22:54.29
           Body SysBody 04-MAY-2006 16:22:55.09
             Attr PgmName = "Ch23"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4901,6 +5309,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch24 $Attribute 18 04-MAY-2006 16:22:57.81
           Body SysBody 04-MAY-2006 16:22:58.65
             Attr PgmName = "Ch24"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4908,6 +5317,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch25 $Attribute 17 04-MAY-2006 16:23:01.29
           Body SysBody 04-MAY-2006 16:23:02.13
             Attr PgmName = "Ch25"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4915,6 +5325,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch26 $Attribute 16 04-MAY-2006 16:23:04.68
           Body SysBody 04-MAY-2006 16:23:07.09
             Attr PgmName = "Ch26"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4922,6 +5333,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch27 $Attribute 15 04-MAY-2006 16:23:10.47
           Body SysBody 04-MAY-2006 16:23:11.29
             Attr PgmName = "Ch27"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4929,6 +5341,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch30 $Attribute 14 04-MAY-2006 16:23:16.00
           Body SysBody 04-MAY-2006 16:23:18.05
             Attr PgmName = "Ch30"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4936,6 +5349,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch31 $Attribute 13 04-MAY-2006 16:23:22.43
           Body SysBody 04-MAY-2006 16:23:23.68
             Attr PgmName = "Ch31"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4943,6 +5357,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch32 $Attribute 12 04-MAY-2006 16:23:27.43
           Body SysBody 04-MAY-2006 16:23:30.22
             Attr PgmName = "Ch32"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4950,6 +5365,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch33 $Attribute 11 04-MAY-2006 16:23:32.91
           Body SysBody 04-MAY-2006 16:23:34.69
             Attr PgmName = "Ch33"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4957,6 +5373,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch34 $Attribute 10 04-MAY-2006 16:23:37.29
           Body SysBody 04-MAY-2006 16:23:38.61
             Attr PgmName = "Ch34"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4964,6 +5381,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch35 $Attribute 9 04-MAY-2006 16:23:41.12
           Body SysBody 04-MAY-2006 16:23:41.82
             Attr PgmName = "Ch35"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4971,6 +5389,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch36 $Attribute 8 04-MAY-2006 16:23:44.52
           Body SysBody 04-MAY-2006 16:23:46.62
             Attr PgmName = "Ch36"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4978,6 +5397,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch37 $Attribute 7 04-MAY-2006 16:23:49.15
           Body SysBody 04-MAY-2006 16:23:50.90
             Attr PgmName = "Ch37"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5073,6 +5493,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 7 02-MAY-2006 12:59:38.44
           Body SysBody 02-MAY-2006 12:59:38.44
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -5080,6 +5501,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch00 $Attribute 8 04-MAY-2006 16:26:32.11
           Body SysBody 04-MAY-2006 16:26:41.00
             Attr PgmName = "Ch00"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5087,6 +5509,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch01 $Attribute 23 04-MAY-2006 16:27:01.32
           Body SysBody 04-MAY-2006 16:27:02.42
             Attr PgmName = "Ch01"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5094,6 +5517,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch02 $Attribute 22 04-MAY-2006 16:27:05.40
           Body SysBody 04-MAY-2006 16:27:06.21
             Attr PgmName = "Ch02"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5101,6 +5525,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch03 $Attribute 21 04-MAY-2006 16:27:12.15
           Body SysBody 04-MAY-2006 16:27:12.93
             Attr PgmName = "Ch03"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5108,6 +5533,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch04 $Attribute 20 04-MAY-2006 16:27:15.95
           Body SysBody 04-MAY-2006 16:27:16.76
             Attr PgmName = "Ch04"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5115,6 +5541,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch05 $Attribute 19 04-MAY-2006 16:27:23.87
           Body SysBody 04-MAY-2006 16:27:25.63
             Attr PgmName = "Ch05"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5122,6 +5549,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch06 $Attribute 18 04-MAY-2006 16:27:28.37
           Body SysBody 04-MAY-2006 16:27:29.24
             Attr PgmName = "Ch06"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5129,6 +5557,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch07 $Attribute 17 04-MAY-2006 16:27:32.03
           Body SysBody 04-MAY-2006 16:27:32.92
             Attr PgmName = "Ch07"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5136,6 +5565,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch10 $Attribute 16 04-MAY-2006 16:28:04.62
           Body SysBody 04-MAY-2006 16:28:06.00
             Attr PgmName = "Ch10"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5143,6 +5573,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch11 $Attribute 15 04-MAY-2006 16:28:12.51
           Body SysBody 04-MAY-2006 16:28:13.37
             Attr PgmName = "Ch11"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5150,6 +5581,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch12 $Attribute 14 04-MAY-2006 16:28:16.43
           Body SysBody 04-MAY-2006 16:28:17.42
             Attr PgmName = "Ch12"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5157,6 +5589,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch13 $Attribute 13 04-MAY-2006 16:28:20.17
           Body SysBody 04-MAY-2006 16:28:20.95
             Attr PgmName = "Ch13"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5164,6 +5597,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch14 $Attribute 12 04-MAY-2006 16:28:23.41
           Body SysBody 04-MAY-2006 16:28:24.18
             Attr PgmName = "Ch14"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5171,6 +5605,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch15 $Attribute 11 04-MAY-2006 16:28:27.01
           Body SysBody 04-MAY-2006 16:28:27.73
             Attr PgmName = "Ch15"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5178,6 +5613,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch16 $Attribute 10 04-MAY-2006 16:28:36.32
           Body SysBody 04-MAY-2006 16:28:34.86
             Attr PgmName = "Ch16"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5185,6 +5621,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch17 $Attribute 9 04-MAY-2006 16:28:39.83
           Body SysBody 04-MAY-2006 16:28:40.64
             Attr PgmName = "Ch17"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -5250,6 +5687,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 7 02-MAY-2006 12:59:37.94
           Body SysBody 02-MAY-2006 12:59:37.94
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -5257,6 +5695,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 8 02-MAY-2006 12:59:37.94
           Body SysBody 02-MAY-2006 13:00:46.00
             Attr PgmName = "Ch"
+            Attr Size = 1344
             Attr Flags = 131074
             Attr Elements = 8
             Attr TypeRef = "pwrb:Class-ChanDo"
@@ -5308,6 +5747,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 3 02-MAY-2006 13:01:52.00
           Body SysBody 02-MAY-2006 13:01:52.00
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -5315,6 +5755,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 4 02-MAY-2006 13:01:52.00
           Body SysBody 02-MAY-2006 13:02:32.38
             Attr PgmName = "Ch"
+            Attr Size = 1920
             Attr Flags = 131074
             Attr Elements = 8
             Attr TypeRef = "pwrb:Class-ChanAi"
@@ -5455,6 +5896,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 5 02-MAY-2006 13:02:46.87
           Body SysBody 02-MAY-2006 13:02:46.87
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -5462,6 +5904,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 6 02-MAY-2006 13:02:46.87
           Body SysBody 02-MAY-2006 13:11:54.34
             Attr PgmName = "Ch"
+            Attr Size = 960
             Attr Flags = 131074
             Attr Elements = 4
             Attr TypeRef = "pwrb:Class-ChanAi"
@@ -5550,6 +5993,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 5 02-MAY-2006 13:02:46.25
           Body SysBody 02-MAY-2006 13:02:46.25
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -5557,6 +6001,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 6 02-MAY-2006 13:02:46.25
           Body SysBody 02-MAY-2006 13:03:29.27
             Attr PgmName = "Ch"
+            Attr Size = 480
             Attr Flags = 131074
             Attr Elements = 2
             Attr TypeRef = "pwrb:Class-ChanAi"
@@ -5617,6 +6062,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 7 02-MAY-2006 13:04:53.22
           Body SysBody 02-MAY-2006 13:04:53.22
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -5624,6 +6070,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 8 02-MAY-2006 13:04:53.22
           Body SysBody 02-MAY-2006 13:05:34.03
             Attr PgmName = "Ch"
+            Attr Size = 1920
             Attr Flags = 131074
             Attr Elements = 8
             Attr TypeRef = "pwrb:Class-ChanAo"
@@ -5748,6 +6195,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 7 02-MAY-2006 13:04:52.64
           Body SysBody 02-MAY-2006 13:04:52.64
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -5755,6 +6203,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 8 02-MAY-2006 13:04:52.64
           Body SysBody 02-MAY-2006 13:05:40.30
             Attr PgmName = "Ch"
+            Attr Size = 960
             Attr Flags = 131074
             Attr Elements = 4
             Attr TypeRef = "pwrb:Class-ChanAo"
@@ -5835,6 +6284,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 5 02-MAY-2006 13:04:16.84
           Body SysBody 02-MAY-2006 13:04:16.84
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -5842,6 +6292,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Ch $Attribute 6 02-MAY-2006 13:04:16.84
           Body SysBody 02-MAY-2006 13:04:16.84
             Attr PgmName = "Ch"
+            Attr Size = 480
             Attr Flags = 131074
             Attr Elements = 2
             Attr TypeRef = "pwrb:Class-ChanAo"
@@ -5919,6 +6370,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 1 04-APR-2006 14:54:01.57
           Body SysBody 04-APR-2006 14:54:29.77
             Attr PgmName = "Super"
+            Attr Size = 2456
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_DP_Slave"
           EndBody
@@ -5996,6 +6448,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 2 02-MAY-2006 11:49:53.66
           Body SysBody 02-MAY-2006 11:49:53.66
             Attr PgmName = "Super"
+            Attr Size = 2456
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_DP_Slave"
           EndBody
@@ -6048,6 +6501,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 3 24-NOV-2010 14:40:04.73
           Body SysBody 24-NOV-2010 14:40:04.73
             Attr PgmName = "Super"
+            Attr Size = 2456
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_DP_Slave"
           EndBody
@@ -6099,6 +6553,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 3 24-NOV-2010 09:12:49.08
           Body SysBody 24-NOV-2010 09:13:51.42
             Attr PgmName = "Super"
+            Attr Size = 976
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnDevice"
           EndBody
@@ -6159,6 +6614,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 4 25-NOV-2010 14:33:53.49
           Body SysBody 25-NOV-2010 14:33:53.49
             Attr PgmName = "Super"
+            Attr Size = 976
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnDevice"
           EndBody
@@ -6212,6 +6668,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 4 25-NOV-2010 14:34:56.17
           Body SysBody 25-NOV-2010 14:34:56.17
             Attr PgmName = "Super"
+            Attr Size = 976
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnDevice"
           EndBody
@@ -6252,6 +6709,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 17 24-NOV-2010 13:44:52.26
           Body SysBody 24-NOV-2010 13:44:52.26
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-PnModule"
           EndBody
@@ -6259,6 +6717,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 18 24-NOV-2010 13:44:52.26
           Body SysBody 24-NOV-2010 13:45:47.46
             Attr PgmName = "Io"
+            Attr Size = 808
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-BaseFcPPO3IoModule"
           EndBody
@@ -6330,6 +6789,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 19 24-NOV-2010 14:28:29.53
           Body SysBody 24-NOV-2010 14:29:33.97
             Attr PgmName = "Super"
+            Attr Size = 376
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
@@ -6337,6 +6797,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Io $Attribute 20 24-NOV-2010 14:28:29.53
           Body SysBody 24-NOV-2010 14:28:29.53
             Attr PgmName = "Io"
+            Attr Size = 808
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-BaseFcPPO3IoModule"
           EndBody
@@ -6407,6 +6868,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 4 25-NOV-2010 09:36:42.49
           Body SysBody 25-NOV-2010 09:37:51.67
             Attr PgmName = "Super"
+            Attr Size = 13472
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseFcPPO3"
           EndBody
@@ -7622,66 +8084,77 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object SlotNr $Attribute 1 25-APR-2007 14:41:31.15
           Body SysBody 25-APR-2007 14:43:57.13
             Attr PgmName = "SlotNr"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object LineDiag $Attribute 2 26-APR-2007 13:43:12.01
           Body SysBody 26-APR-2007 13:43:41.16
             Attr PgmName = "LineDiag"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object TopologyON $Attribute 10 26-APR-2007 13:43:57.88
           Body SysBody 26-APR-2007 13:44:00.32
             Attr PgmName = "TopologyON"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object SegmentON $Attribute 11 26-APR-2007 13:44:09.84
           Body SysBody 26-APR-2007 13:44:13.93
             Attr PgmName = "SegmentON"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object FaultRate $Attribute 3 25-APR-2007 14:46:53.19
           Body SysBody 25-APR-2007 14:47:01.30
             Attr PgmName = "FaultRate"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object SlaveX $Attribute 4 25-APR-2007 14:48:01.16
           Body SysBody 25-APR-2007 14:48:03.13
             Attr PgmName = "SlaveX"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object SlaveY $Attribute 5 25-APR-2007 14:48:12.61
           Body SysBody 25-APR-2007 14:48:15.80
             Attr PgmName = "SlaveY"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object X_Dist $Attribute 6 25-APR-2007 14:48:51.19
           Body SysBody 25-APR-2007 14:48:52.13
             Attr PgmName = "X_Dist"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object Y_Dist $Attribute 7 25-APR-2007 14:48:47.62
           Body SysBody 25-APR-2007 14:48:49.10
             Attr PgmName = "Y_Dist"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object DR_Dist $Attribute 8 25-APR-2007 14:48:57.07
           Body SysBody 25-APR-2007 14:49:01.61
             Attr PgmName = "DR_Dist"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object ErrCause $Attribute 9 25-APR-2007 14:50:29.75
           Body SysBody 25-APR-2007 14:50:44.93
             Attr PgmName = "ErrCause"
+            Attr Size = 4
             Attr TypeRef = "Siemens:Type-SiemDR_ErrCause"
           EndBody
         EndObject
@@ -7705,6 +8178,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object Super $Attribute 3 25-APR-2007 13:26:06.87
           Body SysBody 25-APR-2007 13:26:06.87
             Attr PgmName = "Super"
+            Attr Size = 2456
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_DP_Slave"
           EndBody
@@ -7712,6 +8186,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object DP1 $Attribute 4 26-APR-2007 13:41:04.51
           Body SysBody 26-APR-2007 13:41:34.58
             Attr PgmName = "DP1"
+            Attr Size = 48
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_DR_SegmStatus"
           EndBody
@@ -7719,6 +8194,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object DP2 $Attribute 5 26-APR-2007 13:42:14.40
           Body SysBody 26-APR-2007 13:42:16.14
             Attr PgmName = "DP2"
+            Attr Size = 48
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_DR_SegmStatus"
           EndBody
@@ -7726,6 +8202,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object DP3 $Attribute 6 26-APR-2007 13:42:22.24
           Body SysBody 26-APR-2007 13:42:24.65
             Attr PgmName = "DP3"
+            Attr Size = 48
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_DR_SegmStatus"
           EndBody
@@ -7733,6 +8210,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         Object PG $Attribute 7 26-APR-2007 13:42:29.91
           Body SysBody 26-APR-2007 13:42:31.71
             Attr PgmName = "PG"
+            Attr Size = 48
             Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_DR_SegmStatus"
           EndBody
