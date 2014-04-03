@@ -893,6 +893,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		public static final int LOGIN = 22;
     	        public static final int CLASS_HELP = 23;
     	        public static final int FLOW_CLASSHELP = 24;
+    	        public static final int OPEN_GRAPH_OBJECT = 25;
 		
 		@Override
 		protected Void doInBackground(GdhTaskArg... arg) {
@@ -1251,6 +1252,42 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 									
 				System.out.println("Open " + fname);
 				new ReaderTask().execute(new ReaderTaskArg(ReaderTask.GROW_READ, fname, rName.str));
+				break;
+			}
+			case OPEN_GRAPH_OBJECT: {
+				String objectStr = (String)arg[0].item;
+				String objectName;
+
+				// Replace * by node object
+				if ( objectStr.charAt(0) == '*') {
+				    CdhrObjid cdhr_node = gdh.getNodeObject(0);
+				    if ( cdhr_node.evenSts())
+					break;
+				    CdhrString cdhr_nodestr = gdh.objidToName( cdhr_node.objid, Cdh.mName_volumeStrict);
+				    objectName = cdhr_nodestr.str + objectStr.substring(1);
+				}
+				else
+				    objectName = objectStr;
+
+				String attrName = objectName + ".Action";
+				CdhrString cdhr = gdh.getObjectInfoString( attrName);
+				if ( cdhr.evenSts()) {
+				    System.out.println("Object name error");
+				    break;
+				}
+				int idx = cdhr.str.lastIndexOf( ".pwg");
+				if ( idx == -1)
+				    break;
+
+				String fname = cdhr.str;
+
+				attrName = objectName + ".Object";
+				cdhr = gdh.getObjectInfoString( attrName);
+				String instance = null;
+				if ( cdhr.oddSts() && !cdhr.str.equals(""))
+				    instance = cdhr.str;
+
+				new ReaderTask().execute(new ReaderTaskArg(ReaderTask.GROW_READ, fname, instance));
 				break;
 			}
 			case EVENTHANDLER: {
@@ -2151,7 +2188,13 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
         				String graphName = null;
         				String instanceValue = null;
         				boolean classGraph = false;
-
+					String objectValue = null;
+					
+        				if ( cli.qualifierFound("/OBJECT")) {
+        					objectValue = cli.getQualValue("/OBJECT");
+    						new GdhTask().execute(new GdhTaskArg(GdhTask.OPEN_GRAPH_OBJECT, objectValue));
+						return 1;
+					}
         				if ( cli.qualifierFound("/INSTANCE")) {
         					instanceValue = cli.getQualValue("/INSTANCE");
         					classGraph = cli.qualifierFound("/CLASSGRAPH");		      
