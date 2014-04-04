@@ -47,6 +47,7 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <pthread.h>
+#include <signal.h>
 
 #include "pwr.h"
 #include "co_cdh.h"
@@ -77,6 +78,10 @@ typedef struct {
   int idx;
 } mb_sCondata;
 
+static void signal_callback_handler(int signum){
+  printf("Caught signal SIGPIPE %d\n",signum);
+}
+
 static void mb_close_connection( io_sRack *rp, int l_idx) 
 {
   pwr_sClass_Modbus_TCP_Server *op = (pwr_sClass_Modbus_TCP_Server *) rp->op;
@@ -87,7 +92,7 @@ static void mb_close_connection( io_sRack *rp, int l_idx)
   close( local->connections[l_idx].c_socket);
   local->connections[l_idx].occupied = 0;
   op->Connections--;
-}
+}	
 
 static void *mb_receive( void *data)
 {
@@ -788,6 +793,9 @@ static pwr_tStatus IoRackInit (
   int 		i;
   unsigned short port;
     
+  // Ignore SIGPIPE signal
+  signal( SIGPIPE, signal_callback_handler);
+
   op = (pwr_sClass_Modbus_TCP_Server *) rp->op;
   op->Connections = 0;
 
