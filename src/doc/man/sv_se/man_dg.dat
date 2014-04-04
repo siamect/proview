@@ -1898,6 +1898,12 @@ och detta görs genom att välja ut signalen i konfiguratören, och sedan trycka ne
 tangenten och dubbelklicka med MB1 på GetDi objektet. Signalnamnet visas nu i objektet. Dv
 signaler, Do signaler och attribut hämtas på samma sätt med GetDv, GetDo resp GetDp objekt.
 
+Enklaste sättat att skapa ett Get objekt är att rita en koppling från den kopplingspunkt som
+Get-objektet ska vara kopplat till, och släppa den på ett tomt ställe i arbetsarean. Nu skapas
+ett generiskt Get-objekt som omvandlas till ett Get-objekt av rätt typ när signalen specificeras
+Signalen specificeras som tidigare genom att välja ut signalen i anläggnings-hierarkin och 
+klicka med Ctrl/dubbelklick på Get-objektet.
+
 <h2>Lagra ett värde i en signal
 Värdet från en utgång på ett funktionsobjekt lagras i en Do signal med ett StoDo objekt.
 StoDo objektet kopplas till Do signalen på samma sätt som Get objekt. Dv signaler och 
@@ -3038,6 +3044,7 @@ ALCM (ett Digital protokoll, modell äldre, supportas av historiska skäl)
 Serial
 Modbus/RTU Serial
 3964R (seriellt protokoll från Siemens)
+Webspear MQ
 
 Konfigurationen av varje protokoll beskrivs längre ner.
 RemNode-objekt placeras under RemoteConfig-objektet.
@@ -3083,6 +3090,7 @@ BEA Message Queue <link> bea_mq
 Serial <link> serial
 3964-R <link> 3964r
 Modbus Serial <link> modbus_serial
+Websphear MQ <link> websphear_mq
 <option> printenable
 </topic>
 
@@ -3285,6 +3293,22 @@ stort, lagra meddelandet och DataValid flaggan sätts.
 <h2>Skicka meddelanden
 Meddelanden som sänds använder innehållet i RemTrans.Address[0] och [1} för fälten för
 slav-adress och funktions-kod i meddelandets header.
+</topic>
+
+<topic>websphear_mq
+Websphear MQ
+RemnodeWMQ är en transport för att sända meddelanden med Websphear Message Queue (WMQ). Det kräver
+att Websphear MQ är installerat på noden.
+
+RemnodeWMQ konfigurerar kommunikation genom en meddelande-kö och använder Websphear MQ som klient.
+Allt som har med Server, kanal, kö-manager och kö att koppla till konfigureras i RemnodeWMQ-objektet.
+
+Konfigurationen för de olika meddelandena konfigureras i RemTrans objekt som definierar varje
+in och utgående meddelande. För varje RemTrans-meddelande konfigureras följande:
+
+TransName  <t> en sträng som definierar MsgId (identitet för meddelandet).
+Address[0] <t> definierar om meddelandet ska sändas som ett 'persistent' meddelande eller inte, dvs
+           <t> loggas på disk eller inte. 1 betyder att det kommer att sändas som 'persistent'.
 </topic>
 </headerlevel>
 
@@ -5141,6 +5165,22 @@ När runtime-mijön är startad kan man utforska systemet genom att starta runtime 
 
 Man kan även använda runtime-monitorn för att starta runtime-miljön. Se nedan.
 </topic>
+
+<headerlevel>
+<topic> simserver
+Simulerings-server
+En simulerings-server kan startas för att kontrollera exekveringen av plc-programmet, och för att
+kunna lagra det nuvarande tillståndet av databasen och återskapade vid ett senare tillfälle.
+
+Simulerings-servern, rt_sim, konfigureras med ett SimulateConfig objekt. I runtime hanteras
+servern från objektsbilden för SimulateConfig objektet.
+
+
+<image> dg_fig121.png
+<b>Fig Simulerings-server
+</topic>
+</headerlevel>
+
 
 <topic>runtime monitor
 Runtime Monitorn
