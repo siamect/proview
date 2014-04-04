@@ -1,8 +1,8 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X629"
+    Attr NextOix = "_X632"
     Attr NextCix = "_X47"
-    Attr NextTix[0] = "_X17"
+    Attr NextTix[0] = "_X18"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
     Object MotionControl_StatusEnum $TypeDef 1 15-NOV-2007 14:36:24.17
@@ -246,7 +246,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       EndObject
     EndObject
     Object ModbusSever_StatusEnum $TypeDef 4 25-NOV-2009 11:10:38.85
-      Body SysBody 13-DEC-2010 21:41:14.95
+      Body SysBody 03-APR-2014 13:45:03.70
         Attr TypeRef = "pwrs:Type-$Enum"
         Attr Elements = 1
       EndBody
@@ -296,6 +296,32 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr Text = "SeverBusy"
           Attr PgmName = "SeverBusy"
           Attr Value = 6
+        EndBody
+      EndObject
+    EndObject
+    Object Modbus_DisableEnum $TypeDef 0 03-APR-2014 13:43:57.18
+      Body SysBody 03-APR-2014 13:45:08.43
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object No $Value 630 03-APR-2014 13:44:16.86
+        Body SysBody 03-APR-2014 13:44:20.30
+          Attr Text = "No"
+          Attr PgmName = "No"
+        EndBody
+      EndObject
+      Object Disable $Value 631 03-APR-2014 13:44:25.15
+        Body SysBody 03-APR-2014 13:44:28.45
+          Attr Text = "Disable"
+          Attr PgmName = "Disable"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object Close $Value 632 03-APR-2014 13:44:33.37
+        Body SysBody 03-APR-2014 13:44:37.18
+          Attr Text = "Close"
+          Attr PgmName = "Close"
+          Attr Value = 2
         EndBody
       EndObject
     EndObject
@@ -2266,14 +2292,16 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
         !/**
-        ! @Summary Flag that disables the slave.
-        ! Flag that disables the initialization of the slave, if initialized turns off i/o-handling.
+        ! Disables the slave.
+        ! When set to Disable no messages are sent. When Close is activated the
+        ! connection is also closed. Note that the value is set to Disable
+        ! after a Close is performed.
         !*/
         Object DisableSlave $Attribute 16 20-FEB-2008 15:38:59.22
-          Body SysBody 08-SEP-2008 14:45:03.01
+          Body SysBody 03-APR-2014 13:45:59.34
             Attr PgmName = "DisableSlave"
             Attr Size = 4
-            Attr TypeRef = "pwrb:Type-YesNoEnum"
+            Attr TypeRef = "OtherIO:Type-Modbus_DisableEnum"
           EndBody
         EndObject
         !/**
@@ -9883,17 +9911,17 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  PiFace Digital is an IO interface card to Raspberry Pi.
     !  The card contains 8 digital inputs and 8 digital outputs.
     !  The inputs and outputs are configured with internal channel arrays, ChDi and ChDo.
-    !
+    ! 
     !  The board uses the SPI bus which has to be enabled on the Raspberry Pi. See
     !  the PiFace manual for more information.
-    !
+    ! 
     !  The PiFace_Digital object is configured as a child to a generic Rack object of class
     !  BaseIORack.
     ! 
     !  The PiFace Digital interface uses the libpiface-V1.0 archive. If Process is set to Plc
     !  this archive has to be present in the development enviroment, and specified in a 
     !  BuildOptions object. If this is not the case, use the default IoComm process.
-    !
+    ! 
     !  @b See also
     !  @classlink BaseIORack basecomponent_baseiorack.html
     !  @link Datasheet ../dsh/piface_digital.pdf
@@ -9961,7 +9989,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
-        EndObject 
+        EndObject
         !/**
         ! Digital input channel array.
         !*/
@@ -10052,7 +10080,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  Gertboard is an IO interface card to Raspberry Pi.
     !  This object handles 12 buffered IO that can be configured as digital inputs or outputs,
     !  two analog inputs and two analog outputs.
-    !
+    ! 
     !  @h2 Digital channels
     !  The buffered IO is configured with internal channel objects Buf1 - Buf12 of type ChanD.
     !  Each buffered IO is connected to a gpio on the Raspberry Pi and the gpio number should be
@@ -10063,7 +10091,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  revision. 
     !  Note also that if the analog input or output is used, five of the gpio are reserved for 
     !  the SPI bus and these should not be configured for buffered IO. 
-    !
+    ! 
     !  @h2 Analog channels
     !  The analog channels uses the SPI bus and thus five of the gpio are used for the bus
     !  communication. These have to be configured on the board. See the Gertboard manual for more

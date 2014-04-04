@@ -868,12 +868,20 @@ static pwr_tStatus IoRackRead (
   
   sp = (pwr_sClass_Modbus_TCP_Slave *) rp->op;
 
+  if ( sp->DisableSlave == 2) {
+    sp->Status = MB__CONNDOWN;
+    close(local->s);
+    sp->DisableSlave = 1;
+  }
+  if ( sp->Status == MB__DISABLED && sp->DisableSlave == 0)
+    sp->Status = MB__NORMAL;
+
   if (((sp->Status == MB__CONNDOWN) || (sp->Status == MB__CONNLOST)) && sp->DisableSlave != 1) {
     /* Reconnect */
 
     time_GetTimeMonotonic( &now);
     time_Adiff(&dt, &now, &local->last_try_connect_time); 
-   if (dt.tv_sec >= (1 << MIN(sp->ReconnectCount, 6))) {
+    if (dt.tv_sec >= (1 << MIN(sp->ReconnectCount, 6))) {
       sts = connect_slave(local, rp);
       if (sts >= 0) {
 	sp->ReconnectCount = 0;
@@ -905,7 +913,8 @@ static pwr_tStatus IoRackRead (
   }
   else {
     sp->ErrorCount = 0;
-    sp->Status = MB__DISABLED;
+    if ( sp->Status != MB__CONNDOWN)
+      sp->Status = MB__DISABLED;
   }
   
   return IO__SUCCESS;
@@ -935,7 +944,8 @@ static pwr_tStatus IoRackWrite (
     sts = mb_send_data(local, rp, sp, mb_mSendMask_WriteReq);
   }
 
-  if (sp->DisableSlave == 1) sp->Status = MB__DISABLED;
+  if (sp->DisableSlave == 1 && sp->Status != MB__CONNDOWN) 
+    sp->Status = MB__DISABLED;
 
   return IO__SUCCESS;
 }
