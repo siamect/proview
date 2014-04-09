@@ -98,7 +98,6 @@ class Op {
   pwr_tAttrRef  button_aref[25];
   int	       	button_cnt;
   int	       	start_jop;
-  pwr_tAttrRef  autostart_aref[25];
   Jop	       	*jop;
   void 		(*command_cb)( void *, char *);
   void 		(*map_cb)( void *);
@@ -131,7 +130,6 @@ class Op {
   int 	appl_action( int idx);
   int 	jop_command( char *command);
   int   sup_init();
-  void  appl_startup();
   void activate_exit();
   void activate_aalarm_ack();
   void activate_balarm_ack();

@@ -3690,7 +3690,11 @@ int XNav::init_brow_base_cb( FlowCtx *fctx, void *client_data)
 	strcat( cmd, " /closebutton");
       xnav->command( cmd);
 
-      xnav->load_ev_from_opplace();
+      // xnav->load_ev_from_opplace();
+      // xnav->appl_startup();
+    }
+    else {
+      xnav->appl_startup();
     }
     if (xnav->op)
       xnav->op->set_title( xnav->user);
@@ -4258,4 +4262,57 @@ int XNav::eventlog_enabled()
     elog_enabled = (mhp->EventLogSize != 0);
   }
   return elog_enabled;
+}
+
+void XNav::appl_startup()
+{
+  pwr_tCmd cmd;
+  pwr_tAName name;
+  int sts;
+  pwr_tCid cid;
+
+  for ( unsigned int i = 0; i < sizeof(opplace_p->AutoStart)/sizeof(opplace_p->AutoStart[0]); i++) {
+    if ( cdh_ObjidIsNotNull( opplace_p->AutoStart[i].Objid)) {
+
+      sts = gdh_AttrrefToName( &opplace_p->AutoStart[i], name, sizeof(name), 
+				 cdh_mName_volumeStrict);
+      if ( EVEN(sts)) continue;
+	  
+      sts = gdh_GetAttrRefTid( &opplace_p->AutoStart[i], &cid);
+      if ( EVEN(sts)) continue;
+
+      switch ( cid) {
+      case pwr_cClass_XttGraph:
+	strcpy( cmd, "ope gra/obj=");
+	strcat( cmd, name);
+	if ( i == 0 && !op &&
+	     opplace_p->OpWindLayout & pwr_mOpWindLayoutMask_HideNavigator &&
+	     opplace_p->OpWindLayout & pwr_mOpWindLayoutMask_HideOperatorWindow) {
+	  strcat( cmd, "/main");
+	  load_ev_from_opplace();
+	}
+	
+	command( cmd);
+	break;
+      case pwr_cClass_XttMultiView:
+	strcpy( cmd, "ope mult ");
+	strcat( cmd, name);
+	if ( i == 0 && !op &&
+	     opplace_p->OpWindLayout & pwr_mOpWindLayoutMask_HideNavigator &&
+	     opplace_p->OpWindLayout & pwr_mOpWindLayoutMask_HideOperatorWindow) {
+	  strcat( cmd, "/main");
+	  load_ev_from_opplace();
+	}
+	
+	command( cmd);
+      default: ;
+      }
+    }
+  }
+  if ( opplace_p->OpWindLayout & pwr_mOpWindLayoutMask_HideNavigator ||
+       (!is_authorized( pwr_mAccess_RtNavigator | pwr_mAccess_System))) {
+    strcpy( cmd, "close navigator");
+    command( cmd);
+  }
+  
 }

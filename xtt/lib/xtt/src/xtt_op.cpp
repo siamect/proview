@@ -368,32 +368,3 @@ void Op::sup_scan( void *data)
   op->sup_timerid->add( time, sup_scan, op);
 }
 
-void Op::appl_startup()
-{
-  pwr_tCmd cmd;
-  pwr_tAName name;
-  int sts;
-
-  if ( command_cb) {
-
-    if ( layout_mask & pwr_mOpWindLayoutMask_HideNavigator ||
-	 (is_authorized_cb && !is_authorized_cb( parent_ctx, pwr_mAccess_RtNavigator | pwr_mAccess_System))) {
-      strcpy( cmd, "close navigator");
-      command_cb( parent_ctx, cmd);
-    }
-
-    for ( unsigned int i = 0; i < sizeof(autostart_aref)/sizeof(autostart_aref[0]); i++) {
-      if ( cdh_ObjidIsNotNull( autostart_aref[i].Objid)) {
-
-	sts = gdh_AttrrefToName( &autostart_aref[i], name, sizeof(name), 
-				 cdh_mName_volumeStrict);
-        if ( ODD(sts)) {
-	  strcpy( cmd, "ope gra/obj=");
-	  strcat( cmd, name);
-	  
-	  command_cb( parent_ctx, cmd);
-	}
-      }
-    }
-  }
-}

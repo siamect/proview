@@ -108,7 +108,10 @@ void XttMultiViewGtk::activate_exit( GtkWidget *w, gpointer data)
 {
   XttMultiViewGtk *multiview = (XttMultiViewGtk *)data;
   
-  delete multiview;
+  if ( multiview->options & ge_mOptions_IsMain)
+    (multiview->close_cb)( multiview->parent_ctx, multiview);
+  else
+    delete multiview;
 }
 
 

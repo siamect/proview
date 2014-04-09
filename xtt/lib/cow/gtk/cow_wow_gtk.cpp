@@ -176,6 +176,9 @@ void CoWowGtk::DisplayQuestion( void *ctx, const char *title, const char *text,
   gtk_box_pack_end( GTK_BOX(question_vbox), question_hboxbuttons, FALSE, FALSE, 15);
   gtk_container_add( GTK_CONTAINER(question_widget), question_vbox);
   gtk_widget_show_all( question_widget);
+
+  if ( m_transient_wid)
+    gtk_window_set_transient_for(GTK_WINDOW(question_widget), GTK_WINDOW(m_transient_wid));
 }
 
 void CoWowGtk::inputdialog_ok_cb( GtkWidget *w, gpointer data)
@@ -300,6 +303,9 @@ void CoWowGtk::CreateInputDialog( void *ctx, const char *title, const char *text
 			      strlen(textutf8), &pos);
     g_free( textutf8);
   }
+
+  if ( m_transient_wid)
+    gtk_window_set_transient_for(GTK_WINDOW(inputdialog_widget), GTK_WINDOW(m_transient_wid));
 }
 
 /************************************************************************
@@ -407,6 +413,8 @@ void CoWowGtk::DisplayText( const char *title, const char *text, int width, int 
   gtk_container_add( GTK_CONTAINER(dialog), displaytext_vbox);
   gtk_widget_show_all( dialog);
 
+  if ( m_transient_wid)
+    gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(m_transient_wid));
 }
 
 /************************************************************************
@@ -618,6 +626,9 @@ void *CoWowGtk::CreateList (
 
   // Set input focus to the scrolled list widget
   gtk_widget_grab_focus( ctx->list);
+
+  if ( m_transient_wid)
+    gtk_window_set_transient_for(GTK_WINDOW(ctx->toplevel), GTK_WINDOW(m_transient_wid));
 
   return ctx;
 }
@@ -1702,6 +1713,7 @@ void CoWowGtk::CreateBrowPrintDialogGtk( const char *title, void *brow_ctx, int 
     settings = (GtkPrintSettings *)g_object_ref( gtk_print_operation_get_print_settings( print));
   }
   g_object_unref( print);    
+
   *sts = WOW__SUCCESS;
 }
 

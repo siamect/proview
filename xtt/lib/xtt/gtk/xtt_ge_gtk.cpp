@@ -203,7 +203,9 @@ void XttGeGtk::activate_exit( GtkWidget *w, gpointer data)
 {
   XttGe *ge = (XttGe *)data;
 
-  if ( !(ge->options & ge_mOptions_Embedded))
+  if ( ge->options & ge_mOptions_IsMain)
+    (ge->close_cb)( ge->parent_ctx, ge);
+  else if ( !(ge->options & ge_mOptions_Embedded))
     delete ge;
 }
 
@@ -339,6 +341,8 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
     if ( basewidget) {
       gtk_window_set_transient_for(GTK_WINDOW(toplevel), GTK_WINDOW(basewidget));
     }
+    if ( options & ge_mOptions_IsMain)
+      CoWow::SetTransient( toplevel);
 
   }
   else {

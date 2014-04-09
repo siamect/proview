@@ -106,6 +106,7 @@ class CoWow {
   static bool m_autoremove;
   static bool m_printdialog_disable;
   static char m_default_printer[80];
+  static void *m_transient_wid;
 
  public:
   CoWow() {}
@@ -163,6 +164,7 @@ class CoWow {
   static void DisablePrintDialog() { m_printdialog_disable = true;}
   static bool PrintDialogIsDisabled() { return m_printdialog_disable;}
   static void SetAutoRemove( bool on) { m_autoremove = on;}
+  static void SetTransient( void *transient_wid) { m_transient_wid = transient_wid;}
 
 };
 

@@ -192,6 +192,18 @@ void XNavGtk::pop()
   gtk_window_present( GTK_WINDOW(top));
 }
 
+void XNavGtk::set_transient( void *basewidget) 
+{
+  GtkWidget *parent, *top;
+
+  parent = gtk_widget_get_parent( form_widget);
+  while( parent) {
+    top = parent;
+    parent = gtk_widget_get_parent( parent);
+  }
+  gtk_window_set_transient_for(GTK_WINDOW(top), GTK_WINDOW(basewidget));
+}
+
 RtTrace *XNavGtk::plctrace_new( pwr_tOid oid, pwr_tStatus *sts)
 {
   return new RtTraceGtk( this, form_widget, oid, sts);

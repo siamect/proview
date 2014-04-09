@@ -58,6 +58,7 @@ class XNavGtk : public XNav {
 
     void set_inputfocus();
     void pop();
+    void set_transient( void *basewidget);
     void create_popup_menu( pwr_sAttrRef attrref,
 			    xmenu_eItemType item_type,
 			    xmenu_mUtility caller, unsigned int priv,

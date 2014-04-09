@@ -1066,9 +1066,6 @@ int OpGtk::configure( char *opplace_str)
   if ( opplace_p->StartJavaProcess)
     start_jop = 1;
 
-  // Store autostart array
-  memcpy( autostart_aref, opplace_p->AutoStart, sizeof(autostart_aref)); 
-
   // Examine Graph objects
   for ( i = 0; i < sizeof(opplace_p->FastAvail)/sizeof(opplace_p->FastAvail[0]); i++) {
 

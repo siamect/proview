@@ -81,6 +81,16 @@ SObject pwrb:Type
        Attr Value = 4
      EndBody
     EndObject
+    !/**
+    !  All windows transient of main.
+    !*/
+    Object EnablePrintDialog $Bit
+     Body SysBody
+       Attr PgmName = "AllMainTransient"
+       Attr Text = "AllMainTransient"
+       Attr Value = 8
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

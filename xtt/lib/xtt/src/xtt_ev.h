@@ -133,6 +133,9 @@ class Ev {
     virtual void unmap_eve() {}
     virtual void unmap_ala() {}
     virtual void unmap_blk() {}
+    virtual void set_transient_eve( void *basewidget) {}
+    virtual void set_transient_ala( void *basewidget) {}
+    virtual void set_transient_blk( void *basewidget) {}
     virtual void set_title_ala( char *title) {}
     virtual EvAla *open_alarmlist_satellite( const char *title, pwr_tStatus *sts, 
 					     int width, int height, int x, int y, 

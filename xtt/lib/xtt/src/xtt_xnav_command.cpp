@@ -165,6 +165,7 @@ static int xnav_attribute_func (
 static int xnav_multiview_command_cb( void *gectx, char *command, void *caller);
 static int xnav_ge_command_cb( void *gectx, char *command, void *caller);
 static void xnav_ge_close_cb( void *xnav, void *gectx);
+static void xnav_multiview_close_cb( void *xnav, void *mvctx);
 //new code by Jonas Nylund 030131
 static void xnav_hist_close_cb( void *ctx);
 //end new code by Jonas Nylund 030131
@@ -270,7 +271,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/FILE", 
 			  "/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", 
 			  "/NAVIGATOR", "/CENTER", "/OBJECT", "/NEW", 
-			  "/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", 
+			  "/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", "/MAIN",
 			  "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/PARENT", "/PWINDOW",
 			  "/PINSTANCE", "/BYPASS", 
 			  "/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", "/FTYPE", 
@@ -1905,6 +1906,7 @@ static int	xnav_show_func(	void		*client_data,
     char arg2_str[80];
     int	arg2_sts;
     unsigned int options = 0;
+    void *basewidget = 0;
 
     if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
       options |= ev_mAlaOptions_FullScreen;
@@ -2015,6 +2017,15 @@ static int	xnav_show_func(	void		*client_data,
     }
     else {
       xnav->ev->map_eve( options);
+
+      if ( xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_AllMainTransient) {
+	if ( xnav->ge_main)
+	  basewidget = xnav->ge_main->get_widget();
+	else if ( xnav->multiview_main)
+	  basewidget = xnav->multiview_main->get_widget();
+	if ( basewidget)
+	  xnav->ev->set_transient_eve( basewidget);
+      }
     }
   }
   /*new code by Jonas Nylund 030122*/
@@ -2059,6 +2070,7 @@ static int	xnav_show_func(	void		*client_data,
     char arg2_str[80];
     int	arg2_sts;
     unsigned int options = 0;
+    void *basewidget = 0;
 
     if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
       options |= ev_mAlaOptions_FullScreen;
@@ -2168,11 +2180,21 @@ static int	xnav_show_func(	void		*client_data,
     }
     else {
 	xnav->ev->map_ala( options);
+
+	if ( xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_AllMainTransient) {
+	  if ( xnav->ge_main)
+	    basewidget = xnav->ge_main->get_widget();
+	  else if ( xnav->multiview_main)
+	    basewidget = xnav->multiview_main->get_widget();
+	  if ( basewidget)
+	    xnav->ev->set_transient_ala( basewidget);
+	}
     }
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "BLOCKLIST", strlen( arg1_str)) == 0)
   {
     unsigned int options = 0;
+    void *basewidget = 0;
 
     if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
       options |= ev_mAlaOptions_FullScreen;
@@ -2212,6 +2234,15 @@ static int	xnav_show_func(	void		*client_data,
     }
     else
       xnav->ev->map_blk( options);
+
+      if ( xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_AllMainTransient) {
+	if ( xnav->ge_main)
+	  basewidget = xnav->ge_main->get_widget();
+	else if ( xnav->multiview_main)
+	  basewidget = xnav->multiview_main->get_widget();
+	if ( basewidget)
+	  xnav->ev->set_transient_blk( basewidget);
+      }
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "USER", strlen( arg1_str)) == 0)
   {
@@ -2898,7 +2929,12 @@ static int	xnav_open_func(	void		*client_data,
     if ( ODD( dcli_get_qualifier( "/ICONIFY", 0, 0)))
       options |= ge_mOptions_Iconify;	   
     if ( ODD( dcli_get_qualifier( "/HIDE", 0, 0)))
-      options |= ge_mOptions_Invisible;	   
+      options |= ge_mOptions_Invisible;
+    if ( ODD( dcli_get_qualifier( "/MAIN", 0, 0)) && !xnav->op && !xnav->ge_main && !xnav->multiview_main) {
+      options |= ge_mOptions_IsMain;
+      if ( xnav->opplace_p->OpWindLayout & pwr_mOpWindLayoutMask_HideCloseButton)
+	options |= ge_mOptions_HideCloseButton;
+    }
 
     if ( ODD( dcli_get_qualifier( "/PWINDOW", pwindow_str, sizeof(pwindow_str)))) {
       char *pinstance_p = 0;
@@ -2924,6 +2960,12 @@ static int	xnav_open_func(	void		*client_data,
 			      (void **) &gectx))
 	  basewidget = gectx->get_widget();
       }
+    }
+    else if ( xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_AllMainTransient) {
+      if ( xnav->ge_main)
+	basewidget = xnav->ge_main->get_widget();
+      else if ( xnav->multiview_main)
+	basewidget = xnav->multiview_main->get_widget();
     }
 
     if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str)))) {
@@ -3264,6 +3306,11 @@ static int	xnav_open_func(	void		*client_data,
       options |= ge_mOptions_Iconify;	   
     if ( ODD( dcli_get_qualifier( "/HIDE", 0, 0)))
       options |= ge_mOptions_Invisible;	   
+    if ( ODD( dcli_get_qualifier( "/MAIN", 0, 0)) && !xnav->op && !xnav->ge_main && !xnav->multiview_main) {
+      options |= ge_mOptions_IsMain;
+      if ( xnav->opplace_p->OpWindLayout & pwr_mOpWindLayoutMask_HideCloseButton)
+	options |= ge_mOptions_HideCloseButton;
+    }
 
     if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str, sizeof(tmp_str)))) {
       nr = sscanf( tmp_str, "%d", &width);
@@ -3319,7 +3366,7 @@ static int	xnav_open_func(	void		*client_data,
 	xnav->message(' ', XNav::get_message(sts));
 	return sts;
       }
-      mvctx->close_cb = xnav_ge_close_cb;
+      mvctx->close_cb = xnav_multiview_close_cb;
       mvctx->help_cb = xnav_ge_help_cb;
       mvctx->display_in_xnav_cb = xnav_ge_display_in_xnav_cb;
       mvctx->popup_menu_cb = xnav_popup_menu_cb;
@@ -3330,6 +3377,14 @@ static int	xnav_open_func(	void		*client_data,
 
       xnav->appl.insert( applist_eType_MultiView, (void *)mvctx, &aref, "",
 			 NULL);
+
+      if ( options & ge_mOptions_IsMain) {
+	if ( xnav->opplace_p->OpWindLayout & pwr_mOpWindLayoutMask_HideCloseButton)
+	  options |= ge_mOptions_HideCloseButton;
+	if ( !xnav->op && !xnav->ge_main)
+	  xnav->multiview_main = mvctx;
+      }
+
     }
     return XNAV__SUCCESS;	
   }
@@ -3391,8 +3446,11 @@ static int	xnav_open_func(	void		*client_data,
 
     if ( !xnav->op)
     {
-      if ( EVEN( dcli_get_qualifier( "dcli_arg2", opplace_str, sizeof(opplace_str))))
-      {
+      if ( xnav->ge_main || xnav->multiview_main) {
+        xnav->message('E', "Main window alreay opened");
+        return XNAV__HOLDCOMMAND;
+      }
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", opplace_str, sizeof(opplace_str)))) {
         xnav->message('E', "Enter opplace");
         return XNAV__HOLDCOMMAND;
       }
@@ -3419,7 +3477,6 @@ static int	xnav_open_func(	void		*client_data,
 	xnav->op->add_close_button();
       strcpy( xnav->opplace_name, opplace_str);
       xnav->op->set_title( xnav->user);
-      xnav->op->appl_startup();
 
       // Load eventlist
       if ( xnav->ev) {
@@ -3428,6 +3485,7 @@ static int	xnav_open_func(	void		*client_data,
       }
 
       xnav->load_ev_from_opplace();
+      xnav->appl_startup();
     }
     else
     {
@@ -4408,7 +4466,7 @@ static int	xnav_open_func(	void		*client_data,
       xnav->clog = xnav->clog_new( "System Messages", &sts);
       if ( EVEN(sts)) {
         delete xnav->clog;
-        xnav->op = 0;
+        xnav->clog = 0;
         xnav->message('E', "Unable to open console log");
         return XNAV__SUCCESS;
       }
@@ -4485,6 +4543,7 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tAName object_str;
     pwr_tAttrRef aref;
     pwr_tStatus sts;
+    void *basewidget = 0;
 
     if ( ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
       sts = gdh_NameToAttrref( pwr_cNObjid, object_str, &aref);
@@ -4497,6 +4556,16 @@ static int	xnav_open_func(	void		*client_data,
     }
 
     xnav->pop();
+
+    if ( xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_AllMainTransient) {
+      if ( xnav->ge_main)
+	basewidget = xnav->ge_main->get_widget();
+      else if ( xnav->multiview_main)
+	basewidget = xnav->multiview_main->get_widget();
+      if ( basewidget)
+	xnav->set_transient( basewidget);
+    }
+
   }
   else
     xnav->message('E',"Syntax error");
@@ -4785,7 +4854,7 @@ static int	xnav_close_func(	void		*client_data,
   else if ( cdh_NoCaseStrncmp( arg1_str, "NAVIGATOR", strlen( arg1_str)) == 0)
   {
     if ( xnav->close_cb)
-      (xnav->close_cb)( xnav->parent_ctx, xnav->op ? 0 : 1);
+      (xnav->close_cb)( xnav->parent_ctx, xnav->op || xnav->ge_main || xnav->multiview_main ? 0 : 1);
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "ALL", strlen( arg1_str)) == 0)
   {
@@ -4988,9 +5057,32 @@ static int xnav_ge_command_cb( void *ctx, char *command, void *caller)
   return ((XNav *)ctx)->get_command_sts();
 }
 
-static void xnav_ge_close_cb( void *xnav, void *ctx)
+static void xnav_ge_close_cb( void *nav, void *ctx)
 {
-  ((XNav *)xnav)->appl.remove( (void *)ctx);
+  XNav *xnav = (XNav *)nav;
+
+  if ( ctx == xnav->ge_main) {
+    if ( xnav->close_cb)
+      (xnav->close_cb)( xnav->parent_ctx, 1);
+    else
+      exit(0);
+  }
+  else
+    xnav->appl.remove( (void *)ctx);
+}
+
+static void xnav_multiview_close_cb( void *nav, void *ctx)
+{
+  XNav *xnav = (XNav *)nav;
+
+  if ( ctx == xnav->multiview_main) {
+    if ( xnav->close_cb)
+      (xnav->close_cb)( xnav->parent_ctx, 1);
+    else
+      exit(0);
+  }
+  else
+    xnav->appl.remove( (void *)ctx);
 }
 
 //new code Jonas Nylund 030131
@@ -8374,7 +8466,10 @@ void XNav::open_graph( const char *name, const char *filename, int scrollbar, in
 		   object_name);
     if ( focus_name)
       gectx->set_object_focus( focus_name, input_focus_empty);
-
+    if ( options & ge_mOptions_IsMain) {
+      if ( !op && !multiview_main)
+	ge_main = gectx;
+    }
   }
 }
 

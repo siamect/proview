@@ -47,6 +47,7 @@
 bool CoWow::m_autoremove = false;
 bool CoWow::m_printdialog_disable = false;
 char CoWow::m_default_printer[80] = "";
+void *CoWow::m_transient_wid = 0;
 
 CoWow::~CoWow() {}
 

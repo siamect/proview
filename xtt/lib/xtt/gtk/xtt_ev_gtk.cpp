@@ -976,6 +976,21 @@ void EvGtk::unmap_blk()
   }
 }
 
+void EvGtk::set_transient_eve( void *basewidget) 
+{
+  gtk_window_set_transient_for(GTK_WINDOW(parent_wid_eve), GTK_WINDOW(basewidget));
+}
+
+void EvGtk::set_transient_ala( void *basewidget) 
+{
+  gtk_window_set_transient_for(GTK_WINDOW(parent_wid_ala), GTK_WINDOW(basewidget));
+}
+
+void EvGtk::set_transient_blk( void *basewidget) 
+{
+  gtk_window_set_transient_for(GTK_WINDOW(parent_wid_blk), GTK_WINDOW(basewidget));
+}
+
 void EvGtk::set_title_ala( char *title) 
 {
     g_object_set( parent_wid_ala, "title", title, NULL);

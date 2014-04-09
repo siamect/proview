@@ -84,6 +84,9 @@ class EvGtk : public Ev {
     void unmap_eve();
     void unmap_ala();
     void unmap_blk();
+    void set_transient_eve( void *basewidget);
+    void set_transient_ala( void *basewidget);
+    void set_transient_blk( void *basewidget);
     void set_title_ala( char *title);
     EvAla *open_alarmlist_satellite( const char *title, pwr_tStatus *sts,
 				     int width, int height, int x, int y, pwr_tObjid view, 

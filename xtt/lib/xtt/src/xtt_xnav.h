@@ -215,7 +215,9 @@ typedef enum {
         ge_mOptions_FullMaximize = 1 << 2,
         ge_mOptions_Iconify      = 1 << 3,
         ge_mOptions_Invisible    = 1 << 4,
-        ge_mOptions_Embedded     = 1 << 5
+        ge_mOptions_Embedded     = 1 << 5,
+        ge_mOptions_IsMain    	 = 1 << 6,
+        ge_mOptions_HideCloseButton = 1 << 7
 } ge_mOptions;
 
 class XNav;
@@ -298,6 +300,8 @@ class XNav {
     xnav_sMenu 		*menu_tree;
     Ev			*ev;
     Op			*op;
+    XttGe		*ge_main;
+    XttMultiView	*multiview_main;
     CLog		*clog;
     int			closing_down;
     pwr_tOName		opplace_name;
@@ -329,6 +333,7 @@ class XNav {
 
     virtual void set_inputfocus() {}
     virtual void pop() {}
+    virtual void set_transient( void *basewidget) {}
     virtual void create_popup_menu( pwr_sAttrRef attrref,
 				    xmenu_eItemType item_type,
 				    xmenu_mUtility caller, unsigned int priv,
@@ -451,6 +456,7 @@ class XNav {
     int sound( pwr_tAttrRef *arp);
     int sound_attached();
     int eventlog_enabled();
+    void  appl_startup();
     
     
     static int init_brow_base_cb( FlowCtx *fctx, void *client_data);

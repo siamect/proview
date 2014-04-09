@@ -280,7 +280,7 @@ void XttGtk::activate_exit( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
 
-  close( xtt, xtt->xnav->op ? 0 : 1);
+  close( xtt, xtt->xnav->op || xtt->xnav->ge_main || xtt->xnav->multiview_main ? 0 : 1);
 }
 
 void XttGtk::activate_print( GtkWidget *w, gpointer data)
