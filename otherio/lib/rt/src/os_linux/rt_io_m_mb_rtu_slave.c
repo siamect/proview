@@ -180,41 +180,6 @@ static pwr_tStatus IoRackRead (
   io_sRack	*rp
 ) 
 {
-#if 0
-  io_sRackLocal *local;
-  pwr_sClass_Modbus_TCP_Slave *sp;
-  pwr_tStatus sts;
-  pwr_tTime now;
-  pwr_tDeltaTime dt;
-  
-  local = rp->Local;
-  
-  sp = (pwr_sClass_Modbus_TCP_Slave *) rp->op;
-
-
-  /* Receive data */
-  if ((sp->Status == MB__NORMAL) && !sp->SingleOp) {
-    sts = mb_recv_data(local, rp, sp);
-  }  
-  
-  if (sp->DisableSlave != 1) {
-  
-    if (sp->Status == MB__NORMAL) {
-      sp->ErrorCount = 0;
-    }
-    else {
-      sp->ErrorCount++;
-    }
-
-    if (sp->ErrorCount > sp->ErrorLimit) {
-      memset(&sp->Inputs, 0, local->input_size);
-    }
-  }
-  else {
-    sp->ErrorCount = 0;
-    sp->Status = MB__DISABLED;
-  }
-#endif  
   return IO__SUCCESS;
 }
 
@@ -228,23 +193,6 @@ static pwr_tStatus IoRackWrite (
   io_sRack	*rp
 ) 
 {
-#if 0
-  io_sRackLocal *local;
-  pwr_sClass_Modbus_TCP_Slave *sp;
-  pwr_tStatus sts;
-
-  local = rp->Local;
-  
-  sp = (pwr_sClass_Modbus_TCP_Slave *) rp->op;
-  
-  local->expected_msgs = 0;
-
-  if (sp->Status == MB__NORMAL && sp->DisableSlave != 1) {
-    sts = mb_send_data( rp, ap->Local, local, ap->op, sp, mb_mSendMask_WriteReq);
-  }
-
-  if (sp->DisableSlave == 1) sp->Status = MB__DISABLED;
-#endif
   return IO__SUCCESS;
 }
 
