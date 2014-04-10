@@ -90,7 +90,8 @@ typedef enum {
   time_eFormat_NumDateAndTime = 3,    //!< Date and time format, 2005-01-01 00:00:00
   time_eFormat_FileDateAndTime = 4,   //!< Date and time format, 20050101_000000
   time_eFormat_FileDate = 5,          //!< Date format, 20050101
-  time_eFormat_DateAndTimeLoc = 6     //!< Display date and time with local month
+  time_eFormat_DateAndTimeLoc = 6,    //!< Display date and time with local month
+  time_eFormat_TimeAndDate = 7        //!< Time and date format, 01:00:00 30/01/87
 } time_eFormat;
 
 typedef enum {

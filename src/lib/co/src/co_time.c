@@ -693,6 +693,8 @@ time_TmToAscii (
     strftime(buf, bufsize, "%y-%m-%d %H:%M:%S", tmptr);
   } else if (format == time_eFormat_NumDateAndTime) {
     strftime(buf, bufsize, "%Y-%m-%d %H:%M:%S", tmptr);
+  } else if (format == time_eFormat_TimeAndDate) {
+    strftime(buf, bufsize, "%H:%M:%S %d/%m/%y", tmptr);
   } else {
     strftime(buf, bufsize, "%H:%M:%S", tmptr);
   }

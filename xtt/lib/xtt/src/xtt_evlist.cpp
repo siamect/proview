@@ -693,8 +693,10 @@ EvList::EvList(
   start_trace_cb(0), display_in_xnav_cb(0), name_to_alias_cb(0), 
   sound_cb(0), selection_changed_cb(0), init_cb(ev_init_cb), help_event_cb(0), acc_beep_time(0),
   beep_interval(4), eventname_seg(ev_eventname_seg), current_view(pwr_cNOid), 
-  flash_value(false)
+  flash_value(false), alarm_table_cnt(0)
 {
+  memset(alarm_table_member_cnt, 0, sizeof(alarm_table_member_cnt));
+
   if ( max_size <= 0) {
     switch ( type) {
     case ev_eType_AlarmList:
@@ -740,6 +742,11 @@ EvList::EvList(
 //
 EvList::~EvList()
 {
+  for ( unsigned int i = 0; i < alarm_table_cnt; i++) {
+    gdh_DLUnrefObjectInfo(alarm_tables_refid[i]);
+    if ( alarm_table_member_cnt[i] > 0)
+      free( alarm_table_members[i]);
+  }
 }
 
 EvListBrow::~EvListBrow()
@@ -2845,5 +2852,152 @@ void EvList::copy_list( EvList* evl)
       default:
         ;
     }
+  }
+}
+
+int EvList::get_alarm_tables( pwr_tOid user) 
+{
+  pwr_tOid ch;
+  pwr_tStatus sts;
+  pwr_tCid cid;
+  pwr_tAttrRef aref;
+
+  // Find alarm tables
+  alarm_table_cnt = 0;
+  for ( pwr_tStatus lsts = gdh_GetChild( user, &ch); 
+	ODD(lsts); 
+	lsts = gdh_GetNextSibling( ch, &ch)) {
+    sts = gdh_GetObjectClass( ch, &cid);
+    if ( EVEN(sts)) return sts;
+    
+    switch ( cid) {
+    case pwr_cClass_AlarmTable: {
+      pwr_sClass_AlarmTable *op;
+      int idx = alarm_table_cnt;
+
+      if ( alarm_table_cnt > ALARM_TABLE_SIZE)
+	break;
+
+      aref = cdh_ObjidToAref( ch);
+      sts = gdh_DLRefObjectInfoAttrref( &aref, (void **)&op, 
+				      &alarm_tables_refid[idx]);
+      if ( EVEN(sts)) return sts;
+
+      alarm_tables[idx] = op;
+
+      alarm_table_member_cnt[idx] = 0;
+      int mix = 0;
+      for ( unsigned int i = 0; i < sizeof(op->Members)/sizeof(op->Members[0]); i++) {
+	if ( cdh_ObjidIsNull( op->Members[i].Objid))
+	  break;
+	if ( mix == 0) {
+	  alarm_table_members[idx] = (ev_sAlarmTableMembers *)calloc( 1, sizeof(ev_sAlarmTableMembers));
+	}
+	sts = gdh_AttrrefToName( &op->Members[i], (char *)(*alarm_table_members[idx])[mix], 
+				 sizeof(pwr_tAName), cdh_mName_pathStrict);
+	mix++;
+      }
+      alarm_table_member_cnt[idx] = mix;
+      alarm_table_cnt++;
+
+      break;
+    }
+    default: ;
+    }
+  }
+  return 1;
+}
+
+void EvList::fill_alarm_tables()
+{
+  if ( !alarm_table_cnt) return;
+
+  int		i;
+  brow_tObject 	*object_list;
+  int 		object_cnt;
+  ItemAlarm	*item;
+  pwr_sClass_AlarmTable at;
+  int		idx;
+  int		eventtype;
+
+  brow_GetObjectList( browbase->ctx, &object_list, &object_cnt);
+  for ( unsigned int j = 0; j < alarm_table_cnt; j++) {
+    memset( &at, 0, sizeof(at));
+
+    idx = 0;
+    for ( i = 0; i < object_cnt; i++) {
+      if ( idx > int(sizeof(at.ActiveArray)/sizeof(at.ActiveArray[0])))
+	break;
+
+      brow_GetUserData( object_list[i], (void **)&item);
+      switch( item->type) {
+      case evlist_eItemType_Alarm: {
+	if (  alarm_tables[j]->Options & pwr_mAlarmTableOptionsMask_UnackedOnly &&
+	      !(item->status & mh_mEventStatus_NotAck))
+	  break;
+
+	// Check membership
+	int skip = 0;
+	if ( alarm_table_member_cnt[j] > 0) {
+	  skip = 1;
+	  for ( int i = 0; i < alarm_table_member_cnt[j]; i++) {
+	    if ( strncmp( (char *)(*alarm_table_members[j])[i], item->eventname, 
+			  strlen((char *)(*alarm_table_members[j])[i])) == 0) {
+	      skip = 0;
+	      break;
+	    }
+	  }
+	}
+	if ( skip)
+	  break;
+
+	// Check event type and priority
+	skip = 0;
+	switch ( item->event_type) {
+	case evlist_eEventType_Info:
+	  if ( alarm_tables[j]->EventType & pwr_mEventTypeMask_Info)
+	    eventtype = pwr_eEventTypeEnum_Info;
+	  else
+	    skip = 1;
+	  break;
+	case evlist_eEventType_Alarm:
+	  if ( alarm_tables[j]->EventType & pwr_mEventTypeMask_Alarm) {
+	    eventtype = pwr_eEventTypeEnum_Alarm;
+	    if (  !(alarm_tables[j]->EventPriority & item->eventprio))
+	      skip = 1;
+	  }
+	  else
+	    skip = 1;
+	  break;
+	default:
+	  skip = 1;
+	}
+	if ( skip)
+	  break;
+
+	// Insert alarm
+	at.NotAckedArray[idx] = item->status & mh_mEventStatus_NotAck ? 1 : 0;
+	at.ActiveArray[idx] = item->status & mh_mEventStatus_NotRet ? 1 : 0;
+	at.TimeArray[idx] = item->time;
+	at.EventTypeArray[idx] = eventtype;
+	at.EventPrioArray[idx] = item->eventprio;
+	strcpy(at.EventTextArray[idx], item->eventtext);
+	strcpy(at.EventNameArray[idx], item->eventname);
+	strcpy(at.AliasArray[idx], item->alias);
+	at.ObjectArray[idx] = item->object;
+
+	if ( at.NotAckedArray[idx]) 
+	  at.NoOfUnackedAlarms++;
+	idx++;
+
+        break;
+      }
+      default:
+        ;
+      }
+    }
+    at.NoOfAlarms = idx;
+    memcpy( &alarm_tables[j]->NoOfAlarms, &at.NoOfAlarms, 
+	    sizeof(at) - offsetof(pwr_sClass_AlarmTable, NoOfAlarms));
   }
 }

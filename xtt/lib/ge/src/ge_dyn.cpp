@@ -4088,6 +4088,12 @@ int GeValue::scan( grow_tObject object)
 			   timstr, sizeof(timstr));
       timstr[8] = 0;
       break;
+    case '6':
+      // Format %6t, 01:00:00 30/01/87
+      sts = time_AtoAscii( &val, time_eFormat_TimeAndDate, 
+			   timstr, sizeof(timstr));
+      timstr[8] = 0;
+      break;
     default:
       sts = time_AtoAscii( &val, time_eFormat_DateAndTime, 
 			   timstr, sizeof(timstr));
@@ -8007,7 +8013,24 @@ int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data)
       info.column_size[i] = 25;
       break;
     case pwr_eType_Objid:
-      info.column_size[i] = 40;
+      switch ( format[i][1]) {
+      case '1':
+      case '2':
+	info.column_size[i] = 200;
+	break;
+      default:
+	info.column_size[i] = 40;
+      }
+      break;
+    case pwr_eType_AttrRef:
+      switch ( format[i][1]) {
+      case '1':
+      case '2':
+	info.column_size[i] = 400;
+	break;
+      default:
+	info.column_size[i] = 80;
+      }
       break;
     default:
       info.column_size[i] = 10;
@@ -8158,42 +8181,52 @@ int GeTable::scan( grow_tObject object)
 	  int sts;
 	  char timstr[40];
 
-	  switch ( format[i][1]) {
-	  case '1': 
-	    // Format %1t, only time, no hundredth
-	    sts = time_AtoAscii( (pwr_tTime *) p, time_eFormat_Time, 
-				 timstr, sizeof(timstr));
-	    timstr[8] = 0;
-	    break;
-	  case '2': 
-	    // Format %2t, only time, with hundredth
-	    sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_Time,
-				 timstr, sizeof(timstr));
-	    break;
-	  case '3': 
-	    // Format %3t, compressed date and time, no hundredth
-	    sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_ComprDateAndTime,
-				 timstr, sizeof(timstr));
-	    timstr[17] = 0;
-	    break;
-	  case '4':
-	    // Format %4t, date only
-	    sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_DateAndTime, 
-				 timstr, sizeof(timstr));
-	    timstr[11] = 0;
-	    break;
-	  case '5':
-	    // Format %5t, compressed date only
-	    sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_ComprDateAndTime, 
-				 timstr, sizeof(timstr));
-	    timstr[8] = 0;
-	    break;
-	  default:
-	    sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_DateAndTime, 
-			   timstr, sizeof(timstr));
+	  if ( memcmp( headerref_p[i][j], &pwr_cNTime, sizeof(pwr_tTime)) == 0)
+	    strcpy( timstr, "");
+	  else {
+	    switch ( format[i][1]) {
+	    case '1': 
+	      // Format %1t, only time, no hundredth
+	      sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_Time, 
+				   timstr, sizeof(timstr));
+	      timstr[8] = 0;
+	      break;
+	    case '2': 
+	      // Format %2t, only time, with hundredth
+	      sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_Time,
+				   timstr, sizeof(timstr));
+	      break;
+	    case '3': 
+	      // Format %3t, compressed date and time, no hundredth
+	      sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_ComprDateAndTime,
+				   timstr, sizeof(timstr));
+	      timstr[17] = 0;
+	      break;
+	    case '4':
+	      // Format %4t, date only
+	      sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_DateAndTime, 
+				   timstr, sizeof(timstr));
+	      timstr[11] = 0;
+	      break;
+	    case '5':
+	      // Format %5t, compressed date only
+	      sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_ComprDateAndTime, 
+				   timstr, sizeof(timstr));
+	      timstr[8] = 0;
+	      break;
+	    case '6':
+	    // Format %6t, 01:00:00 30/01/87
+	      sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_TimeAndDate, 
+				   timstr, sizeof(timstr));
+	      timstr[8] = 0;
+	      break;
+	    default:
+	      sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_DateAndTime, 
+				   timstr, sizeof(timstr));
+	    }
+	    if ( EVEN(sts))
+	      strcpy( timstr, "-");
 	  }
-	  if ( EVEN(sts))
-	    strcpy( timstr, "-");
 	  len = sprintf( buf, "%s", timstr);
 	  break;
 	}
@@ -8245,9 +8278,11 @@ int GeTable::scan( grow_tObject object)
 	case pwr_eType_Float32:
 	  len = sprintf( buf, format[i], *(pwr_tFloat32 *) (p[i] + offs));
 	  break;
+	case pwr_eType_Boolean:
 	case pwr_eType_Int32:
 	case pwr_eType_UInt32:
 	  len = sprintf( buf, format[i], *(pwr_tInt32 *) (p[i] + offs));
+	  break;
 	  break;
 	case pwr_eType_String:
 	  len = sprintf( buf, format[i], (char *)(p[i] + offs));
@@ -8276,34 +8311,85 @@ int GeTable::scan( grow_tObject object)
 	  len = sprintf( buf, "%s", name);
 	  break;
 	}
+	case pwr_eType_AttrRef: {
+	  int sts;
+	  pwr_tOName name;
+	  pwr_tAttrRef aref = *(pwr_tAttrRef *)(p[i] + offs);
+
+	  if ( cdh_ObjidIsNull( aref.Objid))
+	    strcpy( name, "");
+	  else {
+	    switch ( format[i][1]) {
+	    case '1':
+	      // Format %1o, write path
+	      sts = gdh_AttrrefToName ( &aref, name, sizeof(name), 
+					cdh_mName_pathStrict);
+	      break;
+	    case '2':
+	      // Format %2o, write volume and path
+	      sts = gdh_AttrrefToName ( &aref, name, sizeof(name), 
+					cdh_mName_volumeStrict);
+	      break;
+	    default:
+	      sts = gdh_AttrrefToName ( &aref, name, sizeof(name), 
+					cdh_mName_object | cdh_mName_attribute);
+	    }
+	    if ( EVEN(sts))
+	      strcpy( name, "");
+	  }
+	  len = sprintf( buf, "%s", name);
+	  break;
+	}
 	case pwr_eType_Time: {
 	  int sts;
 	  char timstr[40];
 
-	  switch ( format[i][1]) {
-	  case '1': 
-	    // Format %1t, only time, no hundredth
-	    sts = time_AtoAscii( (pwr_tTime *)(p[i] + offs), time_eFormat_Time, 
-				 timstr, sizeof(timstr));
-	    timstr[8] = 0;
-	    break;
-	  case '2': 
-	    // Format %2t, only time, with hundredth
-	    sts = time_AtoAscii( (pwr_tTime *)(p[i] + offs), time_eFormat_Time,
-				 timstr, sizeof(timstr));
-	    break;
-	  case '3': 
-	    // Format %3t, compressed date and time, no hundredth
-	    sts = time_AtoAscii( (pwr_tTime *)(p[i] + offs), time_eFormat_ComprDateAndTime,
-				 timstr, sizeof(timstr));
-	    timstr[17] = 0;
-	    break;
-	  default:
-	    sts = time_AtoAscii( (pwr_tTime *)(p[i] + offs), time_eFormat_DateAndTime, 
-			   timstr, sizeof(timstr));
+	  if ( memcmp( p[i] + offs, &pwr_cNTime, sizeof(pwr_tTime)) == 0)
+	    strcpy( timstr, "");
+	  else {
+	    switch ( format[i][1]) {
+	    case '1': 
+	      // Format %1t, only time, no hundredth
+	      sts = time_AtoAscii( (pwr_tTime *)(p[i] + offs), time_eFormat_Time, 
+				   timstr, sizeof(timstr));
+	      timstr[8] = 0;
+	      break;
+	    case '2': 
+	      // Format %2t, only time, with hundredth
+	      sts = time_AtoAscii( (pwr_tTime *)(p[i] + offs), time_eFormat_Time,
+				   timstr, sizeof(timstr));
+	      break;
+	    case '3': 
+	      // Format %3t, compressed date and time, no hundredth
+	      sts = time_AtoAscii( (pwr_tTime *)(p[i] + offs), time_eFormat_ComprDateAndTime,
+				   timstr, sizeof(timstr));
+	      timstr[17] = 0;
+	      break;
+	    case '4':
+	      // Format %4t, date only
+	      sts = time_AtoAscii( (pwr_tTime *) p[i] + offs, time_eFormat_DateAndTime, 
+				   timstr, sizeof(timstr));
+	      timstr[11] = 0;
+	      break;
+	    case '5':
+	      // Format %5t, compressed date only
+	      sts = time_AtoAscii( (pwr_tTime *) p[i] + offs, time_eFormat_ComprDateAndTime, 
+				   timstr, sizeof(timstr));
+	      timstr[8] = 0;
+	      break;
+	    case '6':
+	    // Format %6t, 01:00:00 30/01/87
+	      sts = time_AtoAscii( (pwr_tTime *) p[i] + offs, time_eFormat_TimeAndDate, 
+				   timstr, sizeof(timstr));
+	      timstr[8] = 0;
+	      break;
+	    default:
+	      sts = time_AtoAscii( (pwr_tTime *)(p[i] + offs), time_eFormat_DateAndTime, 
+				   timstr, sizeof(timstr));
+	    }
+	    if ( EVEN(sts))
+	      strcpy( timstr, "-");
 	  }
-	  if ( EVEN(sts))
-	    strcpy( timstr, "-");
 	  len = sprintf( buf, "%s", timstr);
 	  break;
 	}

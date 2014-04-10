@@ -4686,6 +4686,11 @@ pwr_tStatus gdh_AttrValueToString(
 			     timstr, sizeof(timstr));
 	timstr[8] = 0;
 	break;
+      case '6':
+        // Format %6t, time before to date
+        sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_TimeAndDate,
+                             timstr, sizeof(timstr));
+        break;
       default:
 	sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
 			     timstr, sizeof(timstr));

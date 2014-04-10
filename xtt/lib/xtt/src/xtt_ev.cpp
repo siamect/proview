@@ -590,6 +590,7 @@ pwr_tStatus Ev::mh_ack_bc( mh_sAck *MsgP)
 
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
+  ev->ala->fill_alarm_tables();
   return 1;
 }
 
@@ -608,6 +609,7 @@ pwr_tStatus Ev::mh_return_bc( mh_sReturn *MsgP)
 
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
+  ev->ala->fill_alarm_tables();
   return 1;
 }
 
@@ -621,6 +623,7 @@ pwr_tStatus Ev::mh_alarm_bc( mh_sMessage *MsgP)
     ev->sala[i]->mh_alarm( MsgP);
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
+  ev->ala->fill_alarm_tables();
   if ( ev->pop_cb) {
     int pop = 0;
 
@@ -655,6 +658,7 @@ pwr_tStatus Ev::mh_block_bc( mh_sBlock *MsgP)
   ev->eve->event_block( MsgP);
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
+  ev->ala->fill_alarm_tables();
   return 1;
 }
 
@@ -666,6 +670,7 @@ pwr_tStatus Ev::mh_cancel_bc( mh_sReturn *MsgP)
 
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
+  ev->ala->fill_alarm_tables();
   return 1;
 }
 
@@ -679,6 +684,7 @@ pwr_tStatus Ev::mh_info_bc( mh_sMessage *MsgP)
     ev->sala[i]->mh_info( MsgP);
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
+  ev->ala->fill_alarm_tables();
   if ( ev->pop_mask & pwr_mOpWindPopMask_InfoMsg)
     ev->pop_cb( ev->parent_ctx);
 

@@ -33,18 +33,15 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_opplaceoptionsmask.wb_load -- Defines the mask type OpPlaceOptionsMask
+!  pwrb_eventtypemask.wb_load -- Defines the mask type EventTypeMask
 !
 SObject pwrb:Type
 !/**
 !  @Version 1.0
 !  @Group Types
-!  Bitmask for opplace options.
-!
-! @b See also
-!  @classlink OpPlace pwrb_opplace.html
+!  Bitmask for event type.
 !*/
-  Object OpPlaceOptionsMask $TypeDef 66
+  Object EventTypeMask $TypeDef 74
     Body SysBody
       Attr Type = pwr_eType_Mask
       Attr Size = 4
@@ -52,43 +49,23 @@ SObject pwrb:Type
       Attr Elements = 1
     EndBody
     !/**
-    !  Activate operator log
+    !  Type Info.
     !*/
-    Object OperatorLog $Bit
+    Object Info $Bit
      Body SysBody
-       Attr PgmName = "OperatorLog"
-       Attr Text = "OperatorLog"
-       Attr Value = 1
+       Attr PgmName = "Info"
+       Attr Text = "Info"
+       Attr Value = 32
      EndBody
     EndObject
     !/**
-    !  Also store mouse and motion events in the operator log.
+    !  Type Alarm.
     !*/
-    Object OperatorExtendedLog $Bit
+    Object Alarm $Bit
      Body SysBody
-       Attr PgmName = "OperatorExtendedLog"
-       Attr Text = "OperatorExtendedLog"
-       Attr Value = 2
-     EndBody
-    EndObject
-    !/**
-    !  Enable Print Dialog.
-    !*/
-    Object EnablePrintDialog $Bit
-     Body SysBody
-       Attr PgmName = "EnablePrintDialog"
-       Attr Text = "EnablePrintDialog"
-       Attr Value = 4
-     EndBody
-    EndObject
-    !/**
-    !  All windows transient of main window.
-    !*/
-    Object AllMainTransient $Bit
-     Body SysBody
-       Attr PgmName = "AllMainTransient"
-       Attr Text = "AllMainTransient"
-       Attr Value = 8
+       Attr PgmName = "Alarm"
+       Attr Text = "Alarm"
+       Attr Value = 64
      EndBody
     EndObject
   EndObject

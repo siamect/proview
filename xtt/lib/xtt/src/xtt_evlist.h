@@ -69,6 +69,9 @@
 
 class ItemAlarm;
 
+#define ALARM_TABLE_SIZE 10
+typedef pwr_tAName ev_sAlarmTableMembers[200];
+
 #define ALARM_INFO_A_SIZE  5
 #define ALARM_INFO_B_SIZE  2
 #define ALARM_INFO_C_SIZE  2
@@ -211,6 +214,11 @@ class EvList {
     int			eventname_seg;
     pwr_tObjid		current_view;
     bool 		flash_value;
+    unsigned int	alarm_table_cnt;
+    pwr_sClass_AlarmTable *alarm_tables[ALARM_TABLE_SIZE];
+    ev_sAlarmTableMembers *alarm_table_members[ALARM_TABLE_SIZE];
+    int		       	alarm_table_member_cnt[ALARM_TABLE_SIZE];
+    pwr_tRefId 		alarm_tables_refid[ALARM_TABLE_SIZE];
 
     virtual void set_input_focus() {}
     virtual void bell() {}
@@ -252,6 +260,8 @@ class EvList {
     void view_alarm( ItemAlarm *alarm_item);
     void flash();
     void copy_list( EvList* evl);
+    int get_alarm_tables( pwr_tOid user);
+    void fill_alarm_tables();
 
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
     static int init_browtree_cb( BrowCtx *fctx, void *client_data);

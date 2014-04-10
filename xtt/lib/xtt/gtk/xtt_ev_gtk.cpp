@@ -654,6 +654,7 @@ EvGtk::EvGtk( void *ev_parent_ctx,
 
     ala_methodtoolbar->set_sensitive();
     ala_sup_methodtoolbar->set_sensitive();
+    ala->get_alarm_tables( user);
   }
 
   // Blk Window
