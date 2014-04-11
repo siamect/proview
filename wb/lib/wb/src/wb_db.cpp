@@ -54,7 +54,8 @@
 
 static void printstat(DbEnv *ep, const char *s);
 static void get_config( char *name, unsigned int *lk_max_locks, 
-			unsigned int *lk_max_objects);
+			unsigned int *lk_max_objects,
+			unsigned int *log_autoremove);
 
 wb_db_info::wb_db_info(wb_db *db) :
   m_db(db), m_data(&m_volume, sizeof(m_volume))
@@ -1059,6 +1060,7 @@ void wb_db::openDb(bool useTxn)
   int rc;
   unsigned int lk_max_locks;
   unsigned int lk_max_objects;
+  unsigned int log_autoremove;
   //DbTxn *txn = 0;
 
   /* Create the directory, read/write/access owner and group. */
@@ -1070,7 +1072,7 @@ void wb_db::openDb(bool useTxn)
 
   }
 
-  get_config( m_fileName, &lk_max_locks, &lk_max_objects);
+  get_config( m_fileName, &lk_max_locks, &lk_max_objects, &log_autoremove);
 
   m_env = new DbEnv(0/*DB_CXX_NO_EXCEPTIONS*/);
   printf("%s\n", m_env->version(0, 0, 0));
@@ -1080,6 +1082,7 @@ void wb_db::openDb(bool useTxn)
   rc = m_env->set_lg_max(1024*1024*8*2);
   rc = m_env->set_lk_max_locks(lk_max_locks); // Decreased from 500000
   rc = m_env->set_lk_max_objects(lk_max_objects);
+  rc = m_env->log_set_config( DB_LOG_AUTO_REMOVE, log_autoremove);
 
 #if 0
   try {
@@ -1413,18 +1416,18 @@ bool wb_db::importMeta(dbs_sMenv *mep)
 }
 
 static void get_config( char *name, unsigned int *lk_max_locks, 
-			unsigned int *lk_max_objects)
+			unsigned int *lk_max_objects,
+			unsigned int *log_autoremove)
 {
   pwr_tFileName fname;
   FILE *fp;
   char line[200];
   char	line_elem[2][100];
-  unsigned int max_locks;
-  unsigned int max_objects;
+  unsigned int max_locks = 50000;
+  unsigned int max_objects = 20000;
+  unsigned int autoremove = 1;
+  unsigned int value;
   int nr;
-
-  *lk_max_locks = 50000;
-  *lk_max_objects = 20000;
 
   strcpy( fname, name);
   strcat( fname, ".cnf");
@@ -1432,7 +1435,7 @@ static void get_config( char *name, unsigned int *lk_max_locks,
 
   fp = fopen( fname, "r");
   if ( !fp)
-    return;
+    goto go_back;
 
   while ( dcli_read_line( line, sizeof(line), fp)) {
     dcli_trim( line, line);
@@ -1448,19 +1451,31 @@ static void get_config( char *name, unsigned int *lk_max_locks,
       continue;
 
     if ( cdh_NoCaseStrcmp( line_elem[0], "lk_max_locks") == 0) {
-      nr = sscanf( line_elem[1], "%d", &max_locks);
+      nr = sscanf( line_elem[1], "%d", &value);
       if ( nr == 1) {
-	*lk_max_locks = max_locks;
+	max_locks = value;
 	printf( "lk_max_locks.........%d\n", max_locks);
       }
     }
     else if ( cdh_NoCaseStrcmp( line_elem[0], "lk_max_objects") == 0) {
-      nr = sscanf( line_elem[1], "%d", &max_objects);
+      nr = sscanf( line_elem[1], "%d", &value);
       if ( nr == 1) {
-	*lk_max_objects = max_objects;
+	max_objects = value;
 	printf( "lk_max_objects.......%d\n", max_objects);
+      }
+    }
+    else if ( cdh_NoCaseStrcmp( line_elem[0], "db_log_autoremove") == 0) {
+      nr = sscanf( line_elem[1], "%d", &value);
+      if ( nr == 1) {
+	autoremove = value;
+	printf( "db_log_autoremove....%d\n", autoremove);
       }
     }
   }
   fclose( fp);
+  
+ go_back:
+  *lk_max_locks = max_locks;
+  *lk_max_objects = max_objects;
+  *log_autoremove = autoremove ? 1 : 0;
 }
