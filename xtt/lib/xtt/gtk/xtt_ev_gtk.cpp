@@ -896,6 +896,15 @@ EvGtk::~EvGtk()
 {
   if ( connected)
     mh_OutunitDisconnect();
+  for ( int i = 0; i < seve_cnt; i++) {
+    if ( seve[i])
+      delete seve[i];
+  }
+  for ( int i = 0; i < sala_cnt; i++) {
+    if ( sala[i])
+      delete sala[i];
+  }
+
   if ( eve)
     delete eve;
   if ( ala)
