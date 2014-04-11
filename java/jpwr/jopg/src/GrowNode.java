@@ -915,6 +915,110 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 		      y_high * cmn.mw.zoom_factor_y - cmn.mw.offset_y + Glow.DRAW_MP);
     }
 
+    public void set_scale_pos( double x, double y, 
+			       double scale_x, double scale_y, 
+			       double x0, double y0, int type) {
+	double old_x_left, old_x_right, old_y_low, old_y_high;
+
+	old_x_left = x_left;
+	old_x_right = x_right;
+	old_y_low = y_low;
+	old_y_high = y_high;
+
+	cmn.setNodraw();
+	set_scale( scale_x, scale_y, x0, y0, type);
+	cmn.resetNodraw();
+	trf.move( x - x_left, y - y_low);
+	get_node_borders();
+
+	/*
+	ctx->set_defered_redraw();
+	ctx->draw( &ctx->mw, old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+		   old_y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+		   old_x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+		   old_y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+	ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+		   y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+		   x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+		   y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+	ctx->draw( &ctx->navw,  old_x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+		   old_y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+		   old_x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+		   old_y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+	ctx->draw( &ctx->navw,  x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+		   y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+		   x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+		   y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+	ctx->redraw_defered();
+	*/
+    }
+
+    public void set_scale( double scale_x, double scale_y, 
+			   double x0, double y0, int type) {
+	double old_x_left, old_x_right, old_y_low, old_y_high;
+
+	if ( !((scale_x == -1 && scale_y == 1) || (scale_x == 1 && scale_y == -1))) {
+	    if ( scale_x < 0)
+		scale_x = 0;
+	    if ( scale_y < 0)
+		scale_y = 0;
+	}
+
+	if ( trf.s_a11 != 0 && trf.s_a22 != 0 &&
+	     Math.abs( scale_x - trf.a11 / trf.s_a11) < Float.MIN_VALUE &&
+	     Math.abs( scale_y - trf.a22 / trf.s_a22) < Float.MIN_VALUE)
+	    return;
+
+	switch( type) {
+	case Glow.eScaleType_LowerLeft:
+	    x0 = x_left;
+	    y0 = y_low;
+	    break;
+	case Glow.eScaleType_LowerRight:
+	    x0 = x_right;
+	    y0 = y_low;
+	    break;
+	case Glow.eScaleType_UpperRight:
+	    x0 = x_right;
+	    y0 = y_high;
+	    break;
+	case Glow.eScaleType_UpperLeft:
+	    x0 = x_left;
+	    y0 = y_high;
+	    break;
+	case Glow.eScaleType_FixPoint:
+	    break;
+	case Glow.eScaleType_Center:
+	    x0 = (x_left + x_right) / 2;
+	    y0 = (y_low + y_high) /2;
+	    break;
+	default:
+	    ;
+	}
+
+	old_x_left = x_left;
+	old_x_right = x_right;
+	old_y_low = y_low;
+	old_y_high = y_high;
+	trf.scale_from_stored( scale_x, scale_y, x0, y0);
+	get_node_borders();
+
+	/*
+	ctx->draw( &ctx->mw, old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+		   old_y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+		   old_x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+		   old_y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+	ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+		   y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+		   x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+		   y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+	ctx->draw( &ctx->navw,  x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+		   y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+		   x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+		   y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+	*/
+    }
+
     public int get_background_object_limits(GlowTransform t, int type, double x, double y, Object bo) {
 	int dyn_type;
 	GlowBackgroundObject b = (GlowBackgroundObject)bo;
@@ -1021,5 +1125,11 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 
     public String getName() {
 	return n_name;
+    }
+    public void store_transform() { 
+	trf.store(); 
+    }
+    public boolean transform_is_stored() { 
+	return trf.is_stored(); 
     }
 }

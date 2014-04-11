@@ -1341,6 +1341,8 @@ public class Dyn {
     }
 
     public DynParsedAttrName parseAttrName(String name) {
+	if ( name == null)
+	    return null;
 	if ( (total_dyn_type1 & Dyn.mDynType1_HostObject) != 0) {
 	    int idx = name.indexOf("$hostobject");
 	    if ( idx != -1) {
@@ -3661,7 +3663,32 @@ public class Dyn {
 	double scale_x_factor;
 	double scale_y_factor;
 	int scale_type;
-
+	int move_x_p = -1;
+	int move_x_database;
+	int move_x_typeid;
+	PwrtRefId move_x_subid;
+	int move_y_p = -1;
+	int move_y_database;
+	int move_y_typeid;
+	PwrtRefId move_y_subid;
+	int scale_x_p = -1;
+	int scale_x_database;
+	int scale_x_typeid;
+	PwrtRefId scale_x_subid;
+	int scale_y_p = -1;
+	int scale_y_database;
+	int scale_y_typeid;
+	PwrtRefId scale_y_subid;
+	float move_x_old_value = 0;
+	float move_y_old_value = 0;
+	float scale_x_old_value = 0;
+	float scale_y_old_value = 0;
+	boolean firstScan = true;
+	double x_orig;
+	double y_orig;
+	double width_orig;
+	double height_orig;
+	
 	public DynMove( Dyn dyn) {
 	    super(dyn, Dyn.mDynType1_Move, 0, 0, 0, Dyn.eDynPrio_Move);
 	}
@@ -3678,6 +3705,359 @@ public class Dyn {
 	    scale_x_attribute = x.scale_x_attribute;
 	    scale_y_attribute = x.scale_y_attribute;
 	}
+
+
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+
+	    GdhrRefObjectInfo ret = null;
+
+	    DynParsedAttrName pname = dyn.parseAttrName(move_x_attribute);
+	    if ( !(pname == null || pname.name.equals(""))) {
+
+		switch ( pname.type) {
+		case Pwr.eType_Float32:
+		case Pwr.eType_Float64:
+		case Pwr.eType_Int32:
+		case Pwr.eType_UInt32:
+		    break;
+		default:
+		    System.out.println("Move: " + move_x_attribute);
+		    return 1;
+		}
+
+		ret = null;
+
+		switch( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		    break;
+		default:
+		    ret = null;
+		}
+
+		if ( ret == null || ret.evenSts()) {
+		    System.out.println("Move: " + move_x_attribute);
+		    return 1;
+		}
+
+		move_x_p = ret.id;
+		move_x_subid = ret.refid;
+		move_x_typeid = pname.type;
+	    }
+		
+	    pname = dyn.parseAttrName(move_y_attribute);
+	    if ( pname != null && !pname.name.equals("")) {
+		ret = null;
+
+		switch ( pname.type) {
+		case Pwr.eType_Float32:
+		case Pwr.eType_Float64:
+		case Pwr.eType_Int32:
+		case Pwr.eType_UInt32:
+		    break;
+		default:
+		    System.out.println("Move: " + move_y_attribute);
+		    return 1;
+		}
+
+		switch( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		    break;
+		default:
+		    ret = null;
+		}
+
+		if ( ret == null || ret.evenSts()) {
+		    System.out.println("Move: " + move_y_attribute);
+		    return 1;
+		}
+
+		move_y_p = ret.id;
+		move_y_subid = ret.refid;
+		move_y_typeid = pname.type;
+	    }
+
+	    pname = dyn.parseAttrName(scale_x_attribute);
+	    if ( pname != null && !pname.name.equals("")) {
+		ret = null;
+
+		switch ( pname.type) {
+		case Pwr.eType_Float32:
+		case Pwr.eType_Float64:
+		case Pwr.eType_Int32:
+		case Pwr.eType_UInt32:
+		    break;
+		default:
+		    System.out.println("Move: " + scale_x_attribute);
+		    return 1;
+		}
+
+		switch( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		    break;
+		default:
+		    ret = null;
+		}
+
+		if ( ret == null || ret.evenSts()) {
+		    System.out.println("Move: " + scale_x_attribute);
+		    return 1;
+		}
+
+		scale_x_p = ret.id;
+		scale_x_subid = ret.refid;
+		scale_x_typeid = pname.type;
+	    }
+
+	    pname = dyn.parseAttrName(scale_y_attribute);
+	    if ( pname != null && !pname.name.equals("")) {
+		ret = null;
+
+		switch ( pname.type) {
+		case Pwr.eType_Float32:
+		case Pwr.eType_Float64:
+		case Pwr.eType_Int32:
+		case Pwr.eType_UInt32:
+		    break;
+		default:
+		    System.out.println("Move: " + scale_y_attribute);
+		    return 1;
+		}
+
+		switch( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		    break;
+		default:
+		    ret = null;
+		}
+
+		if ( ret == null || ret.evenSts()) {
+		    System.out.println("Move: " + scale_y_attribute);
+		    return 1;
+		}
+
+		scale_y_p = ret.id;
+		scale_y_subid = ret.refid;
+		scale_y_typeid = pname.type;
+	    }
+
+	    if ( !object.transform_is_stored()) {
+		object.store_transform();
+		GlowGeometry geom = object.measure();
+		x_orig = geom.ll_x;
+		y_orig = geom.ll_y;
+		width_orig = geom.ur_x - x_orig;
+		height_orig = geom.ur_y - y_orig;
+	    }
+
+	    return 1;
+	}
+
+	public void disconnect() {
+	    if ( move_x_p != -1 && move_x_database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(move_x_subid);
+	    if ( move_y_p != -1 && move_y_database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(move_y_subid);
+	    if ( scale_x_p != -1 && scale_x_database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(scale_x_subid);
+	    if ( scale_y_p != -1 && scale_y_database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(scale_y_subid);
+	}
+
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+	    boolean update = false;
+  
+	    float move_x_value = 0;
+	    float move_y_value = 0;
+	    float scale_x_value = 0;
+	    float scale_y_value = 0;
+	    if ( move_x_p != -1) {
+		switch ( move_x_typeid) {
+		case Pwr.eType_Float32:
+		case Pwr.eType_Float64: {
+		    move_x_value = dyn.graph.getGdh().getObjectRefInfoFloat( move_x_p);		   
+		    break;
+		}
+		case Pwr.eType_Int32:
+		case Pwr.eType_UInt32: {
+		    move_x_value = (float)dyn.graph.getGdh().getObjectRefInfoInt( move_x_p);
+		    break;
+		}
+		default: ;
+		}
+	    }
+
+	    if ( move_y_p != -1) {
+		switch ( move_x_typeid) {
+		case Pwr.eType_Float32:
+		case Pwr.eType_Float64: {
+		    move_y_value = dyn.graph.getGdh().getObjectRefInfoFloat( move_y_p);		   
+		    break;
+		}
+		case Pwr.eType_Int32:
+		case Pwr.eType_UInt32: {
+		    move_y_value = (float)dyn.graph.getGdh().getObjectRefInfoInt( move_y_p);
+		    break;
+		}
+		default: ;
+		}
+	    }
+
+	    if ( scale_x_p != -1) {
+		switch ( scale_x_typeid) {
+		case Pwr.eType_Float32:
+		case Pwr.eType_Float64: {
+		    scale_x_value = dyn.graph.getGdh().getObjectRefInfoFloat( scale_x_p);		   
+		    break;
+		}
+		case Pwr.eType_Int32:
+		case Pwr.eType_UInt32: {
+		    scale_x_value = (float)dyn.graph.getGdh().getObjectRefInfoInt( scale_x_p);
+		    break;
+		}
+		default: ;
+		}
+	    }
+
+	    if ( scale_y_p != -1) {
+		switch ( scale_x_typeid) {
+		case Pwr.eType_Float32:
+		case Pwr.eType_Float64: {
+		    scale_y_value = dyn.graph.getGdh().getObjectRefInfoFloat( scale_y_p);		   
+		    break;
+		}
+		case Pwr.eType_Int32:
+		case Pwr.eType_UInt32: {
+		    scale_y_value = (float)dyn.graph.getGdh().getObjectRefInfoInt( scale_y_p);
+		    break;
+		}
+		default: ;
+		}
+	    }
+
+
+	    update = false;
+	    if ( !firstScan) {
+		if ( move_x_p != -1 && move_x_value != move_x_old_value)
+		    update = true;
+		else if ( move_y_p != -1 && move_y_value != move_y_old_value)
+		    update = true;
+		else if ( scale_x_p != -1 && scale_x_value != scale_x_old_value)
+		    update = true;
+		else if ( scale_y_p != -1 && scale_y_value != scale_y_old_value)
+		    update = true;
+		if ( !update)
+		    return;
+
+	    }
+	    else
+		firstScan = false;
+
+	    double move_x = 0;
+	    double move_y = 0;
+	    double scale_x = 1;
+	    double scale_y = 1;
+
+	    if ( scale_x_p != -1 || scale_y_p != -1) {
+		if ( scale_x_p != -1)
+		    scale_x = scale_x_value * scale_x_factor;
+		else
+		    scale_x = 1;
+		
+		if ( scale_y_p != -1)
+		    scale_y = scale_y_value * scale_y_factor;
+	    }
+	    else
+		scale_y = 1;
+
+      
+	    if ( !(move_x_p != -1 || move_y_p != -1))
+		object.set_scale( scale_x, scale_y, 0, 0,
+				  scale_type);
+	    if ( scale_x_p != -1)
+		scale_x_old_value = scale_x_value;
+	    if ( scale_y_p != -1)
+		scale_y_old_value =  scale_y_value;
+
+
+	    if ( move_x_p != -1 || move_y_p != -1) {
+		if ( move_x_p != -1) {
+		    double scale_offs = 0;
+		    // Adjust position for different scaletypes
+		    switch ( scale_type) {
+		    case Glow.eScaleType_LowerRight:
+		    case Glow.eScaleType_UpperRight:
+			scale_offs = width_orig * ( 1 - scale_x);
+			break;
+		    case Glow.eScaleType_Center:
+			scale_offs = width_orig * ( 1 - scale_x) / 2;
+			break;
+		    default: ;
+		    }
+
+		    move_x = x_orig + scale_offs + (move_x_value - x_offset) * x_factor;
+		}
+		else
+		    move_x = x_orig;
+		
+		if ( move_y_p != -1) {
+		    double scale_offs = 0;
+		    // Adjust position for different scaletypes
+		    switch ( scale_type) {
+		    case Glow.eScaleType_UpperRight:
+		    case Glow.eScaleType_UpperLeft:
+			scale_offs = height_orig * ( 1 - scale_y);
+			break;
+		    case Glow.eScaleType_Center:
+			scale_offs = height_orig * ( 1 - scale_y) / 2;
+			break;
+		    default: ;
+		    }
+		    
+		    move_y = y_orig + scale_offs + (move_y_value - y_offset) * y_factor;
+		}
+		else
+		    move_y = y_orig;
+		
+		if ( Math.abs(scale_x) < Double.MIN_VALUE)
+		    scale_x = 10e-5;
+		if ( Math.abs(scale_y) < Double.MIN_VALUE)
+		    scale_y = 10e-5;
+		
+		object.set_scale_pos( move_x, move_y, 
+				      scale_x, scale_y, 0, 0,
+				      scale_type);
+		if ( move_x_p != -1)
+		    move_x_old_value = move_x_value;
+		if ( move_y_p != -1)
+		    move_y_old_value = move_y_value;
+	    }
+	    else {
+		if ( move_x_p != -1)
+		    move_x = (move_x_value - x_offset) * x_factor;
+		else
+		    move_x = 0;
+	    
+		if ( move_y_p != -1) {
+		    move_y = (move_y_value - y_offset) * y_factor;
+		}
+		else
+		    move_y = 0;
+  
+		object.set_position( move_x, move_y);
+	    
+		if ( move_x_p != -1)
+		    move_x_old_value = move_x_value;
+		if ( move_y_p != -1)
+		    move_y_old_value = move_y_value;
+	    }
+	}
+
 
 	public void open( BufferedReader reader) {
 	    String line;
