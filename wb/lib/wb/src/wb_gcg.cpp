@@ -5498,7 +5498,7 @@ int	gcg_comp_rtnode(
   unsigned long		thread_count;
   gcg_t_plcproclist	*plcproclist;
   unsigned long		plcproc_count;
-  char			text[80];
+  char			text[400];
   char			nodename_low[80];
 
   gcg_debug = debug;
@@ -5771,7 +5771,12 @@ int	gcg_comp_rtnode(
       /* Create an object file */
       sprintf( module_name, "%s%s_%4.4d_%s", gcgmn_filenames[0], nodename_low, bus, 
 	       cdh_Low(plcproclist[j].name));
-      gcg_cc( GCG_PROC, module_name, NULL, NULL, os, GCG_NOSPAWN);
+      sts = gcg_cc( GCG_PROC, module_name, NULL, NULL, os, GCG_NOSPAWN);
+      if ( EVEN(sts)) {
+	gcg_error_msg( 0, sts, 0);
+	(*errorcount)++;
+	return sts;
+      }
 
       /* print module in option file */
       if (IS_VMS_OR_ELN(os))
@@ -5837,8 +5842,13 @@ int	gcg_comp_rtnode(
 		 nodename_low, bus, cdh_Low(plcproclist[j].name));
 	sprintf( fullfilename,"%s%s_%4.4d_%s", gcgmn_filenames[0], nodename_low, bus,
 		 cdh_Low(plcproclist[j].name));
-	gcg_cc( GCG_RTNODE, fullfilename, plcfilename, 
-		plclib_frozen, os, GCG_NOSPAWN);
+	sts = gcg_cc( GCG_RTNODE, fullfilename, plcfilename, 
+		      plclib_frozen, os, GCG_NOSPAWN);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( 0, sts, 0);
+	  (*errorcount)++;
+	  return sts;
+	}
       }      
     }
   }

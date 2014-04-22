@@ -306,7 +306,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
       sumsts = m_sts;
   }
 
-  if ( sumsts != PWRB__NOBUILT) {
+  if ( ODD(sumsts) && sumsts != PWRB__NOBUILT) {
     char msg[200];
 
     sprintf( msg, "Build:    Node     %s", nodename);
