@@ -1125,7 +1125,10 @@ gdb_MapDb (
   /* Map lock sections.  */
 
   gdbroot->lock = sect_Alloc(sts, &created, &gdbroot->h.lock, sizeof(sect_sMutex), gdb_cNameDbLock, 0);
-  if (gdbroot->lock == NULL) errh_Bugcheck(*sts, "mapping db lock");
+  if (gdbroot->lock == NULL) {
+    errh_Fatal("Error mapping db lock\n%m", *sts);
+    pwr_Return(NULL, sts, GDH__DBLOCK);
+  }
   if (created) {
     sect_Free(&lsts, gdbroot->lock); 
     pwr_Return(NULL, sts, GDH__RTNOTSTARTED);

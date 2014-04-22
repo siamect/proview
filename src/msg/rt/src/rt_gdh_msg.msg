@@ -101,6 +101,7 @@ file		<Unable to open file>					/error
 convert		<Unable to convert value>				/error
 readonly	<Object or attribute is read only>			/error
 remotemount	<Remotly mounted object>				/error
+dblock		<Unable to map db lock>					/error
 .end
 
 

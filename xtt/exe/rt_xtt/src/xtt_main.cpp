@@ -550,6 +550,8 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
   static char 	display[80];
   static char   display_opt[20] = "--display";
 
+  *return_sts = XNAV__SUCCESS;
+
   strcpy( opplace_str, "");
   hot_xtt = this;
 

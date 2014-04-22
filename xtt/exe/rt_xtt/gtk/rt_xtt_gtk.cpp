@@ -689,6 +689,8 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   char		title[120] = "Xtt ";
   char		nodename[80];
 
+  if ( EVEN(*return_sts)) return;
+
   gtk_init( &argc, &argv);
 
   setlocale( LC_TIME, "en_US");

@@ -755,8 +755,14 @@ void Ge::activate_change_name()
 
 void Ge::activate_preview_start()
 {
-  graph->init_trace();
-  set_title();
+  int sts;
+
+  sts = graph->init_trace();
+  if ( EVEN(sts)) {
+    message( 'E', "Unable to start Preview");
+  }
+  else
+    set_title();
 }
 
 void Ge::activate_preview_stop()
