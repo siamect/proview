@@ -319,13 +319,13 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   gtk_misc_set_alignment( GTK_MISC(sea_type_label), 0.0, 0.5);
 
   alarm_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("Active"));
-  gtk_widget_set_size_request( alarm_toggle_w, 100, -1);
+  gtk_widget_set_size_request( alarm_toggle_w, 120, -1);
   info_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("Message"));
-  gtk_widget_set_size_request( info_toggle_w, 100, -1);
+  gtk_widget_set_size_request( info_toggle_w, 120, -1);
   ret_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("Return"));
-  gtk_widget_set_size_request( ret_toggle_w, 100, -1);
+  gtk_widget_set_size_request( ret_toggle_w, 120, -1);
   ack_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("Ack"));
-  gtk_widget_set_size_request( ack_toggle_w, 100, -1);
+  gtk_widget_set_size_request( ack_toggle_w, 120, -1);
 
   GtkWidget *sea_typebox = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(sea_typebox), sea_type_label, FALSE, FALSE, 0);
@@ -340,13 +340,13 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   gtk_misc_set_alignment( GTK_MISC(sea_prio_label), 0.0, 0.5);
 
   prioA_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("A-Alarm"));
-  gtk_widget_set_size_request( prioA_toggle_w, 100, -1);
+  gtk_widget_set_size_request( prioA_toggle_w, 120, -1);
   prioB_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("B-Alarm"));
-  gtk_widget_set_size_request( prioB_toggle_w, 100, -1);
+  gtk_widget_set_size_request( prioB_toggle_w, 120, -1);
   prioC_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("C-Alarm"));
-  gtk_widget_set_size_request( prioC_toggle_w, 100, -1);
+  gtk_widget_set_size_request( prioC_toggle_w, 120, -1);
   prioD_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("D-Alarm"));
-  gtk_widget_set_size_request( prioD_toggle_w, 100, -1);
+  gtk_widget_set_size_request( prioD_toggle_w, 120, -1);
 
   GtkWidget *sea_priobox = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(sea_priobox), sea_prio_label, FALSE, FALSE, 0);
