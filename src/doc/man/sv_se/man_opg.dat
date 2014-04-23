@@ -1590,6 +1590,7 @@ show graph <t>Visa graf-filer			<LINK> show graph
 show time  <t>Visa aktuell tid			<LINK> show time
 show default<t>Visa default katalog		<LINK> show default
 show children<t>Visa ett objekts barn 		<LINK> show children
+show message<t>Visa ett meddelande 		<LINK> show message
 show objectlist<t>Visa alla objects av en specifik klass<LINK> show objectlist
 show objid <t>Visa ett objekts identitet	<LINK> show objid
 show parameter<t>Visa ett objektsattribut	<LINK> show parameter
@@ -1988,6 +1989,17 @@ att hämtas från användardatabasen. Dessa avgör användarens behörighet.
 <H2>Se även
 logout <LINK> logout
 show user <LINK> show user
+</TOPIC>
+
+<TOPIC> show message <style> function
+Command   show message
+
+Öppna ett fönster med ett meddelande.
+
+<B>xtt> show message /text= [/title=]
+
+/text 	    <t>Meddelande.
+/title      <t>Titel på fönstret.
 </TOPIC>
 
 <TOPIC> show objectlist <style> function

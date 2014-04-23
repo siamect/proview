@@ -263,7 +263,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			  "/OPTION", "/ENTRY", "/NEW", "/TITLE", "/WINDOW", 
 			  "/ALARMVIEW", "/WIDTH", "/HEIGHT", "/XPOSITION", "/YPOSITION",  
 			  "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE",
-			  "/SORT", ""}
+			  "/SORT", "/TEXT", ""}
 		},
 		{
 			"OPEN",
@@ -2279,6 +2279,21 @@ static int	xnav_show_func(	void		*client_data,
 	xnav->message('I', msg);
       }
     }
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "MESSAGE", strlen( arg1_str)) == 0)
+  {
+    char	text_str[256];
+    char	title_str[256];
+
+    if ( EVEN( dcli_get_qualifier( "/TEXT", text_str, sizeof(text_str)))) {
+      xnav->message('E', "Syntax error");
+      return XNAV__SUCCESS;
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str))))
+      strncpy( title_str, Lng::translate("Message"), sizeof(title_str));
+
+    xnav->wow->DisplayText( title_str, text_str);
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "VOLUMES", strlen( arg1_str)) == 0)
   {

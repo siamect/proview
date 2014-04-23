@@ -1525,22 +1525,22 @@ Xtt commands
 
 add parameter<t>Add an attribute to a picture 	<LINK> add parameter
 add menu    <t>Add a menu item to a xtt menu  	<LINK> add menu
-call method <t>Call a xtt method for an object <LINK> call method
+call method <t>Call a xtt method for an object 	<LINK> call method
 check method <t>Call a xtt method filter for an object <LINK> check method
 collect     <t>Add an attribute to collect list <LINK> collect
 collect show<t>Show the collect list		<LINK> collect show
-collect clear<t>Clear the collect list	<LINK> collect clear
+collect clear<t>Clear the collect list		<LINK> collect clear
 collect remove<t>Remove an attribute from the collect list <LINK> collect remove
 collect open<t>Open a stored collect window	<LINK> collect open
 close alarmlist <t>Close alarmlist		<LINK> close alarmlist
 close eventlist <t>Close eventlist		<LINK> close eventlist
 close graph <t>Close a graph			<LINK> close graph
 close multiview <t>Close a multiview		<LINK> close multiview
-close navigator <t>Close the navigator	<LINK> close navigator
+close navigator <t>Close the navigator		<LINK> close navigator
 create item <t>Create a menu item in the Xtt menu <LINK> create item
 create opmenuitem <t>Create a menu item in the operator window menu <LINK> create opmenuitem
-crossreference<t>Show crossreferenses	<LINK> crossreference
-define      <t>Define a symbol		<LINK> define
+crossreference<t>Show crossreferenses		<LINK> crossreference
+define      <t>Define a symbol			<LINK> define
 delete item <t>Delete a menu item in the Xtt menu <LINK> delete item
 delete opmenuitem <t>Delete a menu item in the operator window menu <LINK> delete opmenuitem
 eventlist    <t>Handle the eventlist		<LINK> eventlist
@@ -1554,34 +1554,35 @@ read object <t>Read the content of an object from file <LINK> read object
 search	<t>Search for an object or a string 	<LINK> search
 set advanceduser<t>Set advanced user		<LINK> set advanceduser
 set display<t>Set format of display for selected attribute <LINK> set display
-set folder  <t>Set a folder in a tabbed window.  <LINK> set folder
-set parameter<t>Set the value of an attribute  <LINK> set parameter
+set folder  <t>Set a folder in a tabbed window. <LINK> set folder
+set parameter<t>Set the value of an attribute  	<LINK> set parameter
 set subwindow<t>View a graph in a Ge window object.  <LINK> set subwindow
 setup       <t>Xtt setup			<LINK> setup
-show version<t>Show xtt version		<LINK> show version
+show version<t>Show xtt version			<LINK> show version
 show symbol <t>Show a symbol			<LINK> show symbol
 show plcpgm <t>Show PlcPgm objects		<LINK> show plcpgm
 show plcthreads<t>Show PlcThread objects	<LINK> show plcthreads
 show links  <t>Show links			<LINK> show links
 show logfiles<t>Show rtt loggfiles		<LINK> show logfiles
-show subsrv <t>Show subscription server	<LINK> show subsrv
-show subcli <t>Show subscription client	<LINK> show subcli
+show subsrv <t>Show subscription server		<LINK> show subsrv
+show subcli <t>Show subscription client		<LINK> show subcli
 show device <t>Show devices			<LINK> show device
 show remnode<t>Show RemNode objects		<LINK> show remnode
-show remtrans<t>Show RemTrans objects	<LINK> show remtrans
+show remtrans<t>Show RemTrans objects		<LINK> show remtrans
 show database<t>Show the runtime database	<LINK> show database
 show file  <t>Show files			<LINK> show file
-show graph <t>Show graph-files		<LINK> show graph
-show time  <t>Show current time		<LINK> show time
-show default<t>Show default directory	<LINK> show default
-show children<t>Show the children of an object <LINK> show children
+show graph <t>Show graph-files			<LINK> show graph
+show time  <t>Show current time			<LINK> show time
+show default<t>Show default directory		<LINK> show default
+show children<t>Show the children of an object 	<LINK> show children
+show message<t>Show a message	 		<LINK> show message
 show objectlist<t>Show all objects of a specific class<LINK> show objectlist
 show objid <t>Show object identity		<LINK> show objid
 show parameter<t>Show an object attribute	<LINK> show parameter
 show logging<t>Show a logging entry		<LINK> show logging
 show eventlist<t>Show the event list		<LINK> show eventlist
 show alarmlist<t>Show the alarm list		<LINK> show alarmlist
-show user  <t>Show current user		<LINK> show user
+show user  <t>Show current user			<LINK> show user
 sound      <t>Play a sound defined by a sound object	<LINK> sound
 store      <t>Store an attribute list in a file <LINK> store
 write object <t>Write the content of an object to file <LINK> write object
@@ -2546,6 +2547,17 @@ Command   show user
 Show the current user and his privileges.
 
 <B>xtt> show user
+</TOPIC>
+
+<TOPIC> show message <style> function
+Command   show message
+
+Open a message window.
+
+<B>xtt> show message /text= [/title=]
+
+/text 	    <t>Message text.
+/title      <t>Window title.
 </TOPIC>
 
 <TOPIC> show objectlist <style> function
