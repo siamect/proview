@@ -115,7 +115,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Maximum increase per second. If RampUp £ 0 no
+      !  Maximum increase per second. If RampUp <= 0 no
       !  limitation upwards is done.
       !*/
       Object RampUp $Intern 5 
@@ -125,7 +125,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Maximum decrease per second. If RampDown £ 0 no
+      !  Maximum decrease per second. If RampDown <= 0 no
       !  limitation downwards is done.
       !*/
       Object RampDown $Intern 6 
@@ -134,6 +134,11 @@ SObject pwrb:Class
           Attr GraphName = "RampDown"
         EndBody
       EndObject
+      !/**
+      !  If RampUpAbs is set, RampUp is the limit when the absolute value
+      !  is increasing, and RampDown the limit when the absolute value is
+      !  decreasing.
+      !*/
       Object RampUpAbs $Intern 13 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
