@@ -273,7 +273,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			  "/NAVIGATOR", "/CENTER", "/OBJECT", "/NEW", 
 			  "/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", "/MAIN",
 			  "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/PARENT", "/PWINDOW",
-			  "/PINSTANCE", "/BYPASS", 
+			  "/PINSTANCE", "/BYPASS",
 			  "/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", "/FTYPE", 
 			  "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE", "/ICONIFY", "/HIDE", 
 			  "/XPOSITION", "/YPOSITION", ""}
@@ -8579,6 +8579,10 @@ int XNav::exec_xttgraph( pwr_tObjid xttgraph, char *instance,
       options |= ge_mOptions_FullMaximize;
     if ( xttgraph_o.Options & pwr_mXttGraphOptionsMask_Iconify)
       options |= ge_mOptions_Iconify;
+    if ( xttgraph_o.Options & pwr_mXttGraphOptionsMask_HideDecorations)
+      options |= ge_mOptions_HideDecorations;
+    if ( xttgraph_o.Options & pwr_mXttGraphOptionsMask_Dialog)
+      options |= ge_mOptions_Dialog;
 
     open_graph( xttgraph_o.Title, action, scrollbars, 
 	menu, navigator, xttgraph_o.Width,

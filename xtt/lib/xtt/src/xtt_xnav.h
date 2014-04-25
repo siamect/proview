@@ -217,7 +217,9 @@ typedef enum {
         ge_mOptions_Invisible    = 1 << 4,
         ge_mOptions_Embedded     = 1 << 5,
         ge_mOptions_IsMain    	 = 1 << 6,
-        ge_mOptions_HideCloseButton = 1 << 7
+        ge_mOptions_HideCloseButton = 1 << 7,
+	ge_mOptions_HideDecorations = 1 << 8,
+        ge_mOptions_Dialog 	 = 1 << 9
 } ge_mOptions;
 
 class XNav;

@@ -332,6 +332,15 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
     gtk_window_set_geometry_hints( GTK_WINDOW(toplevel), GTK_WIDGET(toplevel),
 				   &geometry, GDK_HINT_ASPECT);
 
+    if ( options & ge_mOptions_HideDecorations)
+      gtk_window_set_decorated( GTK_WINDOW(toplevel), FALSE);
+
+    if ( options & ge_mOptions_Dialog) {
+      gtk_window_set_type_hint( GTK_WINDOW(toplevel), GDK_WINDOW_TYPE_HINT_DIALOG);
+      gtk_widget_set_size_request( GTK_WIDGET(toplevel), window_width, window_height);
+      gtk_window_set_resizable( GTK_WINDOW(toplevel), FALSE);
+    }
+
     g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
     g_signal_connect( toplevel, "destroy", G_CALLBACK(destroy_event), this);
     g_signal_connect( toplevel, "focus-in-event", G_CALLBACK(action_inputfocus), this);

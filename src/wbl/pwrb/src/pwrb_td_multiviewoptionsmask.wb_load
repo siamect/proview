@@ -111,6 +111,26 @@ SObject pwrb:Type
        Attr Value = 64
      EndBody
     EndObject
+    !/**
+    !  Decorations.
+    !*/
+    Object HideDecorations $Bit
+      Body SysBody
+        Attr PgmName = "HideDecorations"
+        Attr Text = "HideDecorations"
+        Attr Value = 128
+      EndBody
+     EndObject
+    !/**
+    !  Dialog window.
+    !*/
+    Object Dialog $Bit
+      Body SysBody
+        Attr PgmName = "Dialog"
+        Attr Text = "Dialog"
+        Attr Value = 256
+      EndBody
+    EndObject
   EndObject
 EndSObject
 
