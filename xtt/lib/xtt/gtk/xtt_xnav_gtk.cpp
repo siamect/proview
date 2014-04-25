@@ -105,7 +105,7 @@ XNavGtk::XNavGtk( void *xn_parent_ctx,
 		  int xn_op_close_button,
 		  pwr_tStatus *status) :
   XNav( xn_parent_ctx, xn_name, root_menu, xn_opplace_name, xn_op_close_button, status),
-  parent_wid(xn_parent_wid)
+  parent_wid(xn_parent_wid), clock_cursor(0)
 {
 
   form_widget = scrolledbrowwidgetgtk_new(
@@ -190,6 +190,21 @@ void XNavGtk::pop()
   }
   displayed = 1;
   gtk_window_present( GTK_WINDOW(top));
+}
+
+void XNavGtk::set_clock_cursor()
+{
+  if ( !clock_cursor)
+    clock_cursor = gdk_cursor_new_for_display( gtk_widget_get_display( form_widget),
+					       GDK_WATCH);
+
+  gdk_window_set_cursor( form_widget->window, clock_cursor);
+  gdk_display_flush( gtk_widget_get_display( form_widget));
+}
+
+void XNavGtk::reset_cursor()
+{
+  gdk_window_set_cursor( form_widget->window, NULL);
 }
 
 void XNavGtk::set_transient( void *basewidget) 
@@ -467,3 +482,32 @@ void XNavGtk::popup_button_cb( GtkWidget *w, gpointer data)
   //xnav->reset_cursor();
 }
 
+static void xnav_confirm_dialog_ok( void *ctx, void *data)
+{
+  ((XNav *)ctx)->dialog_ok = 1;
+  gtk_main_quit();
+}
+
+static void xnav_confirm_dialog_cancel( void *ctx, void *data)
+{
+  ((XNav *)ctx)->dialog_cancel = 1;
+  gtk_main_quit();
+}
+
+int XNavGtk::confirm_dialog( char *title, char *text)
+{
+  dialog_ok = 0;
+  dialog_cancel = 0;
+  wow->DisplayQuestion( this, title, text, xnav_confirm_dialog_ok,
+			xnav_confirm_dialog_cancel, 0);
+
+  gtk_main();
+
+  if ( dialog_ok) {
+    return 1;
+  }
+  if ( dialog_cancel) {
+    return 0;
+  }
+  return 0;
+}

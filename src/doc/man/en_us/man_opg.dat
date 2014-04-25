@@ -2714,6 +2714,7 @@ verify()		<LINK> verify()
 
 <h2>Miscellaneous functions
 CutObjectName()		<LINK> cutobjectname()
+ConfirmDialog()		<LINK> confirmdialog()
 MessageError()		<LINK> messageerror()
 MessageInfo()		<LINK> messageinfo()
 GetCurrentText()	<LINK> getcurrenttext()
@@ -3896,6 +3897,7 @@ Miscellaneous functions
 
 <b>Function <t>Description
 CutObjectName()	<t>Cut off an object name. <LINK> cutobjectname()
+ConfirmDialog()	<t>Open a confirm dialog <LINK> confirmdialog()
 MessageError()	<t>Print error message.	<LINK> messageerror()
 MessageInfo()	<t>Print info message.	<LINK> messageinfo()
 GetCurrentText() <t>Get selected text.	<LINK> getcurrenttext()
@@ -3929,6 +3931,31 @@ int		<t>segments	<t>Number of segments that should be left.
 
 <c>  path_name = GetChild("Rt-Motor");
 <c>  object_name = CutObjectName( path_name, 1);
+</TOPIC>
+
+<TOPIC> confirmdialog() <style> function
+ConfirmDialog()
+
+int ConfirmDialog( string title, string text)
+
+<b>Description
+
+Display a confirm dialog box.
+Returns 1 if the yes-button is pressed, 0 if the no-button i pressed. 
+
+<b>Arguments
+
+string		<t>title	<t>Title.
+string		<t>text		<t>Confirm text.
+
+<b>Example
+
+<c>  if ( ! ConfirmDialog( "Confirm", "Do you really want to..."))
+<c>    printf( "Yes is pressed\n");
+<c>  else
+<c>    printf( "No is pressed\n");
+<c>  endif
+
 </TOPIC>
 
 <TOPIC> messageerror() <style> function

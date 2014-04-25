@@ -4235,6 +4235,7 @@ static int	xnav_open_func(	void		*client_data,
         strcpy( title_str, "History");
     }
 
+    xnav->set_clock_cursor();
     if ( plotgroup_found) {
       hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, 
 				   xnav->scctx, 0, width, height, options, &sts);
@@ -4259,6 +4260,7 @@ static int	xnav_open_func(	void		*client_data,
 	hist->get_select_cb = xnav_sevhist_get_select_cb;
       }
     }
+    xnav->reset_cursor();
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "FAST", strlen( arg1_str)) == 0)
   {
@@ -7505,6 +7507,38 @@ static int xnav_messageinfo_func(
   return 1;
 }
 
+static int xnav_confirmdialog_func(
+  void *filectx,
+  ccm_sArg *arg_list,
+  int arg_count,
+  int *return_decl,
+  ccm_tFloat *return_float,
+  ccm_tInt *return_int,
+  char *return_string)
+{
+  XNav *xnav;
+  ccm_sArg 	*arg_p2;
+  int sts;
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  xnav_get_stored_xnav( &xnav);
+  sts = xnav->confirm_dialog( arg_list->value_string, arg_p2->value_string);
+
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+
+  return 1;
+}
+
 static int xnav_cutobjectname_func( 
   void *filectx,
   ccm_sArg *arg_list, 
@@ -7673,6 +7707,8 @@ int XNav::readcmdfile( 	char		*incommand)
 	  sts = ccm_register_function( "CutObjectName", xnav_cutobjectname_func);
 	  if ( EVEN(sts)) return sts;
 	  sts = ccm_register_function( "GetAttribute", xnav_getattribute_func);
+	  if ( EVEN(sts)) return sts;
+	  sts = ccm_register_function( "ConfirmDialog", xnav_confirmdialog_func);
 	  if ( EVEN(sts)) return sts;
 	  ccm_func_registred = 1;
         }

@@ -115,6 +115,9 @@ class XNavGtk : public XNav {
 			 xmenu_eItemType item_type, 
 			 xmenu_mUtility caller, 
 			 unsigned int priv, char *arg, int x, int y);
+    void set_clock_cursor();
+    void reset_cursor();
+    int confirm_dialog( char *title, char *text);
     static void menu_position_func( GtkMenu *menu, gint *x, gint *y, gboolean *push_in,
 				    gpointer data);
     static GtkWidget *build_menu( GtkWidget *Parent,
@@ -133,6 +136,7 @@ class XNavGtk : public XNav {
     GtkWidget		*toplevel;
     int			popupmenu_x;
     int			popupmenu_y;
+    GdkCursor   	*clock_cursor;
 };
 
 #endif

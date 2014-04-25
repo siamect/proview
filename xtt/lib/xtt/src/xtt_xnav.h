@@ -330,6 +330,8 @@ class XNav {
     void 		*current_cmd_ctx;
     int 		elog_enabled;
     int			elog_checked;
+    int 		dialog_ok;
+    int 		dialog_cancel;
 
     virtual void set_inputfocus() {}
     virtual void pop() {}
@@ -387,6 +389,9 @@ class XNav {
 				void		(* wl_bc_cancel)( void *),
 				pwr_tStatus  	*status) { return 0;}
     virtual void bell( int time) {}
+    virtual int confirm_dialog( char *title, char *text) { return 0; }
+    virtual void set_clock_cursor() {}
+    virtual void reset_cursor() {}
 
     void start_trace( pwr_tObjid Objid, char *object_str);
     void start_trace_selected();
