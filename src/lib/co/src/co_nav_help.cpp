@@ -725,8 +725,8 @@ int	NavHelp::get_previous_key( const char *help_key, navh_eHelpFile file_type, c
       }
 
       if ( !noprop) {
-	sts = get_next_key( help_key, navh_eHelpFile_Other, 
-			    include_file, strict, prev_key);
+	sts = get_previous_key( help_key, navh_eHelpFile_Other, 
+				include_file, strict, prev_key);
 	if ( ODD(sts)) {
 	  fclose( file);
 	  return sts;
