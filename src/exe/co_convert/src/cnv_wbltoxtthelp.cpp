@@ -50,6 +50,79 @@ extern "C" {
 }
 #include "co_lng.h"
 
+static int  get_class_link( char *typeref, char *volume, char *file) {
+  char tr[80];
+  char v[80];
+
+  cdh_ToLower( v, volume);
+
+  if ( strcmp( v, "pwrs") == 0 ||
+       strcmp( v, "pwrb") == 0 ||
+       strcmp( v, "basecomponent") == 0 ||
+       strcmp( v, "miscellaneous") == 0 ||
+       strcmp( v, "nmps") == 0 ||
+       strcmp( v, "opc") == 0 ||
+       strcmp( v, "otherio") == 0 ||
+       strcmp( v, "othermanufacturer") == 0 ||
+       strcmp( v, "profibus") == 0 ||
+       strcmp( v, "remote") == 0 ||
+       strcmp( v, "siemens") == 0 ||
+       strcmp( v, "abb") == 0)
+    sprintf( file, "$pwr_lang/%s_xtthelp.dat", v);
+  else
+    sprintf( file, "$pwrp_exe/%s_xtthelp.dat", v);
+  
+  cdh_ToLower( tr, typeref);
+  if ( strcmp( tr, "pwrs:class-$plcnode") == 0)
+    return 0;
+  if ( strstr( tr, "enum") != 0)
+    return 0;
+  if ( strstr( tr, "mask") != 0)
+    return 0;
+  if ( strncmp( tr, "string", 6) == 0)
+    return 0;
+  if ( strncmp( tr, "text", 4) == 0)
+    return 0;
+  if ( strcmp( tr, "boolean") == 0 ||
+       strcmp( tr, "float32") == 0 ||
+       strcmp( tr, "float64") == 0 ||
+       strcmp( tr, "char") == 0 ||
+       strcmp( tr, "int8") == 0 ||
+       strcmp( tr, "int16") == 0 ||
+       strcmp( tr, "int32") == 0 ||
+       strcmp( tr, "uint8") == 0 ||
+       strcmp( tr, "uint16") == 0 ||
+       strcmp( tr, "uint32") == 0 ||
+       strcmp( tr, "objid") == 0 ||
+       strcmp( tr, "buffer") == 0 ||
+       strcmp( tr, "string") == 0 ||
+       strcmp( tr, "enum") == 0 ||
+       strcmp( tr, "struct") == 0 ||
+       strcmp( tr, "mask") == 0 ||
+       strcmp( tr, "array") == 0 ||
+       strcmp( tr, "time") == 0 ||
+       strcmp( tr, "text") == 0 ||
+       strcmp( tr, "attrref") == 0 ||
+       strcmp( tr, "uint64") == 0 ||
+       strcmp( tr, "int64") == 0 ||
+       strcmp( tr, "classid") == 0 ||
+       strcmp( tr, "typeid") == 0 ||
+       strcmp( tr, "volumeid") == 0 ||
+       strcmp( tr, "objectix") == 0 ||
+       strcmp( tr, "refid") == 0 ||
+       strcmp( tr, "deltatime") == 0 ||
+       strcmp( tr, "status") == 0 ||
+       strcmp( tr, "netstatus") == 0 ||
+       strcmp( tr, "castid") == 0 ||
+       strcmp( tr, "prostring") == 0 ||
+       strcmp( tr, "disableattr") == 0 ||
+       strcmp( tr, "dataref") == 0 ||
+       strcmp( tr, "void") == 0)
+    return 0;
+
+  return 1;
+}
+
 int CnvWblToXtthelp::init( char *first)
 {
   pwr_tFileName fname;
@@ -239,6 +312,7 @@ int CnvWblToXtthelp::attribute_exec()
   int i;
   char *s;
   int lng_sts = 1;
+  pwr_tFileName link_file;
 
   if ( strcmp( ctx->rw->attr_typeref, "CastId") == 0 ||
        strcmp( ctx->rw->attr_typeref, "DisableAttr") == 0)
@@ -273,6 +347,8 @@ int CnvWblToXtthelp::attribute_exec()
     fp_tmp <<
 "Flags[" << ctx->rw->attr_flags << "]";
 
+  if ( get_class_link(ctx->rw->attr_typeref, ctx->rw->attr_typeref_volume, link_file))
+    fp_tmp << " <LINK>"  << ctx->rw->attr_typeref << ",," << link_file;
   fp_tmp << endl;
 
   if ( ctx->rw->doc_fresh) {
