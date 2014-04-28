@@ -315,6 +315,9 @@ void fastobject::scan()
 	case pwr_eType_Int8:
 	  ((pwr_tInt8 *)buffers[i])[current_index] = *(pwr_tInt8 *)attributes[i];
 	  break;
+	case pwr_eType_Boolean:
+	  ((pwr_tBoolean *)buffers[i])[current_index] = *(pwr_tBoolean *)attributes[i];
+	  break;
 	default:
 	  ;
 	}

@@ -159,6 +159,7 @@ XttFast::XttFast( void *parent_ctx,
       case pwr_eType_Float32:
       case pwr_eType_Int32:
       case pwr_eType_UInt32:
+      case pwr_eType_Boolean:
         element_size[i] = 4;
         break;
       case pwr_eType_Float64:
@@ -352,6 +353,9 @@ void XttFast::fast_scan( void *data)
 	  case pwr_eType_UInt8:
 	    fast->gcd->y_data[i][j] = ((pwr_tUInt8 *)tmp)[k];
 	    break;
+	  case pwr_eType_Boolean:
+	    fast->gcd->y_data[i][j] = ((pwr_tBoolean *)tmp)[k];
+	    break;
 	  default:
 	    ;
 	  }
@@ -391,6 +395,9 @@ void XttFast::fast_scan( void *data)
 	    break;
 	  case pwr_eType_UInt8:
 	    fast->gcd->y_data[i][j] = ((pwr_tUInt8 *)tmp)[k];
+	    break;
+	  case pwr_eType_Boolean:
+	    fast->gcd->y_data[i][j] = ((pwr_tBoolean *)tmp)[k];
 	    break;
 	  default: ;
 	  }
@@ -434,6 +441,9 @@ void XttFast::fast_scan( void *data)
 	    break;
 	  case pwr_eType_UInt8:
 	    fast->gcd->y_data[i][j] = ((pwr_tUInt8 *)tmp)[j];
+	    break;
+	  case pwr_eType_Boolean:
+	    fast->gcd->y_data[i][j] = ((pwr_tBoolean *)tmp)[j];
 	    break;
 	  default: ;
 	  }

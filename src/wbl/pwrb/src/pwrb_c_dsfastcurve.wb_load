@@ -92,6 +92,7 @@ SObject pwrb:Class
 !  The datatypes that can be stored is
 !  - pwr_tFloat32, pwr_tFloat64
 !  - pwr_tInt32, pwr_tUInt32, pwr_tInt16, pwr_tUInt16, pwr_tInt8, pwr_tUInt8
+!  - pwr_tBoolean
 !
 !  The time is stored as pwr_tFloat32.
 !
