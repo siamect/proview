@@ -83,6 +83,8 @@
 #include "pwr_baseclasses.h"
 #include "rt_errh.h"
 #include "rt_gdh.h"
+#include "rt_thread.h"
+#include "rt_proc.h"
 #include "rt_gdh_msg.h"
 #include "rt_bckdef.h"
 #include "co_cdh.h"
@@ -1389,15 +1391,9 @@ pwr_tUInt32 bck_init ()
   pwr_tBoolean local;
   pwr_tOName name;
   pwr_tDlid dlid;
-  pthread_t thr_file;
-  pthread_t thr_coll [2];
+  thread_s thr_file;
+  thread_s thr_coll[2];
   pwr_sAttrRef attrref;
-#ifdef OS_VMS
-  $DESCRIPTOR(efcname, BCK_EFC_NAME);
-#endif
-#if defined OS_POSIX
-  pthread_attr_t attr;
-#endif
 
   /* Create and initialize all memory structures */
 
@@ -1432,6 +1428,7 @@ pwr_tUInt32 bck_init ()
   /* This should eventually use Posix 1003.4 signals */
 #ifdef OS_ELN
   BCK_MAP_AREAS;
+
 #elif defined OS_VMS
   sts = sys$ascefc(BCK_EFC, &efcname, 0, 0);
   if (EVEN(sts)) lib$signal(sts);			/* BUG */
@@ -1480,50 +1477,15 @@ pwr_tUInt32 bck_init ()
   /* Activate the disk process
      Activate the fast and slow cycle processes */
 
-#if defined OS_ELN || (defined OS_VMS && !defined(PTHREAD_1003_1C))
-  sts4a = pthread_create(&thr_file, pthread_attr_default, bck_file_process, NULL);
+  sts4a = thread_Create(&thr_file, "bck_file", bck_file_process, NULL);
   check4a(sts4a, "pthread_create thr_file");
-
+    
   for (c=0; c<2; c++) {
-    sts4a = pthread_create(&thr_coll[c], pthread_attr_default, bck_coll_process, (void *)c);
+    char name[20];
+    sprintf( name, "bck_coll%d", c);
+    sts4a = thread_Create( &thr_coll[c], name, bck_coll_process, (void *)(long)c);
     check4a(sts4a, "pthread_create thr_coll");
   }
-
-#elif defined(OS_VMS) && defined(PTHREAD_1003_1C)
-
-  sts4a = pthread_create(&thr_file, NULL, bck_file_process, NULL);
-  check4a(sts4a, "pthread_create thr_file");
-
-  for (c=0; c<2; c++) {
-    sts4a = pthread_create(&thr_coll[c], NULL, bck_coll_process, (void *)c);
-    check4a(sts4a, "pthread_create thr_coll");
-  }
-
-#elif defined OS_LYNX && defined(PWR_LYNX_30)
-
-  pthread_attr_create(&attr);
-
-  sts4a = pthread_create(&thr_file, attr, bck_file_process, NULL);
-  check4a(sts4a, "pthread_create thr_file");
-
-  for (c=0; c<2; c++) {
-    sts4a = pthread_create(&thr_coll[c], attr, bck_coll_process, (void *)c);
-    check4a(sts4a, "pthread_create thr_coll");
-  }
-
-#elif defined OS_POSIX
-
-  pthread_attr_init(&attr);
-
-  sts4a = pthread_create(&thr_file, &attr, bck_file_process, NULL);
-  check4a(sts4a, "pthread_create thr_file");
-
-  for (c=0; c<2; c++) {
-    sts4a = pthread_create(&thr_coll[c], &attr, bck_coll_process, (void *)(long)c);
-    check4a(sts4a, "pthread_create thr_coll");
-  }
-
-#endif
 
   return sts;
 } /* bck_init */
@@ -1549,6 +1511,9 @@ int main( int argc, char *argv[])
       exit(1);
     }
   }
+
+  /* Wait for scheduler to be set */
+  proc_SchedWait();
 
   errh_Init("pwr_bck", errh_eAnix_bck);
   errh_SetStatus( PWR__SRVSTARTUP);

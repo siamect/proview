@@ -124,3 +124,21 @@ proc_UnloadProgram (
 
   return sts;
 }
+
+pwr_tStatus proc_SchedWait()
+{
+  pid_t         pid;
+  int           count = 0;
+  int 		sched;
+
+  pid = getpid();
+
+  while (((sched = sched_getscheduler(pid)) == SCHED_OTHER) &&
+	 (count < 5)) {
+    sleep(1);
+    count++;
+  }
+  if ( sched == SCHED_OTHER)
+    return PROC__NOSCHED;
+  return PROC__SUCCESS;
+}

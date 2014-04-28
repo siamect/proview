@@ -124,3 +124,8 @@ proc_UnloadProgram (
 
   return sts;
 }
+
+pwr_tStatus proc_SchedWait()
+{
+  return PROC__SUCCESS;
+}
