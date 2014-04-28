@@ -86,6 +86,7 @@
 #include "rt_gdh.h"
 #include "rt_errh.h"
 #include "rt_qcom.h"
+#include "rt_proc.h"
 #include "rt_qcom_msg.h"
 #include "rt_pwr_msg.h"
 #include "rt_ini_event.h"
@@ -427,6 +428,9 @@ int main()
 
   char hotswap;
   char new_plc;
+
+  /* Wait for scheduler to be set */
+  proc_SchedWait();
 
   errh_Init("rs_remhdl", errh_eAnix_remote);
   errh_SetStatus(PWR__SRVSTARTUP);
