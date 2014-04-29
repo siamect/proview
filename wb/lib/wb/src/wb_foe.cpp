@@ -3155,7 +3155,7 @@ int WFoe::show_executeorder()
 int WFoe::search_string_next()
 {
   char		searchstr[80];
-  char		annotations[1300];
+  char		annotations[8400];
   int		sts, size;
   vldh_t_node 	*node_list;
   vldh_t_node 	*node_ptr;
@@ -3185,7 +3185,7 @@ int WFoe::search_string_next()
   for ( j = searchindex; j < (int)node_count; j++) {
     node_ptr = node_list + j;
     sts = gre->node_annot_message( *node_ptr, annotations, 
-				      sizeof(annotations)-200, 1024);
+				      sizeof(annotations)-200, 8192);
     strcat( annotations, " ");
     strcat( annotations, (*node_ptr)->hn.name);
     strcat( annotations, " ");
