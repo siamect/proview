@@ -96,6 +96,10 @@ Hist::Hist( void *hist_parent_ctx,
   eventType_Unblock(false), eventType_Reblock(false),
   eventType_CancelBlock(false)
 {
+  if ( arp)
+    aref = *arp;
+  else
+    memset( &aref, 0, sizeof(aref));
 }
 
 
@@ -1020,6 +1024,23 @@ pwr_tStatus Hist::AdjustForDayBreak( Hist *histOP, pwr_tTime *Time,
 
     return 1;
 } /* AdjustForDayBreak */
+
+void Hist::hist_init_cb( void *ctx)
+{
+  Hist *hist = (Hist *)ctx;
+  pwr_tAName name_str;
+  pwr_tStatus sts;
+
+  // If objid is applied, search for this object
+  if ( cdh_ObjidIsNotNull( hist->aref.Objid)) {
+    sts = gdh_AttrrefToName( &hist->aref, name_str, sizeof(name_str), cdh_mName_pathStrict);
+    if (ODD(sts)) {
+      hist->insert_eventname( name_str);
+      hist->eventName_str = name_str;
+      hist->get_hist_list();
+    }
+  }
+}
 #endif
 #endif
 

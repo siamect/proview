@@ -425,7 +425,7 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   GtkWidget *hist_pane = gtk_vpaned_new();
 
   // Create hist
-  hist = new EvListGtk( this, hist_pane, ev_eType_HistList, hist_size, 0, &hist_widget);
+  hist = new EvListGtk( this, hist_pane, ev_eType_HistList, hist_size, 0, &hist_widget, hist_init_cb);
   hist->start_trace_cb = &hist_start_trace_cb;
   hist->display_in_xnav_cb = &hist_display_in_xnav_cb;
   hist->popup_menu_cb = &hist_popup_menu_cb;
@@ -443,23 +443,8 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   gtk_paned_set_position( GTK_PANED(hist_pane), 300);
 
   // Init start and stop time
-  pwr_tStatus sts;
-  pwr_tAName name_str;
-  gint pos = 0;
 
   ((Hist *)this)->all_cb();
-
-  // If objid is applied, search for this object
-  pos = 0;
-  if ( arp && cdh_ObjidIsNotNull(arp->Objid)) {
-    sts = gdh_AttrrefToName( arp, name_str, sizeof(name_str), cdh_mName_pathStrict);
-    if (ODD(sts)) {
-      gtk_editable_insert_text( GTK_EDITABLE(event_name_entry_w), name_str, 
-				strlen(name_str), &pos);
-      this->eventName_str = name_str;
-      get_hist_list();
-    }
-  }
 
   wow = new CoWowGtk( parent_wid_hist);
 
@@ -700,6 +685,14 @@ void HistGtk::set_search_string( const char *s1, const char *s2,
   gtk_label_set_text( GTK_LABEL(this->search_string2_lbl_w), CoWowGtk::convert_utf8(s2));
   gtk_label_set_text( GTK_LABEL(this->search_string3_lbl_w), CoWowGtk::convert_utf8(s3));
   gtk_label_set_text( GTK_LABEL(this->search_string4_lbl_w), CoWowGtk::convert_utf8(s4));
+}
+
+void HistGtk::insert_eventname( const char *name)
+{
+  int pos = 0;
+
+  gtk_editable_insert_text( GTK_EDITABLE(event_name_entry_w), name, 
+			    strlen(name), &pos);
 }
 
 

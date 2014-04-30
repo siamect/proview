@@ -83,6 +83,7 @@ class HistGtk : public Hist {
 			  const char *s3, const char *s4);
   void SetListTime( pwr_tTime StartTime, pwr_tTime StopTime, 
 		    int Sensitive);
+  void insert_eventname( const char *name);
 
   static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
   static void activate_exit( GtkWidget *w, gpointer data);

@@ -100,6 +100,7 @@ class Hist {
     bool		eventType_Reblock;
     bool		eventType_CancelBlock;
     CoWow		*wow;
+    pwr_tAttrRef	aref;
     
     void		get_hist_list();
     pwr_tStatus 	hist_add_ack_mess( mh_sAck *MsgP);
@@ -116,6 +117,7 @@ class Hist {
 				    const char *s3, const char *s4) {}
     virtual void SetListTime( pwr_tTime StartTime, pwr_tTime StopTime, 
 			      int Sensitive) {}
+    virtual void insert_eventname( const char *name) {}
 
 
     void activate_print();
@@ -146,6 +148,7 @@ class Hist {
 			      unsigned long item_type, unsigned long utility,
 			      char *arg, int x, int y);
     static void help_event_cb( void *ctx, void *item);
+    static void hist_init_cb( void *ctx);
 };
 
 #else
@@ -163,6 +166,7 @@ class Hist {
     void 		(*help_cb)( void *, const char *);
     void 		(*popup_menu_cb)( void *, pwr_sAttrRef, unsigned long,
 					  unsigned long, char *, int x, int y);
+
 };
 
 #endif
