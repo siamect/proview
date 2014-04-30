@@ -133,7 +133,7 @@ void CoWowGtk::DisplayQuestion( void *ctx, const char *title, const char *text,
 
 
   // Create a question window
-  question_widget = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
+  question_widget = (GtkWidget *) g_object_new( GTK_TYPE_DIALOG, 
 						"default-height", 150,
 						"default-width", 400,
 						"title", translate_utf8(title),
@@ -170,11 +170,10 @@ void CoWowGtk::DisplayQuestion( void *ctx, const char *title, const char *text,
   gtk_box_pack_start( GTK_BOX(question_hboxbuttons), question_ok, FALSE, FALSE, 0);
   gtk_box_pack_end( GTK_BOX(question_hboxbuttons), question_no, FALSE, FALSE, 0);
 
-  GtkWidget *question_vbox = gtk_vbox_new( FALSE, 0);
+  GtkWidget *question_vbox = gtk_dialog_get_content_area( GTK_DIALOG(question_widget));
   gtk_box_pack_start( GTK_BOX(question_vbox), question_hboxtext, TRUE, TRUE, 30);
   gtk_box_pack_start( GTK_BOX(question_vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
   gtk_box_pack_end( GTK_BOX(question_vbox), question_hboxbuttons, FALSE, FALSE, 15);
-  gtk_container_add( GTK_CONTAINER(question_widget), question_vbox);
   gtk_widget_show_all( question_widget);
 
   if ( m_transient_wid)
@@ -243,7 +242,7 @@ void CoWowGtk::CreateInputDialog( void *ctx, const char *title, const char *text
   
 
   // Create a inputdialog window
-  inputdialog_widget = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
+  inputdialog_widget = (GtkWidget *) g_object_new( GTK_TYPE_DIALOG, 
 						"default-height", 150,
 						"default-width", 400,
 						"title", translate_utf8(title),
@@ -288,12 +287,11 @@ void CoWowGtk::CreateInputDialog( void *ctx, const char *title, const char *text
   gtk_box_pack_start( GTK_BOX(inputdialog_hboxbuttons), inputdialog_ok, FALSE, FALSE, 0);
   gtk_box_pack_end( GTK_BOX(inputdialog_hboxbuttons), inputdialog_no, FALSE, FALSE, 0);
 
-  GtkWidget *inputdialog_vbox = gtk_vbox_new( FALSE, 0);
+  GtkWidget *inputdialog_vbox = gtk_dialog_get_content_area( GTK_DIALOG(inputdialog_widget));
   gtk_box_pack_start( GTK_BOX(inputdialog_vbox), inputdialog_hboxtext, TRUE, TRUE, 20);
   gtk_box_pack_start( GTK_BOX(inputdialog_vbox), inputdialog_hboxinput, FALSE, FALSE, 5);
   gtk_box_pack_start( GTK_BOX(inputdialog_vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
   gtk_box_pack_end( GTK_BOX(inputdialog_vbox), inputdialog_hboxbuttons, FALSE, FALSE, 15);
-  gtk_container_add( GTK_CONTAINER(inputdialog_widget), inputdialog_vbox);
   gtk_widget_show_all( inputdialog_widget);
 
   gint pos = 0;
@@ -376,10 +374,11 @@ void CoWowGtk::DisplayText( const char *title, const char *text, int width, int 
     height = 150;
 
   // Create a displaytext window
-  GtkWidget *dialog = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
+  GtkWidget *dialog = (GtkWidget *) g_object_new( GTK_TYPE_DIALOG, 
 			   "default-height", height,
 			   "default-width", width,
 			   "title", CoWowGtk::translate_utf8(title),
++			   "window-position", GTK_WIN_POS_CENTER,
 			   NULL);
   g_signal_connect( dialog, "delete_event", G_CALLBACK(displaytext_close_cb), dialog);
 
@@ -406,11 +405,10 @@ void CoWowGtk::DisplayText( const char *title, const char *text, int width, int 
   GtkWidget *displaytext_hboxbuttons = gtk_hbox_new( TRUE, 40);
   gtk_box_pack_end( GTK_BOX(displaytext_hboxbuttons), displaytext_close, FALSE, FALSE, 0);
 
-  GtkWidget *displaytext_vbox = gtk_vbox_new( FALSE, 0);
+  GtkWidget *displaytext_vbox = gtk_dialog_get_content_area( GTK_DIALOG(dialog));
   gtk_box_pack_start( GTK_BOX(displaytext_vbox), displaytext_hboxtext, TRUE, TRUE, 30);
   gtk_box_pack_start( GTK_BOX(displaytext_vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
   gtk_box_pack_end( GTK_BOX(displaytext_vbox), displaytext_hboxbuttons, FALSE, FALSE, 15);
-  gtk_container_add( GTK_CONTAINER(dialog), displaytext_vbox);
   gtk_widget_show_all( dialog);
 
   if ( m_transient_wid)
