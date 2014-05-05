@@ -4092,7 +4092,7 @@ int GeValue::scan( grow_tObject object)
       // Format %6t, 01:00:00 30/01/87
       sts = time_AtoAscii( &val, time_eFormat_TimeAndDate, 
 			   timstr, sizeof(timstr));
-      timstr[8] = 0;
+      timstr[17] = 0;
       break;
     default:
       sts = time_AtoAscii( &val, time_eFormat_DateAndTime, 
@@ -8218,7 +8218,7 @@ int GeTable::scan( grow_tObject object)
 	    // Format %6t, 01:00:00 30/01/87
 	      sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_TimeAndDate, 
 				   timstr, sizeof(timstr));
-	      timstr[8] = 0;
+	      timstr[17] = 0;
 	      break;
 	    default:
 	      sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_DateAndTime, 
@@ -8381,7 +8381,7 @@ int GeTable::scan( grow_tObject object)
 	    // Format %6t, 01:00:00 30/01/87
 	      sts = time_AtoAscii( (pwr_tTime *) p[i] + offs, time_eFormat_TimeAndDate, 
 				   timstr, sizeof(timstr));
-	      timstr[8] = 0;
+	      timstr[17] = 0;
 	      break;
 	    default:
 	      sts = time_AtoAscii( (pwr_tTime *)(p[i] + offs), time_eFormat_DateAndTime, 
