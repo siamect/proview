@@ -145,6 +145,13 @@ int goen_create_nodetype_m16(
   char		name[80];
   int		size;
   int		conpoint_nr;
+  char		annot_str[3][200];
+  int		annot_nr[3];
+  int		annot_count;
+  double	annot_width[3];
+  double	annot_height;
+  int		annot_rows;
+  float		classname_width;
   static int	idx = 0;
 
 
@@ -156,6 +163,35 @@ int goen_create_nodetype_m16(
   sts = ldh_GetObjectBodyDef(ldhses, cid, "RtBody", 1, 
 			&bodydef, &rows);
   if ( EVEN(sts) ) return sts;
+
+  /* Get number of annotations and the width of the annotations */
+  sts = WGre::get_annotations( node,
+		(char *)annot_str, annot_nr, &annot_count,
+		sizeof( annot_str)/sizeof(annot_str[0]), sizeof( annot_str[0]));
+  if ( EVEN(sts)) return sts;
+
+  annot_width[0] = 0;
+  annot_width[1] = 0;
+  annot_width[2] = 0;
+  if ( annot_count > 0)
+  {
+    flow_MeasureAnnotText( ctx, annot_str[0],
+	     	flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
+		flow_eAnnotType_OneLine,
+		&annot_width[0], &annot_height, &annot_rows);
+  }
+  if ( annot_count > 1)
+  {
+    flow_MeasureAnnotText( ctx, annot_str[1],
+	     	flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, flow_eAnnotType_OneLine,
+		&annot_width[1], &annot_height, &annot_rows);
+  }
+  if ( annot_count > 2)
+  {
+    flow_MeasureAnnotText( ctx, annot_str[2],
+	     	flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, flow_eAnnotType_OneLine,
+		&annot_width[2], &annot_height, &annot_rows);
+  }
 
   inmask_pointer = mask++;
   outmask_pointer = mask++;
@@ -202,9 +238,19 @@ int goen_create_nodetype_m16(
   f_height  = 3 * f_repeat +
 	       (co_max(inputpoints,outputpoints)-1)*f_repeat;
 
-  f_width = co_max( f_strlength * (2 + node_width), f_defwidth);
-  f_namepos = f_width/2.0 - strlen( graphbody->graphname)*
-			      f_strlength/2.0;
+  classname_width = strlen( graphbody->graphname) * f_strlength;
+  f_width = co_max( f_strlength * 4 + co_max( classname_width, annot_width[0]),
+			 f_defwidth + f_strlength * 2);
+  if ( annot_count >= 2)
+    f_width = co_max( f_width, f_strlength * 4 + annot_width[1]);
+
+  if ( annot_count >= 3)
+    f_width = co_max( f_width, f_strlength * 4 + annot_width[2]);
+
+  f_namepos = f_width/2.0 - classname_width/2;
+  //f_width = co_max( f_strlength * (2 + node_width), f_defwidth);
+  //f_namepos = f_width/2.0 - strlen( graphbody->graphname)*
+  //			      f_strlength/2.0;
 
   flow_CreateNodeClass(ctx, name, flow_eNodeGroup_Common, 
 		&nc_pid);
