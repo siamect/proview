@@ -962,6 +962,7 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
        o->a.tid == pwr_eType_Float64 ||
        o->a.tid == pwr_eType_CastId ||
        o->a.tid == pwr_eType_DisableAttr ||
+       o->a.tid == pwr_eType_DataRef ||
        strcmp( name(), "TimerFlag") == 0) {
     // Align on longword
     *boffset = pwr_AlignLW(*boffset);

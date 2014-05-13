@@ -372,7 +372,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[0].Data_ObjId##Objid
+1010 $object.Data[0].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -387,7 +387,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[0].Data_ObjId
+1029 &$object.Data[0].DataP
 99
 2707
 28
@@ -414,14 +414,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[0].Data_ObjId##Objid
+1200 $object.Data[0].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[0].Data_ObjId
+5000 &$object.Data[0].DataP
 99
 99
 99
@@ -894,7 +894,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[1].Data_ObjId##Objid
+1010 $object.Data[1].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -909,7 +909,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[1].Data_ObjId
+1029 &$object.Data[1].DataP
 99
 2707
 28
@@ -936,14 +936,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[1].Data_ObjId##Objid
+1200 $object.Data[1].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[1].Data_ObjId
+5000 &$object.Data[1].DataP
 99
 99
 99
@@ -1416,7 +1416,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[2].Data_ObjId##Objid
+1010 $object.Data[2].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -1431,7 +1431,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[2].Data_ObjId
+1029 &$object.Data[2].DataP
 99
 2707
 28
@@ -1458,14 +1458,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[2].Data_ObjId##Objid
+1200 $object.Data[2].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[2].Data_ObjId
+5000 &$object.Data[2].DataP
 99
 99
 99
@@ -1938,7 +1938,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[3].Data_ObjId##Objid
+1010 $object.Data[3].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -1953,7 +1953,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[3].Data_ObjId
+1029 &$object.Data[3].DataP
 99
 2707
 28
@@ -1980,14 +1980,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[3].Data_ObjId##Objid
+1200 $object.Data[3].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[3].Data_ObjId
+5000 &$object.Data[3].DataP
 99
 99
 99
@@ -2460,7 +2460,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[4].Data_ObjId##Objid
+1010 $object.Data[4].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -2475,7 +2475,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[4].Data_ObjId
+1029 &$object.Data[4].DataP
 99
 2707
 28
@@ -2502,14 +2502,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[4].Data_ObjId##Objid
+1200 $object.Data[4].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[4].Data_ObjId
+5000 &$object.Data[4].DataP
 99
 99
 99
@@ -2982,7 +2982,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[5].Data_ObjId##Objid
+1010 $object.Data[5].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -2997,7 +2997,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[5].Data_ObjId
+1029 &$object.Data[5].DataP
 99
 2707
 28
@@ -3024,14 +3024,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[5].Data_ObjId##Objid
+1200 $object.Data[5].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[5].Data_ObjId
+5000 &$object.Data[5].DataP
 99
 99
 99
@@ -3504,7 +3504,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[6].Data_ObjId##Objid
+1010 $object.Data[6].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -3519,7 +3519,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[6].Data_ObjId
+1029 &$object.Data[6].DataP
 99
 2707
 28
@@ -3546,14 +3546,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[6].Data_ObjId##Objid
+1200 $object.Data[6].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[6].Data_ObjId
+5000 &$object.Data[6].DataP
 99
 99
 99
@@ -4026,7 +4026,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[7].Data_ObjId##Objid
+1010 $object.Data[7].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -4041,7 +4041,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[7].Data_ObjId
+1029 &$object.Data[7].DataP
 99
 2707
 28
@@ -4068,14 +4068,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[7].Data_ObjId##Objid
+1200 $object.Data[7].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[7].Data_ObjId
+5000 &$object.Data[7].DataP
 99
 99
 99
@@ -4548,7 +4548,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[8].Data_ObjId##Objid
+1010 $object.Data[8].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -4563,7 +4563,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[8].Data_ObjId
+1029 &$object.Data[8].DataP
 99
 2707
 28
@@ -4590,14 +4590,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[8].Data_ObjId##Objid
+1200 $object.Data[8].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[8].Data_ObjId
+5000 &$object.Data[8].DataP
 99
 99
 99
@@ -5070,7 +5070,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[9].Data_ObjId##Objid
+1010 $object.Data[9].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -5085,7 +5085,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[9].Data_ObjId
+1029 &$object.Data[9].DataP
 99
 2707
 28
@@ -5112,14 +5112,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[9].Data_ObjId##Objid
+1200 $object.Data[9].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[9].Data_ObjId
+5000 &$object.Data[9].DataP
 99
 99
 99
@@ -5592,7 +5592,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[10].Data_ObjId##Objid
+1010 $object.Data[10].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -5607,7 +5607,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[10].Data_ObjId
+1029 &$object.Data[10].DataP
 99
 2707
 28
@@ -5634,14 +5634,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[10].Data_ObjId##Objid
+1200 $object.Data[10].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[10].Data_ObjId
+5000 &$object.Data[10].DataP
 99
 99
 99
@@ -6114,7 +6114,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[11].Data_ObjId##Objid
+1010 $object.Data[11].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -6129,7 +6129,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[11].Data_ObjId
+1029 &$object.Data[11].DataP
 99
 2707
 28
@@ -6156,14 +6156,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[11].Data_ObjId##Objid
+1200 $object.Data[11].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[11].Data_ObjId
+5000 &$object.Data[11].DataP
 99
 99
 99
@@ -6636,7 +6636,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[12].Data_ObjId##Objid
+1010 $object.Data[12].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -6651,7 +6651,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[12].Data_ObjId
+1029 &$object.Data[12].DataP
 99
 2707
 28
@@ -6678,14 +6678,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[12].Data_ObjId##Objid
+1200 $object.Data[12].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[12].Data_ObjId
+5000 &$object.Data[12].DataP
 99
 99
 99
@@ -7158,7 +7158,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[13].Data_ObjId##Objid
+1010 $object.Data[13].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -7173,7 +7173,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[13].Data_ObjId
+1029 &$object.Data[13].DataP
 99
 2707
 28
@@ -7200,14 +7200,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[13].Data_ObjId##Objid
+1200 $object.Data[13].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[13].Data_ObjId
+5000 &$object.Data[13].DataP
 99
 99
 99
@@ -7680,7 +7680,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[14].Data_ObjId##Objid
+1010 $object.Data[14].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -7695,7 +7695,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[14].Data_ObjId
+1029 &$object.Data[14].DataP
 99
 2707
 28
@@ -7722,14 +7722,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[14].Data_ObjId##Objid
+1200 $object.Data[14].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[14].Data_ObjId
+5000 &$object.Data[14].DataP
 99
 99
 99
@@ -8202,7 +8202,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[15].Data_ObjId##Objid
+1010 $object.Data[15].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -8217,7 +8217,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[15].Data_ObjId
+1029 &$object.Data[15].DataP
 99
 2707
 28
@@ -8244,14 +8244,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[15].Data_ObjId##Objid
+1200 $object.Data[15].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[15].Data_ObjId
+5000 &$object.Data[15].DataP
 99
 99
 99
@@ -8724,7 +8724,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[16].Data_ObjId##Objid
+1010 $object.Data[16].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -8739,7 +8739,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[16].Data_ObjId
+1029 &$object.Data[16].DataP
 99
 2707
 28
@@ -8766,14 +8766,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[16].Data_ObjId##Objid
+1200 $object.Data[16].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[16].Data_ObjId
+5000 &$object.Data[16].DataP
 99
 99
 99
@@ -9246,7 +9246,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[17].Data_ObjId##Objid
+1010 $object.Data[17].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -9261,7 +9261,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[17].Data_ObjId
+1029 &$object.Data[17].DataP
 99
 2707
 28
@@ -9288,14 +9288,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[17].Data_ObjId##Objid
+1200 $object.Data[17].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[17].Data_ObjId
+5000 &$object.Data[17].DataP
 99
 99
 99
@@ -9768,7 +9768,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[18].Data_ObjId##Objid
+1010 $object.Data[18].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -9783,7 +9783,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[18].Data_ObjId
+1029 &$object.Data[18].DataP
 99
 2707
 28
@@ -9810,14 +9810,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[18].Data_ObjId##Objid
+1200 $object.Data[18].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[18].Data_ObjId
+5000 &$object.Data[18].DataP
 99
 99
 99
@@ -10290,7 +10290,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[19].Data_ObjId##Objid
+1010 $object.Data[19].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -10305,7 +10305,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[19].Data_ObjId
+1029 &$object.Data[19].DataP
 99
 2707
 28
@@ -10332,14 +10332,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[19].Data_ObjId##Objid
+1200 $object.Data[19].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[19].Data_ObjId
+5000 &$object.Data[19].DataP
 99
 99
 99
@@ -10812,7 +10812,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[20].Data_ObjId##Objid
+1010 $object.Data[20].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -10827,7 +10827,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[20].Data_ObjId
+1029 &$object.Data[20].DataP
 99
 2707
 28
@@ -10854,14 +10854,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[20].Data_ObjId##Objid
+1200 $object.Data[20].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[20].Data_ObjId
+5000 &$object.Data[20].DataP
 99
 99
 99
@@ -11334,7 +11334,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[21].Data_ObjId##Objid
+1010 $object.Data[21].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -11349,7 +11349,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[21].Data_ObjId
+1029 &$object.Data[21].DataP
 99
 2707
 28
@@ -11376,14 +11376,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[21].Data_ObjId##Objid
+1200 $object.Data[21].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[21].Data_ObjId
+5000 &$object.Data[21].DataP
 99
 99
 99
@@ -11856,7 +11856,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[22].Data_ObjId##Objid
+1010 $object.Data[22].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -11871,7 +11871,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[22].Data_ObjId
+1029 &$object.Data[22].DataP
 99
 2707
 28
@@ -11898,14 +11898,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[22].Data_ObjId##Objid
+1200 $object.Data[22].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[22].Data_ObjId
+5000 &$object.Data[22].DataP
 99
 99
 99
@@ -12378,7 +12378,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[23].Data_ObjId##Objid
+1010 $object.Data[23].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -12393,7 +12393,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[23].Data_ObjId
+1029 &$object.Data[23].DataP
 99
 2707
 28
@@ -12420,14 +12420,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[23].Data_ObjId##Objid
+1200 $object.Data[23].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[23].Data_ObjId
+5000 &$object.Data[23].DataP
 99
 99
 99
@@ -12900,7 +12900,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[24].Data_ObjId##Objid
+1010 $object.Data[24].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -12915,7 +12915,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[24].Data_ObjId
+1029 &$object.Data[24].DataP
 99
 2707
 28
@@ -12942,14 +12942,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[24].Data_ObjId##Objid
+1200 $object.Data[24].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[24].Data_ObjId
+5000 &$object.Data[24].DataP
 99
 99
 99
@@ -13422,7 +13422,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[25].Data_ObjId##Objid
+1010 $object.Data[25].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -13437,7 +13437,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[25].Data_ObjId
+1029 &$object.Data[25].DataP
 99
 2707
 28
@@ -13464,14 +13464,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[25].Data_ObjId##Objid
+1200 $object.Data[25].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[25].Data_ObjId
+5000 &$object.Data[25].DataP
 99
 99
 99
@@ -13944,7 +13944,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[26].Data_ObjId##Objid
+1010 $object.Data[26].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -13959,7 +13959,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[26].Data_ObjId
+1029 &$object.Data[26].DataP
 99
 2707
 28
@@ -13986,14 +13986,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[26].Data_ObjId##Objid
+1200 $object.Data[26].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[26].Data_ObjId
+5000 &$object.Data[26].DataP
 99
 99
 99
@@ -14466,7 +14466,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[27].Data_ObjId##Objid
+1010 $object.Data[27].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -14481,7 +14481,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[27].Data_ObjId
+1029 &$object.Data[27].DataP
 99
 2707
 28
@@ -14508,14 +14508,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[27].Data_ObjId##Objid
+1200 $object.Data[27].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[27].Data_ObjId
+5000 &$object.Data[27].DataP
 99
 99
 99
@@ -14988,7 +14988,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[28].Data_ObjId##Objid
+1010 $object.Data[28].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -15003,7 +15003,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[28].Data_ObjId
+1029 &$object.Data[28].DataP
 99
 2707
 28
@@ -15030,14 +15030,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[28].Data_ObjId##Objid
+1200 $object.Data[28].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[28].Data_ObjId
+5000 &$object.Data[28].DataP
 99
 99
 99
@@ -15510,7 +15510,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[29].Data_ObjId##Objid
+1010 $object.Data[29].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -15525,7 +15525,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[29].Data_ObjId
+1029 &$object.Data[29].DataP
 99
 2707
 28
@@ -15552,14 +15552,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[29].Data_ObjId##Objid
+1200 $object.Data[29].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[29].Data_ObjId
+5000 &$object.Data[29].DataP
 99
 99
 99
@@ -16032,7 +16032,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.DataLast_ObjId##Objid
+1010 $object.DataLastP##DataRef
 1011 %o
 1018 
 1019 
@@ -16047,7 +16047,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.DataLast_ObjId
+1029 &$object.DataLastP
 99
 2707
 28
@@ -16074,14 +16074,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.DataLast_ObjId##Objid
+1200 $object.DataLastP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.DataLast_ObjId
+5000 &$object.DataLastP
 99
 99
 99
@@ -17611,7 +17611,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[30].Data_ObjId##Objid
+1010 $object.Data[30].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -17626,7 +17626,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[30].Data_ObjId
+1029 &$object.Data[30].DataP
 99
 2707
 28
@@ -17653,14 +17653,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[30].Data_ObjId##Objid
+1200 $object.Data[30].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[30].Data_ObjId
+5000 &$object.Data[30].DataP
 99
 99
 99
@@ -18133,7 +18133,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[31].Data_ObjId##Objid
+1010 $object.Data[31].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -18148,7 +18148,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[31].Data_ObjId
+1029 &$object.Data[31].DataP
 99
 2707
 28
@@ -18175,14 +18175,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[31].Data_ObjId##Objid
+1200 $object.Data[31].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[31].Data_ObjId
+5000 &$object.Data[31].DataP
 99
 99
 99
@@ -18655,7 +18655,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[32].Data_ObjId##Objid
+1010 $object.Data[32].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -18670,7 +18670,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[32].Data_ObjId
+1029 &$object.Data[32].DataP
 99
 2707
 28
@@ -18697,14 +18697,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[32].Data_ObjId##Objid
+1200 $object.Data[32].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[32].Data_ObjId
+5000 &$object.Data[32].DataP
 99
 99
 99
@@ -19177,7 +19177,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[33].Data_ObjId##Objid
+1010 $object.Data[33].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -19192,7 +19192,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[33].Data_ObjId
+1029 &$object.Data[33].DataP
 99
 2707
 28
@@ -19219,14 +19219,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[33].Data_ObjId##Objid
+1200 $object.Data[33].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[33].Data_ObjId
+5000 &$object.Data[33].DataP
 99
 99
 99
@@ -19699,7 +19699,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[34].Data_ObjId##Objid
+1010 $object.Data[34].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -19714,7 +19714,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[34].Data_ObjId
+1029 &$object.Data[34].DataP
 99
 2707
 28
@@ -19741,14 +19741,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[34].Data_ObjId##Objid
+1200 $object.Data[34].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[34].Data_ObjId
+5000 &$object.Data[34].DataP
 99
 99
 99
@@ -20221,7 +20221,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[35].Data_ObjId##Objid
+1010 $object.Data[35].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -20236,7 +20236,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[35].Data_ObjId
+1029 &$object.Data[35].DataP
 99
 2707
 28
@@ -20263,14 +20263,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[35].Data_ObjId##Objid
+1200 $object.Data[35].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[35].Data_ObjId
+5000 &$object.Data[35].DataP
 99
 99
 99
@@ -20743,7 +20743,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[36].Data_ObjId##Objid
+1010 $object.Data[36].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -20758,7 +20758,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[36].Data_ObjId
+1029 &$object.Data[36].DataP
 99
 2707
 28
@@ -20785,14 +20785,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[36].Data_ObjId##Objid
+1200 $object.Data[36].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[36].Data_ObjId
+5000 &$object.Data[36].DataP
 99
 99
 99
@@ -21265,7 +21265,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[37].Data_ObjId##Objid
+1010 $object.Data[37].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -21280,7 +21280,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[37].Data_ObjId
+1029 &$object.Data[37].DataP
 99
 2707
 28
@@ -21307,14 +21307,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[37].Data_ObjId##Objid
+1200 $object.Data[37].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[37].Data_ObjId
+5000 &$object.Data[37].DataP
 99
 99
 99
@@ -21787,7 +21787,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[38].Data_ObjId##Objid
+1010 $object.Data[38].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -21802,7 +21802,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[38].Data_ObjId
+1029 &$object.Data[38].DataP
 99
 2707
 28
@@ -21829,14 +21829,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[38].Data_ObjId##Objid
+1200 $object.Data[38].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[38].Data_ObjId
+5000 &$object.Data[38].DataP
 99
 99
 99
@@ -22309,7 +22309,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[39].Data_ObjId##Objid
+1010 $object.Data[39].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -22324,7 +22324,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[39].Data_ObjId
+1029 &$object.Data[39].DataP
 99
 2707
 28
@@ -22351,14 +22351,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[39].Data_ObjId##Objid
+1200 $object.Data[39].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[39].Data_ObjId
+5000 &$object.Data[39].DataP
 99
 99
 99
@@ -22831,7 +22831,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[40].Data_ObjId##Objid
+1010 $object.Data[40].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -22846,7 +22846,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[40].Data_ObjId
+1029 &$object.Data[40].DataP
 99
 2707
 28
@@ -22873,14 +22873,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[40].Data_ObjId##Objid
+1200 $object.Data[40].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[40].Data_ObjId
+5000 &$object.Data[40].DataP
 99
 99
 99
@@ -23353,7 +23353,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[41].Data_ObjId##Objid
+1010 $object.Data[41].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -23368,7 +23368,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[41].Data_ObjId
+1029 &$object.Data[41].DataP
 99
 2707
 28
@@ -23395,14 +23395,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[41].Data_ObjId##Objid
+1200 $object.Data[41].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[41].Data_ObjId
+5000 &$object.Data[41].DataP
 99
 99
 99
@@ -23875,7 +23875,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[42].Data_ObjId##Objid
+1010 $object.Data[42].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -23890,7 +23890,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[42].Data_ObjId
+1029 &$object.Data[42].DataP
 99
 2707
 28
@@ -23917,14 +23917,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[42].Data_ObjId##Objid
+1200 $object.Data[42].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[42].Data_ObjId
+5000 &$object.Data[42].DataP
 99
 99
 99
@@ -24397,7 +24397,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[43].Data_ObjId##Objid
+1010 $object.Data[43].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -24412,7 +24412,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[43].Data_ObjId
+1029 &$object.Data[43].DataP
 99
 2707
 28
@@ -24439,14 +24439,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[43].Data_ObjId##Objid
+1200 $object.Data[43].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[43].Data_ObjId
+5000 &$object.Data[43].DataP
 99
 99
 99
@@ -24919,7 +24919,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[44].Data_ObjId##Objid
+1010 $object.Data[44].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -24934,7 +24934,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[44].Data_ObjId
+1029 &$object.Data[44].DataP
 99
 2707
 28
@@ -24961,14 +24961,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[44].Data_ObjId##Objid
+1200 $object.Data[44].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[44].Data_ObjId
+5000 &$object.Data[44].DataP
 99
 99
 99
@@ -25441,7 +25441,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[45].Data_ObjId##Objid
+1010 $object.Data[45].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -25456,7 +25456,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[45].Data_ObjId
+1029 &$object.Data[45].DataP
 99
 2707
 28
@@ -25483,14 +25483,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[45].Data_ObjId##Objid
+1200 $object.Data[45].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[45].Data_ObjId
+5000 &$object.Data[45].DataP
 99
 99
 99
@@ -25963,7 +25963,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[46].Data_ObjId##Objid
+1010 $object.Data[46].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -25978,7 +25978,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[46].Data_ObjId
+1029 &$object.Data[46].DataP
 99
 2707
 28
@@ -26005,14 +26005,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[46].Data_ObjId##Objid
+1200 $object.Data[46].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[46].Data_ObjId
+5000 &$object.Data[46].DataP
 99
 99
 99
@@ -26485,7 +26485,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[47].Data_ObjId##Objid
+1010 $object.Data[47].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -26500,7 +26500,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[47].Data_ObjId
+1029 &$object.Data[47].DataP
 99
 2707
 28
@@ -26527,14 +26527,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[47].Data_ObjId##Objid
+1200 $object.Data[47].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[47].Data_ObjId
+5000 &$object.Data[47].DataP
 99
 99
 99
@@ -27007,7 +27007,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[48].Data_ObjId##Objid
+1010 $object.Data[48].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -27022,7 +27022,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[48].Data_ObjId
+1029 &$object.Data[48].DataP
 99
 2707
 28
@@ -27049,14 +27049,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[48].Data_ObjId##Objid
+1200 $object.Data[48].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[48].Data_ObjId
+5000 &$object.Data[48].DataP
 99
 99
 99
@@ -27529,7 +27529,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[49].Data_ObjId##Objid
+1010 $object.Data[49].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -27544,7 +27544,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[49].Data_ObjId
+1029 &$object.Data[49].DataP
 99
 2707
 28
@@ -27571,14 +27571,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[49].Data_ObjId##Objid
+1200 $object.Data[49].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[49].Data_ObjId
+5000 &$object.Data[49].DataP
 99
 99
 99
@@ -28051,7 +28051,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[50].Data_ObjId##Objid
+1010 $object.Data[50].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -28066,7 +28066,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[50].Data_ObjId
+1029 &$object.Data[50].DataP
 99
 2707
 28
@@ -28093,14 +28093,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[50].Data_ObjId##Objid
+1200 $object.Data[50].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[50].Data_ObjId
+5000 &$object.Data[50].DataP
 99
 99
 99
@@ -28573,7 +28573,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[51].Data_ObjId##Objid
+1010 $object.Data[51].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -28588,7 +28588,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[51].Data_ObjId
+1029 &$object.Data[51].DataP
 99
 2707
 28
@@ -28615,14 +28615,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[51].Data_ObjId##Objid
+1200 $object.Data[51].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[51].Data_ObjId
+5000 &$object.Data[51].DataP
 99
 99
 99
@@ -29095,7 +29095,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[52].Data_ObjId##Objid
+1010 $object.Data[52].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -29110,7 +29110,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[52].Data_ObjId
+1029 &$object.Data[52].DataP
 99
 2707
 28
@@ -29137,14 +29137,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[52].Data_ObjId##Objid
+1200 $object.Data[52].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[52].Data_ObjId
+5000 &$object.Data[52].DataP
 99
 99
 99
@@ -29617,7 +29617,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[53].Data_ObjId##Objid
+1010 $object.Data[53].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -29632,7 +29632,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[53].Data_ObjId
+1029 &$object.Data[53].DataP
 99
 2707
 28
@@ -29659,14 +29659,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[53].Data_ObjId##Objid
+1200 $object.Data[53].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[53].Data_ObjId
+5000 &$object.Data[53].DataP
 99
 99
 99
@@ -30139,7 +30139,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[54].Data_ObjId##Objid
+1010 $object.Data[54].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -30154,7 +30154,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[54].Data_ObjId
+1029 &$object.Data[54].DataP
 99
 2707
 28
@@ -30181,14 +30181,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[54].Data_ObjId##Objid
+1200 $object.Data[54].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[54].Data_ObjId
+5000 &$object.Data[54].DataP
 99
 99
 99
@@ -30661,7 +30661,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[55].Data_ObjId##Objid
+1010 $object.Data[55].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -30676,7 +30676,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[55].Data_ObjId
+1029 &$object.Data[55].DataP
 99
 2707
 28
@@ -30703,14 +30703,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[55].Data_ObjId##Objid
+1200 $object.Data[55].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[55].Data_ObjId
+5000 &$object.Data[55].DataP
 99
 99
 99
@@ -31183,7 +31183,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[56].Data_ObjId##Objid
+1010 $object.Data[56].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -31198,7 +31198,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[56].Data_ObjId
+1029 &$object.Data[56].DataP
 99
 2707
 28
@@ -31225,14 +31225,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[56].Data_ObjId##Objid
+1200 $object.Data[56].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[56].Data_ObjId
+5000 &$object.Data[56].DataP
 99
 99
 99
@@ -31705,7 +31705,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[57].Data_ObjId##Objid
+1010 $object.Data[57].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -31720,7 +31720,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[57].Data_ObjId
+1029 &$object.Data[57].DataP
 99
 2707
 28
@@ -31747,14 +31747,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[57].Data_ObjId##Objid
+1200 $object.Data[57].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[57].Data_ObjId
+5000 &$object.Data[57].DataP
 99
 99
 99
@@ -32227,7 +32227,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[58].Data_ObjId##Objid
+1010 $object.Data[58].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -32242,7 +32242,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[58].Data_ObjId
+1029 &$object.Data[58].DataP
 99
 2707
 28
@@ -32269,14 +32269,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[58].Data_ObjId##Objid
+1200 $object.Data[58].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[58].Data_ObjId
+5000 &$object.Data[58].DataP
 99
 99
 99
@@ -32749,7 +32749,7 @@ pwr_exe:
 700 6.9
 701 4.25
 99
-1010 $object.Data[59].Data_ObjId##Objid
+1010 $object.Data[59].DataP##DataRef
 1011 %o
 1018 
 1019 
@@ -32764,7 +32764,7 @@ pwr_exe:
 1027 9999
 1026 65532
 1028 0
-1029 !$object.Data[59].Data_ObjId
+1029 &$object.Data[59].DataP
 99
 2707
 28
@@ -32791,14 +32791,14 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Data[59].Data_ObjId##Objid
+1200 $object.Data[59].DataP##DataRef
 1201 %o
 1202 1
 1203 1
 1204 0
 99
 50
-5000 !$object.Data[59].Data_ObjId
+5000 &$object.Data[59].DataP
 99
 99
 99

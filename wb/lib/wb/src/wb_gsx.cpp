@@ -506,9 +506,20 @@ int	gsx_check_connection(
 	if ( !( dest_class == pwr_cClass_Point ||	
 	        dest_class == pwr_cClass_Backup))
 	{
+	  if ( (source_type == pwr_eType_DataRef && !source_pointer_flag &&
+		(dest_type == pwr_eType_Float32 || dest_type == pwr_eType_Void) && dest_pointer_flag) ||
+	       (dest_type == pwr_eType_DataRef && !dest_pointer_flag &&
+		(source_type == pwr_eType_Float32 || source_type == pwr_eType_Void) && source_pointer_flag) ||
+	       (source_type == pwr_eType_DataRef && !source_pointer_flag &&
+		dest_type == pwr_eType_DataRef && !dest_pointer_flag)) {
+	    *conclass = DATA_CONN;
+	    return GSX__SUCCESS;
+	  }
+
 	  /* source and destination has to be of the same type */
-	  if ( source_pointer_flag != dest_pointer_flag)
+	  if ( source_pointer_flag != dest_pointer_flag) {
 	    return GSX__CONTYPE;
+	  }
 	  else if ( source_type != dest_type) {
 	    if ( source_pointer_flag && dest_pointer_flag &&
 		 (source_type == pwr_eType_Float32 || source_type == pwr_eType_Void) &&

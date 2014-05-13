@@ -261,7 +261,7 @@ int goen_create_nodetype_m7(
 		flow_eDirection_Left);
   }
 
-  if (outputpoints != 0)
+  if ( outputs > 0 && outputpoints != 0)
   {
     flow_AddLine( nc_pid, f_width, f_height/2 - f_yoffs, 
 		f_width+f_pinlength, f_height/2 - f_yoffs,

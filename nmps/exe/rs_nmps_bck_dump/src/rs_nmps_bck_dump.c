@@ -86,9 +86,9 @@
 #include "rt_errh.h"
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
-#include "rs_nmps.h"
+#include "nmps.h"
 #include "rs_nmps_msg.h"
-#include "rs_sutl.h"
+//#include "rs_sutl.h"
 
 #define ODD(a)	(((int)(a) & 1) != 0)
 #define EVEN(a)	(((int)(a) & 1) == 0)
@@ -233,8 +233,10 @@ static pwr_tUInt32 nmpsbck_print_cellheader(
 	printf("	type:  %s\n", cellheader->type);
 	printf("	objid: %s\n", cdh_ObjidToString( NULL, 
 				cellheader->objid, 0));
-	printf("	class: %lx\n", cellheader->class);
-	printf("	size:  %d\n", cellheader->size);
+	if ( strcmp( cellheader->type, HEADERTYPE_CELLEND) != 0) {
+	  printf("	class: %x\n", cellheader->class);
+	  printf("	size:  %d\n", cellheader->size);
+	}
 	return NMPS__SUCCESS;
 }
 
@@ -245,19 +247,20 @@ static pwr_tUInt32 nmpsbck_print_dataheader(
 	printf("	type:  %s\n", dataheader->type);
 	printf("	objid: %s\n", cdh_ObjidToString( NULL, 
 				dataheader->objid, 0));
-	printf("	class: %lx\n", dataheader->class);
-	printf("	name:  %s\n", dataheader->data_name);
-	printf("	size:  %d\n", dataheader->size);
+	if ( strcmp( dataheader->type, HEADERTYPE_DATAEND) != 0) {
+	  printf("	class: %x\n", dataheader->class);
+	  printf("	name:  %s\n", dataheader->data_name);
+	  printf("	size:  %d\n", dataheader->size);
+	}
 	return NMPS__SUCCESS;
 }
 static int		nmpsbck_timecmp( pwr_tTime 	*time_old,
-					pwr_tTime	*time_new)
+					 pwr_tTime	*time_new)
 {
-	pwr_tTime	testtime;
 	int		sts;
 
-	sts = lib$sub_times( time_new, time_old, &testtime);
-	if ( sts == LIB$_NEGTIM)
+	sts = time_Acomp( time_new, time_old);
+	if ( sts == -1)
 	  return 0;
 	return 1;
 }
@@ -269,7 +272,6 @@ int	nmpsbck_get_filename(
 {
 	char	*s;
 	char	*s2;
-	char	filename[80];
 
 	strcpy( outname, inname);
 
@@ -319,7 +321,6 @@ static pwr_tStatus nmpsbck_check_file( 	bck_ctx		bckctx,
 					pwr_tTime	*last_record_time,
 					int		time_only)
 {
-	pwr_tStatus		sts;
 	nmpsbck_t_fileheader	fileheader;
 	nmpsbck_t_recordheader	recordheader;
 	nmpsbck_t_recordheader	recordheaderend;
@@ -331,9 +332,11 @@ static pwr_tStatus nmpsbck_check_file( 	bck_ctx		bckctx,
 	int			data_read_success;
 	char			filename[80];
 	int			k;
-	char			buffer[2000];
+	char			buffer[30000];
+	int			size;
 
-	fgetname( bckfile, filename);
+	// fgetname( bckfile, filename);
+	strcpy( filename, bckctx->bckconfig->BackupFile);
 	printf("******************************************************\n");
 	printf("Examining file %s\n\n", filename);
 
@@ -404,6 +407,11 @@ static pwr_tStatus nmpsbck_check_file( 	bck_ctx		bckctx,
 	    else if ( strcmp( cellheader.type, HEADERTYPE_CELL))
 	      break;
 
+	    size = cellheader.size;
+	    if ( size > sizeof(buffer)) {
+	      size = sizeof(buffer);
+	      printf("** Max buffer size exceeded, cell body truncated\n");
+	    }
 	    csts = fread( buffer, cellheader.size, 1, bckfile);
 	    if (csts == 0)
 	      break;
@@ -417,22 +425,22 @@ static pwr_tStatus nmpsbck_check_file( 	bck_ctx		bckctx,
 	        plc_t_DataInfo		*data_block_ptr;
 
 	        cell_ptr = (pwr_sClass_NMpsCell *) buffer;
-	        data_block_ptr = (plc_t_DataInfo *) &cell_ptr->Data1P;
+	        data_block_ptr = (plc_t_DataInfo *) &cell_ptr->Data1P.Ptr;
 	        for ( k = 0; k < cell_ptr->LastIndex; k++)
 	        {
 	          /* Check if the objid already is in the data_db */
 	          printf( "         Data%d: %s  %c %c %c\n", k, 
 			cdh_ObjidToString( NULL, 
-				data_block_ptr->Data_ObjId, 0),
+				data_block_ptr->DataP.Aref.Objid, 0),
 			data_block_ptr->Data_Front ? 'F':' ',
 			data_block_ptr->Data_Back ? 'B':' ',
 			data_block_ptr->Data_Select ? 'S':' ');
 	          data_block_ptr++;
 	        }
-	        data_block_ptr = (plc_t_DataInfo *) &cell_ptr->DataLP;
+	        data_block_ptr = (plc_t_DataInfo *) &cell_ptr->DataLP.Ptr;
 	        printf( "         DataL:  %s  %c %c %c\n", 
 			cdh_ObjidToString( NULL, 
-				data_block_ptr->Data_ObjId, 0),
+				data_block_ptr->DataP.Aref.Objid, 0),
 			data_block_ptr->Data_Front ? 'F':' ',
 			data_block_ptr->Data_Back ? 'B':' ',
 			data_block_ptr->Data_Select ? 'S':' ');
@@ -444,12 +452,12 @@ static pwr_tStatus nmpsbck_check_file( 	bck_ctx		bckctx,
 	        plc_t_DataInfoMirCell	*data_block_ptr;
 
 	        cell_ptr = (pwr_sClass_NMpsMirrorCell *) buffer;
-	        data_block_ptr = (plc_t_DataInfoMirCell *) &cell_ptr->Data1P;
+	        data_block_ptr = (plc_t_DataInfoMirCell *) &cell_ptr->Data1P.Ptr;
 	        for ( k = 0; k < cell_ptr->LastIndex; k++)
 	        {
 	          printf( "         Data%d: %s\n", k, 
 			cdh_ObjidToString( NULL, 
-				data_block_ptr->Data_ObjId, 0));
+				data_block_ptr->DataP.Aref.Objid, 0));
 	          data_block_ptr++;
 	        }
 	        break;
@@ -536,6 +544,7 @@ static pwr_tStatus nmpsbck_check_file( 	bck_ctx		bckctx,
 
 static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
 {
+#if 0
 	pwr_tStatus		sts;
 	nmpsbck_t_fileheader	fileheader;
 	nmpsbck_t_recordheader	recordheader;
@@ -543,7 +552,6 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
 	nmpsbck_t_cellheader	cellheader;
 	nmpsbck_t_dataheader	dataheader;
 	FILE			*bckfile;
-	FILE			*bckfile1;
 	FILE			*bckfile2;
 	pwr_tUInt32		csts;
 	pwr_tUInt32		actpos;
@@ -557,11 +565,7 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
 	char			filename[80];
 	char			file_ext[8];
 	int			file_num = 1;
-	int			record_count;
 	char			*s;
-	pwr_tUInt32		cellarea_start[NMPSBCK_MAX_RECORDS];
-	pwr_tUInt32		dataarea_start[NMPSBCK_MAX_RECORDS];
-	pwr_tUInt32		record_start[NMPSBCK_MAX_RECORDS];
 	int			cell_read_success;
 	int			data_read_success;
 	int			i;
@@ -569,11 +573,17 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
 	int			data_count;
 	int			created;
 	pwr_tTime		first_record_time;
+	pwr_tTime		bckfile2_time;
+	pwr_tStatus		bckfile2_sts;
+#endif
+	FILE			*bckfile1;
+	pwr_tUInt32		cellarea_start[NMPSBCK_MAX_RECORDS];
+	pwr_tUInt32		dataarea_start[NMPSBCK_MAX_RECORDS];
+	pwr_tUInt32		record_start[NMPSBCK_MAX_RECORDS];
+	int			record_count;
 	pwr_tTime		last_record_time;
 	pwr_tTime		bckfile1_time;
-	pwr_tTime		bckfile2_time;
 	pwr_tStatus		bckfile1_sts;
-	pwr_tStatus		bckfile2_sts;
 
 	/* Open file 1 */
 #if defined(OS_ELN)
@@ -591,7 +601,7 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
 	return bckfile1_sts;
 }
 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	bck_ctx		bckctx;
 	int		sts;

@@ -33,110 +33,120 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_getdap.wb_load -- Defines the class GetDap.
+!  pwrb_c_cstodatarefv.wb_load -- Defines the class CStoDataRefv.
 !
-SObject NMps:Class
+SObject pwrb:Class
 !/**
-!  @Group MaterialPlanning,Plc
+!  @Version 1.0
+!  @Code rt_plc_macro_io.h
+!  @Group Plc,PlcIO
+!  @Summary Conditional store Data Reference value
+!  Conditional store Data Reference value.
+!  @image orm_cstodatarefv_fo.png
 !
-!  Note! Obsolete since V5.2
-!  Replaced by GetDataRefp.
+!  Conditional storage of a data reference value, DataRefv.
 !*/
-  Object GetDap $ClassDef 19
+  Object CStoDataRefv $ClassDef 620 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
-      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr Flags = pwr_mClassDef_DevOnly
     EndBody
-    !
-    ! GETDAP Runtime Body
-    !
-    Object RtBody $ObjBodyDef 1
+    Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "GetDap"
+        Attr StructName = "CStoDataRefv"
       EndBody
-      Object OutDataP $Output 1
+      !/**
+      !  The input is connected to a digital quantity or left
+      !  open. In the latter case In is default FALSE and not
+      !  adjustable in the run time system. The In attribute
+      !  specifies which value should be assigned to the
+      !  DataRefv.
+      !*/
+      Object In $Input 1 
         Body SysBody
-          Attr PgmName = "OutDataP"
           Attr TypeRef = "pwrs:Type-$Void"
-          Attr GraphName = "Out"
 	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
-	  Attr Flags |= PWR_MASK_STATE
-	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "in"
         EndBody
       EndObject
-      Object OutData_ObjId $Intern 2
+      !/**
+      !  Specifies whether a storage will be done or not. FALSE
+      !  means no storage and TRUE means storage of to data reference
+      !  value.
+      !*/
+      Object Cond $Input 2 
         Body SysBody
-          Attr PgmName = "OutData_ObjId"
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
-	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr PgmName = "Cond"
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "con"
+          Attr ConPointNr = 1
         EndBody
       EndObject
     EndObject
-    !
-    ! GETDAP Development Body
-    !
-    Object DevBody $ObjBodyDef 2
-      Object DataObject $Intern 1
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Used by the PLC Editor. Specifies the complete name of
+      !  the current Dv object.
+      !*/
+      Object DataRefvObject $Intern 1 
         Body SysBody
-          Attr PgmName = "DataObject"
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr PgmName = "DataRefvObject"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr NiNaAnnot = 1
           Attr NiNaSegments = 1
+          Attr ConPointNr = 2
         EndBody
       EndObject
-      Object Parameter $Intern 2
-        Body SysBody
-          Attr PgmName = "Parameter"
-          Attr TypeRef = "pwrs:Type-$String80"
-          Attr NiNaAnnot = 2
-        EndBody
-      EndObject
-      Object DataObjectSegments $Intern 3
+      !/**
+      !  Specifies how many segments of the Dv object name that
+      !  is to be displayed in the symbol of the StoDv object.
+      !  The segments are counted from behind.
+      !*/
+      Object DataRefvObjectSegments $Intern 2 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
       EndObject
-      Object PlcNode $Buffer 4
+      Object PlcNode $Buffer 3 
         Body SysBody
           Attr Class = pwr_eClass_PlcNode
-	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
     EndObject
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
-        Attr object_type = 234
-        Attr parameters[0] = 0
+        Attr object_type = 11
+        Attr parameters[0] = 2
         Attr parameters[1] = 0
-        Attr parameters[2] = 1
+        Attr parameters[2] = 0
         Attr parameters[3] = 0
         Attr subwindows = 0
         Attr graphmethod = 15
         Attr graphindex = 0
-        Attr default_mask[0] = 0
-        Attr default_mask[1] = 1
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 0
         Attr segname_annotation = 0
         Attr devbody_annotation = 1
-        Attr compmethod = 52
+        Attr compmethod = 11
         Attr compindex = 0
         Attr tracemethod = 0
         Attr traceindex = 0
-        Attr connectmethod = 0
-	Attr executeordermethod = 2
-        Attr objname = "GetDap"
-        Attr graphname = "Dap"
-        Attr debugpar = ""
+        Attr connectmethod = 34
+        Attr executeordermethod = 2
+        Attr objname = "CStoDataRefv"
+        Attr graphname = "CStoDataRefv"
       EndBody
     EndObject
-    !
-    ! Template object 
-    !
-    Object Template GetDap
+    Object Template CStoDataRefv
+      Body RtBody
+        Attr Cond = 1
+      EndBody
       Body DevBody
-        Attr DataObjectSegments = 2
+        Attr DataRefvObjectSegments = 2
       EndBody
     EndObject
   EndObject

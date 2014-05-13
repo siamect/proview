@@ -374,14 +374,14 @@ static pwr_tStatus	nmpsbck_data_handler( bck_ctx	bckctx)
 	      {
 	        /* Check if the objid already is in the data_db */
 	        sts = nmpsbck_data_db_find(  bckctx->data_list,
-			data_block_ptr->Data_ObjId, &data_ptr);
+			data_block_ptr->DataP.Aref.Objid, &data_ptr);
 	        if ( ODD(sts))
 	          data_ptr->found = 1;
 	        else
 	        {
 	          /* New data object, insert it */
 		  sts = nmpsbck_data_db_create( bckctx, 
-			data_block_ptr->Data_ObjId, &data_ptr);
+			data_block_ptr->DataP.Aref.Objid, &data_ptr);
 	          if ( EVEN(sts)) return sts;
 	          data_ptr->found = 1;
 	          data_ptr->new = 1;
@@ -402,14 +402,14 @@ static pwr_tStatus	nmpsbck_data_handler( bck_ctx	bckctx)
 	      {
 	        /* Check if the objid already is in the data_db */
 	        sts = nmpsbck_data_db_find(  bckctx->data_list,
-			data_block_ptr->Data_ObjId, &data_ptr);
+			data_block_ptr->DataP.Aref.Objid, &data_ptr);
 	        if ( ODD(sts))
 	          data_ptr->found = 1;
 	        else
 	        {
 	          /* New data object, insert it */
 		  sts = nmpsbck_data_db_create( bckctx,
-			data_block_ptr->Data_ObjId, &data_ptr);
+			data_block_ptr->DataP.Aref.Objid, &data_ptr);
 	          if ( EVEN(sts))
 	          {
 	            /* The object does not exist... */
@@ -2032,7 +2032,7 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx, char *backupfile)
 	        {
 	          /* Check if the objid already is in the data_db */
 	          sts = nmpsbck_data_db_find_old(  bckctx->data_list,
-			data_block_ptr->Data_ObjId, &data_ptr);
+			data_block_ptr->DataP.Aref.Objid, &data_ptr);
 	          if ( EVEN(sts))
 	          {
 	            sts = NMPS__RELOADINCONS;
@@ -2040,39 +2040,39 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx, char *backupfile)
 	          }
 	          /* Replace the objid */
 	          data_ptr->found = 1;
-	          data_block_ptr->Data_ObjId = data_ptr->objid;
+	          data_block_ptr->DataP.Aref.Objid = data_ptr->objid;
 	          /* Put NULL in pointer */
-	          data_block_ptr->DataP = NULL;
+	          data_block_ptr->DataP.Ptr = NULL;
 	          data_block_ptr->Data_Dlid = pwr_cNDlid;
 	          data_block_ptr++;
 	        }
 	        /* Replace DataLast and DataL */
 	        if ( cell_ptr->LastIndex > 0 && 
-		     cdh_ObjidIsNotNull( cell_ptr->DataL_ObjId))
+		     cdh_ObjidIsNotNull( cell_ptr->DataLP.Aref.Objid))
 	        {
 	          sts = nmpsbck_data_db_find_old(  bckctx->data_list,
-			cell_ptr->DataL_ObjId, &data_ptr);
+			cell_ptr->DataLP.Aref.Objid, &data_ptr);
 	          if ( EVEN(sts))
 	          {
 	            sts = NMPS__RELOADINCONS;
 	            goto nmpsbck_read_abort;
 	          }
 	          /* Replace the objid */
-	          cell_ptr->DataL_ObjId = data_ptr->objid;
+	          cell_ptr->DataLP.Aref.Objid = data_ptr->objid;
 	          /* Put NULL in pointer */
-	          cell_ptr->DataLP = NULL;
+	          cell_ptr->DataLP.Ptr = NULL;
 	        	
 	          sts = nmpsbck_data_db_find_old(  bckctx->data_list,
-			cell_ptr->DataLast_ObjId, &data_ptr);
+			cell_ptr->DataLastP.Aref.Objid, &data_ptr);
 	          if ( EVEN(sts))
 	          {
 	            sts = NMPS__RELOADINCONS;
 	            goto nmpsbck_read_abort;
 	          }
 	          /* Replace the objid */
-	          cell_ptr->DataLast_ObjId = data_ptr->objid;
+	          cell_ptr->DataLastP.Aref.Objid = data_ptr->objid;
 	          /* Put NULL in pointer */
-	          cell_ptr->DataLastP = NULL;
+	          cell_ptr->DataLastP.Ptr = NULL;
 	        }
 	        /* Reset flags */
 	        cell_ptr->InFlag = 0;
@@ -2098,34 +2098,34 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx, char *backupfile)
 	        {
 	          /* Check if the objid already is in the data_db */
 	          sts = nmpsbck_data_db_find_old(  bckctx->data_list,
-			data_block_ptr->Data_ObjId, &data_ptr);
+			data_block_ptr->DataP.Aref.Objid, &data_ptr);
 	          if ( EVEN(sts))
 	          {
 	            sts = NMPS__RELOADINCONS;
 	            goto nmpsbck_read_abort;
 	          }
 	          data_ptr->found = 1;
-	          data_block_ptr->Data_ObjId = data_ptr->objid;
+	          data_block_ptr->DataP.Aref.Objid = data_ptr->objid;
 	          /* Put NULL in pointer */
-	          data_block_ptr->DataP = NULL;
+	          data_block_ptr->DataP.Ptr = NULL;
 	          data_block_ptr->Data_Dlid = pwr_cNDlid;
 	          data_block_ptr++;
 	        }
 	        /* Replace DataLast */
 	        if ( cell_ptr->LastIndex > 0 && 
-		     cdh_ObjidIsNotNull( cell_ptr->DataLast_ObjId))
+		     cdh_ObjidIsNotNull( cell_ptr->DataLastP.Aref.Objid))
 	        {
 	          sts = nmpsbck_data_db_find_old(  bckctx->data_list,
-			cell_ptr->DataLast_ObjId, &data_ptr);
+			cell_ptr->DataLastP.Aref.Objid, &data_ptr);
 	          if ( EVEN(sts))
 	          {
 	            sts = NMPS__RELOADINCONS;
 	            goto nmpsbck_read_abort;
 	          }
 	          /* Replace the objid */
-	          cell_ptr->DataLast_ObjId = data_ptr->objid;
+	          cell_ptr->DataLastP.Aref.Objid = data_ptr->objid;
 	          /* Put NULL in pointer */
-	          cell_ptr->DataLastP = NULL;
+	          cell_ptr->DataLastP.Ptr = NULL;
 	        }
 	        /* Reset flags */
 	        object_ptr->TempLastIndex = cell_ptr->LastIndex;

@@ -76,10 +76,9 @@
  
 #ifndef nmps_data_info
 #define nmps_data_info
-/* Data structure for one dataobjekt in a NMpsCell and NMpsSelectCell */
+/* Data structure for one dataobject in a NMpsCell and NMpsStoreCell */
 typedef struct {
-	pwr_tFloat32	*DataP pwr_dAlignLW;
-	pwr_tObjid	Data_ObjId pwr_dAlignLW;
+	pwr_tDataRef	DataP pwr_dAlignLW;
 	pwr_tBoolean	Data_Front pwr_dAlignW;
 	pwr_tBoolean	Data_Back pwr_dAlignW;
 	gdh_tDlid	Data_Dlid pwr_dAlignW;	
@@ -90,17 +89,10 @@ typedef struct {
 
 /* Data structure for one dataobjekt in a NMpsMirrorCell */
 typedef struct {
-	pwr_tFloat32	*DataP pwr_dAlignLW;
-	pwr_tObjid	Data_ObjId pwr_dAlignLW;
+	pwr_tDataRef	DataP pwr_dAlignLW;
 	gdh_tDlid	Data_Dlid pwr_dAlignW;	
 	} plc_t_DataInfoMirCell;
 #endif
-
-/* Data structure for the DLpointer and the objid in a Cell */
-typedef struct {
-	pwr_tFloat32	*DataP;
-	pwr_tObjid	Data_ObjId;
-	} plc_t_DataInfoBrief;
 
 /* Data structure for the copyarea in a  NMpsMirrorCell */
 typedef struct {

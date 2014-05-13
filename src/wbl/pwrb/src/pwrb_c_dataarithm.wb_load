@@ -131,7 +131,7 @@ SObject pwrb:Class
       Object DataIn1 $Input 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da1"
         EndBody
       EndObject
@@ -143,7 +143,7 @@ SObject pwrb:Class
       Object DataIn2 $Input 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da2"
         EndBody
       EndObject
@@ -155,7 +155,7 @@ SObject pwrb:Class
       Object DataIn3 $Input 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da3"
         EndBody
       EndObject
@@ -167,7 +167,7 @@ SObject pwrb:Class
       Object DataIn4 $Input 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_POINTER
           Attr GraphName = "Da4"
         EndBody
       EndObject
@@ -404,21 +404,8 @@ SObject pwrb:Class
           Attr PgmName = "OutData1"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "ODa1"
-        EndBody
-      EndObject
-      !/**
-      !  Objid of the data object referred to in the output ODa1.
-      !*/
-      Object OutData1ObjId $Intern 18
-        Body SysBody
-          Attr PgmName = "OutData1ObjId"
-	  Attr Flags |= PWR_MASK_STATE
-	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
       !/**
@@ -431,21 +418,8 @@ SObject pwrb:Class
           Attr PgmName = "OutData2"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "ODa2"
-        EndBody
-      EndObject
-      !/**
-      !  Objid of the data object referred to in the output ODa2.
-      !*/
-      Object OutData2ObjId $Intern 20
-        Body SysBody
-          Attr PgmName = "OutData2ObjId"
-	  Attr Flags |= PWR_MASK_STATE
-	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
       !/**
@@ -458,21 +432,8 @@ SObject pwrb:Class
           Attr PgmName = "OutData3"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "ODa3"
-        EndBody
-      EndObject
-      !/**
-      !  Objid of the data object referred to in the output ODa3.
-      !*/
-      Object OutData3ObjId $Intern 22
-        Body SysBody
-          Attr PgmName = "OutData3ObjId"
-	  Attr Flags |= PWR_MASK_STATE
-	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
       !/**
@@ -485,21 +446,8 @@ SObject pwrb:Class
           Attr PgmName = "OutData4"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "ODa4"
-        EndBody
-      EndObject
-      !/**
-      !  Objid of the data object referred to in the output ODa4.
-      !*/
-      Object OutData4ObjId $Intern 24
-        Body SysBody
-          Attr PgmName = "OutData4ObjId"
-	  Attr Flags |= PWR_MASK_STATE
-	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
       !/**

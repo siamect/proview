@@ -228,7 +228,7 @@ static pwr_tStatus dataa_Da1 (
 	if ( dataactx->outdata1_eq_indata )
 	{
 	  sprintf( out, 
-		"Da1 */ memcpy( &%s->OutData1, %s->DataIn1P, 12)", var, var);
+		"Da1 */ memcpy( &%s->OutData1, %s->DataIn1P, 32)", var, var);
 	  dataactx->outdata1_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS; 
@@ -236,7 +236,7 @@ static pwr_tStatus dataa_Da1 (
 	if ( dataactx->outdata2_eq_indata )
 	{
 	  sprintf( out, 
-		"Da1 */ memcpy( &%s->OutData2, %s->DataIn1P, 12)", var, var);
+		"Da1 */ memcpy( &%s->OutData2, %s->DataIn1P, 32)", var, var);
 	  dataactx->outdata2_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS; 
@@ -244,7 +244,7 @@ static pwr_tStatus dataa_Da1 (
 	if ( dataactx->outdata3_eq_indata )
 	{
 	  sprintf( out, 
-		"Da1 */ memcpy( &%s->OutData3, %s->DataIn1P, 12)", var, var);
+		"Da1 */ memcpy( &%s->OutData3, %s->DataIn1P, 32)", var, var);
 	  dataactx->outdata3_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS; 
@@ -252,7 +252,7 @@ static pwr_tStatus dataa_Da1 (
 	if ( dataactx->outdata4_eq_indata )
 	{
 	  sprintf( out, 
-		"Da1 */ memcpy( &%s->OutData4, %s->DataIn1P, 12)", var, var);
+		"Da1 */ memcpy( &%s->OutData4, %s->DataIn1P, 32)", var, var);
 	  dataactx->outdata4_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS;
@@ -286,7 +286,7 @@ static pwr_tStatus dataa_Da2 (
 	if ( dataactx->outdata1_eq_indata )
 	{
 	  sprintf( out,
-		"Da2 */ memcpy( &%s->OutData1, %s->DataIn2P, 12)", var, var);
+		"Da2 */ memcpy( &%s->OutData1, %s->DataIn2P, 32)", var, var);
 	  dataactx->outdata1_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS; 
@@ -294,7 +294,7 @@ static pwr_tStatus dataa_Da2 (
 	if ( dataactx->outdata2_eq_indata )
 	{
 	  sprintf( out, 
-		"Da2 */ memcpy( &%s->OutData2, %s->DataIn2P, 12)", var, var);
+		"Da2 */ memcpy( &%s->OutData2, %s->DataIn2P, 32)", var, var);
 	  dataactx->outdata2_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS; 
@@ -302,7 +302,7 @@ static pwr_tStatus dataa_Da2 (
 	if ( dataactx->outdata3_eq_indata )
 	{
 	  sprintf( out, 
-		"Da2 */ memcpy( &%s->OutData3, %s->DataIn2P, 12)", var, var);
+		"Da2 */ memcpy( &%s->OutData3, %s->DataIn2P, 32)", var, var);
 	  dataactx->outdata3_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS; 
@@ -310,7 +310,7 @@ static pwr_tStatus dataa_Da2 (
 	if ( dataactx->outdata4_eq_indata )
 	{
 	  sprintf( out, 
-		"Da2 */ memcpy( &%s->OutData4, %s->DataIn2P, 12)", var, var);
+		"Da2 */ memcpy( &%s->OutData4, %s->DataIn2P, 32)", var, var);
 	  dataactx->outdata4_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS;
@@ -344,7 +344,7 @@ static pwr_tStatus dataa_Da3 (
 	if ( dataactx->outdata1_eq_indata )
 	{
 	  sprintf( out, 
-		"Da3 */ memcpy( &%s->OutData1, %s->DataIn3P, 12)", var, var);
+		"Da3 */ memcpy( &%s->OutData1, %s->DataIn3P, 32)", var, var);
 	  dataactx->outdata1_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS; 
@@ -352,7 +352,7 @@ static pwr_tStatus dataa_Da3 (
 	if ( dataactx->outdata2_eq_indata )
 	{
 	  sprintf( out, 
-		"Da3 */ memcpy( &%s->OutData2, %s->DataIn3P, 12)", var, var);
+		"Da3 */ memcpy( &%s->OutData2, %s->DataIn3P, 32)", var, var);
 	  dataactx->outdata2_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS; 
@@ -360,7 +360,7 @@ static pwr_tStatus dataa_Da3 (
 	if ( dataactx->outdata3_eq_indata )
 	{
 	  sprintf( out, 
-		"Da3 */ memcpy( &%s->OutData3, %s->DataIn3P, 12)", var, var);
+		"Da3 */ memcpy( &%s->OutData3, %s->DataIn3P, 32)", var, var);
 	  dataactx->outdata3_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS; 
@@ -368,7 +368,7 @@ static pwr_tStatus dataa_Da3 (
 	if ( dataactx->outdata4_eq_indata )
 	{
 	  sprintf( out, 
-		"Da3 */ memcpy( &%s->OutData4, %s->DataIn3P, 12)", var, var);
+		"Da3 */ memcpy( &%s->OutData4, %s->DataIn3P, 32)", var, var);
 	  dataactx->outdata4_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS;
@@ -402,7 +402,7 @@ static pwr_tStatus dataa_Da4 (
 	if ( dataactx->outdata1_eq_indata )
 	{
 	  sprintf( out, 
-		"Da4 */ memcpy( &%s->OutData1, %s->DataIn4P, 12)", var, var);
+		"Da4 */ memcpy( &%s->OutData1, %s->DataIn4P, 32)", var, var);
 	  dataactx->outdata1_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS; 
@@ -410,7 +410,7 @@ static pwr_tStatus dataa_Da4 (
 	if ( dataactx->outdata2_eq_indata )
 	{
 	  sprintf( out, 
-		"Da4 */ memcpy( &%s->OutData2, %s->DataIn4P, 12)", var, var);
+		"Da4 */ memcpy( &%s->OutData2, %s->DataIn4P, 32)", var, var);
 	  dataactx->outdata2_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS; 
@@ -418,7 +418,7 @@ static pwr_tStatus dataa_Da4 (
 	if ( dataactx->outdata3_eq_indata )
 	{
 	  sprintf( out, 
-		"Da4 */ memcpy( &%s->OutData3, %s->DataIn4P, 12)", var, var);
+		"Da4 */ memcpy( &%s->OutData3, %s->DataIn4P, 32)", var, var);
 	  dataactx->outdata3_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS; 
@@ -426,7 +426,7 @@ static pwr_tStatus dataa_Da4 (
 	if ( dataactx->outdata4_eq_indata )
 	{
 	  sprintf( out, 
-		"Da4 */ memcpy( &%s->OutData4, %s->DataIn4P, 12)", var, var);
+		"Da4 */ memcpy( &%s->OutData4, %s->DataIn4P, 32)", var, var);
 	  dataactx->outdata4_eq_indata = 0;
 	  *incr = strlen(out);
 	  return GSX__SUCCESS;

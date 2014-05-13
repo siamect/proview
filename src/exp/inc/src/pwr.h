@@ -548,8 +548,8 @@ typedef pwr_sAttrRef pwr_tAttrRef;
   @aref dataref DataRef
 */
 typedef struct {
-  void		    *Ptr;	//!< Private plc pointer to data object.
-  pwr_sAttrRef      Aref;	//!< Attribute reference to data object.
+  pwr_tVoid    	    *Ptr pwr_dAlignLW;	//!< Private plc pointer to data object.
+  pwr_tAttrRef      Aref pwr_dAlignLW;	//!< Attribute reference to data object.
 } pwr_tDataRef;
 
 /*_*

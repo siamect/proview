@@ -53,11 +53,6 @@
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
-typedef struct {
-        pwr_tFloat32    *DataP pwr_dAlignLW;
-        pwr_tObjid      Data_ObjId pwr_dAlignLW;
-        } plc_t_DataInfoBrief;
-
 /* 		PLC RUTINER			*/
 
 /*_*
@@ -158,14 +153,13 @@ void DataCollect_exec(
   pwr_sClass_DataCollect  *object)
 {
 	int	i;
-	plc_t_DataInfoBrief	**InP;
+	pwr_tDataRef	**InP;
 
 	for (  i = 0; i < object->MaxIndex; i++)
 	{
-	  InP = (plc_t_DataInfoBrief **) ((char *) &object->DataIn1P +
+	  InP = (pwr_tDataRef **) ((char *) &object->DataIn1P +
 		i * pwr_cInputOffset);
-	  object->DataP[i] = (*InP)->DataP;
-	  object->DataObjId[i] = (*InP)->Data_ObjId;
+	  memcpy( &object->DataP[i], *InP, sizeof(pwr_tDataRef));
 	}
 }
 

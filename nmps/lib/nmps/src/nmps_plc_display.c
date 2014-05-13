@@ -278,11 +278,11 @@ void CellDisp_exec(
 	      data_info += cell->LastIndex - 1;
 	    for ( i = num; i < num + cell->LastIndex; i++)
 	    {
-	      datap = (char *) data_info->DataP;
+	      datap = (char *) data_info->DataP.Ptr;
 	      dataptr[i] = datap;
 	      if ( datap)
 	      {
-	        object->Objid[i] = data_info->Data_ObjId;
+	        object->Objid[i] = data_info->DataP.Aref.Objid;
 	        if ( object->FloatAttrOffs[0] >= 0)
 	          object->F1[i] = *(pwr_tFloat32 *)(datap + object->FloatAttrOffs[0]);
 	        if ( object->FloatAttrOffs[1] >= 0)
@@ -911,11 +911,11 @@ void CellDispMir_exec(
 	      data_info += cell->LastIndex - 1;
 	    for ( i = num; i < num + cell->LastIndex; i++)
 	    {
-	      datap = (char *) data_info->DataP;
+	      datap = (char *) data_info->DataP.Ptr;
 	      dataptr[i] = datap;
 	      if ( datap)
 	      {
-	        object->Objid[i] = data_info->Data_ObjId;
+	        object->Objid[i] = data_info->DataP.Aref.Objid;
 	        if ( object->FloatAttrOffs[0] >= 0)
 	          object->F1[i] = *(pwr_tFloat32 *)(datap + object->FloatAttrOffs[0]);
 	        if ( object->FloatAttrOffs[1] >= 0)
@@ -1464,11 +1464,11 @@ void CellUpdate_exec(
 	      data_info += cell->LastIndex - 1;
 	    for ( i = num; i < num + cell->LastIndex; i++)
 	    {
-	      datap = (char *) data_info->DataP;
+	      datap = (char *) data_info->DataP.Ptr;
 	      dataptr[i] = datap;
 	      if ( datap)
 	      {
-	        object->Objid[i] = data_info->Data_ObjId;
+	        object->Objid[i] = data_info->DataP.Aref.Objid;
 	        if ( object->FloatAttrOffs[0] >= 0)
                 {
 	          if ( object->F1[i] != object->F1Old[i])

@@ -51,7 +51,7 @@ SObject pwrs:Type
   Object $DataRef pwr_eClass_Type pwr_eTix_DataRef
     Body SysBody
       Attr Type = pwr_eType_DataRef
-      Attr Size = 28
+      Attr Size = 32
     EndBody
   EndObject
 EndSObject

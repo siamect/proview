@@ -93,6 +93,7 @@ static const    graph_sTypeStr	graph_type_table[] = {
     {"NetStatus", pwr_eType_NetStatus,  sizeof(pwr_tNetStatus)},
     {"Enum", 	pwr_eType_Enum,     sizeof(pwr_tEnum)},
     {"Mask", 	pwr_eType_Mask,     sizeof(pwr_tMask)},
+    {"DataRef", pwr_eType_DataRef,  sizeof(pwr_tDataRef)},
     {"Bit",  	(pwr_eType)graph_eType_Bit,    sizeof(pwr_tBit)}
     };
 
@@ -4759,8 +4760,6 @@ int Graph::get_reference_name( char *name, char *tname)
     pwr_tAName aname;
     pwr_tAName refattrname = "";
     char *s;
-    pwr_sAttrRef aref;
-    pwr_tOid oid;
     pwr_tTypeId atid;
     pwr_tUInt32 asize, aoffs, aelem;
 
@@ -4784,14 +4783,28 @@ int Graph::get_reference_name( char *name, char *tname)
 
     if ( asize == sizeof(pwr_tOid)) {
       // Reference is an objid
+      pwr_tOid oid;
+
       sts = gdh_GetObjectInfo( refname, &oid, sizeof(oid));
       if ( EVEN(sts)) return sts;
 
       sts = gdh_ObjidToName( oid, aname, sizeof(aname), cdh_mName_volumeStrict);
       if ( EVEN(sts)) return sts;
     }
+    else if ( asize == sizeof(pwr_tDataRef)) {
+      // Reference is an dataref
+      pwr_tDataRef dataref;
+
+      sts = gdh_GetObjectInfo( refname, &dataref, sizeof(dataref));
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_AttrrefToName( &dataref.Aref, aname, sizeof(aname), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+    }
     else {
       // Reference is an attrref
+
+      pwr_sAttrRef aref;
       sts = gdh_GetObjectInfo( refname, &aref, sizeof(aref));
       if ( EVEN(sts)) return sts;
 

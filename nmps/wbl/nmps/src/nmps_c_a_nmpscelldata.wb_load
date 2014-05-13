@@ -59,21 +59,9 @@ SObject NMps:Class
       !*/
       Object DataP $Attribute 1
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-        EndBody
-      EndObject
-      !/**
-      ! Objid of data object.
-      !*/
-      Object Data_ObjId $Attribute 2
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_NOEDIT
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       !/**

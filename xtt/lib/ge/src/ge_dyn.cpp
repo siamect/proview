@@ -217,6 +217,7 @@ static int check_format( char *format, int type)
     break;
   case pwr_eType_Objid:
   case pwr_eType_AttrRef:
+  case pwr_eType_DataRef:
     if ( *s == 'o' || *s == 's')
       return 1;
     break;
@@ -4043,6 +4044,44 @@ int GeValue::scan( grow_tObject object)
     }
     len = sprintf( buf, "%s", name);
     memcpy( &old_value, &aref, MIN(size, (int) sizeof(old_value)));
+    break;
+  }
+  case pwr_eType_DataRef: {
+    int sts;
+    char name[120];
+    pwr_tDataRef dataref = *(pwr_tDataRef *)p;
+
+    if ( !first_scan) {
+      if ( memcmp( &old_value, &dataref, size) == 0 )
+	// No change since last time
+	return 1;
+    }
+    else
+      first_scan = false;
+
+    if ( cdh_ObjidIsNull( dataref.Aref.Objid))
+      strcpy( name, "");
+    else {
+      switch ( format[1]) {
+      case '1':
+	// Format %1o, write path
+	sts = gdh_AttrrefToName ( &dataref.Aref, name, sizeof(name), 
+				  cdh_mName_pathStrict);
+	break;
+      case '2':
+	// Format %2o, write volume and path
+	sts = gdh_AttrrefToName ( &dataref.Aref, name, sizeof(name), 
+				  cdh_mName_volumeStrict);
+	break;
+      default:
+	sts = gdh_AttrrefToName ( &dataref.Aref, name, sizeof(name), 
+				  cdh_mName_object | cdh_mName_attribute);
+      }
+      if ( EVEN(sts))
+	strcpy( name, "");
+    }
+    len = sprintf( buf, "%s", name);
+    memcpy( &old_value, &dataref, MIN(size, (int) sizeof(old_value)));
     break;
   }
   case pwr_eType_Time: {
@@ -10521,7 +10560,8 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
       pwr_tAName refname;
       dyn->parse_attr_name( ref_object, refname, &inverted,
 			    &attr_type, &attr_size);
-      dyn->graph->get_reference_name( refname, parsed_name); 
+      sts = dyn->graph->get_reference_name( refname, parsed_name);
+      if ( EVEN(sts)) break;
       // reference = 1;
     }
     else {
@@ -10531,15 +10571,41 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
 	reference = 1;
     }
     if ( reference) {
-      // The ref_object is an objid-attribute that containts the object 
-      pwr_tOid oid;
+      // The ref_object is an objid-attribute that contains the object 
+      switch ( attr_type) {
+      case pwr_eType_AttrRef: {
+	pwr_tAttrRef aref;
 
-      sts = gdh_GetObjectInfo( parsed_name, &oid, 
-				 sizeof(oid));
-      if ( EVEN(sts)) break;
-      if ( cdh_ObjidIsNull( oid))
+	sts = gdh_GetObjectInfo( parsed_name, &aref, 
+				 sizeof(aref));
+	if ( EVEN(sts)) break;
+	if ( cdh_ObjidIsNull( aref.Objid))
+	  break;
+	attrref = aref;
 	break;
-      attrref = cdh_ObjidToAref( oid);
+      }
+      case pwr_eType_DataRef: {
+	pwr_tDataRef dataref;
+
+	sts = gdh_GetObjectInfo( parsed_name, &dataref, 
+				 sizeof(dataref));
+	if ( EVEN(sts)) break;
+	if ( cdh_ObjidIsNull( dataref.Aref.Objid))
+	  break;
+	attrref = dataref.Aref;
+	break;
+      }
+      default: {
+	pwr_tOid oid;
+
+	sts = gdh_GetObjectInfo( parsed_name, &oid, 
+				 sizeof(oid));
+	if ( EVEN(sts)) break;
+	if ( cdh_ObjidIsNull( oid))
+	  break;
+	attrref = cdh_ObjidToAref( oid);
+      }
+      }
     }
     else {
       sts = gdh_NameToAttrref( pwr_cNObjid, parsed_name, &attrref);

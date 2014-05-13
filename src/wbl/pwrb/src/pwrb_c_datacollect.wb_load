@@ -51,7 +51,7 @@ SObject pwrb:Class
 !  objects.
 !
 !  Another advantage of DataCollect is that its sometimes convenient to have
-!  the values arranged in an array, to use for example in an for or
+!  the values arranged in an array, for example to use in a for or
 !  while loop.
 !
 !  MaxIndex should be assigned the number of used inputs in the DataCollect
@@ -67,7 +67,7 @@ SObject pwrb:Class
 !
 !      OA1 = 0;
 !      for ( i = 0; i < Da1->MaxIndex; i++)
-!        if ( ((pwr_sClass_Mtrl *)(Da1->DataP[i]))->Length > 10.0)
+!        if ( ((pwr_sClass_Mtrl *)(Da1->DataP[i].Ptr))->Length > 10.0)
 !          OA1++;
 !
 !*/
@@ -268,21 +268,7 @@ SObject pwrb:Class
       !*/
       Object DataP $Intern 26
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-          Attr Flags |= PWR_MASK_PRIVATE
-	  Attr Flags |= PWR_MASK_STATE
-	  Attr Flags |= PWR_MASK_NOEDIT
-	  Attr Flags |= PWR_MASK_ARRAY
-	  Attr Elements = 24
-        EndBody
-      EndObject
-      !/**
-      !  Array that contains objid to the the data input objects.
-      !*/
-      Object DataObjId $Intern 27
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_ARRAY
@@ -295,20 +281,10 @@ SObject pwrb:Class
       Object OutDataP $Output 28
         Body SysBody
           Attr PgmName = "OutDataP"
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "Out"
-	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-	  Attr Flags |= PWR_MASK_PRIVATE
-        EndBody
-      EndObject
-      Object OutData_ObjId $Intern 29
-        Body SysBody
-          Attr PgmName = "OutData_ObjId"
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
     EndObject
@@ -327,7 +303,7 @@ SObject pwrb:Class
       Body SysBody
         Attr object_type = 11
         Attr parameters[0] = 24
-        Attr parameters[1] = 3
+        Attr parameters[1] = 2
         Attr parameters[2] = 1
         Attr parameters[3] = 0
         Attr subwindows = 0

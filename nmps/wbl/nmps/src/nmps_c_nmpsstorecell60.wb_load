@@ -472,19 +472,9 @@ SObject NMps:Class
       Object DataLP $Intern 28
         Body SysBody
           Attr PgmName = "DataLP"
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object DataL_ObjId $Intern 29
-        Body SysBody
-          Attr PgmName = "DataL_ObjId"
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object DataL_Front $Intern 30
@@ -531,23 +521,10 @@ SObject NMps:Class
       Object DataLastP $Output 35
         Body SysBody
           Attr PgmName = "DataLastP"
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "DL"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-        EndBody
-      EndObject
-      !/**
-      ! Objid for data object with highest index.
-      !*/
-      Object DataLast_ObjId $Intern 36
-        Body SysBody
-          Attr PgmName = "DataLast_ObjId"
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       !/**
@@ -595,18 +572,9 @@ SObject NMps:Class
       EndObject
       Object DataCurrentP $Intern 42
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object DataCurrent_ObjId $Intern 43
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object DataCurrent_Front $Intern 44

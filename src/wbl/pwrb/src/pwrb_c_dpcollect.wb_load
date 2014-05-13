@@ -314,20 +314,10 @@ SObject pwrb:Class
       Object OutDataP $Output 27
         Body SysBody
           Attr PgmName = "OutDataP"
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "Out"
-	  Attr Flags |= PWR_MASK_POINTER
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-	  Attr Flags |= PWR_MASK_PRIVATE
-        EndBody
-      EndObject
-      Object OutData_ObjId $Intern 28
-        Body SysBody
-          Attr PgmName = "OutData_ObjId"
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
     EndObject

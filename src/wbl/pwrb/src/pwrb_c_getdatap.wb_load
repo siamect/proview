@@ -44,6 +44,9 @@ SObject pwrb:Class
 !  Get Data reference.
 !  @image orm_getdatap_fo.gif
 !
+!  Obsolete since V5.1. 
+!  Use GetDataRefp instead.
+!
 !  Fetches the reference to a data object from a data output attribute.
 !  
 !  The complete name of quantity has to be supplied.
@@ -75,7 +78,7 @@ SObject pwrb:Class
       !*/
       Object DataObjid $Intern 2
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject

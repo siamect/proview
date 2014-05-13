@@ -865,3 +865,19 @@
   obj->ActVal.low = in;
   obj->ActVal.high = 0;
 #endif
+
+/*_*
+  StoDataRefv
+  Store data reference value 
+  @aref stodatarefv StoDataRefv
+*/
+#define StoDataRefv_exec(obj,in) \
+  memcpy( &obj->ActualValue, &(in), sizeof(pwr_tDataRef));
+
+/*_*
+  CStoDataRefv
+  Conditional storage of a data reference value 
+  @aref cstodatarefv CStoDataRefv
+*/
+#define CStoDataRefv_exec(obj,in,cond)				\
+  if ( cond) memcpy( &obj->ActualValue, &(in), sizeof(pwr_tDataRef));

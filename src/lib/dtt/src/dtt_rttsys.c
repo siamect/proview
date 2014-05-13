@@ -152,8 +152,7 @@ typedef struct {
 	} rttsys_t_cell_list;
 
 typedef struct {
-	pwr_tFloat32	*DataP;
-	pwr_tObjid	Data_ObjId pwr_dAlignLW;
+	pwr_tDataRef	DataP pwr_dAlignLW;
 	pwr_tBoolean	Data_Front pwr_dAlignW;
 	pwr_tBoolean	Data_Back pwr_dAlignW;
 	gdh_tDlid	Data_Dlid pwr_dAlignW;	
@@ -162,8 +161,7 @@ typedef struct {
 	} plc_t_DataInfo;
 
 typedef struct {
-	pwr_tFloat32	*DataP;
-	pwr_tObjid	Data_ObjId pwr_dAlignW;
+	pwr_tDataRef	DataP pwr_dAlignLW;
 	gdh_tDlid	Data_Dlid pwr_dAlignW;	
 	} plc_t_DataInfoMirCell;
 
@@ -5752,7 +5750,7 @@ int RTTSYS_OBJECT_CELL( menu_ctx	ctx,
         else
           menu_ptr->value_ptr = (char *) &((pwr_sClass_NMpsCell *)(cell_ptr))->LastIndex;
         menu_ptr++;
-        menu_ptr->value_ptr = (char *) &((pwr_sClass_NMpsCell *)(cell_ptr))->DataLast_ObjId;
+        menu_ptr->value_ptr = (char *) &((pwr_sClass_NMpsCell *)(cell_ptr))->DataLastP.Aref.Objid;
         menu_ptr++;
         *(pwr_tBoolean *)(menu_ptr->value_ptr) = 
 		((pwr_sClass_NMpsCell *)(cell_ptr))->DataLast_Front;
@@ -5801,7 +5799,7 @@ int RTTSYS_OBJECT_CELL( menu_ctx	ctx,
       {
         menu_ptr->value_ptr = (char *) &((pwr_sClass_NMpsMirrorCell *)(cell_ptr))->LastIndex;
         menu_ptr++;
-        menu_ptr->value_ptr = (char *) &((pwr_sClass_NMpsMirrorCell *)(cell_ptr))->DataLast_ObjId;
+        menu_ptr->value_ptr = (char *) &((pwr_sClass_NMpsMirrorCell *)(cell_ptr))->DataLastP.Aref.Objid;
         menu_ptr++;
         menu_ptr->value_ptr = (char *) RTT_ERASE;
         menu_ptr++;
@@ -5878,8 +5876,8 @@ int RTTSYS_OBJECT_CELL( menu_ctx	ctx,
             menu_ptr->func2 = &rttsys_cell_dataobject;
             menu_ptr->func3 = &rtt_object_parameters;
 	    menu_ptr->argoi = cell_objid;
-            menu_ptr->arg1 = &data_info->Data_ObjId;
-            *(pwr_tObjid *)(menu_ptr->value_ptr) = data_info->Data_ObjId;
+            menu_ptr->arg1 = &data_info->DataP.Aref.Objid;
+            *(pwr_tObjid *)(menu_ptr->value_ptr) = data_info->DataP.Aref.Objid;
             menu_ptr++;
             *(pwr_tBoolean *)(menu_ptr->value_ptr) = data_info->Data_Front;
             menu_ptr++;
@@ -5913,8 +5911,8 @@ int RTTSYS_OBJECT_CELL( menu_ctx	ctx,
             menu_ptr->func2 = &rttsys_cell_dataobject;
             menu_ptr->func3 = &rtt_object_parameters;
 	    menu_ptr->argoi = cell_objid;
-            menu_ptr->arg1 = &data_info->Data_ObjId;
-            *(pwr_tObjid *)(menu_ptr->value_ptr) = data_info->Data_ObjId;
+            menu_ptr->arg1 = &data_info->DataP.Aref.Objid;
+            *(pwr_tObjid *)(menu_ptr->value_ptr) = data_info->DataP.Aref.Objid;
             menu_ptr++;
             *(pwr_tBoolean *)(menu_ptr->value_ptr) = 0;
             menu_ptr++;
@@ -6258,9 +6256,9 @@ int RTTSYS_NMPSCELL( 	menu_ctx	ctx,
 
             data_info = (plc_t_DataInfo	*)
 		&((pwr_sClass_NMpsCell *)(cellist_ptr->value_ptr))->Data1P;
-            cell_menu_ptr->arg1 = &data_info->Data_ObjId;
+            cell_menu_ptr->arg1 = &data_info->DataP.Aref.Objid;
 
-            *(pwr_tObjid *)(menu_ptr->value_ptr) = data_info->Data_ObjId;
+            *(pwr_tObjid *)(menu_ptr->value_ptr) = data_info->DataP.Aref.Objid;
             menu_ptr++;
             *(pwr_tBoolean *)(menu_ptr->value_ptr) = data_info->Data_Front;
             menu_ptr++;
@@ -6289,9 +6287,9 @@ int RTTSYS_NMPSCELL( 	menu_ctx	ctx,
 
             data_info = (plc_t_DataInfoMirCell *)
 		&((pwr_sClass_NMpsMirrorCell *)(cellist_ptr->value_ptr))->Data1P;
-            cell_menu_ptr->arg1 = &data_info->Data_ObjId;
+            cell_menu_ptr->arg1 = &data_info->DataP.Aref.Objid;
 
-            *(pwr_tObjid *)(menu_ptr->value_ptr) = data_info->Data_ObjId;
+            *(pwr_tObjid *)(menu_ptr->value_ptr) = data_info->DataP.Aref.Objid;
             menu_ptr++;
             *(pwr_tBoolean *)(menu_ptr->value_ptr) = 0;
             menu_ptr++;
@@ -6341,8 +6339,8 @@ int RTTSYS_NMPSCELL( 	menu_ctx	ctx,
 	        menu_ptr++;
 	        *(pwr_tInt32 *)(menu_ptr->value_ptr) = l + 1;
 	        menu_ptr++;
-                cell_menu_ptr->arg1 = &data_info->Data_ObjId;
-                *(pwr_tObjid *)(menu_ptr->value_ptr) = data_info->Data_ObjId;
+                cell_menu_ptr->arg1 = &data_info->DataP.Aref.Objid;
+                *(pwr_tObjid *)(menu_ptr->value_ptr) = data_info->DataP.Aref.Objid;
                 menu_ptr++;
                 *(pwr_tBoolean *)(menu_ptr->value_ptr) = data_info->Data_Front;
                 menu_ptr++;
@@ -6387,8 +6385,8 @@ int RTTSYS_NMPSCELL( 	menu_ctx	ctx,
 	        menu_ptr++;
 	        *(pwr_tInt32 *)(menu_ptr->value_ptr) = l + 1;
 	        menu_ptr++;
-                cell_menu_ptr->arg1 = &data_info->Data_ObjId;
-                *(pwr_tObjid *)(menu_ptr->value_ptr) = data_info->Data_ObjId;
+                cell_menu_ptr->arg1 = &data_info->DataP.Aref.Objid;
+                *(pwr_tObjid *)(menu_ptr->value_ptr) = data_info->DataP.Aref.Objid;
                 menu_ptr++;
                 *(pwr_tBoolean *)(menu_ptr->value_ptr) = 0;
                 menu_ptr++;

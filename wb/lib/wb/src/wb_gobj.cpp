@@ -58,7 +58,7 @@
 
 #define	BEEP	    putchar( '\7' );
 
-#define	GOBJ_MAX_METHOD 33
+#define	GOBJ_MAX_METHOD 34
 
 typedef int (* gobj_tMethod)( WFoe *, vldh_t_node, unsigned long);
 
@@ -96,6 +96,7 @@ int	gobj_get_object_m30( WFoe *foe, vldh_t_node node, unsigned long index);
 int	gobj_get_object_m31( WFoe *foe, vldh_t_node node, unsigned long index);
 int	gobj_get_object_m32( WFoe *foe, vldh_t_node node, unsigned long index);
 int	gobj_get_object_m33( WFoe *foe, vldh_t_node node, unsigned long index);
+int	gobj_get_object_m34( WFoe *foe, vldh_t_node node, unsigned long index);
 
 gobj_tMethod gobj_get_object_m[40] = {
 	gobj_get_object_m0,
@@ -132,6 +133,7 @@ gobj_tMethod gobj_get_object_m[40] = {
  	gobj_get_object_m31,
  	gobj_get_object_m32,
  	gobj_get_object_m33,
+ 	gobj_get_object_m34,
 	};
 
 static int	gobj_expand_m0(	WFoe		*foe,
@@ -3018,6 +3020,59 @@ int	gobj_get_object_m33( WFoe *foe, vldh_t_node node, unsigned long index)
 			  node->ln.oid, 
 			  "DevBody",
 			  "BoObject",
+			  (char *)&attrref, sizeof(attrref)); 
+  if ( EVEN(sts)) return sts;
+
+  foe->gre->node_update( node);
+
+  return FOE__SUCCESS;
+}
+
+//
+//	Method for getdatarefv, stodatarefv, cstodatarefv. Inserts the selected sv-object in the
+//	navigator in the parameter DataRefvObject in a GetDataRefv object.
+//
+int	gobj_get_object_m34( WFoe *foe, vldh_t_node node, unsigned long index)
+{
+  pwr_tClassId	cid;
+  ldh_tSesContext	ldhses;
+  int		sts;
+  vldh_t_plc	plc;
+  pwr_sAttrRef	attrref;
+  int		is_attr;
+
+  /* Get the selected object in the navigator */
+  plc = (node->hn.wind)->hw.plc;
+  ldhses =(node->hn.wind)->hw.ldhses;
+
+  sts = gobj_get_select( foe, &attrref, &is_attr);
+  if ( EVEN(sts)) { 
+    foe->message( "Select Sv object in the navigator");
+    BEEP;
+    return sts;
+  }
+
+
+  /* Check that the objdid is an av object */
+  sts = ldh_GetAttrRefTid( ldhses, &attrref, &cid);
+  if (EVEN(sts)) return sts;
+
+  if ( cid != pwr_cClass_DataRefv) {
+    foe->message( "Selected object is not a DataRefv object");
+    BEEP;
+    return 0;
+  }
+	
+  if ( cdh_IsClassVolume( node->ln.oid.vid)) {
+    sts = gobj_ref_replace( ldhses, node, &attrref);
+    if ( EVEN(sts)) return sts;
+  }
+
+  /* Set the parameter value */
+  sts = ldh_SetObjectPar( ldhses,
+			  node->ln.oid, 
+			  "DevBody",
+			  "DataRefvObject",
 			  (char *)&attrref, sizeof(attrref)); 
   if ( EVEN(sts)) return sts;
 

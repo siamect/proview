@@ -255,23 +255,10 @@ SObject NMps:Class
       Object OutDataP $Output 19
         Body SysBody
           Attr PgmName = "OutDataP"
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "Out"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-        EndBody
-      EndObject
-      !/**
-      !  Objid of the data object of the selected input.
-      !*/
-      Object OutData_ObjId $Intern 20
-        Body SysBody
-          Attr PgmName = "OutData_ObjId"
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
     EndObject
@@ -290,7 +277,7 @@ SObject NMps:Class
       Body SysBody
         Attr object_type = 11
         Attr parameters[0] = 18
-        Attr parameters[1] = 1
+        Attr parameters[1] = 0
         Attr parameters[2] = 1
         Attr parameters[3] = 0
         Attr subwindows = 0

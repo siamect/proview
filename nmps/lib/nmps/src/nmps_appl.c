@@ -570,7 +570,7 @@ nmpsappl_Mirror(
 	        for ( j = 0; j < applctx->data_count; j++)
 	        {
 	          if ( cdh_ObjidIsEqual( applctx->datainfo[j].objid, 
-				data_block_ptr->Data_ObjId))
+				data_block_ptr->DataP.Aref.Objid))
 	          {
 	            found = 1;
 	            break;
@@ -579,7 +579,7 @@ nmpsappl_Mirror(
 	        if ( !found)
 	        {
 	          applctx->datainfo[applctx->data_count].objid = 
-			data_block_ptr->Data_ObjId;
+			data_block_ptr->DataP.Aref.Objid;
 	          applctx->datainfo[applctx->data_count].front = 
 			data_block_ptr->Data_Front;
 	          applctx->datainfo[applctx->data_count].back = 
@@ -624,7 +624,7 @@ nmpsappl_Mirror(
 	        for ( j = 0; j < i; j++)
 	        {
 	          if ( cdh_ObjidIsEqual( applctx->datainfo[j].objid, 
-				data_block_ptr->Data_ObjId))
+				data_block_ptr->DataP.Aref.Objid))
 	          {
 	            found = 1;
 	            break;
@@ -633,7 +633,7 @@ nmpsappl_Mirror(
 	        if ( !found)
 	        {
 	          applctx->datainfo[applctx->data_count].objid = 
-			data_block_ptr->Data_ObjId;
+			data_block_ptr->DataP.Aref.Objid;
 	          applctx->datainfo[applctx->data_count].select = 0;
 	          applctx->datainfo[applctx->data_count].front = 0;
 	          applctx->datainfo[applctx->data_count].back = 0;

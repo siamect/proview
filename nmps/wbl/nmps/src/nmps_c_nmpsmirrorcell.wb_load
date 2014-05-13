@@ -202,23 +202,10 @@ SObject NMps:Class
       Object DataLastP $Output 17 
         Body SysBody
           Attr PgmName = "DataLastP"
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "DL"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-        EndBody
-      EndObject
-      !/**
-      ! Objid for data object with highest index.
-      !*/
-      Object DataLast_ObjId $Intern 18 
-        Body SysBody
-          Attr PgmName = "DataLast_ObjId"
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object DataLast_Dlid $Intern 19 
@@ -230,18 +217,9 @@ SObject NMps:Class
       EndObject
       Object DataCurrentP $Intern 20 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object DataCurrent_ObjId $Intern 21 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Idx $Intern 22 
@@ -292,23 +270,10 @@ SObject NMps:Class
       Object Data1P $Output 28 
         Body SysBody
           Attr PgmName = "Data1P"
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "D1"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-        EndBody
-      EndObject
-      !/**
-      ! Objid of data object in index 1.
-      !*/
-      Object Data1_ObjId $Intern 29 
-        Body SysBody
-          Attr PgmName = "Data1_ObjId"
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data1_Dlid $Intern 30 
@@ -322,20 +287,10 @@ SObject NMps:Class
       Object Data2P $Output 31 
         Body SysBody
           Attr PgmName = "Data2P"
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "D2"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-        EndBody
-      EndObject
-      Object Data2_ObjId $Intern 32 
-        Body SysBody
-          Attr PgmName = "Data2_ObjId"
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data2_Dlid $Intern 33 
@@ -348,19 +303,10 @@ SObject NMps:Class
       EndObject
       Object Data3P $Output 34 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "D3"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-        EndBody
-      EndObject
-      Object Data3_ObjId $Intern 35 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data3_Dlid $Intern 36 
@@ -372,19 +318,10 @@ SObject NMps:Class
       EndObject
       Object Data4P $Output 37 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "D4"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-        EndBody
-      EndObject
-      Object Data4_ObjId $Intern 38 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data4_Dlid $Intern 39 
@@ -396,19 +333,10 @@ SObject NMps:Class
       EndObject
       Object Data5P $Output 40 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "D5"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-        EndBody
-      EndObject
-      Object Data5_ObjId $Intern 41 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data5_Dlid $Intern 42 
@@ -420,19 +348,10 @@ SObject NMps:Class
       EndObject
       Object Data6P $Output 43 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "D6"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-        EndBody
-      EndObject
-      Object Data6_ObjId $Intern 44 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data6_Dlid $Intern 45 
@@ -444,19 +363,10 @@ SObject NMps:Class
       EndObject
       Object Data7P $Output 46 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "D7"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-        EndBody
-      EndObject
-      Object Data7_ObjId $Intern 47 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data7_Dlid $Intern 48 
@@ -468,19 +378,10 @@ SObject NMps:Class
       EndObject
       Object Data8P $Output 49 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "D8"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-        EndBody
-      EndObject
-      Object Data8_ObjId $Intern 50 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data8_Dlid $Intern 51 
@@ -492,18 +393,9 @@ SObject NMps:Class
       EndObject
       Object Data9P $Intern 52 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data9_ObjId $Intern 53 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data9_Dlid $Intern 54 
@@ -515,18 +407,9 @@ SObject NMps:Class
       EndObject
       Object Data10P $Intern 55 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data10_ObjId $Intern 56 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data10_Dlid $Intern 57 
@@ -538,18 +421,9 @@ SObject NMps:Class
       EndObject
       Object Data11P $Intern 58 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data11_ObjId $Intern 59 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data11_Dlid $Intern 60 
@@ -561,18 +435,9 @@ SObject NMps:Class
       EndObject
       Object Data12P $Intern 61 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data12_ObjId $Intern 62 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data12_Dlid $Intern 63 
@@ -584,18 +449,9 @@ SObject NMps:Class
       EndObject
       Object Data13P $Intern 64 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data13_ObjId $Intern 65 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data13_Dlid $Intern 66 
@@ -607,18 +463,9 @@ SObject NMps:Class
       EndObject
       Object Data14P $Intern 67 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data14_ObjId $Intern 68 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data14_Dlid $Intern 69 
@@ -630,18 +477,9 @@ SObject NMps:Class
       EndObject
       Object Data15P $Intern 70 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data15_ObjId $Intern 71 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data15_Dlid $Intern 72 
@@ -653,18 +491,9 @@ SObject NMps:Class
       EndObject
       Object Data16P $Intern 73 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data16_ObjId $Intern 74 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data16_Dlid $Intern 75 
@@ -676,18 +505,9 @@ SObject NMps:Class
       EndObject
       Object Data17P $Intern 76 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data17_ObjId $Intern 77 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data17_Dlid $Intern 78 
@@ -699,18 +519,9 @@ SObject NMps:Class
       EndObject
       Object Data18P $Intern 79 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data18_ObjId $Intern 80 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data18_Dlid $Intern 81 
@@ -722,18 +533,9 @@ SObject NMps:Class
       EndObject
       Object Data19P $Intern 82 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data19_ObjId $Intern 83 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data19_Dlid $Intern 84 
@@ -745,18 +547,9 @@ SObject NMps:Class
       EndObject
       Object Data20P $Intern 85 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data20_ObjId $Intern 86 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data20_Dlid $Intern 87 
@@ -768,18 +561,9 @@ SObject NMps:Class
       EndObject
       Object Data21P $Intern 88 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data21_ObjId $Intern 89 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data21_Dlid $Intern 90 
@@ -791,18 +575,9 @@ SObject NMps:Class
       EndObject
       Object Data22P $Intern 91 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data22_ObjId $Intern 92 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data22_Dlid $Intern 93 
@@ -814,18 +589,9 @@ SObject NMps:Class
       EndObject
       Object Data23P $Intern 94 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data23_ObjId $Intern 95 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data23_Dlid $Intern 96 
@@ -837,18 +603,9 @@ SObject NMps:Class
       EndObject
       Object Data24P $Intern 97 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data24_ObjId $Intern 98 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data24_Dlid $Intern 99 
@@ -860,18 +617,9 @@ SObject NMps:Class
       EndObject
       Object Data25P $Intern 100 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data25_ObjId $Intern 101 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data25_Dlid $Intern 102 
@@ -883,18 +631,9 @@ SObject NMps:Class
       EndObject
       Object Data26P $Intern 103 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data26_ObjId $Intern 104 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data26_Dlid $Intern 105 
@@ -906,18 +645,9 @@ SObject NMps:Class
       EndObject
       Object Data27P $Intern 106 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data27_ObjId $Intern 107 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data27_Dlid $Intern 108 
@@ -929,18 +659,9 @@ SObject NMps:Class
       EndObject
       Object Data28P $Intern 109 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data28_ObjId $Intern 110 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data28_Dlid $Intern 111 
@@ -952,18 +673,9 @@ SObject NMps:Class
       EndObject
       Object Data29P $Intern 112 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data29_ObjId $Intern 113 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data29_Dlid $Intern 114 
@@ -975,18 +687,9 @@ SObject NMps:Class
       EndObject
       Object Data30P $Intern 115 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Void"
-	  Attr Flags |= PWR_MASK_POINTER
-	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$DataRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object Data30_ObjId $Intern 116 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$ObjId"
-	  Attr Flags |= PWR_MASK_INVISIBLE
-	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       Object Data30_Dlid $Intern 117 

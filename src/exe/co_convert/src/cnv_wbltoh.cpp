@@ -420,6 +420,7 @@ int CnvWblToH::attribute_exec()
        strcmp( CnvCtx::low(ctx->rw->attr_typeref), "deltatime") == 0 ||
        strcmp( CnvCtx::low(ctx->rw->attr_typeref), "castid") == 0 ||
        strcmp( CnvCtx::low(ctx->rw->attr_typeref), "disableattr") == 0 ||
+       strcmp( CnvCtx::low(ctx->rw->attr_typeref), "dataref") == 0 ||
        strcmp( ctx->rw->attr_name, "TimerFlag") == 0)
     strcpy( alignstr, " pwr_dAlignLW");
   else

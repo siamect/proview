@@ -80,7 +80,7 @@ class WGre;
 /* Geometrical values */
 #define GOEN_F_LINEWIDTH        0.005   /* linewidth for drawing        */
 #define GOEN_F_HIGHLIGHT_LINEWIDTH 0.010 /* linewidth for highlight ggc */
-#define GOEN_F_OBJNAME_STRWIDTH 0.017   /* Widht of letter used in objname */
+#define GOEN_F_OBJNAME_STRWIDTH 0.017   /* Width of letter used in objname */
 #define GOEN_F_OBJNAME_STRHEIGHT 0.023  /* Height of fonts used in objname */
 #define GOEN_F_MINWIDTH         8       /* Minimum width in strwidth size */
 #define GOEN_F_GRID             0.05    /* Size between two conpoints */

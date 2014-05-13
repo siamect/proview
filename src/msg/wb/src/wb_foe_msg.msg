@@ -130,6 +130,7 @@ noseqreset	<No SequenceReset object found in main object>		/error
 compmethod	<Invalid compile method>				/error
 libref		<Invalid reference to library hierarchy>		/error
 misplacedthread	<Misplaced thread object>				/error
+obsolete	<Object is obsolete>					/error
 
         .facility       FOE,280 /prefix = FOE__ ! Function object editor
 

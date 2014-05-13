@@ -1142,9 +1142,6 @@ static pwr_tStatus	nmpsmir_origcell_init(
 	      sts = gdh_GetObjectInfo ( name, &maxsize, sizeof(maxsize));
 	      if ( EVEN(sts)) return NMPS__NODEDOWN;
 
-/*	      attrref.Size = sizeof( pwr_sClass_NMpsCell) - 
-		sizeof( plc_t_DataInfo) * ( NMPS_CELL_SIZE - maxsize);
-*/
 	      break;
 	    }
 	    case pwr_cClass_NMpsMirrorCell:
@@ -1159,10 +1156,6 @@ static pwr_tStatus	nmpsmir_origcell_init(
 	      sts = gdh_GetObjectInfo ( name, &maxsize, sizeof(maxsize));
 	      if ( EVEN(sts)) return NMPS__NODEDOWN;
 
-/*	      attrref.Size = sizeof( pwr_sClass_NMpsMirrorCell) - 
-		sizeof( plc_t_DataInfoMirCell) * ( NMPS_CELLMIR_SIZE - maxsize)-
-		sizeof( nmps_t_mircell_copyarea);
-*/
 	      break;
 	    }
 	    default:
@@ -1173,23 +1166,9 @@ static pwr_tStatus	nmpsmir_origcell_init(
 	  }
 
 
-/** Test
-	  {
-            void *infop;
-	    sts = gdh_ObjidToName ( objid, name, sizeof(name), cdh_mNName);
-	    if ( EVEN(sts)) return NMPS__NODEDOWN;
-	    sts = gdh_RefObjectInfo( name, (void *)&infop, orig_subid, 
-		attrref.Size);
-	   if ( EVEN(sts)) return sts;
-	  }
-**/
 
 	  sts = gdh_SubRefObjectInfoAttrref( &attrref, orig_subid);
 	  if (EVEN(sts)) LogAndReturn(NMPS__MIRORIGCELL, sts);
-/**** Use gdh_SubData instead
-	  sts = gdh_SubAssociateBuffer( *orig_subid, (void *)orig_cell, attrref.Size);
-	  if (EVEN(sts)) LogAndReturn(NMPS__MIRASSBUFF, sts);
-***/
 	}
 	return NMPS__SUCCESS;
 }
@@ -1338,46 +1317,6 @@ static pwr_tStatus	nmpsmir_cellmirlist_add(
 	return NMPS__SUCCESS;
 }
 
-
-#if 0
-/****************************************************************************
-* Name:		nmpsmir_get_convconfig()
-*
-* Type		pwr_tStatus
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-*		Get the conversion config object.
-*
-**************************************************************************/
-static pwr_tStatus	nmpsmir_get_convconfig( 
-			mir_ctx				mirctx,
-			pwr_tObjid 			objid,
-			char				**object_ptr)
-{
-	int				i;
-	int				found;
-	nmpsmir_t_convconfig_list 	*convconfig_ptr;
-
-	found = 1;
-	convconfig_ptr = mirctx->convconfiglist;
-	for (i = 0; i < mirctx->convconfig_count; i++)
-	{
-	  if ( cdh_ObjidIsEqual( objid, convconfig_ptr->objid))
-	  {
-	    *object_ptr = (char *) convconfig_ptr->convconfig;
-	    found = 1;
-	    break;
-	  }
-	  convconfig_ptr++; 
-	}
-	if ( !found)
-	  return NMPS__CONVOBJECT;
-
-	return NMPS__SUCCESS;
-}
-#endif
 
 /****************************************************************************
 * Name:		nmpsmir_convconfig_add()
@@ -1683,11 +1622,11 @@ static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx)
 	      {
 	        if ( cellmir_ptr->datalist_ptr[j]->plc_data_ptr == 0)
 	        {
-	          if ( cdh_ObjidIsEqual( copyarea->datainfo[count].Data_ObjId,
+	          if ( cdh_ObjidIsEqual( copyarea->datainfo[count].DataP.Aref.Objid,
 				cellmir_ptr->data_objid[j]))
 	          {
 		    cellmir_ptr->datalist_ptr[j]->plc_data_ptr = 
-				(char *) copyarea->datainfo[count].DataP;
+				(char *) copyarea->datainfo[count].DataP.Ptr;
 		    cellmir_ptr->datalist_ptr[j]->plc_dlid =
 				copyarea->datainfo[count].Data_Dlid;
 	          }
@@ -1781,7 +1720,7 @@ static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx)
 	            for ( l = 0; l < orig_data_count; l++)
 	            {
 	              if ( cdh_ObjidIsEqual( cellmir_ptr->orig_data_objid[l],
-				data_block_ptr->Data_ObjId))
+				data_block_ptr->DataP.Aref.Objid))
 	              {
 	                objid_found = 1;
 	                break;
@@ -1791,7 +1730,7 @@ static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx)
 	          if ( !objid_found)
 	          {
 	            cellmir_ptr->orig_data_objid[ orig_data_count] =
-		 	data_block_ptr->Data_ObjId;
+		 	data_block_ptr->DataP.Aref.Objid;
 	            orig_data_count++;
 	          }
 		  data_block_ptr++;
@@ -1819,7 +1758,7 @@ static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx)
 	            for ( l = 0; l < orig_data_count; l++)
 	            {
 	              if ( cdh_ObjidIsEqual( cellmir_ptr->orig_data_objid[l],
-				data_block_ptr->Data_ObjId))
+				data_block_ptr->DataP.Aref.Objid))
 	              {
 	                objid_found = 1;
 	                break;
@@ -1829,7 +1768,7 @@ static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx)
 	          if ( !objid_found)
 	          {
 	            cellmir_ptr->orig_data_objid[ orig_data_count] =
-		 	data_block_ptr->Data_ObjId;
+		 	data_block_ptr->DataP.Aref.Objid;
 	            orig_data_count++;
 	          }
 		  data_block_ptr++;
@@ -1922,11 +1861,11 @@ static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx)
 	        /* Try to find info of data in the mircell */
 	        for ( k = 0; k < cellmir_ptr->cell->TempLastIndex; k++)
 	        {
-	          if ( cdh_ObjidIsEqual( copyarea->datainfo[k].Data_ObjId,
+	          if ( cdh_ObjidIsEqual( copyarea->datainfo[k].DataP.Aref.Objid,
 				datalist_ptr->data_objid))
 	          {
 		    datalist_ptr->plc_data_ptr =
-				(char *) copyarea->datainfo[k].DataP;
+				(char *) copyarea->datainfo[k].DataP.Ptr;
 		    datalist_ptr->plc_dlid =
 				copyarea->datainfo[k].Data_Dlid;
 	            break;
@@ -1957,7 +1896,7 @@ static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx)
 	  {
 	    for ( j = 0; j < cellmir_ptr->cell->TempLastIndex; j++)
 	    {
-	      if ( cdh_ObjidIsNotEqual( copyarea->datainfo[j].Data_ObjId,
+	      if ( cdh_ObjidIsNotEqual( copyarea->datainfo[j].DataP.Aref.Objid,
 	     			cellmir_ptr->data_objid[j]))
 	      {
 	        change_detected = 1;
@@ -1974,7 +1913,7 @@ static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx)
 	    found = 0;
 	    for ( k = 0; k < orig_data_count; k++)
 	    {
-	      if ( cdh_ObjidIsEqual( copyarea->datainfo[j].Data_ObjId,
+	      if ( cdh_ObjidIsEqual( copyarea->datainfo[j].DataP.Aref.Objid,
 	     			cellmir_ptr->data_objid[k]))
 	      {
 	        found = 1;
@@ -1985,7 +1924,7 @@ static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx)
 	    {
 	      /* This object is probably removed */
 	      sts = nmpsmir_data_db_find( mirctx->data_list,
-			copyarea->datainfo[j].Data_ObjId,
+			copyarea->datainfo[j].DataP.Aref.Objid,
 		        cellmir_ptr->objid,
 			&datalist_ptr);
 	      if ( EVEN(sts))
@@ -1999,7 +1938,7 @@ static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx)
 	          /* Insert the object in the backup removed list */
 	          sts = nmpsmir_bckremoved_store(
 		  		&mirctx->bckremoved_list,
-				copyarea->datainfo[j].Data_ObjId,
+				copyarea->datainfo[j].DataP.Aref.Objid,
 				&bckremlist_ptr);
 	          if (ODD(sts))
 	          {
@@ -2046,8 +1985,8 @@ static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx)
 	        break;
 	      if ( !cellmir_ptr->data_noinit[j])
 	      {
-	        copyarea->datainfo[count].Data_ObjId = cellmir_ptr->data_objid[j];
-	        copyarea->datainfo[count].DataP =
+	        copyarea->datainfo[count].DataP.Aref.Objid = cellmir_ptr->data_objid[j];
+	        copyarea->datainfo[count].DataP.Ptr =
 	          (pwr_tFloat32 *) cellmir_ptr->datalist_ptr[j]->plc_data_ptr;
 	        copyarea->datainfo[count].Data_Dlid =
 		  cellmir_ptr->datalist_ptr[j]->plc_dlid;

@@ -40,6 +40,7 @@ palette NavigatorPalette
       class Co
       class ConstAv
       class ConstIv
+      class DataRefv
       class Di
       class Do
       class Dv
@@ -1033,10 +1034,13 @@ palette PlcEditorPalette
     menu Data
     {
       class CStoAttrRefP
+      class CStoDataRefv
       class DataCollect
       class GetData
-      class GetDatap
+      class GetDataRefp
+      class GetDataRefv
       class GetDataInput
+      class StoDataRefv
     }
     menu String
     {

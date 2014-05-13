@@ -3800,9 +3800,10 @@ static int	gcg_get_outputstring_spec(
   }
   case pwr_cClass_GetSp:
   case pwr_cClass_GetATp:
-  case pwr_cClass_GetDTp: {
+  case pwr_cClass_GetDTp:
+  case pwr_cClass_GetDataRefp: {
     /**********************************************************
-     *  GetSp, GetATP, GetDTp
+     *  GetSp, GetATP, GetDTp, GetDataRefp
      ***********************************************************/	
 
     pwr_tAName aname;
@@ -3811,6 +3812,7 @@ static int	gcg_get_outputstring_spec(
     case pwr_cClass_GetSp: strcpy( aname, "SpObject"); break;
     case pwr_cClass_GetATp: strcpy( aname, "ATpObject"); break;
     case pwr_cClass_GetDTp: strcpy( aname, "DTpObject"); break;
+    case pwr_cClass_GetDataRefp: strcpy( aname, "DataRefpObject"); break;
     default: ;
     }
 
@@ -7167,6 +7169,15 @@ int	gcg_comp_m8( gcg_ctx gcgctx, vldh_t_node node)
 	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF, node);
 	  return GSX__SUCCESS;
 	  break;
+	case pwr_cClass_GetDataRefv:
+	  if ( cid != pwr_cClass_DataRefv) {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+
+	  /* Insert io object in ioread list */
+	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF, node);
+	  return GSX__SUCCESS;
 	default:
 	  gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	  return GSX__NEXTNODE;
@@ -7261,7 +7272,7 @@ int	gcg_comp_m9( gcg_ctx gcgctx, vldh_t_node node)
 * vldh_t_node	node		I	vldh node.
 *
 * Description:
-*	Compile method for GetDp, GetAp, GetSp, GetATp, GetDTp
+*	Compile method for GetDp, GetAp, GetSp, GetATp, GetDTp, GetDataRefp.
 *	Checks that the referenced object exists and that the referenced
 *	parameter exists in that object, and that the type of the parameter
 *	is correct.
@@ -7392,6 +7403,12 @@ int	gcg_comp_m10( gcg_ctx gcgctx, vldh_t_node node)
           break;
         case pwr_eType_DeltaTime :
 	  if ( node->ln.cid != pwr_cClass_GetDTp) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+          break;
+        case pwr_eType_DataRef :
+	  if ( node->ln.cid != pwr_cClass_GetDataRefp) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
@@ -8520,6 +8537,13 @@ int	gcg_comp_m11( gcg_ctx gcgctx, vldh_t_node node)
 	  nocondef[0].dtime = *(pwr_tDeltaTime *) nocondef_ptr;
 	  nocontype[0] = GCG_DTIME;
 	}    
+	else if ( node->ln.cid == pwr_cClass_StoDataRefv || 
+	          node->ln.cid == pwr_cClass_CStoDataRefv) {
+	  if ( cid != pwr_cClass_DataRefv) {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+	}    
 	free(nocondef_ptr);
 
 	/* Check if disabled */
@@ -8531,7 +8555,8 @@ int	gcg_comp_m11( gcg_ctx gcgctx, vldh_t_node node)
 
         if ( cid == pwr_cClass_Sv ||
 	     cid == pwr_cClass_ATv ||
-	     cid == pwr_cClass_DTv) {
+	     cid == pwr_cClass_DTv ||
+	     cid == pwr_cClass_DataRefv) {
 	  /* Insert io object in ref list */
 	  gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF, node);
 
@@ -11469,7 +11494,8 @@ int	gcg_comp_m36( gcg_ctx gcgctx, vldh_t_node node)
 	  //}
 	}
 
-	if ( info.flags & PWR_MASK_POINTER) {
+        if ( info.type == pwr_eType_DataRef) {
+	  // if ( info.flags & PWR_MASK_POINTER) {
 	  if ( node->ln.cid != pwr_cClass_GetDatap) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
@@ -12630,7 +12656,7 @@ int	gcg_comp_m42( gcg_ctx gcgctx, vldh_t_node node)
 	        gcg_error_msg( gcgctx, GSX__INV, node);
 
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
-			"%c%s->%sP = &%c%s->%s;\n", 
+			"%c%s->%sP = (pwr_tVoid *)&%c%s->%s;\n", 
 			GCG_PREFIX_REF,
 			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
@@ -12756,7 +12782,7 @@ int	gcg_comp_m43( gcg_ctx gcgctx, vldh_t_node node)
 	/* Put referenced object in rt body */
         IF_PR {
 	  sts = ldh_SetObjectPar( ldhses, node->ln.oid,
-		"RtBody", "DataObjid", (char *)&refattrref.Objid, sizeof( refattrref.Objid)); 
+		"RtBody", "DataObjid", (char *)&refattrref, sizeof( refattrref)); 
 	  if ( EVEN(sts)) return sts;
 	}
 
@@ -13733,11 +13759,11 @@ int	gcg_comp_m51( gcg_ctx gcgctx, vldh_t_node node)
 	sts = gcg_comp_m4( gcgctx, node);
 	if ( EVEN(sts)) return sts;
 
-	strcpy( cast_str, "(pwr_tFloat32 *)");	  
+	strcpy( cast_str, "(pwr_tVoid *)");	  
 
 	/* Place the pointer to the object in the output */
 	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
-		       "%c%s->OutDataP = %s%c%s;\n", 
+		       "%c%s->OutDataP.Ptr = %s%c%s;\n", 
 		       GCG_PREFIX_REF,
 		       vldh_IdToStr(0, node->ln.oid),
 		       cast_str, 
@@ -13746,12 +13772,12 @@ int	gcg_comp_m51( gcg_ctx gcgctx, vldh_t_node node)
 
 	/* Place the objid of the object in the output */
 	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
-			"%c%s->OutData_ObjId.oix = %u;\n", 
+			"%c%s->OutDataP.Aref.Objid.oix = %u;\n", 
 			GCG_PREFIX_REF,
 			vldh_IdToStr(0, node->ln.oid),
 			node->ln.oid.oix);
 	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
-			"%c%s->OutData_ObjId.vid = %u;\n", 
+			"%c%s->OutDataP.Aref.Objid.vid = %u;\n", 
 			GCG_PREFIX_REF,
 			vldh_IdToStr(0, node->ln.oid),
 			node->ln.oid.vid);
@@ -13785,6 +13811,9 @@ int	gcg_comp_m51( gcg_ctx gcgctx, vldh_t_node node)
 
 int	gcg_comp_m52( gcg_ctx gcgctx, vldh_t_node node)
 {
+  gcg_error_msg( gcgctx, GSX__OBSOLETE, node);  
+
+#if 0
 	ldh_sParDef 		*bodydef;
 	int 			rows, sts;
 	int			size;
@@ -13973,7 +14002,7 @@ int	gcg_comp_m52( gcg_ctx gcgctx, vldh_t_node node)
 
 	/* Insert object in ref list */
 	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF, node);
-
+#endif
 	return GSX__SUCCESS;
 }
 
