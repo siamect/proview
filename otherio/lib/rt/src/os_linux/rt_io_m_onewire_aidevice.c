@@ -91,6 +91,7 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
 
     errh_Info( "Init of OneWire_AiDevice '%s'", cp->Name);
   }
+  op->Status = IO__SUCCESS;
   return IO__SUCCESS;
 }
 
@@ -176,6 +177,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
 	*(pwr_tFloat32 *)chanp->vbp = actvalue;
 	sop->SigValue = cop->SigValPolyCoef1 * fvalue + cop->SigValPolyCoef0;
 	sop->RawValue = fvalue;
+	op->Status = IO__SUCCESS;
 	break;
       }
       default: {
@@ -201,11 +203,13 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
 	*(pwr_tFloat32 *)chanp->vbp = actvalue;
 	sop->SigValue = cop->SigValPolyCoef1 * ivalue + cop->SigValPolyCoef0;
 	sop->RawValue = ivalue;
+	op->Status = IO__SUCCESS;
       }
       }
     }
     else {
       op->Super.ErrorCount++;
+      op->Status = IO__SEARCHSTRING;
     }
   }
 
@@ -216,6 +220,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
   if ( op->Super.ErrorCount >= op->Super.ErrorHardLimit) {
     errh_Error( "IO Card ErrorHardLimit reached '%s', IO stopped", cp->Name);
     ctx->Node->EmergBreakTrue = 1;
+    op->Status = IO__ERRDEVICE;
     return IO__ERRDEVICE;
   }    
 
