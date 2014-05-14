@@ -240,6 +240,11 @@ void CompPID_Fo_init( pwr_sClass_CompPID_Fo  *o)
 #define DALG 8		/* Derivative part exists */
 #define DAVV 16		/* Derivative part working on control difference */
 
+#define IWUP 1		/* Windup limitation on I part */
+#define BIWUP 2		/* Windup limitation on Bias and I part */
+#define BPIWUP 4	/* Windup limitation on Bias PI part */
+#define BPIDWUP 8	/* Windup limitation on Bias and PID part (Default, old funcionality */
+
 void CompPID_Fo_exec( plc_sThread *tp,
 		      pwr_sClass_CompPID_Fo *o)
 {
@@ -252,6 +257,9 @@ void CompPID_Fo_exec( plc_sThread *tp,
   float	ut;
   float	dut;
   float kd;
+  float	absut;
+  float	gain;
+
   pwr_sClass_CompPID *co = (pwr_sClass_CompPID *) o->PlcConnectP;
 
   if ( !co)
@@ -284,104 +292,120 @@ void CompPID_Fo_exec( plc_sThread *tp,
   ddiff = ((co->PidAlg & DAVV) != 0) ?
     (co->ControlDiff - eold) / *o->ScanTime:
     (co->ProcVal - xold) / *o->ScanTime;
-  if ((co->DerGain <= 0.0) || (co->DerTime <= 0))
+  if (((co->DerGain * *o->ScanTime) >= co->DerTime) || (co->DerTime <= 0))
     co->FiltDer = ddiff;		/* No Filter */
   else {
     kd = 1.0 / (1.0 + co->DerGain * *o->ScanTime / co->DerTime);
     co->FiltDer += (ddiff - derold) * (1.0 - kd);
   }
+
+  if (co->Inverse == 0) gain = co->Gain;
+  else gain = -co->Gain;
   
   if ( co->Force ) {
     /* Force */
-    dut = co->OutVal;
-    co->OutVal = co->ForcVal;
-    co->OutChange = co->OutVal - dut;
+    co->OutChange = co->ForcVal - co->OutVal;
+    co->OutVal = co->OutWindup = co->ForcVal;
     co->EndMin = FALSE;
     co->EndMax = FALSE;
+
+    /* Adjust for bumpless transfer to auto */
+    co->PDManOffset = co->OutVal - 
+    gain * co->ControlDiff - co->BiasGain * co->Bias;  
+
+    if ((co->PidAlg & IALG) != 0) co->AbsOut = 0.0;
+    else co->AbsOut = co->OutVal;
+
+    if (co->WindupMask < BIWUP)
+      co->OutWindup -= co->BiasGain * co->Bias;
+    if (co->WindupMask < BPIWUP)
+      co->OutWindup -= gain * co->ControlDiff;
+    
+    co->AbsOut = co->OutVal - co->OutWindup;
   }
 
   else {
     /* Auto mode */
-    if ((co->PidAlg & IALG) != 0) {
-      /* Incremental algorithm */
+    
+    dut = absut = 0.0;
+    
+    if ((co->PidAlg & IALG) != 0)
+    /* Incremental algorithm */
+    {
       /* Integral-part */
       if ((*o->IntOffP == FALSE) && (co->IntTime > 0))
 	dut = co->ControlDiff * *o->ScanTime / co->IntTime;
-      else
-	dut = 0;
-      if ((co->PidAlg & PALG) != 0) {
-	/* Not pure I-controller */
-	/* Derivative-part */
-	if ((co->PidAlg & DALG) != 0)
-	  dut += (co->FiltDer-derold) * co->DerTime;
-	/* P-part */
-	dut += ((co->PidAlg & PAVV) != 0) ?
-	  co->ControlDiff - eold :
-	  co->ProcVal - xold ;
-	dut *= co->Gain;
-      }
-      if (co->Inverse != 0) dut = - dut;
+
+      if ((co->PidAlg & PALG) != 0) dut *= gain;
+      else gain = 0.0; /* Pure I-controller */
+
       /* Bias */
-      dut += co->BiasGain * (co->Bias - bfold);
-      /* Limit output */
-      ut = co->OutVal + dut;
-      if (co->MaxOut > co->MinOut) {
-	if (ut > co->MaxOut) {
-	  ut = co->MaxOut;
-	  co->EndMin = FALSE;
-	  co->EndMax = TRUE;
-	}
-	else if (ut < co->MinOut) {
-	  ut = co->MinOut;
-	  co->EndMin = TRUE;
-	  co->EndMax = FALSE;
-	}
-	else {
-	  if (co->EndMin && (ut >= (co->MinOut + co->EndHys)))
-	    co->EndMin = FALSE;
-	  if (co->EndMax && (ut <= (co->MaxOut - co->EndHys)))
-	    co->EndMax = FALSE;
-	}
+      if (co->WindupMask >= BIWUP) /* Windup on Bias */
+        dut += co->BiasGain * (co->Bias - bfold);
+      else absut = co->BiasGain * co->Bias;
+
+      /* P-part */
+      if (co->WindupMask >= BPIWUP) /* Windup on P */
+        dut += ((co->PidAlg & PAVV) != 0) ?
+            gain * (co->ControlDiff - eold) :
+            gain * (co->ProcVal - xold) ;
+      else
+        absut += gain * co->ControlDiff;
+
+      /* Derivative-part */
+      if ((co->PidAlg & DALG) != 0) {
+        if (co->WindupMask >= BPIDWUP) /* Windup on D */
+          dut += gain * (co->FiltDer - derold) * co->DerTime;
+        else
+          absut += gain * co->FiltDer * co->DerTime;
       }
+
+      /* Limit output */
+      co->OutWindup += dut;
+
+      if (co->OutWindup > co->MaxWindup) {
+        co->OutWindup = co->MaxWindup;
+        co->EndMax = TRUE;
+      } else if (co->OutWindup < co->MinWindup) {
+        co->OutWindup = co->MinWindup;
+        co->EndMin = TRUE;
+      }
+
+      ut = co->OutWindup + absut;
+      if (ut > co->MaxOut) ut = co->MaxOut;
+      else if (ut < co->MinOut) ut = co->MinOut;
+      dut += absut - co->AbsOut;
     }
-    
-    else {
+
+    else
       /* Nonincremental algorithm */
+    {
       /* P-part */
       ut = co->ControlDiff;
       /* Derivative-part */
       if ((co->PidAlg & DALG) != 0)
 	ut += co->FiltDer * co->DerTime;
       /* Gain */
-      ut *= co->Gain;
-      if (co->Inverse != 0) ut = - ut;
-      /* Bias */
-      ut += co->BiasGain * co->Bias;
+      ut *= gain;
+
+      /* Bias and Man offset*/
+      if (co->PDAbsFlag) co->PDManOffset = 0;
+      ut += co->BiasGain * co->Bias + co->PDManOffset;
+      
       /* Limit output */
-      if (co->MaxOut > co->MinOut) {
-	if (ut > co->MaxOut) {
-	  ut = co->MaxOut;
-	  co->EndMin = FALSE;
-	  co->EndMax = TRUE;
-	}
-	else if (ut < co->MinOut) {
-	  ut = co->MinOut;
-	  co->EndMin = TRUE;
-	  co->EndMax = FALSE;
-	}
-	else {
-	  if (co->EndMin && (ut >= (co->MinOut + co->EndHys)))
-	    co->EndMin = FALSE;
-	  if (co->EndMax && (ut <= (co->MaxOut - co->EndHys)))
-	    co->EndMax = FALSE;
-	}
+      if (co->MaxOut > co->MinOut)
+      {
+        if (ut > co->MaxOut) ut = co->MaxOut;
+        else if (ut < co->MinOut) ut = co->MinOut;
       }
       dut = ut - co->OutVal;
+      absut = ut;
     }
     
     /* Output Auto */
     co->OutChange = dut;
     co->OutVal = ut;
+    co->AbsOut = absut;
   }
 
   /* Transfer outputs */

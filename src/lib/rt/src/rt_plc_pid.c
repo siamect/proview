@@ -44,7 +44,6 @@
 #include "pwr_baseclasses.h"
 #include "rt_plc.h"
 #include "rt_plc_timer.h"
-#include "rt_plc_pid.h"
 
 /* 		PLC RUTINER			*/
 
@@ -53,9 +52,13 @@
   function:	accumulate output change from controller
 		and convert to Open or Close orders.
 
+  2014-02-18	Werner	Limit acc to new attribute "MaxWindup"
+
   @aref inc3p Inc3p
 */
-void inc3p_init( pwr_sClass_inc3p *object)
+
+void inc3p_init(
+  pwr_sClass_inc3p 	*object)
 {
 	object->Acc = 0;
 }
@@ -157,6 +160,13 @@ void inc3p_exec(
 		}
 	    }
 	}
+
+    /* Limit output 2014-02-18 / Werner */
+    if ((object->Acc > object->MaxWindup) && (object->MaxWindup > 0.0))
+     object->Acc = object->MaxWindup;
+    if ((object->Acc < -object->MaxWindup) && (object->MaxWindup > 0.0))
+     object->Acc = -object->MaxWindup;
+
     }
 
 /*_*
@@ -355,15 +365,19 @@ void mode_exec(
 		Possible to turn off integration and to force
 		output to desired value.
 		
-  Revision:	2011-01-18 / Werner
-		Error in filtered derivate part corrected.
-		
+		New Attributes 2014-02-18 / Werner:
+		WindupMask	Config
+		MinWindup	Config
+		MaxWindup	Config
+		PDManOffset	Internal
+		OutWindup	Internal
+
   @aref pid Pid
 */
 
 void pid_exec(
   plc_sThread		*tp,
-  pwr_sClass_pid		*object)
+  pwr_sClass_pid	*object)
 {
 
 /* Define Algoritm bitmask */
@@ -373,6 +387,11 @@ void pid_exec(
 #define DALG 8		/* Derivative part exists */
 #define DAVV 16		/* Derivative part working on control difference */
 
+#define IWUP 1		/* Windup limitation on I part */
+#define BIWUP 2		/* Windup limitation on Bias and I part */
+#define BPIWUP 4	/* Windup limitation on Bias PI part */
+#define BPIDWUP 8	/* Windup limitation on Bias and PID part (Default, old funcionality */
+
 	float	xold;	/* Local variables */
 	float	eold;
 	float	bfold;
@@ -381,6 +400,8 @@ void pid_exec(
 	float	ut;
 	float	dut;
 	float	kd;
+	float	absut;
+	float	gain;
 
 /* Save old values */
 xold=object->ProcVal;
@@ -402,73 +423,93 @@ object->ControlDiff = object->ProcVal - object->SetVal;
 ddiff = ((object->PidAlg & DAVV) != 0) ?
   (object->ControlDiff - eold) / *object->ScanTime:
   (object->ProcVal - xold) / *object->ScanTime;
-if ((object->DerGain <= 0.0) || (object->DerTime <= 0))
+if (((object->DerGain * *object->ScanTime) >= object->DerTime) || (object->DerTime <= 0))
     object->FiltDer = ddiff;		/* No Filter */
 else {
     kd = 1.0 / (1.0 + object->DerGain * *object->ScanTime / object->DerTime);
     object->FiltDer += (ddiff - derold) * (1.0 - kd);
 }
 
+
+  if (object->Inverse == 0) gain = object->Gain;
+  else gain = -object->Gain;
+
 if ( object->Force )
 /* Force */
 {
-  dut = object->OutVal;
-  object->OutVal = object->ForcVal;
-  object->OutChange = object->OutVal - dut;
+  object->OutChange = object->ForcVal - object->OutVal;
+  object->OutVal = object->OutWindup = object->ForcVal;
   object->EndMin = FALSE;
   object->EndMax = FALSE;
+  
+  /* Adjust for bumpless transfer to auto */
+  object->PDManOffset = object->OutVal - 
+    gain * object->ControlDiff - object->BiasGain * object->Bias;  
+
+  if ((object->PidAlg & IALG) != 0) object->AbsOut = 0.0;
+  else object->AbsOut = object->OutVal;
+
+  if (object->WindupMask < BIWUP)
+    object->OutWindup -= object->BiasGain * object->Bias;
+  if (object->WindupMask < BPIWUP)
+    object->OutWindup -= gain * object->ControlDiff;
+    
+  object->AbsOut = object->OutVal - object->OutWindup;
+
 }
 
 else
 /* Auto mode */
 {
+  dut = absut = 0.0;
+  
   if ((object->PidAlg & IALG) != 0)
   /* Incremental algorithm */
   {
     /* Integral-part */
     if ((*object->IntOffP == FALSE) && (object->IntTime > 0))
       dut = object->ControlDiff * *object->ScanTime / object->IntTime;
-    else
-      dut = 0;
-    if ((object->PidAlg & PALG) != 0)
-    /* Not pure I-controller */
-    {
-      /* Derivative-part */
-      if ((object->PidAlg & DALG) != 0)
-        dut += (object->FiltDer-derold) * object->DerTime;
-      /* P-part */
-      dut += ((object->PidAlg & PAVV) != 0) ?
-        object->ControlDiff - eold :
-        object->ProcVal - xold ;
-      dut *= object->Gain;
-    }
-    if (object->Inverse != 0) dut = - dut;
+    
+    if ((object->PidAlg & PALG) != 0) dut *= gain;
+    else gain = 0.0; /* Pure I-controller */
+    
     /* Bias */
-    dut += object->BiasGain * (object->Bias - bfold);
-    /* Limit output */
-    ut = object->OutVal + dut;
-    if (object->MaxOut > object->MinOut)
-    {
-      if (ut > object->MaxOut)
-      {
-        ut = object->MaxOut;
-        object->EndMin = FALSE;
-        object->EndMax = TRUE;
-      }
-      else if (ut < object->MinOut)
-      {
-        ut = object->MinOut;
-        object->EndMin = TRUE;
-        object->EndMax = FALSE;
-      }
+    if (object->WindupMask >= BIWUP) /* Windup on Bias */
+      dut += object->BiasGain * (object->Bias - bfold);
+    else absut = object->BiasGain * object->Bias;
+      
+    /* P-part */
+    if (object->WindupMask >= BPIWUP) /* Windup on P */
+      dut += ((object->PidAlg & PAVV) != 0) ?
+          gain * (object->ControlDiff - eold) :
+          gain * (object->ProcVal - xold) ;
+    else
+      absut += gain * object->ControlDiff;
+      
+    /* Derivative-part */
+    if ((object->PidAlg & DALG) != 0) {
+      if (object->WindupMask >= BPIDWUP) /* Windup on D */
+        dut += gain * (object->FiltDer - derold) * object->DerTime;
       else
-      {
-        if (object->EndMin && (ut >= (object->MinOut + object->EndHys)))
-          object->EndMin = FALSE;
-        if (object->EndMax && (ut <= (object->MaxOut - object->EndHys)))
-          object->EndMax = FALSE;
-      }
+        absut += gain * object->FiltDer * object->DerTime;
     }
+    
+    
+    /* Limit output */
+    object->OutWindup += dut;
+
+    if (object->OutWindup > object->MaxWindup) {
+      object->OutWindup = object->MaxWindup;
+      object->EndMax = TRUE;
+    } else if (object->OutWindup < object->MinWindup) {
+      object->OutWindup = object->MinWindup;
+      object->EndMin = TRUE;
+    }
+
+    ut = object->OutWindup + absut;
+    if (ut > object->MaxOut) ut = object->MaxOut;
+    else if (ut < object->MinOut) ut = object->MinOut;
+    dut += absut - object->AbsOut;
   }
 
   else
@@ -480,39 +521,27 @@ else
     if ((object->PidAlg & DALG) != 0)
       ut += object->FiltDer * object->DerTime;
     /* Gain */
-    ut *= object->Gain;
-    if (object->Inverse != 0) ut = - ut;
-    /* Bias */
-    ut += object->BiasGain * object->Bias;
+    ut *= gain;
+    
+    /* Bias and Man offset */
+    if (object->PDAbsFlag) object->PDManOffset = 0;
+    ut += object->BiasGain * object->Bias + object->PDManOffset;
+    
     /* Limit output */
     if (object->MaxOut > object->MinOut)
     {
-      if (ut > object->MaxOut)
-      {
-        ut = object->MaxOut;
-        object->EndMin = FALSE;
-        object->EndMax = TRUE;
-      }
-      else if (ut < object->MinOut)
-      {
-        ut = object->MinOut;
-        object->EndMin = TRUE;
-        object->EndMax = FALSE;
-      }
-      else
-      {
-        if (object->EndMin && (ut >= (object->MinOut + object->EndHys)))
-          object->EndMin = FALSE;
-        if (object->EndMax && (ut <= (object->MaxOut - object->EndHys)))
-          object->EndMax = FALSE;
-      }
+      if (ut > object->MaxOut) ut = object->MaxOut;
+      else if (ut < object->MinOut) ut = object->MinOut;
     }
     dut = ut - object->OutVal;
+    absut = ut;
   }
 
   /* Output Auto */
   object->OutChange = dut;
   object->OutVal = ut;
+  object->AbsOut = absut;
+  
 }
 
 }

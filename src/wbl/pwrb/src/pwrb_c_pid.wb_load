@@ -70,10 +70,18 @@ SObject         pwrb:Class
 !  the I-part will give a slope.
 !  I+P means that the P-part will only be affected by changes on the process value.
 !
-!  When using the P- or PD-algorithm we use an aabsolute algorithm. The output 
+!  When using the P- or PD-algorithm we use an absolute algorithm. The output 
 !  will not be stable away from zero without a control deviation.
-!  When using algorithms with I-part, all changesof the output are calculated by 
-!  changes of the inputs to the controller. You can still turn off the integration
+!  If PDAbsFlag is zero, there will be a offset that is calculated when the
+!  controller is in manual mode (force), so that there is no jump in the output
+!  when going from manual to auto.
+!  When using algorithms with I-part, the output is divided in two parts, depending
+!  on the bitmask WindupMask. The I-part is always calculated and limited in the
+!  OutWindup, and you can select to include the Bias, the P-part and the D-part also.
+!  OutWindup is limited to MinWindup and MaxWindup, which sets the signals EndMin and EndMax
+!  The rest of the output is calculated as an absolute part in AbsOut, that is added to the
+!  OutWindup, and then limited to MinOutput and MaxOutput.
+!  You can still turn off the integration
 !  with an input to the object
 !
 !  The PID-object has two outputs.
@@ -95,21 +103,32 @@ SObject         pwrb:Class
 !
 !  You can use a feedforward signal by the Bias-input, with BiasGain.
 ! 
-!  The output, OutVal, is limited to the interval { MinOut , MaxOut }. This means
+!  The output from the controller is divided in two parts, OutWindup and AbsOut.
+!  The OutWindup contains the I-part and possibly the bias, P and D parts.
+!  Select by WindupMask between I, BI, BPI and BPID.
+!  OutWindup, is limited to the interval { MinWindup , MaxWindup }. This means
 !  that you can loose your stable controlpoint if you have much noise. Especially
-!  if you use the D-part of the controller. The interval should normally be a bit
-!  larger than the possible output to the process.
+!  if you use the D-part of the controller. If you set the flag WindupMask to BIP
+!  you remove the influence of D from the OutWindup. You can also set it to BI or I to remove the
+!  influence of P and Bias from the OutWindup
+!  The total output is also limited to the interval {MinOut , MaxOut }
+!
 !  Example: You have a rather noisy flowcontrol with an output 0-100% as
-!  speedreference to a pump.
+!  speedreference to a pump. WindupMask = BPID. MinWindup = 0, MaxWindup = 100.
 !  The output varies +- 5% as a result of the noise. At the moment we need 98%
-!  output as an average to reach the desired setpoint. If we use 100% as MaxOut
+!  output as an average to reach the desired setpoint. If we use 100% as MaxWindup
 !  for the controller, the output will be cut all the time, and it will vary
 !  between 90 and 100% with 95% as an average. We will not reach the setpoint.
-!  The solution is to allow the output from -10% to 110%, and then limit the
-!  output outside the controller.
+!  The solution is to change WindupMask to I or BI. The disturbances will not affect the windup,
+!  but the output will still be limited to 0-100 %
+!
+!  For a servo valve for position control, you may want to have a slow I-part for leakage control,
+!  but limited to +- 20 %. WindupMask = I or BI,
+!  Set MinWindup = -20, Max Windup = + 20, MinOutput = -100, Max Output = +100
+!  EndMin and EndMax can now be used to give alarm for leakage.
 !
 !  The controller has bumpless transfer between manual and auto, and after forced
-!  output, but not if you use the P or PD-form.
+!  output, but not if you use the P or PD-form with the flag PDAbsFlag.
 !
 !
 !
@@ -142,13 +161,14 @@ SObject         pwrb:Class
 !  PID  (lower left) adds a short spike at the start, which in this case 
 !       doesn't affect anything. 
 !       MaxOut = 500%
-!  PID  (lower right) is identical with the left, except for MaxOut = 100%, 
-!       which gives "wrong" result.
+!  PID  (lower right) is identical with the left, except for MaxWindup = 100%, 
+!       and WindupMask = BPID, which gives "wrong" result.
 !       At the setpoint step, the P-part gives an increase of 30 %, and the 
 !       P-part wants a spike of 90 %. That results in an output of 155%, which 
 !       is cut to 100% because of saturation of the output signal. Then the D-part 
 !       will remove 90 % again, and the controller will restart from 10% output, 
 !       which is not desired. 
+!       Use WindupMask = BPI !!
 !
 !
 ! @h1 Examples
@@ -426,13 +446,13 @@ SObject         pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Specifies if OutVal at this scanning has been limited
+      !  Specifies if OutWindup at this scanning has been limited
       !  against any of the limit values in the interval {
-      !  MinOut, MaxOut } or not. If a limitation is done
+      !  MinWindup, MaxWindup } or not. If a limitation is done
       !  against
       !  
-      !  --  MinOut, then EndMin is set TRUE
-      !  --  MaxOut, then EndMax is set TRUE
+      !  --  MinWindup, then EndMin is set TRUE
+      !  --  MaxWindup, then EndMax is set TRUE
       !  else they are FALSE.
       !  
       !  EndMin /EndMax can only be set in AUTO or CASCADE
@@ -576,16 +596,60 @@ SObject         pwrb:Class
         EndBody
       EndObject
       !/**
-      !  At AUTO and CASCADE control the control signal OutVal
-      !  is supposed to be in the interval { MinOut, MaxOut }.
+      !  Flag to force no offset after manual mode. Will cause an output jump
+      !  when switching from manual to Auto. Not Bumpless transfer!
+      !*/
+      Object PDAbsFlag $Intern 49 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-Boolean"
+          Attr GraphName = "PDAbsFlag"
+        EndBody
+      EndObject
+      !/**
+      !  WindupMask
+      !  The possible values are as follows:
+      !  
+      !  1   -- I     Only the I-part is limited in OutWindup
+      !
+      !  2   -- BI    Bias and I are limited in OutWindup
+      !
+      !  4   -- BPI   Bias, P and I are limited in OutWindup
+      !
+      !  8   -- BPID  All parts of the controller are limited in OutWindup
+      !*/
+      Object WindupMask $Intern 50 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-WindupMaskEnum"
+          Attr GraphName = "WindupMask"
+        EndBody
+      EndObject
+      !/**
+      !  At AUTO and CASCADE control for controllers with an I-part,
+      !  the control signal OutWindup is supposed to be
+      !  in the interval { MinWindup, MaxWindup }.
       !  The EndMin /EndMax flags are used to signal if any
       !  limitation has occurred.
-      !  If OutVal is greater than MaxOut or less than MinOut,
-      !  OutVal is limited to the value at the end of the
+      !  If OutWindup is greater than MaxWindup or less than MinWindup,
+      !  OutWindup is limited to the value at the end of the
       !  interval.
+      !  If MinWindup >= MaxWindup no limitation will occur.
       !  
+      !  After addition of the absolute output part, 
+      !  OutVal is limited  to the interval {MinOut , MaxOut }.
       !  If MinOut >= MaxOut no limitation will occur.
       !*/
+      Object MinWindup $Intern 51 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-Float32"
+          Attr GraphName = "MinWindup"
+        EndBody
+      EndObject
+      Object MaxWindup $Intern 52 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-Float32"
+          Attr GraphName = "MaxWindup"
+        EndBody
+      EndObject
       Object MinOut $Intern 19 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -596,6 +660,73 @@ SObject         pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "MaxOut"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the hysteresis on MinOut and MaxOut in
+      !  connection with the handling of EndMin/EndMax.
+      !  @image orm_en1-144.gif
+      !*/
+      Object EndHys $Intern 47 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "EndHys"
+        EndBody
+      EndObject
+      !/**
+      !  The lower respectively upper limit in the graph at
+      !  presentation of ProcVal and SetVal in the Pid object
+      !  display. The values may be changed in the more info
+      !  form of the Pid object.
+      !*/
+      Object SetMinShow $Intern 41 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "SetMinShow"
+        EndBody
+      EndObject
+      Object SetMaxShow $Intern 40 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "SetMaxShow"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the engineering unit of SetVal / SetMinShow /
+      !  SetMaxShow, e.g. meter. Used in the Pid object display.
+      !*/
+      Object SetEngUnit $Intern 44 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+          Attr GraphName = "SetEngUnit"
+        EndBody
+      EndObject
+      !/**
+      !  The lower respectively upper limit in the graph at
+      !  presentation of the control signal OutVal in the Pid
+      !  object display. The values may be changed in the more
+      !  info form of the Pid object.
+      !*/
+      Object OutMinShow $Intern 43 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OutMinShow"
+        EndBody
+      EndObject
+      Object OutMaxShow $Intern 42 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OutMaxShow"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the engineering unit of OutVal / Force / OutMinShow /
+      !  OutMaxShow, e.g., %. Used in the Pid object display.
+      !*/
+      Object OutEngUnit $Intern 45 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+          Attr GraphName = "OutEngUnit"
         EndBody
       EndObject
       !/**
@@ -758,63 +889,6 @@ SObject         pwrb:Class
           Attr GraphName = "MaxBGain"
         EndBody
       EndObject
-      Object SetMaxShow $Intern 40 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
-          Attr GraphName = "SetMaxShow"
-        EndBody
-      EndObject
-      !/**
-      !  The lower respectively upper limit in the graph at
-      !  presentation of ProcVal and SetVal in the Pid object
-      !  display. The values may be changed in the more info
-      !  form of the Pid object.
-      !*/
-      Object SetMinShow $Intern 41 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
-          Attr GraphName = "SetMinShow"
-        EndBody
-      EndObject
-      !/**
-      !  The lower respectively upper limit in the graph at
-      !  presentation of the control signal OutVal in the Pid
-      !  object display. The values may be changed in the more
-      !  info form of the Pid object.
-      !*/
-      Object OutMaxShow $Intern 42 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
-          Attr GraphName = "OutMaxShow"
-        EndBody
-      EndObject
-      Object OutMinShow $Intern 43 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
-          Attr GraphName = "OutMinShow"
-        EndBody
-      EndObject
-      !/**
-      !  Specifies the engineering unit of SetMinShow /
-      !  SetMaxShow, e.g. meter. Used in the Pid object display.
-      !*/
-      Object SetEngUnit $Intern 44 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String16"
-          Attr GraphName = "SetEngUnit"
-        EndBody
-      EndObject
-      !/**
-      !  Specifies the engineering unit of OutMinShow /
-      !  OutMaxShow, e.g., %. Used in the in the Pid object
-      !  display.
-      !*/
-      Object OutEngUnit $Intern 45 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String16"
-          Attr GraphName = "OutEngUnit"
-        EndBody
-      EndObject
       !/**
       !  Specifies the complete name of the Mode object
       !  associated to this Pid object. The attribute makes it
@@ -829,27 +903,52 @@ SObject         pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Specifies the hysteresis on MinOut and MaxOut in
-      !  connection with the handling of EndMin/EndMax.
-      !  @image orm_en1-144.gif
-      !*/
-      Object EndHys $Intern 47 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
-          Attr GraphName = "EndHys"
-        EndBody
-      EndObject
-      !/**
       !  Filtered derivative is saved to the next program cycle.
       !*/
       Object FiltDer $Intern 48 
         Body SysBody
+	  Attr Flags |= PWR_MASK_INVISIBLE
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-	  Attr Flags |= PWR_MASK_INVISIBLE
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "FiltDer"
         EndBody
+      EndObject
+      !/**
+      !  Offset for PD-controller when switching from manual to auto mode
+      !*/
+      Object PDManOffset $Intern 53 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-Float32"
+          Attr GraphName = "PDManOffset"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+         EndBody
+      EndObject
+      !/**
+      !  Output that is cut off (limited) with MinWindup and MaxWindup
+      !*/
+      Object OutWindup $Intern 54 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-Float32"
+          Attr GraphName = "OutWindup"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+         EndBody
+      EndObject
+      !/**
+      !  The absolute part of the output. (Contrary to OutWindup) 
+      !*/
+      Object AbsOut $Intern 55 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-Float32"
+          Attr GraphName = "AbsOut"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+         EndBody
       EndObject
     EndObject
     Object DevBody $ObjBodyDef 2 
@@ -907,6 +1006,8 @@ SObject         pwrb:Class
         Attr SetMaxShow = 100.0
         Attr SetEngUnit = "%"
         Attr OutEngUnit = "%"
+        Attr WindupMask = 4
+        Attr MaxWindup = 100.0
       EndBody
     EndObject
   EndObject

@@ -7509,14 +7509,15 @@ satta under en tid som är proportionell mot storleken på insignalen.
 @image orm_en1-100.gif
 
 Insignalen OutChange betraktas som ett reglerfel. Detta fel överförs till en tid 
-genom multiplikation med Gain . Produkten adderas till ackumulatorn Acc . 
+genom multiplikation med Gain . Produkten adderas till ackumulatorn Acc.
+Absolutvärdet av Acc begränsas till MaxWindup.
 
 Om absolut värdet av Acc är större än MinTim sätts någon av utgångarna Open 
 eller Close till TRUE. 
 
-Om Acc > MinTim sätts 'öka' signalen (= Open ) så länge som Acc = 0 , om, å 
+Om Acc > MinTim sätts 'öka' signalen (= Open ) så länge som Acc > 0 , om, å 
 andra sidan, Acc < - MinTim sätts 'minska' signalen (= Close ) så länge som 
-Acc = 0. Vid varje exekvering räknas värdet av Acc ned respektive upp med ett 
+Acc < 0. Vid varje exekvering räknas värdet av Acc ned respektive upp med ett 
 tidsbelopp av ScanTime , beroende på om 'öka' eller 'minska' signalen satts. 
 
 För att undvika 'obefogade' styringrepp, som skulle kunna skada ställdon vid 
@@ -7606,6 +7607,12 @@ Ackumulerad styrsignal - ingrepp i form av tid.
 
 <attr>AccTim 
 Ackumulerad löptid utan ingrepp. 
+</attr>
+
+<attr>MaxWindup 
+Absolutvärdet av Acc begränsas till MaxWindupsekunder, för att undvika oändlig 
+uppvridning vid felsatta parametrar. Negativt eller noll ger ingen begränsning.
+Bör vara nära gångtid från helt stängd till helt öppen. Default 30 sek.
 </attr>
 
 <attr>TimerFlag 
@@ -8922,13 +8929,13 @@ objektets objektbild. Gränserna kan ändras från Mode-objektets MERbild.
 </attr>
 
 <attr>SetEngUnit 
-Anger ingenjörsenheten för SetMinShow / SetMaxShow , t.ex kg. Används i 
-Mode-objektets objektbild. 
+Anger ingenjörsenheten för XSetVal / SetVal / SetMinShow / SetMaxShow, t.ex kg.
+Används i Mode-objektets objektbild. 
 </attr>
 
 <attr>OutEngUnit 
-Anger ingenjörsenheten för OutMinShow / OutMaxShow , t.ex %. Används i 
-Mode-objektets objektbild. 
+Anger ingenjörsenheten för XForcVal / OutVal /ForcVal / OutMinShow / OutMaxShow, t.ex %.
+Används i Mode-objektets objektbild. 
 </attr>
 
 <attr>PidObjDid 
@@ -10361,10 +10368,14 @@ bara genom att det större reglerfelet börjar integrera utsignalen.
 
 Vid P- och PD-algoritm används en absolut algoritm. Utsignalen kan då alltså inte 
 ligga stabilt skilt från noll utan regleravvikelse, annat än om man använder en 
-framkopplingssignal.
-Vid alla algoritmer med I-del baseras hela tiden förändringar i utsignalen på 
-förändringar i insignalerna. Man kan fortfarande stänga av integrereringen med 
-en insignal till objektet.
+framkopplingssignal. Om flaggan PDAbsFlag sitter, så beräknas en offset i manuell mod,
+så att vi får en stötfri övergång till auto.
+Vid alla algoritmer med I-del delas utsignalen upp i två delar ned hjälp av masken WindupMask.
+I-delen ingår alltid i OutWindup, medanBias, P-delen och D-delen kan tillhöra antingen OutWindup
+eller AbsOut.
+OutWindup begränsas av MinWindup och MaxWindup, vilket sätter flaggorna EndMin och EndMax.
+Resten av utsignalen lagras i AbsOut, och total utsignal begränsas med MinOut och MaxOut
+Man kan även stänga av integrereringen med en insignal till objektet.
  
 Pid-objektet har två utgångar som båda kan användas som styrsignal. Vilken som 
 används i det enskilda fallet beror på hur regleringen är ordnad: 
@@ -10388,25 +10399,35 @@ så mycket av derivatadelen som av P-delen. Derivatatillskottet smetas sedan ut
 skulle bli utan filtrering.
  
 En framkopplingssignal, Bias, kan inkluderas i algoritmen genom en ingångssignal 
-till objektet.
- 
-Utvärdet, OutVal, begränsas till intervallet { MinOut, MaxOut }. Det innebär att 
+till objektet. Förstärkning framkoppling anges med BiasGain.
+
+Regulatorns utsignal OutVal är uppdelad i två delar, OutWindup och AbsOut.
+I-delen innefattas alltid i OutWindup. Med WindupMask kan man styra även Bias,
+P-delen och D-delen till OutWindup.
+OutWindup, begränsas till intervallet { MinWindup, MaxWindup }. Det innebär att 
 man kan tappa det stabila läget vid en orolig reglering, speciellt vid inkopplad 
-D-del.
+D-del. Om man sätter flaggan WindupMask till BIP, så tar man bort D-delens inflytande 
+på OutWindup. Man kan även sätta den till BI eller I för att ta bort P-delen och
+Bias från OutWindup.
+Den totala utsignalen OutVal begränsas till intervallet { MinOut , MaxOut }.
+
 Exempel: Vi har en ganska orolig flödesreglering (utsignal 0-100 %) och reglerar 
-nära maxvarvet för pumpen. Vi behöver styra ut i snitt 98 % för att nå önskat 
-börvärde. Utsignalen fladdrar ca +- 5 % pga störningar. Om MaxOut är 100 %, så 
-innebär det att regulatorn bottnar regelbundet. Utsignalen kommer då att svänga 
-mellan 90 och 100 % med en medelutsignal på ca 95%, och vi når inte önskat 
+nära maxvarvet för pumpen. WindupMask = BPID. Vi behöver styra ut i snitt 98 % för 
+att nå önskat börvärde. Utsignalen fladdrar ca +- 5 % pga störningar. 
+Om MaxWindup är 100 %, så innebär det att regulatorn bottnar regelbundet. Utsignalen 
+kommer då att svänga mellan 90 och 100 % med en medelutsignal på ca 95%, och vi når inte önskat 
 börvärde.
-Lösning: Sätt MinOut och MaxOut till -10 % resp 110 %. Utsignalen kommer att 
-svänga mellan 93 och 103% med ett medel på 98%, och vi uppnår önskat börvärde. 
-Utsignalen får sedan begränsas till 0 - 100 % utanför PID-regulatorn.
+Lösning: Sätt WindupMask till I eller BI. Störningarna kommer inte att  påverka MaxWindup.
+
+För en servoventil med positionsreglering, kan man vilja ha en långsam I-del för läckagekontroll,
+begränsad till +- 20 %. Sätt WindupMask till I eller BI.
+Sätt MinWindup = -20% och MaxWindup till +20%, MinOutput = -100 %, MaxOutput = 100 %
+EndMin och EndMax kan användas för läckagelarm.
 
 
 Regulatorn har stötfri omkoppling AUTO / MANUAL och efter annan tvångsstyrning av 
 regulatorn.
-Dock ej vid P- eller PD-reglering.
+Dock ej vid P- eller PD-reglering, om man har PDAbsFlag satt.
  
 EXEMPEL 1
 
@@ -10638,8 +10659,8 @@ operatören i läge MANUAL eller på ett s.k. tvångsstyrningsvärde.
 </attr>
 
 <attr>OutChange 
-Regulatorns syrsignal baserad på 'incremental form'. 
-
+Regulatorns syrsignal baserad på 'incremental form', eller förändring i styrsignalen
+vid 'positional form'.
 Attributet avser styrsignalsförändringen mellan två konsekutiva exekveringar; 
 dvs. OutVal t - OutVal t-1 . 
 </attr>
@@ -10649,14 +10670,14 @@ Reglerfelet (= ProcVal - SetVal ).
 </attr>
 
 <attr>EndMin
-Om beräknat värde på OutVal inte tillhör intervallet { MinOut , MaxOut } ska 
+Om beräknat värde på OutWindup inte tillhör intervallet { MinWindup , MaxWindup } ska 
 begränsning ske till motsvarande intervallgräns. Attributet anger om sådan 
 begränsning skett vid den senaste exekveringen eller ej. 
 
 Om begränsning görs mot 
 
--- MinOut , ska EndMin sättas TRUE
--- MaxOut , ska EndMax sättas TRUE 
+-- MinWindup , ska EndMin sättas TRUE
+-- MaxWindup , ska EndMax sättas TRUE 
 
 annars är de FALSE. 
 
@@ -10748,11 +10769,10 @@ Värdet kan ändras från Pid-objektets MERbild.
 
 <attr>MinOut
 I driftläge AUTO och CASCADE ska den utställda styrsignlaen OutVal vara i 
-intervallet { MinOut , MaxOut }. Flaggorna EndMin / EndMax används för att 
-signalera då begränsning sker.
+intervallet { MinOut , MaxOut }.
 Om OutVal är större än MaxOut eller mindre än MinOut , begränsas OutVal 
 till värdet av motsvarande intervallgräns.
-Om MinOut = MaxOut sker ingen begränsning. 
+Om MinOut >= MaxOut sker ingen begränsning. 
 </attr>
 
 <attr>MaxOut 
@@ -10907,6 +10927,45 @@ EndMin / EndMax flaggorna.
  
 <attr>FiltDer 
 Filtrerad derivata sparas till nästa exekevering. 
+</attr>
+
+<attr>PDAbsFlag 
+Anger att utsignalen beräknas direkt med regleravvikelsen.
+Vid nollvärde beräknas en offset i manuell mod, så att vi får stötfri övergång till auto. 
+</attr>
+
+<attr>WindupMask 
+Möjliga värden är:
+1  -- I		Bara I-delen begränsas i OutWindup
+2  -- BI	I-delen och Bias begränsas i OutWindup
+4  -- BIP	Också P-delen begränsas i OutWindup
+8  -- BIPD	Hela utsignalen, även D-delen begränsas i OutWindup
+</attr>
+
+<attr>MinWindup
+I driftläge AUTO och CASCADE ska den utställda styrsignalen OutWindup vara i 
+intervallet { MinWindup , MaxWindup }. Flaggorna EndMin / EndMax används för att 
+signalera då begränsning sker.
+Om OutWindup är större än MaxWindup eller mindre än MinWindup , begränsas OutWindup 
+till värdet av motsvarande intervallgräns.
+Om MinWindup >= MaxWindup sker ingen begränsning. 
+</attr>
+
+<attr>MaxWindup 
+Se MinOut
+</attr>
+
+<attr>PDManOffset 
+Offset beräknas i manuell mod, och används vid P och PD-algoritm 
+för att få stötfri övergång till auto. 
+</attr>
+
+<attr>OutWindup 
+Utsignal som begränsas av MinWindup och MaxWindup
+</attr>
+
+<attr>AbsOut 
+Utsignaldel som ligger utanför OutWindup
 </attr>
 
 <attr>OpMod

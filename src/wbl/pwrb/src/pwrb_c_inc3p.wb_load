@@ -52,7 +52,8 @@ SObject pwrb:Class
 !  The input signal OutChange is regarded as a control
 !  error. This error is transformed into a time by
 !  multiplication with Gain. The product is added to
-!  accumulator Acc.
+!  accumulator Acc. The absolute value of Acc is limited
+!  to MaxWindup.
 !  
 !  If the absolute value of Acc > MinTim either the output
 !  Open or Close is set. If Acc > MinTim an incremental
@@ -191,6 +192,18 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "MaxTim"
+        EndBody
+      EndObject
+      !/**
+      !  Maximum windup in seconds
+      !  The absolute value of Acc will never be greater than MaxWindup
+      !  Typically less or equal than running time from open to closed
+      !  Default 30 seconds. Lessor equal to zero means no limitation.
+      !*/
+      Object MaxWindup $Intern 19 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxWindup"
         EndBody
       EndObject
       Object OpenP $Intern 8 
@@ -387,6 +400,7 @@ SObject pwrb:Class
     Object Template Inc3P
       Body RtBody
         Attr Gain = 1.0
+        Attr MaxWindup = 30.0
       EndBody
     EndObject
   EndObject

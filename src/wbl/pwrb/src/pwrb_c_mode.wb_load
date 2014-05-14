@@ -175,8 +175,6 @@ SObject pwrb:Class
       Object SetVal $Output 7 
         Body SysBody
           Attr PgmName = "SetVal"
-          Attr Flags |= PWR_MASK_STATE
-          Attr Flags |= PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "SV"
         EndBody
@@ -380,40 +378,21 @@ SObject pwrb:Class
       !  Mode object display. The values may be changed in the
       !  more info form of the Mode object.
       !*/
-      Object SetMaxShow $Intern 20 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
-          Attr GraphName = "SetMaxShow"
-        EndBody
-      EndObject
       Object SetMinShow $Intern 21 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "SetMinShow"
         EndBody
       EndObject
-      !/**
-      !  The lower respectively upper limits in the bar graph at
-      !  presentation of the control signal, OutVal, of the Pid
-      !  object in the Mode display. The values may be changed
-      !  in the more info form of the Mode object.
-      !*/
-      Object OutMaxShow $Intern 22 
+      Object SetMaxShow $Intern 20 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
-          Attr GraphName = "OutMaxShow"
-        EndBody
-      EndObject
-      Object OutMinShow $Intern 23 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
-          Attr GraphName = "OutMinShow"
+          Attr GraphName = "SetMaxShow"
         EndBody
       EndObject
       !/**
-      !  Specifies the engineering unit of SetMinShow /
+      !  Specifies the engineering unit of XSetVal / SetVal / SetMinShow /
       !  SetMaxShow, e.g. kg. Used in the Mode object display.
-      !  OutEngUnit
       !*/
       Object SetEngUnit $Intern 24 
         Body SysBody
@@ -422,8 +401,27 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Specifies the engineering unit of OutMinShow /
-      !  OutMaxShow e.g. %. Used in the Mode object display.
+      !  The lower respectively upper limits in the bar graph at
+      !  presentation of the control signal, OutVal, of the Pid
+      !  object in the Mode display. The values may be changed
+      !  in the more info form of the Mode object.
+      !*/
+      Object OutMinShow $Intern 23 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OutMinShow"
+        EndBody
+      EndObject
+      Object OutMaxShow $Intern 22 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OutMaxShow"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the engineering unit of XForcVal / OutVal / 
+      !  ForcVal / OutMinShow / OutMaxShow e.g. %.
+      !  Used in the Mode object display.
       !*/
       Object OutEngUnit $Intern 25 
         Body SysBody
