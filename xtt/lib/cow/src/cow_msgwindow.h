@@ -95,6 +95,7 @@ class MsgWindow {
 			 pwr_tOid oid = pwr_cNOid, bool is_plc = false);
     void 	activate_print() { print();}
     static void	set_default( MsgWindow *msgw) { default_window = msgw;}
+    static int has_default() { return default_window ? 1 : 0;}
     static void message( int severity, const char *text, msgw_ePop pop = msgw_ePop_Default, 
 			 pwr_tOid oid = pwr_cNOid, bool is_plc = false);
     static void message( const co_error& e, const char *text1 = 0, const char *text2 = 0,

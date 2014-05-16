@@ -95,6 +95,11 @@ void msgw_reset_nodraw()
   MsgWindow::dreset_nodraw();
 }
 
+int msgw_has_default()
+{
+  return MsgWindow::has_default();
+}
+
 //
 // c api to co_xhelp
 //

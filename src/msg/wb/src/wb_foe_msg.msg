@@ -117,7 +117,7 @@ nothread	<Invalid thread object>					/error
 invthread	<Invalid thread object, plc will not be executed>	/warning
 generic		<Generic object is not connected>			/error
 templateplc	<Template plc not found>				/error
-ccerror		<Error from c compiler or linker, see terminal window>	/fatal
+ccerror		<Error from c compiler or linker>			/fatal
 noconnect	<PlcConnect object is missing>				/error
 refconnect      <Error in PlcConnect object class>			/error
 conbackup	<Backup connected to invalid attribute>			/error
@@ -131,6 +131,8 @@ compmethod	<Invalid compile method>				/error
 libref		<Invalid reference to library hierarchy>		/error
 misplacedthread	<Misplaced thread object>				/error
 obsolete	<Object is obsolete>					/error
+ccwarning	<Warning from c compiler or linker> 			/warning
+ccsucc		<Window compiled> 					/info
 
         .facility       FOE,280 /prefix = FOE__ ! Function object editor
 

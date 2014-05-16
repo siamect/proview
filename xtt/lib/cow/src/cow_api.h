@@ -55,6 +55,7 @@ void msgw_message_object( pwr_tStatus sts, const char *text1, const char *text2,
 void msgw_message_plcobject( pwr_tStatus sts, const char *text1, const char *text2, pwr_tOid oid);
 void msgw_set_nodraw();
 void msgw_reset_nodraw();
+int msgw_has_default();
 int xhelp_help( char *key, char *help_bookmark, navh_eHelpFile file_type,
 		char *file_name, int strict);
 #if defined __cplusplus

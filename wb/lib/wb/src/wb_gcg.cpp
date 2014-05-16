@@ -109,6 +109,9 @@ extern "C" {
 /* Filename of process includefile */
 #define PROCINC "rt_plc_proc.h"
 
+/* Compiler output temporary file */
+#define CC_OUTPUT_FILE "$pwrp_tmp/plc_cc.txt"
+
 #define GCDIR 		"$pwrp_tmp/"
 #define GCEXT ".gc"
 
@@ -1067,10 +1070,60 @@ static int gcg_cc(
 	  utl_get_projectname( systemname);
 
 	  dcli_translate_filename( fname, CC_COMMAND_UNIX);
- 	  sprintf( cmd, "%s %d %ld %s %d %s %s %s", 
-	    fname, gcg_debug, filetype, p1, os, p2, p3, systemname);
-	  sts = system( cmd);
-          if ( sts != 0) return GSX__CCERROR;
+	  if ( !msgw_has_default()) {
+	    // pwrc: don't redirect output
+	    sprintf( cmd, "%s %d %ld %s %d %s %s %s", 
+	      fname, gcg_debug, filetype, p1, os, p2, p3, systemname);
+	  }
+	  else {
+	    sprintf( cmd, "%s %d %ld %s %d %s %s %s 2> %s", 
+		     fname, gcg_debug, filetype, p1, os, p2, p3, systemname, CC_OUTPUT_FILE);
+	    sts = system( cmd);
+	    if ( 1 /* sts != 0 */) {
+	      pwr_tFileName efile;
+	      char line[50][200];
+	      char *s;
+	      
+	      dcli_translate_filename( efile, CC_OUTPUT_FILE);
+	      FILE *fp = fopen( efile, "r");
+	      if ( !fp) {
+		if ( sts != 0)
+		  return GSX__CCERROR;
+		else
+		  return GSX__SUCCESS;
+	      }
+	      int i = 0;
+	      while ( dcli_read_line( line[i], sizeof( line[0]), fp)) {
+		i++;
+		if ( i >= 50) {
+		  sprintf( line[i-1], "** Truncated, see all errors in terminal window **");
+		  break;
+		}
+	      }
+	      fclose( fp);
+	      sprintf( cmd, "cat %s", CC_OUTPUT_FILE);
+	      system( cmd);
+	      sprintf( cmd, "rm -f %s", CC_OUTPUT_FILE);
+	      system( cmd);
+	      for ( int j = i-1; j >= 0; j--) {
+		msgw_ePop pop;
+		if ( j == 0)
+		  pop = msgw_ePop_Yes;
+		else
+		  pop = msgw_ePop_No;
+		if ( line[j][0] == '/' && (s = strstr( line[j], "/common/tmp/"))) {
+		  strncpy(s+2, "$pwrp_tmp", 9); 
+		  msgw_message( 0, s+2, pop);
+		}
+		else
+		  msgw_message( 0, line[j], pop);
+	      }
+	      if ( sts != 0)
+		return GSX__CCERROR;
+	      else if ( i > 0)
+		return GSX__CCWARNING;
+	    }
+	  }
 	}
 	else
 	{
@@ -4422,13 +4475,15 @@ static int gcg_error_msg(
 int gcg_wind_msg( 
     gcg_ctx		gcgctx,
     unsigned long 	sts,
-    vldh_t_wind	wind
+    vldh_t_wind		wind,
+    int			in_wind
 )
 {
 	static char 	msg[256];
 	int		status, size;
 	pwr_tOName	hier_name;
 	FILE 		*logfile;
+	char		txt[20];
 
 	logfile = NULL;
 
@@ -4436,8 +4491,12 @@ int gcg_wind_msg(
 
 	if (logfile != NULL)
 	  fprintf(logfile, "%s\n", msg);
-	else
-	  printf("%s\n", msg);
+	else {
+	  if ( wind && !in_wind)
+	    printf("%s ", msg);
+	  else
+	    printf("%s\n", msg);
+	}
 	if ( wind == 0)
 	  msgw_message_sts( sts, 0, 0);
 	else {
@@ -4469,12 +4528,16 @@ int gcg_wind_msg(
 	      printf("%ld warnings ", gcgctx->warningcount);
 	    sprintf( &str[strlen(str)], "%ld warnings ", gcgctx->warningcount);
 	  }
-	  if (logfile != NULL)
-	    fprintf(logfile, "in window  %s\n", hier_name);
+	  if ( in_wind)
+	    strcpy( txt, "in window");
 	  else
-	    printf("in window  %s\n", hier_name);
-	  sprintf( &str[strlen(str)], " in window");
-
+	    strcpy( txt, "");
+	  if (logfile != NULL)
+	    fprintf(logfile, "%s  %s\n", txt, hier_name);
+	  else
+	    printf("%s  %s\n", txt, hier_name);
+	  sprintf( &str[strlen(str)], " %s", txt);
+	  
 	  msgw_message_plcobject( sts, str, hier_name, wind->lw.oid);
 	}
 	return GSX__SUCCESS;
@@ -5774,7 +5837,9 @@ int	gcg_comp_rtnode(
       sprintf( module_name, "%s%s_%4.4d_%s", gcgmn_filenames[0], nodename_low, bus, 
 	       cdh_Low(plcproclist[j].name));
       sts = gcg_cc( GCG_PROC, module_name, NULL, NULL, os, GCG_NOSPAWN);
-      if ( EVEN(sts)) {
+      if ( sts == GSX__CCWARNING)
+	(*warningcount)++;
+      else if ( EVEN(sts)) {
 	gcg_error_msg( 0, sts, 0);
 	(*errorcount)++;
 	return sts;
@@ -5846,7 +5911,9 @@ int	gcg_comp_rtnode(
 		 cdh_Low(plcproclist[j].name));
 	sts = gcg_cc( GCG_RTNODE, fullfilename, plcfilename, 
 		      plclib_frozen, os, GCG_NOSPAWN);
-	if ( EVEN(sts)) {
+	if ( sts == GSX__CCWARNING)
+	  (*warningcount)++;
+	else if ( EVEN(sts)) {
 	  gcg_error_msg( 0, sts, 0);
 	  (*errorcount)++;
 	  return sts;
@@ -6058,7 +6125,9 @@ int	gcg_comp_volume(
 		/* Insert all objects into the archive */
 	        sts = gcg_cc( GCG_LIBRARY, vldh_VolumeIdToStr( volid), plclib_frozen, 
 			      plclibrary, (pwr_mOpSys)opsys, GCG_NOSPAWN);
-	        if (EVEN(sts)) return sts;
+		if ( sts == GSX__CCWARNING)
+		  gcgctx->warningcount++;
+	        else if (EVEN(sts)) return sts;
 	      }
 	    }
           }
@@ -6240,7 +6309,9 @@ int	gcg_comp_m0( vldh_t_plc	plc,
 
 	        sts = gcg_cc( GCG_PLC, module_name, plclibrary, 
 			      plc_name, (pwr_mOpSys)opsys, spawn);
-                if ( EVEN(sts)) {
+		if ( sts == GSX__CCWARNING)
+		  (*warningcount)++;
+                else if ( EVEN(sts)) {
 		  gcg_error_msg( 0, sts, 0);
 		  (*errorcount)++;
 		}
@@ -6509,20 +6580,20 @@ int	gcg_comp_m1( vldh_t_wind wind,
 	if ( gcgctx->print )
 	{
 	  if ( gcgctx->errorcount > 0)
-	    gcg_wind_msg( gcgctx, GSX__CWINDERR, wind);
+	    gcg_wind_msg( gcgctx, GSX__CWINDERR, wind, 1);
 	  else if ( gcgctx->warningcount > 0 )
-	    gcg_wind_msg( gcgctx, GSX__CWINDWARN, wind);
+	    gcg_wind_msg( gcgctx, GSX__CWINDWARN, wind, 1);
 	  else
 	    printf( "-- Plc window generated            %s\n", wind_name);
 	}
 	else
 	{
 	  if ( gcgctx->errorcount > 0)
-	    gcg_wind_msg( gcgctx, GSX__SWINDERR, wind);
+	    gcg_wind_msg( gcgctx, GSX__SWINDERR, wind, 1);
 	  else if ( gcgctx->warningcount > 0 )
-	    gcg_wind_msg( gcgctx, GSX__SWINDWARN, wind);
+	    gcg_wind_msg( gcgctx, GSX__SWINDWARN, wind, 1);
 	  else
-	    gcg_wind_msg( gcgctx, GSX__SWINDSUCC, wind);
+	    gcg_wind_msg( gcgctx, GSX__SWINDSUCC, wind, 1);
 	}
 
 	msgw_reset_nodraw();
@@ -6555,10 +6626,16 @@ int	gcg_comp_m1( vldh_t_wind wind,
 	      IF_PR {
                 sts = gcg_cc( GCG_WIND, module_name, plclibrary, wind_name, 
 			(pwr_mOpSys)opsys, spawn);
-                if ( EVEN(sts)) {
-		  gcg_error_msg( 0, sts, 0);
+		if ( sts == GSX__CCWARNING) {
+		  gcg_wind_msg( gcgctx, sts, wind, 1);
+		  (*warningcount)++;
+		}
+                else if ( EVEN(sts)) {
+		  gcg_wind_msg( gcgctx, sts, wind, 1);
 		  (*errorcount)++;
 		}
+                else
+		  gcg_wind_msg( gcgctx, GSX__CCSUCC, wind, 0);
 	      }
 	    }
           }
@@ -6615,7 +6692,7 @@ int	gcg_comp_m1( vldh_t_wind wind,
 
 classerror:
 	/* If error status from ldh */
-	gcg_wind_msg( gcgctx, GSX__CLASSERR, 0);
+	gcg_wind_msg( gcgctx, GSX__CLASSERR, 0, 0);
 	msgw_reset_nodraw();
 
   	/* Revert the session */

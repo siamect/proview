@@ -265,7 +265,8 @@ int gcg_get_outputstring (
 int gcg_wind_msg( 
     gcg_ctx		gcgctx,
     unsigned long 	sts,
-    vldh_t_wind	wind
+    vldh_t_wind		wind,
+    int			in_wind
 );
 
 int gcg_get_point ( 
