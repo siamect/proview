@@ -299,19 +299,26 @@ SObject pwrb:Class
       !  Bit map. A combination of flags can be attached to the
       !  message. The possible values are as follows:
       !  
-      !  -- 1  If this flag exists the return message ReturnText
-      !        will be sent to the event lists at the out units,
-      !  -- 2  If this flag exists the acknowledgement message
-      !        will be sent to the event lists at the out-units,
-      !  
-      !  -- 4  If the single out unit has a peep-function this
-      !        will be activated when the message is received.
-      !  -- 8  The message is sent to every out unit regardless
-      !  
-      !  --16  If the message is of the type INFO it will be
-      !        placed in the event list. If this flag exists the
-      !        message is also placed in the INFO square of the
-      !        alarm window where acknowledgement is to be done.
+      !  -- Return (1)  If this flag exists the return message ReturnText
+      !                 will be sent to the event lists at the out units,
+      !  -- Ack (2)     If this flag exists the acknowledgement message
+      !                 will be sent to the event lists at the out-units,
+      !  -- Bell(4)     If the single out unit has a beep-function this
+      !                 will be activated when the message is received.
+      !  -- Force (8)   The message is sent to every out unit regardless
+      !  -- InfoWindow (16)  If the message is of the type INFO it will be
+      !                 placed in the event list. If this flag exists the
+      !                 message is also placed in the INFO square of the
+      !                 alarm window where acknowledgement is to be done.
+      !  -- Returned (32) The alarm status is set to returned already
+      !                 when the alarm is emitted.
+      !  -- NoObject (64) Not used
+      !  -- Email (128) The message will be handled by the email server
+      !                 and forwarded to the specified receiver.
+      !  -- SMS (256)   The message will be handled by the SMS server
+      !                 and forwarded to the specified receiver.
+      !  -- UserDetectTime (512) DetectTime is set by the user when the 
+      !                 alarm condition is set.
       !*/
       Object EventFlags $Attribute 12 
         Body SysBody

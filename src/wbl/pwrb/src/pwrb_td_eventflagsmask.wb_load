@@ -106,7 +106,8 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  Undocumented...
+    !  The alarm status is set to returned already when the 
+    !  alarm is emitted.
     !*/
     Object Returned $Bit
      Body SysBody
@@ -116,7 +117,7 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  Undocumented...
+    !  Not used.
     !*/
     Object NoObject $Bit
      Body SysBody
@@ -126,7 +127,7 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  The message will be handle by the email server and
+    !  The message will be handled by the email server and
     !  forwarded to the specified receiver.
     !*/
     Object Email $Bit
@@ -137,7 +138,7 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  The message will be handle by the SMS server and
+    !  The message will be handled by the SMS server and
     !  forwarded to the specified receiver.
     !*/
     Object SMS $Bit
