@@ -207,6 +207,7 @@ pwr_tDeltaTime *  time_ZeroD  (pwr_tDeltaTime*);
 void 	       	time_Sleep	(float time);
 int 	      time_GetTime (pwr_tTime *ts);
 int 	      time_GetTimeMonotonic (pwr_tTime *ts);
+char 	      *time_GetTimeAscii( time_eFormat format);
 int 	      time_PeriodPreviousMonth( pwr_tTime *time, pwr_tTime *from, pwr_tTime *to);
 int 	      time_PeriodPreviousWeek( pwr_tTime *time, pwr_tTime *from, pwr_tTime *to);
 void	      time_PreviousDayBreak( pwr_tTime *time, pwr_tTime *daybreak);

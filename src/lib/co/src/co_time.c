@@ -554,6 +554,15 @@ time_AtoAscii (
 
   return TIME__SUCCESS;
 }
+
+//! Get current time in ascii
+char *time_GetTimeAscii( time_eFormat format)
+{
+  static char buf[80];
+  time_AtoAscii( 0, format, buf, sizeof(buf));
+  return buf;
+}
+
 
 //! Convert ascii to timespec.
 pwr_tStatus
