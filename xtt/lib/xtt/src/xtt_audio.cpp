@@ -13,6 +13,7 @@
 #include "rt_gdh.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_time.h"
 #include "pwr_baseclasses.h"
 #include "rt_xnav_msg.h"
 #include "cow_wow.h"
@@ -41,6 +42,7 @@ typedef struct {
   long dataSize;
 } wav_sFormat;
 
+static int debug = 0;
 
 int XttAudio::number_of=0;
 int XttAudio::audio_ok=0;
@@ -424,6 +426,8 @@ void XttAudio::audio_stop( void *a)
 {
   XttAudio *audio = (XttAudio *)a;
 
+  if (debug)
+    printf( "audio_stop: %s\n", time_GetTimeAscii( time_eFormat_DateAndTime));
   snd_pcm_drop( audio->ALSA_handle);  
 }
 
@@ -460,12 +464,13 @@ void XttAudio::audio_write( void *data)
     }    
     else {
       int time = 1000 * size/2 / srate + 10;
+      audio->timerid->remove();
       audio->timerid->add( time, audio_write, audio);
     }
   }
 
   else if(ALSA_audio_ok) {
-    int size, asize;
+    int asize;
 
     asize = audio->write_buffer_asize;
 
@@ -481,72 +486,122 @@ void XttAudio::audio_write( void *data)
     snd_pcm_prepare( audio->ALSA_handle);
     // snd_pcm_start( audio->ALSA_handle);
 
-    for (;;) {
-      if ( audio->write_buffer_asize)
-      	size = audio->write_buffer_asize - audio->write_buffer_idx;
-      else
-	size = audio->write_buffer_size - audio->write_buffer_idx;
-      if ( size > audio->hw_buff_size)
-	size = audio->hw_buff_size;
+    audio_write_buff( audio);
+  }
+}
 
-      int time = 1000 * asize/2 / srate;
-      audio->timerid->add( time, audio_stop, audio);
+void XttAudio::audio_write_buff( void *a)
+{
+  XttAudio *audio = (XttAudio *)a;
+  int size;
+  int rc;
+  snd_pcm_sframes_t delay;
 
-      rc = snd_pcm_writei( audio->ALSA_handle, &audio->write_buffer[audio->write_buffer_idx], 
-			 size/2);
+  // Get number of allocated frames in the ALSA buffer
+  rc = snd_pcm_delay( audio->ALSA_handle, &delay);
+  if (debug)
+    printf( "Delay %ld\n", delay);
 
-      printf( "Write idx: %d totsize: %d size: %d written: %d actsize: %d\n", audio->write_buffer_idx, audio->write_buffer_size, size, rc*2, asize);
+  // Calculate size in samples
+  if ( audio->write_buffer_asize)
+    size = audio->write_buffer_asize - audio->write_buffer_idx;
+  else
+    size = audio->write_buffer_size - audio->write_buffer_idx;
+  if ( size > audio->hw_buff_size - delay * 2)
+    size = audio->hw_buff_size - delay * 2;
 
-      if (rc == -EPIPE) {
-	// EPIPE means underrun
-	fprintf(stderr, "ALSA audio underrun occurred\n");
-	// int time = 20;
-	// audio->timerid->add( time, audio_write, audio);
-	snd_pcm_close( audio->ALSA_handle);
-	free( audio->write_buffer);
-	audio->write_buffer = 0;
-	return;
-	// snd_pcm_prepare( audio->ALSA_handle);
+  // Calculate time to next refill
+  int time = 1000 * (size/2 + delay) / srate - 10;
+  
+  rc = snd_pcm_writei( audio->ALSA_handle, &audio->write_buffer[audio->write_buffer_idx], 
+		       size/2);
+
+  if (debug)
+    printf( "Write idx: %6d totsize: %6d size: %6d written: %6d actsize: %4.2f\n", audio->write_buffer_idx, audio->write_buffer_size, size, rc*2, ((float)time)/1000);
+
+  if (rc == -EPIPE) {
+    // EPIPE means underrun
+    fprintf(stderr, "ALSA audio underrun occurred\n");
+    snd_pcm_recover( audio->ALSA_handle, rc, 1);
+    // Fill the same sequence again
+    audio->timerid->remove();
+    audio->timerid->add( 0, audio_write_buff, audio);
+  }
+  else if (rc < 0) {
+    printf("ALSA audio error from writei:%s\n",snd_strerror(rc));
+    free( audio->write_buffer);
+    audio->write_buffer = 0;
+    return;
+  }
+  else if (rc != size/2) {
+    fprintf(stderr,"ALSA audio short write, write %d\n", rc * 2);
+    audio->write_buffer_idx += rc*2; // += size;
+    
+    int time = 1000 * (rc + delay)/ srate - 10;
+    struct timespec t;
+    t.tv_sec = time / 1000;
+    t.tv_nsec = (time - t.tv_sec * 1000) * 1e6;
+    
+    if ( debug)
+      printf( "short  sleep %6.4f\n", ((float)time)/1000);
+    audio->timerid->remove();
+    audio->timerid->add( time, audio_write_buff, audio);
+    // nanosleep( &t, 0);
+  }
+  else {
+    audio->write_buffer_idx += size;
+
+    if ( audio->write_buffer_idx >= audio->write_buffer_size) {
+      int time = 1000 * (rc + delay)/ srate;
+      struct timespec t;
+      t.tv_sec = time / 1000;
+      t.tv_nsec = (time - t.tv_sec * 1000) * 1e6;
+    
+      if ( !audio->queue_cnt) {
+	if ( debug)
+	  printf( "stop sleep %6.4f\n", ((float)time)/1000);
+	audio->timerid->remove();
+	audio->timerid->add( time, audio_stop, audio);
       }
-      else if (rc < 0) {
-	printf("ALSA audio error from writei:%s\n",snd_strerror(rc));
-	//snd_pcm_close( audio->ALSA_handle);
-	free( audio->write_buffer);
-	audio->write_buffer = 0;
-	return;
-      }
-      else if (rc != size/2) {
-	fprintf(stderr,"ALSA audio short write, write %d frames\n", rc);
-      }
-      audio->write_buffer_idx += size;
-      if ( (audio->write_buffer_asize && audio->write_buffer_idx < audio->write_buffer_asize) ||
-      	   (!audio->write_buffer_asize && audio->write_buffer_idx < audio->write_buffer_size)) {
-	//if ( audio->write_buffer_idx < audio->write_buffer_size) {
-	// Submit next write
-
-	// int time = 1000 * size/2 / srate;
-	// audio->timerid->add( time, audio_write, audio);
-
-      }    
-      else {
-	// Free buffer
-	free( audio->write_buffer);
-	audio->write_buffer = 0;
-
-	// Process next on queue
-	if ( audio->queue_cnt) {
-	  pwr_tAttrRef aref = audio->queue[0];
-	  for ( int i = 0; i < audio->queue_cnt - 1; i++)
-	    audio->queue[i] = audio->queue[i+1];
-	  audio->queue_cnt--;
-
-	  audio->beep( &aref);
-	}
-	snd_pcm_drain( audio->ALSA_handle);
-	break;
-      }      
+    }
+    else {
+      struct timespec t;
+      t.tv_sec = time / 1000;
+      t.tv_nsec = (time - t.tv_sec * 1000) * 1e6;
+    
+      if ( debug)
+	printf( "normal sleep %6.4f\n", ((float)time)/1000);
+      audio->timerid->remove();
+      audio->timerid->add( time, audio_write_buff, audio);
+      // nanosleep( &t, 0);
     }
   }
+  if ( (audio->write_buffer_asize && audio->write_buffer_idx < audio->write_buffer_asize) ||
+       (!audio->write_buffer_asize && audio->write_buffer_idx < audio->write_buffer_size)) {
+    //if ( audio->write_buffer_idx < audio->write_buffer_size) {
+    // Submit next write
+    
+    // int time = 1000 * size/2 / srate;
+    // audio->timerid->add( time, audio_write, audio);
+    
+  }    
+  else {
+    // Free buffer
+    free( audio->write_buffer);
+    audio->write_buffer = 0;
+    
+    // Process next on queue
+    if ( audio->queue_cnt) {
+      pwr_tAttrRef aref = audio->queue[0];
+      for ( int i = 0; i < audio->queue_cnt - 1; i++)
+	audio->queue[i] = audio->queue[i+1];
+      audio->queue_cnt--;
+      
+      audio->beep( &aref);
+    }
+    // snd_pcm_drain( audio->ALSA_handle);
+    return;
+  }      
 }
 
 int XttAudio::Init_ALSA(char *device, unsigned int samplerate)
@@ -613,15 +668,17 @@ int XttAudio::Init_ALSA(char *device, unsigned int samplerate)
     int msize;
     err = snd_pcm_hw_params_get_buffer_size_min(hw_params, (snd_pcm_uframes_t *)&msize);
     if ( err >= 0) {
-      hw_buff_size = 4 * msize;
+      hw_buff_size = 2 * msize;
       // hw_buff_size = 65536 / 2;
-      printf( "Buffer size min: %d\n", msize * 2);
+      if ( debug)
+	printf( "Buffer size min: %d\n", hw_buff_size);
       if((err =  snd_pcm_hw_params_set_buffer_size_near(ALSA_handle, hw_params, (snd_pcm_uframes_t *)&msize)) <0) {
 	fprintf(stderr, "could not set buffer size (%s)\n",snd_strerror (err));
       }
     }
     err = snd_pcm_hw_params_get_buffer_size_max(hw_params, (snd_pcm_uframes_t *)&msize);
-    printf( "Buffer size max: %d\n", msize * 2);
+    if ( debug)
+      printf( "Buffer size max: %d\n", msize * 2);
 
 
     if ((err = snd_pcm_hw_params (ALSA_handle, hw_params)) < 0)

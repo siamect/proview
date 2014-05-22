@@ -1,6 +1,7 @@
 Volume rt $SharedVolume 254.254.254.245 
-  Body SysBody 01-JAN-1970 01:00:00.00
+  Body SysBody 22-MAY-2014 11:19:05.00
     Attr NextOix = "_X31"
+    Attr Modified = "22-MAY-2014 11:19:05.00"
   EndBody
   Object Sounds $Hier 1 10-NOV-2005 13:10:06.12
     Body SysBody 10-NOV-2005 13:09:55.69
@@ -258,6 +259,40 @@ Volume rt $SharedVolume 254.254.254.245
     Object Wav0007 Sound 10 10-NOV-2005 17:04:14.10
       Body RtBody 16-NOV-2005 15:23:43.01
         Attr Source = "$pwr_exe/wav0007.wav"
+        Attr BaseTone = 21
+        Attr ToneTable[1] = 3
+        Attr ToneTable[2] = 7
+        Attr ToneTable[3] = 13
+        Attr VolumeTable[0] = 4.000000e+01
+        Attr VolumeTable[1] = 3.000000e+01
+        Attr VolumeTable[2] = 3.000000e+01
+        Attr VolumeTable[3] = 2.000000e+01
+        Attr Attack = 3.000000e-01
+        Attr Decay = 1.000000e-01
+        Attr Release = 2.000000e-01
+        Attr Length = 8.000000e-01
+      EndBody
+    EndObject
+    Object Wav0008 Sound 32 22-MAY-2014 11:18:39.74
+      Body RtBody 22-MAY-2014 11:18:50.25
+        Attr Source = "$pwr_exe/wav0008.wav"
+        Attr BaseTone = 21
+        Attr ToneTable[1] = 3
+        Attr ToneTable[2] = 7
+        Attr ToneTable[3] = 13
+        Attr VolumeTable[0] = 4.000000e+01
+        Attr VolumeTable[1] = 3.000000e+01
+        Attr VolumeTable[2] = 3.000000e+01
+        Attr VolumeTable[3] = 2.000000e+01
+        Attr Attack = 3.000000e-01
+        Attr Decay = 1.000000e-01
+        Attr Release = 2.000000e-01
+        Attr Length = 8.000000e-01
+      EndBody
+    EndObject
+    Object Wav0009 Sound 33 22-MAY-2014 11:18:40.52
+      Body RtBody 22-MAY-2014 11:18:58.89
+        Attr Source = "$pwr_exe/wav0009.wav"
         Attr BaseTone = 21
         Attr ToneTable[1] = 3
         Attr ToneTable[2] = 7

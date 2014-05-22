@@ -103,6 +103,7 @@ class XttAudio
 		    double sustain, double release, double tremolo);
     static void audio_write( void *data);
     static void audio_stop( void *data);
+    static void audio_write_buff( void *data);
 };
 
 #else
