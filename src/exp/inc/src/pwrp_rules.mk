@@ -20,10 +20,10 @@ f77inc		:= -I$(pwr_inc) -I$(pwrp_inc)
 
 .SUFFIXES:
 
-$(pwrp_inc)/pwr_%classes.h : $(pwrp_db)/%.wb_load
-	@ echo "Create struct $(notdir $(source))"
-	@ wb_cmd create struct
-	@ co_convert -x -d $(pwrp_exe) $(source)
+#$(pwrp_inc)/pwr_%classes.h : $(pwrp_db)/%.wb_load
+#	@ echo "Create struct $(notdir $(source))"
+#	@ wb_cmd create struct
+#	@ co_convert -x -d $(pwrp_exe) $(source)
 
 $(pwrp_inc)/%.h : %.h
 	@ echo "Copy $(notdir $(source))"
