@@ -1215,6 +1215,7 @@ void XNavBrow::create_nodeclasses()
   brow_CreateNodeClass( ctx, "NavigatorAttr", 
 		flow_eNodeGroup_Common, &nc_attr);
   brow_AddAnnotPixmap( nc_attr, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnotPixmap( nc_attr, 1, 1.4, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr, 2.9, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);

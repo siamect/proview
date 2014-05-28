@@ -2488,6 +2488,14 @@ int XNav::trace_scan_bc( brow_tObject object, void *p)
       ItemAttr	*item;
 
       item = (ItemAttr *)base_item;
+
+      if ( item->type == xnav_eItemType_Collect) {
+	// Add signal flags
+	XNav *xnav;
+	brow_GetCtxUserData( brow_GetCtx( item->node), (void **)&xnav);
+	((ItemCollect *)item)->set_signal_flags( xnav->brow);
+      }
+
       if ( !item->first_scan)
       {
         if ( item->size > (int) sizeof(item->old_value) && 
@@ -2508,6 +2516,7 @@ int XNav::trace_scan_bc( brow_tObject object, void *p)
 	
       brow_SetAnnotation( object, 1, buf, len);
       memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
+
       break;
     }
     case xnav_eItemType_Enum: {

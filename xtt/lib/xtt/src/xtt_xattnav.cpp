@@ -588,6 +588,14 @@ int XAttNav::trace_scan_bc( brow_tObject object, void *p)
       ItemAttr	*item;
 
       item = (ItemAttr *)base_item;
+
+      if ( item->type == xnav_eItemType_Collect) {
+	// Add signal flags
+	XAttNav *xattnav;
+	brow_GetCtxUserData( brow_GetCtx( item->node), (void **)&xattnav);
+	((ItemCollect *)item)->set_signal_flags( xattnav->brow);
+      }
+
       if ( !item->first_scan)
       {
         if ( item->size > (int) sizeof(item->old_value) && 

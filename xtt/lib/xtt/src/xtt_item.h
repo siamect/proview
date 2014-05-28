@@ -326,6 +326,7 @@ class ItemCollect : public ItemBaseAttr {
     ItemCollect( XNavBrow *brow, pwr_tObjid item_objid, char *attr_name,
 	brow_tNode dest, flow_eDest dest_code, int attr_type_id, pwr_tTid attr_tid,
 	int attr_size, int attr_flags, int item_is_root);
+    void set_signal_flags( XNavBrow *brow);
 };
 
 class ItemMenu : public Item {

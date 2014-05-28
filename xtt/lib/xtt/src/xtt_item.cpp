@@ -768,10 +768,10 @@ ItemAttr::ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
 	ItemBaseAttr( item_objid, attr_name,
 		      attr_type_id, attr_tid, attr_size, attr_flags, item_is_root, item_display_type)
 {
-  pwr_tOName obj_name;
+  pwr_tObjName  obj_name;
   pwr_tAName	annot;
   int	sts;
-
+  
   type = xnav_eItemType_Attr;
 
   strcpy( name, attr_name);
@@ -835,6 +835,7 @@ ItemAttr::ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
     else
       brow_SetTraceAttr( node, obj_name, attr_name, flow_eTraceType_User);
   }
+
 }
 
 ItemAttrArray::ItemAttrArray( XNavBrow *brow, pwr_tObjid item_objid,
@@ -1479,7 +1480,7 @@ ItemCollect::ItemCollect( XNavBrow *brow, pwr_tObjid item_objid, char *attr_name
 	attr_type_id, attr_tid, attr_size, attr_flags, item_is_root, item_eDisplayType_Path)
 {
   int sts;
-  pwr_tOName obj_name;
+  pwr_tAName obj_name;
   pwr_tObjid tst_objid;
 
   type = xnav_eItemType_Collect;
@@ -1510,6 +1511,52 @@ ItemCollect::ItemCollect( XNavBrow *brow, pwr_tObjid item_objid, char *attr_name
 
     brow_SetTraceAttr( node, obj_name, attr, flow_eTraceType_User);
   }
+
+  set_signal_flags( brow);
+}
+
+
+// Add signal flags
+void ItemCollect::set_signal_flags( XNavBrow *brow)
+{
+  pwr_tAName obj_name;
+  pwr_tStatus sts;
+
+  sts = gdh_ObjidToName( objid, obj_name, sizeof(obj_name), cdh_mName_volumeStrict); 
+  if ( EVEN(sts)) throw co_error(sts);
+  
+  strcat( obj_name, ".");
+  strcat( obj_name, attr);
+
+  char *s = strrchr( obj_name, '.');
+  if ( s && strcmp( s + 1, "ActualValue") == 0) {
+    pwr_tAttrRef aref;
+    pwr_tCid cid;
+
+    *s = 0;
+
+    sts = gdh_NameToAttrref( pwr_cNObjid, obj_name, &aref);
+    if ( EVEN(sts)) return;
+
+    sts = gdh_GetAttrRefTid( &aref, &cid);
+    if ( EVEN(sts)) return;
+
+    switch ( cid) {
+    case pwr_cClass_Di:
+    case pwr_cClass_Do:
+    case pwr_cClass_Ii:
+    case pwr_cClass_Io:
+    case pwr_cClass_Ai:
+    case pwr_cClass_Ao:
+    case pwr_cClass_Co:
+    case pwr_cClass_Po: {
+      xnav_set_sigchan_flags( brow, &aref, cid, node, 1);
+      break;
+    }
+    default: ;
+    }
+  }
+
 }
 
 static int add_window( XNav *xnav, pwr_tObjid objid, brow_tNode node, int *child_exist)
@@ -2490,6 +2537,8 @@ static void xnav_set_sigchan_flags( XNavBrow *brow, pwr_tAttrRef *arp, pwr_tCid 
     brow_SetAnnotPixmap( node, annot, brow->pixmap_teston);
   else if ( inv)
     brow_SetAnnotPixmap( node, annot, brow->pixmap_inverted);
+  else
+    brow_RemoveAnnotPixmap( node, annot);
 }
 
 
