@@ -207,6 +207,12 @@ public class GlowVector {
 	  a.add( c);
 	  break;
 	}
+	case Glow.eSave_GrowXYCurve: {
+	  GrowTrend c = new GrowXYCurve( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
 	case Glow.eSave_GrowTable: {
 	  GrowTable c = new GrowTable( cmn);
 	  c.open( reader);

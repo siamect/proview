@@ -51,6 +51,7 @@ local_java_sources := \
 	GrowMenu.java,\
 	GrowBar.java,\
 	GrowTrend.java,\
+	GrowXYCurve.java,\
 	GrowScrollBarIfc.java,\
 	GrowScrollBar.java,\
 	GrowTable.java,\
