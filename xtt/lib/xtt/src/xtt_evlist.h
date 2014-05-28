@@ -167,6 +167,8 @@ class EvListBrow {
     flow_sAnnotPixmap 	*pixmap_eventacked;
     flow_sAnnotPixmap 	*pixmap_eventreturn;
     flow_sAnnotPixmap 	*pixmap_info;
+    flow_sAnnotPixmap 	*pixmap_maintenance;
+    flow_sAnnotPixmap 	*pixmap_system;
     flow_sAnnotPixmap 	*pixmap_blockr;
     flow_sAnnotPixmap 	*pixmap_blockl;
 
@@ -280,7 +282,7 @@ class ItemEvBase {
 class ItemAlarm : public ItemEvBase {
   public:
     ItemAlarm( EvList *evlist, const char *item_name, pwr_tTime item_time,
-	const char *item_eventtext, char *item_eventname, int item_eventflags,
+	const char *item_eventtext, char *item_eventname, int item_eventttype, int item_eventflags,
 	unsigned long item_eventprio, mh_sEventId item_eventid,
 	pwr_tAttrRef *item_object, pwr_tAttrRef *item_eventsound, 
         char *item_eventmoretext,unsigned long item_status,
@@ -294,6 +296,7 @@ class ItemAlarm : public ItemEvBase {
     pwr_tTime		time;
     char		eventtext[80];
     pwr_tAName		eventname;
+    int			eventtype;
     int			eventflags;
     unsigned long	eventprio;
     mh_sEventId		eventid;

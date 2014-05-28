@@ -73,6 +73,26 @@ SObject pwrb:Type
        Attr Value = 64
      EndBody
     EndObject
+    !/**
+    !  Type MaintenanceAlarm.
+    !*/
+    Object MaintenanceAlarm $Value
+     Body SysBody
+       Attr PgmName = "MaintenanceAlarm"
+       Attr Text = "MaintenanceAlarm"
+       Attr Value = 128
+     EndBody
+    EndObject
+    !/**
+    !  Type SystemAlarm.
+    !*/
+    Object SystemAlarm $Value
+     Body SysBody
+       Attr PgmName = "SystemAlarm"
+       Attr Text = "SystemAlarm"
+       Attr Value = 256
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

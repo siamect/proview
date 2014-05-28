@@ -107,6 +107,22 @@
 #include "xnav_bitmap_info18.h"
 #include "xnav_bitmap_info20.h"
 #include "xnav_bitmap_info24.h"
+#include "xnav_bitmap_system8.h"
+#include "xnav_bitmap_system10.h"
+#include "xnav_bitmap_system12.h"
+#include "xnav_bitmap_system14.h"
+#include "xnav_bitmap_system16.h"
+#include "xnav_bitmap_system18.h"
+#include "xnav_bitmap_system20.h"
+#include "xnav_bitmap_system24.h"
+#include "xnav_bitmap_maintenance8.h"
+#include "xnav_bitmap_maintenance10.h"
+#include "xnav_bitmap_maintenance12.h"
+#include "xnav_bitmap_maintenance14.h"
+#include "xnav_bitmap_maintenance16.h"
+#include "xnav_bitmap_maintenance18.h"
+#include "xnav_bitmap_maintenance20.h"
+#include "xnav_bitmap_maintenance24.h"
 #include "xnav_bitmap_blockr_12.h"
 #include "xnav_bitmap_blockl_12.h"
 
@@ -137,6 +153,8 @@ void EvListBrow::free_pixmaps()
   brow_FreeAnnotPixmap( ctx, pixmap_eventacked);
   brow_FreeAnnotPixmap( ctx, pixmap_eventreturn);
   brow_FreeAnnotPixmap( ctx, pixmap_info);
+  brow_FreeAnnotPixmap( ctx, pixmap_system);
+  brow_FreeAnnotPixmap( ctx, pixmap_maintenance);
   brow_FreeAnnotPixmap( ctx, pixmap_blockr);
   brow_FreeAnnotPixmap( ctx, pixmap_blockl);
 }
@@ -378,6 +396,70 @@ void EvListBrow::allocate_pixmaps()
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_info);
 
+  i = 0;
+  pixmap_data[i].width =xnav_bitmap_maintenance8_width;
+  pixmap_data[i].height =xnav_bitmap_maintenance8_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_maintenance8_bits;
+  pixmap_data[i].width =xnav_bitmap_maintenance10_width;
+  pixmap_data[i].height =xnav_bitmap_maintenance10_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_maintenance10_bits;
+  pixmap_data[i].width =xnav_bitmap_maintenance12_width;
+  pixmap_data[i].height =xnav_bitmap_maintenance12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_maintenance12_bits;
+  pixmap_data[i].width =xnav_bitmap_maintenance14_width;
+  pixmap_data[i].height =xnav_bitmap_maintenance14_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_maintenance14_bits;
+  pixmap_data[i].width =xnav_bitmap_maintenance16_width;
+  pixmap_data[i].height =xnav_bitmap_maintenance16_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_maintenance16_bits;
+  pixmap_data[i].width =xnav_bitmap_maintenance18_width;
+  pixmap_data[i].height =xnav_bitmap_maintenance18_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_maintenance18_bits;
+  pixmap_data[i].width =xnav_bitmap_maintenance20_width;
+  pixmap_data[i].height =xnav_bitmap_maintenance20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_maintenance20_bits;
+  pixmap_data[i].width =xnav_bitmap_maintenance20_width;
+  pixmap_data[i].height =xnav_bitmap_maintenance20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_maintenance20_bits;
+  pixmap_data[i].width =xnav_bitmap_maintenance24_width;
+  pixmap_data[i].height =xnav_bitmap_maintenance24_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_maintenance24_bits;
+
+
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_maintenance);
+
+  i = 0;
+  pixmap_data[i].width =xnav_bitmap_system8_width;
+  pixmap_data[i].height =xnav_bitmap_system8_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_system8_bits;
+  pixmap_data[i].width =xnav_bitmap_system10_width;
+  pixmap_data[i].height =xnav_bitmap_system10_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_system10_bits;
+  pixmap_data[i].width =xnav_bitmap_system12_width;
+  pixmap_data[i].height =xnav_bitmap_system12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_system12_bits;
+  pixmap_data[i].width =xnav_bitmap_system14_width;
+  pixmap_data[i].height =xnav_bitmap_system14_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_system14_bits;
+  pixmap_data[i].width =xnav_bitmap_system16_width;
+  pixmap_data[i].height =xnav_bitmap_system16_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_system16_bits;
+  pixmap_data[i].width =xnav_bitmap_system18_width;
+  pixmap_data[i].height =xnav_bitmap_system18_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_system18_bits;
+  pixmap_data[i].width =xnav_bitmap_system20_width;
+  pixmap_data[i].height =xnav_bitmap_system20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_system20_bits;
+  pixmap_data[i].width =xnav_bitmap_system20_width;
+  pixmap_data[i].height =xnav_bitmap_system20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_system20_bits;
+  pixmap_data[i].width =xnav_bitmap_system24_width;
+  pixmap_data[i].height =xnav_bitmap_system24_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_system24_bits;
+
+
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_system);
+
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_blockr_12_width;
     pixmap_data[i].height =xnav_bitmap_blockr_12_height;
@@ -411,16 +493,16 @@ void EvListBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_event, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_event, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmapButton( nc_event, 2, 3.0, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnot( nc_event, 4.3, 0.6, 1,
+  brow_AddAnnot( nc_event, 4.8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddAnnot( nc_event, 11, 0.6, 2,
+  brow_AddAnnot( nc_event, 11.5, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddAnnot( nc_event, 13, 0.6, 3,
+  brow_AddAnnot( nc_event, 13.5, 0.6, 3,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddAnnot( nc_event, 29, 0.6, 4,
+  brow_AddAnnot( nc_event, 29.5, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddFrame( nc_event, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
@@ -435,13 +517,14 @@ void EvListBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_a_alarm, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_a_alarm, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmapButton( nc_a_alarm, 2, 3.0, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnot( nc_a_alarm, 4.3, 0.6, 1,
+  brow_AddAnnotPixmap( nc_a_alarm, 3, 3.8, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnot( nc_a_alarm, 4.8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_a_alarm, 11, 0.6, 2,
+  brow_AddAnnot( nc_a_alarm, 11.5, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_a_alarm, 13, 0.6, 3,
+  brow_AddAnnot( nc_a_alarm, 13.5, 0.6, 3,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
-  brow_AddAnnot( nc_a_alarm, 29, 0.6, 4,
+  brow_AddAnnot( nc_a_alarm, 29.5, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
   brow_AddFrame( nc_a_alarm, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -455,13 +538,14 @@ void EvListBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_b_alarm, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_b_alarm, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmapButton( nc_b_alarm, 2, 3.0, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnot( nc_b_alarm, 4.3, 0.6, 1,
+  brow_AddAnnotPixmap( nc_b_alarm, 3, 3.8, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnot( nc_b_alarm, 4.8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_b_alarm, 11, 0.6, 2,
+  brow_AddAnnot( nc_b_alarm, 11.5, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_b_alarm, 13, 0.6, 3,
+  brow_AddAnnot( nc_b_alarm, 13.5, 0.6, 3,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
-  brow_AddAnnot( nc_b_alarm, 29, 0.6, 4,
+  brow_AddAnnot( nc_b_alarm, 29.5, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
   brow_AddFrame( nc_b_alarm, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -475,13 +559,13 @@ void EvListBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_info, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_info, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmapButton( nc_info, 2, 3.0, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnot( nc_info, 4.3, 0.6, 1,
+  brow_AddAnnot( nc_info, 4.8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_info, 11, 0.6, 2,
+  brow_AddAnnot( nc_info, 11.5, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_info, 13, 0.6, 3,
+  brow_AddAnnot( nc_info, 13.5, 0.6, 3,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
-  brow_AddAnnot( nc_info, 29, 0.6, 4,
+  brow_AddAnnot( nc_info, 29.5, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
   brow_AddFrame( nc_info, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -493,9 +577,9 @@ void EvListBrow::create_nodeclasses()
   brow_AddRect( nc_category, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_LineGray, 0, 0);
   brow_AddAnnot( nc_category, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category, 4.3, 0.6, 1,
+  brow_AddAnnot( nc_category, 4.8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category, 11, 0.6, 2,
+  brow_AddAnnot( nc_category, 11.5, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddFrame( nc_category, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -508,9 +592,9 @@ void EvListBrow::create_nodeclasses()
   brow_AddRect( nc_category_a, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_a, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_a, 4.3, 0.6, 1,
+  brow_AddAnnot( nc_category_a, 4.8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_a, 11, 0.6, 2,
+  brow_AddAnnot( nc_category_a, 11.5, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddFrame( nc_category_a, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -523,9 +607,9 @@ void EvListBrow::create_nodeclasses()
   brow_AddRect( nc_category_b, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_b, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_b, 4.3, 0.6, 1,
+  brow_AddAnnot( nc_category_b, 4.8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_b, 11, 0.6, 2,
+  brow_AddAnnot( nc_category_b, 11.5, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddFrame( nc_category_b, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -538,9 +622,9 @@ void EvListBrow::create_nodeclasses()
   brow_AddRect( nc_category_c, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_c, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_c, 4.3, 0.6, 1,
+  brow_AddAnnot( nc_category_c, 4.8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_c, 11, 0.6, 2,
+  brow_AddAnnot( nc_category_c, 11.5, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddFrame( nc_category_c, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -553,9 +637,9 @@ void EvListBrow::create_nodeclasses()
   brow_AddRect( nc_category_d, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_d, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_d, 4.3, 0.6, 1,
+  brow_AddAnnot( nc_category_d, 4.8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_d, 11, 0.6, 2,
+  brow_AddAnnot( nc_category_d, 11.5, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddFrame( nc_category_d, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -568,9 +652,9 @@ void EvListBrow::create_nodeclasses()
   brow_AddRect( nc_category_i, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_i, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_i, 4.3, 0.6, 1,
+  brow_AddAnnot( nc_category_i, 4.8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_i, 11, 0.6, 2,
+  brow_AddAnnot( nc_category_i, 11.5, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddFrame( nc_category_i, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
@@ -583,9 +667,9 @@ void EvListBrow::create_nodeclasses()
   brow_AddRect( nc_category_flash, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_flash, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_flash, 4.3, 0.6, 1,
+  brow_AddAnnot( nc_category_flash, 4.8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
-  brow_AddAnnot( nc_category_flash, 11, 0.6, 2,
+  brow_AddAnnot( nc_category_flash, 11.5, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddFrame( nc_category_flash, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 }
@@ -786,7 +870,7 @@ void EvList::event_info( mh_sMessage *msg)
 
   new ItemAlarm( this, "Alarm",
 		 net_NetTimeToTime( &event->Info.EventTime), event->Msg.EventText,
-		 event->Msg.EventName, event->Info.EventFlags,
+		 event->Msg.EventName, event->Info.EventType, event->Info.EventFlags,
 		 event->Info.EventPrio, event->Info.Id,
 		 &event->Msg.Object, &event->Msg.EventSound, 
 		 event->Msg.EventMoreText, msg->Status, 
@@ -832,7 +916,7 @@ void EvList::event_alarm( mh_sMessage *msg)
 
   ItemAlarm *item = new ItemAlarm( this, "Alarm",
 		 net_NetTimeToTime( &event->Info.EventTime), event->Msg.EventText,
-		 event->Msg.EventName, event->Info.EventFlags,
+	         event->Msg.EventName, event->Info.EventType, event->Info.EventFlags,
 		 event->Info.EventPrio, event->Info.Id,
 		 &event->Msg.Object, &event->Msg.EventSound, 
 		 event->Msg.EventMoreText, msg->Status, 
@@ -885,7 +969,7 @@ void EvList::event_block( mh_sBlock *msg)
       
       new ItemAlarm( this, "Alarm",
 		     net_NetTimeToTime( &event->Info.EventTime), event->Block.EventName,
-		     text, event->Info.EventFlags,
+		     text, event->Info.EventType, event->Info.EventFlags,
 		     event->Info.EventPrio, event->Info.Id,
 		     &event->Block.Object, 0, 0, 0, evlist_eEventType_Block,
 		     &event->Block.SupObject, dest_node, dest_code, &sts);
@@ -942,7 +1026,7 @@ void EvList::event_block( mh_sBlock *msg)
 
     ItemAlarm *item = new ItemAlarm( this, "Alarm",
 				     net_NetTimeToTime( &event->Info.EventTime), text, 
-				     event->Block.EventName, event->Info.EventFlags,
+				     event->Block.EventName, event->Info.EventType, event->Info.EventFlags,
 				     event->Info.EventPrio, event->Info.Id,
 				     &event->Block.Object, 0, 0, 0, evlist_eEventType_Block,
 				     &event->Block.SupObject, dest_node, dest_code, &sts);
@@ -1028,7 +1112,7 @@ void EvList::event_ack( mh_sAck *msg)
     }
     ItemAlarm *item = new ItemAlarm( this, "Alarm",
 		   net_NetTimeToTime( &event->Info.EventTime), "",
-	event->Ack.EventName, event->Info.EventFlags,
+		   event->Ack.EventName, event->Info.EventType, event->Info.EventFlags,
 	event->Info.EventPrio, event->Info.Id,
 	&event->Ack.Object, 0, 0, 0, evlist_eEventType_Ack,
 	&event->Ack.SupObject, dest_node, dest_code, &sts);
@@ -1107,7 +1191,7 @@ void EvList::event_return( mh_sReturn *msg)
     }
     ItemAlarm *item = new ItemAlarm( this, "Alarm",
 		   net_NetTimeToTime( &event->Info.EventTime), event->Msg.EventText,
-		   event->Return.EventName, event->Info.EventFlags,
+		   event->Return.EventName, event->Info.EventType, event->Info.EventFlags,
 		   event->Info.EventPrio, event->Info.Id,
 		   &event->Return.Object, 0, 0, 0, evlist_eEventType_Return,
 		   &event->Return.SupObject, dest_node, dest_code, &sts);
@@ -1698,13 +1782,13 @@ int EvList::brow_cb( FlowCtx *ctx, flow_tEvent event)
 }
 
 ItemAlarm::ItemAlarm( EvList *item_evlist, const char *item_name, pwr_tTime item_time,
-	const char *item_eventtext, char *item_eventname, int item_eventflags,
+	const char *item_eventtext, char *item_eventname, int item_eventtype, int item_eventflags,
 	unsigned long item_eventprio, mh_sEventId item_eventid,
 	pwr_tAttrRef *item_object, pwr_tAttrRef *item_eventsound, char *item_eventmoretext,
         unsigned long item_status, evlist_eEventType item_event_type, pwr_tAttrRef *item_supobject,
 	brow_tNode dest, flow_eDest dest_code, int *rsts):
         event_type(item_event_type), evlist(item_evlist), tree_node(0), time(item_time), 
-	eventflags(item_eventflags), eventprio(item_eventprio),
+	eventtype(item_eventtype), eventflags(item_eventflags), eventprio(item_eventprio),
 	eventid(item_eventid), object(*item_object), status(item_status), supobject(*item_supobject)
 {
   type = evlist_eItemType_Alarm;
@@ -1899,6 +1983,15 @@ void ItemAlarm::update_text( int use_treenode)
   if ( strcmp( eventmoretext, "") != 0)
     brow_SetAnnotPixmap( n, 2, evlist->browbase->pixmap_info);
 
+  switch ( eventtype) {
+  case mh_eEvent_SystemAlarm:
+    brow_SetAnnotPixmap( n, 3, evlist->browbase->pixmap_system);
+    break;
+  case mh_eEvent_MaintenanceAlarm:
+    brow_SetAnnotPixmap( n, 3, evlist->browbase->pixmap_maintenance);
+    break;
+  default: ;
+  }
 }
 
 ItemCategory::ItemCategory( EvList *item_evlist, const char *item_name, pwr_sClass_AlarmCategory *cop,
@@ -2844,7 +2937,7 @@ void EvList::copy_list( EvList* evl)
     switch( item->type) {
       case evlist_eItemType_Alarm:
 	new ItemAlarm( evl, item->name,
-		       item->time, item->eventtext, item->eventname, item->eventflags,
+		       item->time, item->eventtext, item->eventname, item->eventtype, item->eventflags,
 		       item->eventprio, item->eventid, &item->object, &item->eventsound, 
 		       item->eventmoretext, item->status, item->event_type, 
 		       &item->supobject, 0, flow_eDest_IntoLast, &sts);

@@ -682,6 +682,8 @@ activeListInsert (
 
   switch (ap->event) {
   case  mh_eEvent_Alarm:
+  case  mh_eEvent_MaintenanceAlarm:
+  case  mh_eEvent_SystemAlarm:
     ++l.emon->AlarmCount;
     break;
   case mh_eEvent_Block:
@@ -720,6 +722,8 @@ activeListRemove (
 
   switch (ap->event) {
   case  mh_eEvent_Alarm:
+  case  mh_eEvent_MaintenanceAlarm:
+  case  mh_eEvent_SystemAlarm:
     --l.emon->AlarmCount;
     break;
   case mh_eEvent_Block:
@@ -1073,6 +1077,8 @@ applReturn (
 
   switch (aap->link.event) {
   case mh_eEvent_Alarm:
+  case  mh_eEvent_MaintenanceAlarm:
+  case  mh_eEvent_SystemAlarm:
     updateAlarm(ap, ep);
     break;
   case mh_eEvent_Info:
@@ -1448,6 +1454,8 @@ eventListInsert (
   switch (event) {
   case mh_eEvent_Info:
   case mh_eEvent_Alarm:
+  case mh_eEvent_MaintenanceAlarm:
+  case mh_eEvent_SystemAlarm:
   case mh_eEvent_Block:
   case mh_eEvent_Reblock:
     ap->idx = idx;
@@ -1527,11 +1535,15 @@ formatApplEvent (
 
   switch (event) {
   case mh_eEvent_Alarm:
+  case mh_eEvent_MaintenanceAlarm:
+  case mh_eEvent_SystemAlarm:
   case mh_eEvent_Info:
     mp = &up->message;
     ip->Id.Idx = aap->link.idx;
     ip->EventTime = net_TimeToNetTime( &aap->message.EventTime);
-    if (aap->link.event == mh_eEvent_Alarm)
+    if (aap->link.event == mh_eEvent_Alarm || 
+	aap->link.event == mh_eEvent_MaintenanceAlarm || 
+	aap->link.event == mh_eEvent_SystemAlarm)
       ip->EventPrio = aap->message.EventPrio;
     strncpy(mp->EventText, aap->message.EventText, sizeof(mp->EventText));
     mp->SupInfo.SupType = aap->message.SupInfo.SupType;
@@ -1548,7 +1560,9 @@ formatApplEvent (
     acp = &up->ack;
     ip->Id.Idx = aap->link.ackIdx;
     ip->EventTime = net_TimeToNetTime( &aap->ackTime);
-    if (aap->link.event == mh_eEvent_Alarm)
+    if (aap->link.event == mh_eEvent_Alarm || 
+	aap->link.event == mh_eEvent_MaintenanceAlarm || 
+	aap->link.event == mh_eEvent_SystemAlarm)
       ip->EventPrio = aap->message.EventPrio;
     acp->TargetId.Nix = l.head.nix;
     acp->TargetId.BirthTime = l.head.birthTime;
@@ -1567,7 +1581,9 @@ formatApplEvent (
     rp = &up->ret;
     ip->Id.Idx = aap->link.returnIdx;
     net_GetTime(&ip->EventTime);
-    if (aap->link.event == mh_eEvent_Alarm)
+    if (aap->link.event == mh_eEvent_Alarm || 
+	aap->link.event == mh_eEvent_MaintenanceAlarm || 
+	aap->link.event == mh_eEvent_SystemAlarm)
       ip->EventPrio = aap->message.EventPrio;
     strncpy(rp->EventText, text, sizeof(rp->EventText));
     rp->TargetId.Nix = l.head.nix;
@@ -1586,7 +1602,9 @@ formatApplEvent (
     rp = &up->ret;
     ip->Id.Idx = aap->link.returnIdx;
     ip->EventTime = net_TimeToNetTime( &aap->returnTime);
-    if (aap->link.event == mh_eEvent_Alarm)
+    if (aap->link.event == mh_eEvent_Alarm || 
+	aap->link.event == mh_eEvent_MaintenanceAlarm || 
+	aap->link.event == mh_eEvent_SystemAlarm)
       ip->EventPrio = aap->message.EventPrio;
     strncpy(rp->EventText, aap->returnText, sizeof(rp->EventText));
     rp->TargetId.Nix = l.head.nix;
@@ -1630,12 +1648,16 @@ formatSupEvent (
 
   switch (event) {
   case mh_eEvent_Alarm:
+  case mh_eEvent_MaintenanceAlarm:
+  case mh_eEvent_SystemAlarm:
   case mh_eEvent_Info:
     mp = &up->message;
     ip->Id.Idx = sp->link.idx;
     ip->EventTime = net_TimeToNetTime( &sup->DetectTime);
     strncpy(mp->EventText, sup->DetectText, sizeof(mp->EventText));
-    if (sp->link.event == mh_eEvent_Alarm)
+    if (sp->link.event == mh_eEvent_Alarm || 
+	sp->link.event == mh_eEvent_MaintenanceAlarm || 
+	sp->link.event == mh_eEvent_SystemAlarm)
       ip->EventPrio = sup->EventPriority;
     mp->SupInfo.SupType = sp->supType;
 #if 1
@@ -1658,7 +1680,9 @@ formatSupEvent (
     acp = &up->ack;
     ip->Id.Idx = sp->link.ackIdx;
     ip->EventTime = net_TimeToNetTime( &sup->AckTime);
-    if (sp->link.event == mh_eEvent_Alarm)
+    if (sp->link.event == mh_eEvent_Alarm || 
+	sp->link.event == mh_eEvent_MaintenanceAlarm || 
+	sp->link.event == mh_eEvent_SystemAlarm)
       ip->EventPrio = sup->EventPriority;
     acp->TargetId.Idx = sp->link.idx;
     acp->TargetId.Nix = l.head.nix;
@@ -1675,7 +1699,9 @@ formatSupEvent (
     rp = &up->ret;
     ip->Id.Idx = sp->link.returnIdx;
     ip->EventTime = net_TimeToNetTime( &sup->ReturnTime);
-    if (sp->link.event == mh_eEvent_Alarm)
+    if (sp->link.event == mh_eEvent_Alarm || 
+	sp->link.event == mh_eEvent_MaintenanceAlarm || 
+	sp->link.event == mh_eEvent_SystemAlarm)
       ip->EventPrio = sup->EventPriority;
     strncpy(rp->EventText, sup->ReturnText, sizeof(rp->EventText));
     rp->TargetId.Idx = sp->link.idx;
@@ -1699,7 +1725,9 @@ formatSupEvent (
   case mh_eEvent_Cancel:
     rp = &up->ret;
     ip->Id.Idx = sp->link.returnIdx;
-    if (sp->link.event == mh_eEvent_Alarm)
+    if (sp->link.event == mh_eEvent_Alarm || 
+	sp->link.event == mh_eEvent_MaintenanceAlarm || 
+	sp->link.event == mh_eEvent_SystemAlarm)
       ip->EventPrio = sup->EventPriority;
     net_GetTime(&ip->EventTime);
     strncpy(rp->EventText, text, sizeof(rp->EventText));
@@ -2218,7 +2246,7 @@ handleAlarm (
 {
   sEvent *ep;
 
-  ep = eventListInsert(mh_eEvent_Alarm, NULL, (sActive*) sp);
+  ep = eventListInsert(sp->sup->EventType, NULL, (sActive*) sp);
   activeListInsert((sActive *) sp, ep, mh_eSource_Scanner);
   updateAlarm((sActive *) sp, ep);
 
@@ -2289,6 +2317,8 @@ handleReturn (
 
   switch (sp->link.event) {
   case mh_eEvent_Alarm:
+  case mh_eEvent_MaintenanceAlarm:
+  case mh_eEvent_SystemAlarm:
     updateAlarm((sActive *) sp, ep);
     break;
   case mh_eEvent_Info:
@@ -2398,6 +2428,8 @@ handlerEvent (
 
   switch (eventType) {
   case mh_eEvent_Alarm:
+  case mh_eEvent_MaintenanceAlarm:
+  case mh_eEvent_SystemAlarm:
   case mh_eEvent_Info:
 
     if (LstInl(&hp->link.active_l)) /* already active */
@@ -3250,6 +3282,8 @@ outunitAck (
 
   switch (ap->event) {
   case mh_eEvent_Alarm:
+  case mh_eEvent_MaintenanceAlarm:
+  case mh_eEvent_SystemAlarm:
     updateAlarm(ap, ep);
     break;
   case mh_eEvent_Info:
@@ -3702,6 +3736,8 @@ reSendEventToOutunit (
 
   switch (event.message.Info.EventType) {
   case mh_eEvent_Alarm:
+  case mh_eEvent_MaintenanceAlarm:
+  case mh_eEvent_SystemAlarm:
   case mh_eEvent_Info:
     event.message.Status = Status;
     break;
@@ -3796,6 +3832,8 @@ scanSupList ()
           handleInfo(sp);
           break;
         case mh_eEvent_Alarm:
+        case mh_eEvent_MaintenanceAlarm:
+        case mh_eEvent_SystemAlarm:
         default:
           handleAlarm(sp);
           break;
@@ -4143,6 +4181,8 @@ updateAlarm (
 
   switch (ep->event) {
   case mh_eEvent_Alarm:
+  case mh_eEvent_MaintenanceAlarm:
+  case mh_eEvent_SystemAlarm:
     ap->status.Event.Status = mh_mEventStatus_NotRet |
       mh_mEventStatus_NotAck;
     if (ap->source == mh_eSource_Scanner) {
@@ -4235,7 +4275,9 @@ updateAlarmInfo (
   for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l) ; al = LstNex(al)) {
     ap = LstObj(al);
     if (cdh_ArefIsEqual(&iap->object, &ap->object))
-      if (ap->event == mh_eEvent_Alarm)
+      if (ap->event == mh_eEvent_Alarm || 
+	  ap->event == mh_eEvent_MaintenanceAlarm || 
+	  ap->event == mh_eEvent_SystemAlarm)
         maxAlarm.All = MAX(maxAlarm.All, ap->status.All);
   }
 

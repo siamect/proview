@@ -871,6 +871,8 @@ handlerEvent (
       l.cbAck(ap);
     break;
   case mh_eEvent_Alarm:
+  case mh_eEvent_MaintenanceAlarm:
+  case mh_eEvent_SystemAlarm:
     if (l.cbAlarm != NULL)
       sts = l.cbAlarm((mh_sMessage*) mp);
     break;
@@ -1163,7 +1165,9 @@ static void msgFromV3( mh_sHead *hp)
       break;
     }
     case mh_eEvent_Info:
-    case mh_eEvent_Alarm: {
+    case mh_eEvent_Alarm:
+    case mh_eEvent_MaintenanceAlarm:
+    case mh_eEvent_SystemAlarm: {
       mh_sMessage *mp = (mh_sMessage *)ip;
 
       mp->Object = cdh_ObjidToAref( ip->Object_V3);
