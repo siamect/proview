@@ -42,7 +42,7 @@ typedef struct {
   long dataSize;
 } wav_sFormat;
 
-static int debug = 0;
+static int debug = 1;
 
 int XttAudio::number_of=0;
 int XttAudio::audio_ok=0;
@@ -224,6 +224,7 @@ int XttAudio::beep( pwr_tAttrRef *arp)
 	      }
 	    }
 	  }
+	  size = 2 * int(sound.Length * srate);
 	}
 	else if ( strstr( sound.Source, ".wav") != 0) {
 	  // Wave file
@@ -249,6 +250,9 @@ int XttAudio::beep( pwr_tAttrRef *arp)
 	    return XNAV__WAVEFORMAT;
 	  }
 
+	  if ( debug)
+	    printf( "Wavefile BitPerSample %d Channels %d\n", chunk.wBitsPerSample, chunk.wChannels);
+
 	  if ( chunk.dataSize == 0 || chunk.dataSize > 10000000)
 	    return XNAV__FILECORRUPT;
 	  if ( chunk.wBitsPerSample == 8) {
@@ -267,6 +271,7 @@ int XttAudio::beep( pwr_tAttrRef *arp)
 	      for ( int i = 0; i < chunk.dataSize; i++) {
 		buffer[2*i] = buffer[2*i+1] = 255 * ((short) buf8[i] - 127);
 	      }
+	      size = chunk.dataSize;
 	    }
 	    else {
 	      // wChannels == 2
@@ -278,6 +283,7 @@ int XttAudio::beep( pwr_tAttrRef *arp)
 	      for ( int i = 0; i < chunk.dataSize; i++) {
 		buffer[i] = 255 * ((short)buf8[i] - 127);
 	      }
+	      size = chunk.dataSize / 2;
 	    }
 	    free( buf8);
 	  }
@@ -300,16 +306,18 @@ int XttAudio::beep( pwr_tAttrRef *arp)
 		buffer[2*i] = buffer[2*i+1] = buf16[i];
 	      }
 	      free( buf16);
+	      size = chunk.dataSize;
 	    }
 	    else {
 	      // wChannels == 2
-	      size = chunk.dataSize / 2;
+	      size = chunk.dataSize;
 	      size = ((size - 1) / (hw_buff_size) + 1) * hw_buff_size;
 	      buffer = (short *) calloc( sizeof(short), size);
 	      if ( !buffer) return XNAV__NOMEMORY;
 
 	      sts = fread( buffer, chunk.dataSize, 1, fp);
 	      fclose( fp);
+	      size = chunk.dataSize/2;
 	    }
 	  }
 	}
