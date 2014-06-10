@@ -1361,10 +1361,11 @@ void wb_erep::checkVolume( pwr_tStatus *sts, pwr_tVid vid, vector<wb_volcheck> &
     pwr_tCid vol_cid;
     pwr_tTime vol_time;
     pwr_tObjName vol_name;
+    pwr_tUInt32 vol_dvversion;
 
     volumeNameToFilename( sts, (char *)vol->name(), filestr);
 	   
-    *sts = lfu_GetVolume( filestr, vol_name, &vol_vid, &vol_cid, &vol_time);
+    *sts = lfu_GetVolume( filestr, vol_name, &vol_vid, &vol_cid, &vol_time, &vol_dvversion);
     if ( EVEN(*sts)) {
       MsgWindow::message( 'E', "Dbs file not found for volume ", cdh_VolumeIdToString( 0, vid, 0, 0));
       (*err_cnt)++;
@@ -1372,7 +1373,9 @@ void wb_erep::checkVolume( pwr_tStatus *sts, pwr_tVid vid, vector<wb_volcheck> &
     }
 
     vcheck.m_vid = vid;
+    vcheck.m_cid = vol_cid;
     vcheck.m_time = vol_time;
+    vcheck.m_dvversion = vol_dvversion;
     strcpy( vcheck.m_vname, vol->name());
     strcpy( vcheck.m_filename, filestr);
 

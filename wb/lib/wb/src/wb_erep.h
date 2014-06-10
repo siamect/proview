@@ -67,7 +67,9 @@ class wb_volcheck
   char m_vname[80];
   char m_filename[80];
   pwr_tVid m_vid;
+  pwr_tCid m_cid;
   pwr_tTime m_time;
+  pwr_tUInt32 m_dvversion;
 };
 
 class wb_erep

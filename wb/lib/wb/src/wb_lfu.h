@@ -130,7 +130,8 @@ pwr_tStatus lfu_GetVolume( char *filename,
 			   char *name,
 			   pwr_tVid *vid,
 			   pwr_tCid *cid,
-			   pwr_tTime *time);
+			   pwr_tTime *time,
+			   pwr_tUInt32 *dvversion);
 pwr_tStatus lfu_GetVolumeCnf( char *name, pwr_tVid *vid, pwr_tCid *cid, ldh_eVolRep *volrep,
 			      char *server);
 

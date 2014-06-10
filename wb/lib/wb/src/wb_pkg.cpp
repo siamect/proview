@@ -332,11 +332,12 @@ void pkg_node::checkVolume( char *filename)
   pwr_tCid vol_cid;
   pwr_tTime vol_time;
   char vol_name[80];
+  pwr_tUInt32 vol_dvversion;
   bool found;
   pwr_tStatus sts;
   char fname[200];
 	  
-  sts = lfu_GetVolume( filename, vol_name, &vol_vid, &vol_cid, &vol_time);
+  sts = lfu_GetVolume( filename, vol_name, &vol_vid, &vol_cid, &vol_time, &vol_dvversion);
   if ( EVEN(sts)) throw wb_error(sts);
 
   found = false;

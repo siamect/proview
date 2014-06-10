@@ -2905,7 +2905,8 @@ pwr_tStatus lfu_GetVolume(     	char *filename,
 			       	char *name,
 				pwr_tVid *vid,
 				pwr_tCid *cid,
-				pwr_tTime *time
+				pwr_tTime *time,
+				pwr_tUInt32 *dvversion
 			       	)
 {
   dbs_sEnv dbsenv;
@@ -2924,6 +2925,7 @@ pwr_tStatus lfu_GetVolume(     	char *filename,
   *cid = volume.cid;
   strcpy( name, volume.name);
   *time = volume.time;
+  *dvversion = volume.dvVersion;
   dbs_Close( &sts, &dbsenv);
 
   return 	LFU__SUCCESS;
