@@ -587,6 +587,18 @@ ldh_GetClassList(ldh_tSession session, pwr_tCid cid, pwr_tOid *oid)
   return o.sts();
 }
 
+pwr_tStatus
+ldh_GetTemplateObject(ldh_tSession session, pwr_tCid cid, pwr_tOid *oid)
+{
+  wb_session *sp = (wb_session *)session;
+
+  wb_object o = sp->templateObject(cid);
+  if (!o) return o.sts();
+
+  *oid = o.oid();
+  return o.sts();
+}
+
 /* Returns the objid of the next object of the same class.  */
 
 pwr_tStatus
@@ -623,6 +635,18 @@ ldh_GetNextAttrRef(ldh_tSession session, pwr_tCid cid, pwr_sAttrRef *arp,
   wb_session *sp = (wb_session *)session;
 
   sp->nextAref( cid, arp, new_arp);
+  return sp->sts();
+}
+
+/* Returns the attrref of the next object of the same class.  */
+
+pwr_tStatus
+ldh_GetNextTemplateAttrRef(ldh_tSession session, pwr_tCid cid, pwr_sAttrRef *arp, 
+		   pwr_sAttrRef *new_arp)
+{
+  wb_session *sp = (wb_session *)session;
+
+  sp->nextTemplateAref( cid, arp, new_arp);
   return sp->sts();
 }
 

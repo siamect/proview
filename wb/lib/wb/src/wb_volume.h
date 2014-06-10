@@ -88,6 +88,7 @@ public:
   wb_object object(pwr_tOid oid) const;
   wb_object object(pwr_tCid cid) const;
   wb_object object(const char *name) const;
+  wb_object templateObject(pwr_tCid cid) const;
     
   wb_attribute attribute(pwr_tOid oid, const char *bname, const char *aname) const;
   wb_attribute attribute(pwr_tOid oid, const char *bname) const;
@@ -139,6 +140,8 @@ public:
   void nextAref( pwr_tCid cid, pwr_sAttrRef *arp, pwr_sAttrRef *new_arp);
   void aref( pwr_tCid cid, wb_object o, pwr_sAttrRef *arp);
   void nextObjectAref( pwr_tCid cid, pwr_sAttrRef *arp, pwr_sAttrRef *oarp);
+  void nextTemplateAref(pwr_tCid cid, pwr_sAttrRef *arp,
+			pwr_sAttrRef *oarp);
   bool isAncestor( wb_object& ancestor, wb_object& o);
   void subClass( pwr_tCid cid, pwr_tCid subcid, pwr_tCid *nextsubcid);
 };

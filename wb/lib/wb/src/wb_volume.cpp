@@ -192,6 +192,16 @@ wb_object wb_volume::object(const char *name) const
   return o;
 }
 
+wb_object wb_volume::templateObject(pwr_tCid cid) const
+{
+  pwr_tOid oid;
+
+  oid.oix = cdh_cixToOix( cdh_cidToCix(cid), pwr_eBix_template, 0);
+  oid.vid = cdh_CidToVid( cid);
+
+  return object(oid);
+}
+
 wb_adef wb_volume::adef(pwr_tCid cid, const char *bname, const char *aname)
 {
   pwr_tStatus sts;
@@ -205,7 +215,6 @@ wb_adef wb_volume::adef(pwr_tCid cid, const char *bname, const char *aname)
     return wb_adef();
   return bdef.adef(aname);
 }
-
 
 wb_cdef wb_volume::cdef(wb_object o)
 {
@@ -1122,7 +1131,7 @@ void wb_volume::aref(pwr_tCid cid, pwr_sAttrRef *arp)
 }
 
 void wb_volume::nextAref(pwr_tCid cid, pwr_sAttrRef *arp,
-			  pwr_sAttrRef *oarp)
+			 pwr_sAttrRef *oarp)
 {
   tree_sTable *catt_tt = m_vrep->merep()->catt_tt();
   int bd_size;
@@ -1268,6 +1277,134 @@ void wb_volume::nextAref(pwr_tCid cid, pwr_sAttrRef *arp,
   }
   m_sts = LDH__NONEXT;
   op->unref();
+}
+
+void wb_volume::nextTemplateAref(pwr_tCid cid, pwr_sAttrRef *arp,
+				 pwr_sAttrRef *oarp)
+{
+  tree_sTable *catt_tt = m_vrep->merep()->buildCatt(&m_sts);
+  int bd_size;
+
+  wb_object o = object(arp->Objid);
+  if (!o) {
+    m_sts = o.sts();
+    return;
+  }
+  wb_orep *op = o;
+
+  // Get body size
+  wb_cdrep *cd = m_vrep->merep()->cdrep(&m_sts, cid);
+  if (evenSts()) return;
+
+  wb_bdrep *bd = cd->bdrep(&m_sts, pwr_eBix_rt);
+  if (oddSts()) {
+    bd_size = bd->size();
+    delete bd;
+  }
+  else
+    bd_size = 0;
+  delete cd;
+
+  if ( cid == op->cid()) {
+    // Find attribute object
+    pwr_tCid hostCid = 0;
+    merep_sClassAttrKey key;
+    merep_sClassAttr *item;
+
+    key.subCid = cid;
+    key.hostCid = 0;
+    key.idx = 0;
+    for (item = (merep_sClassAttr*) tree_FindSuccessor(&m_sts, catt_tt, &key);
+	  item;
+	  item = (merep_sClassAttr*) tree_FindSuccessor(&m_sts, catt_tt, &item->key)) {
+      if ( item->key.subCid != cid) {
+	m_sts = LDH__CLASSLIST;
+	break;
+      }
+      if (hostCid && item->key.hostCid == hostCid)
+	// Same class with other index
+	continue;
+
+      hostCid = item->key.hostCid;
+
+      wb_object to = templateObject( item->key.hostCid);
+      if ( to) {
+	wb_orep *o = to;
+
+	wb_cdrep *cd = m_vrep->merep()->cdrep(&m_sts, cid);
+	if (evenSts()) return;
+
+	int bd_size;
+	wb_bdrep *bd = cd->bdrep(&m_sts, pwr_eBix_rt);
+	if (oddSts()) {
+	  bd_size = bd->size();
+	  delete bd;
+	}
+	else
+	  bd_size = 0;
+	delete cd;
+
+	*oarp = pwr_cNAttrRef;
+	oarp->Objid = o->oid();
+	oarp->Flags.b.ObjectAttr = 1;
+	oarp->Offset = item->offset[0];
+	oarp->Size = bd_size;
+	oarp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
+	return;
+      }      
+    }
+  }
+
+  // Find next attribute object in current object
+  merep_sClassAttrKey key;
+  merep_sClassAttr *item;
+  int first_offset = 0;
+
+  key.subCid = cid;
+  key.hostCid = op->cid();
+  key.idx = 0;
+  for (item = (merep_sClassAttr*)tree_Find(&m_sts, catt_tt, &key);
+	item && item->key.subCid == cid && item->key.hostCid == op->cid();
+	item = (merep_sClassAttr*)tree_FindSuccessor(&m_sts, catt_tt, &item->key)) {
+    // Find next offset
+    for (int i = 0; i < item->numOffset; i++) {
+      if (i == 0 && item->key.idx == 0)
+	first_offset = item->offset[0];
+      if (item->offset[i] > arp->Offset) {
+	*oarp = pwr_cNAttrRef;
+	oarp->Objid = op->oid();
+	oarp->Flags.b.ObjectAttr = 1;
+	oarp->Offset = item->offset[i];
+	oarp->Size = bd_size;
+	oarp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
+	return;
+      }
+    }
+  }
+
+  // Find first offset in first object of next class
+  key.subCid = cid;
+  key.hostCid = op->cid();
+  key.idx = 0;
+  for (item = (merep_sClassAttr*) tree_Find(&m_sts, catt_tt, &key);
+       item && item->key.subCid == cid;
+       item = (merep_sClassAttr*) tree_FindSuccessor(&m_sts, catt_tt, &item->key)) {
+    
+    if (item->key.hostCid == key.hostCid)
+      continue;
+
+    wb_object ol = templateObject( item->key.hostCid);
+    if (oddSts()) {
+      *oarp = pwr_cNAttrRef;
+      oarp->Objid = ol.oid();
+      oarp->Flags.b.ObjectAttr = 1;
+      oarp->Offset = item->offset[0];
+      oarp->Size = bd_size;
+      oarp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
+      return;
+    }
+  }
+  m_sts = LDH__NONEXT;
 }
 
 void wb_volume::aref(pwr_tCid cid, wb_object o, pwr_sAttrRef *arp)

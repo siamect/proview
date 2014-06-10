@@ -708,12 +708,25 @@ pwr_tStatus ldh_GetNextAttrRef(
   pwr_sAttrRef *arp, 
   pwr_sAttrRef *new_arp
 );
+
 pwr_tStatus ldh_GetNextObjectAttrRef(
   ldh_tSession session,
   pwr_tCid cid,
   pwr_sAttrRef *arp, 
   pwr_sAttrRef *new_arp
 );
+
+pwr_tStatus ldh_GetTemplateObject(
+  ldh_tSession session, 
+  pwr_tCid cid, 
+  pwr_tOid *oid
+);
+pwr_tStatus ldh_GetNextTemplateAttrRef(
+  ldh_tSession session, 
+  pwr_tCid cid, pwr_sAttrRef *arp, 
+  pwr_sAttrRef *new_arp
+);
+
 pwr_tStatus ldh_GetNextSibling (
   ldh_tSession Session,
   pwr_tObjid object,

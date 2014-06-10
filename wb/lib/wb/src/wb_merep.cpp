@@ -733,6 +733,42 @@ tree_sTable *wb_merep::buildCatt( pwr_tStatus *sts)
     }
   }
 
+
+  // If the current volume is a class volume, add objects from this also
+  if ( m_vrep->type() == ldh_eVolRep_Mem && m_vrep->cid() == pwr_eClass_ClassVolume) {
+    wb_vrep *vrep = m_vrep;
+    wb_orep *o, *onext;
+    wb_adrep *ad, *adnext;
+    pwr_tCid cid;
+
+    for ( o = vrep->object( sts, pwr_eClass_ClassDef);
+	  ODD(*sts);
+	  onext = o->next( sts), o->unref(), o = onext) {
+      o->ref();
+      
+      cid = cdh_ClassObjidToId( o->oid());
+      wb_cdrep *cd = cdrep( sts, cid);
+      if ( EVEN(*sts)) throw wb_error(*sts);
+      
+      wb_bdrep *bd = cd->bdrep( sts, pwr_eBix_rt);
+      if ( EVEN(*sts)) {
+	delete cd;
+	continue;
+      }
+      
+      for ( ad = bd->adrep( sts);
+	    ODD(*sts);
+	    adnext = ad->next( sts), delete ad, ad = adnext) {
+	if ( ad->flags() & PWR_MASK_CLASS && cdh_tidIsCid( ad->tid())) {
+	  insertCattObject( sts, cid, ad, 0);
+	  if ( EVEN(*sts)) throw wb_error(*sts);
+	}
+      }
+      delete bd;
+      delete cd;
+    }
+  }
+
 #if 0
   merep_sClassAttrKey key;
   key.subCid = 0;

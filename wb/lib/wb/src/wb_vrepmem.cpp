@@ -604,6 +604,7 @@ wb_orep *wb_vrepmem::next(pwr_tStatus *sts, const wb_orep *o)
     mem_object *next = root_object->next( mem->m_cid, &oix);
     if ( next) {
       wb_orepmem *orep = new wb_orepmem( this, next);
+      *sts = LDH__SUCCESS;
       return orep;
     }
   }
