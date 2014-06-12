@@ -16487,7 +16487,7 @@ pwr_exe:
 102 33619964
 103 0
 9
-900 $object.ExternOrdHide##Boolean
+900 $object.Actuator.Mode.ExternOrdHide##Boolean
 901 0
 902 1
 903 1
@@ -17517,7 +17517,7 @@ pwr_exe:
 303 3
 99
 12
-1200 $object.Mode.IndMode##String8
+1200 $object.Actuator.Mode.IndMode##String8
 1201 %s
 1202 1
 1203 1
