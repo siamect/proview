@@ -12635,7 +12635,7 @@ int	gcg_comp_m42( gcg_ctx gcgctx, vldh_t_node node)
 	ldh_tSesContext ldhses;
 	char			*expression;
 	char			*newstr;
-	char			error_line[80];
+	char			error_line[200];
 	int			error_num;
 	int			error_line_size = sizeof(error_line);
 	char			pointer_name[80];

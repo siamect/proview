@@ -1584,6 +1584,8 @@ static int	dataa_get_next_line( 	char *str,
 	  i++;
 	  t++;
 	  s++;
+	  if ( i == size)
+	    return -1;
 	}
 	*t = *s;
 	if ( *s == 0) return 1;
@@ -1721,7 +1723,7 @@ pwr_tStatus dataarithm_convert (
 	char		*t;
 	char		*delim_p;
 	int		hit, delim_hit;
-	char		tmpstr[160];
+	char		tmpstr[200];
 	char		*write_from;
 	int		first_line;
 	int		end_of_text;
@@ -1742,6 +1744,12 @@ pwr_tStatus dataarithm_convert (
 	{
 	  end_of_text = dataa_get_next_line( str, &p, line, sizeof(line),
 			first_line);
+	  if ( end_of_text == -1) {
+	    strncpy( error_line, line, *error_line_size);
+	    error_line[*error_line_size-1] = 0;
+	    *error_line_num = dataactx->line_count + 1;
+	    return GSX__DATAALINESIZE;
+	  }
 	  dataactx->line_count++;
 	  first_line = 0;
 	  item_ptr = dataactx->items;

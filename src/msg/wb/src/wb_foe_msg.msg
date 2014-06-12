@@ -133,6 +133,7 @@ misplacedthread	<Misplaced thread object>				/error
 obsolete	<Object is obsolete>					/error
 ccwarning	<Warning from c compiler or linker> 			/warning
 ccsucc		<Window compiled> 					/info
+dataalinesize	<DataArithm maximum line size exceeded>			/error
 
         .facility       FOE,280 /prefix = FOE__ ! Function object editor
 
