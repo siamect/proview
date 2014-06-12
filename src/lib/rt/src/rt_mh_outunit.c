@@ -122,7 +122,9 @@ typedef struct {
   pwr_tUInt32		selGen;
   pwr_tUInt32		selSize;
   pwr_tString80		(*pSelL)[];
+  pwr_mEventTypeMask    *pSelEventType;
   mh_sSelL		selL[mh_cSelLSize];
+  pwr_mEventTypeMask    selEventType;
   pwr_tBoolean		*SelectListIsUpdated;
 } sContext;
 
@@ -286,37 +288,40 @@ mh_OutunitConnect (
     switch (cid) {
     case pwr_cClass_User:
       type = mh_eOutunitType_Operator;
-      l.pSelL = (void *)&((pwr_sClass_User*) p)->SelectList[0];
-      l.SelectListIsUpdated = (pwr_tBoolean *)&((pwr_sClass_User*) p)->SelectListIsUpdated;
+      l.pSelL = (void *)&((pwr_sClass_User*)p)->SelectList[0];
+      l.SelectListIsUpdated = (pwr_tBoolean *)&((pwr_sClass_User*)p)->SelectListIsUpdated;
       break;
     case pwr_cClass_OpPlace:
       type = mh_eOutunitType_Operator;
-      l.pSelL = (void *)&((pwr_sClass_OpPlace*) p)->EventSelectList[0];
+      l.pSelL = (void *)&((pwr_sClass_OpPlace *)p)->EventSelectList[0];
+      l.pSelEventType = &((pwr_sClass_OpPlace *)p)->EventSelectType;
       l.SelectListIsUpdated = (pwr_tBoolean *)&((pwr_sClass_OpPlace*) p)->SelectListIsUpdated;
       break;
     case pwr_cClass_WebHandler:
       type = mh_eOutunitType_Operator;
-      l.pSelL = (void *)&((pwr_sClass_WebHandler*) p)->EventSelectList[0];
+      l.pSelL = (void *)&((pwr_sClass_WebHandler *)p)->EventSelectList[0];
+      l.pSelEventType = &((pwr_sClass_WebHandler *)p)->EventSelectType;
       l.SelectListIsUpdated = NULL;
       break;
     case pwr_cClass_RttConfig:
       type = mh_eOutunitType_Operator;
-      l.pSelL = (void *)&((pwr_sClass_RttConfig*) p)->EventSelectList[0];
+      l.pSelL = (void *)&((pwr_sClass_RttConfig *)p)->EventSelectList[0];
       l.SelectListIsUpdated = NULL;
       break;
     case pwr_cClass_EventPrinter:
       type = mh_eOutunitType_Printer;
-      l.pSelL = (void *)&((pwr_sClass_EventPrinter*) p)->SelectList[0];
+      l.pSelL = (void *)&((pwr_sClass_EventPrinter *)p)->SelectList[0];
       l.SelectListIsUpdated = NULL;
       break;
     case pwr_cClass_PostConfig:
       type = mh_eOutunitType_Post;
-      l.pSelL = (void *)&((pwr_sClass_PostConfig*) p)->EventSelectList[0];
+      l.pSelL = (void *)&((pwr_sClass_PostConfig *)p)->EventSelectList[0];
       l.SelectListIsUpdated = NULL;
       break;
     case pwr_cClass_SevHistEvents:
       type = mh_eOutunitType_SevHistEvents;
-      l.pSelL = (void *)&((pwr_sClass_SevHistEvents*) p)->EventSelectList[0];
+      l.pSelL = (void *)&((pwr_sClass_SevHistEvents *)p)->EventSelectList[0];
+      l.pSelEventType = &((pwr_sClass_SevHistEvents *)p)->EventSelectType;
       l.SelectListIsUpdated = NULL;
       break;
     default:
@@ -822,6 +827,9 @@ getSelectList ()
   }
   l.selSize = j;
   l.selGen++;
+
+  if ( l.pSelEventType)
+    l.selEventType = *l.pSelEventType;
 }
 
 static void
@@ -873,6 +881,10 @@ handlerEvent (
   case mh_eEvent_Alarm:
   case mh_eEvent_MaintenanceAlarm:
   case mh_eEvent_SystemAlarm:
+  case mh_eEvent_UserAlarm1:
+  case mh_eEvent_UserAlarm2:
+  case mh_eEvent_UserAlarm3:
+  case mh_eEvent_UserAlarm4:
     if (l.cbAlarm != NULL)
       sts = l.cbAlarm((mh_sMessage*) mp);
     break;
@@ -919,7 +931,7 @@ handlerLog (
 )
 {
 
-  errh_Info("%s, (%s)", s, qcom_QidToString(NULL, &hp->qid, 1));
+  errh_Info("%s, %s (%s)", s, qcom_NodeName( hp->qid.nid), qcom_QidToString(NULL, &hp->qid, 1));
 }
 
 static void
@@ -1085,7 +1097,8 @@ sendInfo (
     return;
 
   ip = (mh_sOutunitInfo *)mp;
-  ip->type     = l.type;
+  ip->type     = (pwr_tUInt16)l.type;
+  ip->selEventType  = (pwr_tUInt16)l.selEventType;
   ip->selGen   = l.selGen;
   ip->selSize  = l.selSize;
 
@@ -1167,7 +1180,11 @@ static void msgFromV3( mh_sHead *hp)
     case mh_eEvent_Info:
     case mh_eEvent_Alarm:
     case mh_eEvent_MaintenanceAlarm:
-    case mh_eEvent_SystemAlarm: {
+    case mh_eEvent_SystemAlarm:
+    case mh_eEvent_UserAlarm1:
+    case mh_eEvent_UserAlarm2:
+    case mh_eEvent_UserAlarm3:
+    case mh_eEvent_UserAlarm4: {
       mh_sMessage *mp = (mh_sMessage *)ip;
 
       mp->Object = cdh_ObjidToAref( ip->Object_V3);

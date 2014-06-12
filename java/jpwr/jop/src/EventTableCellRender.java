@@ -40,17 +40,17 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import jpwr.rt.Mh;
 import jpwr.rt.MhrEvent;
+
 /* This class is used to make sure an EventTableModel in a JaTable is presented 
  * in a graphically appealing manner. */
 
-public class EventTableCellRender extends DefaultTableCellRenderer
-  {
+public class EventTableCellRender extends DefaultTableCellRenderer {
         
-  Color ALarmColor = Color.red;
-  Color BLarmColor = Color.yellow;
-  Color CLarmColor = Color.blue;
-  Color DLarmColor = Color.cyan;
-  Color InfoColor = Color.green;
+    Color ALarmColor = new Color(255,100,100); // red;
+    Color BLarmColor = Color.yellow;
+    Color CLarmColor = new Color(135,206,235); // blue;
+    Color DLarmColor = new Color(177,156,217); // purple;
+    Color InfoColor = Color.green;
 
     /**
      *  Gets the tableCellRendererComponent attribute of the
@@ -65,75 +65,52 @@ public class EventTableCellRender extends DefaultTableCellRenderer
      *@return             The tableCellRendererComponent value
      */
     public Component getTableCellRendererComponent(JTable table, Object value,
-                                                   boolean isSelected, boolean hasFocus, int row, int column)
-    {
-      //I will assume that the number is stored as a string. if it is stored as an Integer, you can change this easily.
-      //if(column == 0)
-      //{
-      String number = (String)value;
-      //cast to a string
-      //int val = Integer.parseInt(number);//convert to an integer
-      MhrEvent ev = ((EventTableModel)table.getModel()).getRowObject(row);
+                                                   boolean isSelected, boolean hasFocus, int row, int column) {
+	String prio = (String)value;
+	MhrEvent ev = ((EventTableModel)table.getModel()).getRowObject(row);
 
-      this.setBackground(Color.white);
+	this.setBackground(Color.white);
+	
+	if (ev == null) {
+	    this.setText(" ");
+	    return this;
+	}
 
-      if(ev == null)
-      {
-        this.setText(" ");
-        return this;
-      }
+	boolean setColor = false;
+	if( ev.eventType == Mh.mh_eEvent_Alarm || ev.eventType == Mh.mh_eEvent_Info ||
+	    ev.eventType == Mh.mh_eEvent_MaintenanceAlarm || ev.eventType == Mh.mh_eEvent_SystemAlarm ||
+	    ev.eventType == Mh.mh_eEvent_UserAlarm1 || ev.eventType == Mh.mh_eEvent_UserAlarm2 ||
+	    ev.eventType == Mh.mh_eEvent_UserAlarm3 || ev.eventType == Mh.mh_eEvent_UserAlarm4)
+	    setColor = true;
 
-      boolean setColor = false;
-      if( ev.eventType == Mh.mh_eEvent_Alarm||ev.eventType == Mh.mh_eEvent_Info )
-        setColor = true;
+	// System.out.println("i eventTable.getTableCellRendererComponent(row " + row + " value " + value + ")");
 
-      //System.out.println("i eventTable.getTableCellRendererComponent(row " + row + "value" + number + ")");
-      if(number.compareTo("A") == 0)
-      {
-        if(setColor)
-        {
-          this.setBackground(ALarmColor);
-        }
-        this.setText("A");
-      }
-      else if(number.compareTo("B") == 0)
-      {
-        if(setColor)
-        {
-          this.setBackground(BLarmColor);
-        }
-        this.setText("B");
-      }
-      else if(number.compareTo("C") == 0)
-      {
-        if(setColor)
-        {
-          this.setBackground(CLarmColor);
-        }
-        this.setText("C");
-      }
-      else if(number.compareTo("D") == 0)
-      {
-        if(setColor)
-        {
-          this.setBackground(DLarmColor);
-        }
-        this.setText("D");
-      }
-      //annars måste det vara ett meddelande qqq??
-      else
-      {
-        if(setColor)
-        {
-          this.setBackground(InfoColor);
-        }
-        this.setText(" ");
-      }
-
-      //}
-      //else
-      //  this.setBackground(Color.white);
-
-      return this;
+	if ( setColor) {
+	    if ( ev.eventType == Mh.mh_eEvent_Info) {
+		this.setBackground(InfoColor);
+		setText("");
+	    }
+	    else {
+		setText( "  " + prio);
+		switch ( ev.eventPrio) {
+		case Mh.mh_eEventPrio_A:
+		    this.setBackground(ALarmColor);
+		    break;
+		case Mh.mh_eEventPrio_B:
+		    this.setBackground(BLarmColor);
+		    break;
+		case Mh.mh_eEventPrio_C:
+		    this.setBackground(CLarmColor);
+		    break;
+		case Mh.mh_eEventPrio_D:
+		    this.setBackground(DLarmColor);
+		    break;
+		}
+	    }	
+	}
+	else
+	    setText("");
+	
+	return this;
     }
-  }
+}

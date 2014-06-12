@@ -333,7 +333,7 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     eve_methodtoolbar->get_select_cb = eve->get_select;
 
     eve_sup_methodtoolbar = new XttMethodToolbarGtk(0, 0, mt_mMethod_OpenPlc | mt_mMethod_RtNavigator, 
-						    "for supervisory object");
+						    " for supervisory object");
     GtkToolbar *tools_sup = (GtkToolbar *) ((XttMethodToolbarGtk *)eve_sup_methodtoolbar)->build();
     eve_sup_methodtoolbar->m_xnav = (XNav *)parent_ctx;
     eve_sup_methodtoolbar->m_parent_ctx = eve;
@@ -342,9 +342,9 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     GtkWidget *eve_toolsbox = gtk_hbox_new( FALSE, 0);
     gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(tools), FALSE, FALSE, 0);
     gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(gtk_separator_tool_item_new()), FALSE, FALSE, 4);
-    gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(tools_meth), FALSE, FALSE, 0);
-    gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(gtk_separator_tool_item_new()), FALSE, FALSE, 4);
     gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(tools_sup), FALSE, FALSE, 0);
+    gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(gtk_separator_tool_item_new()), FALSE, FALSE, 4);
+    gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(tools_meth), FALSE, FALSE, 0);
 
     gtk_box_pack_start( GTK_BOX(eve_vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
     gtk_box_pack_start( GTK_BOX(eve_vbox), GTK_WIDGET(eve_toolsbox), FALSE, FALSE, 0);

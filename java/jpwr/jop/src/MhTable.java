@@ -96,10 +96,10 @@ public class MhTable extends JPanel
 				    JopLang.transl("Event Text"),
 				    JopLang.transl("Object")};
   //JLabel eventTableLbl = new JLabel("Händelselista");
-  Color ALarmColor = Color.red;
+  Color ALarmColor = new Color(255,100,100); // Color.red;
   Color BLarmColor = Color.yellow;
-  Color CLarmColor = Color.blue;
-  Color DLarmColor = Color.cyan;
+  Color CLarmColor = new Color(135,206,235); // Color.blue;
+  Color DLarmColor = new Color(177,156,217); // Color.cyan;
   Color InfoColor = Color.green;
   /**
    *  Constructor for the MhTable object
@@ -733,6 +733,24 @@ public class MhTable extends JPanel
 	    case Mh.mh_eEvent_Alarm:
 	      returnString = JopLang.transl("Alarm");
 	      break;
+	    case Mh.mh_eEvent_MaintenanceAlarm:
+	      returnString = JopLang.transl("MaintenanceAlarm");
+	      break;
+	    case Mh.mh_eEvent_SystemAlarm:
+	      returnString = JopLang.transl("SystemAlarm");
+	      break;
+	    case Mh.mh_eEvent_UserAlarm1:
+	      returnString = JopLang.transl("UserAlarm1");
+	      break;
+	    case Mh.mh_eEvent_UserAlarm2:
+	      returnString = JopLang.transl("UserAlarm2");
+	      break;
+	    case Mh.mh_eEvent_UserAlarm3:
+	      returnString = JopLang.transl("UserAlarm3");
+	      break;
+	    case Mh.mh_eEvent_UserAlarm4:
+	      returnString = JopLang.transl("UserAlarm4");
+	      break;
 	    case Mh.mh_eEvent_Ack:
 	      returnString = JopLang.transl("Acknowledge");
 	      break;
@@ -1151,7 +1169,10 @@ public class MhTable extends JPanel
       }
 
       boolean setColor = false;
-      if( ev.eventType == Mh.mh_eEvent_Alarm||ev.eventType == Mh.mh_eEvent_Info )
+      if( ev.eventType == Mh.mh_eEvent_Alarm || ev.eventType == Mh.mh_eEvent_Info ||
+	  ev.eventType == Mh.mh_eEvent_MaintenanceAlarm || ev.eventType == Mh.mh_eEvent_SystemAlarm ||
+	  ev.eventType == Mh.mh_eEvent_UserAlarm1 || ev.eventType == Mh.mh_eEvent_UserAlarm2 ||
+	  ev.eventType == Mh.mh_eEvent_UserAlarm3 || ev.eventType == Mh.mh_eEvent_UserAlarm4)
         setColor = true;
 
       //System.out.println("i eventTable.getTableCellRendererComponent(row " + row + "value" + number + ")");

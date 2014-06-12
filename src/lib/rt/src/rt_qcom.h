@@ -385,6 +385,16 @@ pwr_tBoolean		qcom_MyNode (
   qcom_sNode		*node
 );
 
+char 			*qcom_NodeName ( 
+  pwr_tNodeId nid
+);
+
+pwr_tBoolean		qcom_Node (
+  pwr_tStatus		*sts,
+  qcom_sNode		*node,
+  pwr_tNodeId		nid
+);
+
 pwr_tBoolean		qcom_NextNode (
   pwr_tStatus		*sts,
   qcom_sNode		*node,

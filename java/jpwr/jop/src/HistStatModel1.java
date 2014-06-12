@@ -71,9 +71,15 @@ public class HistStatModel1 extends AbstractTableModel{
  
     for(int i=0; i<m.eventVec.size();i++){
             boolean found=false;
-            for (int j = 0; j<result.size();j++){
-                if (((MhrEvent) m.eventVec.get(i)).eventName.equals(((MhrEvent)(result.get(j))).eventName)){
-                    if(((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_Alarm){
+            for ( int j = 0; j<result.size();j++){
+                if ( ((MhrEvent) m.eventVec.get(i)).eventName.equals(((MhrEvent)(result.get(j))).eventName)){
+                    if ( ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_Alarm ||
+			 ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_MaintenanceAlarm ||
+			 ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_SystemAlarm ||
+			 ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm1 ||
+			 ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm2 ||
+			 ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm3 ||
+			 ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm4){
                         ((MhrEvent)(result.get(j))).eventFlags++;
                         found=true;
                     }
@@ -81,12 +87,18 @@ public class HistStatModel1 extends AbstractTableModel{
                 if (found) break;
             }
             if (! found){
-                if(((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_Alarm){
-            result.add(((MhrEvent)(m.eventVec.get(i))).getCopy());
-            ((MhrEvent)result.get(result.size()-1)).eventFlags=1;
-        }
-        }      
-        
+		if ( ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_Alarm ||
+		     ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_MaintenanceAlarm ||
+		     ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_SystemAlarm ||
+		     ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm1 ||
+		     ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm2 ||
+		     ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm3 ||
+		     ((MhrEvent) m.eventVec.get(i)).eventType == Mh.mh_eEvent_UserAlarm4){
+		    result.add(((MhrEvent)(m.eventVec.get(i))).getCopy());
+		    ((MhrEvent)result.get(result.size()-1)).eventFlags=1;
+		}
+	    }      
+	    
     }
     }
     

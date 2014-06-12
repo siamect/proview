@@ -113,6 +113,12 @@ public class MhData
     switch (ev.eventType)
     {
       case Mh.mh_eEvent_Alarm:
+      case Mh.mh_eEvent_MaintenanceAlarm:
+      case Mh.mh_eEvent_SystemAlarm:
+      case Mh.mh_eEvent_UserAlarm1:
+      case Mh.mh_eEvent_UserAlarm2:
+      case Mh.mh_eEvent_UserAlarm3:
+      case Mh.mh_eEvent_UserAlarm4:
         // Add to alarm list
         this.addMessToVectorInSortedOrder(alarmVec, ev);
         // Add copy to event list

@@ -6186,6 +6186,7 @@ popup menu for an object in the operator environment (method 'Help').
 <option> printdisable
 <b>Syntax <link> helpfile syntax
 <b>Conversion <link> helpfile conversion
+<b>Encoding <link> helpfile encoding
 <option> printenable
 </topic>
 
@@ -6222,6 +6223,16 @@ A helpfile is converted to PDF with the command
 
 <b>Example
 <c>co_convert -f -d $pwrp_lis $pwrp_exe/xtt_help.dat
+</topic>
+
+<topic> helpfile encoding
+Encoding
+The default encoding of the help file is ISO 8859-1. UTF-8 can be specified with a Coding
+statement on the first line of the help-file, eg
+
+<c>Coding:UTF-8
+
+Supported values for Coding are UTF-8 and ISO8859-1.
 </topic>
 
 <topic> helpfile syntax
@@ -9886,6 +9897,8 @@ GetClassList()		<LINK> getclasslist()
 GetNextObject()		<LINK> getnextobject()
 GetClassListAttrRef()	<LINK> getclasslistattrref()
 GetNextAttrRef()	<LINK> getnextattrref()
+GetTemplateObject()     <LINK> gettemplateobject()
+GetNextTemplateAttrRef() <LINK> getnexttemplateattrref()
 GetObjectClass()	<LINK> getobjectclass()
 GetNodeObject()		<LINK> getnodeobject()
 GetRootList()		<LINK> getrootlist()
@@ -10875,6 +10888,8 @@ GetClassList()	<t>Get first instance of a class. <LINK> getclasslist()
 GetNextObject()	<t>Get next instance of a class. <LINK> getnextobject()
 GetClassListAttrRef() <t>Get first instance of a class, attribute objects included. <LINK> getclasslistattrref()
 GetNextAttrRef() <t>Get next instance of a class, attribute objects included. <LINK> getnextattrref()
+GetTemplateObject() <t>Get the template object for a class. <LINK> gettemplateobject()
+GetNextTemplateAttrRef() <t>Get the next instance in a template object . <LINK> getnexttemplateattrref()
 GetObjectClass() <t>Get class of an object. <LINK> getobjectclass()
 GetNodeObject()	<t>Get node object.	<LINK> getnodeobject()
 GetRootList()	<t>Get first object in root list. <LINK> getrootlist()
@@ -11084,7 +11099,55 @@ string		<t>name		<t>name of object or attribute object.
 <c>  name = GetClassListAttrRef("Di");
 <c>  while ( name != "")
 <c>    printf("Di object found: %s", name);
-<c>    name = GetNextAttrRef(name);
+<c>    name = GetNextAttrRef( "Di", name);
+<c>  endwhile
+</TOPIC>
+
+<TOPIC> gettemplateobject() <style> function
+GetTemplateObject()
+
+string GetTemplateObject( string class)
+
+<b>Description
+
+Get the template object of a specified class. 
+
+<b>Arguments
+
+string		<t>name		<t>name of class.
+
+<b>Example
+
+<c>  string name;
+
+<c>  name = GetTemplateObject("Dv");
+</TOPIC>
+
+
+<TOPIC> getnexttemplateattrref() <style> function
+GetNextTemplateAttrRef()
+
+string GetNextTemplateAttrRef( string class, string name)
+
+<b>Description
+
+Get the next attribute object of the specified class in a template object. Returns 
+the name of the attribute object. If no next object exist a null-string is returned.
+The first template object is fetched with GetTemplateObject().
+
+<b>Arguments
+
+string		<t>class	<t>name of class.
+string		<t>name		<t>name of template object or template attribute object.
+
+<b>Example
+
+<c>  string name;
+
+<c>  name = GetTemplateObject("Di");
+<c>  while ( name != "")
+<c>    printf("Di object found: %s", name);
+<c>    name = GetNextTemplateAttrRef( "Di", name);
 <c>  endwhile
 </TOPIC>
 

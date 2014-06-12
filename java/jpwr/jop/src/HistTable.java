@@ -52,13 +52,13 @@ import jpwr.rt.*;
  * the alarmTable to an excel file, and for performing a search in the historic
  * event list using a HistSender */
  
-public class HistTable extends JScrollPane{
+public class HistTable extends JScrollPane {
     
     JopSession session;
     boolean DEBUG=false;
     public EventTableModel atModel;
     public JTable alarmTable;
-    String[] columnNamesEventTable = {"","Type","Time","Event text","Event name"};
+    String[] columnNamesEventTable = {"Prio","Type","Time","Event text","Event name"};
     
     String[] excelMess= {JopLang.transl("Export to Excel"),
 			 JopLang.transl("The result is put into the Clipboard. Open a new Excel document and use Paste to insert it.")};
@@ -73,19 +73,20 @@ public class HistTable extends JScrollPane{
     //and set it up to support JopMethodsMenu.
     private void setup(){
                
-    atModel = new EventTableModel();
-    alarmTable = new JTable(atModel);
-    alarmTable.setCellEditor(null);
-    this.initColumnSizes(alarmTable, atModel);
-    alarmTable.getTableHeader().setReorderingAllowed(false);
-    alarmTable.getColumn((Object)columnNamesEventTable[0]).setCellRenderer(new EventTableCellRender());
+	atModel = new EventTableModel();
+	alarmTable = new JTable(atModel);
+	alarmTable.setCellEditor(null);
+	alarmTable.setIntercellSpacing(new Dimension(8, 2));
+	this.initColumnSizes(alarmTable, atModel);
+	alarmTable.getTableHeader().setReorderingAllowed(false);
+	alarmTable.getColumn((Object)columnNamesEventTable[0]).setCellRenderer(new EventTableCellRender());
     
     
-    this.setViewportView(alarmTable);
-    this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-    this.getViewport().setBackground(Color.white);
-    
-    ((EventTableModel)alarmTable.getModel()).updateTable(); 
+	this.setViewportView(alarmTable);
+	this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+	this.getViewport().setBackground(Color.white);
+	
+	((EventTableModel)alarmTable.getModel()).updateTable(); 
     
     }
     
@@ -94,81 +95,78 @@ public class HistTable extends JScrollPane{
       the clipboard. Display a message telling how to paste the string to
       excel*/
     
-    public void exportExcel(){
-    StringBuffer copybuffer = new StringBuffer("");
-    for(int i=0;i<alarmTable.getRowCount();i++){
-        for (int j=0; j<alarmTable.getColumnCount();j++){
-        copybuffer.append((String) alarmTable.getValueAt(i,j));
-        copybuffer.append("\t");
-        }
-        copybuffer.append("\n");
-    }  
-    Clipboard cb= Toolkit.getDefaultToolkit().getSystemClipboard();
-    StringSelection output = new StringSelection(copybuffer.toString());
-    cb.setContents(output, output);
-    JOptionPane.showMessageDialog(this.getParent(),excelMess[1],excelMess[0],JOptionPane.INFORMATION_MESSAGE);
+    public void exportExcel() {
+	StringBuffer copybuffer = new StringBuffer("");
+	for( int i = 0; i < alarmTable.getRowCount(); i++){
+	    for ( int j = 0; j < alarmTable.getColumnCount(); j++){
+		copybuffer.append((String) alarmTable.getValueAt(i,j));
+		copybuffer.append("\t");
+	    }
+	    copybuffer.append("\n");
+	}  
+	Clipboard cb= Toolkit.getDefaultToolkit().getSystemClipboard();
+	StringSelection output = new StringSelection(copybuffer.toString());
+	cb.setContents(output, output);
+	JOptionPane.showMessageDialog(this.getParent(),excelMess[1],excelMess[0],JOptionPane.INFORMATION_MESSAGE);
     
         
     }
     
     //XLS
     //Creates a String for sending to a javascript which can save to a file.
-    public String exportExcelFromApplet(){
+    public String exportExcelFromApplet() {
 	String copyString = "";
-	    for(int i=0;i<alarmTable.getRowCount();i++){
-		for (int j=0; j<alarmTable.getColumnCount();j++){
+	for( int i = 0; i < alarmTable.getRowCount(); i++){
+		for ( int j = 0; j < alarmTable.getColumnCount(); j++){
 		    copyString = copyString +(String) alarmTable.getValueAt(i,j);
 		    copyString = copyString+"\t";
 		}
 		copyString = copyString + "\n" ;
-	    }  
+	}  
 	return copyString;
     }
     
     
     //Set column sizes to fit the table contents...
-    private void initColumnSizes(JTable table, AbstractTableModel model)
-    {
-    TableColumn column = null;
-    Component comp = null;
-    int headerWidth = 0;
-    int cellWidth = 0;
-    Object[] longValues;
+    private void initColumnSizes(JTable table, AbstractTableModel model) {
+	TableColumn column = null;
+	Component comp = null;
+	int headerWidth = 0;
+	int cellWidth = 0;
+	Object[] longValues;
     
     
-    longValues = ((EventTableModel)(model)).longValues;
+	longValues = ((EventTableModel)(model)).longValues;
     
     
-    for(int i = 0; i < longValues.length; i++)
-        {
-        column = table.getColumnModel().getColumn(i);
+	for( int i = 0; i < longValues.length; i++) {
+	    column = table.getColumnModel().getColumn(i);
         
-        comp = table.getDefaultRenderer(model.getColumnClass(i)).
-            getTableCellRendererComponent(
-                          table, longValues[i],
-                          false, false, 0, i);
-        cellWidth = comp.getPreferredSize().width;
+	    comp = table.getDefaultRenderer(model.getColumnClass(i)).
+		getTableCellRendererComponent(
+					      table, longValues[i],
+					      false, false, 0, i);
+	    cellWidth = comp.getPreferredSize().width;
         
-        if(DEBUG)
-            {
-            System.out.println("Initializing width of column "
-                       + i + ". "
-                       + "headerWidth = " + headerWidth
-                       + "; cellWidth = " + cellWidth);
+	    if(DEBUG) {
+		System.out.println("Initializing width of column "
+				   + i + ". "
+				   + "headerWidth = " + headerWidth
+				   + "; cellWidth = " + cellWidth);
             }
         
-        //XXX: Before Swing 1.1 Beta 2, use setMinWidth instead.
-        column.setPreferredWidth(Math.max(headerWidth, cellWidth));
-        if(i == 0)
-            {
-            column.setMaxWidth(Math.max(headerWidth, cellWidth));
-            column.setResizable(false);
+	    //XXX: Before Swing 1.1 Beta 2, use setMinWidth instead.
+	    column.setPreferredWidth(Math.max(headerWidth, cellWidth));
+	    if(i == 0) {
+		column.setPreferredWidth(30);
+		column.setMaxWidth(30);
+		column.setResizable(false);
             }
         
         }
     }
     
-    public void presentStat(){        
+    public void presentStat() {        
 	// Derive interesting statistics from the current searchresult and
         //display it in a JFrame...
 	HistStatistics statistics = new HistStatistics(atModel.mhData,session);
@@ -181,11 +179,11 @@ public class HistTable extends JScrollPane{
 
     }
 
-    public int getNrOfResults(){
-    return alarmTable.getRowCount();
+    public int getNrOfResults() {
+	return alarmTable.getRowCount();
     }
     // Make a search in the Historical Event list based on the HistQuery search
-    public void performSearch(Object root, HistQuery search){
+    public void performSearch(Object root, HistQuery search) {
         HistSender sender = new HistSender(root);
         atModel.setMhData(sender.SearchRequest(search));
     }

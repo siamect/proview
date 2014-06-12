@@ -318,10 +318,22 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   gtk_widget_set_size_request( sea_type_label, 120, -1);
   gtk_misc_set_alignment( GTK_MISC(sea_type_label), 0.0, 0.5);
 
-  alarm_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("Active"));
-  gtk_widget_set_size_request( alarm_toggle_w, 120, -1);
-  info_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("Message"));
+  info_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("Info"));
   gtk_widget_set_size_request( info_toggle_w, 120, -1);
+  alarm_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("Alarm"));
+  gtk_widget_set_size_request( alarm_toggle_w, 120, -1);
+  mnt_alarm_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("MaintenanceAlarm"));
+  gtk_widget_set_size_request( mnt_alarm_toggle_w, 120, -1);
+  sys_alarm_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("SystemAlarm"));
+  gtk_widget_set_size_request( sys_alarm_toggle_w, 120, -1);
+  user_alarm1_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("UserAlarm1"));
+  gtk_widget_set_size_request( user_alarm1_toggle_w, 120, -1);
+  user_alarm2_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("UserAlarm2"));
+  gtk_widget_set_size_request( user_alarm2_toggle_w, 120, -1);
+  user_alarm3_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("UserAlarm3"));
+  gtk_widget_set_size_request( user_alarm3_toggle_w, 120, -1);
+  user_alarm4_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("UserAlarm4"));
+  gtk_widget_set_size_request( user_alarm4_toggle_w, 120, -1);
   ret_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("Return"));
   gtk_widget_set_size_request( ret_toggle_w, 120, -1);
   ack_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("Ack"));
@@ -329,8 +341,14 @@ HistGtk::HistGtk( void *hist_parent_ctx,
 
   GtkWidget *sea_typebox = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(sea_typebox), sea_type_label, FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(sea_typebox), alarm_toggle_w, FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(sea_typebox), info_toggle_w, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(sea_typebox), alarm_toggle_w, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(sea_typebox), mnt_alarm_toggle_w, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(sea_typebox), sys_alarm_toggle_w, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(sea_typebox), user_alarm1_toggle_w, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(sea_typebox), user_alarm2_toggle_w, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(sea_typebox), user_alarm3_toggle_w, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(sea_typebox), user_alarm4_toggle_w, FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(sea_typebox), ret_toggle_w, FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(sea_typebox), ack_toggle_w, FALSE, FALSE, 0);
 
@@ -476,11 +494,23 @@ void HistGtk::ok_btn( GtkWidget *w, gpointer data)
   Hist *histOP = (Hist *)data;
 
   brow_DeleteAll(histOP->hist->brow->ctx);
+  histOP->eventType_Info = (bool)gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( ((HistGtk *)histOP)->info_toggle_w));
+
   histOP->eventType_Alarm = (bool)gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(((HistGtk *)histOP)->alarm_toggle_w));
 
-  histOP->eventType_Ack = (bool)gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( ((HistGtk *)histOP)->ack_toggle_w));
+  histOP->eventType_MaintenanceAlarm = (bool)gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( ((HistGtk *)histOP)->mnt_alarm_toggle_w));
 
-  histOP->eventType_Info = (bool)gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( ((HistGtk *)histOP)->info_toggle_w));
+  histOP->eventType_SystemAlarm = (bool)gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( ((HistGtk *)histOP)->sys_alarm_toggle_w));
+
+  histOP->eventType_UserAlarm1 = (bool)gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( ((HistGtk *)histOP)->user_alarm1_toggle_w));
+
+  histOP->eventType_UserAlarm2 = (bool)gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( ((HistGtk *)histOP)->user_alarm2_toggle_w));
+
+  histOP->eventType_UserAlarm3 = (bool)gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( ((HistGtk *)histOP)->user_alarm3_toggle_w));
+
+  histOP->eventType_UserAlarm4 = (bool)gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( ((HistGtk *)histOP)->user_alarm4_toggle_w));
+
+  histOP->eventType_Ack = (bool)gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( ((HistGtk *)histOP)->ack_toggle_w));
 
   histOP->eventType_Return = (bool)gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( ((HistGtk *)histOP)->ret_toggle_w));
 

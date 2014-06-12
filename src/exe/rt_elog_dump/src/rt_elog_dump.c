@@ -45,6 +45,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <stdarg.h>
 #include <db.h>
 #include "co_time.h"
 #include "rt_mh_def.h"
@@ -73,6 +74,10 @@ void convertEventType(int type, char *ret);
 void convertEventPrio(int prio, char *ret);
 
 DB *dataBaseP = NULL;
+static int current_pos = 0;
+static int current_col = 0;
+//static int cols[] = {8, 22, 8, 22, 22, 17, 3, 40, 40, 8, 22, 8, 2, 8, 8, 8, 1};
+static int cols[] = {8, 30, 38, 60, 82, 99, 102, 142, 182, 190, 202, 210, 212, 220, 228, 236, 237};
 
 void usage()
 {
@@ -83,6 +88,42 @@ void usage()
 	  "\n"
 	  "           dumpfile      Name of dumpfile, default " DUMPFILE "\n"
 	  "           database      Database file, default " DATABASE "\n\n");
+}
+
+void new_row( FILE *fp)
+{
+  current_col = 0;
+  current_pos = 0;
+  
+  fprintf( fp, "\n");
+}
+
+int col_print( FILE *fp, char *format, ...)
+{
+  va_list ap;
+  int i;
+  char buf[200];
+  int sts;
+  int incr;
+
+  va_start( ap, format);
+  sts = vsprintf( buf, format, ap);
+  va_end( ap);
+
+  fprintf( fp, "%s", buf);
+  current_pos += strlen(buf);
+
+  incr = 0;
+  for ( i = 0; i < cols[current_col] - current_pos - 1; i++) {
+    incr++;
+    fprintf( fp, " ");
+  }
+  fprintf( fp, " ");
+  incr++;
+  current_pos += incr;
+  current_col++;
+  
+  return sts;
 }
 
 int 
@@ -114,6 +155,7 @@ main (int argc, char *argv[])
   else
     Init(DATABASE);
   ReadFromDBAndPutInFile(outFile);
+  new_row(outFile);
   fclose(outFile);
   if((ret = dataBaseP->close(dataBaseP,0) != 0))
   {
@@ -210,25 +252,23 @@ void ReadFromDBAndPutInFile(FILE *outFile)
   
 void WriteColumnNames(FILE *outFile)
 {
-  fprintf(outFile, "Nid\t");
-  fprintf(outFile, "BirthTime\t");
-  fprintf(outFile, "Idx\t");
-  fprintf(outFile, "EventFlags\t");
-  fprintf(outFile, "EventTime\t");
-  fprintf(outFile, "EventName\t");
-  fprintf(outFile, "EventType\t");
-  fprintf(outFile, "EventPrio\t");
-  fprintf(outFile, "EventText\t");
-  //fprintf(outFile, "Status\t");
-  fprintf(outFile, "TargetIdx\t");
-  fprintf(outFile, "DetectTime\t");
-  fprintf(outFile, "AValue\t");
-  fprintf(outFile, "CtrlLimit\t");
-  fprintf(outFile, "Hysteres\t");
-  fprintf(outFile, "Unit\t");
-  fprintf(outFile, "DValue\t");
-  fprintf(outFile, "High\t");
-  fprintf(outFile, "\n");
+  col_print(outFile, "Nid");
+  col_print(outFile, "BirthTime");
+  col_print(outFile, "Idx");
+  col_print(outFile, "EventFlags");
+  col_print(outFile, "EventTime");
+  col_print(outFile, "EventType");
+  col_print(outFile, "Prio");
+  col_print(outFile, "EventText");
+  col_print(outFile, "EventName");
+  col_print(outFile, "TargetIdx");
+  col_print(outFile, "DetectTime");
+  col_print(outFile, "AValue");
+  col_print(outFile, "CtrlLimit");
+  col_print(outFile, "Hysteres");
+  col_print(outFile, "Unit");
+  col_print(outFile, "DValue");
+  col_print(outFile, "High");
 }
 
 int
@@ -239,6 +279,12 @@ Write (
 {
   switch (sp->EventType) {
   case mh_eEvent_Alarm:
+  case mh_eEvent_MaintenanceAlarm:
+  case mh_eEvent_SystemAlarm:
+  case mh_eEvent_UserAlarm1:
+  case mh_eEvent_UserAlarm2:
+  case mh_eEvent_UserAlarm3:
+  case mh_eEvent_UserAlarm4:
   case mh_eEvent_Info:
     printMess(sp, outFile);
     break;
@@ -259,7 +305,6 @@ Write (
     printf("rt_elog_dump: Error in Write unknown EventType");
     break;
   }  
-  fprintf(outFile, "\n");
   return 1;
 }
 
@@ -269,6 +314,7 @@ printMess (
   FILE *outFile
 )
 {
+  new_row( outFile);
   printMsgInfo(&(sp->Mess.message.Info), outFile);
 
 
@@ -282,25 +328,26 @@ printMess (
   //Unit
   //DValue
   //High
-  fprintf(outFile, "%s\t", sp->Mess.message.EventText);
-  fprintf(outFile,"\t");
-  fprintf(outFile,"\t");
+  col_print(outFile, "\"%s\"", sp->Mess.message.EventText);
+  col_print(outFile, "%s", sp->Mess.message.EventName);
+  col_print(outFile,"");
+  col_print(outFile,"");
   switch (sp->Mess.message.SupInfo.SupType) {
     case mh_eSupType_Analog:
-      fprintf(outFile, "%.2f\t", sp->Mess.message.SupInfo.mh_uSupInfo_u.A.ActualValue);
-      fprintf(outFile, "%.2f\t", sp->Mess.message.SupInfo.mh_uSupInfo_u.A.CtrlLimit);
-      fprintf(outFile, "%.2f\t", sp->Mess.message.SupInfo.mh_uSupInfo_u.A.Hysteres);
-      fprintf(outFile, "%s\t",   sp->Mess.message.SupInfo.mh_uSupInfo_u.A.Unit);
-      fprintf(outFile,"\t");
-      fprintf(outFile, "%u\t", sp->Mess.message.SupInfo.mh_uSupInfo_u.A.High);
+      col_print(outFile, "%.2f", sp->Mess.message.SupInfo.mh_uSupInfo_u.A.ActualValue);
+      col_print(outFile, "%.2f", sp->Mess.message.SupInfo.mh_uSupInfo_u.A.CtrlLimit);
+      col_print(outFile, "%.2f", sp->Mess.message.SupInfo.mh_uSupInfo_u.A.Hysteres);
+      col_print(outFile, "%s",   sp->Mess.message.SupInfo.mh_uSupInfo_u.A.Unit);
+      col_print(outFile,"");
+      col_print(outFile, "%u", sp->Mess.message.SupInfo.mh_uSupInfo_u.A.High);
       break;
     case mh_eSupType_Digital:
-      fprintf(outFile,"\t");
-      fprintf(outFile,"\t");
-      fprintf(outFile,"\t");
-      fprintf(outFile,"\t");
-      fprintf(outFile, "%u\t", sp->Mess.message.SupInfo.mh_uSupInfo_u.D.ActualValue);
-      fprintf(outFile, "%u\t", sp->Mess.message.SupInfo.mh_uSupInfo_u.D.High);
+      col_print(outFile,"");
+      col_print(outFile,"");
+      col_print(outFile,"");
+      col_print(outFile,"");
+      col_print(outFile, "%u", sp->Mess.message.SupInfo.mh_uSupInfo_u.D.ActualValue);
+      col_print(outFile, "%u", sp->Mess.message.SupInfo.mh_uSupInfo_u.D.High);
       break;
     case mh_eSupType__:  
     case mh_eSupType_None:
@@ -319,6 +366,7 @@ printAck (
   char time_str[40];
   pwr_tTime event_time;
   
+  new_row( outFile);
   printMsgInfo(&(sp->Mess.ack.Info), outFile);
   
   //EventText
@@ -332,29 +380,30 @@ printAck (
   //DValue
   //High
 
-  fprintf(outFile,"\t");
-  fprintf(outFile, "%u\t", sp->Mess.ack.TargetId.Idx);
+  col_print(outFile,"\"\"");
+  col_print(outFile, "%s", sp->Mess.ack.EventName);
+  col_print(outFile, "%u", sp->Mess.ack.TargetId.Idx);
 
   event_time = net_NetTimeToTime(&(sp->Mess.ack.DetectTime));    
   time_AtoAscii(&event_time, time_eFormat_ComprDateAndTime, time_str, sizeof(time_str));
-  fprintf(outFile, "%s\t", time_str);
+  col_print(outFile, "%s", time_str);
 
   switch (sp->Mess.ack.SupInfo.SupType) {
     case mh_eSupType_Analog:
-      fprintf(outFile, "%.2f\t", sp->Mess.ack.SupInfo.mh_uSupInfo_u.A.ActualValue);
-      fprintf(outFile, "%.2f\t", sp->Mess.ack.SupInfo.mh_uSupInfo_u.A.CtrlLimit);
-      fprintf(outFile, "%.2f\t", sp->Mess.ack.SupInfo.mh_uSupInfo_u.A.Hysteres);
-      fprintf(outFile, "%s\t",   sp->Mess.ack.SupInfo.mh_uSupInfo_u.A.Unit);
-      fprintf(outFile,"\t");
-      fprintf(outFile, "%u\t", sp->Mess.ack.SupInfo.mh_uSupInfo_u.A.High);
+      col_print(outFile, "%.2f", sp->Mess.ack.SupInfo.mh_uSupInfo_u.A.ActualValue);
+      col_print(outFile, "%.2f", sp->Mess.ack.SupInfo.mh_uSupInfo_u.A.CtrlLimit);
+      col_print(outFile, "%.2f", sp->Mess.ack.SupInfo.mh_uSupInfo_u.A.Hysteres);
+      col_print(outFile, "%s",   sp->Mess.ack.SupInfo.mh_uSupInfo_u.A.Unit);
+      col_print(outFile,"");
+      col_print(outFile, "%u", sp->Mess.ack.SupInfo.mh_uSupInfo_u.A.High);
       break;
     case mh_eSupType_Digital:
-      fprintf(outFile,"\t");
-      fprintf(outFile,"\t");
-      fprintf(outFile,"\t");
-      fprintf(outFile,"\t");
-      fprintf(outFile, "%u\t", sp->Mess.ack.SupInfo.mh_uSupInfo_u.D.ActualValue);
-      fprintf(outFile, "%u\t", sp->Mess.ack.SupInfo.mh_uSupInfo_u.D.High);
+      col_print(outFile,"");
+      col_print(outFile,"");
+      col_print(outFile,"");
+      col_print(outFile,"");
+      col_print(outFile, "%u", sp->Mess.ack.SupInfo.mh_uSupInfo_u.D.ActualValue);
+      col_print(outFile, "%u", sp->Mess.ack.SupInfo.mh_uSupInfo_u.D.High);
       break;    
     case mh_eSupType__:  
     case mh_eSupType_None:
@@ -371,6 +420,7 @@ printRet (
 )
 {
   char time_str[40];
+  new_row( outFile);
   printMsgInfo(&(sp->Mess.ret.Info), outFile);
   pwr_tTime event_time;
   
@@ -384,29 +434,30 @@ printRet (
   //Unit
   //DValue
   //High
-  fprintf(outFile, "%s\t", sp->Mess.ret.EventText);
-  fprintf(outFile, "%u\t", sp->Mess.ret.TargetId.Idx);
+  col_print(outFile, "\"%s\"", sp->Mess.ret.EventText);
+  col_print(outFile, "%s", sp->Mess.ret.EventName);
+  col_print(outFile, "%u", sp->Mess.ret.TargetId.Idx);
 
   event_time = net_NetTimeToTime(&(sp->Mess.ret.DetectTime));    
   time_AtoAscii( &event_time, time_eFormat_ComprDateAndTime, time_str, sizeof(time_str));
-  fprintf(outFile, "%s\t", time_str);
+  col_print(outFile, "%s", time_str);
 
   switch (sp->Mess.ret.SupInfo.SupType) {
     case mh_eSupType_Analog:
-      fprintf(outFile, "%.2f\t", sp->Mess.ret.SupInfo.mh_uSupInfo_u.A.ActualValue);
-      fprintf(outFile, "%.2f\t", sp->Mess.ret.SupInfo.mh_uSupInfo_u.A.CtrlLimit);
-      fprintf(outFile, "%.2f\t", sp->Mess.ret.SupInfo.mh_uSupInfo_u.A.Hysteres);
-      fprintf(outFile, "%s\t",   sp->Mess.ret.SupInfo.mh_uSupInfo_u.A.Unit);
-      fprintf(outFile,"\t");
-      fprintf(outFile, "%u\t", sp->Mess.ret.SupInfo.mh_uSupInfo_u.A.High);
+      col_print(outFile, "%.2f", sp->Mess.ret.SupInfo.mh_uSupInfo_u.A.ActualValue);
+      col_print(outFile, "%.2f", sp->Mess.ret.SupInfo.mh_uSupInfo_u.A.CtrlLimit);
+      col_print(outFile, "%.2f", sp->Mess.ret.SupInfo.mh_uSupInfo_u.A.Hysteres);
+      col_print(outFile, "%s",   sp->Mess.ret.SupInfo.mh_uSupInfo_u.A.Unit);
+      col_print(outFile,"");
+      col_print(outFile, "%u", sp->Mess.ret.SupInfo.mh_uSupInfo_u.A.High);
       break;
     case mh_eSupType_Digital:
-      fprintf(outFile,"\t");
-      fprintf(outFile,"\t");
-      fprintf(outFile,"\t");
-      fprintf(outFile,"\t");
-      fprintf(outFile, "%u\t", sp->Mess.ret.SupInfo.mh_uSupInfo_u.D.ActualValue);
-      fprintf(outFile, "%u\t", sp->Mess.ret.SupInfo.mh_uSupInfo_u.D.High);
+      col_print(outFile,"");
+      col_print(outFile,"");
+      col_print(outFile,"");
+      col_print(outFile,"");
+      col_print(outFile, "%u", sp->Mess.ret.SupInfo.mh_uSupInfo_u.D.ActualValue);
+      col_print(outFile, "%u", sp->Mess.ret.SupInfo.mh_uSupInfo_u.D.High);
       break;  
     case mh_eSupType__:  
     case mh_eSupType_None:
@@ -427,7 +478,8 @@ printBlock (
   char time_str[40];
   pwr_tTime event_time;
 
-    printMsgInfo(&(sp->Mess.block.Info), outFile);
+  new_row( outFile);
+  printMsgInfo(&(sp->Mess.block.Info), outFile);
   //EventText
   //Status
   //TargetIdx
@@ -438,19 +490,20 @@ printBlock (
   //Unit
   //DValue
   //High
-  fprintf(outFile,"\t");
-  fprintf(outFile, "%u\t", sp->Mess.block.TargetId.Idx);
+  col_print(outFile, "\"\"");
+  col_print(outFile, "%s", sp->Mess.block.EventName);
+  col_print(outFile, "%u", sp->Mess.block.TargetId.Idx);
 
   event_time = net_NetTimeToTime( &(sp->Mess.block.DetectTime));        
   time_AtoAscii(&event_time, time_eFormat_ComprDateAndTime, time_str, sizeof(time_str));
-  fprintf(outFile, "%s\t", time_str);
+  col_print(outFile, "%s", time_str);
     
-  fprintf(outFile,"\t");
-  fprintf(outFile,"\t");
-  fprintf(outFile,"\t");
-  fprintf(outFile,"\t");
-  fprintf(outFile,"\t");
-  fprintf(outFile,"\t");
+  col_print(outFile,"");
+  col_print(outFile,"");
+  col_print(outFile,"");
+  col_print(outFile,"");
+  col_print(outFile,"");
+  col_print(outFile,"");
 }
 
 void
@@ -462,64 +515,59 @@ printMsgInfo (
   char time_str[40];
   pwr_tTime event_time;
   
-  fprintf(outFile, "%d\t", mp->Id.Nix);
+  col_print(outFile, "%d", mp->Id.Nix);
   
   event_time = net_NetTimeToTime(&(mp->Id.BirthTime));        
   time_AtoAscii(&event_time, time_eFormat_ComprDateAndTime, time_str, sizeof(time_str));
-  fprintf(outFile, "%s\t", time_str);
+  col_print(outFile, "%s", time_str);
   
-  fprintf(outFile, "%d\t",mp->Id.Idx);
+  col_print(outFile, "%d",mp->Id.Idx);
   /*
   sp->Object
   sp->SupObject
   */
   printEventFlags(outFile, mp->EventFlags);
-  fprintf(outFile, "\t");
 
   event_time = net_NetTimeToTime(&(mp->EventTime));      
   time_AtoAscii( &event_time, time_eFormat_ComprDateAndTime, time_str, sizeof(time_str));
-  fprintf(outFile, "%s\t", time_str);
+  col_print(outFile, "%s", time_str);
   
-  fprintf(outFile, "%s\t",mp->EventName_V3);
+  // col_print(outFile, "%s",mp->EventName_V3);
   
   convertEventType(mp->EventType, time_str);
-  fprintf(outFile, "%s\t", time_str);
+  col_print(outFile, "%s", time_str);
   
   convertEventPrio(mp->EventPrio, time_str);
-  fprintf(outFile, "%s\t",time_str);
+  col_print(outFile, "%s",time_str);
 }
 
 
 void printEventFlags(FILE *outFile, int flags)
 {
-  if(flags & mh_mEventFlags_Return)
-  {
-    fprintf(outFile,"Return/");
-  }
+  char buf[80];
+
+  buf[0] = 0;
+  if (flags & mh_mEventFlags_Return)
+    strcat( buf, "Return/");
   if(flags & mh_mEventFlags_Ack)
-  {
-    fprintf(outFile,"Ack/");
-  }
+    strcat( buf, "Ack/");
   if(flags & mh_mEventFlags_Bell)
-  {
-    fprintf(outFile,"Bell/");
-  }
+    strcat( buf, "Bell/");
   if(flags & mh_mEventFlags_Force)
-  {
-    fprintf(outFile,"Force/");
-  }
+    strcat( buf, "Force/");
   if(flags & mh_mEventFlags_InfoWindow)
-  {
-    fprintf(outFile,"InfoWind");
-  }
+    strcat( buf, "InfoWind/");
   if(flags & mh_mEventFlags_Returned)
-  {
-    fprintf(outFile,"Returned/");
-  }
+    strcat( buf, "Returned/");
   if(flags & mh_mEventFlags_NoObject)
-  {
-    fprintf(outFile,"NoObject");
-  }
+    strcat( buf, "NoObject/");
+  /* Remove last / */
+  if ( strlen(buf) > 0)
+    buf[strlen(buf)-1] = 0;
+  else
+    strcpy( buf, "-");
+
+  col_print(outFile, "%s", buf);
 }
 
 
@@ -529,6 +577,24 @@ void convertEventType(int type, char *ret)
   switch (type) {
   case mh_eEvent_Alarm:
     strcpy(ret, "Alarm");
+    break;
+  case mh_eEvent_MaintenanceAlarm:
+    strcpy(ret, "MaintenanceAlarm");
+    break;
+  case mh_eEvent_SystemAlarm:
+    strcpy(ret, "SystemAlarm");
+    break;
+  case mh_eEvent_UserAlarm1:
+    strcpy(ret, "UserAlarm1");
+    break;
+  case mh_eEvent_UserAlarm2:
+    strcpy(ret, "UserAlarm2");
+    break;
+  case mh_eEvent_UserAlarm3:
+    strcpy(ret, "UserAlarm3");
+    break;
+  case mh_eEvent_UserAlarm4:
+    strcpy(ret, "UserAlarm4");
     break;
   case mh_eEvent_Info:
     strcpy(ret, "Info");
@@ -576,7 +642,7 @@ void convertEventPrio(int prio, char *ret)
     strcpy(ret, "D");
     break;
   default:
-    strcpy(ret, " ");
+    strcpy(ret, "-");
     break;
   }
 }  

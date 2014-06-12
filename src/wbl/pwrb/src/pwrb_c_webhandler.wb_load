@@ -297,6 +297,15 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Specifies the type of events that are sent to the user.
+      !  If no type is specified, all types av events are sent.
+      !*/
+      Object EventSelectType $Attribute 43 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-EventTypeMask"
+        EndBody
+      EndObject
+      !/**
       !  Specifies the maximum number of contemporary alarms in
       !  the user's alarm list.
       !  The number should exceed the maximum number of 

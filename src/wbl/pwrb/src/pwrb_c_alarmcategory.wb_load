@@ -85,6 +85,14 @@ SObject pwrb:Class
 	  Attr Elements = 100
         EndBody
       EndObject
+      !/**
+      !  Event type.
+      !*/
+      Object EventType $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-EventTypeMask"
+        EndBody
+      EndObject
     EndObject
     Object Template AlarmCategory
       Body RtBody

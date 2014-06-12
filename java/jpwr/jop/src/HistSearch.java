@@ -42,8 +42,6 @@ import javax.swing.*;
 import javax.swing.table.*;
 import jpwr.rt.*;
 import java.applet.Applet;
-//XLS import netscape.javascript.*;
-// Import of netscape.javascript.* from jaws.jar is needed !!!
 
 /* HistSearch is a search engine for performing searches from the historic 
  *event list. It's mainly a GUI for getting input on the criteria on which
@@ -56,13 +54,12 @@ import java.applet.Applet;
  *strings.
  */
 
-public class HistSearch extends JFrame implements ActionListener, GdhApplIfc
-{
+public class HistSearch extends JFrame implements ActionListener, GdhApplIfc {
         
     public JopEngine engine;
     public JopSession session;
     public Object root;
-;
+
     
     /*integers for keeping track of the number of 
       search results.*/
@@ -101,9 +98,15 @@ public class HistSearch extends JFrame implements ActionListener, GdhApplIfc
     JComboBox cbWhen ;
     
     // type is an array of radiobuttons, one for each type of event
-    JCheckBox[] type = new JCheckBox[4];
-    String[] nameType = {JopLang.transl("Active"),
-			   JopLang.transl("Message"),
+    JCheckBox[] type = new JCheckBox[10];
+    String[] nameType = {JopLang.transl("Info"),
+			   JopLang.transl("Alarm"),
+			   JopLang.transl("MaintenanceAlarm"),
+			   JopLang.transl("SystemAlarm"),
+			   JopLang.transl("UserAlarm1"),
+			   JopLang.transl("UserAlarm2"),
+			   JopLang.transl("UserAlarm3"),
+			   JopLang.transl("UserAlarm4"),
 			   JopLang.transl("Return"),
 			   JopLang.transl("Ack")};
     
@@ -136,9 +139,6 @@ public class HistSearch extends JFrame implements ActionListener, GdhApplIfc
     //resultTable is the HistTable containing the search results.
     HistTable result;
     
-    // result contains the table showing the search result.
-    //JTable result = new JTable(resultTable);
-    
     // lblCondition is the label showing the current search conditions.
     JLabel lblCondition = new JLabel("",JLabel.LEFT);
     
@@ -151,43 +151,40 @@ public class HistSearch extends JFrame implements ActionListener, GdhApplIfc
     public JButton btnStat;    
 
     class WindowExit extends WindowAdapter{
-    public void windowClosing(WindowEvent ev){
-    
-    }
+	public void windowClosing(WindowEvent ev){    
+	}
     }
     void HistSearch_WindowClosing(WindowEvent event) {
-    dispose();
+	dispose();
     }
     
     //Default constructor
-    public HistSearch(){
-    engine = new JopEngine( 1000, this);
-    session = new JopSession( engine, (Object)this);
-    root = (Object) this;
-    setup();
+    public HistSearch() {
+	engine = new JopEngine( 1000, this);
+	session = new JopSession( engine, (Object)this);
+	root = (Object) this;
+	setup();
     }
 
-    public HistSearch( JopSession s)
-    {
-    session = s;
-    engine = session.getEngine();
-    root = session.getRoot();
-    setup();
+    public HistSearch( JopSession s) {
+	session = s;
+	engine = session.getEngine();
+	root = session.getRoot();
+	setup();
     }
 
-    public HistSearch(String q , JopSession s)
-    {
-    session = s;
-    engine = session.getEngine();
-    root = session.getRoot();
-    setup();
-    txName.setText("*" + q + "*");
-    doSearch();
-    
+    public HistSearch(String q , JopSession s) {
+	session = s;
+	engine = session.getEngine();
+	root = session.getRoot();
+	setup();
+	txName.setText("*" + q + "*");
+	doSearch();    
     }
 
     private void setup(){
     result =new HistTable(session);
+
     /* A mouse listener is added to the alarmTable from here because
        the result of the double click affects components of the HistSearch.
        To add the listener like this avoids compilation order problems.*/
@@ -212,78 +209,76 @@ public class HistSearch extends JFrame implements ActionListener, GdhApplIfc
 	    int row=result.alarmTable.rowAtPoint(e.getPoint());
 	    result.alarmTable.setRowSelectionInterval(row,row);
             if ( e.isPopupTrigger()) {
-            MhrEvent event = (MhrEvent) result.atModel.mhData.eventVec.get(row);
-            String trace_object= event.eventName;
-            new JopMethodsMenu(session, 
-                       trace_object, 
-                       JopUtility.TRACE,(Component) result.alarmTable, 
-                       e.getX(), e.getY());
-            return;
+		MhrEvent event = (MhrEvent) result.atModel.mhData.eventVec.get(row);
+		String trace_object= event.eventName;
+		new JopMethodsMenu(session, 
+				   trace_object, 
+				   JopUtility.TRACE,(Component) result.alarmTable, 
+				   e.getX(), e.getY());
+		return;
             }
         }
-	    //On double click copy name or text to corresponding textfields.
-	    public void mouseClicked(MouseEvent e) {
-		if (e.getClickCount() == 2) {
-		    String tempStr="";
-		    int row=result.alarmTable.rowAtPoint(e.getPoint());
-		    if(result.alarmTable.columnAtPoint(e.getPoint())==3){
-			if (txText.getText().length() > 0)
-			    tempStr=txText.getText() + ";";
-			tempStr=tempStr + "*" +
-			    (String)result.alarmTable.getValueAt(row,3) + "*";
-			txText.setText(tempStr);
-		    }
-		    else{
-			if (txName.getText().length() > 0 )
-			    tempStr=txName.getText() + ";";
-			tempStr=tempStr + "*" +
-			    (String)result.alarmTable.getValueAt(row,4) + "*";
-			txName.setText(tempStr);
-		    }
+
+        //On double click copy name or text to corresponding textfields.
+	public void mouseClicked(MouseEvent e) {
+	    if (e.getClickCount() == 2) {
+		String tempStr="";
+		int row=result.alarmTable.rowAtPoint(e.getPoint());
+		if(result.alarmTable.columnAtPoint(e.getPoint())==3){
+		    if (txText.getText().length() > 0)
+			tempStr=txText.getText() + ";";
+		    tempStr=tempStr + "*" +
+			(String)result.alarmTable.getValueAt(row,3) + "*";
+		    txText.setText(tempStr);
+		}
+		else{
+		    if (txName.getText().length() > 0 )
+			tempStr=txName.getText() + ";";
+		    tempStr=tempStr + "*" +
+			(String)result.alarmTable.getValueAt(row,4) + "*";
+		    txName.setText(tempStr);
 		}
 	    }
-
-	    /**** MOUSE LISTENER CODE STOP ****/
-
+	}
+	/**** MOUSE LISTENER CODE STOP ****/
         });
-    addWindowListener(new WindowExit());
-    addComponentListener(new minSizeListener(this));
-    this.setTitle("Hist Search");
-    // setup the searchbutton
-    btnSearch= new JButton( JopLang.transl("Search"));
-    btnSearch.addActionListener(this);
-    btnSearch.setActionCommand("search");
-    btnSearch.setMnemonic('s');
-    // setup the statisticsbutton
-    btnStat= new JButton(JopLang.transl("Statistics"));
-    btnStat.setMnemonic('t');
-    btnStat.setActionCommand("stat");
-    btnStat.addActionListener(this);
-    //setup tht combobox.
-    cbWhen=new JComboBox(choice);
-    cbWhen.addActionListener(this); 
 
-    //setup the start and stop dates.
-    calStop = Calendar.getInstance();
-    calStart = Calendar.getInstance();
-    calStart.set(Calendar.YEAR,1970);
-    //      setup the array of checkboxes
-    checkSetup();
-    //make sure all buttons and labels have text.
-    menuSetup();
-    place();
-    //set comboBox to "thisYear" by deafult. setSelectedItem calls
-    //the action listener, so the dates update.
-    cbWhen.setSelectedItem(cbWhen.getItemAt(1));
-    updateDate();
-    
-    
+        addWindowListener(new WindowExit());
+	addComponentListener(new minSizeListener(this));
+	this.setTitle("Hist Search");
+	// setup the searchbutton
+	btnSearch= new JButton( JopLang.transl("Search"));
+	btnSearch.addActionListener(this);
+	btnSearch.setActionCommand("search");
+	btnSearch.setMnemonic('s');
+	// setup the statisticsbutton
+	btnStat= new JButton(JopLang.transl("Statistics"));
+	btnStat.setMnemonic('t');
+	btnStat.setActionCommand("stat");
+	btnStat.addActionListener(this);
+	//setup tht combobox.
+	cbWhen=new JComboBox(choice);
+	cbWhen.addActionListener(this); 
+
+	//setup the start and stop dates.
+	calStop = Calendar.getInstance();
+	calStart = Calendar.getInstance();
+	calStart.set(Calendar.YEAR,1970);
+	//      setup the array of checkboxes
+	checkSetup();
+	//make sure all buttons and labels have text.
+	menuSetup();
+	place();
+	//set comboBox to "thisYear" by deafult. setSelectedItem calls
+	//the action listener, so the dates update.
+	cbWhen.setSelectedItem(cbWhen.getItemAt(1));
+	updateDate();    
     }
     
                 
     
     //Place all onscreen objects    
-    private void place(){
+    private void place() {
         contentPane = (JPanel)this.getContentPane();
         contentPane.setLayout(new BorderLayout());
         middleSetup();
@@ -293,342 +288,341 @@ public class HistSearch extends JFrame implements ActionListener, GdhApplIfc
 	contentPane.add("South",btnStat);
     }
     
-    private void menuSetup(){
-    // set up the menu structure.
-    this.setJMenuBar (new JMenuBar());
-    fileMenu=new JMenu(JopLang.transl("File"));
-    fileMenu.setMnemonic(fileMenu.getText().charAt(0));
-    
-    JMenuItem item = new JMenuItem(JopLang.transl("Export result to Excel"));
-    item.addActionListener(this);
-    item.setMnemonic(item.getText().charAt(0));
-    fileMenu.add(item);
+    private void menuSetup() {
+	// set up the menu structure.
+	this.setJMenuBar (new JMenuBar());
+	fileMenu=new JMenu(JopLang.transl("File"));
+	fileMenu.setMnemonic(fileMenu.getText().charAt(0));
+	
+	JMenuItem item = new JMenuItem(JopLang.transl("Export result to Excel"));
+	item.addActionListener(this);
+	item.setMnemonic(item.getText().charAt(0));
+	fileMenu.add(item);
 
-    item = new JMenuItem(JopLang.transl("Close"));
-    item.addActionListener(this);
-    item.setMnemonic(item.getText().charAt(0));
-    fileMenu.add(item);
-    
-    this.getJMenuBar().add(fileMenu);
+	item = new JMenuItem(JopLang.transl("Close"));
+	item.addActionListener(this);
+	item.setMnemonic(item.getText().charAt(0));
+	fileMenu.add(item);
+	
+	this.getJMenuBar().add(fileMenu);
     }
     
     
-    private void middleSetup(){
-    //Setup the layout for the middle part of the screen.
+    private void middleSetup() {
+	//Setup the layout for the middle part of the screen.
         
-    middle.setLayout(new BorderLayout());
-    JPanel condition = new JPanel();
-    condition.setLayout(new BorderLayout());
-    condition.add("North",lblHead);
-    Dimension d = lblCondition.getSize();
-    d.height +=80;
-    lblCondition.setPreferredSize(d);
-    condition.add("Center", lblCondition);
-    middle.add("North",condition);
-    d = result.getSize();
-    result.setPreferredSize(d);
-    middle.add("Center", result);
+	middle.setLayout(new BorderLayout());
+	JPanel condition = new JPanel();
+	condition.setLayout(new BorderLayout());
+	condition.add("North",lblHead);
+	Dimension d = lblCondition.getSize();
+	d.height +=80;
+	lblCondition.setPreferredSize(d);
+	condition.add("Center", lblCondition);
+	middle.add("North",condition);
+	d = result.getSize();
+	result.setPreferredSize(d);
+	middle.add("Center", result);
     }
     
-    private void topSetup(){
-    GridBagLayout topLayout = new GridBagLayout();  
-    GridBagConstraints topC = new GridBagConstraints();
-    top.setLayout(topLayout);
+    private void topSetup() {
+	GridBagLayout topLayout = new GridBagLayout();  
+	GridBagConstraints topC = new GridBagConstraints();
+	top.setLayout(topLayout);
     
     
-    // 1st row
-    topC.gridx=0;
-    topC.gridy=0;
-    topC.weightx=0;
-    topC.fill=GridBagConstraints.BOTH;
-    topC.anchor=GridBagConstraints.CENTER;
-    topC.insets= new Insets(2,2,5,5);
+	// 1st row
+	topC.gridx=0;
+	topC.gridy=0;
+	topC.weightx=0;
+	topC.fill=GridBagConstraints.BOTH;
+	topC.anchor=GridBagConstraints.CENTER;
+	topC.insets= new Insets(2,2,5,5);
     
-    // Start time label
-    topLayout.setConstraints(lblStart, topC);
-    top.add(lblStart);
+	// Start time label
+	topLayout.setConstraints(lblStart, topC);
+	top.add(lblStart);
     
-    // Start time textfield         
-    topC.gridx=1;
-    topC.weightx=1;
-    txStart = new JTextField (defaultDate);
-    txStart.setEditable(false);
-    txStart.setColumns(19);
-    topLayout.setConstraints(txStart, topC);
-    top.add(txStart);
+	// Start time textfield         
+	topC.gridx=1;
+	topC.weightx=1;
+	txStart = new JTextField (defaultDate);
+	txStart.setEditable(false);
+	txStart.setColumns(19);
+	topLayout.setConstraints(txStart, topC);
+	top.add(txStart);
     
-    //Stop time label
-    topC.gridx=2;
-    topC.weightx=0;
-    topLayout.setConstraints(lblStop, topC);
-    top.add(lblStop);
+	//Stop time label
+	topC.gridx = 2;
+	topC.weightx = 0;
+	topLayout.setConstraints(lblStop, topC);
+	top.add(lblStop);
+	
+	//Stop time textfield
+	topC.gridx=3;
+	topC.weightx=1;
+	topC.gridwidth=GridBagConstraints.RELATIVE;
+	txStop = new JTextField (defaultDate);
+	txStop.setEditable(false);
+	txStop.setColumns(19);
+	topLayout.setConstraints(txStop, topC);
+	top.add(txStop);
     
-    //Stop time textfield
-    topC.gridx=3;
-    topC.weightx=1;
-    topC.gridwidth=GridBagConstraints.RELATIVE;
-    txStop = new JTextField (defaultDate);
-    txStop.setEditable(false);
-    txStop.setColumns(19);
-    topLayout.setConstraints(txStop, topC);
-    top.add(txStop);
+	//Search interval combobox.
+	topC.gridx=4;
+	topC.gridwidth=GridBagConstraints.REMAINDER;
+	topLayout.setConstraints(cbWhen, topC);
+	top.add(cbWhen);    
     
-    //Search interval combobox.
-    topC.gridx=4;
-    topC.gridwidth=GridBagConstraints.REMAINDER;
-    topLayout.setConstraints(cbWhen, topC);
-    top.add(cbWhen);
+	// 2nd & 3rd rows               
+            
+	// add the array of check boxes
+	topC.gridx = 0;
+	topC.gridy = 1;
+	topC.weightx = 0;
+	topC.gridwidth = 4;
+	topC.gridheight = 2;
+	topLayout.setConstraints(check, topC);
+	top.add(check);
+            
+	// 4th row
+	topC.gridx = 0;
+	topC.gridy = 3;
+	topC.gridwidth = 1;
+	topC.gridheight = 1;
     
+	// Event name time label
+	topLayout.setConstraints(lblName, topC);
+	top.add(lblName);       
     
+	//Event name textfield
+	topC.gridx=1;
+	topC.gridwidth=GridBagConstraints.REMAINDER;
+	txName = new JTextField();
+	topLayout.setConstraints(txName, topC);
+	top.add(txName);
     
-    // 2nd & 3rd rows               
-    
+	// 5th row
+	topC.gridx = 0;
+	topC.gridy = 4;
+	topC.gridwidth = 1;
         
-    // add the array of check boxes
-    topC.gridx=0;
-    topC.gridy=1;
-    topC.weightx=0;
-    topC.gridwidth=4;
-    topC.gridheight=2;
-    topLayout.setConstraints(check, topC);
-    top.add(check);
+	// Event name time label
+	topLayout.setConstraints(lblText, topC);
+	top.add(lblText);       
     
-    
+	//Event name textfield
+	topC.gridx=1;
+	topC.gridwidth=GridBagConstraints.REMAINDER;
+	txText = new JTextField();
+	topLayout.setConstraints(txText, topC);
+	top.add(txText);
         
-    // 4th row
-    topC.gridx=0;
-    topC.gridy=3;
-    topC.gridwidth=1;
-    topC.gridheight=1;
+	// 6th row
+	topC.gridx=0;
+	topC.gridy=5;
+	topC.gridwidth=1;       
     
-    // Event name time label
-    topLayout.setConstraints(lblName, topC);
-    top.add(lblName);       
+	// Number of events label
+	updateNum();
+	topLayout.setConstraints(lblNum, topC);
+	top.add(lblNum);        
     
-    //Event name textfield
-    topC.gridx=1;
-    topC.gridwidth=GridBagConstraints.REMAINDER;
-    txName = new JTextField();
-    topLayout.setConstraints(txName, topC);
-    top.add(txName);
-    
-    // 5th row
-    topC.gridx=0;
-    topC.gridy=4;
-    topC.gridwidth=1;
-        
-    // Event name time label
-    topLayout.setConstraints(lblText, topC);
-    top.add(lblText);       
-    
-    //Event name textfield
-    topC.gridx=1;
-    topC.gridwidth=GridBagConstraints.REMAINDER;
-    txText = new JTextField();
-    topLayout.setConstraints(txText, topC);
-    top.add(txText);
-        
-    // 6th row
-    topC.gridx=0;
-    topC.gridy=5;
-    topC.gridwidth=1;       
-    
-    // Number of events label
-    updateNum();
-    topLayout.setConstraints(lblNum, topC);
-    top.add(lblNum);        
-    
-    //The search button
-    topC.gridx=2;
-    topLayout.setConstraints(btnSearch, topC);
-    top.add(btnSearch);
+	//The search button
+	topC.gridx=2;
+	topLayout.setConstraints(btnSearch, topC);
+	top.add(btnSearch);
     }
     
-    private void checkSetup(){
+    private void checkSetup() {
         
-    // make the layout of the checkbox array a GridLayout. Add the event Type label.
-    check.setLayout(new GridLayout(2,5));   
-    check.add(lblType);
+	// make the layout of the checkbox array a GridLayout. Add the event Type label.
+	check.setLayout(new GridLayout(3,7));   
+	check.add(lblType);
     
-    //For loop adding the four type checkboxes      with name tags  
-    for (int i=0;i<4;i++){
+	//For loop adding the type checkboxes with name tags  
+	for ( int i = 0; i < 10; i++) {
         
-        type[i]=new JCheckBox(nameType[i]);
-        check.add(type[i]);
-                }
+	    type[i]=new JCheckBox(nameType[i]);
+	    check.add(type[i]);
+	    if ( i == 3) {
+		check.add( new JLabel());
+		check.add( new JLabel());
+		check.add( new JLabel());
+	    }
+	}
     
-    // Add the Event priority label         
-    check.add(lblPriority);
+	// Add the Event priority label         
+	check.add(lblPriority);
     
-    //For loop adding the four priority checkboxes with name tags.          
-    for (int i=0;i<4;i++){
-        priority[i]=new JCheckBox(namePriority[i]);
-        check.add(priority[i]);
-    }       
-        
-    
+	//For loop adding the four priority checkboxes with name tags.          
+	for ( int i = 0; i < 4; i++){
+	    priority[i]=new JCheckBox(namePriority[i]);
+	    check.add(priority[i]);
+	}       
+            
     }
     
     //Update the number of events label.
-    private void updateNum(){
-    num=result.getNrOfResults();
-    lblNum.setText(strNum+num);
+    private void updateNum() {
+	num=result.getNrOfResults();
+	lblNum.setText(strNum+num);
     }       
     
     
-    private void updateDate(){
-    txStart.setText(dateText(calStart));
-    txStop.setText(dateText(calStop));              
+    private void updateDate() {
+	txStart.setText(dateText(calStart));
+	txStop.setText(dateText(calStop));              
     }
     
     // Update the text in the Start & Stop Textfields. Adjust x<10 to 0x    
-    private String dateText(Calendar cal){
-    String text=""+cal.get(Calendar.YEAR)+"-";
-    if(cal.get(Calendar.MONTH)<9) text = text + "0";
-    text = text + (cal.get(Calendar.MONTH)+1)+"-";
-    if(cal.get(Calendar.DATE)<10) text = text + "0";
-    text = text +cal.get(Calendar.DATE)+" ";
-    if(cal.get(Calendar.HOUR_OF_DAY)<10) text = text +"0";
-    text = text+ cal.get(Calendar.HOUR_OF_DAY)+":";
-    if(cal.get(Calendar.MINUTE)<10) text = text +"0";
-    text = text +cal.get(Calendar.MINUTE)+":";
-    if(cal.get(Calendar.SECOND)<10) text = text + "0";
-    text = text + cal.get(Calendar.SECOND);
-    return text;                    
+    private String dateText(Calendar cal) {
+	String text=""+cal.get(Calendar.YEAR)+"-";
+	if(cal.get(Calendar.MONTH)<9) text = text + "0";
+	text = text + (cal.get(Calendar.MONTH)+1)+"-";
+	if(cal.get(Calendar.DATE)<10) text = text + "0";
+	text = text +cal.get(Calendar.DATE)+" ";
+	if(cal.get(Calendar.HOUR_OF_DAY)<10) text = text +"0";
+	text = text+ cal.get(Calendar.HOUR_OF_DAY)+":";
+	if(cal.get(Calendar.MINUTE)<10) text = text +"0";
+	text = text +cal.get(Calendar.MINUTE)+":";
+	if(cal.get(Calendar.SECOND)<10) text = text + "0";
+	text = text + cal.get(Calendar.SECOND);
+	return text;                    
     }
     
     /* the action listener methods of this object. Checks on ComboBox, searchbutton
        and menu options */
     public void actionPerformed(ActionEvent e){
-    if (e.getSource()==cbWhen){
+	if (e.getSource()==cbWhen){
         
-        switch(cbWhen.getSelectedIndex()){
+	    switch(cbWhen.getSelectedIndex()){
         
-                                //all entries           
-        case 0:
-        calStop = Calendar.getInstance();
-        calStart = Calendar.getInstance();
-        calStart.set(Calendar.YEAR,1970);
-        updateDate();
-        break;
+		//all entries           
+	    case 0:
+		calStop = Calendar.getInstance();
+		calStart = Calendar.getInstance();
+		calStart.set(Calendar.YEAR,1970);
+		updateDate();
+		break;
         
-                                //this year
-        case 1:
-        calStop = Calendar.getInstance();
-        calStart = Calendar.getInstance();
-        calStart.set(Calendar.MONTH,0);
-        calStart.set(Calendar.DATE,1);
-        calStart.set(Calendar.HOUR_OF_DAY,0);
-        calStart.set(Calendar.MINUTE,0);
-        calStart.set(Calendar.SECOND,0);
-        updateDate();
-        break;
+		//this year
+	    case 1:
+		calStop = Calendar.getInstance();
+		calStart = Calendar.getInstance();
+		calStart.set(Calendar.MONTH,0);
+		calStart.set(Calendar.DATE,1);
+		calStart.set(Calendar.HOUR_OF_DAY,0);
+		calStart.set(Calendar.MINUTE,0);
+		calStart.set(Calendar.SECOND,0);
+		updateDate();
+		break;
         
-                                //this month
-        case 2:
-        calStop = Calendar.getInstance();
-        calStart = Calendar.getInstance();
-        calStart.set(Calendar.DATE,1);
-        calStart.set(Calendar.HOUR_OF_DAY,0);
-        calStart.set(Calendar.MINUTE,0);
-        calStart.set(Calendar.SECOND,0);
-        updateDate();
-        break;
-        
-                                //this week
-        case 3:
-        calStop = Calendar.getInstance();
-        calStart = Calendar.getInstance();
-        int diff = calStart.get(Calendar.DAY_OF_WEEK)-Calendar.MONDAY;
-        calStart.add(Calendar.DATE,-1*diff);
-        if (diff<0) calStart.add(Calendar.DATE,-7);
-        calStart.set(Calendar.HOUR_OF_DAY,0);
-        calStart.set(Calendar.MINUTE,0);
-        calStart.set(Calendar.SECOND,0);
-        updateDate();
-        break;
-        
-                                //today
-        case 4:
-        calStop = Calendar.getInstance();
-        calStart = Calendar.getInstance();
-        calStart.set(Calendar.HOUR_OF_DAY,0);
-        calStart.set(Calendar.MINUTE,0);
-        calStart.set(Calendar.SECOND,0);
-        updateDate();
-        break;
+		//this month
+	    case 2:
+		calStop = Calendar.getInstance();
+		calStart = Calendar.getInstance();
+		calStart.set(Calendar.DATE,1);
+		calStart.set(Calendar.HOUR_OF_DAY,0);
+		calStart.set(Calendar.MINUTE,0);
+		calStart.set(Calendar.SECOND,0);
+		updateDate();
+		break;
+		
+		//this week
+	    case 3:
+		calStop = Calendar.getInstance();
+		calStart = Calendar.getInstance();
+		int diff = calStart.get(Calendar.DAY_OF_WEEK)-Calendar.MONDAY;
+		calStart.add(Calendar.DATE,-1*diff);
+		if (diff<0) calStart.add(Calendar.DATE,-7);
+		calStart.set(Calendar.HOUR_OF_DAY,0);
+		calStart.set(Calendar.MINUTE,0);
+		calStart.set(Calendar.SECOND,0);
+		updateDate();
+		break;
+		
+		//today
+	    case 4:
+		calStop = Calendar.getInstance();
+		calStart = Calendar.getInstance();
+		calStart.set(Calendar.HOUR_OF_DAY,0);
+		calStart.set(Calendar.MINUTE,0);
+		calStart.set(Calendar.SECOND,0);
+		updateDate();
+		break;
                                 
-                                //enter dates
-        case 5:
-        
-                                //routine for Start time input dialog
+		//enter dates
+	    case 5:
+		
+		//routine for Start time input dialog
            
-        HistDateChooser tempDate = new HistDateChooser(calStart);
-        int buttonPressed = JOptionPane.showOptionDialog(this,tempDate,msgStart,JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,null,null);
-        if (buttonPressed == JOptionPane.OK_OPTION){
-            calStart=tempDate.getDate();
-            //routine for Stop time input dialog
-            tempDate = new HistDateChooser(calStop);
-            buttonPressed = JOptionPane.showOptionDialog(this,tempDate,msgStop,JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,null,null);
-            if (buttonPressed == JOptionPane.OK_OPTION){
-            calStop=tempDate.getDate();
-            }
-        }
+		HistDateChooser tempDate = new HistDateChooser(calStart);
+		int buttonPressed = JOptionPane.showOptionDialog(this,tempDate,msgStart,JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,null,null);
+		if (buttonPressed == JOptionPane.OK_OPTION) {
+		    calStart=tempDate.getDate();
+		    //routine for Stop time input dialog
+		    tempDate = new HistDateChooser(calStop);
+		    buttonPressed = JOptionPane.showOptionDialog(this,tempDate,msgStop,JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,null,null);
+		    if (buttonPressed == JOptionPane.OK_OPTION){
+			calStop=tempDate.getDate();
+		    }
+		}
         
-        updateDate();
-        break;
-        default:
-        updateDate();
-        break;
-        }
-    }
+		updateDate();
+		break;
+	    default:
+		updateDate();
+		break;
+	    }
+	}
     
-    //  Handling of search button event.
+	//  Handling of search button event.
     
-    if(e.getActionCommand()=="search"){
-        doSearch();
-    }
+	if(e.getActionCommand()=="search"){
+	    doSearch();
+	}
 
-    if (e.getActionCommand()=="stat"){
-	result.presentStat();
-    }
+	if (e.getActionCommand()=="stat"){
+	    result.presentStat();
+	}
     
-    // the handling of menu events
-    if(e.getActionCommand()=="Copy result to excel"||e.getActionCommand()=="Kopiera resultat till Excel"){
-        // check if the root is an applet
-	try{	    
-	    Applet source = (Applet) root;
-	    /* //XLS Method for exporting an excel file from an applet
-	       // Uses a javascript from the page that started the applet.
-	    JSObject javaScript = JSObject.getWindow(source);
-	    if (javaScript != null){
+	// the handling of menu events
+	if(e.getActionCommand()=="Copy result to excel"||e.getActionCommand()=="Kopiera resultat till Excel"){
+	    // check if the root is an applet
+	    try{	    
+		Applet source = (Applet) root;
+		/* //XLS Method for exporting an excel file from an applet
+		// Uses a javascript from the page that started the applet.
+		JSObject javaScript = JSObject.getWindow(source);
+		if (javaScript != null){
 	        Object[] args = new Object[1];
                 args[0]=result.exportExcelFromApplet();
                 javaScript.call("appletHtml", args);
-	    }	    */
+		}	    */
 	    
-        }
-	catch(Exception ex){
-	    //No applet, copy to system clipboard.
-	    result.exportExcel();
+	    }
+	    catch(Exception ex){
+		//No applet, copy to system clipboard.
+		result.exportExcel();
+	    }
 	}
-    }
     
-    if(e.getActionCommand()=="Quit"||e.getActionCommand()=="Avsluta"){
-       this.dispose();
-    }
-    
+	if(e.getActionCommand()=="Quit"||e.getActionCommand()=="Avsluta"){
+	    this.dispose();
+	}
+	
     }       
 
-    private void doSearch(){
-    lblCondition.setFont(new Font("SansSerif", Font.PLAIN, 14));
-    lblCondition.setForeground(new Color(0x000000));
-    lblCondition.setText(evalSearch());
-    lblCondition.validate();
-    this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-    result.performSearch(root,currentSearch);
-    this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-    updateNum();
+    private void doSearch() {
+	lblCondition.setFont(new Font("SansSerif", Font.PLAIN, 14));
+	lblCondition.setForeground(new Color(0x000000));
+	lblCondition.setText(evalSearch());
+	lblCondition.validate();
+	this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+	result.performSearch(root,currentSearch);
+	this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+	updateNum();
     }
     
     
@@ -637,100 +631,106 @@ public class HistSearch extends JFrame implements ActionListener, GdhApplIfc
     
 	//Useful words in english and swedish.
 	String[] words ={JopLang.transl("All "), 
-			   JopLang.transl(" Active"), 
-			   JopLang.transl(" Message"), 
-			   JopLang.transl(" Return"), 
-			   JopLang.transl(" Acknowlegement"), 
-			   JopLang.transl(" events"),
-			   JopLang.transl(" with"),
-			   JopLang.transl(" priority"),
-			   JopLang.transl(" name"),
-			   JopLang.transl(" text"), 
-			   JopLang.transl(" from "),
-			   JopLang.transl(" to "),
-			   JopLang.transl(" or")};
-    String eval="<html>" + words[0];
-    String temp="";
-    boolean[] noCheck ={true,true};
-    boolean[] typeSelected = {false,false,false,false};
-    boolean[] prioSelected = {false,false,false,false};
+			 JopLang.transl(" Info"), 
+			 JopLang.transl(" Alarm"), 
+			 JopLang.transl(" MaintenanceAlarm"), 
+			 JopLang.transl(" SystemAlarm"), 
+			 JopLang.transl(" UserAlarm1"), 
+			 JopLang.transl(" UserAlarm2"), 
+			 JopLang.transl(" UserAlarm3"), 
+			 JopLang.transl(" UserAlarm4"), 
+			 JopLang.transl(" Return"), 
+			 JopLang.transl(" Acknowlegement"), 
+			 JopLang.transl(" events"),
+			 JopLang.transl(" with"),
+			 JopLang.transl(" priority"),
+			 JopLang.transl(" name"),
+			 JopLang.transl(" text"), 
+			 JopLang.transl(" from "),
+			 JopLang.transl(" to "),
+			 JopLang.transl(" or")};
+	String eval="<html>" + words[0];
+	String temp="";
+	boolean[] noCheck ={true,true};
+	boolean[] typeSelected = {false,false,false,false,false,false,false,false,false,false};
+	boolean[] prioSelected = {false,false,false,false};
     
-    for (int i=0;i<4;i++){
-        if (type[i].isSelected()){
-        typeSelected[i]=true;
-        if (noCheck[0]) noCheck[0]=false;
-        else eval=eval+words[12];
-        eval=eval + "<b>" +words[i+1] + "</b>";
-        }
-        if (priority[i].isSelected()){
-        prioSelected[i]=true;
-        if (noCheck[1]) noCheck[1]=false;
-        else temp=temp+words[12];
-        int charA =(int)'A';
-        charA=charA+i;                          
-        temp=temp + " <b>" + (char) charA + "</b>";
-        }
-    }
-    eval= eval + words[5] + " ";
-    if (temp.length()>0) {
-        eval=eval+ words[6] + temp + words[7] ;
-    }
+	for ( int i = 0; i < 10; i++){
+	    if (type[i].isSelected()){
+		typeSelected[i] = true;
+		if (noCheck[0]) 
+		    noCheck[0] = false;
+		else 
+		    eval=eval+words[18];
+		eval=eval + "<b>" +words[i+1] + "</b>";
+	    }
+	}
+	for ( int i = 0; i < 4; i++) {
+	    if (priority[i].isSelected()){
+		prioSelected[i]=true;
+		if (noCheck[1]) 
+		    noCheck[1]=false;
+		else 
+		    temp=temp+words[18];
+		int charA =(int)'A';
+		charA=charA+i;                          
+		temp=temp + " <b>" + (char) charA + "</b>";
+	    }
+	}
+	eval= eval + words[11] + " ";
+	if (temp.length()>0) {
+	    eval=eval+ words[12] + temp + words[13] ;
+	}
     
-    eval=eval+"<br>"+words[6]+words[8]+" <b>"+txName.getText() +"</b><br>";
-    eval=eval+words[6]+words[9]+" <b>"+txText.getText() +"</b><br>";
-    eval=eval + words[10] + "<b>"+ dateText(calStart)+ "</b>" + words[11]  + "<b>" + dateText(calStop)+"</b> </html>";
-    
-    String nameFormatted= txName.getText().replace('"','*');
+	eval=eval+"<br>"+words[12]+words[14]+" <b>"+txName.getText() +"</b><br>";
+	eval=eval+words[12]+words[15]+" <b>"+txText.getText() +"</b><br>";
+	eval=eval + words[16] + "<b>"+ dateText(calStart)+ "</b>" + words[17]  + "<b>" + dateText(calStop)+"</b> </html>";
+	
+	String nameFormatted= txName.getText().replace('"','*');
 	String textFormatted= txText.getText().replace('"','*');
-    //Setup the current search for transfer to server
-    currentSearch=new HistQuery(dateText(calStart), dateText(calStop),typeSelected,prioSelected,nameFormatted,textFormatted);
+	//Setup the current search for transfer to server
+	currentSearch=new HistQuery(dateText(calStart), dateText(calStop),typeSelected,prioSelected,nameFormatted,textFormatted);
     
-    return eval;            
+	return eval;            
     }       
 
     
     public class minSizeListener implements ComponentListener {
         
-        static final int MIN_WIDTH=600;
-        static final int MIN_HEIGHT=480;
+        static final int MIN_WIDTH = 800;
+        static final int MIN_HEIGHT = 480;
     
-    private HistSearch as;
+	private HistSearch as;
         
-        public minSizeListener(HistSearch a){
-        as=a;
+        public minSizeListener(HistSearch a) {
+	    as = a;
         }
         
         public void componentResized(ComponentEvent e) {
         
-        int width = as.getWidth();
-        int height = as.getHeight();
-        boolean resize=false;
+	    int width = as.getWidth();
+	    int height = as.getHeight();
+	    boolean resize=false;
+        
+	    
+	    //we check if either the width
+	    //or the height are below minimum
         
         
-        //we check if either the width
-        //or the height are below minimum
         
-        
-        
-        if (width < MIN_WIDTH) {
+	    if (width < MIN_WIDTH) {
                 width = MIN_WIDTH;
                 resize=true;
                 
-        }
-        if (height < MIN_HEIGHT) {
+	    }
+	    if (height < MIN_HEIGHT) {
                 height = MIN_HEIGHT;
-        resize=true;
-        }
+		resize=true;
+	    }
         
         
-        if (resize)
-        as.setSize(width, height);
-        
-        
-        
-        
-        
-        
+	    if (resize)
+		as.setSize(width, height);
         }
     
         public void componentMoved(ComponentEvent e) {
@@ -754,7 +754,5 @@ public class HistSearch extends JFrame implements ActionListener, GdhApplIfc
         HistSearch ASWindow = new HistSearch();
         ASWindow.pack();        
         ASWindow.setVisible(true);
-    }
-    
-    
+    } 
 }

@@ -694,6 +694,23 @@ int ItemBaseAttr::open_children( XNavBrow *brow, double x, double y)
     brow_RemoveAnnotPixmap( node, 1);
     brow_ResetNodraw( brow->ctx);
     brow_Redraw( brow->ctx, node_y);
+    switch( type_id)
+    {
+      case pwr_eType_Objid:
+        brow_SetAnnotPixmap( node, 0, brow->pixmap_ref);
+        break;
+      case pwr_eType_AttrRef:
+        brow_SetAnnotPixmap( node, 0, brow->pixmap_attrref);
+        break;
+      case pwr_eType_Enum:
+        brow_SetAnnotPixmap( node, 0, brow->pixmap_attrenum);
+        break;
+      case pwr_eType_Mask:
+        brow_SetAnnotPixmap( node, 0, brow->pixmap_attrmask);
+        break;
+      default:
+        brow_SetAnnotPixmap( node, 0, brow->pixmap_attr);
+    }
   }
   else {
     int sts;
@@ -738,7 +755,7 @@ int ItemBaseAttr::open_children( XNavBrow *brow, double x, double y)
       return 0;
 
     brow_SetOpen( node, xnav_mOpen_Children);
-    brow_SetAnnotPixmap( node, 1, brow->pixmap_openmap);
+    brow_SetAnnotPixmap( node, 0, brow->pixmap_openmap);
     brow_ResetNodraw( brow->ctx);
     brow_Redraw( brow->ctx, node_y);
   }
@@ -757,6 +774,23 @@ void ItemBaseAttr::close( XNavBrow *brow, double x, double y)
     brow_ResetOpen( node, xnav_mOpen_All);
     brow_ResetNodraw( brow->ctx);
     brow_Redraw( brow->ctx, node_y);
+    switch( type_id)
+    {
+      case pwr_eType_Objid:
+        brow_SetAnnotPixmap( node, 0, brow->pixmap_ref);
+        break;
+      case pwr_eType_AttrRef:
+        brow_SetAnnotPixmap( node, 0, brow->pixmap_attrref);
+        break;
+      case pwr_eType_Enum:
+        brow_SetAnnotPixmap( node, 0, brow->pixmap_attrenum);
+        break;
+      case pwr_eType_Mask:
+        brow_SetAnnotPixmap( node, 0, brow->pixmap_attrmask);
+        break;
+      default:
+        brow_SetAnnotPixmap( node, 0, brow->pixmap_attr);
+    }
   }
 }
 
@@ -768,7 +802,7 @@ ItemAttr::ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
 	ItemBaseAttr( item_objid, attr_name,
 		      attr_type_id, attr_tid, attr_size, attr_flags, item_is_root, item_display_type)
 {
-  pwr_tObjName  obj_name;
+  pwr_tOName  obj_name;
   pwr_tAName	annot;
   int	sts;
   

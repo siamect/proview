@@ -319,7 +319,8 @@ class ItemCategory : public ItemEvBase {
     char		name[80];
     char	 	text[80];
     unsigned int	prio;
-    unsigned int	event_priority;
+    unsigned int	select_priority;
+    unsigned int	select_eventtype;
     pwr_tAName		members[100];
     int			member_cnt;
     brow_tNodeClass 	base_nc;

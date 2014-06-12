@@ -6131,6 +6131,7 @@ från popup-menyn för ett objekt i operatörsmiljön (metod 'Help').
 <option> printdisable
 <b>Syntax <link> helpfile syntax
 <b>Konvertering <link> helpfile conversion
+<b>Encoding <link> helpfile encoding
 <option> printenable
 </topic>
 
@@ -6167,6 +6168,16 @@ En hjälpfil konverteras til PDF med kommandot
 
 <b>Exempel
 <c>co_convert -f -d $pwrp_lis $pwrp_exe/xtt_help.dat
+</topic>
+
+<topic> helpfile encoding
+Encoding
+Standard kodningen på hjälpfilen är ISO 8859-1. UTF-8 kan anges med en Coding specifikation
+på först raden, t ex
+
+<c>Coding:UTF-8
+
+Tillåtna värden på Coding är UTF-8 och ISO8859-1.
 </topic>
 
 <topic> helpfile syntax
@@ -9754,6 +9765,8 @@ GetClassList()		<LINK> getclasslist()
 GetNextObject()		<LINK> getnextobject()
 GetClassListAttrRef()	<LINK> getclasslistattrref()
 GetNextAttrRef()	<LINK> getnextattrref()
+GetTemplateObject()     <LINK> gettemplateobject()
+GetNextTemplateAttrRef() <LINK> getnexttemplateattrref()
 GetObjectClass()	<LINK> getobjectclass()
 GetNodeObject()		<LINK> getnodeobject()
 GetRootList()		<LINK> getrootlist()
@@ -10735,6 +10748,8 @@ GetClassList()	<t>Hämta första instansen av en klass. <LINK> getclasslist()
 GetNextObject()	<t>Hämta nästa instans av en klass. <LINK> getnextobject()
 GetClassListAttrRef() <t>Hämta första instansen av en klass, attribut-object inkluderade. <LINK> getclasslistattrref()
 GetNextAttrRef() <t>Hämta nästa instans av en klass, attribut-objekt inkluderade. <LINK> getnextattrref()
+GetTemplateObject() <t>Hämta template objektet för en klass. <LINK> gettemplateobject()
+GetNextTemplateAttrRef() <t>Hämta nästa instance i ett template objekt. <LINK> getnexttemplateattrref()
 GetObjectClass() <t>Hämta klassen för ett objekt. <LINK> getobjectclass()
 GetNodeObject()	<t>Hämta nod-objektet.	<LINK> getnodeobject()
 GetRootList()	<t>Hämta första objektet i rot-listan. <LINK> getrootlist()
@@ -10963,7 +10978,55 @@ string		<t>name		<t>namn på objektet eller attributobjektet.
 <c>  name = GetClassListAttrRef("Di");
 <c>  while ( name != "")
 <c>    printf("Di object found: %s", name);
-<c>    name = GetNextAttrRef(name);
+<c>    name = GetNextAttrRef( "Di", name);
+<c>  endwhile
+</TOPIC>
+
+<TOPIC> gettemplateobject() <style> function
+GetTemplateObject()
+
+string GetTemplateObject( string class)
+
+<b>Beskrivning
+
+Hämta template objektet för en specifik klass.
+
+<b>Argument
+
+string		<t>name		<t>namn på klassen.
+
+<b>Exempel
+
+<c>  string name;
+
+<c>  name = GetTemplateObject("Dv");
+</TOPIC>
+
+
+<TOPIC> getnexttemplateattrref() <style> function
+GetNextTemplateAttrRef()
+
+string GetNextTemplateAttrRef( string class, string name)
+
+<b>Beskrivning
+
+Hämta nästa attribute objekt av den angivna klassen i ett template objekt. Returnerar
+namnet på attribut objektet. Om det inte finns något nästa objekt returneras en
+null-sträng. Det första template objektet hämtas med GetTemplateObject().
+
+<b>Argument
+
+string		<t>class	<t>namn på klassen.
+string		<t>name		<t>namn på template objekt och template attribute objekt.
+
+<b>Exempel
+
+<c>  string name;
+
+<c>  name = GetTemplateObject("Di");
+<c>  while ( name != "")
+<c>    printf("Di object found: %s", name);
+<c>    name = GetNextTemplateAttrRef( "Di", name);
 <c>  endwhile
 </TOPIC>
 

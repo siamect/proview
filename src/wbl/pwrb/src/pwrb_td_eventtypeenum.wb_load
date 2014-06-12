@@ -93,6 +93,46 @@ SObject pwrb:Type
        Attr Value = 256
      EndBody
     EndObject
+    !/**
+    !  Type UserAlarm1.
+    !*/
+    Object UserAlarm1 $Value
+     Body SysBody
+       Attr PgmName = "UserAlarm1"
+       Attr Text = "UserAlarm1"
+       Attr Value = 512
+     EndBody
+    EndObject
+    !/**
+    !  Type UserAlarm2.
+    !*/
+    Object UserAlarm2 $Value
+     Body SysBody
+       Attr PgmName = "UserAlarm2"
+       Attr Text = "UserAlarm2"
+       Attr Value = 1024
+     EndBody
+    EndObject
+    !/**
+    !  Type UserAlarm3.
+    !*/
+    Object UserAlarm3 $Value
+     Body SysBody
+       Attr PgmName = "UserAlarm3"
+       Attr Text = "UserAlarm3"
+       Attr Value = 2048
+     EndBody
+    EndObject
+    !/**
+    !  Type UserAlarm4.
+    !*/
+    Object UserAlarm4 $Value
+     Body SysBody
+       Attr PgmName = "UserAlarm4"
+       Attr Text = "UserAlarm4"
+       Attr Value = 4096
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

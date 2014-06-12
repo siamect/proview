@@ -157,6 +157,7 @@ struct s_Active {
   pwr_tAName		objName;
   pwr_tAName		eventName;
   mh_mEventFlags	eventFlags;
+  pwr_eEventTypeEnum	eventType;
   mh_uEventInfo		status;
   mh_eEvent		event;
   pwr_tAttrRef		eventSound;
@@ -205,6 +206,7 @@ struct s_Event {
   pwr_tAttrRef	  object;
   pwr_tAName	  objName;
   mh_eEvent	  event;
+  pwr_eEventTypeEnum eventType;			
   pwr_tUInt32	  msgSize;
   pwr_tBoolean	  local;
   sEventTab	  *etp;
@@ -351,6 +353,7 @@ struct s_Outunit {
   pwr_tUInt32		syncedIdx;	/*  */
   pwr_tBoolean		check;
   pwr_tBoolean		linkUp;
+  pwr_mEventTypeMask    selEventType;		
   pwr_tUInt32		selGen;		/* Index of last received select list from outunit */
   pwr_tUInt32		selSize;	/* Size of last received select list from outunit */
   mh_sSelL		sel_l[mh_cSelLSize];
@@ -481,7 +484,7 @@ static void		initNodeDb();
 static pwr_tStatus	initSupActiveCB(pwr_tAttrRef*, pwr_tClassId, sSupActive**, pwr_tBoolean, pwr_tBoolean);
 static pwr_tStatus	initSupList();
 static pwr_tStatus	initSupListClass(pwr_tClassId);
-static pwr_tBoolean	isForOutunit(sOutunit*, pwr_tObjid, pwr_tObjid, pwr_tString80, mh_mEventFlags, pwr_tBoolean);
+static pwr_tBoolean	isForOutunit(sOutunit*, pwr_tObjid, pwr_tObjid, pwr_tString80, mh_mEventFlags, pwr_eEventTypeEnum, pwr_tBoolean);
 static pwr_tBoolean	isValidApplication(mh_sHead*, qcom_sAid*, sAppl**, mh_uApplReply*);
 static pwr_tBoolean	isValidOutunit(mh_sHead*, qcom_sAid*, sOutunit**);
 static void		linkActive(qcom_sGet*);
@@ -684,6 +687,10 @@ activeListInsert (
   case  mh_eEvent_Alarm:
   case  mh_eEvent_MaintenanceAlarm:
   case  mh_eEvent_SystemAlarm:
+  case  mh_eEvent_UserAlarm1:
+  case  mh_eEvent_UserAlarm2:
+  case  mh_eEvent_UserAlarm3:
+  case  mh_eEvent_UserAlarm4:
     ++l.emon->AlarmCount;
     break;
   case mh_eEvent_Block:
@@ -724,6 +731,10 @@ activeListRemove (
   case  mh_eEvent_Alarm:
   case  mh_eEvent_MaintenanceAlarm:
   case  mh_eEvent_SystemAlarm:
+  case  mh_eEvent_UserAlarm1:
+  case  mh_eEvent_UserAlarm2:
+  case  mh_eEvent_UserAlarm3:
+  case  mh_eEvent_UserAlarm4:
     --l.emon->AlarmCount;
     break;
   case mh_eEvent_Block:
@@ -954,6 +965,7 @@ applMessage (
   aap->link.eventSound = ip->EventSound;
   strncpy(aap->link.eventMoreText, ip->EventMoreText, sizeof(aap->link.eventMoreText));
   aap->link.event = ip->EventType;
+  aap->link.eventType = ip->EventType;
 
   aap->message = *ip;
 
@@ -1079,6 +1091,10 @@ applReturn (
   case mh_eEvent_Alarm:
   case  mh_eEvent_MaintenanceAlarm:
   case  mh_eEvent_SystemAlarm:
+  case  mh_eEvent_UserAlarm1:
+  case  mh_eEvent_UserAlarm2:
+  case  mh_eEvent_UserAlarm3:
+  case  mh_eEvent_UserAlarm4:
     updateAlarm(ap, ep);
     break;
   case mh_eEvent_Info:
@@ -1433,6 +1449,7 @@ eventListInsert (
   ep->outunit = ap->outunit;
   ep->object = ap->object;
   ep->local = ap->local;
+  ep->eventType = ap->eventType;
   memcpy(ep->objName, ap->objName, sizeof(ap->objName));
   ep->event = event;
   memset(&ep->msg, 0, sizeof(ep->msg));
@@ -1456,6 +1473,10 @@ eventListInsert (
   case mh_eEvent_Alarm:
   case mh_eEvent_MaintenanceAlarm:
   case mh_eEvent_SystemAlarm:
+  case mh_eEvent_UserAlarm1:
+  case mh_eEvent_UserAlarm2:
+  case mh_eEvent_UserAlarm3:
+  case mh_eEvent_UserAlarm4:
   case mh_eEvent_Block:
   case mh_eEvent_Reblock:
     ap->idx = idx;
@@ -1537,13 +1558,21 @@ formatApplEvent (
   case mh_eEvent_Alarm:
   case mh_eEvent_MaintenanceAlarm:
   case mh_eEvent_SystemAlarm:
+  case mh_eEvent_UserAlarm1:
+  case mh_eEvent_UserAlarm2:
+  case mh_eEvent_UserAlarm3:
+  case mh_eEvent_UserAlarm4:
   case mh_eEvent_Info:
     mp = &up->message;
     ip->Id.Idx = aap->link.idx;
     ip->EventTime = net_TimeToNetTime( &aap->message.EventTime);
     if (aap->link.event == mh_eEvent_Alarm || 
 	aap->link.event == mh_eEvent_MaintenanceAlarm || 
-	aap->link.event == mh_eEvent_SystemAlarm)
+	aap->link.event == mh_eEvent_SystemAlarm ||
+	aap->link.event == mh_eEvent_UserAlarm1 ||
+	aap->link.event == mh_eEvent_UserAlarm2 ||
+	aap->link.event == mh_eEvent_UserAlarm3 ||
+	aap->link.event == mh_eEvent_UserAlarm4)
       ip->EventPrio = aap->message.EventPrio;
     strncpy(mp->EventText, aap->message.EventText, sizeof(mp->EventText));
     mp->SupInfo.SupType = aap->message.SupInfo.SupType;
@@ -1562,7 +1591,11 @@ formatApplEvent (
     ip->EventTime = net_TimeToNetTime( &aap->ackTime);
     if (aap->link.event == mh_eEvent_Alarm || 
 	aap->link.event == mh_eEvent_MaintenanceAlarm || 
-	aap->link.event == mh_eEvent_SystemAlarm)
+	aap->link.event == mh_eEvent_SystemAlarm ||
+	aap->link.event == mh_eEvent_UserAlarm1 ||
+	aap->link.event == mh_eEvent_UserAlarm2 ||
+	aap->link.event == mh_eEvent_UserAlarm3 ||
+	aap->link.event == mh_eEvent_UserAlarm4)
       ip->EventPrio = aap->message.EventPrio;
     acp->TargetId.Nix = l.head.nix;
     acp->TargetId.BirthTime = l.head.birthTime;
@@ -1583,7 +1616,11 @@ formatApplEvent (
     net_GetTime(&ip->EventTime);
     if (aap->link.event == mh_eEvent_Alarm || 
 	aap->link.event == mh_eEvent_MaintenanceAlarm || 
-	aap->link.event == mh_eEvent_SystemAlarm)
+	aap->link.event == mh_eEvent_SystemAlarm ||
+	aap->link.event == mh_eEvent_UserAlarm1 ||
+	aap->link.event == mh_eEvent_UserAlarm2 ||
+	aap->link.event == mh_eEvent_UserAlarm3 ||
+	aap->link.event == mh_eEvent_UserAlarm4)
       ip->EventPrio = aap->message.EventPrio;
     strncpy(rp->EventText, text, sizeof(rp->EventText));
     rp->TargetId.Nix = l.head.nix;
@@ -1604,7 +1641,11 @@ formatApplEvent (
     ip->EventTime = net_TimeToNetTime( &aap->returnTime);
     if (aap->link.event == mh_eEvent_Alarm || 
 	aap->link.event == mh_eEvent_MaintenanceAlarm || 
-	aap->link.event == mh_eEvent_SystemAlarm)
+	aap->link.event == mh_eEvent_SystemAlarm ||
+	aap->link.event == mh_eEvent_UserAlarm1 ||
+	aap->link.event == mh_eEvent_UserAlarm2 ||
+	aap->link.event == mh_eEvent_UserAlarm3 ||
+	aap->link.event == mh_eEvent_UserAlarm4)
       ip->EventPrio = aap->message.EventPrio;
     strncpy(rp->EventText, aap->returnText, sizeof(rp->EventText));
     rp->TargetId.Nix = l.head.nix;
@@ -1650,6 +1691,10 @@ formatSupEvent (
   case mh_eEvent_Alarm:
   case mh_eEvent_MaintenanceAlarm:
   case mh_eEvent_SystemAlarm:
+  case mh_eEvent_UserAlarm1:
+  case mh_eEvent_UserAlarm2:
+  case mh_eEvent_UserAlarm3:
+  case mh_eEvent_UserAlarm4:
   case mh_eEvent_Info:
     mp = &up->message;
     ip->Id.Idx = sp->link.idx;
@@ -1657,7 +1702,11 @@ formatSupEvent (
     strncpy(mp->EventText, sup->DetectText, sizeof(mp->EventText));
     if (sp->link.event == mh_eEvent_Alarm || 
 	sp->link.event == mh_eEvent_MaintenanceAlarm || 
-	sp->link.event == mh_eEvent_SystemAlarm)
+	sp->link.event == mh_eEvent_SystemAlarm ||
+	sp->link.event == mh_eEvent_UserAlarm1 ||
+	sp->link.event == mh_eEvent_UserAlarm2 ||
+	sp->link.event == mh_eEvent_UserAlarm3 ||
+	sp->link.event == mh_eEvent_UserAlarm4)
       ip->EventPrio = sup->EventPriority;
     mp->SupInfo.SupType = sp->supType;
 #if 1
@@ -1682,7 +1731,11 @@ formatSupEvent (
     ip->EventTime = net_TimeToNetTime( &sup->AckTime);
     if (sp->link.event == mh_eEvent_Alarm || 
 	sp->link.event == mh_eEvent_MaintenanceAlarm || 
-	sp->link.event == mh_eEvent_SystemAlarm)
+	sp->link.event == mh_eEvent_SystemAlarm ||
+	sp->link.event == mh_eEvent_UserAlarm1 ||
+	sp->link.event == mh_eEvent_UserAlarm2 ||
+	sp->link.event == mh_eEvent_UserAlarm3 ||
+	sp->link.event == mh_eEvent_UserAlarm4)
       ip->EventPrio = sup->EventPriority;
     acp->TargetId.Idx = sp->link.idx;
     acp->TargetId.Nix = l.head.nix;
@@ -1701,7 +1754,11 @@ formatSupEvent (
     ip->EventTime = net_TimeToNetTime( &sup->ReturnTime);
     if (sp->link.event == mh_eEvent_Alarm || 
 	sp->link.event == mh_eEvent_MaintenanceAlarm || 
-	sp->link.event == mh_eEvent_SystemAlarm)
+	sp->link.event == mh_eEvent_SystemAlarm ||
+	sp->link.event == mh_eEvent_UserAlarm1 ||
+	sp->link.event == mh_eEvent_UserAlarm2 ||
+	sp->link.event == mh_eEvent_UserAlarm3 ||
+	sp->link.event == mh_eEvent_UserAlarm4)
       ip->EventPrio = sup->EventPriority;
     strncpy(rp->EventText, sup->ReturnText, sizeof(rp->EventText));
     rp->TargetId.Idx = sp->link.idx;
@@ -1727,7 +1784,11 @@ formatSupEvent (
     ip->Id.Idx = sp->link.returnIdx;
     if (sp->link.event == mh_eEvent_Alarm || 
 	sp->link.event == mh_eEvent_MaintenanceAlarm || 
-	sp->link.event == mh_eEvent_SystemAlarm)
+	sp->link.event == mh_eEvent_SystemAlarm ||
+	sp->link.event == mh_eEvent_UserAlarm1 ||
+	sp->link.event == mh_eEvent_UserAlarm2 ||
+	sp->link.event == mh_eEvent_UserAlarm3 ||
+	sp->link.event == mh_eEvent_UserAlarm4)
       ip->EventPrio = sup->EventPriority;
     net_GetTime(&ip->EventTime);
     strncpy(rp->EventText, text, sizeof(rp->EventText));
@@ -2319,6 +2380,10 @@ handleReturn (
   case mh_eEvent_Alarm:
   case mh_eEvent_MaintenanceAlarm:
   case mh_eEvent_SystemAlarm:
+  case mh_eEvent_UserAlarm1:
+  case mh_eEvent_UserAlarm2:
+  case mh_eEvent_UserAlarm3:
+  case mh_eEvent_UserAlarm4:
     updateAlarm((sActive *) sp, ep);
     break;
   case mh_eEvent_Info:
@@ -2430,6 +2495,10 @@ handlerEvent (
   case mh_eEvent_Alarm:
   case mh_eEvent_MaintenanceAlarm:
   case mh_eEvent_SystemAlarm:
+  case mh_eEvent_UserAlarm1:
+  case mh_eEvent_UserAlarm2:
+  case mh_eEvent_UserAlarm3:
+  case mh_eEvent_UserAlarm4:
   case mh_eEvent_Info:
 
     if (LstInl(&hp->link.active_l)) /* already active */
@@ -2843,6 +2912,7 @@ initSupActiveCB (
   }
 
   sp->link.eventFlags = sp->sup->EventFlags;
+  sp->link.eventType = sp->sup->EventType;
   sp->link.event = sp->sup->EventType;
 
   if (sp->agent == mh_eAgent_MH) {
@@ -2960,6 +3030,7 @@ isForOutunit (
   pwr_tObjid object,
   pwr_tString80 objName,
   mh_mEventFlags eventFlags,
+  pwr_eEventTypeEnum eventType,
   pwr_tBoolean local
 )
 {
@@ -2987,11 +3058,12 @@ isForOutunit (
     return TRUE;   /* Send message not associated with object */
 
   /* Check select list */
-
-  for (i=0; i < op->selSize; i++)
-    if (strncmp(op->sel_l[i].objName, objName, op->sel_l[i].len) == 0)
-      return TRUE;
-
+  if (op->selEventType == 0 || op->selEventType & eventType) {
+    
+    for (i=0; i < op->selSize; i++)
+      if (strncmp(op->sel_l[i].objName, objName, op->sel_l[i].len) == 0)
+	return TRUE;
+  }
   return FALSE;
 }
 
@@ -3284,6 +3356,10 @@ outunitAck (
   case mh_eEvent_Alarm:
   case mh_eEvent_MaintenanceAlarm:
   case mh_eEvent_SystemAlarm:
+  case mh_eEvent_UserAlarm1:
+  case mh_eEvent_UserAlarm2:
+  case mh_eEvent_UserAlarm3:
+  case mh_eEvent_UserAlarm4:
     updateAlarm(ap, ep);
     break;
   case mh_eEvent_Info:
@@ -3337,6 +3413,7 @@ outunitBlock (
     }
 
     bp->link.event = mh_eEvent_Block;
+    bp->link.eventType = bp->link.event;
     bp->link.eventFlags = mh_mEventFlags_Force;
     bp->link.source = mh_eSource_Outunit;
     bp->link.object = cdh_ObjidToAref(ip->object);
@@ -3425,6 +3502,7 @@ outunitInfo (
 
   op->outunit = hp->outunit;
   op->type = ip->type;
+  op->selEventType = ip->selEventType;
   if (op->selGen != ip->selGen) {
     op->selSize = MIN(ip->selSize, mh_cSelLSize);
     if (ip->selSize > 0)
@@ -3468,10 +3546,9 @@ outunitLog (
   char *text
 )
 {
-
-  errh_Info("%s (qid: %s, oid: %s)",
-    text, qcom_QidToString(NULL, &op->link.qid, 1),
-    cdh_ObjidToString(NULL, op->outunit, 1)
+  errh_Info("%s (%s, qid: %s, oid: %s)",
+	    text, qcom_NodeName(op->link.qid.nid), qcom_QidToString(NULL, &op->link.qid, 1),
+	    cdh_ObjidToString(NULL, op->outunit, 1)
   );
 }
 
@@ -3738,6 +3815,10 @@ reSendEventToOutunit (
   case mh_eEvent_Alarm:
   case mh_eEvent_MaintenanceAlarm:
   case mh_eEvent_SystemAlarm:
+  case mh_eEvent_UserAlarm1:
+  case mh_eEvent_UserAlarm2:
+  case mh_eEvent_UserAlarm3:
+  case mh_eEvent_UserAlarm4:
   case mh_eEvent_Info:
     event.message.Status = Status;
     break;
@@ -3834,6 +3915,10 @@ scanSupList ()
         case mh_eEvent_Alarm:
         case mh_eEvent_MaintenanceAlarm:
         case mh_eEvent_SystemAlarm:
+	case mh_eEvent_UserAlarm1:
+	case mh_eEvent_UserAlarm2:
+	case mh_eEvent_UserAlarm3:
+	case mh_eEvent_UserAlarm4:
         default:
           handleAlarm(sp);
           break;
@@ -3912,10 +3997,11 @@ sendEventListToOutunit (
     }
 
     if ((ep = etp->ep) != NULL) {
-      if (isForOutunit(op, ep->outunit, ep->object.Objid, ep->objName, ep->msg.info.EventFlags, ep->local))
+      if (isForOutunit(op, ep->outunit, ep->object.Objid, ep->objName, ep->msg.info.EventFlags, 
+		       ep->eventType, ep->local))
 	break;
     } else if ((ap = etp->ap) != NULL) {
-      if (isForOutunit(op, ap->outunit, ap->object.Objid, ap->objName, ap->eventFlags, ap->local))
+      if (isForOutunit(op, ap->outunit, ap->object.Objid, ap->objName, ap->eventFlags, ap->eventType, ap->local))
 	break;
     } else {
       errh_Error("ap == NULL && ep == NULL");
@@ -4183,6 +4269,10 @@ updateAlarm (
   case mh_eEvent_Alarm:
   case mh_eEvent_MaintenanceAlarm:
   case mh_eEvent_SystemAlarm:
+  case mh_eEvent_UserAlarm1:
+  case mh_eEvent_UserAlarm2:
+  case mh_eEvent_UserAlarm3:
+  case mh_eEvent_UserAlarm4:
     ap->status.Event.Status = mh_mEventStatus_NotRet |
       mh_mEventStatus_NotAck;
     if (ap->source == mh_eSource_Scanner) {
@@ -4277,7 +4367,11 @@ updateAlarmInfo (
     if (cdh_ArefIsEqual(&iap->object, &ap->object))
       if (ap->event == mh_eEvent_Alarm || 
 	  ap->event == mh_eEvent_MaintenanceAlarm || 
-	  ap->event == mh_eEvent_SystemAlarm)
+	  ap->event == mh_eEvent_SystemAlarm ||
+	  ap->event == mh_eEvent_UserAlarm1 ||
+	  ap->event == mh_eEvent_UserAlarm2 ||
+	  ap->event == mh_eEvent_UserAlarm3 ||
+	  ap->event == mh_eEvent_UserAlarm4)
         maxAlarm.All = MAX(maxAlarm.All, ap->status.All);
   }
 

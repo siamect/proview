@@ -409,6 +409,12 @@ void Hist::get_hist_list()
     switch (it->EventType) 
     {
       case mh_eEvent_Alarm:
+      case mh_eEvent_MaintenanceAlarm:
+      case mh_eEvent_SystemAlarm:
+      case mh_eEvent_UserAlarm1:
+      case mh_eEvent_UserAlarm2:
+      case mh_eEvent_UserAlarm3:
+      case mh_eEvent_UserAlarm4:
         hist_add_alarm_mess( &(it->Mess.message) );
         break;
       case mh_eEvent_Info:
@@ -563,6 +569,12 @@ void Hist::stat()
 
     switch (evv[i].event.EventType) {
     case mh_eEvent_Alarm:
+    case mh_eEvent_MaintenanceAlarm:
+    case mh_eEvent_SystemAlarm:
+    case mh_eEvent_UserAlarm1:
+    case mh_eEvent_UserAlarm2:
+    case mh_eEvent_UserAlarm3:
+    case mh_eEvent_UserAlarm4:
       hist_add_alarm_mess( &evv[i].event.Mess.message);
       break;
     case mh_eEvent_Info:
@@ -609,13 +621,39 @@ int Hist::check_conditions(sEvent *evp)
   }
   bool ret = false;
   //then we compare the EventType if nothing is selected everything is selected
-  if(eventType_Ack || eventType_Alarm || eventType_Info || eventType_Return || eventType_Cancel || eventType_Block ||
+  if(eventType_Ack || eventType_Alarm || eventType_MaintenanceAlarm || eventType_SystemAlarm || 
+     eventType_UserAlarm1 || eventType_UserAlarm2 || eventType_UserAlarm3 || eventType_UserAlarm4 || 
+     eventType_Info || eventType_Return || eventType_Cancel || eventType_Block ||
      eventType_Unblock || eventType_Reblock || eventType_CancelBlock)
   {
     switch(evp->EventType) 
     {
       case mh_eEvent_Alarm:
         if(!eventType_Alarm)
+	  ret = true;
+        break;
+      case mh_eEvent_SystemAlarm:
+        if(!eventType_SystemAlarm)
+	  ret = true;
+        break;
+      case mh_eEvent_MaintenanceAlarm:
+        if(!eventType_MaintenanceAlarm)
+	  ret = true;
+        break;
+      case mh_eEvent_UserAlarm1:
+        if(!eventType_UserAlarm1)
+	  ret = true;
+        break;
+      case mh_eEvent_UserAlarm2:
+        if(!eventType_UserAlarm2)
+	  ret = true;
+        break;
+      case mh_eEvent_UserAlarm3:
+        if(!eventType_UserAlarm3)
+	  ret = true;
+        break;
+      case mh_eEvent_UserAlarm4:
+        if(!eventType_UserAlarm4)
 	  ret = true;
         break;
       case mh_eEvent_Info:
@@ -666,6 +704,12 @@ int Hist::check_conditions(sEvent *evp)
   switch (evp->EventType) 
   {
     case mh_eEvent_Alarm:
+    case mh_eEvent_MaintenanceAlarm:
+    case mh_eEvent_SystemAlarm:
+    case mh_eEvent_UserAlarm1:
+    case mh_eEvent_UserAlarm2:
+    case mh_eEvent_UserAlarm3:
+    case mh_eEvent_UserAlarm4:
     case mh_eEvent_Info:
       msgInfop = &(evp->Mess.message.Info);
       eventNamep = evp->Mess.message.EventName;

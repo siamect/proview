@@ -495,6 +495,51 @@ qcom_MyNode (
 
   return YES;
 }
+
+char *qcom_NodeName( 
+  pwr_tNodeId nid
+)  
+{
+  static char name[80];
+  qcom_sNode node;
+  pwr_tStatus sts;
+
+  qcom_Node( &sts, &node, nid);
+  if (EVEN(sts))
+    strcpy( name, "");
+  else
+    strncpy( name, node.name, sizeof(name));
+
+  return name;
+}
+
+
+pwr_tBoolean
+qcom_Node (
+  pwr_tStatus	*status,
+  qcom_sNode	*node,
+  pwr_tNodeId	nid
+)
+{
+  qdb_sNode	*np = NULL;
+  pwr_dStatus	(sts, status, QCOM__SUCCESS);
+
+  if (node == NULL)
+    pwr_Return(NO, sts, QCOM__BADARG);
+
+  qdb_ScopeLock {
+
+    np = hash_Search(sts, &qdb->nid_ht, &nid);
+    if (np == NULL) {
+      *sts = QCOM__NOSUCHNODE;
+    }
+    
+    qdb_NodeInfo(NULL, node, np);
+
+  } qdb_ScopeUnlock;
+
+  return (np != NULL);
+}
 
 pwr_tBoolean
 qcom_NextNode (

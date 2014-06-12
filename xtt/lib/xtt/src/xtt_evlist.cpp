@@ -136,6 +136,7 @@ union alau_Event
     mh_sBlock   Block;
 };
 
+static unsigned int prio_enum_to_mask( unsigned int prio);
 
 //
 //  Free pixmaps
@@ -493,6 +494,7 @@ void EvListBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_event, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_event, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmapButton( nc_event, 2, 3.0, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnotPixmap( nc_event, 3, 3.8, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_event, 4.8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
@@ -1996,7 +1998,7 @@ void ItemAlarm::update_text( int use_treenode)
 
 ItemCategory::ItemCategory( EvList *item_evlist, const char *item_name, pwr_sClass_AlarmCategory *cop,
 			    brow_tNode dest, flow_eDest dest_code, int *rsts) :
-  evlist(item_evlist), prio(0), notacked_child(0)
+  evlist(item_evlist), prio(0), base_nc(0), notacked_child(0)
 {
   pwr_tStatus sts;
 
@@ -2005,7 +2007,8 @@ ItemCategory::ItemCategory( EvList *item_evlist, const char *item_name, pwr_sCla
   *rsts = 1;
   strcpy( name, item_name);
   strcpy( text, cop->Text);
-  event_priority = cop->EventPriority;
+  select_priority = cop->EventPriority;
+  select_eventtype = cop->EventType;
 
   member_cnt = 0;
   for ( unsigned int i = 0; i < sizeof(cop->Members)/sizeof(cop->Members[0]); i++) {
@@ -2055,6 +2058,11 @@ void ItemCategory::configure( EvList *evlist)
       switch( item->type) {
       case evlist_eItemType_Alarm: {
 	for ( int j = 0; j < member_cnt; j++) {
+	  if ( item->eventtype != mh_eEvent_Info &&  select_priority != 0 && !(select_priority & prio_enum_to_mask( item->eventprio)))
+	    continue;
+	  if ( select_eventtype != 0 && !(select_eventtype & item->eventtype))
+	    continue;
+
 	  if ( strncmp( members[j], item->eventname, strlen(members[j])) == 0) {
 	    // Presupmtive child
 	    if ( item->event_type == evlist_eEventType_Info) {
@@ -2098,6 +2106,9 @@ void ItemCategory::configure( EvList *evlist)
     
     brow_ChangeObjectNodeClass( node, base_nc);
   }
+  if ( base_nc == 0)
+    base_nc = evlist->brow->nc_category;
+    
   if ( prio == 0) {
     brow_SetAnnotPixmap( node, 0, evlist->brow->pixmap_leaf);
     if ( brow_IsOpen( node) & evlist_mOpen_Children)
@@ -2213,6 +2224,11 @@ int ItemCategory::open_children( EvList *evlist, double x, double y)
       case evlist_eItemType_Alarm: {
 	if ( item->tree_node)
 	  continue;
+	if ( item->eventtype != mh_eEvent_Info &&  select_priority != 0 && !(select_priority & prio_enum_to_mask( item->eventprio)))
+	  continue;
+	if ( select_eventtype != 0 && !(select_eventtype & item->eventtype))
+	  continue;
+	    
 	for ( int j = 0; j < member_cnt; j++) {
 	  if ( strncmp( members[j], item->eventname, strlen(members[j])) == 0) {
 	    // Insert item
@@ -2293,6 +2309,10 @@ void ItemCategory::flash( EvList *evlist)
       brow_GetUserData( object_list[i], (void **)&item);
       switch( item->type) {
       case evlist_eItemType_Alarm: {
+	if ( select_priority != 0 && !(select_priority & prio_enum_to_mask( item->eventprio)))
+	  continue;
+	if ( select_eventtype != 0 && !(select_eventtype & item->eventtype))
+	  continue;
 	for ( int j = 0; j < member_cnt; j++) {
 	  if ( strncmp( members[j], item->eventname, strlen(members[j])) == 0) {
 	    // Presupmtive child
@@ -3054,8 +3074,8 @@ void EvList::fill_alarm_tables()
 	    skip = 1;
 	  break;
 	case evlist_eEventType_Alarm:
-	  if ( alarm_tables[j]->EventType & pwr_mEventTypeMask_Alarm) {
-	    eventtype = pwr_eEventTypeEnum_Alarm;
+	  if ( alarm_tables[j]->EventType & item->eventtype) {
+	    eventtype = item->eventtype;
 	    if (  !(alarm_tables[j]->EventPriority & item->eventprio))
 	      skip = 1;
 	  }
@@ -3093,4 +3113,19 @@ void EvList::fill_alarm_tables()
     memcpy( &alarm_tables[j]->NoOfAlarms, &at.NoOfAlarms, 
 	    sizeof(at) - offsetof(pwr_sClass_AlarmTable, NoOfAlarms));
   }
+}
+
+static unsigned int prio_enum_to_mask( unsigned int prio) 
+{
+  switch ( prio) {
+  case mh_eEventPrio_A:
+    return pwr_mEventPrioMask_A;
+  case mh_eEventPrio_B:
+    return pwr_mEventPrioMask_B;
+  case mh_eEventPrio_C:
+    return pwr_mEventPrioMask_C;
+  case mh_eEventPrio_D:
+    return pwr_mEventPrioMask_D;
+  }
+  return 0;
 }

@@ -99,10 +99,10 @@ public class HElogTable extends JPanel
     "Händelsetext",
     "Objekt"};
   //JLabel eventTableLbl = new JLabel("Händelselista");
-  Color ALarmColor = Color.red;
+  Color ALarmColor = new Color(255,100,100); // red;
   Color BLarmColor = Color.yellow;
-  Color CLarmColor = Color.blue;
-  Color DLarmColor = Color.cyan;
+  Color CLarmColor = new Color(135,206,235); // blue;
+  Color DLarmColor = new Color(177,156,217); // purple;
   Color InfoColor = Color.green;
   /**
    *  Constructor for the HElogTable object
@@ -734,41 +734,59 @@ public class HElogTable extends JPanel
 	  switch (ev.eventType)
 	  {
 	    case Mh.mh_eEvent_Alarm:
-	      returnString = "Larm";
-	    break;
+	      returnString = "Alarm";
+	      break;
+	    case Mh.mh_eEvent_MaintenenceAlarm:
+	      returnString = "MantenanceAlarm";
+	      break;
+	    case Mh.mh_eEvent_SystemAlarm:
+	      returnString = "SystemAlarm";
+	      break;
+	    case Mh.mh_eEvent_UserAlarm1:
+	      returnString = "UserAlarm1";
+	      break;
+	    case Mh.mh_eEvent_UserAlarm2:
+	      returnString = "UserAlarm2";
+	      break;
+	    case Mh.mh_eEvent_UserAlarm3:
+	      returnString = "UserAlarm3";
+	      break;
+	    case Mh.mh_eEvent_UserAlarm4:
+	      returnString = "UserAlarm4";
+	      break;
 	    case Mh.mh_eEvent_Ack:
-	      returnString = "Kvittens";
-	    break;
+	      returnString = "Acknowlege";
+	      break;
 	    case Mh.mh_eEvent_Block:
 	      returnString = "Block";
-	    break;
+	      break;
 	    case Mh.mh_eEvent_Cancel:
 	      returnString = "Cancel";
-	    break;
+	      break;
 	    case Mh.mh_eEvent_CancelBlock:
 	      returnString = "CancelBlock";
-	    break;
+	      break;
 	    case Mh.mh_eEvent_Missing:
 	      returnString = "Missing";
-	    break;
+	      break;
 	    case Mh.mh_eEvent_Reblock:
 	      returnString = "Reblock";
-	    break;
+	      break;
 	    case Mh.mh_eEvent_Return:
-	      returnString = "Retur";
-	    break;
+	      returnString = "Return";
+	      break;
 	    case Mh.mh_eEvent_Unblock:
 	      returnString = "Unblock";
-	    break;
+	      break;
 	    case Mh.mh_eEvent_Info:
 	      returnString = "Info";
-	    break;
+	      break;
 	    case Mh.mh_eEvent_:
 	      returnString = "?";
-	    break;
+	      break;
 	    default:
 	     returnString = " ";
-	    break;
+	     break;
 	  }
 	  return returnString;
         }
@@ -1188,7 +1206,10 @@ public class HElogTable extends JPanel
       }
 
       boolean setColor = false;
-      if( ev.eventType == Mh.mh_eEvent_Alarm||ev.eventType == Mh.mh_eEvent_Info )
+      if( ev.eventType == Mh.mh_eEvent_Alarm || ev.eventType == Mh.mh_eEvent_Info ||
+	  ev.eventType == Mh.mh_eEvent_MaintenanceAlarm || ev.eventType == Mh.mh_eEvent_SystemAlarm ||
+	  ev.eventType == Mh.mh_eEvent_UserAlarm1 || ev.eventType == Mh.mh_eEvent_UserAlarm2 ||
+	  ev.eventType == Mh.mh_eEvent_UserAlarm3 || ev.eventType == Mh.mh_eEvent_UserAlarm4)
         setColor = true;
 
       //System.out.println("i eventTable.getTableCellRendererComponent(row " + row + "value" + number + ")");

@@ -79,7 +79,11 @@ enum mh_eEvent {
   mh_eEvent_Alarm	= 64,
   mh_eEvent_MaintenanceAlarm = 128,
   mh_eEvent_SystemAlarm	= 256,
-  mh_eEvent_   		= 257
+  mh_eEvent_UserAlarm1	= 512,
+  mh_eEvent_UserAlarm2	= 1024,
+  mh_eEvent_UserAlarm3	= 2048,
+  mh_eEvent_UserAlarm4	= 4096,
+  mh_eEvent_   		= 4097
 };
 
 %/** 
@@ -400,7 +404,8 @@ struct mh_sReturn {
 
 #ifdef RPC_HDR
 %struct mh_sOutunitInfo {
-%  mh_eOutunitType	type;
+%  pwr_tUInt16		type;
+%  pwr_tUInt16		selEventType;
 %  pwr_tUInt32		selGen;
 %  pwr_tUInt32		selSize;
 %  /* Here comes select list if needed */
@@ -426,7 +431,10 @@ struct mh_sReturn {
 %		selSize = op->selSize;
 %	}	
 %
-%	if (!xdr_mh_eOutunitType(xdrs, &op->type)) {
+%	if (!xdr_pwr_tUInt16(xdrs, &op->type)) {
+%		return (FALSE);
+%	}
+%	if (!xdr_pwr_tUInt16(xdrs, &op->selEventType)) {
 %		return (FALSE);
 %	}
 %	if (!xdr_pwr_tUInt32(xdrs, &op->selGen)) {

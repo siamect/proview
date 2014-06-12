@@ -80,7 +80,7 @@ JNIEXPORT void JNICALL Java_jpwr_rt_Hist_initHistIDs
  * Signature: (Ljava/lang/String;Ljava/lang/String;ZZZZZZZZLjava/lang/String;Ljava/lang/String;)[Ljpwr/rt/MhrEvent;
  */
 JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Hist_getHistList
-  (JNIEnv *, jclass, jstring, jstring, jboolean, jboolean, jboolean, jboolean, jboolean, jboolean, jboolean, jboolean, jstring, jstring);
+  (JNIEnv *, jclass, jstring, jstring, jboolean, jboolean, jboolean, jboolean, jboolean, jboolean, jboolean, jboolean, jboolean, jboolean, jboolean, jboolean, jboolean, jboolean, jstring, jstring);
 
 #ifdef __cplusplus
 }
