@@ -115,7 +115,7 @@ void FlowText::open( ifstream& fp)
   }
 }
 
-void FlowText::draw( void *pos, int highlight, int hot, void *node)
+void FlowText::draw( void *pos, int highlight, int dimmed, int hot, void *node)
 {
   int idx = int( ctx->zoom_factor / ctx->base_zoom_factor * (text_size +4) - 4);
   if ( idx < 0)
@@ -123,7 +123,7 @@ void FlowText::draw( void *pos, int highlight, int hot, void *node)
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->fdraw->text( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 		    p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, text, strlen(text),
-		    draw_type, idx, highlight, 0, 
+		    draw_type, idx, highlight, dimmed, 0, 
 		    ctx->zoom_factor / ctx->base_zoom_factor * (8+2*text_size));
 }
 
@@ -221,7 +221,7 @@ void FlowText::get_borders( double pos_x, double pos_y, double *x_right,
 */
 }
 
-void FlowText::move( void *pos, double x, double y, int highlight, int hot)
+void FlowText::move( void *pos, double x, double y, int highlight, int dimmed, int hot)
 {
 
   erase( pos, hot, NULL);
@@ -230,12 +230,12 @@ void FlowText::move( void *pos, double x, double y, int highlight, int hot)
   p.y = y;
   zoom();
   nav_zoom();
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 
 void FlowText::shift( void *pos, double delta_x, double delta_y,
-	int highlight, int hot)
+		      int highlight, int dimmed, int hot)
 {
   erase( pos, hot, NULL);
   nav_erase( pos, NULL);
@@ -244,7 +244,7 @@ void FlowText::shift( void *pos, double delta_x, double delta_y,
   zoom();
   nav_zoom();
 
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 

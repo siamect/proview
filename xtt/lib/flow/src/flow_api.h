@@ -109,6 +109,7 @@ void flow_DeleteNode( flow_tNode node);
 void flow_DeleteConnection( flow_tCon con);
 int flow_FindSelectedObject( flow_tCtx ctx, flow_tObject object);
 void flow_ResetHighlightAll( flow_tCtx ctx);
+void flow_ResetDimmedAll( flow_tCtx ctx);
 void flow_ResetInverseAll( flow_tCtx ctx);
 void flow_SetSelectHighlight( flow_tCtx ctx);
 void flow_ResetSelectHighlight( flow_tCtx ctx);
@@ -125,6 +126,8 @@ void flow_GetSelectedNodes( flow_tCtx ctx, flow_tNode **nodes, int *num);
 void flow_GetSelectedCons( flow_tCtx ctx, flow_tCon **cons, int *num);
 void flow_SetHighlight( flow_tObject object, int value);
 void flow_GetHighlight( flow_tObject object, int *value);
+void flow_SetDimmed( flow_tObject object, int value);
+void flow_GetDimmed( flow_tObject object, int *value);
 void flow_SetInverse( flow_tObject object, int value);
 void flow_CreateNode( flow_tCtx ctx, const char *name, flow_tNodeClass nc,
 	double x, double y, void *user_data, flow_tNode *node);

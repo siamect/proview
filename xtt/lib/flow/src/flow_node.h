@@ -88,6 +88,8 @@ class FlowNode : public FlowArrayElem {
     int		delete_node_cons( void *node) {return 0;};
     void set_highlight( int on);
     int get_highlight() {return highlight;};
+    void set_dimmed( int on);
+    int get_dimmed() {return dimmed;};
     void set_inverse( int on);
     int get_inverse() {return inverse;};
     void set_hot( int on);
@@ -120,6 +122,7 @@ class FlowNode : public FlowArrayElem {
     FlowPoint		stored_pos;
     flow_tName		n_name;
     int			highlight;
+    int			dimmed;
     int			inverse;
     char		*annotv[10];
     int			annotsize[10];

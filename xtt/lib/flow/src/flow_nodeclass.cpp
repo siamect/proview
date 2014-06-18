@@ -115,13 +115,13 @@ void FlowNodeClass::open( ifstream& fp)
   }
 }
 
-void FlowNodeClass::draw( FlowPoint *pos, int highlight, int hot, void *node)
+void FlowNodeClass::draw( FlowPoint *pos, int highlight, int dimmed, int hot, void *node)
 {
   int		i;
 
   for ( i = 0; i < a.a_size; i++)
   {
-    a.a[i]->draw( pos, highlight, hot, node);
+    a.a[i]->draw( pos, highlight, dimmed, hot, node);
   }
 }
 
@@ -145,7 +145,7 @@ void FlowNodeClass::draw_inverse( FlowPoint *pos, int hot, void *node)
     { 
       case flow_eObjectType_Radiobutton:
       case flow_eObjectType_Image:
-        a.a[i]->draw( pos, 0, hot, node);
+        a.a[i]->draw( pos, 0, 0, hot, node);
         break;
       default:
         a.a[i]->draw_inverse( pos, hot, node);
@@ -237,7 +237,7 @@ void FlowNodeClass::draw_annotation( void *pos, int highlight, int hot,
     if ( a.a[i]->type() == flow_eObjectType_Annot &&
          ((FlowAnnot *)a.a[i])->number == num)
     {
-      a.a[i]->draw( pos, highlight, hot, node);
+      a.a[i]->draw( pos, highlight, 0, hot, node);
       a.a[i]->nav_draw( pos, highlight, node);
       break;
     }

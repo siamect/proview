@@ -151,6 +151,7 @@ class FlowCon : public FlowArrayElem {
     flow_tName		c_name;
     int			hot;
     int			highlight;
+    int 		dimmed;
     flow_eMoveType 	movement_type;
     flow_tTraceObj      trace_object;
     flow_tTraceAttr     trace_attribute;

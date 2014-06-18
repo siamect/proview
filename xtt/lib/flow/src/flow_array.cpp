@@ -787,13 +787,13 @@ void FlowArray::open( void *ctx, ifstream& fp)
   }
 }
 
-void FlowArray::draw( void *pos, int highlight, int hot, void *node) 
+void FlowArray::draw( void *pos, int highlight, int dimmed, int hot, void *node) 
 {
   int i;
 
   for ( i = 0; i < a_size; i++)
   {
-    a[i]->draw( pos, highlight, hot, node);
+    a[i]->draw( pos, highlight, dimmed, hot, node);
   }
 }
 
@@ -901,6 +901,16 @@ void FlowArray::set_highlight( int on)
   }
 }
 
+void FlowArray::set_dimmed( int on) 
+{
+  int i;
+
+  for ( i = 0; i < a_size; i++)
+  {
+    a[i]->set_dimmed( on);
+  }
+}
+
 void FlowArray::set_hot( int on) 
 {
   int i;
@@ -963,13 +973,13 @@ void FlowArray::move( int delta_x, int delta_y, int grid)
   }
 }
 
-void FlowArray::shift( void *pos, double delta_x, double delta_y, int highlight, int hot)
+void FlowArray::shift( void *pos, double delta_x, double delta_y, int highlight, int dimmed, int hot)
 {
   int i;
 
   for ( i = 0; i < a_size; i++)
   {
-    a[i]->shift( pos, delta_x, delta_y, highlight, hot);
+    a[i]->shift( pos, delta_x, delta_y, highlight, dimmed, hot);
   }
 }
 

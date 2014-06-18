@@ -125,7 +125,7 @@ FlowCon::FlowCon( FlowCtx *flow_ctx, const char *name, FlowConClass *con_class,
 	ctx(flow_ctx), cc(con_class),
 	source_node(source), dest_node(dest), source_conpoint(source_cp),
 	dest_conpoint(dest_cp), p_num(0), l_num(0), a_num(0), line_a(10,10), 
-        arc_a(10,10), hot(0), highlight(0), arrow_num(0), arrow_a(1,1),
+        arc_a(10,10), hot(0), highlight(0), dimmed(0), arrow_num(0), arrow_a(1,1),
 	ref_num(0), ref_a(4,4), temporary_ref(0), trace_p(NULL)
 {
   double x1, y1, x2, y2;
@@ -152,7 +152,7 @@ FlowCon::FlowCon( FlowCtx *flow_ctx, const char *name, FlowConClass *con_class,
 	dest_node(dest), source_node(source), dest_conpoint(dest_cp), source_conpoint(source_cp),
 	p_num(point_num), l_num(0), a_num(0), arrow_num(0), ref_num(0),
 	line_a(10,10), arc_a(10,10), arrow_a(1,1), ref_a(4,4), temporary_ref(0), 
-	hot(0), highlight(0),
+	hot(0), highlight(0), dimmed(0),
 	movement_type(flow_eMoveType_Route),
 	trace_attr_type(flow_eTraceType_Boolean), 
 	trace_p(NULL)
@@ -190,7 +190,7 @@ FlowCon::FlowCon( FlowCtx *flow_ctx, const char *name, FlowConClass *con_class,
       nav_zoom();
       if ( nodraw)
         break;
-      l1->draw( &cc->zero, highlight, hot, NULL);
+      l1->draw( &cc->zero, highlight, dimmed, hot, NULL);
       l1->nav_draw( &cc->zero, highlight, NULL);
       break;
     case flow_eConType_StraightOneArrow:
@@ -204,9 +204,9 @@ FlowCon::FlowCon( FlowCtx *flow_ctx, const char *name, FlowConClass *con_class,
       nav_zoom();
       if ( nodraw)
         break;
-      l1->draw( &cc->zero, highlight, hot, NULL);
+      l1->draw( &cc->zero, highlight, dimmed, hot, NULL);
       l1->nav_draw( &cc->zero, highlight, NULL);
-      arrow->draw( &cc->zero, highlight, hot, NULL);
+      arrow->draw( &cc->zero, highlight, dimmed, hot, NULL);
       arrow->nav_draw( &cc->zero, highlight, NULL);
       break;
     case flow_eConType_StepDiv:
@@ -382,7 +382,7 @@ FlowCon::FlowCon( FlowCtx *flow_ctx, const char *name, FlowConClass *con_class,
     source_ref_cnt = source->refcon_cnt[source_cp]++;
     dest_ref_cnt = dest->refcon_cnt[dest_cp]++;
     nav_zoom();
-    ref_a.draw( &cc->zero, highlight, hot, NULL);
+    ref_a.draw( &cc->zero, highlight, dimmed, hot, NULL);
     ref_a.nav_draw( &cc->zero, highlight, NULL);
   }
 
@@ -461,22 +461,22 @@ void FlowCon::set_highlight( int on)
   highlight = on;
   if ( temporary_ref || cc->con_type == flow_eConType_Reference)
   {
-    ref_a.draw( &cc->zero, highlight, hot, NULL);
+    ref_a.draw( &cc->zero, highlight, dimmed, hot, NULL);
     ref_a.nav_draw( &cc->zero, highlight, NULL);
   }
   else
   {
     for ( i = 0; i < l_num; i++)
     {
-      ((FlowLine *)line_a[i])->draw( &cc->zero, highlight, hot, NULL);
+      ((FlowLine *)line_a[i])->draw( &cc->zero, highlight, dimmed, hot, NULL);
       ((FlowLine *)line_a[i])->nav_draw( &cc->zero, highlight, NULL);
     }
     for ( i = 0; i < a_num; i++)
     {
-      ((FlowArc *)arc_a[i])->draw( &cc->zero, highlight, hot, NULL);
+      ((FlowArc *)arc_a[i])->draw( &cc->zero, highlight, dimmed, hot, NULL);
       ((FlowArc *)arc_a[i])->nav_draw( &cc->zero, highlight, NULL);
     }
-    arrow_a.draw( &cc->zero, highlight, hot, NULL);
+    arrow_a.draw( &cc->zero, highlight, dimmed, hot, NULL);
     arrow_a.nav_draw( &cc->zero, highlight, NULL);
   }
 }
@@ -490,22 +490,22 @@ void FlowCon::set_hot( int on)
     hot = on;
     if ( temporary_ref || cc->con_type == flow_eConType_Reference)
     {
-      ref_a.draw( &cc->zero, highlight, hot, NULL);
+      ref_a.draw( &cc->zero, highlight, dimmed, hot, NULL);
       ref_a.nav_draw( &cc->zero, highlight, NULL);
     }
     else
     {
       for ( i = 0; i < l_num; i++)
       {
-        ((FlowLine *)line_a[i])->draw( &cc->zero, highlight, hot, NULL);
+        ((FlowLine *)line_a[i])->draw( &cc->zero, highlight, dimmed, hot, NULL);
         ((FlowLine *)line_a[i])->nav_draw( &cc->zero, highlight, NULL);
       }
       for ( i = 0; i < a_num; i++)
       {
-        ((FlowArc *)arc_a[i])->draw( &cc->zero, highlight, hot, NULL);
+        ((FlowArc *)arc_a[i])->draw( &cc->zero, highlight, dimmed, hot, NULL);
         ((FlowArc *)arc_a[i])->nav_draw( &cc->zero, highlight, NULL);
       }
-      arrow_a.draw( &cc->zero, highlight, hot, NULL);
+      arrow_a.draw( &cc->zero, highlight, dimmed, hot, NULL);
       arrow_a.nav_draw( &cc->zero, highlight, NULL);
     }
   }
@@ -622,14 +622,14 @@ void FlowCon::move( int delta_x, int delta_y, int grid)
       point_y[i] += y;
     }
     if ( temporary_ref || cc->con_type == flow_eConType_Reference)
-      ref_a.shift( &cc->zero, x, y, highlight, hot);
+      ref_a.shift( &cc->zero, x, y, highlight, dimmed, hot);
     else
     {
       for ( i = 0; i < l_num; i++)
-        ((FlowLine *)line_a[i])->shift( &cc->zero, x, y, highlight, hot);
+        ((FlowLine *)line_a[i])->shift( &cc->zero, x, y, highlight, dimmed, hot);
       for ( i = 0; i < a_num; i++)
-        ((FlowArc *)arc_a[i])->shift( &cc->zero, x, y, highlight, hot);
-      arrow_a.shift( &cc->zero, x, y, highlight, hot);
+        ((FlowArc *)arc_a[i])->shift( &cc->zero, x, y, highlight, dimmed, hot);
+      arrow_a.shift( &cc->zero, x, y, highlight, dimmed, hot);
     }
     get_con_borders();
     ctx->draw( int(x_left * ctx->zoom_factor - ctx->offset_x - 20),
@@ -707,7 +707,7 @@ void FlowCon::reconfigure()
   {
     case flow_eConType_Straight:
       l1 = (FlowLine *)line_a[0];
-      l1->move( &cc->zero, x1, y1, x2, y2, highlight, hot);
+      l1->move( &cc->zero, x1, y1, x2, y2, highlight, dimmed, hot);
       break;
     case flow_eConType_Reference:
     {
@@ -716,9 +716,9 @@ void FlowCon::reconfigure()
     }
     case flow_eConType_StraightOneArrow:
       l1 = (FlowLine *)line_a[0];
-      l1->move( &cc->zero, x1, y1, x2, y2, highlight, hot);
+      l1->move( &cc->zero, x1, y1, x2, y2, highlight, dimmed, hot);
       arrow = (FlowArrow *)arrow_a[0];
-      arrow->move(  &cc->zero, x1, y1, x2, y2, highlight, hot);
+      arrow->move(  &cc->zero, x1, y1, x2, y2, highlight, dimmed, hot);
       break;
     case flow_eConType_StepDiv:
     case flow_eConType_StepConv:
@@ -730,15 +730,15 @@ void FlowCon::reconfigure()
       if ( !p_num)
       {
         l1 = (FlowLine *)line_a[0];
-        l1->move( &cc->zero, x1, y1, x2, y2, highlight, hot);
+        l1->move( &cc->zero, x1, y1, x2, y2, highlight, dimmed, hot);
       }
       else
       {
         l1 = (FlowLine *)line_a[0];
-        l1->move( &cc->zero, x1, y1, point_x[0], point_y[0], highlight, hot);
+        l1->move( &cc->zero, x1, y1, point_x[0], point_y[0], highlight, dimmed, hot);
         l1 = (FlowLine *)line_a[p_num];
         l1->move( &cc->zero, point_x[p_num-1], point_y[p_num-1], x2, y2, 
-		highlight, hot);
+		highlight, dimmed, hot);
       }
       break;
     case flow_eConType_AllFixed:
@@ -986,14 +986,14 @@ void FlowCon::draw( int ll_x, int ll_y, int ur_x, int ur_y)
        y_low * ctx->zoom_factor - ctx->offset_y <= ur_y)
   {
     if ( temporary_ref || cc->con_type == flow_eConType_Reference)
-      ref_a.draw( &cc->zero, highlight, hot, NULL);
+      ref_a.draw( &cc->zero, highlight, dimmed, hot, NULL);
     else
     {
       for ( i = 0; i < l_num; i++)
-        ((FlowLine *)line_a[i])->draw( &cc->zero, highlight, hot, NULL);
+        ((FlowLine *)line_a[i])->draw( &cc->zero, highlight, dimmed, hot, NULL);
       for ( i = 0; i < a_num; i++)
-        ((FlowArc *)arc_a[i])->draw( &cc->zero, highlight, hot, NULL);
-      arrow_a.draw( &cc->zero, highlight, hot, NULL);
+        ((FlowArc *)arc_a[i])->draw( &cc->zero, highlight, dimmed, hot, NULL);
+      arrow_a.draw( &cc->zero, highlight, dimmed, hot, NULL);
     }
   }
 }
@@ -2045,11 +2045,11 @@ int FlowCon::con_route_area( double wind_ll_x, double wind_ll_y,
 void draw_line( FlowCtx *ctx, double x1, double y1, double x2, double y2)
 {
   ctx->fdraw->line( ctx, 
-	int( x1*ctx->zoom_factor-ctx->offset_x), 
-	int( y1*ctx->zoom_factor-ctx->offset_y), 
-	int( x2*ctx->zoom_factor-ctx->offset_x), 
-	int( y2*ctx->zoom_factor-ctx->offset_y),
-	flow_eDrawType_Line, 0, 0);
+		    int( x1*ctx->zoom_factor-ctx->offset_x), 
+		    int( y1*ctx->zoom_factor-ctx->offset_y), 
+		    int( x2*ctx->zoom_factor-ctx->offset_x), 
+		    int( y2*ctx->zoom_factor-ctx->offset_y),
+		    flow_eDrawType_Line, 0, 0, 0);
 }
 void print_line()
 {
@@ -3360,14 +3360,14 @@ int FlowCon::event_handler( flow_eEvent event, int x, int y)
         ctx->fdraw->set_cursor( ctx, draw_eCursor_CrossHair);
         hot = 1;
         if ( temporary_ref || cc->con_type == flow_eConType_Reference)
-          ref_a.draw( &cc->zero, highlight, hot, NULL);
+          ref_a.draw( &cc->zero, highlight, dimmed, hot, NULL);
         else
         {
           for ( i = 0; i < l_num; i++)
-            ((FlowLine *)line_a[i])->draw( &cc->zero, highlight, hot, NULL);
+            ((FlowLine *)line_a[i])->draw( &cc->zero, highlight, dimmed, hot, NULL);
           for ( i = 0; i < a_num; i++)
-            ((FlowArc *)arc_a[i])->draw( &cc->zero, highlight, hot, NULL);
-          arrow_a.draw( &cc->zero, highlight, hot, NULL);
+            ((FlowArc *)arc_a[i])->draw( &cc->zero, highlight, dimmed, hot, NULL);
+          arrow_a.draw( &cc->zero, highlight, dimmed, hot, NULL);
         }
       }
       if ( !sts && hot)
@@ -3385,14 +3385,14 @@ int FlowCon::event_handler( flow_eEvent event, int x, int y)
         }
         hot = 0;
         if ( temporary_ref || cc->con_type == flow_eConType_Reference)
-          ref_a.draw( &cc->zero, highlight, hot, NULL);
+          ref_a.draw( &cc->zero, highlight, dimmed, hot, NULL);
         else
         {
           for ( i = 0; i < l_num; i++)
-            ((FlowLine *)line_a[i])->draw( &cc->zero, highlight, hot, NULL);
+            ((FlowLine *)line_a[i])->draw( &cc->zero, highlight, dimmed, hot, NULL);
           for ( i = 0; i < a_num; i++)
-            ((FlowArc *)arc_a[i])->draw( &cc->zero, highlight, hot, NULL);
-          arrow_a.draw( &cc->zero, highlight, hot, NULL);
+            ((FlowArc *)arc_a[i])->draw( &cc->zero, highlight, dimmed, hot, NULL);
+          arrow_a.draw( &cc->zero, highlight, dimmed, hot, NULL);
         }
       }
       break;
@@ -3423,7 +3423,7 @@ void FlowCon::draw_routed( int points, double *x, double *y)
   {
     l = (FlowLine *) line_a[i];
     l->move( &cc->zero, x[i], y[i],
-		x[i+1], y[i+1], highlight, hot);
+		x[i+1], y[i+1], highlight, dimmed, hot);
   }
 
   for ( i = points - 1; i < l_num; i++)
@@ -3456,7 +3456,7 @@ void FlowCon::draw_routed_trans( int points, double *x, double *y)
       continue;
     l = (FlowLine *) line_a[j];
     l->move( &cc->zero, x[i], y[i],
-		x[i+1], y[i+1], highlight, hot);
+		x[i+1], y[i+1], highlight, dimmed, hot);
     j++;
   }
 
@@ -3723,14 +3723,14 @@ void FlowCon::draw_routed_roundcorner( int points, double *x, double *y)
   {
     l = (FlowLine *) line_a[i];
     l->move( &cc->zero, line_x1[i], line_y1[i],
-		line_x2[i], line_y2[i], highlight, hot);
+		line_x2[i], line_y2[i], highlight, dimmed, hot);
   }
   for ( i = 0; i < points - 2; i++)
   {
     a = (FlowArc *) arc_a[i];
     a->move( &cc->zero, arc_ll_x[i], arc_ll_y[i],
 		arc_ur_x[i], arc_ur_y[i], arc_angle1[i], arc_angle2[i],
-		highlight, hot);
+		highlight, dimmed, hot);
   }
   for ( i = points - 1; i < l_num; i++)
   {
@@ -3822,8 +3822,8 @@ void FlowCon::move_ref( double x1, double y1, double x2, double y2)
   {
     r1 = (FlowRect *)ref_a[0];
     t1 = (FlowText *)ref_a[1];
-    r1->move( &cc->zero, rect_x, rect_y, highlight, hot);
-    t1->move( &cc->zero, text_x, text_y, highlight, hot);
+    r1->move( &cc->zero, rect_x, rect_y, highlight, dimmed, hot);
+    t1->move( &cc->zero, text_x, text_y, highlight, dimmed, hot);
   }
   switch ( dest_direction)
   {
@@ -3863,8 +3863,8 @@ void FlowCon::move_ref( double x1, double y1, double x2, double y2)
   {
     r2 = (FlowRect *)ref_a[2];
     t2 = (FlowText *)ref_a[3];
-    r2->move( &cc->zero, rect_x, rect_y, highlight, hot);
-    t2->move( &cc->zero, text_x, text_y, highlight, hot);
+    r2->move( &cc->zero, rect_x, rect_y, highlight, dimmed, hot);
+    t2->move( &cc->zero, text_x, text_y, highlight, dimmed, hot);
   }
 }
 

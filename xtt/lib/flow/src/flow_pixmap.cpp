@@ -142,7 +142,7 @@ void FlowPixmap::open( ifstream& fp)
 #endif
 }
 
-void FlowPixmap::draw( void *pos, int highlight, int hot, void *node)
+void FlowPixmap::draw( void *pos, int highlight, int dimmed, int hot, void *node)
 {
   int idx = int( ctx->zoom_factor / ctx->base_zoom_factor * (pixmap_size + 4) - 
 		4);
@@ -250,7 +250,7 @@ void FlowPixmap::get_borders( double pos_x, double pos_y, double *x_right,
 */
 }
 
-void FlowPixmap::move( void *pos, double x, double y, int highlight, int hot)
+void FlowPixmap::move( void *pos, double x, double y, int highlight, int dimmed, int hot)
 {
 
   erase( pos, hot, NULL);
@@ -259,12 +259,12 @@ void FlowPixmap::move( void *pos, double x, double y, int highlight, int hot)
   p.y = y;
   zoom();
   nav_zoom();
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 
 void FlowPixmap::shift( void *pos, double delta_x, double delta_y,
-	int highlight, int hot)
+			int highlight, int dimmed, int hot)
 {
   erase( pos, hot, NULL);
   nav_erase( pos, NULL);
@@ -273,7 +273,7 @@ void FlowPixmap::shift( void *pos, double delta_x, double delta_y,
   zoom();
   nav_zoom();
 
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 

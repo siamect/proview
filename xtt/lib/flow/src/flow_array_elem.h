@@ -64,14 +64,14 @@ class FlowArrayElem {
     virtual void open( ifstream& fp) {};
     virtual void print( void *pos, void *node, int highlight) {};
     virtual void draw( int ll_x, int ll_y, int ur_x, int ur_y) {};
-    virtual void draw( void *pos, int highlight, int hot, void *node) {};
+    virtual void draw( void *pos, int highlight, int dimmed, int hot, void *node) {};
     virtual void erase() {};
     virtual void erase( void *pos, int hot, void *node) {};
     virtual void draw_inverse( void *pos, int hot, void *node) {};
     virtual void move( int delta_x, int delta_y, int grid) {};
     virtual void move_noerase( int delta_x, int delta_y, int grid) {};
     virtual void shift( void *pos, double delta_x, double delta_y,
-		int highlight, int hot) {};
+			int highlight, int dimmed, int hot) {};
     virtual void nav_draw( int ll_x, int ll_y, int ur_x, int ur_y) {};
     virtual void nav_draw( void *pos, int highlight, void *node) {};
     virtual void nav_erase() {};
@@ -84,6 +84,8 @@ class FlowArrayElem {
     virtual int delete_node_cons( void *node) {return 0;};
     virtual void set_highlight( int on) {};
     virtual int get_highlight() {return 1;};
+    virtual void set_dimmed( int on) {};
+    virtual int get_dimmed() {return 1;};
     virtual void set_inverse( int on) {};
     virtual void set_hot( int on) {};
     virtual void select_region_insert( double ll_x, double ll_y, double ur_x, 

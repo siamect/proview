@@ -1,4 +1,4 @@
-/* 
+ /* 
  * Proview   Open Source Process Control.
  * Copyright (C) 2005-2014 SSAB EMEA AB.
  *
@@ -570,8 +570,8 @@ void FlowCtx::draw( int ll_x, int ll_y, int ur_x, int ur_y)
   if ( select_rect_active)
   {
     fdraw->rect( this, select_rect_ll_x, select_rect_ll_y, 
-	  select_rect_ur_x - select_rect_ll_x,
-	  select_rect_ur_y - select_rect_ll_y, flow_eDrawType_Line, 0, 0);
+		 select_rect_ur_x - select_rect_ll_x,
+		 select_rect_ur_y - select_rect_ll_y, flow_eDrawType_Line, 0, 0, 0);
   }
   tiptext->draw();
 }
@@ -1148,7 +1148,7 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
         draw( con_create_conpoint_x, con_create_conpoint_y, 
 		con_create_last_x, con_create_last_y);
         fdraw->line( this, con_create_conpoint_x, con_create_conpoint_y,
-		x, y, flow_eDrawType_Line, 0, 0);
+		     x, y, flow_eDrawType_Line, 0, 0, 0);
         con_create_last_x = x;
         con_create_last_y = y;
         for ( i = 0; i < a.a_size; i++)

@@ -119,16 +119,16 @@ void FlowArc::open( ifstream& fp)
   }
 }
 
-void FlowArc::draw( void *pos, int highlight, int hot, void *node)
+void FlowArc::draw( void *pos, int highlight, int dimmed, int hot, void *node)
 {
   int idx = int( ctx->zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx += hot;
   idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->fdraw->arc( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
-	ll.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
-	ur.z_x - ll.z_x, ur.z_y - ll.z_y, angle1, angle2,
-	draw_type, idx, highlight);
+		   ll.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
+		   ur.z_x - ll.z_x, ur.z_y - ll.z_y, angle1, angle2,
+		   draw_type, idx, highlight, dimmed);
 }
 
 void FlowArc::erase( void *pos, int hot, void *node)
@@ -198,7 +198,7 @@ void FlowArc::get_borders( double pos_x, double pos_y, double *x_right,
 }
 
 void FlowArc::move( void *pos, double x1, double y1, double x2, double y2,
-	int ang1, int ang2, int highlight, int hot)
+	int ang1, int ang2, int highlight, int dimmed, int hot)
 {
   erase( pos, hot, NULL);
   nav_erase( pos, NULL);
@@ -210,12 +210,12 @@ void FlowArc::move( void *pos, double x1, double y1, double x2, double y2,
   angle2 = ang2;  
   zoom();
   nav_zoom();
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 
 void FlowArc::shift( void *pos, double delta_x, double delta_y, 
-	int highlight, int hot)
+		     int highlight, int dimmed, int hot)
 {
   erase( pos, hot, NULL);
   nav_erase( pos, NULL);
@@ -226,7 +226,7 @@ void FlowArc::shift( void *pos, double delta_x, double delta_y,
   zoom();
   nav_zoom();
 
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 

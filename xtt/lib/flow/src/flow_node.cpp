@@ -54,7 +54,7 @@ FlowNode::FlowNode( FlowCtx *flow_ctx, const char *name, FlowNodeClass *node_cla
 	obst_x_right(x1), obst_x_left(x1), obst_y_high(y1), obst_y_low(y1),
 	hot(0), ctx(flow_ctx), nc(node_class), pos(flow_ctx, x1,y1), 
 	stored_pos(flow_ctx, x1, y1),
-	highlight(0), inverse(0), trace_attr_type(flow_eTraceType_Boolean), 
+	highlight(0), dimmed(0), inverse(0), trace_attr_type(flow_eTraceType_Boolean), 
 	trace_inverted(0), trace_p(NULL), user_data(0),
 	level(0), node_open(0),
 	relative_annot_pos(rel_annot_pos), relative_annot_x(0), 
@@ -424,7 +424,7 @@ void FlowNode::draw( int ll_x, int ll_y, int ur_x, int ur_y)
        	y_low * ctx->zoom_factor - ctx->offset_y <= ur_y)
   {
     if ( !inverse)
-      nc->draw( &pos, highlight, hot, (void *)this);
+      nc->draw( &pos, highlight, dimmed, hot, (void *)this);
     else
       draw_inverse();
   }
@@ -447,7 +447,7 @@ void FlowNode::draw_inverse()
 		int( obst_x_right * ctx->zoom_factor - obst_x_left * ctx->zoom_factor),
   	     	int( obst_y_high * ctx->zoom_factor - obst_y_low * ctx->zoom_factor),
 		flow_eDrawType_Line);
-    nc->draw( &pos, highlight, hot, (void *)this);
+    nc->draw( &pos, highlight, dimmed, hot, (void *)this);
   }
   else {
     ctx->fdraw->fill_rect( ctx,
@@ -531,7 +531,17 @@ void FlowNode::set_highlight( int on)
 {
   highlight = on;
   if ( !inverse)
-    nc->draw( &pos, highlight, hot, (void *)this);
+    nc->draw( &pos, highlight, dimmed, hot, (void *)this);
+  else
+    draw_inverse();
+  nc->nav_draw( &pos, highlight, (void *)this);
+}
+
+void FlowNode::set_dimmed( int on)
+{
+  dimmed = on;
+  if ( !inverse)
+    nc->draw( &pos, highlight, dimmed, hot, (void *)this);
   else
     draw_inverse();
   nc->nav_draw( &pos, highlight, (void *)this);
@@ -545,7 +555,7 @@ void FlowNode::set_hot( int on)
       nc->erase( &pos, hot, (void *)this);
     hot = on;
     if ( !inverse)
-      nc->draw( &pos, highlight, hot, (void *)this);
+      nc->draw( &pos, highlight, dimmed, hot, (void *)this);
     else
       draw_inverse();
     nc->nav_draw( &pos, highlight, (void *)this);
@@ -571,7 +581,7 @@ void FlowNode::set_inverse( int on)
 	int( obst_x_right * ctx->zoom_factor - obst_x_left * ctx->zoom_factor),
        	int( obst_y_high * ctx->zoom_factor - obst_y_low * ctx->zoom_factor),
 	flow_eDrawType_LineErase);
-      nc->draw( &pos, highlight, hot, (void *)this);
+      nc->draw( &pos, highlight, dimmed, hot, (void *)this);
     }
     else {
       ctx->fdraw->fill_rect( ctx,
@@ -580,7 +590,7 @@ void FlowNode::set_inverse( int on)
 	int( x_r * ctx->zoom_factor - x_left * ctx->zoom_factor),
        	int( y_high * ctx->zoom_factor - y_low * ctx->zoom_factor + 1),
 	flow_eDrawType_LineErase);
-      nc->draw( &pos, highlight, hot, (void *)this);
+      nc->draw( &pos, highlight, dimmed, hot, (void *)this);
     }
   }
   else
@@ -635,7 +645,7 @@ void FlowNode::set_annotation( int num, const char *text, int size, int nodraw)
     relative_annot_x = 0;
     nc->configure_annotations( &pos, (void *)this);
     if ( !inverse)
-      nc->draw( &pos, highlight, hot, (void *)this);
+      nc->draw( &pos, highlight, dimmed, hot, (void *)this);
     else
       draw_inverse();
   }
@@ -715,7 +725,7 @@ void FlowNode::set_annot_pixmap( int num, flow_sAnnotPixmap *pixmap,
     return;
 
   if ( !inverse)
-    nc->draw( &pos, highlight, hot, (void *)this);
+    nc->draw( &pos, highlight, dimmed, hot, (void *)this);
   else
     draw_inverse();
   nc->nav_draw( &pos, highlight, (void *)this);
@@ -736,7 +746,7 @@ void FlowNode::remove_annot_pixmap( int num)
   annotpixmapv[num] = 0;
 
   if ( !inverse)
-    nc->draw( &pos, highlight, hot, (void *)this);
+    nc->draw( &pos, highlight, dimmed, hot, (void *)this);
   else
     draw_inverse();
   nc->nav_draw( &pos, highlight, (void *)this);
@@ -751,7 +761,7 @@ void FlowNode::set_radiobutton( int num, int value, int nodraw)
     return;
 
   if ( !inverse)
-    nc->draw( &pos, highlight, hot, (void *)this);
+    nc->draw( &pos, highlight, dimmed, hot, (void *)this);
   else
     draw_inverse();
   nc->nav_draw( &pos, highlight, (void *)this);
@@ -865,7 +875,7 @@ int FlowNode::event_handler( flow_eEvent event, int x, int y)
       if ( redraw)
       {
         if ( !inverse)
-          nc->draw( &pos, highlight, hot, (void *)this);
+          nc->draw( &pos, highlight, dimmed, hot, (void *)this);
         else
           draw_inverse();
       }
@@ -1053,7 +1063,7 @@ void FlowNode::conpoint_select( int num)
     sel_conpoint1 = num;
   else if ( sel_conpoint2 == -1)
     sel_conpoint2 = num;
-  nc->draw( &pos, highlight, hot, (void *)this);
+  nc->draw( &pos, highlight, dimmed, hot, (void *)this);
 }
 
 void FlowNode::conpoint_select_clear( int num)
@@ -1061,12 +1071,12 @@ void FlowNode::conpoint_select_clear( int num)
   if ( sel_conpoint1 == num) {
     erase();
     sel_conpoint1 = -1;
-    nc->draw( &pos, highlight, hot, (void *)this);
+    nc->draw( &pos, highlight, dimmed, hot, (void *)this);
   }
   else if ( sel_conpoint2 == num) {
     erase();
     sel_conpoint2 = -1;
-    nc->draw( &pos, highlight, hot, (void *)this);
+    nc->draw( &pos, highlight, dimmed, hot, (void *)this);
   }
 }
 
@@ -1076,7 +1086,7 @@ void FlowNode::conpoint_select_clear()
     erase();
     sel_conpoint1 = -1;
     sel_conpoint2 = -1;
-    nc->draw( &pos, highlight, hot, (void *)this);
+    nc->draw( &pos, highlight, dimmed, hot, (void *)this);
   }
 }
 
@@ -1090,7 +1100,7 @@ void FlowNode::change_nodeclass( FlowNodeClass *new_nc)
     erase();
     nc = new_nc;
     if ( !inverse)
-      nc->draw( &pos, highlight, hot, (void *)this);
+      nc->draw( &pos, highlight, dimmed, hot, (void *)this);
     else
       draw_inverse();
 }

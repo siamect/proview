@@ -138,12 +138,12 @@ void FlowRect::draw_inverse( void *pos, int hot, void *node)
 	 draw_type == flow_eDrawType_Green ||
 	 draw_type == flow_eDrawType_DarkGray ||
 	 draw_type == flow_eDrawType_Yellow))
-    draw( pos, hot, 0, node);
+    draw( pos, 0, 0, hot, node);
   else
     erase( pos, hot, node);
 }
 
-void FlowRect::draw( void *pos, int highlight, int hot, void *node)
+void FlowRect::draw( void *pos, int highlight, int dimmed, int hot, void *node)
 {
   if ( !(display_level & ctx->display_level))
     return;
@@ -167,8 +167,8 @@ void FlowRect::draw( void *pos, int highlight, int hot, void *node)
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
   if ( !fill)
     ctx->fdraw->rect( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
-	((FlowPoint *)pos)->z_y - ctx->offset_y, 
-	ur.z_x - ll.z_x, ur.z_y - ll.z_y, draw_type, idx, highlight);
+		      ((FlowPoint *)pos)->z_y - ctx->offset_y, 
+		      ur.z_x - ll.z_x, ur.z_y - ll.z_y, draw_type, idx, highlight, dimmed);
   else {
     flow_eDrawType dtype;
     if ( node && ((FlowNode *)node)->fill_color != flow_eDrawType_Inherit)
@@ -290,7 +290,7 @@ void FlowRect::get_borders( double pos_x, double pos_y, double *x_right,
     *y_high = pos_y + ur.y;
 }
 
-void FlowRect::move( void *pos, double x, double y, int highlight, int hot)
+void FlowRect::move( void *pos, double x, double y, int highlight, int dimmed, int hot)
 {
   double width, height;
 
@@ -304,12 +304,12 @@ void FlowRect::move( void *pos, double x, double y, int highlight, int hot)
   ur.y = y + height;
   zoom();
   nav_zoom();
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 
 void FlowRect::shift( void *pos, double delta_x, double delta_y,
-	int highlight, int hot)
+	int highlight, int dimmed, int hot)
 {
   erase( pos, hot, NULL);
   nav_erase( pos, NULL);
@@ -320,7 +320,7 @@ void FlowRect::shift( void *pos, double delta_x, double delta_y,
   zoom();
   nav_zoom();
 
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 

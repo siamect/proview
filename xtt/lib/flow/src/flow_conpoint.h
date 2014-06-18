@@ -63,7 +63,7 @@ class FlowConPoint : public FlowArrayElem {
     void print( void *pos, void *node) {};
     void save( ofstream& fp, flow_eSaveMode mode);
     void open( ifstream& fp);
-    void draw( void *pos, int highlight, int hot, void *node);
+    void draw( void *pos, int highlight, int dimmed, int hot, void *node);
     void nav_draw( void *pos, int highlight, void *node) {};
     void erase( void *pos, int hot, void *node);
     void nav_erase( void *pos, void *node) {};

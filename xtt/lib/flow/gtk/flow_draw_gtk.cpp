@@ -992,15 +992,19 @@ void FlowDrawGtk::enable_event( FlowCtx *ctx, flow_eEvent event,
 }
 
 int FlowDrawGtk::rect( FlowCtx *ctx, int x, int y, int width, int height, 
-	flow_eDrawType gc_type, int idx, int highlight)
+		       flow_eDrawType gc_type, int idx, int highlight, int dimmed)
 {
   if ( ctx->nodraw) return 1;
 
-  if ( gc_type == flow_eDrawType_LineGray && highlight)
+  if ( dimmed)
+    gc_type = flow_eDrawType_LineGray;
+  else if ( gc_type == flow_eDrawType_LineGray && highlight)
     gc_type = flow_eDrawType_Line;
+  else if ( highlight)
+    gc_type = flow_eDrawType(gc_type + 1);
 
   gdk_draw_rectangle( window, 
-		      gcs[gc_type+highlight][idx], 0,
+		      gcs[gc_type][idx], 0,
 		      x, y, width, height);
   return 1;
 }
@@ -1098,16 +1102,20 @@ int FlowDrawGtk::nav_arrow_erase( FlowCtx *ctx, int x1, int y1, int x2, int y2,
 }
 
 int FlowDrawGtk::arc( FlowCtx *ctx, int x, int y, int width, int height, 
-	int angle1, int angle2,
-	flow_eDrawType gc_type, int idx, int highlight)
+		      int angle1, int angle2,
+		      flow_eDrawType gc_type, int idx, int highlight, int dimmed)
 {
   if ( ctx->nodraw) return 1;
 
-  if ( gc_type == flow_eDrawType_LineGray && highlight)
+  if ( dimmed)
+    gc_type = flow_eDrawType_LineGray;
+  else if ( gc_type == flow_eDrawType_LineGray && highlight)
     gc_type = flow_eDrawType_Line;
+  else if ( highlight)
+    gc_type = flow_eDrawType(gc_type + 1);
 
   gdk_draw_arc( window,
-		gcs[gc_type+highlight][idx], 0,
+		gcs[gc_type][idx], 0,
 		x, y, width, height, angle1*64, angle2*64);
   return 1;
 }
@@ -1152,15 +1160,19 @@ int FlowDrawGtk::nav_arc_erase( FlowCtx *ctx, int x, int y, int width, int heigh
 }
 
 int FlowDrawGtk::line( FlowCtx *ctx, int x1, int y1, int x2, int y2,
-	flow_eDrawType gc_type, int idx, int highlight)
+		       flow_eDrawType gc_type, int idx, int highlight, int dimmed)
 {
   if ( ctx->nodraw) return 1;
 
-  if ( gc_type == flow_eDrawType_LineGray && highlight)
+  if ( dimmed)
+    gc_type = flow_eDrawType_LineGray;
+  else if ( gc_type == flow_eDrawType_LineGray && highlight)
     gc_type = flow_eDrawType_Line;
+  else if ( highlight)
+    gc_type = flow_eDrawType(gc_type + 1);
 
   gdk_draw_line( window,
-		 gcs[gc_type+highlight][idx], 
+		 gcs[gc_type][idx], 
 		 x1, y1, x2, y2);
   return 1;
 }
@@ -1222,12 +1234,21 @@ static char *font_string( flow_eDrawType gc_type, double size)
 }
 
 int FlowDrawGtk::text_pango( FlowCtx *ctx, int x, int y, char *text, int len,
-			     flow_eDrawType gc_type, int idx, int highlight, int line, double size)
+			     flow_eDrawType gc_type, int idx, int highlight, int dimmed, int line, double size)
 {
   if ( ctx->nodraw) return 1;
 
   PangoRenderer *pr = gdk_pango_renderer_get_default( screen);
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), window);
+
+  if ( dimmed) {
+    GdkGCValues xgcv;
+
+    gdk_gc_get_values( gcs[flow_eDrawType_LineGray][0], &xgcv);
+
+    gdk_gc_set_values( gcs[gc_type][0], &xgcv, GDK_GC_FOREGROUND);
+  }
+
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), gcs[gc_type][0]);
 
   PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
@@ -1259,6 +1280,13 @@ int FlowDrawGtk::text_pango( FlowCtx *ctx, int x, int y, char *text, int len,
   pango_font_description_free( desc);
   g_object_unref( pctx);
   
+  if ( dimmed) {
+    GdkGCValues xgcv;
+
+    gdk_gc_get_values( gcs[flow_eDrawType_Line][0], &xgcv);
+
+    gdk_gc_set_values( gcs[gc_type][0], &xgcv, GDK_GC_FOREGROUND);
+  }
   return 1;
 }
 
@@ -1348,12 +1376,12 @@ int FlowDrawGtk::text_erase_pango( FlowCtx *ctx, int x, int y, char *text, int l
 }
 
 int FlowDrawGtk::text( FlowCtx *ctx, int x, int y, char *text, int len,
-		       flow_eDrawType gc_type, int idx, int highlight, int line, double size)
+		       flow_eDrawType gc_type, int idx, int highlight, int dimmed, int line, double size)
 {
   if ( ctx->nodraw) return 1;
 
   if ( pango)
-    return text_pango( ctx, x, y, text, len, gc_type, idx, highlight, line, size);
+    return text_pango( ctx, x, y, text, len, gc_type, idx, highlight, dimmed, line, size);
 
   int font_idx = get_font_idx( gc_type);
 

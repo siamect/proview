@@ -129,13 +129,13 @@ void FlowTipText::draw()
   ctx->fdraw->fill_rect( ctx, text_x, text_y, text_width, text_height,
 		       flow_eDrawType_LineErase);
   ctx->fdraw->rect( ctx, text_x, text_y, text_width, text_height,
-		       flow_eDrawType_Line, 0, 0);
+		    flow_eDrawType_Line, 0, 0, 0);
 
   int y = text_y + 4 + (text_height-4)/tiptext_rows;
   for ( int i = 0; i < tiptext_rows; i++) {
     ctx->fdraw->text( ctx, text_x + 6, y - text_descent - 2, 
 		      tiptext[i], strlen(tiptext[i]), flow_eDrawType_TextHelvetica, text_size, 
-		      0, 0, ctx->zoom_factor / ctx->base_zoom_factor * (8+2*text_size));
+		      0, 0, 0, ctx->zoom_factor / ctx->base_zoom_factor * (8+2*text_size));
 
     y += (text_height-3)/tiptext_rows;
   }

@@ -117,7 +117,7 @@ void FlowLine::open( ifstream& fp)
   }
 }
 
-void FlowLine::draw( void *pos, int hightlight, int hot, void *node)
+void FlowLine::draw( void *pos, int highlight, int dimmed, int hot, void *node)
 {
   if ( p1.z_x == p2.z_x && p1.z_y == p2.z_y)
     return;
@@ -126,10 +126,10 @@ void FlowLine::draw( void *pos, int hightlight, int hot, void *node)
   idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->fdraw->line( ctx, p1.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
-	p1.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
-	p2.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
-	p2.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y,
-	draw_type, idx, hightlight);
+		    p1.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
+		    p2.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
+		    p2.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y,
+		    draw_type, idx, highlight, dimmed);
 }
 
 void FlowLine::erase( void *pos, int hot, void *node)
@@ -243,7 +243,7 @@ void FlowLine::get_borders( double pos_x, double pos_y,
 }
 
 void FlowLine::move( void *pos, double x1, double y1, double x2, double y2,
-	int highlight, int hot)
+		     int highlight, int dimmed, int hot)
 {
   erase( pos, hot, NULL);
   nav_erase( pos, NULL);
@@ -253,12 +253,12 @@ void FlowLine::move( void *pos, double x1, double y1, double x2, double y2,
   p2.y = y2;
   zoom();
   nav_zoom();
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 
 void FlowLine::shift( void *pos, double delta_x, double delta_y,
-	int highlight, int hot)
+		      int highlight, int dimmed, int hot)
 {
   erase( pos, hot, NULL);
   nav_erase( pos, NULL);
@@ -269,7 +269,7 @@ void FlowLine::shift( void *pos, double delta_x, double delta_y,
   zoom();
   nav_zoom();
 
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 

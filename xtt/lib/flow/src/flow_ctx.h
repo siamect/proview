@@ -127,6 +127,8 @@ class FlowCtx {
     void copy();
     void set_highlight( int on)
 		{ a.set_highlight( on);};
+    void set_dimmed( int on)
+		{ a.set_dimmed( on);};
     void set_inverse( int on)
 		{ a.set_inverse( on);};
     void set_select_highlight( int on)

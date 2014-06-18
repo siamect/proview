@@ -936,15 +936,19 @@ void FlowDrawXLib::enable_event( FlowCtx *ctx, flow_eEvent event,
 }
 
 int FlowDrawXLib::rect( FlowCtx *ctx, int x, int y, int width, int height, 
-	flow_eDrawType gc_type, int idx, int highlight)
+			flow_eDrawType gc_type, int idx, int highlight, int dimmed)
 {
   if ( ctx->nodraw) return 1;
 
-  if ( gc_type == flow_eDrawType_LineGray && highlight)
+  if ( dimmed)
+    gc_type = flow_eDrawType_LineGray;
+  else if ( gc_type == flow_eDrawType_LineGray && highlight)
     gc_type = flow_eDrawType_Line;
+  else if ( highlight)
+    gc_type++;
 
   XDrawRectangle( display, window, 
-	gcs[gc_type+highlight][idx], 
+	gcs[gc_type][idx], 
 	x, y, width, height);
   return 1;
 }
@@ -1042,16 +1046,20 @@ int FlowDrawXLib::nav_arrow_erase( FlowCtx *ctx, int x1, int y1, int x2, int y2,
 }
 
 int FlowDrawXLib::arc( FlowCtx *ctx, int x, int y, int width, int height, 
-	int angle1, int angle2,
-	flow_eDrawType gc_type, int idx, int highlight)
+		       int angle1, int angle2,
+		       flow_eDrawType gc_type, int idx, int highlight, int dimmed)
 {
   if ( ctx->nodraw) return 1;
 
-  if ( gc_type == flow_eDrawType_LineGray && highlight)
+  if ( dimmed)
+    gc_type = flow_eDrawType_LineGray;
+  else if ( gc_type == flow_eDrawType_LineGray && highlight)
     gc_type = flow_eDrawType_Line;
+  else if ( highlight)
+    gc_type++;
 
   XDrawArc( display, window,
-	gcs[gc_type+highlight][idx], 
+	gcs[gc_type][idx], 
 	x, y, width, height, angle1*64, angle2*64);
   return 1;
 }
@@ -1096,15 +1104,19 @@ int FlowDrawXLib::nav_arc_erase( FlowCtx *ctx, int x, int y, int width, int heig
 }
 
 int FlowDrawXLib::line( FlowCtx *ctx, int x1, int y1, int x2, int y2,
-	flow_eDrawType gc_type, int idx, int highlight)
+			flow_eDrawType gc_type, int idx, int highlight, int dimmed)
 {
   if ( ctx->nodraw) return 1;
 
-  if ( gc_type == flow_eDrawType_LineGray && highlight)
+  if ( dimmed)
+    gc_type = flow_eDrawType_LineGray;
+  else if ( gc_type == flow_eDrawType_LineGray && highlight)
     gc_type = flow_eDrawType_Line;
+  else if ( highlight)
+    gc_type++;
 
   XDrawLine( display, window,
-	gcs[gc_type+highlight][idx], 
+	gcs[gc_type][idx], 
 	x1, y1, x2, y2);
   return 1;
 }
@@ -1146,7 +1158,7 @@ int FlowDrawXLib::nav_line_erase( FlowCtx *ctx, int x1, int y1, int x2, int y2,
 }
 
 int FlowDrawXLib::text( FlowCtx *ctx, int x, int y, char *text, int len,
-			flow_eDrawType gc_type, int idx, int highlight, int line, double size)
+			flow_eDrawType gc_type, int idx, int highlight, int dimmed, int line, double size)
 {
   if ( ctx->nodraw) return 1;
 
