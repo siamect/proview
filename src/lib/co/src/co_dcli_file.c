@@ -522,3 +522,29 @@ pwr_tStatus dcli_file_ctime( char *filename, pwr_tTime *time)
   return DCLI__NOFILE;
 }
 
+void dcli_save_file_versions( char *fname)
+{  
+  pwr_tFileName newname;
+  pwr_tFileName oldname;
+  char cmd[400];
+  int i;
+  pwr_tTime t;
+  int sts;
+
+  for ( i = 9; i >= 0; i--) {
+    snprintf( newname, sizeof(newname), "%s.%d", fname, i+1);
+    if ( i == 0 )
+      strncpy( oldname, fname, sizeof(oldname));
+    else
+      snprintf( oldname, sizeof(oldname), "%s.%d", fname, i);
+
+    sts = dcli_file_time( oldname, &t);
+    if ( EVEN(sts))
+      continue;
+    
+    snprintf( cmd, sizeof(cmd), "mv -f %s %s", oldname, newname);
+    // printf( "%s -> %s\n", oldname, newname);
+    system( cmd);
+  }
+}
+

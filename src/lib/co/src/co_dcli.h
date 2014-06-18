@@ -107,6 +107,7 @@ char	*dcli_fgetname( FILE *fp, char *name, char *def_name);
 int	dcli_translate_filename( char *out, const char *in);
 pwr_tStatus dcli_file_time( char *filename, pwr_tTime *time);
 pwr_tStatus dcli_file_ctime( char *filename, pwr_tTime *time);
+void dcli_save_file_versions( char *fname);
 
 
 /* Functions in module co_dcli_dir */

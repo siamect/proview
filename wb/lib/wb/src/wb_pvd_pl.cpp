@@ -477,6 +477,7 @@ void wb_pvd_pl::save_list( pwr_tStatus *sts)
 
   *sts = LDH__SUCCESS;
   dcli_translate_filename( fname, "$pwra_db/pwr_projectlist.dat");
+  dcli_save_file_versions( fname);
   of.open( fname);
   if ( !of) {
     *sts = LDH__FILEOPEN;
