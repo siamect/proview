@@ -68,10 +68,10 @@ void FlowPushButton::draw( int ll_x, int ll_y, int ur_x, int ur_y)
 //  t.draw( &pos, 0);
 
   ctx->fdraw->rect( ctx, pos.z_x + r.ll.z_x, pos.z_y + r.ll.z_y, 
-	  r.ur.z_x - r.ll.z_x, r.ur.z_y - r.ll.z_y, r.draw_type, 
-	  r.line_width-1, 0);
+		    r.ur.z_x - r.ll.z_x, r.ur.z_y - r.ll.z_y, r.draw_type, 
+		    r.line_width-1, 0, 0);
   ctx->fdraw->text( ctx, pos.z_x + t.p.z_x, pos.z_y + t.p.z_y, t.text,
-		    strlen(t.text), t.draw_type, t.text_size, 0, 0,
+		    strlen(t.text), t.draw_type, t.text_size, 0, 0, 0,
 		    ctx->zoom_factor / ctx->base_zoom_factor * (8+2*t.text_size));
 }
 

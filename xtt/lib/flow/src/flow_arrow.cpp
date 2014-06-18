@@ -187,7 +187,7 @@ void FlowArrow::open( ifstream& fp)
   }
 }
 
-void FlowArrow::draw( void *pos, int highlight, int hot, void *node)
+void FlowArrow::draw( void *pos, int highlight, int dimmed, int hot, void *node)
 {
   int idx = int( ctx->zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx += hot;
@@ -250,7 +250,7 @@ void FlowArrow::nav_erase( void *pos, void *node)
 }
 
 void FlowArrow::move( void *pos, double x1, double y1, double x2, double y2,
-	int highlight, int hot)
+		      int highlight, int dimmed, int hot)
 {
   erase( pos, hot, NULL);
   nav_erase( pos, NULL);
@@ -301,12 +301,12 @@ void FlowArrow::move( void *pos, double x1, double y1, double x2, double y2,
   p_dest.y = y2;
   zoom();
   nav_zoom();
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 
 void FlowArrow::shift( void *pos, double delta_x, double delta_y, 
-	int highlight, int hot)
+		       int highlight, int dimmed, int hot)
 {
   erase( pos, hot, NULL);
   nav_erase( pos, NULL);
@@ -319,7 +319,7 @@ void FlowArrow::shift( void *pos, double delta_x, double delta_y,
   zoom();
   nav_zoom();
 
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 

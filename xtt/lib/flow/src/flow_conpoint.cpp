@@ -158,7 +158,7 @@ void FlowConPoint::get_trace_attr( char *object, char *attribute,
   *inverted = 0;
 }
 
-void FlowConPoint::draw( void *pos, int highlight, int hot, void *node)
+void FlowConPoint::draw( void *pos, int highlight, int dimmed, int hot, void *node)
 {
   int line_width = 1;
   int idx = int( ctx->zoom_factor / ctx->base_zoom_factor * line_width - 1) + 2;
@@ -191,7 +191,7 @@ void FlowConPoint::draw( void *pos, int highlight, int hot, void *node)
       y = p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y - size/2;
     }
     ctx->fdraw->arc( ctx, x, y, size, size, 0, 360,
-		     flow_eDrawType_LineRed, idx, 0);
+		     flow_eDrawType_LineRed, idx, 0, 0);
   }
 }
 

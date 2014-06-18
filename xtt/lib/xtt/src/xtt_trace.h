@@ -145,6 +145,7 @@ class RtTrace {
   static int connect_bc( flow_tObject object, char *name, char *attr, 
 			 flow_eTraceType type, void **p);
   static int disconnect_bc( flow_tObject object);
+  static int scan_bc( flow_tObject object, void *p);
   static void trace_scan( void *data);
   static int init_flow( FlowCtx *ctx, void *client_data);
   static int flow_cb( FlowCtx *ctx, flow_tEvent event);

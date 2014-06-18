@@ -59,7 +59,7 @@ class FlowArrow : public FlowArrayElem {
     void print( void *pos, void *node, int highlight);
     void save( ofstream& fp, flow_eSaveMode mode);
     void open( ifstream& fp);
-    void draw( void *pos, int hightlight, int hot, void *node);
+    void draw( void *pos, int hightlight, int dimmed, int hot, void *node);
     void nav_draw( void *pos, int highlight, void *node);
     void erase( void *pos, int hot, void *node);
     void draw_inverse( void *pos, int hot, void *node)
@@ -72,9 +72,9 @@ class FlowArrow : public FlowArrayElem {
 		{ return 0;};
     flow_eObjectType type() { return flow_eObjectType_Arrow;};
     void move( void *pos, double x1, double y1, double x2, double y2,
-	int highlight, int hot);
+	int highlight, int dimmed, int hot);
     void shift( void *pos, double delta_x, double delta_y, 
-	int highlight, int hot);
+	int highlight, int dimmed, int hot);
     FlowCtx *ctx;    
     FlowPoint p_dest;
     FlowPoint p1;

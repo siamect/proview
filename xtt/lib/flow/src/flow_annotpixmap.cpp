@@ -149,7 +149,7 @@ void FlowAnnotPixmap::open( ifstream& fp)
 #endif
 }
 
-void FlowAnnotPixmap::draw( void *pos, int highlight, int hot, void *node)
+void FlowAnnotPixmap::draw( void *pos, int highlight, int dimmed, int hot, void *node)
 {
   int x;
 
@@ -307,7 +307,7 @@ void FlowAnnotPixmap::get_borders( double pos_x, double pos_y, double *x_right,
 */
 }
 
-void FlowAnnotPixmap::move( void *pos, double x, double y, int highlight, int hot)
+void FlowAnnotPixmap::move( void *pos, double x, double y, int highlight, int dimmed, int hot)
 {
   erase( pos, hot, NULL);
   nav_erase( pos, NULL);
@@ -315,12 +315,12 @@ void FlowAnnotPixmap::move( void *pos, double x, double y, int highlight, int ho
   p.y = y;
   zoom();
   nav_zoom();
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 
 void FlowAnnotPixmap::shift( void *pos, double delta_x, double delta_y,
-	int highlight, int hot)
+			     int highlight, int dimmed, int hot)
 {
   erase( pos, hot, NULL);
   nav_erase( pos, NULL);
@@ -329,7 +329,7 @@ void FlowAnnotPixmap::shift( void *pos, double delta_x, double delta_y,
   zoom();
   nav_zoom();
 
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 

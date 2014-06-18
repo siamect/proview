@@ -88,7 +88,7 @@ class FlowDrawGtk : public FlowDraw {
   void set_nav_window_size( FlowCtx *ctx, int width, int height);
 
   int rect( FlowCtx *ctx, int x, int y, int width, int height, 
-	    flow_eDrawType gc_type, int idx, int highlight);
+	    flow_eDrawType gc_type, int idx, int highlight, int dimmed);
   int rect_erase( FlowCtx *ctx, int x, int y, int width, int height,
 		  int idx);
   int nav_rect( FlowCtx *ctx, int x, int y, int width, int height,
@@ -109,7 +109,7 @@ class FlowDrawGtk : public FlowDraw {
 		       int idx);
   int arc( FlowCtx *ctx, int x, int y, int width, int height, 
 	   int angle1, int angle2,
-	   flow_eDrawType gc_type, int idx, int highlight);
+	   flow_eDrawType gc_type, int idx, int highlight, int dimmed);
   int arc_erase( FlowCtx *ctx, int x, int y, int width, int height,
 		 int angle1, int angle2,
 		 int idx);
@@ -120,7 +120,7 @@ class FlowDrawGtk : public FlowDraw {
 		     int angle1, int angle2,
 		     int idx);
   int line( FlowCtx *ctx, int x1, int y1, int x2, int y2,
-	    flow_eDrawType gc_type, int idx, int highlight);
+	    flow_eDrawType gc_type, int idx, int highlight, int dimmed);
   int line_erase( FlowCtx *ctx, int x1, int y1, int x2, int y2,
 		  int idx);
   int nav_line( FlowCtx *ctx, int x1, int y1, int x2, int y2,
@@ -128,7 +128,7 @@ class FlowDrawGtk : public FlowDraw {
   int nav_line_erase( FlowCtx *ctx, int x1, int y1, int x2, int y2,
 		      int idx);
   int text( FlowCtx *ctx, int x, int y, char *text, int len,
-	    flow_eDrawType gc_type, int idx, int highlight, int line, double size);
+	    flow_eDrawType gc_type, int idx, int highlight, int dimmed, int line, double size);
   int text_inverse( FlowCtx *ctx, int x, int y, char *text, int len,
 		    flow_eDrawType gc_type, int idx, int line, double size);
   int text_erase( FlowCtx *ctx, int x, int y, char *text, int len,
@@ -198,7 +198,7 @@ class FlowDrawGtk : public FlowDraw {
 		  flow_tPixmap *im_pixmap, flow_tPixmap *im_mask,
 		  flow_tPixmap *im_nav_pixmap, flow_tPixmap *im_nav_mask);
   int text_pango( FlowCtx *ctx, int x, int y, char *text, int len,
-		  flow_eDrawType gc_type, int idx, int highlight, int line, double size);
+		  flow_eDrawType gc_type, int idx, int highlight, int dimmed, int line, double size);
   int text_inverse_pango( FlowCtx *ctx, int x, int y, char *text, int len,
 			  flow_eDrawType gc_type, int idx, int line, double size);
   int text_erase_pango( FlowCtx *ctx, int x, int y, char *text, int len,

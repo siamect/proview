@@ -115,7 +115,7 @@ void FlowRadiobutton::open( ifstream& fp)
   // Not yet implemented
 }
 
-void FlowRadiobutton::draw( void *pos, int highlight, int hot, void *node)
+void FlowRadiobutton::draw( void *pos, int highlight, int dimmed, int hot, void *node)
 {
   int ll_x, ll_y, ur_x, ur_y;
   int idx = 0;
@@ -125,17 +125,17 @@ void FlowRadiobutton::draw( void *pos, int highlight, int hot, void *node)
   ur_x = ll_x + ur.z_x - ll.z_x;
   ur_y = ll_y + ur.z_y - ll.z_y;
   ctx->fdraw->rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	draw_type, idx, 0);
+		    draw_type, idx, 0, 0);
   if ( ((FlowNode *)node)->rbuttonv[number])
   {
     ctx->fdraw->line( ctx, ll_x + 1, ll_y + 1, ur_x - 1, ll_y + 1,
-	flow_eDrawType_LineGray, idx, 0);
+		      flow_eDrawType_LineGray, idx, 0, 0);
     ctx->fdraw->line( ctx, ll_x + 2, ll_y + 2, ur_x - 2, ll_y + 2,
-	flow_eDrawType_LineGray, idx, 0);
+		      flow_eDrawType_LineGray, idx, 0, 0);
     ctx->fdraw->line( ctx, ll_x + 1, ll_y + 1, ll_x + 1, ur_y - 1,
-	flow_eDrawType_LineGray, idx, 0);
+		      flow_eDrawType_LineGray, idx, 0, 0);
     ctx->fdraw->line( ctx, ll_x + 2, ll_y + 2, ll_x + 2, ur_y - 2,
-	flow_eDrawType_LineGray, idx, 0);
+		      flow_eDrawType_LineGray, idx, 0, 0);
     ctx->fdraw->line_erase( ctx, ur_x - 1, ur_y - 1, ll_x + 1, ur_y - 1,
 	idx);
     ctx->fdraw->line_erase( ctx, ur_x - 2, ur_y - 2, ll_x + 2, ur_y - 2,
@@ -158,15 +158,15 @@ void FlowRadiobutton::draw( void *pos, int highlight, int hot, void *node)
     ctx->fdraw->line_erase( ctx, ll_x + 2, ll_y + 2, ll_x + 2, ur_y - 2,
 	idx);
     ctx->fdraw->line( ctx, ur_x - 1, ur_y - 1, ll_x + 1, ur_y - 1,
-	flow_eDrawType_LineGray, idx, 0);
+		      flow_eDrawType_LineGray, idx, 0, 0);
     ctx->fdraw->line( ctx, ur_x - 2, ur_y - 2, ll_x + 2, ur_y - 2,
-	flow_eDrawType_LineGray, idx, 0);
+		      flow_eDrawType_LineGray, idx, 0, 0);
     ctx->fdraw->line( ctx, ur_x - 1, ur_y - 1, ur_x - 1, ll_y + 1,
-	flow_eDrawType_LineGray, idx, 0);
+		      flow_eDrawType_LineGray, idx, 0, 0);
     ctx->fdraw->line( ctx, ur_x - 2, ur_y - 2, ur_x - 2, ll_y + 2,
-	flow_eDrawType_LineGray, idx, 0);
+		      flow_eDrawType_LineGray, idx, 0, 0);
     ctx->fdraw->fill_rect( ctx, ll_x + 3, ll_y + 3, ur_x - ll_x - 5, 
-	ur_y - ll_y - 5, flow_eDrawType_LineErase);
+			   ur_y - ll_y - 5, flow_eDrawType_LineErase);
   }
 }
 
@@ -273,7 +273,7 @@ void FlowRadiobutton::get_borders( double pos_x, double pos_y, double *x_right,
     *y_high = pos_y + ur.y;
 }
 
-void FlowRadiobutton::move( void *pos, double x, double y, int highlight, int hot)
+void FlowRadiobutton::move( void *pos, double x, double y, int highlight, int dimmed, int hot)
 {
   double width, height;
 
@@ -287,12 +287,12 @@ void FlowRadiobutton::move( void *pos, double x, double y, int highlight, int ho
   ur.y = y + height;
   zoom();
   nav_zoom();
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 
 void FlowRadiobutton::shift( void *pos, double delta_x, double delta_y,
-	int highlight, int hot)
+			     int highlight, int dimmed, int hot)
 {
   erase( pos, hot, NULL);
   nav_erase( pos, NULL);
@@ -303,7 +303,7 @@ void FlowRadiobutton::shift( void *pos, double delta_x, double delta_y,
   zoom();
   nav_zoom();
 
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 

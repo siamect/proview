@@ -105,6 +105,11 @@ void flow_ResetHighlightAll( flow_tCtx ctx)
   ctx->set_highlight( 0);
 }
 
+void flow_ResetDimmedAll( flow_tCtx ctx)
+{
+  ctx->set_dimmed( 0);
+}
+
 void flow_ResetInverseAll( flow_tCtx ctx)
 {
   ctx->set_inverse( 0);
@@ -183,6 +188,16 @@ void flow_SetHighlight( flow_tObject object, int value)
 void flow_GetHighlight( flow_tObject object, int *value)
 {
   *value = ((FlowArrayElem *) object)->get_highlight();
+}
+
+void flow_SetDimmed( flow_tObject object, int value)
+{
+  ((FlowArrayElem *) object)->set_dimmed( value);
+}
+
+void flow_GetDimmed( flow_tObject object, int *value)
+{
+  *value = ((FlowArrayElem *) object)->get_dimmed();
 }
 
 void flow_SetInverse( flow_tObject object, int value)

@@ -54,7 +54,7 @@ void FlowFrame::open( ifstream& fp)
   // nyi
 }
 
-void FlowFrame::draw( void *pos, int highlight, int hot, void *node)
+void FlowFrame::draw( void *pos, int highlight, int dimmed, int hot, void *node)
 {
   double ur_x, ur_y;
   int idx;
@@ -83,7 +83,7 @@ void FlowFrame::draw( void *pos, int highlight, int hot, void *node)
 		    ll.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
 		    int( ur_x * ctx->zoom_factor - ll.z_x - ((FlowPoint *)pos)->z_x - 1), 
 		    int( ur_y * ctx->zoom_factor - ll.z_y - ((FlowPoint *)pos)->z_y - 1), 
-		    draw_type, idx, highlight);
+		    draw_type, idx, highlight, 0);
 }
 
 void FlowFrame::erase( void *pos, int hot, void *node)

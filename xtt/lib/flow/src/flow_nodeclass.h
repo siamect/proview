@@ -64,7 +64,7 @@ class FlowNodeClass : public FlowArrayElem {
     void save( ofstream& fp, flow_eSaveMode mode);
     void open( ifstream& fp);
     int load( char *filename);
-    void draw( FlowPoint *pos, int highlight, int hot, void *node);
+    void draw( FlowPoint *pos, int highlight, int dimmed, int hot, void *node);
     void nav_draw( FlowPoint *pos, int highlight, void *node);
     void draw_inverse( FlowPoint *pos, int hot, void *node);
     void erase( FlowPoint *pos, int hot, void *node);

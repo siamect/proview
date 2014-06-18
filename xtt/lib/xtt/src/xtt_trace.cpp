@@ -273,6 +273,63 @@ int RtTrace::disconnect_bc( flow_tObject object)
   return 1;
 }
 
+int RtTrace::scan_bc( flow_tObject object, void *trace_p)
+{
+  flow_tTraceObj trace_object;
+  flow_tTraceAttr trace_attribute;
+  flow_eTraceType trace_attr_type;
+  int trace_inverted;
+  int highlight;
+  int on;
+  char txt[80];
+  pwr_tSubid	*subid_p;
+  pwr_tStatus sts;
+  pwr_tBoolean old;
+  int dimmed;
+  
+
+  if ( flow_GetObjectType( object) == flow_eObjectType_Node) {
+    flow_GetTraceAttr( object, trace_object, trace_attribute, &trace_attr_type, &trace_inverted);
+    flow_GetHighlight( object, &highlight);
+
+    switch( trace_attr_type) {
+    case flow_eTraceType_Boolean:
+      on = trace_inverted ? *(unsigned int *) trace_p == 0 : *(unsigned int *) trace_p != 0;
+      if ( highlight != on)
+        flow_SetHighlight( object, on);
+      if ( flow_GetNodeGroup( object) == flow_eNodeGroup_Trace) {
+        sprintf( txt, "%d", *(unsigned int *) trace_p);
+        flow_SetAnnotation( object, 0, txt, strlen(txt));
+      }
+      break;
+    case flow_eTraceType_Int32:
+      sprintf( txt, "%d", *(unsigned int *) trace_p);
+      flow_SetAnnotation( object, 0, txt, strlen(txt));
+      break;
+    case flow_eTraceType_Float32:
+      sprintf( txt, "%f", *(float *) trace_p);
+      flow_SetAnnotation( object, 0, txt, strlen(txt));
+      break;
+    default:
+      break;
+    }
+
+    if ( !( strcmp( trace_object, "") == 0 || strcmp( trace_attribute, "") == 0)) {
+      flow_GetUserData( object, (void **) &subid_p);
+      if ( subid_p) {
+	sts = gdh_GetSubscriptionOldness( *subid_p, &old, 0, 0);
+	if ( ODD(sts)) {
+
+	  flow_GetDimmed( object, &dimmed);
+	  if ( (int)old != dimmed)
+	    flow_SetDimmed( object, old);
+	}
+      }
+    }
+    
+  }
+  return 1;
+}
 
 void RtTrace::trace_scan( void *data)
 {
@@ -1285,7 +1342,7 @@ int RtTrace::trace_start()
 
     flow_ResetHighlightAll( flow_ctx);
     flow_SelectClear( flow_ctx);
-    sts = flow_TraceInit( flow_ctx, connect_bc, disconnect_bc, NULL);
+    sts = flow_TraceInit( flow_ctx, connect_bc, disconnect_bc, scan_bc);
     if ( EVEN(sts))
       return sts;
     trace_started = 1;
@@ -1323,6 +1380,7 @@ int RtTrace::trace_stop()
   if ( trace_started) {
     flow_TraceClose( flow_ctx);
     flow_ResetHighlightAll( flow_ctx);
+    flow_ResetDimmedAll( flow_ctx);
     flow_SelectClear( flow_ctx);
     flow_RemoveTraceObjects( flow_ctx);
     trace_started = 0;

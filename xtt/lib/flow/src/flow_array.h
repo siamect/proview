@@ -64,7 +64,7 @@ class FlowArray {
     void print( void *pos, void *node, int highlight);
     void save( ofstream& fp, flow_eSaveMode mode);
     void open( void *ctx, ifstream& fp);
-    void draw( void *pos, int highlight, int hot, void *node);
+    void draw( void *pos, int highlight, int dimmed, int hot, void *node);
     void erase( void *pos, int hot, void *node); 
     void draw_inverse( void *pos, int hot, void *node);
     void nav_draw( void *pos, int highlight, void *node);
@@ -82,10 +82,11 @@ class FlowArray {
 		void **cp);
     int get_conpoint( int num, double *x, double *y, flow_eDirection *dir);
     void set_highlight( int on);
+    void set_dimmed( int on);
     void set_hot( int on);
     void select_region_insert( double ll_x, double ll_y, double ur_x, 
 		double ur_y);
-    void shift( void *pos, double delta_x, double delta_y, int highlight, 
+    void shift( void *pos, double delta_x, double delta_y, int highlight, int dimmed, 
 		int hot);
     void move( int delta_x, int delta_y, int grid);
     void move_noerase( int delta_x, int delta_y, int grid);

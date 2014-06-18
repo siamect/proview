@@ -65,7 +65,7 @@ class FlowAnnot : public FlowArrayElem {
     void print( void *pos, void *node, int highlight);
     void save( ofstream& fp, flow_eSaveMode mode);
     void open( ifstream& fp);
-    void draw( void *pos, int highlight, int hot, void *node);
+    void draw( void *pos, int highlight, int dimmed, int hot, void *node);
     void nav_draw( void *pos, int highlight, void *node);
     void draw_inverse( void *pos, int hot, void *node);
     void erase( void *pos, int hot, void *node);

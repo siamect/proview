@@ -65,7 +65,7 @@ class FlowArc : public FlowArrayElem {
     void print( void *pos, void *node, int highlight);
     void save( ofstream& fp, flow_eSaveMode mode);
     void open( ifstream& fp);
-    void draw( void *pos, int highlight, int hot, void *node);
+    void draw( void *pos, int highlight, int dimmed, int hot, void *node);
     void nav_draw( void *pos, int highlight, void *node);
     void erase( void *pos, int hot, void *node);
     void draw_inverse( void *pos, int hot, void *node)
@@ -74,9 +74,9 @@ class FlowArc : public FlowArrayElem {
     void get_borders( double pos_x, double pos_y, double *x_right, 
 		double *x_left, double *y_high, double *y_low, void *node);
     void move( void *pos, double x1, double y1, double x2, double y2,
-	int ang1, int ang2, int highlight, int hot);
+	       int ang1, int ang2, int highlight, int dimmed, int hot);
     void shift( void *pos, double delta_x, double delta_y,
-	int highlight, int hot);
+		int highlight, int dimmed, int hot);
     int get_conpoint( int num, double *x, double *y, flow_eDirection *dir) 
 		{ return 0;};
     flow_eObjectType type() { return flow_eObjectType_Arc;};

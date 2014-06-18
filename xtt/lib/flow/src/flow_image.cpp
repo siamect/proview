@@ -171,7 +171,7 @@ void FlowImage::open( ifstream& fp)
   }
 }
 
-void FlowImage::draw( void *pos, int highlight, int hot, void *node)
+void FlowImage::draw( void *pos, int highlight, int dimmed, int hot, void *node)
 {
   if ( !(display_level & ctx->display_level))
     return;
@@ -249,7 +249,7 @@ void FlowImage::get_borders( double pos_x, double pos_y, double *x_right,
     *y_high = pos_y + ur.y;
 }
 
-void FlowImage::move( void *pos, double x, double y, int highlight, int hot)
+void FlowImage::move( void *pos, double x, double y, int highlight, int dimmed, int hot)
 {
   double width, height;
 
@@ -263,12 +263,12 @@ void FlowImage::move( void *pos, double x, double y, int highlight, int hot)
   ur.y = y + height;
   zoom();
   nav_zoom();
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 
 void FlowImage::shift( void *pos, double delta_x, double delta_y,
-	int highlight, int hot)
+		       int highlight, int dimmed, int hot)
 {
   erase( pos, hot, NULL);
   nav_erase( pos, NULL);
@@ -279,7 +279,7 @@ void FlowImage::shift( void *pos, double delta_x, double delta_y,
   zoom();
   nav_zoom();
 
-  draw( pos, highlight, hot, NULL);
+  draw( pos, highlight, dimmed, hot, NULL);
   nav_draw( pos, highlight, NULL);
 }
 

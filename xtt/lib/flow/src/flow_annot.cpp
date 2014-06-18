@@ -182,7 +182,7 @@ void FlowAnnot::open( ifstream& fp)
   }
 }
 
-void FlowAnnot::draw( void *pos, int highlight, int hot, void *node)
+void FlowAnnot::draw( void *pos, int highlight, int dimmed, int hot, void *node)
 {
   int x;
 
@@ -208,7 +208,7 @@ void FlowAnnot::draw( void *pos, int highlight, int hot, void *node)
 			p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
 			((FlowNode *) node)->annotv[number],
 			strlen(((FlowNode *) node)->annotv[number]), draw_type, idx, 
-			highlight, 0,
+			highlight, dimmed, 0,
 			tsize(text_size));
       if ( ((FlowNode *) node)->annotv_inputmode[number])
         ctx->fdraw->move_input( ctx, 
@@ -234,7 +234,7 @@ void FlowAnnot::draw( void *pos, int highlight, int hot, void *node)
 	  if ( len) {
 	    *s = 0;
             ctx->fdraw->text( ctx, z_x, z_y + line_cnt * z_height, line, 
-			      len, draw_type, idx, highlight, 0,
+			      len, draw_type, idx, highlight, dimmed, 0,
 			      tsize(text_size));
 	    *s = 10;
 	  }
@@ -247,7 +247,7 @@ void FlowAnnot::draw( void *pos, int highlight, int hot, void *node)
       }
       if ( len)
         ctx->fdraw->text( ctx, z_x, z_y + line_cnt * z_height, line, 
-			  len, draw_type, idx, highlight, 0,
+			  len, draw_type, idx, highlight, dimmed, 0,
 			  tsize(text_size));
       break;
     }
