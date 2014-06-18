@@ -1442,7 +1442,7 @@ pwrc_copy_func()
 
     # Copy directory tree
     echo "-- Copying project tree..."
-    if cp -R $from_proot $to_proot
+    if cp -Ra $from_proot $to_proot
     then
       echo "-- Project tree copied"
     else
