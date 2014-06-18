@@ -9717,7 +9717,8 @@ int GeHostObject::connect( grow_tObject object, glow_sTraceData *trace_data)
     grow_GetNodeClassObjectList( nodeclass, &objectlist, &object_cnt);
     object_p = objectlist;
     for ( int i = 0; i < object_cnt; i++) {
-      if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowNode) {
+      if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowNode ||
+	   grow_GetObjectType( *object_p) == glow_eObjectType_GrowGroup) {
 	GeDyn *gm_dyn;
 	
         grow_GetUserData( *object_p, (void **)&gm_dyn);
