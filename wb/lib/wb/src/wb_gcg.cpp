@@ -15289,7 +15289,7 @@ int	gcg_comp_m58( gcg_ctx gcgctx, vldh_t_node node)
 	      switch ( bodydef[i].Par->Param.Info.Type) {
 	      case pwr_eType_String:
 		IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
-			       "strncpy( %c%s->%s, %c%s->%sP, %d);\n",
+			       "strncpy( %c%s->%s, (char *)%c%s->%sP, %d);\n",
 			       GCG_PREFIX_REF,
 			       vldh_IdToStr(0, node->ln.oid),
 			       bodydef[i].Par->Param.Info.PgmName,
