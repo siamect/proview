@@ -82,6 +82,33 @@ $(pwrp_root)/vax_eln/exe/%.sys : $(pwrp_load)/%.dat
 	@ echo "ebuild $(tname)"
 	@ rsh $(pwr_build_host_vax_eln) @pwr_cc '"'$(pwrp_root)'"' $(pwrp_projectname) "1" "3" $(tname)
 
+$(pwrp_exe)/%.gif : %.gif
+	@ echo "Copy $(notdir $(source))"
+	@ cp $(source) $(target)
+
+$(pwrp_exe)/%.png : %.png
+	@ echo "Copy $(notdir $(source))"
+	@ cp $(source) $(target)
+
+$(pwrp_exe)/%.jpg : %.jpg
+	@ echo "Copy $(notdir $(source))"
+	@ cp $(source) $(target)
+
+$(pwrp_exe)/%.gsd : %.gsd
+	@ echo "Copy $(notdir $(source))"
+	@ cp $(source) $(target)
+
+$(pwrp_exe)/%.pwg : %.pwg
+	@ echo "Copy $(notdir $(source))"
+	@ cp $(source) $(target)
+
+$(pwrp_exe)/%.xml : %.xml
+	@ echo "Copy $(notdir $(source))"
+	@ cp $(source) $(target)
+
+$(pwrp_exe)/%.dat : %.dat
+	@ echo "Copy $(notdir $(source))"
+	@ cp $(source) $(target)
 
 
 
