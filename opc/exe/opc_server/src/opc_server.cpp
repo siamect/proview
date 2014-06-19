@@ -264,6 +264,7 @@ int main()
   errh_SetStatus( PWR__SRUN);
 
   soap_init( &soap);
+  soap.bind_flags = 0;
 
   for ( int k = 0; k < restarts + 1; k++) {
     m = soap_bind( &soap, NULL, opcsrv->m_config->Port, 100);

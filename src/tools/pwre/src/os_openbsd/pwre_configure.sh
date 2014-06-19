@@ -331,7 +331,7 @@ echo "export wb_rtt=\$pwr_exe/wb_rtt" >> $cfile
 
 echo "export pwre_conf_cc_define=\"$conf_cc_define\"" >> $cfile
 echo "export pwre_conf_libpwrco=\"-lpwr_co\"" >> $cfile
-echo "export pwre_conf_libpwrrt=\"-lpwr_rt -lpwr_co -lpwr_statussrv -lpwr_msg_dummy\"" >> $cfile
+echo "export pwre_conf_libpwrrt=\"-lpwr_rt -lpwr_statussrv -lpwr_co -lpwr_msg_dummy\"" >> $cfile
 echo "export pwre_conf_libpwrdtt=\"-lpwr_dtt\"" >> $cfile
 echo "export pwre_conf_libpwrotherio=\"-lpwr_usbio_dummy -lpwr_usb_dummy\"" >> $cfile
 echo "export pwre_conf_libpwrxtt=\"-lpwr_xtt -lpwr_ge -lpwr_cow -lpwr_flow -lpwr_glow\"" >> $cfile

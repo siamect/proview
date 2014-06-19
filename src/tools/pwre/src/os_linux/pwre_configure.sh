@@ -389,7 +389,7 @@ if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
 
   echo "export pwre_conf_cc_define=\"$conf_cc_define\"" >> $cfile
   echo "export pwre_conf_libpwrco=\"-lpwr_co\"" >> $cfile
-  echo "export pwre_conf_libpwrrt=\"-lpwr_rt -lpwr_co -lpwr_statussrv -lpwr_msg_dummy\"" >> $cfile
+  echo "export pwre_conf_libpwrrt=\"-lpwr_rt -lpwr_statussrv -lpwr_co -lpwr_msg_dummy\"" >> $cfile
   echo "export pwre_conf_libpwrdtt=\"-lpwr_dtt\"" >> $cfile
   echo "export pwre_conf_libpwrotherio=\"-lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_cifx_dummy\"" >> $cfile
   echo "export pwre_conf_libpwrprofibus=\"-lpwr_pnak_dummy\"" >> $cfile
@@ -492,7 +492,7 @@ else
 
   echo "export pwre_conf_cc_define=\"$conf_cc_define\"" >> $cfile
   echo "export pwre_conf_libpwrco=\"-lpwr_co\"" >> $cfile
-  echo "export pwre_conf_libpwrrt=\"-lpwr_rt -lpwr_co -lpwr_statussrv -lpwr_msg_dummy\"" >> $cfile
+  echo "export pwre_conf_libpwrrt=\"-lpwr_rt -lpwr_statussrv -lpwr_co -lpwr_msg_dummy\"" >> $cfile
   echo "export pwre_conf_libpwrdtt=\"-lpwr_dtt\"" >> $cfile
   echo "export pwre_conf_libpwrotherio=\"-lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_cifx_dummy -lpwr_nodave_dummy -lpwr_epl_dummy\"" >> $cfile
   echo "export pwre_conf_libpwrprofibus=\"-lpwr_pnak_dummy\"" >> $cfile

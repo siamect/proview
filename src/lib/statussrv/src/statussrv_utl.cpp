@@ -5,12 +5,31 @@
 #include "statussrv_utl.h"
 #include "co_time.h"
 #include "co_cdh.h"
+#include "co_cnf.h"
 #include "co_syi.h"
 #include "rt_pwr_msg.h"
 
 static struct soap soap;
 static int init_done = 0;
 static int port = 18084;
+
+static void init()
+{
+  float timeout;
+  char timeoutstr[20];
+
+  if ( init_done)
+    return;
+
+  soap_init( &soap);
+
+  if ( cnf_get_value("statusMonitorTimeout", timeoutstr, sizeof(timeoutstr)) != 0 &&
+       sscanf( timeoutstr, "%f", &timeout) == 1)
+    soap.recv_timeout = -1000000 * timeout;  // Negative value is us, positive is s    
+  else
+    soap.recv_timeout = -200000;
+  init_done = 1;
+}
 
 static char *nname( const char *nodename)
 {
@@ -31,10 +50,8 @@ pwr_tStatus statussrv_GetStatus( const char *nodename, statussrv_sGetStatus *res
   pwr_tStatus sts = PWR__SUCCESS;
   char endpoint[80];
 
-  if ( !init_done) {
-    soap_init( &soap);
-    init_done = 1;
-  }
+  if ( !init_done)
+    init();
 
   sprintf( endpoint, "http://%s:%d", nname(nodename), port);
 
@@ -125,10 +142,8 @@ pwr_tStatus statussrv_GetExtStatus( const char *nodename, statussrv_sGetExtStatu
   pwr_tStatus sts = PWR__SUCCESS;
   char endpoint[80];
 
-  if ( !init_done) {
-    soap_init( &soap);
-    init_done = 1;
-  }
+  if ( !init_done)
+    init();
 
   sprintf( endpoint, "http://%s:%d", nname(nodename), port);
 
@@ -398,10 +413,8 @@ pwr_tStatus statussrv_Restart( const char *nodename)
   pwr_tStatus sts = PWR__SUCCESS;
   char endpoint[80];
 
-  if ( !init_done) {
-    soap_init( &soap);
-    init_done = 1;
-  }
+  if ( !init_done)
+    init();
 
   sprintf( endpoint, "http://%s:%d", nname(nodename), port);
 
@@ -428,10 +441,8 @@ pwr_tStatus statussrv_XttStart( const char *nodename, const char *opplace, const
   pwr_tStatus sts = PWR__SUCCESS;
   char endpoint[80];
 
-  if ( !init_done) {
-    soap_init( &soap);
-    init_done = 1;
-  }
+  if ( !init_done)
+    init();
 
   sprintf( endpoint, "http://%s:%d", nname(nodename), port);
 
@@ -476,10 +487,8 @@ pwr_tStatus statussrv_RtMonStart( const char *nodename, const char *lang, const 
   pwr_tStatus sts = PWR__SUCCESS;
   char endpoint[80];
 
-  if ( !init_done) {
-    soap_init( &soap);
-    init_done = 1;
-  }
+  if ( !init_done)
+    init();
 
   sprintf( endpoint, "http://%s:%d", nname(nodename), port);
 
