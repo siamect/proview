@@ -186,7 +186,7 @@ cp $pwre_sroot/tools/pkg/deb/user/wtt_init1.pwr_com $pkgroot/usr/pwr$ver/$pwre_t
   echo "Name=Proview V${version:0:3}"
   echo "Type=Application"
   echo "Comment=Start Proview"
-  echo "Exec=xterm -title \"Proview Development Console\" -e 'export pwra_db=$aroot/db;source \$pwra_db/pwra_env.sh set base V""${version:0:3}"";source \$pwra_db/pwra_env.sh set bus;wb -p pwrp pwrp'"
+  echo "Exec=lxterm -title \"Proview Development Console\" -e 'export pwra_db=$aroot/db;source \$pwra_db/pwra_env.sh set base V""${version:0:3}"";source \$pwra_db/pwra_env.sh set bus;wb -p pwrp pwrp'"
   echo "Icon=$aroot/db/proview_icon.png"
   echo "Categories=GNOME;GTK;Application;"
 } > $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user/proview$ver.desktop

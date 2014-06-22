@@ -74,7 +74,7 @@ cd $currentdir
   echo "Name=Proview Demo"
   echo "Type=Application"
   echo "Comment=Start Proview Demo"
-  echo "Exec=xterm -title \"Proview Demo Console\" -e 'export pwra_db=$aroot/db;source \$pwra_db/pwr_setup.sh;source \$pwra_db/pwra_env.sh set project pwrdemo""$ver"";export PWR_BUS_ID=999;pwr_rtmon'"
+  echo "Exec=lxterm -title \"Proview Demo Console\" -e 'export pwra_db=$aroot/db;source \$pwra_db/pwr_setup.sh;source \$pwra_db/pwra_env.sh set project pwrdemo""$ver"";export PWR_BUS_ID=999;pwr_rtmon'"
   echo "Icon=$aroot/db/proview_icon.png"
   echo "Categories=GNOME;GTK;Application;"
 } > $pkgroot/usr/pwrp/pwrdemo$ver/cnf/proviewdemo$ver.desktop
