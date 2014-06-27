@@ -55,26 +55,44 @@ SObject pwrb:Class
       Body SysBody
         Attr StructName = "PlcProcess"
       EndBody 
+      !/**
+      !  Description of the plc process.
+      !*/
       Object Description $Attribute 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
+      !/**
+      !  Priority of the plc process.
+      !*/
       Object Prio $Attribute 2
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
 	EndBody
       EndObject
+      !/**
+      !  Obsolete.
+      !*/
       Object StartWithDebug $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Update time for subscriptions, when attributes in other nodes are 
+      !  references in the plc code.
+      !*/
       Object SubscriptionInterval $Attribute 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
+      !/**
+      !  Kernel affinity mask.
+      !  This mask is used to specify that the plc process should be
+      !  executed on a specific kernel.
+      !*/
       Object CpuMask $Attribute 15
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Mask"
@@ -94,6 +112,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Last start time. Uptime.
+      !*/
       Object StartTime $Attribute 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$DeltaTime"
@@ -101,6 +122,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Last stop time. Uptime.
+      !*/
       Object StopTime $Attribute 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$DeltaTime"
@@ -108,6 +132,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Stall time at last restart.
+      !*/
       Object StallTime $Attribute 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$DeltaTime"
@@ -138,6 +165,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_PRIVATE
 	EndBody
       EndObject
+      !/**
+      !  List of thread object.
+      !*/
       Object PlcThreadObjects $Attribute 13
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"

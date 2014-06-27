@@ -2932,7 +2932,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! The Profinet stack is implemented as three Linux kernel modules. The stack 
     ! is configured by the current object and is placed below the $Node object.
     !
-    ! See Proview documentation 'Guide to I/O System! for more information. See also
+    ! See Proview documentation 'Guide to I/O System' for more information. See also
     ! a Case Study in class help class ABB_ACS880_PnDevice
     !
     ! Note due to Softing licens requirements the NIC must have a specific macadress.
