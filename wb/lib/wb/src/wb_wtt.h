@@ -252,6 +252,9 @@ class Wtt : public WUtility {
     void activate_openclasseditor();
     void activate_buildvolume();
     void activate_buildnode();
+    void activate_buildproject();
+    void activate_buildimport();
+    void activate_buildexport();
     void activate_distribute();
     void activate_showcrossref();
     void activate_updateclasses();

@@ -1413,4 +1413,101 @@ void wb_build::classdef( pwr_tOid oid)
 }
 
 
+void wb_build::project( char *dir)
+{
+  pwr_tFileName fname;
+  char line[400];
+  char line_item[4][250];
+  pwr_tFileName found_file;
+  int num;
+  int sts;
+  pwr_tCmd cmd;
 
+  dcli_translate_filename( fname, load_cNameDistribute);
+  ifstream is( fname);
+
+  while ( is.getline( line, sizeof(line))) {
+    dcli_trim( line, line);
+    if ( line[0] == '#' || line[0] == '!')
+      continue;
+    
+    num = dcli_parse( line, " 	", "", (char *)line_item,
+		      sizeof(line_item)/sizeof(line_item[0]),
+		      sizeof(line_item[0]), 0);
+    if ( !num)
+      continue;
+    
+    if  ( dir && strncmp( dir, line_item[1], strlen(dir)) != 0)
+      continue;
+
+    if ( strcmp( cdh_Low(line_item[0]), "buildcopy") == 0) {
+      if ( num != 4) {
+	printf("File corrupt " load_cNameDistribute);
+	continue;
+      }
+
+      for ( sts = dcli_search_file( line_item[2], found_file, DCLI_DIR_SEARCH_INIT);
+	    ODD(sts);
+	    sts = dcli_search_file( line_item[2], found_file, DCLI_DIR_SEARCH_NEXT)) {
+
+	// Check if file should be updated
+	int update = 0;
+	pwr_tFileName source, target;
+	pwr_tTime source_time, target_time;
+
+	strncpy( source, found_file, sizeof(source));
+	strncpy( target, line_item[3], sizeof(target));
+
+	sts = dcli_file_time( source, &source_time);
+
+	if ( target[strlen(target)-1] == '/') {
+	  // Target is a directory, add file name
+	  char *s = strrchr( source, '/');
+	  if ( !s)
+	    strncat( target, source, sizeof(target));
+	  else
+	    strncat( target, s+1, sizeof(target));
+	}
+	
+	dcli_translate_filename( target, target);
+	sts = dcli_file_time( target, &target_time);	  
+	
+	if ( ODD(sts) && time_Acomp( &source_time, &target_time) != 1)
+	  update = 0;
+	else
+	  update = 1;
+
+	if ( !opt.force && !update)
+	  continue;
+
+	sprintf( cmd, "cp -a %s %s", source, target);
+	//	system( cmd);
+	sprintf( cmd, "Build:    %s %s -> %s", line_item[1], source, target);
+	MsgWindow::message( 'I', cmd, msgw_ePop_No);
+    
+	// wb_log::log( wlog_eCategory_GeBuild, name, 0);
+	m_sts = PWRB__SUCCESS;
+      }
+
+      dcli_search_file( line_item[1], found_file, DCLI_DIR_SEARCH_END);
+    }
+    else if ( strcmp( cdh_Low(line_item[0]), "buildexec") == 0) {
+
+      if ( num != 4) {
+	printf("File corrupt " load_cNameDistribute);
+	continue;
+      }
+
+      sprintf( cmd, "cd %s;%s", line_item[2], line_item[3]);
+      //      system( cmd);
+      sprintf( cmd, "Build:    executed %s %s", line_item[2], line_item[3]);
+      MsgWindow::message( 'I', cmd, msgw_ePop_No);
+    
+      // wb_log::log( wlog_eCategory_GeBuild, name, 0);
+      m_sts = PWRB__SUCCESS;
+    }
+  }
+
+  is.close();
+  
+}

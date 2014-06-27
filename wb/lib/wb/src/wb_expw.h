@@ -1,4 +1,4 @@
-/* 
+/** 
  * Proview   Open Source Process Control.
  * Copyright (C) 2005-2014 SSAB EMEA AB.
  *
@@ -34,45 +34,71 @@
  * General Public License plus this exception.
  **/
 
-#ifndef wb_build_h
-#define wb_build_h
+#ifndef wb_expw_h
+#define wb_expw_h
 
-#include "pwr.h"
-#include "wb_ldh.h"
-#include "wb_session.h"
-#include "wb_wnav.h"
-#include "wb_build_opt.h"
+/* wb_expw.h -- Backupfile display window */
 
-class Wtt;
+#ifndef pwr_h
+# include "pwr.h"
+#endif
 
-class wb_build : public wb_status
-{
- public:
-  wb_build( wb_session ses, WNav *wnav = 0):
-    m_session(ses), m_wnav(wnav), m_hierarchy(pwr_cNOid) {};
+#ifndef wb_bck_h
+# include "wb_bck.h"
+#endif
 
-  void classlist( pwr_tCid cid);
-  void node( char *nodename, void *volumelist, int volumecnt);
-  void volume();
-  void rootvolume( pwr_tVid vid);
-  void classvolume( pwr_tVid vid);
-  void planthier( pwr_tOid oid);
-  void nodehier( pwr_tOid oid);
-  void plcpgm( pwr_tOid oid);
-  void xttgraph( pwr_tOid oid);
-  void webhandler( pwr_tOid oid);
-  void webbrowserconfig( pwr_tOid oid);
-  void webgraph( pwr_tOid oid);
-  void appgraph( pwr_tOid oid);
-  void application( pwr_tOid oid);
-  void classdef( pwr_tOid oid);
-  void project( char *dir);
+#ifndef wb_expwnav_h
+# include "wb_expwnav.h"
+#endif
 
-  wb_build_opt opt;
-  wb_session m_session;
-  WNav *m_wnav;
-  pwr_tOid m_hierarchy;
+class CoWow;
+class CoWowFocusTimer;
+
+#include "cow_wow.h"
+
+class WbExpW {
+  public:
+    WbExpW(
+	void *l_parent_ctx,
+	ldh_tSesContext l_ldhses,
+	const char *expw_name,
+	int l_type,
+	int l_editmode,
+	pwr_tStatus *status);
+    ~WbExpW();
+
+    virtual void set_title( char *title) {}
+    void show();
+    void activate_export();
+    void activate_update() { expwnav->show();}
+    void activate_check_all() { expwnav->check_all();}
+    void activate_check_clear() { expwnav->check_clear();}
+    void activate_check_reset() { expwnav->check_reset();}
+
+    static void export_ok( void *ctx, void *data);
+
+    void 		*parent_ctx;
+    ldh_tSesContext 	ldhses;
+    char 		name[80];
+    char		action[20];
+    char		btext[20];
+    char		typetext[20];
+    WbExpWNav		*expwnav;
+    int			size;
+    int			max_size;
+    int			type;
+    int			editmode;
+    CoWow		*wow;
+
 };
 
 #endif
+
+
+
+
+
+
+
+
 

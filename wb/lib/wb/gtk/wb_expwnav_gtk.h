@@ -1,4 +1,4 @@
-/* 
+/** 
  * Proview   Open Source Process Control.
  * Copyright (C) 2005-2014 SSAB EMEA AB.
  *
@@ -34,45 +34,35 @@
  * General Public License plus this exception.
  **/
 
-#ifndef wb_build_h
-#define wb_build_h
+#ifndef wb_expwnav_gtk_h
+#define wb_expwnav_gtk_h
 
-#include "pwr.h"
-#include "wb_ldh.h"
-#include "wb_session.h"
-#include "wb_wnav.h"
-#include "wb_build_opt.h"
+/* wb_expwnav_gtk.h -- Backup display window */
 
-class Wtt;
+#ifndef wb_expwnav_h
+# include "wb_expwnav.h"
+#endif
 
-class wb_build : public wb_status
-{
- public:
-  wb_build( wb_session ses, WNav *wnav = 0):
-    m_session(ses), m_wnav(wnav), m_hierarchy(pwr_cNOid) {};
+class WbExpWNavGtk : public WbExpWNav {
+  public:
+    WbExpWNavGtk(
+	void *expw_parent_ctx,
+	GtkWidget *expw_parent_wid,
+	ldh_tSession expw_ldhses,
+	int l_type,
+	int l_editmode,
+	GtkWidget **w);
+    ~WbExpWNavGtk();
 
-  void classlist( pwr_tCid cid);
-  void node( char *nodename, void *volumelist, int volumecnt);
-  void volume();
-  void rootvolume( pwr_tVid vid);
-  void classvolume( pwr_tVid vid);
-  void planthier( pwr_tOid oid);
-  void nodehier( pwr_tOid oid);
-  void plcpgm( pwr_tOid oid);
-  void xttgraph( pwr_tOid oid);
-  void webhandler( pwr_tOid oid);
-  void webbrowserconfig( pwr_tOid oid);
-  void webgraph( pwr_tOid oid);
-  void appgraph( pwr_tOid oid);
-  void application( pwr_tOid oid);
-  void classdef( pwr_tOid oid);
-  void project( char *dir);
+    GtkWidget		*parent_wid;
+    GtkWidget		*brow_widget;
+    GtkWidget		*form_widget;
+    GtkWidget		*toplevel;
 
-  wb_build_opt opt;
-  wb_session m_session;
-  WNav *m_wnav;
-  pwr_tOid m_hierarchy;
+    void set_input_focus();
 };
 
 #endif
+
+
 

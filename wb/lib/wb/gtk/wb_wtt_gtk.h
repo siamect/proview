@@ -112,6 +112,9 @@ class WttGtk : public Wtt {
     GtkWidget	*menu_buildobject_w;
     GtkWidget	*menu_buildvolume_w;
     GtkWidget	*menu_buildnode_w;
+    GtkWidget	*menu_buildproject_w;
+    GtkWidget	*menu_buildexport_w;
+    GtkWidget	*menu_buildimport_w;
     GtkWidget	*menu_distribute_w;
     GtkWidget	*menu_change_value_w;
     GtkWidget	*menu_edit_w;
@@ -237,6 +240,9 @@ class WttGtk : public Wtt {
     static void activate_openclasseditor( GtkWidget *w, gpointer data);
     static void activate_buildvolume( GtkWidget *w, gpointer data);
     static void activate_buildnode( GtkWidget *w, gpointer data);
+    static void activate_buildproject( GtkWidget *w, gpointer data);
+    static void activate_buildimport( GtkWidget *w, gpointer data);
+    static void activate_buildexport( GtkWidget *w, gpointer data);
     static void activate_distribute( GtkWidget *w, gpointer data);
     static void activate_showcrossref( GtkWidget *w, gpointer data);
     static void activate_updateclasses( GtkWidget *w, gpointer data);

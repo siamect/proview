@@ -75,10 +75,6 @@
 # include "cow_wow.h"
 #endif
 
-//#ifndef cow_xhelp_h
-//#include "cow_xhelp.h"
-//#endif
-
 #ifndef wb_h
 #include "wb.h"
 #endif
@@ -89,6 +85,10 @@
 
 #ifndef wb_bckw_h
 #include "wb_bckw.h"
+#endif
+
+#ifndef wb_expw_h
+#include "wb_expw.h"
 #endif
 
 
@@ -347,6 +347,7 @@ class WNav : public WUtility{
 				pwr_tStatus *status) { return 0;}
     virtual WCrr *wcrr_new( pwr_tAttrRef *aref, pwr_tStatus  *status) { return 0;}
     virtual WbBckW *bckw_new( char *name, wb_bck_list *list, pwr_tStatus  *status) { return 0;}
+    virtual WbExpW *expw_new( char *name, int type, pwr_tStatus  *status) { return 0;}
 
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);
     static int init_brow_base_cb( FlowCtx *fctx, void *client_data);

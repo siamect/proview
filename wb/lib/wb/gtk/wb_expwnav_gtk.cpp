@@ -1,4 +1,4 @@
-/* 
+/** 
  * Proview   Open Source Process Control.
  * Copyright (C) 2005-2014 SSAB EMEA AB.
  *
@@ -34,45 +34,58 @@
  * General Public License plus this exception.
  **/
 
-#ifndef wb_build_h
-#define wb_build_h
+/* wb_expwnav_gtk.cpp -- Backupfile display window */
 
-#include "pwr.h"
+#include "glow_std.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <gtk/gtk.h>
+
+#include "co_cdh.h"
+#include "co_time.h"
+#include "co_dcli.h"
+
+#include "flow.h"
+#include "flow_browctx.h"
+#include "flow_browapi.h"
+#include "flow_browwidget_gtk.h"
+
 #include "wb_ldh.h"
-#include "wb_session.h"
-#include "wb_wnav.h"
-#include "wb_build_opt.h"
+#include "wb_expwnav_gtk.h"
 
-class Wtt;
-
-class wb_build : public wb_status
+WbExpWNavGtk::WbExpWNavGtk (
+	void *l_parent_ctx,
+	GtkWidget *l_parent_wid,
+	ldh_tSession l_ldhses,
+	int l_type,
+	int l_editmode,
+	GtkWidget **w) :
+  WbExpWNav( l_parent_ctx, l_ldhses, l_type, l_editmode), parent_wid(l_parent_wid)
 {
- public:
-  wb_build( wb_session ses, WNav *wnav = 0):
-    m_session(ses), m_wnav(wnav), m_hierarchy(pwr_cNOid) {};
+  form_widget = scrolledbrowwidgetgtk_new(
+	WbExpWNav::init_brow_cb, this, &brow_widget);
 
-  void classlist( pwr_tCid cid);
-  void node( char *nodename, void *volumelist, int volumecnt);
-  void volume();
-  void rootvolume( pwr_tVid vid);
-  void classvolume( pwr_tVid vid);
-  void planthier( pwr_tOid oid);
-  void nodehier( pwr_tOid oid);
-  void plcpgm( pwr_tOid oid);
-  void xttgraph( pwr_tOid oid);
-  void webhandler( pwr_tOid oid);
-  void webbrowserconfig( pwr_tOid oid);
-  void webgraph( pwr_tOid oid);
-  void appgraph( pwr_tOid oid);
-  void application( pwr_tOid oid);
-  void classdef( pwr_tOid oid);
-  void project( char *dir);
+  gtk_widget_show_all( brow_widget);
 
-  wb_build_opt opt;
-  wb_session m_session;
-  WNav *m_wnav;
-  pwr_tOid m_hierarchy;
-};
+  // Create the root item
+  *w = form_widget;
+}
 
-#endif
+
+//
+//  Delete ev
+//
+WbExpWNavGtk::~WbExpWNavGtk()
+{
+  delete brow;
+  gtk_widget_destroy( form_widget);
+}
+
+void WbExpWNavGtk::set_input_focus()
+{
+  gtk_widget_grab_focus( brow_widget);
+}
+
+
 

@@ -453,7 +453,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"BUILD",
 			&wnav_build_func,
 			{ "dcli_arg1", "dcli_arg2", "/FORCE", "/DEBUG", "/CROSSREFERENCE", 
-			  "/MANUAL", "/NAME", ""}
+			  "/MANUAL", "/NAME", "/WINDOW", ""}
 		},
 		{
 			"CHECK",
@@ -474,7 +474,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"BACKUP",
 			&wnav_backup_func,
 			{ "dcli_arg1", "dcli_arg2", "dcli_arg13", "/FILE", "/FILE1", "/FILE2", "/OUT", 
-			  "/WINDOW", ""}
+			  "/WINDOW", ""},
 		},
 		{"",}};
 
@@ -5149,6 +5149,91 @@ static int	wnav_build_func(	void		*client_data,
     }
     free( sel_list);
     free( sel_is_attr);
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "PROJECT", strlen( arg1_str)) == 0) {
+
+    if ( !(CoLogin::privilege() & pwr_mPrv_DevConfig)) {
+      wnav->message( 'E', "User is not authorized to build");
+      return WNAV__NOTAUTHORIZED;
+    }
+
+    if ( ODD( dcli_get_qualifier( "/WINDOW", 0, 0))) {
+      pwr_tStatus	sts;
+
+      sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+      if ( EVEN(sts)) return sts;
+
+
+      wnav->expw_new( (char *)"Build Project", expw_eType_BuildProject, &sts);
+      if ( EVEN(sts))
+	wnav->message(' ', wnav_get_message(sts));
+    }
+    else {
+      char arg2_str[200];
+      int	arg2_sts;
+      char *dirp;
+
+      wb_build build( *(wb_session *)wnav->ldhses, wnav);
+      build.opt.force = ODD( dcli_get_qualifier( "/FORCE", 0, 0));
+      build.opt.debug = ODD( dcli_get_qualifier( "/DEBUG", 0, 0));
+      build.opt.crossref = ODD( dcli_get_qualifier( "/CROSSREFERENCE", 0, 0));
+      build.opt.manual = ODD( dcli_get_qualifier( "/MANUAL", 0, 0));
+
+      arg2_sts = dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str));
+      if ( EVEN(arg1_sts))
+	dirp = 0;
+      else
+	dirp = arg2_str;
+      
+      build.project( dirp);
+      wnav->message(' ', wnav_get_message(build.sts()));
+    }
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "EXPORT", strlen( arg1_str)) == 0) {
+    // command  is "BUILD EXPORT"
+
+    if ( !(CoLogin::privilege() & pwr_mPrv_DevConfig)) {
+      wnav->message( 'E', "User is not authorized to export");
+      return WNAV__NOTAUTHORIZED;
+    }
+
+    if ( ODD( dcli_get_qualifier( "/WINDOW", 0, 0))) {
+      pwr_tStatus	sts;
+
+      sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+      if ( EVEN(sts)) return sts;
+
+      
+      wnav->expw_new( (char *)"Export", expw_eType_Export, &sts);
+      if ( EVEN(sts))
+	wnav->message(' ', wnav_get_message(sts));
+    }
+    else {
+      // TODO
+    }
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "IMPORT", strlen( arg1_str)) == 0) {
+    // command  is "BUILD IMPORT"
+
+    if ( !(CoLogin::privilege() & pwr_mPrv_DevConfig)) {
+      wnav->message( 'E', "User is not authorized to import");
+      return WNAV__NOTAUTHORIZED;
+    }
+
+    if ( ODD( dcli_get_qualifier( "/WINDOW", 0, 0))) {
+      pwr_tStatus	sts;
+
+      sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+      if ( EVEN(sts)) return sts;
+
+
+      wnav->expw_new( (char *)"Import", expw_eType_Import, &sts);
+      if ( EVEN(sts))
+	wnav->message(' ', wnav_get_message(sts));
+    }
+    else {
+      // TODO
+    }
   }
   else {
     wnav->message('E', "Syntax error");

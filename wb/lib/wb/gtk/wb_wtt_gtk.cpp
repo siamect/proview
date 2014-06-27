@@ -150,6 +150,9 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_buildobject_w, FALSE);
       gtk_widget_set_sensitive( menu_buildvolume_w, FALSE);
       gtk_widget_set_sensitive( menu_buildnode_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildproject_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildexport_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildimport_w, FALSE);
       gtk_widget_set_sensitive( menu_distribute_w, FALSE);
       gtk_widget_set_sensitive( menu_change_value_w, TRUE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
@@ -181,6 +184,9 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_buildobject_w, FALSE);
       gtk_widget_set_sensitive( menu_buildvolume_w, FALSE);
       gtk_widget_set_sensitive( menu_buildnode_w, TRUE);
+      gtk_widget_set_sensitive( menu_buildproject_w, TRUE);
+      gtk_widget_set_sensitive( menu_buildexport_w, TRUE);
+      gtk_widget_set_sensitive( menu_buildimport_w, TRUE);
       gtk_widget_set_sensitive( menu_distribute_w, TRUE);
       gtk_widget_set_sensitive( menu_change_value_w, FALSE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
@@ -214,6 +220,9 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_buildobject_w, FALSE);
       gtk_widget_set_sensitive( menu_buildvolume_w, FALSE);
       gtk_widget_set_sensitive( menu_buildnode_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildproject_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildexport_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildimport_w, FALSE);
       gtk_widget_set_sensitive( menu_distribute_w, FALSE);
       gtk_widget_set_sensitive( menu_change_value_w, TRUE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
@@ -251,6 +260,9 @@ void WttGtk::menu_setup()
       else
 	gtk_widget_set_sensitive( menu_buildvolume_w, TRUE);
       gtk_widget_set_sensitive( menu_buildnode_w, TRUE);
+      gtk_widget_set_sensitive( menu_buildproject_w, TRUE);
+      gtk_widget_set_sensitive( menu_buildexport_w, TRUE);
+      gtk_widget_set_sensitive( menu_buildimport_w, TRUE);
       gtk_widget_set_sensitive( menu_distribute_w, TRUE);
       gtk_widget_set_sensitive( menu_change_value_w, FALSE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
@@ -284,6 +296,9 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_buildobject_w, FALSE);
       gtk_widget_set_sensitive( menu_buildvolume_w, FALSE);
       gtk_widget_set_sensitive( menu_buildnode_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildproject_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildexport_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildimport_w, FALSE);
       gtk_widget_set_sensitive( menu_distribute_w, FALSE);
       gtk_widget_set_sensitive( menu_change_value_w, TRUE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
@@ -315,6 +330,9 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_buildobject_w, FALSE);
       gtk_widget_set_sensitive( menu_buildvolume_w, TRUE);
       gtk_widget_set_sensitive( menu_buildnode_w, TRUE);
+      gtk_widget_set_sensitive( menu_buildproject_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildexport_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildimport_w, FALSE);
       gtk_widget_set_sensitive( menu_distribute_w, TRUE);
       gtk_widget_set_sensitive( menu_change_value_w, FALSE);
       gtk_widget_set_sensitive( menu_edit_w, FALSE);
@@ -357,6 +375,9 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
       gtk_widget_set_sensitive( tools_edit_w, TRUE);
       gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildproject_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildexport_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildimport_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       if ( ldh_VolRepType( ldhses) == ldh_eVolRep_Ced)
 	gtk_widget_set_sensitive( menu_updateclasses_w, TRUE);
@@ -386,6 +407,9 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_buildobject_w, FALSE);
       gtk_widget_set_sensitive( menu_buildvolume_w, TRUE);
       gtk_widget_set_sensitive( menu_buildnode_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildproject_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildexport_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildimport_w, FALSE);
       gtk_widget_set_sensitive( menu_distribute_w, FALSE);
       gtk_widget_set_sensitive( menu_change_value_w, FALSE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
@@ -419,6 +443,9 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_buildobject_w, FALSE);
       gtk_widget_set_sensitive( menu_buildvolume_w, FALSE);
       gtk_widget_set_sensitive( menu_buildnode_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildproject_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildexport_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildimport_w, FALSE);
       gtk_widget_set_sensitive( menu_distribute_w, FALSE);
       gtk_widget_set_sensitive( menu_change_value_w, TRUE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
@@ -450,6 +477,9 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_buildobject_w, FALSE);
       gtk_widget_set_sensitive( menu_buildvolume_w, FALSE);
       gtk_widget_set_sensitive( menu_buildnode_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildproject_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildexport_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildimport_w, FALSE);
       gtk_widget_set_sensitive( menu_distribute_w, FALSE);
       gtk_widget_set_sensitive( menu_change_value_w, FALSE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
@@ -483,6 +513,9 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_buildobject_w, FALSE);
       gtk_widget_set_sensitive( menu_buildvolume_w, FALSE);
       gtk_widget_set_sensitive( menu_buildnode_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildproject_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildexport_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildimport_w, FALSE);
       gtk_widget_set_sensitive( menu_distribute_w, FALSE);
       gtk_widget_set_sensitive( menu_change_value_w, TRUE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
@@ -514,6 +547,9 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_buildobject_w, FALSE);
       gtk_widget_set_sensitive( menu_buildvolume_w, FALSE);
       gtk_widget_set_sensitive( menu_buildnode_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildproject_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildexport_w, FALSE);
+      gtk_widget_set_sensitive( menu_buildimport_w, FALSE);
       gtk_widget_set_sensitive( menu_distribute_w, FALSE);
       gtk_widget_set_sensitive( menu_change_value_w, FALSE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
@@ -1315,6 +1351,25 @@ void WttGtk::activate_buildnode( GtkWidget *w, gpointer data)
   Wtt *wtt = (Wtt *)data;
   wtt->activate_buildnode();
 }
+
+void WttGtk::activate_buildproject( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  wtt->activate_buildproject();
+}
+
+void WttGtk::activate_buildimport( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  wtt->activate_buildimport();
+}
+
+void WttGtk::activate_buildexport( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  wtt->activate_buildexport();
+}
+
 
 void WttGtk::activate_distribute( GtkWidget *w, gpointer data)
 {
@@ -2446,6 +2501,7 @@ WttGtk::WttGtk(
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(edit), GTK_WIDGET(edit_menu));
 
   // Functions menu
+
   menu_buildnode_w = gtk_image_menu_item_new_with_mnemonic( "_Build Node");
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(menu_buildnode_w), 
 				 gtk_image_new_from_stock( "gtk-execute", GTK_ICON_SIZE_MENU));
@@ -2462,6 +2518,30 @@ WttGtk::WttGtk(
   menu_buildobject_w = gtk_menu_item_new_with_mnemonic( "Bu_ild Object");
   g_signal_connect( menu_buildobject_w, "activate", 
 		    G_CALLBACK(WttGtk::activate_buildobject), this);
+
+  menu_buildproject_w = gtk_menu_item_new_with_mnemonic( "Bui_ld Directory");
+  g_signal_connect( menu_buildproject_w, "activate", 
+		    G_CALLBACK(WttGtk::activate_buildproject), this);
+
+  menu_buildimport_w = gtk_menu_item_new_with_mnemonic( "_Import");
+  g_signal_connect( menu_buildimport_w, "activate", 
+		    G_CALLBACK(WttGtk::activate_buildimport), this);
+
+  menu_buildexport_w = gtk_menu_item_new_with_mnemonic( "_Export");
+  g_signal_connect( menu_buildexport_w, "activate", 
+		    G_CALLBACK(WttGtk::activate_buildexport), this);
+
+  GtkWidget *functions_build = gtk_menu_item_new_with_mnemonic( "_Build");
+  GtkMenu *functions_build_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_build_menu), menu_buildnode_w);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_build_menu), menu_buildvolume_w);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_build_menu), menu_buildobject_w);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_build_menu), menu_buildproject_w);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_build_menu), menu_buildimport_w);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_build_menu), menu_buildexport_w);
+
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_build),
+			    GTK_WIDGET(functions_build_menu));
 
   menu_utilities_w = gtk_menu_item_new_with_mnemonic( "_Utilities...");
   g_signal_connect( menu_utilities_w, "activate", 
@@ -2543,9 +2623,7 @@ WttGtk::WttGtk(
 			      GTK_ACCEL_VISIBLE);
 
   GtkMenu *functions_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
-  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_buildnode_w);
-  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_buildvolume_w);
-  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_buildobject_w);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_build);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_utilities_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_spreadsheet);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_distribute_w);

@@ -1,4 +1,4 @@
-/* 
+/** 
  * Proview   Open Source Process Control.
  * Copyright (C) 2005-2014 SSAB EMEA AB.
  *
@@ -34,45 +34,70 @@
  * General Public License plus this exception.
  **/
 
-#ifndef wb_build_h
-#define wb_build_h
+#ifndef wb_expw_gtk_h
+#define wb_expw_gtk_h
 
-#include "pwr.h"
-#include "wb_ldh.h"
-#include "wb_session.h"
-#include "wb_wnav.h"
-#include "wb_build_opt.h"
+/* wb_expw_gtk.h -- Backupfile display window */
 
-class Wtt;
+#ifndef wb_expw_h
+# include "wb_expw.h"
+#endif
 
-class wb_build : public wb_status
-{
- public:
-  wb_build( wb_session ses, WNav *wnav = 0):
-    m_session(ses), m_wnav(wnav), m_hierarchy(pwr_cNOid) {};
+#ifndef cow_wow_gtk_h
+# include "cow_wow_gtk.h"
+#endif
 
-  void classlist( pwr_tCid cid);
-  void node( char *nodename, void *volumelist, int volumecnt);
-  void volume();
-  void rootvolume( pwr_tVid vid);
-  void classvolume( pwr_tVid vid);
-  void planthier( pwr_tOid oid);
-  void nodehier( pwr_tOid oid);
-  void plcpgm( pwr_tOid oid);
-  void xttgraph( pwr_tOid oid);
-  void webhandler( pwr_tOid oid);
-  void webbrowserconfig( pwr_tOid oid);
-  void webgraph( pwr_tOid oid);
-  void appgraph( pwr_tOid oid);
-  void application( pwr_tOid oid);
-  void classdef( pwr_tOid oid);
-  void project( char *dir);
+#include <gtk/gtk.h>
 
-  wb_build_opt opt;
-  wb_session m_session;
-  WNav *m_wnav;
-  pwr_tOid m_hierarchy;
+class WbExpWGtk : public WbExpW {
+  public:
+    WbExpWGtk(
+	void *l_parent_ctx,
+	GtkWidget *l_parent_wid,
+	ldh_tSession l_ldhses,
+	const char *l_name,
+	int type,
+	int l_editmode,
+	pwr_tStatus *status);
+    ~WbExpWGtk();
+
+    GtkWidget		*parent_wid;
+    GtkWidget		*toplevel;
+    GtkWidget		*form;
+    GtkWidget		*nav_widget;
+    GtkWidget		*edit_check_all;
+    GtkWidget		*edit_check_clear;
+    GtkWidget		*edit_check_reset;
+    GtkWidget		*edit_show_all;
+    GtkWidget		*file_export;
+    CoWowFocusTimerGtk  focustimer;
+    CoWowFocusTimerGtk	maptimer;
+
+    void print();
+    void set_title( char *title);
+
+    static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
+    static void activate_exit( GtkWidget *w, gpointer data);
+    static void activate_export( GtkWidget *w, gpointer data);
+    static void activate_update( GtkWidget *w, gpointer data);
+    static void activate_check_all( GtkWidget *w, gpointer data);
+    static void activate_check_clear( GtkWidget *w, gpointer data);
+    static void activate_check_reset( GtkWidget *w, gpointer data);
+    static void activate_show_all(GtkWidget *w, gpointer data);
+    static void activate_zoom_in( GtkWidget *w, gpointer data);
+    static void activate_zoom_out( GtkWidget *w, gpointer data);
+    static void activate_zoom_reset( GtkWidget *w, gpointer data);
+    static void activate_help( GtkWidget *w, gpointer data);
+
 };
 
 #endif
+
+
+
+
+
+
+
+
 

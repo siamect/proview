@@ -72,6 +72,7 @@ extern "C" {
 #include "wb_utl_gtk.h"
 #include "wb_xcrr_gtk.h"
 #include "wb_bckw_gtk.h"
+#include "wb_expw_gtk.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -476,65 +477,20 @@ WbBckW *WNavGtk::bckw_new( char *name, wb_bck_list *list, pwr_tStatus  *status)
   return new WbBckWGtk( this, parent_wid, ldhses, name, list, editmode, status);
 }
 
+WbExpW *WNavGtk::expw_new( char *name, int type, pwr_tStatus  *status)
+{
+  return new WbExpWGtk( this, parent_wid, ldhses, name, type, 1, status);
+}
+
 void WNavGtk::wge_subwindow_loop( WGe *wge)
 {
   gtk_main();
-#if 0
-  XEvent 	Event;
-  
-  for (;;) {
-    XtAppNextEvent( XtWidgetToApplicationContext( parent_wid), &Event);
-    XtDispatchEvent( &Event);
-	  
-    if ( wge->subwindow_release) {
-      wge->subwindow_release = 0;
-      break;
-    }
-  }
-#endif
 }
 
 void WNavGtk::wge_modal_loop( WGe *wge)
 {
   gtk_main();
-#if 0
-  XEvent 	Event;
-	  
-  for (;;) {
-    XtAppNextEvent( XtWidgetToApplicationContext( parent_wid), &Event);
-    XtDispatchEvent( &Event);
-
-    if ( wge->terminated) {
-      appl.remove( (void *)wge);
-      delete wge;
-      break;      
-    }
-  }
-#endif
 }
-
-#if 0
-static char *wnav_dialog_convert_text( char *text)
-{
-  char *s, *t;
-  static char new_text[200];
-
-  for ( s = text, t = new_text; *s; s++, t++)
-  {
-    if ( *s == '\\' && *(s+1) == 'n')
-    {
-      *t = 10;
-      s++;
-    }
-    else
-     *t = *s;
-    if ( t > &new_text[sizeof(new_text)-1])
-      break;
-  }
-  *t = *s;
-  return new_text;
-}
-#endif
 
 static void wnav_message_dialog_ok( GtkWidget *w, gint arg1, gpointer wnav)
 {

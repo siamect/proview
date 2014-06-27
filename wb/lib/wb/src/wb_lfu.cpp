@@ -2432,6 +2432,239 @@ pwr_tStatus lfu_SaveDirectoryVolume(
     sts = ldh_GetNextSibling( ldhses, dbobjid, &dbobjid);
   }
 
+  // Export files
+  pwr_tOid exportoid;
+
+  for ( sts = ldh_GetClassList( ldhses, pwr_cClass_Export, &exportoid);
+	ODD(sts);
+	sts = ldh_GetNextObject( ldhses, exportoid, &exportoid)) {
+    pwr_tFileName dir;
+    char *dir_ptr;
+    pwr_mExportImportMask *components_ptr;
+    pwr_tOid appoid;
+
+    sts = ldh_GetObjectPar( ldhses, exportoid, "DevBody",
+			    "TargetDirectory", (char **)&dir_ptr, &size);
+    if ( EVEN(sts)) return sts;
+
+    strncpy( dir, dir_ptr, sizeof(dir));
+    free( dir_ptr);
+    if ( strcmp( dir, "") == 0) {
+      MsgWindow::message( 'E', "Export directory is missing", msgw_ePop_Default);
+      continue;
+    }
+    
+    if ( dir[strlen(dir)-1] != '/')
+      strcat( dir, "/");
+
+    sts = ldh_GetObjectPar( ldhses, exportoid, "DevBody",
+			    "Components", (char **)&components_ptr, &size);
+    if (EVEN(sts)) return sts;
+
+    if ( *components_ptr & pwr_mExportImportMask_IncludeFiles)
+      fprintf( file, "export $pwrp_inc/*.h %s\n", dir);
+    if ( *components_ptr & pwr_mExportImportMask_GraphFiles)
+      fprintf( file, "export $pwrp_exe/*.pwg %s\n", dir);
+    if ( *components_ptr & pwr_mExportImportMask_FlowFiles)
+      fprintf( file, "export $pwrp_load/*.flw %s\n", dir);
+    
+    free( components_ptr);
+
+    for ( sts = ldh_GetChild( ldhses, exportoid, &appoid);
+	  ODD(sts);
+	  sts = ldh_GetNextSibling( ldhses, appoid, &appoid)) {
+      sts = ldh_GetObjectClass( ldhses, appoid, &cid);
+      if ( EVEN(sts)) return sts;
+
+      switch ( cid) {
+      case pwr_cClass_ApplExport: {
+
+	sts = ldh_GetObjectPar( ldhses, appoid, "DevBody",
+				"Source", (char **)&source_ptr, &size);
+	if ( EVEN(sts)) return sts;
+
+	sts = ldh_GetObjectPar( ldhses, appoid, "DevBody",
+				"Target", (char **)&target_ptr, &size);
+	if ( EVEN(sts)) return sts;
+
+	fprintf( file, "export %s %s%s\n", source_ptr, dir, target_ptr);
+
+	free( source_ptr);
+	free( target_ptr);
+	break;
+      }
+      default: ;
+      }
+    }
+  }
+
+  // Import files
+  pwr_tOid importoid;
+
+  for ( sts = ldh_GetClassList( ldhses, pwr_cClass_Import, &importoid);
+	ODD(sts);
+	sts = ldh_GetNextObject( ldhses, importoid, &importoid)) {
+    pwr_tFileName dir;
+    char *dir_ptr;
+    pwr_mExportImportMask *components_ptr;
+    pwr_tOid appoid;
+
+    sts = ldh_GetObjectPar( ldhses, importoid, "DevBody",
+			    "SourceDirectory", (char **)&dir_ptr, &size);
+    if ( EVEN(sts)) return sts;
+
+    strncpy( dir, dir_ptr, sizeof(dir));
+    free( dir_ptr);
+    if ( strcmp( dir, "") == 0) {
+      MsgWindow::message( 'E', "Import directory is missing", msgw_ePop_Default);
+      continue;
+    }
+    
+    if ( dir[strlen(dir)-1] != '/')
+      strcat( dir, "/");
+
+    sts = ldh_GetObjectPar( ldhses, importoid, "DevBody",
+			    "Components", (char **)&components_ptr, &size);
+    if (EVEN(sts)) return sts;
+
+    if ( *components_ptr & pwr_mExportImportMask_IncludeFiles)
+      fprintf( file, "import %s*.h $pwrp_inc/\n", dir);
+    if ( *components_ptr & pwr_mExportImportMask_GraphFiles)
+      fprintf( file, "import %s*.pwg $pwrp/exe/\n", dir);
+    if ( *components_ptr & pwr_mExportImportMask_FlowFiles)
+      fprintf( file, "import %s*.flw $pwrp_load/\n", dir);
+    
+    free( components_ptr);
+
+    for ( sts = ldh_GetChild( ldhses, importoid, &appoid);
+	  ODD(sts);
+	  sts = ldh_GetNextSibling( ldhses, appoid, &appoid)) {
+      sts = ldh_GetObjectClass( ldhses, appoid, &cid);
+      if ( EVEN(sts)) return sts;
+
+      switch ( cid) {
+      case pwr_cClass_ApplImport: {
+	
+	sts = ldh_GetObjectPar( ldhses, appoid, "DevBody",
+				"Source", (char **)&source_ptr, &size);
+	if ( EVEN(sts)) return sts;
+
+	sts = ldh_GetObjectPar( ldhses, appoid, "DevBody",
+				"Target", (char **)&target_ptr, &size);
+	if ( EVEN(sts)) return sts;
+
+	fprintf( file, "import %s%s %s\n", dir, source_ptr, target_ptr);
+
+	free( source_ptr);
+	free( target_ptr);
+	break;
+      }
+      default: ;
+      }
+    }
+  }
+
+  // Build files
+  pwr_tOid builddir_oid;
+  pwr_tOid coid;
+  pwr_tObjName oname;
+  pwr_tOName fullname;
+  pwr_tOid poid;
+
+  for ( sts = ldh_GetClassList( ldhses, pwr_cClass_BuildDirectory, &builddir_oid);
+	ODD(sts);
+	sts = ldh_GetNextObject( ldhses, builddir_oid, &builddir_oid)) {
+    pwr_tFileName dir;
+    char *dir_ptr;
+    char *descr_ptr;
+
+    sts = ldh_ObjidToName( ldhses, builddir_oid, ldh_eName_Object,
+			   oname, sizeof(oname), &size);
+
+    strcpy( fullname, oname);
+    for ( sts = ldh_GetParent( ldhses, builddir_oid, &poid);
+	  ODD(sts);
+	  sts = ldh_GetParent( ldhses, poid, &poid)) {
+      pwr_tOName tmp;
+      pwr_tCid pcid;
+
+      sts = ldh_GetObjectClass( ldhses, poid, &pcid);
+      if ( EVEN(sts)) return sts;
+
+      if ( pcid != pwr_cClass_BuildDirectory)
+	break;
+
+      strcpy( tmp, fullname);
+      sts = ldh_ObjidToName( ldhses, poid, ldh_eName_Object,
+			     oname, sizeof(oname), &size);
+      if ( EVEN(sts)) return sts;
+
+      strcpy( fullname, oname);
+      strcat( fullname, "-");
+      strcat( fullname, tmp);
+    }
+
+    sts = ldh_GetObjectPar( ldhses, builddir_oid, "DevBody",
+			    "Directory", (char **)&dir_ptr, &size);
+    if ( EVEN(sts)) return sts;
+
+    strncpy( dir, dir_ptr, sizeof(dir));
+    free( dir_ptr);
+    if ( strcmp( dir, "") == 0) {
+      MsgWindow::message( 'E', "Build directory is missing", msgw_ePop_Default);
+      continue;
+    }
+    
+    if ( dir[strlen(dir)-1] != '/')
+      strcat( dir, "/");
+
+    sts = ldh_GetObjectPar( ldhses, builddir_oid, "DevBody",
+			    "Description", (char **)&descr_ptr, &size);
+    if ( EVEN(sts)) return sts;
+
+    fprintf( file, "builddir %s \"%s\"\n", fullname, descr_ptr);
+    free( descr_ptr);
+
+    for ( sts = ldh_GetChild( ldhses, builddir_oid, &coid);
+	  ODD(sts);
+	  sts = ldh_GetNextSibling( ldhses, coid, &coid)) {
+      sts = ldh_GetObjectClass( ldhses, coid, &cid);
+      if ( EVEN(sts)) return sts;
+
+      switch ( cid) {
+      case pwr_cClass_BuildCopy: {
+	
+	sts = ldh_GetObjectPar( ldhses, coid, "DevBody",
+				"Source", (char **)&source_ptr, &size);
+	if ( EVEN(sts)) return sts;
+
+	sts = ldh_GetObjectPar( ldhses, coid, "DevBody",
+				"Target", (char **)&target_ptr, &size);
+	if ( EVEN(sts)) return sts;
+
+	fprintf( file, "buildcopy %s %s%s %s\n", cdh_Low(fullname), dir, source_ptr, target_ptr);
+
+	free( source_ptr);
+	free( target_ptr);
+	break;
+      }
+      case pwr_cClass_BuildExecute: {
+	char *command_ptr;
+	
+	sts = ldh_GetObjectPar( ldhses, coid, "DevBody",
+				"Command", (char **)&command_ptr, &size);
+	if ( EVEN(sts)) return sts;
+
+	fprintf( file, "buildexec %s %s \"%s\"\n", cdh_Low(fullname), dir, command_ptr);
+
+	free( command_ptr);
+	break;
+      }
+      default: ;
+      }
+    }
+  }
+
   fclose( file);
 #if defined OS_VMS
   system( "purge/nolog " load_cNameDistribute);

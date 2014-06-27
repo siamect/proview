@@ -2071,6 +2071,30 @@ void Wtt::activate_buildnode()
   reset_cursor();
 }
 
+void Wtt::activate_buildproject()
+{
+  char cmd[80] = "build project/window";
+  if ( !focused_wnav)
+    set_focus_default();
+  focused_wnav->command( cmd);
+}
+
+void Wtt::activate_buildimport()
+{
+  char cmd[80] = "build import/window";
+  if ( !focused_wnav)
+    set_focus_default();
+  focused_wnav->command( cmd);
+}
+
+void Wtt::activate_buildexport()
+{
+  char cmd[80] = "build export/window";
+  if ( !focused_wnav)
+    set_focus_default();
+  focused_wnav->command( cmd);
+}
+
 void Wtt::activate_distribute()
 {
 

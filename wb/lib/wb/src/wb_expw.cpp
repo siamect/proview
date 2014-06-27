@@ -1,4 +1,4 @@
-/* 
+/** 
  * Proview   Open Source Process Control.
  * Copyright (C) 2005-2014 SSAB EMEA AB.
  *
@@ -34,45 +34,78 @@
  * General Public License plus this exception.
  **/
 
-#ifndef wb_build_h
-#define wb_build_h
+/* wb_bckw.cpp -- Backupfile display window */
 
-#include "pwr.h"
+#include "glow_std.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "co_cdh.h"
+#include "co_time.h"
+#include "co_dcli.h"
+
+#include "co_lng.h"
+#include "cow_xhelp.h"
+#include "cow_wow.h"
 #include "wb_ldh.h"
-#include "wb_session.h"
-#include "wb_wnav.h"
-#include "wb_build_opt.h"
+#include "wb_expw.h"
 
-class Wtt;
 
-class wb_build : public wb_status
+WbExpW::WbExpW(
+	void *l_parent_ctx,
+	ldh_tSesContext l_ldhses,
+	const char *expw_name,
+	int l_type,
+	int l_editmode,
+	pwr_tStatus *status) :
+  parent_ctx(l_parent_ctx), ldhses(l_ldhses), expwnav(NULL),
+  size(0), max_size(500), type(l_type), editmode(l_editmode), wow(0)
 {
- public:
-  wb_build( wb_session ses, WNav *wnav = 0):
-    m_session(ses), m_wnav(wnav), m_hierarchy(pwr_cNOid) {};
+  *status = 1;
+  strcpy( name, expw_name);
+  if ( type == expw_eType_Export) {
+    strcpy( action, "Export files");
+    strcpy( btext, "_Export files");
+    strcpy( typetext, "export");
+  }
+  else if ( type == expw_eType_Import) {
+    strcpy( action, "Import files");
+    strcpy( btext, "_Import files");
+    strcpy( typetext, "import");
+  }
+  else if ( type == expw_eType_BuildProject) {
+    strcpy( action, "Build Project");
+    strcpy( btext, "_Build Project");
+    strcpy( typetext, "build");
+  }
+      
+}
 
-  void classlist( pwr_tCid cid);
-  void node( char *nodename, void *volumelist, int volumecnt);
-  void volume();
-  void rootvolume( pwr_tVid vid);
-  void classvolume( pwr_tVid vid);
-  void planthier( pwr_tOid oid);
-  void nodehier( pwr_tOid oid);
-  void plcpgm( pwr_tOid oid);
-  void xttgraph( pwr_tOid oid);
-  void webhandler( pwr_tOid oid);
-  void webbrowserconfig( pwr_tOid oid);
-  void webgraph( pwr_tOid oid);
-  void appgraph( pwr_tOid oid);
-  void application( pwr_tOid oid);
-  void classdef( pwr_tOid oid);
-  void project( char *dir);
+WbExpW::~WbExpW() { 
+}
 
-  wb_build_opt opt;
-  wb_session m_session;
-  WNav *m_wnav;
-  pwr_tOid m_hierarchy;
-};
+void WbExpW::show()
+{
+  expwnav->show();
+}
 
-#endif
+void WbExpW::activate_export() 
+{ 
+  char text[80];
+
+  sprintf( text, "Do you want to %s to marked files", typetext);
+  wow->DisplayQuestion( this, action, text, 
+			export_ok, 0, 0);
+}
+
+void WbExpW::export_ok( void *ctx, void *data)
+{
+  WbExpW *expw = (WbExpW *)ctx;
+
+  expw->expwnav->exp();
+}
+
+
+
 

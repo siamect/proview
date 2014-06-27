@@ -602,6 +602,7 @@ topobjects ProjectNavigatorW2
   class FriendNodeConfig
   class SevNodeConfig
   class BusConfig
+  class BuildConfig
 }
 
 palette ProjectNavigatorPalette
@@ -639,6 +640,20 @@ palette ProjectNavigatorPalette
     class SharedVolumeLoad
     class SubVolumeLoad
     class $System
+    menu Build
+    {
+      class BuildConfig
+      class BuildDirectory
+      class BuildCopy
+      class BuildExecute
+    }
+    menu Export/Import
+    {
+      class ApplExport
+      class ApplImport
+      class Export
+      class Import
+    }
   }
 }
 
