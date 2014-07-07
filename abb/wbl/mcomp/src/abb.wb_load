@@ -85376,11 +85376,11 @@ this parameter settings menu."
     !  The main parameter:   
     ! 
     !   1  Slave/device name: abb-drive1
-    !   2  Slave/device Ip adress 10.0.0.11 and mask 255.255.255.0
+    !   2  Slave/device Ip adress 192.168.90.11 and mask 255.255.254.0
     ! 
     !  Before starting the Profinet Viewer the NIC configuration in this case are
-    !  done like example 9 below, i.e. Proview master station ip adress 10.0.0.1,
-    !  mask 255.255.255.0, HWaddress aa:00:04:00:21:14 and ethernet interface eth1.
+    !  done like example 9 below, i.e. Proview master station ip adress 192.168.90.1,
+    !  mask 255.255.254.0, HWaddress aa:00:04:00:21:14 and ethernet interface eth1.
     ! 
     !  Note The HWadress must be between an interval specified under the Profinet master
     !  class object PnControllerSoftingPNAK,

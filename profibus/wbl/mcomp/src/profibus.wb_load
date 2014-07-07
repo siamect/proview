@@ -2941,8 +2941,8 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! 
     !  auto eth1
     !  iface eth1 inet static
-    !                  address 10.0.0.1
-    !                  netmask 255.255.255.0
+    !                  address 192.168.90.1
+    !                  netmask 255.255.254.0
     !                  hwaddress ether xx:xx:xx:xx:xx:xx
     !
     !  where  xx:xx:xx:xx:xx:xx needs to be:
