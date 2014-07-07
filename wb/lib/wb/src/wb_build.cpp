@@ -118,15 +118,33 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
   pwr_tStatus status;
   char currentnode[80];
   char node[80];
-  pwr_tStatus sumsts;
+  pwr_tStatus sumsts = PWRB__NOBUILT;
 
   printf( "-- Build node %s\n", nodename);
 
   wb_log::push();
 
+  if ( !opt.manual)
+    rebuild = 0;
+
+  import_files( bld_ePass_BeforeNode);
+  if ( evenSts())
+    sumsts = m_sts;
+  else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT && m_sts != PWRB__INLIBHIER)
+    sumsts = m_sts;
+
+  directories( 0, bld_ePass_BeforeNode);
+  if ( m_sts == PWRB__MAKEUPDATED) {
+    rebuild = 1;
+    m_sts = PWRB__SUCCESS;
+  }
+  else if ( evenSts())
+    sumsts = m_sts;
+  else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT && m_sts != PWRB__INLIBHIER)
+    sumsts = m_sts;
+
   if ( !opt.manual) {
     // Check if there is any new dbsfile
-    rebuild = 0;
     for ( int i = 0; i < volumecnt; i++) {
       if ( cdh_NoCaseStrcmp( nodename, vlist[i].p1) == 0) {
 	if ( bussid == -1) {
@@ -200,7 +218,8 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
     m_sts = PWRB__NOBUILT;
 
 
-  sumsts = m_sts;
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
 
   syi_NodeName( &m_sts, currentnode, sizeof(currentnode));
 
@@ -306,6 +325,12 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
       sumsts = m_sts;
   }
 
+  export_files( bld_ePass_AfterNode);
+  if ( evenSts())
+    sumsts = m_sts;
+  else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT && m_sts != PWRB__INLIBHIER)
+    sumsts = m_sts;
+
   if ( ODD(sumsts) && sumsts != PWRB__NOBUILT) {
     char msg[200];
 
@@ -314,6 +339,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
   }
 
   m_sts = sumsts;
+
 }
 
 void wb_build::volume()
@@ -1413,7 +1439,7 @@ void wb_build::classdef( pwr_tOid oid)
 }
 
 
-void wb_build::project( char *dir)
+void wb_build::directories( char *dir, bld_ePass pass)
 {
   pwr_tFileName fname;
   char line[400];
@@ -1422,9 +1448,12 @@ void wb_build::project( char *dir)
   int num;
   int sts;
   pwr_tCmd cmd;
+  pwr_tMask current_options = 0;
 
   dcli_translate_filename( fname, load_cNameDistribute);
   ifstream is( fname);
+
+  m_sts = PWRB__NOBUILT;
 
   while ( is.getline( line, sizeof(line))) {
     dcli_trim( line, line);
@@ -1437,14 +1466,30 @@ void wb_build::project( char *dir)
     if ( !num)
       continue;
     
-    if  ( dir && strncmp( dir, line_item[1], strlen(dir)) != 0)
+    if  ( dir && cdh_NoCaseStrcmp( dir, line_item[1]) != 0)
       continue;
 
-    if ( strcmp( cdh_Low(line_item[0]), "buildcopy") == 0) {
+    if ( strcmp( cdh_Low(line_item[0]), "builddir") == 0) {
       if ( num != 4) {
 	printf("File corrupt " load_cNameDistribute);
 	continue;
       }
+      int sts = sscanf( line_item[2], "%d", &current_options);
+      if ( sts != 1) {
+	printf("File corrupt " load_cNameDistribute);
+	current_options = 0;
+      }
+      if ( !(pass == bld_ePass_BeforeNode && !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode)))
+	wb_log::log( wlog_eCategory_DirectoryBuild, line_item[1], 0);
+    }
+    else if ( strcmp( cdh_Low(line_item[0]), "buildcopy") == 0) {      
+      if ( num != 4) {
+	printf("File corrupt " load_cNameDistribute);
+	continue;
+      }
+
+      if ( pass == bld_ePass_BeforeNode && !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode))
+	continue;
 
       for ( sts = dcli_search_file( line_item[2], found_file, DCLI_DIR_SEARCH_INIT);
 	    ODD(sts);
@@ -1481,15 +1526,54 @@ void wb_build::project( char *dir)
 	  continue;
 
 	sprintf( cmd, "cp -a %s %s", source, target);
-	//	system( cmd);
-	sprintf( cmd, "Build:    %s %s -> %s", line_item[1], source, target);
+	system( cmd);
+	sprintf( cmd, "Build:    copy %s %s -> %s", line_item[1], source, target);
 	MsgWindow::message( 'I', cmd, msgw_ePop_No);
     
 	// wb_log::log( wlog_eCategory_GeBuild, name, 0);
-	m_sts = PWRB__SUCCESS;
+	if ( m_sts != PWRB__MAKEUPDATED)
+	  m_sts = PWRB__SUCCESS;
       }
 
       dcli_search_file( line_item[1], found_file, DCLI_DIR_SEARCH_END);
+    }
+    else if ( strcmp( cdh_Low(line_item[0]), "buildmake") == 0) {
+
+      if ( num != 4) {
+	printf("File corrupt " load_cNameDistribute);
+	continue;
+      }
+
+      if ( pass == bld_ePass_BeforeNode && !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode))
+	continue;
+
+      int update = 0;
+      sprintf( cmd, "cd %s;make -q %s", line_item[2], line_item[3]);
+      sts = system( cmd);
+      if ( WEXITSTATUS(sts) != 0)
+	update = 1;
+
+      if ( !opt.force && !update)
+	continue;
+
+      // Needs update
+      if ( opt.force)
+	// Execute make with -B, unconditionally make all targets
+	sprintf( cmd, "cd %s;make -B %s", line_item[2], line_item[3]);
+      else
+	sprintf( cmd, "cd %s;make %s", line_item[2], line_item[3]);
+      sts = system( cmd);
+      if ( WEXITSTATUS(sts) != 0) {
+	sprintf( cmd, "Build:    make error %s %s", line_item[2], line_item[3]);
+	MsgWindow::message( 'E', cmd, msgw_ePop_Yes);
+	m_sts = PWRB__MAKEERROR;
+      }
+      else {
+	sprintf( cmd, "Build:    executed %s %s", line_item[2], line_item[3]);
+	MsgWindow::message( 'I', cmd, msgw_ePop_No);
+	m_sts = PWRB__MAKEUPDATED;
+      }
+      // wb_log::log( wlog_eCategory_GeBuild, name, 0);
     }
     else if ( strcmp( cdh_Low(line_item[0]), "buildexec") == 0) {
 
@@ -1498,13 +1582,123 @@ void wb_build::project( char *dir)
 	continue;
       }
 
+      if ( pass == bld_ePass_BeforeNode && !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode))
+	continue;
+
       sprintf( cmd, "cd %s;%s", line_item[2], line_item[3]);
-      //      system( cmd);
+      system( cmd);
       sprintf( cmd, "Build:    executed %s %s", line_item[2], line_item[3]);
       MsgWindow::message( 'I', cmd, msgw_ePop_No);
     
       // wb_log::log( wlog_eCategory_GeBuild, name, 0);
-      m_sts = PWRB__SUCCESS;
+      if ( m_sts != PWRB__MAKEUPDATED)
+	m_sts = PWRB__SUCCESS;
+    }
+  }
+
+  is.close();
+  
+}
+
+void wb_build::export_import_files( int type, bld_ePass pass)
+{
+  pwr_tFileName fname;
+  char line[400];
+  char line_item[4][250];
+  pwr_tFileName found_file;
+  int num;
+  int sts;
+  pwr_tCmd cmd;
+  char tag[20];
+  pwr_tMask current_options = 0;
+
+  if ( type == bld_eType_Export)
+    strcpy( tag, "export");
+  else
+    strcpy( tag, "import");
+
+  dcli_translate_filename( fname, load_cNameDistribute);
+  ifstream is( fname);
+
+  m_sts = PWRB__NOBUILT;
+
+  while ( is.getline( line, sizeof(line))) {
+    dcli_trim( line, line);
+    if ( line[0] == '#' || line[0] == '!')
+      continue;
+    
+    num = dcli_parse( line, " 	", "", (char *)line_item,
+		      sizeof(line_item)/sizeof(line_item[0]),
+		      sizeof(line_item[0]), 0);
+    if ( !num)
+      continue;
+    
+    if ( strcmp( cdh_Low(line_item[0]), tag) == 0) {
+      if ( num != 4) {
+	printf("File corrupt " load_cNameDistribute);
+	continue;
+      }
+
+      sts = sscanf( line_item[1], "%d", &current_options);
+      if ( sts != 1) {
+	printf("File corrupt " load_cNameDistribute);
+	current_options = 0;
+      }
+
+      if ( type == bld_eType_Import && 
+	   pass == bld_ePass_BeforeNode && 
+	   !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode))
+	continue;
+
+      if ( type == bld_eType_Export && 
+	   pass == bld_ePass_AfterNode && 
+	   !(current_options & pwr_mBuildExportMask_BuildAfterNode))
+	continue;
+
+      for ( sts = dcli_search_file( line_item[2], found_file, DCLI_DIR_SEARCH_INIT);
+	    ODD(sts);
+	    sts = dcli_search_file( line_item[2], found_file, DCLI_DIR_SEARCH_NEXT)) {
+
+	// Check if file should be updated
+	int update = 0;
+	pwr_tFileName source, target;
+	pwr_tTime source_time, target_time;
+
+	strncpy( source, found_file, sizeof(source));
+	strncpy( target, line_item[3], sizeof(target));
+
+	sts = dcli_file_time( source, &source_time);
+
+	if ( target[strlen(target)-1] == '/') {
+	  // Target is a directory, add file name
+	  char *s = strrchr( source, '/');
+	  if ( !s)
+	    strncat( target, source, sizeof(target));
+	  else
+	    strncat( target, s+1, sizeof(target));
+	}
+	
+	dcli_translate_filename( target, target);
+	sts = dcli_file_time( target, &target_time);	  
+	
+	if ( ODD(sts) && time_Acomp( &source_time, &target_time) != 1)
+	  update = 0;
+	else
+	  update = 1;
+
+	if ( !opt.force && !update)
+	  continue;
+
+	sprintf( cmd, "cp -a %s %s", source, target);
+	system( cmd);
+	sprintf( cmd, "Build:    %s %s -> %s", tag, source, target);
+	MsgWindow::message( 'I', cmd, msgw_ePop_No);
+    
+	// wb_log::log( wlog_eCategory_GeBuild, name, 0);
+	m_sts = PWRB__SUCCESS;
+      }
+
+      dcli_search_file( line_item[2], found_file, DCLI_DIR_SEARCH_END);
     }
   }
 

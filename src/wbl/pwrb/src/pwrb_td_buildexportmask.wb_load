@@ -33,47 +33,32 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_buildexecute.wb_load -- Defines the class BuildExecute.
+!  pwrb_td_buildexportmask.wb_load -- Defines the mask type BuildExportMask
 !
-SObject pwrb:Class
+SObject pwrb:Type
 !/**
 !  @Version 1.0
-!  @Group ProjectConfiguration
-!  @Summary Configures build actions with shell commands.
-!  The BuildExecute object configures build actions performed with shell commands, 
-!  for example executing make files or shell scripts.
-!
-!  The object reside in the project volume beneath an BuildDirectory object.
-!
-!  The execution is carried out when Build Directories in the configurator menu
-!  is activated.
-!
-!  If the Options attribute in the BuildDirectory object is set to BuildBeforeNode
-!  the copy is performed automatically before a node is built.
-!
-! @b See also
-!  @classlink BuildConfig pwrb_buildconfig.html
-!  @classlink BuildDirectory pwrb_builddirectory.html
-!  @classlink BuildCopy pwrb_buildcopy.html
-!  @classlink BuildMake pwrb_buildmake.html
+!  @Group Types
+!  Defines options mask for BuildExport.
 !*/
-  Object BuildExecute $ClassDef 629 
+  Object BuildExportMask $TypeDef 78
     Body SysBody
-      Attr Editor = pwr_eEditor_AttrEd
-      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr PgmName = "BuildExportMask"
     EndBody
-    Object DevBody $ObjBodyDef 2 
-      !/**
-      ! Shell command that is executed when the directory is built.
-      !
-      ! Example
-      !   make
-      !*/
-      Object Command $Attribute 1 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String80"
-        EndBody
-      EndObject
+    !/**
+    !  Export is automatically built after a node is built.
+    !*/
+    Object BuildAfterNode $Bit
+     Body SysBody
+       Attr PgmName = "BuildAfterNode"
+       Attr Text = "BuildAfterNode"
+       Attr Value = 1
+     EndBody
     EndObject
   EndObject
 EndSObject
+
+
+
+

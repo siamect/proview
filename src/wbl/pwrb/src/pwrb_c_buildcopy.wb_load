@@ -39,21 +39,25 @@ SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group ProjectConfiguration
-!  @Summary Configures export of applications.
-!  The ApplExport object configures export of files to other projects.
+!  @Summary Configures copying of files from source to build tree.
+!  The BuildCopy object configures copying of files from source to build tree.
 !
-!  One ApplExport object causes one or several files (with wildcard
-!  specification) to be copied from a directory in the src tree to the
-!  bld tree.
+!  One BuildCopy object causes one or several files (with wildcard
+!  specification) to be copied from a directory in the source tree to the
+!  build tree.
 !
 !  The object reside in the project volume beneath an BuildDirectory object.
 !
-!  The distribution is carried out when Build Project in the configurator menu
-!  is activated.
+!  The copy is carried out when Build Directories in the configurator menu
+!  is activated, or when the node is built.
+!
+!  If the Options attribute in the BuildDirectory object is set to BuildBeforeNode
+!  the copy is performed automatically before a node is built.
 !
 ! @b See also
 !  @classlink BuildConfig pwrb_buildconfig.html
 !  @classlink BuildDirectory pwrb_builddirectory.html
+!  @classlink BuildMake pwrb_buildmake.html
 !  @classlink BuildExecute pwrb_buildexecute.html
 !*/
   Object BuildCopy $ClassDef 628 

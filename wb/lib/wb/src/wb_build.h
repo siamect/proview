@@ -45,6 +45,18 @@
 
 class Wtt;
 
+typedef enum {
+  bld_eType_Export,
+  bld_eType_Import
+} bld_eType;
+
+typedef enum {
+  bld_ePass_None,
+  bld_ePass_BeforeNode,
+  bld_ePass_AfterNode
+} bld_ePass;
+
+
 class wb_build : public wb_status
 {
  public:
@@ -66,7 +78,10 @@ class wb_build : public wb_status
   void appgraph( pwr_tOid oid);
   void application( pwr_tOid oid);
   void classdef( pwr_tOid oid);
-  void project( char *dir);
+  void directories( char *dir, bld_ePass pass);
+  void export_import_files( int type, bld_ePass pass);
+  void export_files( bld_ePass pass) { export_import_files(bld_eType_Export, pass);}
+  void import_files( bld_ePass pass) { export_import_files(bld_eType_Import, pass);}
 
   wb_build_opt opt;
   wb_session m_session;

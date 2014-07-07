@@ -2440,8 +2440,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	sts = ldh_GetNextObject( ldhses, exportoid, &exportoid)) {
     pwr_tFileName dir;
     char *dir_ptr;
+    pwr_tMask *options_ptr;    
     pwr_mExportImportMask *components_ptr;
     pwr_tOid appoid;
+    pwr_tMask current_options = 0;
 
     sts = ldh_GetObjectPar( ldhses, exportoid, "DevBody",
 			    "TargetDirectory", (char **)&dir_ptr, &size);
@@ -2458,15 +2460,29 @@ pwr_tStatus lfu_SaveDirectoryVolume(
       strcat( dir, "/");
 
     sts = ldh_GetObjectPar( ldhses, exportoid, "DevBody",
+			    "Options", (char **)&options_ptr, &size);
+    if ( EVEN(sts)) return sts;
+
+    current_options = *options_ptr;
+    free( options_ptr);
+
+    sts = ldh_GetObjectPar( ldhses, exportoid, "DevBody",
 			    "Components", (char **)&components_ptr, &size);
     if (EVEN(sts)) return sts;
 
     if ( *components_ptr & pwr_mExportImportMask_IncludeFiles)
-      fprintf( file, "export $pwrp_inc/*.h %s\n", dir);
+      fprintf( file, "export %d $pwrp_inc/*.h %s\n", current_options, dir);
     if ( *components_ptr & pwr_mExportImportMask_GraphFiles)
-      fprintf( file, "export $pwrp_exe/*.pwg %s\n", dir);
+      fprintf( file, "export %d $pwrp_exe/*.pwg %s\n", current_options, dir);
     if ( *components_ptr & pwr_mExportImportMask_FlowFiles)
-      fprintf( file, "export $pwrp_load/*.flw %s\n", dir);
+      fprintf( file, "export %d $pwrp_load/*.flw %s\n", current_options, dir);
+    if ( *components_ptr & pwr_mExportImportMask_LoadFiles) {
+      fprintf( file, "export %d $pwrp_load/*.dbs %s\n", current_options, dir);
+      fprintf( file, "export %d $pwrp_load/rtt_crr_*.dat %s\n", current_options, dir);
+      fprintf( file, "export %d $pwrp_load/rtt_crro_*.dat %s\n", current_options, dir);
+      fprintf( file, "export %d $pwrp_load/rtt_crrs_*.dat %s\n", current_options, dir);
+      fprintf( file, "export %d $pwrp_load/rtt_crrc_*.dat %s\n", current_options, dir);
+    }
     
     free( components_ptr);
 
@@ -2487,7 +2503,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 				"Target", (char **)&target_ptr, &size);
 	if ( EVEN(sts)) return sts;
 
-	fprintf( file, "export %s %s%s\n", source_ptr, dir, target_ptr);
+	fprintf( file, "export %d %s %s%s\n", current_options, source_ptr, dir, target_ptr);
 
 	free( source_ptr);
 	free( target_ptr);
@@ -2508,6 +2524,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
     char *dir_ptr;
     pwr_mExportImportMask *components_ptr;
     pwr_tOid appoid;
+    pwr_tMask *options_ptr;    
+    pwr_tMask current_options = 0;
 
     sts = ldh_GetObjectPar( ldhses, importoid, "DevBody",
 			    "SourceDirectory", (char **)&dir_ptr, &size);
@@ -2524,15 +2542,29 @@ pwr_tStatus lfu_SaveDirectoryVolume(
       strcat( dir, "/");
 
     sts = ldh_GetObjectPar( ldhses, importoid, "DevBody",
+			    "Options", (char **)&options_ptr, &size);
+    if ( EVEN(sts)) return sts;
+
+    current_options = *options_ptr;
+    free( options_ptr);
+
+    sts = ldh_GetObjectPar( ldhses, importoid, "DevBody",
 			    "Components", (char **)&components_ptr, &size);
     if (EVEN(sts)) return sts;
 
     if ( *components_ptr & pwr_mExportImportMask_IncludeFiles)
-      fprintf( file, "import %s*.h $pwrp_inc/\n", dir);
+      fprintf( file, "import %d %s*.h $pwrp_inc/\n", current_options, dir);
     if ( *components_ptr & pwr_mExportImportMask_GraphFiles)
-      fprintf( file, "import %s*.pwg $pwrp/exe/\n", dir);
+      fprintf( file, "import %d %s*.pwg $pwrp/exe/\n", current_options, dir);
     if ( *components_ptr & pwr_mExportImportMask_FlowFiles)
-      fprintf( file, "import %s*.flw $pwrp_load/\n", dir);
+      fprintf( file, "import %d %s*.flw $pwrp_load/\n", current_options, dir);
+    if ( *components_ptr & pwr_mExportImportMask_LoadFiles) {
+      fprintf( file, "import %d %s*.dbs $pwrp_load/\n", current_options, dir);
+      fprintf( file, "import %d %srtt_crr_*.dat $pwrp_load/\n", current_options, dir);
+      fprintf( file, "import %d %srtt_crro_*.dat $pwrp_load/\n", current_options, dir);
+      fprintf( file, "import %d %srtt_crrs_*.dat $pwrp_load/\n", current_options, dir);
+      fprintf( file, "import %d %srtt_crrc_*.dat $pwrp_load/\n", current_options, dir);
+    }
     
     free( components_ptr);
 
@@ -2553,7 +2585,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 				"Target", (char **)&target_ptr, &size);
 	if ( EVEN(sts)) return sts;
 
-	fprintf( file, "import %s%s %s\n", dir, source_ptr, target_ptr);
+	fprintf( file, "import %d %s%s %s\n", current_options, dir, source_ptr, target_ptr);
 
 	free( source_ptr);
 	free( target_ptr);
@@ -2577,6 +2609,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
     pwr_tFileName dir;
     char *dir_ptr;
     char *descr_ptr;
+    pwr_tMask *options_ptr;
 
     sts = ldh_ObjidToName( ldhses, builddir_oid, ldh_eName_Object,
 			   oname, sizeof(oname), &size);
@@ -2619,10 +2652,15 @@ pwr_tStatus lfu_SaveDirectoryVolume(
       strcat( dir, "/");
 
     sts = ldh_GetObjectPar( ldhses, builddir_oid, "DevBody",
+			    "Options", (char **)&options_ptr, &size);
+    if ( EVEN(sts)) return sts;
+
+    sts = ldh_GetObjectPar( ldhses, builddir_oid, "DevBody",
 			    "Description", (char **)&descr_ptr, &size);
     if ( EVEN(sts)) return sts;
 
-    fprintf( file, "builddir %s \"%s\"\n", fullname, descr_ptr);
+    fprintf( file, "builddir %s %d \"%s\"\n", fullname, *options_ptr, descr_ptr);
+    free( options_ptr);
     free( descr_ptr);
 
     for ( sts = ldh_GetChild( ldhses, builddir_oid, &coid);
@@ -2658,6 +2696,18 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	fprintf( file, "buildexec %s %s \"%s\"\n", cdh_Low(fullname), dir, command_ptr);
 
 	free( command_ptr);
+	break;
+      }
+      case pwr_cClass_BuildMake: {
+	char *makefile_ptr;
+	
+	sts = ldh_GetObjectPar( ldhses, coid, "DevBody",
+				"Makefile", (char **)&makefile_ptr, &size);
+	if ( EVEN(sts)) return sts;
+
+	fprintf( file, "buildmake %s %s \"%s\"\n", cdh_Low(fullname), dir, makefile_ptr);
+
+	free( makefile_ptr);
 	break;
       }
       default: ;

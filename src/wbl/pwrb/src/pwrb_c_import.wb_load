@@ -62,6 +62,9 @@ SObject pwrb:Class
 !
 !  Other files can be included with an ApplImport object.
 !
+!  If the Options attribute is set to BuildBeforeNode the import is performed 
+!  automatically before a node is built.
+!
 ! @b See also
 !  @classlink ApplImport pwrb_applimport.html
 !*/
@@ -95,6 +98,16 @@ SObject pwrb:Class
       Object Components $Attribute 3 
         Body SysBody
           Attr TypeRef = "pwrb:Type-ExportImportMask"
+        EndBody
+      EndObject
+      !/**
+      ! Options.
+      ! - BuildBeforeNode, directory is automatically built before any 
+      !   node is built.
+      !*/
+      Object Options $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-BuildDirectoryMask"
         EndBody
       EndObject
     EndObject

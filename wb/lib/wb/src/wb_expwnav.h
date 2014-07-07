@@ -67,7 +67,7 @@ typedef enum {
 typedef enum {
   expw_eType_Export,
   expw_eType_Import,
-  expw_eType_BuildProject
+  expw_eType_BuildDirectories
 } expw_eType;
 
 typedef enum {
@@ -108,18 +108,31 @@ class ExpWExec : public ExpWList {
   ExpWExec() : next(0), prev(0) {}
 };
 
+class ExpWMake : public ExpWList {
+ public:
+  ExpWMake *next;
+  ExpWMake *prev;
+  pwr_tFileName makefile;
+  pwr_tFileName dir;
+
+  ExpWMake() : next(0), prev(0) {}
+};
+
 class ExpWDir : public ExpWList {
  public:
   ExpWDir *next;
   ExpWDir *prev;
   ExpWCopy *copylist;
+  ExpWMake *makelist;
   ExpWExec *execlist;
   int open;
   char name[80];
+  pwr_tMask options;
   char description[80];
 
-  ExpWDir() : next(0), prev(0), copylist(0), execlist(0), open(0) {}
+  ExpWDir() : next(0), prev(0), copylist(0), makelist(0), execlist(0), open(0), options(0) {}
   ExpWCopy *copy_insert( char *source, char *target, int update);
+  ExpWMake *make_insert( char *dir, char *makefile, int update);
   ExpWExec *exec_insert( char *dir, char *command, int update);
     
 };
@@ -161,7 +174,7 @@ class WbExpWNav {
 
     void show();
     void show_export_import();
-    void show_buildproject();
+    void show_builddir();
     void redraw();
     void clear();
     void zoom( double zoom_factor);
@@ -172,7 +185,7 @@ class WbExpWNav {
     void check_reset();
     void set_show_all( int set);
     ExpWDir *dir_find( char *name);
-    ExpWDir *dir_insert( char *name, char *description);
+    ExpWDir *dir_insert( char *name, char *options_str, char *description);
     void list_free();
 
     static int init_brow_cb( FlowCtx *fctx, void *client_data);

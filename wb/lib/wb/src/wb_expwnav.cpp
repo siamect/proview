@@ -652,8 +652,8 @@ void WbExpWNav::show()
   case expw_eType_Export:
     show_export_import();
     break;
-  case expw_eType_BuildProject:
-    show_buildproject();
+  case expw_eType_BuildDirectories:
+    show_builddir();
     break;
   default: ;
   }
@@ -664,7 +664,7 @@ void WbExpWNav::show_export_import()
 
   pwr_tFileName fname;
   char line[400];
-  char line_item[3][250];
+  char line_item[4][250];
   pwr_tFileName found_file;
   int num;
   int sts;
@@ -693,14 +693,14 @@ void WbExpWNav::show_export_import()
       strcpy( tag, "import");
 
     if ( strcmp( cdh_Low(line_item[0]), tag) == 0) {
-      if ( num != 3) {
+      if ( num != 4) {
 	printf("File corrupt " load_cNameDistribute);
 	continue;
       }
       
-      for ( sts = dcli_search_file( line_item[1], found_file, DCLI_DIR_SEARCH_INIT);
+      for ( sts = dcli_search_file( line_item[2], found_file, DCLI_DIR_SEARCH_INIT);
 	    ODD(sts);
-	    sts = dcli_search_file( line_item[1], found_file, DCLI_DIR_SEARCH_NEXT)) {
+	    sts = dcli_search_file( line_item[2], found_file, DCLI_DIR_SEARCH_NEXT)) {
 	
 	// Check if file should be updated
 	int update = 0;
@@ -708,7 +708,7 @@ void WbExpWNav::show_export_import()
 	pwr_tTime source_time, target_time;
 	
 	strncpy( source, found_file, sizeof(source));
-	strncpy( target, line_item[2], sizeof(target));
+	strncpy( target, line_item[3], sizeof(target));
 	
 	sts = dcli_file_time( source, &source_time);
 	
@@ -732,11 +732,11 @@ void WbExpWNav::show_export_import()
 	if ( !show_all && !update)
 	  continue;
 	  
-	ItemExp *item = new ItemExp( this, found_file, line_item[2], 0, 0, flow_eDest_IntoLast);
+	ItemExp *item = new ItemExp( this, found_file, line_item[3], 0, 0, flow_eDest_IntoLast);
 	if ( update)
 	  brow_SetRadiobutton( item->node, 0, 1);  
       }
-      dcli_search_file( line_item[1], found_file, DCLI_DIR_SEARCH_END);
+      dcli_search_file( line_item[2], found_file, DCLI_DIR_SEARCH_END);
     }
   }
   
@@ -749,7 +749,7 @@ void WbExpWNav::show_export_import()
 
 }
 
-void WbExpWNav::show_buildproject()
+void WbExpWNav::show_builddir()
 {
 
   pwr_tFileName fname;
@@ -776,14 +776,14 @@ void WbExpWNav::show_buildproject()
       continue;
 
     if ( strcmp( cdh_Low(line_item[0]), "builddir") == 0) {
-      if ( num != 3) {
+      if ( num != 4) {
 	printf("File corrupt " load_cNameDistribute);
 	continue;
       }
 
       ExpWDir *dir = dir_find( line_item[1]);
       if ( !dir)
-	dir = dir_insert( line_item[1], line_item[2]);
+	dir = dir_insert( line_item[1], line_item[2], line_item[3]);
     }
 
     else if ( strcmp( cdh_Low(line_item[0]), "buildcopy") == 0) {
@@ -842,6 +842,24 @@ void WbExpWNav::show_buildproject()
 	brow_SetRadiobutton( item->node, 0, 1);  
       
     }
+    else if ( strcmp( cdh_Low(line_item[0]), "buildmake") == 0) {
+      int update = 1;
+
+      if ( num != 4) {
+	printf("File corrupt " load_cNameDistribute);
+	continue;
+      }
+
+      ExpWDir *dir = dir_find( line_item[1]);
+      if ( !dir) {
+	printf("File corrupt " load_cNameDistribute);
+	continue;
+      }
+
+      dir->make_insert( line_item[2], line_item[3], update);
+      if ( update)
+	dir->update = 1;
+    }
     else if ( strcmp( cdh_Low(line_item[0]), "buildexec") == 0) {
       int update = 1;
 
@@ -875,7 +893,7 @@ void WbExpWNav::set_show_all( int set)
   case expw_eType_Import:
     show();
     break;
-  case expw_eType_BuildProject:
+  case expw_eType_BuildDirectories:
     redraw();
     break;
   }
@@ -916,6 +934,11 @@ void WbExpWNav::list_free()
       cp_next = cp->next;
       delete cp;
     }
+    ExpWMake *mp_next;
+    for ( ExpWMake *mp = dp->makelist; mp; mp = mp_next) {
+      mp_next = mp->next;
+      delete mp;
+    }
     ExpWExec *ep_next;
     for ( ExpWExec *ep = dp->execlist; ep; ep = ep_next) {
       ep_next = ep->next;
@@ -927,10 +950,17 @@ void WbExpWNav::list_free()
   dirlist = 0;
 }
 
-ExpWDir *WbExpWNav::dir_insert( char *name, char *description)
+ExpWDir *WbExpWNav::dir_insert( char *name, char *options_str, char *description)
 {
+  int num;
+
   ExpWDir *dir = new ExpWDir();
   strncpy( dir->name, name, sizeof(dir->name));
+  num = sscanf( options_str, "%d", &dir->options);
+  if ( num != 1) {
+    printf( "** BuildDirectory.Options syntax error\n");
+    dir->options = 0;
+  }
   strncpy( dir->description, description, sizeof(dir->description));
 
   if ( !dirlist)
@@ -958,6 +988,23 @@ ExpWCopy *ExpWDir::copy_insert( char *source, char *target, int update)
     cp->next = copy;
   }
   return copy;
+}
+
+ExpWMake *ExpWDir::make_insert( char *dir, char *makefile, int update)
+{
+  ExpWMake *make = new ExpWMake();
+  strncpy( make->dir, dir, sizeof(make->dir));
+  strncpy( make->makefile, makefile, sizeof(make->makefile));
+  make->update = update;
+
+  if ( !makelist)
+    makelist = make;
+  else {
+    ExpWMake *ep;
+    for ( ep = makelist; ep->next; ep = ep->next) ;
+    ep->next = make;
+  }
+  return make;
 }
 
 ExpWExec *ExpWDir::exec_insert( char *dir, char *command, int update)
@@ -1016,7 +1063,7 @@ pwr_tStatus WbExpWNav::exp()
     show();
     break;
   }
-  case expw_eType_BuildProject: {
+  case expw_eType_BuildDirectories: {
     for ( ExpWDir *dp = dirlist; dp; dp = dp->next) {
       if ( !dp->update)
 	continue;
@@ -1040,6 +1087,19 @@ pwr_tStatus WbExpWNav::exp()
       if ( !dp->update)
 	continue;
       
+      for ( ExpWMake *mp = dp->makelist; mp; mp = mp->next) {
+	if ( !mp->update)
+	  continue;
+
+	sprintf( cmd, "cd %s;make %s", mp->dir, mp->makefile);
+	printf( "%s\n", cmd);
+	sts = system( cmd);
+	if ( sts != 0) {
+	  char msg[250];
+	  snprintf( msg, sizeof(msg), "Build error %d, %s", WEXITSTATUS(sts), cmd);
+	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	}
+      }
       for ( ExpWExec *ep = dp->execlist; ep; ep = ep->next) {
 	if ( !ep->update)
 	  continue;
@@ -1079,11 +1139,13 @@ void WbExpWNav::check_all()
       brow_SetRadiobutton( node, 0, 1);
     break;
   }
-  case expw_eType_BuildProject: {
+  case expw_eType_BuildDirectories: {
     for ( ExpWDir *dir = dirlist; dir; dir = dir->next) {
       dir->update = 1;
       for ( ExpWCopy *cp = dir->copylist; cp; cp = cp->next)
 	cp->update = 1;
+      for ( ExpWMake *mp = dir->makelist; mp; mp = mp->next)
+	mp->update = 1;
       for ( ExpWExec *ep = dir->execlist; ep; ep = ep->next)
 	ep->update = 1;
     }    
@@ -1108,11 +1170,13 @@ void WbExpWNav::check_clear()
       brow_SetRadiobutton( node, 0, 0);
     break;
   }
-  case expw_eType_BuildProject: {
+  case expw_eType_BuildDirectories: {
     for ( ExpWDir *dir = dirlist; dir; dir = dir->next) {
       dir->update = 0;
       for ( ExpWCopy *cp = dir->copylist; cp; cp = cp->next)
 	cp->update = 0;
+      for ( ExpWMake *mp = dir->makelist; mp; mp = mp->next)
+	mp->update = 0;
       for ( ExpWExec *ep = dir->execlist; ep; ep = ep->next)
 	ep->update = 0;
     }    
@@ -1192,11 +1256,11 @@ ItemDir::ItemDir( WbExpWNav *item_expwnav, ExpWDir *item_dir, char *item_name, c
   // Check if map or leaf
   int child_exist = 0;
   if ( expwnav->show_all) {
-    if ( dir->copylist || dir->execlist)
+    if ( dir->copylist || dir->execlist || dir->makelist)
       child_exist = 1;
   }
   else {
-    if ( dir->execlist)
+    if ( dir->execlist || dir->makelist)
       child_exist = 1;
     else {
       for ( ExpWCopy *cp = dir->copylist; cp; cp = cp->next) {
@@ -1247,6 +1311,14 @@ int ItemDir::open_children()
     // Create some children
     brow_SetNodraw( expwnav->brow->ctx);
 
+    for ( ExpWMake *mp = dir->makelist; mp; mp = mp->next) {
+      pwr_tCmd cmd;
+      sprintf( cmd, "make %s", mp->makefile);
+      ItemExp *item = new ItemExp( expwnav, mp->dir, cmd, mp, node, flow_eDest_IntoLast);
+      if ( mp->update)
+	brow_SetRadiobutton( item->node, 0, 1);  
+      child_exist = 1;
+    }
     for ( ExpWExec *ep = dir->execlist; ep; ep = ep->next) {
       ItemExp *item = new ItemExp( expwnav, ep->dir, ep->command, ep, node, flow_eDest_IntoLast);
       if ( ep->update)

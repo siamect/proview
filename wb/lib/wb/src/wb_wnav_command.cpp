@@ -5150,7 +5150,7 @@ static int	wnav_build_func(	void		*client_data,
     free( sel_list);
     free( sel_is_attr);
   }
-  else if ( cdh_NoCaseStrncmp( arg1_str, "PROJECT", strlen( arg1_str)) == 0) {
+  else if ( cdh_NoCaseStrncmp( arg1_str, "DIRECTORIES", strlen( arg1_str)) == 0) {
 
     if ( !(CoLogin::privilege() & pwr_mPrv_DevConfig)) {
       wnav->message( 'E', "User is not authorized to build");
@@ -5164,7 +5164,7 @@ static int	wnav_build_func(	void		*client_data,
       if ( EVEN(sts)) return sts;
 
 
-      wnav->expw_new( (char *)"Build Project", expw_eType_BuildProject, &sts);
+      wnav->expw_new( (char *)"Build Directories", expw_eType_BuildDirectories, &sts);
       if ( EVEN(sts))
 	wnav->message(' ', wnav_get_message(sts));
     }
@@ -5185,7 +5185,7 @@ static int	wnav_build_func(	void		*client_data,
       else
 	dirp = arg2_str;
       
-      build.project( dirp);
+      build.directories( dirp, bld_ePass_None);
       wnav->message(' ', wnav_get_message(build.sts()));
     }
   }
@@ -5209,7 +5209,14 @@ static int	wnav_build_func(	void		*client_data,
 	wnav->message(' ', wnav_get_message(sts));
     }
     else {
-      // TODO
+      wb_build build( *(wb_session *)wnav->ldhses, wnav);
+      build.opt.force = ODD( dcli_get_qualifier( "/FORCE", 0, 0));
+      build.opt.debug = ODD( dcli_get_qualifier( "/DEBUG", 0, 0));
+      build.opt.crossref = ODD( dcli_get_qualifier( "/CROSSREFERENCE", 0, 0));
+      build.opt.manual = ODD( dcli_get_qualifier( "/MANUAL", 0, 0));
+
+      build.export_files( bld_ePass_None);
+      wnav->message(' ', wnav_get_message(build.sts()));
     }
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "IMPORT", strlen( arg1_str)) == 0) {
@@ -5232,7 +5239,14 @@ static int	wnav_build_func(	void		*client_data,
 	wnav->message(' ', wnav_get_message(sts));
     }
     else {
-      // TODO
+      wb_build build( *(wb_session *)wnav->ldhses, wnav);
+      build.opt.force = ODD( dcli_get_qualifier( "/FORCE", 0, 0));
+      build.opt.debug = ODD( dcli_get_qualifier( "/DEBUG", 0, 0));
+      build.opt.crossref = ODD( dcli_get_qualifier( "/CROSSREFERENCE", 0, 0));
+      build.opt.manual = ODD( dcli_get_qualifier( "/MANUAL", 0, 0));
+
+      build.import_files( bld_ePass_None);
+      wnav->message(' ', wnav_get_message(build.sts()));
     }
   }
   else {

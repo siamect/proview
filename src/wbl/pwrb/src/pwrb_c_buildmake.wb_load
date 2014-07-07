@@ -33,43 +33,46 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_buildexecute.wb_load -- Defines the class BuildExecute.
+!  pwrb_c_buildmake.wb_load -- Defines the class BuildMake.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group ProjectConfiguration
-!  @Summary Configures build actions with shell commands.
-!  The BuildExecute object configures build actions performed with shell commands, 
-!  for example executing make files or shell scripts.
-!
+!  @Summary Configures build actions with make.
+!  The BuildMake object configures build actions performed with GNU make.
+!  
 !  The object reside in the project volume beneath an BuildDirectory object.
 !
-!  The execution is carried out when Build Directories in the configurator menu
+!  The execution is carried out when Build Directories in the configurator menu 
 !  is activated.
 !
 !  If the Options attribute in the BuildDirectory object is set to BuildBeforeNode
-!  the copy is performed automatically before a node is built.
+!  the makefile is executed automatically before a node is built. In this case
+!  the makefile is first executed with the -q option to examine if any dependencies
+!  needs to be updated. The result is a dependency for if the node is rebuilt or not.
+!
+!  If Build Force is set in the settings, the makefile is executed with the -B
+!  option (unconditionally make all targets).
 !
 ! @b See also
 !  @classlink BuildConfig pwrb_buildconfig.html
 !  @classlink BuildDirectory pwrb_builddirectory.html
 !  @classlink BuildCopy pwrb_buildcopy.html
-!  @classlink BuildMake pwrb_buildmake.html
+!  @classlink BuildExecute pwrb_buildexecute.html
 !*/
-  Object BuildExecute $ClassDef 629 
+  Object BuildMake $ClassDef 631 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_RtAndDevBodies
     EndBody
     Object DevBody $ObjBodyDef 2 
       !/**
-      ! Shell command that is executed when the directory is built.
-      !
-      ! Example
-      !   make
+      ! The name of the makefile.
+      ! If Makefile is left empty make will use the default file
+      ! "makefile".
       !*/
-      Object Command $Attribute 1 
+      Object Makefile $Attribute 1 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody

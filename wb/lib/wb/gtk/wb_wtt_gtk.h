@@ -240,7 +240,7 @@ class WttGtk : public Wtt {
     static void activate_openclasseditor( GtkWidget *w, gpointer data);
     static void activate_buildvolume( GtkWidget *w, gpointer data);
     static void activate_buildnode( GtkWidget *w, gpointer data);
-    static void activate_buildproject( GtkWidget *w, gpointer data);
+    static void activate_builddirectories( GtkWidget *w, gpointer data);
     static void activate_buildimport( GtkWidget *w, gpointer data);
     static void activate_buildexport( GtkWidget *w, gpointer data);
     static void activate_distribute( GtkWidget *w, gpointer data);

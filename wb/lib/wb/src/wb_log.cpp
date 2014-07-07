@@ -134,6 +134,9 @@ void wb_log::category_to_string( wlog_eCategory category, char *str)
   case wlog_eCategory_VolumeClone:
     strcpy( str, "VolumeClone");
     break;
+  case wlog_eCategory_DirectoryBuild:
+    strcpy( str, "DirectoryBuild");
+    break;
   default:
     strcpy( str, "");
   }
@@ -169,6 +172,8 @@ void wb_log::string_to_category( char *str, wlog_eCategory *category)
     *category = wlog_eCategory_WbLoad;
   else if ( strcmp( str, "VolumeClone") == 0)
     *category = wlog_eCategory_VolumeClone;
+  else if ( strcmp( str, "DirectoryBuild") == 0)
+    *category = wlog_eCategory_DirectoryBuild;
   else
     *category = wlog_eCategory_;
 }
@@ -261,6 +266,7 @@ NodeBuild	Node is built. Built node displayed in item.\n\
 PlcBuild	Plc window compiled. Built window displayed in item.\n\
 GeBuild		Ge graph built. Built graph displayed in item.\n\
 GeExport	Ge graph exported to java. Exported graph displayed in item.\n\
+DirectoryBuild	Directory built. Directory displayed in item.\n\
 UpdateClasses	Classes updated.\n\
 CreatePackage	Distribution package created. Created package displayed in item.\n\
 CopyPackage	Package distributed to process or operator station. Package displayed in item.\n\

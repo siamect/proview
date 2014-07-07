@@ -41,11 +41,61 @@ SObject pwrb:Class
 !  @Group ProjectConfig
 !  @Summary Build configuration root object.
 !  The BuildConfig is the root object for the build configuration.
+!  This object is placed in the directory volume as toplevel object
+!  in the node view.
+!
+!  The build configuration makes it possible to handle
+!  - building of applications, with execution of makefiles and copying 
+!    of include files.
+!  - copying of graph files.
+!  - copying of configuration files from $pwrp_cnf.
+!  - importing files from other projects.
+!  - exporting files to other projects.
+!
+!  Other objects in the build configuration
+!  
+!  @bBuildDirectory
+!  Configures how a directory, eg $pwrp_appl or $pwrp_pop is built. The 
+!  actions executed when building the directory is specified with
+!  BuildCopy, BuildMake and BuildExecute object.
+!
+!  @BuildCopy
+!  Copies a file, or a number of files specified with wildcard from the
+!  source directory to the build tree.
+!
+!  @BuildMake
+!  Executes a make file.
+!
+!  @BuildExec
+!  Executes a shell command.
+!  
+!  @Export
+!  Configures files that should be exported to other projects. Normally
+!  files are exported to a common directory from where they are imported
+!  by other projects. Specific files to export is configured with 
+!  ApplExport objects.
+!
+!  @Import
+!  Configures files that is imported from other projects. Specific
+!  files are imported with ApplImport objects.
+!  
+!  The build, export and import can be performed automatically when building
+!  a node, by configuring BuildBeforeNode or BuildAfterNode in the Option
+!  attribute of the BuildDirectory, Import and Export objects.
+!
+!  To perform an selective build, export or import, the Build Directories,
+!  Import and Export window is opened from the Functions menu in the 
+!  configurator.
 !
 ! @b See also
 !  @classlink BuildDirectory pwrb_builddirectory.html
 !  @classlink BuildCopy pwrb_buildcopy.html
+!  @classlink BuildMake pwrb_buildmake.html
 !  @classlink BuildExecute pwrb_buildexecute.html
+!  @classlink Import pwrb_import.html
+!  @classlink ApplImport pwrb_applimport.html
+!  @classlink Export pwrb_export.html
+!  @classlink ApplExport pwrb_applexport.html
 !*/
   Object BuildConfig $ClassDef 630 
     Body SysBody

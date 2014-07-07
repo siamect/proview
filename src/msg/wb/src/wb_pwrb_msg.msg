@@ -47,5 +47,7 @@ graphaction     <no action defined in graph object>                     /error
 inlibhier       <Object is in library hierarchy>                      	/info
 nobuilt    	<Nothing is built>					/info
 plcpgmchild    	<Object can not be a child to a PlcPgm>			/error
+makeerror    	<Error from make>					/error
+makeupdated     <Make dependency updated>				/info
 
 

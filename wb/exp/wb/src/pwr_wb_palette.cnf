@@ -645,6 +645,7 @@ palette ProjectNavigatorPalette
       class BuildConfig
       class BuildDirectory
       class BuildCopy
+      class BuildMake
       class BuildExecute
     }
     menu Export/Import

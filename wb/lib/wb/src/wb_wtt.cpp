@@ -2071,9 +2071,9 @@ void Wtt::activate_buildnode()
   reset_cursor();
 }
 
-void Wtt::activate_buildproject()
+void Wtt::activate_builddirectories()
 {
-  char cmd[80] = "build project/window";
+  char cmd[80] = "build directories/window";
   if ( !focused_wnav)
     set_focus_default();
   focused_wnav->command( cmd);

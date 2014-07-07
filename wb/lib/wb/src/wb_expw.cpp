@@ -74,9 +74,9 @@ WbExpW::WbExpW(
     strcpy( btext, "_Import files");
     strcpy( typetext, "import");
   }
-  else if ( type == expw_eType_BuildProject) {
-    strcpy( action, "Build Project");
-    strcpy( btext, "_Build Project");
+  else if ( type == expw_eType_BuildDirectories) {
+    strcpy( action, "Build Directories");
+    strcpy( btext, "_Build Directories");
     strcpy( typetext, "build");
   }
       

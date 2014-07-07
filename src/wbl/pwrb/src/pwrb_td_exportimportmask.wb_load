@@ -47,10 +47,8 @@ SObject pwrb:Type
       Attr PgmName = "ExportImportMask"
     EndBody
     !/**
-    !  Loadfiles are included, i.e. 
-    !    - loadfiles for volumes configured with RootVolumeLoad, SubVolumeLoad 
-    !      and ClassVolumeLoad objects, and volumes referenced by these volumes, 
-    !    - rtt crossreference files.
+    !  Loadfiles are exported or imported, i.e. all dbs-files and rtt 
+    !  crossreference files on $pwrp_load.
     !*/
     Object LoadFiles $Bit
      Body SysBody

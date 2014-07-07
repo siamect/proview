@@ -62,6 +62,9 @@ SObject pwrb:Class
 !
 !  Other files can be included with an ApplExport object.
 !
+!  If the Options attribute is set to BuildAfterNode the export is performed 
+!  automatically after a node is built.
+!
 ! @b See also
 !  @classlink ApplExport pwrb_applexport.html
 !*/
@@ -96,6 +99,16 @@ SObject pwrb:Class
       Object Components $Attribute 3 
         Body SysBody
           Attr TypeRef = "pwrb:Type-ExportImportMask"
+        EndBody
+      EndObject
+      !/**
+      ! Options.
+      ! - BuildAfterNode, export is automatically built before any 
+      !   node is built.
+      !*/
+      Object Options $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-BuildExportMask"
         EndBody
       EndObject
     EndObject

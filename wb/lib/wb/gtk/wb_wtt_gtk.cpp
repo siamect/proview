@@ -1352,10 +1352,10 @@ void WttGtk::activate_buildnode( GtkWidget *w, gpointer data)
   wtt->activate_buildnode();
 }
 
-void WttGtk::activate_buildproject( GtkWidget *w, gpointer data)
+void WttGtk::activate_builddirectories( GtkWidget *w, gpointer data)
 {
   Wtt *wtt = (Wtt *)data;
-  wtt->activate_buildproject();
+  wtt->activate_builddirectories();
 }
 
 void WttGtk::activate_buildimport( GtkWidget *w, gpointer data)
@@ -1918,7 +1918,7 @@ void WttGtk::boot_ok_cb(GtkWidget *w, gpointer data)
     wtt->message( 'E', "Nothing to build");
     return;
   }
-  sprintf( msg, "Bootfile%s created", (bootfile_count == 1) ? "":"s");
+  sprintf( msg, "Node%s built", (bootfile_count == 1) ? "":"s");
   wtt->message( 'I', msg);
 }
 
@@ -2519,9 +2519,9 @@ WttGtk::WttGtk(
   g_signal_connect( menu_buildobject_w, "activate", 
 		    G_CALLBACK(WttGtk::activate_buildobject), this);
 
-  menu_buildproject_w = gtk_menu_item_new_with_mnemonic( "Bui_ld Directory");
+  menu_buildproject_w = gtk_menu_item_new_with_mnemonic( "Bui_ld Directories");
   g_signal_connect( menu_buildproject_w, "activate", 
-		    G_CALLBACK(WttGtk::activate_buildproject), this);
+		    G_CALLBACK(WttGtk::activate_builddirectories), this);
 
   menu_buildimport_w = gtk_menu_item_new_with_mnemonic( "_Import");
   g_signal_connect( menu_buildimport_w, "activate", 

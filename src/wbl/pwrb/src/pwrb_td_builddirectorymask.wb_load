@@ -33,47 +33,32 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_buildexecute.wb_load -- Defines the class BuildExecute.
+!  pwrb_td_builddirectorymask.wb_load -- Defines the mask type BuildDirectoryMask
 !
-SObject pwrb:Class
+SObject pwrb:Type
 !/**
 !  @Version 1.0
-!  @Group ProjectConfiguration
-!  @Summary Configures build actions with shell commands.
-!  The BuildExecute object configures build actions performed with shell commands, 
-!  for example executing make files or shell scripts.
-!
-!  The object reside in the project volume beneath an BuildDirectory object.
-!
-!  The execution is carried out when Build Directories in the configurator menu
-!  is activated.
-!
-!  If the Options attribute in the BuildDirectory object is set to BuildBeforeNode
-!  the copy is performed automatically before a node is built.
-!
-! @b See also
-!  @classlink BuildConfig pwrb_buildconfig.html
-!  @classlink BuildDirectory pwrb_builddirectory.html
-!  @classlink BuildCopy pwrb_buildcopy.html
-!  @classlink BuildMake pwrb_buildmake.html
+!  @Group Types
+!  Defines options mask for BuildDirectory.
 !*/
-  Object BuildExecute $ClassDef 629 
+  Object BuildDirectoryMask $TypeDef 77
     Body SysBody
-      Attr Editor = pwr_eEditor_AttrEd
-      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr PgmName = "BuildDirectoryMask"
     EndBody
-    Object DevBody $ObjBodyDef 2 
-      !/**
-      ! Shell command that is executed when the directory is built.
-      !
-      ! Example
-      !   make
-      !*/
-      Object Command $Attribute 1 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String80"
-        EndBody
-      EndObject
+    !/**
+    !  Directory is automatically built before a node is built.
+    !*/
+    Object BuildBeforeNode $Bit
+     Body SysBody
+       Attr PgmName = "BuildBeforeNode"
+       Attr Text = "BuildBeforeNode"
+       Attr Value = 1
+     EndBody
     EndObject
   EndObject
 EndSObject
+
+
+
+
