@@ -652,7 +652,12 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
 	case '-': 
 	  // Possible arg to gtk
 	  if ( strcmp( (*argv)[i], "--display") == 0) {
+	    // Gtk arg with parameter
 	    i++;	    
+	    i_incr = 1;
+	  }
+	  else if ( strcmp( (*argv)[i], "--sync") == 0) {
+	    // Gtk arg without parameter
 	    i_incr = 1;
 	  }	    
 	  break;
