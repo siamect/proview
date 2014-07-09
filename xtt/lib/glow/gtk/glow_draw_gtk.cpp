@@ -1340,6 +1340,13 @@ int GlowDrawGtk::arc( GlowWind *wind, int x, int y, int width, int height,
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
+  if ( w->clip_on && 
+       !(w->clip_rectangle[w->clip_cnt-1].x <= x + width &&
+	 w->clip_rectangle[w->clip_cnt-1].x + w->clip_rectangle[w->clip_cnt-1].width >= x &&
+	 w->clip_rectangle[w->clip_cnt-1].y  <= y + height &&
+	 w->clip_rectangle[w->clip_cnt-1].y + w->clip_rectangle[w->clip_cnt-1].height >= y))
+    return 1;
+
   if ( gc_type == glow_eDrawType_LineGray && highlight)
     gc_type = glow_eDrawType_Line;
 
@@ -1441,6 +1448,13 @@ int GlowDrawGtk::line( GlowWind *wind, int x1, int y1, int x2, int y2,
 {
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
+
+  if ( w->clip_on && 
+       !(w->clip_rectangle[w->clip_cnt-1].x <= x2 &&
+	 w->clip_rectangle[w->clip_cnt-1].x + w->clip_rectangle[w->clip_cnt-1].width >= x1 &&
+	 w->clip_rectangle[w->clip_cnt-1].y  <= y2 &&
+	 w->clip_rectangle[w->clip_cnt-1].y + w->clip_rectangle[w->clip_cnt-1].height >= y1))
+    return 1;
 
   // Fix for highlight for connections in grow
   if ( highlight && ctx->type() == glow_eCtxType_Grow)
