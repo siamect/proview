@@ -200,6 +200,7 @@ struct plc_sProcess {
   unsigned int		sigmask;
   thread_sMutex		io_copy_mutex;
   plc_sArea		base;
+  int 			is_core;
 };
 
 #if defined OS_LYNX || defined OS_LINUX

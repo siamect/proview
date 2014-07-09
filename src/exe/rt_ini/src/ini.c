@@ -2135,52 +2135,9 @@ ini_ProcTable (
   pp->proc.flags.b.system = 1;
 #endif
 
-  plc_idx = 0;
-  cp->plc_sigmask = 0;
-  for ( lsts = gdh_GetClassList(pwr_cClass_PlcProcess, &oid);
-	ODD(lsts);
-	lsts = gdh_GetNextObject( oid, &oid)) {
-    pwr_sClass_PlcProcess *plc;
-    pwr_tObjName ppname;
-    pwr_tObjName name;
-    char p_name[80];
-    int i;
-    char busidstr[10];
-    int found;
-    char idstr[80];
-    
-    *sts = gdh_ObjidToName(oid, ppname, sizeof(ppname), cdh_mName_object);
-    if (EVEN(*sts)) break;
-
-    *sts = gdh_ObjidToPointer(oid, (void *)&plc);
-    if (EVEN(*sts)) break;
-
-    sprintf( busidstr, "_%04d_", cp->busid);
-
-    found = 0;
-    for ( i = 0; i < cp->plcfile_cnt; i++) {
-      s = strstr( cp->plcfile[i].name, busidstr);
-      if ( s) {
-	strncpy( name, s + 6, sizeof(name));
-	if ( (s = strchr( name, '.')))
-	  *s = 0;
-	
-	if ( cdh_NoCaseStrcmp( ppname, name) == 0) {
-	  found = 1;
-	  break;
-	}	
-      }
-    }
-
-    if ( !found) {
-      plc_idx++;
-      continue;
-    }
-
-    // cp->PlcProcess = plc;
-    snprintf( idstr, sizeof(idstr), "pwr_plc_%s", name);
-    snprintf(p_name, sizeof(p_name), "pwr_plc_%s_%%d_%d", name, plc->ChgCount++ % 10); 
-    pp = ini_ProcInsert(sts, cp, idstr, p_name, 1, 1, cp->plcfile[i].name, cPrio_plc_init, plc->StartWithDebug, 0, "", plc);
+  if ( !cp->plcfile_cnt) {
+    plc_idx = 0;
+    pp = ini_ProcInsert(sts, cp, "pwr_plc", "pwr_plc_%d", 0, 1, "rt_plc_core", cPrio_plc_init, 0, pwr_cClass_PlcProcess, "", 0);
     pp->flags.b.plc = 1;
     cp->plc = pp;
     pp->proc.flags.b.user = 1;
@@ -2188,6 +2145,62 @@ ini_ProcTable (
     pp->proc.k_size = 30;
     cp->plc_sigmask |= ini_mEvent_plc1 << plc_idx;
     plc_idx++;
+  }
+  else {
+    plc_idx = 0;
+    cp->plc_sigmask = 0;
+    for ( lsts = gdh_GetClassList(pwr_cClass_PlcProcess, &oid);
+	  ODD(lsts);
+	  lsts = gdh_GetNextObject( oid, &oid)) {
+      pwr_sClass_PlcProcess *plc;
+      pwr_tObjName ppname;
+      pwr_tObjName name;
+      char p_name[80];
+      int i;
+      char busidstr[10];
+      int found;
+      char idstr[80];
+    
+      *sts = gdh_ObjidToName(oid, ppname, sizeof(ppname), cdh_mName_object);
+      if (EVEN(*sts)) break;
+
+      *sts = gdh_ObjidToPointer(oid, (void *)&plc);
+      if (EVEN(*sts)) break;
+
+      sprintf( busidstr, "_%04d_", cp->busid);
+
+      found = 0;
+      for ( i = 0; i < cp->plcfile_cnt; i++) {
+	s = strstr( cp->plcfile[i].name, busidstr);
+	if ( s) {
+	  strncpy( name, s + 6, sizeof(name));
+	  if ( (s = strchr( name, '.')))
+	    *s = 0;
+	
+	  if ( cdh_NoCaseStrcmp( ppname, name) == 0) {
+	    found = 1;
+	    break;
+	  }	
+	}
+      }
+      
+      if ( !found) {
+	plc_idx++;
+	continue;
+      }
+
+      // cp->PlcProcess = plc;
+      snprintf( idstr, sizeof(idstr), "pwr_plc_%s", name);
+      snprintf(p_name, sizeof(p_name), "pwr_plc_%s_%%d_%d", name, plc->ChgCount++ % 10); 
+      pp = ini_ProcInsert(sts, cp, idstr, p_name, 1, 1, cp->plcfile[i].name, cPrio_plc_init, plc->StartWithDebug, 0, "", plc);
+      pp->flags.b.plc = 1;
+      cp->plc = pp;
+      pp->proc.flags.b.user = 1;
+      pp->proc.flags.b.k_mode = 1;
+      pp->proc.k_size = 30;
+      cp->plc_sigmask |= ini_mEvent_plc1 << plc_idx;
+      plc_idx++;
+    }
   }
 
   for (

@@ -294,34 +294,46 @@ init_process ( char *name)
     exit(sts);
   }
 
+  if ( strstr( name, "rt_plc_core") != 0)
+    pp->is_core = 1;
+  
   /* Get PlcProcess object */
-  busid = qcom_MyBus( &sts);
-  if ( EVEN(sts)) return 0;
+  if ( !pp->is_core) {
+    busid = qcom_MyBus( &sts);
+    if ( EVEN(sts)) return 0;
 
-  sprintf( busidstr, "_%04d_", busid);
-  s = strstr( name, busidstr);
-  if ( s) {
-    strncpy( pp_name, s + 6, sizeof(pp_name));
-    if ( (s = strchr( pp_name, '.')))
-      *s = 0;
+    sprintf( busidstr, "_%04d_", busid);
+    s = strstr( name, busidstr);
+    if ( s) {
+      strncpy( pp_name, s + 6, sizeof(pp_name));
+      if ( (s = strchr( pp_name, '.')))
+	*s = 0;
+    }
+    else {
+      strcpy( pp_name, "");
+    }
+
+    idx = 0;
+    for ( sts = gdh_GetClassList(pwr_cClass_PlcProcess, &pp_oid);
+	  ODD(sts);
+	  sts = gdh_GetNextObject(pp_oid, &pp_oid)) {
+      
+      sts = gdh_ObjidToName(pp_oid, oname, sizeof(oname), cdh_mName_object);
+      if (EVEN(sts)) return 0;
+
+      if ( cdh_NoCaseStrcmp( pp_name, oname) == 0) {
+	found = 1;
+	break;
+      }
+      idx++;
+    }
   }
   else {
-    strcpy( pp_name, "");
-  }
-
-  idx = 0;
-  for ( sts = gdh_GetClassList(pwr_cClass_PlcProcess, &pp_oid);
-	ODD(sts);
-	sts = gdh_GetNextObject(pp_oid, &pp_oid)) {
-
-    sts = gdh_ObjidToName(pp_oid, oname, sizeof(oname), cdh_mName_object);
-    if (EVEN(sts)) return 0;
-
-    if ( cdh_NoCaseStrcmp( pp_name, oname) == 0) {
+    sts = gdh_GetClassList(pwr_cClass_PlcProcess, &pp_oid);
+    if ( ODD(sts)) {
       found = 1;
-      break;
+      idx = 0;
     }
-    idx++;
   }
   if (!found) {
     errh_Error("PlcProcess object not found, %s", pp_name);
@@ -705,7 +717,16 @@ create_thread (
   pwr_tStatus	sts;
   long int phase;
 
-  tp->aref.Objid = ptp->thread;
+  if ( !pp->is_core)
+    tp->aref.Objid = ptp->thread;
+  else {
+    sts = gdh_GetClassList(pwr_cClass_PlcThread, &tp->aref.Objid);
+    if (EVEN(sts)) {
+      errh_Error("Can't find PlcThread object, %m", sts);
+      return;
+    }
+    ptp->thread = tp->aref.Objid;
+  }
   tp->init = ptp->init;
   tp->exec = ptp->exec;
   tp->first_scan = 1;
