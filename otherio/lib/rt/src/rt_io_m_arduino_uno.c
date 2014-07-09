@@ -957,9 +957,9 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
 
       memset( &msg, 0, sizeof(msg));
       if ( op->Options & pwr_mArduino_OptionsMask_Ao16Bit)
-	msg.size = local->AoNum + 3;
-      else
 	msg.size = local->AoNum * 2 + 3;
+      else
+	msg.size = local->AoNum + 3;
       msg.id = local->IdCnt++;
       msg.type = ard_eMsgType_AoWrite;
 

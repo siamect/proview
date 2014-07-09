@@ -1,6 +1,6 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X632"
+    Attr NextOix = "_X633"
     Attr NextCix = "_X47"
     Attr NextTix[0] = "_X18"
   EndBody
@@ -380,9 +380,16 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
       Object NoMessage $Value 158 21-DEC-2010 16:10:28.31
-        Body SysBody 21-DEC-2010 16:10:30.95
+        Body SysBody 08-JUL-2014 08:04:30.11
           Attr Text = "NoMessage"
           Attr PgmName = "NoMessage"
+          Attr Value = 14
+        EndBody
+      EndObject
+      Object ChecksumError $Value 633 08-JUL-2014 08:04:40.13
+        Body SysBody 08-JUL-2014 08:04:45.51
+          Attr Text = "ChecksumError"
+          Attr PgmName = "ChecksumError"
           Attr Value = 16
         EndBody
       EndObject
