@@ -181,6 +181,7 @@ class GeGtk : public Ge {
   static void activate_new( GtkWidget *w, gpointer gectx);
   static void activate_save( GtkWidget *w, gpointer gectx);
   static void activate_save_as( GtkWidget *w, gpointer gectx);
+  static void activate_build( GtkWidget *w, gpointer gectx);
   static void activate_export_javabean( GtkWidget *w, gpointer gectx);
   static void activate_export_javabean_as( GtkWidget *w, gpointer gectx);
   static void activate_export_gejava( GtkWidget *w, gpointer gectx);

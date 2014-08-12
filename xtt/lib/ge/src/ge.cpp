@@ -1135,6 +1135,23 @@ void Ge::activate_save_as()
 	Ge::save_graph);
 }
 
+void Ge::activate_build()
+{
+  char name[40];
+  pwr_tCmd cmd;
+
+  graph->get_name( name);
+  if ( strcmp( name, "") == 0 || graph->is_modified()) {
+    wow->DisplayError( "Build error", "Graph is not saved");
+    return;
+  }
+
+  sprintf( cmd, "cp -a $pwrp_pop/%s.pwg $pwrp_exe/", name);
+  system( cmd);
+
+  message( 'I', "Graph built");
+}
+
 void Ge::activate_export_javabean()
 {
   char name[80];

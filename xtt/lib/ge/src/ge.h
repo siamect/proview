@@ -203,6 +203,7 @@ class Ge {
   void activate_new();
   void activate_save();
   void activate_save_as();
+  void activate_build();
   void activate_export_javabean();
   void activate_export_javabean_as();
   void activate_export_gejava();
