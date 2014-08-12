@@ -611,6 +611,16 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
     public void resetBorderColor() {
 	draw_type = original_border_drawtype;
     }
+    public void setTextColor(int draw_type) {
+	text_drawtype = draw_type;
+	color_tone = Glow.eDrawTone_No;
+	color_shift = 0;
+	color_lightness = 0;
+	color_intensity = 0;
+    }
+    public void resetTextColor() {
+	text_drawtype = original_text_drawtype;
+    }
     public void setColorInverse(int color_inverse) {
 	this.color_inverse = color_inverse;
     }

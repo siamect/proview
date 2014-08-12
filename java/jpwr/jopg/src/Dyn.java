@@ -85,6 +85,7 @@ public class Dyn {
 
     public static final int mDynType2_No			= 0;
     public static final int mDynType2_Axis			= 1 << 0;
+    public static final int mDynType2_DigTextColor     		= 1 << 1;
 
     public static final int mActionType1_No			= 0;
     public static final int mActionType1_Inherit		= 1 << 0;
@@ -122,47 +123,48 @@ public class Dyn {
     public static final int eDynPrio_AnalogColor	       	= 6;
     public static final int eDynPrio_DigColor			= 7;
     public static final int eDynPrio_DigLowColor	       	= 8;
-    public static final int eDynPrio_DigBorder			= 9;
-    public static final int eDynPrio_DigText			= 10;
-    public static final int eDynPrio_FillLevel			= 11;
-    public static final int eDynPrio_Value			= 12;
-    public static final int eDynPrio_ValueInput			= 13;
-    public static final int eDynPrio_Rotate			= 14;
-    public static final int eDynPrio_Move			= 15;
-    public static final int eDynPrio_AnalogShift	       	= 16;
-    public static final int eDynPrio_DigShift			= 17;
-    public static final int eDynPrio_Animation			= 18;
-    public static final int eDynPrio_Bar			= 19;
-    public static final int eDynPrio_Trend			= 20;
-    public static final int eDynPrio_FastCurve			= 21;
-    public static final int eDynPrio_XY_Curve			= 22;
-    public static final int eDynPrio_AnalogText			= 23;
-    public static final int eDynPrio_Table			= 24;
-    public static final int eDynPrio_SliderBackground	       	= 25;
-    public static final int eDynPrio_Video			= 26;
-    public static final int eDynPrio_StatusColor	       	= 27;
-    public static final int eDynPrio_PopupMenu			= 28;
-    public static final int eDynPrio_Confirm			= 29;
-    public static final int eDynPrio_SetDig			= 30;
-    public static final int eDynPrio_ResetDig			= 31;
-    public static final int eDynPrio_ToggleDig			= 32;
-    public static final int eDynPrio_StoDig			= 33;
-    public static final int eDynPrio_Help			= 34;
-    public static final int eDynPrio_OpenGraph			= 35;
-    public static final int eDynPrio_OpenURL			= 36;
-    public static final int eDynPrio_CommandDoubleClick	       	= 37;
-    public static final int eDynPrio_IncrAnalog			= 38;
-    public static final int eDynPrio_RadioButton	       	= 39;
-    public static final int eDynPrio_Slider			= 40;
-    public static final int eDynPrio_TipText			= 41;
-    public static final int eDynPrio_PulldownMenu	       	= 42;
-    public static final int eDynPrio_OptionMenu			= 43;
-    public static final int eDynPrio_InputFocus			= 44;
-    public static final int eDynPrio_DigCommand			= 45;
-    public static final int eDynPrio_SetValue			= 46;
-    public static final int eDynPrio_Pie			= 47;
-    public static final int eDynPrio_BarChart			= 48;
-    public static final int eDynPrio_Axis			= 49;
+    public static final int eDynPrio_DigTextColor	       	= 9;
+    public static final int eDynPrio_DigBorder			= 10;
+    public static final int eDynPrio_DigText			= 11;
+    public static final int eDynPrio_FillLevel			= 12;
+    public static final int eDynPrio_Value			= 13;
+    public static final int eDynPrio_ValueInput			= 14;
+    public static final int eDynPrio_Rotate			= 15;
+    public static final int eDynPrio_Move			= 16;
+    public static final int eDynPrio_AnalogShift	       	= 17;
+    public static final int eDynPrio_DigShift			= 18;
+    public static final int eDynPrio_Animation			= 19;
+    public static final int eDynPrio_Bar			= 20;
+    public static final int eDynPrio_Trend			= 21;
+    public static final int eDynPrio_FastCurve			= 22;
+    public static final int eDynPrio_XY_Curve			= 23;
+    public static final int eDynPrio_AnalogText			= 24;
+    public static final int eDynPrio_Table			= 25;
+    public static final int eDynPrio_SliderBackground	       	= 26;
+    public static final int eDynPrio_Video			= 27;
+    public static final int eDynPrio_StatusColor	       	= 28;
+    public static final int eDynPrio_PopupMenu			= 29;
+    public static final int eDynPrio_Confirm			= 30;
+    public static final int eDynPrio_SetDig			= 31;
+    public static final int eDynPrio_ResetDig			= 32;
+    public static final int eDynPrio_ToggleDig			= 33;
+    public static final int eDynPrio_StoDig			= 34;
+    public static final int eDynPrio_Help			= 35;
+    public static final int eDynPrio_OpenGraph			= 36;
+    public static final int eDynPrio_OpenURL			= 37;
+    public static final int eDynPrio_CommandDoubleClick	       	= 38;
+    public static final int eDynPrio_IncrAnalog			= 39;
+    public static final int eDynPrio_RadioButton	       	= 40;
+    public static final int eDynPrio_Slider			= 41;
+    public static final int eDynPrio_TipText			= 42;
+    public static final int eDynPrio_PulldownMenu	       	= 43;
+    public static final int eDynPrio_OptionMenu			= 44;
+    public static final int eDynPrio_InputFocus			= 45;
+    public static final int eDynPrio_DigCommand			= 46;
+    public static final int eDynPrio_SetValue			= 47;
+    public static final int eDynPrio_Pie			= 48;
+    public static final int eDynPrio_BarChart			= 49;
+    public static final int eDynPrio_Axis			= 50;
     public static final int eDynPrio_Command  			= 9999;
     public static final int eDynPrio_CloseGraph 		= 10000;
 
@@ -198,6 +200,7 @@ public class Dyn {
     public static final int eSave_Pie	             		= 36;
     public static final int eSave_BarChart	       		= 37;
     public static final int eSave_Axis	             		= 38;
+    public static final int eSave_DigTextColor	             	= 39;
     public static final int eSave_PopupMenu	       		= 50;
     public static final int eSave_SetDig	       		= 51;
     public static final int eSave_ResetDig	       		= 52;
@@ -398,6 +401,8 @@ public class Dyn {
     public static final int eSave_BarChart_fix_range      	= 3712;
     public static final int eSave_Axis_minvalue_attr      	= 3800;
     public static final int eSave_Axis_maxvalue_attr      	= 3801;
+    public static final int eSave_DigTextColor_attribute        = 3900;
+    public static final int eSave_DigTextColor_color		= 3901;
     public static final int eSave_PopupMenu_ref_object      	= 5000;
     public static final int eSave_SetDig_attribute		= 5100;
     public static final int eSave_SetDig_instance		= 5101;
@@ -694,6 +699,8 @@ public class Dyn {
 	    switch( x.elements.get(i).dyn_type2) {
 	    case Dyn.mDynType2_Axis:
 		e = new DynAxis((DynAxis) x.elements.get(i)); break;
+	    case Dyn.mDynType2_DigTextColor:
+		e = new DynDigTextColor((DynDigTextColor) x.elements.get(i)); break;
 	    default: ;
 	    }
 	    switch( x.elements.get(i).action_type1) {
@@ -924,6 +931,9 @@ public class Dyn {
 	    case mDynType2_Axis:
 		e = (DynElem) new DynAxis((DynAxis) x);
 		break;
+	    case mDynType2_DigTextColor:
+		e = (DynElem) new DynDigTextColor((DynDigTextColor) x);
+		break;
 	    default: ;
 	    }
 	}
@@ -1078,6 +1088,9 @@ public class Dyn {
 		    break;
 		case Dyn.eSave_Axis: 
 		    elem = (DynElem) new DynAxis(this); 
+		    break;
+		case Dyn.eSave_DigTextColor: 
+		    elem = (DynElem) new DynDigTextColor(this); 
 		    break;
 		case Dyn.eSave_HostObject: 
 		    elem = (DynElem) new DynHostObject(this); 
@@ -2404,6 +2417,139 @@ public class Dyn {
 	}
 
     }
+
+    public class DynDigTextColor extends DynElem {
+	String attribute;
+	int color;
+	PwrtRefId subid;
+	int p;
+	int database;
+	boolean inverted;
+	boolean attrFound = false;
+	boolean oldValue;
+	boolean firstScan = true;
+	int bitmask;
+	int a_typeid;
+	
+	public DynDigTextColor( Dyn dyn) {
+	    super(dyn, Dyn.mDynType2_DigTextColor, 0, 0, 0, Dyn.eDynPrio_DigTextColor);
+	}
+
+	public DynDigTextColor( DynDigTextColor x) {
+	    super(x);
+	    color = x.color;
+	    attribute = x.attribute;
+	}
+
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+	    color = dyn.getColor1(object, color);
+	    if ( color < 0 || color >= Glow.eDrawType__)
+		return 0;
+
+	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
+	    if ( pname == null || pname.name.equals("")) 
+		return 1;
+
+	    GdhrRefObjectInfo ret = null;
+
+	    switch( pname.database) {
+	    case GraphIfc.eDatabase_Gdh:
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		break;
+	    case GraphIfc.eDatabase_Local:
+		ret = dyn.graph.getLdb().refObjectInfo( graph, pname.name);
+		break;
+	    default:
+		ret = null;
+	    }
+
+	    if ( ret == null || ret.evenSts()) {
+		System.out.println("DigTextColor: " + attribute);
+		return 1;
+	    }
+
+	    p = ret.id;
+	    subid = ret.refid;
+	    inverted = pname.inverted;
+	    a_typeid = pname.type;
+	    bitmask = pname.bitmask;
+	    database = pname.database;
+	    attrFound = true;
+	    return 1;
+	}
+
+	public void disconnect() {
+	    if ( attrFound && database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid);
+	}
+
+	
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+	    if ( !attrFound || dyn.ignoreColor)
+		return;
+	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
+
+	    if ( inverted)
+		value = !value;
+
+	    if ( !firstScan) {
+		if ( oldValue == value && !dyn.resetColor)
+		    return;
+	    }
+	    else
+		firstScan = false;
+	
+	    if ( value)
+		object.setTextColor( color);
+	    else 
+		object.resetTextColor();		
+	    dyn.repaintNow = true;
+
+	    oldValue = value;
+	}
+
+	public void open( BufferedReader reader) {
+	    String line;
+	    StringTokenizer token;
+	    boolean end_found = false;
+
+	    try {
+		while( (line = reader.readLine()) != null) {
+		    token = new StringTokenizer(line);
+		    int key = Integer.valueOf(token.nextToken());
+		    if ( Dyn.debug) System.out.println( "DynDigTextColor : " + line);
+
+		    switch ( key) {
+		    case Dyn.eSave_DigTextColor: 
+			break;
+		    case Dyn.eSave_DigTextColor_attribute: 
+			if ( token.hasMoreTokens())
+			    attribute = token.nextToken();
+			break;
+		    case Dyn.eSave_DigTextColor_color: 
+			color = Integer.valueOf(token.nextToken());
+			break;
+		    case Dyn.eSave_End:
+			end_found = true;
+			break;
+		    default:
+			System.out.println( "Syntax error in DynDigTextColor");
+			break;
+		    }
+
+		    if ( end_found)
+			break;
+		}
+		
+	    } catch ( Exception e) {
+		System.out.println( "IOException DynDigTextColor");
+	    }
+	}
+
+    }
+
 
     public class DynDigBorder extends DynElem {
 	String attribute;
@@ -4172,7 +4318,7 @@ public class Dyn {
 	    }
 
 	    if ( ret == null || ret.evenSts()) {
-		System.out.println("DigLowColor: " + attribute);
+		System.out.println("AnalogShift: " + attribute);
 		return 1;
 	    }
 

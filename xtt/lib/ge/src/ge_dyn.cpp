@@ -452,6 +452,8 @@ GeDyn::GeDyn( const GeDyn& x) :
     switch( elem->dyn_type2) {
     case ge_mDynType2_Axis:
       e = new GeAxis((const GeAxis&) *elem); break;
+    case ge_mDynType2_DigTextColor:
+      e = new GeDigTextColor((const GeDigTextColor&) *elem); break;
     default: ;
     }
     switch( elem->action_type1) {
@@ -590,6 +592,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_Pie: e = (GeDynElem *) new GePie(this); break;
       case ge_eSave_BarChart: e = (GeDynElem *) new GeBarChart(this); break;
       case ge_eSave_Axis: e = (GeDynElem *) new GeAxis(this); break;
+      case ge_eSave_DigTextColor: e = (GeDynElem *) new GeDigTextColor(this); break;
       case ge_eSave_HostObject: e = (GeDynElem *) new GeHostObject(this); break;
       case ge_eSave_DigSound: e = (GeDynElem *) new GeDigSound(this); break;
       case ge_eSave_XY_Curve: e = (GeDynElem *) new GeXY_Curve(this); break;
@@ -794,6 +797,12 @@ void GeDyn::get_attributes( grow_tObject object, attr_sItem *itemlist, int *item
     attrinfo[i].mask = ge_mDynType1_Invisible;
     attrinfo[i++].size = sizeof( dyn_type1);
   }
+
+  strcpy( attrinfo[i].name, "DynType2");
+  attrinfo[i].value = &dyn_type2;
+  attrinfo[i].type = ge_eAttrType_DynType2;
+  attrinfo[i++].size = sizeof( dyn_type2);
+
   strcpy( attrinfo[i].name, "Action");
   attrinfo[i].value = &action_type1;
   attrinfo[i].type = ge_eAttrType_ActionType1;
@@ -1500,6 +1509,9 @@ GeDynElem *GeDyn::create_dyn2_element( int mask, int instance)
   case ge_mDynType2_Axis:
     e = (GeDynElem *) new GeAxis(this);
     break;
+  case ge_mDynType2_DigTextColor:
+    e = (GeDynElem *) new GeDigTextColor(this);
+    break;
   default: ;
   }
   return e;
@@ -1678,6 +1690,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
     switch ( x.dyn_type2) {
     case ge_mDynType2_Axis:
       e = (GeDynElem *) new GeAxis((GeAxis&) x);
+      break;
+    case ge_mDynType2_DigTextColor:
+      e = (GeDynElem *) new GeDigTextColor((GeDigTextColor&) x);
       break;
     default: ;
     }
@@ -3261,6 +3276,158 @@ int GeInvisible::export_java( grow_tObject object, ofstream& fp, bool first, cha
   else
     fp << "      ,";
   fp << "new GeDynInvisible(" << var_name << ".dd, \"" << GeDyn::printstr(attribute) << "\"," << dimmed << ")" << endl;
+  return 1;
+}
+
+void GeDigTextColor::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  strcpy( attrinfo[i].name, "DigTextColor.Attribute");
+  attrinfo[i].value = attribute;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute);
+
+  strcpy( attrinfo[i].name, "DigTextColor.Color");
+  attrinfo[i].value = &color;
+  attrinfo[i].type = glow_eType_Color;
+  attrinfo[i++].size = sizeof( color);
+
+  *item_count = i;
+}
+
+void GeDigTextColor::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
+{
+  (*cnt)--;
+  if ( *cnt == 0) {
+    char msg[200];
+
+    strncpy( attribute, attr_name, sizeof( attribute));
+    snprintf( msg, sizeof(msg), "DigTextColor.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
+    dyn->graph->message( 'I', msg);
+  }
+}
+
+void GeDigTextColor::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
+void GeDigTextColor::save( ofstream& fp)
+{
+  fp << int(ge_eSave_DigTextColor) << endl;
+  fp << int(ge_eSave_DigTextColor_attribute) << FSPACE << attribute << endl;
+  fp << int(ge_eSave_DigTextColor_color) << FSPACE << int(color) << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeDigTextColor::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  int		tmp;
+  char		dummy[40];
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDigTextColor: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+      case ge_eSave_DigTextColor: break;
+      case ge_eSave_DigTextColor_attribute:
+        fp.get();
+        fp.getline( attribute, sizeof(attribute));
+        break;
+      case ge_eSave_DigTextColor_color: fp >> tmp; color = (glow_eDrawType)tmp; break;
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeDigTextColor:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeDigTextColor::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+  int		attr_type, attr_size;
+  pwr_tAName   	parsed_name;
+  int		sts;
+
+  color = dyn->get_color1( object, color);
+  if ( color < 0 || color >= glow_eDrawType__) {
+    printf( "** Color out of range, %s\n", attribute);
+    return 0;
+  }
+
+  size = 4;
+  p = 0;
+  db = dyn->parse_attr_name( attribute, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp( parsed_name,"") == 0)
+    return 1;
+
+  get_bit( parsed_name, attr_type, &bitmask);
+  a_typeid = attr_type;
+
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
+  if ( EVEN(sts)) return sts;
+
+  trace_data->p = &pdummy;
+  first_scan = true;
+  return 1;
+}
+
+int GeDigTextColor::disconnect( grow_tObject object)
+{
+  if ( p && db == graph_eDatabase_Gdh)
+    gdh_UnrefObjectInfo( subid);
+  p = 0;
+  return 1;
+}
+
+int GeDigTextColor::scan( grow_tObject object)
+{
+  if ( !p)
+    return 1;
+
+  pwr_tBoolean val = *p;
+
+  if ( !get_dig( &val, p, a_typeid, bitmask))
+    return 1;
+
+  if ( inverted)
+    val = !val;
+
+  if ( !first_scan) {
+    if ( old_value == val) {
+      // No change since last time
+      return 1;
+    }
+  }
+  else
+    first_scan = false;
+
+  if ( val) {
+    grow_SetObjectTextColor( object, color);
+  }
+  else {
+    grow_ResetObjectTextColor( object);
+  }
+  old_value = val;
+  return 1;
+}
+
+int GeDigTextColor::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
   return 1;
 }
 

@@ -129,6 +129,7 @@
     ge_eDynPrio_AnalogColor,
     ge_eDynPrio_DigColor,
     ge_eDynPrio_DigLowColor,
+    ge_eDynPrio_DigTextColor,
     ge_eDynPrio_DigBorder,
     ge_eDynPrio_DigText,
     ge_eDynPrio_FillLevel,
@@ -215,7 +216,8 @@
 
   typedef enum {
     ge_mDynType2_No		= 0,
-    ge_mDynType2_Axis		= 1 << 0
+    ge_mDynType2_Axis		= 1 << 0,
+    ge_mDynType2_DigTextColor  	= 1 << 1
   } ge_mDynType2;
 
   //! Action types.
@@ -322,6 +324,7 @@
     ge_eSave_Pie	             	= 36,
     ge_eSave_BarChart	             	= 37,
     ge_eSave_Axis	             	= 38,
+    ge_eSave_DigTextColor               = 39,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -522,6 +525,8 @@
     ge_eSave_BarChart_fix_range      	= 3712,
     ge_eSave_Axis_minvalue_attr      	= 3800,
     ge_eSave_Axis_maxvalue_attr      	= 3801,
+    ge_eSave_DigTextColor_attribute     = 3900,
+    ge_eSave_DigTextColor_color		= 3901,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -1197,6 +1202,41 @@ class GeDigBorder : public GeDynElem {
     color(glow_eDrawType_Inherit)
     { strcpy( attribute, "");}
   GeDigBorder( const GeDigBorder& x) : 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), color(x.color)
+    { strcpy( attribute, x.attribute);}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
+  void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+
+};
+
+//! Set the supplied border color when the signal is high.
+class GeDigTextColor : public GeDynElem {
+ public:
+  pwr_tAName attribute;		//!< Database reference to digital attribute.
+  glow_eDrawType  color;	//!< Text color to set when the signal is high.
+
+  pwr_tBoolean *p;
+  pwr_tSubid subid;
+  int size;
+  graph_eDatabase db;
+  int inverted;
+  bool first_scan;
+  pwr_tBoolean old_value;
+  int a_typeid;
+  unsigned int bitmask;  
+
+  GeDigTextColor( GeDyn *e_dyn) : 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_DigTextColor, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigTextColor),
+    color(glow_eDrawType_Inherit)
+    { strcpy( attribute, "");}
+  GeDigTextColor( const GeDigTextColor& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), color(x.color)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
