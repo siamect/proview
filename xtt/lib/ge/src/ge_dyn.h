@@ -124,6 +124,7 @@
     ge_eDynPrio_HostObject,
     ge_eDynPrio_Invisible,
     ge_eDynPrio_DigFlash,
+    ge_eDynPrio_TimeoutColor,
     ge_eDynPrio_DigError,
     ge_eDynPrio_DigWarning,
     ge_eDynPrio_AnalogColor,
@@ -217,7 +218,8 @@
   typedef enum {
     ge_mDynType2_No		= 0,
     ge_mDynType2_Axis		= 1 << 0,
-    ge_mDynType2_DigTextColor  	= 1 << 1
+    ge_mDynType2_DigTextColor  	= 1 << 1,
+    ge_mDynType2_TimeoutColor  	= 1 << 2
   } ge_mDynType2;
 
   //! Action types.
@@ -325,6 +327,7 @@
     ge_eSave_BarChart	             	= 37,
     ge_eSave_Axis	             	= 38,
     ge_eSave_DigTextColor               = 39,
+    ge_eSave_TimeoutColor               = 40,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -527,6 +530,8 @@
     ge_eSave_Axis_maxvalue_attr      	= 3801,
     ge_eSave_DigTextColor_attribute     = 3900,
     ge_eSave_DigTextColor_color		= 3901,
+    ge_eSave_TimeoutColor_time     	= 4000,
+    ge_eSave_TimeoutColor_color		= 4001,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -2771,6 +2776,37 @@ class GeAxis : public GeDynElem {
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+
+};
+
+//! Set the supplied border color when the signal is high.
+class GeTimeoutColor : public GeDynElem {
+ public:
+  double time;			//!< Timeout time
+  glow_eDrawType  color;	//!< Fill color to set when the subscription is old.
+
+  pwr_tBoolean *p;
+  pwr_tSubid subid;
+  bool first_scan;
+  bool init_done;
+  pwr_tBoolean old_value;
+  pwr_tDeltaTime dtime;
+  int scan_interval;
+  int interval_cnt;
+
+  GeTimeoutColor( GeDyn *e_dyn) : 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_TimeoutColor, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_TimeoutColor),
+    time(5), color(glow_eDrawType_Inherit)
+    {}
+  GeTimeoutColor( const GeTimeoutColor& x) : 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), time(x.time), color(x.color)
+    {}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
 
 };
 

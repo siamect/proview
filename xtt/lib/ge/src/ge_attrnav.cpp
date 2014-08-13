@@ -110,6 +110,7 @@ static attrnav_sEnumElement elem_dyn_type1[] = {
 
 static attrnav_sEnumElement elem_dyn_type2[] = {
 	{ (int) ge_mDynType2_DigTextColor       , "DigTextColor"},
+	{ (int) ge_mDynType2_TimeoutColor       , "TimeoutColor"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_dyn_type1_tone[] = {

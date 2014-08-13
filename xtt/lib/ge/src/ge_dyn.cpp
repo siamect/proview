@@ -454,6 +454,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeAxis((const GeAxis&) *elem); break;
     case ge_mDynType2_DigTextColor:
       e = new GeDigTextColor((const GeDigTextColor&) *elem); break;
+    case ge_mDynType2_TimeoutColor:
+      e = new GeTimeoutColor((const GeTimeoutColor&) *elem); break;
     default: ;
     }
     switch( elem->action_type1) {
@@ -593,6 +595,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_BarChart: e = (GeDynElem *) new GeBarChart(this); break;
       case ge_eSave_Axis: e = (GeDynElem *) new GeAxis(this); break;
       case ge_eSave_DigTextColor: e = (GeDynElem *) new GeDigTextColor(this); break;
+      case ge_eSave_TimeoutColor: e = (GeDynElem *) new GeTimeoutColor(this); break;
       case ge_eSave_HostObject: e = (GeDynElem *) new GeHostObject(this); break;
       case ge_eSave_DigSound: e = (GeDynElem *) new GeDigSound(this); break;
       case ge_eSave_XY_Curve: e = (GeDynElem *) new GeXY_Curve(this); break;
@@ -1512,6 +1515,9 @@ GeDynElem *GeDyn::create_dyn2_element( int mask, int instance)
   case ge_mDynType2_DigTextColor:
     e = (GeDynElem *) new GeDigTextColor(this);
     break;
+  case ge_mDynType2_TimeoutColor:
+    e = (GeDynElem *) new GeTimeoutColor(this);
+    break;
   default: ;
   }
   return e;
@@ -1693,6 +1699,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
       break;
     case ge_mDynType2_DigTextColor:
       e = (GeDynElem *) new GeDigTextColor((GeDigTextColor&) x);
+      break;
+    case ge_mDynType2_TimeoutColor:
+      e = (GeDynElem *) new GeTimeoutColor((GeTimeoutColor&) x);
       break;
     default: ;
     }
@@ -9798,6 +9807,296 @@ int GeAxis::scan( grow_tObject object)
 
 int GeAxis::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
+  return 1;
+}
+
+void GeTimeoutColor::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  strcpy( attrinfo[i].name, "TimeoutColor.Time");
+  attrinfo[i].value = &time;
+  attrinfo[i].type = glow_eType_Double;
+  attrinfo[i++].size = sizeof( time);
+
+  strcpy( attrinfo[i].name, "TimeoutColor.Color");
+  attrinfo[i].value = &color;
+  attrinfo[i].type = glow_eType_Color;
+  attrinfo[i++].size = sizeof( color);
+
+  *item_count = i;
+}
+
+void GeTimeoutColor::save( ofstream& fp)
+{
+  fp << int(ge_eSave_TimeoutColor) << endl;
+  fp << int(ge_eSave_TimeoutColor_time) << FSPACE << time << endl;
+  fp << int(ge_eSave_TimeoutColor_color) << FSPACE << int(color) << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeTimeoutColor::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  int		tmp;
+  char		dummy[40];
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeTimeoutColor: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+      case ge_eSave_TimeoutColor: break;
+      case ge_eSave_TimeoutColor_time: fp >> time; break;
+      case ge_eSave_TimeoutColor_color: fp >> tmp; color = (glow_eDrawType)tmp; break;
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeTimeoutColor:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeTimeoutColor::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+
+  color = dyn->get_color1( object, color);
+  if ( color < 0 || color >= glow_eDrawType__) {
+    printf( "** Color out of range, TimeoutColor\n");
+    return 0;
+  }
+
+  time_FloatToD( &dtime, time);
+
+  trace_data->p = &pdummy;
+  first_scan = true;
+  init_done = false;
+
+  double scan_time;
+  switch( dyn->cycle) {
+  case glow_eCycle_Slow:
+    scan_time = dyn->graph->scan_time;
+    break;
+  case glow_eCycle_Fast:
+    scan_time = dyn->graph->fast_scan_time;
+    break;
+  default:
+    scan_time = 1;
+  }
+  scan_interval = (int)(time / scan_time / 2);
+  if ( scan_interval < 1)
+    scan_interval = 1;
+  interval_cnt = 0;
+  return 1;
+}
+
+int GeTimeoutColor::disconnect( grow_tObject object)
+{
+  subid = pwr_cNSubid;
+  return 1;
+}
+
+int GeTimeoutColor::scan( grow_tObject object)
+{
+  if ( (init_done && subid.nid == 0 && subid.rix == 0) || dyn->ignore_color)
+    return 1;
+  
+  interval_cnt++;
+  if ( interval_cnt < scan_interval)
+    return 1;
+  interval_cnt = 0;
+
+  if ( !init_done) {
+    // Get subid from other dyn element
+    for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
+      if ( elem == this)
+	continue;
+
+      switch( elem->dyn_type1) {
+      case ge_mDynType1_DigLowColor:
+	subid = ((GeDigLowColor *)elem)->subid;
+	break;
+      case ge_mDynType1_DigColor:
+	subid = ((GeDigColor *)elem)->subid;
+	break;
+      case ge_mDynType1_DigError:
+	subid = ((GeDigError *)elem)->subid;
+	break;
+      case ge_mDynType1_DigWarning:
+	subid = ((GeDigWarning *)elem)->subid;
+	break;
+      case ge_mDynType1_DigFlash:
+	subid = ((GeDigFlash *)elem)->subid;
+	break;
+      case ge_mDynType1_Invisible:
+	subid = ((GeInvisible *)elem)->subid;
+	break;
+      case ge_mDynType1_DigBorder:
+	subid = ((GeDigBorder *)elem)->subid;
+	break;
+      case ge_mDynType1_DigText:
+	subid = ((GeDigText *)elem)->subid;
+	break;
+      case ge_mDynType1_Value:
+	subid = ((GeValue *)elem)->subid;
+	break;
+      case ge_mDynType1_AnalogColor:
+	subid = ((GeAnalogColor *)elem)->subid;
+	break;
+      case ge_mDynType1_Rotate:
+	subid = ((GeRotate *)elem)->subid;
+	break;
+      case ge_mDynType1_Move:
+	if ( ((GeMove *)elem)->move_x_p)
+	  subid = ((GeMove *)elem)->move_x_subid;
+	else if ( ((GeMove *)elem)->move_x_p)
+	  subid = ((GeMove *)elem)->move_y_subid;
+	else if ( ((GeMove *)elem)->scale_x_p)
+	  subid = ((GeMove *)elem)->scale_x_subid;
+	else if ( ((GeMove *)elem)->scale_y_p)
+	  subid = ((GeMove *)elem)->scale_y_subid;
+	break;
+      case ge_mDynType1_DigShift:
+	subid = ((GeDigShift *)elem)->subid;
+	break;
+      case ge_mDynType1_AnalogShift:
+	subid = ((GeAnalogShift *)elem)->subid;
+	break;
+      case ge_mDynType1_Video:
+	break;
+      case ge_mDynType1_Animation:
+	subid = ((GeAnimation *)elem)->subid;
+	break;
+      case ge_mDynType1_Bar:
+	subid = ((GeBar *)elem)->subid;
+	break;
+      case ge_mDynType1_Trend:
+	if ( ((GeTrend *)elem)->p1)
+	  subid = ((GeTrend *)elem)->subid1;
+	else if ( ((GeTrend *)elem)->p2)
+	  subid = ((GeTrend *)elem)->subid2;
+	break;
+      case ge_mDynType1_FillLevel:
+	subid = ((GeFillLevel *)elem)->subid;
+	break;
+      case ge_mDynType1_FastCurve:
+	subid = ((GeFastCurve *)elem)->subid;
+	break;
+      case ge_mDynType1_AnalogText:
+	subid = ((GeAnalogText *)elem)->subid;
+	break;
+      case ge_mDynType1_Table:
+	break;
+      case ge_mDynType1_StatusColor:
+	subid = ((GeStatusColor *)elem)->subid;
+	break;
+      case ge_mDynType1_HostObject:
+	break;
+      case ge_mDynType1_DigSound:
+	subid = ((GeDigSound *)elem)->subid;
+	break;
+      case ge_mDynType1_XY_Curve:
+	if ( ((GeXY_Curve *)elem)->update_p)
+	  subid = ((GeXY_Curve *)elem)->update_subid;
+	else if ( ((GeXY_Curve *)elem)->noofpoints_p)
+	  subid = ((GeXY_Curve *)elem)->noofpoints_subid;
+	break;
+      case ge_mDynType1_DigCommand:
+	subid = ((GeDigCommand *)elem)->subid;
+	break;
+      case ge_mDynType1_Pie:
+	subid = ((GePie *)elem)->subid[0];
+	break;
+      case ge_mDynType1_BarChart:
+	subid = ((GeBarChart *)elem)->subid[0];
+	break;
+      default: ;
+      }
+      switch( elem->dyn_type2) {
+      case ge_mDynType2_Axis:
+	if ( ((GeAxis *)elem)->min_value_p)
+	  subid = ((GeAxis *)elem)->min_value_subid;
+	else if ( ((GeAxis *)elem)->max_value_p)
+	  subid = ((GeAxis *)elem)->max_value_subid;
+	break;
+      case ge_mDynType2_DigTextColor:
+	subid = ((GeDigTextColor *)elem)->subid;
+	break;
+      case ge_mDynType2_TimeoutColor:
+	break;
+      default: ;
+      }
+      
+      if ( !(subid.nid == 0 && subid.rix == 0))
+	break;
+    }
+    init_done = true;
+    return 1;
+  }
+
+  pwr_tBoolean val;
+  pwr_tTime last_update, current_time, timeout_time;
+  pwr_tStatus sts;
+
+  sts = gdh_GetSubscriptionOldness( subid, 0, &last_update, 0);
+  if ( EVEN(sts)) return 1;
+
+  time_Aadd( &timeout_time, &last_update, &dtime);
+  time_GetTime( &current_time);
+
+  if ( time_Acomp( &current_time, &timeout_time) >= 0)
+    val = 1;
+  else
+    val = 0;
+
+  if ( !first_scan) {
+    if ( old_value == val) {
+      // No change since last time
+      return 1;
+    }
+  }
+  else
+    first_scan = false;
+
+  if ( dyn->total_dyn_type1 & ge_mDynType1_Tone) {
+    if ( val) {
+      if ( color >= (glow_eDrawType) glow_eDrawTone__) {
+	if ( dyn->reset_color)
+	  grow_ResetObjectFillColor( object); // Previous color might be a tone
+	grow_SetObjectFillColor( object, color);
+      }
+      else
+	grow_SetObjectColorTone( object, (glow_eDrawTone) color);
+      dyn->ignore_color = true;
+    }
+    else {
+      if ( color >= (glow_eDrawType) glow_eDrawTone__)
+	grow_ResetObjectFillColor( object);
+      grow_ResetObjectColorTone( object);
+      dyn->reset_color = true;
+    }
+  }
+  else {
+    if ( val) {
+      grow_SetObjectFillColor( object, color);
+      dyn->ignore_color = true;
+    }
+    else {
+      grow_ResetObjectFillColor( object);
+      dyn->reset_color = true;
+    }
+  }
+
+  old_value = val;
   return 1;
 }
 

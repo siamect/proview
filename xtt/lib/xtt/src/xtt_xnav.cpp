@@ -3212,8 +3212,10 @@ int	XNavGbl::load_config( XNav *xnav)
 {
   int		sts;
 
-  if ( strcmp( xnav->opplace_name, "") == 0)
+  if ( strcmp( xnav->opplace_name, "") == 0) {
+    xnav->opplace_p = (pwr_sClass_OpPlace *) calloc(1, sizeof(pwr_sClass_OpPlace));
     return 0;
+  }
 
   strcpy( OpPlace, xnav->opplace_name);
 
