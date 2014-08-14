@@ -581,6 +581,8 @@ static const pwr_tNid       pwr_cNNid       = 0;	//!< Zero node identity constan
 static const pwr_tStatus    pwr_cNStatus    = 0;	//!< Zero status constant.
 static const pwr_tTime      pwr_cNTime      = {0, 0};	//!< Zero time constant.
 static const pwr_tDeltaTime pwr_cNDeltaTime = {0, 0};	//!< Zero deltatime constant.
+static const pwr_tTime      pwr_cNotATime   = {0, 1000000000}; //!< Illegal time.
+static const pwr_tDeltaTime pwr_cNotADeltaTime = {0, 1000000000}; //!< Illegal delta time.
 
 /* Gereral macro definitions  */
 

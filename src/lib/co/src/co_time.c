@@ -9,7 +9,7 @@
  * published by the Free Software Foundation, either version 2 of 
  * the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful 
+ * This program is distributed in the hope that it will be useful
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
  * GNU General Public License for more details.
@@ -56,6 +56,7 @@
 # include <string.h>
 # include <ctype.h>
 # include <stdlib.h>
+# include <math.h>
 #endif
 
 #if defined OS_LYNX
@@ -68,16 +69,23 @@
 # define assertAbs(p) do {\
     pwr_Assert(p->tv_sec >= 0 && p->tv_nsec >= 0 && p->tv_nsec < 1000000000);\
   } while (0)
+# define notATime(p) (p->tv_sec < 0 || p->tv_nsec < 0 || p->tv_nsec >= 1000000000)
 #else
 # define assertAbs(p) do {\
     pwr_Assert(p->tv_nsec >= 0 && p->tv_nsec < 1000000000);\
   } while (0)
+# define notATime(p) (p->tv_nsec < 0 || p->tv_nsec >= 1000000000)
 #endif
+
+
 
 #define assertDelta(p) do {\
   pwr_Assert((p->tv_sec > 0) ? (p->tv_nsec >= 0 && p->tv_nsec <  1000000000) : TRUE);\
   pwr_Assert((p->tv_sec < 0) ? (p->tv_nsec <= 0 && p->tv_nsec > -1000000000) : TRUE);\
 } while (0)
+#define notADeltaTime(p) \
+  (((p->tv_sec >= 0) && (p->tv_nsec < 0 || p->tv_nsec >=  1000000000)) || \
+   ((p->tv_sec < 0) && (p->tv_nsec > 0 || p->tv_nsec <= -1000000000)))
 
 #define ONEDAY 86400
 
@@ -168,7 +176,7 @@ time_IsNull (
 
   return (t1->tv_sec == pwr_cNTime.tv_sec) && (t1->tv_nsec == pwr_cNTime.tv_nsec);
 }
-
+
 //! Add an absolute time and a delta time.
 /*! Add two timespecs, result = t + d, where:
 
@@ -178,6 +186,9 @@ time_IsNull (
   If 'result' argument is NULL
   then 't' will be used as resultant.
   Returns the address to the resulting time.
+
+  Input arguments containing invalid times will
+  cause an exception.
 */
 
 pwr_tTime *
@@ -187,18 +198,74 @@ time_Aadd (
   pwr_tDeltaTime  *a
 )
 {
+  pwr_tInt64     tv_nsec = t->tv_nsec + a->tv_nsec;
+  pwr_tInt64     tv_sec  = t->tv_sec  + a->tv_sec;
   pwr_tTime   *r = result;
-  pwr_tInt64  tv_nsec;
 
   assertAbs(t);
   assertDelta(a);
 
   if (result == NULL) r = t;
 
-  tv_nsec = t->tv_nsec + a->tv_nsec;
-  r->tv_sec = t->tv_sec + a->tv_sec + (tv_nsec / 1000000000);
-  r->tv_nsec = tv_nsec % 1000000000;
+  tv_sec += tv_nsec / 1000000000;
+  tv_nsec %= 1000000000;
+  if (tv_nsec < 0 && tv_sec > 0) {
+    tv_sec--;
+    tv_nsec += 1000000000;
+  } else if (tv_sec < 0 && tv_nsec > 0) {
+    tv_sec++;
+    tv_nsec -= 1000000000;
+  }
 
+  r->tv_sec = tv_sec;
+  r->tv_nsec = tv_nsec;
+  return r;
+}
+
+//! Add an absolute time and a delta time.
+/*! Add two timespecs, result = t + d, where:
+
+   -  'result' and 't' is an absolute time, and
+   -  'd' is a delta time.
+
+  If 'result' argument is NULL
+  then 't' will be used as resultant.
+  Returns the address to the resulting time.
+
+  If any input argument contains an invalid time
+  an invalid time, pwr_cNotATime, is returned.
+*/
+
+pwr_tTime *
+time_Aadd_NE (
+  pwr_tTime   *result,
+  pwr_tTime   *t,
+  pwr_tDeltaTime  *a
+)
+{
+  pwr_tInt64     tv_nsec = t->tv_nsec + a->tv_nsec;
+  pwr_tInt64     tv_sec  = t->tv_sec  + a->tv_sec;
+  pwr_tTime   *r = result;
+
+  if (result == NULL) r = t;
+
+  if ( notATime(t) || notADeltaTime(a)) {
+    *r = pwr_cNotATime;
+    return r;
+  }
+
+  tv_sec += tv_nsec / 1000000000;
+  tv_nsec %= 1000000000;
+  if (tv_nsec < 0 && tv_sec > 0) {
+    tv_sec--;
+    tv_nsec += 1000000000;
+  } else if (tv_sec < 0 && tv_nsec > 0) {
+    tv_sec++;
+    tv_nsec -= 1000000000;
+  }
+
+  r->tv_sec = tv_sec;
+  r->tv_nsec = tv_nsec;
   return r;
 }
 
@@ -210,6 +277,9 @@ time_Aadd (
 
    If argument 't2' is NULL the comparison will
    be done as if t2 == 0.
+
+  Input arguments containing invalid times will
+  cause an exception.
 */
 
 int
@@ -234,11 +304,49 @@ time_Acomp (
   else
     return ((t1->tv_sec > t2->tv_sec) ? 1 : -1);
 }
-
+
+//! Compare two timespecs.
+/*!   Returns \n
+    1 if t1  > t2 \n
+    0 if t1 == t2 \n
+   -1 if t1  < t2 \n
+
+   If argument 't2' is NULL the comparison will
+   be done as if t2 == 0.
+
+   If any input argument contains an invalid time
+   -2 is returned.
+*/
+int
+time_Acomp_NE (
+  pwr_tTime *t1,
+  pwr_tTime *t2
+)
+{
+  static pwr_tTime null = {0, 0};
+
+  if (t2 == NULL) t2 = &null;
+
+  if ( notATime(t1) || notATime(t2))
+    return -2;
+
+  if (t1->tv_sec == t2->tv_sec)
+  {
+    if ( t1->tv_nsec == t2->tv_nsec)
+      return 0;
+    return ((t1->tv_nsec > t2->tv_nsec) ? 1 : -1);
+  }
+  else
+    return ((t1->tv_sec > t2->tv_sec) ? 1 : -1);
+}
+
 //! Subtract a time from a time,
 /*!   r = t - s
 
-   Result is always a delta time.
+  Result is always a delta time.
+
+  Input arguments containing invalid times will
+  cause an exception.
 */
 
 pwr_tDeltaTime *
@@ -270,11 +378,54 @@ time_Adiff (
 
   return r;
 }
-
+
+//! Subtract a time from a time,
+/*!   r = t - s
+
+  Result is always a delta time.
+
+  If any input argument contains an invalid time
+  an invalid time, pwr_cNotADeltaTime, is returned.
+*/
+
+pwr_tDeltaTime *
+time_Adiff_NE (
+  pwr_tDeltaTime  *r,
+  pwr_tTime   *t,
+  pwr_tTime   *s
+)
+{
+  pwr_tInt64     tv_nsec = t->tv_nsec - s->tv_nsec;
+  pwr_tInt64     tv_sec  = t->tv_sec  - s->tv_sec;
+
+  if ( r == NULL || notATime(t) || notATime(s)) {
+    *r = pwr_cNotADeltaTime;
+    return r;
+  }
+
+  tv_sec  = tv_sec + tv_nsec / 1000000000;
+  tv_nsec = tv_nsec % 1000000000;
+  if (tv_nsec < 0 && tv_sec > 0) {
+    tv_sec--;
+    tv_nsec += 1000000000;
+  } else if (tv_sec < 0 && tv_nsec > 0) {
+    tv_sec++;
+    tv_nsec -= 1000000000;
+  }
+
+  r->tv_sec = tv_sec;
+  r->tv_nsec = tv_nsec;
+
+  return r;
+}
+
 //! Subtract a delta time from a time,
 /*!   r = t - s
 
-   Result is always an abstime.
+  Result is always an abstime.
+
+  Input arguments containing invalid times will
+  cause an exception.
 */
 
 pwr_tTime *
@@ -308,13 +459,59 @@ time_Asub (
   return r;
 
 }
-
+
+//! Subtract a delta time from a time,
+/*!   r = t - s
+
+  Result is always an abstime.
+
+  If any input argument contains an invalid time
+  an invalid time, pwr_cNotATime, is returned.
+*/
+
+pwr_tTime *
+time_Asub_NE (
+  pwr_tTime   *result,
+  pwr_tTime   *t,
+  pwr_tDeltaTime  *s
+)
+{
+  pwr_tInt64     tv_nsec = t->tv_nsec - s->tv_nsec;
+  pwr_tInt64     tv_sec  = t->tv_sec  - s->tv_sec;
+  pwr_tTime   *r = result;
+
+  if (r == NULL) r = t;
+
+  if ( notATime(t) || notADeltaTime(s)) {
+    *r = pwr_cNotATime;
+    return r;
+  }
+
+  tv_sec  += tv_nsec / 1000000000;
+  tv_nsec %= 1000000000;
+  if (tv_nsec < 0 && tv_sec > 0) {
+    tv_sec--;
+    tv_nsec += 1000000000;
+  } else if (tv_sec < 0 && tv_nsec > 0) {
+    tv_sec++;
+    tv_nsec -= 1000000000;
+  }
+
+  r->tv_sec = tv_sec;
+  r->tv_nsec = tv_nsec;
+  return r;
+
+}
+
 //! Take the absolute walue of a delta time.
 /*!
    'result' = |'t'|
 
    A NULL address => abs value is written to 't'.
    Returns the address to the resulting time.
+
+   Input arguments containing invalid times will
+   cause an exception.
 */
 
 pwr_tDeltaTime *
@@ -334,9 +531,45 @@ time_Dabs (
 
   return r;
 }
-
+
+//! Take the absolute walue of a delta time.
+/*!
+   'result' = |'t'|
+
+   A NULL address => abs value is written to 't'.
+   Returns the address to the resulting time.
+
+   If any input argument contains an invalid time
+   an invalid time, pwr_cNotADeltaTime, is returned.
+*/
+
+pwr_tDeltaTime *
+time_Dabs_NE (
+  pwr_tDeltaTime  *result,
+  pwr_tDeltaTime  *t
+)
+{
+  pwr_tDeltaTime  *r = result;
+
+  if (r == NULL) r = t;
+
+  if ( notADeltaTime(t)) {
+    *r = pwr_cNotADeltaTime;
+    return r;
+  }
+
+  if (r->tv_sec < 0)  r->tv_sec  = -r->tv_sec;
+  if (r->tv_nsec < 0) r->tv_nsec = -r->tv_nsec;
+
+  return r;
+}
+
 //! Add two delta times, the result is also delta.
-/*!   If 'result' is NULL then 'a' will be added to 't'.  */
+/*!   If 'result' is NULL then 'a' will be added to 't'.  
+
+  Input arguments containing invalid times will
+  cause an exception.
+*/
 
 pwr_tDeltaTime *
 time_Dadd (
@@ -370,7 +603,49 @@ time_Dadd (
 
   return r;
 }
-
+
+//! Add two delta times, the result is also delta.
+/*!   If 'result' is NULL then 'a' will be added to 't'.  
+
+  If any input argument contains an invalid time
+  an invalid time, pwr_cNotADeltaTime, is returned.
+*/
+
+pwr_tDeltaTime *
+time_Dadd_NE (
+  pwr_tDeltaTime  *result,
+  pwr_tDeltaTime  *t,
+  pwr_tDeltaTime  *a
+)
+{
+  pwr_tDeltaTime  *r = result;
+  pwr_tInt64     tv_nsec, tv_sec;
+
+  if (result == NULL) r = t;
+
+  if ( notADeltaTime(t) || notADeltaTime(a)) {
+    *r = pwr_cNotADeltaTime;
+    return r;
+  }
+
+  tv_nsec = t->tv_nsec + a->tv_nsec;
+  tv_sec = t->tv_sec + a->tv_sec + (tv_nsec / 1000000000);
+  tv_nsec = tv_nsec % 1000000000;
+
+  if (tv_nsec < 0 && tv_sec > 0) {
+    tv_sec--;
+    tv_nsec += 1000000000;
+  } else if (tv_sec < 0 && tv_nsec > 0) {
+    tv_sec++;
+    tv_nsec -= 1000000000;
+  }
+
+  r->tv_sec = tv_sec;
+  r->tv_nsec = tv_nsec;
+
+  return r;
+}
+
 //! Compare two delta times.
 /*!   Returns \n
     1 if t1  > t2 \n
@@ -379,6 +654,9 @@ time_Dadd (
 
    If argument 't2' is NULL the comparison will
    be done as if t2 == 0.
+
+   Input arguments containing invalid times will
+   cause an exception.
 */
 
 int
@@ -402,7 +680,42 @@ time_Dcomp (
   }
   return ((t1->tv_sec > t2->tv_sec) ? 1 : -1);
 }
-
+
+//! Compare two delta times.
+/*!   Returns \n
+    1 if t1  > t2 \n
+    0 if t1 == t2 \n
+   -1 if t1  < t2 \n
+
+   If argument 't2' is NULL the comparison will
+   be done as if t2 == 0.
+
+   If any input argument contains an invalid time
+   -2 is returned.
+*/
+
+int
+time_Dcomp_NE (
+  pwr_tDeltaTime  *t1,
+  pwr_tDeltaTime  *t2
+)
+{
+  static pwr_tDeltaTime null = {0, 0};
+
+  if (t2 == NULL)
+    t2 = &null;
+
+  if ( notADeltaTime(t1) || notADeltaTime(t2))
+    return -2;
+
+  if (t1->tv_sec == t2->tv_sec) {
+    if (t1->tv_nsec == t2->tv_nsec)
+      return 0;
+    return ((t1->tv_nsec > t2->tv_nsec) ? 1 : -1);
+  }
+  return ((t1->tv_sec > t2->tv_sec) ? 1 : -1);
+}
+
 //! Negate a delta time,
 /*!
    result = -d
@@ -410,6 +723,9 @@ time_Dcomp (
   If 'result' argument is NULL
   then 'd' will be used as resultant.
   Returns the address to the resulting time.
+
+  Input arguments containing invalid times will
+  cause an exception.
 */
 
 pwr_tDeltaTime *
@@ -429,9 +745,46 @@ time_Dneg (
 
   return r;
 }
-
+
+//! Negate a delta time,
+/*!
+   result = -d
+
+  If 'result' argument is NULL
+  then 'd' will be used as resultant.
+  Returns the address to the resulting time.
+
+  If any input argument contains an invalid time
+  an invalid time, pwr_cNotADeltaTime, is returned.
+*/
+
+pwr_tDeltaTime *
+time_Dneg_NE (
+  pwr_tDeltaTime  *result,
+  pwr_tDeltaTime  *t
+)
+{
+  pwr_tDeltaTime  *r = result;
+
+  if (r == NULL) r = t;
+
+  if ( notADeltaTime(t)) {
+    *r = pwr_cNotADeltaTime;
+    return r;
+  }
+
+  r->tv_sec  = -r->tv_sec;
+  r->tv_nsec = -r->tv_nsec;
+
+  return r;
+}
+
 //! Subtract two delta times.
-/*! The result is also delta.  */
+/*! The result is also delta.  
+
+    Input arguments containing invalid times will
+    cause an exception.
+*/
 
 pwr_tDeltaTime *
 time_Dsub (
@@ -464,6 +817,47 @@ time_Dsub (
 
   return r;
 }
+
+//! Subtract two delta times.
+/*! The result is also delta.  
+
+    If any input argument contains an invalid time
+    an invalid time, pwr_cNotADeltaTime, is returned.
+*/
+
+pwr_tDeltaTime *
+time_Dsub_NE (
+  pwr_tDeltaTime  *result,
+  pwr_tDeltaTime  *t,
+  pwr_tDeltaTime  *s
+)
+{
+  pwr_tInt64     tv_nsec = t->tv_nsec - s->tv_nsec;
+  pwr_tInt64     tv_sec  = t->tv_sec  - s->tv_sec;
+  pwr_tDeltaTime  *r = result;
+
+  if (r == NULL) r = t;
+
+  if ( notADeltaTime(t) || notADeltaTime(s)) {
+    *r = pwr_cNotADeltaTime;
+    return r;
+  }
+
+  tv_sec  = tv_sec + tv_nsec / 1000000000;
+  tv_nsec = tv_nsec % 1000000000;
+  if (tv_nsec < 0 && tv_sec > 0) {
+    tv_sec--;
+    tv_nsec += 1000000000;
+  } else if (tv_sec < 0 && tv_nsec > 0) {
+    tv_sec++;
+    tv_nsec -= 1000000000;
+  }
+
+  r->tv_sec = tv_sec;
+  r->tv_nsec = tv_nsec;
+
+  return r;
+}
 
 //! Convert a delta time to ascii string.
 
@@ -480,6 +874,12 @@ time_DtoAscii (
 
   if (dt == NULL)
     return TIME__IVDTIME;
+
+  if ( notADeltaTime(dt)) {
+    strncpy(buf, "NotADeltaTime", bufsize);
+    buf[bufsize-1] = '\0';    
+    return TIME__NADT;
+  }
 
   day  = div(dt->tv_sec, 24 * 3600);
   hour = div(day.rem, 3600);
@@ -526,9 +926,13 @@ time_AtoAscii (
   pwr_tTime time;
   pwr_tTime *tp;
 
+  if ( ts && notATime(ts)) {
+    strncpy(buf, "NotATime", bufsize);
+    buf[bufsize-1] = '\0';    
+    return TIME__NAT;
+  }
 
-  if (ts == NULL)
-  {
+  if (ts == NULL) {
     time_GetTime(&time);
     tp = &time;
   }
@@ -908,6 +1312,8 @@ time_AtoFormAscii (
 }
 
 //! Convert millisec to timespec.
+/*!
+   Not thread safe if dt is NULL.  */
 
 pwr_tDeltaTime *
 time_MsToD (
@@ -916,7 +1322,7 @@ time_MsToD (
 )
 {
   static pwr_tDeltaTime time;
-  static pwr_tDeltaTime *t = &time;
+  pwr_tDeltaTime *t = &time;
 
   if (dt != NULL) t = dt;
 
@@ -927,6 +1333,8 @@ time_MsToD (
 }
 
 //! Convert float to time.
+/*!
+   Not thread safe if dt is NULL.  */
 
 pwr_tDeltaTime *
 time_FloatToD (
@@ -935,15 +1343,24 @@ time_FloatToD (
 )
 {
   static pwr_tDeltaTime time;
-  static pwr_tDeltaTime *t = &time;
+  pwr_tDeltaTime *t = &time;
 
   if (dt != NULL) t = dt;
+
+  if ( isnan(f)) {
+    *t = pwr_cNotADeltaTime;
+    return t;
+  }
 
   t->tv_sec  = f;
   t->tv_nsec = (f - t->tv_sec) * 1e9;
 
   return t;
 }
+
+//! Convert double to time.
+/*!
+   Not thread safe if dt is NULL.  */
 
 pwr_tDeltaTime *
 time_Float64ToD (
@@ -952,9 +1369,14 @@ time_Float64ToD (
 )
 {
   static pwr_tDeltaTime time;
-  static pwr_tDeltaTime *t = &time;
+  pwr_tDeltaTime *t = &time;
 
   if (dt != NULL) t = dt;
+
+  if ( isnan(f)) {
+    *t = pwr_cNotADeltaTime;
+    return t;
+  }
 
   t->tv_sec  = f;
   t->tv_nsec = (f - t->tv_sec) * 1e9;
@@ -964,6 +1386,9 @@ time_Float64ToD (
 
 
 //! Convert time to Float32.
+/*!
+   Not thread safe if f is NULL.  
+*/
 
 pwr_tFloat32
 time_DToFloat (
@@ -972,12 +1397,18 @@ time_DToFloat (
 )
 {
   static pwr_tFloat32 flt;
+  pwr_tFloat32 *fp = &flt;
 
-  flt =  1e-9 * dt->tv_nsec  + dt->tv_sec;
+  if (f != NULL) fp = f;
 
-  if (f != NULL) *f = flt;
+  if ( notADeltaTime(dt)) {
+    *fp = NAN;
+    return *fp;
+  }
 
-  return flt;
+  *fp =  1e-9 * dt->tv_nsec  + dt->tv_sec;
+
+  return *fp;
 }
 
 //! Convert time to Float64.
@@ -989,12 +1420,18 @@ time_DToFloat64 (
 )
 {
   static pwr_tFloat64 flt;
+  pwr_tFloat64 *fp = &flt;
 
-  flt =  1e-9 * dt->tv_nsec  + dt->tv_sec;
+  if (f != NULL) fp = f;
 
-  if (f != NULL) *f = flt;
+  if ( notADeltaTime(dt)) {
+    *fp = NAN;
+    return *fp;
+  }
 
-  return flt;
+  *fp =  1e-9 * dt->tv_nsec  + dt->tv_sec;
+
+  return *fp;
 }
 
 time_tClock

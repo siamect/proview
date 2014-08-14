@@ -47,3 +47,5 @@ ivtime		<invalid time>						/error
 ivdtime		<invalid delta time>					/error
 negtime		<negative time>						/info
 clkchange	<clock has changed>					/info
+nadt		<Not a deltatime>					/error
+nat		<Not a time>						/error

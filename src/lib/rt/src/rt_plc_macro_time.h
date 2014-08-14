@@ -109,35 +109,35 @@
   @aref atadd AtAdd
 */
 #define AtAdd_exec(obj,t1,t2) \
-  time_Aadd( &obj->ActVal, &t1, &t2);
+  time_Aadd_NE( &obj->ActVal, &t1, &t2);
 
 /*_*
   DTADD
   @aref dtadd DtAdd
 */
 #define DtAdd_exec(obj,t1,t2) \
-  time_Dadd( &obj->ActVal, &t1, &t2);
+  time_Dadd_NE( &obj->ActVal, &t1, &t2);
 
 /*_*
   ATSUB
   @aref atsub AtSub
 */
 #define AtSub_exec(obj,t1,t2) \
-  time_Adiff( &obj->ActVal, &t1, &t2);
+  time_Adiff_NE( &obj->ActVal, &t1, &t2);
 
 /*_*
   ATDTSUB
   @aref atdtsub AtDtSub
 */
 #define AtDtSub_exec(obj,t1,t2) \
-  time_Asub( &obj->ActVal, &t1, &t2);
+  time_Asub_NE( &obj->ActVal, &t1, &t2);
 
 /*_*
   DTSUB
   @aref dtsub DtSub
 */
 #define DtSub_exec(obj,t1,t2) \
-  time_Dsub( &obj->ActVal, &t1, &t2);
+  time_Dsub_NE( &obj->ActVal, &t1, &t2);
 
 /*_*
   DTTOA
@@ -165,42 +165,42 @@
   @aref atgreaterthan AtGreaterThan
 */
 #define AtGreaterThan_exec(obj,t1,t2) \
-  obj->Status = (time_Acomp( &t1, &t2) == 1);
+  obj->Status = (time_Acomp_NE( &t1, &t2) == 1);
 
 /*_*
   ATLESSTHAN
   @aref atlessthan AtLessThan
 */
 #define AtLessThan_exec(obj,t1,t2) \
-  obj->Status = (time_Acomp( &t1, &t2) == -1);
+  obj->Status = (time_Acomp_NE( &t1, &t2) == -1);
 
 /*_*
   ATEQUAL
   @aref atequal AtEqual
 */
 #define AtEqual_exec(obj,t1,t2) \
-  obj->Status = (time_Acomp( &t1, &t2) == 0);
+  obj->Status = (time_Acomp_NE( &t1, &t2) == 0);
 
 /*_*
   DTGREATERTHAN
   @aref dtgreaterthan DtGreaterThan
 */
 #define DtGreaterThan_exec(obj,t1,t2) \
-  obj->Status = (time_Dcomp( &t1, &t2) == 1);
+  obj->Status = (time_Dcomp_NE( &t1, &t2) == 1);
 
 /*_*
   DTLESSTHAN
   @aref dtlessthan DtLessThan
 */
 #define DtLessThan_exec(obj,t1,t2) \
-  obj->Status = (time_Dcomp( &t1, &t2) == -1);
+  obj->Status = (time_Dcomp_NE( &t1, &t2) == -1);
 
 /*_*
   DTEQUAL
   @aref dtequalthan DtEqual
 */
 #define DtEqual_exec(obj,t1,t2) \
-  obj->Status = (time_Dcomp( &t1, &t2) == 0);
+  obj->Status = (time_Dcomp_NE( &t1, &t2) == 0);
 
 /*_*
   LOCALTIME

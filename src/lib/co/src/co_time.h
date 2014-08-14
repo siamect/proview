@@ -160,20 +160,29 @@ typedef enum {
 int time_IsNull (pwr_tTime *t1);
 pwr_tTime *   time_Aabs (pwr_tTime*, pwr_tTime*);
 pwr_tTime *   time_Aadd (pwr_tTime*, pwr_tTime*, pwr_tDeltaTime*);
+pwr_tTime *   time_Aadd_NE (pwr_tTime*, pwr_tTime*, pwr_tDeltaTime*);
 int     time_Acomp  (pwr_tTime*, pwr_tTime*);
+int     time_Acomp_NE  (pwr_tTime*, pwr_tTime*);
 pwr_tDeltaTime *  time_Adiff  (pwr_tDeltaTime*, pwr_tTime*, pwr_tTime*);
+pwr_tDeltaTime *  time_Adiff_NE  (pwr_tDeltaTime*, pwr_tTime*, pwr_tTime*);
 pwr_tTime *   time_Aneg (pwr_tTime*, pwr_tTime*);
 pwr_tTime *   time_Asub (pwr_tTime*, pwr_tTime*, pwr_tDeltaTime*);
+pwr_tTime *   time_Asub_NE (pwr_tTime*, pwr_tTime*, pwr_tDeltaTime*);
 pwr_tDeltaTime *  time_Dabs (pwr_tDeltaTime*, pwr_tDeltaTime*);
+pwr_tDeltaTime *  time_Dabs_NE (pwr_tDeltaTime*, pwr_tDeltaTime*);
 pwr_tDeltaTime *  time_Dadd (pwr_tDeltaTime*, pwr_tDeltaTime*, pwr_tDeltaTime*);
+pwr_tDeltaTime *  time_Dadd_NE (pwr_tDeltaTime*, pwr_tDeltaTime*, pwr_tDeltaTime*);
 pwr_tDeltaTime *  time_Dneg (pwr_tDeltaTime*, pwr_tDeltaTime*);
+pwr_tDeltaTime *  time_Dneg_NE (pwr_tDeltaTime*, pwr_tDeltaTime*);
 pwr_tDeltaTime *  time_Dsub (pwr_tDeltaTime*, pwr_tDeltaTime*, pwr_tDeltaTime*);
+pwr_tDeltaTime *  time_Dsub_NE (pwr_tDeltaTime*, pwr_tDeltaTime*, pwr_tDeltaTime*);
 
 #if defined (OS_VMS) || defined(OS_ELN)
 pwr_tStatus   time_Dmul (pwr_tDeltaTime*, pwr_tDeltaTime*, pwr_tInt32);
 #endif
 
 int     time_Dcomp  (pwr_tDeltaTime*, pwr_tDeltaTime*);
+int     time_Dcomp_NE  (pwr_tDeltaTime*, pwr_tDeltaTime*);
 pwr_tStatus   time_DtoAscii (pwr_tDeltaTime*, int, char*, int);
 pwr_tStatus   time_AtoAscii (pwr_tTime*, time_eFormat, char*, int);
 pwr_tStatus   time_AsciiToD (const char*, pwr_tDeltaTime*);

@@ -55,6 +55,7 @@
 #include "co_api_user.h"
 #include "co_msg.h"
 #include "co_syi.h"
+#include "co_time_msg.h"
 #include "pwr_baseclasses.h"
 #include "rt_xnav_msg.h"
 #include "flow.h"
@@ -869,7 +870,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     default:
       sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
 			 timstr, sizeof(timstr));
-      if ( EVEN(sts))
+      if ( EVEN(sts) && sts != TIME__NAT)
 	strcpy( timstr, "-");
       *len = snprintf( str, size, "%s", timstr);
     }
@@ -884,7 +885,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     default:
       sts = time_DtoAscii( (pwr_tDeltaTime *) value_ptr, 1, 
 			   timstr, sizeof(timstr));
-      if ( EVEN(sts))
+      if ( EVEN(sts) && sts != TIME__NADT)
 	strcpy( timstr, "Undefined time");
       *len = snprintf( str, size, "%s", timstr);
     }
