@@ -2783,13 +2783,14 @@ WttGtk::WttGtk(
   tools_buildnode_w = gtk_button_new();
   gtk_container_add( GTK_CONTAINER(tools_buildnode_w), 
 	  gtk_image_new_from_stock( "gtk-execute", GTK_ICON_SIZE_SMALL_TOOLBAR));
-  if ( wb_type != wb_eType_ClassEditor) {
-    g_signal_connect(tools_buildnode_w, "clicked", G_CALLBACK(WttGtk::activate_buildnode), this);
-    gtk_toolbar_append_widget( tools, tools_buildnode_w, "Build Node", "");
-  }
-  else {
+  if ( wb_type == wb_eType_ClassEditor ||
+       (wbctx && volid && (volclass == pwr_eClass_SharedVolume || volclass == pwr_eClass_SubVolume))) {
     g_signal_connect(tools_buildnode_w, "clicked", G_CALLBACK(WttGtk::activate_buildvolume), this);
     gtk_toolbar_append_widget( tools, tools_buildnode_w, "Build Volume", "");
+  }
+  else {
+    g_signal_connect(tools_buildnode_w, "clicked", G_CALLBACK(WttGtk::activate_buildnode), this);
+    gtk_toolbar_append_widget( tools, tools_buildnode_w, "Build Node", "");
   }
   g_object_set( tools_buildnode_w, "can-focus", FALSE, NULL);
 
