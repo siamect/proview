@@ -70,6 +70,14 @@ SObject pwrb:Class
         Attr StructName = "WebHandler"
       EndBody
       !/**
+      !  Optional description.
+      !*/
+      Object Description $Attribute 44
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
       !  @Summary Max number of web connections to the GdhServer process
       !  Max number of concurrent connections to the GdhServer process.
       !  Every graph-applet that is displayed, opens a link to the GdhServer

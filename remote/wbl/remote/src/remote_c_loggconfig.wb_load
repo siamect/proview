@@ -106,6 +106,14 @@ SObject Remote:Class
         Attr StructName = "LoggConfig"
       EndBody
       !/**
+      !  Optional description.
+      !*/
+      Object Description $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
       !  Name of log file, eg $pwrp_log/remote.log
       !*/
       Object LoggFile $Attribute 1

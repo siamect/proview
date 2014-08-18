@@ -55,6 +55,14 @@ SObject pwrb:Class
         Attr StructName = "WebBrowserConfig"
       EndBody
       !/**
+      !  Optional description.
+      !*/
+      Object Description $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
       !  The webbrowser used when opening an URL.
       !  Use 'rt_mozilla' instead of mozilla to allow all users to
       !  open mozilla from xtt.
