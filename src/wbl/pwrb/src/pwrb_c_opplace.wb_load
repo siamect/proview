@@ -331,13 +331,14 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Obsolete from V4.7.0.
+      !  @Summary Used as default OpPlace if no specific OpPlace is specified.
+      !  An OpPlace object can be specified as an argument to rt_xtt when
+      !  rt_xtt is started. If no OpPlace is specified, the OpPlace object
+      !  where IsDefaultOp is set, will be used.
       !*/
-      Object OpNumber $Attribute 2
+      Object IsDefaultOp $Attribute 50
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Int32"
-          Attr Flags |= PWR_MASK_INVISIBLE
-          Attr Flags |= PWR_MASK_RTHIDE
+          Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
     EndObject

@@ -696,7 +696,6 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
   if ( select_opplace) {
     // Check if there is only one single opplace
     pwr_tOName fullname;
-    pwr_tObjName name;
     pwr_tStatus sts;
     pwr_tOid oid;
 
@@ -705,9 +704,6 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
     for ( sts = gdh_GetClassList( pwr_cClass_OpPlace, &oid); 
 	  ODD(sts);
 	  sts = gdh_GetNextObject( oid, &oid)) {
-      sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
-      if ( EVEN(sts) || cdh_NoCaseStrcmp( name, "opdefault") == 0) 
-	continue;
       sts = gdh_ObjidToName( oid, fullname, sizeof(fullname), cdh_mName_volumeStrict);
       if ( EVEN(sts)) continue;    
 
@@ -726,8 +722,10 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
     for ( sts = gdh_GetClassList( pwr_cClass_OpPlace, &oid); 
 	  ODD(sts);
 	  sts = gdh_GetNextObject( oid, &oid)) {
-      sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
-      if ( ODD(sts) && cdh_NoCaseStrcmp( name, "opdefault") == 0) {
+      pwr_sClass_OpPlace *opp;
+
+      sts = gdh_ObjidToPointer( oid, (void **)&opp);
+      if ( ODD(sts) && opp->IsDefaultOp ) {
 	sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_volumeStrict);
 	if ( EVEN(sts)) exit(sts);
 
@@ -844,13 +842,12 @@ void Xtt::opplace_selected_cb( void *ctx, char *text)
   if ( xtt->op_close_button)
     strcat( cmd, " /closebutton");
   xtt->xnav->command( cmd);
-  xtt->xnav->load_ev_from_opplace();
+  //xtt->xnav->load_ev_from_opplace();
 }
 
 void Xtt::list_opplace()
 {
   pwr_tOName texts[20];
-  pwr_tObjName name;
   pwr_tStatus sts;
   pwr_tOid oid;
   pwr_tVid root_vid;
@@ -867,10 +864,6 @@ void Xtt::list_opplace()
       sts = gdh_ObjidToName( oid, texts[i], sizeof(texts[0]), cdh_mName_volumeStrict);
     if ( EVEN(sts)) continue;
     
-    sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
-    if ( EVEN(sts) || cdh_NoCaseStrcmp( name, "opdefault") == 0) 
-      continue;
-
     i++;
     if ( i == (int)(sizeof(texts)/sizeof(texts[0]) - 2))
       break;

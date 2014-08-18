@@ -53,6 +53,7 @@ static pwr_tStatus PostCreate (
   pwr_tStatus sts;
   pwr_tObjName name;
   pwr_tMask   value = 1;
+  pwr_tBoolean bvalue = 1;
   int size;
 
   sts = ldh_ObjidToName( Session, Object, ldh_eName_Object,
@@ -64,6 +65,10 @@ static pwr_tStatus PostCreate (
     
     sts = ldh_SetObjectPar( Session, Object, "RtBody",
 			    "OpWindLayout", (char *) &value, sizeof(value));
+    if ( EVEN(sts)) return sts;
+
+    sts = ldh_SetObjectPar( Session, Object, "RtBody",
+			    "IsDefaultOp", (char *) &value, sizeof(bvalue));
     if ( EVEN(sts)) return sts;
   }
 
