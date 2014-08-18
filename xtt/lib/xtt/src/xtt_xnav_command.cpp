@@ -2489,8 +2489,8 @@ static int	xnav_show_func(	void		*client_data,
     if ( sort) {
       // Sort
       pwr_tOName tmp;
-      for ( unsigned int i = cnt - 1; i > 0; i--) {
-	for ( unsigned int j = 0; j < i; j++) {
+      for ( int i = cnt - 1; i > 0; i--) {
+	for ( int j = 0; j < i; j++) {
 	  if ( strcmp(names[j], names[j+1]) > 0) {
 	    strcpy( tmp, names[j+1]);
 	    strcpy( names[j+1], names[j]);
@@ -3472,26 +3472,30 @@ static int	xnav_open_func(	void		*client_data,
 
       int closebutton = ODD( dcli_get_qualifier( "/CLOSEBUTTON", 0, 0));
 
-      xnav->op = xnav->op_new( opplace_str, &sts);
-      if ( EVEN(sts))
-      {
-        delete xnav->op;
-        xnav->op = NULL;
-        xnav->message('E', "Unable to open operator window");
-        return XNAV__SUCCESS;
-      }
-      xnav->op->command_cb = xnav_op_command_cb;
-      xnav->op->close_cb = xnav_op_close_cb;
-      xnav->op->help_cb = xnav_op_help_cb;
-      xnav->op->map_cb = xnav_op_map_cb;
-      xnav->op->get_alarm_info_cb = xnav_op_get_alarm_info_cb;
-      xnav->op->ack_last_cb = xnav_op_ack_last_cb;
-      xnav->op->is_authorized_cb = xnav->is_authorized_cb;
-
-      if ( closebutton)
-	xnav->op->add_close_button();
       strcpy( xnav->opplace_name, opplace_str);
-      xnav->op->set_title( xnav->user);
+      xnav->gbl.load_config(xnav);
+
+      if ( !xnav->gbl.hide_opwind) {
+	xnav->op = xnav->op_new( opplace_str, &sts);
+	if ( EVEN(sts)) {
+	  delete xnav->op;
+	  xnav->op = NULL;
+	  xnav->message('E', "Unable to open operator window");
+	  return XNAV__SUCCESS;
+	}
+	xnav->op->command_cb = xnav_op_command_cb;
+	xnav->op->close_cb = xnav_op_close_cb;
+	xnav->op->help_cb = xnav_op_help_cb;
+	xnav->op->map_cb = xnav_op_map_cb;
+	xnav->op->get_alarm_info_cb = xnav_op_get_alarm_info_cb;
+	xnav->op->ack_last_cb = xnav_op_ack_last_cb;
+	xnav->op->is_authorized_cb = xnav->is_authorized_cb;
+	
+	if ( closebutton)
+	  xnav->op->add_close_button();
+	strcpy( xnav->opplace_name, opplace_str);
+	xnav->op->set_title( xnav->user);
+      }
 
       // Load eventlist
       if ( xnav->ev) {
