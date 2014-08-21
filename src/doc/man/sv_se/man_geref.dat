@@ -2890,7 +2890,9 @@ StatusColor <t>Status   <t>Sätter fyllnadsfärg efter ett status värde. <link>GeD
 FillLevel <t>Float32    <t>Ändrar fyllnadsfärgen på en del av komponenten. Nivån <link>GeDynFillLevel
           <t>           <t>som avgränsar den färgade delen bestäms av värdet på signalen.
 Invisible <t>Boolean String <t>Gör komponenten osynlig vid hög signal, eller vid tom sträng. <link>GeDynInvisible
-DigBorder <t>Boolean    <t>Sätter angiven kantfärgen vid hög signal. <link>GeDynDigBorder
+DigBorder <t>Boolean    <t>Sätter angiven kantfärgen vid låg signal. <link>GeDynDigBorder
+TimeoutColor <t>Boolean <t>Sätter angiven färg vid timeout på prenumerationen. <link>GeDynTimeoutColor
+DigTextColor <t>Boolean <t>Sätter angiven textfärg vid hög signal. <link>GeDynDigTextColor
 DigText   <t>Boolean    <t>Sätter angiven text vid låg signal. <link>GeDynDigText
 AnalogText <t>Float32 Int32 <t>Sätter upp till 32 olika text beroende på värdet av <link>GeDynAnalogText
           <t>           <t>en analog signal.
@@ -3137,13 +3139,44 @@ DigBorder
 
 Sätt angiven kantfärg när signalen är låg.
 
-Objektet kopplas till en digital signal i rtdb. Om värdet är 1 ritas objektet med den normala
-kantfärgen, om värdet är 0 ritas det med DigBorder.Color som anges i objektseditorn.
+Objektet kopplas till en digital signal i rtdb. Om värdet är 1 ritas objektet med den 
+normala kantfärgen, om värdet är 0 ritas det med DigBorder.Color som anges i objektseditorn.
 
 <b>Attribut <t><t>Beskrivning
 DigBorder.Attribute <t><t>Signal i rtdb av typen Boolean som ska 
                     <t><t>påverka komponenten.
 DigBorder.LowColor  <t><t>Kantfärg på komponenten om signalen är 0.
+</topic>
+
+<topic>GeDynTimeoutColor <style>function
+TimeoutColor
+
+Sätter angiven färg vid timeout på prenumerationen.
+
+Kontrollerar tiden för prenumerationen, och sätter fyllnadsfärgen till den angivna
+färgen om timeout tiden har överskridits.
+
+TimeoutColor måste kombineras med någon annan dynamik som anger attributet för
+prenumerationen. Om det finns flera typer av dynamik, övervakas prenumerationen för
+dynamiken med högst prioritet.
+
+<b>Attribut <t><t>Beskrivning
+TimeoutColor.Time <t><t>Timeout tid i sekunder.
+TimeoutColor.Color  <t><t>Fyllnadsfärg för komponenten vid timeout.
+</topic>
+
+<topic>GeDynDigTextColor <style>function
+DigTextColor
+
+Sätter angiven färg när signalen är hög.
+
+Objektet kopplas till en digital signal i rtdb. Om värdet är 0 ritas objektet med den normala
+textfärgen, om värdet är 1 ritas det med DigTextColor.Color som anges i objektseditorn.
+
+<b>Attribut <t><t>Beskrivning
+DigTextColor.Attribute <t><t>Signal i databasen av typen Boolean som ändrar textfärg 
+                    <t><t>på komponenten.
+DigTextColor.Color  <t><t>Färg som sätts på texter när signalen är 1.
 </topic>
 
 <topic>GeDynDigText <style>function

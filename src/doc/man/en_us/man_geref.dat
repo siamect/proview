@@ -2912,7 +2912,9 @@ FillLevel <t>Float32    <t>Changes partly the fill color of the component. The l
           <t>           <t>the value of the signal.
 Invisible <t>Boolean String <t>Make the component invisible when the signal is high, <link>GeDynInvisible
           <t>           <t>or when the string is empty.
-DigBorder <t>Boolean    <t>Set specified border color when the signal is high. <link>GeDynDigBorder
+DigBorder <t>Boolean    <t>Set specified border color when the signal is low. <link>GeDynDigBorder
+TimeoutColor <t>Boolean <t>Set specified color when at subscription timeout. <link>GeDynTimeoutColor
+DigTextColor <t>Boolean <t>Set specified text color when the signal is high. <link>GeDynDigTextColor
 DigText   <t>Boolean    <t>Set specified text when the signal is low. <link>GeDynDigText
 AnalogText <t>Float32 Int32 <t>Set up till 32 different texts depending on the value of <link>GeDynAnalogText
           <t>           <t>an analog signal.
@@ -2936,8 +2938,8 @@ The default dynamic for an instance, is displayed by opening the object editor f
 and there open the subgraph folder.
 
 <h2>Xtt-commands
-There are a number of pushbuttons that executes xtt-commands. The most usual is to open another
-graph, but you can also open trace or trends etc. Here follows some usable xtt-commands. 
+There are a number of pushbuttons that executes xtt-commands. The most usual is to open 
+another graph, but you can also open trace or trends etc. Here follows some usable xtt-commands. 
 
 <c>open graph GraphName [/width=][/height=][/scrollbar][/navigator]
 
@@ -3167,6 +3169,37 @@ is stated from the object editor.
 DigBorder.Attribute <t><t>Signal in the database of type Boolean the should influence 
                     <t><t>the component.
 DigBorder.LowColor  <t><t>Border color of the component when the signal is 0.
+</topic>
+
+<topic>GeDynTimeoutColor <style>function
+TimeoutColor
+
+Set specified color at subscription timeout.
+
+Checks the last arrival for the subscription, and sets the fill color to the specifed 
+color if the timeout time is exceeded.
+
+TimeoutColor has to be combined with another dynamic specifying the attribute for the 
+subscription. If there are several dynamics, the subscription for the dynamic with the highest 
+priority is supervised.
+
+<b>Attribute <t><t>Description
+TimeoutColor.Time <t><t>Timeout time in seconds.
+TimeoutColor.Color  <t><t>Fill color of the component at timeout.
+</topic>
+
+<topic>GeDynDigTextColor <style>function
+DigTextColor
+
+Set specified text color when the signal is high.
+
+The object is connected to a digital signal in the database. If the value is 1, the object is 
+drawn with DigTextColor.Color, if the value is 0, it is drawn with normal text color.
+
+<b>Attribute <t><t>Description
+DigTextColor.Attribute <t><t>Signal in the database of type Boolean the should influence 
+                    <t><t>the component.
+DigTextColor.Color  <t><t>Text color of the component when the signal is 1.
 </topic>
 
 <topic>GeDynDigText <style>function
