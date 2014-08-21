@@ -57,7 +57,7 @@
 #include "co_ccm_msg.h"
 #include "co_regex.h"
 #include "co_user.h"
-#include "rt_load.h"
+#include "pwr_names.h"
 #include "wb_ldh.h"
 #include "wb_ldhload.h"
 #include "cow_login.h"
@@ -5018,7 +5018,7 @@ static int	wnav_build_func(	void		*client_data,
     }
 
     // Load the bootlist
-    sts = lfu_volumelist_load( load_cNameBootList, (lfu_t_volumelist **) &volumelist,
+    sts = lfu_volumelist_load( pwr_cNameBootList, (lfu_t_volumelist **) &volumelist,
 			       &volumecount);
     if ( sts == FOE__NOFILE) {
       wnav->message( 'E', "Project is not configured");
@@ -5622,7 +5622,7 @@ static void wnav_clone_volume_cb( void *ctx, char *text)
   // Get vid from project volume list
   lfu_t_volumelist * volumelist;
   int volumecount;
-  sts = lfu_volumelist_load( load_cNameVolumeList, (lfu_t_volumelist **) &volumelist,
+  sts = lfu_volumelist_load( pwr_cNameVolumeList, (lfu_t_volumelist **) &volumelist,
 			     &volumecount);
   if ( EVEN(sts)) {
     wnav->message('E', "Volumelist load error");
@@ -5685,7 +5685,7 @@ static int	wnav_clone_func(	void		*client_data,
     // Load the project volume list
     lfu_t_volumelist * volumelist;
     int volumecount;
-    sts = lfu_volumelist_load( load_cNameVolumeList, (lfu_t_volumelist **) &volumelist,
+    sts = lfu_volumelist_load( pwr_cNameVolumeList, (lfu_t_volumelist **) &volumelist,
 			       &volumecount);
     if ( EVEN(sts)) {
       wnav->message('E', "Volumelist load error");
@@ -7470,7 +7470,7 @@ int WNav::get_next_free_vid( pwr_tVid min_vid, pwr_tVid max_vid, pwr_tVid *next)
   int found;
   int sts;
 
-  sts = lfu_volumelist_load( load_cNameGblVolumeList,  &volumelist, 
+  sts = lfu_volumelist_load( pwr_cNameGblVolumeList,  &volumelist, 
 			     &volumecount);
   if ( EVEN(sts)) return sts;
 
@@ -7506,7 +7506,7 @@ int WNav::check_new_vid( pwr_tVid vid)
   int found = 0;
   int sts;
 
-  sts = lfu_volumelist_load( load_cNameGblVolumeList,  &volumelist, 
+  sts = lfu_volumelist_load( pwr_cNameGblVolumeList,  &volumelist, 
 			     &volumecount);
   if ( EVEN(sts)) return sts;
 
@@ -7530,7 +7530,7 @@ int WNav::check_new_volumename( char *vname)
   int found = 0;
   int sts;
 
-  sts = lfu_volumelist_load( load_cNameGblVolumeList,  &volumelist, 
+  sts = lfu_volumelist_load( pwr_cNameGblVolumeList,  &volumelist, 
 			     &volumecount);
   if ( EVEN(sts)) return sts;
 

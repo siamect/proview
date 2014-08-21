@@ -48,7 +48,7 @@
 
 #include "pwr.h"
 #include "rt_gdb.h"
-#include "rt_load.h"
+#include "pwr_names.h"
 
 #include "ini_rc.h"
 
@@ -118,7 +118,7 @@ ini_RcReadAndSet(
   for (rc = def_rc; rc && rc->name; rc++)
     *rc->var = rc->val;
 
-  sprintf(filename, load_cNameRc, dir, nodename, busid);
+  sprintf(filename, pwr_cNameRc, dir, nodename, busid);
 
   cdh_ToLower(filename, filename);
   fp = fopen(filename, "r");

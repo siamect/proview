@@ -50,7 +50,7 @@
 #include "cow_login.h"
 #include "wb_wtt.h"
 #include "wb_vldh.h"
-#include "rt_load.h"
+#include "pwr_names.h"
 
 static pwr_tStatus configure_parse_attr( ldh_sMenuCall *ip, pwr_tAttrRef *parent, char *str);
 
@@ -653,7 +653,7 @@ static pwr_tStatus Help( ldh_sMenuCall *ip)
     sts = ldh_GetChild( ip->PointedSession, ip->Pointed.Objid, &woid);
     if ( EVEN(sts)) return LDH__SUCCESS;
 
-    sprintf( cmd, "help plcw_%s /helpfile=\"" load_cNamePlcXttHelp "\"", 
+    sprintf( cmd, "help plcw_%s /helpfile=\"" pwr_cNamePlcXttHelp "\"", 
 	     vldh_IdToStr(0, woid),
 	     vldh_VolumeIdToStr(woid.vid));
     break;

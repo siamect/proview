@@ -55,6 +55,7 @@
 #include "co_time.h"
 #include "co_cnf.h"
 #include "rt_load.h"
+#include "pwr_names.h"
 #include "sev_dbsqlite.h"
 #include "rt_sev_msg.h"
 #include "rt_errh.h"
@@ -84,7 +85,7 @@ int sev_dbsqlite::get_systemname()
   if ( sscanf( bus_str, "%d", &bus) != 1)
     return 0;
   
-  sprintf( fname, load_cNameBoot, load_cDirectory, cdh_Low(nodename), bus);
+  sprintf( fname, pwr_cNameBoot, load_cDirectory, cdh_Low(nodename), bus);
   dcli_translate_filename( fname, fname);
   file = fopen( fname, "r");
   if ( file == 0) {

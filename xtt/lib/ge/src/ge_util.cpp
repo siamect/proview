@@ -40,7 +40,7 @@
 #include "pwr.h"
 extern "C" {
 #include "co_dcli.h"
-#include "rt_load.h"
+#include "pwr_names.h"
 }
 
 
@@ -52,7 +52,7 @@ int ge_get_systemname(
   int	nr;
   char	fname[120];
 
-  dcli_translate_filename( fname, load_cNameSysObject);
+  dcli_translate_filename( fname, pwr_cNameSysObject);
   file = fopen( fname, "r");
   if ( file == 0) {
     printf("** Warning, systemname not found\n");

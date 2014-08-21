@@ -35,54 +35,17 @@
 %#if defined OS_VMS || defined OS_ELN
 %# define	load_cNameDirectory	"pwrp_load:"
 %# define	load_cDirectory		"pwrp_load:"
-%# define	load_cNamePlc		"%splc_%s_%04d_%s.exe"
-%
-%# define	load_cNameBootList	"pwrp_root:[src.db]pwrp_cnf_bootlist.dat"
-%# define	load_cNameVolumeList	"pwrp_root:[src.db]pwrp_cnf_volumelist.dat"
-%# define	load_cNameDistribute	"pwrp_root:[src.db]pwrp_cnf_distribute.dat"
-%# define	load_cNameSysObject	"pwrp_root:[src.db]pwrp_cnf_sysobject.dat"
-%# define	load_cNameGblVolumeList	"pwra_db:pwr_volumelist.dat"
-%# define       load_cNameRttCrr         "rtt_crr_%03.3d_%03.3d_%03.3d_%03.3d.dat"
-%# define       load_cNameRttCrrObj      "rtt_crro_%03.3d_%03.3d_%03.3d_%03.3d.dat"
-%# define       load_cNameRttCrrCode     "rtt_crrc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
-%# define       load_cNameRttSignals     "rtt_crrs_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 
 %
 %#elif defined OS_POSIX
 %# define	load_cNameDirectory	"pwrp_load"
 %# define	load_cDirectory		"$pwrp_load/"
-%# define	load_cNamePlc		"%splc_%s_%04d_%s"
-%
-%# define	load_cNameBootList	"$pwrp_root/src/db/pwrp_cnf_bootlist.dat"
-%# define	load_cNameVolumeList	"$pwrp_root/src/db/pwrp_cnf_volumelist.dat"
-%# define	load_cNameDistribute	"$pwrp_root/src/db/pwrp_cnf_distribute.dat"
-%# define	load_cNameSysObject	"$pwrp_root/src/db/pwrp_cnf_sysobject.dat"
-%# define	load_cNameFilePath	"$pwrp_root/src/db/pwrp_cnf_dirlist.dat"
-%# define	load_cNameLocalWb	"$pwrp_root/src/db/wb.wb_load"
-%# define	load_cNameGblVolumeList	"$pwra_db/pwr_volumelist.dat"
-%# define	load_cNameCmnVolumeList	"pwr_volumelist.dat"
-%# define       load_cNameRttCrr        "rtt_crr_%3.3d_%3.3d_%3.3d_%3.3d.dat"
-%# define       load_cNameRttCrrObj     "rtt_crro_%3.3d_%3.3d_%3.3d_%3.3d.dat"
-%# define       load_cNameRttCrrCode    "rtt_crrc_%3.3d_%3.3d_%3.3d_%3.3d.dat"
-%# define       load_cNameRttSignals    "rtt_crrs_%3.3d_%3.3d_%3.3d_%3.3d.dat"
-%# define       load_cNamePkg           "pwrp_pkg_%s_%04d.tgz"
-%# define       load_cNameCustomBuild   "$pwrp_exe/custom_build.sh"
-%# define       load_cNameBaseXttHelp   "$pwr_lang/xtt_help.dat"
-%# define       load_cNameBaseWttHelp   "$pwr_lang/wtt_help.dat"
-%# define       load_cNameProjectXttHelp "$pwrp_exe/xtt_help.dat"
-%# define       load_cNamePlcXttHelp    "$pwrp_exe/xtthelp_%s_plc.dat"
 %#endif
 %
 %
 %#define load_cNameVolume		"%sld_vol_%03d_%03d_%03d_%03d_%05d.dat"
 %					/* ld_vol_<vid3>_<vid2>_<vid1>_<vid0>_<version>.dat  */
 %
-%#define	load_cNameAlias		"%spwrp_alias.dat"
-%#define	load_cNameAppl		"%sld_appl_%s_%d.txt"
-%#define	load_cNameOpt		"%splc_%s_%04d_%s.opt"
-%#define	load_cNameBoot		"%sld_boot_%s_%04d.dat"
-%#define	load_cNameNode		"%sld_node_%s_%04d.dat"
-%#define	load_cNameRc		"%sld_rc_%s_%04d.dat"
 %
 %
 %

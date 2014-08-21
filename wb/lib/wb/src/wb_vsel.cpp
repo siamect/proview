@@ -42,7 +42,7 @@
 
 #include "pwr.h"
 #include "pwr_systemclasses.h"
-#include "rt_load.h"
+#include "pwr_names.h"
 
 #include "flow.h"
 #include "flow_ctx.h"
@@ -287,7 +287,7 @@ pwr_tStatus WVsel::check_volumelist(
     return 1;
 
   // Load the configured volume list
-  sts = lfu_volumelist_load( load_cNameVolumeList,  &volumelist, 
+  sts = lfu_volumelist_load( pwr_cNameVolumeList,  &volumelist, 
 			     &volumecount);
   if (sts == FOE__NOFILE) {
     if ( !quiet) {

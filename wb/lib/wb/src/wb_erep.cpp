@@ -65,7 +65,7 @@
 extern "C" {
 #include "co_dcli.h"
 #include "co_cdh.h"
-#include "rt_load.h"
+#include "pwr_names.h"
 #include "wb_pwrs.h"
 }
 
@@ -460,7 +460,7 @@ void wb_erep::loadDirList( pwr_tStatus *status)
   strcat( m_dir_list[0], "/");
   m_dir_cnt = 1;
 
-  dcli_translate_filename( fname, load_cNameFilePath);
+  dcli_translate_filename( fname, pwr_cNameFilePath);
   ifstream fp( fname, ios::in);
   if ( !fp) {
     *status = LDH__PROJCONFIG;
@@ -493,7 +493,7 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
     // Load metavolumes
     strcpy( fdir, m_dir_list[i]);
     strcpy( fname, fdir);
-    strcat( fname, load_cNameCmnVolumeList);
+    strcat( fname, pwr_cNameCmnVolumeList);
 
     ifstream fpm( fname, ios::in);
     if ( !fpm) {
@@ -565,7 +565,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
   int load_dbs;
   int load_db;
 
-  strcpy( fname, load_cNameVolumeList);
+  strcpy( fname, pwr_cNameVolumeList);
   dcli_translate_filename( fname, fname);
 
   // Load classvolumes first (j == 0) and then other volumes (j == 1)
@@ -960,8 +960,8 @@ void wb_erep::loadLocalWb( pwr_tStatus *rsts)
   pwr_tStatus sts;
   char found_file[200];
 
-  sts = dcli_search_file( load_cNameLocalWb, found_file, DCLI_DIR_SEARCH_INIT);
-  dcli_search_file( load_cNameLocalWb, found_file, DCLI_DIR_SEARCH_END);
+  sts = dcli_search_file( pwr_cNameLocalWb, found_file, DCLI_DIR_SEARCH_INIT);
+  dcli_search_file( pwr_cNameLocalWb, found_file, DCLI_DIR_SEARCH_END);
   if ( ODD(sts)) {
     try {
       wb_vrepwbl *vrep = new wb_vrepwbl( this);
@@ -1244,7 +1244,7 @@ void wb_erep::volumeNameToFilename( pwr_tStatus *sts, char *name, char *filename
   strcpy( dir_list[1], "$pwrp_load/");
   dir_cnt = 2;
 
-  dcli_translate_filename( fname, load_cNameFilePath);
+  dcli_translate_filename( fname, pwr_cNameFilePath);
   ifstream fp( fname, ios::in);
   if ( !fp) {
     *sts = LDH__PROJCONFIG;
@@ -1448,7 +1448,7 @@ void wb_erep::checkVolumes( pwr_tStatus *sts, char *nodeconfigname)
   int 			err_cnt = 0;
 
   // Load the bootlist
-  *sts = lfu_volumelist_load( load_cNameBootList, &vollist, &volcnt);
+  *sts = lfu_volumelist_load( pwr_cNameBootList, &vollist, &volcnt);
   if ( EVEN(*sts)) return;
   
   bool found = false;

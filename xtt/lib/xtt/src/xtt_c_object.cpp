@@ -44,7 +44,7 @@
 #include "xtt_url.h"
 #include "rt_xnav_msg.h"
 #include "rt_gdh.h"
-#include "rt_load.h"
+#include "pwr_names.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "cow_wow.h"
@@ -1092,7 +1092,7 @@ static pwr_tStatus Help( xmenu_sMenuCall *ip)
     sts = gdh_GetChild( objar->Objid, &woid);
     if ( EVEN(sts)) return XNAV__SUCCESS;
 
-    sprintf( cmd, "help plcw_%s /helpfile=\"" load_cNamePlcXttHelp "\"", 
+    sprintf( cmd, "help plcw_%s /helpfile=\"" pwr_cNamePlcXttHelp "\"", 
 	     cdh_ObjidToFnString(0, woid),
 	     cdh_VolumeIdToFnString(0, woid.vid));
 

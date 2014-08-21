@@ -75,6 +75,7 @@ extern "C" {
 #include "wb_utl_api.h"
 #include "wb_lfu.h"
 #include "rt_load.h"
+#include "pwr_names.h"
 #include "wb_foe_msg.h"
 #include "wb_pwrb_msg.h"
 #include "wb_uted_motif.h"
@@ -1598,7 +1599,7 @@ void WttMotif::open_boot_window()
   static int reglist_num = XtNumber(reglist);
 
   // Load the bootlist
-  sts = lfu_volumelist_load( load_cNameBootList, 
+  sts = lfu_volumelist_load( pwr_cNameBootList, 
 		(lfu_t_volumelist **) &boot_volumelist,
 		&boot_volumecount);
   if (sts == FOE__NOFILE) {

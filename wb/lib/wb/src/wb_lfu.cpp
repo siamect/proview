@@ -57,6 +57,7 @@
 #include "flow.h"
 #include "flow_ctx.h"
 #include "rt_load.h"
+#include "pwr_names.h"
 #include "cow_wow.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
@@ -332,7 +333,7 @@ pwr_tStatus lfu_create_bootfile(
 	noplc = 0;
 
       /* Open the file and print boot data */
-      sprintf( filename, load_cNameBoot, 
+      sprintf( filename, pwr_cNameBoot, 
 	       load_cDirectory, cdh_Low(nodename), bus);
       dcli_translate_filename( filename, filename);
       file = fopen( filename, "w");
@@ -366,7 +367,7 @@ pwr_tStatus lfu_create_bootfile(
 	  if ( i != 0)
 	    fprintf( file, ",");
 	  strncpy( plcname, cdh_Low(plcproclist[i].name), sizeof(plcname));
-	  fprintf( file, load_cNamePlc, "", cdh_Low(nodename), bus, plcname);
+	  fprintf( file, pwr_cNamePlc, "", cdh_Low(nodename), bus, plcname);
 	}
 	fprintf( file, "\n");
       }
@@ -571,7 +572,7 @@ pwr_tStatus lfu_ReadSysObjectFile(
 	int	nr;
 	char	fname[120];
 
-	dcli_translate_filename( fname, load_cNameSysObject);
+	dcli_translate_filename( fname, pwr_cNameSysObject);
 	file = fopen( fname, "r");
 	if ( file == 0)
 	{
@@ -607,12 +608,12 @@ pwr_tStatus lfu_WriteSysObjectFile(
 		systemgroup);
 	if ( EVEN(sts)) return sts;
 
-	dcli_translate_filename( fname, load_cNameSysObject);
+	dcli_translate_filename( fname, pwr_cNameSysObject);
 	file = fopen( fname, "w");
 	if ( !file )
 	{
 	  printf( "** Error, unable to open file %s\n",
-			load_cNameSysObject);
+			pwr_cNameSysObject);
 	  return LFU__NOFILE;
 	}
 	fprintf( file, "%s\n", systemname);
@@ -713,7 +714,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
     syntax_error = 1;
 
   /* Load the volume list */
-  sts = lfu_volumelist_load( load_cNameGblVolumeList,  &volumelist, 
+  sts = lfu_volumelist_load( pwr_cNameGblVolumeList,  &volumelist, 
 		&volumecount);
   if (EVEN(sts))
   {
@@ -722,7 +723,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
       return sts;
   }
 
-  dcli_translate_filename( fname, load_cNameVolumeList);
+  dcli_translate_filename( fname, pwr_cNameVolumeList);
   file = fopen( fname, "w");
   if ( file == 0)
   {
@@ -754,7 +755,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 				"Path", (char **) &path_ptr, &size);
 	if ( EVEN(sts)) return sts;
 	
-	dcli_translate_filename( filename, load_cNameFilePath);
+	dcli_translate_filename( filename, pwr_cNameFilePath);
 
 	fpath = fopen( filename, "w");
 	if ( !fpath) {
@@ -1263,12 +1264,12 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   }
   fclose( file);
 #if defined OS_VMS
-  system( "purge/nolog " load_cNameVolumeList);
+  system( "purge/nolog " pwr_cNameVolumeList);
 #endif
 
   if ( !path_file_created) {
     // Create an empty path file
-    dcli_translate_filename( filename, load_cNameFilePath);
+    dcli_translate_filename( filename, pwr_cNameFilePath);
     fpath = fopen( filename, "w");
     if ( !fpath) {
       char msg[200];
@@ -1281,7 +1282,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   }
 
   /* Generate data for bootfiles */
-  dcli_translate_filename( fname, load_cNameBootList);
+  dcli_translate_filename( fname, pwr_cNameBootList);
   file = fopen( fname, "w");
   if ( file == 0)
   {
@@ -1474,7 +1475,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
   fclose( file);
 #if defined OS_VMS
-  system( "purge/nolog " load_cNameBootList);
+  system( "purge/nolog " pwr_cNameBootList);
 #endif
 
   // Generate data for nodefiles */
@@ -1717,7 +1718,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	if ( !found)
 	  return 0;
 
-	sprintf( filename, load_cNameNode, load_cDirectory, cdh_Low(nodevect[idx].nodename), 
+	sprintf( filename, pwr_cNameNode, load_cDirectory, cdh_Low(nodevect[idx].nodename), 
 		 bus_number);
 	dcli_translate_filename( fname, filename);
         fp = fopen( fname, "w");
@@ -1832,7 +1833,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  // Print a bootfile also
 	  char	timstr[40];
 
-	  sprintf( filename, load_cNameBoot, 
+	  sprintf( filename, pwr_cNameBoot, 
 		   load_cDirectory, cdh_Low(nodevect[idx].nodename), 
 		   bus_number);
 	  dcli_translate_filename( filename, filename);
@@ -1868,7 +1869,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
     
 
   /* Generate data for distribution, custom build and build options */
-  dcli_translate_filename( fname, load_cNameDistribute);
+  dcli_translate_filename( fname, pwr_cNameDistribute);
   file = fopen( fname, "w");
   if ( file == 0)
   {
@@ -2189,7 +2190,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		else
 		  sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( (pwr_mOpSys)os));
 		cdh_ToLower( nodename, nodename_ptr);
-		sprintf( fname, load_cNameOpt, dir, nodename, *bus_number_ptr, cdh_Low(plcproc));
+		sprintf( fname, pwr_cNameOpt, dir, nodename, *bus_number_ptr, cdh_Low(plcproc));
 		dcli_translate_filename( fname, fname);
 		optfile = fopen( fname, "w");
 		if ( optfile == 0) {
@@ -2269,7 +2270,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		fprintf( file, "appl %s W $pwrp_cnf/%s/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat\n",
 			 nodename_ptr, nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_ApplFile)
-		fprintf( file, "appl %s W "load_cNameAppl" $pwrp_load/\n",
+		fprintf( file, "appl %s W "pwr_cNameAppl" $pwrp_load/\n",
 			 nodename_ptr, "$pwrp_cnf/", nodename_ptr, *bus_number_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_PwrpAliasFile)
 		fprintf( file, "appl %s W $pwrp_cnf/%s/pwrp_alias.dat:$pwrp_cnf/pwrp_alias.dat $pwrp_load/pwrp_alias.dat\n", 
@@ -2717,7 +2718,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
   fclose( file);
 #if defined OS_VMS
-  system( "purge/nolog " load_cNameDistribute);
+  system( "purge/nolog " pwr_cNameDistribute);
 #endif
 
   // Generate custom_build files
@@ -2816,7 +2817,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		opsys == pwr_mOpSys_ARM_LINUX))
 	  continue;
 
-	sprintf( fname, load_cNameCustomBuild);
+	sprintf( fname, pwr_cNameCustomBuild);
 	dcli_translate_filename( fname, fname);
 	fp = fopen( fname, "w");
 	if ( file == 0) {
@@ -2965,7 +2966,7 @@ int lfu_create_bootfiles (
 	pwr_tString40 nodeconfigname;
 
 	/* Load the bootlist */
-	sts = lfu_volumelist_load( load_cNameBootList, 
+	sts = lfu_volumelist_load( pwr_cNameBootList, 
 		&volumelist, &volumecount);
 	if (sts == LFU__NOFILE) 
 	{
@@ -3223,7 +3224,7 @@ pwr_tStatus lfu_GetVolumeCnf( char *name, pwr_tVid *vid, pwr_tCid *cid, ldh_eVol
   char vol_array[7][80];
   int found = 0;
 
-  strcpy( fname, load_cNameVolumeList);
+  strcpy( fname, pwr_cNameVolumeList);
   dcli_translate_filename( fname, fname);
       
   *volrep = ldh_eVolRep_Db;
@@ -3369,7 +3370,7 @@ pwr_tStatus lfu_check_appl_file( ldh_tSesContext ldhses,
   pwr_tFileName fname;
   pwr_tTime t;
 
-  sprintf( fname, load_cNameAppl, "$pwrp_cnf/", cdh_Low(nodename), bus_number);
+  sprintf( fname, pwr_cNameAppl, "$pwrp_cnf/", cdh_Low(nodename), bus_number);
   dcli_translate_filename( fname, fname);
 
   if ( ODD(dcli_file_time( fname, &t)))
@@ -3446,7 +3447,7 @@ pwr_tStatus lfu_check_opt_file( ldh_tSesContext ldhses, char *nodename, int bus_
 			   name, sizeof(name), &size);
     if( EVEN(sts)) return sts;
 
-    sprintf( fname, load_cNameOpt, dir, nodename, bus_number, cdh_Low(name));
+    sprintf( fname, pwr_cNameOpt, dir, nodename, bus_number, cdh_Low(name));
     dcli_translate_filename( fname, fname);
 
     if ( ODD(dcli_file_time( fname, &t)))

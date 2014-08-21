@@ -46,6 +46,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "rt_load.h"
+#include "pwr_names.h"
 #include "wb_log.h"
 
 static unsigned int pkg_random()
@@ -94,7 +95,7 @@ void wb_pkg::readConfig()
   int num;
   int sts;
 
-  dcli_translate_filename( fname, load_cNameDistribute);
+  dcli_translate_filename( fname, pwr_cNameDistribute);
   ifstream is( fname);
 
   while ( is.getline( line, sizeof(line))) {
@@ -116,19 +117,19 @@ void wb_pkg::readConfig()
       pwr_tString80 custom_platform;
 
       if ( num != 7)
-	throw wb_error_str("File corrupt " load_cNameDistribute);
+	throw wb_error_str("File corrupt " pwr_cNameDistribute);
 
       sts = sscanf( line_item[2], "%d", (int *)&opsys);
       if ( sts != 1)
-	throw wb_error_str("File corrupt " load_cNameDistribute);
+	throw wb_error_str("File corrupt " pwr_cNameDistribute);
 
       sts = sscanf( line_item[3], "%d", &bus);
       if ( sts != 1)
-	throw wb_error_str("File corrupt " load_cNameDistribute);
+	throw wb_error_str("File corrupt " pwr_cNameDistribute);
 
       sts = sscanf( line_item[4], "%d", (int *)&dstatus);
       if ( sts != 1)
-	throw wb_error_str("File corrupt " load_cNameDistribute);
+	throw wb_error_str("File corrupt " pwr_cNameDistribute);
 
       strcpy( bootnode, line_item[5]);
       strcpy( custom_platform, line_item[6]);
@@ -155,7 +156,7 @@ void wb_pkg::readConfig()
     }
     else if ( strcmp( cdh_Low(line_item[0]), "appl") == 0) {
       if ( !(num == 4 || num == 5))
-	throw wb_error_str("File corrupt " load_cNameDistribute);
+	throw wb_error_str("File corrupt " pwr_cNameDistribute);
 
       char severity = line_item[2][0];
       try {
@@ -183,18 +184,18 @@ void wb_pkg::readConfig()
       pwr_tTime date;
 
       if ( !(num == 2))
-	throw wb_error_str("File corrupt " load_cNameDistribute);
+	throw wb_error_str("File corrupt " pwr_cNameDistribute);
 
       try {
         pkg_node &n = getNode( line_item[1]);
 
 	// Add ld_node file
-	sprintf( fname, load_cNameNode, load_cDirectory, n.name(), n.bus());
+	sprintf( fname, pwr_cNameNode, load_cDirectory, n.name(), n.bus());
 	pkg_pattern pnode( fname, "", 'E');
 	n.push_back( pnode);
 
 	// Add bootfile
-	sprintf( fname, load_cNameBoot, load_cDirectory, n.name(), n.bus());
+	sprintf( fname, pwr_cNameBoot, load_cDirectory, n.name(), n.bus());
 	pkg_pattern pboot( fname, "", 'E');
 	n.push_back( pboot);
 
@@ -243,21 +244,21 @@ void wb_pkg::readConfig()
 
 	    // RttCrr-file
 	    strcpy( dir, "$pwrp_load/");
-	    sprintf( fname, "%s" load_cNameRttCrr,
+	    sprintf( fname, "%s" pwr_cNameRttCrr,
 		dir, vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
 	    pkg_pattern rttcrr( fname);
 	    n.push_back( rttcrr);
 
 	    // RttCrrObj-file
 	    strcpy( dir, "$pwrp_load/");
-	    sprintf( fname, "%s" load_cNameRttCrrObj,
+	    sprintf( fname, "%s" pwr_cNameRttCrrObj,
 		dir, vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
 	    pkg_pattern rttcrrobj( fname);
 	    n.push_back( rttcrrobj);
 
 	    // RttCrrCode-file
 	    strcpy( dir, "$pwrp_load/");
-	    sprintf( fname, "%s" load_cNameRttCrrCode,
+	    sprintf( fname, "%s" pwr_cNameRttCrrCode,
 		dir, vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
 	    pkg_pattern rttcrrcode( fname);
 	    n.push_back( rttcrrcode);
@@ -265,7 +266,7 @@ void wb_pkg::readConfig()
 	    // RttSignals
 
 	    strcpy( dir, "$pwrp_load/");
-	    sprintf( fname, "%s" load_cNameRttSignals,
+	    sprintf( fname, "%s" pwr_cNameRttSignals,
 		dir, vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
 	    pkg_pattern rttsignals( fname);
 	    n.push_back( rttsignals);
@@ -286,16 +287,16 @@ void wb_pkg::readConfig()
       // A Sev node, only node and bootfile
       try {
 	if ( !(num == 2))
-	  throw wb_error_str("File corrupt " load_cNameDistribute);
+	  throw wb_error_str("File corrupt " pwr_cNameDistribute);
 
 	pkg_node &n = getNode( line_item[1]);
 	// Add ld_node file
-	sprintf( fname, load_cNameNode, load_cDirectory, n.name(), n.bus());
+	sprintf( fname, pwr_cNameNode, load_cDirectory, n.name(), n.bus());
 	pkg_pattern pnode( fname, "", 'E');
 	n.push_back( pnode);
 	
 	// Add bootfile
-	sprintf( fname, load_cNameBoot, load_cDirectory, n.name(), n.bus());
+	sprintf( fname, pwr_cNameBoot, load_cDirectory, n.name(), n.bus());
 	pkg_pattern pboot( fname, "", 'E');
 	n.push_back( pboot);
       } catch ( wb_error &e) {
@@ -479,7 +480,7 @@ void pkg_node::fetchFiles( bool distribute)
 
   // Create a script that copies files to build directory
   char pkg_name[80];
-  sprintf( pkg_name, load_cNamePkg, m_name, version);
+  sprintf( pkg_name, pwr_cNamePkg, m_name, version);
 
   sprintf( pack_fname, "$pwrp_tmp/pkg_pack_%s.sh", m_name);
   dcli_translate_filename( pack_fname, pack_fname);

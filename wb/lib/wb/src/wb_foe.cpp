@@ -51,7 +51,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_msg.h"
-#include "rt_load.h"
+#include "pwr_names.h"
 #include "wb_ldh.h"
 #include "wb_foe_msg.h"
 #include "wb_vldh_msg.h"
@@ -1350,7 +1350,7 @@ void WFoe::activate_helpplc()
   pwr_tFileName filename;
   char		key[80];
 
-  sprintf( filename, load_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, gre->wind->lw.oid.vid));
+  sprintf( filename, pwr_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, gre->wind->lw.oid.vid));
   sprintf( key, "plcw_%s", cdh_ObjidToFnString(0, gre->wind->lw.oid));
 
   CoXHelp::dhelp( key, 0, navh_eHelpFile_Other, filename, 1);
@@ -1360,7 +1360,7 @@ void WFoe::activate_helpplclist()
 {
   pwr_tFileName filename;
 
-  sprintf( filename, load_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, gre->wind->lw.oid.vid));
+  sprintf( filename, pwr_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, gre->wind->lw.oid.vid));
   CoXHelp::dhelp( "index", 0, navh_eHelpFile_Other, filename, 1);
 }
 
@@ -4158,7 +4158,7 @@ int WFoe::create_xtthelpfile()
 			       subw_name, sizeof( subw_name), &size); 
 	if ( EVEN(sts)) return sts;
 	
-	fprintf( fp, "%s <link>plcw_%s,," load_cNamePlcXttHelp "\n", &subw_name[strlen(name)+1],
+	fprintf( fp, "%s <link>plcw_%s,," pwr_cNamePlcXttHelp "\n", &subw_name[strlen(name)+1],
 		 vldh_IdToStr(0, nodelist[i]->ln.subwind_oid[0]), vldh_VolumeIdToStr(wind->lw.oid.vid));
       }
       if ( nodelist[i]->ln.subwindow & 2) {
@@ -4167,7 +4167,7 @@ int WFoe::create_xtthelpfile()
 			       subw_name, sizeof( subw_name), &size); 
 	if ( EVEN(sts)) return sts;
 	
-	fprintf( fp, "%s <link>plcw_%s,," load_cNamePlcXttHelp "\n", &subw_name[strlen(name)+1],
+	fprintf( fp, "%s <link>plcw_%s,," pwr_cNamePlcXttHelp "\n", &subw_name[strlen(name)+1],
 		 vldh_IdToStr(0, nodelist[i]->ln.subwind_oid[1]), vldh_VolumeIdToStr(wind->lw.oid.vid));
       }
     }
@@ -4217,7 +4217,7 @@ int WFoe::create_volume_xtthelpfile( ldh_tSession ldhses, pwr_tVid vid)
   char *desc;
   pwr_tOid oid, woid;
 
-  sprintf( fname, load_cNamePlcXttHelp, vldh_VolumeIdToStr(vid));
+  sprintf( fname, pwr_cNamePlcXttHelp, vldh_VolumeIdToStr(vid));
   dcli_translate_filename( fname, fname);
   fp = fopen( fname, "w");
   if ( !fp) return FOE__NOFILE;
@@ -4239,7 +4239,7 @@ int WFoe::create_volume_xtthelpfile( ldh_tSession ldhses, pwr_tVid vid)
     sts = ldh_GetChild( ldhses, oid, &woid);
     if ( EVEN(sts)) continue;
 
-    fprintf( fp, "%s <t><t>%s<link> plcw_%s,," load_cNamePlcXttHelp "\n",
+    fprintf( fp, "%s <t><t>%s<link> plcw_%s,," pwr_cNamePlcXttHelp "\n",
 	     name, desc, vldh_IdToStr(0, woid), vldh_VolumeIdToStr(vid));
     free(desc);
   }

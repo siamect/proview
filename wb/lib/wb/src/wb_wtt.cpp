@@ -50,7 +50,7 @@
 #include "wb_utl_api.h"
 #include "wb_lfu.h"
 #include "cow_login.h"
-#include "rt_load.h"
+#include "pwr_names.h"
 #include "wb_foe_msg.h"
 #include "wb_pwrb_msg.h"
 #include "flow.h"
@@ -2016,7 +2016,7 @@ void Wtt::activate_buildnode()
   }
 
   // Check if there is only one node configured for the current volume
-  sts = lfu_volumelist_load( load_cNameBootList, 
+  sts = lfu_volumelist_load( pwr_cNameBootList, 
 		(lfu_t_volumelist **) &boot_volumelist,
 		&boot_volumecount);
   if (sts == FOE__NOFILE){

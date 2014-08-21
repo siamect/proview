@@ -42,6 +42,7 @@
 #include "co_time.h"
 #include "co_syi.h"
 #include "rt_load.h"
+#include "pwr_names.h"
 #include "wb_foe_msg.h"
 #include "wb_pwrb_msg.h"
 #include "wb_utl_api.h"
@@ -160,7 +161,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
 	    // Bussid error
 	  }
 	
-	  sprintf( fname, load_cNameBoot, 
+	  sprintf( fname, pwr_cNameBoot, 
 		   load_cDirectory, vlist[i].p2, bussid);
 	  cdh_ToLower( fname, fname);
 	  dcli_translate_filename( fname, fname);
@@ -294,19 +295,19 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
       sumsts = m_sts;
 
     // Copy ld_appl_...txt from $pwrp_cnf to $pwrp_load
-    sprintf( src_fname, load_cNameAppl, "$pwrp_cnf", cdh_Low(node), bussid);
+    sprintf( src_fname, pwr_cNameAppl, "$pwrp_cnf", cdh_Low(node), bussid);
     dcli_translate_filename( src_fname, src_fname);
     m_sts = dcli_file_time( src_fname, &src_time);
     if ( evenSts()) {
       char dir[80];
       strcpy( dir, "$pwrp_cnf/");
-      sprintf( src_fname, load_cNameAppl, dir, cdh_Low(node), bussid);
+      sprintf( src_fname, pwr_cNameAppl, dir, cdh_Low(node), bussid);
       dcli_translate_filename( src_fname, src_fname);
       m_sts = dcli_file_time( src_fname, &src_time);
     }
 
     if ( oddSts()) {
-      sprintf( dest_fname, load_cNameAppl, "$pwrp_load/", cdh_Low(node), bussid);
+      sprintf( dest_fname, pwr_cNameAppl, "$pwrp_load/", cdh_Low(node), bussid);
       dcli_translate_filename( dest_fname, dest_fname);
       m_sts = dcli_file_time( dest_fname, &dest_time);
       if ( opt.force || evenSts() || src_time.tv_sec > dest_time.tv_sec) {
@@ -471,7 +472,7 @@ void wb_build::rootvolume( pwr_tVid vid)
 
   cdh_uVolumeId	uvid;
   uvid.pwr = m_session.vid();
-  sprintf( fname, "$pwrp_load/" load_cNameRttCrr,
+  sprintf( fname, "$pwrp_load/" pwr_cNameRttCrr,
 	   uvid.v.vid_3, uvid.v.vid_2, uvid.v.vid_1, uvid.v.vid_0);
   dcli_translate_filename( fname, fname);
   m_sts = dcli_file_time( fname, &rtt_time);
@@ -1178,14 +1179,14 @@ void wb_build::webhandler( pwr_tOid oid)
   }
 
   // Check if xtthelp should be converted to html
-  dcli_translate_filename( fname, load_cNameProjectXttHelp);
+  dcli_translate_filename( fname, pwr_cNameProjectXttHelp);
   fsts = dcli_file_time( fname, &xtthelp_time);
   if ( EVEN(fsts)) return;
   
   dcli_translate_filename( fname, "$pwrp_web/xtt_help_index.html");
   fsts = dcli_file_time( fname, &html_time);
   if ( opt.force || EVEN(fsts) || time_Acomp( &xtthelp_time, &html_time) == 1) {
-    system( "co_convert -d $pwrp_web -t " load_cNameProjectXttHelp);
+    system( "co_convert -d $pwrp_web -t " pwr_cNameProjectXttHelp);
 
     char msg[200];
     sprintf( msg, "Build:    WebHandler xtt_help.dat converted to html");
@@ -1194,7 +1195,7 @@ void wb_build::webhandler( pwr_tOid oid)
   }
 
   // Check if plc xtthelp should be converted to html
-  sprintf( srcname, load_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, oid.vid));
+  sprintf( srcname, pwr_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, oid.vid));
   dcli_translate_filename( fname, srcname);
   fsts = dcli_file_time( fname, &xtthelp_time);
   if ( EVEN(fsts)) return;
@@ -1474,7 +1475,7 @@ void wb_build::directories( char *dir, bld_ePass pass)
   pwr_tCmd cmd;
   pwr_tMask current_options = 0;
 
-  dcli_translate_filename( fname, load_cNameDistribute);
+  dcli_translate_filename( fname, pwr_cNameDistribute);
   ifstream is( fname);
 
   m_sts = PWRB__NOBUILT;
@@ -1495,12 +1496,12 @@ void wb_build::directories( char *dir, bld_ePass pass)
 
     if ( strcmp( cdh_Low(line_item[0]), "builddir") == 0) {
       if ( num != 4) {
-	printf("File corrupt " load_cNameDistribute);
+	printf("File corrupt " pwr_cNameDistribute);
 	continue;
       }
       int sts = sscanf( line_item[2], "%d", &current_options);
       if ( sts != 1) {
-	printf("File corrupt " load_cNameDistribute);
+	printf("File corrupt " pwr_cNameDistribute);
 	current_options = 0;
       }
       if ( !(pass == bld_ePass_BeforeNode && !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode)))
@@ -1508,7 +1509,7 @@ void wb_build::directories( char *dir, bld_ePass pass)
     }
     else if ( strcmp( cdh_Low(line_item[0]), "buildcopy") == 0) {      
       if ( num != 4) {
-	printf("File corrupt " load_cNameDistribute);
+	printf("File corrupt " pwr_cNameDistribute);
 	continue;
       }
 
@@ -1564,7 +1565,7 @@ void wb_build::directories( char *dir, bld_ePass pass)
     else if ( strcmp( cdh_Low(line_item[0]), "buildmake") == 0) {
 
       if ( num != 4) {
-	printf("File corrupt " load_cNameDistribute);
+	printf("File corrupt " pwr_cNameDistribute);
 	continue;
       }
 
@@ -1602,7 +1603,7 @@ void wb_build::directories( char *dir, bld_ePass pass)
     else if ( strcmp( cdh_Low(line_item[0]), "buildexec") == 0) {
 
       if ( num != 4) {
-	printf("File corrupt " load_cNameDistribute);
+	printf("File corrupt " pwr_cNameDistribute);
 	continue;
       }
 
@@ -1641,7 +1642,7 @@ void wb_build::export_import_files( int type, bld_ePass pass)
   else
     strcpy( tag, "import");
 
-  dcli_translate_filename( fname, load_cNameDistribute);
+  dcli_translate_filename( fname, pwr_cNameDistribute);
   ifstream is( fname);
 
   m_sts = PWRB__NOBUILT;
@@ -1659,13 +1660,13 @@ void wb_build::export_import_files( int type, bld_ePass pass)
     
     if ( strcmp( cdh_Low(line_item[0]), tag) == 0) {
       if ( num != 4) {
-	printf("File corrupt " load_cNameDistribute);
+	printf("File corrupt " pwr_cNameDistribute);
 	continue;
       }
 
       sts = sscanf( line_item[1], "%d", &current_options);
       if ( sts != 1) {
-	printf("File corrupt " load_cNameDistribute);
+	printf("File corrupt " pwr_cNameDistribute);
 	current_options = 0;
       }
 

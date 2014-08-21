@@ -44,7 +44,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
-#include "rt_load.h"
+#include "pwr_names.h"
 
 #include "flow.h"
 #include "flow_browctx.h"
@@ -673,7 +673,7 @@ void WbExpWNav::show_export_import()
   brow_SetNodraw( brow->ctx);
   brow_DeleteAll( brow->ctx);
 
-  dcli_translate_filename( fname, load_cNameDistribute);
+  dcli_translate_filename( fname, pwr_cNameDistribute);
   ifstream is( fname);
 
   while ( is.getline( line, sizeof(line))) {
@@ -694,7 +694,7 @@ void WbExpWNav::show_export_import()
 
     if ( strcmp( cdh_Low(line_item[0]), tag) == 0) {
       if ( num != 4) {
-	printf("File corrupt " load_cNameDistribute);
+	printf("File corrupt " pwr_cNameDistribute);
 	continue;
       }
       
@@ -761,7 +761,7 @@ void WbExpWNav::show_builddir()
 
   list_free();
 
-  dcli_translate_filename( fname, load_cNameDistribute);
+  dcli_translate_filename( fname, pwr_cNameDistribute);
   ifstream is( fname);
 
   while ( is.getline( line, sizeof(line))) {
@@ -777,7 +777,7 @@ void WbExpWNav::show_builddir()
 
     if ( strcmp( cdh_Low(line_item[0]), "builddir") == 0) {
       if ( num != 4) {
-	printf("File corrupt " load_cNameDistribute);
+	printf("File corrupt " pwr_cNameDistribute);
 	continue;
       }
 
@@ -789,7 +789,7 @@ void WbExpWNav::show_builddir()
     else if ( strcmp( cdh_Low(line_item[0]), "buildcopy") == 0) {
       int dir_update = 0;
       if ( num != 4) {
-	printf("File corrupt " load_cNameDistribute);
+	printf("File corrupt " pwr_cNameDistribute);
 	continue;
       }
 
@@ -826,7 +826,7 @@ void WbExpWNav::show_builddir()
 
 	ExpWDir *dir = dir_find( line_item[1]);
 	if ( !dir) {
-	  printf("File corrupt " load_cNameDistribute);
+	  printf("File corrupt " pwr_cNameDistribute);
 	  continue;
 	}
 
@@ -846,13 +846,13 @@ void WbExpWNav::show_builddir()
       int update = 1;
 
       if ( num != 4) {
-	printf("File corrupt " load_cNameDistribute);
+	printf("File corrupt " pwr_cNameDistribute);
 	continue;
       }
 
       ExpWDir *dir = dir_find( line_item[1]);
       if ( !dir) {
-	printf("File corrupt " load_cNameDistribute);
+	printf("File corrupt " pwr_cNameDistribute);
 	continue;
       }
 
@@ -864,13 +864,13 @@ void WbExpWNav::show_builddir()
       int update = 1;
 
       if ( num != 4) {
-	printf("File corrupt " load_cNameDistribute);
+	printf("File corrupt " pwr_cNameDistribute);
 	continue;
       }
 
       ExpWDir *dir = dir_find( line_item[1]);
       if ( !dir) {
-	printf("File corrupt " load_cNameDistribute);
+	printf("File corrupt " pwr_cNameDistribute);
 	continue;
       }
 

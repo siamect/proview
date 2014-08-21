@@ -42,6 +42,7 @@
 #include <stdlib.h>
 
 #include "pwr.h"
+#include "pwr_names.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
@@ -110,7 +111,7 @@ CoHelpMain::CoHelpMain( int argc, char *argv[], int *return_sts) :
       type = navh_eHelpFile_Other;
       if ( strcmp(topic, "index") == 0)
 	strcpy( topic, "overview");
-      strcpy( helpfile, load_cNameBaseWttHelp);
+      strcpy( helpfile, pwr_cNameBaseWttHelp);
     }
     else if ( strcmp( argv[i], "-d") == 0) {
       type = navh_eHelpFile_Other;
@@ -123,7 +124,7 @@ CoHelpMain::CoHelpMain( int argc, char *argv[], int *return_sts) :
       type = navh_eHelpFile_Other;
       if ( strcmp(topic, "index") == 0)
 	strcpy( topic, "overview");
-      strcpy( helpfile, load_cNameBaseXttHelp);
+      strcpy( helpfile, pwr_cNameBaseXttHelp);
     }
     else if ( strcmp( argv[i], "-g") == 0) {
       type = navh_eHelpFile_Other;

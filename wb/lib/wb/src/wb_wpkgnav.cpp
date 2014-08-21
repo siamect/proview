@@ -42,7 +42,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
-#include "rt_load.h"
+#include "pwr_names.h"
 #include "wb_pkg_msg.h"
 
 #include "flow.h"
@@ -365,7 +365,7 @@ int	WPkgNav::root_objects()
   int num;
   int sts;
 
-  dcli_translate_filename( fname, load_cNameDistribute);
+  dcli_translate_filename( fname, pwr_cNameDistribute);
   ifstream is( fname);
 
   while ( is.getline( line, sizeof(line))) {
@@ -385,19 +385,19 @@ int	WPkgNav::root_objects()
       int dstatus;
 
       if ( !(num == 5 || num == 6))
-	throw wb_error_str("File corrupt " load_cNameDistribute);
+	throw wb_error_str("File corrupt " pwr_cNameDistribute);
 
       sts = sscanf( line_item[2], "%d", (int *)&opsys);
       if ( sts != 1)
-	throw wb_error_str("File corrupt " load_cNameDistribute);
+	throw wb_error_str("File corrupt " pwr_cNameDistribute);
 
       sts = sscanf( line_item[3], "%d", &bus);
       if ( sts != 1)
-	throw wb_error_str("File corrupt " load_cNameDistribute);
+	throw wb_error_str("File corrupt " pwr_cNameDistribute);
 
       sts = sscanf( line_item[4], "%d", &dstatus);
       if ( sts != 1)
-	throw wb_error_str("File corrupt " load_cNameDistribute);
+	throw wb_error_str("File corrupt " pwr_cNameDistribute);
 
       new WItemPkgNode( brow, line_item[1], line_item[1], bus, opsys, 0,
 			flow_eDest_IntoLast);
@@ -691,7 +691,7 @@ int WItemPkgInfoHier::open_children( WNavBrow *brow, double x, double y, int dis
     return 1;
   }
 
-  sprintf( bootfile, load_cNameBoot, "pkg_build/", nodename, bus);
+  sprintf( bootfile, pwr_cNameBoot, "pkg_build/", nodename, bus);
   sprintf( cmd, "cd $pwrp_tmp; tar -xzf $pwrp_load/%s %s", packagename, bootfile);
   system( cmd);
   strcpy( bfile, "$pwrp_tmp/");
