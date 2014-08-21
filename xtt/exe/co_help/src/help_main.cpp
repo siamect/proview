@@ -110,7 +110,7 @@ CoHelpMain::CoHelpMain( int argc, char *argv[], int *return_sts) :
       type = navh_eHelpFile_Other;
       if ( strcmp(topic, "index") == 0)
 	strcpy( topic, "overview");
-      strcpy( helpfile, "$pwr_lang/wtt_help.dat");
+      strcpy( helpfile, load_cNameBaseWttHelp);
     }
     else if ( strcmp( argv[i], "-d") == 0) {
       type = navh_eHelpFile_Other;
@@ -123,7 +123,7 @@ CoHelpMain::CoHelpMain( int argc, char *argv[], int *return_sts) :
       type = navh_eHelpFile_Other;
       if ( strcmp(topic, "index") == 0)
 	strcpy( topic, "overview");
-      strcpy( helpfile, "$pwr_exe/xtt_help.dat");
+      strcpy( helpfile, load_cNameBaseXttHelp);
     }
     else if ( strcmp( argv[i], "-g") == 0) {
       type = navh_eHelpFile_Other;

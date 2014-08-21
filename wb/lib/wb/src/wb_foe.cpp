@@ -51,6 +51,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_msg.h"
+#include "rt_load.h"
 #include "wb_ldh.h"
 #include "wb_foe_msg.h"
 #include "wb_vldh_msg.h"
@@ -117,6 +118,7 @@ void WFoe::activate_save()
   enable_ldh_cb();
   error_msg( sts);
   sts = create_flow();
+  sts = create_xtthelpfile();
 	
   normal_cursor();
 
@@ -773,6 +775,8 @@ void WFoe::activate_changetext()
   switch ( nodelist[0]->ln.cid) {
   case pwr_cClass_Text:
   case pwr_cClass_BodyText:
+  case pwr_cClass_HelpText:
+  case pwr_cClass_HelpTextL:
   case pwr_cClass_Head:
   case pwr_cClass_Title:
     attr_create( nodelist[0]);
@@ -1338,7 +1342,26 @@ void WFoe::activate_compress()
 //
 void WFoe::activate_help()
 {
-  CoXHelp::dhelp( "plc editor", 0, navh_eHelpFile_Base, 0, 1);
+  CoXHelp::dhelp( "plceditor_refman", 0, navh_eHelpFile_Base, 0, 1);
+}
+
+void WFoe::activate_helpplc()
+{
+  pwr_tFileName filename;
+  char		key[80];
+
+  sprintf( filename, load_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, gre->wind->lw.oid.vid));
+  sprintf( key, "plcw_%s", cdh_ObjidToFnString(0, gre->wind->lw.oid));
+
+  CoXHelp::dhelp( key, 0, navh_eHelpFile_Other, filename, 1);
+}
+
+void WFoe::activate_helpplclist()
+{
+  pwr_tFileName filename;
+
+  sprintf( filename, load_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, gre->wind->lw.oid.vid));
+  CoXHelp::dhelp( "index", 0, navh_eHelpFile_Other, filename, 1);
 }
 
 //
@@ -1459,6 +1482,7 @@ void WFoe::exit_save( WFoe *foe)
   sts = vldh_wind_save( foe->gre->wind);
   foe->error_msg( sts);
   sts = foe->create_flow();
+  sts = foe->create_xtthelpfile();
 	
   foe->normal_cursor();
   if ( sts == VLDH__PLCNOTSAVED ) {
@@ -1559,6 +1583,8 @@ void WFoe::gre_node_created( WGre *gre, unsigned long current_node_type,
   switch ( cid) {
   case pwr_cClass_Text:
   case pwr_cClass_BodyText:
+  case pwr_cClass_HelpText:
+  case pwr_cClass_HelpTextL:
   case pwr_cClass_Head:
   case pwr_cClass_Title:
     ((WFoe *)gre->parent_ctx)->attr_create(node);
@@ -1582,6 +1608,8 @@ void WFoe::gre_node_floating_created( WGre *gre, vldh_t_node node)
   switch ( node->ln.cid) {
   case pwr_cClass_Text:
   case pwr_cClass_BodyText:
+  case pwr_cClass_HelpText:
+  case pwr_cClass_HelpTextL:
   case pwr_cClass_Head:
   case pwr_cClass_Title:
     ((WFoe *)gre->parent_ctx)->attr_create(node);
@@ -2018,7 +2046,7 @@ void WFoe::gre_message( WGre *gre, const char *message)
      SG 19.03.91
      send the message received from gre modules to the foe routine
      that will write them on the label widget . The backcalls routines
-     gre_xxx should never erase a message because there is chance that
+     gre_yyy should never erase a message because there is chance that
      the message to be erased has just been set by a gre routine
   */
 
@@ -3908,6 +3936,7 @@ void WFoe::edit_exit_save( WFoe *foe)
   }
 
   foe->create_flow();
+  foe->create_xtthelpfile();
 
   unsigned int opt;
   if ( foe->options & foe_mOption_EnableComment)
@@ -4048,6 +4077,195 @@ int WFoe::create_flow()
   }
 
   return sts;
+}
+
+//
+//  	Create xtt helpfile from HelpText objects.
+//
+int WFoe::create_xtthelpfile()
+{
+  int sts;
+  pwr_tOName name;
+  pwr_tOName subw_name;
+  int size;
+  pwr_tFileName fname;
+  int objcnt = 0;
+  pwr_tOid *objlist;
+  FILE *fp;
+  vldh_t_wind wind = gre->wind;
+  char *textp;
+  vldh_t_node *nodelist;
+  unsigned long nodecnt;
+  int subw_found;
+
+  sts = vldh_get_nodes( wind, &nodecnt, &nodelist);
+  if ( EVEN(sts)) return sts;
+
+  if ( !nodecnt)
+    return FOE__SUCCESS;
+
+  for ( unsigned int i = 0; i < nodecnt; i++) {
+    if ( nodelist[i]->ln.cid == pwr_cClass_HelpText || 
+	 nodelist[i]->ln.cid == pwr_cClass_HelpTextL) {
+      objcnt++;
+    }
+  }
+
+  if ( !objcnt) {
+    free( nodelist);
+    return FOE__SUCCESS;
+  }
+
+  objlist = (pwr_tOid *)calloc( objcnt, sizeof(pwr_tOid));
+
+  objcnt = 0;
+  for ( unsigned int i = 0; i < nodecnt; i++) {
+    if ( nodelist[i]->ln.cid == pwr_cClass_HelpText || 
+	 nodelist[i]->ln.cid == pwr_cClass_HelpTextL) {
+      objlist[objcnt++] = nodelist[i]->ln.oid;
+    }
+  }
+      
+  sts = ldh_ObjidToName( wind->hw.ldhses, wind->lw.oid, ldh_eName_Hierarchy, 
+			 name, sizeof( name), &size); 
+  if ( EVEN(sts)) return sts;
+    
+  sprintf( fname, "$pwrp_obj/xtthelp_%s.dat", vldh_IdToStr(0, wind->lw.oid)); 
+  dcli_translate_filename( fname, fname);
+
+  fp = fopen( fname, "w");
+  if ( !fp)
+    return FOE__NOFILE;
+
+  fprintf( fp, "<topic> plcw_%s\n", vldh_IdToStr(0, wind->lw.oid));
+  fprintf( fp, "%s\n", name);
+
+  // Create links to subwindows
+  subw_found = 0;
+  for ( unsigned int i = 0; i < nodecnt; i++) {
+    if ( nodelist[i]->ln.subwindow & 1 || nodelist[i]->ln.subwindow & 2) {
+      subw_found = 1;
+      break;
+    }
+  }
+
+  if ( subw_found) {
+    // fprintf( fp, "<h2>Subwindows\n");
+    for ( unsigned int i = 0; i < nodecnt; i++) {
+      if ( nodelist[i]->ln.subwindow & 1) {
+	sts = ldh_ObjidToName( wind->hw.ldhses, nodelist[i]->ln.subwind_oid[0], 
+			       ldh_eName_Hierarchy, 
+			       subw_name, sizeof( subw_name), &size); 
+	if ( EVEN(sts)) return sts;
+	
+	fprintf( fp, "%s <link>plcw_%s,," load_cNamePlcXttHelp "\n", &subw_name[strlen(name)+1],
+		 vldh_IdToStr(0, nodelist[i]->ln.subwind_oid[0]), vldh_VolumeIdToStr(wind->lw.oid.vid));
+      }
+      if ( nodelist[i]->ln.subwindow & 2) {
+	sts = ldh_ObjidToName( wind->hw.ldhses, nodelist[i]->ln.subwind_oid[1], 
+			       ldh_eName_Hierarchy, 
+			       subw_name, sizeof( subw_name), &size); 
+	if ( EVEN(sts)) return sts;
+	
+	fprintf( fp, "%s <link>plcw_%s,," load_cNamePlcXttHelp "\n", &subw_name[strlen(name)+1],
+		 vldh_IdToStr(0, nodelist[i]->ln.subwind_oid[1]), vldh_VolumeIdToStr(wind->lw.oid.vid));
+      }
+    }
+    fprintf( fp, "\n");
+  }
+  for ( int i = 0; i < objcnt; i++) {
+    sts = ldh_GetObjectPar( wind->hw.ldhses, objlist[i], "DevBody", "Text",
+			    &textp, &size);
+    if ( EVEN(sts)) return sts;
+    
+    fprintf( fp, "%s", textp);
+    fprintf( fp, "\n");
+  }
+
+  fprintf( fp, "</topic>\n");
+  fclose( fp);
+
+  free( nodelist);
+  free( objlist);
+  return sts;
+}
+
+static void copy_helpfile( FILE *fp, pwr_tOid woid)
+{
+  FILE *fwp;
+  int c;
+  pwr_tFileName fname;
+
+  sprintf( fname, "$pwrp_obj/xtthelp_%s.dat", vldh_IdToStr(0, woid));
+  dcli_translate_filename( fname, fname);
+  fwp = fopen(fname, "r");
+  if ( !fwp)
+    return;
+
+  while( (c = getc(fwp)) != EOF)
+    putc( c, fp);
+  fclose( fwp);
+}
+
+int WFoe::create_volume_xtthelpfile( ldh_tSession ldhses, pwr_tVid vid)
+{
+  pwr_tFileName fname;
+  FILE *fp;
+  pwr_tOName name;
+  int size;
+  pwr_tStatus sts;
+  char *desc;
+  pwr_tOid oid, woid;
+
+  sprintf( fname, load_cNamePlcXttHelp, vldh_VolumeIdToStr(vid));
+  dcli_translate_filename( fname, fname);
+  fp = fopen( fname, "w");
+  if ( !fp) return FOE__NOFILE;
+
+  // Insert a list of all PlcPgm
+  fprintf( fp, "<topic> index\nPlcPgm List\n");
+  for ( sts = ldh_GetClassList( ldhses, pwr_cClass_plc, &oid);
+	ODD(sts);
+	sts = ldh_GetNextObject( ldhses, oid, &oid)) {
+    
+    sts = ldh_ObjidToName( ldhses, oid, ldh_eName_Hierarchy, 
+			   name, sizeof( name), &size); 
+    if ( EVEN(sts)) return sts;
+
+    sts = ldh_GetObjectPar( ldhses, oid, "RtBody", "Description",
+			    &desc, &size);
+    if ( EVEN(sts)) return sts;
+
+    sts = ldh_GetChild( ldhses, oid, &woid);
+    if ( EVEN(sts)) continue;
+
+    fprintf( fp, "%s <t><t>%s<link> plcw_%s,," load_cNamePlcXttHelp "\n",
+	     name, desc, vldh_IdToStr(0, woid), vldh_VolumeIdToStr(vid));
+    free(desc);
+  }
+  fprintf( fp, "</topic>\n\n");
+  
+  // Insert xtthelp for all plc windows
+  for ( sts = ldh_GetClassList( ldhses, pwr_cClass_windowplc, &woid);
+	ODD(sts);
+	sts = ldh_GetNextObject( ldhses, woid, &woid))
+    copy_helpfile( fp, woid);
+  for ( sts = ldh_GetClassList( ldhses, pwr_cClass_windoworderact, &woid);
+	ODD(sts);
+	sts = ldh_GetNextObject( ldhses, woid, &woid))
+    copy_helpfile( fp, woid);
+  for ( sts = ldh_GetClassList( ldhses, pwr_cClass_windowcond, &woid);
+	ODD(sts);
+	sts = ldh_GetNextObject( ldhses, woid, &woid))
+    copy_helpfile( fp, woid);
+  for ( sts = ldh_GetClassList( ldhses, pwr_cClass_windowsubstep, &woid);
+	ODD(sts);
+	sts = ldh_GetNextObject( ldhses, woid, &woid))
+    copy_helpfile( fp, woid);
+  
+  fclose(fp);
+
+  return FOE__SUCCESS;
 }
 
 /* API routines */

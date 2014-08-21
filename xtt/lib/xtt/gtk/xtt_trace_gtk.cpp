@@ -237,6 +237,13 @@ void RtTraceGtk::activate_helpplc(GtkWidget *w, gpointer data)
   tractx->activate_helpplc();
 }
 
+void RtTraceGtk::activate_helpplclist(GtkWidget *w, gpointer data)
+{
+  RtTrace *tractx = (RtTrace *)data;
+
+  tractx->activate_helpplclist();
+}
+
 RtTraceGtk::~RtTraceGtk()
 {
   trace_tNode *node, *fnode;
@@ -594,13 +601,18 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
   gtk_widget_add_accelerator( help_help, "activate", accel_g,
 			      'h', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-  GtkWidget *help_plcpgm = gtk_check_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("On _PlcPgm"));
+  GtkWidget *help_plcpgm = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("On _PlcPgm"));
   g_signal_connect( help_plcpgm, "activate", 
 		    G_CALLBACK(activate_helpplc), this);
+
+  GtkWidget *help_plclist = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("P_lcPgm Overview"));
+  g_signal_connect( help_plclist, "activate", 
+		    G_CALLBACK(activate_helpplclist), this);
 
   GtkMenu *help_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_help);
   gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_plcpgm);
+  gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_plclist);
 
   GtkWidget *help = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Help"));
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), help);

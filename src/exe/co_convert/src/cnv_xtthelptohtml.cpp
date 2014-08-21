@@ -208,6 +208,19 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, const char *text1,
 	    strcat( fname, "#");
 	    strcat( fname, link_bookmark);
           }
+	  else if ( file_name && strcmp( file_name, "") != 0) {
+	    char *s = (char *)strrchr( file_name, '/');
+	    if ( s)
+	      strcpy( fname, s+1);
+	    else
+	      strcpy( fname, file_name);
+	    s = strchr( fname, '.');
+	    if ( s)
+	      *s = 0;
+	    strcat( fname, "_");
+	    strcat( fname, link);
+	    strcat( fname, ".html");
+	  }
         }
 	if ( !in_table)
 	  cf->f << "<A HREF=\"" <<  fname << "\">";

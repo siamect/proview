@@ -49,6 +49,8 @@
 #include "co_msg.h"
 #include "cow_login.h"
 #include "wb_wtt.h"
+#include "wb_vldh.h"
+#include "rt_load.h"
 
 static pwr_tStatus configure_parse_attr( ldh_sMenuCall *ip, pwr_tAttrRef *parent, char *str);
 
@@ -639,21 +641,39 @@ static pwr_tStatus Help( ldh_sMenuCall *ip)
   int size;
   char cmd[200];
   char *topic;
+  pwr_tCid cid;
 
-  sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "RtBody",
-			  "HelpTopic", &topic, &size);
-  if ( EVEN(sts))
-    sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "SysBody",
-			    "HelpTopic", &topic, &size);
-  if ( EVEN(sts)) return LDH__SUCCESS;
+  sts = ldh_GetObjectClass(ip->PointedSession, ip->Pointed.Objid, &cid);
+  if (EVEN(sts)) return sts;
 
-  if ( strcmp( topic, "") == 0) {
-    free( topic);
-    return LDH__SUCCESS;
+  switch ( cid) {
+  case pwr_cClass_plc: {
+    pwr_tOid woid;
+
+    sts = ldh_GetChild( ip->PointedSession, ip->Pointed.Objid, &woid);
+    if ( EVEN(sts)) return LDH__SUCCESS;
+
+    sprintf( cmd, "help plcw_%s /helpfile=\"" load_cNamePlcXttHelp "\"", 
+	     vldh_IdToStr(0, woid),
+	     vldh_VolumeIdToStr(woid.vid));
+    break;
   }
+  default: 
+    sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "RtBody",
+			    "HelpTopic", &topic, &size);
+    if ( EVEN(sts))
+      sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "SysBody",
+			      "HelpTopic", &topic, &size);
+    if ( EVEN(sts)) return LDH__SUCCESS;
+    
+    if ( strcmp( topic, "") == 0) {
+      free( topic);
+      return LDH__SUCCESS;
+    }
 
-  snprintf( cmd, sizeof(cmd), "help %s /strict", topic);
-  free( topic);
+    snprintf( cmd, sizeof(cmd), "help %s /strict", topic);
+    free( topic);
+  }
 
   ip->wnav->command( cmd);
   return 1;
@@ -664,17 +684,26 @@ static pwr_tStatus HelpFilter( ldh_sMenuCall *ip)
   pwr_tStatus sts;
   int size;
   char *topic;
+  pwr_tCid cid;
 
-  sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "RtBody",
-			  "HelpTopic", &topic, &size);
-  if ( EVEN(sts))
-    sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "SysBody",
+  sts = ldh_GetObjectClass(ip->PointedSession, ip->Pointed.Objid, &cid);
+  if (EVEN(sts)) return sts;
+
+  switch ( cid) {
+  case pwr_cClass_plc:
+    return 1;
+  default:
+    sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "RtBody",
 			    "HelpTopic", &topic, &size);
-  if ( EVEN(sts)) return 0;
-
-  if ( strcmp( topic, "") == 0) {
-    free( topic);
-    return 0;
+    if ( EVEN(sts))
+      sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "SysBody",
+			      "HelpTopic", &topic, &size);
+    if ( EVEN(sts)) return 0;
+    
+    if ( strcmp( topic, "") == 0) {
+      free( topic);
+      return 0;
+    }
   }
 
   return 1;

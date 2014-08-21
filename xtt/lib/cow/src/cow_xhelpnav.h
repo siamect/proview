@@ -59,13 +59,17 @@
 #include "flow_browapi.h"
 #endif
 
+#ifndef rt_load_h
+#include "rt_load.h"
+#endif
+
 #ifndef flow_browwidget_motif_h
 // #include "flow_browwidget_motif.h"
 #endif
 
-#define xhelp_cFile_BaseXtt "$pwr_lang/xtt_help.dat"
-#define xhelp_cFile_BaseWtt "$pwr_lang/wtt_help.dat"
-#define xhelp_cFile_Project "$pwrp_exe/xtt_help.dat"
+#define xhelp_cFile_BaseXtt load_cNameBaseXttHelp
+#define xhelp_cFile_BaseWtt load_cNameBaseWttHelp
+#define xhelp_cFile_Project load_cNameProjectXttHelp
 #define XHELPNAV_BROW_MAX	25
 
 typedef enum {

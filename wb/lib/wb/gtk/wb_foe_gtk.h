@@ -281,6 +281,8 @@ class WFoeGtk : public WFoe {
   static void activate_expand( GtkWidget *w, gpointer data);
   static void activate_compress( GtkWidget *w, gpointer data);
   static void activate_help( GtkWidget *w, gpointer data);
+  static void activate_helpplc( GtkWidget *w, gpointer data);
+  static void activate_helpplclist( GtkWidget *w, gpointer data);
   static void activate_helpclass( GtkWidget *w, gpointer data);
   static void activate_trace_togg( GtkWidget *w, gpointer data);
   static void activate_simulate_togg( GtkWidget *w, gpointer data);

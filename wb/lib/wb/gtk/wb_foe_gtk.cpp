@@ -698,6 +698,26 @@ void WFoeGtk::activate_help( GtkWidget *w, gpointer data)
 }
 
 //
+//	Display help for the plc window
+//
+void WFoeGtk::activate_helpplc( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+
+  foe->activate_helpplc();
+}
+
+//
+//	Display help for all the plcpmgs
+//
+void WFoeGtk::activate_helpplclist( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+
+  foe->activate_helpplclist();
+}
+
+//
 //	Display class help for selected object
 //
 void WFoeGtk::activate_helpclass( GtkWidget *w, gpointer data)
@@ -1816,8 +1836,16 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_widget_add_accelerator( help_help, "activate", accel_g,
 			      'h', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
+  GtkWidget *help_helpplc = gtk_image_menu_item_new_with_mnemonic("H_elp on PlcPgm");
+  g_signal_connect(help_helpplc, "activate", G_CALLBACK(WFoeGtk::activate_helpplc), this);
+
+  GtkWidget *help_helpplclist = gtk_image_menu_item_new_with_mnemonic("He_lp PlcPgm Overview");
+  g_signal_connect(help_helpplclist, "activate", G_CALLBACK(WFoeGtk::activate_helpplclist), this);
+
   GtkMenu *help_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_help);
+  gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_helpplc);
+  gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_helpplclist);
 
   GtkWidget *help = gtk_menu_item_new_with_mnemonic("_Help");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), help);

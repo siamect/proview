@@ -1885,7 +1885,7 @@ void XNav::trace_close_cb( RtTrace *tractx)
   delete tractx;
 }
 
-void XNav::trace_help_cb( RtTrace *tractx, const char *key)
+void XNav::trace_help_cb( RtTrace *tractx, const char *key, const char *file)
 {
   XNav *xnav = (XNav *) tractx->parent_ctx;
   int sts;
@@ -1894,21 +1894,30 @@ void XNav::trace_help_cb( RtTrace *tractx, const char *key)
   pwr_tObjid objid;
   char objid_str[40];
 
-  sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Project, NULL, 0);
-  if ( EVEN(sts)) {
-    // Try to convert to objid and search for objid as topic
-    sts = gdh_NameToObjid ( key, &objid);
-    if ( ODD(sts)) {
-      cdh_ObjidToString( objid_str, objid, 1);
-      sts = CoXHelp::dhelp( objid_str, "", navh_eHelpFile_Project, NULL, 0);
-    }
+  if ( file) {
+    sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Other, file, 0);
+    if ( EVEN(sts))
+      xnav->message( 'E', "Unable to find topic");
+    else
+      xnav->message( ' ', null_str);
   }
-  if ( EVEN(sts))
-    sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Base, NULL, 0);
-  if ( EVEN(sts))
-    xnav->message( 'E', "Unable to find topic");
-  else
-    xnav->message( ' ', null_str);
+  else {
+    sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Project, NULL, 0);
+    if ( EVEN(sts)) {
+      // Try to convert to objid and search for objid as topic
+      sts = gdh_NameToObjid ( key, &objid);
+      if ( ODD(sts)) {
+	cdh_ObjidToString( objid_str, objid, 1);
+	sts = CoXHelp::dhelp( objid_str, "", navh_eHelpFile_Project, NULL, 0);
+      }
+    }
+    if ( EVEN(sts))
+      sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Base, NULL, 0);
+    if ( EVEN(sts))
+      xnav->message( 'E', "Unable to find topic");
+    else
+      xnav->message( ' ', null_str);
+  }
   // xnav->pop();
 }
 

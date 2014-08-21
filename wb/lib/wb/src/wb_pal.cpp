@@ -352,9 +352,13 @@ PalItemClass::PalItemClass( Pal *pal, char *item_name,
         case pwr_cClass_CStoSattr:
           pixmap = pal->pixmap_stop; 
 	  break;
-        case pwr_cClass_Text:	 	pixmap = pal->pixmap_text; break;
-        case pwr_cClass_BodyText:	pixmap = pal->pixmap_bodytext; break;
-        case pwr_cClass_Head:		pixmap = pal->pixmap_head; break;
+        case pwr_cClass_BodyText:
+        case pwr_cClass_HelpText:
+        case pwr_cClass_HelpTextL:	
+	  pixmap = pal->pixmap_bodytext; 
+	  break;
+        case pwr_cClass_Text: 	pixmap = pal->pixmap_text; break;
+        case pwr_cClass_Head:  	pixmap = pal->pixmap_head; break;
         case pwr_cClass_Title:	pixmap = pal->pixmap_title; break;
         case pwr_cClass_Frame:	pixmap = pal->pixmap_frame; break;
 	default:

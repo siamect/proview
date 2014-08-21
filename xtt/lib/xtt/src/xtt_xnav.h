@@ -477,7 +477,7 @@ class XNav {
     static int is_authorized_cb( void *xnav, unsigned int access);
     static void trace_collect_insert_cb( void *ctx, pwr_tObjid objid);
     static void trace_close_cb( RtTrace *tractx);
-    static void trace_help_cb( RtTrace *tractx, const char *key);
+    static void trace_help_cb( RtTrace *tractx, const char *key, const char *file);
     static void xatt_close_cb( void *xnav, void *xatt);
     static void xcrr_close_cb( void *xnav, void *xcrr);
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);

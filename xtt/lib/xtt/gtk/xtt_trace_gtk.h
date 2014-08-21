@@ -85,6 +85,7 @@ class RtTraceGtk : public RtTrace {
   static void activate_scantime5(GtkWidget *w, gpointer data);
   static void activate_help(GtkWidget *w, gpointer data);
   static void activate_helpplc(GtkWidget *w, gpointer data);
+  static void activate_helpplclist(GtkWidget *w, gpointer data);
 
 };
 #endif

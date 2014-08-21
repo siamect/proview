@@ -48,6 +48,7 @@
 
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "rt_load.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
@@ -141,8 +142,8 @@ int	XNav::help( char *help_key, char *help_bookmark,
   int sts;
   brow_tNode bookmark_node;
   brow_tNode prev, first;
-  NavHelp *navhelp = new NavHelp( (void *)this, "$pwr_exe/xtt_help.dat",
-				  "$pwrp_exe/xtt_help.dat");
+  NavHelp *navhelp = new NavHelp( (void *)this, load_cNameBaseXttHelp,
+				  load_cNameProjectXttHelp);
   navhelp->insert_cb = xnav_help_insert_cb;
 
   if ( pop)
@@ -194,8 +195,8 @@ int	XNav::help_index( navh_eHelpFile file_type, char *file_name, int pop)
   int sts;
   brow_tObject 	*object_list;
   int		object_cnt;
-  NavHelp *navhelp = new NavHelp( (void *)this, "$pwr_exe/xtt_help.dat",
-				  "$pwrp_exe/xtt_help.dat");
+  NavHelp *navhelp = new NavHelp( (void *)this, load_cNameBaseXttHelp,
+				  load_cNameProjectXttHelp);
   navhelp->insert_cb = xnav_help_insert_cb;
 
   if (pop)

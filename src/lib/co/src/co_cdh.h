@@ -974,6 +974,12 @@ cdh_VolumeIdToString (
     );
 
 char *
+cdh_VolumeIdToFnString (
+  char			*s,
+  pwr_tVolumeId		vid
+);
+
+char *
 cdh_SubidToString (
   char			*s,
   pwr_tSubid    sid,

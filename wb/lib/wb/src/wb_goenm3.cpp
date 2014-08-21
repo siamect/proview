@@ -125,6 +125,7 @@ int goen_create_nodetype_m3(
 	int		line_width;
 	flow_eAnnotType	annot_type;
 	int		annot_rows;
+	int 		graph_index = graphbody->graphindex;
         static int	idx = 0;
 
 	sts = ldh_ClassIdToName(ldhses, cid, name, sizeof(name), &size);
@@ -250,10 +251,16 @@ int goen_create_nodetype_m3(
         else
 	  annot_type = flow_eAnnotType_MultiLine;
 
+	if ( graph_index == 2)
+	  annot_type = flow_eAnnotType_HelpText;
+
         flow_MeasureAnnotText( ctx, parvalue,
 	     	text_type, text_size, annot_type,
 		&width, &height, &annot_rows);
 	free((char *) parvalue);	
+
+        if ( annot_rows == 0)
+	  annot_rows = 1;
 
 	f_height = (floor( (height + f_delta*2)/ GOEN_F_GRID) + 1) * GOEN_F_GRID - f_delta*2;
 	f_width = co_max( width + f_strlength *2, f_defwidth) - f_delta*2;
@@ -285,9 +292,13 @@ int goen_create_nodetype_m3(
 		f_height, line_type, line_width, flow_mDisplayLevel_1);
 	}
 
-        flow_AddAnnot( nc, f_strlength, (f_height - height)/2 +
-		height/annot_rows - f_yoffs, 0, text_type, text_size, 
-		annot_type, flow_mDisplayLevel_1);
+	if ( annot_type == flow_eAnnotType_HelpText)
+	  flow_AddAnnot( nc, f_strlength, 0, 0, text_type, text_size, 
+			 annot_type, flow_mDisplayLevel_1);
+	else
+	  flow_AddAnnot( nc, f_strlength, (f_height - height)/2 +
+			 height/annot_rows - f_yoffs, 0, text_type, text_size, 
+			 annot_type, flow_mDisplayLevel_1);
         flow_AddConPoint( nc, f_width+f_delta, f_height / 2 - f_yoffs, 0, flow_eDirection_Right);
 
 	*node_class = nc;

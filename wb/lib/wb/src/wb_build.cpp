@@ -48,6 +48,7 @@
 #include "wb_build.h"
 #include "wb_name.h"
 #include "wb_lfu.h"
+#include "wb_foe.h"
 #include "wb_merep.h"
 #include "wb_log.h"
 
@@ -484,6 +485,7 @@ void wb_build::rootvolume( pwr_tVid vid)
     MsgWindow::message('I', msg, msgw_ePop_No);
   }
 
+  WFoe::create_volume_xtthelpfile( &m_session, m_session.vid());
 
   m_sts = sumsts;
 }
@@ -1125,6 +1127,7 @@ void wb_build::webhandler( pwr_tOid oid)
   pwr_tTime	modtime;
   pwr_tString80 file_name, name;
   pwr_tFileName fname;
+  pwr_tFileName srcname;
   pwr_tTime 	ftime;
   pwr_tTime	xtthelp_time, html_time;
   char 		*s;
@@ -1175,17 +1178,38 @@ void wb_build::webhandler( pwr_tOid oid)
   }
 
   // Check if xtthelp should be converted to html
-  dcli_translate_filename( fname, "$pwrp_exe/xtt_help.dat");
+  dcli_translate_filename( fname, load_cNameProjectXttHelp);
   fsts = dcli_file_time( fname, &xtthelp_time);
   if ( EVEN(fsts)) return;
   
   dcli_translate_filename( fname, "$pwrp_web/xtt_help_index.html");
   fsts = dcli_file_time( fname, &html_time);
   if ( opt.force || EVEN(fsts) || time_Acomp( &xtthelp_time, &html_time) == 1) {
-    system( "co_convert -d $pwrp_web -t $pwrp_exe/xtt_help.dat");
+    system( "co_convert -d $pwrp_web -t " load_cNameProjectXttHelp);
 
     char msg[200];
     sprintf( msg, "Build:    WebHandler xtt_help.dat converted to html");
+    MsgWindow::message( 'I', msg, msgw_ePop_No, oid);
+    m_sts = PWRB__SUCCESS;
+  }
+
+  // Check if plc xtthelp should be converted to html
+  sprintf( srcname, load_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, oid.vid));
+  dcli_translate_filename( fname, srcname);
+  fsts = dcli_file_time( fname, &xtthelp_time);
+  if ( EVEN(fsts)) return;
+  
+  sprintf( fname, "$pwrp_web/xtthelp_%s_plc_index.html", cdh_VolumeIdToFnString(0, oid.vid));
+  dcli_translate_filename( fname, fname);
+  fsts = dcli_file_time( fname, &html_time);
+  if ( opt.force || EVEN(fsts) || time_Acomp( &xtthelp_time, &html_time) == 1) {
+    char msg[200];
+    pwr_tCmd cmd;
+
+    sprintf( cmd, "co_convert -d $pwrp_web -t %s", srcname);
+    system( cmd);
+
+    sprintf( msg, "Build:    WebHandler plc xtthelp-file converted to html");
     MsgWindow::message( 'I', msg, msgw_ePop_No, oid);
     m_sts = PWRB__SUCCESS;
   }

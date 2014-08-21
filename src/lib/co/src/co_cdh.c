@@ -1622,6 +1622,39 @@ cdh_VolumeIdToString (
     return ls;
   
 }
+//!  Converts a volume identifier, 'vid' to a filename string.
+/*!
+    The output string will be in the format:
+
+    The output string will be in the format:
+
+    xxx_xxx_xxx_xxx
+
+    where xxx are the volume id in decimal form.
+
+    If 's' is non null the resultant string will be catenated
+    to 's', otherwise the resultant string will be returned.
+*/
+
+char *
+cdh_VolumeIdToFnString (
+  char			*s,
+  pwr_tVolumeId		vid
+)
+{
+  cdh_uVolumeId	lvid;
+  static char		str[40];
+
+  lvid.pwr = vid;
+
+  sprintf( str, "%3.3u_%3.3u_%3.3u_%3.3u", lvid.v.vid_3,
+	   lvid.v.vid_2, lvid.v.vid_1, lvid.v.vid_0);
+
+  if (s != NULL)
+    return strcat(s, str);
+  else
+    return str;  
+}
 
 //! Converts a subscription identifier, 'sid' to a string.
 /*!

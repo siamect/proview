@@ -44,6 +44,7 @@
 #include "xtt_url.h"
 #include "rt_xnav_msg.h"
 #include "rt_gdh.h"
+#include "rt_load.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "cow_wow.h"
@@ -1074,25 +1075,43 @@ static pwr_tStatus Help( xmenu_sMenuCall *ip)
   pwr_tString40 helptopic;
   pwr_tCmd cmd;
   pwr_sAttrRef *objar;
+  pwr_tCid cid;
 
   if (!ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid))
     objar = &ip->Pointed;
   else
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_AttrrefToName( objar, name, sizeof(name),
-			   cdh_mName_volumeStrict);
+  sts = gdh_GetAttrRefTid( objar, &cid);
   if ( EVEN(sts)) return sts;
 
-  strcat( name, ".HelpTopic");
-  sts = gdh_GetObjectInfo( name, (void *)helptopic, sizeof(helptopic));
-  if ( EVEN(sts)) return sts;
+  switch ( cid) {
+  case pwr_cClass_plc: {
+    pwr_tOid woid;
 
-  if ( strcmp( helptopic, "") == 0)
-    return 0;
+    sts = gdh_GetChild( objar->Objid, &woid);
+    if ( EVEN(sts)) return XNAV__SUCCESS;
 
-  sprintf( cmd, "help %s", helptopic);
+    sprintf( cmd, "help plcw_%s /helpfile=\"" load_cNamePlcXttHelp "\"", 
+	     cdh_ObjidToFnString(0, woid),
+	     cdh_VolumeIdToFnString(0, woid.vid));
 
+    break;
+  }
+  default:
+    sts = gdh_AttrrefToName( objar, name, sizeof(name),
+			     cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+
+    strcat( name, ".HelpTopic");
+    sts = gdh_GetObjectInfo( name, (void *)helptopic, sizeof(helptopic));
+    if ( EVEN(sts)) return sts;
+
+    if ( strcmp( helptopic, "") == 0)
+      return 0;
+
+    sprintf( cmd, "help %s", helptopic);
+  }
   sts = ((XNav *)ip->EditorContext)->command( cmd);
 
   return XNAV__SUCCESS;
@@ -1105,23 +1124,31 @@ static pwr_tStatus HelpFilter( xmenu_sMenuCall *ip)
   pwr_tAName name;
   pwr_tString40 helptopic;
   pwr_sAttrRef *objar;
+  pwr_tCid cid;
 
   if (!ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid))
     objar = &ip->Pointed;
   else
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_AttrrefToName( objar, name, sizeof(name),
-			cdh_mName_volumeStrict);
+  sts = gdh_GetAttrRefTid( objar, &cid);
   if ( EVEN(sts)) return sts;
 
-  strcat( name, ".HelpTopic");
-  sts = gdh_GetObjectInfo( name, (void *)helptopic, sizeof(helptopic));
-  if ( EVEN(sts)) return XNAV__INVISIBLE;
+  switch ( cid) {
+  case pwr_cClass_plc:
+    return XNAV__SUCCESS;
+  default:
+    sts = gdh_AttrrefToName( objar, name, sizeof(name),
+			     cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
 
-  if ( strcmp( helptopic, "") == 0)
-    return XNAV__INVISIBLE;
+    strcat( name, ".HelpTopic");
+    sts = gdh_GetObjectInfo( name, (void *)helptopic, sizeof(helptopic));
+    if ( EVEN(sts)) return XNAV__INVISIBLE;
 
+    if ( strcmp( helptopic, "") == 0)
+      return XNAV__INVISIBLE;
+  }
   return XNAV__SUCCESS;
 }
 

@@ -799,6 +799,8 @@ palette PlcEditorPalette
     class DocUser2
     class Frame
     class Head
+    class HelpText
+    class HelpTextL
     class Point
     class ShowPlcAttr
     class Text

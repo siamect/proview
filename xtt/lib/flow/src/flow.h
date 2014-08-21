@@ -142,7 +142,8 @@ typedef enum {
 
 typedef enum {
 	flow_eAnnotType_OneLine,
-	flow_eAnnotType_MultiLine
+	flow_eAnnotType_MultiLine,
+	flow_eAnnotType_HelpText
 	} flow_eAnnotType;
 
 typedef enum {

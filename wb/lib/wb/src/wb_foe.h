@@ -258,6 +258,8 @@ class WFoe : public WUtility {
   void activate_expand();
   void activate_compress();
   void activate_help();
+  void activate_helpplc();
+  void activate_helpplclist();
   void activate_helpclass();
   void activate_trace_togg( int set);
   void activate_simulate_togg( int set);
@@ -293,6 +295,7 @@ class WFoe : public WUtility {
   int change_mode( int new_mode);
   int redraw_and_save();
   int create_flow();
+  int create_xtthelpfile();
 
   static WFoe *get( pwr_tOid oid);
   static void reset_current_node( WFoe *foe);
@@ -352,6 +355,7 @@ class WFoe : public WUtility {
   static void gre_message( WGre *gre, const char *message);
 
   static void pal_select_cb( void *ctx, pwr_tCid cid);
+  static int create_volume_xtthelpfile( ldh_tSession ldhses, pwr_tVid vid);
 
 };
 

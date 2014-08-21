@@ -47,6 +47,7 @@
 #include "co_ccm_msg.h"
 #include "co_dcli.h"
 #include "co_cnf.h"
+#include "rt_load.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
 #include "glow.h"
@@ -587,12 +588,12 @@ int Graph::generate_web_help()
   system( "cp $pwr_exe/pwr_css.css $pwrp_web/");
 
   // If $pwrp_exe/xtt_help.dat exist convert this to html
-  sts = dcli_search_file( "$pwrp_exe/xtt_help.dat", fname,
+  sts = dcli_search_file( load_cNameProjectXttHelp, fname,
 			  DCLI_DIR_SEARCH_INIT);
   if ( ODD(sts)) {
-    system( "co_convert -d $pwrp_web -t $pwrp_exe/xtt_help.dat");
+    system( "co_convert -d $pwrp_web -t " load_cNameProjectXttHelp);
   }
-  sts = dcli_search_file( "$pwrp_exe/xtt_help.dat", fname,
+  sts = dcli_search_file( load_cNameProjectXttHelp, fname,
 			  DCLI_DIR_SEARCH_END);
   return 1;
 }

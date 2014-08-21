@@ -74,7 +74,7 @@ class RtTrace {
   pwr_tObjid		objid;
   double		scan_time;
   void			(*close_cb) (RtTrace *);
-  void			(*help_cb) (RtTrace *, const char *);
+  void			(*help_cb) (RtTrace *, const char *, const char *);
   void			(*subwindow_cb) (void *parent_ctx, pwr_tObjid objid);
   void			(*display_object_cb) (void *parent_ctx, pwr_tObjid objid);
   void			(*collect_insert_cb) (void *parent_ctx, pwr_tObjid objid);
@@ -124,6 +124,7 @@ class RtTrace {
   void activate_view();
   void activate_help();
   void activate_helpplc();
+  void activate_helpplclist();
 
  protected:
   void get_trace_attr( flow_tObject object, 

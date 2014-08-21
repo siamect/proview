@@ -67,6 +67,10 @@
 %# define       load_cNameRttSignals    "rtt_crrs_%3.3d_%3.3d_%3.3d_%3.3d.dat"
 %# define       load_cNamePkg           "pwrp_pkg_%s_%04d.tgz"
 %# define       load_cNameCustomBuild   "$pwrp_exe/custom_build.sh"
+%# define       load_cNameBaseXttHelp   "$pwr_lang/xtt_help.dat"
+%# define       load_cNameBaseWttHelp   "$pwr_lang/wtt_help.dat"
+%# define       load_cNameProjectXttHelp "$pwrp_exe/xtt_help.dat"
+%# define       load_cNamePlcXttHelp    "$pwrp_exe/xtthelp_%s_plc.dat"
 %#endif
 %
 %

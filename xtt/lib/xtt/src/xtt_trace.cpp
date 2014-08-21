@@ -53,6 +53,7 @@
 #include "cow_wow.h"
 #include "co_trace.h"
 #include "rt_gdh.h"
+#include "rt_load.h"
 #include "xtt_trace.h"
 #include "xtt_menu.h"
 
@@ -671,19 +672,29 @@ void RtTrace::activate_view()
 void RtTrace::activate_help()
 {
   if ( help_cb)
-    (help_cb)(this, "opg_trace");
+    (help_cb)(this, "opg_trace", 0);
 }
 
 void RtTrace::activate_helpplc()
 {
-  pwr_tOName	name;
-  int 		sts;
-
-  sts = gdh_ObjidToName( objid, name, sizeof(name), cdh_mNName); 
-  if (EVEN(sts)) return;
+  pwr_tFileName filename;
+  char		key[80];
+  
+  sprintf( filename, load_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, objid.vid));
+  sprintf( key, "plcw_%s", cdh_ObjidToFnString(0, objid));
 
   if ( help_cb)
-    (help_cb)(this, name);
+    (help_cb)(this, key, filename);
+}
+
+void RtTrace::activate_helpplclist()
+{
+  pwr_tFileName filename;
+  
+  sprintf( filename, load_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, objid.vid));
+
+  if ( help_cb)
+    (help_cb)(this, "index", filename);
 }
 
 
