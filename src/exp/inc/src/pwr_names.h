@@ -67,8 +67,8 @@
 # define        pwr_cNameCustomBuild   "$pwrp_exe/custom_build.sh"
 # define        pwr_cNameBaseXttHelp   "$pwr_lang/xtt_help.dat"
 # define        pwr_cNameBaseWttHelp   "$pwr_lang/wtt_help.dat"
-# define        pwr_cNameProjectXttHelp "$pwrp_exe/xtt_help.dat"
-# define        pwr_cNamePlcXttHelp    "$pwrp_exe/xtthelp_%s_plc.dat"
+# define        pwr_cNameProjectXttHelp "$pwrp_load/xtt_help.dat"
+# define        pwr_cNamePlcXttHelp    "$pwrp_load/xtthelp_%s_plc.dat"
 
 #elif defined OS_VMS || defined OS_ELN
 

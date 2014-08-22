@@ -232,7 +232,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
     pwr_tTime	dest_time, src_time;
 
 
-    // Copy xtt_help.dat from $pwrp_cnf to $pwrp_exe
+    // Copy xtt_help.dat from $pwrp_cnf to $pwrp_load
     sprintf( src_fname, "$pwrp_cnf/%s/xtt_help.dat", node);
     dcli_translate_filename( src_fname, src_fname);
     m_sts = dcli_file_time( src_fname, &src_time);
@@ -248,7 +248,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
     }
 
     if ( oddSts()) {
-      strcpy( dest_fname, "$pwrp_exe/xtt_help.dat");
+      strcpy( dest_fname, "$pwrp_load/xtt_help.dat");
       dcli_translate_filename( dest_fname, dest_fname);
       m_sts = dcli_file_time( dest_fname, &dest_time);
       if ( opt.force || evenSts() || src_time.tv_sec > dest_time.tv_sec) {

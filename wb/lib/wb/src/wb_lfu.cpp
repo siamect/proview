@@ -2282,7 +2282,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      if ( *components_ptr & pwr_mDistrComponentMask_XMLFiles)
 		fprintf( file, "appl %s W $pwrp_load/*.xml\n", nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_XttHelpFile)
-		fprintf( file, "appl %s W $pwrp_cnf/%s/xtt_help.dat:$pwrp_cnf/xtt_help.dat $pwrp_exe/xtt_help.dat\n", 
+		fprintf( file, "appl %s W $pwrp_cnf/%s/xtt_help.dat:$pwrp_cnf/xtt_help.dat $pwrp_load/xtt_help.dat\n", 
 			 nodename_ptr, nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_XttResourceFile)
 		fprintf( file, "appl %s W $pwrp_cnf/%s/b55/Rt_xtt:$pwrp_cnf/%s/Rt_xtt:$pwrp_cnf/Rt_xtt /home/b55/Rt_xtt\n", 

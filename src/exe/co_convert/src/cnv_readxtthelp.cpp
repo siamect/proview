@@ -51,6 +51,7 @@ extern "C" {
 #include "co_dcli.h"
 }
 
+#include "pwr_names.h"
 #include "co_nav_help.h"
 #include "cnv_readxtthelp.h"
 #include "cnv_xtthelpto.h"
@@ -105,8 +106,8 @@ int CnvReadXtthelp::read_xtthelp()
 
   if ( xtthelpto->confpass()) {
     xtthelpto->set_confpass( true);
-    NavHelp *navhelp = new NavHelp( (void *)this, "$pwr_exe/wtt_help.dat",
-				  "$pwrp_exe/xtt_help.dat");
+    NavHelp *navhelp = new NavHelp( (void *)this, pwr_cNameBaseWttHelp,
+				    pwr_cNameProjectXttHelp);
     navhelp->insert_cb = help_insert_cb;
     navhelp->set_propagate(0);  			// Don't print include files
     
@@ -116,8 +117,8 @@ int CnvReadXtthelp::read_xtthelp()
     delete navhelp;
     xtthelpto->set_confpass( false);
   }
-  NavHelp *navhelp = new NavHelp( (void *)this, "$pwr_exe/wtt_help.dat",
-				  "$pwrp_exe/xtt_help.dat");
+  NavHelp *navhelp = new NavHelp( (void *)this, pwr_cNameBaseWttHelp,
+				  pwr_cNameProjectXttHelp);
   navhelp->insert_cb = help_insert_cb;
   navhelp->set_propagate(0);  			// Don't print include files
   sts = navhelp->help( NULL, "", navh_eHelpFile_Other, 

@@ -587,7 +587,7 @@ int Graph::generate_web_help()
   // Copy default css-file to pwrp_web
   system( "cp $pwr_exe/pwr_css.css $pwrp_web/");
 
-  // If $pwrp_exe/xtt_help.dat exist convert this to html
+  // If $pwrp_load/xtt_help.dat exist convert this to html
   sts = dcli_search_file( pwr_cNameProjectXttHelp, fname,
 			  DCLI_DIR_SEARCH_INIT);
   if ( ODD(sts)) {
