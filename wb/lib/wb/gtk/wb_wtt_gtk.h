@@ -99,6 +99,7 @@ class WttGtk : public Wtt {
     GtkWidget	*build_debug_w;
     GtkWidget	*build_crossref_w;
     GtkWidget	*build_manual_w;
+    GtkWidget	*build_nocopy_w;
     GtkWidget	*menu_save_w;
     GtkWidget	*menu_revert_w;
     GtkWidget	*menu_cut_w;

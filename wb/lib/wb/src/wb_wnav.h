@@ -404,11 +404,11 @@ class WNav : public WUtility{
     void refresh();
     void collapse();
     void set_options( int ena_comment, int sh_class, int sh_alias, int sh_descrip, 
-	int sh_objref, int sh_objxref, int sh_attrref, int sh_attrxref,
-        int bu_force, int bu_debug, int bu_crossref, int bu_manual);
+		      int sh_objref, int sh_objxref, int sh_attrref, int sh_attrxref,
+		      int bu_force, int bu_debug, int bu_crossref, int bu_manual, int bu_nocopy);
     void get_options( int *ena_comment, int *sh_class, int *sh_alias, int *sh_descrip, 
-	 int *sh_objref, int *sh_objxref, int *sh_attrref, int *sh_attrxref,
-         int *bu_force, int *bu_debug, int *bu_crossref, int *bu_manual);
+		      int *sh_objref, int *sh_objxref, int *sh_attrref, int *sh_attrxref,
+		      int *bu_force, int *bu_debug, int *bu_crossref, int *bu_manual, int *bu_nocopy);
     int save_settnings( ofstream& fp);
     int node_to_objid( brow_tNode node, pwr_tObjid *objid);
     int unselect_objid( pwr_tObjid objid);

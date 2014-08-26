@@ -1309,6 +1309,20 @@ static int	wnav_set_func(	void		*client_data,
     else
       wnav->gbl.build.manual = 0;
   }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "BUILDNOCOPY", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET BUILDNOCOPY");
+    else
+      wnav->gbl.build.nocopy = 1;
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "NOBUILDNOCOPY", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET NOBUILDNOCOPY");
+    else
+      wnav->gbl.build.nocopy = 0;
+  }
   else if ( cdh_NoCaseStrncmp( arg1_str, "ENABLECOMMENT", strlen( arg1_str)) == 0)
   {
     if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))

@@ -1949,6 +1949,7 @@ void WttGtk::update_options_form()
   gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(build_debug_w), build_debug ? TRUE : FALSE);
   gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(build_crossref_w), build_crossref ? TRUE : FALSE);
   gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(build_manual_w), build_manual ? TRUE : FALSE);
+  gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(build_nocopy_w), build_nocopy ? TRUE : FALSE);
 } 
 
 
@@ -1972,15 +1973,16 @@ void WttGtk::set_options()
   build_debug = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(build_debug_w));
   build_crossref = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(build_crossref_w));
   build_manual = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(build_manual_w));
+  build_nocopy = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(build_nocopy_w));
 
   wnav->set_options( enable_comment, show_class, show_alias, 
-	show_descrip, show_objref, show_objxref, 
-	show_attrref, show_attrxref, build_force, build_debug,
-	build_crossref, build_manual);
+		     show_descrip, show_objref, show_objxref, 
+		     show_attrref, show_attrxref, build_force, build_debug,
+		     build_crossref, build_manual, build_nocopy);
   wnavnode->set_options( enable_comment, show_class, show_alias, 
-	show_descrip, show_objref, show_objxref, 
-        show_attrref, show_attrxref, build_force, build_debug,
-	build_crossref, build_manual);
+			 show_descrip, show_objref, show_objxref, 
+			 show_attrref, show_attrxref, build_force, build_debug,
+			 build_crossref, build_manual, build_nocopy);
 }
 
 // Callbacks from the options form
@@ -3011,9 +3013,9 @@ WttGtk::WttGtk(
   gtk_paned_set_position( GTK_PANED(wnav_paned), window_width / 2);
 
   wnav->get_options( &enable_comment, &show_class, &show_alias, 
-	&show_descrip, &show_objref, &show_objxref, 
-	&show_attrref, &show_attrxref, &build_force, &build_debug,
-	&build_crossref, &build_manual);
+		     &show_descrip, &show_objref, &show_objxref, 
+		     &show_attrref, &show_attrxref, &build_force, &build_debug,
+		     &build_crossref, &build_manual, &build_nocopy);
 
   if ( wbctx && volid) {
     wnav->volume_attached( wbctx, ldhses, 0);
@@ -3140,6 +3142,7 @@ void WttGtk::create_options_dialog()
   build_debug_w = gtk_check_button_new_with_label( "Debug");
   build_crossref_w = gtk_check_button_new_with_label( "Crossreference");
   build_manual_w = gtk_check_button_new_with_label( "Manual");
+  build_nocopy_w = gtk_check_button_new_with_label( "Disable Copy");
 
   GtkWidget *build_vbox = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(build_vbox), build_label, FALSE, FALSE, 15);
@@ -3147,6 +3150,7 @@ void WttGtk::create_options_dialog()
   gtk_box_pack_start( GTK_BOX(build_vbox), build_debug_w, FALSE, FALSE, 7);
   gtk_box_pack_start( GTK_BOX(build_vbox), build_crossref_w, FALSE, FALSE, 7);
   gtk_box_pack_start( GTK_BOX(build_vbox), build_manual_w, FALSE, FALSE, 7);
+  gtk_box_pack_start( GTK_BOX(build_vbox), build_nocopy_w, FALSE, FALSE, 7);
 
   GtkWidget *hbox = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(hbox), hier_vbox, FALSE, FALSE, 50);

@@ -40,11 +40,12 @@
 class wb_build_opt
 {
  public:
-  wb_build_opt() : force(0), debug(0), crossref(0), manual(0) {}
+  wb_build_opt() : force(0), debug(0), crossref(0), manual(0), nocopy(0) {}
   int force;
   int debug;
   int crossref;
   int manual;
+  int nocopy;
 };
 
 #endif

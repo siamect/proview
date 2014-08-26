@@ -2263,6 +2263,9 @@ int	WNav::setup()
   new WItemLocal( this, "Build.Manual", "setup_build_manual", 
 	pwr_eType_Int32, sizeof( gbl.build.manual), 0, 1,
 	(void *) &gbl.build.manual, NULL, flow_eDest_IntoLast);
+  new WItemLocal( this, "Build.NoCopy", "setup_build_nocopy", 
+	pwr_eType_Int32, sizeof( gbl.build.nocopy), 0, 1,
+	(void *) &gbl.build.nocopy, NULL, flow_eDest_IntoLast);
 
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
@@ -2290,8 +2293,8 @@ int	WNavGbl::symbolfile_exec( void *wnav)
 }
 
 void WNav::set_options( int ena_comment, int sh_class, int sh_alias, int sh_descrip, 
-        int sh_objref, int sh_objxref, int sh_attrref, int sh_attrxref,
-	int bu_force, int bu_debug, int bu_crossref, int bu_manual)
+			int sh_objref, int sh_objxref, int sh_attrref, int sh_attrxref,
+			int bu_force, int bu_debug, int bu_crossref, int bu_manual, int bu_nocopy)
 {
   gbl.enable_comment = ena_comment;
   gbl.show_class = sh_class;
@@ -2305,12 +2308,13 @@ void WNav::set_options( int ena_comment, int sh_class, int sh_alias, int sh_desc
   gbl.build.debug = bu_debug;
   gbl.build.crossref = bu_crossref;
   gbl.build.manual = bu_manual;
+  gbl.build.nocopy = bu_nocopy;
   ldh_refresh( pwr_cNObjid);
 }
 
 void WNav::get_options( int *ena_comment, int *sh_class, int *sh_alias, int *sh_descrip, 
-	int *sh_objref, int *sh_objxref, int *sh_attrref, int *sh_attrxref,
-	int *bu_force, int *bu_debug, int *bu_crossref, int *bu_manual)
+			int *sh_objref, int *sh_objxref, int *sh_attrref, int *sh_attrxref,
+			int *bu_force, int *bu_debug, int *bu_crossref, int *bu_manual, int *bu_nocopy)
 {
   *ena_comment = gbl.enable_comment;
   *sh_class =  gbl.show_class;
@@ -2324,6 +2328,7 @@ void WNav::get_options( int *ena_comment, int *sh_class, int *sh_alias, int *sh_
   *bu_debug = gbl.build.debug;
   *bu_crossref = gbl.build.crossref;
   *bu_manual = gbl.build.manual;
+  *bu_nocopy = gbl.build.nocopy;
 }
 
 int WNav::save_settnings( ofstream& fp)
@@ -2395,6 +2400,11 @@ int WNav::save_settnings( ofstream& fp)
     fp << "  set buildmanual /local" << endl;
   else
     fp << "  set nobuildmanual /local" << endl;
+ 
+  if ( gbl.build.nocopy)
+    fp << "  set buildnocopy /local" << endl;
+  else
+    fp << "  set nobuildnocopy /local" << endl;
  
   if ( window_type == wnav_eWindowType_W1)
     fp << "endif" << endl;

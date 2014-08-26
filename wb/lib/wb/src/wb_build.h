@@ -82,6 +82,7 @@ class wb_build : public wb_status
   void export_import_files( int type, bld_ePass pass);
   void export_files( bld_ePass pass) { export_import_files(bld_eType_Export, pass);}
   void import_files( bld_ePass pass) { export_import_files(bld_eType_Import, pass);}
+  void update_file( char *dest, char *src);
 
   wb_build_opt opt;
   wb_session m_session;

@@ -117,7 +117,11 @@ void dcli_save_file_versions( char *fname);
 #define DCLI_DIR_SEARCH_END 2
 
 
-int dcli_search_file( 		const char *file_name , 
+int dcli_search_file( 		const char *file_name, 
+				char	*found_file,
+				int	new_search);
+
+int dcli_search_directory(     	const char *file_name, 
 				char	*found_file,
 				int	new_search);
 
@@ -132,6 +136,9 @@ int dcli_parse_filename( 	const char *filename,
 				char	*file,
 				char	*type,
 				int	*version);
+
+int dcli_create_directory( char *path);
+int dcli_delete_directory( char *path, int force);
 
 /* Functions i module co_dcli_struct */
 
