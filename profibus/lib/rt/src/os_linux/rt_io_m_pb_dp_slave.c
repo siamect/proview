@@ -42,8 +42,6 @@
 #include <sys/file.h>
 #include <sys/ioctl.h>
 
-#include "rt_io_pb_locals.h"
-
 #include "pwr.h"
 #include "co_cdh.h"
 #include "pwr_baseclasses.h"
@@ -56,6 +54,8 @@
 #include "co_cdh.h"
 #include "rt_io_profiboard.h"
 #include "rt_pb_msg.h"
+
+#include "rt_io_pb_locals.h"
 
 /* Check if channel should be fetched from diagnostic area, 
    i.e. channel name starts with "Diag_" */
@@ -97,6 +97,13 @@ static pwr_tStatus IoRackInit (
   pwr_sClass_ChanIi *chan_ii;
   pwr_sClass_ChanAo *chan_ao;
   pwr_sClass_ChanIo *chan_io;
+
+  io_sRackLocal *local;
+
+  local= calloc(1, sizeof(*local));
+  rp->Local = local;
+
+  local->dp = 1;
 
   sts = gdh_ObjidToName(rp->Objid, (char *) &name, sizeof(name), cdh_mNName);
   errh_Info( "Init of Profibus DP Slave and Modules %s", name);
