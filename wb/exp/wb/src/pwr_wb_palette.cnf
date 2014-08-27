@@ -1076,10 +1076,16 @@ palette PlcEditorPalette
     menu Time
     {
       class AtAdd
+      class AtDemux
       class AtEqual
       class AtGreaterThan
       class AtLessThan
+      class AtLimit
+      class AtMax
+      class AtMin
+      class AtMux
       class AToDt
+      class AtSel
       class AtSub
       class AtDtSub
       class CStoATp
@@ -1088,9 +1094,15 @@ palette PlcEditorPalette
       class CStoDTv
       class CurrentTime
       class DtAdd
+      class DtDemux
       class DtEqual
       class DtGreaterThan
       class DtLessThan
+      class DtLimit
+      class DtMax
+      class DtMin
+      class DtMux
+      class DtSel
       class DtSub
       class DtToA
       class GetATp

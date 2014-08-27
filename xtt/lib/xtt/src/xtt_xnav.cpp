@@ -107,6 +107,8 @@ int XNav::get_trace_attr( pwr_sAttrRef *arp, char *attr)
   case pwr_cClass_Io:
   case pwr_cClass_Iv:
   case pwr_cClass_Sv:
+  case pwr_cClass_ATv:
+  case pwr_cClass_DTv:
     strcpy( attr, "ActualValue");	
     break;   
   case pwr_cClass_ChanDi:
@@ -432,17 +434,29 @@ int XNav::attr_string_to_value( int type_id, char *value_str,
   case pwr_eType_Time: {
     pwr_tTime	time;
 
-    sts = time_AsciiToA( value_str, &time);
-    if (EVEN(sts)) return XNAV__INPUT_SYNTAX;
-    memcpy( buffer_ptr, (char *) &time, sizeof(time));
+    if ( strcmp( value_str, "ATTIME_ZERO") == 0)
+      memcpy( buffer_ptr, &pwr_cAtMin, sizeof(pwr_tTime));
+    else if ( strcmp( value_str, "ATTIME_MAX") == 0)
+      memcpy( buffer_ptr, &pwr_cAtMax, sizeof(pwr_tTime));
+    else {
+      sts = time_AsciiToA( value_str, &time);
+      if (EVEN(sts)) return XNAV__INPUT_SYNTAX;
+      memcpy( buffer_ptr, (char *) &time, sizeof(time));
+    }
     break;
   }
   case pwr_eType_DeltaTime: {
     pwr_tDeltaTime deltatime;
 
-    sts = time_AsciiToD( value_str, &deltatime);
-    if (EVEN(sts)) return XNAV__INPUT_SYNTAX;
-    memcpy( buffer_ptr, (char *) &deltatime, sizeof(deltatime));
+    if ( strcmp( value_str, "DTTIME_MIN") == 0)
+      memcpy( buffer_ptr, &pwr_cDtMin, sizeof(pwr_tDeltaTime));
+    else if ( strcmp( value_str, "DTTIME_MAX") == 0)
+      memcpy( buffer_ptr, &pwr_cDtMax, sizeof(pwr_tDeltaTime));
+    else {
+      sts = time_AsciiToD( value_str, &deltatime);
+      if (EVEN(sts)) return XNAV__INPUT_SYNTAX;
+      memcpy( buffer_ptr, (char *) &deltatime, sizeof(deltatime));
+    }
     break;
   }
   }
@@ -868,10 +882,16 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 		       ((pwr_tTime *)value_ptr)->tv_sec, ((pwr_tTime *)value_ptr)->tv_nsec);
       break;
     default:
-      sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
-			 timstr, sizeof(timstr));
-      if ( EVEN(sts) && sts != TIME__NAT)
-	strcpy( timstr, "-");
+      if ( memcmp( value_ptr, &pwr_cAtMin, sizeof(pwr_tTime)) == 0)
+	strcpy( timstr, "ATTIME_ZERO");
+      else if ( memcmp( value_ptr, &pwr_cAtMax, sizeof(pwr_tTime)) == 0)
+	strcpy( timstr, "ATTIME_MAX");
+      else {
+	sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
+			     timstr, sizeof(timstr));
+	if ( EVEN(sts) && sts != TIME__NAT)
+	  strcpy( timstr, "-");
+      }
       *len = snprintf( str, size, "%s", timstr);
     }
     break;
@@ -883,10 +903,16 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 		       ((pwr_tTime *)value_ptr)->tv_sec, ((pwr_tDeltaTime *)value_ptr)->tv_nsec);
       break;
     default:
-      sts = time_DtoAscii( (pwr_tDeltaTime *) value_ptr, 1, 
-			   timstr, sizeof(timstr));
-      if ( EVEN(sts) && sts != TIME__NADT)
-	strcpy( timstr, "Undefined time");
+      if ( memcmp( value_ptr, &pwr_cDtMin, sizeof(pwr_tDeltaTime)) == 0)
+	strcpy( timstr, "DTTIME_MIN");
+      else if ( memcmp( value_ptr, &pwr_cDtMax, sizeof(pwr_tDeltaTime)) == 0)
+	strcpy( timstr, "DTTIME_MAX");
+      else {
+	sts = time_DtoAscii( (pwr_tDeltaTime *) value_ptr, 1, 
+			     timstr, sizeof(timstr));
+	if ( EVEN(sts) && sts != TIME__NADT)
+	  strcpy( timstr, "Undefined time");
+      }
       *len = snprintf( str, size, "%s", timstr);
     }
     break;

@@ -875,27 +875,41 @@ bool wb_print_wbl::printValue (wb_volume& v,
     // sprintf(sval, "\"%.*s\"", varSize, (char *)val);
     break;
   }
-  case pwr_eType_Time:
-    sts = time_AtoAscii((pwr_tTime *)val, time_eFormat_DateAndTime,
-			timbuf, sizeof(timbuf)); 
-    if (ODD(sts)) {
-      sprintf(sval, "\"%s\"", timbuf);
-    } else {
-      sprintf(sval, "Bad time value");
-      m_errCnt++;
-      retval = FALSE;
+  case pwr_eType_Time: {
+    if ( memcmp( val, &pwr_cAtMin, sizeof(pwr_tTime)) == 0)
+      strcpy( sval, "ATTIME_MIN");
+    else if ( memcmp( val, &pwr_cAtMax, sizeof(pwr_tTime)) == 0)
+      strcpy( sval, "ATTIME_MAX");
+    else {
+      sts = time_AtoAscii((pwr_tTime *)val, time_eFormat_DateAndTime,
+			  timbuf, sizeof(timbuf)); 
+      if (ODD(sts)) {
+	sprintf(sval, "\"%s\"", timbuf);
+      } else {
+	sprintf(sval, "Bad time value");
+	m_errCnt++;
+	retval = FALSE;
+      }
     }
     break;
-  case pwr_eType_DeltaTime:
-    sts = time_DtoAscii((pwr_tDeltaTime *)val, 1, timbuf, sizeof(timbuf));
-    if (ODD(sts)) {
-      sprintf(sval, "\"%s\"", timbuf);
-    } else {
-      sprintf(sval, "Bad time value");
-      m_errCnt++;
-      retval = FALSE;
+  }
+  case pwr_eType_DeltaTime: {
+    if ( memcmp( val, &pwr_cDtMin, sizeof(pwr_tDeltaTime)) == 0)
+      strcpy( sval, "DTTIME_MIN");
+    else if ( memcmp( val, &pwr_cDtMax, sizeof(pwr_tDeltaTime)) == 0)
+      strcpy( sval, "DTTIME_MAX");
+    else {
+      sts = time_DtoAscii((pwr_tDeltaTime *)val, 1, timbuf, sizeof(timbuf));
+      if (ODD(sts)) {
+	sprintf(sval, "\"%s\"", timbuf);
+      } else {
+	sprintf(sval, "Bad time value");
+	m_errCnt++;
+	retval = FALSE;
+      }
     }
     break;
+  }
   case pwr_eType_Status:
     sprintf(sval, "%d", *(pwr_tStatus *) val);
     break;

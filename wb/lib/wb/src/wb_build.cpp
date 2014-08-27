@@ -238,161 +238,11 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
 
   syi_NodeName( &m_sts, currentnode, sizeof(currentnode));
 
-  // if ( cdh_NoCaseStrcmp( node, currentnode) == 0) 
-  {
-    pwr_tFileName src_fname, dest_fname;
-
-    // Copy node directories from $pwrp_cnf to $pwrp_load
-    vector<build_dir> users_dirv;
-    build_dir node_dir;
-    
-    pwr_tFileName src_dir, dest_dir, found_src_dir, found_dest_dir;
-    pwr_tStatus src_sts, dest_sts;
-
-    sprintf( node_dir.src_dir, "$pwrp_cnf/%s", node);    
-    src_sts = dcli_search_directory( node_dir.src_dir, found_src_dir, DCLI_DIR_SEARCH_INIT);
-    dcli_search_directory( node_dir.src_dir, found_src_dir, DCLI_DIR_SEARCH_END);
-
-    sprintf( node_dir.dest_dir, "$pwrp_load/%s", node);
-    dest_sts = dcli_search_directory( node_dir.dest_dir, found_dest_dir, DCLI_DIR_SEARCH_INIT);
-    dcli_search_directory( node_dir.dest_dir, found_dest_dir, DCLI_DIR_SEARCH_END);
-
-    if ( ODD(src_sts) && EVEN(dest_sts))
-      // Create destination directory
-      dcli_create_directory( node_dir.dest_dir);
-    else if ( EVEN(src_sts) && ODD(dest_sts))
-      // Delete destination directory
-      dcli_delete_directory( node_dir.dest_dir, 1);
-
-    sprintf( src_dir, "%s/*", node_dir.src_dir);
-    for ( src_sts = dcli_search_directory( src_dir, found_src_dir, DCLI_DIR_SEARCH_INIT);
-	  ODD(src_sts);
-	  src_sts = dcli_search_directory( src_dir, found_src_dir, DCLI_DIR_SEARCH_NEXT)) {
-      build_dir dir;
-
-      char *s = strrchr( found_src_dir, '/');
-      if ( !s) continue;
-
-      sprintf( dest_dir, "%s/%s", node_dir.dest_dir, s+1);
-
-      strcpy( dir.src_dir, found_src_dir);
-      strcpy( dir.dest_dir, dest_dir);
-      users_dirv.push_back(dir);      
-    }
-    dcli_search_directory( src_dir, found_src_dir, DCLI_DIR_SEARCH_END);
-
-    // Files on $pwrp_cnf
-
-    // Update $pwrp_cnf/xtt_help.dat
-    strcpy( src_fname, "$pwrp_cnf/xtt_help.dat");
-    strcpy( dest_fname, "$pwrp_load/xtt_help.dat");
-    update_file( dest_fname, src_fname);
-    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-      sumsts = m_sts;
-
-    // Update $pwrp_cnf/xtt_setup.rtt_com
-    strcpy( src_fname, "$pwrp_cnf/xtt_setup.rtt_com");
-    strcpy( dest_fname, "$pwrp_load/xtt_setup.rtt_com");
-    update_file( dest_fname, src_fname);
-    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-      sumsts = m_sts;
-
-    // Update $pwrp_cnf/Rt_xtt
-    strcpy( src_fname, "$pwrp_cnf/Rt_xtt");
-    strcpy( dest_fname, "$pwrp_load/Rt_xtt");
-    update_file( dest_fname, src_fname);
-    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-      sumsts = m_sts;
-
-    // Update $pwrp_cnf/pwrp_stop.sh
-    strcpy( src_fname, "$pwrp_cnf/pwrp_stop.sh");
-    strcpy( dest_fname, "$pwrp_load/pwrp_stop.sh");
-    update_file( dest_fname, src_fname);
-    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-      sumsts = m_sts;
-
-    // Files on $pwrp_cnf/node
-
-    // Update $pwrp_cnf/node/xtt_help.dat
-    sprintf( src_fname, "%s/xtt_help.dat", node_dir.src_dir);
-    sprintf( dest_fname, "%s/xtt_help.dat", node_dir.dest_dir);
-    update_file( dest_fname, src_fname);
-    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-      sumsts = m_sts;
-
-    // Update $pwrp_cnf/node/xtt_setup.rtt_com
-    sprintf( src_fname, "%s/xtt_setup.rtt_com", node_dir.src_dir);
-    sprintf( dest_fname, "%s/xtt_setup.rtt_com", node_dir.dest_dir);
-    update_file( dest_fname, src_fname);
-    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-      sumsts = m_sts;
-
-    // Update $pwrp_cnf/node/'node'_xtthelp.dat
-    sprintf( src_fname, "%s/%s_xtthelp.dat", node_dir.src_dir, node);
-    sprintf( dest_fname, "%s/%s_xtthelp.dat", node_dir.dest_dir, node);
-    update_file( dest_fname, src_fname);
-    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-      sumsts = m_sts;
-
-    // Update $pwrp_cnf/node/Rt_xtt
-    sprintf( src_fname, "%s/Rt_xtt", node_dir.src_dir);
-    sprintf( dest_fname, "%s/Rt_xtt", node_dir.dest_dir);
-    update_file( dest_fname, src_fname);
-    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-      sumsts = m_sts;
-
-    // Update $pwrp_cnf/node/pwrp_stop.sh
-    sprintf( src_fname, "%s/pwrp_stop.sh", node_dir.src_dir);
-    sprintf( dest_fname, "%s/pwrp_stop.sh", node_dir.dest_dir);
-    update_file( dest_fname, src_fname);
-    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-      sumsts = m_sts;
-
-    for ( unsigned int i = 0; i < users_dirv.size(); i++) {
-      dest_sts = dcli_search_directory( users_dirv[i].dest_dir, found_dest_dir, DCLI_DIR_SEARCH_INIT);
-      dcli_search_directory( users_dirv[i].dest_dir, found_dest_dir, DCLI_DIR_SEARCH_END);
-
-      if ( EVEN(dest_sts))
-	// Create destination directory
-	dcli_create_directory( users_dirv[i].dest_dir);
-
-      // Update $pwrp_cnf/node/user/xtt_help.dat
-      sprintf( src_fname, "%s/%s", users_dirv[i].src_dir, "xtt_help.dat");
-      sprintf( dest_fname, "%s/%s", users_dirv[i].dest_dir, "xtt_help.dat");
-      update_file( dest_fname, src_fname);
-      if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-	sumsts = m_sts;
-
-      // Update $pwrp_cnf/node/user/xtt_setup.rtt_com
-      sprintf( src_fname, "%s/%s", users_dirv[i].src_dir, "xtt_setup.rtt_com");
-      sprintf( dest_fname, "%s/%s", users_dirv[i].dest_dir, "xtt_setup.rtt_com");
-      update_file( dest_fname, src_fname);
-      if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-	sumsts = m_sts;
-
-      // Update $pwrp_cnf/node/user/Rt_xtt
-      sprintf( src_fname, "%s/%s", users_dirv[i].src_dir, "Rt_xtt");
-      sprintf( dest_fname, "%s/%s", users_dirv[i].dest_dir, "Rt_xtt");
-      update_file( dest_fname, src_fname);
-      if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-	sumsts = m_sts;
-    }
-
-    // Copy pwrp_alias.dat from $pwrp_cnf to $pwrp_load
-    strcpy( src_fname, "$pwrp_cnf/pwrp_alias.dat");
-    strcpy( dest_fname, "$pwrp_load/pwrp_alias.dat");
-    update_file( dest_fname, src_fname);
-    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-      sumsts = m_sts;
-
-    // Copy ld_appl_...txt from $pwrp_cnf to $pwrp_load
-    sprintf( src_fname, pwr_cNameAppl, "$pwrp_cnf/", cdh_Low(node), bussid);
-    sprintf( dest_fname, pwr_cNameAppl, "$pwrp_load/", cdh_Low(node), bussid);
-    update_file( dest_fname, src_fname);
-    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-      sumsts = m_sts;
-
-  }
+  cnf( nodename, volumelist, volumecnt);
+  if ( evenSts())
+    sumsts = m_sts;
+  else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
 
   export_files( bld_ePass_AfterNode);
   if ( evenSts())
@@ -409,6 +259,183 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
 
   m_sts = sumsts;
 
+}
+
+void wb_build::cnf( char *nodename, void *volumelist, int volumecnt)
+{
+  lfu_t_volumelist *vlist = (lfu_t_volumelist *)volumelist;
+  pwr_tStatus sumsts = PWRB__NOBUILT;
+  pwr_tFileName src_fname, dest_fname;
+  vector<build_dir> users_dirv;
+  build_dir node_dir;    
+  pwr_tFileName src_dir, dest_dir, found_src_dir, found_dest_dir;
+  pwr_tStatus src_sts, dest_sts;
+  int status;
+  int bussid;
+  int found;
+  char node[80];
+
+  found = 0;
+  for ( int i = 0; i < volumecnt; i++) {
+    if ( cdh_NoCaseStrcmp( nodename, vlist[i].p1) == 0) {
+      found = 1;
+      strncpy( node, vlist[i].p2, sizeof(node));
+      status = sscanf( vlist[i].p3, "%d", &bussid);
+      if ( status != 1) {
+	m_sts = PWRB__NOSUCHNODE;
+	return;
+      }
+    }
+  }
+  if ( !found) {
+    m_sts = PWRB__NOSUCHNODE;
+    return;
+  }
+    
+  sprintf( node_dir.src_dir, "$pwrp_cnf/%s", node);    
+  src_sts = dcli_search_directory( node_dir.src_dir, found_src_dir, DCLI_DIR_SEARCH_INIT);
+  dcli_search_directory( node_dir.src_dir, found_src_dir, DCLI_DIR_SEARCH_END);
+
+  sprintf( node_dir.dest_dir, "$pwrp_load/%s", node);
+  dest_sts = dcli_search_directory( node_dir.dest_dir, found_dest_dir, DCLI_DIR_SEARCH_INIT);
+  dcli_search_directory( node_dir.dest_dir, found_dest_dir, DCLI_DIR_SEARCH_END);
+
+  if ( ODD(src_sts) && EVEN(dest_sts))
+    // Create destination directory
+    dcli_create_directory( node_dir.dest_dir);
+  else if ( EVEN(src_sts) && ODD(dest_sts))
+    // Delete destination directory
+    dcli_delete_directory( node_dir.dest_dir, 1);
+
+  sprintf( src_dir, "%s/*", node_dir.src_dir);
+  for ( src_sts = dcli_search_directory( src_dir, found_src_dir, DCLI_DIR_SEARCH_INIT);
+	ODD(src_sts);
+	src_sts = dcli_search_directory( src_dir, found_src_dir, DCLI_DIR_SEARCH_NEXT)) {
+    build_dir dir;
+
+    char *s = strrchr( found_src_dir, '/');
+    if ( !s) continue;
+
+    sprintf( dest_dir, "%s/%s", node_dir.dest_dir, s+1);
+
+    strcpy( dir.src_dir, found_src_dir);
+    strcpy( dir.dest_dir, dest_dir);
+    users_dirv.push_back(dir);      
+  }
+  dcli_search_directory( src_dir, found_src_dir, DCLI_DIR_SEARCH_END);
+
+  // Files on $pwrp_cnf
+
+  // Update $pwrp_cnf/xtt_help.dat
+  strcpy( src_fname, "$pwrp_cnf/xtt_help.dat");
+  strcpy( dest_fname, "$pwrp_load/xtt_help.dat");
+  update_file( dest_fname, src_fname);
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+
+  // Update $pwrp_cnf/xtt_setup.rtt_com
+  strcpy( src_fname, "$pwrp_cnf/xtt_setup.rtt_com");
+  strcpy( dest_fname, "$pwrp_load/xtt_setup.rtt_com");
+  update_file( dest_fname, src_fname);
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+
+  // Update $pwrp_cnf/Rt_xtt
+  strcpy( src_fname, "$pwrp_cnf/Rt_xtt");
+  strcpy( dest_fname, "$pwrp_load/Rt_xtt");
+  update_file( dest_fname, src_fname);
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+  
+  // Update $pwrp_cnf/pwrp_stop.sh
+  strcpy( src_fname, "$pwrp_cnf/pwrp_stop.sh");
+  strcpy( dest_fname, "$pwrp_load/pwrp_stop.sh");
+  update_file( dest_fname, src_fname);
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+  
+  // Files on $pwrp_cnf/node
+
+  // Update $pwrp_cnf/node/xtt_help.dat
+  sprintf( src_fname, "%s/xtt_help.dat", node_dir.src_dir);
+  sprintf( dest_fname, "%s/xtt_help.dat", node_dir.dest_dir);
+  update_file( dest_fname, src_fname);
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+
+  // Update $pwrp_cnf/node/xtt_setup.rtt_com
+  sprintf( src_fname, "%s/xtt_setup.rtt_com", node_dir.src_dir);
+  sprintf( dest_fname, "%s/xtt_setup.rtt_com", node_dir.dest_dir);
+  update_file( dest_fname, src_fname);
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+
+  // Update $pwrp_cnf/node/'node'_xtthelp.dat
+  sprintf( src_fname, "%s/%s_xtthelp.dat", node_dir.src_dir, node);
+  sprintf( dest_fname, "%s/%s_xtthelp.dat", node_dir.dest_dir, node);
+  update_file( dest_fname, src_fname);
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+
+  // Update $pwrp_cnf/node/Rt_xtt
+  sprintf( src_fname, "%s/Rt_xtt", node_dir.src_dir);
+  sprintf( dest_fname, "%s/Rt_xtt", node_dir.dest_dir);
+  update_file( dest_fname, src_fname);
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+
+  // Update $pwrp_cnf/node/pwrp_stop.sh
+  sprintf( src_fname, "%s/pwrp_stop.sh", node_dir.src_dir);
+  sprintf( dest_fname, "%s/pwrp_stop.sh", node_dir.dest_dir);
+  update_file( dest_fname, src_fname);
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+  
+  for ( unsigned int i = 0; i < users_dirv.size(); i++) {
+    dest_sts = dcli_search_directory( users_dirv[i].dest_dir, found_dest_dir, DCLI_DIR_SEARCH_INIT);
+    dcli_search_directory( users_dirv[i].dest_dir, found_dest_dir, DCLI_DIR_SEARCH_END);
+    
+    if ( EVEN(dest_sts))
+      // Create destination directory
+      dcli_create_directory( users_dirv[i].dest_dir);
+
+    // Update $pwrp_cnf/node/user/xtt_help.dat
+    sprintf( src_fname, "%s/%s", users_dirv[i].src_dir, "xtt_help.dat");
+    sprintf( dest_fname, "%s/%s", users_dirv[i].dest_dir, "xtt_help.dat");
+    update_file( dest_fname, src_fname);
+    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+      sumsts = m_sts;
+
+    // Update $pwrp_cnf/node/user/xtt_setup.rtt_com
+    sprintf( src_fname, "%s/%s", users_dirv[i].src_dir, "xtt_setup.rtt_com");
+    sprintf( dest_fname, "%s/%s", users_dirv[i].dest_dir, "xtt_setup.rtt_com");
+    update_file( dest_fname, src_fname);
+    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+      sumsts = m_sts;
+
+    // Update $pwrp_cnf/node/user/Rt_xtt
+    sprintf( src_fname, "%s/%s", users_dirv[i].src_dir, "Rt_xtt");
+    sprintf( dest_fname, "%s/%s", users_dirv[i].dest_dir, "Rt_xtt");
+    update_file( dest_fname, src_fname);
+    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+      sumsts = m_sts;
+  }
+
+  // Copy pwrp_alias.dat from $pwrp_cnf to $pwrp_load
+  strcpy( src_fname, "$pwrp_cnf/pwrp_alias.dat");
+  strcpy( dest_fname, "$pwrp_load/pwrp_alias.dat");
+  update_file( dest_fname, src_fname);
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+  
+  // Copy ld_appl_...txt from $pwrp_cnf to $pwrp_load
+  sprintf( src_fname, pwr_cNameAppl, "$pwrp_cnf/", cdh_Low(node), bussid);
+  sprintf( dest_fname, pwr_cNameAppl, "$pwrp_load/", cdh_Low(node), bussid);
+  update_file( dest_fname, src_fname);
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+
+  m_sts = sumsts;
 }
 
 void wb_build::volume()

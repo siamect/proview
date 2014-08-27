@@ -94,5 +94,17 @@ void BwShiftLeft_exec( plc_sThread *tp, pwr_sClass_BwShiftLeft *object);
 void BwShiftRight_exec( plc_sThread *tp, pwr_sClass_BwShiftRight *object);
 void BwRotateRight_exec( plc_sThread *tp, pwr_sClass_BwRotateRight *object);
 void BwRotateLeft_exec( plc_sThread *tp, pwr_sClass_BwRotateLeft *object);
+void AtSel_exec( plc_sThread *tp, pwr_sClass_AtSel *object);
+void DtSel_exec( plc_sThread *tp, pwr_sClass_DtSel *object);
+void AtMux_exec( plc_sThread *tp, pwr_sClass_AtMux *object);
+void DtMux_exec( plc_sThread *tp, pwr_sClass_DtMux *object);
+void AtMin_exec( plc_sThread *tp, pwr_sClass_AtMin *object);
+void AtMax_exec( plc_sThread *tp, pwr_sClass_AtMax *object);
+void DtMin_exec( plc_sThread *tp, pwr_sClass_DtMin *object);
+void DtMax_exec( plc_sThread *tp, pwr_sClass_DtMax *object);
+void AtLimit_exec( plc_sThread *tp, pwr_sClass_AtLimit *object);
+void DtLimit_exec( plc_sThread *tp, pwr_sClass_DtLimit *object);
+void AtDemux_exec( plc_sThread *tp, pwr_sClass_AtDemux *object);
+void DtDemux_exec( plc_sThread *tp, pwr_sClass_DtDemux *object);
 
 #endif

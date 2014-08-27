@@ -54,6 +54,7 @@
 # include <stdio.h>
 # include <stdlib.h>  /* EXIT_FAILURE */
 # include <time.h>
+# include <limits.h>
 #endif
 
 /*! \file pwr.h
@@ -194,12 +195,18 @@ typedef struct {
 } __pwr_tInt64;
 #if defined OS_POSIX
 # if defined HW_X86_64
-typedef long int pwr_tInt64;
+    typedef long int pwr_tInt64;
+#   define PWR_INT64MAX LONG_MAX
+#   define PWR_INT64MIN LONG_MIN
 # else
-typedef long long int pwr_tInt64;
+    typedef long long int pwr_tInt64;
+#   define PWR_INT64MAX LLONG_MAX
+#   define PWR_INT64MIN LLONG_MIN
 # endif
 #else
-typedef __pwr_tInt64 pwr_tInt64;
+  typedef __pwr_tInt64 pwr_tInt64;
+# define PWR_INT64MAX LONG_MAX
+# define PWR_INT64MIN LONG_MIN
 #endif
 
 //! 64-bit unsigned integer type.
@@ -213,13 +220,31 @@ typedef struct {
 
 #if defined OS_POSIX
 # if defined HW_X86_64
-typedef unsigned long int pwr_tUInt64;
+    typedef unsigned long int pwr_tUInt64;
+#   define PWR_UINT64MAX ULONG_MAX
 # else
-typedef unsigned long long int pwr_tUInt64;
+    typedef unsigned long long int pwr_tUInt64;
+#   define PWR_UINT64MAX ULLONG_MAX
 # endif
 #else
-typedef __pwr_tUInt64 pwr_tUInt64;
+  typedef __pwr_tUInt64 pwr_tUInt64;
+# define PWR_UINT64MAX ULONG_MAX
 #endif
+
+#define PWR_INT8_MAX SCHAR_MAX
+#define PWR_INT8_MIN SCHAR_MIN
+#define PWR_UINT8_MAX UCHAR_MAX
+#define PWR_INT16_MAX SHRT_MAX
+#define PWR_INT16_MIN SHRT_MIN
+#define PWR_UINT16_MAX USHRT_MAX
+#define PWR_INT32_MAX INT_MAX
+#define PWR_INT32_MIN INT_MIN
+#define PWR_UINT32_MAX UINT_MAX
+#define PWR_ATTIME_MAX {PWR_INT64MAX,1000000000-1}
+#define PWR_ATTIME_MIN {0,0}
+#define PWR_DTTIME_MAX {PWR_INT64MAX,1000000000-1}
+#define PWR_DTTIME_MIN {PWR_INT64MIN,-(1000000000-1)}
+
 /*_*
   @aref uint8 UInt8
 */
@@ -583,6 +608,10 @@ static const pwr_tTime      pwr_cNTime      = {0, 0};	//!< Zero time constant.
 static const pwr_tDeltaTime pwr_cNDeltaTime = {0, 0};	//!< Zero deltatime constant.
 static const pwr_tTime      pwr_cNotATime   = {0, 1000000000}; //!< Illegal time.
 static const pwr_tDeltaTime pwr_cNotADeltaTime = {0, 1000000000}; //!< Illegal delta time.
+static const pwr_tTime	    pwr_cAtMax      = PWR_ATTIME_MAX;
+static const pwr_tTime	    pwr_cAtMin      = PWR_ATTIME_MIN;
+static const pwr_tDeltaTime pwr_cDtMax      = PWR_DTTIME_MAX;
+static const pwr_tDeltaTime pwr_cDtMin      = PWR_DTTIME_MIN;
 
 /* Gereral macro definitions  */
 

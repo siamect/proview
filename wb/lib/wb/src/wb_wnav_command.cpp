@@ -453,7 +453,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"BUILD",
 			&wnav_build_func,
 			{ "dcli_arg1", "dcli_arg2", "/FORCE", "/DEBUG", "/CROSSREFERENCE", 
-			  "/MANUAL", "/NAME", "/WINDOW", ""}
+			  "/MANUAL", "/NAME", "/WINDOW", "/NODE", ""}
 		},
 		{
 			"CHECK",
@@ -5046,6 +5046,37 @@ static int	wnav_build_func(	void		*client_data,
     build.opt.manual = ODD( dcli_get_qualifier( "/MANUAL", 0, 0));
 
     build.node( namestr, volumelist, volumecount);
+    wnav->message(' ', wnav_get_message(build.sts()));
+
+    free( (char *) volumelist);
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "CONFIG", strlen( arg1_str)) == 0) {
+    char nodestr[80];
+    void *volumelist;
+    int	volumecount;
+
+    if ( EVEN( dcli_get_qualifier( "/NODE", nodestr, sizeof(nodestr)))) {
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", nodestr, sizeof(nodestr)))) {
+	wnav->message('E', "Syntax error");
+	return WNAV__SYNTAX;
+      }
+    }
+
+    // Load the bootlist
+    sts = lfu_volumelist_load( pwr_cNameBootList, (lfu_t_volumelist **) &volumelist,
+			       &volumecount);
+    if ( sts == FOE__NOFILE) {
+      wnav->message( 'E', "Project is not configured");
+      return sts;
+    }
+
+    wb_build build( *(wb_session *)wnav->ldhses, wnav);
+    build.opt.force = ODD( dcli_get_qualifier( "/FORCE", 0, 0));
+    build.opt.debug = ODD( dcli_get_qualifier( "/DEBUG", 0, 0));
+    build.opt.crossref = ODD( dcli_get_qualifier( "/CROSSREFERENCE", 0, 0));
+    build.opt.manual = ODD( dcli_get_qualifier( "/MANUAL", 0, 0));
+
+    build.cnf( nodestr, volumelist, volumecount);
     wnav->message(' ', wnav_get_message(build.sts()));
 
     free( (char *) volumelist);

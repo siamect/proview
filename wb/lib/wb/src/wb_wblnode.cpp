@@ -2317,18 +2317,30 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
     {
       pwr_tTime	time;
 
-      sts = time_AsciiToA( value_str, &time);
-      if (EVEN(sts)) return 0;
-      memcpy( buffer_ptr, (char *) &time, sizeof(time));
+      if ( strcmp( value_str, "ATTIME_MIN") == 0)
+	memcpy( buffer_ptr, &pwr_cAtMin, sizeof(pwr_tTime));
+      else if ( strcmp( value_str, "ATTIME_MAX") == 0)
+	memcpy( buffer_ptr, &pwr_cAtMax, sizeof(pwr_tTime));
+      else {
+	sts = time_AsciiToA( value_str, &time);
+	if (EVEN(sts)) return 0;
+	memcpy( buffer_ptr, (char *) &time, sizeof(time));
+      }
       break;
     }
     case pwr_eType_DeltaTime:
     {
       pwr_tDeltaTime deltatime;
 
-      sts = time_AsciiToD( value_str, &deltatime);
-      if (EVEN(sts)) return 0;
-      memcpy( buffer_ptr, (char *) &deltatime, sizeof(deltatime));
+      if ( strcmp( value_str, "DTTIME_MIN") == 0)
+	memcpy( buffer_ptr, &pwr_cDtMin, sizeof(pwr_tDeltaTime));
+      else if ( strcmp( value_str, "DTTIME_MAX") == 0)
+	memcpy( buffer_ptr, &pwr_cDtMax, sizeof(pwr_tDeltaTime));
+      else {
+	sts = time_AsciiToD( value_str, &deltatime);
+	if (EVEN(sts)) return 0;
+	memcpy( buffer_ptr, (char *) &deltatime, sizeof(deltatime));
+      }
       break;
     }
     default:

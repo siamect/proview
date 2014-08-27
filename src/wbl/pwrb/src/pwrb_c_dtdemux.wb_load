@@ -33,18 +33,18 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_idemux.wb_load -- Defines the class IDemux.
+!  pwrb_c_dtdemux.wb_load -- Defines the class DtDemux.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
-!  @Group Plc,PlcInteger
-!  @Summary Integer demultiplexer
-!  Integer demultiplexer.
-!  @image orm_idemux_fo.gif
+!  @Group Plc,PlcTime
+!  @Summary Delta time demultiplexer
+!  Delta time demultiplexer.
+!  @image orm_dtdemux_fo.gif
 !
-!  Transfer the integer input to one of the 24 outputs, depending on Idx.
+!  Transfer the delta time input to one of the 24 outputs, depending on Idx.
 !  The index attribute states which output the input value is
 !  transfered to.
 !  The other outputs are set to zero.
@@ -52,7 +52,7 @@ SObject pwrb:Class
 !  set to zero.
 !  
 !*/
-  Object IDemux $ClassDef 519
+  Object DtDemux $ClassDef 645
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Connections
@@ -60,14 +60,14 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "IDemux"
+        Attr StructName = "DtDemux"
       EndBody
       !/**
       !  Value of input signal 0, input signal 1, ...
       !*/
       Object In $Input 1 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "In"
         EndBody
       EndObject
@@ -88,7 +88,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out0"
         EndBody
       EndObject
@@ -99,7 +99,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out1"
         EndBody
       EndObject
@@ -110,7 +110,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out2"
         EndBody
       EndObject
@@ -121,7 +121,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out3"
         EndBody
       EndObject
@@ -132,7 +132,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out4"
         EndBody
       EndObject
@@ -143,7 +143,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out5"
         EndBody
       EndObject
@@ -154,7 +154,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out6"
         EndBody
       EndObject
@@ -165,7 +165,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out7"
         EndBody
       EndObject
@@ -176,7 +176,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out8"
         EndBody
       EndObject
@@ -187,7 +187,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out9"
         EndBody
       EndObject
@@ -198,7 +198,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out10"
         EndBody
       EndObject
@@ -209,7 +209,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out11"
         EndBody
       EndObject
@@ -220,7 +220,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out12"
         EndBody
       EndObject
@@ -231,7 +231,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out13"
         EndBody
       EndObject
@@ -242,7 +242,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out14"
         EndBody
       EndObject
@@ -253,7 +253,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out15"
         EndBody
       EndObject
@@ -264,7 +264,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out16"
         EndBody
       EndObject
@@ -275,7 +275,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out17"
         EndBody
       EndObject
@@ -286,7 +286,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out18"
         EndBody
       EndObject
@@ -297,7 +297,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out19"
         EndBody
       EndObject
@@ -308,7 +308,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out20"
         EndBody
       EndObject
@@ -319,7 +319,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out21"
         EndBody
       EndObject
@@ -330,7 +330,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out22"
         EndBody
       EndObject
@@ -341,7 +341,7 @@ SObject pwrb:Class
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "Out23"
         EndBody
       EndObject
@@ -372,12 +372,12 @@ SObject pwrb:Class
         Attr tracemethod = 0
         Attr traceindex = 0
 	Attr executeordermethod = 2
-        Attr objname = "IDemux"
-        Attr graphname = "IDemux"
+        Attr objname = "DtDemux"
+        Attr graphname = "DtDemux"
         Attr debugpar = ""
       EndBody
     EndObject
-    Object Template IDemux
+    Object Template DtDemux
       Body RtBody
       EndBody
     EndObject

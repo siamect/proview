@@ -49,5 +49,6 @@ nobuilt    	<Nothing is built>					/info
 plcpgmchild    	<Object can not be a child to a PlcPgm>			/error
 makeerror    	<Error from make>					/error
 makeupdated     <Make dependency updated>				/info
+nosuchnode	<No such node>						/error
 
 

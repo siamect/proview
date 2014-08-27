@@ -76,6 +76,8 @@
 
 
 static const unsigned int pwr_cInputOffset = pwr_AlignLW(sizeof(void*)) + pwr_AlignLW(sizeof(pwr_tBoolean));
+static const unsigned int pwr_cInputOffsetAt = pwr_AlignLW(sizeof(void*)) + pwr_AlignLW(sizeof(pwr_tTime));
+static const unsigned int pwr_cInputOffsetDt = pwr_AlignLW(sizeof(void*)) + pwr_AlignLW(sizeof(pwr_tDeltaTime));
 
 typedef struct plc_sProcess plc_sProcess;
 typedef struct plc_sThread plc_sThread;

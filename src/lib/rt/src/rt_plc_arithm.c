@@ -46,6 +46,7 @@
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"
+#include "co_time.h"
 #include "rt_plc.h"
 #include "rt_plc_arithm.h"
 
@@ -1233,8 +1234,269 @@ void BwRotateLeft_exec(
 	((unsigned int)(*o->InP) << (*o->NumP));
 }
 
+/*_*
+  AtSel Select function.
+  @aref atsel AtSel
+*/
+void AtSel_exec(
+  plc_sThread		*tp,
+  pwr_sClass_AtSel	*o)
+{
+  o->Control = *o->ControlP;
+  if ( o->Control)
+    o->ActVal = *o->In1P;
+  else
+    o->ActVal = *o->In2P;
+}
 
+/*_*
+  DtSel Select function.
+  @aref dtsel DtSel
+*/
+void DtSel_exec(
+  plc_sThread		*tp,
+  pwr_sClass_DtSel	*o)
+{
+  o->Control = *o->ControlP;
+  if ( o->Control)
+    o->ActVal = *o->In1P;
+  else
+    o->ActVal = *o->In2P;
+}
 
+/*_*
+  AtMux Absolute time multiplexer.
+  @aref atmux AtMux
+*/
+void AtMux_exec(
+  plc_sThread		*tp,
+  pwr_sClass_AtMux	*o)
+{
+#define ATMUX_SIZE 24
+  int     	idx;
+  pwr_tTime	**inp = &o->In0P;
+
+  idx = o->Index = *o->IndexP;
+  idx = idx < 0 ? 0 : ( idx > ATMUX_SIZE - 1 ? ATMUX_SIZE - 1 : idx);
+  inp = (pwr_tTime **)((char *)inp + idx * pwr_cInputOffsetAt);
+  o->ActVal = **inp;
+}
+
+/*_*
+  DtMux Absolute time multiplexer.
+  @aref dtmux DtMux
+*/
+void DtMux_exec(
+  plc_sThread		*tp,
+  pwr_sClass_DtMux	*o)
+{
+#define DTMUX_SIZE 24
+  int     	idx;
+  pwr_tDeltaTime **inp = &o->In0P;
+
+  idx = o->Index = *o->IndexP;
+  idx = idx < 0 ? 0 : ( idx > DTMUX_SIZE - 1 ? DTMUX_SIZE - 1 : idx);
+  inp = (pwr_tDeltaTime **)((char *)inp + idx * pwr_cInputOffsetDt);
+  o->ActVal = **inp;
+}
+
+/*_*
+  AtMax Maximum function.
+  @aref atmax AtMax
+*/
+void AtMax_exec(
+  plc_sThread		*tp,
+  pwr_sClass_AtMax	*o)
+{
+#define ATMAX_SIZE 8
+  int     	i;
+  pwr_tTime	**inp = &o->In1P;
+  pwr_tTime   	result = PWR_ATTIME_MIN;
+
+  for ( i = 0; i < ATMAX_SIZE; i++) {
+    if ( time_Acomp_NE( *inp, &result) == 1)
+      result = **inp;    
+    inp = (pwr_tTime **)((char *)inp + pwr_cInputOffsetAt);
+  }
+  o->ActVal = result;
+}
+
+/*_*
+  AtMin Minimum function.
+  @aref atmin AtMin
+*/
+void AtMin_exec(
+  plc_sThread		*tp,
+  pwr_sClass_AtMin	*o)
+{
+#define ATMIN_SIZE 8
+  int     	i;
+  pwr_tTime	**inp = &o->In1P;
+  pwr_tTime   	result = PWR_ATTIME_MAX;
+
+  for ( i = 0; i < ATMIN_SIZE; i++) {
+    if ( time_Acomp_NE( *inp, &result) == -1)
+      result = **inp;
+    inp = (pwr_tTime **)((char *)inp + pwr_cInputOffsetAt);
+  }
+  o->ActVal = result;
+}
+
+/*_*
+  DtMax Maximum function.
+  @aref dtmax DtMax
+*/
+void DtMax_exec(
+  plc_sThread		*tp,
+  pwr_sClass_DtMax	*o)
+{
+#define DTMAX_SIZE 8
+  int     	i;
+  pwr_tDeltaTime	**inp = &o->In1P;
+  pwr_tDeltaTime   	result = PWR_DTTIME_MIN;
+
+  for ( i = 0; i < DTMAX_SIZE; i++) {
+    if ( time_Dcomp_NE( *inp, &result) == 1)
+      result = **inp;    
+    inp = (pwr_tDeltaTime **)((char *)inp + pwr_cInputOffsetDt);
+  }
+  o->ActVal = result;
+}
+
+/*_*
+  DtMin Minimum function.
+  @aref dtmin DtMin
+*/
+void DtMin_exec(
+  plc_sThread		*tp,
+  pwr_sClass_DtMin	*o)
+{
+#define DTMIN_SIZE 8
+  int     	i;
+  pwr_tDeltaTime	**inp = &o->In1P;
+  pwr_tDeltaTime   	result = PWR_DTTIME_MAX;
+
+  for ( i = 0; i < DTMIN_SIZE; i++) {
+    if ( time_Dcomp_NE( *inp, &result) == -1)
+      result = **inp;
+    inp = (pwr_tDeltaTime **)((char *)inp + pwr_cInputOffsetDt);
+  }
+  o->ActVal = result;
+}
+
+/*_*
+  AtLimit Absolute time limiter.
+  @aref atlimit AtLimit
+*/
+void AtLimit_exec(
+  plc_sThread		*tp,
+  pwr_sClass_AtLimit	*o)
+{
+  o->Max = *o->MaxP;
+  o->Min = *o->MinP;
+  o->In = *o->InP;
+
+  if ( time_Acomp_NE( &o->In, &o->Max) == 1) {
+    o->ActVal = o->Max;
+    o->High = TRUE;
+    o->Low = FALSE;
+  }
+  else if ( time_Acomp_NE( &o->In, &o->Min) == -1) {
+    o->Low = TRUE;
+    if ( time_Acomp_NE( &o->Min, &o->Max) <= 0) {
+      o->ActVal = o->Min;
+      o->High = FALSE;
+    }
+    else {
+      o->ActVal = o->Max;
+      o->High = TRUE;
+    }
+  }
+  else {
+    o->ActVal = o->In;
+    o->High = FALSE;
+    o->Low = FALSE;
+  }
+}
+
+/*_*
+  DtLimit Delta time limiter.
+  @aref dtlimit DtLimit
+*/
+void DtLimit_exec(
+  plc_sThread		*tp,
+  pwr_sClass_DtLimit	*o)
+{
+  o->Max = *o->MaxP;
+  o->Min = *o->MinP;
+  o->In = *o->InP;
+
+  if ( time_Dcomp_NE( &o->In, &o->Max) == 1) {
+    o->ActVal = o->Max;
+    o->High = TRUE;
+    o->Low = FALSE;
+  }
+  else if ( time_Dcomp_NE( &o->In, &o->Min) == -1) {
+    o->Low = TRUE;
+    if ( time_Dcomp_NE( &o->Min, &o->Max) <= 0) {
+      o->ActVal = o->Min;
+      o->High = FALSE;
+    }
+    else {
+      o->ActVal = o->Max;
+      o->High = TRUE;
+    }
+  }
+  else {
+    o->ActVal = o->In;
+    o->High = FALSE;
+    o->Low = FALSE;
+  }
+}
+
+/*_*
+  AtDemux Absolute time demultiplexer.
+  @aref atdemux AtDemux
+*/
+void AtDemux_exec(
+  plc_sThread		*tp,
+  pwr_sClass_AtDemux	*o)
+{
+#define ATDEMUX_SIZE 24
+  int     	idx, i;
+  pwr_tTime	*outp = &o->Out0;
+
+  idx = o->Index = *o->IndexP;
+  for ( i = 0; i < ATDEMUX_SIZE; i++) {
+    if ( i == idx)
+      *outp = *o->InP;
+    else
+      *outp = pwr_cNTime;
+    outp++;
+  }
+}
+
+/*_*
+  DtDemux Delta time demultiplexer.
+  @aref dtdemux DtDemux
+*/
+void DtDemux_exec(
+  plc_sThread		*tp,
+  pwr_sClass_DtDemux	*o)
+{
+#define DTDEMUX_SIZE 24
+  int     	idx, i;
+  pwr_tDeltaTime *outp = &o->Out0;
+
+  idx = o->Index = *o->IndexP;
+  for ( i = 0; i < ATDEMUX_SIZE; i++) {
+    if ( i == idx)
+      *outp = *o->InP;
+    else
+      *outp = pwr_cNDeltaTime;
+    outp++;
+  }
+}
 
 
 

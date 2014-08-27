@@ -4655,7 +4655,15 @@ pwr_tStatus gdh_AttrValueToString(
   case pwr_eType_Time: {
     char			timstr[64];
 
-    if( format && format[0] == '%' && format[2] == 't') {
+    if ( memcmp( value_ptr, &pwr_cAtMin, sizeof(pwr_tTime)) == 0) {
+      strcpy( timstr, "ATTIME_ZERO");
+      sts = GDH__SUCCESS;
+    }
+    else if ( memcmp( value_ptr, &pwr_cAtMax, sizeof(pwr_tTime)) == 0) {
+      strcpy( timstr, "ATTIME_MAX");
+      sts = GDH__SUCCESS;
+    }
+    else if( format && format[0] == '%' && format[2] == 't') {
       switch ( format[1]) {
       case '1': 
 	// Format %1t, only time, no hundredth
@@ -4708,10 +4716,16 @@ pwr_tStatus gdh_AttrValueToString(
   case pwr_eType_DeltaTime: {
     char			timstr[64];
 
-    sts = time_DtoAscii( (pwr_tDeltaTime *) value_ptr, 1, 
-			 timstr, sizeof(timstr));
-    if ( EVEN(sts))
-      strcpy( timstr, "Undefined time");
+    if ( memcmp( value_ptr, &pwr_cDtMin, sizeof(pwr_tDeltaTime)) == 0)
+      strcpy( timstr, "DTTIME_MIN");
+    else if ( memcmp( value_ptr, &pwr_cDtMax, sizeof(pwr_tDeltaTime)) == 0)
+      strcpy( timstr, "DTTIME_MAX");
+    else {
+      sts = time_DtoAscii( (pwr_tDeltaTime *) value_ptr, 1, 
+			   timstr, sizeof(timstr));
+      if ( EVEN(sts))
+	strcpy( timstr, "Undefined time");
+    }
     *len = sprintf( str, "%s", timstr);
     break;
   }
@@ -4962,17 +4976,29 @@ pwr_tStatus gdh_AttrStringToValue(
   case pwr_eType_Time: {
     pwr_tTime	time;
 
-    sts = time_AsciiToA( value_str, &time);
-    if (EVEN(sts)) return GDH__CONVERT;
-    memcpy( buffer_ptr, (char *) &time, sizeof(time));
+    if ( strcmp( value_str, "ATTIME_ZERO") == 0)
+      memcpy( buffer_ptr, &pwr_cAtMin, sizeof(pwr_tTime));
+    else if ( strcmp( value_str, "ATTIME_MAX") == 0)
+      memcpy( buffer_ptr, &pwr_cAtMax, sizeof(pwr_tTime));
+    else {
+      sts = time_AsciiToA( value_str, &time);
+      if (EVEN(sts)) return GDH__CONVERT;
+      memcpy( buffer_ptr, (char *) &time, sizeof(time));
+    }
     break;
   }
   case pwr_eType_DeltaTime: {
     pwr_tDeltaTime deltatime;
 
-    sts = time_AsciiToD( value_str, &deltatime);
-    if (EVEN(sts)) return GDH__CONVERT;
-    memcpy( buffer_ptr, (char *) &deltatime, sizeof(deltatime));
+    if ( strcmp( value_str, "DTTIME_MIN") == 0)
+      memcpy( buffer_ptr, &pwr_cDtMin, sizeof(pwr_tDeltaTime));
+    else if ( strcmp( value_str, "DTTIME_MAX") == 0)
+      memcpy( buffer_ptr, &pwr_cDtMax, sizeof(pwr_tDeltaTime));
+    else {
+      sts = time_AsciiToD( value_str, &deltatime);
+      if (EVEN(sts)) return GDH__CONVERT;
+      memcpy( buffer_ptr, (char *) &deltatime, sizeof(deltatime));
+    }
     break;
   }
   case pwr_eType_Enum: {

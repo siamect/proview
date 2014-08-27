@@ -78,6 +78,7 @@ class wb_build : public wb_status
   void appgraph( pwr_tOid oid);
   void application( pwr_tOid oid);
   void classdef( pwr_tOid oid);
+  void cnf( char *node, void *volumelist, int volumecnt);
   void directories( char *dir, bld_ePass pass);
   void export_import_files( int type, bld_ePass pass);
   void export_files( bld_ePass pass) { export_import_files(bld_eType_Export, pass);}
