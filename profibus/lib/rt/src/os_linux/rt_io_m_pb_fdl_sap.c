@@ -34,143 +34,75 @@
  * General Public License plus this exception.
  */
 
+/* rt_io_m_pb_fdl_sap.c -- io methods for a profibus FDL SAP */
+
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <math.h>
 #include <sys/file.h>
 #include <sys/ioctl.h>
 
 #include "pwr.h"
+#include "co_cdh.h"
 #include "pwr_baseclasses.h"
 #include "pwr_profibusclasses.h"
+#include "rt_gdh.h"
 #include "rt_io_base.h"
 #include "rt_io_bus.h"
 #include "rt_io_msg.h"
 #include "rt_errh.h"
+#include "co_cdh.h"
+#include "rt_io_profiboard.h"
 #include "rt_pb_msg.h"
 
 #include "rt_io_pb_locals.h"
 
+
 /*----------------------------------------------------------------------------*\
-   Init method for the Pb module
+   Init method for the Pb FDL SAP 
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardInit (
+
+static pwr_tStatus IoRackInit (
   io_tCtx	ctx,
   io_sAgent	*ap,
-  io_sRack	*rp,
-  io_sCard	*cp
+  io_sRack	*rp
 ) 
 {
-  io_sCardLocal *local;
-  pwr_sClass_Pb_Module *op;
-  int i;
+  io_sRackLocal *local;
+  char name[196];
+  pwr_tStatus sts;
 
-  op = (pwr_sClass_Pb_Module *) cp->op;
-  local = (io_sCardLocal *) cp->Local;
-  
-  for (i=0; i<IO_MAXCHAN; i++) {
-    local->scancount[i] = 0;
-  }
+  sts = gdh_ObjidToName(rp->Objid, (char *) &name, sizeof(name), cdh_mNName);
+  errh_Info( "Init of Profibus FDL SAP %s", name);
 
-  op->Status = PB__NORMAL;
+  local= calloc(1, sizeof(*local));
+  rp->Local = local;
+
+  local->fdl = 1;  
 
   return IO__SUCCESS;
 }
 
 
 /*----------------------------------------------------------------------------*\
-   Read method for the Pb module
-\*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardRead (
-  io_tCtx	ctx,
-  io_sAgent	*ap,
-  io_sRack	*rp,
-  io_sCard	*cp
-) 
-{
-  io_sCardLocal *local;
-  pwr_sClass_Pb_Module *op;
-  pwr_sClass_Pb_DP_Slave *slave;
-
-  op = (pwr_sClass_Pb_Module *) cp->op;
-  local = (io_sCardLocal *) cp->Local;
-  slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
-
-  op->Status = slave->Status;  
-
-  /* I/O-read operations should always be made. This ensures correct values */
-  /* on all inputs. Default StallAction is ResetInputs which means that */
-  /* all inputs will be zeroed */
-
-  io_bus_card_read(ctx, rp, cp, local->input_area, slave->Diag, slave->ByteOrdering,
-		   slave->FloatRepresentation);  
-
-//  printf("Method Pb_Module-IoCardRead\n");
-  return IO__SUCCESS;
-}
-
-
-/*----------------------------------------------------------------------------*\
-   Write method for the Pb module
-\*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardWrite (
-  io_tCtx	ctx,
-  io_sAgent	*ap,
-  io_sRack	*rp,
-  io_sCard	*cp
-) 
-{
-  io_sCardLocal *local;
-  pwr_sClass_Pb_Module *op;
-  pwr_sClass_Pb_DP_Slave *slave;
-
-  op = (pwr_sClass_Pb_Module *) cp->op;
-  local = (io_sCardLocal *) cp->Local;
-  slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
   
-  op->Status = slave->Status;  
-
-  if (op->Status == PB__NORMAL) { 
-    io_bus_card_write(ctx, cp, local->output_area, slave->ByteOrdering,
-		      slave->FloatRepresentation);  
-  }
-//  printf("Method Pb_Module-IoCardWrite\n");
-  return IO__SUCCESS;
-}
-
-
-/*----------------------------------------------------------------------------*\
-   Close method for the Pb module
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardClose (
+static pwr_tStatus IoRackClose (
   io_tCtx	ctx,
   io_sAgent	*ap,
-  io_sRack	*rp,
-  io_sCard	*cp
+  io_sRack	*rp
 ) 
 {
-  io_sCardLocal *local;
-  local = cp->Local;
-
-  free ((char *) local);
-  
-  printf("Method Pb_Module-IoCardClose\n");
   return IO__SUCCESS;
 }
-
 
 
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/
 
-pwr_dExport pwr_BindIoMethods(Pb_Module) = {
-  pwr_BindIoMethod(IoCardInit),
-  pwr_BindIoMethod(IoCardRead),
-  pwr_BindIoMethod(IoCardWrite),
-  pwr_BindIoMethod(IoCardClose),
+pwr_dExport pwr_BindIoMethods(Pb_FDL_SAP) = {
+  pwr_BindIoMethod(IoRackInit),
+  pwr_BindIoMethod(IoRackClose),
   pwr_NullMethod
 };
-

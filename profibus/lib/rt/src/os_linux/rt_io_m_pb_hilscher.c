@@ -74,8 +74,6 @@ The code refers to some documents provided by Hilscher, the documents are:
 #include "rcs_user.h"
 #include "dpm_user.h"
 
-#include "rt_io_pb_locals.h"
-
 #include "pwr.h"
 #include "co_cdh.h"
 #include "pwr_baseclasses.h"
@@ -86,6 +84,8 @@ The code refers to some documents provided by Hilscher, the documents are:
 #include "rt_errh.h"
 #include "rt_io_agent_init.h"
 #include "rt_pb_msg.h"
+
+#include "rt_io_pb_locals.h"
 
 typedef struct {
 	/* Board number.  */
@@ -101,7 +101,7 @@ typedef struct {
 	/* Watchdog counter, used by DevTriggerWatchDog() as explained on page
 	58 of CIFLinux_en.pdf.  */
 	unsigned short watchdog;
-} io_sAgentLocal;
+} io_sAgentLocalHilscher;
 
 /* Prototypes for functions exported to Proview.  */
 static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent *ap);
@@ -141,7 +141,7 @@ boards known_boards[] = {
 /* Initializes Profibus DP interface on the CIF board referred to by local.
 DRV_NO_ERROR is returned upon success.  */
 static short
-dpm_init_master(io_sAgentLocal *local, pwr_sClass_Pb_Hilscher *op,
+dpm_init_master(io_sAgentLocalHilscher *local, pwr_sClass_Pb_Hilscher *op,
 		io_sAgent *ap)
 {
 	short rv;
@@ -193,7 +193,7 @@ dpm_init_master(io_sAgentLocal *local, pwr_sClass_Pb_Hilscher *op,
 /* Opens and initializes the board referred to by local. Upon success
  * DRV_NO_ERROR will be returned.  */
 static short
-dpm_init(io_sAgentLocal *local, io_sAgent *ap)
+dpm_init(io_sAgentLocalHilscher *local, io_sAgent *ap)
 {
 	short rv;
 
@@ -215,7 +215,7 @@ dpm_init(io_sAgentLocal *local, io_sAgent *ap)
 /* Closes the board referred to by local. Upon success DRV_NO_ERROR will
 be returned.  */
 static short
-dpm_exit(io_sAgentLocal *local, io_sAgent *ap)
+dpm_exit(io_sAgentLocalHilscher *local, io_sAgent *ap)
 {
 	short rv;
 	short rv_ret = DRV_NO_ERROR;
@@ -414,9 +414,9 @@ dpm_set_add_tab(pwr_sClass_Pb_DP_Slave *op, io_sAgent *ap, io_sRack *rp,
 	slaves/modules have occupied so far.  */
 	unsigned short *input_size;
 	unsigned short *output_size;
-	input_size = (unsigned short *) &((io_sAgentLocal *) ap->Local)->input_size;
+	input_size = (unsigned short *) &((io_sAgentLocalHilscher *) ap->Local)->input_size;
 	output_size =
-			(unsigned short *) &((io_sAgentLocal *) ap->Local)->output_size;
+			(unsigned short *) &((io_sAgentLocalHilscher *) ap->Local)->output_size;
 
 	/* This lets Proview find the IO-area for this module (in this case it is
 	actually handled at the agent level, thus in this file).  The offsets
@@ -606,7 +606,7 @@ or 127 to set master bus parameters.  The bus parameters are read from
 the buffer prmdata and shall be of length prmlen.  DRV_NO_ERROR is returned
 if successful.  */
 static short
-dpm_ddlm_download(io_sAgentLocal *local, unsigned char address,
+dpm_ddlm_download(io_sAgentLocalHilscher *local, unsigned char address,
 		unsigned int prmlen, void *prmdata, io_sAgent *ap)
 {
 	short rv;
@@ -673,7 +673,7 @@ dpm_ddlm_download(io_sAgentLocal *local, unsigned char address,
 /* Configures the master bus parameters of the board referred to by
 local, the struct containing the parameters should be passed in op.  */
 static short
-dpm_download_master_prm(io_sAgentLocal *local, pwr_sClass_Pb_Hilscher *op,
+dpm_download_master_prm(io_sAgentLocalHilscher *local, pwr_sClass_Pb_Hilscher *op,
 		io_sAgent *ap)
 {
 	DPM_BUS_DP prm;
@@ -719,7 +719,7 @@ is passed in local.  op holds the slave to configure, the corresponding
 agent pointer and rack pointer must be passed in ap and rp respectively.
 DRV_NO_ERROR will be returned upon success.  */
 static short
-dpm_download_slave_prm(io_sAgentLocal *local, pwr_sClass_Pb_DP_Slave *op,
+dpm_download_slave_prm(io_sAgentLocalHilscher *local, pwr_sClass_Pb_DP_Slave *op,
 		io_sAgent *ap, io_sRack *rp)
 {
 	unsigned char buf[DPM_MAX_LEN_DATA_UNIT];
@@ -815,7 +815,7 @@ board referred to by local.  The function will return DRV_NO_ERROR if
 the request was sent without error, however, it tells us nothing
 about whether any diagnostics data was sent back.  */
 static short
-dpm_req_slave_diag(io_sAgentLocal *local, unsigned char address, io_sAgent *ap)
+dpm_req_slave_diag(io_sAgentLocalHilscher *local, unsigned char address, io_sAgent *ap)
 {
 	short rv;
 	RCS_MESSAGETELEGRAM_10 msg;
@@ -858,7 +858,7 @@ to gather diagnostics data asynchronously.  The desired agent's local
 struct is passed via local and the associated rack list (Profibus slaves) is
 passed in slave_list.  */
 static void
-dpm_update_slave_diag(io_sAgentLocal *local, io_sRack *slave_list,
+dpm_update_slave_diag(io_sAgentLocalHilscher *local, io_sRack *slave_list,
 		io_sAgent *ap)
 {
 	short rv;
@@ -1000,7 +1000,7 @@ dpm_print_diag(io_sAgent *ap, DPM_DIAGNOSTICS *diag)
 If the board was found in the database, the function returns DRV_NO_ERROR
 and the startsegment will be written to what db_startsegment points to.  */
 static short
-dpm_check_board_type(io_sAgentLocal *local, io_sAgent *ap,
+dpm_check_board_type(io_sAgentLocalHilscher *local, io_sAgent *ap,
 		unsigned char *db_startsegment)
 {
 	short rv;
@@ -1064,7 +1064,7 @@ dpm_check_board_type(io_sAgentLocal *local, io_sAgent *ap,
 /* Deletes the "PROFIBUS" protocol settings database from the card referred
 to by local, this procedure is described on page 32 -- 33 in dpm_pie.pdf.  */
 static short
-dpm_delete_flash_prmdb(io_sAgentLocal *local, io_sAgent *ap)
+dpm_delete_flash_prmdb(io_sAgentLocalHilscher *local, io_sAgent *ap)
 {
 	unsigned char db_startsegment;
 	int s = 3;
@@ -1151,7 +1151,7 @@ dpm_delete_flash_prmdb(io_sAgentLocal *local, io_sAgent *ap)
 /* Wrapper for dpm_init_master(), takes care of checking for (and optionally
 removing) the sycon database if present.  */
 static short
-dpm_init_master_check_sycon_db(io_sAgentLocal *local,
+dpm_init_master_check_sycon_db(io_sAgentLocalHilscher *local,
 		pwr_sClass_Pb_Hilscher *op, io_sAgent *ap)
 {
 	short rv;
@@ -1201,7 +1201,7 @@ IoAgentInit(io_tCtx ctx, io_sAgent *ap)
 {
 	pwr_sClass_Pb_Hilscher *op;
 	pwr_tStatus status;
-	io_sAgentLocal *local;
+	io_sAgentLocalHilscher *local;
 	char ok;
 
 	pwr_tObjid slave_objid;
@@ -1215,7 +1215,7 @@ IoAgentInit(io_tCtx ctx, io_sAgent *ap)
 	int retry;
 
 	/* Allocates area for local data structure */
-	ap->Local = calloc(1, sizeof(io_sAgentLocal));
+	ap->Local = calloc(1, sizeof(io_sAgentLocalHilscher));
 	if (!ap->Local) {
 		errh_Error("ERROR config Profibus DP Master %s - %s",
 				ap->Name, "calloc");
@@ -1223,7 +1223,7 @@ IoAgentInit(io_tCtx ctx, io_sAgent *ap)
 	}
 
 	/* Handles for easy access to local variables.  */
-	local = (io_sAgentLocal *) ap->Local;
+	local = (io_sAgentLocalHilscher *) ap->Local;
 	op = (pwr_sClass_Pb_Hilscher *) ap->op;
 
 	op->Status = PB__NOTINIT;
@@ -1342,7 +1342,7 @@ IoAgentRead(io_tCtx ctx, io_sAgent *ap)
 {
 	pwr_sClass_Pb_Hilscher *mp;
 	pwr_sClass_Pb_DP_Slave *sp;
-	io_sAgentLocal *local;
+	io_sAgentLocalHilscher *local;
 	io_sRack *slave_list;
 
 	pwr_sClass_Pb_Hilscher *op;
@@ -1352,7 +1352,7 @@ IoAgentRead(io_tCtx ctx, io_sAgent *ap)
 	DPM_DIAGNOSTICS diag;
 
 	/* Handle for local data structure.  */
-	local = (io_sAgentLocal *) ap->Local;
+	local = (io_sAgentLocalHilscher *) ap->Local;
 
 	/*** Data exchange code goes here:  ***/
 
@@ -1382,7 +1382,7 @@ IoAgentRead(io_tCtx ctx, io_sAgent *ap)
 
 	/*** Diagnostics collecting code goes here:  ***/
 
-	local = (io_sAgentLocal *) ap->Local;
+	local = (io_sAgentLocalHilscher *) ap->Local;
 	op = (pwr_sClass_Pb_Hilscher *) ap->op;
 
 	/* If everything is fine we should be in state OPERATE.
@@ -1474,11 +1474,11 @@ IoAgentWrite(io_tCtx ctx, io_sAgent *ap)
 {
 	pwr_sClass_Pb_Hilscher *mp;
 	pwr_sClass_Pb_DP_Slave *sp;
-	io_sAgentLocal *local;
+	io_sAgentLocalHilscher *local;
 	io_sRack *slave_list;
 
 	/* Handle for local data structure.  */
-	local = (io_sAgentLocal *) ap->Local;
+	local = (io_sAgentLocalHilscher *) ap->Local;
 
 	/* Iterates over the slaves on the bus and writes process data to their
 	respective addresses.  This is really the rack level's responsibility,
@@ -1519,9 +1519,9 @@ IoAgentWrite(io_tCtx ctx, io_sAgent *ap)
 static pwr_tStatus
 IoAgentClose(io_tCtx ctx, io_sAgent *ap)
 {
-	io_sAgentLocal *local;
+	io_sAgentLocalHilscher *local;
 
-	local = (io_sAgentLocal *) ap->Local;
+	local = (io_sAgentLocalHilscher *) ap->Local;
 
 	dpm_exit(local, ap);
 	free(local);

@@ -45,8 +45,6 @@
 #include <sys/file.h>
 #include <sys/ioctl.h>
 
-#include "rt_io_pb_locals.h"
-
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "pwr_profibusclasses.h"
@@ -54,6 +52,7 @@
 #include "rt_io_bus.h"
 #include "rt_io_msg.h"
 #include "rt_errh.h"
+#include "rt_io_pb_locals.h"
 
 /*----------------------------------------------------------------------------*\
   Convert ai from rawvalue to actualvalue.
