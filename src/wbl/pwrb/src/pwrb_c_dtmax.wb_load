@@ -42,7 +42,7 @@ SObject pwrb:Class
 !  @Group Plc,PlcTime
 !  @Summary Delta time maximum function.
 !  Delta time maximum function.
-!  @image orm_dtmax_fo.gif
+!  @image orm_dtmax_fo.png
 !
 !  Get maximum of up to 8 delta time inputs.
 !  

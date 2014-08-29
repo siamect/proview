@@ -262,13 +262,13 @@ int XNav::attr_string_to_value( int type_id, char *value_str,
     break;
   }
   case pwr_eType_Float32: {
-    if ( strcmp( value_str, "FLT_MIN") == 0)
+    if ( strcmp( value_str, "FltMin") == 0)
       *(float *)buffer_ptr = FLT_MIN;
-    else if ( strcmp( value_str, "FLT_NMIN") == 0)
+    else if ( strcmp( value_str, "FltNMin") == 0)
       *(float *)buffer_ptr = -FLT_MIN;
-    else if ( strcmp( value_str, "FLT_MAX") == 0)
+    else if ( strcmp( value_str, "FltMax") == 0)
       *(float *)buffer_ptr = FLT_MAX;
-    else if ( strcmp( value_str, "FLT_NMAX") == 0)
+    else if ( strcmp( value_str, "FltNMax") == 0)
       *(float *)buffer_ptr = -FLT_MAX;
     else if ( sscanf( value_str, "%f%s", (float *)buffer_ptr, s) != 1)
       return XNAV__INPUT_SYNTAX;
@@ -306,9 +306,9 @@ int XNav::attr_string_to_value( int type_id, char *value_str,
   case pwr_eType_Int32:
   case pwr_eType_Status:
   case pwr_eType_NetStatus: {
-    if ( strcmp( value_str, "INT_MIN") == 0)
+    if ( strcmp( value_str, "IntMin") == 0)
       *(int *)buffer_ptr = INT_MIN;
-    else if ( strcmp( value_str, "INT_MAX") == 0)
+    else if ( strcmp( value_str, "IntMax") == 0)
       *(int *)buffer_ptr = INT_MAX;
     else if ( sscanf( value_str, "%d%s", (int *)buffer_ptr, s) != 1)
       return XNAV__INPUT_SYNTAX;
@@ -434,9 +434,9 @@ int XNav::attr_string_to_value( int type_id, char *value_str,
   case pwr_eType_Time: {
     pwr_tTime	time;
 
-    if ( strcmp( value_str, "ATTIME_ZERO") == 0)
+    if ( strcmp( value_str, "AtZero") == 0)
       memcpy( buffer_ptr, &pwr_cAtMin, sizeof(pwr_tTime));
-    else if ( strcmp( value_str, "ATTIME_MAX") == 0)
+    else if ( strcmp( value_str, "AtMax") == 0)
       memcpy( buffer_ptr, &pwr_cAtMax, sizeof(pwr_tTime));
     else {
       sts = time_AsciiToA( value_str, &time);
@@ -448,9 +448,9 @@ int XNav::attr_string_to_value( int type_id, char *value_str,
   case pwr_eType_DeltaTime: {
     pwr_tDeltaTime deltatime;
 
-    if ( strcmp( value_str, "DTTIME_MIN") == 0)
+    if ( strcmp( value_str, "DtMin") == 0)
       memcpy( buffer_ptr, &pwr_cDtMin, sizeof(pwr_tDeltaTime));
-    else if ( strcmp( value_str, "DTTIME_MAX") == 0)
+    else if ( strcmp( value_str, "DtMax") == 0)
       memcpy( buffer_ptr, &pwr_cDtMax, sizeof(pwr_tDeltaTime));
     else {
       sts = time_AsciiToD( value_str, &deltatime);
@@ -489,19 +489,19 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
   }
   case pwr_eType_Float32: {
     if ( *(float *)value_ptr == FLT_MIN) {
-      strcpy( str, "FLT_MIN");
+      strcpy( str, "FltMin");
       *len = strlen(str);
     }
     else if ( *(float *)value_ptr == -FLT_MIN) {
-      strcpy( str, "FLT_NMIN");
+      strcpy( str, "FltNMin");
       *len = strlen(str);
     }
     else if ( *(float *)value_ptr == FLT_MAX) {
-      strcpy( str, "FLT_MAX");
+      strcpy( str, "FltMax");
       *len = strlen(str);
     }
     else if ( *(float *)value_ptr == -FLT_MAX) {
-      strcpy( str, "FLT_NMAX");
+      strcpy( str, "FltNMax");
       *len = strlen(str);
     }
     else {
@@ -606,11 +606,11 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
   }
   case pwr_eType_Int32: {
     if ( *(int *)value_ptr == INT_MIN) {
-      strcpy( str, "INT_MIN");
+      strcpy( str, "IntMin");
       *len = strlen(str);
     }
     else if ( *(int *)value_ptr == INT_MAX) {
-      strcpy( str, "INT_MAX");
+      strcpy( str, "IntMax");
       *len = strlen(str);
     }
     else {
@@ -883,9 +883,9 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
       break;
     default:
       if ( memcmp( value_ptr, &pwr_cAtMin, sizeof(pwr_tTime)) == 0)
-	strcpy( timstr, "ATTIME_ZERO");
+	strcpy( timstr, "AtZero");
       else if ( memcmp( value_ptr, &pwr_cAtMax, sizeof(pwr_tTime)) == 0)
-	strcpy( timstr, "ATTIME_MAX");
+	strcpy( timstr, "AtMax");
       else {
 	sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
 			     timstr, sizeof(timstr));
@@ -904,9 +904,9 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
       break;
     default:
       if ( memcmp( value_ptr, &pwr_cDtMin, sizeof(pwr_tDeltaTime)) == 0)
-	strcpy( timstr, "DTTIME_MIN");
+	strcpy( timstr, "DtMin");
       else if ( memcmp( value_ptr, &pwr_cDtMax, sizeof(pwr_tDeltaTime)) == 0)
-	strcpy( timstr, "DTTIME_MAX");
+	strcpy( timstr, "DtMax");
       else {
 	sts = time_DtoAscii( (pwr_tDeltaTime *) value_ptr, 1, 
 			     timstr, sizeof(timstr));

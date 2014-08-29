@@ -42,7 +42,7 @@ SObject pwrb:Class
 !  @Group Plc,PlcTime
 !  @Summary Delta time demultiplexer
 !  Delta time demultiplexer.
-!  @image orm_dtdemux_fo.gif
+!  @image orm_dtdemux_fo.png
 !
 !  Transfer the delta time input to one of the 24 outputs, depending on Idx.
 !  The index attribute states which output the input value is

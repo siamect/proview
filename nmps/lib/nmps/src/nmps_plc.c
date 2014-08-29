@@ -2825,7 +2825,64 @@ void DataSelect_exec(
 	memcpy( &object->OutDataP, *DataP, sizeof(pwr_tDataRef));
 }
 
+/*_*
+  DataSel
 
+  @aref datasel DataSel
+*/
+void DataSel_exec(
+  plc_sThread		*tp,
+  pwr_sClass_DataSel	*o)
+{
+  o->Control = *o->ControlP;
+  if ( o->Control)
+    memcpy( &o->ActVal, o->In1P, sizeof(pwr_tDataRef));
+  else
+    memcpy( &o->ActVal, o->In2P, sizeof(pwr_tDataRef));
+}
+
+/*_*
+  DataEqual
+
+  @aref dataequal DataEqual
+*/
+void DataEqual_exec(
+  plc_sThread		*tp,
+  pwr_sClass_DataEqual	*o)
+{
+  o->Status = (memcmp( o->In1P, o->In2P, sizeof(pwr_tDataRef)) == 0);
+}
+
+/*_*
+  DataNotEqual
+
+  @aref datanotequal DataNotEqual
+*/
+void DataNotEqual_exec(
+  plc_sThread		*tp,
+  pwr_sClass_DataNotEqual	*o)
+{
+  o->Status = (memcmp( o->In1P, o->In2P, sizeof(pwr_tDataRef)) != 0);
+}
+
+
+/*_*
+  DataMux Data reference multiplexer.
+  @aref datamux DataMux
+*/
+void DataMux_exec(
+  plc_sThread		*tp,
+  pwr_sClass_DataMux	*o)
+{
+#define DATAMUX_SIZE 24
+  int     	idx;
+  pwr_tDataRef	**inp = &o->In0P;
+
+  idx = o->Index = *o->IndexP;
+  idx = idx < 0 ? 0 : ( idx > DATAMUX_SIZE - 1 ? DATAMUX_SIZE - 1 : (idx > o->MaxIndex ? o->MaxIndex : idx));
+  inp = (pwr_tDataRef **)((char *)inp + idx * pwr_cInputOffsetDataRef);
+  o->ActVal = **inp;
+}
 
 /*      NMpsMirrorCell
 */

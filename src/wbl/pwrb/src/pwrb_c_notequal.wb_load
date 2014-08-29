@@ -41,7 +41,7 @@ SObject pwrb:Class
 !  @Code rt_plc_arithm.c
 !  @Group Plc,PlcAnalog
 !  @Summary Check if two analog values are not equal.
-!  Equal compare two analog values and returnes true if they are not equal.
+!  Equal compares two analog values and returns true if they are not equal.
 !  @image orm_notequal_fo.gif
 !*/
   Object NotEqual $ClassDef 424

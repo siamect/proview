@@ -33,58 +33,100 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_iequal.wb_load -- Defines the class IEqual.
+!  pwrb_c_stradd.wb_load -- Defines the class StrAdd.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
-!  @Group Plc,PlcInteger
-!  @Summary Check if two integer are not equal.
-!  INotEqual compares two integer values and returns true if they are not equal.
-!  @image orm_inotequal_fo.gif
+!  @Group Plc,PlcString
+!  @Summary String addition
+!  String addition.
+!  @image orm_stradd_fo.png
+!
+!  Addition of up to 8 string inputs.
+!  
 !*/
-  Object INotEqual $ClassDef 425
+  Object StrAdd $ClassDef 650
     Body SysBody
-      Attr Editor = pwr_eEditor_PlcEd
+      Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Connections
       Attr PopEditor = 2
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-         Attr StructName = "INotEqual"
+        Attr StructName = "StrAdd"
       EndBody
       !/**
-      !  Integer input 1.
+      !  Value of input signal 1, input signal 2, ..., input
+      !  signal 8.
       !*/
       Object In1 $Input 1 
         Body SysBody
-	  Attr Flags |= PWR_MASK_NOREMOVE
-	  Attr Flags |= PWR_MASK_NOINVERT
-	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr PgmName = "In1"
+          Attr TypeRef = "pwrs:Type-$String80"
           Attr GraphName = "In1"
         EndBody
       EndObject
-      !/**
-      !  Integer input 2.
-      !*/
-      Object In2 $Input 2
+      Object In2 $Input 2 
         Body SysBody
-	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr PgmName = "In2"
+          Attr TypeRef = "pwrs:Type-$String80"
           Attr GraphName = "In2"
         EndBody
       EndObject
-      !/**
-      !  True if the input values are not equal.
-      !*/
-      Object Status $Output 3
+      Object In3 $Input 3 
         Body SysBody
+          Attr PgmName = "In3"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "In3"
+        EndBody
+      EndObject
+      Object In4 $Input 4 
+        Body SysBody
+          Attr PgmName = "In4"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "In4"
+        EndBody
+      EndObject
+      Object In5 $Input 5 
+        Body SysBody
+          Attr PgmName = "In5"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "In5"
+        EndBody
+      EndObject
+      Object In6 $Input 6 
+        Body SysBody
+          Attr PgmName = "In6"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "In6"
+        EndBody
+      EndObject
+      Object In7 $Input 7 
+        Body SysBody
+          Attr PgmName = "In7"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "In7"
+        EndBody
+      EndObject
+      Object In8 $Input 8 
+        Body SysBody
+          Attr PgmName = "In8"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "In8"
+        EndBody
+      EndObject
+      !/**
+      !  The result of the addition.
+      !*/
+      Object ActVal $Output 9 
+        Body SysBody
+          Attr PgmName = "ActVal"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Boolean"
-          Attr GraphName = "sts"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "Val"
         EndBody
       EndObject
     EndObject
@@ -99,7 +141,7 @@ SObject pwrb:Class
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
         Attr object_type = 11
-        Attr parameters[0] = 2
+        Attr parameters[0] = 8
         Attr parameters[1] = 0
         Attr parameters[2] = 1
         Attr parameters[3] = 0
@@ -111,15 +153,15 @@ SObject pwrb:Class
         Attr segname_annotation = 1
         Attr compmethod = 4
         Attr compindex = 0
-        Attr tracemethod = 3
-        Attr traceindex = 1
+        Attr tracemethod = 0
+        Attr traceindex = 0
 	Attr executeordermethod = 2
-        Attr objname = "INe"
-        Attr graphname = "INe"
-        Attr debugpar = "Status"
+        Attr objname = "StrAdd"
+        Attr graphname = "StrAdd"
+        Attr debugpar = ""
       EndBody
     EndObject
-    Object Template INotEqual
+    Object Template StrAdd
       Body RtBody
       EndBody
     EndObject

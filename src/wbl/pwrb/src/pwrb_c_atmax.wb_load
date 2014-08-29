@@ -42,7 +42,7 @@ SObject pwrb:Class
 !  @Group Plc,PlcTime
 !  @Summary Absolute time maximum function.
 !  Absolute time maximum function.
-!  @image orm_atmax_fo.gif
+!  @image orm_atmax_fo.png
 !
 !  Get maximum of up to 8 absolute time inputs.
 !  

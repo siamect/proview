@@ -42,7 +42,7 @@ SObject pwrb:Class
 !  @Group Plc,PlcTime
 !  @Summary Delta time minimum function.
 !  Delta minimum function.
-!  @image orm_dtmin_fo.gif
+!  @image orm_dtmin_fo.png
 !
 !  Get minimum of up to 8 delta time inputs.
 !  

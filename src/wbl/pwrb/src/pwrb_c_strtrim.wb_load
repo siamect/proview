@@ -33,58 +33,47 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_iequal.wb_load -- Defines the class IEqual.
+!  pwrb_c_strtrim.wb_load -- Defines the class StrTrim.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
-!  @Group Plc,PlcInteger
-!  @Summary Check if two integer are not equal.
-!  INotEqual compares two integer values and returns true if they are not equal.
-!  @image orm_inotequal_fo.gif
+!  @Group Plc,PlcString
+!  @Summary Remove leading and trailing spaces in a string.
+!  Remove leading and trailing white space characters in a string.
+!  @image orm_strtrim_fo.png
+!
 !*/
-  Object INotEqual $ClassDef 425
+  Object StrTrim $ClassDef 651
     Body SysBody
-      Attr Editor = pwr_eEditor_PlcEd
+      Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Connections
       Attr PopEditor = 2
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-         Attr StructName = "INotEqual"
+        Attr StructName = "StrTrim"
       EndBody
       !/**
-      !  Integer input 1.
+      !  String input.
       !*/
-      Object In1 $Input 1 
+      Object In $Input 1 
         Body SysBody
-	  Attr Flags |= PWR_MASK_NOREMOVE
-	  Attr Flags |= PWR_MASK_NOINVERT
-	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
-          Attr GraphName = "In1"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "In"
         EndBody
       EndObject
       !/**
-      !  Integer input 2.
+      !  Trimmed string.
       !*/
-      Object In2 $Input 2
+      Object ActVal $Output 9 
         Body SysBody
-	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr TypeRef = "pwrs:Type-$Int32"
-          Attr GraphName = "In2"
-        EndBody
-      EndObject
-      !/**
-      !  True if the input values are not equal.
-      !*/
-      Object Status $Output 3
-        Body SysBody
+          Attr PgmName = "ActVal"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Boolean"
-          Attr GraphName = "sts"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "Val"
         EndBody
       EndObject
     EndObject
@@ -99,29 +88,27 @@ SObject pwrb:Class
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
         Attr object_type = 11
-        Attr parameters[0] = 2
+        Attr parameters[0] = 1
         Attr parameters[1] = 0
         Attr parameters[2] = 1
         Attr parameters[3] = 0
         Attr subwindows = 0
         Attr graphmethod = 1
         Attr graphindex = 0
-        Attr default_mask[0] = 3
+        Attr default_mask[0] = 1
         Attr default_mask[1] = 1
         Attr segname_annotation = 1
         Attr compmethod = 4
         Attr compindex = 0
-        Attr tracemethod = 3
-        Attr traceindex = 1
+        Attr tracemethod = 0
+        Attr traceindex = 0
 	Attr executeordermethod = 2
-        Attr objname = "INe"
-        Attr graphname = "INe"
-        Attr debugpar = "Status"
+        Attr objname = "StrTrim"
+        Attr graphname = "StrTrim"
+        Attr debugpar = ""
       EndBody
     EndObject
-    Object Template INotEqual
-      Body RtBody
-      EndBody
+    Object Template StrTrim
     EndObject
   EndObject
 EndSObject

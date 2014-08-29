@@ -42,7 +42,7 @@ SObject pwrb:Class
 !  @Group Plc,PlcTime
 !  @Summary Absolute time selection.
 !  Absolute time selection.
-!  @image orm_atsel_fo.gif
+!  @image orm_atsel_fo.png
 !
 !  Select one of two inputs.
 !  
@@ -80,6 +80,7 @@ SObject pwrb:Class
       !*/
       Object Control $Input 3 
         Body SysBody
+	  Attr Flags |= PWR_MASK_NOINVERT
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "con"
         EndBody

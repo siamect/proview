@@ -47,6 +47,8 @@
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "co_time.h"
+#include "co_cdh.h"
+#include "co_dcli.h"
 #include "rt_plc.h"
 #include "rt_plc_arithm.h"
 
@@ -785,7 +787,7 @@ void IEqual_exec(
 }
 
 /*_*
-  @aref iequal INotEqual
+  @aref inotequal INotEqual
 */
 void INotEqual_exec(
   plc_sThread		*tp,
@@ -1498,5 +1500,111 @@ void DtDemux_exec(
   }
 }
 
+/*_*
+  StrSel Select function.
+  @aref strsel StrSel
+*/
+void StrSel_exec(
+  plc_sThread		*tp,
+  pwr_sClass_StrSel	*o)
+{
+  o->Control = *o->ControlP;
+  if ( o->Control)
+    strncpy( o->ActVal, *o->In1P, sizeof(o->ActVal));
+  else
+    strncpy( o->ActVal, *o->In2P, sizeof(o->ActVal));
+}
+
+/*_*
+  StrMux String multiplexer.
+  @aref strmux StrMux
+*/
+void StrMux_exec(
+  plc_sThread		*tp,
+  pwr_sClass_StrMux	*o)
+{
+#define STRMUX_SIZE 24
+  int     	idx;
+  pwr_tString80	**inp = &o->In0P;
+
+  idx = o->Index = *o->IndexP;
+  idx = idx < 0 ? 0 : ( idx > STRMUX_SIZE - 1 ? STRMUX_SIZE - 1 : idx);
+  inp = (pwr_tString80 **)((char *)inp + idx * pwr_cInputOffsetStr);
+  strncpy( o->ActVal, **inp, sizeof(o->ActVal));
+}
+
+/*_*
+  @aref strequal StrEqual
+*/
+void StrEqual_exec(
+  plc_sThread		*tp,
+  pwr_sClass_StrEqual 	*o)
+{
+  if ( o->CaseSensitive)
+    o->Status = (strcmp( *o->In1P, *o->In2P) == 0);
+  else
+    o->Status = (cdh_NoCaseStrcmp( *o->In1P, *o->In2P) == 0);
+}
+
+/*_*
+  @aref strnotequal StrNotEqual
+*/
+void StrNotEqual_exec(
+  plc_sThread		*tp,
+  pwr_sClass_StrNotEqual *o)
+{
+  if ( o->CaseSensitive)
+    o->Status = (strcmp( *o->In1P, *o->In2P) != 0);
+  else
+    o->Status = (cdh_NoCaseStrcmp( *o->In1P, *o->In2P) != 0);
+}
+
+/*_*
+  StrAdd String addition.
+  @aref stradd StrAdd
+*/
+void StrAdd_exec(
+  plc_sThread		*tp,
+  pwr_sClass_StrAdd	*o)
+{
+#define STRADD_SIZE 8
+  int     	i;
+  pwr_tString80	**inp = &o->In1P;
+  pwr_tString80 sum = "";
+
+  for ( i = 0; i < STRADD_SIZE; i++) {
+    strncat( sum, **inp, sizeof(sum));
+    
+    inp = (pwr_tString80 **)((char *)inp + pwr_cInputOffsetStr);
+  }
+  strncpy( o->ActVal, sum, sizeof(o->ActVal));
+  o->ActVal[sizeof(o->ActVal)-1] = 0;
+}
+
+/*_*
+  StrTrim Remove leading and trailing spaces.
+  @aref strtrim StrTrim
+*/
+void StrTrim_exec(
+  plc_sThread		*tp,
+  pwr_sClass_StrTrim	*o)
+{
+  dcli_trim( o->ActVal, *o->InP);
+}
+
+/*_*
+  StrParse Parse a string.
+  @aref strparse StrParse
+*/
+void StrParse_exec(
+  plc_sThread		*tp,
+  pwr_sClass_StrParse	*o)
+{
+#define STRPARSE_SIZE 10
+  int i, tokens;
+  tokens = dcli_parse( *o->InP, o->Delimiter, "", o->Token1, STRPARSE_SIZE, sizeof(o->Token1), 1);
+  for ( i = tokens; i < STRPARSE_SIZE; i++)
+    *(char *)((char *)o->Token1 + i * sizeof(o->Token1)) = 0;
+}
 
 

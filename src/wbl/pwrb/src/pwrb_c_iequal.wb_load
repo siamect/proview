@@ -41,7 +41,7 @@ SObject pwrb:Class
 !  @Code rt_plc_arithm.c
 !  @Group Plc,PlcInteger
 !  @Summary Check if two integer are equal.
-!  IEqual compare two integer values and returnes true if they are equal.
+!  IEqual compares two integer values and returns true if they are equal.
 !  @image orm_iequal_fo.gif
 !*/
   Object IEqual $ClassDef 391

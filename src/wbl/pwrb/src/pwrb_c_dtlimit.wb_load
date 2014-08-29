@@ -42,7 +42,7 @@ SObject pwrb:Class
 !  @Group Plc,PlcTime
 !  @Summary Delta time limiter.
 !  Delta time limiter.
-!  @image orm_dtlimit_fo.gif
+!  @image orm_dtlimit_fo.png
 !
 !  Minimum and maximum limiter for delta time value.
 !  

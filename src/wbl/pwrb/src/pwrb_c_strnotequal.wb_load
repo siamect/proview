@@ -33,18 +33,18 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_iequal.wb_load -- Defines the class IEqual.
+!  pwrb_c_strnotequal.wb_load -- Defines the class StrNotEqual.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
-!  @Group Plc,PlcInteger
-!  @Summary Check if two integer are not equal.
-!  INotEqual compares two integer values and returns true if they are not equal.
-!  @image orm_inotequal_fo.gif
+!  @Group Plc,PlcString
+!  @Summary Check if two strings are not equal.
+!  StrEqual compares two string values and returns true if they are not equal.
+!  @image orm_strnotequal_fo.png
 !*/
-  Object INotEqual $ClassDef 425
+  Object StrNotEqual $ClassDef 649
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd
       Attr Method = pwr_eMethod_Connections
@@ -52,34 +52,40 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-         Attr StructName = "INotEqual"
+         Attr StructName = "StrNotEqual"
       EndBody
       !/**
-      !  Integer input 1.
+      !  String input 1.
       !*/
       Object In1 $Input 1 
         Body SysBody
 	  Attr Flags |= PWR_MASK_NOREMOVE
-	  Attr Flags |= PWR_MASK_NOINVERT
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$String80"
           Attr GraphName = "In1"
         EndBody
       EndObject
       !/**
-      !  Integer input 2.
+      !  String input 2.
       !*/
       Object In2 $Input 2
         Body SysBody
-	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$String80"
           Attr GraphName = "In2"
+        EndBody
+      EndObject
+      !/**
+      !  Comparision is case sensitive.
+      !*/
+      Object CaseSensitive $Intern 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
       !/**
       !  True if the input values are not equal.
       !*/
-      Object Status $Output 3
+      Object Status $Output 4
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -100,7 +106,7 @@ SObject pwrb:Class
       Body SysBody
         Attr object_type = 11
         Attr parameters[0] = 2
-        Attr parameters[1] = 0
+        Attr parameters[1] = 1
         Attr parameters[2] = 1
         Attr parameters[3] = 0
         Attr subwindows = 0
@@ -114,12 +120,12 @@ SObject pwrb:Class
         Attr tracemethod = 3
         Attr traceindex = 1
 	Attr executeordermethod = 2
-        Attr objname = "INe"
-        Attr graphname = "INe"
+        Attr objname = "StrNe"
+        Attr graphname = "StrNe"
         Attr debugpar = "Status"
       EndBody
     EndObject
-    Object Template INotEqual
+    Object Template StrNotEqual
       Body RtBody
       EndBody
     EndObject

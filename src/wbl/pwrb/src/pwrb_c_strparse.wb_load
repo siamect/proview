@@ -33,21 +33,20 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_atlimit.wb_load -- Defines the class AtLimit.
+!  pwrb_c_strparse.wb_load -- Defines the class StrParse.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
-!  @Group Plc,PlcTime
-!  @Summary Absolute time limiter.
-!  Absolute time limiter.
-!  @image orm_atlimit_fo.png
+!  @Group Plc,PlcString
+!  @Summary Parse a string.
+!  Parse a string with specified delimiter characters.
+!  The default delimiter characters are Space and TAB.
+!  @image orm_strparse_fo.png
 !
-!  Minimum and maximum limiter for absolute time value.
-!  
 !*/
-  Object AtLimit $ClassDef 642
+  Object StrParse $ClassDef 652
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Connections
@@ -55,77 +54,133 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "AtLimit"
+        Attr StructName = "StrParse"
       EndBody
       !/**
-      !  Specifies the current value of the high limit.
+      !  String input.
       !*/
-      Object Max $Input 1 
+      Object In $Input 1 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Time"
-          Attr GraphName = "Max"
-        EndBody
-      EndObject
-      !/**
-      !  Specifies the current value of the input signal.
-      !*/
-      Object In $Input 2 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Time"
+          Attr TypeRef = "pwrs:Type-$String80"
           Attr GraphName = "In"
         EndBody
       EndObject
       !/**
-      !  Specifies the current value of the low limit.
+      !  Delimiter characters.
       !*/
-      Object Min $Input 3 
+      Object Delimiter $Intern 2 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Time"
-          Attr GraphName = "Min"
+          Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
       !/**
-      !   if In < Min and Min < Max   ActVal = Min
-      !   if In > Max                 ActVal = Max
-      !   else                        ActVal = In
+      !  Token 1.
       !*/
-      Object ActVal $Output 4
+      Object Token1 $Output 3 
         Body SysBody
-          Attr PgmName = "ActVal"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Time"
-          Attr GraphName = "Val"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "Token1"
         EndBody
       EndObject
       !/**
-      !  Specifies if a limitation upwards has taken place or
-      !  not. FALSE means no limitation upwards at the moment;
-      !  TRUE means that the output signal has been limited
-      !  upwards to the value of Max.
+      !  Token 2.
       !*/
-      Object High $Output 5 
+      Object Token2 $Output 4 
         Body SysBody
-          Attr PgmName = "High"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Boolean"
-          Attr GraphName = "hl"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "Token2"
         EndBody
       EndObject
       !/**
-      !  Specifies if a limitation downwards has taken place or
-      !  not. FALSE means no limitation downwards at the moment;
-      !  TRUE means that the output signal has been limited
-      !  downwards to the value of Min.
+      !  Token 3.
       !*/
-      Object Low $Output 6 
+      Object Token3 $Output 5 
         Body SysBody
-          Attr PgmName = "Low"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Boolean"
-          Attr GraphName = "ll"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "Token3"
+        EndBody
+      EndObject
+      !/**
+      !  Token 4.
+      !*/
+      Object Token4 $Output 6 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "Token4"
+        EndBody
+      EndObject
+      !/**
+      !  Token 5.
+      !*/
+      Object Token5 $Output 7 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "Token5"
+        EndBody
+      EndObject
+      !/**
+      !  Token 6.
+      !*/
+      Object Token6 $Output 8 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "Token6"
+        EndBody
+      EndObject
+      !/**
+      !  Token 7.
+      !*/
+      Object Token7 $Output 9 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "Token7"
+        EndBody
+      EndObject
+      !/**
+      !  Token 8.
+      !*/
+      Object Token8 $Output 10 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "Token8"
+        EndBody
+      EndObject
+      !/**
+      !  Token 9.
+      !*/
+      Object Token9 $Output 11 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "Token9"
+        EndBody
+      EndObject
+      !/**
+      !  Token 10.
+      !*/
+      Object Token10 $Output 12 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "Token10"
         EndBody
       EndObject
     EndObject
@@ -140,27 +195,30 @@ SObject pwrb:Class
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
         Attr object_type = 11
-        Attr parameters[0] = 3
-        Attr parameters[1] = 0
-        Attr parameters[2] = 3
+        Attr parameters[0] = 1
+        Attr parameters[1] = 1
+        Attr parameters[2] = 10
         Attr parameters[3] = 0
         Attr subwindows = 0
         Attr graphmethod = 0
         Attr graphindex = 0
-        Attr default_mask[0] = 7
-        Attr default_mask[1] = 1
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 3
         Attr segname_annotation = 1
         Attr compmethod = 4
         Attr compindex = 0
         Attr tracemethod = 0
         Attr traceindex = 0
 	Attr executeordermethod = 2
-        Attr objname = "AtLimit"
-        Attr graphname = "AtLimit"
+        Attr objname = "StrParse"
+        Attr graphname = "StrParse"
         Attr debugpar = ""
       EndBody
     EndObject
-    Object Template AtLimit
+    Object Template StrParse
+      Body RtBody
+        Attr Delimiter = "	 "
+      EndBody
     EndObject
   EndObject
 EndSObject

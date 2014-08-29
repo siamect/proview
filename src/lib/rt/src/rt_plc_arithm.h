@@ -106,5 +106,12 @@ void AtLimit_exec( plc_sThread *tp, pwr_sClass_AtLimit *object);
 void DtLimit_exec( plc_sThread *tp, pwr_sClass_DtLimit *object);
 void AtDemux_exec( plc_sThread *tp, pwr_sClass_AtDemux *object);
 void DtDemux_exec( plc_sThread *tp, pwr_sClass_DtDemux *object);
+void StrSel_exec( plc_sThread *tp, pwr_sClass_StrSel *object);
+void StrMux_exec( plc_sThread *tp, pwr_sClass_StrMux *object);
+void StrEqual_exec( plc_sThread *tp, pwr_sClass_StrEqual *object);
+void StrNotEqual_exec( plc_sThread *tp, pwr_sClass_StrNotEqual *object);
+void StrAdd_exec( plc_sThread *tp, pwr_sClass_StrAdd *object);
+void StrTrim_exec( plc_sThread *tp, pwr_sClass_StrTrim *object);
+void StrParse_exec( plc_sThread *tp, pwr_sClass_StrParse *object);
 
 #endif

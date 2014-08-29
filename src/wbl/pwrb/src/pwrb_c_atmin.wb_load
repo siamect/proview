@@ -42,7 +42,7 @@ SObject pwrb:Class
 !  @Group Plc,PlcTime
 !  @Summary Absolute time minimum function.
 !  Absolute minimum function.
-!  @image orm_atmin_fo.gif
+!  @image orm_atmin_fo.png
 !
 !  Get minimum of up to 8 absolute time inputs.
 !  

@@ -876,11 +876,15 @@ palette PlcEditorPalette
     class CurrentIndex
     class DataCopy
     class DataCnv
+    class DataEqual
     class DataFRead
     class DataFWrite
+    class DataMux
+    class DataNotEqual
     class DataRcv
     class DataRequest
     class DataReset
+    class DataSel
     class DataSelect
     class DataSend
     class DispLink
@@ -1070,7 +1074,14 @@ palette PlcEditorPalette
       class StoNumSp
       class StoSp
       class StoSv
+      class StrAdd
       class Strcat
+      class StrEqual
+      class StrMux
+      class StrNotEqual
+      class StrParse
+      class StrSel
+      class StrTrim
       class SubStr
     }
     menu Time

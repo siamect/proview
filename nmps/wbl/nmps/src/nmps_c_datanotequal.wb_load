@@ -33,18 +33,18 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_iequal.wb_load -- Defines the class IEqual.
+!  pwrb_c_datanotequal.wb_load -- Defines the class DataNotEqual.
 !
-SObject pwrb:Class
+SObject NMps:Class
 !/**
 !  @Version 1.0
-!  @Code rt_plc_arithm.c
-!  @Group Plc,PlcInteger
-!  @Summary Check if two integer are not equal.
-!  INotEqual compares two integer values and returns true if they are not equal.
-!  @image orm_inotequal_fo.gif
+!  @Code nmps_plc.c
+!  @Group Plc,PlcData
+!  @Summary Check if two data references are not equal.
+!  DataNotEqual compares two data reference values and returns false if they are equal.
+!  @image orm_datanotequal_fo.png
 !*/
-  Object INotEqual $ClassDef 425
+  Object DataNotEqual $ClassDef 59
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd
       Attr Method = pwr_eMethod_Connections
@@ -52,27 +52,27 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-         Attr StructName = "INotEqual"
+         Attr StructName = "DataNotEqual"
       EndBody
       !/**
-      !  Integer input 1.
+      !  Data reference input 1.
       !*/
       Object In1 $Input 1 
         Body SysBody
 	  Attr Flags |= PWR_MASK_NOREMOVE
-	  Attr Flags |= PWR_MASK_NOINVERT
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "In1"
         EndBody
       EndObject
       !/**
-      !  Integer input 2.
+      !  Data reference input 2.
       !*/
       Object In2 $Input 2
         Body SysBody
-	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_NOREMOVE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$DataRef"
           Attr GraphName = "In2"
         EndBody
       EndObject
@@ -114,12 +114,12 @@ SObject pwrb:Class
         Attr tracemethod = 3
         Attr traceindex = 1
 	Attr executeordermethod = 2
-        Attr objname = "INe"
-        Attr graphname = "INe"
+        Attr objname = "DataNe"
+        Attr graphname = "DataNe"
         Attr debugpar = "Status"
       EndBody
     EndObject
-    Object Template INotEqual
+    Object Template DataNotEqual
       Body RtBody
       EndBody
     EndObject

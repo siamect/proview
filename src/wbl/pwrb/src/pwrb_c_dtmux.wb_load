@@ -42,7 +42,7 @@ SObject pwrb:Class
 !  @Group Plc,PlcTime
 !  @Summary Absolute time multiplexer
 !  Absolute time multiplexer.
-!  @image orm_dtmux_fo.gif
+!  @image orm_dtmux_fo.png
 !
 !  Select one of 24 absolute time inputs, depending on Idx.
 !  
