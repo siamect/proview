@@ -3976,8 +3976,8 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! 
     ! With Profibus FDL Service Access Points data transfer services between nodes on a Profibus
     ! network is made possible.
-    ! There are two SAP types reflecting the different charachteristics of Master Stations and
-    ! Slave Stations. Usually, "regular" SAP's are activated o Master Stations whereas Respnder
+    ! There are two SAP types reflecting the different characteristics of Master Stations and
+    ! Slave Stations. Usually, "regular" SAP's are activated o Master Stations whereas Responder
     ! SAP's (RSAP's) are activated on Slave Stations. However both can be used on either one.
     !
     ! A (R)SAP is defined by an address in the interval 0-63. A SAP is used to issue data transfers
@@ -4258,8 +4258,8 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! With Profibus FDL Service Access Points data transfer services between nodes on a Profibus
     ! network is made possible.
     !
-    ! There are two SAP types reflecting the different charachteristics of Master Stations and
-    ! Slave Stations. Usually, "regular" SAP's are activated on Master Stations whereas Respnder
+    ! There are two SAP types reflecting the different characteristics of Master Stations and
+    ! Slave Stations. Usually, "regular" SAP's are activated on Master Stations whereas Responder
     ! SAP's (RSAP's) are activated on Slave Stations. However both can be used on either one.
     !
     ! There are five types of data transfer services that can be configured. Three for sending and/or

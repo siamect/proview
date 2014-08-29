@@ -371,6 +371,11 @@ palette NavigatorPalette
           class Siemens_ET200M_IM153
           class Sinamics_G120_PbSlave
         }
+	menu FDL
+        {
+          class Pb_FDL_SAP
+          class Pb_FDL_DataTransfer
+        }
       }
       menu Profinet
       {
