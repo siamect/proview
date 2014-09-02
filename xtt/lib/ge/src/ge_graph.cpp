@@ -2188,7 +2188,7 @@ int Graph::edit_subgraph_attributes()
 int Graph::get_graph_attr_items( attr_sItem **itemlist,
 				 int *item_cnt, void **client_data) 
 {
-  static attr_sItem	items[20];
+  static attr_sItem	items[40];
   int			i;
   grow_sAttrInfo	*grow_info, *grow_info_p;
   int			grow_info_cnt;

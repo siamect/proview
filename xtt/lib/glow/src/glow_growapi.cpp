@@ -3002,7 +3002,7 @@ int grow_GetSubGraphAttrInfo( grow_tCtx ctx, char *transtab, grow_sAttrInfo **in
   int  dynsize;
   char *name;
 
-  attrinfo = (grow_sAttrInfo *) calloc( 30, sizeof(grow_sAttrInfo)); 
+  attrinfo = (grow_sAttrInfo *) calloc( 40, sizeof(grow_sAttrInfo)); 
 
   i = 0;
 
@@ -3162,7 +3162,7 @@ int grow_GetGraphAttrInfo( grow_tCtx ctx, grow_sAttrInfo **info,
   grow_sAttrInfo *attrinfo;
   int i;
 
-  attrinfo = (grow_sAttrInfo *) calloc( 20, sizeof(grow_sAttrInfo)); 
+  attrinfo = (grow_sAttrInfo *) calloc( 40, sizeof(grow_sAttrInfo)); 
 
   i = 0;
 
