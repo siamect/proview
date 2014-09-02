@@ -59,23 +59,23 @@ SObject pwrb:Class
 !  actions executed when building the directory is specified with
 !  BuildCopy, BuildMake and BuildExecute object.
 !
-!  @BuildCopy
+!  @bBuildCopy
 !  Copies a file, or a number of files specified with wildcard from the
 !  source directory to the build tree.
 !
-!  @BuildMake
+!  @bBuildMake
 !  Executes a make file.
 !
-!  @BuildExec
+!  @bBuildExec
 !  Executes a shell command.
 !  
-!  @Export
+!  @bExport
 !  Configures files that should be exported to other projects. Normally
 !  files are exported to a common directory from where they are imported
 !  by other projects. Specific files to export is configured with 
 !  ApplExport objects.
 !
-!  @Import
+!  @bImport
 !  Configures files that is imported from other projects. Specific
 !  files are imported with ApplImport objects.
 !  
