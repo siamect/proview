@@ -673,20 +673,36 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
       // Opplace argument
       strcpy( opplace_str, (*argv)[i]);
       
-      sts = gdh_NameToObjid( opplace_str, &op_objid);
-      if ( EVEN(sts)) {
-	printf("** Unable to find opplace\n");
-	exit(sts);
-      }
+      if ( strchr( opplace_str, '-') == 0) {
+	char oname[80];
 
-      sts = gdh_GetObjectClass( op_objid, &op_class);
-      if ( EVEN(sts)) exit( sts);
-
-      if ( op_class != pwr_cClass_OpPlace) {
-	printf("** Error in opplace object class\n");
-	exit(sts);
+	sts = gdh_GetClassList( pwr_cClass_OpPlace, &op_objid);
+	while (ODD(sts)) {
+	  sts = gdh_ObjidToName( op_objid, oname, sizeof(oname), cdh_mName_object);
+	  if (ODD(sts) && cdh_NoCaseStrcmp( oname, opplace_str) == 0) {
+	    sts = gdh_ObjidToName( op_objid, opplace_str, sizeof(opplace_str), cdh_mName_volumeStrict);
+	    opplace_found = 1;
+	    break;
+	  }
+	  sts = gdh_GetNextObject( op_objid, &op_objid);
+	}
       }
-      opplace_found = 1;
+      else {
+	sts = gdh_NameToObjid( opplace_str, &op_objid);
+	if ( EVEN(sts)) {
+	  printf("** Unable to find opplace\n");
+	  exit(sts);
+	}
+	
+	sts = gdh_GetObjectClass( op_objid, &op_class);
+	if ( EVEN(sts)) exit( sts);
+
+	if ( op_class != pwr_cClass_OpPlace) {
+	  printf("** Error in opplace object class\n");
+	  exit(sts);
+	}
+	opplace_found = 1;
+      }
     }
   }
     
