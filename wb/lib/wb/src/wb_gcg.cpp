@@ -6918,6 +6918,17 @@ int	gcg_comp_m4( gcg_ctx gcgctx, vldh_t_node node)
 	char			output_prefix;
 	char			output_par[80];
 	char			*name;
+	char			cast[80];
+
+	switch ( node->ln.cid) {
+	case pwr_cClass_ApDistribute:
+	case pwr_cClass_DpDistribute:
+	case pwr_cClass_IpDistribute:
+	  strcpy( cast, "(pwr_tVoid *)");
+	  break;
+	default:
+	  strcpy( cast, "");	    
+	}
 
 	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF, node);
 
@@ -6973,15 +6984,16 @@ int	gcg_comp_m4( gcg_ctx gcgctx, vldh_t_node node)
 	        gcg_error_msg( gcgctx, GSX__INV, node);
 
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
-			"%c%s->%sP = &%c%s->%s;\n", 
-			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.oid),
-			bodydef[i].Par->Param.Info.PgmName,
-			output_prefix,
-			output_type == GCG_OTYPE_OID ? 
+			     "%c%s->%sP = %s&%c%s->%s;\n", 
+			     GCG_PREFIX_REF,
+			     vldh_IdToStr(0, node->ln.oid),
+			     bodydef[i].Par->Param.Info.PgmName,
+			     cast,
+			     output_prefix,
+			     output_type == GCG_OTYPE_OID ? 
 			     vldh_IdToStr(1, output_attrref.Objid) : 
 			     vldh_AttrRefToStr(0, output_attrref),
-			output_par);
+			     output_par);
 	    }
 	    else
 	    {
@@ -6996,13 +7008,14 @@ int	gcg_comp_m4( gcg_ctx gcgctx, vldh_t_node node)
 	       own object */
 
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
-			"%c%s->%sP = &%c%s->%s;\n", 
-			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.oid),
-			bodydef[i].Par->Param.Info.PgmName,
-			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.oid),
-			bodydef[i].Par->Param.Info.PgmName);
+			   "%c%s->%sP = %s&%c%s->%s;\n", 
+			   GCG_PREFIX_REF,
+			   vldh_IdToStr(0, node->ln.oid),
+			   bodydef[i].Par->Param.Info.PgmName,
+			   cast,
+			   GCG_PREFIX_REF,
+			   vldh_IdToStr(1, node->ln.oid),
+			   bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
 	}
