@@ -1,6 +1,6 @@
 /* 
  * Proview   Open Source Process Control.
- * Copyright (C) 2005-2014 SSAB EMEA AB.
+ * Copyright (C) 2005-2014 SSAB AB.
  *
  * This file is part of Proview.
  *
@@ -94,6 +94,6 @@
 #define pwrv_cPwrVersion         SET_VERSION('V', 5, 2, 0)
 
 #define pwrv_cWbdbVersionShortStr "V52"
-#define pwrv_cPwrCopyright	 "Copyright (C) 2005-2014 SSAB EMEA AB"
+#define pwrv_cPwrCopyright	 "Copyright (C) 2005-2014 SSAB AB"
 
 #endif

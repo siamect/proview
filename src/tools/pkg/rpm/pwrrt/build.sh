@@ -51,7 +51,7 @@ fi
         echo "<b>Proview V${version:0:3}"
 	echo "Version V$version"
         echo ""
-        echo "Copyright © 2004-${d:0:4} SSAB Oxelösund AB"
+        echo "Copyright � 2005-${d:0:4} SSAB AB"
         echo ""
         echo "This program is free software; you can redistribute it and/or"
         echo "modify it under the terms of the GNU General Public License as" 
