@@ -68,6 +68,46 @@
   eval `ipcs -m|grep ^0x|grep "[ \t]$user[ \t]"|awk '{printf "ipcrm shm %s;", $2
 }'`
 
+  node=`eval uname -n`
+  applfile=$pwrp_load"/ld_appl_"$node"_"$PWR_BUS_ID".txt"
+
+  if [ -e $applfile ]; then
+    stored_ifs=$IFS
+    IFS=' ,'
+    while read appid appname appload apprun appfile appprio appdebug apparg; do
+      if [ -n "$appid" ] && [ "${appid:0:1}" != "#" ]; then      
+        if [ $appid != "pwr_neth" ] && 
+           [ $appid != "pwr_qmon" ] &&
+           [ $appid != "pwr_nacp" ] &&
+           [ $appid != "pwr_io" ] &&
+           [ $appid != "pwr_tmon" ] &&
+           [ $appid != "pwr_emon" ] &&
+           [ $appid != "pwr_alim" ] &&
+           [ $appid != "pwr_bck" ] &&
+           [ $appid != "pwr_linksup" ] &&
+           [ $appid != "pwr_trend" ] &&
+           [ $appid != "pwr_fast" ] &&
+           [ $appid != "pwr_remh" ] &&
+           [ $appid != "pwr_remlog" ] &&
+           [ $appid != "pwr_webmon" ] &&
+           [ $appid != "pwr_webmonmh" ] &&
+           [ $appid != "pwr_webmonelog" ] &&
+           [ $appid != "pwr_opc_server" ] &&
+           [ $appid != "pwr_post" ] &&
+           [ $appid != "pwr_report" ] &&
+           [ $appid != "pwr_sevhistmon" ] &&
+           [ $appid != "pwr_sev_server" ] &&
+           [ $appid != "pwr_powerlink" ] &&
+           [ $appid != "pwr_sim" ] &&
+           [ $appid != "pwr_plc" ] &&
+           [ ${appid:0:8} != "pwr_plc_" ]; then
+          killall $appname
+        fi
+      fi
+    done < $applfile
+    IFS=$stored_ifs
+  fi
+
   if [ -e $pwrp_exe/pwrp_stop.sh ]; then
     source $pwrp_exe/pwrp_stop.sh
   fi
