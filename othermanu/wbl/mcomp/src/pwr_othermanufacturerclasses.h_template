@@ -5,3 +5,7 @@
 #ifndef pwr_profibusclasses_h
 #include "pwr_profibusclasses.h"
 #endif
+
+#ifndef pwr_otherioclasses_h
+#include "pwr_otherioclasses.h"
+#endif
