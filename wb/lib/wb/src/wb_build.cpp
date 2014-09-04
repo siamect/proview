@@ -370,13 +370,6 @@ void wb_build::cnf( char *nodename, void *volumelist, int volumecnt)
   if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
     sumsts = m_sts;
 
-  // Update $pwrp_cnf/node/'node'_xtthelp.dat
-  sprintf( src_fname, "%s/%s_xtthelp.dat", node_dir.src_dir, node);
-  sprintf( dest_fname, "%s/%s_xtthelp.dat", node_dir.dest_dir, node);
-  update_file( dest_fname, src_fname);
-  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-    sumsts = m_sts;
-
   // Update $pwrp_cnf/node/Rt_xtt
   sprintf( src_fname, "%s/Rt_xtt", node_dir.src_dir);
   sprintf( dest_fname, "%s/Rt_xtt", node_dir.dest_dir);

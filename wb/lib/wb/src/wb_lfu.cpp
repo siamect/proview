@@ -2284,8 +2284,6 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      if ( *components_ptr & pwr_mDistrComponentMask_XttHelpFile) {
 		fprintf( file, "appl %s W $pwrp_cnf/%s/xtt_help.dat:$pwrp_cnf/xtt_help.dat $pwrp_load/xtt_help.dat\n", 
 			 nodename_ptr, nodename_ptr);
-		fprintf( file, "appl %s S $pwrp_cnf/%s/%s_xtthelp.dat $pwrp_load/%s/%s__xtthelp.dat\n", 
-			 nodename_ptr, nodename_ptr, nodename_ptr, nodename_ptr, nodename_ptr);
 	      }
 	      if ( *components_ptr & pwr_mDistrComponentMask_XttResourceFile) {
 		fprintf( file, "appl %s W $pwrp_load/%s/b55/Rt_xtt:$pwrp_load/%s/Rt_xtt:$pwrp_load/Rt_xtt /home/b55/Rt_xtt\n", 
