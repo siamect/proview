@@ -806,11 +806,13 @@ int XNav::show_device()
 
   th.table_cnt = 0;
   strcpy( th.title[th.table_cnt++], "Device");
-  strcpy( th.title[th.table_cnt++], "Class");
   strcpy( th.title[th.table_cnt++], "ErrorCount");
   strcpy( th.title[th.table_cnt++], "Process");
   strcpy( th.title[th.table_cnt++], "PlcThread");
   strcpy( th.title[th.table_cnt++], "Address");
+  strcpy( th.title[th.table_cnt++], "Class");
+  strcpy( th.title[th.table_cnt++], "");
+  strcpy( th.title[th.table_cnt++], "Description");
   new ItemTableHeader( brow, this, "Title", &th,  NULL, flow_eDest_IntoLast);
 
   // Get the rack objects
@@ -838,13 +840,6 @@ int XNav::show_device()
         // Object name
 	xnav_cut_segments( namebuf, object_name, 2);
 
-        strcpy( t.elem[t.elem_cnt].fix_str, namebuf);
-        t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
-
-        // Class name
-        sts = gdh_GetObjectClass( device_objid, &classid);
-        sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
-		  namebuf, sizeof(namebuf), cdh_mName_object);
         strcpy( t.elem[t.elem_cnt].fix_str, namebuf);
         t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
 
@@ -910,6 +905,38 @@ int XNav::show_device()
         else
           strcpy( t.elem[t.elem_cnt].fix_str, "-");
         t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+
+        // Class name
+        sts = gdh_GetObjectClass( device_objid, &classid);
+        sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
+		  namebuf, sizeof(namebuf), cdh_mName_object);
+        strcpy( t.elem[t.elem_cnt].fix_str, namebuf);
+        t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+
+	t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
+
+	// Description
+        strcpy( attr_name, object_name);
+        strcat( attr_name, ".Description");
+        sts = gdh_GetAttributeCharacteristics ( attr_name,
+		&attrtype, &attrsize, &attroffs, &attrelem);
+        if ( EVEN(sts)) {
+          strcpy( t.elem[t.elem_cnt].fix_str, "");
+	  t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+	}
+	else {
+	  sts = gdh_NameToAttrref( pwr_cNObjid, attr_name, &attrref);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gdh_DLRefObjectInfoAttrref ( &attrref, &attr_ptr, &subid);
+	  if ( EVEN(sts)) return sts;
+
+	  t.elem[t.elem_cnt].value_p = attr_ptr;
+	  t.elem[t.elem_cnt].type_id = attrtype;
+	  t.elem[t.elem_cnt].size = attrsize;
+	  strcpy( t.elem[t.elem_cnt++].format, "%s");
+	  ts.subid[ts.subid_cnt++] = subid;
+	}
 
         new ItemDevice( brow, this, device_objid, &t, &ts, -1, 0, 0, 0, 
 		NULL, flow_eDest_IntoLast);
