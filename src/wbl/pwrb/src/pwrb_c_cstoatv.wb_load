@@ -81,6 +81,7 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_RTVIRTUAL
           Attr Flags |= PWR_MASK_DEVBODYREF
           Attr Flags |= PWR_MASK_NOREMOVE
+          Attr Flags |= PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Time"
           Attr GraphName = "VAL"
         EndBody
