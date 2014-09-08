@@ -45,6 +45,9 @@ SObject pwrb:Class
 !  @image orm_isel_fo.gif
 !
 !  Select one of two inputs.
+!
+!  If Control is high, ActualValue is set to In1, else ActualValue
+!  is set to In2.
 !  
 !*/
   Object ISel $ClassDef 402

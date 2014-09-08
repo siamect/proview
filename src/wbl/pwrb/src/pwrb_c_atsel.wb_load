@@ -46,6 +46,8 @@ SObject pwrb:Class
 !
 !  Select one of two inputs.
 !  
+!  If Control is high, ActualValue is set to In1, else ActualValue
+!  is set to In2.
 !*/
   Object AtSel $ClassDef 634
     Body SysBody
