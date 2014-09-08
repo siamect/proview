@@ -1640,7 +1640,7 @@ void wb_build::directories( char *dir, bld_ePass pass)
 	if ( !opt.force && !update)
 	  continue;
 
-	sprintf( cmd, "cp -a %s %s", source, target);
+	sprintf( cmd, "cp %s %s", source, target);
 	system( cmd);
 	sprintf( cmd, "Build:    copy %s %s -> %s", line_item[1], source, target);
 	MsgWindow::message( 'I', cmd, msgw_ePop_No);
@@ -1804,7 +1804,7 @@ void wb_build::export_import_files( int type, bld_ePass pass)
 	if ( !opt.force && !update)
 	  continue;
 
-	sprintf( cmd, "cp -a %s %s", source, target);
+	sprintf( cmd, "cp %s %s", source, target);
 	system( cmd);
 	sprintf( cmd, "Build:    %s %s -> %s", tag, source, target);
 	MsgWindow::message( 'I', cmd, msgw_ePop_No);
@@ -1840,7 +1840,7 @@ void wb_build::update_file( char *dest, char *src)
     if ( opt.force || evenSts() || src_time.tv_sec > dest_time.tv_sec) {
       pwr_tCmd cmd;
 
-      sprintf( cmd, "cp -a %s %s", src_fname, dest_fname);
+      sprintf( cmd, "cp %s %s", src_fname, dest_fname);
       system( cmd);
       sprintf( cmd, "Build:    Copy %s -> %s", src, dest);
       MsgWindow::message( 'I', cmd, msgw_ePop_No);
