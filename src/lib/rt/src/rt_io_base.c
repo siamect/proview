@@ -2947,6 +2947,21 @@ static pwr_tStatus io_init_agent(
 	  }
 	  
 	  sts = io_trv_child( objid, 0, io_init_rack, ctx, ap, agent_type, iocomm_swap);
+
+	  if ( ap->Class == pwr_eClass_Node) {
+	    pwr_tAName io_name;
+	    pwr_tOid io_oid;
+	    pwr_tCid io_cid;
+
+	    sprintf( io_name, "%s-IO", ap->Name); 
+	    sts = gdh_NameToObjid( io_name, &io_oid);
+	    if ( ODD(sts)) {
+	      sts = gdh_GetObjectClass( io_oid, &io_cid);
+	      if ( ODD(sts) && io_cid == pwr_eClass_NodeHier) {
+		sts = io_trv_child( io_oid, 0, io_init_rack, ctx, ap, agent_type, iocomm_swap);
+	      }
+	    }
+	  }
 	}
       }
     }
