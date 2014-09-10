@@ -2584,6 +2584,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
       switch ( cid) {
       case pwr_cClass_ApplImport: {
+	char target_array[10][80];
+	int target_cnt;
 	
 	sts = ldh_GetObjectPar( ldhses, appoid, "DevBody",
 				"Source", (char **)&source_ptr, &size);
@@ -2593,8 +2595,14 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 				"Target", (char **)&target_ptr, &size);
 	if ( EVEN(sts)) return sts;
 
-	fprintf( file, "import %d %s%s %s\n", current_options, dir, source_ptr, target_ptr);
-
+	// Target can be a list
+	target_cnt = dcli_parse( target_ptr, ",", "", (char *)target_array,
+			       sizeof(target_array)/sizeof(target_array[0]),
+			       sizeof(target_array[0]), 0);
+	for ( int i = 0; i < target_cnt; i++) {
+	  dcli_trim( target_array[i], target_array[i]);
+	  fprintf( file, "import %d %s%s %s\n", current_options, dir, source_ptr, target_array[i]);
+	}
 	free( source_ptr);
 	free( target_ptr);
 	break;
