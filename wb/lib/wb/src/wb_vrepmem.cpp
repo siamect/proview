@@ -2141,7 +2141,8 @@ bool wb_vrepmem::commit(pwr_tStatus *sts)
 bool wb_vrepmem::abort(pwr_tStatus *sts) 
 {
   // Reload
-  if ( m_classeditor) {
+
+  if ( m_classeditor || cid() == pwr_eClass_DirectoryVolume) {
     clear();
     loadWbl( m_filename, sts, true);
   }
