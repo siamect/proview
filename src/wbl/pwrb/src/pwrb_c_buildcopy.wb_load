@@ -83,6 +83,9 @@ SObject pwrb:Class
       !/**
       ! Target file specification.
       ! Only the path need to be specified.
+      !
+      ! If files should be copied to several directories, Target can contain 
+      ! a list separated by comma, eg '$pwrp_exe, $pwrp_web'
       !*/
       Object Target $Attribute 2 
         Body SysBody

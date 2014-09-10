@@ -104,6 +104,8 @@ SObject pwrb:Class
       ! Options.
       ! - BuildBeforeNode, directory is automatically built before any 
       !   node is built.
+      ! - BuildAfterNode, directory is automatically built after any 
+      !   node is built.
       !*/
       Object Options $Attribute 4 
         Body SysBody

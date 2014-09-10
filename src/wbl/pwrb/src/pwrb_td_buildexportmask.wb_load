@@ -47,22 +47,22 @@ SObject pwrb:Type
       Attr PgmName = "BuildExportMask"
     EndBody
     !/**
-    !  Export is automatically built after a node is built.
-    !*/
-    Object BuildAfterNode $Bit
-     Body SysBody
-       Attr PgmName = "BuildAfterNode"
-       Attr Text = "BuildAfterNode"
-       Attr Value = 1
-     EndBody
-    EndObject
-    !/**
     !  Export is automatically built before a node is built.
     !*/
     Object BuildBeforeNode $Bit
      Body SysBody
        Attr PgmName = "BuildBeforeNode"
        Attr Text = "BuildBeforeNode"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Export is automatically built after a node is built.
+    !*/
+    Object BuildAfterNode $Bit
+     Body SysBody
+       Attr PgmName = "BuildAfterNode"
+       Attr Text = "BuildAfterNode"
        Attr Value = 2
      EndBody
     EndObject

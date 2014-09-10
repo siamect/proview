@@ -105,6 +105,8 @@ SObject pwrb:Class
       ! Options.
       ! - BuildAfterNode, export is automatically built before any 
       !   node is built.
+      ! - BuildBeforeNode, directory is automatically built before any 
+      !   node is built.
       !*/
       Object Options $Attribute 4 
         Body SysBody
