@@ -56,6 +56,16 @@ SObject pwrb:Type
        Attr Value = 1
      EndBody
     EndObject
+    !/**
+    !  Directory is automatically built after a node is built.
+    !*/
+    Object BuildAfterNode $Bit
+     Body SysBody
+       Attr PgmName = "BuildAfterNode"
+       Attr Text = "BuildAfterNode"
+       Attr Value = 2
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

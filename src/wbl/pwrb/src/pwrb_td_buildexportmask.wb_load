@@ -56,6 +56,16 @@ SObject pwrb:Type
        Attr Value = 1
      EndBody
     EndObject
+    !/**
+    !  Export is automatically built before a node is built.
+    !*/
+    Object BuildBeforeNode $Bit
+     Body SysBody
+       Attr PgmName = "BuildBeforeNode"
+       Attr Text = "BuildBeforeNode"
+       Attr Value = 2
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

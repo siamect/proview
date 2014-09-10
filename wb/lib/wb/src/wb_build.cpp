@@ -1594,7 +1594,8 @@ void wb_build::directories( char *dir, bld_ePass pass)
 	printf("File corrupt " pwr_cNameDistribute);
 	current_options = 0;
       }
-      if ( !(pass == bld_ePass_BeforeNode && !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode)))
+      if ( !((pass == bld_ePass_BeforeNode && !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode)) ||
+	     (pass == bld_ePass_AfterNode && !(current_options & pwr_mBuildDirectoryMask_BuildAfterNode))))
 	wb_log::log( wlog_eCategory_DirectoryBuild, line_item[1], 0);
     }
     else if ( strcmp( cdh_Low(line_item[0]), "buildcopy") == 0) {      
@@ -1603,7 +1604,8 @@ void wb_build::directories( char *dir, bld_ePass pass)
 	continue;
       }
 
-      if ( pass == bld_ePass_BeforeNode && !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode))
+      if ( (pass == bld_ePass_BeforeNode && !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode)) ||
+	   (pass == bld_ePass_AfterNode && !(current_options & pwr_mBuildDirectoryMask_BuildAfterNode)))
 	continue;
 
       for ( sts = dcli_search_file( line_item[2], found_file, DCLI_DIR_SEARCH_INIT);
@@ -1659,7 +1661,8 @@ void wb_build::directories( char *dir, bld_ePass pass)
 	continue;
       }
 
-      if ( pass == bld_ePass_BeforeNode && !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode))
+      if ( (pass == bld_ePass_BeforeNode && !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode)) ||
+	   (pass == bld_ePass_AfterNode && !(current_options & pwr_mBuildDirectoryMask_BuildAfterNode)))
 	continue;
 
       int update = 0;
@@ -1697,7 +1700,8 @@ void wb_build::directories( char *dir, bld_ePass pass)
 	continue;
       }
 
-      if ( pass == bld_ePass_BeforeNode && !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode))
+      if ( (pass == bld_ePass_BeforeNode && !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode)) ||
+	   (pass == bld_ePass_AfterNode && !(current_options & pwr_mBuildDirectoryMask_BuildAfterNode)))
 	continue;
 
       sprintf( cmd, "cd %s;%s", line_item[2], line_item[3]);
@@ -1762,12 +1766,17 @@ void wb_build::export_import_files( int type, bld_ePass pass)
 
       if ( type == bld_eType_Import && 
 	   pass == bld_ePass_BeforeNode && 
-	   !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode))
+	   ((pass == bld_ePass_BeforeNode && 
+	     !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode)) ||
+	    (pass == bld_ePass_AfterNode && 
+	     !(current_options & pwr_mBuildDirectoryMask_BuildAfterNode))))
 	continue;
 
       if ( type == bld_eType_Export && 
-	   pass == bld_ePass_AfterNode && 
-	   !(current_options & pwr_mBuildExportMask_BuildAfterNode))
+	   ((pass == bld_ePass_BeforeNode && 
+	     !(current_options & pwr_mBuildExportMask_BuildBeforeNode)) ||
+	    (pass == bld_ePass_AfterNode && 
+	     !(current_options & pwr_mBuildExportMask_BuildAfterNode))))
 	continue;
 
       for ( sts = dcli_search_file( line_item[2], found_file, DCLI_DIR_SEARCH_INIT);

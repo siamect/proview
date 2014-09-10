@@ -115,6 +115,7 @@ SObject pwrb:Class
       Body DevBody
         Attr SourceDirectory = "/usr/local/pwrp/common"
         Attr Components = 15
+	Attr Options = 1
       EndBody
     EndObject
   EndObject

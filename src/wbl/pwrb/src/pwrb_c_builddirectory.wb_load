@@ -92,5 +92,10 @@ SObject pwrb:Class
         EndBody
       EndObject
     EndObject
+    Object Template BuildDirectory
+      Body DevBody
+        Attr Options = 2
+      EndBody
+    EndObject
   EndObject
 EndSObject
