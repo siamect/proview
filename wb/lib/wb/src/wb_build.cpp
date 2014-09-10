@@ -158,6 +158,12 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
   else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT && m_sts != PWRB__INLIBHIER)
     sumsts = m_sts;
 
+  export_files( bld_ePass_BeforeNode);
+  if ( evenSts())
+    sumsts = m_sts;
+  else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT && m_sts != PWRB__INLIBHIER)
+    sumsts = m_sts;
+
   if ( !opt.manual) {
     // Check if there is any new dbsfile
     for ( int i = 0; i < volumecnt; i++) {
@@ -242,6 +248,18 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
   if ( evenSts())
     sumsts = m_sts;
   else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+
+  import_files( bld_ePass_AfterNode);
+  if ( evenSts())
+    sumsts = m_sts;
+  else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT && m_sts != PWRB__INLIBHIER)
+    sumsts = m_sts;
+
+  directories( 0, bld_ePass_AfterNode);
+  if ( evenSts())
+    sumsts = m_sts;
+  else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT && m_sts != PWRB__INLIBHIER)
     sumsts = m_sts;
 
   export_files( bld_ePass_AfterNode);
