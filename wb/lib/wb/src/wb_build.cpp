@@ -1241,6 +1241,9 @@ void wb_build::webhandler( pwr_tOid oid)
   pwr_tTime	xtthelp_time, html_time;
   char 		*s;
   pwr_tStatus   fsts;
+  pwr_tStatus 	sts;
+  char 		line[200];
+
 
   wb_object o = m_session.object(oid);
   if ( !o) {
@@ -1302,26 +1305,60 @@ void wb_build::webhandler( pwr_tOid oid)
     m_sts = PWRB__SUCCESS;
   }
 
-  // Check if plc xtthelp should be converted to html
-  sprintf( srcname, pwr_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, oid.vid));
-  dcli_translate_filename( fname, srcname);
-  fsts = dcli_file_time( fname, &xtthelp_time);
-  if ( EVEN(fsts)) return;
-  
-  sprintf( fname, "$pwrp_web/xtthelp_%s_plc_index.html", cdh_VolumeIdToFnString(0, oid.vid));
+  // Convert plc xtthelp files to html for all volumes
+  strcpy( fname, pwr_cNameVolumeList);
   dcli_translate_filename( fname, fname);
-  fsts = dcli_file_time( fname, &html_time);
-  if ( opt.force || EVEN(fsts) || time_Acomp( &xtthelp_time, &html_time) == 1) {
-    char msg[200];
-    pwr_tCmd cmd;
-
-    sprintf( cmd, "co_convert -d $pwrp_web -t %s", srcname);
-    system( cmd);
-
-    sprintf( msg, "Build:    WebHandler plc xtthelp-file converted to html");
-    MsgWindow::message( 'I', msg, msgw_ePop_No, oid);
-    m_sts = PWRB__SUCCESS;
+      
+  ifstream fpm( fname, ios::in);
+  if ( !fpm) {
+    m_sts = 0;
+    return;
   }
+ 
+  while ( fpm.getline( line, sizeof(line))) {
+    int nr;
+    char vol_array[7][80];
+    pwr_tVid vid;
+      
+    if ( line[0] == '#')
+      continue;
+      
+    nr = dcli_parse( line, " ", "", (char *)vol_array,
+		     sizeof(vol_array)/sizeof(vol_array[0]),
+		     sizeof(vol_array[0]), 0);
+      
+    if ( cdh_NoCaseStrcmp( vol_array[2], "RootVolume") == 0 ||
+	 cdh_NoCaseStrcmp( vol_array[2], "SubVolume") == 0 ||
+	 cdh_NoCaseStrcmp( vol_array[2], "SharedVolume") == 0) {
+      sts =  cdh_StringToVolumeId( vol_array[1], &vid);
+      if ( EVEN(sts)) {
+	m_sts = 0;
+	return;
+      }
+
+      sprintf( srcname, pwr_cNamePlcXttHelp, cdh_VolumeIdToFnString(0, vid));
+      dcli_translate_filename( fname, srcname);
+      fsts = dcli_file_time( fname, &xtthelp_time);
+      if ( ODD(fsts)) {
+  
+	sprintf( fname, "$pwrp_web/xtthelp_%s_plc_index.html", cdh_VolumeIdToFnString(0, vid));
+	dcli_translate_filename( fname, fname);
+	fsts = dcli_file_time( fname, &html_time);
+	if ( opt.force || EVEN(fsts) || time_Acomp( &xtthelp_time, &html_time) == 1) {
+	  char msg[200];
+	  pwr_tCmd cmd;
+
+	  sprintf( cmd, "co_convert -d $pwrp_web -t %s", srcname);
+	  system( cmd);
+
+	  sprintf( msg, "Build:    WebHandler plc xtthelp-file for volume %s converted to html", vol_array[0]);
+	  MsgWindow::message( 'I', msg, msgw_ePop_No, oid);
+	  m_sts = PWRB__SUCCESS;
+	}
+      }
+    }    
+  }
+  fpm.close();
 
   // Generate wb history html file
   pwr_tCmd cmd;
