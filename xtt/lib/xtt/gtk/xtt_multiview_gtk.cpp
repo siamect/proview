@@ -314,7 +314,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  gectx[i*rows + j] = new XttGeGtk( toplevel, this, "No title", 
 					    graph_name, scrollbar, menu, 0, w, h, mv_x, mv_y, 
 					    1.0, objectname_p, 0, 0, 
-					    ge_mOptions_Embedded, 0,
+					    ge_mOptions_Embedded, 0, 0,
 					    multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
 					    multiview_ge_is_authorized_cb);
 
@@ -719,7 +719,7 @@ void *XttMultiViewGtk::get_widget()
     return box_widget;
 }
 
-int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char *object,
+int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char *object, double *borders,
 					   int insert, int cont)
 {
   pwr_sClass_XttMultiView mv;
@@ -764,7 +764,7 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
 	    XttGeGtk *ctx = new XttGeGtk( toplevel, this, "No title", 
 					  source, scrollbar, menu, 0, w, h, x, y, 
 					  1.0, object, 0, 0, 
-					  ge_mOptions_Embedded, 0,
+					  ge_mOptions_Embedded, 0, borders,
 					  multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
 					  multiview_ge_is_authorized_cb);
 	    
@@ -1111,7 +1111,7 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
 	    break;
 	  }
 	  case pwr_eMultiViewContentEnum_MultiView: {
-	    mvctx[i*rows+j]->set_subwindow_source( sub_name, source, object,
+	    mvctx[i*rows+j]->set_subwindow_source( sub_name, source, object, borders,
 						   insert);
 	  }
 	  default: ;

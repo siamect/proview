@@ -79,7 +79,8 @@ class XttMultiViewGtk : public XttMultiView {
   void create_confirm_dialog();
   void confirm_reply( int ok);
   void *get_widget();
-  int set_subwindow_source( const char *name, char *source, char *object, int insert = 1, int more = 0);
+  int set_subwindow_source( const char *name, char *source, char *object, double *borders,
+			    int insert = 1, int more = 0);
 
   static void ge_change_value_cb( void *ge_ctx, void *value_object, char *text);
   static void confirm_cb( void *ge_ctx, void *confirm_object, char *text);

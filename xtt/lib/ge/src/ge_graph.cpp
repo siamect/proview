@@ -189,7 +189,7 @@ Graph::Graph(
 	graph_object_scan(0), graph_object_close(0), local_db(0),
 	use_default_access(xn_use_default_access), 
 	default_access(xn_default_access), keep_mode(false),
-        subgraph_dyn(0), was_subgraph(0), disable_log(1)
+        subgraph_dyn(0), was_subgraph(0), disable_log(1), pending_borders(0)
 {
   cdh_StrncpyCutOff( name, xn_name, sizeof(name), 1);
   strcpy( default_path, xn_default_path);
@@ -627,6 +627,19 @@ void Graph::zoom( double zoom_factor)
 void Graph::unzoom()
 {
   grow_UnZoom( grow->ctx);
+}
+
+//
+//  Return to base zoom factor
+//
+void Graph::set_borders( double *borders)
+{
+  if ( grow)
+    grow_SetLayout( grow->ctx, borders[0], borders[1], borders[2], borders[3]);
+  else {
+    pending_borders = (double *)calloc( 4, sizeof(double));
+    memcpy( pending_borders, borders, 4*sizeof(double));
+  }
 }
 
 //
@@ -3338,6 +3351,14 @@ int graph_init_grow_base_cb( GlowCtx *fctx, void *client_data)
 
   if ( graph->init_cb)
     (graph->init_cb) (graph->parent_ctx);
+
+  if ( graph->pending_borders) {
+    grow_SetLayout( graph->grow->ctx, graph->pending_borders[0], graph->pending_borders[1], 
+		    graph->pending_borders[2], graph->pending_borders[3]);
+    free( graph->pending_borders);
+    graph->pending_borders = 0;
+  }
+
   return 1;
 }
 

@@ -61,7 +61,7 @@ class XttGeMotif : public XttGe {
   XttGeMotif( Widget parent_wid, void *parent_ctx, const char *name, const char *filename,
 	      int scrollbar, int menu, int navigator, int width, int height,
 	      int x, int y, double scan_time, const char *object_name, int use_default_access,
-	      unsigned int access, unsigned int options,
+	      unsigned int access, unsigned int options, void *basewidget, double *borders,
 	      int (*xg_command_cb) (void *, char *, void *),
 	      int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 	      int (*xg_is_authorized_cb) (void *, unsigned int));

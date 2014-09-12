@@ -1696,10 +1696,17 @@ supplying the object with the /object qualifier.
 
 <B>xtt> set subwindow 'graphname' /name= /source= [/object=]
 
-'graphname'	<t>the graph where the window object resides.
-/name=		<t>the name of the window object.
-/source=	<t>name of the Ge graph to view in the window object.
-/object=	<t>specifies the object when the graph is an object graph.
+'graphname' <t>the graph where the window object resides.
+/name	<t>the name of the window object.
+/source	<t>name of the Ge graph to view in the window object.
+/object	<t>specifies the object when the graph is an object graph.
+/x0	<t>Upper left x Ge coordinate for graph border. If x0, y0, x1, y1 are
+        <t>supplied, another part of the graph than the one specified in the Graph 
+        <t>attributes x0, y0, x1, y1 will be displayed. Implemented for graphs
+        <t>in a multiview cell, not for window objects.
+/y0	<t>Upper left y Ge coordinate for graph border.
+/x1	<t>Lower right x Ge coordinate for graph border.
+/x1	<t>Lower right y Ge coordinate for graph border.
 </TOPIC>
 
 <TOPIC> add menu <style> function
@@ -2095,6 +2102,12 @@ a XttGraph object.
 /maximize   <t>Open the window maximized with frame.
 /iconify    <t>Open the window iconified.
 /hide	    <t>Don't display the graph on the screen.
+/x0	<t>Upper left x Ge coordinate for graph border. If x0, y0, x1, y1 are
+        <t>supplied, another part of the graph than the one specified in the Graph 
+        <t>attributes x0, y0, x1, y1 will be displayed.
+/y0	<t>Upper left y Ge coordinate for graph border.
+/x1	<t>Lower right x Ge coordinate for graph border.
+/x1	<t>Lower right y Ge coordinate for graph border.
 </TOPIC>
 
 <TOPIC> open multiview <style> function

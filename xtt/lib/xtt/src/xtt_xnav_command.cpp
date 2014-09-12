@@ -276,7 +276,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			  "/PINSTANCE", "/BYPASS",
 			  "/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", "/FTYPE", 
 			  "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE", "/ICONIFY", "/HIDE", 
-			  "/XPOSITION", "/YPOSITION", ""}
+			  "/XPOSITION", "/YPOSITION", "/X0", "/Y0", "/X1", "/Y1", ""}
 		},
 		{
 			"CLOSE",
@@ -358,7 +358,8 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"SET",
 			&xnav_set_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/VALUE",
-			  "/BYPASS", "/INDEX", "/SOURCE", "/OBJECT", "/CONTINUE", ""}
+			  "/BYPASS", "/INDEX", "/SOURCE", "/OBJECT", "/CONTINUE", 
+			  "/X0", "/Y0", "/X1", "/Y1", ""}
 		},
 		{
 			"SETUP",
@@ -882,12 +883,59 @@ static int	xnav_set_func(	void		*client_data,
     else {
       pwr_tStatus sts;
       pwr_tAttrRef aref;
+      char tmp_str[80];
+      int nr;
+      double borders[4] = {0,0,0,0};
+      double *bordersp = borders;
 
       xnav_replace_node_str( graph_str, graph_str);
 
+      if ( ODD( dcli_get_qualifier( "/X0", tmp_str, sizeof(tmp_str)))) {
+        nr = sscanf( tmp_str, "%lf", &borders[0]);
+        if ( nr != 1) {
+          xnav->message('E', "Syntax error in x0");
+          return XNAV__HOLDCOMMAND;
+        }
+      }
+      else
+        borders[0] = 0;
+
+      if ( ODD( dcli_get_qualifier( "/Y0", tmp_str, sizeof(tmp_str)))) {
+        nr = sscanf( tmp_str, "%lf", &borders[1]);
+        if ( nr != 1) {
+          xnav->message('E', "Syntax error in y0");
+          return XNAV__HOLDCOMMAND;
+        }
+      }
+      else
+        borders[1] = 0;
+
+      if ( ODD( dcli_get_qualifier( "/X1", tmp_str, sizeof(tmp_str)))) {
+        nr = sscanf( tmp_str, "%lf", &borders[2]);
+        if ( nr != 1) {
+          xnav->message('E', "Syntax error in x1");
+          return XNAV__HOLDCOMMAND;
+        }
+      }
+      else
+        borders[2] = 0;
+
+      if ( ODD( dcli_get_qualifier( "/Y1", tmp_str, sizeof(tmp_str)))) {
+        nr = sscanf( tmp_str, "%lf", &borders[3]);
+        if ( nr != 1) {
+          xnav->message('E', "Syntax error in y1");
+          return XNAV__HOLDCOMMAND;
+        }
+      }
+      else
+        borders[3] = 0;
+
+      if ( borders[0] == 0 && borders[1] == 0 && borders[2] == 0 && borders[3] == 0)
+	bordersp = 0;
+
       sts = gdh_NameToAttrref( pwr_cNObjid, graph_str, &aref);
       if ( ODD(sts) && xnav->appl.find( applist_eType_MultiView, &aref, (void **) &mvctx)) {
-	return mvctx->set_subwindow_source( name_str, source_str, object_p, cont);
+	return mvctx->set_subwindow_source( name_str, source_str, object_p, bordersp, cont);
       }
       else {
 	xnav->message('E', "Graph is not open");
@@ -3112,6 +3160,8 @@ static int	xnav_open_func(	void		*client_data,
       char tmp_str[80];
       char *focus_p;
       int  width, height, nr, scrollbar, menu, navigator;
+      double borders[4] = {0,0,0,0};
+      double *bordersp = borders;
       int  inputempty;
       pwr_tFileName fname;
       int  use_default_access;
@@ -3126,7 +3176,7 @@ static int	xnav_open_func(	void		*client_data,
         navigator =  ODD( dcli_get_qualifier( "/NAVIGATOR", 0, 0));
 
         xnav->open_graph( "Collect", "_none_", scrollbar, menu, navigator,
-			  0, 0, 0, 0, "collect", NULL, 0, 0, 0, options, basewidget);
+			  0, 0, 0, 0, "collect", NULL, 0, 0, 0, options, basewidget, 0);
         return XNAV__SUCCESS;
       }
       if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str, sizeof(file_str)))) {
@@ -3247,6 +3297,49 @@ static int	xnav_open_func(	void		*client_data,
       else
         height = 0;
 
+      if ( ODD( dcli_get_qualifier( "/X0", tmp_str, sizeof(tmp_str)))) {
+        nr = sscanf( tmp_str, "%lf", &borders[0]);
+        if ( nr != 1) {
+          xnav->message('E', "Syntax error in x0");
+          return XNAV__HOLDCOMMAND;
+        }
+      }
+      else
+        borders[0] = 0;
+
+      if ( ODD( dcli_get_qualifier( "/Y0", tmp_str, sizeof(tmp_str)))) {
+        nr = sscanf( tmp_str, "%lf", &borders[1]);
+        if ( nr != 1) {
+          xnav->message('E', "Syntax error in y0");
+          return XNAV__HOLDCOMMAND;
+        }
+      }
+      else
+        borders[1] = 0;
+
+      if ( ODD( dcli_get_qualifier( "/X1", tmp_str, sizeof(tmp_str)))) {
+        nr = sscanf( tmp_str, "%lf", &borders[2]);
+        if ( nr != 1) {
+          xnav->message('E', "Syntax error in x1");
+          return XNAV__HOLDCOMMAND;
+        }
+      }
+      else
+        borders[2] = 0;
+
+      if ( ODD( dcli_get_qualifier( "/Y1", tmp_str, sizeof(tmp_str)))) {
+        nr = sscanf( tmp_str, "%lf", &borders[3]);
+        if ( nr != 1) {
+          xnav->message('E', "Syntax error in y1");
+          return XNAV__HOLDCOMMAND;
+        }
+      }
+      else
+        borders[3] = 0;
+
+      if ( borders[0] == 0 && borders[1] == 0 && borders[2] == 0 && borders[3] == 0)
+	bordersp = 0;
+
       if ( ODD( dcli_get_qualifier( "/ACCESS", tmp_str, sizeof(tmp_str)))) {
         nr = sscanf( tmp_str, "%u", &access);
         if ( nr != 1) {
@@ -3260,7 +3353,7 @@ static int	xnav_open_func(	void		*client_data,
 
       xnav->open_graph( name_str, file_str, scrollbar, menu, navigator,
 			width, height, 0, 0, instance_p, focus_p, inputempty,
-			use_default_access, access, options, basewidget);
+			use_default_access, access, options, basewidget, bordersp);
       return XNAV__SUCCESS;	
     }
   }
@@ -8490,9 +8583,10 @@ static int xnav_ge_get_current_objects_cb( void *vxnav, pwr_sAttrRef **alist,
 }
 
 void XNav::open_graph( const char *name, const char *filename, int scrollbar, int menu, 
-	int navigator, int width, int height, int x, int y,
-	const char *object_name, const char *focus_name, int input_focus_empty,
-	int use_default_access, unsigned int access, unsigned int options, void *basewidget)
+		       int navigator, int width, int height, int x, int y, 
+		       const char *object_name, const char *focus_name, int input_focus_empty,
+		       int use_default_access, unsigned int access, unsigned int options, void *basewidget,
+		       double *borders)
 {
   XttGe *gectx;
 
@@ -8507,7 +8601,7 @@ void XNav::open_graph( const char *name, const char *filename, int scrollbar, in
     gectx = xnav_ge_new( name, filename, 
 			 scrollbar, menu, navigator, width, height, x, y, gbl.scantime,
 			 object_name, use_default_access, access, options, basewidget,
-			 &xnav_ge_command_cb,
+			 borders, &xnav_ge_command_cb,
 			 &xnav_ge_get_current_objects_cb, &xnav_ge_is_authorized_cb);
     gectx->close_cb = xnav_ge_close_cb;
     gectx->help_cb = xnav_ge_help_cb;
@@ -8591,7 +8685,7 @@ int XNav::exec_xttgraph( pwr_tObjid xttgraph, char *instance,
     open_graph( xttgraph_o.Title, action, scrollbars, 
 	menu, navigator, xttgraph_o.Width,
 	xttgraph_o.Height, xttgraph_o.X, xttgraph_o.Y, instance, 
-		focus, inputempty, use_default_access, access, options, basewidget);
+		focus, inputempty, use_default_access, access, options, basewidget, 0);
   }
   else if ( (strstr( action, ".class")))
   {

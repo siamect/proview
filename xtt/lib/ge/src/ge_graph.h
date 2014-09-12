@@ -535,6 +535,7 @@ class Graph {
   char			java_package[80];      	//!< Package for generated java code for baseclasses
   vector<GraphRef>      reflist;		//!< List with stored references
   int			disable_log;		//!< Disable wb log window
+  double		*pending_borders;       //!< Stored initial borders
 
   //! Print to postscript file.
   /*! \param filename	Name of postscript file. */
@@ -551,6 +552,9 @@ class Graph {
   //! Unzoom.
   /*! Return to base zoom factor. */
   void unzoom();
+
+  //! Set graph borders.
+  void set_borders( double *borders);
 
   //! Set edit mode.
   /*!

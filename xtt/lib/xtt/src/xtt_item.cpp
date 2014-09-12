@@ -1495,7 +1495,7 @@ int ItemFile::open_children( XNavBrow *brow, double x, double y)
       break;
     }
     case item_eFileType_Graph:
-      xnav->open_graph( name, file_name, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+      xnav->open_graph( name, file_name, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
       break;
     case item_eFileType_RttLog:
       xnav->open_rttlog( name, file_name);

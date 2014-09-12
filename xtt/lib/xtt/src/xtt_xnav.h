@@ -370,7 +370,7 @@ class XNav {
 				int navigator, int width, int height, int x, int y, 
 				double scan_time, const char *object_name, 
 				int use_default_access, unsigned int access, unsigned int options,
-				void *basewidget,
+				void *basewidget, double *borders,
 				int (*xg_command_cb) (void *, char *, void *),
 				int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 				int (*xg_is_authorized_cb) (void *, unsigned int)) {return 0;}
@@ -524,9 +524,10 @@ class XNav {
 			int		collect);
     int show_symbols();
     void open_graph( const char *name, const char *filename, int scrollbar, int menu, 
-	int navigator, int width, int height, int x, int y, const char *object_name,
-        const char *focus, int inputempty, int use_default_access, 
-	unsigned int access, unsigned int options, void *basewidget);
+		     int navigator, int width, int height, int x, int y, const char *object_name,
+		     const char *focus, int inputempty, int use_default_access, 
+		     unsigned int access, unsigned int options, void *basewidget, 
+		     double *borders);
     void close_graph( char *filename, char *object_name);
     int exec_xttgraph( pwr_tObjid xttgraph, char *instance,
 		       char *focus, int inputempty, int use_default_access, 

@@ -2054,6 +2054,16 @@ XttGraph objekt.
         <t>Strängen $current anger nuvarande fönster när grafen öppnas från en
 	<t>tryckknapp i detta fönster.
 /pinstance <t>Instance namn för pwindow grafen, om pwindow är en objektsbild.
+/fullscreen <t>Öppna fönstret med full skärm utan ram.
+/maximize   <t>Öppna fönstret maximerat med ram.
+/iconify    <t>Öppna fönstret ikoniserat.
+/hide	    <t>Visa inte fönstret på skärmen.
+/x0	<t>Övre vänstra x koordinat i Ge för grafens gränslinje. Om x0, y0, x1, y1
+        <t>angesvisas en annan del av grafen än den som är specificerad Graph 
+        <t>attributes x0, y0, x1, y1.
+/y0	<t>Övre vänstra y koordinat i Ge för grafens gränslinje.
+/x1	<t>Undre högra x koordinat i Ge för grafen gränslinje.
+/x1	<t>Undre högra y koordinat i Ge för grafen gränslinje.
 </TOPIC>
 
 <TOPIC> open jgraph <style> function

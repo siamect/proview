@@ -292,13 +292,15 @@ XttGe *XNavMotif::xnav_ge_new( const char *name, const char *filename, int scrol
 			       int navigator, int width, int height, int x, int y, 
 			       double scan_time, const char *object_name, 
 			       int use_default_access, unsigned int access, unsigned int options,
+			       void *basewidget, double* borders,
 			       int (*command_cb) (void *, char *, void *),
 			       int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 			       int (*is_authorized_cb) (void *, unsigned int))
 {
   return new XttGeMotif( parent_wid, this, name, filename, scrollbar, menu, navigator,
 			 width, height, x, y, scan_time, object_name, use_default_access,
-			 access, options, command_cb, get_current_objects_cb, is_authorized_cb);
+			 access, options, basewidget, scroll_x, scroll_y, 
+			 command_cb, get_current_objects_cb, is_authorized_cb);
 }
 
 GeCurve *XNavMotif::gecurve_new( char *name, char *filename, GeCurveData *data,

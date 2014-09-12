@@ -288,7 +288,7 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
 		    const char *xg_filename, int xg_scrollbar, int xg_menu, int xg_navigator, 
 		    int xg_width, int xg_height, int x, int y, double scan_time, 
 		    const char *object_name, int use_default_access, unsigned int access,
-		    unsigned int options, void *basewidget,
+		    unsigned int options, void *basewidget, double *borders,
 		    int (*xg_command_cb) (void *, char *, void *),
 		    int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 		    int (*xg_is_authorized_cb) (void *, unsigned int)) :
@@ -477,6 +477,9 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
   else {
     gtk_widget_set_size_request( graph_form, window_width, window_height);
   }
+
+  if ( borders)
+    ((Graph *)graph)->set_borders( borders);
 
 }
 
