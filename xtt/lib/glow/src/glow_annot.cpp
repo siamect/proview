@@ -58,6 +58,7 @@ void GlowAnnot::save( ofstream& fp, glow_eSaveMode mode)
   p.save( fp, mode);
   fp << int(glow_eSave_Annot_annot_type) << FSPACE << int(annot_type) << endl;
   fp << int(glow_eSave_Annot_font) << FSPACE << int(font) << endl;
+  fp << int(glow_eSave_Annot_protect) << FSPACE << protect << endl;
   fp << int(glow_eSave_End) << endl;
 }
 
@@ -89,6 +90,7 @@ void GlowAnnot::open( ifstream& fp)
 	annot_type = (glow_eAnnotType)tmp; break;
       case glow_eSave_Annot_font: fp >> tmp; 
 	font = (glow_eFont)tmp; break;
+      case glow_eSave_Annot_protect: fp >> protect; break;
       case glow_eSave_End: end_found = 1; break;
       default:
         cout << "GlowAnnot:open syntax error" << endl;

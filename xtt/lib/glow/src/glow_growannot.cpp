@@ -47,6 +47,7 @@
 #include "glow_node.h"
 #include "glow_grownode.h"
 
+static char stars[] = "*******************************************************************************";
 
 void GrowAnnot::save( ofstream& fp, glow_eSaveMode mode) 
 { 
@@ -152,19 +153,28 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
   switch ( annot_type) {
   case glow_eAnnotType_OneLine: {
     int width, height, descent;
+    char *textp;
+    int text_len;
 
     color = ((GrowCtx *)ctx)->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
 					    highlight, (GrowNode *)colornode, 2);
 
-    
+    if ( protect) {
+      text_len = min(strlen(((GlowNode *) node)->annotv[number]), sizeof(stars)-2);
+      textp = &stars[sizeof(stars) - 1 - text_len];
+    }
+    else {
+      textp = ((GlowNode *) node)->annotv[number];
+      text_len = strlen(((GlowNode *) node)->annotv[number]);
+    }
+
     if ( ((rot < 45 || rot >= 315) &&
 	  ( ((GlowNode *) node)->annotv_inputmode[number] &&
 	    ((GrowNode *) node)->input_selected)) ||
 	 ( !(rot < 45 || rot >= 315)) ||
 	 adjustment == glow_eAdjustment_Right ||
 	 adjustment == glow_eAdjustment_Center)
-      ctx->gdraw->get_text_extent( ((GlowNode *) node)->annotv[number],
-				   strlen(((GlowNode *) node)->annotv[number]),
+      ctx->gdraw->get_text_extent( textp, text_len,
 				   ldraw_type, idx, lfont,
 				   &width, &height, &descent, tsize, 0);
 
@@ -222,13 +232,13 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
     } 
 
     ctx->gdraw->text( w, x1, y1,
-		      ((GlowNode *) node)->annotv[number], 
-		      strlen(((GlowNode *) node)->annotv[number]), ldraw_type, color, idx, 
+		      textp, text_len,
+		      ldraw_type, color, idx, 
 		      highlight, 0, lfont, tsize, rot);
+
     if ( ((GlowNode *) node)->annotv_inputmode[number])
       ctx->gdraw->text_cursor( w, x1, y1,
-			       ((GlowNode *) node)->annotv[number],
-			       strlen(((GlowNode *) node)->annotv[number]),
+			       textp, text_len,
 			       ldraw_type, color, idx, highlight, 
 			       ((GrowNode *)node)->input_position, lfont, tsize);
     break;
@@ -316,6 +326,17 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   switch ( annot_type) {
     case glow_eAnnotType_OneLine: {
       int width, height, descent;
+      char *textp;
+      int text_len;
+
+      if ( protect) {
+	text_len = min(strlen(((GlowNode *) node)->annotv[number]), sizeof(stars)-2);
+	textp = &stars[sizeof(stars) - 1 - text_len];
+      }
+      else {
+	textp = ((GlowNode *) node)->annotv[number];
+	text_len = strlen(((GlowNode *) node)->annotv[number]);
+      }
 
       if ( ((rot < 45 || rot >= 315) &&
 	    ( ((GlowNode *) node)->annotv_inputmode[number] &&
@@ -323,8 +344,8 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 	   ( !(rot < 45 || rot >= 315)) ||
 	   adjustment == glow_eAdjustment_Right ||
 	   adjustment == glow_eAdjustment_Center)
-	ctx->gdraw->get_text_extent( ((GlowNode *) node)->annotv[number],
-				     strlen(((GlowNode *) node)->annotv[number]),
+	ctx->gdraw->get_text_extent( textp,
+				     text_len,
 				     ldraw_type, idx, lfont,
 				     &width, &height, &descent, tsize, 0);
 
@@ -378,8 +399,8 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       } 
 
       ctx->gdraw->text_erase( w, x1, y1,
-			      ((GlowNode *) node)->annotv[number], 
-			      strlen(((GlowNode *) node)->annotv[number]), ldraw_type, idx, 0, lfont,
+			      textp, text_len,
+			      ldraw_type, idx, 0, lfont,
 			      tsize, rot);
       break;
     }
@@ -463,11 +484,21 @@ void GrowAnnot::erase_background( GlowWind *w, GlowTransform *t, int hot, void *
 //		strlen(((GlowNode *) node)->annotv[number]), background, idx, 
 //		0, 0);
       }
-      else
-        ctx->gdraw->text_erase( w, x1, y1,
-				((GlowNode *) node)->annotv[number], 
-				strlen(((GlowNode *) node)->annotv[number]), ldraw_type, idx, 0, 
-				lfont, tsize, 0);
+      else {
+	if ( !protect)
+	  ctx->gdraw->text_erase( w, x1, y1,
+				  ((GlowNode *) node)->annotv[number], 
+				  strlen(((GlowNode *) node)->annotv[number]), ldraw_type, idx, 0, 
+				  lfont, tsize, 0);
+	else {
+	  int text_len = min(strlen(((GlowNode *) node)->annotv[number]), sizeof(stars)-2);
+	  ctx->gdraw->text_erase( w, x1, y1,
+				  &stars[sizeof(stars) - 1 - text_len], 
+				  text_len, 
+				  ldraw_type, idx, 0, 
+				  lfont, tsize, 0);
+	}
+      }
       break;
     }
     case glow_eAnnotType_MultiLine: {

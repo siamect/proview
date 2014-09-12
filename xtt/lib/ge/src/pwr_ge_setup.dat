@@ -151,6 +151,7 @@ menu Values
   subgraph 	ValueReliefUp	pwr_exe:pwr_valuereliefup.pwsg 		51
   subgraph 	ValueInputReliefDown	pwr_exe:pwr_valueinputreliefdown.pwsg 	51
   subgraph 	ValueInputReliefUp	pwr_exe:pwr_valueinputreliefup.pwsg 	51
+  subgraph 	PasswordInput	pwr_exe:pwr_passwordinput.pwsg 	51
 }
 menu Pushbuttons
 {

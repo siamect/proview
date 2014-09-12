@@ -1644,6 +1644,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].type = glow_eType_AnnotType;
       attrinfo[i++].size = sizeof( op->annot_type);
       
+      strcpy( attrinfo[i].name, "Protected");
+      attrinfo[i].value_p = &op->protect;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->protect);
+      
       break;
     }
     case glow_eObjectType_GrowText:

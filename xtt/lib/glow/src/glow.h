@@ -1280,6 +1280,7 @@ typedef enum {
 	glow_eSave_Annot_display_level		= 1305,
 	glow_eSave_Annot_color_drawtype		= 1306,
 	glow_eSave_Annot_font			= 1307,
+	glow_eSave_Annot_protect	       	= 1308,
 	glow_eSave_Arrow_arrow_width		= 1400,
 	glow_eSave_Arrow_arrow_length		= 1401,
 	glow_eSave_Arrow_draw_type		= 1402,

@@ -56,7 +56,7 @@ class GlowAnnot : public GlowArrayElem {
       ctx(glow_ctx), number(annot_num), p(glow_ctx,x,y), draw_type(d_type),
       text_size(t_size), annot_type(a_type), relative_pos(rel_pos),
       display_level(display_lev), color_drawtype(color_d_type),
-      font(glow_eFont_Helvetica) {};
+      font(glow_eFont_Helvetica), protect(0) {};
     void save( ofstream& fp, glow_eSaveMode mode);
     void open( ifstream& fp);
     void traverse( int x, int y) { p.traverse( x, y);}
@@ -71,6 +71,7 @@ class GlowAnnot : public GlowArrayElem {
     glow_mDisplayLevel display_level;
     glow_eDrawType color_drawtype;
     glow_eFont font;
+    int protect;
 };
 
 void glow_measure_annot_text( GrowCtx *ctx, char *text, glow_eDrawType draw_type, 
