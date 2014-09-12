@@ -104,8 +104,8 @@ void RunTimeCounterFo_exec( plc_sThread		*tp,
     co->TripReset = 0;
   }
   /* Update Calendar time */
-  time_Dadd( &co->TotalTime, &co->TotalTime, &TimeSince);
-  time_Dadd( &co->TripTime, &co->TripTime, &TimeSince);
+  time_Dadd_NE( &co->TotalTime, &co->TotalTime, &TimeSince);
+  time_Dadd_NE( &co->TripTime, &co->TripTime, &TimeSince);
 
   /* Test if running */
   o->Start = 0;
@@ -118,8 +118,8 @@ void RunTimeCounterFo_exec( plc_sThread		*tp,
       time_GetTime( &co->StartTime);
     } /* End if new start */
     /* Update Running Time */
-    time_Dadd( &co->TripRunTime, &co->TripRunTime, &TimeSince);
-    time_Dadd( &co->TotalRunTime, &co->TotalRunTime, &TimeSince);
+    time_Dadd_NE( &co->TripRunTime, &co->TripRunTime, &TimeSince);
+    time_Dadd_NE( &co->TotalRunTime, &co->TotalRunTime, &TimeSince);
   } /* End if Running */
 
   o->Running = co->Running = *o->RunningP;
