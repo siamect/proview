@@ -39,3 +39,9 @@
 131114 cs  java      java jopc.jar -> jopg.jar fix
 140103 cs  java      Java GlowCon fix, and open function for image and window added
 140204 cs  aapp      Java android app work
+140211 cs  web       WebGraph object searched for also in one herarchiy level below WebHandler
+140214 cs  web       Web, open graph from pwg-files as default, methods for pwg-graphs added
+140327 cs  java      Java pwg fix for color tone/fill color dynamics
+140327 cs  java      java c-format %F allowed
+140411 cs  java      Java, move dynamics added to jopg
+140528 cs  java      Java pwg-file read, XYCurve class added

@@ -9,3 +9,4 @@
 131119 cs  abb       ABB ACS800 alarmtext for no connection was missing
 140203 cs  abb       Frequency converter object, DSUp TimerTime set
 140204 cs  abb       Frequency converter ABB ACS880 with Profinet communication added
+140214 cs  abb       ABB ACS800 and ACS880 parameter graphs, op privileges removed on write button

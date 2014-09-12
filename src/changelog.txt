@@ -269,3 +269,17 @@
 131122 cs  pwre      pwre build fix for libpcap
 131127 cs  wbl       DSupComp and ASupComp added
 140203 cs  pkg       New package for crosscompiling raspberry pi applications.
+140327 cs  co        Time to ascii format, month string changed to English
+140401 cs  sim       Sim server bugfix for step with long scantime
+140428 cs  rt        Fast curve support for boolean datatype
+140428 cs  rt        Backup threads started with realtime priority (refs #187)
+140513 cs  rt        Plc data and NMps, class DataRefv added and type DataRef used for data references
+140514 cs  plc       Plc control, new algorithm for PID and CompPID, and windup limit in Inc3P-object
+140522 cs  co        Time function to get current time in ascii added
+140612 cs  mh        Mh event types MaintainanceAlarm, SystemAlarm, UserAlarm1-4 added
+140709 cs  plc       Plc core program added
+140814 cs  co        Time function for plc without exceptions at invalid times added, and fix in time_Aadd for negative deltatimes
+140827 cs  plc       Plc, new time function objects AtDemux, AtLimit, AtMax, AtMin, AtMux, AtSel, DtDemux, DtLimit, DtMax, DtMin, DtMux and DtSel
+140829 cs  plc       Plc, new dataref and string function objects, DataSel, DataEqual, DataNotEqual, StrAdd, StrEqual, StrNotEqual, StrSel, StrTrim and StrParse
+140904 cs  rt        pwr kill, read ld_appl file to kill applications
+140910 cs  io        IO hierarchy allowed between node object and rack object

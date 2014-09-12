@@ -7,3 +7,6 @@
 111103 cs  -         DataCopy, DataReset bugfix, didn't work for attribute object references
 111108 cs  wbl       NMpsCellData visibility of attributes changed
 121031 cs  nmps      NMpsCell object graphs, layout fix
+140513 cs  nmps      Plc data and NMps, class DataRefv added and type DataRef used for data references
+140829 cs  nmps      Plc, new dataref and string function objects, DataSel, DataEqual, DataNotEqual, StrAdd, StrEqual, StrNotEqual, StrSel, StrTrim and StrParse
+140829 cs  nmps      NMps class DataMux added

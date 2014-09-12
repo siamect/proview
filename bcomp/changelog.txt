@@ -28,3 +28,4 @@
 130320 cs  bcomp     BaseFilter bugfix, alarm was inverted
 131031 cs  bcomp     BaseContactor object graph for two orders added
 131212 cs  bcomp     DSupComp and ASupComp added, all DSup replaced in basecomponents and ABB
+140912 cs  bcomp     RunTimeCounter, changed time_Dadd() t time_Dadd_NE

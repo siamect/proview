@@ -344,3 +344,38 @@
 140206 cs  xtt       Xtt command 'close graph $current ' added to close from a button inside the graph
 140206 cs  ge        Ge image bugfix for not keeping rotation and color tone
 140206 eb  ge        Ge image float position implemented.
+140214 cs  xtt       Xtt command 'open graph' bugfix for classgraphs
+140214 cs  xtt       Ge polyline draw bugfix for subwindows
+140218 cs  xtt       Xtt command 'open shist', SevHistObjects were not displayed
+140221 cs  ge        Ge copy of axis segfaulted
+140305 cs  ge        Ge bugfix for scale with snap to grid
+140305 cs  ge        Ge trend and xycurve fix for curves in subwindow
+140312 cs  xtt       Xtt read struct fix, element name buffer increased
+140327 cs  xtt       OpPlace.AppUseWebDir=1 as default
+140403 cs  ge        Ge graph list, subgraph pages hidden
+140409 cs  xtt       Xtt ge graph or multiview base window when operator window and navigator is hidden
+140410 cs  xtt       Xtt AlarmTable added
+140411 cs  xtt       Xtt eventlist satellite bugfix for eventlist unload
+140422 cs  ge        Ge preview, handling of exception when runtime not started
+140423 cs  xtt       Xtt command 'show message' added
+140423 cs  xtt       Xtt eventlog window adjustment
+140425 cs  xtt       Xtt script, ConfirmDialog() function added
+140425 cs  xtt       Xtt class help, link to class of object attribute added
+140425 cs  xtt       XttGraph and XttMultview options HideDecorations and Dialog added
+140430 cs  xtt       Xtt centered dialogues
+140430 cs  xtt       Xtt eventlog window bugfix when opened for specific object
+140528 cs  xtt       Xtt audio bugfix
+140528 cs  xtt       Xtt signal flags, inv/conv/test displayed in collection view
+140618 cs  xtt       Plc trace, objects with old subscriptions dimmed
+140619 cs  smon      Status monitor, timeout for receive added
+140813 cs  ge        Ge dynamic TimeoutColor added
+140812 cs  ge        Ge dynamic DigTextColor added
+140812 cs  ge        Ge editor, build button added
+140709 cs  ge        Ge draw optimization for lines and arcs
+140818 cs  xtt       Xtt bugfix in command 'show objectlist'
+140818 cs  xtt       Xtt default OpPlace changed from name 'OpDefault' to attribute IsDefaultOp in OpPlace object
+140822 cs  xtt       Xtthelp,  project xtthelp-files moved from $pwrp_exe to $pwrp_load
+140904 cs  xtt       Xtt bugfix for opplace arg with only object name
+140902 cs  ge        Ge editor, buffer size bugfix in graph attributes dialog
+140908 cs  xtt       Xtt 'show device' table, class column moved
+140912 cs  xtt       Xtt command 'open graph' and 'set subw', /x0 /y0 /x1 /y1 added

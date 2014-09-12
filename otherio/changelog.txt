@@ -37,3 +37,11 @@
 130718 cs  epl       Powerlink new stall action logic
 130905 cs  epl       Powerlink added to Guide to IO systems
 131009 cs  modbus    Modbus TCP, configuration of max slave timeout added
+140222 cs  rpi       IO PiFace Digital for Raspberry Pi added
+140227 cs  modbus    Modbus TCP server, function code ReadInputRegisters added
+140302 cs  rpi       IO support for Gertboard
+140401 cs  modbus    IO Modbus TCP ScanInterval bugfix
+140404 cs  modbus    Modbus TCP, disable slave with disconnect added
+140404 cs  modbus    Modbus TCP server, signalhandler added for SIGPIPE
+140514 cs  onewire   IO OneWire_AiDevice Status attribute set
+140709 cs  arduino   IO Arduino Ao size bugfix and Status enum fix

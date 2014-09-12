@@ -11,3 +11,4 @@
 120304 cs  .         Release 4.8.4-1.
 120527 cs  .         Release 4.8.5-1.
 140204 cs  .         Release 5.1.0-1.
+140903 cs  .         Copyright changed to SSAB AB

@@ -9,3 +9,6 @@
 131031 cs  sev       sev_xtt xttsevhist constructor changed
 131031 cs  sev       Sev repair options for list, clean and optimize database added
 131107 cs  sev       Sev event storage, check that event is not already stored added
+140218 cs  sevcli    Sevcli read fix
+140218 cs  sev       Sev read of items with option event and small number of points fix
+140218 cs  sev       Sev bugfix, sevobjects without event-bit didn't work

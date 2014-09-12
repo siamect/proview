@@ -257,4 +257,21 @@
 131220 cs  wb        'Build options, pwr_epl_dummy was missing
 140123 cs  wb        wb lowercase name on appl-file fix
 140204 cs  wb        CustomBuild object increased size of cross compiler commands
+140216 cs  wb        Wb build WebGraph modified for read of pwg files
+140219 cs  wb        wb history to html conversion bugfix
+140305 cs  wb        Wb fix for custombuild attribute sizes
+140312 cs  wbl       wb load bugfix for DataAritmL objects
+140327 cs  wb        Wb fix for array elements in object arrays
+140403 cs  wb        Wb palette, XttMultiView, WebLink, AppGraph and AppLink added
+140411 cs  wb        Wb db_log_autoremove added to Berkeley db
+140422 cs  wb        Wb, error message when error from linker added
+140610 cs  wb        wb script functions GetTemplateObject() and GetNextTemplateAttrRef() added
+140612 cs  wb        Wb dataarithm error for long code lines
+140618 cs  plc       Plc compile warning fix for string inputs
+140618 cs  wb        pwr_projectlist.dat, old versions stored
+140627 cs  wb        Wb function to build directory, import and export
+140818 cs  wb        Wtt, build tools button builds volume for SharedVolume and SubVolume
+140821 cs  plc       Plc helptext objects added
+140908 cs  wbl       Wbl CStoATv and CStoDTv, noedit flags on input added
+140910 cs  wb        Wb directory volume, revert didn't work
 
