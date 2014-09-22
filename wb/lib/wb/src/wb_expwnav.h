@@ -173,9 +173,10 @@ class WbExpWNav {
     virtual void set_input_focus() {}
 
     void show();
+    void update();
     void show_export_import();
     void show_builddir();
-    void redraw();
+    void redraw( int posit_top);
     void clear();
     void zoom( double zoom_factor);
     void unzoom();

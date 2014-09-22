@@ -90,6 +90,11 @@ void WbExpW::show()
   expwnav->show();
 }
 
+void WbExpW::update()
+{
+  expwnav->update();
+}
+
 void WbExpW::activate_export() 
 { 
   char text[80];

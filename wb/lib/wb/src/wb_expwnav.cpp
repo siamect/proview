@@ -659,9 +659,117 @@ void WbExpWNav::show()
   }
 }
 
+void WbExpWNav::update()
+{
+  int sts;
+  ItemDir *item;
+  brow_tNode node;
+  pwr_tString80 *open_nodes;
+  int select_exist = 0;
+  expwitem_eItemType select_type;
+  pwr_tString80 select_name;
+  pwr_tFileName select_source;
+  pwr_tFileName select_target;
+  brow_tNode	*node_list;
+  int		node_count;
+  
+  // Store selected node
+  brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
+  if ( node_count) {
+    select_exist = 1;
+    brow_GetUserData( node_list[0], (void **)&item);
+    select_type = item->type;
+
+    switch( item->type) {
+    case expwitem_eItemType_Dir: 
+      strcpy( select_name, item->name);
+      break;
+    case expwitem_eItemType_Exp: 
+      strcpy( select_source, ((ItemExp *)item)->source);
+      strcpy( select_target, ((ItemExp *)item)->target);
+      break;
+    }
+    free( node_list);
+  }
+
+  // Store all open nodes.
+  int cnt = 0;
+  for ( sts = brow_GetFirst( brow->ctx, &node); 
+	ODD(sts); 
+	sts = brow_GetNextSibling( brow->ctx, node, &node)) {
+    if ( brow_IsOpen( node))
+      cnt++;
+  }
+
+  open_nodes = (pwr_tString80 *)calloc( cnt, sizeof(pwr_tString80));
+
+  cnt = 0;
+  for ( sts = brow_GetFirst( brow->ctx, &node); 
+	ODD(sts); 
+	sts = brow_GetNextSibling( brow->ctx, node, &node)) {
+    if ( brow_IsOpen( node)) {
+      brow_GetUserData( node, (void **)&item);
+
+      switch ( item->type) {
+      case expwitem_eItemType_Exp:
+	break;
+      case expwitem_eItemType_Dir:
+	strcpy( open_nodes[cnt], item->name);
+	break;
+      }
+      cnt++;
+    }
+  }
+
+  brow_SetNodraw( brow->ctx);
+
+  show();
+
+  if ( cnt) {
+    for ( sts = brow_GetFirst( brow->ctx, &node); 
+	  ODD(sts); 
+	  sts = brow_GetNextSibling( brow->ctx, node, &node)) {
+      brow_GetUserData( node, (void **)&item);
+
+      switch ( item->type) {
+      case expwitem_eItemType_Exp:
+	break;
+      case expwitem_eItemType_Dir:
+	for ( int i = 0; i < cnt; i++) {
+	  if ( strcmp( open_nodes[i], item->name) == 0) {
+	    item->open_children();
+	  }
+	}
+	break;
+      }      
+    }
+  }
+
+  // Select previously selected node
+  if ( select_exist) {
+    brow_GetObjectList( brow->ctx, &node_list, &node_count);
+    for ( int i = 0; i < node_count; i++) {
+      brow_GetUserData( node_list[i], (void **)&item);
+      if ( select_type == item->type &&
+	   (( item->type == expwitem_eItemType_Exp &&
+	      strcmp( select_source, ((ItemExp *)item)->source) == 0 &&
+	      strcmp( select_target, ((ItemExp *)item)->target) == 0) ||
+	    ( item->type == expwitem_eItemType_Dir &&
+	      strcmp( select_name, item->name) == 0))) {
+	brow_SelectInsert( brow->ctx, node_list[i]);
+	brow_SetInverse( node_list[i], 1);
+      }
+    }
+  }
+
+  brow_ResetNodraw( brow->ctx);
+  brow_Redraw( brow->ctx, 0);
+  free( open_nodes);
+}
+
+
 void WbExpWNav::show_export_import()
 {
-
   pwr_tFileName fname;
   char line[400];
   char line_item[4][250];
@@ -669,6 +777,7 @@ void WbExpWNav::show_export_import()
   int num;
   int sts;
   char tag[20];
+  ItemExp *first_item = 0;
 
   brow_SetNodraw( brow->ctx);
   brow_DeleteAll( brow->ctx);
@@ -735,6 +844,8 @@ void WbExpWNav::show_export_import()
 	ItemExp *item = new ItemExp( this, found_file, line_item[3], 0, 0, flow_eDest_IntoLast);
 	if ( update)
 	  brow_SetRadiobutton( item->node, 0, 1);  
+	if ( !first_item)
+	  first_item = item;
       }
       dcli_search_file( line_item[2], found_file, DCLI_DIR_SEARCH_END);
     }
@@ -742,7 +853,8 @@ void WbExpWNav::show_export_import()
   
   is.close();    
 
-  check_all();
+  if ( !show_all && first_item)
+    brow_CenterObject( brow->ctx, first_item->node, 0);
 
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
@@ -882,7 +994,7 @@ void WbExpWNav::show_builddir()
   
   is.close();    
 
-  redraw();
+  redraw(0);
 }
 
 void WbExpWNav::set_show_all( int set) 
@@ -894,13 +1006,15 @@ void WbExpWNav::set_show_all( int set)
     show();
     break;
   case expw_eType_BuildDirectories:
-    redraw();
+    redraw( !show_all);
     break;
   }
 }
 
-void WbExpWNav::redraw()
+void WbExpWNav::redraw( int posit_top)
 {
+  ItemDir *first_item = 0;
+
   brow_SetNodraw( brow->ctx);
   brow_DeleteAll( brow->ctx);
 
@@ -910,7 +1024,12 @@ void WbExpWNav::redraw()
       brow_SetRadiobutton( item->node, 0, 1);
     if ( dir->open)
       item->open_children();
+    if ( !first_item)
+      first_item = item;
   }
+
+  if ( first_item && posit_top)
+    brow_CenterObject( brow->ctx, first_item->node, 0);
 
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
@@ -1149,7 +1268,7 @@ void WbExpWNav::check_all()
       for ( ExpWExec *ep = dir->execlist; ep; ep = ep->next)
 	ep->update = 1;
     }    
-    redraw();
+    redraw(0);
     break;
   }
   default: ;
@@ -1180,7 +1299,7 @@ void WbExpWNav::check_clear()
       for ( ExpWExec *ep = dir->execlist; ep; ep = ep->next)
 	ep->update = 0;
     }    
-    redraw();
+    redraw(0);
     break;
   }
   default: ;

@@ -69,8 +69,9 @@ class WbExpW {
 
     virtual void set_title( char *title) {}
     void show();
+    void update();
     void activate_export();
-    void activate_update() { expwnav->show();}
+    void activate_update() { expwnav->update();}
     void activate_check_all() { expwnav->check_all();}
     void activate_check_clear() { expwnav->check_clear();}
     void activate_check_reset() { expwnav->check_reset();}

@@ -175,6 +175,14 @@ WbExpWGtk::WbExpWGtk (
   g_object_set( tools_export, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_export, action, "");
 
+  GtkWidget *tools_update = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/ge_update.png");
+  gtk_container_add( GTK_CONTAINER(tools_update), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_update, "clicked", G_CALLBACK(activate_update), this);
+  g_object_set( tools_update, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_update, "Update", "");
+
   GtkWidget *tools_zoom_in = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
