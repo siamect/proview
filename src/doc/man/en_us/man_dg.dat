@@ -1890,8 +1890,8 @@ working area.
 The object is modified from the object editor. This is opened by selecting the object and 
 activating 'Functions/Open Objects' in the menu. Values of the object attributes are modified 
 with 'Functions/Change value' in the object editor menu, or by pressing the Arrow Right key. 
-If an input or output is not used, it can be removed with a checkbox. There is also a 
-checkbox which states that the value of a digital input should be inverted.
+If an input or output is not used, it can be removed with a check box. There is also a 
+check box which states that the value of a digital input should be inverted.
 
 <h2>Connect function objects
 A output pin and a input pin is connected by
@@ -2895,7 +2895,7 @@ that display Description and Specification for the component. In the lowest row 
 the Note message is viewed if such a message is inserted (by the Note method).
 
 Furthermore the level is displayed as a number and with a bar, and the alarm limits are also
-viewed. The alarm limits can be adjusted with sliders and enabled or disabled by checkboxes.
+viewed. The alarm limits can be adjusted with sliders and enabled or disabled by check boxes.
 
 In the upper right corner of the graph there is a button marked with an 'S'. It is only visible
 in simulation mode (i.e. IOSimulFlag in the IOHandler object is set) and it opens the 
@@ -5487,7 +5487,7 @@ icons dependent of type.
 
 - Enumeration types, Enum, is marked with am map and some long narrow rectangles. By clicking
   MB1 on the map the different alternatives of the enumeration are displayed. The alternatives
-  are displayed with checkboxes, and the chosen alternative is marked. You can also 
+  are displayed with check boxes, and the chosen alternative is marked. You can also 
   Doubleclick MB1 in the attribute row to display the alternatives.
  
 <image> dg_fig28.gif
@@ -5649,11 +5649,11 @@ or activate 'Functions/Close change value' (Ctrl/T) to terminate.
 
 The Object Editor for plc objects has functions to state which inputs or outputs that are to 
 be displayed in the function block. You can also choose if digital inputs are to be inverted.
-This is chosen with checkboxes for each attribute respectively ('Used' and 'Inverted'). The
-checkbox for 'Used' can also be changed from the keyboard with 'Shift/ArrowRight', and the
-checkbox for 'Inverted' can be changed with 'Shift/ArrowLeft'.
+This is chosen with check boxes for each attribute respectively ('Used' and 'Inverted'). The
+check box for 'Used' can also be changed from the keyboard with 'Shift/ArrowRight', and the
+check box for 'Inverted' can be changed with 'Shift/ArrowLeft'.
 
-<b>Plc object with checkboxes
+<b>Plc object with check boxes
 <image> dg_fig32.gif
 </topic>
 
@@ -5732,6 +5732,46 @@ Utilities
 
 The utilities window is a graphic interface to different configurator commands.
 For more information about the commands, see chapter Commands.
+</topic>
+
+<topic> builddir_refman
+Build Directories
+
+The Build Directories window displays the directories with configured build actions. The 
+check box for each directory shows if the directory will be built or not, ie if anything
+has to be updated in the directory. 
+
+Note! If a file is stored after the Build Directories window is opened, the update button 
+has to be pressed to show the correct status. Otherwise the stored file will not be
+updated when the directory is built.
+
+The directory folders can be opened to view the files, makefiles or scripts that is to be 
+updated. By activating 'Edit/Show all' in the menu also files and makefile that are not
+to be updated are viewed.
+
+Only directories and files that are checked are executed. Individual directories or
+files can be built by clearing the check boxes for other directories and files.
+
+By pressing the 'Build Directories' button in the toolbar the build is executed.
+
+The directories and the build actions are configured in the directory volume.
+</topic>
+
+<topic> exportimport_refman
+Build Export and Import
+
+The Build Export window displays files that should be exported to other projects or modules.
+Common files between projects can for example be dbs-files for class volumes or h-files for
+transactions between nodes. Normally files are exported from a project to a common directory,
+from where they later are imported by other projects. It's not recommended to import or
+export directly from or to other projects.
+
+By pressing the 'Export files' button in the toolbar the export is executed.
+
+The Build Import window displays files that should be imported from other projects and
+modules.
+
+By pressing the 'Import files' button in the toolbar the import is executed.
 </topic>
 </chapter>
 
@@ -5835,7 +5875,7 @@ plc object are separated into input attributes, internal attributes and output a
 The value of an input attribute is fetched from another function block, via a connection.
 The attribute is displayed in the function block as an input pin. In some cases the input is
 not used, an and-gate has for example 8 inputs but often only two of them are used. This is
-controlled by the 'Used' checkbox in the object editor. If 'Used' is marked, the attributes are
+controlled by the 'Used' check box in the object editor. If 'Used' is marked, the attributes are
 displayed with an input pin, else they are hidden.
 
 Some input attributes, especially of analog type, can be assigned a value in the object editor.
@@ -5845,7 +5885,7 @@ example the function for the limit values 'Min' and 'Max' in a Limit object. You
 whether to fetch the value from another function block, or to assign a value. The assignment
 works in runtime as an initial value, that later can be modified in various ways.
 
-Some digital inputs can be inverted. To do this you mark the checkbox 'Inverted' in the object
+Some digital inputs can be inverted. To do this you mark the check box 'Inverted' in the object
 editor. In the function block this is displayed with a circle on the input pin.
 
 <b>Internal attributes
@@ -5855,7 +5895,7 @@ maybe not even visible in the development environment.
 
 <b>Outputs
 The value of an output attribute is transferred to an input via a connection. As for an input,
-you can choose whether to display an output pin or not with the 'Used' checkbox in the
+you can choose whether to display an output pin or not with the 'Used' check box in the
 object editor.
 
 <h2>Select an object
@@ -7015,12 +7055,12 @@ common usages are strings and texts with specific size, and enumeration types an
 To define an enumeration type, the basetype should be $Enum. Below the $TypeDef object, texts
 for different values are defined with $Value objects. When the value of an attribute of the
 type is to be displayed, the text that corresponds to the value is displayed. When the
-attribute is given a value, the different texts are viewed with checkboxes and you select
+attribute is given a value, the different texts are viewed with check boxes and you select
 one alternative.
 
 To define bitmasks the basetype $Mask is used. Below the $TypeDef object, texts are defined
 for different bits by $Bit objects. When the attribute is given a value, the texts are 
-displayed with checkboxes, as for enumeration types. For bitmasks, several alternatives can
+displayed with check boxes, as for enumeration types. For bitmasks, several alternatives can
 be chosen.
 
 <b>$Value
@@ -7227,7 +7267,7 @@ character upper-case for other signal types.
 
 An input attribute in an instance object, contains both a pointer to the output it is
 connected to, and a value that can be stated. You choose whether to use the input pin and 
-connect an output, or to set a value, with a checkbox (Used). If you choose not to mark Used, 
+connect an output, or to set a value, with a check box (Used). If you choose not to mark Used, 
 the input pin is not displayed in the function object. In the Template object, you can set 
 default values for the input, that will be used when the input is not connected.
 

@@ -5678,6 +5678,44 @@ Utilities fönstret
 Utilities fönstret är ett grafiskt gränssnitt till olika kommandon i konfiguratören.
 För en närmare beskrivning av respektive kommando, se avsnittet Kommandon.
 </topic>
+
+<topic> builddir_refman
+Build Directories
+
+Build Directories fönstret visar kataloger som är konfiguerarde att byggas genom att
+kopiera filer, exekvera makefiler, skript och program. Kataloger som innehåller element 
+som behöver uppdateras är markerade i fönstret.
+
+OBS! Om en fil lagras efter Build Directories fönstret öppnades, måste uppdaterings-
+knappen aktiveras för att visa korrect status. Annars kommer den lagrade filen inte
+att uppdateras när katalogen byggs.
+
+Mappen för en katalog kan öppnas för att visa filer som ska uppdateras. Genom att 
+aktivera 'Edit/Show all' i menyn visas även filer som inte kommera att updateras.
+
+Bygget exekveras endast för kataloger och filer som är markerade. Enstaka kataloger
+eller filer kan byggas genom att avmarkera övriga kataloger och filer.
+
+Genom att trycka på 'Build Directories' i verktygspanelen utförs bygget.
+
+Katalogerna och bygg-åtgärderna konfigureras i directory volymen.
+</topic>
+
+<topic> exportimport_refman
+Build Export och Import
+
+Build Export fönstret visar filer som ska exporteras till andra projekt och moduler.
+Exempel på gemensamma filer för projekt är dbs-filer för klassvolymer och h-filer
+för transaktioner. Vanligvis exporteras filer till en gemensam katalog, varifrån de
+sedan importeras av andra project. Det är inte rekommendabelt att importera eller
+exportera direkt till eller från andra projekt.
+
+Genom att trycka på 'Export files' knappen i verktygspanelen utförs exporteringen.
+
+Build Import fönstret visar filer som ska importeras från andra projekt och moduler.
+
+Genom att trycka på 'Import files' knappen i verktygspanelen utförs importeringen.
+</topic>
 </chapter>
 
 <chapter>

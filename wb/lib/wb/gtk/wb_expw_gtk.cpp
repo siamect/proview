@@ -163,6 +163,17 @@ WbExpWGtk::WbExpWGtk (
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), view);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(view), GTK_WIDGET(view_menu));
 
+  // Help Entry
+  GtkWidget *help_help = gtk_image_menu_item_new_from_stock(GTK_STOCK_HELP, accel_g);
+  g_signal_connect(help_help, "activate", G_CALLBACK(WbExpWGtk::activate_help), this);
+
+  GtkMenu *help_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_help);
+
+  GtkWidget *help = gtk_menu_item_new_with_mnemonic("_Help");
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), help);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(help), GTK_WIDGET(help_menu));
+
   // Toolbar
   GtkToolbar *tools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
@@ -341,8 +352,14 @@ void WbExpWGtk::activate_zoom_reset( GtkWidget *w, gpointer data)
 
 void WbExpWGtk::activate_help( GtkWidget *w, gpointer data)
 {
-  CoXHelp::dhelp( "messagewindow_refman", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat", 
-		  true);
+  WbExpW *expw = (WbExpW *)data;
+
+  if ( expw->type == expw_eType_Export || expw->type == expw_eType_Import)
+    CoXHelp::dhelp( "exportimport_refman", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat", 
+		    true);
+    else if ( expw->type == expw_eType_BuildDirectories)
+      CoXHelp::dhelp( "builddir_refman", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat", 
+		      true);
 }
 
 
