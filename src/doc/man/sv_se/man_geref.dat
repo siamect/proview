@@ -2517,7 +2517,10 @@ annotation.
 TextSize     <t>Textstorlek 0-7
 Number       <t>Numrering av annotations inom en subgraf.
 Adjustment   <t>Justering av texten, vänster, höger eller mitt.
-Dynamic      <t>Ej implementerat
+Font	     <t>Typsnitt.
+Type	     <t>Enradig eller flerradig.
+Protected    <t>Texten visas ej utan markeras med asterisk tecken. Används för inmatning
+             <t>av passerord.
 </topic>
 
 <topic>geref_conpoint <style>function
@@ -3830,6 +3833,9 @@ y0          <t>Se x0. Används även av vissa subgrafer med DynType Slider,
 x1          <t>Se x0.
 y1          <t>Se x0. Används även av vissa subgrafer med DynType Sliderbackground 
             <t>och FillLevel.
+InputFocusMark <t>Hur objekt markeras när de har input fokus.
+RecursiveDynamic <t>Används för dynamiken HostObject när objekt i subgrafen har
+            <t>individuell dynamik.
 Dynamic     <t>Ej implementerat.
 
 Spara subgrafen med 'File/SaveAs...'. Kopiera den .pwsg fil som skapats till $pwrp_exe. 
@@ -4220,6 +4226,12 @@ BackgroundTiled <t>Bakgrundsbilden skalas ej utan upprepas så att bakgrunden täc
 DoubleBuffered <t>Grafen ska dubbelbuffras, vilket innebär att bilden först 
              <t>ritas i en pixmap i minnet och sedan kopieras till skärmen. Bör 
              <t>användas om bilden innehåller rörliga objekt eller animationer.
+MB3Action   <t>Anger vad som ska hända vid högerklick i grafet.
+Translate   <t>All dynamisk och statisk text översätts.
+BitmapFonts <t>Bitmapsfonter används i stället för skalbara fonter.
+HotIndication <t>Hur känsliga objekt markeras när makören pekar på dem.
+TooltipTextsize <t>Storlek på text is tooltip.
+AppMotion   <t>Vad som ska ske vid drag i en Android app.
 
 <h1>Objekts och hierarki grafer
 Det här kapitlet beskriver hur man kan göra ge-bilder som visar innehållet objekt av en viss 

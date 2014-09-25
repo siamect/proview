@@ -2476,6 +2476,9 @@ gradient      <t>Type of gradient.
 disable_shadow <t>Disables the 3D-function. Is used when the object is a part of a subgraph
               <t>an not should be drawn with 3D when 3D is chosen for the instance of the 
               <t>subgraph.
+disable_gradient <t>Disables the gradient function. Is used when the object is a part of a subgraph
+              <t>an not should be drawn with gradient when gradient is chosen for the instance of the 
+              <t>subgraph.
 fill_eq_border <t>Indicates that the fill color is drawn with the specified border color instead
               <t>of the current fill color. This is used for subgraphs where certain elements,
               <t>e.g. arrows, have more in common with the border color than the fill color.
@@ -2537,7 +2540,9 @@ Note that some types of dynamics (Value, SetDig etc) requires specific numbers o
 TextSize     <t>Text size 0-7
 Number       <t>Numbering of annotations within the subgraph.
 Adjustment   <t>Text adjustment, left, right or center.
-Dynamic      <t>Not implemented.
+Font	     <t>Font
+Type         <t>OneLine of MultiLine.
+Protected    <t>The text is not displayed. It is marked with asterisks. Use for input of passwords.
 </topic>
 
 <topic>geref_conpoint <style>function
@@ -2564,10 +2569,9 @@ Each connection point has a number that is unique within a subgraph.
 - Direction
 
 <h2>Attributes
-<b>Attribute      <t>Description
+<b>Attribute  <t>Description
 Number        <t>Numbering or connection points within a subgraph.
 Direction     <t>Direction: up, down, right or left.
-Dynamic       <t>Not implemented.
 </topic>
 
 <topic>geref_complexobj
@@ -3868,6 +3872,9 @@ y0          <t>See x0. Also used by some subgraphs with DynType Slider,
 x1          <t>See x0.
 y1          <t>See x0. Also used by some subgraphs with DynType SliderBackground
             <t>and FillLevel.
+InputFocusMark <t>How objects are marked when they have input focus.
+RecursiveDynamic <t>Used for dynamic HostObject where objects in the subgraph
+            <t>have individual dynamics.
 Dynamic     <t>Not implemented.
 
 Save the subgraph with 'File/SaveAs...'. Copy the .pwsg file that is created to $pwrp_exe.
@@ -4257,8 +4264,14 @@ IsJavaFrame <t>The graph is exported as a java frame when exported.
 BackgroundImage <t>Name of a gif or jpeg image for the background image.
 BackgroundTiled <t>The background image is tiled, not scaled.
 DoubleBuffered <t>The graph is double buffered, i.e. it is first drawn
-             <t>in a pixmap in memory that is then copied to the sreen.
-             <t>Should be used if the graph contains mobile objects or animations.
+            <t>in a pixmap in memory that is then copied to the sreen.
+            <t>Should be used if the graph contains mobile objects or animations.
+MB3Action   <t>Action for right click in the graph. 
+Translate   <t>All dynamic and static texts are translated.
+BitmapFonts <t>Bitmap fonts are used instead of scalalbe fonts.
+HotIndication <t>How sensitive objects are marked when they are hot.
+TooltipTextsize <t>Size of text in tooltip.
+AppMotion   <t>Action for motion event in Android app.
 
 <h1>Object and hierarchy graphs
 This chapter describes how to create Ge graphs that displays the content of an object of a 

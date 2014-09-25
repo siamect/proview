@@ -5745,7 +5745,7 @@ Note! If a file is stored after the Build Directories window is opened, the upda
 has to be pressed to show the correct status. Otherwise the stored file will not be
 updated when the directory is built.
 
-The directory folders can be opened to view the files, makefiles or scripts that is to be 
+The directory folders can be opened to view the files, makefiles or scripts that are to be 
 updated. By activating 'Edit/Show all' in the menu also files and makefile that are not
 to be updated are viewed.
 
