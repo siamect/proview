@@ -77,6 +77,7 @@ typedef void *Widget;
 #include "xtt_xcolwind_gtk.h"
 #include "xtt_ge_gtk.h"
 #include "xtt_multiview_gtk.h"
+#include "xtt_stream_gtk.h"
 #include "xtt_block_gtk.h"
 #include "xtt_trend_gtk.h"
 #include "xtt_sevhist_gtk.h"
@@ -343,6 +344,14 @@ XttMultiView *XNavGtk::multiview_new( const char *name, pwr_tAttrRef *aref,
   return new XttMultiViewGtk( parent_wid, this, name, aref,
 			      width, height, x, y, options, sts, command_cb, 
 			      get_current_objects_cb, is_authorized_cb);
+}
+
+XttStream *XNavGtk::stream_new( const char *name, const char *uri,
+				int width, int height, int x, int y, double scan_time, 
+				unsigned int options, int embedded, pwr_tStatus *sts)
+{
+  return new XttStreamGtk( parent_wid, this, name, uri, width, height, x, y,
+			   scan_time, options, embedded, sts);
 }
 
 GeCurve *XNavGtk::gecurve_new( char *name, char *filename, GeCurveData *data,

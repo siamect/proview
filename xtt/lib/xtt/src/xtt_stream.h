@@ -1,4 +1,3 @@
-
 /* 
  * Proview   Open Source Process Control.
  * Copyright (C) 2005-2014 SSAB AB.
@@ -35,65 +34,48 @@
  * General Public License plus this exception.
  */
 
-#ifndef xtt_applist_h
-#define xtt_applist_h
+#ifndef xtt_stream_h
+#define xtt_stream_h
 
+#ifndef pwr_h
+# include "pwr.h"
+#endif
 
-typedef enum {
-	applist_eType_Trace,
-	applist_eType_Graph,
-	applist_eType_Attr,
-	applist_eType_AttrOne,
-	applist_eType_Trend,
-	applist_eType_Crossref,
-	applist_eType_Hist,
-	applist_eType_Fast,
-	applist_eType_MultiView,
-	applist_eType_Stream
-} applist_eType;
+class CoWow;
+class CoWowTimer;
 
+class XttStream {
+ public:
+  void 		*parent_ctx;
+  unsigned int  options;
+  int		embedded;
+  pwr_tURL      uri;
+  CoWowTimer 	*timerid;
+  CoWow	     	*wow;
+  int		scan_time;
+  void       	(*close_cb)( void *, XttStream *);
 
-class ApplListElem {
-  public:
-    ApplListElem( applist_eType al_type, void *al_ctx, pwr_sAttrRef *al_arp,
-	const char *al_name, const char *al_instance);
-    ~ApplListElem() { log_delete();}
-    applist_eType	type;
-    void		*ctx;
-    pwr_sAttrRef       	aref;
-    char		name[80];
-    pwr_tAName          instance;
-    ApplListElem 	*next;
+  XttStream( void *st_parent_ctx, const char *name, const char *st_uri,
+	     int width, int height, int x, int y, 
+	     double st_scan_time, unsigned int st_options, int st_embedded) :
+    parent_ctx(st_parent_ctx), options(st_options), embedded(st_embedded), timerid(0), close_cb(0)  {
+    strncpy( uri, st_uri, sizeof(uri)); 
+    if ( st_scan_time < 0.02)
+      scan_time = 1000;
+    else
+      scan_time = 1000 * st_scan_time;
+  }
+  virtual ~XttStream() {}
 
-    void log_new();
-    void log_delete();
-};
-
-class ApplList {
-  public:
-    ApplList() :
-       root(NULL) {};
-
-    ~ApplList() {
-      ApplListElem *elem, *next;
-      for ( elem = root; elem; elem = next) {
-	next = elem->next;
-	delete elem;
-      }
-    }
-
-    ApplListElem *root;
-    void insert( applist_eType type, void *ctx, 
-	pwr_sAttrRef *arp, const char *name, const char *instance);
-    void insert( applist_eType type, void *ctx, 
-	pwr_tObjid objid, const char *name, const char *instance);
-    void remove( void *ctx);
-    int find( applist_eType type, const char *name, const char *instance, void **ctx);
-    int find( applist_eType type, pwr_sAttrRef *arp, void **ctx);
-    int find( applist_eType type, pwr_tObjid objid, void **ctx);
-    int find( applist_eType type, void *ctx, char *name, char *instance);
-    int find_graph( const char *name, const char *instance, void **ctx);
-    void swap( int mode);
+  virtual void pop() {}
+  virtual void set_size( int width, int height) {}
+  virtual void *get_widget() { return 0;}
 };
 
 #endif
+
+
+
+
+
+

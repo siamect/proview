@@ -101,6 +101,9 @@ class XNavGtk : public XNav {
 				 int (*command_cb) (void *, char *, void *),
 				 int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 				 int (*is_authorized_cb) (void *, unsigned int));
+    XttStream *stream_new( const char *name, const char *uri,
+			   int width, int height, int x, int y, double scan_time, 
+			   unsigned int options, int embedded, pwr_tStatus *sts);
     GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
 			  int pos_right, unsigned int options);
     XttFileview *fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,

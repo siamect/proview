@@ -58,6 +58,7 @@ typedef void *Widget;
 #include "xtt_ge_gtk.h"
 #include "xtt_trend_gtk.h"
 #include "xtt_sevhist_gtk.h"
+#include "xtt_stream_gtk.h"
 #include "ge_graph_gtk.h"
 #include "xtt_ev_gtk.h"
 #include "xtt_evala_gtk.h"
@@ -150,6 +151,11 @@ XttMultiViewGtk::~XttMultiViewGtk()
     if ( sevhist[i])
       delete sevhist[i];
   }
+
+  for ( unsigned int i = 0; i < MV_SIZE; i++) {
+    if ( strmctx[i])
+      delete strmctx[i];
+  }
 	  
   // delete widget;
   if ( !(options & ge_mOptions_Embedded))
@@ -196,6 +202,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
   memset( seve, 0, sizeof(seve));
   memset( trend, 0, sizeof(trend));
   memset( sevhist, 0, sizeof(sevhist));
+  memset( strmctx, 0, sizeof(strmctx));
   memset( comp_widget, 0, sizeof(comp_widget));
   memset( exchange_widget, 0, sizeof(exchange_widget));
 
@@ -635,6 +642,49 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  //	       "",  NULL);
 	
 
+	  if ( mv.Action[i*rows+j].Options & pwr_mMultiViewElemOptionsMask_Exchangeable) {
+	    exchange_widget[i*rows+j] = gtk_hbox_new( FALSE, 0);
+	    gtk_box_pack_start( GTK_BOX(exchange_widget[i*rows+j]), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
+	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(exchange_widget[i*rows + j]), TRUE, TRUE, 0);
+	  }
+	  else
+	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
+	  break;
+	}
+	case pwr_eMultiViewContentEnum_Video: {
+	  pwr_sClass_XttVideo xttvideo;
+	  pwr_tObjid objid;
+	  pwr_tCid cid;
+
+	  objid = mv.Action[i*rows+j].Object.Objid;
+	  if ( cdh_ObjidIsNull(objid))
+	    break;
+      
+	  lsts = gdh_GetObjectClass( objid, &cid);
+	  if ( EVEN(lsts)) break;
+
+	  if ( cid != pwr_cClass_XttVideo)
+	    break;
+
+	  pwr_tAttrRef aref = cdh_ObjidToAref( objid);
+
+	  lsts = gdh_GetObjectInfoAttrref( &aref, (pwr_tAddress)&xttvideo, sizeof(xttvideo));
+	  if (EVEN(lsts)) break;
+
+	  unsigned int options = xttvideo.Options;
+
+	  strmctx[i*rows + j] = new XttStreamGtk( toplevel, this, "No title", 
+						  xttvideo.URL,
+						  mv.Action[i*rows+j].Width, mv.Action[i*rows+j].Height, 
+						  0, 0, 0, options, 1, sts);
+
+	  strmctx[i*rows + j]->close_cb = multiview_strm_close_cb;
+
+	  comp_widget[i*rows + j] = (GtkWidget *)strmctx[i*rows + j]->get_widget();
+
+	  appl.insert( applist_eType_Stream, (void *)strmctx[i*rows + j], objid, xttvideo.Title,
+		       xttvideo.URL);
+	
 	  if ( mv.Action[i*rows+j].Options & pwr_mMultiViewElemOptionsMask_Exchangeable) {
 	    exchange_widget[i*rows+j] = gtk_hbox_new( FALSE, 0);
 	    gtk_box_pack_start( GTK_BOX(exchange_widget[i*rows+j]), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
@@ -1096,6 +1146,41 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
 	    //		 "",  NULL);
 
 	    mv.Action[i*rows+j].Object = object_aref;
+	  }
+	  case pwr_eMultiViewContentEnum_Video: {
+	    pwr_sClass_XttVideo xttvideo;
+	    pwr_tStatus lsts;
+	    pwr_tAttrRef object_aref;
+	    
+	    lsts = gdh_NameToAttrref( pwr_cNObjid, object, &object_aref);
+	    if ( EVEN(lsts)) break;
+
+	    lsts = gdh_GetObjectInfoAttrref( &object_aref, (pwr_tAddress)&xttvideo, sizeof(xttvideo));
+	    if (EVEN(lsts)) break;
+
+	    XttStreamGtk *ctx = new XttStreamGtk( toplevel, this, "No title", 
+						  xttvideo.URL, w, h, 0, 0,
+						  0, xttvideo.Options, 1, &lsts);
+	    
+	    GtkWidget *comp_w = (GtkWidget *)ctx->get_widget();
+	  
+	    appl.remove( (void *)strmctx[i*rows+j]);
+	    delete strmctx[i*rows+j];
+
+	    gtk_widget_destroy( comp_widget[i*rows+j]);
+	    gtk_box_pack_start( GTK_BOX(exchange_widget[i*rows+j]), GTK_WIDGET(comp_w), TRUE, TRUE, 0);
+	    // gtk_container_add(GTK_CONTAINER(exchange_widget[i*rows + j]), comp_w);
+	    gtk_widget_show_all( exchange_widget[i*rows + j]);
+	    gtk_box_reorder_child( GTK_BOX(exchange_widget[i*rows+j]), comp_w, 0);
+
+	    comp_widget[i*rows + j] = comp_w;	
+	    strmctx[i*rows+j] = ctx;	  
+	    if ( insert)
+	      recall_buffer[i*rows + j].insert( source, object);
+
+	    appl.insert( applist_eType_Stream, (void *)strmctx[i*rows + j], object_aref.Objid, xttvideo.Title,
+			 xttvideo.URL);
+	    break;
 	  }
 	  default: ;
 	  }

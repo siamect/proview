@@ -1076,12 +1076,23 @@ int OpGtk::configure( char *opplace_str)
     sts = gdh_GetAttrRefTid( &opplace_p->FastAvail[i], &tid);
     if ( EVEN(sts))continue;
 
-    if ( tid != pwr_cClass_XttGraph)
-      continue;
-
     memset( &attrref, 0, sizeof(attrref));
-    sts = gdh_ClassAttrToAttrref( pwr_cClass_XttGraph, ".ButtonText", &attrref);
-    if ( EVEN(sts)) return sts;
+    switch ( tid) {
+    case pwr_cClass_XttGraph:
+      sts = gdh_ClassAttrToAttrref( pwr_cClass_XttGraph, ".ButtonText", &attrref);
+      if ( EVEN(sts)) return sts;
+      break;
+    case pwr_cClass_XttMultiView:
+      sts = gdh_ClassAttrToAttrref( pwr_cClass_XttMultiView, ".ButtonText", &attrref);
+      if ( EVEN(sts)) return sts;
+      break;
+    case pwr_cClass_XttVideo:
+      sts = gdh_ClassAttrToAttrref( pwr_cClass_XttVideo, ".ButtonText", &attrref);
+      if ( EVEN(sts)) return sts;
+      break;
+    default:
+      continue;
+    }
 
     attrref = cdh_ArefAdd( &opplace_p->FastAvail[i], &attrref);
     sts = gdh_GetObjectInfoAttrref( &attrref, (void *)button_title[i], 

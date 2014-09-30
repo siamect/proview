@@ -33,132 +33,113 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_a_multiviewelement.wb_load -- Defines the class MultiViewElement.
+!  pwrb_c_xttvideo.wb_load -- Defines the class XttVideo.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Operator,NodeConfiguration
-!
-!  Definition of an array element in a XttMultiView object, describing
-!  the content of one part of the view.
+!  @Summary Configure a video stream
+!  The XttVideo object configures a video stream.
 !
 ! @b See also
-!  @classlink XttMultiView pwrb_xttmultiview.html
+!  @classlink OpPlace pwrb_opplace.html
 !*/
 !
-  Object MultiViewElement $ClassDef 605 
+  Object XttVideo $ClassDef 653 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "MultiViewElement"
+        Attr StructName = "XttVideo"
       EndBody
       !/**
-      ! Optional name that it used to reference the element
-      ! from for example xtt command 'set subwindow'.
+      !  Description of the object.
       !*/
-      Object Name $Attribute 1
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String40"
-        EndBody
-      EndObject
-      !/**
-      !  Content type.
-      !  - Graph       A Ge graph.
-      !  - ObjectGraph A Ge object or hierarchy graph.(NYI)
-      !  - AlarmList   An alarm list
-      !*/
-      Object Type $Attribute 2 
-        Body SysBody
-          Attr TypeRef = "pwrb:Type-MultiViewContentEnum"
-        EndBody
-      EndObject
-      !/**
-      !  @Summary Action to be performed.
-      !  Action to be performed
-      !  - Graph, the name of the pwg-file for the graph, for example "my_graph.pwg"
-      !  - ObjectGraph, not used,
-      !  - Alarm list,  not used.
-      !*/
-      Object Action $Attribute 3
+      Object Description $Attribute 1 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
       !/**
-      ! X position in pixel for the window.
-      ! Only used for Fix layout.
+      ! URL to the camera image.
       !*/
-      Object X $Attribute 4
+      Object URL $Attribute 2
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$URL"
         EndBody
       EndObject
       !/**
-      ! Y position in pixel for the window. 
-      ! Only used for Fix layout.
+      ! Title of the window.
       !*/
-      Object Y $Attribute 5
+      Object Title $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      ! Text of the pushbutton in the operator window.
+      !*/
+      Object ButtonText $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      ! X position in pixel for the window.
+      !*/
+      Object X $Attribute 6
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      ! Y position in pixel for the window.
+      !*/
+      Object Y $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags = 0
         EndBody
       EndObject
       !/**
       ! Width of the window in pixel.
       !*/
-      Object Width $Attribute 6
+      Object Width $Attribute 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags = 0
         EndBody
       EndObject
       !/**
       ! Height of the window in pixel.
       !*/
-      Object Height $Attribute 7
+      Object Height $Attribute 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags = 0
         EndBody
       EndObject
       !/**
-      ! Name of an object, if action is opening a class graph for a 
-      ! specific object.
-      ! For an alarm list element, this can be an AlarmView object.
+      ! Options for the video.
+      !
+      ! - FullScreen  Open the graph as full screen without frame.
+      ! - Maximize    Open the graph maximized, not covering the operator window (NYI).
+      ! - FullMaximize Open the graph maximized, covering the operator window.
+      ! - Iconify     Open the graph iconified.
+      ! - ControlPanel Show a control panel with progress bar, Play, Pause and Stop buttons.
       !*/
-      Object Object $Attribute 8
+      Object Options $Attribute 15
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$AttrRef"
-          Attr Flags |= PWR_MASK_ARRAY 
-	  Attr Elements = 4
+          Attr TypeRef = "pwrb:Type-VideoOptionsMask"
+          Attr Flags = 0
         EndBody
       EndObject
-      !/**
-      ! Element options.
-      ! - Menu, a menu is created. For window managers with one
-      !       common menu row, only one menu is displayed.
-      ! - Scrollbars, scrollbars are viewed.
-      ! - Exchangable, a Ge graph can be exchanged with the 'set subwindow' command (NYI).
-      !*/
-      Object Options $Attribute 9
-        Body SysBody
-          Attr TypeRef = "pwrb:Type-MultiViewElemOptionsMask"
-        EndBody
-      EndObject
-      !/**
-      ! Determines the borders of a Ge graph. The first two elements are the 
-      ! coordinates for the upper left corner, and the two last, the coordinates for 
-      ! the lower right corner. These values will override the x0, y0, x1 and y1 
-      ! values in Graph Attributes for the graph.
-      !*/
-      Object Borders $Attribute 10
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
-          Attr Flags |= PWR_MASK_ARRAY 
-	  Attr Elements = 4
-        EndBody
-      EndObject
+    EndObject
+    Object Template XttVideo
     EndObject
   EndObject
 EndSObject

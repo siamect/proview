@@ -33,118 +33,86 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_webtargetenum.wb_load -- Defines the enum type WebTargetEnum
+!  pwrb_videloptionsmask.wb_load -- Defines the mask type VideoOptionsMask
 !
 SObject pwrb:Type
 !/**
 !  @Version 1.0
 !  @Group Types
-!  Content of XttMultiView element.
+!  Bitmask for xtt video options.
 !
 ! @b See also
-!  @classlink XttMultiView pwrb_xttmultiview.html
+!  @classlink XttVideo pwrb_xttvideo.html
 !*/
-  Object MultiViewContentEnum $TypeDef 68
+  Object VideoOptionsMask $TypeDef 79
     Body SysBody
-      Attr TypeRef = "pwrs:Type-$Enum"
-      Attr PgmName = "MultiViewContentEnum"
+      Attr Type = pwr_eType_Mask
+      Attr Size = 4
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr Elements = 1
     EndBody
     !/**
-    !  Graph.
+    !  Full screen.
     !*/
-    Object Graph $Value
+    Object FullSceen $Bit
      Body SysBody
-       Attr PgmName = "Graph"
-       Attr Text = "Graph"
-       Attr Value = 0
-     EndBody
-    EndObject
-    !/**
-    !  Object graph.
-    !*/
-    Object ObjectGraph $Value
-     Body SysBody
-       Attr PgmName = "ObjectGraph"
-       Attr Text = "ObjectGraph"
+       Attr PgmName = "FullScreen"
+       Attr Text = "FullScreen"
        Attr Value = 1
      EndBody
     EndObject
     !/**
-    !  Alarm list.
+    !  Maximize.
     !*/
-    Object AlarmList $Value
+    Object Maximize $Bit
      Body SysBody
-       Attr PgmName = "AlarmList"
-       Attr Text = "AlarmList"
+       Attr PgmName = "Maximize"
+       Attr Text = "Maximize"
        Attr Value = 2
      EndBody
     EndObject
     !/**
-    !  Multiview.
+    !  Full maximize.
     !*/
-    Object MultiView $Value
+    Object FullMaximize $Bit
      Body SysBody
-       Attr PgmName = "MultiView"
-       Attr Text = "MultiView"
-       Attr Value = 3
-     EndBody
-    EndObject
-    !/**
-    !  Event list.
-    !*/
-    Object EventList $Value
-     Body SysBody
-       Attr PgmName = "EventList"
-       Attr Text = "EventList"
+       Attr PgmName = "FullMaximize"
+       Attr Text = "FullMaximize"
        Attr Value = 4
      EndBody
     EndObject
     !/**
-    !  Trend curve.
+    !  Iconify.
     !*/
-    Object TrendCurve $Value
+    Object Iconify $Bit
      Body SysBody
-       Attr PgmName = "TrendCurve"
-       Attr Text = "TrendCurve"
-       Attr Value = 5
-     EndBody
-    EndObject
-    !/**
-    !  Fast curve.
-    !*/
-    Object FastCurve $Value
-     Body SysBody
-       Attr PgmName = "FastCurve"
-       Attr Text = "FastCurve"
-       Attr Value = 6
-     EndBody
-    EndObject
-    !/**
-    !  Sev History.
-    !*/
-    Object SevHistory $Value
-     Body SysBody
-       Attr PgmName = "SevHistory"
-       Attr Text = "SevHistory"
-       Attr Value = 7
-     EndBody
-    EndObject
-    !/**
-    !  Video.
-    !*/
-    Object Video $Value
-     Body SysBody
-       Attr PgmName = "Video"
-       Attr Text = "Video"
+       Attr PgmName = "Iconify"
+       Attr Text = "Iconify"
        Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !  Display a control panel with Play, Pause and Stop buttons.
+    !*/
+    Object ControlPanel $Bit
+     Body SysBody
+       Attr PgmName = "ControlPanel"
+       Attr Text = "ControlPanel"
+       Attr Value = 16
+     EndBody
+    EndObject
+    !/**
+    !  Add progress bar to control panel.
+    !*/
+    Object ProgressBar $Bit
+     Body SysBody
+       Attr PgmName = "ProgressBar"
+       Attr Text = "ProgressBar"
+       Attr Value = 32
      EndBody
     EndObject
   EndObject
 EndSObject
-
-
-
-
 
 
 

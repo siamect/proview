@@ -481,6 +481,7 @@ palette NavigatorPalette
       class OpPlace
       class XttGraph
       class XttMultiView
+      class XttVideo
       class WebBrowserConfig
       class WebGraph
       class WebLink

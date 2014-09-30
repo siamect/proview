@@ -194,10 +194,16 @@ Graph::Graph(
   cdh_StrncpyCutOff( name, xn_name, sizeof(name), 1);
   strcpy( default_path, xn_default_path);
   memset( arglist_stack, 0, sizeof(arglist_stack));
-  if ( xn_object_name)
-    strcpy( object_name, xn_object_name);
-  else
-    strcpy( object_name, "");
+  for ( unsigned int i = 0; i < sizeof(object_name)/sizeof(object_name[0]); i++)
+    strcpy( object_name[i], "");
+  if ( xn_object_name) {
+    if ( strchr( xn_object_name, ',') != 0)
+      dcli_parse( xn_object_name, ",", "",
+		  (char *) object_name, sizeof( object_name)/sizeof(object_name[0]), 
+		  sizeof( object_name[0]), 0);
+    else 
+      strcpy( object_name[0], xn_object_name);
+  }
   strcpy( filename, "");
   strcpy( systemname, "");
 
@@ -3478,7 +3484,7 @@ int Graph::init_trace()
     grow->grow_trace_setup();
 
     // Look for object graph
-    if ( strcmp( object_name, "") != 0)
+    if ( strcmp( object_name[0], "") != 0)
       init_object_graph(0);
 
     sts = grow_TraceInit( grow->ctx, graph_trace_connect_bc, 
@@ -3486,7 +3492,7 @@ int Graph::init_trace()
 			  graph_trace_ctrl_bc);
 
     // Look for object graph
-    if ( strcmp( object_name, "") != 0)
+    if ( strcmp( object_name[0], "") != 0)
       init_object_graph(1);
 
     trace_started = 1;
@@ -4290,26 +4296,30 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
   char *s0 = in;
   char str[500];
 
-  pwr_tOName oname;
-  if ( grow->stack_cnt == 0)
-    strcpy( oname, object_name);
+  pwr_tAName oname[4];
+  if ( grow->stack_cnt == 0) {
+    for ( int i = 0; i < 4; i++)
+      strcpy( oname[i], object_name[i]);
+  }
   else {
-    grow_GetOwner( grow->ctx, oname);
+    grow_GetOwner( grow->ctx, oname[0]);
 
-    if ( strcmp( object_name, "") != 0) {
+    if ( strcmp( object_name[0], "") != 0) {
       pwr_tOName n;
       t0 = n;
-      s0 = oname;
+      s0 = oname[0];
       while ( (s = strstr( s0, "$object"))) {
 	strncpy( t0, s0, s-s0);
 	t0 += s - s0;
-	strcpy( t0, object_name); 
-	t0 += strlen(object_name);
+	strcpy( t0, object_name[0]); 
+	t0 += strlen(object_name[0]);
 	s0 = s + strlen("$object");
       }
       cdh_Strcpy( t0, s0);
-      strcpy( oname, n);
+      strcpy( oname[0], n);
     }
+    for ( int i = 1; i < 4; i++)
+      strcpy( oname[i], object_name[i]);
   }
   s0 = in;
   if ( dyn && (dyn->total_dyn_type1 & ge_mDynType1_HostObject || 
@@ -4329,23 +4339,39 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
     }
     cdh_Strcpy( t0, s0);
 
-    if ( strcmp( oname, "") == 0) {
+    if ( strcmp( oname[0], "") == 0) {
       strcpy( out, str);
     }
     s0 = str;
   }
-  else if ( strcmp( oname, "") == 0) {
+  else if ( strcmp( oname[0], "") == 0) {
     cdh_Strcpy( out, in);
   }
 
-  if ( strcmp( oname, "") != 0) {
+  if ( strcmp( oname[0], "") != 0) {
     t0 = out;
     while ( (s = strstr( s0, "$object"))) {
+      int idx;
+      char *sidx = s + strlen("$object");
+      switch ( *sidx) {
+      case '2':
+	idx = 1;
+	break;
+      case '3':
+	idx = 2;
+	break;
+      case '4':
+	idx = 3;
+	break;
+      default:
+	idx = 0;
+      }
+
       cdh_Strncpy( t0, s0, s-s0);
       t0 += s - s0;
-      strcpy( t0, oname); 
-      t0 += strlen(oname);
-      s0 = s + strlen("$object");
+      strcpy( t0, oname[idx]); 
+      t0 += strlen(oname[idx]);
+      s0 = s + strlen("$object") + (idx > 0 ? 1 : 0);
     }
     cdh_Strcpy( t0, s0);
 
@@ -4535,23 +4561,40 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
   }
 
   if ( (s = strstr( str, "$object"))) {
-    char oname[256];
+    pwr_tAName oname[4];
+    for ( int i = 1; i < 4; i++)
+      strcpy( oname[i], object_name[i]);
     if ( grow->stack_cnt == 0)
-      strcpy( oname, object_name);
+      strcpy( oname[0], object_name[0]);
     else {
-      grow_GetOwner( grow->ctx, oname);
+      grow_GetOwner( grow->ctx, oname[0]);
     
       // Replace $object in oname (one level only)
       char *s1;
-      if ( (s1 = strstr( oname, "$object"))) {
+      if ( (s1 = strstr( oname[0], "$object"))) {
 	strcpy( str1, s1 + strlen("$object"));
-	strcpy( s1, object_name);
-	strcat( oname, str1);
+	strcpy( s1, object_name[0]);
+	strcat( oname[0], str1);
       }
     }
 
-    strcpy( str1, s + strlen("$object"));
-    strcpy( s, oname);
+    int idx;
+    char *sidx = s + strlen("$object");
+    switch ( *sidx) {
+    case '2':
+      idx = 1;
+      break;
+    case '3':
+      idx = 2;
+      break;
+    case '4':
+      idx = 3;
+      break;
+    default:
+      idx = 0;
+    }
+    strcpy( str1, s + strlen("$object") + (idx > 0 ? 1 : 0));
+    strcpy( s, oname[idx]);
     strcat( str, str1);
   }
 
@@ -4560,8 +4603,8 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
     pwr_tOid oid;
     pwr_tStatus sts;
 
-    if ( strcmp( object_name, "") != 0) {
-      sts = gdh_NameToObjid( object_name, &oid);
+    if ( strcmp( object_name[0], "") != 0) {
+      sts = gdh_NameToObjid( object_name[0], &oid);
       if ( ODD(sts))
 	sts = gdh_GetNodeObject( oid.vid, &oid);
     }

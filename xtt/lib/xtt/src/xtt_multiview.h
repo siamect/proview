@@ -54,6 +54,7 @@
 class Graph;
 class XNav;
 class XttTrend;
+class XttStream;
 
 class MVRecall {
  public:
@@ -140,6 +141,7 @@ class XttMultiView {
   static void multiview_trend_command_cb( void *ctx, const char *cmd);
   static void multiview_trend_help_cb( void *ctx, const char *key);
   static int multiview_sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, char *oname);
+  static void multiview_strm_close_cb( void *ctx, XttStream *strm);
   static void message_cb( void *ctx, char severity, const char *msg);
   static void eventlog_enable( int enable);
 };

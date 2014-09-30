@@ -183,7 +183,7 @@ int Graph::init_object_graph( int mode)
   {
     if ( strcmp( filename, "_none_.pwg") == 0)
     {
-      if ( strcmp( object_name, "collect") == 0)
+      if ( strcmp( object_name[0], "collect") == 0)
       {
         sts = graph_object_collect_build( this, 0);
         return sts;
@@ -194,7 +194,7 @@ int Graph::init_object_graph( int mode)
 
   if ( strcmp( filename, "_none_.pwg") == 0)
   {
-    if ( strcmp( object_name, "collect") == 0)
+    if ( strcmp( object_name[0], "collect") == 0)
     {
       sts = graph_object_collect( this, 0);
       return sts;
@@ -224,7 +224,7 @@ int Graph::init_object_graph( int mode)
 
   if ( is_type)
   {
-    sts = gdh_NameToAttrref( pwr_cNObjid, object_name, &attrref);
+    sts = gdh_NameToAttrref( pwr_cNObjid, object_name[0], &attrref);
     if ( EVEN(sts)) return sts;
 
     if ( strcmp( classname, "float32") == 0) {
@@ -252,7 +252,7 @@ int Graph::init_object_graph( int mode)
     sts = gdh_ClassNameToId( classname, &classid);
     if ( EVEN(sts)) return sts;
 
-    sts = gdh_NameToAttrref( pwr_cNObjid, object_name, &attrref);
+    sts = gdh_NameToAttrref( pwr_cNObjid, object_name[0], &attrref);
     if ( EVEN(sts)) return sts;
 
     for ( i = 0; graph_object_functions[i].classid; i++)

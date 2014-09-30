@@ -4352,6 +4352,12 @@ void XNav::appl_startup()
 	}
 	
 	command( cmd);
+	break;
+      case pwr_cClass_XttVideo:
+	strcpy( cmd, "ope vid/obj=");
+	strcat( cmd, name);
+	command( cmd);
+	break;
       default: ;
       }
     }

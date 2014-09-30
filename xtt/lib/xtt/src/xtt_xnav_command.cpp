@@ -98,6 +98,7 @@
 #include "xtt_hist.h"
 #include "xtt_fileview.h"
 #include "xtt_log.h"
+#include "xtt_stream.h"
 
 class xnav_file {
 public:
@@ -166,6 +167,7 @@ static int xnav_multiview_command_cb( void *gectx, char *command, void *caller);
 static int xnav_ge_command_cb( void *gectx, char *command, void *caller);
 static void xnav_ge_close_cb( void *xnav, void *gectx);
 static void xnav_multiview_close_cb( void *xnav, void *mvctx);
+static void xnav_stream_close_cb( void *xnav, XttStream *strmctx);
 //new code by Jonas Nylund 030131
 static void xnav_hist_close_cb( void *ctx);
 //end new code by Jonas Nylund 030131
@@ -276,7 +278,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			  "/PINSTANCE", "/BYPASS",
 			  "/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", "/FTYPE", 
 			  "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE", "/ICONIFY", "/HIDE", 
-			  "/XPOSITION", "/YPOSITION", "/X0", "/Y0", "/X1", "/Y1", ""}
+			  "/XPOSITION", "/YPOSITION", "/X0", "/Y0", "/X1", "/Y1", "/URL", "/CONTINOUS", ""}
 		},
 		{
 			"CLOSE",
@@ -3248,13 +3250,18 @@ static int	xnav_open_func(	void		*client_data,
       if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
 	if ( instance_p) {
 	  pwr_sAttrRef aref;
+	  char *s;
 
 	  // Use object name as title
+	  if ( (s = strchr( instance_p, ',')))
+	    *s = 0;
 	  sts = gdh_NameToAttrref( pwr_cNObjid, instance_p, &aref);
 	  if ( EVEN(sts)) {
 	    xnav->message('E',"Instance object not found");
 	    return XNAV__HOLDCOMMAND;
 	  }
+	  if ( s)
+	    *s = ',';
 	  sts = gdh_AttrrefToName( &aref, name_str, sizeof(name_str),
 			   cdh_mName_pathStrict);
 	  if ( EVEN(sts)) return sts;
@@ -3493,6 +3500,151 @@ static int	xnav_open_func(	void		*client_data,
 	  xnav->multiview_main = mvctx;
       }
 
+    }
+    return XNAV__SUCCESS;	
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "VIDEO", strlen( arg1_str)) == 0) {
+    char tmp_str[80];
+    int width, height;
+    int x, y;
+    unsigned int options = 0;
+    pwr_tString80 name_str;
+    int nr;
+    pwr_tStatus sts;
+    pwr_tURL url_str;
+    pwr_tAName object_str;
+    
+    // Command is "OPEN VIDEO"
+
+    if ( ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
+      // XttVideo object supplied, fetch data from object
+      pwr_tOName xttvideo_name;
+      pwr_sClass_XttVideo xttvideo;
+      pwr_tObjid objid;
+      pwr_tCid cid;
+      
+      xnav_replace_node_str( xttvideo_name, object_str);
+        
+      sts = gdh_NameToObjid( xttvideo_name, &objid);
+      if (EVEN(sts)) {
+        xnav->message('E', "Object not found");
+        return XNAV__HOLDCOMMAND;
+      }
+
+      sts = gdh_GetObjectClass( objid, &cid);
+      if ( EVEN(sts)) return sts;
+
+      if ( cid != pwr_cClass_XttVideo) {
+        xnav->message('E', "Error in object class");
+        return XNAV__HOLDCOMMAND;
+      }
+      pwr_tAttrRef aref = cdh_ObjidToAref( objid);
+
+      sts = gdh_GetObjectInfoAttrref( &aref, (pwr_tAddress)&xttvideo, sizeof(xttvideo));
+      if (EVEN(sts)) return sts;
+
+      strncpy( name_str, xttvideo.Title, sizeof(name_str));
+      strncpy( url_str, xttvideo.URL, sizeof(url_str));
+      width = xttvideo.Width;
+      height = xttvideo.Height;
+      x = xttvideo.X;
+      y = xttvideo.Y;
+      options = xttvideo.Options;
+	
+      XttStream *strmctx;
+
+      if ( xnav->appl.find( applist_eType_Stream, objid, (void **) &strmctx)) {
+	strmctx->pop();
+      }
+      else {
+	strmctx = xnav->stream_new( name_str, url_str, width, height, x, y, 0, options, 0, &sts);
+	if ( EVEN(sts)) {
+	  xnav->message(' ', XNav::get_message(sts));
+	  return sts;
+	}
+	strmctx->close_cb = xnav_stream_close_cb;
+	
+	xnav->appl.insert( applist_eType_Stream, (void *)strmctx, objid, name_str, url_str);
+      }
+    }
+    else {
+      /* Get the name qualifier */
+      if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
+	strcpy( name_str, "");
+
+      if ( EVEN( dcli_get_qualifier( "/URL", url_str, sizeof(url_str)))) {
+	xnav->message('E', "Url is missing");
+	return XNAV__SUCCESS;
+      }
+
+      if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
+	options |= pwr_mVideoOptionsMask_FullScreen;
+      if ( ODD( dcli_get_qualifier( "/MAXIMIZE", 0, 0)))
+	options |= pwr_mVideoOptionsMask_Maximize;
+      if ( ODD( dcli_get_qualifier( "/FULLMAXIMIZE", 0, 0)))
+	options |= pwr_mVideoOptionsMask_FullMaximize;
+      if ( ODD( dcli_get_qualifier( "/ICONIFY", 0, 0)))
+	options |= pwr_mVideoOptionsMask_Iconify;	   
+      if ( ODD( dcli_get_qualifier( "/CONTROLPANEL", 0, 0)))
+	options |= pwr_mVideoOptionsMask_ControlPanel;
+      if ( ODD( dcli_get_qualifier( "/PROGRESSBAR", 0, 0)))
+	options |= pwr_mVideoOptionsMask_ProgressBar;
+
+      if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str, sizeof(tmp_str)))) {
+	nr = sscanf( tmp_str, "%d", &width);
+	if ( nr != 1) {
+	  xnav->message('E', "Syntax error in width");
+	  return XNAV__HOLDCOMMAND;
+	}
+      }
+      else
+	width = 0;
+
+      if ( ODD( dcli_get_qualifier( "/HEIGHT", tmp_str, sizeof(tmp_str)))) {
+	nr = sscanf( tmp_str, "%d", &height);
+	if ( nr != 1) {
+	  xnav->message('E', "Syntax error in height");
+	  return XNAV__HOLDCOMMAND;
+	}
+      }
+      else
+	height = 0;
+
+      if ( ODD( dcli_get_qualifier( "/XPOSITION", tmp_str, sizeof(tmp_str)))) {
+	nr = sscanf( tmp_str, "%d", &x);
+	if ( nr != 1) {
+	  xnav->message('E', "Syntax error in x coordinate");
+	  return XNAV__HOLDCOMMAND;
+	}
+      }
+      else
+	x = 0;
+      
+      if ( ODD( dcli_get_qualifier( "/YPOSITION", tmp_str, sizeof(tmp_str)))) {
+	nr = sscanf( tmp_str, "%d", &y);
+	if ( nr != 1) {
+	  xnav->message('E', "Syntax error in y coordinate");
+	  return XNAV__HOLDCOMMAND;
+	}
+      }
+      else
+	y = 0;
+
+      XttStream *strmctx;
+
+      if ( xnav->appl.find( applist_eType_Stream, name_str, url_str, (void **) &strmctx)) {
+	strmctx->pop();
+      }
+      else {
+	strmctx = xnav->stream_new( name_str, url_str, width, height, x, y, 0, options, 0, &sts);
+	if ( EVEN(sts)) {
+	  xnav->message(' ', XNav::get_message(sts));
+	  return sts;
+	}
+	strmctx->close_cb = xnav_stream_close_cb;
+	
+	xnav->appl.insert( applist_eType_Stream, (void *)strmctx, pwr_cNOid, name_str, url_str);
+      }
     }
     return XNAV__SUCCESS;	
   }
@@ -5197,6 +5349,13 @@ static void xnav_multiview_close_cb( void *nav, void *ctx)
   }
   else
     xnav->appl.remove( (void *)ctx);
+}
+
+static void xnav_stream_close_cb( void *nav, XttStream *ctx)
+{
+  XNav *xnav = (XNav *)nav;
+
+  xnav->appl.remove( (void *)ctx);
 }
 
 //new code Jonas Nylund 030131

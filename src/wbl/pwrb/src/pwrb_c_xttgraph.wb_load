@@ -159,11 +159,13 @@ SObject pwrb:Class
       EndObject
       !/**
       ! Name of an object, if action is opening a class graph for a specific object.
+      ! In Ge graphs, first element replaces "$object", second "$object2" etc.
       !*/
       Object Object $Attribute 13
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
-          Attr Flags = 0
+          Attr Flags |= PWR_MASK_ARRAY 
+	  Attr Elements = 4
         EndBody
       EndObject
       !/**
@@ -181,6 +183,19 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrb:Type-XttGraphOptionsMask"
           Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      ! Determines the border of a Ge graph. The first two elements are the 
+      ! coordinates for the upper left corner, and the two last, the coordinates for 
+      ! the lower right corner. These values will override the x0, y0, x1 and y1 
+      ! values in Graph Attributes for the graph.
+      !*/
+      Object Borders $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_ARRAY 
+	  Attr Elements = 4
         EndBody
       EndObject
       !/**

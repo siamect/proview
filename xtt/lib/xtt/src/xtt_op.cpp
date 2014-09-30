@@ -99,12 +99,31 @@ int Op::appl_action( int idx)
   pwr_tCmd cmd;
   pwr_tAName name;
   int sts;
+  pwr_tCid cid;
 
   if ( command_cb) {
     sts = gdh_AttrrefToName( &button_aref[idx], name, sizeof(name), cdh_mName_volumeStrict);
-    strcpy( cmd, "ope gra/obj=");
-    strcat( cmd, name);
+    if ( EVEN(sts)) return sts;
 
+    sts = gdh_GetAttrRefTid( &button_aref[idx], &cid);
+    if ( EVEN(sts)) return sts;
+
+    switch ( cid) {
+    case pwr_cClass_XttGraph:
+      strcpy( cmd, "ope gra/obj=");
+      strcat( cmd, name);
+      break;
+    case pwr_cClass_XttMultiView:
+      strcpy( cmd, "ope mult ");
+      strcat( cmd, name);
+      break;
+    case pwr_cClass_XttVideo:
+      strcpy( cmd, "ope vide/obj=");
+      strcat( cmd, name);
+      break;
+    default:
+      return 0;
+    }
     command_cb( parent_ctx, cmd);
   }
   return XNAV__SUCCESS;

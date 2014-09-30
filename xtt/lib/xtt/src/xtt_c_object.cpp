@@ -908,6 +908,13 @@ static pwr_tStatus OpenGraph( xmenu_sMenuCall *ip)
     sts = ((XNav *)ip->EditorContext)->command( cmd);
     return XNAV__SUCCESS;
   }
+  else if ( classid == pwr_cClass_XttVideo) {
+    sts = gdh_AttrrefToName( objar, name, sizeof(name), cdh_mNName);
+    strcpy( cmd, "ope vide/obj=");
+    strcat( cmd, name);
+    sts = ((XNav *)ip->EditorContext)->command( cmd);
+    return XNAV__SUCCESS;
+  }
 
   while( ODD(sts)) {
     sts = gdh_AttrrefToName( &aref, name, sizeof(name),
@@ -931,6 +938,13 @@ static pwr_tStatus OpenGraph( xmenu_sMenuCall *ip)
       else if ( classid == pwr_cClass_XttMultiView) {
         sts = gdh_AttrrefToName( &defgraph, name, sizeof(name), cdh_mNName);
         strcpy( cmd, "ope mult/name=");
+        strcat( cmd, name);
+        sts = ((XNav *)ip->EditorContext)->command( cmd);
+        break;
+      }
+      else if ( classid == pwr_cClass_XttVideo) {
+        sts = gdh_AttrrefToName( &defgraph, name, sizeof(name), cdh_mNName);
+        strcpy( cmd, "ope vide/obj=");
         strcat( cmd, name);
         sts = ((XNav *)ip->EditorContext)->command( cmd);
         break;
@@ -973,7 +987,8 @@ static pwr_tStatus OpenGraphFilter( xmenu_sMenuCall *ip)
   if ( EVEN(sts)) return sts;
 
   if ( classid == pwr_cClass_XttGraph ||
-       classid == pwr_cClass_XttMultiView)
+       classid == pwr_cClass_XttMultiView ||
+       classid == pwr_cClass_XttVideo)
     return XNAV__SUCCESS;
 
   while( ODD(sts)) {
@@ -1007,6 +1022,8 @@ static pwr_tStatus OpenGraphFilter( xmenu_sMenuCall *ip)
         return XNAV__SUCCESS;
       }
       else if ( classid == pwr_cClass_XttMultiView)
+	return XNAV__SUCCESS;
+      else if ( classid == pwr_cClass_XttVideo)
 	return XNAV__SUCCESS;
     }
 

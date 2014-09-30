@@ -51,6 +51,7 @@
 class EvEveGtk;
 class XttTrendGtk;
 class XttSevHistGtk;
+class XttStreamGtk;
 
 class XttMultiViewGtk : public XttMultiView {
  public:
@@ -65,6 +66,7 @@ class XttMultiViewGtk : public XttMultiView {
   EvEveGtk 	*seve[MV_SIZE];
   XttTrendGtk	*trend[MV_SIZE];
   XttSevHistGtk	*sevhist[MV_SIZE];
+  XttStreamGtk	*strmctx[MV_SIZE];
   CoWowFocusTimerGtk focustimer;
 
   XttMultiViewGtk( GtkWidget *parent_wid, void *parent_ctx, const char *name, pwr_tAttrRef *aref,

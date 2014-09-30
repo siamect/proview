@@ -230,6 +230,10 @@ int XttMultiView::multiview_sevhist_get_select_cb( void *ctx, pwr_tOid *oid, cha
   return 0;
 }
 
+void XttMultiView::multiview_strm_close_cb( void *ctx, XttStream *strm)
+{
+}
+
 void XttMultiView::message_cb( void *ctx, char severity, const char *msg)
 {
   ((XttMultiView *)ctx)->message( severity, msg);

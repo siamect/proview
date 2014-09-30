@@ -444,7 +444,7 @@ class Graph {
   GraphRecallBuff     	recall;			//! Recall buffer for dynamics.
   void 			*parent_ctx;		//! Parent context.
   char 			name[300];		//! Name.
-  pwr_tAName 	       	object_name;		//! Name of object for class graphs.
+  pwr_tAName 	       	object_name[4];		//! Name of object for class graphs.
   GraphGrow		*grow;			//! GraphGrow
   GraphGrow		*grow_stack[GRAPH_GROW_MAX]; //! Grow stack. Not used.
   int			grow_cnt;		//! Number of grow in stack. Not used.

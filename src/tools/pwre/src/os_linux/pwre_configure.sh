@@ -182,6 +182,9 @@ pwre_config_check_lib()
 	elif test $3 == "gtk"; then
 	  conf_libgtk=$conf_libgtk" \\\`pkg-config --libs gtk+-2.0\\\`"
 	  conf_incdirgtk=$conf_incdirgtk" \\\`pkg-config --cflags gtk+-2.0\\\`"
+	elif test $3 == "gst"; then
+	  conf_libgst=$conf_libgst" \\\`pkg-config --libs gstreamer-interfaces-0.10 gstreamer-0.10\\\`"
+	  conf_incdirgst=$conf_incdirgst" \\\`pkg-config --cflags gstreamer-interfaces-0.10 gstreamer-0.10\\\`"
 	elif test $3 == "motif"; then
 	  conf_libmotif=$conf_libmotif" -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp -lSM -lICE"
 	else
@@ -271,8 +274,10 @@ conf_libwmq=""
 conf_libpnak=""
 conf_libgtk="" 
 conf_libmotif="" 
+conf_libgst="" 
 conf_libdir=""
 conf_incdirgtk=""
+conf_incdirgst=""
 let inc_cnt=0
 let lib_cnt=0
 let i=0
@@ -411,6 +416,7 @@ if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
   echo "export pwre_conf_libpnak=\"$conf_libpnak\"" >> $cfile
   echo "export pwre_conf_libgtk=\"$conf_libgtk\"" >> $cfile
   echo "export pwre_conf_libmotif=\"$conf_libmotif\"" >> $cfile
+  echo "export pwre_conf_libgst=\"$conf_libgtk\"" >> $cfile
   echo "export pwre_conf_libdir=\"$conf_libdir\"" >> $cfile
   echo "export pwre_conf_incdir=\"$conf_incdir\"" >> $cfile
   echo "export pwre_conf_incdirgtk=\"$conf_incdirgtk\"" >> $cfile
@@ -460,6 +466,8 @@ else
   pwre_config_check_lib powerlinkcn POWERLINKCN lib powerlinkcn 1 "$epl/buildcn/Examples/X86/Generic/powerlink_user_lib/libpowerlink.a"
   pwre_config_check_lib libpcap   LIBPCAP  lib libpcap 1 "/usr/lib/libpcap.so:/usr/lib/$hwpl-linux-$gnu/libpcap.so"
   pwre_config_check_lib librsvg   LIBRSVG  lib librsvg 1 "/usr/lib/librsvg-2.so:/usr/lib/$hwpl-linux-$gnu/librsvg-2.so"
+  pwre_config_check_include gst   GST   1 "/opt/gstreamer-sdk/include/gstreamer-0.10/gst/gst.h"
+  pwre_config_check_lib gst    	  GST      gst gst 0 "/opt/gstreamer-sdk/lib/libgstreamer-0.10.so"
   if [ $pwre_hw == "hw_arm" ]; then
     pwre_config_check_lib libpiface LIBPIFACE lib libpiface 1 "/usr/local/lib/libpiface-1.0.a"
     pwre_config_check_include piface  PIFACE  1 "/usr/local/include/libpiface-1.0/pfio.h"
@@ -515,9 +523,11 @@ else
   echo "export pwre_conf_libwmq=\"$conf_libwmq\"" >> $cfile
   echo "export pwre_conf_libpnak=\"$conf_libpnak\"" >> $cfile
   echo "export pwre_conf_libgtk=\"$conf_libgtk\"" >> $cfile
+  echo "export pwre_conf_libgst=\"$conf_libgst\"" >> $cfile
   echo "export pwre_conf_libmotif=\"$conf_libmotif\"" >> $cfile
   echo "export pwre_conf_libdir=\"$conf_libdir\"" >> $cfile
   echo "export pwre_conf_incdir=\"$conf_incdir\"" >> $cfile
   echo "export pwre_conf_incdirgtk=\"$conf_incdirgtk\"" >> $cfile
+  echo "export pwre_conf_incdirgst=\"$conf_incdirgst\"" >> $cfile
 
 fi
