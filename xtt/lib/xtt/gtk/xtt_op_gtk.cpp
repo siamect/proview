@@ -648,7 +648,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
 
     for ( unsigned int i = 0; i < sup_vect.size(); i++) {
       GtkWidget *node_label = gtk_label_new("");
-      snprintf( text, sizeof(text), "<span size=\"%d\">%s</span>", 12 * 1024, sup_vect[i].node_name);
+      snprintf( text, sizeof(text), "<span size=\"%d\">%s</span>", 11 * 1024, sup_vect[i].node_name);
       gtk_label_set_markup( GTK_LABEL(node_label), CoWowGtk::convert_utf8(text));
 
       GtkWidget *node_button = gtk_button_new();
