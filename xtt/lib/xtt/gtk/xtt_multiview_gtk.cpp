@@ -284,7 +284,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	case pwr_eMultiViewContentEnum_AlarmList: {
 	  if ( xnav->ev) {
 	    sala[i*rows + j] = (EvAlaGtk *)xnav->ev->open_alarmlist_satellite( "No title", 
-		    &lsts, w, h, 0, 0, mv.Action[i*rows+j].Object.Objid, ev_mAlaOptions_Embedded, toplevel);
+		    &lsts, w, h, 0, 0, mv.Action[i*rows+j].Object[0].Objid, ev_mAlaOptions_Embedded, toplevel);
 	    if ( !sala[i*rows + j])
 	      continue;
 	    comp_widget[i*rows + j] = sala[i*rows + j]->get_widget();
@@ -295,7 +295,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	case pwr_eMultiViewContentEnum_EventList: {
 	  if ( xnav->ev) {
 	    seve[i*rows + j] = (EvEveGtk *)xnav->ev->open_eventlist_satellite( "No title", 
-		    &lsts, w, h, 0, 0, mv.Action[i*rows+j].Object.Objid, ev_mAlaOptions_Embedded, toplevel);
+		    &lsts, w, h, 0, 0, mv.Action[i*rows+j].Object[0].Objid, ev_mAlaOptions_Embedded, toplevel);
 	    if ( !seve[i*rows + j])
 	      continue;
 	    comp_widget[i*rows + j] = seve[i*rows + j]->get_widget();
@@ -306,22 +306,41 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	case pwr_eMultiViewContentEnum_Graph:
 	case pwr_eMultiViewContentEnum_ObjectGraph: {
 	  char *objectname_p = 0;
-	  pwr_tAName objectname;
+	  char objectname[800];
+	  double borders[4];
+	  double *bordersp = 0;
 	  char *s;
 
-	  if ( !cdh_ObjidIsNull(mv.Action[i*rows+j].Object.Objid)) {	    
-	    lsts = gdh_AttrrefToName( &mv.Action[i*rows+j].Object, objectname, sizeof(objectname),
+	  for ( int k = 0; k < 4; k++) {
+	    pwr_tAName oname;
+
+	    if ( cdh_ObjidIsNull(mv.Action[i*rows+j].Object[k].Objid))
+	      break;
+	    lsts = gdh_AttrrefToName( &mv.Action[i*rows+j].Object[k], oname, sizeof(oname),
 				     cdh_mName_volumeStrict);
-	    if ( ODD(lsts))
-	      objectname_p = objectname;
-	    else
-	      objectname_p = 0;
+	    if ( EVEN(lsts))
+	      break;
+
+	    if ( k == 0)
+	      strncpy( objectname, oname, sizeof(objectname));
+	    else {
+	      strncat( objectname, ",", sizeof(objectname));
+	      strncat( objectname, oname, sizeof(objectname));
+	    }
+	    objectname_p = objectname;
+	  }
+
+	  if ( mv.Action[i*rows+j].Borders[0] != 0 || mv.Action[i*rows+j].Borders[1] != 0 ||
+	       mv.Action[i*rows+j].Borders[2] != 0 || mv.Action[i*rows+j].Borders[3] != 0) {
+	    for ( int k = 0; k < 4; k++)
+	      borders[k] = mv.Action[i*rows+j].Borders[k];
+	    bordersp = borders;
 	  }
 
 	  gectx[i*rows + j] = new XttGeGtk( toplevel, this, "No title", 
 					    graph_name, scrollbar, menu, 0, w, h, mv_x, mv_y, 
 					    1.0, objectname_p, 0, 0, 
-					    ge_mOptions_Embedded, 0, 0,
+					    ge_mOptions_Embedded, 0, bordersp,
 					    multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
 					    multiview_ge_is_authorized_cb);
 
@@ -396,7 +415,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  pwr_tAttrRef arefv[2];
 	  int skip = 0;
 
-	  lsts = gdh_GetAttrRefTid( &mv.Action[i*rows+j].Object, &classid);
+	  lsts = gdh_GetAttrRefTid( &mv.Action[i*rows+j].Object[0], &classid);
 	  if (EVEN(lsts)) break;
 
 	  switch ( classid) {
@@ -405,7 +424,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	    break;
 	  case pwr_cClass_PlotGroup:
 	    plotgroup_found = 1;
-	    plotgroup = mv.Action[i*rows+j].Object;
+	    plotgroup = mv.Action[i*rows+j].Object[0];
 	    arefv[0] = plotgroup;
 	    break;
 	  default:
@@ -420,7 +439,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 						 0, &plotgroup, w, h, (unsigned int)curve_mOptions_Embedded, sts);
 	  }
 	  else {
-	    arefv[0] = mv.Action[i*rows+j].Object;
+	    arefv[0] = mv.Action[i*rows+j].Object[0];
 	    memset( &arefv[1], 0, sizeof(arefv[0]));
 	    trend[i*rows + j] = new XttTrendGtk( this, toplevel, (char *)"No title", &widget,
 						 arefv, 0, w, h, (unsigned int)curve_mOptions_Embedded, sts);
@@ -464,13 +483,13 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  pwr_tCid classid;
 	  int skip = 0;
 
-	  if ( cdh_ObjidIsNull(mv.Action[i*rows+j].Object.Objid))
+	  if ( cdh_ObjidIsNull(mv.Action[i*rows+j].Object[0].Objid))
 	    break;
 
 	  GtkWidget *widget;
 	  pwr_tAttrRef arefv[2];
 	  pwr_tAttrRef plotgroup;
-	  arefv[0] = mv.Action[i*rows+j].Object;
+	  arefv[0] = mv.Action[i*rows+j].Object[0];
 	  memset( &arefv[1], 0, sizeof(arefv[0]));
 
 
@@ -484,7 +503,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	    sevHistObjectFound = true;
 	    break;
 	  case pwr_cClass_PlotGroup:
-	    plotgroup = mv.Action[i*rows+j].Object;
+	    plotgroup = mv.Action[i*rows+j].Object[0];
 	    plotgroup_found = 1;
 	    break;
 	  default:
@@ -557,7 +576,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	    }
 	  }
 	  else if ( sevHistObjectFound ) {
-	    lsts = gdh_ArefANameToAref( &mv.Action[i*rows+j].Object, "Object", &attr_aref);
+	    lsts = gdh_ArefANameToAref( &mv.Action[i*rows+j].Object[0], "Object", &attr_aref);
 	    if ( EVEN(lsts)) break;
 
 	    lsts = gdh_GetObjectInfoAttrref( &attr_aref, &attr_aref, sizeof(attr_aref));
@@ -577,11 +596,11 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	    oidv[oid_cnt] = attr_aref.Objid;
 	    sevhistobjectv[oid_cnt] = true;
 	    strcpy( onamev[oid_cnt], "");
-	    sevhist_aref = mv.Action[i*rows+j].Object;
+	    sevhist_aref = mv.Action[i*rows+j].Object[0];
 	    oid_cnt = 1;
 	  }
 	  else {
-	    lsts = gdh_ArefANameToAref( &mv.Action[i*rows+j].Object, "Attribute", &attr_aref);
+	    lsts = gdh_ArefANameToAref( &mv.Action[i*rows+j].Object[0], "Attribute", &attr_aref);
 	    if ( EVEN(lsts)) break;
   
 	    lsts = gdh_GetObjectInfoAttrref( &attr_aref, &attr_aref, sizeof(attr_aref));
@@ -599,7 +618,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	    oidv[0] = attr_aref.Objid;
 	    sevhistobjectv[0] = false;
 	    oid_cnt = 1;
-	    sevhist_aref = mv.Action[i*rows+j].Object;
+	    sevhist_aref = mv.Action[i*rows+j].Object[0];
 	  }
 	  
 	  oidv[oid_cnt] = pwr_cNOid;
@@ -656,7 +675,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  pwr_tObjid objid;
 	  pwr_tCid cid;
 
-	  objid = mv.Action[i*rows+j].Object.Objid;
+	  objid = mv.Action[i*rows+j].Object[0].Objid;
 	  if ( cdh_ObjidIsNull(objid))
 	    break;
       
@@ -953,7 +972,7 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
 	    appl.insert( applist_eType_Trend, (void *)trend[i*rows + j], &arefv[0], 
 			 "",  NULL);
 
-	    mv.Action[i*rows+j].Object = object_aref;
+	    mv.Action[i*rows+j].Object[0] = object_aref;
 	    break;
 	  }
 
@@ -1145,7 +1164,7 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
 	    //appl.insert( applist_eType_Trend, (void *)trend[i*rows + j], &arefv[0], 
 	    //		 "",  NULL);
 
-	    mv.Action[i*rows+j].Object = object_aref;
+	    mv.Action[i*rows+j].Object[0] = object_aref;
 	  }
 	  case pwr_eMultiViewContentEnum_Video: {
 	    pwr_sClass_XttVideo xttvideo;

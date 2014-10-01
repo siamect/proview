@@ -846,7 +846,7 @@ static int	xnav_set_func(	void		*client_data,
     XttMultiView *mvctx;
     pwr_tOName graph_str;
     char name_str[80];
-    pwr_tOName object_str;
+    char object_str[800];
     char *object_p;
     pwr_tOName source_str;
     int cont;
@@ -8800,9 +8800,11 @@ int XNav::exec_xttgraph( pwr_tObjid xttgraph, char *instance,
   char	action[80];
   char	*s;
   int	sts;
-  pwr_tAName  instance_str;
+  char instance_str[800];
   pwr_tAName  name;
   int   scrollbars, menu, navigator;
+  double borders[4];
+  double *bordersp = 0;
 
   sts = gdh_ObjidToName( xttgraph, name, 
 		sizeof(name), cdh_mName_volumeStrict);
@@ -8813,12 +8815,32 @@ int XNav::exec_xttgraph( pwr_tObjid xttgraph, char *instance,
 
   cdh_ToLower( action, xttgraph_o.Action);
   if ( !instance) {
-    if ( cdh_ObjidIsNotNull( xttgraph_o.Object)) {
-      sts = gdh_ObjidToName( xttgraph_o.Object, 
-		instance_str, sizeof( instance_str), cdh_mName_volumeStrict);
-      if ( ODD(sts))
-        instance = instance_str;
+    for ( int i = 0; i < 4; i++) {
+      pwr_tOName oname;
+
+      if ( cdh_ObjidIsNull( xttgraph_o.Object[i]))
+	break;
+	
+      sts = gdh_ObjidToName( xttgraph_o.Object[i], 
+		oname, sizeof( oname), cdh_mName_volumeStrict);
+      if ( EVEN(sts))
+	break;
+
+      if ( i == 0)
+	strncpy( instance_str, oname, sizeof(instance_str));
+      else {
+	strncat( instance_str, ",", sizeof(instance_str));
+	strncat( instance_str, oname, sizeof(instance_str));
+      }
+      instance = instance_str;
     }
+  }
+
+  if ( xttgraph_o.Borders[0] != 0 || xttgraph_o.Borders[1] != 0 ||
+       xttgraph_o.Borders[2] != 0 || xttgraph_o.Borders[3] != 0) {
+    for ( int i = 0; i < 4; i++)
+      borders[i] = xttgraph_o.Borders[i];
+    bordersp = borders;
   }
 
   if ( (s = strstr( action, ".pwg")))
@@ -8844,7 +8866,7 @@ int XNav::exec_xttgraph( pwr_tObjid xttgraph, char *instance,
     open_graph( xttgraph_o.Title, action, scrollbars, 
 	menu, navigator, xttgraph_o.Width,
 	xttgraph_o.Height, xttgraph_o.X, xttgraph_o.Y, instance, 
-		focus, inputempty, use_default_access, access, options, basewidget, 0);
+		focus, inputempty, use_default_access, access, options, basewidget, bordersp);
   }
   else if ( (strstr( action, ".class")))
   {
