@@ -364,7 +364,7 @@ void SubPaletteBrow::free_pixmaps()
   for ( i = 0; i < 9; i++) { \
     pixmap_data[i].width = bitmap ## _width; \
     pixmap_data[i].height = bitmap ## _height; \
-    pixmap_data[i].bits = (char *) bitmap ## _bits; \
+    pixmap_data[i].bits = (unsigned char *)bitmap ## _bits; \
   } \
   if ( idx-1 >= SUBP_PIXMAPS_SIZE) \
     return; \

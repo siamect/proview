@@ -66,9 +66,9 @@ class XttAudio
 {
   public:
     static int audio_ok;
-    XttAudio( CoWow *a_wow, const char *OSS_device="/dev/dsp", const char *ALSA_device="plughw:0,0");
+    XttAudio( CoWow *a_wow, const char *OSS_device=0, const char *ALSA_device=0);
     ~XttAudio();
-    int init(char *OSS_device="/dev/dsp", char *ALSA_device="plughw:0,0");
+    int init(char *OSS_device=0, char *ALSA_device=0);
     int beep( pwr_tAttrRef *arp);
   private:
     static int number_of;

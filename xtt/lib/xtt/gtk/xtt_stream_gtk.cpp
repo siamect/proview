@@ -34,7 +34,6 @@
  * General Public License plus this exception.
  */
 
-#define PWRE_CONF_GST 1
 
 #if defined PWRE_CONF_GST
 
@@ -543,12 +542,15 @@ int main(int argc, char *argv[]) {
 
 #else
 // gstreamer not installed
+#include <string.h>
 #include <gtk/gtk.h>
 #include "xtt_stream_gtk.h"  
 
-XttStreamGtk::XttStreamGtk( GtkWidget *parent_wid, void *parent_ctx, const char *name, const char *uri,
-		int width, int height,
-		int x, int y, double scan_time, unsigned int options) {}
+XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const char *name, const char *st_uri,
+			    int width, int height, int x, int y, double scan_time, 
+			    unsigned int st_options, int st_embedded, pwr_tStatus *sts) :
+	 XttStream( st_parent_ctx, name, st_uri, width, height, x, y, scan_time, st_options, st_embedded) { *sts = 0;}
+
 XttStreamGtk::~XttStreamGtk() {}
 
 #endif

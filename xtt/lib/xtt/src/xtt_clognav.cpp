@@ -80,7 +80,7 @@ void CLogNavBrow::allocate_pixmaps()
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_leaf12_width;
     pixmap_data[i].height =xnav_bitmap_leaf12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_leaf12_bits;
+    pixmap_data[i].bits = xnav_bitmap_leaf12_bits;
   }
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_leaf);
@@ -88,7 +88,7 @@ void CLogNavBrow::allocate_pixmaps()
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_map12_width;
     pixmap_data[i].height =xnav_bitmap_map12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_map12_bits;
+    pixmap_data[i].bits = xnav_bitmap_map12_bits;
   }
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_map);
@@ -96,7 +96,7 @@ void CLogNavBrow::allocate_pixmaps()
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_openmap12_width;
     pixmap_data[i].height =xnav_bitmap_openmap12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_openmap12_bits;
+    pixmap_data[i].bits = xnav_bitmap_openmap12_bits;
   }
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_openmap);

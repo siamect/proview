@@ -83,7 +83,7 @@ void CoLogWNavBrow::allocate_pixmaps()
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_save12_width;
     pixmap_data[i].height =xnav_bitmap_save12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_save12_bits;
+    pixmap_data[i].bits = xnav_bitmap_save12_bits;
   }
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_save);
@@ -91,7 +91,7 @@ void CoLogWNavBrow::allocate_pixmaps()
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_build12_width;
     pixmap_data[i].height =xnav_bitmap_build12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_build12_bits;
+    pixmap_data[i].bits = xnav_bitmap_build12_bits;
   }
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_build);
@@ -99,7 +99,7 @@ void CoLogWNavBrow::allocate_pixmaps()
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_package12_width;
     pixmap_data[i].height =xnav_bitmap_package12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_package12_bits;
+    pixmap_data[i].bits = xnav_bitmap_package12_bits;
   }
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_package);
@@ -107,7 +107,7 @@ void CoLogWNavBrow::allocate_pixmaps()
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_copy12_width;
     pixmap_data[i].height =xnav_bitmap_copy12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_copy12_bits;
+    pixmap_data[i].bits = xnav_bitmap_copy12_bits;
   }
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_copy);
@@ -115,7 +115,7 @@ void CoLogWNavBrow::allocate_pixmaps()
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_export12_width;
     pixmap_data[i].height =xnav_bitmap_export12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_export12_bits;
+    pixmap_data[i].bits = xnav_bitmap_export12_bits;
   }
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_export);
@@ -123,7 +123,7 @@ void CoLogWNavBrow::allocate_pixmaps()
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_clone12_width;
     pixmap_data[i].height =xnav_bitmap_clone12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_clone12_bits;
+    pixmap_data[i].bits = xnav_bitmap_clone12_bits;
   }
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_clone);

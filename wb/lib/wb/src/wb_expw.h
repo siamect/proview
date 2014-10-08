@@ -65,7 +65,7 @@ class WbExpW {
 	int l_type,
 	int l_editmode,
 	pwr_tStatus *status);
-    ~WbExpW();
+    virtual ~WbExpW();
 
     virtual void set_title( char *title) {}
     void show();

@@ -1867,7 +1867,7 @@ int pn_gsdml::string_to_datavalue( gsdml_eValueDataType datatype, void *value,
   case gsdml_eValueDataType_OctetString: {
     unsigned int len;
     for ( unsigned int i = 0; i < size; i++) {
-      len = sscanf( &str[i*5], "0x%2hhx", (unsigned char *)((unsigned char *)value)[i]);
+      len = sscanf( &str[i*5], "0x%2hhx", (unsigned char *)((unsigned char *)value+i));
       if ( len != 1)
 	break;
     }

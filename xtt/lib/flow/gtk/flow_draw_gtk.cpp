@@ -1463,7 +1463,7 @@ int FlowDrawGtk::pixmaps_create( FlowCtx *ctx, flow_sPixmapData *pixmap_data,
     if ( i == 0 || 
          (i > 0 && pdata->bits != prev_pdata->bits)) {
       pms->pixmap[i] = gdk_pixmap_create_from_data(
-	window, pdata->bits, pdata->width,
+	window, (char *)pdata->bits, pdata->width,
 	pdata->height, 1, &foreground, &background);
     }
     else

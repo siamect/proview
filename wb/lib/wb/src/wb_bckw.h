@@ -65,7 +65,7 @@ class WbBckW {
 	wb_bck_list *l_list,
 	int l_editmode,
 	pwr_tStatus *status);
-    ~WbBckW();
+    virtual ~WbBckW();
 
     virtual void print() {}
     virtual void set_title( char *title) {}

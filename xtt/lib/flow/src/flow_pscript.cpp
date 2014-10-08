@@ -331,7 +331,7 @@ int FlowPscript::pixmap( double x, double y, flow_sPixmapDataElem *data,
 {
   int i, j;
   int bit_cnt;
-  char *char_p;
+  unsigned char *char_p;
   double scale_factor = 0.8;
 
   fprintf( file, "/picstr %d string def\n", data->width);

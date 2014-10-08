@@ -84,8 +84,7 @@
     (o)->e.pre = (void *)((p)->pre),\
     (o)->e.nex = (void *)(p),\
     (p)->pre->nex = (void *)(&(o)->e),\
-    (p)->pre = (void *)(&(o)->e),\
-    p)
+    (p)->pre = (void *)(&(o)->e))
 #define LstRem(p) ((p)->nex->pre = (p)->pre,(p)->pre->nex = (p)->nex)
 #define LstNul(p) ((p)->nex = (p)->pre = NULL)
 #define LstInl(p) ((p)->nex != NULL && (p)->pre != NULL)

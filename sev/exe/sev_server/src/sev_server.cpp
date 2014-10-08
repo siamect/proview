@@ -455,9 +455,9 @@ int sev_server::mainloop()
     if ( sts == QCOM__TMO || !mp)
       continue;
 
-    switch (get.type.b) {
+    switch ((int)get.type.b) {
       case sev_cMsgClass:
-        switch ( get.type.s) {
+        switch ( (int)get.type.s) {
           case sev_eMsgType_NodeUp:
             errh_Info("Node up %s", cdh_NodeIdToString( 0, get.reply.nid, 0, 0));
             request_items( get.reply.nid);

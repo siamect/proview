@@ -563,7 +563,7 @@ typedef enum {
 typedef struct {
 	int			width;
 	int			height;
-	char			*bits;
+	unsigned char		*bits;
 	} flow_sPixmapDataElem;
 
 typedef flow_sPixmapDataElem flow_sPixmapData[DRAW_PIXMAP_SIZE];

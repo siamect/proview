@@ -97,7 +97,7 @@ void TblNavBrow::allocate_pixmaps()
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_leaf12_width;
     pixmap_data[i].height =xnav_bitmap_leaf12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_leaf12_bits;
+    pixmap_data[i].bits = xnav_bitmap_leaf12_bits;
   }
   
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_leaf);
@@ -105,7 +105,7 @@ void TblNavBrow::allocate_pixmaps()
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_map12_width;
     pixmap_data[i].height =xnav_bitmap_map12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_map12_bits;
+    pixmap_data[i].bits = xnav_bitmap_map12_bits;
   }
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_map);
@@ -113,7 +113,7 @@ void TblNavBrow::allocate_pixmaps()
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_openmap12_width;
     pixmap_data[i].height =xnav_bitmap_openmap12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_openmap12_bits;
+    pixmap_data[i].bits = xnav_bitmap_openmap12_bits;
   }
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_openmap);
@@ -121,7 +121,7 @@ void TblNavBrow::allocate_pixmaps()
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_attr12_width;
     pixmap_data[i].height =xnav_bitmap_attr12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_attr12_bits;
+    pixmap_data[i].bits = xnav_bitmap_attr12_bits;
   }
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_attr);
@@ -129,7 +129,7 @@ void TblNavBrow::allocate_pixmaps()
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_attrarra12_width;
     pixmap_data[i].height =xnav_bitmap_attrarra12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_attrarra12_bits;
+    pixmap_data[i].bits = xnav_bitmap_attrarra12_bits;
   }
 	  
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_attrarray);

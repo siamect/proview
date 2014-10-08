@@ -47,6 +47,7 @@ class co_xml_parser;
 class co_xml_interpreter {
  public:
   co_xml_interpreter() : tag_stack_cnt(0), object_stack_cnt(0) {}
+  virtual ~co_xml_interpreter() {}
 
   virtual int tag( const char *name) { return 0;}
   virtual int metatag( const char *name) { return 0;}

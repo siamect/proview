@@ -96,12 +96,12 @@ typedef enum {
 	} attrnav_eType;
 
 typedef struct {
-	int 	num;
+	unsigned int 	num;
 	char	name[40];
 	} attrnav_sEnumElement;
 
 typedef struct {
-	int			num;
+	unsigned int		num;
 	attrnav_sEnumElement	*elements;
 	} attrnav_sEnum;
 

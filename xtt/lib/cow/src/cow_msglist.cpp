@@ -72,7 +72,7 @@ void MsgListBrow::allocate_pixmaps()
   for ( i = 0; i < 9; i++) {
     pixmap_data[i].width =xnav_bitmap_morehelp12_width;
     pixmap_data[i].height =xnav_bitmap_morehelp12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_morehelp12_bits;
+    pixmap_data[i].bits = xnav_bitmap_morehelp12_bits;
   }
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_morehelp);

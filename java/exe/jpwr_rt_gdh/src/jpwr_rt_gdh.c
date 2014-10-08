@@ -529,7 +529,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_refObjectInfo
   /* Extract the type and size from the suffix */
   if ( gdh_ExtractNameSuffix( cstr, &suffix_p)) {
     gdh_TranslateSuffixToClassData( suffix_p, &typeid, &size, &elements);
-    if ( typeid == graph_eType_Bit) {
+    if ( typeid == (int)graph_eType_Bit) {
       char *s = strrchr( cstr, '[');
       if ( s)
 	*s = 0;

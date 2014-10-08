@@ -56,10 +56,21 @@ snd_pcm_uframes_t XttAudio::frames=AUDIO_BUFFER_SIZE/4;
 snd_pcm_hw_params_t *XttAudio::hw_params=NULL;
 static long unsigned int period_size = 65536;
 
-XttAudio::XttAudio( CoWow *a_wow, const char *OSS_device, const char * ALSA_device) :
+XttAudio::XttAudio( CoWow *a_wow, const char *a_OSS_device, const char *a_ALSA_device) :
   write_buffer(0), timerid(0), queue_cnt(0)
 {
   /*constructor*/
+  char ALSA_device[80];
+  char OSS_device[80];
+
+  if ( a_OSS_device)
+    strncpy( OSS_device, a_OSS_device, sizeof(OSS_device));
+  else
+    strcpy( OSS_device, "/dev/dsp");
+  if ( a_ALSA_device)
+    strncpy( ALSA_device, a_ALSA_device, sizeof(ALSA_device));
+  else
+    strcpy( ALSA_device, "plughw:0,0");
 
   number_of++;
 
@@ -107,8 +118,19 @@ XttAudio::~XttAudio()
   }
 }
 
-int XttAudio::init(char *OSS_device, char * ALSA_device)
+int XttAudio::init(char *a_OSS_device, char *a_ALSA_device)
 {
+  char ALSA_device[80];
+  char OSS_device[80];
+
+  if ( a_OSS_device)
+    strncpy( OSS_device, a_OSS_device, sizeof(OSS_device));
+  else
+    strcpy( OSS_device, "/dev/dsp");
+  if ( a_ALSA_device)
+    strncpy( ALSA_device, a_ALSA_device, sizeof(ALSA_device));
+  else
+    strcpy( ALSA_device, "plughw:0,0");
 
   if(number_of<2 && audio_ok==0)
   {

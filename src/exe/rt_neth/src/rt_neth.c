@@ -525,7 +525,7 @@ id (
 
 
 
-  if (get->type.s == net_eMsg_id)
+  if (get->type.s == (int)net_eMsg_id)
     event = net_eEvent_id;
   else
     event = net_eEvent_idAck;
@@ -783,7 +783,7 @@ mainLoop (void)
       break;
     case net_cMsgClass:
       if (((int)get.type.s > (int)net_eMsg__  && (int)get.type.s < (int)net_eMsg_)
-          || (get.type.s == net_eMsg_volumes7)
+          || (get.type.s == (int)net_eMsg_volumes7)
       ) {
 	if (gdbroot->db->log.b.messages) {
 	  errh_Info("Received '%s' from %x @ %s, length=%d",

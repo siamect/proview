@@ -319,7 +319,7 @@ int main (int argc, char **argv)
           event(&get);
         }
       }
-    } while (ODD(sts) && get.type.s != alimsrv_eSubType_Request && get.type.b != alimsrv_cMsgType);
+    } while (ODD(sts) && get.type.s != (int)alimsrv_eSubType_Request && get.type.b != (int)alimsrv_cMsgType);
 
     if (EVEN(sts)) {
       errh_Error("qcom_Get, %m",sts);
