@@ -118,7 +118,30 @@ void XttMultiViewGtk::activate_exit( GtkWidget *w, gpointer data)
 
 void XttMultiViewGtk::action_resize( GtkWidget *w, GtkAllocation *allocation, gpointer data)
 {
-  // XttMultiView *multiview = (XttMultiView *)data;
+#if 0
+  XttMultiViewGtk *mv = (XttMultiViewGtk *)data;
+  GtkRequisition req;
+  static int skip = 0;
+  int window_width, window_height;
+
+  if ( !mv->toplevel->window)
+    return;
+  if ( skip) {
+    skip--;
+    return;
+  }
+
+  //gtk_widget_get_preferred_size( GTK_WIDGET(mv->toplevel), &req);
+  // gtk_widget_size_request( GTK_WIDGET(mv->toplevel), &req);
+  gdk_window_get_size( mv->toplevel->window, &window_width, &window_height);
+  double factor = float(window_width) / mv->orig_width;
+
+  for ( int i = 0; i < mv->cols * mv->rows; i++) {
+    gtk_fixed_move( GTK_FIXED(mv->col_widget), mv->comp_widget[i], factor * mv->comp_x[i], factor * mv->comp_y[i]);
+    gtk_widget_set_size_request( GTK_WIDGET(mv->comp_widget[i]), factor * mv->comp_width[i], factor * mv->comp_height[i]);
+  }
+  skip = mv->cols * mv->rows;
+#endif
 }
 
 XttMultiViewGtk::~XttMultiViewGtk()
@@ -205,18 +228,28 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
   memset( strmctx, 0, sizeof(strmctx));
   memset( comp_widget, 0, sizeof(comp_widget));
   memset( exchange_widget, 0, sizeof(exchange_widget));
+  memset( comp_width, 0, sizeof(comp_width));
+  memset( comp_height, 0, sizeof(comp_height));
+  memset( comp_x, 0, sizeof(comp_x));
+  memset( comp_y, 0, sizeof(comp_y));
+
+  *sts = gdh_GetObjectInfoAttrref( &aref, &mv, sizeof(mv));
+  if ( EVEN(*sts)) return;
 
   if ( mv_width != 0 && mv_height != 0) {
     window_width = mv_width;
     window_height = mv_height;
   }
+  else if ( mv.Width != 0 && mv.Height != 0) {
+    window_width = mv.Width;
+    window_height = mv.Height;
+  }
   else {
     window_width = 600;
     window_height = 500;
   }
-
-  *sts = gdh_GetObjectInfoAttrref( &aref, &mv, sizeof(mv));
-  if ( EVEN(*sts)) return;
+  orig_width = window_width;
+  orig_height = window_height;
 
   char *titleutf8 = g_convert( mv.Title, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
 
@@ -237,6 +270,9 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
     if ( mv.Options & pwr_mMultiViewOptionsMask_HideDecorations)
       gtk_window_set_decorated( GTK_WINDOW(toplevel), FALSE);
 
+    if ( mv.Layout == pwr_eMultiViewLayoutEnum_Fix|| mv.Layout == pwr_eMultiViewLayoutEnum_Table)
+      gtk_window_set_resizable( GTK_WINDOW(toplevel), FALSE);
+
     if ( mv.Options & pwr_mMultiViewOptionsMask_Dialog) {
       gtk_window_set_type_hint( GTK_WINDOW(toplevel), GDK_WINDOW_TYPE_HINT_DIALOG);
       gtk_widget_set_size_request( GTK_WIDGET(toplevel), window_width, window_height);
@@ -253,16 +289,51 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
     toplevel = parent_wid;
     box_widget = gtk_hbox_new( FALSE, 0);
   }
-    
-  if ( mv.Layout == pwr_eMultiViewLayoutEnum_Box) {
-    GtkWidget *col_widget = gtk_hbox_new( FALSE, 0);
 
+  if ( mv.Layout == pwr_eMultiViewLayoutEnum_Fix) {
+    // g_signal_connect( toplevel, "size_allocate", G_CALLBACK(action_resize), this);
+  }
+    
+  {
     rows = mv.Rows;
     cols = mv.Columns;
 
+    switch ( mv.Layout) {
+    case pwr_eMultiViewLayoutEnum_Box:
+      col_widget = gtk_hbox_new( FALSE, 0);
+      break;
+    case pwr_eMultiViewLayoutEnum_Fix:
+      col_widget = gtk_fixed_new();
+      break;
+    case pwr_eMultiViewLayoutEnum_Pane:      
+      col_widget = gtk_hpaned_new();
+      break;
+    case pwr_eMultiViewLayoutEnum_Table:      
+      col_widget = gtk_table_new( rows, cols, FALSE);
+      break;
+    default:
+      return;
+    }
+
     bool escape = false;
     for ( int i = 0; i < cols; i++) {
-      GtkWidget *row_widget = gtk_vbox_new( FALSE, 0);
+      GtkWidget *row_widget;
+
+      if ( mv.Layout == pwr_eMultiViewLayoutEnum_Pane && i > 1)
+	break;
+      
+      switch ( mv.Layout) {
+      case pwr_eMultiViewLayoutEnum_Box:
+	row_widget = gtk_vbox_new( FALSE, 0);
+	break;
+      case pwr_eMultiViewLayoutEnum_Fix:
+      case pwr_eMultiViewLayoutEnum_Table:
+	break;
+      case pwr_eMultiViewLayoutEnum_Pane:      
+	row_widget = gtk_vpaned_new();
+	break;
+      default: ;
+      }
 
       for ( int j = 0; j < rows; j++) {
 	pwr_tFileName graph_name;
@@ -272,9 +343,13 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  escape = true;
 	  break;
 	}
+	if ( mv.Layout == pwr_eMultiViewLayoutEnum_Pane && j > 1)
+	  break;
 
-	w = mv.Action[i*rows+j].Width;
-	h = mv.Action[i*rows+j].Height;
+	w = comp_width[i*rows+j] = mv.Action[i*rows+j].Width;
+	h = comp_height[i*rows+j] = mv.Action[i*rows+j].Height;
+	comp_x[i*rows+j] = mv.Action[i*rows+j].X;
+	comp_y[i*rows+j] = mv.Action[i*rows+j].Y;
 	scrollbar = (mv.Action[i*rows+j].Options & pwr_mMultiViewElemOptionsMask_Scrollbars) ? 1 : 0;
 	menu = (mv.Action[i*rows+j].Options & pwr_mMultiViewElemOptionsMask_Menu) ? 1 : 0;
 	strcpy( graph_name, mv.Action[i*rows+j].Action);
@@ -288,7 +363,6 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	    if ( !sala[i*rows + j])
 	      continue;
 	    comp_widget[i*rows + j] = sala[i*rows + j]->get_widget();
-	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
 	  }
 	  break;
 	}
@@ -299,7 +373,6 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	    if ( !seve[i*rows + j])
 	      continue;
 	    comp_widget[i*rows + j] = seve[i*rows + j]->get_widget();
-	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
 	  }
 	  break;
 	}
@@ -361,14 +434,6 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  appl.insert( applist_eType_Graph, (void *)gectx[i*rows + j], pwr_cNObjid, graph_name,
 		       objectname_p);
 	
-
-	  if ( mv.Action[i*rows+j].Options & pwr_mMultiViewElemOptionsMask_Exchangeable) {
-	    exchange_widget[i*rows+j] = gtk_hbox_new( FALSE, 0);
-	    gtk_box_pack_start( GTK_BOX(exchange_widget[i*rows+j]), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
-	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(exchange_widget[i*rows + j]), TRUE, TRUE, 0);
-	  }
-	  else
-	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
 	  break;
 	}
 	case pwr_eMultiViewContentEnum_MultiView: {
@@ -397,13 +462,6 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 
 	  appl.insert( applist_eType_MultiView, (void *)mvctx[i*rows + j], &aref, "", NULL);
 	
-	  if ( mv.Action[i*rows+j].Options & pwr_mMultiViewElemOptionsMask_Exchangeable) {
-	    exchange_widget[i*rows+j] = gtk_hbox_new( FALSE, 0);
-	    gtk_box_pack_start( GTK_BOX(exchange_widget[i*rows+j]), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
-	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(exchange_widget[i*rows + j]), TRUE, TRUE, 0);
-	  }
-	  else
-	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
 	  break;
 	}
 	case pwr_eMultiViewContentEnum_TrendCurve: {
@@ -457,14 +515,6 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  appl.insert( applist_eType_Trend, (void *)trend[i*rows + j], &arefv[0], 
 		       "",  NULL);
 	
-
-	  if ( mv.Action[i*rows+j].Options & pwr_mMultiViewElemOptionsMask_Exchangeable) {
-	    exchange_widget[i*rows+j] = gtk_hbox_new( FALSE, 0);
-	    gtk_box_pack_start( GTK_BOX(exchange_widget[i*rows+j]), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
-	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(exchange_widget[i*rows + j]), TRUE, TRUE, 0);
-	  }
-	  else
-	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
 	  break;
 	}
 	case pwr_eMultiViewContentEnum_SevHistory: {
@@ -660,14 +710,6 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  //appl.insert( applist_eType_Trend, (void *)trend[i*rows + j], &arefv[0], 
 	  //	       "",  NULL);
 	
-
-	  if ( mv.Action[i*rows+j].Options & pwr_mMultiViewElemOptionsMask_Exchangeable) {
-	    exchange_widget[i*rows+j] = gtk_hbox_new( FALSE, 0);
-	    gtk_box_pack_start( GTK_BOX(exchange_widget[i*rows+j]), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
-	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(exchange_widget[i*rows + j]), TRUE, TRUE, 0);
-	  }
-	  else
-	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
 	  break;
 	}
 	case pwr_eMultiViewContentEnum_Video: {
@@ -704,24 +746,82 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  appl.insert( applist_eType_Stream, (void *)strmctx[i*rows + j], objid, xttvideo.Title,
 		       xttvideo.URL);
 	
-	  if ( mv.Action[i*rows+j].Options & pwr_mMultiViewElemOptionsMask_Exchangeable) {
-	    exchange_widget[i*rows+j] = gtk_hbox_new( FALSE, 0);
-	    gtk_box_pack_start( GTK_BOX(exchange_widget[i*rows+j]), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
-	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(exchange_widget[i*rows + j]), TRUE, TRUE, 0);
-	  }
-	  else
-	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
 	  break;
 	}
 	default: ;
 	}
-	if ( (j + 1) % rows != 0 && mv.Options & pwr_mMultiViewOptionsMask_RowSeparators)
+
+
+	if ( mv.Action[i*rows+j].Options & pwr_mMultiViewElemOptionsMask_Exchangeable) {
+	  exchange_widget[i*rows+j] = gtk_hbox_new( FALSE, 0);
+	  gtk_box_pack_start( GTK_BOX(exchange_widget[i*rows+j]), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
+	  switch ( mv.Layout) {
+	  case pwr_eMultiViewLayoutEnum_Box:
+	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(exchange_widget[i*rows + j]), TRUE, TRUE, 0);
+	    break;
+	  case pwr_eMultiViewLayoutEnum_Fix:
+	    gtk_fixed_put( GTK_FIXED(col_widget), GTK_WIDGET(exchange_widget[i*rows + j]), mv.Action[i*rows+j].X, mv.Action[i*rows+j].Y);
+	    gtk_widget_set_size_request( GTK_WIDGET(comp_widget[i*rows + j]), mv.Action[i*rows+j].Width, mv.Action[i*rows+j].Height);
+	    break;
+	  case pwr_eMultiViewLayoutEnum_Pane:      
+	    if ( j == 0)
+	      gtk_paned_pack1( GTK_PANED(row_widget), GTK_WIDGET(exchange_widget[i*rows + j]), TRUE, TRUE);
+	    else
+	      gtk_paned_pack2( GTK_PANED(row_widget), GTK_WIDGET(exchange_widget[i*rows + j]), TRUE, TRUE);
+	    break;
+	  case pwr_eMultiViewLayoutEnum_Table:
+	    gtk_table_attach( GTK_TABLE(col_widget), GTK_WIDGET(exchange_widget[i*rows + j]), j, j+1, i, i+1,
+			      GTK_FILL, GTK_FILL, 0, 0);
+	    break;
+	  default: ;
+	  }
+	}
+	else {
+	  switch ( mv.Layout) {
+	  case pwr_eMultiViewLayoutEnum_Box:
+	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
+	    break;
+	  case pwr_eMultiViewLayoutEnum_Fix:
+	    gtk_fixed_put( GTK_FIXED(col_widget), GTK_WIDGET(comp_widget[i*rows + j]), mv.Action[i*rows+j].X, mv.Action[i*rows+j].Y);
+	    gtk_widget_set_size_request( GTK_WIDGET(comp_widget[i*rows + j]), mv.Action[i*rows+j].Width, mv.Action[i*rows+j].Height);
+	    break;
+	  case pwr_eMultiViewLayoutEnum_Pane:      
+	    if ( j == 0)
+	      gtk_paned_pack1( GTK_PANED(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE);
+	    else
+	      gtk_paned_pack2( GTK_PANED(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE);
+	    break;
+	  case pwr_eMultiViewLayoutEnum_Table:
+	    gtk_table_attach( GTK_TABLE(col_widget), GTK_WIDGET(comp_widget[i*rows + j]), j, j+1, i, i+1,
+			      GTK_FILL, GTK_FILL, 0, 0);
+	  default: ;
+	  }
+	}
+
+	if ( mv.Layout == pwr_eMultiViewLayoutEnum_Box &&
+	     ((j + 1) % rows != 0 && mv.Options & pwr_mMultiViewOptionsMask_RowSeparators))
 	  gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(gtk_hseparator_new()), FALSE, FALSE, 0);
 	  
       }
-      gtk_box_pack_start( GTK_BOX(col_widget), GTK_WIDGET(row_widget), TRUE, TRUE, 0);
 
-      if ( i != cols - 1 && mv.Options & pwr_mMultiViewOptionsMask_ColumnSeparators)
+      switch ( mv.Layout) {
+      case pwr_eMultiViewLayoutEnum_Box:
+	gtk_box_pack_start( GTK_BOX(col_widget), GTK_WIDGET(row_widget), TRUE, TRUE, 0);
+	break;
+      case pwr_eMultiViewLayoutEnum_Fix:
+	break;
+      case pwr_eMultiViewLayoutEnum_Pane:      
+	if ( i == 0)
+	  gtk_paned_pack1( GTK_PANED(col_widget), GTK_WIDGET(row_widget), TRUE, TRUE);
+	else
+	  gtk_paned_pack2( GTK_PANED(col_widget), GTK_WIDGET(row_widget), TRUE, TRUE);
+	break;
+	break;
+      default: ;
+      }
+
+      if ( mv.Layout == pwr_eMultiViewLayoutEnum_Box &&
+	   (i != cols - 1 && mv.Options & pwr_mMultiViewOptionsMask_ColumnSeparators))
 	gtk_box_pack_start( GTK_BOX(col_widget), GTK_WIDGET(gtk_vseparator_new()), FALSE, FALSE, 0);
 
       if ( escape)
@@ -731,10 +831,6 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
       gtk_container_add( GTK_CONTAINER(toplevel), col_widget);
     else
       gtk_box_pack_start( GTK_BOX(box_widget), GTK_WIDGET(col_widget), FALSE, FALSE, 0);
-  }
-  else if ( mv.Layout == pwr_eMultiViewLayoutEnum_Fix) {
-  }
-  else if ( mv.Layout == pwr_eMultiViewLayoutEnum_Table) {
   }
 
 

@@ -60,6 +60,7 @@ class XttMultiViewGtk : public XttMultiView {
   GtkWidget	*exchange_widget[MV_SIZE];
   GtkWidget	*box_widget;
   GtkWidget	*toplevel;
+  GtkWidget	*col_widget;
   XttGeGtk	*gectx[MV_SIZE];
   XttMultiViewGtk *mvctx[MV_SIZE];
   EvAlaGtk 	*sala[MV_SIZE];
@@ -67,6 +68,12 @@ class XttMultiViewGtk : public XttMultiView {
   XttTrendGtk	*trend[MV_SIZE];
   XttSevHistGtk	*sevhist[MV_SIZE];
   XttStreamGtk	*strmctx[MV_SIZE];
+  int		comp_width[MV_SIZE];
+  int		comp_height[MV_SIZE];
+  int		comp_x[MV_SIZE];
+  int		comp_y[MV_SIZE];
+  int		orig_width;
+  int		orig_height;
   CoWowFocusTimerGtk focustimer;
 
   XttMultiViewGtk( GtkWidget *parent_wid, void *parent_ctx, const char *name, pwr_tAttrRef *aref,

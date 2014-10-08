@@ -79,6 +79,16 @@ SObject pwrb:Type
        Attr Value = 2
      EndBody
     EndObject
+    !/**
+    !  Pane layout.
+    !*/
+    Object Pane $Value
+     Body SysBody
+       Attr PgmName = "Pane"
+       Attr Text = "Pane"
+       Attr Value = 3
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

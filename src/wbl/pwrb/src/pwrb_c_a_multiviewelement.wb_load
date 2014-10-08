@@ -41,7 +41,7 @@ SObject pwrb:Class
 !  @Group Operator,NodeConfiguration
 !
 !  Definition of an array element in a XttMultiView object, describing
-!  the content of one part of the view.
+!  the content of a cell in the view.
 !
 ! @b See also
 !  @classlink XttMultiView pwrb_xttmultiview.html
@@ -68,8 +68,14 @@ SObject pwrb:Class
       !/**
       !  Content type.
       !  - Graph       A Ge graph.
-      !  - ObjectGraph A Ge object or hierarchy graph.(NYI)
+      !  - ObjectGraph A Ge object or hierarchy graph.
       !  - AlarmList   An alarm list
+      !  - MultiView   Another multiview specified with an XttMultiView object.
+      !  - EvenList    An event list
+      !  - TrendCurve  A trend curve specified with a DsTrend, DsTrendCurve or PlotGroup object.
+      !  - FastCurve   Not yet implemented.
+      !  - SevHistory  History curve specified with a SevHist, SevHistObject or PlotGroup object.
+      !  - Video       A video stream specified with an XttVideo object.
       !*/
       Object Type $Attribute 2 
         Body SysBody

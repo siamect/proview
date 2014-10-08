@@ -41,18 +41,46 @@ SObject pwrb:Class
 !  @Group Operator,NodeConfiguration
 !  @Summary Defines the action of a pushbutton in the operator window
 !  The XttMultiView object defines a xtt window that is built by a number 
-!  Ge graphs and alarm windows.
+!  Ge graphs, alarm windows, curves other multiviews etc.
 !  The window is structured as a table with rows and columns. 
 !  The content and layout of each table cell is specified in the Action array. 
 !  Each element in the action array correspons to a cell in the table where
 !  index 0 is the top cell in the first column, index 1 the second row in
 !  the first column etc.
 !
-!  For ge graps the pwg-file for the graph is specified, and, if the graph
-!  is an object graph or hierarchy graph, also the object is specified. 
-!  For alarm windows an alarm view can be specified in the Object attribute.
+!  Example Action array index for a multiview with 3 rows and 3 columns
+!  ----------------
+!  | 0  | 3  | 6  |
+!  ----------------
+!  | 1  | 4  | 7  |
+!  ----------------
+!  | 2  | 5  | 8  |
+!  ----------------
 !
-!  The multiwiew are opened by the xtt command
+!  The type of window displayed in a cell is specified in Action[].Type.
+!
+!  Graph
+!  Specify the pwg file in Action[].Action.
+!
+!  ObjectGraph
+!  Specify the pwg file in Action[].Action and the instance object in Action[].Object[0].
+!
+!  AlarmList and EventList
+!  Specify an AlarmView in the Action[]Object[0] attribute.
+!
+!  MultiView
+!  Specify the name of the XttMultiView object in Actino[].Action.
+!
+!  TrendCurve
+!  Specify the DsTrend, DsTrendCurve or PlotGroup object in Action[].Object[0].
+!
+!  SevHistory
+!  Specify the SevHist, SevHistObject or PlotGroup object in Action[].Object[0].
+!
+!  Video
+!  Specify the XttVideo object in Action.Object[0].
+!  
+!  The multiwiew is opened by the xtt command
 !
 !  > open multiview 'object' [/width=] [/height=] [/xpos=] [/ypos=]  
 !
@@ -82,9 +110,15 @@ SObject pwrb:Class
       EndObject
       !/**
       ! Layout management.
-      ! - Box
-      ! - Fix (NYI)
-      ! - Table (NYI)
+      ! - Box   The cells in each row is packed in horizontal boxes, and these boxes are 
+      !         then packed in a vertical box.
+      ! - Fix   Fix layout with position specified in X, Y and size in Width and Height.
+      !         Column and row doesn't have any meaning and only specifies the number of cells.
+      !         Not resizeable.
+      ! - Pane  The cells in each row is inserted in horizontal paned windows, and these
+      !         Windows are then inserted in vertical paned windows. Maximum two rows and two
+      !         columns are supported.
+      ! - Table The cells are ordered in rows and columns. Not resizable.
       !*/
       Object Layout $Attribute 2
         Body SysBody
