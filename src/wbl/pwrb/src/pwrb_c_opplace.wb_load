@@ -341,6 +341,14 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Audio device.
+      !*/
+      Object AudioDevice $Attribute 51
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
     EndObject
     Object Template OpPlace
       Body RtBody

@@ -4268,8 +4268,14 @@ int XNav::sound( pwr_tAttrRef *sound)
   if ( !attach_audio)
     return 0;
 
-  if ( !audio)
-    audio = new XttAudio( wow);
+  if ( !audio) {
+    char *dp = 0;
+
+    if ( strcmp( opplace_p->AudioDevice, "") != 0)
+      dp = opplace_p->AudioDevice;
+
+    audio = new XttAudio( wow, 0, dp);
+  }
 
   if ( audio->audio_ok) {
     audio->beep( sound);
@@ -4283,9 +4289,14 @@ int XNav::sound_attached()
   if ( !attach_audio)
     return 0;
 
-  if ( !audio)
-    audio = new XttAudio( wow);
+  if ( !audio) {
+    char *dp = 0;
 
+    if ( strcmp( opplace_p->AudioDevice, "") != 0)
+      dp = opplace_p->AudioDevice;
+
+    audio = new XttAudio( wow, 0, dp);
+  }
   if ( audio->audio_ok)
     return 1;
   return 0;
