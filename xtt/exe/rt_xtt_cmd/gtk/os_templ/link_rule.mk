@@ -7,7 +7,7 @@ ifeq ($(export_type),exp)
 	$(pwr_eobj)/rt_io_user.o \
 	$(pwre_conf_libdir) $(pwre_conf_libpwrxttgtk) $(pwre_conf_libpwrxtt) \
 	$(pwre_conf_libpwrxttgtk) $(pwre_conf_libpwrxtt) \
-	$(pwre_conf_libgtk) \
+	$(pwre_conf_libgst) $(pwre_conf_libgtk) \
 	$(pwre_conf_libpwrrt) $(pwre_conf_lib)
 
 else
@@ -16,7 +16,7 @@ else
 	$(pwr_eobj)/rt_io_user.o \
 	$(pwre_conf_libdir) $(pwre_conf_libpwrxttgtk) $(pwre_conf_libpwrxtt) \
 	$(pwre_conf_libpwrxttgtk) $(pwre_conf_libpwrxtt) \
-	$(pwre_conf_libgtk) \
+	$(pwre_conf_libgst) $(pwre_conf_libgtk) \
 	$(pwre_conf_libpwrrt) $(pwre_conf_lib)
 
 endif
