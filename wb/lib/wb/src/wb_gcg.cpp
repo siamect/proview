@@ -6924,6 +6924,7 @@ int	gcg_comp_m4( gcg_ctx gcgctx, vldh_t_node node)
 	case pwr_cClass_ApDistribute:
 	case pwr_cClass_DpDistribute:
 	case pwr_cClass_IpDistribute:
+	case pwr_cClass_DataCollect:
 	  strcpy( cast, "(pwr_tVoid *)");
 	  break;
 	default:
