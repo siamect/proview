@@ -140,6 +140,10 @@ SObject pwrb:Class
       EndObject
     EndObject
     Object Template XttVideo
+      Body RtBody
+        Attr Width = 800
+        Attr Height = 600
+      EndBody
     EndObject
   EndObject
 EndSObject

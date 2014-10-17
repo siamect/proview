@@ -56,6 +56,9 @@ class XttStreamGtk : public XttStream {
   gulong slider_update_signal_id; /* Signal ID for the slider update signal */  
   GstState state;                 /* Current state of the pipeline */
   gint64 duration;                /* Duration of the clip, in nanoseconds */
+  pwr_tTime mb_press_time;
+  int mb_press_x;
+  int mb_press_y;
 
   GtkWidget     *slider;              /* Slider widget to keep track of current position */
   GtkWidget	*parent_wid;
@@ -63,6 +66,7 @@ class XttStreamGtk : public XttStream {
   GtkWidget	*video_form;
   GtkWidget	*main_box;
   // CoWowFocusTimerGtk focustimer;
+  void *overlay;
 
   static int gst_initialized;
 
@@ -92,6 +96,7 @@ class XttStreamGtk : public XttStream {
   static void eos_cb( GstBus *bus, GstMessage *msg, void *data);
   static void state_changed_cb( GstBus *bus, GstMessage *msg, void *data);
   static void application_cb( GstBus *bus, GstMessage *msg, void *data);
+  static gboolean mousebutton_cb( GtkWidget *widget, GdkEvent *event, void *data);
 
 };
 

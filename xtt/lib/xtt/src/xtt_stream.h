@@ -53,12 +53,15 @@ class XttStream {
   CoWowTimer 	*timerid;
   CoWow	     	*wow;
   int		scan_time;
-  void       	(*close_cb)( void *, XttStream *);
+  int		width;
+  int		height;
+  void       	(*close_cb)( void *, XttStream *);  
 
   XttStream( void *st_parent_ctx, const char *name, const char *st_uri,
-	     int width, int height, int x, int y, 
+	     int st_width, int st_height, int x, int y, 
 	     double st_scan_time, unsigned int st_options, int st_embedded) :
-    parent_ctx(st_parent_ctx), options(st_options), embedded(st_embedded), timerid(0), close_cb(0)  {
+    parent_ctx(st_parent_ctx), options(st_options), embedded(st_embedded), timerid(0), width(st_width),
+    height(st_height), close_cb(0)  {
     strncpy( uri, st_uri, sizeof(uri)); 
     if ( st_scan_time < 0.02)
       scan_time = 1000;

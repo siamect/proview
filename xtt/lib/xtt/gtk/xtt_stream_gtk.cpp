@@ -38,6 +38,7 @@
 #if defined PWRE_CONF_GST
 
 #include <string.h>
+#include <math.h>
 #include "xtt_xnav.h"
   
 #include <gtk/gtk.h>
@@ -49,12 +50,43 @@
 
 #include "pwr.h"
 #include "co_dcli.h"
+#include "co_time.h"
 #include "xtt_stream_gtk.h"  
 #include "rt_xnav_msg.h"
 #include "cow_wow_gtk.h"
 
 int XttStreamGtk::gst_initialized = 0;
   
+static GstBusSyncReply bus_sync_handler (GstBus * bus, GstMessage * message, 
+					 gpointer data)
+{
+  return GST_BUS_PASS;
+#if 0
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  printf( "Bus sync handler\n");
+
+  if (GST_MESSAGE_TYPE (message) != GST_MESSAGE_ELEMENT)
+
+  if (!gst_structure_has_name (message->structure, "prepare-xwindow-id"))
+    return GST_BUS_PASS;
+
+  strm->overlay = GST_X_OVERLAY (GST_MESSAGE_SRC (message));
+  printf( "Overlay: %u\n", strm->overlay);
+
+  GdkWindow *window = gtk_widget_get_window( strm->video_form);
+  guintptr window_handle;
+  
+  if (!gdk_window_ensure_native (window))
+    g_error ("Couldn't create native window needed for GstXOverlay!");
+  
+  window_handle = GDK_WINDOW_XID( window);
+  gst_x_overlay_set_xwindow_id( GST_X_OVERLAY (strm->playbin2), window_handle);
+
+  return GST_BUS_DROP;
+#endif
+}
+
 /* This function is called when the GUI toolkit creates the physical window that will hold the video.
  * At this point we can retrieve its handler (which has a different meaning depending on the windowing system)
  * and pass it to GStreamer through the XOverlay interface. */
@@ -62,16 +94,13 @@ void XttStreamGtk::realize_cb( GtkWidget *widget, void *data)
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
 
-  GdkWindow *window = gtk_widget_get_window( widget);
+  GdkWindow *window = gtk_widget_get_window( strm->video_form);
   guintptr window_handle;
   
   if (!gdk_window_ensure_native (window))
     g_error ("Couldn't create native window needed for GstXOverlay!");
   
-  /* Retrieve window handler from GDK */
   window_handle = GDK_WINDOW_XID( window);
-  /* Pass it to playbin2, which implements XOverlay and will forward it to the video sink */
-  //gst_x_overlay_set_window_handle( GST_X_OVERLAY (strm->playbin2), window_handle);
   gst_x_overlay_set_xwindow_id( GST_X_OVERLAY (strm->playbin2), window_handle);
 }
   
@@ -348,6 +377,92 @@ void XttStreamGtk::application_cb( GstBus *bus, GstMessage *msg, void *data)
   }
 }
 
+gboolean XttStreamGtk::mousebutton_cb( GtkWidget *widget, GdkEvent *event, void *data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+  GtkAllocation alloc;
+
+#if 0
+  GstElement *sink;
+  g_object_get( strm->playbin2, "video-sink", &sink, NULL);
+
+  int num = gst_child_proxy_get_children_count( GST_CHILD_PROXY(sink));
+  printf( "children %d\n", num);
+
+  GstElement *child = (GstElement *)gst_child_proxy_get_child_by_index( GST_CHILD_PROXY(sink), 0);
+
+  gst_x_overlay_set_render_rectangle(GST_X_OVERLAY(child), 0, 0, 100, 100);
+  guint64 w, h;
+  g_object_get( child, "window-height", &h, NULL);
+  g_object_get( child, "window-width", &w, NULL);
+  printf( "Top w %d h %d\n", w, h);
+#endif
+
+  // Calculate offset for video image
+  gtk_widget_get_allocation(strm->video_form, &alloc);
+
+  if ( alloc.width == 0 || alloc.height == 0 || strm->width == 0 || strm->height == 0)
+    return TRUE;
+
+  int offset_x, offset_y;
+
+  if ( (double)alloc.width/alloc.height > (double)strm->width/strm->height) {
+    offset_x = (alloc.width - (double)strm->width/strm->height * alloc.height) / 2;
+    offset_y = 0;      
+  }
+  else {
+    offset_x = 0;
+    offset_y = (alloc.height - (double)strm->height/strm->width * alloc.width) / 2;
+  }
+
+  switch( event->type) {
+  case GDK_BUTTON_PRESS:
+    switch ( event->button.button) {
+    case 1:
+      time_GetTime( &strm->mb_press_time);
+      strm->mb_press_x = event->button.x;
+      strm->mb_press_y = event->button.y;
+      break;
+    }
+    break;
+  case GDK_BUTTON_RELEASE:
+    switch ( event->button.button) {
+    case 1: {
+      pwr_tTime now;
+      pwr_tDeltaTime dt;
+      pwr_tFloat32 dft;
+
+      time_GetTime( &now);
+      time_Adiff( &dt, &now, &strm->mb_press_time);
+      dft =  time_DToFloat( &dft, &dt);
+      if ( dft < 0.5 && 
+	   abs( event->button.x - strm->mb_press_x) < 10 &&
+	   abs( event->button.y - strm->mb_press_y) < 10)
+	printf( "Mb click %f %f\n", event->button.x - offset_x, event->button.y - offset_y);
+      else if ( abs( event->button.x - strm->mb_press_x) > 20 &&
+		abs( event->button.y - strm->mb_press_y) > 20) {
+	int x = min( event->button.x, strm->mb_press_x) - offset_x;
+	int y = min( event->button.y, strm->mb_press_y) - offset_y;
+	int w = abs( event->button.x - strm->mb_press_x);
+	int h = abs( event->button.y - strm->mb_press_y);
+	printf( "Mb zoom (%d,%d) rect %d,%d\n", x, y, w, h);
+      }
+      break;
+    }
+    }
+    break;
+  case GDK_SCROLL:
+    if ( event->scroll.direction == GDK_SCROLL_UP)
+      printf( "Scroll Up %f %f\n", event->scroll.x - offset_x, event->scroll.y - offset_y);
+    else if ( event->scroll.direction == GDK_SCROLL_DOWN)
+      printf( "Scroll Down %f %f\n", event->scroll.x - offset_x, event->scroll.y - offset_y);
+    break;
+  default: ;
+  } 
+  return TRUE;
+}
+
+
 XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const char *name, const char *st_uri,
 			    int width, int height, int x, int y, double scan_time, 
 			    unsigned int st_options, int st_embedded, pwr_tStatus *sts) :
@@ -408,7 +523,13 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
   gtk_widget_set_double_buffered( video_form, FALSE);
   g_signal_connect( video_form, "realize", G_CALLBACK( realize_cb), this);
   g_signal_connect( video_form, "expose_event", G_CALLBACK( expose_cb), this);
+  g_signal_connect( video_form, "button_press_event", G_CALLBACK( mousebutton_cb), this);
+  g_signal_connect( video_form, "button_release_event", G_CALLBACK( mousebutton_cb), this);
+  g_signal_connect( video_form, "scroll_event", G_CALLBACK( mousebutton_cb), this);
   
+  gtk_widget_add_events( video_form, GDK_BUTTON_PRESS_MASK | 
+			 GDK_BUTTON_RELEASE_MASK | GDK_SCROLL_MASK);
+
   // GtkWidget *controls;
   GtkWidget *hbox = gtk_hbox_new( FALSE, 0);
   if ( options & pwr_mVideoOptionsMask_ControlPanel) {
@@ -478,6 +599,8 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
   g_signal_connect( G_OBJECT( bus), "message::eos", (GCallback)eos_cb, this);
   g_signal_connect( G_OBJECT( bus), "message::state-changed", (GCallback)state_changed_cb, this);
   g_signal_connect( G_OBJECT( bus), "message::application", (GCallback)application_cb, this);
+
+  gst_bus_set_sync_handler (bus, (GstBusSyncHandler) bus_sync_handler, this);
   gst_object_unref( bus);
   
   /* Start playing */
