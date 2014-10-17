@@ -49,6 +49,43 @@ public class Dyn {
     public static final int eValueInput_MinValueExceeded       	= 3;
     public static final int eValueInput_MaxValueExceeded       	= 4;
 
+    public static final int eCurveDataType_XYArrays    		= 0;
+    public static final int eCurveDataType_PointArray  		= 1;
+    public static final int eCurveDataType_TableObject  	= 2;
+
+    public static final int mInstance_1				= 1 << 0;
+    public static final int mInstance_2				= 1 << 1;
+    public static final int mInstance_3				= 1 << 2;
+    public static final int mInstance_4				= 1 << 3;
+    public static final int mInstance_5				= 1 << 4;
+    public static final int mInstance_6				= 1 << 5;
+    public static final int mInstance_7				= 1 << 6;
+    public static final int mInstance_8				= 1 << 7;
+    public static final int mInstance_9				= 1 << 8;
+    public static final int mInstance_10			= 1 << 9;
+    public static final int mInstance_11			= 1 << 10;
+    public static final int mInstance_12			= 1 << 11;
+    public static final int mInstance_13			= 1 << 12;
+    public static final int mInstance_14			= 1 << 13;
+    public static final int mInstance_15			= 1 << 14;
+    public static final int mInstance_16			= 1 << 15;
+    public static final int mInstance_17			= 1 << 16;
+    public static final int mInstance_18			= 1 << 17;
+    public static final int mInstance_19			= 1 << 18;
+    public static final int mInstance_20			= 1 << 19;
+    public static final int mInstance_21			= 1 << 20;
+    public static final int mInstance_22			= 1 << 21;
+    public static final int mInstance_23			= 1 << 22;
+    public static final int mInstance_24			= 1 << 23;
+    public static final int mInstance_25			= 1 << 24;
+    public static final int mInstance_26			= 1 << 25;
+    public static final int mInstance_27			= 1 << 26;
+    public static final int mInstance_28			= 1 << 27;
+    public static final int mInstance_29			= 1 << 28;
+    public static final int mInstance_30			= 1 << 29;
+    public static final int mInstance_31			= 1 << 30;
+    public static final int mInstance_32			= 1 << 31;
+
     public static final int mDynType1_No			= 0;
     public static final int mDynType1_Inherit      		= 1 << 0;
     public static final int mDynType1_Tone			= 1 << 1;
@@ -601,7 +638,7 @@ public class Dyn {
     public static final int ePwrStatus_Error		= 3;
     public static final int ePwrStatus_Fatal		= 4;
 
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
     Vector<DynElem> elements = new Vector<DynElem>();
     GraphIfc graph;
@@ -1408,6 +1445,7 @@ public class Dyn {
 	if ( cycle == Glow.eCycle_Inherit)
 	    cycle = object.getClassCycle();
 
+	System.out.println("Dyn connect " + elements.size());
 	for ( int i = 0; i < elements.size(); i++) {
 	    elements.get(i).connect(object);
 	}
@@ -5208,6 +5246,7 @@ public class Dyn {
     }
 
     public class DynXY_Curve extends DynElem {
+	boolean firstScan = true;
 	String x_attr;
 	String y_attr;
 	String y_minvalue_attr;
@@ -5224,6 +5263,32 @@ public class Dyn {
 	int curve_color;
 	int fill_color;
 	int noofpoints;
+	int noOfPoints;
+	int xAttrType;
+	int yAttrType;
+	public double[] curveX;
+	public double[] curveY;
+	boolean updateAttrFound;
+	PwrtRefId updateSubid;
+	int updateP;
+	boolean updateOldValue;
+	boolean noofpointsAttrFound;
+	PwrtRefId noofpointsSubid;
+	int noofpointsP;
+	int noofpointsOldValue;
+	boolean yMinvalueAttrFound;
+	PwrtRefId yMinvalueSubid;
+	int yMinvalueP;
+	boolean yMaxvalueAttrFound;
+	PwrtRefId yMaxvalueSubid;
+	int yMaxvalueP;
+	boolean xMinvalueAttrFound;
+	PwrtRefId xMinvalueSubid;
+	int xMinvalueP;
+	boolean xMaxvalueAttrFound;
+	PwrtRefId xMaxvalueSubid;
+	int xMaxvalueP;
+	int curve_number;
 
 	public DynXY_Curve( Dyn dyn) {
 	    super(dyn, Dyn.mDynType1_XY_Curve, 0, 0, 0, Dyn.eDynPrio_XY_Curve);
@@ -5339,6 +5404,345 @@ public class Dyn {
 	    }
 	}
 
+
+	public int connect(GlowArrayElem o) {
+	    GrowXYCurve object = (GrowXYCurve) o;
+
+	    DynParsedAttrName pname = dyn.parseAttrName(update_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		GdhrRefObjectInfo ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		if ( ret.evenSts())
+		    System.out.println( "XYCurve: " + pname.tname);
+		else {
+		    updateAttrFound = true;
+		    updateP = ret.id;
+		    updateSubid = ret.refid;
+		}
+	    }
+
+	    pname = dyn.parseAttrName( noofpoints_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		GdhrRefObjectInfo ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		if ( ret.evenSts())
+		    System.out.println( "XYCurve: " + pname.tname);
+		else {
+		    noofpointsAttrFound = true;
+		    noofpointsP = ret.id;
+		    noofpointsSubid = ret.refid;
+		}
+	    }
+	    
+	    pname = dyn.parseAttrName( y_minvalue_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		GdhrRefObjectInfo ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		if ( ret.evenSts())
+		    System.out.println( "XYCurve: " + pname.tname);
+		else {
+		    yMinvalueAttrFound = true;
+		    yMinvalueP = ret.id;
+		    yMinvalueSubid = ret.refid;
+		}
+	    }
+	    
+	    pname = dyn.parseAttrName( y_maxvalue_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		GdhrRefObjectInfo ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		if ( ret.evenSts())
+		    System.out.println( "XYCurve: " + pname.tname);
+		else {
+		    yMaxvalueAttrFound = true;
+		    yMaxvalueP = ret.id;
+		    yMaxvalueSubid = ret.refid;
+		}
+	    }
+
+	    pname = dyn.parseAttrName( x_minvalue_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		GdhrRefObjectInfo ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		if ( ret.evenSts())
+		    System.out.println( "XYCurve: " + pname.tname);
+		else {
+		    xMinvalueAttrFound = true;
+		    xMinvalueP = ret.id;
+		    xMinvalueSubid = ret.refid;
+		}
+	    }
+
+	    pname = dyn.parseAttrName( x_maxvalue_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		GdhrRefObjectInfo ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		if ( ret.evenSts())
+		    System.out.println( "XYCurve: " + pname.tname);
+		else {
+		    xMaxvalueAttrFound = true;
+		    xMaxvalueP = ret.id;
+		    xMaxvalueSubid = ret.refid;
+		}
+	    }
+
+	    // Get curve number
+	    curve_number = 0;
+	    int m = instance;
+	    while( m != 0) {
+		m = m >> 1;
+		curve_number++;
+	    }
+
+	    // Get number of curves
+	    if ( instance == mInstance_1) {
+		m = instance_mask;
+		int noofcurves = 0;
+		while( m != 0) {
+		    m = m >> 1;
+		    noofcurves++;
+		}
+		object.set_xy_noofcurves( noofcurves);
+	    }
+
+	    noofpoints = object.get_no_of_points();
+	    if ( Math.abs(y_max_value - y_min_value) > Float.MIN_VALUE)
+		object.set_xy_range_y( curve_number - 1, y_min_value, y_max_value);
+	    if ( Math.abs(x_max_value - x_min_value) > Float.MIN_VALUE)
+		object.set_xy_range_x( curve_number - 1, x_min_value, x_max_value);
+	    object.set_xy_curve_color( curve_number - 1, curve_color, fill_color);
+	    return 1;
+	}
+
+	public void disconnect() {
+	    if ( updateAttrFound)
+		dyn.graph.getGdh().unrefObjectInfo( updateSubid);
+	    if ( noofpointsAttrFound)
+		dyn.graph.getGdh().unrefObjectInfo( noofpointsSubid);
+	    if ( yMinvalueAttrFound)
+		dyn.graph.getGdh().unrefObjectInfo( yMinvalueSubid);
+	    if ( yMaxvalueAttrFound)
+		dyn.graph.getGdh().unrefObjectInfo( yMaxvalueSubid);
+	    if ( xMinvalueAttrFound)
+		dyn.graph.getGdh().unrefObjectInfo( xMinvalueSubid);
+	    if ( xMaxvalueAttrFound)
+		dyn.graph.getGdh().unrefObjectInfo( xMaxvalueSubid);
+	}
+
+	public void scan( GlowArrayElem o) {
+	    GrowXYCurve object = (GrowXYCurve) o;
+	    DynParsedAttrName pname;
+	    int attrSize;
+	    boolean update = false;
+	    int size = 1;
+	    noOfPoints = noofpoints;
+
+	    if ( firstScan)
+		update = true;
+
+	    if ( updateAttrFound) {
+		boolean value = dyn.graph.getGdh().getObjectRefInfoBoolean( updateP);
+		if ( value && !updateOldValue)
+		    update = true;
+		updateOldValue = value;
+	    }
+
+	    if ( noofpointsAttrFound) {
+		int value = dyn.graph.getGdh().getObjectRefInfoInt( noofpointsP);
+		if ( value != noofpointsOldValue) {
+		    update = true;
+		    noofpoints = noOfPoints = value;
+		    noofpointsOldValue = value;
+		}
+	    }
+
+	    if ( yMinvalueAttrFound) {
+		float value = dyn.graph.getGdh().getObjectRefInfoFloat( yMinvalueP);
+		if ( value != y_min_value) {
+		    y_min_value = value;
+		    if ( Math.abs(y_max_value - y_min_value) > Float.MIN_VALUE)
+		    object.set_xy_range_y( curve_number - 1, y_min_value, y_max_value);
+		    update = true;
+		}
+	    }
+	    if ( yMaxvalueAttrFound) {
+		float value = dyn.graph.getGdh().getObjectRefInfoFloat( yMaxvalueP);
+		if ( value != y_max_value) {
+		    y_max_value = value;
+		    if ( Math.abs(y_max_value - y_min_value) > Float.MIN_VALUE)
+			object.set_xy_range_y( curve_number - 1, y_min_value, y_max_value);
+		    update = true;
+		}
+	    }
+
+	    if ( xMinvalueAttrFound) {
+		float value = dyn.graph.getGdh().getObjectRefInfoFloat( xMinvalueP);
+		if ( value != x_min_value) {
+		    x_min_value = value;
+		    if ( Math.abs(x_max_value - x_min_value) > Float.MIN_VALUE)
+			object.set_xy_range_x( curve_number - 1, x_min_value, x_max_value);
+		    update = true;
+		}
+	    }
+	    if ( xMaxvalueAttrFound) {
+		float value = dyn.graph.getGdh().getObjectRefInfoFloat( xMaxvalueP);
+		if ( value != x_max_value) {
+		    x_max_value = value;
+		    if ( Math.abs(x_max_value - x_min_value) > Float.MIN_VALUE)
+			object.set_xy_range_x( curve_number - 1, x_min_value, x_max_value);
+		    update = true;
+		}
+	    }
+
+	    if ( update) {
+	        pname = dyn.parseAttrName( x_attr);
+		attrSize = pname.elements;
+		xAttrType = pname.type;
+
+		switch ( datatype) {
+		case eCurveDataType_XYArrays:
+		    if ( attrSize < noOfPoints)
+			noOfPoints = attrSize;
+		    size = noOfPoints;
+		    break;
+		case eCurveDataType_PointArray:
+		    if ( attrSize/2 < noOfPoints)
+			noOfPoints = attrSize/2;
+		    size = noOfPoints * 2;
+		    break;
+		case eCurveDataType_TableObject:
+		    if ( (attrSize-1)/2 < noOfPoints)
+			noOfPoints = (attrSize-1)/2;
+		    size = noOfPoints * 2 + 1;
+		    break;
+		}
+      
+		// Read x-array
+		CdhrFloatArray rxf;
+		CdhrIntArray rxi;
+		switch ( xAttrType) {
+		case Pwr.eType_Float32:
+		    rxf = dyn.graph.getGdh().getObjectInfoFloatArray( pname.tname, size);
+		    if ( rxf.evenSts())
+			return;
+
+		    switch ( datatype) {
+		    case eCurveDataType_XYArrays:
+			curveX = new double[noOfPoints];
+			for ( int i = 0; i < noOfPoints; i++)
+			    curveX[i] = (double)rxf.value[i];
+			break;
+		    case eCurveDataType_PointArray:
+			curveX = new double[noOfPoints];
+			curveY = new double[noOfPoints];
+			for ( int i = 0; i < noOfPoints; i++) {
+			    curveX[i] = (double)rxf.value[2*i];
+			    curveY[i] = (double)rxf.value[2*i+1];
+			}
+			dyn.repaintNow = true;
+			break;
+		    case eCurveDataType_TableObject:
+			noOfPoints = (int)rxf.value[0];
+			if ( noOfPoints > noofpoints)
+			    noOfPoints = noofpoints;
+			if ( attrSize < noOfPoints)
+			    noOfPoints = attrSize;
+			curveY = new double[noOfPoints];
+			curveX = new double[noOfPoints];
+			for ( int i = 0; i < noOfPoints; i++) {
+			    curveX[i] = (double)rxf.value[2*i+1];
+			    curveY[i] = (double)rxf.value[2*i+2];
+			}
+			dyn.repaintNow = true;
+			break;
+		    }
+		    break;
+		case Pwr.eType_Int32:
+		case Pwr.eType_Int16:
+		case Pwr.eType_Int8:
+		case Pwr.eType_UInt32:
+		case Pwr.eType_UInt16:
+		case Pwr.eType_UInt8:
+		    rxi = dyn.graph.getGdh().getObjectInfoIntArray( pname.tname, size);
+		    if ( rxi.evenSts())
+			return;
+
+		    switch ( datatype) {
+		    case eCurveDataType_XYArrays:
+			curveX = new double[noOfPoints];
+			for ( int i = 0; i < noOfPoints; i++)
+			    curveX[i] = (double)rxi.value[i];
+			break;
+		    case eCurveDataType_PointArray:
+			curveX = new double[noOfPoints];
+			curveY = new double[noOfPoints];
+			for ( int i = 0; i < noOfPoints; i++) {
+			    curveX[i] = (double)rxi.value[2*i];
+			    curveY[i] = (double)rxi.value[2*i+1];
+			}
+			dyn.repaintNow = true;
+			break;
+		    case eCurveDataType_TableObject:
+			noOfPoints = (int)rxi.value[0];
+			if ( noOfPoints > noofpoints)
+			    noOfPoints = noofpoints;
+			if ( attrSize < noOfPoints)
+			    noOfPoints = attrSize;
+			curveY = new double[noOfPoints];
+			curveX = new double[noOfPoints];
+			for ( int i = 0; i < noOfPoints; i++) {
+			    curveX[i] = (double)rxi.value[2*i+1];
+			    curveY[i] = (double)rxi.value[2*i+2];
+			}
+			dyn.repaintNow = true;
+			break;
+		    }
+		    break;
+		default:
+		    return;
+		}
+
+		// Read y-array
+		switch ( datatype) {
+		case eCurveDataType_XYArrays:
+		    pname = dyn.parseAttrName( y_attr);
+		    if ( pname.elements < noOfPoints)
+			noOfPoints = pname.elements;
+		    yAttrType = pname.type;
+		    curveY = new double[noOfPoints];
+
+		    CdhrFloatArray ryf;
+		    CdhrIntArray ryi;
+		    switch ( yAttrType) {
+		    case Pwr.eType_Float32:
+			ryf = dyn.graph.getGdh().getObjectInfoFloatArray( pname.tname, noOfPoints);
+			if ( ryf.evenSts())
+			    return;
+
+			for ( int i = 0; i < noOfPoints; i++)
+			    curveY[i] = (double)ryf.value[i];
+			dyn.repaintNow = true;
+			break;
+		    case Pwr.eType_Int32:
+		    case Pwr.eType_Int16:
+		    case Pwr.eType_Int8:
+		    case Pwr.eType_UInt32:
+		    case Pwr.eType_UInt16:
+		    case Pwr.eType_UInt8:
+			ryi = dyn.graph.getGdh().getObjectInfoIntArray( pname.tname, noOfPoints);
+			if ( ryi.evenSts())
+			    return;
+
+			for ( int i = 0; i < noOfPoints; i++)
+			    curveY[i] = (double)ryi.value[i];
+	  
+			dyn.repaintNow = true;
+
+			break;
+		    default:
+			return;
+		    }
+		    break;
+		}
+
+		object.set_xy_data( curveY, curveX, curve_number - 1, noOfPoints);
+	    }
+	    firstScan = false;
+	}
     }
 
     public class DynTable extends DynElem {
