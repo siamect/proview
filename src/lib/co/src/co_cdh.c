@@ -542,6 +542,9 @@ cdh_AttrValueToString (
     sprintf(sval, "%hd", *(pwr_tInt16 *) Value);
     break;
   case pwr_eType_Int32:
+  case pwr_eType_Status:
+  case pwr_eType_NetStatus:
+  case pwr_eType_Enum:
     sprintf(sval, "%d", *(pwr_tInt32 *) Value);
     break;
   case pwr_eType_Int64:
@@ -554,6 +557,7 @@ cdh_AttrValueToString (
     sprintf(sval, "%hu", *(pwr_tUInt16 *) Value);
     break;
   case pwr_eType_UInt32:
+  case pwr_eType_Mask:
     sprintf(sval, "%u", *(pwr_tUInt32 *) Value);
     break;
   case pwr_eType_UInt64:
@@ -710,6 +714,9 @@ cdh_StringToAttrValue (
     break;
 
   case pwr_eType_Int32:
+  case pwr_eType_Status:
+  case pwr_eType_NetStatus:
+  case pwr_eType_Enum:
     if (*String != '\0') {
       i32val = strtol(String, &endp, 0);
       if (errno == ERANGE || *endp != '\0' || i32val > INT_MAX ||
@@ -763,7 +770,6 @@ cdh_StringToAttrValue (
 
   case pwr_eType_UInt32:
   case pwr_eType_Mask:
-  case pwr_eType_Enum:
     while (*String && isspace(*String)) String++;
     if (*String != '\0') {
       ui32val = strtoul(String, &endp, 0);
