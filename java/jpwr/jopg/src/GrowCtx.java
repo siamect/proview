@@ -611,7 +611,8 @@ public class GrowCtx implements GrowCtxIfc {
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowTable ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowWindow ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowFolder) {
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowFolder ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowXYCurve) {
 		System.out.println("GrowCtx connect " + i + " (" + cmn.a.size() + ") " + cmn.a.get(i));
 		cmn.appl.traceConnect(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
@@ -644,7 +645,8 @@ public class GrowCtx implements GrowCtxIfc {
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowTable ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowWindow ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowFolder) {
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowFolder ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowXYCurve) {
 		cmn.appl.traceDisconnect(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {
@@ -664,6 +666,7 @@ public class GrowCtx implements GrowCtxIfc {
     }
     public void traceScan() {
 	int sts;
+
 	for ( int i = 0; i < cmn.a.size(); i++) {
 	    if ( cmn.a.get(i).type() == Glow.eObjectType_GrowNode ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowGroup ||
@@ -672,7 +675,8 @@ public class GrowCtx implements GrowCtxIfc {
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowTable ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowWindow ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowFolder) {
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowFolder ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowXYCurve) {
 	    	cmn.appl.traceScan(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {

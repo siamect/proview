@@ -466,4 +466,7 @@ public class GrowTrend extends GrowRect {
     public double get_scan_time() {
 	return scan_time;
     }
+    public int get_no_of_points() {
+	return no_of_points;
+    }
 }

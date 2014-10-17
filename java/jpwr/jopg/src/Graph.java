@@ -196,22 +196,22 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	return 0;
     }
 
-    int stringToElements( String str) {
+    int stringToIndex( String str) {
 	int idx1, idx2;
-	int elements;
+	int index;
 
 	if ( (idx1 = str.indexOf('[')) != -1 &&
 	     (idx2 = str.indexOf(']')) != -1 &&
 	     idx2 > idx1) {
 	    try {
 		System.out.println("Elements: " + str.substring(idx1+1, idx2));
-		elements = new Integer(str.substring(idx1+1, idx2)).intValue();
+		index = new Integer(str.substring(idx1+1, idx2)).intValue();
 	    }
 	    catch( NumberFormatException e) {
 		System.out.println("Element syntax error, " + str);
 		return 1;
 	    }
-	    return elements;
+	    return index;
 	}
 	return 1;
     }
@@ -294,21 +294,31 @@ public class Graph implements GraphIfc, GrowApplIfc {
 
 	pname.tname = new String(str);
 	
-	if ( (idx = str.indexOf('[')) != -1 &&
-	     (eidx = str.lastIndexOf('#')) != -1 &&
-	     str.charAt(eidx-1) != '#') {
-	    pname.elements = stringToElements(str);
-	    str = str.substring(0, idx-1);
-	}
-	else
+	if ( (idx = str.indexOf('[')) == -1) {
+	    if ((eidx = str.lastIndexOf('#')) != -1 &&
+		str.charAt(eidx-1) != '#') {
+		pname.elements = new Integer(str.substring(eidx+1)).intValue();
+		str = str.substring(0, eidx);
+	    }
+	    else
+		pname.elements = 1;
+	}	    
+	else {
+	    pname.index = stringToIndex(str);
 	    pname.elements = 1;
+	    if ((eidx = str.lastIndexOf('#')) != -1 &&
+		str.charAt(eidx-1) != '#')
+		str = str.substring( 0, eidx-1);
+	    else
+		str = str.substring(0, idx-1);
+	}
 
 	if ( (tidx = str.indexOf("##")) != -1) {
 	    if ( str.toLowerCase().startsWith("bit", tidx+2)) {
 		String typestr = str.substring(tidx+2);
-		int bit = stringToElements(str);
+		int bit = stringToIndex(str);
 		pname.bitmask = 1 << bit;
-		str =  str.substring(0, tidx+5);
+		str = str.substring(0, tidx+5);
 	    }
 
 	    pname.type = stringToType( str.substring(tidx+2));

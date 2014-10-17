@@ -42,6 +42,7 @@ public class DynParsedAttrName {
     public String tname;
     public boolean inverted;
     public int elements;
+    public int index;
     public int type;
     public int database;
     public int bitmask;

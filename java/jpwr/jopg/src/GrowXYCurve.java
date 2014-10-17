@@ -95,14 +95,14 @@ public class GrowXYCurve extends GrowTrend {
 
 
     public void set_xy_range_x( int curve, double min, double max) {
-	if ( curve > Glow.TREND_MAX_CURVES)
+	if ( curve > Glow.TREND_MAX_CURVES || curve < 0)
 	    return;
 	x_max_value[curve] = max;
 	x_min_value[curve] = min;
     }
 
     public void set_xy_range_y( int curve, double min, double max) {
-	if ( curve > Glow.TREND_MAX_CURVES)
+	if ( curve > Glow.TREND_MAX_CURVES || curve < 0)
 	    return;
 	y_max_value[curve] = max;
 	y_min_value[curve] = min;
@@ -114,7 +114,7 @@ public class GrowXYCurve extends GrowTrend {
 
     public void set_xy_curve_color( int curve, int curve_color,
 				    int fill_color) {
-	if ( curve > Glow.TREND_MAX_CURVES)
+	if ( curve > Glow.TREND_MAX_CURVES || curve < 0)
 	    return;
 	curve_drawtype[curve] = curve_color;
 	curve_fill_drawtype[curve] = fill_color;
@@ -128,7 +128,7 @@ public class GrowXYCurve extends GrowTrend {
 	GlowPoint point_p;
 	int	i, j, idx;
 
-	if ( curve_idx > Glow.TREND_MAX_CURVES)
+	if ( curve_idx > Glow.TREND_MAX_CURVES || curve_idx < 0)
 	    return;
 
 	no_of_points = Math.max( 2, no_of_points);
@@ -138,16 +138,16 @@ public class GrowXYCurve extends GrowTrend {
 	
 	curve_width = Math.min( Glow.DRAW_TYPE_SIZE, Math.max( 1, curve_width));
 	
-	pointarray = new GlowPoint[points];
+	pointarray = new GlowPoint[cpoints];
 	j = curve_idx;
 	for ( i = 0, idx = 0; i < cpoints; i++, idx++) {
-	    point_p = pointarray[i];
+	    point_p = pointarray[i] = new GlowPoint();
 	    if ( fill_curve == 0) {
 		idx = i;
 		if ( y_max_value[j] != y_min_value[j])
 		    point_p.y = ur.y - (y_data[idx] - y_min_value[j]) / 
 			(y_max_value[j] - y_min_value[j]) * (ur.y - ll.y);
-		
+				
 		point_p.y = Math.max( ll.y, Math.min( point_p.y, ur.y));	
 		
 		if ( x_max_value[j] != x_min_value[j])
@@ -155,6 +155,7 @@ public class GrowXYCurve extends GrowTrend {
 			(x_max_value[j] - x_min_value[j]) * (ur.x - ll.x);
 		
 		point_p.x = Math.max( ll.x, Math.min( point_p.x, ur.x));	
+
 	    }
 	    else {
 		
@@ -206,6 +207,7 @@ public class GrowXYCurve extends GrowTrend {
 				     curve_width,
 				     0, fill_curve, 1, 0, dt_fill);
 	cmn.nodraw--;
+	draw();
     }
 
 }
