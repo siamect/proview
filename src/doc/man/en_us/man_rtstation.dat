@@ -42,7 +42,7 @@ Version 5.0.0
 <topic> __DocumentInfoPage
 
 
-Copyright (C) 2005-2014 SSAB AB
+Copyright (C) 2005-2014 SSAB EMEA AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -244,7 +244,7 @@ messages in the terminal window.
 <c>> rt_ini -i
 
 <c>   Proview/R Version V4.6.0 for Linux on Unknown Hardware 
-<c>   Copyright © 09-OCT-2008 12:00:00 by SSAB Oxelösund AB 
+<c>   Copyright © 17-OCT-2015 12:00:00 by SSAB EMEA AB 
 
 <c>   Proview/R is free software; you can redistribute it and/or 
 <c>   modify it under the terms of the GNU General Public License. 
