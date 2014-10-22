@@ -12,6 +12,8 @@ local_java_sources := \
 	GlowSliderInfo.java,\
 	GlowTableInfo.java,\
 	GlowMenuInfo.java,\
+	GlowPieInfo.java,\
+	GlowBarChartInfo.java,\
 	GlowTransform.java,\
 	GlowEvent.java,\
 	GlowArrayElem.java,\
@@ -55,6 +57,8 @@ local_java_sources := \
 	GrowScrollBarIfc.java,\
 	GrowScrollBar.java,\
 	GrowTable.java,\
+	GrowPie.java,\
+	GrowBarChart.java,\
 	GrowConGlue.java,\
 	GrowImage.java,\
 	GrowWindow.java,\

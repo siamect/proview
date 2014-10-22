@@ -612,8 +612,9 @@ public class GrowCtx implements GrowCtxIfc {
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowWindow ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowFolder ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowXYCurve) {
-		System.out.println("GrowCtx connect " + i + " (" + cmn.a.size() + ") " + cmn.a.get(i));
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowXYCurve ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowPie ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowBarChart) {
 		cmn.appl.traceConnect(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {
@@ -646,7 +647,9 @@ public class GrowCtx implements GrowCtxIfc {
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowWindow ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowFolder ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowXYCurve) {
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowXYCurve ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowPie ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowBarChart) {
 		cmn.appl.traceDisconnect(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {
@@ -676,7 +679,9 @@ public class GrowCtx implements GrowCtxIfc {
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowSlider ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowWindow ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowFolder ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowXYCurve) {
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowXYCurve ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowPie ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowBarChart) {
 	    	cmn.appl.traceScan(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {

@@ -443,6 +443,10 @@ public class GrowArc extends GlowArrayElem {
 	
     }
 
+    public Object getCmn() { 
+	return cmn;
+    }
+
     public String getName() {
 	return n_name;
     }

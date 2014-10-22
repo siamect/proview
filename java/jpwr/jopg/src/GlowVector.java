@@ -243,6 +243,18 @@ public class GlowVector {
 	  a.add( c);
 	  break;
 	}
+	case Glow.eSave_GrowPie: {
+	  GrowPie c = new GrowPie( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
+	case Glow.eSave_GrowBarChart: {
+	  GrowBarChart c = new GrowBarChart( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
 	case Glow.eSave_Point: {
 	  GlowPoint c = new GlowPoint();
 	  c.open( reader);

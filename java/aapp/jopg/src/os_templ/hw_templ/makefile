@@ -13,6 +13,8 @@ extern_java_sources := \
 	GlowSliderInfo.java,\
 	GlowTableInfo.java,\
 	GlowMenuInfo.java,\
+	GlowPieInfo.java,\
+	GlowBarChartInfo.java,\
 	GlowTransform.java,\
 	GlowEvent.java,\
 	GlowArrayElem.java,\
@@ -52,10 +54,13 @@ extern_java_sources := \
 	GrowTrend.java,\
 	GrowScrollBarIfc.java,\
 	GrowScrollBar.java,\
+	GrowXYCurve.java,\
 	GrowTable.java,\
 	GrowImage.java,\
 	GrowWindow.java,\
 	GrowFolder.java,\
+	GrowPie.java,\
+	GrowBarChart.java,\
 	GrowConGlue.java,\
 	GlowVector.java,\
 	GrowCtx.java,\

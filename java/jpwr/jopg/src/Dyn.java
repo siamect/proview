@@ -6487,12 +6487,20 @@ public class Dyn {
     }
 
     public class DynPie extends DynElem {
-	public static final int MAX_SECTORS = 12;
-	String[] attribute = new String[12];
+	String[] attribute = new String[GrowPie.PIE_MAX_SECTORS];
 	int sectors;
 	double min_value;
 	double max_value;
 	int fix_range;
+	int attr_type;
+	int p[] = new int[GrowPie.PIE_MAX_SECTORS];
+	PwrtRefId[] subid = new PwrtRefId[GrowPie.PIE_MAX_SECTORS];
+	boolean[] inverted = new boolean[GrowPie.PIE_MAX_SECTORS];
+	int[] a_typeid = new int[GrowPie.PIE_MAX_SECTORS];
+	boolean[] attrFound = new boolean[GrowPie.PIE_MAX_SECTORS];
+	float[] oldValueF;
+	int[] oldValueI;
+	boolean firstScan = true;
 
 	public DynPie( Dyn dyn) {
 	    super(dyn, Dyn.mDynType1_Pie, 0, 0, 0, Dyn.eDynPrio_Pie);
@@ -6500,7 +6508,7 @@ public class Dyn {
 
 	public DynPie( DynPie x) {
 	    super(x);
-	    for ( int i = 0; i < MAX_SECTORS; i++)
+	    for ( int i = 0; i < GrowPie.PIE_MAX_SECTORS; i++)
 		attribute[i] = x.attribute[i];
 	    sectors = x.sectors;
 	    min_value = x.min_value;
@@ -6521,6 +6529,9 @@ public class Dyn {
 
 		    switch ( key) {
 		    case Dyn.eSave_Pie: 
+			break;
+		    case Dyn.eSave_Pie_fix_range: 
+			fix_range = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_Pie_attribute1: 
 			if ( token.hasMoreTokens())
@@ -6587,16 +6598,148 @@ public class Dyn {
 	    }
 	}
 
+	public int connect(GlowArrayElem o) {
+	    GrowPie object = (GrowPie)o;	    
+
+	    GlowPieInfo info = object.get_conf();
+	    min_value = info.min_val;
+	    max_value = info.max_val;
+	    sectors = info.sector_num;
+	    if ( sectors > GrowPie.PIE_MAX_SECTORS)
+		 sectors = GrowPie.PIE_MAX_SECTORS;
+		 
+	    for ( int i = 0; i < sectors; i++) {
+		if ( attribute[i] == null)
+		    continue;
+
+		DynParsedAttrName pname = dyn.parseAttrName(attribute[i]);
+		if ( pname == null || pname.name.equals("")) 
+		    continue;
+
+		if ( i == 0) {
+		    attr_type = pname.type;
+		    switch ( attr_type) {			
+		    case Pwr.eType_Float32:
+			oldValueF = new float[GrowPie.PIE_MAX_SECTORS];
+			break;
+		    case Pwr.eType_Int32:
+			oldValueI = new int[GrowPie.PIE_MAX_SECTORS];
+			break;
+		    default:
+			return 1;
+		    }
+		}
+		else {
+		    if ( attr_type != pname.type)
+			continue;
+		}
+
+		
+		GdhrRefObjectInfo ret = null;
+
+		switch( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		    break;
+		default:
+		    ret = null;
+		}
+		
+		if ( ret == null || ret.evenSts()) {
+		    System.out.println("Pie: " + attribute[i]);
+		    return 1;
+		}
+		
+		p[i] = ret.id;
+		subid[i] = ret.refid;
+		inverted[i] = pname.inverted;
+		a_typeid[i] = pname.type;
+		attrFound[i] = true;
+	    }
+	    return 1;
+	}
+
+	public void disconnect() {
+	    for ( int i = 0; i < sectors; i++) {
+		if ( attrFound[i])
+		    dyn.graph.getGdh().unrefObjectInfo(subid[i]);
+	    }
+	}
+	
+	public void scan( GlowArrayElem o) {
+	    GrowPie object = (GrowPie)o;
+
+	    switch ( attr_type) {
+	    case Pwr.eType_Float32: {    
+		float[] val = new float[GrowPie.PIE_MAX_SECTORS];
+		for ( int i = 0; i < sectors; i++)
+		    val[i] = dyn.graph.getGdh().getObjectRefInfoFloat( p[i]);
+
+		if ( !firstScan) {
+		    int update = 0;
+		    for ( int i = 0; i < sectors; i++) {
+			if ( Math.abs( oldValueF[i] - val[i]) > Float.MIN_VALUE) {
+			    update = 1;
+			    break;
+			}
+		    }
+		    if ( update == 0)
+			return;
+		}
+		else
+		    firstScan = false;
+		
+		if ( Math.abs( max_value - min_value) < Float.MIN_VALUE)
+		    return;
+		
+		double[] dval = new double[GrowPie.PIE_MAX_SECTORS];
+		if ( fix_range != 0|| sectors == 1) {
+		    for ( int i = 0; i < sectors; i++)
+			dval[i] = val[i];
+		}
+		else {
+		    double sum = 0;
+		    for ( int i = 0; i < sectors; i++)
+			sum += val[i];
+		    for ( int i = 0; i < sectors; i++) {
+			if ( Math.abs( sum) < Double.MIN_VALUE)
+			    dval[i] = 0;
+			else
+			    dval[i] = val[i] / sum * (max_value - min_value);
+		    }
+		}
+		
+		object.set_values( dval);
+		for ( int i = 0; i < sectors; i++)
+		    oldValueF[i] = val[i];
+		break;
+	    }
+	    case Pwr.eType_Int32: {
+		break;
+	    }
+	    default: ;
+	    }
+	}
     }
 
     public class DynBarChart extends DynElem {
-	public static final int MAX_BARSEGMENTS = 12;
-	String[] attribute = new String[12];
+	String[] attribute = new String[GrowBarChart.BARCHART_MAX_BARSEGMENTS];
 	int bars;
 	int barsegments;
 	double min_value;
 	double max_value;
-	boolean fix_range;
+	int fix_range;
+	float[][] valueF;
+	int[][] valueI;
+	float[][] oldValueF;
+	int[][] oldValueI;
+	int attr_type;
+	int p[] = new int[GrowBarChart.BARCHART_MAX_BARSEGMENTS];
+	PwrtRefId[] subid = new PwrtRefId[GrowBarChart.BARCHART_MAX_BARSEGMENTS];
+	boolean[] inverted = new boolean[GrowBarChart.BARCHART_MAX_BARSEGMENTS];
+	int[] a_typeid = new int[GrowBarChart.BARCHART_MAX_BARSEGMENTS];
+	boolean[] attrFound = new boolean[GrowBarChart.BARCHART_MAX_BARSEGMENTS];
+	boolean firstScan = true;
 
 	public DynBarChart( Dyn dyn) {
 	    super(dyn, Dyn.mDynType1_BarChart, 0, 0, 0, Dyn.eDynPrio_BarChart);
@@ -6609,7 +6752,7 @@ public class Dyn {
 	    min_value = x.min_value;
 	    max_value = x.max_value;
 	    fix_range = x.fix_range;
-	    for ( int i = 0; i < MAX_BARSEGMENTS; i++)
+	    for ( int i = 0; i < GrowBarChart.BARCHART_MAX_BARSEGMENTS; i++)
 		attribute[i] = x.attribute[i];
 	}
 
@@ -6626,6 +6769,9 @@ public class Dyn {
 
 		    switch ( key) {
 		    case Dyn.eSave_BarChart: 
+			break;
+		    case Dyn.eSave_BarChart_fix_range: 
+			fix_range = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_BarChart_attribute1: 
 			if ( token.hasMoreTokens())
@@ -6692,6 +6838,121 @@ public class Dyn {
 	    }
 	}
 
+	public int connect(GlowArrayElem o) {
+	    GrowBarChart object = (GrowBarChart)o;	    
+
+	    GlowBarChartInfo info = object.get_conf();
+	    min_value = info.min_value;
+	    max_value = info.max_value;
+	    bars = info.bars;
+	    barsegments = info.barsegments;
+		 
+	    for ( int i = 0; i < barsegments; i++) {
+		if ( attribute[i] == null)
+		    continue;
+
+		DynParsedAttrName pname = dyn.parseAttrName(attribute[i]);
+		if ( pname == null || pname.name.equals("")) 
+		    continue;
+
+		if ( pname.elements == 0)
+		    continue;
+
+		bars = Math.min( bars, pname.elements);
+		if ( i == 0) {
+		    attr_type = pname.type;
+		    switch ( attr_type) {			
+		    case Pwr.eType_Float32:
+			valueF = new float[barsegments][];
+			break;
+		    case Pwr.eType_Int32:
+			valueI = new int[barsegments][];
+			break;
+		    default:
+			return 1;
+		    }
+		}
+		else {
+		    if ( attr_type != pname.type)
+			continue;
+		}
+
+		
+		GdhrRefObjectInfo ret = null;
+
+		switch( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		    break;
+		default:
+		    ret = null;
+		}
+		
+		if ( ret == null || ret.evenSts()) {
+		    System.out.println("Pie: " + attribute[i]);
+		    return 1;
+		}
+		
+		p[i] = ret.id;
+		subid[i] = ret.refid;
+		inverted[i] = pname.inverted;
+		a_typeid[i] = pname.type;
+		attrFound[i] = true;
+	    }
+	    return 1;
+	}
+
+	public void disconnect() {
+	    for ( int i = 0; i < barsegments; i++) {
+		if ( attrFound[i])
+		    dyn.graph.getGdh().unrefObjectInfo(subid[i]);
+	    }
+	}
+	
+	public void scan( GlowArrayElem o) {
+	    GrowBarChart object = (GrowBarChart)o;
+
+	    switch ( attr_type) {
+	    case Pwr.eType_Float32: {    
+		valueF = new float[GrowBarChart.BARCHART_MAX_BARSEGMENTS][];
+		for ( int i = 0; i < barsegments; i++) {
+		    valueF[i] = dyn.graph.getGdh().getObjectRefInfoFloatArray( p[i], bars);
+		}
+
+		if ( !firstScan) {
+		    int update = 0;
+		    for ( int i = 0; i < barsegments && valueF[i] != null; i++) {
+			for ( int j = 0; j < bars; j++) {
+			    if ( Math.abs( oldValueF[i][j] - valueF[i][j]) > Float.MIN_VALUE) {
+				update = 1;
+				break;
+			    }
+			}
+			if ( update == 1)
+			    break;
+		    }
+		    if ( update == 0)
+			return;
+		}
+		else
+		    firstScan = false;
+		
+		if ( Math.abs( max_value - min_value) < Float.MIN_VALUE)
+		    return;
+		
+		object.set_values( valueF[0], valueF[1], valueF[2], valueF[3], valueF[4], 
+				   valueF[5], valueF[6], valueF[7], valueF[8], valueF[9], 
+				   valueF[10], valueF[11]);
+		oldValueF = valueF;
+
+		break;
+	    }
+	    case Pwr.eType_Int32: {
+		break;
+	    }
+	    default: ;
+	    }
+	}
     }
 
     public class DynAxis extends DynElem {
