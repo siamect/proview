@@ -1,13 +1,13 @@
-Package: pwrdemo51
-Version: 5.1.0-4
+Package: pwrdemo52
+Version: 5.2.1-1
 Section: base
 Priority: optional
 Architecture: i386
-Depends: pwr51 (>= 5.1.0-4)
+Depends: pwr52 (>= 5.2.1-1)
 Replaces:
 Maintainer: Proview <postmaster@proview.se>
 Homepage: http://www.proview.se
 Installed-Size: 70464
 Description: Proview Demo Project package
  Proview Demo Project
- 5.1.0-1 Base release 
+ 5.2.0-1 Base release 
