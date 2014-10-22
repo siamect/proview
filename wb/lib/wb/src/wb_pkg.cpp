@@ -84,6 +84,9 @@ wb_pkg::wb_pkg( char *nodelist, bool distribute, bool config_only)
   if ( config_only)
     return;
 
+  for ( unsigned int i = 0; i < m_nodelist.size(); i++)
+    m_nodelist[i].checkNode();
+
   fetchFiles( distribute);
 }
 
@@ -323,6 +326,52 @@ pkg_node& wb_pkg::getNode( char *name)
       return m_nodelist[i];
   }
   throw wb_error_str("No such node");
+}
+
+void pkg_node::checkNode()
+{
+  pwr_tStatus 	sts;
+  pwr_tVolumeId *vollist;
+  pwr_tString40 *volnamelist;
+  int       	volcount;
+  pwr_tString80 *plclist;
+  int		plccount;
+  char     	systemname[80];
+  char     	systemgroup[80];
+  pwr_tTime 	bootversion;
+  pwr_tFileName fname;
+
+  sprintf( fname, pwr_cNameBoot, load_cDirectory, name(), bus());
+  sts = lfu_ReadBootFile( fname, &bootversion, systemname, 
+			  systemgroup, &vollist, &volnamelist, &volcount, &plclist, &plccount);
+  if ( EVEN(sts))
+    throw wb_error_str("Bootfile is corrupt");
+
+  // Check that bootversion is later than volume versions
+  for ( int i = 0; i < volcount; i++) {
+    pwr_tVid vol_vid;
+    pwr_tCid vol_cid;
+    pwr_tTime vol_time;
+    char vol_name[80];
+    pwr_tUInt32 vol_dvversion;
+    char dir[20];
+    pwr_tObjName vname;
+
+    strcpy( dir, "$pwrp_load/");
+    strcpy( vname, (char *)(volnamelist + i));
+    sprintf( fname, "%s%s.dbs", dir, cdh_Low(vname)); 
+
+    sts = lfu_GetVolume( fname, vol_name, &vol_vid, &vol_cid, &vol_time, &vol_dvversion);
+    if ( EVEN(sts)) throw wb_error(sts);
+
+    if ( time_Acomp( &bootversion, &vol_time) == -1) {
+      char msg[200];
+      sprintf( msg, "Volume %s is built after node %s", vname, name());
+      MsgWindow::message( 'E', msg, msgw_ePop_No);
+      m_errors++;
+    }
+    
+  }
 }
 
 void pkg_node::checkVolume( char *filename)

@@ -195,6 +195,7 @@ class pkg_node {
     m_pattern.push_back( pattern);
   }
   void checkVolume( char *filename);
+  void checkNode();
   void fetchFiles( bool distribute);
   void copyPackage( char *pkg_name);
   void incrWarnings() { m_warnings++;}
