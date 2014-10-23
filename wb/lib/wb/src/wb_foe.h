@@ -274,6 +274,7 @@ class WFoe : public WUtility {
   void disable_ldh_cb();
   int attr_create( vldh_t_node node);
   int attr_delete();
+  void attr_set_editmode( int mode);
   int parent_quit();
   int child_quit( vldh_t_node node, unsigned long windowindex);
   int child_delete( vldh_t_node node, vldh_t_wind subwind);

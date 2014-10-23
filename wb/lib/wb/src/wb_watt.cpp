@@ -80,7 +80,8 @@ void WAtt::activate_print()
 
 void WAtt::set_editmode( int editmode, ldh_tSesContext ldhses)
 {
-  this->ldhses = ldhses;
+  if ( ldhses != 0)
+    this->ldhses = ldhses;
   this->editmode = editmode;
   ((WAttNav *)wattnav)->set_editmode( editmode, ldhses);
 }

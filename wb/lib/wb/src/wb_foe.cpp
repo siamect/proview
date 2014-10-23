@@ -2289,6 +2289,20 @@ int WFoe::attr_delete()
 }
 
 //
+//	Delete all attribute editors and remove them from the
+//	attribute list.
+//
+void WFoe::attr_set_editmode( int mode)
+{
+  int i;
+	
+  for ( i = 0; i < attr_count; i++ ) {
+    if ( this == (attr_pointer + i)->foe)
+      ((WAtt *)(attr_pointer + i)->a_ctx)->set_editmode( mode, 0);
+  }
+}
+
+//
 //	Tell all the subwindows on the screen that I am quitting now
 //	by setting the parentctx in foe zero.
 //
@@ -3633,6 +3647,7 @@ int WFoe::change_mode( int new_mode)
 			      ldh_eAccess_ReadOnly);
 	if ( EVEN(sts)) return sts;
 	access = ldh_eAccess_ReadOnly;
+	attr_set_editmode(0);
       }
       break;
     case TRACE:
@@ -3693,6 +3708,7 @@ int WFoe::change_mode( int new_mode)
       gre->disable_button_events();
       edit_setup();
       set_mode_button_state( VIEW, 0);
+      attr_set_editmode(1);
       break;
     case EDIT:
       /* Mode unchanged */
@@ -3961,6 +3977,7 @@ void WFoe::edit_exit_save( WFoe *foe)
     foe->set_mode_button_state( EDIT, 0);
     foe->set_mode_button_state( SIMULATE, 1);
     foe->function = SIMULATE;
+    foe->attr_set_editmode(0);
     break;
   case TRACE:
     foe->gre->disable_button_events();
@@ -3973,6 +3990,7 @@ void WFoe::edit_exit_save( WFoe *foe)
     foe->set_mode_button_state( EDIT, 0);
     foe->set_mode_button_state( TRACE, 1);
     foe->function = TRACE;
+    foe->attr_set_editmode(0);
     break;
   case VIEW:
     foe->set_mode_button_state( EDIT, 0);
@@ -3984,6 +4002,7 @@ void WFoe::edit_exit_save( WFoe *foe)
 			  ldh_eAccess_ReadOnly);
     foe->error_msg(sts);
     foe->access = ldh_eAccess_ReadOnly;
+    foe->attr_set_editmode(0);
     break;
   }
 }

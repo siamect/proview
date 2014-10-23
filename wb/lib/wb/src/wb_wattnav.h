@@ -113,7 +113,7 @@ class WAttNav {
     void redraw();
     void enable_events();
     void set_editmode( int editmode, ldh_tSesContext ldhses)
-	{ this->editmode = editmode; this->ldhses = ldhses;};
+    { this->editmode = editmode; if( ldhses != 0) this->ldhses = ldhses;};
     int select_by_name( const char *name);
 
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
