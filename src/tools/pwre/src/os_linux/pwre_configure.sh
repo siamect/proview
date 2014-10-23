@@ -448,12 +448,12 @@ else
 
   pwre_config_check_include antlr ANTLR 1 "/usr/include/antlr/CommonAST.hpp:/usr/local/include/antlr/CommonAST.hpp"
   pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
-  pwre_config_check_include jni   JNI   1 "$jdk/include/jni.h"
-  pwre_config_check_include jni   JNI   0 "$jdk/include/linux/jni_md.h"
   pwre_config_check_include alsa  ALSA  1 "/usr/include/alsa/asoundlib.h"
 
   echo ""
   echo "Optional :"
+  pwre_config_check_include jni   JNI   1 "$jdk/include/jni.h"
+  pwre_config_check_include jni   JNI   0 "$jdk/include/linux/jni_md.h"
   pwre_config_check_lib motif     MRM      motif motif 0 "/usr/lib/libMrm.so"
   pwre_config_check_lib mysql     MYSQL    lib lib 1 "/usr/lib/libmysqlclient.so:/usr/lib/mysql/libmysqlclient.so:/usr/lib/$hwpl-linux-$gnu/libmysqlclient.so"
   pwre_config_check_include sqlite3 SQLITE3   1 "/usr/include/sqlite3.h"

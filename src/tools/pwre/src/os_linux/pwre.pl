@@ -622,9 +622,11 @@ sub build_all_modules ()
   _module("bcomp");
   build_all( $flavour);
   merge();
-  _module("java");
-  build_all( $flavour);
-  merge();
+  if ( $ENV{"PWRE_CONF_JNI"} eq "1") {
+    _module("java");
+    build_all( $flavour);
+    merge();
+  }
   _module("opc");
   build_all( $flavour);
   merge();
