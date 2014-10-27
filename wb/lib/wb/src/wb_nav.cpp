@@ -625,7 +625,7 @@ int ItemAttrObject::open_attributes( Nav *nav, double x, double y)
       if ( EVEN(sts) ) continue;
 
       for ( i = 0; i < rows; i++) {
-	strcpy( parname, name);
+	strcpy( parname, aname);
 	strcat( parname, ".");
 	strcat( parname, bodydef[i].ParName);
 
