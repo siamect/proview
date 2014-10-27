@@ -162,7 +162,7 @@ main ()
       qcom_Free(&sts, get.data);
     }
 
-    aproc_TimeStamp( lHelCB.ScanTime, 5.0);
+    aproc_TimeStamp( lHelCB.ScanTime/1000, 5.0);
   }
 }
 

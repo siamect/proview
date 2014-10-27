@@ -1179,6 +1179,7 @@ int main( int argc, char *argv[])
 	exit(0);
       }
     }
+    aproc_TimeStamp(sim->scantime(), 10);
     first_scan = false;
   }
 
