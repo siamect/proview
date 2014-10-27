@@ -5,10 +5,10 @@ Priority: optional
 Maintainer: Proview <postmaster@proview.se>
 Version: 5.2.1-1
 Architecture: i386
-Depends: libc6 (>= 2.19-0ubuntu6), libgtk2.0-0 (>= 2.24.23-0ubuntu1.1), libasound2 (>= 1.0.27.2-3ubuntu7), libdb5.3 (>=5.3.28-3ubuntu3), libdb5.3++ (>=5.3.28-3ubuntu3), libmysql++3 (>= 3.2.0-pristine-1), libsqlite3-0 (>= 3.8.2-1ubuntu2), librsvg2-2 (>= 2.40.2-1), g++ (>= 4:4.8.2-1ubuntu6), xfonts-100dpi
+Depends: libc6 (>= 2.19-0ubuntu6), libgtk2.0-0 (>= 2.24.23-0ubuntu1.1), libasound2 (>= 1.0.27.2-3ubuntu7), libdb5.3 (>=5.3.28-3ubuntu3), libdb5.3++ (>=5.3.28-3ubuntu3), libmysql++3 (>= 3.2.0+pristine-1), libsqlite3-0 (>= 3.8.2-1ubuntu2), librsvg2-2 (>= 2.40.2-1), g++ (>= 4:4.8.2-1ubuntu6), xfonts-100dpi
 Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48,pwr50,pwr51
 Homepage: http://www.proview.se
 Installed-Size: 1114020
 Description: Proview development and runtime environment package
  Proview development and runtime environment
- 5.2.0-1 Base release 
+ 5.2.0-1 Base release
