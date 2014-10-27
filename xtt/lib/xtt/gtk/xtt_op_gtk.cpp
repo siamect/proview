@@ -619,7 +619,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
 
     dcli_translate_filename( fname, "$pwrp_exe/pwrp_logotype.png");
     if ( EVEN( dcli_file_time( fname, &time)))
-      dcli_translate_filename( fname, "$pwr_exe/proview_icon.png");
+      dcli_translate_filename( fname, "$pwr_exe/proview_icon17.png");
     GtkWidget *icon_image = gtk_image_new_from_file( fname);
 
     title_label = gtk_label_new("");
