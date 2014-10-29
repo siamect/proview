@@ -49,9 +49,9 @@
 #include "rt_gdh.h"
 #include "rt_errh.h"
 
-int print_object( pwr_tObjid objid, pwr_tClassId classid, char *object_p, 
+int print_object( pwr_tAttrRef *arp, pwr_tClassId classid, char *object_p, 
 		  int offset, char *prefix, FILE *fp);
-int print_attribute( pwr_tObjid objid, pwr_tClassId classid, char *object_p, char *attributename,
+int print_attribute( pwr_tAttrRef *arp, pwr_tClassId classid, char *object_p, char *attributename,
 		     int array_element, int index, FILE *fp);
 
 static void  attrvalue_to_string( int type_id, void *value_ptr, 
@@ -280,7 +280,7 @@ static void  attrvalue_to_string( int type_id, void *value_ptr,
   }
 }
 
-static int print_attr( char *object_p, pwr_tObjid objid,
+static int print_attr( char *object_p, pwr_tAttrRef *arp,
 		       char *object_name, char *attr_name, int type_id, int size, 
 		       int offset, int elements, FILE *fp)
 {
@@ -317,7 +317,7 @@ int print_data( pwr_sAttrRef *arp, FILE *fp)
   pwr_tAName   	dataname;
   pwr_tAName   	objectname;
   pwr_tAName   	attributename;
-  pwr_tObjid	objid;
+  pwr_tAttrRef	aref;
   int 		object_backup;
   int		array_element = 0;
   int		index;
@@ -327,7 +327,7 @@ int print_data( pwr_sAttrRef *arp, FILE *fp)
   if ( EVEN(sts)) return sts;
 
   strcpy( objectname, dataname);
-  if ( (s = strchr( objectname, '.'))) {
+  if ( !arp->Flags.b.ObjectAttr && (s = strchr( objectname, '.'))) {
     *s = 0;
     object_backup = 0;
     strcpy( attributename, dataname);
@@ -342,25 +342,25 @@ int print_data( pwr_sAttrRef *arp, FILE *fp)
     object_backup = 1;
   }
 
-  sts = gdh_NameToObjid( objectname, &objid);
+  sts = gdh_NameToAttrref( pwr_cNOid, objectname, &aref);
   if ( EVEN(sts)) return sts;
 
-  sts = gdh_ObjidToPointer( objid, (void **)&object_p);
+  sts = gdh_AttrRefToPointer( &aref, (void **)&object_p);
   if ( EVEN(sts)) return sts;
 
-  sts = gdh_GetObjectClass( objid, &classid);
+  sts = gdh_GetAttrRefTid( &aref, &classid);
   if ( EVEN(sts)) return sts;
 
   if ( object_backup) {
-    print_object( objid, classid, object_p, 0, objectname, fp);
+    print_object( &aref, classid, object_p, 0, objectname, fp);
   }
   else {
-    print_attribute( objid, classid, object_p, attributename, array_element, index, fp);
+    print_attribute( &aref, classid, object_p, attributename, array_element, index, fp);
   }
   return 1;
 }
 
-int print_attribute( pwr_tObjid objid, pwr_tClassId classid, char *object_p, char *attributename,
+int print_attribute( pwr_tAttrRef *arp, pwr_tClassId classid, char *object_p, char *attributename,
 		  int array_element, int index, FILE *fp)
 {
   pwr_tTypeId tid;
@@ -383,17 +383,17 @@ int print_attribute( pwr_tObjid objid, pwr_tClassId classid, char *object_p, cha
     sts = gdh_GetObjectInfo( attributename, buf, sizeof(buf));
     if ( EVEN(sts)) return sts;
 
-    print_attr( buf, objid, objectname, parname, tid, size, 
+    print_attr( buf,  arp, objectname, parname, tid, size, 
 		0, elem, fp);
   }
   else {
-    print_attr( object_p, objid, objectname, parname, tid, size, offs,
+    print_attr( object_p, arp, objectname, parname, tid, size, offs,
 		elem, fp);
   }
   return 1;
 }
 
-int print_object( pwr_tOid oid, pwr_tCid cid, char *object_p, 
+int print_object( pwr_tAttrRef *arp, pwr_tCid cid, char *object_p, 
 		  int offset, char *prefix, FILE *fp)
 {
   int		sts;
@@ -404,7 +404,7 @@ int print_object( pwr_tOid oid, pwr_tCid cid, char *object_p,
   int 		rows;
   char		idx[20];
 
-  sts = gdh_GetObjectBodyDef( cid, &bd, &rows, oid);
+  sts = gdh_GetObjectBodyDef( cid, &bd, &rows, pwr_cNOid);
   if ( EVEN(sts)) return sts;
 
   for ( i = 0; i < rows; i++) {
@@ -424,7 +424,7 @@ int print_object( pwr_tOid oid, pwr_tCid cid, char *object_p,
 	strcpy( objectname, prefix);
 	strcat( objectname, ".");
 	strcat( objectname, bd[i].attrName);
-	print_object( oid, bd[i].attr->Param.TypeRef, object_p, 
+	print_object( arp, bd[i].attr->Param.TypeRef, object_p, 
 		      offset + bd[i].attr->Param.Info.Offset, objectname, fp);
       }
       else {
@@ -434,14 +434,14 @@ int print_object( pwr_tOid oid, pwr_tCid cid, char *object_p,
 	  strcat( objectname, bd[i].attrName);
 	  sprintf( idx, "[%d]", j);
 	  strcat( objectname, idx);
-	  print_object( oid, bd[i].attr->Param.TypeRef, object_p, 
+	  print_object( arp, bd[i].attr->Param.TypeRef, object_p, 
 			offset + bd[i].attr->Param.Info.Offset + 
 			j * bd[i].attr->Param.Info.Size / elements, objectname, fp);
 	}
       }
     }
     else
-      print_attr( object_p, oid, prefix, bd[i].attrName, bd[i].attr->Param.Info.Type, 
+      print_attr( object_p, arp, prefix, bd[i].attrName, bd[i].attr->Param.Info.Type, 
 		  bd[i].attr->Param.Info.Size,
 		  offset + bd[i].attr->Param.Info.Offset, elements, fp);
 
