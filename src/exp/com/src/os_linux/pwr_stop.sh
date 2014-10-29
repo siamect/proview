@@ -75,7 +75,9 @@
     stored_ifs=$IFS
     IFS=' ,'
     while read appid appname appload apprun appfile appprio appdebug apparg; do
-      if [ -n "$appid" ] && [ "${appid:0:1}" != "#" ]; then      
+      s1=`eval 'echo $appid' | head -c1`
+      s8=`eval 'echo $appid' | head -c8`
+      if [ -n "$appid" ] && [ "$s1" != "#" ]; then      
         if [ $appid != "pwr_neth" ] && 
            [ $appid != "pwr_qmon" ] &&
            [ $appid != "pwr_nacp" ] &&
@@ -100,7 +102,7 @@
            [ $appid != "pwr_powerlink" ] &&
            [ $appid != "pwr_sim" ] &&
            [ $appid != "pwr_plc" ] &&
-           [ ${appid:0:8} != "pwr_plc_" ]; then
+           [ $s8 != "pwr_plc_" ]; then
           killall $appname
         fi
       fi
