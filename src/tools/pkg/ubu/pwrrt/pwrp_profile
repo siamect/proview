@@ -32,7 +32,7 @@ export pwrp_web=$web_dir
 
 export pwra_db=/usr/pwrp/adm/db
 jdk=`eval ls -t /usr/local | grep -m 1 ^jdk`
-if [ "$jdk" == "" ]; then
+if [ -z "$jdk" ]; then
   jdk=`eval ls -t /usr/local | grep -m 1 ^jre`
 fi
 
