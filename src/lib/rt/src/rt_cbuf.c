@@ -230,8 +230,10 @@ pwr_tStatus cbuf_GetCircBuffInfo( cbuf_sCircBuffInfo *info,
     
       hp = vol_AttributeToAddress(&sts, ap);
       if (hp != NULL) {
-	if ( hp->FirstIndex == hp->LastIndex)
-	  return 0;
+	if ( hp->FirstIndex == hp->LastIndex) {
+	  sts = 0;
+	  break;
+	}
 	if ( info[j].resolution <= 1) {
 	  if ( samples > hp->Size)
 	    samples = hp->Size;
