@@ -376,7 +376,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 		{
 			"EVENTLIST",
 			&xnav_eventlist_func,
-			{"dcli_arg1", "/PRIORITY", "/NAME", "/ALL", "",}
+			{"dcli_arg1", "/PRIORITY", "/NAME", "/ALL", "/AUTOACKNOWLEDGE", "",}
 		},
 		{
 			"TEST",
@@ -2634,6 +2634,7 @@ static int	xnav_eventlist_func(	void		*client_data,
   {
     // Command is "EVENTLIST ACKNOWLEDGE"
     char prio_str[80];
+    char autoack_str[80];
     mh_sEventId *id;
     int all;
 
@@ -2642,6 +2643,22 @@ static int	xnav_eventlist_func(	void		*client_data,
       if ( xnav->ev)
 	xnav->ev->ack_all();
       return XNAV__SUCCESS;      
+    }
+
+    if ( ODD( dcli_get_qualifier( "/AUTOACKNOWLEDGE", autoack_str, sizeof(autoack_str)))) {
+      float ftime;
+      int nr = sscanf( autoack_str, "%f", &ftime);
+      if ( nr != 1) {
+	xnav->message('E', "Syntax error in time");
+	return XNAV__HOLDCOMMAND;
+      }
+      xnav->autoack_scantime = ftime;
+      int time = int( xnav->autoack_scantime * 1000);
+      if ( time == 0)
+	xnav->autoack_timerid->remove();
+      else
+	xnav->autoack_timerid->add( time, XNav::autoack_scan, xnav);
+      return XNAV__SUCCESS;
     }
 
     if ( xnav->ev) {

@@ -4380,3 +4380,14 @@ void XNav::appl_startup()
   }
   
 }
+
+void XNav::autoack_scan( void *data)
+{
+  XNav *xnav = (XNav *)data;
+  int time = int( xnav->autoack_scantime * 1000);
+
+  if ( xnav->ev)
+    xnav->ev->ack_all();
+
+  xnav->autoack_timerid->add( time, autoack_scan, xnav);
+}

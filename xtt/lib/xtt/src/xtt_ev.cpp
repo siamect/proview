@@ -696,6 +696,10 @@ pwr_tStatus Ev::mh_clear_alarmlist_bc( pwr_tNodeIndex nix)
   ev->ala->event_clear_alarmlist( nix);
   for ( int i = 0; i < ev->sala_cnt; i++)
     ev->sala[i]->mh_clear_alarmlist( nix);
+
+  if ( ev->update_info_cb)
+    ev->update_info_cb( ev->parent_ctx);
+  ev->ala->fill_alarm_tables();
   return 1;
 }
 

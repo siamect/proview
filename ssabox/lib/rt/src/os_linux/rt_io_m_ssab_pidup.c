@@ -328,9 +328,11 @@ static pwr_tStatus IoCardRead (
           op->ErrorCount++;
         local->ErrTime = now;
 
-        if ( op->ErrorCount == op->ErrorSoftLimit)
+        if ( op->ErrorCount == op->ErrorSoftLimit) {
           errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);
-
+	  ctx->IOHandler->CardErrorSoftLimit = 1;
+	  ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref( cp->Objid);
+	}
         continue;
       }
     } 
@@ -354,6 +356,8 @@ static pwr_tStatus IoCardRead (
   {
      errh_Error( "IO Error hard limit reached on card '%s', IO stopped", cp->Name);
      ctx->Node->EmergBreakTrue = 1;
+     ctx->IOHandler->CardErrorHardLimit = 1;
+     ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref( cp->Objid);
      return IO__ERRDEVICE;
   }
 
@@ -533,9 +537,11 @@ static pwr_tStatus IoCardWrite (
           op->ErrorCount++;
         local->ErrTime = now;
 
-        if ( op->ErrorCount == op->ErrorSoftLimit)
+        if ( op->ErrorCount == op->ErrorSoftLimit) {
           errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);
-
+	  ctx->IOHandler->CardErrorSoftLimit = 1;
+	  ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref( cp->Objid);
+	}
         continue;
       }
     } 
@@ -582,9 +588,11 @@ static pwr_tStatus IoCardWrite (
           op->ErrorCount++;
         local->ErrTime = now;
 
-        if ( op->ErrorCount == op->ErrorSoftLimit)
+        if ( op->ErrorCount == op->ErrorSoftLimit) {
           errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);
-
+	  ctx->IOHandler->CardErrorSoftLimit = 1;
+	  ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref( cp->Objid);
+	}
         continue;
       }
     } 
@@ -613,6 +621,8 @@ static pwr_tStatus IoCardWrite (
   {
      errh_Error( "IO Error hard limit reached on card '%s', IO stopped", cp->Name);
      ctx->Node->EmergBreakTrue = 1;
+     ctx->IOHandler->CardErrorHardLimit = 1;
+     ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref( cp->Objid);
      return IO__ERRDEVICE;
   }
 

@@ -37,6 +37,7 @@
 #include "pwr.h"
 #include "pwr_basecomponentclasses.h"
 #include "co_dcli.h"
+#include "co_cdh.h"
 #include "rt_io_base.h"
 #include "rt_io_agent_init.h"
 #include "rt_io_agent_close.h"
@@ -754,10 +755,14 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
   // Agent error soft limit reached, tell log (once)
   if ( op->ErrorCount >= op->ErrorSoftLimit && error_count < op->ErrorSoftLimit) {
     errh_Warning( "IO Agent ErrorSoftLimit reached, '%s'", ap->Name);
+    ctx->IOHandler->CardErrorSoftLimit = 1;
+    ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref( ap->Objid);
   }	
 	
   // Agent error hard limit reached, tell log (once)	
   if ( op->ErrorCount >= op->ErrorHardLimit && error_count < op->ErrorHardLimit) {
+    ctx->IOHandler->CardErrorHardLimit = 1;
+    ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref( ap->Objid);
 		
     if( op->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
       errh_Error( "IO Agent ErrorHardLimit reached '%s', IO stopped", ap->Name);
@@ -833,10 +838,14 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap) {
     // Slave error soft limit reached, tell log (once)
     if ( ((pwr_sClass_Epl_CN *)rp->op)->ErrorCount >= ((pwr_sClass_Epl_CN *)rp->op)->ErrorSoftLimit && error_count < ((pwr_sClass_Epl_CN *)rp->op)->ErrorSoftLimit) {
       errh_Warning( "IO Rack ErrorSoftLimit reached, '%s'", rp->Name);
+      ctx->IOHandler->CardErrorSoftLimit = 1;
+      ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref( ap->Objid);
     }
 			
     // Slave error hard limit reached, tell log (once)
     if ( ((pwr_sClass_Epl_CN *)rp->op)->ErrorCount >= ((pwr_sClass_Epl_CN *)rp->op)->ErrorHardLimit && error_count < ((pwr_sClass_Epl_CN *)rp->op)->ErrorHardLimit) {
+      ctx->IOHandler->CardErrorHardLimit = 1;
+      ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref( ap->Objid);
 		
       if( ((pwr_sClass_Epl_CN *)rp->op)->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
 	errh_Error( "IO Rack ErrorHardLimit reached '%s', IO stopped", rp->Name);

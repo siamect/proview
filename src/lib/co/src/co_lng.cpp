@@ -246,6 +246,10 @@ static int compKey( tree_sTable *tp, tree_sNode *x, tree_sNode *y)
 		       (unsigned long)s - (unsigned long)xKey->text);
       return strcmp(xKey->text, yKey->text);
     }
+    case 'C': {
+      int len = strlen( yKey->text);
+      return strncmp(xKey->text, yKey->text, len);
+    }
     }
     return 0;
 }
@@ -289,6 +293,12 @@ char *Lng::translate( const char *text)
       }
       else
 	strcpy( result, record->transl);
+      break;
+    }
+    case 'C': {
+      int len = strlen( record->key.text);
+      strcpy( result, record->transl);
+      strcat( result, &text[len]);
       break;
     }
     default:
@@ -338,6 +348,12 @@ int Lng::translate( char *text, char *out)
       }
       else
 	strcpy( result, record->transl);
+      break;
+    }
+    case 'C': {
+      int len = strlen( record->key.text);
+      strcpy( result, record->transl);
+      strcat( result, &text[len]);
       break;
     }
     default:

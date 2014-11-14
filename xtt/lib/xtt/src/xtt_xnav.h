@@ -291,6 +291,8 @@ class XNav {
     void		*root_item;
     t_trace_node	*TraceList;
     CoWowTimer		*trace_timerid;
+    CoWowTimer		*autoack_timerid;
+    float		autoack_scantime;
     int			trace_started;
     void 		(*message_cb)( void *, char, const char *);
     void 		(*close_cb)( void *, int);
@@ -467,8 +469,8 @@ class XNav {
     int sound( pwr_tAttrRef *arp);
     int sound_attached();
     int eventlog_enabled();
-    void  appl_startup();
-    
+    void appl_startup();
+ 
     
     static int init_brow_base_cb( FlowCtx *fctx, void *client_data);
     static int get_trace_attr( pwr_sAttrRef *arp, char *attr);
@@ -492,6 +494,7 @@ class XNav {
     static int trace_disconnect_bc( brow_tObject object);
     static int init_brow_collect_cb( BrowCtx *ctx, void *client_data);
     static int init_brow_cb( BrowCtx *ctx, void *client_data);
+    static void autoack_scan( void *data);
 
     // Command module member functions
     int command( char *cmd);

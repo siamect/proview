@@ -47,6 +47,7 @@
 
 #include "pwr.h"
 #include "co_time.h"
+#include "co_cdh.h"
 #include "rt_errh.h"
 #include "pwr_baseclasses.h"
 #include "pwr_basecomponentclasses.h"
@@ -209,8 +210,11 @@ static pwr_tStatus IoCardRead (
 	  bfb_error = 1;
           if ( op->ErrorCount == op->ErrorSoftLimit)
             errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);
-          if ( op->ErrorCount == op->ErrorHardLimit)
+          if ( op->ErrorCount == op->ErrorHardLimit) {
             errh_Error( "IO Error hard limit reached on card '%s', stall action %d", cp->Name, rrp->StallAction);
+	    ctx->IOHandler->CardErrorSoftLimit = 1;
+	    ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref( cp->Objid);
+	  }
           if ( op->ErrorCount >= op->ErrorHardLimit && rrp->StallAction == pwr_eSsabStallAction_ResetInputs )
 	  {
 	    data = 0;
@@ -219,6 +223,8 @@ static pwr_tStatus IoCardRead (
           if ( op->ErrorCount >= op->ErrorHardLimit && rrp->StallAction == pwr_eSsabStallAction_EmergencyBreak )
 	  {
             ctx->Node->EmergBreakTrue = 1;
+	    ctx->IOHandler->CardErrorHardLimit = 1;
+	    ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref( cp->Objid);
             return IO__ERRDEVICE;
           }
 	}

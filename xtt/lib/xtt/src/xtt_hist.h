@@ -162,7 +162,7 @@ class Hist {
 class Hist {
   public:
     Hist( void *hist_parent_ctx,
-	  char *hist_name, pwr_tObjid objid,
+	  char *hist_name, pwr_tAttrRef *arp,
 	  pwr_tStatus *status) : parent_ctx(hist_parent_ctx) {}
     void 		*parent_ctx;
     void 		(*close_cb)( void *);

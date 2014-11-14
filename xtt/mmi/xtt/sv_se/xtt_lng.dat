@@ -1,3 +1,23 @@
+#
+# System events
+C 0.0.1 "Länken nere till nod"
+C 0.0.2 "Länken uppe till nod"
+C 0.0.3 "Nod uppe"
+C 0.0.4 "Nod omstart påbörjad, nod"
+C 0.0.5 "Nod omstart slutförd, nod"
+C 0.0.6 "Utenhet omstartad, nod"
+C 0.0.7 "Nödstopp, omstart, nod"
+C 0.0.8 "Nödstopp, fixa utgångsvärden, nod"
+C 0.0.9 "Nödstopp, I/O stoppat, nod"
+C 0.0.10 "Simulering, ladding startad, nod"
+C 0.0.11 "Simulering, ladding slutförd, nod"
+C 0.0.12 "System status fel, nod"
+C 0.0.13 "System status varning, nod"
+C 0.0.14 "IO Mjuk felgräns uppnådd, nod"
+C 0.0.15 "IO Hård felgräns uppnådd, nod"
+C 0.0.16 "Kvota för applikationslarm överskriden, nod"
+C 0.0.17 "Kvota för systemlarm överskriden, nod"
+#
 # General
 E 1.0.1 "Fel"
 E 1.0.2 "Varning"
@@ -422,6 +442,18 @@ E 1.17.2 "Zooma in"
 E 1.17.3 "Zooma ut"
 E 1.17.4 "Återställ zoom"
 E 1.17.5 "Operatörsfönster"
+#
+# Help window
+E 1.18.1 "_Hem"
+E 1.18.2 "_Bakåt"
+E 1.18.3 "_Nästa ämne"
+E 1.18.4 "_Föregående ämne"
+E 1.18.5 "Sök _Nästa"
+E 1.18.6 "Sök _Föregående"
+E 1.18.7 "Gå till startsidan"
+E 1.18.8 "Gå tillbaka"
+E 1.18.9 "Föregående ämne"
+E 1.18.10 "Nästa ämne"
 #
 # Postscript printing
 E 2.1.1 "Innehåll"

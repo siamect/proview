@@ -110,6 +110,16 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
+      !/**
+      !  Specifies the maximum number of contemporary system alarms.
+      !  The attribute is used to limit alarm allocation when
+      !  system alarms are not acknowledged.
+      !*/
+      Object MaxSystemAlarms $Attribute 23 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
       Object DetectTimer $Intern 6 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -222,14 +232,135 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      Object SystemEvents $Attribute 22 
+        Body SysBody
+          Attr TypeRef = "pwrb:Class-SystemSup"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_CLASS
+	  Attr Elements = 14
+        EndBody
+      EndObject
     EndObject
     Object Template MessageHandler
       Body RtBody
         Attr EventListSize = 100
         Attr MaxApplAlarms = 50
+        Attr MaxSystemAlarms = 50
         Attr DetectTimer = 1.0
         Attr MessageTimer = 1.0
         Attr ScanCycleSup = 1
+	Attr SystemEvents[0].SystemEvent = 0
+	Attr SystemEvents[0].Description = "Link down event"
+	Attr SystemEvents[0].DetectOn = 1
+	Attr SystemEvents[0].DetectText = "Link down to node"
+	Attr SystemEvents[0].ReturnText = "Link up to node"
+	Attr SystemEvents[0].EventType = 256
+	Attr SystemEvents[0].EventPriority = 67
+	Attr SystemEvents[0].EventFlags = 15
+	Attr SystemEvents[1].SystemEvent = 1
+	Attr SystemEvents[1].Description = "Node up event"
+	Attr SystemEvents[1].DetectOn = 1
+	Attr SystemEvents[1].DetectText = "Node up"
+	Attr SystemEvents[1].ReturnText = ""
+	Attr SystemEvents[1].EventType = 32
+	Attr SystemEvents[1].EventPriority = 67
+	Attr SystemEvents[1].EventFlags = 63
+	Attr SystemEvents[2].SystemEvent = 2
+	Attr SystemEvents[2].Description = "Node restart event"
+	Attr SystemEvents[2].DetectOn = 1
+	Attr SystemEvents[2].DetectText = "Node restart initiated, node"
+	Attr SystemEvents[2].ReturnText = "Node restart completion, node"
+	Attr SystemEvents[2].EventType = 256
+	Attr SystemEvents[2].EventPriority = 67
+	Attr SystemEvents[2].EventFlags = 15
+	Attr SystemEvents[3].SystemEvent = 3
+	Attr SystemEvents[3].Description = "Outunit restart event"
+	Attr SystemEvents[3].DetectOn = 1
+	Attr SystemEvents[3].DetectText = "Outunit restarted, node"
+	Attr SystemEvents[3].ReturnText = ""
+	Attr SystemEvents[3].EventType = 32
+	Attr SystemEvents[3].EventPriority = 67
+	Attr SystemEvents[3].EventFlags = 63
+	Attr SystemEvents[4].SystemEvent = 4
+	Attr SystemEvents[4].Description = "Emergency break with reboot event"
+	Attr SystemEvents[4].DetectOn = 1
+	Attr SystemEvents[4].DetectText = "Emergency break reboot, node"
+	Attr SystemEvents[4].ReturnText = ""
+	Attr SystemEvents[4].EventType = 256
+	Attr SystemEvents[4].EventPriority = 67
+	Attr SystemEvents[4].EventFlags = 15
+	Attr SystemEvents[5].SystemEvent = 5
+	Attr SystemEvents[5].Description = "Emergency break with fixed output values event"
+	Attr SystemEvents[5].DetectOn = 1
+	Attr SystemEvents[5].DetectText = "Emergency break, fixed output values, node"
+	Attr SystemEvents[5].ReturnText = ""
+	Attr SystemEvents[5].EventType = 256
+	Attr SystemEvents[5].EventPriority = 67
+	Attr SystemEvents[5].EventFlags = 15
+	Attr SystemEvents[6].SystemEvent = 6
+	Attr SystemEvents[6].Description = "Emergency break with stop I/O"
+	Attr SystemEvents[6].DetectOn = 1
+	Attr SystemEvents[6].DetectText = "Emergency break, I/O stopped, node"
+	Attr SystemEvents[6].ReturnText = ""
+	Attr SystemEvents[6].EventType = 256
+	Attr SystemEvents[6].EventPriority = 67
+	Attr SystemEvents[6].EventFlags = 15
+	Attr SystemEvents[7].SystemEvent = 7
+	Attr SystemEvents[7].Description = "Simulate load event"
+	Attr SystemEvents[7].DetectOn = 1
+	Attr SystemEvents[7].DetectText = "Simulate load started, node"
+	Attr SystemEvents[7].ReturnText = "Simulate load completion, node"
+	Attr SystemEvents[7].EventType = 256
+	Attr SystemEvents[7].EventPriority = 67
+	Attr SystemEvents[7].EventFlags = 15
+	Attr SystemEvents[8].SystemEvent = 8
+	Attr SystemEvents[8].Description = "System status error event"
+	Attr SystemEvents[8].DetectOn = 1
+	Attr SystemEvents[8].DetectText = "System status error, node"
+	Attr SystemEvents[8].ReturnText = ""
+	Attr SystemEvents[8].EventType = 256
+	Attr SystemEvents[8].EventPriority = 67
+	Attr SystemEvents[8].EventFlags = 15
+	Attr SystemEvents[9].SystemEvent = 9
+	Attr SystemEvents[9].Description = "System status warning event"
+	Attr SystemEvents[9].DetectOn = 1
+	Attr SystemEvents[9].DetectText = "System status warning, node"
+	Attr SystemEvents[9].ReturnText = ""
+	Attr SystemEvents[9].EventType = 256
+	Attr SystemEvents[9].EventPriority = 66
+	Attr SystemEvents[9].EventFlags = 15
+	Attr SystemEvents[10].SystemEvent = 10
+	Attr SystemEvents[10].Description = "IO Soft error limit reached event"
+	Attr SystemEvents[10].DetectOn = 1
+	Attr SystemEvents[10].DetectText = "IO Soft error limit reached, node"
+	Attr SystemEvents[10].ReturnText = ""
+	Attr SystemEvents[10].EventType = 256
+	Attr SystemEvents[10].EventPriority = 66
+	Attr SystemEvents[10].EventFlags = 15
+	Attr SystemEvents[11].SystemEvent = 11
+	Attr SystemEvents[11].Description = "IO Hard error limit reached event"
+	Attr SystemEvents[11].DetectOn = 1
+	Attr SystemEvents[11].DetectText = "IO Hard error limit reached, node"
+	Attr SystemEvents[11].ReturnText = ""
+	Attr SystemEvents[11].EventType = 256
+	Attr SystemEvents[11].EventPriority = 67
+	Attr SystemEvents[11].EventFlags = 15
+	Attr SystemEvents[12].SystemEvent = 12
+	Attr SystemEvents[12].Description = "Application alarm quota exceeded event, node"
+	Attr SystemEvents[12].DetectOn = 1
+	Attr SystemEvents[12].DetectText = "Application alarm quota exceeded, node"
+	Attr SystemEvents[12].ReturnText = ""
+	Attr SystemEvents[12].EventType = 32
+	Attr SystemEvents[12].EventPriority = 67
+	Attr SystemEvents[12].EventFlags = 63
+	Attr SystemEvents[13].SystemEvent = 13
+	Attr SystemEvents[13].Description = "System alarm quota exceeded event"
+	Attr SystemEvents[13].DetectOn = 1
+	Attr SystemEvents[13].DetectText = "System alarm quota exceeded, node"
+	Attr SystemEvents[13].ReturnText = ""
+	Attr SystemEvents[13].EventType = 32
+	Attr SystemEvents[13].EventPriority = 67
+	Attr SystemEvents[13].EventFlags = 63
       EndBody
     EndObject
   EndObject

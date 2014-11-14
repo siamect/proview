@@ -345,6 +345,16 @@ static pwr_tStatus IoRackRead (
       sp->ErrorCount++;
     }
 
+    if (sp->ErrorCount == sp->ErrorSoftLimit) {
+      errh_Error( "IO Error soft limit reached on card '%s'", rp->Name);
+      ctx->IOHandler->CardErrorSoftLimit = 1;
+      ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref( rp->Objid);
+    }
+    if ( sp->ErrorCount == sp->ErrorHardLimit) {
+      errh_Error( "IO Error hard limit reached on card '%s', stall action %d", rp->Name, sp->StallAction);
+      ctx->IOHandler->CardErrorHardLimit = 1;
+      ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref( rp->Objid);
+    }
     if (sp->ErrorCount > sp->ErrorSoftLimit && sp->StallAction >= pwr_ePbStallAction_ResetInputs) {
       memset(&sp->Inputs, 0, sp->BytesOfInput);
     }

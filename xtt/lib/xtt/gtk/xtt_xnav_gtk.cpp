@@ -127,6 +127,7 @@ XNavGtk::XNavGtk( void *xn_parent_ctx,
 
   wow = new CoWowGtk( parent_wid);
   trace_timerid = wow->timer_new();
+  autoack_timerid = wow->timer_new();
   *status = 1;
 }
 
@@ -136,6 +137,9 @@ XNavGtk::XNavGtk( void *xn_parent_ctx,
 XNavGtk::~XNavGtk()
 {
   closing_down = 1;
+
+  delete autoack_timerid;
+  delete trace_timerid;
 
   if ( mcp) {
     free( mcp);

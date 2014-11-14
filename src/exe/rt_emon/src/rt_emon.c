@@ -81,6 +81,7 @@
 #include "rt_aproc.h"
 #include "rt_pwr_msg.h"
 #include "rt_c_node.h"
+#include "rt_c_iohandler.h"
 
 /* Local defines */
 
@@ -171,9 +172,9 @@ struct s_Active {
 
 
 struct s_NodeInfo {
+  pwr_tNid	    nid;
   sAppl		    appl;
   sApplActive	    *hp;
-  gdh_sNodeInfo	    gdh;
   gdh_eLinkState    oldLinkState; 
   gdh_eLinkState    newLinkState; 
   pwr_tString40	    name;
@@ -181,6 +182,8 @@ struct s_NodeInfo {
   pwr_tBoolean	    initiated;
   pwr_tBoolean	    check;
   pwr_tBoolean	    checkInit;
+  pwr_tUInt32	    handlerEventIdx[14];
+  int		    occupied;
 };
 
 struct s_Block {
@@ -384,7 +387,8 @@ typedef enum {
   eHEvent_LinkDown,
   eHEvent_Booted,
   eHEvent_RestartInit,
-  eHEvent_RestartComplete
+  eHEvent_RestartComplete,
+  eHEvent_OutunitRestart
 } eHEvent;
 
 typedef struct {
@@ -396,7 +400,7 @@ typedef struct {
 
 struct sLocal {
   pwr_sClass_MessageHandler	*emon;
-  pwr_tString80			emonName;
+  pwr_tOName			emonName;
   pwr_tObjid			emonObject;
   LstHead(sOutunit)		outunit_l;
   mh_sHead			head;
@@ -425,7 +429,13 @@ struct sLocal {
   sNodeInfo			nodeDb[cNodes];
   pwr_tBoolean			outunitServer;
   pwr_sClass_IOHandler		*iohp;
+  pwr_tOid			iohObject;
+  pwr_tOName			iohName;
   pwr_sNode			*nodep;
+  pwr_tOid			nodeObject;
+  pwr_tOName			nodeName;
+  pwr_tUInt32			handlerListCount;
+  pwr_tBoolean 			applAlarmQuotaSent;
 }; 
 
 /* Global variables */
@@ -475,8 +485,9 @@ static void		handleAlarm(sSupActive*);
 static void		handleInfo(sSupActive*);
 static void		handleMessage(qcom_sGet*);
 static void		handleReturn(sSupActive*);
-static void		handlerEvent(eHEvent, pwr_tNodeIndex);
-static sApplActive	*handlerListAlloc();
+static void		handlerEvent(pwr_eSystemEventTypeEnum, pwr_tNodeIndex, int);
+static void		handlerEvent_cb(int, int);
+static sApplActive	*handlerListAlloc(pwr_eSystemEventTypeEnum);
 static void		handlerListFree(sApplActive*);
 static void		getHandlerObject();
 static void		initBlockList();
@@ -518,6 +529,8 @@ static void		timerIn(sSupActive*, sTimer*);
 static void		updateAlarm(sActive*, sEvent*);
 static void		updateAlarmInfo(sActive*);
 static void		updateSupActive(sSupActive*);
+static sNodeInfo 	*node_get( pwr_tNid nid);
+static sNodeInfo 	*node_insert( pwr_tNid nid);
 
 
 
@@ -635,7 +648,7 @@ int main ()
 
   mh_UtilWake();
 
-  handlerEvent(eHEvent_Booted, 0);
+  handlerEvent(pwr_eSystemEventTypeEnum_NodeUp, l.head.nix, 1);
 
   errh_SetStatus( PWR__SRUN);
 
@@ -978,6 +991,10 @@ applMessage (
     if (ap->activeMessages > l.emon->MaxApplAlarms) {
       reply->Message.Sts = MH__APPLQUOTA;
       free(aap);
+      if ( !l.applAlarmQuotaSent) {
+	handlerEvent(pwr_eSystemEventTypeEnum_ApplAlarmQuota, l.head.nix, 1);
+	l.applAlarmQuotaSent = 1;
+      }
       return;
     }
 
@@ -2069,8 +2086,12 @@ fromEvent (
   new_event.m  = ep->mask;
 
   if (new_event.b.swapDone & !cur_event.b.swapDone) {
+    LstLink(sOutunit) *ol;
+    sOutunit *op;
+
     errh_Info("Warm restart completed.");   
-    handlerEvent(eHEvent_RestartComplete, l.head.nix);
+
+    handlerEvent(pwr_eSystemEventTypeEnum_NodeRestart, l.head.nix, 0);
     reInitSupList();
 
     if (!LstEmp(&l.sup_l)) {
@@ -2087,18 +2108,28 @@ fromEvent (
       setTimerActive(cMessageIdx, FALSE);
       errh_Info("No supervise objects.");
     }
+    for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol)) {
+      op = LstObj(ol);
+      sendToOutunit(op, mh_eMsg_OutunitClear, 0, NULL, 0);
+    }
+    for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol)) {
+      op = LstObj(ol);
+      sendEventListToOutunit(op);
+    }
+    pwrb_IOHandler_Exec( handlerEvent_cb, 1);
+
   } 
   else if (new_event.b.swapInit & !cur_event.b.swapInit) {
     l.supListState = eSupListState_Wait;
     errh_Info("Warm restart initiated.");   
-    handlerEvent(eHEvent_RestartInit, l.head.nix);
+    handlerEvent(pwr_eSystemEventTypeEnum_NodeRestart, l.head.nix, 1);
   }
   else if (new_event.b.simLoadStart & !cur_event.b.simLoadStart) {
     LstLink(sOutunit) *ol;
     sOutunit *op;
 
     l.supListState = eSupListState_Wait;
-    handlerEvent(eHEvent_RestartInit, l.head.nix);
+    handlerEvent(pwr_eSystemEventTypeEnum_SimulateLoad, l.head.nix, 1);
 
     for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol)) {
       op = LstObj(ol);
@@ -2109,7 +2140,7 @@ fromEvent (
   }
   else if (new_event.b.simLoadDone & !cur_event.b.simLoadDone) {
     printf( "rt_emon: SimLoadDone\n");
-    handlerEvent(eHEvent_RestartComplete, l.head.nix);
+    handlerEvent(pwr_eSystemEventTypeEnum_SimulateLoad, l.head.nix, 0);
     reInitSupList();
 
     if (!LstEmp(&l.sup_l)) {
@@ -2138,11 +2169,9 @@ getHandlerObject ()
 {
   pwr_tStatus  sts;
   pwr_tObjid   nodeOid;
-  pwr_tObjid   oid;
   pwr_sAttrRef aref; 
   pwr_tDlid dlid;
   pwr_tBoolean created = FALSE;
-  pwr_tOid 	node_oid;
 
   sts = gdh_GetClassList(pwr_eClass_Node, &nodeOid);            
   if (EVEN(sts)) {
@@ -2238,20 +2267,30 @@ getHandlerObject ()
 #endif
 
   /* Get IOHandler object */
-  sts = gdh_GetClassList(pwr_cClass_IOHandler, &oid);
+  sts = gdh_GetClassList(pwr_cClass_IOHandler, &l.iohObject);
+  if (EVEN(sts)) {
+    errh_Info("Could not find IO handler object, %m", sts);
+    return;
+  }
+  sts = gdh_ObjidToName(l.iohObject, l.iohName, sizeof(l.iohName), cdh_mNName);
   if (EVEN(sts)) {
     errh_Info("Could not find IO handler object, %m", sts);
     return;
   }
 
   l.iohp = NULL;
-  gdh_ObjidToPointer(oid, (void *) &l.iohp);
+  gdh_ObjidToPointer(l.iohObject, (void *) &l.iohp);
   
-  sts = gdh_GetNodeObject( 0, &node_oid);
+  sts = gdh_GetNodeObject( 0, &l.nodeObject);
   if (ODD(sts))
-    sts = gdh_ObjidToPointer( node_oid, (void **)&l.nodep);
+    sts = gdh_ObjidToPointer( l.nodeObject, (void **)&l.nodep);
   if (EVEN(sts)) {
     errh_Fatal("No node object found\n%m", sts);
+    exit(sts);
+  }
+  sts = gdh_ObjidToName(l.nodeObject, l.nodeName, sizeof(l.nodeName), cdh_mNName);
+  if (EVEN(sts)) {
+    errh_Info("Could not find node object, %m", sts);
     exit(sts);
   }
 }
@@ -2404,156 +2443,163 @@ handleReturn (
 
 static void
 handlerEvent (
-  eHEvent event,
-  pwr_tNodeIndex nix
+  pwr_eSystemEventTypeEnum event,
+  pwr_tNodeIndex nix,
+  int status
 )
 {
   mh_sApplMessage *ip;
-  char eventText[256];
   sApplActive *hp;
   sEvent *ep;
-  mh_eEvent eventType = 0;
-  mh_eEventPrio eventPrio = 0;
-  mh_mEventFlags eventFlags = 0;
   pwr_tBoolean local = FALSE;
+  pwr_sClass_SystemSup *ssup;
+  sNodeInfo *node = node_get(nix);
 
-  return; /* todo */
+  // return; /* todo */
 
-  switch (event) {
-  case eHEvent_LinkStart:
-    if (!l.outunitServer)
-      return;
-    eventType = mh_eEvent_Alarm;
-    eventPrio = mh_eEventPrio_A;
-    eventFlags = mh_mEventFlags_Bell | mh_mEventFlags_Force
-      | mh_mEventFlags_Ack | mh_mEventFlags_Return;
-    sprintf(eventText, "No contact with node (%s)", l.nodeDb[nix].gdh.nodename);
-    local = TRUE;
-    break;
-  case eHEvent_LinkUp:
-    if (!l.outunitServer)
-      return;
-    eventType = mh_eEvent_Return;
-    sprintf(eventText, "Established contact with node (%s): %s", 
-      l.nodeDb[nix].gdh.nodename, l.nodeDb[nix].fullname);
-    local = TRUE;
-    break;
-  case eHEvent_LinkDown:
-    if (!l.outunitServer)
-      return;
-    eventType = mh_eEvent_Alarm;
-    eventPrio = mh_eEventPrio_A;
-    eventFlags = mh_mEventFlags_Bell | mh_mEventFlags_Force
-      | mh_mEventFlags_Ack | mh_mEventFlags_Return;
-    sprintf(eventText, "Lost contact with node (%s): %s",
-      l.nodeDb[nix].gdh.nodename, l.nodeDb[nix].fullname);
-    local = TRUE;
-    break;
-  case eHEvent_Booted:
-    eventFlags = mh_mEventFlags_Bell | mh_mEventFlags_Force
-      | mh_mEventFlags_InfoWindow | mh_mEventFlags_Returned;
-    eventType = mh_eEvent_Info;
-    sprintf(eventText, "Node up and running (%s): %s",
-      l.nodeDb[0].gdh.nodename, l.nodeDb[0].fullname);
-    break;
-  case eHEvent_RestartInit:
-    eventType = mh_eEvent_Alarm;
-    eventPrio = mh_eEventPrio_A;
-    eventFlags = mh_mEventFlags_Bell | mh_mEventFlags_Force
-      | mh_mEventFlags_Ack | mh_mEventFlags_Return;
-    sprintf(eventText, "Restart initiated at node (%s): %s",
-      l.nodeDb[0].gdh.nodename, l.nodeDb[0].fullname);
-    break;
-  case eHEvent_RestartComplete:
-    eventType = mh_eEvent_Return;
-    sprintf(eventText, "Restart completed at node (%s): %s",
-      l.nodeDb[0].gdh.nodename, l.nodeDb[0].fullname);
-    break;
-  default:
+  if ( event >= (int)sizeof(l.emon->SystemEvents)/sizeof(l.emon->SystemEvents[0]))
     return;
-    break;
-  }
 
-  if (event == eHEvent_Booted) {
-    hp = handlerListAlloc();
-    if (hp == NULL) {
-      errh_Error("%s\n%m", "HandlerEvent", MH__NOSPACE);
+  ssup = &l.emon->SystemEvents[event];
+  if ( !node)
+    return;
+  if ( !ssup->DetectOn)
+    return;
+
+  if ( status == 1) {
+    // Alarm or info event
+    switch (ssup->EventType) {
+    case mh_eEvent_Alarm:
+    case mh_eEvent_MaintenanceAlarm:
+    case mh_eEvent_SystemAlarm:
+    case mh_eEvent_UserAlarm1:
+    case mh_eEvent_UserAlarm2:
+    case mh_eEvent_UserAlarm3:
+    case mh_eEvent_UserAlarm4:
+    case mh_eEvent_Info:
+      hp = handlerListAlloc( event);
+      break;
+    case mh_eEvent_Return:
+      break;
+    default: 
+      errh_Info("handlerEvent, unexpected event type, event: %d", ssup->EventType);
       return;
     }
-  } else if (l.nodeDb[nix].hp == NULL) {
-    hp = handlerListAlloc();
-    if (hp == NULL) {
-      errh_Error("%s\n%m", "HandlerEvent", MH__NOSPACE);
-      return;
-    }
-    l.nodeDb[nix].hp = hp;
-  } else {
-    hp = l.nodeDb[nix].hp;
   }
+  else {    
+    // Return event
+    hp = (sApplActive *)activeListGet( node->handlerEventIdx[event]);
+  }
+  if ( !hp)
+    return;
+    
+  if ( status == 1) {
+    switch (ssup->EventType) {
+    case mh_eEvent_Alarm:
+    case mh_eEvent_MaintenanceAlarm:
+    case mh_eEvent_SystemAlarm:
+    case mh_eEvent_UserAlarm1:
+    case mh_eEvent_UserAlarm2:
+    case mh_eEvent_UserAlarm3:
+    case mh_eEvent_UserAlarm4:
+    case mh_eEvent_Info:
 
-  switch (eventType) {
-  case mh_eEvent_Alarm:
-  case mh_eEvent_MaintenanceAlarm:
-  case mh_eEvent_SystemAlarm:
-  case mh_eEvent_UserAlarm1:
-  case mh_eEvent_UserAlarm2:
-  case mh_eEvent_UserAlarm3:
-  case mh_eEvent_UserAlarm4:
-  case mh_eEvent_Info:
+      ip = &hp->message;
+      ip->EventFlags = ssup->EventFlags;
+      ip->EventPrio = ssup->EventPriority;
+      time_GetTime(&ip->EventTime);
+      ip->EventType = ssup->EventType;
+      strncpy(ip->EventText, ssup->DetectText, sizeof(ip->EventText) - 1);
+      strncat(ip->EventText, " ", sizeof(ip->EventText) - 1);
+      strncat(ip->EventText, node->name, sizeof(ip->EventText) - 1);
+      ip->EventSound = ssup->Sound;
+      strncpy( ip->EventMoreText, ssup->MoreText, sizeof(ip->EventMoreText));
 
-    if (LstInl(&hp->link.active_l)) /* already active */
-      return;
 
-    ip = &hp->message;
-    ip->Object = l.emonObject;
-    ip->EventFlags = eventFlags;
-    ip->EventPrio = eventPrio;
-    time_GetTime(&ip->EventTime);
-    strncpy(ip->EventName, l.emonName, sizeof(ip->EventName) - 1);
-    ip->EventType = eventType;
-    strncpy(ip->EventText, eventText, sizeof(ip->EventText) - 1);
+      switch ( event) {
+      case pwr_eSystemEventTypeEnum_NodeUp:
+      case pwr_eSystemEventTypeEnum_EmergBreakReboot:
+      case pwr_eSystemEventTypeEnum_EmergBreakFixedOutput:
+      case pwr_eSystemEventTypeEnum_EmergBreakStopIO:
+      case pwr_eSystemEventTypeEnum_SystemStatusError:
+      case pwr_eSystemEventTypeEnum_SystemStatusWarning:
+	ip->Object = l.nodeObject;
+	strncpy(ip->EventName, l.nodeName, sizeof(ip->EventName) - 1);
+	break;
+      case pwr_eSystemEventTypeEnum_IOErrorSoftLimit:
+      case pwr_eSystemEventTypeEnum_IOErrorHardLimit:
+	ip->Object = l.iohObject;
+	strncpy(ip->EventName, l.iohName, sizeof(ip->EventName) - 1);
+	break;
+      default:
+	ip->Object = l.emonObject;	
+	strncpy(ip->EventName, l.emonName, sizeof(ip->EventName) - 1);
+      }
+      
+      hp->link.local = local;
+      hp->link.source = mh_eSource_Handler;
+      hp->link.object = cdh_ObjidToAref(ip->Object);
+      strncpy(hp->link.objName, ip->EventName, sizeof(hp->link.objName));
+      cdh_ToUpper(hp->link.objName, NULL);
+      strncpy(hp->link.eventName, ip->EventName, sizeof(hp->link.eventName));
+      hp->link.eventFlags = ip->EventFlags;
+      hp->link.event = ip->EventType;
+      hp->link.eventSound = ip->EventSound;
+      strncpy(hp->link.eventMoreText, ip->EventMoreText, sizeof(hp->link.eventMoreText));
+      strncpy(hp->link.receiver, ssup->Recipient, sizeof(hp->link.receiver));      
 
-    hp->link.local = local;
-    hp->link.source = mh_eSource_Handler;
-    hp->link.object = cdh_ObjidToAref(ip->Object);
-    strncpy(hp->link.objName, ip->EventName, sizeof(hp->link.objName));
-    cdh_ToUpper(hp->link.objName, NULL);
-    strncpy(hp->link.eventName, ip->EventName, sizeof(hp->link.eventName));
-    hp->link.eventFlags = ip->EventFlags;
-    hp->link.event = ip->EventType;
+      /* Insert in application alarm list */
+      (void)LstIns(&node->appl.active_l, hp, active_l);    
+      hp->ap = (sAppl *)&node->appl;
+      ++hp->ap->activeMessages;
+      ep = eventListInsert(ssup->EventType, NULL, (sActive*) hp);
+      activeListInsert((sActive*) hp, ep, mh_eSource_Handler);
+      updateAlarm((sActive *) hp, ep);
+      
+      if ( ssup->EventFlags & mh_mEventFlags_Return)
+	node->handlerEventIdx[event] = hp->link.idx;
+      else
+	node->handlerEventIdx[event] = 0;
+      ssup->DetectTime = ip->EventTime;
 
-    /* Insert in application alarm list */
-    (void)LstIns(&l.nodeDb[nix].appl.active_l, hp, active_l);    
-    hp->ap = (sAppl *)&l.nodeDb[nix];
-    ++hp->ap->activeMessages;
-    ep = eventListInsert(eventType, NULL, (sActive*) hp);
-    activeListInsert((sActive*) hp, ep, mh_eSource_Handler);
-    updateAlarm((sActive *) hp, ep);
-    break;
-  case mh_eEvent_Return:
-
-    if (!LstInl(&hp->link.active_l)) /* not active */
-      return;
-
+      break;
+    default: ;
+    }
+  }
+  else {
     if ((hp->link.status.Event.Status & mh_mEventStatus_NotRet) == 0)
       return; /* already returned */
 
     time_GetTime(&hp->returnTime);
     hp->returnType = mh_eEvent_Return;
-    strncpy(hp->returnText, eventText, sizeof(ip->EventText) - 1);
-    ep = eventListInsert(eventType, NULL, (sActive*) hp);
+    if ( strcmp( ssup->ReturnText, "") != 0) {
+      strncpy(hp->returnText, ssup->ReturnText, sizeof(hp->returnText) - 1);
+      strncat(hp->returnText, " ", sizeof(hp->returnText) - 1);
+      strncat(hp->returnText, node->name, sizeof(hp->returnText) - 1);
+    }
+    ep = eventListInsert(mh_eEvent_Return, NULL, (sActive*) hp);
     updateAlarm((sActive *) hp, ep);
-  default:
-    errh_Info("handlerEvent, unexpected event type, event: %d", eventType);
-    break;
+    
+    ssup->ReturnTime = hp->returnTime;
   }
 
   eventToOutunits(ep);
 }
+
+static void
+handlerEvent_cb (
+  int event,
+  int status
+)
+{
+  handlerEvent( event, l.head.nix, status);
+}
+
+
 
 static sApplActive *
 handlerListAlloc (
-  pwr_tNodeIndex Nix
+  pwr_eSystemEventTypeEnum event	  
 )
 {
   LstLink(sApplActive) *hl;
@@ -2562,12 +2608,18 @@ handlerListAlloc (
   const int Alloc = 50;
   int i;
 
-  return NULL;
+  if ( l.handlerListCount == l.emon->MaxSystemAlarms - 1 && event != pwr_eSystemEventTypeEnum_SystemAlarmQuota) {
+    handlerEvent(pwr_eSystemEventTypeEnum_SystemAlarmQuota, l.head.nix, 1);
+    return NULL;
+  }
+
+  if ( l.handlerListCount >= l.emon->MaxSystemAlarms)
+    return NULL;
 
   ll = &l.handlerFree_l;
 
   if (LstEmp(ll)) {
-    hp = (sApplActive *) calloc(Alloc, sizeof(sApplActive));
+    hp = (sApplActive *) calloc(Alloc, sizeof(sApplActive));    
     if (hp != NULL) {
       for (i = 0; i < Alloc; i++, hp++)
         LstIns(ll, hp, link.active_l);
@@ -2581,6 +2633,8 @@ handlerListAlloc (
   LstRem(hl);
   LstNul(hl);
   --l.emon->AlarmMaxCount;
+  l.handlerListCount++;
+
   return LstObj(hl);
 }
 
@@ -2590,10 +2644,11 @@ handlerListFree (
 )
 {
 
-  return;
+  //return;
   memset(hp, 0, sizeof(*hp));
   LstIns(&l.handlerFree_l, hp, link.active_l);
   ++l.emon->AlarmMaxCount;
+  l.handlerListCount--;
   return;
 }
 
@@ -2696,17 +2751,18 @@ initNodeDb ()
 
   pwr_tStatus sts;
   sNodeInfo *np;
-  pwr_tNodeId nid;
+  qcom_sNode qnode;
 
-  return;
+  //return;
 
   memset(l.nodeDb, 0, sizeof(l.nodeDb));
-
+  
   np = &l.nodeDb[0];
+  np->occupied = 1;
 
-  sts = gdh_GetNodeIndex(&nid);
-  sts = gdh_GetNodeObject(nid, &np->gdh.objid);
-  sts = gdh_ObjidToName(np->gdh.objid, np->fullname, sizeof(np->fullname), cdh_mNName);
+  qcom_MyNode( &sts, &qnode);
+  np->nid = qnode.nid;
+  strncpy( np->name, qnode.name, sizeof(np->name));
 
   for (i = 0; i < cNodes; i++) {
     LstIni(&l.nodeDb[i].appl.active_l);
@@ -3180,18 +3236,30 @@ isValidOutunit (
     op = LstObj(ol);
 
     if (op->birthTime.tv_sec != hp->birthTime.tv_sec) {
-      /* Different times, i.e. the outunit is restarted */
-      op->link.source = mh_eSource_Outunit;
-      op->link.qid = hp->qid;
-      op->link.aid = *aid; /* QCOM ApplId */
-      op->link.platform = hp->platform;
-      op->link.nix = hp->nix;
-      op->birthTime = net_NetTimeToTime( &hp->birthTime);
-      op->outunit = hp->outunit;
-      op->selGen = 0;
-      op->eventGen = 0;
-      op->linkUp = TRUE;
-      outunitLog(op, "Outunit restarted");
+      if ( hp->type == mh_eMsg_OutunitInfo) {
+	printf( "Outunit restart old x%x qid %d,%d aid %d,%d\n", (unsigned int)op, op->link.qid.nid,op->link.qid.qix,op->link.aid.nid,op->link.aid.aix);
+	printf( "                new x%x qid %d,%d aid %d,%d\n", (unsigned int)hp, hp->qid.nid,hp->qid.qix,aid->nid,aid->aix);
+	//sendToOutunit(op, mh_eMsg_OutunitClear, 0, NULL, 0);
+	if ( hp->nix == l.head.nix)
+	  handlerEvent(pwr_eSystemEventTypeEnum_OutunitRestart, hp->nix, 1);
+	
+	// return FALSE;
+
+	/* Different times, i.e. the outunit is restarted */
+	op->link.source = mh_eSource_Outunit;
+	op->link.qid = hp->qid;
+	op->link.aid = *aid; /* QCOM ApplId */
+	op->link.platform = hp->platform;
+	op->link.nix = hp->nix;
+	op->birthTime = net_NetTimeToTime( &hp->birthTime);
+	op->outunit = hp->outunit;
+	op->selGen = 0;
+	op->eventGen = 0;
+	op->linkUp = TRUE;
+	outunitLog(op, "Outunit restarted");
+      }
+      else
+	return FALSE;
     }
   }
 
@@ -3221,24 +3289,21 @@ linkConnect (
 {
   pwr_tStatus sts;
   LstLink(sOutunit) *ol;
-  qcom_sNode *node = (qcom_sNode *)msg->data;
-  int nix = node->nid;
+  qcom_sNode *qnode = (qcom_sNode *)msg->data;
+  int nix = qnode->nid;
 
-  if ( node->connection != qcom_eNodeConnectionFull)
+  if ( qnode->connection != qcom_eNodeConnectionFull)
     return;
 
   errh_Info("Connected, link to node %s (%s)",
-    node->name, cdh_NodeIdToString(NULL, node->nid, 0, 0));
+    qnode->name, cdh_NodeIdToString(NULL, qnode->nid, 0, 0));
+  handlerEvent(pwr_eSystemEventTypeEnum_LinkDown, qnode->nid, 0);
 
-#if 0
-  int i;
-  for (i = 1; i < cNodes; i++)
-    if (l.nodeDb[i].gdh.nix == nix) {
-      l.nodeDb[i].newLinkState = gdh_eLinkState_Up;
-      l.nodeDb[i].check = TRUE;
-      break;
-    }
-#endif
+  sNodeInfo *node = node_get( nix);
+  if ( !node)
+    node = node_insert( nix);
+  node->newLinkState = gdh_eLinkState_Up;
+  node->check = TRUE;
 
   for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol))
     if (nix == LstObj(ol)->link.qid.nid) {
@@ -3254,25 +3319,22 @@ linkDisconnect (
 )
 {
   LstLink(sOutunit) *ol;
-  qcom_sNode	*node = (qcom_sNode *)msg->data;
-  int		nix = node->nid;
+  qcom_sNode	*qnode = (qcom_sNode *)msg->data;
+  int		nix = qnode->nid;
 
 
-  if ( node->connection != qcom_eNodeConnectionFull)
+  if ( qnode->connection != qcom_eNodeConnectionFull)
     return;
 
   errh_Info("Disconnected, link to node %s (%s)",
-    node->name, cdh_NodeIdToString(NULL, node->nid, 0, 0));
+    qnode->name, cdh_NodeIdToString(NULL, qnode->nid, 0, 0));
+  handlerEvent(pwr_eSystemEventTypeEnum_LinkDown, qnode->nid, 1);
 
-#if 0
-  int i;
-  for (i = 1; i < cNodes; i++)
-    if (l.nodeDb[i].gdh.nix == node->nid) {
-      l.nodeDb[i].newLinkState = gdh_eLinkState_Down;
-      l.nodeDb[i].check = TRUE;
-      break;
-    }
-#endif
+  sNodeInfo *node = node_get( qnode->nid);
+  if ( node) {
+    node->newLinkState = gdh_eLinkState_Down;
+    node->check = TRUE;
+  }
 
   for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol))
     if (nix == LstObj(ol)->link.qid.nid) {
@@ -3285,13 +3347,13 @@ linkStalled (
   qcom_sGet *msg
 )
 {
-  qcom_sNode *node = (qcom_sNode *)msg->data;
+  qcom_sNode *qnode = (qcom_sNode *)msg->data;
 
-  if ( node->connection != qcom_eNodeConnectionFull)
+  if ( qnode->connection != qcom_eNodeConnectionFull)
     return;
 
   errh_Info("Stalled, link to node %s (%s)",
-    node->name, cdh_NodeIdToString(NULL, node->nid, 0, 0));
+    qnode->name, cdh_NodeIdToString(NULL, qnode->nid, 0, 0));
 
 }
 
@@ -4233,7 +4295,9 @@ timeOut()
     checkOutunits();
   }
 
-  pwrs_Node_Exec();
+  pwrs_Node_Exec( handlerEvent_cb);
+  pwrb_IOHandler_Exec( handlerEvent_cb, 0);
+
 }
 
 static void
@@ -4502,3 +4566,51 @@ static void msgToV3( mh_eEvent type, uEvent *up)
   default: ;
   }
 }
+
+static sNodeInfo *node_get( pwr_tNid nid)
+{
+  int i;
+
+  if ( nid == 0)
+    return &l.nodeDb[0];
+
+  for (i = 0; i < cNodes; i++) {
+    if ( l.nodeDb[i].occupied && l.nodeDb[i].nid == nid)
+      return &l.nodeDb[i];
+  }    
+  return 0;
+}
+
+static sNodeInfo *node_insert( pwr_tNid nid)
+{
+  int i;
+  qcom_sNode qnode;
+  pwr_tStatus sts;
+
+  for (i = 1; i < cNodes; i++) {
+    if ( !l.nodeDb[i].occupied) {
+      qcom_Node( &sts, &qnode, nid);
+      if ( EVEN(sts))
+	return 0;
+      l.nodeDb[i].occupied = 1;
+      l.nodeDb[i].nid = nid;
+      strncpy( l.nodeDb[i].name, qnode.name, sizeof(l.nodeDb[0].name));
+      return &l.nodeDb[i];
+    }
+  }
+  return 0;
+}
+
+#if 0
+static void node_remove( pwr_tNid nid)
+{
+  int i;
+
+  for (i = 1; i < cNodes; i++) {
+    if ( l.nodeDb[i].occupied && l.nodeDb[i].nid == nid) {
+      l.nodeDb[i].occupied = 0;
+      break;
+    }
+  }    
+}
+#endif

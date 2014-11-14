@@ -497,6 +497,12 @@ typedef unsigned int    pwr_tDisableAttr;	       		//!< DisableAttr type.
 /*_*
   @aref emergbreakselectenum EmergBreakSelectEnum
 */
+typedef enum {
+  pwr_eEmergBreakSelectEnum_NoAction   	= 0,
+  pwr_eEmergBreakSelectEnum_Reboot   	= 1,
+  pwr_eEmergBreakSelectEnum_FixedOutputValues = 2,
+  pwr_eEmergBreakSelectEnum_StopIO 	= 3
+} pwr_eEmergBreakSelectEnum;
 typedef pwr_tEnum      pwr_tEmergBreakSelectEnum;	       	//!< Node attribute enum.
 
 /*_*

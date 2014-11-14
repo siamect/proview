@@ -46,6 +46,8 @@
 #include "rt_gdh.h"
 #include "rt_pwr_msg.h"
 #include "pwr_systemclasses.h"
+#include "pwr_baseclasses.h"
+#include "rt_c_node.h"
 
 static pwr_sNode *np = 0;
 
@@ -56,6 +58,7 @@ static pwr_sNode *np = 0;
 
 void
 pwrs_Node_Exec (
+		void (* handler_event_cb)(int, int)
 )
 {
   int i;
@@ -75,6 +78,9 @@ pwrs_Node_Exec (
     1,1,1,1,1,1,1,1,1,1,
     1,1,1,1,1,1,1,1,1,1};
   static int reboot_done = 0;
+  static int old_EmergeBreakTrue = 0;
+  static int old_SystemStatus = 1;
+  static int init_cnt = 0;
 
   if ( !np) {
     pwr_tOid oid;
@@ -89,9 +95,39 @@ pwrs_Node_Exec (
   if ( !np)
     return;
 
+    
+  if ( np->EmergBreakTrue && !old_EmergeBreakTrue && handler_event_cb) {
+    switch ( np->EmergBreakSelect) {
+    case pwr_eEmergBreakSelectEnum_Reboot:
+      (handler_event_cb)(pwr_eSystemEventTypeEnum_EmergBreakReboot, 1);
+      break;
+    case pwr_eEmergBreakSelectEnum_FixedOutputValues:
+      (handler_event_cb)(pwr_eSystemEventTypeEnum_EmergBreakFixedOutput, 1);
+      break;
+    case pwr_eEmergBreakSelectEnum_StopIO:
+      (handler_event_cb)(pwr_eSystemEventTypeEnum_EmergBreakStopIO, 1);
+      break;
+    default: ;
+    }
+  }
+  else if ( !np->EmergBreakTrue && old_EmergeBreakTrue && handler_event_cb) {
+    switch ( np->EmergBreakSelect) {
+    case pwr_eEmergBreakSelectEnum_Reboot:
+      (handler_event_cb)(pwr_eSystemEventTypeEnum_EmergBreakReboot, 0);
+      break;
+    case pwr_eEmergBreakSelectEnum_FixedOutputValues:
+      (handler_event_cb)(pwr_eSystemEventTypeEnum_EmergBreakFixedOutput, 0);
+      break;
+    case pwr_eEmergBreakSelectEnum_StopIO:
+      (handler_event_cb)(pwr_eSystemEventTypeEnum_EmergBreakStopIO, 0);
+      break;
+    default: ;
+    }
+  }
+  
   if ( np->EmergBreakTrue) {
     switch ( np->EmergBreakSelect) {
-    case 1: {
+    case pwr_eEmergBreakSelectEnum_Reboot: {
       /* Reboot */
       int sts;
 
@@ -105,10 +141,13 @@ pwrs_Node_Exec (
       break;
     }
     default: ;
-    }
+    }    
   }
   else
     reboot_done = 0;
+
+  old_EmergeBreakTrue = np->EmergBreakTrue;
+
 
   /* Calculate plc status */
   new_idx = -1;
@@ -157,6 +196,24 @@ pwrs_Node_Exec (
     np->SystemStatus = np->ProcStatus[new_idx];
   else if ( EVEN(np->SystemStatus))
     np->SystemStatus = PWR__RUNNING;
+
+  if ( init_cnt > 30) {
+    if ( old_SystemStatus != np->SystemStatus) {
+      if ( (errh_SeverityError(np->SystemStatus) || errh_SeverityFatal(np->SystemStatus)) &&
+	   !(errh_SeverityError(old_SystemStatus) || errh_SeverityFatal(old_SystemStatus)))
+	(handler_event_cb)(pwr_eSystemEventTypeEnum_SystemStatusError, 1);
+      else if ( !(errh_SeverityError(np->SystemStatus) || errh_SeverityFatal(np->SystemStatus)) &&
+		(errh_SeverityError(old_SystemStatus) || errh_SeverityFatal(old_SystemStatus)))
+	(handler_event_cb)(pwr_eSystemEventTypeEnum_SystemStatusError, 0);
+      if ( errh_SeverityWarning(np->SystemStatus) && !errh_SeverityWarning(old_SystemStatus))
+	(handler_event_cb)(pwr_eSystemEventTypeEnum_SystemStatusWarning, 1);
+      else if ( !errh_SeverityWarning(np->SystemStatus) && errh_SeverityWarning(old_SystemStatus))
+	(handler_event_cb)(pwr_eSystemEventTypeEnum_SystemStatusWarning, 0);
+      old_SystemStatus = np->SystemStatus;
+    }
+  }
+  else
+    init_cnt++;
 }
 
 

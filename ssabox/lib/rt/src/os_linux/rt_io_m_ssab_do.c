@@ -47,6 +47,7 @@
 
 #include "pwr.h"
 #include "co_time.h"
+#include "co_cdh.h"
 #include "rt_errh.h"
 #include "pwr_baseclasses.h"
 #include "pwr_basecomponentclasses.h"
@@ -243,10 +244,16 @@ static pwr_tStatus IoCardWrite (
 	if (bfb_error == 0) {
           op->ErrorCount++;
 	  bfb_error = 1;
-          if ( op->ErrorCount == op->ErrorSoftLimit)
+          if ( op->ErrorCount == op->ErrorSoftLimit) {
+	    ctx->IOHandler->CardErrorSoftLimit = 1;
+	    ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref( cp->Objid);
             errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);
-          if ( op->ErrorCount == op->ErrorHardLimit)
+	  }
+          if ( op->ErrorCount == op->ErrorHardLimit) {
             errh_Error( "IO Error hard limit reached on card '%s', stall action %d", cp->Name, rrp->StallAction);
+	    ctx->IOHandler->CardErrorHardLimit = 1;
+	    ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref( cp->Objid);
+	  }
           if ( op->ErrorCount >= op->ErrorHardLimit && rrp->StallAction == pwr_eSsabStallAction_ResetInputs ) {
 	    sts = 1;
           }
@@ -279,12 +286,17 @@ static pwr_tStatus IoCardWrite (
       local->ErrTime = now;
 
 
-      if ( op->ErrorCount == op->ErrorSoftLimit)
+      if ( op->ErrorCount == op->ErrorSoftLimit) {
         errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);
+	ctx->IOHandler->CardErrorSoftLimit = 1;
+	ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref( cp->Objid);
+      }
       if ( op->ErrorCount >= op->ErrorHardLimit)
       {
         errh_Error( "IO Error hard limit reached on card '%s', IO stopped", cp->Name);
         ctx->Node->EmergBreakTrue = 1;
+	ctx->IOHandler->CardErrorHardLimit = 1;
+	ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref( cp->Objid);
         return IO__ERRDEVICE;
       }
       continue;

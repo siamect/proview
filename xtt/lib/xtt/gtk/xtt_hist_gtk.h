@@ -131,8 +131,8 @@ class HistGtk : public Hist {
   public:
   HistGtk( void *hist_parent_ctx,
 	   GtkWidget *hist_parent_wid,
-	   char *hist_name, pwr_tObjid objid,
-	   pwr_tStatus *status) : Hist(hist_parent_ctx,hist_name,objid,status) {}
+	   char *hist_name, pwr_tAttrRef *arp,
+	   pwr_tStatus *status) : Hist(hist_parent_ctx,hist_name,arp,status) {}
   ~HistGtk() {}
 };
 

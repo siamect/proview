@@ -406,11 +406,15 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
   
   if ( op->ErrorCount == op->ErrorSoftLimit && !local->softlimit_logged) {
     errh_Warning( "IO Card ErrorSoftLimit reached, '%s'", cp->Name);
+    ctx->IOHandler->CardErrorSoftLimit = 1;
+    ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref( cp->Objid);
     local->softlimit_logged = 1;
   }
   if ( op->ErrorCount >= op->ErrorHardLimit) {
     errh_Error( "IO Card ErrorHardLimit reached '%s', IO stopped", cp->Name);
     ctx->Node->EmergBreakTrue = 1;
+    ctx->IOHandler->CardErrorHardLimit = 1;
+    ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref( cp->Objid);
     return IO__ERRDEVICE;
   }    
 

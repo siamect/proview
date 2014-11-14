@@ -34,18 +34,74 @@
  * General Public License plus this exception.
  */
 
-/* rt_c_node.h
-   Functions for the class Node. */
+/* rt_c_iohandler.c 
+   Functions for the class IOHandler. */
 
+#include <stdio.h>
+#include <string.h>
 #include "pwr.h"
-#include "pwr_class.h"
+#include "rt_gdh.h"
+#include "pwr_baseclasses.h"
+#include "rt_c_iohandler.h"
+
+static pwr_sClass_IOHandler *iop = 0;
+
+/*_*
+  @aref iohandler IOHandler
+*/
 
 void
-pwrs_Node_Exec (
-		void (* handlerEvent_bc)(int, int)	       
-);
+pwrb_IOHandler_Exec (
+  void (* handler_event_cb)(int, int),
+  int swap
+)
+{
+  static pwr_tBoolean old_CardErrorSoftLimit = 0;
+  static pwr_tBoolean old_CardErrorHardLimit = 0;
 
-void
-pwrs_Node_SupEmon (
-);
+  if ( !iop || swap) {
+    pwr_tOid oid;
+    pwr_tStatus sts;
+
+    sts = gdh_GetClassList( pwr_cClass_IOHandler, &oid);
+    if ( ODD(sts))
+      gdh_ObjidToPointer( oid, (void **) &iop);
+    if ( EVEN(sts)) return;
+  }
+
+  if ( !iop)
+    return;
+
+  if ( handler_event_cb) {
+    if ( iop->CardErrorSoftLimit && !old_CardErrorSoftLimit)
+      (handler_event_cb)(pwr_eSystemEventTypeEnum_IOErrorSoftLimit, 1);
+    else if ( !iop->CardErrorSoftLimit && old_CardErrorSoftLimit)
+      (handler_event_cb)(pwr_eSystemEventTypeEnum_IOErrorSoftLimit, 0);
+    
+    if ( iop->CardErrorHardLimit && !old_CardErrorHardLimit)
+      (handler_event_cb)(pwr_eSystemEventTypeEnum_IOErrorHardLimit, 1);
+    else if ( !iop->CardErrorHardLimit && old_CardErrorHardLimit)
+      (handler_event_cb)(pwr_eSystemEventTypeEnum_IOErrorHardLimit, 0);  
+  }
+  old_CardErrorSoftLimit = iop->CardErrorSoftLimit;
+  old_CardErrorHardLimit = iop->CardErrorHardLimit;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

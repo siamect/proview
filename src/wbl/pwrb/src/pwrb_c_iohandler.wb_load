@@ -123,6 +123,46 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Error soft limit reached on any card.
+      !*/
+      Object CardErrorSoftLimit $Attribute 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Error hard limit reached on any card.
+      !*/
+      Object CardErrorHardLimit $Attribute 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Object that has reached error soft limit.
+      !*/
+      Object ErrorSoftLimitObject $Attribute 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Object that has reached error hard limit.
+      !*/
+      Object ErrorHardLimitObject $Attribute 22
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
       !  Number of configured Di objects in the node.
       !*/
       Object DiCount $Attribute 5

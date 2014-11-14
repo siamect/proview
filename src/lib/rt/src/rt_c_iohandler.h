@@ -34,18 +34,13 @@
  * General Public License plus this exception.
  */
 
-/* rt_c_node.h
-   Functions for the class Node. */
+/* rt_c_iohandler.h
+   Functions for the class IOHandler. */
 
 #include "pwr.h"
-#include "pwr_class.h"
 
 void
-pwrs_Node_Exec (
-		void (* handlerEvent_bc)(int, int)	       
+pwrb_IOHandler_Exec (
+  void (* handlerEvent_bc)(int, int),
+  int swap
 );
-
-void
-pwrs_Node_SupEmon (
-);
-

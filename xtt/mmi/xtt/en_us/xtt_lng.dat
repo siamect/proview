@@ -1,3 +1,23 @@
+#
+# System events
+C 0.0.1 "Link down to node"
+C 0.0.2 "Link up to node"
+C 0.0.3 "Node up"
+C 0.0.4 "Node restart initiated, node"
+C 0.0.5 "Node restart completion, node"
+C 0.0.6 "Outunit restarted, node"
+C 0.0.7 "Emergency break reboot, node"
+C 0.0.8 "Emergency break, fixed output values, node"
+C 0.0.9 "Emergency break, I/O stopped, node"
+C 0.0.10 "Simulate load started, node"
+C 0.0.11 "Simulate load completion, node"
+C 0.0.12 "System status error, node"
+C 0.0.13 "System status warning, node"
+C 0.0.14 "IO Soft error limit reached, node"
+C 0.0.15 "IO Hard error limit reached, node"
+C 0.0.16 "Application alarm quota exceeded, node"
+C 0.0.17 "System alarm quota exceeded, node"
+#
 # General
 E 1.0.1 "Error"
 E 1.0.2 "Warning"

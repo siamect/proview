@@ -41,6 +41,7 @@
 #include "pwr.h"
 #include "pwr_basecomponentclasses.h"
 #include "co_dcli.h"
+#include "co_cdh.h"
 #include "rt_io_base.h"
 #include "rt_io_rack_init.h"
 #include "rt_io_rack_close.h"
@@ -917,10 +918,14 @@ static pwr_tStatus IoRackRead (
   // Server error soft limit reached, tell log (once)
   if ( op->ErrorCount >= op->ErrorSoftLimit && error_count < op->ErrorSoftLimit) {
     errh_Warning( "IO Server ErrorSoftLimit reached, '%s'", rp->Name);
+    ctx->IOHandler->CardErrorSoftLimit = 1;
+    ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref( rp->Objid);
   }	
 	
   // Server error hard limit reached, tell log (once)	
   if ( op->ErrorCount >= op->ErrorHardLimit && error_count < op->ErrorHardLimit) {
+    ctx->IOHandler->CardErrorHardLimit = 1;
+    ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref( rp->Objid);
 		
     if( op->StallAction == pwr_eStallActionEnum_EmergencyBreak) {
       errh_Error( "IO Server ErrorHardLimit reached '%s', IO stopped", rp->Name);
