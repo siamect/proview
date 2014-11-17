@@ -371,6 +371,7 @@ sub ebuild # args: pass flavour
     _build("lib","cifx_dummy","src","init lib");
     _build("lib","nodave_dummy","src","init lib");
     _build("lib","epl_dummy","src","init lib");
+    _build("lib","piface_dummy","src","init lib");
     merge();
     _module("rt");
     _build("exe", "rt*", "src", "all");
