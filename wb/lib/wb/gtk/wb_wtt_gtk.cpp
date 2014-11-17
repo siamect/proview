@@ -326,7 +326,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_copykeep_w, TRUE);
       gtk_widget_set_sensitive( menu_rename_w, FALSE);
       gtk_widget_set_sensitive( menu_utilities_w, TRUE);
-      gtk_widget_set_sensitive( menu_openplc_w, FALSE);
+      gtk_widget_set_sensitive( menu_openplc_w, TRUE);
       gtk_widget_set_sensitive( menu_buildobject_w, FALSE);
       gtk_widget_set_sensitive( menu_buildvolume_w, TRUE);
       gtk_widget_set_sensitive( menu_buildnode_w, TRUE);
