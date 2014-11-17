@@ -1984,6 +1984,12 @@ NOA acknowleges the last not A alarm.
 
 Acknowledge all alarms.
 
+<b>xtt> eventlist acknowledge /autoacknowledge=
+
+Automatically acknowlege all alarms. The acknowlegde will be made cyclically with
+the cycletime specified by /autoacknowledge. This function is made for test purposes
+and requires System privilege.
+
 <H2>related subjects
 show alarmlist <LINK> show alarmlist
 show eventlist <LINK> show eventlist

@@ -72,16 +72,27 @@ SObject pwrb:Class
       Body SysBody
         Attr StructName = "MessageHandler"
       EndBody
+      !/**
+      !  Not yet implemented.
+      !*/
       Object OutunitServer $Attribute 1 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  If true, current alarm blocking are stored to file 
+      !  and recovered after a restart.
+      !*/
       Object BlockFile $Attribute 2 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Size of event log.
+      !  Max number of events that can be stored in the event log.
+      !*/
       Object EventLogSize $Attribute 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -120,11 +131,21 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
+      !/**
+      !  Cycle time for detecting alarm conditions for supervision
+      !  objects which detection is handled by the event monitor, that
+      !  is supervision objects that is not in a PlcPgm and not under
+      !  a signal object.
+      !*/
       Object DetectTimer $Intern 6 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
+      !/**
+      !  Cycle time for reading status of supervision object and sending
+      !  alarm messages.
+      !*/
       Object MessageTimer $Intern 7 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"

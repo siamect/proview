@@ -2647,6 +2647,13 @@ static int	xnav_eventlist_func(	void		*client_data,
 
     if ( ODD( dcli_get_qualifier( "/AUTOACKNOWLEDGE", autoack_str, sizeof(autoack_str)))) {
       float ftime;
+
+      // Check authorization
+      if ( !(xnav->priv & pwr_mPrv_System)) {
+	xnav->message('E', "Not authorized for this operation");
+	return XNAV__SUCCESS;
+      }
+
       int nr = sscanf( autoack_str, "%f", &ftime);
       if ( nr != 1) {
 	xnav->message('E', "Syntax error in time");

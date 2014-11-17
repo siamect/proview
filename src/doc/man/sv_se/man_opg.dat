@@ -868,7 +868,7 @@ Database
 <b>Fig Objektträdet i navigatorn
 
 Under mappen 'Database' visas objektträdet. Här kan man navigera i objektsträdet, öppna
-objekt och titta på innehållet i olika attribut i objektet. Om man har priviligier kan man
+objekt och titta på innehållet i olika attribut i objektet. Om man har privilegier kan man
 även ändra på attributvärden.
 
 Högerklickar man på ett objekt öppnas en popupmeny med objektets metoder. Knappar för att
@@ -1942,6 +1942,12 @@ Ta bort händelselistan.
 Kvittera det sista larmet med angiven priritet. Prioriteten kan vara A, B, C, D, I
 eller NOA. NOA kvitterar det sista larmet som inte är ett A larm.
 
+<b>xtt> eventlist acknowledge /autoacknowledge=
+
+Kvittera alla larm automatiskt. Kvitteringen kommer att ske cykliskt med cykeltiden
+specificerad av /autoacknowledge. Den här funktionen är gjord for test och kräver
+System privilegium.
+
 <b>xtt> eventlist acknowledge /all 
 
 Kvittera alla larm.
@@ -1981,7 +1987,7 @@ helpfile <LINK> helpfile
 <TOPIC> login <style> function
 Kommando   login
 
-Inloggning med användare och passerord. Användarens priviligier kommer
+Inloggning med användare och passerord. Användarens privilegier kommer
 att hämtas från användardatabasen. Dessa avgör användarens behörighet.
 
 <B>xtt> login 'username' 'password'
