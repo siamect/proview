@@ -1198,6 +1198,14 @@ void wb_volume::nextAref(pwr_tCid cid, pwr_sAttrRef *arp,
 	  oarp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
 	  ol->unref();
 	  op->unref();
+
+	  if (item->flags[0] & PWR_MASK_DISABLEATTR) {
+	    wb_attribute a = attribute(oarp);
+	    if (a.disabled()) {
+	      pwr_sAttrRef aref = *oarp;
+	      nextAref(cid, &aref, oarp);
+	    }
+	  }
 	  return;
 	}
       }
@@ -1230,6 +1238,14 @@ void wb_volume::nextAref(pwr_tCid cid, pwr_sAttrRef *arp,
 	oarp->Size = bd_size;
 	oarp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
 	op->unref();
+
+	if (item->flags[0] & PWR_MASK_DISABLEATTR) {
+	  wb_attribute a = attribute(oarp);
+	  if (a.disabled()) {
+	    pwr_sAttrRef aref = *oarp;
+	    nextAref(cid, &aref, oarp);
+	  }
+	}
 	return;
       }
     }
@@ -1247,6 +1263,15 @@ void wb_volume::nextAref(pwr_tCid cid, pwr_sAttrRef *arp,
     oarp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
     ol->unref();
     op->unref();
+
+    if (item->flags[0] & PWR_MASK_DISABLEATTR) {
+      wb_attribute a = attribute(oarp);
+      if (a.disabled()) {
+	pwr_sAttrRef aref = *oarp;
+	nextAref(cid, &aref, oarp);
+      }
+    }
+
     return;
   }
 
@@ -1272,6 +1297,14 @@ void wb_volume::nextAref(pwr_tCid cid, pwr_sAttrRef *arp,
       oarp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
       ol->unref();
       op->unref();
+
+      if (item->flags[0] & PWR_MASK_DISABLEATTR) {
+	wb_attribute a = attribute(oarp);
+	if (a.disabled()) {
+	  pwr_sAttrRef aref = *oarp;
+	  nextAref(cid, &aref, oarp);
+	}
+      }
       return;
     }
   }
@@ -1401,6 +1434,7 @@ void wb_volume::nextTemplateAref(pwr_tCid cid, pwr_sAttrRef *arp,
       oarp->Offset = item->offset[0];
       oarp->Size = bd_size;
       oarp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
+
       return;
     }
   }
