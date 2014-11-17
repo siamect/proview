@@ -735,7 +735,7 @@ tree_sTable *wb_merep::buildCatt( pwr_tStatus *sts)
 
 
   // If the current volume is a class volume, add objects from this also
-  if ( m_vrep->type() == ldh_eVolRep_Mem && m_vrep->cid() == pwr_eClass_ClassVolume) {
+  if ( m_vrep && m_vrep->type() == ldh_eVolRep_Mem && m_vrep->cid() == pwr_eClass_ClassVolume) {
     wb_vrep *vrep = m_vrep;
     wb_orep *o, *onext;
     wb_adrep *ad, *adnext;
