@@ -660,7 +660,7 @@ static void StoreData( trend_tCtx ctx)
     pwr_sClass_DsTrendCurve *o;
     int			i;
     unsigned int current_index;
-    unsigned int first_index;
+    unsigned int first_index = 0;
     pwr_tTime time;
     int first_sample;
 
