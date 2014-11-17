@@ -747,7 +747,7 @@ WdaGtk::WdaGtk(
     ((Wtt *)parent_ctx)->register_utility( (void *) this,
 	wb_eUtility_SpreadsheetEditor);
   }
-
+  ((Wda *)this)->open_class_dialog();
 }
 
 static gint india_delete_event( GtkWidget *w, GdkEvent *event, gpointer wda)
