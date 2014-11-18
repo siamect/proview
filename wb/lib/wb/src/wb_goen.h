@@ -130,7 +130,7 @@ class WGre;
 #define GOEN_REFNODEWIDTH 0.08          /* Reference rect width */
 #define GOEN_REFNODEHEIGHT 0.035        /* Reference rect height */
 #define GOEN_DISPLAYNODEWIDTH 0.09      /* Display node rect width */
-#define GOEN_DISPLAYNODEHEIGHT 0.030    /* Display node rect height */
+#define GOEN_DISPLAYNODEHEIGHT 0.040    /* Display node rect height */
 
 /* Connection attributes */
 #define GOEN_CON_OBJTOOBJ       1

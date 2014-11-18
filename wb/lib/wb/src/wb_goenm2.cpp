@@ -384,8 +384,11 @@ int goen_create_nodetype_m2(
 
   /* Add execute order display */
   flow_AddFilledRect( nc_pid, f_width - GOEN_DISPLAYNODEWIDTH, -f_yoffs, 
+		      GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
+		      flow_eDrawType_LineErase, flow_mDisplayLevel_2);
+  flow_AddRect( nc_pid, f_width - GOEN_DISPLAYNODEWIDTH, -f_yoffs, 
 		GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
-		flow_eDrawType_LineGray, flow_mDisplayLevel_2);
+		flow_eDrawType_LineRed, 1, flow_mDisplayLevel_2);
   flow_AddAnnot( nc_pid, 
 	f_width - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_yoffs,

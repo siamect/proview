@@ -173,7 +173,10 @@ int goen_create_nodetype_m4(
       /* Add execute order display */
       flow_AddFilledRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
 		GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
-		flow_eDrawType_LineGray, flow_mDisplayLevel_2);
+		flow_eDrawType_LineErase, flow_mDisplayLevel_2);
+      flow_AddRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
+		    GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
+		    flow_eDrawType_LineRed, 1, flow_mDisplayLevel_2);
       flow_AddAnnot( nc, 
 	f_width/2 - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_height/2,
@@ -210,7 +213,10 @@ int goen_create_nodetype_m4(
       /* Add execute order display */
       flow_AddFilledRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
 		GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
-		flow_eDrawType_LineGray, flow_mDisplayLevel_2);
+		flow_eDrawType_LineErase, flow_mDisplayLevel_2);
+      flow_AddRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
+		    GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
+		    flow_eDrawType_LineRed, 1, flow_mDisplayLevel_2);
       flow_AddAnnot( nc, 
 	f_width/2 - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_height/2,
@@ -251,7 +257,10 @@ int goen_create_nodetype_m4(
       /* Add execute order display */
       flow_AddFilledRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
 		GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
-		flow_eDrawType_LineGray, flow_mDisplayLevel_2);
+		flow_eDrawType_LineErase, flow_mDisplayLevel_2);
+      flow_AddRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
+		    GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
+		    flow_eDrawType_LineRed, 1, flow_mDisplayLevel_2);
       flow_AddAnnot( nc, 
 	f_width/2 - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_height/2,
@@ -279,7 +288,10 @@ int goen_create_nodetype_m4(
       /* Add execute order display */
       flow_AddFilledRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
 		GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
-		flow_eDrawType_LineGray, flow_mDisplayLevel_2);
+		flow_eDrawType_LineErase, flow_mDisplayLevel_2);
+      flow_AddRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
+		    GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
+		    flow_eDrawType_LineRed, 1, flow_mDisplayLevel_2);
       flow_AddAnnot( nc, 
 	f_width/2 - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_height/2,
@@ -307,7 +319,10 @@ int goen_create_nodetype_m4(
       /* Add execute order display */
       flow_AddFilledRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
 		GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
-		flow_eDrawType_LineGray, flow_mDisplayLevel_2);
+		flow_eDrawType_LineErase, flow_mDisplayLevel_2);
+      flow_AddRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
+		    GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
+		    flow_eDrawType_LineRed, 1, flow_mDisplayLevel_2);
       flow_AddAnnot( nc, 
 	f_width/2 - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_height/2,
@@ -339,7 +354,10 @@ int goen_create_nodetype_m4(
       /* Add execute order display */
       flow_AddFilledRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, 0, 
 		GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
-		flow_eDrawType_LineGray, flow_mDisplayLevel_2);
+		flow_eDrawType_LineErase, flow_mDisplayLevel_2);
+      flow_AddRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, 0, 
+		    GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
+		    flow_eDrawType_LineRed, 1, flow_mDisplayLevel_2);
       flow_AddAnnot( nc, 
 	f_width/2 - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0,
@@ -387,7 +405,10 @@ int goen_create_nodetype_m4(
       /* Add execute order display */
       flow_AddFilledRect( nc, f_width - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
 		GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
-		flow_eDrawType_LineGray, flow_mDisplayLevel_2);
+		flow_eDrawType_LineErase, flow_mDisplayLevel_2);
+      flow_AddRect( nc, f_width - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
+		    GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
+		    flow_eDrawType_LineRed, 1, flow_mDisplayLevel_2);
       flow_AddAnnot( nc, 
 	f_width - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_height/2,

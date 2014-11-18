@@ -147,7 +147,10 @@ int goen_create_nodetype_m12( pwr_sGraphPlcNode	*graphbody,
   double y  = 0;
   flow_AddFilledRect( nc, x, y, 
 		      GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
-		      flow_eDrawType_LineGray, flow_mDisplayLevel_2);
+		      flow_eDrawType_LineErase, flow_mDisplayLevel_2);
+  flow_AddRect( nc, x, y, 
+		GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
+		flow_eDrawType_LineRed, 1, flow_mDisplayLevel_2);
   flow_AddAnnot( nc, 
 		 x + f_strlength,
 		 y + (GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0,
