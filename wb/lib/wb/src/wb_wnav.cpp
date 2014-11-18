@@ -2425,6 +2425,11 @@ int WNav::save_settnings( ofstream& fp)
   else
     fp << "  set nobuildmanual /local" << endl;
  
+  if ( gbl.build.debug)
+    fp << "  set builddebug /local" << endl;
+  else
+    fp << "  set nobuilddebug /local" << endl;
+ 
   if ( gbl.build.nocopy)
     fp << "  set buildnocopy /local" << endl;
   else
