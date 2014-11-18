@@ -1046,10 +1046,14 @@ WFoe *WFoeGtk::subwindow_new( void			*f_parent_ctx,
 			        unsigned int 	f_options,
 				pwr_tStatus 	*sts)
 {
-  return new WFoeGtk( f_parent_ctx, widgets.foe_window, f_name, plcprogram,
+  WFoeGtk *foe = new WFoeGtk( f_parent_ctx, widgets.foe_window, f_name, plcprogram,
 		      ldhwbctx, ldhsesctx, nodeobject, windowindex,
 		      new_window, f_map_window, f_access, function_access,
 		      f_options, sts);
+  if ( ODD(*sts))
+    foe->get_build_options_cb = get_build_options_subwindow_cb;
+
+  return foe;
 }
 
 

@@ -283,6 +283,7 @@ class WNav : public WUtility{
     int 		(*global_unselect_objid_cb)( void *, pwr_tObjid objid);
     void 		(*set_window_char_cb)( void *, int, int);
     void                (*open_vsel_cb)( void *, wb_eType, char *, wow_eFileSelType);
+    void                (*get_build_options_cb)( void *, wb_build_opt **);
     int			ccm_func_registred;
     wnav_sMenu 		*menu_tree;
     int			closing_down;
@@ -356,6 +357,7 @@ class WNav : public WUtility{
 				 flow_eTraceType type, void **p);
     static int trace_disconnect_bc( brow_tObject object);
     static int trace_scan_bc( brow_tObject object, void *p);
+    static void foe_get_build_options_cb( void *ctx, wb_build_opt **opt);
 
     int create_object_item( pwr_tObjid objid, 
 		brow_tNode dest, flow_eDest dest_code, void **item,

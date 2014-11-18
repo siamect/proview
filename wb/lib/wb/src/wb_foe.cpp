@@ -73,6 +73,7 @@
 #include "cow_wow.h"
 #include "cow_xhelp.h"
 #include "wb_log.h"
+#include "wb_build_opt.h"
 
 #define	BEEP	    putchar( '\7' );
 
@@ -464,7 +465,8 @@ void WFoe::activate_compile()
   char		msg[80];
   vldh_t_wind	wind;
   int		vldh_mod;
-
+  int 		debug = 0;
+  
   if ( msg_label_id != 0 ) message( ""); 
 
   wind = gre->wind;
@@ -477,8 +479,15 @@ void WFoe::activate_compile()
     return;
   }
 
+  if ( get_build_options_cb) {
+    wb_build_opt  *buildopt;
+
+    (get_build_options_cb)( parent_ctx, &buildopt);
+    debug = buildopt->debug;
+  }
+
   disable_ldh_cb();
-  sts = gcg_plcwindow_compile( wind, 1, &errcount, &warncount, 0, 0);
+  sts = gcg_plcwindow_compile( wind, 1, &errcount, &warncount, 0, debug);
   enable_ldh_cb();
   if ( sts == GSX__AMBIGOUS_EXECUTEORDER) {
     message( "Execute order error");
@@ -508,7 +517,7 @@ void WFoe::activate_compile()
   }
 	
   sts = gcg_plc_compile( wind->hw.plc, 1, 
-			 &plc_errcount, &plc_warncount, 0, 0);
+			 &plc_errcount, &plc_warncount, 0, debug);
   warncount += plc_warncount;
   errcount += plc_errcount;
   if ( sts == GSX__PLCPGM_ERRORS) {
@@ -2715,8 +2724,8 @@ WFoe::WFoe( void		*f_parent_ctx,
 	    pwr_tStatus		*sts) :
   WUtility(wb_eUtility_PlcEditor),
   parent_ctx(f_parent_ctx),
-  node_palctx(0), con_palctx(0), navctx(0), tractx(0), gre(0), msg_label_id(0),
-  function(0), wanted_function(0), plcobject(0), con_palette_managed(0),
+  node_palctx(0), con_palctx(0), navctx(0), tractx(0), gre(0), get_build_options_cb(0),
+  msg_label_id(0), function(0), wanted_function(0), plcobject(0), con_palette_managed(0),
   node_palette_managed(0), nav_palette_managed(0), con_drawtype(GOEN_CONDRAW),
   show_execorder(0), searchindex(0), popupmenu_mask(~0), popupmenu_node(0),
   access(f_access), map_window(f_map_window), advanced_user(1), ldh_cb_enabled(0),
@@ -4285,6 +4294,14 @@ int WFoe::create_volume_xtthelpfile( ldh_tSession ldhses, pwr_tVid vid)
   fclose(fp);
 
   return FOE__SUCCESS;
+}
+
+void WFoe::get_build_options_subwindow_cb( void *ctx, wb_build_opt **opt)
+{
+  WFoe *foe = (WFoe *)ctx;
+
+  if ( foe->get_build_options_cb)
+    (foe->get_build_options_cb)( foe->parent_ctx, opt);
 }
 
 /* API routines */

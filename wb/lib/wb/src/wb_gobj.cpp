@@ -206,7 +206,8 @@ static int gobj_get_select( WFoe *foe, pwr_sAttrRef *attrref, int *is_attr)
       return sts;
   }
 
-  sts = ((Wtt *)plc->hp.hinactx)->get_select_first( attrref, is_attr);
+  WNav *wnav = (WNav *)plc->hp.hinactx;
+  sts = ((Wtt *)wnav->parent_ctx)->get_select_first( attrref, is_attr);
   if ( ODD(sts))
     return sts;
 

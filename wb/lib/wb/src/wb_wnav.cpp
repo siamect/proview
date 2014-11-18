@@ -633,7 +633,7 @@ WNav::WNav(
 	window_type(xn_type), ldhses(xn_ldhses), wbctx(0),
 	brow(0), brow_cnt(0), trace_started(0),
 	message_cb(NULL), close_cb(NULL), map_cb(NULL), change_value_cb(NULL),
-	ccm_func_registred(0),
+	get_build_options_cb(NULL), ccm_func_registred(0),
 	menu_tree(NULL), closing_down(0),
 	base_priv(pwr_mPrv_System), priv(pwr_mPrv_System), editmode(0),
 	layout_objid(pwr_cNObjid), search_last(pwr_cNObjid), search_compiled(0),
@@ -3599,6 +3599,13 @@ int WNav::init_brow_cb( BrowCtx *ctx, void *client_data)
 }
 
 
+void WNav::foe_get_build_options_cb( void *ctx, wb_build_opt **opt)
+{
+  WNav *wnav = (WNav *)ctx;
+
+  *opt = &wnav->gbl.build;
+}
+
 ApplListElem::ApplListElem( applist_eType al_type, void *al_ctx, 
 	pwr_tObjid al_objid, const char *al_name):
 	type(al_type), ctx(al_ctx), objid(al_objid), next(NULL)
@@ -3670,4 +3677,5 @@ char *wnav_get_message( int sts)
 
   return msg_GetMsg( sts, msg, sizeof(msg));
 }
+
 

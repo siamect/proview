@@ -95,6 +95,7 @@ class WAtt;
 class CoWow;
 class Pal;
 class Nav;
+class wb_build_opt;
 
 typedef struct 	{
   void		*a_ctx;
@@ -113,9 +114,10 @@ class WFoe : public WUtility {
   void		*tractx;
   WGre		*gre;
 
-  void         (* popupmsg_yes_p)(WFoe *);
-  void         (* popupmsg_no_p)(WFoe *); 
-  void         (* popupmsg_cancel_p)(WFoe *);
+  void          (* popupmsg_yes_p)(WFoe *);
+  void          (* popupmsg_no_p)(WFoe *); 
+  void          (* popupmsg_cancel_p)(WFoe *);
+  void		(* get_build_options_cb)(void *, wb_build_opt **);
   int           msg_label_id;
   int 		function; 		/* TRACE or EDIT or ... */
   int		wanted_function;	
@@ -357,6 +359,7 @@ class WFoe : public WUtility {
 
   static void pal_select_cb( void *ctx, pwr_tCid cid);
   static int create_volume_xtthelpfile( ldh_tSession ldhses, pwr_tVid vid);
+  static void get_build_options_subwindow_cb( void *ctx, wb_build_opt **opt);
 
 };
 

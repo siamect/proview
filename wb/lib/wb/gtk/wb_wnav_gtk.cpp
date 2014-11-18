@@ -439,12 +439,13 @@ int WNavGtk::open_foe( const char *name, pwr_tOid plcpgm,
   foe = WFoe::get( plcpgm);
   if ( foe)
     foe->pop();
-  else 
-    foe = new WFoeGtk( (void *)parent_ctx, parent_wid, name,
+  else {
+    foe = new WFoeGtk( (void *)this, parent_wid, name,
 		       plcpgm, wbctx, ldhses,
 		       map_window, access, options, &sts);
-  if ( EVEN(sts)) return sts;
-
+    if ( EVEN(sts)) return sts;
+    foe->get_build_options_cb = foe_get_build_options_cb;
+  }
   if ( cdh_ObjidIsNotNull( oid))
     foe->center_object(oid);
   *foectx = foe;
