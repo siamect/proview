@@ -99,16 +99,52 @@ int xnav_crr_name_to_objid_cb( void *ctx, char *name, pwr_tObjid *objid)
   return gdh_NameToObjid( name, objid);
 }
 
-int xnav_crr_get_volume_cb( void *ctx, pwr_tVolumeId *volid)
+int xnav_crr_get_volume_cb( void *ctx, pwr_tVid *vid, pwr_tVid prev_vid)
 {
   int sts;
   pwr_tObjid objid;
+  pwr_tVid v;
+  gdh_sVolumeInfo info;
 
   sts = gdh_GetNodeObject( 0, &objid);
   if ( EVEN(sts)) return sts;
 
-  *volid = objid.vid;
-  return XNAV__SUCCESS;
+  if ( prev_vid == 0) {
+    *vid = objid.vid;
+    return XNAV__SUCCESS;
+  }
+
+  int next = 0;
+  for (  sts = gdh_GetVolumeList( &v); ODD(sts); sts = gdh_GetNextVolume( v, &v)) {
+    int volume_found = 0;
+
+    sts = gdh_GetVolumeInfo( v, &info);
+    if ( EVEN(sts)) return sts;
+
+    switch ( info.cid) {
+    case pwr_eClass_SubVolume:
+    case pwr_eClass_SharedVolume:
+      volume_found = 1;
+      break;
+    default: ;
+    }
+    if ( !volume_found)
+      continue;
+
+    if ( prev_vid == objid.vid) {
+      *vid = v;
+      return XNAV__SUCCESS;
+    }
+
+    if ( prev_vid == v) {
+      next = 1;
+    }
+    else if ( next) {
+      *vid = v;
+      return XNAV__SUCCESS;
+    }
+  }
+  return XNAV__NOSUCHVOLUME;
 }
 
 int	xnav_crr_signal(

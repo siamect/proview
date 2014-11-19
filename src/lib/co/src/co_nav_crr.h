@@ -61,7 +61,7 @@ class NavCrr {
     void 		(*insert_cb)( void *, void *, navc_eItemType,
 			     char *, char *, int);
     int                 (*name_to_objid_cb)( void *, char *, pwr_tObjid *);
-    int                 (*get_volume_cb)( void *, pwr_tVolumeId *);
+    int                 (*get_volume_cb)( void *, pwr_tVid *, pwr_tVid);
     int	crr_signal( char *filename, char *signalname);
     int	crr_object( char *filename, char *objectname);
     int	crr_code( char *filename, char *str, int brief, int func,

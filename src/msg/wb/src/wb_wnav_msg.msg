@@ -80,6 +80,7 @@ volnameexist	<Volume name already exist>			/error
 createdbs	<Create loadfile error>				/error
 edit		<In edit mode>					/error
 notauthorized	<User not authorized for requested operation>	/error
+nosuchvolume	<No such volume>				/error
 
 
 

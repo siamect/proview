@@ -127,7 +127,7 @@ int wnav_crr_name_to_objid_cb( void *ctx, char *name, pwr_tObjid *objid)
   return ldh_NameToObjid( cctx->ldhses, objid, name);
 }
 
-int wnav_crr_get_volume_cb( void *ctx, pwr_tVolumeId *volid)
+int wnav_crr_get_volume_cb( void *ctx, pwr_tVid *vid, pwr_tVid prev_vid)
 {
   int sts;
   ldh_sVolumeInfo info;
@@ -135,7 +135,10 @@ int wnav_crr_get_volume_cb( void *ctx, pwr_tVolumeId *volid)
   ldh_tVolContext volctx = ldh_SessionToVol( cctx->ldhses);
   sts = ldh_GetVolumeInfo( volctx, &info);
 
-  *volid = info.Volume;
+  if ( prev_vid)
+    return WNAV__NOSUCHVOLUME;
+
+  *vid = info.Volume;
   return WNAV__SUCCESS;
 }
 

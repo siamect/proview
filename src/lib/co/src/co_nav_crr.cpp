@@ -253,7 +253,7 @@ int	NavCrr::crr_signal(
 	volid = objid.vid;
       }
       else {
-	sts = (get_volume_cb)( parent_ctx, &volid);
+	sts = (get_volume_cb)( parent_ctx, &volid, 0);
 	if ( EVEN(sts)) return sts;
       }
 
@@ -428,7 +428,7 @@ int	NavCrr::crr_object(
 	volid = objid.vid;
       }
       else {
-	sts = (get_volume_cb)( parent_ctx, &volid);
+	sts = (get_volume_cb)( parent_ctx, &volid, 0);
 	if ( EVEN(sts)) return sts;
       }
 
@@ -588,132 +588,162 @@ int	NavCrr::crr_code(
 	int	objname_written;
 	int	hit;
 	char	*tst_char;
+	pwr_tVid prev_volid = 0;
+	int	vol_cnt = 0;
+	int     end_of_file;
 
-	/* Open file */
-	if ( filename == NULL) {
-          sts = (get_volume_cb)( parent_ctx, &volid);
-          if ( EVEN(sts)) return sts;
+	while (1) {
+	  end_of_file = 0;
 
-	  sprintf( default_filename, "%srtt_crrc_%s.dat", 
-		dcli_pwr_dir("pwrp_load"), nav_VolumeIdToStr( volid));
-	  dcli_get_defaultfilename( default_filename, filestr, NULL);
-	  file = fopen( filestr, "r");
-	}
-	else {
-	  dcli_get_defaultfilename( filename, filestr, ".lis");
-	  file = fopen( filestr, "r");
-	}
-	  
-	if ( file == 0)
-	  return NAV__NOFILE;
-	
-	/* Case sensitive if any lowercase */
-	if ( !case_sensitive)
-	  for ( s = str; *s != 0; s++) {
-	    if ( *s != '_' && !isupper(*s))
-	      case_sensitive = 1;
+	  /* Open file */
+	  if ( filename == NULL) {
+	    sts = (get_volume_cb)( parent_ctx, &volid, prev_volid);
+	    if ( EVEN(sts)) break;
+
+	    prev_volid = volid;
+
+	    sprintf( default_filename, "%srtt_crrc_%s.dat", 
+		     dcli_pwr_dir("pwrp_load"), nav_VolumeIdToStr( volid));
+	    dcli_get_defaultfilename( default_filename, filestr, NULL);
+	    file = fopen( filestr, "r");
 	  }
+	  else {
+	    if ( vol_cnt == 1)
+	      break; 
 
-	while ( strncmp( line, " _Obj_ ", 7) != 0) {
-	  sts = nav_get_signal_line( file, line, sizeof( line),
-				     &spaces, object, &lines);
-	  if ( EVEN(sts)) goto finish;
-	}
+	    dcli_get_defaultfilename( filename, filestr, ".lis");
+	    file = fopen( filestr, "r");
+	  }
+	  vol_cnt++;
+	  
+	  if ( file == 0)
+	    continue;
+	
+	  /* Case sensitive if any lowercase */
+	  if ( !case_sensitive)
+	    for ( s = str; *s != 0; s++) {
+	      if ( *s != '_' && !isupper(*s))
+		case_sensitive = 1;
+	    }
 
-
-	first = 1;
-	while ( 1) {
-
-	  strcpy( objname, &line[7]);
-	  for ( s = objname; !(*s == 32 || *s == 9 || *s == 0); s++);
-	  *s = 0;
-
-	  sts = nav_get_signal_line( file, line, sizeof( line),
-				&spaces, object, &lines);
-	  objname_written = 0;
 	  while ( strncmp( line, " _Obj_ ", 7) != 0) {
-	    if ( !case_sensitive)
-	      cdh_ToUpper( tst_line, line);
-	    else
-	      strcpy( tst_line, line);
-
-	    hit = 0;
-	    if ( !func) {
-	      if ( strstr( tst_line, str) != 0)
-	        hit = 1;
+	    sts = nav_get_signal_line( file, line, sizeof( line),
+				       &spaces, object, &lines);
+	    if ( EVEN(sts)) {
+	      fclose( file);
+	      end_of_file = 1;
+	      break;
 	    }
-	    else {
-	      if ( (s = strstr( tst_line, str)) != 0) {
-	        hit = 1;
-	        /* Check char after */
-	        tst_char = s + strlen(str);
-	        if ( isalpha( *tst_char) || isdigit( *tst_char) ||
-		     *tst_char == '_')
-	          hit = 0;
-	        /* Check char before */
-	        if ( s != tst_line)
-	        {
-	          tst_char = s - 1;
-	          if ( isalpha( *tst_char) || isdigit( *tst_char) ||
-		       *tst_char == '_')
-	            hit = 0;
-	        }
-	      }
-	    }
-	    if ( hit) {
-	      /* Hit, print this object */
-	      if ( signalcount == 0) {
-	        if ( func) {
-	          sprintf( title, "Crossreferens list Function  \"%s\"\n\n", str);
-                  (insert_cb)( parent_ctx, parent_node, 
-			       navc_eItemType_Header, title, NULL, 0);
-	        }
-	        else {
-	          sprintf( title, "Crossreferens list String    \"%s\"\n\n", str);
-                  (insert_cb)( parent_ctx, parent_node, 
-			       navc_eItemType_Header, title, NULL, 0);
-	        }
-	      }
-	      signalcount++;
+	  }
+	  if ( end_of_file)
+	    continue;
 
-	      if ( !objname_written) {
-                (insert_cb)( parent_ctx, parent_node, 
-			     navc_eItemType_Crossref, objname, (char *)"", 2);
-	        objname_written = 1;
-	      }
+	  first = 1;
+	  while ( 1) {
 
-	      strcpy( tst_line, "     ");
-	      strcat( tst_line, line);
-              (insert_cb)( parent_ctx, parent_node, 
-			   navc_eItemType_Text, tst_line, NULL, 0);
+	    strcpy( objname, &line[7]);
+	    for ( s = objname; !(*s == 32 || *s == 9 || *s == 0); s++);
+	    *s = 0;
 
-	      if ( brief) {
-	        while ( strncmp( line, " _Obj_ ", 7) != 0) {	      
-	          sts = nav_get_signal_line( file, line, sizeof( line),
-				&spaces, object, &lines);
-	          if ( EVEN(sts)) goto finish;
-	        }
+	    sts = nav_get_signal_line( file, line, sizeof( line),
+				       &spaces, object, &lines);
+	    objname_written = 0;
+	    while ( strncmp( line, " _Obj_ ", 7) != 0) {
+	      if ( !case_sensitive)
+		cdh_ToUpper( tst_line, line);
+	      else
+		strcpy( tst_line, line);
+
+	      hit = 0;
+	      if ( !func) {
+		if ( strstr( tst_line, str) != 0)
+		  hit = 1;
 	      }
 	      else {
-	        sts = nav_get_signal_line( file, line, sizeof( line),
-				&spaces, object, &lines);
-	        if ( EVEN(sts)) goto finish;
+		if ( (s = strstr( tst_line, str)) != 0) {
+		  hit = 1;
+		  /* Check char after */
+		  tst_char = s + strlen(str);
+		  if ( isalpha( *tst_char) || isdigit( *tst_char) ||
+		       *tst_char == '_')
+		    hit = 0;
+		  /* Check char before */
+		  if ( s != tst_line)
+		    {
+		      tst_char = s - 1;
+		      if ( isalpha( *tst_char) || isdigit( *tst_char) ||
+			   *tst_char == '_')
+			hit = 0;
+		    }
+		}
 	      }
-	    }
-	    else {
-	      sts = nav_get_signal_line( file, line, sizeof( line),
-				&spaces, object, &lines);
-	      if ( EVEN(sts)) goto finish;
-	    }
+	      if ( hit) {
+		/* Hit, print this object */
+		if ( signalcount == 0) {
+		  if ( func) {
+		    sprintf( title, "Crossreferens list Function  \"%s\"\n\n", str);
+		    (insert_cb)( parent_ctx, parent_node, 
+				 navc_eItemType_Header, title, NULL, 0);
+		  }
+		  else {
+		    sprintf( title, "Crossreferens list String    \"%s\"\n\n", str);
+		    (insert_cb)( parent_ctx, parent_node, 
+				 navc_eItemType_Header, title, NULL, 0);
+		  }
+		}
+		signalcount++;
+
+		if ( !objname_written) {
+		  (insert_cb)( parent_ctx, parent_node, 
+			       navc_eItemType_Crossref, objname, (char *)"", 2);
+		  objname_written = 1;
+		}
+
+		strcpy( tst_line, "     ");
+		strcat( tst_line, line);
+		(insert_cb)( parent_ctx, parent_node, 
+			     navc_eItemType_Text, tst_line, NULL, 0);
+
+		if ( brief) {
+		  while ( strncmp( line, " _Obj_ ", 7) != 0) {	      
+		    sts = nav_get_signal_line( file, line, sizeof( line),
+					       &spaces, object, &lines);
+		    if ( EVEN(sts)) {
+		      end_of_file = 1;
+		      break;
+		    }
+		  }
+		  if ( end_of_file)
+		    break;
+		}
+		else {
+		  sts = nav_get_signal_line( file, line, sizeof( line),
+					     &spaces, object, &lines);
+		  if ( EVEN(sts)) {
+		    end_of_file = 1;
+		    break;
+		  }
+		}
+	      }
+	      else {
+		sts = nav_get_signal_line( file, line, sizeof( line),
+					   &spaces, object, &lines);
+		if ( EVEN(sts)) {
+		  end_of_file = 1;
+		  break;
+		}
+	      }
+	      if ( end_of_file)
+		break;
+	    }	    
+	    if ( end_of_file)
+	      break;
 	  }
+
+	  fclose( file);
 	}
 
-finish:
-	fclose( file);
-
-	if ( signalcount > 0) {
-	}
-	else {
+	if ( signalcount == 0) {
 	  if ( func)
 	    return NAV__STRINGNOTFOUND;
 	  else
