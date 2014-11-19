@@ -424,6 +424,9 @@ void GeCurveGtk::activate_export_ok( GtkWidget *w, gpointer data)
   int nr;
   int idx = 0;
 
+  from = pwr_cNTime;
+  time_GetTime( &to);
+
   value = gtk_combo_box_get_active_text( GTK_COMBO_BOX(((GeCurveGtk *)curve)->export_attrcombo_widget));
   if ( !value) return;
 

@@ -700,7 +700,23 @@ int XttTCurve::tcurve_export_cb( void *ctx, pwr_tTime *from, pwr_tTime *to, int 
   int rowcnt;
   int resolution;
 
-  dcli_translate_filename( fname, filename);
+  // Replace $date with date
+  strncpy( fname, filename, sizeof(fname));
+  char *s1 = strstr( fname, "$date");
+  if ( s1) {
+    char timstr[40];
+    pwr_tFileName str;
+
+    sts = time_AtoAscii( 0, time_eFormat_FileDateAndTime,
+			 timstr, sizeof(timstr));
+
+    strncpy( str, s1 + strlen("$date"), sizeof(str));
+    *s1 = 0;
+    strncat( fname, timstr, sizeof(fname));
+    strncat( fname, str, sizeof(fname));
+  }
+
+  dcli_translate_filename( fname, fname);
 
   fp = fopen( fname, "w");
   if ( !fp)
