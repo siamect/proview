@@ -64,6 +64,10 @@
 void WPkgGtk::message( char severity, const char *message)
 {
   gtk_label_set_text( GTK_LABEL(msg_label), message);
+
+  // Change the label now !!
+  gdk_display_flush( gdk_display_get_default());
+  while(gtk_events_pending()) gtk_main_iteration();
 }
 
 //
