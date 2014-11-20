@@ -418,7 +418,7 @@ void GeCurveGtk::activate_export_ok( GtkWidget *w, gpointer data)
   GeCurve *curve = (GeCurve *)data;
   char *value;
   pwr_tTime from, to;
-  int rows;
+  int rows = 5000;
   pwr_tFileName filename;
   pwr_tStatus sts;
   int nr;
