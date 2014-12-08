@@ -3581,7 +3581,7 @@ static int	xnav_open_func(	void		*client_data,
 	strmctx->pop();
       }
       else {
-	strmctx = xnav->stream_new( name_str, url_str, width, height, x, y, 0, options, 0, &sts);
+	strmctx = xnav->stream_new( name_str, url_str, width, height, x, y, 0, options, 0, &aref, &sts);
 	if ( EVEN(sts)) {
 	  xnav->message(' ', XNav::get_message(sts));
 	  return sts;
@@ -3660,7 +3660,7 @@ static int	xnav_open_func(	void		*client_data,
 	strmctx->pop();
       }
       else {
-	strmctx = xnav->stream_new( name_str, url_str, width, height, x, y, 0, options, 0, &sts);
+	strmctx = xnav->stream_new( name_str, url_str, width, height, x, y, 0, options, 0, 0, &sts);
 	if ( EVEN(sts)) {
 	  xnav->message(' ', XNav::get_message(sts));
 	  return sts;

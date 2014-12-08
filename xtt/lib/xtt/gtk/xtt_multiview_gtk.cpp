@@ -737,7 +737,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  strmctx[i*rows + j] = new XttStreamGtk( toplevel, this, "No title", 
 						  xttvideo.URL,
 						  mv.Action[i*rows+j].Width, mv.Action[i*rows+j].Height, 
-						  0, 0, 0, options, 1, sts);
+						  0, 0, 0, options, 1, &aref, sts);
 
 	  strmctx[i*rows + j]->close_cb = multiview_strm_close_cb;
 
@@ -1275,7 +1275,7 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
 
 	    XttStreamGtk *ctx = new XttStreamGtk( toplevel, this, "No title", 
 						  xttvideo.URL, w, h, 0, 0,
-						  0, xttvideo.Options, 1, &lsts);
+						  0, xttvideo.Options, 1, &object_aref, &lsts);
 	    
 	    GtkWidget *comp_w = (GtkWidget *)ctx->get_widget();
 	  

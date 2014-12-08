@@ -93,7 +93,6 @@ SObject pwrb:Class
       Object X $Attribute 6
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
-          Attr Flags = 0
         EndBody
       EndObject
       !/**
@@ -102,7 +101,6 @@ SObject pwrb:Class
       Object Y $Attribute 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
-          Attr Flags = 0
         EndBody
       EndObject
       !/**
@@ -111,7 +109,6 @@ SObject pwrb:Class
       Object Width $Attribute 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
-          Attr Flags = 0
         EndBody
       EndObject
       !/**
@@ -120,7 +117,6 @@ SObject pwrb:Class
       Object Height $Attribute 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
-          Attr Flags = 0
         EndBody
       EndObject
       !/**
@@ -132,10 +128,44 @@ SObject pwrb:Class
       ! - Iconify     Open the graph iconified.
       ! - ControlPanel Show a control panel with progress bar, Play, Pause and Stop buttons.
       !*/
-      Object Options $Attribute 15
+      Object Options $Attribute 10
         Body SysBody
           Attr TypeRef = "pwrb:Type-VideoOptionsMask"
-          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      ! Protocol for camera control.
+      !*/
+      Object Control $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-CameraControlEnum"
+        EndBody
+      EndObject
+      !/**
+      ! Width of stream in pixel.
+      !*/
+      Object StreamWidth $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      ! Height of stream in pixel.
+      !*/
+      Object StreamHeight $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      ! Camera preset positions.
+      !*/
+      Object PresetPosition $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrb:Class-CameraPosition"
+          Attr Flags |= PWR_MASK_CLASS
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 10
         EndBody
       EndObject
     EndObject

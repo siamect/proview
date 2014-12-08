@@ -422,7 +422,16 @@ gboolean XttStreamGtk::mousebutton_cb( GtkWidget *widget, GdkEvent *event, void 
       time_GetTime( &strm->mb_press_time);
       strm->mb_press_x = event->button.x;
       strm->mb_press_y = event->button.y;
-      break;
+      break;    
+    case 3: {
+      int x1, y1;
+      int x = event->button.x + 8;
+      int y = event->button.y;
+      CoWowGtk::PopupPosition( strm->video_form, x, y, &x1, &y1);
+      strm->action_mb3click( x1, y1);
+      g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+  break;
+    }
     }
     break;
   case GDK_BUTTON_RELEASE:
@@ -437,8 +446,11 @@ gboolean XttStreamGtk::mousebutton_cb( GtkWidget *widget, GdkEvent *event, void 
       dft =  time_DToFloat( &dft, &dt);
       if ( dft < 0.5 && 
 	   abs( event->button.x - strm->mb_press_x) < 10 &&
-	   abs( event->button.y - strm->mb_press_y) < 10)
+	   abs( event->button.y - strm->mb_press_y) < 10) {
 	printf( "Mb click %f %f\n", event->button.x - offset_x, event->button.y - offset_y);
+	strm->action_click( event->button.x - offset_x, event->button.y - offset_y);
+	g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+      }
       else if ( abs( event->button.x - strm->mb_press_x) > 20 &&
 		abs( event->button.y - strm->mb_press_y) > 20) {
 	int x = min( event->button.x, strm->mb_press_x) - offset_x;
@@ -446,7 +458,15 @@ gboolean XttStreamGtk::mousebutton_cb( GtkWidget *widget, GdkEvent *event, void 
 	int w = abs( event->button.x - strm->mb_press_x);
 	int h = abs( event->button.y - strm->mb_press_y);
 	printf( "Mb zoom (%d,%d) rect %d,%d\n", x, y, w, h);
+	strm->action_areaselect( x, y, w, h);
+	g_object_set( strm->ptz_box, "visible", FALSE, NULL);
       }
+      break;
+    }
+    case 2: {
+      int x = min( event->button.x, strm->mb_press_x) - offset_x;
+      int y = min( event->button.y, strm->mb_press_y) - offset_y;
+      strm->action_mb2click( x, y);
       break;
     }
     }
@@ -456,18 +476,35 @@ gboolean XttStreamGtk::mousebutton_cb( GtkWidget *widget, GdkEvent *event, void 
       printf( "Scroll Up %f %f\n", event->scroll.x - offset_x, event->scroll.y - offset_y);
     else if ( event->scroll.direction == GDK_SCROLL_DOWN)
       printf( "Scroll Down %f %f\n", event->scroll.x - offset_x, event->scroll.y - offset_y);
+
+    strm->scroll_timerid->remove();
+    strm->scroll_timerid->add( 600, strm->scroll_cb, strm);
+    //strm->action_scroll(  event->scroll.direction == GDK_SCROLL_UP ? 1 : 0, 
+    //			  event->button.x - offset_x, event->button.y - offset_y);
+    strm->scroll_direction = event->scroll.direction == GDK_SCROLL_UP ? 1 : 0;
+    strm->scroll_x = event->button.x - offset_x;
+    strm->scroll_y = event->button.y - offset_y;
+    strm->scroll_cnt++;
     break;
   default: ;
   } 
   return TRUE;
 }
 
+void XttStreamGtk::scroll_cb( void *data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+  strm->action_scroll(  strm->scroll_direction, 
+			strm->scroll_x, strm->scroll_y, strm->scroll_cnt);
+  strm->scroll_cnt = 0;
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
 
 XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const char *name, const char *st_uri,
 			    int width, int height, int x, int y, double scan_time, 
-			    unsigned int st_options, int st_embedded, pwr_tStatus *sts) :
-  XttStream( st_parent_ctx, name, st_uri, width, height, x, y, scan_time, st_options, st_embedded),
-  parent_wid(st_parent_wid)
+			    unsigned int st_options, int st_embedded, pwr_tAttrRef *st_arp, pwr_tStatus *sts) :
+  XttStream( st_parent_ctx, name, st_uri, width, height, x, y, scan_time, st_options, st_embedded, st_arp),
+  scroll_cnt(0), parent_wid(st_parent_wid)
 {
   GstStateChangeReturn ret;
   GstBus *bus;
@@ -567,18 +604,209 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
       gtk_box_pack_start( GTK_BOX( hbox), slider, TRUE, TRUE, 2);
     }
   }
+
+  GtkWidget *tools = gtk_toolbar_new();
+  gtk_toolbar_set_style( GTK_TOOLBAR(tools), GTK_TOOLBAR_ICONS);
+
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
+  GtkToolItem *tools_zoom_in = gtk_tool_button_new( gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_zoom_in, CoWowGtk::translate_utf8("Zoom in"));
+  g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(activate_zoomin), this);
+  g_object_set( tools_zoom_in, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_zoom_in, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
+  GtkToolItem *tools_zoom_out = gtk_tool_button_new( gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_zoom_out, CoWowGtk::translate_utf8("Zoom out"));
+  g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(activate_zoomout), this);
+  g_object_set( tools_zoom_out, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_zoom_out, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_reset.png");
+  GtkToolItem *tools_zoom_reset = gtk_tool_button_new( gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_zoom_reset, CoWowGtk::translate_utf8("Zoom reset"));
+  g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(activate_zoomreset), this);
+  g_object_set( tools_zoom_reset, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_zoom_reset, -1);
+
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), gtk_separator_tool_item_new(), -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/ge_page_left.png");
+  GtkToolItem *tools_page_left = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_page_left, CoWowGtk::translate_utf8("Page left"));
+  g_signal_connect(tools_page_left, "clicked", G_CALLBACK(activate_page_left), this);
+  g_object_set( tools_page_left, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_page_left, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/ge_scroll_left.png");
+  GtkToolItem *tools_scroll_left = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_scroll_left, CoWowGtk::translate_utf8("Scroll left"));
+  g_signal_connect(tools_scroll_left, "clicked", G_CALLBACK(activate_scroll_left), this);
+  g_object_set( tools_scroll_left, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_scroll_left, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/ge_scroll_right.png");
+  GtkToolItem *tools_scroll_right = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_scroll_right, CoWowGtk::translate_utf8("Scroll right"));
+  g_signal_connect(tools_scroll_right, "clicked", G_CALLBACK(activate_scroll_right), this);
+  g_object_set( tools_scroll_right, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_scroll_right, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/ge_page_right.png");
+  GtkToolItem *tools_page_right = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_page_right, CoWowGtk::translate_utf8("Page right"));
+  g_signal_connect(tools_page_right, "clicked", G_CALLBACK(activate_page_right), this);
+  g_object_set( tools_page_right, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_page_right, -1);
+
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), gtk_separator_tool_item_new(), -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/ge_page_down.png");
+  GtkToolItem *tools_page_down = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_page_down, CoWowGtk::translate_utf8("Page down"));
+  g_signal_connect(tools_page_down, "clicked", G_CALLBACK(activate_page_down), this);
+  g_object_set( tools_page_down, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_page_down, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/ge_scroll_down.png");
+  GtkToolItem *tools_scroll_down = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_scroll_down, CoWowGtk::translate_utf8("Scroll down"));
+  g_signal_connect(tools_scroll_down, "clicked", G_CALLBACK(activate_scroll_down), this);
+  g_object_set( tools_scroll_down, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_scroll_down, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/ge_scroll_up.png");
+  GtkToolItem *tools_scroll_up = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_scroll_up, CoWowGtk::translate_utf8("Scroll up"));
+  g_signal_connect(tools_scroll_up, "clicked", G_CALLBACK(activate_scroll_up), this);
+  g_object_set( tools_scroll_up, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_scroll_up, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/ge_page_up.png");
+  GtkToolItem *tools_page_up = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_page_up, CoWowGtk::translate_utf8("Page up"));
+  g_signal_connect(tools_page_up, "clicked", G_CALLBACK(activate_page_up), this);
+  g_object_set( tools_page_up, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_page_up, -1);
+
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), gtk_separator_tool_item_new(), -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/xtt_pos1.png");
+  GtkToolItem *tools_preset1 = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_preset1, CoWowGtk::translate_utf8("Preset position 1"));
+  g_signal_connect(tools_preset1, "clicked", G_CALLBACK(activate_preset_position1), this);
+  g_object_set( tools_preset1, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_preset1, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/xtt_pos2.png");
+  GtkToolItem *tools_preset2 = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_preset2, CoWowGtk::translate_utf8("Preset position 2"));
+  g_signal_connect(tools_preset2, "clicked", G_CALLBACK(activate_preset_position2), this);
+  g_object_set( tools_preset2, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_preset2, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/xtt_pos3.png");
+  GtkToolItem *tools_preset3 = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_preset3, CoWowGtk::translate_utf8("Preset position 3"));
+  g_signal_connect(tools_preset3, "clicked", G_CALLBACK(activate_preset_position3), this);
+  g_object_set( tools_preset3, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_preset3, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/xtt_pos4.png");
+  GtkToolItem *tools_preset4 = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_preset4, CoWowGtk::translate_utf8("Preset position 4"));
+  g_signal_connect(tools_preset4, "clicked", G_CALLBACK(activate_preset_position4), this);
+  g_object_set( tools_preset4, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_preset4, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/xtt_pos5.png");
+  GtkToolItem *tools_preset5 = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_preset5, CoWowGtk::translate_utf8("Preset position 5"));
+  g_signal_connect(tools_preset5, "clicked", G_CALLBACK(activate_preset_position5), this);
+  g_object_set( tools_preset5, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_preset5, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/xtt_pos6.png");
+  GtkToolItem *tools_preset6 = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_preset6, CoWowGtk::translate_utf8("Preset position 6"));
+  g_signal_connect(tools_preset6, "clicked", G_CALLBACK(activate_preset_position6), this);
+  g_object_set( tools_preset6, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_preset6, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/xtt_pos7.png");
+  GtkToolItem *tools_preset7 = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_preset7, CoWowGtk::translate_utf8("Preset position 7"));
+  g_signal_connect(tools_preset7, "clicked", G_CALLBACK(activate_preset_position7), this);
+  g_object_set( tools_preset7, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_preset7, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/xtt_pos8.png");
+  GtkToolItem *tools_preset8 = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_preset8, CoWowGtk::translate_utf8("Preset position 8"));
+  g_signal_connect(tools_preset8, "clicked", G_CALLBACK(activate_preset_position8), this);
+  g_object_set( tools_preset8, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_preset8, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/xtt_pos9.png");
+  GtkToolItem *tools_preset9 = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_preset9, CoWowGtk::translate_utf8("Preset position 9"));
+  g_signal_connect(tools_preset9, "clicked", G_CALLBACK(activate_preset_position9), this);
+  g_object_set( tools_preset9, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_preset9, -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/xtt_pos10.png");
+  GtkToolItem *tools_preset10 = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_preset10, CoWowGtk::translate_utf8("Preset position 10"));
+  g_signal_connect(tools_preset10, "clicked", G_CALLBACK(activate_preset_position10), this);
+  g_object_set( tools_preset10, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_preset10, -1);
+
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), gtk_separator_tool_item_new(), -1);
+
+  dcli_translate_filename( fname, "$pwr_exe/xtt_get_pos.png");
+  GtkToolItem *tools_get_position = gtk_tool_button_new(gtk_image_new_from_file( fname), NULL);
+  gtk_tool_item_set_tooltip_text( tools_get_position, CoWowGtk::translate_utf8("Get position"));
+  g_signal_connect(tools_get_position, "clicked", G_CALLBACK(activate_get_position), this);
+  g_object_set( tools_get_position, "can-focus", FALSE, NULL);
+  gtk_toolbar_insert( GTK_TOOLBAR(tools), tools_get_position, -1);
+
+
+  GtkWidget *ptz_pan_label = gtk_label_new("Pan");
+  ptz_pan = gtk_label_new("0");
+  GtkWidget *ptz_tilt_label = gtk_label_new("Tilt");
+  ptz_tilt = gtk_label_new("0");
+  GtkWidget *ptz_zoom_label = gtk_label_new("Zoom");
+  ptz_zoom = gtk_label_new("0");
+
+  ptz_box = gtk_hbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX( ptz_box), GTK_WIDGET(ptz_pan_label), FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX( ptz_box), GTK_WIDGET(ptz_pan), FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX( ptz_box), GTK_WIDGET(gtk_vseparator_new()), FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX( ptz_box), GTK_WIDGET(ptz_tilt_label), FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX( ptz_box), GTK_WIDGET(ptz_tilt), FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX( ptz_box), GTK_WIDGET(gtk_vseparator_new()), FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX( ptz_box), GTK_WIDGET(ptz_zoom_label), FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX( ptz_box), GTK_WIDGET(ptz_zoom), FALSE, FALSE, 5);
+
+  GtkWidget *tools_box = gtk_hbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX( tools_box), GTK_WIDGET(tools), TRUE, TRUE, 0);
+  gtk_box_pack_start( GTK_BOX( tools_box), ptz_box, FALSE, FALSE, 0);
   
   main_box = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX( main_box), GTK_WIDGET(tools_box), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX( main_box), video_form, TRUE, TRUE, 0);
   if ( options & pwr_mVideoOptionsMask_ControlPanel)
     gtk_box_pack_start( GTK_BOX( main_box), GTK_WIDGET(hbox), FALSE, FALSE, 0);
 
+  
   if ( !embedded) {
     gtk_container_add( GTK_CONTAINER( toplevel), main_box);
     gtk_window_set_default_size( GTK_WINDOW( toplevel), width, height);
   
     gtk_widget_show_all( toplevel);
-
+    
+    g_object_set( ptz_box, "visible", FALSE, NULL);
+  
     if ( options & pwr_mVideoOptionsMask_FullScreen)
       gtk_window_fullscreen( GTK_WINDOW(toplevel));
     else if ( options & pwr_mVideoOptionsMask_Maximize)
@@ -614,6 +842,7 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
   
   wow = new CoWowGtk( toplevel);
   timerid = wow->timer_new();
+  scroll_timerid = wow->timer_new();
   timerid->add( scan_time, refresh, this);
 
   *sts = XNAV__SUCCESS;
@@ -622,6 +851,7 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
 XttStreamGtk::~XttStreamGtk()
 {
   timerid->remove();
+  scroll_timerid->remove();
 
   gst_element_set_state( playbin2, GST_STATE_NULL);
   gst_object_unref( playbin2);
@@ -640,6 +870,380 @@ void XttStreamGtk::set_size( int width, int height)
   gtk_window_resize( GTK_WINDOW(toplevel), width, height);
 }
 
+void XttStreamGtk::create_popup_menu( int x, int y)
+{
+  GtkMenu *menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+
+  GtkWidget *w = gtk_menu_item_new_with_label( "Zoom reset");
+  g_signal_connect( w, "activate", 
+		    G_CALLBACK(activate_zoomreset), this);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu), w);
+  gtk_widget_show(w);
+
+  w = gtk_menu_item_new_with_label( "Zoom in");
+  g_signal_connect( w, "activate", 
+		    G_CALLBACK(activate_zoomin), this);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu), w);
+  gtk_widget_show(w);
+
+  w = gtk_menu_item_new_with_label( "Zoom out");
+  g_signal_connect( w, "activate", 
+		    G_CALLBACK(activate_zoomout), this);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu), w);
+  gtk_widget_show(w);
+ 
+  GtkWidget *preset_store = gtk_menu_item_new_with_label( "Preset store");
+  GtkMenu *menu_preset_store = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+
+  w = gtk_menu_item_new_with_label( "Position 1");
+  g_signal_connect( w, "activate", 
+		    G_CALLBACK(activate_preset_store_pos1), this); 
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_preset_store), w);
+  gtk_widget_show(w);
+
+  w = gtk_menu_item_new_with_label( "Position 2");
+  g_signal_connect( w, "activate", 
+		    G_CALLBACK(activate_preset_store_pos2), this); 
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_preset_store), w);
+  gtk_widget_show(w);
+
+  w = gtk_menu_item_new_with_label( "Position 3");
+  g_signal_connect( w, "activate", 
+		    G_CALLBACK(activate_preset_store_pos3), this); 
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_preset_store), w);
+  gtk_widget_show(w);
+
+  w = gtk_menu_item_new_with_label( "Position 4");
+  g_signal_connect( w, "activate", 
+		    G_CALLBACK(activate_preset_store_pos4), this); 
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_preset_store), w);
+  gtk_widget_show(w);
+
+  w = gtk_menu_item_new_with_label( "Position 5");
+  g_signal_connect( w, "activate", 
+		    G_CALLBACK(activate_preset_store_pos5), this); 
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_preset_store), w);
+  gtk_widget_show(w);
+
+  w = gtk_menu_item_new_with_label( "Position 6");
+  g_signal_connect( w, "activate", 
+		    G_CALLBACK(activate_preset_store_pos6), this); 
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_preset_store), w);
+  gtk_widget_show(w);
+
+  w = gtk_menu_item_new_with_label( "Position 7");
+  g_signal_connect( w, "activate", 
+		    G_CALLBACK(activate_preset_store_pos7), this); 
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_preset_store), w);
+  gtk_widget_show(w);
+
+  w = gtk_menu_item_new_with_label( "Position 8");
+  g_signal_connect( w, "activate", 
+		    G_CALLBACK(activate_preset_store_pos8), this); 
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_preset_store), w);
+  gtk_widget_show(w);
+
+  w = gtk_menu_item_new_with_label( "Position 9");
+  g_signal_connect( w, "activate", 
+		    G_CALLBACK(activate_preset_store_pos9), this); 
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_preset_store), w);
+  gtk_widget_show(w);
+
+  w = gtk_menu_item_new_with_label( "Position 10");
+  g_signal_connect( w, "activate", 
+		    G_CALLBACK(activate_preset_store_pos10), this); 
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_preset_store), w);
+  gtk_widget_show(w);
+
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(preset_store),
+			    GTK_WIDGET(menu_preset_store));
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(preset_store));
+  gtk_widget_show(preset_store);
+
+  popupmenu_x = x + 5;
+  popupmenu_y = y;
+  gtk_menu_popup( menu, NULL, NULL, menu_position_func, 
+		  this, 0, gtk_get_current_event_time());
+}
+
+void XttStreamGtk::menu_position_func( GtkMenu *menu, gint *x, gint *y, gboolean *push_in,
+				       gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  *x = strm->popupmenu_x;
+  *y = strm->popupmenu_y;
+  *push_in = FALSE;
+}
+
+void XttStreamGtk::activate_zoomreset( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->camera_control->zoom_absolute( 0);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+
+void XttStreamGtk::activate_zoomin( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->camera_control->zoom_relative( 5);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+
+void XttStreamGtk::activate_zoomout( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->camera_control->zoom_relative( -5);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_scroll_left( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->camera_control->pan_relative( -3);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_scroll_right( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->camera_control->pan_relative( 3);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_page_left( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->camera_control->pan_relative( -15);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_page_right( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->camera_control->pan_relative( 15);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_scroll_down( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->camera_control->tilt_relative( -3);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_scroll_up( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->camera_control->tilt_relative( 3);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_page_down( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->camera_control->tilt_relative( -15);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_page_up( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->camera_control->tilt_relative( 15);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_position1( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_position(0);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_position2( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_position(1);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_position3( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_position(2);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_position4( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_position(3);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_position5( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_position(4);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_position6( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_position(5);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_position7( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_position(6);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_position8( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_position(7);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_position9( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_position(8);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_position10( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_position(9);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_store_pos1( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_store_pos(0);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_store_pos2( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_store_pos(1);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_store_pos3( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_store_pos(2);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_store_pos4( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_store_pos(3);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_store_pos5( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_store_pos(4);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_store_pos6( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_store_pos(5);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_store_pos7( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_store_pos(6);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_store_pos8( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_store_pos(7);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_store_pos9( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_store_pos(8);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_preset_store_pos10( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  strm->activate_preset_store_pos(9);
+  g_object_set( strm->ptz_box, "visible", FALSE, NULL);
+}
+  
+void XttStreamGtk::activate_get_position( GtkWidget *w, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+  double pan, tilt, zoom;
+  int sts;
+  char pan_str[20], tilt_str[20], zoom_str[20];
+
+  sts = strm->camera_control->get_position( &pan, &tilt, &zoom);
+  if ( EVEN(sts)) return;
+
+  sprintf( pan_str, "%6.2f", pan);
+  sprintf( tilt_str, "%6.2f", tilt);
+  sprintf( zoom_str, "%6.2f", zoom);
+  gtk_label_set_text( GTK_LABEL(strm->ptz_pan), pan_str);
+  gtk_label_set_text( GTK_LABEL(strm->ptz_tilt), tilt_str);
+  gtk_label_set_text( GTK_LABEL(strm->ptz_zoom), zoom_str);
+  printf( "Pan %f Tilt %f Zoom %f\n", pan, tilt, zoom);
+
+  g_object_set( strm->ptz_box, "visible", TRUE, NULL);
+}
   
 #if 0
 int main(int argc, char *argv[]) {

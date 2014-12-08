@@ -44,6 +44,35 @@
 class CoWow;
 class CoWowTimer;
 
+class XttCameraControl {
+ public:
+  pwr_tURL url;
+  XttCameraControl( char *x_url) {}
+  ~XttCameraControl() {}
+  virtual void zoom_relative( double factor) {}
+  virtual void zoom_absolute( double factor) {}
+  virtual void pan_relative( double value) {}
+  virtual void pan_absolute( double value) {}
+  virtual void tilt_relative( double value) {}
+  virtual void tilt_absolute( double value) {}  
+  virtual void pan_tilt_zoom_absolute( double pan, double tilt, double zoom) {}
+  virtual int get_position( double *pan, double *tilt, double *zoom) { return 0;}  
+};
+
+class XttCameraControlVapix : public XttCameraControl {
+ public:
+  XttCameraControlVapix( char *x_url);
+  ~XttCameraControlVapix() {}
+  void zoom_relative( double factor);
+  void zoom_absolute( double factor);
+  void pan_relative( double value);
+  void pan_absolute( double value);
+  void tilt_relative( double value);
+  void tilt_absolute( double value);
+  void pan_tilt_zoom_absolute( double pan, double tilt, double zoom);
+  int get_position( double *pan, double *tilt, double *zoom);
+};
+
 class XttStream {
  public:
   void 		*parent_ctx;
@@ -51,28 +80,47 @@ class XttStream {
   int		embedded;
   pwr_tURL      uri;
   CoWowTimer 	*timerid;
+  CoWowTimer 	*scroll_timerid;
   CoWow	     	*wow;
   int		scan_time;
   int		width;
   int		height;
   void       	(*close_cb)( void *, XttStream *);  
+  XttCameraControl *camera_control;
+  pwr_tAttrRef  aref;
 
   XttStream( void *st_parent_ctx, const char *name, const char *st_uri,
 	     int st_width, int st_height, int x, int y, 
-	     double st_scan_time, unsigned int st_options, int st_embedded) :
-    parent_ctx(st_parent_ctx), options(st_options), embedded(st_embedded), timerid(0), width(st_width),
-    height(st_height), close_cb(0)  {
+	     double st_scan_time, unsigned int st_options, int st_embedded, pwr_tAttrRef *st_arp) :
+    parent_ctx(st_parent_ctx), options(st_options), embedded(st_embedded), timerid(0), scroll_timerid(0),
+    width(st_width), height(st_height), close_cb(0)  {
     strncpy( uri, st_uri, sizeof(uri)); 
     if ( st_scan_time < 0.02)
       scan_time = 1000;
     else
       scan_time = 1000 * st_scan_time;
+    camera_control = new XttCameraControlVapix(uri);
+    if ( st_arp)
+      aref = *st_arp;
+    else
+      memset( &aref, 0, sizeof(aref));
   }
-  virtual ~XttStream() {}
+  virtual ~XttStream() {
+    delete camera_control;
+  }
+    
+  void action_click( int x, int  y);
+  void action_mb2click( int x, int y);
+  void action_mb3click( int x, int y);
+  void action_areaselect( int x, int y, int w, int h);
+  void action_scroll( int direction, int x, int  y, int cnt);
+  void activate_preset_position( int idx);
+  void activate_preset_store_pos( int idx);
 
   virtual void pop() {}
   virtual void set_size( int width, int height) {}
   virtual void *get_widget() { return 0;}
+  virtual void create_popup_menu( int x, int y) {}
 };
 
 #endif

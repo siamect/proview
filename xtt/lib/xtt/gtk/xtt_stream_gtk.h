@@ -59,26 +59,38 @@ class XttStreamGtk : public XttStream {
   pwr_tTime mb_press_time;
   int mb_press_x;
   int mb_press_y;
+  int scroll_x;
+  int scroll_y;
+  int scroll_direction;
+  int scroll_cnt;
+  int popupmenu_x;
+  int popupmenu_y;
 
   GtkWidget     *slider;              /* Slider widget to keep track of current position */
   GtkWidget	*parent_wid;
   GtkWidget	*toplevel;
   GtkWidget	*video_form;
   GtkWidget	*main_box;
-  // CoWowFocusTimerGtk focustimer;
+  GtkWidget	*ptz_box;
+  GtkWidget	*ptz_pan;
+  GtkWidget	*ptz_tilt;
+  GtkWidget	*ptz_zoom;
+
   void *overlay;
 
   static int gst_initialized;
 
   XttStreamGtk( GtkWidget *parent_wid, void *parent_ctx, const char *name, const char *uri,
 		int width, int height, int x, int y, 
-		double scan_time, unsigned int options, int embedded, pwr_tStatus *sts);
+		double scan_time, unsigned int options, int embedded, pwr_tAttrRef *arp, pwr_tStatus *sts);
   ~XttStreamGtk();
 
   void pop();
   void set_size( int width, int height);
   void *get_widget() { return main_box;}
+  void create_popup_menu( int x, int y);
 
+  static void scroll_cb( void *data);
   static void refresh( void *data);
   static void refresh_ui( XttStreamGtk *strm);
 
@@ -97,6 +109,40 @@ class XttStreamGtk : public XttStream {
   static void state_changed_cb( GstBus *bus, GstMessage *msg, void *data);
   static void application_cb( GstBus *bus, GstMessage *msg, void *data);
   static gboolean mousebutton_cb( GtkWidget *widget, GdkEvent *event, void *data);
+  static void menu_position_func( GtkMenu *menu, gint *x, gint *y, gboolean *push_in,
+				  gpointer data);
+  static void activate_zoomreset( GtkWidget *w, gpointer data);
+  static void activate_zoomin( GtkWidget *w, gpointer data);
+  static void activate_zoomout( GtkWidget *w, gpointer data);
+  static void activate_scroll_left( GtkWidget *w, gpointer data);
+  static void activate_scroll_right( GtkWidget *w, gpointer data);
+  static void activate_page_left( GtkWidget *w, gpointer data);
+  static void activate_page_right( GtkWidget *w, gpointer data);
+  static void activate_scroll_down( GtkWidget *w, gpointer data);
+  static void activate_scroll_up( GtkWidget *w, gpointer data);
+  static void activate_page_down( GtkWidget *w, gpointer data);
+  static void activate_page_up( GtkWidget *w, gpointer data);
+  static void activate_preset_position1( GtkWidget *w, gpointer data);
+  static void activate_preset_position2( GtkWidget *w, gpointer data);
+  static void activate_preset_position3( GtkWidget *w, gpointer data);
+  static void activate_preset_position4( GtkWidget *w, gpointer data);
+  static void activate_preset_position5( GtkWidget *w, gpointer data);
+  static void activate_preset_position6( GtkWidget *w, gpointer data);
+  static void activate_preset_position7( GtkWidget *w, gpointer data);
+  static void activate_preset_position8( GtkWidget *w, gpointer data);
+  static void activate_preset_position9( GtkWidget *w, gpointer data);
+  static void activate_preset_position10( GtkWidget *w, gpointer data);
+  static void activate_preset_store_pos1( GtkWidget *w, gpointer data);
+  static void activate_preset_store_pos2( GtkWidget *w, gpointer data);
+  static void activate_preset_store_pos3( GtkWidget *w, gpointer data);
+  static void activate_preset_store_pos4( GtkWidget *w, gpointer data);
+  static void activate_preset_store_pos5( GtkWidget *w, gpointer data);
+  static void activate_preset_store_pos6( GtkWidget *w, gpointer data);
+  static void activate_preset_store_pos7( GtkWidget *w, gpointer data);
+  static void activate_preset_store_pos8( GtkWidget *w, gpointer data);
+  static void activate_preset_store_pos9( GtkWidget *w, gpointer data);
+  static void activate_preset_store_pos10( GtkWidget *w, gpointer data);
+  static void activate_get_position( GtkWidget *w, gpointer data);
 
 };
 

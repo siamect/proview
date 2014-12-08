@@ -385,7 +385,7 @@ class XNav {
 					 int (*is_authorized_cb) (void *, unsigned int)) {return 0;}
     virtual XttStream *stream_new( const char *name, const char *uri,
 				   int width, int height, int x, int y, double scan_time, 
-				   unsigned int options, int embedded, pwr_tStatus *sts) {return 0;}
+				   unsigned int options, int embedded, pwr_tAttrRef *arp, pwr_tStatus *sts) {return 0;}
     virtual GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
 				  int pos_right, unsigned int options) {return 0;}
     virtual XttFileview *fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,
