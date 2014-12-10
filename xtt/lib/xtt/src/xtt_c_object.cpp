@@ -475,6 +475,149 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
 }
 
 //
+// Camera
+//
+static pwr_tStatus Camera( xmenu_sMenuCall *ip)
+{
+  pwr_tAName name;
+  char cmd[800];
+  int sts;
+  pwr_tObjid child;
+  pwr_tClassId classid;
+  int found;
+  pwr_sAttrRef defcamera;
+  pwr_sAttrRef *objar;
+
+  if (!ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid))
+    objar = &ip->Pointed;
+  else
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  sts = gdh_GetAttrRefTid( objar, &classid);
+  if ( EVEN(sts)) return sts;
+
+  if ( classid == pwr_cClass_CameraPosition) {
+    sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+			cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+
+    // Open video
+    sprintf( cmd, "open video /cameraposition=%s", name);
+    ((XNav *)ip->EditorContext)->command( cmd);
+    return 1;
+  }
+
+  // Look for attribute Camera
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
+			cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return sts;
+
+  strcat( name, ".DefCamera");
+  sts = gdh_GetObjectInfo( name, (void *)&defcamera, sizeof(defcamera));
+  if ( ODD(sts) && cdh_ObjidIsNotNull( defcamera.Objid)) {
+    // Default camera found
+    sts = gdh_GetAttrRefTid( &defcamera, &classid);
+    if ( ODD(sts) && classid == pwr_cClass_CameraPosition) {
+
+      sts = gdh_AttrrefToName( &defcamera, name, sizeof(name),
+			       cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+
+      // Open video
+      sprintf( cmd, "open video /cameraposition=%s", name);
+      ((XNav *)ip->EditorContext)->command( cmd);
+      return 1;
+    }
+  }
+
+  // Look for camera as child
+  if ( !ip->Pointed.Flags.b.Object)
+    return 0;
+
+  found = 0;
+  sts = gdh_GetChild( objar->Objid, &child);
+  while ( ODD(sts)) {
+    sts = gdh_GetObjectClass( child, &classid);
+    if ( EVEN(sts)) return sts;
+    
+    if ( classid == pwr_cClass_CameraPosition) {
+      found = 1;
+      break;
+    }      
+    sts = gdh_GetNextSibling( child, &child);
+  }
+  if ( !found)
+    return 1;
+
+  sts = gdh_ObjidToName( child, name, sizeof(name),
+			   cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return sts;
+
+  // Open video
+  sprintf( cmd, "open video /cameraposition=%s", name);
+  ((XNav *)ip->EditorContext)->command( cmd);
+ 
+  return 1;
+}
+
+// Camera filter
+static pwr_tStatus CameraFilter( xmenu_sMenuCall *ip)
+{
+  int sts;
+  pwr_tObjid child;
+  pwr_tClassId classid, cid;
+  pwr_sAttrRef defcamera;
+  pwr_tAName name;
+  pwr_sAttrRef *objar;
+
+  if (!ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid))
+    objar = &ip->Pointed;
+  else 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  sts = gdh_GetAttrRefTid( objar, &cid);
+  if ( EVEN(sts)) return sts;
+
+  switch ( cid) {
+  case pwr_cClass_CameraPosition:
+    return XNAV__SUCCESS;
+  }
+
+  // Check if attribute DefCamera exist
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
+			   cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return sts;
+
+  strcat( name, ".DefCamera");
+  sts = gdh_GetObjectInfo( name, (void *)&defcamera, sizeof(defcamera));
+  if ( ODD(sts) && cdh_ObjidIsNotNull( defcamera.Objid)) {
+    // Default Camera found
+    sts = gdh_GetAttrRefTid( &defcamera, &classid);
+    if ( ODD(sts) && classid == pwr_cClass_CameraPosition)
+      return XNAV__SUCCESS;
+  }
+
+  // Check if object has a CameraPosition as child
+  if ( cid == pwr_eClass_PlantHier)
+    return XNAV__INVISIBLE;
+
+  if ( !objar->Flags.b.Object)
+    return XNAV__INVISIBLE;
+
+  sts = gdh_GetChild( objar->Objid, &child);
+  while ( ODD(sts)) {
+    sts = gdh_GetObjectClass( child, &classid);
+    if ( EVEN(sts)) return sts;
+
+    if ( classid == pwr_cClass_CameraPosition)
+      return XNAV__SUCCESS;
+
+    sts = gdh_GetNextSibling( child, &child);
+  }
+  return XNAV__INVISIBLE;
+}
+
+//
 // Open History
 //
 static pwr_tStatus OpenHistory( xmenu_sMenuCall *ip)
@@ -2102,6 +2245,8 @@ pwr_dExport pwr_BindXttMethods($Object) = {
   pwr_BindXttMethod(OpenTraceFilter),
   pwr_BindXttMethod(OpenTrend),
   pwr_BindXttMethod(OpenTrendFilter),
+  pwr_BindXttMethod(Camera),
+  pwr_BindXttMethod(CameraFilter),
   pwr_BindXttMethod(OpenHistory),
   pwr_BindXttMethod(OpenHistoryFilter),
   pwr_BindXttMethod(OpenFast),

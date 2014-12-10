@@ -65,6 +65,7 @@ class XttStreamGtk : public XttStream {
   int scroll_cnt;
   int popupmenu_x;
   int popupmenu_y;
+  int ptz_box_displayed;
 
   GtkWidget     *slider;              /* Slider widget to keep track of current position */
   GtkWidget	*parent_wid;
@@ -75,6 +76,7 @@ class XttStreamGtk : public XttStream {
   GtkWidget	*ptz_pan;
   GtkWidget	*ptz_tilt;
   GtkWidget	*ptz_zoom;
+  GtkWidget	*tools;
 
   void *overlay;
 
@@ -87,6 +89,7 @@ class XttStreamGtk : public XttStream {
 
   void pop();
   void set_size( int width, int height);
+  void setup();
   void *get_widget() { return main_box;}
   void create_popup_menu( int x, int y);
 
@@ -108,6 +111,7 @@ class XttStreamGtk : public XttStream {
   static void eos_cb( GstBus *bus, GstMessage *msg, void *data);
   static void state_changed_cb( GstBus *bus, GstMessage *msg, void *data);
   static void application_cb( GstBus *bus, GstMessage *msg, void *data);
+  static void resize_cb( GtkWidget *w, GtkAllocation *allocation, gpointer data);
   static gboolean mousebutton_cb( GtkWidget *widget, GdkEvent *event, void *data);
   static void menu_position_func( GtkMenu *menu, gint *x, gint *y, gboolean *push_in,
 				  gpointer data);

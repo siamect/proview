@@ -1034,6 +1034,13 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-OpenFastFilter"
 	EndBody
       EndObject
+      Object Camera $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Camera"
+	  Attr MethodName = "$Object-Camera"
+	  Attr FilterName = "$Object-CameraFilter"
+	EndBody
+      EndObject
       Object HistEvent $MenuButton
 	Body SysBody
 	  Attr ButtonName = "Event Log..."

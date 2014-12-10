@@ -278,7 +278,9 @@ dcli_tCmdTable	xnav_command_table[] = {
 			  "/PINSTANCE", "/BYPASS",
 			  "/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", "/FTYPE", 
 			  "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE", "/ICONIFY", "/HIDE", 
-			  "/XPOSITION", "/YPOSITION", "/X0", "/Y0", "/X1", "/Y1", "/URL", "/CONTINOUS", ""}
+			  "/XPOSITION", "/YPOSITION", "/X0", "/Y0", "/X1", "/Y1", "/URL", "/CONTINOUS", 
+			  "/CAMERAPOSITION", "/CAMERACONTROLPANEL", "/VIDEOCONTROLPANEL", 
+			  "/VIDEOPROGRESSBAR", ""}
 		},
 		{
 			"CLOSE",
@@ -3537,10 +3539,29 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tStatus sts;
     pwr_tURL url_str;
     pwr_tAName object_str;
+    pwr_tAName camerapos_str;
+    int camerapos_found = 0;
+    pwr_sClass_CameraPosition pos;
     
     // Command is "OPEN VIDEO"
 
-    if ( ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
+    if ( ODD( dcli_get_qualifier( "/CAMERAPOSITION", camerapos_str, sizeof(camerapos_str)))) {
+      // CameraPosition object supplied
+
+      sts = gdh_GetObjectInfo( camerapos_str, &pos, sizeof(pos));
+      if (EVEN(sts)) {
+        xnav->message('E', "Object not found");
+        return XNAV__HOLDCOMMAND;
+      }
+
+      sts = gdh_AttrrefToName( &pos.VideoObject, object_str, sizeof(object_str), cdh_mNName);
+      if ( EVEN(sts)) {
+	xnav->message('E', "Configuration error, video object not found");
+	return XNAV__HOLDCOMMAND;
+      }
+      camerapos_found = 1;
+    }
+    if ( camerapos_found || ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
       // XttVideo object supplied, fetch data from object
       pwr_tOName xttvideo_name;
       pwr_sClass_XttVideo xttvideo;
@@ -3590,6 +3611,8 @@ static int	xnav_open_func(	void		*client_data,
 	
 	xnav->appl.insert( applist_eType_Stream, (void *)strmctx, objid, name_str, url_str);
       }
+      if ( camerapos_found)
+	strmctx->position( pos.Pan, pos.Tilt, pos.Zoom);
     }
     else {
       /* Get the name qualifier */
@@ -3609,10 +3632,12 @@ static int	xnav_open_func(	void		*client_data,
 	options |= pwr_mVideoOptionsMask_FullMaximize;
       if ( ODD( dcli_get_qualifier( "/ICONIFY", 0, 0)))
 	options |= pwr_mVideoOptionsMask_Iconify;	   
-      if ( ODD( dcli_get_qualifier( "/CONTROLPANEL", 0, 0)))
-	options |= pwr_mVideoOptionsMask_ControlPanel;
-      if ( ODD( dcli_get_qualifier( "/PROGRESSBAR", 0, 0)))
-	options |= pwr_mVideoOptionsMask_ProgressBar;
+      if ( ODD( dcli_get_qualifier( "/CAMERACONTROLPANEL", 0, 0)))
+	options |= pwr_mVideoOptionsMask_CameraControlPanel;
+      if ( ODD( dcli_get_qualifier( "/VIDEOCONTROLPANEL", 0, 0)))
+	options |= pwr_mVideoOptionsMask_VideoControlPanel;
+      if ( ODD( dcli_get_qualifier( "/VIDEOPROGRESSBAR", 0, 0)))
+	options |= pwr_mVideoOptionsMask_VideoProgressBar;
 
       if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str, sizeof(tmp_str)))) {
 	nr = sscanf( tmp_str, "%d", &width);

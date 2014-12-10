@@ -33,55 +33,62 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_td_sevdatabaseenum.wb_load -- Defines the enum type SevDatabase
+!  pwrb_c_a_cameraptz.wb_load -- Defines the class CameraPtz.
 !
-SObject pwrb:Type
+SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  @Group Types
-!  Enumeration for Sev database.
+!  @Summary Data for camera position
+!  Data for camera position.
 !*/
-  Object SevDatabaseEnum $TypeDef 67
+  Object CameraPtz $ClassDef 655
     Body SysBody
-      Attr TypeRef = "pwrs:Type-$Enum"
-      Attr PgmName = "SevDatabaseEnum"
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 1
     EndBody
-    !/**
-    !  Mysql.
-    !*/
-    Object MySQL $Value
-     Body SysBody
-       Attr PgmName = "MySQL"
-       Attr Text = "MySQL"
-       Attr Value = 0
-     EndBody
-    EndObject
-    !/**
-    !  SQLite.
-    !*/
-    Object SQLite $Value
-     Body SysBody
-       Attr PgmName = "SQLite"
-       Attr Text = "SQLite"
-       Attr Value = 1
-     EndBody
-    EndObject
-    !/**
-    !  HDF5.
-    !*/
-    Object HDF5 $Value
-     Body SysBody
-       Attr PgmName = "HDF5"
-       Attr Text = "HDF5"
-       Attr Value = 2
-     EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "CameraPtz"
+      EndBody
+      !/**
+      !  Optional description.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Pan value.
+      !  Range 0 - 100.
+      !*/
+      Object Pan $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Tilt value.
+      !  Range 0 - 100.
+      !*/
+      Object Tilt $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Zoom value.
+      !  Range 0 - 100.
+      !*/
+      Object Zoom $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
     EndObject
   EndObject
 EndSObject
-
-
-
-
 
 
 

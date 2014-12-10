@@ -56,6 +56,9 @@ class XttCameraControl {
   virtual void tilt_relative( double value) {}
   virtual void tilt_absolute( double value) {}  
   virtual void pan_tilt_zoom_absolute( double pan, double tilt, double zoom) {}
+  virtual void center( int x, int y, int width, int height, int stream_width, int stream_height) {}
+  virtual void area_zoom( int x, int y, int width, int height, int window_width,
+			  int window_height, int stream_width, int stream_height) {}
   virtual int get_position( double *pan, double *tilt, double *zoom) { return 0;}  
 };
 
@@ -70,6 +73,9 @@ class XttCameraControlVapix : public XttCameraControl {
   void tilt_relative( double value);
   void tilt_absolute( double value);
   void pan_tilt_zoom_absolute( double pan, double tilt, double zoom);
+  void center( int x, int y, int width, int height, int stream_width, int stream_height);
+  void area_zoom( int x, int y, int width, int height, int window_width,
+		  int window_height, int stream_width, int stream_height);
   int get_position( double *pan, double *tilt, double *zoom);
 };
 
@@ -83,32 +89,26 @@ class XttStream {
   CoWowTimer 	*scroll_timerid;
   CoWow	     	*wow;
   int		scan_time;
+  int		x_offset;
+  int		y_offset;	
   int		width;
   int		height;
+  int		stream_width;
+  int		stream_height;
+  double 	stream_ratio;
   void       	(*close_cb)( void *, XttStream *);  
   XttCameraControl *camera_control;
-  pwr_tAttrRef  aref;
+  pwr_tEnum	control_protocol;
+  pwr_tAttrRef  aref;  
 
   XttStream( void *st_parent_ctx, const char *name, const char *st_uri,
 	     int st_width, int st_height, int x, int y, 
-	     double st_scan_time, unsigned int st_options, int st_embedded, pwr_tAttrRef *st_arp) :
-    parent_ctx(st_parent_ctx), options(st_options), embedded(st_embedded), timerid(0), scroll_timerid(0),
-    width(st_width), height(st_height), close_cb(0)  {
-    strncpy( uri, st_uri, sizeof(uri)); 
-    if ( st_scan_time < 0.02)
-      scan_time = 1000;
-    else
-      scan_time = 1000 * st_scan_time;
-    camera_control = new XttCameraControlVapix(uri);
-    if ( st_arp)
-      aref = *st_arp;
-    else
-      memset( &aref, 0, sizeof(aref));
-  }
+	     double st_scan_time, unsigned int st_options, int st_embedded, pwr_tAttrRef *st_arp);
   virtual ~XttStream() {
     delete camera_control;
   }
     
+  void position( double pan, double tilt, double zoom);
   void action_click( int x, int  y);
   void action_mb2click( int x, int y);
   void action_mb3click( int x, int y);
@@ -119,6 +119,7 @@ class XttStream {
 
   virtual void pop() {}
   virtual void set_size( int width, int height) {}
+  virtual void setup() {}
   virtual void *get_widget() { return 0;}
   virtual void create_popup_menu( int x, int y) {}
 };

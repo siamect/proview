@@ -854,6 +854,10 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
       if ( sevhist[i])
 	sevhist[i]->setup();
     }
+    for ( int i = 0; i < MV_SIZE; i++) {
+      if ( strmctx[i])
+	strmctx[i]->setup();
+    }
     if ( options & ge_mOptions_FullScreen || 
 	 mv.Options & pwr_mMultiViewOptionsMask_FullScreen)
       gtk_window_fullscreen( GTK_WINDOW(toplevel));

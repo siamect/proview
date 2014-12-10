@@ -162,7 +162,7 @@ SObject pwrb:Class
       !*/
       Object PresetPosition $Attribute 14
         Body SysBody
-          Attr TypeRef = "pwrb:Class-CameraPosition"
+          Attr TypeRef = "pwrb:Class-CameraPtz"
           Attr Flags |= PWR_MASK_CLASS
 	  Attr Flags |= PWR_MASK_ARRAY
 	  Attr Elements = 10

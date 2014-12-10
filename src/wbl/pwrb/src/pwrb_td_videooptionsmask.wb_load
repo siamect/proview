@@ -92,23 +92,33 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  Display a control panel with Play, Pause and Stop buttons.
+    !  Display a camera control panel.
     !*/
-    Object ControlPanel $Bit
+    Object CameraControlPanel $Bit
      Body SysBody
-       Attr PgmName = "ControlPanel"
-       Attr Text = "ControlPanel"
+       Attr PgmName = "CameraControlPanel"
+       Attr Text = "CameraControlPanel"
        Attr Value = 16
+     EndBody
+    EndObject
+    !/**
+    !  Display a video control panel with Play, Pause and Stop buttons.
+    !*/
+    Object VideoControlPanel $Bit
+     Body SysBody
+       Attr PgmName = "VideoControlPanel"
+       Attr Text = "VideoControlPanel"
+       Attr Value = 32
      EndBody
     EndObject
     !/**
     !  Add progress bar to control panel.
     !*/
-    Object ProgressBar $Bit
+    Object VideoProgressBar $Bit
      Body SysBody
-       Attr PgmName = "ProgressBar"
-       Attr Text = "ProgressBar"
-       Attr Value = 32
+       Attr PgmName = "VideoProgressBar"
+       Attr Text = "VideoProgressBar"
+       Attr Value = 64
      EndBody
     EndObject
   EndObject

@@ -33,15 +33,15 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_a_cameraposition.wb_load -- Defines the class CameraPosition.
+!  pwrb_c_cameraposition.wb_load -- Defines the class CameraPosition.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  @Summary Data for camera position
-!  Data for camera position.
+!  @Summary Data for camera position method in xtt.
+!  Data for camera position method in xtt.
 !*/
-  Object CameraPosition $ClassDef 655
+  Object CameraPosition $ClassDef 656
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
@@ -52,11 +52,11 @@ SObject pwrb:Class
         Attr StructName = "CameraPosition"
       EndBody
       !/**
-      !  Optional description.
+      !  XttVideo object for the camera.
       !*/
-      Object Description $Attribute 1 
+      Object VideoObject $Attribute 1 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String80"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
         EndBody
       EndObject
       !/**
