@@ -466,7 +466,6 @@ gboolean XttStreamGtk::mousebutton_cb( GtkWidget *widget, GdkEvent *event, void 
       if ( dft < 0.5 && 
 	   abs( event->button.x - strm->mb_press_x) < 10 &&
 	   abs( event->button.y - strm->mb_press_y) < 10) {
-	printf( "Mb click %f %f\n", event->button.x - offset_x, event->button.y - offset_y);
 	strm->action_click( event->button.x - offset_x, event->button.y - offset_y);
 	if ( strm->ptz_box_displayed) {
 	  g_object_set( strm->ptz_box, "visible", FALSE, NULL);

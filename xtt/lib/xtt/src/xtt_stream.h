@@ -64,7 +64,10 @@ class XttCameraControl {
 
 class XttCameraControlVapix : public XttCameraControl {
  public:
-  XttCameraControlVapix( char *x_url);
+  char outstr[20];
+  char authstr[100];
+
+  XttCameraControlVapix( char *x_url, char *x_user, char *x_password);
   ~XttCameraControlVapix() {}
   void zoom_relative( double factor);
   void zoom_absolute( double factor);
@@ -96,6 +99,8 @@ class XttStream {
   int		stream_width;
   int		stream_height;
   double 	stream_ratio;
+  pwr_tString40 user;
+  pwr_tString40 password;
   void       	(*close_cb)( void *, XttStream *);  
   XttCameraControl *camera_control;
   pwr_tEnum	control_protocol;

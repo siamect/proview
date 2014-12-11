@@ -168,6 +168,26 @@ SObject pwrb:Class
 	  Attr Elements = 10
         EndBody
       EndObject
+      !/**
+      ! User for camera authentication.
+      !*/
+      Object User $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+          Attr Flags |= PWR_MASK_CONST
+        EndBody
+      EndObject
+      !/**
+      ! Password for camera authentication.
+      !*/
+      Object Password $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+          Attr Flags |= PWR_MASK_CONST
+          Attr Flags |= PWR_MASK_RTHIDE
+          Attr Flags |= PWR_MASK_DEVHIDEVALUE
+        EndBody
+      EndObject
     EndObject
     Object Template XttVideo
       Body RtBody
