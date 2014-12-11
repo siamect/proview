@@ -713,10 +713,12 @@ union pwr_m_Adef {
     pwr_Bits( buffer    , 1),  
     pwr_Bits( nowbl     , 1),  
     pwr_Bits( alwayswbl , 1), 
-    pwr_Bits( newattribute , 1), 
-    pwr_Bits( fill_0	, 1),
+    pwr_Bits( disableattr , 1), 
+    pwr_Bits( rthide 	, 1), 
 
-    pwr_Bits( fill_1	, 8),,,,,,,
+    pwr_Bits( newattribute , 1), 
+    pwr_Bits( devhidevalue , 1), 
+    pwr_Bits( fill_1	, 6),,,,,
   ) b;
 
 #define pwr_mAdef_pointer	pwr_Bit(0)		/*  1	  */
@@ -744,6 +746,7 @@ union pwr_m_Adef {
 #define pwr_mAdef_disableattr	pwr_Bit(22)		/* Can be disabled */
 #define pwr_mAdef_rthide	pwr_Bit(23)		/* Hide in runtime */
 #define pwr_mAdef_newattribute 	pwr_Bit(24)		/* New attribute */
+#define pwr_mAdef_devhidevalue	pwr_Bit(25)		/* Hide in runtime */
 };
 
 #define PWR_MASK_POINTER	pwr_mAdef_pointer
@@ -772,6 +775,7 @@ union pwr_m_Adef {
 #define PWR_MASK_DISABLEATTR    pwr_mAdef_disableattr
 #define PWR_MASK_RTHIDE    	pwr_mAdef_rthide
 #define PWR_MASK_NEWATTRIBUTE  	pwr_mAdef_newattribute
+#define PWR_MASK_DEVHIDEVALUE  	pwr_mAdef_devhidevalue
 
 struct pwr_s_Param {
   pwr_sParInfo	Info 	pwr_dAlignLW;

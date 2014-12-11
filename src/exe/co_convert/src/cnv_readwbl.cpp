@@ -1342,6 +1342,7 @@ char *CnvReadWbl::flags_to_string( int value)
   if ( value & pwr_mAdef_alwayswbl) 	strcat( str, "Alwayswbl|");
   if ( value & pwr_mAdef_disableattr) 	strcat( str, "DisableAttr|");
   if ( value & pwr_mAdef_rthide) 	strcat( str, "RtHide|");
+  if ( value & pwr_mAdef_devhidevalue) 	strcat( str, "DevHideValue|");
   if ( str[strlen(str)-1] == '|')
     str[strlen(str)-1] = 0;
   return str;
