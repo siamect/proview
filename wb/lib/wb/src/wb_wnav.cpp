@@ -827,11 +827,12 @@ int WNav::check_attr_value( brow_tObject node, int *multiline,
       if ( item->flags & PWR_MASK_STATE && !gbl.bypass)
         return WNAV__FLAGSTATE;
 
-      sts = item->get_value( (char **)&p);
-      wnav_attrvalue_to_string( ldhses, item->type_id, p, init_value, 
+      if ( !(item->flags & PWR_MASK_DEVHIDEVALUE)) {
+	sts = item->get_value( (char **)&p);
+	wnav_attrvalue_to_string( ldhses, item->type_id, p, init_value, 
 				  &len);
-      free( p);
-
+	free( p);
+      }
       *size = cdh_TypeToMaxStrSize( (pwr_eType)item->type_id, item->size, 1);
 
       if ( item->type_id == pwr_eType_Text)

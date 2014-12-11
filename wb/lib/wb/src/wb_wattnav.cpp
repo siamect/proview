@@ -146,9 +146,11 @@ int WAttNav::check_attr( int *multiline, brow_tObject *node,
       else
 	sts = item->get_value( (char **)&p);
 
-      wnav_attrvalue_to_string( ldhses, item->type_id, p, init_value, 
+      if ( !(item->flags & PWR_MASK_DEVHIDEVALUE)) {
+	wnav_attrvalue_to_string( ldhses, item->type_id, p, init_value, 
 				  &len);
-      free( p);
+	free( p);
+      }
       *size = cdh_TypeToMaxStrSize( (pwr_eType)item->type_id, item->size, 1);
 
       if ( item->type_id == pwr_eType_Text)

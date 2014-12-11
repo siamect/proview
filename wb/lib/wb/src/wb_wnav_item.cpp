@@ -1467,6 +1467,10 @@ int WItemAttr::update()
       wnav_attrvalue_to_string( ldhses, type_id, value, &buff, &len);
   }
 
+  if ( flags & PWR_MASK_DEVHIDEVALUE)
+    for ( int i = 0; i < len; i++)
+      buff[i] = '*';
+
   brow_SetAnnotation( node, 1, buff, len);
   free( (char *)value);
   return WNAV__SUCCESS;

@@ -330,6 +330,7 @@ static wbl_sSym attr_flags[] =
   ,{ "PWR_MASK_ALWAYSWBL",     	PWR_MASK_ALWAYSWBL }
   ,{ "PWR_MASK_DISABLEATTR",    PWR_MASK_DISABLEATTR }
   ,{ "PWR_MASK_RTHIDE",     	PWR_MASK_RTHIDE }
+  ,{ "PWR_MASK_DEVHIDEVALUE",   PWR_MASK_DEVHIDEVALUE }
 
   ,{ "pwr_mClassDef_DevOnly",	pwr_mClassDef_DevOnly }
   ,{ "pwr_mClassDef_System",	pwr_mClassDef_System }

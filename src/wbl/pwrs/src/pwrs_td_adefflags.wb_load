@@ -321,6 +321,16 @@ SObject pwrs:Type
        Attr Value = 16777216
      EndBody
     EndObject
+    !/**
+    !  The attribute value is hidden in the configurator.
+    !*/
+    Object DevHideValue $Bit
+     Body SysBody
+       Attr PgmName = "DevHideValue"
+       Attr Text = "DevHideValue"
+       Attr Value = 33554432
+     EndBody
+    EndObject
   EndObject
 EndSObject
 
