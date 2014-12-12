@@ -120,6 +120,10 @@ public class Graph implements GraphIfc, GrowApplIfc {
 		    Dyn old_dyn = dyn;
 		    dyn = new Dyn( nodeclass_dyn);
 		    dyn.merge( old_dyn);
+		    if ( old_dyn.cycle != Glow.eCycle_Inherit)
+			dyn.cycle = old_dyn.cycle;
+		    if ( !(old_dyn.action_type1 == Dyn.mActionType1_Inherit && old_dyn.action_type2 == 0))
+			dyn.access = old_dyn.access;
 		    object.setUserData( dyn);
 		    dyn.setTotal(object);
 		}

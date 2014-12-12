@@ -3613,6 +3613,10 @@ static int graph_trace_connect_bc( grow_tObject object,
       dyn->set_hostobject( hostobject);
 #endif
       dyn->merge( *old_dyn);
+      if ( old_dyn->cycle != glow_eCycle_Inherit)
+	dyn->cycle = old_dyn->cycle;
+      if ( !(old_dyn->action_type1 == ge_mActionType1_Inherit && old_dyn->action_type2 == 0))
+	dyn->access = old_dyn->access;
       grow_SetUserData( object, (void *)dyn);
 
       delete old_dyn;
