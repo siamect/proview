@@ -558,7 +558,28 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
   }
   
   /* Set the URI to play, eg "http://192.168.67.248/mjpg/video.mjpg" */
-  g_object_set( playbin2, "uri", uri,  NULL);
+  pwr_tURL luri;
+  char *s;
+  if ( options & pwr_mVideoOptionsMask_HttpBasicAuthentication) {
+    if ( strcmp( user, "") != 0 && strcmp( password, "") != 0 && (s = strstr( uri, "://"))) {
+      unsigned long int offs = s - (char *)uri + 3;
+      strncpy( luri, uri, offs);
+      luri[offs] = 0;
+      strcat( luri, user);
+      strcat( luri, ":");
+      strcat( luri, password);
+      strcat( luri, "@");
+      strcat( luri, &uri[offs]);
+    }
+    else
+      strcpy( luri, uri);
+  }
+  else if ( options & pwr_mVideoOptionsMask_CgiParameterAuthentication)
+    snprintf( luri, sizeof(luri), "%s?user=%s&pwd=%s", uri, user, password);
+  else
+    strcpy( luri, uri);
+
+  g_object_set( playbin2, "uri", luri,  NULL);
   
   /* Connect to interesting signals in playbin2 */
   g_signal_connect( G_OBJECT( playbin2), "video-tags-changed",( GCallback) tags_cb, this);

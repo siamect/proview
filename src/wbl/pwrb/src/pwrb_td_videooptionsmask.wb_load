@@ -121,6 +121,26 @@ SObject pwrb:Type
        Attr Value = 64
      EndBody
     EndObject
+    !/**
+    !  Http basic authentication.
+    !*/
+    Object HttpBasicAuthentication $Bit
+     Body SysBody
+       Attr PgmName = "HttpBasicAuthentication"
+       Attr Text = "HttpBasicAuthentication"
+       Attr Value = 128
+     EndBody
+    EndObject
+    !/**
+    !  Cgi parameter authentication.
+    !*/
+    Object CgiParameterAuthentication $Bit
+     Body SysBody
+       Attr PgmName = "CgiParameterAuthentication"
+       Attr Text = "CgiParameterAuthentication"
+       Attr Value = 256
+     EndBody
+    EndObject
   EndObject
 EndSObject
 
