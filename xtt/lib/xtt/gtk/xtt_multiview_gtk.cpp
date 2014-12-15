@@ -712,8 +712,8 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	
 	  break;
 	}
-	case pwr_eMultiViewContentEnum_Video: {
-	  pwr_sClass_XttVideo xttvideo;
+	case pwr_eMultiViewContentEnum_Camera: {
+	  pwr_sClass_XttCamera xttcamera;
 	  pwr_tObjid objid;
 	  pwr_tCid cid;
 
@@ -724,18 +724,18 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  lsts = gdh_GetObjectClass( objid, &cid);
 	  if ( EVEN(lsts)) break;
 
-	  if ( cid != pwr_cClass_XttVideo)
+	  if ( cid != pwr_cClass_XttCamera)
 	    break;
 
 	  pwr_tAttrRef aref = cdh_ObjidToAref( objid);
 
-	  lsts = gdh_GetObjectInfoAttrref( &aref, (pwr_tAddress)&xttvideo, sizeof(xttvideo));
+	  lsts = gdh_GetObjectInfoAttrref( &aref, (pwr_tAddress)&xttcamera, sizeof(xttcamera));
 	  if (EVEN(lsts)) break;
 
-	  unsigned int options = xttvideo.Options;
+	  unsigned int options = xttcamera.Options;
 
 	  strmctx[i*rows + j] = new XttStreamGtk( toplevel, this, "No title", 
-						  xttvideo.URL,
+						  xttcamera.URL,
 						  mv.Action[i*rows+j].Width, mv.Action[i*rows+j].Height, 
 						  0, 0, 0, options, 1, &aref, sts);
 
@@ -743,8 +743,8 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 
 	  comp_widget[i*rows + j] = (GtkWidget *)strmctx[i*rows + j]->get_widget();
 
-	  appl.insert( applist_eType_Stream, (void *)strmctx[i*rows + j], objid, xttvideo.Title,
-		       xttvideo.URL);
+	  appl.insert( applist_eType_Stream, (void *)strmctx[i*rows + j], objid, xttcamera.Title,
+		       xttcamera.URL);
 	
 	  break;
 	}
@@ -1266,20 +1266,20 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
 
 	    mv.Action[i*rows+j].Object[0] = object_aref;
 	  }
-	  case pwr_eMultiViewContentEnum_Video: {
-	    pwr_sClass_XttVideo xttvideo;
+	  case pwr_eMultiViewContentEnum_Camera: {
+	    pwr_sClass_XttCamera xttcamera;
 	    pwr_tStatus lsts;
 	    pwr_tAttrRef object_aref;
 	    
 	    lsts = gdh_NameToAttrref( pwr_cNObjid, object, &object_aref);
 	    if ( EVEN(lsts)) break;
 
-	    lsts = gdh_GetObjectInfoAttrref( &object_aref, (pwr_tAddress)&xttvideo, sizeof(xttvideo));
+	    lsts = gdh_GetObjectInfoAttrref( &object_aref, (pwr_tAddress)&xttcamera, sizeof(xttcamera));
 	    if (EVEN(lsts)) break;
 
 	    XttStreamGtk *ctx = new XttStreamGtk( toplevel, this, "No title", 
-						  xttvideo.URL, w, h, 0, 0,
-						  0, xttvideo.Options, 1, &object_aref, &lsts);
+						  xttcamera.URL, w, h, 0, 0,
+						  0, xttcamera.Options, 1, &object_aref, &lsts);
 	    
 	    GtkWidget *comp_w = (GtkWidget *)ctx->get_widget();
 	  
@@ -1297,8 +1297,8 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
 	    if ( insert)
 	      recall_buffer[i*rows + j].insert( source, object);
 
-	    appl.insert( applist_eType_Stream, (void *)strmctx[i*rows + j], object_aref.Objid, xttvideo.Title,
-			 xttvideo.URL);
+	    appl.insert( applist_eType_Stream, (void *)strmctx[i*rows + j], object_aref.Objid, xttcamera.Title,
+			 xttcamera.URL);
 	    break;
 	  }
 	  default: ;

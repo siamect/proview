@@ -366,9 +366,9 @@ void Xtt::activate_opengraph()
       sprintf( cmd, "open mult /name=%s", vname);
       xnav->command( cmd);
       return;
-    case pwr_cClass_XttVideo:
+    case pwr_cClass_XttCamera:
       // Open video
-      sprintf( cmd, "open vide /obj=%s", vname);
+      sprintf( cmd, "open camera /obj=%s", vname);
       xnav->command( cmd);
       return;
     case pwr_cClass_DsTrend:

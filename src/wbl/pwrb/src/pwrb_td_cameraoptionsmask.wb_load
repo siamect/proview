@@ -33,18 +33,18 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_videloptionsmask.wb_load -- Defines the mask type VideoOptionsMask
+!  pwrb_videloptionsmask.wb_load -- Defines the mask type CameraOptionsMask
 !
 SObject pwrb:Type
 !/**
 !  @Version 1.0
 !  @Group Types
-!  Bitmask for xtt video options.
+!  Bitmask for xtt camera options.
 !
 ! @b See also
-!  @classlink XttVideo pwrb_xttvideo.html
+!  @classlink XttCamera pwrb_xttcamera.html
 !*/
-  Object VideoOptionsMask $TypeDef 79
+  Object CameraOptionsMask $TypeDef 79
     Body SysBody
       Attr Type = pwr_eType_Mask
       Attr Size = 4
@@ -102,33 +102,13 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  Display a video control panel with Play, Pause and Stop buttons.
-    !*/
-    Object VideoControlPanel $Bit
-     Body SysBody
-       Attr PgmName = "VideoControlPanel"
-       Attr Text = "VideoControlPanel"
-       Attr Value = 32
-     EndBody
-    EndObject
-    !/**
-    !  Add progress bar to control panel.
-    !*/
-    Object VideoProgressBar $Bit
-     Body SysBody
-       Attr PgmName = "VideoProgressBar"
-       Attr Text = "VideoProgressBar"
-       Attr Value = 64
-     EndBody
-    EndObject
-    !/**
     !  Http basic authentication.
     !*/
     Object HttpBasicAuthentication $Bit
      Body SysBody
        Attr PgmName = "HttpBasicAuthentication"
        Attr Text = "HttpBasicAuthentication"
-       Attr Value = 128
+       Attr Value = 32
      EndBody
     EndObject
     !/**
@@ -138,7 +118,7 @@ SObject pwrb:Type
      Body SysBody
        Attr PgmName = "CgiParameterAuthentication"
        Attr Text = "CgiParameterAuthentication"
-       Attr Value = 256
+       Attr Value = 64
      EndBody
     EndObject
   EndObject

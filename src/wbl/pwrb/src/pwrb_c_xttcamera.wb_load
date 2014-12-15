@@ -33,27 +33,27 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_xttvideo.wb_load -- Defines the class XttVideo.
+!  pwrb_c_xttcamera.wb_load -- Defines the class XttCamera.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Operator,NodeConfiguration
-!  @Summary Configure a video stream
-!  The XttVideo object configures a video stream.
+!  @Summary Configure a video camera stream
+!  The XttCamera object configures a video camera stream.
 !
 ! @b See also
 !  @classlink OpPlace pwrb_opplace.html
 !*/
 !
-  Object XttVideo $ClassDef 653 
+  Object XttCamera $ClassDef 653 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "XttVideo"
+        Attr StructName = "XttCamera"
       EndBody
       !/**
       !  Description of the object.
@@ -120,7 +120,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      ! Options for the video.
+      ! Options for the camera.
       !
       ! - FullScreen  Open the graph as full screen without frame.
       ! - Maximize    Open the graph maximized, not covering the operator window (NYI).
@@ -130,7 +130,7 @@ SObject pwrb:Class
       !*/
       Object Options $Attribute 10
         Body SysBody
-          Attr TypeRef = "pwrb:Type-VideoOptionsMask"
+          Attr TypeRef = "pwrb:Type-CameraOptionsMask"
         EndBody
       EndObject
       !/**
@@ -189,7 +189,7 @@ SObject pwrb:Class
         EndBody
       EndObject
     EndObject
-    Object Template XttVideo
+    Object Template XttCamera
       Body RtBody
         Attr Width = 800
         Attr Height = 600

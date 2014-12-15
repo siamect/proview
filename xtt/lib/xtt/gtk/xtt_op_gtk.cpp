@@ -1086,8 +1086,8 @@ int OpGtk::configure( char *opplace_str)
       sts = gdh_ClassAttrToAttrref( pwr_cClass_XttMultiView, ".ButtonText", &attrref);
       if ( EVEN(sts)) return sts;
       break;
-    case pwr_cClass_XttVideo:
-      sts = gdh_ClassAttrToAttrref( pwr_cClass_XttVideo, ".ButtonText", &attrref);
+    case pwr_cClass_XttCamera:
+      sts = gdh_ClassAttrToAttrref( pwr_cClass_XttCamera, ".ButtonText", &attrref);
       if ( EVEN(sts)) return sts;
       break;
     default:

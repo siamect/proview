@@ -182,8 +182,8 @@ void XttStreamGtk::refresh_ui( XttStreamGtk *strm)
   GstFormat fmt = GST_FORMAT_TIME;
   gint64 current = -1;
   
-  if ( !(strm->options & pwr_mVideoOptionsMask_VideoControlPanel && 
-	 strm->options & pwr_mVideoOptionsMask_VideoProgressBar))
+  if ( !(strm->options & strm_mOptions_VideoControlPanel && 
+	 strm->options & strm_mOptions_VideoProgressBar))
     return;
 
   /* We do not want to update anything unless we are in the PAUSED or PLAYING states */
@@ -560,7 +560,7 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
   /* Set the URI to play, eg "http://192.168.67.248/mjpg/video.mjpg" */
   pwr_tURL luri;
   char *s;
-  if ( options & pwr_mVideoOptionsMask_HttpBasicAuthentication) {
+  if ( options & strm_mOptions_HttpBasicAuthentication) {
     if ( strcmp( user, "") != 0 && strcmp( password, "") != 0 && (s = strstr( uri, "://"))) {
       unsigned long int offs = s - (char *)uri + 3;
       strncpy( luri, uri, offs);
@@ -574,7 +574,7 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
     else
       strcpy( luri, uri);
   }
-  else if ( options & pwr_mVideoOptionsMask_CgiParameterAuthentication)
+  else if ( options & strm_mOptions_CgiParameterAuthentication)
     snprintf( luri, sizeof(luri), "%s?user=%s&pwd=%s", uri, user, password);
   else
     strcpy( luri, uri);
@@ -613,7 +613,7 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
 
   // GtkWidget *controls;
   GtkWidget *hbox = gtk_hbox_new( FALSE, 0);
-  if ( options & pwr_mVideoOptionsMask_VideoControlPanel) {
+  if ( options & strm_mOptions_VideoControlPanel) {
     GtkToolbar *controlbuttons;
     controlbuttons = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
@@ -641,7 +641,7 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
 
     gtk_box_pack_start( GTK_BOX( hbox), GTK_WIDGET(controlbuttons), FALSE, FALSE, 2);
 
-    if ( options & pwr_mVideoOptionsMask_VideoProgressBar) {
+    if ( options & strm_mOptions_VideoProgressBar) {
       slider = gtk_hscale_new_with_range( 0, 100, 1);
       gtk_scale_set_draw_value( GTK_SCALE( slider), 0);
       slider_update_signal_id = g_signal_connect( G_OBJECT( slider), "value-changed", G_CALLBACK( slider_cb), this);
@@ -847,7 +847,7 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
   main_box = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX( main_box), GTK_WIDGET(tools_box), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX( main_box), video_form, TRUE, TRUE, 0);
-  if ( options & pwr_mVideoOptionsMask_VideoControlPanel)
+  if ( options & strm_mOptions_VideoControlPanel)
     gtk_box_pack_start( GTK_BOX( main_box), GTK_WIDGET(hbox), FALSE, FALSE, 0);
 
   
@@ -859,23 +859,23 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
     
     if ( ptz_box)
       g_object_set( ptz_box, "visible", FALSE, NULL);
-    if ( !(options & pwr_mVideoOptionsMask_CameraControlPanel))
+    if ( !(options & strm_mOptions_CameraControlPanel))
       g_object_set( tools, "visible", FALSE, NULL);
   
-    if ( options & pwr_mVideoOptionsMask_FullScreen)
+    if ( options & strm_mOptions_FullScreen)
       gtk_window_fullscreen( GTK_WINDOW(toplevel));
-    else if ( options & pwr_mVideoOptionsMask_Maximize)
+    else if ( options & strm_mOptions_Maximize)
       gtk_window_maximize( GTK_WINDOW(toplevel)); // TODO
-    else if ( options & pwr_mVideoOptionsMask_FullMaximize)
+    else if ( options & strm_mOptions_FullMaximize)
       gtk_window_maximize( GTK_WINDOW(toplevel));
-    else if ( options & pwr_mVideoOptionsMask_Iconify)
+    else if ( options & strm_mOptions_Iconify)
       gtk_window_iconify( GTK_WINDOW(toplevel));
   }
   else {
     gtk_widget_set_size_request( main_box, width, height);
     if ( ptz_box)
       g_object_set( ptz_box, "visible", FALSE, NULL);
-    if ( (options & pwr_mVideoOptionsMask_CameraControlPanel) == 0)
+    if ( (options & strm_mOptions_CameraControlPanel) == 0)
       g_object_set( tools, "visible", FALSE, NULL);
   }
 
@@ -933,7 +933,7 @@ void XttStreamGtk::setup()
 {
   if ( ptz_box)
     g_object_set( ptz_box, "visible", FALSE, NULL);
-  if ( !(options & pwr_mVideoOptionsMask_CameraControlPanel))
+  if ( !(options & strm_mOptions_CameraControlPanel))
     g_object_set( tools, "visible", FALSE, NULL);
 }
 

@@ -3529,7 +3529,8 @@ static int	xnav_open_func(	void		*client_data,
     }
     return XNAV__SUCCESS;	
   }
-  else if ( cdh_NoCaseStrncmp( arg1_str, "VIDEO", strlen( arg1_str)) == 0) {
+  else if ( cdh_NoCaseStrncmp( arg1_str, "CAMERA", strlen( arg1_str)) == 0 ||
+	    cdh_NoCaseStrncmp( arg1_str, "VIDEO", strlen( arg1_str)) == 0) {
     char tmp_str[80];
     int width, height;
     int x, y;
@@ -3542,8 +3543,10 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tAName camerapos_str;
     int camerapos_found = 0;
     pwr_sClass_CameraPosition pos;
+    int is_video = (cdh_NoCaseStrncmp( arg1_str, "VIDEO", strlen( arg1_str)) == 0);
+
     
-    // Command is "OPEN VIDEO"
+    // Command is "OPEN CAMERA" or "OPEN VIDEO"
 
     if ( ODD( dcli_get_qualifier( "/CAMERAPOSITION", camerapos_str, sizeof(camerapos_str)))) {
       // CameraPosition object supplied
@@ -3562,15 +3565,15 @@ static int	xnav_open_func(	void		*client_data,
       camerapos_found = 1;
     }
     if ( camerapos_found || ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
-      // XttVideo object supplied, fetch data from object
-      pwr_tOName xttvideo_name;
-      pwr_sClass_XttVideo xttvideo;
+      // XttCamera object supplied, fetch data from object
+      pwr_tOName xttcamera_name;
+      pwr_sClass_XttCamera xttcamera;
       pwr_tObjid objid;
       pwr_tCid cid;
       
-      xnav_replace_node_str( xttvideo_name, object_str);
+      xnav_replace_node_str( xttcamera_name, object_str);
         
-      sts = gdh_NameToObjid( xttvideo_name, &objid);
+      sts = gdh_NameToObjid( xttcamera_name, &objid);
       if (EVEN(sts)) {
         xnav->message('E', "Object not found");
         return XNAV__HOLDCOMMAND;
@@ -3579,22 +3582,36 @@ static int	xnav_open_func(	void		*client_data,
       sts = gdh_GetObjectClass( objid, &cid);
       if ( EVEN(sts)) return sts;
 
-      if ( cid != pwr_cClass_XttVideo) {
+      if ( cid != pwr_cClass_XttCamera) {
         xnav->message('E', "Error in object class");
         return XNAV__HOLDCOMMAND;
       }
       pwr_tAttrRef aref = cdh_ObjidToAref( objid);
 
-      sts = gdh_GetObjectInfoAttrref( &aref, (pwr_tAddress)&xttvideo, sizeof(xttvideo));
+      sts = gdh_GetObjectInfoAttrref( &aref, (pwr_tAddress)&xttcamera, sizeof(xttcamera));
       if (EVEN(sts)) return sts;
 
-      strncpy( name_str, xttvideo.Title, sizeof(name_str));
-      strncpy( url_str, xttvideo.URL, sizeof(url_str));
-      width = xttvideo.Width;
-      height = xttvideo.Height;
-      x = xttvideo.X;
-      y = xttvideo.Y;
-      options = xttvideo.Options;
+      strncpy( name_str, xttcamera.Title, sizeof(name_str));
+      strncpy( url_str, xttcamera.URL, sizeof(url_str));
+      width = xttcamera.Width;
+      height = xttcamera.Height;
+      x = xttcamera.X;
+      y = xttcamera.Y;
+      options = 0;
+      if ( xttcamera.Options & pwr_mCameraOptionsMask_FullScreen)
+	options |= strm_mOptions_FullScreen;
+      if ( xttcamera.Options & pwr_mCameraOptionsMask_Maximize)
+	options |= strm_mOptions_Maximize;
+      if ( xttcamera.Options & pwr_mCameraOptionsMask_FullMaximize)
+	options |= strm_mOptions_FullMaximize;
+      if ( xttcamera.Options & pwr_mCameraOptionsMask_Iconify)
+	options |= strm_mOptions_Iconify;
+      if ( xttcamera.Options & pwr_mCameraOptionsMask_CameraControlPanel)
+	options |= strm_mOptions_CameraControlPanel;
+      if ( xttcamera.Options & pwr_mCameraOptionsMask_HttpBasicAuthentication)
+	options |= strm_mOptions_HttpBasicAuthentication;
+      if ( xttcamera.Options & pwr_mCameraOptionsMask_CgiParameterAuthentication)
+	options |= strm_mOptions_CgiParameterAuthentication;
 	
       XttStream *strmctx;
 
@@ -3625,19 +3642,23 @@ static int	xnav_open_func(	void		*client_data,
       }
 
       if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
-	options |= pwr_mVideoOptionsMask_FullScreen;
+	options |= strm_mOptions_FullScreen;
       if ( ODD( dcli_get_qualifier( "/MAXIMIZE", 0, 0)))
-	options |= pwr_mVideoOptionsMask_Maximize;
+	options |= strm_mOptions_Maximize;
       if ( ODD( dcli_get_qualifier( "/FULLMAXIMIZE", 0, 0)))
-	options |= pwr_mVideoOptionsMask_FullMaximize;
+	options |= strm_mOptions_FullMaximize;
       if ( ODD( dcli_get_qualifier( "/ICONIFY", 0, 0)))
-	options |= pwr_mVideoOptionsMask_Iconify;	   
-      if ( ODD( dcli_get_qualifier( "/CAMERACONTROLPANEL", 0, 0)))
-	options |= pwr_mVideoOptionsMask_CameraControlPanel;
-      if ( ODD( dcli_get_qualifier( "/VIDEOCONTROLPANEL", 0, 0)))
-	options |= pwr_mVideoOptionsMask_VideoControlPanel;
-      if ( ODD( dcli_get_qualifier( "/VIDEOPROGRESSBAR", 0, 0)))
-	options |= pwr_mVideoOptionsMask_VideoProgressBar;
+	options |= strm_mOptions_Iconify;	   
+      if ( is_video) {
+	if ( ODD( dcli_get_qualifier( "/VIDEOCONTROLPANEL", 0, 0)))
+	  options |= strm_mOptions_VideoControlPanel;
+	if ( ODD( dcli_get_qualifier( "/VIDEOPROGRESSBAR", 0, 0)))
+	  options |= strm_mOptions_VideoProgressBar;
+      }
+      else {
+	if ( ODD( dcli_get_qualifier( "/CAMERACONTROLPANEL", 0, 0)))
+	  options |= strm_mOptions_CameraControlPanel;
+      }
 
       if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str, sizeof(tmp_str)))) {
 	nr = sscanf( tmp_str, "%d", &width);

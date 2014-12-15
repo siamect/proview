@@ -130,12 +130,12 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  Video.
+    !  Camera.
     !*/
-    Object Video $Value
+    Object Camera $Value
      Body SysBody
-       Attr PgmName = "Video"
-       Attr Text = "Video"
+       Attr PgmName = "Camera"
+       Attr Text = "Camera"
        Attr Value = 8
      EndBody
     EndObject

@@ -4364,8 +4364,8 @@ void XNav::appl_startup()
 	
 	command( cmd);
 	break;
-      case pwr_cClass_XttVideo:
-	strcpy( cmd, "ope vid/obj=");
+      case pwr_cClass_XttCamera:
+	strcpy( cmd, "ope camera/obj=");
 	strcat( cmd, name);
 	command( cmd);
 	break;

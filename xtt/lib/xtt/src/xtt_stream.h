@@ -44,6 +44,19 @@
 class CoWow;
 class CoWowTimer;
 
+typedef enum {
+  strm_mOptions_FullScreen     = 1,
+  strm_mOptions_Maximize       = 2,
+  strm_mOptions_FullMaximize   = 4,
+  strm_mOptions_Iconify        = 8,
+  strm_mOptions_CameraControlPanel = 16,
+  strm_mOptions_VideoControlPanel = 32,
+  strm_mOptions_VideoProgressBar = 64,
+  strm_mOptions_HttpBasicAuthentication = 128,
+  strm_mOptions_CgiParameterAuthentication = 256,
+} strm_mOptions;
+
+
 class XttCameraControl {
  public:
   pwr_tURL url;

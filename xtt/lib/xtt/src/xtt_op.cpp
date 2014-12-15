@@ -117,8 +117,8 @@ int Op::appl_action( int idx)
       strcpy( cmd, "ope mult ");
       strcat( cmd, name);
       break;
-    case pwr_cClass_XttVideo:
-      strcpy( cmd, "ope vide/obj=");
+    case pwr_cClass_XttCamera:
+      strcpy( cmd, "ope camera/obj=");
       strcat( cmd, name);
       break;
     default:

@@ -501,8 +501,8 @@ static pwr_tStatus Camera( xmenu_sMenuCall *ip)
 			cdh_mName_volumeStrict);
     if ( EVEN(sts)) return sts;
 
-    // Open video
-    sprintf( cmd, "open video /cameraposition=%s", name);
+    // Open camera
+    sprintf( cmd, "open camera /cameraposition=%s", name);
     ((XNav *)ip->EditorContext)->command( cmd);
     return 1;
   }
@@ -523,8 +523,8 @@ static pwr_tStatus Camera( xmenu_sMenuCall *ip)
 			       cdh_mName_volumeStrict);
       if ( EVEN(sts)) return sts;
 
-      // Open video
-      sprintf( cmd, "open video /cameraposition=%s", name);
+      // Open camera
+      sprintf( cmd, "open camera /cameraposition=%s", name);
       ((XNav *)ip->EditorContext)->command( cmd);
       return 1;
     }
@@ -553,8 +553,8 @@ static pwr_tStatus Camera( xmenu_sMenuCall *ip)
 			   cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
 
-  // Open video
-  sprintf( cmd, "open video /cameraposition=%s", name);
+  // Open camera
+  sprintf( cmd, "open camera /cameraposition=%s", name);
   ((XNav *)ip->EditorContext)->command( cmd);
  
   return 1;
@@ -1051,9 +1051,9 @@ static pwr_tStatus OpenGraph( xmenu_sMenuCall *ip)
     sts = ((XNav *)ip->EditorContext)->command( cmd);
     return XNAV__SUCCESS;
   }
-  else if ( classid == pwr_cClass_XttVideo) {
+  else if ( classid == pwr_cClass_XttCamera) {
     sts = gdh_AttrrefToName( objar, name, sizeof(name), cdh_mNName);
-    strcpy( cmd, "ope vide/obj=");
+    strcpy( cmd, "ope camera/obj=");
     strcat( cmd, name);
     sts = ((XNav *)ip->EditorContext)->command( cmd);
     return XNAV__SUCCESS;
@@ -1085,7 +1085,7 @@ static pwr_tStatus OpenGraph( xmenu_sMenuCall *ip)
         sts = ((XNav *)ip->EditorContext)->command( cmd);
         break;
       }
-      else if ( classid == pwr_cClass_XttVideo) {
+      else if ( classid == pwr_cClass_XttCamera) {
         sts = gdh_AttrrefToName( &defgraph, name, sizeof(name), cdh_mNName);
         strcpy( cmd, "ope vide/obj=");
         strcat( cmd, name);
@@ -1131,7 +1131,7 @@ static pwr_tStatus OpenGraphFilter( xmenu_sMenuCall *ip)
 
   if ( classid == pwr_cClass_XttGraph ||
        classid == pwr_cClass_XttMultiView ||
-       classid == pwr_cClass_XttVideo)
+       classid == pwr_cClass_XttCamera)
     return XNAV__SUCCESS;
 
   while( ODD(sts)) {
@@ -1166,7 +1166,7 @@ static pwr_tStatus OpenGraphFilter( xmenu_sMenuCall *ip)
       }
       else if ( classid == pwr_cClass_XttMultiView)
 	return XNAV__SUCCESS;
-      else if ( classid == pwr_cClass_XttVideo)
+      else if ( classid == pwr_cClass_XttCamera)
 	return XNAV__SUCCESS;
     }
 
