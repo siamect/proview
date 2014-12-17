@@ -75,7 +75,7 @@ XttStream::XttStream( void *st_parent_ctx, const char *name, const char *st_uri,
 
   strncpy( uri, st_uri, sizeof(uri)); 
   if ( st_scan_time < 0.02)
-    scan_time = 1000;
+    scan_time = 250;
   else
     scan_time = 1000 * st_scan_time;
 
@@ -135,7 +135,7 @@ XttStream::XttStream( void *st_parent_ctx, const char *name, const char *st_uri,
   }
   if ( stream_width == 0 || stream_height == 0) {
     stream_width = 700;
-    stream_width = 580;
+    stream_height = 580;
   }
   stream_ratio = ((float)stream_width)/stream_height;
 

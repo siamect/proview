@@ -732,7 +732,21 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  lsts = gdh_GetObjectInfoAttrref( &aref, (pwr_tAddress)&xttcamera, sizeof(xttcamera));
 	  if (EVEN(lsts)) break;
 
-	  unsigned int options = xttcamera.Options;
+	  unsigned int options = 0;
+	  if ( xttcamera.Options & pwr_mCameraOptionsMask_FullScreen)
+	    options |= strm_mOptions_FullScreen;
+	  if ( xttcamera.Options & pwr_mCameraOptionsMask_Maximize)
+	    options |= strm_mOptions_Maximize;
+	  if ( xttcamera.Options & pwr_mCameraOptionsMask_FullMaximize)
+	    options |= strm_mOptions_FullMaximize;
+	  if ( xttcamera.Options & pwr_mCameraOptionsMask_Iconify)
+	    options |= strm_mOptions_Iconify;
+	  if ( xttcamera.Options & pwr_mCameraOptionsMask_CameraControlPanel)
+	    options |= strm_mOptions_CameraControlPanel;
+	  if ( xttcamera.Options & pwr_mCameraOptionsMask_HttpBasicAuthentication)
+	    options |= strm_mOptions_HttpBasicAuthentication;
+	  if ( xttcamera.Options & pwr_mCameraOptionsMask_CgiParameterAuthentication)
+	    options |= strm_mOptions_CgiParameterAuthentication;
 
 	  strmctx[i*rows + j] = new XttStreamGtk( toplevel, this, "No title", 
 						  xttcamera.URL,

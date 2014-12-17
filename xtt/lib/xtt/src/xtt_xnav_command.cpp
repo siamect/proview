@@ -280,7 +280,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			  "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE", "/ICONIFY", "/HIDE", 
 			  "/XPOSITION", "/YPOSITION", "/X0", "/Y0", "/X1", "/Y1", "/URL", "/CONTINOUS", 
 			  "/CAMERAPOSITION", "/CAMERACONTROLPANEL", "/VIDEOCONTROLPANEL", 
-			  "/VIDEOPROGRESSBAR", ""}
+			  "/VIDEOPROGRESSBAR", "/SCANTIME", ""}
 		},
 		{
 			"CLOSE",
@@ -3534,6 +3534,7 @@ static int	xnav_open_func(	void		*client_data,
     char tmp_str[80];
     int width, height;
     int x, y;
+    float scantime;
     unsigned int options = 0;
     pwr_tString80 name_str;
     int nr;
@@ -3700,13 +3701,23 @@ static int	xnav_open_func(	void		*client_data,
       else
 	y = 0;
 
+      if ( ODD( dcli_get_qualifier( "/SCANTIME", tmp_str, sizeof(tmp_str)))) {
+	nr = sscanf( tmp_str, "%f", &scantime);
+	if ( nr != 1) {
+	  xnav->message('E', "Syntax error in scantime");
+	  return XNAV__HOLDCOMMAND;
+	}
+      }
+      else
+       scantime = 0;
+
       XttStream *strmctx;
 
       if ( xnav->appl.find( applist_eType_Stream, name_str, url_str, (void **) &strmctx)) {
 	strmctx->pop();
       }
       else {
-	strmctx = xnav->stream_new( name_str, url_str, width, height, x, y, 0, options, 0, 0, &sts);
+	strmctx = xnav->stream_new( name_str, url_str, width, height, x, y, scantime, options, 0, 0, &sts);
 	if ( EVEN(sts)) {
 	  xnav->message(' ', XNav::get_message(sts));
 	  return sts;
