@@ -567,7 +567,7 @@ void rt_report::create_report( pwr_sClass_Report *o)
 	sprintf( cmd, "export DISPLAY=%s;co_convert -s -d %s %s", 
 		 display, "$pwrp_lis", tmpfile);
       else
-	sprintf( cmd, "co_convert -s -d %s %s", 
+	sprintf( cmd, "co_convert -t -d %s %s", 
 		 "$pwrp_lis", tmpfile);
       system( cmd);
       strcpy( cnvfile, "$pwrp_lis/report_index.html");
