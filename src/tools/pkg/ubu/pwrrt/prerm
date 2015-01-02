@@ -123,4 +123,7 @@ if [ -e /etc/proview.cnf ]; then
   if [ -e $web_dir/pwr_jop.jar ]; then
     rm $web_dir/pwr_jop.jar
   fi
+  if [ -e $web_dir/pwr_jopg.jar ]; then
+    rm $web_dir/pwr_jopg.jar
+  fi
 fi
