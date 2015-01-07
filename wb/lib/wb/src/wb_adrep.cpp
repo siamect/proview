@@ -301,7 +301,7 @@ void wb_adrep::add( wb_adrep *ad, int idx)
   m_isSubattr = true;
 
   if ( ad->m_flags & PWR_MASK_ARRAY)
-    m_offset += ad->m_offset + idx * ad->m_size / ad->m_elements;
+    m_offset += ad->m_offset + idx * (ad->m_size / ad->m_elements);
   else
     m_offset += ad->m_offset;
 
