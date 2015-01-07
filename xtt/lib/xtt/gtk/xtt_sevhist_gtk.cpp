@@ -99,6 +99,8 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
   curve->remove_cb = sevhist_remove_cb;
   curve->export_cb = sevhist_export_cb;
   curve->enable( curve_mEnable_Timebox | curve_mEnable_Export | curve_mEnable_ExportTime);
+  if ( initial_period != time_ePeriod_)
+    curve->set_period( initial_period, 1);
 
   if ( w)
     *w = (GtkWidget *)curve->get_widget();

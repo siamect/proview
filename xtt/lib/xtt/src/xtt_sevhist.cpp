@@ -72,7 +72,7 @@ XttSevHist::XttSevHist( void *parent_ctx,
 			sevcli_tCtx xn_scctx,
 			int *sts) :
   xnav(parent_ctx), gcd(0), curve(0), rows(0), vsize(0), timerid(0), close_cb(0), help_cb(0), 
-  get_select_cb(0), first_scan(1), scctx(xn_scctx), time_low_old(0), time_high_old(0)
+  get_select_cb(0), first_scan(1), scctx(xn_scctx), time_low_old(0), time_high_old(0), initial_period(time_ePeriod_)
 {
   pwr_tTime from, to;
 
@@ -101,8 +101,11 @@ XttSevHist::XttSevHist( void *parent_ctx,
       time_Period( time_ePeriod_OneMonth, &from, &to, 0, 0);
       get_data( sts, from, to);
       if ( EVEN(*sts)) return;
+      initial_period = time_ePeriod_OneMonth;
     }
     else if ( EVEN(*sts)) return;
+    else
+      initial_period = time_ePeriod_OneHour;
   }
   else {
     get_multidata( sts, from, to);
@@ -122,7 +125,7 @@ XttSevHist::XttSevHist( void *parent_ctx,
 			char *filename,
 			int *sts) :
   xnav(parent_ctx), gcd(0), curve(0), rows(0), vsize(0), timerid(0), close_cb(0), help_cb(0), 
-  get_select_cb(0), first_scan(1), scctx(0), time_low_old(0), time_high_old(0)
+  get_select_cb(0), first_scan(1), scctx(0), time_low_old(0), time_high_old(0), initial_period(time_ePeriod_)
 {
   strncpy( title, filename, sizeof(title));
 

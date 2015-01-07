@@ -94,6 +94,7 @@ class XttSevHist {
   long int	time_low_old;
   long int	time_high_old;
   bool    	sevhistobjectv[XTT_SEVHIST_MAX]; //!< Indicates that it is a SevHistObject
+  time_ePeriod	initial_period;
 
   //! Constructor
   XttSevHist( void *xn_parent_ctx,
