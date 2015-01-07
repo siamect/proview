@@ -282,12 +282,18 @@ if [ -e /etc/proview.cnf ]; then
   set -e
 
   if [ -e "$web_dir" ]; then
-    cp /usr/pwrrt/lib/pwr_rt_client.jar $web_dir
-    chown pwrp $web_dir/pwr_rt_client.jar
-    cp /usr/pwrrt/lib/pwr_jop.jar $web_dir
-    chown pwrp $web_dir/pwr_jop.jar
-    cp /usr/pwrrt/lib/pwr_jopc.jar $web_dir
-    chown pwrp $web_dir/pwr_jopc.jar
+    if [ -e /usr/pwrrt/lib/pwr_rt_client.jar ]; then
+      cp /usr/pwrrt/lib/pwr_rt_client.jar $web_dir
+      chown pwrp $web_dir/pwr_rt_client.jar
+    fi
+    if [ -e /usr/pwrrt/lib/pwr_jop.jar ]; then
+      cp /usr/pwrrt/lib/pwr_jop.jar $web_dir
+      chown pwrp $web_dir/pwr_jop.jar
+    fi
+    if [ -e /usr/pwrrt/lib/pwr_jopg.jar ]; then
+      cp /usr/pwrrt/lib/pwr_jopg.jar $web_dir
+      chown pwrp $web_dir/pwr_jopg.jar
+    fi
   fi
 fi
 
@@ -481,6 +487,9 @@ if [ -e /etc/proview.cnf ]; then
   fi
   if [ -e $web_dir/pwr_jop.jar ]; then
     rm $web_dir/pwr_jop.jar
+  fi
+  if [ -e $web_dir/pwr_jopg.jar ]; then
+    rm $web_dir/pwr_jopg.jar
   fi
 fi
 
