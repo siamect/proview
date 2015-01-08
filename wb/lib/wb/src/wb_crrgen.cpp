@@ -168,6 +168,7 @@ static crrgen_tRefList reflist[] = {
 
 static crrgen_tRefList codelist[] = {
     { pwr_cClass_dataarithm, "DevBody", "Code", crrgen_eType_, crrgen_eTable_, 0},
+    { pwr_cClass_dataarithml, "DevBody", "Code", crrgen_eType_, crrgen_eTable_, 0},
     { pwr_cClass_carithm, "DevBody", "Code", crrgen_eType_, crrgen_eTable_, 0},
     { pwr_cClass_aarithm, "DevBody", "Expression", crrgen_eType_, crrgen_eTable_, 0},
     { pwr_cClass_darithm, "DevBody", "Expression", crrgen_eType_, crrgen_eTable_, 0}};
@@ -681,7 +682,7 @@ void wb_crrgen::write( pwr_tStatus *rsts)
 void wb_crrgen::write_code( pwr_tStatus *rsts)
 {
   pwr_tFileName fname;
-  char text[1024];
+  char text[8192];
 
   sprintf( fname, "$pwrp_load/rtt_crrc_%s.dat", vldh_VolumeIdToStr( m_sp->vid()));
   dcli_translate_filename( fname, fname);
