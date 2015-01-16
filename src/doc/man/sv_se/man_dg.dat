@@ -2152,6 +2152,35 @@ Supervisory), som finns under mappen 'Analog' i paletten.
 Övervakningen sker på liknande sätt som för en DSup, med undantaget att man kan välja om 
 larmet ska utlösas om gränsvärdet underskrids eller överskrids.
 
+<h1>Exekveringsordning
+Exekveringsordningen bestäms normalt efter hur funktionsobjekten är sammankopplade. Ett
+objekt vars utgång är kopplad till en ingång på ett annat objekt, exekverar före det objekt
+det är kopplat till. Man kan se exekveringordningen genom att aktivera 'View/Show 
+Execute Order' i plc-editorns meny. För objekt och nät som inte är sammankopplade exekveras
+bestämmer koordinaterna exekveringsordningen. Objekt som ligger högre upp exekveras först.
+
+Om man vill påverka exekveringsordningen mellan två objekt kan man koppla en speciell
+exekveringsordnings koppling mellan objekten. Denna väljs i kopplings-paletten och har en
+pil i ena ändan. Den fungerar så att objektet som kopplingen pekar på exekverar efter objektet
+som kopplingen utgår från.
+
+Om ett nät innehåller en återkoppling, kan exekeveringordningen inte bestämmas och man får 
+felet 'Ambigous execute order'. Man måste då byta ut en koppling mot en feedback koppling, dvs 
+en koppling som inte bestämmer exekveringsordningen, så att exekveringsordningen blir 
+entydigt bestämd. Feedback-kopplingen är sträckad och väljs i verktygs-panelen eller i 
+kopplings-paletten.
+
+<h1>I/O kopiering
+Om en signal används på flera ställen i ett nät av funktions-objekt, och det finns risk att 
+signalens värde ändras under exekveringen kan man få låsningar och andra fenomen som är 
+svåra att förutse. Därför används en mekanism som kallas I/O kopiering. Signalvärdena för
+signaler av typen Ai, Ao, Av, Di, Do, Dv, Ii, Io, Iv, Co, Bo och Bi, är samlade i speciella
+area-objekt. Innan en plc-tråd börjar exekvera tar man en kopia av areaobjekten, och under
+exekveringen görs alla läsningar från kopian, medan skrivningar görs i area-objekten.
+Det innebär dels att man undviker den här typen av fenomen, men också att man kan få 
+fördröjningar. Om man sätter värdet på en signal, och sedan läser det i samma plc-tråd, kommer 
+förändringen inte att registreras förrän i nästa skan.
+
 <h1>Kompilera plcprogrammet
 Innan man börjar kompilera, måste man ange vilken platform (eller vilka plattformar) som
 plcprogrammets volym ska exekvera på. Öppna volymsattribut-editorn från konfiguratören, 

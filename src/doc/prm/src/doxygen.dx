@@ -26,6 +26,7 @@ This manual will give a description of the following API's
 - Sevcli Storage environment client interface.
 - NMps Interface to NMps Cell objects.
 - AProc Application process interface.
+- Net  Network conversion functions.
 - rt_appl A base class for applications i c++.
 */
 
@@ -338,6 +339,11 @@ This manual will give a description of the following API's
 /*! \defgroup AProc AProc Application process interface
   \ingroup PRM
   This module contains functions to handle application processes.
+*/
+
+/*! \defgroup Net Net Network conversion functions
+  \ingroup PRM
+  This module contains functions for network conversion.
 */
 
 /*! \defgroup rt rt_appl Base class for applications

@@ -75,6 +75,9 @@
 #include "rt_net_msg.h"
 #include "rt_net.h"
 
+/** @addtogroup Net */
+/*@{*/
+
 /* The following variables are the interface between the net_*
    routines and the NetThread. The requestor must first
    aquire ownership of the l_mutex mutex, then fill in the
@@ -767,6 +770,10 @@ net_Connect (
 }
 
 
+/**
+ * @brief Convert a net time to a time.
+ * @return pwr_tTime
+ */
 pwr_tTime net_NetTimeToTime( const net_sTime *nt)
 {
   pwr_tTime t;
@@ -776,6 +783,10 @@ pwr_tTime net_NetTimeToTime( const net_sTime *nt)
   return t;
 }
 
+/**
+ * @brief Convert a time to a net time.
+ * @return net_sTime
+ */
 net_sTime net_TimeToNetTime( const pwr_tTime *t)
 {
   net_sTime nt;
@@ -786,7 +797,11 @@ net_sTime net_TimeToNetTime( const pwr_tTime *t)
 }
 
 
-/* Note! Only for positive deltatimes */
+/**
+ * @brief Convert a net time to a delta time.
+ * Note! Only for positive deltatimes.
+ * @return pwr_tDeltaTime
+ */
 pwr_tDeltaTime net_NetTimeToDeltaTime( const net_sTime *nt)
 {
   pwr_tDeltaTime t;
@@ -796,7 +811,10 @@ pwr_tDeltaTime net_NetTimeToDeltaTime( const net_sTime *nt)
   return t;
 }
 
-/* Note! Only for positive deltatimes */
+/**
+ * @brief Convert a delta time to a net time.
+ * @return pwr_tDeltaTime
+ */
 net_sTime net_DeltaTimeToNetTime( const pwr_tDeltaTime *t)
 {
   net_sTime nt;
@@ -806,6 +824,10 @@ net_sTime net_DeltaTimeToNetTime( const pwr_tDeltaTime *t)
   return nt;
 }
 
+/**
+ * @brief Get the current time as a net time.
+ * @return int
+ */
 int net_GetTime( net_sTime *nt)
 {
   int sts;
@@ -849,3 +871,5 @@ int net_StringToAddr( char *str, struct in_addr *naddr)
   }
   return 1;
 }
+
+/** @} */

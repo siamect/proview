@@ -2170,6 +2170,34 @@ Supervision takes place in the same way as for DSup objects with the exception t
 choose whether the alarm will be released when the value is above or below the supervision 
 limit.
 
+<h1>Execute order
+The execute order is determined by the how the function objects are coupled together. An object
+which output is connected to the input of another object, is executed before the object it
+is connected to. You can see the execute order by activating 'View/Show Execute Order' in the
+plc editor menu. For objects and nets that are not coupled together, the execute order is
+determined by the position. Object higher up is execute first.
+
+If you want to influence the execute order between two objects, you can draw a special execute 
+order connection beween the objects. This is choosen in the connection palette and has an
+arrow in one end. The object that the connection is pointing at will be executed after the 
+object that the connection emanates from.
+
+If a net contains a feedback connection, the execute order can't be determined and the error
+'Amigous execute order' is messaged. You then have to exchange one connection to a feedback
+connection, ie a connection that doesn't determine the execute order. The feedback connection is
+dashed and is selected in the tool panel or in the connection palette.
+
+<h1>I/O copying
+If a signal is used in several places in a net of function objects, there is a chance that
+the signal value will be changed during the execution which can result in lockings and other
+fenomena that is hard to predict. Therefor a mechanism called I/O copying is used. The 
+signal values for signals of type Ai, Ao, Av, Di, Do, Dv, Ii, Io, Iv, Co, Bo and Bi are
+gathered in special area objects. Before a plc thread starts to execute, a copy of the area
+objects are made, and during the execution all the readings are made from the copy, while 
+writings are made into the original area objects. This ensures that this kind of fenomena is
+avoided, but also that you can get delays. If a signal value is set, and then read in the same
+plc thread, the modification will not be registred until the next scan.
+
 <h1>Compile the plcpgm
 Before starting to compile, you have to state on which platform (or platforms) the volume of
 the plc should run. Open the volume attributes editor from the navigator menu: 
