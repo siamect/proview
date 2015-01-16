@@ -42,6 +42,7 @@
 
 #include "pwr.h"
 #include "pwr_class.h"
+#include "pwr_baseclasses.h"
 #include "rt_sev_net.h"
 #include "sev_db.h"
 
@@ -72,7 +73,7 @@ class sev_server {
  public:
 
   sev_server() : m_server_status(0), m_refid(0), m_msg_id(0), m_storage_cnt(0),
-    m_db_type(sev_eDbType_Sqlite) {memset(&m_stat,0,sizeof(m_stat));}
+    m_db_type(sev_eDbType_Sqlite), m_config(0) {memset(&m_stat,0,sizeof(m_stat));}
 
   pwr_tStatus m_sts;
   pwr_tStatus m_server_status;
@@ -84,6 +85,8 @@ class sev_server {
   unsigned int m_storage_cnt;
   sev_sStat m_stat;
   sev_eDbType m_db_type;
+  pwr_sClass_SevServer *m_config;
+  pwr_tDlid m_config_dlid;
 
   int init( int noneth);
   int connect();

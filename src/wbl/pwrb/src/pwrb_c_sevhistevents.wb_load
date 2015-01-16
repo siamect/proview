@@ -134,11 +134,20 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Size of event table. Only used for hdf5 databases.
+      !*/
+      Object TableSize $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
     EndObject
     Object Template SevHistEvents
       Body RtBody
 	Attr EventTypes = 3
 	Attr Options = 0
+	Attr TableSize = 10000
       EndBody
     EndObject
     Object PostCreate $DbCallBack

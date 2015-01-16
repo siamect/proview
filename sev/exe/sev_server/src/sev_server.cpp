@@ -108,10 +108,14 @@ int sev_server::init( int noneth)
       exit(0);
     }
 
+    pwr_sAttrRef aref = cdh_ObjidToAref( conf_oid);
+    sts = gdh_DLRefObjectInfoAttrref( &aref, (void **)&m_config, &m_config_dlid);
+    if ( EVEN(sts))
+      m_config = 0;
+
     // Get configured database
     pwr_tAttrRef daref;
     pwr_eSevDatabaseEnum db_enum;
-    pwr_tAttrRef aref = cdh_ObjidToAref( conf_oid);
     sts = gdh_ArefANameToAref( &aref, "Database", &daref);
     if ( ODD(sts)) {
       sts = gdh_GetObjectInfoAttrref( &daref, (void *)&db_enum, sizeof(db_enum));
@@ -122,6 +126,9 @@ int sev_server::init( int noneth)
 	  break;
 	case pwr_eSevDatabaseEnum_SQLite:
 	  set_dbtype( sev_eDbType_Sqlite);
+	  break;
+	case pwr_eSevDatabaseEnum_HDF5:
+	  set_dbtype( sev_eDbType_HDF5);
 	  break;
 	}
       }
@@ -444,6 +451,16 @@ int sev_server::mainloop()
 	m_stat.medium_storage_rate = a * m_stat.medium_storage_rate + (1.0-a) * m_stat.storage_rate;
       m_storage_cnt = 0;
       m_db->store_stat( &m_stat); 
+      if ( m_config) {
+	m_config->Stat.CurrentLoad = m_stat.current_load;
+	m_config->Stat.MediumLoad = m_stat.medium_load;
+	m_config->Stat.StorageRate = m_stat.storage_rate;
+	m_config->Stat.MediumStorageRate = m_stat.medium_storage_rate;
+	m_config->Stat.DataStoreMsgCnt = m_stat.datastore_msg_cnt;
+	m_config->Stat.DataGetMsgCnt = m_stat.dataget_msg_cnt;
+	m_config->Stat.ItemsMsgCnt = m_stat.items_msg_cnt;
+	m_config->Stat.EventStoreMsgCnt = m_stat.eventstore_msg_cnt;	
+      }
       time_Aadd( &next_stat, &next_stat, &stat_interval);
       busy = pwr_cNDeltaTime;
       idle = pwr_cNDeltaTime;
@@ -576,6 +593,8 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 					buffP->scantime, 
 					buffP->deadband, 
 					buffP->options, 
+					buffP->attrnum,
+					buffP->attr,
 					&idx)) {
 	    m_db->add_objectitem( &m_sts, 
 				  tablename, 
@@ -587,6 +606,8 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 				  buffP->scantime, 
 				  buffP->deadband, 
 				  buffP->options, 
+				  buffP->attrnum,
+				  buffP->attr,
 				  &idx);
 	    if ( EVEN(m_sts)) return m_sts;
 	    newobject = true;
@@ -986,6 +1007,8 @@ int main (int argc, char *argv[])
     dbtype = sev_eDbType_Sqlite;
   else if ( argc > 2 + noneth && strcmp( argv[1+noneth], "-d") == 0 && strcmp( argv[2+noneth], "mysql") == 0)
     dbtype = sev_eDbType_Mysql;
+  else if ( argc > 2 + noneth && strcmp( argv[1+noneth], "-d") == 0 && strcmp( argv[2+noneth], "hdf5") == 0)
+    dbtype = sev_eDbType_HDF5;
 
   if ( dbtype == sev_eDbType_) {
     char type[80];
@@ -994,6 +1017,8 @@ int main (int argc, char *argv[])
 	dbtype = sev_eDbType_Sqlite;
       else if ( cdh_NoCaseStrcmp( type, "mysql") == 0)
 	dbtype = sev_eDbType_Mysql;	
+      else if ( cdh_NoCaseStrcmp( type, "hdf5") == 0)
+	dbtype = sev_eDbType_HDF5;	
     }
   }
 

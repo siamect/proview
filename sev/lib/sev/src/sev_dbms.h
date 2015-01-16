@@ -163,12 +163,14 @@ class sev_dbms : public sev_db {
   static int timestr_to_time( char *tstr, pwr_tTime *ts);
   int check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
                          pwr_tDeltaTime storagetime,
-                         char *description, pwr_tFloat32 scantime, 
-                         pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx);
+			char *description, pwr_tFloat32 scantime, 
+			pwr_tFloat32 deadband, pwr_tMask options, unsigned int attrnum,
+			sev_sHistAttr *attr, unsigned int *idx);
   int add_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
-                       pwr_tDeltaTime storagetime, 
-                       char *description, pwr_tFloat32 scantime, 
-                       pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx);  
+		      pwr_tDeltaTime storagetime, 
+		      char *description, pwr_tFloat32 scantime, 
+		      pwr_tFloat32 deadband, pwr_tMask options, unsigned int attrnum,
+		      sev_sHistAttr *attr, unsigned int *idx);  
   int store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
       pwr_tDeltaTime storagetime, char *description, pwr_tFloat32 scantime, 
       pwr_tFloat32 deadband, pwr_tMask options);

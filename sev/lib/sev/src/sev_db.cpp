@@ -37,10 +37,17 @@
 #include "sev_db.h"
 #include "sev_dbms.h"
 #include "sev_dbsqlite.h"
+#include "sev_dbhdf5.h"
+#include "co_syi.h"
+#include "pwr_names.h"
+#include "rt_load.h"
+#include "co_dcli.h"
+
 
 
 sev_db *sev_db::open_database( sev_eDbType type)
 {
+
   if ( type == sev_eDbType_Mysql) {
 #if defined PWRE_CONF_MYSQL
     return sev_dbms::open_database();
@@ -57,6 +64,56 @@ sev_db *sev_db::open_database( sev_eDbType type)
     return 0;
 #endif
   }
+  else if ( type == sev_eDbType_HDF5) {
+#if defined PWRE_CONF_HDF5
+    return sev_dbhdf5::open_database();
+#else
+    printf( "** Release is not built with HDF5\n");
+    return 0;
+#endif
+  }
   else
     return 0;
+}
+
+int sev_db::get_systemname( char *name)
+{
+  FILE 	*file;
+  pwr_tFileName	fname;
+  char  nodename[40];
+  char	*bus_str;
+  int bus;
+  char line[200];
+  pwr_tStatus sts;
+  static char system_name[80] = "";
+
+  if ( strcmp( system_name, "") == 0) {
+
+    syi_NodeName( &sts, nodename, sizeof(nodename));
+    if ( EVEN(sts)) return 0;
+    
+    bus_str = getenv( "PWR_BUS_ID");
+    if ( !bus_str)
+      return 0;
+    if ( sscanf( bus_str, "%d", &bus) != 1)
+      return 0;
+    
+    sprintf( fname, pwr_cNameBoot, load_cDirectory, cdh_Low(nodename), bus);
+    dcli_translate_filename( fname, fname);
+    file = fopen( fname, "r");
+    if ( file == 0) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf("** Warning, systemname not found\n");
+      return 0;
+    }
+
+    if ( !dcli_read_line( line, sizeof(line), file))
+      return 0;
+    if ( !dcli_read_line( line, sizeof(line), file))
+      return 0;
+
+    strcpy( system_name, line);
+  }
+  strcpy( name, system_name);
+  return 1;
 }

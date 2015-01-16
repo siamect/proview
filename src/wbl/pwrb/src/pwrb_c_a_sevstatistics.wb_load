@@ -33,61 +33,103 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_sevserver.wb_load -- Defines the class SevServer.
+!  pwrb_c_a_sevstatistics.wb_load -- Defines the class SevStatistics.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  @Group Servers,NodeConfiguration
-!  Configures the Sev server process.
-!  
-!  Configures the server process for historical data storage.
-!  
-!  This object is used when the server is started on a node with
-!  the runtime environment started.
-!  The the server can also be started without the runtime
-!  environment, but with the storage environment (Sev) installed.
-!  See the documentation for the storage environment on how to
-!  start the server in this case.
+!  Displays sev server statistics.
 !
 ! @b See also
-!  @classlink SevHistThread pwrb_sevhistthread.html
-!  @classlink SevHistMonitor pwrb_sevhistmonitor.html
-!  @classlink SevHist pwrb_sevhist.html
-!  @classlink SevHistObject pwrb_sevhistobject.html
+!  @classlink SevServer pwrb_sevserver.html
 !*/
-  Object SevServer $ClassDef 535 
+  Object SevStatistics $ClassDef 657 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "SevServer"
+        Attr StructName = "SevStatistics"
       EndBody
       !/**
-      !  Optional description.
+      !  Current load in percentage.
       !*/
-      Object Description $Attribute 1 
+      Object CurrentLoad $Attribute 1 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String80"
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       !/**
-      !  Database type.
+      !  Medium load in percentage.
       !*/
-      Object Database $Attribute 2 
+      Object MediumLoad $Attribute 2 
         Body SysBody
-          Attr TypeRef = "pwrb:Type-SevDatabaseEnum"
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
       !/**
-      !  Statistics.
+      !  Storage rate. Values per second.
       !*/
-      Object Stat $Attribute 3 
+      Object StorageRate $Attribute 3 
         Body SysBody
-          Attr TypeRef = "pwrb:Class-SevStatistics"
-	  Attr Flags |= PWR_MASK_CLASS
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Medium storage rate. Values per second.
+      !*/
+      Object MediumStorageRate $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Data store message count.
+      !*/
+      Object DataStoreMsgCnt $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Data get message count.
+      !*/
+      Object DataGetMsgCnt $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Items message count.
+      !*/
+      Object ItemsMsgCnt $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Event store message count.
+      !*/
+      Object EventStoreMsgCnt $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
     EndObject

@@ -1887,9 +1887,10 @@ char *sev_dbsqlite::pwrtype_to_type( pwr_eType type, unsigned int size)
 
 
 int sev_dbsqlite::check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
-                                 pwr_tDeltaTime storagetime,
-                                 char *description, pwr_tFloat32 scantime, 
-                                 pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx)
+				    pwr_tDeltaTime storagetime,
+				    char *description, pwr_tFloat32 scantime, 
+				    pwr_tFloat32 deadband, pwr_tMask options, unsigned int attrnum,
+				    sev_sHistAttr *attr, unsigned int *idx)
 {
   char timestr[40];
   pwr_tTime uptime;
@@ -1946,9 +1947,10 @@ int sev_dbsqlite::check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid 
 }
 
 int sev_dbsqlite::add_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
-			pwr_tDeltaTime storagetime,
-			char *description, pwr_tFloat32 scantime, 
-			pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx)
+				  pwr_tDeltaTime storagetime,
+				  char *description, pwr_tFloat32 scantime, 
+				  pwr_tFloat32 deadband, pwr_tMask options, unsigned int attrnum,
+				  sev_sHistAttr *attr, unsigned int *idx)
 {
 	  
   store_objectitem( sts, tablename, oid, oname, aname, storagetime, description,

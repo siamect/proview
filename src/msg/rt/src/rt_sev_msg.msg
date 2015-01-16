@@ -50,6 +50,7 @@ exportfile	<Unable to open export file>				/error
 repair_failed	<Repair failed>						/error
 nyi		<Not yet implemented>					/error
 nopoints 	<No points found in this interval>			/error
+nosuchattr      <No such attribute exist>				/error
 .end
 
 

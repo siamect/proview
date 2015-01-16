@@ -42,6 +42,7 @@
 #include "pwr.h"
 #include "pwr_class.h"
 #include "rt_mh_net.h"
+#include "rt_sev_net.h"
 
 using namespace std;
 
@@ -50,7 +51,8 @@ using namespace std;
 typedef enum {
   sev_eDbType_,
   sev_eDbType_Mysql,
-  sev_eDbType_Sqlite
+  sev_eDbType_Sqlite,
+  sev_eDbType_HDF5
 } sev_eDbType;
 
 typedef struct {
@@ -66,6 +68,12 @@ typedef struct {
 
 class sev_attr {
  public:
+  sev_attr() : type(pwr_eType_), size(0), elem(0) {
+    strcpy( aname, ""); strcpy( unit, "");
+  }
+  sev_attr( const sev_attr& x) : type(x.type), size(x.size), elem(x.elem) {
+    strncpy( aname, x.aname, sizeof(aname)); strncpy( unit, x.unit, sizeof(unit));
+  }
   pwr_tOName	aname;
   pwr_eType	type;
   unsigned int	size;
@@ -86,8 +94,17 @@ class sev_event {
 class sev_item {
  public:
   sev_item() : deadband_active(0), last_id(0), value_size(0), old_value(0), first_storage(1), status(0), logged_status(0), 
-    deleted(0)
+    idx(0), deleted(0)
     { /*memset( old_value, 0, sizeof(old_value));*/}
+    sev_item( const sev_item& x) : id(x.id), oid(x.oid), creatime(x.creatime), modtime(x.modtime), 
+      storagetime(x.storagetime), sevid(x.sevid), scantime(x.scantime), deadband(x.deadband), options(x.options),
+      deadband_active(x.deadband_active), last_id(x.last_id), value_size(x.value_size), first_storage(x.first_storage),
+      attrnum(x.attrnum), attr(x.attr), status(x.status), logged_status(x.logged_status), 
+      idx(x.idx), deleted(x.deleted) {
+      strncpy( tablename, x.tablename, sizeof(tablename)); 
+      strncpy( oname, x.oname, sizeof(oname)); 
+      strncpy( description, x.description, sizeof(description));
+    }
   unsigned int 	id;
   char		tablename[256];
   pwr_tOid	oid;
@@ -110,6 +127,7 @@ class sev_item {
   vector<sev_attr>	attr;
   pwr_tStatus	status;
   pwr_tStatus   logged_status;
+  unsigned int	idx;
   int deleted;
 };
 
@@ -124,54 +142,58 @@ class sev_db {
 			  pwr_tDeltaTime storatetime, pwr_eType type, unsigned int size, 
 			  char *description, char *unit, pwr_tFloat32 scantime, 
 			  pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx) 
-    { return 0;}
+  { *sts = 0; return 0;}
   virtual int add_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname, 
 			pwr_tDeltaTime storagetime, pwr_eType type, unsigned int size, 
 			char *description, char *unit, pwr_tFloat32 scantime, 
 			pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx) 
-    { return 0;}
-  virtual int delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname) { return 0;}
+    { *sts = 0; return 0;}
+  virtual int delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname) { *sts = 0; return 0;}
   virtual int store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
-			   pwr_tTime time, void *buf, unsigned int size) { return 0;}
+			   pwr_tTime time, void *buf, unsigned int size) { *sts = 0; return 0;}
   virtual int get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, float deadband, 
 			  char *aname, pwr_eType type, 
 			  unsigned int size, pwr_tFloat32 scantime, pwr_tTime *creatime, pwr_tTime *starttime, 
 			  pwr_tTime *endtime, int maxsize, pwr_tTime **tbuf, void **vbuf, 
-			  unsigned int *bsize) { return 0;}
-  virtual int get_items( pwr_tStatus *sts) { return 0;}
+			  unsigned int *bsize) { *sts = 0; return 0;}
+  virtual int get_items( pwr_tStatus *sts) { *sts = 0; return 0;}
   virtual int delete_old_data( pwr_tStatus *sts, char *tablename, 
-			       pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle) { return 0;}
+			       pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle) 
+  { *sts = 0; return 0;}
 
   virtual int check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
-                         pwr_tDeltaTime storagetime, 
-                         char *description, pwr_tFloat32 scantime, 
-                         pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx) { return 0;}
+				pwr_tDeltaTime storagetime, 
+				char *description, pwr_tFloat32 scantime, 
+				pwr_tFloat32 deadband, pwr_tMask options, unsigned int attrnum,
+				sev_sHistAttr *attr, unsigned int *idx) { *sts = 0; return 0;}
   virtual int add_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
-                       pwr_tDeltaTime storagetime,
-                       char *description, pwr_tFloat32 scantime, 
-                       pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx) { return 0;} 
+			      pwr_tDeltaTime storagetime,
+			      char *description, pwr_tFloat32 scantime, 
+			      pwr_tFloat32 deadband, pwr_tMask options, unsigned int attrnum,
+			      sev_sHistAttr *attr, unsigned int *idx) { *sts = 0; return 0;} 
   virtual int store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
                                 pwr_tDeltaTime storagetime, char *description, pwr_tFloat32 scantime, pwr_tFloat32 deadband, pwr_tMask options) { return 0;}
-  virtual int store_event( pwr_tStatus *sts, int item_idx, sev_event *ep) { return 0;}
-  virtual int get_item( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename) { return 0;}
-  virtual int get_objectitem( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename) { return 0;}
-  virtual int get_objectitems( pwr_tStatus *sts) { return 0;}
+  virtual int store_event( pwr_tStatus *sts, int item_idx, sev_event *ep) { *sts = 0; return 0;}
+  virtual int get_item( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename) { *sts = 0; return 0;}
+  virtual int get_objectitem( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename) { *sts = 0; return 0;}
+  virtual int get_objectitems( pwr_tStatus *sts) { *sts = 0; return 0;}
   virtual int check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
-																	  pwr_eType type, unsigned int size, unsigned int *idx) { return 0;}
+																	  pwr_eType type, unsigned int size, unsigned int *idx) { *sts = 0; return 0;}
   virtual int delete_old_objectdata( pwr_tStatus *sts, char *tablename, 
-                                     pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle) { return 0;}
+                                     pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle) { *sts = 0; return 0;}
   virtual int get_objectvalues( pwr_tStatus *sts, sev_item *item,
                                 unsigned int size, pwr_tTime *starttime, pwr_tTime *endtime, 
-                                int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize) { return 0;}
-  virtual int handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject) { return 0;}
-  virtual int repair_table( pwr_tStatus *sts, char *tablename) { return 0;}
-  virtual int alter_engine( pwr_tStatus *sts, char *tablename) { return 0;}
-  virtual int optimize( pwr_tStatus *sts, char *tablename) { return 0;}
+                                int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize) { *sts = 0; return 0;}
+  virtual int handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject) { *sts = 0; return 0;}
+  virtual int repair_table( pwr_tStatus *sts, char *tablename) { *sts = 0; return 0;}
+  virtual int alter_engine( pwr_tStatus *sts, char *tablename) { *sts = 0; return 0;}
+  virtual int optimize( pwr_tStatus *sts, char *tablename) { *sts = 0; return 0;}
   virtual int store_stat( sev_sStat *stat) { return 0;}
   virtual int begin_transaction() { return 0;}
   virtual int commit_transaction() { return 0;}
   virtual char *dbName() { return 0;}
   
   static sev_db *open_database( sev_eDbType type);
+  static int get_systemname( char *name);
 };
 #endif

@@ -77,6 +77,7 @@ class sev_sevhistevents {
   pwr_tRefId	hs_refid;
   pwr_tDeltaTime storagetime;
   pwr_tMask  	options;
+  pwr_tUInt32   table_size;
   pwr_tBoolean  disabled;
   unsigned int event_thread_idx;
   sev_sEvent event_buffer[20];

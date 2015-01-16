@@ -996,7 +996,8 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
 	     m_sevhistevents->description, 
 	     sizeof(((sev_sMsgHistItems *)put.data)->Items[0].description));
     strcpy( ((sev_sMsgHistItems *)put.data)->Items[k].attr[0].unit, "");
-    ((sev_sMsgHistItems *)put.data)->Items[k].scantime = 0;
+    // Put the table size in scan time. Only used for hdf5 databases.
+    ((sev_sMsgHistItems *)put.data)->Items[k].scantime = m_sevhistevents->table_size;
     k++;
   }
 
@@ -1352,6 +1353,7 @@ int rt_sevhistmon::init_events()
 
     h->storagetime = h->hsp->StorageTime;
     h->options = h->hsp->Options;
+    h->table_size = h->hsp->TableSize;
     strcpy( h->description, h->hsp->Description);
     h->disabled = h->hsp->Disable;
     h->event_thread_idx = hs_idx;
