@@ -332,6 +332,9 @@ void CoWowGtk::DisplayError( const char *title, const char *text)
   }
 
   char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  if ( textutf8[0] == '%')
+    textutf8[0] = ' ';
+
   GtkWidget *dialog = gtk_message_dialog_new( GTK_WINDOW(parent),
 					      GTK_DIALOG_MODAL, 
 					      GTK_MESSAGE_ERROR,
