@@ -2427,7 +2427,7 @@ static int gdh_crr_name_to_objid_cb( void *ctx, char *name, pwr_tObjid *objid)
   return sts;
 }
 
-static int gdh_crr_get_volume_cb( void *ctx, pwr_tVolumeId *volid)
+static int gdh_crr_get_volume_cb( void *ctx, pwr_tVid *volid,  pwr_tVid v)
 {
   int sts;
   pwr_tObjid objid;
