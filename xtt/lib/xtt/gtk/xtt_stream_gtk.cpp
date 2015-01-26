@@ -237,18 +237,88 @@ void XttStreamGtk::tags_cb( GstElement *playbin2, gint stream, void *data)
 void XttStreamGtk::error_cb( GstBus *bus, GstMessage *msg, void *data) 
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
-  GError *err;
-  gchar *debug_info;
+
+  switch ( GST_MESSAGE_TYPE(msg)) {
+  case GST_MESSAGE_ERROR: {
+
+    GError *err;
+    gchar *debug_info;
   
-  /* Print error details on the screen */
-  gst_message_parse_error( msg, &err, &debug_info);
-  printf( "Error received from element %s: %s\n", GST_OBJECT_NAME( msg->src), err->message);
-  printf( "Debugging information: %s\n", debug_info ? debug_info : "none");
-  g_clear_error( &err);
-  g_free( debug_info);
-  
-  /* Set the pipeline to READY (which stops playback) */
-  gst_element_set_state( strm->playbin2, GST_STATE_READY);
+    printf( "Message %d\n", GST_MESSAGE_TYPE(data));
+    /* Print error details on the screen */
+    gst_message_parse_error( msg, &err, &debug_info);
+    printf( "Error received from element %s: %s\n", GST_OBJECT_NAME( msg->src), err->message);
+    printf( "Debugging information: %s\n", debug_info ? debug_info : "none");
+    g_clear_error( &err);
+    g_free( debug_info);
+    
+    /* Set the pipeline to READY (which stops playback) */
+    gst_element_set_state( strm->playbin2, GST_STATE_READY);
+    break;
+  }
+  case GST_MESSAGE_BUFFERING: {
+
+    if ( strm->is_live)
+      break;
+
+#if 0
+    gint percent = 0;
+
+    gst_message_parse_buffering( msg, &percent);   
+    // printf( "Buffering %d %%\n", percent);
+    // Wait until buffering is complete before start/resume playing
+    if ( percent < 100) {
+      if ( percent < 50) {
+	pwr_tTime current_time;
+
+	time_GetTime( &current_time);
+	if ( strm->buftime.tv_sec == 0 && strm->buftime.tv_nsec == 0)
+	  strm->buftime = current_time;
+	else {
+	  pwr_tDeltaTime dt;
+	  pwr_tFloat32 fdt;
+	  time_Adiff( &dt, &current_time, &strm->buftime);
+	  time_DToFloat( &fdt, &dt);
+	  printf( "Buffering %d %%  %f\n", percent, fdt);
+	  if ( fdt > 5) {	  
+	    strm->buftime = pwr_cNTime;
+	    gst_element_set_state( strm->playbin2, GST_STATE_PAUSED);	  
+	  }
+	}
+      }
+      else
+	strm->buftime = pwr_cNTime;
+    }
+    else {
+      strm->buftime = pwr_cNTime;
+      gst_element_set_state( strm->playbin2, GST_STATE_PLAYING);
+    }
+#endif
+
+#if 0
+    if ( percent < 100)
+      gst_element_set_state( strm->playbin2, GST_STATE_PAUSED);
+    else
+      gst_element_set_state( strm->playbin2, GST_STATE_PLAYING);
+#endif
+    break;
+  }
+  case GST_MESSAGE_CLOCK_LOST: {
+    printf( "Clock lost\n");
+    // Get a new clock 
+    gst_element_set_state( strm->playbin2, GST_STATE_PAUSED);
+    gst_element_set_state( strm->playbin2, GST_STATE_PLAYING);
+    break;
+  }
+  case GST_MESSAGE_STATE_CHANGED:
+#if 0
+    GstState old_state, new_state, pending_state;
+    gst_message_parse_state_changed( msg, &old_state, &new_state, &pending_state);
+    printf( "State changed %s\n", gst_element_state_get_name( new_state));
+#endif
+    break;
+  default: ;
+  }
 }
   
 /* This function is called when an End-Of-Stream message is posted on the bus.
@@ -281,6 +351,7 @@ void XttStreamGtk::state_changed_cb( GstBus *bus, GstMessage *msg, void *data)
   
 /* Extract metadata from all the streams and write it to the text widget in the GUI */
 static void analyze_streams( void *data) {
+  printf( "Analyze stream\n");
 #if 0
   XttStreamGtk *strm = (XttStreamGtk *)data;
   gint i;
@@ -526,7 +597,7 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
 			    int width, int height, int x, int y, double scan_time, 
 			    unsigned int st_options, int st_embedded, pwr_tAttrRef *st_arp, pwr_tStatus *sts) :
   XttStream( st_parent_ctx, name, st_uri, width, height, x, y, scan_time, st_options, st_embedded, st_arp),
-  scroll_cnt(0), ptz_box_displayed(0), parent_wid(st_parent_wid), ptz_box(0)
+  scroll_cnt(0), ptz_box_displayed(0), is_live(0), buftime(pwr_cNTime), parent_wid(st_parent_wid), ptz_box(0)
 {
   GstStateChangeReturn ret;
   GstBus *bus;
@@ -956,7 +1027,7 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
   /* Instruct the bus to emit signals for each received message, and connect to the interesting signals */
   bus = gst_element_get_bus( playbin2);
   gst_bus_add_signal_watch( bus);
-  g_signal_connect( G_OBJECT( bus), "message::error", (GCallback)error_cb, this);
+  g_signal_connect( G_OBJECT( bus), "message", (GCallback)error_cb, this);
   g_signal_connect( G_OBJECT( bus), "message::eos", (GCallback)eos_cb, this);
   g_signal_connect( G_OBJECT( bus), "message::state-changed", (GCallback)state_changed_cb, this);
   g_signal_connect( G_OBJECT( bus), "message::application", (GCallback)application_cb, this);
@@ -971,6 +1042,9 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
     gst_object_unref( playbin2);
     *sts = 0;
     return;
+  }
+  else if ( ret == GST_STATE_CHANGE_NO_PREROLL) {
+    is_live = 1;
   }
   
   wow = new CoWowGtk( toplevel);

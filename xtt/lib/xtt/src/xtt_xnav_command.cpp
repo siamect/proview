@@ -3607,8 +3607,16 @@ static int	xnav_open_func(	void		*client_data,
 	options |= strm_mOptions_FullMaximize;
       if ( xttcamera.Options & pwr_mCameraOptionsMask_Iconify)
 	options |= strm_mOptions_Iconify;
-      if ( xttcamera.Options & pwr_mCameraOptionsMask_CameraControlPanel)
-	options |= strm_mOptions_CameraControlPanel;
+      if ( is_video) {
+	if ( ODD( dcli_get_qualifier( "/VIDEOCONTROLPANEL", 0, 0)))
+	  options |= strm_mOptions_VideoControlPanel;
+	if ( ODD( dcli_get_qualifier( "/VIDEOPROGRESSBAR", 0, 0)))
+	  options |= strm_mOptions_VideoProgressBar;
+      }
+      else {
+	if ( xttcamera.Options & pwr_mCameraOptionsMask_CameraControlPanel)
+	  options |= strm_mOptions_CameraControlPanel;
+      }
       if ( xttcamera.Options & pwr_mCameraOptionsMask_HttpBasicAuthentication)
 	options |= strm_mOptions_HttpBasicAuthentication;
       if ( xttcamera.Options & pwr_mCameraOptionsMask_CgiParameterAuthentication)

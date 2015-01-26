@@ -66,6 +66,8 @@ class XttStreamGtk : public XttStream {
   int popupmenu_x;
   int popupmenu_y;
   int ptz_box_displayed;
+  int is_live;
+  pwr_tTime buftime;
 
   GtkWidget     *slider;              /* Slider widget to keep track of current position */
   GtkWidget	*parent_wid;
