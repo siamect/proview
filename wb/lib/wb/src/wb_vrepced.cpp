@@ -1467,13 +1467,13 @@ void wb_vrepced::updateTemplateRef( wb_adrep *subattr, char *body, pwr_tAttrRef 
       if ( adrep->isClass()) {
 	pwr_tAttrRef aaref = aref;
 	aaref.Offset += i * bdrep->size();
-	updateTemplateRef( adrep, (char *)body + i * subattr->size() / subattr_elements + 
+	updateTemplateRef( adrep, (char *)body + i * (subattr->size() / subattr_elements) + 
 			   adrep->offset(), aaref, toid);
       }
       else {
 	switch ( adrep->type()) {
 	case pwr_eType_Objid: {
-	  pwr_tOid *oidp = (pwr_tOid *)(body + i * subattr->size() / subattr_elements + 
+	  pwr_tOid *oidp = (pwr_tOid *)(body + i * (subattr->size() / subattr_elements) + 
 					adrep->offset());
 	  for ( int j = 0; j < elements; j++) {
 	    if ( cdh_ObjidIsEqual( *oidp, toid))
@@ -1483,7 +1483,7 @@ void wb_vrepced::updateTemplateRef( wb_adrep *subattr, char *body, pwr_tAttrRef 
 	  break;
 	}
 	case pwr_eType_AttrRef: {
-	  pwr_sAttrRef *arp = (pwr_sAttrRef *)(body + i * subattr->size() / subattr_elements + 
+	  pwr_sAttrRef *arp = (pwr_sAttrRef *)(body + i * (subattr->size() / subattr_elements) + 
 					adrep->offset());
 	  for ( int j = 0; j < elements; j++) {
 	    if ( cdh_ObjidIsEqual( arp->Objid, toid)) {

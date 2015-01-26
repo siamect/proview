@@ -2396,7 +2396,7 @@ void wb_vrepdbms::checkAttributes(pwr_tCid cid)
 	      for ( int j = 0; j < o_adrep->nElement(); j++) {
 		a.cid = cid;
 		a.bix = bix;
-		a.offset = o_adrep->offset() + j * o_adrep->size() / o_adrep->nElement();
+		a.offset = o_adrep->offset() + j * (o_adrep->size() / o_adrep->nElement());
 		tree_Insert(&sts, m_aref_th, &a);        
 	      }
 	    }
@@ -2474,8 +2474,8 @@ void wb_vrepdbms::checkAttributes(pwr_tCid cid)
 		for ( int j = 0; j < MIN(o_adrep->nElement(),n_adrep->nElement()); j++) {
 
 		  checkSubClass( cid, o_adrep->subClass(), 
-				 o_adrep->offset() + j * o_adrep->size() / o_adrep->nElement(), 
-				 n_adrep->offset() + j * n_adrep->size() / n_adrep->nElement(),
+				 o_adrep->offset() + j * (o_adrep->size() / o_adrep->nElement()), 
+				 n_adrep->offset() + j * (n_adrep->size() / n_adrep->nElement()),
 				 body);
 		}
 	      }
@@ -2589,8 +2589,8 @@ void wb_vrepdbms::checkSubClass(pwr_tCid cid, pwr_tCid subcid, unsigned int o_of
 	if ( o_adrep->isArray()) {
 	  for ( int j = 0; j < MIN(o_adrep->nElement(),n_adrep->nElement()); j++) {
 	    checkSubClass( cid, n_adrep->subClass(), 
-			   o_adrep->offset() + o_offset + j * o_adrep->size() / o_adrep->nElement(),
-			   n_adrep->offset() + n_offset + j * n_adrep->size() / n_adrep->nElement(),
+			   o_adrep->offset() + o_offset + j * (o_adrep->size() / o_adrep->nElement()),
+			   n_adrep->offset() + n_offset + j * (n_adrep->size() / n_adrep->nElement()),
 			   body);
 	  }
 	}
@@ -2605,7 +2605,7 @@ void wb_vrepdbms::checkSubClass(pwr_tCid cid, pwr_tCid subcid, unsigned int o_of
 	  for ( int j = 0; j < o_adrep->nElement(); j++) {
 	    a.cid = cid;
 	    a.bix = bix;
-	    a.offset = o_adrep->offset() + o_offset + j * o_adrep->size() / o_adrep->nElement();
+	    a.offset = o_adrep->offset() + o_offset + j * (o_adrep->size() / o_adrep->nElement());
 	    tree_Insert(&sts, m_aref_th, &a);        
 	  }
 	}

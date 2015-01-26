@@ -118,7 +118,7 @@ wb_adrep *wb_bdrep::adrep( pwr_tStatus *sts, const char *aname)
 	return 0;
       }
 
-      offset += n.attrIndex(i) * adrep->size() / adrep->nElement();
+      offset += n.attrIndex(i) * (adrep->size() / adrep->nElement());
     }
 
     if ( (i != n.attributes() - 1) && adrep->isClass()) {

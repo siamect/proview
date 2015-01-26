@@ -611,9 +611,9 @@ void wb_cdrep::convertSubClass( pwr_tCid cid, wb_merep *merep,
 	  for ( int j = 0; j < MIN(adrep_source->nElement(), adrep_target->nElement()); j++) {
 	    convertSubClass( adrep_target->subClass(), merep, 
 			     (char *)body_source + adrep_source->offset() + 
-			     j * adrep_source->size() / adrep_source->nElement(),
+			     j * (adrep_source->size() / adrep_source->nElement()),
 			     (char *)body_target + adrep_target->offset() + 
-			     j * adrep_target->size() / adrep_target->nElement());
+			     j * (adrep_target->size() / adrep_target->nElement()));
 	  }
 	}
 	else {
@@ -788,9 +788,9 @@ void wb_cdrep::convertObject( wb_merep *merep, void *rbody, void *dbody,
 		for ( int j = 0; j < MIN(adrep_source->nElement(), adrep_target->nElement()); j++) {
 		  convertSubClass( adrep_target->subClass(), merep, 
 				 (char *)body_source + adrep_source->offset() + 
-				   j * adrep_source->size() / adrep_source->nElement(),
+				   j * (adrep_source->size() / adrep_source->nElement()),
 				 (char *)body_target + adrep_target->offset() + 
-				   j * adrep_target->size() / adrep_target->nElement());
+				   j * (adrep_target->size() / adrep_target->nElement()));
 		}
 	      }
 	      else {
@@ -909,13 +909,13 @@ void wb_cdrep::updateTemplateSubClass( wb_adrep *subattr, char *body, pwr_tOid o
     while ( ODD(sts)) {
       int elements = adrep->isArray() ? adrep->nElement() : 1;
       if ( adrep->isClass()) {
-	updateTemplateSubClass( adrep, body + i * subattr->size() / subattr_elements + adrep->offset(),
+	updateTemplateSubClass( adrep, body + i * (subattr->size() / subattr_elements) + adrep->offset(),
 			oid, toid, aoffs);
       }
       else {
 	switch ( adrep->type()) {
 	case pwr_eType_Objid: {
-	  pwr_tOid *oidp = (pwr_tOid *)(body + i * subattr->size() / subattr_elements + 
+	  pwr_tOid *oidp = (pwr_tOid *)(body + i * (subattr->size() / subattr_elements) + 
 					adrep->offset());
 	  for ( int j = 0; j < elements; j++) {
 	    if ( cdh_ObjidIsEqual( *oidp, toid))
@@ -925,7 +925,7 @@ void wb_cdrep::updateTemplateSubClass( wb_adrep *subattr, char *body, pwr_tOid o
 	  break;
 	}
 	case pwr_eType_AttrRef: {
-	  pwr_sAttrRef *arp = (pwr_sAttrRef *)(body + i * subattr->size() / subattr_elements + 
+	  pwr_sAttrRef *arp = (pwr_sAttrRef *)(body + i * (subattr->size() / subattr_elements) + 
 					adrep->offset());
 	  for ( int j = 0; j < elements; j++) {
 	    if ( cdh_ObjidIsEqual( arp->Objid, toid)) {
