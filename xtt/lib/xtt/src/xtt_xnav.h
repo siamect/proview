@@ -150,7 +150,8 @@ typedef enum {
 	xnav_eType_GdbNodeFlags	= 10000,
 	xnav_eType_Empty	= 10001,
 	xnav_eType_FixStr	= 10002,
-	xnav_eType_ShortTime	= 10003
+	xnav_eType_ShortTime	= 10003,
+	xnav_eType_NetTime	= 10004
 	} xnav_eType;
 
 typedef enum {

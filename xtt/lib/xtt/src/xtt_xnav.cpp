@@ -975,6 +975,17 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     *len = snprintf( str, size, "%s", timstr);
     break;
   }
+  case xnav_eType_NetTime: {
+    pwr_tTime t;
+    t.tv_sec = ((net_sTime *)value_ptr)->tv_sec;
+    t.tv_nsec = ((net_sTime *)value_ptr)->tv_nsec;
+    sts = time_AtoAscii( &t, time_eFormat_DateAndTime, 
+			 timstr, sizeof(timstr));
+    if ( EVEN(sts))
+      strcpy( timstr, "Undefined time");
+    *len = snprintf( str, size, "%s", timstr);
+    break;
+  }
   case xnav_eType_GdbNodeFlags: {
     if ( ((gdb_mNode *)value_ptr)->b.up)
       *len = sprintf( str, "Up");

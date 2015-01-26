@@ -734,6 +734,11 @@ static int add_element( 	t_ctx		ctx,
 	  type = pwr_eType_RefId;
 	  size = sizeof(pwr_tRefId);
 	}
+	else if ( strcmp( line_elem[0], "net_sTime") == 0)
+	{
+	  type = 10004; /* xnav_eType_NetTime */
+	  size = 2 * sizeof(pwr_tInt32);
+	}
 	else
 	{
 	  undefined = 1;
