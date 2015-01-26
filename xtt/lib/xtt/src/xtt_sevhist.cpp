@@ -779,6 +779,11 @@ void XttSevHist::sevhist_reload_cb( void *ctx)
   else
     sevhist->get_multidata( &sts, t_low, t_high);
 
+  if ( EVEN(sts)) {
+    sevhist->wow->DisplayError( "Data error", XNav::get_message(sts));
+    return;
+  }
+
   sevhist->time_low_old = 0;
   sevhist->time_high_old = 0;
   sevhist->curve->set_center_from_window( 1);

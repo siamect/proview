@@ -51,6 +51,9 @@ repair_failed	<Repair failed>						/error
 nyi		<Not yet implemented>					/error
 nopoints 	<No points found in this interval>			/error
 nosuchattr      <No such attribute exist>				/error
+range		<Unable to get range>					/error
+unknowntype	<Unknown data type>					/error
+nosuchtable	<Table doesn't exist>					/error
 .end
 
 

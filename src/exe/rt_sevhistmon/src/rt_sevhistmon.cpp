@@ -105,8 +105,8 @@ int rt_sevhistmon::init()
 
   m_confp->Status = m_server_status = PWR__SRVSTARTUP;
   m_scantime = m_confp->ScanTime;
-  if ( m_scantime < 0.02)
-    m_scantime = 0.02;
+  if ( m_scantime < 0.01)
+    m_scantime = 0.01;
 
   // Create a queue to server
   qcom_sQattr attr;

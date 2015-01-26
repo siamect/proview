@@ -62,6 +62,7 @@
 
 using namespace std;
 
+#define ITER_MAX 50
 #define cName_Dir "/Dir"
 #define cName_Stat "/Stat"
 #define cName_Items "/Items"
@@ -2194,6 +2195,9 @@ int sev_dbhdf5::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
   strcat( dname, cName_Header);
 
   hid_t dataset_id = H5Dopen2( m_file, dname, H5P_DEFAULT);
+  if ( dataset_id == -1)
+    return SEV__NOSUCHTABLE;
+
   hsts = H5Dread( dataset_id, m_header_mtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, 
 		  &header);
 
@@ -2815,6 +2819,10 @@ int sev_dbhdf5::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, f
     lsts = time_to_idx( dataset_id, memspace_id, dataspace_id, mdatatype, from, header.data_size, 
 			header.first_idx, header.last_idx, first_time, header.last_time, res, 0,
 			&from_iter, &from_idx);
+  }
+  if ( from_iter == ITER_MAX + 1 || to_iter == ITER_MAX + 1) {
+    *sts = SEV__RANGE;
+    return 0;
   }
 
   printf( "first time %d, last time %d res %d\n", first_time, header.last_time, res);
@@ -3462,6 +3470,7 @@ int sev_dbhdf5::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, f
       break;
     }
     default:
+      *sts = SEV__UNKNOWNTYPE;
       return 0;
     }
 
@@ -4754,7 +4763,7 @@ int sev_dbhdf5::time_to_idx( hid_t dataset_id, hid_t memspace_id, hid_t dataspac
   int idx;
 
   (*iter)++;
-  if ( *iter > 50)
+  if ( *iter > ITER_MAX)
     return 0;
 
   if ( high_idx < low_idx)
