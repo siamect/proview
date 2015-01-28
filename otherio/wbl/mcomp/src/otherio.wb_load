@@ -3640,11 +3640,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
       Object Template Modbus_RTU_Master 2155315200 01-JAN-1970 01:00:00.00
-        Body RtBody 26-OCT-2011 18:01:49.06
+        Body RtBody 28-JAN-2015 15:42:27.80
           Attr Process = 1
           Attr Device = "/dev/ttyS0"
           Attr Speed = 9600
-          Attr StopBits = 2
+          Attr Parity = 2
+          Attr StopBits = 1
           Attr DataBits = 8
           Attr CharTimeout = 2.000000e-02
           Attr FrameTimeout = 1.000000e-02
