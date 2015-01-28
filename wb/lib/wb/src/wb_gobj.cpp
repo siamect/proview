@@ -1365,7 +1365,7 @@ int	gobj_get_object_m16( WFoe *foe, vldh_t_node node, unsigned long index)
 
   sts = gobj_get_select( foe, &attrref, &is_attr);
   if ( EVEN(sts)) { 
-    foe->message( "Select a digital signal or attribute in the navigator");
+    foe->message( "Select an analog signal or attribute in the navigator");
     BEEP;
     return sts;
   }
@@ -1410,7 +1410,7 @@ int	gobj_get_object_m16( WFoe *foe, vldh_t_node node, unsigned long index)
     create_classid = pwr_cClass_stoav;
     break;
   default:
-    foe->message( "Select a digital signal or attribute in the navigator");
+    foe->message( "Select an analog signal or attribute in the navigator");
     BEEP;
     return 0;
   }
