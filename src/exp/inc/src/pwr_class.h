@@ -526,8 +526,9 @@ union pwr_m_ClassDef {
     pwr_Bits( IOCard      , 1),	/* object is IO card  */
     pwr_Bits( HasCallBack , 1),	/* object has DbCallBack  */
 
-    pwr_Bits( RtReadOnly , 1),	/* object is readonly in runtime  */
-    pwr_Bits( fill_1      , 7),,,,,,,
+    pwr_Bits( RtReadOnly  , 1),	/* object is readonly in runtime  */
+    pwr_Bits( Internal    , 1),	/* class is internal  */
+    pwr_Bits( fill_1      , 6),,,,,,
     pwr_Bits( fill_2      , 8),,,,,,,
   ) b;
 
@@ -548,6 +549,7 @@ union pwr_m_ClassDef {
 #define pwr_mClassDef_IOCard      pwr_Bit(14)
 #define pwr_mClassDef_HasCallBack pwr_Bit(15)
 #define pwr_mClassDef_RtReadOnly  pwr_Bit(16)
+#define pwr_mClassDef_Internal    pwr_Bit(17)
 
 #define pwr_mClassDef_HasRef	  (pwr_mClassDef_ObjXRef|pwr_mClassDef_AttrXRef|\
 				   pwr_mClassDef_ObjRef|pwr_mClassDef_AttrRef)

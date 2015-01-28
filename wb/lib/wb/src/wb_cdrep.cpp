@@ -108,7 +108,32 @@ wb_cdrep::wb_cdrep( wb_mvrep *mvrep, wb_name name) : m_nRef(0), m_orep(0), m_mer
   strcat( str, name.object());
   wb_name n = wb_name( str);
   m_orep = mvrep->object( &m_sts, n);
-  if ( EVEN(m_sts)) throw wb_error( m_sts);
+  if ( EVEN(m_sts)) {
+    wb_name n = wb_name( "Class");
+    wb_orep *c_orep = mvrep->object( &m_sts, n);
+    c_orep->ref();
+    for ( wb_orep *orep = mvrep->first( &m_sts, c_orep);
+	  ODD(m_sts);) {
+      orep->ref();
+      if ( orep->cid() == pwr_eClass_ClassHier) {
+	strcpy( str, "Class-");
+	strcat( str, orep->name());
+	strcat( str, "-");
+	strcat( str, name.object());
+
+	wb_name nn = wb_name( str);
+	m_orep = mvrep->object( &m_sts, nn);
+	if ( ODD(m_sts))
+	  break;
+      }
+      wb_orep *old = orep;
+      orep = mvrep->after( &m_sts, orep);
+      old->unref();
+    }
+    c_orep->unref();
+  }
+  if ( EVEN(m_sts))
+    throw wb_error( m_sts);
 
   m_orep->ref();
   m_sts = LDH__SUCCESS;

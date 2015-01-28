@@ -222,6 +222,17 @@ SObject pwrs:Type
        Attr Value = 65536
      EndBody
     EndObject
+    !/**
+    !  Class is internal, ie only used as superclass or attribute objects.
+    !  It will not be displayed in palettes.
+    !*/
+    Object Internal $Bit
+     Body SysBody
+       Attr PgmName = "Internal"
+       Attr Text = "Internal"
+       Attr Value = 131072
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

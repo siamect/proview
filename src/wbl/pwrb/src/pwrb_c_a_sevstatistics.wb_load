@@ -47,6 +47,7 @@ SObject pwrb:Class
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
+      Attr Flags |= pwr_mClassDef_Internal
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody

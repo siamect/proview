@@ -168,7 +168,8 @@ typedef enum {
 	pal_ePalItemType_Object,
 	pal_ePalItemType_Class,
 	pal_ePalItemType_ClassVolume,
-	pal_ePalItemType_Menu
+	pal_ePalItemType_Menu,
+	pal_ePalItemType_ClassMenu
 	} pal_ePalItemType;
 
 class PalItem {
@@ -206,6 +207,14 @@ class PalItemObject : public PalItem {
   public:
     PalItemObject( Pal *pal, pwr_tObjid item_objid, 
 	brow_tNode dest, flow_eDest dest_code, int item_is_root);
+};
+
+class PalItemClassMenu : public PalItem {
+  public:
+    PalItemClassMenu( Pal *pal, pwr_tObjid item_objid, 
+		      brow_tNode dest, flow_eDest dest_code);
+    int			open( Pal *pal, double x, double y);
+    int     		close( Pal *pal, double x, double y);
 };
 
 class PalItemMenu : public PalItem {

@@ -166,8 +166,9 @@ int PalItemClassVolume::open( Pal *pal, double x, double y)
   int		found;
   pwr_tObjid	ref_objid;
   pwr_tVolumeId	volume;
-  pwr_tClassId	classid;
+  pwr_tClassId	classid, cid;
   char		volume_name[80];	
+  pwr_tMask	*flags;
 
   if ( !is_root)
     brow_GetNodePosition( node, &node_x, &node_y);
@@ -223,8 +224,24 @@ int PalItemClassVolume::open( Pal *pal, double x, double y)
     while ( ODD(sts))
     {
       child_exist = 1;
-      sts = pal->create_item( child, node, flow_eDest_IntoLast,
-		(void **) &item, 0);
+      sts = ldh_GetObjectClass( pal->ldhses, child, &cid);
+      if ( EVEN(sts)) return sts;
+
+      switch ( cid) {
+      case pwr_eClass_ClassDef:
+	sts = ldh_GetObjectPar( pal->ldhses, child, "SysBody", "Flags",
+				(char **)&flags, &size);
+	if ( EVEN(sts)) return sts;
+
+	if ( !(*flags & pwr_mClassDef_Internal))
+	  sts = pal->create_item( child, node, flow_eDest_IntoLast,
+				  (void **) &item, 0);
+	free( flags);
+	break;
+      case pwr_eClass_ClassHier:
+	new PalItemClassMenu( pal, child, node, flow_eDest_IntoLast);
+	break;
+      }
       sts = ldh_GetNextSibling( pal->ldhses, child, &child);
     }
 
@@ -435,6 +452,97 @@ PalItemObject::PalItemObject( Pal *pal, pwr_tObjid item_objid,
     brow_SetAnnotation( node, 0, name, sizeof(name));
     brow_SetUserData( node, (void *)this);
   }
+}
+
+PalItemClassMenu::PalItemClassMenu( Pal *pal, pwr_tObjid item_objid, 
+				   brow_tNode dest, flow_eDest dest_code) :
+  PalItem( item_objid, 0)
+{
+  int sts;
+  char name[80];
+  int size;
+
+  type = pal_ePalItemType_ClassMenu;
+  sts = ldh_ObjidToName( pal->ldhses, objid, ldh_eName_Object, 
+			 name, sizeof(name), &size);
+
+  brow_CreateNode( pal->brow_ctx, name, pal->nc, 
+		   dest, dest_code, NULL, 1, &node);
+
+  brow_SetAnnotPixmap( node, 0, pal->pixmap_map);
+  brow_SetAnnotation( node, 0, name, sizeof(name));
+  brow_SetUserData( node, (void *)this);
+}
+
+int PalItemClassMenu::open( Pal *pal, double x, double y)
+{
+  if ( brow_IsOpen( node))
+    close( pal, x, y);
+  else {
+    // Display children
+    double	node_x, node_y;
+    PalItem 	*item;
+    pwr_tCid	cid;
+    pwr_tOid	child;
+    int		child_exist;
+    pwr_tStatus sts;
+    pwr_tMask	*flags;
+    int		size;
+
+    brow_GetNodePosition( node, &node_x, &node_y);
+    brow_SetNodraw( pal->brow_ctx);
+
+    child_exist = 0;
+    sts = ldh_GetChild( pal->ldhses, objid, &child);
+    while ( ODD(sts)) {
+      child_exist = 1;
+      sts = ldh_GetObjectClass( pal->ldhses, child, &cid);
+      if ( EVEN(sts)) return sts;
+
+      switch ( cid) {
+      case pwr_eClass_ClassDef:
+	sts = ldh_GetObjectPar( pal->ldhses, child, "SysBody", "Flags",
+				(char **)&flags, &size);
+	if ( EVEN(sts)) return sts;
+
+	if ( !(*flags & pwr_mClassDef_Internal))
+	  sts = pal->create_item( child, node, flow_eDest_IntoLast,
+				  (void **) &item, 0);
+	free( flags);
+	break;
+      case pwr_eClass_ClassHier:
+	new PalItemClassMenu( pal, child, node, flow_eDest_IntoLast);
+	break;
+      }
+      sts = ldh_GetNextSibling( pal->ldhses, child, &child);
+    }
+
+    if ( child_exist) {
+      brow_SetOpen( node, 1);
+      brow_SetAnnotPixmap( node, 0, pal->pixmap_openmap);
+    }
+    brow_ResetNodraw( pal->brow_ctx);
+    if ( child_exist)
+      brow_Redraw( pal->brow_ctx, node_y);
+  }
+  return 1;
+}
+
+int PalItemClassMenu::close( Pal *pal, double x, double y)
+{
+  double	node_x, node_y;
+
+  if ( brow_IsOpen( node)) {
+    // Close
+    brow_GetNodePosition( node, &node_x, &node_y);
+    brow_SetNodraw( pal->brow_ctx);
+    brow_CloseNode( pal->brow_ctx, node);
+    brow_SetAnnotPixmap( node, 0, pal->pixmap_map);
+    brow_ResetOpen( node, pal_mOpen_All);
+    brow_ResetNodraw( pal->brow_ctx);
+    brow_Redraw( pal->brow_ctx, node_y);
+  }
+  return 1;
 }
 
 PalItemMenu::PalItemMenu( Pal *pal, char *item_name, 
@@ -1178,6 +1286,9 @@ int Pal::brow_cb( FlowCtx *ctx, flow_tEvent event)
         case pal_ePalItemType_Menu: 
 	  ((PalItemMenu *)item)->open( pal, 0, 0);
           break;
+        case pal_ePalItemType_ClassMenu: 
+	  ((PalItemClassMenu *)item)->open( pal, 0, 0);
+          break;
         case pal_ePalItemType_Object: 
           ((PalItemObject *)item)->open( pal, 0, 0);
           break;
@@ -1218,6 +1329,9 @@ int Pal::brow_cb( FlowCtx *ctx, flow_tEvent event)
           ((PalItemClassVolume *)item)->open( pal, 0, 0);
            break;
         case pal_ePalItemType_Menu: 
+	  ((PalItemMenu *)item)->open( pal, 0, 0);
+          break;
+        case pal_ePalItemType_ClassMenu: 
 	  ((PalItemMenu *)item)->open( pal, 0, 0);
           break;
         case pal_ePalItemType_Object: 
@@ -1261,6 +1375,10 @@ int Pal::brow_cb( FlowCtx *ctx, flow_tEvent event)
               break;
             case pal_ePalItemType_Menu: 
 	      ((PalItemMenu *)item)->open( pal,
+			event->object.x, event->object.y);
+              break;
+            case pal_ePalItemType_ClassMenu: 
+	      ((PalItemClassMenu *)item)->open( pal,
 			event->object.x, event->object.y);
               break;
             case pal_ePalItemType_Object: 

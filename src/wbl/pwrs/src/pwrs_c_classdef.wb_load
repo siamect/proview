@@ -93,18 +93,23 @@ SObject pwrs:Class
       !  @Summary Bitmask for class properties.
       !  Bitmask for class properties
       !
-      !  DevOnly	object exists only in development environment
-      !  System	  	object is a system object
-      !  Multinode	object is a multinode object
-      !  ObjXRef	object contains ObjXRefs
-      !  RtBody	  	object has a body in runtime
-      !  AttrXRef	object contains AttrXRefs
-      !  ObjRef	  	object contains ObjRefs
-      !  AttrRef	object contains AttrRefs
-      !  TopObject	object can be top object
-      !  NoAdopt	object can not have children
-      !  Template	object is a template object
-      !  IO	  	object is an IO object
+      !  DevOnly      object exists only in development environment
+      !  System	      object is a system object
+      !  Multinode    object is a multinode object
+      !  ObjXRef      object contains ObjXRefs
+      !  RtBody	      object has a body in runtime
+      !  AttrXRef     object contains AttrXRefs
+      !  ObjRef	      object contains ObjRefs
+      !  AttrRef      object contains AttrRefs
+      !  TopObject    object can be top object
+      !  NoAdopt      object can not have children
+      !  Template     object is a template object
+      !  IO           object is an IO object
+      !  IOAgent      object is an IO agent object
+      !  IORack	      object is an IO rack object
+      !  IOCard       object is an IO card object
+      !  RtReadOnly   object is readonly in runtime
+      !  Internal     class is internal and not displayed in palettes
       !*/
       Object Flags pwr_eClass_Param
         Body SysBody

@@ -46,10 +46,18 @@ static pwr_tStatus AnteCreate (
   pwr_tObjid	    Father,
   pwr_tClassId	    Class
 ) {
-  // ClassHier should be a top object
-  if ( Father.oix != 0)
-    return PWRS__POSCLASSHIER;
+  // ClassHier should be a top object or under object Class
+  if ( Father.oix != 0) {
+    pwr_tStatus sts;
+    pwr_tOName name;
+    int size;
 
+    sts = ldh_ObjidToName( Session, Father, ldh_eName_Hierarchy, name, sizeof(name), &size);
+    if ( EVEN(sts)) return sts;
+
+    if ( strcmp( name, "Class") != 0) 
+      return PWRS__POSCLASSHIER;
+  }
   return PWRS__SUCCESS;
 }
 
