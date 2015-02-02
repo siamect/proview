@@ -8173,7 +8173,7 @@ static int xnav_attribute_func (
 	  }
 	}
 	
-	object_element = object_par + element * attrsize / attrelem;
+	object_element = object_par + element * (attrsize / attrelem);
 
         switch ( attrtype )
         {

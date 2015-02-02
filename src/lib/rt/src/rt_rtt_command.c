@@ -5516,7 +5516,7 @@ static int	rtt_show_parameter_add(
 
 
 	if ( element >= 0)
-	  parameter_ptr += element * ad.attr->Param.Info.Size / elements;
+	  parameter_ptr += element * (ad.attr->Param.Info.Size / elements);
 
 	/* Get class name */	
 	sts = rtt_objidtoclassname( objid, classname);

@@ -295,7 +295,7 @@ mvol_AnameToAttribute (
 
       if ( i != pn->nAttribute - 1) {
 	if ( pn->hasIndex[i])
-	  offset += pn->index[i] * ap->adef->Info.Size / ap->adef->Info.Elements;
+	  offset += pn->index[i] * (ap->adef->Info.Size / ap->adef->Info.Elements);
 	if ( !(ap->adef->Info.Flags & PWR_MASK_CLASS)) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
 
         tid = ap->adef->TypeRef;
@@ -479,7 +479,7 @@ mvol_ArefToAttribute (
 	if (arp->Offset > offset &&
 	    ((arp->Offset - offset) % (acp->attr[i].size / acp->attr[i].elem)) != 0)
 	  pwr_Return(NULL, sts, GDH__ATTRIBUTE);
-	offset -= idx * acp->attr[i].size / acp->attr[i].elem;
+	offset -= idx * (acp->attr[i].size / acp->attr[i].elem);
 	break;
       }
     }
@@ -980,7 +980,7 @@ static void insertCattObject( pwr_tStatus *sts, pwr_tCid cid, gdb_sAttribute *ap
     for ( j = 0; j < ap->elem; j++) {
       if ( ODD(*sts) && item->numOffset < gdb_cCattOffsetSize) {
 	/* Insert in current item */
-	item->offset[item->numOffset] = offset + ap->offs + j * ap->size / ap->elem;
+	item->offset[item->numOffset] = offset + ap->offs + j * (ap->size / ap->elem);
 	item->flags[item->numOffset++] = ap->flags;
       }
       else {
@@ -992,7 +992,7 @@ static void insertCattObject( pwr_tStatus *sts, pwr_tCid cid, gdb_sAttribute *ap
 	itemr = ptree_Insert( sts, gdbroot->catt_tt, &key);
 	item = (gdb_sClassAttr *) pool_Address( sts, gdbroot->pool, itemr);
 	if ( item == NULL) return;
-	item->offset[item->numOffset] = offset + ap->offs + j * ap->size / ap->elem;
+	item->offset[item->numOffset] = offset + ap->offs + j * (ap->size / ap->elem);
 	item->flags[item->numOffset++] = ap->flags;
       }
 
@@ -1000,7 +1000,7 @@ static void insertCattObject( pwr_tStatus *sts, pwr_tCid cid, gdb_sAttribute *ap
       for (i=0; i < cp->acount; i++) {
 	if ( cp->attr[i].flags.b.isclass && cdh_tidIsCid( cp->attr[i].tid) && !cp->attr[i].flags.b.pointer) {
 	  insertCattObject( sts, cid, &cp->attr[i], 
-			    offset + ap->offs + j * ap->size / ap->elem);
+			    offset + ap->offs + j * (ap->size / ap->elem));
 	  if ( EVEN(*sts)) return;
 	}
       }
