@@ -981,7 +981,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
         if ( index >= n_attr->o->a.elements)
           return 0;
 
-        *offset += n_attr->o->a.offset + index * n_attr->o->a.size / n_attr->o->a.elements;
+        *offset += n_attr->o->a.offset + index * (n_attr->o->a.size / n_attr->o->a.elements);
         *size = n_attr->o->a.size / n_attr->o->a.elements;
       }
       else {
