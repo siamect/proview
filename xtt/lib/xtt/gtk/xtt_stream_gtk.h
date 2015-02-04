@@ -157,7 +157,7 @@ class XttStreamGtk : public XttStream {
  public:
   XttStreamGtk( GtkWidget *parent_wid, void *parent_ctx, const char *name, const char *uri,
 		int width, int height, int x, int y, 
-		double scan_time, unsigned int options, int embedded, pwr_tStatus *sts);
+		double scan_time, unsigned int options, int embedded, pwr_tAttrRef *arp, pwr_tStatus *sts);
   ~XttStreamGtk();
 
   void pop() {}

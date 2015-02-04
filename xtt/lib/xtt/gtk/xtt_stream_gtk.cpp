@@ -1585,8 +1585,8 @@ int main(int argc, char *argv[]) {
 
 XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const char *name, const char *st_uri,
 			    int width, int height, int x, int y, double scan_time, 
-			    unsigned int st_options, int st_embedded, pwr_tStatus *sts) :
-	 XttStream( st_parent_ctx, name, st_uri, width, height, x, y, scan_time, st_options, st_embedded) { *sts = 0;}
+			    unsigned int st_options, int st_embedded, pwr_tAttrRef *arp, pwr_tStatus *sts) :
+  XttStream( st_parent_ctx, name, st_uri, width, height, x, y, scan_time, st_options, st_embedded, arp) { *sts = 0;}
 
 XttStreamGtk::~XttStreamGtk() {}
 
