@@ -148,6 +148,7 @@ public class Dyn {
     public static final int mActionType1_PulldownMenu 		= 1 << 19;
     public static final int mActionType1_OptionMenu 		= 1 << 20;
     public static final int mActionType1_SetValue 		= 1 << 21;
+    public static final int mActionType1_MethodToolbar 		= 1 << 22;
 
     public static final int mActionType2_No			= 0;
     
@@ -204,6 +205,7 @@ public class Dyn {
     public static final int eDynPrio_Pie			= 49;
     public static final int eDynPrio_BarChart			= 50;
     public static final int eDynPrio_Axis			= 51;
+    public static final int eDynPrio_MethodToolbar	       	= 52;
     public static final int eDynPrio_Command  			= 9999;
     public static final int eDynPrio_CloseGraph 		= 10000;
 
@@ -262,6 +264,7 @@ public class Dyn {
     public static final int eSave_PulldownMenu         		= 68;
     public static final int eSave_OptionMenu           		= 69;
     public static final int eSave_SetValue	       		= 70;
+    public static final int eSave_MethodToolbar	       		= 71;
     public static final int eSave_End		       		= 99;
     public static final int eSave_Dyn_dyn_type1	       		= 100;
     public static final int eSave_Dyn_action_type1      	= 101;
@@ -621,6 +624,7 @@ public class Dyn {
     public static final int eSave_SetValue_value		= 7001;
     public static final int eSave_SetValue_instance		= 7002;
     public static final int eSave_SetValue_instance_mask     	= 7003;
+    public static final int eSave_MethodToolbar_method_object   = 7100;
 
     public static final int eAnimSequence_Cycle		= 1;
     public static final int eAnimSequence_Dig		= 2;
@@ -790,6 +794,8 @@ public class Dyn {
 		e = new DynOptionMenu((DynOptionMenu) x.elements.get(i)); break;
 	    case Dyn.mActionType1_SetValue:
 		e = new DynSetValue((DynSetValue) x.elements.get(i)); break;
+	    case Dyn.mActionType1_MethodToolbar:
+		e = new DynMethodToolbar((DynMethodToolbar) x.elements.get(i)); break;
 	    default: ;
 	    }
 	    switch( x.elements.get(i).action_type2) {
@@ -869,6 +875,9 @@ public class Dyn {
 		break;
 	    case mActionType1_SetValue:
 		e = (DynElem) new DynSetValue((DynSetValue) x);
+		break;
+	    case mActionType1_MethodToolbar:
+		e = (DynElem) new DynMethodToolbar((DynMethodToolbar) x);
 		break;
 	    default: ;
 	    }
@@ -1213,6 +1222,9 @@ public class Dyn {
 		    break;
 		case Dyn.eSave_SetValue: 
 		    elem = (DynElem) new DynSetValue(this); 
+		    break;
+		case Dyn.eSave_MethodToolbar: 
+		    elem = (DynElem) new DynMethodToolbar(this); 
 		    break;
 		case Dyn.eSave_End:
 		    end_found = true;
@@ -10836,6 +10848,299 @@ public class Dyn {
 		    return 0;
 		}	    
 	       
+		break;
+	    }
+	    default:
+		return 0;
+	    }
+	    return 1;
+	}
+    }
+
+    public class DynMethodToolbar extends DynElem {
+	String method_object;
+
+	public static final int method_toolbar_op_cnt = 12;
+	public final String[] method_toolbar_op_subgraph = {
+	    "pwr_mb2opengraph",
+	    "pwr_mb2openobjectgraph",
+	    "pwr_mb2trend",
+	    "pwr_mb2history",
+	    "pwr_mb2fast",
+	    "pwr_mb2camera",
+	    "pwr_mb2histevent",
+	    "pwr_mb2blockevents",
+	    "pwr_mb2help",
+	    "pwr_mb2photo",
+	    "pwr_mb2note",
+	    "pwr_mb2parentgraph",
+	};
+
+	public final int method_toolbar_mnt_cnt = 32;
+	public final String[] method_toolbar_mnt_subgraph = {
+	    "pwr_mb2openobject",
+	    "pwr_mb2openplc",
+	    "pwr_mb2rtnavigator",
+	    "pwr_mb2crossreferences",
+	    "pwr_mb2helpclass",
+	    "pwr_mb2datasheet",
+	    "pwr_mb2circuitdiagram",
+	    "", "","","","","","","","","","","","","","","","","","","","","","","",
+	    "pwr_mb2simulate"
+	};
+
+	public final String[] method_toolbar_op_methods = {
+	    "Graph", 
+	    "Object Graph",
+	    "Trend",
+	    "History",
+	    "Fast", 
+	    "Camera",
+	    "Event Log...",
+	    "Block Events...", 
+	    "Help",
+	    "Photo", 
+	    "Note",
+	    "Parent Object Graph",};
+  
+	public final String[] method_toolbar_mnt_methods = {
+	    "Open Object",
+	    "Open Plc",
+	    "RtNavigator", 
+	    "Crossreferences", 
+	    "Help Class", 
+	    "DataSheet", 
+	    "CircuitDiagram", 
+	    "","","","","","","","","","","","","","","","","","","","","","","","",
+	    "Simulate"};
+
+	public final String[] method_toolbar_op_tooltip = {
+	    "Graph", 
+	    "Object graph",
+	    "Trend", 
+	    "History", 
+	    "Fast curve", 
+	    "Camera", 
+	    "Event log", 
+	    "Block events", 
+	    "Help", 
+	    "Photo", 
+	    "Note",
+	    "Open parent object graph",   
+	};
+
+	public final String[] method_toolbar_mnt_tooltip = {
+	    "Open object",
+	    "Open plc",
+	    "Navigator", 
+	    "CrossReferences", 
+	    "Help class", 
+	    "Datasheet",
+	    "CircuitDiagram", 
+	    "", "","","","","","","","","","","","","","","","","","","","","","","",
+	    "Simulate"};
+
+
+	public DynMethodToolbar( Dyn dyn) {
+	    super(dyn, 0, 0, Dyn.mActionType1_MethodToolbar, 0, Dyn.eDynPrio_MethodToolbar);
+	}
+
+	public DynMethodToolbar( DynMethodToolbar x) {
+	    super(x);
+	    method_object = x.method_object;
+	}
+
+	public void open( BufferedReader reader) {
+	    String line;
+	    StringTokenizer token;
+	    boolean end_found = false;
+
+	    try {
+		while( (line = reader.readLine()) != null) {
+		    token = new StringTokenizer(line);
+		    int key = Integer.valueOf(token.nextToken());
+		    if ( Dyn.debug) System.out.println( "DynMethodToolbar : " + line);
+
+		    switch ( key) {
+		    case Dyn.eSave_MethodToolbar: 
+			break;
+		    case Dyn.eSave_MethodToolbar_method_object: 
+			if ( token.hasMoreTokens())
+			    method_object = token.nextToken();
+			break;
+		    case Dyn.eSave_End:
+			end_found = true;
+			break;
+		    default:
+			System.out.println( "Syntax error in DynMethodToolbar");
+			break;
+		    }
+
+		    if ( end_found)
+			break;
+		}
+		
+	    } catch ( Exception e) {
+		System.out.println( "IOException DynMethodToolbar");
+	    }
+	}
+
+	public int connect(GlowArrayElem o) {
+	    GrowToolbar object = (GrowToolbar)o;
+
+	    int      	sts;
+	    String     	cmd, command;
+	    String    	parsed_name;
+	    int 	xm_mask_flags = 0;
+	    int		xm_mask_opmethods = 0;
+	    int		xm_mask_mntmethods = 0;
+	    int       	mask_configure = 0;
+	    int	        mask_store = 0;
+    
+	    DynParsedAttrName pname = dyn.parseAttrName(method_object);
+	    if ( pname == null || pname.name.equals("")) 
+		return 1;
+
+	    parsed_name = pname.name + ".XttMethodsMask.Flags";
+	    CdhrInt ret = dyn.graph.getGdh().getObjectInfoInt( parsed_name);
+	    if ( ret.oddSts()) {
+		xm_mask_flags = ret.value;
+
+		if ( (xm_mask_flags & Pwrb.mXttMethodsFlagsMask_IsConfigured) == 0) {		    
+		    mask_configure = 1;
+		    mask_store = 1;
+		}      
+		else {
+		    parsed_name = pname.name + ".XttMethodsMask.OpMethods";
+		    ret = dyn.graph.getGdh().getObjectInfoInt( parsed_name);
+		    if ( ret.evenSts()) {
+			System.out.println("DynMethodToolbar: " + parsed_name);
+			mask_configure = 1;
+		    }
+		    else
+			xm_mask_opmethods = ret.value;
+		    parsed_name = pname.name + ".XttMethodsMask.MntMethods";
+		    ret = dyn.graph.getGdh().getObjectInfoInt( parsed_name);
+		    if ( ret.evenSts()) {
+			System.out.println("DynMethodToolbar: " + parsed_name);
+			mask_configure = 1;
+		    }
+		    else
+			xm_mask_mntmethods = ret.value;
+		}
+	    }
+	    else {
+		mask_configure = 1;
+	    }
+  
+
+	    if ( mask_configure != 0) {
+		xm_mask_opmethods = 0;
+		for ( int i = 0; i < method_toolbar_op_cnt; i++) {
+		    if ( method_toolbar_op_methods[i].equals("Parent Object Graph")) {
+			if ( method_object.indexOf('.') != -1)
+			    xm_mask_opmethods |= 1 << i;
+		    }
+		    else {
+			command = "check method/method=\"" + method_toolbar_op_methods[i] + "\"/object=" +
+			    method_object;
+
+			command = dyn.graph.getCommand(command);
+			sts = dyn.graph.command(command);
+			if ( (sts & 1) != 0)
+			    xm_mask_opmethods |= 1 << i;
+		    }
+		}
+		xm_mask_mntmethods = 0;
+		for ( int i = 0; i < method_toolbar_mnt_cnt; i++) {
+		    command = "check method/method=\"" + method_toolbar_mnt_methods[i] + "\"/object=" +
+			method_object;
+	
+		    command = dyn.graph.getCommand(command);
+		    sts = dyn.graph.command(command);
+		    if ( (sts & 1) != 0)
+			xm_mask_mntmethods |= 1 << i;
+		}
+		xm_mask_flags |= Pwrb.mXttMethodsFlagsMask_IsConfigured;
+	    }
+	    System.out.println("Method mask: " + xm_mask_opmethods + " " + xm_mask_mntmethods);
+
+	    int opmask = xm_mask_opmethods;
+	    int mntmask = xm_mask_mntmethods;
+	    int insensitive_opmask = 0;
+	    int insensitive_mntmask = 0;
+
+	    opmask &= ~Pwrb.mXttOpMethodsMask_OpenObjectGraph;
+	    if ( !dyn.graph.isAuthorized( Pwr.mAccess_RtEventsBlock))
+		insensitive_opmask |= Pwrb.mXttOpMethodsMask_BlockEvents;
+	    if ( !dyn.graph.isAuthorized( Pwr.mAccess_RtNavigator))
+		insensitive_mntmask |= Pwrb.mXttMntMethodsMask_RtNavigator;
+	    if ( !dyn.graph.isAuthorized( Pwr.mAccess_RtPlc))
+		insensitive_mntmask |= Pwrb.mXttMntMethodsMask_OpenTrace;  
+
+	    object.configure( method_toolbar_op_subgraph, method_toolbar_mnt_subgraph,
+			      method_toolbar_op_cnt, method_toolbar_mnt_cnt, opmask, mntmask,
+			      insensitive_opmask, insensitive_mntmask);
+
+	    mask_store = 0; // Check call is not universal
+	    if ( mask_store != 0) {
+		PwrtStatus psts;
+
+		parsed_name = pname.name + ".XttMethodsMask.OpMethods";
+		psts = dyn.graph.getGdh().setObjectInfo( parsed_name, xm_mask_opmethods);
+		if ( psts.evenSts())
+		    System.out.println( "Set mask error " + parsed_name);
+
+		parsed_name = pname.name + ".XttMethodsMask.MntMethods";
+		psts = dyn.graph.getGdh().setObjectInfo( parsed_name, xm_mask_mntmethods);
+		if ( psts.evenSts())
+		    System.out.println( "Set mask error " + parsed_name);
+
+		parsed_name = pname.name + ".XttMethodsMask.Flags";
+		psts = dyn.graph.getGdh().setObjectInfo( parsed_name, xm_mask_flags);
+		if ( psts.evenSts())
+		    System.out.println( "Set mask error " + parsed_name);
+
+	    }
+
+	    return 1;
+	}
+
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    GrowNode object = (GrowNode)o;
+
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
+	    switch ( e.event) {
+	    case Glow.eEvent_MB1Down:
+		object.setColorInverse( 1);
+		break;
+	    case Glow.eEvent_MB1Up:
+		object.setColorInverse( 0);
+		break;
+	    case Glow.eEvent_MB1Click: {
+		int sts;
+		String command;
+		int idx = ((GlowEventToolbar)e).idx;
+		int category = ((GlowEventToolbar)e).category;
+		System.out.println( "Toolbar action " + category + " " + idx);
+
+		if ( category == 1) {
+		    if ( method_toolbar_op_methods[idx].equals( "Parent Object Graph"))
+			command = "open graph/class/parent/instance=" + method_object;
+		    else
+			command = "call method/method=\"" + method_toolbar_op_methods[idx] + 
+			    "\"/object=" +  method_object;
+		}
+		else {
+		    command = "call method/method=\"" + method_toolbar_mnt_methods[idx] + 
+			"\"/object=" +  method_object;
+		}
+
+		command = dyn.graph.getCommand(command);
+		sts = dyn.graph.command(command);
+		
 		break;
 	    }
 	    default:

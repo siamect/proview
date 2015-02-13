@@ -70,6 +70,7 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
     public int gradient;
     public int text_type;
     public int text_font;
+    public int disable_cb;
 
     String nc_name;
     GlowNodeClass nc;
@@ -103,6 +104,16 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 	this.cmn = cmn;
 	pos = new GlowPoint();
 	visible = 1;
+	original_border_drawtype = Glow.eDrawType_No;
+	original_text_drawtype = Glow.eDrawType_No;
+	original_fill_drawtype = Glow.eDrawType_No;	
+	fill_drawtype = Glow.eDrawType_No;
+	level_fill_drawtype = Glow.eDrawType_No;
+	original_color_tone = Glow.eDrawTone_No;
+	color_tone = Glow.eDrawTone_No;
+	level_color_tone = Glow.eDrawTone_No;
+	text_type = Glow.eDrawType_TextHelvetica;
+	text_font = Glow.eFont_No;
     }
 
     public int type() {
@@ -217,6 +228,9 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 		    break;
 		case Glow.eSave_GrowNode_text_font:
 		    text_font = Integer.valueOf(token.nextToken());
+		    break;
+		case Glow.eSave_GrowNode_disable_cb:
+		    disable_cb = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowNode_userdata_cb:
 		    if ( cmn.appl != null)

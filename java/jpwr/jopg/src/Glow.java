@@ -153,6 +153,7 @@ public class Glow {
     public static final int eObjectType_GrowAxisArc    	= 42;
     public static final int eObjectType_GrowPie		= 43;
     public static final int eObjectType_GrowBarChart   	= 44;
+    public static final int eObjectType_GrowToolbar   	= 45;
 
     public static final int eDirection_Center		= 0;
     public static final int eDirection_Right		= 1;
@@ -736,6 +737,7 @@ public class Glow {
     public static final int eSave_GrowAxisArc		        = 44;
     public static final int eSave_GrowPie		        = 45;
     public static final int eSave_GrowBarChart		        = 46;
+    public static final int eSave_GrowToolbar		        = 47;
     public static final int eSave_End				= 99;
     public static final int eSave_Ctx_zoom_factor_x		= 100;
     public static final int eSave_Ctx_base_zoom_factor		= 101;
@@ -1113,6 +1115,7 @@ public class Glow {
     public static final int eSave_GrowNode_gradient          	= 2727;
     public static final int eSave_GrowNode_text_type          	= 2728;
     public static final int eSave_GrowNode_text_font          	= 2729;
+    public static final int eSave_GrowNode_disable_cb          	= 2730;
     public static final int eSave_Transform_a11			= 2800;
     public static final int eSave_Transform_a12			= 2801;
     public static final int eSave_Transform_a13			= 2802;
@@ -1474,6 +1477,8 @@ public class Glow {
     public static final int eSave_GrowBarChart_horizontal_lines = 4618;
     public static final int eSave_GrowBarChart_userdata_cb   	= 4619;
     public static final int eSave_GrowBarChart_line_color   	= 4620;
+    public static final int eSave_GrowToolbar_grownode_part     = 4700;
+    public static final int eSave_GrowToolbar_nc	     	= 4701;
 
     public static final int ePosition_Absolute			= 0;
     public static final int ePosition_Relative			= 1;
@@ -1484,6 +1489,7 @@ public class Glow {
 
     public static final int eEventType_Object 			= 0;
     public static final int eEventType_Menu 			= 1;
+    public static final int eEventType_Toolbar 			= 2;
 
     public static final int eEvent_MB1Click 			= 0;
     public static final int eEvent_MB1Up 			= 2;

@@ -629,6 +629,68 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	return graph.loadGrowCtx( reader);
     }
 
+    public int loadSubgraph( String fname) {
+	String filename;
+	BufferedReader reader = null;
+
+	if ( root != null && root instanceof JApplet) {
+	    try {
+		URL current = ((JApplet) root).getCodeBase();
+		String current_str = current.toString();
+		int idx1 = current_str.lastIndexOf('/');
+		int idx2 = current_str.lastIndexOf(':');
+		int idx = idx1;
+		if ( idx2 > idx)
+		    idx = idx2;
+		String path = current_str.substring(0,idx + 1);
+
+		idx = fname.indexOf('/');
+		if ( idx != -1)
+		    fname = fname.substring(idx);
+		
+		filename = path + fname;
+		System.out.println( "Opening file " + filename);
+		URL fileURL = new URL( filename);
+		InputStream in = fileURL.openStream();
+		// in = new BufferedInputStream(in);
+		InputStreamReader r2 = new InputStreamReader(in, "ISO-8859-1");
+		reader = new BufferedReader( r2);
+	    }
+	    catch ( Exception e) {
+		System.out.println( "Unable to open file");
+	    }
+	}
+	else {
+	    if ( fname.lastIndexOf('/') == -1) {
+		if ( fname.startsWith("pwr_"))
+		    filename = "$pwr_exe/" + fname;
+		else
+		    filename = "$pwrp_exe/" + fname;
+	    }
+	    else
+		filename = fname;
+	    filename = Gdh.translateFilename( filename);
+
+	    System.out.println( "Fname: " + filename);
+	    try {
+		//reader = new BufferedReader(new FileReader(filename));
+		reader = new BufferedReader( new InputStreamReader(new FileInputStream(filename), "ISO-8859-1"));
+	    }
+	    catch ( Exception e) {
+		System.out.println( "Unable to open file " + filename);
+		return 0;
+	    }
+	}
+	int sts = graph.loadSubgraph( reader);
+	try {
+	    reader.close();
+	}
+	catch ( IOException e) {
+	    System.out.println( "Subgraph close file error " + fname);
+	}
+	return sts;
+    }
+
     public void setTitle( String file, String instance) {
 	if ( instance != null)
 	    super.setTitle( instance);

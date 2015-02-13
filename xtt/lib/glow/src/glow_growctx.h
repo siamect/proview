@@ -685,6 +685,19 @@ class GrowCtx : public GlowCtx {
   int send_table_callback( GlowArrayElem *object, glow_eEvent event,
 			  double x, double y, int column, int row);
 
+  //! Send a toolbar callback if such a callback is registred.
+  /*!
+    \param object	Menu object.
+    \param event	Menu event.
+    \param x		x coordinate.
+    \param y		y coordinate.
+    \param idx      	Activated tool index.
+
+    Send a toolbar callback.
+  */
+  int send_toolbar_callback( GlowArrayElem *object, glow_eEvent event,
+			     double x, double y, int category, int idx);
+
   //! Get configured scantimes.
   /*!
     \param time		Scantime for slow cycle.

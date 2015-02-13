@@ -486,6 +486,14 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	return ctx;
     }
 
+    public int loadSubgraph( BufferedReader reader) {
+	return ctx.loadSubgraph( reader);
+    }
+
+    public int loadSubgraph( String file) {
+	return appl.loadSubgraph( file);
+    }
+
     public int command(String cmd) {
 	if ( appl != null)
 	    return appl.command(cmd);

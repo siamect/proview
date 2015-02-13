@@ -45,6 +45,7 @@ public interface GraphApplIfc {
     public int getHeight();
     public String getObject();
     public Object loadGrowCtx( String file);
+    public int loadSubgraph( String file);
     public void closeGraph();
     public boolean isAuthorized(int access);
 }

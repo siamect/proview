@@ -892,6 +892,10 @@ static attrnav_sEnumElement elem_access[] = {
 	{ (unsigned int) pwr_mPrv_Operator8, 	"Operator8"},
 	{ (unsigned int) pwr_mPrv_Operator9, 	"Operator9"},
 	{ (unsigned int) pwr_mPrv_Operator10, 	"Operator10"},
+	{ (unsigned int) pwr_mPrv_RtEventsAck,  "RtEventsAck"},
+	{ (unsigned int) pwr_mPrv_RtPlc,        "RtPlc"},
+	{ (unsigned int) pwr_mPrv_RtNavigator,  "RtNavigator"},
+	{ (unsigned int) pwr_mPrv_RtEventsBlock, "RtEventsBlock"},
 	{ (unsigned int) pwr_mAccess_Default, 	"Default"},
 	{ 0, ""}};
 

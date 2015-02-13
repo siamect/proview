@@ -1302,6 +1302,14 @@ class Graph {
   */
   void create_folder( grow_tObject *object, double x, double y);
 
+  //! Create a toolbar object.
+  /*!
+    \param object	Created bar object.
+    \param x		x coordinate for object.
+    \param y		y coordinate for object.
+  */
+  void create_toolbar( grow_tObject *object, double x, double y);
+
   //! Create an axis object.
   /*!
     \param object	Created axis object.

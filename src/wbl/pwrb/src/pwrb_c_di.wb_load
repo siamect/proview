@@ -147,6 +147,19 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Xtt method configuration.
+      !  Specification of the available methods for the object.
+      !  If Flags.IsConfigured is set, the methods can be specified in
+      !  the development environment. Otherwise they will be calculated
+      !  in runtime.
+      !*/
+      Object XttMethodsMask $Attribute 18 
+        Body SysBody
+          Attr TypeRef = "pwrb:Class-XttMethodsMask"
+          Attr Flags |= PWR_MASK_CLASS
+        EndBody
+      EndObject
+      !/**
       !  @Summary A XttGraph object that will open a graph for this object.
       !  A XttGraph object that will open a graph that contains data for
       !  this object. This graph can be opened from the popup menu for

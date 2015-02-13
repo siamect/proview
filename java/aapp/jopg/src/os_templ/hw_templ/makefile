@@ -25,6 +25,7 @@ extern_java_sources := \
 	GlowColor.java,\
 	GlowBackgroundObject.java,\
 	GlowEventMenu.java,\
+	GlowEventToolbar.java,\
 	GrowCtxIfc.java,\
 	GrowCmn.java,\
 	GlowNodeClass.java,\
@@ -61,6 +62,7 @@ extern_java_sources := \
 	GrowFolder.java,\
 	GrowPie.java,\
 	GrowBarChart.java,\
+	GrowToolbar.java,\
 	GrowConGlue.java,\
 	GlowVector.java,\
 	GrowCtx.java,\

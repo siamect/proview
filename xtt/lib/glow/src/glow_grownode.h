@@ -224,6 +224,7 @@ class GrowNode : public GlowNode {
   glow_eGradient gradient;      //!< Type of gradient.
   glow_eDrawType text_type;	//!< Text type, bold or normal.
   glow_eFont	text_font;	//!< Text font.
+  int		disable_cb;     //!< Disable event callbacks
   
   //! Set dynamic code
   /*!
@@ -932,6 +933,7 @@ class GrowNode : public GlowNode {
   int get_java_name( char *name) { return nc->get_java_name( name);}
   void set_textbold( int bold);
   void set_textfont( glow_eFont textfont);
+  void disable_callback() { disable_cb = 1;}
 
   //! Destructor
   /*! Remove the object from the context and erase it from the screen.

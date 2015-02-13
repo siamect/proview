@@ -255,6 +255,12 @@ public class GlowVector {
 	  a.add( c);
 	  break;
 	}
+	case Glow.eSave_GrowToolbar: {
+	  GrowToolbar n = new GrowToolbar( cmn);
+	  n.open( reader);
+	  a.add( n);
+	  break;
+	}
 	case Glow.eSave_Point: {
 	  GlowPoint c = new GlowPoint();
 	  c.open( reader);

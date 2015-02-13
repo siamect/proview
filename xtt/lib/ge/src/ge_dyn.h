@@ -172,6 +172,7 @@
     ge_eDynPrio_Pie,
     ge_eDynPrio_BarChart,
     ge_eDynPrio_Axis,
+    ge_eDynPrio_MethodToolbar,
 
     // This should always be last
     ge_eDynPrio_Command  = 9999,
@@ -246,7 +247,8 @@
     ge_mActionType1_CloseGraph	= 1 << 18,
     ge_mActionType1_PulldownMenu = 1 << 19,
     ge_mActionType1_OptionMenu 	= 1 << 20,
-    ge_mActionType1_SetValue 	= 1 << 21
+    ge_mActionType1_SetValue 	= 1 << 21,
+    ge_mActionType1_MethodToolbar = 1 << 22
   } ge_mActionType1;
 
   typedef enum {
@@ -349,6 +351,7 @@
     ge_eSave_PulldownMenu      		= 68,
     ge_eSave_OptionMenu      		= 69,
     ge_eSave_SetValue			= 70,
+    ge_eSave_MethodToolbar     		= 71,
     ge_eSave_End		       	= 99,
     ge_eSave_Dyn_dyn_type1	       	= 100,
     ge_eSave_Dyn_action_type1	       	= 101,
@@ -707,7 +710,8 @@
     ge_eSave_SetValue_attribute		= 7000,
     ge_eSave_SetValue_value		= 7001,
     ge_eSave_SetValue_instance		= 7002,
-    ge_eSave_SetValue_instance_mask     = 7003
+    ge_eSave_SetValue_instance_mask     = 7003,
+    ge_eSave_MethodToolbar_method_object = 7100
   } ge_eSave;
 
 
@@ -2730,6 +2734,38 @@ class GeSetValue : public GeDynElem {
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
+  int action( grow_tObject object, glow_tEvent event);
+  void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+
+};
+
+//! Toolbar for object methods
+class GeMethodToolbar : public GeDynElem {
+ public:
+  pwr_tOName method_object;
+
+  static int method_toolbar_op_cnt;
+  static char method_toolbar_op_subgraph[32][80];
+  static char method_toolbar_op_methods[32][80];
+  static char method_toolbar_op_tooltip[32][80];
+  static int method_toolbar_mnt_cnt;
+  static char method_toolbar_mnt_subgraph[32][80];
+  static char method_toolbar_mnt_methods[32][80];
+  static char method_toolbar_mnt_tooltip[32][80];
+
+  GeMethodToolbar( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_MethodToolbar, ge_mActionType2_No, ge_eDynPrio_MethodToolbar)
+    { strcpy( method_object, ""); instance = e_instance;}
+  GeMethodToolbar( const GeMethodToolbar& x) : 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
+    { strcpy( method_object, x.method_object);
+    instance = x.instance, instance_mask = x.instance_mask;}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
   int action( grow_tObject object, glow_tEvent event);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);

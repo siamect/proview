@@ -2139,6 +2139,27 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 	return graph.loadGrowCtx(reader);
     }
 
+    public int loadSubgraph( String fname) {
+	String filename = fname;
+	BufferedReader reader;
+	URL url = null;
+	try {
+	    if ( filename.startsWith("pwr_")) {
+		// url = new URL("http://10.0.2.2/data0/x4-8-6/rls/os_linux/hw_x86/exp/exe/" + filename.substring(9));
+		url = new URL("http://" + pwrHost + "/" + pwr_exe + filename);
+	    }
+	    else {
+		// url = new URL("http://10.0.2.2/data0/pwrp/opg7/bld/x86_linux/exe/" + filename);
+		url = new URL("http://" + pwrHost + "/" + pwrp_exe + filename);
+	    }
+	    reader = new BufferedReader(new InputStreamReader(url.openStream(), "ISO-8859-1"));
+	} catch ( IOException e) {
+	    System.out.println( "Unable to open file " + filename  + " " + url);
+	    return 0;			
+	}
+	return graph.loadSubgraph(reader);
+    }
+
     static CliTable[] cliTable = new CliTable[] { 
         new CliTable( "OPEN", new String[] {"cli_arg1", "cli_arg2", "/NAME", 
     	"/FILE", "/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", "/NAVIGATOR", 

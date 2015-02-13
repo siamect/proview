@@ -85,6 +85,7 @@
 #include "glow_growgroup.h"
 #include "glow_growconglue.h"
 #include "glow_growmenu.h"
+#include "glow_growtoolbar.h"
 
 /*! \file glow_growapi.cpp
     \brief Contains c API for grow. */
@@ -1017,6 +1018,19 @@ void grow_CreateGrowFolder( grow_tCtx ctx, const char *name,
   ctx->insert( r1);
   ctx->nav_zoom();
   *window = (grow_tObject) r1;
+}
+
+void grow_CreateGrowToolbar( grow_tCtx ctx, const char *name, const char *nc_name,
+			     char *tools1, char *tools2, int tools1_cnt, int tools2_cnt,
+			     double x, double y, void *user_data,
+			     grow_tObject *toolbar)
+{
+  GrowToolbar *r1;
+  r1 = new GrowToolbar( ctx, name, nc_name, tools1, tools2, tools1_cnt, tools2_cnt, x, y);
+  r1->set_user_data( user_data);
+  ctx->insert( r1);
+  ctx->nav_zoom();
+  *toolbar = (grow_tObject) r1;
 }
 
 void grow_CreateGrowLine( grow_tCtx ctx, const char *name, 
@@ -2756,6 +2770,7 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
     }
     case glow_eObjectType_GrowNode:
     case glow_eObjectType_GrowGroup:
+    case glow_eObjectType_GrowToolbar:
     {
       GrowNode *op = (GrowNode *)object;
       char *dynamic;
@@ -5275,6 +5290,13 @@ int grow_GetObjectRecursiveTrace( grow_tObject object)
   return nodeclass->recursive_trace;
 }
 
+void grow_ToolbarConfigure( grow_tObject object, char *tools1, char *tools2, int tools1_cnt, int tools2_cnt,
+			    unsigned int show_mask1, unsigned int show_mask2,
+			    unsigned int insensitive_mask1, unsigned int insensitive_mask2)
+{
+  ((GrowToolbar *)object)->configure( tools1, tools2, tools1_cnt, tools2_cnt,
+				      show_mask1, show_mask2, insensitive_mask1, insensitive_mask2);
+}
 
 /*@}*/
 

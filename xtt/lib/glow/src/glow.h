@@ -218,7 +218,8 @@ typedef enum {
         glow_eObjectType_GrowXYCurve,
         glow_eObjectType_GrowAxisArc,
         glow_eObjectType_GrowPie,
-        glow_eObjectType_GrowBarChart
+        glow_eObjectType_GrowBarChart,
+	glow_eObjectType_GrowToolbar
 	} glow_eObjectType;
 
 //! Direction of a connection points, sliders etc
@@ -916,7 +917,8 @@ typedef enum {
   glow_eEventType_Translate,  		//!< Translation callback. Event structure is glow_sEventTranslate
   glow_eEventType_KeyAscii,  		//!< Ascii key callback.
   glow_eEventType_Menu,  		//!< Menu callback.
-  glow_eEventType_Table  		//!< Table callback.
+  glow_eEventType_Table,  		//!< Table callback.
+  glow_eEventType_Toolbar 		//!< Toolbar callback.
 } glow_eEventType;
 
 //! Glow events
@@ -1095,6 +1097,7 @@ typedef enum {
 	glow_eSave_GrowAxisArc		        = 44,
 	glow_eSave_GrowPie		        = 45,
 	glow_eSave_GrowBarChart		        = 46,
+	glow_eSave_GrowToolbar		        = 47,
 	glow_eSave_End				= 99,
 	glow_eSave_Ctx_zoom_factor_x		= 100,
 	glow_eSave_Ctx_base_zoom_factor		= 101,
@@ -1473,6 +1476,7 @@ typedef enum {
 	glow_eSave_GrowNode_gradient          	= 2727,
 	glow_eSave_GrowNode_text_type          	= 2728,
 	glow_eSave_GrowNode_text_font          	= 2729,
+	glow_eSave_GrowNode_disable_cb         	= 2730,
 	glow_eSave_Transform_a11		= 2800,
 	glow_eSave_Transform_a12		= 2801,
 	glow_eSave_Transform_a13		= 2802,
@@ -1833,7 +1837,9 @@ typedef enum {
 	glow_eSave_GrowBarChart_vertical_lines 	= 4617,
 	glow_eSave_GrowBarChart_horizontal_lines = 4618,
 	glow_eSave_GrowBarChart_userdata_cb   	= 4619,
-	glow_eSave_GrowBarChart_line_color   	= 4620
+	glow_eSave_GrowBarChart_line_color   	= 4620,
+	glow_eSave_GrowToolbar_grownode_part	= 4700,
+	glow_eSave_GrowToolbar_nc	        = 4701
 	} glow_eSave;
 
 //! Relative or absolute position for an annotation
@@ -2042,6 +2048,19 @@ typedef struct {
   int			row;  		//!< Activated cell row
 } glow_sEventTable, *glow_tEventTable;
 
+//! Data structure for a toolbar event
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate
+  double	       	y;  		//!< y-coordinate
+  glow_eObjectType	object_type;	//!< Type of object
+  void			*object;        //!< Pointer to object
+  int	       	        category;      	//!< Category for activated tool
+  int	       	        idx;		//!< Index for activated tool
+} glow_sEventToolbar, *glow_tEventToolbar;
 
 //! Union for event data structures
 typedef union {
@@ -2058,6 +2077,7 @@ typedef union {
 	glow_sEventKeyAscii	key;
 	glow_sEventMenu		menu;
 	glow_sEventTable       	table;
+	glow_sEventToolbar    	toolbar;
 	} glow_sEvent, *glow_tEvent;
 
 //! Pixmap data structure

@@ -2496,6 +2496,7 @@ void GrowCtx::clear_all( int keep_paste)
         if ( a_paste[j]->type() == glow_eObjectType_GrowNode ||
              a_paste[j]->type() == glow_eObjectType_GrowSlider ||
              a_paste[j]->type() == glow_eObjectType_GrowGroup ||
+             a_paste[j]->type() == glow_eObjectType_GrowToolbar ||
              a_paste[j]->type() == glow_eObjectType_GrowConGlue)
 	{
           found = ((GrowNode *) a_paste[j])->find_nc( a_nc[i]);
@@ -3898,6 +3899,31 @@ int GrowCtx::send_table_callback( GlowArrayElem *object, glow_eEvent event,
     e.table.object = object;
     e.table.column = column;
     e.table.row = row;
+    return event_callback[event]( this, &e);
+  }
+
+  return 0;
+}
+
+int GrowCtx::send_toolbar_callback( GlowArrayElem *object, glow_eEvent event,
+				    double x, double y, int category, int idx)
+{
+
+  if ( event_callback[event] )
+  {
+    /* Send a toolbar callback */
+    static glow_sEvent e;
+
+    e.event = event;
+    e.any.type = glow_eEventType_Toolbar;
+    e.any.x_pixel = int( x * mw.zoom_factor_x) - mw.offset_x;
+    e.any.y_pixel = int( y * mw.zoom_factor_y) - mw.offset_y;
+    e.any.x = x;
+    e.any.y = y;
+    e.toolbar.object_type = object->type();
+    e.toolbar.object = object;
+    e.toolbar.category = category;
+    e.toolbar.idx = idx;
     return event_callback[event]( this, &e);
   }
 

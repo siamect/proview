@@ -49,6 +49,8 @@ public interface GrowCtxIfc {
     public void register_callback_object(int type, GlowArrayElem o);
     public int send_menu_callback( GlowArrayElem object, int item, int type,
 				   double x, double y);
+    public int send_toolbar_callback( GlowArrayElem object, int category, int idx, int type,
+				      double x, double y);
     public void insert(GlowArrayElem e);
     public void remove(GlowArrayElem e);
     public void pop(GlowArrayElem e);
@@ -67,4 +69,5 @@ public interface GrowCtxIfc {
     public boolean traceStarted();
     public void setSubwindowSource( String name, String source, String owner);
     public void setSliderActive( boolean active);
+    public int loadSubgraph( String file);
 }

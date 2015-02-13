@@ -77,6 +77,7 @@
 #include "glow_growaxisarc.h"
 #include "glow_growpie.h"
 #include "glow_growbarchart.h"
+#include "glow_growtoolbar.h"
 #include "glow_growconglue.h"
 #include "glow_growwindow.h"
 #include "glow_growfolder.h"
@@ -267,6 +268,15 @@ void GlowArray::copy_from( const GlowArray& array)
       case glow_eObjectType_GrowBarChart:
       {
         GrowBarChart *n = new GrowBarChart(*(GrowBarChart *)array.a[i]);
+        n->highlight = 0;
+        n->hot = 0;
+        insert( n);
+        break;
+      }
+      case glow_eObjectType_GrowToolbar:
+      {
+        GrowToolbar *n = new GrowToolbar();
+	n->copy_from(*(GrowToolbar *)array.a[i]);
         n->highlight = 0;
         n->hot = 0;
         insert( n);
@@ -1069,6 +1079,13 @@ void GlowArray::open( GrowCtx *ctx, ifstream& fp)
       case glow_eSave_GrowBarChart:
       {
         GrowBarChart *r = new GrowBarChart( ctx, "");
+	r->open( fp);
+        insert( r);
+        break;
+      }
+      case glow_eSave_GrowToolbar:
+      {
+        GrowToolbar *r = new GrowToolbar( ctx, "", "", 0, 0, 0, 0, 0, 0, 0);
 	r->open( fp);
         insert( r);
         break;

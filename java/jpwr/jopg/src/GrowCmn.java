@@ -120,7 +120,7 @@ public class GrowCmn {
     public GrowCmn( GrowCtxIfc ctx, GrowApplIfc appl) {
 	this.ctx = ctx;
 	this.appl = appl;
-	this.debug = false;
+	this.debug = true;
 	this.antiAliasing = true;
 	mw.window_width = getWidth();
 	mw.window_height = getHeight();

@@ -1048,14 +1048,19 @@ extern "C" {
     \param unselected_color Color of unseleced folder.
     \param display_level Display levels when the object is visible.
     \param user_data	User data.
-    \param bar		Created GrowFolder object.
+    \param window      	Created GrowFolder object.
   */
   void grow_CreateGrowFolder( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width,
 	glow_eDrawType selected_color, glow_eDrawType unselected_color,
 	glow_mDisplayLevel display_level, void *user_data,
-	grow_tObject *bar);
+	grow_tObject *window);
+
+  void grow_CreateGrowToolbar( grow_tCtx ctx, const char *name, const char *nc_name,
+			     char *tools1, char *tools2, int tools1_cnt, int tools2_cnt,
+			     double x, double y, void *user_data,
+			     grow_tObject *toolbar);
 
   //! Create a line, i.e an object of class GrowRect.
   /*!
@@ -3065,6 +3070,9 @@ void grow_GetObjectClassDynType( grow_tObject object, int *dyn_type1, int *dyn_t
   void grow_EventLogEnable( int enable);
   void grow_GetObjectClass( grow_tObject object, grow_tNodeClass *nodeclass);
   int grow_GetObjectRecursiveTrace( grow_tObject object);
+  void grow_ToolbarConfigure( grow_tObject object, char *tools1, char *tools2, int tools1_cnt, int tools2_cnt,
+			      unsigned int show_mask1, unsigned int show_mask2,
+			      unsigned int insensitive_mask1, unsigned int insensitive_mask2);
   
 /*@}*/
 #if defined __cplusplus

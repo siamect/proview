@@ -83,6 +83,9 @@ public class GrowFrame implements GraphApplIfc {
     public Object loadGrowCtx( String fname) {
 	return null;
     }
+    public int loadSubgraph( String fname) {
+	return 0;
+    }
     public void closeGraph() {}
     public boolean isAuthorized(int access) {
 	return false;

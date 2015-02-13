@@ -340,7 +340,6 @@ public class GrowRect extends GlowArrayElem {
 	boolean display_shadow = ((node != null && ((GrowNode)node).shadow != 0) || shadow != 0) && disable_shadow == 0;
 	int fillcolor = GlowColor.get_drawtype( fill_drawtype, Glow.eDrawType_FillHighlight,
 						highlight, colornode, 1, 0);
-
         int grad = gradient;
 	if ( gradient == Glow.eGradient_No && 
 	     (node != null && ((GrowNode)node).gradient != Glow.eGradient_No) && disable_gradient == 0)

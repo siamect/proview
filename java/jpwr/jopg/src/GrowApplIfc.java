@@ -46,4 +46,5 @@ public interface GrowApplIfc {
     public int getWidth();
     public int getHeight();
     public Object loadCtx( String file);
+    public int loadSubgraph( String file);
 }

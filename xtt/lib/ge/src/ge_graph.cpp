@@ -129,7 +129,6 @@ static int graph_get_current_color_tone_cb( void *g, glow_eDrawType *color_tone)
 static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event);
 static void graph_free_dyn( grow_tObject object);
 
-
 void Graph::message( pwr_tStatus sts)
 {
   char msg[80];
@@ -1344,7 +1343,8 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 
   memset( items, 0, sizeof(items));
   if ( grow_GetObjectType( object) == glow_eObjectType_GrowNode ||
-       grow_GetObjectType( object) == glow_eObjectType_GrowGroup)
+       grow_GetObjectType( object) == glow_eObjectType_GrowGroup ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowToolbar)
   {
     GeDyn *dyn;
     char *transtab;
@@ -2697,6 +2697,12 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	  grow_tObject t1;
 	  graph->create_barchart( &t1, event->create_grow_object.x, event->create_grow_object.y);
 	}
+	else if ( strcmp( sub_name, "pwr_methodtoolbar") == 0) {
+	  grow_tObject t1;
+	  graph->create_toolbar( &t1, event->create_grow_object.x, event->create_grow_object.y);
+
+	  graph->journal_store( journal_eAction_CreateObject, t1);
+	}
 	else if ( strcmp( sub_name, "pwr_conglue") == 0) {
 	  grow_tObject t1;
 
@@ -3783,7 +3789,8 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
     {
       if ( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowSlider ||
-           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup)
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup ||
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowToolbar)
       {
 	GeDyn *dyn;
 
@@ -3825,7 +3832,8 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
     {
       if ( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowSlider ||
-           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup)
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup ||
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowToolbar)
       {
 	GeDyn *dyn;
 
@@ -3901,6 +3909,7 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
         break;
       if ( !( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
               grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup ||
+              grow_GetObjectType( event->object.object) == glow_eObjectType_GrowToolbar ||
               grow_GetObjectType( event->object.object) == glow_eObjectType_GrowWindow ||
               grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar ||
               grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
@@ -3938,6 +3947,11 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	dyn->action( event->table.object, event);
 	break;
       }
+      if ( event->any.type == glow_eEventType_Toolbar) {
+	grow_GetUserData( event->toolbar.object, (void **)&dyn);
+	dyn->action( event->toolbar.object, event);
+	break;
+      }
 
       if ( event->object.object_type == glow_eObjectType_NoObject ||
 	   grow_GetObjectType( event->object.object) != glow_eObjectType_GrowMenu) {
@@ -3971,6 +3985,7 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
         break;
       if ( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup ||
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowToolbar ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowWindow ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
@@ -4061,6 +4076,7 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	  if ( grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowNode ||
 	       grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowSlider ||
 	       grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowGroup ||
+	       grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowToolbar ||
 	       grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowWindow) {
 	    grow_GetUserData( objectlist[i], (void **)&dyn);
 	    dyn->action( objectlist[i], event);
@@ -4110,7 +4126,8 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
       grow_GetObjectList( graph->grow->ctx, &objectlist, &object_cnt);
       for ( i = 0; i < object_cnt; i++) {
 	if ( grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowNode ||
-	     grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowGroup) {
+	     grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowGroup ||
+	     grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowToolbar) {
 
 	  
 	  grow_GetUserData( objectlist[i], (void **)&dyn);
@@ -5140,6 +5157,24 @@ void Graph::create_folder( grow_tObject *object, double x, double y)
   grow_Redraw( grow->ctx);
 }
 
+void Graph::create_toolbar( grow_tObject *object, double x, double y)
+{
+  GeDyn *dyn;
+
+  grow_CreateGrowToolbar( grow->ctx, "mbtoolbar", "mbtoolbar", 
+			  (char *)GeMethodToolbar::method_toolbar_op_subgraph, 
+			  (char *)GeMethodToolbar::method_toolbar_mnt_subgraph,
+			  GeMethodToolbar::method_toolbar_op_cnt, 
+			  GeMethodToolbar::method_toolbar_mnt_cnt,
+			  x, y, NULL, object);
+  dyn = new GeDyn( this);
+  dyn->action_type1 = dyn->total_action_type1 = ge_mActionType1_MethodToolbar;
+  dyn->update_elements();
+  grow_SetUserData( *object, (void *)dyn);
+
+  grow_Redraw( grow->ctx);
+}
+
 void Graph::create_axis( grow_tObject *object, double x, double y, int dynamic)
 {
   double width = 1.2;
@@ -5362,6 +5397,7 @@ static void graph_free_dyn( grow_tObject object)
   if ( grow_GetObjectType( object) == glow_eObjectType_GrowNode ||
        grow_GetObjectType( object) == glow_eObjectType_GrowSlider ||
        grow_GetObjectType( object) == glow_eObjectType_GrowGroup ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowToolbar ||
        grow_GetObjectType( object) == glow_eObjectType_GrowWindow ||
        grow_GetObjectType( object) == glow_eObjectType_GrowTrend ||
        grow_GetObjectType( object) == glow_eObjectType_GrowXYCurve ||

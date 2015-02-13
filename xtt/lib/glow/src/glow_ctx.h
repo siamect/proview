@@ -795,6 +795,7 @@ class GlowCtx {
     \param y		y coordinate for event.
   */
   void tiptext_event( GlowArrayElem *object, int x, int y);
+  void tiptext_toolbar_event( GlowArrayElem *object, int x, int y, int category, int idx);
 
   void annotation_input_cb( GlowArrayElem *object, int number, 
 	char *text);

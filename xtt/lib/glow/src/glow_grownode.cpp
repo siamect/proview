@@ -64,7 +64,7 @@ GrowNode::GrowNode( GrowCtx *glow_ctx, const char *name, GlowNodeClass *node_cla
 	flip_horizontal(false), flip_vertical(false), fill_level(1),
 	level_direction( glow_eDirection_Right), shadow(0), input_position(0), input_selected(0),
 	gradient(glow_eGradient_No), text_type(glow_eDrawType_TextHelvetica), 
-	text_font(glow_eFont_No)
+	text_font(glow_eFont_No), disable_cb(0)
 {  
   memset( argv, 0, sizeof(argv));
   memset( argsize, 0, sizeof(argsize));
@@ -201,6 +201,7 @@ void GrowNode::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowNode_gradient) << FSPACE << int(gradient) << endl;
   fp << int(glow_eSave_GrowNode_text_type) << FSPACE << int(text_type) << endl;
   fp << int(glow_eSave_GrowNode_text_font) << FSPACE << int(text_font) << endl;
+  fp << int(glow_eSave_GrowNode_disable_cb) << FSPACE << disable_cb << endl;
 
   if ( user_data && ctx->userdata_save_callback) {
     fp << int(glow_eSave_GrowNode_userdata_cb) << endl;
@@ -327,6 +328,7 @@ void GrowNode::open( ifstream& fp)
       case glow_eSave_GrowNode_gradient: fp >> tmp; gradient = (glow_eGradient)tmp; break;
       case glow_eSave_GrowNode_text_type: fp >> tmp; text_type = (glow_eDrawType)tmp; break;
       case glow_eSave_GrowNode_text_font: fp >> tmp; text_font = (glow_eFont)tmp; break;
+      case glow_eSave_GrowNode_disable_cb: fp >> disable_cb; break;
       case glow_eSave_GrowNode_userdata_cb:
 	if ( ctx->userdata_open_callback)
 	  (ctx->userdata_open_callback)(&fp, this, glow_eUserdataCbType_Node);
@@ -1104,8 +1106,9 @@ void GrowNode::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
 
   // If group member with click action, set hot
   if ( ctx->trace_started && this->hot && root_node && 
-       ((GrowNode *)root_node)->type() == glow_eObjectType_GrowGroup &&
-       !((GrowGroup *)root_node)->hot && is_sensitive())
+       ((((GrowNode *)root_node)->type() == glow_eObjectType_GrowGroup && is_sensitive()) ||
+	((GrowNode *)root_node)->type() == glow_eObjectType_GrowToolbar) &&
+       !((GrowGroup *)root_node)->hot )
     hot = 1;
 
   if ( fill_level == 1) {
@@ -1660,6 +1663,8 @@ int GrowNode::find_nc( GlowArrayElem *nodeclass)
 
 int GrowNode::is_sensitive()
 {
+  if ( disable_cb)
+    return 0;
   return ctx->send_hot_request( this);
 #if 0
   return (is_refobject_sensitive() || is_click_sensitive());

@@ -7,7 +7,7 @@ link_rule_mk := 1
 	$(bld_dir)/xtt_tblnav.o $(bld_dir)/xtt_tbl_command.o \
 	$(rt_msg_eobjs) \
 	$(pwr_eobj)/rt_io_user.o \
-	$(pwre_conf_libdir) $(pwre_conf_libpwrxttgtk) $(pwre_conf_libpwrxtt) $(pwre_conf_libgtk) \
+	$(pwre_conf_libdir) $(pwre_conf_libpwrxttgtk) $(pwre_conf_libpwrxtt) $(pwre_conf_libgtk) $(pwre_conf_libpwrxttgtk) $(pwre_conf_libpwrxtt) \
 	$(pwre_conf_libpwrrt) $(pwre_conf_lib)
 
 endif

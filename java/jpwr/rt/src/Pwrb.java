@@ -50,6 +50,30 @@ public class Pwrb {
   public static final int eWebTargetEnum_ParentWindow = 1;
   public static final int eWebTargetEnum_SeparateWindow = 2;
 
+  public static final int mXttMethodsFlagsMask_IsConfigured = 1;
+
+  public static final int mXttOpMethodsMask_OpenGraph      = 1;
+  public static final int mXttOpMethodsMask_OpenObjectGraph = 2;
+  public static final int mXttOpMethodsMask_OpenTrend      = 4;
+  public static final int mXttOpMethodsMask_OpenHistory    = 8;
+  public static final int mXttOpMethodsMask_OpenFast       = 16;
+  public static final int mXttOpMethodsMask_Camera         = 32;
+  public static final int mXttOpMethodsMask_HistEvent      = 64;
+  public static final int mXttOpMethodsMask_BlockEvents    = 128;
+  public static final int mXttOpMethodsMask_Help           = 256;
+  public static final int mXttOpMethodsMask_Photo          = 512;
+  public static final int mXttOpMethodsMask_Note           = 1024;
+  public static final int mXttOpMethodsMask_ParentObjectGraph = 2048;
+
+  public static final int mXttMntMethodsMask_OpenObject    = 1;
+  public static final int mXttMntMethodsMask_OpenTrace     = 2;
+  public static final int mXttMntMethodsMask_RtNavigator   = 4;
+  public static final int mXttMntMethodsMask_OpenCrossref  = 8;
+  public static final int mXttMntMethodsMask_HelpClass     = 16;
+  public static final int mXttMntMethodsMask_DataSheet     = 32;
+  public static final int mXttMntMethodsMask_CircuitDiagram = 64;
+  public static final int mXttMntMethodsMask_Simulate      = 1 << 31;
+
   public static final int cClass_AAnalyse = 131080;
   public static final int cClass_aarithm = 131088;
   public static final int cClass_adelay = 131096;

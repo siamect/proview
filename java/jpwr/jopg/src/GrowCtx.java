@@ -421,6 +421,24 @@ public class GrowCtx implements GrowCtxIfc {
 	return 1;
     }
 
+    public int send_toolbar_callback( GlowArrayElem object, int category, int idx, int event,
+				      double x, double y) {
+	/* Send a host request callback */
+	GlowEventToolbar e = new GlowEventToolbar();
+
+	e.event = event;
+	e.type = Glow.eEventType_Toolbar;
+	e.x = x;
+	e.y = y;
+	e.object_type = object.type();
+	e.object = object;
+	e.category = category;
+	e.idx = idx;
+	cmn.appl.eventHandler(e);
+ 
+	return 1;
+    }
+
     public int eventHandler(GlowEvent e, double fx, double fy) {
 	return eventHandler( e);
     }
@@ -614,7 +632,8 @@ public class GrowCtx implements GrowCtxIfc {
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowFolder ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowXYCurve ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowPie ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowBarChart) {
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowBarChart ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowToolbar) {
 		cmn.appl.traceConnect(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {
@@ -870,6 +889,42 @@ public class GrowCtx implements GrowCtxIfc {
 	cmn.mw.offset_y = (int)(cmn.y0 * cmn.mw.zoom_factor_y);
 
 	draw();
+    }
+
+    public int loadSubgraph( String file) {
+	return cmn.appl.loadSubgraph( file);
+    }
+
+    public int loadSubgraph( BufferedReader reader) {
+	String line;
+	StringTokenizer token;
+	boolean end_found = false;
+
+	try {
+	    while( (line = reader.readLine()) != null) {
+		token = new StringTokenizer(line);
+		int key = Integer.valueOf(token.nextToken());
+		if ( cmn.debug) System.out.println( "GrowCtx : " + line);
+
+		switch ( key) {
+		case Glow.eSave_Ctx_a_nc: 
+		    GlowVector.open( reader, cmn, cmn.a_nc);
+		    break;
+		case Glow.eSave_End: 
+		    end_found = true; 
+		    break;
+		default:
+		    System.out.println( "Syntax error in GrowCtx");
+		    break;
+		}
+		if ( end_found)
+		    break;
+	    }
+	} catch ( Exception e) {
+	    System.out.println( "IOException GrowCtx");
+	    return 0;
+	}
+	return 1;
     }
 }
 

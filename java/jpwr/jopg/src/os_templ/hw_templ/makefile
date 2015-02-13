@@ -26,6 +26,7 @@ local_java_sources := \
 	GlowDraw.java,\
 	GlowBackgroundObject.java,\
 	GlowEventMenu.java,\
+	GlowEventToolbar.java,\
 	GrowCtxIfc.java,\
 	GrowCmn.java,\
 	GlowNodeClass.java,\
@@ -63,6 +64,7 @@ local_java_sources := \
 	GrowImage.java,\
 	GrowWindow.java,\
 	GrowFolder.java,\
+	GrowToolbar.java,\
 	GlowVector.java,\
 	GrowCtx.java,\
 	DynParsedAttrName.java,\

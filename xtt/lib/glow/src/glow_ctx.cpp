@@ -1901,10 +1901,8 @@ void GlowCtx::object_deleted( GlowArrayElem *object)
 }
 
 void GlowCtx::tiptext_event( GlowArrayElem *object, int x, int y)
-{
-  
-  if ( event_callback[glow_eEvent_TipText] )
-  {
+{  
+  if ( event_callback[glow_eEvent_TipText] ) {
     /* Send an tiptext callback */
     static glow_sEvent e;
 
@@ -1916,6 +1914,26 @@ void GlowCtx::tiptext_event( GlowArrayElem *object, int x, int y)
     e.any.y = 0;
     e.object.object_type = object->type();
     e.object.object = object;
+    event_callback[glow_eEvent_TipText]( this, &e);
+  }
+}
+
+void GlowCtx::tiptext_toolbar_event( GlowArrayElem *object, int x, int y, int category, int idx)
+{  
+  if ( event_callback[glow_eEvent_TipText] ) {
+    /* Send an tiptext callback */
+    static glow_sEvent e;
+
+    e.event = glow_eEvent_TipText;
+    e.any.type = glow_eEventType_Toolbar;
+    e.any.x_pixel = x;
+    e.any.y_pixel = y;
+    e.any.x = 0;
+    e.any.y = 0;
+    e.toolbar.object_type = object->type();
+    e.toolbar.object = object;
+    e.toolbar.category = category;
+    e.toolbar.idx = idx;
     event_callback[glow_eEvent_TipText]( this, &e);
   }
 }
