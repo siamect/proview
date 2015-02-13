@@ -336,6 +336,7 @@ timerAst (
 }
 #endif
 
+
 pwr_tStatus
 thread_CondTimedWait (
   thread_sCond		*cp,
@@ -403,7 +404,7 @@ thread_CondTimedWait (
 
     cp->f = 0;
 
-    if (time == NULL)
+    if (time == NULL || time->tv_sec > 100000000)
       return thread_CondWait(cp, mp);
 
     time_GetTime(&now);
