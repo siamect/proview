@@ -794,14 +794,14 @@ int CnvWblToH::bit_exec()
 "  pwr_m" << ctx->rw->typedef_pgmname << "_" << pgmname;
     for ( i = 0; i < int(30 - strlen(ctx->rw->typedef_pgmname) - strlen(pgmname)); i++)
       fp_struct << ' ';
-    fp_struct << " = " << ctx->rw->bit_value << "," << endl;
+    fp_struct << " = " << ctx->rw->bit_value << "UL," << endl;
   }
   else if ( strcmp( ctx->rw->bit_type, "Value") == 0) {
     fp_struct <<
 "  pwr_e" << ctx->rw->typedef_pgmname << "_" << pgmname;
     for ( i = 0; i < int(30 - strlen(ctx->rw->typedef_pgmname) - strlen(pgmname)); i++)
       fp_struct << ' ';
-    fp_struct << " = " << ctx->rw->bit_value << "," << endl;
+    fp_struct << " = " << ctx->rw->bit_value << "UL," << endl;
   }
   return 1;
 }
