@@ -46,6 +46,9 @@
 #include "glow_draw.h"
 #include "glow_growctx.h"
 
+#define TIPTEXT_OFFSET_X 3
+#define TIPTEXT_OFFSET_Y 3
+
 static void tiptext_timer_cb( GlowCtx *ctx)
 {
   ctx->tiptext->timer_id = 0;
@@ -74,8 +77,8 @@ void GlowTipText::draw_text( GlowArrayElem *e, char *text, int x, int y)
 			       glow_eFont_Helvetica, &z_width, &z_height, &z_descent,
 			       ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size), 0);
 
-  text_x = x;
-  text_y = y;
+  text_x = x + TIPTEXT_OFFSET_X;
+  text_y = y + TIPTEXT_OFFSET_Y;
   text_width = z_width + 4;
   text_height = z_height + 4;
   text_descent = z_descent;
@@ -100,7 +103,7 @@ void GlowTipText::draw()
     return;
 
   ctx->gdraw->fill_rect( &ctx->mw, text_x, text_y, text_width, text_height,
-		       glow_eDrawType_Color22);
+		       glow_eDrawType_Color4);
   ctx->gdraw->rect( &ctx->mw, text_x, text_y, text_width, text_height,
 		       glow_eDrawType_Line, 0, 0);
   ctx->gdraw->text( &ctx->mw, text_x + 2, text_y + text_height - text_descent - 2, tiptext, 
