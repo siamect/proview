@@ -2312,6 +2312,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		fprintf( file, "appl %s S $pwrp_web/*.png\n", nodename_ptr);
 		fprintf( file, "appl %s S $pwrp_web/*.jpg\n", nodename_ptr);
 		fprintf( file, "appl %s S $pwrp_web/*.pdf\n", nodename_ptr);
+		fprintf( file, "appl %s S $pwrp_web/*.pwg\n", nodename_ptr);
 	      }
 	      if ( *components_ptr & pwr_mDistrComponentMask_PwrpStop)
 		fprintf( file, "appl %s W $pwrp_load/%s/pwrp_stop.sh:$pwrp_load/pwrp_stop.sh $pwrp_exe/pwrp_stop.sh\n", 
