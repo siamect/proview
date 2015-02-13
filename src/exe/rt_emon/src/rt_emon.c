@@ -238,11 +238,11 @@ struct s_SaveBlock {
 };
 
 struct s_Timer {	
-  pwr_tBoolean          TimerFlag pwr_dAlignW;
+  pwr_tBoolean          TimerFlag pwr_dAlignLW;
   pwr_tBoolean          *TimerNext pwr_dAlignLW;
-  pwr_tUInt32           TimerCount pwr_dAlignW;
+  pwr_tUInt32           TimerCount pwr_dAlignLW;
   pwr_tBoolean          *TimerDO pwr_dAlignLW;
-  pwr_tFloat32          TimerTime pwr_dAlignW;
+  pwr_tFloat32          TimerTime pwr_dAlignLW;
   pwr_tBoolean          TimerDODum pwr_dAlignW;
   pwr_tObjid            TimerObjDId pwr_dAlignW;
   pwr_tInt32            TimerAcc pwr_dAlignW;
