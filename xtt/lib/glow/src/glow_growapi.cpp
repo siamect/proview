@@ -5298,6 +5298,11 @@ void grow_ToolbarConfigure( grow_tObject object, char *tools1, char *tools2, int
 				      show_mask1, show_mask2, insensitive_mask1, insensitive_mask2);
 }
 
+void grow_SetEditSetMode( grow_tCtx ctx, glow_eEditSetMode mode)
+{
+  ctx->set_edit_set_mode( mode);
+}
+
 /*@}*/
 
 

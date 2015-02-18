@@ -16689,8 +16689,13 @@ int GeMethodToolbar::connect( grow_tObject object, glow_sTraceData *trace_data)
   opmask &= ~pwr_mXttOpMethodsMask_OpenObjectGraph;
   if ( !dyn->graph->is_authorized( pwr_mAccess_RtEventsBlock | pwr_mAccess_System))
     insensitive_opmask |= pwr_mXttOpMethodsMask_BlockEvents;
+  if ( !dyn->graph->is_authorized( pwr_mAccess_AllOperators | pwr_mAccess_System | pwr_mAccess_RtWrite |
+				   pwr_mAccess_Maintenance | pwr_mAccess_Process | pwr_mAccess_Instrument))
+    insensitive_opmask |= pwr_mXttOpMethodsMask_Note;  
   if ( !dyn->graph->is_authorized( pwr_mAccess_RtNavigator | pwr_mAccess_System))
     insensitive_mntmask |= pwr_mXttMntMethodsMask_RtNavigator;
+  if ( !dyn->graph->is_authorized( pwr_mAccess_RtPlc | pwr_mAccess_System))
+    insensitive_mntmask |= pwr_mXttMntMethodsMask_OpenTrace;  
   if ( !dyn->graph->is_authorized( pwr_mAccess_RtPlc | pwr_mAccess_System))
     insensitive_mntmask |= pwr_mXttMntMethodsMask_OpenTrace;  
 
@@ -16714,14 +16719,10 @@ int GeMethodToolbar::action( grow_tObject object, glow_tEvent event)
 
   switch ( event->event) {
   case glow_eEvent_MB1Down:
-    // grow_SetClickSensitivity( dyn->graph->grow->ctx, glow_mSensitivity_MB1Click);
-    // grow_SetObjectColorInverse( object, 1);
     break;
   case glow_eEvent_MB1Up:
-    // grow_SetObjectColorInverse( object, 0);
     break;
   case glow_eEvent_TipText:
-    printf( "TipText %d %d\n", event->toolbar.category, event->toolbar.idx);
     if ( event->toolbar.category == 1)
       grow_SetTipText( dyn->graph->grow->ctx, event->toolbar.object, 		       
 		       method_toolbar_op_tooltip[event->toolbar.idx], 
@@ -16733,7 +16734,6 @@ int GeMethodToolbar::action( grow_tObject object, glow_tEvent event)
     break;
   case glow_eEvent_Key_Return:
   case glow_eEvent_MB1Click: {
-    printf( "Toolbar index %d\n", event->toolbar.idx);
     int sts;
     pwr_tCmd cmd, command;
 

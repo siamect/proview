@@ -1660,6 +1660,8 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *file_graph_attr = gtk_menu_item_new_with_mnemonic( "_Graph attributes...");
   g_signal_connect( file_graph_attr, "activate", 
 		    G_CALLBACK(activate_graph_attr), this);
+  gtk_widget_add_accelerator( file_graph_attr, "activate", accel_g,
+			      'g', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE);
 
   GtkWidget *file_subgraphs = gtk_menu_item_new_with_mnemonic( "_Loaded Subgraphs...");
   g_signal_connect( file_subgraphs, "activate", 

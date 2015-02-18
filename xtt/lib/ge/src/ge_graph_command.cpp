@@ -1036,6 +1036,7 @@ static int	graph_set_func(	void		*client_data,
         case glow_eType_Direction:
         case glow_eType_Color:
         case glow_eType_ToneOrColor:
+        case ge_eAttrType_InstanceMask:
           sts = sscanf( arg4_str, "%d", &i_value);
           if ( sts != 1)
           {
@@ -1364,6 +1365,48 @@ static int	graph_set_func(	void		*client_data,
   else if ( cdh_NoCaseStrncmp( arg1_str, "NOENABLECOMMENT", strlen( arg1_str)) == 0)
   {
     graph->disable_log = 1;
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "EDITSETMODE", strlen( arg1_str)) == 0)
+  {
+    char	arg2_str[80];
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str)))) {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+
+    if ( cdh_NoCaseStrcmp( arg2_str, "none") == 0) {
+      grow_SetEditSetMode( graph->grow->ctx, glow_eEditSetMode_None);
+      graph->message('E', "Mode set to None");
+    }
+    else if ( cdh_NoCaseStrcmp( arg2_str, "x0") == 0) {
+      grow_SetEditSetMode( graph->grow->ctx, glow_eEditSetMode_X0);
+      graph->message('E', "Mode set to X0");
+    }
+    else if ( cdh_NoCaseStrcmp( arg2_str, "y0") == 0) {
+      grow_SetEditSetMode( graph->grow->ctx, glow_eEditSetMode_Y0);
+      graph->message('E', "Mode set to Y0");
+    }
+    else if ( cdh_NoCaseStrcmp( arg2_str, "x0y0") == 0) {
+      grow_SetEditSetMode( graph->grow->ctx, glow_eEditSetMode_X0Y0);
+      graph->message('E', "Mode set to X0Y0");
+    }
+    else if ( cdh_NoCaseStrcmp( arg2_str, "x1") == 0) {
+      grow_SetEditSetMode( graph->grow->ctx, glow_eEditSetMode_X1);
+      graph->message('E', "Mode set to X1");
+    }
+    else if ( cdh_NoCaseStrcmp( arg2_str, "y1") == 0) {
+      grow_SetEditSetMode( graph->grow->ctx, glow_eEditSetMode_Y1);
+      graph->message('E', "Mode set to Y1");
+    }
+    else if ( cdh_NoCaseStrcmp( arg2_str, "x1y1") == 0) {
+      grow_SetEditSetMode( graph->grow->ctx, glow_eEditSetMode_X1Y1);
+      graph->message('E', "Mode set to X1Y1");
+    }
+    else {
+      graph->message('E', "No such mode");
+      return GE__SYNTAX;
+    }
   }
   else
   {

@@ -3073,6 +3073,7 @@ void grow_GetObjectClassDynType( grow_tObject object, int *dyn_type1, int *dyn_t
   void grow_ToolbarConfigure( grow_tObject object, char *tools1, char *tools2, int tools1_cnt, int tools2_cnt,
 			      unsigned int show_mask1, unsigned int show_mask2,
 			      unsigned int insensitive_mask1, unsigned int insensitive_mask2);
+  void grow_SetEditSetMode( grow_tCtx ctx, glow_eEditSetMode mode);
   
 /*@}*/
 #if defined __cplusplus

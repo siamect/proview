@@ -2191,6 +2191,17 @@ typedef struct {
   int		        column_size[TABLE_MAX_COL]; //!< Number of characters in each column
 } glow_sTableInfo;
 
+//! Special edit mode
+typedef enum {
+  glow_eEditSetMode_None,
+  glow_eEditSetMode_X0,
+  glow_eEditSetMode_Y0,
+  glow_eEditSetMode_X0Y0,
+  glow_eEditSetMode_X1,
+  glow_eEditSetMode_Y1,
+  glow_eEditSetMode_X1Y1
+} glow_eEditSetMode;
+
 /*@}*/
 
 #if defined __cplusplus

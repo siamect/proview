@@ -258,6 +258,40 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
   callback_object_type = glow_eObjectType_NoObject;
   callback_object = 0;
 
+  if ( edit_set_mode != glow_eEditSetMode_None && event == glow_eEvent_MB1Click) {
+    switch ( edit_set_mode) {
+    case glow_eEditSetMode_X0:
+      x0 = fx;
+      printf( "x0 set to %f\n", fx);
+      break;
+    case glow_eEditSetMode_Y0:
+      y0 = fy;
+      printf( "y0 set to %f\n", fy);
+      break;
+    case glow_eEditSetMode_X0Y0:
+      x0 = fx;
+      y0 = fy;
+      printf( "x0,y0 set to %f,%f\n", fx, fy);
+      break;
+    case glow_eEditSetMode_X1:
+      x1 = fx;
+      printf( "x1 set to %f\n", fx);
+      break;
+    case glow_eEditSetMode_Y1:
+      y1 = fy;
+      printf( "y1 set to %f\n", fy);
+      break;
+    case glow_eEditSetMode_X1Y1:
+      x1 = fx;
+      y1 = fy;
+      printf( "x1,y1 set to %f,%f\n", fx, fy);
+      break;
+    default: ;
+    }
+
+    return 0;
+  }
+
   // Check if any menue is active
   if ( a.a_size && a[a.a_size-1]->type() == glow_eObjectType_GrowMenu) {
     for ( i = a.a_size-1; i >= 0; i--) {

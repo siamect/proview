@@ -188,6 +188,7 @@ menu Pushbuttons
   subgraph	RadioButton2	pwr_exe:pwr_radiobutton2.pwsg		89
   subgraph	RadioButtonRelief pwr_exe:pwr_radiobuttonrelief.pwsg	90
   subgraph	NoteButton      pwr_exe:pwr_notebutton.pwsg		96
+  subgraph	NoteButton2     pwr_exe:pwr_notebutton2.pwsg		96
   menu          MethodButtons
   {
     subgraph 	MbBlockEvents 	pwr_exe:pwr_mbblockevents.pwsg		83
