@@ -233,6 +233,7 @@ typedef enum {
   gsdml_eTag_PrimaryLanguage,
   gsdml_eTag_Language,
   gsdml_eTag_Text,
+  gsdml_eTag_CertificationInfo,
   gsdml_eTag__
 } gsdml_eTag;
 
@@ -411,6 +412,19 @@ class gsdml_ModuleInfo {
   pn_gsdml *gsdml;
   void build();
   void print( int ind);
+};
+
+typedef struct {
+  gsdml_tString ConformanceClass;
+  gsdml_tString ApplicationClass;
+  gsdml_tString NetloadClass;
+} gsdml_sCertificationInfo;
+
+class gsdml_CertificationInfo {
+ public:
+  gsdml_CertificationInfo( pn_gsdml *g) : gsdml(g) { memset( &Body, 0, sizeof(Body));}
+  gsdml_sCertificationInfo Body;
+  pn_gsdml *gsdml;
 };
 
 typedef struct {
@@ -786,6 +800,8 @@ class gsdml_General {
 typedef struct {
   gsdml_tUnsigned16 MaxBridgeDelay;
   gsdml_tUnsigned16 MaxNumberIR_FrameData;
+  gsdml_tString StartupMode;
+  gsdml_tString ForwardingMode;
 } gsdml_sRT_Class3Properties;
 
 class gsdml_RT_Class3Properties {
@@ -869,6 +885,9 @@ class gsdml_InterfaceSubmoduleItem_ApplicationRelations {
 typedef struct {
   gsdml_tBoolean RT_MediaRedundancySupported;
   gsdml_tTokenList SupportedRole;
+  gsdml_tBoolean AdditionalProtocolsSupported;
+  gsdml_tBoolean MRPD_Supported;
+  gsdml_tInteger MaxMRP_Instances;
 } gsdml_sMediaRedundancy;
 
 class gsdml_MediaRedundancy {
@@ -930,6 +949,7 @@ typedef struct {
   gsdml_tBoolean PowerBudgetControlSupported;
   gsdml_tBoolean SupportsRingportConfig;
   gsdml_tBoolean IsDefaultRingport;
+  gsdml_tBoolean CheckMAUTypeSupported;
 } gsdml_sPortSubmoduleItem;
 
 class gsdml_PortSubmoduleItem {
@@ -1071,6 +1091,11 @@ typedef struct {
   gsdml_tBoolean NameOfStationNotTransferable;
   gsdml_tBoolean DeviceAccessSupported;
   gsdml_tBoolean SharedDeviceSupported;
+  gsdml_tString PNIO_Version;
+  gsdml_tBoolean CheckDeviceID_Allowed;
+  gsdml_tBoolean LLDP_NoD_Supported;
+  gsdml_tUnsigned32 ResetToFactoryModes;
+  gsdml_tBoolean SharedInputSupported;
 } gsdml_sDeviceAccessPointItem;
 
 class gsdml_DeviceAccessPointItem {
@@ -1081,6 +1106,7 @@ class gsdml_DeviceAccessPointItem {
     { memset( &Body, 0, sizeof(Body));}
   gsdml_sDeviceAccessPointItem Body;
   gsdml_ModuleInfo *ModuleInfo;
+  gsdml_CertificationInfo *CertificationInfo;
   gsdml_SubslotList *SubslotList;
   gsdml_IOConfigData *IOConfigData;
   gsdml_UseableModules *UseableModules;

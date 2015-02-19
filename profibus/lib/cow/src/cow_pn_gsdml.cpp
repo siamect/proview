@@ -188,6 +188,7 @@ static gsdml_sTag taglist[] = {
   { "PrimaryLanguage", gsdml_eTag_PrimaryLanguage, gsdml_eType_, 0, 0, 1},
   { "Language", gsdml_eTag_Language, gsdml_eType_, 0, 0, 1},
   { "Text", gsdml_eTag_Text, gsdml_eType_, 0, 0, 1},
+  { "CertificationInfo", gsdml_eTag_CertificationInfo, gsdml_eType_, 0, 0, 1},
   { "", gsdml_eTag_, gsdml_eType_, 0}};
 
 static gsdml_sAttribute attrlist[] = {
@@ -235,6 +236,12 @@ static gsdml_sAttribute attrlist[] = {
   { "NameOfStationNotTransferable", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sDeviceAccessPointItem,NameOfStationNotTransferable), 0, "false"},
   { "DeviceAccessSupported", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sDeviceAccessPointItem,DeviceAccessSupported), 0, "false"},
   { "SharedDeviceSupported", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sDeviceAccessPointItem,SharedDeviceSupported), 0, "false"},
+  // Added without doc, TODO check type and default value
+  { "PNIO_Version", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_String, sizeof(gsdml_tString80), offsetof(gsdml_sDeviceAccessPointItem,PNIO_Version), 0, "V1.0"},
+  { "CheckDeviceID_Allowed", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sDeviceAccessPointItem,CheckDeviceID_Allowed), 0, "false"},
+  { "LLDP_NoD_Supported", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sDeviceAccessPointItem,LLDP_NoD_Supported), 0, "false"},
+  { "ResetToFactoryModes", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Unsigned32, sizeof(gsdml_tUnsigned32), offsetof(gsdml_sDeviceAccessPointItem,ResetToFactoryModes), 0, "0"},
+  { "SharedInputSupported", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sDeviceAccessPointItem,SharedInputSupported), 0, "false"},
   //
   // ModuleInfo
   //
@@ -248,6 +255,13 @@ static gsdml_sAttribute attrlist[] = {
   { "Value", gsdml_eTag_SoftwareRelease, gsdml_eTag_ModuleInfo, gsdml_eType_Token, sizeof(gsdml_tToken), offsetof(gsdml_sModuleInfo,SoftwareRelease), 0, ""},
   { "MainFamily", gsdml_eTag_Family, gsdml_eTag_ModuleInfo, gsdml_eType_String, sizeof(gsdml_tString80), offsetof(gsdml_sModuleInfo,MainFamily), 0, ""},
   { "ProductFamily", gsdml_eTag_Family, gsdml_eTag_ModuleInfo, gsdml_eType_String, sizeof(gsdml_tString80), offsetof(gsdml_sModuleInfo,ProductFamily), 0, ""},
+  //
+  // CertificationInfo
+  //
+  // Added without doc, TODO check type and default value
+  { "ConformanceClass", gsdml_eTag_CertificationInfo, gsdml_eTag_, gsdml_eType_String, sizeof(gsdml_tString80), offsetof(gsdml_sCertificationInfo,ConformanceClass), 0, ""},
+  { "ApplicationClass", gsdml_eTag_CertificationInfo, gsdml_eTag_, gsdml_eType_String, sizeof(gsdml_tString80), offsetof(gsdml_sCertificationInfo,ApplicationClass), 0, ""},
+  { "NetloadClass", gsdml_eTag_CertificationInfo, gsdml_eTag_, gsdml_eType_String, sizeof(gsdml_tString80), offsetof(gsdml_sCertificationInfo,NetloadClass), 0, ""},
   // 
   // SubslotItem
   //
@@ -453,6 +467,9 @@ static gsdml_sAttribute attrlist[] = {
   //
   { "MaxBridgeDelay", gsdml_eTag_RT_Class3Properties, gsdml_eTag_, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16), offsetof(gsdml_sRT_Class3Properties,MaxBridgeDelay), 0, ""},
   { "MaxNumberIR_FrameData", gsdml_eTag_RT_Class3Properties, gsdml_eTag_, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16), offsetof(gsdml_sRT_Class3Properties,MaxNumberIR_FrameData), 0, ""},
+  // Added without spec
+  { "StartupMode", gsdml_eTag_RT_Class3Properties, gsdml_eTag_, gsdml_eType_String, sizeof(gsdml_tString), offsetof(gsdml_sRT_Class3Properties,StartupMode), 0, ""},
+  { "ForwardingMode", gsdml_eTag_RT_Class3Properties, gsdml_eTag_, gsdml_eType_String, sizeof(gsdml_tString), offsetof(gsdml_sRT_Class3Properties,ForwardingMode), 0, ""},
   //
   // SynchronisationMode
   //
@@ -474,6 +491,8 @@ static gsdml_sAttribute attrlist[] = {
   { "IOCR_BlockVersion", gsdml_eTag_ApplicationRelations, gsdml_eTag_InterfaceSubmoduleItem, gsdml_eType_Unsigned16, 0, 0, 1, ""},
   { "AlarmCR_BlockVersion", gsdml_eTag_ApplicationRelations, gsdml_eTag_InterfaceSubmoduleItem, gsdml_eType_Unsigned16, 0, 0, 1, ""},
   { "SubmoduleDataBlockVersion", gsdml_eTag_ApplicationRelations, gsdml_eTag_InterfaceSubmoduleItem, gsdml_eType_Unsigned16, 0, 0, 1, ""},
+  // Added without doc, TODO check type and default value
+  { "StartupMode", gsdml_eTag_ApplicationRelations, gsdml_eTag_InterfaceSubmoduleItem, gsdml_eType_String, 0, 0, 1, ""},
   //
   // TimingProperties
   //
@@ -493,6 +512,10 @@ static gsdml_sAttribute attrlist[] = {
   //
   { "RT_MediaRedundancySupported", gsdml_eTag_MediaRedundancy, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sMediaRedundancy,RT_MediaRedundancySupported), 0, "true"},
   { "SupportedRole", gsdml_eTag_MediaRedundancy, gsdml_eTag_, gsdml_eType_TokenList, sizeof(gsdml_tTokenList), offsetof(gsdml_sMediaRedundancy,SupportedRole), 0, "Client"},
+  // Added without doc, TODO check type and default value
+  { "AdditionalProtocolsSupported", gsdml_eTag_MediaRedundancy, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sMediaRedundancy,AdditionalProtocolsSupported), 0, "false"},
+  { "MRPD_Supported", gsdml_eTag_MediaRedundancy, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sMediaRedundancy,MRPD_Supported), 0, "false"},
+  { "MaxMRP_Instances", gsdml_eTag_MediaRedundancy, gsdml_eTag_, gsdml_eType_Integer, sizeof(gsdml_tInteger), offsetof(gsdml_sMediaRedundancy,MaxMRP_Instances), 0, "1"},
   //
   // PortSubmoduleItem
   //
@@ -510,6 +533,8 @@ static gsdml_sAttribute attrlist[] = {
   { "PowerBudgetControlSupported", gsdml_eTag_PortSubmoduleItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sPortSubmoduleItem,PowerBudgetControlSupported), 0, "false"},
   { "SupportsRingportConfig", gsdml_eTag_PortSubmoduleItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sPortSubmoduleItem,SupportsRingportConfig), 0, "false"},
   { "IsDefaultRingport", gsdml_eTag_PortSubmoduleItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sPortSubmoduleItem,IsDefaultRingport), 0, "false"},
+  // Added without doc, TODO check type and default value
+  { "CheckMAUTypeSupported", gsdml_eTag_PortSubmoduleItem, gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean), offsetof(gsdml_sPortSubmoduleItem,CheckMAUTypeSupported), 0, "false"},
   //
   // DeviceAccessPointItem-ApplicationRelations
   //
@@ -1195,7 +1220,9 @@ int pn_gsdml::tag_value( const char *value)
 
   sts = find_tag( get_tag_stack(), &idx);
   if ( !sts) {
-    error_message_line( "Undefined tag");
+    char msg[200];
+    printf( "Undefined tag %s", value); 
+    error_message_line( msg);
     return 0;
   }
 
@@ -1219,7 +1246,9 @@ int pn_gsdml::tag_attribute( const char *name, const char *value)
 
   sts = find_tag_attribute( name, get_tag_stack(), get_tag_stack(1), &idx);
   if ( !sts) {
-    error_message_line( "Undefined tag attribute");
+    char msg[200];
+    sprintf( msg, "Undefined tag attribute %s (%s)", name, current_tag);
+    error_message_line( msg);
     return 0;
   }
 
@@ -2081,6 +2110,28 @@ void *pn_gsdml::object_factory( gsdml_eTag id)
       ((gsdml_ModuleItem *)p)->ModuleInfo = o;
     else {
       error_message_line( "Misplaced ModuleInfo");
+      return 0;
+    }
+
+    ro = o;
+    break;
+  }
+  case gsdml_eTag_CertificationInfo: {
+    gsdml_CertificationInfo *o = new gsdml_CertificationInfo( this);
+    current_body = &o->Body;
+    current_body_size = sizeof( gsdml_sCertificationInfo);
+
+    void *p;
+    if ( (p = get_object_stack( gsdml_eTag_DeviceAccessPointItem)))
+      ((gsdml_DeviceAccessPointItem *)p)->CertificationInfo = o;
+#if 0
+    else if ( (p = get_object_stack( gsdml_eTag_VirtualSubmoduleItem)))
+      ((gsdml_VirtualSubmoduleItem *)p)->CertificationInfo = o;
+    else if ( (p = get_object_stack( gsdml_eTag_ModuleItem)))
+      ((gsdml_ModuleItem *)p)->CertificationInfo = o;
+#endif
+    else {
+      error_message_line( "Misplaced CertificationInfo");
       return 0;
     }
 
