@@ -148,7 +148,6 @@ public class GrowMenu extends GrowRect {
 	    ur.posit( (ur_x  + cmn.mw.offset_x)/ cmn.mw.zoom_factor_x, (ur_y  + cmn.mw.offset_y)/ cmn.mw.zoom_factor_y);
 	ll_y = (int)( ll.y * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
 	get_node_borders();
-	System.out.println("Menu borders: (" + x_left + "," + y_low + ") (" + x_right + "," + y_high + ")");
 
 	if ( fill != 0) {
 	    cmn.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fill_drawtype);
@@ -291,11 +290,8 @@ public class GrowMenu extends GrowRect {
 	    break;
 	}
 	case Glow.eEvent_MB1Click: {
-	    System.out.println("GrowMenu eventHandler called (" + rp.x + "," + rp.y + ") {" + fx + "," + fy + ")" );
-	    System.out.println("Growmenu (" + ll.x + "," + ll.y + ") (" + ur.x + "," + ur.y + ")");
 	    sts = local_event_handler( event, rp.x, rp.y);
 	    if ( sts != 0 && current_item != -1) {
-		System.out.println("Hit in GrowMenu item " + current_item);
 		if ( info.item[current_item].type == Glow.eMenuItem_Button) {
 		    csts = cmn.ctx.send_menu_callback( this, current_item, Glow.eEvent_MenuActivated, fx, fy);
 		    if ( csts == Glow.GLOW__TERMINATED)

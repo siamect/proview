@@ -173,6 +173,7 @@
     ge_eDynPrio_BarChart,
     ge_eDynPrio_Axis,
     ge_eDynPrio_MethodToolbar,
+    ge_eDynPrio_MethodPulldownMenu,
 
     // This should always be last
     ge_eDynPrio_Command  = 9999,
@@ -248,7 +249,8 @@
     ge_mActionType1_PulldownMenu = 1 << 19,
     ge_mActionType1_OptionMenu 	= 1 << 20,
     ge_mActionType1_SetValue 	= 1 << 21,
-    ge_mActionType1_MethodToolbar = 1 << 22
+    ge_mActionType1_MethodToolbar = 1 << 22,
+    ge_mActionType1_MethodPulldownMenu = 1 << 23
   } ge_mActionType1;
 
   typedef enum {
@@ -352,6 +354,7 @@
     ge_eSave_OptionMenu      		= 69,
     ge_eSave_SetValue			= 70,
     ge_eSave_MethodToolbar     		= 71,
+    ge_eSave_MethodPulldownMenu        	= 72,
     ge_eSave_End		       	= 99,
     ge_eSave_Dyn_dyn_type1	       	= 100,
     ge_eSave_Dyn_action_type1	       	= 101,
@@ -711,7 +714,9 @@
     ge_eSave_SetValue_value		= 7001,
     ge_eSave_SetValue_instance		= 7002,
     ge_eSave_SetValue_instance_mask     = 7003,
-    ge_eSave_MethodToolbar_method_object = 7100
+    ge_eSave_MethodToolbar_method_object = 7100,
+    ge_eSave_MethodPulldownMenu_method_object = 7200,
+    ge_eSave_MethodPulldownMenu_help_menu = 7201
   } ge_eSave;
 
 
@@ -2744,13 +2749,15 @@ class GeSetValue : public GeDynElem {
 //! Toolbar for object methods
 class GeMethodToolbar : public GeDynElem {
  public:
-  pwr_tOName method_object;
+  pwr_tAName method_object;
 
   static int method_toolbar_op_cnt;
+  static unsigned int method_toolbar_op_helpmask;
   static char method_toolbar_op_subgraph[32][80];
   static char method_toolbar_op_methods[32][80];
   static char method_toolbar_op_tooltip[32][80];
   static int method_toolbar_mnt_cnt;
+  static unsigned int method_toolbar_mnt_helpmask;
   static char method_toolbar_mnt_subgraph[32][80];
   static char method_toolbar_mnt_methods[32][80];
   static char method_toolbar_mnt_tooltip[32][80];
@@ -2771,6 +2778,32 @@ class GeMethodToolbar : public GeDynElem {
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
+};
+
+//! Method pulldown menu.
+class GeMethodPulldownMenu : public GeDynElem {
+ public:
+  pwr_tAName method_object;
+  pwr_tBoolean help_menu;
+  grow_tObject menu_object;
+  pwr_tTime focus_gained_time;
+  unsigned int opmask;
+  unsigned int mntmask;
+
+  GeMethodPulldownMenu( GeDyn *e_dyn) : 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_MethodPulldownMenu, ge_mActionType2_No, ge_eDynPrio_MethodPulldownMenu),
+    help_menu(0), menu_object(0)
+    { strcpy( method_object, "");}
+  GeMethodPulldownMenu( const GeMethodPulldownMenu& x) : 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), help_menu(x.help_menu),
+    menu_object(0)    
+    { strcpy( method_object, x.method_object);
+    instance = x.instance, instance_mask = x.instance_mask;}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int action( grow_tObject object, glow_tEvent event);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
 
 //! Changes the fill color up to a certain level of the component.

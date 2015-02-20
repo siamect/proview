@@ -149,6 +149,7 @@ public class Dyn {
     public static final int mActionType1_OptionMenu 		= 1 << 20;
     public static final int mActionType1_SetValue 		= 1 << 21;
     public static final int mActionType1_MethodToolbar 		= 1 << 22;
+    public static final int mActionType1_MethodPulldownMenu    	= 1 << 23;
 
     public static final int mActionType2_No			= 0;
     
@@ -206,6 +207,7 @@ public class Dyn {
     public static final int eDynPrio_BarChart			= 50;
     public static final int eDynPrio_Axis			= 51;
     public static final int eDynPrio_MethodToolbar	       	= 52;
+    public static final int eDynPrio_MethodPulldownMenu	       	= 53;
     public static final int eDynPrio_Command  			= 9999;
     public static final int eDynPrio_CloseGraph 		= 10000;
 
@@ -265,6 +267,7 @@ public class Dyn {
     public static final int eSave_OptionMenu           		= 69;
     public static final int eSave_SetValue	       		= 70;
     public static final int eSave_MethodToolbar	       		= 71;
+    public static final int eSave_MethodPulldownMenu	       	= 72;
     public static final int eSave_End		       		= 99;
     public static final int eSave_Dyn_dyn_type1	       		= 100;
     public static final int eSave_Dyn_action_type1      	= 101;
@@ -625,6 +628,8 @@ public class Dyn {
     public static final int eSave_SetValue_instance		= 7002;
     public static final int eSave_SetValue_instance_mask     	= 7003;
     public static final int eSave_MethodToolbar_method_object   = 7100;
+    public static final int eSave_MethodPulldownMenu_method_object = 7200;
+    public static final int eSave_MethodPulldownMenu_help_menu  = 7201;
 
     public static final int eAnimSequence_Cycle		= 1;
     public static final int eAnimSequence_Dig		= 2;
@@ -796,6 +801,8 @@ public class Dyn {
 		e = new DynSetValue((DynSetValue) x.elements.get(i)); break;
 	    case Dyn.mActionType1_MethodToolbar:
 		e = new DynMethodToolbar((DynMethodToolbar) x.elements.get(i)); break;
+	    case Dyn.mActionType1_MethodPulldownMenu:
+		e = new DynMethodPulldownMenu((DynMethodPulldownMenu) x.elements.get(i)); break;
 	    default: ;
 	    }
 	    switch( x.elements.get(i).action_type2) {
@@ -878,6 +885,9 @@ public class Dyn {
 		break;
 	    case mActionType1_MethodToolbar:
 		e = (DynElem) new DynMethodToolbar((DynMethodToolbar) x);
+		break;
+	    case mActionType1_MethodPulldownMenu:
+		e = (DynElem) new DynMethodPulldownMenu((DynMethodPulldownMenu) x);
 		break;
 	    default: ;
 	    }
@@ -1225,6 +1235,9 @@ public class Dyn {
 		    break;
 		case Dyn.eSave_MethodToolbar: 
 		    elem = (DynElem) new DynMethodToolbar(this); 
+		    break;
+		case Dyn.eSave_MethodPulldownMenu: 
+		    elem = (DynElem) new DynMethodPulldownMenu(this); 
 		    break;
 		case Dyn.eSave_End:
 		    end_found = true;
@@ -9658,9 +9671,9 @@ public class Dyn {
 		    
 		    sts = 0; // TODO sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, &bg_color, &scale, &text_font);
 		    if ( (sts & 1) == 0) {
-			text_size = 2;
-			text_drawtype = Glow.eDrawType_TextHelveticaBold;
-			text_font = Glow.eFont_Helvetica;
+			text_size = 3;
+			text_drawtype = Glow.eDrawType_TextHelvetica;
+			text_font = Glow.eFont_LucidaSans;
 			text_color = Glow.eDrawType_Line;
 			bg_color = Glow.eDrawType_LightGray;
 		    }
@@ -10857,89 +10870,91 @@ public class Dyn {
 	}
     }
 
+    public static final int method_toolbar_op_cnt = 12;
+    public static final int method_toolbar_op_helpmask = 1 << 8;
+    public final String[] method_toolbar_op_subgraph = {
+	"pwr_mb2opengraph",
+	"pwr_mb2openobjectgraph",
+	"pwr_mb2trend",
+	"pwr_mb2history",
+	"pwr_mb2fast",
+	"pwr_mb2camera",
+	"pwr_mb2histevent",
+	"pwr_mb2blockevents",
+	"pwr_mb2help",
+	"pwr_mb2photo",
+	"pwr_mb2note",
+	"pwr_mb2parentgraph",
+    };
+
+    public static final int method_toolbar_mnt_cnt = 32;
+    public static final int method_toolbar_mnt_helpmask = 1 << 4;
+    public static  final String[] method_toolbar_mnt_subgraph = {
+	"pwr_mb2openobject",
+	"pwr_mb2openplc",
+	"pwr_mb2rtnavigator",
+	"pwr_mb2crossreferences",
+	"pwr_mb2helpclass",
+	"pwr_mb2datasheet",
+	"pwr_mb2circuitdiagram",
+	"", "","","","","","","","","","","","","","","","","","","","","","","",
+	"pwr_mb2simulate"
+    };
+
+    public static final String[] method_toolbar_op_methods = {
+	"Graph", 
+	"Object Graph",
+	"Trend",
+	"History",
+	"Fast", 
+	"Camera",
+	"Event Log...",
+	"Block Events...", 
+	"Help",
+	"Photo", 
+	"Note",
+	"Parent Object Graph",};
+  
+    public static final String[] method_toolbar_mnt_methods = {
+	"Open Object",
+	"Open Plc",
+	"RtNavigator", 
+	"Crossreferences", 
+	"Help Class", 
+	"DataSheet", 
+	"CircuitDiagram", 
+	"","","","","","","","","","","","","","","","","","","","","","","","",
+	"Simulate"};
+
+    public static final String[] method_toolbar_op_tooltip = {
+	"Graph", 
+	"Object graph",
+	"Trend", 
+	"History", 
+	"Fast curve", 
+	"Camera", 
+	"Event log", 
+	"Block events", 
+	"Help", 
+	"Photo", 
+	"Note",
+	"Open parent object graph",   
+    };
+
+    public static final String[] method_toolbar_mnt_tooltip = {
+	"Open object",
+	"Open plc",
+	"Navigator", 
+	"CrossReferences", 
+	"Help class", 
+	"Datasheet",
+	"CircuitDiagram", 
+	"", "","","","","","","","","","","","","","","","","","","","","","","",
+	"Simulate"};
+
+
     public class DynMethodToolbar extends DynElem {
 	String method_object;
-
-	public static final int method_toolbar_op_cnt = 12;
-	public final String[] method_toolbar_op_subgraph = {
-	    "pwr_mb2opengraph",
-	    "pwr_mb2openobjectgraph",
-	    "pwr_mb2trend",
-	    "pwr_mb2history",
-	    "pwr_mb2fast",
-	    "pwr_mb2camera",
-	    "pwr_mb2histevent",
-	    "pwr_mb2blockevents",
-	    "pwr_mb2help",
-	    "pwr_mb2photo",
-	    "pwr_mb2note",
-	    "pwr_mb2parentgraph",
-	};
-
-	public final int method_toolbar_mnt_cnt = 32;
-	public final String[] method_toolbar_mnt_subgraph = {
-	    "pwr_mb2openobject",
-	    "pwr_mb2openplc",
-	    "pwr_mb2rtnavigator",
-	    "pwr_mb2crossreferences",
-	    "pwr_mb2helpclass",
-	    "pwr_mb2datasheet",
-	    "pwr_mb2circuitdiagram",
-	    "", "","","","","","","","","","","","","","","","","","","","","","","",
-	    "pwr_mb2simulate"
-	};
-
-	public final String[] method_toolbar_op_methods = {
-	    "Graph", 
-	    "Object Graph",
-	    "Trend",
-	    "History",
-	    "Fast", 
-	    "Camera",
-	    "Event Log...",
-	    "Block Events...", 
-	    "Help",
-	    "Photo", 
-	    "Note",
-	    "Parent Object Graph",};
-  
-	public final String[] method_toolbar_mnt_methods = {
-	    "Open Object",
-	    "Open Plc",
-	    "RtNavigator", 
-	    "Crossreferences", 
-	    "Help Class", 
-	    "DataSheet", 
-	    "CircuitDiagram", 
-	    "","","","","","","","","","","","","","","","","","","","","","","","",
-	    "Simulate"};
-
-	public final String[] method_toolbar_op_tooltip = {
-	    "Graph", 
-	    "Object graph",
-	    "Trend", 
-	    "History", 
-	    "Fast curve", 
-	    "Camera", 
-	    "Event log", 
-	    "Block events", 
-	    "Help", 
-	    "Photo", 
-	    "Note",
-	    "Open parent object graph",   
-	};
-
-	public final String[] method_toolbar_mnt_tooltip = {
-	    "Open object",
-	    "Open plc",
-	    "Navigator", 
-	    "CrossReferences", 
-	    "Help class", 
-	    "Datasheet",
-	    "CircuitDiagram", 
-	    "", "","","","","","","","","","","","","","","","","","","","","","","",
-	    "Simulate"};
-
 
 	public DynMethodToolbar( Dyn dyn) {
 	    super(dyn, 0, 0, Dyn.mActionType1_MethodToolbar, 0, Dyn.eDynPrio_MethodToolbar);
@@ -11071,11 +11086,14 @@ public class Dyn {
 	    int insensitive_mntmask = 0;
 
 	    opmask &= ~Pwrb.mXttOpMethodsMask_OpenObjectGraph;
-	    if ( !dyn.graph.isAuthorized( Pwr.mAccess_RtEventsBlock))
+	    if ( !dyn.graph.isAuthorized( Pwr.mAccess_RtEventsBlock | Pwr.mAccess_System))
 		insensitive_opmask |= Pwrb.mXttOpMethodsMask_BlockEvents;
-	    if ( !dyn.graph.isAuthorized( Pwr.mAccess_RtNavigator))
+	    if ( !dyn.graph.isAuthorized( Pwr.mAccess_RtNavigator | Pwr.mAccess_System | Pwr.mAccess_RtWrite | 
+					  Pwr.mAccess_Maintenance | Pwr.mAccess_Process | Pwr.mAccess_Instrument))
+		insensitive_opmask |= Pwrb.mXttOpMethodsMask_Note;
+	    if ( !dyn.graph.isAuthorized( Pwr.mAccess_RtNavigator | Pwr.mAccess_System))
 		insensitive_mntmask |= Pwrb.mXttMntMethodsMask_RtNavigator;
-	    if ( !dyn.graph.isAuthorized( Pwr.mAccess_RtPlc))
+	    if ( !dyn.graph.isAuthorized( Pwr.mAccess_RtPlc | Pwr.mAccess_System))
 		insensitive_mntmask |= Pwrb.mXttMntMethodsMask_OpenTrace;  
 
 	    object.configure( method_toolbar_op_subgraph, method_toolbar_mnt_subgraph,
@@ -11148,6 +11166,299 @@ public class Dyn {
 	    }
 	    return 1;
 	}
+    }
+
+
+    public class DynMethodPulldownMenu extends DynElem {
+	String method_object;
+	int help_menu;
+	int opmask;
+	int mntmask;
+	GrowMenu menu_object;
+	int text_size;
+
+	public DynMethodPulldownMenu( Dyn dyn) {
+	    super(dyn, 0, 0, Dyn.mActionType1_MethodPulldownMenu, 0, Dyn.eDynPrio_MethodPulldownMenu);
+	}
+
+	public DynMethodPulldownMenu( DynMethodPulldownMenu x) {
+	    super(x);
+	    method_object = x.method_object;
+	}
+
+	public void open( BufferedReader reader) {
+	    String line;
+	    StringTokenizer token;
+	    boolean end_found = false;
+
+	    try {
+		while( (line = reader.readLine()) != null) {
+		    token = new StringTokenizer(line);
+		    int key = Integer.valueOf(token.nextToken());
+		    if ( Dyn.debug) System.out.println( "DynMethodPulldownMenu : " + line);
+
+		    switch ( key) {
+		    case Dyn.eSave_MethodPulldownMenu: 
+			break;
+		    case Dyn.eSave_MethodPulldownMenu_method_object: 
+			if ( token.hasMoreTokens())
+			    method_object = token.nextToken();
+			break;
+		    case Dyn.eSave_MethodPulldownMenu_help_menu: 
+			help_menu = Integer.valueOf(token.nextToken());
+			break;
+		    case Dyn.eSave_End:
+			end_found = true;
+			break;
+		    default:
+			System.out.println( "Syntax error in DynMethodPulldownMenu");
+			break;
+		    }
+
+		    if ( end_found)
+			break;
+		}
+		
+	    } catch ( Exception e) {
+		System.out.println( "IOException DynMethodPulldownMenu");
+	    }
+	}
+
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
+	    GrowNode object = (GrowNode)o;
+	    switch ( e.event) {
+	    case Glow.eEvent_MB1Click:
+		if ( menu_object != null) {
+		    // Close, delete this menu
+		    dyn.graph.getCtx().remove(menu_object);
+		    menu_object = null;
+		}
+		else if ( object != null) {
+		    double	ll_x, ll_y, ur_x, ur_y;
+		    GlowMenuInfo info = new GlowMenuInfo();
+
+		    int 		sts;
+		    String 		command;
+		    String         	parsed_name;
+		    int 	       	mask_configure = 0;
+		    int		        mask_store = 0;
+		    int			xm_mask_flags = 0;
+		    int			xm_mask_opmethods = 0;
+		    int			xm_mask_mntmethods = 0;
+    
+		    DynParsedAttrName pname = dyn.parseAttrName(method_object);
+		    if ( pname == null || pname.name.equals("")) 
+			return 1;
+
+		    parsed_name = pname.name + ".XttMethodsMask.Flags";
+		    CdhrInt ret = dyn.graph.getGdh().getObjectInfoInt( parsed_name);
+		    if ( ret.oddSts()) {
+			xm_mask_flags = ret.value;
+
+			if ( (xm_mask_flags & Pwrb.mXttMethodsFlagsMask_IsConfigured) == 0) {		    
+			    mask_configure = 1;
+			    mask_store = 1;
+			}      
+			else {
+			    parsed_name = pname.name + ".XttMethodsMask.OpMethods";
+			    ret = dyn.graph.getGdh().getObjectInfoInt( parsed_name);
+			    if ( ret.evenSts()) {
+				System.out.println("DynMethodToolbar: " + parsed_name);
+				mask_configure = 1;
+			    }
+			    else
+				xm_mask_opmethods = ret.value;
+			    parsed_name = pname.name + ".XttMethodsMask.MntMethods";
+			    ret = dyn.graph.getGdh().getObjectInfoInt( parsed_name);
+			    if ( ret.evenSts()) {
+				System.out.println("DynMethodToolbar: " + parsed_name);
+				mask_configure = 1;
+			    }
+			    else
+				xm_mask_mntmethods = ret.value;
+			}
+		    }
+		    else {
+			mask_configure = 1;
+		    }
+  
+
+		    if ( mask_configure != 0) {
+			xm_mask_opmethods = 0;
+			for ( int i = 0; i < Dyn.method_toolbar_op_cnt; i++) {
+			    if ( Dyn.method_toolbar_op_methods[i].equals("Parent Object Graph")) {
+				if ( method_object.indexOf('.') != -1)
+				    xm_mask_opmethods |= 1 << i;
+			    }
+			    else {
+				command = "check method/method=\"" + Dyn.method_toolbar_op_methods[i] + "\"/object=" +
+				    method_object;
+
+				command = dyn.graph.getCommand(command);
+				sts = dyn.graph.command(command);
+				if ( (sts & 1) != 0)
+				    xm_mask_opmethods |= 1 << i;
+			    }
+			}
+			xm_mask_mntmethods = 0;
+			for ( int i = 0; i < Dyn.method_toolbar_mnt_cnt; i++) {
+			    command = "check method/method=\"" + Dyn.method_toolbar_mnt_methods[i] + "\"/object=" +
+				method_object;
+	
+			    command = dyn.graph.getCommand(command);
+			    sts = dyn.graph.command(command);
+			    if ( (sts & 1) != 0)
+				xm_mask_mntmethods |= 1 << i;
+			}
+			xm_mask_flags |= Pwrb.mXttMethodsFlagsMask_IsConfigured;
+		    }
+
+		    opmask = xm_mask_opmethods;
+		    mntmask = xm_mask_mntmethods;
+		    int insensitive_opmask = 0;
+		    int insensitive_mntmask = 0;
+
+		    opmask &= ~Pwrb.mXttOpMethodsMask_OpenObjectGraph;
+		    if ( !dyn.graph.isAuthorized( Pwr.mAccess_RtEventsBlock | Pwr.mAccess_System))
+			insensitive_opmask |= Pwrb.mXttOpMethodsMask_BlockEvents;
+		    if ( !dyn.graph.isAuthorized( Pwr.mAccess_RtNavigator | Pwr.mAccess_System | Pwr.mAccess_RtWrite | 
+						  Pwr.mAccess_Maintenance | Pwr.mAccess_Process | Pwr.mAccess_Instrument))
+			insensitive_opmask |= Pwrb.mXttOpMethodsMask_Note;
+		    if ( !dyn.graph.isAuthorized( Pwr.mAccess_RtNavigator | Pwr.mAccess_System))
+			insensitive_mntmask |= Pwrb.mXttMntMethodsMask_RtNavigator;
+		    if ( !dyn.graph.isAuthorized( Pwr.mAccess_RtPlc | Pwr.mAccess_System))
+			insensitive_mntmask |= Pwrb.mXttMntMethodsMask_OpenTrace;    
+
+
+		    int menu_idx = 0;
+		    for ( int i = 0; i < 32; i++)
+			info.item[i].occupied = false;
+
+		    for ( int i = 0; i < Dyn.method_toolbar_op_cnt; i++) {
+			if ( menu_idx >= 32)
+			    break;
+
+			if ( help_menu != 0 && (Dyn.method_toolbar_op_helpmask & (1 << i)) == 0)
+			    continue;
+  
+			if ( (opmask & (1 << i)) != 0) {
+			    info.item[menu_idx].type = Glow.eMenuItem_Button;
+			    info.item[menu_idx].text = new String(Dyn.method_toolbar_op_methods[i]);
+			    info.item[menu_idx].occupied = true;
+			    if ( (insensitive_opmask & (1 << i)) != 0)
+				info.item[menu_idx].type = Glow.eMenuItem_ButtonDisabled;
+			    menu_idx++;
+			}
+		    }
+		    for ( int i = 0; i < Dyn.method_toolbar_mnt_cnt; i++) {
+			if ( menu_idx >= 32)
+			    break;
+
+			if ( help_menu != 0 && (Dyn.method_toolbar_mnt_helpmask & (1 << i)) == 0)
+			    continue;
+
+			if ( (mntmask & (1 << i)) != 0) {
+			    info.item[menu_idx].type = Glow.eMenuItem_Button;
+			    info.item[menu_idx].text = new String(Dyn.method_toolbar_mnt_methods[i]);
+			    info.item[menu_idx].occupied = true;
+			    if ( (insensitive_mntmask & (1 << i)) != 0)
+				info.item[menu_idx].type = Glow.eMenuItem_ButtonDisabled;
+			    menu_idx++;
+			}
+		    }
+
+		    // Get fillcolor, and textattributes from object
+		    int text_drawtype = 0, text_color = 0, bg_color = 0;
+		    int text_size = 0;
+		    double scale = 1;
+		    int text_font = 0;
+		    
+		    sts = 0; // TODO sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, &bg_color, &scale, &text_font);
+		    if ( (sts & 1) == 0) {
+			text_size = 3;
+			text_drawtype = Glow.eDrawType_TextHelvetica;
+			text_font = Glow.eFont_LucidaSans;
+			text_color = Glow.eDrawType_Line;
+			bg_color = Glow.eDrawType_LightGray;
+		    }
+		    else if ( bg_color == Glow.eDrawType_No || bg_color == Glow.eDrawType_Inherit)
+			bg_color = Glow.eDrawType_LightGray;
+		    
+		    GlowGeometry g = object.measure();
+		    menu_object = new GrowMenu( dyn.graph.getCtx().cmn, "__Menu", info, g.ll_x, g.ur_y, g.ur_x - g.ll_x,
+						Glow.eDrawType_Line, 0, 1, 1, bg_color, text_size,
+						text_drawtype, text_color,
+						Glow.eDrawType_MediumGray, text_font);
+		    menu_object.set_scale( scale, scale, 0, 0, Glow.eScaleType_LowerLeft);
+		    dyn.graph.getCtx().insert(menu_object);
+
+		    // grow_SetMenuInputFocus( menu_object, 1);
+		}
+
+		break;
+	    case Glow.eEvent_MenuActivated:
+		if ( menu_object == null)
+		    break;
+		if ( e.object == menu_object) {
+      
+		    int sts;
+		    String command;
+		    int idx = 0;
+		    int found = 0;
+
+		    for ( int i = 0; i < Dyn.method_toolbar_op_cnt; i++) {
+			if ( help_menu != 0 && (Dyn.method_toolbar_op_helpmask & (1 << i)) == 0)
+			    continue;
+
+			if ( (opmask & (1 << i)) != 0)
+			    idx++;
+			if ( ((GlowEventMenu)e).item + 1 == idx) {
+			    command = "call method/method=\"" + Dyn.method_toolbar_op_methods[i] +
+				     "\"/object=" + method_object;
+			    command = dyn.graph.getCommand(command);
+			    sts = dyn.graph.command(command);
+			    found = 1;
+			    break;
+			}
+		    }
+
+		    if ( found == 0) {
+			for ( int i = 0; i < Dyn.method_toolbar_mnt_cnt; i++) {
+			    if ( help_menu != 0 && (Dyn.method_toolbar_mnt_helpmask & (1 << i)) == 0)
+				continue;
+
+			    if ( (mntmask & (1 << i)) != 0)
+				idx++;
+			    if ( ((GlowEventMenu)e).item + 1 == idx) {
+				command = "call method/method=\"" + Dyn.method_toolbar_mnt_methods[i] +
+				    "\"/object=" + method_object;
+				command = dyn.graph.getCommand(command);
+				sts = dyn.graph.command(command);
+				found = 1;
+				break;
+			    }
+			}
+		    }
+		}
+		break;
+	    case Glow.eEvent_MenuDelete:
+		if ( menu_object == null)
+		    break;
+		if ( e.object == null || e.object == menu_object) {
+		    // Delete this menu
+		    dyn.graph.getCtx().remove(menu_object);
+		    menu_object = null;
+		}
+		break;
+
+	    default: ;
+	    }
+	    return 1;
+	}
+
     }
 
 

@@ -42,8 +42,8 @@
 101 20
 102 25
 103 17
-104 3.14747
-136 3.14747
+104 3.29508
+136 3.29508
 105 100
 106 3
 107 2
@@ -53,7 +53,7 @@
 111 1.2
 116 0
 117 0
-118 109
+118 119
 119 113
 120 0
 121 Claes context
@@ -17266,40 +17266,15 @@ pwr_exe:
 2730 0
 2721
 1
-100 1
+100 0
 105 0
-101 1
-106 0
-102 65532
-103 0
-68
-6800 3
-6801 Help
-6833
-1
-100 1
-105 0
-101 65
+101 8388608
 106 0
 102 65535
 103 0
-55
-5500 call method/method="Help"/object=$object
-99
-99
-6802 Help Class
-6834
-1
-100 1
-105 0
-101 65
-106 0
-102 65532
-103 0
-55
-5500 call method/method="Help Class"/object=$object
-99
-99
+72
+7200 $object
+7201 1
 99
 99
 99
@@ -17672,261 +17647,15 @@ pwr_exe:
 2730 0
 2721
 1
-100 1
+100 0
 105 0
-101 1
+101 8388608
 106 0
 102 65535
 103 0
-68
-6800 8191
-6801 Help
-6833
-1
-100 129
-105 0
-101 65
-106 0
-102 65535
-103 0
-9
-900 $cmd(check method/method="Help"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="Help"/object=$object
-99
-99
-6802 Note
-6834
-1
-100 129
-105 0
-101 65
-106 0
-102 65532
-103 0
-9
-900 $cmd(check method/method="Note"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="Note"/object=$object
-99
-99
-6803 Trend
-6835
-1
-100 129
-105 0
-101 65
-106 0
-102 65532
-103 0
-9
-900 $cmd(check method/method="Trend"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="Trend"/object=$object
-99
-99
-6804 Fast
-6836
-1
-100 129
-105 0
-101 65
-106 0
-102 65532
-103 0
-9
-900 $cmd(check method/method="Fast"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="Fast"/object=$object
-99
-99
-6805 Photo
-6837
-1
-100 129
-105 0
-101 65
-106 0
-102 65532
-103 0
-9
-900 $cmd(check method/method="Photo"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="Photo"/object=$object
-99
-99
-6806 DataSheet
-6838
-1
-100 129
-105 0
-101 65
-106 0
-102 65532
-103 0
-9
-900 $cmd(check method/method="DataSheet"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="DataSheet"/object=$object
-99
-99
-6807 Hist Event...
-6839
-1
-100 129
-105 0
-101 65
-106 0
-102 65532
-103 0
-9
-900 $cmd(check method/method="Hist Event..."/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="Hist Event..."/object=$object
-99
-99
-6808 Block Events...
-6840
-1
-100 129
-105 0
-101 65
-106 0
-102 65532
-103 0
-9
-900 $cmd(check method/method="Block Events..."/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="Block Events..."/object=$object
-99
-99
-6809 RtNavigator
-6841
-1
-100 129
-105 0
-101 65
-106 0
-102 65532
-103 0
-9
-900 $cmd(check method/method="RtNavigator"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="RtNavigator"/object=$object
-99
-99
-6810 Open  Object
-6842
-1
-100 129
-105 0
-101 65
-106 0
-102 65532
-103 0
-9
-900 $cmd(check method/method="Open Object"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="Open Object"/object=$object
-99
-99
-6811 Open Plc
-6843
-1
-100 129
-105 0
-101 65
-106 0
-102 65532
-103 0
-9
-900 $cmd(check method/method="Open Plc"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="Open Plc"/object=$object
-99
-99
-6812 CircuitDiagram
-6844
-1
-100 129
-105 0
-101 65
-106 0
-102 65532
-103 0
-9
-900 $cmd(check method/method="CircuitDiagram"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="CircuitDiagram"/object=$object
-99
-99
-6813 Help Class
-6845
-1
-100 129
-105 0
-101 65
-106 0
-102 65532
-103 0
-9
-900 $cmd(check method/method="Help Class"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="Help Class"/object=$object
-99
-99
+72
+7200 $object
+7201 0
 99
 99
 99

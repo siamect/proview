@@ -503,6 +503,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeSetValue((const GeSetValue&) *elem); break;
     case ge_mActionType1_MethodToolbar:
       e = new GeMethodToolbar((const GeMethodToolbar&) *elem); break;
+    case ge_mActionType1_MethodPulldownMenu:
+      e = new GeMethodPulldownMenu((const GeMethodPulldownMenu&) *elem); break;
     default: ;
     }
     switch( elem->action_type2) {
@@ -623,6 +625,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_OptionMenu: e = (GeDynElem *) new GeOptionMenu(this); break;
       case ge_eSave_SetValue: e = (GeDynElem *) new GeSetValue(this); break;
       case ge_eSave_MethodToolbar: e = (GeDynElem *) new GeMethodToolbar(this); break;
+      case ge_eSave_MethodPulldownMenu: e = (GeDynElem *) new GeMethodPulldownMenu(this); break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeDyn:open syntax error" << endl;
@@ -1398,6 +1401,9 @@ GeDynElem *GeDyn::create_action1_element( int mask, int instance)
   case ge_mActionType1_MethodToolbar:
     e = (GeDynElem *) new GeMethodToolbar(this, (ge_mInstance)instance);
     break;
+  case ge_mActionType1_MethodPulldownMenu:
+    e = (GeDynElem *) new GeMethodPulldownMenu(this);
+    break;
   default: ;
   }
   return e;
@@ -1600,6 +1606,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
       break;
     case ge_mActionType1_MethodToolbar:
       e = (GeDynElem *) new GeMethodToolbar((GeMethodToolbar&) x);
+      break;
+    case ge_mActionType1_MethodPulldownMenu:
+      e = (GeDynElem *) new GeMethodPulldownMenu((GeMethodPulldownMenu&) x);
       break;
     default: ;
     }
@@ -16474,6 +16483,7 @@ int GeSetValue::export_java( grow_tObject object, ofstream& fp, bool first, char
 }
 
 int GeMethodToolbar::method_toolbar_op_cnt = 12;
+unsigned int GeMethodToolbar::method_toolbar_op_helpmask = 1 << 8;
 char GeMethodToolbar::method_toolbar_op_subgraph[32][80] = {
   "pwr_mb2opengraph",
   "pwr_mb2openobjectgraph",
@@ -16490,6 +16500,7 @@ char GeMethodToolbar::method_toolbar_op_subgraph[32][80] = {
 };
 
 int GeMethodToolbar::method_toolbar_mnt_cnt = 32;
+unsigned int GeMethodToolbar::method_toolbar_mnt_helpmask = 1 << 4;
 char GeMethodToolbar::method_toolbar_mnt_subgraph[32][80] = {
   "pwr_mb2openobject",
   "pwr_mb2openplc",
@@ -16679,7 +16690,6 @@ int GeMethodToolbar::connect( grow_tObject object, glow_sTraceData *trace_data)
     }
     xm_mask.Flags |= pwr_mXttMethodsFlagsMask_IsConfigured;
   }
-  printf("Method mask: %u %u\n", xm_mask.OpMethods, xm_mask.MntMethods);
 
   unsigned int opmask = xm_mask.OpMethods;
   unsigned int mntmask = xm_mask.MntMethods;
@@ -16694,8 +16704,6 @@ int GeMethodToolbar::connect( grow_tObject object, glow_sTraceData *trace_data)
     insensitive_opmask |= pwr_mXttOpMethodsMask_Note;  
   if ( !dyn->graph->is_authorized( pwr_mAccess_RtNavigator | pwr_mAccess_System))
     insensitive_mntmask |= pwr_mXttMntMethodsMask_RtNavigator;
-  if ( !dyn->graph->is_authorized( pwr_mAccess_RtPlc | pwr_mAccess_System))
-    insensitive_mntmask |= pwr_mXttMntMethodsMask_OpenTrace;  
   if ( !dyn->graph->is_authorized( pwr_mAccess_RtPlc | pwr_mAccess_System))
     insensitive_mntmask |= pwr_mXttMntMethodsMask_OpenTrace;  
 
@@ -16764,6 +16772,392 @@ int GeMethodToolbar::export_java( grow_tObject object, ofstream& fp, bool first,
   return 1;
 }
 
+void GeMethodPulldownMenu::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  strcpy( attrinfo[i].name, "MethodPulldownMenu.Object");
+  attrinfo[i].value = method_object;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( method_object);
+
+  strcpy( attrinfo[i].name, "MethodPulldownMenu.HelpMenu");
+  attrinfo[i].value = &help_menu;
+  attrinfo[i].type = glow_eType_Boolean;
+  attrinfo[i++].size = sizeof( help_menu);
+
+  dyn->display_access = true;
+  *item_count = i;
+}
+
+void GeMethodPulldownMenu::save( ofstream& fp)
+{
+  fp << int(ge_eSave_MethodPulldownMenu) << endl;
+  fp << int(ge_eSave_MethodPulldownMenu_method_object) << FSPACE << method_object << endl;
+  fp << int(ge_eSave_MethodPulldownMenu_help_menu) << FSPACE << help_menu << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeMethodPulldownMenu::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[40];
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeMethodPulldownMenu: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+    case ge_eSave_MethodPulldownMenu: break;
+    case ge_eSave_MethodPulldownMenu_method_object:
+      fp.get();
+      fp.getline( method_object, sizeof(method_object));
+      break;
+    case ge_eSave_MethodPulldownMenu_help_menu: fp >> help_menu; break;
+    case ge_eSave_End: end_found = 1; break;
+    default:
+      cout << "GeMethodPulldownMenu:open syntax error" << endl;
+      fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
+{
+  if ( !dyn->graph->is_authorized( dyn->access))
+    return 1;
+
+  switch ( event->event) {
+  case glow_eEvent_MB1Down:
+    grow_SetClickSensitivity( dyn->graph->grow->ctx, glow_mSensitivity_MB1Click);
+    break;
+  case glow_eEvent_MB1Up:
+    break;
+  case glow_eEvent_Key_Up:
+    if ( !menu_object)
+      break;
+    if ( grow_GetMenuInputFocus( menu_object)) {
+      grow_MenuShiftCurrentItem( menu_object, -1);
+      return GE__NO_PROPAGATE;
+    }
+    break;
+  case glow_eEvent_Key_Down:
+    if ( !menu_object)
+      break;
+    if ( grow_GetMenuInputFocus( menu_object)) {
+      grow_MenuShiftCurrentItem( menu_object, 1);
+      return GE__NO_PROPAGATE;
+    }
+    break;
+  case glow_eEvent_Key_Right:
+    if ( !menu_object)
+      break;
+
+    if ( grow_GetMenuInputFocus( menu_object)) {
+    }
+    else {
+    }
+    break;
+  case glow_eEvent_Key_Left:
+    break;
+  case glow_eEvent_Key_Return:
+    if ( !menu_object)
+      break;
+
+    if ( grow_GetMenuInputFocus( menu_object)) {
+      // Send menu activated event
+      int sts;
+      glow_sEvent e;
+      e.event = glow_eEvent_MenuActivated;
+      e.menu.object = menu_object;
+      sts = grow_MenuGetCurrentItem( menu_object, &e.menu.item);
+      if ( EVEN(sts))
+	break;
+
+      action( object, &e);
+
+      // Close any open menu
+      Graph *graph = dyn->graph;
+      grow_tObject 	*objectlist;
+      int 		object_cnt, cnt;
+      int		i;
+
+      e.event = glow_eEvent_MenuDelete;
+      e.any.type = glow_eEventType_Menu;
+      e.menu.object = 0;
+	
+      grow_GetObjectList( graph->grow->ctx, &objectlist, &object_cnt);
+      for ( i = 0; i < object_cnt; i++) {
+	if ( grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowNode ||
+	     grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowGroup) {
+	  grow_GetUserData( objectlist[i], (void **)&dyn);
+	  dyn->action( objectlist[i], &e);
+	  grow_GetObjectList( graph->grow->ctx, &objectlist, &cnt);
+	  if ( cnt != object_cnt)
+	    // Something is deleted
+	    break;
+	}
+      }
+      return GE__NO_PROPAGATE;
+    }
+    break;
+
+  case glow_eEvent_InputFocusGained:
+    if ( menu_object)
+      break;
+    time_GetTime( &focus_gained_time);
+  case glow_eEvent_MB1Click:
+    if ( event->event == glow_eEvent_MB1Click) {
+      pwr_tTime now;
+      time_GetTime( &now);
+      if ( abs( (int)(now.tv_sec - focus_gained_time.tv_sec)) < 2)
+	break;
+    }
+    if ( menu_object) {
+      // Close, delete this menu
+      grow_DeleteObject( dyn->graph->grow->ctx, menu_object);
+      menu_object = 0;
+    }
+    else if ( object) {
+      double	ll_x, ll_y, ur_x, ur_y;
+      glow_sMenuInfo info;
+
+      int 			sts;
+      pwr_tCmd 		cmd, command;
+      pwr_tAName         	parsed_name;
+      int			inverted;
+      int			attr_type, attr_size;
+      graph_eDatabase 	db;
+      pwr_sClass_XttMethodsMask xm_mask;
+      int 			mask_configure = 0;
+      int		        mask_store = 0;
+    
+      db = dyn->parse_attr_name( method_object, parsed_name, &inverted, &attr_type, 
+				 &attr_size);
+      strcat( parsed_name, ".XttMethodsMask");
+      sts = gdh_GetObjectInfo( parsed_name, &xm_mask, sizeof(xm_mask));
+      if ( ODD(sts)) {
+	if ( !(xm_mask.Flags & pwr_mXttMethodsFlagsMask_IsConfigured)) {
+	  mask_configure = 1;
+	  mask_store = 1;
+	}      
+      }
+      else {
+	mask_configure = 1;
+      }
+  
+
+      if ( mask_configure) {
+	xm_mask.OpMethods = 0;
+	for ( int i = 0; i < GeMethodToolbar::method_toolbar_op_cnt; i++) {
+	  if ( strcmp( GeMethodToolbar::method_toolbar_op_methods[i], "Parent Object Graph") == 0) {
+	    if ( strchr( method_object, '.') != 0)
+	      xm_mask.OpMethods |= 1 << i;
+	  }
+	  else {
+	    sprintf( command, "check method/method=\"%s\"/object=%s", 
+		     GeMethodToolbar::method_toolbar_op_methods[i], method_object);
+	
+	    dyn->graph->get_command( command, cmd, dyn);
+	    sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+	    if ( ODD(sts))
+	      xm_mask.OpMethods |= 1 << i;
+	  }
+	}
+	xm_mask.MntMethods = 0;
+	for ( int i = 0; i < GeMethodToolbar::method_toolbar_mnt_cnt; i++) {
+	  sprintf( command, "check method/method=\"%s\"/object=%s", 
+		   GeMethodToolbar::method_toolbar_mnt_methods[i], method_object);
+	
+	  dyn->graph->get_command( command, cmd, dyn);
+	  sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+	  if ( ODD(sts))
+	    xm_mask.MntMethods |= 1 << i;
+	}
+	xm_mask.Flags |= pwr_mXttMethodsFlagsMask_IsConfigured;
+      }
+
+      opmask = xm_mask.OpMethods;
+      mntmask = xm_mask.MntMethods;
+      unsigned int insensitive_opmask = 0;
+      unsigned int insensitive_mntmask = 0;
+
+      opmask &= ~pwr_mXttOpMethodsMask_OpenObjectGraph;
+      if ( !dyn->graph->is_authorized( pwr_mAccess_RtEventsBlock | pwr_mAccess_System))
+	insensitive_opmask |= pwr_mXttOpMethodsMask_BlockEvents;
+      if ( !dyn->graph->is_authorized( pwr_mAccess_AllOperators | pwr_mAccess_System | pwr_mAccess_RtWrite |
+				       pwr_mAccess_Maintenance | pwr_mAccess_Process | pwr_mAccess_Instrument))
+	insensitive_opmask |= pwr_mXttOpMethodsMask_Note;  
+      if ( !dyn->graph->is_authorized( pwr_mAccess_RtNavigator | pwr_mAccess_System))
+	insensitive_mntmask |= pwr_mXttMntMethodsMask_RtNavigator;
+      if ( !dyn->graph->is_authorized( pwr_mAccess_RtPlc | pwr_mAccess_System))
+	insensitive_mntmask |= pwr_mXttMntMethodsMask_OpenTrace;  
+
+      int menu_idx = 0;
+      for ( int i = 0; i < (int)(sizeof(info.item)/sizeof(info.item[0])); i++)
+	info.item[i].occupied = false;
+
+      for ( int i = 0; i < GeMethodToolbar::method_toolbar_op_cnt; i++) {
+	if ( menu_idx >= (int)(sizeof(info.item)/sizeof(info.item[0])))
+	  break;
+
+	if ( help_menu && !(GeMethodToolbar::method_toolbar_op_helpmask & (1 << i)))
+	  continue;
+  
+	if ( opmask & (1 << i)) {
+	  info.item[menu_idx].type = glow_eMenuItem_Button;
+	  strcpy( info.item[menu_idx].text, GeMethodToolbar::method_toolbar_op_methods[i]);
+	  info.item[menu_idx].occupied = true;
+	  if ( insensitive_opmask & (1 << i))
+	    info.item[menu_idx].type = glow_eMenuItem_ButtonDisabled;
+	  menu_idx++;
+	}
+      }
+      for ( int i = 0; i < GeMethodToolbar::method_toolbar_mnt_cnt; i++) {
+	if ( menu_idx >= (int)(sizeof(info.item)/sizeof(info.item[0])))
+	  break;
+
+	if ( help_menu && !(GeMethodToolbar::method_toolbar_mnt_helpmask & (1 << i)))
+	  continue;
+
+	if ( mntmask & (1 << i)) {
+	  info.item[menu_idx].type = glow_eMenuItem_Button;
+	  strcpy( info.item[menu_idx].text, GeMethodToolbar::method_toolbar_mnt_methods[i]);
+	  info.item[menu_idx].occupied = true;
+	  if ( insensitive_mntmask & (1 << i))
+	    info.item[menu_idx].type = glow_eMenuItem_ButtonDisabled;
+	  menu_idx++;
+	}
+      }
+
+      // Get fillcolor, and textattributes from object
+      glow_eDrawType text_drawtype, text_color, bg_color;
+      int text_size;
+      double scale;
+      glow_eFont text_font;
+      
+      sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, 
+				     &bg_color, &scale, &text_font);
+      if ( EVEN(sts)) {
+	text_size = 2;
+	text_drawtype = glow_eDrawType_TextHelveticaBold;
+	text_font = glow_eFont_Helvetica;
+	text_color = glow_eDrawType_Line;
+	bg_color = glow_eDrawType_LightGray;
+      }
+      else if ( bg_color == glow_eDrawType_No || bg_color == glow_eDrawType_Inherit)
+	bg_color = glow_eDrawType_LightGray;
+	
+      grow_MeasureNode( object, &ll_x, &ll_y, &ur_x, &ur_y);
+      grow_CreateGrowMenu( dyn->graph->grow->ctx, "__Menu", &info, ll_x, ur_y, ur_x - ll_x,
+			   glow_eDrawType_Line, 0, 1, 1, bg_color, text_size,
+			   text_drawtype, text_color,
+			   glow_eDrawType_MediumGray, text_font, 0,
+			   &menu_object);
+      grow_SetObjectScale( menu_object, scale, scale, 0, 0, glow_eScaleType_LowerLeft);
+      grow_SetMenuInputFocus( menu_object, 1);
+
+      if ( mask_store) {
+	sts = gdh_SetObjectInfo( parsed_name, &xm_mask, sizeof(xm_mask));
+	if ( EVEN(sts))
+	  printf( "Set mask error %s\n", parsed_name);
+      }
+
+    }
+    break;
+  case glow_eEvent_MenuActivated: {
+    if ( !menu_object)
+      break;
+
+    int sts;
+    pwr_tCmd cmd, command;
+    int idx = 0;
+    int found = 0;
+
+    for ( int i = 0; i < GeMethodToolbar::method_toolbar_op_cnt; i++) {
+      if ( help_menu && !(GeMethodToolbar::method_toolbar_op_helpmask & (1 << i)))
+	continue;
+
+      if ( opmask & (1 << i))
+	idx++;
+      if ( event->menu.item + 1 == idx) {
+	sprintf( command, "call method/method=\"%s\"/object=%s", 
+		 GeMethodToolbar::method_toolbar_op_methods[i], method_object);
+	dyn->graph->get_command( command, cmd, dyn);
+	sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+	found = 1;
+	break;
+      }
+    }
+
+    if ( !found) {
+      for ( int i = 0; i < GeMethodToolbar::method_toolbar_mnt_cnt; i++) {
+	if ( help_menu && !(GeMethodToolbar::method_toolbar_mnt_helpmask & (1 << i)))
+	  continue;
+
+	if ( mntmask & (1 << i))
+	  idx++;
+	if ( event->menu.item + 1 == idx) {
+	  sprintf( command, "call method/method=\"%s\"/object=%s", 
+		   GeMethodToolbar::method_toolbar_mnt_methods[i], method_object);
+	  dyn->graph->get_command( command, cmd, dyn);
+	  sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+	  found = 1;
+	  break;
+	}
+      }
+    }
+
+    break;
+  }
+  case glow_eEvent_MenuCreate:
+    break;
+  case glow_eEvent_InputFocusLost: {
+    // Delete this and all child menues
+    glow_sEvent e;
+    e.event = glow_eEvent_MenuDelete;
+    e.menu.object = 0;
+
+    grow_DeleteObject( dyn->graph->grow->ctx, menu_object);
+    menu_object = 0;
+    break;
+  }
+  case glow_eEvent_MenuDelete:
+    if ( menu_object == 0)
+      break;
+    if ( event->menu.object == 0) {
+      // Delete this menu
+      grow_DeleteObject( dyn->graph->grow->ctx, menu_object);
+      menu_object = 0;
+    }
+    else {
+      if ( event->menu.object == menu_object) {
+	// Delete this and all child menues
+	event->menu.object = menu_object;
+
+	grow_DeleteObject( dyn->graph->grow->ctx, menu_object);
+	menu_object = 0;
+      }
+    }
+    break;
+  default: ;
+  }
+  return 1;
+}
+
+int GeMethodPulldownMenu::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
+  return 1;
+}
 
 
 

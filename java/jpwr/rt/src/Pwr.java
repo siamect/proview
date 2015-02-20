@@ -148,6 +148,7 @@ public class Pwr {
   public static final int mAccess_RtWrite      	= mPrv_RtWrite;
   public static final int mAccess_System       	= mPrv_System;
   public static final int mAccess_Process      	= mPrv_Process;
+  public static final int mAccess_Maintenance  	= mPrv_Maintenance;
   public static final int mAccess_Instrument    = mPrv_Instrument;
   public static final int mAccess_RtEventsBlock = mPrv_RtEventsBlock;
   public static final int mAccess_RtEventsAck 	= mPrv_RtEventsAck;
