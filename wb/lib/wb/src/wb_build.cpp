@@ -1721,7 +1721,11 @@ void wb_build::directories( char *dir, bld_ePass pass)
 	continue;
 
       int update = 0;
-      sprintf( cmd, "cd %s;make -q %s", line_item[2], line_item[3]);
+      if ( strcmp( line_item[3], "") == 0)
+	sprintf( cmd, "cd %s;make -q", line_item[2]);
+      else
+	sprintf( cmd, "cd %s;make -q -f %s", line_item[2], line_item[3]);
+
       sts = system( cmd);
       if ( WEXITSTATUS(sts) != 0)
 	update = 1;
@@ -1730,11 +1734,19 @@ void wb_build::directories( char *dir, bld_ePass pass)
 	continue;
 
       // Needs update
-      if ( opt.force)
+      if ( opt.force) {
 	// Execute make with -B, unconditionally make all targets
-	sprintf( cmd, "cd %s;make -B %s", line_item[2], line_item[3]);
-      else
-	sprintf( cmd, "cd %s;make %s", line_item[2], line_item[3]);
+	if ( strcmp( line_item[3], "") == 0)
+	  sprintf( cmd, "cd %s;make -B", line_item[2]);
+	else
+	  sprintf( cmd, "cd %s;make -B -f %s", line_item[2], line_item[3]);
+      }
+      else {
+	if ( strcmp( line_item[3], "") == 0)
+	  sprintf( cmd, "cd %s;make", line_item[2]);
+	else
+	  sprintf( cmd, "cd %s;make -f %s", line_item[2], line_item[3]);
+      }
       sts = system( cmd);
       if ( WEXITSTATUS(sts) != 0) {
 	sprintf( cmd, "Build:    make error %s %s", line_item[2], line_item[3]);
