@@ -326,13 +326,14 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     g_object_set( tools_zoom_reset, "can-focus", FALSE, NULL);
     gtk_toolbar_append_widget( tools, tools_zoom_reset,CoWowGtk::translate_utf8("Zoom reset"), "");
     
-    eve_methodtoolbar = new XttMethodToolbarGtk(0, 0, ~0, "");
+    eve_methodtoolbar = new XttMethodToolbarGtk(0, 0, ~pwr_mXttOpMethodsMask_ParentObjectGraph, ~0, "");
     GtkToolbar *tools_meth = (GtkToolbar *) ((XttMethodToolbarGtk *)eve_methodtoolbar)->build();
     eve_methodtoolbar->m_xnav = (XNav *)parent_ctx;
     eve_methodtoolbar->m_parent_ctx = eve;
     eve_methodtoolbar->get_select_cb = eve->get_select;
 
-    eve_sup_methodtoolbar = new XttMethodToolbarGtk(0, 0, mt_mMethod_OpenPlc | mt_mMethod_RtNavigator, 
+    eve_sup_methodtoolbar = new XttMethodToolbarGtk(0, 0, 0, pwr_mXttMntMethodsMask_OpenTrace | 
+						    pwr_mXttMntMethodsMask_RtNavigator, 
 						    " for supervisory object");
     GtkToolbar *tools_sup = (GtkToolbar *) ((XttMethodToolbarGtk *)eve_sup_methodtoolbar)->build();
     eve_sup_methodtoolbar->m_xnav = (XNav *)parent_ctx;
@@ -624,14 +625,15 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     g_object_set( tools_zoom_reset, "can-focus", FALSE, NULL);
     gtk_toolbar_append_widget( tools, tools_zoom_reset,CoWowGtk::translate_utf8("Zoom reset"), "");
     
-    ala_methodtoolbar = new XttMethodToolbarGtk(0, 0, ~0, "");
+    ala_methodtoolbar = new XttMethodToolbarGtk(0, 0, ~pwr_mXttOpMethodsMask_ParentObjectGraph, ~0, "");
     GtkToolbar *tools_meth = (GtkToolbar *) ((XttMethodToolbarGtk *)ala_methodtoolbar)->build();
 
     ala_methodtoolbar->m_xnav = (XNav *)parent_ctx;
     ala_methodtoolbar->m_parent_ctx = ala;
     ala_methodtoolbar->get_select_cb = ala->get_select;
 
-    ala_sup_methodtoolbar = new XttMethodToolbarGtk(0, 0, mt_mMethod_OpenPlc | mt_mMethod_RtNavigator, 
+    ala_sup_methodtoolbar = new XttMethodToolbarGtk(0, 0, 0, pwr_mXttMntMethodsMask_OpenTrace | 
+						    pwr_mXttMntMethodsMask_RtNavigator, 
 						    " for supervisory object");
     GtkToolbar *tools_sup = (GtkToolbar *) ((XttMethodToolbarGtk *)ala_sup_methodtoolbar)->build();
     ala_sup_methodtoolbar->m_xnav = (XNav *)parent_ctx;

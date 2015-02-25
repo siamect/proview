@@ -2751,16 +2751,18 @@ class GeMethodToolbar : public GeDynElem {
  public:
   pwr_tAName method_object;
 
-  static int method_toolbar_op_cnt;
   static unsigned int method_toolbar_op_helpmask;
+  static unsigned int method_toolbar_mnt_helpmask;
+#if 0
+  static int method_toolbar_op_cnt;
   static char method_toolbar_op_subgraph[32][80];
   static char method_toolbar_op_methods[32][80];
   static char method_toolbar_op_tooltip[32][80];
   static int method_toolbar_mnt_cnt;
-  static unsigned int method_toolbar_mnt_helpmask;
   static char method_toolbar_mnt_subgraph[32][80];
   static char method_toolbar_mnt_methods[32][80];
   static char method_toolbar_mnt_tooltip[32][80];
+#endif
 
   GeMethodToolbar( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_MethodToolbar, ge_mActionType2_No, ge_eDynPrio_MethodToolbar)

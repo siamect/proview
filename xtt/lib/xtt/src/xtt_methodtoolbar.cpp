@@ -41,24 +41,3 @@
 #include "xtt_methodtoolbar.h"
 
 int XttMethodToolbar::m_disabled = 0;
-
-xtt_sMethodButton XttMethodToolbar::m_data[XttMethodToolbar::m_size] =
-  {{"Help", 		"$Object-Help",		"$Object-HelpFilter", 		"$pwr_exe/xtt_meth_help.png", 		"Help"},
-   {"Note",		"$Object-Note",		"$Object-NoteFilter", 		"$pwr_exe/xtt_meth_note.png", 		"Note"},
-   {"Trend",		"$Object-OpenTrend",	"$Object-OpenTrendFilter", 	"$pwr_exe/xtt_meth_trend.png", 		"Trend"},
-   {"Fast",		"$Object-OpenFast",	"$Object-OpenFastFilter", 	"$pwr_exe/xtt_meth_fast.png", 		"Fast"},
-   {"History",		"$Object-OpenHistory",	"$Object-OpenHistoryFilter", 	"$pwr_exe/xtt_meth_history.png", 	"History"},
-   {"Photo",		"$Object-Photo",	"$Object-PhotoFilter", 		"$pwr_exe/xtt_meth_photo.png", 		"Photo"},
-   {"Graph",		"$Object-OpenGraph",	"$Object-OpenGraphFilter", 	"$pwr_exe/xtt_meth_graph.png", 		"Graph"},
-   {"RtNavigator",    	"$Object-RtNavigator",	"$Object-RtNavigatorFilter", 	"$pwr_exe/xtt_meth_navigator.png",     	"RtNavigator"},
-   {"Object Graph", 	"$Object-OpenObjectGraph","$Object-OpenObjectGraphFilter", "$pwr_exe/xtt_meth_classgraph.png", 	"Object Graph"},
-   {"Open Plc",		"$Object-OpenTrace",	"$Object-OpenTraceFilter", 	"$pwr_exe/xtt_meth_trace.png", 	        "Open Plc"},
-   {"DataSheet",	"$Object-DataSheet",	"$Object-DataSheetFilter", 	"$pwr_exe/xtt_meth_datasheet.png", 	"DataSheet"},
-   {"Event Log...",	"$Object-HistEvent",	"$Object-HistEventFilter", 	"$pwr_exe/xtt_meth_histevent.png", 	"Event Log..."},
-   {"Block Events...",	"$Object-BlockEvents",	"$Object-BlockEventsFilter", 	"$pwr_exe/xtt_meth_block.png", 		"Block Events..."},
-   {"Open Object", 	"$Object-OpenObject",	"$Object-OpenObjectFilter", 	"$pwr_exe/xtt_meth_openobject.png", 	"Open Object"},
-   {"Crossreferences", 	"$Object-OpenCrossref",	"$Object-OpenCrossrefFilter", 	"$pwr_exe/xtt_meth_crossref.png", 	"Crossreferences"},
-   {"CircuitDiagram",	"$Object-CircuitDiagram",	"$Object-CircuitDiagramFilter", "$pwr_exe/xtt_meth_circuitdiagram.png", "CircuitDiagram"},
-   {"Help Class", 	"$Object-HelpClass",	"$Object-HelpClassFilter", 	"$pwr_exe/xtt_meth_classhelp.png", 	"Help Class"}};
-
-

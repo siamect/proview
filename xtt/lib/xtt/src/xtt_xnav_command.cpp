@@ -397,12 +397,12 @@ dcli_tCmdTable	xnav_command_table[] = {
 		{
 			"CALL",
 			&xnav_call_func,
-			{ "dcli_arg1", "/METHOD", "/OBJECT", ""}
+			{ "dcli_arg1", "/METHOD", "/OBJECT", "/FUNCTION", ""}
 		},
 		{
 			"CHECK",
 			&xnav_check_func,
-			{ "dcli_arg1", "/METHOD", "/OBJECT", ""}
+			{ "dcli_arg1", "/METHOD", "/OBJECT", "/FILTER", ""}
 		},
 		{
 			"PRINT",
@@ -6756,36 +6756,68 @@ static int	xnav_call_func(	void		*client_data,
     xmenu_eItemType menu_type;
     pwr_sAttrRef aref;
 
-    if ( EVEN( dcli_get_qualifier( "/METHOD", method_str, sizeof(method_str)))) {
-      xnav->message('E', "Enter method");
-      return XNAV__HOLDCOMMAND;
-    }
-    if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
-      xnav->message('E', "Enter object");
-      return XNAV__HOLDCOMMAND;
-    }
+    if ( ODD( dcli_get_qualifier( "/FUNCTION", method_str, sizeof(method_str)))) {
+      xmenu_sMenuCall mcp;
+      pwr_tStatus (*method)( xmenu_sMenuCall *);
 
-    sts = gdh_NameToAttrref( pwr_cNObjid, object_str, &aref);
-    if ( EVEN(sts)) {
-      xnav->message('E', "No such object");
-      return XNAV__HOLDCOMMAND;      
-    }
+      sts = XNav::GetMethod( method_str, &method);
+      if ( EVEN(sts)) {
+	xnav->message('E', "Method not found");
+	return XNAV__HOLDCOMMAND;
+      }
+      
+      if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
+	xnav->message('E', "Enter object");
+	return XNAV__HOLDCOMMAND;
+      }
+      
+      sts = gdh_NameToAttrref( pwr_cNObjid, object_str, &aref);
+      if ( EVEN(sts)) {
+	xnav->message('E', "No such object");
+	return XNAV__HOLDCOMMAND;      
+      }
 
-    if ( aref.Flags.b.Object)
-      menu_type = xmenu_eItemType_Object;
-    else if ( aref.Flags.b.ObjectAttr)
-      menu_type = xmenu_eItemType_AttrObject;
-    else
-      menu_type = xmenu_eItemType_Attribute;
+      memset( &mcp, 0, sizeof(mcp));
+      mcp.Pointed = aref;
+      mcp.Selected = &aref;
+      mcp.SelectCount = 1;
+      mcp.EditorContext = xnav;
 
-    sts = xnav->call_object_method( aref, menu_type, xmenu_mUtility_XNav,
-				    xnav->priv, method_str);
-    if ( EVEN(sts)) {
-      xnav->message('E',"Unable to call method");	
-      return XNAV__HOLDCOMMAND;
-    }
-    else
+      sts = (method)( &mcp);
       return sts;
+    }
+    else {
+      if ( EVEN( dcli_get_qualifier( "/METHOD", method_str, sizeof(method_str)))) {
+	xnav->message('E', "Enter method");
+	return XNAV__HOLDCOMMAND;
+      }
+      if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
+	xnav->message('E', "Enter object");
+	return XNAV__HOLDCOMMAND;
+      }
+      
+      sts = gdh_NameToAttrref( pwr_cNObjid, object_str, &aref);
+      if ( EVEN(sts)) {
+	xnav->message('E', "No such object");
+	return XNAV__HOLDCOMMAND;      
+      }
+
+      if ( aref.Flags.b.Object)
+	menu_type = xmenu_eItemType_Object;
+      else if ( aref.Flags.b.ObjectAttr)
+	menu_type = xmenu_eItemType_AttrObject;
+      else
+	menu_type = xmenu_eItemType_Attribute;
+      
+      sts = xnav->call_object_method( aref, menu_type, xmenu_mUtility_XNav,
+				      xnav->priv, method_str);
+      if ( EVEN(sts)) {
+	xnav->message('E',"Unable to call method");	
+	return XNAV__HOLDCOMMAND;
+      }
+      else
+	return sts;
+    }
   }
   else
     xnav->message('E',"Syntax error");
@@ -6801,8 +6833,7 @@ static int	xnav_check_func( void		*client_data,
 	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if ( cdh_NoCaseStrncmp( arg1_str, "METHOD", strlen( arg1_str)) == 0)
-  {
+  if ( cdh_NoCaseStrncmp( arg1_str, "METHOD", strlen( arg1_str)) == 0) {
     // Command is "CHECK METHOD"
     char	method_str[80];
     pwr_tAName	object_str;
@@ -6810,31 +6841,63 @@ static int	xnav_check_func( void		*client_data,
     xmenu_eItemType menu_type;
     pwr_sAttrRef aref;
 
-    if ( EVEN( dcli_get_qualifier( "/METHOD", method_str, sizeof(method_str)))) {
-      xnav->message('E', "Enter method");
-      return XNAV__HOLDCOMMAND;
-    }
-    if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
-      xnav->message('E', "Enter object");
-      return XNAV__HOLDCOMMAND;
-    }
+    if ( ODD( dcli_get_qualifier( "/FILTER", method_str, sizeof(method_str)))) {
+      xmenu_sMenuCall mcp;
+      pwr_tStatus (*method)( xmenu_sMenuCall *);
 
-    sts = gdh_NameToAttrref( pwr_cNObjid, object_str, &aref);
-    if ( EVEN(sts)) {
-      xnav->message('E', "No such object");
-      return XNAV__HOLDCOMMAND;      
+      sts = XNav::GetMethod( method_str, &method);
+      if ( EVEN(sts)) {
+	xnav->message('E', "Method not found");
+	return XNAV__HOLDCOMMAND;
+      }
+      
+      if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
+	xnav->message('E', "Enter object");
+	return XNAV__HOLDCOMMAND;
+      }
+      
+      sts = gdh_NameToAttrref( pwr_cNObjid, object_str, &aref);
+      if ( EVEN(sts)) {
+	xnav->message('E', "No such object");
+	return XNAV__HOLDCOMMAND;      
+      }
+
+      memset( &mcp, 0, sizeof(mcp));
+      mcp.Pointed = aref;
+      mcp.Selected = &aref;
+      mcp.SelectCount = 1;
+      mcp.EditorContext = xnav;
+
+      sts = (method)( &mcp);
+      return sts;
     }
+    else {
+      if ( EVEN( dcli_get_qualifier( "/METHOD", method_str, sizeof(method_str)))) {
+	xnav->message('E', "Enter method");
+	return XNAV__HOLDCOMMAND;
+      }
+      if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
+	xnav->message('E', "Enter object");
+	return XNAV__HOLDCOMMAND;
+      }
+      
+      sts = gdh_NameToAttrref( pwr_cNObjid, object_str, &aref);
+      if ( EVEN(sts)) {
+	xnav->message('E', "No such object");
+	return XNAV__HOLDCOMMAND;      
+      }
 
-    if ( aref.Flags.b.Object)
-      menu_type = xmenu_eItemType_Object;
-    else if ( aref.Flags.b.ObjectAttr)
-      menu_type = xmenu_eItemType_AttrObject;
-    else
-      menu_type = xmenu_eItemType_Attribute;
-
-    sts = xnav->check_object_methodfilter( aref, menu_type, xmenu_mUtility_XNav,
-					   xnav->priv, method_str);
-    return sts;
+      if ( aref.Flags.b.Object)
+	menu_type = xmenu_eItemType_Object;
+      else if ( aref.Flags.b.ObjectAttr)
+	menu_type = xmenu_eItemType_AttrObject;
+      else
+	menu_type = xmenu_eItemType_Attribute;
+      
+      sts = xnav->check_object_methodfilter( aref, menu_type, xmenu_mUtility_XNav,
+					     xnav->priv, method_str);
+      return sts;
+    }
   }
   if ( cdh_NoCaseStrncmp( arg1_str, "ISATTRIBUTE", strlen( arg1_str)) == 0)
   {

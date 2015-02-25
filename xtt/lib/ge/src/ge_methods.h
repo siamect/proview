@@ -34,36 +34,34 @@
  * General Public License plus this exception.
  */
 
-#ifndef xtt_methodtoolbar_gtk_h
-#define xtt_methodtoolbar_gtk_h
+#ifndef ge_methods_h
+#define ge_methods_h
 
-#include "xtt_methodtoolbar.h"
+#include <string.h>
+#include "pwr.h"
+#include "pwr_baseclasses.h"
 
-class XttMethodToolbarGtk;
-
-typedef struct {
-  XttMethodToolbarGtk *mt;
-  int idx;
-} xtt_sMethodButtonCb;
-  
-class XttMethodToolbarGtk : public  XttMethodToolbar {
+class GeMethods {
  public:
-  GtkWidget *m_toolbar_w;
-  GtkWidget *m_op_button_w[32];
-  GtkWidget *m_mnt_button_w[32];
-  xtt_sMethodButtonCb m_cb[64];
-  gint 	    m_timerid;
+  static const int opmeth_size = 12;
+  static const int mntmeth_size = 32;
+  static const unsigned int op_helpmask = 1 << 8;
+  static const unsigned int mnt_helpmask = 1 << 4;
+  static pwr_tString80 op_name[opmeth_size];
+  static pwr_tString80 op_subgraph[opmeth_size];
+  static pwr_tString80 op_image[opmeth_size];
+  static pwr_tString80 op_tooltip[opmeth_size];
+  static pwr_tString80 op_method[opmeth_size];
+  static pwr_tString80 op_filter[opmeth_size];
+  static pwr_tString80 mnt_name[mntmeth_size];
+  static pwr_tString80 mnt_subgraph[mntmeth_size];
+  static pwr_tString80 mnt_image[mntmeth_size];
+  static pwr_tString80 mnt_tooltip[mntmeth_size];
+  static pwr_tString80 mnt_method[mntmeth_size];
+  static pwr_tString80 mnt_filter[mntmeth_size];
 
-  XttMethodToolbarGtk( void *parent_ctx, void *xnav, unsigned int op_method_mask, 
-		       unsigned int mnt_method_mask, const char *tooltip_suffix);
-  ~XttMethodToolbarGtk();
-  GtkWidget *build();
-  void set_sensitive();
-  void set_current_sensitive();
-
-  static void activate_button( GtkWidget *w, gpointer data);
-  static gboolean set_sensitive_cb( void *data);
-
+  static int get_xm_mask( pwr_tAttrRef *arp, char *name, pwr_sClass_XttMethodsMask *xm_mask, int *configured,
+			  int (command_cb)( char *cmd, void *udata), void *udata);
 };
 
 #endif

@@ -61,6 +61,7 @@
 #include "ge_graph.h"
 #include "ge_attr.h"
 #include "ge_dyn.h"
+#include "ge_methods.h"
 #include "ge_msg.h"
 
 #include "co_lng.h"
@@ -16482,87 +16483,6 @@ int GeSetValue::export_java( grow_tObject object, ofstream& fp, bool first, char
   return 1;
 }
 
-int GeMethodToolbar::method_toolbar_op_cnt = 12;
-unsigned int GeMethodToolbar::method_toolbar_op_helpmask = 1 << 8;
-char GeMethodToolbar::method_toolbar_op_subgraph[32][80] = {
-  "pwr_mb2opengraph",
-  "pwr_mb2openobjectgraph",
-  "pwr_mb2trend",
-  "pwr_mb2history",
-  "pwr_mb2fast",
-  "pwr_mb2camera",
-  "pwr_mb2histevent",
-  "pwr_mb2blockevents",
-  "pwr_mb2help",
-  "pwr_mb2photo",
-  "pwr_mb2note",
-  "pwr_mb2parentgraph",
-};
-
-int GeMethodToolbar::method_toolbar_mnt_cnt = 32;
-unsigned int GeMethodToolbar::method_toolbar_mnt_helpmask = 1 << 4;
-char GeMethodToolbar::method_toolbar_mnt_subgraph[32][80] = {
-  "pwr_mb2openobject",
-  "pwr_mb2openplc",
-  "pwr_mb2rtnavigator",
-  "pwr_mb2crossreferences",
-  "pwr_mb2helpclass",
-  "pwr_mb2datasheet",
-  "pwr_mb2circuitdiagram",
-  "", "","","","","","","","","","","","","","","","","","","","","","","",
-  "pwr_mb2simulate"
-};
-
-char GeMethodToolbar::method_toolbar_op_methods[32][80] = {
-  "Graph", 
-  "Object Graph",
-  "Trend",
-  "History",
-  "Fast", 
-  "Camera",
-  "Event Log...",
-  "Block Events...", 
-  "Help",
-  "Photo", 
-  "Note",
-  "Parent Object Graph",};
-  
-char GeMethodToolbar::method_toolbar_mnt_methods[32][80] = {
-  "Open Object",
-  "Open Plc",
-  "RtNavigator", 
-  "Crossreferences", 
-  "Help Class", 
-  "DataSheet", 
-  "CircuitDiagram", 
-  "","","","","","","","","","","","","","","","","","","","","","","","",
-  "Simulate"};
-
-char GeMethodToolbar::method_toolbar_op_tooltip[32][80] = {
-  "Graph", 
-  "Object graph",
-  "Trend", 
-  "History", 
-  "Fast curve", 
-  "Camera", 
-  "Event log", 
-  "Block events", 
-  "Help", 
-  "Photo", 
-  "Note",
-  "Open parent object graph",   
-};
-
-char GeMethodToolbar::method_toolbar_mnt_tooltip[32][80] = {
-  "Open object",
-  "Open plc",
-  "Navigator", 
-  "CrossReferences", 
-  "Help class", 
-  "Datasheet",
-  "CircuitDiagram", 
-  "", "","","","","","","","","","","","","","","","","","","","","","","",
-  "Simulate"};
 
 void GeMethodToolbar::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
@@ -16634,62 +16554,29 @@ void GeMethodToolbar::open( ifstream& fp)
   }  
 }
 
+static int methods_command_cb( char *command, void *udata)
+{
+  GeDyn *dyn = (GeDyn *)udata;
+  pwr_tCmd cmd;
+
+  dyn->graph->get_command( command, cmd, dyn);
+  return (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+}
+
 int GeMethodToolbar::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int 			sts;
-  pwr_tCmd 		cmd, command;
   pwr_tAName         	parsed_name;
   int			inverted;
   int			attr_type, attr_size;
   graph_eDatabase 	db;
   pwr_sClass_XttMethodsMask xm_mask;
-  int 			mask_configure = 0;
   int		        mask_store = 0;
     
   db = dyn->parse_attr_name( method_object, parsed_name, &inverted, &attr_type, 
 			     &attr_size);
-  strcat( parsed_name, ".XttMethodsMask");
-  sts = gdh_GetObjectInfo( parsed_name, &xm_mask, sizeof(xm_mask));
-  if ( ODD(sts)) {
-    if ( !(xm_mask.Flags & pwr_mXttMethodsFlagsMask_IsConfigured)) {
-      mask_configure = 1;
-      mask_store = 1;
-    }      
-  }
-  else {
-    mask_configure = 1;
-  }
-  
 
-  if ( mask_configure) {
-    xm_mask.OpMethods = 0;
-    for ( int i = 0; i < method_toolbar_op_cnt; i++) {
-      if ( strcmp( method_toolbar_op_methods[i], "Parent Object Graph") == 0) {
-	if ( strchr( method_object, '.') != 0)
-	  xm_mask.OpMethods |= 1 << i;
-      }
-      else {
-	sprintf( command, "check method/method=\"%s\"/object=%s", 
-		 method_toolbar_op_methods[i], method_object);
-	
-	dyn->graph->get_command( command, cmd, dyn);
-	sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
-	if ( ODD(sts))
-	  xm_mask.OpMethods |= 1 << i;
-      }
-    }
-    xm_mask.MntMethods = 0;
-    for ( int i = 0; i < method_toolbar_mnt_cnt; i++) {
-      sprintf( command, "check method/method=\"%s\"/object=%s", 
-	       method_toolbar_mnt_methods[i], method_object);
-	
-      dyn->graph->get_command( command, cmd, dyn);
-      sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
-      if ( ODD(sts))
-	xm_mask.MntMethods |= 1 << i;
-    }
-    xm_mask.Flags |= pwr_mXttMethodsFlagsMask_IsConfigured;
-  }
+  sts = GeMethods::get_xm_mask( 0, parsed_name, &xm_mask, &mask_store, methods_command_cb, dyn);
 
   unsigned int opmask = xm_mask.OpMethods;
   unsigned int mntmask = xm_mask.MntMethods;
@@ -16707,11 +16594,12 @@ int GeMethodToolbar::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( !dyn->graph->is_authorized( pwr_mAccess_RtPlc | pwr_mAccess_System))
     insensitive_mntmask |= pwr_mXttMntMethodsMask_OpenTrace;  
 
-  grow_ToolbarConfigure( object, (char *)method_toolbar_op_subgraph, (char *)method_toolbar_mnt_subgraph,
-			 method_toolbar_op_cnt, method_toolbar_mnt_cnt, opmask, mntmask,
+  grow_ToolbarConfigure( object, (char *)GeMethods::op_subgraph, (char *)GeMethods::mnt_subgraph,
+			 GeMethods::opmeth_size, GeMethods::mntmeth_size, opmask, mntmask,
 			 insensitive_opmask, insensitive_mntmask);
 
   if ( mask_store) {
+    strcat( parsed_name, ".XttMethodsMask");
     sts = gdh_SetObjectInfo( parsed_name, &xm_mask, sizeof(xm_mask));
     if ( EVEN(sts))
       printf( "Set mask error %s\n", parsed_name);
@@ -16733,11 +16621,11 @@ int GeMethodToolbar::action( grow_tObject object, glow_tEvent event)
   case glow_eEvent_TipText:
     if ( event->toolbar.category == 1)
       grow_SetTipText( dyn->graph->grow->ctx, event->toolbar.object, 		       
-		       method_toolbar_op_tooltip[event->toolbar.idx], 
+		       GeMethods::op_tooltip[event->toolbar.idx],
 		       event->any.x_pixel, event->any.y_pixel);
     else
       grow_SetTipText( dyn->graph->grow->ctx, event->toolbar.object, 		       
-		       method_toolbar_mnt_tooltip[event->toolbar.idx], 
+		       GeMethods::mnt_tooltip[event->toolbar.idx], 
 		       event->any.x_pixel, event->any.y_pixel);
     break;
   case glow_eEvent_Key_Return:
@@ -16746,15 +16634,12 @@ int GeMethodToolbar::action( grow_tObject object, glow_tEvent event)
     pwr_tCmd cmd, command;
 
     if ( event->toolbar.category == 1) {
-      if ( strcmp( method_toolbar_op_methods[event->toolbar.idx], "Parent Object Graph") == 0)
-	sprintf( command, "open graph/class/parent/instance=%s", method_object);
-      else
-	sprintf( command, "call method/method=\"%s\"/object=%s", 
-		 method_toolbar_op_methods[event->toolbar.idx], method_object);
+      sprintf( command, "call method/function=\"%s\"/object=%s", 
+	       GeMethods::op_method[event->toolbar.idx], method_object);
     }
     else {
-      sprintf( command, "call method/method=\"%s\"/object=%s", 
-	       method_toolbar_mnt_methods[event->toolbar.idx], method_object);
+      sprintf( command, "call method/function=\"%s\"/object=%s", 
+	       GeMethods::mnt_method[event->toolbar.idx], method_object);
     }
       
     dyn->graph->get_command( command, cmd, dyn);
@@ -16932,59 +16817,20 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
       glow_sMenuInfo info;
 
       int 			sts;
-      pwr_tCmd 		cmd, command;
-      pwr_tAName         	parsed_name;
+      pwr_tAName         	parsed_name, xm_name;
       int			inverted;
       int			attr_type, attr_size;
       graph_eDatabase 	db;
       pwr_sClass_XttMethodsMask xm_mask;
-      int 			mask_configure = 0;
       int		        mask_store = 0;
     
       db = dyn->parse_attr_name( method_object, parsed_name, &inverted, &attr_type, 
 				 &attr_size);
-      strcat( parsed_name, ".XttMethodsMask");
-      sts = gdh_GetObjectInfo( parsed_name, &xm_mask, sizeof(xm_mask));
-      if ( ODD(sts)) {
-	if ( !(xm_mask.Flags & pwr_mXttMethodsFlagsMask_IsConfigured)) {
-	  mask_configure = 1;
-	  mask_store = 1;
-	}      
-      }
-      else {
-	mask_configure = 1;
-      }
-  
 
-      if ( mask_configure) {
-	xm_mask.OpMethods = 0;
-	for ( int i = 0; i < GeMethodToolbar::method_toolbar_op_cnt; i++) {
-	  if ( strcmp( GeMethodToolbar::method_toolbar_op_methods[i], "Parent Object Graph") == 0) {
-	    if ( strchr( method_object, '.') != 0)
-	      xm_mask.OpMethods |= 1 << i;
-	  }
-	  else {
-	    sprintf( command, "check method/method=\"%s\"/object=%s", 
-		     GeMethodToolbar::method_toolbar_op_methods[i], method_object);
-	
-	    dyn->graph->get_command( command, cmd, dyn);
-	    sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
-	    if ( ODD(sts))
-	      xm_mask.OpMethods |= 1 << i;
-	  }
-	}
-	xm_mask.MntMethods = 0;
-	for ( int i = 0; i < GeMethodToolbar::method_toolbar_mnt_cnt; i++) {
-	  sprintf( command, "check method/method=\"%s\"/object=%s", 
-		   GeMethodToolbar::method_toolbar_mnt_methods[i], method_object);
-	
-	  dyn->graph->get_command( command, cmd, dyn);
-	  sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
-	  if ( ODD(sts))
-	    xm_mask.MntMethods |= 1 << i;
-	}
-	xm_mask.Flags |= pwr_mXttMethodsFlagsMask_IsConfigured;
-      }
+      sts = GeMethods::get_xm_mask( 0, parsed_name, &xm_mask, &mask_store, methods_command_cb, dyn);
+
+      strcpy( xm_name, parsed_name);
+      strcat( xm_name, ".XttMethodsMask");
 
       opmask = xm_mask.OpMethods;
       mntmask = xm_mask.MntMethods;
@@ -17006,32 +16852,38 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
       for ( int i = 0; i < (int)(sizeof(info.item)/sizeof(info.item[0])); i++)
 	info.item[i].occupied = false;
 
-      for ( int i = 0; i < GeMethodToolbar::method_toolbar_op_cnt; i++) {
+      for ( int i = 0; i < GeMethods::opmeth_size; i++) {
 	if ( menu_idx >= (int)(sizeof(info.item)/sizeof(info.item[0])))
 	  break;
 
-	if ( help_menu && !(GeMethodToolbar::method_toolbar_op_helpmask & (1 << i)))
+	if ( strcmp( GeMethods::op_name[i], "") == 0)
+	  continue;
+
+	if ( help_menu && !(GeMethods::op_helpmask & (1 << i)))
 	  continue;
   
 	if ( opmask & (1 << i)) {
 	  info.item[menu_idx].type = glow_eMenuItem_Button;
-	  strcpy( info.item[menu_idx].text, GeMethodToolbar::method_toolbar_op_methods[i]);
+	  strcpy( info.item[menu_idx].text, GeMethods::op_name[i]);
 	  info.item[menu_idx].occupied = true;
 	  if ( insensitive_opmask & (1 << i))
 	    info.item[menu_idx].type = glow_eMenuItem_ButtonDisabled;
 	  menu_idx++;
 	}
       }
-      for ( int i = 0; i < GeMethodToolbar::method_toolbar_mnt_cnt; i++) {
+      for ( int i = 0; i < GeMethods::mntmeth_size; i++) {
 	if ( menu_idx >= (int)(sizeof(info.item)/sizeof(info.item[0])))
 	  break;
 
-	if ( help_menu && !(GeMethodToolbar::method_toolbar_mnt_helpmask & (1 << i)))
+	if ( strcmp( GeMethods::mnt_name[i], "") == 0)
+	  continue;
+
+	if ( help_menu && !(GeMethods::mnt_helpmask & (1 << i)))
 	  continue;
 
 	if ( mntmask & (1 << i)) {
 	  info.item[menu_idx].type = glow_eMenuItem_Button;
-	  strcpy( info.item[menu_idx].text, GeMethodToolbar::method_toolbar_mnt_methods[i]);
+	  strcpy( info.item[menu_idx].text, GeMethods::mnt_name[i]);
 	  info.item[menu_idx].occupied = true;
 	  if ( insensitive_mntmask & (1 << i))
 	    info.item[menu_idx].type = glow_eMenuItem_ButtonDisabled;
@@ -17067,7 +16919,7 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
       grow_SetMenuInputFocus( menu_object, 1);
 
       if ( mask_store) {
-	sts = gdh_SetObjectInfo( parsed_name, &xm_mask, sizeof(xm_mask));
+	sts = gdh_SetObjectInfo( xm_name, &xm_mask, sizeof(xm_mask));
 	if ( EVEN(sts))
 	  printf( "Set mask error %s\n", parsed_name);
       }
@@ -17083,15 +16935,15 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
     int idx = 0;
     int found = 0;
 
-    for ( int i = 0; i < GeMethodToolbar::method_toolbar_op_cnt; i++) {
-      if ( help_menu && !(GeMethodToolbar::method_toolbar_op_helpmask & (1 << i)))
+    for ( int i = 0; i < GeMethods::opmeth_size; i++) {
+      if ( help_menu && !(GeMethods::op_helpmask & (1 << i)))
 	continue;
 
       if ( opmask & (1 << i))
 	idx++;
       if ( event->menu.item + 1 == idx) {
-	sprintf( command, "call method/method=\"%s\"/object=%s", 
-		 GeMethodToolbar::method_toolbar_op_methods[i], method_object);
+	sprintf( command, "call method/function=\"%s\"/object=%s", 
+		 GeMethods::op_method[i], method_object);
 	dyn->graph->get_command( command, cmd, dyn);
 	sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
 	found = 1;
@@ -17100,15 +16952,15 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
     }
 
     if ( !found) {
-      for ( int i = 0; i < GeMethodToolbar::method_toolbar_mnt_cnt; i++) {
-	if ( help_menu && !(GeMethodToolbar::method_toolbar_mnt_helpmask & (1 << i)))
+      for ( int i = 0; i < GeMethods::mntmeth_size; i++) {
+	if ( help_menu && !(GeMethods::mnt_helpmask & (1 << i)))
 	  continue;
 
 	if ( mntmask & (1 << i))
 	  idx++;
 	if ( event->menu.item + 1 == idx) {
-	  sprintf( command, "call method/method=\"%s\"/object=%s", 
-		   GeMethodToolbar::method_toolbar_mnt_methods[i], method_object);
+	  sprintf( command, "call method/function=\"%s\"/object=%s", 
+		   GeMethods::mnt_method[i], method_object);
 	  dyn->graph->get_command( command, cmd, dyn);
 	  sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
 	  found = 1;

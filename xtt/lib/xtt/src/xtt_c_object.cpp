@@ -1014,6 +1014,94 @@ static pwr_tStatus OpenObjectGraphFilter( xmenu_sMenuCall *ip)
   return XNAV__INVISIBLE;
 }
 
+// Open parent class graph
+static pwr_tStatus OpenParentObjectGraph( xmenu_sMenuCall *ip)
+{
+  int		sts;
+  pwr_tAName   	name;
+  char     	cmd[800];
+  pwr_sAttrRef  aref;
+  pwr_sAttrRef *objar;
+  pwr_tAttrRef pobjar;
+
+  if (!ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid))
+    objar = &ip->Pointed;
+  else
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  if ( !objar->Flags.b.ObjectAttr)
+    return 0;
+
+  sts = gdh_AttrArefToObjectAref( objar, &pobjar);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_AttrrefToName( &pobjar,
+		  name, sizeof(name), cdh_mNName);
+  if ( EVEN(sts)) return sts;
+
+  // Check if object is mounted with other name
+  sts = gdh_NameToAttrref( pwr_cNObjid, name, &aref);
+  if ( EVEN(sts)) {
+    sts = gdh_AttrrefToName( &pobjar,
+		  name, sizeof(name), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+  }
+  sprintf( cmd, "open graph/class/inst=%s/name=\"%s\"", name, name);
+
+  ((XNav *)ip->EditorContext)->command( cmd);
+
+  return XNAV__SUCCESS;
+}
+
+// Open object graph filter
+static pwr_tStatus OpenParentObjectGraphFilter( xmenu_sMenuCall *ip)
+{
+  int		sts;
+  pwr_tClassId	classid;
+  pwr_tObjName 	classname;
+  pwr_tFileName	fname;
+  pwr_tFileName	found_file;
+  pwr_sAttrRef *objar;
+  pwr_tAttrRef pobjar;
+
+  if (!ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid))
+    objar = &ip->Pointed;
+  else
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  if ( !objar->Flags.b.ObjectAttr)
+    return XNAV__INVISIBLE;
+
+  sts = gdh_AttrArefToObjectAref( objar, &pobjar);
+  if ( EVEN(sts))
+    return XNAV__INVISIBLE;
+
+  for ( sts = gdh_GetAttrRefTid( &pobjar, &classid);
+	ODD(sts);
+	sts = gdh_GetSuperClass( classid, &classid, pwr_cNObjid)) {
+
+    sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
+			   classname, sizeof(classname), cdh_mName_object);
+    if ( EVEN(sts)) return sts;
+    cdh_ToLower( classname, classname);
+
+    if ( classname[0] == '$')
+      sprintf( fname, "$pwr_exe/pwr_c_%s.pwg", &classname[1]);
+    else
+      sprintf( fname, "$pwr_exe/pwr_c_%s.pwg", classname);
+    sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+    dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+    if ( EVEN(sts)) {
+      sprintf( fname, "$pwrp_exe/%s.pwg", classname);
+      sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+      dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+    }
+    if ( ODD(sts))
+      return XNAV__SUCCESS;
+  }
+  return XNAV__INVISIBLE;
+}
+
 // Open Graph
 static pwr_tStatus OpenGraph( xmenu_sMenuCall *ip)
 {
@@ -2255,6 +2343,8 @@ pwr_dExport pwr_BindXttMethods($Object) = {
   pwr_BindXttMethod(RtNavigatorFilter),
   pwr_BindXttMethod(OpenObjectGraph),
   pwr_BindXttMethod(OpenObjectGraphFilter),
+  pwr_BindXttMethod(OpenParentObjectGraph),
+  pwr_BindXttMethod(OpenParentObjectGraphFilter),
   pwr_BindXttMethod(OpenGraph),
   pwr_BindXttMethod(OpenGraphFilter),
   pwr_BindXttMethod(Collect),

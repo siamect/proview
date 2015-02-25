@@ -53,6 +53,7 @@
 #include "ge_graph.h"
 #include "ge_attr.h"
 #include "ge_dyn.h"
+#include "ge_methods.h"
 #include "ge_msg.h"
 #include "glow_msg.h"
 
@@ -5162,10 +5163,10 @@ void Graph::create_toolbar( grow_tObject *object, double x, double y)
   GeDyn *dyn;
 
   grow_CreateGrowToolbar( grow->ctx, "mbtoolbar", "mbtoolbar", 
-			  (char *)GeMethodToolbar::method_toolbar_op_subgraph, 
-			  (char *)GeMethodToolbar::method_toolbar_mnt_subgraph,
-			  GeMethodToolbar::method_toolbar_op_cnt, 
-			  GeMethodToolbar::method_toolbar_mnt_cnt,
+			  (char *)GeMethods::op_subgraph, 
+			  (char *)GeMethods::mnt_subgraph,
+			  GeMethods::opmeth_size, 
+			  GeMethods::mntmeth_size,
 			  x, y, NULL, object);
   dyn = new GeDyn( this);
   dyn->action_type1 = dyn->total_action_type1 = ge_mActionType1_MethodToolbar;

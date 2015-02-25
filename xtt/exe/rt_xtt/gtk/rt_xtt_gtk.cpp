@@ -1025,7 +1025,8 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   gtk_toolbar_append_widget( tools, tools_zoom_reset,CoWowGtk::translate_utf8("Zoom reset"), "");
 
   // Toolbar
-  methodtoolbar = new XttMethodToolbarGtk(0, 0, ~mt_mMethod_RtNavigator, "");
+  methodtoolbar = new XttMethodToolbarGtk(0, 0, ~pwr_mXttOpMethodsMask_ParentObjectGraph, 
+					  ~pwr_mXttMntMethodsMask_RtNavigator, "");
   GtkToolbar *tools2 = (GtkToolbar *) ((XttMethodToolbarGtk *)methodtoolbar)->build();
 
   // Statusbar and cmd input

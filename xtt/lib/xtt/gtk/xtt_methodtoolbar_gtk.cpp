@@ -41,14 +41,17 @@
 #include <gtk/gtk.h>
 #include "co_dcli.h"
 #include "cow_wow_gtk.h"
+#include "co_cdh.h"
+#include "rt_gdh.h"
 #include "xtt_xnav.h"
 #include "xtt_methodtoolbar_gtk.h"
+#include "ge_methods.h"
 
-XttMethodToolbarGtk::XttMethodToolbarGtk( void *parent_ctx, void *xnav, unsigned int method_mask,
-					  const char *tooltip_suffix) :
-  XttMethodToolbar( parent_ctx, xnav, method_mask, tooltip_suffix), m_timerid(0)
+XttMethodToolbarGtk::XttMethodToolbarGtk( void *parent_ctx, void *xnav, unsigned int op_method_mask,
+					  unsigned int mnt_method_mask, const char *tooltip_suffix) :
+  XttMethodToolbar( parent_ctx, xnav, op_method_mask, mnt_method_mask, tooltip_suffix), m_timerid(0)
 {
-  for ( int i = 0; i < m_size; i++) {
+  for ( int i = 0; i < 64; i++) {
     m_cb[i].mt = this;
     m_cb[i].idx = i;
   }
@@ -68,6 +71,8 @@ void XttMethodToolbarGtk::activate_button( GtkWidget *w, gpointer data)
   int		sts = 0;
   int		is_attr;
   pwr_sAttrRef	aref;
+  pwr_tAName	aname;
+  pwr_tCmd	cmd;
   xmenu_eItemType menu_type;
 
   if ( mt->get_select_cb)
@@ -81,11 +86,21 @@ void XttMethodToolbarGtk::activate_button( GtkWidget *w, gpointer data)
     else
       menu_type = xmenu_eItemType_Attribute;
     
-    mt->m_xnav->call_method( mt->m_data[idx].method, mt->m_data[idx].filter, aref,
-			     menu_type,
-			     xmenu_mUtility_XNav,
-			     mt->m_xnav->priv, 0);
+    sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mName_volumeStrict);
+    if ( idx < 32)
+      sprintf( cmd, "call method/function=%s/object=%s", GeMethods::op_method[idx], aname);
+    else
+      sprintf( cmd, "call method/function=%s/object=%s", GeMethods::mnt_method[idx-32], aname);
+
+    mt->m_xnav->command( cmd);
   }  
+}
+
+static int methods_command_cb( char *command, void *udata)
+{
+  XNav *xnav = (XNav *)udata;
+  xnav->command( command);
+  return xnav->get_command_sts();
 }
 
 GtkWidget *XttMethodToolbarGtk::build()
@@ -95,20 +110,36 @@ GtkWidget *XttMethodToolbarGtk::build()
   // Toolbar
   m_toolbar_w = (GtkWidget *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
-  for ( int i = 0; i < m_size; i++) {
-    if ( m_method_mask & (1 << i)) {
+  for ( int i = 0; i < GeMethods::opmeth_size; i++) {
+    if ( m_op_method_mask & (1 << i) && strcmp( GeMethods::op_image[i],"") != 0) {
       char tooltip[200];
 
-      strcpy( tooltip, m_data[i].tooltip);
+      strcpy( tooltip, GeMethods::op_tooltip[i]);
       strcat( tooltip, m_tooltip_suffix);
 
-      m_button_w[i] = gtk_button_new();
-      dcli_translate_filename( fname, m_data[i].image);
-      gtk_container_add( GTK_CONTAINER(m_button_w[i]), 
+      m_op_button_w[i] = gtk_button_new();
+      dcli_translate_filename( fname, GeMethods::op_image[i]);
+      gtk_container_add( GTK_CONTAINER(m_op_button_w[i]), 
 			 gtk_image_new_from_file( fname));
-      g_signal_connect( m_button_w[i], "clicked", G_CALLBACK(activate_button), &m_cb[i]);
-      g_object_set( m_button_w[i], "can-focus", FALSE, NULL);
-      gtk_toolbar_append_widget( GTK_TOOLBAR(m_toolbar_w), m_button_w[i], CoWowGtk::translate_utf8( tooltip), "");
+      g_signal_connect( m_op_button_w[i], "clicked", G_CALLBACK(activate_button), &m_cb[i]);
+      g_object_set( m_op_button_w[i], "can-focus", FALSE, NULL);
+      gtk_toolbar_append_widget( GTK_TOOLBAR(m_toolbar_w), m_op_button_w[i], CoWowGtk::translate_utf8( tooltip), "");
+    }
+  }
+  for ( int i = 0; i < GeMethods::mntmeth_size; i++) {
+    if ( m_mnt_method_mask & (1 << i) && strcmp( GeMethods::mnt_image[i],"") != 0) {
+      char tooltip[200];
+
+      strcpy( tooltip, GeMethods::mnt_tooltip[i]);
+      strcat( tooltip, m_tooltip_suffix);
+
+      m_mnt_button_w[i] = gtk_button_new();
+      dcli_translate_filename( fname, GeMethods::mnt_image[i]);
+      gtk_container_add( GTK_CONTAINER(m_mnt_button_w[i]), 
+			 gtk_image_new_from_file( fname));
+      g_signal_connect( m_mnt_button_w[i], "clicked", G_CALLBACK(activate_button), &m_cb[32+i]);
+      g_object_set( m_mnt_button_w[i], "can-focus", FALSE, NULL);
+      gtk_toolbar_append_widget( GTK_TOOLBAR(m_toolbar_w), m_mnt_button_w[i], CoWowGtk::translate_utf8( tooltip), "");
     }
   }
   return m_toolbar_w;
@@ -145,9 +176,13 @@ void XttMethodToolbarGtk::set_current_sensitive()
     sts = (get_select_cb)( m_parent_ctx, &aref, &is_attr);
   if ( EVEN(sts)) {
     // Nothing selected
-    for ( int i = 0; i < m_size; i++) {
-      if ( m_method_mask & (1 << i))
-	gtk_widget_set_sensitive( m_button_w[i], FALSE);      
+    for ( int i = 0; i < GeMethods::opmeth_size; i++) {
+      if ( m_op_method_mask & (1 << i) && strcmp( GeMethods::op_image[i], "") != 0)
+	gtk_widget_set_sensitive( m_op_button_w[i], FALSE);      
+    }
+    for ( int i = 0; i < GeMethods::mntmeth_size; i++) {
+      if ( m_mnt_method_mask & (1 << i) && strcmp( GeMethods::mnt_image[i], "") != 0)
+	gtk_widget_set_sensitive( m_mnt_button_w[i], FALSE);      
     }
   }
   else {
@@ -158,9 +193,13 @@ void XttMethodToolbarGtk::set_current_sensitive()
     if ( EVEN(sts)) return;
 
     if ( info.cid == pwr_eClass_ExternVolume) {
-      for ( int i = 0; i < m_size; i++) {
-	if ( m_method_mask & (1 << i))
-	  gtk_widget_set_sensitive( m_button_w[i], FALSE);      
+      for ( int i = 0; i < GeMethods::opmeth_size; i++) {
+	if ( m_op_method_mask & (1 << i) && strcmp( GeMethods::op_image[i], "") != 0)
+	  gtk_widget_set_sensitive( m_op_button_w[i], FALSE);      
+      }
+      for ( int i = 0; i < GeMethods::mntmeth_size; i++) {
+	if ( m_mnt_method_mask & (1 << i) && strcmp( GeMethods::mnt_image[i], "") != 0)
+	  gtk_widget_set_sensitive( m_mnt_button_w[i], FALSE);
       }
       return;
     }
@@ -172,15 +211,37 @@ void XttMethodToolbarGtk::set_current_sensitive()
     else
       menu_type = xmenu_eItemType_Attribute;
     
-    for ( int i = 0; i < m_size; i++) {
-      if ( m_method_mask & (1 << i)) {
-	sts = m_xnav->check_object_methodfilter( aref, menu_type, xmenu_mUtility_XNav,
-						 m_xnav->priv, m_data[i].name);
-	if ( ODD(sts)) 
-	  gtk_widget_set_sensitive( m_button_w[i], TRUE);
+    pwr_tAName aname;
+    pwr_sClass_XttMethodsMask xm_mask;
+    int		        mask_store = 0;
+
+    sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return;
+
+    sts = GeMethods::get_xm_mask( 0, aname, &xm_mask, &mask_store, methods_command_cb, m_xnav);
+
+    for ( int i = 0; i < GeMethods::opmeth_size; i++) {
+      if ( m_op_method_mask & (1 << i) && strcmp( GeMethods::op_image[i],"") != 0) {
+	if ( xm_mask.OpMethods & (1 << i))
+	  gtk_widget_set_sensitive( m_op_button_w[i], TRUE);
 	else
-	  gtk_widget_set_sensitive( m_button_w[i], FALSE);
+	  gtk_widget_set_sensitive( m_op_button_w[i], FALSE);
       }
     }
+    for ( int i = 0; i < GeMethods::mntmeth_size; i++) {
+      if ( m_mnt_method_mask & (1 << i)  && strcmp( GeMethods::mnt_image[i],"") != 0) {
+	if ( xm_mask.MntMethods & (1 << i))
+	  gtk_widget_set_sensitive( m_mnt_button_w[i], TRUE);
+	else
+	  gtk_widget_set_sensitive( m_mnt_button_w[i], FALSE);
+      }
+    }
+    if ( mask_store) {
+      strcat( aname, ".XttMethodsMask");
+      sts = gdh_SetObjectInfo( aname, &xm_mask, sizeof(xm_mask));
+      if ( EVEN(sts))
+	printf( "Set mask error %s\n", aname);
+    }
+
   }
 }
