@@ -140,8 +140,8 @@ struct sHead {
   pwr_tNodeId		nid		pwr_dPacked;	/* Node identitiy. */
   int			birth		pwr_dPacked;	/* Time when link was born. */
   mSeg			flags		pwr_dPacked;
-  qdb_sAck		lack		pwr_dPacked;
-  qdb_sAck		rack		pwr_dPacked;
+  qdb_sAck		lack;
+  qdb_sAck		rack;
 };
 
 struct sCseg {
@@ -949,8 +949,11 @@ get_link (
   thread_MutexLock(&l.links.mutex);
 
   lp = tree_Find(&sts, l.links.table, &nid);
+#if 0
+  // Allow unconfigured links...
   if (lp == NULL)
     lp = new_link(nid, mp);    
+#endif
 
   thread_MutexUnlock(&l.links.mutex);  
 
@@ -1066,7 +1069,7 @@ import_thread ()
     else
       sp->lp = last_link = get_link(sp->head.nid, &msg);
     if (sp->lp == NULL) {
-      errh_Error("get_link, returned NULL");
+      errh_Warning("Request from unknown node %s", cdh_VolumeIdToString(0, sp->head.nid,0,0));
       continue;   
     }
     sp->c.action = eAction_import;
