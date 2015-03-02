@@ -748,10 +748,14 @@ void XttTrend::trend_scan( void *data)
 
       size = trend->cb_info[i].size;
       if ( size > 0) {
- 
+
 	// Shift data
-	for ( j = trend->cb_info[i].samples - 1; j >= (int)size; j--)
-	  trend->gcd->y_data[i][j] = trend->gcd->y_data[i][j-size];
+
+	for ( j = trend->cb_info[i].samples - 1; j >= (int)size; j--) {
+	  if ( j < trend->gcd->rows[i])
+	    trend->gcd->y_data[i][j] = trend->gcd->y_data[i][j-size];
+	}
+
 	// Insert new value
 	switch ( trend->element_type[i]) {
 	case pwr_eType_Float64:
@@ -1237,7 +1241,7 @@ void XttTrend::curve_add( pwr_tAttrRef *arp, pwr_tAttrRef *trend_arp, pwr_tStatu
     }
 
     for ( i = start_idx; i < trend_cnt; i++) {
-      gcd->y_data[i] = (double *) calloc( 1, 8 * max_points);
+      gcd->y_data[i] = (double *) calloc( 1, 8 * MAX((unsigned int)max_points,actual_data_size[i]));
       
       switch ( element_type[i]) {
       case pwr_eType_Float32:
@@ -1289,7 +1293,7 @@ void XttTrend::curve_add( pwr_tAttrRef *arp, pwr_tAttrRef *trend_arp, pwr_tStatu
       
       gcd->y_axis_type[i] = curve_eAxis_y;
       strcpy( gcd->y_name[i], object_name[i]);      
-      gcd->rows[i] = max_points;
+      gcd->rows[i] = actual_data_size[i];
     }
 
     gcd->cols = trend_cnt;

@@ -1407,11 +1407,17 @@ void GrowPolyLine::add_and_shift_y_values( double *values, unsigned int no_of_va
   if ( !no_of_values)
     return;
 
-  for ( unsigned int i = a_points.size() - 1; i >= no_of_values; i--)
-    ((GlowPoint *)a_points[i])->y = ((GlowPoint *)a_points[i-no_of_values])->y;
+  if ( no_of_values >= (unsigned int) a_points.size()) {
+    for ( unsigned int i = 0; i < (unsigned int)a_points.size(); i++) 
+      ((GlowPoint *)a_points[i])->y = *(values + i);
+  }
+  else {
+    for ( unsigned int i = a_points.size() - 1; i >= no_of_values; i--)
+      ((GlowPoint *)a_points[i])->y = ((GlowPoint *)a_points[i-no_of_values])->y;
   
-  for ( unsigned int i = 0; i < no_of_values; i++) 
-    ((GlowPoint *)a_points[i])->y = *(values + i);
+    for ( unsigned int i = 0; i < no_of_values; i++) 
+      ((GlowPoint *)a_points[i])->y = *(values + i);
+  }
   zoom();
   nav_zoom();
 }
