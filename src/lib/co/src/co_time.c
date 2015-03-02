@@ -85,6 +85,7 @@
 } while (0)
 #define notADeltaTime(p) \
   (((p->tv_sec > 0) && (p->tv_nsec < 0 || p->tv_nsec >=  1000000000)) || \
+   ((p->tv_sec == 0) && (p->tv_nsec <= -1000000000 || p->tv_nsec >=  1000000000)) || \
    ((p->tv_sec < 0) && (p->tv_nsec > 0 || p->tv_nsec <= -1000000000)))
 
 #define ONEDAY 86400
