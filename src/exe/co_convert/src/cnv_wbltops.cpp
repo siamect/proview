@@ -172,6 +172,9 @@ int CnvWblToPs::class_exec()
       else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
 	tops.print_h3( txt + 3);
       }
+      else if ( strncmp( CnvCtx::low(txt), "@i", 2) == 0)  {
+	tops.print_text( txt + 2, tops.style[tops.ci].text);
+      }
       else
   	tops.print_text( ctx->rw->doc_text[i], tops.style[tops.ci].text);
     }

@@ -236,6 +236,9 @@ Lng::translate("Class") << " " << full_class_name << endl <<
       else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
 	fp_tmp << "<H2> " << txt + 3 << endl;
       }
+      else if ( strncmp( CnvCtx::low(txt), "@i", 2) == 0)  {
+	fp_tmp << "<i>" << txt + 2 << endl;
+      }
       else
 	fp_tmp << ctx->rw->doc_text[i] << endl;
     }

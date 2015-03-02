@@ -643,6 +643,9 @@ endl <<
       else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
 	html_clf->f << "</XMP><H4>" << txt + 3 << "</H4><BR><XMP>" << endl;
       }
+      else if ( strncmp( CnvCtx::low(txt), "@i", 2) == 0)  {
+	html_clf->f << txt + 2 << endl;
+      }
       else
 	html_clf->f << ctx->rw->doc_text[i] << endl;
     }
