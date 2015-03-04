@@ -139,17 +139,17 @@ public class JopXttTrend implements ActionListener, JopCurveIfc, GdhApplIfc {
 	    return;
 	}
 
-	CdhrObjid oret = engine.gdh.nameToObjid( trendList[0]);
-	if ( oret.evenSts()) {
+	CdhrAttrRef aret = engine.gdh.nameToAttrRef( trendList[0]);
+	if ( aret.evenSts()) {
 	    System.out.println("Error in trend  configuration");
 	    return;
 	}
-	CdhrClassId cret = engine.gdh.getObjectClass( oret.objid);
+	CdhrTypeId cret = engine.gdh.getAttrRefTid( aret.aref);
 	if ( cret.evenSts()) {
 	    System.out.println("Error in trend  configuration");
 	    return;
 	}
-	trend_tid = cret.classId;
+	trend_tid = cret.typeId;
 
 	if ( trend_tid == Pwrb.cClass_PlotGroup) {
 	    // Plotgroup as input
@@ -163,17 +163,17 @@ public class JopXttTrend implements ActionListener, JopCurveIfc, GdhApplIfc {
 	    }
 
 
-	    oret = engine.gdh.nameToObjid( trend_name[0]);
-	    if ( oret.evenSts()) {
+	    aret = engine.gdh.nameToAttrRef( trend_name[0]);
+	    if ( aret.evenSts()) {
 		System.out.println("Error in trend  configuration");
 		return;
 	    }
-	    cret = engine.gdh.getObjectClass( oret.objid);
+	    cret = engine.gdh.getAttrRefTid( aret.aref);
 	    if ( cret.evenSts()) {
 		System.out.println("Error in trend  configuration");
 		return;
 	    }
-	    trend_tid = cret.classId;
+	    trend_tid = cret.typeId;
 	}
 	else {
 	    // DsTrend or DsTrendCurve as input
@@ -428,7 +428,7 @@ public class JopXttTrend implements ActionListener, JopCurveIfc, GdhApplIfc {
 			    continue;			
 		        tcp[tcp_i].Buffer = sret.str;
 
-			CdhrAttrRef aret = engine.gdh.nameToAttrRef( tcp[tcp_i].Buffer);
+			aret = engine.gdh.nameToAttrRef( tcp[tcp_i].Buffer);
 			if ( aret.evenSts())
 			    continue;
 			tcp[tcp_i].AttrRef = aret.aref;

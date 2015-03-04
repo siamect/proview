@@ -1306,11 +1306,11 @@ public class XttTree extends JPanel
       }
       
       int cid = 0;
-      CdhrObjid oret = gdh.nameToObjid(name);
-      if ( oret.oddSts()) {
-	  CdhrClassId cret = gdh.getObjectClass(oret.objid);
+      CdhrAttrRef aret = gdh.nameToAttrRef(name);
+      if ( aret.oddSts()) {
+	  CdhrTypeId cret = gdh.getAttrRefTid(aret.aref);
 	  if ( cret.oddSts())
-	      cid = cret.getClassId();
+	      cid = cret.getTypeId();
       }
       String cmd;
       switch ( cid) {
