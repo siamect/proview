@@ -1361,6 +1361,7 @@ static int wccm_openplcpgm_func(
   ldh_tSesContext ldhses;
   ldh_tWBContext wbctx;
   ldh_sSessInfo info;
+  int new_plc = 0;
 
   sts = wccm_get_wbctx( &wbctx);
   if ( EVEN(sts)) {
@@ -1404,6 +1405,11 @@ static int wccm_openplcpgm_func(
     return 1;
   }
   
+  // Check if this is a new PlcPgm
+  sts = ldh_GetChild( ldhses, oid, &windoid);
+  if ( EVEN(sts))
+    new_plc = 1;
+
   WNav *wnav;
   sts = wccm_get_wnav( &wnav);
   wb_utl *utl = wnav->utl_new();
@@ -1421,11 +1427,17 @@ static int wccm_openplcpgm_func(
     lsts = ldh_ObjidToName( ldhses, windoid, ldh_eName_Hierarchy, stored_foe_window, sizeof(stored_foe_window), &size);
     if ( EVEN(lsts)) return sts;
     
-    // Delete the document object
-    lsts = ldh_GetChild( ldhses, windoid, &docoid);
-    if ( EVEN(lsts)) return sts;
+    if ( new_plc) {
+      // Delete the document object
+      lsts = ldh_GetChild( ldhses, windoid, &docoid);
+      if ( EVEN(lsts)) return sts;
 
-    stored_foe->cmd_delete_node( docoid);
+      stored_foe->cmd_delete_node( docoid);
+    }
+    else {
+      // Enter edit mode
+      stored_foe->change_mode(EDIT);
+    }
   }
   *return_int = sts;
   *return_decl = CCM_DECL_INT;
