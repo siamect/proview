@@ -690,6 +690,7 @@ static void ccm_print_error( ccm_tFileCtx filectx, int sts)
     case CCM__STRINGEXCEED :	strcpy( text, "Maximum string size exceeded"); break;
     case CCM__ARGEXCEED :	strcpy( text, "Maximum number of arguments exceeded"); break;
     case CCM__ARRAYBOUNDS :	strcpy( text, "Array index out of bounds"); break;
+    case CCM__NOACCESS :	strcpy( text, "No access for operation"); break;
     default :			strcpy( text, "Unknown error code");
   }
   if ( filectx->error_row)

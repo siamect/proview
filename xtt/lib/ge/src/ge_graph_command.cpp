@@ -3068,7 +3068,7 @@ int Graph::readcmdfile( 	char		*incommand)
 
     // Register wb standard functions
 #if LDH
-    wccm_register( graph_wccm_get_wbctx_cb, graph_wccm_get_ldhsession_cb);
+    wccm_register( graph_wccm_get_wbctx_cb, graph_wccm_get_ldhsession_cb, 0);
 #endif
   }
 

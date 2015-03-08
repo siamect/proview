@@ -36,10 +36,13 @@
 
 /* wb_wccm.h -- Buildtin script functions for wb */
 
+class WNav;
+
 void wccm_store_ldhses( void *client_data, ldh_tSesContext ldhsession);
 void wccm_store_client( void *client_data);
 int wccm_get_ldhses( ldh_tSesContext *ldhses);
 int	wccm_register( 
 	int (* get_wbctx_cb)( void *, ldh_tWBContext *),
-	int (* get_ldhsession_cb)( void *, ldh_tSesContext *));
+	int (* get_ldhsession_cb)( void *, ldh_tSesContext *),
+	int (* get_wnav_cb)( void *, WNav **));
 void	wccm_set_status( pwr_tStatus	sts);

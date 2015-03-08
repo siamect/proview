@@ -9973,6 +9973,12 @@ GetRootList()		<LINK> getrootlist()
 GetVolumeClass()	<LINK> getvolumeclass()
 GetVolumeList()		<LINK> getvolumelist()
 SetAttribute()		<LINK> setattribute()
+CreateObject()		<LINK> createobject()
+OpenPlcPgm()		<LINK> openplcpgm()
+CreatePlcObject()	<LINK> createplcobject()
+CreatePlcConnection()	<LINK> createplcconnection()
+SetPlcObjectAttr()	<LINK> setplcobjectattr()
+PlcConnect()		<LINK> plcconnect()
 
 <h2>System functions
 exit()			<LINK> exit()
@@ -10964,6 +10970,12 @@ GetRootList()	<t>Get first object in root list. <LINK> getrootlist()
 GetVolumeClass() <t>Get class of a volume. <LINK> getvolumeclass()
 GetVolumeList()	<t>Get fist volume.	<LINK> getvolumelist()
 SetAttribute()	<t>Set attribute value.	<LINK> setattribute()
+CreateObject()	<t>Create an object session. <LINK> createobject()
+OpenPlcPgm()	<t>Open a PlcPgm.	<LINK> openplcpgm()
+CreatePlcObject() <t>Create a plc object. <LINK> createplcobject()
+CreatePlcConnection() <t>Create a plc connection. <LINK> createplcconnection()
+SetPlcObjectAttr() <t>Set attribute in a plc object. <LINK> setplcobjectattr()
+PlcConnect()	<t>Connect a plc object. <LINK> plcconnect()
 </TOPIC>
 
 <headerlevel>
@@ -11351,13 +11363,215 @@ Returns the status of the operation.
 
 <b>Argument
 
-string          name            attribute name.
-arbitrary type  value		attribute value.
+string          <t>name            <t>attribute name.
+arbitrary type  <t>value	   <t>attribute value.
 
 <b>Example
 
 <c>  SetAttribute( "Pump-V1-Switch.Description", "Valve switch open");
 </TOPIC>
+
+<TOPIC> createobject() <style> function
+CreateObject()
+
+int CreateObject( string name, string class, string destination, int destcode)
+
+<b>Description
+
+Create an object.
+Returns the status of the operation.
+
+<b>Argument
+ 
+string          <t>name            <t>object name. Without path.
+string          <t>class           <t>object class.
+string          <t>destination     <t>destination object. A father or sibling to the object.
+int             <t>destcode        <t>destination code. 1 first child, 2 last child,
+                                   <t><t>3 after, 4 before.
+<b>Example
+
+<c>  CreateObject( "Temperature", "BaseTempSensor", "Pump-V1", 2);
+</TOPIC>
+
+<TOPIC> openplcpgm() <style> function
+OpenPlcPgm()
+
+int OpenPlcPgm( string name)
+
+<b>Description
+
+Open a plc program and a plc editing session.
+Returns the status of the operation.
+There should not be any unsaved operations when this  function is called.
+Only one program can be opened concurrently.
+
+The plc editing session should be closed with a call to ClosePlcPgm().
+In the plc editing session only the plc functions CreatePlcObject(),
+CreatePlcConnection(), SetPlcObjectAttr() and PlcConnect() should be
+used to manipulate and create objects. Access for the previous session 
+is temporary set to readonly when the plc editing is active.
+
+<b>Argument
+ 
+string          name            name of PlcPgm object.
+
+<b>Example
+
+<c>  OpenPlcPgm( "Pump-V1-Control");
+<c>  ...
+<c>  ClosePlcPgm();
+</TOPIC>
+
+<TOPIC> closeplcpgm() <style> function
+ClosePlcPgm()
+
+int ClosePlcPgm()
+
+<b>Description
+
+Closes a plc editing session.
+
+<b>Example
+
+<c>  OpenPlcPgm( "Pump-V1-Control");
+<c>  ...
+<c>  ClosePlcPgm();
+</TOPIC>
+
+<TOPIC> createplcobject() <style> function
+CreatePlcObject()
+
+int CreatePlcObject( string name, string class, float x, float y [, string destination,
+                     int inputmask, int outputmask, int invertmask])
+
+<b>Description
+
+Creates a plc function object in a plc editing session.
+The function can only be used in a plc editing session started with a call to 
+OpenPlcPgm().
+
+The object is positioned on the coordinates x and y. If destination, a document object,
+is supplied, the coordinates are relative to this object, otherwise they are absolute.
+If the masks are left out the default masks are used.
+
+<b>Argument
+ 
+string          <t>name            <t>Object name. Without path.
+string          <t>class           <t>Object class.
+float           <t>x               <t>x coordinate.
+float           <t>y               <t>y coordinate.
+string          <t>destination     <t>Optional. A document object. If supplied the coordinates
+                                <t><t>are relative to this object.
+int             <t>inputmask       <t>Optional. Mask where the bits indicate visible input pins
+                                <t><t>in the function block.
+int             <t>outputmask      <t>Optional. Mask where the bits indicate visible output pins
+                                <t><t>in the function block.
+int             <t>invmask         <t>Optional. Mask where the bits indicate inverted input pins.
+
+<b>Example
+
+<c>  OpenPlcPgm( "Pump-V1-Control");
+<c>  CreatePlcObject( "Document0", "Document", 1.2, 0.0);
+<c>  CreatePlcObject( "And0", "And", 0.3, 0.1, "Document0", 15, 1, 3);
+<c>  CreatePlcObject( "V1", "BaseCValve", 0.3, 0.4, "Document0");
+<c>  ClosePlcPgm();
+</TOPIC>
+
+<TOPIC> createplcconnection() <style> function
+CreatePlcConnection()
+
+int CreatePlcConnection( string source, string sourceattr, string dest, string destattr [,
+	                 int feedback])
+
+<b>Description
+
+Creates a plc connection between the source function object and the destination 
+function object.
+
+The function can only be used in a plc editing session started with a call to 
+OpenPlcPgm().
+
+The pins to connect to are specified by the attributes names of the pins. If a
+dashed feedback connection is to be created, this can be stated with the optional
+feedback argument.
+
+<b>Argument
+ 
+string          <t>source          <t>Source object name. Without path.
+string          <t>sourceattr      <t>Attribute for pin on the source object.
+string          <t>dest            <t>Destination object name. Without path.
+string          <t>destattr        <t>Attribute for pin on the destination object.
+int             <t>feedback        <t>Optional. If 1 a dashed feedback connection is created.
+
+<b>Example
+
+<c>  OpenPlcPgm( "Pump-V1-Control");
+<c>  ...
+<c>  CreatePlcObject( "And0", "And", 0.3, 0.1, "Document0", 15, 1, 3);
+<c>  CreatePlcObject( "And1", "And", 0.6, 0.1, "Document0", 15, 1, 3);
+<c>  CreatePlcConnection( "And0", "Status", "And1", "In1");
+<c>  # Feedback connection
+<c>  CreatePlcConnection( "And1", "Status", "And0", "In4", 1);
+<c>  ClosePlcPgm();
+</TOPIC>
+
+<TOPIC> plcconnect() <style> function
+PlcConnect()
+
+int PlcConnect( string plcobject, string connectobject)
+
+<b>Description
+
+Activates the plc connect function, for example to connect Get and Sto function objects to
+signals and attributes in the plant hierarchy.
+
+The function can only be used in a plc editing session started with a call to 
+OpenPlcPgm().
+
+<b>Argument
+ 
+string          <t>plcobject       <t>Name, without path, of plc function object that should
+                                <t><t>be connected.
+string          <t>connectobject   <t>Name of object or attribute to connect to. 
+				<t><t>Full name with path.
+
+<b>Example
+
+<c>  OpenPlcPgm( "Pump-V1-Control");
+<c>  ...
+<c>  CreatePlcObject( "GetDv0", "GetDv", 0.3, 0.1, "Document0");
+<c>  PlcConnect( "GetDv0", "Pump-V1-Active");
+<c>  ...
+<c>  ClosePlcPgm();
+</TOPIC>
+
+<TOPIC> setplcobjectattr() <style> function
+SetPlcObjectAttr()
+
+int SetPlcObjectAttr( string attribute, (arbitrary type) value)
+xxx
+<b>Description
+
+Set a value in a plc object.
+
+The function can only be used in a plc editing session started with a call to 
+OpenPlcPgm().
+
+<b>Argument
+ 
+string          <t>name            <t>attribute name. Without path.
+arbitrary type  <t>value	   <t>attribute value.
+
+<b>Example
+
+<c>  OpenPlcPgm( "Pump-V1-Control");
+<c>  CreatePlcObject( "Document0", "Document", 1.3, 0.0);
+<c>  SetPlcObjectAttr( "Document0.DocumentOrientation", 1);
+<c>  SetPlcObjectAttr( "Document0.DocumentSize", 3);
+<c>  ...
+<c>  ClosePlcPgm();
+</TOPIC>
+
 </headerlevel>
 
 <TOPIC> misc_functions <style> function

@@ -106,6 +106,7 @@ static int wnav_cnt = 0;
 
 static int wnav_wccm_get_ldhsession_cb( void *ctx, ldh_tWBContext *wbctx);
 static int wnav_wccm_get_wbctx_cb( void *ctx, ldh_tSesContext *ldhses);
+static int wnav_wccm_get_wnav_cb( void *ctx, WNav **wnav);
 static char	*wnav_VolumeIdToStr( pwr_tVolumeId volumeid);
 
 static int	wnav_help_func(		void		*client_data,
@@ -7001,7 +7002,7 @@ int WNav::readcmdfile( 	char		*incommand)
     ccm_func_registred = 1;
 
     // Register wb standard functions
-    wccm_register( wnav_wccm_get_wbctx_cb, wnav_wccm_get_ldhsession_cb);
+    wccm_register( wnav_wccm_get_wbctx_cb, wnav_wccm_get_ldhsession_cb,  wnav_wccm_get_wnav_cb);
   }
 
   strcpy( input_str, incommand);
@@ -7354,6 +7355,12 @@ static int wnav_wccm_get_wbctx_cb( void *ctx, ldh_tWBContext *wbctx)
     sts = (wnav->get_wbctx_cb)( wnav->parent_ctx, wbctx);
     if ( EVEN(sts)) return sts;
   }
+  return 1;
+}
+
+static int wnav_wccm_get_wnav_cb( void *ctx, WNav **wnav)
+{
+  *wnav = (WNav *)ctx;
   return 1;
 }
 

@@ -50,4 +50,7 @@ int     gobj_get_object(
 int	gobj_expand(	WFoe		*foe,
 			vldh_t_node	node,
 			int		compress);
+
+void 	gobj_set_select( pwr_tAttrRef *aref);
+
 #endif

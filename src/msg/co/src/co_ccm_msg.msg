@@ -67,7 +67,7 @@ stringexceed	<maximum size of string exceeded>			/error
 argexceed	<max number of arguments exceeded>			/error
 arraybounds	<array index out of bounds>				/error
 alreadyreg      <function is already registred>                         /info
-
+noaccess	<no access for operation>				/error
 
 
 

@@ -4304,6 +4304,239 @@ void WFoe::get_build_options_subwindow_cb( void *ctx, wb_build_opt **opt)
     (foe->get_build_options_cb)( foe->parent_ctx, opt);
 }
 
+int WFoe::cmd_get_ldhses( ldh_tSesContext *ldhses)
+{
+  *ldhses = gre->wind->hw.ldhses;
+  return 1;
+}
+
+int WFoe::cmd_delete_node( pwr_tOid oid)
+{
+  vldh_t_node 	*nodelist;
+  unsigned long	node_count;
+  int		i, sts;
+
+  /* Get all nodes */
+  sts = vldh_get_nodes( gre->wind, &node_count, &nodelist);
+  if ( EVEN(sts)) return sts;
+
+  for ( i = 0; i < (int)node_count; i++) {
+    if ( cdh_ObjidIsEqual( nodelist[i]->ln.oid, oid)) {
+      gre->delete_node( nodelist[i]);
+      break;
+    }
+  }
+  free( (char *)nodelist);
+  return FOE__SUCCESS;
+}
+
+int WFoe::cmd_create_node( char *name, pwr_tCid cid, pwr_tOid *destoid, float x, float y, int use_default_masks, 
+			   unsigned int inputmask, unsigned int outputmask, unsigned int invertmask)
+{
+  vldh_t_node node;
+  int sts;
+  pwr_sPlcNode	*nodebuffer;
+  pwr_eClass	eclass;
+  int size;
+
+  if ( destoid) {
+    // Coordinates are relative to destination node
+    vldh_t_node 	*nodelist;
+    unsigned long	node_count;
+    vldh_t_node		destnode;
+    float		ll_x, ll_y, width, height;
+
+    sts = vldh_get_nodes( gre->wind, &node_count, &nodelist);
+    if ( EVEN(sts)) return sts;
+
+    int found = 0;
+    for ( int i = 0; i < (int)node_count; i++) {
+      if ( cdh_ObjidIsEqual( nodelist[i]->ln.oid, *destoid)) {
+	destnode = nodelist[i];
+	found = 1;
+	break;
+      }
+    }
+    if ( found) {
+      gre->measure_object( destnode, &ll_x, &ll_y, &width, &height);
+      x += ll_x;
+      y += ll_y;
+    }
+  }
+
+  disable_ldh_cb();
+  sts = gre->create_node( cid, x, y, &node);
+  enable_ldh_cb();
+
+  if ( EVEN(sts)) return sts;
+
+  sts = ldh_SetObjectName( gre->wind->hw.ldhses, node->ln.oid, name);
+
+  if ( !use_default_masks) {
+    sts = ldh_GetObjectBuffer( gre->wind->hw.ldhses,
+			       node->ln.oid, "DevBody", "PlcNode", &eclass,	
+			       (char **)&nodebuffer, &size);
+    if ( EVEN(sts)) return sts;
+    nodebuffer->mask[0] = inputmask;
+    nodebuffer->mask[1] = outputmask;
+    nodebuffer->mask[2] = invertmask;
+
+    sts = ldh_SetObjectBuffer( gre->wind->hw.ldhses,
+			       node->ln.oid, "DevBody", "PlcNode",	
+			       (char *)nodebuffer);
+    free( (char *)nodebuffer);
+  }
+  gre->node_update( node);
+
+  return FOE__SUCCESS;
+}
+
+int WFoe::cmd_create_con( pwr_tOid srcoid, char *srcattr, pwr_tOid destoid, char *destattr,
+			  int feedback)
+{
+  vldh_t_node srcnode, destnode;
+  vldh_t_node 	*nodelist;
+  unsigned long	node_count;
+  int		i, sts;
+  pwr_tCid	con_class, user_class;
+  ldh_sParDef  	*bodydef;
+  int 	       	rows;
+
+  /* Get all nodes */
+  sts = vldh_get_nodes( gre->wind, &node_count, &nodelist);
+  if ( EVEN(sts)) return sts;
+
+  int src_found = 0;
+  int dest_found = 0;
+  for ( i = 0; i < (int)node_count; i++) {
+    if ( cdh_ObjidIsEqual( nodelist[i]->ln.oid, srcoid)) {
+      srcnode = nodelist[i];
+      src_found = 1;
+      if ( dest_found)
+	break;
+    }
+    else if ( cdh_ObjidIsEqual( nodelist[i]->ln.oid, destoid)) {
+      destnode = nodelist[i];
+      dest_found = 1;
+      if ( src_found)
+	break;
+    }
+  }
+  free( (char *)nodelist);
+
+  if ( !(src_found && dest_found))
+    return 0;
+
+  user_class = 0;
+
+  // Get conpoints
+  sts = ldh_GetObjectBodyDef( gre->wind->hw.ldhses, 
+			      srcnode->ln.cid, "RtBody", 1, 
+			      &bodydef, &rows);
+  if ( EVEN(sts) ) return sts;
+
+  // Find source connection point number
+  src_found = 0;
+  int src_point = -1;
+  unsigned int inputmask = 1;
+  unsigned int outputmask = 1;
+  for ( int i = 0; i < rows; i++) {
+    if ( bodydef[i].ParClass == pwr_eClass_Input) {
+      if ( inputmask & srcnode->ln.mask[0])
+	src_point++;
+      inputmask = inputmask << 1;
+    }
+    else if ( bodydef[i].ParClass == pwr_eClass_Output) {
+      if ( outputmask & srcnode->ln.mask[1])
+	src_point++;
+      outputmask = outputmask << 1;
+    }
+    if ( cdh_NoCaseStrcmp( srcattr, bodydef[i].ParName) == 0) {
+      src_found = 1;
+      break;
+    }
+  }
+  free( (char *)bodydef);
+
+  if ( !src_found || src_point == -1)
+    return 0;
+
+  // Find destination connection point number
+  sts = ldh_GetObjectBodyDef( gre->wind->hw.ldhses, 
+			      destnode->ln.cid, "RtBody", 1, 
+			      &bodydef, &rows);
+  if ( EVEN(sts) ) return sts;
+
+  dest_found = 0;
+  int dest_point = -1;
+  inputmask = 1;
+  outputmask = 1;
+  for ( int i = 0; i < rows; i++) {
+    if ( bodydef[i].ParClass == pwr_eClass_Input) {
+      if ( inputmask & destnode->ln.mask[0])
+	dest_point++;
+      inputmask = inputmask << 1;
+    }
+    else if ( bodydef[i].ParClass == pwr_eClass_Output) {
+      if ( outputmask & destnode->ln.mask[1])
+	dest_point++;
+      outputmask = outputmask << 1;
+    }
+    if ( cdh_NoCaseStrcmp( destattr, bodydef[i].ParName) == 0) {
+      dest_found = 1;
+      break;
+    }
+  }
+  free( (char *)bodydef);
+
+  if ( !dest_found || dest_point == -1)
+    return 0;
+
+  sts = gsx_check_connection( this, srcnode, src_point, 
+			      destnode, dest_point, &con_class, user_class);	
+  if ( EVEN(sts)) return sts;
+
+  if ( feedback) {
+    // Change to corresponding feedback connection
+
+    if ( con_class == pwr_cClass_ConDigital)
+      con_class = pwr_cClass_ConFeedbackDigital;
+    else if ( con_class == pwr_cClass_ConAnalog)
+      con_class = pwr_cClass_ConFeedbackAnalog;
+  }
+
+  sts = gre->create_con( con_class, srcnode, src_point,
+			 destnode, dest_point, con_drawtype);
+  return sts;
+}
+
+int WFoe::cmd_connect( pwr_tAttrRef *aref, pwr_tOid plcnode)
+{
+  vldh_t_node node;
+  vldh_t_node *nodelist;
+  unsigned long	node_count;
+  int sts;
+
+  /* Get all nodes */
+  sts = vldh_get_nodes( gre->wind, &node_count, &nodelist);
+  if ( EVEN(sts)) return sts;
+
+  int found = 0;
+  for ( int i = 0; i < (int)node_count; i++) {
+    if ( cdh_ObjidIsEqual( nodelist[i]->ln.oid, plcnode)) {
+      node = nodelist[i];
+      found = 1;
+      break;
+    }
+  }
+  if ( !found)
+    return 0;
+
+  gobj_set_select( aref);
+  sts = gobj_get_object( this, node, 1) ;
+  return sts;
+}
+
 /* API routines */
 
 #if 0

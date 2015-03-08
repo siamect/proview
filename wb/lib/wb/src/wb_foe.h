@@ -312,6 +312,13 @@ class WFoe : public WUtility {
 		 unsigned long	new_window,
 		 foe_eFuncAccess function_access);
   void get_hinactx( void **hinactx);
+  int cmd_get_ldhses( ldh_tSesContext *ldhses);
+  int cmd_create_node( char *name, pwr_tCid cid, pwr_tOid *destoid, float x, float y, int use_default_masks, 
+		       unsigned int inputmask, unsigned int outputmask, unsigned int invertmask);
+  int cmd_delete_node( pwr_tOid oid);
+  int cmd_create_con( pwr_tOid srcoid, char *srcattr, pwr_tOid destoid, char *destattr,
+		      int feedback);
+  int cmd_connect( pwr_tAttrRef *aref, pwr_tOid plcnode);
   
   static pwr_tStatus ldh_this_session_cb( void *ctx, ldh_sEvent *event);
   static void error_msg( unsigned long sts);

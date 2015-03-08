@@ -136,6 +136,9 @@ gobj_tMethod gobj_get_object_m[40] = {
  	gobj_get_object_m34,
 	};
 
+static pwr_tAttrRef gobj_selected_aref;
+static int gobj_selected_set = 0;
+
 static int	gobj_expand_m0(	WFoe		*foe,
 				vldh_t_node	node,
 				int		compress);
@@ -147,6 +150,14 @@ static int	gobj_expand_m2(	WFoe		*foe,
 				int		compress);
 /*_Local procedues_______________________________________________________*/
 
+//
+// Preset of selected object used by command interface
+//
+void gobj_set_select( pwr_tAttrRef *aref)
+{
+  gobj_selected_set = 1;
+  gobj_selected_aref = *aref;
+}
 
 //
 //	Function used in class template PlcPgm's.
@@ -197,8 +208,26 @@ static pwr_tStatus gobj_ref_replace( ldh_tSesContext ldhses,
 static int gobj_get_select( WFoe *foe, pwr_sAttrRef *attrref, int *is_attr)
 {
   pwr_tStatus sts;
-  char str[200];
+  pwr_tAName str;
   vldh_t_plc plc = foe->gre->wind->hw.plc;
+
+  if ( gobj_selected_set) {
+    // Preset select
+    char *np;
+    int size;
+
+    *attrref = gobj_selected_aref;
+    gobj_selected_set = 0;
+
+    sts = ldh_AttrRefToName( foe->gre->wind->hw.ldhses, attrref, ldh_eName_Hierarchy, &np, &size);
+    if ( ODD(sts)) {
+      if ( strchr( np, '.') != 0)
+	*is_attr = 1;
+      else
+	*is_attr = 0;
+    }
+    return FOE__SUCCESS;
+  }
 
   if ( foe->nav_palette_managed) {
     sts = foe->navctx->get_select( attrref, is_attr);
@@ -244,7 +273,7 @@ int	gobj_get_object(
 
   /* Fix to avoid crash if foe is started form hied */
   plc = (node->hn.wind)->hw.plc;
-  if ( plc->hp.hinactx == 0 ) {
+  if ( plc->hp.hinactx == 0 && !gobj_selected_set) {
     foe->message( "Foe must be started from the navigator to connect");
     return FOE__SUCCESS;
   }

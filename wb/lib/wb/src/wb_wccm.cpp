@@ -53,16 +53,22 @@
 #include "wb_cmd_msg.h"
 #include "co_ccm_msg.h"
 #include "wb_foe_msg.h"
+#include "wb_ldh_msg.h"
 #include "wb_wnav.h"
+#include "wb_utl.h"
 //#include "wb_cmd.h"
 
+class WFoe;
 
 static int 		wccm_ccm_func_registred = 0;
 static ldh_tSesContext	stored_ldhses = 0;
 static ldh_tWBContext	stored_wbctx = 0;
 static void		*stored_client_data;
+static WFoe		*stored_foe = 0;
+static pwr_tOName	stored_foe_window;
 int (* wccm_get_wbctx_cb)( void *, ldh_tWBContext *);
 int (* wccm_get_ldhsession_cb)( void *, ldh_tSesContext *);
+int (* wccm_get_wnav_cb)( void *, WNav **);
 
 /*____Local function prototypes_______________________________________*/
 
@@ -116,6 +122,13 @@ int wccm_get_wbctx( ldh_tWBContext *wbctx)
   }
   *wbctx = stored_wbctx;
   return 1;
+}
+
+int wccm_get_wnav( WNav **wnav)
+{
+  if ( wccm_get_wnav_cb)
+    return (wccm_get_wnav_cb)( stored_client_data, wnav);
+  return 0;
 }
 
 
@@ -1264,6 +1277,583 @@ static int wccm_gethardware_func(
   return 1;
 }
 
+static int wccm_createobject_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  ccm_sArg *arg_p2, *arg_p3, *arg_p4;
+  int sts;
+  pwr_tAName dest;
+  pwr_tOid dest_oid;
+  int dest_code;
+  pwr_tObjName classname, name;
+  pwr_tCid cid;
+  pwr_tOid oid;
+  ldh_tSesContext ldhses;
+
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts)) {
+    *return_int = CMD__NOVOLATTACHED;
+    *return_decl = CCM_DECL_INT;
+    return CMD__NOVOLATTACHED;
+  }
+
+  if ( arg_count != 4)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+  arg_p4 = arg_p3->next;
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+  if ( arg_p2->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+  if ( arg_p3->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+  if ( arg_p4->value_decl != CCM_DECL_INT)
+    return CCM__VARTYPE;
+
+  strncpy( name, arg_list->value_string, sizeof(name));
+  strncpy( classname, arg_p2->value_string, sizeof(classname));
+  strncpy( dest, arg_p3->value_string, sizeof(dest));
+  dest_code = arg_p4->value_int;
+
+  sts = ldh_NameToObjid( ldhses, &dest_oid, dest);
+  if ( EVEN(sts)) {
+    *return_int = sts;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+  
+  sts = ldh_ClassNameToId( ldhses, &cid, classname);
+  if ( EVEN(sts)) {
+    *return_int = sts;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+  
+  sts = ldh_CreateObject( ldhses, &oid, name, cid, dest_oid, (ldh_eDest)dest_code);
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
+static int wccm_openplcpgm_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  int sts;
+  pwr_tOName name;
+  pwr_tOid oid;
+  pwr_tOid windoid, docoid;
+  int size;
+  ldh_tSesContext ldhses;
+  ldh_tWBContext wbctx;
+  ldh_sSessInfo info;
+
+  sts = wccm_get_wbctx( &wbctx);
+  if ( EVEN(sts)) {
+    *return_int = CMD__NOWBATTACHED;
+    *return_decl = CCM_DECL_INT;
+    return CMD__NOWBATTACHED;
+  }
+
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts)) {
+    *return_int = CMD__NOVOLATTACHED;
+    *return_decl = CCM_DECL_INT;
+    return CMD__NOVOLATTACHED;
+  }
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+  /* Check that the session is saved */
+  sts = ldh_GetSessionInfo( ldhses, &info);
+  if ( EVEN(sts)) return sts;
+  if ( info.Access != ldh_eAccess_ReadWrite)
+    return CCM__NOACCESS;
+  if ( !info.Empty) {
+    return GSX__NOTSAVED;
+  }
+
+  /* To be able to redraw the windows, the session has to 
+     be set to ReadOnly */
+  sts = ldh_SetSession( ldhses, ldh_eAccess_ReadOnly);
+  if ( EVEN(sts)) return sts;
+
+  strncpy( name, arg_list->value_string, sizeof(name));
+
+  sts = ldh_NameToObjid( ldhses, &oid, name);
+  if ( EVEN(sts)) {
+    *return_int = sts;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+  
+  WNav *wnav;
+  sts = wccm_get_wnav( &wnav);
+  wb_utl *utl = wnav->utl_new();
+  if ( !wnav->has_window())
+    utl->create_mainwindow( 0, NULL);
+
+  sts = utl->utl_foe_new( "CmdEdit", oid, wbctx, ldhses, &stored_foe, 0, ldh_eAccess_SharedReadWrite);
+  delete utl;
+
+  if ( ODD(sts)) {
+    // Store the window object
+    int lsts = ldh_GetChild( ldhses, oid, &windoid);
+    if ( EVEN(lsts)) return sts;
+
+    lsts = ldh_ObjidToName( ldhses, windoid, ldh_eName_Hierarchy, stored_foe_window, sizeof(stored_foe_window), &size);
+    if ( EVEN(lsts)) return sts;
+    
+    // Delete the document object
+    lsts = ldh_GetChild( ldhses, windoid, &docoid);
+    if ( EVEN(lsts)) return sts;
+
+    stored_foe->cmd_delete_node( docoid);
+  }
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
+void wccm_foe_close( ldh_tSesContext ldhses)
+{
+  if ( !stored_foe)
+    return;
+
+  stored_foe->quit();
+  stored_foe = 0;
+
+  /* Set session access to readwrite again */
+  ldh_SetSession( ldhses, ldh_eAccess_ReadWrite);
+}
+
+static int wccm_closeplcpgm_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  ldh_tSesContext ldhses;
+  int sts;
+
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  if ( !stored_foe) {
+    *return_int = 0;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts)) {
+    *return_int = CMD__NOVOLATTACHED;
+    *return_decl = CCM_DECL_INT;
+    return CMD__NOVOLATTACHED;
+  }
+
+  WFoe::exit_save( stored_foe);
+  stored_foe = 0;
+
+  /* Set session access to readwrite again */
+  sts = ldh_SetSession( ldhses, ldh_eAccess_ReadWrite);
+  if ( EVEN(sts)) return sts;
+
+  *return_int = 1;
+  *return_decl = CCM_DECL_INT;  
+  return 1;
+}
+
+static int wccm_createplcobject_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  ccm_sArg *arg_p2, *arg_p3, *arg_p4, *arg_p5, *arg_p6, *arg_p7, *arg_p8;
+  int sts;
+  pwr_tObjName dest;
+  pwr_tObjName classname, name;
+  float x;
+  float y;
+  unsigned int inputmask, outputmask, invertmask;
+  ldh_tSesContext ldhses;
+  int use_default_masks = 1;
+  pwr_tCid cid;
+  pwr_tOid dest_oid;
+  pwr_tOid *dest_oid_p = &dest_oid;
+  int dest_found = 0;
+  
+  // Arguments name, class, document, x, y, document, inputmask, outputmask, invertmask
+  if ( !stored_foe) {
+    *return_int = 0;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+  
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts)) {
+    *return_int = CMD__NOVOLATTACHED;
+    *return_decl = CCM_DECL_INT;
+    return CMD__NOVOLATTACHED;
+  }
+
+  if ( !(arg_count == 4 || arg_count == 5 || arg_count == 8)) {
+    wccm_foe_close( ldhses);
+    return CCM__ARGMISM;
+  }
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+  arg_p4 = arg_p3->next;
+  if ( arg_list->value_decl != CCM_DECL_STRING) {
+    wccm_foe_close( ldhses);
+    return CCM__VARTYPE;
+  }
+  if ( arg_p2->value_decl != CCM_DECL_STRING) {
+    wccm_foe_close( ldhses);
+    return CCM__VARTYPE;
+  }
+  if ( arg_p3->value_decl != CCM_DECL_FLOAT) {
+    wccm_foe_close( ldhses);
+    return CCM__VARTYPE;
+  }
+  if ( arg_p4->value_decl != CCM_DECL_FLOAT) {
+    wccm_foe_close( ldhses);
+    return CCM__VARTYPE;
+  }
+  if ( arg_count >= 5) {
+    arg_p5 = arg_p4->next;
+    if ( arg_p5->value_decl != CCM_DECL_STRING) {
+      wccm_foe_close( ldhses);
+      return CCM__VARTYPE;
+    }
+    if ( strcmp( arg_p5->value_string, "") != 0) {
+      strncpy( dest, stored_foe_window, sizeof(dest));
+      strncat( dest, "-", sizeof(dest));
+      strncat( dest, arg_p5->value_string, sizeof(dest));
+      dest_found = 1;
+    }
+  }
+  if ( arg_count >= 6) {
+    arg_p6 = arg_p5->next;
+    if ( arg_p6->value_decl != CCM_DECL_INT) {
+      wccm_foe_close( ldhses);
+      return CCM__VARTYPE;
+    }
+    inputmask = arg_p6->value_int;
+  }
+  if ( arg_count >= 7) {
+    arg_p7 = arg_p6->next;
+    if ( arg_p7->value_decl != CCM_DECL_INT) {
+      wccm_foe_close( ldhses);
+      return CCM__VARTYPE;
+    }
+    outputmask = arg_p7->value_int;
+  }
+  if ( arg_count >= 8) {
+    arg_p8 = arg_p7->next;
+    if ( arg_p8->value_decl != CCM_DECL_INT) {
+      wccm_foe_close( ldhses);
+      return CCM__VARTYPE;
+    }
+    invertmask = arg_p8->value_int;
+    use_default_masks = 0;
+  }
+
+  strncpy( name, arg_list->value_string, sizeof(name));
+  strncpy( classname, arg_p2->value_string, sizeof(classname));
+  x = arg_p3->value_float;
+  y = arg_p4->value_float;
+
+  sts = ldh_ClassNameToId( ldhses, &cid, classname);
+  if ( EVEN(sts)) {
+    *return_int = sts;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+
+  if ( dest_found) {
+    sts = ldh_NameToObjid( ldhses, &dest_oid, dest);
+    if ( EVEN(sts)) {
+      *return_int = sts;
+      *return_decl = CCM_DECL_INT;
+      return 1;
+    }
+  }
+  else
+    dest_oid_p = 0;
+
+  sts = stored_foe->cmd_create_node( name, cid, dest_oid_p, x, y, use_default_masks, 
+				     inputmask, outputmask, invertmask);
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
+static int wccm_setplcobjectattr_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  ccm_sArg *arg_p2; 
+  int sts;
+  char buf[400];
+  pwr_tAName name;
+  pwr_tOName attr;
+  char *s;
+  ldh_tSesContext ldhses;
+
+  if ( !stored_foe) {
+    *return_int = 0;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts)) {
+    strcpy( return_string, "");
+    *return_decl = CCM_DECL_STRING;
+    return CMD__NOVOLATTACHED;
+  }
+
+  if ( arg_count != 2) {
+    wccm_foe_close( ldhses);
+    return CCM__ARGMISM;
+  }
+  arg_p2 = arg_list->next;
+  if ( arg_list->value_decl != CCM_DECL_STRING) {
+    wccm_foe_close( ldhses);
+    return CCM__VARTYPE;
+  }
+  switch ( arg_p2->value_decl) {
+    case CCM_DECL_STRING:
+      strcpy( buf, arg_p2->value_string);
+      break;
+    case CCM_DECL_INT:
+      sprintf( buf, "%ld", arg_p2->value_int);
+      break;
+    case CCM_DECL_FLOAT:
+      sprintf( buf, "%f", arg_p2->value_float);
+      break;
+  }
+
+  strcpy( name, stored_foe_window);
+  strcat( name, "-");
+  strncat( name, arg_list->value_string, sizeof(name));
+  if ( (s = strrchr( name, '.'))) {
+    *s = 0;
+    strcpy( attr, s+1);
+  }
+  else {
+    wccm_foe_close( ldhses);
+    return CMD__ATTRIBUTE;
+  }
+
+  sts = stored_foe->cmd_get_ldhses( &ldhses);
+  sts = utl_set_object_parameter( ldhses, 0, 0, name, attr, buf, 0, "", 0, 0);
+
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
+static int wccm_createplcconnection_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  ccm_sArg *arg_p2, *arg_p3, *arg_p4, *arg_p5;
+  int sts;
+  pwr_tObjName srcattr, destattr;
+  pwr_tOName srcname, destname;
+  pwr_tOid srcoid, destoid;
+  ldh_tSesContext ldhses;
+  int feedback = 0;
+
+  // Arguments souce, source attribute, destination, destination attribute, feedback
+  if ( !stored_foe) {
+    *return_int = 0;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+  
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts)) {
+    *return_int = CMD__NOVOLATTACHED;
+    *return_decl = CCM_DECL_INT;
+    return CMD__NOVOLATTACHED;
+  }
+
+  if ( !(arg_count == 4 || arg_count == 5)) {
+    wccm_foe_close( ldhses);
+    return CCM__ARGMISM;
+  }
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+  arg_p4 = arg_p3->next;
+  if ( arg_list->value_decl != CCM_DECL_STRING) {
+    wccm_foe_close( ldhses);
+    return CCM__VARTYPE;
+  }
+  if ( arg_p2->value_decl != CCM_DECL_STRING) {
+    wccm_foe_close( ldhses);
+    return CCM__VARTYPE;
+  }
+  if ( arg_p3->value_decl != CCM_DECL_STRING) {
+    wccm_foe_close( ldhses);
+    return CCM__VARTYPE;
+  }
+  if ( arg_p4->value_decl != CCM_DECL_STRING) {
+    wccm_foe_close( ldhses);
+    return CCM__VARTYPE;
+  }
+  if ( arg_count > 4) {
+    arg_p5 = arg_p4->next;
+    if ( arg_p5->value_decl != CCM_DECL_INT) {
+      wccm_foe_close( ldhses);
+      return CCM__VARTYPE;
+    }
+    feedback = arg_p5->value_int;
+  }
+
+  strcpy( srcname, stored_foe_window);
+  strcat( srcname, "-");
+  strncat( srcname, arg_list->value_string, sizeof(srcname));
+  strncpy( srcattr, arg_p2->value_string, sizeof(srcattr));
+  strcpy( destname, stored_foe_window);
+  strcat( destname, "-");
+  strncat( destname, arg_p3->value_string, sizeof(destname));
+  strncpy( destattr, arg_p4->value_string, sizeof(destattr));
+
+  sts = ldh_NameToObjid( ldhses, &srcoid, srcname);
+  if ( EVEN(sts)) {
+    *return_int = sts;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+
+  sts = ldh_NameToObjid( ldhses, &destoid, destname);
+  if ( EVEN(sts)) {
+    *return_int = sts;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+    
+  sts = stored_foe->cmd_create_con( srcoid, srcattr, destoid, destattr, feedback);
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
+static int wccm_plcconnect_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  ccm_sArg *arg_p2;
+  int sts;
+  pwr_tOName nodename;
+  pwr_tAName attrname;
+  pwr_tAttrRef aref;
+  pwr_tOid nodeoid;
+  ldh_tSesContext ldhses;
+
+  // Arguments plcnode, attribute
+  if ( !stored_foe) {
+    *return_int = 0;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+  
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts)) {
+    *return_int = CMD__NOVOLATTACHED;
+    *return_decl = CCM_DECL_INT;
+    return CMD__NOVOLATTACHED;
+  }
+
+  if ( arg_count != 2) {
+    wccm_foe_close( ldhses);
+    return CCM__ARGMISM;
+  }
+
+  arg_p2 = arg_list->next;
+  if ( arg_list->value_decl != CCM_DECL_STRING) {
+    wccm_foe_close( ldhses);
+    return CCM__VARTYPE;
+  }
+  if ( arg_p2->value_decl != CCM_DECL_STRING) {
+    wccm_foe_close( ldhses);
+    return CCM__VARTYPE;
+  }
+
+  strcpy( nodename, stored_foe_window);
+  strcat( nodename, "-");
+  strncat( nodename, arg_list->value_string, sizeof(nodename));
+  strncpy( attrname, arg_p2->value_string, sizeof(attrname));
+
+  sts = ldh_NameToObjid( ldhses, &nodeoid, nodename);
+  if ( EVEN(sts)) {
+    *return_int = sts;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+
+  sts = ldh_NameToAttrRef( ldhses, attrname, &aref);
+  if ( EVEN(sts)) {
+    *return_int = sts;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+    
+  sts = stored_foe->cmd_connect( &aref, nodeoid);
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
 
 /*************************************************************************
 *
@@ -1279,12 +1869,14 @@ static int wccm_gethardware_func(
 
 int	wccm_register( 
 	int (* get_wbctx_cb)( void *, ldh_tWBContext *),
-	int (* get_ldhsession_cb)( void *, ldh_tSesContext *))
+	int (* get_ldhsession_cb)( void *, ldh_tSesContext *),
+	int (* get_wnav_cb)( void *, WNav **))
 {
   int		sts;
 
   wccm_get_wbctx_cb = get_wbctx_cb;
   wccm_get_ldhsession_cb = get_ldhsession_cb;
+  wccm_get_wnav_cb = get_wnav_cb;
 
   if ( !wccm_ccm_func_registred)
   {
@@ -1343,6 +1935,20 @@ int	wccm_register(
     sts = ccm_register_function( "GetHardware", wccm_gethardware_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "GetOpSys", wccm_getopsys_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "CreateObject", wccm_createobject_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "OpenPlcPgm", wccm_openplcpgm_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "ClosePlcPgm", wccm_closeplcpgm_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "CreatePlcObject", wccm_createplcobject_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetPlcObjectAttr", wccm_setplcobjectattr_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "CreatePlcConnection", wccm_createplcconnection_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "PlcConnect", wccm_plcconnect_func);
     if ( EVEN(sts)) return sts;
 
     sts = ccm_create_external_var( "cmd_status", CCM_DECL_INT, 0, 1, 
