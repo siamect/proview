@@ -2336,7 +2336,7 @@ void grow_GetObjectClassDynType( grow_tObject object, int *dyn_type1, int *dyn_t
 			 int no_of_lines, int long_quot, int value_quot, double rot, 
 			 const char *format);
 
-  void grow_SetAxisRange( grow_tObject object, double minval, double maxval);
+  void grow_SetAxisRange( grow_tObject object, double minval, double maxval, int keep_settings);
 
 
   //! Set that graph is modified or not since last save.

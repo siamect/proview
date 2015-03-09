@@ -146,8 +146,10 @@ void XttGeGtk::message_dialog_cb( void *ge_ctx, const char *text)
 {
   XttGe 	*ge = (XttGe *)ge_ctx;
   CoWowGtk 	wow( ((XttGeGtk *)ge)->toplevel);
-  
-  wow.DisplayError( "Message", CoWowGtk::translate_utf8(text));
+  char		title[80];
+
+  strcpy( title, Lng::translate("Message"));
+  wow.DisplayError( title, Lng::translate(text));
 
   // g_object_set( ((XttGeGtk *)ge)->message_dia_widget, "visible", TRUE, NULL);
   // gtk_label_set_text( GTK_LABEL(((XttGeGtk *)ge)->message_dia_label), text);

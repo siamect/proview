@@ -1859,14 +1859,14 @@ void GeCurveData::scale( int axis_type, int value_type,
          && axis_type == curve_eAxis_x) {
       // Time axis
       if ( max_value - min_value < 300) {
-        i_value = int(max_value + 1);
+        i_value = int(max_value + 0.99);
         maxval = i_value;
         max_lines = i_value;
 
         if ( fabs( min_value) < DBL_EPSILON)
           i_value = 0;
         else
-          i_value = int(min_value - 1);
+          i_value = int(min_value - 0.99);
         minval = i_value;
         min_lines = i_value;
       }

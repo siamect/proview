@@ -498,7 +498,7 @@ void GrowAxisArc::set_textbold( int bold)
   draw();
 }
 
-void GrowAxisArc::set_range( double minval, double maxval)
+void GrowAxisArc::set_range( double minval, double maxval, int keep_settings)
 {
   static sRange rdata[2][25] = {
     {{  26,  5,  5, 10, "%3.1f"}, // 1
@@ -566,82 +566,84 @@ void GrowAxisArc::set_range( double minval, double maxval)
   double rotation = (trf.rot() / 360 - floor( trf.rot() / 360)) * 360;
 
 
-  int len;
-  int lix;
-  int di;
-  int horizontal = ( rotation < 45 || (rotation > 135 && rotation < 225) || rotation > 315) ? 0 : 1;
-  if ( horizontal)
-    len = abs( x2 - x1);
-  else
-    len = abs( y2 - y1);
-
-  if ( len < 150)
-    lix = 0;
-  else 
-    lix = 1;
-
-  double d = fabs( maxval - minval);
-  if ( d < 5)
-    d = 1000 * d;
-
-  di = (int) (d + 0.5);
-  while ( di >= 25)
-    di /= 10;
-
-  if ( di > 0 && di <= 25) {
-    lines = rdata[lix][di-1].lines;
-    longquotient = rdata[lix][di-1].longq;
+  if ( !keep_settings) {
+    int len;
+    int lix;
+    int di;
+    int horizontal = ( rotation < 45 || (rotation > 135 && rotation < 225) || rotation > 315) ? 0 : 1;
     if ( horizontal)
-      valuequotient = rdata[lix][di-1].hvalq;
+      len = abs( x2 - x1);
     else
-      valuequotient = rdata[lix][di-1].vvalq;
-  }
+      len = abs( y2 - y1);
 
-  double m = max(fabs(maxval),fabs(minval)); 
-  switch ( lix) {
-  case 0: {
-    if ( m < 0.01)
-      strcpy( format, "%g");
-    else if ( m < 0.1)
-      strcpy( format, "%5.3f");
-    else if ( m < 1)
-      strcpy( format, "%4.2f");
-    else if ( m < 3)
-      strcpy( format, "%3.1f");
-    else if ( m <= 20)
-      strcpy( format, "%2.0f");
-    else if ( m <= 200)
-      strcpy( format, "%3.0f");
-    else if ( m < 2000)
-      strcpy( format, "%4.0f");
-    else if ( m < 20000)
-      strcpy( format, "%5.0f");
-    else
-      strcpy( format, "%g");
-    break;
-  }
-  case 1: {
-    if ( m < 0.01)
-      strcpy( format, "%g");
-    else if ( m < 0.1)
-      strcpy( format, "%5.3f");
-    else if ( m < 1)
-      strcpy( format, "%4.2f");
-    else if ( m <= 4)
-      strcpy( format, "%3.1f");
-    else if ( m <= 20)
-      strcpy( format, "%2.0f");
-    else if ( m <= 200)
-      strcpy( format, "%3.0f");
-    else if ( m < 2000)
-      strcpy( format, "%4.0f");
-    else if ( m < 20000)
-      strcpy( format, "%5.0f");
-    else
-      strcpy( format, "%g");
-    break;
-  }
-  default: ;
+    if ( len < 150)
+      lix = 0;
+    else 
+      lix = 1;
+
+    double d = fabs( maxval - minval);
+    if ( d < 5)
+      d = 1000 * d;
+
+    di = (int) (d + 0.5);
+    while ( di >= 25)
+      di /= 10;
+
+    if ( di > 0 && di <= 25) {
+      lines = rdata[lix][di-1].lines;
+      longquotient = rdata[lix][di-1].longq;
+      if ( horizontal)
+	valuequotient = rdata[lix][di-1].hvalq;
+      else
+	valuequotient = rdata[lix][di-1].vvalq;
+    }
+
+    double m = max(fabs(maxval),fabs(minval)); 
+    switch ( lix) {
+    case 0: {
+      if ( m < 0.01)
+	strcpy( format, "%g");
+      else if ( m < 0.1)
+	strcpy( format, "%5.3f");
+      else if ( m < 1)
+	strcpy( format, "%4.2f");
+      else if ( m < 3)
+	strcpy( format, "%3.1f");
+      else if ( m <= 20)
+	strcpy( format, "%2.0f");
+      else if ( m <= 200)
+	strcpy( format, "%3.0f");
+      else if ( m < 2000)
+	strcpy( format, "%4.0f");
+      else if ( m < 20000)
+	strcpy( format, "%5.0f");
+      else
+	strcpy( format, "%g");
+      break;
+    }
+    case 1: {
+      if ( m < 0.01)
+	strcpy( format, "%g");
+      else if ( m < 0.1)
+	strcpy( format, "%5.3f");
+      else if ( m < 1)
+	strcpy( format, "%4.2f");
+      else if ( m <= 4)
+	strcpy( format, "%3.1f");
+      else if ( m <= 20)
+	strcpy( format, "%2.0f");
+      else if ( m <= 200)
+	strcpy( format, "%3.0f");
+      else if ( m < 2000)
+	strcpy( format, "%4.0f");
+      else if ( m < 20000)
+	strcpy( format, "%5.0f");
+      else
+	strcpy( format, "%g");
+      break;
+    }
+    default: ;
+    }
   }
 
   configure();
