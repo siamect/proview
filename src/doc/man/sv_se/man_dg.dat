@@ -7908,19 +7908,19 @@ Hjälpfiler för xtt genereras med kommandot
 Kommandot genererar en hjälpfil $pwrp_exe/'volymsnamn'_xtthelp.dat som man lämpligt-vis 
 lägger en länk till i projektets xtt-hjälpfil $pwrp_exe/xtt_help.dat:
 
-Exempel för klassvolymen cvolvhxn2r:
+Exempel för klassvolymen cvolvhxtank:
 
 <i><topic> index
 
 <i>...
 
-<i>Användar klasser<link>cvolssabtest,"",$pwrp_exe/cvolvhxn2r_xtthelp.dat
+<i>Användar klasser<link>cvoltank,"",$pwrp_exe/cvoltank_xtthelp.dat
 
 <i></topic>
 
 ...
 
-<i><include> $pwrp_exe/cvolssabtest_xtthelp.dat
+<i><include> $pwrp_exe/cvoltank_xtthelp.dat
 </topic>
 
 <topic> class generate html

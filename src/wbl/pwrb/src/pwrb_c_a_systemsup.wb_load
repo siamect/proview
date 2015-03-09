@@ -41,6 +41,10 @@ SObject pwrb:Class
 !  @Group Supervision,NodeConfiguration
 !  @Summary System supervisory
 !  System Supervisory.
+!  SystemSup objects are used by the event monitor to send
+!  system events and alarms to outunits. 
+!  All SystemSup objects are placed in the SystemEvent array
+!  in the MessageHandler object.
 !
 ! @b See Also
 !  @classlink MessageHandler pwrb_messagehandler.html

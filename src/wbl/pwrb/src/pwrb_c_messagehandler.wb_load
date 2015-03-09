@@ -253,6 +253,11 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Alarms and events emitted by the system.
+      !  An array of supervisory objects that is triggered by various 
+      !  system events or errors.
+      !*/
       Object SystemEvents $Attribute 22 
         Body SysBody
           Attr TypeRef = "pwrb:Class-SystemSup"

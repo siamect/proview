@@ -8025,19 +8025,19 @@ Helpfiles for xtt is generated with the command
 The command generates a helpfile $pwrp_exe/'volumename'_xtthelp.dat, and it is proper to put
 a link to the file in the xtt helpfile for the project $pwrp_exe/xtt_help.dat:
 
-Example for the classvolume cvolvhxn2r
+Example for the classvolume cvoltank
 
 <i><topic> index
 
 <i>...
 
-<i>User classes<link>cvolssabtest,"",$pwrp_exe/cvolvhxn2r_xtthelp.dat
+<i>User classes<link>cvoltank,"",$pwrp_exe/cvoltank_xtthelp.dat
 
 <i></topic>
 
 ...
 
-<i><include> $pwrp_exe/cvolssabtest_xtthelp.dat
+<i><include> $pwrp_exe/cvoltank_xtthelp.dat
 </topic>
 
 <topic> class generate html
