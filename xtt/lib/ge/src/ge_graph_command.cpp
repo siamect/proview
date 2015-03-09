@@ -243,6 +243,243 @@ static void graph_get_stored_graph( Graph **graph)
   *graph = current_graph;
 }
 
+static int graph_str_to_dyntype1( char *str, unsigned int *dyntype)
+{
+  char vect[32][40];
+  int nr;
+  unsigned int dyntype1 = 0;
+
+  nr = dcli_parse( str, "|", "", (char *)vect, 
+		   sizeof( vect) / sizeof( vect[0]), sizeof( vect[0]), 0);
+  for ( int i = 0; i < nr; i++) {
+    if ( cdh_NoCaseStrcmp( vect[i], "Inherit") == 0)
+      dyntype1 |= ge_mDynType1_Inherit;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Tone") == 0)
+      dyntype1 |= ge_mDynType1_Tone;
+    else if ( cdh_NoCaseStrcmp( vect[i], "DigLowColor") == 0)
+      dyntype1 |= ge_mDynType1_DigLowColor;
+    else if ( cdh_NoCaseStrcmp( vect[i], "DigColor") == 0)
+      dyntype1 |= ge_mDynType1_DigColor;
+    else if ( cdh_NoCaseStrcmp( vect[i], "DigError") == 0)
+      dyntype1 |= ge_mDynType1_DigError;
+    else if ( cdh_NoCaseStrcmp( vect[i], "DigWarning") == 0)
+      dyntype1 |= ge_mDynType1_DigWarning;
+    else if ( cdh_NoCaseStrcmp( vect[i], "DigFlash") == 0)
+      dyntype1 |= ge_mDynType1_DigFlash;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Invisible") == 0)
+      dyntype1 |= ge_mDynType1_Invisible;
+    else if ( cdh_NoCaseStrcmp( vect[i], "DigBorder") == 0)
+      dyntype1 |= ge_mDynType1_DigBorder;
+    else if ( cdh_NoCaseStrcmp( vect[i], "DigText") == 0)
+      dyntype1 |= ge_mDynType1_DigText;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Value") == 0)
+      dyntype1 |= ge_mDynType1_Value;
+    else if ( cdh_NoCaseStrcmp( vect[i], "AnalogColor") == 0)
+      dyntype1 |= ge_mDynType1_AnalogColor;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Rotate") == 0)
+      dyntype1 |= ge_mDynType1_Rotate;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Move") == 0)
+      dyntype1 |= ge_mDynType1_Move;
+    else if ( cdh_NoCaseStrcmp( vect[i], "AnalogShift") == 0)
+      dyntype1 |= ge_mDynType1_AnalogShift;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Animation") == 0)
+      dyntype1 |= ge_mDynType1_Animation;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Bar") == 0)
+      dyntype1 |= ge_mDynType1_Bar;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Trend") == 0)
+      dyntype1 |= ge_mDynType1_Trend;
+    else if ( cdh_NoCaseStrcmp( vect[i], "SliderBackground") == 0)
+      dyntype1 |= ge_mDynType1_SliderBackground;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Video") == 0)
+      dyntype1 |= ge_mDynType1_Video;
+    else if ( cdh_NoCaseStrcmp( vect[i], "FillLevel") == 0)
+      dyntype1 |= ge_mDynType1_FillLevel;
+    else if ( cdh_NoCaseStrcmp( vect[i], "FastCurve") == 0)
+      dyntype1 |= ge_mDynType1_FastCurve;
+    else if ( cdh_NoCaseStrcmp( vect[i], "AnalogText") == 0)
+      dyntype1 |= ge_mDynType1_AnalogText;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Table") == 0)
+      dyntype1 |= ge_mDynType1_Table;
+    else if ( cdh_NoCaseStrcmp( vect[i], "StatusColor") == 0)
+      dyntype1 |= ge_mDynType1_StatusColor;
+    else if ( cdh_NoCaseStrcmp( vect[i], "HostObject") == 0)
+      dyntype1 |= ge_mDynType1_HostObject;
+    else if ( cdh_NoCaseStrcmp( vect[i], "DigSound") == 0)
+      dyntype1 |= ge_mDynType1_DigSound;
+    else if ( cdh_NoCaseStrcmp( vect[i], "XY_Curve") == 0)
+      dyntype1 |= ge_mDynType1_XY_Curve;
+    else if ( cdh_NoCaseStrcmp( vect[i], "DigCommand") == 0)
+      dyntype1 |= ge_mDynType1_DigCommand;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Pie") == 0)
+      dyntype1 |= ge_mDynType1_Pie;
+    else if ( cdh_NoCaseStrcmp( vect[i], "BarChart") == 0)
+      dyntype1 |= ge_mDynType1_BarChart;
+    else
+      return 0;
+  }
+  *dyntype = dyntype1;
+  return 1;
+}
+
+static int graph_str_to_dyntype2( char *str, unsigned int *dyntype)
+{
+  char vect[32][40];
+  int nr;
+  unsigned int dyntype2 = 0;
+
+  nr = dcli_parse( str, "|", "", (char *)vect, 
+		   sizeof( vect) / sizeof( vect[0]), sizeof( vect[0]), 0);
+  for ( int i = 0; i < nr; i++) {
+    if ( cdh_NoCaseStrcmp( vect[i], "DigTextColor") == 0)
+      dyntype2 |= ge_mDynType2_DigTextColor;
+    else if ( cdh_NoCaseStrcmp( vect[i], "TimeoutColor") == 0)
+      dyntype2 |= ge_mDynType2_TimeoutColor;
+    else
+      return 0;
+  }
+  *dyntype = dyntype2;
+  return 1;
+}
+
+static int graph_str_to_actiontype1( char *str, unsigned int *actiontype)
+{
+  char vect[32][40];
+  int nr;
+  unsigned int actiontype1 = 0;
+
+  nr = dcli_parse( str, "|", "", (char *)vect, 
+		   sizeof( vect) / sizeof( vect[0]), sizeof( vect[0]), 0);
+  for ( int i = 0; i < nr; i++) {
+    if ( cdh_NoCaseStrcmp( vect[i], "Inherit") == 0)
+      actiontype1 |= ge_mActionType1_Inherit;
+    else if ( cdh_NoCaseStrcmp( vect[i], "PopupMenu") == 0)
+      actiontype1 |= ge_mActionType1_PopupMenu;
+    else if ( cdh_NoCaseStrcmp( vect[i], "SetDig") == 0)
+      actiontype1 |= ge_mActionType1_SetDig;
+    else if ( cdh_NoCaseStrcmp( vect[i], "ResetDig") == 0)
+      actiontype1 |= ge_mActionType1_ResetDig;
+    else if ( cdh_NoCaseStrcmp( vect[i], "ToggleDig") == 0)
+      actiontype1 |= ge_mActionType1_ToggleDig;
+    else if ( cdh_NoCaseStrcmp( vect[i], "StoDig") == 0)
+      actiontype1 |= ge_mActionType1_StoDig;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Command") == 0)
+      actiontype1 |= ge_mActionType1_Command;
+    else if ( cdh_NoCaseStrcmp( vect[i], "CommandDoubleClick") == 0)
+      actiontype1 |= ge_mActionType1_CommandDoubleClick;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Confirm") == 0)
+      actiontype1 |= ge_mActionType1_Confirm;
+    else if ( cdh_NoCaseStrcmp( vect[i], "IncrAnalog") == 0)
+      actiontype1 |= ge_mActionType1_IncrAnalog;
+    else if ( cdh_NoCaseStrcmp( vect[i], "RadioButton") == 0)
+      actiontype1 |= ge_mActionType1_RadioButton;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Slider") == 0)
+      actiontype1 |= ge_mActionType1_Slider;
+    else if ( cdh_NoCaseStrcmp( vect[i], "ValueInput") == 0)
+      actiontype1 |= ge_mActionType1_ValueInput;
+    else if ( cdh_NoCaseStrcmp( vect[i], "ToolTip") == 0)
+      actiontype1 |= ge_mActionType1_TipText;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Help") == 0)
+      actiontype1 |= ge_mActionType1_Help;
+    else if ( cdh_NoCaseStrcmp( vect[i], "OpenGraph") == 0)
+      actiontype1 |= ge_mActionType1_OpenGraph;
+    else if ( cdh_NoCaseStrcmp( vect[i], "OpenURL") == 0)
+      actiontype1 |= ge_mActionType1_OpenURL;
+    else if ( cdh_NoCaseStrcmp( vect[i], "InputFocus") == 0)
+      actiontype1 |= ge_mActionType1_InputFocus;
+    else if ( cdh_NoCaseStrcmp( vect[i], "CloseGraph") == 0)
+      actiontype1 |= ge_mActionType1_CloseGraph;
+    else if ( cdh_NoCaseStrcmp( vect[i], "PulldownMenu") == 0)
+      actiontype1 |= ge_mActionType1_PulldownMenu;
+    else if ( cdh_NoCaseStrcmp( vect[i], "OptionMenu") == 0)
+      actiontype1 |= ge_mActionType1_OptionMenu;
+    else if ( cdh_NoCaseStrcmp( vect[i], "SetValue") == 0)
+      actiontype1 |= ge_mActionType1_SetValue;
+    else if ( cdh_NoCaseStrcmp( vect[i], "MethodToolbar") == 0)
+      actiontype1 |= ge_mActionType1_MethodToolbar;
+    else if ( cdh_NoCaseStrcmp( vect[i], "MethodPulldownMenu") == 0)
+      actiontype1 |= ge_mActionType1_MethodPulldownMenu;
+    else
+      return 0;
+  }
+  *actiontype = actiontype1;
+  return 1;
+}
+
+static int graph_str_to_access( char *str, unsigned int *acc)
+{
+  char vect[32][40];
+  int nr;
+  unsigned int access = 0;
+
+  nr = dcli_parse( str, "|", "", (char *)vect, 
+		   sizeof( vect) / sizeof( vect[0]), sizeof( vect[0]), 0);
+  for ( int i = 0; i < nr; i++) {
+    if ( cdh_NoCaseStrcmp( vect[i], "RtRead") == 0)
+      access |= pwr_mAccess_RtRead;
+    else if ( cdh_NoCaseStrcmp( vect[i], "RtWrite") == 0)
+      access |= pwr_mAccess_RtWrite;
+    else if ( cdh_NoCaseStrcmp( vect[i], "System") == 0)
+      access |= pwr_mAccess_System;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Maintenance") == 0)
+      access |= pwr_mAccess_Maintenance;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Process") == 0)
+      access |= pwr_mAccess_Process;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Instrument") == 0)
+      access |= pwr_mAccess_Instrument;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Operator1") == 0)
+      access |= pwr_mAccess_Operator1;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Operator2") == 0)
+      access |= pwr_mAccess_Operator2;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Operator3") == 0)
+      access |= pwr_mAccess_Operator3;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Operator4") == 0)
+      access |= pwr_mAccess_Operator4;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Operator5") == 0)
+      access |= pwr_mAccess_Operator5;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Operator6") == 0)
+      access |= pwr_mAccess_Operator6;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Operator7") == 0)
+      access |= pwr_mAccess_Operator7;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Operator8") == 0)
+      access |= pwr_mAccess_Operator8;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Operator9") == 0)
+      access |= pwr_mAccess_Operator9;
+    else if ( cdh_NoCaseStrcmp( vect[i], "Operator10") == 0)
+      access |= pwr_mAccess_Operator10;
+    else if ( cdh_NoCaseStrcmp( vect[i], "RtEventsAck") == 0)
+      access |= pwr_mAccess_RtEventsAck;
+    else if ( cdh_NoCaseStrcmp( vect[i], "RtPlc") == 0)
+      access |= pwr_mAccess_RtPlc;
+    else if ( cdh_NoCaseStrcmp( vect[i], "RtNavigator") == 0)
+      access |= pwr_mAccess_RtNavigator;
+    else if ( cdh_NoCaseStrcmp( vect[i], "RtEventsBlock") == 0)
+      access |= pwr_mAccess_RtEventsBlock;
+    else
+      return 0;
+  }
+  *acc = access;
+  return 1;
+}
+
+static int graph_str_to_direction( char *str, int *dir)
+{
+  int direction;
+
+  if ( cdh_NoCaseStrcmp( str, "Right") == 0)
+      direction = glow_eDirection_Right;
+  else if ( cdh_NoCaseStrcmp( str, "Left") == 0)
+      direction = glow_eDirection_Left;
+  else if ( cdh_NoCaseStrcmp( str, "Down") == 0)
+      direction = glow_eDirection_Down;
+  else if ( cdh_NoCaseStrcmp( str, "Up") == 0)
+      direction = glow_eDirection_Up;
+  else
+    return 0;
+
+  *dir = direction;
+  return 1;
+}
+
 static int	graph_show_func(void		*client_data,
 				void		*client_flag)
 {
@@ -1030,10 +1267,7 @@ static int	graph_set_func(	void		*client_data,
       {
         case glow_eType_Int:
         case glow_eType_TraceColor:
-        case glow_eType_DynType1:
-        case glow_eType_Access:
         case glow_eType_Boolean:
-        case glow_eType_Direction:
         case glow_eType_Color:
         case glow_eType_ToneOrColor:
         case ge_eAttrType_InstanceMask:
@@ -1058,6 +1292,68 @@ static int	graph_set_func(	void		*client_data,
         case glow_eType_String:
           strncpy( (char *) item_p->value, arg4_str, item_p->size);
           break;
+        case glow_eType_Direction:
+	  int direction;
+          sts = sscanf( arg4_str, "%d", &direction);
+          if ( sts != 1) {
+	    sts = graph_str_to_direction( arg4_str, &direction);
+	    if ( EVEN(sts)) {
+	      graph->message('E', "Syntax error");
+	      return GE__SYNTAX;
+	    }
+	  }
+          memcpy( item_p->value, (char *)&direction, sizeof(direction));
+	  break;
+        case glow_eType_Access:
+	  unsigned int access;
+          sts = sscanf( arg4_str, "%u", &access);
+          if ( sts != 1) {
+	    sts = graph_str_to_access( arg4_str, &access);
+	    if ( EVEN(sts)) {
+	      graph->message('E', "Syntax error");
+	      return GE__SYNTAX;
+	    }
+	  }
+          memcpy( item_p->value, (char *)&access, sizeof(access));
+	  break;
+        case glow_eType_DynType1:
+	  unsigned int dyntype1;
+          sts = sscanf( arg4_str, "%u", &dyntype1);
+          if ( sts != 1) {
+	    sts = graph_str_to_dyntype1( arg4_str, &dyntype1);
+	    if ( EVEN(sts)) {
+	      graph->message('E', "Syntax error");
+	      return GE__SYNTAX;
+	    }
+	  }
+          memcpy( item_p->value, (char *)&dyntype1, sizeof(dyntype1));
+	  break;
+        case glow_eType_DynType2:
+	  unsigned int dyntype2;
+          sts = sscanf( arg4_str, "%u", &dyntype2);
+          if ( sts != 1) {
+	    sts = graph_str_to_dyntype2( arg4_str, &dyntype2);
+	    if ( EVEN(sts)) {
+	      graph->message('E', "Syntax error");
+	      return GE__SYNTAX;
+	    }
+	  }
+          memcpy( item_p->value, (char *)&dyntype2, sizeof(dyntype2));
+	  break;
+        case glow_eType_ActionType1:
+	  unsigned int actiontype1;
+          sts = sscanf( arg4_str, "%u", &actiontype1);
+          if ( sts != 1) {
+	    sts = graph_str_to_actiontype1( arg4_str, &actiontype1);
+	    if ( EVEN(sts)) {
+	      graph->message('E', "Syntax error");
+	      return GE__SYNTAX;
+	    }
+	  }
+          memcpy( item_p->value, (char *)&actiontype1, sizeof(actiontype1));
+	  break;
+        case glow_eType_ActionType2:
+	  break;
         default:
           ;
       }
