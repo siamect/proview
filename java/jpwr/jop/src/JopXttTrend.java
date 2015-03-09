@@ -50,6 +50,11 @@ import javax.swing.Timer;
 import java.net.URL;
 import jpwr.rt.*;
 
+/**
+   Jop trend curve.
+   <b>
+   Displays trend curves configured with DsTrend or DsTrendCruve objects.
+ */
 public class JopXttTrend implements ActionListener, JopCurveIfc, GdhApplIfc {
     public static final int XTT_TREND_MAX = 20;
 

@@ -42,10 +42,9 @@ import javax.swing.tree.DefaultTreeModel;
 import jpwr.rt.*;
 
 /**
- *  Description of the Class
+ *  Xtt object attribute class.
  *
- *@author     JN3920
- *@created    November 12, 2002
+ *  @author     JN
  */
 public class XttObjAttr extends AttrObj
 {
@@ -69,11 +68,6 @@ public class XttObjAttr extends AttrObj
   public XttObjAttr() { }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Return Value
-   */
   public String toString()
   {
     if((this.flags & Pwr.mAdef_array) > 0)

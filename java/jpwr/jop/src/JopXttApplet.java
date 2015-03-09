@@ -49,22 +49,20 @@ import java.net.URL;
 import jpwr.rt.*;
 
 /**
- *  Description of the Class
+ *  Runtime navigator started as an applet.
  *
- *@author     JN3920
- *@created    November 12, 2002
+ *  @author     JN
  */
 public class JopXttApplet extends JopApplet
 {
   boolean sim = false;
-  /**  Description of the Field */
   XttTree xttTree;
 
   /**
    *  Sets the size attribute of the JopXttApplet object
    *
-   *@param  width   The new size value
-   *@param  height  The new size value
+   *  @param  width   The new size value
+   *  @param  height  The new size value
    */
   public void setSize(int width, int height)
   {
@@ -76,11 +74,6 @@ public class JopXttApplet extends JopApplet
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Return Value
-   */
   public String GetAppletInfo()
   {
     return "Applet information";
@@ -90,13 +83,12 @@ public class JopXttApplet extends JopApplet
   /**
    *  Gets the parameterInfo attribute of the JopXttApplet object
    *
-   *@return    The parameterInfo value
+   *  @return    The parameterInfo value
    */
   public String[][] getParameterInfo()
   {
     return null;
   }
-  /**  Description of the Method */
   public void destroy()
   {
     if(!sim)
@@ -105,7 +97,6 @@ public class JopXttApplet extends JopApplet
     }
   }
 
-  /**  Description of the Method */
   public void init()
   {
     super.init();

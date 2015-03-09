@@ -41,6 +41,9 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+/**
+   Ge dynamic type AnalogText.
+*/
 public class GeDynAnalogText extends GeDynOptionMenu {
 
   public GeDynAnalogText( GeDyn dyn, String attribute, String[] itemsText, int[] itemsEnum) {

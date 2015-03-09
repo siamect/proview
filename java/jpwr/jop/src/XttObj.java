@@ -45,63 +45,37 @@ import javax.swing.tree.DefaultTreeModel;
 import jpwr.rt.*;
 
 /**
- *  Description of the Class
+ *  Xtt object class.
  *
- *@author     JN3920
- *@created    November 12, 2002
+ *  @author     JN
  */
 public class XttObj extends DynamicObj implements JopDynamic
 {
-  /**  Description of the Field */
   public Vector attrVector = null;
-  /**  Description of the Field */
   public CdhrClassId classId = null;
-  /**  Description of the Field */
   public String className = null;
-  /**  Description of the Field */
   public boolean debug = false;
-  /**  Description of the Field */
   public String description = " ";
-  /**  Description of the Field */
   public JopEngine en;
-  /**  Description of the Field */
 //  public String fullName = null;
-  /**  Description of the Field */
   public Gdh gdh;
-  /**  Description of the Field */
   public boolean hasBeenReferenced = false;
-  /**  Description of the Field */
   public boolean hasChildren = false;
-  /**  Description of the Field */
   public int lengthToSecondCol = 15;
-  /**  Description of the Field */
 //  public String name = null;
-  /**  Description of the Field */
   public CdhrObjid objId = null;
 
   public CdhrAttrRef aref = null;
 
-  /**  Description of the Field */
   public XttRefObj refObj = null;
-  /**  Description of the Field */
   public int sts = 2;
-  /**  Description of the Field */
   DefaultMutableTreeNode treeNode;
 //  public String showableClassName = "Dv";
-  /**  Description of the Field */
   private static String isXttObjStr = "XttObj";
 
 
   /**
    *  Constructor for the XttObj object
-   *
-   *@param  gdh        Description of the Parameter
-   *@param  en         Description of the Parameter
-   *@param  fullName   Description of the Parameter
-   *@param  name       Description of the Parameter
-   *@param  className  Description of the Parameter
-   *@param  objId      Description of the Parameter
-   *@param  classId    Description of the Parameter
    */
   public XttObj(Gdh gdh, JopEngine en, String fullName, String name, String className, CdhrObjid objId, CdhrClassId classId)
   {
@@ -134,9 +108,6 @@ public class XttObj extends DynamicObj implements JopDynamic
   /**
    *  Constructor for the XttObj object
    *
-   *@param  obj  Description of the Parameter
-   *@param  gdh  Description of the Parameter
-   *@param  en   Description of the Parameter
    */
   public XttObj(GdhrGetXttObj obj, Gdh gdh, JopEngine en)
   {
@@ -156,7 +127,7 @@ public class XttObj extends DynamicObj implements JopDynamic
   /**
    *  Adds a feature to the AttrVector attribute of the XttObj object
    *
-   *@param  attrVector  The feature to be added to the AttrVector attribute
+   *  @param  attrVector  The feature to be added to the AttrVector attribute
    */
   public void addAttrVector(Vector attrVector)
   {
@@ -175,7 +146,6 @@ public class XttObj extends DynamicObj implements JopDynamic
     return null;
   }
 
-  /**  Description of the Method */
   public void dynamicClose()
   {
     Logg.logg("XttObj: dynamic close", 6);
@@ -183,7 +153,6 @@ public class XttObj extends DynamicObj implements JopDynamic
 
 
 
-  /**  Description of the Method */
   public void dynamicOpen()
   {
     Logg.logg("XttObj: Dynamic open", 6);
@@ -291,11 +260,6 @@ public class XttObj extends DynamicObj implements JopDynamic
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  animationOnly  Description of the Parameter
-   */
   public void dynamicUpdate(boolean animationOnly)
   {
     if(animationOnly)
@@ -352,11 +316,6 @@ public class XttObj extends DynamicObj implements JopDynamic
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  debug  Description of the Parameter
-   */
   public void init(boolean debug)
   {
     if(!debug)
@@ -375,7 +334,6 @@ public class XttObj extends DynamicObj implements JopDynamic
   }
 
 
-  /**  Description of the Method */
   public void localDynamicClose()
   {
     Logg.logg("XttObj: localDynamic close_vector", 6);
@@ -428,7 +386,6 @@ public class XttObj extends DynamicObj implements JopDynamic
   }
 
 
-  /**  Description of the Method */
   public void removeAttrVector()
   {
     this.debug = false;
@@ -449,8 +406,6 @@ public class XttObj extends DynamicObj implements JopDynamic
 
   /**
    *  A unit test for JUnit
-   *
-   *@return    Description of the Return Value
    */
   public String test()
   {
@@ -458,11 +413,6 @@ public class XttObj extends DynamicObj implements JopDynamic
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Return Value
-   */
   public String toString()
   {
     int spaceLength = this.lengthToSecondCol - this.name.length();
@@ -485,8 +435,6 @@ public class XttObj extends DynamicObj implements JopDynamic
 
   /**
    *  Gets the xttObj attribute of the XttObj class
-   *
-   *@param  o  Description of the Parameter
    *@return    The xttObj value
    */
   public static boolean isXttObj(Object o)

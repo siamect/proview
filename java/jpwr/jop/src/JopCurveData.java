@@ -47,6 +47,9 @@ import javax.swing.tree.*;
 import java.net.URL;
 import jpwr.rt.*;
 
+/**
+   Contains data for the curve window.
+ */
 public class JopCurveData
 {
     public static final int CURVE_MAX_COLS   	= 20;

@@ -48,10 +48,9 @@ import java.net.URL;
 import jpwr.rt.*;
 
 /**
- *  Description of the Class
+ *  Runtime navigator started as a frame.
  *
- *@author     JN3920
- *@created    November 12, 2002
+ *  @author     JN
  */
 public class JopXttFrame extends JFrame implements GdhApplIfc
 {

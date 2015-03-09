@@ -44,12 +44,12 @@ import java.sql.Timestamp;
 import java.util.Date;
 import javax.swing.*;
 //end for test
+
 /**
- *  Description of the Class
+ *  Server process for events and ararms.
+ *  Handles communication with web clients and apps.
  *
- *@author     claes, Jonas
- *@created    November 25, 2002
- *@version    0.1 beta: Första testversionen
+ *  @author     JN
  */
 public class MhServer
 {
@@ -79,7 +79,7 @@ public class MhServer
   /**
    *  The main program for the MhServer class
    *
-   *@param  args  The command line arguments
+   *  @param  args  The command line arguments
    */
   public static void main(String[] args)
   {
@@ -121,18 +121,15 @@ public class MhServer
   }
 
 
-  /**
-   *  Description of the Method
-   */
   public MhServer()
   {
   }
 
 
   /**
-   *  Gets the handlerObject attribute of the MhServer object
+   *  Get the handlerObject attribute of the MhServer object.
    *
-   *@return    The handlerObject value
+   *  @return    The handlerObject value.
    */
   private int getHandlerObject()
   {
@@ -197,9 +194,9 @@ public class MhServer
 
 
   /**
-   *  Sets the currentConnections attribute of the GdhServer object
+   *  Sets the currentConnections attribute of the GdhServer object.
    *
-   *@param  connections  The new currentConnections value
+   *  @param  connections  The new currentConnections value.
    */
   private void setCurrentConnections(int connections)
   {
@@ -215,7 +212,7 @@ public class MhServer
 
 
   /**
-   *  Description of the Method
+   *  Open a socket and wait for connect requests.
    */
   public void openServerSocket()
   {

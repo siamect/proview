@@ -38,6 +38,9 @@ package jpwr.jop;
 import jpwr.rt.*;
 import java.awt.event.*;
 
+/**
+   Ge action type StoDig.
+*/
 public class GeDynStoDig extends GeDynElem {
   String attribute;
 

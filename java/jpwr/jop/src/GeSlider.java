@@ -43,6 +43,9 @@ import javax.swing.*;
 import java.awt.event.*;
 import jpwr.rt.*;
 
+/**
+   Ge slider component.
+*/
 public class GeSlider extends JComponent implements JopDynamic, ActionListener{
   Timer timer = new Timer(500, this);
   public Object root;

@@ -44,13 +44,12 @@ import java.sql.Timestamp;
 import java.util.Date;
 import javax.swing.*;
 //end for test
+
 /**
- *  Description of the Class
- *
- *@author     claes, Jonas
- *@created    November 25, 2002
- *@version    1.2 beta: Test with connecting to msghandler
- */
+ Server process for communication with web and app clients.
+ 
+ @author     claes, Jonas
+*/
 public class GdhServer
 {
   public final static int SET_OBJECT_INFO_BOOLEAN = 1;
@@ -182,19 +181,16 @@ public class GdhServer
   }
 
 
-  /**
-   *  Description of the Method
-   */
   public GdhServer()
   {
   }
 
 
   /**
-   *  Gets the handlerObject attribute of the GdhServer object
-   *
-   *@return    The handlerObject value
-   */
+     Gets the handlerObject attribute of the GdhServer object
+   
+     @return    The handlerObject value
+  */
   private int getHandlerObject()
   {
     if(ignoreHandler)
@@ -232,10 +228,10 @@ public class GdhServer
 
 
   /**
-   *  Sets the currentConnections attribute of the GdhServer object
-   *
-   *@param  connections  The new currentConnections value
-   */
+     Sets the currentConnections attribute of the GdhServer object
+   
+     @param  connections  The new currentConnections value
+  */
   private void setCurrentConnections(int connections)
   {
     PwrtStatus sts;
@@ -248,8 +244,8 @@ public class GdhServer
 
 
   /**
-   *  Description of the Method
-   */
+     Open a server socket and wait for connect requests.
+  */
   public void openServerSocket()
   {
     ServerSocket serverSocket = null;
@@ -345,12 +341,6 @@ public class GdhServer
   }
 
 
-  /**
-   *  Description of the Class
-   *
-   *@author     claes
-   *@created    November 25, 2002
-   */
   private class GdhThread extends Thread
   {
     Socket clientSocket;
@@ -360,13 +350,6 @@ public class GdhServer
     int threadNumber;
 
 
-    /**
-     *  Constructor for the GdhThread object
-     *
-     *@param  clientSocket    Description of the Parameter
-     *@param  threadNumber    Description of the Parameter
-     *@param  maxConnections  Description of the Parameter
-     */
     public GdhThread(Socket clientSocket, int threadNumber, int maxConnections)
     {
       /************ In case of debugging this might be useful
@@ -376,7 +359,7 @@ public class GdhServer
                          "Delay : " + clientSocket.getTcpNoDelay());
       }
       catch(SocketException exc){}
-      *************************************/
+      ************************************/
       this.threadNumber = threadNumber;
       this.clientSocket = clientSocket;
       this.maxConnections = maxConnections;
@@ -385,8 +368,8 @@ public class GdhServer
 
 
     /**
-     *  Main processing method for the GdhThread object
-     */
+       Main processing method for the GdhThread object
+    */
     public void run()
     {
       if(log)
@@ -1969,13 +1952,6 @@ public class GdhServer
     
 
 
-    /**
-     *  Description of the Method
-     *
-     *@param  attrName      Description of the Parameter
-     *@param  threadNumber  Description of the Parameter
-     *@return               Description of the Return Value
-     */
     public synchronized Sub refObjectInfo(String attrName, int threadNumber)
     {
       SubElement sub;
@@ -2039,13 +2015,6 @@ public class GdhServer
 
 
 
-    /**
-     *  Description of the Method
-     *
-     *@param  refid         Description of the Parameter
-     *@param  threadNumber  Description of the Parameter
-     *@return               Description of the Return Value
-     */
     public synchronized PwrtStatus unrefObjectInfo(PwrtRefId refid, int threadNumber)
     {
       //System.out.println("unrefObjectInfo");
@@ -2098,13 +2067,6 @@ public class GdhServer
 
 
 
-    /**
-     *  Description of the Method
-     *
-     *@param  attrName      Description of the Parameter
-     *@param  threadNumber  Description of the Parameter
-     *@return               Description of the Return Value
-     */
     public synchronized void trimRefObjectList()
     {
       SubElement sub;
@@ -2135,10 +2097,10 @@ public class GdhServer
 
 
     /**
-     *  Gets the subscriptions attribute of the GdhThread object
-     *
-     *@return    The subscriptions value
-     */
+       Gets the subscriptions attribute of the GdhThread object
+     
+       @return    The subscriptions value
+    */
     public synchronized ArrayList getSubscriptions()
     {
       return (ArrayList)subscriptions.clone();

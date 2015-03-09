@@ -41,8 +41,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import jpwr.rt.Mh;
 import jpwr.rt.MhrEvent;
 
-/* This class is used to make sure an EventTableModel in a JaTable is presented 
- * in a graphically appealing manner. */
+/**
+   Cell renderer class for event table.
+   This class is used to make sure an EventTableModel in a JaTable is presented 
+   in a graphically appealing manner. 
+*/
 
 public class EventTableCellRender extends DefaultTableCellRenderer {
         
@@ -56,13 +59,13 @@ public class EventTableCellRender extends DefaultTableCellRenderer {
      *  Gets the tableCellRendererComponent attribute of the
      *  EventTableCellRender object
      *
-     *@param  table       Description of the Parameter
-     *@param  value       Description of the Parameter
-     *@param  isSelected  Description of the Parameter
-     *@param  hasFocus    Description of the Parameter
-     *@param  row         Description of the Parameter
-     *@param  column      Description of the Parameter
-     *@return             The tableCellRendererComponent value
+     * @param  table       Description of the Parameter
+     * @param  value       Description of the Parameter
+     * @param  isSelected  Description of the Parameter
+     * @param  hasFocus    Description of the Parameter
+     * @param  row         Description of the Parameter
+     * @param  column      Description of the Parameter
+     * @return             The tableCellRendererComponent value
      */
     public Component getTableCellRendererComponent(JTable table, Object value,
                                                    boolean isSelected, boolean hasFocus, int row, int column) {

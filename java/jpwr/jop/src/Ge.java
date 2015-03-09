@@ -36,6 +36,9 @@
 
 package jpwr.jop;
 
+/**
+   Ge basic definitions.
+*/
 public class Ge {
 
   // Directions

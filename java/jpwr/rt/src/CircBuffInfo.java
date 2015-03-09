@@ -36,6 +36,9 @@
 
 package jpwr.rt;
 
+/**
+   Information about a circular buffer. 
+*/
 public class CircBuffInfo
 {
     public PwrtAttrRef circAref;

@@ -34,15 +34,18 @@
  * General Public License plus this exception.
  */
 
-  /**
-   * Object som lagras i den statiska vektorn, i GdhServer, som handhar alla prenumerationer
-   *
-   *@author     JN3920
-   *@created    den 18 november 2002
-   */
   package jpwr.rt;
   import java.io.Serializable;
   import java.util.*;
+
+  /**
+   * Element of subscription data.
+   * <p>
+   * Object that is stored in the static vector in GdhServer handling all subscriptions.
+   *
+   * @author     JN
+   */
+
   public class SubElement
   {
     public int[] reffedByThread;

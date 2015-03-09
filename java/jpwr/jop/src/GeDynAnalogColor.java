@@ -37,6 +37,9 @@
 package jpwr.jop;
 import jpwr.rt.*;
 
+/**
+   Ge dynamic type AnalogColor.
+*/
 public class GeDynAnalogColor extends GeDynElem {
   String attribute;
   double limit;

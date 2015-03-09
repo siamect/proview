@@ -42,21 +42,12 @@ import javax.swing.tree.DefaultTreeModel;
 import jpwr.rt.*;
 
 /**
- *  Description of the Class
+ *  Xtt array attribute object.
  *
- *@author     JN3920
- *@created    November 12, 2002
+ *  @author     JN
  */
 public class XttArrayAttr extends AttrObj
 {
-  /**
-   *  Constructor for the XttArrayAttr object
-   *
-   *@param  name      Description of the Parameter
-   *@param  fullName  Description of the Parameter
-   *@param  type      Description of the Parameter
-   *@param  elements  Description of the Parameter
-   */
   public XttArrayAttr(String name, String fullName, int type, int elements)
   {
     this.name = name;
@@ -66,11 +57,6 @@ public class XttArrayAttr extends AttrObj
   }
 
 
-  /**
-   *  Constructor for the XttArrayAttr object
-   *
-   *@param  dummyname  Description of the Parameter
-   */
   public XttArrayAttr(String dummyname)
   {
     this.name = dummyname;

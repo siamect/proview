@@ -13,6 +13,9 @@
 
 package jpwr.jop;
 
+/**
+    Java-based implementation of the unix crypt command
+*/
 public class JopCrypt
 {
    private JopCrypt() {}

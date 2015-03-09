@@ -36,11 +36,9 @@
 
 package jpwr.rt;
 import java.io.Serializable; 
+
 /**
- *  Description of the Class
- *
- *@author     claes
- *@created    November 26, 2002
+ *  Return class for function returning mh events.
  */
 public class MhrEvent implements Serializable
 {

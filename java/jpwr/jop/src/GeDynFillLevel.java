@@ -38,6 +38,9 @@ package jpwr.jop;
 import jpwr.rt.*;
 import javax.swing.*;
 
+/**
+   Ge dynamic type FillLevel.
+*/
 public class GeDynFillLevel extends GeDynElem {
   String attribute;
   int color;

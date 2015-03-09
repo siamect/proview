@@ -39,26 +39,20 @@ import java.util.Vector;
 import javax.swing.tree.DefaultMutableTreeNode;
 import jpwr.rt.*;
 /**
- *  Description of the Class
+ *  Xtt object with ref.
  *
- *@author     JN3920
- *@created    November 12, 2002
+ *  @author     JN
  */
 public class XttRefObj extends DynamicObj implements JopDynamic
 {
-  /**  Description of the Field */
   public XttObjAttr objAttribute = null;
   //static JopEngine en;
-  /**  Description of the Field */
   int cid;
 //  String showableClassName = null;
-  /**  Description of the Field */
   String fullname;
-  /**  Description of the Field */
   int index;
   
   static boolean initdone = false;
-  /**  Description of the Field */
   static String[] AttributeNameArray = {"ActualValue", 
                                         "ActualValue", 
 					/*"ActualValue",*/
@@ -104,7 +98,6 @@ public class XttRefObj extends DynamicObj implements JopDynamic
 					
 					"OutVal", 
 					"OutVal"};
-  /**  Description of the Field */
   static int[] TypeClassId =           {Pwrb.cClass_Dv, 
                                         Pwrb.cClass_Av,  
 					/*Pwrb.cClass_Sv,*/
@@ -150,7 +143,6 @@ public class XttRefObj extends DynamicObj implements JopDynamic
 					
 					Pwrb.cClass_pid, 
 					Pwrb.cClass_mode};
-  /**  Description of the Field */
   static String[] TypeNameArray =      {"Dv", 
                                         "Av",  
 					/*"Sv",*/
@@ -196,20 +188,12 @@ public class XttRefObj extends DynamicObj implements JopDynamic
 					
 					"PID", 
 					"Mode"};
-  /**  Description of the Field */
   static CdhrObjAttr[] AttrObj = new CdhrObjAttr[TypeNameArray.length];
-  /**  Description of the Field */
   static boolean firstTime = true;
 
 
   /**
    *  Constructor for the XttRefObj object
-   *
-   *@param  fullname  Description of the Parameter
-   *@param  en        Description of the Parameter
-   *@param  cid   Description of the Parameter
-   *@param  treeNode  Description of the Parameter
-   *@param  index     Description of the Parameter
    */
   public XttRefObj(String fullname, JopEngine en, int cid,  /*String showableClassName,*/DefaultMutableTreeNode treeNode, int index)
   {
@@ -242,7 +226,7 @@ public class XttRefObj extends DynamicObj implements JopDynamic
   /**
    *  Gets the pwrtRefId attribute of the XttRefObj object
    *
-   *@return    The pwrtRefId value
+   *  @return    The pwrtRefId value
    */
   public PwrtRefId getPwrtRefId()
   {
@@ -257,7 +241,7 @@ public class XttRefObj extends DynamicObj implements JopDynamic
   /**
    *  Gets the xttObjAttr attribute of the XttRefObj object
    *
-   *@return    The xttObjAttr value
+   *  @return    The xttObjAttr value
    */
   public XttObjAttr getXttObjAttr()
   {
@@ -278,24 +262,17 @@ public class XttRefObj extends DynamicObj implements JopDynamic
     return null;
   }
 
-  /**  Description of the Method */
   public void dynamicClose()
   {
   }
 
 
 
-  /**  Description of the Method */
   public void dynamicOpen()
   {
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  animationOnly  Description of the Parameter
-   */
   public void dynamicUpdate(boolean animationOnly)
   {
     if(animationOnly)
@@ -307,17 +284,11 @@ public class XttRefObj extends DynamicObj implements JopDynamic
   }
 
 
-  /**  Description of the Method */
   public void localDynamicClose()
   {
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Return Value
-   */
   public String toString()
   {
     if(objAttribute != null)
@@ -334,8 +305,8 @@ public class XttRefObj extends DynamicObj implements JopDynamic
   /**
    *  Gets the wantedClassAttribute attribute of the XttRefObj class
    *
-   *@param  index  Description of the Parameter
-   *@return        The wantedClassAttribute value
+   *  @param  index  Description of the Parameter
+   *  @return        The wantedClassAttribute value
    */
   public static CdhrObjAttr getWantedClassAttribute(int index)
   {
@@ -356,12 +327,6 @@ public class XttRefObj extends DynamicObj implements JopDynamic
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  s  Description of the Parameter
-   *@return    Description of the Return Value
-   */
   public static int checkTypeName(String s)
   {
     for(int i = 0; i < XttRefObj.TypeNameArray.length; i++)
@@ -374,12 +339,6 @@ public class XttRefObj extends DynamicObj implements JopDynamic
     return -1;
   }
 
-
-  /**
-   *  Description of the Method
-   *
-   *@param  en  Description of the Parameter
-   */
   public static void init(JopEngine en)
   {
     if(XttRefObj.initdone)

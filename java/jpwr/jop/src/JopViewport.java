@@ -38,6 +38,9 @@ package jpwr.jop;
 import javax.swing.JViewport;
 import java.awt.Point;
 
+/**
+   Viewport class for scrollbar.
+*/
 public class JopViewport extends JViewport
 {
   public boolean user = false;

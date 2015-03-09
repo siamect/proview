@@ -42,6 +42,10 @@ import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
 
+/**
+   Flow node description class.
+   Layout and specification of function objects.
+*/
 public class FlowNodeClass {
   FlowArray a;
   String nc_name;

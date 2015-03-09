@@ -42,6 +42,9 @@ import java.awt.font.*;
 import javax.swing.*;
 import jpwr.rt.*;
 
+/**
+   Ge dynamic type XYCurve.
+*/
 public class GeDynXYCurve extends GeDynElem {
   String x_attr;
   String y_attr;

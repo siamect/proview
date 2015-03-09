@@ -37,9 +37,11 @@
 package jpwr.jop;
 import java.awt.*;
 
-/* The Proportion class is used when using the RatioLayout layoutmanager. It 
-   makes sure that the object associated with it  keeps its proportions 
-   when the frame is resized. */
+/** 
+    The Proportion class is used when using the RatioLayout layoutmanager. It 
+    makes sure that the object associated with it keeps its proportions 
+    when the frame is resized. 
+*/
 public class Proportion {
     
     //The ratios in x,y position and width, height

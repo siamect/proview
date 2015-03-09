@@ -43,6 +43,10 @@ import java.awt.geom.*;
 import javax.swing.*;
 
 
+/**
+   Flow annotation.
+   Place in a node for an instance specific text.
+*/
 public class FlowAnnot implements FlowArrayElem {
   FlowPoint p;
   int draw_type;

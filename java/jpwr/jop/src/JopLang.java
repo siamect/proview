@@ -12,6 +12,9 @@ import java.net.*;
 import java.applet.*;
 
 
+/**
+   Jop language translations handling.
+*/
 public class JopLang {
 
     public static final int ITEM_TYPE_EXACT = 0;

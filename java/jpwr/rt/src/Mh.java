@@ -51,8 +51,7 @@ import java.util.Vector;
 /**
  *  Description of the Class
  *
- *@author     Jonas Nylund
- *@created    November 25, 2002
+ *  @author     Jonas Nylund
  */
 public class Mh
 {
@@ -62,22 +61,6 @@ public class Mh
     initIDs();  
   }
 
-  /**
-   *@author                            claes
-   *@created                           November 26, 2002
-   *@ingroup                           MSGH_DS
-   *@brief                             Defines a bit pattern.
-   *@param  mh_mEventFlags_Return      Setting this flag enables a return
-   *      message associated with this message to be shown in the event list.
-   *@param  mh_mEventFlags_Ack         Setting this flag enables an
-   *      acknowledgement message associated with this message to be shown in
-   *      the event list.
-   *@param  mh_mEventFlags_Bell
-   *@param  mh_mEventFlags_Force
-   *@param  mh_mEventFlags_InfoWindow
-   *@param  mh_mEventFlags_Returned
-   *@param  mh_mEventFlags_NoObject
-   */
   public static final int mh_mEventFlags_Return = 0x01;
   public static final int mh_mEventFlags_Ack = 0x02;
   public static final int mh_mEventFlags_Bell = 0x04;
@@ -91,25 +74,6 @@ public class Mh
   public static final  int mh_mEventStatus_NotAck = (1 << 1);
   public static final  int mh_mEventStatus_Block  = (1 << 2);
   
-
-
- /** 
- * @ingroup MSGH_DS
- * @brief Event prio
- *
- * This enumeration defines the priority of the event. 
- * This affects how the message handler treats the generated message. 
- * For A and B priorities the alarm window displays number of alarms, 
- * number of unacknowledged alarms, identities of the alarms, and associated 
- * message texts. For C and D priorities, only number of alarms and number of 
- * unacknowledged alarms are shown. 
- * @param mh_eEventPrio_A Priority A, the highest priority. 
- * Alarm messages of this priority are shown in the upper part of the alarm window. 
- * @param mh_eEventPrio_B Priority B. 
- * These messages are shown in the lower part of the alarm window. 
- * @param mh_eEventPrio_C Priority C. 
- * @param mh_eEventPrio_D Priority D. This is the lowest priority. 
- */
   public static final int mh_eEventPrio__ = 0;   
   public static final int mh_eEventPrio_A = 67;  
   public static final int mh_eEventPrio_B = 66; 
@@ -117,8 +81,7 @@ public class Mh
   public static final int mh_eEventPrio_D = 64;
   public static final int mh_eEventPrio_  = 63;
   
-  
-  public static final int mh_eEvent__		= 0;    
+    public static final int mh_eEvent__		= 0;    
   public static final int mh_eEvent_Ack		= 1;
   public static final int mh_eEvent_Block	= 2;
   public static final int mh_eEvent_Cancel	= 3;
@@ -165,8 +128,6 @@ public class Mh
 
   /**
    *  Constructor for the Mh object
-   *
-   *@param  root  Description of the Parameter
    */
   public Mh(Object root, int maxNoOfAlarms, int maxNoOfEvents)
   {
@@ -179,32 +140,16 @@ public class Mh
     }
   }
 
-
-  /**
-   *  Description of the Method
-   */
   public void close()
   {
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  lockRejected  Description of the Parameter
-   */
   public void printStatistics(int lockRejected)
   {
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  user      Description of the Parameter
-   *@param  password  Description of the Parameter
-   *@return           Description of the Return Value
-   */
   public int login(String user, String password)
   {
     // Get system group
@@ -224,9 +169,6 @@ public class Mh
   }
 
 
-  /**
-   *  Description of the Method
-   */
   public void logout()
   {
     currentSystemGroup = null;
@@ -236,11 +178,6 @@ public class Mh
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Return Value
-   */
   public int checkUser()
   {
     return 1;
@@ -248,9 +185,9 @@ public class Mh
 
 
   /**
-   *  Gets the user attribute of the Mh object
+   *  Get the user attribute of the Mh object
    *
-   *@return    The user value
+   *  @return    The user value
    */
   public String getUser()
   {
@@ -261,8 +198,8 @@ public class Mh
   /**
    *  Gets the authorized attribute of the Mh object
    *
-   *@param  access  Description of the Parameter
-   *@return         The authorized value
+   *  @param  access  Description of the Parameter
+   *  @return         The authorized value
    */
   public boolean isAuthorized(int access)
   {
@@ -270,14 +207,6 @@ public class Mh
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  from      Description of the Parameter
-   *@param  to        Description of the Parameter
-   *@param  instance  Description of the Parameter
-   *@return           Description of the Return Value
-   */
   public PwrtStatus createInstanceFile(String from, String to,
                                        String instance)
   {
@@ -286,11 +215,6 @@ public class Mh
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  str  Description of the Parameter
-   */
   public void logString(String str)
   {
     // Dummy
@@ -302,10 +226,7 @@ public class Mh
     System.out.println("callback funkar ju");
   }
   /**
-   *  Anropas av Callbackfunktionerna
-   *
-   *@param  messType    Meddelandetyp
-   *@param  messString  Meddelande
+   *  Callback function for received messages.
    */
   public static void messReceived(String messString, String nameString, String timeString)
   {
@@ -363,10 +284,10 @@ public class Mh
 
 
   /**
-   *  Returnerar det nya meddelandet som har kommit. Skall endast anropas om
-   *  <tag>hasNewMessArrived()</tag> returnerar true
+   *  Returns the new messsage that has arrived. Should only be called if
+   *  <code>hasNewMessArrived()</code> returns <code>true</code>.
    *
-   *@return    Det nya meddelandet som har kommit
+   *  @return    The new message.
    */
   public MhrEvent getNewMess()
   { 
@@ -374,75 +295,64 @@ public class Mh
   }
 
 
-  /**
-   *  Se Programmers reference manual för beskrivning
-   */
   //public native PwrtStatus outunitBlock(PwrtObjid object, MheEventPrio prio);
 
 
   private native static void initIDs();
 
   /**
-   *  Sänder ett kvittensmeddelande till meddelandehanteraren
+   *  Sends an acknowledge message to the message handler.
    *
-   *@param  id  Identiteten för händelsen som skall kvitteras
-   *@return          Status. Koder: %MH-S-SUCCES %MH-S-ACKBUFF
+   *  @param  id  Identity for the aknowledged event.
+   *  @return     Status. <code>%MH-S-SUCCES</code> or <code>%MH-S-ACKBUFF</code>.
    */
   public native PwrtStatus outunitAck(MhrsEventId id);
 
 
 
   /**
-   *  Kopplar en outunit till den lokala meddelandehanteraren
+   *  Connects an outunit to the lcoal message handler.
    *
-   *@param  outunit  Objektsidentiteten för UserObjektet
-   *@return          Status. Koder: %MH-S-SUCCES
+   *  @param  outunit  The object identity for the outunit object.
+   *  @return          Status. <code>%MH-S-SUCCESS</code>.
    */
   public native PwrtStatus outunitConnect(PwrtObjid outunit);
 
 
   /**
-   *  Kopplar bort en outunit från den lokala meddelandehanteraren
+   *  Disconnects an outunit from the local message handler.
    *
-   *@return    Status. Koder: %MH-S-SUCCES
+   *  @return    Status. <code>%MH-S-SUCCESS</code>.
    */
   public native PwrtStatus outunitDisConnect();
 
 
   /**
-   *  Den här funktionen läser meddelandekön för en outunit. Om det finns ett
-   *  meddelande kommer messReceived att anropas
+   *  Reads the message queue for an outunit. If there is a message messReceived() will be
+   *  called.
    *
-   *@return    Status. Koder: %MH-S-SUCCES
+   *@return    Status, <code>%MH-S-SUCCESS</code>.
    */
   public native PwrtStatus outunitReceive();
 
 
   /**
-   *  Se Programmers reference manual för beskrivning
+   *  See Programmer's Reference Manual for description.
    *
-   *@param  object  Identiteten för objektet som skall blockeras
-   *@return         Status. Koder: %MH-S-SUCCES, %MH-W-NOTBLOCK redan
-   *      avblockerad , %GDH-F-NOSUCHOBJ objektet är inte tillgängligt
+   *  @param  object  Identity for the object that should be blocked.
+   *  @return         Status, <code>%MH-S-SUCCES</code>, <code>%MH-W-NOTBLOCK</code> 
+   *  already unblocked, <code>%GDH-F-NOSUCHOBJ</code> object is not available.
    */
   public native PwrtStatus outunitUnBlock(PwrtObjid object);
 
 
   /**
-   *  Se Programmers reference manual för beskrivning
+   *  See Programmer's Reference Manual for description.
    *
-   *@return    Status. Koder: %MH-S-SUCCES
+   *  @return    Status, <code>%MH-S-SUCCESS</code>.
    */
   public native PwrtStatus outunitUpdate();
 
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  filename  Description of the Parameter
-   *@return           Description of the Return Value
-   */
   public native static String translateFilename(String filename);
 }
 

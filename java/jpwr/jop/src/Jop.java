@@ -35,17 +35,11 @@
  */
 
 
-/**
- * Title:
- * Description:
- * Copyright:    Copyright (c) 2000
- * Company:
- * @author 	 CS
- * @version 1.0
- */
-
 package jpwr.jop;
 
+/**
+   Jop basic definitions.
+*/
 public class Jop {
   public static final int BUTTON_ACTION_SET = 0;
   public static final int BUTTON_ACTION_RESET = 1;

@@ -44,6 +44,9 @@ import java.awt.font.*;
 import javax.swing.*;
 import java.awt.event.*;
 
+/**
+   Applet for login.
+*/
 public class JopLoginApplet extends JApplet implements GdhApplIfc {
   JPanel contentPane;
   BorderLayout borderLayout1 = new BorderLayout();

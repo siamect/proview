@@ -44,6 +44,9 @@ import java.awt.font.*;
 import javax.swing.*;
 import java.awt.event.*;
 
+/**
+   Jop language chooser.
+*/
 public class JopLanguageFrame extends JFrame implements ActionListener {
   String[] languages = { "English",
 			 "Swedish",

@@ -39,14 +39,8 @@ package jpwr.jop;
 import java.beans.*;
 
 /**
- * Title:
- * Description:
- * Copyright:    Copyright (c) 2000
- * Company:
- * @author 	 CS
- * @version 1.0
- */
-
+   Deprecated
+*/
 public class GeColorToneEditor extends PropertyEditorSupport {
 
   public GeColorToneEditor() {

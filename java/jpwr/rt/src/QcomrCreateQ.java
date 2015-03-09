@@ -34,17 +34,12 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	CS
- * @version	1.0
- */
-
 package jpwr.rt;
 
+/**
+ * Return class for function creating QCom queues.
+ * @author	cs
+ */
 public class QcomrCreateQ {
   public int qix;
   public int nid;

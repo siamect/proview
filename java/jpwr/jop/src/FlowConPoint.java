@@ -43,6 +43,10 @@ import java.awt.geom.*;
 import javax.swing.*;
 
 
+/**
+   Flow connection point element.
+   Specifies a connection point in a node.
+*/
 public class FlowConPoint implements FlowArrayElem {
   FlowPoint p;
   int number;

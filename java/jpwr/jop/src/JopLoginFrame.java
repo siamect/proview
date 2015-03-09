@@ -44,6 +44,9 @@ import java.awt.font.*;
 import javax.swing.*;
 import java.awt.event.*;
 
+/**
+   Frame for login.
+*/
 public class JopLoginFrame extends JFrame {
   JPanel contentPane;
   BorderLayout borderLayout1 = new BorderLayout();

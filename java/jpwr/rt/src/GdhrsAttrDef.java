@@ -34,19 +34,14 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	JN
- * @version	1.0
- */
-
 package jpwr.rt;
 import java.io.Serializable;
 import jpwr.rt.PwrsParInfo;
 
+/**
+ *  Return class for attribute definitions.
+ *  @author	JN
+ */
 public class GdhrsAttrDef implements Serializable
 {
   public String attrName;
@@ -72,7 +67,10 @@ public class GdhrsAttrDef implements Serializable
     this.typeRef = typeRef;
     this.sts = sts;
   }
+  /** Check if status is even. */
   public boolean evenSts() { return (sts % 2 == 0);}
+  /** Get the status. */
   public boolean oddSts() { return (sts % 2 == 1);}
+  /** Get the type identifier. */
   public int getSts() { return sts;}
 }

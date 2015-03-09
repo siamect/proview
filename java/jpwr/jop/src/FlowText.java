@@ -42,7 +42,9 @@ import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
 
-
+/**
+   Flow text element.
+*/
 public class FlowText implements FlowArrayElem {
   FlowPoint p;
   int draw_type;

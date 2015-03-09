@@ -34,17 +34,15 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	CS
- * @version	1.0
- */
-
 package jpwr.rt;
 import java.io.Serializable;
+
+/**
+ * Reference identity.
+ * <p>
+ * A reference identity is an identity for a subscription or a direct link. 
+ * @author	cs
+ */
 public class PwrtRefId implements Serializable
 {
   public int rix;

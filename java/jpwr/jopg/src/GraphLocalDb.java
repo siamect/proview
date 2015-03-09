@@ -40,13 +40,6 @@ import jpwr.rt.*;
 import java.util.*;
 import java.io.*;
 
-/**
- *  Description of the Class
- *
- *@author     cs
- *@created    July 12, 2004
- *@version    1.0
- */
 public class GraphLocalDb {
 
   private class LocalSub {

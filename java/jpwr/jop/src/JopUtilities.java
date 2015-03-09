@@ -42,6 +42,9 @@ import java.awt.geom.*;
 import java.awt.image.*;
 import javax.swing.*;
 
+/**
+   Image utilities.
+ */
 public class JopUtilities {
   private static final Component sComponent = new Component() {};
   private static final MediaTracker sTracker = new MediaTracker( sComponent);

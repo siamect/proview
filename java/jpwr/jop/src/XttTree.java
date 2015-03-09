@@ -52,9 +52,8 @@ import java.beans.SimpleBeanInfo;
 import jpwr.rt.*;
 
 /**
- *@author     Jonas Nylund
- *@created    November 12, 2002
- *@version    1.0
+ *  Xtt tree object.
+ *  @author     Jonas Nylund
  */
 
 public class XttTree extends JPanel
@@ -65,33 +64,21 @@ public class XttTree extends JPanel
   JPanel userPanel = new JPanel();
   BorderLayout borderLayout1 = new BorderLayout();
   JPanel messagePanel = new JPanel();
-   /**  Description of the Field */
   JTextField textUser = new JTextField(10);
-  /**  Description of the Field */
   JTextField userValue = new JTextField(25);
-  /**  Description of the Field */
   JLabel userValueLabel = new JLabel("Value input: ");    
   JLabel userCommandLabel = new JLabel("Command:");
   JLabel labelMessage = new JLabel("");
   Dimension size;
-  /**  Description of the Field */
   JTree tree;
   Object root;
-  /**  Description of the Field */
   private JopSession session;
-  /**  Description of the Field */
   private JopEngine engine;
-  /**  Description of the Field */
   private boolean firstTime = true;
-  /**  Description of the Field */
   private Gdh gdh;
-  /**  Description of the Field */
   private DefaultMutableTreeNode rootNode;
-  /**  Description of the Field */
   private boolean sim = false;
-  /**  Description of the Field */
   private DefaultMutableTreeNode tNodeRoot;
-  /**  Description of the Field */
   private DefaultTreeModel treeModel;
   private URL url;
   
@@ -165,9 +152,6 @@ public class XttTree extends JPanel
   
 
   
-  /**
-   *@param  engine  JopEngine-instansen som trädet använder för uppkopling.
-   */
   public XttTree(JopSession session, URL url, Object root)
   {
     Logg.text_lbl = this.labelMessage;
@@ -339,11 +323,11 @@ public class XttTree extends JPanel
   }
   
   /**
-   *  Adderar alla barn till en nod i trädet. Kontrollerar också om barnen har
-   *  barn, om så är fallet adderas det första barnet till barnet!!!
+   * Adds all children to a node in the tree. Checks that if the children has
+   * children, and if so addes the first child of the child.
    *
-   *@param  tN  noden vars eventuella barn skall adderas.
-   *@param  tC  nodens första barn som alltid måste finnas qqq
+   *  @param  tN  The node which children should be added.
+   *  @param  tC  The first child of the node, which allways has to exist.
    */
   public void addChildren(DefaultMutableTreeNode tN, DefaultMutableTreeNode tC)
   {
@@ -408,10 +392,9 @@ public class XttTree extends JPanel
   }
 
   /**
-   *  Kontrollerar om en nod har barn, om så är fallet adderas det första barnet
-   *  till noden.
+   *  Checks if a node has children, if so addes the first child of the node.
    *
-   *@param  tN  Noden vars eventuella barn skall adderas. qqq
+   *  @param  tN  The node which children should be added.
    */
   public void addFirstChild(DefaultMutableTreeNode tN)
   {
@@ -447,9 +430,9 @@ public class XttTree extends JPanel
   }
 
   /**
-   *  Raderar alla barn för en nod, skapar sedan nya med annat innehåll
+   *  Deletes all children to a node, and creates new ones with new content.
    *
-   *@param  treePath  The feature to be added to the ObjectInfo attribute
+   *  @param  treePath  The feature to be added to the ObjectInfo attribute
    */
   public void addObjectInfo(TreePath treePath)
   {
@@ -547,10 +530,10 @@ public class XttTree extends JPanel
   }
 
   /**
-   *  Ändrar värde på markerat objekt till valueString Om det ej går att ändra
-   *  värde anropas Logg.loggToApplet() med felmeddelande.
+   *  Changes the value of selected object to valueString. If it's not possible to 
+   *  change the value Logg.loggToApplet() is called with an error message.
    *
-   *@param  valueString  Önskat värde i strängform
+   *@param  valueString  Desired string value.
    */
   public void changeValue(String valueString)
   {
@@ -1055,13 +1038,11 @@ public class XttTree extends JPanel
   /**
    *  Creates menuitem and keyboardbinding for a "method"
    *
-   *@param  name           The string that is to be shown in the menu's
-   *@param  action         The action who should be associated with the method
-   *@param  actionName     The name of the action
-   *@param  toPopup        If true the method will be added to the popupmenu 
-   *@param  toMenu         The index of the menu where the method will be, if -1 the method won't be added to any menu
-   *@param  keyStroke      A string representing the key-combination that is to be associated with the method
-   *@return                Void
+   *  @param  name           The string that is to be shown in the menu's
+   *  @param  action         The action who should be associated with the method
+   *  @param  actionName     The name of the action
+   *  @param  toMenu         The index of the menu where the method will be, if -1 the method won't be added to any menu
+   *  @param  keyStroke      A string representing the key-combination that is to be associated with the method
    */
 
   // Mats förändringar: booelan toPopup borttagen.
@@ -1227,16 +1208,6 @@ public class XttTree extends JPanel
   }
 
   // En hjälpmethod för att skapa menyobjekt.
-  /**
-   *  Description of the Method
-   *
-   *@param  label           Description of the Parameter
-   *@param  listener        Description of the Parameter
-   *@param  command         Description of the Parameter
-   *@param  mnemonic        Description of the Parameter
-   *@param  acceleratorKey  Description of the Parameter
-   *@return                 Description of the Return Value
-   */
   public static JMenuItem menuItem(String label,
       Action action,
       String keyStroke)

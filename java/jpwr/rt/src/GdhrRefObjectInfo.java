@@ -34,17 +34,12 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	CS
- * @version	1.0
- */
-
 package jpwr.rt;
 import java.io.Serializable;
+
+/**
+   Return class for refObjectInfo.
+*/
 public class GdhrRefObjectInfo implements Serializable
 {
   public PwrtRefId refid;
@@ -73,8 +68,11 @@ public class GdhrRefObjectInfo implements Serializable
     this.size = size;
   }
 
+  /** Check if status is even. */
   public boolean evenSts() { return (sts % 2 == 0);}
+  /** Check if status is odd. */
   public boolean oddSts() { return (sts % 2 == 1);}
+  /** Get the status. */
   public int getSts() { return sts;}
   public int getElements(){ return elements;}
   public int getSize(){ return size;}

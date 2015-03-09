@@ -37,6 +37,9 @@
 package jpwr.jop;
 import jpwr.rt.*;
 
+/**
+   Ge dynamic type Invisible.
+*/
 public class GeDynInvisible extends GeDynElem {
   String attribute;
   int dimmed;

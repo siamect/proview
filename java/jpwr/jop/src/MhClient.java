@@ -54,38 +54,28 @@ import java.awt.event.*;
 
 
 /**
- *  Description of the Class
+ *  Applet for Alarm and event list.
  *
- *@author     JN3920
- *@created    November 12, 2002
+ *  @author     JN
  */
 public class MhClient extends JApplet
 {
-  /**  Description of the Field */
   BorderLayout borderLayout1 = new BorderLayout();
 
-  /**  Description of the Field */
   BorderLayout borderLayout5 = new BorderLayout();
 
-  /**  Description of the Field */
   JPanel contentPane;
-  /**  Description of the Field */
   JLabel labelMessage = new JLabel("MhClient version 1.0");
 
-  /**  Description of the Field */
   JPanel messagePanel = new JPanel();
 
-  /**  Description of the Field */
   boolean sim = false;
 
-  /**  Description of the Field */
   Dimension size;
 
-  /**  Description of the Field */
   JPanel userPanel = new JPanel();
 
 
-  /**  Description of the Field */
   MhTable mhTable;
 
 
@@ -96,8 +86,8 @@ public class MhClient extends JApplet
   /**
    *  Sets the size attribute of the MhClient object
    *
-   *@param  width   The new size value
-   *@param  height  The new size value
+   *  @param  width   The new size value
+   *  @param  height  The new size value
    */
   public void setSize(int width, int height)
   {
@@ -110,11 +100,6 @@ public class MhClient extends JApplet
 
 
 
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Return Value
-   */
 /*
   public String GetAppletInfo()
   {
@@ -125,7 +110,7 @@ public class MhClient extends JApplet
   /**
    *  Gets the parameterInfo attribute of the MhClient object
    *
-   *@return    The parameterInfo value
+   *  @return    The parameterInfo value
    */
   public String[][] getParameterInfo()
   {
@@ -135,7 +120,6 @@ public class MhClient extends JApplet
 
 
 
-  /**  Description of the Method */
   public void destroy()
   {
     if(mhTable != null)
@@ -147,7 +131,6 @@ public class MhClient extends JApplet
   }
 
 
-  /**  Description of the Method */
   public void init()
   {
     super.init();
@@ -196,13 +179,11 @@ public class MhClient extends JApplet
   }
 
 
-  /**  Description of the Method */
   public void start()
   {
   }
 
 
-  /**  Description of the Method */
   public void stop()
   {
   }

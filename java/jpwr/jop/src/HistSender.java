@@ -42,9 +42,12 @@ import javax.swing.*;
 import java.util.Vector;
 import jpwr.rt.*;
 
-/* The HistSender initiates a socket to the server and can then perform a
- *SearchRequest given a HistQuery using an ObjectInput- and an 
- *ObjectOutputStream.*/
+/**
+ *  Event log communcation.
+ *  The HistSender initiates a socket to the server and can then perform a
+ *  SearchRequest given a HistQuery using an ObjectInput- and an 
+ *  ObjectOutputStream.
+ */
 
 public class HistSender {
     

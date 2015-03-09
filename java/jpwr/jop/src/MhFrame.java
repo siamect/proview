@@ -54,10 +54,9 @@ import java.awt.event.*;
 
 
 /**
- *  Description of the Class
+ *  Frame for Alarm and event list.
  *
- *@author     JN3920
- *@created    November 12, 2002
+ *  @author     JN
  */
 public class MhFrame extends JFrame implements GdhApplIfc {
   JopSession session;
@@ -65,31 +64,22 @@ public class MhFrame extends JFrame implements GdhApplIfc {
   XttTree xttTree;
   Object root;
   
-  /**  Description of the Field */
   BorderLayout borderLayout1 = new BorderLayout();
 
-  /**  Description of the Field */
   BorderLayout borderLayout5 = new BorderLayout();
 
-  /**  Description of the Field */
   JPanel contentPane;
-  /**  Description of the Field */
   JLabel labelMessage = new JLabel("MhClient version 1.0");
 
-  /**  Description of the Field */
   JPanel messagePanel = new JPanel();
 
-  /**  Description of the Field */
   boolean sim = false;
 
-  /**  Description of the Field */
   Dimension size;
 
-  /**  Description of the Field */
   JPanel userPanel = new JPanel();
 
 
-  /**  Description of the Field */
   MhTable mhTable;
 
 
@@ -129,7 +119,6 @@ public class MhFrame extends JFrame implements GdhApplIfc {
     init();
   }  
   
-  /**  Description of the Method */
   public void destroy()
   {
     if(mhTable != null)
@@ -143,7 +132,6 @@ public class MhFrame extends JFrame implements GdhApplIfc {
   }
 
 
-  /**  Description of the Method */
   public void init()
   {
     //super.init();

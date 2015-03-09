@@ -39,6 +39,9 @@ import jpwr.rt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+/**
+   Ge action type ValueInput.
+*/
 public class GeDynValueInput extends GeDynElem {
   double minValue;
   double maxValue;

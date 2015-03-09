@@ -34,21 +34,17 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	CS
- * @version	1.0
- */
-
 package jpwr.jop;
 import java.util.*;
 import javax.swing.Timer;
 import java.awt.event.*;
 import jpwr.rt.*;
 
+/**
+   Cyclic update of dynamics.
+   The object contains a vector where object that should be updated is inserted.
+   Contains the Gdh object.
+*/
 public class JopEngine implements ActionListener {
   int scanTime;
   int animationScanTime;

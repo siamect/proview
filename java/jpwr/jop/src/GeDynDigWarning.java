@@ -37,6 +37,9 @@
 package jpwr.jop;
 import jpwr.rt.*;
 
+/**
+   Ge dynamic type DigWarning.
+*/
 public class GeDynDigWarning extends GeDynElem {
   String attribute;
 

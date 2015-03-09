@@ -43,6 +43,9 @@ import javax.swing.*;
 import java.awt.event.*;
 import jpwr.rt.*;
 
+/**
+   Axis configuration and drawing for the curve window.
+*/
 public class JopCurveAxis extends JComponent {
   Dimension size;
   public JopCurveAxis()

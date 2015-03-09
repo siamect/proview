@@ -41,8 +41,9 @@ import java.util.*;
 import jpwr.jop.*;
 import java.beans.Beans;
 
-/** RatioLayout.java -- Layout manager for Java containers
- * 
+/** 
+ *  Layout manager for Java containers.
+ *  <p>
  *  This layout manager allows you to specify ratios of x,y,width,height
  *  using a Proportion object.
  *

@@ -39,6 +39,9 @@ import jpwr.rt.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+   Ge action type Confirm.
+*/
 public class GeDynConfirm extends GeDynElem {
   String text;
 

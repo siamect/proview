@@ -37,9 +37,12 @@
 package jpwr.rt;
 import java.io.Serializable;
 
-/*The HistQuery class represents the search criteria needed to perform a Search
- *in the eventlist. It is used as the argument for performing SearchRequest from
- *a SearchSender	*/
+/**
+ * Event log search criteria.
+ * The HistQuery class represents the search criteria needed to perform a Search
+ * in the eventlist. It is used as the argument for performing SearchRequest from
+ * a SearchSender.
+ */
 
 public class HistQuery implements Serializable{
   public String startTime;

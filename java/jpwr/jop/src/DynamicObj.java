@@ -40,20 +40,15 @@ import jpwr.jop.JopDynamic;
 import jpwr.jop.JopEngine;
 import jpwr.rt.*;
 /**
- *  Description of the Class
+ *  Xtt class for object attribute subscriptions.
  *
- *@author     JN3920
- *@created    November 12, 2002
+ *  @author     JN
  */
 public class DynamicObj extends TreeObj
 {
-  /**  Description of the Field */
   public XttObjAttr objAttr;
-  /**  Description of the Field */
   int classid;
-  /**  Description of the Field */
 //  String fullName;
-  /**  Description of the Field */
   static JopEngine en;
   
   static boolean initDone = false;
@@ -62,7 +57,7 @@ public class DynamicObj extends TreeObj
   /**
    *  Sets the objectAttributeValue attribute of the DynamicObj object
    *
-   *@param  obj  The new objectAttributeValue value
+   *  @param  obj  The new objectAttributeValue value
    */
   public void setObjectAttributeValue(AttrObj obj)
   {
@@ -109,9 +104,9 @@ public class DynamicObj extends TreeObj
   /**
    *  Sets the typeIdString attribute of the DynamicObj object
    *
-   *@param  type  The new typeIdString value
-   *@param  size  The new typeIdString value
-   *@return       Description of the Return Value
+   *  @param  type  The new typeIdString value
+   *  @param  size  The new typeIdString size
+   *  @return       The typeId suffix
    */
   public String setTypeIdString(int type, int size)
   {

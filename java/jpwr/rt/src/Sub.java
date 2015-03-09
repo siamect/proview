@@ -34,14 +34,15 @@
  * General Public License plus this exception.
  */
 
-  /**
-   * Object stored in supscription array for each thread in GdhServer
-   *
-   *@author     JN3920
-   *@created    den 18 november 2002
-   */
   package jpwr.rt;
   import java.io.Serializable;
+
+  /**
+   * Subscription data.
+   * Object stored in supscription array for each thread in GdhServer.
+   *
+   * @author     JN
+   */
   public class Sub  extends GdhrRefObjectInfo implements Serializable
   {
     public String attrName = "hej";

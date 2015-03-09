@@ -37,6 +37,9 @@
 package jpwr.jop;
 import jpwr.rt.*;
 
+/**
+   Ge dynamic type DigText.
+*/
 public class GeDynDigText extends GeDynElem {
   String attribute;
   String lowText;

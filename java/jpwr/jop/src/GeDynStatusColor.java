@@ -37,6 +37,9 @@
 package jpwr.jop;
 import jpwr.rt.*;
 
+/**
+   Ge dynamic type StatusColor.
+*/
 public class GeDynStatusColor extends GeDynElem {
   String attribute;
   int nostatusColor;

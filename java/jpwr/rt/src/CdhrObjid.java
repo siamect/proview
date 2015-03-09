@@ -34,18 +34,13 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	CS
- * @version	1.0
- */
-
 package jpwr.rt;
 import java.io.Serializable;
 
+/**
+   Return class for functions returning an object identity.
+   Contains a return status and an object identity.
+*/
 public class CdhrObjid implements Serializable
 {
   public PwrtObjid objid;
@@ -55,7 +50,10 @@ public class CdhrObjid implements Serializable
     this.objid = objid;
     this.sts = sts;
   }
+  /** Check if status is even. */
   public boolean evenSts() { return (sts % 2 == 0);}
+  /** Check if status is odd. */
   public boolean oddSts() { return (sts % 2 == 1);}
+  /** Get the status. */
   public int getSts() { return sts;}
 }

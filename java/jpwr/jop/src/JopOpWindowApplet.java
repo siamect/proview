@@ -46,6 +46,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import jpwr.rt.*;
 
+/** 
+    Applet for the operator window.
+*/
 public class JopOpWindowApplet extends JopApplet
 {
   JScrollPane scrollPane;

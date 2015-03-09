@@ -37,6 +37,10 @@
 package jpwr.rt;
 import java.io.Serializable;
 
+/**
+   Return class for functions returning cicular buffer information.
+   Contains a return status and circular buffer information.
+*/
 public class GdhrCircBuffInfo implements Serializable
 {
     public CircBuffInfo info;

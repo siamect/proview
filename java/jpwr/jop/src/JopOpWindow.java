@@ -40,6 +40,12 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
+/**
+   Jop operator window.
+   <p>
+   The window contains buttons to login, select language, open navigator, alarm and event list, and
+   buttons for actions defined with WebGraph and WebLink objects.
+*/
 public class JopOpWindow extends JPanel {
 
   JopSession session;

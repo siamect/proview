@@ -38,15 +38,18 @@ package jpwr.jop;
 import java.awt.*;
 import java.awt.event.*;
 
-/* This class is used as a ComponentListener for any Component for which
- the Aspect Ratio is important and needs to be retained. The constructor
-needs to know what Component it is applied to and the original size of it.
-From the size the aspect ratio is calculated and every time the Container
-is resized. The size is changed so that the aspect ratio matches the, 
-relatively, smaller one of the new width and height.
-syntax : new AspectTarioListener(c)
-   or    new AspectRatioListener(c,size)
-where c is the component, and size is the original size of it. */
+/**
+   Component listener that retains the aspect ratio.
+   <p>
+   This class is used as a ComponentListener for any Component for which
+   the Aspect Ratio is important and needs to be retained. The constructor
+   needs to know what Component it is applied to and the original size of it.
+   From the size the aspect ratio is calculated and every time the Container
+   is resized. The size is changed so that the aspect ratio matches the, 
+   relatively, smaller one of the new width and height.
+   syntax : new AspectTarioListener(c) or new AspectRatioListener(c,size)
+   where c is the component, and size is the original size of it. 
+*/
 
 public class AspectRatioListener implements ComponentListener {
 	

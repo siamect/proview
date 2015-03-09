@@ -38,6 +38,9 @@ package jpwr.jop;
 import javax.swing.*;
 import jpwr.rt.*;
 
+/**
+   Ge dynamic type Rotate.
+*/
 public class GeDynRotate extends GeDynElem {
   String attribute;
   double x0;

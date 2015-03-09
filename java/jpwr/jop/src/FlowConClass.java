@@ -40,6 +40,10 @@ import java.io.*;
 import java.util.*;
 
 
+/**
+   Flow connection class.
+   Specifies appearance and function for connections.
+*/
 public class FlowConClass {
   String cc_name;
   int con_type;

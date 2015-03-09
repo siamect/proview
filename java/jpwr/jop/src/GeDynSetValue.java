@@ -38,6 +38,9 @@ package jpwr.jop;
 import jpwr.rt.*;
 import java.awt.event.*;
 
+/**
+   Ge action type SetValue.
+*/
 public class GeDynSetValue extends GeDynElem {
   String attribute;
   String value;

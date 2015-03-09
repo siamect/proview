@@ -34,17 +34,29 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	CS
- * @version	1.0
- */
-
 package jpwr.rt;
 import java.io.Serializable;
+
+/**
+ * Status value. 
+ * <p>
+ * A status is a 32-bit word, with the following properties  
+ * 
+ * <p>
+ * Description. The status word can be translated to a string that describes the status. 
+ * <p>
+ * Severity. There are five types of severity: Success, Info, Warning, Error and Fatal. 
+ * The severity is defined by the last 3 bits of the word. Note that status with OK 
+ * severity is odd, and not OK severity is even. 001 (1) Success 011 (3) Info 000 (0) 
+ * Warning 010 (2) Error 100 (4) Fatal 
+ * <p>
+ * c-binding. All status values are defined in message includefiles, e.g. GDH__NOSUCHOBJ 
+ * is defined in rt_gdh_msg.h Color coding
+ * <p>
+ * Status values are displayed in graphs with different colors dependent on the severity. 
+ * Success Green. Info Green. Warning Yellow. Error Red. Fatal Flashing red. 
+ * @author	cs
+ */
 public class PwrtStatus implements Serializable
 {
   int sts;

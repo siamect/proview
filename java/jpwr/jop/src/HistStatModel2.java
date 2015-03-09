@@ -40,9 +40,12 @@ import java.util.regex.*;
 import javax.swing.table.AbstractTableModel;
 import jpwr.rt.*;
 
-/* HistStatModel2 is an AbstractTableModel that derives information on the
+/**
+   Event statistics model.
+   HistStatModel2 is an AbstractTableModel that derives information on the
    duration of alarms (Active to Return) supplied in a MhData. Proper methods
-   for displaying the results as a table ar included aswell... */
+   for displaying the results as a table ar included aswell... 
+*/
 
 public class HistStatModel2 extends AbstractTableModel{
     // The List holding the statistics

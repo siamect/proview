@@ -45,6 +45,9 @@ import javax.swing.Timer;
 import java.awt.event.*;
 import jpwr.rt.*;
 
+/**
+   Ge base class for subgraphs.
+*/
 public class GeComponent extends JComponent implements GeComponentIfc, 
 	JopDynamic, JopConfirm, ActionListener {
   public Dimension size;

@@ -43,6 +43,10 @@ import java.awt.geom.*;
 import javax.swing.*;
 
 
+/**
+   Flow connection.
+   A connection between to nodes.
+*/
 public class FlowCon extends JComponent implements FlowComponent, JopDynamic {
   double x_right;
   double x_left;

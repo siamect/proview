@@ -39,6 +39,9 @@ import java.awt.*;
 import javax.swing.*;
 import jpwr.rt.*;
 
+/**
+   Ge dynamic type Move.
+*/
 public class GeDynMove extends GeDynElem {
 public  String moveXAttribute;
 public  String moveYAttribute;

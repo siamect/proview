@@ -35,15 +35,6 @@
  */
 
 
-/**
- * Title:        <p>
- * Description:  Utöka befintliga JButton till PwrButton.<p>
- * Copyright:    Copyright (c) <p>
- * Company:      <p>
- * @author
- * @version 1.0
- */
-
 package jpwr.jop;
 import javax.swing.*;
 import java.awt.event.*;
@@ -52,6 +43,10 @@ import java.applet.*;
 import java.net.*;
 import jpwr.rt.*;
 
+/**
+   Jop root object when Jop is started as an applet.
+   @see JopFrame
+*/
 public class JopApplet extends JApplet implements GdhApplIfc
 {
   public JopSession session;

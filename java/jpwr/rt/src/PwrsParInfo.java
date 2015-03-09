@@ -34,17 +34,13 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	JN
- * @version	1.0
- */
-
 package jpwr.rt;
 import java.io.Serializable;
+
+/**
+ * Attribute information.
+ * @author	JN
+ */
 public class PwrsParInfo implements Serializable
 {
   public String PgmName;

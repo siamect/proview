@@ -39,8 +39,11 @@ import java.util.*;
 import javax.swing.table.AbstractTableModel;
 import jpwr.rt.*;
 
-/*The HistStatModel1 class is used to derive how many times an Alarm has been
-  set off during the interval of the search provided in a MhData.*/
+/**
+   Event statistics model.
+   The HistStatModel1 class is used to derive how many times an Alarm has been
+   set off during the interval of the search provided in a MhData.
+*/
 
 public class HistStatModel1 extends AbstractTableModel{
     // The List storing the resulting statistics.

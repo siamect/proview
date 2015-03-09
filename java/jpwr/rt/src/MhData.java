@@ -38,10 +38,9 @@ package jpwr.rt;
 import java.util.Vector;
 import java.util.ListIterator;
 /**
- *  Description of the Class
+ *  Storage class for alarms and events.
  *
- *@author     Jonas Nylund
- *@created    November 25, 2002
+ *  @author     Jonas Nylund
  */
 public class MhData
 {

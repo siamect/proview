@@ -40,6 +40,9 @@ import java.awt.*;
 import javax.swing.*;
 import jpwr.rt.*;
 
+/**
+   Deprecated.
+*/
 public class JopSpiderFrame {
   Object frame;
 

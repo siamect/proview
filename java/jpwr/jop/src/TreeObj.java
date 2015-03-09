@@ -40,15 +40,12 @@ package jpwr.jop;
 //import jpwr.rt.*;
 
 /**
- *  Description of the Class
+ *  Xtt object class.
  *
- *@author     JN3920
- *@created    November 12, 2002
+ *  @author     JN
  */
 public class TreeObj
 {
-  /**  Description of the Field */
   String  name = null;
-  /**  Description of the Field */
   String fullName = null;
 }

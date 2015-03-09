@@ -38,6 +38,9 @@ package jpwr.jop;
 import jpwr.rt.*;
 import java.awt.event.*;
 
+/**
+   Ge dynamics, basic definitions and utilities.
+*/
 public class GeDyn {
     public static final int mDynType_No			= 0;
     public static final int mDynType_Inherit		= 1 << 0;

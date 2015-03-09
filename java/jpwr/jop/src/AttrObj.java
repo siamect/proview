@@ -41,52 +41,35 @@ import javax.swing.tree.DefaultTreeModel;
 import jpwr.rt.*;
 
 /**
- *  Description of the Class
+ *  Xtt class for object attributes.
  *
- *@author     JN3920
- *@created    November 12, 2002
+ *  @author     JN
  */
 public class AttrObj extends TreeObj
 {
-  /**  Description of the Field */
   int elements = 0;
-  /**  Description of the Field */
   int flags;
-  /**  Description of the Field */
 //  String fullName = null;
-  /**  Description of the Field */
   int lengthToSecondCol = 20;
-  /**  Description of the Field */
 //  String name = null;
-  /**  Description of the Field */
   PwrtObjid objid;
-  /**  Description of the Field */
   GdhrRefObjectInfo refObj;
-  /**  Description of the Field */
   boolean showName = true;
-  /**  Description of the Field */
   int size;
-  /**  Description of the Field */
   DefaultMutableTreeNode treeNode;
-  /**  Description of the Field */
   int type;
-  /**  Description of the Field */
   boolean valueBoolean;
-  /**  Description of the Field */
   float valueFloat;
 
-  /**  Description of the Field */
   int valueInt;
-  /**  Description of the Field */
   String valueString = " ";
-  /**  Description of the Field */
   static DefaultTreeModel treeModel;
 
 
   /**
    *  Sets the value attribute of the AttrObj object
    *
-   *@param  value  The new value value
+   *  @param  value  The new value value
    */
   public void setValue(int value)
   {
@@ -102,7 +85,7 @@ public class AttrObj extends TreeObj
   /**
    *  Sets the value attribute of the AttrObj object
    *
-   *@param  value  The new value value
+   *  @param  value  The new value value
    */
   public void setValue(float value)
   {
@@ -118,7 +101,7 @@ public class AttrObj extends TreeObj
   /**
    *  Sets the value attribute of the AttrObj object
    *
-   *@param  value  The new value value
+   *  @param  value  The new value value
    */
   public void setValue(boolean value)
   {
@@ -134,7 +117,7 @@ public class AttrObj extends TreeObj
   /**
    *  Sets the value attribute of the AttrObj object
    *
-   *@param  value  The new value value
+   *  @param  value  The new value value
    */
   public void setValue(String value)
   {
@@ -150,7 +133,7 @@ public class AttrObj extends TreeObj
   /**
    *  Description of the Method
    *
-   *@return    Description of the Return Value
+   *  @return    Description of the Return Value
    */
   public String toString()
   {

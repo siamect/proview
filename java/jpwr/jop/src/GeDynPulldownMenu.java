@@ -41,6 +41,9 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+/**
+   Ge action type PulldownMenu.
+*/
 public class GeDynPulldownMenu extends GeDynElem {
   String[] itemsText;
   GeDyn[] itemsDyn;

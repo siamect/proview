@@ -34,17 +34,11 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	CS
- * @version	1.0
- */
-
 package jpwr.rt;
 
+/**
+   Interface to system messages.
+*/
 public class Errh {
   public static final int eAnix_webmon 		= 14;
   public static final int eAnix_webmonmh       	= 15;
@@ -68,11 +62,17 @@ public class Errh {
   }
   
   private native int init( String programName, int anix);
+  /** Set process status. */
   public native void setStatus( int sts);
+  /** Write a fatal system message. */
   public native void fatal( String msg);
+  /** Write an error system message. */
   public native void error( String msg);
+  /** Write a warning system message. */
   public native void warning( String msg);
+  /** Write an info system message. */
   public native void info( String msg);
+  /** Write a success system message. */
   public native void success( String msg);
 }
 

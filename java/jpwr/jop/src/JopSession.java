@@ -39,6 +39,11 @@ package jpwr.jop;
 import jpwr.rt.*;
 import java.lang.*;
 
+/**
+   Wrapper to the JopSessionRep class.
+   @see JopSessionRep
+   @see JopSessionIfc
+ */
 public class JopSession {
   public JopSession() {
   }
@@ -47,7 +52,7 @@ public class JopSession {
 
   // New implementation
   public JopSession( JopEngine engine, Object rootObject) {
-    // Create a JopSessionRep object which class i not known by the compiler
+    // Create a JopSessionRep object which class is not known by the compiler
     try {
       Class clazz = Class.forName( "jpwr.jop.JopSessionRep");
       try {

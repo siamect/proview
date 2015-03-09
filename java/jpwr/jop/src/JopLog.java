@@ -36,6 +36,9 @@
 
 package jpwr.jop;
 
+/**
+   Logging.
+*/
 public class JopLog {
 
   public static final boolean log = true;

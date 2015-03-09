@@ -40,6 +40,9 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
+/**
+   Jop confirm dialog used by Ge confirm dynamics.
+ */
 public class JopConfirmDialog {
   static JDialog dia = null;
   static Component par;

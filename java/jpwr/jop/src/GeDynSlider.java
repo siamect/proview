@@ -41,6 +41,9 @@ import java.awt.*;
 import javax.swing.*;
 
 
+/**
+   Ge dynamic type Slider.
+*/
 public class GeDynSlider extends GeDynElem {
   String attribute;
   public int direction;

@@ -41,6 +41,9 @@ import java.util.*;
 import jpwr.rt.*;
 
 
+/**
+   Flow context.
+*/
 public class FlowCtx implements FlowCtxInterface {
   FlowCmn cmn;
   String name;
