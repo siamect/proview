@@ -821,7 +821,7 @@ void XttTCurve::tcurve_help_cb( void *ctx)
   XttTCurve *tcurve = (XttTCurve *) ctx;
 
   if ( tcurve->help_cb)
-    (tcurve->help_cb)( tcurve->xnav, "opg_trendbuffer");
+    (tcurve->help_cb)( tcurve->xnav, "opg_trend_snapshot");
 }
 
 void XttTCurve::tcurve_scan( void *data)
