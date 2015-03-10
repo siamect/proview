@@ -651,12 +651,75 @@ void WFoe::delete_subwindow_ok_cb( void *ctx, void *data)
   foe->gre->delete_selected();
 }
 
+void WFoe::delete_subwindows_ok_cb( void *ctx, void *data)
+{
+  WFoe *foe = (WFoe *) ctx;
+  vldh_t_node *nodelist;
+  unsigned long node_count;
+  pwr_tStatus sts, rsts;
+  pwr_tOid child, nextchild;
+  vldh_t_wind wind = foe->gre->wind;
+  unsigned long		wind_count;
+  vldh_t_wind		*windlist;
+  vldh_t_wind		*wind_ptr;
+  int			i;
+
+  foe->gre->get_selnodes( &node_count, &nodelist);
+
+  for ( unsigned int j = 0; j < node_count; j++) {
+    vldh_t_node node = nodelist[j];
+    if ( node->ln.subwindow != 0 ) {
+
+      /* Check that subwindow is not open */
+      sts = vldh_get_wind_subwindows( foe->gre->wind, 
+				    &wind_count, &windlist);
+      if( EVEN(sts)) { foe->error_msg( sts); return;}
+
+      for ( sts = ldh_GetChild( wind->hw.ldhses, node->ln.oid, &child);
+	    ODD(sts);
+	    sts = ldh_GetNextSibling( wind->hw.ldhses, child, &child)) {
+	wind_ptr = windlist;
+	for ( i = 0; i < (int)wind_count; i++) {
+	  if ( cdh_ObjidIsEqual( (*wind_ptr)->lw.oid, child)) {
+	    foe->wow->DisplayError( "Window open",
+				    "Subwindow is open\nClose subwindow first");
+	    free((char *) windlist);
+	    free( (char *)nodelist);
+	    return;
+	  }
+	  wind_ptr++;
+	}
+      }
+      if ( wind_count > 0) free((char *) windlist);
+    }
+  }
+
+  for ( unsigned int j = 0; j < node_count; j++) {
+    vldh_t_node node = nodelist[j];
+
+    if ( node->ln.subwindow != 0 ) {
+      for ( sts = ldh_GetChild( wind->hw.ldhses, node->ln.oid, &child);
+	    ODD(sts);
+	    child = nextchild) {
+	sts = ldh_GetNextSibling( wind->hw.ldhses, child, &nextchild);
+
+	rsts = ldh_DeleteObjectTree( wind->hw.ldhses, child, 0);
+	if ( EVEN(rsts)) { foe->error_msg( rsts); return; }
+      }
+      node->ln.subwindow = 0;
+    }
+  }
+  foe->gre->delete_selected();
+
+  free( (char *)nodelist);
+}
+
 void WFoe::activate_delete()
 {
   unsigned long		node_count;
   vldh_t_node		*nodelist;
   vldh_t_node		*node_ptr;
-  int			i, subwind_found;
+  int			i;
 
   if ( msg_label_id != 0 ) message( ""); 
   
@@ -678,25 +741,29 @@ void WFoe::activate_delete()
   }
 
   node_ptr = nodelist;
-  subwind_found = FALSE;
+  int subwind_cnt = 0;
   for( i = 0; i < (int)node_count; i++) {
-    if ( (*node_ptr)->ln.subwindow != 0 ) {
-      subwind_found = TRUE;
-      break;
-    }
+    if ( (*node_ptr)->ln.subwindow != 0 )
+      subwind_cnt++;
     node_ptr++;
   }
   if ( node_count > 0) free((char *) nodelist);
-  if ( subwind_found ) {
-    wow->DisplayError( "Subwindow found",
-		       "Subwindow found\nDelete objects with subwindows separately");
-    BEEP;
-  }
-  else {
-    /* Delete selected nodes */
-    gre->delete_selected();
+
+  if ( subwind_cnt ) {
+    char msg[200];
+    sprintf( msg, 
+	     "%d objects have subwindows\n Do you want to delete the subwindows?",
+	     subwind_cnt);
+    wow->DisplayQuestion( this,
+			 "Delete subwindows", msg,
+			 delete_subwindows_ok_cb, 0, 0);
     popupmenu_node = 0;
+    return;
   }
+
+  /* Delete selected nodes */
+  gre->delete_selected();
+  popupmenu_node = 0;
 }
 
 void WFoe::activate_createobject( float x, float y)
