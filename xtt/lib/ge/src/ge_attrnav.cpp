@@ -44,6 +44,7 @@
 
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_dcli.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
@@ -1024,6 +1025,68 @@ static attrnav_sEnum mask_types[] = {
 	{ 0, NULL}};
 
 
+int AttrNav::string_to_mask( int type_id, char *str, pwr_tMask *mask)
+{
+  attrnav_sEnumElement	*elem_p;
+  attrnav_sEnum		*enum_p;
+  int			found;
+  char 			vect[32][40];
+  int			nr;
+  unsigned int		m = 0;
+
+  nr = dcli_parse( str, "|", "", (char *)vect, 
+		   sizeof( vect) / sizeof( vect[0]), sizeof( vect[0]), 0);
+
+  for ( enum_p = mask_types; enum_p->elements; enum_p++) {
+    if ( enum_p->num == (unsigned int)type_id) {
+      found = 1;
+      break;
+    }
+  }
+  if ( !found)
+    return 1;
+
+  for ( int i = 0; i < nr; i++) {
+    found = 0;
+    elem_p = enum_p->elements;
+    for ( ; elem_p->name[0] != 0; elem_p++) {
+      if ( cdh_NoCaseStrcmp( elem_p->name, vect[i]) == 0) {
+	m |= elem_p->num;
+	found = 1;
+	break;
+      }
+    }
+    if ( !found)
+      return 0;
+  }
+  *mask = m;
+  return 1;
+}
+
+int AttrNav::string_to_enum( int type_id, char *str, pwr_tEnum *enumval)
+{
+  attrnav_sEnumElement	*elem_p;
+  attrnav_sEnum		*enum_p;
+  int			found;
+
+  for ( enum_p = enum_types; enum_p->elements; enum_p++) {
+    if ( enum_p->num == (unsigned int)type_id) {
+      found = 1;
+      break;
+    }
+  }
+  if ( !found)
+    return 1;
+
+  elem_p = enum_p->elements;
+  for ( ; elem_p->name[0] != 0; elem_p++) {
+    if ( cdh_NoCaseStrcmp( elem_p->name, str) == 0) {
+      *enumval = elem_p->num;
+      return 1;
+    }
+  }
+  return 0;
+}
 
 static char null_str[] = "";
 
