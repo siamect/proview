@@ -41,18 +41,8 @@ import java.util.*;
 import jpwr.jop.*;
 import java.beans.Beans;
 
-/** JopCurveChartLayout.java -- Layout manager for Java containers
- * 
- *  This layout manager allows you to specify ratios of x,y,width,height
- *  using a Proportion object.
- *
- *   For example,
- *
- *      setLayout(new JopCurveChartLayout());
- *      add( myObject, new Proportion(myObject.getBounds(), this.getSize()));
- *
- * @author Mats Trovik inspired by RatioLayout.java by Terence Parr 
- *
+/** 
+    Layout manager for curve chart.
  */
 public class JopCurveChartLayout implements LayoutManager2 {
     

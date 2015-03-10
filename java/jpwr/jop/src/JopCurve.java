@@ -49,6 +49,9 @@ import javax.swing.border.*;
 import java.net.URL;
 import jpwr.rt.*;
 
+/**
+   Jop curve window for trends and fast curves.
+*/
 public class JopCurve extends JFrame implements GdhApplIfc
 {
 

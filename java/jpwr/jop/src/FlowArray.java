@@ -43,6 +43,9 @@ import java.awt.geom.*;
 import javax.swing.*;
 
 
+/**
+   Flow container for elements
+*/
 public class FlowArray {
   //Vector<Object> a = new Vector<Object>();
   Vector a = new Vector();

@@ -40,6 +40,10 @@ import java.io.*;
 import java.util.*;
 
 
+/**
+   Flow common data.
+   Common data for a flow context.
+*/
 public class FlowCmn {
   static final int display_level = Flow.mDisplayLevel_1;
   boolean debug;

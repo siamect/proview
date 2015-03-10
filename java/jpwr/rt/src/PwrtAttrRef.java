@@ -34,17 +34,28 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	CS
- * @version	1.0
- */
-
 package jpwr.rt;
 import java.io.Serializable;
+
+/**
+ * Attribute reference.
+ * <p>
+ * Basic type attribute reference. Reference to an attribute in an object. The reference 
+ * contains 
+ * <li>- objid of the referenced object 
+ * <li>- classid of body 
+ * <li>- offset of the attribute 
+ * <li>- size of the attribute 
+ * <li>- a flagword. 
+ * <p>
+ * If the bit Indirect is set, the attribute is a pointer. The string notation for an attrref 
+ * is _A'vid':'oix'('classvolume':'class').'attribute'[index], e.g.
+ * _A0.123.34.63:1234567890(pwrb:Ai).FilterAttribute[2] or if the class is unknown, the notation 
+ * is _A'vid':'oix'('cid').('bix')'offset'.'size', e.g. _A0.123.34.63.1234567890(_C0.1:34).(_B1)60.34 
+ * where vid is the volume id for the object. oix is the object index for the object. cid is 
+ * classid for the class of the object. bix is body index for the body of the attribute. 
+ * @author	cs
+ */
 
 public class PwrtAttrRef implements Serializable
 {

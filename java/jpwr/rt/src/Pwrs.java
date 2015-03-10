@@ -34,17 +34,12 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	CS
- * @version	1.0
- */
-
 package jpwr.rt;
 
+/**
+ * Declarations for system classes, class volume pwrs.
+ * @author	cs
+ */
 public class Pwrs {
   public static final int cClass_Node = 65784;
   public static final int cClass_Security = 66080;

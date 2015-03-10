@@ -44,12 +44,12 @@ import java.sql.Timestamp;
 import java.util.Date;
 import javax.swing.*;
 //end for test
+
 /**
- *  Description of the Class
+ *  Server process for event log.
+ *  Handles communication with web and app.
  *
- *@author     claes, Jonas
- *@created    November 25, 2002
- *@version    0.1 beta: Första testversionen
+ *  @author     JN
  */
 public class HistServer {
     public final static int HISTPORT = 4447;
@@ -65,7 +65,7 @@ public class HistServer {
     /**
      *  The main program for the HistServer class
      *
-     *@param  args  The command line arguments
+     *  @param  args  The command line arguments
      */
     public static void main(String[] args) {
 	for(int i = 0; i < args.length; i++) {

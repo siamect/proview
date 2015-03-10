@@ -44,6 +44,9 @@ import javax.swing.*;
 import java.awt.event.*;
 import jpwr.rt.*;
 
+/**
+   Jop slider component.
+*/
 public class JopSlider extends JComponent implements JopDynamic, ActionListener{
   Timer timer = new Timer(500, this);
   JopEngine en;

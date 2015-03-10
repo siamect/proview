@@ -44,6 +44,9 @@ import javax.swing.Timer;
 import java.awt.event.*;
 import jpwr.rt.*;
 
+/**
+   Jop bar chart component.
+ */
 public class JopBarChart extends JComponent implements GeComponentIfc, 
             JopDynamic, JopConfirm, ActionListener{
   Dimension size;

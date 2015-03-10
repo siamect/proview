@@ -624,11 +624,13 @@ Description of columns in the table
 
 View <t>A checkbox from which you can choose to view or hide the curve.
 Cursor <t>Shows the curve value where the cursor is placed.
-Mark <t>Shows the curve value where the marker is placed.
+Mark1 <t>Shows the curve value where the first marker is placed.
+Mark2 <t>Shows the curve value where the second marker is placed.
 Unit <t>Displays the unit of the curve.
 Scale <t>From 'Scale' you can change the scale in y direction (Scale on
       <t>the Time axis row changes in x direction).
 Attribute <t>States the attribute of the trend curve.
+Description <t>Description of the attribute.
 
 <h2>Navigation
 The tool panel contains buttons to zoom and move the view to the left or to the right.
@@ -640,6 +642,53 @@ the view in x direction, and by dragging the middle button you can zoom in and o
 Navigation from the keyboard is accomplished with the arrow keys. With arrow up and down
 the zoom factor is changed, and arrow left and right moves the view to the left and to the
 right.
+
+<h2>Markers
+There are two markers in the window that can be positioned at specific time values. The
+curve value for the position is displayed in the table. The markers can be moved with
+the cursor, or by clicking with MB1 (first marker) or with Ctrl+MB1 (second marker) in
+the curve window.
+
+<h2>Snapshot
+For some trends it is possible to take snapshot of the current trend, in order to examine
+it more carefully or save it to file. The snapshot is activated with the camera button in
+the trend toolbar, and a new curve window is opened with the snapshot.
+<option> printdisable
+See Trend snapshot <link> opg_trend_snapshot
+<option> printenable
+
+<h2>Add curves
+Curves can be added to the current trend window by selecting a DsTrendCurve object in the
+runtime navigator and activating the '+' button in the toolbar.
+
+<h2>Graph grid
+When several curves are present, the graph grid is adapted to the scale of a specific
+curve by clicking on the colored scale for this curve.
+
+<h2>Export to text file
+A trend can be exported to text file from File/Export in the menu. In the export dialog,
+a specific attribute can be selected for export, or all attributes. To avoid overwriting
+previous exported files, the filename can contain the string '$date' which will be replaces 
+by the current date in the actual file name.
+</topic>
+
+<topic> opg_trend_snapshot
+Trend snapshot
+
+The trend snapshot curve is a snapshot of a trend taken at a specific time. 
+<image> opg_fig42.png
+<b>Fig Trend snapshot
+
+A time interval can be selected in the time toolbar. When a new time intervall is
+selected the 'Update curve' button is pressed to redraw the curve.
+
+<h2>Store curve
+A snapshot curve can be stored by activating File/Save in the menu.
+
+<h2>Open stored curve
+A saved snapshot curve is opened from File/Open in the menu. To open in a new window,
+first activate File/New to open an empty snapshot window, and then activate File/Open in
+this window.
 </topic>
 
 <topic> opg_fastcurves

@@ -39,7 +39,9 @@ package jpwr.jop;
 import java.io.*;
 import java.util.*;
 
-
+/**
+   Float point object with x and y coordinate.
+*/
 public class FlowPoint {
   double x;
   double y;

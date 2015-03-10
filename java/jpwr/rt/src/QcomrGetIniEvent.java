@@ -34,16 +34,11 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	JN
- * @version	1.0
- */
-
 package jpwr.rt;
+
+/**
+ * Return class for Qcom.getIniEvent().
+ */
 
 public class QcomrGetIniEvent {
   public boolean terminate;

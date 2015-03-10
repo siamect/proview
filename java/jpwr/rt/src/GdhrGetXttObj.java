@@ -34,18 +34,12 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	JN
- * @version	1.0
- */
-
 package jpwr.rt;
 import java.io.Serializable;
 
+/**
+   Return class for object data for runtime navigator.
+*/
 public class GdhrGetXttObj implements Serializable
 {
   public String name;
@@ -75,7 +69,10 @@ public class GdhrGetXttObj implements Serializable
     this.sts = sts;
     this.hasChildren = hasChildren;
   }
+  /** Check if status is even. */
   public boolean evenSts() { return (sts % 2 == 0);}
+  /** Check if status is odd. */
   public boolean oddSts() { return (sts % 2 == 1);}
+  /** Get the status. */
   public int getSts() { return sts;}
 }

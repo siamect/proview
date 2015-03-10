@@ -47,6 +47,9 @@ import jpwr.rt.*;
 import java.awt.event.*;
 import jpwr.jopg.*;
 
+/**
+   Command execution.
+*/
 public class JopSpider {
   int qcom_qix;
   int qcom_nid;

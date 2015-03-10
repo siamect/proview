@@ -1779,7 +1779,7 @@ gdh_GetNextObjectAttrRef (
  * @brief Return the objid of the node object for a node identified by a
  * node identifier (of type pwr_tNodeId).
  *  
- * If the node idenetity is specified as zero,
+ * If the node identity is specified as zero,
  * the node object for the local node is returned. 
  * @return pwr_tStatus  
  */

@@ -50,6 +50,11 @@ import javax.swing.Timer;
 import java.net.URL;
 import jpwr.rt.*;
 
+/**
+   Jop fast curve.
+   <p>
+   Displaying fast curves configured with DsFastCurve objects.
+*/
 public class JopXttFast implements ActionListener, JopCurveIfc, GdhApplIfc {
     public static final int XTT_FAST_MAX = 20;
     public static final int FAST_CURVES = 10;

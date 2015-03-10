@@ -40,6 +40,9 @@ import java.io.*;
 import java.util.*;
 
 
+/**
+   Flow class to read arrays.
+*/
 public class FlowVector {
   public FlowVector() {
   }

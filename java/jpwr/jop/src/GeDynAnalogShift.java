@@ -39,6 +39,9 @@ import jpwr.rt.*;
 import java.awt.*;
 import javax.swing.*;
 
+/**
+   Ge dynamic type AnalogShift.
+*/
 public class GeDynAnalogShift extends GeDynElem {
   String attribute;
 

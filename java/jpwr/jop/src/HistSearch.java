@@ -43,15 +43,18 @@ import javax.swing.table.*;
 import jpwr.rt.*;
 import java.applet.Applet;
 
-/* HistSearch is a search engine for performing searches from the historic 
- *event list. It's mainly a GUI for getting input on the criteria on which
- *the search should be based, launching the search and presenting the result. 
- *It uses a HistTable called result for presenting the search result. 
- *The HistQuery currentSearch is set to the criteria chosen via the GUI when
- *the JButton btnSearch is pressed and currentSearch is then sent to a class
- *in the HistTable result for evaluating the search and updating the table.
- *The GUI is made to support English and Swedish by keeping arrays of all 
- *strings.
+/**
+ * Event log search dialog.
+ * <p> 
+ * HistSearch is a search engine for performing searches from the historic 
+ * event list. It's mainly a GUI for getting input on the criteria on which
+ * the search should be based, launching the search and presenting the result. 
+ * It uses a HistTable called result for presenting the search result. 
+ * The HistQuery currentSearch is set to the criteria chosen via the GUI when
+ * the JButton btnSearch is pressed and currentSearch is then sent to a class
+ * in the HistTable result for evaluating the search and updating the table.
+ * The GUI is made to support English and Swedish by keeping arrays of all 
+ * strings.
  */
 
 public class HistSearch extends JFrame implements ActionListener, GdhApplIfc {

@@ -38,6 +38,9 @@ package jpwr.jop;
 import javax.swing.*;
 import jpwr.rt.*;
 
+/**
+   Ge dynamic type Animation.
+*/
 public class GeDynAnimation extends GeDynElem {
   String attribute;
   int sequence;

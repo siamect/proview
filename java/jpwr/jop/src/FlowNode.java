@@ -46,6 +46,11 @@ import javax.swing.*;
 import java.awt.event.*;
 
 
+/**
+   Flow node.
+   <p>
+   A flow node is a function object built by element of type arcs, lines, recangles, texts etc.
+*/
 public class FlowNode extends JComponent implements FlowComponent, JopDynamic {
   static final int OFFSET = 2;
   double x_right;

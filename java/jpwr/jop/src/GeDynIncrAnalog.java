@@ -38,6 +38,9 @@ package jpwr.jop;
 import jpwr.rt.*;
 import java.awt.event.*;
 
+/**
+   Ge action type IncrAnalog.
+*/
 public class GeDynIncrAnalog extends GeDynElem {
   String attribute;
   double increment;

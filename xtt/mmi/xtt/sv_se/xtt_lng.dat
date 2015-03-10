@@ -258,9 +258,19 @@ E 1.10.32 "Tidigare period"
 E 1.10.33 "Nästa period"
 E 1.10.34 "Öka period"
 E 1.10.35 "Minska period"
-E 1.10.36 "Updatera kurva"
+E 1.10.36 "Uppdatera kurva"
 E 1.10.37 "Addera kurva"
 E 1.10.38 "Ta bort utvald kurva"
+E 1.10.39 "Addera"
+E 1.10.40 "Ögonblicksbild"
+E 1.10.41 "_Addera"
+E 1.10.42 "_Ny"
+E 1.10.43 "_Öppna"
+E 1.10.44 "S_para"
+E 1.10.45 "_Exportera"
+E 1.10.46 "Ö_gonblicksbild"
+E 1.10.47 "En sekund"
+E 1.10.48 "10 sekunder"
 #
 # Fileview
 E 1.11.1 "Spara"
@@ -484,6 +494,11 @@ E 1.19.25 "Förinställd lagra"
 E 1.19.26 "Visa position"
 E 1.19.27 "Vänster"
 E 1.19.28 "Höger"
+#
+# Misc messages
+E 1.20.1 "Inmatad sträng för lång"
+E 1.20.2 "Objektet finns inte"
+E 1.20.3 "Syntax fel i inmatning"
 #
 # Postscript printing
 E 2.1.1 "Innehåll"

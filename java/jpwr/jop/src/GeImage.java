@@ -44,6 +44,9 @@ import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.event.*;
 
+/**
+   Ge image component.
+*/
 public class GeImage extends JComponent implements ActionListener {
   Dimension size;
   Object root;

@@ -41,11 +41,11 @@ import java.util.*;
 import java.io.*;
 
 /**
- *  Description of the Class
+ *  Local database.
+ *  <p>
+ *  A local database used by ge dynamics.
  *
- *@author     cs
- *@created    July 12, 2004
- *@version    1.0
+ *  @author     cs
  */
 public class LocalDb {
 

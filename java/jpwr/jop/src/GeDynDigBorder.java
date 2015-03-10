@@ -37,6 +37,9 @@
 package jpwr.jop;
 import jpwr.rt.*;
 
+/**
+   Ge dynamic type DigBorder.
+*/
 public class GeDynDigBorder extends GeDynElem {
   String attribute;
   int color;

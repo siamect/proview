@@ -44,6 +44,9 @@ import javax.swing.Timer;
 import java.awt.event.*;
 import jpwr.rt.*;
 
+/**
+   Ge XYCurve component.
+*/
 public class JopXYCurve extends JopTrend {
 
   public JopXYCurve( JopSession session)

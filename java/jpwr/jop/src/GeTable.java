@@ -45,6 +45,9 @@ import javax.swing.Timer;
 import javax.swing.table.*;
 import javax.swing.event.*;
 
+/**
+   Ge table component.
+*/
 public class GeTable extends JScrollPane implements GeComponentIfc, 
 		  JopDynamic, ActionListener, ListSelectionListener
 {

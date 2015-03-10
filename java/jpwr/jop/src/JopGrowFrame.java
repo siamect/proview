@@ -49,6 +49,9 @@ import java.awt.event.*;
 import java.net.*;
 import java.applet.*;
 
+/**
+   Grow frame containing a Ge graph.
+ */
 public class JopGrowFrame extends GrowFrame implements JopUtilityIfc {
     String utilityName;
     PwrtAttrRef utilityAref;

@@ -41,10 +41,13 @@ import javax.swing.*;
 import java.util.Vector;
 import jpwr.rt.*;
 
-/* The HistStatistics class is a JPanel containing two JTables showing 
-statistics derived from the MhData supplied in the constructor. The tables
-get their contents from a HistStatModel1 and an HistStatModel2. The tables support
-the use of JopMethodsMenu.*/
+/** 
+   Event statistics.
+   The HistStatistics class is a JPanel containing two JTables showing 
+   statistics derived from the MhData supplied in the constructor. The tables
+   get their contents from a HistStatModel1 and an HistStatModel2. The tables support
+   the use of JopMethodsMenu.
+*/
 
 public class HistStatistics extends JPanel{
     

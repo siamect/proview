@@ -39,6 +39,9 @@ import jpwr.rt.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+   Ge dynamic type Table.
+*/
 public class GeDynTable extends GeDynElem {
   public String[] attribute;
   public String[] selAttribute;

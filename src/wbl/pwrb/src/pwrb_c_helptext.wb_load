@@ -43,7 +43,7 @@ SObject pwrb:Class
 !  Help text in plc document.
 !  
 !  Makes it possible to insert a text that also will be available as
-!  an help text and has html pages.
+!  an help text and as html pages.
 !
 !  The help text can be opened from 
 !  - help entry in the PlcPgm popup menu.
@@ -51,13 +51,18 @@ SObject pwrb:Class
 !
 !  Some help text tags can be used. h1, h2 and b should be placed in
 !  the first position of the row.
-!  <h1>    Large header
-!  <h2>    Header
-!  <b>     Bold text
-!  <image> Display a gif or png image. The image is displayed 
-!          in the help viewer, but not it the plc document.
-!  <link>  Link to another help topic. The link will work in the help 
-!          viewer, but not in the plc document.
+! @i <h1>      Large header
+! @i <h2>      Header
+! @i <b>       Bold text
+! @i <image>   Display a gif or png image. The image is displayed 
+!              in the help viewer, but not it the plc document.
+! @i <link>    Link to another help topic. The link will work in the help 
+!              viewer, but not in the plc document.
+!              Links to other plc windows can be made through the generated
+!              topic for the window which is 'plcw_' + the object identity for
+!              the window object, eg 
+!
+! @i             See subwindow <link>plcw_000_001_001_024_000037ed
 !
 !  The maximum size for the text is 1023 characters. For larger texts
 !  se HelpTextL.

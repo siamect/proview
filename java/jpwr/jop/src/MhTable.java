@@ -52,10 +52,9 @@ import java.awt.event.*;
 import javax.swing.Timer;
 import javax.swing.table.TableColumn;
 /**
- *  Description of the Class
+ *  Alarm and event list table.
  *
- *@author     JN
- *@created    December 10, 2002
+ *  @author     JN
  */
 public class MhTable extends JPanel
 {
@@ -104,8 +103,8 @@ public class MhTable extends JPanel
   /**
    *  Constructor for the MhTable object
    *
-   *@param  root   Description of the Parameter
-   *@param  DEBUG  Description of the Parameter
+   *  @param  root   Description of the Parameter
+   *  @param  DEBUG  Description of the Parameter
    */
   public MhTable(Object root, boolean DEBUG, JLabel mess)
   {
@@ -166,17 +165,10 @@ public class MhTable extends JPanel
   }
 
 
-  /*
-     * This method picks good column sizes.
-     * If all column heads are wider than the column's cells'
-     * contents, then you can just use column.sizeWidthToFit().
-     */
   /**
-   *  Description of the Method
-   *
-   *@param  table              Description of the Parameter
-   *@param  model              Description of the Parameter
-   *@param  isAlarmTableModel  Description of the Parameter
+   * This method picks good column sizes.
+   * If all column heads are wider than the column's cells'
+   * contents, then you can just use column.sizeWidthToFit().
    */
   private void initColumnSizes(JTable table, AbstractTableModel model, boolean isAlarmTableModel)
   {
@@ -228,11 +220,6 @@ public class MhTable extends JPanel
     }
   }
 
-  /**
-   *  Description of the Method
-   *
-   *@param  root  Description of the Parameter
-   */
   private void init(Object root)
   {
     try
@@ -273,9 +260,6 @@ public class MhTable extends JPanel
   }
 
 
-  /**
-   *  Description of the Method
-   */
   public void close()
   {
     closingDown = true;
@@ -299,9 +283,6 @@ public class MhTable extends JPanel
 
 
 
-  /**
-   *  Description of the Method
-   */
   public void newKeyboardBindings()
   {
     InputMap inputMap = new InputMap();
@@ -347,11 +328,6 @@ public class MhTable extends JPanel
 
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  ev  Description of the Parameter
-   */
   public void newMess(MhrEvent ev)
   {
   
@@ -365,12 +341,6 @@ public class MhTable extends JPanel
   }
 
 
-  /**
-   *  Description of the Class
-   *
-   *@author     JN
-   *@created    December 10, 2002
-   */
   class AlarmTableModel extends AbstractTableModel
   {
 
@@ -389,7 +359,7 @@ public class MhTable extends JPanel
     /**
      *  Gets the columnCount attribute of the AlarmTableModel object
      *
-     *@return    The columnCount value
+     *  @return    The columnCount value
      */
     public int getColumnCount()
     {
@@ -400,7 +370,7 @@ public class MhTable extends JPanel
     /**
      *  Gets the rowCount attribute of the AlarmTableModel object
      *
-     *@return    The rowCount value
+     *  @return    The rowCount value
      */
     public int getRowCount()
     {
@@ -411,8 +381,8 @@ public class MhTable extends JPanel
     /**
      *  Gets the columnName attribute of the AlarmTableModel object
      *
-     *@param  col  Description of the Parameter
-     *@return      The columnName value
+     *  @param  col  Description of the Parameter
+     *  @return      The columnName value
      */
     public String getColumnName(int col)
     {
@@ -423,9 +393,9 @@ public class MhTable extends JPanel
     /**
      *  Gets the valueAt attribute of the AlarmTableModel object
      *
-     *@param  row  Description of the Parameter
-     *@param  col  Description of the Parameter
-     *@return      The valueAt value
+     *  @param  row  Description of the Parameter
+     *  @param  col  Description of the Parameter
+     *  @return      The valueAt value
      */
     public Object getValueAt(int row, int col)
     {
@@ -488,8 +458,8 @@ public class MhTable extends JPanel
     /**
      *  Gets the columnClass attribute of the AlarmTableModel object
      *
-     *@param  c  Description of the Parameter
-     *@return    The columnClass value
+     *  @param  c  Description of the Parameter
+     *  @return    The columnClass value
      */
     public Class getColumnClass(int c)
     {
@@ -501,9 +471,9 @@ public class MhTable extends JPanel
     /**
      *  Gets the cellEditable attribute of the AlarmTableModel object
      *
-     *@param  row  Description of the Parameter
-     *@param  col  Description of the Parameter
-     *@return      The cellEditable value
+     *  @param  row  Description of the Parameter
+     *  @param  col  Description of the Parameter
+     *  @return      The cellEditable value
      */
     public boolean isCellEditable(int row, int col)
     {
@@ -518,9 +488,9 @@ public class MhTable extends JPanel
     /**
      *  Sets the valueAt attribute of the AlarmTableModel object
      *
-     *@param  value  The new valueAt value
-     *@param  row    The new valueAt value
-     *@param  col    The new valueAt value
+     *  @param  value  The new valueAt value
+     *  @param  row    The new valueAt value
+     *  @param  col    The new valueAt value
      */
     public void setValueAt(Object value, int row, int col)
     {
@@ -550,8 +520,8 @@ public class MhTable extends JPanel
     /**
      *  Gets the rowObject attribute of the AlarmTableModel object
      *
-     *@param  row  Description of the Parameter
-     *@return      The rowObject value
+     *  @param  row  Description of the Parameter
+     *  @return      The rowObject value
      */
     public MhrEvent getRowObject(int row)
     {
@@ -570,8 +540,8 @@ public class MhTable extends JPanel
     /**
      *  Description of the Method
      *
-     *@param  row  Description of the Parameter
-     *@param  col  Description of the Parameter
+     *  @param  row  Description of the Parameter
+     *  @param  col  Description of the Parameter
      */
     public void cellUpdated(int row, int col)
     {
@@ -579,50 +549,28 @@ public class MhTable extends JPanel
     }
 
 
-    /**
-     *  Description of the Method
-     */
     public void rowInserted()
     {
       fireTableRowsInserted(0, 0);
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     *@param  row  Description of the Parameter
-     */
     public void rowRemoved(int row)
     {
       fireTableRowsDeleted(row, row);
       
     }
 
-
-    /**
-     *  Description of the Method
-     */
     public void reloadTable()
     {
       fireTableStructureChanged();
     }
 
-
-    /**
-     *  Description of the Method
-     */
     public void updateTable()
     {
       fireTableDataChanged();
     }
 
-
-    /**
-     *  Description of the Method
-     *
-     *@param  row  Description of the Parameter
-     */
     public void ackAlarm(int row)
     {
       
@@ -635,12 +583,6 @@ public class MhTable extends JPanel
   }
 
 
-  /**
-   *  Description of the Class
-   *
-   *@author     JN
-   *@created    December 10, 2002
-   */
   class EventTableModel extends AbstractTableModel
   {
 
@@ -659,7 +601,7 @@ public class MhTable extends JPanel
     /**
      *  Gets the columnCount attribute of the EventTableModel object
      *
-     *@return    The columnCount value
+     *  @return    The columnCount value
      */
     public int getColumnCount()
     {
@@ -670,7 +612,7 @@ public class MhTable extends JPanel
     /**
      *  Gets the rowCount attribute of the EventTableModel object
      *
-     *@return    The rowCount value
+     *  @return    The rowCount value
      */
     public int getRowCount()
     {
@@ -681,8 +623,8 @@ public class MhTable extends JPanel
     /**
      *  Gets the columnName attribute of the EventTableModel object
      *
-     *@param  col  Description of the Parameter
-     *@return      The columnName value
+     *  @param  col  Description of the Parameter
+     *  @return      The columnName value
      */
     public String getColumnName(int col)
     {
@@ -693,9 +635,9 @@ public class MhTable extends JPanel
     /**
      *  Gets the valueAt attribute of the EventTableModel object
      *
-     *@param  row  Description of the Parameter
-     *@param  col  Description of the Parameter
-     *@return      The valueAt value
+     *  @param  row  Description of the Parameter
+     *  @param  col  Description of the Parameter
+     *  @return      The valueAt value
      */
     public Object getValueAt(int row, int col)
     {
@@ -815,8 +757,8 @@ public class MhTable extends JPanel
     /**
      *  Gets the columnClass attribute of the EventTableModel object
      *
-     *@param  c  Description of the Parameter
-     *@return    The columnClass value
+     *  @param  c  Description of the Parameter
+     *  @return    The columnClass value
      */
     public Class getColumnClass(int c)
     {
@@ -828,9 +770,9 @@ public class MhTable extends JPanel
     /**
      *  Sets the valueAt attribute of the EventTableModel object
      *
-     *@param  value  The new valueAt value
-     *@param  row    The new valueAt value
-     *@param  col    The new valueAt value
+     *  @param  value  The new valueAt value
+     *  @param  row    The new valueAt value
+     *  @param  col    The new valueAt value
      */
     public void setValueAt(Object value, int row, int col)
     {
@@ -843,8 +785,8 @@ public class MhTable extends JPanel
     /**
      *  Gets the rowObject attribute of the EventTableModel object
      *
-     *@param  row  Description of the Parameter
-     *@return      The rowObject value
+     *  @param  row  Description of the Parameter
+     *  @return      The rowObject value
      */
     public MhrEvent getRowObject(int row)
     {
@@ -859,40 +801,22 @@ public class MhTable extends JPanel
       return null;
     }
 
-
-    /**
-     *  Description of the Method
-     */
     public void rowInserted()
     {
       fireTableRowsInserted(0, 0);
     }
 
-
-    /**
-     *  Description of the Method
-     *
-     *@param  row  Description of the Parameter
-     */
     public void rowRemoved(int row)
     {
       fireTableRowsDeleted(row, row);
       
     }
 
-
-    /**
-     *  Description of the Method
-     */
     public void reloadTable()
     {
       fireTableStructureChanged();
     }
 
-
-    /**
-     *  Description of the Method
-     */
     public void updateTable()
     {
       fireTableDataChanged();
@@ -900,13 +824,6 @@ public class MhTable extends JPanel
 
   }
 
-
-  /**
-   *  Description of the Class
-   *
-   *@author     JN
-   *@created    December 10, 2002
-   */
   private class MhClientReceiveThread extends Thread
   {
     MhTable mhTable;
@@ -920,8 +837,8 @@ public class MhTable extends JPanel
     /**
      *  Constructor for the MhClientReceiveThread object
      *
-     *@param  socket   Description of the Parameter
-     *@param  mhTable  Description of the Parameter
+     *  @param  socket   Description of the Parameter
+     *  @param  mhTable  Description of the Parameter
      */
     public MhClientReceiveThread(Socket socket, MhTable mhTable)
     {
@@ -1012,11 +929,6 @@ public class MhTable extends JPanel
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     *@param  obj  Description of the Parameter
-     */
     public void sendMess(MhrsEventId obj)
     {
       try
@@ -1035,12 +947,6 @@ public class MhTable extends JPanel
 
   //MhClientReciveThread
 
-  /**
-   *  Description of the Class
-   *
-   *@author     JN
-   *@created    December 10, 2002
-   */
   private class AlarmTableCellRender extends DefaultTableCellRenderer
   {
 
@@ -1048,13 +954,13 @@ public class MhTable extends JPanel
      *  Gets the tableCellRendererComponent attribute of the
      *  AlarmTableCellRender object
      *
-     *@param  table       Description of the Parameter
-     *@param  value       Description of the Parameter
-     *@param  isSelected  Description of the Parameter
-     *@param  hasFocus    Description of the Parameter
-     *@param  row         Description of the Parameter
-     *@param  column      Description of the Parameter
-     *@return             The tableCellRendererComponent value
+     *  @param  table       Description of the Parameter
+     *  @param  value       Description of the Parameter
+     *  @param  isSelected  Description of the Parameter
+     *  @param  hasFocus    Description of the Parameter
+     *  @param  row         Description of the Parameter
+     *  @param  column      Description of the Parameter
+     *  @return             The tableCellRendererComponent value
      */
     public Component getTableCellRendererComponent(JTable table, Object value,
                                                    boolean isSelected, boolean hasFocus, int row, int column)
@@ -1128,26 +1034,13 @@ public class MhTable extends JPanel
   }
 
 
-  /**
-   *  Description of the Class
-   *
-   *@author     JN
-   *@created    December 10, 2002
-   */
   private class EventTableCellRender extends DefaultTableCellRenderer
   {
 
     /**
      *  Gets the tableCellRendererComponent attribute of the
      *  EventTableCellRender object
-     *
-     *@param  table       Description of the Parameter
-     *@param  value       Description of the Parameter
-     *@param  isSelected  Description of the Parameter
-     *@param  hasFocus    Description of the Parameter
-     *@param  row         Description of the Parameter
-     *@param  column      Description of the Parameter
-     *@return             The tableCellRendererComponent value
+     *  @return             The tableCellRendererComponent value
      */
     public Component getTableCellRendererComponent(JTable table, Object value,
                                                    boolean isSelected, boolean hasFocus, int row, int column)
@@ -1231,7 +1124,7 @@ public class MhTable extends JPanel
   /**
    *  The main program for the MhTable class
    *
-   *@param  args  The command line arguments
+   *  @param  args  The command line arguments
    */
   public static void main(String[] args)
   {

@@ -37,6 +37,9 @@
 package jpwr.jop;
 import jpwr.rt.*;
 
+/**
+   Ge dynamic type Value.
+*/
 public class GeDynValue extends GeDynElem {
   public String attribute;
 

@@ -4726,12 +4726,25 @@ int GeValueInput::change_value( grow_tObject object, char *text)
   if ( value_element->zero_blank && strcmp( text, "") == 0)
     sts = graph_attr_string_to_value( annot_typeid, "0",
 	(void *)&buf, sizeof( buf), sizeof(buf));
-  else
-    sts = graph_attr_string_to_value( annot_typeid, text,
-	(void *)&buf, sizeof( buf), sizeof(buf));
+  else {
+    if ( annot_typeid == pwr_eType_String)
+      sts = graph_attr_string_to_value( annot_typeid, text,
+					(void *)&buf, sizeof( buf), annot_size);
+    else
+      sts = graph_attr_string_to_value( annot_typeid, text,
+					(void *)&buf, sizeof( buf), sizeof(buf));
+  }
   if ( EVEN(sts)) {
-    if ( dyn->graph->message_dialog_cb)
-      (dyn->graph->message_dialog_cb)( dyn->graph->parent_ctx, "Input syntax error");
+    if ( dyn->graph->message_dialog_cb) {
+      char msg[80];
+      if ( sts == GE__STRINGTOLONG)
+	strcpy( msg, "Input string too long");
+      else if ( sts == GE__OBJNOTFOUND)
+	strcpy( msg, "Object not found");
+      else
+	strcpy( msg, "Input syntax error");
+      (dyn->graph->message_dialog_cb)( dyn->graph->parent_ctx, msg);
+    }
     return sts;
   }
 
@@ -9632,6 +9645,11 @@ void GeAxis::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( maxvalue_attr);
 
+  strcpy( attrinfo[i].name, "Axis.KeepSettings");
+  attrinfo[i].value = &keep_settings;
+  attrinfo[i].type = glow_eType_Int;
+  attrinfo[i++].size = sizeof(keep_settings);
+
   *item_count = i;
 }
 
@@ -9650,6 +9668,7 @@ void GeAxis::save( ofstream& fp)
   fp << int(ge_eSave_Axis) << endl;
   fp << int(ge_eSave_Axis_minvalue_attr) << FSPACE << minvalue_attr << endl;
   fp << int(ge_eSave_Axis_maxvalue_attr) << FSPACE << maxvalue_attr << endl;
+  fp << int(ge_eSave_Axis_keep_settings) << FSPACE << keep_settings << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -9679,6 +9698,7 @@ void GeAxis::open( ifstream& fp)
         fp.get();
         fp.getline( maxvalue_attr, sizeof(maxvalue_attr));
         break;
+      case ge_eSave_Axis_keep_settings: fp >> keep_settings; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeAxis:open syntax error" << endl;
@@ -9718,6 +9738,12 @@ int GeAxis::connect( grow_tObject object, glow_sTraceData *trace_data)
 					 &min_value_subid, attr_size);
       min_found = 1;
       break;
+    case pwr_eType_Time:
+    case pwr_eType_DeltaTime:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&tmin_value_p, 
+					 &min_value_subid, attr_size);
+      min_found = 1;
+      break;
     default: ;
     }
   }
@@ -9735,6 +9761,12 @@ int GeAxis::connect( grow_tObject object, glow_sTraceData *trace_data)
       break;
     case pwr_eType_Int32:
       sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&imax_value_p, 
+					 &max_value_subid, attr_size);
+      max_found = 1;
+      break;
+    case pwr_eType_Time:
+    case pwr_eType_DeltaTime:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&tmax_value_p, 
 					 &max_value_subid, attr_size);
       max_found = 1;
       break;
@@ -9794,7 +9826,7 @@ int GeAxis::scan( grow_tObject object)
     if ( max_value == min_value)
       return 1;
 
-    grow_SetAxisRange( object, min_value, max_value);
+    grow_SetAxisRange( object, min_value, max_value, keep_settings);
     break;
   }
   case pwr_eType_Int32: {
@@ -9817,7 +9849,31 @@ int GeAxis::scan( grow_tObject object)
     if ( imax_value == imin_value)
       return 1;
 
-    grow_SetAxisRange( object, (double)imin_value, (double)imax_value);
+    grow_SetAxisRange( object, (double)imin_value, (double)imax_value, keep_settings);
+    break;
+  }
+  case pwr_eType_Time:
+  case pwr_eType_DeltaTime: {
+    if ( !(tmax_value_p || tmin_value_p))
+      return 1;
+  
+    if ( !(first_scan ||
+	   (tmax_value_p && ( tmax_value_p->tv_sec != imax_value)) ||
+	   (tmin_value_p && ( tmin_value_p->tv_sec != imin_value)))) {
+      return 1;
+    }
+    if ( first_scan)
+      first_scan = 0;
+
+    if ( tmin_value_p)
+      imin_value = tmin_value_p->tv_sec;
+    if ( tmax_value_p)
+      imax_value = tmax_value_p->tv_sec;
+    
+    if ( imax_value == imin_value)
+      return 1;
+
+    grow_SetAxisRange( object, (double)imin_value, (double)imax_value, keep_settings);
     break;
   }
   default: ;
@@ -16439,7 +16495,6 @@ int GeSetValue::action( grow_tObject object, glow_tEvent event)
 
     db = dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, 
 				      &attr_size);
-
     sts = graph_attr_string_to_value( attr_type, value,
 				      (void *)&buf, sizeof( buf), sizeof(buf));
     if ( EVEN(sts)) {

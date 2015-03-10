@@ -37,10 +37,7 @@
 package jpwr.rt;
 import java.io.Serializable; 
 /**
- *  Description of the Class
- *
- *@author     claes
- *@created    November 26, 2002
+ *  Return class for functions returning mh event identity.
  */
 public class MhrsEventId implements Serializable
 {

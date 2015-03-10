@@ -38,6 +38,9 @@ package jpwr.jop;
 import jpwr.rt.*;
 import java.awt.event.*;
 
+/**
+   Ge dynamics base class.
+*/
 public class GeDynElem implements GeDynElemIfc {
     public GeDyn dyn;
     public int dynType;
@@ -54,12 +57,16 @@ public class GeDynElem implements GeDynElemIfc {
     public int getActionType() {
 	return actionType;
     }
+    /** Init function to connect and subscribe to attributes and objects */
     public void connect() {
     }
+    /** Close function to remove subscriptions */
     public void disconnect() {
     }
+    /** Function call every scan */
     public void scan() {
     }
+    /** Function called when an event has occured */
     public void action( int eventType, MouseEvent e) {
     }
 }

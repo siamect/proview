@@ -34,18 +34,19 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	CS
- * @version	1.0
- */
-
 package jpwr.rt;
 import java.io.Serializable;
 
+/**
+ * Object identity.
+ * <p>
+ * Every object has an unique identity. The object identity consists of the volume identity 
+ * and the object index. The string notation for an objid is _O<vid>:<oix>, e.g. _O1.23.4.2:126 
+ * where vid is the volume identity and oix the object index. 
+ * <p>The string notation for an objid is _O<vid>:<oix>, e.g. _O1.23.4.2:126 where vid is the 
+ * volume identity and oix the object index. 
+ * @author	cs
+ */
 public class PwrtObjid implements Serializable
 {
   public int oix;

@@ -34,17 +34,14 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	CS
- * @version	1.0
- */
 
 package jpwr.rt;
 
+/**
+ * Proview basic declarations.
+ *
+ * @author	cs
+ */
 public class Pwr {
   public static final int eTix_Boolean 		= 1;
   public static final int eTix_Float32 		= 2;

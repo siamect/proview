@@ -622,11 +622,13 @@ Beskrivning av kolumner i tabellen
 
 View <t>En checkbox med vilken man kan välja om en kurva ska visas eller inte.
 Cursor <t>Visar värdet för kurvan vid den tidpunk där cursorn är placerad.
-Mark <t>Visar värdet för kurvan vid den tidpunkt där markören är placerad.
+Mark1 <t>Visar värdet för kurvan vid den tidpunkt där den första markören är placerad.
+Mark2 <t>Visar värdet för kurvan vid den tidpunkt där den andra markören är placerad.
 Unit <t>Visar enhet för kurvan.
 Scale <t>Från 'Scale' kan man ställa in skal-området i y-led (Scale för raden Time axis
       <t>ställer om i x-led).
 Attribute <t>Anger det attribut som trendkurvan visar.
+Description <t>Beskrivning av attributet.
 
 <h2>Navigering
 Verktygspanelen innehåller knappar för att zooma in och ut, och för att flytta visningen
@@ -638,6 +640,53 @@ genom att dra med mittenknappen, kan man zooma in eller ut.
 
 Navigering med tangenbordet sker med pil tangenterna. Pil upp och ner ändrar zoomningsgraden
 och pil vänster och höger flyttar visningen åt höger resp vänster.
+
+<h2>Markörer
+Det finns två makörer i fönstret som kan positioneras till specifika tider. Kurv-värdet
+för positionen visas i tabellen. Markörerna kan flyttas med cursorn, eller genom att
+klicka med MB1 (första markören) eller Ctrl+MB1 (andra markören) i kurv-fönstret.
+
+<h2>Snapshot
+För vissa trend-kurvor är det möjligt att ta en ögonblicksbild av trenden för att 
+undersökan den nogrannare eller spara den till fil. Ögonblicksbilden aktiveras med
+kamera-knappen in verktygspanelen, då ett nytt fönster med ögonblicksbilden visas.
+<option> printdisable
+See Trend ögonblicksbild <link> opg_trend_snapshot
+<option> printenable
+
+<h2>Addera kurvor
+Flera kurvor kan adderas till trendfönstret genom att välja ut ett DsTrendCurve objekt
+i runtime-navigatören och aktivera '+'-knappen i verktygspanelen.
+
+<h2>Rutnät
+När flera kurvor visas kan rutnätet anpassas till skalan för en specifik kurva genom
+att klicka på den färgade skalan för kurvan.
+
+<h2>Exportera till text-fil
+En trend kan exporteras till text-fil från Arkiv/Exportera i menyn. I export dialogen kan
+ett specifikt attribut väljas för exportering, eller alla attribut. För att undvika att
+skriva över tidigare exporterade filer kan filnamnet innehålla strängen '$date' som
+kommer att ersättas med aktuell tid i det verkliga filnamnet.
+</topic>
+
+<topic> opg_trend_snapshot
+Trend ögonblicksbild
+
+Trend ögonblicksbilden är ett snapshot av trendkurvan tagen vid en specifik tillfälle.
+
+<image> opg_fig42.png
+<b>Fig Trend snapshot
+
+Ett tidsintervall kan väljas i verktygspanelen för tider. När ett intervall har
+valts trycks på knappen 'Uppdatera kurva' för att rita om kurvan.
+
+<h2>Spara kurva
+En snapshot-kurva kan lagra genom att aktivera Arkiv/Spara i menyn.
+
+<h2>Öppna sparad kurva
+En sparad snapshot kurva öppnas från Arkiv/Öppna i menyn. För att öppna i ett nytt
+fönster aktiveras Arkiv/Ny för att öppna ett tomt snapshot fönster, och sedan
+Arkiv/Öppna i detta fönster.
 </topic>
 
 <topic> opg_fastcurves

@@ -41,6 +41,9 @@ import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 
+/**
+   The session object from which all graphs, trends, alarm and event lists etc, are opened.
+*/
 public class JopSessionRep implements JopSessionIfc {
   JopEngine engine;
   Object root;

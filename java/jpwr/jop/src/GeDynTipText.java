@@ -39,6 +39,9 @@ import jpwr.rt.*;
 import java.awt.*;
 import javax.swing.*;
 
+/**
+   Ge action TipText.
+*/
 public class GeDynTipText extends GeDynElem {
   String text;
 

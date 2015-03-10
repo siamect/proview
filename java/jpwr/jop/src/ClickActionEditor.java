@@ -39,12 +39,7 @@ package jpwr.jop;
 import java.beans.*;
 
 /**
- * Title:
- * Description:
- * Copyright:    Copyright (c) 2000
- * Company:
- * @author 	 CS
- * @version 1.0
+   Deprecated. Should be removed.
  */
 
 public class ClickActionEditor extends PropertyEditorSupport {

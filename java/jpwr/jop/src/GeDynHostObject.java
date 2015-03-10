@@ -37,6 +37,9 @@
 package jpwr.jop;
 import jpwr.rt.*;
 
+/**
+   Ge dynamic type HostObject.
+*/
 public class GeDynHostObject extends GeDynElem {
 
   public GeDynHostObject( GeDyn dyn, String hostObject) {

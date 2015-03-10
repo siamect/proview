@@ -37,6 +37,9 @@
 package jpwr.jop;
 import jpwr.rt.*;
 
+/**
+   Ge dynamic type DigError.
+*/
 public class GeDynDigError extends GeDynElem {
   String attribute;
 

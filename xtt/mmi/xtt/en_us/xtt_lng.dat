@@ -261,6 +261,16 @@ E 1.10.35 "Decrease period"
 E 1.10.36 "Update curve"
 E 1.10.37 "Add curve item"
 E 1.10.38 "Remove selected curve"
+E 1.10.39 "Add"
+E 1.10.40 "Snapshot"
+E 1.10.41 "_Add"
+E 1.10.42 "_New"
+E 1.10.43 "_Open"
+E 1.10.44 "S_ave"
+E 1.10.45 "_Export"
+E 1.10.46 "_Snapshot"
+E 1.10.47 "One Second"
+E 1.10.48 "10 Seconds"
 #
 # Fileview
 E 1.11.1 "Save"
@@ -487,6 +497,11 @@ E 1.19.25 "Preset store"
 E 1.19.26 "Get position"
 E 1.19.27 "Left"
 E 1.19.28 "Right"
+#
+# Misc messages
+E 1.20.1 "Input string too long"
+E 1.20.2 "Object not found"
+E 1.20.3 "Input syntax error"
 #
 # Postscript printing
 E 2.1.1 "Contents"

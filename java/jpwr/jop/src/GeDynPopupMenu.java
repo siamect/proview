@@ -39,6 +39,9 @@ import jpwr.rt.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+   Ge dynamic type PopupMenu.
+*/
 public class GeDynPopupMenu extends GeDynElem {
   String refObject;
 

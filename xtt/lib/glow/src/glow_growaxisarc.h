@@ -185,7 +185,7 @@ class GrowAxisArc : public GrowArc {
     \param min		Min value.
     \param max		Max value.
   */
-  void set_range( double min, double max);
+  void set_range( double min, double max, int keep_settings);
 
   //! Set size of text.
   /*!

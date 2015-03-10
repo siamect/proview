@@ -43,6 +43,10 @@ import java.awt.geom.*;
 import javax.swing.*;
 
 
+/**
+   Flow arrow element.
+   Used for connections with arrows.
+*/
 public class FlowArrow implements FlowArrayElem {
   FlowPoint p1;
   FlowPoint p2;

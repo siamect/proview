@@ -41,6 +41,9 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+/**
+   Ge action type OptionMenu.
+*/
 public class GeDynOptionMenu extends GeDynElem {
   String attribute;
   String[] itemsText;

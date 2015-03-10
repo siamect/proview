@@ -47,10 +47,13 @@ import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
 import jpwr.rt.*;
 
-/* HistTable is an extended JScrollPane containing the 
+/** 
+ * Event log table.
+ * HistTable is an extended JScrollPane containing the 
  * a JTable alarmTable. The HistTable also contains methods for exporting
  * the alarmTable to an excel file, and for performing a search in the historic
- * event list using a HistSender */
+ * event list using a HistSender 
+ */
  
 public class HistTable extends JScrollPane {
     

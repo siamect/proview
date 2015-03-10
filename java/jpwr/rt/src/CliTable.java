@@ -36,6 +36,9 @@
 
 package jpwr.rt;
 
+/**
+   Definition of commands and qualifiers for the command line interpreter.
+*/
 public class CliTable {
   String command;
   String[] qualifier;

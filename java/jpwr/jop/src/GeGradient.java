@@ -40,6 +40,9 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
 
+/**
+   Ge color gradients drawing.
+*/
 public class GeGradient {
     public static final int eGradient_No		= 0;
     public static final int eGradient_HorizontalUp	= 1;

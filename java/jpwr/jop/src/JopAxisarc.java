@@ -43,6 +43,9 @@ import javax.swing.*;
 import java.awt.event.*;
 import jpwr.rt.*;
 
+/**
+   Jop axis arc component.
+*/
 public class JopAxisarc extends JComponent {
   Dimension size;
   public JopAxisarc()

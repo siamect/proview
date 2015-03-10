@@ -34,17 +34,13 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	CS
- * @version	1.0
- */
-
 package jpwr.rt;
 import java.io.Serializable;
+
+/**
+   Return class for functions returning a float.
+   Contains a return status and a float.
+*/
 public class CdhrFloat implements Serializable
 {
   public float value;
@@ -54,7 +50,10 @@ public class CdhrFloat implements Serializable
     this.value = value;
     this.sts = sts;
   }
+  /** Check if status is even. */
   public boolean evenSts() { return (sts % 2 == 0);}
+  /** Check if status is odd. */
   public boolean oddSts() { return (sts % 2 == 1);}
+  /** Get the type identifier. */
   public int getSts() { return sts;}
 }

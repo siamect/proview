@@ -36,6 +36,9 @@
 
 package jpwr.jop;
 
+/**
+   Utility graph, navigator, alarmlist or trace.
+*/
 public class JopUtility {
     public static final int NO = 0;
     public static final int TRACE = 1;

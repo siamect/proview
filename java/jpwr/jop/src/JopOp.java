@@ -4,6 +4,12 @@ import java.io.*;
 import javax.swing.*;
 import jpwr.rt.*;
 
+/**
+   Main class for jop operator environment.
+   <p>
+   The operator enviroment can be opened with the command 
+   > jpwr_opwind.sh.
+ */
 public class JopOp {
   boolean packFrame = false;
 

@@ -43,6 +43,9 @@ import javax.swing.*;
 import java.awt.event.*;
 import jpwr.rt.*;
 
+/**
+   Jop axis component.
+*/
 public class JopAxis extends JComponent {
   Dimension size;
   public JopAxis()

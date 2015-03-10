@@ -40,6 +40,9 @@ import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
 
+/**
+   Ge action type RadioButton.
+*/
 public class GeDynRadioButton extends GeDynElem {
   String attribute;
 

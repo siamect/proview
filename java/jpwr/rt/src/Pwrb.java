@@ -34,17 +34,13 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	CS
- * @version	1.0
- */
 
 package jpwr.rt;
 
+/**
+ * Declarations for base classes, class volume pwrb.
+ * @author	cs
+ */
 public class Pwrb {
   public static final int eWebTargetEnum_RightFrame = 0;
   public static final int eWebTargetEnum_ParentWindow = 1;

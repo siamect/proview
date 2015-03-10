@@ -44,6 +44,9 @@ import javax.swing.*;
 import javax.swing.Timer;
 import javax.swing.border.*;
 
+/**
+   Ge textfield component.
+*/
 public class GeTextField extends JTextField implements GeComponentIfc, 
 			       JopDynamic, JopConfirm, ActionListener
 {

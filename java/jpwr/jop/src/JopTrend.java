@@ -44,6 +44,9 @@ import javax.swing.Timer;
 import java.awt.event.*;
 import jpwr.rt.*;
 
+/**
+   Ge trend component.
+*/
 public class JopTrend extends JComponent implements GeComponentIfc, 
 	  JopDynamic, JopConfirm, ActionListener{
   Dimension size;

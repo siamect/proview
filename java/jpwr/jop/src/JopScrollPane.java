@@ -39,6 +39,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.JScrollBar;
 
+/**
+   Scrollbar pane.
+*/
 public class JopScrollPane extends JScrollPane
 {
   public JopScrollPane()

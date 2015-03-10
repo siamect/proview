@@ -42,6 +42,9 @@ import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
 
+/**
+   Flow rectangle element.
+*/
 public class FlowRect implements FlowArrayElem {
   FlowPoint ll;
   FlowPoint ur;

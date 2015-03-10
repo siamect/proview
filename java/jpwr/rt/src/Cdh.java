@@ -34,19 +34,10 @@
  * General Public License plus this exception.
  */
 
-/**
- * Title:	<p>
- * Description:	<p>
- * Copyright:	<p>
- * Company	SSAB<p>
- * @author	Claes Sjofors
- * @version	1.0
- */
-
 package jpwr.rt;
 
 /**
- * Interface to cdh functions.
+ * Cdh basic declarations.
  */
 
 public class Cdh {

@@ -48,6 +48,9 @@ import java.awt.event.*;
 import java.net.*;
 import java.applet.*;
 
+/**
+   Frame loading and displaying plc code.
+*/
 public class FlowFrame extends JFrame implements JopUtilityIfc, GdhApplIfc {
   JScrollPane scrollPane;
   JPanel contentPane;

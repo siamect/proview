@@ -41,6 +41,9 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+/**
+   Event log date chooser in serach dialog.
+*/
 public class HistDateChooser extends JPanel implements ActionListener{
         
     private Calendar date;

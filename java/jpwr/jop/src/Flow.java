@@ -37,7 +37,12 @@
 
 package jpwr.jop;
 
-
+/**
+   Flow basic declarations.
+   <b>
+   The flow utility reads flw-files contaning the plc code graphics, diplays
+   the graphics and starts plc trace to show the current status of the code.
+ */
 public class Flow {
     public static final int DRAWOFFSET                          = 2;
 

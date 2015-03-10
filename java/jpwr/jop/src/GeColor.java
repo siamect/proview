@@ -37,6 +37,9 @@
 package jpwr.jop;
 import java.awt.*;
 
+/**
+   Ge color specificatins and color calculations.
+*/
 public class GeColor {
 
   // Color tones
@@ -456,6 +459,9 @@ public class GeColor {
     return colors[idx];
   }
 
+  /**
+     Ge RGB color.
+  */
   static public class Rgb {
     public Rgb() {}
     double r;

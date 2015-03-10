@@ -169,6 +169,8 @@ class AttrNav {
     virtual int object_attr();
     virtual void trace_start() {}
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
+    static int string_to_mask( int type_id, char *str, pwr_tMask *mask);
+    static int string_to_enum( int type_id, char *str, pwr_tEnum *enumval);
 };
 
 //! Item for a normal attribute.

@@ -48,6 +48,10 @@ import javax.swing.border.*;
 import java.awt.event.*;
 import java.util.*;
 
+/**
+   Cross reference window.
+   Loads and displays cross references for an object.
+*/
 public class CrrFrame extends JFrame {
   JScrollPane scrollPane;
   JPanel contentPane;

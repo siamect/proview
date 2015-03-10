@@ -36,6 +36,10 @@
 
 package jpwr.rt;
 
+/**
+  Security functions. 
+  Checking of user autorization.
+*/
 public class RtSecurity {
 
   static {

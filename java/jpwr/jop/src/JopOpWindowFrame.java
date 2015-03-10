@@ -48,6 +48,9 @@ import java.awt.event.*;
 import java.net.*;
 import java.applet.*;
 
+/**
+   Frame for the Jop operator window.
+*/
 public class JopOpWindowFrame extends JFrame implements GdhApplIfc {
   JScrollPane scrollPane;
   JPanel contentPane;

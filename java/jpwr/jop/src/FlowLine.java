@@ -43,6 +43,9 @@ import java.awt.geom.*;
 import javax.swing.*;
 
 
+/**
+   Flow line element.
+*/
 public class FlowLine implements FlowArrayElem {
   FlowPoint p1;
   FlowPoint p2;

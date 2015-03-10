@@ -46,6 +46,9 @@
 package jpwr.rt;
 import java.io.Serializable;
 
+/**
+   Return class for functions returning attribut information.
+*/
 public class CdhrObjAttr implements Serializable
 {
   public PwrtObjid objid;

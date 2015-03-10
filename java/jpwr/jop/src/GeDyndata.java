@@ -37,6 +37,9 @@
 package jpwr.jop;
 import jpwr.rt.*;
 
+/**
+   Ge dynamic data.
+*/
 public class GeDyndata {
   public static final int eTrace_Inherit            = 0;
   public static final int eTrace_Dig                = 1;

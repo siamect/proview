@@ -4608,12 +4608,12 @@ void grow_SetAxisConf( grow_tObject object, double max_val, double min_val,
 				       long_quot, value_quot, rot, format);
 }
 
-void grow_SetAxisRange( grow_tObject object, double minval, double maxval)
+void grow_SetAxisRange( grow_tObject object, double minval, double maxval, int keep_settings)
 {
   if ( ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowAxis)
-    ((GrowAxis *)object)->set_range( minval, maxval);
+    ((GrowAxis *)object)->set_range( minval, maxval, keep_settings);
   else if ( ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowAxisArc)
-    ((GrowAxisArc *)object)->set_range( minval, maxval);
+    ((GrowAxisArc *)object)->set_range( minval, maxval, keep_settings);
 }
 
 void grow_SetModified( grow_tCtx ctx, int modified)

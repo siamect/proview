@@ -43,6 +43,9 @@ import java.awt.geom.*;
 import javax.swing.*;
 
 
+/**
+   Flow arc element.
+*/
 public class FlowArc implements FlowArrayElem {
   FlowPoint ll;
   FlowPoint ur;
