@@ -5685,6 +5685,29 @@ check box for 'Inverted' can be changed with 'Shift/ArrowLeft'.
 <image> dg_fig32.gif
 </topic>
 
+<topic>objecttexteditor_refman
+Object Text Editor
+
+For text attributes in objects as BodyText, HelpText, CArithm and DataArithm a special
+text editor is available. The editor is opened by right-clicking on the object in the 
+plc editor and activating EditText or EditCode in the popup menu.
+
+<h2>Menu
+
+File/Close <t><t>close the text editor.
+
+File/Save <t><t>Save the text to the object attribute. Note that the text is not saved
+          <t><t>in the database until the plc editor session is saved.
+
+Edit/Copy <t><t>Copy selected text to the clipboard.
+Edit/Cut  <t><t>Cut selected text.
+Edit/Paste <t><t>Paste text from the clipboard into the current cursor position.
+
+<b>Object Text Editor
+<image> dg_fig122.png
+
+</topic>
+
 <topic>spreadsheeteditor_refman
 The Spreadsheet Editor
 

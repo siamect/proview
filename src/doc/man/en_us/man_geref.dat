@@ -754,6 +754,7 @@ Axis <link>geg_specialobjects_axis
 Table <link>geg_specialobjects_table
 PulldownMenu <link>geg_specialobjects_pulldownmenu
 OptionMenu <link>geg_specialobjects_optionmenu
+MethodToolbar<link>geg_specialobjects_methodtoolbar
 </topic>
 
 <headerlevel>
@@ -980,6 +981,34 @@ Trend.MinValueAttr and Trend.MaxValueAttr to the attributes in the database that
 min and max value for the range of the signal.
 </topic>
 
+<topic> geg_specialobjects_xycurve
+XYCurve
+
+The XYCurve plots a curve specified with two arrays containing the x and y values for points
+in the curve. There is a special XYCurve class that is convenient to use, with all the 
+necessary attributes and two arrays with 100 elements.
+
+<image> geg_fig168.png
+<b>Fig XYCurve
+
+<image> geg_fig169.png
+<b>Fig Attributes for an XYCurve object
+</topic>
+
+<topic> geg_specialobjects_fastcurve
+FastCurve
+
+The FastCurve displays a curve specified by a DsFastCurve object. A DsFastCurve can contain
+10 curves, but the FastCurve object can only show two of them. Which curve are specified with
+the FastCurve.FastIndex attributes. 
+
+<image> geg_fig166.png
+<b>Fig FastCurve
+
+<image> geg_fig167.png
+<b>Fig Attributes for a FastCurve object
+</topic>
+
 <topic> geg_specialobjects_axis
 Axis and AxisArc
 An axis object draws a scale with a specified range. Axis objects don't have any dynamics
@@ -1134,6 +1163,58 @@ array will be set, ie H3-Select1.Value[3].
 
 <image> geg_fig85.png
 <b>Fig The corresponding array element of the selected row is set
+</topic>
+
+<topic> geg_specialobjects_pulldownmenu
+PulldownMenu
+The pulldown menu contains a number of menu entries that can either open a new pulldown menu,
+or execute and action. Actions that can be defined for other buttons also are available for 
+menu entries. With the action PulldownMenu submenus can be configured.
+
+<image> geg_fig160.png
+<b>Fig Pulldown menu
+
+<image> geg_fig163.png
+<b>Fig The attributes for the pulldown menu
+
+<h2>MethodPulldownMenu
+The method pulldown menu contains menu entries to activate the methods of an object. It is
+usually use in object graphs. With the help menu options, only the help methods is displayed.
+
+<image> geg_fig161.png
+<b>Fig Method pulldown menu
+
+By setting the action to MethodPulldownMenu a method pulldown menu is configured.
+
+<image> geg_fig162.png
+<b>Fig The attributes for a method pulldown menu
+</topic>
+
+<topic> geg_specialobjects_optionmenu
+OptionMenu
+Option menu is menu where you select an alternative in a list of alternatives. The chosen
+alternative is displayed in the menu component. When you click on the component, the list
+of alternatives is displayed. When an alternative is chosen, the list is closed, and the 
+selected alternative is displayed in the component.
+
+<image> geg_fig165.png
+<b>Fig Optionmenu
+
+<image> geg_fig164.png
+<b>Fig The attributes for the option menu
+</topic>
+
+<topic> geg_specialobjects_methodtoolbar
+MethodToolbar
+The methodtoolbar displays a set of buttons to activate the methods for a specific object.
+Only methods that are configured for the object are displayed, and buttons that the current
+user doesn't have access to, are dimmed.
+
+The methodtoolbar is usually used in object graphs.
+
+<image> geg_fig159.png
+<b>Fig MethodToolbar
+
 </topic>
 </headerlevel>
 
@@ -2574,10 +2655,11 @@ Number        <t>Numbering or connection points within a subgraph.
 Direction     <t>Direction: up, down, right or left.
 </topic>
 
-<topic>geref_complexobj
+<topic>geref_complexobj <style>function
 Complex objects
 </topic>
 
+<headerlevel>
 <topic>geref_bar <style>function
 Bar
 <image> geref_fig13.png
@@ -2682,6 +2764,10 @@ Dynamic      <t>Not implemented.
 <b>Dynamic Axis
 Axis.MinValueAttr <t>Min value signal of type Float32 or Int32.
 Axis.MaxValueAttr <t>Max value signal of type Float32 of Int32.
+Axis.KeepSettings <t>If 0, new values of Lines, LongQuotient, ValueQoutient
+                  <t>and Format are calculated when the Min or Max value is
+                  <t>dymaically changed. If KeepSettings are 1, the original
+                  <t>values will be kept.
 </topic>
 
 <topic>geref_windowobject <style>function
@@ -2789,6 +2875,7 @@ Column1.SelectAttribute <t><t>Array attribute of type Boolean, When a cell in th
 Column1Width      <t><t>Width of the column.
 Column1.HeaderText <t><t>Column title. The title is written in the header row.
 </topic>
+</headerlevel>
 </chapter>
 
 <chapter>
@@ -3489,6 +3576,7 @@ OpenGraph <t>-          <t>Open a graph with Click MB1. <link>GeDynOpenGraph
 OpenURL   <t>-          <t>Open an URL in a suitable web browser on Click MB1. <link>GeDynOpenURL
 PulldownMenu <t>- 	<t>Action for pulldown menus. <link>GeDynPulldownMenu
 OptionMenu <t>-		<t>Action for option menus. <link>GeDynOptionMenu
+MethodPulldownMenu <t>- <t>Action for pulldown menus for object methods. <link>GeDynMethodPulldownMenu
 </topic>
 
 <headerlevel>
@@ -3835,6 +3923,19 @@ OptionMenu.UpdateAttribute <t><t>Database attribute of type Boolean. Should be s
 		      <t><t>1 when new texts are present in the TextAttribute. New 
 		      <t><t>texts are loaded when the value is changed from 0 to 1.
 </topic>
+
+<topic>GeDynMethodPulldownMenu <style>function
+MethodPulldownMenu
+
+Action for a method pulldown menu, with menu alternatives for the methods of an object.
+Only the configured methods are displayed in the menu.
+
+<b>Attribute <t><t>Description
+MethodPulldownMenu.Object <t><t>Object which methods are diplayed in the menu.
+MethodPulldownMenu.HelpMenu <t><t>The menu is a help menu and only the help methods
+                          <t><t>Help and Help Class is shown in the menu.
+</topic>
+
 </headerlevel>
 <pagebreak>
 
@@ -4625,6 +4726,7 @@ Ge script och commands
 Introduction to script <link>gecmd_intro
 Commands <link>gecmd_command
 Script <link>gecmd_script
+Examples <link>gecmd_examples
 <option> printenable
 </topic>
 
@@ -4651,8 +4753,8 @@ An example of a filled rectangle
 
 <c>set fill
 <c>set linewidth 1
-<c>set bordercolor 0
-<c>set fillcolor 19
+<c>set bordercolor Black
+<c>set fillcolor BlueHigh7
 <c>create rect /x1=10 /y1=1 /width=4  /height=2
 
 <h2>Circle
@@ -4660,25 +4762,25 @@ An example of a half circle
 
 <c>set nofill
 <c>set linewidth 2
-<c>set bordercolor 0
-<c>create arc /x1=1 /y1=1 /x2=3 /y2=2 /angle1=0 /angle2 =180
+<c>set bordercolor Black
+<c>create arc /x1=1 /y1=1 /x2=3 /y2=2 /angle1=0 /angle2=180
 
 <h2>Line
 Line example
 
 <c>set linewidth 1
-<c>set bordercolor 0
+<c>set bordercolor Black
 <c>create line /x1=0 /y1=0 /x2=10 /y2=0
 
 <h2>Polylinje
 To create to polyline, you create the first segment with 'create', and the following segments
 with 'add'.
 
-Polyline example
+<b>Polyline example
 
 <c>set nofill
 <c>set linewidth 1
-<c>set bordercolor 0
+<c>set bordercolor Black
 <c>create polyline /x1=5 /y1=5 /x2=6 /y2=6
 <c>add polyline /x1=5 /y1=7
 <c>add polyline /x1= 6/y1=8
@@ -4686,9 +4788,11 @@ Polyline example
 <c>add polyline /x1= 6 /y1=10
 
 <h2>Text
-Example
+<b>Example
 
 <c>set textsize 14
+<c>set textfont LucidaSans
+<c>set textcolor RedHigh8
 <c>set bold
 <c>create text/text="Example" /x1=3 /y1=5
 
@@ -4696,24 +4800,25 @@ Example
 Creating subgraphs object is a bit different. Here you create the object first, and the set
 the attributes of the object.
 
-Valve example
+<b>Valve example
 
 <c>create object /sub=pwr_valve /x1=1 /y1= 1 /x2=3 /y2=2
-<c>set current fillcolor 45
-<c>set current attr attribute "Rt-Dv1.ActualValue##Boolean"
-<c>set current attr lowcolor 3
+<c>set current fillcolor YellowGreenMedium4
+<c>set current attr DigLowColor.Attribute "Rt-Dv1.ActualValue##Boolean"
+<c>set current attr DigLowColor.Color GrayHigh8
 
-Pushbutton example
+<b>Pushbutton example
 
 <c>create object /sub=pwr_buttonset /x1=5 /y1=1
-<c>! Change type to SetDigConfirmWithTone
-<c>set current attr type 1014
-<c>set current attr text "Start"
-<c>set current attr ConfirmText "Do you really want to..."
-<c>set current attr Attribute "rt-Dv1.ActualValue##Boolean"
-<c>set current attr ToneAttr "rt-Dv2.ActualValue##Boolean"
-<c>set current attr LowTone 8
-<c>set current attr Access 65534
+<c>! Change type to SetDig with Confirm
+<c>set current attr Dyntype1 DigLowColor
+<c>set current attr Action Inherit|Confirm
+<c>set current attr annotation "Start"
+<c>set current attr Confirm.Text "Do you really want to..."
+<c>set current attr SetDig.Attribute "rt-Dv1.ActualValue##Boolean"
+<c>set current attr DigLowColor.Attribute "rt-Dv2.ActualValue##Boolean"
+<c>set current attr DigLowColor.Color YellowGreenMedium4
+<c>set current attr Access System|Operator1
 
 <h2>Graph attributes
 Before saving the graph, you should state the borders in x and y direction for the graph, and
@@ -4732,37 +4837,14 @@ Example
 If the graph is to be saved as a subgraph, you also use 'set graphattributes'. You first set
 the attribute 'subgraph' and thereafter the other attributes that belongs to a subgraph.
 
-Example
+<b>Example
 
 <c>set graph subgraph 1
-<c>! Type ToggleDigWithTone
-<c>set graph TraceAttrType 1012
-<c>set graph TraceColor 3
-<c>set graph NoConObstacle 1
+<c>set graphattr Action ToggleDig
+<c>set graphattr DynType1 DigLowColor
+<c>set graphattr Color1 YellowGreenMedium4
+<c>set graphattr NoConObstacle 1
 
-<h2>Colors
-Colors are stated with index in the color palette (0-299). 0 is black, 30-59 gray tones,
-60-89 greenyellow, 90-119 yellow, 120-149 orange, 150-179 red, 180-209 violet, 210-239 blue,
-240-269 seablue and 270-299 green.
-
-<h2>Color tone
-Also the color tone is stated with index. See table below.
-
-For dynamic types that changes the color tone you can often set a fill color instead of color
-tone. You then state index for the fill color instead (a value in the interval 83-299).
-
-<b>Index <t>Ton
-0 <t>No tone
-1 <t>Gray
-2 <t>Yellowgreen
-3 <t>Yellow
-4 <t>Orange
-5 <t>Red
-6 <t>Violet
-7 <t>Blue
-8 <t>Seagreen
-9 <t>Green
-10 <t>Darkgray
 </topic>
 
 <topic>gecmd_command
@@ -4806,28 +4888,27 @@ set 			<link>gecmd_set
   <t>set nofill		<link>gecmd_set_nofill
   <t>set border		<link>gecmd_set_border
   <t>set noborder	<link>gecmd_set_noborder
+  <t>set shadow		<link>gecmd_set_shadow
+  <t>set noshadow	<link>gecmd_set_noshadow
   <t>set grid		<link>gecmd_set_grid
   <t>set nogrid		<link>gecmd_set_nogrid
   <t>set linewidth	<link>gecmd_set_linewidth
   <t>set gridsize	<link>gecmd_set_gridsize
   <t>set textsize	<link>gecmd_set_textsize
+  <t>set textfont	<link>gecmd_set_textfont
   <t>set bold		<link>gecmd_set_bold
   <t>set nobold		<link>gecmd_set_nobold
   <t>set backgroundcolor <link>gecmd_set_backgroundcolor
   <t>set fillcolor	<link>gecmd_set_fillcolor
   <t>set bordercolor	<link>gecmd_set_bordercolor
+  <t>set textcolor	<link>gecmd_set_textcolor
   <t>set currentobject fillcolor <link>gecmd_set_current_fillcolor
   <t>set currentobject colortone <link>gecmd_set_current_colortone
   <t>set currentobject colorlightness <link>gecmd_set_current_colorlightness
   <t>set currentobject colorintensity <link>gecmd_set_current_colorintensity
   <t>set currentobject colorshift <link>gecmd_set_current_colorshift
+  <t>set currentobject gradient <link>gecmd_set_current_gradient
   <t>set currentobject attributes <link>gecmd_set_current_attributes
-  <t>set currentobject type <link>gecmd_set_current_type
-  <t>set currentobject color <link>gecmd_set_current_color_
-  <t>set currentobject colortone <link>gecmd_set_current_colortone
-  <t>set currentobject access <link>gecmd_set_current_access
-  <t>set currentobject attr1 <link>gecmd_set_current_attr1
-  <t>set currentobject attr2 <link>gecmd_set_current_attr1
   <t>set currentobject annotation <link>gecmd_set_current_annotation
   <t>set graphattributes <link>gecmd_set_graphattributes
 show 			<link>gecmd_show
@@ -5185,6 +5266,18 @@ Reset 'border' in the editor. Created objects will in the future be created with
 property reset.
 </topic>
 
+<topic>gecmd_set_shadow
+set shadow
+Set 'shadow' or '3D' in the editor. Created objects will in the future be created with the 
+shadow property set.
+</topic>
+
+<topic>gecmd_set_noshadow
+set noshadow
+Reset 'shadow' or '3D' in the editor. Created objects will in the future be created with 
+the shadow property reset.
+</topic>
+
 <topic>gecmd_set_grid
 set grid
 
@@ -5229,6 +5322,17 @@ size. The text size can be 8, 10, 12, 14, 18 or 24.
 <c>ge> set textsize 'textsize'
 </topic>
 
+<topic>gecmd_set_textfont
+set textfont
+
+Set 'textfont' in the editor. All text objects will in the future be created with this font.
+The font can be 'Helvetica', 'Times', 'New Century Schoolbook', 'Curier' or 'LucidaSans'.
+
+<b>Syntax
+
+<c>ge> set textfont 'font'
+</topic>
+
 <topic>gecmd_set_bold
 set bold
 
@@ -5244,7 +5348,7 @@ Reset bold.
 <topic>gecmd_set_backgroundcolor
 set backgroundcolor
 
-Set background color. The background color is an index in the color palette (0-299).
+Set background color.
 
 
 <b>Syntax
@@ -5256,7 +5360,7 @@ Set background color. The background color is an index in the color palette (0-2
 set fillcolor
 
 Set fill color in the color palette. The object will in the future be created with this fill 
-color. Fill color is an index in the color palette  (0-299).
+color.
 
 <b>Syntax
 
@@ -5267,17 +5371,28 @@ color. Fill color is an index in the color palette  (0-299).
 set bordercolor
 
 Set border color in the color palette. Objects will in the future be created with this border
-color. The border color is an index in the color palette (0-299).
+color.
 
 <b>Syntax
 
 <c>ge> set bordercolor 'color'
 </topic>
 
+<topic>gecmd_set_textcolor
+set textcolor
+
+Set text color in the color palette. Text objects will in the future be created with this text
+color.
+
+<b>Syntax
+
+<c>ge> set textcolor 'color'
+</topic>
+
 <topic>gecmd_set_current_fillcolor
 set currentobject fillcolor
 
-Set fill color of the current object. The fill color is an index in the color palette (0-299).
+Set fill color of the current object.
 
 <b>Syntax
 
@@ -5291,7 +5406,7 @@ Set color tone of the current object.
 
 <b>Syntax
 
-<c>ge> set currentobject colortone 'index'
+<c>ge> set currentobject colortone 'tone'
 </topic>
 
 <topic>gecmd_set_current_colorlightness
@@ -5330,6 +5445,23 @@ yellow->orange->red->violet->blue->seablue->green. Negative in the opposite dire
 <c>ge> set currentobject colorshift 'shift'
 </topic>
 
+<topic>gecmd_set_current_gradient
+set currentobject gradient
+
+Set color gradient on the current object.
+The gradient can be No, 
+HorizontalUp, HorizontalDown, HorizontalTube1, HorizontalTube2,
+VerticalLeft, VerticalRight, VerticalTube1, VerticalTube2, 
+DiagonalUpperLeft, DiagonalLowerLeft, DiagonalUpperRight, DiagonalLowerRight, 
+DiagonalUpTube, DiagonalDownTube, 
+Globe, RadialCenter, 
+RadialUpperLeft, RadialLowerLeft, RadialUpperRight or RadialLowerRight.
+
+<b>Syntax
+
+<c>ge> set currentobject gradient 'gradient'
+</topic>
+
 <topic>gecmd_set_current_attributes
 set currentobject attributes
 Set attributes of the current object.
@@ -5341,128 +5473,36 @@ Set attributes of the current object.
 The name the attributes depends on which type of dynamic is applied on the subgraph. The
 dynamic type has to be stated first, and thereafter the attributes for that dynamic type 
 is stated.
-</topic>
 
-<topic>gecmd_set_current_type
-set currentobject type
-Type states type of dynamic for the object. It is entered as an integer.
+<b>Enumeration types
+For attributes of enumeration type, where you can select one of several alternatives, the
+value is set to the name of the enumeration value, eg
 
-<b>Syntax
+<c> set currentobject attr Cycle Slow
 
-<c>ge> set currentobject attributes type 'value'
+<b>Bitmask types
+For attributes of bitmask type, where you can select several alternatives, the names of
+the desired alternatives are specifed separated with '|', eg
 
+<c> set currentobject attr Action ToggleDig|Confirm|Tooltip
+<c> set currentobject attr DigColor.Instances 2|3|4
 
-<b>Type of dynamic <t>Value
-No		<t> 0
-Inherit		<t> 1 << 0
-Tone		<t> 1 << 1
-DigLowColor     <t> 1 << 2
-DigColor	<t> 1 << 3
-DigError	<t> 1 << 4
-DigWarning	<t> 1 << 5
-DigFlash	<t> 1 << 6
-Invisible	<t> 1 << 7
-DigBorder	<t> 1 << 8
-DigText		<t> 1 << 9
-Value		<t> 1 << 10
-AnalogColor     <t> 1 << 11
-Rotate		<t> 1 << 12
-Move	       	<t> 1 << 13
-AnalogShift     <t> 1 << 14
-DigShift	<t> 1 << 15
-Animation	<t> 1 << 16
-Bar	       	<t> 1 << 17
-Trend		<t> 1 << 18
-SliderBackground <t> 1 << 19
-Video		<t> 1 << 20
-FillLevel	<t> 1 << 21
-FastCurve	<t> 1 << 22
-AnalogText	<t> 1 << 23
-Table		<t> 1 << 24
-StatusColor     <t> 1 << 25
-HostObject      <t> 1 << 26
+<b>Example
+<c> set currentobject attr Cycle Fast
+<c> set currentobject attr DynType1 DigColor|DigWarning|DigError
+<c> set currentobject attr Action Tooltip|OpenGraph
+<c> set currentobject attr DigColor.Instances 2|3
+<c> set currentobject attr DigColor3.Attribute H1-Dv3##Boolean
+<c> set currentobject attr DigColor3.Color MagentaHigh3
+<c> set currentobject attr DigColor2.Attribute H1-Dv2##Boolean
+<c> set currentobject attr DigColor2.Color OrangeHigh4
+<c> set currentobject attr DigColor.Attribute H1-Dv1##Boolean
+<c> set currentobject attr DigColor.Color BlueHigh3
+<c> set currentobject attr DigError.Attribute H1-Dv4##Boolean
+<c> set currentobject attr DigWarning.Attribute H1-Dv5##Boolean
+<c> set currentobject attr OpenGraph.GraphObject Nodes-MyNode-Op-Overview
+<c> set currentobject attr ToolTip.Text "Temperature switch indicator"
 
-<b>Type of action <t>Value
-No		<t> 0
-Inherit		<t> 1 << 0
-PopupMenu      	<t> 1 << 1
-SetDig		<t> 1 << 2
-ResetDig       	<t> 1 << 3
-ToggleDig      	<t> 1 << 4
-StoDig		<t> 1 << 5
-Command		<t> 1 << 6
-CommandDoubleClick <t> 1 << 7
-Confirm		<t> 1 << 8
-IncrAnalog	<t> 1 << 9
-RadioButton	<t> 1 << 10
-Slider		<t> 1 << 11
-ValueInput	<t> 1 << 12
-TipText		<t> 1 << 13
-CloseGraph     	<t> 1 << 18
-PulldownMenu    <t> 1 << 19
-OptionMenu     	<t> 1 << 20
-</topic>
-
-<topic>gecmd_set_current_color_
-set currentobject color
-Colors are usually called 'LowColor' or 'LowColor2'. Color is an index in the color palette.
-</topic>
-
-<topic>gecmd_set_curren_colortone
-set currentobject colortone
-
-Color tone are usually called 'LowTone'. Colortone is an integer.
-</topic>
-
-<topic>gecmd_set_current_access
-set currentobject access
-
-Access is a bitmask where each bit represents a user category authority to influence the object.
-
-<b>User category <t>Value
-RtRead     <t>1 << 0
-RtWrite    <t>1 << 1
-System     <t>1 << 2
-Maintenance <t>1 << 3
-Process    <t>1 << 4
-Instrument <t>1 << 5
-Operator1  <t>1 << 6
-Operator2  <t>1 << 7
-Operator3  <t>1 << 8
-Operator4  <t>1 << 9
-Operator5  <t>1 << 10
-Operator6  <t>1 << 11
-Operator7  <t>1 << 12
-Operator8  <t>1 << 13
-Operator9  <t>1 << 14
-Operator10 <t>1 << 15
-
-<b>Syntax
-
-<c>ge> set currentobject access 'value'
-</topic>
-
-<topic>gecmd_set_current_attr1
-set currentobject attr1
-
-Set the attribute, i.e. the connection to the database, for the current object.
-Corresponds to the Ctrl+Doubleclick MB1 function.
-
-<b>Syntax
-
-<c>ge> set currentobject attr1 'attribute'
-
-</topic>
-
-<topic>gecmd_set_current_attr2
-set currentobject attr2
-
-Set the second attribute, i.e. the connection to the database, for the current object.
-Corresponds to the Ctrl+Shift+Doubleclick MB1 function.
-
-<b>Syntax
-
-<c>ge> set currentobject attr2 'attribute'
 </topic>
 
 <topic>gecmd_set_current_annotation
@@ -5480,7 +5520,7 @@ set graphattributes
 
 Set an attribute for the current graph or subgraph.
 
-<b>Graph attribut
+<b>Graph attributes
 
 <b>Name  <t>Type
 subgraph <t>Boolean
@@ -5490,24 +5530,68 @@ x1  <t>Float
 y1  <t>Float
 ScanTime <t>Float
 AnimationScanTime <t>Float
-JavaWidth <t>String
+JavaWidth <t>Float
+IsJavaApplet <t>Boolean
+IsJavaFrame <t>Boolean
 BackgroundImage <t>String
+BackgroundIiled <t>Boolean
+DoubleBuffered <t>Boolean
+MB3Action <t>Enumeration: No, Close, PopupMenu or Both
+Translate <t>Boolean
+BitmapFonts <t>Boolean
+HotIndication <t>Enumeration: No, LineWidth, DarkColor or LightColor
+TooltipTextsize <t>Integer
+AppMotion <t>Enumeration: Scroll, Slider or Both
 
-<b>Subgraph attribute
+<b>Subgraph attributes
 
 <b>Name <t>Type
-TraceAttrType
-TraceType
-TraceColor <t>ColorIndex or ColorTone
-TraceColor2 <t>ColorIndex or ColorTone
-NoConObstacle <t>Int
-Slider <t>Int
-NextSubgraph <t>Int
+DynType1 <t>Mask: Inherit, Tone, DigLowColor, DigColor, AnalogColor, 
+         <t>StatusColor, DigWarning, DigError, DigFlash, FillLevel, 
+         <t>Invisible, DigBorder, DigText, Valule, Rotate, Move, AnalogShift,
+         <t>DigShift, Animation, Bar, Trend, FastCurve, XY_Curve, SliderBackground,
+         <t>Video, Table, HostObject, DigSound, DigCommand
+DynType2 <t>Mask: DigTextColor, TimeoutColor
+Action <t>Mask: Inherit, PopupMenu, SetDig, ResetDig, ToggleDig, StoDig,
+       <t>SetValue, Command, CommandDoubleClick, Help, OpenGraph, CloseGraph,
+       <t>OpenURL, Confirm, IncrAnalog, RadioButton, ValueInput, ToolTip,
+       <t>InputFocus, PulldownMenu, OptionMenu, MethodPulldownMenu, Slider
+Color1 <t>A color or color tone
+Color2 <t>A color or color tone
+AnimSequence <t>Enumeration: Cyclic, Dig or ForwBack
+NoConObstacle <t>Boolean
+Slider <t>Boolean
+NextSubgraph <t>String
 AnimationCount <t>Int
+JavaName <t>String
+Cycle <t>Enumeration: Fast or Slow
+x0    <t>Float
+y0    <t>Float
+x1    <t>Float
+y1    <t>Float
+InputFocusMark <t>Enumeration: Relief or No.
+RecursiveDynamic <t>Boolean
 
 <b>Syntax
 
 <c>ge> set graphattributes 'name' 'value'
+
+<b>Example graph
+<c> set graphattributes x0 0
+<c> set graphattributes y0 0
+<c> set graphattributes x1 15
+<c> set graphattributes y1 20
+<c> set graphattributes DoubleBuffered 1
+<c> set graphattributes MB3Action PopupMenu
+<c> set graphattributes TooltipTextsize 14
+
+<b>Example subgraph
+<c> set graphattributes Subgraph 1
+<c> set graphattributes DynType1 DigLowColor|DigWarning|DigError
+<c> set graphattributes Action PopupMenu|OpenGraph
+<c> set graphattributes Color1 GrayLow9
+<c> set graphattributes Cycle Fast
+
 </topic>
 
 <topic>gecmd_show
@@ -5707,49 +5791,61 @@ Example
 <c>  verify(1);
 
 
-<c>  ! Draw a rectangle
-<c>  set fill
-<c>  set linewidth 1
-<c>  set bordercolor 0
-<c>  set fillcolor 19
-<c>  create rect /x1=10 /y1=1 /width=2 /height=2
+<c>  ! Draw a rectangle  
 
-<c>  ! Draw a half circle
-<c>  set nofill
+<c>  set fill
+<c>  set shadow
+<c>  set linewidth 1
+<c>  set bordercolor Black
+<c>  set fillcolor BlueHigh8
+<c>  create rect /x1=10 /y1=1 /width=20 /height=12
+<c>  set current attr shadow_width 2
+<c>  set current attr gradient Globe
+
+<c>  ! Draw a circle  
+<c>  set fill
+<c>  set shadow
+<c>  set fillcolor MagentaHigh4
 <c>  set linewidth 2
-<c>  create arc /x1=1/y1=1/x2=3/y2=2/angle1=0 /angle2=180
+<c>  create arc /x1=1/y1=1/x2=6/y2=6
+<c>  set current attr shadow_width 12
+<c>  set current attr gradient DiagonalLowerLeft
   
 <c>  ! Draw a polyline
-<c>  set nofill
+<c>  set fill
+<c>  set shadow
+<c>  set fillcolor YellowGreenHigh5
 <c>  set linewidth 1
-<c>  create polyline /x1=5 /y1=5 /x2=6 /y2=6
-<c>  add polyline /x1=5 /y1=7
-<c>  add polyline /x1=6 /y1=8
-<c>  add polyline /x1=5 /y1=9
-<c>  add polyline /x1=6 /y1=10
+<c>  create polyline /x1=5 /y1=5 /x2=10 /y2=10
+<c>  add polyline /x1=10 /y1=20
+<c>  add polyline /x1=5 /y1=20
+<c>  add polyline /x1=5 /y1=5
+<c>  set current attr gradient DiagonalLowerLeft
 
 <c>  ! Print a text
 <c>  set bold
-<c>  set textsize 14
+<c>  set textsize 24
+<c>  set textfont LucidaSans
+<c>  set textcolor RedHigh8
 <c>  create text/text="Example" /x1=3 /y1=5
 
 <c>  ! Create a subgraph
+<c>  set fillcolor YellowGreenMedium3
 <c>  create object/sub=pwr_valve/x1=1/y1=1/x2=3/y2=2
-<c>  set current fillcolor 45
-<c>  set current attr attribute "Rt-Dv1.ActualValue##Boolean"
-<c>  set current attr lowcolor 0
+<c>  set current attr DigLowColor.Attribute "Rt-Dv1.ActualValue##Boolean"
+<c>  set current attr DigLowColor.Color GrayHigh9
   
 <c>  ! Create a pushbutton
-<c>  create object /sub=pwr_buttonset /x1=5 /y1=1
-<c>  set current attr text "Start"
-<c>  set current attr attribute "rt-dv1.actualvalue##Boolean"
-<c>  set current attributes access 65000
+<c>  create object /sub=pwr_buttonsetcenter /x1=5 /y1=1
+<c>  set current annotation "Start"
+<c>  set current attr SetDig.Attribute "rt-dv1.actualvalue##Boolean"
+<c>  set current attr Access System|Operator1
 
 <c>  ! Set graph attributes
-<c>  set graph x0 -3
-<c>  set graph y0 -3
-<c>  set graph x1 40
-<c>  set graph y1 25
+<c>  set graphattr x0 -3
+<c>  set graphattr y0 -3
+<c>  set graphattr x1 40
+<c>  set graphattr y1 25
 
 <c>  save
 <c>endmain
@@ -5774,8 +5870,11 @@ Example
 <c>  float y1;
 <c>  float y2;
 <c>  float width;
+<c>  float height;
 <c>  float t_width;
 <c>  string class;
+
+<c>  verify(1);
   
 <c>  x_ind = 2;
 <c>  x = 4;
@@ -5795,7 +5894,7 @@ Example
 <c>    if ( class == "Dv")
 <c>      create object/sub=pwr_indsquare/x1='x_ind'/y1='y_ind'
 <c>      attr = name + ".ActualValue##Boolean";
-<c>      set current attr attribute "'attr'"
+<c>      set current attr DigLowColor.Attribute "'attr'"
 <c>      segname = CutObjectName( name, 1);
 <c>      create text/text="'segname'"/x1='x'/y1='y'
 <c>      GetTextExtent( segname, 12, 1, t_width);
@@ -5812,18 +5911,28 @@ Example
 <c>  x2 = x + width + 1;
 <c>  y1 = 0;
 <c>  y1 = y;
-<c>  cre obj/sub=pwr_framethin/x1='x1'/y1='y1'/x2='x2'/y2='y2'
+<c>  width = x2 - x1;
+<c>  height = y2 - y1;
+
+<c>  set fillcolor GrayLow3
+<c>  set shadow
+<c>  set noborder
+<c>  set nofill
+<c>  create rectangle/x1='x1'/y1='y1'/width='width'/height='height'
+<c>  set current attr shadow_width 2
+<c>  set current attr relief Down
 
 <c>  x1--;
 <c>  x2++;
 <c>  y1--;
 <c>  y2++;
-<c>  set background 11
+<c>  set background GrayLow3
 <c>  set graph x0 'x1'
 <c>  set graph y0 'y1'
 <c>  set graph x1 'x2'
 <c>  set graph y1 'x2'
 <c>endmain
+
 </topic>
 </chapter>
 

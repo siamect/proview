@@ -5632,6 +5632,29 @@ för 'Used' kan även ändras från tangentbordet med 'Shift/PilHöger' och checkboxe
 <image> dg_fig32.gif
 </topic>
 
+<topic>objecttexteditor_refman
+Texteditor
+
+För text-attribut i objekt som BodyText, HelpText, CArithm och DataArithm finns en
+speciell texteditor. Editorn öppnas genom att högerklicka på objektet i plc-editorn
+och aktivera EditText eller EditCode i popupmenyn.
+
+<h2>Meny
+
+File/Close <t><t>Stäng texteditorn.
+
+File/Save <t><t>Spara texten i objektets attribut. Notera att texten
+          <t><t>är inte sparad i databasen förrän sessionen i plceditorn
+          <t><t>har sparats.
+Edit/Copy <t><t>Kopiera utvald text till urklipp.
+Edit/Cut  <t><t>Klipp ut utvald text.
+Edit/Paste <t><t>Klistra int text från urklipp till aktuell markör-position.
+
+<b>Texteditor
+<image> dg_fig122.png
+
+</topic>
+
 <topic>spreadsheeteditor_refman
 Spreadsheet editorn
 
