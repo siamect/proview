@@ -269,10 +269,12 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 		    break;
 		case Glow.eSave_Node_nc:
 		    nc_name = token.nextToken();
-		    nc = (GlowNodeClass)cmn.ctx.get_nodeclass_from_name( nc_name);
-		    nc_root = nc;
-		    if ( nc == null)
-			System.out.println( "GlowNode : " + line + ", node class not found: " + nc_name);
+		    if ( type() != Glow.eObjectType_GrowGroup) {
+			nc = (GlowNodeClass)cmn.ctx.get_nodeclass_from_name( nc_name);
+			nc_root = nc;
+			if ( nc == null)
+			    System.out.println( "GlowNode : " + line + ", node class not found: " + nc_name);
+		    }
 		    break;
 		case Glow.eSave_Node_n_name:
 		    if ( token.hasMoreTokens())

@@ -210,7 +210,7 @@ public class GrowText extends GlowArrayElem {
 
 
     public void draw(GlowTransform t, int highlight, int hot, Object node, Object colornode) {
-	if ( cmn.nodraw != 0)
+	if ( cmn.nodraw != 0 || text == null)
 	    return;
 
 	int x1, y1, rx1, ry1;
