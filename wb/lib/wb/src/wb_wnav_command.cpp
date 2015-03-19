@@ -96,6 +96,7 @@
 #include "ge.h"
 #include "wb_utl.h"
 #include "wb_bck.h"
+#include "wb_watttext.h"
 
 #define	WNAV_MENU_CREATE	0
 #define	WNAV_MENU_ADD		1
@@ -3817,6 +3818,34 @@ static int	wnav_open_func(	void		*client_data,
     }
 
     wnav->logw_new( itemp, catp, showitem);
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "ATTRIBUTE", strlen( arg1_str)) == 0)
+  {
+    pwr_tAName		namestr;
+    pwr_tAttrRef	aref;
+    pwr_tStatus 	sts;
+
+    // Command is "OPEN ATTRIBUTE" 
+
+    if ( EVEN( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr)))) {
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", namestr, sizeof(namestr)))) {
+	wnav->message('E', "Syntax error");
+	return WNAV__SYNTAX;
+      }    
+    }
+
+    sts = ldh_NameToAttrRef( wnav->ldhses, namestr, &aref);
+    if ( EVEN(sts)) {
+      wnav->message(' ', wnav_get_message(sts));
+      return WNAV__SUCCESS;
+    }
+
+    WAttText *watttext = wnav->watttext_new( aref, wnav->editmode, &sts);
+    if ( EVEN(sts)) {
+      wnav->message(' ', wnav_get_message(sts));
+      delete watttext;
+      return WNAV__SUCCESS;
+    }
   }
   else
   {

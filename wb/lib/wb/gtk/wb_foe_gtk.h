@@ -163,6 +163,11 @@ class WFoeGtk : public WFoe {
 			  int a_editmode,
 			  int a_advanced_user,
 			  int a_display_objectname);
+  virtual WAttText *watttext_new( void *a_parent_ctx,
+				  ldh_tSesContext a_ldhses,
+				  pwr_sAttrRef a_aref,
+				  int a_editmode,
+				  pwr_tStatus *status);
   virtual WFoe *subwindow_new( void	       	*f_parent_ctx,
 			       char	       	*f_name,
 			       pwr_tObjid     	plcprogram,
@@ -245,6 +250,7 @@ class WFoeGtk : public WFoe {
   static void activate_move_up(GtkWidget *w, gpointer foe);
   static void activate_move_down(GtkWidget *w, gpointer foe);
   static void activate_attribute( GtkWidget *w, gpointer data);
+  static void activate_editcode( GtkWidget *w, gpointer data);
   static void activate_subwindow( GtkWidget *w, gpointer data);
   static void activate_undelete( GtkWidget *w, gpointer data);
   static void activate_unselect( GtkWidget *w, gpointer data);

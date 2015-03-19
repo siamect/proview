@@ -61,6 +61,7 @@
 #include "wb_wnav_item.h"
 #include "wb_pal.h"
 #include "wb_watt.h"
+#include "wb_watttext.h"
 #include "wb_wda.h"
 #include "wb_wtt.h"
 #include "wb_wnav_msg.h"
@@ -2277,6 +2278,14 @@ void wtt_watt_close_cb( void *watt)
   wtt->appl.remove( watt);
 }
 
+void wtt_watttext_close_cb( void *watttext)
+{
+  Wtt *wtt = (Wtt *) ((WAttText *)watttext)->parent_ctx;
+
+  delete (WAttText *)watttext;
+  wtt->appl.remove( watttext);
+}
+
 void wtt_wda_close_cb( void *wda)
 {
   Wtt *wtt = (Wtt *) ((Wda *)wda)->parent_ctx;
@@ -2293,6 +2302,10 @@ void Wtt::register_utility( void *ctx, wb_eUtility utility)
     case wb_eUtility_AttributeEditor:
       appl.insert( utility, ctx, pwr_cNObjid, "");
       ((WAtt *)ctx)->close_cb = wtt_watt_close_cb;
+      break;
+    case wb_eUtility_AttrTextEditor:
+      appl.insert( utility, ctx, pwr_cNObjid, "");
+      ((WAtt *)ctx)->close_cb = wtt_watttext_close_cb;
       break;
     case wb_eUtility_SpreadsheetEditor:
       appl.insert( utility, ctx, pwr_cNObjid, "");
@@ -2585,6 +2598,14 @@ void WttApplList::set_editmode( int editmode, ldh_tSesContext ldhses)
       case wb_eUtility_AttributeEditor:
         // Delete the attribute editor
         delete (WAtt *)elem->ctx;
+        // Remove element
+        next_elem = elem->next;
+        remove( elem->ctx);
+        elem = next_elem;
+        continue;
+      case wb_eUtility_AttrTextEditor:
+        // Delete the attribute editor
+        delete (WAttText *)elem->ctx;
         // Remove element
         next_elem = elem->next;
         remove( elem->ctx);

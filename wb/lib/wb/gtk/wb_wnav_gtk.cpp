@@ -73,6 +73,7 @@ extern "C" {
 #include "wb_xcrr_gtk.h"
 #include "wb_bckw_gtk.h"
 #include "wb_expw_gtk.h"
+#include "wb_watttext_gtk.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -481,6 +482,11 @@ WbBckW *WNavGtk::bckw_new( char *name, wb_bck_list *list, pwr_tStatus  *status)
 WbExpW *WNavGtk::expw_new( char *name, int type, pwr_tStatus  *status)
 {
   return new WbExpWGtk( this, parent_wid, ldhses, name, type, 1, status);
+}
+
+WAttText *WNavGtk::watttext_new( pwr_tAttrRef aref, int editmode, pwr_tStatus *status)
+{
+  return new WAttTextGtk( parent_wid, this, ldhses, aref, editmode, status);
 }
 
 void WNavGtk::wge_subwindow_loop( WGe *wge)

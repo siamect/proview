@@ -91,6 +91,10 @@
 #include "wb_expw.h"
 #endif
 
+#ifndef wb_watttext_h
+#include "wb_watttext.h"
+#endif
+
 
 #define wnav_cVersion	"X3.3a"
 #define wnav_cScriptDescKey	"!** Description"
@@ -349,6 +353,7 @@ class WNav : public WUtility{
     virtual WCrr *wcrr_new( pwr_tAttrRef *aref, pwr_tStatus  *status) { return 0;}
     virtual WbBckW *bckw_new( char *name, wb_bck_list *list, pwr_tStatus  *status) { return 0;}
     virtual WbExpW *expw_new( char *name, int type, pwr_tStatus  *status) { return 0;}
+    virtual WAttText *watttext_new( pwr_tAttrRef aref, int editmode, pwr_tStatus *status) { return 0;}
 
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);
     static int init_brow_base_cb( FlowCtx *fctx, void *client_data);

@@ -42,6 +42,7 @@
 /* wtt_wnav_gtk.h -- Simple navigator */
 
 class CoLogin;
+class WAttText;
 
 class WNavGtk : public WNav {
   public:
@@ -98,6 +99,7 @@ class WNavGtk : public WNav {
     WCrr *wcrr_new( pwr_tAttrRef *aref, pwr_tStatus  *status);
     WbBckW *bckw_new( char *name, wb_bck_list *list, pwr_tStatus  *status);
     WbExpW *expw_new( char *name, int type, pwr_tStatus  *status);
+    WAttText *watttext_new( pwr_tAttrRef aref, int editmode, pwr_tStatus *status);
       
     static void trace_scan( WNavGtk *wnav);
     static void sel_lose_cb( GtkWidget *w, GdkEventSelection *event,

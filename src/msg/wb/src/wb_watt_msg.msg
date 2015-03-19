@@ -47,3 +47,4 @@ flagstate	<State attribute>				/error
 disappeard	<Item has disappeard>				/error
 nochildren	<Item has no children>				/error
 attrnotfound	<Attribute is not found>			/error
+notext		<Attribute is not a text attribute>		/error

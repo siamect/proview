@@ -77,30 +77,39 @@ typedef enum {
   foe_eFuncAccess_Edit		= 1 << 1
 } foe_eFuncAccess;
 
-enum foe_e_popupmenu {
-  foe_e_popupmenu_attribute	= 1 << 0,
-  foe_e_popupmenu_subwindow	= 1 << 1,
-  foe_e_popupmenu_connect      	= 1 << 2,
-  foe_e_popupmenu_delete       	= 1 << 3,
-  foe_e_popupmenu_paste		= 1 << 4,
-  foe_e_popupmenu_copy		= 1 << 5,
-  foe_e_popupmenu_cut		= 1 << 6,
-  foe_e_popupmenu_printselect	= 1 << 7,
-  foe_e_popupmenu_helpclass	= 1 << 8,
-  foe_e_popupmenu_createobject	= 1 << 9
+enum foe_ePopupmenu {
+  foe_ePopupmenu_attribute	= 1 << 0,
+  foe_ePopupmenu_subwindow	= 1 << 1,
+  foe_ePopupmenu_connect      	= 1 << 2,
+  foe_ePopupmenu_delete       	= 1 << 3,
+  foe_ePopupmenu_paste		= 1 << 4,
+  foe_ePopupmenu_copy		= 1 << 5,
+  foe_ePopupmenu_cut		= 1 << 6,
+  foe_ePopupmenu_printselect	= 1 << 7,
+  foe_ePopupmenu_helpclass	= 1 << 8,
+  foe_ePopupmenu_createobject	= 1 << 9,
+  foe_ePopupmenu_editcode	= 1 << 10,
+  foe_ePopupmenu_edittext	= 1 << 11
 };
 
 class WFoe;
 class WAtt;
+class WAttText;
 class CoWow;
 class Pal;
 class Nav;
 class wb_build_opt;
 
+typedef enum {
+  foe_eAttr_WAtt,
+  foe_eAttr_WAttText
+} foe_eAttr;
+
 typedef struct 	{
   void		*a_ctx;
   WFoe	 	*foe;
   vldh_t_node	node;
+  foe_eAttr	type;
 } foe_sAttr;
 
 
@@ -176,6 +185,11 @@ class WFoe : public WUtility {
 			  int a_advanced_user,
 			  int a_display_objectname) 
     {return 0;}
+  virtual WAttText *watttext_new( void *a_parent_ctx,
+				  ldh_tSesContext a_ldhses,
+				  pwr_sAttrRef a_aref,
+				  int a_editmode,
+				  pwr_tStatus *status) {*status = 0; return 0;}
   virtual WFoe *subwindow_new( void	       	*f_parent_ctx,
 			       char	       	*f_name,
 			       pwr_tObjid     	plcprogram,
@@ -240,6 +254,7 @@ class WFoe : public WUtility {
   void activate_scroll( flow_eDirection dir);
   void activate_move_object( flow_eDirection dir);
   void activate_attribute();
+  void activate_editcode();
   void activate_subwindow();
   void activate_undelete();
   void activate_unselect();
@@ -275,6 +290,7 @@ class WFoe : public WUtility {
   void enable_ldh_cb();
   void disable_ldh_cb();
   int attr_create( vldh_t_node node);
+  int attredit_create( vldh_t_node node, const char *aname);
   int attr_delete();
   void attr_set_editmode( int mode);
   int parent_quit();
@@ -323,11 +339,12 @@ class WFoe : public WUtility {
   static pwr_tStatus ldh_this_session_cb( void *ctx, ldh_sEvent *event);
   static void error_msg( unsigned long sts);
   static void info_msg( unsigned long sts);
-  static int attrlist_get( void *a_ctx, WFoe **foe, vldh_t_node *node);
-  static int attrlist_get_by_node( vldh_t_node node, void **a_ctx);
-  static int attrlist_insert( void *a_ctx, WFoe *foe, vldh_t_node node);
+  static int attrlist_get( void *a_ctx, foe_eAttr type, WFoe **foe, vldh_t_node *node);
+  static int attrlist_get_by_node( vldh_t_node node, foe_eAttr type, void **a_ctx);
+  static int attrlist_insert( void *a_ctx, WFoe *foe, vldh_t_node node, foe_eAttr type);
   static int attrlist_delete( void *a_ctx);
   static void attr_quit( void *a_ctx);
+  static void attredit_quit( void *a_ctx);
   static void edit_exit_save( WFoe *foe);
   static void edit_exit_nosave( WFoe *foe);
   static void delete_subwindow_ok_cb( void *ctx, void *data);

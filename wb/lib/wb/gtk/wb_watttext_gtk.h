@@ -34,28 +34,66 @@
  * General Public License plus this exception.
  **/
 
-#ifndef wb_utility_h
-#define wb_utility_h
+#ifndef wb_watttext_gtk_h
+#define wb_watttext_gtk_h
 
-/* wb_utility.h -- Baseclass for a workbench utility */
+/* wb_watttext_gtk.h -- Object attribute editor */
 
-typedef enum {
-	wb_eUtility_Wtt 		= 999,
-	wb_eUtility_PlcEditor 		= 1000,
-	wb_eUtility_AttributeEditor	= 1001,
-	wb_eUtility_Distributor		= 1002,
-	wb_eUtility_SpreadsheetEditor  	= 1003,
-	wb_eUtility_Cmd  		= 1004,
-	wb_eUtility_WNav  		= 1005,
-	wb_eUtility_AttrTextEditor	= 1006
-} wb_eUtility;
+#ifndef wb_watttext_h
+# include "wb_watttext.h"
+#endif
 
-class WUtility {
+#ifndef cow_wow_gtk_h
+# include "cow_wow_gtk.h"
+#endif
+
+
+class WAttTextGtk : public WAttText {
  public:
-  WUtility( wb_eUtility type) : utype(type) {}
-  virtual ~WUtility() {}
-  wb_eUtility	utype;
+  WAttTextGtk( 
+	GtkWidget      	*wa_parent_wid, 
+	void 		*wa_parent_ctx, 
+	ldh_tSesContext wa_ldhses,
+	pwr_sAttrRef 	wa_aref,
+	int 		wa_editmode,
+	pwr_tStatus 	*status);
+  ~WAttTextGtk();
+  GtkWidget	*parent_wid;
+  GtkWidget	*toplevel;
+  GtkWidget	*msg_label;
+  GtkWidget	*vbox;
+  GtkWidget	*textview;
+  GtkWidget	*button_ok;
+  GtkWidget	*button_apply;
+  GtkWidget	*button_cancel;
+  GtkTextBuffer *textbuffer;
+  int 		input_max_length;
+  int		init;
+
+  void message( char severity, const char *message);
+  void pop();
+  void set_editmode( int editmode, ldh_tSesContext ldhses);
+  void set_attr_value();
+
+  static void activate_exit( GtkWidget *w, gpointer data);
+  static void activate_save( GtkWidget *w, gpointer data);
+  static void activate_copy( GtkWidget *w, gpointer data);
+  static void activate_cut( GtkWidget *w, gpointer data);
+  static void activate_paste( GtkWidget *w, gpointer data);
+  static void activate_help( GtkWidget *w, gpointer data);
+  static void activate_ok( GtkWidget *w, gpointer data);
+  static void activate_apply( GtkWidget *w, gpointer data);
+  static void activate_cancel( GtkWidget *w, gpointer data);
+  static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
+  static void action_text_changed( GtkTextBuffer *w, gpointer data);
+  static void action_text_inserted( GtkTextBuffer *w, GtkTextIter *arg1, gchar *arg2, gint arg3, gpointer data);
 };
 
 #endif
+
+
+
+
+
+
 

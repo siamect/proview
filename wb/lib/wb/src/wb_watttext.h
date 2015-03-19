@@ -34,28 +34,69 @@
  * General Public License plus this exception.
  **/
 
+#ifndef wb_watttext_h
+#define wb_watttext_h
+
+/* wb_watttext.h -- Object attribute editor */
+
+#ifndef pwr_h
+# include "pwr.h"
+#endif
+
 #ifndef wb_utility_h
-#define wb_utility_h
+# include "wb_utility.h"
+#endif
 
-/* wb_utility.h -- Baseclass for a workbench utility */
+#ifndef wb_h
+# include "wb.h"
+#endif
 
-typedef enum {
-	wb_eUtility_Wtt 		= 999,
-	wb_eUtility_PlcEditor 		= 1000,
-	wb_eUtility_AttributeEditor	= 1001,
-	wb_eUtility_Distributor		= 1002,
-	wb_eUtility_SpreadsheetEditor  	= 1003,
-	wb_eUtility_Cmd  		= 1004,
-	wb_eUtility_WNav  		= 1005,
-	wb_eUtility_AttrTextEditor	= 1006
-} wb_eUtility;
+#ifndef wb_ldh_h
+# include "wb_ldh.h"
+#endif
 
-class WUtility {
- public:
-  WUtility( wb_eUtility type) : utype(type) {}
-  virtual ~WUtility() {}
-  wb_eUtility	utype;
+#ifndef cow_wow_h
+# include "cow_wow.h"
+#endif
+
+class WAttText {
+  public:
+    WAttText( 
+	void 		*wa_parent_ctx, 
+	ldh_tSesContext wa_ldhses,
+	pwr_sAttrRef 	wa_aref,
+	int 		wa_editmode,
+	pwr_tStatus	*status);
+    virtual ~WAttText();
+    void 	*parent_ctx;
+    ldh_tSesContext ldhses;
+    pwr_sAttrRef aref;
+    pwr_tOName 	aname;
+    int		editmode;
+    int		modified;
+    void	(*close_cb) ( void *);
+    wb_eUtility	utility;
+    CoWow	*wow;
+
+    virtual void message( char severity, const char *message) {}
+    virtual void pop() {}
+    virtual void set_editmode( int editmode, ldh_tSesContext ldhses) {}
+    virtual void print( const char *title) {}
+    virtual void set_attr_value() {}
+
+    void activate_print();
+    void activate_exit();
+    static void exit_ok( void *ctx, void *data);
+    static void exit_cancel( void *ctx, void *data);
+    static void message_cb( void *watttext, char severity, const char *message);
+
 };
 
 #endif
+
+
+
+
+
+
 

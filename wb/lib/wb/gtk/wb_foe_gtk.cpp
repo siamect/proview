@@ -60,6 +60,7 @@
 #include <gdk/gdkkeysyms.h>
 
 #include "wb_watt_gtk.h"
+#include "wb_watttext_gtk.h"
 #include "wb_gre_gtk.h"
 #include "wb_foe_gtk.h"
 #include "cow_login.h"
@@ -357,6 +358,14 @@ void WFoeGtk::activate_attribute( GtkWidget *w, gpointer data)
   WFoe *foe = (WFoe *)data;
 
   foe->activate_attribute();
+}
+
+//	Callback from the menu.
+void WFoeGtk::activate_editcode( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+
+  foe->activate_editcode();
 }
 
 
@@ -900,24 +909,27 @@ typedef void (*gtk_tCallback)(GtkWidget *,gpointer);
 
 int WFoeGtk::modify_popup( unsigned long popupmenu_mask, int x, int y)
 {
-  static char buttontext[][40] = { "ObjectEditor", "SubWindow", "Connect", "Delete",
-				   "Paste", "Copy", "Cut", "PrintSelect", "HelpClass",
-                                   "CreateObject"};
-  static gtk_tCallback menu_callbacks[] = { WFoeGtk::activate_attribute,
-					    WFoeGtk::activate_subwindow,
-					    WFoeGtk::activate_getobj,
-					    WFoeGtk::activate_delete,
-					    WFoeGtk::activate_paste,
-					    WFoeGtk::activate_copy,
-					    WFoeGtk::activate_cut,
-					    WFoeGtk::activate_printselect,
-					    WFoeGtk::activate_helpclass,
-					    WFoeGtk::activate_createobject};
-
+  static const int bsize = 12;
+  static char buttontext[bsize][40] = { "ObjectEditor", "SubWindow", "Connect", "Delete",
+					"Paste", "Copy", "Cut", "PrintSelect", "HelpClass",
+					"CreateObject", "EditCode", "EditText"};
+  static gtk_tCallback menu_callbacks[bsize] = { WFoeGtk::activate_attribute,
+						 WFoeGtk::activate_subwindow,
+						 WFoeGtk::activate_getobj,
+						 WFoeGtk::activate_delete,
+						 WFoeGtk::activate_paste,
+						 WFoeGtk::activate_copy,
+						 WFoeGtk::activate_cut,
+						 WFoeGtk::activate_printselect,
+						 WFoeGtk::activate_helpclass,
+						 WFoeGtk::activate_createobject,
+						 WFoeGtk::activate_editcode,
+						 WFoeGtk::activate_editcode};
+  
   popupmenu_x = x + 5;
   popupmenu_y = y;
   GtkMenu *menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
-  for ( int i = 0; i < 10; i++) {
+  for ( int i = 0; i < bsize; i++) {
     if ( popupmenu_mask & (1 << i)) {
       GtkWidget *w = gtk_menu_item_new_with_label( buttontext[i]);
       g_signal_connect( w, "activate", 
@@ -985,6 +997,17 @@ WAtt *WFoeGtk::watt_new( void *a_parent_ctx,
 			       a_ldhses, a_aref, a_editmode, a_advanced_user,
 			       a_display_objectname);
   return watt;
+}
+
+WAttText *WFoeGtk::watttext_new( void *a_parent_ctx,
+				 ldh_tSesContext a_ldhses,
+				 pwr_sAttrRef a_aref,
+				 int a_editmode,
+				 pwr_tStatus *status)
+{
+  WAttTextGtk *watttext = new WAttTextGtk( parent_wid, a_parent_ctx,
+				       a_ldhses, a_aref, a_editmode, status);
+  return watttext;
 }
 
 //

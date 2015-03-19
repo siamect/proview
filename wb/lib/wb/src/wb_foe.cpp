@@ -66,9 +66,9 @@
 #include "cow_login.h"
 #include "wb_tra.h"
 #include "wb_watt.h"
+#include "wb_watttext.h"
 #include "wb_gobj.h"
 #include "wb_exo.h"
-#include "wb_watt.h"
 #include "wb_pal.h"
 #include "cow_wow.h"
 #include "cow_xhelp.h"
@@ -782,14 +782,16 @@ void WFoe::activate_changetext()
   }
 
   switch ( nodelist[0]->ln.cid) {
-  case pwr_cClass_Text:
   case pwr_cClass_BodyText:
   case pwr_cClass_HelpText:
   case pwr_cClass_HelpTextL:
+    attredit_create( nodelist[0], "Text");
+    break;
   case pwr_cClass_Head:
+  case pwr_cClass_Text:
   case pwr_cClass_Title:
     attr_create( nodelist[0]);
-    sts = attrlist_get_by_node( nodelist[0], (void **)&watt);
+    sts = attrlist_get_by_node( nodelist[0], foe_eAttr_WAtt, (void **)&watt);
     if ( EVEN(sts)) return;
     sts = watt->open_changevalue( "Text");
     break;
@@ -937,12 +939,62 @@ void WFoe::activate_attribute()
     /* Create attribute editor */
     if ( msg_label_id != 0 ) message( ""); 
     object = *nodelist;
-    sts = attrlist_get_by_node( object, (void **)&watt);
+    sts = attrlist_get_by_node( object, foe_eAttr_WAtt, (void **)&watt);
     if ( ODD(sts))
       watt->pop();
     else {
       clock_cursor();
       attr_create( object);
+      normal_cursor();
+    }
+    // gre->unselect();
+  }
+  
+  if ( node_count > 0) free((char *) nodelist);
+
+  if ( node_count == 0) {
+    message( "Select an object to edit attributes");
+    BEEP;
+  }
+  else if ( node_count > 1 ) {
+    message( "Unable to open object, more than one object selected");
+    BEEP;
+  }
+  return;
+}
+
+void WFoe::activate_editcode()
+{
+  unsigned long		node_count;
+  vldh_t_node		*nodelist;
+  vldh_t_node		object;
+  int                   sts;
+  WAttText              *watttext;
+
+  if ( msg_label_id != 0 ) message( ""); 
+
+  /* Get selected nodes */
+  
+  gre->get_selnodes( &node_count, &nodelist);
+
+  if ( node_count == 1 ) {
+    /* Create attribute editor */
+    if ( msg_label_id != 0 ) message( ""); 
+    object = *nodelist;
+    sts = attrlist_get_by_node( object, foe_eAttr_WAttText, (void **)&watttext);
+    if ( ODD(sts))
+      watttext->pop();
+    else {
+      clock_cursor();
+      switch ( object->ln.cid) {
+      case pwr_cClass_BodyText:
+      case pwr_cClass_HelpText:
+      case pwr_cClass_HelpTextL:
+	attredit_create( object, "Text");
+	break;
+      default:
+	attredit_create( object, "Code");
+      }
       normal_cursor();
     }
     // gre->unselect();
@@ -1590,14 +1642,16 @@ void WFoe::gre_node_created( WGre *gre, unsigned long current_node_type,
   if ( EVEN(sts)) return;
         
   switch ( cid) {
-  case pwr_cClass_Text:
   case pwr_cClass_BodyText:
   case pwr_cClass_HelpText:
   case pwr_cClass_HelpTextL:
+    ((WFoe *)gre->parent_ctx)->attredit_create(node, "Text");
+    break;
+  case pwr_cClass_Text:
   case pwr_cClass_Head:
   case pwr_cClass_Title:
     ((WFoe *)gre->parent_ctx)->attr_create(node);
-    sts = attrlist_get_by_node( node, (void **)&watt);
+    sts = attrlist_get_by_node( node, foe_eAttr_WAtt, (void **)&watt);
     if ( EVEN(sts)) return;
     sts = watt->open_changevalue( "Text", 1);
     break;
@@ -1615,14 +1669,16 @@ void WFoe::gre_node_floating_created( WGre *gre, vldh_t_node node)
   foe = (WFoe *)gre->parent_ctx;
 
   switch ( node->ln.cid) {
-  case pwr_cClass_Text:
   case pwr_cClass_BodyText:
   case pwr_cClass_HelpText:
   case pwr_cClass_HelpTextL:
+    ((WFoe *)gre->parent_ctx)->attredit_create(node, "Text");
+    break;
+  case pwr_cClass_Text:
   case pwr_cClass_Head:
   case pwr_cClass_Title:
     ((WFoe *)gre->parent_ctx)->attr_create(node);
-    sts = attrlist_get_by_node( node, (void **)&watt);
+    sts = attrlist_get_by_node( node, foe_eAttr_WAtt, (void **)&watt);
     if ( EVEN(sts)) return;
     sts = watt->open_changevalue( "Text", 1);
     break;
@@ -1971,20 +2027,34 @@ void WFoe::gre_popupmenu( WGre *gre, int x_pix, int y_pix, int popupmenu_type,
 	foe->popupmenu_node = node;
       }
       
-      foe->modify_popup( foe_e_popupmenu_attribute |
-			 foe_e_popupmenu_subwindow |
-			 foe_e_popupmenu_connect |
-			 foe_e_popupmenu_delete	|
-			 foe_e_popupmenu_helpclass,
-			 x_pix + 5, y_pix);
-
+      unsigned int mask = foe_ePopupmenu_attribute |
+	foe_ePopupmenu_subwindow |
+	foe_ePopupmenu_connect |
+	foe_ePopupmenu_delete	|
+	foe_ePopupmenu_helpclass;
+      if ( node) {
+	switch ( node->ln.cid) {
+	case pwr_cClass_dataarithm:
+	case pwr_cClass_dataarithml:
+	case pwr_cClass_carithm:
+	  mask |= foe_ePopupmenu_editcode;
+	  break;
+	case pwr_cClass_BodyText:
+	case pwr_cClass_HelpText:
+	case pwr_cClass_HelpTextL:
+	  mask |= foe_ePopupmenu_edittext;
+	  break;
+	default: ;
+	}
+      }
+      foe->modify_popup( mask, x_pix + 5, y_pix);
     }
     else {
-      foe->modify_popup( foe_e_popupmenu_delete	|
-			 foe_e_popupmenu_copy |
-			 foe_e_popupmenu_cut |
-			 foe_e_popupmenu_printselect |
-			 foe_e_popupmenu_createobject,
+      foe->modify_popup( foe_ePopupmenu_delete	|
+			 foe_ePopupmenu_copy |
+			 foe_ePopupmenu_cut |
+			 foe_ePopupmenu_printselect |
+			 foe_ePopupmenu_createobject,
 			 x_pix + 5, y_pix);
     }
   }
@@ -1993,9 +2063,9 @@ void WFoe::gre_popupmenu( WGre *gre, int x_pix, int y_pix, int popupmenu_type,
       gre->node_select( node);
       foe->popupmenu_node = node;
     }
-    foe->modify_popup( foe_e_popupmenu_attribute |
-		       foe_e_popupmenu_subwindow |
-		       foe_e_popupmenu_helpclass,
+    foe->modify_popup( foe_ePopupmenu_attribute |
+		       foe_ePopupmenu_subwindow |
+		       foe_ePopupmenu_helpclass,
 		       x_pix + 5, y_pix);
   }
 }
@@ -2176,7 +2246,7 @@ int WFoe::attr_create( vldh_t_node node)
 
   }
   else {
-    sts = attrlist_get_by_node( node, (void **)&watt);
+    sts = attrlist_get_by_node( node, foe_eAttr_WAtt, (void **)&watt);
     if ( ODD(sts))
       watt->pop();
     else {
@@ -2187,8 +2257,36 @@ int WFoe::attr_create( vldh_t_node node)
       watt->close_cb = attr_quit;
       
       /* Store in the array */
-      sts = attrlist_insert( watt, this, node);
+      sts = attrlist_insert( watt, this, node, foe_eAttr_WAtt);
     }
+  }
+  return FOE__SUCCESS;
+}
+
+int WFoe::attredit_create( vldh_t_node node, const char *aname)
+{
+  WAttText     	*watttext;
+  int		ate_mode;
+  pwr_sAttrRef	aref, aaref;
+  pwr_tStatus 	sts;
+
+  ate_mode = ( function == EDIT );
+
+  sts = attrlist_get_by_node( node, foe_eAttr_WAttText, (void **)&watttext);
+  if ( ODD(sts))
+    watttext->pop();
+  else {
+    aref = cdh_ObjidToAref( node->ln.oid); 
+    sts = ldh_ArefANameToAref( (node->hn.wind)->hw.ldhses, &aref, aname, &aaref);
+    if ( EVEN(sts)) return sts;
+
+    watttext = watttext_new( this, 
+			 (node->hn.wind)->hw.ldhses,
+			 aaref, ate_mode, &sts);
+    watttext->close_cb = attredit_quit;
+    
+    /* Store in the array */
+    sts = attrlist_insert( watttext, this, node, foe_eAttr_WAttText);
   }
   return FOE__SUCCESS;
 }
@@ -2199,12 +2297,12 @@ int WFoe::attr_create( vldh_t_node node)
 //	To assosiate this with a foe and a node the context is stored in
 //	the attribute list when ate is created.
 //
-int WFoe::attrlist_get( void *a_ctx, WFoe **foe, vldh_t_node *node)
+int WFoe::attrlist_get( void *a_ctx, foe_eAttr type, WFoe **foe, vldh_t_node *node)
 {
   int	i;
 
   for ( i = 0; i < attr_count; i++) {
-    if ( (attr_pointer + i)->a_ctx == a_ctx) {
+    if ( (attr_pointer + i)->a_ctx == a_ctx && (attr_pointer + i)->type == type) {
       /* This is it */
       *foe = (attr_pointer + i)->foe;
       *node = (attr_pointer + i)->node;
@@ -2214,12 +2312,12 @@ int WFoe::attrlist_get( void *a_ctx, WFoe **foe, vldh_t_node *node)
   return FOE__OBJECT;
 }
 
-int WFoe::attrlist_get_by_node( vldh_t_node node, void **a_ctx)
+int WFoe::attrlist_get_by_node( vldh_t_node node, foe_eAttr type, void **a_ctx)
 {
   int	i;
 
   for ( i = 0; i < attr_count; i++) {
-    if ( (attr_pointer + i)->node == node) {
+    if ( (attr_pointer + i)->node == node && type == (attr_pointer + i)->type) {
       /* This is it */
       *a_ctx = (attr_pointer + i)->a_ctx;
       return FOE__SUCCESS;
@@ -2228,14 +2326,14 @@ int WFoe::attrlist_get_by_node( vldh_t_node node, void **a_ctx)
   return FOE__OBJECT;
 }
 
-int WFoe::attrlist_insert( void *a_ctx, WFoe *foe, vldh_t_node node)
+int WFoe::attrlist_insert( void *a_ctx, WFoe *foe, vldh_t_node node, foe_eAttr type)
 {
   int		sts;
   WFoe		*dum_foe;
   vldh_t_node	dum_node;
 
   /* Check that it doesn't exist */
-  sts = attrlist_get( a_ctx, &dum_foe, &dum_node);
+  sts = attrlist_get( a_ctx, type, &dum_foe, &dum_node);
   if ( EVEN(sts)) {
     sts = utl_realloc( (char **)&attr_pointer, 
 		       attr_count * sizeof( foe_sAttr), 
@@ -2245,6 +2343,7 @@ int WFoe::attrlist_insert( void *a_ctx, WFoe *foe, vldh_t_node node)
     (attr_pointer + attr_count)->a_ctx = a_ctx;
     (attr_pointer + attr_count)->foe = foe;
     (attr_pointer + attr_count)->node = node;
+    (attr_pointer + attr_count)->type = type;
     attr_count++;	
   }
   return FOE__SUCCESS;
@@ -2290,8 +2389,12 @@ int WFoe::attr_delete()
   /* Get the foe in the attributectx array and reset it*/
   for ( i = 0; i < attr_count; i++ ) {
     if ( this == (attr_pointer + i)->foe) {
-      delete (WAtt *) (attr_pointer + i)->a_ctx;
+      if ( (attr_pointer + i)->type == foe_eAttr_WAtt)
+	delete (WAtt *) (attr_pointer + i)->a_ctx;
+      else if ( (attr_pointer + i)->type == foe_eAttr_WAttText)
+	delete (WAttText *) (attr_pointer + i)->a_ctx;
       attrlist_delete( (attr_pointer + i)->a_ctx);
+      i--;
     }
   }
   return FOE__SUCCESS;
@@ -2306,8 +2409,12 @@ void WFoe::attr_set_editmode( int mode)
   int i;
 	
   for ( i = 0; i < attr_count; i++ ) {
-    if ( this == (attr_pointer + i)->foe)
-      ((WAtt *)(attr_pointer + i)->a_ctx)->set_editmode( mode, 0);
+    if ( this == (attr_pointer + i)->foe) {
+      if ( (attr_pointer + i)->type == foe_eAttr_WAtt)
+	((WAtt *)(attr_pointer + i)->a_ctx)->set_editmode( mode, 0);
+      else if ( (attr_pointer + i)->type == foe_eAttr_WAttText)
+	((WAttText *)(attr_pointer + i)->a_ctx)->set_editmode( mode, 0);
+    }
   }
 }
 
@@ -2704,6 +2811,18 @@ void WFoe::attr_quit( void *a_ctx)
 
   /* Delete the attribute editor */
   delete (WAtt *)a_ctx;
+}
+
+void WFoe::attredit_quit( void *a_ctx)
+{
+  int	sts;
+
+  /* Delete from attribute list */
+  sts = attrlist_delete( a_ctx);
+  error_msg(sts);
+
+  /* Delete the attribute editor */
+  delete (WAttText *)a_ctx;
 }
 
 //
