@@ -53,7 +53,7 @@
 /*! \addtogroup Ge */
 /*@{*/
 
-#define SUBP_PIXMAPS_SIZE	250
+#define SUBP_PIXMAPS_SIZE	252
 
 typedef struct subpalette_s_Menu {
 	char				title[80];
