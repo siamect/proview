@@ -348,6 +348,7 @@ class WFoe : public WUtility {
   static void edit_exit_save( WFoe *foe);
   static void edit_exit_nosave( WFoe *foe);
   static void delete_subwindow_ok_cb( void *ctx, void *data);
+  static void delete_subwindows_ok_cb( void *ctx, void *data);
   static void delete_ok_cb( void *ctx, void *data);
   
   static void exit_save( WFoe *foe);
