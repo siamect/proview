@@ -13076,7 +13076,7 @@ int	gcg_comp_m45( gcg_ctx gcgctx, vldh_t_node node)
 	        gcg_error_msg( gcgctx, GSX__INV, node);
 
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
-			"%c%s->%sP = &%c%s->%s;\n", 
+			"%c%s->%sP = (pwr_tVoid *)&%c%s->%s;\n", 
 			GCG_PREFIX_REF,
 			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
