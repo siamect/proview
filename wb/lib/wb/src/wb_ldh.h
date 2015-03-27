@@ -1295,6 +1295,12 @@ ldh_RecixSetDestination(
   const char *destination
 );
 
+pwr_tStatus
+ldh_AttrArefToObjectAref(
+  ldh_tSession session, 
+  pwr_tAttrRef *arp,
+  pwr_tAttrRef *oarp
+);
 
 #ifdef __cplusplus
 }

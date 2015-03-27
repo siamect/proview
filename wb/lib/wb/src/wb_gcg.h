@@ -345,6 +345,9 @@ pwr_tStatus gcg_read_volume_plclist(
   gcg_t_plcproclist **plcproclist
 );
 
+int gcg_comp_plcembed_all( ldh_tSession ldhses);
+int gcg_comp_plcembed( ldh_tSession ldhses, pwr_tOid oid);
+
 #ifdef __cplusplus
 }
 #endif

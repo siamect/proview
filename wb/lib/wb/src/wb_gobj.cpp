@@ -58,7 +58,7 @@
 
 #define	BEEP	    putchar( '\7' );
 
-#define	GOBJ_MAX_METHOD 34
+#define	GOBJ_MAX_METHOD 35
 
 typedef int (* gobj_tMethod)( WFoe *, vldh_t_node, unsigned long);
 
@@ -97,6 +97,7 @@ int	gobj_get_object_m31( WFoe *foe, vldh_t_node node, unsigned long index);
 int	gobj_get_object_m32( WFoe *foe, vldh_t_node node, unsigned long index);
 int	gobj_get_object_m33( WFoe *foe, vldh_t_node node, unsigned long index);
 int	gobj_get_object_m34( WFoe *foe, vldh_t_node node, unsigned long index);
+int	gobj_get_object_m35( WFoe *foe, vldh_t_node node, unsigned long index);
 
 gobj_tMethod gobj_get_object_m[40] = {
 	gobj_get_object_m0,
@@ -134,6 +135,7 @@ gobj_tMethod gobj_get_object_m[40] = {
  	gobj_get_object_m32,
  	gobj_get_object_m33,
  	gobj_get_object_m34,
+ 	gobj_get_object_m35,
 	};
 
 static pwr_tAttrRef gobj_selected_aref;
@@ -2388,7 +2390,7 @@ int	gobj_get_object_m27( WFoe *foe, vldh_t_node node, unsigned long index)
     if ( EVEN(sts)) return sts;
   }
 
-  /* Check that attribute can be disbled */
+  /* Check that attribute can be disabled */
   sts = ldh_GetAttrRefInfo( ldhses, &attrref, &info);
   if ( EVEN(sts)) return sts;
 
@@ -3059,7 +3061,7 @@ int	gobj_get_object_m33( WFoe *foe, vldh_t_node node, unsigned long index)
 }
 
 //
-//	Method for getdatarefv, stodatarefv, cstodatarefv. Inserts the selected sv-object in the
+//	Method for getdatarefv, stodatarefv, cstodatarefv. Inserts the selected object in the
 //	navigator in the parameter DataRefvObject in a GetDataRefv object.
 //
 int	gobj_get_object_m34( WFoe *foe, vldh_t_node node, unsigned long index)
@@ -3103,6 +3105,56 @@ int	gobj_get_object_m34( WFoe *foe, vldh_t_node node, unsigned long index)
 			  node->ln.oid, 
 			  "DevBody",
 			  "DataRefvObject",
+			  (char *)&attrref, sizeof(attrref)); 
+  if ( EVEN(sts)) return sts;
+
+  foe->gre->node_update( node);
+
+  return FOE__SUCCESS;
+}
+//
+//	Method for GetRefXx and StoRefXx. Inserts the selected attribute in the
+//	navigator in the attribute RefAttribute in a GetDataRefv object.
+//
+int	gobj_get_object_m35( WFoe *foe, vldh_t_node node, unsigned long index)
+{
+  ldh_tSesContext	ldhses;
+  int		sts;
+  vldh_t_plc	plc;
+  pwr_sAttrRef	attrref;
+  int		is_attr;
+  ldh_sAttrRefInfo info;
+
+  /* Get the selected object in the navigator */
+  plc = (node->hn.wind)->hw.plc;
+  ldhses =(node->hn.wind)->hw.ldhses;
+
+  sts = gobj_get_select( foe, &attrref, &is_attr);
+  if ( EVEN(sts)) { 
+    foe->message( "Select an attribute of the AttrRef in the navigator");
+    BEEP;
+    return sts;
+  }
+
+  sts = ldh_GetAttrRefInfo( ldhses, &attrref, &info);
+  if ( EVEN(sts)) return sts;
+
+  if ( info.type != pwr_eType_AttrRef) {
+    foe->message( "Selected attribute is not of type AttrRef");
+    BEEP;
+    return 0;
+  }
+	
+  if ( cdh_IsClassVolume( node->ln.oid.vid)) {
+    sts = gobj_ref_replace( ldhses, node, &attrref);
+    if ( EVEN(sts)) return sts;
+  }
+
+  /* Set the parameter value */
+  sts = ldh_SetObjectPar( ldhses,
+			  node->ln.oid, 
+			  "DevBody",
+			  "RefAttribute",
 			  (char *)&attrref, sizeof(attrref)); 
   if ( EVEN(sts)) return sts;
 

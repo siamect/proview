@@ -120,9 +120,37 @@ int RtTrace::get_filename( pwr_tObjid window_objid, char *filename,
     sts = gdh_GetObjectClass( host, &cid);
     if ( EVEN(sts)) return sts;
 
-    if ( cid == pwr_cClass_plc)
-      return 0;
-    
+    if ( cid == pwr_cClass_plc) {
+      pwr_tAttrRef aref, hostaref;
+
+      aref = cdh_ObjidToAref( host);
+      sts = gdh_ArefANameToAref( &aref, "HostObject", &aref);
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_GetObjectInfoAttrref( &aref, &hostaref, sizeof(hostaref));
+      if ( EVEN(sts)) return sts;
+
+      if ( cdh_ObjidIsNull( hostaref.Objid))
+	return 0;
+
+      sts = gdh_GetAttrRefTid( &hostaref, &cid);
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_ObjidToName( host, name, sizeof(name),
+			     cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+      /*
+      sts = gdh_AttrrefToName( &hostaref, name, sizeof(name),
+			       cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+      */
+    }    
+    else {
+      sts = gdh_ObjidToName( host, name, sizeof(name),
+			     cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+    }
+
     sts = gdh_ObjidToName( cdh_ClassIdToObjid(cid), cname, sizeof(cname),
 			   cdh_mName_object);
     if ( EVEN(sts)) return sts;
@@ -139,10 +167,6 @@ int RtTrace::get_filename( pwr_tObjid window_objid, char *filename,
       if ( !fp)
 	return 0;
     }
-
-    sts = gdh_ObjidToName( host, name, sizeof(name),
-			   cdh_mName_volumeStrict);
-    if ( EVEN(sts)) return sts;
 
     strcpy( hostname, name);
     *has_host = 1;

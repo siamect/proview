@@ -96,6 +96,8 @@ static pwr_tStatus ConfigFc (
   pwr_tObjid	coid;
   int plcconnect = 0;
   int plctemplate = 0;
+  int plcfo = 0;
+  int plcembedded = 0;
   char 		str[80];
   pwr_sMenuButton   mb;
   
@@ -116,18 +118,26 @@ static pwr_tStatus ConfigFc (
   if ( strcmp(mb.MethodArguments[0], "PlcConnect") == 0) {
     plcconnect = 1;
     plctemplate = 1;
+    plcfo = 1;
   }
   else if ( strcmp(mb.MethodArguments[0], "CCode") == 0) {
     plcconnect = 0;
     plctemplate = 0;
+    plcfo = 1;
   }
   else if ( strcmp(mb.MethodArguments[0], "PlcConnectCCode") == 0) {
     plcconnect = 1;
     plctemplate = 0;
+    plcfo = 1;
+  }
+  else if ( strcmp(mb.MethodArguments[0], "EmbeddedPlc") == 0) {
+    plctemplate = 1;
+    plcembedded = 1;
   }
   else {
     plcconnect = 0;
     plctemplate = 1;
+    plcfo = 1;
   }
 
   sts = ldh_ObjidToName( ip->PointedSession, ip->Pointed.Objid, ldh_eName_Hierarchy, 
@@ -178,83 +188,85 @@ static pwr_tStatus ConfigFc (
     }
   }
 
-  sts = ldh_CreateObject( ip->PointedSession, &oid, "DevBody", pwr_eClass_ObjBodyDef,
+  if ( plcfo) {
+    sts = ldh_CreateObject( ip->PointedSession, &oid, "DevBody", pwr_eClass_ObjBodyDef,
 			    ip->Pointed.Objid, ldh_eDest_IntoLast);
-  if ( EVEN(sts)) {
-    // The object already exist
-  }
+    if ( EVEN(sts)) {
+      // The object already exist
+    }
 
-  strcpy( name, pname);
-  strcat( name, "-");
-  strcat( name, "DevBody");
-  sts = ldh_NameToObjid( ip->PointedSession, &oid, name);
-  if ( EVEN(sts)) return sts;
-
-  sts = ldh_CreateObject( ip->PointedSession, &oid, "PlcNode", pwr_eClass_Buffer,
-			    oid, ldh_eDest_IntoLast);
-  if ( ODD(sts)) {
-    cid = pwr_eClass_PlcNode;
-
-    sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "Class", (char *)&cid,
-			   sizeof(cid));
+    strcpy( name, pname);
+    strcat( name, "-");
+    strcat( name, "DevBody");
+    sts = ldh_NameToObjid( ip->PointedSession, &oid, name);
     if ( EVEN(sts)) return sts;
-  }
 
-  sts = ldh_CreateObject( ip->PointedSession, &oid, "GraphPlcNode",
-			  pwr_eClass_GraphPlcNode,
-			  ip->Pointed.Objid, ldh_eDest_IntoLast);
-  if ( ODD(sts)) {
-    if ( plctemplate) {
-      pwr_tCid scid[2];
-      scid[0] = pwr_cClass_windowplc;
-      scid[1] = 0;
-      int_val = 1;
+    sts = ldh_CreateObject( ip->PointedSession, &oid, "PlcNode", pwr_eClass_Buffer,
+			    oid, ldh_eDest_IntoLast);
+    if ( ODD(sts)) {
+      cid = pwr_eClass_PlcNode;
 
-      sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "subwindows", 
-			   (char *)&int_val, sizeof(int_val));
-      if ( EVEN(sts)) return sts;
-
-      sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "subwindow_class[0]", 
-			     (char *)scid, sizeof(scid));
+      sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "Class", (char *)&cid,
+			     sizeof(cid));
       if ( EVEN(sts)) return sts;
     }
 
-    int_val = 1;
-    sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "segname_annotation",
-			   (char *)&int_val, sizeof(int_val));
-    if ( EVEN(sts)) return sts;
-
-    if ( plctemplate)
-      int_val = 58;
-    else if ( plcconnect)
-      int_val = 35;
-    else
-      int_val = 4;
-
-    sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "compmethod",
-			   (char *)&int_val, sizeof(int_val));
-    if ( EVEN(sts)) return sts;
-
-    if ( plcconnect) {
-      int_val = 10;
-      sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "connectmethod",
+    sts = ldh_CreateObject( ip->PointedSession, &oid, "GraphPlcNode",
+			    pwr_eClass_GraphPlcNode,
+			    ip->Pointed.Objid, ldh_eDest_IntoLast);
+    if ( ODD(sts)) {
+      if ( plctemplate) {
+	pwr_tCid scid[2];
+	scid[0] = pwr_cClass_windowplc;
+	scid[1] = 0;
+	int_val = 1;
+	
+	sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "subwindows", 
+			       (char *)&int_val, sizeof(int_val));
+	if ( EVEN(sts)) return sts;
+	
+	sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "subwindow_class[0]", 
+			       (char *)scid, sizeof(scid));
+	if ( EVEN(sts)) return sts;
+      }
+      
+      int_val = 1;
+      sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "segname_annotation",
 			     (char *)&int_val, sizeof(int_val));
       if ( EVEN(sts)) return sts;
+      
+      if ( plctemplate)
+	int_val = 58;
+      else if ( plcconnect)
+	int_val = 35;
+      else
+	int_val = 4;
+      
+      sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "compmethod",
+			     (char *)&int_val, sizeof(int_val));
+      if ( EVEN(sts)) return sts;
+      
+      if ( plcconnect) {
+	int_val = 10;
+	sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "connectmethod",
+			       (char *)&int_val, sizeof(int_val));
+	if ( EVEN(sts)) return sts;
+      }
+      
+      int_val = 2;
+      sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "executeordermethod",
+			     (char *)&int_val, sizeof(int_val));
+      if ( EVEN(sts)) return sts;
+      
+      oname[15] = 0;
+      sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "objname",
+			     oname, sizeof(pwr_tString16));
+      if ( EVEN(sts)) return sts;
+      
+      sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "graphname",
+			     oname, sizeof(pwr_tString16));
+      if ( EVEN(sts)) return sts;
     }
-
-    int_val = 2;
-    sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "executeordermethod",
-			   (char *)&int_val, sizeof(int_val));
-    if ( EVEN(sts)) return sts;
-
-    oname[15] = 0;
-    sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "objname",
-			   oname, sizeof(pwr_tString16));
-    if ( EVEN(sts)) return sts;
-
-    sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "graphname",
-			   oname, sizeof(pwr_tString16));
-    if ( EVEN(sts)) return sts;
   }
 
   if ( plcconnect) {
@@ -286,6 +298,37 @@ static pwr_tStatus ConfigFc (
     sts = ldh_CreateObject( ip->PointedSession, &oid, "Code",
 			    pwr_cClass_PlcTemplate,
 			    ip->Pointed.Objid, ldh_eDest_IntoLast);
+  }
+
+  if ( plcembedded) {
+    // Create PlcEmbed attribute
+    strcpy( name, pname);
+    strcat( name, "-");
+    strcat( name, "RtBody");
+    sts = ldh_NameToObjid( ip->PointedSession, &oid, name);
+    if ( EVEN(sts)) return sts;
+
+    sts = ldh_CreateObject( ip->PointedSession, &coid, "PlcEmbed", pwr_eClass_Param,
+			    oid, ldh_eDest_IntoLast);
+    if ( ODD(sts)) {
+      tid = pwr_cClass_PlcEmbed;
+
+      sts = ldh_SetObjectPar(ip->PointedSession, coid, "SysBody", "TypeRef", (char *)&tid,
+			     sizeof(tid));
+      if ( EVEN(sts)) return sts;
+    }
+
+    // Create PostCreate callback
+    sts = ldh_CreateObject( ip->PointedSession, &oid, "PostCreate",
+			    pwr_eClass_DbCallBack,
+			    ip->Pointed.Objid, ldh_eDest_IntoLast);
+
+    strcpy( str, "PlcEmbed-PostCreate");
+    sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "MethodName", 
+			   str, sizeof(pwr_tString40));
+    if ( EVEN(sts)) return sts;
+
+    // 
   }
   return PWRS__SUCCESS;
 }

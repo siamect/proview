@@ -44,6 +44,7 @@ pwr_dImport pwr_BindMethods(SevHist);
 pwr_dImport pwr_BindMethods(DsTrend);
 pwr_dImport pwr_BindMethods(DSup);
 pwr_dImport pwr_BindMethods(PlcPgm);
+pwr_dImport pwr_BindMethods(PlcEmbed);
 pwr_dImport pwr_BindMethods(ProjectReg);
 pwr_dImport pwr_BindMethods(RootVolumeConfig);
 pwr_dImport pwr_BindMethods(SubVolumeConfig);
@@ -85,6 +86,7 @@ pwr_dExport pwr_BindClasses(Base) = {
   pwr_BindClass(DsTrend),
   pwr_BindClass(DSup),
   pwr_BindClass(PlcPgm),
+  pwr_BindClass(PlcEmbed),
   pwr_BindClass(ProjectReg),
   pwr_BindClass(RootVolumeConfig),
   pwr_BindClass(SubVolumeConfig),

@@ -95,6 +95,15 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Used by the code generator.
+      !*/
+      Object HostObject $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
       !  @Summary Configuration status.
       !  Configuration status.
       !  Status in the development environment for an hierarchy, 

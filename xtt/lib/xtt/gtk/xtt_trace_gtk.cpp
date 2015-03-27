@@ -317,7 +317,7 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
   pwr_tObjid	window_objid;
   pwr_tClassId	cid;
   char   	title[220];
-  pwr_tOName   	hostname;
+  pwr_tAName   	hostname;
   pwr_tOName   	plcconnect;
   pwr_tFileName fname;
 

@@ -94,7 +94,7 @@ class RtTrace {
   pwr_tFileName	       	filename;
   int			version;
   int			m_has_host;
-  pwr_tOName   		m_hostname;
+  pwr_tAName   		m_hostname;
   pwr_tAName   		m_plcconnect;
   CoWow			*wow;
 

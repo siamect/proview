@@ -215,7 +215,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			&wnav_compile_func,
 			{ "/MODIFIED", "/DEBUG", 
 			"/HIERARCHY", "/PLCPGM" , "/WINDOW", 
-			"/FROM_PLCPGM", "/ALLPLCPGM", "/VOLALL", "/VOLUMES", 
+			"/FROM_PLCPGM", "/ALLPLCPGM", "/VOLALL", "/VOLUMES", "/PLCEMBED",
 			""}
 		},
 		{
@@ -2205,6 +2205,7 @@ static int	wnav_compile_func(	void		*client_data,
   int		allplcpgm;
   char		volumestr[80] ;
   char		*volumestr_p;
+  pwr_tOName	plcembed_str;
   int		sts_plcpgm, sts_hier, sts_window, sts_from, sts_volumes;
 
   if ( !wnav->editmode)
@@ -2215,6 +2216,37 @@ static int	wnav_compile_func(	void		*client_data,
 
   modified = ODD( dcli_get_qualifier( "/MODIFIED", 0, 0));
   debug = ODD( dcli_get_qualifier( "/DEBUG", 0, 0));
+
+  if (( sts_hier = ODD( dcli_get_qualifier( "/PLCEMBED", plcembed_str, sizeof(plcembed_str))))) {
+    pwr_tOid oid;
+
+    allplcpgm = ODD( dcli_get_qualifier( "/ALLPLCPGM", 0, 0));
+
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+    if ( EVEN(sts)) return sts;
+
+    if ( allplcpgm) {
+      sts = gcg_comp_plcembed_all( wnav->ldhses);
+      if ( EVEN(sts)) {
+	wnav->message( 'E', wnav_get_message(sts));
+	return sts;
+      }
+    }
+    else {
+      sts = ldh_NameToObjid( wnav->ldhses, &oid, plcembed_str);
+      if ( EVEN(sts)) {
+	wnav->message('E', "No such object");
+	return sts;
+      }
+      
+      sts = gcg_comp_plcembed( wnav->ldhses, oid);
+      if ( EVEN(sts)) {
+	wnav->message( 'E', wnav_get_message(sts));
+	return sts;
+      }
+    }
+    return WNAV__SUCCESS;
+  }
 
   if (( sts_hier = ODD( dcli_get_qualifier( "/HIERARCHY", hierstr, sizeof(hierstr)))))
     hierstr_p = hierstr;

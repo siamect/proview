@@ -299,6 +299,13 @@ SObject pwrs:Class
 	      Attr MethodArguments[0] = "PlcConnectCCode"
 	    EndBody
 	  EndObject
+	  Object EmbeddedPlc $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "EmbeddedPlc"
+	      Attr MethodName = "$ClassDef-ConfigFc"
+	      Attr MethodArguments[0] = "EmbeddedPlc"
+	    EndBody
+	  EndObject
 	EndObject
       EndObject
     EndObject

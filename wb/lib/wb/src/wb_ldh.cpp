@@ -2262,6 +2262,32 @@ ldh_RecixSetDestination(ldh_tSession session, const char *destination)
   sp->recix_set_destination( destination);
 }
 
+pwr_tStatus
+ldh_AttrArefToObjectAref(ldh_tSession session, pwr_tAttrRef *arp, pwr_tAttrRef *oarp)
+{
+  wb_session *sp = (wb_session *)session;
+  pwr_tAName str;
+  char *t;
+
+  wb_attribute a = sp->attribute(arp);
+  if (!a) return a.sts();
+    
+  wb_name n = a.longName();
+  strcpy( str, n.name( cdh_mName_volume | cdh_mName_attribute));
+
+  t = strrchr( str, '.');
+  if ( !t) 
+    return LDH__NO_PARENT;
+  *t = 0;
+
+  wb_attribute oa = sp->attribute(str);
+  if (!oa) return oa.sts();
+  
+  oa.aref(oarp);
+
+  return oa.sts();
+}
+
 #endif
 
 

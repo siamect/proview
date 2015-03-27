@@ -936,17 +936,20 @@ palette PlcEditorPalette
       class CStoAp
       class CStoAtoIp
       class CStoAv
+      class CStoRefA
       class GetAi
       class GetAo
       class GetAp
       class GetApPtr
       class GetAv
       class GetConstAv
+      class GetRefA
       class StoAo
       class StoAp
       class StoApPtr
       class StoAtoIp
       class StoAv
+      class StoRefA
     }
     menu Digital
     {
@@ -957,9 +960,11 @@ palette PlcEditorPalette
       class GetDp
       class GetDpPtr
       class GetDv
+      class GetRefD
       class ResDo
       class ResDp
       class ResDv
+      class ResRefD
       class SetDo
       class SetDp
       class SetDv
@@ -967,6 +972,8 @@ palette PlcEditorPalette
       class StoDp
       class StoDpPtr
       class StoDv
+      class SetRefD
+      class StoRefD
     }
     menu Extern
     {
@@ -1002,6 +1009,7 @@ palette PlcEditorPalette
       class CStoIo
       class CStoIp
       class CStoIv
+      class CStoRefI
       class GetConstIv
       class GetIi
       class GetIo
@@ -1009,12 +1017,14 @@ palette PlcEditorPalette
       class GetIpPtr
       class GetIpToA
       class GetIv
+      class GetRefI
       class IpCollect
       class IpDistribute
       class StoIo
       class StoIp
       class StoIpPtr
       class StoIv
+      class StoRefI
       class GetPi
       class PiPos
     }

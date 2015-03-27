@@ -881,3 +881,84 @@
 */
 #define CStoDataRefv_exec(obj,in,cond)				\
   if ( cond) memcpy( &obj->ActualValue, &(in), sizeof(pwr_tDataRef));
+
+/*_*
+  GetRefD
+  Get digital value by reference 
+  @aref getrefd GetRefD
+*/
+#define GetRefD_exec(obj,value)				\
+  obj->Status = value;
+
+/*_*
+  GetRefI
+  Get integer value by reference 
+  @aref getrefi GetRefI
+*/
+#define GetRefI_exec(obj,value)				\
+  obj->ActVal = value;
+
+/*_*
+  GetRefA
+  Get analog value by reference 
+  @aref getrefa GetRefA
+*/
+#define GetRefA_exec(obj,value)				\
+  obj->ActVal = value;
+
+/*_*
+  StoRefD
+  Store digital value by reference
+  @aref storefd StoRefD
+*/
+#define StoRefD_exec(out,in) \
+  out = in;
+
+/*_*
+  SetRefD
+  Set digital value by reference
+  @aref setrefd SetRefD
+*/
+#define SetRefD_exec(out,cond) \
+  if ( cond) out = true;
+
+/*_*
+  ResRefD
+  Reset digital value by reference
+  @aref resrefd ResRefD
+*/
+#define ResRefD_exec(out,cond) \
+  if ( cond) out = false;
+
+/*_*
+  StoRefI
+  Store integer value by reference
+  @aref storefi StoRefI
+*/
+#define StoRefI_exec(out,in) \
+  out = in;
+
+/*_*
+  CStoRefI
+  Conditionally store integer value by reference
+  @aref dstorefi DStoRefI
+*/
+#define CStoRefI_exec(out,in,cond)			\
+  if ( cond) out = in;
+
+/*_*
+  StoRefA
+  Store analog value by reference
+  @aref storefa StoRefA
+*/
+#define StoRefA_exec(out,in) \
+  out = in;
+
+/*_*
+  CStoRefA
+  Conditionally store analog value by reference
+  @aref cstorefa CStoRefA
+*/
+#define CStoRefA_exec(out,in,cond) \
+  if ( cond) out = in;
+

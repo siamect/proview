@@ -232,16 +232,34 @@ static pwr_tStatus OpenTrace( xmenu_sMenuCall *ip)
     }
   }
   if ( !in_plc) {
+    pwr_tAName aname;
     sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			   cdh_mName_volumeStrict);
     if ( EVEN(sts)) return sts;
-    strcat( name, ".PlcConnect");
-    sts = gdh_GetObjectInfo( name, (void *)&plcconnect, sizeof(plcconnect));
-    if ( EVEN(sts)) return sts;
-	 
-    oid = plcconnect.Objid;
-    sts = gdh_GetParent( oid, &parent);
-    if ( EVEN(sts)) return sts;
+    strcpy( aname, name);
+    strcat( aname, ".PlcConnect");
+    sts = gdh_GetObjectInfo( aname, (void *)&plcconnect, sizeof(plcconnect));
+    if ( ODD(sts)) {
+      oid = plcconnect.Objid;
+      sts = gdh_GetParent( oid, &parent);
+      if ( EVEN(sts)) return sts;
+    }
+    else {
+      pwr_tOid plcoid;
+
+      strcpy( aname, name);
+      strcat( aname, ".PlcEmbed.PlcObject");
+      sts = gdh_GetObjectInfo( aname, (void *)&plcoid, sizeof(plcoid));
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_ObjidToName( plcoid, name, sizeof(name), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+
+      sprintf( cmd, "open trace/name=%s", name);
+      ((XNav *)ip->EditorContext)->command( cmd);
+
+      return 1;
+    }
   }
 
   sts = gdh_ObjidToName( parent, parent_name, sizeof(parent_name),
@@ -260,10 +278,11 @@ static pwr_tStatus OpenTrace( xmenu_sMenuCall *ip)
 static pwr_tStatus OpenTraceFilter( xmenu_sMenuCall *ip)
 {
   int sts;
-  pwr_tObjid parent;
+  pwr_tOid parent;
+  pwr_tOid plcoid;
   pwr_tClassId classid;
   pwr_sAttrRef plcconnect;
-  pwr_tAName name;
+  pwr_tAName name, aname;
   pwr_sAttrRef *objar;
 
   if (!ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid))
@@ -290,8 +309,9 @@ static pwr_tStatus OpenTraceFilter( xmenu_sMenuCall *ip)
   sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			   cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
-  strcat( name, ".PlcConnect");
-  sts = gdh_GetObjectInfo( name, (void *)&plcconnect, sizeof(plcconnect));
+  strcpy( aname, name);
+  strcat( aname, ".PlcConnect");
+  sts = gdh_GetObjectInfo( aname, (void *)&plcconnect, sizeof(plcconnect));
   if ( ODD(sts) && cdh_ObjidIsNotNull( plcconnect.Objid)) {
     for ( sts = gdh_GetParent( plcconnect.Objid, &parent);
 	  ODD(sts);
@@ -300,6 +320,16 @@ static pwr_tStatus OpenTraceFilter( xmenu_sMenuCall *ip)
       if ( classid == pwr_cClass_plc)
 	return XNAV__SUCCESS;
     }
+  }
+
+  // Try PlcObject attribute
+  strcpy( aname, name);
+  strcat( aname, ".PlcEmbed.PlcObject");
+  sts = gdh_GetObjectInfo( aname, (void *)&plcoid, sizeof(plcoid));
+  if ( ODD(sts) && cdh_ObjidIsNotNull( plcoid)) {
+    gdh_GetObjectClass( plcoid, &classid);
+    if ( classid == pwr_cClass_plc)
+      return XNAV__SUCCESS;
   }
 
   return XNAV__INVISIBLE;
