@@ -1573,7 +1573,7 @@ void StrAdd_exec(
   pwr_tString80 sum = "";
 
   for ( i = 0; i < STRADD_SIZE; i++) {
-    strncat( sum, **inp, sizeof(sum));
+    strncat( sum, **inp, sizeof(sum)-strlen(sum)-1);
     
     inp = (pwr_tString80 **)((char *)inp + pwr_cInputOffsetStr);
   }
