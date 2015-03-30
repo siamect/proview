@@ -122,6 +122,8 @@ menu Indicators
   subgraph 	IndSquareMetalFrame pwr_exe:pwr_indsquaremetalframe.pwsg 5
   subgraph 	IndRoundMetalFrame pwr_exe:pwr_indroundmetalframe.pwsg 		6
   subgraph 	TrafficLight 	pwr_exe:pwr_trafficlight.pwsg 		36
+  subgraph 	TrafficLight2 	pwr_exe:pwr_trafficlight2.pwsg 		36
+  subgraph 	TrafficLight3 	pwr_exe:pwr_trafficlight3.pwsg 		6
 }
 menu Values
 {

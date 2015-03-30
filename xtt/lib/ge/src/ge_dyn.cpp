@@ -457,6 +457,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeDigTextColor((const GeDigTextColor&) *elem); break;
     case ge_mDynType2_TimeoutColor:
       e = new GeTimeoutColor((const GeTimeoutColor&) *elem); break;
+    case ge_mDynType2_DigFourShift:
+      e = new GeDigFourShift((const GeDigFourShift&) *elem); break;
     default: ;
     }
     switch( elem->action_type1) {
@@ -587,6 +589,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_Move: e = (GeDynElem *) new GeMove(this); break;
       case ge_eSave_AnalogShift: e = (GeDynElem *) new GeAnalogShift(this); break;
       case ge_eSave_DigShift: e = (GeDynElem *) new GeDigShift(this); break;
+      case ge_eSave_DigFourShift: e = (GeDynElem *) new GeDigFourShift(this); break;
       case ge_eSave_Animation: e = (GeDynElem *) new GeAnimation(this); break;
       case ge_eSave_Video: e = (GeDynElem *) new GeVideo(this); break;
       case ge_eSave_Bar: e = (GeDynElem *) new GeBar(this); break;
@@ -1530,6 +1533,9 @@ GeDynElem *GeDyn::create_dyn2_element( int mask, int instance)
   case ge_mDynType2_TimeoutColor:
     e = (GeDynElem *) new GeTimeoutColor(this);
     break;
+  case ge_mDynType2_DigFourShift:
+    e = (GeDynElem *) new GeDigFourShift(this);
+    break;
   default: ;
   }
   return e;
@@ -1720,6 +1726,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
       break;
     case ge_mDynType2_TimeoutColor:
       e = (GeDynElem *) new GeTimeoutColor((GeTimeoutColor&) x);
+      break;
+    case ge_mDynType2_DigFourShift:
+      e = (GeDynElem *) new GeDigFourShift((GeDigFourShift&) x);
       break;
     default: ;
     }
@@ -6287,6 +6296,252 @@ int GeDigShift::export_java( grow_tObject object, ofstream& fp, bool first, char
   else
     fp << "      ,";
   fp << "new GeDynDigShift(" << var_name << ".dd, \"" << attribute << "\")" << endl;
+  return 1;
+}
+
+void GeDigFourShift::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  strcpy( attrinfo[i].name, "DigFourShift.Attribute1");
+  attrinfo[i].value = attribute1;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute1);
+
+  strcpy( attrinfo[i].name, "DigFourShift.Attribute2");
+  attrinfo[i].value = attribute2;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute2);
+
+  strcpy( attrinfo[i].name, "DigFourShift.Attribute3");
+  attrinfo[i].value = attribute3;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute3);
+
+  *item_count = i;
+}
+
+void GeDigFourShift::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
+{
+  (*cnt)--;
+  if ( *cnt == 0) {
+    char msg[200];
+
+    strncpy( attribute1, attr_name, sizeof( attribute1));
+    snprintf( msg, sizeof(msg), "DigFourShift.Attribute1 = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
+    dyn->graph->message( 'I', msg);
+  }
+}
+
+void GeDigFourShift::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute1, sizeof(attribute1), from, to, cnt, strict);
+  GeDyn::replace_attribute( attribute2, sizeof(attribute2), from, to, cnt, strict);
+  GeDyn::replace_attribute( attribute3, sizeof(attribute3), from, to, cnt, strict);
+}
+
+void GeDigFourShift::save( ofstream& fp)
+{
+  fp << int(ge_eSave_DigFourShift) << endl;
+  fp << int(ge_eSave_DigFourShift_attribute1) << FSPACE << attribute1 << endl;
+  fp << int(ge_eSave_DigFourShift_attribute2) << FSPACE << attribute2 << endl;
+  fp << int(ge_eSave_DigFourShift_attribute3) << FSPACE << attribute3 << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeDigFourShift::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[40];
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDigFourShift: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+      case ge_eSave_DigFourShift: break;
+      case ge_eSave_DigFourShift_attribute1:
+        fp.get();
+        fp.getline( attribute1, sizeof(attribute1));
+        break;
+      case ge_eSave_DigFourShift_attribute2:
+        fp.get();
+        fp.getline( attribute2, sizeof(attribute2));
+        break;
+      case ge_eSave_DigFourShift_attribute3:
+        fp.get();
+        fp.getline( attribute3, sizeof(attribute3));
+        break;
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeDigFourShift:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeDigFourShift::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+  int		attr_type, attr_size;
+  pwr_tAName   	parsed_name;
+  int		sts;
+
+  size1 = 4;
+  p1 = 0;
+  db1 = dyn->parse_attr_name( attribute1, parsed_name,
+			      &inverted1, &attr_type, &attr_size);
+  if ( strcmp( parsed_name,"") == 0)
+    return 1;
+
+  get_bit( parsed_name, attr_type, &bitmask1);
+  a_typeid1 = attr_type;
+
+  switch ( db1) {
+  case graph_eDatabase_Gdh:
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p1, &subid1, size1);
+    if ( EVEN(sts)) return sts;
+    break;
+  case graph_eDatabase_Ccm:
+    sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, (void **)&p1);
+    if ( EVEN(sts)) return sts;
+    break;
+  default: ;
+  }
+
+  size2 = 4;
+  p2 = 0;
+  db2 = dyn->parse_attr_name( attribute2, parsed_name,
+			      &inverted2, &attr_type, &attr_size);
+  if ( strcmp( parsed_name,"") == 0)
+    return 1;
+
+  get_bit( parsed_name, attr_type, &bitmask2);
+  a_typeid2 = attr_type;
+
+  switch ( db2) {
+  case graph_eDatabase_Gdh:
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p2, &subid2, size2);
+    if ( EVEN(sts)) return sts;
+    break;
+  case graph_eDatabase_Ccm:
+    sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, (void **)&p2);
+    if ( EVEN(sts)) return sts;
+    break;
+  default: ;
+  }
+
+  size3 = 4;
+  p3 = 0;
+  db3 = dyn->parse_attr_name( attribute3, parsed_name,
+				    &inverted3, &attr_type, &attr_size);
+  if ( strcmp( parsed_name,"") == 0)
+    return 1;
+
+  get_bit( parsed_name, attr_type, &bitmask3);
+  a_typeid3 = attr_type;
+
+  switch ( db3) {
+  case graph_eDatabase_Gdh:
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p3, &subid3, size3);
+    if ( EVEN(sts)) return sts;
+    break;
+  case graph_eDatabase_Ccm:
+    sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, (void **)&p3);
+    if ( EVEN(sts)) return sts;
+    break;
+  default: ;
+  }
+
+  trace_data->p = &pdummy;
+  first_scan = true;
+  return 1;
+}
+
+int GeDigFourShift::disconnect( grow_tObject object)
+{
+  if ( p1 && db1 == graph_eDatabase_Gdh)
+    gdh_UnrefObjectInfo( subid1);
+  if ( p2 && db2 == graph_eDatabase_Gdh)
+    gdh_UnrefObjectInfo( subid2);
+  if ( p3 && db3 == graph_eDatabase_Gdh)
+    gdh_UnrefObjectInfo( subid3);
+  p1 = 0;
+  p2 = 0;
+  p3 = 0;
+  return 1;
+}
+
+int GeDigFourShift::scan( grow_tObject object)
+{
+  pwr_tBoolean val1, val2, val3;
+
+  if ( p1) {
+    if ( !get_dig( &val1, p1, a_typeid1, bitmask1))
+      return 1;
+
+    if ( inverted1)
+      val1 = !val1;
+  }
+  else
+    val1 = 0;
+
+  if ( p2) {
+    if ( !get_dig( &val2, p2, a_typeid2, bitmask2))
+      return 1;
+
+    if ( inverted2)
+      val2 = !val2;
+  }
+  else
+    val2 = 0;
+
+  if ( p3) {
+    if ( !get_dig( &val3, p3, a_typeid3, bitmask3))
+      return 1;
+
+    if ( inverted3)
+      val3 = !val3;
+  }
+  else
+    val3 = 0;
+
+  if ( !first_scan) {
+    if ( old_value1 == val1 && old_value2 == val2 && old_value3 == val3) {
+      // No change since last time
+      return 1;
+    }
+  }
+  else
+    first_scan = false;
+  
+  if ( val3)
+    grow_SetObjectNodeClassByIndex( object, 2);
+  else if ( val2)
+    grow_SetObjectNodeClassByIndex( object, 1);
+  else if ( val1)
+    grow_SetObjectFirstNodeClass( object);
+  else
+    grow_SetObjectLastNodeClass( object);
+
+  old_value1 = val1;
+  old_value2 = val2;
+  old_value3 = val3;
+
+  return 1;
+}
+
+int GeDigFourShift::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
   return 1;
 }
 

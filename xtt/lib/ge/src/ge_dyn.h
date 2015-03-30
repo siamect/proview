@@ -140,6 +140,7 @@
     ge_eDynPrio_Move,
     ge_eDynPrio_AnalogShift,
     ge_eDynPrio_DigShift,
+    ge_eDynPrio_DigFourShift,
     ge_eDynPrio_Animation,
     ge_eDynPrio_Bar,
     ge_eDynPrio_Trend,
@@ -221,7 +222,8 @@
     ge_mDynType2_No		= 0,
     ge_mDynType2_Axis		= 1 << 0,
     ge_mDynType2_DigTextColor  	= 1 << 1,
-    ge_mDynType2_TimeoutColor  	= 1 << 2
+    ge_mDynType2_TimeoutColor  	= 1 << 2,
+    ge_mDynType2_DigFourShift  	= 1 << 3
   } ge_mDynType2;
 
   //! Action types.
@@ -235,7 +237,7 @@
     ge_mActionType1_StoDig     	= 1 << 5,
     ge_mActionType1_Command	= 1 << 6,
     ge_mActionType1_CommandDoubleClick = 1 << 7,
-    ge_mActionType1_Confirm	= 1 << 8,
+    ge_mActionType1_Confirm  	= 1 << 8,
     ge_mActionType1_IncrAnalog	= 1 << 9,
     ge_mActionType1_RadioButton	= 1 << 10,
     ge_mActionType1_Slider     	= 1 << 11,
@@ -332,6 +334,7 @@
     ge_eSave_Axis	             	= 38,
     ge_eSave_DigTextColor               = 39,
     ge_eSave_TimeoutColor               = 40,
+    ge_eSave_DigFourShift	       	= 41,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -539,6 +542,9 @@
     ge_eSave_DigTextColor_color		= 3901,
     ge_eSave_TimeoutColor_time     	= 4000,
     ge_eSave_TimeoutColor_color		= 4001,
+    ge_eSave_DigFourShift_attribute1   	= 4100,
+    ge_eSave_DigFourShift_attribute2  	= 4101,
+    ge_eSave_DigFourShift_attribute3   	= 4102,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -1590,6 +1596,57 @@ class GeDigShift : public GeDynElem {
   GeDigShift( const GeDigShift& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( attribute, x.attribute);}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
+  void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+
+};
+
+//! Shift between four pages in the subgraph (first, second, third and last).
+class GeDigFourShift : public GeDynElem {
+ public:
+  pwr_tAName attribute1;
+  pwr_tAName attribute2;
+  pwr_tAName attribute3;
+
+  pwr_tBoolean *p1;
+  pwr_tSubid subid1;
+  int size1;
+  graph_eDatabase db1;
+  int inverted1;
+  pwr_tBoolean old_value1;
+  int a_typeid1;
+  unsigned int bitmask1;  
+  pwr_tBoolean *p2;
+  pwr_tSubid subid2;
+  int size2;
+  graph_eDatabase db2;
+  int inverted2;
+  pwr_tBoolean old_value2;
+  int a_typeid2;
+  unsigned int bitmask2;  
+  pwr_tBoolean *p3;
+  pwr_tSubid subid3;
+  int size3;
+  graph_eDatabase db3;
+  int inverted3;
+  pwr_tBoolean old_value3;
+  int a_typeid3;
+  unsigned int bitmask3;  
+  bool first_scan;
+
+  GeDigFourShift( GeDyn *e_dyn) : 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_DigFourShift, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigFourShift)
+    { strcpy( attribute1, ""); strcpy( attribute2, ""); strcpy( attribute3, "");}
+  GeDigFourShift( const GeDigFourShift& x) : 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
+    { strcpy( attribute1, x.attribute1); strcpy( attribute2, x.attribute2); strcpy( attribute3, x.attribute3);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
