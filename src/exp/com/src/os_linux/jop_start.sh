@@ -34,8 +34,8 @@
 # combined work), being distributed under the terms of the GNU 
 # General Public License plus this exception.
 #
-echo "Here in jop start"
+echo "-- Op java process starting"
 #export LD_LIBRARY_PATH=$pwr_exe
 #echo $LD_LIBRARY_PATH
 #export CLASSPATH=$pwr_lib/pwr_rt.jar:$pwr_lib/pwr_jop.jar
-java jpwr.jop.JopSpider $1
+$jdk_home/java jpwr.jop.JopSpider $1
