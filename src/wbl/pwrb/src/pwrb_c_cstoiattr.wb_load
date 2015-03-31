@@ -39,8 +39,10 @@ SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
-!  @Group Plc,PlcIO
-!  @Summary Conditional store of integer attribute from class template plc.
+!  @Summary Deprecated.
+!  Deprecated.
+!  This object is deprecated and should not be used in newly written code.
+!
 !  Conditional store of integer attribute from class template plc.
 !  @image orm_cstoiattr_fo.gif
 !

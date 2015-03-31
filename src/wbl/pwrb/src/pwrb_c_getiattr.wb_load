@@ -38,8 +38,10 @@
 SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  @Group Plc,PlcIO
-!  @Summary Get integer attribute from class template plc.
+!  @Summary Deprecated.
+!  Deprecated.
+!  This object is deprecated and should not be used in newly written code.
+!
 !  Get integer attribute from class template plc.
 !
 !  @image orm_getiattr_fo.gif
