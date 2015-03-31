@@ -20,13 +20,13 @@
 // Sketch for Arduino USB board to communicate with Proview I/O
 // object OtherIO:Arduino_Uno.
 //
-byte firmware[20] = "Proview V2.0.0-1";
+byte firmware[20] = "Proview V2.0.0-2";
 byte version_major = 2;
 byte version_minor = 0;
 byte msg = 0;
 byte sts;
 int val = 0;
-byte amsg[50];
+byte amsg[68];
 byte smsg[10];
 byte diSize = 0;
 byte doSize = 0;
