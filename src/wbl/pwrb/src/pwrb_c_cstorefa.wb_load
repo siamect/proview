@@ -44,6 +44,10 @@ SObject pwrb:Class
 !  Conditional store analog attribute by reference.
 !  @image orm_cstorefa_fo.png
 !
+!  The object should be conneced to an attribute of type AttrRef that
+!  points to the target signal or attribute.
+!
+!  The target can be an Av, Ai, Ao or an arbitrary analog attribute.
 !*/
   Object CStoRefA $ClassDef 667 
     Body SysBody

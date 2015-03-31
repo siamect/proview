@@ -33,22 +33,23 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_storefd.wb_load -- Defines the class StoRefD.
+!  pwrb_c_storefs.wb_load -- Defines the class StoRefS.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
+
 !  @Group Plc,PlcIO
-!  @Summary Store digital attribute by reference
-!  Store digital attribute by reference.
-!  @image orm_storefd_fo.png
+!  @Summary Store string attribute by reference
+!  Store string attribute by reference.
+!  @image orm_storefs_fo.png
 !
 !  The object should be conneced to an attribute of type AttrRef that
 !  points to the target signal or attribute.
 !
-!  The target can be a Dv, Di, Do or an arbitrary digital attribute.
+!  The target can be an Sv or an arbitrary string attribute.
 !*/
-  Object StoRefD $ClassDef 662 
+  Object StoRefS $ClassDef 671 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
@@ -56,7 +57,7 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "StoRefD"
+        Attr StructName = "StoRefS"
       EndBody
       !/**
       !  Input value to store in the referenced attribute.
@@ -66,7 +67,7 @@ SObject pwrb:Class
           Attr PgmName = "In"
           Attr Flags |= PWR_MASK_RTVIRTUAL
           Attr Flags |= PWR_MASK_DEVBODYREF
-          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr TypeRef = "pwrs:Type-$String80"
           Attr GraphName = "in"
         EndBody
       EndObject
@@ -86,7 +87,7 @@ SObject pwrb:Class
       EndObject
       !/**
       !  Specifies how many segments of the actual object name
-      !  that is to be displayed in the symbol of the StoRefD
+      !  that is to be displayed in the symbol of the StoRefS
       !  object. The segments are counted from behind.
       !*/
       Object RefAttributeSegments $Intern 3 
@@ -117,16 +118,15 @@ SObject pwrb:Class
         Attr devbody_annotation = 1
         Attr compmethod = 69
         Attr compindex = 0
-        Attr tracemethod = 6
+        Attr tracemethod = 1
         Attr traceindex = 1
         Attr connectmethod = 35
         Attr executeordermethod = 2
-        Attr objname = "StoRefD"
-        Attr graphname = "StoRefD"
-        Attr debugpar = "Status"
+        Attr objname = "StoRefS"
+        Attr graphname = "StoRefS"
       EndBody
     EndObject
-    Object Template StoRefD
+    Object Template StoRefS
       Body DevBody
         Attr RefAttributeSegments = 2
       EndBody

@@ -43,6 +43,10 @@ SObject pwrb:Class
 !  Get analog attribute by reference.
 !  @image orm_getrefa_fo.png
 !
+!  The object should be conneced to an attribute of type AttrRef that
+!  points to the source signal or attribute.
+!
+!  The source can be an Av, Ai, Ao or an arbitrary analog attribute.
 !*/
   Object GetRefA $ClassDef 661 
     Body SysBody

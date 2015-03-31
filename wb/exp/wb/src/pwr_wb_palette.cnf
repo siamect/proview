@@ -1078,16 +1078,20 @@ palette PlcEditorPalette
       class GetDataRefp
       class GetDataRefv
       class GetDataInput
+      class GetRefData
       class StoDataRefv
     }
     menu String
     {
       class CStoNumSp
+      class CStoRefS
       class CStoSp
       class CStoSv
+      class GetRefS
       class GetSp
       class GetSv
       class StoNumSp
+      class StoRefS
       class StoSp
       class StoSv
       class StrAdd
@@ -1159,22 +1163,6 @@ palette PlcEditorPalette
       class StoIi
       class StoPi
       class ToggleDi
-    }
-    menu Function
-    {
-      class CStoAattr
-      class CStoIattr
-      class CStoSattr
-      class GetAattr
-      class GetDattr
-      class GetIattr
-      class GetSattr
-      class ResDattr
-      class SetDattr
-      class StoAattr
-      class StoDattr
-      class StoIattr
-      class StoSattr
     }
   }
   menu TLog TLog

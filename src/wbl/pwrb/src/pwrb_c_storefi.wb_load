@@ -43,6 +43,10 @@ SObject pwrb:Class
 !  Store integer attribute by reference.
 !  @image orm_storefi_fo.png
 !
+!  The object should be conneced to an attribute of type AttrRef that
+!  points to the target signal or attribute.
+!
+!  The target can be an Iv, Ii, Io or an arbitrary integer attribute.
 !*/
   Object StoRefI $ClassDef 663 
     Body SysBody

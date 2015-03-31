@@ -43,6 +43,10 @@ SObject pwrb:Class
 !  Get Integer attribute by reference.
 !  @image orm_getrefi_fo.png
 !
+!  The object should be conneced to an attribute of type AttrRef that
+!  points to the source signal or attribute.
+!
+!  The source can be an Iv, Ii, Io or an arbitrary integer attribute.
 !*/
   Object GetRefI $ClassDef 660 
     Body SysBody

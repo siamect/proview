@@ -39,8 +39,10 @@ SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
-!  @Group Plc,PlcIO
-!  @Summary Store string attribute from class template plc.
+!  @Summary Deprecated.
+!  Deprecated.
+!  This object is deprecated and should not be used in newly written code.
+! 
 !  Store string attribute from class template plc.
 !  @image orm_stosattr_fo.gif
 !

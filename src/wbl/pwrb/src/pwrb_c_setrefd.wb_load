@@ -43,6 +43,10 @@ SObject pwrb:Class
 !  Set digital attribute by reference.
 !  @image orm_setrefd_fo.png
 !
+!  The object should be conneced to an attribute of type AttrRef that
+!  points to the target signal or attribute.
+!
+!  The target can be a Dv, Di, Do or an arbitrary digital attribute.
 !*/
   Object SetRefD $ClassDef 665 
     Body SysBody
@@ -113,7 +117,7 @@ SObject pwrb:Class
         Attr devbody_annotation = 1
         Attr compmethod = 69
         Attr compindex = 0
-        Attr tracemethod = 1
+        Attr tracemethod = 6
         Attr traceindex = 1
         Attr connectmethod = 35
         Attr executeordermethod = 2

@@ -43,6 +43,10 @@ SObject pwrb:Class
 !  Get Digital attribute by reference.
 !  @image orm_getrefd_fo.png
 !
+!  The object should be conneced to an attribute of type AttrRef that
+!  points to the source signal or attribute.
+!
+!  The source can be a Dv, Di, Do or an arbitrary digital attribute.
 !*/
   Object GetRefD $ClassDef 659 
     Body SysBody

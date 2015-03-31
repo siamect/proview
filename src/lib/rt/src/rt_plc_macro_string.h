@@ -140,6 +140,30 @@
   else \
     strcpy( obj->ActVal, "");
 
+/*_*
+  GetRefS
+  Get string value by reference 
+  @aref getrefs GetRefS
+*/
+#define GetRefS_exec(obj,value)				\
+  strncpy( obj->ActVal, value, sizeof(obj->ActVal));
+
+/*_*
+  StoRefS
+  Store string value by reference
+  @aref storefs StoRefS
+*/
+#define StoRefS_exec(out,in,size) \
+  strncpy( out, in, size);
+
+/*_*
+  CStoRefS
+  Conditionally store analog value by reference
+  @aref cstorefs CStoRefS
+*/
+#define CStoRefS_exec(out,in,cond,size) \
+  if ( cond) strncpy( out, in, size);
+
 
 
 

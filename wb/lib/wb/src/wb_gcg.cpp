@@ -16610,6 +16610,16 @@ int	gcg_comp_m68( gcg_ctx gcgctx, vldh_t_node node)
 	  /* Insert io object in ioread list */
 	  gcg_ioread_insert( gcgctx, aref, GCG_PREFIX_REF);
 	  break;
+	case pwr_cClass_Sv:
+	  if ( node->ln.cid != pwr_cClass_GetRefS) { 
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTPAR;
+	  }
+	  strcpy( parameter, "ActualValue");
+
+	  /* Insert io object in ioread list */
+	  gcg_aref_insert( gcgctx, aref, GCG_PREFIX_REF, node);
+	  break;
 	default: {
 	  switch ( info.type) {
 	  case pwr_eType_Boolean:
@@ -16638,64 +16648,92 @@ int	gcg_comp_m68( gcg_ctx gcgctx, vldh_t_node node)
 	      return GSX__NEXTPAR;
 	    }
 	    break;
-	  default:
-	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    return GSX__NEXTPAR;
-	  }
-
-	  /* Get rid of last attribute segment of the referenced object */
-	  sts = ldh_AttrRefToName( ldhses, &aref, ldh_eName_ArefVol, 
-				   &name_p, &size);
-	  if ( EVEN(sts)) return sts;
-	  
-	  strcpy( aname, name_p);
-	  if ( (s = strrchr( aname, '.')) == 0) { 
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
-	    return GSX__NEXTPAR;
-	  }
-
-	  *s = 0;
-	  sts = ldh_NameToAttrRef( ldhses, aname, &aref);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, node);
-	    return GSX__NEXTPAR;
-	  }
-
-	  sts = ldh_GetAttrRefOrigTid( ldhses, &aref, &cid);
-	  if ( EVEN(sts)) return sts;
-	
-	  sts = gcg_parname_to_pgmname(ldhses, cid, s+1, parameter);
-	  if ( EVEN(sts)) return sts;
-
-	  if ( info.flags & PWR_MASK_RTVIRTUAL) {
-	    /* Attribute is not defined in runtime */
-	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    return GSX__NEXTNODE;
-	  } 
-
-	  if ( info.flags & PWR_MASK_ARRAY) {
-	    if ( info.nElement == -1) {
-	      /* No index in attribute */
+	  case pwr_eType_String:
+	    if ( node->ln.cid != pwr_cClass_GetRefS) { 
 	      gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	      return GSX__NEXTNODE;
+	      return GSX__NEXTPAR;
+	    }
+	    break;
+	  default:
+	    if ( cdh_tidIsCid( info.tid)) {
+	      if ( node->ln.cid != pwr_cClass_GetRefData) { 
+		gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+		return GSX__NEXTPAR;
+	      }
+	    }
+	    else {
+	      gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);
+	      return GSX__NEXTPAR;
 	    }
 	  }
 
-	  /* Insert object in ref list */
-	  gcg_aref_insert( gcgctx, aref, GCG_PREFIX_REF, node);
+	  if ( node->ln.cid == pwr_cClass_GetRefData)
+	    gcg_aref_insert( gcgctx, aref, GCG_PREFIX_REF, node);	      
+	  else {
+	    /* Get rid of last attribute segment of the referenced object */
+	    sts = ldh_AttrRefToName( ldhses, &aref, ldh_eName_ArefVol, 
+				     &name_p, &size);
+	    if ( EVEN(sts)) return sts;
+	  
+	    strcpy( aname, name_p);
+	    if ( (s = strrchr( aname, '.')) == 0) { 
+	      gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	      return GSX__NEXTPAR;
+	    }
+
+	    *s = 0;
+	    sts = ldh_NameToAttrRef( ldhses, aname, &aref);
+	    if ( EVEN(sts)) {
+	      gcg_error_msg( gcgctx, GSX__REFOBJ, node);
+	      return GSX__NEXTPAR;
+	    }
+
+	    sts = ldh_GetAttrRefOrigTid( ldhses, &aref, &cid);
+	    if ( EVEN(sts)) return sts;
+	
+	    sts = gcg_parname_to_pgmname(ldhses, cid, s+1, parameter);
+	    if ( EVEN(sts)) return sts;
+
+	    if ( info.flags & PWR_MASK_RTVIRTUAL) {
+	      /* Attribute is not defined in runtime */
+	      gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	      return GSX__NEXTNODE;
+	    } 
+
+	    if ( info.flags & PWR_MASK_ARRAY) {
+	      if ( info.nElement == -1) {
+		/* No index in attribute */
+		gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+		return GSX__NEXTNODE;
+	      }
+	    }
+
+	    /* Insert object in ref list */
+	    gcg_aref_insert( gcgctx, aref, GCG_PREFIX_REF, node);
+	  }
 	}
 	}
 
-	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
-	if (EVEN(sts)) return sts; 
 
-	/* Print the parent object */
-	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
-		       "%c%s->%s);\n",
-		       GCG_PREFIX_REF,
-		       vldh_AttrRefToStr(0, aref),
-		       parameter);
+	if ( node->ln.cid == pwr_cClass_GetRefData) {
+	  IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
+			 "%c%s->Out = (pwr_tVoid *)%c%s;\n", 
+			 GCG_PREFIX_REF,
+			 vldh_IdToStr(0, node->ln.oid),
+			 GCG_PREFIX_REF,
+			 vldh_AttrRefToStr(0, aref));
+	}
+	else {
+	  sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
+	  if (EVEN(sts)) return sts; 
 
+	  /* Print the parent object */
+	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
+			 "%c%s->%s);\n",
+			 GCG_PREFIX_REF,
+			 vldh_AttrRefToStr(0, aref),
+			 parameter);
+	}
 	return GSX__SUCCESS;
 }
 
@@ -16743,6 +16781,7 @@ int	gcg_comp_m69( gcg_ctx gcgctx, vldh_t_node node)
 	gcg_t_nocondef		nocondef[2];
 	unsigned long		nocontype[2];
 	char 			*name;
+	int			info_size;
 
 	nocondef[1].bo = 1;
 	nocontype[1] = GCG_BOOLEAN;
@@ -16844,7 +16883,19 @@ int	gcg_comp_m69( gcg_ctx gcgctx, vldh_t_node node)
 	  /* Insert io object in iowrite list */
 	  gcg_iowrite_insert( gcgctx, aref, GCG_PREFIX_REF);
 	  break;
+	case pwr_cClass_Sv:
+	  if ( !(node->ln.cid == pwr_cClass_StoRefS || 
+		 node->ln.cid == pwr_cClass_CStoRefS)) { 
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTPAR;
+	  }
+	  strcpy( parameter, "ActualValue");
+	  info_size = sizeof(pwr_tString80);
+	  /* Insert io object in ref list */
+	  gcg_aref_insert( gcgctx, aref, GCG_PREFIX_REF, node);
+	  break;
 	default: {
+	  info_size = info.size;
 	  switch ( info.type) {
 	  case pwr_eType_Boolean:
 	  if ( !(node->ln.cid == pwr_cClass_StoRefD || 
@@ -16872,6 +16923,13 @@ int	gcg_comp_m69( gcg_ctx gcgctx, vldh_t_node node)
 	  case pwr_eType_Float64:
 	    if ( !(node->ln.cid == pwr_cClass_StoRefA ||
 		   node->ln.cid == pwr_cClass_CStoRefA)) {
+	      gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	      return GSX__NEXTPAR;
+	    }
+	    break;
+	  case pwr_eType_String:
+	    if ( !(node->ln.cid == pwr_cClass_StoRefS ||
+		   node->ln.cid == pwr_cClass_CStoRefS)) {
 	      gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	      return GSX__NEXTPAR;
 	    }
@@ -16951,6 +17009,11 @@ int	gcg_comp_m69( gcg_ctx gcgctx, vldh_t_node node)
 	  nocondef[0].bo = *(int *) nocondef_ptr;
 	  nocontype[0] = GCG_INT32;
 	  break;
+	case pwr_cClass_StoRefS:
+	case pwr_cClass_CStoRefS:
+	  strcpy( nocondef[0].str, (char *) nocondef_ptr);
+	  nocontype[0] = GCG_STRING;
+	  break;
 	default: ;
 	}
 	free(nocondef_ptr);
@@ -16971,27 +17034,13 @@ int	gcg_comp_m69( gcg_ctx gcgctx, vldh_t_node node)
 		nocondef, nocontype);
 	if ( EVEN(sts) ) return sts;
 
-#if 0
-	if ( node->ln.cid == pwr_cClass_stosp ||
-	     node->ln.cid == pwr_cClass_cstosp ) {
+	if ( node->ln.cid == pwr_cClass_StoRefS ||
+	     node->ln.cid == pwr_cClass_CStoRefS ) {
           // Add size of connected attribute
 	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		",%d", info.size);
+		",%d", info_size);
         }
-	else if ( node->ln.cid == pwr_cClass_stonumsp ||
-		  node->ln.cid == pwr_cClass_cstonumsp ) {
-          // Add size of connected attribute and number of characters
-	  pwr_tInt32 *numberofchar_ptr;
 
-	  sts = ldh_GetObjectPar( ldhses, node->ln.oid, "DevBody",
-			"NumberOfChar", (char **)&numberofchar_ptr, &size); 
-	  if ( EVEN(sts)) return sts;
-
-	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		",%d,%d", info.size, *numberofchar_ptr);
-	  free( (char *)numberofchar_ptr);
-        }
-#endif
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		");\n");
 

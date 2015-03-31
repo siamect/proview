@@ -136,6 +136,13 @@ static pwr_tStatus trace_get_attr_m5( 	WGre		*gre,
 					char		*attr_str,
 					flow_eTraceType	*trace_type,
 					int		*inverted);
+static pwr_tStatus trace_get_attr_m6( 	WGre		*gre, 
+					vldh_t_node	node, 
+					char		*debug_par,
+					char		*object_str, 
+					char		*attr_str,
+					flow_eTraceType	*trace_type,
+					int		*inverted);
 static pwr_tStatus trace_get_attr_m7( 	WGre		*gre, 
 					vldh_t_node	node, 
 					char		*debug_par,
@@ -166,7 +173,7 @@ tra_tMethod trace_get_attr_m[TRA_MAX_TRACEMETHOD] = {
     trace_get_attr_m3,
     trace_get_attr_m4,
     trace_get_attr_m5,
-    trace_get_attr_mno,
+    trace_get_attr_m6,
     trace_get_attr_m7,
     trace_get_attr_mno,
     trace_get_attr_m9
@@ -570,6 +577,99 @@ static pwr_tStatus trace_get_attr_m5( 	WGre		*gre,
   strcpy( object_str, aname);
 
   *trace_type = flow_eTraceType_Boolean;
+  return TRA__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		trace_getm6()
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+*
+* Description:
+*	Trace method for SetRefD, StoRefD and similar objects.
+*
+*	The attribute RefAttribute contains a reference to an attribute of type
+*       pwr_tAttrRef that points to the actual attribute.
+*
+**************************************************************************/
+
+static pwr_tStatus trace_get_attr_m6( 	WGre		*gre, 
+					vldh_t_node	node, 
+					char		*debug_par,
+					char		*object_str, 
+					char		*attr_str,
+					flow_eTraceType	*trace_type,
+					int		*inverted)
+{
+  pwr_tAName   		aname;
+  pwr_tStatus		sts;
+  int			size;
+  pwr_tAttrRef		*refarp, *arp;
+  pwr_tAttrRef		aref;
+  pwr_tTid		tid;
+  char			*np, *s;
+  ldh_sAttrRefInfo	info;
+
+  sts = ldh_GetObjectPar( node->hn.wind->hw.ldhses, node->ln.oid, 
+			  "DevBody", "RefAttribute", (char **)&refarp, &size); 
+  if ( EVEN(sts)) return sts;
+
+  sts = ldh_GetAttrObjectPar( node->hn.wind->hw.ldhses,
+			      refarp, "RtBody", "", (char **)&arp, &size);
+  free((char *) refarp);
+  if ( EVEN(sts)) return sts;
+  
+  aref = *arp;
+  free( arp);
+  
+  sts = ldh_GetAttrRefTid( node->hn.wind->hw.ldhses, &aref, &tid);
+  if( EVEN(sts) ) return sts;
+
+  /* Get the name of the node */
+  sts = ldh_AttrRefToName( node->hn.wind->hw.ldhses,  
+			   &aref, cdh_mNName, &np, &size);
+  if( EVEN(sts)) return sts;
+  strcpy( aname, np);
+
+  switch ( tid) {
+  case pwr_cClass_Dv:
+  case pwr_cClass_Di:
+  case pwr_cClass_Do:
+    strcpy( attr_str, "ActualValue");
+    strcpy( object_str, aname);
+    *trace_type = flow_eTraceType_Boolean;
+    break;
+  default:;
+    if ( cdh_tidIsCid( tid))
+      return TRA__NOPAR;
+    s = strrchr( aname, '.');
+    if ( !s) return TRA__NOPAR;
+    strcpy( attr_str, s + 1);
+    *s = 0;
+    strcpy( object_str, aname);    
+
+    sts = ldh_GetAttrRefInfo( node->hn.wind->hw.ldhses, &aref, &info);
+    if ( EVEN(sts)) return sts;
+
+    switch( info.type) {
+    case pwr_eType_Boolean:
+      *trace_type = flow_eTraceType_Boolean;
+      break;
+    case pwr_eType_Int32:
+      *trace_type = flow_eTraceType_Int32;
+      break;
+    case pwr_eType_Float32:
+      *trace_type = flow_eTraceType_Float32;
+      break;
+    default:
+      *trace_type = flow_eTraceType_Int32;
+      break;
+    }
+  }
+
   return TRA__SUCCESS;
 }
 
