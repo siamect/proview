@@ -1551,15 +1551,15 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 	      event_callback[glow_eEvent_SliderMoved]( this, &e);
 
 	      // Send slider movement end event
-              e.event = glow_eEvent_SliderMoveStart;
+              e.event = glow_eEvent_SliderMoveEnd;
 	      e.any.type = glow_eEventType_Object;
 	      e.any.x_pixel = x;
 	      e.any.y_pixel = y;
 	      e.any.x = double (x + mw.offset_x) / mw.zoom_factor_x;
 	      e.any.y = double (y + mw.offset_y) / mw.zoom_factor_y;
-	      e.object.object = NULL;
-	      e.object.object_type = glow_eObjectType_NoObject;
-	      event_callback[glow_eEvent_SliderMoveStart]( this, &e);
+	      e.object.object = restriction_object;
+	      e.object.object_type = restriction_object->type();
+	      event_callback[glow_eEvent_SliderMoveEnd]( this, &e);
 	    }
             node_move_last_x = x;
             node_move_last_y = y;

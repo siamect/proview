@@ -22,7 +22,7 @@ Build with
 Eclipse 
 
 The application PwrXtt can be imported to eclipse by stating 
-$pwre_sroot/os_linux/hw_x86/bld/aapp as work directory. Import the project with 
+$pwre_broot/os_linux/hw_x86/bld/aapp as work directory. Import the project with 
 File/Import/General/Existing Projects... Activate Android Tools/Fix Project Properties 
 in the popup menu for the project. After this the application can be run and debugged.
 Any changes in the java code should be copied back to source code in java/jpwr and 

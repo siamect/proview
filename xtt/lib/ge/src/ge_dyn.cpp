@@ -13916,6 +13916,11 @@ void GeSlider::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( insensitive_attr);
 
+  strcpy( attrinfo[i].name, "Slider.ReleaseAttr");
+  attrinfo[i].value = release_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( release_attr);
+
   dyn->display_access = true;
   *item_count = i;
 }
@@ -13939,6 +13944,7 @@ void GeSlider::replace_attribute( char *from, char *to, int *cnt, int strict)
   GeDyn::replace_attribute( minvalue_attr, sizeof(minvalue_attr), from, to, cnt, strict);
   GeDyn::replace_attribute( maxvalue_attr, sizeof(maxvalue_attr), from, to, cnt, strict);
   GeDyn::replace_attribute( insensitive_attr, sizeof(insensitive_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute( release_attr, sizeof(release_attr), from, to, cnt, strict);
 }
 
 void GeSlider::save( ofstream& fp)
@@ -13948,6 +13954,7 @@ void GeSlider::save( ofstream& fp)
   fp << int(ge_eSave_Slider_minvalue_attr) << FSPACE << minvalue_attr << endl;
   fp << int(ge_eSave_Slider_maxvalue_attr) << FSPACE << maxvalue_attr << endl;
   fp << int(ge_eSave_Slider_insensitive_attr) << FSPACE << insensitive_attr << endl;
+  fp << int(ge_eSave_Slider_release_attr) << FSPACE << release_attr << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -13984,6 +13991,10 @@ void GeSlider::open( ifstream& fp)
       case ge_eSave_Slider_insensitive_attr:
         fp.get();
         fp.getline( insensitive_attr, sizeof(insensitive_attr));
+        break;
+      case ge_eSave_Slider_release_attr:
+        fp.get();
+        fp.getline( release_attr, sizeof(release_attr));
         break;
       case ge_eSave_End: end_found = 1; break;
       default:
@@ -14273,6 +14284,25 @@ int GeSlider::action( grow_tObject object, glow_tEvent event)
   case glow_eEvent_MB1Down:
     grow_SetClickSensitivity( dyn->graph->grow->ctx, glow_mSensitivity_MB1Press);
     break;
+  case glow_eEvent_SliderMoveEnd: {
+    pwr_tAName		parsed_name;
+    int			inverted;
+    int			attr_type, attr_size;
+    pwr_tBoolean	val = 1;
+    pwr_tStatus		sts;
+
+    if ( strcmp( release_attr, "") != 0) {
+      dyn->parse_attr_name( release_attr, parsed_name, &inverted, &attr_type, &attr_size);
+      switch ( attr_type) {
+      case pwr_eType_Boolean: {
+	sts = gdh_SetObjectInfo( parsed_name, &val, sizeof(val));
+	break;
+      }
+      default: ;
+      }
+    }
+    break;
+  }
   case glow_eEvent_SliderMoveStart: {
     double max_value, min_value, max_pos, min_pos;
     glow_eDirection direction;

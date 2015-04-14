@@ -460,7 +460,6 @@ public class GrowCtx implements GrowCtxIfc {
 	switch ( e.event) {
 	case Glow.eEvent_MB1Down:
 	    if ( sts == 1 && cmn.callback_object != null && cmn.callback_object.type() == Glow.eObjectType_GrowSlider) {
-		System.out.println("Slider start");
 		sliderActive = true;
 		sliderObject = (GrowSlider)cmn.callback_object;
 
@@ -487,7 +486,6 @@ public class GrowCtx implements GrowCtxIfc {
 	case Glow.eEvent_MB1Up:
 	    if ( sliderActive) {
 		if ( cmn.restriction_object != null) {
-		    System.out.println("Slider end");
 
 		    GlowEvent se = new GlowEvent();
 		    se.event = Glow.eEvent_SliderMoveEnd;
@@ -519,7 +517,6 @@ public class GrowCtx implements GrowCtxIfc {
 			else {
 			    move_y = cmn.restriction_max_limit - node_move_last_y -
 				slider_cursor_offset;
-			    System.out.println("Slider max limit: " + move_y + " limit " + cmn.restriction_max_limit);
 			}
 		    }
 		    else if ( cursor_y + slider_cursor_offset < cmn.restriction_min_limit) {

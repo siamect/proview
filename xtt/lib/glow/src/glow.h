@@ -981,6 +981,7 @@ typedef enum {
   glow_eEvent_CreateGrowObject,		//!< Create grow object event
   glow_eEvent_GrowDynamics,		//!< Execute dynamics event
   glow_eEvent_SliderMoveStart,		//!< Start of slider motion sequence event
+  glow_eEvent_SliderMoveEnd,		//!< End of slider motion sequence event
   glow_eEvent_SliderMoved,		//!< Slider move event
   glow_eEvent_HotRequest,		//!< Hot request on object event
   glow_eEvent_MB1Down,			//!< MB1 down event

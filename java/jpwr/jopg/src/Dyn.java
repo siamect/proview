@@ -472,6 +472,7 @@ public class Dyn {
     public static final int eSave_Slider_minvalue_attr     	= 6001;
     public static final int eSave_Slider_maxvalue_attr     	= 6002;
     public static final int eSave_Slider_insensitive_attr    	= 6003;
+    public static final int eSave_Slider_release_attr    	= 6004;
     public static final int eSave_AnalogColor_attribute      	= 6100;
     public static final int eSave_AnalogColor_limit        	= 6101;
     public static final int eSave_AnalogColor_limit_type     	= 6102;
@@ -9032,6 +9033,7 @@ public class Dyn {
 	String minvalue_attr;
 	String maxvalue_attr;
 	String insensitive_attr;
+	String release_attr;
 	PwrtRefId subid;
 	int p;
 	int database;
@@ -9067,6 +9069,7 @@ public class Dyn {
 	    minvalue_attr = x.minvalue_attr;
 	    maxvalue_attr = x.maxvalue_attr;
 	    insensitive_attr = x.insensitive_attr;
+	    release_attr = x.release_attr;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -9376,6 +9379,21 @@ public class Dyn {
 		return 1;
 
 	    switch ( e.event) {
+	    case Glow.eEvent_SliderMoveEnd: {
+		DynParsedAttrName pname = dyn.parseAttrName(release_attr);
+		if ( !(pname == null || pname.name.equals(""))) {
+		    switch ( pname.type) {
+		    case Pwr.eType_Boolean: {
+			PwrtStatus sts = dyn.graph.getGdh().setObjectInfo( pname.name, 1);
+			break;
+		    }
+		    default: ;
+		    }
+		}
+		if ( dyn.graph.getCurrentSlider() == object)
+		    dyn.graph.setCurrentSlider(null);
+		break;
+	    }
 	    case Glow.eEvent_SliderMoveStart: {
 		if ( !dyn.graph.isAuthorized( dyn.access) ||
 		     slider_disabled) {
@@ -9384,7 +9402,6 @@ public class Dyn {
 		    break;
 		}
 		GlowSliderInfo info = ((GrowSlider)object).get_info();
-		System.out.println("Slider start direction " + info.direction);
 		if ( direction == Glow.eDirection_Right || 
 		     direction == Glow.eDirection_Left)
 		    dyn.graph.getCtx().setMoveRestrictions( Glow.eMoveRestriction_HorizontalSlider,
@@ -9394,11 +9411,6 @@ public class Dyn {
 							    info.max_position, info.min_position, (GlowArrayElem)e.object);
 
 		dyn.graph.setCurrentSlider((GrowSlider)object);
-		break;
-	    }
-	    case Glow.eEvent_SliderMoveEnd: {
-		if ( dyn.graph.getCurrentSlider() == object)
-		    dyn.graph.setCurrentSlider(null);
 		break;
 	    }
 	    case Glow.eEvent_SliderMoved: {
@@ -9429,7 +9441,6 @@ public class Dyn {
 			value = (float)( (g.ll_y - info.min_position) / (info.max_position - info.min_position) *
 				       (max_value - min_value) + min_value);
 		    }
-		    System.out.println("Slider value " + value + "  minpos " + info.min_position + " maxpos " + info.max_position);
 		    if ( value > max_value)
 			value = max_value;
 		    if ( value < min_value)
@@ -9494,6 +9505,10 @@ public class Dyn {
 		    case Dyn.eSave_Slider_insensitive_attr: 
 			if ( token.hasMoreTokens())
 			    insensitive_attr = token.nextToken();
+			break;
+		    case Dyn.eSave_Slider_release_attr: 
+			if ( token.hasMoreTokens())
+			    release_attr = token.nextToken();
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;

@@ -566,6 +566,7 @@
     ge_eSave_Slider_minvalue_attr     	= 6001,
     ge_eSave_Slider_maxvalue_attr     	= 6002,
     ge_eSave_Slider_insensitive_attr    = 6003,
+    ge_eSave_Slider_release_attr    	= 6004,
     ge_eSave_AnalogColor_attribute      = 6100,
     ge_eSave_AnalogColor_limit        	= 6101,
     ge_eSave_AnalogColor_limit_type     = 6102,
@@ -2214,6 +2215,7 @@ class GeSlider : public GeDynElem {
   pwr_tAName minvalue_attr;
   pwr_tAName maxvalue_attr;
   pwr_tAName insensitive_attr;
+  pwr_tAName release_attr;
   int slider_disabled;
 
   pwr_tFloat32 *p;
@@ -2240,12 +2242,13 @@ class GeSlider : public GeDynElem {
     GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_Slider, ge_mActionType2_No, ge_eDynPrio_Slider),
     min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0), insensitive_p(0)
     { strcpy( attribute, ""); strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");
-    strcpy( insensitive_attr, "");}
+    strcpy( insensitive_attr, ""); strcpy( release_attr, "");}
   GeSlider( const GeSlider& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio),
     min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0), insensitive_p(0)
     { strcpy( attribute, x.attribute); strcpy( minvalue_attr, x.minvalue_attr);
-    strcpy( maxvalue_attr, x.maxvalue_attr); strcpy( insensitive_attr, x.insensitive_attr);}
+    strcpy( maxvalue_attr, x.maxvalue_attr); strcpy( insensitive_attr, x.insensitive_attr);
+     strcpy( release_attr, x.release_attr);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);

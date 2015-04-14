@@ -152,7 +152,6 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	int idx;
 	if ( (idx = str.indexOf('#')) != -1)
 	    str = str.substring(0, idx);
-	System.out.println("type: " + str);
 	if ( str.equalsIgnoreCase("boolean"))
 	    return Pwr.eType_Boolean;
 	if ( str.equalsIgnoreCase("float32"))
@@ -292,7 +291,6 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	    if ( appl != null) {
 		String oname = cmn.getOwner();
 		str = str.substring(0, idx) + oname + str.substring(idx+7);
-		System.out.println("Parse name $object " + oname + " str " + str);
 	    }
 	}
 
@@ -344,7 +342,8 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	pname.database = Graph.eDatabase_Gdh;
 	pname.name = str;
 
-	System.out.println( "ParsedName: " + name + "    " + pname.name + " type: " + pname.type + " elements: " + pname.elements + " bitm: " + pname.bitmask);
+	if ( Dyn.debug)
+	    System.out.println( "ParsedName: " + name + "    " + pname.name + " type: " + pname.type + " elements: " + pname.elements + " bitm: " + pname.bitmask);
 
 	return pname;
     }

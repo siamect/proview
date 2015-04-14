@@ -3295,6 +3295,8 @@ void GraphGrow::grow_trace_setup()
 	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_SliderMoveStart, glow_eEventType_CallBack,
 	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_SliderMoveEnd, glow_eEventType_CallBack,
+	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_AnnotationInput, glow_eEventType_CallBack,
 	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_InputFocusLost, glow_eEventType_CallBack,
@@ -3843,22 +3845,25 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
       }
       break;
     }
+    case glow_eEvent_SliderMoveEnd:
+    {
+      GeDyn *dyn;
+      
+      grow_GetUserData( event->object.object, (void **)&dyn);
+      dyn->action( event->object.object, event);
+
+      grow_SetMoveRestrictions( graph->grow->ctx, 
+				glow_eMoveRestriction_Disable, 0, 0, NULL);
+      graph->current_slider = NULL;
+      break;
+    }
     case glow_eEvent_SliderMoveStart:
     {
-      if ( event->object.object_type == glow_eObjectType_NoObject)
-      {
-        grow_SetMoveRestrictions( graph->grow->ctx, 
-		glow_eMoveRestriction_Disable, 0, 0, NULL);
-        graph->current_slider = NULL;
-      }
-      else
-      {
-	GeDyn *dyn;
+      GeDyn *dyn;
+      
+      grow_GetUserData( event->object.object, (void **)&dyn);
+      dyn->action( event->object.object, event);
 
-        grow_GetUserData( event->object.object, (void **)&dyn);
-	dyn->action( event->object.object, event);
-
-      }
       break;
     }
     case glow_eEvent_SliderMoved:
