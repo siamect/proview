@@ -527,12 +527,18 @@ public class GrowWindow extends GrowRect implements GrowScrollBarIfc {
     }
 
     public void traceConnect() {
+	if ( windowCmn == null)
+	    return;
 	windowCmn.ctx.traceConnect();
     }
     public void traceDisconnect() {
+	if ( windowCmn == null)
+	    return;
 	windowCmn.ctx.traceDisconnect();
     }
     public void traceScan() {
+	if ( windowCmn == null)
+	    return;
 	windowCmn.ctx.traceScan();
     }
 
