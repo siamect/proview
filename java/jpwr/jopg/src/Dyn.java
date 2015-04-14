@@ -647,7 +647,7 @@ public class Dyn {
     public static final int ePwrStatus_Error		= 3;
     public static final int ePwrStatus_Fatal		= 4;
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
 
     Vector<DynElem> elements = new Vector<DynElem>();
     GraphIfc graph;
@@ -1519,6 +1519,16 @@ public class Dyn {
 	    elements.get(i).action((GlowArrayElem)object,  e);
 	action_type1 |= mActionType1_Confirm;
     }    
+
+    public int instance_to_number( int instance) {
+	int inst = 1;
+	int m = instance;
+	while( m > 1) {
+	    m = m >> 1;
+	    inst++;
+	}
+	return inst;
+    }
 
     public class DynElem {
 	Dyn dyn;
@@ -2972,6 +2982,8 @@ public class Dyn {
 	    if ( !attrFound)
 		return;
 
+	    int annot_num = dyn.instance_to_number( instance);
+
 	    switch ( a_typeid) {
 	    case Pwr.eType_Float32: {
 		float value0 = 0;
@@ -2986,7 +2998,7 @@ public class Dyn {
 		if ( value0 != oldValueF  || firstScan) {
 		    if ( cFormat != null) {
 		      sb = cFormat.format( value0, sb);
-	  	      object.setAnnotation(1, new String(sb));
+	  	      object.setAnnotation(annot_num, new String(sb));
 		    }
 		    dyn.repaintNow = true;
 		    oldValueF = value0;
@@ -3011,7 +3023,7 @@ public class Dyn {
 
 		if ( value0 != oldValueI || firstScan) {
 		    sb = cFormat.format( value0, sb);
-		    object.setAnnotation(1, new String(sb));
+		    object.setAnnotation(annot_num, new String(sb));
 		    dyn.repaintNow = true;
 		    oldValueI = value0;
 		}
@@ -3030,7 +3042,7 @@ public class Dyn {
 
 		if ( value0 != oldValueB || firstScan) {
 		    sb = cFormat.format( value0, sb);
-		    object.setAnnotation(1, new String(sb));
+		    object.setAnnotation(annot_num, new String(sb));
 		    dyn.repaintNow = true;
 		    oldValueB = value0;
 		}
@@ -3052,7 +3064,7 @@ public class Dyn {
 
 		if ( firstScan || !value0.equals( oldValueS)) {
 		    sb = cFormat.format( value0, sb);
-		    object.setAnnotation(1, new String(sb));
+		    object.setAnnotation(annot_num, new String(sb));
 		    dyn.repaintNow = true;
 		    oldValueS = value0;
 		}
@@ -3073,13 +3085,13 @@ public class Dyn {
 		    switch ( cFormat.type()) {
 		    case GlowCFormat.FRM_M: {
 			CdhrString cstr = dyn.graph.getGdh().getMsg( value0);
-			object.setAnnotation(1, cstr.str);
+			object.setAnnotation(annot_num, cstr.str);
 			dyn.repaintNow = true;
 			break;
 		    }
 		    case GlowCFormat.FRM_1M: {
 			CdhrString cstr = dyn.graph.getGdh().getMsgText( value0);
-			object.setAnnotation(1, cstr.str);
+			object.setAnnotation(annot_num, cstr.str);
 			dyn.repaintNow = true;
 			break;
 		    }
