@@ -923,6 +923,7 @@ public class Glow {
     public static final int eSave_Annot_display_level		= 1305;
     public static final int eSave_Annot_color_drawtype		= 1306;
     public static final int eSave_Annot_font			= 1307;
+    public static final int eSave_Annot_protect			= 1308;
     public static final int eSave_Arrow_arrow_width		= 1400;
     public static final int eSave_Arrow_arrow_length		= 1401;
     public static final int eSave_Arrow_draw_type		= 1402;

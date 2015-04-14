@@ -52,6 +52,7 @@ public class GrowAnnot extends GlowArrayElem {
     int display_level;
     int annot_type;
     int font;
+    int protect;
 
     public GrowAnnot(GrowCmn cmn) {
 	this.cmn = cmn;
@@ -137,6 +138,9 @@ public class GrowAnnot extends GlowArrayElem {
 		    break;
 		case Glow.eSave_Annot_font:
 		    font = Integer.valueOf(token.nextToken());
+		    break;
+		case Glow.eSave_Annot_protect:
+		    protect = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_End:
 		    end_found = true;
