@@ -195,7 +195,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	    return Pwr.eType_Mask;
 	if ( str.equalsIgnoreCase("bit"))
 	    return GraphIfc.eType_Bit;
-	if ( str.substring(0,6).equalsIgnoreCase("string"))
+	if ( str.length() >= 6 && str.substring(0,6).equalsIgnoreCase("string"))
 	     return Pwr.eType_String;
 	return 0;
     }
@@ -312,7 +312,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	    pname.elements = 1;
 	    if ((eidx = str.lastIndexOf('#')) != -1 &&
 		str.charAt(eidx-1) != '#')
-		str = str.substring( 0, eidx-1);
+		str = str.substring( 0, eidx);
 	    else
 		str = str.substring(0, idx-1);
 	}
