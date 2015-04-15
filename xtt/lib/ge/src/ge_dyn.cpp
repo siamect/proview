@@ -4160,7 +4160,12 @@ int GeValue::scan( grow_tObject object)
     default:
       msg_GetMsg( val, buf, sizeof(buf));
     }
-    len = strlen(buf);
+    if ( zero_blank && val == 0) {
+      buf[0] = 0;
+      len = 0;
+    }
+    else
+      len = strlen(buf);
     memcpy( &old_value, &val, MIN(size, (int) sizeof(old_value)));
     break;
   }
@@ -4208,7 +4213,13 @@ int GeValue::scan( grow_tObject object)
     }
     if ( EVEN(sts))
       strcpy( name, "");
-    len = sprintf( buf, "%s", name);
+
+    if ( zero_blank && cdh_ObjidIsNull(objid)) {
+      buf[0] = 0;
+      len = 0;
+    }
+    else
+      len = sprintf( buf, "%s", name);
     memcpy( &old_value, &objid, MIN(size, (int) sizeof(old_value)));
     break;
   }
@@ -4343,7 +4354,12 @@ int GeValue::scan( grow_tObject object)
     }
     if ( EVEN(sts))
       strcpy( timstr, "-");
-    len = sprintf( buf, "%s", timstr);
+    if ( zero_blank && val.tv_sec == 0 && val.tv_nsec == 0) {
+      buf[0] = 0;
+      len = 0;
+    }
+    else
+      len = sprintf( buf, "%s", timstr);
     memcpy( &old_value, &val, MIN(size, (int) sizeof(old_value)));
     break;
   }
@@ -4372,7 +4388,12 @@ int GeValue::scan( grow_tObject object)
     }
     if ( EVEN(sts))
       strcpy( timstr, "-");
-    len = sprintf( buf, "%s", timstr);
+    if ( zero_blank && val.tv_sec == 0 && val.tv_nsec == 0) {
+      buf[0] = 0;
+      len = 0;
+    }
+    else
+      len = sprintf( buf, "%s", timstr);
     memcpy( &old_value, &val, MIN(size, (int) sizeof(old_value)));
     break;
   }
