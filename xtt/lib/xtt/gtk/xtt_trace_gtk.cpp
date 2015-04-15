@@ -52,6 +52,7 @@
 #include "flow_ctx.h"
 #include "flow_api.h"
 #include "co_cdh.h"
+#include "co_time.h"
 #include "co_api.h"
 #include "co_dcli.h"
 #include "rt_gdh.h"
@@ -725,8 +726,23 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
   sts = gdh_GetObjectInfo( aname, &window_version, sizeof(window_version));
   if ( EVEN(sts)) return;
 
-  if ( flow_version > window_version)
-    wow->DisplayError( "Version mismatch", "Trace file is newer than database version");
-  else if ( flow_version < window_version)
-    wow->DisplayError( "Version mismatch", "Trace file is older than database version");
+  if ( flow_version != window_version) {
+    char msg[200];
+    char flow_version_str[30];
+    char window_version_str[30];
+    pwr_tTime t;
+    
+    t.tv_sec = flow_version;
+    t.tv_nsec = 0;
+    time_AtoAscii( &t, time_eFormat_DateAndTime, flow_version_str, sizeof(flow_version_str));
+    t.tv_sec = window_version;
+    t.tv_nsec = 0;
+    time_AtoAscii( &t, time_eFormat_DateAndTime, window_version_str, sizeof(window_version_str));
+
+    if ( flow_version > window_version)
+      sprintf( msg, "Trace file is newer than database version\n(%s > %s)", flow_version_str, window_version_str);
+    else if ( flow_version < window_version)
+      sprintf( msg, "Trace file is older than database version\n(%s < %s)", flow_version_str, window_version_str);
+    wow->DisplayError( "Version mismatch", msg);
+  }
 }
