@@ -69,6 +69,7 @@ static int	help_remove_spaces(
 			char	*in,
 			char	*out);
 static FILE *navhelp_open_file( NavHelp *navhelp, navh_eHelpFile file_type, const char *file_name);
+static pwr_tStatus get_lang_file( char *file, char *found_file);
 
 /*************************************************************************
 *
@@ -627,11 +628,9 @@ int	NavHelp::get_next_key( const char *help_key, navh_eHelpFile file_type, const
       help_remove_spaces( &line[9], include_file);
       // Replace symbol for language
       if ( strncmp( include_file, "$pwr_lang/", 10) == 0) {
-        char lng_include_file[200];
-
-	sprintf( lng_include_file, "$pwr_exe/%s/%s", Lng::get_language_str(),
-		 &include_file[10]);
-	strcpy( include_file, lng_include_file);
+	sts = get_lang_file( include_file, include_file);
+	if ( EVEN(sts))
+	  continue;
       }
 
       if ( !noprop) {
@@ -717,11 +716,9 @@ int	NavHelp::get_previous_key( const char *help_key, navh_eHelpFile file_type, c
       help_remove_spaces( &line[9], include_file);
       // Replace symbol for language
       if ( strncmp( include_file, "$pwr_lang/", 10) == 0) {
-        char lng_include_file[200];
-
-	sprintf( lng_include_file, "$pwr_exe/%s/%s", Lng::get_language_str(),
-		 &include_file[10]);
-	strcpy( include_file, lng_include_file);
+	sts = get_lang_file( include_file, include_file);
+	if ( EVEN(sts))
+	  continue;
       }
 
       if ( !noprop) {
@@ -825,6 +822,7 @@ static FILE *navhelp_open_file( NavHelp *navhelp, navh_eHelpFile file_type, cons
 {
   pwr_tFileName filestr;
   FILE *file;
+  pwr_tStatus sts;
 
   if ( file_type == navh_eHelpFile_Base)
     dcli_get_defaultfilename( navhelp->base_file, filestr, NULL);
@@ -852,13 +850,19 @@ static FILE *navhelp_open_file( NavHelp *navhelp, navh_eHelpFile file_type, cons
       dcli_translate_filename( lng_filestr, lng_filestr);
 
       file = fopen( lng_filestr, "r");
-      if ( file == 0)
-	return 0;	
+      if ( file == 0) {
+	sts = get_lang_file( filestr, lng_filestr);
+	if ( EVEN(sts)) return 0;
+	
+	file = fopen( lng_filestr, "r");
+	if ( file == 0)
+	  return 0;
+      }
     }
   }
   else {
     dcli_translate_filename( filestr, filestr);
-
+    
     file = fopen( filestr, "r");
     if ( file == 0)
       return 0;    
@@ -867,7 +871,37 @@ static FILE *navhelp_open_file( NavHelp *navhelp, navh_eHelpFile file_type, cons
 }
 
 
+static pwr_tStatus get_lang_file( char *file, char *found_file)
+{
+  pwr_tFileName lng_include_file, tmp_file;
+  pwr_tTime t;
+  pwr_tStatus sts;
 
+  if ( strncmp( file, "$pwr_lang/", 10) != 0)
+    return NAV__NOFILE;
+
+  // Try pwr_exe/xx_xx/
+  sprintf( lng_include_file, "$pwr_exe/%s/%s", Lng::get_language_str(),
+	   &file[10]);
+  dcli_translate_filename( tmp_file, lng_include_file);
+  sts = dcli_file_time( tmp_file, &t);
+  if ( EVEN(sts)) {
+    // Try pwrp_exe/xx_xx/ instead
+    sprintf( lng_include_file, "$pwrp_exe/%s/%s", Lng::get_language_str(), &file[10]);
+    dcli_translate_filename( tmp_file, lng_include_file);
+    sts = dcli_file_time( tmp_file, &t);
+    if ( EVEN(sts)) {
+      // Try pwrp_exe/ instead
+      sprintf( lng_include_file, "$pwrp_exe/%s", &file[10]);
+      dcli_translate_filename( tmp_file, lng_include_file);
+      sts = dcli_file_time( tmp_file, &t);
+      if ( EVEN(sts))
+	return NAV__NOFILE;
+    }
+  }
+  strcpy( found_file, tmp_file);
+  return NAV__SUCCESS;
+}
 
 
 
