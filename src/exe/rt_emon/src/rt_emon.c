@@ -2453,9 +2453,9 @@ handlerEvent (
   sEvent *ep;
   pwr_tBoolean local = FALSE;
   pwr_sClass_SystemSup *ssup;
+  pwr_tOName attr;
+  pwr_tAttrRef aref;
   sNodeInfo *node = node_get(nix);
-
-  // return; /* todo */
 
   if ( event >= (int)sizeof(l.emon->SystemEvents)/sizeof(l.emon->SystemEvents[0]))
     return;
@@ -2514,7 +2514,7 @@ handlerEvent (
       strncat(ip->EventText, node->name, sizeof(ip->EventText) - 1);
       ip->EventSound = ssup->Sound;
       strncpy( ip->EventMoreText, ssup->MoreText, sizeof(ip->EventMoreText));
-
+      ip->SupObject = l.emonObject;
 
       switch ( event) {
       case pwr_eSystemEventTypeEnum_NodeUp:
@@ -2547,6 +2547,9 @@ handlerEvent (
       hp->link.eventSound = ip->EventSound;
       strncpy(hp->link.eventMoreText, ip->EventMoreText, sizeof(hp->link.eventMoreText));
       strncpy(hp->link.receiver, ssup->Recipient, sizeof(hp->link.receiver));      
+      sprintf( attr, "SystemEvents[%d]", event);
+      aref = cdh_ObjidToAref( l.emonObject);
+      gdh_ArefANameToAref( &aref, attr, &hp->link.supObject);
 
       /* Insert in application alarm list */
       (void)LstIns(&node->appl.active_l, hp, active_l);    
