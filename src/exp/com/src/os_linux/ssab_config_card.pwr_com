@@ -4,18 +4,18 @@
 # Copyright (C) 2005-2014 SSAB EMEA AB.
 #
 # This file is part of Proview.
-!
-!  This program is free software; you can redistribute it and/or 
-!  modify it under the terms of the GNU General Public License as 
-!  published by the Free Software Foundation, either version 2 of 
-!  the License, or (at your option) any later version.
-!
-!  This program is distributed in the hope that it will be useful 
-!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
-!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-!  GNU General Public License for more details.
-!
-!  You should have received a copy of the GNU General Public License 
+#
+#  This program is free software; you can redistribute it and/or 
+#  modify it under the terms of the GNU General Public License as 
+#  published by the Free Software Foundation, either version 2 of 
+#  the License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful 
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License 
 # along with Proview. If not, see <http://www.gnu.org/licenses/>
 #
 # Linking Proview statically or dynamically with other modules is
@@ -111,6 +111,10 @@ function int ssab_create_signal( string rname, string resname, string chname, st
     endfor
 
   endif
+
+! Set description and identity in channel
+  set attr/noco/name='rname'-'cname'.Ch'chnr_str'/attr=Description/value="'chan_descr'"
+  set attr/noco/name='rname'-'cname'.Ch'chnr_str'/attr=Identity/value="'chan_ident'"
 
 ! Set description in signal
   sprintf( rnam, "Reserv_%s%s", cname, chnr_str);
