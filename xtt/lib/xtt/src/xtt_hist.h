@@ -57,6 +57,7 @@ extern "C" {
 #define ERROR_TIME_CONVERT  -99
 
 class CoWow;
+class XttMethodToolbar;
 
 class Hist {
   public:
@@ -117,6 +118,8 @@ class Hist {
     int			check_conditions(sEvent *evp);
     int			compareStr(char *, char *);
     void		printSearchStr();
+    XttMethodToolbar 	*methodtoolbar;
+    XttMethodToolbar 	*sup_methodtoolbar;
 
     virtual void set_num_of_events( int nrOfEvents) {}
     virtual void set_search_string( const char *s1, const char *s2, 
@@ -154,6 +157,7 @@ class Hist {
 			      unsigned long item_type, unsigned long utility,
 			      char *arg, int x, int y);
     static void help_event_cb( void *ctx, void *item);
+    static void selection_changed_cb( void *ctx);
     static void hist_init_cb( void *ctx);
 };
 

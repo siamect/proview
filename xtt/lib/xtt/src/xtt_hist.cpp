@@ -72,6 +72,7 @@ extern "C" {
 #include "xtt_hist.h"
 #include "rt_xnav_msg.h"
 #include "xtt_evlist.h"
+#include "xtt_methodtoolbar.h"
 
 #define SENS 	1
 #define INSENS  0
@@ -137,6 +138,12 @@ void Hist::help_event_cb( void *ctx, void *item)
   default:
     return;
   }
+}
+
+void Hist::selection_changed_cb( void *ctx)
+{
+  ((Hist *)ctx)->methodtoolbar->set_sensitive();
+  ((Hist *)ctx)->sup_methodtoolbar->set_sensitive();
 }
 
 void Hist::hist_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp)

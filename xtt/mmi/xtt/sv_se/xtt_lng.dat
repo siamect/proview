@@ -163,7 +163,7 @@ E 1.5.4 "_Dölj händelsenamn"
 E 1.5.5 "Dölj _händelsetext"
 E 1.5.6 "Hjälp för utvald händelse"
 E 1.5.7 "_Ta bort blockering"
-E 1.5.8 "RtNavigator för övervakningsobjekt"
+E 1.5.8 "Navigator för övervakningsobjekt"
 E 1.5.9 "Open Plc för övervakningsobjekt"
 E 1.5.10 "Kvittera"
 #
@@ -221,6 +221,8 @@ E 1.9.32 " med typ "
 E 1.9.33 " med Händelsenamn "
 E 1.9.34 " med Händelsetext "
 E 1.9.35 "S_tatistik"
+E 1.9.36 "Dölj _sökfönster"
+E 1.9.37 "Maximera"
 #
 # Ge Curve
 E 1.10.1 "_Uppdatera"
@@ -499,6 +501,10 @@ E 1.19.28 "Höger"
 E 1.20.1 "Inmatad sträng för lång"
 E 1.20.2 "Objektet finns inte"
 E 1.20.3 "Syntax fel i inmatning"
+#
+# Method toolbar
+E 1.21.1 "Snabbkurva"
+E 1.21.2 "Blockera händelser"
 #
 # Postscript printing
 E 2.1.1 "Innehåll"

@@ -83,6 +83,7 @@ class HistGtk : public Hist {
   GtkWidget		*search_string2_lbl_w;
   GtkWidget		*search_string3_lbl_w;
   GtkWidget		*search_string4_lbl_w;            
+  GtkWidget 		*search_vbox;
 
   void set_num_of_events( int nrOfEvents);
   void set_search_string( const char *s1, const char *s2, 
@@ -97,6 +98,8 @@ class HistGtk : public Hist {
   static void activate_zoom_in( GtkWidget *w, gpointer data);
   static void activate_zoom_out( GtkWidget *w, gpointer data);
   static void activate_zoom_reset( GtkWidget *w, gpointer data);
+  static void activate_hidesearch( GtkWidget *w, gpointer data);
+  static void activate_hide_search( GtkWidget *w, gpointer data);
   static void activate_open_plc( GtkWidget *w, gpointer data);
   static void activate_stat( GtkWidget *w, gpointer data);
   static void activate_display_in_xnav( GtkWidget *w, gpointer data);

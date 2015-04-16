@@ -72,6 +72,7 @@ extern "C" {
 #include "xtt_hist_gtk.h"
 #include "rt_xnav_msg.h"
 #include "xtt_evlist_gtk.h"
+#include "xtt_methodtoolbar_gtk.h"
 
 #define SENS 	1
 #define INSENS  0
@@ -151,22 +152,19 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   g_signal_connect( functions_open_plc, "activate", 
 		    G_CALLBACK(activate_open_plc), this);
   gtk_widget_add_accelerator( functions_open_plc, "activate", accel_g,
-			      'l', GdkModifierType(GDK_CONTROL_MASK), 
-			      GTK_ACCEL_VISIBLE);
+			      'l', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
   GtkWidget *functions_display_object = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Display object in Navigator"));
   g_signal_connect( functions_display_object, "activate", 
 		    G_CALLBACK(activate_display_in_xnav), this);
   gtk_widget_add_accelerator( functions_display_object, "activate", accel_g,
-			      'd', GdkModifierType(GDK_CONTROL_MASK), 
-			      GTK_ACCEL_VISIBLE);
+			      'd', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
   GtkWidget *functions_search = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Search"));
   g_signal_connect( functions_search, "activate", 
 		    G_CALLBACK(ok_btn), this);
   gtk_widget_add_accelerator( functions_search, "activate", accel_g,
-			      'f', GdkModifierType(GDK_CONTROL_MASK), 
-			      GTK_ACCEL_VISIBLE);
+			      'f', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
   GtkWidget *functions_stat = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("S_tatistics"));
   g_signal_connect( functions_stat, "activate", 
@@ -189,8 +187,7 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   g_signal_connect( view_zoom_in, "activate", 
 		    G_CALLBACK(activate_zoom_in), this);
   gtk_widget_add_accelerator( view_zoom_in, "activate", accel_g,
-			      'i', GdkModifierType(GDK_CONTROL_MASK), 
-			      GTK_ACCEL_VISIBLE);
+			      'i', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
   
   GtkWidget *view_zoom_out = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Zoom _Out"));
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(view_zoom_out), 
@@ -198,8 +195,7 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   g_signal_connect( view_zoom_out, "activate", 
 		    G_CALLBACK(activate_zoom_out), this);
   gtk_widget_add_accelerator( view_zoom_out, "activate", accel_g,
-			      'o', GdkModifierType(GDK_CONTROL_MASK), 
-			      GTK_ACCEL_VISIBLE);
+			      'o', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
   
   GtkWidget *view_zoom_reset = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Zoom _Reset"));
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(view_zoom_reset), 
@@ -207,8 +203,13 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   g_signal_connect( view_zoom_reset, "activate", 
 		    G_CALLBACK(activate_zoom_reset), this);
   gtk_widget_add_accelerator( view_zoom_reset, "activate", accel_g,
-			      'b', GdkModifierType(GDK_CONTROL_MASK), 
-				GTK_ACCEL_VISIBLE);
+			      'b', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
+
+  GtkWidget *view_hide_search = gtk_check_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("Hide _Search Dialog"));
+  g_signal_connect( view_hide_search, "activate", 
+		    G_CALLBACK(activate_hide_search), this);
+  gtk_widget_add_accelerator( view_hide_search, "activate", accel_g,
+			      'e', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
   GtkWidget *view_disp_hundredth = gtk_check_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Display hundredth"));
   g_signal_connect( view_disp_hundredth, "activate", 
@@ -226,6 +227,7 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_in);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_out);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_reset);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_hide_search);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_disp_hundredth);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_hide_object);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_hide_text);
@@ -429,36 +431,93 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   // gtk_frame_set_shadow_type( GTK_FRAME(sea_stringframe), GTK_SHADOW_ETCHED_IN);
   gtk_container_add( GTK_CONTAINER(sea_stringframe), sea_stringbox);
 
-  GtkWidget *sea_vbox = gtk_vbox_new( FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(sea_vbox), sea_timebox, FALSE, FALSE, 5);
-  gtk_box_pack_start( GTK_BOX(sea_vbox), sea_typebox, FALSE, FALSE, 5);
-  gtk_box_pack_start( GTK_BOX(sea_vbox), sea_priobox, FALSE, FALSE, 5);
-  gtk_box_pack_start( GTK_BOX(sea_vbox), sea_eventnamebox, FALSE, FALSE, 5);
-  gtk_box_pack_start( GTK_BOX(sea_vbox), sea_eventtextbox, FALSE, FALSE, 5);
-  gtk_box_pack_start( GTK_BOX(sea_vbox), gtk_hseparator_new(), FALSE, FALSE, 2);
-  gtk_box_pack_start( GTK_BOX(sea_vbox), sea_numeventsbox, FALSE, FALSE, 5);
-  gtk_box_pack_start( GTK_BOX(sea_vbox), sea_stringframe, FALSE, FALSE, 3);
-
+  search_vbox = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(search_vbox), sea_timebox, FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX(search_vbox), sea_typebox, FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX(search_vbox), sea_priobox, FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX(search_vbox), sea_eventnamebox, FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX(search_vbox), sea_eventtextbox, FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX(search_vbox), gtk_hseparator_new(), FALSE, FALSE, 2);
+  gtk_box_pack_start( GTK_BOX(search_vbox), sea_numeventsbox, FALSE, FALSE, 5);
+  gtk_box_pack_start( GTK_BOX(search_vbox), sea_stringframe, FALSE, FALSE, 3);
   
-  GtkWidget *hist_pane = gtk_vpaned_new();
-
   // Create hist
-  hist = new EvListGtk( this, hist_pane, ev_eType_HistList, hist_size, 0, &hist_widget, hist_init_cb);
+  hist = new EvListGtk( this, hist_vbox, ev_eType_HistList, hist_size, 0, &hist_widget, hist_init_cb);
   hist->start_trace_cb = &hist_start_trace_cb;
   hist->display_in_xnav_cb = &hist_display_in_xnav_cb;
   hist->popup_menu_cb = &hist_popup_menu_cb;
   hist->help_event_cb = &help_event_cb;
+  hist->selection_changed_cb = &selection_changed_cb;
 
-  gtk_paned_pack1( GTK_PANED(hist_pane), GTK_WIDGET(sea_vbox), TRUE, TRUE);
-  gtk_paned_pack2( GTK_PANED(hist_pane), GTK_WIDGET(hist_widget), TRUE, TRUE);
+  // Toolbar
+  pwr_tFileName fname;
+  GtkToolbar *tools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
+
+  GtkWidget *tools_zoom_in = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
+  gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(activate_zoom_in), this);
+  g_object_set( tools_zoom_in, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_zoom_in,CoWowGtk::translate_utf8("Zoom in"), "");
+
+  GtkWidget *tools_zoom_out = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
+  gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(activate_zoom_out), this);
+  g_object_set( tools_zoom_out, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_zoom_out,CoWowGtk::translate_utf8("Zoom out"), "");
+  
+  GtkWidget *tools_zoom_reset = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_reset.png");
+  gtk_container_add( GTK_CONTAINER(tools_zoom_reset), 
+		       gtk_image_new_from_file( fname));
+  g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(activate_zoom_reset), this);
+  g_object_set( tools_zoom_reset, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_zoom_reset,CoWowGtk::translate_utf8("Zoom reset"), "");
+    
+  // Hide search dialog checkbutton
+  GtkWidget *tools_hidesearch = gtk_toggle_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_maximize.png");
+  gtk_container_add( GTK_CONTAINER(tools_hidesearch), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_hidesearch, "clicked", G_CALLBACK(activate_hidesearch), this);
+  g_object_set( tools_hidesearch, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_hidesearch, CoWowGtk::translate_utf8("Maximize"), "");
+
+  // Method toolbar
+  methodtoolbar = new XttMethodToolbarGtk(0, 0, ~(pwr_mXttOpMethodsMask_ParentObjectGraph | pwr_mXttOpMethodsMask_HistEvent), 
+					  ~0, "");
+  GtkToolbar *tools_meth = (GtkToolbar *) ((XttMethodToolbarGtk *)methodtoolbar)->build();
+  methodtoolbar->m_xnav = (XNav *)parent_ctx;
+  methodtoolbar->m_parent_ctx = hist;
+  methodtoolbar->get_select_cb = hist->get_select;
+
+  sup_methodtoolbar = new XttMethodToolbarGtk(0, 0, 0, pwr_mXttMntMethodsMask_OpenTrace | 
+						    pwr_mXttMntMethodsMask_RtNavigator, 
+						    " for supervisory object");
+  GtkToolbar *tools_sup = (GtkToolbar *) ((XttMethodToolbarGtk *)sup_methodtoolbar)->build();
+  sup_methodtoolbar->m_xnav = (XNav *)parent_ctx;
+  sup_methodtoolbar->m_parent_ctx = hist;
+  sup_methodtoolbar->get_select_cb = hist->get_select_supobject;
+  
+  GtkWidget *toolsbox = gtk_hbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(toolsbox), GTK_WIDGET(tools), FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(toolsbox), GTK_WIDGET(gtk_separator_tool_item_new()), FALSE, FALSE, 4);
+  gtk_box_pack_start( GTK_BOX(toolsbox), GTK_WIDGET(tools_sup), FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(toolsbox), GTK_WIDGET(gtk_separator_tool_item_new()), FALSE, FALSE, 4);
+  gtk_box_pack_start( GTK_BOX(toolsbox), GTK_WIDGET(tools_meth), FALSE, FALSE, 0);
 
   gtk_box_pack_start( GTK_BOX(hist_vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
-  gtk_box_pack_end( GTK_BOX(hist_vbox), GTK_WIDGET(hist_pane), TRUE, TRUE, 0);
+  gtk_box_pack_start( GTK_BOX(hist_vbox), GTK_WIDGET(search_vbox), FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(hist_vbox), GTK_WIDGET(toolsbox), FALSE, FALSE, 0);
+  gtk_box_pack_end( GTK_BOX(hist_vbox), GTK_WIDGET(hist_widget), TRUE, TRUE, 0);
 
   gtk_container_add( GTK_CONTAINER(parent_wid_hist), hist_vbox);
   gtk_widget_show_all( parent_wid_hist);
 
-  gtk_paned_set_position( GTK_PANED(hist_pane), 300);
+  // gtk_paned_set_position( GTK_PANED(hist_pane), 300);
 
   // Init start and stop time
 
@@ -576,6 +635,28 @@ void HistGtk::activate_zoom_reset( GtkWidget *w, gpointer data)
   Hist *histOP = (Hist *)data;
 
   histOP->hist->unzoom();
+}
+
+void HistGtk::activate_hidesearch( GtkWidget *w, gpointer data)
+{
+  HistGtk *histOP = (HistGtk *)data;
+
+  int set = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(w));
+  if ( set)
+    g_object_set( histOP->search_vbox, "visible", FALSE, NULL);
+  else
+    g_object_set( histOP->search_vbox, "visible", TRUE, NULL);
+}
+
+void HistGtk::activate_hide_search( GtkWidget *w, gpointer data)
+{
+  HistGtk *histOP = (HistGtk *)data;
+
+  int set = (int) gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM(w));
+  if ( set)
+    g_object_set( histOP->search_vbox, "visible", FALSE, NULL);
+  else
+    g_object_set( histOP->search_vbox, "visible", TRUE, NULL);
 }
 
 void HistGtk::activate_open_plc( GtkWidget *w, gpointer data)

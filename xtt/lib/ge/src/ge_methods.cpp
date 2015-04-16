@@ -88,7 +88,7 @@ pwr_tString80 GeMethods::op_image[GeMethods::opmeth_size] = {
 
 pwr_tString80 GeMethods::op_tooltip[GeMethods::opmeth_size] = {
   "Graph",
-  "Object graph",
+  "Object Graph",
   "Trend",
   "History",
   "Fast curve",
@@ -162,13 +162,13 @@ pwr_tString80 GeMethods::mnt_image[GeMethods::mntmeth_size] = {
   ""};
 
 pwr_tString80 GeMethods::mnt_tooltip[GeMethods::mntmeth_size] = {
-  "Open object",
-  "Open plc",
+  "Open Object",
+  "Open Plc",
   "Navigator",
   "Crossreferences",
-  "Help class",
-  "Datasheet",
-  "CicuitDiagram",
+  "Help Class",
+  "DataSheet",
+  "CircuitDiagram",
   "","","","","","","","","","","","","","","","","","","","","","","","",
   "Simulate"};
 
