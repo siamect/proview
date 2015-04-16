@@ -2307,7 +2307,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 			 nodename_ptr, nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_WebFiles) {
 		fprintf( file, "appl %s W $pwrp_web/*.html\n", nodename_ptr);
-		fprintf( file, "appl %s W $pwrp_web/*.jar\n", nodename_ptr);
+		fprintf( file, "appl %s S $pwrp_web/*.jar\n", nodename_ptr);
 		fprintf( file, "appl %s S $pwrp_web/*.gif\n", nodename_ptr);
 		fprintf( file, "appl %s S $pwrp_web/*.png\n", nodename_ptr);
 		fprintf( file, "appl %s S $pwrp_web/*.jpg\n", nodename_ptr);
