@@ -3733,6 +3733,10 @@ specified text, Ok and Cancel buttons, is displayed before any other action elem
 
 <b>Attribute  <t><t>Desciption
 Confirm.Text <t><t>Text displayed in the confirm window.
+Confirm.OnSet <t><t>Used with action ToggleDig when only set of value to 1 should be confirmed. 
+              <t><t>Set of value to 0 is executed without confirm.
+Confirm.OnReset <t><t>Used with action ToggleDig when only set of value to 0 should be confirmed.
+              <t><t>Set of value to 1 is executed without confirm.
 </topic>
 
 <topic>GeDynIncrAnalog <style>function

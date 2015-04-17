@@ -3694,6 +3694,10 @@ resp Ja och Nej knappar visas, innan övriga action-element exekveras.
 
 <b>Attribut  <t><t>Beskrivning
 Confirm.Text <t><t>Text som visas i verifierings fönstret.
+Confirm.OnSet <t><t>Används med action ToggleDig när bekräftelse enbart krävs när värdet sätts till 1.
+              <t><t>När värdet sätts till 0 sker det utan bekräftelse.
+Confirm.OnReset <t><t>Används med action ToggleDig när bekräftelse enbart krävs när värdet sätts till 0.
+              <t><t>När värdet sätts till 1 sker det utan bekräftelse.
 </topic>
 
 <topic>GeDynIncrAnalog <style>function

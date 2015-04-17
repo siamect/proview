@@ -238,9 +238,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	
 	MouseAdapter adapter = new MouseAdapter() {
 		public void mouseClicked(MouseEvent e) {
-		    System.out.println("GrowFrame click " + e.getModifiers() + " " + MouseEvent.BUTTON1_MASK);
 		    if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
-			System.out.println("GrowFrame click MB1" + e.getModifiers() + " " + MouseEvent.BUTTON1_MASK);
 			GlowEvent event = new GlowEvent();
 			event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
 			event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;
@@ -248,7 +246,6 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 			graph.ctx.eventHandler( event);
 		    }
 		    else if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0) {
-			System.out.println("GrowFrame click MB3" + e.getModifiers() + " " + MouseEvent.BUTTON3_MASK);
 			GlowEvent event = new GlowEvent();
 			event.x = (e.getX() + graph.ctx.cmn.mw.offset_x) / graph.ctx.cmn.mw.zoom_factor_x;
 			event.y = (e.getY() + graph.ctx.cmn.mw.offset_y) / graph.ctx.cmn.mw.zoom_factor_y;

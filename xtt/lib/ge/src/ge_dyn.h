@@ -557,6 +557,8 @@
     ge_eSave_Command_command		= 5500,
     ge_eSave_CommandDC_command		= 5600,
     ge_eSave_Confirm_text	       	= 5700,
+    ge_eSave_Confirm_on_set      	= 5701,
+    ge_eSave_Confirm_on_reset		= 5702,
     ge_eSave_IncrAnalog_attribute      	= 5800,
     ge_eSave_IncrAnalog_increment      	= 5801,
     ge_eSave_IncrAnalog_min_value      	= 5802,
@@ -2013,12 +2015,16 @@ class GeCommandDoubleClick : public GeDynElem {
 class GeConfirm : public GeDynElem {
  public:
   char text[120];
+  pwr_tBoolean on_set;
+  pwr_tBoolean on_reset;
 
   GeConfirm( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_Confirm, ge_mActionType2_No, ge_eDynPrio_Confirm)
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_Confirm, ge_mActionType2_No, ge_eDynPrio_Confirm),
+    on_set(0), on_reset(0)
     { strcpy( text, "");}
   GeConfirm( const GeConfirm& x) : 
-    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio),
+    on_set(x.on_set), on_reset(x.on_reset)
     { strcpy( text, x.text);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);

@@ -463,6 +463,8 @@ public class Dyn {
     public static final int eSave_Command_command		= 5500;
     public static final int eSave_CommandDC_command		= 5600;
     public static final int eSave_Confirm_text	       		= 5700;
+    public static final int eSave_Confirm_on_set	       	= 5701;
+    public static final int eSave_Confirm_on_reset	       	= 5702;
     public static final int eSave_IncrAnalog_attribute      	= 5800;
     public static final int eSave_IncrAnalog_increment      	= 5801;
     public static final int eSave_IncrAnalog_min_value      	= 5802;
@@ -8195,6 +8197,8 @@ public class Dyn {
 
     public class DynConfirm extends DynElem {
 	String text;
+	int on_set;
+	int on_reset;
 
 	public DynConfirm( Dyn dyn) {
 	    super(dyn, 0, 0, Dyn.mActionType1_Confirm, 0, Dyn.eDynPrio_Confirm);
@@ -8218,6 +8222,40 @@ public class Dyn {
 		break;
 	    case Glow.eEvent_MB1Click:
 	    case Glow.eEvent_ValueChanged:
+
+		int skip = 0;
+		if ( ((on_set != 0 && on_reset == 0) || (on_reset != 0 && on_set == 0)) &&
+		     (dyn.total_action_type1 & Dyn.mActionType1_ToggleDig) != 0) {
+		    for ( int j = 0; j < dyn.elements.size(); j++) {
+			if ( dyn.elements.get(j).action_type1 == Dyn.mActionType1_ToggleDig) {
+			    DynParsedAttrName pname = dyn.parseAttrName( ((DynToggleDig)dyn.elements.get(j)).attribute);
+			    if ( pname.name.startsWith("&"))
+				pname.name = dyn.graph.get_reference_name( pname.name);
+
+			    switch ( pname.database) {
+			    case GraphIfc.eDatabase_Gdh:
+				CdhrBoolean ret = dyn.graph.getGdh().getObjectInfoBoolean( pname.name);
+				if (ret.oddSts()) {
+				    if ( (on_set != 0 && ret.value) || (on_reset != 0 && !ret.value))
+					skip = 1;
+				}
+				else
+				    System.out.println("Confirm: " + ret.getSts());
+				break;
+			    case GraphIfc.eDatabase_Ccm:
+				// TODO
+				break;
+			    default: ;
+			    }
+			    break;
+			}
+		    }
+		}
+		if ( skip != 0) {
+		    dyn.confirmedAction(  e.event, o);
+		    return 1;
+		}
+
 		dyn.graph.openConfirmDialog( dyn, text, object);
 		break;
 	    }
@@ -8241,6 +8279,12 @@ public class Dyn {
 		    case Dyn.eSave_Confirm_text: 
 			if ( token.hasMoreTokens())
 			    text = line.substring(5);
+			break;
+		    case Dyn.eSave_Confirm_on_set: 
+			on_set = Integer.valueOf(token.nextToken());
+			break;
+		    case Dyn.eSave_Confirm_on_reset: 
+			on_reset = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;

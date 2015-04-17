@@ -12477,6 +12477,16 @@ void GeConfirm::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( text);
 
+  strcpy( attrinfo[i].name, "OnSet");
+  attrinfo[i].value = &on_set;
+  attrinfo[i].type = glow_eType_Boolean;
+  attrinfo[i++].size = sizeof( on_set);
+
+  strcpy( attrinfo[i].name, "OnReset");
+  attrinfo[i].value = &on_reset;
+  attrinfo[i].type = glow_eType_Boolean;
+  attrinfo[i++].size = sizeof( on_reset);
+
   dyn->display_access = true;
   *item_count = i;
 }
@@ -12485,6 +12495,8 @@ void GeConfirm::save( ofstream& fp)
 {
   fp << int(ge_eSave_Confirm) << endl;
   fp << int(ge_eSave_Confirm_text) << FSPACE << text << endl;
+  fp << int(ge_eSave_Confirm_on_set) << FSPACE << on_set << endl;
+  fp << int(ge_eSave_Confirm_on_reset) << FSPACE << on_reset << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -12510,6 +12522,8 @@ void GeConfirm::open( ifstream& fp)
         fp.get();
         fp.getline( text, sizeof(text));
         break;
+      case ge_eSave_Confirm_on_set: fp >> on_set; break;
+      case ge_eSave_Confirm_on_reset: fp >> on_reset; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeConfirm:open syntax error" << endl;
@@ -12533,6 +12547,46 @@ int GeConfirm::action( grow_tObject object, glow_tEvent event)
   case glow_eEvent_MB1Click: {
     if ( dyn->total_action_type1 & ge_mActionType1_ValueInput)
       return 1;
+
+    int skip = 0;
+    if ( ((on_set && !on_reset) || (on_reset && !on_set)) &&
+	 dyn->total_action_type1 & ge_mActionType1_ToggleDig) {
+      for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
+	if ( elem->action_type1 == ge_mActionType1_ToggleDig) {
+	  pwr_tAName         	parsed_name;
+	  int			inverted;
+	  int			attr_type, attr_size;
+	  graph_eDatabase 	db;
+	  pwr_tBoolean		value;
+	  pwr_tStatus		sts;
+
+	  db = dyn->parse_attr_name( ((GeToggleDig *)elem)->attribute, parsed_name, &inverted, &attr_type, &attr_size);
+	  if ( parsed_name[0] == '&')
+	    dyn->graph->get_reference_name( parsed_name, parsed_name);
+
+	  switch ( db) {
+	  case graph_eDatabase_Gdh: {
+
+	    sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
+	    if ( EVEN(sts)) {
+	      printf("Confirm error: %s\n", parsed_name);
+	      break;
+	    }
+	    if ( (on_set && value == 1) || (on_reset && value == 0))
+	      skip = 1;
+	    break;
+	  }
+	  default: ;
+	  }
+	  break;
+	}
+      }
+    }
+    if ( skip) {
+      dyn->confirmed_action( object, event);
+      return 1;
+    }
+
     if ( dyn->graph->confirm_cb) {
       (dyn->graph->confirm_cb)( dyn->graph->parent_ctx, 
 			   object, text);
