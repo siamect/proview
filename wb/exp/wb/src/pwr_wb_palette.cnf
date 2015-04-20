@@ -180,6 +180,8 @@ palette NavigatorPalette
         {
           class Eurotherm_TC3001
           class Eurotherm_TC3001Aggr
+          class Eurotherm_EPower
+          class Eurotherm_EPowerAggr
         }
         menu Impac
         {
@@ -387,10 +389,11 @@ palette NavigatorPalette
         menu Devices
         {
           class PnDevice
+          class ABB_ACS_PnDevice
+	  class Eurotherm_EPower_PnDevice
           class Siemens_ET200S_PnDevice
           class Siemens_ET200M_PnDevice
           class Sinamics_G120_PnDevice
-          class ABB_ACS_PnDevice
         }
       }
       menu PSS9000
@@ -1153,6 +1156,7 @@ palette PlcEditorPalette
       class CStoBiFloat32
       class CStoBiString80
       class CStoIi
+      class IOSimulFlag
       class ResDi
       class SetDi
       class StoAi
@@ -1248,6 +1252,8 @@ palette PlcEditorPalette
     {
       class Eurotherm_TC3001Fo
       class Eurotherm_TC3001AggrFo
+      class Eurotherm_EPowerFo
+      class Eurotherm_EPowerAggrFo
       class SEW_Movidrive_1Fo
       class SEW_Movidrive_EPBFo
       class Janitza_UMG96S_1Fo	
@@ -1274,6 +1280,8 @@ palette PlcEditorPalette
       class BaseValveIncrDecrSim
       class Eurotherm_TC3001Sim
       class Eurotherm_TC3001AggrSim
+      class Eurotherm_EPowerSim
+      class Eurotherm_EPowerAggrSim
       class SEW_Movidrive_1Sim
     }
     menu Miscellaneous

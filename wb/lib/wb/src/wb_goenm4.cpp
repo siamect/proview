@@ -78,7 +78,8 @@ typedef enum {
 	goen_eGraphIndex_GetDTgeneric	= 43,
 	goen_eGraphIndex_StoDTgeneric	= 44,
 	goen_eGraphIndex_True		= 45,
-	goen_eGraphIndex_False		= 46
+	goen_eGraphIndex_False		= 46,
+	goen_eGraphIndex_IOSimulFlag	= 47
 	} goen_eGraphIndex;
 
 static	float	f_pinlength  = GOEN_F_PINLENGTH;
@@ -517,6 +518,7 @@ int goen_create_nodetype_m4(
       break;
     }
     case goen_eGraphIndex_FirstScan:
+    case goen_eGraphIndex_IOSimulFlag:
     case goen_eGraphIndex_True:
     case goen_eGraphIndex_False:
     {
@@ -525,6 +527,7 @@ int goen_create_nodetype_m4(
 
       switch ( graph_index) {
       case goen_eGraphIndex_FirstScan:    w=4; strcpy( text, "FirstScan"); break;
+      case goen_eGraphIndex_IOSimulFlag:  w=4; strcpy( text, "IOSimulFlag"); break;
       case goen_eGraphIndex_True:         w=2; strcpy( text, "True"); break;
       case goen_eGraphIndex_False:        w=2; strcpy( text, "False"); break;
       default: ;

@@ -78,6 +78,14 @@
     object->Status = tp->first_scan;
 
 /*_*
+  @aref iosimulflag IOSimulFlag
+*/
+#define IOSimulFlag_exec(object)\
+  if ( tp->pp->IOHandler) \
+    object->Status = tp->pp->IOHandler->IOSimulFlag;
+
+
+/*_*
   @aref abs Abs
 */
 #define Abs_exec(object, in)\
