@@ -53,7 +53,7 @@ co_StrToArgv (
   int argc;
   char **argv;
   char *arg;
-  int last_was_white;
+  int last_was_white = 1;
   int in_quote = 0;
 
   if (args == NULL) {
