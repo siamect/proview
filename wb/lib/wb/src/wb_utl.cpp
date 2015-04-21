@@ -11799,18 +11799,38 @@ static	int		cross_crosslist_count[CROSSLIST_SIZE] = {0,0,0,0,0,0,0,0,0,0};
 pwr_tStatus wb_utl::utl_replace_symbol( ldh_tSesContext ldhses, 
 					pwr_tObjid oid,
 					pwr_sAttrRef *arp)
-{
+{  
   switch ( arp->Objid.vid) {
   case ldh_cPlcFoVolume: {
     pwr_tStatus sts;
     pwr_tOid host;
+    pwr_tCid cid;
 
     sts = ldh_GetParent( ldhses, oid, &host);
     if ( EVEN(sts)) return sts;
     sts = ldh_GetParent( ldhses, host, &host);
     if ( EVEN(sts)) return sts;
 
-    arp->Objid = host;
+    sts = ldh_GetObjectClass( ldhses, host, &cid);
+    if ( EVEN(sts)) return sts;
+
+    if ( cid == pwr_cClass_plc) {      
+      // PlcFo reference in embedded template plc
+      pwr_tAttrRef *host_arp;
+      int size;
+      
+      sts = ldh_GetObjectPar( ldhses, host, "RtBody",
+			      "HostObject", (char **)&host_arp, &size);
+      if ( EVEN(sts)) return sts;
+
+      arp->Objid = host_arp->Objid;
+      arp->Offset += host_arp->Offset;
+
+      free( (char *)host_arp);
+    }
+    else
+      arp->Objid = host;
+
     break;
   }
   case ldh_cPlcMainVolume: {
