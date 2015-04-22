@@ -144,16 +144,18 @@ class SubGraphBaseItem {
 class ItemSubGraph : public SubGraphBaseItem {
   public:
     ItemSubGraph( SubGraphs *subgraphs, char *item_name, int *item_extern_p,
-	void *item_nodeclass,
-	brow_tNode dest, flow_eDest dest_code);
+		  void *item_nodeclass, void *item_grow_ctx,
+		  brow_tNode dest, flow_eDest dest_code);
     brow_tNode		node;
+    void		*grow_ctx;
     char	 	name[120];
     void		*nodeclass;
     int			*extern_p;
     int			old_extern;
     int			first_scan;
 
-    void		set_extern( int value) { *extern_p = value;};
+    void		set_extern( int value) { *extern_p = value; grow_SetModified((grow_tCtx)grow_ctx, 1);
+};
 };
 
 /*@}*/

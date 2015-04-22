@@ -212,6 +212,7 @@ int SubGraphs::set_all_extern( int eval)
     if ( item->type == subgraphs_eItemType_SubGraph)
       ((ItemSubGraph *)item)->set_extern( eval);
   }
+  grow_SetModified( (grow_tCtx)grow_ctx, 1);
   return 1;
 }
 
@@ -564,7 +565,7 @@ int	SubGraphs::object_attr()
     grow_GetNodeClassName( *list_p, name);
 
     new ItemSubGraph( this, name, extern_p, *list_p,
-	NULL, flow_eDest_IntoLast);
+		      grow_ctx, NULL, flow_eDest_IntoLast);
     list_p++;
   }
     
@@ -638,12 +639,11 @@ int SubGraphs::init_brow_cb( FlowCtx *fctx, void *client_data)
 }
 
 ItemSubGraph::ItemSubGraph( SubGraphs *subgraphs, 
-	char *item_name, int *item_extern_p, void *item_nodeclass,
-	brow_tNode dest, flow_eDest dest_code) :
-	SubGraphBaseItem(subgraphs_eItemType_SubGraph), 
-	nodeclass(item_nodeclass), extern_p( item_extern_p), 
-	old_extern(0), first_scan(0)
-	
+			    char *item_name, int *item_extern_p, void *item_nodeclass,
+			    void *item_grow_ctx, brow_tNode dest, flow_eDest dest_code) :
+  SubGraphBaseItem(subgraphs_eItemType_SubGraph), 
+  grow_ctx(item_grow_ctx), nodeclass(item_nodeclass), extern_p( item_extern_p),
+  old_extern(0), first_scan(0)	
 {
 
   strcpy( name, item_name);
