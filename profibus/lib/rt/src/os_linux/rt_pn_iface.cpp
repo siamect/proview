@@ -59,6 +59,13 @@
 #include "rt_pn_gsdml_data.h"
 #include "rt_io_base.h"
 #include "rt_io_pnak_locals.h"
+#include "rt_io_pn_locals.h"
+
+#include "sys/socket.h"
+#include "sys/ioctl.h"
+#include "net/if.h"
+#include "netinet/in.h"
+#include "arpa/inet.h"
 
 #define _PN_U32_HIGH_WORD(U32)                                     ((PN_U16) ((U32) >> 16))
 #define _PN_U32_LOW_WORD(U32)                                      ((PN_U16)  (U32)       )
@@ -1229,7 +1236,7 @@ int unpack_get_device_state_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal
 
 
     printf(
-	   "channel %d: download.con [-] (%d)\r\n"
+	   "channel %d: get_device_state.con [-] (%d)\r\n"
 	   "            code       : %d (0x%02x)\r\n"
 	   "            detail     : %d (0x%02x)\r\n"
 	   "            add. detail: %d (0x%02x)\r\n"
@@ -1652,15 +1659,312 @@ void *handle_events(void *ptr) {
   T_PNAK_WAIT_OBJECT           wait_object;
   int                          sts;
 
+
+  pwr_sClass_PnControllerSoftingPNAK *op;
+  //  pwr_tUInt16 sts;
+  io_sPnRackLocal *r_local;
+
+  char fname[196];
+  char hname[40];
+  char *env;
+
+  vector<GsdmlDeviceData *>  device_vect;
+  GsdmlDeviceData  *dev_data;
+  PnDeviceData     *pn_dev_data;
+  PnIOCRData       *pn_iocr_data;
+  PnModuleData     *pn_slot_data;
+  PnSubmoduleData  *pn_subslot_data;
+  unsigned short    ii, jj, kk, ll, offset_inputs, offset_outputs, type;
+  unsigned short    num_modules = 0;
+  int               s;
+
+  struct ifreq ifr = {};
+
+  io_sRack *slave_list;
+
   args = (agent_args *) ptr;
   local = (io_sAgentLocal *) args->local;
   ap = args->ap;
 
+  //  count=0;
+
+  pthread_mutex_lock(&local->mutex);
+    
+  op = (pwr_sClass_PnControllerSoftingPNAK *) ap->op;
+
+  /* Initialize interface */
+  
+  errh_Info( "Initializing interface for Profinet IO Master %s", ap->Name);
+
+  /* Add master as a device */
+
+  dev_data = new GsdmlDeviceData;
+
+  /* Get configs for device */
+
+  gethostname(hname, 40);
+
+  s = socket(AF_INET, SOCK_DGRAM, 0);
+  strncpy(ifr.ifr_name, op->EthernetDevice, sizeof(ifr.ifr_name));
+  if (ioctl(s, SIOCGIFADDR, &ifr) >= 0) {
+    strcpy(dev_data->ip_address, inet_ntoa(((struct sockaddr_in *) &ifr.ifr_addr)->sin_addr));
+  }
+  if (ioctl(s, SIOCGIFNETMASK, &ifr) >= 0) {
+    strcpy(dev_data->subnet_mask, inet_ntoa(((struct sockaddr_in *) &ifr.ifr_netmask)->sin_addr));
+  }
+
+  sscanf(dev_data->ip_address, "%hhu.%hhu.%hhu.%hhu", &local->ipaddress[3], &local->ipaddress[2], &local->ipaddress[1], &local->ipaddress[0]) ;
+  sscanf(dev_data->subnet_mask, "%hhu.%hhu.%hhu.%hhu", &local->subnetmask[3], &local->subnetmask[2], &local->subnetmask[1], &local->subnetmask[0]) ;
+
+  strcpy(dev_data->device_name, hname);
+  dev_data->device_num = PN_DEVICE_REFERENCE_THIS_STATION;
+  strcpy(dev_data->device_text, op->EthernetDevice);
+  dev_data->vendor_id = 279; // Softing vendor id
+  dev_data->device_id = 0;
+  strcpy(dev_data->version, "1.0");
+  dev_data->byte_order = 0;
+
+  device_vect.push_back(dev_data);
+
+  pn_dev_data = new PnDeviceData;
+
+  pn_dev_data->device_ref = PN_DEVICE_REFERENCE_THIS_STATION;
+  local->device_data.push_back(pn_dev_data);
+
+  env = getenv("pwrp_load");
+
+  /* Iterate over the slaves.  */
+
+  for (slave_list = ap->racklist, ii = 0; slave_list != NULL;
+       slave_list = slave_list->next, ii++) {
+
+    dev_data = new GsdmlDeviceData;
+    pn_dev_data = new PnDeviceData;
+
+    sprintf(fname, "%s/pwr_pn_%s.xml", env, cdh_ObjidToFnString(NULL, slave_list->Objid ));
+
+    dev_data->read(fname);
+    device_vect.push_back(dev_data);
+    
+    pn_dev_data->device_ref = ii + 1;
+    
+    for (jj = 0; jj < dev_data->iocr_data.size(); jj++) {
+      pn_iocr_data = new PnIOCRData;
+      pn_iocr_data->type = dev_data->iocr_data[jj]->type;
+      pn_dev_data->iocr_data.push_back(pn_iocr_data);
+    }
+
+    num_modules = 0;
+    for (jj = 0; jj < dev_data->slot_data.size(); jj++) {
+      if ((dev_data->slot_data[jj]->module_enum_number != 0) ||
+	  (jj == 0))
+	num_modules++;
+      else break;
+    }
+
+    for (jj = 0; jj < num_modules; jj++) {
+      pn_slot_data = new PnModuleData;
+      pn_slot_data->slot_number = dev_data->slot_data[jj]->slot_number;
+      pn_slot_data->ident_number = dev_data->slot_data[jj]->module_ident_number;
+      pn_dev_data->module_data.push_back(pn_slot_data);
+
+      for (kk = 0; kk < dev_data->slot_data[jj]->subslot_data.size(); kk++) {
+	pn_subslot_data = new PnSubmoduleData;
+        pn_subslot_data->subslot_number = dev_data->slot_data[jj]->subslot_data[kk]->subslot_number;
+	pn_subslot_data->ident_number = dev_data->slot_data[jj]->subslot_data[kk]->submodule_ident_number;
+	pn_subslot_data->api = dev_data->slot_data[jj]->subslot_data[kk]->api;
+        if (dev_data->slot_data[jj]->subslot_data[kk]->io_input_length > 0) {
+	  pn_subslot_data->io_in_data_length = dev_data->slot_data[jj]->subslot_data[kk]->io_input_length;
+	  pn_subslot_data->type = PROFINET_IO_SUBMODULE_TYPE_INPUT ;
+	} 
+        if (dev_data->slot_data[jj]->subslot_data[kk]->io_output_length > 0) {
+	  pn_subslot_data->io_out_data_length = dev_data->slot_data[jj]->subslot_data[kk]->io_output_length;
+	  pn_subslot_data->type |= PROFINET_IO_SUBMODULE_TYPE_OUTPUT;
+	}
+        if ((dev_data->slot_data[jj]->subslot_data[kk]->io_output_length > 0) &&
+	    (dev_data->slot_data[jj]->subslot_data[kk]->io_input_length > 0)) {
+	  pn_subslot_data->type |= PROFINET_IO_SUBMODULE_TYPE_INPUT_AND_OUTPUT;
+	}
+	
+	pn_dev_data->module_data[jj]->submodule_data.push_back(pn_subslot_data);
+      }
+    }
+    local->device_data.push_back(pn_dev_data);
+  }
+
+  /* Start profistack */
+
+  sts = pnak_start_profistack(0, PNAK_CONTROLLER_MODE);
+  
+  if (sts != PNAK_OK) {
+    op->Status = PB__INITFAIL;
+    errh_Error( "Starting profistack returned with error code: %d", sts);
+    //    return IO__ERRINIDEVICE;
+  }
+  
+
+  /* Download configuration for all devices */
+  
+  for (ii = 0; ii < device_vect.size(); ii++) {
+    //  for (ii = 0; ii < 1; ii++) {
+    pack_download_req(&local->service_req_res, device_vect[ii], local->device_data[ii]->device_ref);
+    
+    sts = pnak_send_service_req_res(0, &local->service_req_res);
+    
+    if (sts == PNAK_OK) {
+      sts = wait_service_con(local, ap);
+      
+      if (sts == PNAK_OK) { 
+	/* Loop through devices and calculate offset for io */
+	
+	
+	for (jj = 0; jj <  local->device_data[ii]->iocr_data.size(); jj++) {
+	  offset_inputs = 0;
+	  offset_outputs = 0;
+	  type = local->device_data[ii]->iocr_data[jj]->type;
+	  for (kk = 0; kk < local->device_data[ii]->module_data.size(); kk++) {
+	    for (ll = 0; ll < local->device_data[ii]->module_data[kk]->submodule_data.size(); ll++) {
+	      PnSubmoduleData *submodule;
+	      submodule = local->device_data[ii]->module_data[kk]->submodule_data[ll];
+              if ((type == PROFINET_IO_CR_TYPE_INPUT) &&
+                  ((submodule->type == PROFINET_IO_SUBMODULE_TYPE_INPUT) ||
+                   (submodule->type == PROFINET_IO_SUBMODULE_TYPE_INPUT_AND_OUTPUT))) {
+                submodule->offset_clean_io_in = offset_inputs;
+                offset_inputs += submodule->io_in_data_length;
+              }
+              else if ((type == PROFINET_IO_CR_TYPE_OUTPUT) &&
+                       ((submodule->type == PROFINET_IO_SUBMODULE_TYPE_OUTPUT) ||
+                        (submodule->type == PROFINET_IO_SUBMODULE_TYPE_INPUT_AND_OUTPUT))) {
+                submodule->offset_clean_io_out = offset_outputs;
+                offset_outputs += submodule->io_out_data_length;
+              }
+	    }
+	  }
+	  local->device_data[ii]->iocr_data[jj]->clean_io_data = (unsigned char *) calloc(1, offset_inputs + offset_outputs);
+	  local->device_data[ii]->iocr_data[jj]->clean_io_data_length = offset_inputs + offset_outputs;
+	}
+      } else {
+	errh_Error( "Download of Profinet Device configuration failed for: %s", device_vect[ii]->device_name);
+	/* Setup a dummy i/o area. Depending on exisiting channels this area needs to exist */
+        
+	for (jj = 0; jj <  local->device_data[ii]->iocr_data.size(); jj++) {
+	  local->device_data[ii]->iocr_data[jj]->clean_io_data = (unsigned char *) calloc(1, PROFINET_IO_DATA_MAX_LENGTH);
+	}
+      }
+    }
+  }
+  
+  /* Loop trough devices and set up i/o */
+
+  for (slave_list = ap->racklist, ii = 0; slave_list != NULL;
+       slave_list = slave_list->next, ii++) {
+    slave_list->Local = (unsigned char *) calloc(1, sizeof(io_sPnRackLocal));
+    r_local = (io_sPnRackLocal *) slave_list->Local;
+    
+    for (jj = 0; jj <  local->device_data[ii + 1]->iocr_data.size(); jj++) {
+      
+      if (local->device_data[ii + 1]->iocr_data[jj]->type == PROFINET_IO_CR_TYPE_INPUT) {
+	r_local->bytes_of_input = local->device_data[ii + 1]->iocr_data[jj]->clean_io_data_length;
+	r_local->inputs = local->device_data[ii + 1]->iocr_data[jj]->clean_io_data;
+      }
+      else if (local->device_data[ii + 1]->iocr_data[jj]->type == PROFINET_IO_CR_TYPE_OUTPUT) {
+	r_local->bytes_of_output = local->device_data[ii + 1]->iocr_data[jj]->clean_io_data_length;
+	r_local->outputs = local->device_data[ii + 1]->iocr_data[jj]->clean_io_data;
+      }
+    }
+  }
+  
+
+  /* Set identification */
+
+  pack_set_identification_req(&local->service_req_res);
+
+  sts = pnak_send_service_req_res(0, &local->service_req_res);
+
+  if (sts == PNAK_OK) {
+    sts = wait_service_con(local, ap);
+  }
+
+  /* Set mode online */
+  
+  T_PNAK_EVENT_SET_MODE        pMode;
+  
+  pMode.Mode = PNAK_MODE_ONLINE;
+  
+  sts = pnak_set_mode(0, &pMode);
+  
+  if (sts != PNAK_OK) {
+    op->Status = PB__INITFAIL;
+    errh_Error( "Profistack unable to go online, errcode: %d", sts);
+    //    return IO__ERRINIDEVICE;
+  }
+  
+
+  //  T_PNAK_WAIT_OBJECT           wait_object;
+  
+  wait_object = PNAK_WAIT_OBJECT_STATE_CHANGED;
+  
+  sts = pnak_wait_for_multiple_objects(0, &wait_object, PNAK_INFINITE_TIMEOUT);
+  
+  if (sts == PNAK_OK) {
+    T_PNAK_EVENT_STATE           pState;
+    
+    sts = pnak_get_state(0, &pState);
+    
+    if (pState.Mode != PNAK_MODE_ONLINE) {
+      
+      if (sts != PNAK_OK) {
+	op->Status = PB__INITFAIL;
+	errh_Error( "Profistack unable to set state online, errcode: %d", sts);
+	//	return IO__ERRINIDEVICE;
+      }
+    }
+  }
+
+  /* Activate the devices */
+  
+  T_PNAK_EVENT_SET_DEVICE_STATE  set_dev_state;
+  unsigned short index, bit_no;
+  
+  memset(&set_dev_state, 0, sizeof(set_dev_state));
+  
+  for (ii = 0; ii < local->device_data.size(); ii++) {
+    index = ii / 8;
+    bit_no = ii % 8;
+    set_dev_state.ActivateDeviceReference[index] |= (1 << bit_no);
+  }
+  
+  sts = pnak_set_device_state(0, &set_dev_state);
+  
+  if (sts != PNAK_OK) {
+    op->Status = PB__INITFAIL;
+    errh_Error( "Profistack unable to activate devices, errcode: %d", sts);
+    //    return IO__ERRINIDEVICE;
+  }
+
+  /* Check state for all devices */
+
+  for (ii = 1; ii < device_vect.size(); ii++) {
+    //  for (ii = 0; ii < 1; ii++) {
+    pack_get_device_state_req(&local->service_req_res, local->device_data[ii]->device_ref);
+
+    sts = pnak_send_service_req_res(0, &local->service_req_res);
+
+    if (sts == PNAK_OK) {
+      sts = wait_service_con(local, ap);
+    }
+  }
+
+  pthread_cond_signal(&local->cond);
+  pthread_mutex_unlock(&local->mutex);
 
   /* Do forever ... */
 
   while (1) {
     wait_object = PNAK_WAIT_OBJECTS_EVENT_IND | PNAK_WAIT_OBJECTS_OTHER | PNAK_WAIT_OBJECT_SERVICE_CON;
+
+    //    pthread_mutex_lock(&local->mutex);
+
     sts = pnak_wait_for_multiple_objects(0, &wait_object, PNAK_INFINITE_TIMEOUT);
     
     if (sts == PNAK_OK) {
@@ -1713,6 +2017,9 @@ void *handle_events(void *ptr) {
 	printf("Running == NOT !!"); 
       //    pThisSmObject->Running = PN_FALSE;
     }
+
+//    pthread_mutex_unlock(&local->mutex);
+
   }
   return 0;
 }

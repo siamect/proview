@@ -462,7 +462,7 @@ else
   pwre_config_check_lib libhdf5   LIBHDF5  lib lib 0 "/usr/lib/libhdf5.so:/usr/lib/$hwpl-linux-$gnu/libhdf5.so"
   pwre_config_check_lib mq        MQ       lib mq  1 "/usr/lib/libdmq.so:/usr/local/dmq/lib/libdmq.so"
   pwre_config_check_lib wmq       WMQ      lib wmq 1 "/usr/lib/libmqic.so"
-  pwre_config_check_lib libpnioif PNAK     lib pnak 1 "/usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a"
+  pwre_config_check_lib libprofinet PNAK     lib pnak 1 "/usr/lib/libprofinet.a"
   pwre_config_check_lib libusb    LIBUSB   lib libusb 1 "/usr/lib/libusb-1.0.so:/usr/lib/$hwpl-linux-$gnu/libusb-1.0.so"
   pwre_config_check_lib powerlink POWERLINK lib powerlink 1 "$epl/build/Examples/X86/Generic/powerlink_user_lib/libpowerlink.a"
   pwre_config_check_lib powerlinkcn POWERLINKCN lib powerlinkcn 1 "$epl/buildcn/Examples/X86/Generic/powerlink_user_lib/libpowerlink.a"

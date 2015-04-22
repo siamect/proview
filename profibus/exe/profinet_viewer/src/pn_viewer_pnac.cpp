@@ -67,7 +67,7 @@ PnViewerPNAC::PnViewerPNAC( pwr_tStatus *sts, const char *dev_name)
 
   local = new io_sAgentLocal;
   pnak_init();
-  *sts = pnak_start_profistack(0, PNAK_CONTROLLER_MODE);
+  *sts = pnak_start_profistack(0, PNAK_SUPERVISOR_MODE);
 
   if (*sts != PNAK_OK) {
     printf("Starting profistack returned with error code\n");

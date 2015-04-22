@@ -191,6 +191,9 @@ class io_sAgentLocal {
 
   pthread_t handle_events;
   agent_args args;
+  
+  pthread_mutex_t  mutex;
+  pthread_cond_t   cond;
 
 };
 

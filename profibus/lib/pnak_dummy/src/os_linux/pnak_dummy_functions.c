@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2010 SSAB Oxelösund AB.
+ * Copyright (C) 2005-2015 SSAB EMEA AB.
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 
@@ -60,9 +60,9 @@ T_PNAK_RESULT    pnak_get_alarm_ack_ind                    (unsigned short a1, T
 
 /*--- Data interface functions ----------------------------------------------*/
 
-T_PNAK_RESULT    pnak_set_iocr_data                        (unsigned short a1, unsigned short a2, const unsigned char* a3, unsigned short a4) {return PNAK_OK;}
+T_PNAK_RESULT    pnak_set_iocr_data                        (unsigned short a1, unsigned short a2, const unsigned char* a3, unsigned short a4, unsigned char a5) {return PNAK_OK;}
 
-T_PNAK_RESULT    pnak_get_iocr_data                        (unsigned short a1, unsigned short a2, unsigned char* a3, unsigned short* a4, unsigned char* a5) {return PNAK_OK;}
+T_PNAK_RESULT    pnak_get_iocr_data                        (unsigned short a1, unsigned short a2, unsigned char* a3, unsigned short* a4, unsigned char* a5, unsigned char *a6) {return PNAK_OK;}
 T_PNAK_RESULT    pnak_get_consumer_data_changed_ind        (unsigned short a1, T_PNAK_DATA_CONSUMER_DATA_CHANGED* a2) {return PNAK_OK;}
 T_PNAK_RESULT    pnak_get_provider_data_updated            (unsigned short a1, T_PNAK_DATA_PROVIDER_DATA_UPDATED* a2) {return PNAK_OK;}
 
