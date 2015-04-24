@@ -3240,8 +3240,6 @@ isValidOutunit (
 
     if (op->birthTime.tv_sec != hp->birthTime.tv_sec) {
       if ( hp->type == mh_eMsg_OutunitInfo) {
-	printf( "Outunit restart old x%x qid %d,%d aid %d,%d\n", (unsigned int)op, op->link.qid.nid,op->link.qid.qix,op->link.aid.nid,op->link.aid.aix);
-	printf( "                new x%x qid %d,%d aid %d,%d\n", (unsigned int)hp, hp->qid.nid,hp->qid.qix,aid->nid,aid->aix);
 	//sendToOutunit(op, mh_eMsg_OutunitClear, 0, NULL, 0);
 	if ( hp->nix == l.head.nix)
 	  handlerEvent(pwr_eSystemEventTypeEnum_OutunitRestart, hp->nix, 1);

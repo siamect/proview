@@ -59,7 +59,7 @@ import jpwr.rt.*;
 public class XttTree extends JPanel
 {
   boolean findFieldEnable = false;
-    /*Mats förändringar ny boolean för enterComm tillagd (enterFieldEnable)*/
+    /* Mats modification */
   boolean enterFieldEnable = false; 
   JPanel userPanel = new JPanel();
   BorderLayout borderLayout1 = new BorderLayout();
@@ -81,9 +81,6 @@ public class XttTree extends JPanel
   private DefaultMutableTreeNode tNodeRoot;
   private DefaultTreeModel treeModel;
   private URL url;
-  
-    //Mats förändringar: popup borttagen
-    //final JPopupMenu popup = new JPopupMenu();
   
   InputMap inputMap = new InputMap();
   ActionMap actionMap = new ActionMap();
@@ -107,18 +104,18 @@ public class XttTree extends JPanel
   String functions;
     
   String language_EN = "Language";
-  String language_SW = "Språk";
+  String language_SW = "SprÃ¥k";
   String language;
     
   String swedish = "Svenska";
   String english = "English";
 
   String openObject_EN = "open object";
-  String openObject_SW = "öppna objekt";
+  String openObject_SW = "Ã¶ppna objekt";
   String openObject;
     
   String changeValue_EN = "change value";
-  String changeValue_SW = "ändra värde";
+  String changeValue_SW = "Ã¤ndra vÃ¤rde";
   String changeValue;
     
   String debug_EN = "debug";
@@ -130,7 +127,7 @@ public class XttTree extends JPanel
   String working;
 
   String openPlc_EN = "open PLC";
-  String openPlc_SW = "öppna PLC";
+  String openPlc_SW = "Ã¶ppna PLC";
   String openPlc;
 
   String showCross_EN = "show cross";
@@ -138,9 +135,9 @@ public class XttTree extends JPanel
   String showCross;
 
   String find_EN = "find...";
-  String find_SW = "sök...";
+  String find_SW = "sÃ¶k...";
   String find;
-    //Mats förändringar: strängar för enterComm
+    // Mats modifications: stings enterComm
   String enterComm_EN = "enter command";
   String enterComm_SW = "kommandorad";
   String enterComm;
@@ -226,11 +223,11 @@ public class XttTree extends JPanel
     tree.addTreeWillExpandListener(new MyTreeWillExpandListener());
     tree.addTreeExpansionListener(new MyTreeExpansionListener());
 
-    /*---Bygg upp trädet--------------------------------------------------------------*/
+    /*---Build the tree--------------------------------------------------------------*/
     CdhrObjid r = gdh.getRootList();
     if(r.evenSts())
     {
-      Logg.logg("XttTree: Kan inte hitta roten avslutar initieringen av trädet", 1);
+      Logg.logg("XttTree: Can't find the root, stopping the initialization", 1);
       return;
     }
     tNodeRoot = new DefaultMutableTreeNode(createXttObj(r));
@@ -246,7 +243,7 @@ public class XttTree extends JPanel
     {
       for(int i = 0; i < v.size(); i++)
       {
-        //String loggStr = new String("XttTree: Börjar bygga root " + rootRow++);
+        //String loggStr = new String("XttTree: BÃ¶rjar bygga root " + rootRow++);
         //Logg.logg(loggStr, 0);
         
 	GdhrGetXttObj gdhr = (GdhrGetXttObj)v.get(i);
@@ -266,7 +263,7 @@ public class XttTree extends JPanel
         }
       }
     }
-    /*---slut på bygg upp trädet--------------------------------------------------------*/
+    /*---End build tree--------------------------------------------------------*/
     
     //make the root invisible(it's just there becasue the JTree component must have exactly 1 root)
     //then expand row 0 so we can se the rootlevel in the system
@@ -285,9 +282,7 @@ public class XttTree extends JPanel
         public void actionPerformed(ActionEvent evt)
         {
 
-	    /*Mats förändringar: Omstrukturering av ifsatser + en tillagd ifsats
-	      för enterFieldEnable*/
-	    if(enterFieldEnable)
+	  if(enterFieldEnable)
 	  {
             Logg.logg("XttTree: innan enterCommand:(" + userValue.getText() + ");", 6);
             enterComm(userValue.getText());
@@ -336,13 +331,13 @@ public class XttTree extends JPanel
     Vector v = this.gdh.getAllXttChildren(obj.objId.objid);
     if(!(v instanceof Vector))
     {
-      Logg.logg("XttTree: getAllXttChildren returnerar annat än Vector", 1);
+      Logg.logg("XttTree: getAllXttChildren returns object that is not a Vector", 1);
       return;
     }
-    //används utifall användaren angett debug
+    // Used if the user has specified debug
     //Vector<String> ref_vec = new Vector<String>();
     Vector ref_vec = new Vector();
-    //används utifall användaren angett debug
+    // Used if the user has specified debug
     //Vector<XttRefObj> o_vec = new Vector<XttRefObj>();
     Vector o_vec = new Vector();
 
@@ -465,7 +460,7 @@ public class XttTree extends JPanel
       tN.removeAllChildren();
       Logg.logg("XttTree: Barnen borttagna", 6);
 
-      Logg.logg("XttTree: Före getObjectAttributes", 6);
+      Logg.logg("XttTree: Less getObjectAttributes", 6);
       PwrtObjid pwrobjid = new PwrtObjid(0, 0);
 
       Vector v = (Vector)gdh.getAllClassAttributes(obj.fullName);
@@ -486,7 +481,7 @@ public class XttTree extends JPanel
 	*/
 	if((cdhrobjattr.flags & Pwr.mAdef_class) > 0)
 	{
-	  Logg.logg("XttTree:  Hittat klass, vad ska jag göra nu?? " + obj.fullName + " " + cdhrobjattr.name , 1);
+	  Logg.logg("XttTree: Found class, what to do now?? " + obj.fullName + " " + cdhrobjattr.name , 1);
 	  CdhrObjid cdhrObjid = gdh.classIdToObjid(cdhrobjattr.type);
        
        	  CdhrAttrRef aref = gdh.nameToAttrRef(obj.fullName + "." + cdhrobjattr.name);
@@ -537,17 +532,17 @@ public class XttTree extends JPanel
    */
   public void changeValue(String valueString)
   {
-    Logg.logg("XttTree: Användare vill ändra värde", 6);
+    Logg.logg("XttTree: User wants to change value", 6);
 
     TreePath tp = this.tree.getSelectionPath();
-    //inget objekt är markerat
+    // No object selected
     if(tp == null)
     {
       Logg.loggToApplet(JopLang.transl("Select an object"));
       return;
     }
     DefaultMutableTreeNode tn = (DefaultMutableTreeNode)(tp.getLastPathComponent());
-    //inget objekt är markerat
+    // No object selected
     if(tn == null)
     {
       Logg.loggToApplet(JopLang.transl("Select an object"));
@@ -569,13 +564,13 @@ public class XttTree extends JPanel
       name = obj.fullName;
       type = obj.type;
     }
-    //Markerat objekt kan ej ändra värde
+    // Nothing to change on selected object
     if(name == null)
     {
       Logg.loggToApplet(JopLang.transl("Unable to change value on selected object"));
       return;
     }
-    Logg.logg("XttTree: Användren vill ändra värde på " + name, 6);
+    Logg.logg("XttTree: The user wants to change value of " + name, 6);
     PwrtStatus sts = new PwrtStatus(1);
     switch (type)
     {
@@ -652,7 +647,7 @@ public class XttTree extends JPanel
 //          break;
       default:
         Logg.logg("XttTree.changeValue: innan setObjectInfo(string, string);", 6);
-        //qqq borde kolla så att det gick bra
+        // return status should be checked...
         sts = gdh.setObjectInfo(name, valueString);
         Logg.logg("efter setObjectInfo(string, string)", 4);
         break;
@@ -665,9 +660,8 @@ public class XttTree extends JPanel
   }
 
   /**
-   *  Anropas då en nod, oavsett typ, skall stängas. Kontrollerar om noden är
-   *  expanderad och i så fall stänger då noden. Om noden ej är expanderad så
-   *  stängs föräldernoden.
+   *  Called when a node is closed. Checks if the node is expanded and in that case
+   *  closes the node. If the node isn't expanded the parent node is closed.
    */
   public void collapseNode()
   {
@@ -678,15 +672,15 @@ public class XttTree extends JPanel
     }
     TreePath tp = tpc.getParentPath();
 
-    //om vi har en nod vars barn är är synliga
+    // If this is a node with visible children
     if(!treeModel.isLeaf(tpc.getLastPathComponent()) && tree.isExpanded(tpc))
     {
-      Logg.logg("XttTree: Förälderkollapsering " + tpc.toString(), 6);
+      Logg.logg("XttTree: Parenet collapsing " + tpc.toString(), 6);
       tree.collapsePath(tpc);
       tree.setSelectionPath(tpc);
       tree.scrollPathToVisible(tpc);
     }
-    //vi är ej på rootnivån
+    // We are not on root leve
     else if(tp.getPathCount() > 1)
     {
       tree.collapsePath(tp);
@@ -696,10 +690,10 @@ public class XttTree extends JPanel
   }
 
   /**
-   *  Skapar ett XttObj genom några Gdh-anrop
+   *  Creating an XttObj with some Gdh calls.
    *
-   *@param  c  CdhrObjid för det objektet som skall skapa XttObj.
-   *@return    Det nya XttObj som skapats
+   *@param  c  CdhrObjid for the object that will be created.
+   *@return    The new XttObj
    */
   public XttObj createXttObj(CdhrObjid c)
   {
@@ -719,10 +713,10 @@ public class XttTree extends JPanel
   }
 
   /**
-   *  Anropas då användaren vill göra debug på en hierarki. Sätter debug-flaggan
-   *  i XttObj-objektet som är userObject is treePath
+   *  Is called when the user wants to debug an hierarchy. Sets the debug flag in
+   *  the XttObj object that is userObject in treePath.
    *
-   *@param  treePath  Hierarki som skall "debuggas"
+   *@param  treePath  Hierarchy to debug
    */
   public void debugNode(TreePath treePath)
   {
@@ -1045,7 +1039,6 @@ public class XttTree extends JPanel
    *  @param  keyStroke      A string representing the key-combination that is to be associated with the method
    */
 
-  // Mats förändringar: booelan toPopup borttagen.
   public void newMethod(String name, Action action, String actionName, /*boolean toPopup,*/ int toMenu, String keyStroke) {
     if ( action != null) {
       actionMap.put(actionName, action);
@@ -1074,7 +1067,7 @@ public class XttTree extends JPanel
     JMenu languageSel = new JMenu(language);
     languageSel.setMnemonic('S');
 
-    // Skapa en menylist och lägg till ovan skapade "panes" i denna.
+    // Create a menu bar and add the created panes to this
     menubar.add(file);
     menubar.add(edit);
     menubar.add(functions);
@@ -1104,8 +1097,8 @@ public class XttTree extends JPanel
     this.tree.setActionMap(actionMap);
     
     
-    // Ordna så att snabbmenyn visas då man klickar i huvudfönstret.
-    //och så att SHIFT + musklick ger "öppna objekt" 
+    // Manage the fast menu to be shown when you click in the main window.
+    // Shift Click will give "Open object"
     this.tree.addMouseListener(
       new MouseAdapter()
       {
@@ -1135,7 +1128,6 @@ public class XttTree extends JPanel
             }
             if(e.isPopupTrigger())
             {
-	      //Mats förändringar: popup borttagen, JopMethodsMenu tillagd.
 	      TreePath tp = tree.getSelectionPath();
 	      if(tp == null) return;
 	      DefaultMutableTreeNode tn = (DefaultMutableTreeNode)(tp.getLastPathComponent());
@@ -1177,11 +1169,10 @@ public class XttTree extends JPanel
 
         public void mouseReleased(MouseEvent e)
         {
-          // Kontrollera om detta är rätt typ av händelse för att visa en snabbmeny
+          // Check if this is the correct type of event to display a fast menu.
 
           if(e.isPopupTrigger())
           {
-	    //Mats förändringar: popup borttagen, JopMethodsMenu tillagd.
 	    TreePath tp = tree.getSelectionPath();
 	    if(tp == null) return;
 	    DefaultMutableTreeNode tn = (DefaultMutableTreeNode)(tp.getLastPathComponent());
@@ -1207,7 +1198,7 @@ public class XttTree extends JPanel
       });
   }
 
-  // En hjälpmethod för att skapa menyobjekt.
+  // A help method to create the menu object
   public static JMenuItem menuItem(String label,
       Action action,
       String keyStroke)
@@ -1424,7 +1415,7 @@ public class XttTree extends JPanel
       Logg.logg("JopXttApplet: find()", 6);
       userValue.setText(null);
       this.tree.setRequestFocusEnabled(false);
-      //Mats förändringar: Hantering av om enterFieldEnable =true
+
       if (enterFieldEnable){
 	  enterFieldEnable = false;
 	  this.messagePanel.remove(userCommandLabel);
@@ -1438,8 +1429,9 @@ public class XttTree extends JPanel
       this.userValue.requestFocus();
       this.findFieldEnable = true;
   }
-    //Mats förändringar: Ny metod enterComm för att hantera manuellt inskrivna kommandon.
- public void enterComm()
+
+  // Method to handle manual typed commands.
+  public void enterComm()
   {
       Logg.loggToApplet(" ");
       Logg.logg("JopXttApplet: enterComm()", 6);
@@ -1458,7 +1450,8 @@ public class XttTree extends JPanel
       this.userValue.requestFocus();
       this.enterFieldEnable = true;
   }
-    //Mats förändringar: ny metod som exekverar kommandot com.
+
+    // Execute a comand
     public void enterComm(String com){
 	session.executeCommand(com);
     }
@@ -1491,7 +1484,7 @@ public class XttTree extends JPanel
      */
     public void treeExpanded(TreeExpansionEvent e)
     {
-      //pga bugg som jag ej kan lösa för tillfället
+      // fix for bug that I can't solve for the moment
       try
       {
         TreePath tp = e.getPath();
@@ -1531,8 +1524,7 @@ public class XttTree extends JPanel
   {
 
     /**
-     *  Ser till att alla grenar under den kollapserande noden också
-     *  kollapseras.
+     *  Collaps all branches below the collapsing node.
      *
      *@param  e  Description of the Parameter
      */
@@ -1573,7 +1565,7 @@ public class XttTree extends JPanel
     public void treeWillExpand(TreeExpansionEvent e)
     {
       Logg.logg("XttTree.treeWillExpand", 7);
-      //qqq bör läggas i en egen metod
+      // should be in a separate method...
       TreePath tp = e.getPath();
       if(tree.hasBeenExpanded(tp))
       {
@@ -1615,7 +1607,7 @@ public class XttTree extends JPanel
         Vector ret_vec;
         //Vector<XttArrayAttr> attr_vec = new Vector<XttArrayAttr>();
         Vector attr_vec = new Vector();
-        //qqq borde läggas i egen tråd???
+        // should be in a separate tree??
         for(int j = 0; j < obj.elements; j++)
         {
           XttArrayAttr arrayAttr = new XttArrayAttr(obj.name + "[" + j + "]", s + "#" + obj.elements + "[" + j + "]", obj.type,
@@ -1768,7 +1760,7 @@ public class XttTree extends JPanel
         {
           setIcon(ObjAttrArrayIcon);
         }
-        //qqq ändra flgga så att actual value visas rätt
+        // Change flag to show actual value correct
         else if(((flags & (Pwr.mAdef_rtdbref | Pwr.mAdef_devbodyref)) > 0) || type == Pwr.eType_Objid)
         {
           setIcon(ObjAttrPointerIcon);

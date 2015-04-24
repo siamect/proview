@@ -94,7 +94,7 @@ public class MhTable extends JPanel
 				    JopLang.transl("Time"),
 				    JopLang.transl("Event Text"),
 				    JopLang.transl("Object")};
-  //JLabel eventTableLbl = new JLabel("Händelselista");
+
   Color ALarmColor = new Color(255,100,100); // Color.red;
   Color BLarmColor = Color.yellow;
   Color CLarmColor = new Color(135,206,235); // Color.blue;
@@ -346,8 +346,8 @@ public class MhTable extends JPanel
 
     public final Object[] longValues = {"A", Boolean.TRUE,
       "10-12-31 12:12:12.98",
-      "QWERTYUIOPÅÄÖLK_JHGFDSAZXCVBNM__P",
-      "QWERTYUIOPÅÄÖLK"};
+      "QWERTYUIOPAAOLK_JHGFDSAZXCVBNM__P",
+      "QWERTYUIOPAAOLK"};
 
 
     /**
@@ -588,8 +588,8 @@ public class MhTable extends JPanel
 
     public final Object[] longValues = {"A", "Acknowledge",
       "10-12-31 12:12:12.98",
-      "QWERTYUIOPÅÄÖLK_JHGFDSAZXCVBNM__POÅIUYTRQWERTYUIOPÅÄÖL",
-      "QWERTYUIOPÅÄÖLK"};
+      "QWERTYUIOPAAOLK_JHGFDSAZXCVBNM__POÅIUYTRQWERTYUIOPAAOL",
+      "QWERTYUIOPAAOLK"};
 
 
     /**
@@ -848,7 +848,7 @@ public class MhTable extends JPanel
       {
         out = new ObjectOutputStream( /*new BufferedOutputStream(*/socket.getOutputStream() /*)*/);
         out.flush();
-        //varför???
+        // why?
         in = new ObjectInputStream( /*new BufferedInputStream(*/socket.getInputStream() /*)*/);
       }
       catch(IOException e)
@@ -1015,7 +1015,7 @@ public class MhTable extends JPanel
         //}
         this.setText("D");
       }
-      //annars måste det vara ett meddelande qqq??
+      // or this has to be a message qqq??
       else
       {
         //if(isNotReturned)
@@ -1101,7 +1101,7 @@ public class MhTable extends JPanel
         }
         this.setText("D");
       }
-      //annars måste det vara ett meddelande qqq??
+      // or it has to be a message qqq??
       else
       {
         if(setColor)

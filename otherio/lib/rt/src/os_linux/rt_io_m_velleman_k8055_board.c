@@ -40,6 +40,7 @@
 #include "pwr_basecomponentclasses.h"
 #include "pwr_otherioclasses.h"
 #include "co_time.h"
+#include "co_cdh.h"
 #include "rt_io_base.h"
 #include "rt_io_card_init.h"
 #include "rt_io_card_close.h"

@@ -156,9 +156,9 @@ public class MhClient extends JApplet
     this.setSize(size);
 
     messagePanel.add(labelMessage, BorderLayout.NORTH);
-    //Logg.logg("MhClient: Före XttTree-skapande", 6);
+    //Logg.logg("MhClient: Before XttTree-creation", 6);
     this.mhTable = new MhTable(this, false, this.labelMessage);
-    //Logg.logg("MhClient: mhTable-skapande klart", 6);
+    //Logg.logg("MhClient: mhTable created", 6);
     this.contentPane.add(this.mhTable.splitPane, BorderLayout.CENTER);
 
   }

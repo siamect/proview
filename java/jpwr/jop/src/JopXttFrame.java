@@ -81,11 +81,11 @@ public class JopXttFrame extends JFrame implements GdhApplIfc
     URL url = null;
     Logg.loggTo = Logg.TO_SCREEN;
     Logg.loggPrio = 0;
-    Logg.logg("JopXttApplet: Före XttTree-skapande", 6);
+    Logg.logg("JopXttApplet: Before XttTree-created", 6);
     this.xttTree = new XttTree(this.session, url, this);
     this.getContentPane().add(this.xttTree);
     this.xttTree.createUserInputs();
-    Logg.logg("JopXttApplet: XttTree-skapande klart", 6);
+    Logg.logg("JopXttApplet: XttTree created", 6);
 
     class WindowCatcher extends WindowAdapter
     {

@@ -168,7 +168,7 @@ void setup_io()
    );
 
    if ((long)clk_map < 0) {
-      printf("clk mmap error %d\n", (int)clk_map);
+     printf("clk mmap error %d\n", (int)((long int)clk_map));
       exit (-1);
    }
    clk = (volatile unsigned *)clk_map;
@@ -197,7 +197,7 @@ void setup_io()
    );
 
    if ((long)gpio_map < 0) {
-      printf("gpio mmap error %d\n", (int)gpio_map);
+     printf("gpio mmap error %d\n", (int)((long int)gpio_map));
       exit (-1);
    }
    gpio = (volatile unsigned *)gpio_map;
@@ -225,7 +225,7 @@ void setup_io()
    );
 
    if ((long)pwm_map < 0) {
-      printf("pwm mmap error %d\n", (int)pwm_map);
+      printf("pwm mmap error %d\n", (int)((long int)pwm_map));
       exit (-1);
    }
    pwm = (volatile unsigned *)pwm_map;
@@ -253,7 +253,7 @@ void setup_io()
    );
 
    if ((long)spi0_map < 0) {
-      printf("spi0 mmap error %d\n", (int)spi0_map);
+      printf("spi0 mmap error %d\n", (int)((long int)spi0_map));
       exit (-1);
    }
    spi0 = (volatile unsigned *)spi0_map;
@@ -281,7 +281,7 @@ void setup_io()
    );
 
    if ((long)uart_map < 0) {
-      printf("uart mmap error %d\n", (int)uart_map);
+      printf("uart mmap error %d\n", (int)((long int)uart_map));
       exit (-1);
    }
    uart = (volatile unsigned *)uart_map;

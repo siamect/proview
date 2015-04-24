@@ -3373,7 +3373,7 @@ GtkWidget *WttGtk::build_submenu( GtkWidget *Parent, int MenuType,
 	// Pushbutton
 	W = gtk_menu_item_new_with_label( Items[*idx].Name);
 	gtk_widget_set_sensitive( W, Items[*idx].Flags.f.Sensitive ? TRUE : FALSE);
-	g_object_set_data( (GObject *)W, "userdata", (gpointer)*idx);
+	g_object_set_data( (GObject *)W, "userdata", (gpointer)((long int)*idx));
 	if ( Callback)
 	  g_signal_connect( W, "activate", 
 			    G_CALLBACK(Callback), CallbackData);

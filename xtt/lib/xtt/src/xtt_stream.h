@@ -61,7 +61,7 @@ class XttCameraControl {
  public:
   pwr_tURL url;
   XttCameraControl( char *x_url) {}
-  ~XttCameraControl() {}
+  virtual ~XttCameraControl() {}
   virtual void zoom_relative( double factor) {}
   virtual void zoom_absolute( double factor) {}
   virtual void pan_relative( double value) {}

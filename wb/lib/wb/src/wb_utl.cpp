@@ -3820,7 +3820,7 @@ int utl_set_object_parameter (
 
 	sts = trv_get_objects_hier_class_name( ldhses, hierobjdid, classp, name, 
 		(trv_tBcFunc) utl_set_parameter, ldhses, parameter, valuestr, 
-		(void *)element, utlctx);
+					       (void *)((long int)element), utlctx);
 	if ( sts != FOE__ABORTSEARCH)
 	  if (EVEN(sts)) return sts;
 
@@ -4541,13 +4541,14 @@ pwr_tStatus utl_show_class_classhier (
 	if ( contents || all )
 	{
 	  sts = trv_get_class_hier( ldhses, hierobjdid, name, classclass_ptr, 
-		(trv_tBcFunc) utl_print_aref, ldhses, utlctx, (void *)contents, 0, 0);
+				    (trv_tBcFunc) utl_print_aref, ldhses, utlctx, 
+				    (void *)((long int)contents), 0, 0);
 	  if ( EVEN (sts)) return sts;
 	}
 	else
 	{
 	  sts = trv_get_class_hier( ldhses, hierobjdid, name, classclass_ptr,
-		(trv_tBcFunc) utl_print_class, ldhses, utlctx, (void *)full, 0, 0);
+				    (trv_tBcFunc) utl_print_class, ldhses, utlctx, (void *)((long int)full), 0, 0);
 	  if ( EVEN (sts)) return sts;
 	}
 

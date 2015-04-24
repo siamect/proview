@@ -98,9 +98,9 @@ int sev_repair::check()
   int fail_cnt = 0;
 
 
-  printf( "-- Number of tables to check: %u\n", m_db->m_items.size());
+  printf( "-- Number of tables to check: %u\n", (unsigned int)m_db->m_items.size());
   for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
-    printf( "\n-- Processing %u (%u) %s\n", i, m_db->m_items.size(), m_db->m_items[i].tablename);
+    printf( "\n-- Processing %u (%u) %s\n", i, (unsigned int)m_db->m_items.size(), m_db->m_items[i].tablename);
     m_db->repair_table( &sts, m_db->m_items[i].tablename);
     if ( EVEN(sts))
       fail_cnt++;
@@ -144,9 +144,9 @@ int sev_repair::alter_engine()
   int fail_cnt = 0;
 
 
-  printf( "-- Number of tables to alter: %u\n", m_db->m_items.size());
+  printf( "-- Number of tables to alter: %u\n", (unsigned int)m_db->m_items.size());
   for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
-    printf( "\n-- Processing %u (%u) %s\n", i, m_db->m_items.size(), m_db->m_items[i].tablename);
+    printf( "\n-- Processing %u (%u) %s\n", i, (unsigned int)m_db->m_items.size(), m_db->m_items[i].tablename);
     m_db->alter_engine( &sts, m_db->m_items[i].tablename);
     if ( EVEN(sts))
       fail_cnt++;
@@ -164,9 +164,9 @@ int sev_repair::optimize()
   int fail_cnt = 0;
 
 
-  printf( "-- Number of tables to optimize: %u\n", m_db->m_items.size());
+  printf( "-- Number of tables to optimize: %u\n", (unsigned int)m_db->m_items.size());
   for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
-    printf( "-- Processing %u (%u) %s\n", i, m_db->m_items.size(), m_db->m_items[i].tablename);
+    printf( "-- Processing %u (%u) %s\n", i, (unsigned int)m_db->m_items.size(), m_db->m_items[i].tablename);
     m_db->optimize( &sts, m_db->m_items[i].tablename);
     if ( EVEN(sts))
       fail_cnt++;
@@ -208,7 +208,7 @@ void sev_repair::clean()
 {
   int i;
 
-  printf( " \n-- Number of tables to clean: %u\n", m_db->m_items.size());
+  printf( " \n-- Number of tables to clean: %u\n", (unsigned int)m_db->m_items.size());
   for ( i = 0; i < (int)m_db->m_items.size(); i++) {
     clean_item( i, 1);
   }
@@ -246,7 +246,7 @@ void sev_repair::clean_item( int idx, int print_idx)
 
   if( m_db->m_items[idx].attrnum > 1 ) {
     if ( print_idx)
-      printf( "-- Processing %d (%u) %s\n", idx, m_db->m_items.size(), m_db->m_items[idx].tablename);
+      printf( "-- Processing %d (%u) %s\n", idx, (unsigned int)m_db->m_items.size(), m_db->m_items[idx].tablename);
     else
       printf( "-- Processing %s\n", m_db->m_items[idx].tablename);
     m_db->delete_old_objectdata( &m_sts, m_db->m_items[idx].tablename, 
@@ -254,7 +254,7 @@ void sev_repair::clean_item( int idx, int print_idx)
   }
   else {
     if ( print_idx)
-      printf( "-- Processing %d (%u) %s\n", idx, m_db->m_items.size(), m_db->m_items[idx].tablename);
+      printf( "-- Processing %d (%u) %s\n", idx, (unsigned int)m_db->m_items.size(), m_db->m_items[idx].tablename);
     else
       printf( "-- Processing %s\n", m_db->m_items[idx].tablename);
     m_db->delete_old_data( &m_sts, m_db->m_items[idx].tablename, 
@@ -270,7 +270,7 @@ int sev_repair::list()
       printf( " ");
     printf( " %s\n", m_db->m_items[i].oname);
   }
-  printf( "-- Number of tables: %u\n", m_db->m_items.size());
+  printf( "-- Number of tables: %u\n", (unsigned int)m_db->m_items.size());
   return 1;
 }
 

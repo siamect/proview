@@ -172,14 +172,14 @@ public class XttObj extends DynamicObj implements JopDynamic
       if( ((obj.flags & Pwr.mAdef_array) > 0) &&
           ((obj.flags & Pwr.mAdef_class) <= 0) )
       {
-        Logg.logg("XttObj:  Hittat array, vad ska jag göra nu?? " + s, 6);
+        Logg.logg("XttObj:  Found array, what to do now?? " + s, 6);
         XttArrayAttr arrayAttr = new XttArrayAttr(s);
         DefaultMutableTreeNode arrayChildNode = new DefaultMutableTreeNode(arrayAttr);
         obj.treeNode.add(arrayChildNode);
       }
       else if((obj.flags & Pwr.mAdef_class) > 0)
       {
-        Logg.logg("XttObj:  Hittat klass, vad ska jag göra nu?? " + this.fullName + " " + obj.name , 1);
+        Logg.logg("XttObj:  Found class, what to do now?? " + this.fullName + " " + obj.name , 1);
 
 	//	CdhrObjid cdhrObjid = gdh.nameToObjid(this.fullName + obj.name);
 	//	System.out.println("nameToObjid " + cdhrObjid.getSts());
@@ -206,14 +206,14 @@ public class XttObj extends DynamicObj implements JopDynamic
                                      this.en, 
                                      this.fullName + obj.name, 
                                      obj.name,
-				     "Tjoflöjt",
+				     "Test",
 				     cdhrObjid,
 				     cdhrClassId); 
 	*/
 	//        DefaultMutableTreeNode classChildNode = new DefaultMutableTreeNode(classObj);
 	//        obj.treeNode.add(classChildNode);
       }
-      //på grund av bugg i nuvarande proviewversion DataPointer borde vara PRIVATE
+      // Data pointer should be PRIVATE but id not?
       else if(obj.name.compareTo("DataPointer") != 0)
       {
         refVec.add(s);
@@ -238,7 +238,7 @@ public class XttObj extends DynamicObj implements JopDynamic
           Logg.logg("XttObj:  refObjectInfo_Vector(" + s + ") Error ", 1);
         }
 
-        //på grund av bugg i nuvarande proviewversion DataPointer borde vara PRIVATE
+        // DataPointer should be PRIVATE but is not?
         while(j < attrVector.size() &&
             (((XttObjAttr)attrVector.get(j)).name.compareTo("DataPointer") == 0 ||
             ((((XttObjAttr)attrVector.get(j)).flags & Pwr.mAdef_array) > 0) ||
@@ -374,7 +374,7 @@ public class XttObj extends DynamicObj implements JopDynamic
         }
 	  */
       }
-      //på grund av bugg i nuvarande proviewversion DataPointer borde vara PRIVATE
+      // DataPointer should be PRIVATE but is not?
       else if(obj.name.compareTo("DataPointer") != 0)
       {
         Logg.logg(" " + obj.refObj.refid.rix, 6);

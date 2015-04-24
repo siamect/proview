@@ -204,7 +204,7 @@ public class XttRefObj extends DynamicObj implements JopDynamic
 //    this.showableClassName = showableClassName;
     if(index < 0)
     {
-      Logg.logg("Fel vid försök att debugga", 0);
+      Logg.logg("Error at debug attempt", 0);
       return;
     }
     CdhrObjAttr oa = AttrObj[index];
@@ -218,7 +218,7 @@ public class XttRefObj extends DynamicObj implements JopDynamic
     }
     else
     {
-      Logg.logg("Kan ej debugga " + fullname + " cid: " + cid + " på index " + index, 0);
+      Logg.logg("Can not debug " + fullname + " cid: " + cid + " on index " + index, 0);
     }
   }
 

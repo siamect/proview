@@ -101,7 +101,7 @@ public class Logg
   {
     Logg.loggTo = Logg.TO_SCREEN;
     System.out.println(Logg.loggTo);
-    Logg.logg("Tjoflöjt", 3);
+    Logg.logg("Logg test", 3);
   }
 }
 

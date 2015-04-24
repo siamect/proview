@@ -3024,7 +3024,7 @@ static int gdh_JidToPointer( int id, void **p)
 
 static int gdh_JidStore( void *p, pwr_tRefId r, int *id)
 {
-#if (defined POSIX) && defined HW_X86_64
+#if ( defined OS_POSIX) && defined HW_X86_64
   sJid *jp;
   pwr_tStatus sts;
 

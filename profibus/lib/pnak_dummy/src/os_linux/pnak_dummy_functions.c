@@ -38,9 +38,9 @@ T_PNAK_RESULT    pnak_mask_multiple_objects                (unsigned short a1, c
 T_PNAK_RESULT    pnak_get_exception                        (unsigned short a1, T_PNAK_EXCEPTION* a2) {return PNAK_OK;}
 T_PNAK_RESULT    pnak_get_version                          (unsigned short a1, T_PNAK_VERSIONS* a2) {return PNAK_OK;}
 
-T_PNAK_RESULT    pnak_snmp_get_data                        (unsigned short a1, T_PNAK_OID* a2, void* a3, unsigned long* a4, unsigned long* a5, unsigned char a6, PN_BOOL a7) {return PNAK_OK;}
-T_PNAK_RESULT    pnak_snmp_check_data                      (unsigned short a1, T_PNAK_OID* a2, void* a3, unsigned long a4, unsigned long a5, unsigned char a6) {return PNAK_OK;}
-T_PNAK_RESULT    pnak_snmp_set_data                        (unsigned short a1, T_PNAK_OID* a2, void* a3, unsigned long a4, unsigned long a5) {return PNAK_OK;}
+T_PNAK_RESULT    pnak_snmp_get_data                        (unsigned short a1, T_PNAK_OID* a2, void* a3, unsigned int* a4, unsigned int* a5, unsigned char a6, PN_BOOL a7) {return PNAK_OK;}
+T_PNAK_RESULT    pnak_snmp_check_data                      (unsigned short a1, T_PNAK_OID* a2, void* a3, unsigned int a4, unsigned int a5, unsigned char a6) {return PNAK_OK;}
+T_PNAK_RESULT    pnak_snmp_set_data                        (unsigned short a1, T_PNAK_OID* a2, void* a3, unsigned int a4, unsigned int a5) {return PNAK_OK;}
 
 /*--- Service interface functions -------------------------------------------*/
 

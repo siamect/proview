@@ -283,7 +283,7 @@ let lib_cnt=0
 let i=0
 hwpl=`eval uname -i`
 machine=`eval uname -m`
-if [ $machine == "i686" ]; then
+if [ $machine == "i686" ] || [ $machine == "x86_64" ]; then
   hwpl=$machine
 fi
 if [ ${machine:0:3} == "arm" ]; then
@@ -301,6 +301,7 @@ else
     hwpl=i386
   fi
 fi
+echo "hwpl $hwpl"
 
 # Bash
 if [ "$SHELL" != "/bin/bash" ] && [ "$SHELL" != "/usr/local/bin/bash" ]; then
@@ -468,8 +469,8 @@ else
   pwre_config_check_lib powerlinkcn POWERLINKCN lib powerlinkcn 1 "$epl/buildcn/Examples/X86/Generic/powerlink_user_lib/libpowerlink.a"
   pwre_config_check_lib libpcap   LIBPCAP  lib libpcap 1 "/usr/lib/libpcap.so:/usr/lib/$hwpl-linux-$gnu/libpcap.so"
   pwre_config_check_lib librsvg   LIBRSVG  lib librsvg 1 "/usr/lib/librsvg-2.so:/usr/lib/$hwpl-linux-$gnu/librsvg-2.so"
-  pwre_config_check_include gst   GST   1 "/opt/gstreamer-sdk/include/gstreamer-0.10/gst/gst.h"
-  pwre_config_check_lib gst    	  GST      gst gst 0 "/opt/gstreamer-sdk/lib/libgstreamer-0.10.so"
+  pwre_config_check_include gst   GST   1 "/usr/include/gstreamer-0.10/gst/gst.h:/opt/gstreamer-sdk/include/gstreamer-0.10/gst/gst.h"
+  pwre_config_check_lib gst    	  GST      gst gst 0 "/usr/lib/$hwpl-linux-$gnu/libgstreamer-0.10.so:/opt/gstreamer-sdk/lib/libgstreamer-0.10.so"
   if [ $pwre_hw == "hw_arm" ]; then
     pwre_config_check_lib libpiface LIBPIFACE lib libpiface 1 "/usr/local/lib/libpiface-1.0.a"
     pwre_config_check_include piface  PIFACE  1 "/usr/local/include/libpiface-1.0/pfio.h"

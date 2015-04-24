@@ -2214,7 +2214,7 @@ int ItemPnDevice::scan( GsdmlAttrNav *attrnav, void *p)
 
   if ( !first_scan) {
     if (old_value == 0) {
-      GsdmlAttrNav::device_changed_ok( attrnav, (void *)old_value);
+      GsdmlAttrNav::device_changed_ok( attrnav, (void *)((long int)old_value));
       return 1;
     }
     else {
@@ -2227,7 +2227,7 @@ int ItemPnDevice::scan( GsdmlAttrNav *attrnav, void *p)
 				       "All configuration data will be lost when changing the device.\n"
 				       "Do you really want to change the device ?",
 				       GsdmlAttrNav::device_changed_ok, GsdmlAttrNav::device_changed_cancel, 
-				       (void *)old_value);
+				       (void *)((long int)old_value));
 	attrnav->device_confirm_active = 1;
 	return 1;
       }

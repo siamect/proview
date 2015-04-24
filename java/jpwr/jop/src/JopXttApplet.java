@@ -104,17 +104,17 @@ public class JopXttApplet extends JopApplet
     URL url = this.getCodeBase();
     Logg.loggTo = Logg.TO_SCREEN;
     Logg.loggPrio = 0;
-    Logg.logg("JopXttApplet: Före XttTree-skapande", 6);
+    Logg.logg("JopXttApplet: Before XttTree-creation", 6);
     this.xttTree = new XttTree( session, url, this);
     this.getContentPane().add(this.xttTree);
     this.xttTree.createUserInputs();
-    Logg.logg("JopXttApplet: XttTree-skapande klart", 6);
+    Logg.logg("JopXttApplet: XttTree-created", 6);
   }
 
   /**  Description of the Method */
   public void start()
   {
-    Logg.logg("JopXttApplet: start() anropad", 6);
+    Logg.logg("JopXttApplet: start() called", 6);
     this.xttTree.tree.requestFocus();
   }
 
