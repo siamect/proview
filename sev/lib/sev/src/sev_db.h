@@ -98,7 +98,8 @@ class sev_item {
     { /*memset( old_value, 0, sizeof(old_value));*/}
     sev_item( const sev_item& x) : id(x.id), oid(x.oid), creatime(x.creatime), modtime(x.modtime), 
       storagetime(x.storagetime), sevid(x.sevid), scantime(x.scantime), deadband(x.deadband), options(x.options),
-      deadband_active(x.deadband_active), last_id(x.last_id), value_size(x.value_size), first_storage(x.first_storage),
+    deadband_active(x.deadband_active), last_id(x.last_id), value_size(x.value_size), old_value(x.old_value),
+    first_storage(x.first_storage),
       attrnum(x.attrnum), attr(x.attr), status(x.status), logged_status(x.logged_status), 
       idx(x.idx), deleted(x.deleted) {
       strncpy( tablename, x.tablename, sizeof(tablename)); 
