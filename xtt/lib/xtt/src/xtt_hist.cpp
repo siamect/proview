@@ -615,7 +615,8 @@ int Hist::check_conditions(sEvent *evp)
     sts = time_FormAsciiToA(minTime_str, SWE, SECOND, &minTime);
     if(EVEN(sts)) 
       return ERROR_TIME_CONVERT;
-    if(time_Acomp(&minTime, &(evp->EventTime)) > 0)
+    sts = time_Acomp_NE(&minTime, &(evp->EventTime));
+    if( sts > 0 || sts == -2)
       return 2; //evensts
   }
   if(maxTime_str != NULL && (strlen(maxTime_str) != 0))
@@ -623,7 +624,8 @@ int Hist::check_conditions(sEvent *evp)
     sts = time_FormAsciiToA(maxTime_str, SWE, SECOND, &maxTime);
     if(EVEN(sts)) 
       return ERROR_TIME_CONVERT;
-    if(time_Acomp(&maxTime, &(evp->EventTime)) < 0)
+    sts = time_Acomp(&maxTime, &(evp->EventTime));
+    if( sts < 0 || sts == -2)
       return 2; //evensts
   }
   bool ret = false;
