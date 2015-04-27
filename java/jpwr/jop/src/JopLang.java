@@ -375,7 +375,7 @@ public class JopLang {
 		if ( i == 1 && lang == LANGUAGE_zh_CN)
 		  r2 = new InputStreamReader(in, "UTF-8");
 		else
-		  r2 = new InputStreamReader(in);
+		  r2 = new InputStreamReader(in, "ISO-8859-1");
 		reader = new BufferedReader( r2);
 	      }
 	      catch ( Exception e) {
@@ -395,7 +395,7 @@ public class JopLang {
 		  reader = new BufferedReader( new InputStreamReader( new FileInputStream( filename), "UTF-8"));
 		}
 		else
-		  reader = new BufferedReader( new InputStreamReader( new FileInputStream( filename)));
+		  reader = new BufferedReader( new InputStreamReader( new FileInputStream( filename), "ISO-8859-1"));
 	      }
 	      catch ( Exception e) {
 		System.out.println( "Unable to open file " + filename);

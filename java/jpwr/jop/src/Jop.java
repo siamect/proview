@@ -37,6 +37,9 @@
 
 package jpwr.jop;
 
+import java.awt.*;
+import java.awt.font.*;
+
 /**
    Jop basic definitions.
 */
@@ -45,7 +48,9 @@ public class Jop {
   public static final int BUTTON_ACTION_RESET = 1;
   public static final int BUTTON_ACTION_TOGGLE = 2;
   public static final int BUTTON_ACTION_COMMAND = 3;
-
+  public static Font defFont14 = new Font("Lucida Sans", Font.PLAIN, 14);
+  public static Font defFont16 = new Font("Lucida Sans", Font.PLAIN, 16);
+  public static Font defFont20 = new Font("Lucida Sans", Font.PLAIN, 20);
   public static int executeCommand( JopSession session, String command) {
     return JopSpider.command( session, command);
   }

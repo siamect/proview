@@ -93,8 +93,7 @@ public class JopOpWindow extends JPanel {
     if ( srettxt.evenSts()) return;
 
     JLabel llabel = new JLabel( srettxt.str);
-    Font f = new Font("Helvetica", Font.BOLD, 24);
-    llabel.setFont( f);
+    llabel.setFont( Jop.defFont20);
     this.add( llabel);
 
     s = sret.str + ".Text";
@@ -102,8 +101,7 @@ public class JopOpWindow extends JPanel {
     if ( srettxt.evenSts()) return;
 
     llabel = new JLabel( srettxt.str);
-    f = new Font("Helvetica", Font.BOLD, 16);
-    llabel.setFont( f);
+    llabel.setFont( Jop.defFont16);
     this.add( llabel);
 
     this.add( new JSeparator());
@@ -313,6 +311,8 @@ public class JopOpWindow extends JPanel {
       this.session = bsession;
       this.action = name;
       this.type = btype;
+
+      setFont( Jop.defFont14);
       setText( text);
       setHorizontalTextPosition( SwingConstants.LEFT);
       this.addMouseListener(new MouseAdapter() {
