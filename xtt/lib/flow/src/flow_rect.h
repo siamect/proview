@@ -63,14 +63,14 @@ class FlowRect : public FlowArrayElem {
     int	event_handler( void *pos, flow_eEvent event, int x, int y, void *node);
     void conpoint_select( void *pos, int x, int y, double *distance, 
 		void **cp) {};
-    void print( void *pos, void *node, int highlight);
-    void save( ofstream& fp, flow_eSaveMode mode);
-    void open( ifstream& fp);
-    void draw( void *pos, int hightlight, int dimmed, int hot, void *node);
-    void nav_draw( void *pos, int highlight, void *node);
+    virtual void print( void *pos, void *node, int highlight);
+    virtual void save( ofstream& fp, flow_eSaveMode mode);
+    virtual void open( ifstream& fp);
+    virtual void draw( void *pos, int hightlight, int dimmed, int hot, void *node);
+    virtual void nav_draw( void *pos, int highlight, void *node);
     void draw_inverse( void *pos, int hot, void *node);
-    void erase( void *pos, int hot, void *node);
-    void nav_erase( void *pos, void *node);
+    virtual void erase( void *pos, int hot, void *node);
+    virtual void nav_erase( void *pos, void *node);
     void get_borders( double pos_x, double pos_y, double *x_right, 
 		double *x_left, double *y_high, double *y_low, void *node);
     void move( void *pos, double x, double y, int highlight, int dimmed, int hot);

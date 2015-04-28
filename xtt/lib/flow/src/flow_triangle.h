@@ -34,44 +34,34 @@
  * General Public License plus this exception.
  **/
 
-#ifndef flow_pdf_h
-#define flow_pdf_h
+#ifndef flow_triangle_h
+#define flow_triangle_h
 
-#include <stdio.h>
+#include <iostream>
+#include <fstream>
 #include "flow.h"
-#include "flow_print.h"
+#include "flow_ctx.h"
+#include "flow_point.h"
+#include "flow_array_elem.h"
+#include "flow_rect.h"
 
-class CnvToPdf;
 
-class FlowPdf : public FlowPrint {
+class FlowTriangle : public FlowRect {
   public:
-    FlowPdf( char *filename, void *flow_ctx, int page_border, int *sts);
-    ~FlowPdf();
-     int type() { return print_eType_Pdf;}
-     int print_page( double ll_x, double ll_y, double ur_x, double ur_y);
-     int rect( double x, double y, double width, double height, flow_eDrawType type, double idx, int highlight);
-     int filled_rect( double x, double y, double width, double height, flow_eDrawType type, double idx);
-     int triangle( double x, double y, double width, double height, flow_eDrawType type, double idx, int highlight);
-     int filled_triangle( double x, double y, double width, double height, flow_eDrawType type, double idx);
-     int arc( double x, double y, double width, double height, int angel1, int angel2,
-		flow_eDrawType type, double idx, int highlight);
-     int line( double x1, double y1, double x2, double y2, flow_eDrawType type, double idx, int highlight);
-     int text( double x, double y, char *text, int len,  flow_eDrawType type, double size, int line);
-     int pixmap( double x, double y, flow_sPixmapDataElem *data, flow_eDrawType type);
-     int arrow( double x1, double y1, double x2, double y2, 
-	double x3, double y3, flow_eDrawType type, double idx);
-     void move( double x, double y);
-     void setlinewidth( double idx);
-     void rowbreak();
-     void set_showred( int show) { show_red = show;}
-     double offset_x;
-     double offset_y;
-     FILE *file;
-     char fname[80];
-     int border;
-     void *ctx;
-     int show_red;
-     CnvToPdf *topdf;
+    FlowTriangle( FlowCtx *flow_ctx, double x = 0, double y = 0, double w = 0, 
+		  double h = 0, flow_eDrawType d_type = flow_eDrawType_Line, 
+		  int line_w = 1, int fix_line_w = 0, 
+		  flow_mDisplayLevel display_lev = flow_mDisplayLevel_1,
+		  int fill_triangle = 0) :
+      FlowRect(flow_ctx, x, y, w, h, d_type, line_w, fix_line_w, display_lev, fill_triangle) {}
+    virtual ~FlowTriangle() {}
+    void save( ofstream& fp, flow_eSaveMode mode);
+    void open( ifstream& fp);
+    void draw( void *pos, int hightlight, int dimmed, int hot, void *node);
+    void nav_draw( void *pos, int highlight, void *node);
+    void erase( void *pos, int hot, void *node);
+    void nav_erase( void *pos, void *node);
+    void print( void *pos, void *node, int highlight);
 };
 
 #endif

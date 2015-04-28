@@ -149,6 +149,12 @@ void brow_AddRect( brow_tNodeClass nc, double x, double y,
 void brow_AddFilledRect( brow_tNodeClass nc, double x, double y, 
 	double width, double height,
 	flow_eDrawType draw_type);
+void brow_AddTriangle( brow_tNodeClass nc, double x, double y, 
+	double width, double height,
+	flow_eDrawType draw_type, int line_width, int fix_line_width);
+void brow_AddFilledTriangle( brow_tNodeClass nc, double x, double y, 
+	double width, double height,
+	flow_eDrawType draw_type);
 void brow_AddFrame( brow_tNodeClass nc, double x, double y, 
 	double width, double height,
 	flow_eDrawType draw_type, int line_width, int fix_line_width);

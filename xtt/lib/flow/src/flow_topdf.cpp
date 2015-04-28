@@ -519,6 +519,53 @@ void CnvToPdf::draw_rect( double lw, double x, double y, double w, double h)
 "  " << x << " " << y << " " << w << " " << h << " re S" << endl;
 }
 
+void CnvToPdf::draw_triangle( double lw, double x, double y, double w, double h)
+{
+      fp[cf] <<
+"  " << lw << " w" << endl <<
+"  " << x << " " << y << " m" << endl <<
+"  " << x+w/2 << " " << y+h << " l" << endl <<
+"  " << x+w << " " << y << " l" << endl <<
+"  " << x << " " << y << " l" << endl <<
+"  S" << endl;
+}
+
+void CnvToPdf::draw_filled_triangle( flow_eDrawType color, double x, double y, double w, double h)
+{
+  float r, g, b;
+
+  if ( color == flow_eDrawType_LineRed || color == flow_eDrawType_Yellow) {
+    if ( color == flow_eDrawType_LineRed) {
+      r = 1;
+      g = 0.2;
+      b = 0.2;
+    }
+    else if ( color == flow_eDrawType_Yellow) {
+      r = 1;
+      g = 1;
+      b = 0;
+    }
+    fp[cf] <<
+"  /DeviceRGB cs" << endl <<
+"  " << r << " " << g << " " << b << " sc" << endl;
+  }
+    
+      fp[cf] <<
+"  " << x << " " << y << " m" << endl <<
+"  " << x+w/2 << " " << y+h << " l" << endl <<
+"  " << x+w << " " << y << " l" << endl <<
+"  " << x << " " << y << " l" << endl <<
+"  f" << endl;
+
+  if ( color == flow_eDrawType_LineRed || color == flow_eDrawType_Yellow) {
+    r = 0;
+    g = 0;
+    b = 0;
+    fp[cf] <<
+"  " << r << " " << g << " " << b << " sc" << endl;
+  }
+}
+
 void CnvToPdf::draw_arc( double lw, double x, double y, double w, double h,
 			  int angle1, int angle2)
 {

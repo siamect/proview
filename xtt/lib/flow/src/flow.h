@@ -113,7 +113,8 @@ typedef enum {
 	flow_eObjectType_Radiobutton,
 	flow_eObjectType_Frame,
 	flow_eObjectType_Image,
-	flow_eObjectType_AnnotPixmapButton
+	flow_eObjectType_AnnotPixmapButton,
+	flow_eObjectType_Triangle
 	} flow_eObjectType;
 
 typedef enum {
@@ -132,7 +133,8 @@ typedef enum {
 typedef enum {
 	flow_eNodeGroup_Common,
 	flow_eNodeGroup_Document,
-	flow_eNodeGroup_Trace
+	flow_eNodeGroup_Trace,
+	flow_eNodeGroup_Safety
 	} flow_eNodeGroup;
 
 typedef enum {
@@ -417,6 +419,7 @@ typedef enum {
 	flow_eSave_Radiobutton			= 17,
 	flow_eSave_Frame			= 18,
 	flow_eSave_AnnotPixmapButton   		= 19,
+	flow_eSave_Triangle		       	= 20,
 	flow_eSave_End				= 99,
 	flow_eSave_Ctx_zoom_factor		= 100,
 	flow_eSave_Ctx_base_zoom_factor		= 101,
@@ -472,6 +475,7 @@ typedef enum {
 	flow_eSave_Rect_ll			= 502,
 	flow_eSave_Rect_ur			= 503,
 	flow_eSave_Rect_display_level		= 504,
+	flow_eSave_Rect_fill			= 505,
 	flow_eSave_Line_draw_type		= 600,
 	flow_eSave_Line_line_width		= 601,
 	flow_eSave_Line_p1			= 602,
@@ -552,7 +556,8 @@ typedef enum {
 	flow_eSave_Arrow_line_width		= 1403,
 	flow_eSave_Arrow_p_dest			= 1404,
 	flow_eSave_Arrow_p1			= 1405,
-	flow_eSave_Arrow_p2			= 1406
+	flow_eSave_Arrow_p2			= 1406,
+	flow_eSave_Triangle_rect_part	       	= 2000
 	} flow_eSave;
 
 typedef enum {

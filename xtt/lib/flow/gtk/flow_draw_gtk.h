@@ -95,6 +95,16 @@ class FlowDrawGtk : public FlowDraw {
 		flow_eDrawType gc_type, int idx, int highlight);
   int nav_rect_erase( FlowCtx *ctx, int x, int y, int width, int height,
 		      int idx);
+  int triangle( FlowCtx *ctx, int x, int y, int width, int height, 
+		flow_eDrawType gc_type, int idx, int highlight, int dimmed);
+  int triangle_erase( FlowCtx *ctx, int x, int y, int width, int height,
+		      int idx);
+  int nav_triangle( FlowCtx *ctx, int x, int y, int width, int height,
+		    flow_eDrawType gc_type, int idx, int highlight);
+  int nav_fill_triangle( FlowCtx *ctx, int x, int y, int width, int height,
+			 flow_eDrawType gc_type);
+  int nav_triangle_erase( FlowCtx *ctx, int x, int y, int width, int height,
+			  int idx);
   int arrow( FlowCtx *ctx, int x1, int y1, int x2, int y2, 
 	     int x3, int y3,
 	     flow_eDrawType gc_type, int idx, int highlight);
@@ -139,6 +149,8 @@ class FlowDrawGtk : public FlowDraw {
 		      flow_eDrawType gc_type, int idx, int line, double size);
   int fill_rect( FlowCtx *ctx, int x, int y, int width, int height, 
 		 flow_eDrawType gc_type);
+  int fill_triangle( FlowCtx *ctx, int x, int y, int width, int height, 
+		     flow_eDrawType gc_type);
   int image( FlowCtx *ctx, int x, int y, int width, int height,
 	     flow_tImImage image, flow_tPixmap pixmap, flow_tPixmap clip_mask);
   int pixmaps_create( FlowCtx *ctx, flow_sPixmapData *pixmap_data,

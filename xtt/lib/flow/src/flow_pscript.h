@@ -49,6 +49,8 @@ class FlowPscript : public FlowPrint {
      int print_page( double ll_x, double ll_y, double ur_x, double ur_y);
      int rect( double x, double y, double width, double height, flow_eDrawType type, double idx, int highlight);
      int filled_rect( double x, double y, double width, double height, flow_eDrawType type, double idx);
+     int triangle( double x, double y, double width, double height, flow_eDrawType type, double idx, int highlight);
+     int filled_triangle( double x, double y, double width, double height, flow_eDrawType type, double idx);
      int arc( double x, double y, double width, double height, int angle1, int angle2,
 		flow_eDrawType type, double idx, int highlight);
      int line( double x1, double y1, double x2, double y2, flow_eDrawType type, double idx, int highlight);

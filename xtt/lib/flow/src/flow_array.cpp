@@ -43,6 +43,7 @@
 #include "flow_ctx.h"
 #include "flow_point.h"
 #include "flow_rect.h"
+#include "flow_triangle.h"
 #include "flow_node.h"
 #include "flow_con.h"
 #include "flow_nodeclass.h"
@@ -178,6 +179,12 @@ void FlowArray::copy_from( const FlowArray& array)
       case flow_eObjectType_Rect:
       {
         FlowRect *n = new FlowRect(*(FlowRect *)array.a[i]);
+        insert( n);
+        break;
+      }
+      case flow_eObjectType_Triangle:
+      {
+        FlowTriangle *n = new FlowTriangle(*(FlowTriangle *)array.a[i]);
         insert( n);
         break;
       }
@@ -749,6 +756,13 @@ void FlowArray::open( void *ctx, ifstream& fp)
       case flow_eSave_Arrow: 
       {
         FlowArrow *n = new FlowArrow( (FlowCtx *) ctx,0,0,0,0,0,0,flow_eDrawType_Line);
+	n->open( fp);
+        insert( n);
+        break;
+      }
+      case flow_eSave_Triangle: 
+      {
+        FlowTriangle *n = new FlowTriangle( (FlowCtx *) ctx);
 	n->open( fp);
         insert( n);
         break;

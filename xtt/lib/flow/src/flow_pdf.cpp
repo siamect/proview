@@ -132,6 +132,20 @@ int FlowPdf::filled_rect( double x, double y, double width, double height,
   return 1;
 }
 
+int FlowPdf::triangle( double x, double y, double width, double height, flow_eDrawType type, 
+		       double idx, int highlight)
+{
+  topdf->draw_triangle( idx, x - offset_x, offset_y - y - height, width, height);
+  return 1;
+}
+
+int FlowPdf::filled_triangle( double x, double y, double width, double height, 
+			      flow_eDrawType type, double idx)
+{
+  topdf->draw_filled_triangle( type, x - offset_x, offset_y - y - height, width, height);
+  return 1;
+}
+
 int FlowPdf::arc( double x, double y, double width, double height, int angle1, int angle2,
 		  flow_eDrawType type, double idx, int highlight)
 {

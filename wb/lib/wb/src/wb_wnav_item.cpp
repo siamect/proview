@@ -89,7 +89,8 @@ WItemObject::WItemObject( WNav *wnav, pwr_tObjid item_objid,
   char	segname[120];
   pwr_tObjid child;
   pwr_tClassId classid;
-  pwr_tEnum *config_status;
+  pwr_tEnum *config_status_p, *safety_level_p;
+  pwr_tEnum config_status, safety_level;
   char	*descr;
   char  descr_str[200];
   int	size;
@@ -110,6 +111,7 @@ WItemObject::WItemObject( WNav *wnav, pwr_tObjid item_objid,
 	segname, sizeof(segname), &size);
 
     // Get ConfigStatus
+    config_status = 0;
     for ( int i = 0; i < 3; i++) {
       switch ( i) {
       case 0:
@@ -123,57 +125,117 @@ WItemObject::WItemObject( WNav *wnav, pwr_tObjid item_objid,
 	break;
       }	
       sts = ldh_GetObjectPar( wnav->ldhses, objid, body, "ConfigurationStatus",
-			      (char **)&config_status, &size);
-      if ( ODD(sts)) break;
+			      (char **)&config_status_p, &size);
+      if ( ODD(sts)) {
+	config_status = *config_status_p;
+	free((char *) config_status_p);
+	break;
+      }
     }
-    if ( EVEN(sts)) {
-      nc = wnav->brow->nc_multiobject;
+    // Get SafetyLevel
+    safety_level = 0;
+    for ( int i = 0; i < 3; i++) {
+      switch ( i) {
+      case 0:
+	strcpy( body, "DevBody");
+	break;
+      case 1:
+	strcpy( body, "SysBody");
+	break;
+      case 2:
+	strcpy( body, "RtBody");
+	break;
+      }	
+      sts = ldh_GetObjectPar( wnav->ldhses, objid, body, "SafetyLevel",
+			      (char **)&safety_level_p, &size);
+      if ( ODD(sts)) {
+	safety_level = *safety_level_p;
+	free( (char *)safety_level_p);
+	break;
+      }
+    }
+    if ( config_status == 0) {
+      switch ( safety_level) {
+      case pwr_eSafetyLevel_None:
+	nc = wnav->brow->nc_multiobject[wnav_eMultiobject_Normal];
+	break;
+      case pwr_eSafetyLevel_Low:
+	nc = wnav->brow->nc_multiobject[wnav_eMultiobject_YellowTriangle];
+	break;
+      case pwr_eSafetyLevel_High:
+	nc = wnav->brow->nc_multiobject[wnav_eMultiobject_RedTriangle];
+	break;
+      }
       strcpy( descr_str, "");
     }
     else {
-      // Evaluate config status
-      if ( *config_status == 0) {
-	nc = wnav->brow->nc_multiobject;
-	strcpy( descr_str, "");
+      // Get enum text
+      ldh_sParDef adef;
+      ldh_sValueDef *vd;
+      int rows;
+      
+      sts = ldh_GetAttrDef( wnav->ldhses, classid, body, "ConfigurationStatus", &adef);
+      if ( EVEN(sts)) return;
+
+      sts = ldh_GetEnumValueDef( wnav->ldhses, adef.Par->Param.TypeRef, &vd, &rows);
+      if ( EVEN(sts)) return;
+      
+      bool found = false;
+      int i;
+      for ( i = 0; i < rows; i++) {
+	if ( vd[i].Value.Value == config_status) {
+	  found = true;
+	  break;
+	}	  
       }
-      else {
-	// Get enum text
-	ldh_sParDef adef;
-	ldh_sValueDef *vd;
-	int rows;
-
-	sts = ldh_GetAttrDef( wnav->ldhses, classid, body, "ConfigurationStatus", &adef);
-	if ( EVEN(sts)) return;
-
-	sts = ldh_GetEnumValueDef( wnav->ldhses, adef.Par->Param.TypeRef, &vd, &rows);
-	if ( EVEN(sts)) return;
-
-	bool found = false;
-	int i;
-	for ( i = 0; i < rows; i++) {
-	  if ( vd[i].Value.Value == *config_status) {
-	    found = true;
+      
+      if ( found) {
+	if ( config_status < 100) {
+	  switch ( safety_level) {
+	  case pwr_eSafetyLevel_None:
+	    nc = wnav->brow->nc_multiobject[wnav_eMultiobject_RedSquare];
 	    break;
-	  }	  
+	  case pwr_eSafetyLevel_Low:
+	    nc = wnav->brow->nc_multiobject[wnav_eMultiobject_RedSquare_YellowTriangle];
+	    break;
+	  case pwr_eSafetyLevel_High:
+	    nc = wnav->brow->nc_multiobject[wnav_eMultiobject_RedSquare_RedTriangle];
+	    break;
+	  }
 	}
-	
-	if ( found) {
-	  if ( *config_status < 100)
-	    nc = wnav->brow->nc_multiobject_red;
-	  else if ( *config_status < 200)
-	    nc = wnav->brow->nc_multiobject_yellow;
-	  else 
-	    nc = wnav->brow->nc_multiobject_green
-;
-	  sprintf( descr_str, "<%s> ", vd[i].Value.Text);
+	else if ( config_status < 200) {
+	  switch ( safety_level) {
+	  case pwr_eSafetyLevel_None:
+	    nc = wnav->brow->nc_multiobject[wnav_eMultiobject_YellowSquare];
+	    break;
+	  case pwr_eSafetyLevel_Low:
+	    nc = wnav->brow->nc_multiobject[wnav_eMultiobject_YellowSquare_YellowTriangle];
+	    break;
+	  case pwr_eSafetyLevel_High:
+	    nc = wnav->brow->nc_multiobject[wnav_eMultiobject_YellowSquare_RedTriangle];
+	    break;
+	  }
 	}
 	else {
-	  nc = wnav->brow->nc_multiobject_red;
-	  strcpy( descr_str, "<Unknown status>  ");
+	  switch ( safety_level) {
+	  case pwr_eSafetyLevel_None:
+	    nc = wnav->brow->nc_multiobject[wnav_eMultiobject_GreenSquare];
+	    break;
+	  case pwr_eSafetyLevel_Low:
+	    nc = wnav->brow->nc_multiobject[wnav_eMultiobject_GreenSquare_YellowTriangle];
+	    break;
+	  case pwr_eSafetyLevel_High:
+	    nc = wnav->brow->nc_multiobject[wnav_eMultiobject_GreenSquare_RedTriangle];
+	    break;
+	  }
 	}
-	free( (char *)vd);
+	sprintf( descr_str, "<%s> ", vd[i].Value.Text);
       }
-      free((char *) config_status);
+      else {
+	nc = wnav->brow->nc_multiobject_red;
+	strcpy( descr_str, "<Unknown status>  ");
+      }
+      free( (char *)vd);
     }
 
     brow_CreateNode( wnav->brow->ctx, segname, nc, dest, dest_code, (void *) this, 

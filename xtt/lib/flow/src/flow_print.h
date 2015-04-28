@@ -55,6 +55,8 @@ class FlowPrint {
   virtual int print_page( double ll_x, double ll_y, double ur_x, double ur_y) {return 1;}
   virtual int rect( double x, double y, double width, double height, flow_eDrawType type, double idx, int highlight) { return 1;}
   virtual int filled_rect( double x, double y, double width, double height, flow_eDrawType type, double idx) {return 1;}
+  virtual int triangle( double x, double y, double width, double height, flow_eDrawType type, double idx, int highlight) { return 1;}
+  virtual int filled_triangle( double x, double y, double width, double height, flow_eDrawType type, double idx) {return 1;}
   virtual int arc( double x, double y, double width, double height, int angle1, int angle2,
 		   flow_eDrawType type, double idx, int highlight) {return 1;}
   virtual int line( double x1, double y1, double x2, double y2, flow_eDrawType type, double idx, int highlight) {return 1;}

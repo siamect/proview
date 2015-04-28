@@ -177,6 +177,12 @@ void flow_AddRect( flow_tNodeClass nc, double x, double y,
 void flow_AddFilledRect( flow_tNodeClass nc, double x, double y, 
 	double width, double height,
 	flow_eDrawType draw_type, flow_mDisplayLevel display_level);
+void flow_AddTriangle( flow_tNodeClass nc, double x, double y, 
+	double width, double height,
+	flow_eDrawType draw_type, int line_width, flow_mDisplayLevel display_level);
+void flow_AddFilledTriangle( flow_tNodeClass nc, double x, double y, 
+	double width, double height,
+	flow_eDrawType draw_type, flow_mDisplayLevel display_level);
 void flow_AddLine( flow_tNodeClass nc, double x1, double y1, 
 	double x2, double y2,
 	flow_eDrawType draw_type, int line_width);

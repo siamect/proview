@@ -68,6 +68,16 @@ class FlowDraw {
 		flow_eDrawType gc_type, int idx, int highlight) {return 1;}
   virtual int nav_rect_erase( FlowCtx *ctx, int x, int y, int width, int height,
 		      int idx) {return 1;}
+  virtual int triangle( FlowCtx *ctx, int x, int y, int width, int height, 
+		    flow_eDrawType gc_type, int idx, int highlight, int dimmed) {return 1;}
+  virtual int triangle_erase( FlowCtx *ctx, int x, int y, int width, int height,
+		  int idx) {return 1;}
+  virtual int nav_triangle( FlowCtx *ctx, int x, int y, int width, int height,
+			    flow_eDrawType gc_type, int idx, int highlight) {return 1;}
+  virtual int nav_fill_triangle( FlowCtx *ctx, int x, int y, int width, int height,
+				 flow_eDrawType gc_type) {return 1;}
+  virtual int nav_triangle_erase( FlowCtx *ctx, int x, int y, int width, int height,
+				  int idx) {return 1;}
   virtual int arrow( FlowCtx *ctx, int x1, int y1, int x2, int y2, 
 	     int x3, int y3,
 	     flow_eDrawType gc_type, int idx, int highlight) {return 1;}
@@ -115,6 +125,8 @@ class FlowDraw {
 			      flow_eDrawType gc_type, int idx, int line, double size) {return 1;}
   virtual int fill_rect( FlowCtx *ctx, int x, int y, int width, int height, 
 		 flow_eDrawType gc_type) {return 1;}
+  virtual int fill_triangle( FlowCtx *ctx, int x, int y, int width, int height, 
+			     flow_eDrawType gc_type) {return 1;}
   virtual int image( FlowCtx *ctx, int x, int y, int width, int height,
 	     flow_tImImage image, flow_tPixmap pixmap, flow_tPixmap clip_mask) {return 1;}
   virtual int pixmaps_create( FlowCtx *ctx, flow_sPixmapData *pixmap_data,

@@ -96,6 +96,7 @@ void FlowRect::save( ofstream& fp, flow_eSaveMode mode)
   fp << int(flow_eSave_Rect_draw_type) << FSPACE << int(draw_type) << endl;
   fp << int(flow_eSave_Rect_line_width) << FSPACE << line_width << endl;
   fp << int(flow_eSave_Rect_display_level) << FSPACE << int(display_level) << endl;
+  fp << int(flow_eSave_Rect_fill) << FSPACE << fill << endl;
   fp << int(flow_eSave_Rect_ll) << endl;
   ll.save( fp, mode);
   fp << int(flow_eSave_Rect_ur) << endl;
@@ -118,6 +119,7 @@ void FlowRect::open( ifstream& fp)
       case flow_eSave_Rect_draw_type: fp >> tmp; draw_type = (flow_eDrawType)tmp; break;
       case flow_eSave_Rect_line_width: fp >> line_width; break;
       case flow_eSave_Rect_display_level: fp >> tmp; display_level = (flow_mDisplayLevel)tmp; break;
+      case flow_eSave_Rect_fill: fp >> fill; break;
       case flow_eSave_Rect_ll: ll.open( fp); break;
       case flow_eSave_Rect_ur: ur.open( fp); break;
       case flow_eSave_End: end_found = 1; break;

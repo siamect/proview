@@ -1009,154 +1009,99 @@ void WNavBrow::create_nodeclasses()
   brow_AddFrame( nc_object, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create multi object class
+  for ( int i = 0; i < wnav_eMultiobject_; i++) {
+    char name[20];
+    flow_eDrawType square_drawtype;
+    flow_eDrawType triangle_drawtype;
 
-  brow_CreateNodeClass( ctx, "NavigatorObject", 
-		flow_eNodeGroup_Common, &nc_multiobject);
-  brow_AddAnnotPixmap( nc_multiobject, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnotPixmap( nc_multiobject, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnot( nc_multiobject, 2, 0.6, 0,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_multiobject, 7, 0.6, 1,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_multiobject, 11, 0.6, 2,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_multiobject, 15, 0.6, 3,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject, 2, 12.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject, 12.7, 0.6, 4,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject, 3, 14.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject, 14.7, 0.6, 5,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject, 4, 16.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject, 16.7, 0.6, 6,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject, 5, 18.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject, 18.7, 0.6, 7,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddFrame( nc_multiobject, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
+    sprintf( name, "NavigatorObject%d", i);
 
-  // Create multi object class with red indication
+    brow_CreateNodeClass( ctx, name, flow_eNodeGroup_Common, &nc_multiobject[i]);
+    brow_AddAnnotPixmap( nc_multiobject[i], 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
+    brow_AddAnnotPixmap( nc_multiobject[i], 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
 
-  brow_CreateNodeClass( ctx, "NavigatorObjectRed", 
-		flow_eNodeGroup_Common, &nc_multiobject_red);
-  brow_AddAnnotPixmap( nc_multiobject_red, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnotPixmap( nc_multiobject_red, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddFilledRect( nc_multiobject_red, 1.3, 0.15, 0.4, 0.4, flow_eDrawType_LineRed);
-  brow_AddRect( nc_multiobject_red, 1.3, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
-  brow_AddAnnot( nc_multiobject_red, 2, 0.6, 0,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_multiobject_red, 7, 0.6, 1,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_multiobject_red, 11, 0.6, 2,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_multiobject_red, 15, 0.6, 3,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject_red, 2, 12.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject_red, 12.7, 0.6, 4,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject_red, 3, 14.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject_red, 14.7, 0.6, 5,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject_red, 4, 16.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject_red, 16.7, 0.6, 6,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject_red, 5, 18.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject_red, 18.7, 0.6, 7,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddFrame( nc_multiobject_red, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
+    switch ( i) {
+    case wnav_eMultiobject_Normal:
+      square_drawtype = flow_eDrawType__;
+      triangle_drawtype = flow_eDrawType__;
+      break;
+    case wnav_eMultiobject_RedSquare:
+      square_drawtype = flow_eDrawType_LineRed;
+      triangle_drawtype = flow_eDrawType__;
+      break;
+    case wnav_eMultiobject_YellowSquare:
+      square_drawtype = flow_eDrawType_Yellow;
+      triangle_drawtype = flow_eDrawType__;
+      break;
+    case wnav_eMultiobject_GreenSquare:
+      square_drawtype = flow_eDrawType_Green;
+      triangle_drawtype = flow_eDrawType__;
+      break;
+    case wnav_eMultiobject_RedTriangle:
+      square_drawtype = flow_eDrawType__;
+      triangle_drawtype = flow_eDrawType_LineRed;
+      break;
+    case wnav_eMultiobject_RedSquare_RedTriangle:
+      square_drawtype = flow_eDrawType_LineRed;
+      triangle_drawtype = flow_eDrawType_LineRed;
+      break;
+    case wnav_eMultiobject_YellowSquare_RedTriangle:
+      square_drawtype = flow_eDrawType_Yellow;
+      triangle_drawtype = flow_eDrawType_LineRed;
+      break;
+    case wnav_eMultiobject_GreenSquare_RedTriangle:
+      square_drawtype = flow_eDrawType_Green;
+      triangle_drawtype = flow_eDrawType_LineRed;
+      break;
+    case wnav_eMultiobject_YellowTriangle:
+      square_drawtype = flow_eDrawType__;
+      triangle_drawtype = flow_eDrawType_Yellow;
+      break;
+    case wnav_eMultiobject_RedSquare_YellowTriangle:
+      square_drawtype = flow_eDrawType_LineRed;
+      triangle_drawtype = flow_eDrawType_Yellow;
+      break;
+    case wnav_eMultiobject_YellowSquare_YellowTriangle:
+      square_drawtype = flow_eDrawType_Yellow;
+      triangle_drawtype = flow_eDrawType_Yellow;
+      break;
+    case wnav_eMultiobject_GreenSquare_YellowTriangle:
+      square_drawtype = flow_eDrawType_Green;
+      triangle_drawtype = flow_eDrawType_Yellow;
+      break;
+    }
 
-  // Create multi object class with yellow indication
+    if ( square_drawtype != flow_eDrawType__) {
+      brow_AddFilledRect( nc_multiobject[i], 1.3, 0.15, 0.4, 0.4, square_drawtype);
+      brow_AddRect( nc_multiobject[i], 1.3, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
+    }
+    if ( triangle_drawtype != flow_eDrawType__) {
+      brow_AddFilledTriangle( nc_multiobject[i], 1.9, 0.05, 0.5, 0.5, triangle_drawtype);
+      brow_AddTriangle( nc_multiobject[i], 1.9, 0.05, 0.5, 0.5, flow_eDrawType_Line, 0, 0);
+    }
 
-  brow_CreateNodeClass( ctx, "NavigatorObjectYellow", 
-		flow_eNodeGroup_Common, &nc_multiobject_yellow);
-  brow_AddAnnotPixmap( nc_multiobject_yellow, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnotPixmap( nc_multiobject_yellow, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddFilledRect( nc_multiobject_yellow, 1.3, 0.15, 0.4, 0.4, flow_eDrawType_Yellow);
-  brow_AddRect( nc_multiobject_yellow, 1.3, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
-  brow_AddAnnot( nc_multiobject_yellow, 2, 0.6, 0,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_multiobject_yellow, 7, 0.6, 1,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_multiobject_yellow, 11, 0.6, 2,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_multiobject_yellow, 15, 0.6, 3,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject_yellow, 2, 12.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject_yellow, 12.7, 0.6, 4,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject_yellow, 3, 14.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject_yellow, 14.7, 0.6, 5,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject_yellow, 4, 16.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject_yellow, 16.7, 0.6, 6,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject_yellow, 5, 18.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject_yellow, 18.7, 0.6, 7,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddFrame( nc_multiobject_yellow, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
-
-  // Create multi object class with green indication
-
-  brow_CreateNodeClass( ctx, "NavigatorObjectGreen", 
-		flow_eNodeGroup_Common, &nc_multiobject_green);
-  brow_AddAnnotPixmap( nc_multiobject_green, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnotPixmap( nc_multiobject_green, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddFilledRect( nc_multiobject_green, 1.3, 0.15, 0.4, 0.4, flow_eDrawType_Green);
-  brow_AddRect( nc_multiobject_green, 1.3, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
-  brow_AddAnnot( nc_multiobject_green, 2, 0.6, 0,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_multiobject_green, 7, 0.6, 1,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_multiobject_green, 11, 0.6, 2,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_multiobject_green, 15, 0.6, 3,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject_green, 2, 12.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject_green, 12.7, 0.6, 4,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject_green, 3, 14.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject_green, 14.7, 0.6, 5,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject_green, 4, 16.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject_green, 16.7, 0.6, 6,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnotPixmap( nc_multiobject_green, 5, 18.2, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddAnnot( nc_multiobject_green, 18.7, 0.6, 7,
-		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddFrame( nc_multiobject_green, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
+    brow_AddAnnot( nc_multiobject[i], 2.77, 0.6, 0,
+		   flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
+    brow_AddAnnot( nc_multiobject[i], 7.7, 0.6, 1,
+		   flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
+    brow_AddAnnot( nc_multiobject[i], 11.7, 0.6, 2,
+		   flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
+    brow_AddAnnot( nc_multiobject[i], 15.7, 0.6, 3,
+		   flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
+    brow_AddAnnotPixmap( nc_multiobject[i], 2, 12.9, 0.1, flow_eDrawType_Line, 2, 1);
+    brow_AddAnnot( nc_multiobject[i], 13.4, 0.6, 4,
+		   flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
+    brow_AddAnnotPixmap( nc_multiobject[i], 3, 14.9, 0.1, flow_eDrawType_Line, 2, 1);
+    brow_AddAnnot( nc_multiobject[i], 15.4, 0.6, 5,
+		   flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
+    brow_AddAnnotPixmap( nc_multiobject[i], 4, 16.9, 0.1, flow_eDrawType_Line, 2, 1);
+    brow_AddAnnot( nc_multiobject[i], 17.4, 0.6, 6,
+		   flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
+    brow_AddAnnotPixmap( nc_multiobject[i], 5, 18.9, 0.1, flow_eDrawType_Line, 2, 1);
+    brow_AddAnnot( nc_multiobject[i], 19.4, 0.6, 7,
+		   flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
+    brow_AddFrame( nc_multiobject[i], 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
+  }
 
   // Create attribute nodeclass
 

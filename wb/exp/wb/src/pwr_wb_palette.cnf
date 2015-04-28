@@ -811,9 +811,11 @@ palette PlcEditorPalette
     class HelpText
     class HelpTextL
     class Point
+    class RedWarning
     class ShowPlcAttr
     class Text
     class Title
+    class YellowWarning
   }
   menu Grafcet
   {

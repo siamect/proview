@@ -503,7 +503,7 @@ void FlowNode::nav_draw( int ll_x, int ll_y, int ur_x, int ur_y)
        y_high_pix >= ll_y &&
        y_low_pix <= ur_y)
   {
-    if ( x_right_pix - x_left_pix < 10 && y_high_pix - y_low_pix < 10)
+    if ( x_right_pix - x_left_pix < 10 && y_high_pix - y_low_pix < 10 && nc->group != flow_eNodeGroup_Safety)
       ctx->fdraw->nav_rect( ctx, x_left_pix, y_low_pix, 
 	x_right_pix - x_left_pix, y_high_pix - y_low_pix,
 	flow_eDrawType_Line, 0, highlight);

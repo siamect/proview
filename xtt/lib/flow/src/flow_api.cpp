@@ -58,6 +58,7 @@
 #include "flow_annot.h"
 #include "flow_draw.h"
 #include "flow_tiptext.h"
+#include "flow_triangle.h"
 #include "flow_api.h"
 
 int flow_Save( flow_tCtx ctx, char *filename)
@@ -375,6 +376,25 @@ void flow_AddFilledRect( flow_tNodeClass nc, double x, double y,
   FlowRect *rect = new FlowRect( ((FlowNodeClass *)nc)->ctx, x, y, 
 	width, height, draw_type, 0, 0, display_level, 1);
   ((FlowNodeClass *)nc)->insert( rect);
+}
+
+void flow_AddTriangle( flow_tNodeClass nc, double x, double y, 
+	double width, double height,
+	flow_eDrawType draw_type, int line_width, flow_mDisplayLevel display_level)
+{
+  FlowTriangle *triangle = new FlowTriangle( ((FlowNodeClass *)nc)->ctx, x, y, 
+	width, height, draw_type, line_width, 0, display_level);
+  ((FlowNodeClass *)nc)->insert( triangle);
+  
+}
+
+void flow_AddFilledTriangle( flow_tNodeClass nc, double x, double y, 
+	double width, double height,
+	flow_eDrawType draw_type, flow_mDisplayLevel display_level)
+{
+  FlowTriangle *triangle = new FlowTriangle( ((FlowNodeClass *)nc)->ctx, x, y, 
+	width, height, draw_type, 0, 0, display_level, 1);
+  ((FlowNodeClass *)nc)->insert( triangle);
 }
 
 void flow_AddLine( flow_tNodeClass nc, double x1, double y1, 

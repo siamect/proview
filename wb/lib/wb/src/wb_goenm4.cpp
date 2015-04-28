@@ -79,7 +79,9 @@ typedef enum {
 	goen_eGraphIndex_StoDTgeneric	= 44,
 	goen_eGraphIndex_True		= 45,
 	goen_eGraphIndex_False		= 46,
-	goen_eGraphIndex_IOSimulFlag	= 47
+	goen_eGraphIndex_IOSimulFlag	= 47,
+	goen_eGraphIndex_YellowWarning	= 48,
+	goen_eGraphIndex_RedWarning	= 49
 	} goen_eGraphIndex;
 
 static	float	f_pinlength  = GOEN_F_PINLENGTH;
@@ -144,7 +146,14 @@ int goen_create_nodetype_m4(
 		sizeof( annot_str)/sizeof(annot_str[0]), sizeof( annot_str[0]));
   if ( EVEN(sts)) return sts;
 
-  flow_CreateNodeClass( ctx, name, flow_eNodeGroup_Common, &nc);
+  switch ( graph_index) {
+  case goen_eGraphIndex_RedWarning:
+  case goen_eGraphIndex_YellowWarning:
+    flow_CreateNodeClass( ctx, name, flow_eNodeGroup_Safety, &nc);
+    break;
+  default:
+    flow_CreateNodeClass( ctx, name, flow_eNodeGroup_Common, &nc);
+  }
 
   switch ( graph_index)
   {
@@ -543,6 +552,24 @@ int goen_create_nodetype_m4(
 		0, flow_eDirection_Right);
       flow_AddText( nc, text, f_strlength, 0.5 * f_strheight,
 		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
+      break;
+    }
+    case goen_eGraphIndex_RedWarning:
+    case goen_eGraphIndex_YellowWarning:
+    {
+      flow_eDrawType draw_type;
+
+      f_width = GOEN_F_GRID * 2;
+      f_height = GOEN_F_GRID * 2; 
+
+      if ( graph_index == goen_eGraphIndex_RedWarning)
+	draw_type = flow_eDrawType_LineRed;
+      else
+	draw_type = flow_eDrawType_Yellow;
+
+      flow_AddFilledTriangle( nc, 0, GOEN_F_GRID/2, f_width, f_height, draw_type, flow_mDisplayLevel_1);
+      flow_AddTriangle( nc, 0, GOEN_F_GRID/2, f_width, f_height, flow_eDrawType_Line, 1, flow_mDisplayLevel_1);
+
       break;
     }
   }

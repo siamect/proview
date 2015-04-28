@@ -45,6 +45,7 @@ using namespace std;
 #include <vector>
 #include <string>
 #include "pwr.h"
+#include "flow.h"
 //#include "cnv_style.h"
 //#include "cnv_content.h"
 
@@ -262,6 +263,8 @@ class CnvToPdf  {
   void close();
   void print_text( char *text, CnvStyle& style, int mode = pdf_mPrintMode_Pos);
   void draw_rect( double lw, double x, double y, double w, double h);
+  void draw_triangle( double lw, double x, double y, double w, double h);
+  void draw_filled_triangle( flow_eDrawType color, double x, double y, double w, double h);
   void draw_arc( double lw, double x, double y, double w, double h,
 		  int angle1, int angle2);
   void draw_line( double lw, double x1, double y1, double x2, double y2,

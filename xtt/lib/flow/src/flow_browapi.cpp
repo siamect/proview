@@ -62,6 +62,7 @@
 #include "flow_conpoint.h"
 #include "flow_annot.h"
 #include "flow_radiobutton.h"
+#include "flow_triangle.h"
 #include "flow_tiptext.h"
 #include "flow_draw.h"
 #include "flow_browapi.h"
@@ -346,6 +347,26 @@ void brow_AddFilledRect( brow_tNodeClass nc, double x, double y,
 	flow_eDrawType draw_type)
 {
   FlowRect *rect = new FlowRect( ((FlowNodeClass *)nc)->ctx, x, y, 
+	width, height, draw_type, 1, 0, flow_mDisplayLevel_1, 1);
+  ((FlowNodeClass *)nc)->insert( rect);
+
+}
+
+void brow_AddTriangle( brow_tNodeClass nc, double x, double y, 
+		       double width, double height,
+		       flow_eDrawType draw_type, int line_width, int fix_line_width)
+{
+  FlowTriangle *rect = new FlowTriangle( ((FlowNodeClass *)nc)->ctx, x, y, 
+					width, height, draw_type, line_width, fix_line_width);
+  ((FlowNodeClass *)nc)->insert( rect);
+  
+}
+
+void brow_AddFilledTriangle( brow_tNodeClass nc, double x, double y, 
+			     double width, double height,
+			     flow_eDrawType draw_type)
+{
+  FlowTriangle *rect = new FlowTriangle( ((FlowNodeClass *)nc)->ctx, x, y, 
 	width, height, draw_type, 1, 0, flow_mDisplayLevel_1, 1);
   ((FlowNodeClass *)nc)->insert( rect);
 

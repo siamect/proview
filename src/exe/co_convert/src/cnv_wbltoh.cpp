@@ -1059,6 +1059,7 @@ int CnvWblToH::check_typename( char *type_volume, char *type_name)
 	"pwr_tDataRef",
 	"pwr_tVoid",
 	"pwr_tConfigStatusEnum",
+	"pwr_tSafetyLevelEnum",
 	""};
 
     for ( name = valid_names[0]; strcmp(name,"") != 0; 

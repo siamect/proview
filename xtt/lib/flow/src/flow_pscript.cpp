@@ -198,6 +198,64 @@ int FlowPscript::filled_rect( double x, double y, double width, double height, f
   return 1;
 }
 
+int FlowPscript::triangle( double x, double y, double width, double height, flow_eDrawType type, 
+	double idx, int highlight)
+{
+  idx = MAX( 0.5, idx);
+
+  if ( type == flow_eDrawType_LineGray) {
+    fprintf( file, "gsave\n");
+    fprintf( file, "0.5 setgray\n");    
+  }
+  if ( highlight && show_red) {
+    fprintf( file, "gsave\n");
+    fprintf( file, "0 1 1 0 setcmykcolor\n");
+  }
+
+  setlinewidth( idx);
+  fprintf( file, "newpath\n");
+  fprintf( file, "%f %f moveto\n", x-offset_x, offset_y-(y+height));
+  fprintf( file, "%f %f lineto\n", (x+width/2)-offset_x, offset_y-y);
+  fprintf( file, "%f %f lineto\n", (x+width)-offset_x, offset_y-(y+height));
+  fprintf( file, "%f %f lineto\n", x-offset_x, offset_y-(y+height));
+  fprintf( file, "closepath\n");
+  fprintf( file, "stroke\n");
+
+  if ( type == flow_eDrawType_LineGray)
+    fprintf( file, "grestore\n");
+  if ( highlight && show_red)
+    fprintf( file, "grestore\n");
+
+  return 1;
+}
+
+int FlowPscript::filled_triangle( double x, double y, double width, double height, flow_eDrawType type, 
+	double idx)
+{
+  if ( type == flow_eDrawType_LineRed) {
+    fprintf( file, "gsave\n");
+    fprintf( file, "1.0 0.2 0.2 setrgbcolor\n");
+  }
+  else if ( type == flow_eDrawType_Yellow) {
+    fprintf( file, "gsave\n");
+    fprintf( file, "1.0 1.0 0.0 setrgbcolor\n");
+  }
+
+  setlinewidth( idx);
+  fprintf( file, "newpath\n");
+  fprintf( file, "%f %f moveto\n", x-offset_x, offset_y-(y+height));
+  fprintf( file, "%f %f lineto\n", (x+width/2)-offset_x, offset_y-y);
+  fprintf( file, "%f %f lineto\n", (x+width)-offset_x, offset_y-(y+height));
+  fprintf( file, "%f %f lineto\n", x-offset_x, offset_y-(y+height));
+  fprintf( file, "closepath\n");
+  fprintf( file, "fill\n");
+
+  if ( type == flow_eDrawType_LineRed || type == flow_eDrawType_Yellow)
+    fprintf( file, "grestore\n");
+
+  return 1;
+}
+
 int FlowPscript::arc( double x, double y, double width, double height, int angle1, int angle2,
 		flow_eDrawType type, double idx, int highlight)
 {

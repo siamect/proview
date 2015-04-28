@@ -54,10 +54,26 @@
 #endif
 
 typedef enum {
-	wnav_eBrowType_Volume,
-	wnav_eBrowType_Setup,
-	wnav_eBrowType_Other
-	} wnav_eBrowType;
+  wnav_eBrowType_Volume,
+  wnav_eBrowType_Setup,
+  wnav_eBrowType_Other
+} wnav_eBrowType;
+
+typedef enum {
+  wnav_eMultiobject_Normal,
+  wnav_eMultiobject_RedSquare,
+  wnav_eMultiobject_YellowSquare,
+  wnav_eMultiobject_GreenSquare,
+  wnav_eMultiobject_RedTriangle,
+  wnav_eMultiobject_RedSquare_RedTriangle,
+  wnav_eMultiobject_YellowSquare_RedTriangle,
+  wnav_eMultiobject_GreenSquare_RedTriangle,
+  wnav_eMultiobject_YellowTriangle,
+  wnav_eMultiobject_RedSquare_YellowTriangle,
+  wnav_eMultiobject_YellowSquare_YellowTriangle,
+  wnav_eMultiobject_GreenSquare_YellowTriangle,
+  wnav_eMultiobject_
+} wnav_eMultiobject;
 
 class WNavBrow {
   public:
@@ -73,10 +89,14 @@ class WNavBrow {
     BrowCtx		*ctx;
     void		*userdata;
     brow_tNodeClass 	nc_object;
-    brow_tNodeClass 	nc_multiobject;
+    brow_tNodeClass 	nc_multiobject[wnav_eMultiobject_];
     brow_tNodeClass 	nc_multiobject_red;
     brow_tNodeClass 	nc_multiobject_yellow;
     brow_tNodeClass 	nc_multiobject_green;
+    brow_tNodeClass 	nc_multiobject_warn;
+    brow_tNodeClass 	nc_multiobject_red_warn;
+    brow_tNodeClass 	nc_multiobject_yellow_warn;
+    brow_tNodeClass 	nc_multiobject_green_warn;
     brow_tNodeClass 	nc_attr;
     brow_tNodeClass 	nc_attr_full;
     brow_tNodeClass 	nc_attr_input;

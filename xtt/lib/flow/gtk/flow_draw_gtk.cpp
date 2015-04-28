@@ -1045,6 +1045,69 @@ int FlowDrawGtk::nav_rect_erase( FlowCtx *ctx, int x, int y, int width, int heig
   return 1;
 }
 
+int FlowDrawGtk::triangle( FlowCtx *ctx, int x, int y, int width, int height, 
+			   flow_eDrawType gc_type, int idx, int highlight, int dimmed)
+{
+  if ( ctx->nodraw) return 1;
+
+  if ( gc_type == flow_eDrawType_LineGray && highlight)
+    gc_type = flow_eDrawType_Line;
+
+  GdkPoint p[4] = {{x,y+height},{x+width/2,y},{x+width,y+height},{x,y+height}};
+  gdk_draw_polygon( window,
+	gcs[gc_type+highlight][idx], 0, p, 4);
+  return 1;
+}
+
+int FlowDrawGtk::triangle_erase( FlowCtx *ctx, int x, int y, int width, int height,
+				 int idx)
+{
+  if ( ctx->nodraw) return 1;
+
+  GdkPoint p[4] = {{x,y+height},{x+width/2,y},{x+width,y+height},{x,y+height}};
+  gdk_draw_polygon( window,
+		    gcs[flow_eDrawType_LineErase][idx], 0,
+		    p, 4);
+  return 1;
+}
+
+int FlowDrawGtk::nav_triangle( FlowCtx *ctx, int x, int y, int width, int height,
+	flow_eDrawType gc_type, int idx, int highlight)
+{
+  if ( ctx->no_nav || ctx->nodraw) return 1;
+
+  if ( gc_type == flow_eDrawType_LineGray && highlight)
+    gc_type = flow_eDrawType_Line;
+
+  GdkPoint p[4] = {{x,y+height},{x+width/2,y},{x+width,y+height},{x,y+height}};
+  gdk_draw_polygon( nav_window,
+		    gcs[gc_type+highlight][idx], 0, p, 4);
+  return 1;
+}
+
+int FlowDrawGtk::nav_fill_triangle( FlowCtx *ctx, int x, int y, int width, int height,
+				    flow_eDrawType gc_type)
+{
+  if ( ctx->no_nav || ctx->nodraw || gc_type != flow_eDrawType_LineRed) return 1;
+
+  GdkPoint p[4] = {{x,y+height},{x+width/2,y},{x+width,y+height},{x,y+height}};
+  gdk_draw_polygon( nav_window,
+		    gcs[gc_type][0], 1, p, 4);
+  return 1;
+}
+
+int FlowDrawGtk::nav_triangle_erase( FlowCtx *ctx, int x, int y, int width, int height,
+	int idx)
+{
+  if ( ctx->no_nav || ctx->nodraw) return 1;
+
+  GdkPoint p[4] = {{x,y+height},{x+width/2,y},{x+width,y+height},{x,y+height}};
+  gdk_draw_polygon( nav_window,
+		    gcs[flow_eDrawType_LineErase][idx], 0,
+		    p, 4);
+  return 1;
+}
+
 int FlowDrawGtk::arrow( FlowCtx *ctx, int x1, int y1, int x2, int y2, 
 	int x3, int y3,
 	flow_eDrawType gc_type, int idx, int highlight)
@@ -1589,6 +1652,23 @@ int FlowDrawGtk::fill_rect( FlowCtx *ctx, int x, int y, int w, int h,
     gdk_draw_rectangle( window, gc_darkgray, 1, x, y, w, h);
   else
     gdk_draw_rectangle( window, gcs[gc_type][0], 1, x, y, w, h);
+  return 1;
+}
+
+int FlowDrawGtk::fill_triangle( FlowCtx *ctx, int x, int y, int w, int h, 
+				flow_eDrawType gc_type)
+{
+  if ( ctx->nodraw) return 1;
+
+  GdkPoint p[4] = {{x,y+h},{x+w/2,y},{x+w,y+h},{x,y+h}};
+  if ( gc_type == flow_eDrawType_Green)
+    gdk_draw_polygon( window, gc_green, 1, p, 4);
+  else if ( gc_type == flow_eDrawType_Yellow)
+    gdk_draw_polygon( window, gc_yellow, 1, p, 4);
+  else if ( gc_type == flow_eDrawType_DarkGray)
+    gdk_draw_polygon( window, gc_darkgray, 1, p, 4);
+  else
+    gdk_draw_polygon( window, gcs[gc_type][0], 1, p, 4);
   return 1;
 }
 

@@ -212,6 +212,19 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$ConfigStatusEnum"
         EndBody
       EndObject
+      !/**
+      !  @Summary Safety level.
+      !  Safety level.
+      !  Safety level in the development environment for an hierarchy, 
+      !  plcprogram or process graph, set by the designer to indicate
+      !  the level. If a level is set for an object, it is marked with 
+      !  a warning trangle.
+      !*/
+      Object SafetyLevel $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$SafetyLevelEnum"
+        EndBody
+      EndObject
     EndObject
     Object Template XttGraph
       Body RtBody

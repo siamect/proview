@@ -624,6 +624,18 @@ typedef pwr_tMask pwr_tPrivMask;
 */
 typedef pwr_tEnum pwr_tConfigStatusEnum;
 
+/*_*
+  @aref safetylevelenum SafetyLevelEnum
+*/
+typedef pwr_tEnum pwr_tSafetyLevelEnum;
+
+typedef enum {
+  pwr_eSafetyLevel_None,
+  pwr_eSafetyLevel_Low,
+  pwr_eSafetyLevel_High
+} pwr_eSafetyLevel;
+
+
 /* Operating system.  */
 /*_*
   @aref opsys OpSys
@@ -1054,6 +1066,7 @@ struct pwr_s_PlantHier {
   pwr_tURL            	CircuitDiagram	pwr_dAlignW;
   pwr_tURL            	Photo		pwr_dAlignW;
   pwr_tConfigStatusEnum	ConfigurationStatus pwr_dAlignW;
+  pwr_tSafetyLevelEnum	SafetyLevel pwr_dAlignW;
 };
 
 /* Node defining classes.  */
@@ -1123,6 +1136,7 @@ struct pwr_s_LibHier {
 struct pwr_s_NodeHier {
   pwr_tString80		Description	pwr_dAlignLW;
   pwr_tConfigStatusEnum	ConfigurationStatus pwr_dAlignW;
+  pwr_tSafetyLevelEnum	SafetyLevel pwr_dAlignW;
 };
 
 struct pwr_s_RootVolume {

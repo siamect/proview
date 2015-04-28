@@ -276,6 +276,13 @@ int goen_create_nodetype_m3(
 	flow_CreateNodeClass( ctx, name, flow_eNodeGroup_Common, 
 		&nc);
 
+	if ( graph_index == 3) {
+          flow_AddFilledTriangle( nc, f_delta, -f_yoffs, GOEN_F_GRID, 
+		GOEN_F_GRID, flow_eDrawType_LineRed, flow_mDisplayLevel_1);
+          flow_AddTriangle( nc, f_delta, -f_yoffs, GOEN_F_GRID, 
+		GOEN_F_GRID, flow_eDrawType_Line, line_width, flow_mDisplayLevel_1);
+	}
+
 	if ( ! (frame_width == 0.0 && frame_height == 0.0))
 	{
 	  /* Draw a rectangle that is 'hot' only on the lines */
