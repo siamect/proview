@@ -122,6 +122,7 @@ class Pal {
     flow_sAnnotPixmap *pixmap_transdiv;
     flow_sAnnotPixmap *pixmap_frame;
     flow_sAnnotPixmap *pixmap_wait;
+    flow_sAnnotPixmap *pixmap_warning;
 
     virtual void set_inputfocus( int focus) {}
     virtual void set_selection_owner() {}

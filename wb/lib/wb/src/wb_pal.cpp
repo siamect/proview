@@ -135,6 +135,7 @@
 #include "xnav_bitmap_stepdiv12.h"
 #include "xnav_bitmap_transconv12.h"
 #include "xnav_bitmap_transdiv12.h"
+#include "xnav_bitmap_warning12.h"
 
 //
 // Member functions for PalItem classes
@@ -369,15 +370,25 @@ PalItemClass::PalItemClass( Pal *pal, char *item_name,
         case pwr_cClass_CStoSattr:
           pixmap = pal->pixmap_stop; 
 	  break;
+        case pwr_cClass_ScanTime:
+        case pwr_cClass_FirstScan:
+        case pwr_cClass_True:
+        case pwr_cClass_False:
+        case pwr_cClass_IOSimulFlag:
+	  pixmap = pal->pixmap_get; 
+	  break;
         case pwr_cClass_BodyText:
         case pwr_cClass_HelpText:
         case pwr_cClass_HelpTextL:	
 	  pixmap = pal->pixmap_bodytext; 
 	  break;
+        case pwr_cClass_CArea:	pixmap = pal->pixmap_frame; break;
         case pwr_cClass_Text: 	pixmap = pal->pixmap_text; break;
         case pwr_cClass_Head:  	pixmap = pal->pixmap_head; break;
         case pwr_cClass_Title:	pixmap = pal->pixmap_title; break;
         case pwr_cClass_Frame:	pixmap = pal->pixmap_frame; break;
+        case pwr_cClass_RedWarning: pixmap = pal->pixmap_warning; break;
+        case pwr_cClass_YellowWarning: pixmap = pal->pixmap_warning; break;
 	default:
 	  sts = ldh_GetClassBody( pal->ldhses, classid, "GraphPlcNode", 
 		&bodyclass, (char **)&graphbody, &size);
@@ -689,6 +700,7 @@ void Pal::free_pixmaps()
   brow_FreeAnnotPixmap( brow_ctx, pixmap_transdiv);
   brow_FreeAnnotPixmap( brow_ctx, pixmap_frame);
   brow_FreeAnnotPixmap( brow_ctx, pixmap_wait);
+  brow_FreeAnnotPixmap( brow_ctx, pixmap_warning);
 }
 
 void Pal::allocate_pixmaps()
@@ -1157,6 +1169,14 @@ void Pal::allocate_pixmaps()
 	  }
 	  brow_AllocAnnotPixmap( brow_ctx, &pixmap_data,
 			&pixmap_transdiv);
+          for ( i = 0; i < 9; i++)
+          {
+	    pixmap_data[i].width =xnav_bitmap_warning12_width;
+	    pixmap_data[i].height =xnav_bitmap_warning12_height;
+	    pixmap_data[i].bits =xnav_bitmap_warning12_bits;
+	  }
+	  brow_AllocAnnotPixmap( brow_ctx, &pixmap_data,
+			&pixmap_warning);
 
 }
 
