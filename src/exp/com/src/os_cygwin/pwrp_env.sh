@@ -584,7 +584,7 @@ pwrc_create_func()
     done
 
     # Create project info file
-    sysinfo="$proot/src/login/sysinfo.txt"
+    sysinfo="$proot/src/doc/sysinfo.txt"
     echo "Revision history" >> $sysinfo
     echo "`date +%F`	$USER	Project created" >> $sysinfo
 
@@ -597,12 +597,12 @@ pwrc_create_func()
 # Printer command for plc documents
 #export pwr_foe_gre_print="lpr -P lp1"
 
-if [ -e "\$pwrp_login/sysinfo.txt" ]; then
+if [ -e "\$pwrp_doc/sysinfo.txt" ]; then
   echo "-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_"
   echo "Welcome to"
   echo "\`\$pwr_exe/pwrp_env.sh show project\`"
   echo ""
-  cat \$pwrp_login/sysinfo.txt
+  cat \$pwrp_doc/sysinfo.txt
   echo "-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_"
 fi
 EOF
