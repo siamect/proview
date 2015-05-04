@@ -631,6 +631,16 @@ void XttGtk::valchanged_cmd_input( GtkWidget *w, gpointer data)
   text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
   g_free( textutf8);
 
+  if ( !text) {
+    g_object_set( w, "visible", FALSE, NULL);
+    xtt->set_prompt( "");
+    xtt->input_open = 0;
+    xtt->command_open = 0;
+    xtt->xnav->set_inputfocus();
+    xtt->message( 'E', "Input error, invalid character");
+    return;
+  }
+
   if ( xtt->input_open) {
     sts = xtt->xnav->set_attr_value( text);
     g_object_set( w, "visible", FALSE, NULL);

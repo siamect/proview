@@ -1491,6 +1491,11 @@ void WttGtk::valchanged_cmd_input( GtkWidget *w, gpointer data)
   text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
   g_free( textutf8);
 
+  if ( !text) {
+    wtt->wnav->wow->DisplayError( "Input error", "Invalid character");
+    return;
+  }
+
   if ( wtt->input_open) {
     switch( wtt->input_mode)  {
     case wtt_eInputMode_Attribute:
