@@ -374,7 +374,7 @@ class WFoe : public WUtility {
   static void gre_attribute( WGre *gre, vldh_t_node object);
   static void gre_subwindow( WGre *gre, vldh_t_node object, unsigned long subwindow_nr);
   static void gre_popupmenu( WGre *gre, int x_pix, int y_pix, int popupmenu_type,
-			     vldh_t_node node);
+			     vldh_t_node node, int unselect);
   static void gre_getobj( WGre *gre, vldh_t_node node, unsigned long index);
   static void gre_undelete( WGre *gre);
   static void gre_unselect( WGre *gre);

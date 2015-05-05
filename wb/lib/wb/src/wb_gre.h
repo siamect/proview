@@ -148,7 +148,7 @@ class WGre {
   void (*gre_attribute)(WGre *, vldh_t_node);
   void (*gre_subwindow)(WGre *, vldh_t_node, unsigned long);
   void (*gre_reserv)();
-  void (*gre_popupmenu)(WGre *, int, int, int, vldh_t_node);
+  void (*gre_popupmenu)(WGre *, int, int, int, vldh_t_node, int);
   void (*gre_getobj)(WGre *, vldh_t_node, unsigned long);
   void (*gre_undelete)(WGre *);
   void (*gre_unselect)(WGre *);
@@ -208,7 +208,7 @@ class WGre {
 	void (*attribute_bc)(WGre *, vldh_t_node),
 	void (*subwindow_bc)(WGre *, vldh_t_node, unsigned long),
 	void (*reserv_bc)(),
-	void (*popupmenu_bc)(WGre *, int, int, int, vldh_t_node),
+	void (*popupmenu_bc)(WGre *, int, int, int, vldh_t_node, int),
 	void (*getobj_bc)(WGre *, vldh_t_node, unsigned long),
 	void (*undelete_bc)(WGre *),
 	void (*unselect_bc)(WGre *),

@@ -1339,7 +1339,7 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
       }
 
       (gre->gre_popupmenu) (gre, x_pix, y_pix, 
-			gre->popupmenu_mode, current_node);
+			    gre->popupmenu_mode, current_node, 1);
       break;
     }
     case flow_eEvent_MB1ClickCtrl:

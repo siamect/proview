@@ -2080,7 +2080,7 @@ void WFoe::gre_subwindow( WGre *gre, vldh_t_node object, unsigned long subwindow
 //	Backcall from the controlled gre module
 //
 void WFoe::gre_popupmenu( WGre *gre, int x_pix, int y_pix, int popupmenu_type,
-			  vldh_t_node node)
+			  vldh_t_node node, int unselect)
 {
   WFoe	*foe;
 
@@ -2091,7 +2091,8 @@ void WFoe::gre_popupmenu( WGre *gre, int x_pix, int y_pix, int popupmenu_type,
     if ( popupmenu_type == GRE_POPUPMENUMODE_OBJECT) {
       if ( node != 0) {
 	gre->node_select( node);
-	foe->popupmenu_node = node;
+	if ( unselect)
+	  foe->popupmenu_node = node;
       }
       
       unsigned int mask = foe_ePopupmenu_attribute |

@@ -1619,6 +1619,7 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
     vldh_t_node		current_node;
     flow_tObject	*select_list;
     int			select_cnt;
+    int			unselect = 0;
 
     if ( flow_GetPasteActive( ctx) || flow_GetAutoscrollingActive(ctx) ||
 	 flow_GetConCreateActive(ctx))
@@ -1635,16 +1636,22 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
 
     flow_GetSelectList( ctx, &select_list, &select_cnt);
     if ( !select_cnt) {
-      if ( event->object.object_type == flow_eObjectType_Node)
+      if ( event->object.object_type == flow_eObjectType_Node) {
 	/* Get the current object */
 	flow_GetUserData( event->object.object, (void **)&current_node);
+	unselect = 1;
+      }
     }	
+
+    if ( select_cnt == 1)
+      flow_GetUserData( select_list[0], (void **)&current_node);
+
     if ( current_node || select_cnt == 1)
       gre->popupmenu_mode = GRE_POPUPMENUMODE_OBJECT;
     else
       gre->popupmenu_mode = GRE_POPUPMENUMODE_AREA;
     (gre->gre_popupmenu) (gre, x_pix, y_pix, 
-			     gre->popupmenu_mode, current_node);
+			  gre->popupmenu_mode, current_node, unselect);
     break;
   }
 #if 0
@@ -2101,7 +2108,7 @@ int WGre::setup_backcalls (
 	void (*attribute_bc)(WGre *, vldh_t_node),
 	void (*subwindow_bc)(WGre *, vldh_t_node, unsigned long),
 	void (*reserv_bc)(),
-	void (*popupmenu_bc)(WGre *, int, int, int, vldh_t_node),
+	void (*popupmenu_bc)(WGre *, int, int, int, vldh_t_node, int),
 	void (*getobj_bc)(WGre *, vldh_t_node, unsigned long),
 	void (*undelete_bc)(WGre *),
 	void (*unselect_bc)(WGre *),
