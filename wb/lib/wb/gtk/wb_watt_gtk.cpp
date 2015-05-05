@@ -310,15 +310,17 @@ void WAttGtk::change_value_close()
       text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
       g_free( textutf8);
 
-      // Replace ctrl characters with space
-      for ( s = (unsigned char *) text; *s; s++) {
-	if ( *s < ' ' && *s != 10 && *s != 13)
-	  *s = ' ';
-      }
+      if ( text) {
+	// Replace ctrl characters with space
+	for ( s = (unsigned char *) text; *s; s++) {
+	  if ( *s < ' ' && *s != 10 && *s != 13)
+	    *s = ' ';
+	}
 
-      sts = wattnav->set_attr_value( input_node,
-				     input_name, text);
-      g_free( text);
+	sts = wattnav->set_attr_value( input_node,
+				       input_name, text);
+	g_free( text);
+      }
       g_object_set( cmd_scrolledinput, "visible", FALSE, NULL);
       set_prompt( "");
       input_open = 0;
@@ -329,6 +331,8 @@ void WAttGtk::change_value_close()
 
       wattnav->redraw();
       wattnav->set_inputfocus();
+      if ( !text)
+	message( 'E', "Input error, invalid character");
     }
     else {
       char *text, *textutf8;
@@ -336,9 +340,11 @@ void WAttGtk::change_value_close()
       text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
       g_free( textutf8);
 
-      sts = wattnav->set_attr_value( input_node, 
-				     input_name, text);
-      g_free( text);
+      if ( text) {
+	sts = wattnav->set_attr_value( input_node, 
+				       input_name, text);
+	g_free( text);
+      }
       g_object_set( cmd_input, "visible", FALSE, NULL);
       set_prompt( "");
       input_open = 0;
@@ -346,6 +352,9 @@ void WAttGtk::change_value_close()
         (redraw_cb)( this);
 
       wattnav->set_inputfocus();
+
+      if ( !text)
+	message( 'E', "Input error, invalid character");
     }
     if ( pending_close) {
       if ( close_cb)
@@ -367,19 +376,26 @@ void WAttGtk::activate_cmd_input( GtkWidget *w, gpointer data)
   textutf8 = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
   text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
   g_free( textutf8);
+
   if ( watt->input_open) {
-    sts = ((WAttNav *)watt->wattnav)->set_attr_value( watt->input_node, 
-						      watt->input_name, text);
+    if ( text)
+      sts = ((WAttNav *)watt->wattnav)->set_attr_value( watt->input_node, 
+							watt->input_name, text);
     g_object_set( w, "visible", FALSE, NULL);
     watt->set_prompt( "");
     watt->input_open = 0;
     if ( watt->redraw_cb)
       (watt->redraw_cb)( watt);
   }
-  g_free( text);
+
+  if ( text)
+    g_free( text);
 
   g_object_set( watt->cmd_prompt, "visible", FALSE, NULL);
   g_object_set( watt->cmd_input, "visible", FALSE, NULL);
+
+  if ( !text)
+    watt->message( 'E', "Input error, invalid character");
 
   if ( watt->pending_close) {
     if ( watt->close_cb)
@@ -406,14 +422,16 @@ void WAttGtk::activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
     text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
     g_free( textutf8);
 
-    // Replace ctrl characters with space
-    for ( s = (unsigned char *) text; *s; s++) {
-      if ( *s < ' ' && *s != 10 && *s != 13)
-	*s = ' ';
-    }
+    if ( text) {
+      // Replace ctrl characters with space
+      for ( s = (unsigned char *) text; *s; s++) {
+	if ( *s < ' ' && *s != 10 && *s != 13)
+	  *s = ' ';
+      }
 
-    sts = ((WAttNav *)watt->wattnav)->set_attr_value( watt->input_node,
-						      watt->input_name, text);
+      sts = ((WAttNav *)watt->wattnav)->set_attr_value( watt->input_node,
+							watt->input_name, text);
+    }
     g_object_set( watt->cmd_scrolledinput, "visible", FALSE, NULL);
     watt->set_prompt( "");
     watt->input_open = 0;
@@ -424,7 +442,11 @@ void WAttGtk::activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
 
     ((WAttNav *)watt->wattnav)->redraw();
     ((WAttNav *)watt->wattnav)->set_inputfocus();
-    g_free( text);
+
+    if ( text)
+      g_free( text);
+    else
+      watt->message( 'E', "Input error, invalid character");
 
     if ( watt->pending_close) {
       if ( watt->close_cb)

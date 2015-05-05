@@ -318,9 +318,12 @@ void XAttGtk::change_value_close()
       text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
       g_free( textutf8);
 
-      sts = xattnav->set_attr_value( input_node,
-				     input_name, text);
-      g_free( text);
+      if ( text) {
+	sts = xattnav->set_attr_value( input_node,
+				       input_name, text);
+	g_free( text);
+      }
+
       g_object_set( cmd_scrolledinput, "visible", FALSE, NULL);
       set_prompt( "");
       input_open = 0;
@@ -331,6 +334,8 @@ void XAttGtk::change_value_close()
 
       xattnav->redraw();
       xattnav->set_inputfocus();
+      if ( !text)
+	message( 'E', "Input error, invalid character");
     }
     else {
       char *text, *textutf8;
@@ -339,9 +344,11 @@ void XAttGtk::change_value_close()
       text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
       g_free( textutf8);
 
-      sts = xattnav->set_attr_value( input_node, 
+      if ( text) {
+	sts = xattnav->set_attr_value( input_node, 
 				     input_name, text);
-      g_free( text);
+	g_free( text);
+      }
       g_object_set( cmd_input, "visible", FALSE, NULL);
       set_prompt( "");
       input_open = 0;
@@ -349,6 +356,8 @@ void XAttGtk::change_value_close()
         (redraw_cb)( this);
 
       xattnav->set_inputfocus();
+      if ( !text)
+	message( 'E', "Input error, invalid character");
     }
   }
 }
@@ -369,15 +378,19 @@ void XAttGtk::activate_cmd_input( GtkWidget *w, gpointer data)
   g_free( textutf8);
 
   if ( xatt->input_open) {
-    sts = xatt->xattnav->set_attr_value( xatt->input_node, 
-					 xatt->input_name, text);
+    if ( text) 
+      sts = xatt->xattnav->set_attr_value( xatt->input_node, 
+					   xatt->input_name, text);
     g_object_set( w, "visible", FALSE, NULL);
     xatt->set_prompt( "");
     xatt->input_open = 0;
     if ( xatt->redraw_cb)
       (xatt->redraw_cb)( xatt);
+    if ( !text)
+      xatt->message( 'E', "Input error, invalid character");
   }
-  g_free( text);
+  if ( text)
+    g_free( text);
 }
 
 void XAttGtk::activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
@@ -396,8 +409,12 @@ void XAttGtk::activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
     text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
     g_free( textutf8);
 
-    sts = xatt->xattnav->set_attr_value( xatt->input_node,
-						      xatt->input_name, text);
+    if ( text)
+      sts = xatt->xattnav->set_attr_value( xatt->input_node,
+					   xatt->input_name, text);
+    else
+      xatt->message( 'E', "Input error, invalid character");
+
     g_object_set( xatt->cmd_scrolledinput, "visible", FALSE, NULL);
     xatt->set_prompt( "");
     xatt->input_open = 0;
@@ -408,7 +425,8 @@ void XAttGtk::activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
 
     xatt->xattnav->redraw();
     xatt->xattnav->set_inputfocus();
-    g_free( text);
+    if ( text)
+      g_free( text);
   }
 }
 

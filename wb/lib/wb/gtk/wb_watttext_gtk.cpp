@@ -215,15 +215,19 @@ void WAttTextGtk::set_attr_value()
     text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
     g_free( textutf8);
 
+    if ( text) {
     // Replace ctrl characters with space
-    for ( s = (unsigned char *) text; *s; s++) {
-      if ( *s < ' ' && *s != 10 && *s != 13)
-	*s = ' ';
-    }
+      for ( s = (unsigned char *) text; *s; s++) {
+	if ( *s < ' ' && *s != 10 && *s != 13)
+	  *s = ' ';
+      }
 
-    sts = ldh_SetObjectPar( ldhses, aref.Objid, "DevBody",
-			    aname, text, size);
-    g_free( text);
+      sts = ldh_SetObjectPar( ldhses, aref.Objid, "DevBody",
+			      aname, text, size);
+      g_free( text);
+    }
+    else
+      wow->DisplayError( "Input error", "Invalid character");
   }
 }
 

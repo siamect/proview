@@ -89,6 +89,7 @@ int XAttOneGtk::set_value()
   char *text;
   int sts;
   char buff[1024];
+  char *textutf8;
 
   if ( input_open) {
     if ( input_multiline) {
@@ -96,13 +97,21 @@ int XAttOneGtk::set_value()
       gtk_text_buffer_get_start_iter( cmd_scrolled_buffer, &start_iter);
       gtk_text_buffer_get_end_iter( cmd_scrolled_buffer, &end_iter);
 
-      text = gtk_text_buffer_get_text( cmd_scrolled_buffer, &start_iter, &end_iter,
+      textutf8 = gtk_text_buffer_get_text( cmd_scrolled_buffer, &start_iter, &end_iter,
 				       FALSE);
     }
     else {
-      text = gtk_editable_get_chars( GTK_EDITABLE(cmd_input), 0, -1);
+      textutf8 = gtk_editable_get_chars( GTK_EDITABLE(cmd_input), 0, -1);
     }
 
+    text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+    g_free( textutf8);
+
+    if ( !text) {
+      message( 'E', "Input error, invalid character");
+      return 0;
+    }
+    
     sts =  XNav::attr_string_to_value( atype, text, buff, sizeof(buff), 
 				       asize);
     g_free( text);

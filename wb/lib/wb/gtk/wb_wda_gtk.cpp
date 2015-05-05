@@ -407,9 +407,11 @@ void WdaGtk::change_value_close()
       text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
       g_free( textutf8);
 
-      sts = wdanav->set_attr_value( input_node, 
-				     input_name, text);
-      g_free( text);
+      if ( text) {
+	sts = wdanav->set_attr_value( input_node, 
+				      input_name, text);
+	g_free( text);
+      }
       g_object_set( cmd_input, "visible", FALSE, NULL);
       set_prompt( "");
       input_open = 0;
@@ -417,6 +419,9 @@ void WdaGtk::change_value_close()
         (redraw_cb)( this);
 
       wdanav->set_inputfocus();
+
+      if ( !text)
+	message( 'E', "Input error, invalid character");
     }
   }
 }
@@ -437,15 +442,20 @@ void WdaGtk::activate_cmd_input( GtkWidget *w, gpointer data)
   g_free( textutf8);
 
   if ( wda->input_open) {
-    sts = wda->wdanav->set_attr_value( wda->input_node, 
-				       wda->input_name, text);
+    if ( text)
+      sts = wda->wdanav->set_attr_value( wda->input_node, 
+					 wda->input_name, text);
     g_object_set( w, "visible", FALSE, NULL);
     wda->set_prompt( "");
     wda->input_open = 0;
     if ( wda->redraw_cb)
       (wda->redraw_cb)( wda);
+
+    if ( !text)
+      wda->message( 'E', "Input error, invalid character");
   }
-  g_free( text);
+  if ( text)
+    g_free( text);
 }
 
 void WdaGtk::activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
@@ -465,14 +475,16 @@ void WdaGtk::activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
     text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
     g_free( textutf8);
 
-    // Replace ctrl characters with space
-    for ( s = (unsigned char *) text; *s; s++) {
-      if ( *s < ' ' && *s != 10 && *s != 13)
-	*s = ' ';
-    }
+    if ( text) {
+      // Replace ctrl characters with space
+      for ( s = (unsigned char *) text; *s; s++) {
+	if ( *s < ' ' && *s != 10 && *s != 13)
+	  *s = ' ';
+      }
 
-    sts = wda->wdanav->set_attr_value( wda->input_node,
-				       wda->input_name, text);
+      sts = wda->wdanav->set_attr_value( wda->input_node,
+					 wda->input_name, text);
+    }
     g_object_set( wda->cmd_scrolledinput, "visible", FALSE, NULL);
     wda->set_prompt( "");
     wda->input_open = 0;
@@ -483,7 +495,10 @@ void WdaGtk::activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
 
     wda->wdanav->redraw();
     wda->wdanav->set_inputfocus();
-    g_free( text);
+    if ( text)
+      g_free( text);
+    else
+      wda->message( 'E', "Input error, invalid character");
   }
 }
 

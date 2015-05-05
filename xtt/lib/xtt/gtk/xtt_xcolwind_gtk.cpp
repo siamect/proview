@@ -425,6 +425,21 @@ void XColWindGtk::change_value_close()
       text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
       g_free( textutf8);
 
+      if ( !text) {
+	g_object_set( cmd_scrolledinput, "visible", FALSE, NULL);
+	set_prompt( "");
+	input_open = 0;
+
+	int w, h;
+	gdk_drawable_get_size( pane->window, &w, &h);
+	gtk_paned_set_position( GTK_PANED(pane), h - 50);
+
+	xattnav->redraw();
+	xattnav->set_inputfocus();
+	message( 'E', "Input error, invalid character");
+	return;
+      }
+      
       sts = xattnav->set_attr_value( input_node,
 				     input_name, text);
       g_free( text);
@@ -446,6 +461,18 @@ void XColWindGtk::change_value_close()
       text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
       g_free( textutf8);
 
+      if ( !text) {
+	g_free( text);
+	g_object_set( cmd_input, "visible", FALSE, NULL);
+	set_prompt( "");
+	input_open = 0;
+	if ( redraw_cb)
+	  (redraw_cb)( this);
+
+	xattnav->set_inputfocus();
+	message( 'E', "Input error, invalid character");
+	return;
+      }
       sts = xattnav->set_attr_value( input_node, 
 				     input_name, text);
       g_free( text);
@@ -474,6 +501,16 @@ void XColWindGtk::activate_cmd_input( GtkWidget *w, gpointer data)
   textutf8 = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
   text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
   g_free( textutf8);
+
+  if ( !text) {
+    g_object_set( w, "visible", FALSE, NULL);
+    xcolwind->set_prompt( "");
+    xcolwind->input_open = 0;
+    if ( xcolwind->redraw_cb)
+      (xcolwind->redraw_cb)( xcolwind);
+    xcolwind->message( 'E', "Input error, invalid character");
+    return;
+  }
 
   if ( xcolwind->input_open) {
     sts = xcolwind->xattnav->set_attr_value( xcolwind->input_node, 
