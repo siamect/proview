@@ -115,6 +115,8 @@ static int	graph_convert_func( void	*client_data,
 				void		*client_flag);
 static int	graph_two_func( void		*client_data,
 				void		*client_flag);
+static int	graph_build_func( void		*client_data,
+				  void		*client_flag);
 
 dcli_tCmdTable	graph_command_table[] = {
 		{
@@ -232,6 +234,11 @@ dcli_tCmdTable	graph_command_table[] = {
 			&graph_two_func,
 			{""}
 		},
+		{
+			"BUILD",
+			&graph_build_func,
+			{""}
+		},
 		{"",}};
 
 static void graph_store_graph( Graph *graph)
@@ -316,6 +323,26 @@ static int	graph_quit_func(void		*client_data,
 
   // Assume that parent is Ge
   delete (Ge *) graph->parent_ctx;
+  return GE__SUCCESS;
+}
+
+static int	graph_build_func(void		*client_data,
+				 void		*client_flag)
+{
+  Graph *graph = (Graph *)client_data;
+
+  char	name[40];
+  pwr_tCmd cmd;
+
+  graph->get_name( name);
+  if ( strcmp( name, "") == 0 || graph->is_modified()) {
+    graph->message('E', "Build error, graph is not saved");
+    return GE__NOTSAVED;
+  }
+
+  sprintf( cmd, "cp -a $pwrp_pop/%s.pwg $pwrp_exe/", name);
+  system( cmd);
+
   return GE__SUCCESS;
 }
 
@@ -2559,6 +2586,100 @@ static int	graph_create_func( void		*client_data,
     graph->current_cmd_object = n1;
     grow_SetModified( graph->grow->ctx, 1);
   }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "BAR", strlen( arg1_str)) == 0)
+  {
+    char	str[80];
+    int 	sts;
+    float 	value;
+    double 	x1, y1, x2, y2;
+
+    grow_tNode	n1;
+    int		scale_x, scale_y;
+    double	sx, sy;
+    double	ll_x, ll_y, ur_x, ur_y;
+
+    if ( EVEN( dcli_get_qualifier( "/X1", str, sizeof(str))))
+    {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+    sts = sscanf( str, "%f", &value);
+    if ( sts != 1)
+    {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+    x1 = value;
+    
+    if ( EVEN( dcli_get_qualifier( "/Y1", str, sizeof(str))))
+    {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+    sts = sscanf( str, "%f", &value);
+    if ( sts != 1)
+    {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+    y1 = value;
+    
+    if ( ODD( dcli_get_qualifier( "/X2", str, sizeof(str))))
+    {
+      sts = sscanf( str, "%f", &value);
+      if ( sts != 1)
+      {
+        graph->message('E', "Syntax error");
+        return GE__SYNTAX;
+      }
+      x2 = value;
+      if ( x1 == x2)
+      {
+        graph->message('E', "Invalid coordinate");
+        return GE__COORDINATE;
+      }
+      scale_x = 1;
+    }
+    else
+      scale_x = 0;
+    
+    if ( ODD( dcli_get_qualifier( "/Y2", str, sizeof(str))))
+    {
+      sts = sscanf( str, "%f", &value);
+      if ( sts != 1)
+      {
+        graph->message('E', "Syntax error");
+        return GE__SYNTAX;
+      }
+      y2 = value;
+      if ( y1 == y2)
+      {
+        graph->message('E', "Invalid coordinate");
+        return GE__COORDINATE;
+      }
+      scale_y = 1;
+    }
+    else
+      scale_y = 0;
+    
+    graph->create_bar( &n1, x1, y1);
+
+    if ( scale_x || scale_y) {
+      grow_MeasureNode( n1, &ll_x, &ll_y, &ur_x, &ur_y);
+      if ( scale_x)
+        sx = (x2 - x1)/(ur_x - ll_x);
+      else
+        sx = 1;
+      if ( scale_y)
+        sy = (y2 - y1)/(ur_y - ll_y);
+      else
+        sy = 1;
+      grow_StoreTransform( n1);
+      grow_SetObjectScale( n1, sx, sy, x1, y1, glow_eScaleType_LowerLeft);
+    }
+    graph->current_cmd_object = n1;
+    grow_SetModified( graph->grow->ctx, 1);
+  }
   else
   {
     graph->message('E', "Syntax error");
@@ -3024,6 +3145,35 @@ static int graph_false_func(
   return 1;
 }
 
+static int graph_setdraw_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  if ( arg_list->value_int == 0)
+    grow_SetNodraw( graph->grow->ctx);
+  else {
+    grow_ResetNodraw( graph->grow->ctx);
+    grow_Redraw( graph->grow->ctx);
+  }
+
+  return 1;
+}
+
 static int graph_ccm_deffilename_func( char *outfile, char *infile, void *client_data)
 {
 
@@ -3132,6 +3282,8 @@ int Graph::readcmdfile( 	char		*incommand)
     sts = ccm_register_function( "SetExtern", graph_setextern_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "SetIntern", graph_setintern_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetDraw", graph_setdraw_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "IsW1", graph_true_func);
     if ( EVEN(sts)) return sts;

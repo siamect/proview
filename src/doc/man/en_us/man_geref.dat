@@ -4858,6 +4858,7 @@ Below is a description of commands in Ge
 
 add 			<link>gecmd_add
   <t>add polyline 	<link>gecmd_add_polyline
+build			<link>gecmd_build
 create 			<link>gecmd_create
   <t>create rectangle 	<link>gecmd_create_rect
   <t>create arc 	<link>gecmd_create_arc
@@ -4866,6 +4867,7 @@ create 			<link>gecmd_create
   <t>create rectangle 	<link>gecmd_create_rect
   <t>create text 	<link>gecmd_create_text
   <t>create subgraph 	<link>gecmd_create_subgraph
+  <t>create bar 	<link>gecmd_create_bar
 exit 			<link>gecmd_exit
 group 			<link>gecmd_group
 move 			<link>gecmd_move
@@ -4937,6 +4939,17 @@ segments are created by 'add polyline'.
 
 /x1 <t>x-coordinate for the added segment.
 /y1 <t>y-coordinate for the added segment.
+</topic>
+
+<topic>gecmd_build
+build
+
+Build the current graph.
+The pwg-file is copied to $pwrp_exe.
+
+<b>Syntax
+
+<c>ge> build
 </topic>
 
 <topic>gecmd_create <style>function
@@ -5043,6 +5056,21 @@ Create a subgraph object.
     <t>base system is always has the prefix 'pwr_' and is written with lower case,
     <t>e.g. 'Valve' has the name pwr_valve.
 /x2 <t>If the point (x2, y2) is supplied, the subgraph is scaled to fit inside a
+    <t>rectangle with the corner points (x1, y1) and (x2, y2).
+/y2
+</topic>
+
+<topic>gecmd_create_bar
+create bar
+Create a bar object.
+
+<b>Syntax
+
+<c>ge> create bar /x1= /y1= [/x2= /y2=]
+
+/x1 <t>x-coordinate for the upper left corner.
+/y1 <t>y-coordinate for the upper left corner.
+/x2 <t>If the point (x2, y2) is supplied, the bar is scaled to fit inside a
     <t>rectangle with the corner points (x1, y1) and (x2, y2).
 /y2
 </topic>
@@ -5634,6 +5662,7 @@ functions. Here follows a list of build in functions that also can be used in Ge
 GetCurrentObject <t>Returns the identity of the last created object.<link>GetCurrentObject()
 GetTextExtent <t>Calculate the extent of a text. <link>GetTextExtent()
 SelectAdd <t>Add an object to select list. <link>SelectAdd()
+SetDraw	  <t>Set drawing on or off. <link>SetDraw()
 SetExtern <t>Set subgraph extern. <link>SetExtern()
 SetIntern <t>Set subgraph intern. <link>SetIntern()
 
@@ -5746,6 +5775,36 @@ Returns the identity of the last created object.
 <c> int id;
  
 <c> id = GetCurrentObject();
+</topic>
+
+<topic>SetDraw() <style>function
+SetDraw()
+int SetDraw( int on)
+
+<h2>Description
+
+Set drawing on or off. 
+
+<h2>Argument
+
+int    <t>on       <t>If 0, drawing is turned off. If 1, drawing is turned on.
+
+<b>Example
+<c>  SetDraw(0);
+
+<c>  for ( i = 0; i < 10000; i++)
+<c>    x2 = x + 0.55;
+<c>    y2 = y + 0.55;
+<c>    create object/sub=pwr_indsquare/x1='x'/y1='y'/x2='x2'/y2='y2'
+<c>    set current attr DigLowColor.Attribute H1-DArray.Val['i']##Boolean
+<c>    x += 0.65;
+<c>    if ( i - (i / 100) * 100 == 99)
+<c>      y += 0.65;
+<c>      x = 0;
+<c>    endif
+<c>  endfor  
+
+<c>  SetDraw(1);
 </topic>
 
 <topic>SetExtern() <style>function

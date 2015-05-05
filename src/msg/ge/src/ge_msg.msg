@@ -68,6 +68,7 @@ isbaseclass     <Is baseclass>                                  /info
 fileopen	<Unable to open file>				/error
 needconv	<Unable to save, graph needs conversion>	/error
 javanamesyntax	<Java name syntax error>			/error
+notsaved	<Graph is not saved>				/error
 
 
 
