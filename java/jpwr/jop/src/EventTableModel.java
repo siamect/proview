@@ -54,8 +54,8 @@ import jpwr.rt.MhrEvent;
 
       public final Object[] longValues = {"A", "Acknowledge",
 					  "10-12-31 12:12:12.98",
-					  "QWERTYUIOPÅÄÖLK_JHGFDSAZXCVBNM__POÅIUYTRQWERTYUIOPÅÄÖL",
-					  "QWERTYUIOPÅÄÖLK"};
+					  "QWERTYUIOPAAOLK_JHGFDSAZXCVBNM__POAIUYTRQWERTYUIOAAOL",
+					  "QWERTYUIOPAAOLK"};
 
 
       /**
