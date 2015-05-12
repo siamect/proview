@@ -2385,6 +2385,8 @@ Connection point <link>geref_conpoint
 
 <h1>Complex objects
 Bar 		<link>geref_bar
+BarChart 	<link>geref_barchart
+Pie 		<link>geref_pie
 Trend	 	<link>geref_trend
 Axis 		<link>geref_axis
 Window		<link>geref_windowobject
@@ -2688,6 +2690,82 @@ Bar.BarColor  <t>Fillcolor for the bar (the value Inherit implies that the borde
 Bar.BorderColor <t>Border color for the upper border line of the bar (the value Inherit
               <t>implies that that the bordercolor from the background rectangle is chosen).
 Bar.BorderWidth <t>Line width of the borderline (1-8)
+Dynamic       <t>Not implemented
+</topic>
+
+<topic>geref_barchart <style>function
+BarChart
+<image> geg_fig170.png
+
+BarChart displays a number of bars in a chart. Each bar can be divided in segments with different
+colors. The maximum number of segments is 12. The size of each segment corresponds an to an array
+of float values, where each element in the array states the segments size in different bars.
+
+The properties fill, fillcolor, bordercolor etc. states properties for the background rectangle.
+The properties for the bars and segments are stated in the object editor.
+A bar is created by selecting BarChart in the subgraph palette, 'Analog/BarChart', and clicking 
+MB2 in the working area.
+
+<h2>Properties
+- Fill (for the background rectangle)
+- Fillcolor (for the background rectangle)
+- Border (for the background rectangle)
+- Bordercolor (for the background rectangle)
+- Linewidth (for the background rectangle)
+
+<h2>Attributes
+Attribute      <t>Description
+BarChart.Attribute0 <t>The name of an array in the database. The array values states the size 
+                    <t>of the first segment in the different bars.
+BarChart.Attribute1 <t>Array for the second segment.
+...
+BarChart.Attribute11 <t>Array for the twelveth segment.
+BarChart.Bars <t>Number of bars.
+BarChart.BarSegments <t>Number of segments in each bar.
+BarChart.MaxValue  <t>Value that corresponds to full length of a bar.
+BarChart.MinValue  <t>Signal value that corresponds to zero length of a bar.
+BarChart.BarColor1  <t>Fillcolor for the first segments.
+BarChart.BarColor2  <t>Fillcolor for the second segments.
+...
+BarChart.BarColor12  <t>Fillcolor for the twelveth segments.
+Dynamic       <t>Not implemented
+</topic>
+
+<topic>geref_pie <style>function
+Pie
+<image> geg_fig171.png
+
+Pie is a circular chart with a number of sectors in different color. The maximum number of 
+sectors is 12. The size of each segment corresponds a to a signal value.
+
+The properties fill, fillcolor, bordercolor etc. states properties for the background circle.
+The properties for the sectors are stated in the object editor.
+A Pie is created by selecting Pie in the subgraph palette, 'Analog/Pie', and clicking 
+MB2 in the working area.
+
+<h2>Properties
+- Fill (for the background circle)
+- Fillcolor (for the background circle)
+- Border (for the background circle)
+- Bordercolor (for the background circle)
+- Linewidth (for the background circle)
+
+<h2>Attributes
+Attribute      <t>Description
+Pie.Attribute0 <t>Database attribute of type Float that influences the size of the first
+               <t>sector.
+Pie.Attribute1 <t>Database attribute for the second sector.
+...
+Pie.Attribute11 <t>Database attribute for the twelfth sector.
+Pie.Angle1      <t>Angle from the x-axis in degrees to the start of the chart.
+Pie.Angle2      <t>Angle in degrees that states the size of the chart.
+Pie.Sectors <t>Number of sectors.
+Pie.MaxValue  <t>Value that corresponds to full chart.
+Pie.MinValue  <t>Signal value that corresponds to zero size of a sector.
+Pie.SectorColor1  <t>Fillcolor for the first sector.
+Pie.SectorColor2  <t>Fillcolor for the second sector.
+...
+Pie.SectorColor12  <t>Fillcolor for the twelveth sector.
 Dynamic       <t>Not implemented
 </topic>
 
