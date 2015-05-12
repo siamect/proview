@@ -12588,6 +12588,8 @@ int GeConfirm::action( grow_tObject object, glow_tEvent event)
     }
 
     if ( dyn->graph->confirm_cb) {
+      if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	Lng::translate( text, text);
       (dyn->graph->confirm_cb)( dyn->graph->parent_ctx, 
 			   object, text);
     }
