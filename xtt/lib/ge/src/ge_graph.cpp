@@ -1614,7 +1614,7 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
       *item_cnt = 0;
       dyn->get_attributes( object, items, item_cnt);
     }
-    if ( dyn->dyn_type1 & ge_mDynType1_XY_Curve) {
+    else if ( dyn->dyn_type1 & ge_mDynType1_XY_Curve) {
       char transtab[][32] = {	 	"NoOfPoints",		"XY_Curve.NoOfPoints",
 					"ScanTime",		"",
 					"CurveWidth",		"XY_Curve.CurveLineWidth",

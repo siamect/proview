@@ -1,16 +1,16 @@
 199
 !/**
-! CheckBox
+! CheckBox2
 ! Group Pushbuttons
 !
-! <image> pwr_checkbox_gs.gif
+! <image> pwr_checkbox2_gs.png
 !
 ! <h1>Description
 ! Checkbox.
 !
 ! Subgraph with two pages, checkbox unmarked (page 1) and
 ! checkbox marked (page 2).
-! <image> pwr_checkbox_ags.gif
+! <image> pwr_checkbox2_ags.png
 !
 ! <h1>Default dynamics
 ! DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat

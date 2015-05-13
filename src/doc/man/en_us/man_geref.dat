@@ -137,7 +137,7 @@ The Proview realtime database.
 Work with the editor
 
 <option> printdisable
-Baseobjects <link>geg_baseobjects
+Base objects <link>geg_baseobjects
 Editing <link>geg_editing
 Subgraphs <link>geg_subgraphs
 Special objects <link>geg_specialobjects
@@ -2372,7 +2372,7 @@ an object is opened by double clicking on the object. Below is described, under 
 'Properties', the properties that can be changed from the tool panel or color palette, and under
 the title 'Attributes' the attributes found in the object editor.
 
-<h1>Baseobjects
+<h1>Base objects
 
 Rectangle 	<link> geref_rectangle
 Rounded rectangle <link> geref_roundedrect
@@ -2388,10 +2388,13 @@ Bar 		<link>geref_bar
 BarChart 	<link>geref_barchart
 Pie 		<link>geref_pie
 Trend	 	<link>geref_trend
+FastCurve 	<link>geref_fastcurve
 Axis 		<link>geref_axis
+AxisArc 	<link>geref_axisarc
 Window		<link>geref_windowobject
 TabbedWindow	<link>geref_tabbedwind
 Table		<link>geref_table
+XYCurve		<link>geref_xycurve
 
 </topic>
 <topic>geref_rectangle <style>function
@@ -2703,7 +2706,7 @@ of float values, where each element in the array states the segments size in dif
 
 The properties fill, fillcolor, bordercolor etc. states properties for the background rectangle.
 The properties for the bars and segments are stated in the object editor.
-A bar is created by selecting BarChart in the subgraph palette, 'Analog/BarChart', and clicking 
+A barchart is created by selecting BarChart in the subgraph palette, 'Analog/BarChart', and clicking 
 MB2 in the working area.
 
 <h2>Properties
@@ -2714,21 +2717,21 @@ MB2 in the working area.
 - Linewidth (for the background rectangle)
 
 <h2>Attributes
-Attribute      <t>Description
-BarChart.Attribute0 <t>The name of an array in the database. The array values states the size 
-                    <t>of the first segment in the different bars.
-BarChart.Attribute1 <t>Array for the second segment.
+Attribute      <t><t>Description
+BarChart.Attribute0 <t><t>The name of an array in the database. The array values states the size 
+                    <t><t>of the first segment in the different bars.
+BarChart.Attribute1 <t><t>Array for the second segment.
 ...
-BarChart.Attribute11 <t>Array for the twelveth segment.
-BarChart.Bars <t>Number of bars.
-BarChart.BarSegments <t>Number of segments in each bar.
-BarChart.MaxValue  <t>Value that corresponds to full length of a bar.
-BarChart.MinValue  <t>Signal value that corresponds to zero length of a bar.
-BarChart.BarColor1  <t>Fillcolor for the first segments.
-BarChart.BarColor2  <t>Fillcolor for the second segments.
+BarChart.Attribute11 <t><t>Array for the twelveth segment.
+BarChart.Bars       <t><t>Number of bars.
+BarChart.BarSegments <t><t>Number of segments in each bar.
+BarChart.MaxValue   <t><t>Value that corresponds to full length of a bar.
+BarChart.MinValue   <t><t>Signal value that corresponds to zero length of a bar.
+BarChart.BarColor1  <t><t>Fillcolor for the first segments.
+BarChart.BarColor2  <t><t>Fillcolor for the second segments.
 ...
-BarChart.BarColor12  <t>Fillcolor for the twelveth segments.
-Dynamic       <t>Not implemented
+BarChart.BarColor12 <t><t>Fillcolor for the twelveth segments.
+Dynamic             <t><t>Not implemented
 </topic>
 
 <topic>geref_pie <style>function
@@ -2736,7 +2739,7 @@ Pie
 <image> geg_fig171.png
 
 Pie is a circular chart with a number of sectors in different color. The maximum number of 
-sectors is 12. The size of each segment corresponds a to a signal value.
+sectors is 12. The size of each sector corresponds a to a signal value.
 
 The properties fill, fillcolor, bordercolor etc. states properties for the background circle.
 The properties for the sectors are stated in the object editor.
@@ -2751,22 +2754,22 @@ MB2 in the working area.
 - Linewidth (for the background circle)
 
 <h2>Attributes
-Attribute      <t>Description
-Pie.Attribute0 <t>Database attribute of type Float that influences the size of the first
-               <t>sector.
-Pie.Attribute1 <t>Database attribute for the second sector.
+Attribute      <t><t>Description
+Pie.Attribute0 <t><t>Database attribute of type Float that influences the size of 
+               <t><t>the first sector.
+Pie.Attribute1 <t><t>Database attribute for the second sector.
 ...
-Pie.Attribute11 <t>Database attribute for the twelfth sector.
-Pie.Angle1      <t>Angle from the x-axis in degrees to the start of the chart.
-Pie.Angle2      <t>Angle in degrees that states the size of the chart.
-Pie.Sectors <t>Number of sectors.
-Pie.MaxValue  <t>Value that corresponds to full chart.
-Pie.MinValue  <t>Signal value that corresponds to zero size of a sector.
-Pie.SectorColor1  <t>Fillcolor for the first sector.
-Pie.SectorColor2  <t>Fillcolor for the second sector.
+Pie.Attribute11 <t><t>Database attribute for the twelfth sector.
+Pie.Angle1      <t><t>Angle from the x-axis in degrees to the start of the chart.
+Pie.Angle2      <t><t>Angle in degrees that states the size of the chart.
+Pie.Sectors     <t><t>Number of sectors.
+Pie.MaxValue    <t><t>Maximum value for the diagram range.
+Pie.MinValue    <t><t>Minimum value for the diagram range.
+Pie.SectorColor1 <t><t>Fillcolor for the first sector.
+Pie.SectorColor2 <t><t>Fillcolor for the second sector.
 ...
-Pie.SectorColor12  <t>Fillcolor for the twelveth sector.
-Dynamic       <t>Not implemented
+Pie.SectorColor12  <t><t>Fillcolor for the twelveth sector.
+Dynamic         <t><t>Not implemented
 </topic>
 
 <topic>geref_trend <style>function
@@ -2816,6 +2819,35 @@ Trend.CurveFillColor2 <t><t>Fill color for the curve of Attribute2
 Trend.Dynamic     <t><t>Not implemented
 </topic>
 
+<topic>geref_fastcurve <style>function
+FastCurve
+<image> geref_fig14.png
+
+The FastCurve displays one or two curves configured with a DsFastCurve object.
+A Fast curve is the measurement of a signal for a certain period of time. The 
+measurement is triggered by some event, and when the measurement is done, the 
+curve is displayed in the FastCurve object.
+
+<h2>Attributes
+<b>Attribute            <t><t>Description
+FastCurve.FastObject    <t><t>Database object of class DsFastCurve.
+FastCurve.CurveIndex1   <t><t>Index in the DsFastCurve object for first curve.
+FastCurve.CurveIndex2   <t><t>Index in the DsFastCurve object for second curve.
+FastCurve.NoOfPoints    <t><t>Number of points in the curve.
+FastCurve.CurveLineWidth <t><t>Line width.
+FastCurve.FillCurve     <t><t>Fill the area between the curve and the x-axis.
+FastCurve.HorizontalLines <t><t>Number of horizontal lines in the diagram.
+FastCurve.VerticalLines <t><t>Number of vertical lines.
+FastCurve.MaxValue1     <t><t>Maximum value in range for curve 1.
+FastCurve.MinValue1     <t><t>Minimum value in range for curve 1.
+FastCurve.CurveColor1   <t><t>Color for curve 1.
+FastCurve.CurveFillColor1 <t><t>Fill color for curve 1.
+FastCurve.MaxValue2     <t><t>Maximum value in range for curve 2.
+FastCurve.MinValue2     <t><t>Minimum value in range for curve 2.
+FastCurve.CurveColor2   <t><t>Color for curve 2.
+FastCurve.CurveFillColor2 <t><t>Fill color for curve 2.
+</topic>
+
 <topic>geref_axis <style>function
 Axis
 <image> geref_fig12.png
@@ -2840,6 +2872,41 @@ Format       <t>Format in c syntax of written values.
 Dynamic      <t>Not implemented.
 
 <b>Dynamic Axis
+Axis.MinValueAttr <t>Min value signal of type Float32 or Int32.
+Axis.MaxValueAttr <t>Max value signal of type Float32 of Int32.
+Axis.KeepSettings <t>If 0, new values of Lines, LongQuotient, ValueQoutient
+                  <t>and Format are calculated when the Min or Max value is
+                  <t>dymaically changed. If KeepSettings are 1, the original
+                  <t>values will be kept.
+</topic>
+
+<topic>geref_axisarc <style>function
+AxisArc
+<image> geg_fig172.png
+
+AxisArc is an arc shaped scale that displays the range for a needle.
+As for axis there are two variants of AxisArc, one with static min and max
+values, and one with dynamic min and max values, where min and
+max are connected to signals in the database. For a dynamic
+AxisArc object, the values of Lines, LongQuotient, ValueQuotient and
+Format are calculated automatically in runtime.
+
+<h2>Attributes
+<b>Attribute <t>Description
+Angle1       <t>Angle from the x-axis in degrees to the start of the axis.
+Angle2       <t>Angle in degrees that states the size of the axis.
+LineLength   <t>Length of lines perpendicular to the axis.
+MaxValue     <t>Maximum value for the range.
+MinValue     <t>Minimum value for the range.
+Lines        <t>Number of lines perpendicular to the axis.
+LongQuotient <t>Specification of lines that is a bit longer. For example 4 implies that
+             <t>every fourth line is a bit longer.
+ValueQuotient <t>How often a value is to be written. For example 4 impies that a value is
+	     <t>written at every fourth line.
+Format       <t>Format in c syntax of written values.
+Dynamic      <t>Not implemented.
+
+<b>Dynamic AxisArc
 Axis.MinValueAttr <t>Min value signal of type Float32 or Int32.
 Axis.MaxValueAttr <t>Max value signal of type Float32 of Int32.
 Axis.KeepSettings <t>If 0, new values of Lines, LongQuotient, ValueQoutient
@@ -2880,7 +2947,7 @@ and when that folder is activated, the stated graph is displayed in the window.
 Sliders within the window object are disabled.
 You can not state an hierarchy or class object.
 
-<h2>Attribut
+<h2>Attributes
 <b>Attribute    <t><t>Description
 Folder.NumberOfFolders  <t><t>Number of folders.
 Folder.HeaderHeight     <t><t>Folder height.
@@ -2953,6 +3020,54 @@ Column1.SelectAttribute <t><t>Array attribute of type Boolean, When a cell in th
 Column1Width      <t><t>Width of the column.
 Column1.HeaderText <t><t>Column title. The title is written in the header row.
 </topic>
+
+<topic>geref_xycurve <style>function
+XYCurve
+<image> geg_fig173.png
+
+XYCurve displays curves defined with x and y coordinates. 10 curves can be displayed
+in one XYCurve object. For each curve, the object is connected to two float arrays 
+containing the x and y coordinates for the curve. An UpdateAttr is also connected to 
+indicate when new coordinate values are present and the curves should be redrawn. 
+The ranges in x and y direction can be stated with fix values, or connected to attributes 
+in the database. Also the number of points can be defined statically with a connection 
+to a database attribute.
+
+The XYCurve can be connected to any attributes in the database. There is though a specific 
+class, XyCurve, that can be used to store a curve with 100 points. It contains two arrays 
+with 100 elements for the coordinates, together with attributes for the ranges, number of 
+points and update indication.
+
+<h2>Attributes
+<b>Attribute            <t><t>Description
+XY_Curve.XAttr          <t><t>Database array containing the x coordinates for the curve.
+XY_Curve.YAttr          <t><t>Database array containing the y coordinates for the curve.
+XY_Curve.UpdateAttr     <t><t>Boolean database attribute that indicates that the curves
+                        <t><t>should be updated.
+XY_Curve.XMinValue      <t><t>Minimum value of range in x direction.
+XY_Curve.XMaxValue      <t><t>Maximum value of range in x direction.
+XY_Curve.YMinValue      <t><t>Minimum value of range in y direction.
+XY_Curve.YMaxValue      <t><t>Maximum value of range in y direction.
+XY_Curve.XMinValueAttr  <t><t>Database attribute that contains the minimum value of range
+                        <t><t>in x direction.
+XY_Curve.XMaxValueAttr  <t><t>Database attribute that contains the maximum value of range
+                        <t><t>in x direction.
+XY_Curve.YMinValueAttr  <t><t>Database attribute that contains the minimum value of range
+                        <t><t>in y direction.
+XY_Curve.YMaxValueAttr  <t><t>Database attribute that contains the maximum value of range
+                        <t><t>in y direction.
+XY_Curve.NoOfPointsAttr <t><t>Integer database attribute with number of points in the curve.
+XY_Curve.CurveColor     <t><t>Color of curve.
+XY_Curve.FillColor      <t><t>Fill color of curve.
+XY_Curve.Instances      <t><t>Adding new instances makes it possible to display several curves
+                        <t><t>in the same diagram. Maximum 10 curves is possible to show.
+XY_Curve.NoOfPoints     <t><t>Number of points in curve.
+XY_Curve.CurveLineWidth <t><t>Line width of curve.
+XY_Curve.FillCurve      <t><t>If 1 the curve is filled.
+XY_Curve.HorizontalLines <t><t>Number of horizontal lines in the diagram.
+XY_Curve.VerticalLines  <t><t>Number of vertical lines in the diagram.
+</topic>
+
 </headerlevel>
 </chapter>
 
@@ -3016,10 +3131,11 @@ You should save the different pages with the same zoom factor, otherwise you mig
 pixels displacement of pages in runtime.
 
 <h1>Shift
-Shift between different pages in runtime is done with the dynamic types DigShift and AnalogShift.
-DigShift shifts between the first and second page depending on a digital value. AnalogShift
-is connected to an analog signal, where the value corresponds the the index for the page
-to be displayed (the first page has index 0).
+Shift between different pages in runtime is done with the dynamic types DigShift, DigFourShift
+and AnalogShift. DigShift shifts between the first and second page depending on a digital 
+value. DigFourShift shifts between four pages depending on the values of three digital signals.
+AnalogShift is connected to an analog signal, where the value corresponds the the index for 
+the page to be displayed (the first page has index 0).
 
 <h1>Animation
 When an animation is run, the pages are displayed, one after another and gives the impression
@@ -3091,6 +3207,7 @@ Value     <t>Arbitrary  <t>Write the value of an attribute. <link>GeDynValue
 Rotate    <t>Float32 Int32 <t>Rotate the component. <link>GeDynRotate
 Move      <t>Float32 Int32 <t>Move and scale the component is x and y direction. <link>GeDynMove
 DigShift  <t>Boolean    <t>Shift between two pages in the subgraph (first and last page). <link>GeDynDigShift
+DigFourShift <t>Boolean <t>Shift between four pages in the subgraph. <link>GeDynDigFourShift
 AnalogShift <t>Float32 Int32 <t>Shift between different pages in the subgraph. The value <link>GeDynAnalogShift
           <t>           <t>of the signal determines the page number.
 Animation <t>Boolean    <t>Different types of animation. <link>GeDynAnimation
@@ -3555,6 +3672,25 @@ drawn with the first page, if the value is 1, it is drawn with the last page.
 DigShift.Attribute <t><t>Signal in the database or type Boolean that shifts 
                    <t><t>page. When the value is 0, the first page 
                    <t><t>is displayed, when value is 1 the last page.
+</topic>
+
+<topic>GeDynDigFourShift <style>function
+DigFourShift
+
+Shift between four pages in the subgraph. The subgraph has to contain at least four pages.
+
+The object is connected to three digital signals in the database. If the value is 0 on all 
+signals, the first page is drawn. If the value is 1 on Attribute1, the second page is drawn,
+if Attribute2 is 1 the third page is drawn, and if Attribute3 is 1 the fourth page is drawn.
+If several attributes it set, higher page number has higher priority.
+
+<b>Attribute <t><t>Description
+DigFourShift.Attribute1 <t><t>Signal in the database or type Boolean that shifts 
+                   <t><t>page. Activates drawing of the second page.
+DigFourShift.Attribute2 <t><t>Signal in the database or type Boolean that shifts 
+                   <t><t>page. Activates drawing of the third page.
+DigFourShift.Attribute3 <t><t>Signal in the database or type Boolean that shifts 
+                   <t><t>page. Activates drawing of the fouth page.
 </topic>
 
 <topic>GeDynAnimation <style>function

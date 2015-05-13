@@ -34,8 +34,8 @@
 
 
 <hr>
-2010-11-25
-Version V4.8.0
+2015-05-13
+Version V5.3.0
 <hr>
 </topic>
 
@@ -82,9 +82,15 @@ General
 <topic> General_Analog
 Group Analog
 Axis <link>pwr_axis
+AxisArc <link>pwr_axisarc
 Bar <link>pwr_bar
+BarChart <link>pwr_barchart
+DynamicAxis <link>pwr_dynamicaxis
+DynamicAxisArc <link>pwr_dynamicaxisarc
 FastCurve <link>pwr_fastcurve
+Pie <link>pwr_pie
 Trend <link>pwr_trend
+XYCurve <link>pwr_xycurve
 </topic>
 
 <topic> General_Electric
@@ -113,8 +119,8 @@ SafetySwitch <link>pwr_safetyswitch
 Group Grafcet
 InitStep <link>pwr_initstep
 Order <link>pwr_order
-Step <link>pwr_step
 Step <link>pwr_stopwatch
+Step <link>pwr_step
 Trans <link>pwr_trans
 </topic>
 
@@ -159,6 +165,7 @@ FrameMedium <link>pwr_framemedium
 FrameRoundCorners <link>pwr_frameroundcorners
 FrameThick <link>pwr_framethick
 FrameThin <link>pwr_framethin
+NamePlate <link>pwr_nameplate
 PinConnection <link>pwr_pinconnection
 ReliefGray <link>pwr_reliefgray
 ReliefMedium <link>pwr_reliefmedium
@@ -172,13 +179,14 @@ ThreeWayConnection <link>pwr_threewayconnection
 
 <topic> General_Other
 Group Other
+Camera <link>pwr_camera
 Menubar <link>pwr_menubar
-Menubar <link>pwr_menubar2
+Menubar2 <link>pwr_menubar2
 Needle <link>pwr_needle
 OptionMenu <link>pwr_optionmenu
 Pc <link>pwr_pc
 PulldownMenu <link>pwr_pulldownmenu
-PulldownMenu <link>pwr_pulldownmenu2
+PulldownMenu2 <link>pwr_pulldownmenu2
 Pulpet <link>pwr_pulpet
 PwrLogotype <link>pwr_logga
 Rack <link>pwr_rack
@@ -203,18 +211,19 @@ DamperAnim2 <link>pwr_damperanim2
 DamperControl <link>pwr_dampercontrol
 DamperControl2 <link>pwr_dampercontrol2
 DirectValve <link>pwr_directvalve
+Elheater1 <link>pwr_elheater1
+Elheater2 <link>pwr_elheater2
+Elheater3 <link>pwr_elheater3
 EmergencyStop <link>pwr_emergencystop
 Fan <link>pwr_fan
 Fan2 <link>pwr_fan2
-Fan2 <link>pwr_elheater3
-Fan2 <link>pwr_elheater1
-Fan2 <link>pwr_elheater2
 Fan3 <link>pwr_fan3
 FanAnim <link>pwr_fananim
 FanAnim2 <link>pwr_fananim2
 FanAnim3 <link>pwr_fananim3
 Filter <link>pwr_filter
 HandWheel <link>pwr_handwheel
+LimitSwitch <link>pwr_limitswitch
 M3WayValve <link>pwr_m3wayvalve
 MDamper <link>pwr_mdamper
 MValve <link>pwr_mvalve
@@ -236,6 +245,8 @@ SpeedSwitch <link>pwr_speedswitch
 Switch <link>pwr_switch
 Thermometer <link>pwr_thermometer
 TrafficLight <link>pwr_trafficlight
+TrafficLight2 <link>pwr_trafficlight2
+TrafficLight3 <link>pwr_trafficlight3
 Valve <link>pwr_valve
 Valve3Way <link>pwr_valve3way
 Valve3Way2 <link>pwr_valve3way2
@@ -246,7 +257,6 @@ ValveAnim2 <link>pwr_valveanim2
 ValveControl <link>pwr_valvecontrol
 ValveControl2 <link>pwr_valvecontrol2
 ValveManuel <link>pwr_valvemanuel
-pwr_nameplate <link>pwr_nameplate
 </topic>
 
 <topic> General_Pushbuttons
@@ -273,12 +283,13 @@ ButtonToggleCenter <link>pwr_buttontogglecenter
 ButtonToggleConfirm <link>pwr_buttontoggleconfirm
 ButtonUp <link>pwr_buttonup
 CheckBox <link>pwr_checkbox
-CheckBox <link>pwr_checkbox2
+CheckBox2 <link>pwr_checkbox2
 CheckBoxRelief <link>pwr_checkboxrelief
 LargeButton <link>pwr_largebutton
 NoteButton <link>pwr_notebutton
+NoteButton2 <link>pwr_notebutton2
 Radiobutton <link>pwr_radiobutton
-Radiobutton <link>pwr_radiobutton2
+Radiobutton2 <link>pwr_radiobutton2
 RadiobuttonRelief <link>pwr_radiobuttonrelief
 RoundButton <link>pwr_roundbutton
 SmallButton <link>pwr_smallbutton
@@ -288,7 +299,26 @@ SoapButton <link>pwr_soapbutton
 
 <topic> General_Pushbuttons_Methodbuttons
 Group Pushbuttons/Methodbuttons
-MbBlockEvents <link>pwr_mbphoto
+Mb2BlockEvents <link>pwr_mb2blockevents
+Mb2Camera <link>pwr_mb2camera
+Mb2CircuitDiagram <link>pwr_mb2circuitdiagram
+Mb2CrossReferences <link>pwr_mb2crossreferences
+Mb2DataSheet <link>pwr_mb2datasheet
+Mb2Fast <link>pwr_mb2fast
+Mb2Help <link>pwr_mb2help
+Mb2HelpClass <link>pwr_mb2helpclass
+Mb2HistEvent <link>pwr_mb2histevent
+Mb2History <link>pwr_mb2history
+Mb2Note <link>pwr_mb2note
+Mb2OpenGraph <link>pwr_mb2opengraph
+Mb2OpenObject <link>pwr_mb2openobject
+Mb2OpenObjectGraph <link>pwr_mb2openobjectgraph
+Mb2OpenPlc <link>pwr_mb2openplc
+Mb2ParentGraph <link>pwr_mb2parentgraph
+Mb2Photo <link>pwr_mb2photo
+Mb2RtNavigator <link>pwr_mb2rtnavigator
+Mb2Simulate <link>pwr_mb2simulate
+Mb2Trend <link>pwr_mb2trend
 MbBlockEvents <link>pwr_mbblockevents
 MbCircuitDiagram <link>pwr_mbcircuitdiagram
 MbCrossreferences <link>pwr_mbcrossreferences
@@ -300,10 +330,11 @@ MbHistEvent <link>pwr_mbhistevent
 MbNote <link>pwr_mbnote
 MbOpenObject <link>pwr_mbopenobject
 MbOpenPlc <link>pwr_mbopenplc
+MbPhoto <link>pwr_mbphoto
 MbRtNavigator <link>pwr_mbrtnavigator
-MbSimulate <link>pwr_mbup
 MbSimulate <link>pwr_mbsimulate
 MbTrend <link>pwr_mbtrend
+MbUp <link>pwr_mbup
 </topic>
 
 <topic> General_Sliders
@@ -312,6 +343,7 @@ Slider1 <link>pwr_slider1
 Slider2 <link>pwr_slider2
 Slider3 <link>pwr_slider3
 SliderArrow <link>pwr_sliderarrow
+SliderArrow2 <link>pwr_sliderarrow2
 SliderBackground1 <link>pwr_sliderbackground1
 SliderBackground1_2 <link>pwr_sliderbackground1_2
 SliderBackground2 <link>pwr_sliderbackground2
@@ -320,6 +352,7 @@ SliderBackground3 <link>pwr_sliderbackground3
 
 <topic> General_Values
 Group Values
+PasswordInput <link>pwr_passwordinput
 ValueInputLarge <link>pwr_valueinputlarge
 ValueInputLargeCenter <link>pwr_valueinputlargecenter
 ValueInputLargeRd <link>pwr_valueinputlargerd
@@ -374,6 +407,21 @@ Group Analog
 
 </topic>
 
+<topic> pwr_axisarc <style> function
+ AxisArc
+ Group Analog
+
+ <image> pwr_axisarc_gs.png
+
+ <h1>Description
+ Circular axis.
+
+ <h1>Default dynamics
+ AxisArc is a complex object.
+ See AxisArc in Ge Reference Manual <link>geref_axisarc, ,$pwr_lang/man_geref.dat
+
+</topic>
+
 <topic> pwr_bar <style> function
  Bar
  Group Analog
@@ -389,6 +437,53 @@ Group Analog
 
 </topic>
 
+<topic> pwr_barchart <style> function
+ BarChart
+ Group Analog
+
+ <image> pwr_barchart_gs.png
+
+ <h1>Description
+ A number of bars in a chart. Each bar can be divided in segments with differnt color. 
+ The size of the segments and bars is determined from a set of arrays, one array for
+ each segment.
+
+ <h1>Default dynamics
+ BarChart is a complex object.
+ See BarChart in Ge Reference Manual<link>geref_barchart, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_dynamicaxis <style> function
+ DynamicAxis
+ Group Analog
+
+ <image> pwr_axis_gs.gif
+
+ <h1>Description
+ Axis with dynamic range.
+
+ <h1>Default dynamics
+ Axis is a complex object.
+ See Axis in Ge Reference Manual <link>geref_axis, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_dynamicaxisarc <style> function
+ DynamicAxisArc
+ Group Analog
+
+ <image> pwr_axisarc_gs.png
+
+ <h1>Description
+ Circular axis with dynamic range.
+
+ <h1>Default dynamics
+ AxisArc is a complex object.
+ See AxisArc in Ge Reference Manual <link>geref_axisarc, ,$pwr_lang/man_geref.dat
+
+</topic>
+
 <topic> pwr_fastcurve <style> function
  FastCurve
  Group Analog
@@ -399,8 +494,23 @@ Group Analog
  Shows one or two curves in a DsFastCurve object.
 
  <h1>Default dynamics
- Bar is a complex object.
+ FastCurve is a complex object.
  See FastCurve in Ge Reference Manual<link>geref_fastcurve, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_pie <style> function
+ Pie
+ Group Analog
+
+ <image> pwr_pie_gs.png
+
+ <h1>Description
+ A circular diagram displaying a set of analog values.
+
+ <h1>Default dynamics
+ Pie is a complex object.
+ See Pie in Ge Reference Manual<link>geref_pie, ,$pwr_lang/man_geref.dat
 
 </topic>
 
@@ -416,6 +526,21 @@ Group Analog
  <h1>Default dynamics
  Trend is a complex object. 
  See Trend in Ge Reference manual <link>geref_trend, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_xycurve <style> function
+ XYCurve
+ Group Analog
+
+ <image> pwr_xycurve_gs.png
+
+ <h1>Description
+ A diagram displaying a number of curves, defined by x and y coordinates.
+
+ <h1>Default dynamics
+ XYCurve is a complex object.
+ See XYCurve in Ge Reference Manual<link>geref_xycurve, ,$pwr_lang/man_geref.dat
 
 </topic>
 
@@ -764,7 +889,7 @@ Group Grafcet
 
 </topic>
 
-<topic> pwr_step <style> function
+<topic> pwr_stopwatch <style> function
  Step
  Group Grafcet
 
@@ -779,7 +904,7 @@ Group Grafcet
 
 </topic>
 
-<topic> pwr_stopwatch <style> function
+<topic> pwr_step <style> function
  Step
  Group Grafcet
 
@@ -1254,6 +1379,20 @@ Group Layout
 
 </topic>
 
+<topic> pwr_nameplate <style> function
+ NamePlate
+ Group Layout
+
+ <image> pwr_nameplate_gs.png
+
+ <h1>Description
+ A name plate with an annotation.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
 <topic> pwr_pinconnection <style> function
  PinConnection
  Group Layout
@@ -1352,6 +1491,20 @@ Group Layout
 Group Other
 </topic>
 <headerlevel>
+<topic> pwr_camera <style> function
+ Camera
+ Group Other
+
+ <image> pwr_camera_gs.png
+
+ <h1>Description
+ Camera.
+
+ <h1>Default dynamics
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+
+</topic>
+
 <topic> pwr_menubar <style> function
  Menubar
  Group Other
@@ -1368,14 +1521,14 @@ Group Other
 </topic>
 
 <topic> pwr_menubar2 <style> function
- Menubar
+ Menubar2
  Group Other
 
- <image> pwr_menubar_gs.gif
+ <image> pwr_menubar2_gs.png
 
  <h1>Description
  Menubar. 
- Add pulldownmenue-objects to the menubar.
+ Add pulldownmenu-objects to the menubar.
 
  <h1>Default dynamics
  No default dynamics.
@@ -1439,13 +1592,13 @@ Group Other
 </topic>
 
 <topic> pwr_pulldownmenu2 <style> function
- PulldownMenu
+ PulldownMenu2
  Group Other
 
- <image> pwr_pulldownmenu_gs.gif
+ <image> pwr_pulldownmenu2_gs.png
 
  <h1>Description
- Pulldown menu. Place the pulldown menu on a menu bar.
+ Pulldown menu. Place the pulldown menu on a menu bar, preferably a menubar of type Menubar2.
 
  <h1>Default dynamics
  PulldownMenu <link>GeDynPulldownMenu, ,$pwr_lang/man_geref.dat
@@ -1737,7 +1890,7 @@ Group Process
 
  <h1>Description
  Control damper.
- Annotation to display manuel or local mode.
+ Annotation to display manual or local mode.
 
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
@@ -1784,6 +1937,50 @@ Group Process
 
 </topic>
 
+<topic> pwr_elheater1 <style> function
+ Elheater1
+ Group Process
+
+ <image> pwr_elheater1_gs.png
+
+ <h1>Description
+ Electrical heater.
+ Annotation for display of manual or local mode.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_elheater2 <style> function
+ Elheater2
+ Group Process
+
+ <image> pwr_elheater2_gs.png
+
+ <h1>Description
+ Electrical heater.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_elheater3 <style> function
+ Elheater3
+ Group Process
+
+ <image> pwr_elheater3_gs.png
+
+ <h1>Description
+ Electrical heater.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
 <topic> pwr_emergencystop <style> function
  EmergencyStop
  Group Process
@@ -1814,66 +2011,6 @@ Group Process
 </topic>
 
 <topic> pwr_fan2 <style> function
- Fan2
- Group Process
-
- <image> pwr_fan2_gs.gif
-
- <h1>Description
- Fan.
-
- Subgraph with two pages, fan off (page 1) and fan on (page 2).
- Annotation for display of manual or local mode.
- <image> pwr_fan2_ags.gif
-
- <h1>Default dynamics
- DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
- Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
- DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
-
-</topic>
-
-<topic> pwr_elheater3 <style> function
- Fan2
- Group Process
-
- <image> pwr_fan2_gs.gif
-
- <h1>Description
- Fan.
-
- Subgraph with two pages, fan off (page 1) and fan on (page 2).
- Annotation for display of manual or local mode.
- <image> pwr_fan2_ags.gif
-
- <h1>Default dynamics
- DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
- Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
- DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
-
-</topic>
-
-<topic> pwr_elheater1 <style> function
- Fan2
- Group Process
-
- <image> pwr_fan2_gs.gif
-
- <h1>Description
- Fan.
-
- Subgraph with two pages, fan off (page 1) and fan on (page 2).
- Annotation for display of manual or local mode.
- <image> pwr_fan2_ags.gif
-
- <h1>Default dynamics
- DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
- Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
- DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
-
-</topic>
-
-<topic> pwr_elheater2 <style> function
  Fan2
  Group Process
 
@@ -1994,6 +2131,23 @@ Group Process
 
  <h1>Default dynamics
  No default dynamics.
+
+</topic>
+
+<topic> pwr_limitswitch <style> function
+ LimitSwitch
+ Group Process
+
+ <image> pwr_limitswitch_gs.png
+
+ <h1>Description
+ Limit switch
+ 
+ Subgraph with two pages, switch in left and right position.
+ <image> pwr_limitswitch_ags.png
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
 
 </topic>
 
@@ -2332,6 +2486,40 @@ Group Process
 
 </topic>
 
+<topic> pwr_trafficlight2 <style> function
+ TrafficLight2
+ Group Process
+
+ <image> pwr_trafficlight2_gs.png
+
+ <h1>Description
+ Trafficlight with four pages. The color is shifting between dark gray, green for OK,
+ yellow for warning and red for fault. Also the shape is changed in the pages.
+
+ <image> pwr_trafficlight2_ags.png
+
+ <h1>Default dynamics
+ DigFourShift <link>GeDynDigFourShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_trafficlight3 <style> function
+ TrafficLight3
+ Group Process
+
+ <image> pwr_trafficlight3_gs.png
+
+ <h1>Description
+ Trafficlight with four pages. The color is shifting between dark gray, green for OK,
+ yellow for warning and red for fault. Also the shape is changed in the pages.
+
+ <image> pwr_trafficlight3_ags.png
+
+ <h1>Default dynamics
+ DigFourShift <link>GeDynDigFourShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
 <topic> pwr_valve <style> function
  Valve
  Group Process
@@ -2501,7 +2689,7 @@ Group Process
  <image> pwr_valvemanuel_gs.gif
 
  <h1>Description
- Manuel valve.
+ Manual valve.
 
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
@@ -2549,7 +2737,7 @@ Group Pushbuttons
  <image> pwr_buttonx_gs.gif
 
  <h1>Description
- Button to execute a xtt command.
+ Button to execute an xtt command.
 
  <h1>Default dynamics
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
@@ -2563,7 +2751,7 @@ Group Pushbuttons
  <image> pwr_buttonxcenter_gs.gif
 
  <h1>Description
- Button to execute a xtt command. Center aligned text.
+ Button to execute an xtt command. Center aligned text.
 
  <h1>Default dynamics
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
@@ -2577,7 +2765,7 @@ Group Pushbuttons
  <image> pwr_buttonx_gs.gif
 
  <h1>Description
- Button to execute a xtt command with confirm.
+ Button to execute an xtt command with confirm.
 
  <h1>Default dynamics
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
@@ -2832,17 +3020,17 @@ Group Pushbuttons
 </topic>
 
 <topic> pwr_checkbox2 <style> function
- CheckBox
+ CheckBox2
  Group Pushbuttons
 
- <image> pwr_checkbox_gs.gif
+ <image> pwr_checkbox2_gs.png
 
  <h1>Description
  Checkbox.
 
  Subgraph with two pages, checkbox unmarked (page 1) and
  checkbox marked (page 2).
- <image> pwr_checkbox_ags.gif
+ <image> pwr_checkbox2_ags.png
 
  <h1>Default dynamics
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
@@ -2900,6 +3088,23 @@ Group Pushbuttons
 
 </topic>
 
+<topic> pwr_notebutton2 <style> function
+ NoteButton2
+ Group Pushbuttons
+
+ <image> pwr_notebutton2_gs.png
+
+ <h1>Description
+ Button to display the current note for the connected object.
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ The button is visible if a note for the object is present,
+ and the note is displayed when the button is activated.
+
+</topic>
+
 <topic> pwr_radiobutton <style> function
  Radiobutton
  Group Pushbuttons
@@ -2922,10 +3127,10 @@ Group Pushbuttons
 </topic>
 
 <topic> pwr_radiobutton2 <style> function
- Radiobutton
+ Radiobutton2
  Group Pushbuttons
 
- <image> pwr_radiobutton_gs.gif
+ <image> pwr_radiobutton2_gs.png
 
  <h1>Description
  Radiobutton.
@@ -2935,7 +3140,7 @@ Group Pushbuttons
 
  Subgraph with two pages, radiobutton not selected (page 1) and
  selected (page 2).
- <image> pwr_radiobutton_ags.gif
+ <image> pwr_radiobutton2_ags.png
 
  <h1>Default dynamics
  Radiobutton <link>GeDynRadiobutton, ,$pwr_lang/man_geref.dat
@@ -3024,30 +3229,343 @@ Group Pushbuttons
 Group Pushbuttons/Methodbuttons
 </topic>
 <headerlevel>
-<topic> pwr_mbphoto <style> function
- MbBlockEvents
+<topic> pwr_mb2blockevents <style> function
+ Mb2BlockEvents
  Group Pushbuttons/Methodbuttons
 
- <image> pwr_mbphoto_gs.gif
+ <image> pwr_mb2blockevents_gs.png
 
  <h1>Description
- Method button for object graphs, to activate method 'Photo'.
-
- Used in object graphs with the following settings.
-
- Invisible.Attribute <t><t>$cmd(check method/method="Photo"/object=$object)
- Invisible.Dimmed <t><t>1
- Command.Command  <t><t>call method/method="Photo"/object=$object
- ToolTip.Text <t><t>Photo
-    
- The method is executed on activation of the button, and the button is dimmed
- if the method is not present for the current object.
+ Method button for object graphs. Used by the MethodToolbar component.
 
  <h1>Default dynamics
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
+</topic>
+
+<topic> pwr_mb2camera <style> function
+ Mb2Camera
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2camera_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2circuitdiagram <style> function
+ Mb2CircuitDiagram
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2circuitdiagram_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2crossreferences <style> function
+ Mb2CrossReferences
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2crossreferences_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2datasheet <style> function
+ Mb2DataSheet
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2datasheet_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2fast <style> function
+ Mb2Fast
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2fast_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2help <style> function
+ Mb2Help
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2help_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2helpclass <style> function
+ Mb2HelpClass
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2helpclass_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2histevent <style> function
+ Mb2HistEvent
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2histevent_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2history <style> function
+ Mb2History
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2history_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2note <style> function
+ Mb2Note
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2note_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2opengraph <style> function
+ Mb2OpenGraph
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2opengraph_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2openobject <style> function
+ Mb2OpenObject
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2openobject_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2openobjectgraph <style> function
+ Mb2OpenObjectGraph
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2openobjectgraph_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2openplc <style> function
+ Mb2OpenPlc
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2openplc_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2parentgraph <style> function
+ Mb2ParentGraph
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2parentgraph_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2photo <style> function
+ Mb2Photo
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2photo_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2rtnavigator <style> function
+ Mb2RtNavigator
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2rtnavigator_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2simulate <style> function
+ Mb2Simulate
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2simulate_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+</topic>
+
+<topic> pwr_mb2trend <style> function
+ Mb2Trend
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mb2trend_gs.png
+
+ <h1>Description
+ Method button for object graphs. Used by the MethodToolbar component.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+ See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
 </topic>
 
 <topic> pwr_mbblockevents <style> function
@@ -3109,7 +3627,7 @@ Group Pushbuttons/Methodbuttons
  <image> pwr_mbcrossreferences_gs.gif
 
  <h1>Description
- Method button for object graphs, to activate method 'Crossrefereces'.
+ Method button for object graphs, to activate method 'Crossreferences'.
 
  Used in object graphs with the following settings. 
 
@@ -3336,6 +3854,32 @@ Group Pushbuttons/Methodbuttons
 
 </topic>
 
+<topic> pwr_mbphoto <style> function
+ MbPhoto
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mbphoto_gs.gif
+
+ <h1>Description
+ Method button for object graphs, to activate method 'Photo'.
+
+ Used in object graphs with the following settings.
+
+ Invisible.Attribute <t><t>$cmd(check method/method="Photo"/object=$object)
+ Invisible.Dimmed <t><t>1
+ Command.Command  <t><t>call method/method="Photo"/object=$object
+ ToolTip.Text <t><t>Photo
+    
+ The method is executed on activation of the button, and the button is dimmed
+ if the method is not present for the current object.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+</topic>
+
 <topic> pwr_mbrtnavigator <style> function
  MbRtNavigator
  Group Pushbuttons/Methodbuttons
@@ -3354,33 +3898,6 @@ Group Pushbuttons/Methodbuttons
     
  The method is executed on activation of the button, and the button is dimmed
  if the method is not present for the current object.
-
- <h1>Default dynamics
- Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
- Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
- Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
-
-</topic>
-
-<topic> pwr_mbup <style> function
- MbSimulate
- Group Pushbuttons/Methodbuttons
-
- <image> pwr_mbsimulate_gs.gif
-
- <h1>Description
- Method button for object graphs, to activate method 'Simulate'.
-
- Used in object graphs with the following settings. 
-
- Invisible.Attribute <t><t>$cmd(check method/method="Simulate"/object=$object)
- Invisible.Dimmed <t><t>0
- Command.Command  <t><t>call method/method="Simulate"/object=$object
- ToolTip.Text <t><t>Simulate
-    
- The method is executed on activation of the button, and the button is invisible
- if the method is not present for the current object or in the current
- environment.
 
  <h1>Default dynamics
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
@@ -3434,6 +3951,33 @@ Group Pushbuttons/Methodbuttons
     
  The method is executed on activation of the button, and the button is dimmed
  if the method is not present for the current object.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_mbup <style> function
+ MbUp
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mbup_gs.png
+
+ <h1>Description
+ Method button for object graphs, to activate method 'ParentGraph'.
+
+ Used in object graphs with the following settings. 
+
+ Invisible.Attribute <t><t>$cmd(check method/method="Simulate"/object=$object)
+ Invisible.Dimmed <t><t>0
+ Command.Command  <t><t>call method/method="Simulate"/object=$object
+ ToolTip.Text <t><t>Simulate
+    
+ The method is executed on activation of the button, and the button is invisible
+ if the method is not present for the current object or in the current
+ environment.
 
  <h1>Default dynamics
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
@@ -3513,6 +4057,23 @@ Group Sliders
  Group Sliders
 
  <image> pwr_sliderarrow_gs.gif
+
+ <h1>Description
+ The mobile part of a slider. 
+ There is no slider background to this slider.
+ Measure the coordinates of the moving range and insert
+ as MaxPosition and MinPosition.
+ 
+ <h1>Default dynamics
+ Slider <link>GeDynSlider, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_sliderarrow2 <style> function
+ SliderArrow2
+ Group Sliders
+
+ <image> pwr_sliderarrow2_gs.png
 
  <h1>Description
  The mobile part of a slider. 
@@ -3608,6 +4169,21 @@ Group Sliders
 Group Values
 </topic>
 <headerlevel>
+<topic> pwr_passwordinput <style> function
+ PasswordInput
+ Group Values
+
+ <image> pwr_passwordinput_gs.png
+
+ <h1>Description
+ Value input field for passwords. Entered characters are viewed with an asterisk.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
+</topic>
+
 <topic> pwr_valueinputlarge <style> function
  ValueInputLarge
  Group Values
@@ -4160,7 +4736,7 @@ Group Ventilation
  <image> sis032260_3wayvalve_actuator_gs.gif
 
  <h1>Description
- Automatic threeway controlvalve with actuator.
+ Automatic threeway control valve with actuator.
  The marked ports indicates regulatable ports.
 
  <h1>Default dynamics
@@ -7706,7 +8282,7 @@ Group Components/BaseComponent
  <image> bcomp_manvalve_gs.gif
 
  <h1>Description
- Manuel valve. Graphic symbol for basecomponent BaseManValve.
+ Manual valve. Graphic symbol for basecomponent BaseManValve.
  Should be connected to an instance of BaseManValve, or a 
  subclass to this class.
 
@@ -7734,7 +8310,7 @@ Group Components/BaseComponent
  <image> bcomp_manvalve_gs.gif
 
  <h1>Description
- Manuel valve without switches.
+ Manual valve without switches.
  This subgraph is used when the open/closed state can 
  be set by the operator from the object graph.
 
@@ -7763,7 +8339,7 @@ Group Components/BaseComponent
  <image> bcomp_manvalve_gs.gif
 
  <h1>Description
- Manuel valve. Graphic symbol for basecomponent BaseManValve.
+ Manual valve. Graphic symbol for basecomponent BaseManValve.
  Should be connected to an instance of BaseManValve, or a 
  subclass to this class.
 
@@ -7790,7 +8366,7 @@ Group Components/BaseComponent
  <image> bcomp_manvalve_gs.gif
 
  <h1>Description
- Manuel valve. Graphic symbol for basecomponent BaseManValve.
+ Manual valve. Graphic symbol for basecomponent BaseManValve.
  Should be connected to an instance of BaseManValve, or a 
  subclass to this class.
 
@@ -7817,7 +8393,7 @@ Group Components/BaseComponent
  <image> bcomp_manvalve_gs.gif
 
  <h1>Description
- Manuel valve. Graphic symbol for basecomponent BaseManValve.
+ Manual valve. Graphic symbol for basecomponent BaseManValve.
  Should be connected to an instance of BaseManValve, or a 
  subclass to this class.
 
@@ -8229,6 +8805,7 @@ ABB
 Group Components/ABB
 ACS800FanAggr <link>mcomp_abb_acs800fanaggr
 ACS800MotorAggr <link>mcomp_abb_acs800motoraggr
+ACS800PumpAggr <link>mcomp_abb_acs880
 ACS800PumpAggr <link>mcomp_abb_acs800pumpaggr
 </topic>
 
@@ -8299,6 +8876,42 @@ Group Components/ABB
  DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
  DigLowColor <t>$hostobject.ACS800.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
+</topic>
+
+<topic> mcomp_abb_acs880 <style> function
+ ACS800PumpAggr
+ Group Components/ABB
+
+ <image> bcomp_pumpaggr_gs.gif
+
+ <h1>Description
+ Pump aggregate. Graphic symbol for component ABB_ACS800PumpAggr.
+ Should be connected to an instance of ABB_ACS800PumpAggr, or a 
+ subclass to this class.
+
+ Subgraph with two pages, pump off (page 1) and pump on (page 2).
+ <image> bcomp_pumpaggr_ags.gif
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the pump is off.
+ - the mode (manual or local) is displayed with a M or L.
+ - pump on and off is displayed with different pages.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.ACS800.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ DigShift <t>$hostobject.ACS800.ConvertRun <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 

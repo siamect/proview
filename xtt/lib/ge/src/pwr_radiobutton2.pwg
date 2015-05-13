@@ -1,9 +1,9 @@
 199
 !/**
-! Radiobutton
+! Radiobutton2
 ! Group Pushbuttons
 !
-! <image> pwr_radiobutton_gs.gif
+! <image> pwr_radiobutton2_gs.png
 !
 ! <h1>Description
 ! Radiobutton.
@@ -13,7 +13,7 @@
 !
 ! Subgraph with two pages, radiobutton not selected (page 1) and
 ! selected (page 2).
-! <image> pwr_radiobutton_ags.gif
+! <image> pwr_radiobutton2_ags.png
 !
 ! <h1>Default dynamics
 ! Radiobutton <link>GeDynRadiobutton, ,$pwr_lang/man_geref.dat

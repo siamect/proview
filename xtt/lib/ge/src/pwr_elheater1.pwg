@@ -1,21 +1,17 @@
 199
 !/**
-! Fan2
+! Elheater1
 ! Group Process
 !
-! <image> pwr_fan2_gs.gif
+! <image> pwr_elheater1_gs.png
 !
 ! <h1>Description
-! Fan.
-!
-! Subgraph with two pages, fan off (page 1) and fan on (page 2).
+! Electrical heater.
 ! Annotation for display of manual or local mode.
-! <image> pwr_fan2_ags.gif
 !
 ! <h1>Default dynamics
 ! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
 ! Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
-! DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
 !
 !*/
 1

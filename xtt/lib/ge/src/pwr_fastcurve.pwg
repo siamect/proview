@@ -9,7 +9,7 @@
 ! Shows one or two curves in a DsFastCurve object.
 !
 ! <h1>Default dynamics
-! Bar is a complex object.
+! FastCurve is a complex object.
 ! See FastCurve in Ge Reference Manual<link>geref_fastcurve, ,$pwr_lang/man_geref.dat
 !
 !*/

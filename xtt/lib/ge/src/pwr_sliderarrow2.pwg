@@ -1,5 +1,22 @@
 0! DefaultWidth 0
 0! DefaultHeight -49
+199
+!/**
+! SliderArrow2
+! Group Sliders
+!
+! <image> pwr_sliderarrow2_gs.png
+!
+! <h1>Description
+! The mobile part of a slider. 
+! There is no slider background to this slider.
+! Measure the coordinates of the moving range and insert
+! as MaxPosition and MinPosition.
+! 
+! <h1>Default dynamics
+! Slider <link>GeDynSlider, ,$pwr_lang/man_geref.dat
+!
+!*/
 1
 100 98.8304
 135 98.8304

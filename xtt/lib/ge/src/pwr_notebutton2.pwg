@@ -2,10 +2,10 @@
 0! DefaultHeight 0
 199
 !/**
-! NoteButton
+! NoteButton2
 ! Group Pushbuttons
 !
-! <image> pwr_notebutton_gs.gif
+! <image> pwr_notebutton2_gs.png
 !
 ! <h1>Description
 ! Button to display the current note for the connected object.

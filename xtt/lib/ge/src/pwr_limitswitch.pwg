@@ -1,5 +1,22 @@
 0! DefaultWidth 144
 0! DefaultHeight 288
+199
+!/**
+! LimitSwitch
+! Group Process
+!
+! <image> pwr_limitswitch_gs.png
+!
+! <h1>Description
+! Limit switch
+! 
+! Subgraph with two pages, switch in left and right position.
+! <image> pwr_limitswitch_ags.png
+!
+! <h1>Default dynamics
+! DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+!
+!*/
 1
 100 144.012
 135 144.012

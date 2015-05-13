@@ -2,19 +2,19 @@
 0! DefaultHeight 0
 199
 !/**
-! TrafficLight
+! TrafficLight3
 ! Group Process
 !
-! <image> pwr_trafficlight_gs.gif
+! <image> pwr_trafficlight3_gs.png
 !
 ! <h1>Description
-! Trafficlight with the colors green for OK, yellow for
-! warning and red for fault.
+! Trafficlight with four pages. The color is shifting between dark gray, green for OK,
+! yellow for warning and red for fault. Also the shape is changed in the pages.
+!
+! <image> pwr_trafficlight3_ags.png
 !
 ! <h1>Default dynamics
-! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
-! DigWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
-! DigError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+! DigFourShift <link>GeDynDigFourShift, ,$pwr_lang/man_geref.dat
 !
 !*/
 1

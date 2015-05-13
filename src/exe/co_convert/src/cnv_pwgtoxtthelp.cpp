@@ -46,6 +46,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "pwr_version.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
@@ -368,7 +369,7 @@ void CnvPwgToXtthelp::header()
     "<hr>" << endl <<
     "</topic>" << endl << endl <<
     "<topic> __DocumentInfoPage" << endl << endl << endl <<
-    "Copyright (C) "<< year << " SSAB Oxelösund AB" << endl << endl <<
+    pwrv_cPwrCopyright << endl << endl <<
     "Permission is granted to copy, distribute and/or modify this document" << endl <<
     "under the terms of the GNU Free Documentation License, Version 1.2" << endl <<
     "or any later version published by the Free Software Foundation;" << endl <<

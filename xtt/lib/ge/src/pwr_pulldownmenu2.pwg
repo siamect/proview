@@ -1,12 +1,12 @@
 199
 !/**
-! PulldownMenu
+! PulldownMenu2
 ! Group Other
 !
-! <image> pwr_pulldownmenu_gs.gif
+! <image> pwr_pulldownmenu2_gs.png
 !
 ! <h1>Description
-! Pulldown menu. Place the pulldown menu on a menu bar.
+! Pulldown menu. Place the pulldown menu on a menu bar, preferably a menubar of type Menubar2.
 !
 ! <h1>Default dynamics
 ! PulldownMenu <link>GeDynPulldownMenu, ,$pwr_lang/man_geref.dat

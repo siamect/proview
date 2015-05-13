@@ -1,13 +1,13 @@
 199
 !/**
-! Menubar
+! Menubar2
 ! Group Other
 !
-! <image> pwr_menubar_gs.gif
+! <image> pwr_menubar2_gs.png
 !
 ! <h1>Description
 ! Menubar. 
-! Add pulldownmenue-objects to the menubar.
+! Add pulldownmenu-objects to the menubar.
 !
 ! <h1>Default dynamics
 ! No default dynamics.

@@ -2372,11 +2372,16 @@ Kopplingspunkt 	<link>geref_conpoint
 
 <h1>Sammansatta objekt
 Stapel 		<link>geref_bar
+Stapeldiagram 	<link>geref_barchart
+Cirkeldiagram 	<link>geref_pie
 Trendkurva 	<link>geref_trend
+Fastkurva 	<link>geref_fastcurve
 Axis 		<link>geref_axis
+AxisArc 	<link>geref_axisarc
 Window		<link>geref_windowobject
 TabbedWindow	<link>geref_tabbedwind
 Table		<link>geref_table
+XYCurve		<link>geref_xycurve
 
 </topic>
 <topic>geref_rectangle <style>function
@@ -2673,6 +2678,81 @@ Bar.BorderWidth <t>Kantlinjens linjebredd (1-8)
 Dynamic       <t>Ej implementerat
 </topic>
 
+<topic>geref_barchart <style>function
+Stapeldiagram
+<image> geg_fig170.png
+
+Ett stapeldiagram visar ett antal staplar i ett diagram. Varje stapel kan indelas i segment
+med olika färg. Man kan ha upp till 12 segment. Storleken på varje segment anges av en 
+vektor av float, där elementen i vektorn anger storleken på segmentet i de olika staplarna.
+
+Egenskaperna fyllnad, fyllnadsfärg, kantfärg mm, anger egenskaper för bakgrunds-rektangeln.
+Egenskaperna för staplar och segment anges i objekts-editorn. 
+Ett stapeldiagram skapas genom att välja BarChart i subgrafs-paletten, 'Analog/BarChart', och
+klicka med MB2 i arbetsarean.
+
+<h2>Egenskaper
+- Fill (för bakgrundsrektangel)
+- Fillcolor (för bakgrundsrektangel)
+- Border (för bakgrundsrektangel)
+- Bordercolor (för bakgrundsrektangel)
+- Linewidth (för bakgrundsrektangel)
+
+<h2>Attribut
+Attribut           <t><t>Beskrivning
+BarChart.Attribute0 <t><t>Namnet på en array i databasen. Värdena i arrayen anger storleken på
+                    <t><t>det första segmentet i de olika staplarna.
+BarChart.Attribute1 <t><t>Array for andra segmentet.
+...
+BarChart.Attribute11 <t><t>Array för det tolfte segmentet..
+BarChart.Bars      <t><t>Antal staplar.
+BarChart.BarSegments <t><t>Antal segment i varje stapel.
+BarChart.MaxValue  <t><t>Värde som motsvarar full längd på en stapel.
+BarChart.MinValue  <t><t>Värde som motsvarar noll längd på en stapel.
+BarChart.BarColor1  <t><t>Fyllnadsfärg för det första segmentet.
+BarChart.BarColor2  <t><t>Fyllnadsfärg för det andra segmentet.
+...
+BarChart.BarColor12 <t><t>Fyllnadsfärg för det tolfte segmentet.
+Dynamic             <t><t>Ej implementerat.
+</topic>
+
+<topic>geref_pie <style>function
+Cirkeldiagram
+<image> geg_fig171.png
+
+Ett cirkeldiagram med ett antal sektorer i olika färger. Diagrammet kan innehålla upp till
+12 sektorer. Storleken på varje sektor anges av ett signalvärde.
+
+Egenskaperna fyllnad, fyllnadsfärg, kantfärg mm, anger egenskaper för bakgrunds-cirkeln.
+Egenskaperna för sektorerna anges i objekts-editorn. 
+Ett cirkeldiagram skapas genom att välja Pie i subgrafs-paletten, 'Analog/Pie', och
+klicka med MB2 i arbetsarean.
+
+<h2>Egenskaper
+- Fill (för bakgrundscirkeln)
+- Fillcolor (för bakgrundscirkeln)
+- Border (för bakgrundscirkeln)
+- Bordercolor (för bakgrundscirkeln)
+- Linewidth (för bakgrundscirkeln)
+
+<h2>Attribut
+Attribut      <t><t>Beskrivning
+Pie.Attribute0 <t><t>Databas attribut av typen Float som anger storleken på den första sektorn.
+Pie.Attribute1 <t><t>Databas attribut för den andra sektorn.
+...
+Pie.Attribute11 <t><t>Databas attribut för den tolfte sektorn.
+Pie.Angle1      <t><t>Startvinkel i grader från x-axeln.
+Pie.Angle2      <t><t>Vinkel i grader som anger diagrammets utbredning.
+Pie.Sectors     <t><t>Antal sektorer.
+Pie.MaxValue    <t><t>Maxvärde för diagrammets signalvärdesområde.
+Pie.MinValue    <t><t>Minvärde för diagrammets singalvärdesområde.
+Pie.SectorColor1 <t><t>Fyllnadsfärg för den första sektorn.
+Pie.SectorColor2 <t><t>Fyllnadsfärg för den andra sektorn.
+...
+Pie.SectorColor12  <t><t>Fyllnadsfärg för den tolfte sektorn.
+Dynamic       <t><t>Ej implementerad.
+</topic>
+
 <topic>geref_trend <style>function
 Trendkurva
 <image> geref_fig14.png
@@ -2721,12 +2801,40 @@ Trend.CurveFillColor2 <t><t>Fyllnadsfärg på kurvan för Attribute2
 Trend.Dynamic     <t><t>Ej implementerat
 </topic>
 
+<topic>geref_fastcurve <style>function
+FastCurve
+<image> geref_fig14.png
+
+FastCurve visar en eller två kurvor konfigurereade med ett DsFastCurve objekt.
+En FastCurve är mätning av en signal under en viss tid. Mätningen triggas av
+någon händelse, och när mätningen är slutförd visas kurvan i FastCurve objektet.
+
+<h2>Attribut
+<b>Attribut             <t><t>Beskrivning
+FastCurve.FastObject    <t><t>Databas-objekt av typen DsFastCurve.
+FastCurve.CurveIndex1   <t><t>Index i DsFastCurve objektet för den första kurvan.
+FastCurve.CurveIndex2   <t><t>Index i DsFastCurve objektet för den andra kurvan.
+FastCurve.NoOfPoints    <t><t>Antal punkter i kurvan.
+FastCurve.CurveLineWidth <t><t>Linjebredd.
+FastCurve.FillCurve     <t><t>Arean mellan kurvan och x-axeln fylls.
+FastCurve.HorizontalLines <t><t>Antal horisonella linjer.
+FastCurve.VerticalLines <t><t>Antal vertikala linjer.
+FastCurve.MaxValue1     <t><t>Maxvärde för signalområdet för kurva 1.
+FastCurve.MinValue1     <t><t>Minvärde för signalområdet för kurva 1.
+FastCurve.CurveColor1   <t><t>Färg på kurva 1.
+FastCurve.CurveFillColor1 <t><t>Fyllnadsfärg på kurva 1.
+FastCurve.MaxValue2     <t><t>Maxvärde för signalområdet för kurva 2.
+FastCurve.MinValue2     <t><t>Minvärde för signalområdet för kurva 2.
+FastCurve.CurveColor2   <t><t>Färg på kurva 2.
+FastCurve.CurveFillColor2 <t><t>Fyllnadsfärg på kurva 2.
+</topic>
+
 <topic>geref_axis <style>function
 Axis
 <image> geref_fig12.png
 
 Axis visar skalområdet på kurva eller stapel i x- eller y-led.
-Axis finns i två varanter, en med med fasta min och max värden,
+Axis finns i två varanter, en med fasta min och max värden,
 och en med dynamiska min och max värden, där min och max kopplas
 till signaler i databasen. För ett dynamiskt Axis objekt beräknas
 värden på Lines, LongQuotient, ValueQuotient och Format automatiskt
@@ -2745,6 +2853,40 @@ Format       <t>Format i c-syntax för utskrivna värden.
 Dynamic      <t>Ej implementerat.
 
 <b>Dynamisk Axis
+Axis.MinValueAttr <t>Signal för minvärde av typ Float32 eller Int32.
+Axis.MaxValueAttr <t>Signal för maxvärde av typ Float32 eller Int32.
+Axis.KeepSettings <t>Om 0 beräknas nya värden på  Lines, LongQuotient, ValueQoutient
+                  <t>och Format när min eller maxvärdet har ändrats dynamiskt.
+                  <t>Om KeepSettings är 1 behålls de ursprungliga värdena.
+
+</topic>
+
+<topic>geref_axisarc <style>function
+AxisArc
+<image> geg_fig172.png
+
+AxisArc är en cirkelformat skala som visar skalområdet för en visare.
+Som för Axis finns det två varanter av AxisArc, en med med fasta min 
+och max värden, och en med dynamiska min och max värden, där min och 
+max kopplas till signaler i databasen. För ett dynamiskt AxisArc objekt beräknas
+värden på Lines, LongQuotient, ValueQuotient och Format automatiskt
+i runtime.
+
+<h2>Attribut
+<b>Attribut  <t>Beskrivning
+Angle1       <t>Startvinkel i grader från x-axeln.
+Angle2       <t>Vinkel i grader som anger skalans utbredning.
+MaxValue     <t>Övre värde på skalområdet.
+MinValue     <t>Undre värde på skalområdet.
+Lines        <t>Antal linjer vinkelräta mot axeln.
+LongQuotient <t>Hur stor del av linjerna som ska vara långa. T ex 4 innebär 
+             <t>att var 4:e linje är längre
+ValueQuotient <t>Hur ofta värden ska skrivas ut. T ex 4 innebär att ett värde 
+             <t>skrivs ut vid var 4:e linje.
+Format       <t>Format i c-syntax för utskrivna värden.
+Dynamic      <t>Ej implementerat.
+
+<b>Dynamisk AxisArc
 Axis.MinValueAttr <t>Signal för minvärde av typ Float32 eller Int32.
 Axis.MaxValueAttr <t>Signal för maxvärde av typ Float32 eller Int32.
 Axis.KeepSettings <t>Om 0 beräknas nya värden på  Lines, LongQuotient, ValueQoutient
@@ -2858,6 +3000,52 @@ Column1Width      <t><t>Bredd på kolumnen.
 Column1.HeaderText <t><t>Rubrik på kolumnen. Rubriken skrivs i 
                   <t><t>header-raden.
 </topic>
+
+<topic>geref_xycurve <style>function
+XYCurve
+<image> geg_fig173.png
+
+XYCurve visar kurvor definierade med x och y koordinater. 10 kurvor kan visas i ett
+XYCurve objekt. För varje kurva kopplas objektet till två vektorer som innehåller
+s och y koordinaterna för kurvan. Ett digital signal kopplas till UpdateAttr som
+indikerar när koordinaterna har uppdaterats och kurvan ska ritas om.
+Skalområdena i x och y riktning kan anges med fixa värden, eller kopplas till
+attribut i databasen. Antal punkter i kurvan kan också definieras statiskt eller
+med en koppling till ett databasattribut.
+
+XYCurve kan kopplas till godtyckliga attribut i databasen, men det finns en speciell
+klass, XyCurve, som kan användas för att lagra en kurva med 100 punkter. Den innehåller
+två vektorer med 100 element för koordinaterna, samt attributa för skalområden, antal
+punkter och uppdatering.
+
+<h2>Attribut
+<b>Attribut             <t><t>Beskrivning
+XY_Curve.XAttr          <t><t>Vektor i databasen som innehåller x-koordinater för kurvan.
+XY_Curve.YAttr          <t><t>Vektor i databasen som innehåller y-koordinater för kurvan.
+XY_Curve.UpdateAttr     <t><t>Databas attribut av typen Boolean som indikerar att kurvan
+                        <t><t>ska uppdateras.
+XY_Curve.XMinValue      <t><t>Minvärde för skalområde i x-riktning.
+XY_Curve.XMaxValue      <t><t>Maxvärde för skalområde i x-riktning.
+XY_Curve.YMinValue      <t><t>Minvärde för skalområde i y-riktning.
+XY_Curve.YMaxValue      <t><t>Maxvärde för skalområde i y-riktning.
+XY_Curve.XMinValueAttr  <t><t>Databas attribut som innehåller minvärde för skalområde
+                        <t><t>i x-riktning.
+XY_Curve.XMaxValueAttr  <t><t>Databas attribut som innehåller maxvärde för skalområde
+                        <t><t>i x-riktningen.
+XY_Curve.YMinValueAttr  <t><t>Databas attribut som innehåller minvärde för skalområde
+                        <t><t>i y-ritning.
+XY_Curve.YMaxValueAttr  <t><t>Databas attribut som innehåller maxvärde för skalområde
+                        <t><t>i y-riktning.
+XY_Curve.NoOfPointsAttr <t><t>Databas attribut av typ integer med antal punkter i kurvan.
+XY_Curve.CurveColor     <t><t>Kurvans färg.
+XY_Curve.FillColor      <t><t>Kurvans fyllnadsfärg.
+XY_Curve.Instances      <t><t>Genom att addera flera instanser kan man visa flera kurvor
+                        <t><t>i samma diagram. Max 10 kurvor kan visas.
+XY_Curve.CurveLineWidth <t><t>Kurvans linjebredd.
+XY_Curve.FillCurve      <t><t>Om 1 ritas området mellan kurva och x-axeln med fyllnadsfärg.
+XY_Curve.HorizontalLines <t><t>Antal horisontella linjer i diagrammet.
+XY_Curve.VerticalLines  <t><t>Antal vertikala linjer i diagrammet.
+</topic>
 </headerlevel>
 </chapter>
 
@@ -2922,8 +3110,9 @@ Man bör spara de olika sidorna med samma zoom-faktor, för att undvika att risker
 pixels förskjutning mellan olika sidor i runtime.
 
 <h1>Skift
-Skiftning mellan olika sidor i runtime kan ske med dynamik-typerna DigShift och AnalogShift. 
-DigShift växlar mellan första och andra sidan beroende på ett digitalt värde. AnalogShift 
+Skiftning mellan olika sidor i runtime kan ske med dynamik-typerna DigShift, DigFourShigt
+och AnalogShift. DigShift växlar mellan första och andra sidan beroende på ett digitalt värde. 
+DigFourShift växlar mellan fyra sidor, beroende på värdet av tre digitala signaler. AnalogShift 
 kopplas till en analog signal där värdet på den motsvara index för den sidan som ska visas 
 (första sidan har index 0).
 
@@ -2992,6 +3181,7 @@ Value     <t>Valfri     <t>Skriver ut värdet av ett attribut. <link>GeDynValue
 Rotate    <t>Float32 Int32 <t>Roterar komponenten. <link>GeDynRotate
 Move      <t>Float32 Int32 <t>Flyttar och skalar komponenten i x- och y-led. <link>GeDynMove
 DigShift  <t>Boolean    <t>Skiftar mellan två sidor i subgrafen (första och sista sidan). <link>GeDynDigShift
+DigFourShift <t>Boolean <t>Skiftar mellan fyra sidor i subgrafen. <link>GeDynDigFourShift
 AnalogShift <t>Float32 Int32 <t>Skiftar mellan olika sidor i subgrafen. Värdet <link>GeDynAnalogShift
           <t>           <t>på signalen bestämmer sidnr.
 Animation <t>Boolean    <t>Olika typer av animering. <link>GeDynAnimation
@@ -3446,6 +3636,25 @@ sidan, om värdet är 1 ritas det med sista sidan.
 <b>Attribut <t><t>Beskrivning
 DigShift.Attribute <t><t>Signal i rtdb av typen Boolean som skiftar sida. 
                    <t><t>Vid 0 visas första sidan, vid 1 visas sista sidan.
+</topic>
+
+<topic>GeDynDigFourShift <style>function
+DigFourShift
+
+Shifta mellen fyra sidor i subgrafen. Subgrafen måste innehålla minst fyra sidor.
+
+Objektet kopplas till tre digitala signaler i databasen. Om värdet är 0 på alla signaler
+ritas den första sidan. Om värdet är 1 på Attribute1, ritas den andra sidan, om Attribute2
+är 1 ritas den tredje sidan, och om Attribute3 är 1 ritas den fjärde sidan. Om flera
+signaler är 1 samtidigt har högre sidnummer högre prioritet.
+
+<b>Attribut  <t><t>Beskrivning
+DigFourShift.Attribute1 <t><t>Signal i databasen som skiftar sida. Aktiverar ritning av
+                   <t><t>sida nummer 2.
+DigFourShift.Attribute2 <t><t>Signal i databasen som skiftar sida. Aktiverar ritning av
+                   <t><t>den tredje sidan.
+DigFourShift.Attribute3 <t><t>Signal i databasen som skiftar sida. Aktiverar ritning av
+                   <t><t>den fjärde sidan.
 </topic>
 
 <topic>GeDynAnimation <style>function

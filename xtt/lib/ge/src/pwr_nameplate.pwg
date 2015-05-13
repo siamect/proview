@@ -1,3 +1,17 @@
+199
+!/**
+! NamePlate
+! Group Layout
+!
+! <image> pwr_nameplate_gs.png
+!
+! <h1>Description
+! A name plate with an annotation.
+!
+! <h1>Default dynamics
+! No default dynamics.
+!
+!*/
 1
 100 20
 135 20

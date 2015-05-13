@@ -209,6 +209,26 @@ menu Pushbuttons
     subgraph 	MbTrend	 	pwr_exe:pwr_mbtrend.pwsg		83
     subgraph 	MbSimulate 	pwr_exe:pwr_mbsimulate.pwsg		83
     subgraph 	MbUp	 	pwr_exe:pwr_mbup.pwsg			83
+    subgraph 	Mb2BlockEvents 	pwr_exe:pwr_mb2blockevents.pwsg		83
+    subgraph 	Mb2Camera	pwr_exe:pwr_mb2camera.pwsg		83
+    subgraph 	Mb2CircuitDiagram pwr_exe:pwr_mb2circuitdiagram.pwsg	83
+    subgraph 	Mb2CrossReferences pwr_exe:pwr_mb2crossreferences.pwsg	83
+    subgraph 	Mb2DataSheet 	pwr_exe:pwr_mb2datasheet.pwsg		83
+    subgraph 	Mb2Fast	 	pwr_exe:pwr_mb2fast.pwsg		83
+    subgraph 	Mb2Help	 	pwr_exe:pwr_mb2help.pwsg		83
+    subgraph 	Mb2HelpClass 	pwr_exe:pwr_mb2helpclass.pwsg		83
+    subgraph 	Mb2HistEvent 	pwr_exe:pwr_mb2histevent.pwsg		83
+    subgraph 	Mb2History 	pwr_exe:pwr_mb2history.pwsg		83
+    subgraph 	Mb2Note	 	pwr_exe:pwr_mb2note.pwsg		83
+    subgraph 	Mb2OpenGraph 	pwr_exe:pwr_mb2opengraph.pwsg		83
+    subgraph 	Mb2OpenObject 	pwr_exe:pwr_mb2openobject.pwsg		83
+    subgraph 	Mb2OpenObjectGraph pwr_exe:pwr_mb2openobjectgraph.pwsg	83
+    subgraph 	Mb2OpenPlc 	pwr_exe:pwr_mb2openplc.pwsg		83
+    subgraph 	Mb2ParentGraph 	pwr_exe:pwr_mb2parentgraph.pwsg		83
+    subgraph 	Mb2Photo 	pwr_exe:pwr_mb2photo.pwsg		83
+    subgraph 	Mb2RtNavigator 	pwr_exe:pwr_mb2rtnavigator.pwsg		83
+    subgraph 	Mb2Simulate 	pwr_exe:pwr_mb2simulate.pwsg		83
+    subgraph 	Mb2Trend 	pwr_exe:pwr_mb2trend.pwsg		83
   }
 }
 menu Sliders

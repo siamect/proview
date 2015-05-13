@@ -1,12 +1,12 @@
 199
 !/**
-! MbSimulate
+! MbUp
 ! Group Pushbuttons/Methodbuttons
 !
-! <image> pwr_mbsimulate_gs.gif
+! <image> pwr_mbup_gs.png
 !
 ! <h1>Description
-! Method button for object graphs, to activate method 'Simulate'.
+! Method button for object graphs, to activate method 'ParentGraph'.
 !
 ! Used in object graphs with the following settings. 
 !
