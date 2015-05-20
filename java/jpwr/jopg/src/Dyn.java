@@ -124,6 +124,7 @@ public class Dyn {
     public static final int mDynType2_Axis			= 1 << 0;
     public static final int mDynType2_DigTextColor     		= 1 << 1;
     public static final int mDynType2_TimeoutColor     		= 1 << 2;
+    public static final int mDynType2_DigFourShift     		= 1 << 3;
 
     public static final int mActionType1_No			= 0;
     public static final int mActionType1_Inherit		= 1 << 0;
@@ -174,40 +175,41 @@ public class Dyn {
     public static final int eDynPrio_Move			= 17;
     public static final int eDynPrio_AnalogShift	       	= 18;
     public static final int eDynPrio_DigShift			= 19;
-    public static final int eDynPrio_Animation			= 20;
-    public static final int eDynPrio_Bar			= 21;
-    public static final int eDynPrio_Trend			= 22;
-    public static final int eDynPrio_FastCurve			= 23;
-    public static final int eDynPrio_XY_Curve			= 24;
-    public static final int eDynPrio_AnalogText			= 25;
-    public static final int eDynPrio_Table			= 26;
-    public static final int eDynPrio_SliderBackground	       	= 27;
-    public static final int eDynPrio_Video			= 28;
-    public static final int eDynPrio_StatusColor	       	= 29;
-    public static final int eDynPrio_PopupMenu			= 30;
-    public static final int eDynPrio_Confirm			= 31;
-    public static final int eDynPrio_SetDig			= 32;
-    public static final int eDynPrio_ResetDig			= 33;
-    public static final int eDynPrio_ToggleDig			= 34;
-    public static final int eDynPrio_StoDig			= 35;
-    public static final int eDynPrio_Help			= 36;
-    public static final int eDynPrio_OpenGraph			= 37;
-    public static final int eDynPrio_OpenURL			= 38;
-    public static final int eDynPrio_CommandDoubleClick	       	= 39;
-    public static final int eDynPrio_IncrAnalog			= 40;
-    public static final int eDynPrio_RadioButton	       	= 41;
-    public static final int eDynPrio_Slider			= 42;
-    public static final int eDynPrio_TipText			= 43;
-    public static final int eDynPrio_PulldownMenu	       	= 44;
-    public static final int eDynPrio_OptionMenu			= 45;
-    public static final int eDynPrio_InputFocus			= 46;
-    public static final int eDynPrio_DigCommand			= 47;
-    public static final int eDynPrio_SetValue			= 48;
-    public static final int eDynPrio_Pie			= 49;
-    public static final int eDynPrio_BarChart			= 50;
-    public static final int eDynPrio_Axis			= 51;
-    public static final int eDynPrio_MethodToolbar	       	= 52;
-    public static final int eDynPrio_MethodPulldownMenu	       	= 53;
+    public static final int eDynPrio_DigFourShift	       	= 20;
+    public static final int eDynPrio_Animation			= 21;
+    public static final int eDynPrio_Bar			= 22;
+    public static final int eDynPrio_Trend			= 23;
+    public static final int eDynPrio_FastCurve			= 24;
+    public static final int eDynPrio_XY_Curve			= 25;
+    public static final int eDynPrio_AnalogText			= 26;
+    public static final int eDynPrio_Table			= 27;
+    public static final int eDynPrio_SliderBackground	       	= 28;
+    public static final int eDynPrio_Video			= 29;
+    public static final int eDynPrio_StatusColor	       	= 30;
+    public static final int eDynPrio_PopupMenu			= 31;
+    public static final int eDynPrio_Confirm			= 32;
+    public static final int eDynPrio_SetDig			= 33;
+    public static final int eDynPrio_ResetDig			= 34;
+    public static final int eDynPrio_ToggleDig			= 35;
+    public static final int eDynPrio_StoDig			= 36;
+    public static final int eDynPrio_Help			= 37;
+    public static final int eDynPrio_OpenGraph			= 38;
+    public static final int eDynPrio_OpenURL			= 39;
+    public static final int eDynPrio_CommandDoubleClick	       	= 40;
+    public static final int eDynPrio_IncrAnalog			= 41;
+    public static final int eDynPrio_RadioButton	       	= 42;
+    public static final int eDynPrio_Slider			= 43;
+    public static final int eDynPrio_TipText			= 44;
+    public static final int eDynPrio_PulldownMenu	       	= 45;
+    public static final int eDynPrio_OptionMenu			= 46;
+    public static final int eDynPrio_InputFocus			= 47;
+    public static final int eDynPrio_DigCommand			= 48;
+    public static final int eDynPrio_SetValue			= 49;
+    public static final int eDynPrio_Pie			= 50;
+    public static final int eDynPrio_BarChart			= 51;
+    public static final int eDynPrio_Axis			= 52;
+    public static final int eDynPrio_MethodToolbar	       	= 53;
+    public static final int eDynPrio_MethodPulldownMenu	       	= 54;
     public static final int eDynPrio_Command  			= 9999;
     public static final int eDynPrio_CloseGraph 		= 10000;
 
@@ -245,6 +247,7 @@ public class Dyn {
     public static final int eSave_Axis	             		= 38;
     public static final int eSave_DigTextColor	             	= 39;
     public static final int eSave_TimeoutColor	             	= 40;
+    public static final int eSave_DigFourShift	             	= 41;
     public static final int eSave_PopupMenu	       		= 50;
     public static final int eSave_SetDig	       		= 51;
     public static final int eSave_ResetDig	       		= 52;
@@ -447,10 +450,14 @@ public class Dyn {
     public static final int eSave_BarChart_fix_range      	= 3712;
     public static final int eSave_Axis_minvalue_attr      	= 3800;
     public static final int eSave_Axis_maxvalue_attr      	= 3801;
+    public static final int eSave_Axis_keep_settings      	= 3802;
     public static final int eSave_DigTextColor_attribute        = 3900;
     public static final int eSave_DigTextColor_color		= 3901;
     public static final int eSave_TimeoutColor_time             = 4000;
     public static final int eSave_TimeoutColor_color		= 4001;
+    public static final int eSave_DigFourShift_attribute1      	= 4100;
+    public static final int eSave_DigFourShift_attribute2      	= 4101;
+    public static final int eSave_DigFourShift_attribute3      	= 4102;
     public static final int eSave_PopupMenu_ref_object      	= 5000;
     public static final int eSave_SetDig_attribute		= 5100;
     public static final int eSave_SetDig_instance		= 5101;
@@ -650,7 +657,7 @@ public class Dyn {
     public static final int ePwrStatus_Error		= 3;
     public static final int ePwrStatus_Fatal		= 4;
 
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
     Vector<DynElem> elements = new Vector<DynElem>();
     GraphIfc graph;
@@ -757,6 +764,8 @@ public class Dyn {
 		e = new DynDigTextColor((DynDigTextColor) x.elements.get(i)); break;
 	    case Dyn.mDynType2_TimeoutColor:
 		e = new DynTimeoutColor((DynTimeoutColor) x.elements.get(i)); break;
+	    case Dyn.mDynType2_DigFourShift:
+		e = new DynDigFourShift((DynDigFourShift) x.elements.get(i)); break;
 	    default: ;
 	    }
 	    switch( x.elements.get(i).action_type1) {
@@ -1003,6 +1012,9 @@ public class Dyn {
 	    case mDynType2_TimeoutColor:
 		e = (DynElem) new DynTimeoutColor((DynTimeoutColor) x);
 		break;
+	    case mDynType2_DigFourShift:
+		e = (DynElem) new DynDigFourShift((DynDigFourShift) x);
+		break;
 	    default: ;
 	    }
 	}
@@ -1121,6 +1133,9 @@ public class Dyn {
 		    break;
 		case Dyn.eSave_DigShift: 
 		    elem = (DynElem) new DynDigShift(this); 
+		    break;
+		case Dyn.eSave_DigFourShift: 
+		    elem = (DynElem) new DynDigFourShift(this); 
 		    break;
 		case Dyn.eSave_Animation: 
 		    elem = (DynElem) new DynAnimation(this); 
@@ -4554,7 +4569,7 @@ public class Dyn {
 	    }
 
 	    if ( ret == null || ret.evenSts()) {
-		System.out.println("DigLowColor: " + attribute);
+		System.out.println("DigShift: " + attribute);
 		return 1;
 	    }
 
@@ -4631,6 +4646,233 @@ public class Dyn {
 		
 	    } catch ( Exception e) {
 		System.out.println( "IOException DynDigShift");
+	    }
+	}
+
+    }
+
+    public class DynDigFourShift extends DynElem {
+	String attribute1;
+	String attribute2;
+	String attribute3;
+  	PwrtRefId subid1;
+	int p1;
+	int database1;
+	boolean inverted1;
+	boolean attrFound1 = false;
+	int bitmask1;
+	int a_typeid1;
+	boolean oldValue1;
+  	PwrtRefId subid2;
+	int p2;
+	int database2;
+	boolean inverted2;
+	boolean attrFound2 = false;
+	int bitmask2;
+	int a_typeid2;
+	boolean oldValue2;
+  	PwrtRefId subid3;
+	int p3;
+	int database3;
+	boolean inverted3;
+	boolean attrFound3 = false;
+	int bitmask3;
+	int a_typeid3;
+	boolean oldValue3;
+	boolean firstScan = true;
+
+	public DynDigFourShift( Dyn dyn) {
+	    super(dyn, Dyn.mDynType2_DigFourShift, 0, 0, 0, Dyn.eDynPrio_DigFourShift);
+	}
+
+	public DynDigFourShift( DynDigFourShift x) {
+	    super(x);
+	    attribute1 = x.attribute1;
+	    attribute2 = x.attribute2;
+	    attribute3 = x.attribute3;
+	}
+
+ 	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+
+ 	    DynParsedAttrName pname = dyn.parseAttrName(attribute1);
+	    if ( pname == null || pname.name.equals("")) 
+		return 1;
+
+	    GdhrRefObjectInfo ret = null;
+
+	    switch( pname.database) {
+	    case GraphIfc.eDatabase_Gdh:
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		break;
+	    case GraphIfc.eDatabase_Ccm:
+		// TODO
+		break;
+	    default:
+		ret = null;
+	    }
+
+	    if ( ret == null || ret.evenSts()) {
+		System.out.println("DigFourShift: " + attribute1);
+		return 1;
+	    }
+
+	    p1 = ret.id;
+	    subid1 = ret.refid;
+	    inverted1 = pname.inverted;
+	    a_typeid1 = pname.type;
+	    bitmask1 = pname.bitmask;
+	    database1 = pname.database;
+	    attrFound1 = true;
+
+ 	    pname = dyn.parseAttrName(attribute2);
+	    if ( pname == null || pname.name.equals("")) 
+		return 1;
+
+	    ret = null;
+
+	    switch( pname.database) {
+	    case GraphIfc.eDatabase_Gdh:
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		break;
+	    case GraphIfc.eDatabase_Ccm:
+		// TODO
+		break;
+	    default:
+		ret = null;
+	    }
+
+	    if ( ret == null || ret.evenSts()) {
+		System.out.println("DigFourShift: " + attribute2);
+		return 1;
+	    }
+
+	    p2 = ret.id;
+	    subid2 = ret.refid;
+	    inverted2 = pname.inverted;
+	    a_typeid2 = pname.type;
+	    bitmask2 = pname.bitmask;
+	    database2 = pname.database;
+	    attrFound2 = true;
+
+ 	    pname = dyn.parseAttrName(attribute3);
+	    if ( pname == null || pname.name.equals("")) 
+		return 1;
+
+	    ret = null;
+
+	    switch( pname.database) {
+	    case GraphIfc.eDatabase_Gdh:
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		break;
+	    case GraphIfc.eDatabase_Ccm:
+		// TODO
+		break;
+	    default:
+		ret = null;
+	    }
+
+	    if ( ret == null || ret.evenSts()) {
+		System.out.println("DigFourShift: " + attribute3);
+		return 1;
+	    }
+
+	    p3 = ret.id;
+	    subid3 = ret.refid;
+	    inverted3 = pname.inverted;
+	    a_typeid3 = pname.type;
+	    bitmask3 = pname.bitmask;
+	    database3 = pname.database;
+	    attrFound3 = true;
+
+	    return 1;
+	}
+
+	public void disconnect() {
+	    if ( attrFound1 && database1 == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid1);
+	    if ( attrFound2 && database2 == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid2);
+	    if ( attrFound3 && database3 == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid3);
+	}
+
+	
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+	    if ( !attrFound1 || !attrFound2 || !attrFound3)
+		return;
+	    boolean value1 = dyn.getDig(p1, a_typeid1, bitmask1, database1);
+	    boolean value2 = dyn.getDig(p2, a_typeid2, bitmask2, database2);
+	    boolean value3 = dyn.getDig(p3, a_typeid3, bitmask3, database3);
+
+	    if ( inverted1)
+		value1 = !value1;
+	    if ( inverted2)
+		value2 = !value2;
+	    if ( inverted3)
+		value3 = !value3;
+
+	    if ( !firstScan) {
+		if ( oldValue1 == value1 && oldValue2 == value2 && oldValue3 == value3)
+		    return;
+	    }
+	    else
+		firstScan = false;
+	
+	    if ( value3)
+		object.set_nodeclass_by_index(2);	    
+ 	    else if ( value2)
+		object.set_nodeclass_by_index(1);
+ 	    else if ( value1)
+		object.set_root_nodeclass();
+	    else
+		object.set_last_nodeclass();
+	    oldValue1 = value1;
+	    oldValue2 = value2;
+	    oldValue3 = value3;
+	}
+
+	public void open( BufferedReader reader) {
+	    String line;
+	    StringTokenizer token;
+	    boolean end_found = false;
+
+	    try {
+		while( (line = reader.readLine()) != null) {
+		    token = new StringTokenizer(line);
+		    int key = Integer.valueOf(token.nextToken());
+		    if ( Dyn.debug) System.out.println( "DynDigFourShift : " + line);
+
+		    switch ( key) {
+		    case Dyn.eSave_DigFourShift: 
+			break;
+		    case Dyn.eSave_DigFourShift_attribute1: 
+			if ( token.hasMoreTokens())
+			    attribute1 = token.nextToken();
+			break;
+		    case Dyn.eSave_DigFourShift_attribute2: 
+			if ( token.hasMoreTokens())
+			    attribute2 = token.nextToken();
+			break;
+		    case Dyn.eSave_DigFourShift_attribute3: 
+			if ( token.hasMoreTokens())
+			    attribute3 = token.nextToken();
+			break;
+		    case Dyn.eSave_End:
+			end_found = true;
+			break;
+		    default:
+			System.out.println( "Syntax error in DynDigFourShift");
+			break;
+		    }
+
+		    if ( end_found)
+			break;
+		}
+		
+	    } catch ( Exception e) {
+		System.out.println( "IOException DynDigFourShift");
 	    }
 	}
 
@@ -5527,7 +5769,7 @@ public class Dyn {
 		m = m >> 1;
 		curve_number++;
 	    }
-
+	    System.out.println("Curve number " + curve_number + " color " + curve_color + " fillcolor " + fill_color);
 	    // Get number of curves
 	    if ( instance == mInstance_1) {
 		m = instance_mask;
@@ -6961,18 +7203,22 @@ public class Dyn {
 
 		if ( !firstScan) {
 		    int update = 0;
-		    for ( int i = 0; i < barsegments && valueF[i] != null; i++) {
-			for ( int j = 0; j < bars; j++) {
-			    if ( Math.abs( oldValueF[i][j] - valueF[i][j]) > Float.MIN_VALUE) {
-				update = 1;
+		    if ( oldValueF != null) {
+			for ( int i = 0; i < barsegments && valueF[i] != null; i++) {
+			    if ( oldValueF[i] == null || valueF[i] == null)				
 				break;
+			    for ( int j = 0; j < bars; j++) {
+				if ( Math.abs( oldValueF[i][j] - valueF[i][j]) > Float.MIN_VALUE) {
+				    update = 1;
+				    break;
+				}
 			    }
+			    if ( update == 1)
+				break;
 			}
-			if ( update == 1)
-			    break;
+			if ( update == 0)
+			    return;
 		    }
-		    if ( update == 0)
-			return;
 		}
 		else
 		    firstScan = false;
@@ -6998,8 +7244,17 @@ public class Dyn {
     public class DynAxis extends DynElem {
 	String minvalue_attr;
 	String maxvalue_attr;
-	double min_value;
-	double max_value;
+	int attr_type;
+	int min_value_p;
+	int max_value_p;
+        float old_min_value;
+	float old_max_value;
+	boolean minvalueAttrFound = false;
+	boolean maxvalueAttrFound = false;
+	boolean firstScan = true;
+	PwrtRefId minvalueSubid;
+	PwrtRefId maxvalueSubid;
+	int keep_settings = 0;
 
 	public DynAxis( Dyn dyn) {
 	    super(dyn, 0, Dyn.mDynType2_Axis, 0, 0, Dyn.eDynPrio_Axis);
@@ -7009,8 +7264,6 @@ public class Dyn {
 	    super(x);
 	    minvalue_attr = x.minvalue_attr;
 	    maxvalue_attr = x.maxvalue_attr;
-	    min_value = x.min_value;
-	    max_value = x.max_value;	    
 	}
 
 	public void open( BufferedReader reader) {
@@ -7035,6 +7288,9 @@ public class Dyn {
 			if ( token.hasMoreTokens())
 			    maxvalue_attr = token.nextToken();
 			break;
+		    case Dyn.eSave_Axis_keep_settings: 
+			keep_settings = Integer.valueOf(token.nextToken());
+			break;
 		    case Dyn.eSave_End:
 			end_found = true;
 			break;
@@ -7052,6 +7308,103 @@ public class Dyn {
 	    }
 	}
 
+	public int connect(GlowArrayElem o) {
+	    int attr_type_min = 0;
+	    int attr_type_max = 0;
+
+	    min_value_p = -1;
+	    max_value_p = -1;
+
+	    DynParsedAttrName pname = dyn.parseAttrName( minvalue_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		GdhrRefObjectInfo ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		if ( ret.evenSts())
+		    System.out.println( "Axis: " + pname.tname);
+		else {
+		    minvalueAttrFound = true;
+		    min_value_p = ret.id;
+		    minvalueSubid = ret.refid;
+		    attr_type_min = ret.typeId;
+		}
+	    }
+	    
+	    pname = dyn.parseAttrName( maxvalue_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		GdhrRefObjectInfo ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		if ( ret.evenSts())
+		    System.out.println( "Axis: " + pname.tname);
+		else {
+		    maxvalueAttrFound = true;
+		    max_value_p = ret.id;
+		    maxvalueSubid = ret.refid;
+		    attr_type_max = ret.typeId;
+		}
+	    }
+
+
+	    if ( minvalueAttrFound && maxvalueAttrFound) {
+		if ( attr_type_min != attr_type_max)
+		    attr_type = 0;
+		else
+		    attr_type = attr_type_max;
+	    }
+	    else if ( maxvalueAttrFound)
+		attr_type = attr_type_max;
+	    else if ( minvalueAttrFound)
+		attr_type = attr_type_min;
+	    
+	    return 1;
+	}
+
+	public void disconnect() {
+	    if ( minvalueAttrFound) {
+		dyn.graph.getGdh().unrefObjectInfo( minvalueSubid);
+		min_value_p = -1;
+	    }
+	    if ( maxvalueAttrFound) {
+		dyn.graph.getGdh().unrefObjectInfo( maxvalueSubid);
+		max_value_p = -1;
+	    }
+	    return;
+	}
+
+	public void scan( GlowArrayElem o) {
+
+	    switch ( attr_type) {
+	    case Pwr.eType_Float32: {
+ 		if ( !maxvalueAttrFound && !minvalueAttrFound)
+		    return;
+
+		float min_value = 0;
+		float max_value = 0;
+
+		if ( minvalueAttrFound)
+		    min_value = dyn.graph.getGdh().getObjectRefInfoFloat( min_value_p);
+		if ( maxvalueAttrFound)
+		    max_value = dyn.graph.getGdh().getObjectRefInfoFloat( max_value_p);
+  
+		if ( !(firstScan ||
+		       (maxvalueAttrFound && ( max_value != old_max_value)) ||
+		       (minvalueAttrFound && ( min_value != old_min_value))))
+		    return;
+	       
+		if ( firstScan)
+		    firstScan = true;
+		if ( minvalueAttrFound)
+		    old_min_value = min_value;
+		if ( maxvalueAttrFound)
+		    old_max_value = max_value;
+
+		if ( o.type() == Glow.eObjectType_GrowAxis)
+		    ((GrowAxis)o).set_range( min_value, max_value, keep_settings);
+		else if ( o.type() == Glow.eObjectType_GrowAxisArc)
+		    ((GrowAxisArc)o).set_range( min_value, max_value, keep_settings);
+		break;
+	    }
+	    default: ;
+	    }
+	    return;
+	}
     }
 
     public class DynTimeoutColor extends DynElem {

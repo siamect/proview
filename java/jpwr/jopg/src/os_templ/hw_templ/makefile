@@ -46,6 +46,7 @@ local_java_sources := \
 	GrowSlider.java,\
 	GrowAxis.java,\
 	GrowArc.java,\
+	GrowAxisArc.java,\
 	GrowLine.java,\
 	GrowPolyline.java,\
 	GrowText.java,\

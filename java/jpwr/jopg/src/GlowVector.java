@@ -225,6 +225,12 @@ public class GlowVector {
 	  a.add( c);
 	  break;
 	}
+	case Glow.eSave_GrowAxisArc: {
+	  GrowAxisArc c = new GrowAxisArc( cmn);
+	  c.open( reader);
+	  a.add( c);
+	  break;
+	}
 	case Glow.eSave_GrowImage: {
 	  GrowImage c = new GrowImage( cmn);
 	  c.open( reader);

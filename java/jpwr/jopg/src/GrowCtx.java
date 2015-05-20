@@ -630,7 +630,9 @@ public class GrowCtx implements GrowCtxIfc {
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowXYCurve ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowPie ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowBarChart ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowToolbar) {
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowToolbar ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowAxis ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowAxisArc) {
 		cmn.appl.traceConnect(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {
@@ -665,7 +667,9 @@ public class GrowCtx implements GrowCtxIfc {
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowFolder ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowXYCurve ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowPie ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowBarChart) {
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowBarChart ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowAxis ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowAxisArc) {
 		cmn.appl.traceDisconnect(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {
@@ -697,7 +701,9 @@ public class GrowCtx implements GrowCtxIfc {
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowFolder ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowXYCurve ||
 		 cmn.a.get(i).type() == Glow.eObjectType_GrowPie ||
-		 cmn.a.get(i).type() == Glow.eObjectType_GrowBarChart) {
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowBarChart ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowAxis ||
+		 cmn.a.get(i).type() == Glow.eObjectType_GrowAxisArc) {
 	    	cmn.appl.traceScan(cmn.a.get(i));
 		if ( cmn.a.get(i).type() == Glow.eObjectType_GrowGroup) {
 		    for ( int j = 0; j < ((GrowNode)cmn.a.get(i)).nc.a.size(); j++) {

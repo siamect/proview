@@ -39,7 +39,7 @@ import jpwr.rt.*;
 import java.io.*;
 import java.util.*;
 
-public class GrowAxis extends GrowRect {
+public class GrowAxisArc extends GrowArc {
 
     int text_size;
     int text_drawtype;
@@ -47,7 +47,7 @@ public class GrowAxis extends GrowRect {
     double max_value;
     double min_value;
     int lines;
-    int linelength;
+    double linelength;
     int longquotient;
     int valuequotient;
     double increment;
@@ -56,13 +56,13 @@ public class GrowAxis extends GrowRect {
     GlowCFormat	cFormat;
     StringBuffer sb = new StringBuffer();
 
-    public GrowAxis(GrowCmn cmn) {
+    public GrowAxisArc(GrowCmn cmn) {
 	super(cmn);
 	configure();
     }
 
     public int type() {
-	return Glow.eObjectType_GrowAxis;
+	return Glow.eObjectType_GrowAxisArc;
     }
 
     void configure() {
@@ -84,44 +84,47 @@ public class GrowAxis extends GrowRect {
 	    while( (line = reader.readLine()) != null) {
 		token = new StringTokenizer(line);
 		int key = Integer.valueOf(token.nextToken());
-		if ( cmn.debug) System.out.println( "GrowAxis : " + line);
+		if ( cmn.debug) System.out.println( "GrowAxisArc : " + line);
 
 		switch ( key) {
 
-		case Glow.eSave_GrowAxis: 
+		case Glow.eSave_GrowAxisArc: 
 		    break;
-		case Glow.eSave_GrowAxis_text_size: 
+		case Glow.eSave_GrowAxisArc_text_size: 
 		    text_size = Integer.valueOf(token.nextToken()); 
 		    break;
-		case Glow.eSave_GrowAxis_text_drawtype: 
+		case Glow.eSave_GrowAxisArc_text_drawtype: 
 		    text_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
-		case Glow.eSave_GrowAxis_text_color_drawtype: 
+		case Glow.eSave_GrowAxisArc_text_color_drawtype: 
 		    text_color_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
-		case Glow.eSave_GrowAxis_max_value: 
+		case Glow.eSave_GrowAxisArc_max_value: 
 		    max_value = new Double(token.nextToken()).doubleValue(); 
 		    break;
-		case Glow.eSave_GrowAxis_min_value: 
+		case Glow.eSave_GrowAxisArc_min_value: 
 		    min_value = new Double(token.nextToken()).doubleValue(); 
 		    break;
-		case Glow.eSave_GrowAxis_lines: 
+		case Glow.eSave_GrowAxisArc_lines: 
 		    lines = Integer.valueOf(token.nextToken()); 
 		    break;
-		case Glow.eSave_GrowAxis_longquotient: 
+		case Glow.eSave_GrowAxisArc_linelength: 
+		    linelength = new Double(token.nextToken()).doubleValue(); 
+		    break;
+		case Glow.eSave_GrowAxisArc_longquotient: 
 		    longquotient = Integer.valueOf(token.nextToken()); 
 		    break;
-		case Glow.eSave_GrowAxis_valuequotient: 
+		case Glow.eSave_GrowAxisArc_valuequotient: 
 		    valuequotient = Integer.valueOf(token.nextToken()); 
 		    break;
-		case Glow.eSave_GrowAxis_format:
+		case Glow.eSave_GrowAxisArc_format:
 		    if ( token.hasMoreTokens())
 			format = token.nextToken();			 
 		    break;
-		case Glow.eSave_GrowAxis_rect_part: 
+		case Glow.eSave_GrowAxisArc_arc_part: 
 		    super.open( reader);
 		    break;
-		case Glow.eSave_GrowAxis_userdata_cb:
+		case Glow.eSave_GrowAxisArc_userdata_cb:
 		    if ( cmn.appl != null)
 			userdata = cmn.appl.growUserdataOpen( reader, this, Glow.eUserdataCbType_Node);
 		    break;
@@ -129,7 +132,7 @@ public class GrowAxis extends GrowRect {
 		    end_found = true;
 		    break;
 		default:
-		    System.out.println( "Syntax error in GrowAxis");
+		    System.out.println( "Syntax error in GrowAxisArc");
 		    break;
 		}
 		if ( end_found)
@@ -139,9 +142,10 @@ public class GrowAxis extends GrowRect {
 	    configure();
 	    if ( format != null)
 		cFormat = new GlowCFormat(format);
-		
+
+
 	} catch ( Exception e) {
-	    System.out.println( "IOException GrowAxis");
+	    System.out.println( "IOException GrowAxisArc");
 	}
     }    
 
@@ -172,7 +176,7 @@ public class GrowAxis extends GrowRect {
 	
 	idx = Math.max( 0, idx);
 	idx = Math.min( idx, Glow.DRAW_TYPE_SIZE-1);
-	int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
+	int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y, xt, yt;
 
 	if (t == null) {
 	    x1 = (int)( trf.x( ll.x, ll.y) * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
@@ -196,216 +200,75 @@ public class GrowAxis extends GrowRect {
 	drawtype = GlowColor.get_drawtype( draw_type, Glow.eDrawType_LineHighlight,
 					   highlight, (GrowNode)colornode, 0, 0);
 
-	if ( 45 >= rotation || rotation > 315) {
-	    // Vertical line to the right and values to the left
+	if ( true) {
+	    // Lines inwards
+	    cmn.gdraw.arc( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 
+			   angle1 - (int)rotation, angle2, drawtype, idx, 0);
 
-	    cmn.gdraw.line( ur_x, ll_y, ur_x, ur_y, drawtype, idx, 0);
+	    if ( lines == 1)
+		return;
 
-	    // Calculate max value text width
-	    if ( draw_text) {
-		for ( i = 0; i < lines; i++) {
-		    if ( i % valuequotient == 0) {
-			text = format_text( format, max_value - i * increment);
-			GlowDimension d = cmn.gdraw.getTextExtent( text,
-						   Math.max( 0, text_idx), Glow.eFont_Helvetica,
-						   text_drawtype);
-			z_width = d.width;
-			z_height = d.height;
-			z_descent = z_height/4;
-			if ( max_z_width < z_width)
-			    max_z_width = z_width;
-		    }
-		}
-		x_text = ll_x + max_z_width;
-		line_length = ur_x - ll_x - max_z_width;
-		if ( line_length < 3)
-		    line_length = 3;
-	    }
-	    else {
-		x_text = ll_x;
-		line_length = ur_x - ll_x;
-	    }
+	    if ( increment > 0)
+		text = format_text( format, min_value + (lines - 2) * increment);
+	    else 
+		text = format_text( format, min_value + increment);
+	    GlowDimension d = cmn.gdraw.getTextExtent( text,
+						       Math.max( 0, text_idx), Glow.eFont_Helvetica, 
+						       text_drawtype);
+	    z_width = d.width;
+	    z_height = d.height;
+	    z_descent = z_height/4;
+	    if ( max_z_width < z_width)
+		max_z_width = z_width;
 
+	    double line_angle = (double)angle2 / (lines - 1);
 	    for ( i = 0; i < lines; i++) {
-		y = (int)( ll_y + (double)(ur_y - ll_y) / (lines - 1) * i);
-		if ( i % longquotient == 0)
-		    cmn.gdraw.line( ur_x - line_length, y, 
-				      ur_x, y, drawtype, idx, 0);
-		else
-		    cmn.gdraw.line( ur_x -  (int)( 2.0 / 3 * line_length), y, 
-				      ur_x, y, drawtype, idx, 0);
+		double sin1 = Math.sin( ((double)angle1 + i * line_angle) / 180 * Math.PI);
+		double cos1 = Math.cos( ((double)angle1 + i * line_angle) / 180 * Math.PI);
+		y1 = (int)( ((double)ur_y - ll_y) / 2 * ( -sin1 + 1) + ll_y);
+		x1 = (int)( ((double)ur_x - ll_x) / 2 * ( cos1 + 1) + ll_x);
+		if ( i % longquotient == 0) {
+		    y2 = (int)( ((double)ur_y - ll_y) / 2 * ( -sin1 * (1.0 - linelength) + 1) + ll_y);
+		    x2 = (int)( ((double)ur_x - ll_x) / 2 * ( cos1 * (1.0 - linelength) + 1) + ll_x);
+		}
+		else {
+		    y2 = (int)( ((double)ur_y - ll_y) / 2 * ( -sin1 * (1.0 - linelength/2) + 1) + ll_y);
+		    x2 = (int)( ((double)ur_x - ll_x) / 2 * ( cos1 * (1.0 - linelength/2) + 1) + ll_x);
+		}
+		yt = (int)( ((double)ur_y - ll_y) / 2 * ( -sin1 * (1.0 - linelength) + 1) + ll_y +
+			  sin1 * (z_height - z_descent)/2);
+		xt = (int)( ((double)ur_x - ll_x) / 2 * ( cos1 * (1.0 - linelength) + 1) + ll_x -
+			  cos1 * z_width/2);
+
+		cmn.gdraw.line( x1, y1, 
+				x2, y2, drawtype, idx, 0);
 		if ( draw_text) {
-		    text = format_text( format, max_value - i * increment);
-
-		    if ( text_idx >= 0 && max_z_width < ur_x - ll_x &&
-			 i % valuequotient == 0) {
-			if ( i == lines - 1)
-			    y_text = y;
-			else if ( i == 0)
-			    y_text = y + z_height - z_descent - 3;
-			else
-			    y_text = y + (z_height-z_descent)/2;
-			cmn.gdraw.text( ll_x, y_text,
-					  text, text_drawtype, text_color_drawtype, 
-					  text_idx, highlight, 0, Glow.eFont_Helvetica, tsize, 0);
-		    }
-		}
-	    }
-	}
-	else if ( 45 < rotation && rotation <= 135)   {
-	    // Horizontal line at bottom and values to the top
-
-	    cmn.gdraw.line( ll_x, ur_y, ur_x, ur_y, drawtype, idx, 0);
-
-	    // Calculate max value text height
-	    if ( draw_text) {
-		GlowDimension d = cmn.gdraw.getTextExtent( "0",
-				     Math.max( 0, text_idx), Glow.eFont_Helvetica, text_drawtype);
-
-		z_width = d.width;
-		z_height = d.height;
-		z_descent = z_height/4;
-		line_length = ur_y - ll_y - z_height;
-		if ( line_length < 3)
-		    line_length = 3;
-	    }
-	    else {
-		line_length = ur_y - ll_y;
-	    }
-
-	    for ( i = 0; i < lines; i++) {
-		x = (int)( ll_x + (double)(ur_x - ll_x) / (lines - 1) * (lines - 1- i));
-		if ( i % longquotient == 0)
-		    cmn.gdraw.line( x, ur_y - line_length, x, 
-				      ur_y, drawtype, idx, 0);
-		else
-		    cmn.gdraw.line( x, ur_y -  (int)( 2.0 / 3 * line_length), x, 
-				      ur_y, drawtype, idx, 0);
-
-		if ( draw_text && i % valuequotient == 0) {
-		    text = format_text( format, max_value - i * increment);
-		    GlowDimension d = cmn.gdraw.getTextExtent( text, 
-			       Math.max( 0, text_idx), Glow.eFont_Helvetica, text_drawtype);
-		    z_width = d.width;
-		    z_height = d.height;
-		    z_descent = z_height/4;
-
-		    if ( text_idx >= 0 && z_height < ur_y - ll_y ) {
-			if ( i == lines - 1)
-			    x_text = x;
-			else if ( i == 0)
-			    x_text = x - z_width;
-			else
-			    x_text = x - (z_width)/2;
-			cmn.gdraw.text( x_text, ll_y + z_height - z_descent,
-					  text, text_drawtype, text_color_drawtype, 
-					  text_idx, highlight, 0, Glow.eFont_Helvetica, tsize, 0);
-		    }
-		}
-	    }
-	}
-	else if ( 135 < rotation && rotation <= 225) {
-	    // Vertical line to the left and values to the right
-
-	    cmn.gdraw.line( ll_x, ll_y, ll_x, ur_y, drawtype, idx, 0);
-
-	    // Calculate max value text width
-	    if ( draw_text) {
-		for ( i = 0; i < lines; i++) {
-		    if ( i % valuequotient == 0) {
-			text = format_text( format, max_value - i * increment);
-			GlowDimension d = cmn.gdraw.getTextExtent( text, 
-								   Math.max( 0, text_idx), Glow.eFont_Helvetica, text_drawtype);
+		    if ( text_idx >= 0 && i % valuequotient == 0 &&
+			 !(angle2 == 360 && 
+			   ((increment > 0 && i == lines - 1) || (increment < 0 && i == 0)))) {
+			text = format_text( format, min_value + i * increment);
+		        d = cmn.gdraw.getTextExtent( text,
+						     Math.max( 0, text_idx), Glow.eFont_Helvetica, 
+						     text_drawtype);
 			z_width = d.width;
 			z_height = d.height;
 			z_descent = z_height/4;
 			if ( max_z_width < z_width)
 			    max_z_width = z_width;
-		    }
-		}
-		x_text = ur_x - max_z_width;
-		line_length = ur_x - ll_x - max_z_width;
-		if ( line_length < 3)
-		    line_length = 3;
-	    }
-	    else {
-		x_text = ur_x;
-		line_length = ur_x - ll_x;
-	    }
-
-	    for ( i = 0; i < lines; i++) {
-		y = (int)( ll_y + (double)(ur_y - ll_y) / (lines - 1) * ( lines - 1 - i));
-		if ( i % longquotient == 0)
-		    cmn.gdraw.line( ll_x, y, 
-				      ll_x + line_length, y, drawtype, idx, 0);
-		else
-		    cmn.gdraw.line( ll_x, y, 
-				      ll_x + (int)( 2.0 / 3 * line_length), y, drawtype, idx, 0);
-		text = format_text( format, max_value - i * increment);
-
-		if ( draw_text && 
-		     text_idx >= 0 && max_z_width < ur_x - ll_x &&
-		     i % valuequotient == 0) {
-		    if ( i == lines - 1)
-			y_text = y + z_height - z_descent - 3;
-		    else if ( i == 0)
-			y_text = y;
-		    else
-			y_text = y + (z_height-z_descent)/2;
-		    cmn.gdraw.text( x_text, y_text,
-				      text, text_drawtype, text_color_drawtype, 
-				      text_idx, highlight, 0, Glow.eFont_Helvetica, tsize, 0);
-		}
-	    }
-	}
-	else { // if ( 225 < rotation && rotation <= 315)
-	    // Horizontal line at top and values at the bottom
-
-	    cmn.gdraw.line( ll_x, ll_y, ur_x, ll_y, drawtype, idx, 0);
-
-	    // Calculate max value text height
-	    if ( draw_text) {
-		GlowDimension d = cmn.gdraw.getTextExtent( "0", 
-							   Math.max( 0, text_idx), Glow.eFont_Helvetica,
-							   text_drawtype);
-
-		z_width = d.width;
-		z_height = d.height;
-		z_descent = z_height/4;
-		line_length = ur_y - ll_y - (z_height - z_descent);
-		if ( line_length < 3)
-		    line_length = 3;
-	    }
-	    else {
-		line_length = ur_y - ll_y;
-	    }
-
-	    for ( i = 0; i < lines; i++) {
-		x = (int)( ll_x + (double)(ur_x - ll_x) / (lines - 1) * i);
-		if ( i % longquotient == 0)
-		    cmn.gdraw.line( x, ll_y, x, 
-				      ll_y + line_length, drawtype, idx, 0);
-		else
-		    cmn.gdraw.line( x, ll_y, x, 
-				      ll_y  +  (int)( 2.0 / 3 * line_length), drawtype, idx, 0);
-		if ( draw_text && i % valuequotient == 0) {
-		    text = format_text( format, max_value - i * increment);
-		    GlowDimension d = cmn.gdraw.getTextExtent( text, 
-							       Math.max( 0, text_idx), Glow.eFont_Helvetica, text_drawtype);
-		    z_width = d.width;
-		    z_height = d.height;
-		    z_descent = z_height/4;
-
-		    if ( text_idx >= 0 && z_height - z_descent < ur_y - ll_y) {
-			if ( i == lines - 1)
-			    x_text = x - z_width;
-			else if ( i == 0)
-			    x_text = x;
-			else
-			    x_text = x - (z_width)/2;
-			cmn.gdraw.text( x_text, ur_y,
-					  text, text_drawtype, text_color_drawtype, 
-					  text_idx, highlight, 0, Glow.eFont_Helvetica, tsize, 0);
+	  
+			if ( i == lines - 1 && angle1 == 0 && angle2 == 180) {
+			    xt = xt - z_width/2;
+			}
+			else if ( i == 0 && angle1 == 0 && angle2 != 360) {
+			    xt = xt - z_width/2;
+			}
+			else {
+			    yt = yt + (z_height-z_descent)/2;
+			    xt = xt - z_width/2;
+			}
+			cmn.gdraw.text( xt, yt,
+					text, text_drawtype, text_color_drawtype, 
+					text_idx, highlight, 0, Glow.eFont_Helvetica, tsize, 0);
 		    }
 		}
 	    }
@@ -637,5 +500,4 @@ public class GrowAxis extends GrowRect {
 	configure();
 	draw();
     }
-
 }
