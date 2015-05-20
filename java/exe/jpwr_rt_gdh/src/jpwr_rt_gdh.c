@@ -224,7 +224,13 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_setObjectInfoString
   char 		*s, *s1;
   char		buffer[256];
   int           element = 0;
+  int		null_value = 0;
   
+  if ( !value) {
+    null_value = 1;
+    value = (*env)->NewStringUTF( env, "");
+  }
+
   pwrtStatus_id = (*env)->FindClass( env, "jpwr/rt/PwrtStatus");
   pwrtStatus_cid = (*env)->GetMethodID( env, pwrtStatus_id,
     	"<init>", "(I)V");
@@ -232,9 +238,11 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_setObjectInfoString
   str = (*env)->GetStringUTFChars( env, name, 0);
   cstr = (char *)str;
   gdh_ConvertUTFstring( cstr, cstr);
+
   str_value = (*env)->GetStringUTFChars( env, value, 0);
   cstr_value = (char *)str_value;
   gdh_ConvertUTFstring( cstr_value, cstr_value);
+
   if ( (s = (char *)strchr( cstr, '#'))) {
     *s = 0;
     if ( (s1 = strchr( s+1, '[')))
@@ -255,11 +263,14 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_setObjectInfoString
       sts = gdh_SetObjectInfo( cstr, (void *) buffer, attrsize);
     }
   }
+  if ( null_value)
+    (*env)->DeleteLocalRef( env, value);
   (*env)->ReleaseStringUTFChars( env, name, cstr);
   (*env)->ReleaseStringUTFChars( env, value, cstr_value);
   jsts = (jint) sts;
   return_obj = (*env)->NewObject( env, pwrtStatus_id,
   	pwrtStatus_cid, jsts);
+
   return return_obj;
 }
 
