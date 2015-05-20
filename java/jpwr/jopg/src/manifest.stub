@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Permissions: all-permissions
 Codebase: *
-Name: /jpwr/jop/
-Package-Title: /jpwr/jop
+Name: /jpwr/jopg
+Package-Title: /jpwr/jopg
 Package-Version: 5.3.0
 Package-Vendor: Proview Open Source Process Control
-Specification-Title: /jpwr/jop
+Specification-Title: /jpwr/jopg
 Specification-Version: 5.3.0
 Specification-Vendor: Proview Open Source Process Control

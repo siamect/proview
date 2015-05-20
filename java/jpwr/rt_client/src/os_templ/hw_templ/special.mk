@@ -115,8 +115,9 @@ $(export_lib) : $(objects)
 	@ if [ -e $(export_lib) ]; then \
 		$(rm) $(export_lib); \
 	  fi
+	jar cfm $(export_lib) ../../manifest.stub
 	@ cd $(pwre_broot)/$(pwre_target)/bld; \
-	 jar cf $(export_lib) jpwr/rt/*.class; \
+	 jar uf $(export_lib) jpwr/rt/*.class; \
 	 rm jpwr/rt/Gdh.class;
 
 #-include $(source_dependencies)

@@ -145,9 +145,10 @@ $(export_lib) : $(objects)
 	@ if [ -e $(export_lib) ]; then \
 		$(rm) $(export_lib); \
 	  fi
+	jar cfm $(export_lib) ../../manifest.stub
 	@ cd $(pwre_broot)/$(pwre_target)/bld; \
 	echo "Inserting png and gif files"; \
-	jar cf $(export_lib) jpwr/$(comp_name)/*.gif; \
+	jar uf $(export_lib) jpwr/$(comp_name)/*.gif; \
 	jar uf $(export_lib) jpwr/$(comp_name)/*.png; \
 	find jpwr/$(comp_name) -name "*.class" -exec jar uf $(export_lib) {} \;; \
 	chmod a+r $(export_lib);
