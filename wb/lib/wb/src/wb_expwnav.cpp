@@ -1168,7 +1168,7 @@ pwr_tStatus WbExpWNav::exp()
       
 	brow_GetUserData( node, (void **)&item);
 
-	sprintf( cmd, "cp -a %s %s", item->source, item->target);
+	sprintf( cmd, "cp %s %s", item->source, item->target);
 	printf( "%s\n", cmd);
 	sts = system( cmd);
 	if ( sts != 0) {
@@ -1191,7 +1191,7 @@ pwr_tStatus WbExpWNav::exp()
 	if ( !cp->update)
 	  continue;
 
-	sprintf( cmd, "cp -a %s %s", cp->source, cp->target);
+	sprintf( cmd, "cp %s %s", cp->source, cp->target);
 	printf( "%s\n", cmd);
 	sts = system( cmd);
 	if ( sts != 0) {
