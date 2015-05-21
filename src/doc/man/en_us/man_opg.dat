@@ -1755,7 +1755,20 @@ supplying the object with the /object qualifier.
         <t>in a multiview cell, not for window objects.
 /y0	<t>Upper left y Ge coordinate for graph border.
 /x1	<t>Lower right x Ge coordinate for graph border.
-/x1	<t>Lower right y Ge coordinate for graph border.
+/y1	<t>Lower right y Ge coordinate for graph border.
+/continue <t>By default other actions for the command button are discarded as
+        <t>the current graph may have replaced itself. To also execute the succeeding
+        <t>actions for the button, the /continue qualifier is added.
+
+If the 'set subwindow' command is used in a script and replaces the current
+graph, the script should be terminated with a call to exit( GLOW__SUBTERMINATED).
+
+<c>main()
+<c>  set subwindow motor1 /name=subw1 /source=motor1.pwg
+<c>  ...
+<c>  exit( GLOW__SUBTERMINATED);
+<c>endmain
+
 </TOPIC>
 
 <TOPIC> add menu <style> function
