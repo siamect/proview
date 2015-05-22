@@ -20,10 +20,10 @@ export pwr_load=$pwrb_root/load
 export pwr_lis=$pwrb_root/lis
 export pwr_doc=$pwrb_root/doc
 
-export pwrp_exe=$pwrp_root/x86_linux/exe
-export pwrp_lib=$pwrp_root/x86_linux/lib
-export pwrp_obj=$pwrp_root/x86_linux/obj
-export pwrp_lis=$pwrp_root/x86_linux/lis
+export pwrp_exe=$pwrp_root/x86_64_linux/exe
+export pwrp_lib=$pwrp_root/x86_64_linux/lib
+export pwrp_obj=$pwrp_root/x86_64_linux/obj
+export pwrp_lis=$pwrp_root/x86_64_linux/lis
 export pwrp_inc=$pwrp_root/common/inc
 export pwrp_load=$pwrp_root/common/load
 export pwrp_log=$pwrp_root/common/log
