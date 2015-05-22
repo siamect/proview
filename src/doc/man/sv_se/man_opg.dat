@@ -1760,10 +1760,30 @@ att aktuellt objekt med /object.
 
 <B>xtt> set subwindow 'graphname' /name= /source= [/object=]
 
-'graphname'	<t>den graf där window objektet ligger.
-/name=		<t>namn på window objektet.
-/source=	<t>namn på den Ge graf som ska visas i window objektet.
-/object=	<t>anger aktuellt objekt när grafen är en objekts-bild.
+'graphname' <t>den graf där window objektet ligger.
+/name	<t>namn på window objektet.
+/source	<t>namn på den Ge graf som ska visas i window objektet.
+/object	<t>anger aktuellt objekt när grafen är en objekts-bild.
+/x0	<t>Övre vänstra x-koordinaten i Ge för grafens gräns. Om x0, y0, x1, y1
+        <t>anges kan en annan del av grafen än den som har specificerats i
+        <t>Graph attribute visas. Implementerad för grafer i multiview celler,
+        <t>inte för window-objekt.
+/y0	<t>Övre vänstra y-koordinaten i Ge för grafen.
+/x1	<t>Nedre högra x-koordinaten i Ge för grafen.
+/y1	<t>Nedre högra y-koordinaten i Ge för grafen.
+/continue <t>Normalt exekveras inte några fler actions i kommando-knappen, eftersom den
+        <t>nuvarande grafen kan ha bytt ut sig själv. För att också exekvera efterföljande
+        <t>actions för kappen, adderas /continue.
+
+Om 'set subwindow' kommandot används i ett script, och byter ut den nuvarande
+grafen, ska scriptet avslutas med ett anrop till exit( GLOW__SUBTERMINATED).
+
+<c>main()
+<c>  set subwindow motor1 /name=subw1 /source=motor1.pwg
+<c>  ...
+<c>  exit( GLOW__SUBTERMINATED);
+<c>endmain
+
 </TOPIC>
 
 <TOPIC> add menu <style> function

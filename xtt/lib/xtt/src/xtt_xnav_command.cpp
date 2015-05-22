@@ -7483,6 +7483,8 @@ int XNav::command( char* input_str)
       return DCLI__SUCCESS;
     }
     else if ( EVEN(sts)) return sts;
+
+    command_sts = sts;
     return DCLI__SUCCESS;
   }
   // dcli_toupper( input_str, input_str);
@@ -8080,7 +8082,7 @@ int	xnav_externcmd_func( char *cmd, void *client_data)
 *
 **************************************************************************/
 
-int XNav::readcmdfile( 	char		*incommand)
+int XNav::readcmdfile( 	char *incommand)
 {
 	char		input_str[160];
 	int		sts;
@@ -8118,8 +8120,12 @@ int XNav::readcmdfile( 	char		*incommand)
 	  if ( EVEN(sts)) return sts;
 	  sts = ccm_register_function( "ConfirmDialog", xnav_confirmdialog_func);
 	  if ( EVEN(sts)) return sts;
+
+	  sts = ccm_create_external_var( "GLOW__SUBTERMINATED", CCM_DECL_INT, 0, GLOW__SUBTERMINATED, 0);
+
 	  ccm_func_registred = 1;
         }
+
 
 	strcpy( input_str, incommand);
 	dcli_remove_blank( input_str, input_str);
@@ -8131,6 +8137,8 @@ int XNav::readcmdfile( 	char		*incommand)
 		&appl_sts, verify, 0, NULL, 0, 0, NULL, (void *)this);
         if ( EVEN(sts)) return sts;
 
+	if ( sts == CCM__EXITFUNC)
+	  return appl_sts;
 	return 1;
 }
 
