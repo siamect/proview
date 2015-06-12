@@ -339,6 +339,36 @@ ConvertGet (
     }
   }
 
+  /* Fix for getGclassR message from from V4.8.2 with incompatible ClassDef element */
+  if (get->type.s == (qcom_eStype)net_eMsg_getGclassR) {
+    int sts = ((net_sGetGclassR *)get->data)->sts;
+    if ( sts & 1) {
+      int *ip = (int *) &((net_sGetGclassR *)get->data)->gclass.bo;
+      int size = get->size - ((char *)ip - (char *)get->data) - 4;
+      if ( *ip == 0  && ((net_sGetGclassR *)get->data)->attr[0].ao.oid.vid == 0) {
+	char *tmp = malloc(size);
+	memcpy( tmp, ip + 1, size);
+	memcpy( ip, tmp, size);
+	get->size -= 4;
+	free(tmp);
+
+	int i;
+	int acount = ((net_sGetGclassR *)get->data)->gclass.acount;
+	for ( i = 0; i < acount; i++) {
+	  ip = (int *) &((net_sGetGclassR *)get->data)->attr[i];
+	  size = get->size - ((char *)ip - (char *)get->data) - 4;
+	  if ( size <= 0)
+	    break;
+	  char *tmp = malloc(size);
+	  memcpy( tmp, ip + 1, size);
+	  memcpy( ip, tmp, size);
+	  get->size -= 4;
+	  free(tmp);
+	}
+      }
+    }
+  }
+
   if (np == qdb->my_node || np->bo == qdb->my_node->bo) {
     if (get->data != data) memcpy(data, get->data, get->size);
     pwr_Return(TRUE, sts, NET__SUCCESS);

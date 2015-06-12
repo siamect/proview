@@ -649,7 +649,7 @@ createObject (
   if (body == NULL && bodySize > 0)
     return NULL;
   
-  if (op->g.size < bodySize)
+  if ( bodySize != 0 && op->g.size < bodySize - 4) // Allow missing alignment for 4.6
     return NULL;
   
   if (bodySize > 0)

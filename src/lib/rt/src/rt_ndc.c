@@ -1758,7 +1758,7 @@ ndc_NarefToRaref(
       }
     }
 
-    if (l_ccp != ccp) {
+    if (l_ccp != ccp && l_ccp->flags.b.cacheLock) {
       cmvolc_UnlockClass(NULL, l_ccp);
     }
 
@@ -1836,7 +1836,7 @@ ndc_NarefToRaref(
     }  
   }
   
-  if (l_ccp != ccp) {
+  if (l_ccp != ccp && l_ccp->flags.b.cacheLock) {
     cmvolc_UnlockClass(NULL, l_ccp);
   }
    
