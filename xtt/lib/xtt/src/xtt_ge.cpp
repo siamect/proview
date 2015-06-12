@@ -95,14 +95,14 @@ int XttGe::graph_close_cb( void *client_data)
   return 1;
 }
 
-int XttGe::ge_command_cb( void *ge_ctx, char *cmd)
+int XttGe::ge_command_cb( void *ge_ctx, char *cmd, char *script)
 {
   XttGe	*ge = (XttGe *)ge_ctx;
   int		sts;
 
   if ( ge->command_cb)
   {
-    sts = (ge->command_cb)( ge->parent_ctx, cmd, ge_ctx);
+    sts = (ge->command_cb)( ge->parent_ctx, cmd, script, ge_ctx);
     return sts;
   }
   return 0;
@@ -252,7 +252,7 @@ XttGe::XttGe( void *xg_parent_ctx, const char *xg_name, const char *xg_filename,
 	      int xg_scrollbar, int xg_menu, int xg_navigator, int xg_width, int xg_height,
 	      int x, int y, double scan_time, const char *object_name,
 	      int use_default_access, unsigned int access, unsigned int xg_options,
-	      int (*xg_command_cb) (void *, char *, void *),
+	      int (*xg_command_cb) (void *, char *, char *, void *),
 	      int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 	      int (*xg_is_authorized_cb) (void *, unsigned int)) :
   parent_ctx(xg_parent_ctx), scrollbar(xg_scrollbar),

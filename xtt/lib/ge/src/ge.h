@@ -309,7 +309,7 @@ class Ge {
   static void colorpalette_set_current_tone( void *gectx, glow_eDrawType tone);
   static void subgraphs_close_cb( SubGraphs *subgraphs);
   static void status_msg( void *ge_ctx, double x, double y);
-  static int command_cb( void *ge_ctx, char *command);
+  static int command_cb( void *ge_ctx, char *command, char *script);
   static void open_list_cb( void *ctx, char *text);
   static int sort_files( const void *file1, const void *file2);
 

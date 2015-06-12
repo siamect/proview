@@ -508,6 +508,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeMethodToolbar((const GeMethodToolbar&) *elem); break;
     case ge_mActionType1_MethodPulldownMenu:
       e = new GeMethodPulldownMenu((const GeMethodPulldownMenu&) *elem); break;
+    case ge_mActionType1_Script:
+      e = new GeScript((const GeScript&) *elem); break;
     default: ;
     }
     switch( elem->action_type2) {
@@ -630,6 +632,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_SetValue: e = (GeDynElem *) new GeSetValue(this); break;
       case ge_eSave_MethodToolbar: e = (GeDynElem *) new GeMethodToolbar(this); break;
       case ge_eSave_MethodPulldownMenu: e = (GeDynElem *) new GeMethodPulldownMenu(this); break;
+      case ge_eSave_Script: e = (GeDynElem *) new GeScript(this); break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeDyn:open syntax error" << endl;
@@ -1407,6 +1410,9 @@ GeDynElem *GeDyn::create_action1_element( int mask, int instance)
   case ge_mActionType1_MethodPulldownMenu:
     e = (GeDynElem *) new GeMethodPulldownMenu(this);
     break;
+  case ge_mActionType1_Script:
+    e = (GeDynElem *) new GeScript(this);
+    break;
   default: ;
   }
   return e;
@@ -1615,6 +1621,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
       break;
     case ge_mActionType1_MethodPulldownMenu:
       e = (GeDynElem *) new GeMethodPulldownMenu((GeMethodPulldownMenu&) x);
+      break;
+    case ge_mActionType1_Script:
+      e = (GeDynElem *) new GeScript((GeScript&) x);
       break;
     default: ;
     }
@@ -3221,7 +3230,7 @@ int GeInvisible::connect( grow_tObject object, glow_sTraceData *trace_data)
     
     dyn->graph->get_command( command, cmd, dyn);
 
-    sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+    sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
     if ( ODD(sts))
       p = &val_false;
     else
@@ -6421,66 +6430,64 @@ int GeDigFourShift::connect( grow_tObject object, glow_sTraceData *trace_data)
   p1 = 0;
   db1 = dyn->parse_attr_name( attribute1, parsed_name,
 			      &inverted1, &attr_type, &attr_size);
-  if ( strcmp( parsed_name,"") == 0)
-    return 1;
+  if ( strcmp( parsed_name,"") != 0) {
+    get_bit( parsed_name, attr_type, &bitmask1);
+    a_typeid1 = attr_type;
 
-  get_bit( parsed_name, attr_type, &bitmask1);
-  a_typeid1 = attr_type;
-
-  switch ( db1) {
-  case graph_eDatabase_Gdh:
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p1, &subid1, size1);
-    if ( EVEN(sts)) return sts;
-    break;
-  case graph_eDatabase_Ccm:
-    sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, (void **)&p1);
-    if ( EVEN(sts)) return sts;
-    break;
-  default: ;
+    switch ( db1) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p1, &subid1, size1);
+      if ( EVEN(sts)) return sts;
+      break;
+    case graph_eDatabase_Ccm:
+      sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, (void **)&p1);
+      if ( EVEN(sts)) return sts;
+      break;
+    default: ;
+    }
   }
 
   size2 = 4;
   p2 = 0;
   db2 = dyn->parse_attr_name( attribute2, parsed_name,
 			      &inverted2, &attr_type, &attr_size);
-  if ( strcmp( parsed_name,"") == 0)
-    return 1;
+  if ( strcmp( parsed_name,"") != 0) {
+    get_bit( parsed_name, attr_type, &bitmask2);
+    a_typeid2 = attr_type;
 
-  get_bit( parsed_name, attr_type, &bitmask2);
-  a_typeid2 = attr_type;
-
-  switch ( db2) {
-  case graph_eDatabase_Gdh:
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p2, &subid2, size2);
-    if ( EVEN(sts)) return sts;
-    break;
-  case graph_eDatabase_Ccm:
-    sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, (void **)&p2);
-    if ( EVEN(sts)) return sts;
-    break;
-  default: ;
+    switch ( db2) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p2, &subid2, size2);
+      if ( EVEN(sts)) return sts;
+      break;
+    case graph_eDatabase_Ccm:
+      sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, (void **)&p2);
+      if ( EVEN(sts)) return sts;
+      break;
+    default: ;
+    }
   }
 
   size3 = 4;
   p3 = 0;
   db3 = dyn->parse_attr_name( attribute3, parsed_name,
-				    &inverted3, &attr_type, &attr_size);
-  if ( strcmp( parsed_name,"") == 0)
-    return 1;
+			      &inverted3, &attr_type, &attr_size);
+  if ( strcmp( parsed_name,"") != 0) {
 
-  get_bit( parsed_name, attr_type, &bitmask3);
-  a_typeid3 = attr_type;
+    get_bit( parsed_name, attr_type, &bitmask3);
+    a_typeid3 = attr_type;
 
-  switch ( db3) {
-  case graph_eDatabase_Gdh:
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p3, &subid3, size3);
-    if ( EVEN(sts)) return sts;
-    break;
-  case graph_eDatabase_Ccm:
-    sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, (void **)&p3);
-    if ( EVEN(sts)) return sts;
-    break;
-  default: ;
+    switch ( db3) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p3, &subid3, size3);
+      if ( EVEN(sts)) return sts;
+      break;
+    case graph_eDatabase_Ccm:
+      sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, (void **)&p3);
+      if ( EVEN(sts)) return sts;
+      break;
+    default: ;
+    }
   }
 
   trace_data->p = &pdummy;
@@ -6505,6 +6512,9 @@ int GeDigFourShift::disconnect( grow_tObject object)
 int GeDigFourShift::scan( grow_tObject object)
 {
   pwr_tBoolean val1, val2, val3;
+
+  if ( !(p1 || p2 || p3))
+    return 1;
 
   if ( p1) {
     if ( !get_dig( &val1, p1, a_typeid1, bitmask1))
@@ -11262,7 +11272,7 @@ int GeDigCommand::scan( grow_tObject object)
 	char cmd[400];
 
 	dyn->graph->get_command( command, cmd, dyn);
-	(dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+	(dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
       }
     }
   }
@@ -12354,7 +12364,7 @@ int GeCommand::action( grow_tObject object, glow_tEvent event)
       int sts;
 
       dyn->graph->get_command( command, cmd, dyn);
-      sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+      sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
       return sts;
     }
     break;
@@ -12460,7 +12470,133 @@ int GeCommandDoubleClick::action( grow_tObject object, glow_tEvent event)
       char cmd[400];
 
       dyn->graph->get_command( command, cmd, dyn);
-      (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+      (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
+    }
+    break;
+  default: ;    
+  }
+  return 1;
+}
+
+void GeScript::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  strcpy( attrinfo[i].name, "Script.Script");
+  attrinfo[i].value = script;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i].multiline = 1;
+  attrinfo[i++].size = sizeof(script);
+
+  dyn->display_access = true;
+  *item_count = i;
+}
+
+int GeScript::get_transtab( char **tt)
+{
+  static char transtab[][32] = {	"SubGraph",		"SubGraph",
+					"A1",			"Text",
+					"Dynamic",		"",
+					""};
+
+  *tt = (char *) transtab;
+  return 0;
+}
+
+void GeScript::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( script, sizeof(script), from, to, cnt, strict);
+}
+
+void GeScript::save( ofstream& fp)
+{
+  fp << int(ge_eSave_Script) << endl;
+  fp << int(ge_eSave_Script_script_len) << FSPACE << script_len << endl;
+  fp << int(ge_eSave_Script_script) << endl;
+  fp << "\"";
+  for ( char *s  = script; *s; s++) {
+    if ( *s == '"')
+      fp << "\\";
+    fp << *s;
+  }
+  fp << "\"" << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeScript::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[40];
+  char		c;
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeScript: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+      case ge_eSave_Script: break;
+      case ge_eSave_Script_script_len: fp >> script_len; break;
+      case ge_eSave_Script_script: {
+	fp.getline( dummy, sizeof(dummy));
+	fp.get();
+	int j = 0;
+	while ( 1) {
+	  if ( j > (int)sizeof(script))
+	    break;
+	  if ((c = fp.get()) == '"') {
+	    if ( script[j-1] == '\\')
+	      j--;
+	    else {
+	      script[j] = 0;
+	      break;
+	    }
+	  }
+	  script[j++] = c;
+	}
+	script[sizeof(script)-1] = 0;
+	break;
+      }
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeScript:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeScript::action( grow_tObject object, glow_tEvent event)
+{
+  if ( !dyn->graph->is_authorized( dyn->access))
+    return 1;
+
+  switch ( event->event) {
+  case glow_eEvent_MB1Down:
+    grow_SetClickSensitivity( dyn->graph->grow->ctx, glow_mSensitivity_MB1Click);
+    grow_SetObjectColorInverse( object, 1);
+    break;
+  case glow_eEvent_MB1Up:
+    grow_SetObjectColorInverse( object, 0);
+    break;
+  case glow_eEvent_Key_Return:
+  case glow_eEvent_MB1Click:
+    if ( dyn->total_action_type1 & ge_mActionType1_Confirm)
+      break;
+
+    if ( dyn->graph->command_cb) {
+      int sts;
+
+      //dyn->graph->get_command( command, cmd, dyn);
+      sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, 0, script);
+      return 1;
     }
     break;
   default: ;    
@@ -13240,7 +13376,7 @@ int GeHelp::action( grow_tObject object, glow_tEvent event)
       else
 	sprintf( command, "help %s", topic);
       dyn->graph->get_command( command, cmd, dyn);
-      (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+      (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
     }
     break;
   default: ;    
@@ -13394,7 +13530,7 @@ int GeOpenGraph::action( grow_tObject object, glow_tEvent event)
       }
       if ( strcmp( command, "") != 0) {
 	dyn->graph->get_command( command, cmd, dyn);
-	(dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+	(dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
       }
     }
     break;
@@ -13504,7 +13640,7 @@ int GeOpenURL::action( grow_tObject object, glow_tEvent event)
 
       sprintf( command, "open url \"%s\"", url);
       dyn->graph->get_command( command, cmd, dyn);
-      (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+      (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
     }
     break;
   default: ;    
@@ -15606,7 +15742,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
     
 		    dyn->graph->get_command( command, cmd, dyn);
 
-		    sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+		    sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
 		    if ( EVEN(sts))
 		      info.item[i].type = glow_eMenuItem_ButtonDisabled;
 		  }
@@ -16976,7 +17112,7 @@ static int methods_command_cb( char *command, void *udata)
   pwr_tCmd cmd;
 
   dyn->graph->get_command( command, cmd, dyn);
-  return (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+  return (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
 }
 
 int GeMethodToolbar::connect( grow_tObject object, glow_sTraceData *trace_data)
@@ -17059,7 +17195,7 @@ int GeMethodToolbar::action( grow_tObject object, glow_tEvent event)
     }
       
     dyn->graph->get_command( command, cmd, dyn);
-    sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+    sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
 
     break;
   }
@@ -17361,7 +17497,7 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
 	sprintf( command, "call method/function=\"%s\"/object=%s", 
 		 GeMethods::op_method[i], method_object);
 	dyn->graph->get_command( command, cmd, dyn);
-	sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+	sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
 	found = 1;
 	break;
       }
@@ -17378,7 +17514,7 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
 	  sprintf( command, "call method/function=\"%s\"/object=%s", 
 		   GeMethods::mnt_method[i], method_object);
 	  dyn->graph->get_command( command, cmd, dyn);
-	  sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+	  sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
 	  found = 1;
 	  break;
 	}

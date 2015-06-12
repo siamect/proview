@@ -163,8 +163,8 @@ static int xnav_attribute_func (
   ccm_tFloat   	*return_float,
   ccm_tInt     	*return_int,
   char		*return_string);
-static int xnav_multiview_command_cb( void *gectx, char *command, void *caller);
-static int xnav_ge_command_cb( void *gectx, char *command, void *caller);
+static int xnav_multiview_command_cb( void *gectx, char *command, char *script, void *caller);
+static int xnav_ge_command_cb( void *gectx, char *command, char *script, void *caller);
 static void xnav_ge_close_cb( void *xnav, void *gectx);
 static void xnav_multiview_close_cb( void *xnav, void *mvctx);
 static void xnav_stream_close_cb( void *xnav, XttStream *strmctx);
@@ -5396,18 +5396,24 @@ static void xnav_ge_help_cb( void *ctx, const char *key)
     xnav->message( ' ', null_str);
 }
 
-static int xnav_multiview_command_cb( void *ctx, char *command, void *caller)
+static int xnav_multiview_command_cb( void *ctx, char *command, char *script, void *caller)
 {
   ((XNav *)ctx)->current_cmd_ctx = caller;
-  ((XNav *)ctx)->command( command);
+  if ( command)
+    ((XNav *)ctx)->command( command);
+  else if ( script)
+    ((XNav *)ctx)->script( command);
   ((XNav *)ctx)->current_cmd_ctx = 0;
   return ((XNav *)ctx)->get_command_sts();
 }
 
-static int xnav_ge_command_cb( void *ctx, char *command, void *caller)
+static int xnav_ge_command_cb( void *ctx, char *command, char *script, void *caller)
 {
   ((XNav *)ctx)->current_cmd_ctx = caller;
-  ((XNav *)ctx)->command( command);
+  if ( command)
+    ((XNav *)ctx)->command( command);
+  else if ( script)
+    ((XNav *)ctx)->script( script);
   ((XNav *)ctx)->current_cmd_ctx = 0;
   return ((XNav *)ctx)->get_command_sts();
 }
@@ -7463,6 +7469,17 @@ pwr_tStatus XNav::get_command_sts()
   return command_sts;
 }
 
+int XNav::script( char* buffer)
+{
+  int sts;
+
+  sts = readcmdfile( 0, buffer);
+  if ( EVEN(sts)) return sts;
+
+  command_sts = sts;
+  return DCLI__SUCCESS;
+}
+
 int XNav::command( char* input_str)
 {
   char     	command[1000];
@@ -7476,7 +7493,7 @@ int XNav::command( char* input_str)
     if (EVEN(sts)) return sts;
 
     /* Read command file */
-    sts = readcmdfile( &command[1]);
+    sts = readcmdfile( &command[1], 0);
     if ( sts == DCLI__NOFILE)
     {
       message('E',"Unable to open file");
@@ -7503,7 +7520,7 @@ int XNav::command( char* input_str)
       if ( symbol_value[0] == '@')
       {
         /* Read command file */
-        sts = readcmdfile( &symbol_value[1]);
+        sts = readcmdfile( &symbol_value[1], 0);
         if ( sts == DCLI__NOFILE)
         {
           message('E',"Unable to open file");
@@ -8082,7 +8099,7 @@ int	xnav_externcmd_func( char *cmd, void *client_data)
 *
 **************************************************************************/
 
-int XNav::readcmdfile( 	char *incommand)
+int XNav::readcmdfile( 	char *incommand, char *buffer)
 {
 	char		input_str[160];
 	int		sts;
@@ -8127,19 +8144,29 @@ int XNav::readcmdfile( 	char *incommand)
         }
 
 
-	strcpy( input_str, incommand);
-	dcli_remove_blank( input_str, input_str);
-        xnav_store_xnav( this);
+	if ( incommand) {
+	  strcpy( input_str, incommand);
+	  dcli_remove_blank( input_str, input_str);
+	  xnav_store_xnav( this);
 
-	/* Read and execute the command file */
-	sts = ccm_file_exec( input_str, xnav_externcmd_func,
-		xnav_ccm_deffilename_func, xnav_ccm_errormessage_func, 
-		&appl_sts, verify, 0, NULL, 0, 0, NULL, (void *)this);
-        if ( EVEN(sts)) return sts;
-
+	  /* Read and execute the command file */
+	  sts = ccm_file_exec( input_str, xnav_externcmd_func,
+			       xnav_ccm_deffilename_func, xnav_ccm_errormessage_func, 
+			       &appl_sts, verify, 0, NULL, 0, 0, NULL, (void *)this);
+	  if ( EVEN(sts)) return sts;
+	}
+	else if ( buffer) {
+	  /* Execute the buffer */
+	  sts = ccm_buffer_exec( buffer, xnav_externcmd_func,
+				 xnav_ccm_errormessage_func, 
+				 &appl_sts, verify, 0, NULL, 0, NULL, (void *)this);
+	  if ( EVEN(sts)) return sts;
+	}
+	  
 	if ( sts == CCM__EXITFUNC)
 	  return appl_sts;
 	return 1;
+
 }
 
 int xnav_cut_segments (

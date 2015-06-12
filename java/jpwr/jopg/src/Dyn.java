@@ -151,6 +151,7 @@ public class Dyn {
     public static final int mActionType1_SetValue 		= 1 << 21;
     public static final int mActionType1_MethodToolbar 		= 1 << 22;
     public static final int mActionType1_MethodPulldownMenu    	= 1 << 23;
+    public static final int mActionType1_Script		    	= 1 << 24;
 
     public static final int mActionType2_No			= 0;
     
@@ -210,6 +211,7 @@ public class Dyn {
     public static final int eDynPrio_Axis			= 52;
     public static final int eDynPrio_MethodToolbar	       	= 53;
     public static final int eDynPrio_MethodPulldownMenu	       	= 54;
+    public static final int eDynPrio_Script  			= 9998;
     public static final int eDynPrio_Command  			= 9999;
     public static final int eDynPrio_CloseGraph 		= 10000;
 
@@ -271,6 +273,7 @@ public class Dyn {
     public static final int eSave_SetValue	       		= 70;
     public static final int eSave_MethodToolbar	       		= 71;
     public static final int eSave_MethodPulldownMenu	       	= 72;
+    public static final int eSave_Script		       	= 73;
     public static final int eSave_End		       		= 99;
     public static final int eSave_Dyn_dyn_type1	       		= 100;
     public static final int eSave_Dyn_action_type1      	= 101;
@@ -640,6 +643,8 @@ public class Dyn {
     public static final int eSave_MethodToolbar_method_object   = 7100;
     public static final int eSave_MethodPulldownMenu_method_object = 7200;
     public static final int eSave_MethodPulldownMenu_help_menu  = 7201;
+    public static final int eSave_Script_script_len		= 7300;
+    public static final int eSave_Script_script			= 7301;
 
     public static final int eAnimSequence_Cycle		= 1;
     public static final int eAnimSequence_Dig		= 2;
@@ -815,6 +820,8 @@ public class Dyn {
 		e = new DynMethodToolbar((DynMethodToolbar) x.elements.get(i)); break;
 	    case Dyn.mActionType1_MethodPulldownMenu:
 		e = new DynMethodPulldownMenu((DynMethodPulldownMenu) x.elements.get(i)); break;
+	    case Dyn.mActionType1_Script:
+		e = new DynScript((DynScript) x.elements.get(i)); break;
 	    default: ;
 	    }
 	    switch( x.elements.get(i).action_type2) {
@@ -900,6 +907,9 @@ public class Dyn {
 		break;
 	    case mActionType1_MethodPulldownMenu:
 		e = (DynElem) new DynMethodPulldownMenu((DynMethodPulldownMenu) x);
+		break;
+	    case mActionType1_Script:
+		e = (DynElem) new DynScript((DynScript) x);
 		break;
 	    default: ;
 	    }
@@ -1256,6 +1266,9 @@ public class Dyn {
 		    break;
 		case Dyn.eSave_MethodPulldownMenu: 
 		    elem = (DynElem) new DynMethodPulldownMenu(this); 
+		    break;
+		case Dyn.eSave_Script: 
+		    elem = (DynElem) new DynScript(this); 
 		    break;
 		case Dyn.eSave_End:
 		    end_found = true;
@@ -8470,6 +8483,114 @@ public class Dyn {
 	    } catch ( Exception e) {
 		System.out.println( "IOException DynCommand");
 	    }
+	}
+
+    }
+
+    public class DynScript extends DynElem {
+	String script;
+	int script_len;
+
+	public DynScript( Dyn dyn) {
+	    super(dyn, 0, 0, Dyn.mActionType1_Script, 0, Dyn.eDynPrio_Script);
+	}
+
+	public DynScript( DynScript x) {
+	    super(x);
+	    script_len = x.script_len;
+	    script = x.script;
+	}
+
+	public int action( GlowArrayElem object, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+
+	    switch ( e.event) {
+	    case Glow.eEvent_MB1Down:
+		object.setColorInverse( 1);
+		dyn.repaintNow = true;
+		break;
+	    case Glow.eEvent_MB1Up:
+		object.setColorInverse( 0);
+		dyn.repaintNow = true;
+		break;
+	    case Glow.eEvent_MB1Click:
+		if ( (dyn.action_type1 & Dyn.mActionType1_Confirm) != 0)
+		    break;
+		
+		if ( script == null)
+		    return 1;
+
+		// String cmd = graph.getCommand(command);
+
+		dyn.graph.script(script);
+		break;
+	    }
+	    return 1;
+	}
+
+	public void open( BufferedReader reader) {
+	    String line;
+	    StringTokenizer token;
+	    boolean end_found = false;
+
+	    try {
+		while( (line = reader.readLine()) != null) {
+		    token = new StringTokenizer(line);
+		    int key = Integer.valueOf(token.nextToken());
+		    if ( Dyn.debug) System.out.println( "DynScript : " + line);
+
+		    switch ( key) {
+		    case Dyn.eSave_Script: 
+			break;
+		    case Dyn.eSave_Script_script_len: 
+			script_len = Integer.valueOf(token.nextToken());
+			break;
+		    case Dyn.eSave_Script_script: 
+			int idx;
+			boolean end = false;
+			script = "";
+			line = reader.readLine().trim().substring(1);
+
+			idx = 0;
+			while ( line != null) {			    
+			    System.out.println("Script line: " + line);
+			    while ( (idx = line.indexOf('"', idx)) != -1) {
+				if ( idx > 0 && (line.charAt(idx-1) == '\\')) {
+				    line = new StringBuffer(line).delete(idx-1,idx).toString();
+				    System.out.println("Modif  line: " + line);
+				}
+				else {				
+				    if ( idx > 0)
+					line = line.substring( 0, idx - 1);
+				    else
+					line = "";
+				    script += line;
+				    end = true;
+				    break;
+				}
+			    }
+			    if ( end)
+				break;
+			    script += line + "\n";
+			    line = reader.readLine();
+			}			
+			break;
+		    case Dyn.eSave_End:
+			end_found = true;
+			break;
+		    default:
+			System.out.println( "Syntax error in DynScript");
+			break;
+		    }
+
+		    if ( end_found)
+			break;
+		}		
+	    } catch ( Exception e) {
+		System.out.println( "IOException DynScript");
+	    }
+	    System.out.println( "script : \"" + script + "\"");
 	}
 
     }

@@ -499,6 +499,12 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	return 0;
     }
 
+    public int script(String script) {
+	if ( appl != null)
+	    return appl.script(script);
+	return 0;
+    }
+
     public void closeGraph() {
 	if ( appl != null)
 	    appl.closeGraph();

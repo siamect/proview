@@ -54,6 +54,7 @@ public interface GraphIfc {
     public void cmnPop( GrowCmn cmn);
     public void cmnPush();
     public int command(String cmd);
+    public int script(String script);
     public void closeGraph();
     public void openConfirmDialog(Object dyn, String text, Object object);
     public void openValueInputDialog(Object dyn, String text, Object object);

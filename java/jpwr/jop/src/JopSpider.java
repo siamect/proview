@@ -76,6 +76,10 @@ public class JopSpider {
 	System.out.println("JopSpider command callback : " + cmd);
 	return JopSpider.command( session, cmd);
     }
+    public int script( String script) {
+	System.out.println("JopSpider script callback : " + script);
+	return JopSpider.script( session, script);
+    }
     public void frameClosed( Object utility) {
 	session.removeUtility( utility);
     }
@@ -83,6 +87,53 @@ public class JopSpider {
 	JopSpider.openPopupMenu( session, object, invoker, x, y);
     }
   }    
+
+  private static class JopCcmCb implements CcmApplIfc {
+    JopSession session;
+
+    JopCcmCb( JopSession session) {
+      this.session = session;
+    }
+
+    public int externCmd( String cmd) {
+	return JopSpider.command( session, cmd);
+    }
+
+    public String defFilename( String filename) {
+	String str;
+
+	if ( session.getRoot() instanceof JopApplet) {
+	    URL current = ((JApplet) session.getRoot()).getCodeBase();
+	    String current_str = current.toString();
+
+	    str = current_str + filename;
+	    if ( !str.endsWith(".rtt_com"))
+		str += ".rtt_com";
+	}
+	else {
+	    if ( filename.indexOf('/') == -1)
+		str = "$pwrp_exe/" + filename;
+	    else
+		str = filename;
+	    if ( !str.endsWith(".rtt_com"))
+		str += ".rtt_com";
+	    str = Gdh.translateFilename( str);
+	}
+	return str;
+    }
+    
+    public void errorMessage( String msg, int severity) {
+	System.out.println( "Error message:" + msg);
+    }
+
+    public int confirmDialog( String title, String text) {
+	System.out.println( "Confirm dialoga: " + title + ", " + text);
+	return 1;
+    }
+    public Object getRoot() {
+	return session.getRoot();
+    }
+  }
 
   public JopSpider( int op_qcom_qix) {
     JopSpider.op_qcom_qix = op_qcom_qix;
@@ -139,11 +190,21 @@ public class JopSpider {
     new CliTable( "CALL", new String[] {"cli_arg1", "/METHOD", "/OBJECT"})
   };
 
+
+  static int script( JopSession session, String script) {
+      // Execute a script
+      Gdh gdh = session.getEngine().gdh;
+
+      new JopCcm( new JopCcmCb(session), gdh, null, script);
+      return 1;
+  }
+
   static int command( JopSession session, String cmd) {
     boolean local_cmd = false;
     Object root = session.getRoot();
     Gdh gdh = session.getEngine().gdh;
 
+    cmd = cmd.trim();
     System.out.println("JopSpider command : " + cmd);
     if ( root instanceof JopApplet) {
       if ( ((JopApplet)root).engine.isInstance())
@@ -151,10 +212,15 @@ public class JopSpider {
 			  ((JopApplet)root).engine.getInstance());
     }
 
+    if ( cmd.charAt(0) == '@') {
+	// Execute a script
+	new JopCcm( new JopCcmCb(session), gdh, cmd.substring(1),  null);
+	return 1;
+    }
+
     Cli cli = new Cli( cliTable);
     String command = cli.parse( cmd);
     if (cli.oddSts()) {
-	System.out.println("JopSpider1 : " + command);
       if ( command.equals("OPEN")) {
         if ( cli.qualifierFound("cli_arg1")) {
 

@@ -281,6 +281,14 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getAttrRefTid
 
 /*
  * Class:     jpwr_rt_Gdh
+ * Method:    classNameToId
+ * Signature: (Ljava/lang/String;)Ljpwr/rt/CdhrClassId;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_classNameToId
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     jpwr_rt_Gdh
  * Method:    getClassList
  * Signature: (I)Ljpwr/rt/CdhrObjid;
  */

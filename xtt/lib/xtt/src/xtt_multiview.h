@@ -76,7 +76,7 @@ class XttMultiView {
   pwr_tAttrRef	aref;
   pwr_tAName   	name;
   unsigned int	options;
-  int		(*command_cb)(void *, char *, void *);
+  int		(*command_cb)(void *, char *, char *, void *);
   void		(*close_cb)(void *, void *);
   void		(*help_cb)(void *, const char *key);
   void		(*display_in_xnav_cb)(void *, pwr_sAttrRef *);
@@ -99,7 +99,7 @@ class XttMultiView {
   XttMultiView( void *parent_ctx, const char *name,
 		pwr_tAttrRef *aref, int width, int height,
 		int x, int y, unsigned int options,
-		int (*xg_command_cb) (void *, char *, void *),
+		int (*xg_command_cb) (void *, char *, char *, void *),
 		int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 		int (*xg_is_authorized_cb) (void *, unsigned int));
   virtual ~XttMultiView();
@@ -122,7 +122,7 @@ class XttMultiView {
   XNav *get_xnav();
 
   static void multiview_ge_close_cb( void *parent_ctx, void *client_data);
-  static int multiview_ge_command_cb( void *multiview_ctx, char *command, void *caller);
+  static int multiview_ge_command_cb( void *multiview_ctx, char *command, char *script, void *caller);
   static int multiview_ge_sound_cb( void *multiview_ctx, pwr_tAttrRef *aref);
   static void multiview_ge_display_in_xnav_cb( void *multiview_ctx, pwr_sAttrRef *arp);
   static void multiview_ge_popup_menu_cb( void *multiview_ctx, pwr_sAttrRef attrref,

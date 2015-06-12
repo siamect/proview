@@ -81,6 +81,7 @@ void AttrGtk::change_value() {
   GtkWidget	*text_w;
   int		multiline;
   char		*value;
+  int		size;
 
   if ( input_open)  {
     g_object_set( cmd_input, "visible", FALSE, NULL);
@@ -90,7 +91,7 @@ void AttrGtk::change_value() {
     return;
   }
 
-  sts = attrnav->check_attr_value( &multiline, &value);
+  sts = attrnav->check_attr_value( &multiline, &size, &value);
   if ( EVEN(sts)) {
     if ( sts == GE__NOATTRSEL)
       message( 'E', "No attribute is selected");
@@ -107,6 +108,7 @@ void AttrGtk::change_value() {
     gdk_drawable_get_size( pane->window, &w, &h);
     gtk_paned_set_position( GTK_PANED(pane), h - 170);
     gtk_widget_grab_focus( cmd_scrolledtextview);
+    input_max_length = size - 1;
     // XtManageChild( text_w);
     // XtManageChild( cmd_scrolled_ok);
     // XtManageChild( cmd_scrolled_ca);
@@ -342,13 +344,32 @@ static void attr_activate_recall_prev( GtkWidget *w, gpointer attr)
   ((Attr *)attr)->recall_prev();
 }
 
+void AttrGtk::action_text_inserted( GtkTextBuffer *w, GtkTextIter *iter, gchar *str, gint len, gpointer data)
+{
+  AttrGtk *attr = (AttrGtk *)data;
+
+  int count = gtk_text_buffer_get_char_count( w);  
+
+  if ( count > attr->input_max_length) {
+    // Remove inserted chars (note that iter now points at the end of the inserted text)
+    GtkTextIter start_iter;
+
+    int offs = gtk_text_iter_get_offset( iter);
+    gtk_text_buffer_get_iter_at_offset( w, &start_iter, offs - len);
+    gtk_text_buffer_delete( w, &start_iter, iter);
+
+    CoWowGtk wow( attr->toplevel);
+    wow.DisplayError( "Error message", "Attribute size exceeded");
+  }
+}
+
 AttrGtk::AttrGtk( GtkWidget *a_parent_wid,
   void			*a_parent_ctx,
   void 			*a_object,
   attr_sItem  		*itemlist,
   int			item_cnt ) :
   Attr( a_parent_ctx, a_object, itemlist, item_cnt), 
-  parent_wid(a_parent_wid)
+  parent_wid(a_parent_wid), input_max_length(0)
 {
   int sts;
 
@@ -474,6 +495,8 @@ AttrGtk::AttrGtk( GtkWidget *a_parent_wid,
   gtk_container_add( GTK_CONTAINER(toplevel), vbox);
 
   cmd_scrolled_buffer = gtk_text_buffer_new( NULL);
+  g_signal_connect_after( cmd_scrolled_buffer, "insert-text", 
+ 		    G_CALLBACK(action_text_inserted), this);
 
   cmd_scrolledtextview = gtk_text_view_new_with_buffer( cmd_scrolled_buffer);
   GtkWidget *viewport = gtk_viewport_new( NULL, NULL);

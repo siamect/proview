@@ -77,11 +77,13 @@ class AttrGtk : public Attr {
     // int		value_current_recall;
     static CoWowRecall 	value_recall;
     CoWowEntryGtk	*cmd_entry;
+    int		input_max_length;
 
     void message( char severity, const char *message);
     void set_prompt( const char *prompt);
     void change_value();
     int reconfigure_attr();
+    static void action_text_inserted( GtkTextBuffer *w, GtkTextIter *iter, gchar *str, gint len, gpointer data);
     
     ~AttrGtk();
 };

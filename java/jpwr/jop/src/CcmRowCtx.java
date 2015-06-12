@@ -34,65 +34,24 @@
  * General Public License plus this exception.
  */
 
-#ifndef wb_wge_h
-#define wb_wge_h
-
-#ifndef pwr_h
-# include "pwr.h"
-#endif
-
-class Graph;
-
-class WGe {
- public:
-  void 		*parent_ctx;
-  pwr_tAName   	name;
-  Graph   	*graph;
-  pwr_tFileName	filename;
-  int		scrollbar;
-  int		navigator;
-  int		menu;
-  void		*current_value_object;
-  void		*current_confirm_object;
-  int		value_input_open;
-  int		confirm_open;
-  int		(*command_cb)(void *, char *);
-  void		(*close_cb)(void *);
-  void		(*help_cb)(void *, char *key);
-  int		(*is_authorized_cb)(void *, unsigned int);
-  int		width;
-  int		height;
-  int		modal;
-  int 		terminated;
-  int		subwindow_release;
-
-  WGe( void *parent_ctx, char *name, char *filename,
-       int scrollbar, int menu, int navigator, int width, int height, 
-       int x, int y, char *object_name, int modal);
-  virtual ~WGe();
-
-  virtual void pop() {}
-  virtual void set_size( int width, int height) {}
-  virtual void set_subwindow_release();
-
-  int set_object_focus( char *name, int empty);
-  int set_folder_index( char *name, int idx);
-  int set_subwindow_source( char *name, char *source, int modal);
-  void print();
-
-  static void graph_init_cb( void *client_data);
-  static int graph_close_cb( void *client_data);
-  static int wge_command_cb( void *ge_ctx, char *command, char *script);
-  static int wge_is_authorized_cb( void *ge_ctx, unsigned int access);
-  static void message( void *ctx, char severity, const char *message);
-
-  
-};
-
-#endif
+package jpwr.jop;
+import java.util.Vector;
 
 
-
-
-
+public class CcmRowCtx {
+    public CcmRowCtx() {
+    }
+    public String line;
+    public CcmFileCtx filectx;
+    public int pos;
+    public int delim_pos;
+    public int state;
+    public int level;
+    public int num_decl;
+    public boolean num_neg;
+    public String msg;
+    public int last_type;
+    public CcmOperand curr_operand;
+    public Vector<CcmOperand> list;
+}
 

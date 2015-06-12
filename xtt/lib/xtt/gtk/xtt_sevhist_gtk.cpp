@@ -142,12 +142,14 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
 
 XttSevHistGtk::~XttSevHistGtk()
 {
-  timerid->remove();
-
-  delete curve;
+  if ( timerid)
+    timerid->remove();
+  if ( curve)
+    delete curve;
   if ( gcd)
     delete gcd;
-  delete wow;
+  if ( wow)
+    delete wow;
 }
 
 

@@ -728,7 +728,7 @@ void Ge::status_msg( void *ge_ctx, double x, double y)
   gectx->status_msg( pos_str);
 }
 
-int Ge::command_cb( void *ge_ctx, char *command)
+int Ge::command_cb( void *ge_ctx, char *command, char *script)
 {
   printf( "** Command not defined in this environment\n  '%s'\n", command);
   return 0;

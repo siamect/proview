@@ -291,7 +291,7 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
 		    int xg_width, int xg_height, int x, int y, double scan_time, 
 		    const char *object_name, int use_default_access, unsigned int access,
 		    unsigned int options, void *basewidget, double *borders,
-		    int (*xg_command_cb) (void *, char *, void *),
+		    int (*xg_command_cb) (void *, char *, char *, void *),
 		    int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 		    int (*xg_is_authorized_cb) (void *, unsigned int)) :
   XttGe( xg_parent_ctx, xg_name, xg_filename, xg_scrollbar, xg_menu, xg_navigator, xg_width,

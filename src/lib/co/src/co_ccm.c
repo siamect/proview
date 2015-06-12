@@ -3797,6 +3797,100 @@ static int	ccm_read_file(
   return 1;
 }
 
+static int	ccm_read_buffer(
+		ccm_tFileCtx	filectx,
+		char		*buffer,
+		ccm_sLine      	**line_list)
+{
+  char		str[K_LINE_SIZE+40];
+  ccm_sLine 	*line_p;
+  ccm_sLine 	*line_list_p;
+  char		*s;
+  int		row;
+  int		len;
+
+  row = 0;
+  char *last_line = 0;
+  line_list_p = *line_list;
+  s = buffer;
+  while ( *s) {
+    if ( *s != '\n') {
+      s++;
+      continue;
+    }
+
+    if ( last_line) {
+      len = s - last_line - 1;
+      if ( len < 0) {
+	strcpy( str, "");
+	len = 0;
+      }
+      if ( len >= sizeof(str))
+	len = sizeof(str);
+      else {
+	strncpy( str, last_line+1, len);
+	str[len] = 0;      
+      }
+    }
+    else {
+      len = s - buffer;
+      if ( len < 0) {
+	strcpy( str, "");
+	len = 0;
+      }
+      if ( len >= sizeof(str))
+	len = sizeof(str);
+      else {
+	strncpy( str, buffer, len);
+	str[len] = 0;      
+      }
+    }
+    last_line = s;
+    row++;
+    ccm_remove_blank( str, str);
+    if ( str[0] == '!' || str[0] == 0 || (str[0] == '#' && strncmp( str, "#include", 8) != 0)) {
+      s++;
+      continue;
+    }
+
+    /* Remove any trailing \r */
+    if ( str[strlen(str)-1] == '\r')
+      str[strlen(str)-1] = 0;
+
+    /* If last char i backslash, concatenate next line */
+    if ( *s == '\\') {
+      s++;
+      row++;
+      continue;
+    }
+	
+    if ( strlen(str) > K_LINE_SIZE-1) {
+      filectx->error_row = row;
+      strcpy( filectx->error_line, str);
+      return CCM__LONGLINE;
+    }
+    if ( strncmp( str, "#include", 8) == 0) {
+      filectx->error_row = row;
+      strcpy( filectx->error_line, str);
+      return CCM__OPENFILE;
+    }
+
+    line_p = calloc( 1, sizeof(ccm_sLine));
+    strcpy( line_p->line, str);
+    line_p->row = row;
+    if ( line_list_p == NULL)    
+      *line_list = line_p;
+    else
+    {
+      line_p->prev = line_list_p;
+      line_list_p->next = line_p;
+    }
+    line_list_p = line_p;
+    s++;
+  }
+  return 1;
+}
+
 static int ccm_init_filectx( 	ccm_tFileCtx	filectx)
 {
   ccm_sLine 	*line_p;
@@ -5888,6 +5982,63 @@ file_exec_exit:
     next_arg = arg_p->next;
     free( (char *)arg_p);
   }
+  ccm_free_filectx( filectx);
+
+  return sts;
+}
+
+int ccm_buffer_exec(
+  char	*buffer,
+  int	(* externcmd_func) ( char *, void *),
+  int	(* errormessage_func) ( char *, int, void *),
+  int	*appl_sts,
+  int	verify,
+  int	break_before,
+  void  **ctx,
+  int	extfunc_return_mode,
+  char	*extfunc_line,
+  void	*client_data
+)
+{
+  int		decl;
+  ccm_tInt     	int_val;
+  ccm_tFloat   	float_val;
+  ccm_tString  	string_val;
+  int		sts;
+  ccm_tFileCtx filectx;
+
+
+  filectx = calloc( 1, sizeof( *filectx));
+  filectx->externcmd_func = externcmd_func;
+  filectx->errormessage_func = errormessage_func;
+  filectx->verify = verify;
+  filectx->break_before = break_before;
+  filectx->extfunc_return_mode = extfunc_return_mode;
+  filectx->client_data = client_data;
+  if ( ctx)
+    *ctx = filectx;
+
+  sts = ccm_read_buffer( filectx, buffer, &filectx->line_list);
+  if ( EVEN(sts)) goto buffer_exec_exit;
+
+  sts = ccm_init_filectx( filectx);
+  if ( EVEN(sts)) goto buffer_exec_exit;
+
+  sts = ccm_function_exec( filectx, "main", 0, 0, 0, 
+	&decl, &float_val, &int_val, string_val, 0);
+  if ( sts == CCM__EXTERNFUNC) {
+    strcpy( extfunc_line, filectx->extfunc_line);
+    return sts;
+  }
+  if ( sts == CCM__EXITFUNC)
+    *appl_sts = int_val;
+  else
+    *appl_sts = 1;
+  
+buffer_exec_exit:
+  if ( EVEN(sts))
+    ccm_print_error( filectx, sts);
+
   ccm_free_filectx( filectx);
 
   return sts;

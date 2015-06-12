@@ -230,6 +230,19 @@ int ccm_file_exec(
   void	*client_data
 );
 
+int ccm_buffer_exec(
+  char	*buffer,
+  int	(* externcmd_func) ( char *, void *),
+  int	(* errormessage_func) ( char *, int, void *),
+  int	*appl_sts,
+  int	verify,
+  int	break_before,
+  void  **ctx,
+  int	extfunc_return_mode,
+  char	*extfunc_line,
+  void	*client_data
+);
+
 int ccm_create_external_var(
   const char	       	*name,
   int			decl,

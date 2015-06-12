@@ -177,6 +177,7 @@
     ge_eDynPrio_MethodPulldownMenu,
 
     // This should always be last
+    ge_eDynPrio_Script  = 9998,
     ge_eDynPrio_Command  = 9999,
     ge_eDynPrio_CloseGraph = 10000
   } ge_eDynPrio;
@@ -252,7 +253,8 @@
     ge_mActionType1_OptionMenu 	= 1 << 20,
     ge_mActionType1_SetValue 	= 1 << 21,
     ge_mActionType1_MethodToolbar = 1 << 22,
-    ge_mActionType1_MethodPulldownMenu = 1 << 23
+    ge_mActionType1_MethodPulldownMenu = 1 << 23,
+    ge_mActionType1_Script	= 1 << 24
   } ge_mActionType1;
 
   typedef enum {
@@ -358,6 +360,7 @@
     ge_eSave_SetValue			= 70,
     ge_eSave_MethodToolbar     		= 71,
     ge_eSave_MethodPulldownMenu        	= 72,
+    ge_eSave_Script	        	= 73,
     ge_eSave_End		       	= 99,
     ge_eSave_Dyn_dyn_type1	       	= 100,
     ge_eSave_Dyn_action_type1	       	= 101,
@@ -726,7 +729,9 @@
     ge_eSave_SetValue_instance_mask     = 7003,
     ge_eSave_MethodToolbar_method_object = 7100,
     ge_eSave_MethodPulldownMenu_method_object = 7200,
-    ge_eSave_MethodPulldownMenu_help_menu = 7201
+    ge_eSave_MethodPulldownMenu_help_menu = 7201,
+    ge_eSave_Script_script_len		= 7300,
+    ge_eSave_Script_script		= 7301
   } ge_eSave;
 
 
@@ -2002,6 +2007,27 @@ class GeCommandDoubleClick : public GeDynElem {
   GeCommandDoubleClick( const GeCommandDoubleClick& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( command, x.command);}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  int get_transtab( char **tt);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int action( grow_tObject object, glow_tEvent event);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+
+};
+
+//! Execute a script.
+class GeScript : public GeDynElem {
+ public:
+  char script[2048];
+  int script_len;
+
+  GeScript( GeDyn *e_dyn) : 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_Script, ge_mActionType2_No, ge_eDynPrio_Script) { strcpy( script, "");}
+  GeScript( const GeScript& x) : 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), script_len(x.script_len) { 
+    strncpy( script, x.script, sizeof(script));
+  }
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   int get_transtab( char **tt);
   void save( ofstream& fp);

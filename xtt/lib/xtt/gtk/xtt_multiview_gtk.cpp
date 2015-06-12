@@ -204,7 +204,7 @@ static void destroy_event( GtkWidget *w, gpointer data)
 XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx, const char *mv_name, 
 				  pwr_tAttrRef *mv_aref, int mv_width, int mv_height, 
 				  int mv_x, int mv_y, unsigned int mv_options, pwr_tStatus *sts,
-				  int (*mv_command_cb) (void *, char *, void *),
+				  int (*mv_command_cb) (void *, char *, char *, void *),
 				  int (*mv_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 				  int (*mv_is_authorized_cb) (void *, unsigned int)) :
   XttMultiView( mv_parent_ctx, mv_name, mv_aref, mv_width,
@@ -768,7 +768,8 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 
 	if ( mv.Action[i*rows+j].Options & pwr_mMultiViewElemOptionsMask_Exchangeable) {
 	  exchange_widget[i*rows+j] = gtk_hbox_new( FALSE, 0);
-	  gtk_box_pack_start( GTK_BOX(exchange_widget[i*rows+j]), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
+	  if ( comp_widget[i*rows + j])
+	    gtk_box_pack_start( GTK_BOX(exchange_widget[i*rows+j]), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
 	  switch ( mv.Layout) {
 	  case pwr_eMultiViewLayoutEnum_Box:
 	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(exchange_widget[i*rows + j]), TRUE, TRUE, 0);
@@ -791,27 +792,28 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  }
 	}
 	else {
-	  switch ( mv.Layout) {
-	  case pwr_eMultiViewLayoutEnum_Box:
-	    gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
-	    break;
-	  case pwr_eMultiViewLayoutEnum_Fix:
-	    gtk_fixed_put( GTK_FIXED(col_widget), GTK_WIDGET(comp_widget[i*rows + j]), mv.Action[i*rows+j].X, mv.Action[i*rows+j].Y);
-	    gtk_widget_set_size_request( GTK_WIDGET(comp_widget[i*rows + j]), mv.Action[i*rows+j].Width, mv.Action[i*rows+j].Height);
-	    break;
-	  case pwr_eMultiViewLayoutEnum_Pane:      
-	    if ( j == 0)
-	      gtk_paned_pack1( GTK_PANED(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE);
-	    else
-	      gtk_paned_pack2( GTK_PANED(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE);
-	    break;
-	  case pwr_eMultiViewLayoutEnum_Table:
-	    gtk_table_attach( GTK_TABLE(col_widget), GTK_WIDGET(comp_widget[i*rows + j]), j, j+1, i, i+1,
-			      GTK_FILL, GTK_FILL, 0, 0);
-	  default: ;
+	  if ( comp_widget[i*rows + j]) {
+	    switch ( mv.Layout) {
+	    case pwr_eMultiViewLayoutEnum_Box:
+	      gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE, 0);
+	      break;
+	    case pwr_eMultiViewLayoutEnum_Fix:
+	      gtk_fixed_put( GTK_FIXED(col_widget), GTK_WIDGET(comp_widget[i*rows + j]), mv.Action[i*rows+j].X, mv.Action[i*rows+j].Y);
+	      gtk_widget_set_size_request( GTK_WIDGET(comp_widget[i*rows + j]), mv.Action[i*rows+j].Width, mv.Action[i*rows+j].Height);
+	      break;
+	    case pwr_eMultiViewLayoutEnum_Pane:      
+	      if ( j == 0)
+		gtk_paned_pack1( GTK_PANED(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE);
+	      else
+		gtk_paned_pack2( GTK_PANED(row_widget), GTK_WIDGET(comp_widget[i*rows + j]), TRUE, TRUE);
+	      break;
+	    case pwr_eMultiViewLayoutEnum_Table:
+	      gtk_table_attach( GTK_TABLE(col_widget), GTK_WIDGET(comp_widget[i*rows + j]), j, j+1, i, i+1,
+				GTK_FILL, GTK_FILL, 0, 0);
+	    default: ;
+	    }
 	  }
 	}
-
 	if ( mv.Layout == pwr_eMultiViewLayoutEnum_Box &&
 	     ((j + 1) % rows != 0 && mv.Options & pwr_mMultiViewOptionsMask_RowSeparators))
 	  gtk_box_pack_start( GTK_BOX(row_widget), GTK_WIDGET(gtk_hseparator_new()), FALSE, FALSE, 0);

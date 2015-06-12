@@ -9,6 +9,23 @@ local_java_sources := \
 	GeColor.java \
 	JopDynamic.java \
 	LocalDb.java \
+	CcmApplIfc.java \
+	CcmFloatvar.java \
+	CcmIntvar.java \
+	CcmStringvar.java \
+	CcmLine.java \
+	CcmReturn.java \
+	CcmFileReturn.java \
+	CcmArg.java \
+	CcmVariable.java \
+	CcmFunc.java \
+	CcmOperand.java \
+	CcmFuncCtx.java \
+	CcmFileCtx.java \
+	CcmRowCtx.java \
+	CcmSysFunc.java \
+	Ccm.java \
+	JopCcm.java \
 	JopCrypt.java \
 	JopEngine.java \
 	JopSessionIfc.java \

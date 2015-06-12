@@ -72,7 +72,8 @@ XttSevHist::XttSevHist( void *parent_ctx,
 			sevcli_tCtx xn_scctx,
 			int *sts) :
   xnav(parent_ctx), gcd(0), curve(0), rows(0), vsize(0), timerid(0), close_cb(0), help_cb(0), 
-  get_select_cb(0), first_scan(1), scctx(xn_scctx), time_low_old(0), time_high_old(0), initial_period(time_ePeriod_)
+  get_select_cb(0), first_scan(1), scctx(xn_scctx), wow(0), time_low_old(0), time_high_old(0), 
+  initial_period(time_ePeriod_)
 {
   pwr_tTime from, to;
 
@@ -711,6 +712,8 @@ void XttSevHist::pop()
 
 void XttSevHist::setup()
 {
+  if ( !curve)
+    return;
   curve->setup( curve_mEnable_Timebox | curve_mEnable_Export | curve_mEnable_ExportTime);
 }
 

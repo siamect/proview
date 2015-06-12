@@ -34,65 +34,41 @@
  * General Public License plus this exception.
  */
 
-#ifndef wb_wge_h
-#define wb_wge_h
+package jpwr.jop;
+import java.util.Vector;
 
-#ifndef pwr_h
-# include "pwr.h"
-#endif
+public class CcmFileCtx {
+    public CcmFileCtx() {
+    }
+    CcmLine main_start_line;
+    CcmLine main_end_line;
+    boolean verify;
+    int current_row;
+    int error_row;
+    String error_line;
+    boolean break_before;
+    int extfunc_return_mode;
+    String last_fgets;
+    CcmFuncCtx main_funcctx;
+    CcmArg[] main_arg_list;
+    int main_arg_count;
+    CcmLine extfunc_line;
+    Object client_data;
+    CcmApplIfc appl;
+    public Vector<CcmIntvar> gblint_list = new Vector<CcmIntvar>();
+    public Vector<CcmFloatvar>	gblfloat_list = new Vector<CcmFloatvar>();
+    public Vector<CcmStringvar> gblstring_list = new Vector<CcmStringvar>();
+    Vector<CcmLine> line_list = new Vector<CcmLine>();
+    Vector<CcmFunc> func_list = new Vector<CcmFunc>();
 
-class Graph;
-
-class WGe {
- public:
-  void 		*parent_ctx;
-  pwr_tAName   	name;
-  Graph   	*graph;
-  pwr_tFileName	filename;
-  int		scrollbar;
-  int		navigator;
-  int		menu;
-  void		*current_value_object;
-  void		*current_confirm_object;
-  int		value_input_open;
-  int		confirm_open;
-  int		(*command_cb)(void *, char *);
-  void		(*close_cb)(void *);
-  void		(*help_cb)(void *, char *key);
-  int		(*is_authorized_cb)(void *, unsigned int);
-  int		width;
-  int		height;
-  int		modal;
-  int 		terminated;
-  int		subwindow_release;
-
-  WGe( void *parent_ctx, char *name, char *filename,
-       int scrollbar, int menu, int navigator, int width, int height, 
-       int x, int y, char *object_name, int modal);
-  virtual ~WGe();
-
-  virtual void pop() {}
-  virtual void set_size( int width, int height) {}
-  virtual void set_subwindow_release();
-
-  int set_object_focus( char *name, int empty);
-  int set_folder_index( char *name, int idx);
-  int set_subwindow_source( char *name, char *source, int modal);
-  void print();
-
-  static void graph_init_cb( void *client_data);
-  static int graph_close_cb( void *client_data);
-  static int wge_command_cb( void *ge_ctx, char *command, char *script);
-  static int wge_is_authorized_cb( void *ge_ctx, unsigned int access);
-  static void message( void *ctx, char severity, const char *message);
-
-  
-};
-
-#endif
-
-
-
-
-
+    public void updateLines() {
+	for ( int i = 0; i < line_list.size(); i++)
+	    ((CcmLine)line_list.get(i)).idx =  i;
+    }
+    public CcmLine lineNext( CcmLine l) {
+	if ( l.idx + 1 < line_list.size())
+	    return (CcmLine)line_list.get(l.idx+1);
+	return null;
+    }
+}
 

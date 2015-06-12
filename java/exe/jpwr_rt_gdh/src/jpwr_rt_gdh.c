@@ -1229,6 +1229,42 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getClassList
   return return_obj;
 }
 
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_classNameToId
+  (JNIEnv *env, jclass obj, jstring name)
+{
+  int		sts;
+  jclass 	cdhrClassId_id;
+  static jmethodID 	cdhrClassId_cid;
+  jint	 	jclassid = 0;
+  jobject 	return_obj;
+  jint 		jsts;
+  pwr_tClassId	classid;
+  const char *str;
+  char *cstr;
+
+  cdhrClassId_id = (*env)->FindClass( env, "jpwr/rt/CdhrClassId");
+  if(cdhrClassId_cid == NULL)
+  {
+    cdhrClassId_cid = (*env)->GetMethodID( env, cdhrClassId_id,
+    	  "<init>", "(II)V");
+  } 
+
+  str = (*env)->GetStringUTFChars( env, name, 0);
+  cstr = (char *)str;
+  gdh_ConvertUTFstring( cstr, cstr);
+
+  sts = gdh_ClassNameToId( cstr, &classid);
+  (*env)->ReleaseStringUTFChars( env, name, cstr);
+  if ( ODD(sts)) {
+    jclassid = (jint)classid;
+  }
+  
+  jsts = (jint) sts;
+  return_obj = (*env)->NewObject( env, cdhrClassId_id,
+  	cdhrClassId_cid, jclassid, jsts);
+  return return_obj;
+}
+
 JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_classIdToObjid
   (JNIEnv *env, jclass obj, jint jclassid)
 {

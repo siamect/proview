@@ -106,6 +106,7 @@ void AttrMotif::change_value()
   Widget	text_w;
   int		multiline;
   char		*value;
+  int		size;
 
   if ( input_open) {
     XtUnmanageChild( cmd_input);
@@ -114,7 +115,7 @@ void AttrMotif::change_value()
     return;
   }
 
-  sts = ((AttrNav *)attrnav)->check_attr_value( &multiline, &value);
+  sts = ((AttrNav *)attrnav)->check_attr_value( &multiline, &size, &value);
   if ( EVEN(sts)) {
     if ( sts == GE__NOATTRSEL)
       message( 'E', "No attribute is selected");

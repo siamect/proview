@@ -609,6 +609,12 @@ public class Gdh {
     */
     public native CdhrTypeId getAttrRefTid( PwrtAttrRef aref);
 
+    /**
+       Get the class identifier from class name. 
+       @param name Class name.
+    */
+    public native CdhrClassId classNameToId( String name);
+
     /** 
 	Get the object identity of the first object
 	in the list of objects of a specified class.

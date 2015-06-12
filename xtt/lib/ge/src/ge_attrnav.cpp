@@ -158,6 +158,7 @@ static attrnav_sEnumElement elem_action_type[] = {
 	{ (unsigned int) ge_mActionType1_SetValue      	, "SetValue"},
 	{ (unsigned int) ge_mActionType1_Command       	, "Command"},
 	{ (unsigned int) ge_mActionType1_CommandDoubleClick , "CommandDoubleClick"},
+	{ (unsigned int) ge_mActionType1_Script       	, "Script"},
 	{ (unsigned int) ge_mActionType1_Help		, "Help"},
 	{ (unsigned int) ge_mActionType1_OpenGraph	, "OpenGraph"},
 	{ (unsigned int) ge_mActionType1_CloseGraph	, "CloseGraph"},
@@ -1408,7 +1409,7 @@ int AttrNav::set_attr_value( char *value_str)
   int		node_count;
   ItemLocal	*item;
   int		sts;
-  char		buffer[1024];
+  char		buffer[2048];
   
   brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
   if ( !node_count)
@@ -1460,12 +1461,12 @@ int AttrNav::set_attr_value( char *value_str)
 //
 // Check that the current selected item is valid for change
 //
-int AttrNav::check_attr_value( int *multiline, char **value)
+int AttrNav::check_attr_value( int *multiline, int *size, char **value)
 {
   brow_tNode	*node_list;
   int		node_count;
   ItemLocal	*base_item;
-  static char   buf[200];
+  static char   buf[2048];
   int           len;
   
   brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
@@ -1485,10 +1486,12 @@ int AttrNav::check_attr_value( int *multiline, char **value)
 
       if ( base_item->noedit) {
         *multiline = 0;
+	*size = base_item->size;
         *value = 0;
         return GE__ATTRNOEDIT;
       }
       *multiline = base_item->multiline;
+      *size = base_item->size;
       // if ( base_item->type_id == glow_eType_String)
       attrnav_attrvalue_to_string( item->type_id, item->value_p, buf, 
 				   sizeof(buf), &len, NULL);
@@ -1913,6 +1916,16 @@ static int attrnav_trace_scan_bc( brow_tObject object, void *p)
         item->first_scan = 0;
 
       attrnav_attrvalue_to_string( item->type_id, p, buf, sizeof(buf), &len, NULL);
+      if ( item->multiline) {
+	// Display first line only
+	for ( int i = 0; i < len; i++) {
+	  if ( buf[i] == '\n') {
+	    buf[i] = 0;
+	    len = strlen(buf);
+	    break;
+	  }
+	}
+      }
       brow_SetAnnotation( object, 1, buf, len);
       memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
       break;

@@ -391,6 +391,13 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	return 0;
     }
 
+    public int script(String script) {
+	System.out.println("Ge script : " + script);
+	if ( appl != null)
+ 	    return appl.script(script);
+	return 0;
+    }
+
     public void closeGraph() {
 	dispatchEvent(new WindowEvent( this, WindowEvent.WINDOW_CLOSING));
     }

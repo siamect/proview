@@ -39,6 +39,7 @@ package jpwr.jopg;
 
 public interface GrowFrameApplIfc {
     public int command(String cmd);
+    public int script(String script);
     public void frameClosed( Object utility);
     public void openPopupMenu( String object, Object invoker, int x, int y);
 }

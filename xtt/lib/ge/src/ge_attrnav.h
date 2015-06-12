@@ -162,7 +162,7 @@ class AttrNav {
     int 		(*get_current_color_tone_cb)( void *, glow_eDrawType *);
 
     virtual int set_attr_value( char *value_str);
-    virtual int check_attr_value( int *multiline, char **value);
+    virtual int check_attr_value( int *multiline, int *size, char **value);
     virtual void message( char sev, const char *text);
     virtual void set_inputfocus() {}
     virtual void force_trace_scan();
