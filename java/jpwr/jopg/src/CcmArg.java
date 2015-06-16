@@ -34,20 +34,19 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
+package jpwr.jopg;
 
-public class CcmFileReturn {
-    public CcmFileReturn() {
-	sts = 1;
+public class CcmArg {
+    public CcmArg() {
     }
-    public CcmFileReturn( int sts) {
-	this.sts = sts;
-    }
-    public int sts;
-    public int appl_sts;
-    public CcmLine extfunc_line;
-    public boolean evenSts() {
-	return ((sts & 1) == 0);
-    }
+    public String value_name;
+    public int value_decl;
+    public int value_int;
+    public float value_float;
+    public String value_string;
+    public int value_type;
+    public int var_decl;
+    public String var_name;
+    public boolean value_returned;
 }
 

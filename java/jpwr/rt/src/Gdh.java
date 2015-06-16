@@ -642,6 +642,12 @@ public class Gdh {
     */
     public native GdhrGetAttributeChar getAttributeChar( String attributeName);
 
+    /** 
+	Get the flags of an attribute, given
+	its name and the class it belongs to. 
+    */
+    public native GdhrGetAttributeFlags getAttributeFlags( String attributeName);
+
     /**
        Get information of all attributes in a class.
     */

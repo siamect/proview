@@ -152,12 +152,12 @@ SObject pwrs:Type
      EndBody
     EndObject
     !/**
-    !  The attribtute contains the objects own objid.
+    !  The attribute can be written without write privileges.
     !*/
-    Object ObjidSelf $Bit
+    Object PublicWrite $Bit
      Body SysBody
-       Attr PgmName = "objidself"
-       Attr Text = "ObjidSelf"
+       Attr PgmName = "publicwrite"
+       Attr Text = "PublicWrite"
        Attr Value = 512
      EndBody
     EndObject

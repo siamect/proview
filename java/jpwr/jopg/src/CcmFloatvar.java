@@ -34,14 +34,15 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
+package jpwr.jopg;
 
-public class CcmFunc {
-    public CcmFunc() {
+public class CcmFloatvar {
+    public CcmFloatvar() {
     }
-    public String name;
-    public int decl;
-    public CcmLine start_line;
-    public CcmLine end_line;
+    public String       name;
+    public float       	value;
+    public float[]     	avalue;
+    public int	       	elements;
+    public boolean      array;
 }
 

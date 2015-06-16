@@ -192,7 +192,7 @@ public class Pwr {
   public static final int mAdef_rtvirtual	= 1 << 6;		/*  64	  */
   public static final int mAdef_devbodyref	= 1 << 7;		/*  128	  */
   public static final int mAdef_dynamic	        = 1 << 8;		/*  256	  */
-  public static final int mAdef_objidself	= 1 << 9;		/*  512	  */
+  public static final int mAdef_publicwrite	= 1 << 9;		/*  512	  */
   public static final int mAdef_noedit	        = 1 << 10;		/*  1024  */
   public static final int mAdef_invisible	= 1 << 11;		/*  2048  */
   public static final int mAdef_refdirect	= 1 << 12;		/*  4096  If an AttrRef should not give alue pointed to  */

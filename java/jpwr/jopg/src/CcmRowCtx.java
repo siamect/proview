@@ -34,72 +34,24 @@
  * General Public License plus this exception.
  */
 
-
 package jpwr.jopg;
-import jpwr.rt.*;
-import java.io.*;
-import java.net.*;
-
-public class GrowFrame implements GraphApplIfc {
-    String instance;
-    GrowFrameApplIfc appl;
-
-    public GrowFrame( String file, Gdh gdh, String instance, GrowFrameApplIfc appl) {
-    }
-
-    private void init( String file, Gdh gdh) {
-    }
+import java.util.Vector;
 
 
-    public int getWidth() {
-	//return localPanel.getWidth() + 5;
-    	return 100;
+public class CcmRowCtx {
+    public CcmRowCtx() {
     }
-    public int getHeight() {
-	//return localPanel.getHeight() + 40;
-    	return 100;
-    }
-
-    void setSize() {
-    }
-
-    public void closeGrow() {
-    }
-
-    public int command(String cmd) {
-	if ( appl != null)
-	    return appl.command(cmd);
-	return 0;
-    }
-
-    public int script(String script) {
-	if ( appl != null)
-	    return appl.script(script);
-	return 0;
-    }
-
-    public void confirmNo() {}
-    public void confirmYes() {}    
-    public void openConfirmDialog( Object dyn, String text, Object object) {}
-
-    public void openValueInputDialog( Object dyn, String text, Object object) {}
-    public String getObject() {
-	return instance;
-    }
-    public Object loadGrowCtx( String fname) {
-	return null;
-    }
-    public int loadSubgraph( String fname) {
-	return 0;
-    }
-    public void closeGraph() {}
-    public boolean isAuthorized(int access) {
-	return false;
-    }
-    public void openPopupMenu( String object, double x, double y) {}
+    public String line;
+    public CcmFileCtx filectx;
+    public int pos;
+    public int delim_pos;
+    public int state;
+    public int level;
+    public int num_decl;
+    public boolean num_neg;
+    public String msg;
+    public int last_type;
+    public CcmOperand curr_operand;
+    public Vector<CcmOperand> list;
 }
-
-
-
-
 

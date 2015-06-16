@@ -2778,6 +2778,7 @@ tolower()		<LINK> tolower()
 
 <h2>Database functions
 GetAttribute()		<LINK> getattribute()
+SetAttribute()		<LINK> setattribute()
 GetChild()		<LINK> getchild()
 GetParent()		<LINK> getparent()
 GetNextSibling()	<LINK> getnextsibling()
@@ -3748,6 +3749,7 @@ Database functions
 
 <b>Function <t>Description
 GetAttribute()	<t>Get attribute value. <LINK> getattribute()
+SetAttribute()	<t>SGet attribute value. <LINK> setattribute()
 GetChild()	<t>Get object child.	<LINK> getchild()
 GetParent()	<t>Get object parent.	<LINK> getparent()
 GetNextSibling()<t>Get object sibling.	<LINK> getnextsibling()
@@ -3784,6 +3786,40 @@ int		<t>status	<t>status of operation. Returned. If zero, the
 <c>  on = GetAttribute("Roller-Motor-On.ActualValue", sts);
 <c>  if ( !sts)
 <c>    say("Could not find motor on attribute!");
+</TOPIC>
+
+<TOPIC> setattribute() <style> function
+SetAttribute()
+
+int SetAttribute( string name, (arbitrary type)value [, int publicwrite])
+
+<b>Description
+
+Set the value of the specified attribute.
+
+To set the value of a normal attribute the RtWrite privilege is required. It is 
+though possible to write to attributes defined as PublicWrite without this
+privilege, if the publicwrite argument is added. PublicWrite attribute can be
+found in the PublicAv, PublicIv and PublicDv classes.
+
+Returns the status of the operation.
+
+<b>Arguments
+
+string		<t>name		<t>name of the attribute to write to.
+<arbitrary type)<t>value	<t>the value to set.
+int		<t>publicwrite	<t>if 1, write to and attribute defined as PublicWrite
+		<t>		<t>is allowed also without the RtWrite privilege.
+
+<b>Example
+
+<c>  float value = 22.2;
+<c>  int sts;
+
+<c>  sts = SetAttribute("Roller-Motor-Reference.ActualValue", value);
+<c>  if ( !(sts & 1))
+<c>    printf( "SetAttribute error %d\n", sts);
+<c>  endif
 </TOPIC>
 
 <TOPIC> getchild() <style> function

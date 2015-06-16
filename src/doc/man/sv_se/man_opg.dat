@@ -2551,6 +2551,7 @@ tolower()		<LINK> tolower()
 
 <h2>Databas funktioner
 GetAttribute()		<LINK> getattribute()
+SetAttribute()		<LINK> setattribute()
 GetChild()		<LINK> getchild()
 GetParent()		<LINK> getparent()
 GetNextSibling()	<LINK> getnextsibling()
@@ -3511,6 +3512,7 @@ Databas funktioner
 
 <b>Function <t>Description
 GetAttribute()	<t>Hämta värde för ett attribut. <LINK> getattribute()
+SetAttribute()	<t>Sätt värde på ett attribut. <LINK> setattribute()
 GetChild()	<t>Hämta barn till ett objekt.	<LINK> getchild()
 GetParent()	<t>Hämta föräder till ett objekt. <LINK> getparent()
 GetNextSibling()<t>Hämta syskon för ett objekt.	<LINK> getnextsibling()
@@ -3547,6 +3549,40 @@ int		<t>status	<t>status för operationen. Returnerad. Om noll
 <c>  on = GetAttribute("Roller-Motor-On.ActualValue", sts);
 <c>  if ( !sts)
 <c>    say("Could not find motor on attribute!");
+</TOPIC>
+
+<TOPIC> setattribute() <style> function
+SetAttribute()
+
+int SetAttribute( string name, (arbitrary type)value [, int publicwrite])
+
+<b>Beskrivning
+
+Sätt värdet på angivet attribut.
+
+För att sätta värdet på ett vanligt attribut krävs RtWrite privilegiet. Det är
+dock möjligt skriva till attribute som är definierade som PublicWrite även utan
+detta privilegie, om publicwrite argumentet anges. PublicWrite attribut can bl a 
+hittas i klasserna PublicAv, PublicIv och PublicDv.
+
+Returnerar status av operationen.
+
+<b>Argument
+
+string		<t>name		<t>namn på attributet som ska sättas.
+<godtycklig typ)<t>value	<t>värde som ska sättas.
+int		<t>publicwrite	<t>om 1, skrivning till ett attribut definierad som PublicWrite
+		<t>		<t>är tillåtet även utan RtWrite privilegiet.
+
+<b>Exempel
+
+<c>  float value = 22.2;
+<c>  int sts;
+
+<c>  sts = SetAttribute("Roller-Motor-Reference.ActualValue", value);
+<c>  if ( !(sts & 1))
+<c>    printf( "SetAttribute error %d\n", sts);
+<c>  endif
 </TOPIC>
 
 <TOPIC> getchild() <style> function

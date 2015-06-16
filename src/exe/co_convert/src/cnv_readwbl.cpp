@@ -1327,7 +1327,7 @@ char *CnvReadWbl::flags_to_string( int value)
   if ( value & pwr_mAdef_rtvirtual) 	strcat( str, "Rtvirtual|");
   if ( value & pwr_mAdef_devbodyref) 	strcat( str, "Devbodyref|");
   if ( value & pwr_mAdef_dynamic) 	strcat( str, "Dynamic|");
-  if ( value & pwr_mAdef_objidself) 	strcat( str, "Objidself|");
+  if ( value & pwr_mAdef_publicwrite) 	strcat( str, "PubicWrite|");
   if ( value & pwr_mAdef_noedit) 	strcat( str, "Noedit|");
   if ( value & pwr_mAdef_invisible) 	strcat( str, "Invisible|");
   if ( value & pwr_mAdef_refdirect) 	strcat( str, "Refdirect|");

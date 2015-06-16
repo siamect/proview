@@ -100,6 +100,8 @@ public class Gdh
   public final static int GET_OBJECT_INFO_INT_ARRAY = 58;
   public final static int GET_CIRCBUFF_INFO = 59;
   public final static int UPDATE_CIRCBUFF_INFO = 60;
+  public final static int GET_ATTRIBUTE_FLAGS = 61;
+  public final static int CLASSNAME_TO_ID = 62;
 
 
 
@@ -1326,6 +1328,27 @@ public class Gdh
     }
   }
 
+  public CdhrClassId classNameToId(String name)
+  {
+    try
+    {
+      out.writeInt(CLASSNAME_TO_ID);
+      out.writeUTF(name);
+      out.flush();
+      int sts = in.readInt();
+      if(sts % 2 == 0)
+      {
+        return new CdhrClassId(0, sts);
+      }
+
+      int classId = in.readInt();
+      return new CdhrClassId(classId, sts);
+    }
+    catch(IOException e)
+    {
+      return new CdhrClassId(0, __IO_EXCEPTION);
+    }
+  }
 
   private void getDefaultPrivilege() {
     CdhrObjid oretSec = getClassList( Pwrs.cClass_Security);
@@ -1613,7 +1636,7 @@ public class Gdh
       int sts = in.readInt();
       if(sts % 2 == 0)
       {
-        return new GdhrGetAttributeChar(0, 0, 0, 0, sts);
+	return new GdhrGetAttributeChar(0, 0, 0, 0, sts);
       }
 
       int typeId = in.readInt();
@@ -1624,7 +1647,30 @@ public class Gdh
     }
     catch(IOException e)
     {
-      return new GdhrGetAttributeChar(0, 0, 0, 0, __IO_EXCEPTION);
+	return new GdhrGetAttributeChar(0, 0, 0, 0, __IO_EXCEPTION);
+    }
+  }
+
+
+  public GdhrGetAttributeFlags getAttributeFlags(String attributeName)
+  {
+    try
+    {
+      out.writeInt(GET_ATTRIBUTE_FLAGS);
+      out.writeUTF(attributeName);
+      out.flush();
+      int sts = in.readInt();
+      if(sts % 2 == 0)
+      {
+	return new GdhrGetAttributeFlags(0, sts);
+      }
+
+      int flags = in.readInt();
+      return new GdhrGetAttributeFlags(flags, sts);
+    }
+    catch(IOException e)
+    {
+	return new GdhrGetAttributeFlags(0, __IO_EXCEPTION);
     }
   }
 

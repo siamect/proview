@@ -34,7 +34,7 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
+package jpwr.jopg;
 
 public class CcmLine {
     public CcmLine( String line, int row) {

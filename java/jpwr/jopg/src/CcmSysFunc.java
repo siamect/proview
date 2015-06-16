@@ -34,15 +34,16 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
+package jpwr.jopg;
 
-public class CcmStringvar {
-    public CcmStringvar() {
+public class CcmSysFunc {
+    public String name;
+    public CcmSysFunc( String name) {
+	this.name = name;
     }
-    public String       name;
-    public String     	value;
-    public String[]    	avalue;
-    public int	       	elements;
-    public boolean      array;
+    public CcmReturn func( CcmFileCtx filectx, CcmArg[] args) { 
+	return null;
+    }
 }
+
 

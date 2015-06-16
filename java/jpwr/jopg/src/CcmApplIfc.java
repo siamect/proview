@@ -34,14 +34,13 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
+package jpwr.jopg;
 
-public class CcmVariable {
-    public CcmVariable() {
-    }
-    public int		sts;
-    public String	varname;
-    public boolean     	array;
-    public int		element;
+public interface CcmApplIfc {
+    public int externCmd( String cmd);
+    public String defFilename( String filename);
+    public void errorMessage( String msg, int severity);
+    public int confirmDialog( String title, String text);
+    public int getRootType();
 }
 

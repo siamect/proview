@@ -34,15 +34,26 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
+package jpwr.rt;
+import java.io.Serializable;
 
-public class CcmIntvar {
-    public CcmIntvar() {
-    }
-    public String       name;
-    public int       	value;
-    public int[]	avalue;
-    public int	       	elements;
-    public boolean      array;
+/**
+   Return class for functions returning attribute characteristics.
+   Contains a return status and attribute characteristics.
+*/
+public class GdhrGetAttributeFlags implements Serializable
+{
+  public int flags;
+  public int sts;
+  
+  public GdhrGetAttributeFlags( int flags, int sts) {
+    this.flags = flags;
+    this.sts = sts;
+  }
+  /** Check if status is even. */
+  public boolean evenSts() { return (sts % 2 == 0);}
+  /** Check if status is odd. */
+  public boolean oddSts() { return (sts % 2 == 1);}
+  /** Get the status. */
+  public int getSts() { return sts;}
 }
-

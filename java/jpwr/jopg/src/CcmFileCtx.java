@@ -34,15 +34,41 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
+package jpwr.jopg;
+import java.util.Vector;
 
-public class CcmFloatvar {
-    public CcmFloatvar() {
+public class CcmFileCtx {
+    public CcmFileCtx() {
     }
-    public String       name;
-    public float       	value;
-    public float[]     	avalue;
-    public int	       	elements;
-    public boolean      array;
+    CcmLine main_start_line;
+    CcmLine main_end_line;
+    boolean verify;
+    int current_row;
+    int error_row;
+    String error_line;
+    boolean break_before;
+    int extfunc_return_mode;
+    String last_fgets;
+    CcmFuncCtx main_funcctx;
+    CcmArg[] main_arg_list;
+    int main_arg_count;
+    CcmLine extfunc_line;
+    Object client_data;
+    CcmApplIfc appl;
+    public Vector<CcmIntvar> gblint_list = new Vector<CcmIntvar>();
+    public Vector<CcmFloatvar>	gblfloat_list = new Vector<CcmFloatvar>();
+    public Vector<CcmStringvar> gblstring_list = new Vector<CcmStringvar>();
+    Vector<CcmLine> line_list = new Vector<CcmLine>();
+    Vector<CcmFunc> func_list = new Vector<CcmFunc>();
+
+    public void updateLines() {
+	for ( int i = 0; i < line_list.size(); i++)
+	    ((CcmLine)line_list.get(i)).idx =  i;
+    }
+    public CcmLine lineNext( CcmLine l) {
+	if ( l.idx + 1 < line_list.size())
+	    return (CcmLine)line_list.get(l.idx+1);
+	return null;
+    }
 }
 

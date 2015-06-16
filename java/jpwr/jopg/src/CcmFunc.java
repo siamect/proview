@@ -34,24 +34,14 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
-import java.util.Vector;
+package jpwr.jopg;
 
-
-public class CcmRowCtx {
-    public CcmRowCtx() {
+public class CcmFunc {
+    public CcmFunc() {
     }
-    public String line;
-    public CcmFileCtx filectx;
-    public int pos;
-    public int delim_pos;
-    public int state;
-    public int level;
-    public int num_decl;
-    public boolean num_neg;
-    public String msg;
-    public int last_type;
-    public CcmOperand curr_operand;
-    public Vector<CcmOperand> list;
+    public String name;
+    public int decl;
+    public CcmLine start_line;
+    public CcmLine end_line;
 }
 

@@ -18,6 +18,7 @@ extern_java_sources := \
 	CliTable.java,\
 	GdhApplIfc.java,\
 	GdhrGetAttributeChar.java,\
+	GdhrGetAttributeFlags.java,\
 	GdhrGetXttObj.java,\
 	GdhrRefObjectInfo.java,\
 	MhData.java,\

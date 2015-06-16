@@ -88,10 +88,10 @@ public class JopSpider {
     }
   }    
 
-  private static class JopCcmCb implements CcmApplIfc {
+  private static class JopgCcmCb implements CcmApplIfc {
     JopSession session;
 
-    JopCcmCb( JopSession session) {
+    JopgCcmCb( JopSession session) {
       this.session = session;
     }
 
@@ -130,8 +130,11 @@ public class JopSpider {
 	System.out.println( "Confirm dialoga: " + title + ", " + text);
 	return 1;
     }
-    public Object getRoot() {
-	return session.getRoot();
+    public int getRootType() {
+	if ( session.getRoot() instanceof JopApplet)
+	    return Ccm.ROOT_APPLET;
+	else
+	    return Ccm.ROOT_FRAME;
     }
   }
 
@@ -195,7 +198,7 @@ public class JopSpider {
       // Execute a script
       Gdh gdh = session.getEngine().gdh;
 
-      new JopCcm( new JopCcmCb(session), gdh, null, script);
+      new JopgCcm( new JopgCcmCb(session), gdh, null, script);
       return 1;
   }
 
@@ -214,7 +217,7 @@ public class JopSpider {
 
     if ( cmd.charAt(0) == '@') {
 	// Execute a script
-	new JopCcm( new JopCcmCb(session), gdh, cmd.substring(1),  null);
+	new JopgCcm( new JopgCcmCb(session), gdh, cmd.substring(1),  null);
 	return 1;
     }
 

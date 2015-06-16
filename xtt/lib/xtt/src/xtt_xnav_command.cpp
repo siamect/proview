@@ -362,7 +362,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"SET",
 			&xnav_set_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/VALUE",
-			  "/BYPASS", "/INDEX", "/SOURCE", "/OBJECT", "/CONTINUE", 
+			  "/BYPASS", "/PUBLICWRITE", "/INDEX", "/SOURCE", "/OBJECT", "/CONTINUE", 
 			  "/X0", "/Y0", "/X1", "/Y1", ""}
 		},
 		{
@@ -779,12 +779,15 @@ static int	xnav_set_func(	void		*client_data,
     char	value_str[400];
     int	sts;
     int	bypass;
+    int publicwrite;
 
     bypass = ODD( dcli_get_qualifier( "/BYPASS", 0, 0));
     if ( bypass) {
       xnav->message( 'E', "Bypass is obsolete");
       return XNAV__HOLDCOMMAND;
     }
+
+    publicwrite = ODD( dcli_get_qualifier( "/PUBLICWRITE", 0, 0));
 
     if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
     {
@@ -796,9 +799,10 @@ static int	xnav_set_func(	void		*client_data,
       xnav->message('E', "Enter value");
       return XNAV__HOLDCOMMAND;
     }
-    sts = xnav->set_parameter( name_str, value_str, bypass);
-    if ( EVEN(sts))
-    {
+    sts = xnav->set_parameter( name_str, value_str, publicwrite);
+    if ( sts == XNAV__NOTAUTHORIZED)
+      xnav->message('E', "Not authorized for this operation");
+    else if ( EVEN(sts)) {
       xnav->message('E',"Unable to set parameter");	
       return XNAV__HOLDCOMMAND;
     }
@@ -8060,6 +8064,228 @@ static int xnav_getattribute_func(
   return 1;
 }
 
+static int xnav_setattribute_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  ccm_sArg	*arg_p2, *arg_p3;
+  int	sts;
+  pwr_sAttrRef	attrref;
+  pwr_tTypeId	attr_type;
+  unsigned int	attr_size, attr_offset, attr_dim;
+  unsigned int  a_flags;
+  int		publicwrite = 0;
+  XNav *xnav;
+
+
+  if ( !(arg_count == 3 || arg_count == 2))
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+  if ( arg_count == 3) {
+    if ( arg_p3->value_decl != CCM_DECL_INT)
+      return CCM__ARGMISM;
+
+    if ( arg_p3->value_int == 1)
+      publicwrite = 1;
+  }
+
+  xnav_get_stored_xnav( &xnav);
+
+  sts = gdh_NameToAttrref( pwr_cNObjid, arg_list->value_string, &attrref);
+  if (EVEN(sts)) {
+    *return_int = sts;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+
+  // Check authorization
+  if ( publicwrite) {
+    sts = gdh_GetAttributeFlags( &attrref, &a_flags); 
+    if ( EVEN(sts)) return sts;
+
+    if ( !(a_flags & pwr_mAdef_publicwrite))
+      sts = XNAV__NOTAUTHORIZED;
+    if ( !((xnav->priv & pwr_mPrv_RtRead) ||
+	   (xnav->priv & pwr_mPrv_RtWrite) ||
+	   (xnav->priv & pwr_mPrv_System) ||
+	   (xnav->priv & pwr_mPrv_Maintenance) ||
+	   (xnav->priv & pwr_mPrv_Process) ||
+	   (xnav->priv & pwr_mPrv_Instrument) ||
+	   (xnav->priv & pwr_mPrv_Operator1) ||
+	   (xnav->priv & pwr_mPrv_Operator2) ||
+	   (xnav->priv & pwr_mPrv_Operator3) ||
+	   (xnav->priv & pwr_mPrv_Operator4) ||
+	   (xnav->priv & pwr_mPrv_Operator5) ||
+	   (xnav->priv & pwr_mPrv_Operator6) ||
+	   (xnav->priv & pwr_mPrv_Operator7) ||
+	   (xnav->priv & pwr_mPrv_Operator8) ||
+	   (xnav->priv & pwr_mPrv_Operator9) ||
+	   (xnav->priv & pwr_mPrv_Operator10)))
+      sts = XNAV__NOTAUTHORIZED;
+  }
+  else {
+    if ( !((xnav->priv & pwr_mPrv_RtWrite) ||
+           (xnav->priv & pwr_mPrv_System)))
+      sts = XNAV__NOTAUTHORIZED;
+  }
+
+  if ( EVEN(sts)) {
+    *return_int = sts;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+
+  sts = gdh_GetAttributeCharAttrref( &attrref, &attr_type, &attr_size,
+				     &attr_offset, &attr_dim);
+  if ( EVEN(sts)) return sts;
+
+  switch ( arg_p2->value_decl) {
+  case CCM_DECL_STRING: {
+    char buffer[512];
+
+    sts = xnav->attr_string_to_value( attr_type, arg_p2->value_string, 
+				buffer, sizeof(buffer), attr_size);
+    if ( ODD(sts))
+      sts = gdh_SetObjectInfo( arg_list->value_string, buffer, attr_size);
+    break;
+  }
+  case CCM_DECL_INT: {
+    switch ( attr_type) {
+    case pwr_eType_Int8: {
+      pwr_tInt8 val = arg_p2->value_int;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_Int16: {
+      pwr_tInt16 val = arg_p2->value_int;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_Int32: {
+      pwr_tInt32 val = arg_p2->value_int;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_Int64: {
+      pwr_tInt64 val = arg_p2->value_int;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_UInt8: {
+      pwr_tUInt8 val = arg_p2->value_int;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_UInt16: {
+      pwr_tUInt16 val = arg_p2->value_int;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_UInt32: {
+      pwr_tUInt32 val = arg_p2->value_int;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_UInt64: {
+      pwr_tUInt64 val = arg_p2->value_int;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_Float32: {
+      pwr_tFloat32 val = arg_p2->value_int;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_Float64: {
+      pwr_tFloat64 val = arg_p2->value_int;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_Boolean: {
+      pwr_tBoolean val = arg_p2->value_int ? 1: 0;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    }
+    break;
+  }
+  case CCM_DECL_FLOAT: {
+    switch ( attr_type) {
+    case pwr_eType_Int8: {
+      pwr_tInt8 val = arg_p2->value_float;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_Int16: {
+      pwr_tInt16 val = arg_p2->value_float;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_Int32: {
+      pwr_tInt32 val = arg_p2->value_float;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_Int64: {
+      pwr_tInt64 val = arg_p2->value_float;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_UInt8: {
+      pwr_tUInt8 val = arg_p2->value_float;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_UInt16: {
+      pwr_tUInt16 val = arg_p2->value_float;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_UInt32: {
+      pwr_tUInt32 val = arg_p2->value_float;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_UInt64: {
+      pwr_tUInt64 val = arg_p2->value_float;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_Float32: {
+      pwr_tFloat32 val = arg_p2->value_float;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_Float64: {
+      pwr_tFloat64 val = arg_p2->value_float;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    case pwr_eType_Boolean: {
+      pwr_tBoolean val = arg_p2->value_float ? 1: 0;
+      sts = gdh_SetObjectInfo( arg_list->value_string, &val, attr_size);
+      break;
+    }
+    }
+    break;
+  }
+  }
+  
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+
+  return 1;
+}
+
 static int xnav_ccm_deffilename_func( char *outfile, char *infile, void *client_data)
 {
   pwr_tFileName fname;
@@ -8134,6 +8360,8 @@ int XNav::readcmdfile( 	char *incommand, char *buffer)
 	  sts = ccm_register_function( "CutObjectName", xnav_cutobjectname_func);
 	  if ( EVEN(sts)) return sts;
 	  sts = ccm_register_function( "GetAttribute", xnav_getattribute_func);
+	  if ( EVEN(sts)) return sts;
+	  sts = ccm_register_function( "SetAttribute", xnav_setattribute_func);
 	  if ( EVEN(sts)) return sts;
 	  sts = ccm_register_function( "ConfirmDialog", xnav_confirmdialog_func);
 	  if ( EVEN(sts)) return sts;
@@ -9142,27 +9370,48 @@ static void xnav_op_help_cb( void *ctx, const char *key)
     xnav->message( ' ', null_str);
 }
 
-int XNav::set_parameter( char *name_str, char *value_str, int bypass)
+int XNav::set_parameter( char *name_str, char *value_str, int publicwrite)
 {
   pwr_sAttrRef	attrref;
   int		sts;
   pwr_tTypeId	attr_type;
   unsigned int	attr_size, attr_offset, attr_dim;
   char		buffer[80];
-
-  if ( !bypass)
-  {
-    // Check authorization
-    if ( !((priv & pwr_mPrv_RtWrite) ||
-           (priv & pwr_mPrv_System)))
-    {
-      message('E', "Not authorized for this operation");
-      return 0;
-    }
-  }
+  unsigned int  a_flags;
 
   sts = gdh_NameToAttrref( pwr_cNObjid, name_str, &attrref);
   if (EVEN(sts)) return sts;
+
+  // Check authorization
+  if ( publicwrite) {
+    sts = gdh_GetAttributeFlags( &attrref, &a_flags); 
+    if ( EVEN(sts)) return sts;
+
+    if ( !(a_flags & pwr_mAdef_publicwrite))
+      return XNAV__NOTAUTHORIZED;
+    if ( !((priv & pwr_mPrv_RtRead) ||
+	   (priv & pwr_mPrv_RtWrite) ||
+	   (priv & pwr_mPrv_System) ||
+	   (priv & pwr_mPrv_Maintenance) ||
+	   (priv & pwr_mPrv_Process) ||
+	   (priv & pwr_mPrv_Instrument) ||
+	   (priv & pwr_mPrv_Operator1) ||
+	   (priv & pwr_mPrv_Operator2) ||
+	   (priv & pwr_mPrv_Operator3) ||
+	   (priv & pwr_mPrv_Operator4) ||
+	   (priv & pwr_mPrv_Operator5) ||
+	   (priv & pwr_mPrv_Operator6) ||
+	   (priv & pwr_mPrv_Operator7) ||
+	   (priv & pwr_mPrv_Operator8) ||
+	   (priv & pwr_mPrv_Operator9) ||
+	   (priv & pwr_mPrv_Operator10)))
+      return XNAV__NOTAUTHORIZED;
+  }
+  else {
+    if ( !((priv & pwr_mPrv_RtWrite) ||
+           (priv & pwr_mPrv_System)))
+      return XNAV__NOTAUTHORIZED;
+  }
 
   sts = gdh_GetAttributeCharAttrref( &attrref, &attr_type, &attr_size,
 				     &attr_offset, &attr_dim);

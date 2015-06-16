@@ -34,16 +34,16 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
+package jpwr.jopg;
 import jpwr.rt.*;
 
-public class JopCcm {
+public class JopgCcm {
 
     Gdh gdh;
     Ccm ccm;
     CcmApplIfc appl;
 
-    public JopCcm( CcmApplIfc appl, Gdh gdh, String cmd, String script) {
+    public JopgCcm( CcmApplIfc appl, Gdh gdh, String cmd, String script) {
 	this.gdh = gdh;
 	this.appl = appl;
 
@@ -58,6 +58,7 @@ public class JopCcm {
 	ccm.registerFunction( new CcmFuncGetChild("GetChild"));
 	ccm.registerFunction( new CcmFuncGetNextSibling("GetNextSibling"));
 	ccm.registerFunction( new CcmFuncGetAttribute("GetAttribute"));
+	ccm.registerFunction( new CcmFuncSetAttribute("SetAttribute"));
 	ccm.registerFunction( new CcmFuncMessageError("MessageError"));
 	ccm.registerFunction( new CcmFuncMessageInfo("MessageInfo"));
 	ccm.registerFunction( new CcmFuncConfirmDialog("ConfirmDialog"));
@@ -471,6 +472,153 @@ public class JopCcm {
 		    args[1].var_decl = args[1].value_decl;
 		}
 	    }
+	    return ret;
+	}
+    }
+
+    public class CcmFuncSetAttribute extends CcmSysFunc {
+	public CcmFuncSetAttribute( String name) {
+	    super(name);
+	}
+	public CcmReturn func( CcmFileCtx filectx, CcmArg[] args) {
+	    int sts;
+	    CcmReturn ret = new CcmReturn();
+	    boolean publicwrite = false;
+
+	    if ( !(args.length == 2 || args.length == 3)) {
+		ret.sts = Ccm.CCM__ARGMISM;
+		return ret;
+	    }
+	    if ( args[0].value_decl != Ccm.K_DECL_STRING) {
+		ret.sts = Ccm.CCM__VARTYPE;
+		return ret;
+	    }
+	    if ( args.length == 3 ) {
+		if ( args[2].value_decl != Ccm.K_DECL_INT) {
+		    ret.sts = Ccm.CCM__ARGMISM;
+		    return ret;
+		}
+		if ( args[2].value_int == 1)
+		    publicwrite = true;
+	    }
+
+	    // Check authorization
+	    boolean authorized = false;
+	    if ( publicwrite) {
+		GdhrGetAttributeFlags retf = gdh.getAttributeFlags( args[0].value_string);
+		if ( Ccm.EVEN(retf.sts)) {
+		    ret.decl = Ccm.K_DECL_INT;
+		    ret.rint = retf.sts;
+		    return ret;		
+		}
+	    
+		if ( (retf.flags & Pwr.mAdef_publicwrite) != 0 &&
+		     gdh.isAuthorized( Pwr.mPrv_RtRead | Pwr.mPrv_RtWrite | Pwr.mPrv_System | 
+				       Pwr.mPrv_Maintenance | Pwr.mPrv_Process | 
+				       Pwr.mPrv_Operator1 | Pwr.mPrv_Operator2 | 
+				       Pwr.mPrv_Operator3 | Pwr.mPrv_Operator4 | 
+				       Pwr.mPrv_Operator5 | Pwr.mPrv_Operator6 | 
+				       Pwr.mPrv_Operator7 | Pwr.mPrv_Operator8 | 
+				       Pwr.mPrv_Operator9 | Pwr.mPrv_Operator10)) 
+		    authorized = true;
+	    }
+	    else {
+		if ( gdh.isAuthorized( Pwr.mPrv_RtWrite | Pwr.mPrv_System))
+		    authorized = true;
+	    }
+
+	    if ( !authorized) {
+		ret.decl = Ccm.K_DECL_INT;
+		ret.rint = 0;
+		return ret;
+	    }
+
+	    GdhrGetAttributeChar retc = gdh.getAttributeChar( args[0].value_string);
+	    if ( Ccm.EVEN(retc.sts)) {
+		ret.decl = Ccm.K_DECL_INT;
+		ret.rint = retc.sts;
+		return ret;		
+	    }
+	    
+	    PwrtStatus rsts = null;
+	    switch ( args[1].value_decl) {
+	    case Ccm.K_DECL_STRING: {
+		rsts = gdh.setObjectInfo( args[0].value_string, args[1].value_string);
+		break;
+	    }
+	    case Ccm.K_DECL_INT: {
+		switch ( retc.typeId) {
+		case Pwr.eType_Int8:
+		case Pwr.eType_Int16:
+		case Pwr.eType_Int32:
+		case Pwr.eType_Int64:
+		case Pwr.eType_UInt8:
+		case Pwr.eType_UInt16:
+		case Pwr.eType_UInt32:
+		case Pwr.eType_UInt64:
+		case Pwr.eType_Enum:
+		case Pwr.eType_Mask:
+		case Pwr.eType_Status:
+		case Pwr.eType_NetStatus: {
+		    int val = args[1].value_int;
+		    System.out.println( "setObjectInfo val " + val);
+		    rsts = gdh.setObjectInfo( args[0].value_string, val);
+		    System.out.println( "setObjectInfo sts " + rsts.getSts());
+		    break;
+		}
+		case Pwr.eType_Float32:
+		case Pwr.eType_Float64: {
+		    float val = args[1].value_int;		    
+		    rsts = gdh.setObjectInfo( args[0].value_string, val);
+		    break;
+		}
+		case Pwr.eType_Boolean: {
+		    boolean val = (args[1].value_int == 0 ? false : true);
+		    rsts = gdh.setObjectInfo( args[0].value_string, val);
+		    break;
+		}
+		}
+		break;
+	    }
+	    case Ccm.K_DECL_FLOAT: {
+		switch ( retc.typeId) {
+		case Pwr.eType_Int8:
+		case Pwr.eType_Int16:
+		case Pwr.eType_Int32:
+		case Pwr.eType_Int64:
+		case Pwr.eType_UInt8:
+		case Pwr.eType_UInt16:
+		case Pwr.eType_UInt32:
+		case Pwr.eType_UInt64:
+		case Pwr.eType_Enum:
+		case Pwr.eType_Mask:
+		case Pwr.eType_Status:
+		case Pwr.eType_NetStatus: {
+		    int val = (int)args[1].value_float;
+		    rsts = gdh.setObjectInfo( args[0].value_string, val);
+		    break;
+		}
+		case Pwr.eType_Float32:
+		case Pwr.eType_Float64: {
+		    float val = args[1].value_float;
+		    rsts = gdh.setObjectInfo( args[0].value_string, val);
+		    break;
+		}
+		case Pwr.eType_Boolean: {
+		    boolean val = (args[1].value_float == 0 ? false : true);
+		    rsts = gdh.setObjectInfo( args[0].value_string, val);
+		    break;
+		}
+		}
+		break;
+	    }		
+	    }
+
+	    ret.decl = Ccm.K_DECL_INT;
+	    if ( rsts == null)
+		ret.rint = 0;
+	    else
+		ret.rint = rsts.getSts();
 	    return ret;
 	}
     }

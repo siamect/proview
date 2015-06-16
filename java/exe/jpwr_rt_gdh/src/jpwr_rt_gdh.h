@@ -321,6 +321,14 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getAttributeChar
 
 /*
  * Class:     jpwr_rt_Gdh
+ * Method:    getAttributeFlags
+ * Signature: (Ljava/lang/String;)Ljpwr/rt/GdhrGetAttributeFlags;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getAttributeFlags
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     jpwr_rt_Gdh
  * Method:    getClassAttribute
  * Signature: (ILjpwr/rt/PwrtObjid;)Ljpwr/rt/CdhrObjAttr;
  */

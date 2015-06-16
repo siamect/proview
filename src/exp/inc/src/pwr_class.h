@@ -713,7 +713,7 @@ union pwr_m_Adef {
     pwr_Bits( devbodyref, 1),
 
     pwr_Bits( dynamic	, 1),
-    pwr_Bits( objidself	, 1),
+    pwr_Bits( publicwrite , 1),
     pwr_Bits( noedit	, 1),
     pwr_Bits( invisible	, 1),
     pwr_Bits( refdirect	, 1),
@@ -744,7 +744,7 @@ union pwr_m_Adef {
 #define pwr_mAdef_rtvirtual	pwr_Bit(6)		/*  64	  */
 #define pwr_mAdef_devbodyref	pwr_Bit(7)		/*  128	  */
 #define pwr_mAdef_dynamic	pwr_Bit(8)		/*  256	  */
-#define pwr_mAdef_objidself	pwr_Bit(9)		/*  512	  */
+#define pwr_mAdef_publicwrite	pwr_Bit(9)		/*  512	  */
 #define pwr_mAdef_noedit	pwr_Bit(10)		/*  1024  */
 #define pwr_mAdef_invisible	pwr_Bit(11)		/*  2048  */
 #define pwr_mAdef_refdirect	pwr_Bit(12)		/*  4096  If an AttrRef should not give alue pointed to  */
@@ -772,8 +772,7 @@ union pwr_m_Adef {
 #define PWR_MASK_RTVIRTUAL	pwr_mAdef_rtvirtual
 #define PWR_MASK_DEVBODYREF	pwr_mAdef_devbodyref
 #define PWR_MASK_DYNAMIC	pwr_mAdef_dynamic
-#define PWR_MASK_OBJDIDSELF	pwr_mAdef_objidself
-#define PWR_MASK_OBJIDSELF	pwr_mAdef_objidself
+#define PWR_MASK_PUBLICWRITE	pwr_mAdef_publicwrite
 #define PWR_MASK_NOEDIT		pwr_mAdef_noedit
 #define PWR_MASK_INVISIBLE	pwr_mAdef_invisible
 #define PWR_MASK_REFDIRECT	pwr_mAdef_refdirect

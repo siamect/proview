@@ -29,6 +29,7 @@ local_java_sources = \
 	RtSecurity.java \
 	GdhrRefObjectInfo.java \
 	GdhrGetAttributeChar.java \
+	GdhrGetAttributeFlags.java \
 	GdhrGetXttObj.java \
 	CdhrObjAttr.java \
 	PwrsParInfo.java \

@@ -612,7 +612,6 @@ SObject pwrb:Class
       Object TimerObjDId $Attribute 42
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
-          Attr Flags |= PWR_MASK_OBJDIDSELF
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject

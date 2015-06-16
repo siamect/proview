@@ -34,23 +34,14 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
+package jpwr.jopg;
 
-public class CcmOperand {
-    public CcmOperand() {
+public class CcmVariable {
+    public CcmVariable() {
     }
-    public int			type;
-    public String      		name;
-    public CcmReturn	       	value = new CcmReturn();
-    public CcmReturn	       	result = new CcmReturn();
-    public boolean	       	result_done;
-    public int			o_operator;
-    public int			local_type;
-    public int			local_operator;
-    public int			prio;
-    public int			parlevel;
-    public boolean     		done;
-    public int			orig_type;
-    public CcmFunc		func;
+    public int		sts;
+    public String	varname;
+    public boolean     	array;
+    public int		element;
 }
 

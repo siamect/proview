@@ -34,25 +34,15 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
+package jpwr.jopg;
 
-public class CcmReturn {
-    public CcmReturn() {
-	sts = 1;
+public class CcmIntvar {
+    public CcmIntvar() {
     }
-    public CcmReturn( int sts) {
-	this.sts = sts;
-    }
-    public int decl;
-    public int rint;
-    public float rfloat;
-    public String rstring;
-    public int sts;
-    public int getSts() {
-	return sts;
-    }
-    public boolean evenSts() {
-	return ((sts & 1) == 0);
-    }
+    public String       name;
+    public int       	value;
+    public int[]	avalue;
+    public int	       	elements;
+    public boolean      array;
 }
 

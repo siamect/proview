@@ -165,6 +165,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_setObjectInfoInt
       strcat( cstr, s1);
   }
   sts = gdh_SetObjectInfo( cstr, (void *) &val, sizeof(val));
+
   (*env)->ReleaseStringUTFChars( env, name, cstr);
   jsts = (jint) sts;
   return_obj = (*env)->NewObject( env, pwrtStatus_id,
@@ -1642,6 +1643,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getAttributeChar
   unsigned int elements;
   unsigned int offset;
   pwr_eType type_id;
+  pwr_tAttrRef aref;
 
   gdhrGetAttributeChar_id = (*env)->FindClass( env, 
 		    "jpwr/rt/GdhrGetAttributeChar");
@@ -1652,14 +1654,51 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getAttributeChar
   cstr = (char *)str;  
   gdh_ConvertUTFstring( cstr, cstr);
 
-  sts = gdh_GetAttributeCharacteristics( cstr, &type_id, &size, &offset,
-					 &elements);
+  sts = gdh_NameToAttrref( pwr_cNObjid, cstr, &aref);
+  if ( ODD(sts))
+    sts = gdh_GetAttributeCharAttrref( &aref, &type_id, &size, &offset,
+				       &elements);
+
   (*env)->ReleaseStringUTFChars( env, name, cstr);
 
   jsts = (jint) sts;
   return_obj = (*env)->NewObject( env, gdhrGetAttributeChar_id,
   	gdhrGetAttributeChar_cid, (jint)type_id, (jint)size, 
-	(jint)offset, (jint)elements, jsts);
+				  (jint)offset, (jint)elements, jsts);
+  return return_obj;
+}
+
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getAttributeFlags
+  (JNIEnv *env, jobject obj, jstring name)
+{
+  int sts;
+  const char *str;
+  char *cstr;
+  jobject return_obj;
+  jint jsts;
+  jclass gdhrGetAttributeFlags_id;
+  jmethodID gdhrGetAttributeFlags_cid;
+  unsigned int flags;
+  pwr_tAttrRef aref;
+
+  gdhrGetAttributeFlags_id = (*env)->FindClass( env, 
+		    "jpwr/rt/GdhrGetAttributeFlags");
+  gdhrGetAttributeFlags_cid = (*env)->GetMethodID( env, 
+        gdhrGetAttributeFlags_id, "<init>", "(II)V");
+
+  str = (*env)->GetStringUTFChars( env, name, 0);
+  cstr = (char *)str;  
+  gdh_ConvertUTFstring( cstr, cstr);
+
+  sts = gdh_NameToAttrref( pwr_cNObjid, cstr, &aref);
+  if ( ODD(sts))
+    sts = gdh_GetAttributeFlags( &aref, &flags); 
+
+  (*env)->ReleaseStringUTFChars( env, name, cstr);
+
+  jsts = (jint) sts;
+  return_obj = (*env)->NewObject( env, gdhrGetAttributeFlags_id,
+  	gdhrGetAttributeFlags_cid, (jint)flags, jsts);
   return return_obj;
 }
 

@@ -34,7 +34,7 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
+package jpwr.jopg;
 import java.util.Vector;
 import java.util.Scanner;
 import java.util.Calendar;
@@ -44,6 +44,10 @@ import java.net.*;
 
 public class Ccm {
     static final boolean ccm_testmode = false;
+
+    public static final int ROOT_APPLET 	= 1;
+    public static final int ROOT_FRAME 		= 2;
+    public static final int ROOT_AAPP 		= 3;
 
     public static final int CCM__SUCCESS 	= 1;
     public static final int CCM__EXITFUNC 	= 3;
@@ -995,7 +999,8 @@ public class Ccm {
 	try {
 	    BufferedReader reader;
 
-	    if ( filectx.appl != null && filectx.appl.getRoot() instanceof JopApplet) {
+	    if ( filectx.appl != null && 
+		 (filectx.appl.getRootType() == ROOT_APPLET || filectx.appl.getRootType() == ROOT_AAPP)) {
 		URL fileURL = new URL( filename);
 		InputStream in = fileURL.openStream();
 		InputStreamReader r2 = new InputStreamReader(in, "ISO-8859-1");

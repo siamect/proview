@@ -34,22 +34,23 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
-import java.util.Vector;
+package jpwr.jopg;
 
-public class CcmFuncCtx {
-    public CcmFuncCtx() {
+public class CcmOperand {
+    public CcmOperand() {
     }
-    public String 	msg;
-    public Object	filectx;
-    public Vector<CcmIntvar> locint_list = new Vector<CcmIntvar>();
-    public Vector<CcmFloatvar>	locfloat_list = new Vector<CcmFloatvar>();
-    public Vector<CcmStringvar> locstring_list = new Vector<CcmStringvar>();
-    public Vector<CcmOperand>	list;
-    public CcmLine     	current_line;
-    public boolean      is_main;
-    public boolean      for_init;
-    public CcmArg[]    	arg_list;
-    public int		arg_count;
+    public int			type;
+    public String      		name;
+    public CcmReturn	       	value = new CcmReturn();
+    public CcmReturn	       	result = new CcmReturn();
+    public boolean	       	result_done;
+    public int			o_operator;
+    public int			local_type;
+    public int			local_operator;
+    public int			prio;
+    public int			parlevel;
+    public boolean     		done;
+    public int			orig_type;
+    public CcmFunc		func;
 }
 

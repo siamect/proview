@@ -1,6 +1,23 @@
 include $(pwre_dir_symbols)
 
 extern_java_sources := \
+	CcmApplIfc.java, \
+	CcmFloatvar.java, \
+	CcmIntvar.java, \
+	CcmStringvar.java, \
+	CcmLine.java, \
+	CcmReturn.java, \
+	CcmFileReturn.java, \
+	CcmArg.java, \
+	CcmVariable.java, \
+	CcmFunc.java, \
+	CcmOperand.java, \
+	CcmFuncCtx.java, \
+	CcmFileCtx.java, \
+	CcmRowCtx.java, \
+	CcmSysFunc.java, \
+	Ccm.java, \
+	JopgCcm.java, \
 	Glow.java,\
 	GlowCrypt.java, \
 	PrintfFormat.java,\
@@ -44,6 +61,7 @@ extern_java_sources := \
 	GrowGroup.java,\
 	GrowSlider.java,\
 	GrowAxis.java,\
+	GrowAxisArc.java,\
 	GrowArc.java,\
 	GrowLine.java,\
 	GrowPolyline.java,\

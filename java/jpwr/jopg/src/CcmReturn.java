@@ -34,13 +34,25 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
+package jpwr.jopg;
 
-public interface CcmApplIfc {
-    public int externCmd( String cmd);
-    public String defFilename( String filename);
-    public void errorMessage( String msg, int severity);
-    public int confirmDialog( String title, String text);
-    public Object getRoot();
+public class CcmReturn {
+    public CcmReturn() {
+	sts = 1;
+    }
+    public CcmReturn( int sts) {
+	this.sts = sts;
+    }
+    public int decl;
+    public int rint;
+    public float rfloat;
+    public String rstring;
+    public int sts;
+    public int getSts() {
+	return sts;
+    }
+    public boolean evenSts() {
+	return ((sts & 1) == 0);
+    }
 }
 

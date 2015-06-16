@@ -112,6 +112,8 @@ public class GdhServer
   public final static int GET_OBJECT_INFO_INT_ARRAY = 58;
   public final static int GET_CIRCBUFF_INFO = 59;
   public final static int UPDATE_CIRCBUFF_INFO = 60;
+  public final static int GET_ATTRIBUTE_FLAGS = 61;
+  public final static int CLASSNAME_TO_ID = 62;
 
   public final static int PORT = 4445;
 
@@ -1249,6 +1251,23 @@ public class GdhServer
                 System.out.println("getAttrRefTid: IO exception");
               }
               break;
+            case CLASSNAME_TO_ID:
+              try
+              {
+                String name = in.readUTF();
+                CdhrClassId ret = gdh.classNameToId(name);
+                out.writeInt(ret.getSts());
+                if(ret.oddSts())
+                {
+                  out.writeInt(ret.classId);
+                }
+		out.flush();
+              }
+              catch(IOException e)
+              {
+                System.out.println("classNameToId: IO exception");
+              }
+              break;
             case GET_CLASS_LIST:
               try
               {
@@ -1402,6 +1421,24 @@ public class GdhServer
               catch(IOException e)
               {
                 System.out.println("getAttributeChar: IO exception");
+              }
+              break;
+            case GET_ATTRIBUTE_FLAGS:
+              try
+              {
+                String attrName = in.readUTF();
+                GdhrGetAttributeFlags ret = gdh.getAttributeFlags(attrName);
+                out.writeInt(ret.getSts());
+                out.flush();
+                if(ret.oddSts())
+                {
+                  out.writeInt(ret.flags);
+                  out.flush();
+                }
+              }
+              catch(IOException e)
+              {
+                System.out.println("getAttributeFlags: IO exception");
               }
               break;
             case CREATE_INSTANCE_FILE:

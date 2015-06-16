@@ -34,19 +34,15 @@
  * General Public License plus this exception.
  */
 
-package jpwr.jop;
+package jpwr.jopg;
 
-public class CcmArg {
-    public CcmArg() {
+public class CcmStringvar {
+    public CcmStringvar() {
     }
-    public String value_name;
-    public int value_decl;
-    public int value_int;
-    public float value_float;
-    public String value_string;
-    public int value_type;
-    public int var_decl;
-    public String var_name;
-    public boolean value_returned;
+    public String       name;
+    public String     	value;
+    public String[]    	avalue;
+    public int	       	elements;
+    public boolean      array;
 }
 

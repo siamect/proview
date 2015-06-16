@@ -47,7 +47,8 @@ import jpwr.rt.*;
 import jpwr.app.*;
 import jpwr.jopg.*;
 
-public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, GdhApplIfc, OnClickListener, AEvAppl {
+public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, GdhApplIfc, OnClickListener, 
+						      AEvAppl, CcmApplIfc {
 	static final int MODE_NO = 0;
 	static final int MODE_SCROLL = 1;
 	static final int MODE_ZOOM = 2;
@@ -2160,6 +2161,28 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 	return graph.loadSubgraph(reader);
     }
 
+    public int externCmd( String cmd) {
+	return command( cmd);
+    }
+    public String defFilename( String filename) {
+	String fname = "http://" + pwrHost + "/" + pwrp_exe + filename;
+	if ( !fname.endsWith(".rtt_com"))
+	    fname += ".rtt_com";
+	return fname;
+    }
+    public void errorMessage( String msg, int severity) {
+    }
+    public int confirmDialog( String title, String text) {
+	return 1;
+    }
+    public int getRootType() {
+	return Ccm.ROOT_AAPP;
+    }
+    public int script(String script) {
+      new JopgCcm( this, appl.gdh, null, script);
+      return 1;
+    }
+
     static CliTable[] cliTable = new CliTable[] { 
         new CliTable( "OPEN", new String[] {"cli_arg1", "cli_arg2", "/NAME", 
     	"/FILE", "/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", "/NAVIGATOR", 
@@ -2181,9 +2204,15 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
         boolean local_cmd = false;
 
         if ( !appl.gdh.isAuthorized(Pwr.mAccess_AllRt)) {
-		    openMessageDialog("Not authorized");
-		    return 0;
-		}
+	    openMessageDialog("Not authorized");
+	    return 0;
+	}
+
+	if ( cmd.charAt(0) == '@') {
+	    // Execute a script
+	    new JopgCcm( this, gdh, cmd.substring(1),  null);
+	    return 1;
+	}
 
         Cli cli = new Cli( cliTable);
         String command = cli.parse( cmd);
