@@ -372,6 +372,8 @@ JNIEXPORT jbooleanArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoBooleanArray
   jbooleanArray jbooleanArr = (*env)->NewBooleanArray(env, size);
   pwr_tStatus sts;
   pwr_tBoolean *p;
+  jboolean *jp;
+  int i;
 
   sts = gdh_JidToPointer( id, (void **)&p);
   if ( EVEN(sts)) return 0;
@@ -383,8 +385,11 @@ JNIEXPORT jbooleanArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoBooleanArray
     return (jbooleanArray)NULL;
   }
 
-  (*env)->SetBooleanArrayRegion(env, jbooleanArr, 0, size, (jboolean *)p);
-
+  jp = malloc(size * sizeof(jboolean));
+  for ( i = 0; i < size; i++)
+    jp[i] = p[i];
+  (*env)->SetBooleanArrayRegion(env, jbooleanArr, 0, size, jp);
+  free( jp);
   return jbooleanArr;
 }
 
