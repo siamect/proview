@@ -6062,6 +6062,9 @@ public class Dyn {
 	int columns;
 	int rows;
 	StringBuffer sb = new StringBuffer();
+	int[] sel_p;
+	int[] sel_elements;
+	PwrtRefId[] sel_subid;
 
 	public DynTable( Dyn dyn) {
 	    super(dyn, Dyn.mDynType1_Table, 0, 0, 0, Dyn.eDynPrio_Table);
@@ -6274,6 +6277,9 @@ public class Dyn {
 	    cFormat = new GlowCFormat[columns];
 	    for ( int i = 0; i < columns; i++)
 		cFormat[i] = new GlowCFormat( format[i]);
+	    sel_p = new int[columns];
+	    sel_subid = new PwrtRefId[columns];
+	    sel_elements = new int[columns];
 
 	    for ( int i = 0; i < columns; i++) {
 		DynParsedAttrName pname = dyn.parseAttrName(attribute[i]);
@@ -6374,6 +6380,32 @@ public class Dyn {
 		}
 
     
+		// Connect select array
+		sel_p[i] = 0;
+		pname = dyn.parseAttrName(sel_attribute[i]);
+		if ( pname == null || pname.name.equals("")) 
+		    continue;
+
+		if ( pname.type != Pwr.eType_Boolean)
+		    continue;
+
+		switch ( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		    if ( ret.oddSts()) {
+			if ( ret.getElements() == 0)
+			    break;
+			sel_p[i] = ret.id;
+			sel_subid[i] = ret.refid;
+			sel_elements[i] = ret.getElements();
+			if ( sel_elements[i] > elements[i])
+			    sel_elements[i] = elements[i];
+		    }
+		    break;
+		default:
+		    ;
+		}
+
 	    }
 	    object.setTableInfo(info);
 
@@ -6420,6 +6452,10 @@ public class Dyn {
 			oldValueS[i] = null;
 		    break;
 		}
+		if ( sel_p[i] != 0) {
+		    dyn.graph.getGdh().unrefObjectInfo(sel_subid[i]);
+		    sel_p[i] = 0;
+		}
 	    }
 	}
 
@@ -6454,7 +6490,7 @@ public class Dyn {
 				    object.setValue(new String("1"), i, j);
 				else
 				    object.setValue(new String("0"), i, j);
-				object.setValue(new String(sb), i, j);
+				//object.setValue(new String(sb), i, j);
 				oldValueB[i][j] = val[j];
 			    }
 			}
@@ -6569,8 +6605,69 @@ public class Dyn {
 		}
 	    }
 
+	    // Examine select array
+	    boolean sel_found = false;
+	    for ( int i = 0; i < columns; i++) {
+		if ( sel_p[i] == 0)
+		    continue;
+		boolean[] val = dyn.graph.getGdh().getObjectRefInfoBooleanArray(sel_p[i], sel_elements[i]);
+		for ( int j = 0; j < sel_elements[i]; j++) {
+		    if ( val[j]) {
+			sel_found = true;
+			object.setSelectedCell( i, j);
+		    }
+		}
+	    }
+	    if ( !sel_found)
+		object.setSelectedCell( -1, -1);
+
 	    if ( firstScan)
 		firstScan = false;
+	}
+
+	public int action( GlowArrayElem o, GlowEvent e) {
+	    if ( !dyn.graph.isAuthorized( dyn.access))
+		return 1;
+	    GrowTable object = (GrowTable)o;
+
+	    switch ( e.event) {
+	    case Glow.eEvent_MB1Click:
+		int column, row;
+		boolean	value;
+
+		if ( e.type != Glow.eEventType_Table)
+		    break;
+
+		GlowEventTable event = (GlowEventTable)e;
+		row = object.getSelectedCellRow();
+		column = object.getSelectedCellColumn();
+		if ( row >= 0 && sel_p[column] != 0) {
+		    // Reset previously selected
+		    DynParsedAttrName pname = dyn.parseAttrName(sel_attribute[column]);
+		    if ( pname == null || pname.name.equals("")) 
+			break;
+		    value = false;
+		    String aname = pname.name + "[" + row + "]";
+		    PwrtStatus sts = dyn.graph.getGdh().setObjectInfo( aname, value);
+		    if ( sts.evenSts()) System.out.println("Table error: " + pname.name);
+		}
+		if ( sel_p[event.column] != 0 && 
+		     !(event.column == column && event.row == row)) {
+		    // Set new selected, if not same as previous selected
+		    DynParsedAttrName pname = dyn.parseAttrName(sel_attribute[event.column]);
+		    if ( pname == null || pname.name.equals("")) 
+			break;
+		    value = true;
+		    String aname = pname.name + "[" + event.row + "]";
+		    PwrtStatus sts = dyn.graph.getGdh().setObjectInfo( aname, value);
+		    if ( sts.evenSts()) 
+			System.out.println("Table error: " + pname.name);
+		    else
+			object.setSelectedCell( event.column, event.row);
+		}
+		break;
+	    }
+	    return 1;
 	}
     }
 

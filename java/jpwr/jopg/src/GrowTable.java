@@ -81,8 +81,8 @@ public class GrowTable extends GrowRect implements GrowScrollBarIfc {
     int[]	       	column_adjustment = new int[Glow.TABLE_MAX_COL];
     int			value_size;
     String[]  	       	cell_value;
-    int			selected_cell_row;
-    int			selected_cell_column;
+    int			selected_cell_row = -1;
+    int			selected_cell_column = -1;
     int			select_drawtype;
     int			input_focus;
     int 	       	header_text_bold;
@@ -882,8 +882,8 @@ public class GrowTable extends GrowRect implements GrowScrollBarIfc {
 		}
 	    }
 
-	    //if ( row != -1 && column != -1)
-	    //	((GrowCtx *)ctx)->send_table_callback( this, event, fx, fy, column, row);
+	    if ( row != -1 && column != -1)
+		cmn.ctx.send_table_callback( this, event.event, fx, fy, column, row);
 	    break;
 	}
 	default: ;
@@ -911,5 +911,27 @@ public class GrowTable extends GrowRect implements GrowScrollBarIfc {
 
     public void setValue(String value, int col, int row) {
 	cell_value[col * rows + row] = value;
+    }
+
+    public void setSelectedCell( int column, int row) {
+	if ( selected_cell_column == column &&
+	     selected_cell_row == row)
+	    return;
+
+	if ( column >= columns || row >= rows)
+	    return;
+
+	selected_cell_column = column;
+	selected_cell_row = row;
+	draw();
+    }
+
+    public int getSelectedCellRow() {
+	return selected_cell_row;
+    }
+    public int getSelectedCellColumn() {
+	if ( selected_cell_row == -1)
+	    return -1;
+	return selected_cell_column;
     }
 }

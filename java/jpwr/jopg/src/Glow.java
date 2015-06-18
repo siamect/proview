@@ -1491,6 +1491,7 @@ public class Glow {
     public static final int eEventType_Object 			= 0;
     public static final int eEventType_Menu 			= 1;
     public static final int eEventType_Toolbar 			= 2;
+    public static final int eEventType_Table 			= 3;
 
     public static final int eEvent_MB1Click 			= 0;
     public static final int eEvent_MB1Up 			= 2;

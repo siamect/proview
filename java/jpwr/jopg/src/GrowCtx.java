@@ -439,6 +439,25 @@ public class GrowCtx implements GrowCtxIfc {
 	return 1;
     }
 
+    public int send_table_callback( GlowArrayElem object, int event,
+				    double x, double y, int column, int row) {
+	/* Send a table callback */
+	GlowEventTable e = new GlowEventTable();
+
+	e.event = event;
+	e.type = Glow.eEventType_Table;
+	//e.x_pixel = (int)( x * mw.zoom_factor_x) - mw.offset_x;
+	//e.y_pixel = (int)( y * mw.zoom_factor_y) - mw.offset_y;
+	e.x = x;
+	e.y = y;
+	e.object_type = object.type();
+	e.object = object;
+	e.column = column;
+	e.row = row;
+	cmn.appl.eventHandler(e);
+	return 1;
+    }
+
     public int eventHandler(GlowEvent e, double fx, double fy) {
 	return eventHandler( e);
     }

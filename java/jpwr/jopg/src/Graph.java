@@ -434,7 +434,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 		int sts;
 		Dyn dyn = (Dyn)((GlowArrayElem)e.object).getUserData();
 		if ( dyn != null)
-		    sts = dyn.action((GrowNode)e.object, e);	    	    
+		    sts = dyn.action((GlowArrayElem)e.object, e);	    	    
 	    }
 	    break;
 	case Glow.eEvent_MenuActivated:

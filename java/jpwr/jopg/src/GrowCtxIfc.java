@@ -51,6 +51,8 @@ public interface GrowCtxIfc {
 				   double x, double y);
     public int send_toolbar_callback( GlowArrayElem object, int category, int idx, int type,
 				      double x, double y);
+    public int send_table_callback( GlowArrayElem object, int event,
+				    double x, double y, int column, int row);
     public void insert(GlowArrayElem e);
     public void remove(GlowArrayElem e);
     public void pop(GlowArrayElem e);
