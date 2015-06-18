@@ -3083,7 +3083,7 @@ The label line is terminated with colon.
 include
 
 An script include-file containing functions can be included with the
-#include statement. The default file extention is '.pwr_com'
+#include statement. The default file extention is '.rtt_com'
 
 <b>Example
 
@@ -3808,7 +3808,7 @@ Returns the status of the operation.
 
 string		<t>name		<t>name of the attribute to write to.
 <arbitrary type)<t>value	<t>the value to set.
-int		<t>publicwrite	<t>if 1, write to and attribute defined as PublicWrite
+int		<t>publicwrite	<t>if 1, write to an attribute defined as PublicWrite
 		<t>		<t>is allowed also without the RtWrite privilege.
 
 <b>Example

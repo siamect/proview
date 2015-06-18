@@ -1503,6 +1503,10 @@ public class Gdh
   {
     return currentUser;
   }
+  public int getPrivilege() 
+  {
+    return currentPrivilege;
+  }
 
 
   public boolean isAuthorized(int access)

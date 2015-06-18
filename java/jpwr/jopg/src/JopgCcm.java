@@ -91,7 +91,7 @@ public class JopgCcm {
 	    CdhrObjid reto = gdh.getRootList();
 	    sts = reto.sts;
 	    if ( reto.oddSts()) {
-		CdhrString rets = gdh.objidToName( reto.objid, Cdh.mName_volumeStrict);
+		CdhrString rets = gdh.objidToName( reto.objid, Cdh.mNName);
 		sts = rets.sts;
 		if ( rets.oddSts())
 		    ret.rstring = rets.str;
@@ -120,7 +120,7 @@ public class JopgCcm {
 	    CdhrObjid reto = gdh.getNodeObject( 0);
 	    sts = reto.sts;
 	    if ( reto.oddSts()) {
-		CdhrString rets = gdh.objidToName( reto.objid, Cdh.mName_volumeStrict);
+		CdhrString rets = gdh.objidToName( reto.objid, Cdh.mNName);
 		sts = rets.sts;
 		if ( rets.oddSts())
 		    ret.rstring = rets.str;
@@ -156,7 +156,7 @@ public class JopgCcm {
 		CdhrObjid reto = gdh.getClassList( retc.classId);
 		sts = reto.sts;
 		if ( reto.oddSts()) {
-		    CdhrString rets = gdh.objidToName( reto.objid, Cdh.mName_volumeStrict);
+		    CdhrString rets = gdh.objidToName( reto.objid, Cdh.mNName);
 		    sts = rets.sts;
 		    if ( rets.oddSts())
 			ret.rstring = rets.str;
@@ -193,7 +193,7 @@ public class JopgCcm {
 		reto = gdh.getNextObject( reto.objid);
 		sts = reto.sts;
 		if ( reto.oddSts()) {
-		    CdhrString rets = gdh.objidToName( reto.objid, Cdh.mName_volumeStrict);
+		    CdhrString rets = gdh.objidToName( reto.objid, Cdh.mNName);
 		    sts = rets.sts;
 		    if ( rets.oddSts())
 			ret.rstring = rets.str;
@@ -275,7 +275,7 @@ public class JopgCcm {
 		sts = reto.sts;
 	    }
 	    if ( Ccm.ODD(sts)) {
-		CdhrString rets = gdh.objidToName( reto.objid, Cdh.mName_volumeStrict);
+		CdhrString rets = gdh.objidToName( reto.objid, Cdh.mNName);
 		sts = rets.sts;
 		if ( rets.oddSts())
 		    ret.rstring = rets.str;
@@ -313,7 +313,7 @@ public class JopgCcm {
 		sts = reto.sts;
 	    }
 	    if ( Ccm.ODD(sts)) {
-		CdhrString rets = gdh.objidToName( reto.objid, Cdh.mName_volumeStrict);
+		CdhrString rets = gdh.objidToName( reto.objid, Cdh.mNName);
 		sts = rets.sts;
 		if ( rets.oddSts())
 		    ret.rstring = rets.str;
@@ -351,7 +351,7 @@ public class JopgCcm {
 		sts = reto.sts;
 	    }
 	    if ( Ccm.ODD(sts)) {
-		CdhrString rets = gdh.objidToName( reto.objid, Cdh.mName_volumeStrict);
+		CdhrString rets = gdh.objidToName( reto.objid, Cdh.mNName);
 		sts = rets.sts;
 		if ( rets.oddSts())
 		    ret.rstring = rets.str;
@@ -465,12 +465,13 @@ public class JopgCcm {
 		sts = 0;
 	    }
 	    }
-	    if ( Ccm.EVEN(sts)) {
-		if ( args.length == 2) {
+	    if ( args.length == 2) {
+		if ( Ccm.EVEN(sts))
 		    args[1].value_int = sts;
-		    args[1].value_returned = true;
-		    args[1].var_decl = args[1].value_decl;
-		}
+		else
+		    args[1].value_int = 1;
+		args[1].value_returned = true;
+		args[1].var_decl = args[1].value_decl;
 	    }
 	    return ret;
 	}

@@ -57,7 +57,8 @@ public class Gdh {
     private static String currentSystemGroup = null;
     private static String	currentUser = null;
     private static String currentPassword = null;
-    private static int currentPrivilege = Pwr.mAccess_AllPwr;
+    private static int defaultPrivilege = Pwr.mPrv_RtRead;
+    private static int currentPrivilege = defaultPrivilege;
 
 
     public Gdh( GdhApplIfc root) {
@@ -140,7 +141,7 @@ public class Gdh {
 	currentSystemGroup = null;
 	currentUser = null;
 	currentPassword = null;
-	currentPrivilege = Pwr.mAccess_AllPwr;
+	currentPrivilege = defaultPrivilege;
     }
 
     /**
@@ -155,6 +156,9 @@ public class Gdh {
     */
     public String getUser() {
 	return currentUser;
+    }
+    public int getPrivilege() {
+	return currentPrivilege;
     }
 
     /**

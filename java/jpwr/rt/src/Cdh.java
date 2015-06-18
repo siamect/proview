@@ -48,6 +48,7 @@ public class Cdh {
   public static final int cManufactClassVolMin  = (0 + (0 << 24) + (0 << 16) + (250 << 8) + 0);
   public static final int cManufactClassVolMax  = (0 + (0 << 24) + (0 << 16) + (254 << 8) + 254);
 
+  public static final int mNName 		= 0;
   public static final int mName_volume 		= 1 << 0;
   public static final int mName_path 		= 1 << 1;
   public static final int mName_object 		= 1 << 2;

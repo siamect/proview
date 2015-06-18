@@ -187,10 +187,13 @@ public class JopSpider {
 	"cli_arg4", "/HELPFILE", "/POPNAVIGATOR", "/BOOKMARK", "/INDEX",
         "/BASE", "/RETURNCOMMAND", "/WIDTH", "/HEIGHT", "/VERSION"}),
     new CliTable( "SET", new String[] {"cli_arg1", "cli_arg2", "/NAME", 
-	"/SOURCE", "/OBJECT", "/VALUE", "/BYPASS"}), 
+	"/SOURCE", "/OBJECT", "/VALUE", "/BYPASS", "/PUBLICWRITE"}), 
     new CliTable( "EXAMPLE", new String[] {"/NAME", "/HIERARCHY"}),
     new CliTable( "CHECK", new String[] {"cli_arg1", "/METHOD", "/OBJECT"}),
-    new CliTable( "CALL", new String[] {"cli_arg1", "/METHOD", "/OBJECT"})
+    new CliTable( "CALL", new String[] {"cli_arg1", "/METHOD", "/OBJECT"}),
+    new CliTable( "LOGIN", new String[] {"cli_arg1", "cli_arg2"}),
+    new CliTable( "LOGOUT", null),
+    new CliTable( "SHOW", new String[] {"cli_arg1"}),
   };
 
 
@@ -593,13 +596,12 @@ public class JopSpider {
           String cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
           if ( parameter.length() >= cli_arg1.length() &&
                parameter.substring(0,cli_arg1.length()).equals(cli_arg1)) {
-            // Command is "SET PARAMETER"
-            if ( root instanceof JopApplet) {
-              String name;
-              String value;
-              PwrtStatus sts;
+	      // Command is "SET PARAMETER"
+	      String name;
+	      String value;
+	      PwrtStatus sts;
 
-              local_cmd = true;
+	      local_cmd = true;
               if ( cli.qualifierFound("/NAME"))
 	        name = cli.getQualValue("/NAME");
               else {
@@ -613,11 +615,36 @@ public class JopSpider {
                 return 0;
               }
               boolean bypass = cli.qualifierFound("/BYPASS");
-              if ( !bypass ) {
+	      if ( bypass) {
+		  System.out.println( "Bypass is obsolete");
+	      }
+	      boolean publicwrite = cli.qualifierFound("/PUBLICWRITE");
+	      if ( publicwrite ) {
+		 GdhrGetAttributeFlags retf = gdh.getAttributeFlags( name);
+		 if ( retf.evenSts()) return 0;
+
+		 if ( (retf.flags & Pwr.mAdef_publicwrite) == 0) {
+		     System.out.println( "Not authorized");
+		     return 0;
+		 }
+		 
+		 if ( ! gdh.isAuthorized( Pwr.mPrv_RtRead | Pwr.mPrv_RtWrite |
+					  Pwr.mPrv_System | Pwr.mPrv_Maintenance |
+					  Pwr.mPrv_Process | Pwr.mPrv_Instrument |
+					  Pwr.mPrv_Operator1 | Pwr.mPrv_Operator2 |
+					  Pwr.mPrv_Operator3 | Pwr.mPrv_Operator4 |
+					  Pwr.mPrv_Operator5 | Pwr.mPrv_Operator6 |
+					  Pwr.mPrv_Operator7 | Pwr.mPrv_Operator8 |
+					  Pwr.mPrv_Operator9 | Pwr.mPrv_Operator10)) {
+		     System.out.println( "Not authorized");
+		     return 0;
+		 }
+		 
+	      }
+	      else {
                 // Need RtWrite or System to set attribute
-                if ( ! gdh.isAuthorized( 
-			     Pwr.mPrv_RtWrite | Pwr.mPrv_System)) {
-                  System.out.println( "No authorized");
+                if ( ! gdh.isAuthorized( Pwr.mPrv_RtWrite | Pwr.mPrv_System)) {
+                  System.out.println( "Not authorized");
                   return 0;
                 }
               }
@@ -625,6 +652,7 @@ public class JopSpider {
               // Get type of attribute
               GdhrGetAttributeChar ret = gdh.getAttributeChar( name);
               if ( ret.evenSts()) return 0;
+	      System.out.println( "Char sts " + ret.sts);
 
               if ( ret.typeId == Pwr.eType_Float32) {
                 float setValue = Float.parseFloat( value);
@@ -653,7 +681,6 @@ public class JopSpider {
 
               if ( sts.evenSts())
                  System.out.println( "setObjectInfoError " + sts);
-            }
           }
 
           String subwindow = "SUBWINDOW";
@@ -856,6 +883,41 @@ public class JopSpider {
 	    return 1;
 	  }
 
+	}
+      }
+      else if ( command.equals("LOGOUT")) {
+	gdh.logout();
+      }
+      else if ( command.equals("LOGIN")) {
+        if ( cli.qualifierFound("cli_arg1") && cli.qualifierFound("cli_arg2")) {
+	  String username = cli.getQualValue("cli_arg1");
+	  String passwd = cli.getQualValue("cli_arg2");
+	  passwd = JopCrypt.crypt( "aa", passwd);
+	  int sts = gdh.login( username, passwd);
+	  if ( (sts & 1) == 1)
+	    System.out.println( "User " + username + " logged in");
+	  else
+	    System.out.println( "User not authorized");
+	}
+	else {
+	  System.out.println( "Cmd: Syntax error\n");
+	  return 0;
+	}
+      }
+      else if ( command.equals("SHOW")) {
+        if ( cli.qualifierFound("cli_arg1")) {
+
+          String parameter = "USER";
+          String cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
+          if ( parameter.length() >= cli_arg1.length() &&
+               parameter.substring(0,cli_arg1.length()).equals(cli_arg1)) {
+            // Command is "SHOW USER"
+	    String username = gdh.getUser();
+	    if ( username == null)
+	      username = "Not logged in";
+	    int priv = gdh.getPrivilege();
+            System.out.println( "User: " + username + " " + priv);
+	  }
 	}
       }
     }
