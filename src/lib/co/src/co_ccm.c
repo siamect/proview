@@ -5906,7 +5906,7 @@ int ccm_file_exec(
   ccm_tString  	string_val;
   int		sts;
   ccm_tFileCtx filectx;
-  char		elm_str[9][K_LINE_SIZE];
+  char		elm_str[10][K_LINE_SIZE];
   int		nr;
   ccm_sArg	*arg_list, *arg_p, *a_p, *next_arg;
   int		arg_count;
