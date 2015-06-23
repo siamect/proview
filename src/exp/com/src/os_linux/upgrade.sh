@@ -559,17 +559,15 @@ usage()
 {
   cat << EOF
 
-  upgrade.sh  Upgrade from V5.0.0 to V5.1.0
+  upgrade.sh  Upgrade from V5.2.0 to V5.3.1
 
 
   Pass
 
     classvolumes   Create loadfiles for classvolumes.
     renamedb       Rename old databases.
-    cnvdump        Convert the dump files.
     loaddb         Load dumpfiles.
     compile        Compile all plcprograms in the database
-    cnvobjects     Convert objects in loaded database
     createload     Create new loadfiles.
     createboot     Create bootfiles for all nodes in the project.
 
@@ -609,7 +607,7 @@ for db in $tmp; do
   fi
 done
 
-passes="classvolumes renamedb cnvdump loaddb cnvobjects compile createload createboot"
+passes="classvolumes renamedb loaddb compile createload createboot"
 #echo "Pass: $passes"
 echo ""
 echo -n "Enter start pass [classvolumes] > "
