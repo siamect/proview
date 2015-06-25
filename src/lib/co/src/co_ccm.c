@@ -65,6 +65,8 @@
 #define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
 
+#define CCM_FLT_EPSILON 5.0e-6
+
 #define K_ACTION_NO	0
 #define K_ACTION_DOWN	1
 #define K_ACTION_UP	2
@@ -2345,7 +2347,7 @@ int ccm_operate_exec(
           next->result_decl = K_DECL_INT;
 	  break;
 	case K_DECL_FLOAT:
-          next->result_int = ( fabs( op->result_int - next_float) < FLT_EPSILON);
+          next->result_int = ( fabs( op->result_int - next_float) < CCM_FLT_EPSILON);
           next->result_decl = K_DECL_INT;
 	  break;
 	default:
@@ -2356,11 +2358,11 @@ int ccm_operate_exec(
       case K_DECL_FLOAT:
 	switch ( next_decl) {
 	case K_DECL_INT:
-          next->result_int = ( fabs( op->result_float - next_int) < FLT_EPSILON);
+          next->result_int = ( fabs( op->result_float - next_int) < CCM_FLT_EPSILON);
           next->result_decl = K_DECL_INT;
 	  break;
 	case K_DECL_FLOAT:
-          next->result_int = ( fabs( op->result_float - next_float) < FLT_EPSILON);
+          next->result_int = ( fabs( op->result_float - next_float) < CCM_FLT_EPSILON);
           next->result_decl = K_DECL_INT;
 	  break;
 	default:
@@ -2390,7 +2392,7 @@ int ccm_operate_exec(
           next->result_decl = K_DECL_INT;
 	  break;
 	case K_DECL_FLOAT:
-          next->result_int = !( fabs( op->result_int - next_float) < FLT_EPSILON);
+          next->result_int = !( fabs( op->result_int - next_float) < CCM_FLT_EPSILON);
           next->result_decl = K_DECL_INT;
 	  break;
 	default:
@@ -2401,11 +2403,11 @@ int ccm_operate_exec(
       case K_DECL_FLOAT:
 	switch ( next_decl) {
 	case K_DECL_INT:
-          next->result_int = !( fabs( op->result_float - next_int) < FLT_EPSILON);
+          next->result_int = !( fabs( op->result_float - next_int) < CCM_FLT_EPSILON);
           next->result_decl = K_DECL_INT;
 	  break;
 	case K_DECL_FLOAT:
-          next->result_int = !( fabs( op->result_float - next_float) < FLT_EPSILON);
+          next->result_int = !( fabs( op->result_float - next_float) < CCM_FLT_EPSILON);
           next->result_decl = K_DECL_INT;
 	  break;
 	default:
