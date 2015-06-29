@@ -36,6 +36,7 @@
 
 /* wb_c_node.c -- work bench methods of the Node class. */
 
+#include "co_cnf.h"
 #include "wb_pwrs.h"
 #include "wb_pwrs_msg.h"
 #include "wb_ldh.h"
@@ -53,22 +54,40 @@ static pwr_tStatus PostCreate (
   pwr_tObjid oid;
   pwr_tClassId cid;
   pwr_tStatus sts;
+  pwr_tObjName name;
+  pwr_tOid srv_oid, opp_oid;
 
   sts = ldh_CreateObject(Session, &oid, "Security", pwr_eClass_Security, Object, ldh_eDest_IntoLast); 
 
+  // Server objects
+  cnf_get_value( "defaultServers", name, sizeof(name));
+  sts = ldh_ClassNameToId(Session, &cid, "$NodeHier");
+  sts = ldh_CreateObject(Session, &srv_oid, name, cid, Object, ldh_eDest_IntoLast); 
+
   sts = ldh_ClassNameToId(Session, &cid, "MessageHandler");
-  sts = ldh_CreateObject(Session, &oid, "MessageHandler", cid, Object, ldh_eDest_IntoLast); 
+  sts = ldh_CreateObject(Session, &oid, "MessageHandler", cid, srv_oid, ldh_eDest_IntoLast); 
 
   sts = ldh_ClassNameToId(Session, &cid, "IOHandler");
-  sts = ldh_CreateObject(Session, &oid, "IOHandler", cid, Object, ldh_eDest_IntoLast); 
+  sts = ldh_CreateObject(Session, &oid, "IOHandler", cid, srv_oid, ldh_eDest_IntoLast); 
 
   sts = ldh_ClassNameToId(Session, &cid, "Backup_Conf");
-  sts = ldh_CreateObject(Session, &oid, "Backup", cid, Object, ldh_eDest_IntoLast); 
+  sts = ldh_CreateObject(Session, &oid, "Backup", cid, srv_oid, ldh_eDest_IntoLast); 
+
+  sts = ldh_ClassNameToId(Session, &cid, "StatusServerConfig");
+  sts = ldh_CreateObject(Session, &oid, "StatusServer", cid, srv_oid, ldh_eDest_IntoLast); 
+
+  // OpPlace objects
+  cnf_get_value( "defaultOpPlaces", name, sizeof(name));
+  sts = ldh_ClassNameToId(Session, &cid, "$NodeHier");
+  sts = ldh_CreateObject(Session, &opp_oid, name, cid, Object, ldh_eDest_IntoLast); 
 
   sts = ldh_ClassNameToId(Session, &cid, "OpPlace");
-  sts = ldh_CreateObject(Session, &oid, "Op", cid, Object, ldh_eDest_IntoLast); 
-  sts = ldh_CreateObject(Session, &oid, "Maintenance", cid, Object, ldh_eDest_IntoLast); 
-  sts = ldh_CreateObject(Session, &oid, "OpDefault", cid, Object, ldh_eDest_IntoLast); 
+  cnf_get_value( "defaultOpOp", name, sizeof(name));
+  sts = ldh_CreateObject(Session, &oid, name, cid, opp_oid, ldh_eDest_IntoLast); 
+  cnf_get_value( "defaultOpMaintenance", name, sizeof(name));
+  sts = ldh_CreateObject(Session, &oid, name, cid, opp_oid, ldh_eDest_IntoLast); 
+  cnf_get_value( "defaultOpDefault", name, sizeof(name));
+  sts = ldh_CreateObject(Session, &oid, name, cid, opp_oid, ldh_eDest_IntoLast); 
 
   sts = ldh_ClassNameToId(Session, &cid, "PlcProcess");
   sts = ldh_CreateObject(Session, &oid, "Plc", cid, Object, ldh_eDest_IntoLast); 
@@ -79,8 +98,10 @@ static pwr_tStatus PostCreate (
   sts = ldh_ClassNameToId(Session, &cid, "WebBrowserConfig");
   sts = ldh_CreateObject(Session, &oid, "WebBrowser", cid, Object, ldh_eDest_IntoLast); 
 
-  sts = ldh_ClassNameToId(Session, &cid, "StatusServerConfig");
-  sts = ldh_CreateObject(Session, &oid, "StatusServer", cid, Object, ldh_eDest_IntoLast); 
+  // IO
+  cnf_get_value( "defaultIO", name, sizeof(name));
+  sts = ldh_ClassNameToId(Session, &cid, "$NodeHier");
+  sts = ldh_CreateObject(Session, &oid, name, cid, Object, ldh_eDest_IntoLast); 
 
   return PWRS__SUCCESS;
 }

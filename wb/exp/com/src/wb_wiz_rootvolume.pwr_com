@@ -48,6 +48,10 @@ main()
   extern int rv_standard = 1;
   extern int rv_customized = 0;
   extern string rv_nodehierroot;
+  extern string rv_nodehier_opplaces;
+  extern string rv_nodehier_servers;
+  extern string rv_nodehier_io;
+  extern string rv_nodehier_applications;
   extern string rv_nodename;
   extern string rv_opop;
   extern string rv_opmaintenance;
@@ -68,6 +72,7 @@ main()
   string volume;
   string str1;
   string nname;
+  string sname;
   string oname;
   string current_node;
   string hw;
@@ -76,6 +81,10 @@ main()
   verify(0);
 
   rv_nodehierroot = get_pwr_config( "defaultNodeHierRoot");
+  rv_nodehier_opplaces = get_pwr_config( "defaultOpPlaces");
+  rv_nodehier_servers = get_pwr_config( "defaultServers");
+  rv_nodehier_io = get_pwr_config( "defaultIO");
+  rv_nodehier_applications = get_pwr_config( "defaultApplications");
   rv_opop = get_pwr_config( "defaultOpOp");
   rv_opmaintenance = get_pwr_config( "defaultOpMaintenance");
 
@@ -184,24 +193,15 @@ page_4:
     nname = rv_nodename;
   endif
 
-  if ( rv_opop != "")
-    oname = nname + "-" + "Op";
-    move object/rename="'rv_opop'"/source='oname'
-  endif
-
-  if ( rv_opmaintenance != "")
-    oname = nname + "-" + "Maintenance";
-    move object/rename="'rv_opmaintenance'"/source='oname'
-  endif
-
   # Create (or delete) server objects
+  sname = nname + "-" + rv_nodehier_servers;
   if ( !rv_server_backup)
-    oname = nname + "-" + "Backup";
+    oname = sname + "-" + "Backup";
     delete object/name='oname'/noconf/nolog
   endif
 
   if ( !rv_server_statusserver)
-    oname = nname + "-" + "StatusServer";
+    oname = sname + "-" + "StatusServer";
     delete object/name='oname'/noconf/nolog
   endif
 
@@ -211,23 +211,23 @@ page_4:
   endif
 
   if ( rv_server_nodelinksup)
-    create object/dest='nname'/name="NodeLinkSup"/last/class=NodeLinkSup
+    create object/dest='sname'/name="NodeLinkSup"/last/class=NodeLinkSup
   endif
 
   if ( rv_server_fast)
-    create object/dest='nname'/name="DsFastConf"/last/class=DsFastConf
+    create object/dest='sname'/name="DsFastConf"/last/class=DsFastConf
   endif
   if ( rv_server_trend)
-    create object/dest='nname'/name="DsTrendConf"/last/class=DsTrendConf
+    create object/dest='sname'/name="DsTrendConf"/last/class=DsTrendConf
   endif
   if ( rv_server_sysmon)
-    create object/dest='nname'/name="SysMon"/last/class=SysMonConfig
+    create object/dest='sname'/name="SysMon"/last/class=SysMonConfig
   endif
   if ( rv_server_histmon)
-    create object/dest='nname'/name="SevHistMonitor"/last/class=SevHistMonitor
-    oname = nname + "-SevHistMonitor";
+    create object/dest='sname'/name="SevHistMonitor"/last/class=SevHistMonitor
+    oname = sname + "-SevHistMonitor";
     create object/dest='oname'/name="1s"/last/class=SevHistThread
-    oname = nname + "-SevHistMonitor-1s";
+    oname = sname + "-SevHistMonitor-1s";
     set attr/name='oname'/attr=ScanTime/value=1/nolog/noconf
     if ( rv_server_sevserver)
       str1 = tolower( rv_nodename);
@@ -235,28 +235,26 @@ page_4:
     endif
   endif
   if ( rv_server_sevserver)
-    create object/dest='nname'/name="SevServer"/last/class=SevServer
+    create object/dest='sname'/name="SevServer"/last/class=SevServer
   endif
   if ( rv_server_opcserver)
-    create object/dest='nname'/name="OpcServer"/last/class=Opc_ServerConfig
+    create object/dest='sname'/name="OpcServer"/last/class=Opc_ServerConfig
   endif
   if ( rv_server_remh)
-    create object/dest='nname'/name="Remote"/last/class=RemoteConfig
+    create object/dest='sname'/name="Remote"/last/class=RemoteConfig
   endif
   if ( rv_server_remlogg)
-    create object/dest='nname'/name="Logg"/last/class=LoggConfig
+    create object/dest='sname'/name="Logg"/last/class=LoggConfig
   endif
   if ( rv_server_elog)
-    oname = nname + "-" + "MessageHandler";
+    oname = sname + "-" + "MessageHandler";
     set attr/name='oname'/attr=EventLogSize/value=10000/noconf/nolog
   endif
 
   if ( rv_opstation)
-    # Create a dummy plc
-    #create object/dest=""/name="Op"/after/class=$PlantHier
-    #create object/dest=Op/name="Dummy"/first/class=PlcPgm
-    #create object/dest=Op-Dummy/name="W"/first/class=WindowPlc
-    #set attr/name=Op-Dummy-W/attr=Modified/value="01-JUL-2008 01:00:00"/nolog/noconf    
+    # Remove IO Hierarchy
+    oname = nname + "-" + rv_nodehier_io;
+    delete object /name='oname'/noconf /nolog
   endif
 
   save/quiet
@@ -277,6 +275,10 @@ exit_now:
   delete rv_customized;
   delete rv_nodehierroot;
   delete rv_nodename;
+  delete rv_nodehier_opplaces;
+  delete rv_nodehier_servers;
+  delete rv_nodehier_io;
+  delete rv_nodehier_applications;
   delete rv_opop;
   delete rv_opmaintenance;
   delete pwr_wizard_title;

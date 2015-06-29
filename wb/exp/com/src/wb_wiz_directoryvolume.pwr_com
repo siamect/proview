@@ -622,6 +622,23 @@ page_4:
     endfor
   endfor
 
+  # Create BuildConfig objects
+  create object /dest=""/class=BuildConfig /name="Build" /last
+
+  create object /dest="Build"/class=BuildDirectory /name="pop" /first
+  name = "Build-pop";
+  attr = name + ".Directory";
+  SetAttribute( attr, "$pwrp_pop");
+  attr = name + ".Options";
+  SetAttribute( attr, 1);
+
+  create object /dest="Build-pop"/class=BuildCopy /name="pwg" /first
+  name = "Build-pop-pwg";
+  attr = name + ".Source";
+  SetAttribute( attr, "*.pwg");
+  attr = name + ".Target";
+  SetAttribute( attr, "$pwrp_exe/,$pwrp_web/");
+
   save/quiet
   noedit
 
