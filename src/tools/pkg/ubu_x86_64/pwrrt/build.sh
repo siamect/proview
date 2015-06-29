@@ -106,6 +106,9 @@ find $pkgroot -type d | xargs chmod 755
 cp $pkgsrc/control $pkgroot/DEBIAN
 cp $pkgsrc/postinst $pkgroot/DEBIAN
 cp $pkgsrc/prerm $pkgroot/DEBIAN
+chmod 755 $pkgroot/DEBIAN/postinst
+chmod 755 $pkgroot/DEBIAN/prerm
+chmod 644 $pkgroot/DEBIAN/control
 
 # copyright
 cp $pkgsrc/copyright $pkgroot/usr/share/doc/pwrrt

@@ -112,6 +112,11 @@ cp $pkgsrc/rules $pkgroot/debian
 cp $pkgsrc/changelog $pkgroot/debian
 cp $pkgsrc/postinst $pkgroot/debian
 cp $pkgsrc/prerm $pkgroot/debian
+chmod 755 $pkgroot/debian/postinst
+chmod 755 $pkgroot/debian/prerm
+chmod 755 $pkgroot/debian/rules
+chmod 644 $pkgroot/debian/control
+chmod 644 $pkgroot/debian/changelog
 
 # copyright
 cp $pkgsrc/copyright $pkgroot/usr/share/doc/pwrrt

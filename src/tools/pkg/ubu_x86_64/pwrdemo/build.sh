@@ -33,12 +33,14 @@ echo "#!/bin/bash" > $pkgroot/DEBIAN/postinst
 echo "ver=\"$ver\"" >> $pkgroot/DEBIAN/postinst
 echo "pwre_target=\"$pwre_target\"" >> $pkgroot/DEBIAN/postinst
 cat $pkgsrc/postinst >> $pkgroot/DEBIAN/postinst
-chmod a+x $pkgroot/DEBIAN/postinst
 
 echo "#!/bin/sh" > $pkgroot/DEBIAN/prerm
 echo "ver=\"$ver\"" >> $pkgroot/DEBIAN/prerm
 cat $pkgsrc/prerm >> $pkgroot/DEBIAN/prerm
-chmod a+x $pkgroot/DEBIAN/prerm
+
+chmod 755 $pkgroot/DEBIAN/postinst
+chmod 755 $pkgroot/DEBIAN/prerm
+chmod 644 $pkgroot/DEBIAN/control
 
 # copyright
 cp $pkgsrc/copyright $pkgroot/usr/share/doc/pwrdemo$ver

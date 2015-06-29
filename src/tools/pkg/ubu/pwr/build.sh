@@ -102,8 +102,10 @@ echo "#!/bin/bash" > $pkgroot/DEBIAN/postinst
 echo "ver=\"$ver\"" >> $pkgroot/DEBIAN/postinst
 echo "pwre_target=\"$pwre_target\"" >> $pkgroot/DEBIAN/postinst
 cat $pkgsrc/postinst >> $pkgroot/DEBIAN/postinst
-chmod a+x $pkgroot/DEBIAN/postinst
 cp $pkgsrc/prerm $pkgroot/DEBIAN
+chmod 755 $pkgroot/DEBIAN/postinst
+chmod 755 $pkgroot/DEBIAN/prerm
+chmod 644 $pkgroot/DEBIAN/control
 
 # copyright
 cp $pkgsrc/copyright $pkgroot/usr/share/doc/pwr$ver
