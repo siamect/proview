@@ -17279,6 +17279,9 @@ static int	gcg_check_ra_plc_user(
 	pwr_tFileName	found_file;
 	pwr_tStatus 	sts;
         unsigned long 	search_ctx;
+	char 		date[40];
+	char		user[80];
+	pwr_tTime	current_time;
 
         search_ctx = 0;
         sts = dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_INIT);
@@ -17290,11 +17293,21 @@ static int	gcg_check_ra_plc_user(
 	  if ( checkfile == 0)
 	    return GSX__OPENFILE;
 
-	  fprintf( checkfile, "/*  Filename: $pwrp_inc/ra_plc_user.h */\n\n");
-	  fprintf( checkfile, "/*  This file is included by the plc code generated from the plc windows. */\n");
-	  fprintf( checkfile, "/*  Includefiles for classvolumes with classes referenced by the */\n");
-	  fprintf( checkfile, "/*  plc program should be inserted here. Also declarations of types and */\n");
-	  fprintf( checkfile, "/*  functions used in arithm code can be inserted. */\n\n");
+	  time_GetTime( &current_time);
+	  sts = time_AtoAscii( &current_time, time_eFormat_NumDateAndTime, date, sizeof(date));
+	  date[10] = 0;
+
+	  sts = syi_UserName( user, sizeof(user));
+
+	  fprintf( checkfile, "/*  File $pwrp_inc/ra_plc_user.h\n\n");
+	  fprintf( checkfile, " *  Description\n");
+	  fprintf( checkfile, " *  This file is included by the plc code generated from the plc windows.\n");
+	  fprintf( checkfile, " *  Includefiles for classvolumes with classes referenced by the\n");
+	  fprintf( checkfile, " *  plc program should be inserted here. Also declarations of types and\n");
+	  fprintf( checkfile, " *  functions used in arithm code can be inserted.\n\n");
+	  fprintf( checkfile, " *  Revision history\n");
+	  fprintf( checkfile, " *  %s %s Project created\n", date, user);
+	  fprintf( checkfile, " */\n\n");
 	  fprintf( checkfile, "#include \"pwr_nmpsclasses.h\"\n");
 	  fprintf( checkfile, "#include \"pwr_remoteclasses.h\"\n");
 	  fprintf( checkfile, "#include \"pwr_profibusclasses.h\"\n");

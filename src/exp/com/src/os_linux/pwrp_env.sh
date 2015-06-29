@@ -589,9 +589,21 @@ pwrc_create_func()
     echo "`date +%F`	$USER	Project created" >> $sysinfo
 
     # Create local setup script
+    revtxt="`date +%F`	$USER	File created"
     cat > $proot/src/login/login.sh << EOF
 #! /bin/bash
 #
+#  Description
+#
+#  Project login script.
+#  This script is executed when the project is attached, and contains
+#  settings for the development environment.
+#
+#
+#  Revision history
+#  $revtxt
+#
+
 #  Local setup 
 
 # Printer command for plc documents
@@ -611,6 +623,18 @@ EOF
 
     # Create a xtt_help.dat
     cat > $proot/src/cnf/xtt_help.dat << EOF
+#
+#  File \$pwrp_cnf/xtt_help.dat
+#
+#  Description
+#
+#  This file contains help topics that can be displayed in the Proview help browser.
+#  For more information see Designers Guide, chapter Helpfile.
+#
+#
+#  Revision history
+#  $revtxt
+#
 <topic> index
 
 <image> pwr_logga.gif
