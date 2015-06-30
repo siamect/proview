@@ -55,6 +55,7 @@ char default_values[][2][200] = {
     { "defaultProductionQbus", "1"},
     { "defaultSimulationQbus", "999"},
     { "defaultNodeHierRoot", "Nodes"},
+    { "defaultSecurity", "Security"},
     { "defaultOpPlaces", "OpPlaces"},
     { "defaultServers", "Servers"},
     { "defaultIO", "IO"},
@@ -62,6 +63,7 @@ char default_values[][2][200] = {
     { "defaultOpOp", "Op"},
     { "defaultOpMaintenance", "Maintenance"},
     { "defaultOpDefault", "OpDefault"},
+    { "defaultWebBrowser", "WebBrowser"},
   };
 
 

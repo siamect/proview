@@ -77,6 +77,7 @@ main()
   string current_node;
   string hw;
   string os;
+  string localscript;
 
   verify(0);
 
@@ -258,6 +259,12 @@ page_4:
   endif
 
   save/quiet
+
+  # Call local script
+  localscript = translate_filename( "$pwr_rootvolume_setup");
+  if ( localscript != "")
+    @'localscript'
+  endif
 
   # Build
   #noedit

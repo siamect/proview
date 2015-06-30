@@ -56,8 +56,65 @@ static pwr_tStatus PostCreate (
   pwr_tStatus sts;
   pwr_tObjName name;
   pwr_tOid srv_oid, opp_oid;
+  pwr_tBoolean bval;
+  pwr_tUInt32 ival;
 
-  sts = ldh_CreateObject(Session, &oid, "Security", pwr_eClass_Security, Object, ldh_eDest_IntoLast); 
+  cnf_get_value( "defaultSecurity", name, sizeof(name));
+  sts = ldh_CreateObject(Session, &oid, name, pwr_eClass_Security, Object, ldh_eDest_IntoLast); 
+  ival = 1;
+  cnf_get_value( "defaultXttPriv", name, sizeof(name));
+  if ( strcmp( name, "") != 0) {
+    sts = sscanf( name, "%d", &ival);
+    if ( sts == 1) {
+      sts = ldh_SetObjectPar( Session, oid, "SysBody", "DefaultXttPriv", (char *)&ival,
+			      sizeof(ival));
+      if ( EVEN(sts)) return sts;
+    }
+  }
+  cnf_get_value( "defaultWebPriv", name, sizeof(name));
+  if ( strcmp( name, "") != 0) {
+    sts = sscanf( name, "%d", &ival);
+    if ( sts == 1) {
+      sts = ldh_SetObjectPar( Session, oid, "SysBody", "DefaultWebPriv", (char *)&ival,
+			      sizeof(ival));
+      if ( EVEN(sts)) return sts;
+    }
+  }
+  cnf_get_value( "defaultWebSystemGroup", name, sizeof(name));
+  if ( strcmp( name, "") != 0) {
+    sts = ldh_SetObjectPar( Session, oid, "SysBody", "WebSystemGroup", (char *)name,
+			    sizeof(name));
+    if ( EVEN(sts)) return sts;
+  }
+
+  // OpPlace objects
+  cnf_get_value( "defaultOpPlaces", name, sizeof(name));
+  sts = ldh_ClassNameToId(Session, &cid, "$NodeHier");
+  sts = ldh_CreateObject(Session, &opp_oid, name, cid, Object, ldh_eDest_IntoLast); 
+
+  sts = ldh_ClassNameToId(Session, &cid, "OpPlace");
+  cnf_get_value( "defaultOpOp", name, sizeof(name));
+  sts = ldh_CreateObject(Session, &oid, name, cid, opp_oid, ldh_eDest_IntoLast); 
+  cnf_get_value( "defaultOpMaintenance", name, sizeof(name));
+  sts = ldh_CreateObject(Session, &oid, name, cid, opp_oid, ldh_eDest_IntoLast); 
+  cnf_get_value( "defaultOpSystemManager", name, sizeof(name));
+  if ( strcmp( name, "") != 0)
+    sts = ldh_CreateObject(Session, &oid, name, cid, opp_oid, ldh_eDest_IntoLast);
+  cnf_get_value( "defaultOpDefault", name, sizeof(name));
+  sts = ldh_CreateObject(Session, &oid, name, cid, opp_oid, ldh_eDest_IntoLast); 
+  bval = 1;
+  sts = ldh_SetObjectPar( Session, oid, "RtBody", "IsDefaultOp", (char *)&bval,
+			  sizeof(bval));
+  if ( EVEN(sts)) return sts;
+
+  cnf_get_value( "defaultWebBrowser", name, sizeof(name));
+  sts = ldh_ClassNameToId(Session, &cid, "WebBrowserConfig");
+  sts = ldh_CreateObject(Session, &oid, name, cid, opp_oid, ldh_eDest_IntoLast); 
+
+  sts = ldh_ClassNameToId(Session, &cid, "$NodeHier");
+  cnf_get_value( "defaultGraphHier", name, sizeof(name));
+  if ( strcmp( name, "") != 0)
+    sts = ldh_CreateObject(Session, &oid, name, cid, opp_oid, ldh_eDest_IntoLast);
 
   // Server objects
   cnf_get_value( "defaultServers", name, sizeof(name));
@@ -76,27 +133,13 @@ static pwr_tStatus PostCreate (
   sts = ldh_ClassNameToId(Session, &cid, "StatusServerConfig");
   sts = ldh_CreateObject(Session, &oid, "StatusServer", cid, srv_oid, ldh_eDest_IntoLast); 
 
-  // OpPlace objects
-  cnf_get_value( "defaultOpPlaces", name, sizeof(name));
-  sts = ldh_ClassNameToId(Session, &cid, "$NodeHier");
-  sts = ldh_CreateObject(Session, &opp_oid, name, cid, Object, ldh_eDest_IntoLast); 
-
-  sts = ldh_ClassNameToId(Session, &cid, "OpPlace");
-  cnf_get_value( "defaultOpOp", name, sizeof(name));
-  sts = ldh_CreateObject(Session, &oid, name, cid, opp_oid, ldh_eDest_IntoLast); 
-  cnf_get_value( "defaultOpMaintenance", name, sizeof(name));
-  sts = ldh_CreateObject(Session, &oid, name, cid, opp_oid, ldh_eDest_IntoLast); 
-  cnf_get_value( "defaultOpDefault", name, sizeof(name));
-  sts = ldh_CreateObject(Session, &oid, name, cid, opp_oid, ldh_eDest_IntoLast); 
-
+  // Plc process
   sts = ldh_ClassNameToId(Session, &cid, "PlcProcess");
   sts = ldh_CreateObject(Session, &oid, "Plc", cid, Object, ldh_eDest_IntoLast); 
 
+  // Web handler
   sts = ldh_ClassNameToId(Session, &cid, "WebHandler");
   sts = ldh_CreateObject(Session, &oid, "WebHandler", cid, Object, ldh_eDest_IntoLast); 
-
-  sts = ldh_ClassNameToId(Session, &cid, "WebBrowserConfig");
-  sts = ldh_CreateObject(Session, &oid, "WebBrowser", cid, Object, ldh_eDest_IntoLast); 
 
   // IO
   cnf_get_value( "defaultIO", name, sizeof(name));
