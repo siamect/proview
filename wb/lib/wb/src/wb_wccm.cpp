@@ -727,6 +727,107 @@ static int wccm_getobjectclass_func(
   return 1;
 }
 
+static int wccm_renameobject_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  int		sts;
+  pwr_tObjid	objid;
+  ldh_tSesContext ldhses;
+  ccm_sArg 	*arg_p2; 
+
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts)) {
+    *return_int = 0;
+    *return_decl = CCM_DECL_INT;
+    return CMD__NOVOLATTACHED;
+  }
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  sts = ldh_NameToObjid( ldhses, &objid, arg_list->value_string);
+  if ( ODD(sts))
+    sts = ldh_SetObjectName( ldhses, objid, arg_p2->value_string);
+
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
+static int wccm_moveobject_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  int		sts;
+  pwr_tObjid	objid;
+  pwr_tObjid	dest_objid;
+  ldh_tSesContext ldhses;
+  ccm_sArg 	*arg_p2; 
+  ccm_sArg 	*arg_p3; 
+  ldh_eDest     dcode;
+
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts)) {
+    *return_int = 0;
+    *return_decl = CCM_DECL_INT;
+    return CMD__NOVOLATTACHED;
+  }
+
+  if ( arg_count != 3)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  switch ( arg_p3->value_int) {
+  case 1: 
+    dcode = ldh_eDest_IntoFirst;
+    break;
+  case 2: 
+    dcode = ldh_eDest_IntoLast;
+    break;
+  case 3: 
+    dcode = ldh_eDest_After;
+    break;
+  case 4: 
+    dcode = ldh_eDest_Before;
+    break;
+  }
+
+  sts = ldh_NameToObjid( ldhses, &objid, arg_list->value_string);
+  if ( ODD(sts)) {
+    sts = ldh_NameToObjid( ldhses, &dest_objid, arg_p2->value_string);
+    if ( ODD(sts))
+      sts = ldh_MoveObject( ldhses, objid, dest_objid, dcode);
+  }
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
 static int wccm_objectexist_func( 
   void *filectx,
   ccm_sArg *arg_list, 
@@ -1911,6 +2012,10 @@ int	wccm_register(
     sts = ccm_register_function( "GetRootList", wccm_getrootlist_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "GetObjectClass", wccm_getobjectclass_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "RenameObject", wccm_renameobject_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "MoveObject", wccm_moveobject_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "GetTemplateObject", wccm_gettemplateobject_func);
     if ( EVEN(sts)) return sts;
