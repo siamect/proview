@@ -85,7 +85,7 @@
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
 # define SET_VERSION(a, b, c, d)  ((pwr_tVersion)((d << 24) + (c << 16) + (b << 8) + a))		  
 #else
-# define SET_VERSION(a, b, c, d)  ((pwr_tVersion)((a << 24) + (a << 16) + (a << 8) + a))		  
+# define SET_VERSION(a, b, c, d)  ((pwr_tVersion)((a << 24) + (b << 16) + (c << 8) + d))		  
 #endif
 
 #define pwrv_cBuildTimeStr       "17-OCT-2014 12:00:00"
@@ -95,5 +95,16 @@
 
 #define pwrv_cWbdbVersionShortStr "V53"
 #define pwrv_cPwrCopyright	 "Copyright (C) 2005-2015 SSAB EMEA AB"
+
+#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
+# define PWRV_VERSION_MAJOR (0xFF & (pwrv_cPwrVersion >> 8))
+# define PWRV_VERSION_MINOR (0xFF & (pwrv_cPwrVersion >> 16))
+# define PWRV_VERSION_RELEASE (0xFF & (pwrv_cPwrVersion >> 24))
+#else
+# define PWRV_VERSION_MAJOR (0xFF & (pwrv_cPwrVersion >> 16))
+# define PWRV_VERSION_MINOR (0xFF & (pwrv_cPwrVersion >> 8))
+# define PWRV_VERSION_RELEASE (0xFF & (pwrv_cPwrVersion >> 0))
+#endif
+
 
 #endif

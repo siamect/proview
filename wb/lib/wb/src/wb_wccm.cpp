@@ -41,6 +41,7 @@
 #include <string.h>
 
 #include "pwr.h"
+#include "pwr_version.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
 #include "co_time.h"
@@ -1360,6 +1361,24 @@ static int wccm_getopsys_func(
   return 1;
 }
 
+static int wccm_getversion_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  *return_int = 10000 * PWRV_VERSION_MAJOR + 100 * PWRV_VERSION_MINOR + PWRV_VERSION_RELEASE;
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
 static int wccm_gethardware_func( 
   void *filectx,
   ccm_sArg *arg_list, 
@@ -2052,6 +2071,8 @@ int	wccm_register(
     sts = ccm_register_function( "GetHardware", wccm_gethardware_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "GetOpSys", wccm_getopsys_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetVersion", wccm_getversion_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "CreateObject", wccm_createobject_func);
     if ( EVEN(sts)) return sts;

@@ -9997,6 +9997,8 @@ GetVolumeClass()	<LINK> getvolumeclass()
 GetVolumeList()		<LINK> getvolumelist()
 SetAttribute()		<LINK> setattribute()
 CreateObject()		<LINK> createobject()
+RenameObject()		<LINK> renameobject()
+MoveObject()		<LINK> moveobject()
 OpenPlcPgm()		<LINK> openplcpgm()
 CreatePlcObject()	<LINK> createplcobject()
 CreatePlcConnection()	<LINK> createplcconnection()
@@ -10030,6 +10032,7 @@ CloseGraph()		<LINK> closegraph()
 SetSubwindow()		<LINK> setsubwindow()
 GetIoDeviceData()	<LINK> getiodevicedata()
 SetIoDeviceData()	<LINK> setiodevicedata()
+GetVersion()		<LINK> getversion()
 pwr_get_config()	<LINK> pwr_get_config()
 get_node_name()		<LINK> get_node_name()
 
@@ -10993,7 +10996,9 @@ GetRootList()	<t>Get first object in root list. <LINK> getrootlist()
 GetVolumeClass() <t>Get class of a volume. <LINK> getvolumeclass()
 GetVolumeList()	<t>Get fist volume.	<LINK> getvolumelist()
 SetAttribute()	<t>Set attribute value.	<LINK> setattribute()
-CreateObject()	<t>Create an object session. <LINK> createobject()
+CreateObject()	<t>Create an object. <LINK> createobject()
+RenameObject()	<t>Change name of an object. <LINK> renameobject()
+MoveObject()	<t>Move an object. <LINK> moveobject()
 OpenPlcPgm()	<t>Open a PlcPgm.	<LINK> openplcpgm()
 CreatePlcObject() <t>Create a plc object. <LINK> createplcobject()
 CreatePlcConnection() <t>Create a plc connection. <LINK> createplcconnection()
@@ -11416,6 +11421,49 @@ int             <t>destcode        <t>destination code. 1 first child, 2 last ch
 <c>  CreateObject( "Temperature", "BaseTempSensor", "Pump-V1", 2);
 </TOPIC>
 
+<TOPIC> renameobject() <style> function
+RenameObject()
+
+int RenameObject( string name, string newname)
+
+<b>Description
+
+Change the name of an object.
+Returns the status of the operation.
+
+<b>Argument
+ 
+string          <t>name            <t>old name with path.
+string          <t>newname         <t>new name without path.
+
+<b>Example
+
+<c>  RenameObject( "H1-Zon1-Temp2", "PT2");
+</TOPIC>
+
+<TOPIC> moveobject() <style> function
+MoveObject()
+
+int MoveObject( string name, string destination, int destcode)
+
+<b>Description
+
+Move an object.
+Returns the status of the operation.
+
+<b>Argument
+ 
+string          <t>name            <t>name with path.
+string          <t>destination     <t>destination object. A father or sibling to the object
+                                   <t><t>in the new position.
+int             <t>destcode        <t>destination code. 1 first child, 2 last child,
+                                   <t><t>3 after, 4 before.
+
+<b>Example
+
+<c>  MoveObject( "H1-Zon1-Temp2", "H1-Zon2", 1);
+</TOPIC>
+
 <TOPIC> openplcpgm() <style> function
 OpenPlcPgm()
 
@@ -11621,6 +11669,7 @@ CloseGraph()	<t>Close a Ge graph.	<LINK> closegraph()
 SetSubwindow()	<t>Open a graph in a window object. <LINK> setsubwindow()
 GetIoDeviceData() <t>Get data from IO configuration. <LINK> getiodevicedata()
 SetIoDeviceData() <t>Set data in IO configuration. <LINK> setiodevicedata()
+GetVersion() <t>Get Proview version. <LINK> getversion()
 pwr_get_config() <t>Get configuration values. <LINK> pwr_get_config()
 get_node_name()	<t>Get node name. <LINK> get_node_name()
 </TOPIC>
@@ -12053,6 +12102,25 @@ string		<t>value	<t>Value to set.
 
 <c>  sts = SetIoDeviceData( "Nodes-MyNode-PN-D1", "NetworkSettings-DeviceName", "ET200M-D1");
 
+</TOPIC>
+
+<TOPIC> getversion() <style> function
+GetVersion()
+
+int GetVersion()
+
+<b>Description
+
+Get the Proview version for the current release.
+Returns an integer value that is 10000 * major + 100 * minor + release.
+For example V5.3.1 returns 50301.
+
+<b>Example
+
+<c>  if ( GetVersion() > 50300)
+<c>    # Only for versions larger than V5.3.0
+<c>    ...
+<c>  endif
 </TOPIC>
 </headerlevel>
 
