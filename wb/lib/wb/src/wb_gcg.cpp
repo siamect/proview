@@ -15034,6 +15034,7 @@ int	gcg_comp_m58( gcg_ctx gcgctx, vldh_t_node node)
 	pwr_sAttrRef		*connect_aref;
 	pwr_sAttrRef		caref, ccaref;
 	pwr_tObjName		cname;
+	char			cast[40] = "";
 	
 	ldhses = (node->hn.wind)->hw.ldhses; 
 
@@ -15292,11 +15293,14 @@ int	gcg_comp_m58( gcg_ctx gcgctx, vldh_t_node node)
 	      if ( par_inverted )
 	        gcg_error_msg( gcgctx, GSX__INV, node);
 
+	      if ( output_bodydef.Par->Output.Info.Type == pwr_eType_DataRef)
+		strcpy( cast, "(pwr_tVoid *)");
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE],
-			"%c%s->%sP = &%c%s->%s;\n",
+			"%c%s->%sP = %s&%c%s->%s;\n",
 			GCG_PREFIX_REF,
 			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
+			cast,
 			output_prefix,
  			output_type == GCG_OTYPE_OID ? 
 			     vldh_IdToStr(1, output_attrref.Objid) : 
