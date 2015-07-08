@@ -641,13 +641,14 @@ page_4:
   SetAttribute( attr, "$pwrp_exe/,$pwrp_web/");
 
   save/quiet
-  noedit
 
   # Call local script
   localscript = translate_filename( "$pwr_directoryvolume_setup");
   if ( localscript != "")
     @'localscript'
   endif
+
+  noedit
 
   found = 0;
   for ( i = 0; i < volcnt; i++)
