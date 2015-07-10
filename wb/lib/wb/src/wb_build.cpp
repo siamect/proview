@@ -164,6 +164,12 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
   else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT && m_sts != PWRB__INLIBHIER)
     sumsts = m_sts;
 
+  cnf( nodename, volumelist, volumecnt);
+  if ( evenSts())
+    sumsts = m_sts;
+  else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+
   if ( !opt.manual) {
     // Check if there is any new dbsfile
     for ( int i = 0; i < volumecnt; i++) {
@@ -243,12 +249,6 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
     sumsts = m_sts;
 
   syi_NodeName( &m_sts, currentnode, sizeof(currentnode));
-
-  cnf( nodename, volumelist, volumecnt);
-  if ( evenSts())
-    sumsts = m_sts;
-  else if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
-    sumsts = m_sts;
 
   import_files( bld_ePass_AfterNode);
   if ( evenSts())
