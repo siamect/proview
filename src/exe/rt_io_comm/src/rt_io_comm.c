@@ -48,6 +48,7 @@
 
 #include "pwr.h"
 #include "co_time.h"
+#include "co_cdh.h"
 #include "rt_gdh.h"
 #include "pwr_baseclasses.h"
 #include "rt_io_base.h"
@@ -70,7 +71,7 @@
  EVENT           io_comm_terminate;
 #endif
 
-static pwr_sClass_IOHandler* init(qcom_sQid*, lst_sEntry**, pwr_sNode**);
+static pwr_sClass_IOHandler *init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep, io_mProcess process, errh_eAnix errh_anix);
 
 static void usage()
 {
@@ -78,6 +79,8 @@ static void usage()
 rt_io_comm     I/O Communication program\n\
 \n\
      -m        Print loaded I/O methods\n\
+     -p        Optional process, IoComm, User, User2, User3 or User4.\n\
+     -a        Optional errh anix. A value between 61 and 80. Only if process is specified\n\
 \n");
 }
 
@@ -102,6 +105,8 @@ int main (int argc, char **argv)
   int delay_action = 0;
   pwr_sNode *nodep;
   pwr_tBoolean old_emergency_break = 0;
+  io_mProcess process = io_mProcess_IoComm;
+  errh_eAnix errh_anix = errh_eAnix_io;
 
   if ( argc > 1) {
     if ( strcmp( argv[1], "-m") == 0) {
@@ -112,21 +117,43 @@ int main (int argc, char **argv)
       usage();
       exit(0);
     }
+    if ( strcmp( argv[1], "-p") == 0 && argc > 2) {
+      if ( cdh_NoCaseStrcmp( argv[2], "iocomm") == 0)
+	process = io_mProcess_IoComm;
+      else if ( cdh_NoCaseStrcmp( argv[2], "user") == 0)
+	process = io_mProcess_User;
+      else if ( cdh_NoCaseStrcmp( argv[2], "user2") == 0)
+	process = io_mProcess_User2;
+      else if ( cdh_NoCaseStrcmp( argv[2], "user3") == 0)
+	process = io_mProcess_User3;
+      else if ( cdh_NoCaseStrcmp( argv[2], "user4") == 0)
+	process = io_mProcess_User4;
+      else {
+	printf( "** rt_io_comm, undefined process argument %s\n", argv[2]);
+	exit(0);
+      }
+
+      if ( strcmp( argv[3], "-a") == 0 && argc > 4) {
+	sts = sscanf( argv[4], "%d", (int *)&errh_anix);
+	if ( sts != 1 || errh_anix < errh_eAnix_appl1 || errh_anix > errh_eAnix_appl20)
+	  printf( "** rt_io_comm, anix argument error\n");
+      }
+    }
   }
 
-  ihp = init(&qid, &csup_lh, &nodep);
+  ihp = init(&qid, &csup_lh, &nodep, process, errh_anix);
 
   plc_UtlWaitForPlc();
 
   /* Prepare the swap context */
-  sts = io_init_swap(io_mProcess_IoComm, pwr_cNObjid, &io_ctx_swap, 1, ihp->CycleTimeBus);
+  sts = io_init_swap(process, pwr_cNObjid, &io_ctx_swap, 1, ihp->CycleTimeBus);
 
   for (close_io = swap_io = 0, init_io = 1;;) {
 
     if (init_io) {
       double f;
       
-      sts = io_init(io_mProcess_IoComm, pwr_cNObjid, &io_ctx, 1, ihp->CycleTimeBus);
+      sts = io_init(process, pwr_cNObjid, &io_ctx, 1, ihp->CycleTimeBus);
       if ( ODD(sts)) 
 	errh_SetStatus( PWR__SRUN);
 #if defined(OS_ELN)
@@ -210,7 +237,7 @@ int main (int argc, char **argv)
 }
 
 static pwr_sClass_IOHandler *
-init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep)
+init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep, io_mProcess process, errh_eAnix errh_anix)
 {
   pwr_tStatus sts = 1;
   pwr_sClass_IOHandler *ihp;
@@ -218,8 +245,26 @@ init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep)
   qcom_sQid qini;
   pwr_tOid oid;
   pwr_tOid node_oid;
+  char pname[20];
 
-  errh_Init("pwr_io", errh_eAnix_io);
+  switch ( process) {
+  case io_mProcess_User:
+    strcpy( pname, "pwr_io_user");
+    break;
+  case io_mProcess_User2:
+    strcpy( pname, "pwr_io_user2");
+    break;
+  case io_mProcess_User3:
+    strcpy( pname, "pwr_io_user3");
+    break;
+  case io_mProcess_User4:
+    strcpy( pname, "pwr_io_user4");
+    break;
+  default:
+    strcpy( pname, "pwr_io");
+  }
+
+  errh_Init("pwr_io", errh_anix);
 
 #if defined(OS_ELN)
   /* Event to kill dioc */
