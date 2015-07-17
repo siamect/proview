@@ -48,6 +48,7 @@
 # include <signal.h>
 # include <linux/capability.h>
 # include <sys/types.h>
+# include <errno.h>
 #endif
 
 #if defined OS_MACOS || defined OS_FREEBSD || defined OS_OPENBSD || defined OS_CYGWIN
@@ -349,9 +350,13 @@ scan (
 	  nanosleep(&ts, NULL);
 #else
 	  struct timespec ts;
+
 	  ts.tv_sec = tp->sync_time.tv_sec;
 	  ts.tv_nsec = tp->sync_time.tv_nsec;
-	  clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL);
+	  sts = clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL);
+	  while ( sts == EINTR)
+	    /* The wait was interruped, continue to sleep */
+	    sts = clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL);
 #endif
 	}
 	return;
@@ -467,7 +472,10 @@ scan (
       struct timespec ts;
       ts.tv_sec = tp->sync_time.tv_sec;
       ts.tv_nsec = tp->sync_time.tv_nsec;
-      clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL);
+      sts = clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL);
+      while ( sts == EINTR)
+	/* The wait was interruped, continue to sleep */
+	sts = clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL);
       
 #endif
       if (phase > 0) {
