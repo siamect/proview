@@ -2293,3 +2293,14 @@ int time_PeriodZoomOut( time_ePeriod *period)
   }
   return changed;
 }
+
+//! Print an absolute time. The format should contain %s.
+
+int time_PrintA( const char *format, pwr_tTime *ts)
+{
+  char timstr[40];
+
+  time_AtoAscii( ts, time_eFormat_DateAndTime, timstr, sizeof(timstr));
+  return printf( format, timstr);
+}
+

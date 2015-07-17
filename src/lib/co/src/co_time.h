@@ -228,6 +228,7 @@ void 	      time_NextPeriod( time_ePeriod period, pwr_tTime *prev_from, pwr_tTim
 			       pwr_tTime *from, pwr_tTime *to);
 int 	      time_PeriodZoomIn( time_ePeriod *period);
 int 	      time_PeriodZoomOut( time_ePeriod *period);
+int 	      time_PrintA( const char *format, pwr_tTime *ts);
 
 
 #if defined(OS_ELN)
