@@ -689,6 +689,9 @@ static pwr_tStatus IoAgentRead (
 
   local = (io_sAgentLocal *) ap->Local;
 
+  if ( !local->initialized)
+    return IO__SUCCESS;
+
   rp = ap->racklist;
 
   while ( rp) {    
@@ -748,6 +751,9 @@ static pwr_tStatus IoAgentWrite (
   pwr_sClass_Modbus_RTU_Master *op = (pwr_sClass_Modbus_RTU_Master *)ap->op;
 
   local = (io_sAgentLocal *) ap->Local;
+
+  if ( !local->initialized)
+    return IO__SUCCESS;
 
   rp = ap->racklist;
 

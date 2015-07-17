@@ -103,6 +103,9 @@ static pwr_tStatus IoCardRead (
   pwr_sClass_Modbus_RTU_Module *op;
   pwr_sClass_Modbus_RTU_Slave *slave;
 
+  if ( !((io_sAgentLocal *)ap->Local)->initialized)
+    return IO__SUCCESS;
+    
   op = (pwr_sClass_Modbus_RTU_Module *) cp->op;
   local = ((io_sCardLocal *) cp->Local)->msg;
   slave = (pwr_sClass_Modbus_RTU_Slave *) rp->op;
@@ -140,6 +143,9 @@ static pwr_tStatus IoCardWrite (
   pwr_sClass_Modbus_RTU_Module *op;
   
   pwr_sClass_Modbus_RTU_Slave *slave;
+
+  if ( !((io_sAgentLocal *)ap->Local)->initialized)
+    return IO__SUCCESS;
 
   op = (pwr_sClass_Modbus_RTU_Module *) cp->op;
   local = ((io_sCardLocal *) cp->Local)->msg;
