@@ -94,7 +94,11 @@ int main( int argc, char *argv[])
   CoXHelpGtk::set_default( xhelp);
 
   for ( i = 1; i < argc; i++) {
-    if ( strcmp( argv[i], "-l") == 0) {
+    if ( strcmp( argv[i], "-h") == 0) {
+      usage();
+      exit(0);
+    }
+    else if ( strcmp( argv[i], "-l") == 0) {
       if ( i+1 >= argc) {
 	usage();
 	exit(0);

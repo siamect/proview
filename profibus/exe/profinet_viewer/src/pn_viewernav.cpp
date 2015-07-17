@@ -829,7 +829,7 @@ ItemDevice::ItemDevice( PnViewerNav *item_viewernav, const char *item_name,
   memcpy( macaddress, item_macaddress, sizeof(macaddress));
   sprintf( ipaddress_str, "%hhu.%hhu.%hhu.%hhu", 
 	   item_ipaddress[3], item_ipaddress[2], item_ipaddress[1], item_ipaddress[0]);
-  sprintf( macaddress_str, "%02hhX-%02hhX-%02hhX-%02hhX-%02hhX-%02hhX", 
+  sprintf( macaddress_str, "%02hhX:%02hhX:%02hhX:%02hhX:%02hhX:%02hhX", 
 	   item_macaddress[5], item_macaddress[4], item_macaddress[3], 
 	   item_macaddress[2], item_macaddress[1], item_macaddress[0]);
   sprintf( deviceid_str, "%d", deviceid);
