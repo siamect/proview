@@ -1290,6 +1290,9 @@ cSup_exec (
   nextLimit.tv_sec = o->NextLimit.tv_sec;
   o->DetectCount++;
 
+  if ( time_Acomp( &nextLimit, NULL) == 0 && o->DetectCount < 20)
+    return;
+
   diff = time_Acomp(&dnow, &nextLimit);
 
   if (diff > 0 || (o->Delayed && !o->DelayNoted)) {
