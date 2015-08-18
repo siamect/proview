@@ -86,8 +86,8 @@ void usage()
 	  "\n"
 	  "  > rt_elog_dump [database] [dumpfile]\n"
 	  "\n"
-	  "           database      Database file, default " DATABASE "\n\n");
-	  "           dumpfile      Name of dumpfile, default " DUMPFILE "\n"
+	  "           database      Database file, default " DATABASE "\n\n"
+          "           dumpfile      Name of dumpfile, default " DUMPFILE "\n\n");
 }
 
 void new_row( FILE *fp)
