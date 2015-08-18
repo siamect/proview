@@ -95,7 +95,7 @@ co_StrToArgv (
     }
   }
 
-  argv[i] = NULL;
+  argv[i-1] = NULL;
   argv[0] = file;
 
   return argv;
