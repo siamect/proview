@@ -85,6 +85,7 @@ create_killer()
              [ $appid != "pwr_powerlink" ] &&
              [ $appid != "pwr_sim" ] &&
              [ $appid != "pwr_plc" ] &&
+	     [ $appfile != "rt_io_comm" ] &&
              [ ${appid:0:8} != "pwr_plc_" ]; then
             echo "killall $appname" >> $killer
           fi

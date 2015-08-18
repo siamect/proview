@@ -102,6 +102,7 @@
            [ $appid != "pwr_powerlink" ] &&
            [ $appid != "pwr_sim" ] &&
            [ $appid != "pwr_plc" ] &&
+           [ $appfile != "rt_io_comm" ] &&
            [ $s8 != "pwr_plc_" ]; then
           killall $appname
         fi
