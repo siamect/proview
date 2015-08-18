@@ -17303,22 +17303,28 @@ static int	gcg_check_ra_plc_user(
 
 	  sts = syi_UserName( user, sizeof(user));
 
-	  fprintf( checkfile, "/*  File $pwrp_inc/ra_plc_user.h\n\n");
+	  fprintf( checkfile, "/*  File $pwrp_inc/ra_plc_user.h\n");
+	  fprintf( checkfile, " *\n");
 	  fprintf( checkfile, " *  Description\n");
 	  fprintf( checkfile, " *  This file is included by the plc code generated from the plc windows.\n");
 	  fprintf( checkfile, " *  Includefiles for classvolumes with classes referenced by the\n");
 	  fprintf( checkfile, " *  plc program should be inserted here. Also declarations of types and\n");
-	  fprintf( checkfile, " *  functions used in arithm code can be inserted.\n\n");
+	  fprintf( checkfile, " *  functions used in arithm code can be inserted.\n");
+	  fprintf( checkfile, " *\n");
 	  fprintf( checkfile, " *  Revision history\n");
 	  fprintf( checkfile, " *  %s %s Project created\n", date, user);
+	  fprintf( checkfile, " *\n");
 	  fprintf( checkfile, " */\n\n");
+	  fprintf( checkfile, "#ifndef ra_plc_user_h\n");
+	  fprintf( checkfile, "#define ra_plc_user_h\n\n");
 	  fprintf( checkfile, "#include \"pwr_nmpsclasses.h\"\n");
 	  fprintf( checkfile, "#include \"pwr_remoteclasses.h\"\n");
 	  fprintf( checkfile, "#include \"pwr_profibusclasses.h\"\n");
 	  fprintf( checkfile, "#include \"pwr_basecomponentclasses.h\"\n");
 	  fprintf( checkfile, "#include \"pwr_otherioclasses.h\"\n");
 	  fprintf( checkfile, "#include \"pwr_siemensclasses.h\"\n");
-	  fprintf( checkfile, "#include \"pwr_abbclasses.h\"\n\n");
+	  fprintf( checkfile, "#include \"pwr_abbclasses.h\"\n\n\n\n\n");
+	  fprintf( checkfile, "#endif\n\n");
 	  fclose( checkfile);
 	  return GSX__FILECREATED;
 	}
