@@ -62,7 +62,7 @@
 
 
 /*----------------------------------------------------------------------------*\
-   Init method for the Modbus_TCP slave 
+   Init method for the Modbus_RTU slave 
 \*----------------------------------------------------------------------------*/
 
 static pwr_tStatus IoRackInit (
@@ -85,7 +85,7 @@ static pwr_tStatus IoRackInit (
   int i;
 
   sts = gdh_ObjidToName(rp->Objid, (char *) &name, sizeof(name), cdh_mNName);
-  errh_Info( "Init of Modbus TCP Slave and Modules %s", name);
+  errh_Info( "Init of Modbus RTU Slave and Modules %s", name);
 
   op = (pwr_sClass_Modbus_RTU_Slave *) rp->op;
   
@@ -172,7 +172,7 @@ static pwr_tStatus IoRackInit (
 
 
 /*----------------------------------------------------------------------------*\
-   Read method for the Modbus_TCP slave 
+   Read method for the Modbus_RTU slave 
 \*----------------------------------------------------------------------------*/
 static pwr_tStatus IoRackRead (
   io_tCtx	ctx,
@@ -185,7 +185,7 @@ static pwr_tStatus IoRackRead (
 
 
 /*----------------------------------------------------------------------------*\
-   Write method for the Modbus_TCP slave
+   Write method for the Modbus_RTU slave
 \*----------------------------------------------------------------------------*/
 static pwr_tStatus IoRackWrite (
   io_tCtx	ctx,
