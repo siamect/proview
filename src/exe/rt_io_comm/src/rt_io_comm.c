@@ -71,16 +71,18 @@
  EVENT           io_comm_terminate;
 #endif
 
-static pwr_sClass_IOHandler *init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep, io_mProcess process, errh_eAnix errh_anix);
+static pwr_sClass_IOHandler *init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep, io_mProcess process, errh_eAnix errh_anix, char *oname, float *cycletime);
 
 static void usage()
 {
-  printf( "\
+  printf( "\n\n\
 rt_io_comm     I/O Communication program\n\
 \n\
      -m        Print loaded I/O methods\n\
      -p        Optional process, IoComm, User, User2, User3 or User4.\n\
-     -a        Optional errh anix. A value between 61 and 80. Only if process is specified\n\
+     -a        Optional errh anix. A value between 61 and 80. Only if process is specified.\n\
+     -o        Optional application object. Only if process is specified.\n\
+     -c        Optional cycle time in seconds. Only if process is specified.\n\
 \n");
 }
 
@@ -107,53 +109,87 @@ int main (int argc, char **argv)
   pwr_tBoolean old_emergency_break = 0;
   io_mProcess process = io_mProcess_IoComm;
   errh_eAnix errh_anix = errh_eAnix_io;
+  pwr_tOName oname = "";
+  int i;
+  float cycletime = 0;
 
-  if ( argc > 1) {
-    if ( strcmp( argv[1], "-m") == 0) {
+  for ( i = 1; i < argc; i++) {
+    if ( strcmp( argv[i], "-m") == 0) {
       io_methods_print();
       exit(0);
     }
-    if ( strcmp( argv[1], "-h") == 0) {
+    else if ( strcmp( argv[i], "-h") == 0) {
       usage();
       exit(0);
     }
-    if ( strcmp( argv[1], "-p") == 0 && argc > 2) {
-      if ( cdh_NoCaseStrcmp( argv[2], "iocomm") == 0)
-	process = io_mProcess_IoComm;
-      else if ( cdh_NoCaseStrcmp( argv[2], "user") == 0)
-	process = io_mProcess_User;
-      else if ( cdh_NoCaseStrcmp( argv[2], "user2") == 0)
-	process = io_mProcess_User2;
-      else if ( cdh_NoCaseStrcmp( argv[2], "user3") == 0)
-	process = io_mProcess_User3;
-      else if ( cdh_NoCaseStrcmp( argv[2], "user4") == 0)
-	process = io_mProcess_User4;
-      else {
-	printf( "** rt_io_comm, undefined process argument %s\n", argv[2]);
+    else if ( strcmp( argv[i], "-p") == 0) {
+      if ( argc <= i+1) {
+	usage();
 	exit(0);
       }
-
-      if ( strcmp( argv[3], "-a") == 0 && argc > 4) {
-	sts = sscanf( argv[4], "%d", (int *)&errh_anix);
-	if ( sts != 1 || errh_anix < errh_eAnix_appl1 || errh_anix > errh_eAnix_appl20)
-	  printf( "** rt_io_comm, anix argument error\n");
+      if ( cdh_NoCaseStrcmp( argv[i+1], "iocomm") == 0)
+	process = io_mProcess_IoComm;
+      else if ( cdh_NoCaseStrcmp( argv[i+1], "user") == 0)
+	process = io_mProcess_User;
+      else if ( cdh_NoCaseStrcmp( argv[i+1], "user2") == 0)
+	process = io_mProcess_User2;
+      else if ( cdh_NoCaseStrcmp( argv[i+1], "user3") == 0)
+	process = io_mProcess_User3;
+      else if ( cdh_NoCaseStrcmp( argv[i+1], "user4") == 0)
+	process = io_mProcess_User4;
+      else {
+	usage();
+	exit(0);
       }
+      i++;
+    }
+    else if ( strcmp( argv[i], "-a") == 0) {
+      if ( argc <= i+1) {
+	usage();
+	exit(0);
+      }
+      sts = sscanf( argv[i+1], "%d", (int *)&errh_anix);
+      if ( sts != 1 || errh_anix < errh_eAnix_appl1 || errh_anix > errh_eAnix_appl20) {
+	usage();
+	exit(0);
+      }
+      i++;
+    }
+    else if ( strcmp( argv[i], "-c") == 0) {
+      if ( argc <= i+1) {
+	usage();
+	exit(0);
+      }
+      sts = sscanf( argv[i+1], "%f", &cycletime);
+      if ( sts != 1) {
+	usage();
+	exit(0);
+      }
+      i++;
+    }
+    else if ( strcmp( argv[i], "-o") == 0) {
+      if ( argc <= i+1) {
+	usage();
+	exit(0);
+      }
+      strncpy( oname, argv[i+1], sizeof(oname));
+      i++;
     }
   }
 
-  ihp = init(&qid, &csup_lh, &nodep, process, errh_anix);
+  ihp = init(&qid, &csup_lh, &nodep, process, errh_anix, oname, &cycletime);
 
   plc_UtlWaitForPlc();
 
   /* Prepare the swap context */
-  sts = io_init_swap(process, pwr_cNObjid, &io_ctx_swap, 1, ihp->CycleTimeBus);
+  sts = io_init_swap(process, pwr_cNObjid, &io_ctx_swap, 1, cycletime);
 
   for (close_io = swap_io = 0, init_io = 1;;) {
 
     if (init_io) {
       double f;
       
-      sts = io_init(process, pwr_cNObjid, &io_ctx, 1, ihp->CycleTimeBus);
+      sts = io_init(process, pwr_cNObjid, &io_ctx, 1, cycletime);
       if ( ODD(sts)) 
 	errh_SetStatus( PWR__SRUN);
 #if defined(OS_ELN)
@@ -162,10 +198,10 @@ int main (int argc, char **argv)
       io_dioc_start();
 #endif
       init_io = 0;
-      tmo = ihp->CycleTimeBus * 1000.;
-      f = floor(ihp->CycleTimeBus);
+      tmo = cycletime * 1000.;
+      f = floor(cycletime);
       cycle.tv_sec = f;
-      cycle.tv_nsec = (ihp->CycleTimeBus - f) * 1.0e9;
+      cycle.tv_nsec = (cycletime - f) * 1.0e9;
       cycle.tv_nsec++;
       time_GetTimeMonotonic(&next);
       time_Aadd(NULL, &next, &cycle);
@@ -209,7 +245,7 @@ int main (int argc, char **argv)
       if (delay_action == 2)
 	ihp->IOReadWriteFlag = FALSE;
 
-      aproc_TimeStamp(ihp->CycleTimeBus, 5);
+      aproc_TimeStamp(cycletime, 5);
     } else {
       ini_mEvent  new_event;
       qcom_sEvent *ep = (qcom_sEvent*) get.data;
@@ -237,7 +273,8 @@ int main (int argc, char **argv)
 }
 
 static pwr_sClass_IOHandler *
-init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep, io_mProcess process, errh_eAnix errh_anix)
+init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep, io_mProcess process, errh_eAnix errh_anix,
+      char *oname, float *cycletime)
 {
   pwr_tStatus sts = 1;
   pwr_sClass_IOHandler *ihp;
@@ -264,14 +301,14 @@ init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep, io_mProcess proce
     strcpy( pname, "pwr_io");
   }
 
-  errh_Init("pwr_io", errh_anix);
+  errh_Init(pname, errh_anix);
 
 #if defined(OS_ELN)
   /* Event to kill dioc */
   ker$create_event(&sts, &io_comm_terminate, EVENT$CLEARED);
 #endif
 
-  if (!qcom_Init(&sts, 0, "pwr_io")) {
+  if (!qcom_Init(&sts, 0, pname)) {
     errh_Fatal("qcom_Init, %m", sts);
     exit(sts);
   } 
@@ -289,7 +326,7 @@ init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep, io_mProcess proce
     exit(-1);
   }
 
-  sts = gdh_Init("pwr_io");
+  sts = gdh_Init(pname);
   if (EVEN(sts)) {
     errh_Fatal("rt_io_comm aborted\n%m", sts);
     exit(sts);
@@ -313,9 +350,21 @@ init (qcom_sQid *qid, lst_sEntry **csup_lh, pwr_sNode **nodep, io_mProcess proce
     exit(sts);
   }
 
+  if ( strcmp( oname, "") != 0) {
+    /* Register this object instead of IoHandler */
+    sts = gdh_NameToObjid( oname, &oid);
+    if ( EVEN(sts)) {
+      errh_Fatal("rt_io_comm aborted, application object not found\n%m", sts);
+      exit(sts);
+    }    
+  }
+
   aproc_RegisterObject( oid);
 
-  *csup_lh = csup_Init(&sts, oid, ihp->CycleTimeBus);
+  if ( *cycletime == 0)
+    *cycletime = ihp->CycleTimeBus;
+
+  *csup_lh = csup_Init(&sts, oid, *cycletime);
 
   return ihp;
 }
