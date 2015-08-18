@@ -776,6 +776,37 @@ extern "C" void xnav_show_subcli_scan( XNav *xnav)
     brow_Redraw( xnav->brow->ctx, 0);
 }
 
+void process_to_name( char *name, pwr_tUInt32 process)
+{
+  switch ( process) {
+  case pwr_mIoProcessMask_Plc:
+    strcpy( name, "Plc");
+    break;
+  case pwr_mIoProcessMask_IoComm:
+    strcpy( name, "IoComm");
+    break;
+  case pwr_mIoProcessMask_Profibus:
+    strcpy( name, "Profibus");
+    break;
+  case pwr_mIoProcessMask_User:
+    strcpy( name, "User");
+    break;
+  case pwr_mIoProcessMask_User2:
+    strcpy( name, "User2");
+    break;
+  case pwr_mIoProcessMask_User3:
+    strcpy( name, "User3");
+    break;
+  case pwr_mIoProcessMask_User4:
+    strcpy( name, "User4");
+    break;
+  case pwr_mIoProcessMask_Powerlink:
+    strcpy( name, "Powerlink");
+    break;
+  default:
+    sprintf( name, "%4d", process);
+  }
+}
 
 int XNav::show_device()
 {
@@ -872,29 +903,35 @@ int XNav::show_device()
         sts = gdh_GetObjectInfo( attr_name,
 		(void *) &process, sizeof(process));
         if ( ODD(sts))
-          sprintf( t.elem[t.elem_cnt].fix_str, "%4d", process);
-        else
+          process_to_name( t.elem[t.elem_cnt].fix_str, process);
+        else {
+	  process = 0;
           strcpy( t.elem[t.elem_cnt].fix_str, "-");
+	}
         t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
 
         // ThreadObject
-        strcpy( attr_name, object_name);
-        strcat( attr_name, ".ThreadObject");
-        sts = gdh_GetObjectInfo( attr_name,
-		(void *) &thread_objid, sizeof(thread_objid));
-        if ( ODD(sts))
-        {
-          sts = gdh_ObjidToName ( thread_objid, namebuf,
-			sizeof(namebuf), cdh_mName_object);
-          if ( ODD(sts))
-            strcpy( t.elem[t.elem_cnt].fix_str, namebuf);
-          else
-            strcpy( t.elem[t.elem_cnt].fix_str, "-");
-        }
-        else
-          strcpy( t.elem[t.elem_cnt].fix_str, "-");
-        t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
-
+	if ( !(process & 1)) {
+	  strcpy( t.elem[t.elem_cnt].fix_str, "-");
+	  t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+	}
+	else {
+	  strcpy( attr_name, object_name);
+	  strcat( attr_name, ".ThreadObject");
+	  sts = gdh_GetObjectInfo( attr_name,
+				   (void *) &thread_objid, sizeof(thread_objid));
+	  if ( ODD(sts)) {
+	    sts = gdh_ObjidToName ( thread_objid, namebuf,
+				    sizeof(namebuf), cdh_mName_object);
+	    if ( ODD(sts))
+	      strcpy( t.elem[t.elem_cnt].fix_str, namebuf);
+	    else
+	      strcpy( t.elem[t.elem_cnt].fix_str, "-");
+	  }
+	  else
+	    strcpy( t.elem[t.elem_cnt].fix_str, "-");
+	  t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+	}
         // RegAddress
         strcpy( attr_name, object_name);
         strcat( attr_name, ".RegAddress");
