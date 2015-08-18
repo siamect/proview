@@ -84,10 +84,10 @@ void usage()
   printf( "\n"
 	  "  rt_elog_dump   Dump eventlog to text file\n"
 	  "\n"
-	  "  > rt_elog_dump [dumpfile] [database]\n"
+	  "  > rt_elog_dump [database] [dumpfile]\n"
 	  "\n"
-	  "           dumpfile      Name of dumpfile, default " DUMPFILE "\n"
 	  "           database      Database file, default " DATABASE "\n\n");
+	  "           dumpfile      Name of dumpfile, default " DUMPFILE "\n"
 }
 
 void new_row( FILE *fp)
