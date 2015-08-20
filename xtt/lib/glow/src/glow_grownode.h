@@ -225,6 +225,9 @@ class GrowNode : public GlowNode {
   glow_eDrawType text_type;	//!< Text type, bold or normal.
   glow_eFont	text_font;	//!< Text font.
   int		disable_cb;     //!< Disable event callbacks
+  int		annot_scrollingtext; //!< Annotation number for scrolling text annotation.
+  double 	annot_offset_x;	//!< Offset for annotation text position in x direction.
+  double 	annot_offset_y;	//!< Offset for annotation text position in y direction.
   
   //! Set dynamic code
   /*!
@@ -930,6 +933,8 @@ class GrowNode : public GlowNode {
   int get_annotation_info( int num, int *t_size, glow_eDrawType *t_drawtype, glow_eDrawType *t_color,
 			   glow_eDrawType *bg_color, double *scale, glow_eFont *font);
   int get_annotation_text_size( int num, double *tsize);
+  void set_annotation_text_offset( int num, double x, double y);
+  void get_annotation_text_extent( int num, double *width, double *height);
   int get_java_name( char *name) { return nc->get_java_name( name);}
   void set_textbold( int bold);
   void set_textfont( glow_eFont textfont);

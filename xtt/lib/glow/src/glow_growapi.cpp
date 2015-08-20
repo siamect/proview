@@ -352,6 +352,18 @@ int grow_GetAnnotationTextSize( grow_tNode node, int number, double *tsize)
   return 0;
 }
 
+void grow_SetAnnotationTextOffset( grow_tNode node, int num, double x, double y)
+{
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode)
+    ((GrowNode *)node)->set_annotation_text_offset( num, x, y);
+}
+
+void grow_GetAnnotationTextExtent( grow_tNode node, int num, double *width, double *height)
+{
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode)
+    ((GrowNode *)node)->get_annotation_text_extent( num, width, height);
+}
+
 extern "C" void	grow_EnableEvent( GrowCtx *ctx, glow_eEvent event, 
 		glow_eEventType event_type, 
 		int (*event_cb)(GlowCtx *ctx, glow_tEvent event))

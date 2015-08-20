@@ -64,7 +64,8 @@ GrowNode::GrowNode( GrowCtx *glow_ctx, const char *name, GlowNodeClass *node_cla
 	flip_horizontal(false), flip_vertical(false), fill_level(1),
 	level_direction( glow_eDirection_Right), shadow(0), input_position(0), input_selected(0),
 	gradient(glow_eGradient_No), text_type(glow_eDrawType_TextHelvetica), 
-	text_font(glow_eFont_No), disable_cb(0)
+	text_font(glow_eFont_No), disable_cb(0), annot_scrollingtext(-1), annot_offset_x(0),
+	annot_offset_y(0)
 {  
   memset( argv, 0, sizeof(argv));
   memset( argsize, 0, sizeof(argsize));
@@ -970,11 +971,15 @@ void GrowNode::draw()
 {
   if ( root_node)
     root_node->draw();
-  else
-    ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  else {
+    int draw_mp = DRAW_MP;
+    if ( annot_scrollingtext != -1)
+      draw_mp = 1;
+    ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - draw_mp + 1,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - draw_mp,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + draw_mp,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + draw_mp);
+  }
   
   ctx->draw( &ctx->navw,  x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
 	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
@@ -1003,7 +1008,15 @@ void GrowNode::draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y)
       	x_left * w->zoom_factor_x - w->offset_x <= ur_x &&
        	y_high * w->zoom_factor_y - w->offset_y + 1 >= ll_y &&
        	y_low * w->zoom_factor_y - w->offset_y <= ur_y) {
+    if ( annot_scrollingtext != -1)
+      ctx->gdraw->set_clip_rectangle( w, x_left * w->zoom_factor_x - w->offset_x, 
+				      y_low * w->zoom_factor_y - w->offset_y, 
+				      x_right * w->zoom_factor_x - w->offset_x + 1, 
+				      y_high * w->zoom_factor_y - w->offset_y + 2);
+
     draw( w, (GlowTransform *)NULL, highlight, hot, (void *)this, NULL);
+    if ( annot_scrollingtext != -1)
+      ctx->gdraw->reset_clip_rectangle( w);
   }
 }
 
@@ -2097,6 +2110,22 @@ int GrowNode::get_annotation_info( int num, int *t_size, glow_eDrawType *t_drawt
 int GrowNode::get_annotation_text_size( int num, double *tsize)
 {
   return nc->get_annotation_text_size( &trf, num, tsize);
+}
+
+void GrowNode::set_annotation_text_offset( int num, double x, double y)
+{
+  if ( annot_scrollingtext == -1)
+    annot_scrollingtext = num;
+  if ( num == annot_scrollingtext) {
+    annot_offset_x = x;
+    annot_offset_y = y;
+    draw();
+  }
+}
+
+void GrowNode::get_annotation_text_extent( int num, double *width, double *height)
+{
+  nc->get_annotation_text_extent( &trf, (void *)this, num, width, height);
 }
 
 glow_eVis GrowNode::get_visibility()

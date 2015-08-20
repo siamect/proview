@@ -3188,6 +3188,7 @@ Animation <t>Boolean    <t>Olika typer av animering. <link>GeDynAnimation
 Video     <t>-          <t>Kontinuerlig uppdatering av en blidfil. <link>GeDynVideo
 SliderBackground <t>-   <t>Markerar att subgrafen är bakgrund till en slider-komponent. <link>GeDynSliderBackground
 DigCommand <t>Boolean   <t>Exekverar ett kommando när signalet blir hög. <link>GeDynDigCommand
+ScrollingText <t>Boolean   <t>Visar en rullande text. <link>GeDynScrollingText
 
 <h2>Inherit
 För en instans av en subgraph betyder det att dynamiken ärvs från subgrafs-klassen, dvs den 
@@ -3655,6 +3656,19 @@ DigFourShift.Attribute2 <t><t>Signal i databasen som skiftar sida. Aktiverar rit
                    <t><t>den tredje sidan.
 DigFourShift.Attribute3 <t><t>Signal i databasen som skiftar sida. Aktiverar ritning av
                    <t><t>den fjärde sidan.
+</topic>
+
+<topic>GeDynScrollingText <style>function
+ScrollingText
+
+Visa en rullande text.
+
+Objectet kopplas till ett sträng-attribut i databasen, och texten i attributet visas.
+
+<b>Attribut <t><t>Beskrivning
+ScrollingText.Attribute <t><t>Attribut i databasen av typ String.
+ScrollingText.Direction <t><t>Rullningsriktning, vänster, höger, upp eller ner.
+ScrollingText.Speed.    <t><t>Hastighet på rullningen.
 </topic>
 
 <topic>GeDynAnimation <style>function

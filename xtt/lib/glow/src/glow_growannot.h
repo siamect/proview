@@ -71,13 +71,14 @@ class GrowAnnot : public GlowAnnot {
     \param nodraw	Don't draw the object now.
   */
   GrowAnnot( GrowCtx *glow_ctx, double x = 0, double y = 0,
-	int annot_num = 0, glow_eDrawType d_type = glow_eDrawType_TextHelveticaBold,
-	glow_eDrawType color_d_type = glow_eDrawType_Line,
-	int t_size = 2, glow_eAnnotType a_type = glow_eAnnotType_OneLine,
-	int rel_pos = 0, glow_mDisplayLevel display_lev = glow_mDisplayLevel_1,
-	int nodraw =0):
-	GlowAnnot(glow_ctx,x,y,annot_num,d_type,color_d_type,t_size,a_type,
-	rel_pos,display_lev), temporary_scale(0), adjustment(glow_eAdjustment_Left) {};
+	     int annot_num = 0, glow_eDrawType d_type = glow_eDrawType_TextHelveticaBold,
+	     glow_eDrawType color_d_type = glow_eDrawType_Line,
+	     int t_size = 2, glow_eAnnotType a_type = glow_eAnnotType_OneLine,
+	     int rel_pos = 0, glow_mDisplayLevel display_lev = glow_mDisplayLevel_1,
+	     int nodraw =0):
+    GlowAnnot(glow_ctx,x,y,annot_num,d_type,color_d_type,t_size,a_type,
+	      rel_pos,display_lev), temporary_scale(0), adjustment(glow_eAdjustment_Left)
+    {};
 
   //! Save the content of the object to file.
   /*!
@@ -193,6 +194,7 @@ class GrowAnnot : public GlowAnnot {
 			    glow_eDrawType *t_color, glow_eFont *font);
 
   int get_text_size( GlowTransform *t, double *tsize);
+  void get_text_extent( GlowTransform *t, void *node, double *width, double *height);
 };
 
 /*@}*/

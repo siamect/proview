@@ -440,6 +440,10 @@ extern "C" {
 				    int size);
 
   int grow_GetAnnotationTextSize( grow_tNode node, int number, double *tsize);
+
+  void grow_SetAnnotationTextOffset( grow_tNode node, int num, double x, double y);
+
+  void grow_GetAnnotationTextExtent( grow_tNode node, int num, double *width, double *height);
   
   //! Enable an event, an register a callback function for the event.
   /*!

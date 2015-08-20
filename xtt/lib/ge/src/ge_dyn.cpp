@@ -459,6 +459,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeTimeoutColor((const GeTimeoutColor&) *elem); break;
     case ge_mDynType2_DigFourShift:
       e = new GeDigFourShift((const GeDigFourShift&) *elem); break;
+    case ge_mDynType2_ScrollingText:
+      e = new GeScrollingText((const GeScrollingText&) *elem); break;
     default: ;
     }
     switch( elem->action_type1) {
@@ -592,6 +594,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_AnalogShift: e = (GeDynElem *) new GeAnalogShift(this); break;
       case ge_eSave_DigShift: e = (GeDynElem *) new GeDigShift(this); break;
       case ge_eSave_DigFourShift: e = (GeDynElem *) new GeDigFourShift(this); break;
+      case ge_eSave_ScrollingText: e = (GeDynElem *) new GeScrollingText(this); break;
       case ge_eSave_Animation: e = (GeDynElem *) new GeAnimation(this); break;
       case ge_eSave_Video: e = (GeDynElem *) new GeVideo(this); break;
       case ge_eSave_Bar: e = (GeDynElem *) new GeBar(this); break;
@@ -1542,6 +1545,9 @@ GeDynElem *GeDyn::create_dyn2_element( int mask, int instance)
   case ge_mDynType2_DigFourShift:
     e = (GeDynElem *) new GeDigFourShift(this);
     break;
+  case ge_mDynType2_ScrollingText:
+    e = (GeDynElem *) new GeScrollingText(this);
+    break;
   default: ;
   }
   return e;
@@ -1738,6 +1744,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
       break;
     case ge_mDynType2_DigFourShift:
       e = (GeDynElem *) new GeDigFourShift((GeDigFourShift&) x);
+      break;
+    case ge_mDynType2_ScrollingText:
+      e = (GeDynElem *) new GeScrollingText((GeScrollingText&) x);
       break;
     default: ;
     }
@@ -6572,6 +6581,196 @@ int GeDigFourShift::scan( grow_tObject object)
 }
 
 int GeDigFourShift::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
+  return 1;
+}
+
+void GeScrollingText::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  strcpy( attrinfo[i].name, "ScrollingText.Attribute");
+  attrinfo[i].value = attribute;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute);
+
+  strcpy( attrinfo[i].name, "ScrollingText.Direction");
+  attrinfo[i].value = &direction;
+  attrinfo[i].type = glow_eType_Direction;
+  attrinfo[i++].size = sizeof( direction);
+
+  strcpy( attrinfo[i].name, "ScrollingText.Speed");
+  attrinfo[i].value = &speed;
+  attrinfo[i].type = glow_eType_Double;
+  attrinfo[i++].size = sizeof( speed);
+
+  *item_count = i;
+}
+
+void GeScrollingText::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
+{
+  (*cnt)--;
+  if ( *cnt == 0) {
+    char msg[200];
+
+    strncpy( attribute, attr_name, sizeof( attribute));
+    snprintf( msg, sizeof(msg), "ScrollingText.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
+    dyn->graph->message( 'I', msg);
+  }
+}
+
+void GeScrollingText::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
+void GeScrollingText::save( ofstream& fp)
+{
+  fp << int(ge_eSave_ScrollingText) << endl;
+  fp << int(ge_eSave_ScrollingText_attribute) << FSPACE << attribute << endl;
+  fp << int(ge_eSave_ScrollingText_direction) << FSPACE << int(direction) << endl;
+  fp << int(ge_eSave_ScrollingText_speed) << FSPACE << speed << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeScrollingText::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[40];
+  int		tmp;
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeScrollingText: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+      case ge_eSave_ScrollingText: break;
+      case ge_eSave_ScrollingText_attribute:
+        fp.get();
+        fp.getline( attribute, sizeof(attribute));
+        break;
+      case ge_eSave_ScrollingText_direction: fp >> tmp; direction = (glow_eDirection)tmp; break;
+      case ge_eSave_ScrollingText_speed: fp >> speed; break;
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeScrollingText:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeScrollingText::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+  int		attr_type, attr_size, inverted;
+  pwr_tAName   	parsed_name;
+  int		sts;
+  double	ll_x, ll_y, ur_x, ur_y;
+
+  size = 4;
+  p = 0;
+  db = dyn->parse_attr_name( attribute, parsed_name,
+			     &inverted, &attr_type, &attr_size);
+  if ( strcmp( parsed_name,"") != 0) {
+
+    switch ( db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
+      if ( EVEN(sts)) return sts;
+      break;
+    case graph_eDatabase_Ccm:
+      sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, (void **)&p);
+      if ( EVEN(sts)) return sts;
+      break;
+    default: ;
+    }
+  }
+
+  grow_MeasureNode( object, &ll_x, &ll_y, &ur_x, &ur_y);
+  switch( direction) {
+  case glow_eDirection_Left:
+  case glow_eDirection_Right:
+    osize = ur_x - ll_x;
+    break;
+  default:
+    osize = ur_y - ll_y;
+  }
+    
+  trace_data->p = &pdummy;
+  first_scan = true;
+  return 1;
+}
+
+int GeScrollingText::disconnect( grow_tObject object)
+{
+  if ( p && db == graph_eDatabase_Gdh)
+    gdh_UnrefObjectInfo( subid);
+  return 1;
+}
+
+int GeScrollingText::scan( grow_tObject object)
+{
+  double width, height;
+  grow_GetAnnotationTextExtent( object, 1, &width, &height);
+
+  switch ( direction) {
+  case glow_eDirection_Left: {
+    offset -= speed * dyn->graph->animation_scan_time;
+    if ( offset < -width)
+      offset = osize;
+    grow_SetAnnotationTextOffset( object, 1, offset, 0);
+    break;
+  }
+  case glow_eDirection_Right: {
+    offset += speed * dyn->graph->animation_scan_time;
+    if ( offset > osize)
+      offset = -width;
+    grow_SetAnnotationTextOffset( object, 1, offset, 0);
+    break;
+  }
+  case glow_eDirection_Up: {
+    offset += speed * dyn->graph->animation_scan_time;
+    if ( offset > osize)
+      offset = -height;
+    grow_SetAnnotationTextOffset( object, 1, 0, offset);
+    break;
+  }
+  case glow_eDirection_Down: {
+    offset -= speed * dyn->graph->animation_scan_time;
+    if ( offset < -height)
+      offset = osize;
+    grow_SetAnnotationTextOffset( object, 1, 0, offset);
+    break;
+  }
+  default: ;
+  }
+
+
+  if ( !first_scan) {
+    if ( strncmp( old_value, (char *)p, size) == 0)
+      // No change since last time
+      return 1;	
+  }
+  else
+    first_scan = false;
+
+  memcpy( &old_value, p, MIN(size, (int) sizeof(old_value)));
+
+  grow_SetAnnotation( object, 1, (char *)p, strlen((char *)p));
+
+  return 1;
+}
+
+int GeScrollingText::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
   return 1;
 }

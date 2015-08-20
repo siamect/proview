@@ -117,6 +117,8 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 
   glow_eDrawType color;
   int rot;
+  double offset_x = 0;
+  double offset_y = 0;
   double trf_scale = trf.vertical_scale( t);
   int idx = int( trf_scale * w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
   double tsize = trf_scale * w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
@@ -126,6 +128,11 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 
   glow_eFont lfont;
   glow_eDrawType ldraw_type;
+
+  if ( node && ((GrowNode *)node)->annot_scrollingtext == number) {
+    offset_x = ((GrowNode *)node)->annot_offset_x;
+    offset_y = ((GrowNode *)node)->annot_offset_y;
+  }
 
   if ( node && ((GrowNode *)node)->text_font != glow_eFont_No) {
     lfont = ((GrowNode *)node)->text_font;
@@ -138,14 +145,14 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 
   if (!t)
   {
-    x1 = int( trf.x( p.x, p.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int( trf.y( p.x, p.y) * w->zoom_factor_y) - w->offset_y;
+    x1 = int( (trf.x( p.x, p.y) + offset_x) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( (trf.y( p.x, p.y) + offset_y) * w->zoom_factor_y) - w->offset_y;
     rot = (int) trf.rot();
   }
   else
   {
-    x1 = int( trf.x( t, p.x, p.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int( trf.y( t, p.x, p.y) * w->zoom_factor_y) - w->offset_y;
+    x1 = int( (trf.x( t, p.x, p.y) + offset_x) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( (trf.y( t, p.x, p.y) + offset_y) * w->zoom_factor_y) - w->offset_y;
     rot = (int) trf.rot( t);
   }
   rot = rot < 0 ? rot % 360 + 360 : rot % 360;
@@ -655,3 +662,32 @@ int GrowAnnot::get_text_size( GlowTransform *t, double *tsize)
 
   return 1;
 }
+
+void GrowAnnot::get_text_extent( GlowTransform *t, void *node, double *width, double *height)
+{
+  if ( !((GlowNode *)node)->annotv[number]) {
+    *width = 0;
+    *height = 0;
+    return;
+  }
+  int z_width, z_height, descent;
+  double trf_scale = trf.vertical_scale( t);
+  int idx = int( trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * 
+		 (text_size +4) - 4);
+  double tsize = trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size);
+  if ( idx < 0)
+    return;
+  idx = min( idx, DRAW_TYPE_SIZE-1);
+
+  char *textp = ((GlowNode *) node)->annotv[number];
+  int text_len = strlen(((GlowNode *) node)->annotv[number]);
+  
+  ctx->gdraw->get_text_extent( textp,
+			       text_len,
+			       draw_type, idx, font,
+			       &z_width, &z_height, &descent, tsize, 0);
+  
+  *width = (double)z_width / ctx->mw.zoom_factor_x;
+  *height = (double)z_height / ctx->mw.zoom_factor_y;
+}
+

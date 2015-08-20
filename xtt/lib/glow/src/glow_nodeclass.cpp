@@ -775,6 +775,20 @@ int GlowNodeClass::get_annotation_text_size( GlowTransform *t, int num, double *
   return 0;
 }
 
+void GlowNodeClass::get_annotation_text_extent( GlowTransform *t, void *node, int num, 
+						double *width, double *height)
+{
+  int i;
+
+  for ( i = 0; i < a.a_size; i++) {
+    if ( a.a[i]->type() == glow_eObjectType_GrowAnnot &&
+         ((GlowAnnot *)a.a[i])->number == num) {
+      ((GrowAnnot *)a.a[i])->get_text_extent( t, node, width, height);
+      break;
+    }
+  }
+}
+
 
 
 

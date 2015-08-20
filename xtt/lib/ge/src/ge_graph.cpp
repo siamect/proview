@@ -3687,10 +3687,10 @@ static int graph_trace_scan_bc( grow_tObject object, void *p)
   if ( dyn->cycle == glow_eCycle_Inherit)
     return 1;
   if ( dyn->cycle == glow_eCycle_Slow && dyn->graph->slow_scan_cnt != 0 &&
-       !(dyn->total_dyn_type1 & ge_mDynType1_Animation))
+       !(dyn->total_dyn_type1 & ge_mDynType1_Animation || dyn->total_dyn_type2 & ge_mDynType2_ScrollingText))
     return 1;
   if ( dyn->cycle == glow_eCycle_Fast && dyn->graph->fast_scan_cnt != 0 &&
-       !(dyn->total_dyn_type1 & ge_mDynType1_Animation))
+       !(dyn->total_dyn_type1 & ge_mDynType1_Animation || dyn->total_dyn_type2 & ge_mDynType2_ScrollingText))
     return 1;
 
   dyn->scan( object);

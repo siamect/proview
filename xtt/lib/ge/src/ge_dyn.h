@@ -175,6 +175,7 @@
     ge_eDynPrio_Axis,
     ge_eDynPrio_MethodToolbar,
     ge_eDynPrio_MethodPulldownMenu,
+    ge_eDynPrio_ScrollingText,
 
     // This should always be last
     ge_eDynPrio_Script  = 9998,
@@ -224,7 +225,8 @@
     ge_mDynType2_Axis		= 1 << 0,
     ge_mDynType2_DigTextColor  	= 1 << 1,
     ge_mDynType2_TimeoutColor  	= 1 << 2,
-    ge_mDynType2_DigFourShift  	= 1 << 3
+    ge_mDynType2_DigFourShift  	= 1 << 3,
+    ge_mDynType2_ScrollingText 	= 1 << 4
   } ge_mDynType2;
 
   //! Action types.
@@ -337,6 +339,7 @@
     ge_eSave_DigTextColor               = 39,
     ge_eSave_TimeoutColor               = 40,
     ge_eSave_DigFourShift	       	= 41,
+    ge_eSave_ScrollingText	       	= 42,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -548,6 +551,9 @@
     ge_eSave_DigFourShift_attribute1   	= 4100,
     ge_eSave_DigFourShift_attribute2  	= 4101,
     ge_eSave_DigFourShift_attribute3   	= 4102,
+    ge_eSave_ScrollingText_attribute   	= 4200,
+    ge_eSave_ScrollingText_direction  	= 4201,
+    ge_eSave_ScrollingText_speed   	= 4202,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -1655,6 +1661,43 @@ class GeDigFourShift : public GeDynElem {
   GeDigFourShift( const GeDigFourShift& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( attribute1, x.attribute1); strcpy( attribute2, x.attribute2); strcpy( attribute3, x.attribute3);}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
+  void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+
+};
+
+//! Horizontally scrolling text.
+class GeScrollingText : public GeDynElem {
+ public:
+  pwr_tAName attribute;
+  glow_eDirection direction;
+  double speed;
+
+  pwr_tString256 *p;
+  pwr_tSubid subid;
+  int size;
+  graph_eDatabase db;
+  pwr_tString256 old_value;
+  int a_typeid;
+  bool first_scan;
+  double offset;
+  double osize;
+  double tsize;
+
+  GeScrollingText( GeDyn *e_dyn) : 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_ScrollingText, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_ScrollingText), direction(glow_eDirection_Right), speed(2), offset(0), tsize(0)
+    { strcpy( attribute, "");}
+  GeScrollingText( const GeScrollingText& x) : 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), direction(x.direction),
+    speed(x.speed), offset(0), tsize(0)
+    { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);

@@ -3214,6 +3214,7 @@ Animation <t>Boolean    <t>Different types of animation. <link>GeDynAnimation
 Video     <t>-          <t>Display a continuously updated image file. <link>GeDynVideo
 SliderBackground <t>-   <t>Indicates that the subgraph is background to a slider component. <link>GeDynSliderBackground
 DigCommand <t>Boolean   <t>Executes a command when signal gets high. <link>GeDynDigCommand
+ScrollingText <t>Boolean <t>Display a scrolling text. <link>GeDynScrollingText
 
 <h2>Inherit
 For an instance of a subgraph, Inherit means, that the dynamic is inherited from the subgraph 
@@ -3691,6 +3692,20 @@ DigFourShift.Attribute2 <t><t>Signal in the database or type Boolean that shifts
                    <t><t>page. Activates drawing of the third page.
 DigFourShift.Attribute3 <t><t>Signal in the database or type Boolean that shifts 
                    <t><t>page. Activates drawing of the fouth page.
+</topic>
+
+<topic>GeDynScrollingText <style>function
+ScrollingText
+
+Display a scrolling text.
+
+The object is connected to a string attribute in the database, and the text in the 
+attribute is displayed.
+
+<b>Attribute <t><t>Description
+ScrollingText.Attribute <t><t>Attribute in the database or type String.
+ScrollingText.Direction <t><t>Scrolling direction, right, left, up or down.
+ScrollingText.Speed.    <t><t>Scrolling speed.
 </topic>
 
 <topic>GeDynAnimation <style>function

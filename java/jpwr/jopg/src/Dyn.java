@@ -125,6 +125,7 @@ public class Dyn {
     public static final int mDynType2_DigTextColor     		= 1 << 1;
     public static final int mDynType2_TimeoutColor     		= 1 << 2;
     public static final int mDynType2_DigFourShift     		= 1 << 3;
+    public static final int mDynType2_ScrollingText            	= 1 << 4;
 
     public static final int mActionType1_No			= 0;
     public static final int mActionType1_Inherit		= 1 << 0;
@@ -211,6 +212,7 @@ public class Dyn {
     public static final int eDynPrio_Axis			= 52;
     public static final int eDynPrio_MethodToolbar	       	= 53;
     public static final int eDynPrio_MethodPulldownMenu	       	= 54;
+    public static final int eDynPrio_ScrollingText	       	= 55;
     public static final int eDynPrio_Script  			= 9998;
     public static final int eDynPrio_Command  			= 9999;
     public static final int eDynPrio_CloseGraph 		= 10000;
@@ -250,6 +252,7 @@ public class Dyn {
     public static final int eSave_DigTextColor	             	= 39;
     public static final int eSave_TimeoutColor	             	= 40;
     public static final int eSave_DigFourShift	             	= 41;
+    public static final int eSave_ScrollingText             	= 42;
     public static final int eSave_PopupMenu	       		= 50;
     public static final int eSave_SetDig	       		= 51;
     public static final int eSave_ResetDig	       		= 52;
@@ -461,6 +464,9 @@ public class Dyn {
     public static final int eSave_DigFourShift_attribute1      	= 4100;
     public static final int eSave_DigFourShift_attribute2      	= 4101;
     public static final int eSave_DigFourShift_attribute3      	= 4102;
+    public static final int eSave_ScrollingText_attribute      	= 4200;
+    public static final int eSave_ScrollingText_direction      	= 4201;
+    public static final int eSave_ScrollingText_speed      	= 4202;
     public static final int eSave_PopupMenu_ref_object      	= 5000;
     public static final int eSave_SetDig_attribute		= 5100;
     public static final int eSave_SetDig_instance		= 5101;
@@ -771,6 +777,8 @@ public class Dyn {
 		e = new DynTimeoutColor((DynTimeoutColor) x.elements.get(i)); break;
 	    case Dyn.mDynType2_DigFourShift:
 		e = new DynDigFourShift((DynDigFourShift) x.elements.get(i)); break;
+	    case Dyn.mDynType2_ScrollingText:
+		e = new DynScrollingText((DynScrollingText) x.elements.get(i)); break;
 	    default: ;
 	    }
 	    switch( x.elements.get(i).action_type1) {
@@ -1025,6 +1033,9 @@ public class Dyn {
 	    case mDynType2_DigFourShift:
 		e = (DynElem) new DynDigFourShift((DynDigFourShift) x);
 		break;
+	    case mDynType2_ScrollingText:
+		e = (DynElem) new DynScrollingText((DynScrollingText) x);
+		break;
 	    default: ;
 	    }
 	}
@@ -1146,6 +1157,9 @@ public class Dyn {
 		    break;
 		case Dyn.eSave_DigFourShift: 
 		    elem = (DynElem) new DynDigFourShift(this); 
+		    break;
+		case Dyn.eSave_ScrollingText: 
+		    elem = (DynElem) new DynScrollingText(this); 
 		    break;
 		case Dyn.eSave_Animation: 
 		    elem = (DynElem) new DynAnimation(this); 
@@ -4886,6 +4900,86 @@ public class Dyn {
 		
 	    } catch ( Exception e) {
 		System.out.println( "IOException DynDigFourShift");
+	    }
+	}
+
+    }
+
+    public class DynScrollingText extends DynElem {
+	String attribute;
+	int direction;
+	double speed;
+  	PwrtRefId subid;
+	int p;
+	int database;
+	boolean inverted;
+	boolean attrFound = false;
+	String oldValue;
+	boolean firstScan = true;
+
+	public DynScrollingText( Dyn dyn) {
+	    super(dyn, Dyn.mDynType2_ScrollingText, 0, 0, 0, Dyn.eDynPrio_ScrollingText);
+	}
+
+	public DynScrollingText( DynScrollingText x) {
+	    super(x);
+	    attribute = x.attribute;
+	    direction = x.direction;
+	    speed = x.speed;
+	}
+
+ 	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+
+	    return 1;
+	}
+
+	public void disconnect() {
+	}
+
+	
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+	}
+
+	public void open( BufferedReader reader) {
+	    String line;
+	    StringTokenizer token;
+	    boolean end_found = false;
+
+	    try {
+		while( (line = reader.readLine()) != null) {
+		    token = new StringTokenizer(line);
+		    int key = Integer.valueOf(token.nextToken());
+		    if ( Dyn.debug) System.out.println( "DynScrollingText : " + line);
+
+		    switch ( key) {
+		    case Dyn.eSave_ScrollingText: 
+			break;
+		    case Dyn.eSave_ScrollingText_attribute: 
+			if ( token.hasMoreTokens())
+			    attribute = token.nextToken();
+			break;
+		    case Dyn.eSave_ScrollingText_direction: 
+			direction = Integer.valueOf(token.nextToken());
+			break;
+		    case Dyn.eSave_ScrollingText_speed: 
+			speed = new Double(token.nextToken()).doubleValue();
+			break;
+		    case Dyn.eSave_End:
+			end_found = true;
+			break;
+		    default:
+			System.out.println( "Syntax error in DynScrollingText");
+			break;
+		    }
+
+		    if ( end_found)
+			break;
+		}
+		
+	    } catch ( Exception e) {
+		System.out.println( "IOException DynScrollingText");
 	    }
 	}
 

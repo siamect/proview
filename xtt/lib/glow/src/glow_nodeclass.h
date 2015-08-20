@@ -370,6 +370,9 @@ class GlowNodeClass : public GlowArrayElem {
 
   int get_annotation_text_size( GlowTransform *t, int num, double *tsize);
 
+  void get_annotation_text_extent( GlowTransform *t, void *node, int num, 
+				   double *width, double *height);
+
   //! Set user data.
   /*!
     \param data User data.
