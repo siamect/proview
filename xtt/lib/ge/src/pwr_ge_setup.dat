@@ -249,6 +249,8 @@ menu Hydraulics
   subgraph 	CheckValve	pwr_exe:pwr_checkvalve.pwsg		13
   subgraph 	DirectValve	pwr_exe:pwr_directvalve.pwsg 		54
   subgraph 	Filter	 	pwr_exe:pwr_filter.pwsg 		15
+  subgraph 	Lake	 	pwr_exe:pwr_lake.pwsg			14
+  subgraph 	Pool	 	pwr_exe:pwr_pool.pwsg			14
   subgraph 	PressureSwitch	pwr_exe:pwr_pressureswitch.pwsg 	16
   subgraph 	PressureGauge	pwr_exe:pwr_pressuregauge.pwsg 		18
   subgraph 	Pump	 	pwr_exe:pwr_hydraulicpump.pwsg 		17
@@ -469,7 +471,7 @@ menu Layout
   subgraph 	ReliefThick 	pwr_exe:pwr_reliefthick.pwsg 		8
   subgraph 	ReliefGray 	pwr_exe:pwr_reliefgray.pwsg 		8
   subgraph 	ReliefRoundCornersMedium pwr_exe:pwr_reliefroundcornersmedium.pwsg 21
-  subgraph 	ReliefRoundCornersThick pwr_exe:pwr_reliefroundcornersthick.pwsg 	21
+  subgraph 	ReliefRoundCornersThick pwr_exe:pwr_reliefroundcornersthick.pwsg 	21 
   subgraph 	ReliefRoundCornersGray pwr_exe:pwr_reliefroundcornersgray.pwsg 	21
   subgraph 	Arrow		pwr_exe:pwr_arrow.pwsg 			12
   subgraph 	Arrow2		pwr_exe:pwr_arrow2.pwsg 		12
