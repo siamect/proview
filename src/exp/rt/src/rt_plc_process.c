@@ -178,6 +178,11 @@ int main (
   i = 1/0;
   printf("%d\n", i);
 */
+  if ( argc > 1 && strcmp( argv[1], "-m") == 0) {
+    io_methods_print();
+    exit(0);
+  }
+
   pp = init_process( argv[0]);
   if ( !pp) {
     errh_Fatal("Plc process terminated");
