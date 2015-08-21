@@ -77,6 +77,8 @@ co_StrToArgv (
       if (*arg == '"') {
 	*arg = '\0';
 	arg++;
+	if ( *arg == '\0')
+	  break;
 	in_quote = 0;
 	last_was_white = 1;
       }
@@ -95,7 +97,7 @@ co_StrToArgv (
     }
   }
 
-  argv[i-1] = NULL;
+  argv[i] = NULL;
   argv[0] = file;
 
   return argv;
