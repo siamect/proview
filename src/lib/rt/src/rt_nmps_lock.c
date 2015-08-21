@@ -43,7 +43,7 @@
 #include "rt_sect.h"
 #include "rt_nmps_lock.h"
 
-sect_sHead *nmps_locksect = 0;
+static sect_sHead *nmps_locksect = 0;
 
 void nmps_create_lock( pwr_tStatus *sts)
 {
