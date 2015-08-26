@@ -95,8 +95,8 @@ public class FlowNodeClass {
     }
   }
 
-  public void draw( Graphics2D g, FlowPoint p, String[] annotv, boolean highlight) {
-    a.draw( g, p, annotv, highlight);
+  public void draw( Graphics2D g, FlowPoint p, FlowNodeIfc node, boolean highlight) {
+    a.draw( g, p, node, highlight);
   }
 
 }

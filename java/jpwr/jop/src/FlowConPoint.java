@@ -104,7 +104,7 @@ public class FlowConPoint implements FlowArrayElem {
     }
   }
 
-  public void draw( Graphics2D g, FlowPoint p, String[] annotv, boolean highlight) {
+  public void draw( Graphics2D g, FlowPoint p, FlowNodeIfc node, boolean highlight) {
   }
 
 }

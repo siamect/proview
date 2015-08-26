@@ -162,6 +162,22 @@ public class PlowDraw implements PlowDrawIfc {
 		canvas.drawPath(path, paint);
 	}
 	
+    public void triangle(int color, boolean fill, float x1, float y1, float x2, float y2, float x3, float y3) {
+		Path path = new Path();
+		
+		paint.setColor(getColor(color));		
+		if ( fill)
+		    paint.setStyle(Paint.Style.FILL);
+		else
+		    paint.setStyle(Paint.Style.STROKE);
+
+		path.moveTo(x1, y1);
+		path.lineTo(x2, y2);
+		path.lineTo(x3, y3);
+		path.lineTo(x1, y1);
+		canvas.drawPath(path, paint);
+	}
+	
 	public int getColor(int color) {
 		switch ( color) {
 		case Plow.COLOR_BLACK:

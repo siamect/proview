@@ -35,24 +35,20 @@
  */
 
 
-package jpwr.app;
+package jpwr.jop;
 import java.io.*;
 import java.util.*;
+import java.awt.*;
+import java.awt.geom.*;
+import javax.swing.*;
 
-public class FlowNodeClass implements FlowArrayElem {
-  FlowArray a;
-  String nc_name;
-  public int group;
-  FlowCmn cmn;
+/**
+   Flow triangle element.
+*/
+public class FlowTriangle extends FlowRect {
 
-  public FlowNodeClass( FlowCmn cmn) {
-    this.cmn = cmn;
-    a = new FlowArray( cmn);
-  }
-
-  @Override
-  public int type() {
-	 return Flow.eObjectType_NodeClass;
+  public FlowTriangle( FlowCmn cmn) {
+    super(cmn);
   }
 
   public void open( BufferedReader reader) {
@@ -67,47 +63,74 @@ public class FlowNodeClass implements FlowArrayElem {
 	if ( cmn.debug) System.out.println( "line : " + key);
 
 	switch ( key) {
-	case Flow.eSave_NodeClass_nc_name:
-	  nc_name = token.nextToken();
-	  break;
-	case Flow.eSave_NodeClass_a:
-	  a.open( reader);
-	  break;
-	case Flow.eSave_NodeClass_group:
-	  group  = new Integer(token.nextToken()).intValue();
-	  break;
-	case Flow.eSave_NodeClass_no_con_obstacle:
+	case Flow.eSave_Triangle_rect_part:
+	  super.open(reader);
 	  break;
 	case Flow.eSave_End:
 	  end = true;
 	  break;
-	default:	  
-	  System.out.println( "Syntax error in FlowNodeClass");
+	default:
+	  System.out.println( "Syntax error in FlowTriangle");
 	  break;
 	}
 	if ( end)
 	  break;
       }
     } catch ( Exception e) {
-      System.out.println( "IOExeption FlowNodeClass");
+      System.out.println( "IOExeption FlowTriangle");
     }
   }
 
-  public void draw( FlowPoint p, FlowNodeIfc node, boolean highlight) {
-    a.draw( p, node, highlight);
-  }
-  @Override
-  public boolean getSelect() {
-	  return false;
-  }
-  @Override
-  public void setSelect(boolean select) {	  
-  }
-  public boolean eventHandler(PlowEvent e) {
-	  return false;	
-  }	
+  public void draw( Graphics2D g, FlowPoint p, FlowNodeIfc node, boolean highlight) {
+      if ( (display_level & FlowCmn.display_level) == 0)
+	return;
 
+      Polygon pol = new Polygon( new int[] {
+	                           (int) ((ll.x + p.x) * cmn.zoom_factor),
+	                           (int) (((ll.x + ur.x) / 2 + p.x) * cmn.zoom_factor),
+	                           (int) ((ur.x + p.x) * cmn.zoom_factor),
+	                           (int) ((ll.x + p.x) * cmn.zoom_factor)},
+			       new int[] {
+				   (int) ((ur.y + p.y) * cmn.zoom_factor),
+				   (int) ((ll.y + p.y) * cmn.zoom_factor),
+				   (int) ((ur.y + p.y) * cmn.zoom_factor),
+				   (int) ((ur.y + p.y) * cmn.zoom_factor)},
+			       4);
+
+      g.setStroke( new BasicStroke( (float)(cmn.zoom_factor / cmn.base_zoom_factor * line_width)));
+      if ( fill != 0) {
+	  int dtype;
+	  if ( node != null && node.getFillColor() != Flow.eDrawType_Inherit)
+	      dtype = node.getFillColor();
+	  else
+	      dtype = draw_type;
+	  switch ( dtype) {
+	  case Flow.eDrawType_LineRed: 
+	      g.setColor( Color.red);
+	      break;
+	  case Flow.eDrawType_Green: 
+	      g.setColor( Color.green);
+	      break;
+	  case Flow.eDrawType_Yellow: 
+	      g.setColor( Color.yellow);
+	      break;
+	  default:
+	      g.setColor( Color.gray);	      
+	  }
+	  g.fill( pol);
+      }
+      g.setColor( Color.black);
+      if ( highlight)
+        g.setColor( Color.red);
+      g.draw( pol);
+  }
 }
+
+
+
+
+
+
 
 
 

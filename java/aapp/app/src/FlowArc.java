@@ -107,7 +107,7 @@ public class FlowArc implements FlowArrayElem {
     }
   }
 
-  public void draw( FlowPoint p, String[] annotv, boolean highlight) {
+  public void draw( FlowPoint p, FlowNodeIfc node, boolean highlight) {
 	  int color;
 	  
 	  switch ( draw_type) {

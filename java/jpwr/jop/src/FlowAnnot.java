@@ -108,7 +108,11 @@ public class FlowAnnot implements FlowArrayElem {
     }
   }
 
-  public void draw( Graphics2D g, FlowPoint p0, String[] annotv, boolean highlight) { 
+  public void draw( Graphics2D g, FlowPoint p0, FlowNodeIfc node, boolean highlight) { 
+    if ( node == null)
+	return;
+    String[] annotv = node.getAnnotv();
+
     if ( annotv[number] == null)
       return;
     if ( (display_level & FlowCmn.display_level) == 0)

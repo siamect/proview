@@ -113,7 +113,7 @@ public class FlowArrow implements FlowArrayElem {
       System.out.println( "IOExeption FlowArrow");
     }
   }
-  public void draw( Graphics2D g, FlowPoint p, String[] annotv, boolean highlight) {
+  public void draw( Graphics2D g, FlowPoint p, FlowNodeIfc node, boolean highlight) {
       Polygon pol = new Polygon( new int[] {
 	                           (int) ((p1.x + p.x) * cmn.zoom_factor),
 	                           (int) ((p2.x + p.x) * cmn.zoom_factor),

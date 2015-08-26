@@ -113,7 +113,7 @@ public class FlowArrow implements FlowArrayElem {
       System.out.println( "IOExeption FlowArrow");
     }
   }
-  public void draw( FlowPoint p, String[] annotv, boolean highlight) {
+  public void draw( FlowPoint p, FlowNodeIfc node, boolean highlight) {
 	  int color;
 	  Path path = new Path();
 	  

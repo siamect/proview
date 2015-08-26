@@ -118,6 +118,7 @@ public class FlowCtx implements FlowCtxInterface {
 	case Flow.eSave_Ctx_refcon_height:
 	case Flow.eSave_Ctx_refcon_textsize:
 	case Flow.eSave_Ctx_refcon_linewidth:
+	case Flow.eSave_Ctx_user_version:
 	  break;
 	case Flow.eSave_Ctx_a_nc:
 	  FlowVector.open( reader, cmn, cmn.a_nc);

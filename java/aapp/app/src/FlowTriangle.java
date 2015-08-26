@@ -39,20 +39,13 @@ package jpwr.app;
 import java.io.*;
 import java.util.*;
 
-public class FlowNodeClass implements FlowArrayElem {
-  FlowArray a;
-  String nc_name;
-  public int group;
-  FlowCmn cmn;
+/**
+   Flow triangle element.
+*/
+public class FlowTriangle extends FlowRect {
 
-  public FlowNodeClass( FlowCmn cmn) {
-    this.cmn = cmn;
-    a = new FlowArray( cmn);
-  }
-
-  @Override
-  public int type() {
-	 return Flow.eObjectType_NodeClass;
+  public FlowTriangle( FlowCmn cmn) {
+    super(cmn);
   }
 
   public void open( BufferedReader reader) {
@@ -67,47 +60,74 @@ public class FlowNodeClass implements FlowArrayElem {
 	if ( cmn.debug) System.out.println( "line : " + key);
 
 	switch ( key) {
-	case Flow.eSave_NodeClass_nc_name:
-	  nc_name = token.nextToken();
-	  break;
-	case Flow.eSave_NodeClass_a:
-	  a.open( reader);
-	  break;
-	case Flow.eSave_NodeClass_group:
-	  group  = new Integer(token.nextToken()).intValue();
-	  break;
-	case Flow.eSave_NodeClass_no_con_obstacle:
+	case Flow.eSave_Triangle_rect_part:
+	  super.open(reader);
 	  break;
 	case Flow.eSave_End:
 	  end = true;
 	  break;
-	default:	  
-	  System.out.println( "Syntax error in FlowNodeClass");
+	default:
+	  System.out.println( "Syntax error in FlowTriangle");
 	  break;
 	}
 	if ( end)
 	  break;
       }
     } catch ( Exception e) {
-      System.out.println( "IOExeption FlowNodeClass");
+      System.out.println( "IOExeption FlowTriangle");
     }
   }
 
-  public void draw( FlowPoint p, FlowNodeIfc node, boolean highlight) {
-    a.draw( p, node, highlight);
-  }
-  @Override
-  public boolean getSelect() {
-	  return false;
-  }
-  @Override
-  public void setSelect(boolean select) {	  
-  }
-  public boolean eventHandler(PlowEvent e) {
-	  return false;	
-  }	
+  public void draw(  FlowPoint p, FlowNodeIfc node, boolean highlight) {
+	  int color;
+	  
+	  if ( fill != 0) {
+	      int dtype;
+	      if ( node != null && node.getFillColor() != Flow.eDrawType_Inherit)
+		  dtype = node.getFillColor();
+	      else
+		  dtype = draw_type;
 
+	      switch ( dtype) {
+	      case Flow.eDrawType_LineRed: 
+		  color = Plow.COLOR_RED;
+		  break;
+	      case Flow.eDrawType_Green: 
+		  color = Plow.COLOR_GREEN;
+		  break;
+	      case Flow.eDrawType_Yellow: 
+		  color = Plow.COLOR_YELLOW;
+		  break;
+	      default:
+		  color = Plow.COLOR_GRAY;
+	      }
+	      cmn.gdraw.triangle(color, true, 
+				 (float)((ll.x + p.x) * cmn.zoom_factor - cmn.offset_x), 
+				 (float)((ur.y + p.y) * cmn.zoom_factor - cmn.offset_y),
+				 (float)(((ll.x + ur.x)/2 + p.x) * cmn.zoom_factor - cmn.offset_x), 
+				 (float)((ll.y + p.y) * cmn.zoom_factor - cmn.offset_y),
+				 (float)((ur.x + p.x) * cmn.zoom_factor - cmn.offset_x), 
+				 (float)((ur.y + p.y) * cmn.zoom_factor - cmn.offset_y));
+
+	  }
+	  color = Plow.COLOR_BLACK;
+	  if ( highlight)
+	      color = Plow.COLOR_RED;
+	  cmn.gdraw.triangle(color, false, 
+			     (float)((ll.x + p.x) * cmn.zoom_factor - cmn.offset_x), 
+			     (float)((ur.y + p.y) * cmn.zoom_factor - cmn.offset_y),
+			     (float)(((ll.x + ur.x)/2 + p.x) * cmn.zoom_factor - cmn.offset_x), 
+			     (float)((ll.y + p.y) * cmn.zoom_factor - cmn.offset_y),
+			     (float)((ur.x + p.x) * cmn.zoom_factor - cmn.offset_x), 
+			     (float)((ur.y + p.y) * cmn.zoom_factor - cmn.offset_y));
+  }
 }
+
+
+
+
+
+
 
 
 

@@ -224,8 +224,8 @@ public class FlowCon implements FlowArrayElem {
   }
   public void setSelect( boolean select) {
   }
-  public void draw( FlowPoint p0, String[] annotv, boolean highlight) {
-	  // Adjust pos to javabean koordinates
+  public void draw( FlowPoint p0, FlowNodeIfc node, boolean highlight) {
+	  // Adjust pos to javabean coordinates
 	  FlowPoint p = new FlowPoint(cmn);
 	  p.x = 0;
 	  p.y = 0;

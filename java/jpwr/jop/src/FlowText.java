@@ -98,7 +98,7 @@ public class FlowText implements FlowArrayElem {
     }
   }
 
-  public void draw( Graphics2D g, FlowPoint p0, String[] annotv, boolean highlight) {
+  public void draw( Graphics2D g, FlowPoint p0, FlowNodeIfc node, boolean highlight) {
     int tsize;
     int idx = (int)(cmn.zoom_factor / cmn.base_zoom_factor * (text_size +4) - 4);
     if ( idx < 0) return;

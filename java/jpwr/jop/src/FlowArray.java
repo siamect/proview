@@ -79,6 +79,11 @@ public class FlowArray {
 	  l.open( reader);
 	  a.add( l);
 	  break;
+	case Flow.eSave_Triangle:
+	  FlowTriangle t = new FlowTriangle( cmn);
+	  t.open( reader);
+	  a.add( t);
+	  break;
 	case Flow.eSave_Arc:
 	  FlowArc arc = new FlowArc( cmn);
 	  arc.open( reader);
@@ -124,9 +129,9 @@ public class FlowArray {
     }
   }
 
-  public void draw( Graphics2D g, FlowPoint p, String[] annotv, boolean highlight) {
+  public void draw( Graphics2D g, FlowPoint p, FlowNodeIfc node, boolean highlight) {
     for ( int i = 0; i < a.size(); i++) {
-      ((FlowArrayElem)a.get(i)).draw( g, p, annotv, highlight);
+      ((FlowArrayElem)a.get(i)).draw( g, p, node, highlight);
     }
   }
 

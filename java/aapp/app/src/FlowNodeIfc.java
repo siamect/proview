@@ -34,84 +34,9 @@
  * General Public License plus this exception.
  */
 
-
 package jpwr.app;
-import java.io.*;
-import java.util.*;
 
-public class FlowNodeClass implements FlowArrayElem {
-  FlowArray a;
-  String nc_name;
-  public int group;
-  FlowCmn cmn;
-
-  public FlowNodeClass( FlowCmn cmn) {
-    this.cmn = cmn;
-    a = new FlowArray( cmn);
-  }
-
-  @Override
-  public int type() {
-	 return Flow.eObjectType_NodeClass;
-  }
-
-  public void open( BufferedReader reader) {
-    String line;
-    StringTokenizer token;
-    boolean end = false;
-
-    try {
-      while( (line = reader.readLine()) != null) {
-	token = new StringTokenizer(line);
-	int key = new Integer(token.nextToken()).intValue();
-	if ( cmn.debug) System.out.println( "line : " + key);
-
-	switch ( key) {
-	case Flow.eSave_NodeClass_nc_name:
-	  nc_name = token.nextToken();
-	  break;
-	case Flow.eSave_NodeClass_a:
-	  a.open( reader);
-	  break;
-	case Flow.eSave_NodeClass_group:
-	  group  = new Integer(token.nextToken()).intValue();
-	  break;
-	case Flow.eSave_NodeClass_no_con_obstacle:
-	  break;
-	case Flow.eSave_End:
-	  end = true;
-	  break;
-	default:	  
-	  System.out.println( "Syntax error in FlowNodeClass");
-	  break;
-	}
-	if ( end)
-	  break;
-      }
-    } catch ( Exception e) {
-      System.out.println( "IOExeption FlowNodeClass");
-    }
-  }
-
-  public void draw( FlowPoint p, FlowNodeIfc node, boolean highlight) {
-    a.draw( p, node, highlight);
-  }
-  @Override
-  public boolean getSelect() {
-	  return false;
-  }
-  @Override
-  public void setSelect(boolean select) {	  
-  }
-  public boolean eventHandler(PlowEvent e) {
-	  return false;	
-  }	
-
+public interface FlowNodeIfc {
+    public String[] getAnnotv();
+    public int getFillColor();
 }
-
-
-
-
-
-
-

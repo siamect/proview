@@ -37,7 +37,7 @@
 package jpwr.app;
 
 public interface FlowArrayElem {
-    public void draw( FlowPoint p, String[] annotv, boolean highlight); 
+    public void draw( FlowPoint p, FlowNodeIfc node, boolean highlight); 
     public boolean getSelect();
     public void setSelect(boolean select);
 	public boolean eventHandler(PlowEvent e);

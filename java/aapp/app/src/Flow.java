@@ -82,6 +82,11 @@ public class Flow {
     public static final int eDrawType_TextHelveticaBold         = 7;
     public static final int eDrawType_TextHelveticaErase        = 8;
     public static final int eDrawType_TextHelveticaEraseBold    = 9;
+    public static final int eDrawType_   			= 10;
+    public static final int eDrawType_Green   			= 11;
+    public static final int eDrawType_Yellow   			= 12;
+    public static final int eDrawType_DarkGray   	       	= 13;
+    public static final int eDrawType_Inherit   	       	= 9999;
 
     public static final int mDisplayLevel_1		        = 1 << 0;
     public static final int mDisplayLevel_2		        = 1 << 2;
@@ -117,6 +122,8 @@ public class Flow {
     public static final int eSave_AnnotPixmap		        = 16;
     public static final int eSave_Radiobutton		        = 17;
     public static final int eSave_Frame			        = 18;
+    public static final int eSave_AnnotPixmapButton    	        = 19;
+    public static final int eSave_Triangle	       	        = 20;
     public static final int eSave_End			        = 99;
     public static final int eSave_Ctx_zoom_factor		= 100;
     public static final int eSave_Ctx_base_zoom_factor	        = 101;
@@ -152,6 +159,7 @@ public class Flow {
     public static final int eSave_Ctx_refcon_height		= 131;
     public static final int eSave_Ctx_refcon_textsize	        = 132;
     public static final int eSave_Ctx_refcon_linewidth          = 133;
+    public static final int eSave_Ctx_user_version              = 134;
     public static final int eSave_Array_a			= 200;
     public static final int eSave_NodeClass_nc_name		= 300;
     public static final int eSave_NodeClass_a		        = 301;
@@ -171,6 +179,7 @@ public class Flow {
     public static final int eSave_Rect_ll			= 502;
     public static final int eSave_Rect_ur			= 503;
     public static final int eSave_Rect_display_level	        = 504;
+    public static final int eSave_Rect_fill		        = 505;
     public static final int eSave_Line_draw_type		= 600;
     public static final int eSave_Line_line_width		= 601;
     public static final int eSave_Line_p1			= 602;
@@ -252,6 +261,7 @@ public class Flow {
     public static final int eSave_Arrow_p_dest		        = 1404;
     public static final int eSave_Arrow_p1			= 1405;
     public static final int eSave_Arrow_p2			= 1406;
+    public static final int eSave_Triangle_rect_part	       	= 2000;
     
     public static String getFileName(PwrtObjid oid) {
 		String filename = "pwr_" + 

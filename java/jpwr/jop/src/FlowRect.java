@@ -51,6 +51,7 @@ public class FlowRect implements FlowArrayElem {
   int draw_type;
   int line_width;
   int display_level;
+  int fill;
   FlowCmn cmn;
 
   public FlowRect( FlowCmn cmn) {
@@ -80,6 +81,9 @@ public class FlowRect implements FlowArrayElem {
 	case Flow.eSave_Rect_display_level:
 	  display_level = new Integer( token.nextToken()).intValue();
 	  break;
+	case Flow.eSave_Rect_fill:
+	  fill = new Integer( token.nextToken()).intValue();
+	  break;
 	case Flow.eSave_Rect_ll:
 	  ll.open( reader);
 	  break;
@@ -101,7 +105,7 @@ public class FlowRect implements FlowArrayElem {
     }
   }
 
-  public void draw( Graphics2D g, FlowPoint p, String[] annotv, boolean highlight) {
+  public void draw( Graphics2D g, FlowPoint p, FlowNodeIfc node, boolean highlight) {
       if ( (display_level & FlowCmn.display_level) == 0)
 	return;
 

@@ -57,6 +57,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
         String pwrp_load = "pwrp_load/";
         String pwr_exe = "pwr_exe/";
 	Timer timer = new Timer();
+        MyTask timerTask;
 	MainView view;
 	Gdh gdh = null;
 	Handler handler = new Handler();
@@ -126,7 +127,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		setContentView(view);
 		Log.i("PwrXtt", "Starting");
 		view.invalidate();
-		timer.schedule( new MyTask(), 0, 2000);
+		setScanTime(0.5);
 
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
 		density = metrics.densityDpi / 150;
@@ -160,6 +161,14 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			.setNegativeButton("Cancel", null)
 			.show();
 	}
+
+        void setScanTime( double time) {
+	    if ( timerTask != null)
+		timerTask.cancel();
+	    timerTask = new MyTask();
+	    timer.schedule( timerTask, 0, (int)(1000 * time));
+	}
+
 	public void onClick(DialogInterface dialog, int position) {
 		if ( dialog == inputDialog) {
 		    Editable value = editInput.getText();
@@ -629,6 +638,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				cmnAla.setGDraw(gdraw);
 				PlowCmnEv cmnEve = new PlowCmnEv(appl, density * 15);		
 				cmnEve.setGDraw(gdraw);
+				setScanTime( 1);
 				currentCmn = cmnAla;
 				aev = new AEv(cmnAla, cmnEve, appl);
 				cmnAla.setUserData(aev);
@@ -636,6 +646,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				view.invalidate();
 			}
 			else {
+			        setScanTime( 1);
 				currentCmn = aev.getCmnAla();
 				view.invalidate();
 			}
@@ -653,6 +664,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				cmnAla.setGDraw(gdraw);
 				PlowCmnEv cmnEve = new PlowCmnEv(appl, density * 15);		
 				cmnEve.setGDraw(gdraw);
+				setScanTime( 1);
 				currentCmn = cmnEve;
 				aev = new AEv(cmnAla, cmnEve, appl);
 				cmnAla.setUserData(aev);
@@ -660,6 +672,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				view.invalidate();
 			}
 			else {
+			        setScanTime( 1);
 				currentCmn = aev.getCmnEve();
 				view.invalidate();
 			}
@@ -676,6 +689,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				view.invalidate();
 			}
 			else {
+			        setScanTime( 1);
 				currentCmn = aev.getCmnEve();
 				view.invalidate();
 			}
@@ -984,6 +998,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 
 				PlowCmn cmn = new PlowCmn(appl, density * 15);		
 				cmn.setGDraw(gdraw);
+				setScanTime( 1);
 				currentCmn = cmn;
 				cmnList.add(cmn);
 				AXtt axtt = new AXtt((PlowCmn)currentCmn, gdh);
@@ -1055,6 +1070,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 
 				PlowCmn cmn = new PlowCmn(appl, density * 15);		
 				cmn.setGDraw(gdraw);
+				setScanTime( 1);
 				currentCmn = cmn;
 				cmnList.add(cmn);
 				AXtt axtt = new AXtt((PlowCmn)currentCmn, gdh);
@@ -1505,6 +1521,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 					}					
 					if ( graphList.size() > 0) {
 					        opwinCmn = new OpwinCmn(appl, graphList, density);
+						setScanTime( 1);
 						currentCmn = opwinCmn;
 						cmnList.add(opwinCmn);
 					}
@@ -1925,14 +1942,14 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				if ( currentCmn.type() == PlowCmnIfc.TYPE_FLOW)
 				    gdraw.setDensity(1, density);
 				else
-				    gdraw.setDensity(density, density);
+				    gdraw.setDensity(density * density, density);
 				currentCmn.setCanvas(currentCanvas);
 				currentCmn.draw();
 	    	
-				/* Test 
+				/* Test */
 				   Paint paint = new Paint();
 				   currentCanvas.drawText( "Density " + density, 10, 100, paint);
-				*/
+				   /* */
 
 				getHolder().unlockCanvasAndPost(currentCanvas);
 				// currentCanvas = getHolder().lockCanvas(); 
@@ -1996,6 +2013,7 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 			return;			
 		}
 		FlowCmn fcmn = new FlowCmn(this, gdh, windowObjid);
+		setScanTime( 1);
 		currentCmn = fcmn;
 		cmnList.add(fcmn);
 		fcmn.setGDraw(gdraw);
@@ -2009,8 +2027,7 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 			    node.setSelect(true);
 			    ctx.centerObject(node);			
 			}
-		}
-		
+		}		
 		
 		new GdhTask().execute(new GdhTaskArg(GdhTask.DYNAMIC_OPEN, null));
 	}
@@ -2052,6 +2069,7 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 	    graph.gdraw.setActivity(this);
 	    GraphCmn cmn = new GraphCmn(graph);
 	    currentCmn = cmn;
+	    setScanTime( graph.getAnimationScanTime());
 		cmnList.add(cmn);
 
 		// new GdhTask().execute(new GdhTaskArg(GdhTask.DYNAMIC_OPEN, null));
@@ -2269,6 +2287,7 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
         					if ( opwinCmn != null)
         						cmnIdx = 1;
         					
+						setScanTime( 1);
         					currentCmn = cmnList.get(cmnIdx);
         					for ( int i = cmnList.size()-1; i > cmnIdx; i--)
         						cmnList.removeElementAt(i);
@@ -2493,6 +2512,7 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
     }
 
     public void closeGraph() {
+	setScanTime( 1);
 	new GdhTask().execute(new GdhTaskArg(GdhTask.DYNAMIC_CLOSE, currentCmn));
 	if (graphObject.size() > 0)
 	    graphObject.removeElementAt(graphObject.size()-1);
@@ -2551,6 +2571,7 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 	    if ( cmnList.size() == 1) {
 		// Open opwin
 		if ( opwinCmn != null) {
+		    setScanTime( 1);
 		    currentCmn = opwinCmn;
 		    cmnList.add(opwinCmn);
 		    view.invalidate();
@@ -2563,6 +2584,7 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 	    PlowNode o = (PlowNode)cmn.get(0);
 	    AXttItemObject itemo = (AXttItemObject)o.getUserData();
 	    itemo.close(axtt);
+	    setScanTime( 1);
 	    currentCmn = cmnList.get(cmnList.size()-2);
 	    cmnList.removeElementAt(cmnList.size()-1);
 	    System.out.println( "cmnList.size() " + cmnList.size());
@@ -2572,6 +2594,7 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 	case PlowCmnIfc.TYPE_FLOW:
 	    new GdhTask().execute(new GdhTaskArg(GdhTask.DYNAMIC_CLOSE, currentCmn));
 	    System.out.println( "cmnList.size() " + cmnList.size());
+	    setScanTime( 1);
 	    currentCmn = cmnList.get(cmnList.size()-2);
 	    cmnList.removeElementAt(cmnList.size()-1);
 	    System.out.println( "cmnList.size() " + cmnList.size());
@@ -2580,6 +2603,7 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 	    break;
 	case PlowCmnIfc.TYPE_EV:
 	    System.out.println( "cmnList.size() " + cmnList.size());				
+	    setScanTime( 1);
 	    currentCmn = cmnList.get(cmnList.size()-1);
 	    aev = null;
 	    view.invalidate();
@@ -2590,6 +2614,7 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 	    System.out.println( "cmnList.size() " + cmnList.size());
 	    if (graphObject.size() > 0)
 		graphObject.removeElementAt(graphObject.size()-1);
+	    setScanTime( 1);
 	    currentCmn = cmnList.get(cmnList.size()-2);
 	    cmnList.removeElementAt(cmnList.size()-1);
 	    System.out.println( "cmnList.size() " + cmnList.size());

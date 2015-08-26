@@ -71,7 +71,7 @@ public class FlowCmn {
     this.ctx = ctx;
     this.gdh = gdh;
     this.session = session;
-    this.debug = false;
+    this.debug = true;
     this.antiAliasing = true;
   }
 

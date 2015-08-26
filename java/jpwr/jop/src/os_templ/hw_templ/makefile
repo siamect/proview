@@ -99,12 +99,14 @@ local_java_sources := \
 	GeFrameThin.java \
 	Flow.java \
 	FlowCtxInterface.java \
+	FlowNodeIfc.java \
 	FlowCmn.java \
 	FlowComponent.java \
 	FlowPoint.java \
 	FlowArrayElem.java \
 	FlowRect.java \
 	FlowLine.java \
+	FlowTriangle.java \
 	FlowText.java \
 	FlowArc.java \
 	FlowArrow.java \

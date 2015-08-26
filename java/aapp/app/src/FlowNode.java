@@ -42,7 +42,7 @@ import java.io.*;
 import java.util.*;
 
 
-public class FlowNode implements FlowArrayElem {
+public class FlowNode implements FlowArrayElem, FlowNodeIfc {
   static final int OFFSET = 2;
   double x_right;
   double x_left;
@@ -59,10 +59,12 @@ public class FlowNode implements FlowArrayElem {
   int trace_attr_type;
   boolean highlight;
   boolean select;
+  int fill_color;
 
   public FlowNode( FlowCmn cmn) {
     this.cmn = cmn;
     pos = new FlowPoint( cmn);
+    fill_color = Flow.eDrawType_Inherit;
   }
 
   @Override
@@ -70,6 +72,12 @@ public class FlowNode implements FlowArrayElem {
 	 return Flow.eObjectType_Node;
   }
 
+  public String[] getAnnotv() {
+      return annotv;
+  }
+  public int getFillColor() {
+      return fill_color;
+  }
   public boolean getSelect() {
     return select;
   }
@@ -257,7 +265,7 @@ public class FlowNode implements FlowArrayElem {
 */
   }
 
-  public void draw( FlowPoint p0, String[] annotv0, boolean hl) {
+  public void draw( FlowPoint p0, FlowNodeIfc node, boolean hl) {
 	  if ( select) {
 		  // Draw blue background
 		  cmn.gdraw.rect(false, Plow.COLOR_LIGHTBLUE, (float)(x_left * cmn.zoom_factor - cmn.offset_x), 
@@ -266,7 +274,7 @@ public class FlowNode implements FlowArrayElem {
 				  (float)(y_high * cmn.zoom_factor - cmn.offset_y));
 	  }
 
-	  nc.draw( pos, annotv, highlight);
+	  nc.draw( pos, this, highlight);
 	  
   }
 

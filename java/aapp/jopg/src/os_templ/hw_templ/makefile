@@ -27,6 +27,7 @@ extern_java_sources := \
 	GlowPointX.java,\
 	GlowPointDX.java,\
 	GlowDimension.java,\
+	GlowDimensionD.java,\
 	GlowSliderInfo.java,\
 	GlowTableInfo.java,\
 	GlowMenuInfo.java,\
@@ -43,8 +44,10 @@ extern_java_sources := \
 	GlowBackgroundObject.java,\
 	GlowEventMenu.java,\
 	GlowEventToolbar.java,\
+	GlowEventTable.java,\
 	GrowCtxIfc.java,\
 	GrowCmn.java,\
+	GrowAnnotIfc.java,\
 	GlowNodeClass.java,\
 	GlowNodeGroup.java,\
 	GlowConClass.java,\

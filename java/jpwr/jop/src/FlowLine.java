@@ -100,7 +100,7 @@ public class FlowLine implements FlowArrayElem {
     }
   }
 
-  public void draw( Graphics2D g, FlowPoint p, String[] annotv, boolean highlight) {
+  public void draw( Graphics2D g, FlowPoint p, FlowNodeIfc node, boolean highlight) {
       Line2D.Double line = new Line2D.Double( (p1.x + p.x) * cmn.zoom_factor,
 						   (p1.y + p.y) * cmn.zoom_factor,
 						   (p2.x + p.x) * cmn.zoom_factor,

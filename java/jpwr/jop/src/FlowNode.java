@@ -51,7 +51,7 @@ import java.awt.event.*;
    <p>
    A flow node is a function object built by element of type arcs, lines, recangles, texts etc.
 */
-public class FlowNode extends JComponent implements FlowComponent, JopDynamic {
+public class FlowNode extends JComponent implements FlowComponent, FlowNodeIfc, JopDynamic {
   static final int OFFSET = 2;
   double x_right;
   double x_left;
@@ -70,16 +70,22 @@ public class FlowNode extends JComponent implements FlowComponent, JopDynamic {
   boolean highlight;
   boolean select;
   Component component;
+  int fill_color;
 
   public FlowNode( FlowCmn cmn) {
     component = this;
     this.cmn = cmn;
     pos = new FlowPoint( cmn);
     size = new Dimension(40,40); // .....todo
-
-
+    fill_color = Flow.eDrawType_Inherit;
   }
 
+  public String[] getAnnotv() {
+      return annotv;
+  }
+  public int getFillColor() {
+      return fill_color;
+  }
   public boolean getSelect() {
     return select;
   }
@@ -282,7 +288,7 @@ public class FlowNode extends JComponent implements FlowComponent, JopDynamic {
     FlowPoint p = new FlowPoint(cmn);
     p.x = pos.x - x_left + ((double) Flow.DRAWOFFSET) / cmn.zoom_factor;
     p.y = pos.y - y_low + ((double) Flow.DRAWOFFSET) / cmn.zoom_factor;
-    nc.draw( g, p, annotv, highlight);
+    nc.draw( g, p, this, highlight);
   }
 
   boolean attrFound;

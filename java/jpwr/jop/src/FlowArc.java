@@ -108,7 +108,7 @@ public class FlowArc implements FlowArrayElem {
     }
   }
 
-  public void draw( Graphics2D g, FlowPoint p, String[] annotv, boolean highlight) {
+  public void draw( Graphics2D g, FlowPoint p, FlowNodeIfc node, boolean highlight) {
       Arc2D.Double rect = new Arc2D.Double( (ll.x + p.x) * cmn.zoom_factor,
 						   (ll.y + p.y) * cmn.zoom_factor,
 						   (ur.x - ll.x) * cmn.zoom_factor,
