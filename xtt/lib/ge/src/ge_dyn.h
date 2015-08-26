@@ -554,6 +554,7 @@
     ge_eSave_ScrollingText_attribute   	= 4200,
     ge_eSave_ScrollingText_direction  	= 4201,
     ge_eSave_ScrollingText_speed   	= 4202,
+    ge_eSave_ScrollingText_bounce   	= 4203,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -1679,6 +1680,7 @@ class GeScrollingText : public GeDynElem {
   pwr_tAName attribute;
   glow_eDirection direction;
   double speed;
+  int bounce;
 
   pwr_tString256 *p;
   pwr_tSubid subid;
@@ -1692,11 +1694,11 @@ class GeScrollingText : public GeDynElem {
   double tsize;
 
   GeScrollingText( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_ScrollingText, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_ScrollingText), direction(glow_eDirection_Right), speed(2), offset(0), tsize(0)
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_ScrollingText, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_ScrollingText), direction(glow_eDirection_Right), speed(2), bounce(0), offset(0), tsize(0)
     { strcpy( attribute, "");}
   GeScrollingText( const GeScrollingText& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), direction(x.direction),
-    speed(x.speed), offset(0), tsize(0)
+    speed(x.speed), bounce(x.bounce), offset(0), tsize(0)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);

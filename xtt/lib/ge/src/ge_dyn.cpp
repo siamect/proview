@@ -6604,6 +6604,11 @@ void GeScrollingText::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_Double;
   attrinfo[i++].size = sizeof( speed);
 
+  strcpy( attrinfo[i].name, "ScrollingText.Bounce");
+  attrinfo[i].value = &bounce;
+  attrinfo[i].type = glow_eType_Boolean;
+  attrinfo[i++].size = sizeof( bounce);
+
   *item_count = i;
 }
 
@@ -6631,6 +6636,7 @@ void GeScrollingText::save( ofstream& fp)
   fp << int(ge_eSave_ScrollingText_attribute) << FSPACE << attribute << endl;
   fp << int(ge_eSave_ScrollingText_direction) << FSPACE << int(direction) << endl;
   fp << int(ge_eSave_ScrollingText_speed) << FSPACE << speed << endl;
+  fp << int(ge_eSave_ScrollingText_bounce) << FSPACE << bounce << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -6659,6 +6665,7 @@ void GeScrollingText::open( ifstream& fp)
         break;
       case ge_eSave_ScrollingText_direction: fp >> tmp; direction = (glow_eDirection)tmp; break;
       case ge_eSave_ScrollingText_speed: fp >> speed; break;
+      case ge_eSave_ScrollingText_bounce: fp >> bounce; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeScrollingText:open syntax error" << endl;
@@ -6725,29 +6732,77 @@ int GeScrollingText::scan( grow_tObject object)
   switch ( direction) {
   case glow_eDirection_Left: {
     offset -= speed * dyn->graph->animation_scan_time;
-    if ( offset < -width)
-      offset = osize;
+    if ( bounce) {
+      if ( width < osize) {
+	if ( offset < 0) {
+	  offset = -offset;
+	  direction = glow_eDirection_Right;
+	}
+      }
+      else {
+	if ( offset < osize - width) {
+	  offset += (osize - width) - offset;
+	  direction = glow_eDirection_Right;
+	}
+      }
+    }
+    else {
+      if ( offset < -width)
+	offset = osize;
+    }
     grow_SetAnnotationTextOffset( object, 1, offset, 0);
     break;
   }
   case glow_eDirection_Right: {
     offset += speed * dyn->graph->animation_scan_time;
-    if ( offset > osize)
-      offset = -width;
+    if ( bounce) {
+      if ( width < osize) {
+	if ( offset > osize - width) {
+	  offset -= offset - (osize - width);
+	  direction = glow_eDirection_Left;
+	}
+      }
+      else {
+	if ( offset > 0) {
+	  offset = - offset;
+	  direction = glow_eDirection_Left;
+	}
+      }
+    }
+    else {
+      if ( offset > osize)
+	offset = -width;
+    }
     grow_SetAnnotationTextOffset( object, 1, offset, 0);
     break;
   }
   case glow_eDirection_Up: {
     offset += speed * dyn->graph->animation_scan_time;
-    if ( offset > osize)
-      offset = -height;
+    if ( bounce) {
+      if ( offset > osize - height) {
+	offset -= offset - (osize - height);
+	direction = glow_eDirection_Down;
+      }
+    }
+    else {
+      if ( offset > osize)
+	offset = -height;
+    }
     grow_SetAnnotationTextOffset( object, 1, 0, offset);
     break;
   }
   case glow_eDirection_Down: {
     offset -= speed * dyn->graph->animation_scan_time;
-    if ( offset < -height)
-      offset = osize;
+    if ( bounce) {
+      if ( offset < 0) {
+	offset = -offset;
+	direction = glow_eDirection_Up;
+      }
+    }
+    else {
+      if ( offset < -height)
+	offset = osize;
+    }
     grow_SetAnnotationTextOffset( object, 1, 0, offset);
     break;
   }
