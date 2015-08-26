@@ -299,12 +299,12 @@ init_process ( char *name)
     exit(sts);
   }
 
-  nmps_create_lock( &sts);
-  if (EVEN(sts)) {
-    errh_Fatal("nmps_create_lock, %m", sts);
-    errh_SetStatus( PWR__SRVTERM);
-    exit(sts);
-  }
+  // nmps_create_lock( &sts);
+  // if (EVEN(sts)) {
+  //   errh_Fatal("nmps_create_lock, %m", sts);
+  //  errh_SetStatus( PWR__SRVTERM);
+  //  exit(sts);
+  //}
 
   if ( strstr( name, "rt_plc_core") != 0)
     pp->is_core = 1;
@@ -588,8 +588,6 @@ clean_all (
   sts = gdh_UnrefObjectInfoAll();
   if (EVEN(sts))
     errh_Error("gdh_UnrefObjectInfoAll, %m", sts);
-
-  nmps_delete_lock( &sts);
 }
 
 /* Link to I/O base areas.

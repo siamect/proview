@@ -112,8 +112,9 @@ void NMpsCell_init( pwr_sClass_NMpsCell  *object)
 {
 	plc_t_DataInfo	*data_index;
 	int		i;
+	pwr_tStatus 	sts;
 
-	// nmps_create_lock( &sts);
+	nmps_create_lock( &sts);
 
 	if ( !(object->Function & NMPS_CELLFUNC_BACKUP))
 	  NMpsCell_init_time( object);
@@ -705,8 +706,9 @@ void NMpsStoreCell_init( pwr_sClass_NMpsStoreCell  *object)
 {
 	plc_t_DataInfo	*data_index;
 	int		i;
+	pwr_tStatus 	sts;
 
-	// nmps_create_lock( &sts);
+	nmps_create_lock( &sts);
 
 	if ( !(object->Function & NMPS_CELLFUNC_BACKUP))
 	  NMpsCell_init_time( (pwr_sClass_NMpsCell *) object);
