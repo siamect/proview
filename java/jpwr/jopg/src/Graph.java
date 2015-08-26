@@ -51,6 +51,10 @@ public class Graph implements GraphIfc, GrowApplIfc {
     public GraphLocalDb ldb;
     public GrowSlider currentSlider;
     public double scan_time = 1;
+    public double fast_scan_time = 1;
+    public double animation_scan_time = 1;
+    int slow_scan_cnt = 0;
+    int fast_scan_cnt = 0;
     GrowCmn[] cmnStack = new GrowCmn[10];
     int cmnStackCnt = 0;
     int clickActive = 0;
@@ -87,6 +91,7 @@ public class Graph implements GraphIfc, GrowApplIfc {
 
     public void open(BufferedReader reader) {
 	ctx.open( reader);
+	animation_scan_time = ctx.cmn.animation_scantime;
 	ctx.traceConnect();
     }
 
@@ -144,8 +149,32 @@ public class Graph implements GraphIfc, GrowApplIfc {
 
     public void traceScan(GlowArrayElem object) {
 	Dyn dyn = (Dyn)object.getUserData();
-	if ( dyn != null)
-	    dyn.scan(object);
+	if ( dyn == null)
+	    return;
+
+	if ( dyn.cycle == Glow.eCycle_Slow && slow_scan_cnt != 0 &&
+	     !((dyn.total_dyn_type1 & Dyn.mDynType1_Animation) != 0 || (dyn.total_dyn_type2 & Dyn.mDynType2_ScrollingText) != 0))
+	    return;
+	if ( dyn.cycle == Glow.eCycle_Fast && fast_scan_cnt != 0 &&
+	     !((dyn.total_dyn_type1 & Dyn.mDynType1_Animation) != 0 || (dyn.total_dyn_type2 & Dyn.mDynType2_ScrollingText) != 0))
+	    return;
+
+	dyn.scan(object);
+    }
+
+    public void traceScan() {
+	
+	ctx.traceScan();
+
+	fast_scan_cnt++;
+	if ( fast_scan_cnt >= 
+	     (int)(fast_scan_time / animation_scan_time + 0.5))
+	    fast_scan_cnt = 0;
+
+	slow_scan_cnt++;
+	if ( slow_scan_cnt >= 
+	     (int)(scan_time / animation_scan_time + 0.5))
+	    slow_scan_cnt = 0;
     }
 
     int stringToType( String str) {
@@ -543,6 +572,12 @@ public class Graph implements GraphIfc, GrowApplIfc {
 
     public double getScanTime() {
 	return scan_time;
+    }
+
+    public double getAnimationScanTime() {
+	if ( scan_time < animation_scan_time)
+	    return scan_time;
+	return animation_scan_time;
     }
 
     public void setOwner( String owner) {

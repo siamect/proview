@@ -328,6 +328,9 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
         localPanel.addMouseListener(adapter);
         localPanel.addMouseMotionListener(adapter);
 
+	scanTime = (int) (1000 * graph.getAnimationScanTime()); 
+	System.out.println( "scanTime: " + scanTime);
+
 	timer = new Timer( scanTime, this); 
 	timer.start();
     }
@@ -344,7 +347,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	if ( scanCount == 1)
 	    graph.gdh.getObjectRefInfoAll();
 
-	graph.ctx.traceScan();
+	graph.traceScan();
 	localPanel.repaint();
     }
 

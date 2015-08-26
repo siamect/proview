@@ -39,7 +39,7 @@ import jpwr.rt.*;
 import java.io.*;
 import java.util.*;
 
-public class GrowAnnot extends GlowArrayElem {
+public class GrowAnnot extends GlowArrayElem implements GrowAnnotIfc {
     GrowCmn cmn;
     GlowPoint p;
     int adjustment;
@@ -58,6 +58,14 @@ public class GrowAnnot extends GlowArrayElem {
 	this.cmn = cmn;
 	p = new GlowPoint();
 	trf = new GlowTransform();
+    }
+
+    public int type() {
+	return Glow.eObjectType_GrowAnnot;
+    }
+
+    public int getNumber() {
+	return number;
     }
 
     public void open(BufferedReader reader) {
@@ -170,6 +178,8 @@ public class GrowAnnot extends GlowArrayElem {
 
         int color;
 	int rot;
+	double offset_x = 0;
+	double offset_y = 0;
 	double trf_scale = trf.vertical_scale( t);
 	int idx = (int)( trf_scale * cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * (text_size +4) - 3);
 	double tsize = trf_scale * cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * (8+2*text_size);
@@ -179,6 +189,11 @@ public class GrowAnnot extends GlowArrayElem {
 
 	int lfont;
 	int ldraw_type;
+
+	if ( node != null && ((GrowNode)node).annot_scrollingtext == number) {
+	    offset_x = ((GrowNode)node).annot_offset_x;
+	    offset_y = ((GrowNode)node).annot_offset_y;
+	}
 
 	if ( node != null && ((GrowNode)node).text_font != Glow.eFont_No) {
 	    lfont = ((GrowNode)node).text_font;
@@ -190,13 +205,13 @@ public class GrowAnnot extends GlowArrayElem {
 	}
 
 	if ( t == null) {
-	    x1 = (int)( trf.x( p.x, p.y) * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
-	    y1 = (int)( trf.y( p.x, p.y) * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
+	    x1 = (int)( (trf.x( p.x, p.y) + offset_x) * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
+	    y1 = (int)( (trf.y( p.x, p.y) + offset_y) * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
 	    rot = (int) trf.rot();
 	}
 	else {
-	    x1 = (int)( trf.x( t, p.x, p.y) * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
-	    y1 = (int)( trf.y( t, p.x, p.y) * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
+	    x1 = (int)( (trf.x( t, p.x, p.y) + offset_x) * cmn.mw.zoom_factor_x) - cmn.mw.offset_x;
+	    y1 = (int)( (trf.y( t, p.x, p.y) + offset_y) * cmn.mw.zoom_factor_y) - cmn.mw.offset_y;
 	    rot = (int) trf.rot( t);
 	}
 	rot = rot < 0 ? rot % 360 + 360 : rot % 360;
@@ -329,6 +344,35 @@ public class GrowAnnot extends GlowArrayElem {
 	    break;
 	}
 	}
+    }
+
+    public GlowDimensionD getTextExtent( GlowTransform t, Object node) {
+	GlowDimensionD dim = new GlowDimensionD();
+
+	if ( ((GrowNode)node).annotv[number] == null || ((GrowNode)node).annotv[number].isEmpty()) {
+	    dim.width = 0;
+	    dim.height = 0;
+	    return dim;
+	}
+
+	int z_width, z_height, descent;
+	double trf_scale = trf.vertical_scale( t);
+	int idx = (int)( trf_scale * cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * 
+		 (text_size +4) - 4);
+	double tsize = trf_scale * cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * (8+2*text_size);
+	if ( idx < 0) {
+	    dim.width = 0;
+	    dim.height = 0;
+	    return dim;
+	}
+	idx = Math.min( idx, Glow.DRAW_TYPE_SIZE-1);
+  
+	GlowDimension d = cmn.gdraw.getTextExtent( ((GrowNode)node).annotv[number], idx, 
+						   font, draw_type);
+	
+	dim.width = (double)d.width / cmn.mw.zoom_factor_x;
+	dim.height = (double)d.height / cmn.mw.zoom_factor_y;
+	return dim;
     }
 
 }

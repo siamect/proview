@@ -96,7 +96,10 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
     public double fill_level = 1;
     public int level_fill_drawtype;
     public int level_color_tone;
-    public int level_direction;
+    public int level_direction;    
+    public int annot_scrollingtext = -1;
+    public double annot_offset_x = 0;
+    public double annot_offset_y = 0;
 
     GrowCmn cmn;
 
@@ -415,6 +418,12 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 	if ( ((GrowNode)node).invisible != 0 || invisible != 0)
 	    return;
 
+	if ( annot_scrollingtext != -1)
+	    cmn.gdraw.set_clip_rectangle( (int)(x_left * cmn.mw.zoom_factor_x - cmn.mw.offset_x), 
+					  (int)(y_low * cmn.mw.zoom_factor_y - cmn.mw.offset_y),
+					  (int)(x_right * cmn.mw.zoom_factor_x - cmn.mw.offset_x), 
+					  (int)(y_high * cmn.mw.zoom_factor_y - cmn.mw.offset_y));
+
 	if ( fill_level == 1) {
 	    if ( t != null) {
 		GlowTransform trf_tot = t.multiply(trf);
@@ -563,6 +572,8 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 	    }
 	}
 
+	if ( annot_scrollingtext != -1)
+	    cmn.gdraw.reset_clip_rectangle();
     }
 
     public int getClassTraceColor1() {
@@ -657,6 +668,18 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
     }
     public void setAnnotation(int number, String annot) {
 	annotv[number] = annot;
+    }
+    public void setAnnotationTextOffset( int num, double x, double y) {
+	if ( annot_scrollingtext == -1)
+	    annot_scrollingtext = num;
+	if ( num == annot_scrollingtext) {
+	    annot_offset_x = x;
+	    annot_offset_y = y;
+	}
+    }
+
+    public GlowDimensionD getAnnotationTextExtent( int num) {
+	return nc.getAnnotationTextExtent( trf, this, num);
     }
     public void setVisibility( int visibility) {
 	switch ( visibility) {
@@ -762,6 +785,10 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 	return 0;
     }
 
+    void set_first_nodeclass() {
+	set_root_nodeclass();
+    }
+
     void set_last_nodeclass() {
 	GlowArrayElem next;
 	for ( next = nc_root; 
@@ -798,6 +825,14 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
     void set_root_nodeclass() {
 	if ( nc_root != nc)
 	    set_nodeclass( nc_root);
+    }
+
+    int get_animation_count() {
+	return nc.animation_count;
+    }
+
+    int get_nodeclass_dyn_attr1() {
+	return nc.dyn_attr[0];
     }
 
     void set_nodeclass( GlowNodeClass new_nc) {
@@ -837,7 +872,7 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 	double x1, x2, y1, y2;
 	double rotation;
 
-	// Calculate max and min koordinates
+	// Calculate max and min coordinates
 
 	x1 = trf.x( 0, nc.y0);
 	y1 = trf.y( 0, nc.y0);

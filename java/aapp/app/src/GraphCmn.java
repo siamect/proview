@@ -112,7 +112,7 @@ public class GraphCmn implements PlowCmnIfc {
 			    graph.gdh.getObjectRefInfoAll();
 */
 			graph.cmn.setNodraw();
-			graph.ctx.traceScan();
+			graph.traceScan();
 			graph.cmn.resetNodraw();
 		}
 		public void setCanvas(Canvas canvas) {

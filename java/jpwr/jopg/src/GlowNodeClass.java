@@ -61,7 +61,7 @@ public class GlowNodeClass extends GlowArrayElem {
     public int action_type1;
     public int action_type2;
     public int[] dyn_color = new int[4];
-    String[] dyn_attr = new String[4];
+    public int[] dyn_attr = new int[4];
     GlowArrayElem next_nc;
     GlowArrayElem prev_nc;
     int recursive_trace;
@@ -125,19 +125,19 @@ public class GlowNodeClass extends GlowArrayElem {
 		    break;
 		case Glow.eSave_NodeClass_dyn_attr1:
 		    if ( token.hasMoreTokens())
-			dyn_attr[0] = token.nextToken();
+			dyn_attr[0] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_dyn_attr2:
 		    if ( token.hasMoreTokens())
-			dyn_attr[1] = token.nextToken();
+			dyn_attr[1] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_dyn_attr3:
 		    if ( token.hasMoreTokens())
-			dyn_attr[2] = token.nextToken();
+			dyn_attr[2] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_dyn_attr4:
 		    if ( token.hasMoreTokens())
-			dyn_attr[3] = token.nextToken();
+			dyn_attr[3] = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_NodeClass_java_name:
 		    break;
@@ -284,5 +284,15 @@ public class GlowNodeClass extends GlowArrayElem {
 	for ( base = this; base.prev_nc != null; base = (GlowNodeClass)base.prev_nc)
 	    ;
 	return base;
+    }
+
+    GlowDimensionD getAnnotationTextExtent( GlowTransform t, Object node, int num) {
+	int i;
+
+	for ( i = 0; i < a.size(); i++) {
+	    if ( a.get(i).type() == Glow.eObjectType_GrowAnnot && ((GrowAnnotIfc)a.get(i)).getNumber() == num)
+		return ((GrowAnnotIfc)a.get(i)).getTextExtent( t, node);
+	}
+	return null;
     }
 }

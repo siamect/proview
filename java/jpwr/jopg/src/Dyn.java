@@ -467,6 +467,7 @@ public class Dyn {
     public static final int eSave_ScrollingText_attribute      	= 4200;
     public static final int eSave_ScrollingText_direction      	= 4201;
     public static final int eSave_ScrollingText_speed      	= 4202;
+    public static final int eSave_ScrollingText_bounce      	= 4203;
     public static final int eSave_PopupMenu_ref_object      	= 5000;
     public static final int eSave_SetDig_attribute		= 5100;
     public static final int eSave_SetDig_instance		= 5101;
@@ -652,6 +653,7 @@ public class Dyn {
     public static final int eSave_Script_script_len		= 7300;
     public static final int eSave_Script_script			= 7301;
 
+    public static final int eAnimSequence_Inherit      	= 0;
     public static final int eAnimSequence_Cycle		= 1;
     public static final int eAnimSequence_Dig		= 2;
     public static final int eAnimSequence_ForwBack	= 3;
@@ -4909,14 +4911,17 @@ public class Dyn {
 	String attribute;
 	int direction;
 	double speed;
+	int bounce;
   	PwrtRefId subid;
+	int a_typeid;
 	int p;
 	int database;
-	boolean inverted;
 	boolean attrFound = false;
 	String oldValue;
 	boolean firstScan = true;
-
+	double offset = 0;
+	double osize;
+	
 	public DynScrollingText( Dyn dyn) {
 	    super(dyn, Dyn.mDynType2_ScrollingText, 0, 0, 0, Dyn.eDynPrio_ScrollingText);
 	}
@@ -4931,15 +4936,158 @@ public class Dyn {
  	public int connect(GlowArrayElem o) {
 	    GrowNode object = (GrowNode)o;
 
+	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
+	    if ( pname == null || pname.name.equals("")) 
+		return 1;
+	    if ( !(pname.type == Pwr.eType_String || pname.type == Pwr.eType_Text))
+		return 1;
+
+	    GdhrRefObjectInfo ret = null;
+
+	    switch( pname.database) {
+	    case GraphIfc.eDatabase_Gdh:
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		break;
+	    case GraphIfc.eDatabase_Local:
+		ret = dyn.graph.getLdb().refObjectInfo( graph, pname.name);
+		break;
+	    default:
+		ret = null;
+	    }
+
+	    if ( ret == null || ret.evenSts()) {
+		System.out.println("Value: " + attribute);
+		return 1;
+	    }
+
+	    GlowGeometry geom = object.measure();
+	    switch( direction) {
+	    case Glow.eDirection_Left:
+	    case Glow.eDirection_Right:
+		osize = geom.ur_x - geom.ll_x;
+		break;
+	    default:
+		osize = geom.ur_y - geom.ll_y;
+	    }
+
+	    p = ret.id;
+	    subid = ret.refid;
+	    a_typeid = pname.type;
+	    database = pname.database;
+	    attrFound = true;
 	    return 1;
 	}
 
 	public void disconnect() {
+	    if ( attrFound && database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid);
 	}
 
 	
 	public void scan( GlowArrayElem o) {
 	    GrowNode object = (GrowNode)o;
+
+	    GlowDimensionD d = object.getAnnotationTextExtent( 1);
+	    if ( d == null)
+		return;
+
+	    switch ( direction) {
+	    case Glow.eDirection_Left: {
+		offset -= speed * dyn.graph.getAnimationScanTime();
+		if ( bounce != 0) {
+ 		    if ( d.width < osize) {
+			if ( offset < 0) {
+			    offset = -offset;
+			    direction = Glow.eDirection_Right;
+			}
+		    }
+		    else {
+			if ( offset < osize - d.width) {
+			    offset += (osize - d.width) - offset;
+			    direction = Glow.eDirection_Right;
+			}
+		    }
+		}
+		else {
+		    if ( offset < -d.width)
+			offset = osize;
+		}
+		object.setAnnotationTextOffset( 1, offset, 0);
+		break;
+	    }
+	    case Glow.eDirection_Right: {
+		offset += speed * dyn.graph.getAnimationScanTime();
+		if ( bounce != 0) {
+		    if ( d.width < osize) {
+			if ( offset > osize - d.width) {
+			    offset -= offset - (osize -d.width);
+			    direction = Glow.eDirection_Left;
+			}
+		    }
+		    else {
+			if ( offset > 0) {
+			    offset = -offset;
+			    direction = Glow.eDirection_Left;
+			}
+		    }
+		}
+		else {
+		    if ( offset > osize)
+			offset = -d.width;
+		}
+		object.setAnnotationTextOffset( 1, offset, 0);
+		break;
+	    }
+	    case Glow.eDirection_Up: {
+		offset += speed * dyn.graph.getAnimationScanTime();
+		if ( bounce != 0) {
+		    if ( offset > osize - d.height) {
+			offset -= offset- (osize - d.height);
+			direction = Glow.eDirection_Down;
+		    }
+		}
+		else {
+		    if ( offset > osize)
+			offset = -d.height;
+		}
+		object.setAnnotationTextOffset( 1, 0, offset);
+		break;
+	    }
+	    case Glow.eDirection_Down: {
+		offset -= speed * dyn.graph.getAnimationScanTime();
+		if ( bounce != 0) {
+		    if ( offset < 0) {
+			offset = -offset;
+			direction = Glow.eDirection_Up;
+		    }
+		}
+		else {
+		    if ( offset < -d.height)
+			offset = osize;
+		}
+		object.setAnnotationTextOffset( 1, 0, offset);
+		break;
+	    }
+	    default: ;
+	    }
+
+	    String value0 = null;
+	    switch ( database) {
+	    case GraphIfc.eDatabase_Gdh:
+		value0 = dyn.graph.getGdh().getObjectRefInfoString( p, a_typeid);
+		break;
+	    case GraphIfc.eDatabase_Local:
+		value0 = dyn.graph.getLdb().getObjectRefInfoString( p, a_typeid);
+		break;
+	    }
+
+	    if ( firstScan || !value0.equals( oldValue)) {
+		object.setAnnotation(1, value0);
+		dyn.repaintNow = true;
+		oldValue = value0;
+	    }
+	    if ( firstScan)
+		firstScan = false;
 	}
 
 	public void open( BufferedReader reader) {
@@ -4966,6 +5114,9 @@ public class Dyn {
 		    case Dyn.eSave_ScrollingText_speed: 
 			speed = new Double(token.nextToken()).doubleValue();
 			break;
+		    case Dyn.eSave_ScrollingText_bounce: 
+			bounce = Integer.valueOf(token.nextToken());
+			break;
 		    case Dyn.eSave_End:
 			end_found = true;
 			break;
@@ -4988,6 +5139,17 @@ public class Dyn {
     public class DynAnimation extends DynElem {
 	String attribute;
 	int sequence;
+	PwrtRefId subid;
+	int p;
+	int database;
+	boolean inverted;
+	boolean attrFound = false;
+	boolean oldValue;
+	boolean firstScan = true;
+	int bitmask;
+	int a_typeid;
+	int animation_count;
+	int animation_direction;
 
 	public DynAnimation( Dyn dyn) {
 	    super(dyn, Dyn.mDynType1_Animation, 0, 0, 0, Dyn.eDynPrio_Animation);
@@ -4997,6 +5159,169 @@ public class Dyn {
 	    super(x);
 	    attribute = x.attribute;
 	    sequence = x.sequence;
+	}
+
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+
+	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
+	    if ( pname == null || pname.name.equals("")) 
+		return 1;
+
+	    GdhrRefObjectInfo ret = null;
+
+	    switch( pname.database) {
+	    case GraphIfc.eDatabase_Gdh:
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		break;
+	    default:
+		ret = null;
+	    }
+
+	    if ( ret == null || ret.evenSts()) {
+		System.out.println("Animation: " + attribute);
+		return 1;
+	    }
+
+	    p = ret.id;
+	    subid = ret.refid;
+	    inverted = pname.inverted;
+	    a_typeid = pname.type;
+	    bitmask = pname.bitmask;
+	    database = pname.database;
+	    attrFound = true;
+
+	    System.out.println( "AnimSequence1: " + sequence);
+	    if ( sequence == Dyn.eAnimSequence_Inherit)
+		sequence = object.get_nodeclass_dyn_attr1();
+	    System.out.println( "AnimSequence2: " + sequence);
+
+	    return 1;
+	}
+
+	public void disconnect() {
+	    if ( attrFound && database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid);
+	}
+
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+
+	    int max_count;
+	    int sts;
+
+	    if ( !attrFound)
+		return;
+
+	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
+	    if ( inverted)
+		value = !value;
+
+	    if ( firstScan) {
+		animation_count = 0;
+		animation_direction = 0;
+		firstScan = false;
+		if ( sequence == Dyn.eAnimSequence_Dig) {
+		    if ( value)
+			object.set_last_nodeclass();
+		    oldValue = value;
+		}
+	    }
+
+	    if ( sequence == Dyn.eAnimSequence_Dig) {
+		if ( oldValue != value) {
+		    // Start animation
+		    if ( value) {
+			animation_count = 0;
+			animation_direction = 1;
+		    }
+		    else if ( !value) {
+			animation_direction = 2;
+			animation_count = 0;
+		    }
+		}
+
+		if ( animation_direction != 0) {
+		    max_count = object.get_animation_count();
+		    animation_count++;
+		    if ( animation_count >= max_count) {
+			// Shift nodeclass
+			if ( animation_direction == 1) {
+			    // Shift forward
+
+			    sts = object.set_next_nodeclass();
+			    if ( (sts & 1) == 0) {
+				// End of animation
+				animation_count = 0;
+				animation_direction = 0;
+			    }
+			    animation_count = 0;
+			}
+			else {
+			    // Shift backward
+
+			    sts = object.set_previous_nodeclass();
+			    if ( (sts & 1) == 0) {
+				// End of animation
+				animation_count = 0;
+				animation_direction = 0;
+			    }
+			    animation_count = 0;
+			}
+		    }
+		}
+	    }
+	    else {
+		if ( value) {
+		    if ( animation_direction == 0) {
+			// Animation has been stopped
+			animation_count = 0;
+			animation_direction = 1;
+		    }
+
+		    max_count = object.get_animation_count();
+		    animation_count++;
+		    if ( animation_count >= max_count) {
+			// Shift nodeclass
+			if ( animation_direction == 1) {
+			    // Shift forward
+
+			    sts = object.set_next_nodeclass();
+			    if ((sts & 1) == 0) {
+				if ( sequence == Dyn.eAnimSequence_Cycle) {
+				    // Start from the beginning again
+				    object.set_nodeclass_by_index( 1);
+				}
+				else {
+				    // Change direction
+				    animation_direction = 2;
+				    object.set_previous_nodeclass();
+				}
+			    }
+			    animation_count = 0;
+			}
+			else {
+			    // Shift backward
+
+			    sts = object.set_previous_nodeclass();
+			    if ( (sts & 1) == 0) {
+				// Change direction
+				animation_direction = 1;
+				sts = object.set_next_nodeclass();
+			    }
+			    animation_count = 0;
+			}
+		    }
+		}
+		else {
+		    if ( animation_direction != 0) {
+			// Stop and reset animation
+			animation_direction = 0;
+			object.set_first_nodeclass();
+		    }
+		}
+	    }
+	    oldValue = value;
 	}
 
 	public void open( BufferedReader reader) {

@@ -26,6 +26,7 @@ local_java_sources := \
 	GlowPointX.java,\
 	GlowPointDX.java,\
 	GlowDimension.java,\
+	GlowDimensionD.java,\
 	GlowSliderInfo.java,\
 	GlowTableInfo.java,\
 	GlowMenuInfo.java,\
@@ -47,6 +48,7 @@ local_java_sources := \
 	GlowEventTable.java,\
 	GrowCtxIfc.java,\
 	GrowCmn.java,\
+	GrowAnnotIfc.java,\
 	GlowNodeClass.java,\
 	GlowNodeGroup.java,\
 	GlowConClass.java,\
