@@ -357,12 +357,21 @@ void pkg_node::checkNode()
     char dir[20];
     pwr_tObjName vname;
 
-    strcpy( dir, "$pwrp_load/");
+    if ( vollist[i] >= cdh_cUserClassVolMin)
+      strcpy( dir, "$pwrp_load/");
+    else
+      strcpy( dir, "$pwr_load/");
     strcpy( vname, (char *)(volnamelist + i));
     sprintf( fname, "%s%s.dbs", dir, cdh_Low(vname)); 
 
     sts = lfu_GetVolume( fname, vol_name, &vol_vid, &vol_cid, &vol_time, &vol_dvversion);
-    if ( EVEN(sts)) throw wb_error(sts);
+    if ( EVEN(sts)) {
+      char msg[200];
+      sprintf( msg, "Loadfile not found: %s", fname);
+      MsgWindow::message( 'E', msg, msgw_ePop_No);
+      m_errors++;
+      continue;
+    }
 
     if ( time_Acomp( &bootversion, &vol_time) == -1) {
       char msg[200];
