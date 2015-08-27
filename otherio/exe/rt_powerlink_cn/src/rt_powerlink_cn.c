@@ -42,7 +42,10 @@
 #include "rt_gdh.h"
 #include "rt_io_base.h"
 #include "rt_errh.h"
+#include "rt_qcom.h"
 #include "rt_aproc.h"
+#include "rt_ini_event.h"
+#include "rt_qcom_msg.h"
 #include "pwr_basecomponentclasses.h"
 #include "pwr_otherioclasses.h"
 
@@ -90,8 +93,12 @@ int main (int argc, char **argv)
 	
   pwr_sClass_EplHandler *plhp;
   pwr_tOid oid;
-	
-  struct timespec tim1, tim2;
+  int tmo;
+  char mp[2000];
+  qcom_sGet get;
+  qcom_sQattr qAttr;
+  qcom_sQid qini;
+  qcom_sQid qid = qcom_cNQid;
 	
   if ( argc > 1) {
     if ( strcmp( argv[1], "-m") == 0) {
@@ -107,6 +114,24 @@ int main (int argc, char **argv)
   // Make connection to error handler
   errh_Init("pwr_powerlink", errh_eAnix_powerlink);
   errh_SetStatus( PWR__SRVSTARTUP);
+
+  if (!qcom_Init(&sts, 0, "pwr_powerlink")) {
+    errh_Fatal("qcom_Init, %m", sts);
+    exit(sts);
+  } 
+
+  qAttr.type = qcom_eQtype_private;
+  qAttr.quota = 100;
+  if (!qcom_CreateQ(&sts, &qid, &qAttr, "events")) {
+    errh_Fatal("qcom_CreateQ, %m", sts);
+    exit(sts);
+  } 
+
+  qini = qcom_cQini;
+  if (!qcom_Bind(&sts, &qid, &qini)) {
+    errh_Fatal("qcom_Bind(Qini), %m", sts);
+    exit(-1);
+  }
 
   // Make connection to realtime database
   sts = gdh_Init("rt_powerlink");
@@ -133,8 +158,7 @@ int main (int argc, char **argv)
     exit(sts);
   }
 
-  tim1.tv_sec = 0;
-  tim1.tv_nsec = (plhp->CycleTime)*1000000000L;
+  tmo = (plhp->CycleTime)*1000;
 	
   aproc_TimeStamp( plhp->CycleTime, 5.0);
   errh_SetStatus( PWR__SRUN);
@@ -143,11 +167,32 @@ int main (int argc, char **argv)
   // Call IoAgentRead() IoAgentWrite() IoCardRead() IoCardWrite()
   // IoModuleRead() IoModuleWrite() forever
   for (;;) {
-    
-    sts = io_read(io_ctx);
-    sts = io_write(io_ctx); 
-    nanosleep(&tim1, &tim2);
-    aproc_TimeStamp( plhp->CycleTime, 5.0);
+    get.maxSize = sizeof(mp);
+    get.data = mp;
+    qcom_Get(&sts,&qid, &get, tmo);
+    if (sts == QCOM__TMO || sts == QCOM__QEMPTY) {
+        
+      sts = io_read(io_ctx);
+      sts = io_write(io_ctx); 
+
+      aproc_TimeStamp( plhp->CycleTime, 5.0);
+    } 
+    else {
+      ini_mEvent  new_event;
+      qcom_sEvent *ep = (qcom_sEvent*) get.data;
+
+      new_event.m  = ep->mask;
+      if (new_event.b.oldPlcStop) {
+	// TODO
+      } 
+      else if (new_event.b.swapDone) {
+	// TODO
+      } 
+      else if (new_event.b.terminate) {
+	// io_close(io_ctx);
+        exit(0);
+      }
+    }
   }
 }
 
