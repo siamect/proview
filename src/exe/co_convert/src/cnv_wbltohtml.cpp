@@ -623,7 +623,7 @@ endl <<
 
   html_clf->f <<
 "<BR><DT><B>" << Lng::translate("Description") << "</B><DT><BR>" << endl <<
-"</DL><DIV ID=\"description\"><XMP>" << endl;
+"</DL><DIV ID=\"description\"><PRE>" << endl;
 
   if ( ctx->rw->doc_fresh) {
     for ( i = 0; i < ctx->rw->doc_cnt; i++) {
@@ -632,16 +632,16 @@ endl <<
 	char imagefile[80];
 
 	ctx->remove_spaces( txt + 6, imagefile);
-	html_clf->f << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
+	html_clf->f << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
-	html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><BR><XMP>" << endl;
+	html_clf->f << "</PRE><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><BR><PRE>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
-	html_clf->f << "</XMP><H3>" << txt + 3 << "</H3><BR><XMP>" << endl;
+	html_clf->f << "</PRE><H3>" << txt + 3 << "</H3><BR><PRE>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
-	html_clf->f << "</XMP><H4>" << txt + 3 << "</H4><BR><XMP>" << endl;
+	html_clf->f << "</PRE><H4>" << txt + 3 << "</H4><BR><PRE>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@i", 2) == 0)  {
 	html_clf->f << txt + 2 << endl;
@@ -651,7 +651,7 @@ endl <<
     }
   }
   html_clf->f <<
-"</XMP>" << endl;
+"</PRE>" << endl;
 
   for ( i = 0; i < ctx->rw->doc_xlink_cnt; i++) {
     html_clf->f <<
@@ -916,7 +916,7 @@ int CnvWblToHtml::attribute_exec()
 	  continue;
 	}
 	else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
-	  html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP><BR>" << endl;
+	  html_clf->f << "</PRE><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><PRE><BR>" << endl;
 	}
 	else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
 	  html_clf->f << "<H3>" << txt + 3 << "</H3><BR>" << endl;
@@ -981,7 +981,7 @@ int CnvWblToHtml::attribute_exec()
   fp_tmp <<
 "<BR>" << endl <<
 "<CODE><B>" << Lng::translate("Description") << "</B></CODE><DT></DL>" << endl <<
-"<DIV ID=\"description\"><XMP>" << endl;
+"<DIV ID=\"description\"><PRE>" << endl;
 
   if ( ctx->rw->doc_fresh) {
     for ( i = 0; i < ctx->rw->doc_cnt; i++) {
@@ -990,23 +990,23 @@ int CnvWblToHtml::attribute_exec()
 	char imagefile[80];
 
 	ctx->remove_spaces( txt + 6, imagefile);
-	fp_tmp << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
+	fp_tmp << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
-	fp_tmp << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><BR><XMP>" << endl;
+	fp_tmp << "</PRE><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><BR><PRE>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
-	fp_tmp << "</XMP><H3>" << txt + 3 << "</H3><BR><XMP>" << endl;
+	fp_tmp << "</PRE><H3>" << txt + 3 << "</H3><BR><PRE>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
-	fp_tmp << "</XMP><H4>" << txt + 3 << "</H4><BR><XMP>" << endl;
+	fp_tmp << "</PRE><H4>" << txt + 3 << "</H4><BR><PRE>" << endl;
       }
       else
 	fp_tmp << ctx->rw->doc_text[i] << endl;
     }
   }
   fp_tmp <<
-"</XMP></DIV>" << endl;
+"</PRE></DIV>" << endl;
 
   return 1;
 }
@@ -1040,7 +1040,7 @@ int CnvWblToHtml::bit_exec()
 	  continue;
 	}
 	else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
-	  html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP><BR>" << endl;
+	  html_clf->f << "</PRE><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><PRE><BR>" << endl;
 	}
 	else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
 	  html_clf->f << "<H3>" << txt + 3 << "</H3><BR>" << endl;
@@ -1077,7 +1077,7 @@ int CnvWblToHtml::bit_exec()
   fp_tmp <<
 "<BR>" << endl <<
 "<CODE><B>Description</B></CODE><DT></DL>" << endl <<
-"<DIV ID=\"description\"><XMP>" << endl;
+"<DIV ID=\"description\"><PRE>" << endl;
 
   if ( ctx->rw->doc_fresh) {
     for ( i = 0; i < ctx->rw->doc_cnt; i++) {
@@ -1086,23 +1086,23 @@ int CnvWblToHtml::bit_exec()
 	char imagefile[80];
 
 	ctx->remove_spaces( txt + 6, imagefile);
-	fp_tmp << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
+	fp_tmp << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
-	fp_tmp << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><BR><XMP>" << endl;
+	fp_tmp << "</PRE><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><BR><PRE>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
-	fp_tmp << "</XMP><H3>" << txt + 3 << "</H3><BR><XMP>" << endl;
+	fp_tmp << "</PRE><H3>" << txt + 3 << "</H3><BR><PRE>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
-	fp_tmp << "</XMP><H4>" << txt + 3 << "</H4><BR><XMP>" << endl;
+	fp_tmp << "</PRE><H4>" << txt + 3 << "</H4><BR><PRE>" << endl;
       }
       else
 	fp_tmp << ctx->rw->doc_text[i] << endl;
     }
   }
   fp_tmp <<
-"</XMP></DIV>" << endl;
+"</PRE></DIV>" << endl;
 
   return 1;
 }
@@ -1261,7 +1261,7 @@ endl <<
 
   html_clf->f <<
 "<BR><DT><B>Description</B><DT><BR>" << endl <<
-"</DL><DIV ID=\"description\"><XMP>" << endl;
+"</DL><DIV ID=\"description\"><PRE>" << endl;
 
   if ( ctx->rw->doc_fresh) {
     for ( i = 0; i < ctx->rw->doc_cnt; i++) {
@@ -1270,23 +1270,23 @@ endl <<
 	char imagefile[80];
 
 	ctx->remove_spaces( txt + 6, imagefile);
-	html_clf->f << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
+	html_clf->f << "</PRE><IMG SRC=\"" << imagefile << "\"><PRE>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
-	html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><BR><XMP>" << endl;
+	html_clf->f << "</PRE><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><BR><PRE>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
-	html_clf->f << "</XMP><H3>" << txt + 3 << "</H3><BR><XMP>" << endl;
+	html_clf->f << "</PRE><H3>" << txt + 3 << "</H3><BR><PRE>" << endl;
       }
       else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
-	html_clf->f << "</XMP><H4>" << txt + 3 << "</H4><BR><XMP>" << endl;
+	html_clf->f << "</PRE><H4>" << txt + 3 << "</H4><BR><PRE>" << endl;
       }
       else
 	html_clf->f << ctx->rw->doc_text[i] << endl;
     }
   }
   html_clf->f <<
-"</XMP></DIV>" << endl;
+"</PRE></DIV>" << endl;
 
   for ( i = 0; i < ctx->rw->doc_link_cnt; i++) {
     html_clf->f <<

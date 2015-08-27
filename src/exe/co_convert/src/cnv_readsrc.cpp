@@ -171,7 +171,7 @@ filename << endl <<
 "</TITLE>" << endl <<
 "</HEAD>" << endl <<
 "<BODY BGCOLOR=\"white\">" << endl <<
-"<CODE><XMP>" << endl;
+"<CODE><PRE>" << endl;
 
   return 1;
 }
@@ -179,7 +179,7 @@ filename << endl <<
 int CnvReadSrc::html_close()
 {
   fp_src_html <<
-"</XMP></CODE>" << endl <<
+"</PRE></CODE>" << endl <<
 "</BODY>" << endl <<
 "</HTML>" << endl;
   fp_src_html.close();
@@ -189,7 +189,36 @@ int CnvReadSrc::html_close()
 
 int CnvReadSrc::html_line( char *line)
 {
-  fp_src_html << line << endl;
+  char hline[1000];
+  char *s = line;
+  char *t = hline;
+
+  for ( s = line; *s; s++) {
+    switch ( *s) {
+    case '<':
+      strcpy( t, "&#60;");
+      t += 5;
+      break;
+    case '>':
+      strcpy( t, "&#62;");
+      t += 5;
+      break;
+    case '"':
+      strcpy( t, "&#34;");
+      t += 5;
+      break;
+    case '&':
+      strcpy( t, "&#38;");
+      t += 5;
+      break;
+    default:
+      *t = *s;
+      t++;
+    }
+  }
+  *t = 0;
+
+  fp_src_html << hline << endl;
 
   return 1;
 }
@@ -197,10 +226,10 @@ int CnvReadSrc::html_line( char *line)
 int CnvReadSrc::html_aref()
 {
   fp_src_html <<
-"</XMP></CODE>" << endl <<
+"</PRE></CODE>" << endl <<
 "<HR><BR>" << endl <<
 "<A NAME=\"" << src_aref << "\"><H1>" << src_aref_text << "</H1></A>" << endl <<
-"<HR><CODE><XMP>" << endl;
+"<HR><CODE><PRE>" << endl;
   
   return 1;
 }
