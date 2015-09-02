@@ -670,7 +670,7 @@ public class Dyn {
     public static final int ePwrStatus_Error		= 3;
     public static final int ePwrStatus_Fatal		= 4;
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
 
     Vector<DynElem> elements = new Vector<DynElem>();
     GraphIfc graph;
