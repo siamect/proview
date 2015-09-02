@@ -169,7 +169,7 @@ public class GlowDraw implements GlowDrawIfc {
 
     	paint.setColor(color);
     	paint.setStyle(Paint.Style.FILL);
-    	canvas.drawArc(new RectF((float)x, (float)y, (float)(x + width), (float)(y + height)), (float)(360-angle1), (float)(-angle2), false, paint);			
+    	canvas.drawArc(new RectF((float)x, (float)y, (float)(x + width), (float)(y + height)), (float)(360-angle1), (float)(-angle2), true, paint);			
     }
 
     public void gradient_fill_arc(int x, int y, int width, int height, int angle1, int angle2, int gc_type, int f1, int f2, int gradient) {
@@ -178,7 +178,7 @@ public class GlowDraw implements GlowDrawIfc {
 
     	setGradient( gradient, f1, f2, (float)x, (float)y, (float)width, (float)height);
 		paint.setStyle(Paint.Style.FILL);
-    	canvas.drawArc(new RectF((float)x, (float)y, (float)(x + width), (float)(y + height)), (float)(360-angle1), (float)(-angle2), false, paint);			
+    	canvas.drawArc(new RectF((float)x, (float)y, (float)(x + width), (float)(y + height)), (float)(360-angle1), (float)(-angle2), true, paint);			
     	paint.setShader(null);
     }
 
