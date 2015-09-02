@@ -3663,7 +3663,7 @@ ScrollingText
 
 Visa en rullande text.
 
-Objectet kopplas till ett sträng-attribut i databasen, och texten i attributet visas.
+Objektet kopplas till ett sträng-attribut i databasen, och texten i attributet visas.
 
 <b>Attribut <t><t>Beskrivning
 ScrollingText.Attribute <t><t>Attribut i databasen av typ String.

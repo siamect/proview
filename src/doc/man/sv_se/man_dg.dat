@@ -5731,6 +5731,53 @@ Utilities fönstret är ett grafiskt gränssnitt till olika kommandon i konfiguratö
 För en närmare beskrivning av respektive kommando, se avsnittet Kommandon.
 </topic>
 
+
+<topic> backup_refman
+Backup utility
+
+The backup utility analyses a runtime backup file. It makes it possible to
+
+- inspect the content of the backup file.
+- see the difference between two backup files stored and different times.
+- see the difference between the backupfile and the corresponding values in the
+  development database.
+- Transfer selected values from the backup file to the development database.
+
+The backup function in the Proview runtime enviroment, stores the values of 
+objects and attributes specified with Backup objects, in the backup file. The 
+is read at Proview startup and the previously stored values are inserted into
+the realtime database.
+
+<h2>Display the content of a backup file
+Open the backup utility from the root volume configurator of the node from which the 
+backup file is fetched. The backup utility is opened with the command 'backup show'. 
+Activate File/Open in the menu and select a backup file. The backup file can be a copy 
+of the current backup file or a copy from a previous occation. All the attributes and
+their values are displayed in the backup window.
+
+<image>dg_fig123.png
+<b>Fig Display backup file
+
+<h2>Compare two backup files
+Open the first backup file for display as described above. Then activate 
+File/Compare Backup File in the menu and select the other backup file. The attributes
+with values that differs between the files are now displayed.
+
+<h2>Compare a backup file with the development database
+Open the backup file for display, and then activate File/Compare Database in the menu.
+The attributes with values that differs between the backup file and the development
+database in now displayed.
+
+<h2>Transfer values from a backup file to the development database
+Enter edit mode in the configurator and then open the backup utility. Open the backup
+file for display, and then compare this with the values in the development database from
+File/Compare Database in the menu. The attributes with values that differs between the 
+backup file and the database are now displayed with checkboxes. Check the values you
+want to transfer, and activate File/Transfer to database in the menu. Finally activate
+Save in the configurator to store the modifications.
+
+</topic>
+
 <topic> builddir_refman
 Build Directories
 
@@ -9383,6 +9430,21 @@ Skriv ut plc dokument.
 /all		<t>Skriv ut alla plcpgm.
 </TOPIC>
 
+<TOPIC> redraw <style> function
+Kommando   redraw
+
+Rita om plc-koden.
+
+<B>wtt> redraw /all
+<B>wtt> redraw /hierarchy=
+<B>wtt> redraw /plcpgm=
+
+/plcpgm		<t>Rita om ett plcpgm.
+/hierarchy	<t>Hierarkiobjekt. Alla plcpgm i hierarkin kommer att
+		<t>ritas om.
+/all		<t>Rita om alla plcpgm.
+</TOPIC>
+
 <TOPIC> release subwindow <style> function
 Kommando   release subwindow
 
@@ -9867,6 +9929,7 @@ CreateObject()		<LINK> createobject()
 RenameObject()		<LINK> renameobject()
 MoveObject()		<LINK> moveobject()
 OpenPlcPgm()		<LINK> openplcpgm()
+ClosePlcPgm()		<LINK> closeplcpgm()
 CreatePlcObject()	<LINK> createplcobject()
 CreatePlcConnection()	<LINK> createplcconnection()
 SetPlcObjectAttr()	<LINK> setplcobjectattr()
@@ -10858,6 +10921,7 @@ CreateObject()	<t>Skapa ett objekt. <LINK> createobject()
 RenameObject()	<t>Ändra namn på ett objekt. <LINK> renameobject()
 MoveObject()	<t>Flytta ett objekt. <LINK> moveobject()
 OpenPlcPgm()	<t>Öppna ett PlcPgm.	<LINK> openplcpgm()
+ClosePlcPgm()	<t>Stäng ett PlcPgm.	<LINK> closeplcpgm()
 CreatePlcObject() <t>Skapa ett plc-objekt. <LINK> createplcobject()
 CreatePlcConnection() <t>Skapa en plc-koppling. <LINK> createplcconnection()
 SetPlcObjectAttr() <t>Sätt värde på ett attribut i ett plc-objekt. <LINK> setplcobjectattr()
@@ -11258,6 +11322,251 @@ godtycklig typ  value		attributets värde.
 
 <c>  SetAttribute( "Pump-V1-Switch.Description", "Valve switch open");
 </TOPIC>
+
+<TOPIC> createobject() <style> function
+CreateObject()
+
+int CreateObject( string name, string class, string destination, int destcode)
+
+<b>Beskrivning
+
+Skapa ett objekt.
+Returnerar status för operationen.
+
+<b>Argument
+ 
+string          <t>name            <t>objektsnamn. Utan path.
+string          <t>class           <t>objektets klass.
+string          <t>destination     <t>destinationsobjekt. Förälder eller syskon till objektet.
+int             <t>destcode        <t>destinationskod. 1 första barn, 2 sista barn,
+                                   <t><t>3 efter, 4 före.
+<b>Exempel
+
+<c>  CreateObject( "Temperature", "BaseTempSensor", "Pump-V1", 2);
+</TOPIC>
+
+<TOPIC> renameobject() <style> function
+RenameObject()
+
+int RenameObject( string name, string newname)
+
+<b>Beskrivning
+
+Ändra namn på ett objekt.
+Returnerar status för operationen.
+
+<b>Argument
+ 
+string          <t>name            <t>tidigare namn med path.
+string          <t>newname         <t>nytt namn utan path.
+
+<b>Exempel
+
+<c>  RenameObject( "H1-Zon1-Temp2", "PT2");
+</TOPIC>
+
+<TOPIC> moveobject() <style> function
+MoveObject()
+
+int MoveObject( string name, string destination, int destcode)
+
+<b>Beskrivning
+
+Flytta ett objekt.
+Returnerar status för operationen.
+
+<b>Argument
+ 
+string          <t>name            <t>namn med path.
+string          <t>destination     <t>destinationsobjekt. Förälder eller syskon till objektet
+                                   <t><t>i den nya positionen.
+int             <t>destcode        <t>destinationskod. 1 första barn, 2 sista barn,
+                                   <t><t>3 efter, 4 före.
+
+<b>Exempel
+
+<c>  MoveObject( "H1-Zon1-Temp2", "H1-Zon2", 1);
+</TOPIC>
+
+<TOPIC> openplcpgm() <style> function
+OpenPlcPgm()
+
+int OpenPlcPgm( string name)
+
+<b>Beskrivning
+
+Öppna ett plcprogram och en editeringssession för plc.
+Returnerar status för operationen.
+Det får inte finnas några osparade operationer när den här funktionen anropas.
+Endast ett program kan vara öppet åt gången.
+
+Editeringssessionen ska stängas med ett anropt ill ClosePlcPgm():
+I editeringssessionen kan endast plc-funktionerna CreatePlcObject(),
+CreatePlcConnection(), SetPlcObjectAttr() och PlcConnect() användas för
+att modifiera och skapa objekt. Access för den tidigare sessionen är 
+tillfälligt satt till readonly när plc-editering är aktiv.
+
+<b>Argument
+ 
+string          name            namn på ett PlcPgm objekt.
+
+<b>Exempel
+
+<c>  OpenPlcPgm( "Pump-V1-Control");
+<c>  ...
+<c>  ClosePlcPgm();
+</TOPIC>
+
+<TOPIC> closeplcpgm() <style> function
+ClosePlcPgm()
+
+int ClosePlcPgm()
+
+<b>Beskrivning
+
+Stänger en editeringssession för plc
+
+<b>Exempel
+
+<c>  OpenPlcPgm( "Pump-V1-Control");
+<c>  ...
+<c>  ClosePlcPgm();
+</TOPIC>
+
+<TOPIC> createplcobject() <style> function
+CreatePlcObject()
+
+int CreatePlcObject( string name, string class, float x, float y [, string destination,
+                     int inputmask, int outputmask, int invertmask])
+
+<b>Beskrivning
+
+Skapar ett funktionsobjekt i en editeringssession för plc.
+Funktionen kan endast användas i en editeringssession för plc, som har öppnats med
+ett anrop till OpenPlcPgm().
+
+Objektet positioneras på koordinaterna x och y. Om destination, ett dokumentobjekt, har
+angivits, är kordinateran relativa till detta objekt, annars absoluta.
+Om maskerna inte anges används defaultmasker.
+
+<b>Argument
+ 
+string          <t>name            <t>Objektsnamn, utan path.
+string          <t>class           <t>Klass på objektet.
+float           <t>x               <t>x-koordinat.
+float           <t>y               <t>y-koordinat.
+string          <t>destination     <t>Valfritt. Ett dokumentobjekt. Om ett dokumentobjekt är angivet
+                                <t><t>är koordinaterna relativa till detta objekt.
+int             <t>inputmask       <t>Valfritt. Mask där bitarna indikerar synliga ingångspinnar i 
+                                <t><t>funktionsblocket.
+int             <t>outputmask       <t>Valfritt. Mask där bitarna indikerar synliga utgångspinnar i 
+                                <t><t>funktionsblocket.
+int             <t>invmask         <t>Valfritt. Mask där bitarna indikerar inverterade ingångspinnar.
+
+<b>Exempel
+
+<c>  OpenPlcPgm( "Pump-V1-Control");
+<c>  CreatePlcObject( "Document0", "Document", 1.2, 0.0);
+<c>  CreatePlcObject( "And0", "And", 0.3, 0.1, "Document0", 15, 1, 3);
+<c>  CreatePlcObject( "V1", "BaseCValve", 0.3, 0.4, "Document0");
+<c>  ClosePlcPgm();
+</TOPIC>
+
+<TOPIC> createplcconnection() <style> function
+CreatePlcConnection()
+
+int CreatePlcConnection( string source, string sourceattr, string dest, string destattr [,
+	                 int feedback])
+
+<b>Description
+
+Skapar en plc-koppling mellan två funktionsobjekt.
+
+Funktionen kan endast användas i en editeringssession för plc som startas med ett
+anrop till OpenPlcPgm().
+
+In- och utgångspinnarna som kopplingen ska anslutas till, anges med attributnamnen för 
+pinnarna. Om en sträckad feedback-koppling ska skapas, kan detta anges med feedback 
+argumentet.
+
+<b>Argument
+ 
+string          <t>source          <t>Objekt som kopplingen utgår ifrån. Namn utan path.
+string          <t>sourceattr      <t>Attribut för den pinne som kopplingen utgår ifrån.
+string          <t>dest            <t>Destinationsobjekt. Namn utan path.
+string          <t>destattr        <t>Attribut för pinne på destinationsobjektet.
+int             <t>feedback        <t>Valfritt. Om 1 skapas en sträckad feedback-koppling.
+
+<b>Exempel
+
+<c>  OpenPlcPgm( "Pump-V1-Control");
+<c>  ...
+<c>  CreatePlcObject( "And0", "And", 0.3, 0.1, "Document0", 15, 1, 3);
+<c>  CreatePlcObject( "And1", "And", 0.6, 0.1, "Document0", 15, 1, 3);
+<c>  CreatePlcConnection( "And0", "Status", "And1", "In1");
+<c>  # Feedback connection
+<c>  CreatePlcConnection( "And1", "Status", "And0", "In4", 1);
+<c>  ClosePlcPgm();
+</TOPIC>
+
+<TOPIC> plcconnect() <style> function
+PlcConnect()
+
+int PlcConnect( string plcobject, string connectobject)
+
+<b>Beskrivning
+
+Aktiverar 'connect'funktionen för plc, till exempel för att koppla Get eller Sto 
+funktionsobjekt till signaler eller attribut i planthierarkin.
+
+
+Funktionen kan endast användas i en editeringssession för plc som startas med ett
+anrop till OpenPlcPgm().
+
+<b>Argument
+ 
+string          <t>plcobject       <t>Namn, utan path, på det funktionsobjekt som ska kopplas.
+string          <t>connectobject   <t>Namn på objekt som ska kopplas till. Fullständigt namn
+				<t><t>med path ska anges.
+
+<b>Exempel
+
+<c>  OpenPlcPgm( "Pump-V1-Control");
+<c>  ...
+<c>  CreatePlcObject( "GetDv0", "GetDv", 0.3, 0.1, "Document0");
+<c>  PlcConnect( "GetDv0", "Pump-V1-Active");
+<c>  ...
+<c>  ClosePlcPgm();
+</TOPIC>
+
+<TOPIC> setplcobjectattr() <style> function
+SetPlcObjectAttr()
+
+int SetPlcObjectAttr( string attribute, (arbitrary type) value)
+
+<b>Beskrivning
+
+Sätt ett värde i ett plc-objekt.
+
+Funktionen kan endast användas i en editeringssession för plc som startas med ett
+anrop till OpenPlcPgm().
+OpenPlcPgm().
+
+<b>Argument
+ 
+string          <t>name            <t>Namn på attributet. Utan path.
+arbitrary type  <t>value	   <t>värde som ska sättas.
+
+<b>Exempel
+
+<c>  OpenPlcPgm( "Pump-V1-Control");
+<c>  CreatePlcObject( "Document0", "Document", 1.3, 0.0);
+<c>  SetPlcObjectAttr( "Document0.DocumentOrientation", 1);
+<c>  SetPlcObjectAttr( "Document0.DocumentSize", 3);
+<c>  ...
+<c>  ClosePlcPgm();
+</TOPIC>
+
 </headerlevel>
 
 <TOPIC> misc_functions <style> function

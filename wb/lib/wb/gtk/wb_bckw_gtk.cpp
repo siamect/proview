@@ -167,6 +167,17 @@ WbBckWGtk::WbBckWGtk (
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), view);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(view), GTK_WIDGET(view_menu));
 
+  // Help menu
+  GtkWidget *help_backup = gtk_image_menu_item_new_from_stock(GTK_STOCK_HELP, NULL);
+  g_signal_connect(help_backup, "activate", G_CALLBACK(WbBckWGtk::activate_help), this);
+
+  GtkMenu *help_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_backup);
+
+  GtkWidget *help = gtk_menu_item_new_with_mnemonic("_Help");
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), help);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(help), GTK_WIDGET(help_menu));
+
   form = gtk_vbox_new( FALSE, 0);
 
   // Create bckwnav
@@ -317,7 +328,7 @@ void WbBckWGtk::activate_zoom_reset( GtkWidget *w, gpointer data)
 
 void WbBckWGtk::activate_help( GtkWidget *w, gpointer data)
 {
-  CoXHelp::dhelp( "messagewindow_refman", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat", 
+  CoXHelp::dhelp( "backup_refman", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat", 
 		  true);
 }
 

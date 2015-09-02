@@ -95,9 +95,8 @@ csup_Init (
     max_delay = cp->o->MaxDelay;
     cp->o->DelayLimit.tv_sec = tv_sec = (int)max_delay;
     cp->o->DelayLimit.tv_nsec = (int)((max_delay - (float)tv_sec + FLT_EPSILON) * 1.0e9);   
-    // printf("maxdelay: %f, tv_sec: %d, tv_nsec: %d\n", cp->o->MaxDelay, cp->o->DelayLimit.tv_sec, cp->o->DelayLimit.tv_nsec);
-    errh_Info("maxdelay: %f, tv_sec: %d, tv_nsec: %d", cp->o->MaxDelay,
-      cp->o->DelayLimit.tv_sec, cp->o->DelayLimit.tv_nsec);
+    // errh_Info("maxdelay: %f, tv_sec: %d, tv_nsec: %d", cp->o->MaxDelay,
+    //  cp->o->DelayLimit.tv_sec, cp->o->DelayLimit.tv_nsec);
   }
 
   if (lst_IsEmpty(NULL, lh))

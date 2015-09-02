@@ -107,7 +107,7 @@ wb_vrep *wb_vrepwbl::next()
 void wb_vrepwbl::error( const char *msg, const char *file, int line_number)
 {
   char str[400];
-  sprintf( str, "Wbl error: %s, %s line: %d", msg, file, line_number);
+  snprintf( str, sizeof(str), "Wbl error: %s, %s line: %d", msg, file, line_number);
   MsgWindow::message( 'E', str);
   // cout << "Wbl error: " << msg << ", " << file << " line: " << line_number << endl;
   error_cnt++;

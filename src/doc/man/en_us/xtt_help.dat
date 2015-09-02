@@ -5,7 +5,7 @@
 
 <h1>Overview
 
-<b>Project Help <link> index,,$pwrp_exe/xtt_help.dat
+<b>Project Help <link> index,,$pwrp_load/xtt_help.dat
 <b>Operator's Guide <link> index,,$pwr_lang/man_opg.dat
 <b>Classes           <link> classes
 <b>Index            <index>

@@ -45,7 +45,8 @@ SObject pwrb:Class
 !  @image orm_strsel_fo.png
 !
 !  Select one of two inputs.
-!  
+!
+!  When Control is high, In1 is selected, otherwise In2 is selected. 
 !*/
   Object StrSel $ClassDef 646
     Body SysBody

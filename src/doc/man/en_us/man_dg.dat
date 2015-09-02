@@ -5785,6 +5785,50 @@ The utilities window is a graphic interface to different configurator commands.
 For more information about the commands, see chapter Commands.
 </topic>
 
+<topic> backup_refman
+Backup verktyg
+
+Backupverktyget analyserar en runtime backupfil. Den gör det möjligt att
+
+- inspektera innehållet i en backupfil.
+- se skillnaden mellan två backupfiler lagrade vid olika tidpunkt.
+- se skillnaden mellan en backupfil och motsvarande värden i utvecklingsdatabasen.
+- överföra utvalda värden från backupfilen till utvecklingsdatabasen.
+
+Backupfunktionen i Proview runtime, lagrar värden på objekt och attribute
+specificerade med Backupobjekt, till backupfilen. Backupfilen läses vid
+Proview uppstart och de tidigare lagrade värdena läggs in i realtidsdatabasen. 
+
+<h2>Visa innehållet i en backupfil.
+Öppna backupfönstret från konfiguratorn för rotvolymen för den node från vilken
+backupfilen har hämtats. Backupfönstret öppnas med kommandot 'backup show'.
+Aktivera File/Open i menyn och välj en backupfil. Backupfilen kan vara en kopia
+av den nuvarande backupfilen eller en kopia från ett tidigare tillfälle. Alla
+attribut och deras värden visas i backupfönstret.
+
+<image>dg_fig123.png
+<b>Fig Visa backupfilen
+
+<h2>Jämför två backupfiler
+Öppna den första backupfilen för visning som beskrivs ovan. Aktivera sedan
+File/Compare Backup File i menyn och välj den andra backupfilen. Attribut med värden
+som skiljer sig mellan filerna visas nu.
+
+<h2>Jämför backupfilen med utvecklingsdatabasen
+Öppna backupfilen för visning, och aktivera sedan File/Compare Databse in menyn.
+Attribut med värden som skiljer sig mellan backupfilen och utvecklingsdatabasen
+visas nu.
+
+<h2>Överför värden från en backupfil till utvecklingsdatabasen
+Gå till editeringsmod i konfiguratorn, och öppna sedan backupfönstret. Öppna 
+backupfilen för visning, och jämför den med värden från utvecklingsdatabasen 
+med File/Compare Database in menyn. Attribut med värden som skiljer mellan 
+backupfilen och utvecklingsdatabasen visas nu med checkboxar. Markera de värden
+som ska överföras till databasen, och activera File/Transfer to database i menyn.
+Aktivera även Save i konfiguratorn för att spara ändringarna.
+
+</topic>
+
 <topic> builddir_refman
 Build Directories
 
@@ -9496,6 +9540,21 @@ Print plc documents.
 /all		<t>Print all plcpgms.
 </TOPIC>
 
+<TOPIC> redraw <style> function
+Command   redraw
+
+Redraw the plc code.
+
+<B>wtt> redraw /all
+<B>wtt> redraw /hierarchy=
+<B>wtt> redraw /plcpgm=
+
+/plcpgm		<t>Redraw a plcpgm.
+/hierarchy	<t>Hierarchy object. All plc in the hierarchy will
+		<t>be redrawn.
+/all		<t>Redraw all plcpgms.
+</TOPIC>
+
 <TOPIC> release subwindow <style> function
 Command   release subwindow
 
@@ -10001,6 +10060,7 @@ RenameObject()		<LINK> renameobject()
 MoveObject()		<LINK> moveobject()
 OpenPlcPgm()		<LINK> openplcpgm()
 CreatePlcObject()	<LINK> createplcobject()
+ClosePlcObject()	<LINK> closeplcobject()
 CreatePlcConnection()	<LINK> createplcconnection()
 SetPlcObjectAttr()	<LINK> setplcobjectattr()
 PlcConnect()		<LINK> plcconnect()
@@ -11000,6 +11060,7 @@ CreateObject()	<t>Create an object. <LINK> createobject()
 RenameObject()	<t>Change name of an object. <LINK> renameobject()
 MoveObject()	<t>Move an object. <LINK> moveobject()
 OpenPlcPgm()	<t>Open a PlcPgm.	<LINK> openplcpgm()
+ClosePlcPgm()	<t>Close a PlcPgm.	<LINK> closeplcpgm()
 CreatePlcObject() <t>Create a plc object. <LINK> createplcobject()
 CreatePlcConnection() <t>Create a plc connection. <LINK> createplcconnection()
 SetPlcObjectAttr() <t>Set attribute in a plc object. <LINK> setplcobjectattr()
