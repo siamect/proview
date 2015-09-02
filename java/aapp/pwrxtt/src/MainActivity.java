@@ -1968,7 +1968,6 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		public void run() {
 			if ( !initDone)
 				return;
-System.out.println("MainActivity TimerTask " + currentCmn.type());
 			switch(currentCmn.type()) {
 			case PlowCmnIfc.TYPE_PLOW:
 				new GdhTask().execute(new GdhTaskArg(GdhTask.SCAN, 
@@ -2069,7 +2068,7 @@ System.out.println("MainActivity TimerTask " + currentCmn.type());
 	    graph.gdraw.setActivity(this);
 	    GraphCmn cmn = new GraphCmn(graph);
 	    currentCmn = cmn;
-	    setScanTime( graph.getAnimationScanTime());
+	    setScanTime( Math.max(graph.getAnimationScanTime(), 0.25));
 		cmnList.add(cmn);
 
 		// new GdhTask().execute(new GdhTaskArg(GdhTask.DYNAMIC_OPEN, null));
