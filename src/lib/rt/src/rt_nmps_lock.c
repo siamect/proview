@@ -88,7 +88,8 @@ void nmps_delete_lock( pwr_tStatus *sts)
       printf( "Detach of nmps lock failed\n");
     if ( shmctl(shm_id, IPC_RMID, &ds) == -1)
       printf( "Remove of nmps lock failed\n");
-    unlink(segname);
+    // unlink(segname);
+    posix_sem_unlink(segname);
     sect_Free( sts, nmps_locksect);
   }
 }
