@@ -78,10 +78,10 @@ fi
     done
   } < $datfile
   echo "</topic>"
-} > $pwr_eexe/xtt_version_help.dat
+} > $pwr_eload/xtt_version_help.dat
 
 # Convert to html
-co_convert -t -d $pwr_doc $pwr_eexe/xtt_version_help.dat
+co_convert -t -d $pwr_doc $pwr_eload/xtt_version_help.dat
 
 {
   echo "<html><head>"

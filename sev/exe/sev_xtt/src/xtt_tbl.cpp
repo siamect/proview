@@ -281,7 +281,9 @@ void XttTbl::activate_help_project()
 
 void XttTbl::activate_help_proview()
 {
-  CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_exe/sev_xtt_version_help.dat", 0);
+  char cmd[] = "help /version";
+
+  command( cmd);
 }
 
 void XttTbl::sevhist_help_cb( void *ctx, const char *key)

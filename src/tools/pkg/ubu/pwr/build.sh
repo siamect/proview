@@ -80,7 +80,17 @@ fi
     done
   } < $datfile
   echo "</topic>"
-} > $pwr_eexe/wtt_version_help.dat
+} > $pwr_eload/wtt_version_help.dat
+
+# Convert to html
+co_convert -t -d $pwr_doc $pwr_eload/wtt_version_help.dat
+
+{
+  echo "<html><head>"
+  echo "<meta http-equiv=\"Refresh\" content=\"5;../wtt_version_help_version.html\">"
+  echo "</head></html>"
+} > $pwr_doc/en_us/package_version.html
+
 
 if [ "$1" == "-v" ]; then
   exit

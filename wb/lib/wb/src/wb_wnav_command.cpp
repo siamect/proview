@@ -543,7 +543,7 @@ static int	wnav_help_func(		void		*client_data,
   }
 
   if ( ODD( dcli_get_qualifier( "/VERSION", 0, 0))) {
-    sts = CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_exe/wtt_version_help.dat", strict);
+    sts = CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_load/wtt_version_help.dat", strict);
     if ( EVEN(sts))
       wnav->message('E', "No help on this subject");
     return sts;

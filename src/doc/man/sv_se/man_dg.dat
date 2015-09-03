@@ -5731,50 +5731,47 @@ Utilities fönstret är ett grafiskt gränssnitt till olika kommandon i konfiguratö
 För en närmare beskrivning av respektive kommando, se avsnittet Kommandon.
 </topic>
 
-
 <topic> backup_refman
-Backup utility
+Backup verktyg
 
-The backup utility analyses a runtime backup file. It makes it possible to
+Backupverktyget analyserar en runtime backupfil. Den gör det möjligt att
 
-- inspect the content of the backup file.
-- see the difference between two backup files stored and different times.
-- see the difference between the backupfile and the corresponding values in the
-  development database.
-- Transfer selected values from the backup file to the development database.
+- inspektera innehållet i en backupfil.
+- se skillnaden mellan två backupfiler lagrade vid olika tidpunkt.
+- se skillnaden mellan en backupfil och motsvarande värden i utvecklingsdatabasen.
+- överföra utvalda värden från backupfilen till utvecklingsdatabasen.
 
-The backup function in the Proview runtime enviroment, stores the values of 
-objects and attributes specified with Backup objects, in the backup file. The 
-is read at Proview startup and the previously stored values are inserted into
-the realtime database.
+Backupfunktionen i Proview runtime, lagrar värden på objekt och attribute
+specificerade med Backupobjekt, till backupfilen. Backupfilen läses vid
+Proview uppstart och de tidigare lagrade värdena läggs in i realtidsdatabasen. 
 
-<h2>Display the content of a backup file
-Open the backup utility from the root volume configurator of the node from which the 
-backup file is fetched. The backup utility is opened with the command 'backup show'. 
-Activate File/Open in the menu and select a backup file. The backup file can be a copy 
-of the current backup file or a copy from a previous occation. All the attributes and
-their values are displayed in the backup window.
+<h2>Visa innehållet i en backupfil.
+Öppna backupfönstret från konfiguratorn för rotvolymen för den node från vilken
+backupfilen har hämtats. Backupfönstret öppnas med kommandot 'backup show'.
+Aktivera File/Open i menyn och välj en backupfil. Backupfilen kan vara en kopia
+av den nuvarande backupfilen eller en kopia från ett tidigare tillfälle. Alla
+attribut och deras värden visas i backupfönstret.
 
 <image>dg_fig123.png
-<b>Fig Display backup file
+<b>Fig Visa backupfilen
 
-<h2>Compare two backup files
-Open the first backup file for display as described above. Then activate 
-File/Compare Backup File in the menu and select the other backup file. The attributes
-with values that differs between the files are now displayed.
+<h2>Jämför två backupfiler
+Öppna den första backupfilen för visning som beskrivs ovan. Aktivera sedan
+File/Compare Backup File i menyn och välj den andra backupfilen. Attribut med värden
+som skiljer sig mellan filerna visas nu.
 
-<h2>Compare a backup file with the development database
-Open the backup file for display, and then activate File/Compare Database in the menu.
-The attributes with values that differs between the backup file and the development
-database in now displayed.
+<h2>Jämför backupfilen med utvecklingsdatabasen
+Öppna backupfilen för visning, och aktivera sedan File/Compare Databse in menyn.
+Attribut med värden som skiljer sig mellan backupfilen och utvecklingsdatabasen
+visas nu.
 
-<h2>Transfer values from a backup file to the development database
-Enter edit mode in the configurator and then open the backup utility. Open the backup
-file for display, and then compare this with the values in the development database from
-File/Compare Database in the menu. The attributes with values that differs between the 
-backup file and the database are now displayed with checkboxes. Check the values you
-want to transfer, and activate File/Transfer to database in the menu. Finally activate
-Save in the configurator to store the modifications.
+<h2>Överför värden från en backupfil till utvecklingsdatabasen
+Gå till editeringsmod i konfiguratorn, och öppna sedan backupfönstret. Öppna 
+backupfilen för visning, och jämför den med värden från utvecklingsdatabasen 
+med File/Compare Database in menyn. Attribut med värden som skiljer mellan 
+backupfilen och utvecklingsdatabasen visas nu med checkboxar. Markera de värden
+som ska överföras till databasen, och activera File/Transfer to database i menyn.
+Aktivera även Save i konfiguratorn för att spara ändringarna.
 
 </topic>
 

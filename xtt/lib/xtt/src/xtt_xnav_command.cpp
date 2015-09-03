@@ -489,7 +489,7 @@ static int	xnav_help_func(		void		*client_data,
   }
 
   if ( ODD( dcli_get_qualifier( "/VERSION", 0, 0))) {
-    sts = CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_exe/xtt_version_help.dat", 0);
+    sts = CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_load/xtt_version_help.dat", 0);
     if ( EVEN(sts))
       xnav->message('E', "No help on this subject");
     return sts;
