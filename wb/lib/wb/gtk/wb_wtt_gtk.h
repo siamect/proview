@@ -248,6 +248,7 @@ class WttGtk : public Wtt {
     static void activate_showcrossref( GtkWidget *w, gpointer data);
     static void activate_updateclasses( GtkWidget *w, gpointer data);
     static void activate_clonevolume( GtkWidget *w, gpointer data);
+    static void activate_backupfile( GtkWidget *w, gpointer data);
     static void activate_zoom_in( GtkWidget *w, gpointer data);
     static void activate_zoom_out( GtkWidget *w, gpointer data);
     static void activate_zoom_reset( GtkWidget *w, gpointer data);

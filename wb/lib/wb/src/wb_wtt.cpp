@@ -2158,6 +2158,14 @@ void Wtt::activate_clonevolume()
   reset_cursor();
 }
 
+void Wtt::activate_backupfile()
+{
+  char cmd[80] = "backup show";
+  if ( !focused_wnav)
+    set_focus_default();
+  focused_wnav->command( cmd);
+}
+
 void Wtt::activate_zoom_in()
 {
   double zoom_factor;

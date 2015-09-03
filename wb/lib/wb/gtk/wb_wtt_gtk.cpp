@@ -1395,6 +1395,12 @@ void WttGtk::activate_clonevolume( GtkWidget *w, gpointer data)
   wtt->activate_clonevolume();
 }
 
+void WttGtk::activate_backupfile( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  wtt->activate_backupfile();
+}
+
 void WttGtk::activate_zoom_in( GtkWidget *w, gpointer data)
 {
   Wtt *wtt = (Wtt *)data;
@@ -2601,10 +2607,6 @@ WttGtk::WttGtk(
   g_signal_connect( menu_updateclasses_w, "activate", 
 		    G_CALLBACK(WttGtk::activate_updateclasses), this);
 
-  menu_clonevolume_w = gtk_menu_item_new_with_mnemonic( "C_lone Volume");
-  g_signal_connect( menu_clonevolume_w, "activate", 
-		    G_CALLBACK(WttGtk::activate_clonevolume), this);
-
   GtkWidget *functions_showcrossref = gtk_menu_item_new_with_mnemonic( "Show C_rossreferences");
   g_signal_connect( functions_showcrossref, "activate", 
 		    G_CALLBACK(WttGtk::activate_showcrossref), this);
@@ -2629,6 +2631,23 @@ WttGtk::WttGtk(
 			      'b', GdkModifierType(GDK_CONTROL_MASK), 
 			      GTK_ACCEL_VISIBLE);
 
+  // More submenu
+  menu_clonevolume_w = gtk_menu_item_new_with_mnemonic( "C_lone Volume");
+  g_signal_connect( menu_clonevolume_w, "activate", 
+		    G_CALLBACK(WttGtk::activate_clonevolume), this);
+
+  GtkWidget *functions_backupfile = gtk_menu_item_new_with_mnemonic( "_Backupfile Utility");
+  g_signal_connect( functions_backupfile, "activate", 
+		    G_CALLBACK(WttGtk::activate_backupfile), this);
+
+  GtkWidget *functions_more = gtk_menu_item_new_with_mnemonic( "_More");
+  GtkMenu *functions_more_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_more_menu), menu_clonevolume_w);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_more_menu), functions_backupfile);
+
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_more),
+			    GTK_WIDGET(functions_more_menu));
+
   GtkMenu *functions_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_build);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_utilities_w);
@@ -2639,11 +2658,11 @@ WttGtk::WttGtk(
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_openge);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_classeditor_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_updateclasses_w);
-  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_clonevolume_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_showcrossref);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_syntax);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_change_value_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_command);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_more);
 
   GtkWidget *functions = gtk_menu_item_new_with_mnemonic("F_unctions");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), functions);
