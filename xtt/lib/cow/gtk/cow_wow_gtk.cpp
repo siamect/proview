@@ -1814,6 +1814,26 @@ void CoWowGtk::CreateFlowPrintDialogGtk( const char *title, void *flow_ctx, int 
   *sts = WOW__SUCCESS;
 }
 
+void CoWowGtk::update_title( GtkWidget *w, int editmode)
+{
+  char *title;
+  char new_title[512];
+
+  g_object_get( w, "title", &title, NULL);
+  if ( editmode) {
+    if ( strncmp( title, "*** ", 4) != 0) {
+      strcpy( new_title, "*** ");
+      strcat( new_title, title);
+      g_object_set( w, "title", new_title, NULL);
+    }
+  }
+  else {
+    if ( strncmp( title, "*** ", 4) == 0) {
+      strcpy( new_title, &title[4]);
+      g_object_set( w, "title", new_title, NULL);
+    }
+  }
+}
 
 
 

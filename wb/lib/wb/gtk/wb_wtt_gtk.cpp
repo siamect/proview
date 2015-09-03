@@ -1996,6 +1996,7 @@ void WttGtk::set_options()
 			 build_crossref, build_manual, build_nocopy);
 }
 
+
 // Callbacks from the options form
 
 void WttGtk::activate_options_ok( GtkWidget *w, gpointer data)
@@ -3068,6 +3069,8 @@ WttGtk::WttGtk(
     g_object_set( tools_set_advuser, "visible", FALSE, NULL);
 
   menu_setup();
+  update_title();
+
   *status = 1;
 }
 
@@ -3461,4 +3464,9 @@ void WttGtk::disable_focus()
 {
   focustimer.disable( 400);
   focustimer.disabled();
+}
+
+void WttGtk::update_title()
+{
+  CoWowGtk::update_title( toplevel, editmode);
 }

@@ -98,6 +98,7 @@ class WUtedGtk : public WUted {
 		    void	(* no_procedure) (WUted *),
 		    void	(* cancel_procedure) (WUted *), 
 		    pwr_tBoolean cancel);
+  void update_title( int editmode);
 
   static void activate_command( GtkWidget *w, gpointer data);
   static void create_command( GtkWidget *w, gpointer data);

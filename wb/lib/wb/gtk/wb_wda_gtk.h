@@ -90,6 +90,7 @@ class WdaGtk : public Wda {
     void open_class_dialog( char *hierstr, char *classstr);
     void create_class_dialog();
     void print( const char *title);
+    void update_title();
 
     static void activate_change_value( GtkWidget *w, gpointer data);
     static void activate_close_changeval( GtkWidget *w, gpointer data);

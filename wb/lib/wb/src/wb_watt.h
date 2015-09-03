@@ -91,6 +91,7 @@ class WAtt {
     virtual void change_value_close() {}
     virtual void pop() {}
     virtual void print( const char *title) {}
+    virtual void update_title() {}
 
     void activate_print();
     void set_editmode( int editmode, ldh_tSesContext ldhses);

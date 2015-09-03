@@ -99,6 +99,7 @@ class Wda {
     virtual void change_value_close() {}
     virtual void pop() {}
     virtual void print( const char *title) {}
+    virtual void update_title() {}
     
     int open_changevalue( char *name);
     void set_editmode( int editmode, ldh_tSesContext ldhses);

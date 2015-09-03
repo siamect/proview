@@ -490,6 +490,11 @@ void WAttGtk::pop()
   gtk_window_present( GTK_WINDOW(toplevel));
 }
 
+void WAttGtk::update_title()
+{
+  CoWowGtk::update_title( toplevel, editmode);
+}
+
 WAttGtk::~WAttGtk()
 {
   delete (WAttNav *)wattnav;
@@ -681,6 +686,8 @@ WAttGtk::WAttGtk(
     ((Wtt *)parent_ctx)->register_utility( (void *) this,
 					   wb_eUtility_AttributeEditor);
   }
+
+  update_title();
 }
 
 

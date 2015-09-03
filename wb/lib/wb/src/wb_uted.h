@@ -127,6 +127,7 @@ class WUted {
 			    void	(* no_procedure) (WUted *),
 			    void	(* cancel_procedure) (WUted *), 
 			    pwr_tBoolean cancel) {}
+  virtual void update_title( int editmode) {}
 
   static void get_message_error( pwr_tStatus sts, char *str);
   static pwr_tStatus get_command_index( char *label, int *index);

@@ -84,6 +84,7 @@ class WAttGtk : public WAtt {
   void change_value_close();
   void pop();
   void print( const char *title);
+  void update_title();
 
   static void activate_change_value( GtkWidget *w, gpointer data);
   static void activate_close_changeval( GtkWidget *w, gpointer data);

@@ -270,6 +270,11 @@ void WUtedGtk::qbox_cancel_cb( GtkWidget *w, gpointer data)
   g_object_set( ((WUtedGtk *)uted)->widgets.questionbox, "visible", FALSE, NULL);
 }
 
+void WUtedGtk::update_title( int editmode)
+{
+  CoWowGtk::update_title( toplevel, editmode);
+}
+
 static gint delete_event( GtkWidget *w, GdkEvent *event, gpointer uted)
 {
   WUtedGtk::activate_quit(w, uted);
@@ -298,13 +303,15 @@ WUtedGtk::WUtedGtk( void	       	*wu_parent_ctx,
 {
   const int	window_width = 800;
   const int    	window_height = 400;
+  char 		title[] = "Wb Utilities";
 
   memset( &widgets, 0, sizeof(widgets));
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-			   "default-height", window_height,
-			   "default-width", window_width,
-			   NULL);
+					 "default-height", window_height,
+					 "default-width", window_width,
+					 "title", title,
+					 NULL);
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
   g_signal_connect( toplevel, "destroy", G_CALLBACK(destroy_event), this);
@@ -508,199 +515,8 @@ WUtedGtk::WUtedGtk( void	       	*wu_parent_ctx,
   batch_sts = UTED_BATCH_CURRSESS;
   reset_qual();
   enable_entries( wu_editmode);
+  update_title( wu_editmode);
 
-#if 0
-  Arg		args[20];
-  pwr_tStatus	sts;
-  int i;
-  MrmHierarchy	s_MrmH;
-  MrmType	dclass;
-
-  /* DRM database hierarchy related variables */
-  static Pixmap icon = 0;
-  Dimension	icon_w;
-  Dimension	icon_h;
-
-  static Atom	MwmDeleteWind = 0;
-  char		uid_filename[200] = {"pwr_exe:wb_uted.uid"};
-  char		*uid_filename_p = uid_filename;
-
-  static MrmRegisterArg	reglist[] = {
-    /* First the context variable */
-    { "uted_ctx", 0 },
-
-    /* Callbacks for the controlled foe widget */
-    {"uted_create_adb",(caddr_t)create_adb},
-    {"uted_create_quit",(caddr_t)create_quit},
-    {"uted_activate_quit",(caddr_t)activate_quit},
-    {"uted_create_commandlabel",(caddr_t)create_commandlabel},
-    {"uted_create_batchoptmenu",(caddr_t)create_batchoptmenu},
-    {"uted_create_batch",(caddr_t)create_batch},
-    {"uted_create_currsess",(caddr_t)create_currsess},
-    {"uted_create_file_entry",(caddr_t)create_file_entry},
-    {"uted_create_label",(caddr_t)create_label},
-    {"uted_create_adb",(caddr_t)create_adb},
-    {"uted_activate_command",(caddr_t)activate_command},
-    {"uted_create_command",(caddr_t)create_command},
-    {"uted_activate_batch",(caddr_t)activate_batch},
-    {"uted_activate_currsess",(caddr_t)activate_currsess},
-    {"uted_activate_ok",(caddr_t)activate_ok},
-    {"uted_activate_cancel",(caddr_t)activate_cancel},
-    {"uted_activate_show_cmd",(caddr_t)activate_show_cmd},
-    {"uted_create_commandwind_button",(caddr_t)create_commandwind_button},
-    {"uted_activate_cmd_wind",(caddr_t)activate_cmd_wind},
-    {"uted_create_cmd_wind",(caddr_t)create_cmd_wind},
-    {"uted_create_timelabel",(caddr_t)create_timelabel},
-    {"uted_create_timevalue",(caddr_t)create_timevalue},
-    {"uted_create_qualifier1",(caddr_t)create_qualifier1},
-    {"uted_create_value1",(caddr_t)create_value1},
-    {"uted_activate_present1",(caddr_t)activate_present1},
-    {"uted_create_present1",(caddr_t)create_present1},
-    {"uted_create_qualifier2",(caddr_t)create_qualifier2},
-    {"uted_create_value2",(caddr_t)create_value2},
-    {"uted_activate_present2",(caddr_t)activate_present2},
-    {"uted_create_present2",(caddr_t)create_present2},
-    {"uted_create_qualifier3",(caddr_t)create_qualifier3},
-    {"uted_create_value3",(caddr_t)create_value3},
-    {"uted_activate_present3",(caddr_t)activate_present3},
-    {"uted_create_present3",(caddr_t)create_present3},
-    {"uted_create_qualifier4",(caddr_t)create_qualifier4},
-    {"uted_create_value4",(caddr_t)create_value4},
-    {"uted_activate_present4",(caddr_t)activate_present4},
-    {"uted_create_present4",(caddr_t)create_present4},
-    {"uted_create_qualifier5",(caddr_t)create_qualifier5},
-    {"uted_create_value5",(caddr_t)create_value5},
-    {"uted_activate_present5",(caddr_t)activate_present5},
-    {"uted_create_present5",(caddr_t)create_present5},
-    {"uted_create_qualifier6",(caddr_t)create_qualifier6},
-    {"uted_create_value6",(caddr_t)create_value6},
-    {"uted_activate_present6",(caddr_t)activate_present6},
-    {"uted_create_present6",(caddr_t)create_present6},
-    {"uted_create_qualifier7",(caddr_t)create_qualifier7},
-    {"uted_create_value7",(caddr_t)create_value7},
-    {"uted_activate_present7",(caddr_t)activate_present7},
-    {"uted_create_present7",(caddr_t)create_present7},
-    {"uted_create_qualifier8",(caddr_t)create_qualifier8},
-    {"uted_create_value8",(caddr_t)create_value8},
-    {"uted_activate_present8",(caddr_t)activate_present8},
-    {"uted_create_present8",(caddr_t)create_present8},
-    {"uted_create_qualifier9",(caddr_t)create_qualifier9},
-    {"uted_create_value9",(caddr_t)create_value9},
-    {"uted_activate_present9",(caddr_t)activate_present9},
-    {"uted_create_present9",(caddr_t)create_present9},
-    {"uted_create_qualifier10",(caddr_t)create_qualifier10},
-    {"uted_create_value10",(caddr_t)create_value10},
-    {"uted_activate_present10",(caddr_t)activate_present10},
-    {"uted_create_present10",(caddr_t)create_present10},
-    {"uted_activate_helputils",(caddr_t)activate_helputils},
-    {"uted_activate_helppwr_plc",(caddr_t)activate_helppwr_plc},
-    {"uted_commandchanged",(caddr_t)commandchanged},
-    {"uted_qbox_cr",(caddr_t)qbox_cr},
-    {"uted_qbox_yes_cb",(caddr_t)qbox_yes_cb},
-    {"uted_qbox_no_cb",(caddr_t)qbox_no_cb},
-    {"uted_qbox_cancel_cb",(caddr_t)qbox_cancel_cb}
-  };
-
-  static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
-
-  /*
-   * Now start the module creation
-   */
-
-  sts = dcli_translate_filename( uid_filename, uid_filename);
-  if ( EVEN(sts)) {
-    printf( "** pwr_exe is not defined\n");
-    exit(0);
-  }
-
-  /* set initialization values in context */
-
-  /* Save the context structure in the widget */
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
-
-  /*
-   * Create a new widget
-   * Open the UID files (the output of the UIL compiler) in the hierarchy
-   * Register the items DRM needs to bind for us.
-   * Create a new widget
-   * Close the hierarchy
-   * Compile the additional button translations and augment and add actions
-   */ 
-  sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_MrmH);
-  if (sts != MrmSUCCESS) printf("can't open hierarchy\n");
-
-  reglist[0].value = (caddr_t) this;
-
-  MrmRegisterNames(reglist, reglist_num);
-
-  if (icon == 0)
-    sts = MrmFetchBitmapLiteral(s_MrmH,"icon", 
-	      XtScreen(parent_wid), XtDisplay(parent_wid),
-	      &icon, &icon_w, &icon_h);
-
-  i=0;
-  XtSetArg(args[i],XmNiconName, wu_iconname);  i++;
-  XtSetArg(args[i],XmNiconPixmap, icon);  i++;
-  XtSetArg(args[i],XmNtitle, name);  i++;
-  
-  /* SG 11.02.91 Save the id of the top in the context */ 
-  parent_wid = XtCreatePopupShell("utilities", 
-			       topLevelShellGtkWidgetClass, parent_wid, args, i);
-
-  /* the positioning of a top level can only be define after the creation
-      of the widget . So i do it know: 
-     SG 24.02.91 use the parameters received x and y 
-  */
-  i=0;
-  XtSetArg(args[i],XmNx,100);i++;
-  XtSetArg(args[i],XmNy,100);i++;
-  XtSetArg(args[i],XtNallowShellResize,TRUE), i++;
-  XtSetValues( parent_wid, args, i);
-
-  /* now that we have a top level we can get the main window */
-  sts = MrmFetchGtkWidgetOverride(s_MrmH, "uted_window", parent_wid ,
-		name, args, 1,
-		&widgets.uted_window, &dclass);
-  if (sts != MrmSUCCESS) printf("can't fetch utedit widget\n");
-
-  XtManageChild( widgets.uted_window);
-
-  /* SG 09.02.91 a top level should always be realized ! */
-  XtPopup( parent_wid, XtGrabNone );
-
-  /* Ask MRM to fetch the question box */
-  i=0;
-  if (MrmFetchGtkWidgetOverride(s_MrmH,
-			"uted_qbox", 
-	     	        widgets.uted_window,
-			0,
-			args , i,
-			&widgets.questionbox, &dclass) != MrmSUCCESS) {
-    printf("can't fetch uted_qbox widget\n");
-  }
-
-  MrmCloseHierarchy(s_MrmH);
-
-  reset_qual();
-
-  batch_sts = UTED_BATCH_CURRSESS;
-  XtSetArg(args[0],XmNsensitive, 0);
-  XtSetValues( widgets.timelabel,args,1);
-  XtUnmanageChild( widgets.timevalue);
-  XtUnmanageChild( widgets.command_window);
-  enable_entries( wu_editmode);
-
-
-  if (MwmDeleteWind == 0)
-     MwmDeleteWind = XInternAtom(XtDisplay(parent_wid), "WM_DELETE_WINDOW", FALSE);
-
-  if (MwmDeleteWind != 0)
-  {
-    XtVaSetValues( parent_wid, XmNdeleteResponse, XmDO_NOTHING, NULL);
-    XmAddWMProtocolCallback( parent_wid, MwmDeleteWind, 
-       (XtCallbackProc) activate_quit, this);
-  }
-#endif
   *status = FOE__SUCCESS;
 }
 

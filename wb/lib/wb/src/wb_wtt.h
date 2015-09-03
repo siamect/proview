@@ -307,6 +307,7 @@ class Wtt : public WUtility {
     virtual void set_options() {}
     virtual void pop() {}
     virtual void disable_focus() {}
+    virtual void update_title() {}
 
 
     static int format_selection( void *ctx, pwr_sAttrRef attrref, 

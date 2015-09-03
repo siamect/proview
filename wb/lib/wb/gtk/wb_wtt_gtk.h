@@ -189,6 +189,7 @@ class WttGtk : public Wtt {
     virtual void set_options();
     virtual void pop();
     virtual void disable_focus();
+    virtual void update_title();
 
     void create_options_dialog();
     void create_confirm_dialog();

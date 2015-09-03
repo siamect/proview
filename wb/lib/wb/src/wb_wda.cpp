@@ -152,6 +152,7 @@ void Wda::set_editmode( int editmode, ldh_tSesContext ldhses)
   this->ldhses = ldhses;
   this->editmode = editmode;
   ((WdaNav *)wdanav)->set_editmode( editmode, ldhses);
+  update_title();
 }
 
 int Wda::open_changevalue( char *name)

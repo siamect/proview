@@ -768,6 +768,7 @@ int Wtt::set_noedit( wtt_eNoEditMode save, wtt_eNoEditVolMode detach)
     if ( utedctx)
       utedctx->set_editmode( editmode, ldhses);
   }
+  update_title();
   return 1;
 }
 
@@ -883,6 +884,7 @@ int Wtt::set_edit()
       free( (char *)config_status);
     }
   }
+  update_title();
 
   return 1;
 }

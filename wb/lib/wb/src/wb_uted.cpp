@@ -268,6 +268,7 @@ void WUted::set_editmode( int edit, ldh_tSesContext ldhses)
 {
   ldhses = ldhses;
   enable_entries( edit);
+  update_title( edit);
 }
 
 //

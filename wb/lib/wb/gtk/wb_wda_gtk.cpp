@@ -538,6 +538,11 @@ void WdaGtk::open_class_dialog( char *hierstr, char *classstr)
   g_object_set( wdaclass_dia, "visible", TRUE, NULL);
 }
 
+void WdaGtk::update_title()
+{
+  CoWowGtk::update_title( toplevel, editmode);
+}
+
 WdaGtk::~WdaGtk()
 {
   if ( wow)
@@ -757,6 +762,8 @@ WdaGtk::WdaGtk(
 
   create_class_dialog();
   wow = new CoWowGtk( toplevel);
+
+  update_title();
 
   if ( utility == wb_eUtility_Wtt) {
     ((Wtt *)parent_ctx)->register_utility( (void *) this,

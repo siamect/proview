@@ -193,6 +193,7 @@ class CoWowGtk : public CoWow {
   static void list_ok_cb( GtkWidget *w, gpointer data);
   static void list_cancel_cb( GtkWidget *w, gpointer data);
   static gboolean wait_cb( void *data);
+  static void update_title( GtkWidget *w, int editmode);
 
 };
 
