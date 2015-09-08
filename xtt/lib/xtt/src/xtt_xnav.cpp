@@ -270,15 +270,33 @@ int XNav::attr_string_to_value( int type_id, char *value_str,
       *(float *)buffer_ptr = FLT_MAX;
     else if ( strcmp( value_str, "FltNMax") == 0)
       *(float *)buffer_ptr = -FLT_MAX;
-    else if ( sscanf( value_str, "%f%s", (float *)buffer_ptr, s) != 1)
-      return XNAV__INPUT_SYNTAX;
+    else if ( sscanf( value_str, "%f%s", (float *)buffer_ptr, s) != 1) {
+      char val[40];
+      char *sp;
+      strncpy( val, value_str, sizeof(val));
+      if ( (sp = strchr( val, ',')) == 0)
+	return XNAV__INPUT_SYNTAX;
+	
+      *sp = '.';
+      if ( sscanf( val, "%f%s", (float *)buffer_ptr, s) != 1)
+	return XNAV__INPUT_SYNTAX;
+    }
     break;
   }
   case pwr_eType_Float64: {
     pwr_tFloat32 f;
     pwr_tFloat64 d;
-    if ( sscanf( value_str, "%f%s", &f, s) != 1)
-      return XNAV__INPUT_SYNTAX;
+    if ( sscanf( value_str, "%f%s", &f, s) != 1) {
+      char val[40];
+      char *sp;
+      strncpy( val, value_str, sizeof(val));
+      if ( (sp = strchr( val, ',')) == 0)
+	return XNAV__INPUT_SYNTAX;
+	
+      *sp = '.';
+      if ( sscanf( val, "%f%s", (float *)buffer_ptr, s) != 1)
+	return XNAV__INPUT_SYNTAX;
+    }
     d = f;
     memcpy( buffer_ptr, (char *) &d, sizeof(d));
 
