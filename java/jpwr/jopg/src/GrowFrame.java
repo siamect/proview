@@ -82,7 +82,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
     Dimension prevSize;
     int skipResize = 0;
 
-    public GrowFrame( String file, Gdh gdh, String instance, GrowFrameApplIfc appl, Object root) {
+    public GrowFrame( String file, Gdh gdh, String instance, GrowFrameApplIfc appl, Object root) throws FileNotFoundException {
 	this.root = root;
 	this.instance = instance;
 	this.appl = appl;
@@ -90,7 +90,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	init( file, gdh);
     }
 
-    private void init( String file, Gdh gdh) {
+    private void init( String file, Gdh gdh) throws FileNotFoundException {
 	contentPane = (JPanel) this.getContentPane();
 	contentPane.setLayout(borderLayout1);
 	contentPane.add(localPanel, BorderLayout.CENTER);
@@ -159,8 +159,9 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 		    */
 		}
 	    }
-	    catch ( Exception e) {
+	    catch ( Exception e) {		
 		System.out.println( "Unable to open file");
+		throw new FileNotFoundException( "File not found: " + file);
 	    }
 	}
 	else {
@@ -181,7 +182,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
 	    }
 	    catch ( Exception e) {
 		System.out.println( "Unable to open file " + filename);
-		return;
+		throw new FileNotFoundException( "Unable to open file " + filename);
 	    }
 	    // Read size info
 	    String line;

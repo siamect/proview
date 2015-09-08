@@ -56,7 +56,7 @@ public class JopGrowFrame extends GrowFrame implements JopUtilityIfc {
     String utilityName;
     PwrtAttrRef utilityAref;
 
-    public JopGrowFrame( String file, Gdh gdh, String instance, GrowFrameApplIfc appl, Object root) {
+    public JopGrowFrame( String file, Gdh gdh, String instance, GrowFrameApplIfc appl, Object root) throws FileNotFoundException {
 	super(file, gdh, instance, appl, root);
 
 	utilityName = JopUtility.fileToName( file);

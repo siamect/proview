@@ -43,6 +43,7 @@ import javax.swing.*;
 import java.net.*;
 import java.applet.*;
 import java.util.*;
+import java.io.*;
 import jpwr.rt.*;
 import java.awt.event.*;
 import jpwr.jopg.*;
@@ -267,6 +268,8 @@ public class JopSpider {
 		loadFrame( session, frameName, instance, scrollbar);
 	      }
 	      catch ( ClassNotFoundException e) {
+	      }
+	      catch ( FileNotFoundException e) {
 	      }
               local_cmd = true;
             }
@@ -986,6 +989,8 @@ System.out.println( "JopSpiderCmd start");
 		  }
 		  catch ( ClassNotFoundException e) {
 		  }
+		  catch ( FileNotFoundException e) {
+		  }
                 }
               }
             }
@@ -1005,8 +1010,8 @@ System.out.println( "JopSpiderCmd start");
   }
 
   public static Object loadFrame( JopSession session, String className, 
-				  String instance, boolean scrollbar) throws ClassNotFoundException {
-
+				  String instance, boolean scrollbar) throws ClassNotFoundException, FileNotFoundException {
+      System.out.println( "loadFrame " + className);
       if ( className.indexOf(".pwg") != -1) {
 	  JopGrowFrame frame = new JopGrowFrame(className, session.getGdh(), instance, new GrowFrameCb(session),
 						session.getRoot());

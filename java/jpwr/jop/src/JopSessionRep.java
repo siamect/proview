@@ -37,6 +37,7 @@
 package jpwr.jop;
 import jpwr.rt.*;
 import java.lang.*;
+import java.io.*;
 import java.util.*;
 import java.awt.*;
 import javax.swing.*;
@@ -186,7 +187,6 @@ public class JopSessionRep implements JopSessionIfc {
       cid = tid.typeId;
       
       while ( true) {
-
 	CdhrObjid coid = engine.gdh.classIdToObjid( cid);
 	if ( coid.evenSts()) return;
 
@@ -204,6 +204,7 @@ public class JopSessionRep implements JopSessionIfc {
 	    name = "pwr_c_" + sret.str.toLowerCase().substring(1) + ".pwg";  // Pwg test
 	else
 	    name = "pwr_c_" + sret.str.toLowerCase() + ".pwg";  // Pwg test
+
 	int pwgidx = name.lastIndexOf( ".pwg");
 	if (  pwgidx == -1) {
 	    if ( coid.objid.vid < Cdh.cUserClassVolMin ||
@@ -237,8 +238,10 @@ public class JopSessionRep implements JopSessionIfc {
 	    if ( coid.objid.vid < Cdh.cUserClassVolMin ||
 		 (coid.objid.vid >= Cdh.cManufactClassVolMin && 
 		  coid.objid.vid <= Cdh.cManufactClassVolMax)) {
-		if ( isApplication())
+		if ( isApplication()) {
 		    name = "$pwr_exe/" + name;
+		    pwgidx = name.lastIndexOf( ".pwg");
+		}
 	    }
 	    if ( suffix.length() > 0)
 		name = name.substring(0, pwgidx) + suffix + name.substring(pwgidx);
@@ -260,11 +263,18 @@ public class JopSessionRep implements JopSessionIfc {
 	    graph = JopSpider.loadFrame( session, name, instance, scrollbar);
 	    if ( graph != null) {
 	      addUtility( graph);
-	      System.out.println( "Add utility graph " + name);
 	    }
 	    break;
 	  }
-	  catch ( ClassNotFoundException e) {
+ 	  catch ( ClassNotFoundException e) {
+	    if ( classGraph) {
+	      CdhrClassId rcid = engine.gdh.getSuperClass( cid, null);
+	      if ( rcid.evenSts())
+		break;
+	      cid = rcid.classId;
+	    }
+	  }
+ 	  catch ( FileNotFoundException e) {
 	    if ( classGraph) {
 	      CdhrClassId rcid = engine.gdh.getSuperClass( cid, null);
 	      if ( rcid.evenSts())
@@ -296,6 +306,8 @@ public class JopSessionRep implements JopSessionIfc {
 	  }
 	}
 	catch ( ClassNotFoundException e) {
+	}
+	catch ( FileNotFoundException e) {
 	}
       }
     }
