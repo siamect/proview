@@ -1613,38 +1613,52 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		int action;
 		Object data1;
 		Object data2;
+	        int sts;
 		
 		public ReaderTaskArg(int action, Object data1, Object data2) {
 			this.action = action;
 			this.data1 = data1;
 			this.data2 = data2;
+			this.sts = 0;
 		}
 	}
 	
-	private class ReaderTask extends AsyncTask<ReaderTaskArg, Void, Void> {
+	private class ReaderTask extends AsyncTask<ReaderTaskArg, Void, ReaderTaskArg> {
 		public static final int FLOW_READ = 1;
 		public static final int CRR_READ = 2;
 		public static final int GROW_READ = 3;
 				
 		@Override
-		protected Void doInBackground(ReaderTaskArg... arg) {
+		protected ReaderTaskArg doInBackground(ReaderTaskArg... arg) {
 
 			switch ( arg[0].action) {
 			case FLOW_READ:
 				readFlow((PwrtObjid)arg[0].data1, (String)arg[0].data2);
-				break;
+				return new ReaderTaskArg(0,null,null);
 			case GROW_READ:
-				readGrow((String)arg[0].data1, (String)arg[0].data2);
-				break;
+			        try {
+				    readGrow((String)arg[0].data1, (String)arg[0].data2);
+				    return new ReaderTaskArg(0,null,null);
+				}				
+				catch ( FileNotFoundException e) {
+				    ReaderTaskArg result = new ReaderTaskArg(arg[0].action,
+							       arg[0].data1, arg[0].data2);
+				    result.sts = 2;
+				    return result;
+				}
 			}
-			return null;
+			return new ReaderTaskArg(0,null,null);
 		}
 
 		@Override
-		protected void onPostExecute(Void params) {
+		protected void onPostExecute(ReaderTaskArg params) {
 			super.onPostExecute(params);
 			//cmn.draw();
 			view.invalidate();
+
+			if ( params != null && params.sts == 2) {
+			    // TODO Try superclass 
+			}
 		}
 	}
 	public Resources getApplResources() {
@@ -1724,7 +1738,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			     (((GraphCmn)currentCmn).getAppMotion() == Glow.eAppMotion_Both &&
 			      ((GraphCmn)currentCmn).getSliderActive())) {
 			    new GdhTask().execute(new GdhTaskArg(GdhTask.EVENTHANDLER, 
-								 new GdhEventArg(GraphCmn.ACTION_MOVE, x, y-viewOffsetY)));
+								 new GdhEventArg(GraphCmn.ACTION_MOVE, x/density, (y-viewOffsetY)/density)));
 			    scroll = false;
 			    sliderActive = true;
 			}
@@ -1775,7 +1789,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			 me.getEventTime() - me.getDownTime() < 700) {
 			System.out.println("Event Click   " + action + " (" + x + "," + y + ") cmn " + currentCmn.type());
 			new GdhTask().execute(new GdhTaskArg(GdhTask.EVENTHANDLER, 
-							     new GdhEventArg(GraphCmn.ACTION_CLICK, x, y-viewOffsetY)));					
+							     new GdhEventArg(GraphCmn.ACTION_CLICK, x/density, (y-viewOffsetY)/density)));					
 		    }
 		    else {
 			new GdhTask().execute(new GdhTaskArg(GdhTask.EVENTHANDLER, 
@@ -1822,7 +1836,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		lastYSpeed = 0;
 		if ( currentCmn.type() == PlowCmnIfc.TYPE_GRAPH) {
 		    new GdhTask().execute(new GdhTaskArg(GdhTask.EVENTHANDLER, 
-							 new GdhEventArg(GraphCmn.ACTION_DOWN, x, y-viewOffsetY)));					
+							 new GdhEventArg(GraphCmn.ACTION_DOWN, x/density, (y-viewOffsetY)/density)));					
 		}
 		else if ( currentCmn.type() == PlowCmnIfc.TYPE_OPWIN) {
 		    currentCmn.eventHandler(PlowCmnIfc.ACTION_DOWN, x, y-viewOffsetY);
@@ -1909,6 +1923,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 	    			if ( bitmap == null) {
 				    bitmap = Bitmap.createBitmap(canvas.getWidth(), canvas.getHeight(), Bitmap.Config.ARGB_8888);
 				    drawCanvas = new Canvas(bitmap);
+				    drawCanvas.scale(density, density, 0, 0);
 				    drawCanvas.drawColor(graph.cmn.gdraw.getColor(graph.cmn.background_color));
 	    			}	    		
 				try {
@@ -1942,14 +1957,14 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				if ( currentCmn.type() == PlowCmnIfc.TYPE_FLOW)
 				    gdraw.setDensity(1, density);
 				else
-				    gdraw.setDensity(density * density, density);
+				    gdraw.setDensity(density, 1);
 				currentCmn.setCanvas(currentCanvas);
 				currentCmn.draw();
 	    	
-				/* Test */
+				/* Test
 				   Paint paint = new Paint();
 				   currentCanvas.drawText( "Density " + density, 10, 100, paint);
-				   /* */
+				 */
 
 				getHolder().unlockCanvasAndPost(currentCanvas);
 				// currentCanvas = getHolder().lockCanvas(); 
@@ -2031,7 +2046,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 		new GdhTask().execute(new GdhTaskArg(GdhTask.DYNAMIC_OPEN, null));
 	}
 
-	public void readGrow( String file, String  instance) {
+	public void readGrow( String file, String  instance) throws FileNotFoundException {
 /*
 		AssetManager am = getAssets();
 		InputStream inputStream;
@@ -2059,7 +2074,7 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 			reader = new BufferedReader(new InputStreamReader(url.openStream(), "ISO-8859-1"));
 		} catch ( IOException e) {
 			System.out.println( "Unable to open file " + filename  + " " + url);
-			return;			
+			throw new FileNotFoundException();
 		}
 		graph = new Graph(this, gdh);
 		graphObject.add(instance);
