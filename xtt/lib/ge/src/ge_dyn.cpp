@@ -14015,6 +14015,7 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
     if ( event->object.object_type != glow_eObjectType_NoObject) {
       found = 0;
       next_inputfocus = this;
+      int objcnt = 0;
       while ( !found) {
 	if ( strcmp( next_inputfocus->next_horizontal, "") != 0) {
 	  sts = grow_FindObjectByName( dyn->graph->grow->ctx, next_inputfocus->next_horizontal, 
@@ -14055,7 +14056,8 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	      found = 0;
 	  }
 	}
-	if ( next_inputfocus == this)
+	objcnt++;
+	if ( next_inputfocus == this || objcnt > 50)
 	  break;
       }
 
@@ -14218,6 +14220,7 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
     if ( event->object.object_type != glow_eObjectType_NoObject) {
       found = 0;
       next_inputfocus = this;
+      int objcnt = 0;
       while ( !found) {
 	if ( strcmp( next_inputfocus->next_tab, "") != 0) {
 	  sts = grow_FindObjectByName( dyn->graph->grow->ctx, next_inputfocus->next_tab, &next);
@@ -14238,7 +14241,8 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	      found = 0;
 	  }
 	}
-	if ( next_inputfocus == this)
+	objcnt++;
+	if ( next_inputfocus == this || objcnt > 50)
 	  break;
       }
       if ( found) {
