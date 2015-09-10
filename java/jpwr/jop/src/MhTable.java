@@ -588,7 +588,7 @@ public class MhTable extends JPanel
 
     public final Object[] longValues = {"A", "Acknowledge",
       "10-12-31 12:12:12.98",
-      "QWERTYUIOPAAOLK_JHGFDSAZXCVBNM__POÅIUYTRQWERTYUIOPAAOL",
+      "QWERTYUIOPAAOLK_JHGFDSAZXCVBNM__POAIUYTRQWERTYUIOPAAOL",
       "QWERTYUIOPAAOLK"};
 
 

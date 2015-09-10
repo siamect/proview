@@ -813,10 +813,10 @@ public class GdhServer
                 long K = 1024;
                 long freeMem = Runtime.getRuntime().freeMemory() / K;
                 long totalMem = Runtime.getRuntime().totalMemory() / K;
-                System.out.println("Slut på minne, storlek på thSub: " + thSub.size() +
-                  "storlek på sub: " + subscriptions.size() +
-                  "Tillgängligt minne: " + freeMem + " KB" +
-                  "Totalt minne: " + totalMem + " KB");
+                System.out.println("Out of memory, size of thSub: " + thSub.size() +
+                  "size of sub: " + subscriptions.size() +
+                  "Available memory: " + freeMem + " KB" +
+                  "Total memory: " + totalMem + " KB");
               }
 
               catch(IOException e)
@@ -1806,9 +1806,9 @@ public class GdhServer
               {
                 long freeMem = Runtime.getRuntime().freeMemory();
                 long totalMem = Runtime.getRuntime().totalMemory();
-                System.out.println("Slut på minne, storlek på subcp: " + subscriptions.size() +
-                  "Tillgängligt minne: " + freeMem +
-                  "Totalt minne: " + totalMem);
+                System.out.println("Out of memory, size of subcp: " + subscriptions.size() +
+                  "Available memory: " + freeMem +
+                  "Total memory: " + totalMem);
               }
               catch(IOException e)
               {
@@ -1975,7 +1975,7 @@ public class GdhServer
           {
           }
         }
-        //minska storleken på subscriptions för att spara minne
+        // Reduce subscription size to save memory
         this.trimRefObjectList();
         threadCount--;
         setCurrentConnections(threadCount);

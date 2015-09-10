@@ -122,14 +122,14 @@ public class RtUtilities {
 	    int offs1;
 	    int offs2;
 
-	    // Replace едц in instance name because mozilla can't pass them as 
+	    // Replace local char in instance name because mozilla can't pass them as 
 	    // parameter
 	    for ( int i = 0; i < instance.length(); i++) {
-		if ( instanceBuff[i] == 'е' || instanceBuff[i] == 'е')
+		if ( instanceBuff[i] == 229 || instanceBuff[i] == 197)
 		    instanceBuff[i] = '\\';
-		if ( instanceBuff[i] == 'д' || instanceBuff[i] == 'Д')
+		if ( instanceBuff[i] == 228 || instanceBuff[i] == 196)
 		    instanceBuff[i] = '/';
-		if ( instanceBuff[i] == 'ц' || instanceBuff[i] == 'Ц')
+		if ( instanceBuff[i] == 246 || instanceBuff[i] == 214)
 		    instanceBuff[i] = '@';
 	    }
 

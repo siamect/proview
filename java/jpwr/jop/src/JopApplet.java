@@ -65,10 +65,10 @@ public class JopApplet extends JApplet implements GdhApplIfc
     engine = new JopEngine(1000, this);
     session = new JopSession( engine, (Object)this);
     if ( instance != null && instance.length() != 0) {
-      // Substitutes for едц because of mozilla...
-      instance = instance.replace( '\\', 'е');
-      instance = instance.replace( '/', 'д');
-      instance = instance.replace( '@', 'ц');
+      // Substitutes for local char because of mozilla...
+	instance = instance.replace( '\\', (char)229);
+	instance = instance.replace( '/', (char)228);
+	instance = instance.replace( '@', (char)246);
 
       System.out.println( "Parameter instance: " + instance);
       engine.gdh.logString("Parameter instance: " + instance);

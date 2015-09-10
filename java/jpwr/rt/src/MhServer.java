@@ -182,7 +182,7 @@ public class MhServer
     maxConnections = cdhrMaxCon.value;
     maxAlarms = cdhrMaxAlarms.value;
     maxEvents = cdhrMaxEvents.value;
-    //pga bugg i proview, MaxNoOfAlarms syns ej i arbetsbänken
+    // because if Proview bugg, MaxNoOfAlarms is not visible in wb
     if(maxAlarms == 0) maxAlarms = 100;
     if(maxEvents == 0) maxEvents = 200;
     //currentConnectionsStr = cdhrString.str + ".CurrentConnections";
@@ -407,13 +407,12 @@ public class MhServer
 	     //System.out.println("efter insertNewMess");
 	     for(int i = 0;i < totalThreadCount && i < mhThread.length;i++)
 	     {
-	       //System.out.println("Nu skall sendMess anropas");
-	       //det kan ju vara så att någon klient har avslutats 
+	       // Some client may have been terminated
 	       if(mhThread[i] == null)
 	       {
 	         if(log)
 		 {
-		   System.out.println("mhThread[" + i + "] är null");
+		   System.out.println("mhThread[" + i + "] is null");
 	         }
 		 continue;
 	       }
@@ -462,7 +461,7 @@ public class MhServer
       catch(IOException e)
       {
         this.keepRunning = false;
-	System.out.println("IOException vid skapande av strömmar mot klient");
+	System.out.println("IOException at client stream creation");
 	errh.error("DataStream failed");
         threadCount--;
         //setCurrentConnections(threadCount);
@@ -494,7 +493,7 @@ public class MhServer
 	    out.writeInt(nrOfEvents);
 	    if(log)
 	    {
-	      System.out.println("Händelsestorlek: " + nrOfEvents);
+	      System.out.println("Event size: " + nrOfEvents);
 	    }
 	    if(nrOfEvents > 0)
 	    {
@@ -515,22 +514,21 @@ public class MhServer
         
 	while(this.keepRunning)
         {
-	  //här skall vi ligga och vänta på meddelanden från klienterna
-	  //typ alarmkvittens och dylikt
+	  // Wait for client messages, alarm ack and so
 	  try
 	  {
 	    
 	    MhrsEventId id = (MhrsEventId)in.readObject();
 	    if(log)
 	    {
-	      System.out.println("fått meddelande" + id.idx + " " + id.nix + " " +
+	      System.out.println("Message received " + id.idx + " " + id.nix + " " +
 	                          id.birthTime);
 	    }
 	    PwrtStatus sts = mh.outunitAck(id);
 	  }
 	  catch(Exception e)
 	  {
-	    System.out.println("Exception i receivemesstråd " + e.toString());
+	    System.out.println("Exception i receive message thread " + e.toString());
 	    this.keepRunning = false;
 	  }
 	  Thread.sleep(3);
@@ -538,8 +536,8 @@ public class MhServer
       }
       catch(Exception e)
       {
-        System.out.println("exception i run MhThread");
-	System.out.println("avslutar tråden");
+        System.out.println("exception in run MhThread");
+	System.out.println("Terminate thread");
       }
       finally
       {
@@ -571,7 +569,7 @@ public class MhServer
       }
     }
     /**
-    * Anropas var gång ett nytt meddelande skall skickas till klienterna
+    * Called every time a new message is sent to the clients
     */
     public void sendMess(MhrEvent event)
     {

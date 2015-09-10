@@ -189,7 +189,7 @@ public class GdhServerMonitor extends JFrame implements ActionListener
       totalMem = totalMem / 1024;
       labelMessage.setText("Ledigt minne(av allokerat): " + freeMem + " Allokerat minne: " + totalMem +
                            "  Antal prenumerationer: " + nrOfSubscriptions);
-      //qqq behövs detta???
+      // is this needed???
       data = new Object[size][5];
       for(int i = 0; i < size;i++)
       {
