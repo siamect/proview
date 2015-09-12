@@ -23,6 +23,7 @@ echo "-- Building pwrdemo$ver"
 # Create directories
 mkdir -p $pkgroot/DEBIAN
 mkdir -p $pkgroot/usr/share/doc/pwrdemo$ver
+mkdir -p $pkgroot/usr/share/applications
 mkdir -p $pkgroot/usr/pwrp
 
 find $pkgroot -type d | xargs chmod 755
@@ -81,6 +82,8 @@ cd $currentdir
   echo "Icon=$aroot/db/proview_icon.png"
   echo "Categories=GNOME;GTK;Application;"
 } > $pkgroot/usr/pwrp/pwrdemo$ver/cnf/proviewdemo$ver.desktop
+
+cp $pkgroot/usr/pwrp/pwrdemo$ver/cnf/proviewdemo$ver.desktop $pkgroot/usr/share/applications/
 
 # Create package
 echo "-- Building package"

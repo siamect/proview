@@ -102,6 +102,7 @@ echo "-- Building pwr$ver"
 # Create directories
 mkdir -p $pkgroot/DEBIAN
 mkdir -p $pkgroot/usr/share/doc/pwr$ver
+mkdir -p $pkgroot/usr/share/applications
 mkdir -p $pkgroot/usr/pwrp
 mkdir -p $pkgroot/etc
 
@@ -193,6 +194,8 @@ cp $pwre_sroot/tools/pkg/$hw/user/wtt_init1.pwr_com $pkgroot/usr/pwr$ver/$pwre_t
   echo "Icon=$aroot/db/proview_icon.png"
   echo "Categories=GNOME;GTK;Application;"
 } > $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user/proview$ver.desktop
+
+cp $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user/proview$ver.desktop $pkgroot/usr/share/applications/
 
 # Create package
 echo "-- Building package"
