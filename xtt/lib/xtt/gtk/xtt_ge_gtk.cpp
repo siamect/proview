@@ -335,7 +335,7 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
     float rd = 0.05;
     if ( window_width < 300 || window_height < 300)
       rd = 0.2;
-    printf( "w: %d h: %d rd: %5.3f\n", window_width, window_height, rd);
+
     geometry.min_aspect = gdouble(window_width)/window_height * (1.0 - rd);
     geometry.max_aspect = gdouble(window_width)/window_height * (1.0 + rd);
     gtk_window_set_geometry_hints( GTK_WINDOW(toplevel), GTK_WIDGET(toplevel),
