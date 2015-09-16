@@ -421,6 +421,29 @@ void timint_exec(
 }
 
 /*_*
+  TIMEMEAN
+  Function:       Cumulative mean value
+
+  @aref timemean TimeMean
+*/
+void timemean_exec(
+  plc_sThread		*tp,
+  pwr_sClass_timemean   *o)
+{
+  if ( *o->ResetP && !o->Reset) {
+    /* Reset */
+    o->ActVal = o->AccMean;
+    o->AccTime = 0;
+  }
+  o->Reset = *o->ResetP;
+
+  /* Calculate new value */
+  o->AccMean = (*o->InP * *o->ScanTime + o->AccMean * o->AccTime) / 
+    (*o->ScanTime + o->AccTime);
+  o->AccTime += *o->ScanTime;
+}
+
+/*_*
   CURVE
   Funktion:	Interpollation in a table
 

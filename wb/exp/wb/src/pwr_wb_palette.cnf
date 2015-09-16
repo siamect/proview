@@ -768,6 +768,7 @@ palette PlcEditorPalette
     class Sum
     class Table
     class Timint
+    class TimeMean
     menu Math
     {
       class ACos

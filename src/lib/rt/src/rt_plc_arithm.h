@@ -50,6 +50,7 @@ void filter_init( pwr_sClass_filter *object);
 void filter_exec( plc_sThread *tp, pwr_sClass_filter *object);
 void speed_exec( plc_sThread *tp, pwr_sClass_speed *object);
 void timint_exec( plc_sThread *tp, pwr_sClass_timint *object);
+void timemean_exec( plc_sThread *tp, pwr_sClass_timemean *o);
 void curve_exec( plc_sThread *tp, pwr_sClass_curve *object);
 void adelay_init( pwr_sClass_adelay *object);
 void adelay_exec( plc_sThread *tp, pwr_sClass_adelay *object);
