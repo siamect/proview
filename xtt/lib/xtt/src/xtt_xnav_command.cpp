@@ -880,13 +880,17 @@ static int	xnav_set_func(	void		*client_data,
 
     cont = ODD( dcli_get_qualifier( "/CONTINUE", 0, 0));
 
-    if ( xnav->appl.find_graph( graph_str, 0, (void **) &gectx)) {
+    if ( cdh_NoCaseStrcmp(graph_str, "$current") == 0 &&
+	 xnav->current_cmd_ctx) {
+      gectx = (XttGe *)xnav->current_cmd_ctx;	
+      return gectx->set_subwindow_source( name_str, source_str, object_p);
+    }
+    else if ( xnav->appl.find_graph( graph_str, 0, (void **) &gectx)) {
       if ( strcmp( source_str, "") == 0) {
 	xnav->message('E',"Syntax error");
 	return XNAV__HOLDCOMMAND;
       }
-
-      return gectx->set_subwindow_source( name_str, source_str, object_p);
+      return gectx->set_subwindow_source( name_str, source_str, object_p); 
     }
     else {
       pwr_tStatus sts;

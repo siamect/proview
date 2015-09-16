@@ -65,6 +65,7 @@ public class JopSpider {
   static PwrtAttrRef methAref;
   static int methClassId;
   static JopSpider spider;
+  static JopGrowFrame currentGrowFrame;
 
   private static class GrowFrameCb implements GrowFrameApplIfc {
     JopSession session;
@@ -73,9 +74,13 @@ public class JopSpider {
       this.session = session;
     }
 
-    public int command( String cmd) {
+    public int command( String cmd, Object caller) {
 	System.out.println("JopSpider command callback : " + cmd);
-	return JopSpider.command( session, cmd);
+
+	currentGrowFrame = (JopGrowFrame)caller;
+	int sts = JopSpider.command( session, cmd);
+	currentGrowFrame = null;
+	return sts;
     }
     public int script( String script) {
 	System.out.println("JopSpider script callback : " + script);
@@ -725,7 +730,11 @@ public class JopSpider {
 	    if ( source.indexOf('.') == -1)
 		source = source + ".pwg";
 
-	    Object graph = session.getUtility( JopUtility.GRAPH, (PwrtObjid)null, JopUtility.fileToName(graphstr));
+	    Object graph;
+	    if ( graphstr.equals("$current") && currentGrowFrame != null)
+		graph = currentGrowFrame;
+	    else
+	      graph = session.getUtility( JopUtility.GRAPH, (PwrtObjid)null, JopUtility.fileToName(graphstr));
 	    if ( graph != null) {
 	      System.out.println("JopSpider, " + graphstr + " found");
 	      ((JopGrowFrame)graph).setSubwindowSource( name, source, object);

@@ -391,7 +391,7 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
     public int command(String cmd) {
 	System.out.println("Ge command : " + cmd);
 	if ( appl != null)
- 	    return appl.command(cmd);
+ 	    return appl.command(cmd, this);
 	return 0;
     }
 
