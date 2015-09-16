@@ -42,6 +42,7 @@
 #include <stdlib.h>
 
 #include "pwr.h"
+#include "pwr_systemclasses.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
@@ -361,6 +362,11 @@ void Xtt::activate_opengraph()
 
   if ( cdh_tidIsCid( classid)) {
     switch ( classid) {
+    case pwr_cClass_PlantHier:
+      // Open default graph
+      sprintf( cmd, "call meth /meth=Graph /object=%s", vname);
+      xnav->command( cmd);
+      return;
     case pwr_cClass_XttMultiView:
       // Open multiview
       sprintf( cmd, "open mult /name=%s", vname);

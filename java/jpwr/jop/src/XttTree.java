@@ -1276,6 +1276,13 @@ public class XttTree extends JPanel
       }
       String cmd;
       switch ( cid) {
+      case Pwrs.cClass_PlantHier:
+	  String attr = name + ".DefGraph";
+	  CdhrString xttgraph = gdh.getObjectInfoString( attr);
+	  if ( xttgraph.evenSts() || xttgraph.str.isEmpty()) return;
+
+	  cmd = "open graph/object=" + xttgraph.str;
+          break;
       case Pwrb.cClass_DsTrend:
       case Pwrb.cClass_DsTrendCurve:
       case Pwrb.cClass_PlotGroup:
