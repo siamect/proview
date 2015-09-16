@@ -62,4 +62,8 @@
 131107 rk  profibus  Fixed problem with profibus diagnostic messages handling
 131113 cs  profibus  Profibus gsd file for ABB ACS880 added
 140825 rk  profibus  Added support for Profibus FDL.
+150219 cs  profinet  Profinet configurator, new gsdml tags and attributes added
+150422 cs  profinet  Profinet interface to Softing userspace stack
+150428 cs  profinet  Profinet dummy functions argument fix
+150717 cs  profinet  Profinet viewer, option -h added, and macaddress viewed with colon
 

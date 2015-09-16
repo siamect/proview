@@ -379,3 +379,60 @@
 140902 cs  ge        Ge editor, buffer size bugfix in graph attributes dialog
 140908 cs  xtt       Xtt 'show device' table, class column moved
 140912 cs  xtt       Xtt command 'open graph' and 'set subw', /x0 /y0 /x1 /y1 added
+140930 cs  xtt       Support for streaming video added, and xtt command 'open graph' with list instances
+141001 cs  xtt       Xtt, status bar in operator window made slimmer
+141001 cs  xtt       Xtt, xttgraph and xttmultiview, array of object and borders added
+141008 cs  xtt       Xtt multiwindow, pane, fix and table layout added
+141017 cs  xtt       Xtt video stream mouseclicks
+141027 cs  ge        Ge menu icons, transparency added
+141027 cs  ge        Ge line drawing bugfix
+141027 cs  xtt       Xtt proview icon fix
+141114 cs  xtt       Xtt trend circbuf bugfix
+141117 cs  xtt       Xtt trend bugfix, circbuff start index wasn't initialized
+141117 cs  xtt       Xtt command 'event ack/auto' requires system priv, and doc
+141119 cs  xtt       Xtt crossref string and function didn't search in subvolumes (refs #194)
+141119 cs  xtt       Xtt trend export bugfix
+141120 cs  xtt       Xtt trend export bugfix
+141208 cs  xtt       Xtt camera control added
+141211 cs  xtt       Xtt video username password added
+141212 cs  xtt       Xtt video http basic authentication added
+141212 cs  xtt       Xtt and web Ge access fix for hostobject dynamic
+150107 cs  xtt       Xtt sev curve window, initial time period set
+150126 cs  xtt       Xtt remote struct display, typ net_sTime added
+150126 cs  xtt       Xtt error message box, leading % removed in text
+150213 cs  ge        Ge new methods toolbar design added
+150213 cs  ge        Ge dynamic tiptext offset increased
+150218 cs  ge        Ge new methods toolbar added to object graphs
+150220 cs  ge        Ge action for method menu added
+150225 cs  xtt       Xtt method toolbar modified
+150302 cs  xtt       Xtt methods toolbar notes subgraph modification
+150302 cs  xtt       Xtt trend add curve bugfix
+150309 cs  ge        Ge axis dyn, property keep_settings added
+150309 cs  ge        Ge curve translation fixes
+150310 cs  ge        Ge script, general enum and mask conversion functions added
+150309 cs  ge        Ge script parsing of dyntype, actiontype, access added
+150319 cs  ge        Ge subgraph palette new pixmaps added
+150319 cs  ge        Ge pulldown menu dynamics, dyntype2 removed
+150319 cs  ge        Ge commands updated
+150330 cs  ge        Ge dynamic DigFourShift and subgraphs trafficlight2 and 3 added
+150414 cs  ge        Ge slider dynamics, property ReleaseAttr added to detect when slider is released
+150414 cs  ge        Ge value dynamic bugfix for annotation numbers higher than 1
+150415 cs  ge        Ge dynamic Value.ZeroBlank also works for time, objid and status types (refs #197)
+150415 cs  trace     Plc trace, versions printed in message at version mismatch
+150416 cs  xtt       Xtt eventlog window, method toolbar added
+150416 cs  xtt       Xtt eventlog window, method toolbar added
+150417 cs  ge        Ge conditional Confirm action for ToggleDig added
+150422 cs  ge        Ge slider dynamics, property ReleaseAttr bugfix
+150422 cs  ge        Ge change in loaded subgraph extern/intern didn't set modify flag
+150424 cs  xtt       Xtt eventlog window, exception for invalid times removed
+150505 cs  ge        Ge commmands build and create bar added
+150507 cs  ge        Ge translation bugfixes for confirm action and 'set subwindow' command
+150521 cs  xtt       Xtt fix for 'set subwindow' command in scripts
+150612 cs  ge        Ge, new new action: script + xtt scripts in java + multiview bugfix
+150818 cs  xtt       Xtt show device, process names displayed
+150820 cs  ge        Ge, new dyntype ScrollingText
+150821 cs  ge        Ge subgraps pool and lake added
+150826 cs  ge        Ge dynamic ScrollingText, bounce added
+150903 cs  wb        Wb edit mode mark in title added
+150908 cs  ge        Ge dynamic FocusInput in combination with Invisible bugfix
+150908 cs  xtt       Xtt and Ge graphs, allow comma in float value input

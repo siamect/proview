@@ -45,3 +45,7 @@
 140404 cs  modbus    Modbus TCP server, signalhandler added for SIGPIPE
 140514 cs  onewire   IO OneWire_AiDevice Status attribute set
 140709 cs  arduino   IO Arduino Ao size bugfix and Status enum fix
+150128 cs  modbus    IO Modbus RTU template values changed to even parity and 1 stopbit
+150331 cs  arduino   IO arduino sketch, message buffer increased
+150717 cs  modbus    Modbus RTU, avoid plc setfault if init failed
+150827 cs  epl       IO, Powerlink servers didn't handle runtime terminate event

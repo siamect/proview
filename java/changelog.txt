@@ -45,3 +45,28 @@
 140327 cs  java      java c-format %F allowed
 140411 cs  java      Java, move dynamics added to jopg
 140528 cs  java      Java pwg-file read, XYCurve class added
+141017 cs  java      Java pwg-files, XY_Curve added
+141022 cs  java      java pwg read, Pie and BarChart added
+141022 cs  java      java app, mh events added
+150126 cs  java      jpwr_rt_gdh added argument in crr callback
+150304 cs  java      Java trends adapted for internal trend attribute objects
+150309 cs  java      javadoc
+150319 cs  java      Java, read pwg fix for groups and fix for GrowText
+150331 cs  java      Jop start script, $jdk_home added
+150414 cs  java      Java annotation protect added
+150414 cs  java      Java attribute parse bugfix for array elements and strings
+150414 cs  java      Java GrowWindow bugfix for empty window
+150427 cs  java      java JopWindow font and encoding fix
+150505 cs  java      java, non utf-8 characters removed
+150520 cs  java      Java AxisArc and dynamics for Axis added
+150520 cs  java      Java jni, setObjectInfoString null string pointer fix
+150520 cs  java      Java, manifest added to jar
+150618 cs  java      Java table, support for cell selection added
+150618 cs  java      Java script fixes, and default priv for java environment changed to RtRead
+150618 cs  java      Java bugfix in subscription of boolean arrays
+150826 cs  java      Java trace updated with triangles and more
+150826 cs  java      Java dynamic ScrollingText and Animation added
+150902 cs  java      Android app, animation scantime minlimit increased
+150902 cs  java      Android app, fix for arc drawing
+150908 cs  java      Android app density fix
+150908 cs  java      Java inheritens of graph from base class added

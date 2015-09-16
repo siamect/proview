@@ -283,3 +283,57 @@
 140829 cs  plc       Plc, new dataref and string function objects, DataSel, DataEqual, DataNotEqual, StrAdd, StrEqual, StrNotEqual, StrSel, StrTrim and StrParse
 140904 cs  rt        pwr kill, read ld_appl file to kill applications
 140910 cs  io        IO hierarchy allowed between node object and rack object
+141009 cs  wbl       wbl, configurable audio device in opplace object
+141017 cs  cdh       cdh, Status wasn't handled in AttrValueToString (refs #201)
+141023 cs  pwre      pwre java module not built if jni not found
+141024 cs  pkg       Ubuntu package depends fix
+141027 cs  elog      aproc timestamp bugfix in elog, and timestap added to rt_sim
+141029 cs  bck       rt_bck -p didn't print attribute objects (refs #204)
+141114 cs  emon      Emon, system events added
+141114 cs  doc       Doc developer's guide updated
+141117 cs  pwre      pwre, piface_dummy added to 'ebuild'
+141211 cs  wbl       Attribute flag DevHideValue added for password attriubtes
+141217 cs  report    Report server bugfix for html
+150116 cs  doc       Doc changes, rt_net added to PRM and other
+150116 cs  wbl       SystemEvents flag fix
+150116 cs  pwre      Build from source build script fix, base root created
+150128 cs  wbl       ClassDef flags internal bit added to hide class in palette, and one extra classhier level in classvolumes allowed
+150213 cs  qmon      rt_qmon loop bugfix
+150213 cs  time      Time, deltatime control bugfix for negative deltatimes with tv_sec = 0
+150213 cs  emon      rt_emon, fixed timer problem for DSup outside plc
+150213 cs  convert   Convert, added UL to mask declarations in struct files
+150226 cs  qcom      qcom, link requests from not configured nodes rejected
+150302 cs  time      Time, deltatime control bugfix for negative deltatimes with tv_sec = 0
+150302 cs  convert   convert @i added for class help
+150309 cs  doc       Doc, various changes
+150319 cs  wb        Wb text editor for text and code attributes
+150327 cs  plc       Plc StrAdd bugfix for too long strings
+150331 cs  doc       wbl doc getXattr, stoXattr and cstoXattr set deprecated
+150415 cs  help      Help,  also searches in other directories
+150416 cs  emon      emon, sup object set for system events
+150420 cs  plc       Plc object IOSimulFlag to fetch sim flag in IOHandler object added
+150421 cs  ini       rt_ini and sev_ini, first argument could be lost
+150428 cs  wbl       Safety level enum added to some object, and warning triangle in plcpgm
+150430 cs  doc       Doc sysinfo moved from pwrp_login to pwrp_doc
+150512 cs  doc       Doc Ge, barchart and pie added
+150513 cs  doc       Doc, the Ge and subgraphs manual updated with the latest dynamics and new subgraphs
+150522 cs  pkg       Pkg dependency on mysql and hdf5 added for x86_64
+150618 cs  script    Script, arg p9 didn't work
+150616 cs  wbl       Adef flag PublicWrite added, and xtt script function SetAttribute()
+150625 cs  script    Script fix for float equality comparision
+150629 cs  pkg       Access change to sh and some image files to apply to dpkg policy
+150717 cs  emon      rt_emon, CycleSup not evalued the first 20 laps as it might not be initalized yet
+150717 cs  time      co_time, new function time_PrintA to print an absolute time
+150717 cs  plc       Plc thread loop, clock_nanosleep() was interrupted by the profinet stack
+150717 cs  io_comm   rt_io_comm, several instances with differnt IO process can be started. New options added, -p for process and -a for anix
+150818 cs  pwr       pwr kill, remove of applications from appl-file added
+150818 cs  modbus    Modbus RTU, replaced remaining TCP to RTU in comments and messages
+150818 cs  io_comm   rt_io_comm, -o and -c added to state application object and cycle time
+150818 cs  nmps      NMps DispLink, output pin was missing
+150818 cs  elog      rt_elog_dump, fix in usage text. Arguments was mixed up
+150821 cs  pwr       pwr kill, remove of applications fix
+150821 cs  plc       plc program, argument -m to show I/O methods added
+150821 cs  ini       rt_ini process start, bugfix in process arguments
+150827 cs  convert   Convert, html XMP tag is changed to PRE in class documentation
+150902 cs  nmps      NMps lock, posix semaphor removed
+150903 cs  help      Version help file moved from exe to load

@@ -274,4 +274,43 @@
 140821 cs  plc       Plc helptext objects added
 140908 cs  wbl       Wbl CStoATv and CStoDTv, noedit flags on input added
 140910 cs  wb        Wb directory volume, revert didn't work
+141017 cs  wb        wb compile fix for DataCollect
+141022 cs  wb        wb distribute, check that node is built after volumes added
+141023 cs  wb        Plc editor, opened object editors follows view/edit mode
+141027 cs  wb        Plc navigator, attribute objects could only be opened on first level
+141117 cs  wb        Wb clone fix
+141117 cs  wb        Wtt spreadsheet, class dialog opened at start
+141117 cs  wb        Wb classlist for attrref showed disabled objects
+141117 cs  wb        Wtt, menu item 'Open Program' sensitive in dbs-file classvolume
+141118 cs  wb        Plc editor, build debug fetched from wtt settings (refs #203)
+141118 cs  wb        Wtt setting build.debug added to save settings (refs #202)
+141118 cs  wb        Plc editor execute order display fix
+141120 cs  wb        Wb distributor, message erased befor new distribute (refs #123)
+150107 cs  wb        Wb attribute index bugfix for large arrays in large objects
+150108 cs  wb        Wb crossreference list generation, DataArithmL added to code list
+150126 cs  wb        Wb attribute offset fix for large array fix
+150128 cs  wb        Plc connect error message fix
+150202 cs  wb        Rt and wb attribute offset for large array fixes
+150205 cs  wb        Wb fix for shrinking wizard on LXDE desktop
+150213 cs  wb        wb_wnav code cleaned
+150213 cs  distr     Distributor added copy of pwg-files to pwrp_web
+150225 cs  wb        Wb build directory bugfix in makefile specification
+150308 cs  script    Wb script plc editing
+150310 cs  wb        Plc editor, possibility to remove serveral objects with subwindows
+150319 cs  plc       Wb plc code generating casting fix for DataCopy
+150327 cs  wb        Wb classes with embeded plc code added
+150416 cs  distr     Wb distributor, warning for missing web jar-file removed
+150421 cs  wb        wb embedded plc, cross reference fix
+150429 cs  plc       Warning triangle bitmap in plcpgm palette
+150505 cs  wb        Wb and xtt bugfix for non ISO8859-1 chars
+150521 cs  wb        Wb export -a removed in cp
+150629 cs  wb        Wb configure, change of default node hierarchy, and BuidConfig added in directory volume
+150630 cs  script    Wb script function GetVersion() added
+150630 cs  wb        Wb gcg cast for template fo data inputs
+150630 cs  wb        Wb volume configuration support for renameing objects and local script
+150630 cs  script    Wb script functions MoveObject() and RenameObject() added
+150708 cs  wb        wb wizard fix
+150710 cs  wb        wb build, $pwrp_cnf built before volume
+150827 cs  distr     Wb distributor, bugfix in dbs-file check for base dbs-files
+150903 cs  wb        wb, backup utility added to menu
 

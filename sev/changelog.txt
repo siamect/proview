@@ -12,3 +12,5 @@
 140218 cs  sevcli    Sevcli read fix
 140218 cs  sev       Sev read of items with option event and small number of points fix
 140218 cs  sev       Sev bugfix, sevobjects without event-bit didn't work
+150424 cs  sev       Sev bugfix, copy of old_value was missing in item copy contstructor
+150116 cs  sev       Sev database hdf5 added
