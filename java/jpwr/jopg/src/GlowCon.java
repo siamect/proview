@@ -259,6 +259,7 @@ public class GlowCon extends GlowArrayElem {
 	    }
 	}
     }
+    public String getName() { return "Con";}
 
 
 }

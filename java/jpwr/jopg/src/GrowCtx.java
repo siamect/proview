@@ -875,7 +875,6 @@ public class GrowCtx implements GrowCtxIfc {
 
     public GlowArrayElem findByName( String name) {
 	for ( int i = 0; i < cmn.a.size(); i++) {
-	    System.out.println("findByName: " + ((GlowArrayElem)cmn.a.get(i)).getName());
 	    if ( ((GlowArrayElem)cmn.a.get(i)).getName().equalsIgnoreCase(name))
 		return (GlowArrayElem)cmn.a.get(i);
 	}
