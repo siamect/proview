@@ -118,6 +118,8 @@ class XttStream {
   XttCameraControl *camera_control;
   pwr_tEnum	control_protocol;
   pwr_tAttrRef  aref;  
+  float		connection_timeout;
+  float		reconnect_time;
 
   XttStream( void *st_parent_ctx, const char *name, const char *st_uri,
 	     int st_width, int st_height, int x, int y, 

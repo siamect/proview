@@ -81,6 +81,8 @@ class XttStreamGtk : public XttStream {
   GtkWidget	*tools;
 
   void *overlay;
+  CoWowTimer 	*reconnect_timerid;
+  int		no_uri;
 
   static int gst_initialized;
 
@@ -94,6 +96,7 @@ class XttStreamGtk : public XttStream {
   void setup();
   void *get_widget() { return main_box;}
   void create_popup_menu( int x, int y);
+  void erase_window();
 
   static void scroll_cb( void *data);
   static void refresh( void *data);
@@ -114,7 +117,9 @@ class XttStreamGtk : public XttStream {
   static void state_changed_cb( GstBus *bus, GstMessage *msg, void *data);
   static void application_cb( GstBus *bus, GstMessage *msg, void *data);
   static void resize_cb( GtkWidget *w, GtkAllocation *allocation, gpointer data);
+  static void source_setup_cb( GstElement *playbin2, GstElement *src, gpointer data);
   static gboolean mousebutton_cb( GtkWidget *widget, GdkEvent *event, void *data);
+  static void reconnect( void *data);
   static void menu_position_func( GtkMenu *menu, gint *x, gint *y, gboolean *push_in,
 				  gpointer data);
   static void activate_zoomreset( GtkWidget *w, gpointer data);

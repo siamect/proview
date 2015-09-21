@@ -188,11 +188,31 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_DEVHIDEVALUE
         EndBody
       EndObject
+      !/**
+      ! Connection timeout.
+      !*/
+      Object ConnectionTimeout $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      ! Reconnect time.
+      ! If the connection is down, a reconnect will be made
+      ! cyclically with this interval.
+      !*/
+      Object ReconnectTime $Attribute 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
     EndObject
     Object Template XttCamera
       Body RtBody
         Attr Width = 800
         Attr Height = 600
+        Attr ConnectionTimeout = 10
+        Attr ReconnectTime = 5
       EndBody
     EndObject
   EndObject

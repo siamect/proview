@@ -117,6 +117,30 @@ XttStream::XttStream( void *st_parent_ctx, const char *name, const char *st_uri,
     if ( EVEN(sts))
       strcpy( user, "");
 
+    pwr_tFloat32 tmo;
+    sts = gdh_ArefANameToAref( &aref, "ConnectionTimeout", &aaref);
+    if ( ODD(sts))
+      sts = gdh_GetObjectInfoAttrref( &aaref, &tmo, sizeof(tmo));
+    if ( ODD(sts)) {
+      connection_timeout = tmo;
+      if ( connection_timeout < 1)
+	connection_timeout = 10;
+    }
+    else
+      connection_timeout = 10;
+    
+    pwr_tFloat32 time;
+    sts = gdh_ArefANameToAref( &aref, "ReconnectTime", &aaref);
+    if ( ODD(sts))
+      sts = gdh_GetObjectInfoAttrref( &aaref, &time, sizeof(time));
+    if ( ODD(sts)) {
+      reconnect_time = time;
+      if ( connection_timeout < 1)
+	reconnect_time = 5;
+    }
+    else
+      reconnect_time = 5;
+    
     if ( strcmp( user, "") != 0 && strcmp( password, "") != 0) {
       // sprintf( &uri[strlen(uri)], "?user=%s&pwd=%s", user, password);
     }

@@ -93,15 +93,43 @@ static GstBusSyncReply bus_sync_handler (GstBus * bus, GstMessage * message,
 void XttStreamGtk::realize_cb( GtkWidget *widget, void *data)
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
-
-  GdkWindow *window = gtk_widget_get_window( strm->video_form);
   guintptr window_handle;
-  
-  if (!gdk_window_ensure_native (window))
-    g_error ("Couldn't create native window needed for GstXOverlay!");
-  
+
+  GstElement *videosink;
+  g_object_get( strm->playbin2, "video-sink", &videosink, NULL);
+
+    
+  GdkWindow *window = gtk_widget_get_window( strm->video_form);  
+
+  // if (!gdk_window_ensure_native (window))
+  //   g_error ("Couldn't create native window needed for GstXOverlay!");
+
   window_handle = GDK_WINDOW_XID( window);
-  gst_x_overlay_set_xwindow_id( GST_X_OVERLAY (strm->playbin2), window_handle);
+  gst_x_overlay_set_xwindow_id( GST_X_OVERLAY (videosink), window_handle);
+
+}
+
+void XttStreamGtk::source_setup_cb( GstElement *playbin2, GstElement *src, gpointer data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  // Set timeout for connection
+  GstElement *source;
+  guint tmo = (int) (strm->connection_timeout + 0.5);
+
+  g_object_get( strm->playbin2, "source", &source, NULL);
+  g_object_set( source, "timeout", tmo, NULL);
+
+  // If the connections has been down, overlay has to be set again
+  GstElement *videosink;
+  guintptr window_handle;
+  g_object_get( strm->playbin2, "video-sink", &videosink, NULL);
+  if ( videosink) {
+    GdkWindow *window = gtk_widget_get_window( strm->video_form);  
+
+    window_handle = GDK_WINDOW_XID( window);
+    gst_x_overlay_set_xwindow_id( GST_X_OVERLAY (videosink), window_handle);
+  }
 }
   
 /* This function is called when the PLAY button is clicked */
@@ -148,18 +176,7 @@ gboolean XttStreamGtk::expose_cb( GtkWidget *widget, GdkEventExpose *event, void
   XttStreamGtk *strm = (XttStreamGtk *)data;
 
   if (strm->state < GST_STATE_PAUSED) {
-    GtkAllocation allocation;
-    GdkWindow *window = gtk_widget_get_window( widget);
-    cairo_t *cr;
-    
-    /* Cairo is a 2D graphics library which we use here to clean the video window.
-     * It is used by GStreamer for other reasons, so it will always be available to us. */
-    gtk_widget_get_allocation( widget, &allocation);
-    cr = gdk_cairo_create (window);
-    cairo_set_source_rgb( cr, 0, 0, 0);
-    cairo_rectangle( cr, 0, 0, allocation.width, allocation.height);
-    cairo_fill( cr);
-    cairo_destroy( cr);
+    strm->erase_window();
   }
   
   return FALSE;
@@ -213,6 +230,22 @@ void XttStreamGtk::refresh_ui( XttStreamGtk *strm)
 
 }
   
+void XttStreamGtk::erase_window()
+{
+  GtkAllocation allocation;
+  GdkWindow *window = gtk_widget_get_window( video_form);
+  cairo_t *cr;
+    
+  /* Cairo is a 2D graphics library which we use here to clean the video window.
+   * It is used by GStreamer for other reasons, so it will always be available to us. */
+  gtk_widget_get_allocation( video_form, &allocation);
+  cr = gdk_cairo_create (window);
+  cairo_set_source_rgb( cr, 0, 0, 0);
+  cairo_rectangle( cr, 0, 0, allocation.width, allocation.height);
+  cairo_fill( cr);
+  cairo_destroy( cr);
+}
+
 void XttStreamGtk::refresh( void *data)
 {
   XttStreamGtk *strm = (XttStreamGtk *)data;
@@ -220,6 +253,52 @@ void XttStreamGtk::refresh( void *data)
   refresh_ui( strm);
 
   strm->timerid->add( strm->scan_time, strm->refresh, data);
+}
+
+void XttStreamGtk::reconnect( void *data)
+{
+  XttStreamGtk *strm = (XttStreamGtk *)data;
+
+  GstState state, async;
+  GstStateChangeReturn ch = gst_element_get_state( strm->playbin2, &state, &async, 0); 
+  
+  printf( "Try to reconnect %d %d %d\n", state, async, ch);
+
+  if ( state == GST_STATE_PLAYING)
+    return;
+  
+  printf( "Adding reconnect\n");
+  strm->reconnect_timerid->remove();
+  strm->reconnect_timerid->add( int( strm->reconnect_time * 1000), reconnect, strm);
+
+  if ( strm->no_uri) {
+    printf( "Reconnect no URI\n");
+    strm->no_uri = 0;
+    pwr_tURL luri;
+    char *s;
+    if ( strm->options & strm_mOptions_HttpBasicAuthentication) {
+      if ( strcmp( strm->user, "") != 0 && strcmp( strm->password, "") != 0 && (s = strstr( strm->uri, "://"))) {
+	unsigned long int offs = s - (char *)strm->uri + 3;
+	strncpy( luri, strm->uri, offs);
+	luri[offs] = 0;
+	strcat( luri, strm->user);
+	strcat( luri, ":");
+	strcat( luri, strm->password);
+	strcat( luri, "@");
+	strcat( luri, &strm->uri[offs]);
+      }
+      else
+	strcpy( luri, strm->uri);
+    }
+    else if ( strm->options & strm_mOptions_CgiParameterAuthentication)
+      snprintf( luri, sizeof(luri), "%s?user=%s&pwd=%s", strm->uri, strm->user, strm->password);
+    else
+      strcpy( luri, strm->uri);
+
+    g_object_set( strm->playbin2, "uri", luri,  NULL);
+  }
+  else 
+    gst_element_set_state( strm->playbin2, GST_STATE_PLAYING);
 }
 
 /* This function is called when new metadata is discovered in the stream */
@@ -244,16 +323,28 @@ void XttStreamGtk::error_cb( GstBus *bus, GstMessage *msg, void *data)
     GError *err;
     gchar *debug_info;
   
-    printf( "Message %d\n", GST_MESSAGE_TYPE(data));
+    printf( "Message %d\n", GST_MESSAGE_TYPE(msg));
     /* Print error details on the screen */
     gst_message_parse_error( msg, &err, &debug_info);
     printf( "Error received from element %s: %s\n", GST_OBJECT_NAME( msg->src), err->message);
     printf( "Debugging information: %s\n", debug_info ? debug_info : "none");
+
+    if ( strcmp( err->message, "No URI set") == 0)
+      strm->no_uri = 1;
+    
     g_clear_error( &err);
     g_free( debug_info);
-    
+
     /* Set the pipeline to READY (which stops playback) */
     gst_element_set_state( strm->playbin2, GST_STATE_READY);
+
+    // Erase window
+    strm->erase_window();
+
+    // Try to reconnect
+    strm->reconnect_timerid->remove();
+    strm->reconnect_timerid->add( int(strm->reconnect_time * 1000), reconnect, strm);
+
     break;
   }
   case GST_MESSAGE_BUFFERING: {
@@ -597,7 +688,7 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
 			    int width, int height, int x, int y, double scan_time, 
 			    unsigned int st_options, int st_embedded, pwr_tAttrRef *st_arp, pwr_tStatus *sts) :
   XttStream( st_parent_ctx, name, st_uri, width, height, x, y, scan_time, st_options, st_embedded, st_arp),
-  scroll_cnt(0), ptz_box_displayed(0), is_live(0), buftime(pwr_cNTime), parent_wid(st_parent_wid), ptz_box(0)
+  scroll_cnt(0), ptz_box_displayed(0), is_live(0), buftime(pwr_cNTime), parent_wid(st_parent_wid), ptz_box(0), reconnect_timerid(0), no_uri(0)
 {
   GstStateChangeReturn ret;
   GstBus *bus;
@@ -657,6 +748,8 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
   g_signal_connect( G_OBJECT( playbin2), "audio-tags-changed",( GCallback) tags_cb, this);
   g_signal_connect( G_OBJECT( playbin2), "text-tags-changed",( GCallback) tags_cb, this);
 
+  g_signal_connect( G_OBJECT( playbin2), "source-setup",( GCallback) source_setup_cb, this);
+
   if ( !embedded) {
     toplevel = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     g_signal_connect( G_OBJECT(toplevel), "delete-event", G_CALLBACK(delete_event_cb), this);
@@ -670,6 +763,9 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
   else
     toplevel = parent_wid;
 
+  GstElement *x_overlay = gst_element_factory_make( "xvimagesink", "videosink");
+  g_object_set( G_OBJECT(playbin2), "video-sink", x_overlay, NULL);
+
   video_form = gtk_drawing_area_new();
   gtk_widget_set_double_buffered( video_form, FALSE);
   g_signal_connect( video_form, "realize", G_CALLBACK( realize_cb), this);
@@ -681,6 +777,7 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
   
   gtk_widget_add_events( video_form, GDK_BUTTON_PRESS_MASK | 
 			 GDK_BUTTON_RELEASE_MASK | GDK_SCROLL_MASK);
+
 
   // GtkWidget *controls;
   GtkWidget *hbox = gtk_hbox_new( FALSE, 0);
@@ -1000,8 +1097,8 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
     gtk_container_add( GTK_CONTAINER( toplevel), main_box);
     gtk_window_set_default_size( GTK_WINDOW( toplevel), width, height);
   
-    gtk_widget_show_all( toplevel);
-    
+    gtk_widget_show_all( toplevel);  
+
     if ( ptz_box)
       g_object_set( ptz_box, "visible", FALSE, NULL);
     if ( !(options & strm_mOptions_CameraControlPanel))
@@ -1050,6 +1147,7 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
   wow = new CoWowGtk( toplevel);
   timerid = wow->timer_new();
   scroll_timerid = wow->timer_new();
+  reconnect_timerid = wow->timer_new();
   timerid->add( scan_time, refresh, this);
 
   *sts = XNAV__SUCCESS;
@@ -1057,8 +1155,12 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
   
 XttStreamGtk::~XttStreamGtk()
 {
-  timerid->remove();
-  scroll_timerid->remove();
+  if ( timerid)
+    timerid->remove();
+  if ( scroll_timerid)
+    scroll_timerid->remove();
+  if ( reconnect_timerid)
+    reconnect_timerid->remove();
 
   gst_element_set_state( playbin2, GST_STATE_NULL);
   gst_object_unref( playbin2);
