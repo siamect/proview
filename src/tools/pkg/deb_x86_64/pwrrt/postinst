@@ -244,6 +244,7 @@ if [ ! -e $proot ]; then
 
   chown -R pwrp $proot
   chgrp -R pwrp $proot
+  chmod g+w $proot/common/log
   
 fi
 
