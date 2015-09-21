@@ -78,17 +78,20 @@ void XttGeGtk::set_size( int width, int height)
   int		default_width;
   int		default_height;
   GdkGeometry   geometry;
+  float 	rd = 0.05;;
 
   default_width = width + 20;
   default_height = height + 20;
+  if ( width < 300 || height < 300)
+    rd = 0.2;
 
   gtk_window_resize( GTK_WINDOW(toplevel), default_width, default_height);
 
   // This condition is due to a bug in Reflection X 11.0.5...
   if ( !((XNav *)parent_ctx)->gbl.no_graph_ratio) {
     // Note, equal min and max aspect will cause recursive resize on LXDE
-    geometry.min_aspect = gdouble(default_width)/default_height;
-    geometry.max_aspect = gdouble(default_width)/default_height * 1.02;
+    geometry.min_aspect = gdouble(default_width)/default_height * (1.0 - rd);
+    geometry.max_aspect = gdouble(default_width)/default_height * (1.0 + rd);
     gtk_window_set_geometry_hints( GTK_WINDOW(toplevel), GTK_WIDGET(toplevel),
     				   &geometry, GDK_HINT_ASPECT);
   }
@@ -329,10 +332,14 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
 					   NULL);
     g_free( titleutf8);
 
-    geometry.min_aspect = gdouble(window_width)/window_height;
-    geometry.max_aspect = gdouble(window_width)/window_height * 1.02;
+    float rd = 0.05;
+    if ( window_width < 300 || window_height < 300)
+      rd = 0.2;
+
+    geometry.min_aspect = gdouble(window_width)/window_height * (1.0 - rd);
+    geometry.max_aspect = gdouble(window_width)/window_height * (1.0 + rd);
     gtk_window_set_geometry_hints( GTK_WINDOW(toplevel), GTK_WIDGET(toplevel),
-				   &geometry, GDK_HINT_ASPECT);
+    				   &geometry, GDK_HINT_ASPECT);
 
     if ( options & ge_mOptions_HideDecorations)
       gtk_window_set_decorated( GTK_WINDOW(toplevel), FALSE);

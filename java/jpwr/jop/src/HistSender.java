@@ -102,11 +102,11 @@ public class HistSender {
 	try { 
 	    out = new ObjectOutputStream( socket.getOutputStream() );
 	    out.flush();
-	    //varför???
+	    //why???
 	    in = new ObjectInputStream( socket.getInputStream() );
         }
         catch(Exception e) {
-	    System.out.println("IOException vid skapande av strömmar mot server");
+	    System.out.println("IOException at server stream creation");
 	    //errh.error("DataStream failed");
 	    return new MhData(100,100);
         }

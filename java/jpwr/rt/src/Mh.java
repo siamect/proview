@@ -269,7 +269,7 @@ public class Mh
     lastMhrEvent = evItem;
     newAlarmArrived = true;
     
-    nrOfAlarmsArrived++; //behövs ej
+    nrOfAlarmsArrived++; // not needed
 
   }
 

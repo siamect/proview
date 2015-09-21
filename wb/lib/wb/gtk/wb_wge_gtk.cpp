@@ -200,6 +200,7 @@ void WGeGtk::activate_help(GtkWidget *w, gpointer data)
 void WGeGtk::action_resize( GtkWidget *w, GtkAllocation *allocation, gpointer data)
 {
   WGe *ge = (WGe *)data;
+  
 
   if ( ge->graph && !ge->scrollbar && !ge->navigator && ge->graph->grow)
     ge->graph->set_default_layout();
@@ -228,8 +229,8 @@ void WGeGtk::set_size( int width, int height)
 
   gtk_window_resize( GTK_WINDOW(toplevel), default_width, default_height);
 
-  geometry.min_aspect = gdouble(default_width)/default_height;
-  geometry.max_aspect = gdouble(default_width)/default_height * 1.02;
+  geometry.min_aspect = gdouble(default_width)/default_height * 0.95;
+  geometry.max_aspect = gdouble(default_width)/default_height * 1.05;
   gtk_window_set_geometry_hints( GTK_WINDOW(toplevel), GTK_WIDGET(toplevel),
 				 &geometry, GDK_HINT_ASPECT);
 
@@ -293,8 +294,8 @@ WGeGtk::WGeGtk( GtkWidget *wge_parent_wid, void *wge_parent_ctx, char *wge_name,
 
   CoWowGtk::SetWindowIcon( toplevel);
 
-  geometry.min_aspect = gdouble(window_width)/window_height;
-  geometry.max_aspect = gdouble(window_width)/window_height * 1.02;
+  geometry.min_aspect = gdouble(window_width)/window_height * 0.95;
+  geometry.max_aspect = gdouble(window_width)/window_height * 1.05;
   gtk_window_set_geometry_hints( GTK_WINDOW(toplevel), GTK_WIDGET(toplevel),
 				 &geometry, GDK_HINT_ASPECT);
 
