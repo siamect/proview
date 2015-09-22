@@ -748,7 +748,8 @@ XttStreamGtk::XttStreamGtk( GtkWidget *st_parent_wid, void *st_parent_ctx, const
   g_signal_connect( G_OBJECT( playbin2), "audio-tags-changed",( GCallback) tags_cb, this);
   g_signal_connect( G_OBJECT( playbin2), "text-tags-changed",( GCallback) tags_cb, this);
 
-  g_signal_connect( G_OBJECT( playbin2), "source-setup",( GCallback) source_setup_cb, this);
+  //g_signal_connect( G_OBJECT( playbin2), "source-setup",( GCallback) source_setup_cb, this);
+  g_signal_connect( G_OBJECT( playbin2), "notify::source",( GCallback) source_setup_cb, this);
 
   if ( !embedded) {
     toplevel = gtk_window_new (GTK_WINDOW_TOPLEVEL);
