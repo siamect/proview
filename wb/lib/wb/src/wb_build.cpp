@@ -1243,11 +1243,28 @@ void wb_build::webhandler( pwr_tOid oid)
   pwr_tStatus   fsts;
   pwr_tStatus 	sts;
   char 		line[200];
+  int check_hierarchy = cdh_ObjidIsNotNull( m_hierarchy);
+  int hierarchy_found = 0;
 
 
   wb_object o = m_session.object(oid);
   if ( !o) {
     m_sts = o.sts();
+    return;
+  }
+
+  // Check that no ancestor is a LibHier
+  for ( wb_object p = o.parent(); p.oddSts(); p = p.parent()) {
+    if ( p.cid() == pwr_eClass_LibHier) {
+      m_sts = PWRB__INLIBHIER;
+      return;
+    }
+    if ( check_hierarchy && cdh_ObjidIsEqual( m_hierarchy, p.oid()))
+      hierarchy_found = 1;
+  }
+
+  if ( check_hierarchy && !hierarchy_found) {
+    m_sts = PWRB__NOBUILT;
     return;
   }
 
