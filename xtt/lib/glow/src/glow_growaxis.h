@@ -260,6 +260,9 @@ class GrowAxis : public GrowRect {
     \param value	Value to format.
   */
   void format_text( char *text, char *fmt, double value);
+
+  glow_eVis get_visibility();
+  void set_visibility( glow_eVis visibility);
 };
 
 

@@ -71,16 +71,16 @@ void XttGe::graph_init_cb( void *client_data)
     strcat( fname, ".pwg");
   ge->graph->open( fname);
 
-  ge->graph->init_trace();
-
   if ( ge->width == 0 || ge->height == 0) {
     sts = ge->graph->get_default_size( &default_width, &default_height);
     if ( ODD(sts)) {
       ge->set_size( default_width, default_height);
     }
   }
-
   ge->graph->set_default_layout();
+
+  ge->graph->init_trace();
+
 
 }
 

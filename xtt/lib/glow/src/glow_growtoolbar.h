@@ -156,6 +156,7 @@ class GrowToolbar : public GrowNode {
 		  unsigned int show_mask1, unsigned int show_mask2, 
 		  unsigned int insensitive_mask1, unsigned int insensitive_mask2);
   int get_mask_index( int idx, int *category, int *mask_idx);
+  void scale();
 };
 
 /*@}*/

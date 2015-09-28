@@ -280,6 +280,9 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
       idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
     idx += hot;
   }
+  if ( (node && ((GrowNode *)node)->invisible) || invisible)
+    return;
+
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
@@ -1017,6 +1020,32 @@ void GrowAxis::convert( glow_eConvert version)
   }  
 }
 
+glow_eVis GrowAxis::get_visibility()
+{
+  if ( invisible)
+    return glow_eVis_Invisible;
+  return glow_eVis_Visible;
+}
+
+void GrowAxis::set_visibility( glow_eVis visibility)
+{
+  switch( visibility) {
+  case glow_eVis_Visible:
+    if ( invisible == 0)
+      return;
+    invisible = 0;
+    break;
+  case glow_eVis_Invisible:
+    if ( invisible) 
+      return;
+    invisible = 1;
+    erase( &ctx->mw);
+    break;
+  case glow_eVis_Dimmed:
+    break;
+  }
+  draw();
+}
 
 
 

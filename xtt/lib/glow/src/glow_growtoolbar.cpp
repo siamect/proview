@@ -524,6 +524,7 @@ void GrowToolbar::configure( char *tools1, char *tools2, int tools1_cnt, int too
   }
 
   get_node_borders();
+  scale();
 
   // Move the nc to after the methodbuttons nodeclasses, or they will be deleted in the wrong order
   // when when deleted
@@ -552,4 +553,20 @@ int GrowToolbar::get_mask_index( int idx, int *category, int *mask_idx)
     }
   }
   return 0;
+}
+
+void GrowToolbar::scale()
+{
+  double scale;
+
+  if ( ctx->mw.window_width == 0)
+    return;
+
+  if ( x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x > ctx->mw.window_width) {
+    scale = (ctx->mw.window_width - ( x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x) - 10) /
+      (( x_right - x_left) * ctx->mw.zoom_factor_x);
+
+    trf.scale( scale, 1, x_left, y_low);
+    get_node_borders();
+  }
 }
