@@ -55,4 +55,5 @@ public class GlowArrayElem {
     public void setColorInverse(int color_inverse) {}
     public Object getCmn() { return null;}
     public String getName() { return null;}
+    public void setVisibility( int visibility) {}
 }

@@ -163,6 +163,9 @@ public class GrowAxis extends GrowRect {
 	double tsize = cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * (8+2*text_size);
 	text_idx = Math.min( text_idx, Glow.DRAW_TYPE_SIZE-1);
 
+	if ( (node != null && ((GrowNode)node).invisible != 0) || invisible != 0)
+	    return;
+
 	if ( node != null && ((GrowNode)node).line_width != 0)
 	    idx = (int)( cmn.mw.zoom_factor_y / cmn.mw.base_zoom_factor * 
 			 ((GrowNode)node).line_width - 1);
@@ -636,6 +639,20 @@ public class GrowAxis extends GrowRect {
 	}
 	configure();
 	draw();
+    }
+
+    public void setVisibility( int visibility) {
+	switch ( visibility) {
+	case Glow.eVis_Visible:
+	    invisible = 0;
+	    break;
+	case Glow.eVis_Invisible:
+	    invisible = 1;
+	    draw();
+	    break;
+	case Glow.eVis_Dimmed:
+	    break;
+	}
     }
 
 }

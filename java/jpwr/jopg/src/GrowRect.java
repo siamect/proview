@@ -102,6 +102,7 @@ public class GrowRect extends GlowArrayElem {
 	shadow_contrast = 2;
 	gradient = Glow.eGradient_No;	
 	gradient_contrast = 4;
+	invisible = 0;
     }
 
 

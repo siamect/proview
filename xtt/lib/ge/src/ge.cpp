@@ -796,6 +796,48 @@ void Ge::activate_copy()
   graph->copy();
 }
 
+void Ge::activate_objattr_recall()
+{
+  int sts;
+  grow_tObject object;
+  GeDyn *old_dyn;
+
+  sts = graph->get_selected_object( &object);
+  if ( sts == GE__NOSELECT) {
+    message( 'E', "No object is selected");
+    return;
+  }
+  else if ( sts == GE__MANYSELECT) {
+    message( 'E', "More than one object is selected");
+    return;
+  }
+  sts = Graph::graph_attr_recall_cb( graph, object, 0, &old_dyn);
+  if ( EVEN(sts)) {
+    message( 'E', "Nothing to recall");
+    return;
+  }
+  message( 'I', "Object attributes recalled");
+  free( old_dyn);
+}
+
+void Ge::activate_objattr_store()
+{
+  int sts;
+  grow_tObject object;
+
+  sts = graph->get_selected_object( &object);
+  if ( sts == GE__NOSELECT) {
+    message( 'E', "No object is selected");
+    return;
+  }
+  else if ( sts == GE__MANYSELECT) {
+    message( 'E', "More than one object is selected");
+    return;
+  }
+  Graph::graph_attr_store_cb( graph, object);
+  message( 'I', "Object attributes stored");
+}
+
 void Ge::activate_rotate()
 {
   open_input_dialog( "Value (degrees)", "Rotate", "",

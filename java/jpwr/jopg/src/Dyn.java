@@ -2406,7 +2406,7 @@ public class Dyn {
 	}
 
 	public int connect(GlowArrayElem o) {
-	    GrowNode object = (GrowNode)o;
+
 	    if ( attribute.toLowerCase().startsWith("$cmd(")) {
 		cmd = true;
 		int idx = attribute.lastIndexOf(')');
@@ -2456,16 +2456,16 @@ public class Dyn {
 	}
 
 	public void scan( GlowArrayElem o) {
-	    GrowNode object = (GrowNode)o;
+
 	    if ( cmd) {
 		if ( firstScan) {
 		    int sts = dyn.graph.command(command);
 		    System.out.println( "DynInvisible: " + command + ", value: " + sts);
 		    if ( sts == 0) {
 			if ( dimmed == 0)
-			    object.setVisibility( Glow.eVis_Invisible);
+			    o.setVisibility( Glow.eVis_Invisible);
 			else
-			    object.setVisibility( Glow.eVis_Dimmed);
+			    o.setVisibility( Glow.eVis_Dimmed);
 		    }
 		    firstScan = false;
 		}
@@ -2494,12 +2494,12 @@ public class Dyn {
 
 	    if ( value) {
 		if ( dimmed == 0)
-		    object.setVisibility( Glow.eVis_Invisible);
+		    o.setVisibility( Glow.eVis_Invisible);
 		else
-		    object.setVisibility( Glow.eVis_Dimmed);
+		    o.setVisibility( Glow.eVis_Dimmed);
 	    }
 	    else {
-		object.setVisibility( Glow.eVis_Visible);
+		o.setVisibility( Glow.eVis_Visible);
 	    }
 	    dyn.repaintNow = true;
 	    oldValue = value;

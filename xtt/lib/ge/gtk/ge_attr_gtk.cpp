@@ -415,6 +415,8 @@ AttrGtk::AttrGtk( GtkWidget *a_parent_wid,
   GtkWidget *func_store = gtk_menu_item_new_with_mnemonic( "_Store");
   g_signal_connect( func_store, "activate", 
 		    G_CALLBACK(attr_activate_store), this);
+  gtk_widget_add_accelerator( func_store, "activate", accel_g,
+			      't', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   GtkWidget *func_recall = gtk_menu_item_new_with_mnemonic( "_Recall");
   g_signal_connect( func_recall, "activate", 

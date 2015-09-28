@@ -1359,6 +1359,10 @@ class Graph {
   //! Enable event logging
   static void eventlog_enable( int enable) { grow_EventLogEnable( enable);}
 
+  static void graph_attr_store_cb( void *g, grow_tObject object);
+  static int graph_attr_recall_cb( void *g, grow_tObject object, int idx, 
+				   GeDyn **old_dyn);
+
   //
   // Command module
   //

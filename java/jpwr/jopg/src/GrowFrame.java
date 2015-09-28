@@ -337,9 +337,13 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
     }
 
     public int getWidth() {
+	if ( localPanel.getWidth() == 0 && defaultWidth != 0)
+	    return defaultWidth;
 	return localPanel.getWidth() + 5;
     }
     public int getHeight() {
+	if ( localPanel.getHeight() == 0 && defaultHeight != 0)
+	    return defaultHeight;
 	return localPanel.getHeight() + 40;
     }
 

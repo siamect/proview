@@ -164,6 +164,8 @@ class Ge {
   void activate_delete();
   void activate_cut();
   void activate_copy();
+  void activate_objattr_store();
+  void activate_objattr_recall();
   void activate_rotate();
   void activate_rotate90();
   void activate_flip_vert();

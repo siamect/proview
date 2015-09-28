@@ -261,6 +261,7 @@ public class GrowToolbar extends GrowNode {
 	}
 	
 	get_node_borders();
+	scale();
 
 	System.out.println("Toolbar configure tools_mask " + tools1_mask + " " + tools2_mask);
     }
@@ -291,4 +292,21 @@ public class GrowToolbar extends GrowNode {
 	}
 	return null;
     }
+
+    public void scale() {
+	double scale;
+
+	if ( cmn.mw.window_width == 0)
+	    return;
+
+	System.out.println( "Toolbar.scale offset_x " + cmn.mw.offset_x + " wwidth " + cmn.mw.window_width);
+	if ( x_right * cmn.mw.zoom_factor_x - cmn.mw.offset_x > cmn.mw.window_width) {
+	    scale = (cmn.mw.window_width - ( x_left * cmn.mw.zoom_factor_x - cmn.mw.offset_x) - 10) /
+		(( x_right - x_left) * cmn.mw.zoom_factor_x);
+	    
+	    trf.scale( scale, 1, x_left, y_low);
+	    get_node_borders();
+	}
+    }
+
 }

@@ -104,9 +104,6 @@ static void graph_remove_space( char *out_str, char *in_str);
 // static int graph_init_grow_cb( GrowCtx *ctx, void *client_data);
 static void graph_attr_redraw_cb( Attr *attrctx);
 static void graph_attr_close_cb( Attr *attrctx);
-static void graph_attr_store_cb( void *g, grow_tObject object);
-static int graph_attr_recall_cb( void *g, grow_tObject object, int idx, 
-				 GeDyn **old);
 static int graph_attr_set_data_cb( void *g, grow_tObject object, 
 				 GeDyn *data);
 static void graph_graphattr_redraw_cb( Attr *attrctx);
@@ -1974,7 +1971,7 @@ static int graph_reconfigure_attr_cb( void *g, grow_tObject object,
   return 0;
 }
 
-static void graph_attr_store_cb( void *g, grow_tObject object)
+void Graph::graph_attr_store_cb( void *g, grow_tObject object)
 {
   Graph	*graph = (Graph *)g;
   GeDyn *dyn;
@@ -1984,7 +1981,7 @@ static void graph_attr_store_cb( void *g, grow_tObject object)
     graph->recall.insert( dyn, "", object);
 }
 
-static int graph_attr_recall_cb( void *g, grow_tObject object, int idx, 
+int Graph::graph_attr_recall_cb( void *g, grow_tObject object, int idx, 
 				 GeDyn **old_dyn)
 {
   Graph	*graph = (Graph *)g;

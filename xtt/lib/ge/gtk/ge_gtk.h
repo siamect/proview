@@ -136,6 +136,8 @@ class GeGtk : public Ge {
   static void activate_delete( GtkWidget *w, gpointer gectx);
   static void activate_cut( GtkWidget *w, gpointer gectx);
   static void activate_copy( GtkWidget *w, gpointer gectx);
+  static void activate_objattr_store( GtkWidget *w, gpointer gectx);
+  static void activate_objattr_recall( GtkWidget *w, gpointer gectx);
   static void activate_rotate( GtkWidget *w, gpointer gectx);
   static void activate_rotate90( GtkWidget *w, gpointer gectx);
   static void activate_flip_vert( GtkWidget *w, gpointer gectx);

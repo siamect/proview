@@ -54,6 +54,7 @@ menu Process
   subgraph	HandWheel	pwr_exe:pwr_handwheel.pwsg		58
   subgraph	LimitSwitch	pwr_exe:pwr_limitswitch.pwsg	       248
   subgraph	MDamper		pwr_exe:pwr_mdamper.pwsg		55
+  subgraph	MDamper2	pwr_exe:pwr_mdamper2.pwsg		55
   subgraph 	Motor		pwr_exe:pwr_motor.pwsg 			23
   subgraph 	Motor2		pwr_exe:pwr_motor2.pwsg 		65
   subgraph 	MotorAnim	pwr_exe:pwr_motoranim.pwsg 		23
@@ -182,6 +183,7 @@ menu Pushbuttons
   subgraph 	SmallButton 	pwr_exe:pwr_smallbutton.pwsg		95
   subgraph 	SmallButtonCenter pwr_exe:pwr_smallbuttoncenter.pwsg	95
   subgraph 	LargeButton 	pwr_exe:pwr_largebutton.pwsg		7
+  subgraph 	GrayButton 	pwr_exe:pwr_graybutton.pwsg		7
   subgraph 	ButtonInfo 	pwr_exe:pwr_buttoninfo.pwsg		93
   subgraph 	ButtonHelp 	pwr_exe:pwr_buttonhelp.pwsg		94
   subgraph	CheckBox	pwr_exe:pwr_checkbox.pwsg		88
@@ -239,10 +241,12 @@ menu Sliders
   subgraph 	Slider1 	pwr_exe:pwr_slider1.pwsg		37
   subgraph 	SliderBackground1 pwr_exe:pwr_sliderbackground1.pwsg	80
   subgraph 	SliderBackground1_2 pwr_exe:pwr_sliderbackground1_2.pwsg 38
+  subgraph 	SliderBackground1_3 pwr_exe:pwr_sliderbackground1_3.pwsg 38
   subgraph 	Slider2 	pwr_exe:pwr_slider2.pwsg		81
   subgraph 	SliderBackground2 pwr_exe:pwr_sliderbackground2.pwsg	38
   subgraph 	Slider3 	pwr_exe:pwr_slider3.pwsg		78
   subgraph 	SliderBackground3 pwr_exe:pwr_sliderbackground3.pwsg	82
+  subgraph 	Slider4 	pwr_exe:pwr_slider4.pwsg		37
 }
 menu Hydraulics
 {

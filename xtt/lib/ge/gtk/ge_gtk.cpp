@@ -439,6 +439,16 @@ void GeGtk::activate_copy(GtkWidget *w, gpointer gectx)
   ((Ge *)gectx)->activate_copy();
 }
 
+void GeGtk::activate_objattr_store(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_objattr_store();
+}
+
+void GeGtk::activate_objattr_recall(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_objattr_recall();
+}
+
 void GeGtk::activate_rotate(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_rotate();
@@ -1806,6 +1816,18 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   g_signal_connect( edit_change_name, "activate", 
 		    G_CALLBACK(activate_change_name), this);
 
+  GtkWidget *edit_objattr_store = gtk_menu_item_new_with_mnemonic( "O_bject Attributes Store");
+  g_signal_connect( edit_objattr_store, "activate", 
+		    G_CALLBACK(activate_objattr_store), this);
+  gtk_widget_add_accelerator( edit_objattr_store, "activate", accel_g,
+			      's', GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), GTK_ACCEL_VISIBLE);
+
+  GtkWidget *edit_objattr_recall = gtk_menu_item_new_with_mnemonic( "O_bject Attributes Recall");
+  g_signal_connect( edit_objattr_recall, "activate", 
+		    G_CALLBACK(activate_objattr_recall), this);
+  gtk_widget_add_accelerator( edit_objattr_recall, "activate", accel_g,
+			      'd', GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), GTK_ACCEL_VISIBLE);
+
   GtkWidget *edit_command = gtk_menu_item_new_with_mnemonic( "_Command");
   g_signal_connect( edit_command, "activate", 
 		    G_CALLBACK(activate_command), this);
@@ -1824,6 +1846,8 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_create_subgraph);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_change_text);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_change_name);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_objattr_store);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_objattr_recall);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_command);
 
   GtkWidget *edit = gtk_menu_item_new_with_mnemonic("_Edit");
