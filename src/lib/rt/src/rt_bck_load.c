@@ -146,8 +146,10 @@ bck_LoadBackup ()
       errh_Info("BACKUP Loading old file version : %d", fh.version);
       /* Read the cycle data.  */
 
+      BCK_FILEHEAD_STRUCT_V6 *fhp_v6 = (BCK_FILEHEAD_STRUCT_V6 *)&fh;
+
       for (c=0; c<2; c++) {
-        fseek(f, fh.curdata [c], 0);
+        fseek(f, fhp_v6->curdata [c], 0);
 	fread(&ch_old, sizeof ch_old, 1, f);
 
         /* Work thru the data segments */
@@ -197,14 +199,16 @@ bck_LoadBackup ()
     } else if (fh.version == BCK_FILE_VERSION - 1) {
 
       /* Read the cycle data.  */
+      BCK_FILEHEAD_STRUCT_V6 *fhp_v6 = (BCK_FILEHEAD_STRUCT_V6 *)&fh;
+      BCK_CYCLEHEAD_STRUCT_V6 ch_v6;
 
       for (c=0; c<2; c++) {
-        fseek(f, fh.curdata [c], 0);
-	fread(&ch_old, sizeof ch_old, 1, f);
+        fseek(f, fhp_v6->curdata [c], 0);
+	fread(&ch_v6, sizeof ch_v6, 1, f);
 
         /* Work thru the data segments */
 
-        for (d=0; d<ch_old.segments; d++) {
+        for (d=0; d<ch_v6.segments; d++) {
 	  csts = fread(&dh, sizeof dh, 1, f);
 	  if (csts != 0) {
 	    if (dh.namesize > 0) {

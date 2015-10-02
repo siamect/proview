@@ -41,6 +41,7 @@
 #endif
 
 #include "pwr.h"
+#include "rt_net.h"
 
 /* Trace flag: Define BCK_TRACE for trace printouts */
 
@@ -93,14 +94,37 @@ typedef struct {
 
 } BCK_FILEHEAD_STRUCT;
 
+/* File header for Version 6 and previous */
+typedef struct {
+
+	pwr_tInt32	version;	/* File layout version */
+	net_sTime	creationtime;	/* Time when file was created */
+	net_sTime	updatetime [2];	/* Time when header was last updated */
+	pwr_tInt32	curdata [2];	/* backup data 0 for fast cycle, and */
+				/* 1 for slow. Contains file address */
+	pwr_tInt32	cursize [2];	/* size in bytes of curdata areas */
+
+	/* Node identification */
+
+	pwr_tNodeId	nodidx;		/* node index that produced the file */
+
+} BCK_FILEHEAD_STRUCT_V6;
+
 /* Each data section starts with a cycle header.  */
 
 typedef struct {
-	pwr_tTime	objtime;	/* Time up to which new objects are included */
+	net_sTime	objtime;	/* Time up to which new objects are included */
 	pwr_tUInt32	length;		/* Length of section including this header */
 	pwr_tUInt16	cycle;		/* 0=fast, 1=slow */
 	pwr_tUInt16	segments;	/* # of segments in section */
 } BCK_CYCLEHEAD_STRUCT;
+
+typedef struct {
+	net_sTime	objtime;	/* Time up to which new objects are included */
+	pwr_tUInt32	length;		/* Length of section including this header */
+	pwr_tUInt16	cycle;		/* 0=fast, 1=slow */
+	pwr_tUInt32	segments;	/* # of segments in section */
+} BCK_CYCLEHEAD_STRUCT_V6;
 
 typedef struct {
 	pwr_tTime	objtime;	/* Time up to which new objects are included */
