@@ -1663,6 +1663,8 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 
   GtkWidget *file_save_as = gtk_image_menu_item_new_from_stock(GTK_STOCK_SAVE_AS, accel_g);
   g_signal_connect(file_save_as, "activate", G_CALLBACK(activate_save_as), this);
+  gtk_widget_add_accelerator( file_save_as, "activate", accel_g,
+			      's', GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), GTK_ACCEL_VISIBLE);
 
   GtkWidget *file_build = gtk_image_menu_item_new_with_mnemonic("_Build");
   g_signal_connect(file_build, "activate", G_CALLBACK(activate_build), this);
@@ -1820,7 +1822,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   g_signal_connect( edit_objattr_store, "activate", 
 		    G_CALLBACK(activate_objattr_store), this);
   gtk_widget_add_accelerator( edit_objattr_store, "activate", accel_g,
-			      's', GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), GTK_ACCEL_VISIBLE);
+			      'a', GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), GTK_ACCEL_VISIBLE);
 
   GtkWidget *edit_objattr_recall = gtk_menu_item_new_with_mnemonic( "O_bject Attributes Recall");
   g_signal_connect( edit_objattr_recall, "activate", 
