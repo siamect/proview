@@ -58,7 +58,7 @@ GrowMenu::GrowMenu( GrowCtx *glow_ctx, const char *name, glow_sMenuInfo *menu_in
 		glow_mDisplayLevel_1,fill_rect,display_border,0,fill_d_type,1),
 	        info(*menu_info), text_size(t_size),  text_drawtype(t_drawtype), 
 		text_color(t_color), text_color_disabled(t_color_disabled),
-		item_cnt(0), item_height(0), current_item(-1), new_item(0), old_item(-1), 
+		item_cnt(0), item_height(0), current_item(-1), current_idx(-1), new_item(0), old_item(-1), 
 		parent_menu(parent), min_width(min_w), input_focus(0), font(t_font)
 {
   if ( !nodraw)
@@ -353,10 +353,10 @@ int GrowMenu::local_event_handler( GlowWind *w, glow_eEvent event, double x, dou
       item = item_cnt - 1;
     if ( item < 0)
       item = 0;
-    if ( item != current_item) {
+    if ( item != current_idx) {
       new_item = 1;
       old_item = current_item;
-      current_item = item;
+      current_idx = item;
       for ( int i = 0, item_idx = 0; i < 32; i++) {
 	if ( !info.item[i].occupied)
 	  continue;

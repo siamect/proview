@@ -133,6 +133,7 @@ class GrowMenu : public GrowRect {
   int			item_cnt;		//!< Number of menu items.
   double		item_height;		//!< Menu item height in pixel.
   int			current_item;		//!< Hot item.
+  int			current_idx;		//!< Current index.
   int			new_item;		//!< New current item.
   int			old_item;		//!< Current item in previous event.
   GlowArrayElem		*parent_menu;		//!< Parent menu.
