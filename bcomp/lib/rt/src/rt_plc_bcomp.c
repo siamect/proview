@@ -206,6 +206,12 @@ void CompModePID_Fo_exec( plc_sThread *tp,
       co->ForcVal = co->OutVal;
     }
   }
+
+  if ( co->SetVal < co->MinOut)
+    co->SetVal = co->MinOut;
+  else if ( co->SetVal > co->MaxOut)
+    co->SetVal = co->MaxOut;
+
   /* Transfer to outputs */
   o->SetVal = co->SetVal;
   o->ForcVal = co->ForcVal;
