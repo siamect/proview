@@ -217,7 +217,7 @@ dcli_tCmdTable	graph_command_table[] = {
 		{
 			"SELECT",
 			&graph_select_func,
-			{"dcli_arg1", ""}
+			{"dcli_arg1", "/NAME", ""}
 		},
 		{
 			"EXPORT",
@@ -1680,22 +1680,35 @@ static int	graph_select_func(	void		*client_data,
   Graph *graph = (Graph *)client_data;
 
   char	arg1_str[80];
-  int	arg1_sts;
-	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+  int	arg1_sts;	
+  char  name_str[80];
 
-  if ( cdh_NoCaseStrncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
-  {
-    grow_SetHighlight( graph->current_cmd_object, 1);
-    grow_SelectInsert( graph->grow->ctx, graph->current_cmd_object);
+  if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
+    grow_tObject object;
+    int sts;
+
+    sts = grow_FindObjectByName( graph->grow->ctx, name_str, &object);
+    if ( EVEN(sts)) {
+      graph->message('E', "No such object");
+      return sts;
+    }
+    grow_SetHighlight( object, 1);
+    grow_SelectInsert( graph->grow->ctx, object);
   }
-  else if ( cdh_NoCaseStrncmp( arg1_str, "CLEAR", strlen( arg1_str)) == 0)
-  {
-    grow_SelectClear( graph->grow->ctx);
-  }
-  else
-  {
-    graph->message('E', "Syntax error");
+  else {
+    arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+    if ( cdh_NoCaseStrncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0) {
+      grow_SetHighlight( graph->current_cmd_object, 1);
+      grow_SelectInsert( graph->grow->ctx, graph->current_cmd_object);
+    }
+    else if ( cdh_NoCaseStrncmp( arg1_str, "CLEAR", strlen( arg1_str)) == 0) {
+      grow_SelectClear( graph->grow->ctx);
+    }
+    else {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
   }
   return GE__SUCCESS;
 }
