@@ -5223,6 +5223,7 @@ int GeAnalogColor::connect( grow_tObject object, glow_sTraceData *trace_data)
     switch ( e->type) {
     case pwr_eType_Float32:
     case pwr_eType_Int32:
+    case pwr_eType_UInt32:
       break;
     default:
       return 1;
@@ -5298,7 +5299,8 @@ int GeAnalogColor::scan( grow_tObject object)
     memcpy( &old_value, &val, size);
     break;
   }
-  case pwr_eType_Int32: {
+  case pwr_eType_Int32:
+  case pwr_eType_UInt32: {
     pwr_tInt32 val = *(pwr_tInt32 *)p;
 
     if ( !first_scan) {
