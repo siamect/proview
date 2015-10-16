@@ -4026,8 +4026,16 @@ int GeValue::connect( grow_tObject object, glow_sTraceData *trace_data)
     case pwr_eType_Mask: {
       // Get attribute tid
       pwr_sAttrRef ar;
+      pwr_tAName aname;
 
-      sts = gdh_NameToAttrref( pwr_cNObjid, parsed_name, &ar);
+      if ( parsed_name[0] == '&') {
+	sts = dyn->graph->get_reference_name( parsed_name, aname);
+	if ( EVEN(sts)) return sts;
+      }
+      else
+	strcpy( aname, parsed_name);
+
+      sts = gdh_NameToAttrref( pwr_cNObjid, aname, &ar);
       if ( EVEN(sts)) break;
       sts = gdh_GetAttrRefTid( &ar, &tid);
       break;
