@@ -10267,19 +10267,28 @@ int GeAxis::connect( grow_tObject object, glow_sTraceData *trace_data)
   int 		attr_type_min, attr_type_max;
   int		min_found = 0;
   int		max_found = 0;
+  int		db;
 
   imin_value = (int)(min_value + (min_value>= 0?1:-1) * 0.5);
   imax_value = (int)(max_value + (max_value>= 0?1:-1) * 0.5);
   min_value_p = 0;
   imin_value_p = 0;
 
-  dyn->parse_attr_name( minvalue_attr, parsed_name,
-				    &inverted, &attr_type_min, &attr_size);
+  db = dyn->parse_attr_name( minvalue_attr, parsed_name,
+			     &inverted, &attr_type_min, &attr_size);
   if ( strcmp(parsed_name, "") != 0) {
     switch ( attr_type_min) {
     case pwr_eType_Float32:
-      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
+      switch ( db) {
+      case graph_eDatabase_Gdh:
+	sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
 					 &min_value_subid, attr_size);
+	break;
+      case graph_eDatabase_Local:
+	min_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type_min);
+      default:
+	;
+      }
       min_found = 1;
       break;
     case pwr_eType_Int32:
@@ -10299,13 +10308,20 @@ int GeAxis::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   max_value_p = 0;
   imax_value_p = 0;
-  dyn->parse_attr_name( maxvalue_attr, parsed_name,
-				    &inverted, &attr_type_max, &attr_size);
+  db = dyn->parse_attr_name( maxvalue_attr, parsed_name,
+			     &inverted, &attr_type_max, &attr_size);
   if ( strcmp(parsed_name, "") != 0) {
     switch ( attr_type_max) {
     case pwr_eType_Float32:
-      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
-					 &max_value_subid, attr_size);
+      switch ( db) {
+      case graph_eDatabase_Gdh:
+	sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
+					   &max_value_subid, attr_size);
+      case graph_eDatabase_Local:
+	max_value_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type_max);
+      default:
+	;
+      }
       max_found = 1;
       break;
     case pwr_eType_Int32:
