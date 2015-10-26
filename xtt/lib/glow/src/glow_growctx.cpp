@@ -2310,6 +2310,8 @@ void GrowCtx::open_grow( ifstream& fp)
       mw.set_double_buffered( double_buffered);
   }
 
+  if ( environment == glow_eEnv_Runtime)
+    grid_on = 0;
   if ( gdraw)
     set_background( background_color);
 }
