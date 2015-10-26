@@ -2577,6 +2577,8 @@ GetCurrentObject()	<LINK> getcurrentobject()
 pwr_get_config()	<LINK> pwr_get_config()
 get_node_name()		<LINK> get_node_name()
 get_language()		<LINK> get_language()
+GetUser()		<LINK> getuser()
+GetPrivileges()		<LINK> getprivileges()
 
 <h2>xtt-commands
 xtt-commands		<LINK> xtt-commands
@@ -3785,6 +3787,8 @@ GetCurrentObject() <t>Hämta utvalt objekt.	<LINK> getcurrentobject()
 pwr_get_config() <t>Hämta konfigurations-värden <LINK> pwr_get_config()
 get_node_name() <t>Hämta nodnamn <LINK> get_node_name()
 get_language()	<t>Hämta nuvarande språk <LINK> get_language()
+GetUser() 	<t>Hämta nuvarande användare. <LINK> getuser()
+GetPrivileges()	<t>Hämta privilegier för nuvarande användare. <LINK> getprivileges()
 </TOPIC>
 
 <headerlevel>
@@ -3922,6 +3926,41 @@ string				<t><t>Nuvarande språk, t.ex. en_us, sv_se, de_de.
 <c>  endif
 <c>  if ( lng == "en_us")
 <c>    create opmenu/name="Functions-ProcessGraphs-Overview"/command="open graph overview"
+<c>  endif
+</TOPIC>
+<TOPIC> getuser() <style> function
+GetUser()
+
+string GetUser()
+
+<b>Beskrivning
+
+Hämta nuvarande användare.
+
+<b>Exempel
+
+<c>  string user;
+
+<c>  user = GetUser();
+</TOPIC>
+
+<TOPIC> getprivileges() <style> function
+GetPrivileges()
+
+int GetPrivileges()
+
+<b>Beskrivning
+
+Hämta privilegier för nuvarande användare.
+
+<b>Exempel
+
+<c>  int priv;
+
+<c>  priv = GetPrivileges();
+<c>  if ( priv & 4)
+<c>    # Has system privilege
+<c>    ...
 <c>  endif
 </TOPIC>
 </headerlevel>

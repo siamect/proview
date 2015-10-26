@@ -8290,6 +8290,50 @@ static int xnav_setattribute_func(
   return 1;
 }
 
+static int xnav_getuser_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  XNav		*xnav;
+
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  xnav_get_stored_xnav( &xnav);
+
+  strcpy( return_string, xnav->user);
+  *return_decl = CCM_DECL_STRING;
+  
+  return 1;
+}
+
+static int xnav_getprivileges_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  XNav		*xnav;
+
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  xnav_get_stored_xnav( &xnav);
+
+  *return_int = xnav->priv;
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
 static int xnav_ccm_deffilename_func( char *outfile, char *infile, void *client_data)
 {
   pwr_tFileName fname;
@@ -8368,6 +8412,10 @@ int XNav::readcmdfile( 	char *incommand, char *buffer)
 	  sts = ccm_register_function( "SetAttribute", xnav_setattribute_func);
 	  if ( EVEN(sts)) return sts;
 	  sts = ccm_register_function( "ConfirmDialog", xnav_confirmdialog_func);
+	  if ( EVEN(sts)) return sts;
+	  sts = ccm_register_function( "GetUser", xnav_getuser_func);
+	  if ( EVEN(sts)) return sts;
+	  sts = ccm_register_function( "GetPrivileges", xnav_getprivileges_func);
 	  if ( EVEN(sts)) return sts;
 
 	  sts = ccm_create_external_var( "GLOW__SUBTERMINATED", CCM_DECL_INT, 0, GLOW__SUBTERMINATED, 0);

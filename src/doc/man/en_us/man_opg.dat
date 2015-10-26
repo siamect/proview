@@ -2804,6 +2804,8 @@ GetCurrentObject()	<LINK> getcurrentobject()
 pwr_get_config()	<LINK> pwr_get_config()
 get_node_name()		<LINK> get_node_name()
 get_language()		<LINK> get_language()
+GetUser()		<LINK> getuser()
+GetPrivileges()		<LINK> getprivileges()
 
 <h2>xtt-commands
 xtt-commands		<LINK> xtt-commands
@@ -4022,6 +4024,8 @@ GetCurrentObject() <t>Get selected object. <LINK> getcurrentobject()
 pwr_get_config() <t>Get configuration values <LINK> pwr_get_config()
 get_node_name() <t>Get node name <LINK> get_node_name()
 get_language()	<t>Get the current language <LINK> get_language()
+GetUser() 	<t>Get the current user. <LINK> getuser()
+GetPrivileges()	<t>Get the privileges for the current user. <LINK> getprivileges()
 </TOPIC>
 
 <headerlevel>
@@ -4160,6 +4164,43 @@ string				<t><t>The current langage, e.g en_us, sv_se, de_de.
 <c>    create opmenu/name="Functions-ProcessGraphs-Overview"/command="open graph overview"
 <c>  endif
 </TOPIC>
+
+<TOPIC> getuser() <style> function
+GetUser()
+
+string GetUser()
+
+<b>Description
+
+Get the current user.
+
+<b>Example
+
+<c>  string user;
+
+<c>  user = GetUser();
+</TOPIC>
+
+<TOPIC> getprivileges() <style> function
+GetPrivileges()
+
+int GetPrivileges()
+
+<b>Description
+
+Get the privileges for the current user.
+
+<b>Example
+
+<c>  int priv;
+
+<c>  priv = GetPrivileges();
+<c>  if ( priv & 4)
+<c>    # Has system privilege
+<c>    ...
+<c>  endif
+</TOPIC>
+
 </headerlevel>
 
 <TOPIC> xtt-commands <style> function
