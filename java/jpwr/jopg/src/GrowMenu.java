@@ -48,7 +48,8 @@ public class GrowMenu extends GrowRect {
     int		text_color_disabled;	//!< Color for disabled button text.
     int	       	item_cnt;		//!< Number of menu items.
     double     	item_height;		//!< Menu item height in pixel.
-    int	       	current_item;		//!< Hot item.
+    int	       	current_item = -1;     	//!< Hot item.
+    int		current_idx = -1;       //!< Hot index.
     int	       	new_item;		//!< New current item.
     int	       	old_item;		//!< Current item in previous event.
     GlowArrayElem parent_menu;		//!< Parent menu.
@@ -217,10 +218,10 @@ public class GrowMenu extends GrowRect {
 		item = item_cnt - 1;
 	    if ( item < 0)
 		item = 0;
-	    if ( item != current_item) {
+	    if ( item != current_idx) {
 		new_item = 1;
 		old_item = current_item;
-		current_item = item;
+		current_idx = item;
 		for ( int i = 0, item_idx = 0; i < 32; i++) {
 		    if ( !info.item[i].occupied)
 			continue;

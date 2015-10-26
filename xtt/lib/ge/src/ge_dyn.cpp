@@ -17329,6 +17329,11 @@ void GeMethodToolbar::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( method_object);
 
+  strcpy( attrinfo[i].name, "MethodToolbar.ToolbarType");
+  attrinfo[i].value = &toolbar_type;
+  attrinfo[i].type = ge_eAttrType_MethodToolbarType;
+  attrinfo[i++].size = sizeof( toolbar_type);
+
   dyn->display_access = true;
   *item_count = i;
 }
@@ -17355,6 +17360,7 @@ void GeMethodToolbar::save( ofstream& fp)
 {
   fp << int(ge_eSave_MethodToolbar) << endl;
   fp << int(ge_eSave_MethodToolbar_method_object) << FSPACE << method_object << endl;
+  fp << int(ge_eSave_MethodToolbar_toolbar_type) << FSPACE << (int) toolbar_type << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -17363,6 +17369,7 @@ void GeMethodToolbar::open( ifstream& fp)
   int		type;
   int 		end_found = 0;
   char		dummy[40];
+  int		tmp;
 
   for (;;)
   {
@@ -17380,6 +17387,7 @@ void GeMethodToolbar::open( ifstream& fp)
         fp.get();
         fp.getline( method_object, sizeof(method_object));
         break;
+      case ge_eSave_MethodToolbar_toolbar_type: fp >> tmp; toolbar_type = (ge_eMethodToolbarType)tmp; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeMethodToolbar:open syntax error" << endl;
@@ -17429,6 +17437,9 @@ int GeMethodToolbar::connect( grow_tObject object, glow_sTraceData *trace_data)
     insensitive_mntmask |= pwr_mXttMntMethodsMask_RtNavigator;
   if ( !dyn->graph->is_authorized( pwr_mAccess_RtPlc | pwr_mAccess_System))
     insensitive_mntmask |= pwr_mXttMntMethodsMask_OpenTrace;  
+
+  if ( toolbar_type == ge_eMethodToolbarType_Simulate)
+    opmask = 0;
 
   grow_ToolbarConfigure( object, (char *)GeMethods::op_subgraph, (char *)GeMethods::mnt_subgraph,
 			 GeMethods::opmeth_size, GeMethods::mntmeth_size, opmask, mntmask,
@@ -17502,10 +17513,10 @@ void GeMethodPulldownMenu::get_attributes( attr_sItem *attrinfo, int *item_count
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( method_object);
 
-  strcpy( attrinfo[i].name, "MethodPulldownMenu.HelpMenu");
-  attrinfo[i].value = &help_menu;
-  attrinfo[i].type = glow_eType_Boolean;
-  attrinfo[i++].size = sizeof( help_menu);
+  strcpy( attrinfo[i].name, "MethodPulldownMenu.MenuType");
+  attrinfo[i].value = &menu_type;
+  attrinfo[i].type = ge_eAttrType_MethodsMenuType;
+  attrinfo[i++].size = sizeof( menu_type);
 
   dyn->display_access = true;
   *item_count = i;
@@ -17515,7 +17526,7 @@ void GeMethodPulldownMenu::save( ofstream& fp)
 {
   fp << int(ge_eSave_MethodPulldownMenu) << endl;
   fp << int(ge_eSave_MethodPulldownMenu_method_object) << FSPACE << method_object << endl;
-  fp << int(ge_eSave_MethodPulldownMenu_help_menu) << FSPACE << help_menu << endl;
+  fp << int(ge_eSave_MethodPulldownMenu_menu_type) << FSPACE << menu_type << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -17524,6 +17535,7 @@ void GeMethodPulldownMenu::open( ifstream& fp)
   int		type;
   int 		end_found = 0;
   char		dummy[40];
+  int		tmp;
 
   for (;;)
   {
@@ -17541,7 +17553,7 @@ void GeMethodPulldownMenu::open( ifstream& fp)
       fp.get();
       fp.getline( method_object, sizeof(method_object));
       break;
-    case ge_eSave_MethodPulldownMenu_help_menu: fp >> help_menu; break;
+    case ge_eSave_MethodPulldownMenu_menu_type: fp >> tmp; menu_type = (ge_eMethodsMenuType)tmp; break;
     case ge_eSave_End: end_found = 1; break;
     default:
       cout << "GeMethodPulldownMenu:open syntax error" << endl;
@@ -17695,7 +17707,9 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
 	if ( strcmp( GeMethods::op_name[i], "") == 0)
 	  continue;
 
-	if ( help_menu && !(GeMethods::op_helpmask & (1 << i)))
+	if ( menu_type == ge_eMethodsMenuType_Help && !(GeMethods::op_helpmask & (1 << i)))
+	  continue;
+	if ( menu_type == ge_eMethodsMenuType_Simulate)
 	  continue;
   
 	if ( opmask & (1 << i)) {
@@ -17714,7 +17728,7 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
 	if ( strcmp( GeMethods::mnt_name[i], "") == 0)
 	  continue;
 
-	if ( help_menu && !(GeMethods::mnt_helpmask & (1 << i)))
+	if ( menu_type == ge_eMethodsMenuType_Help && !(GeMethods::mnt_helpmask & (1 << i)))
 	  continue;
 
 	if ( mntmask & (1 << i)) {
@@ -17772,7 +17786,9 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
     int found = 0;
 
     for ( int i = 0; i < GeMethods::opmeth_size; i++) {
-      if ( help_menu && !(GeMethods::op_helpmask & (1 << i)))
+      if ( menu_type == ge_eMethodsMenuType_Help && !(GeMethods::op_helpmask & (1 << i)))
+	continue;
+      if ( menu_type == ge_eMethodsMenuType_Simulate)
 	continue;
 
       if ( opmask & (1 << i))
@@ -17789,7 +17805,7 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
 
     if ( !found) {
       for ( int i = 0; i < GeMethods::mntmeth_size; i++) {
-	if ( help_menu && !(GeMethods::mnt_helpmask & (1 << i)))
+	if ( menu_type == ge_eMethodsMenuType_Help && !(GeMethods::mnt_helpmask & (1 << i)))
 	  continue;
 
 	if ( mntmask & (1 << i))

@@ -994,6 +994,17 @@ static attrnav_sEnumElement elem_optionmenu_type[] = {
 	{ (unsigned int) ge_eOptionMenuType_Dynamic, "Dynamic"},
 	{ 0, ""}};
 
+static attrnav_sEnumElement elem_methodsmenu_type[] = {
+	{ (unsigned int) ge_eMethodsMenuType_Object,  "Object"},
+	{ (unsigned int) ge_eMethodsMenuType_Help,    "Help"},
+	{ (unsigned int) ge_eMethodsMenuType_Simulate,"Simulate"},
+	{ 0, ""}};
+
+static attrnav_sEnumElement elem_methodtoolbar_type[] = {
+	{ (unsigned int) ge_eMethodToolbarType_Object,  "Object"},
+	{ (unsigned int) ge_eMethodToolbarType_Simulate,"Simulate"},
+	{ 0, ""}};
+
 static attrnav_sEnum enum_types[] = {
 	{ (unsigned int) glow_eType_Direction, 	(attrnav_sEnumElement *) &elem_direction},
 	{ (unsigned int) glow_eType_Color, 	(attrnav_sEnumElement *) &elem_color},
@@ -1015,6 +1026,8 @@ static attrnav_sEnum enum_types[] = {
 	{ (unsigned int) glow_eType_AppMotion, (attrnav_sEnumElement *) &elem_app_motion},
 	{ (unsigned int) glow_eType_AnnotType, 	(attrnav_sEnumElement *) &elem_annot_type},
 	{ (unsigned int) ge_eAttrType_OptionMenuType, (attrnav_sEnumElement *) &elem_optionmenu_type},
+	{ (unsigned int) ge_eAttrType_MethodsMenuType, (attrnav_sEnumElement *) &elem_methodsmenu_type},
+	{ (unsigned int) ge_eAttrType_MethodToolbarType, (attrnav_sEnumElement *) &elem_methodtoolbar_type},
 	{ 0, NULL}};
 
 static attrnav_sEnum mask_types[] = {
@@ -1155,6 +1168,8 @@ int  attrnav_attr_string_to_value( int type_id, char *value_str,
     case ge_eAttrType_ScaleType:
     case ge_eAttrType_CurveDataType:
     case ge_eAttrType_OptionMenuType:
+    case ge_eAttrType_MethodsMenuType:
+    case ge_eAttrType_MethodToolbarType:
     {
       if ( sscanf( value_str, "%u", (int *)buffer_ptr) != 1)
         return ATTRNAV__INPUT_SYNTAX;
@@ -1237,6 +1252,8 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
     case ge_eAttrType_ScaleType:
     case ge_eAttrType_CurveDataType:
     case ge_eAttrType_OptionMenuType:
+    case ge_eAttrType_MethodsMenuType:
+    case ge_eAttrType_MethodToolbarType:
     {
       attrnav_sEnumElement	*elem_p;
       attrnav_sEnum		*enum_p;
@@ -2341,6 +2358,8 @@ ItemLocal::ItemLocal( AttrNav *attrnav, const char *item_name, const char *attr,
     case ge_eAttrType_ScaleType:
     case ge_eAttrType_CurveDataType:
     case ge_eAttrType_OptionMenuType:
+    case ge_eAttrType_MethodsMenuType:
+    case ge_eAttrType_MethodToolbarType:
       if ( !noedit)
       {
         brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrarray);

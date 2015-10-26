@@ -101,6 +101,8 @@ typedef enum {
   ge_eAttrType_ScaleType      	= 1008,				//!< Scale type.
   ge_eAttrType_CurveDataType   	= 1009,				//!< Data type for XY_Curve.
   ge_eAttrType_OptionMenuType   = 1010,				//!< OptionMenu type.
+  ge_eAttrType_MethodsMenuType  = 1011,				//!< MethodsMenu type.
+  ge_eAttrType_MethodToolbarType  = 1012,	       		//!< MethodToolbar type.
   ge_eAttrType_DynType2        	= glow_eType_DynType2,  	//!< DynType mask 2.
   ge_eAttrType_ActionType2      = glow_eType_ActionType2,  	//!< ActionType mask 2.
 } ge_eAttrType;

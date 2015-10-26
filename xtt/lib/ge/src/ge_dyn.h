@@ -117,6 +117,19 @@
     ge_ePwrStatus_Fatal
   } ge_ePwrStatus;
   
+  //! MethodsPulldownMenu types
+  typedef enum {
+    ge_eMethodsMenuType_Object,
+    ge_eMethodsMenuType_Help,
+    ge_eMethodsMenuType_Simulate
+  } ge_eMethodsMenuType;
+  
+  //! MethodToolbar types
+  typedef enum {
+    ge_eMethodToolbarType_Object,
+    ge_eMethodToolbarType_Simulate
+  } ge_eMethodToolbarType;
+  
 
   //! Priority order for dyntypes and actiontypes. Lower value gives higher priority.
   typedef enum {
@@ -735,8 +748,9 @@
     ge_eSave_SetValue_instance		= 7002,
     ge_eSave_SetValue_instance_mask     = 7003,
     ge_eSave_MethodToolbar_method_object = 7100,
+    ge_eSave_MethodToolbar_toolbar_type = 7101,
     ge_eSave_MethodPulldownMenu_method_object = 7200,
-    ge_eSave_MethodPulldownMenu_help_menu = 7201,
+    ge_eSave_MethodPulldownMenu_menu_type = 7201,
     ge_eSave_Script_script_len		= 7300,
     ge_eSave_Script_script		= 7301
   } ge_eSave;
@@ -2888,25 +2902,16 @@ class GeSetValue : public GeDynElem {
 class GeMethodToolbar : public GeDynElem {
  public:
   pwr_tAName method_object;
+  ge_eMethodToolbarType toolbar_type;
 
   static unsigned int method_toolbar_op_helpmask;
   static unsigned int method_toolbar_mnt_helpmask;
-#if 0
-  static int method_toolbar_op_cnt;
-  static char method_toolbar_op_subgraph[32][80];
-  static char method_toolbar_op_methods[32][80];
-  static char method_toolbar_op_tooltip[32][80];
-  static int method_toolbar_mnt_cnt;
-  static char method_toolbar_mnt_subgraph[32][80];
-  static char method_toolbar_mnt_methods[32][80];
-  static char method_toolbar_mnt_tooltip[32][80];
-#endif
 
   GeMethodToolbar( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
-    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_MethodToolbar, ge_mActionType2_No, ge_eDynPrio_MethodToolbar)
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_MethodToolbar, ge_mActionType2_No, ge_eDynPrio_MethodToolbar), toolbar_type(ge_eMethodToolbarType_Object)
     { strcpy( method_object, ""); instance = e_instance;}
   GeMethodToolbar( const GeMethodToolbar& x) : 
-    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), toolbar_type(x.toolbar_type)
     { strcpy( method_object, x.method_object);
     instance = x.instance, instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
@@ -2924,7 +2929,7 @@ class GeMethodToolbar : public GeDynElem {
 class GeMethodPulldownMenu : public GeDynElem {
  public:
   pwr_tAName method_object;
-  pwr_tBoolean help_menu;
+  ge_eMethodsMenuType menu_type;
   grow_tObject menu_object;
   pwr_tTime focus_gained_time;
   unsigned int opmask;
@@ -2932,10 +2937,10 @@ class GeMethodPulldownMenu : public GeDynElem {
 
   GeMethodPulldownMenu( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_MethodPulldownMenu, ge_mActionType2_No, ge_eDynPrio_MethodPulldownMenu),
-    help_menu(0), menu_object(0)
+    menu_type(ge_eMethodsMenuType_Object), menu_object(0)
     { strcpy( method_object, "");}
   GeMethodPulldownMenu( const GeMethodPulldownMenu& x) : 
-    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), help_menu(x.help_menu),
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), menu_type(x.menu_type),
     menu_object(0)    
     { strcpy( method_object, x.method_object);
     instance = x.instance, instance_mask = x.instance_mask;}

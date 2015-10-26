@@ -65,6 +65,8 @@ public class JopgCcm {
 	ccm.registerFunction( new CcmFuncCutObjectName("CutObjectName"));
 	ccm.registerFunction( new CcmFuncGetCurrentObject("GetCurrentObject"));
 	ccm.registerFunction( new CcmFuncGetCurrentText("GetCurrentText"));
+	ccm.registerFunction( new CcmFuncGetUser("GetUser"));
+	ccm.registerFunction( new CcmFuncGetPrivileges("GetPrivileges"));
 
 	CcmFileReturn fret;
 	if ( cmd != null)
@@ -762,6 +764,7 @@ public class JopgCcm {
 	    return ret;
 	}
     }
+
     public class CcmFuncGetCurrentText extends CcmSysFunc {
 	public CcmFuncGetCurrentText( String name) {
 	    super(name);
@@ -778,6 +781,44 @@ public class JopgCcm {
 	    // NYI
 	    ret.rstring = "";
 	    ret.decl = Ccm.K_DECL_STRING;	    
+	    return ret;
+	}
+    }
+
+    public class CcmFuncGetUser extends CcmSysFunc {
+	public CcmFuncGetUser( String name) {
+	    super(name);
+	}
+
+	public CcmReturn func( CcmFileCtx filectx, CcmArg[] args) {
+	    int sts;
+	    CcmReturn ret = new CcmReturn();
+
+	    if ( args.length != 0) {
+		ret.sts = Ccm.CCM__ARGMISM;
+		return ret;
+	    }
+	    ret.rstring = gdh.getUser();
+	    ret.decl = Ccm.K_DECL_STRING;	    
+	    return ret;
+	}
+    }
+
+    public class CcmFuncGetPrivileges extends CcmSysFunc {
+	public CcmFuncGetPrivileges( String name) {
+	    super(name);
+	}
+
+	public CcmReturn func( CcmFileCtx filectx, CcmArg[] args) {
+	    int sts;
+	    CcmReturn ret = new CcmReturn();
+
+	    if ( args.length != 0) {
+		ret.sts = Ccm.CCM__ARGMISM;
+		return ret;
+	    }
+	    ret.rint = gdh.getPrivilege();
+	    ret.decl = Ccm.K_DECL_INT;	    
 	    return ret;
 	}
     }

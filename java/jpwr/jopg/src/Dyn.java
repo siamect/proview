@@ -648,8 +648,9 @@ public class Dyn {
     public static final int eSave_SetValue_instance		= 7002;
     public static final int eSave_SetValue_instance_mask     	= 7003;
     public static final int eSave_MethodToolbar_method_object   = 7100;
+    public static final int eSave_MethodToolbar_toolbar_type    = 7101;
     public static final int eSave_MethodPulldownMenu_method_object = 7200;
-    public static final int eSave_MethodPulldownMenu_help_menu  = 7201;
+    public static final int eSave_MethodPulldownMenu_menu_type  = 7201;
     public static final int eSave_Script_script_len		= 7300;
     public static final int eSave_Script_script			= 7301;
 
@@ -669,6 +670,13 @@ public class Dyn {
     public static final int ePwrStatus_Warning		= 2;
     public static final int ePwrStatus_Error		= 3;
     public static final int ePwrStatus_Fatal		= 4;
+
+    public static final int eMethodsMenuType_Object	= 0;
+    public static final int eMethodsMenuType_Help	= 1;
+    public static final int eMethodsMenuType_Simulate	= 2;
+
+    public static final int eMethodToolbarType_Object	= 0;
+    public static final int eMethodToolbarType_Simulate	= 1;
 
     public static final boolean debug = false;
 
@@ -3664,7 +3672,7 @@ public class Dyn {
 		}
 		oldValueF = value;
 	    }
-	    else if ( a_typeid == Pwr.eType_Int32) {
+	    else if ( a_typeid == Pwr.eType_Int32 || a_typeid == Pwr.eType_UInt32) {
 		int value = dyn.graph.getGdh().getObjectRefInfoInt( p);
 		int i;
 		if ( !firstScan) {
@@ -12016,6 +12024,7 @@ public class Dyn {
 
     public class DynMethodToolbar extends DynElem {
 	String method_object;
+	int toolbar_type;
 
 	public DynMethodToolbar( Dyn dyn) {
 	    super(dyn, 0, 0, Dyn.mActionType1_MethodToolbar, 0, Dyn.eDynPrio_MethodToolbar);
@@ -12043,6 +12052,9 @@ public class Dyn {
 		    case Dyn.eSave_MethodToolbar_method_object: 
 			if ( token.hasMoreTokens())
 			    method_object = token.nextToken();
+			break;
+		    case Dyn.eSave_MethodToolbar_toolbar_type: 
+			toolbar_type = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -12157,6 +12169,9 @@ public class Dyn {
 	    if ( !dyn.graph.isAuthorized( Pwr.mAccess_RtPlc | Pwr.mAccess_System))
 		insensitive_mntmask |= Pwrb.mXttMntMethodsMask_OpenTrace;  
 
+	    if ( toolbar_type == eMethodToolbarType_Simulate)
+		opmask = 0;
+
 	    object.configure( method_toolbar_op_subgraph, method_toolbar_mnt_subgraph,
 			      method_toolbar_op_cnt, method_toolbar_mnt_cnt, opmask, mntmask,
 			      insensitive_opmask, insensitive_mntmask);
@@ -12232,7 +12247,7 @@ public class Dyn {
 
     public class DynMethodPulldownMenu extends DynElem {
 	String method_object;
-	int help_menu;
+	int menu_type;
 	int opmask;
 	int mntmask;
 	GrowMenu menu_object;
@@ -12265,8 +12280,8 @@ public class Dyn {
 			if ( token.hasMoreTokens())
 			    method_object = token.nextToken();
 			break;
-		    case Dyn.eSave_MethodPulldownMenu_help_menu: 
-			help_menu = Integer.valueOf(token.nextToken());
+		    case Dyn.eSave_MethodPulldownMenu_menu_type: 
+			menu_type = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -12402,7 +12417,9 @@ public class Dyn {
 			if ( menu_idx >= 32)
 			    break;
 
-			if ( help_menu != 0 && (Dyn.method_toolbar_op_helpmask & (1 << i)) == 0)
+			if ( menu_type == eMethodsMenuType_Help && (Dyn.method_toolbar_op_helpmask & (1 << i)) == 0)
+			    continue;
+			if ( menu_type == eMethodsMenuType_Simulate)
 			    continue;
   
 			if ( (opmask & (1 << i)) != 0) {
@@ -12418,7 +12435,7 @@ public class Dyn {
 			if ( menu_idx >= 32)
 			    break;
 
-			if ( help_menu != 0 && (Dyn.method_toolbar_mnt_helpmask & (1 << i)) == 0)
+			if ( menu_type == eMethodsMenuType_Help && (Dyn.method_toolbar_mnt_helpmask & (1 << i)) == 0)
 			    continue;
 
 			if ( (mntmask & (1 << i)) != 0) {
@@ -12471,7 +12488,9 @@ public class Dyn {
 		    int found = 0;
 
 		    for ( int i = 0; i < Dyn.method_toolbar_op_cnt; i++) {
-			if ( help_menu != 0 && (Dyn.method_toolbar_op_helpmask & (1 << i)) == 0)
+			if ( menu_type != eMethodsMenuType_Help && (Dyn.method_toolbar_op_helpmask & (1 << i)) == 0)
+			    continue;
+			if ( menu_type != eMethodsMenuType_Simulate)
 			    continue;
 
 			if ( (opmask & (1 << i)) != 0)
@@ -12488,7 +12507,7 @@ public class Dyn {
 
 		    if ( found == 0) {
 			for ( int i = 0; i < Dyn.method_toolbar_mnt_cnt; i++) {
-			    if ( help_menu != 0 && (Dyn.method_toolbar_mnt_helpmask & (1 << i)) == 0)
+			    if ( menu_type == eMethodsMenuType_Help && (Dyn.method_toolbar_mnt_helpmask & (1 << i)) == 0)
 				continue;
 
 			    if ( (mntmask & (1 << i)) != 0)
