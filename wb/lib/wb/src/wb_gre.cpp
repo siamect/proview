@@ -2941,8 +2941,16 @@ int WGre::undisplay()
 //
 int WGre::node_select( vldh_t_node node)
 {
-  flow_SelectInsert( flow_ctx, node->hn.node_id);
-  flow_SetHighlight( node->hn.node_id, 1); 
+	/* Check if a connection is selected or not */
+	if (node->hn.vldhtype == VLDH_CON) {
+		flow_SelectInsert(flow_ctx, ((vldh_t_con)node)->hc.con_id); 
+		flow_SetHighlight(((vldh_t_con)node)->hc.con_id, 1); 
+	}
+	else {
+		flow_SelectInsert(flow_ctx, node->hn.node_id); 
+		flow_SetHighlight( node->hn.node_id, 1); 
+	}
+	
   return GRE__SUCCESS;
 }
 
@@ -2952,8 +2960,16 @@ int WGre::node_select( vldh_t_node node)
 //
 int WGre::node_unselect( vldh_t_node node)
 {
-  flow_SelectRemove( flow_ctx, node->hn.node_id);
-  flow_SetHighlight( node->hn.node_id, 0); 
+	/* Check if a connection is selected or not */
+	if (node->hn.vldhtype == VLDH_CON) {
+		flow_SelectRemove( flow_ctx, ((vldh_t_con)node)->hc.con_id);
+		flow_SetHighlight(((vldh_t_con)node)->hc.con_id, 0); 
+	}
+	else {
+		flow_SelectRemove( flow_ctx, node->hn.node_id);
+		flow_SetHighlight( node->hn.node_id, 0); 
+	}
+
   return GRE__SUCCESS;
 }
 
