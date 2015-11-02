@@ -3721,7 +3721,8 @@ int XNav::init_brow_base_cb( FlowCtx *fctx, void *client_data)
   XNav *xnav = (XNav *) client_data;
   BrowCtx *ctx = (BrowCtx *)fctx;
   BrowCtx *secondary_ctx;
-  int		sts;
+  int	  sts;
+  char	  msg[120];
 
   if ( Lng::translatefile_coding() == lng_eCoding_UTF_8)
     brow_SetTextCoding( ctx, flow_eTextCoding_UTF_8);
@@ -3788,6 +3789,9 @@ int XNav::init_brow_base_cb( FlowCtx *fctx, void *client_data)
     xnav->command( cmd);
   }
 
+  sprintf( msg, "User %s logged in", xnav->user);
+  XttLog::dlog( xttlog_eCategory_User, msg, 0, 0);	
+
   // Execute the setup script
   xnav->gbl.setupscript_exec( xnav);
 
@@ -3846,6 +3850,7 @@ int XNav::login()
   char	systemgroup[80];
   pwr_sSecurity sec;
   char username[80];
+  char msg[120];
 
   priv = base_priv = 0;
 
@@ -3865,9 +3870,13 @@ int XNav::login()
     strcpy( user, username);
     strcpy( base_user, username);
     priv = base_priv = privilege;
+    sprintf( msg, "User %s logged in", username);
+    XttLog::dlog( xttlog_eCategory_User, msg, 0, 0);	
+
     return XNAV__SUCCESS;
   }
   priv = base_priv = sec.DefaultXttPriv;
+  XttLog::dlog( xttlog_eCategory_User, "No user logged in", 0, 0);	
   return XNAV__SUCCESS;
 }
 

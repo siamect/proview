@@ -165,6 +165,9 @@ void XttLog::category_to_string( xttlog_eCategory category, char *str)
   case xttlog_eCategory_GeConfirmCancel:
     strcpy( str, "GeConfirmCancel");
     break;
+  case xttlog_eCategory_User:
+    strcpy( str, "User");
+    break;
   default:
     strcpy( str, "");
   }
@@ -192,6 +195,8 @@ void XttLog::string_to_category( char *str, xttlog_eCategory *category)
     *category = xttlog_eCategory_GeConfirmOk;
   else if ( strcmp( str, "GeConfirmCancel") == 0)
     *category = xttlog_eCategory_GeConfirmCancel;
+  else if ( strcmp( str, "User") == 0)
+    *category = xttlog_eCategory_User;
   else
     *category = xttlog_eCategory_;
 }

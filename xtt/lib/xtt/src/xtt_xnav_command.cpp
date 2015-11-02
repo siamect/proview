@@ -629,10 +629,11 @@ static int	xnav_define_func(	void		*client_data,
 static void xnav_login_success_bc( void *ctx)
 {
   XNav *xnav = (XNav *)ctx;
-  char	msg[80];
+  char	msg[120];
 
   CoLogin::get_login_info( 0, 0, xnav->user, (unsigned long *)&xnav->priv, 0);
   sprintf( msg, "User %s logged in", xnav->user);
+  XttLog::dlog( xttlog_eCategory_User, msg, 0, 0);	
   xnav->cologin = 0;
   xnav->message('I', msg);
   if ( xnav->op)
@@ -653,7 +654,7 @@ static int	xnav_login_func(	void		*client_data,
   char	arg2_str[80];
   char	systemgroup[80];
   unsigned int	priv;
-  char	msg[80];
+  char	msg[120];
 	
   sts = gdh_GetObjectInfo ( "pwrNode-System.SystemGroup", &systemgroup, 
 		sizeof(systemgroup));
@@ -682,6 +683,7 @@ static int	xnav_login_func(	void		*client_data,
     strcpy( xnav->user, arg1_str);
     xnav->priv = priv;
     sprintf( msg, "User %s logged in", arg1_str);
+    XttLog::dlog( xttlog_eCategory_User, msg, 0, 0);	
     xnav->message('I', msg);
     if ( xnav->op)
       xnav->op->set_title( xnav->user);
@@ -693,17 +695,20 @@ static int	xnav_logout_func(	void		*client_data,
 					void		*client_flag)
 {
   XNav *xnav = (XNav *)client_data;
-  char	msg[80];
+  char	msg[120];
 	
   int window = ODD( dcli_get_qualifier( "/MESSAGEWINDOW", 0, 0));
 
   if ( strcmp( xnav->base_user, "") == 0) {
     sprintf( msg, "User %s logged out", xnav->user);
+    XttLog::dlog( xttlog_eCategory_User, msg, 0, 0);	
     xnav->message('I', msg);
     if ( window)
       xnav->wow->DisplayText( "Logout", msg);
   }
   else {
+    sprintf( msg, "User %s logged out, returned to user %s", xnav->user, xnav->base_user);
+    XttLog::dlog( xttlog_eCategory_User, msg, 0, 0);	
     sprintf( msg, "Returned to user %s", xnav->base_user);
     xnav->message('I', msg);
     if ( window)

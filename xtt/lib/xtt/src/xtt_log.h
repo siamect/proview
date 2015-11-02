@@ -54,6 +54,7 @@ typedef enum {
   xttlog_eCategory_Event,
   xttlog_eCategory_GeConfirmOk,
   xttlog_eCategory_GeConfirmCancel,
+  xttlog_eCategory_User,
   xttlog_eCategory__
 } xttlog_eCategory;
 
