@@ -51,9 +51,11 @@
 /*! The class contains functions to create color for the color palette,
     and to convert colors dependent on the current color tone, inverse, shadow etc.
 */
+class GlowCustomColors;
 
 class GlowColor {
  public:
+    
     //! Constructor
     GlowColor() {}
 
@@ -67,7 +69,7 @@ class GlowColor {
     static void his_to_rgb( double *r, double *g, double *b, double h, double i, double s);
 
     //! Calculates the rgb values for a drawtype index
-    static void rgb_color( int idx, double *r, double *g, double *b);
+    static void rgb_color( int idx, double *r, double *g, double *b, GlowCustomColors *customcolors);
 
     //! Conversion from base drawtype to drawtype dependent on tone, brightness, highlight etc
     /*! If an object is a member of a node, the current properties of the node, such as
@@ -101,6 +103,13 @@ class GlowColor {
       \return The name of the color tone
     */
     static char *colortone_to_name( glow_eDrawType drawtype);
+
+    static int is_shiftable( glow_eDrawType dt) {
+      return (dt >= 20 && dt <= glow_eDrawType_Color300);
+    }
+    static int is_custom( glow_eDrawType dt) {
+      return (dt >= glow_eDrawType_CustomColor1 && dt < glow_eDrawType_CustomColor__);
+    }
 };
 
 /*@}*/

@@ -45,6 +45,7 @@
 #include "glow_transform.h"
 #include "glow_exportjbean.h"
 #include "glow_color.h"
+#include "glow_customcolors.h"
 
 /*! \file glow_growctx.h
     \brief Contains the GrowCtx class. */
@@ -868,6 +869,10 @@ class GrowCtx : public GlowCtx {
   void pop( GlowArrayElem *element) { a.pop( element);}
   void set_text_coding( glow_eTextCoding coding) { text_coding = coding;}
   void set_edit_set_mode( glow_eEditSetMode mode) { edit_set_mode = mode;}
+  int set_custom_color( glow_eDrawType color, double red, double green, double blue);
+  void reset_custom_colors();
+  int read_customcolor_file( char *name);
+  int write_customcolor_file( char *name);
 
   static int get_dimension( char *filename, int *width, int *heigth);
 

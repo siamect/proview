@@ -850,7 +850,9 @@ class GlowCtx {
   int tiptext_size;		//!< Size of tooltip text
   glow_eAppMotion app_motion;	//!< Action for app motion event.
   glow_tEventLogCb eventlog_callback; //!< Callback function to log events.
-  static int eventlog_enabled; //!< Event logging enabled.
+  static int eventlog_enabled;  //!< Event logging enabled.
+  GlowCustomColors *customcolors; //!< Custom colors storage
+  char color_theme[40];		//!< Custom color file.
 
   //! Register scrollbar callback function
   /*!
@@ -915,6 +917,12 @@ class GlowCtx {
   */
   void register_eventlog_callback( glow_tEventLogCb log_callback)
                 { eventlog_callback = log_callback;}
+
+  //! Set custom colors.
+  void set_custom_colors( GlowCustomColors *cc) { customcolors = cc;}
+
+  //! Get custom colors.
+  GlowCustomColors *get_custom_colors() { return customcolors;}
 
   //! Destructor
   /*! Delete all objects in the context. */

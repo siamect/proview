@@ -541,7 +541,7 @@ void Xtt::activate_help_navigator()
 
 void Xtt::activate_help_proview()
 {
-  CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_exe/xtt_version_help.dat", 0);
+  CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_load/xtt_version_help.dat", 0);
 }
 
 Xtt::Xtt( int *argc, char **argv[], int *return_sts) :

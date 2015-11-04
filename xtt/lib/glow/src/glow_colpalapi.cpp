@@ -103,3 +103,8 @@ colpal_eActive colpal_GetActive( colpal_tCtx ctx)
 {
   return ctx->get_active();
 }
+
+void colpal_UpdateCustomColors( colpal_tCtx ctx, void *customcolors)
+{
+  ctx->update_custom_colors( (GlowCustomColors *)customcolors);
+}

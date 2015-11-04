@@ -309,6 +309,7 @@ class Ge {
 					glow_eDrawType text_color);
   static void colorpalette_get_current_tone( void *gectx, glow_eDrawType *tone);
   static void colorpalette_set_current_tone( void *gectx, glow_eDrawType tone);
+  static void update_colorpalette( void *gectx);
   static void subgraphs_close_cb( SubGraphs *subgraphs);
   static void status_msg( void *ge_ctx, double x, double y);
   static int command_cb( void *ge_ctx, char *command, char *script);

@@ -58,6 +58,7 @@ using namespace std;
 #include "glow_colpalctx.h"
 #include "glow_curvectx.h"
 #include "glow_draw_gtk.h"
+#include "glow_customcolors_gtk.h"
 
 #include "glow_msg.h"
 
@@ -199,6 +200,8 @@ static  GdkEvent	last_event;
 static GdkColor glow_allocate_named_color( GlowDrawGtk *draw_ctx, const char *named_color);
 static GdkColor glow_allocate_color( GlowDrawGtk *draw_ctx, int rgb_red,
 	int rgb_green, int rgb_blue);
+static GdkColor glow_allocate_custom_color( GlowDrawGtk *draw_ctx, glow_eDrawType drawtype, int rgb_red,
+	int rgb_green, int rgb_blue);
 static void event_timer( GlowDrawGtk *ctx, int time_ms);
 static void cancel_event_timer( GlowDrawGtk *ctx);
 static gboolean event_timer_cb( void *ctx);
@@ -207,23 +210,48 @@ static int glow_read_color_file( const char *filename, draw_sColor **color_array
 
 static GdkGC *get_gc( GlowDrawGtk *draw_ctx, int i, int j)
 {
-  if ( !draw_ctx->gcs[i][j]) {
+  int crea = 0;
+
+  if ( GlowColor::is_custom((glow_eDrawType)i)) {
+    if ( !draw_ctx->get_customcolors())
+      return draw_ctx->gcs[0][0];
+    if ( !draw_ctx->get_customcolors()->gcs[i-glow_eDrawType_CustomColor1][j])
+      crea = 1;
+  }
+  else if ( !draw_ctx->gcs[i][j])
+    crea = 1;
+
+  if ( crea) {
     GdkGCValues 		xgcv;
     double r, g, b;
 
-    GlowColor::rgb_color( i, &r, &g, &b);
-    xgcv.foreground = glow_allocate_color( draw_ctx, int(r * 65535), 
-		int(g * 65535), int(b * 65535));
+    GlowColor::rgb_color( i, &r, &g, &b, draw_ctx->get_customcolors());
+    if ( GlowColor::is_custom((glow_eDrawType)i))
+      xgcv.foreground = glow_allocate_custom_color( draw_ctx, (glow_eDrawType)i, int(r * 65535), 
+						    int(g * 65535), int(b * 65535));
+    else
+      xgcv.foreground = glow_allocate_color( draw_ctx, int(r * 65535), 
+					     int(g * 65535), int(b * 65535));
     xgcv.background = draw_ctx->background;
     xgcv.cap_style = GDK_CAP_BUTT;
     xgcv.line_width = j + 1;
 
-    draw_ctx->gcs[i][j] = gdk_gc_new_with_values(
+    if ( GlowColor::is_custom((glow_eDrawType)i)) {
+      draw_ctx->get_customcolors()->gcs[i-glow_eDrawType_CustomColor1][j] = gdk_gc_new_with_values(
+		draw_ctx->m_wind.window, &xgcv, 
+		(GdkGCValuesMask)(GDK_GC_FOREGROUND | GDK_GC_BACKGROUND | 
+		GDK_GC_LINE_WIDTH | GDK_GC_CAP_STYLE));
+    }
+    else
+      draw_ctx->gcs[i][j] = gdk_gc_new_with_values(
 		draw_ctx->m_wind.window, &xgcv, 
 		(GdkGCValuesMask)(GDK_GC_FOREGROUND | GDK_GC_BACKGROUND | 
 		GDK_GC_LINE_WIDTH | GDK_GC_CAP_STYLE));
   }
-  return draw_ctx->gcs[i][j];
+  if ( GlowColor::is_custom((glow_eDrawType)i))
+    return draw_ctx->get_customcolors()->gcs[i-glow_eDrawType_CustomColor1][j];
+  else
+    return draw_ctx->gcs[i][j];
 }
 
 static int glow_create_cursor( GlowDrawGtk *draw_ctx)
@@ -275,7 +303,7 @@ static int draw_free_gc( GlowDrawGtk *draw_ctx)
     gdk_cursor_unref( draw_ctx->cursors[i]);
 
   gdk_gc_unref( draw_ctx->gc_inverse);
-  for ( i = 0; i < glow_eDrawType__; i++) {
+  for ( i = 0; i < glow_eDrawType_Color__; i++) {
     for ( j = 0; j < DRAW_TYPE_SIZE; j++) {
       if ( draw_ctx->gcs[i][j])
 	gdk_gc_unref( draw_ctx->gcs[i][j]);
@@ -502,6 +530,33 @@ static GdkColor glow_allocate_color( GlowDrawGtk *draw_ctx, int rgb_red,
   return color;
 }
 
+static GdkColor glow_allocate_custom_color( GlowDrawGtk *draw_ctx, glow_eDrawType drawtype, int rgb_red,
+					    int rgb_green, int rgb_blue)
+{
+  GdkColor color;
+  int idx = drawtype - glow_eDrawType_CustomColor1;
+
+  if ( !draw_ctx->get_customcolors())
+    return color;
+
+  color.red = rgb_red;
+  color.green = rgb_green;
+  color.blue = rgb_blue;
+
+  if ( !gdk_colormap_alloc_color( draw_ctx->colormap, &color, TRUE, TRUE)) {
+    printf( "** Color not allocated !\n");
+    color = glow_allocate_named_color( draw_ctx, "black");
+    return color;
+  }
+
+  if ( draw_ctx->get_customcolors()->color_vect[idx].pixel != 0)
+    gdk_colormap_free_colors( draw_ctx->colormap, &draw_ctx->get_customcolors()->color_vect[idx], 1);
+
+  draw_ctx->get_customcolors()->color_vect[idx] = color;
+
+  return color;
+}
+
 GlowDrawGtk::~GlowDrawGtk()
 {
   closing_down = 1;
@@ -547,11 +602,12 @@ GlowDrawGtk::GlowDrawGtk(
         int (*init_proc)(GtkWidget *w, GlowCtx *ctx, void *client_data),
 	void  *client_data, 
 	glow_eCtxType type) 
-  : ef(0), timer_id(0), click_sensitivity(0), color_vect_cnt(0), closing_down(0)
+  : ef(0), timer_id(0), click_sensitivity(0), color_vect_cnt(0), closing_down(0), customcolors_cnt(0)
 {
   memset( gcs, 0, sizeof(gcs));
   memset( font, 0, sizeof(font));
   memset( cursors, 0, sizeof(cursors));
+  memset( customcolors, 0, sizeof(customcolors));
   nav_wind.is_nav = 1;
 
   if ( type == glow_eCtxType_Brow)
@@ -579,6 +635,12 @@ GlowDrawGtk::GlowDrawGtk(
   GtkStyle *style = gtk_widget_get_style( m_wind.toplevel);
   background = style->bg[GTK_STATE_NORMAL];
   original_background = background;
+
+
+  if ( type == glow_eCtxType_Grow) {
+    ctx->customcolors = create_customcolors();
+    push_customcolors( ctx->customcolors);
+  }
 
   colormap = gdk_colormap_new( gdk_visual_get_system(), TRUE);
 
@@ -2265,7 +2327,7 @@ static int glow_read_color_file( const char *filename, draw_sColor **color_array
     color_p = *color_array;
     for ( int i = 3; i < 300; i++)
     {
-      GlowColor::rgb_color( i, &r, &g, &b);
+      GlowColor::rgb_color( i, &r, &g, &b, ctx->customcolors);
       color_p->red = int( r * 65535);
       color_p->green = int( g * 65535);
       color_p->blue = int( b * 65535);
@@ -2326,7 +2388,7 @@ void GlowDrawGtk::set_background( GlowWind *wind, glow_eDrawType drawtype, glow_
   if ( drawtype == glow_eDrawType_LineErase)
     drawtype = glow_eDrawType_Color32;
 
-  GlowColor::rgb_color( (int)drawtype, &r, &g, &b);
+  GlowColor::rgb_color( (int)drawtype, &r, &g, &b, get_customcolors());
   background = glow_allocate_color( this, int(r * 65535), 
 				    int(g * 65535), int(b * 65535));
   // gdk_gc_get_values( get_gc( this, drawtype, 0), &xgcv);
@@ -3013,14 +3075,13 @@ int GlowDrawGtk::image_scale( int width, int height, glow_tImImage orig_im, glow
       imagefile = rsvg_handle_get_base_uri( handle);
       *im = rsvg_pixbuf_from_file_at_size(imagefile, width, height, NULL);
     }
-    else {
-#else
-    {
+    else 
 #endif
-      if ( *im)
-	gdk_pixbuf_unref( (GdkPixbuf *)*im);
-      *im = gdk_pixbuf_scale_simple( (GdkPixbuf *)orig_im, width, height, GDK_INTERP_NEAREST);
-    }
+      {
+	if ( *im)
+	  gdk_pixbuf_unref( (GdkPixbuf *)*im);
+	*im = gdk_pixbuf_scale_simple( (GdkPixbuf *)orig_im, width, height, GDK_INTERP_NEAREST);
+      }
   }
   return 1;
 }
@@ -3042,17 +3103,16 @@ int GlowDrawGtk::image_load( char *imagefile,
     *im_data = (glow_tImImage *) handle;
     *orig_im = (glow_tImImage *) rsvg_pixbuf_from_file( imagefile, NULL);
   } 
-  else {
-#else
-  {
+  else 
 #endif
-    *orig_im = (glow_tImImage *) gdk_pixbuf_new_from_file( imagefile, 0);
-    if ( !*orig_im) {
-      if ( im)
-	*im = 0;
-      return 0;
+    {
+      *orig_im = (glow_tImImage *) gdk_pixbuf_new_from_file( imagefile, 0);
+      if ( !*orig_im) {
+	if ( im)
+	  *im = 0;
+	return 0;
+      }
     }
-  }
   if ( im) {
     *im = (glow_tImImage *) gdk_pixbuf_copy( (GdkPixbuf *)*orig_im);
   }
@@ -3140,8 +3200,8 @@ int GlowDrawGtk::gradient_create_pattern( int x, int y, int w, int h,
   double r1, g1, b1, r2, g2, b2;
   int a = 15;
 
-  GlowColor::rgb_color( d1, &r1, &g1, &b1);
-  GlowColor::rgb_color( d2, &r2, &g2, &b2);
+  GlowColor::rgb_color( d1, &r1, &g1, &b1, get_customcolors());
+  GlowColor::rgb_color( d2, &r2, &g2, &b2, get_customcolors());
 
   switch ( gradient) {
   case glow_eGradient_HorizontalUp:
@@ -3164,7 +3224,7 @@ int GlowDrawGtk::gradient_create_pattern( int x, int y, int w, int h,
     double r0, g0, b0;
 
     *pat = cairo_pattern_create_linear( x, y, x, y+h);
-    GlowColor::rgb_color( d0, &r0, &g0, &b0);
+    GlowColor::rgb_color( d0, &r0, &g0, &b0, get_customcolors());
     cairo_pattern_add_color_stop_rgb( *pat, 0, r0, g0, b0);
     cairo_pattern_add_color_stop_rgb( *pat, 0.3, r2, g2, b2);
     cairo_pattern_add_color_stop_rgb( *pat, .95, r1, g1, b1);
@@ -3189,7 +3249,7 @@ int GlowDrawGtk::gradient_create_pattern( int x, int y, int w, int h,
   case glow_eGradient_VerticalTube2: {
     double r0, g0, b0;
 
-    GlowColor::rgb_color( d0, &r0, &g0, &b0);
+    GlowColor::rgb_color( d0, &r0, &g0, &b0, get_customcolors());
     *pat = cairo_pattern_create_linear( x, y, x+w, y);
     cairo_pattern_add_color_stop_rgb( *pat, 0, r0, g0, b0);
     cairo_pattern_add_color_stop_rgb( *pat, 0.3, r2, g2, b2);
@@ -4010,4 +4070,125 @@ void GlowDrawGtk::event_exec( void *event, unsigned int size)
   }
   default: ;
   }
+}
+
+int GlowDrawGtk::open_color_selection( double *r, double *g, double *b)
+{
+  int sts;
+  GdkColor color;
+  GtkWidget *w = gtk_color_selection_dialog_new("Color selection");
+  GtkWidget *csel = gtk_color_selection_dialog_get_color_selection( GTK_COLOR_SELECTION_DIALOG(w));
+  color.red = int(*r * 0xffff);
+  color.green = int(*g * 0xffff);
+  color.blue = int(*b * 0xffff);
+  gtk_color_selection_set_current_color( GTK_COLOR_SELECTION(csel), &color);
+  gint response = gtk_dialog_run( GTK_DIALOG(w));
+  if ( response == GTK_RESPONSE_OK) {
+    gtk_color_selection_get_current_color( GTK_COLOR_SELECTION(csel), &color);
+    *r = (double)color.red/0xffff;
+    *g = (double)color.green/0xffff;
+    *b = (double)color.blue/0xffff;
+    sts = 1;
+  }
+  else
+    sts = 0;
+  gtk_widget_destroy( w);
+  return sts;
+}
+
+void GlowDrawGtk::update_color( glow_eDrawType color) 
+{
+  if ( !GlowColor::is_custom(color)) {
+    for ( int j = 0; j < DRAW_TYPE_SIZE; j++) {
+      if ( gcs[color][j]) {
+	gdk_gc_unref( gcs[color][j]);
+	gcs[color][j] = 0;
+      }
+    }
+  }
+  else if ( get_customcolors()) {
+    // A customcolor
+    for ( int j = 0; j < DRAW_TYPE_SIZE; j++) {
+      if ( get_customcolors()->gcs[color-glow_eDrawType_CustomColor1][j]) {
+	gdk_gc_unref( get_customcolors()->gcs[color-glow_eDrawType_CustomColor1][j]);
+	get_customcolors()->gcs[color-glow_eDrawType_CustomColor1][j] = 0;
+      }
+    }
+    for ( int j = 0; j < DRAW_TYPE_SIZE; j++) {
+      if ( get_customcolors()->gcs[color-glow_eDrawType_CustomColor1+1][j]) {
+	gdk_gc_unref( get_customcolors()->gcs[color-glow_eDrawType_CustomColor1+1][j]);
+	get_customcolors()->gcs[color-glow_eDrawType_CustomColor1+1][j] = 0;
+      }
+    }
+    for ( int j = 0; j < DRAW_TYPE_SIZE; j++) {
+      if ( get_customcolors()->gcs[color-glow_eDrawType_CustomColor1+2][j]) {
+	gdk_gc_unref( get_customcolors()->gcs[color-glow_eDrawType_CustomColor1+2][j]);
+	get_customcolors()->gcs[color-glow_eDrawType_CustomColor1+2][j] = 0;
+      }
+    }
+    for ( int j = 0; j < DRAW_TYPE_SIZE; j++) {
+      if ( get_customcolors()->gcs[color-glow_eDrawType_CustomColor1+3][j]) {
+	gdk_gc_unref( get_customcolors()->gcs[color-glow_eDrawType_CustomColor1+3][j]);
+	get_customcolors()->gcs[color-glow_eDrawType_CustomColor1+3][j] = 0;
+      }
+    }
+  }
+}
+
+void GlowDrawGtk::push_customcolors( GlowCustomColors *cc)
+{
+  if ( customcolors_cnt > CUSTOMCOLORS_STACK_SIZE) {
+    printf( "** Max number custom colors exceede\n");
+    return;
+  }
+
+  for ( int i = customcolors_cnt; i > 0; i--)
+    customcolors[i] = customcolors[i-1];
+  customcolors[0] = (GlowCustomColorsGtk *)cc;
+  customcolors_cnt++;
+}
+
+void GlowDrawGtk::set_customcolors( GlowCustomColors *cc)
+{
+  customcolors[0] = (GlowCustomColorsGtk *)cc;
+  customcolors_cnt = 1;
+}
+
+void GlowDrawGtk::pop_customcolors()
+{
+  if ( customcolors_cnt <= 0) {
+    printf( "** Customcolor stack disorder\n");
+  }
+  for ( int i = 0; i < customcolors_cnt - 1; i++)
+    customcolors[i] = customcolors[i+1];
+  customcolors_cnt--;
+}
+
+GlowCustomColorsGtk *GlowDrawGtk::get_customcolors() 
+{
+  if ( customcolors_cnt == 0)
+    return 0;
+  return customcolors[0];
+}
+
+GlowCustomColors *GlowDrawGtk::create_customcolors()
+{
+  return new GlowCustomColorsGtk();
+}
+
+void GlowDrawGtk::reset_customcolors( GlowCustomColors *cc)
+{
+  for ( int i = 0; i < cc->colors_size; i++) {
+    for ( int j = 0; j < DRAW_TYPE_SIZE; j++) {
+      if ( ((GlowCustomColorsGtk *)cc)->gcs[i][j])
+	gdk_gc_unref( ((GlowCustomColorsGtk *)cc)->gcs[i][j]);
+    }
+  }
+  memset( ((GlowCustomColorsGtk *)cc)->gcs, 0, sizeof(((GlowCustomColorsGtk *)cc)->gcs));
+
+  for ( int i = 0; i < glow_eDrawType_CustomColor__-glow_eDrawType_CustomColor1; i++) {
+    if ( ((GlowCustomColorsGtk *)cc)->color_vect[i].pixel != 0)
+      gdk_colormap_free_colors( colormap, &((GlowCustomColorsGtk *)cc)->color_vect[i], 1);
+  }
+  memset( ((GlowCustomColorsGtk *)cc)->color_vect, 0, sizeof(((GlowCustomColorsGtk *)cc)->color_vect));
 }

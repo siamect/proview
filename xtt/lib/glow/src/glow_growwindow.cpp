@@ -301,7 +301,9 @@ void GrowWindow::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, vo
     if ( fill)
       ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fill_drawtype);
 
+    ctx->gdraw->push_customcolors( window_ctx->customcolors);
     window_ctx->draw( &window_ctx->mw, ll_x, ll_y, ur_x, ur_y);
+    ctx->gdraw->pop_customcolors();
   }
 
   ur_x = int( dx2 * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
@@ -674,6 +676,7 @@ int GrowWindow::event_handler( GlowWind *w, glow_eEvent event, int x, int y, dou
     int ll_y = int( (y_low + y_low_offs) * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
 
     // window_ctx->draw_buffer_only = ctx->draw_buffer_only;
+    ctx->gdraw->push_customcolors( window_ctx->customcolors);
     ctx->gdraw->set_clip_rectangle( &ctx->mw, ll_x, ll_y, ur_x, ur_y);
 
     // Set callback to redraw the background
@@ -687,6 +690,7 @@ int GrowWindow::event_handler( GlowWind *w, glow_eEvent event, int x, int y, dou
     window_ctx->redraw_callback = 0;
     window_ctx->redraw_data = 0;
     ctx->gdraw->reset_clip_rectangle( &ctx->mw);
+    ctx->gdraw->pop_customcolors();
 
     if ( window_ctx->inputfocus_object && !input_focus) {
       ctx->register_inputfocus( this, 1);
@@ -913,6 +917,7 @@ void GrowWindow::new_ctx()
   window_ctx->event_move_node = ctx->event_move_node;
   window_ctx->background_disabled = 1;
   strcpy( window_ctx->owner, owner);
+  window_ctx->customcolors = ctx->gdraw->create_customcolors();
 
   if ( !no_file) {
     sts = window_ctx->open( fname, glow_eSaveMode_Edit);

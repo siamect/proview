@@ -46,6 +46,7 @@ import java.awt.event.*;
 
 public class GlowDraw implements GlowDrawIfc {
     public static final int DRAW_FONT_SIZE = 9;
+    public static final int CUSTOMCOLORS_STACK_SIZE = 10;
     Graphics2D g2;
     boolean nodraw = true;
     Font fonts[] = new Font[DRAW_FONT_SIZE * 2];
@@ -54,6 +55,8 @@ public class GlowDraw implements GlowDrawIfc {
     int clip_x2[] = new int[10];
     int clip_y2[] = new int[10];
     int clipCount = 0;
+    GlowCustomColors[] customcolors = new GlowCustomColors[CUSTOMCOLORS_STACK_SIZE];
+    int customcolors_cnt = 0;
 
         
     public void setNodraw(boolean nodraw) {
@@ -275,7 +278,7 @@ public class GlowDraw implements GlowDrawIfc {
     }
 
     public Color getColor(int gc_type) {
-	GlowColorRgb rgb = GlowColor.rgb_color(gc_type);
+	GlowColorRgb rgb = GlowColor.rgb_color(gc_type, get_customcolors());
 	return new Color((float)rgb.r, (float)rgb.g, (float)rgb.b);
     }
     public  int gradient_rotate(double rotate, int gradient) {
@@ -528,5 +531,32 @@ public class GlowDraw implements GlowDrawIfc {
 	}	    
 	else
 	    g2.setClip(null);
+    }
+
+    public void push_customcolors( GlowCustomColors cc) {
+	if ( customcolors_cnt > CUSTOMCOLORS_STACK_SIZE) {
+	    System.out.println( "** Max number custom colors exceede\n");
+	    return;
+	}
+
+	for ( int i = customcolors_cnt; i > 0; i--)
+	    customcolors[i] = customcolors[i-1];
+	customcolors[0] = cc;
+	customcolors_cnt++;
+    }
+
+    public void pop_customcolors() {
+	if ( customcolors_cnt <= 0) {
+	    System.out.println( "** Customcolor stack disorder\n");
+	}
+	for ( int i = 0; i < customcolors_cnt - 1; i++)
+	    customcolors[i] = customcolors[i+1];
+	customcolors_cnt--;
+    }
+
+    public GlowCustomColors get_customcolors() {
+	if ( customcolors_cnt == 0)
+	    return null;
+	return customcolors[0];
     }
 }

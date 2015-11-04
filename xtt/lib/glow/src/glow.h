@@ -730,11 +730,72 @@ typedef enum {
 	glow_eDrawType_TextHelveticaBold = 304,
 	glow_eDrawType_TextHelveticaErase = 305,
 	glow_eDrawType_TextHelveticaEraseBold = 306,
-	glow_eDrawType__ = 307,
+	glow_eDrawType_Color__ = 307,
+	glow_eDrawType_CustomColor1 = 310,
+	glow_eDrawType_CustomColor2 = 314,
+	glow_eDrawType_CustomColor3 = 318,
+	glow_eDrawType_CustomColor4 = 322,
+	glow_eDrawType_CustomColor5 = 326,
+	glow_eDrawType_CustomColor6 = 330,
+	glow_eDrawType_CustomColor7 = 334,
+	glow_eDrawType_CustomColor8 = 338,
+	glow_eDrawType_CustomColor9 = 342,
+	glow_eDrawType_CustomColor10 = 346,
+	glow_eDrawType_CustomColor11 = 350,
+	glow_eDrawType_CustomColor12 = 354,
+	glow_eDrawType_CustomColor13 = 358,
+	glow_eDrawType_CustomColor14 = 362,
+	glow_eDrawType_CustomColor15 = 366,
+	glow_eDrawType_CustomColor16 = 370,
+	glow_eDrawType_CustomColor17 = 374,
+	glow_eDrawType_CustomColor18 = 378,
+	glow_eDrawType_CustomColor19 = 382,
+	glow_eDrawType_CustomColor20 = 386,
+	glow_eDrawType_CustomColor21 = 390,
+	glow_eDrawType_CustomColor22 = 394,
+	glow_eDrawType_CustomColor23 = 398,
+	glow_eDrawType_CustomColor24 = 402,
+	glow_eDrawType_CustomColor25 = 406,
+	glow_eDrawType_CustomColor26 = 410,
+	glow_eDrawType_CustomColor27 = 414,
+	glow_eDrawType_CustomColor28 = 418,
+	glow_eDrawType_CustomColor29 = 422,
+	glow_eDrawType_CustomColor30 = 426,
+	glow_eDrawType_CustomColor31 = 430,
+	glow_eDrawType_CustomColor32 = 434,
+	glow_eDrawType_CustomColor33 = 438,
+	glow_eDrawType_CustomColor34 = 442,
+	glow_eDrawType_CustomColor35 = 446,
+	glow_eDrawType_CustomColor36 = 450,
+	glow_eDrawType_CustomColor37 = 454,
+	glow_eDrawType_CustomColor38 = 458,
+	glow_eDrawType_CustomColor39 = 462,
+	glow_eDrawType_CustomColor40 = 466,
+	glow_eDrawType_CustomColor41 = 470,
+	glow_eDrawType_CustomColor42 = 474,
+	glow_eDrawType_CustomColor43 = 478,
+	glow_eDrawType_CustomColor44 = 482,
+	glow_eDrawType_CustomColor45 = 486,
+	glow_eDrawType_CustomColor46 = 490,
+	glow_eDrawType_CustomColor47 = 494,
+	glow_eDrawType_CustomColor48 = 498,
+	glow_eDrawType_CustomColor49 = 502,
+	glow_eDrawType_CustomColor50 = 506,
+	glow_eDrawType_CustomColor51 = 510,
+	glow_eDrawType_CustomColor52 = 514,
+	glow_eDrawType_CustomColor53 = 518,
+	glow_eDrawType_CustomColor54 = 522,
+	glow_eDrawType_CustomColor55 = 526,
+	glow_eDrawType_CustomColor56 = 530,
+	glow_eDrawType_CustomColor57 = 534,
+	glow_eDrawType_CustomColor58 = 538,
+	glow_eDrawType_CustomColor59 = 542,
+	glow_eDrawType_CustomColor60 = 546,
+	glow_eDrawType_CustomColor__ = 550,
 	glow_eDrawType_Inherit = 9999,
 	glow_eDrawType_No = 10000
 	} glow_eDrawType;
-
+#define glow_eDrawType__ glow_eDrawType_CustomColor__
 #define glow_eDrawType_FillHighlight glow_eDrawType_Color174
 #define glow_eDrawType_LineHighlight glow_eDrawType_Color176
 #define glow_eDrawType_ColorYellow glow_eDrawType_Color115
@@ -918,7 +979,8 @@ typedef enum {
   glow_eEventType_KeyAscii,  		//!< Ascii key callback.
   glow_eEventType_Menu,  		//!< Menu callback.
   glow_eEventType_Table,  		//!< Table callback.
-  glow_eEventType_Toolbar 		//!< Toolbar callback.
+  glow_eEventType_Toolbar, 		//!< Toolbar callback.
+  glow_eEventType_CustomColor 		//!< Custom color modified callback.
 } glow_eEventType;
 
 //! Glow events
@@ -1099,6 +1161,7 @@ typedef enum {
 	glow_eSave_GrowPie		        = 45,
 	glow_eSave_GrowBarChart		        = 46,
 	glow_eSave_GrowToolbar		        = 47,
+	glow_eSave_CustomColors		        = 48,
 	glow_eSave_End				= 99,
 	glow_eSave_Ctx_zoom_factor_x		= 100,
 	glow_eSave_Ctx_base_zoom_factor		= 101,
@@ -1141,6 +1204,7 @@ typedef enum {
 	glow_eSave_Ctx_hot_indication  		= 138,
 	glow_eSave_Ctx_tiptext_size  		= 139,
 	glow_eSave_Ctx_app_motion  		= 140,
+	glow_eSave_Ctx_color_theme  		= 141,
 	glow_eSave_Ctx_comment			= 199,
 	glow_eSave_Array_a			= 200,
 	glow_eSave_NodeClass_nc_name		= 300,
@@ -1383,6 +1447,7 @@ typedef enum {
 	glow_eSave_GrowCtx_dyn_type2		= 2246,
 	glow_eSave_GrowCtx_dyn_action_type2    	= 2247,
 	glow_eSave_GrowCtx_recursive_trace    	= 2248,
+	glow_eSave_GrowCtx_customcolors    	= 2249,
 	glow_eSave_GrowSubAnnot_x_right		= 2300,
 	glow_eSave_GrowSubAnnot_x_left		= 2301,
 	glow_eSave_GrowSubAnnot_y_high		= 2302,
@@ -1840,7 +1905,9 @@ typedef enum {
 	glow_eSave_GrowBarChart_userdata_cb   	= 4619,
 	glow_eSave_GrowBarChart_line_color   	= 4620,
 	glow_eSave_GrowToolbar_grownode_part	= 4700,
-	glow_eSave_GrowToolbar_nc	        = 4701
+	glow_eSave_GrowToolbar_nc	        = 4701,
+	glow_eSave_CustomColors_colors_size     = 4800,
+	glow_eSave_CustomColors_colors	        = 4801
 	} glow_eSave;
 
 //! Relative or absolute position for an annotation
@@ -2063,6 +2130,20 @@ typedef struct {
   int	       	        idx;		//!< Index for activated tool
 } glow_sEventToolbar, *glow_tEventToolbar;
 
+//! Data structure for custom color callback, when a color color is modified in the color palette.
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate
+  double	       	y;  		//!< y-coordinate
+  glow_eDrawType	color;		//!< Selected custom color
+  double		red;		//!< rgb red value
+  double		green;		//!< rgb green value
+  double		blue;		//!< rgb blue value
+} glow_sEventCustomColor, *glow_tEventCustomColor;
+
 //! Union for event data structures
 typedef union {
 	glow_eEvent		event;
@@ -2079,6 +2160,7 @@ typedef union {
 	glow_sEventMenu		menu;
 	glow_sEventTable       	table;
 	glow_sEventToolbar    	toolbar;
+	glow_sEventCustomColor  customcolor;
 	} glow_sEvent, *glow_tEvent;
 
 //! Pixmap data structure

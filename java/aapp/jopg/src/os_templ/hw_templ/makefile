@@ -41,6 +41,7 @@ extern_java_sources := \
 	GlowColorNode.java,\
 	GlowColorRgb.java,\
 	GlowColor.java,\
+	GlowCustomColors.java,\
 	GlowBackgroundObject.java,\
 	GlowEventMenu.java,\
 	GlowEventToolbar.java,\

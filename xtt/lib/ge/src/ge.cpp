@@ -305,6 +305,7 @@ void Ge::clear_all()
   graph->set_modified(0);
   subpalette->get_path( &path_cnt, &path);
   graph->set_subgraph_path( path_cnt, path);
+  colpal_UpdateCustomColors( colorpalette_ctx, graph->get_custom_colors());
   update();
   set_title();
 
@@ -594,6 +595,8 @@ void Ge::open_graph( char *name)
   update();
   set_title();
 
+  colpal_UpdateCustomColors( colorpalette_ctx, graph->get_custom_colors());
+
   if ( graph->journal)
     graph->journal->open( graphname);
 }
@@ -644,6 +647,11 @@ void Ge::colorpalette_get_current_tone( void *gectx, glow_eDrawType *color_tone)
 void Ge::colorpalette_set_current_tone( void *gectx, glow_eDrawType color_tone)
 {
   colpal_SetCurrentColorTone( ((Ge *)gectx)->colorpalette_ctx, color_tone);
+}
+
+void Ge::update_colorpalette( void *gectx)
+{
+  colpal_UpdateCustomColors( ((Ge *)gectx)->colorpalette_ctx, ((Ge *)gectx)->graph->get_custom_colors());
 }
 
 void Ge::subgraphs_close_cb( SubGraphs *subgraphs)
@@ -1978,6 +1986,12 @@ int Ge::colorpalette_cb( GlowCtx *ctx, glow_tEvent event)
   case glow_eEvent_MB2Click:
     gectx->graph->set_select_border_color();
     break;
+  case glow_eEvent_MB1DoubleClick:
+    if ( event->any.type == glow_eEventType_CustomColor) {
+      gectx->graph->set_custom_color( event->customcolor.color, event->customcolor.red,
+				      event->customcolor.green, event->customcolor.blue);
+    }
+    break;
   default:
     ;
   }
@@ -1996,6 +2010,10 @@ int Ge::init_colorpalette_cb( GlowCtx *fctx, void *client_data)
 	glow_eEventType_CallBack, Ge::colorpalette_cb);
   colpal_EnableEvent( gectx->colorpalette_ctx, glow_eEvent_MB2Click, 
 	glow_eEventType_CallBack, Ge::colorpalette_cb);
+  colpal_EnableEvent( gectx->colorpalette_ctx, glow_eEvent_MB1DoubleClick, 
+	glow_eEventType_CallBack, Ge::colorpalette_cb);
+
+  colpal_UpdateCustomColors( gectx->colorpalette_ctx, gectx->graph->get_custom_colors());
 
   return 1;
 }

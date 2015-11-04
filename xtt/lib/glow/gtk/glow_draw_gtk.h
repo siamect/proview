@@ -44,6 +44,9 @@
 #include "glow_draw.h"
 
 #define DRAW_CLIP_SIZE 10
+#define CUSTOMCOLORS_STACK_SIZE 10
+
+class GlowCustomColorsGtk;
 
 class DrawWindGtk : public DrawWind {
  public:
@@ -85,7 +88,7 @@ class GlowDrawGtk : public GlowDraw {
   GdkGC		*gc;
   GdkGC		*gc_erase;
   GdkGC		*gc_inverse;
-  GdkGC		*gcs[glow_eDrawType__][DRAW_TYPE_SIZE];
+  GdkGC		*gcs[glow_eDrawType_CustomColor__][DRAW_TYPE_SIZE];
   GdkFont 	*font[glow_eFont__][glow_eDrawFont__][DRAW_FONT_SIZE];
   GdkCursor	*cursors[glow_eDrawCursor__];
   int		ef;
@@ -94,9 +97,12 @@ class GlowDrawGtk : public GlowDraw {
   GdkColor 	original_background;
   guint		timer_id;
   int		click_sensitivity;
-  GdkColor	color_vect[320];
+  GdkColor	custom_color_vect[120];
+  GdkColor	color_vect[400];
   int		color_vect_cnt;
   int   	closing_down;
+  GlowCustomColorsGtk *customcolors[CUSTOMCOLORS_STACK_SIZE];
+  int 		customcolors_cnt;
   
   int event_handler( GdkEvent event);
   virtual void enable_event( glow_eEvent event, 
@@ -252,7 +258,14 @@ class GlowDrawGtk : public GlowDraw {
 			     int *width, int *height, int *descent, double size, int rot);
   void log_event( GdkEvent *event);
   virtual void event_exec( void *event, unsigned int size);
-
+  virtual int open_color_selection(double *r, double *g, double *b);
+  virtual void update_color( glow_eDrawType color);
+  void push_customcolors( GlowCustomColors *cc);
+  void set_customcolors( GlowCustomColors *cc);
+  void pop_customcolors();
+  GlowCustomColors *create_customcolors();
+  GlowCustomColorsGtk *get_customcolors();
+  void reset_customcolors( GlowCustomColors *cc);
 };
 
 class DrawPs {

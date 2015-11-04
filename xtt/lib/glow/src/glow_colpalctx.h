@@ -123,6 +123,7 @@ class ColPalCtx : public GrowCtx {
   void set_active( colpal_eActive a);
   colpal_eActive get_active() { return active;}
   void set_colors();
+  void update_custom_colors( GlowCustomColors *cc);
 
   int columns;			//!< Number of columns in the color palette.
   glow_eDrawType current_fill;	//!< The currently selected fill color.

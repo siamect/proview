@@ -103,6 +103,10 @@ GrowCtx::~GrowCtx()
     clear_all( 0);
   if ( dynamic)
     free( dynamic);
+  if ( ctx_type == glow_eCtxType_Grow && customcolors) {
+    gdraw->reset_customcolors( customcolors);
+    free( customcolors);
+  }
 }
 
 void GrowCtx::set_mode( grow_eMode grow_mode) 
@@ -2079,6 +2083,9 @@ void GrowCtx::save_grow( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowCtx_input_focus_mark) << FSPACE << int(input_focus_mark) << endl;
   fp << int(glow_eSave_GrowCtx_recursive_trace) << FSPACE << recursive_trace << endl;
   fp << int(glow_eSave_GrowCtx_bitmap_fonts) << FSPACE << bitmap_fonts << endl;
+  fp << int(glow_eSave_GrowCtx_customcolors) << endl;
+  if ( customcolors)
+    customcolors->save( fp, mode);
   if ( user_data && userdata_save_callback) {
     fp << int(glow_eSave_GrowCtx_userdata_cb) << endl;
     (userdata_save_callback)(&fp, this, glow_eUserdataCbType_Ctx);
@@ -2280,6 +2287,13 @@ void GrowCtx::open_grow( ifstream& fp)
 	  (userdata_open_callback)(&fp, this, glow_eUserdataCbType_Ctx);
 	break;
       case glow_eSave_GrowCtx_bitmap_fonts: fp >> bitmap_fonts; break;
+      case glow_eSave_GrowCtx_customcolors:
+	if ( !customcolors)
+	  customcolors = new GlowCustomColors();
+	else
+	  gdraw->reset_customcolors( customcolors);
+	customcolors->open( fp);
+	break;
       default:
         cout << "GrowCtx:open syntax error" << endl;
         fp.getline( dummy, sizeof(dummy));
@@ -2309,6 +2323,9 @@ void GrowCtx::open_grow( ifstream& fp)
     if ( mw.window)
       mw.set_double_buffered( double_buffered);
   }
+
+  if ( strcmp( color_theme, "") != 0)
+    customcolors->read_colorfile( this, color_theme);
 
   if ( environment == glow_eEnv_Runtime)
     grid_on = 0;
@@ -2548,6 +2565,7 @@ void GrowCtx::clear_all( int keep_paste)
       }
     }
   }
+  reset_custom_colors();
   reset_nodraw();
   // if ( show_grid)
   //  draw_grid( 0, 0, mw.window_width, mw.window_height);
@@ -4635,5 +4653,48 @@ void GrowCtx::measure_window( double *ll_x, double *ll_y,
     *ur_x = double(mw.offset_x + mw.window_width) / mw.zoom_factor_x;
     *ll_y = double(mw.offset_y) / mw.zoom_factor_y;
     *ur_y = double(mw.offset_y + mw.window_height) / mw.zoom_factor_y;
+}
+
+int GrowCtx::set_custom_color( glow_eDrawType color, double red, double green, double blue)
+{
+  if ( !customcolors)
+    return 0;
+
+  int sts;
+  sts = customcolors->set_color( color, red, green, blue);
+  if ( ODD(sts)) {
+    gdraw->update_color( color);
+    if ( color == background_color)
+      set_background( color);
+    else
+      redraw();
+  }
+  return sts;
+}
+
+void GrowCtx::reset_custom_colors() 
+{
+  if ( customcolors) {
+    gdraw->reset_customcolors( customcolors);
+    customcolors->reset_colors();
+  }
+  for ( int i = glow_eDrawType_CustomColor1; i < glow_eDrawType_CustomColor__; i+=4)
+    gdraw->update_color( (glow_eDrawType)i);
+}
+
+int GrowCtx::read_customcolor_file( char *name)
+{ 
+  if ( customcolors) 
+    return customcolors->read_colorfile( this, name);
+  else
+    return 0;
+}
+
+int GrowCtx::write_customcolor_file( char *name) 
+{ 
+  if ( customcolors) 
+    return customcolors->write_colorfile( name);
+  else
+    return 0;
 }
 

@@ -3079,6 +3079,10 @@ void grow_GetObjectClassDynType( grow_tObject object, int *dyn_type1, int *dyn_t
 			      unsigned int insensitive_mask1, unsigned int insensitive_mask2);
   void grow_ToolbarScale( grow_tObject object);
   void grow_SetEditSetMode( grow_tCtx ctx, glow_eEditSetMode mode);
+  int grow_SetCustomColor( grow_tCtx ctx, glow_eDrawType color, double red, double green, double blue);
+  void *grow_GetCustomColors( grow_tCtx ctx);
+  int grow_ReadCustomColorFile( grow_tCtx ctx, char *name);
+  int grow_WriteCustomColorFile( grow_tCtx ctx, char *name);
   
 /*@}*/
 #if defined __cplusplus

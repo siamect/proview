@@ -100,6 +100,7 @@ public class GrowCmn {
     int input_focus_mark;
     int hot_indication;
     int app_motion = Glow.eAppMotion_Both;
+    String color_theme = new String();
     Object userdata;
     GlowArrayElem callback_object;
     int callback_object_type;
@@ -112,6 +113,7 @@ public class GrowCmn {
     int recursive_trace;
     public int nodraw;
     public String owner = new String();
+    public GlowCustomColors customcolors = new GlowCustomColors();
     
     Vector<GlowArrayElem> a = new Vector<GlowArrayElem>();
     Vector<GlowArrayElem> a_nc = new Vector<GlowArrayElem>();
@@ -134,6 +136,8 @@ public class GrowCmn {
     }
     public void setGdraw(GlowDrawIfc gdraw) {
 	this.gdraw = gdraw;
+	if ( customcolors != null)
+	    gdraw.push_customcolors( customcolors);
     }
     public void setNodraw() {
     	nodraw++;

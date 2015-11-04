@@ -128,6 +128,18 @@ void ColPalCtx::configure()
     insert( rect);
   }
 
+  int custom_columns = 15;
+  double custom_entry_width = 2 * entry_width;
+  for ( i = glow_eDrawType_CustomColor1; i <= glow_eDrawType_CustomColor60; i+=4)
+  {
+    int i_pos = glow_eDrawType_CustomColor1 + (i - glow_eDrawType_CustomColor1)/4 - 10;
+    x = custom_entry_width * ( double(i_pos)/custom_columns - floor( double(i_pos)/custom_columns)) * custom_columns;
+    y = entry_height * ( 1 + 300/columns + floor( (i_pos - 300)/ custom_columns + DBL_EPSILON));
+    rect = new GrowRect( this, "ColorEntry", x, y, custom_entry_width, entry_height, 
+	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 0, (glow_eDrawType) i);
+    insert( rect);
+  }
+
   double tone_entry_width = 3 * entry_width;
   y += entry_height;
   x = 0;
@@ -324,9 +336,33 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
   callback_object = 0;
 
   switch ( event) {
-    case glow_eEvent_MB1Down:
-      ctx->gdraw->set_click_sensitivity( &ctx->mw, glow_mSensitivity_MB1Click);
+    case glow_eEvent_MB1Down: {
+      sts = 0;
+      for ( i = 0; i < a.a_size; i++) {
+        sts = a.a[i]->event_handler( &ctx->mw, event, x, y, fx, fy);
+        if ( sts == GLOW__NO_PROPAGATE)
+          break;
+      }
+
+      int enable_doubleclick = 0;
+      if ( callback_object_type != glow_eObjectType_NoObject) {
+        if ( callback_object->type() == glow_eObjectType_GrowRect) {
+          GrowRect *rect;
+          char name[32];
+
+          rect = (GrowRect *)callback_object;
+          rect->get_object_name( name);
+          if ( strcmp( name, "ColorEntry") == 0) {
+	    if ( rect->fill_drawtype >= glow_eDrawType_CustomColor1 && rect->fill_drawtype < glow_eDrawType_CustomColor__) {
+	      enable_doubleclick = 1;
+	    }
+	  }
+	}
+      }
+      if ( !enable_doubleclick)
+	ctx->gdraw->set_click_sensitivity( &ctx->mw, glow_mSensitivity_MB1Click);
       break;
+    }
     case glow_eEvent_MB1Click:
     case glow_eEvent_MB1ClickShift:
     case glow_eEvent_MB2Click:
@@ -484,6 +520,61 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
       }
       break;
 
+    case glow_eEvent_MB1DoubleClick:
+      sts = 0;
+      for ( i = 0; i < a.a_size; i++) {
+        sts = a.a[i]->event_handler( &ctx->mw, event, x, y, fx, fy);
+        if ( sts == GLOW__NO_PROPAGATE)
+          break;
+      }
+
+      if ( callback_object_type != glow_eObjectType_NoObject) {
+        if ( callback_object->type() == glow_eObjectType_GrowRect) {
+          GrowRect *rect;
+          char name[32];
+	  int sts;
+
+          rect = (GrowRect *)callback_object;
+          rect->get_object_name( name);
+          if ( strcmp( name, "ColorEntry") == 0) {
+	    current_fill = rect->fill_drawtype;
+	    if ( rect->fill_drawtype >= glow_eDrawType_CustomColor1 && rect->fill_drawtype < glow_eDrawType_CustomColor__) {
+	      double r, g, b;
+
+	      sts = customcolors->get_color( rect->fill_drawtype, &r, &g, &b);
+	      if ( EVEN(sts))
+		r = g = b = 1;
+
+	      sts = gdraw->open_color_selection( &r, &g, &b);
+	      if ( ODD(sts)) {
+		// Send custom color changed callback
+		if ( event_callback[event]) {
+		  static glow_sEvent e;
+
+		  e.event = event;
+		  e.any.type = glow_eEventType_CustomColor;
+		  e.any.x_pixel = x;
+		  e.any.y_pixel = y;
+		  e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+		  e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
+		  e.customcolor.color = rect->fill_drawtype;
+		  e.customcolor.red = r;
+		  e.customcolor.green = g;
+		  e.customcolor.blue = b;
+		  event_callback[event]( this, &e);
+
+		  // Redraw with the new color
+		  //draw( &mw, 0, 0, mw.window_width, mw.window_height);
+		  gdraw->update_color( rect->fill_drawtype);
+		  redraw();
+		}
+	      }
+	    }
+	  }
+	}
+      }
+      break;
+
     case glow_eEvent_Exposure:
       int width, height;
 
@@ -573,10 +664,22 @@ void ColPalCtx::set_colors()
   }
   ((GrowRect *)active_fill)->set_fill_color( shadowcolor);
   
-  if ( current_fill == glow_eDrawType_Line || 
-       (((current_fill + 1) % 10 == 0) && current_fill > 20) ||
-       (((current_fill + 2) % 10 == 0) && current_fill > 20))
-    textcolor = glow_eDrawType_Color4;
+  if ( current_fill < glow_eDrawType_Color__) {
+    if ( current_fill == glow_eDrawType_Line || 
+	 (((current_fill + 1) % 10 == 0) && current_fill > 20) ||
+	 (((current_fill + 2) % 10 == 0) && current_fill > 20))
+      textcolor = glow_eDrawType_Color4;
+    else
+      textcolor = glow_eDrawType_Line;
+  }
+  else if ( customcolors && current_fill >= glow_eDrawType_CustomColor1 && current_fill < glow_eDrawType_CustomColor__) {
+    double r, g, b;
+    GlowColor::rgb_color( current_fill, &r, &g, &b, customcolors);
+    if ( (r+g+b)/3 < 0.4)
+      textcolor = glow_eDrawType_Color4;
+    else
+      textcolor = glow_eDrawType_Line;
+  }
   else
     textcolor = glow_eDrawType_Line;
   text_fill->set_text_color( textcolor);
@@ -607,10 +710,22 @@ void ColPalCtx::set_colors()
   }
   ((GrowRect *)active_border)->set_fill_color( shadowcolor);
   
-  if ( current_border == glow_eDrawType_Line || 
-       (((current_border + 1) % 10 == 0) && current_border > 20) ||
-       (((current_border + 2) % 10 == 0) && current_border > 20))
-    textcolor = glow_eDrawType_Color4;
+  if ( current_border < glow_eDrawType_Color__) {
+    if ( current_border == glow_eDrawType_Line || 
+	 (((current_border + 1) % 10 == 0) && current_border > 20) ||
+	 (((current_border + 2) % 10 == 0) && current_border > 20))
+      textcolor = glow_eDrawType_Color4;
+    else
+      textcolor = glow_eDrawType_Line;
+  }
+  else if ( customcolors && current_border >= glow_eDrawType_CustomColor1 && current_border < glow_eDrawType_CustomColor__) {
+    double r, g, b;
+    GlowColor::rgb_color( current_border, &r, &g, &b, customcolors);
+    if ( (r+g+b)/3 < 0.4)
+      textcolor = glow_eDrawType_Color4;
+    else
+      textcolor = glow_eDrawType_Line;
+  }
   else
     textcolor = glow_eDrawType_Line;
   text_border->set_text_color( textcolor);
@@ -641,10 +756,22 @@ void ColPalCtx::set_colors()
   }
   ((GrowRect *)active_text)->set_fill_color( shadowcolor);
   
-  if ( current_text == glow_eDrawType_Line || 
-       (((current_text + 1) % 10 == 0) && current_text > 20) ||
-       (((current_text + 2) % 10 == 0) && current_text > 20))
-    textcolor = glow_eDrawType_Color4;
+  if ( current_text < glow_eDrawType_Color__) {
+    if ( current_text == glow_eDrawType_Line || 
+	 (((current_text + 1) % 10 == 0) && current_text > 20) ||
+	 (((current_text + 2) % 10 == 0) && current_text > 20))
+      textcolor = glow_eDrawType_Color4;
+    else
+      textcolor = glow_eDrawType_Line;
+  }
+  else if ( customcolors && current_text >= glow_eDrawType_CustomColor1 && current_text < glow_eDrawType_CustomColor__) {
+    double r, g, b;
+    GlowColor::rgb_color( current_text, &r, &g, &b, customcolors);
+    if ( (r+g+b)/3 < 0.4)
+      textcolor = glow_eDrawType_Color4;
+    else
+      textcolor = glow_eDrawType_Line;
+  }
   else
     textcolor = glow_eDrawType_Line;
   text_text->set_text_color( textcolor);
@@ -689,4 +816,14 @@ int tone_color_match( int tone)
   }
 
   return drawtype;
+}
+
+void ColPalCtx::update_custom_colors( GlowCustomColors *cc)
+{
+  set_custom_colors( cc);
+  gdraw->set_customcolors( cc);
+
+  for ( int i = glow_eDrawType_CustomColor1; i < glow_eDrawType_CustomColor__; i+=4)
+    gdraw->update_color( (glow_eDrawType)i);
+  redraw();
 }

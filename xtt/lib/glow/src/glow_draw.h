@@ -189,6 +189,13 @@ class GlowDraw {
 				      glow_eGradient gradient) 
     {return fill_polyline( wind, points, point_cnt, d0, 0);}
   virtual void event_exec( void *event, unsigned int size) {}
+  virtual int open_color_selection(double *r, double *g, double *b) { return 0;}
+  virtual void update_color( glow_eDrawType color) {}
+  virtual void push_customcolors( GlowCustomColors *cc) {}
+  virtual void set_customcolors( GlowCustomColors *cc) {}
+  virtual void pop_customcolors() {}
+  virtual GlowCustomColors *create_customcolors() { return 0;}
+  virtual void reset_customcolors( GlowCustomColors *cc) {}
 };
 
 class DrawWind {

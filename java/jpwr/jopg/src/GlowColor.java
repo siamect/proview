@@ -69,6 +69,7 @@ public class GlowColor {
     }
 
     static final Hue ctab[] = new Hue[]{
+	
 
 	new Hue( 18, -20.0, new Sat[]{new Sat( 0.2, -1.4, 2.8, .9), new Sat( 0.5, -1.4, 3, .9), new Sat(1.5, -3.5, 5.0, 1.0)}),
 	new Hue( 28,  10.0, new Sat[]{new Sat( 0.2, -1.4, 2.8, .9), new Sat( 0.5, -1.4, 3, .9), new Sat(1.5, -3.5, 5.0, 1.0)}),  // Yellow
@@ -125,6 +126,14 @@ public class GlowColor {
 	};
 
 
+    static boolean is_shiftable( int dt) {
+      return (dt >= 20 && dt <= Glow.eDrawType_Color300);
+    }
+
+    static boolean is_custom( int dt) {
+      return (dt >= Glow.eDrawType_CustomColor1 && dt <= Glow.eDrawType_CustomColor__);
+    }
+
     public static int shift_drawtype( int dt, int shift, Object node) {
 	int incr;
 	int base_drawtype;
@@ -133,7 +142,7 @@ public class GlowColor {
 	if ( node != null && ((GlowColorNode)node).getColorInverse() != 0)
 	    shift = - shift;
 
-	if ( dt >= 20) {
+	if ( is_shiftable(dt)) {
 	    base_drawtype = (int)(dt / 10 * 10);
 	    incr = shift + dt - base_drawtype;
 	    if ( incr < 0)
@@ -142,6 +151,16 @@ public class GlowColor {
 		drawtype = Glow.eDrawType_Color30; // DarkGrey
 	    else
 		drawtype = (int)(base_drawtype + incr);
+	}
+	else if ( is_custom(dt)) {
+	    if ( shift == -1)
+		drawtype = (dt + 3);
+	    else if ( shift < 0)
+		drawtype = (dt + 2);
+	    else if ( shift > 0)
+		drawtype = (dt + 1);
+	    else
+		drawtype = dt;
 	}
 	else
 	    drawtype = dt;
@@ -174,7 +193,7 @@ public class GlowColor {
 	    if ( node != null && ((GlowColorNode)node).getColorTone() != Glow.eDrawTone_No) {
 		int tone = ((GlowColorNode)node).getColorTone();
 
-		if ( local_drawtype > 30) {
+		if ( local_drawtype > 30 && local_drawtype < 300) {
 		    if ( tone == Glow.eDrawTone_LightGrayHighSaturation)
 			drawtype = Glow.eDrawType_Color31; // GrayLow1
 		    else if ( tone == Glow.eDrawTone_DarkGrayHighSaturation)
@@ -219,7 +238,7 @@ public class GlowColor {
 		drawtype = local_drawtype;
 
 	    if ( node != null && lightness != 0) {
-		if ( local_drawtype >= 30) {
+		if ( local_drawtype >= 30 && drawtype < 300) {
 		    base_drawtype = drawtype / 10 * 10;
 		    incr = -lightness + drawtype - base_drawtype;
 		    if ( incr < 0)
@@ -240,7 +259,7 @@ public class GlowColor {
 		}
 	    }
 	    if ( node != null && ((GlowColorNode)node).getColorShift() != 0) {
-		if ( drawtype >= 60) {
+		if ( drawtype >= 60 && drawtype < 300) {
 		    incr = ((GlowColorNode)node).getColorShift() - 
 			((GlowColorNode)node).getColorShift() / 8 * 8;
 		    if ( incr < 0)
@@ -253,8 +272,16 @@ public class GlowColor {
 		}
 	    }
 	    if ( node != null && ((GlowColorNode)node).getColorInverse() != 0) {
-		if ( drawtype >= 30)
+		if ( drawtype >= 30 && drawtype < 300)
 		    drawtype = drawtype + 10 - 2 * (drawtype % 10) - 1;      
+		else if ( is_custom(drawtype)) {
+		    if ( (drawtype - Glow.eDrawType_CustomColor1) % 4 == 1)
+			drawtype = drawtype + 1;
+		    else if ( (drawtype - Glow.eDrawType_CustomColor1) % 4 == 2)
+			drawtype = drawtype - 1;
+		    else if ( (drawtype - Glow.eDrawType_CustomColor1) % 4 == 3)
+			drawtype = drawtype - 2;
+		}
 	    }
 	    if ( node != null && ((GlowColorNode)node).getDimmed() != 0) {
 		if ( drawtype == 0)
@@ -269,14 +296,15 @@ public class GlowColor {
 		    drawtype = ( drawtype - 4);
 	    }
 	}
-	if ( drawtype < 0 || drawtype >= 301) {
+	if ( !((drawtype >= 0 && drawtype <= Glow.eDrawType_Color300) || 
+	       (drawtype >= Glow.eDrawType_CustomColor1 && drawtype < Glow.eDrawType_CustomColor__))) {
 	    System.out.println("** Invalid drawtype : " + drawtype);    
 	    drawtype = Glow.eDrawType_Line;
 	}
 	return drawtype;
     }
 
-    public static GlowColorRgb rgb_color( int idx) {
+    public static GlowColorRgb rgb_color( int idx, GlowCustomColors customcolors) {
 	double h1, i1, s1;
 	int i, j, k;
 	double r = 0;
@@ -333,6 +361,12 @@ public class GlowColor {
 	
 		return his_to_rgb( h1, i1, s1);
 	    }
+	}
+	else if ( idx >= Glow.eDrawType_CustomColor1 && idx < Glow.eDrawType_CustomColor__) {
+	    if ( customcolors == null)
+		return new GlowColorRgb(1,1,1);
+	    else
+		return customcolors.get_color(idx);
 	}
 	return new GlowColorRgb(r, g, b);
     }

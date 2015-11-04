@@ -60,4 +60,6 @@ public interface GlowDrawIfc {
     public Color getColor(int gc_type);
     public int set_clip_rectangle( int x1, int y1, int x2, int y2);
     public void reset_clip_rectangle();
+    public void push_customcolors( GlowCustomColors cc);
+    public void pop_customcolors();
 }

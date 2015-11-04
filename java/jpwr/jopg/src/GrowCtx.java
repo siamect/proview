@@ -144,6 +144,10 @@ public class GrowCtx implements GrowCtxIfc {
 		case Glow.eSave_Ctx_app_motion: 
 		    cmn.app_motion = Integer.valueOf(token.nextToken());
 		    break;
+		case Glow.eSave_Ctx_color_theme: 
+		    if ( token.hasMoreTokens())
+			cmn.color_theme = token.nextToken();
+		    break;
 		case Glow.eSave_Ctx_grow:
 		    open_grow( reader);
 		    grow_loaded = true;
@@ -350,6 +354,9 @@ public class GrowCtx implements GrowCtxIfc {
 			cmn.userdata = cmn.appl.growUserdataOpen(reader, cmn, Glow.eUserdataCbType_Ctx);
 		    break;
 		case Glow.eSave_GrowCtx_bitmap_fonts:
+		    break;
+		case Glow.eSave_GrowCtx_customcolors:
+		    cmn.customcolors.open( reader);
 		    break;
 		default:
 		    System.out.println( "Syntax error in GrowCtx");

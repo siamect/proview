@@ -3046,6 +3046,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   graph->traverse_focus_cb = &Ge::traverse_focus;
   graph->get_ldhses_cb = &Ge::get_ldhses_cb;
   graph->create_modal_dialog_cb = &Ge::create_modal_dialog_cb;
+  graph->update_colorpalette_cb = &Ge::update_colorpalette;
 
   // Vertical palette pane
   GtkWidget *vpaned1 = gtk_vpaned_new();

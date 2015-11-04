@@ -41,6 +41,7 @@
 #include <stdlib.h>
 #include "glow_color.h"
 #include "glow_grownode.h"
+#include "glow_customcolors.h"
 
 typedef struct {
   double r;
@@ -113,7 +114,6 @@ static s_rgb rgbtab[] = {
   { 1.000, 0.937, 0.820}
 };
 
-
 void GlowColor::his_to_rgb( double *r, double *g, double *b, double h, double i, double s)
 {
   double m1, m2, i1;
@@ -137,7 +137,7 @@ void GlowColor::his_to_rgb( double *r, double *g, double *b, double h, double i,
   if ( *b < 0) *b = 0;
 }
 
-void GlowColor::rgb_color( int idx, double *r, double *g, double *b)
+void GlowColor::rgb_color( int idx, double *r, double *g, double *b, GlowCustomColors *customcolors)
 {
   double h1, i1, s1;
   int i, j, k;
@@ -190,6 +190,13 @@ void GlowColor::rgb_color( int idx, double *r, double *g, double *b)
       his_to_rgb( r, g, b, h1, i1, s1);
     }
   }
+  else if ( idx >= glow_eDrawType_CustomColor1 && idx < glow_eDrawType_CustomColor__ && customcolors) {
+    // Custom colors, temporary values
+    if ( customcolors == 0)
+      *r = *g = *b = 1;
+    else
+      customcolors->get_color( (glow_eDrawType)idx, r, g, b);
+  }
 }
 
 
@@ -202,7 +209,7 @@ glow_eDrawType GlowColor::shift_drawtype( glow_eDrawType dt, int shift, void *no
   if ( node && ((GrowNode *)node)->color_inverse)
     shift = - shift;
 
-  if ( dt >= 20) {
+  if ( is_shiftable(dt)) {
     base_drawtype = (glow_eDrawType)(dt / 10 * 10);
     incr = shift + dt - base_drawtype;
     if ( incr < 0)
@@ -211,6 +218,16 @@ glow_eDrawType GlowColor::shift_drawtype( glow_eDrawType dt, int shift, void *no
       drawtype = glow_eDrawType_Color30; // DarkGrey
     else
       drawtype = (glow_eDrawType)(base_drawtype + incr);
+  }
+  else if ( is_custom(dt)) {
+    if ( shift == -1)
+      drawtype = (glow_eDrawType)(dt + 3);
+    else if ( shift < 0)
+      drawtype = (glow_eDrawType)(dt + 2);
+    else if ( shift > 0)
+      drawtype = (glow_eDrawType)(dt + 1);
+    else
+      drawtype = dt;
   }
   else
     drawtype = dt;
@@ -244,7 +261,7 @@ glow_eDrawType GlowColor::get_drawtype( glow_eDrawType local_drawtype,
     if ( node && ((GrowNode *)node)->color_tone != glow_eDrawTone_No) {
       glow_eDrawTone tone = ((GrowNode *)node)->color_tone;
 
-      if ( local_drawtype > 30) {
+      if ( local_drawtype > 30 && local_drawtype < 300) {
 	if ( tone == glow_eDrawTone_LightGrayHighSaturation)
           drawtype = glow_eDrawType_Color31; // GrayLow1
 	else if ( tone == glow_eDrawTone_DarkGrayHighSaturation)
@@ -289,7 +306,7 @@ glow_eDrawType GlowColor::get_drawtype( glow_eDrawType local_drawtype,
       drawtype = local_drawtype;
 
     if ( node && lightness) {
-      if ( local_drawtype >= 30) {
+      if ( local_drawtype >= 30 && local_drawtype < 300) {
         base_drawtype = drawtype / 10 * 10;
         incr = -lightness + drawtype - base_drawtype;
         if ( incr < 0)
@@ -301,7 +318,7 @@ glow_eDrawType GlowColor::get_drawtype( glow_eDrawType local_drawtype,
       }
     }
     if ( node && intensity) {
-      if ( drawtype >= 60) {
+      if ( drawtype >= 60 && drawtype < 300) {
         base_drawtype = drawtype / 30 * 30;
         incr = drawtype - base_drawtype;
 	drawtype = glow_eDrawType( drawtype + min( 2 - incr / 10, intensity) * 10);
@@ -324,7 +341,7 @@ glow_eDrawType GlowColor::get_drawtype( glow_eDrawType local_drawtype,
       }
     }
     if ( node && ((GrowNode *)node)->color_shift) {
-      if ( drawtype >= 60) {
+      if ( drawtype >= 60 && drawtype < 300) {
         incr = ((GrowNode *)node)->color_shift - 
 		((GrowNode *)node)->color_shift / 8 * 8;
         if ( incr < 0)
@@ -337,8 +354,16 @@ glow_eDrawType GlowColor::get_drawtype( glow_eDrawType local_drawtype,
       }
     }
     if ( node && ((GrowNode *)node)->color_inverse) {
-      if ( drawtype >= 30)
+      if ( drawtype >= 30 && drawtype < 300)
         drawtype = (glow_eDrawType)(drawtype + 10 - 2 * (drawtype % 10) - 1);      
+      else if ( is_custom(drawtype)) {
+	if ( (drawtype - glow_eDrawType_CustomColor1) % 4 == 1)
+	  drawtype = (glow_eDrawType)(drawtype + 1);
+	else if ( (drawtype - glow_eDrawType_CustomColor1) % 4 == 2)
+	  drawtype = (glow_eDrawType)(drawtype - 1);
+	else if ( (drawtype - glow_eDrawType_CustomColor1) % 4 == 3)
+	  drawtype = (glow_eDrawType)(drawtype - 2);
+      }
     }
     if ( node && ((GrowNode *)node)->dimmed) {
       if ( drawtype == 0)
@@ -353,7 +378,8 @@ glow_eDrawType GlowColor::get_drawtype( glow_eDrawType local_drawtype,
 	drawtype = (glow_eDrawType) ( drawtype - 4);
     }
   }
-  if ( drawtype < 0 || drawtype >= 301) {
+  if ( !((drawtype >= 0 && drawtype <= glow_eDrawType_Color300) || 
+	 (drawtype >= glow_eDrawType_CustomColor1 && drawtype < glow_eDrawType_CustomColor__))) {
     printf("** Invalid drawtype : %d\n", drawtype);    
     drawtype = glow_eDrawType_Line;
   }
@@ -892,5 +918,4 @@ char *GlowColor::colortone_to_name( glow_eDrawType drawtype)
     strcpy( tone_name, color_tone_names[drawtype]);
   return tone_name;
 }
-
 

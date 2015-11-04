@@ -168,7 +168,7 @@ Graph::Graph(
 	message_dialog_cb(NULL), is_authorized_cb(NULL), 
 	traverse_focus_cb(NULL), set_focus_cb(NULL), get_ldhses_cb(NULL),
 	get_current_objects_cb(NULL), popup_menu_cb(NULL), call_method_cb(NULL),
-	sound_cb(0), create_modal_dialog_cb(0), eventlog_cb(0),
+	sound_cb(0), create_modal_dialog_cb(0), eventlog_cb(0), update_colorpalette_cb(0),
 	linewidth(1), linetype(glow_eLineType_Solid), textsize(2), 
 	textbold(0), textfont(glow_eFont_Helvetica),
 	border_color(1), fill_color(1), fill(0), border(1), shadow(0),
@@ -1169,6 +1169,16 @@ void Graph::set_nav_background_color()
   grow_SetBackgroundColor( grow->ctx, color);
 }
 
+int Graph::set_custom_color( glow_eDrawType color, double red, double green, double blue)
+{
+  return grow_SetCustomColor( grow->ctx, color, red, green, blue);
+}
+
+void *Graph::get_custom_colors()
+{
+  return grow_GetCustomColors( grow->ctx);
+}
+
 void Graph::set_default_background_color()
 {
   grow_SetBackgroundColor( grow->ctx, glow_eDrawType_Color32);
@@ -1330,6 +1340,7 @@ int Graph::is_authorized( unsigned int access)
   }
   return 1;
 }
+
 
 int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 	int *item_cnt, void **client_data)

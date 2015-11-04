@@ -3678,6 +3678,12 @@ kurvfönster som sev_xtt.
 
 <h1>Installation av en lagringsstation
 <h2>MySQL
+Det rekommenderas att databasmotorn innodb andvänds för mysql. Sepcificera i /etc/proview.cnf 
+att mysql ska användas, och att tabeller ska skapas med motor innodb
+
+<c>sevDatabaseType mysql
+<c>sevMysqlEngine innodb
+
 Installera mysql-server på lagringstationen och addera användaren pwrp i mysql
 
 <c>> mysql

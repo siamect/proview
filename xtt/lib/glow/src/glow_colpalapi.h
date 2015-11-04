@@ -121,6 +121,8 @@ typedef ColPalCtx *colpal_tCtx;
 
   colpal_eActive colpal_GetActive( colpal_tCtx ctx);
 
+  void colpal_UpdateCustomColors( colpal_tCtx ctx, void *customcolors);
+
 /*@}*/
 #if defined __cplusplus
 }

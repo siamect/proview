@@ -216,7 +216,11 @@ public class GrowWindow extends GrowRect implements GrowScrollBarIfc {
 
 	    cmn.gdraw.set_clip_rectangle( ll_x, ll_y, ur_x-1, ur_y-1);
 
+	    if ( windowCmn.customcolors != null)
+		cmn.gdraw.push_customcolors( windowCmn.customcolors);
 	    windowCmn.ctx.draw( ll_x, ll_y, ur_x, ur_y);
+	    if ( windowCmn.customcolors != null)
+		cmn.gdraw.pop_customcolors();
 
 	    cmn.gdraw.reset_clip_rectangle();
 	}
@@ -277,6 +281,8 @@ public class GrowWindow extends GrowRect implements GrowScrollBarIfc {
 	    cmn.mw.zoom_factor_x * windowCmn.mw.subwindow_scale;
 	    	
 	configureScrollbars();
+	if ( windowCmn.customcolors != null)
+	    cmn.gdraw.pop_customcolors();
     }
 
     public int eventHandler( GlowEvent event, double fx, double fy) {

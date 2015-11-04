@@ -3298,6 +3298,11 @@ int grow_GetGraphAttrInfo( grow_tCtx ctx, grow_sAttrInfo **info,
   attrinfo[i].type = glow_eType_AppMotion;
   attrinfo[i++].size = sizeof( ctx->app_motion);
       
+  strcpy( attrinfo[i].name, "ColorTheme");
+  attrinfo[i].value_p = ctx->color_theme;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( ctx->color_theme);
+      
   attrinfo[i].info_type = grow_eInfoType_End;
   *attr_cnt = i;
   *info = attrinfo;
@@ -5319,6 +5324,27 @@ void grow_SetEditSetMode( grow_tCtx ctx, glow_eEditSetMode mode)
 {
   ctx->set_edit_set_mode( mode);
 }
+
+int grow_SetCustomColor( grow_tCtx ctx, glow_eDrawType color, double red, double green, double blue)
+{
+  return ctx->set_custom_color( color, red, green, blue);
+}
+
+void *grow_GetCustomColors( grow_tCtx ctx)
+{
+  return (void *)ctx->get_custom_colors();
+}
+
+int grow_ReadCustomColorFile( grow_tCtx ctx, char *name)
+{
+  return ctx->read_customcolor_file( name);
+}
+
+int grow_WriteCustomColorFile( grow_tCtx ctx, char *name)
+{
+  return ctx->write_customcolor_file( name);
+}
+
 
 /*@}*/
 

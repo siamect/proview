@@ -39,6 +39,7 @@ local_java_sources := \
 	GrowApplIfc.java,\
 	GlowColorNode.java,\
 	GlowColorRgb.java,\
+	GlowCustomColors.java,\
 	GlowColor.java,\
 	GlowDrawIfc.java,\
 	GlowDraw.java,\

@@ -234,7 +234,7 @@ static GC get_gc( GlowDrawXLib *draw_ctx, int i, int j)
     XGCValues 		xgcv;
     double r, g, b;
 
-    GlowColor::rgb_color( i, &r, &g, &b);
+    GlowColor::rgb_color( i, &r, &g, &b, 0);
     xgcv.foreground = glow_allocate_color( draw_ctx, int(r * 65535), 
 		int(g * 65535), int(b * 65535));
     xgcv.background = draw_ctx->background;
@@ -298,7 +298,7 @@ static int draw_free_gc( GlowDrawXLib *draw_ctx)
     XFreeCursor( draw_ctx->display, draw_ctx->cursors[i]);
 
   XFreeGC( draw_ctx->display, draw_ctx->gc_inverse);
-  for ( i = 0; i < glow_eDrawType__; i++)
+  for ( i = 0; i < glow_eDrawType_Color__; i++)
   {
     for ( j = 0; j < DRAW_TYPE_SIZE; j++) {
       if ( draw_ctx->gcs[i][j])
@@ -2255,7 +2255,7 @@ static int glow_read_color_file( const char *filename, draw_sColor **color_array
     color_p = *color_array;
     for ( int i = 3; i < 300; i++)
     {
-      GlowColor::rgb_color( i, &r, &g, &b);
+      GlowColor::rgb_color( i, &r, &g, &b, 0);
       color_p->red = int( r * 65535);
       color_p->green = int( g * 65535);
       color_p->blue = int( b * 65535);

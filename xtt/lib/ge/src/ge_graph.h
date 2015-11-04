@@ -484,6 +484,7 @@ class Graph {
   int 		(*create_modal_dialog_cb)( void *, const char *, const char *, const char *, const char *, 
 					   const char *, const char *);
   void         	(*eventlog_cb)(void *, void *, unsigned int);
+  void         	(*update_colorpalette_cb)(void *);
   int			linewidth;		//!< Selected linewidth.
   glow_eLineType	linetype;		//!< Selected linetype.
   int			textsize;		//!< Selected text size.
@@ -717,13 +718,19 @@ class Graph {
   /*! \param show	1 gridpoints are displayed, 0 gridpoints are hidden. */
   void set_show_grid( int show);
 
-  //! Checi if gridpoints are displayed.
+  //! Check if gridpoints are displayed.
   /*! \return	1 gridpoints are displayed, 0 gridpoints are hidden. */
   int get_show_grid();
 
   //! Set backgound color in the navigation window.
   /*! Background color is set to the currently selected fill color. */
   void set_nav_background_color();
+
+  //! Modify a custom color.
+  int set_custom_color( glow_eDrawType color, double red, double green, double blue);
+
+  //! Get custom colors.
+  void *get_custom_colors();
 
   //! Set name of the grow context.
   /*! \param name	Grow context name. */

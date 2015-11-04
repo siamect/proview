@@ -117,6 +117,8 @@ static int	graph_two_func( void		*client_data,
 				void		*client_flag);
 static int	graph_build_func( void		*client_data,
 				  void		*client_flag);
+static int	graph_customcolor_func( void   	*client_data,
+				  void		*client_flag);
 
 dcli_tCmdTable	graph_command_table[] = {
 		{
@@ -239,6 +241,11 @@ dcli_tCmdTable	graph_command_table[] = {
 			&graph_build_func,
 			{""}
 		},
+		{
+			"CUSTOMCOLOR",
+			&graph_customcolor_func,
+			{"dcli_arg", "/FILE", ""}
+		},
 		{"",}};
 
 static void graph_store_graph( Graph *graph)
@@ -342,6 +349,52 @@ static int	graph_build_func(void		*client_data,
 
   sprintf( cmd, "cp -a $pwrp_pop/%s.pwg $pwrp_exe/", name);
   system( cmd);
+
+  return GE__SUCCESS;
+}
+
+static int	graph_customcolor_func(void		*client_data,
+				       void		*client_flag)
+{
+  Graph *graph = (Graph *)client_data;
+  char	arg1_str[80];
+  int	arg1_sts;
+  int   sts;
+  char  file_str[80];
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( cdh_NoCaseStrncmp( arg1_str, "WRITE", strlen( arg1_str)) == 0) {
+    // Command is "CUSTOMCOLOR WRITE"
+
+    if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+    sts = grow_WriteCustomColorFile( graph->grow->ctx, file_str);
+    if ( EVEN(sts)) {
+      graph->message('E', "Write error");
+      return GE__SYNTAX;
+    }
+    graph->message('I', "Custom color file created");   
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "READ", strlen( arg1_str)) == 0) {
+    // Command is "CUSTOMCOLOR READ"
+
+    if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+    sts = grow_ReadCustomColorFile( graph->grow->ctx, file_str);
+    if ( EVEN(sts)) {
+      graph->message('E', "Read error");
+      return GE__SYNTAX;
+    }
+    if ( graph->update_colorpalette_cb)
+      (graph->update_colorpalette_cb)( graph->parent_ctx);
+
+    graph->message('I', "Custom color file read");
+  }
 
   return GE__SUCCESS;
 }

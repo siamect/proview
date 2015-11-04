@@ -1842,7 +1842,6 @@ sevDatabaseType <t><t>Database type, mysql or sqlite.
 sevXttDefaultPriv <t><t>Default privileges for access of the sev database from sev_xtt.
 sevMysqlEngine <t><t>Mysql engine for created tables, innodb or myisam.
 
-
 </topic>
 
 </headerlevel>
@@ -3722,6 +3721,12 @@ history method views the same curve window as sev_xtt.
 
 <h1>Installation of a storage station
 <h2>MySQL
+It's recommended to use the database engine innodb. Specify in /etc/proview.cnf that
+mysql should be used, and that tables should be created with engine innodb
+
+<c>sevDatabaseType mysql
+<c>sevMysqlEngine innodb
+
 Install mysql-server on the storage station, and add the mysql user pwrp
 
 <c>> mysql
