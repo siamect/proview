@@ -1496,6 +1496,13 @@ extern "C" {
   //! Set fill for an object.
   /*!
     \param object	Object.
+    \param border       Border value. 1 the object is drawn with border, 0 without border.
+  */
+  void grow_SetObjectBorder( grow_tObject object, int fill);
+
+  //! Set fill for an object.
+  /*!
+    \param object	Object.
     \param fill		Fill value. 1 the object is drawn with fill, 0 without fill.
   */
   void grow_SetObjectFill( grow_tObject object, int fill);
@@ -1907,7 +1914,7 @@ extern "C" {
     \param dyn_action_type1 Actiontype of the object's nodeclass mask 1.
     \param dyn_action_type2 Actiontype of the object's nodeclass mask 2.
   */
-void grow_GetObjectClassDynType( grow_tObject object, int *dyn_type1, int *dyn_type2,
+  void grow_GetObjectClassDynType( grow_tObject object, int *dyn_type1, int *dyn_type2,
 				 int *dyn_action_type1, int *dyn_action_type2);
 
   //! Get cycle for the nodeclass of an object.
@@ -3063,6 +3070,9 @@ void grow_GetObjectClassDynType( grow_tObject object, int *dyn_type1, int *dyn_t
 				  grow_tObject *next);
   int grow_GetPreviousObject( grow_tCtx ctx, grow_tObject object, grow_tObject *prev);
   int grow_GetNextObject( grow_tCtx ctx, grow_tObject object, grow_tObject *next);
+  int grow_GetFirstObject( grow_tCtx ctx, grow_tObject *first);
+  int grow_GroupGetNextObject( grow_tObject group, grow_tObject object, grow_tObject *next);
+  int grow_GroupGetFirstObject( grow_tObject group, grow_tObject *first);
   int grow_IsVisible( grow_tCtx ctx, grow_tObject object, glow_eVisible type);
   int grow_ExportFlow( grow_tCtx ctx, char *filename);
   void grow_ObjectSave( grow_tObject object, ofstream& fp, glow_eSaveMode mode);
@@ -3083,6 +3093,18 @@ void grow_GetObjectClassDynType( grow_tObject object, int *dyn_type1, int *dyn_t
   void *grow_GetCustomColors( grow_tCtx ctx);
   int grow_ReadCustomColorFile( grow_tCtx ctx, char *name);
   int grow_WriteCustomColorFile( grow_tCtx ctx, char *name);
+  void grow_SetDefaultColorTheme( char *theme);
+  void grow_PrintRgbColors( grow_tCtx ctx);
+  int grow_GetObjectFill( grow_tObject o);
+  int grow_GetObjectBorder( grow_tObject o);
+  glow_eDrawType grow_GetObjectFillColor( grow_tObject o);
+  glow_eDrawType grow_GetObjectBorderColor( grow_tObject o);
+  glow_eDrawType grow_GetObjectTextColor( grow_tObject o);
+  glow_eGradient grow_GetObjectGradient( grow_tObject o);
+  int grow_GetObjectShadow( grow_tObject o);
+  void grow_SetObjectOriginalFillColor( grow_tObject o, glow_eDrawType color);
+  void grow_SetObjectOriginalBorderColor( grow_tObject o, glow_eDrawType color);
+  void grow_SetObjectOriginalTextColor( grow_tObject o, glow_eDrawType color);
   
 /*@}*/
 #if defined __cplusplus

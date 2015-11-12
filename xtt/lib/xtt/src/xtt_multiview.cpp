@@ -328,11 +328,11 @@ XNav *XttMultiView::get_xnav()
 
 XttMultiView::XttMultiView( void *mv_parent_ctx, const char *mv_name,
 			    pwr_tAttrRef *mv_aref, int mv_width, int mv_height,
-			    int mv_x, int mv_y, unsigned int mv_options,
+			    int mv_x, int mv_y, unsigned int mv_options, int mv_color_theme,
 			    int (*mv_command_cb) (void *, char *, char *, void *),
 			    int (*mv_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 			    int (*mv_is_authorized_cb) (void *, unsigned int)) :
-  parent_ctx(mv_parent_ctx), options(mv_options),
+  parent_ctx(mv_parent_ctx), options(mv_options), color_theme(mv_color_theme),
   command_cb(mv_command_cb), close_cb(0), help_cb(0), display_in_xnav_cb(0), 
   is_authorized_cb(mv_is_authorized_cb), popup_menu_cb(0), call_method_cb(0), 
   get_current_objects_cb(mv_get_current_objects_cb), sound_cb(0), eventlog_cb(0),

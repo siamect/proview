@@ -853,6 +853,7 @@ class GlowCtx {
   static int eventlog_enabled;  //!< Event logging enabled.
   GlowCustomColors *customcolors; //!< Custom colors storage
   char color_theme[40];		//!< Custom color file.
+  static char default_color_theme[40]; //!< Default custom color file.
 
   //! Register scrollbar callback function
   /*!

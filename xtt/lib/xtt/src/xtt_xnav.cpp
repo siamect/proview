@@ -3173,6 +3173,9 @@ int	XNav::setup()
   new ItemLocal( brow, "ShowAllAttributes", "setup_allattr", 
 	pwr_eType_Int32, sizeof( gbl.show_truedb), 0, 1, 0,
 	(void *) &gbl.show_allattr, NULL, flow_eDest_IntoLast);
+  new ItemLocal( brow, "ColorTheme", "setup_colortheme", 
+	pwr_eType_Int32, sizeof( gbl.color_theme), 0, 20, 0,
+	(void *) &gbl.color_theme, NULL, flow_eDest_IntoLast);
 
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
@@ -3300,6 +3303,7 @@ int	XNavGbl::load_config( XNav *xnav)
   op_wind_eventname_seg = xnav->opplace_p->OpWindEventNameSegments;
   strcpy( setupscript, xnav->opplace_p->SetupScript);
   dcli_trim( setupscript, setupscript);
+  color_theme = xnav->opplace_p->ColorTheme;
 
   return XNAV__SUCCESS;
 }

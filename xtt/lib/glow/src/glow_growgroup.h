@@ -175,6 +175,12 @@ class GrowGroup : public GrowNode {
   void set_object_name( char *name) { strcpy( n_name, name);
     strcpy( nc->nc_name, name);}
 
+  //! Get next object. */
+  int get_next_object( GlowArrayElem *object, GlowArrayElem **next) { return nc->a.get_next( object, next);}
+
+  //! Get first object. */
+  int get_first_object( GlowArrayElem **first) { return nc->a.get_first( first);}
+
 };
 
 /*@}*/

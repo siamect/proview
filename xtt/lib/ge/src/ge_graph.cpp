@@ -156,7 +156,8 @@ Graph::Graph(
 	const char *xn_object_name,
 	int xn_use_default_access,
 	unsigned int xn_default_access,
-	unsigned int xn_options) :
+	unsigned int xn_options,
+	int xn_color_theme) :
 	attr_list( 0, NULL),
 	parent_ctx(xn_parent_ctx),
 	grow(0), grow_cnt(0), ldhses(0), journal(0),
@@ -186,7 +187,8 @@ Graph::Graph(
 	graph_object_scan(0), graph_object_close(0), local_db(0),
 	use_default_access(xn_use_default_access), 
 	default_access(xn_default_access), keep_mode(false),
-        subgraph_dyn(0), was_subgraph(0), disable_log(1), pending_borders(0)
+        subgraph_dyn(0), was_subgraph(0), disable_log(1), pending_borders(0),
+	color_theme(xn_color_theme)
 {
   cdh_StrncpyCutOff( name, xn_name, sizeof(name), 1);
   strcpy( default_path, xn_default_path);
@@ -210,6 +212,10 @@ Graph::Graph(
 
     journal = new GraphJournal( this, &sts);
   }
+
+  char color_theme_file[80];
+  sprintf( color_theme_file, "pwr_colortheme%d", color_theme);
+  grow_SetDefaultColorTheme( color_theme_file);
 }
 
 //

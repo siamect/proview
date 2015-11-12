@@ -7,12 +7,13 @@
 function int process( string graph)
   printf( "-- Processing %s...\n", graph);
   open 'graph'
+  @conv4
 #  SetExtern( "pwr_motorman");
 #  save
 #  open 'graph'
 #  SetIntern( "pwr_motorman");
 #  save
-  set zoom/reset
+#  set zoom/reset
   save
 endfunction
 
@@ -59,6 +60,7 @@ main()
    process( "pwr_c_basecontactor1.pwg");
    process( "pwr_c_basecontactor2.pwg");
    process( "pwr_c_basecontactor3.pwg");
+   process( "pwr_c_basecontactor4.pwg");
    process( "pwr_c_basecontactor.pwg");
    process( "pwr_c_basecontactorsim.pwg");
    process( "pwr_c_basecvalve1.pwg");
@@ -355,6 +357,7 @@ main()
    process( "pwr_c_basesafetyswitchsim.pwg");
    process( "pwr_c_basesensor.pwg");
    process( "pwr_c_basesensorsim.pwg");
+   process( "pwr_c_baseswitch.pwg");
    process( "pwr_c_basesupswitch.pwg");
    process( "pwr_c_basesupswitchsim.pwg");
    process( "pwr_c_basetempsensor.pwg");

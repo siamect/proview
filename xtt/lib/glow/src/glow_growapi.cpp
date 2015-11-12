@@ -3967,6 +3967,11 @@ void grow_SetObjectFill( grow_tObject object, int fill)
   ((GlowArrayElem *)object)->set_fill( fill);
 }
 
+void grow_SetObjectBorder( grow_tObject object, int border)
+{
+  ((GlowArrayElem *)object)->set_border( border);
+}
+
 void grow_SetObjectShadow( grow_tObject object, int shadow)
 {
   ((GlowArrayElem *)object)->set_shadow( shadow);
@@ -5251,6 +5256,25 @@ int grow_GetNextObject( grow_tCtx ctx, grow_tObject object, grow_tObject *next)
   return ctx->get_next_object( (GlowArrayElem *)object, (GlowArrayElem **)next);
 }
 
+int grow_GetFirstObject( grow_tCtx ctx, grow_tObject *first)
+{
+  return ctx->get_first_object( (GlowArrayElem **)first);
+}
+
+int grow_GroupGetNextObject( grow_tObject group, grow_tObject object, grow_tObject *next)
+{
+  if ( ((GlowArrayElem *)group)->type() != glow_eObjectType_GrowGroup)
+    return 0;
+  return ((GrowGroup *)group)->get_next_object( (GlowArrayElem *)object, (GlowArrayElem **)next);
+}
+
+int grow_GroupGetFirstObject( grow_tObject group, grow_tObject *first)
+{
+  if ( ((GlowArrayElem *)group)->type() != glow_eObjectType_GrowGroup)
+    return 0;
+  return ((GrowGroup *)group)->get_first_object( (GlowArrayElem **)first);
+}
+
 int grow_IsVisible( grow_tCtx ctx, grow_tObject object, glow_eVisible type)
 {
   return ctx->is_visible( (GlowArrayElem *)object, type);
@@ -5298,7 +5322,13 @@ void grow_EventLogEnable( int enable)
 
 void grow_GetObjectClass( grow_tObject object, grow_tNodeClass *nodeclass)
 {
-  *nodeclass = ((GrowNode *)object)->nc->get_base_nc();
+  if ( ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowNode ||
+       ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowSlider ||
+       ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowConGlue ||
+       ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowGroup)
+    *nodeclass = ((GrowNode *)object)->nc->get_base_nc();
+  else
+    *nodeclass = 0;
 }
 
 int grow_GetObjectRecursiveTrace( grow_tObject object)
@@ -5343,6 +5373,66 @@ int grow_ReadCustomColorFile( grow_tCtx ctx, char *name)
 int grow_WriteCustomColorFile( grow_tCtx ctx, char *name)
 {
   return ctx->write_customcolor_file( name);
+}
+
+void grow_SetDefaultColorTheme( char *theme)
+{
+  GrowCtx::set_default_color_theme( theme);
+}
+
+void grow_PrintRgbColors( grow_tCtx ctx)
+{
+  GlowColor::print_rgb_colors( ((GlowCtx *)ctx)->customcolors);
+}
+
+int grow_GetObjectFill( grow_tObject o)
+{
+  return ((GlowArrayElem *)o)->get_fill();
+}
+
+int grow_GetObjectBorder( grow_tObject o)
+{
+  return ((GlowArrayElem *)o)->get_border();
+}
+
+glow_eDrawType grow_GetObjectFillColor( grow_tObject o)
+{
+  return ((GlowArrayElem *)o)->get_fill_color();
+}
+
+glow_eDrawType grow_GetObjectBorderColor( grow_tObject o)
+{
+  return ((GlowArrayElem *)o)->get_border_color();
+}
+
+glow_eDrawType grow_GetObjectTextColor( grow_tObject o)
+{
+  return ((GlowArrayElem *)o)->get_fill_color();
+}
+
+glow_eGradient grow_GetObjectGradient( grow_tObject o)
+{
+  return ((GlowArrayElem *)o)->get_gradient();
+}
+
+int grow_GetObjectShadow( grow_tObject o)
+{
+  return ((GlowArrayElem *)o)->get_shadow();
+}
+
+void grow_SetObjectOriginalFillColor( grow_tObject o, glow_eDrawType color)
+{
+  ((GlowArrayElem *)o)->set_original_fill_color( color);
+}
+
+void grow_SetObjectOriginalBorderColor( grow_tObject o, glow_eDrawType color)
+{
+  ((GlowArrayElem *)o)->set_original_border_color( color);
+}
+
+void grow_SetObjectOriginalTextColor( grow_tObject o, glow_eDrawType color)
+{
+  ((GlowArrayElem *)o)->set_original_text_color( color);
 }
 
 

@@ -130,12 +130,14 @@ void ColPalCtx::configure()
 
   int custom_columns = 15;
   double custom_entry_width = 2 * entry_width;
+  double dw;
   for ( i = glow_eDrawType_CustomColor1; i <= glow_eDrawType_CustomColor60; i+=4)
   {
     int i_pos = glow_eDrawType_CustomColor1 + (i - glow_eDrawType_CustomColor1)/4 - 10;
+    dw = (((i_pos+1) % 5) == 0 && ((i_pos+1) % 15) != 0) ? 0.1 * entry_width : 0;
     x = custom_entry_width * ( double(i_pos)/custom_columns - floor( double(i_pos)/custom_columns)) * custom_columns;
     y = entry_height * ( 1 + 300/columns + floor( (i_pos - 300)/ custom_columns + DBL_EPSILON));
-    rect = new GrowRect( this, "ColorEntry", x, y, custom_entry_width, entry_height, 
+    rect = new GrowRect( this, "ColorEntry", x, y, custom_entry_width - dw, entry_height, 
 	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 0, (glow_eDrawType) i);
     insert( rect);
   }

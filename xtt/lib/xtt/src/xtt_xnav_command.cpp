@@ -3512,7 +3512,8 @@ static int	xnav_open_func(	void		*client_data,
       mvctx->pop();
     }
     else {
-      mvctx = xnav->multiview_new( name_str, &aref, width, height, x, y, options, &sts,
+      mvctx = xnav->multiview_new( name_str, &aref, width, height, x, y, options, 
+				   xnav->gbl.color_theme, &sts,
 				   &xnav_multiview_command_cb,
 				   &xnav_ge_get_current_objects_cb, 
 				   &xnav_ge_is_authorized_cb);
@@ -9232,7 +9233,7 @@ void XNav::open_graph( const char *name, const char *filename, int scrollbar, in
     gectx = xnav_ge_new( name, filename, 
 			 scrollbar, menu, navigator, width, height, x, y, gbl.scantime,
 			 object_name, use_default_access, access, options, basewidget,
-			 borders, &xnav_ge_command_cb,
+			 borders, gbl.color_theme, &xnav_ge_command_cb,
 			 &xnav_ge_get_current_objects_cb, &xnav_ge_is_authorized_cb);
     gectx->close_cb = xnav_ge_close_cb;
     gectx->help_cb = xnav_ge_help_cb;

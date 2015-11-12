@@ -67,9 +67,10 @@ GraphGtk::GraphGtk(
 	const char *xn_object_name,
 	int xn_use_default_access,
 	unsigned int xn_default_access,
-	unsigned int xn_options) :
+	unsigned int xn_options,
+	int xn_color_theme) :
   Graph( xn_parent_ctx, xn_name, xn_default_path, graph_mode, xn_gdh_init_done, xn_object_name,
-	 xn_use_default_access, xn_default_access, xn_options), parent_wid(xn_parent_wid)
+	 xn_use_default_access, xn_default_access, xn_options, xn_color_theme), parent_wid(xn_parent_wid)
 {
   default_access = xn_default_access;
   if ( scrollbar) {

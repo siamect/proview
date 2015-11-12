@@ -251,7 +251,8 @@ void XttGe::event_exec( int type, void *event, unsigned int size)
 XttGe::XttGe( void *xg_parent_ctx, const char *xg_name, const char *xg_filename,
 	      int xg_scrollbar, int xg_menu, int xg_navigator, int xg_width, int xg_height,
 	      int x, int y, double scan_time, const char *object_name,
-	      int use_default_access, unsigned int access, unsigned int xg_options,
+	      int use_default_access, unsigned int access, unsigned int xg_options, 
+	      int xg_color_theme,
 	      int (*xg_command_cb) (void *, char *, char *, void *),
 	      int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 	      int (*xg_is_authorized_cb) (void *, unsigned int)) :
@@ -261,7 +262,7 @@ XttGe::XttGe( void *xg_parent_ctx, const char *xg_name, const char *xg_filename,
   command_cb(xg_command_cb), close_cb(0), help_cb(0), display_in_xnav_cb(0), 
   is_authorized_cb(xg_is_authorized_cb), popup_menu_cb(0), call_method_cb(0), 
   get_current_objects_cb(xg_get_current_objects_cb), sound_cb(0), eventlog_cb(0),
-  width(xg_width), height(xg_height), options(xg_options)
+  width(xg_width), height(xg_height), options(xg_options), color_theme(xg_color_theme)
 {
   strcpy( filename, xg_filename);
   strcpy( name, xg_name);

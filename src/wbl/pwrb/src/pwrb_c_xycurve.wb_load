@@ -49,7 +49,7 @@ SObject pwrb:Class
 !
 !  XY_Curve.DataType       XYArrays
 !  XY_Curve.XAttr          o.XValue##Float32#100
-!  XY_Curve.YAttr          o.XValue##Float32#100
+!  XY_Curve.YAttr          o.YValue##Float32#100
 !  XY_Curve.UpdateAttr     o.UpdateAttr##Boolean
 !  XY_Curve.XMinValueAttr  o.XMinValue##Float32
 !  XY_Curve.XMaxValueAttr  o.XMaxValue##Float32

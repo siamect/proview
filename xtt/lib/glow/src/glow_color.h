@@ -110,6 +110,8 @@ class GlowColor {
     static int is_custom( glow_eDrawType dt) {
       return (dt >= glow_eDrawType_CustomColor1 && dt < glow_eDrawType_CustomColor__);
     }
+
+    static void print_rgb_colors( GlowCustomColors *cc);
 };
 
 /*@}*/

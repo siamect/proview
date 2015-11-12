@@ -472,6 +472,8 @@ class GrowLine : public GlowLine {
       { line_type = type; draw();}
 
   void export_flow( GlowExportFlow *ef);
+
+  glow_eDrawType get_border_color() { return draw_type;}
 };
 
 /*@}*/

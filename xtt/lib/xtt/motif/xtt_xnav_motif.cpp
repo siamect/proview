@@ -292,7 +292,7 @@ XttGe *XNavMotif::xnav_ge_new( const char *name, const char *filename, int scrol
 			       int navigator, int width, int height, int x, int y, 
 			       double scan_time, const char *object_name, 
 			       int use_default_access, unsigned int access, unsigned int options,
-			       void *basewidget, double* borders,
+			       void *basewidget, double* borders, int color_theme,
 			       int (*command_cb) (void *, char *, char *, void *),
 			       int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 			       int (*is_authorized_cb) (void *, unsigned int))

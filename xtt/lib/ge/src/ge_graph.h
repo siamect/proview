@@ -432,7 +432,8 @@ class Graph {
 	const char *xn_object_name = 0,
 	int xn_use_default_access = 0,
 	unsigned int xn_default_access = 0,
-	unsigned int xn_options = 0);
+	unsigned int xn_options = 0,
+	int xn_color_theme = 0);
 
   virtual void trace_timer_remove() {}
   virtual void trace_timer_add( int time) {}
@@ -539,6 +540,7 @@ class Graph {
   vector<GraphRef>      reflist;		//!< List with stored references
   int			disable_log;		//!< Disable wb log window
   double		*pending_borders;       //!< Stored initial borders
+  int			color_theme;		//!< Color theme
 
   //! Print to postscript file.
   /*! \param filename	Name of postscript file. */

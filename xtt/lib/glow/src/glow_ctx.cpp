@@ -64,6 +64,7 @@
 #include "glow_msg.h"
 
 int GlowCtx::eventlog_enabled = 0;
+char GlowCtx::default_color_theme[40] = "";
 
 GlowCtx::GlowCtx( const char *ctx_name, double zoom_fact, int offs_x, int offs_y) 
   : ctx_type(glow_eCtxType_Glow), 

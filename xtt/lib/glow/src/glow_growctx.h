@@ -854,6 +854,9 @@ class GrowCtx : public GlowCtx {
   //! Get next object. */
   int get_next_object( GlowArrayElem *object, GlowArrayElem **next) { return a.get_next( object, next);}
 
+  //! Get first object. */
+  int get_first_object( GlowArrayElem **first) { return a.get_first( first);}
+
   //! Check if object is visible. */
   int is_visible( GlowArrayElem *element, glow_eVisible type);
 
@@ -873,6 +876,7 @@ class GrowCtx : public GlowCtx {
   void reset_custom_colors();
   int read_customcolor_file( char *name);
   int write_customcolor_file( char *name);
+  static void set_default_color_theme( char *theme);
 
   static int get_dimension( char *filename, int *width, int *heigth);
 

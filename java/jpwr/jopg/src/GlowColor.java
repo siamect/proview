@@ -296,7 +296,7 @@ public class GlowColor {
 		    drawtype = ( drawtype - 4);
 	    }
 	}
-	if ( !((drawtype >= 0 && drawtype <= Glow.eDrawType_Color300) || 
+	if ( !((drawtype >= 0 && drawtype <= Glow.eDrawType_Color__) || 
 	       (drawtype >= Glow.eDrawType_CustomColor1 && drawtype < Glow.eDrawType_CustomColor__))) {
 	    System.out.println("** Invalid drawtype : " + drawtype);    
 	    drawtype = Glow.eDrawType_Line;

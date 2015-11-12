@@ -233,7 +233,7 @@ class XNavGbl {
       AlarmBeep(0), AlarmReturn(0), AlarmAck(0), hide_opwind(0), hide_statusbar(0), 
       op_wind_pop(0), op_wind_eventname_seg(0), gdh_started(1),
       verify(0), scantime(0.5), signal_test_mode(0), advanced_user(1), show_truedb(0),
-      show_allattr(0), no_graph_ratio(0)
+      show_allattr(0), no_graph_ratio(0), color_theme(0)
       { 
 	strcpy( version, xnav_cVersion); strcpy( time, "");
 	strcpy( OpPlace, "");
@@ -262,6 +262,7 @@ class XNavGbl {
     int			show_truedb;
     int			show_allattr;
     int			no_graph_ratio;
+    int			color_theme;
 
     int			load_config( XNav *xnav);
     int			setupscript_exec( XNav *xnav);
@@ -374,13 +375,13 @@ class XNav {
 				int navigator, int width, int height, int x, int y, 
 				double scan_time, const char *object_name, 
 				int use_default_access, unsigned int access, unsigned int options,
-				void *basewidget, double *borders,
+				void *basewidget, double *borders, int color_theme,
 				int (*xg_command_cb) (void *, char *, char *, void *),
 				int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 				int (*xg_is_authorized_cb) (void *, unsigned int)) {return 0;}
     virtual XttMultiView *multiview_new( const char *name, pwr_tAttrRef *aref, 
 					 int width, int height, int x, int y, unsigned int options,
-					 pwr_tStatus *sts,
+					 int color_theme, pwr_tStatus *sts,
 					 int (*command_cb) (void *, char *, char *, void *),
 					 int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 					 int (*is_authorized_cb) (void *, unsigned int)) {return 0;}

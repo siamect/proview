@@ -170,6 +170,8 @@ int GlowCustomColors::read_colorfile( GrowCtx *ctx, char *name)
   if ( !strstr( filename, ".pwgc"))
     strcat( filename, ".pwgc");
 
+  dcli_translate_filename( filename, filename);
+
   int found = 0;
   if ( check_file( filename))
     found = 1;
@@ -186,6 +188,9 @@ int GlowCustomColors::read_colorfile( GrowCtx *ctx, char *name)
       }
     }
   }
+  else
+    strcpy( path_name, filename);
+
   if ( !found)
     return GLOW__FILEOPEN;
 

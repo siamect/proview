@@ -2324,9 +2324,14 @@ void GrowCtx::open_grow( ifstream& fp)
       mw.set_double_buffered( double_buffered);
   }
 
-  if ( strcmp( color_theme, "") != 0)
-    customcolors->read_colorfile( this, color_theme);
-
+  if ( strcmp( color_theme, "") != 0) {
+    if ( strcmp( color_theme, "$default") == 0) {
+      if ( strcmp( default_color_theme, "") != 0)
+	customcolors->read_colorfile( this, default_color_theme);
+    }
+    else
+      customcolors->read_colorfile( this, color_theme);
+  }
   if ( environment == glow_eEnv_Runtime)
     grid_on = 0;
   if ( gdraw)
@@ -4684,8 +4689,15 @@ void GrowCtx::reset_custom_colors()
 
 int GrowCtx::read_customcolor_file( char *name)
 { 
-  if ( customcolors) 
-    return customcolors->read_colorfile( this, name);
+  int sts;
+
+  if ( customcolors) {
+    sts = customcolors->read_colorfile( this, name);
+    if ( ODD(sts)) {
+      set_background( background_color);
+    }
+    return sts;
+  }
   else
     return 0;
 }
@@ -4698,3 +4710,7 @@ int GrowCtx::write_customcolor_file( char *name)
     return 0;
 }
 
+void GrowCtx::set_default_color_theme( char *theme)
+{
+  strncpy( default_color_theme, theme, sizeof(default_color_theme));
+}

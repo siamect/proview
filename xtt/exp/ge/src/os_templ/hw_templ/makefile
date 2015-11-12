@@ -16,6 +16,7 @@ ifndef rules_mk
 endif
 
 vpath %.pwg $(hw_source):$(os_source):$(co_source)
+vpath %.pwgc $(hw_source):$(os_source):$(co_source)
 
 source_dirs = $(hw_source) $(os_source) $(co_source)
 
@@ -24,6 +25,15 @@ pwg_sources := $(sort \
                $(foreach dir, \
                  $(source_dirs), \
                  $(wildcard $(dir)/*.pwg) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
+pwgc_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/*.pwgc) \
                ), $(notdir $(file)) \
              ) \
            )
@@ -38,11 +48,13 @@ html_sources := $(sort \
            )
 
 export_pwg := $(addprefix $(exe_dir)/,$(pwg_sources))
+export_pwgc := $(addprefix $(exe_dir)/,$(pwgc_sources))
 export_html := $(addprefix $(exe_dir)/,$(html_sources))
 clean_pwg := $(patsubst %.pwg,clean_%.pwg,$(sources))
+clean_pwgc := $(patsubst %.pwgc,clean_%.pwgc,$(sources))
 clean_html := $(patsubst %.html,clean_%.html,$(sources))
-export_ge := $(export_pwg) $(export_html)
-clean_ge := $(clean_pwg) $(clean_html)
+export_ge := $(export_pwg) $(export_pwgc) $(export_html)
+clean_ge := $(clean_pwg) $(clean_pwgc) $(clean_html)
 .SUFFIXES:
 
 
@@ -66,6 +78,9 @@ realclean : $(clean_ge)
 
 $(clean_pwg) : clean_%.pwg : %.pwg
 	@ $(rm) $(rmflags) $(exe_dir)/$*.pwg
+
+$(clean_pwgc) : clean_%.pwgc : %.pwgc
+	@ $(rm) $(rmflags) $(exe_dir)/$*.pwgc
 
 $(clean_html) : clean_%.html : %.html
 	@ $(rm) $(rmflags) $(exe_dir)/$*.html

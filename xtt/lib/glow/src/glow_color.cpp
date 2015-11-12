@@ -130,6 +130,7 @@ void GlowColor::his_to_rgb( double *r, double *g, double *b, double h, double i,
   *g = *g / 2 + 0.5;
   *b = *b / 2 + 0.5;
   if ( *r > 1) *r = 1;
+
   if ( *r < 0) *r = 0;
   if ( *g > 1) *g = 1;
   if ( *g < 0) *g = 0;
@@ -376,9 +377,15 @@ glow_eDrawType GlowColor::get_drawtype( glow_eDrawType local_drawtype,
 	drawtype = (glow_eDrawType) ( drawtype - 4);
       else if ( 56 <= drawtype && drawtype <= 59)
 	drawtype = (glow_eDrawType) ( drawtype - 4);
+      else if ( is_custom(drawtype)) {
+	if ( drawtype == glow_eDrawType_CustomColor16)
+	  drawtype = (glow_eDrawType) 27;	  
+	if ( drawtype == glow_eDrawType_CustomColor17)
+	  drawtype = (glow_eDrawType) 25;	  
+      }
     }
   }
-  if ( !((drawtype >= 0 && drawtype <= glow_eDrawType_Color300) || 
+  if ( !((drawtype >= 0 && drawtype <= glow_eDrawType_Color__) || 
 	 (drawtype >= glow_eDrawType_CustomColor1 && drawtype < glow_eDrawType_CustomColor__))) {
     printf("** Invalid drawtype : %d\n", drawtype);    
     drawtype = glow_eDrawType_Line;
@@ -919,3 +926,30 @@ char *GlowColor::colortone_to_name( glow_eDrawType drawtype)
   return tone_name;
 }
 
+void GlowColor::print_rgb_colors( GlowCustomColors *cc)
+{
+  double r, g, b;
+  char name[80];
+  
+  printf( "Idx Name                    Red    Green  Blue       R   G   B\n");
+  for ( int i = 0; i <= glow_eDrawType_Color300; i++) {
+    rgb_color( i, &r, &g, &b, 0);
+    strcpy( name, color_to_name( (glow_eDrawType)i));
+    printf( "%3d ", i);
+    printf( "%s ", name);
+    for ( int j = strlen(name)+1; j < 24; j++)
+      printf( " ");
+    printf( "%5.3f  %5.3f  %5.3f    %3d %3d %3d\n", r, g, b, (int)(r*255), (int)(g*255), (int)(b*255));
+  }
+  if ( cc) {
+    for ( int i = glow_eDrawType_CustomColor1; i < glow_eDrawType_CustomColor__; i++) {
+      rgb_color( i, &r, &g, &b, cc);
+      sprintf( name, "CustomColor%d", i- glow_eDrawType_CustomColor1 + 1);
+      printf( "%3d ", i+1);
+      printf( "%s ", name);
+      for ( int j = strlen(name)+1; j < 24; j++)
+	printf( " ");
+      printf( "%5.3f  %5.3f  %5.3f    %3d %3d %3d\n", r, g, b, (int)(r*255), (int)(g*255), (int)(b*255));
+    }
+  }
+}

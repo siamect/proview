@@ -218,6 +218,14 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Color theme.
+      !*/
+      Object ColorTheme $Attribute 52
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-ColorThemeEnum"
+        EndBody
+      EndObject
+      !/**
       !  Specifies the maximum number of contemporary alarms in
       !  the user's alarm list.
       !  The number should exceed the maximum number of 

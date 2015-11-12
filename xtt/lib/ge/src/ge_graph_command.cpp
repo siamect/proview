@@ -395,7 +395,15 @@ static int	graph_customcolor_func(void		*client_data,
 
     graph->message('I', "Custom color file read");
   }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "PRINT", strlen( arg1_str)) == 0) {
+    // Command is "CUSTOMCOLOR PRINT"
 
+    grow_PrintRgbColors( graph->grow->ctx);
+  }
+  else {
+    graph->message('E', "Syntax error");
+    return GE__SYNTAX;
+  }
   return GE__SUCCESS;
 }
 
@@ -638,7 +646,7 @@ static int	graph_set_func(	void		*client_data,
 	  return GE__SYNTAX;
 	}
       }
-      if ( value < 0 || value > 299) {
+      if ( value < 0 || value >= glow_eDrawType_CustomColor__) {
           graph->message('E', "Syntax error");
           return GE__SYNTAX;
       }
@@ -666,7 +674,7 @@ static int	graph_set_func(	void		*client_data,
 	return GE__SYNTAX;
       }
     }
-    if ( value < 0 || value > 299)
+    if ( value < 0 || value >= glow_eDrawType_CustomColor__)
     {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -696,7 +704,7 @@ static int	graph_set_func(	void		*client_data,
 	return GE__SYNTAX;
       }
     }
-    if ( value < 0 || value > 299)
+    if ( value < 0 || value >= glow_eDrawType_CustomColor__)
     {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -725,7 +733,7 @@ static int	graph_set_func(	void		*client_data,
 	return GE__SYNTAX;
       }
     }
-    if ( value < 0 || value > 299) {
+    if ( value < 0 || value >= glow_eDrawType_CustomColor__) {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
     }
@@ -767,7 +775,7 @@ static int	graph_set_func(	void		*client_data,
 	  return GE__SYNTAX;
 	}
       }
-      if ( value < 0 || value > 299) {
+      if ( value < 0 || value >= glow_eDrawType_CustomColor__) {
           graph->message('E', "Syntax error");
           return GE__SYNTAX;
       }
@@ -3240,6 +3248,734 @@ static int graph_setdraw_func(
   return 1;
 }
 
+static int graph_getfirstobject_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  grow_tObject first;
+  int sts;
+
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  sts = grow_GetFirstObject( graph->grow->ctx, &first);
+  if ( ODD(sts)) 
+    *return_int = (long int)first;
+  else
+    *return_int = 0;
+  *return_decl = CCM_DECL_INT;
+
+  return 1;
+}
+
+static int graph_getnextobject_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  grow_tObject next;
+  int sts;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  sts = grow_GetNextObject( graph->grow->ctx, (grow_tObject)arg_list->value_int, &next);
+  if ( ODD(sts)) 
+    *return_int = (long int)next;
+  else
+    *return_int = 0;
+  *return_decl = CCM_DECL_INT;
+
+  return 1;
+}
+
+static int graph_groupgetfirstobject_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  grow_tObject first;
+  int sts;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  sts = grow_GroupGetFirstObject( (grow_tObject)arg_list->value_int, &first);
+  if ( ODD(sts)) 
+    *return_int = (long int)first;
+  else
+    *return_int = 0;
+  *return_decl = CCM_DECL_INT;
+
+  return 1;
+}
+
+static int graph_groupgetnextobject_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  grow_tObject next;
+  int sts;
+  ccm_sArg 	*arg_p2;
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  if ( arg_p2->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  sts = grow_GroupGetNextObject( (grow_tObject)arg_list->value_int, (grow_tObject)arg_p2->value_int, &next);
+  if ( ODD(sts)) 
+    *return_int = (long int)next;
+  else
+    *return_int = 0;
+  *return_decl = CCM_DECL_INT;
+
+  return 1;
+}
+
+static int graph_getobjecttype_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  int type;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  type = grow_GetObjectType( (grow_tObject)arg_list->value_int);
+  *return_int = type;
+  *return_decl = CCM_DECL_INT;
+
+  return 1;
+}
+
+static int graph_getobjectclass_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  grow_tNodeClass classid;
+  char name[80];
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  *return_decl = CCM_DECL_STRING;
+
+  grow_GetObjectClass( (grow_tObject)arg_list->value_int, &classid);
+  grow_GetNodeClassName( classid, name);
+
+  strcpy( return_string, name);
+  return 1;
+}
+
+static int graph_getobjectfill_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  *return_int = grow_GetObjectFill( (grow_tObject)arg_list->value_int);
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int graph_setobjectfill_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  ccm_sArg 	*arg_p2;
+
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  grow_SetObjectFill( (grow_tObject)arg_list->value_int, arg_p2->value_int);
+  return 1;
+}
+
+static int graph_getobjectborder_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  *return_int = grow_GetObjectBorder( (grow_tObject)arg_list->value_int);
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int graph_setobjectborder_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  ccm_sArg 	*arg_p2;
+
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  grow_SetObjectBorder( (grow_tObject)arg_list->value_int, arg_p2->value_int);
+  return 1;
+}
+
+static int graph_getobjectgradient_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  *return_int = grow_GetObjectGradient( (grow_tObject)arg_list->value_int);
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int graph_getobjectfillcolor_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  *return_int = (long int)grow_GetObjectFillColor( (grow_tObject)arg_list->value_int);
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int graph_setobjectfillcolor_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  ccm_sArg 	*arg_p2;
+
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  grow_SetObjectOriginalFillColor( (grow_tObject)arg_list->value_int, (glow_eDrawType)arg_p2->value_int);
+  return 1;
+}
+
+static int graph_getobjectbordercolor_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  *return_int = (long int)grow_GetObjectBorderColor( (grow_tObject)arg_list->value_int);
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int graph_setobjectbordercolor_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  ccm_sArg 	*arg_p2;
+
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  grow_SetObjectOriginalBorderColor( (grow_tObject)arg_list->value_int, (glow_eDrawType)arg_p2->value_int);
+  return 1;
+}
+
+static int graph_getobjecttextcolor_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  *return_int = (long int)grow_GetObjectTextColor( (grow_tObject)arg_list->value_int);
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int graph_setobjecttextcolor_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  ccm_sArg 	*arg_p2;
+
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  grow_SetObjectOriginalTextColor( (grow_tObject)arg_list->value_int, (glow_eDrawType)arg_p2->value_int);
+  return 1;
+}
+
+static int graph_getobjectshadow_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  *return_int = grow_GetObjectShadow( (grow_tObject)arg_list->value_int);
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int graph_setobjectshadow_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  ccm_sArg 	*arg_p2;
+
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  grow_SetObjectShadow( (grow_tObject)arg_list->value_int, arg_p2->value_int);
+  return 1;
+}
+
+static int graph_setcurrentobject_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  graph->current_cmd_object = (grow_tObject)arg_list->value_int;
+  return 1;
+}
+
+static int graph_getobjectname_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  char name[80];
+  int type;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  type = grow_GetObjectType( (grow_tObject)arg_list->value_int);
+  if ( type == glow_eObjectType_GrowNode ||
+       type == glow_eObjectType_GrowSlider ||
+       type == glow_eObjectType_GrowGroup ||
+       type == glow_eObjectType_GrowToolbar) {
+    grow_GetObjectName( (grow_tObject)arg_list->value_int, name);
+    strcpy( return_string, name);
+  }
+  else
+    strcpy( return_string, "");
+
+  *return_decl = CCM_DECL_STRING;
+  return 1;
+}
+
+static int graph_getobjectdyntype_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  int type;
+  ccm_sArg 	*arg_p2; 	// Dyntype1 return
+  ccm_sArg 	*arg_p3; 	// Dyntype2 return 
+  ccm_sArg 	*arg_p4; 	// Actiontype1 return 
+  ccm_sArg 	*arg_p5; 	// Actiontype2 return
+  GeDyn *dyn;
+  grow_tObject o;
+
+  if ( arg_count < 2 || arg_count > 5)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  if ( arg_count > 2)
+    arg_p3 = arg_p2->next;
+  if ( arg_count > 3)
+    arg_p4 = arg_p3->next;
+  if ( arg_count > 4)
+    arg_p5 = arg_p4->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_count > 2 && arg_p3->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_count > 3 && arg_p4->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_count > 4 && arg_p5->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  o = (grow_tObject)arg_list->value_int;
+  graph_get_stored_graph( &graph);
+
+  type = grow_GetObjectType( o);
+  if ( type == glow_eObjectType_GrowNode ||
+       type == glow_eObjectType_GrowSlider ||
+       type == glow_eObjectType_GrowGroup ||
+       type == glow_eObjectType_GrowToolbar) {
+
+    grow_GetUserData( o, (void **)&dyn);
+    arg_p2->value_int = dyn->get_dyntype1( o);
+    arg_p2->value_returned = 1;
+    if ( arg_count > 2) {
+      arg_p3->value_int = dyn->get_dyntype2( o);
+      arg_p3->value_returned = 1;
+    }
+    if ( arg_count > 3) {
+      arg_p4->value_int = dyn->get_actiontype1( o);
+      arg_p4->value_returned = 1;
+    }
+    if ( arg_count > 4) {
+      arg_p5->value_int = dyn->get_actiontype2( o);
+      arg_p5->value_returned = 1;
+    }
+  }
+  else {
+    arg_p2->value_int = 0;
+    arg_p2->value_returned = 1;
+    if ( arg_count > 2) {
+      arg_p3->value_int = 0;
+      arg_p3->value_returned = 1;
+    }
+    if ( arg_count > 3) {
+      arg_p4->value_int = 0;
+      arg_p4->value_returned = 1;
+    }
+    if ( arg_count > 4) {
+      arg_p5->value_int = 0;
+      arg_p5->value_returned = 1;
+    }
+  }
+  return 1;
+}
+
+static int graph_getobjecttext_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  int type;
+  grow_tObject o;
+  char text[80];
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  o = (grow_tObject)arg_list->value_int;
+  graph_get_stored_graph( &graph);
+
+  type = grow_GetObjectType( o);
+  if ( type == glow_eObjectType_GrowText) {    
+    grow_GetObjectText( o, text);
+    strncpy( return_string, text, sizeof(text));
+  }
+  else
+    strcpy( return_string, "");
+
+  *return_decl = CCM_DECL_STRING;
+  return 1;
+}
+
+static int graph_reload_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  char name[80];
+
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  grow_GetName( graph->grow->ctx, name);
+  if ( strcmp( name, "") != 0) {
+    grow_New( graph->grow->ctx);
+    graph->open( name);
+  }
+  return 1;
+}
+
 static int graph_ccm_deffilename_func( char *outfile, char *infile, void *client_data)
 {
 
@@ -3354,6 +4090,54 @@ int Graph::readcmdfile( 	char		*incommand)
     sts = ccm_register_function( "IsW1", graph_true_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "IsW2", graph_false_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetFirstObject", graph_getfirstobject_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetNextObject", graph_getnextobject_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GroupGetFirstObject", graph_groupgetfirstobject_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GroupGetNextObject", graph_groupgetnextobject_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetObjectType", graph_getobjecttype_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetObjectClass", graph_getobjectclass_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetObjectFill", graph_getobjectfill_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetObjectFill", graph_setobjectfill_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetObjectBorder", graph_getobjectborder_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetObjectBorder", graph_setobjectborder_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetObjectGradient", graph_getobjectgradient_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetObjectFillColor", graph_getobjectfillcolor_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetObjectFillColor", graph_setobjectfillcolor_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetObjectBorderColor", graph_getobjectbordercolor_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetObjectBorderColor", graph_setobjectbordercolor_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetObjectTextColor", graph_getobjecttextcolor_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetObjectTextColor", graph_setobjecttextcolor_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetObjectShadow", graph_getobjectshadow_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetObjectShadow", graph_setobjectshadow_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetCurrentObject", graph_setcurrentobject_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetObjectName", graph_getobjectname_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetObjectDynType", graph_getobjectdyntype_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetObjectText", graph_getobjecttext_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "Reload", graph_reload_func);
     if ( EVEN(sts)) return sts;
     ccm_func_registred = 1;
 

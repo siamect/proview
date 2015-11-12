@@ -565,6 +565,13 @@ class GrowRect : public GlowRect {
 
   void export_flow( GlowExportFlow *ef);
 
+  int get_fill() { return fill;}
+  int get_border() { return border;}
+  glow_eDrawType get_fill_color() { return fill_drawtype;}
+  glow_eDrawType get_border_color() { return draw_type;}
+  glow_eGradient get_gradient() { return gradient;}
+  int get_shadow() { return shadow;}
+
   //! Destructor
   ~GrowRect();
 };

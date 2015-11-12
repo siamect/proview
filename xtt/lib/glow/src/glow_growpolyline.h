@@ -605,6 +605,8 @@ class GrowPolyLine : public GlowPolyLine {
     \param version	Version to convert to.
   */
   void convert( glow_eConvert version);
+  glow_eDrawType get_fill_color() { return fill_drawtype;}
+  glow_eDrawType get_border_color() { return draw_type;}
 };
 
 /*@}*/

@@ -212,6 +212,13 @@ class GlowArrayElem {
     virtual void set_input_focus( int focus, glow_eEvent event) {};
     virtual int get_java_name( char *name) { return 0;}
     virtual void export_flow( GlowExportFlow *ef) {};
+    virtual int get_fill() { return 0;}
+    virtual int get_border() { return 0;}
+    virtual int get_shadow() { return 0;}
+    virtual glow_eDrawType get_fill_color() { return glow_eDrawType_No;}
+    virtual glow_eDrawType get_border_color() { return glow_eDrawType_No;}
+    virtual glow_eDrawType get_text_color() { return glow_eDrawType_No;}
+    virtual glow_eGradient get_gradient() { return glow_eGradient_No;}
 
     virtual ~GlowArrayElem() {};
 };

@@ -500,6 +500,8 @@ class GrowText : public GlowText {
   void convert( glow_eConvert version);
 
   void export_flow( GlowExportFlow *ef);
+
+  glow_eDrawType get_text_color() { return color_drawtype;}
 };
 
 /*@}*/
