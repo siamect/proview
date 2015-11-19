@@ -2187,3 +2187,13 @@ void GrowNode::set_textfont( glow_eFont textfont)
   draw();
 }
 
+void GrowNode::set_colortheme_lightness()
+{
+  if ( !ctx->customcolors)
+    return;
+  
+  if ( ctx->customcolors->colortheme_lightness != color_lightness) {
+    color_lightness = ctx->customcolors->colortheme_lightness;
+    draw();
+  }
+}

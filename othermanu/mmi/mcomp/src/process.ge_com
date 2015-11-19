@@ -12,7 +12,8 @@ function int process( string graph)
   #save
   #open 'graph'
   #SetIntern( "pwr_mbblockevents");
-  set zoom/reset
+  #set zoom/reset
+  @indcnv3
   save
 endfunction
 
@@ -24,12 +25,16 @@ main()
     process( "pwr_c_eurotherm_tc3001aggr2.pwg");
     process( "pwr_c_eurotherm_tc3001aggr3.pwg");
     process( "pwr_c_eurotherm_tc3001aggr.pwg");
-    process( "pwr_c_eurotherm_tc3001aggrsim.pwg");
+#    process( "pwr_c_eurotherm_tc3001aggrsim.pwg");
     process( "pwr_c_eurotherm_tc3001_param.pwg");
     process( "pwr_c_eurotherm_tc3001.pwg");
-    process( "pwr_c_eurotherm_tc3001sim.pwg");
+#    process( "pwr_c_eurotherm_tc3001sim.pwg");
+    process( "pwr_c_eurotherm_epoweraggr.pwg");
+    process( "pwr_c_eurotherm_epoweraggr2.pwg");
+    process( "pwr_c_eurotherm_epoweraggr3.pwg");
+#    process( "pwr_c_eurotherm_epoweraggrsim.pwg");
     process( "pwr_c_sew_movidrive_1.pwg");
-    process( "pwr_c_sew_movidrive_1sim.pwg");
+#    process( "pwr_c_sew_movidrive_1sim.pwg");
 
 
 endmain

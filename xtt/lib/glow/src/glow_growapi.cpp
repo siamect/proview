@@ -5380,9 +5380,35 @@ void grow_SetDefaultColorTheme( char *theme)
   GrowCtx::set_default_color_theme( theme);
 }
 
+void grow_SetColorThemeLightness( grow_tCtx ctx, int lightness)
+{
+  ((GlowCtx *)ctx)->set_colortheme_lightness( lightness);
+}
+
+void grow_SetObjectColorThemeLightness( grow_tObject o)
+{
+  ((GlowArrayElem *)o)->set_colortheme_lightness();
+}
+
 void grow_PrintRgbColors( grow_tCtx ctx)
 {
   GlowColor::print_rgb_colors( ((GlowCtx *)ctx)->customcolors);
+}
+
+int grow_SetRgbColor( grow_tCtx ctx, glow_eDrawType color, double r, double g, double b)
+{
+  if ( ((GlowCtx *)ctx)->customcolors)
+    return ((GlowCtx *)ctx)->customcolors->set_color( color, r, g, b);
+  else
+    return 0;
+}
+
+int grow_GetRgbColor( grow_tCtx ctx, glow_eDrawType color, double *r, double *g, double *b)
+{
+  if ( ((GlowCtx *)ctx)->customcolors)
+    return ((GlowCtx *)ctx)->customcolors->get_color( color, r, g, b);
+  else
+    return 0;
 }
 
 int grow_GetObjectFill( grow_tObject o)
@@ -5407,7 +5433,7 @@ glow_eDrawType grow_GetObjectBorderColor( grow_tObject o)
 
 glow_eDrawType grow_GetObjectTextColor( grow_tObject o)
 {
-  return ((GlowArrayElem *)o)->get_fill_color();
+  return ((GlowArrayElem *)o)->get_text_color();
 }
 
 glow_eGradient grow_GetObjectGradient( grow_tObject o)

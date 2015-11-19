@@ -905,6 +905,9 @@ class Graph {
   /*! Adjust zoom factor to the current size of the window. */
   void set_default_layout();
 
+  //! Update color theme.
+  void update_color_theme( int color_theme);
+
   //! Set grid size.
   /*! \param gridsize	Distance between gridpoints. */
   void set_gridsize( double gridsize);

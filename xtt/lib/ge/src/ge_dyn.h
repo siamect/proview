@@ -189,6 +189,7 @@
     ge_eDynPrio_MethodToolbar,
     ge_eDynPrio_MethodPulldownMenu,
     ge_eDynPrio_ScrollingText,
+    ge_eDynPrio_ColorThemeLightness,
 
     // This should always be last
     ge_eDynPrio_Script  = 9998,
@@ -239,7 +240,8 @@
     ge_mDynType2_DigTextColor  	= 1 << 1,
     ge_mDynType2_TimeoutColor  	= 1 << 2,
     ge_mDynType2_DigFourShift  	= 1 << 3,
-    ge_mDynType2_ScrollingText 	= 1 << 4
+    ge_mDynType2_ScrollingText 	= 1 << 4,
+    ge_mDynType2_ColorThemeLightness = 1 << 5
   } ge_mDynType2;
 
   //! Action types.
@@ -353,6 +355,7 @@
     ge_eSave_TimeoutColor               = 40,
     ge_eSave_DigFourShift	       	= 41,
     ge_eSave_ScrollingText	       	= 42,
+    ge_eSave_ColorThemeLightness       	= 43,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -392,7 +395,9 @@
     ge_eSave_DigColor_instance		= 302,
     ge_eSave_DigColor_instance_mask    	= 303,
     ge_eSave_DigError_attribute		= 700,
+    ge_eSave_DigError_use_colortheme   	= 701,
     ge_eSave_DigWarning_attribute      	= 800,
+    ge_eSave_DigWarning_use_colortheme  = 801,
     ge_eSave_Invisible_attribute       	= 900,
     ge_eSave_Invisible_dimmed       	= 901,
     ge_eSave_Invisible_instance		= 902,
@@ -499,6 +504,7 @@
     ge_eSave_Table_sel_attribute12     	= 3035,
     ge_eSave_StatusColor_attribute     	= 3100,
     ge_eSave_StatusColor_nostatus_color = 3101,
+    ge_eSave_StatusColor_use_colortheme = 3102,
     ge_eSave_HostObject_object     	= 3200,
     ge_eSave_DigSound_attribute     	= 3300,
     ge_eSave_DigSound_soundobject     	= 3301,
@@ -1094,6 +1100,7 @@ class GeDigColor : public GeDynElem {
 class GeDigWarning : public GeDynElem {
  public:
   pwr_tAName attribute;		//!< Database reference for digital attribute.
+  int use_colortheme;
 
   pwr_tBoolean *p;
   pwr_tSubid subid;
@@ -1106,10 +1113,10 @@ class GeDigWarning : public GeDynElem {
   unsigned int bitmask;  
 
   GeDigWarning( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType1_DigWarning, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigWarning), bitmask(0)
+    GeDynElem(e_dyn, ge_mDynType1_DigWarning, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigWarning), use_colortheme(0), bitmask(0)
     { strcpy( attribute, "");}
   GeDigWarning( const GeDigWarning& x) : 
-    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), use_colortheme(x.use_colortheme)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1127,6 +1134,7 @@ class GeDigWarning : public GeDynElem {
 class GeDigError : public GeDynElem {
  public:
   pwr_tAName attribute;		//!< Database refrence for digital attribute.
+  int use_colortheme;
 
   pwr_tBoolean *p;
   pwr_tSubid subid;
@@ -1139,10 +1147,10 @@ class GeDigError : public GeDynElem {
   unsigned int bitmask;  
 
   GeDigError( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType1_DigError, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigError), bitmask(0)
+    GeDynElem(e_dyn, ge_mDynType1_DigError, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigError), use_colortheme(0), bitmask(0)
     { strcpy( attribute, "");}
   GeDigError( const GeDigError& x) : 
-    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), use_colortheme(x.use_colortheme)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1785,6 +1793,7 @@ class GeStatusColor : public GeDynElem {
  public:
   pwr_tAName attribute;
   glow_eDrawType nostatus_color;
+  int use_colortheme;
 
   pwr_tStatus *p;
   pwr_tSubid subid;
@@ -1798,10 +1807,11 @@ class GeStatusColor : public GeDynElem {
 
   GeStatusColor( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType1_StatusColor, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_StatusColor),
-    nostatus_color(glow_eDrawType_Inherit), on(true)
+    nostatus_color(glow_eDrawType_Inherit), use_colortheme(0), on(true)
     { strcpy( attribute, "");}
   GeStatusColor( const GeStatusColor& x) : 
-    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), nostatus_color(x.nostatus_color)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), 
+    nostatus_color(x.nostatus_color), use_colortheme(x.use_colortheme)
     { strcpy(attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1920,6 +1930,26 @@ class GeDigSound : public GeDynElem {
   void open( ifstream& fp);
   void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
+};
+
+//! Lighntess is dependent on color theme.
+class GeColorThemeLightness : public GeDynElem {
+ public:
+
+  GeColorThemeLightness( GeDyn *e_dyn) : 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_ColorThemeLightness, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_ColorThemeLightness) {}
+  GeColorThemeLightness( const GeColorThemeLightness& x) : 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio) {}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
+  void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+
 };
 
 //! Display the methods popup menu.

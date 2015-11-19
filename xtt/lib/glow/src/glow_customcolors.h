@@ -55,7 +55,7 @@ class GrowCtx;
 class GlowCustomColors {
  public:
   //! Constructor
-  GlowCustomColors() {
+  GlowCustomColors() : colortheme_lightness(0) {
     colors_size = sizeof(colors)/sizeof(colors[0]);
     for ( int i = 0; i < colors_size; i++)
       colors[i][0] = colors[i][1] = colors[i][2] = 1;
@@ -68,8 +68,10 @@ class GlowCustomColors {
   void reset_colors();
   int write_colorfile( char *name);
   int read_colorfile( GrowCtx *ctx, char *name);
+  void set_colortheme_lightness( int lightness) { colortheme_lightness = lightness;}
 
   int colors_size;
+  int colortheme_lightness;
   double colors[glow_eDrawType_CustomColor__-glow_eDrawType_CustomColor1][3];
 };
 

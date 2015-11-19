@@ -93,6 +93,7 @@ void GlowCustomColors::reset_colors()
 void GlowCustomColors::save( ofstream& fp, glow_eSaveMode mode)
 {
   fp << int(glow_eSave_CustomColors) << endl;
+  fp << int(glow_eSave_CustomColors_colortheme_lightness) << FSPACE << colortheme_lightness << endl;
   fp << int(glow_eSave_CustomColors_colors_size) << FSPACE << colors_size << endl;
   fp << int(glow_eSave_CustomColors_colors) << endl;
   for ( int i = 0; i < colors_size; i++)
@@ -118,6 +119,7 @@ void GlowCustomColors::open( ifstream& fp)
     fp >> type;
     switch( type) {
       case glow_eSave_CustomColors: break;
+      case glow_eSave_CustomColors_colortheme_lightness: fp >> colortheme_lightness; break;
       case glow_eSave_CustomColors_colors_size: fp >> csize; break;
       case glow_eSave_CustomColors_colors:
 	for ( int i = 0; i < csize; i++) {

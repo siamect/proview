@@ -95,6 +95,7 @@ class XttGe {
   int set_folder_index( const char *name, int idx);
   int set_subwindow_source( const char *name, char *source, char *object);
   void swap( int mode);
+  void update_color_theme( int color_theme);
   void event_exec( int type, void *event, unsigned int size);
 
   static void graph_init_cb( void *client_data);

@@ -925,6 +925,9 @@ class GlowCtx {
   //! Get custom colors.
   GlowCustomColors *get_custom_colors() { return customcolors;}
 
+  //! Set colorthem lightness.
+  void set_colortheme_lightness( int lightness);
+
   //! Destructor
   /*! Delete all objects in the context. */
   ~GlowCtx();

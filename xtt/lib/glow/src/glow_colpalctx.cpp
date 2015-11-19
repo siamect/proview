@@ -131,7 +131,7 @@ void ColPalCtx::configure()
   int custom_columns = 15;
   double custom_entry_width = 2 * entry_width;
   double dw;
-  for ( i = glow_eDrawType_CustomColor1; i <= glow_eDrawType_CustomColor60; i+=4)
+  for ( i = glow_eDrawType_CustomColor1; i <= glow_eDrawType_CustomColor90; i+=4)
   {
     int i_pos = glow_eDrawType_CustomColor1 + (i - glow_eDrawType_CustomColor1)/4 - 10;
     dw = (((i_pos+1) % 5) == 0 && ((i_pos+1) % 15) != 0) ? 0.1 * entry_width : 0;

@@ -114,6 +114,7 @@ static attrnav_sEnumElement elem_dyn_type2[] = {
 	{ (unsigned int) ge_mDynType2_TimeoutColor       , "TimeoutColor"},
 	{ (unsigned int) ge_mDynType2_DigFourShift       , "DigFourShift"},
 	{ (unsigned int) ge_mDynType2_ScrollingText      , "ScrollingText"},
+	{ (unsigned int) ge_mDynType2_ColorThemeLightness, "ColorThemeLightness"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_dyn_type1_tone[] = {
@@ -538,6 +539,36 @@ static attrnav_sEnumElement elem_color[] = {
 	{ (unsigned int) glow_eDrawType_CustomColor58, 	"CustomColor58"},
 	{ (unsigned int) glow_eDrawType_CustomColor59, 	"CustomColor59"},
 	{ (unsigned int) glow_eDrawType_CustomColor60, 	"CustomColor60"},
+	{ (unsigned int) glow_eDrawType_CustomColor61, 	"CustomColor61"},
+	{ (unsigned int) glow_eDrawType_CustomColor62, 	"CustomColor62"},
+	{ (unsigned int) glow_eDrawType_CustomColor63, 	"CustomColor63"},
+	{ (unsigned int) glow_eDrawType_CustomColor64, 	"CustomColor64"},
+	{ (unsigned int) glow_eDrawType_CustomColor65, 	"CustomColor65"},
+	{ (unsigned int) glow_eDrawType_CustomColor66, 	"CustomColor66"},
+	{ (unsigned int) glow_eDrawType_CustomColor67, 	"CustomColor67"},
+	{ (unsigned int) glow_eDrawType_CustomColor68, 	"CustomColor68"},
+	{ (unsigned int) glow_eDrawType_CustomColor69, 	"CustomColor69"},
+	{ (unsigned int) glow_eDrawType_CustomColor70, 	"CustomColor70"},
+	{ (unsigned int) glow_eDrawType_CustomColor71, 	"CustomColor71"},
+	{ (unsigned int) glow_eDrawType_CustomColor72, 	"CustomColor72"},
+	{ (unsigned int) glow_eDrawType_CustomColor73, 	"CustomColor73"},
+	{ (unsigned int) glow_eDrawType_CustomColor74, 	"CustomColor74"},
+	{ (unsigned int) glow_eDrawType_CustomColor75, 	"CustomColor75"},
+	{ (unsigned int) glow_eDrawType_CustomColor76, 	"CustomColor76"},
+	{ (unsigned int) glow_eDrawType_CustomColor77, 	"CustomColor77"},
+	{ (unsigned int) glow_eDrawType_CustomColor78, 	"CustomColor78"},
+	{ (unsigned int) glow_eDrawType_CustomColor79, 	"CustomColor79"},
+	{ (unsigned int) glow_eDrawType_CustomColor80, 	"CustomColor80"},
+	{ (unsigned int) glow_eDrawType_CustomColor81, 	"CustomColor81"},
+	{ (unsigned int) glow_eDrawType_CustomColor82, 	"CustomColor82"},
+	{ (unsigned int) glow_eDrawType_CustomColor83, 	"CustomColor83"},
+	{ (unsigned int) glow_eDrawType_CustomColor84, 	"CustomColor84"},
+	{ (unsigned int) glow_eDrawType_CustomColor85, 	"CustomColor85"},
+	{ (unsigned int) glow_eDrawType_CustomColor86, 	"CustomColor86"},
+	{ (unsigned int) glow_eDrawType_CustomColor87, 	"CustomColor87"},
+	{ (unsigned int) glow_eDrawType_CustomColor88, 	"CustomColor88"},
+	{ (unsigned int) glow_eDrawType_CustomColor89, 	"CustomColor89"},
+	{ (unsigned int) glow_eDrawType_CustomColor90, 	"CustomColor90"},
 	{ (unsigned int) glow_eDrawType_Inherit, 	"Inherit"},
 	{ 0, ""}};
 
@@ -1188,6 +1219,31 @@ int AttrNav::string_to_enum( int type_id, char *str, pwr_tEnum *enumval)
   for ( ; elem_p->name[0] != 0; elem_p++) {
     if ( cdh_NoCaseStrcmp( elem_p->name, str) == 0) {
       *enumval = elem_p->num;
+      return 1;
+    }
+  }
+  return 0;
+}
+
+int AttrNav::enum_to_string( int type_id, pwr_tEnum enumval, char *str, int strsize)
+{
+  attrnav_sEnumElement	*elem_p;
+  attrnav_sEnum		*enum_p;
+  int			found;
+
+  for ( enum_p = enum_types; enum_p->elements; enum_p++) {
+    if ( enum_p->num == (unsigned int)type_id) {
+      found = 1;
+      break;
+    }
+  }
+  if ( !found)
+    return 1;
+
+  elem_p = enum_p->elements;
+  for ( ; elem_p->name[0] != 0; elem_p++) {
+    if ( enumval == (int)elem_p->num) {
+      strncpy( str, elem_p->name, strsize);
       return 1;
     }
   }

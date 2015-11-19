@@ -944,6 +944,7 @@ class GrowNode : public GlowNode {
   glow_eDrawType get_text_color() { return text_drawtype;}
   glow_eGradient get_gradient() { return gradient;}
   int get_shadow() { return shadow;}
+  void set_colortheme_lightness();
 
   //! Destructor
   /*! Remove the object from the context and erase it from the screen.

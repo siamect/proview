@@ -803,6 +803,11 @@ void GeGtk::image_file_selected_cb( void *ctx, char *filename, wow_eFileSelType 
   ge->subpalette->select_by_name( cmd);
 }
 
+void GeGtk::activate_select_colortheme(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_select_colortheme();
+}
+
 void GeGtk::activate_import_graph(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->wow->CreateFileSelDia( "Graph Selection", (void *)gectx,
@@ -1675,6 +1680,13 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_widget_add_accelerator( file_graph_attr, "activate", accel_g,
 			      'g', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE);
 
+  GtkWidget *file_select_colortheme = gtk_menu_item_new_with_mnemonic( "_Select ColorTheme");
+  g_signal_connect( file_select_colortheme, "activate", 
+		    G_CALLBACK(activate_select_colortheme), this);
+  gtk_widget_add_accelerator( file_select_colortheme, "activate", accel_g,
+			      't', GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), 
+			      GTK_ACCEL_VISIBLE);
+
   GtkWidget *file_subgraphs = gtk_menu_item_new_with_mnemonic( "_Loaded Subgraphs...");
   g_signal_connect( file_subgraphs, "activate", 
 		    G_CALLBACK(activate_subgraphs), this);
@@ -1752,6 +1764,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_save_as);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_build);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_graph_attr);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_select_colortheme);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_subgraphs);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_export);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_import_graph);

@@ -244,7 +244,7 @@ dcli_tCmdTable	graph_command_table[] = {
 		{
 			"CUSTOMCOLOR",
 			&graph_customcolor_func,
-			{"dcli_arg", "/FILE", ""}
+			{"dcli_arg", "/FILE", "/LIGHTNESS", ""}
 		},
 		{"",}};
 
@@ -399,6 +399,27 @@ static int	graph_customcolor_func(void		*client_data,
     // Command is "CUSTOMCOLOR PRINT"
 
     grow_PrintRgbColors( graph->grow->ctx);
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "SET", strlen( arg1_str)) == 0) {
+    // Command is "CUSTOMCOLOR SET"
+    char str[80];
+
+    if ( ODD( dcli_get_qualifier( "/LIGHTNESS", str, sizeof(str)))) {
+      int lightness;
+      int num; 
+
+      num = sscanf( str, "%d", &lightness);
+      if ( num != 1) {
+	graph->message('E', "Syntax error");
+	return GE__SYNTAX;
+      }
+      grow_SetColorThemeLightness( graph->grow->ctx, lightness);
+      graph->message('I', "ColorTheme lightness set");
+    }
+    else {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
   }
   else {
     graph->message('E', "Syntax error");
@@ -3976,6 +3997,476 @@ static int graph_reload_func(
   return 1;
 }
 
+static int graph_setobjectattribute_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  int type;
+  ccm_sArg 	*arg_p2; 	// Attribute
+  ccm_sArg 	*arg_p3; 	// Attribute value
+  grow_tObject o;
+
+  if ( arg_count != 3)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  o = (grow_tObject)arg_list->value_int;
+  graph_get_stored_graph( &graph);
+
+  type = grow_GetObjectType( o);
+  if ( type == glow_eObjectType_GrowNode ||
+       type == glow_eObjectType_GrowSlider ||
+       type == glow_eObjectType_GrowGroup ||
+       type == glow_eObjectType_GrowToolbar ||
+       type == glow_eObjectType_GrowTable ||
+       type == glow_eObjectType_GrowWindow ||
+       type == glow_eObjectType_GrowFolder ||
+       type == glow_eObjectType_GrowBar ||
+       type == glow_eObjectType_GrowTrend ||
+       type == glow_eObjectType_GrowAxis) {
+    attr_sItem 	*itemlist;
+    attr_sItem  *item_p;
+    int 	item_cnt;
+    void	*client_data;
+    char	attr_name[80];
+    int		i_value;
+    double	d_value;
+    int         i;
+    int		sts;
+    int		found;
+    GeDyn 	*dyn;
+
+
+    graph->get_attr_items( o, &itemlist, &item_cnt, &client_data);
+
+    found = 0;
+    item_p = itemlist;
+    for ( i = 0; i < item_cnt; i++) {
+      strcpy( attr_name, item_p->name);
+      if ( cdh_NoCaseStrcmp( arg_p2->value_string, attr_name) == 0) {
+	found = 1;
+	break;
+      }
+      item_p++;
+    }
+
+    if ( !found) {
+      *return_decl = CCM_DECL_INT;
+      *return_int = GE__NOATTR;
+      return 1;
+    }
+
+    switch( item_p->type) {
+    case glow_eType_Int:
+    case glow_eType_TraceColor:
+    case glow_eType_Boolean:
+      if ( arg_p3->value_decl != CCM_DECL_INT)
+	return CCM__ARGMISM;
+
+      i_value = arg_p3->value_int;
+      memcpy( item_p->value, (char *)&i_value, sizeof(i_value));
+      break;
+    case glow_eType_Double:
+      if ( arg_p3->value_decl != CCM_DECL_FLOAT)
+	return CCM__ARGMISM;
+
+      d_value = double(arg_p3->value_float);
+      memcpy( item_p->value, (char *)&d_value, sizeof(d_value));
+      break;
+    case glow_eType_String:
+      if ( arg_p3->value_decl != CCM_DECL_STRING)
+	return CCM__ARGMISM;
+      strncpy( (char *) item_p->value, arg_p3->value_string, item_p->size);
+      break;
+    case glow_eType_Direction:
+    case glow_eType_Color:
+    case glow_eType_Tone:
+    case glow_eType_ToneOrColor:
+    case glow_eType_Cycle:
+    case glow_eType_MB3Action:
+    case ge_eAttrType_AnimSequence:
+    case ge_eAttrType_LimitType:
+    case glow_eType_Relief:
+    case glow_eType_InputFocusMark:
+    case ge_eAttrType_ScaleType:
+    case glow_eType_Adjustment:
+    case glow_eType_Font:
+    case ge_eAttrType_CurveDataType:
+    case glow_eType_Gradient:
+    case glow_eType_HotIndication:
+    case glow_eType_AppMotion:
+    case glow_eType_AnnotType:
+    case ge_eAttrType_OptionMenuType: {
+      int value;
+
+      if ( !(arg_p3->value_decl == CCM_DECL_INT || arg_p3->value_decl == CCM_DECL_STRING))
+	return CCM__ARGMISM;
+
+      if (arg_p3->value_decl == CCM_DECL_INT) {
+	value = arg_p3->value_int;
+      }
+      else {
+	sts = AttrNav::string_to_enum( item_p->type, arg_p3->value_string, &value);
+	if ( EVEN(sts)) {
+	  *return_int = GE__SYNTAX;
+	  *return_decl = CCM_DECL_INT;
+	  return 1;
+	}
+      }
+      memcpy( item_p->value, (char *)&value, sizeof(value));
+      break;
+    }
+    case glow_eType_TextSize: {
+
+      int value;
+      char str[40];
+
+      if ( !(arg_p3->value_decl == CCM_DECL_INT || arg_p3->value_decl == CCM_DECL_STRING))
+	return CCM__ARGMISM;
+
+      if ( arg_p3->value_decl == CCM_DECL_INT)
+	sprintf( str, "%d", (int)arg_p3->value_int);
+      else
+	strncpy( str, arg_p3->value_string, sizeof(str));
+
+      sts = AttrNav::string_to_enum( item_p->type, str, &value);
+      if ( EVEN(sts)) {
+	*return_int = GE__SYNTAX;
+	*return_decl = CCM_DECL_INT;
+	return 1;
+      }
+      memcpy( item_p->value, (char *)&value, sizeof(value));
+      break;
+    }
+    case glow_eType_Access:
+    case ge_eAttrType_DynType1:
+    case ge_eAttrType_DynType2:
+    case ge_eAttrType_ActionType1:
+    case ge_eAttrType_ActionType2:
+    case ge_eAttrType_InstanceMask:
+    case ge_eAttrType_InputFocus: {
+      unsigned int value;
+
+      if ( !(arg_p3->value_decl == CCM_DECL_INT || arg_p3->value_decl == CCM_DECL_STRING))
+	return CCM__ARGMISM;
+
+      if ( arg_p3->value_decl == CCM_DECL_INT)
+	value = arg_p3->value_int;
+      else {
+	sts = AttrNav::string_to_mask( item_p->type, arg_p3->value_string, &value);
+	if ( EVEN(sts)) {
+	  return GE__SYNTAX;
+	}
+      }
+      memcpy( item_p->value, (char *)&value, sizeof(value));
+      if ( item_p->type == ge_eAttrType_DynType1 ||
+	   item_p->type == ge_eAttrType_DynType2 ||
+	   item_p->type == ge_eAttrType_ActionType1 ||
+	   item_p->type == ge_eAttrType_ActionType2) {
+	grow_GetUserData( o, (void **)&dyn);
+	dyn->update_elements();
+      }
+      break;
+    }
+    default:
+      ;
+    }
+    grow_UpdateObject( graph->grow->ctx, o,
+		       (grow_sAttrInfo *)client_data);
+
+  }
+  *return_int = 1;
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int graph_getobjectattribute_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  int type;
+  ccm_sArg 	*arg_p2; 	// Attribute
+  ccm_sArg 	*arg_p3; 	// Attribute value
+  grow_tObject o;
+
+  if ( arg_count != 3)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  o = (grow_tObject)arg_list->value_int;
+  graph_get_stored_graph( &graph);
+
+  type = grow_GetObjectType( o);
+  if ( type == glow_eObjectType_GrowNode ||
+       type == glow_eObjectType_GrowSlider ||
+       type == glow_eObjectType_GrowGroup ||
+       type == glow_eObjectType_GrowToolbar ||
+       type == glow_eObjectType_GrowTable ||
+       type == glow_eObjectType_GrowWindow ||
+       type == glow_eObjectType_GrowFolder ||
+       type == glow_eObjectType_GrowBar ||
+       type == glow_eObjectType_GrowTrend ||
+       type == glow_eObjectType_GrowAxis) {
+    attr_sItem 	*itemlist;
+    attr_sItem  *item_p;
+    int 	item_cnt;
+    void	*client_data;
+    char	attr_name[80];
+    int		i_value;
+    double	d_value;
+    int         i;
+    int		sts;
+    int		found;
+
+    graph->get_attr_items( o, &itemlist, &item_cnt, &client_data);
+
+    found = 0;
+    item_p = itemlist;
+    for ( i = 0; i < item_cnt; i++) {
+      strcpy( attr_name, item_p->name);
+      if ( cdh_NoCaseStrcmp( arg_p2->value_string, attr_name) == 0) {
+	found = 1;
+	break;
+      }
+      item_p++;
+    }
+
+    if ( !found) {
+      *return_decl = CCM_DECL_INT;
+      *return_int = GE__NOATTR;
+      return 1;
+    }
+
+    switch( item_p->type) {
+    case glow_eType_Int:
+    case glow_eType_TraceColor:
+    case glow_eType_Boolean:
+      if ( arg_p3->value_decl != CCM_DECL_INT)
+	return CCM__ARGMISM;
+
+      i_value = arg_p3->value_int;
+      memcpy( (char *)&arg_p3->value_int, item_p->value, sizeof(arg_p3->value_int));
+      arg_p3->value_returned = 1;
+      break;
+    case glow_eType_Double:
+      if ( arg_p3->value_decl != CCM_DECL_FLOAT)
+	return CCM__ARGMISM;
+
+      memcpy( (char *)&d_value, item_p->value, sizeof(d_value));
+      arg_p3->value_float = (float)d_value;
+      arg_p3->value_returned = 1;
+      break;
+    case glow_eType_String:
+      if ( arg_p3->value_decl != CCM_DECL_STRING)
+	return CCM__ARGMISM;
+      strncpy( arg_p3->value_string, (char *) item_p->value, MIN( item_p->size, (int)sizeof(arg_p3->value_string)));
+      arg_p3->value_returned = 1;
+      break;
+    case glow_eType_Direction:
+    case glow_eType_Color:
+    case glow_eType_Tone:
+    case glow_eType_ToneOrColor:
+    case glow_eType_Cycle:
+    case glow_eType_MB3Action:
+    case ge_eAttrType_AnimSequence:
+    case ge_eAttrType_LimitType:
+    case glow_eType_Relief:
+    case glow_eType_InputFocusMark:
+    case ge_eAttrType_ScaleType:
+    case glow_eType_Adjustment:
+    case glow_eType_Font:
+    case ge_eAttrType_CurveDataType:
+    case glow_eType_Gradient:
+    case glow_eType_HotIndication:
+    case glow_eType_AppMotion:
+    case glow_eType_AnnotType:
+    case ge_eAttrType_OptionMenuType: {
+      int value;
+
+      if ( !(arg_p3->value_decl == CCM_DECL_INT || arg_p3->value_decl == CCM_DECL_STRING))
+	return CCM__ARGMISM;
+
+      memcpy( (char *)&value, item_p->value, sizeof(value));
+
+      if (arg_p3->value_decl == CCM_DECL_INT) {
+	arg_p3->value_int = value;
+	arg_p3->value_returned = 1;
+      }
+      else {
+	sts = AttrNav::enum_to_string( item_p->type, value, arg_p3->value_string, sizeof(arg_p3->value_string));
+	if ( EVEN(sts)) {
+	  *return_int = GE__SYNTAX;
+	  *return_decl = CCM_DECL_INT;
+	  return 1;
+	}
+      }
+      break;
+    }
+    case glow_eType_TextSize: {
+
+      int value;
+      char str[40];
+
+      if ( !(arg_p3->value_decl == CCM_DECL_INT || arg_p3->value_decl == CCM_DECL_STRING))
+	return CCM__ARGMISM;
+
+      memcpy( (char *)&value, item_p->value, sizeof(value));
+      sts = AttrNav::enum_to_string( item_p->type, value, str, sizeof(str));
+      if ( EVEN(sts)) {
+	*return_int = GE__SYNTAX;
+	*return_decl = CCM_DECL_INT;
+	return 1;
+      }
+
+      if ( arg_p3->value_decl == CCM_DECL_INT)
+	sscanf( str, "%d", (int *)&arg_p3->value_int);
+      else
+	strncpy( arg_p3->value_string, str, sizeof(arg_p3->value_string));
+      arg_p3->value_returned = 1;
+      break;
+    }
+    case glow_eType_Access:
+    case ge_eAttrType_DynType1:
+    case ge_eAttrType_DynType2:
+    case ge_eAttrType_ActionType1:
+    case ge_eAttrType_ActionType2:
+    case ge_eAttrType_InstanceMask:
+    case ge_eAttrType_InputFocus: {
+      unsigned int value;
+
+      if ( arg_p3->value_decl != CCM_DECL_INT)
+	return CCM__ARGMISM;
+
+      memcpy( (char *)&value, item_p->value, sizeof(value));
+      arg_p3->value_int = value;
+      arg_p3->value_returned = 1;
+      break;
+    }
+    default:
+      ;
+    }
+
+  }
+  *return_int = 1;
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int graph_getrgbcolor_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  ccm_sArg 	*arg_p2; 	// Red
+  ccm_sArg 	*arg_p3; 	// Green
+  ccm_sArg 	*arg_p4; 	// Blue
+  double r, g, b;
+
+  if ( arg_count != 4)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+  arg_p4 = arg_p3->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+  if ( arg_p3->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+  if ( arg_p4->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  grow_GetRgbColor( graph->grow->ctx, (glow_eDrawType)arg_list->value_int, &r, &g, &b);  
+
+  arg_p2->value_float = (float)r;
+  arg_p3->value_float = (float)g;
+  arg_p4->value_float = (float)b;
+  arg_p2->value_returned = 1;
+  arg_p3->value_returned = 1;
+  arg_p4->value_returned = 1;
+
+  return 1;
+}
+
+static int graph_setrgbcolor_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  ccm_sArg 	*arg_p2; 	// Red
+  ccm_sArg 	*arg_p3; 	// Green
+  ccm_sArg 	*arg_p4; 	// Blue
+  double r, g, b;
+
+  if ( arg_count != 4)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+  arg_p4 = arg_p3->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+  if ( arg_p3->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+  if ( arg_p4->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  r = (double)arg_p2->value_float;
+  g = (double)arg_p3->value_float;
+  b = (double)arg_p4->value_float;
+
+  grow_SetRgbColor( graph->grow->ctx, (glow_eDrawType)arg_list->value_int, r, g, b);  
+  if ( graph->update_colorpalette_cb)
+    (graph->update_colorpalette_cb)( graph->parent_ctx);
+
+  return 1;
+}
+
 static int graph_ccm_deffilename_func( char *outfile, char *infile, void *client_data)
 {
 
@@ -4138,6 +4629,14 @@ int Graph::readcmdfile( 	char		*incommand)
     sts = ccm_register_function( "GetObjectText", graph_getobjecttext_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "Reload", graph_reload_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetObjectAttribute", graph_setobjectattribute_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetObjectAttribute", graph_getobjectattribute_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetRgbColor", graph_getrgbcolor_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetRgbColor", graph_setrgbcolor_func);
     if ( EVEN(sts)) return sts;
     ccm_func_registred = 1;
 

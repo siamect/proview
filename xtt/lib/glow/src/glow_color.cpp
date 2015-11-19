@@ -378,10 +378,12 @@ glow_eDrawType GlowColor::get_drawtype( glow_eDrawType local_drawtype,
       else if ( 56 <= drawtype && drawtype <= 59)
 	drawtype = (glow_eDrawType) ( drawtype - 4);
       else if ( is_custom(drawtype)) {
-	if ( drawtype == glow_eDrawType_CustomColor16)
-	  drawtype = (glow_eDrawType) 27;	  
-	if ( drawtype == glow_eDrawType_CustomColor17)
-	  drawtype = (glow_eDrawType) 25;	  
+	if ( drawtype == glow_eDrawType_CustomColor37) 
+	  // Button border color
+	  drawtype = glow_eDrawType_CustomColor40;	  
+	if ( drawtype == glow_eDrawType_CustomColor38)
+	  // Button text color
+	  drawtype = glow_eDrawType_CustomColor39;	  
       }
     }
   }

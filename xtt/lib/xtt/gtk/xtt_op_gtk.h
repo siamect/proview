@@ -114,6 +114,7 @@ class OpGtk : public Op {
   static void activate_aalarm_decr( GtkWidget *w, gpointer data);
   static void activate_zoom_in( GtkWidget *w, gpointer data);
   static void activate_zoom_out( GtkWidget *w, gpointer data);
+  static void activate_colortheme( GtkWidget *w, gpointer data);
   static void activate_alarmlist( GtkWidget *w, gpointer data);
   static void activate_eventlist( GtkWidget *w, gpointer data);
   static void activate_eventlog( GtkWidget *w, gpointer data);

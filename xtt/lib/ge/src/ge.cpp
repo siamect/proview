@@ -1603,6 +1603,65 @@ void Ge::activate_open()
   //	Ge::open_graph);
 }
 
+static void ge_colortheme_selector_ok_cb( void *ctx, char *text)
+{
+  Ge *gectx = (Ge *)ctx;
+  int idx;
+
+  if ( strcmp( text, "Standard") == 0) 
+    idx = 0;
+  else if ( strcmp( text, "Sand") == 0) 
+    idx = 1;
+  else if ( strcmp( text, "Maroon") == 0) 
+    idx = 2;
+  else if ( strcmp( text, "Sienna") == 0) 
+    idx = 3;
+  else if ( strcmp( text, "DarkBlue") == 0) 
+    idx = 4;
+  else if ( strcmp( text, "Classic") == 0) 
+    idx = 5;
+  else if ( strcmp( text, "Midnight") == 0) 
+    idx = 6;
+  else if ( strcmp( text, "PlayRoom") == 0) 
+    idx = 7;
+  else if ( strcmp( text, "NordicLight") == 0) 
+    idx = 8;
+  else if ( strcmp( text, "Contrast") == 0) 
+    idx = 9;
+  else if ( strcmp( text, "AzureContrast") == 0) 
+    idx = 10;
+  else if ( strcmp( text, "OchreContrast") == 0) 
+    idx = 11;
+  else
+    return;
+
+  gectx->graph->update_color_theme( idx);
+}
+
+void Ge::activate_select_colortheme()
+{
+  pwr_tString80 names[30];
+
+  strcpy( names[0], "Standard");
+  strcpy( names[1], "Sand");
+  strcpy( names[2], "Maroon");
+  strcpy( names[3], "Sienna");
+  strcpy( names[4], "DarkBlue");
+  strcpy( names[5], "Classic");
+  strcpy( names[6], "Midnight");
+  strcpy( names[7], "PlayRoom");
+  strcpy( names[8], "NordicLight");
+  strcpy( names[9], "Contrast");
+  strcpy( names[10], "AzureContrast");
+  strcpy( names[11], "OchreContrast");
+  strcpy( names[12], "");
+
+  wow->CreateList( "ColorTheme Selector", (char *)names, sizeof(names[0]),
+		   ge_colortheme_selector_ok_cb, 0, this);
+}
+
+
+
 void Ge::activate_subgraphs()
 {
   if ( subgraphs) {
@@ -2151,7 +2210,7 @@ void Ge::message_cb( void *ctx, char severity, const char *message)
 
 void Ge::help_cb( void *ctx, char *topic, char *helpfile)
 {
-  CoXHelp::dhelp( topic, "", navh_eHelpFile_Other, helpfile, false);  
+  CoXHelp::dhelp( topic, "", navh_eHelpFile_Other, helpfile, false);
 }
 
 Ge::~Ge()

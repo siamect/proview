@@ -148,22 +148,22 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  ContrastBlue.
+    !  AzureContrast.
     !*/
-    Object ContrastBlue $Value
+    Object AzureContrast $Value
      Body SysBody
-       Attr PgmName = "ContrastBlue"
-       Attr Text = "ContrastBlue"
+       Attr PgmName = "AzureContrast"
+       Attr Text = "AzureContrast"
        Attr Value = 10
      EndBody
     EndObject
     !/**
     !  Contrast.
     !*/
-    Object ContrastYellow $Value
+    Object OchreContrast $Value
      Body SysBody
-       Attr PgmName = "ContrastYellow"
-       Attr Text = "ContrastYellow"
+       Attr PgmName = "OchreContrast"
+       Attr Text = "OchreContrast"
        Attr Value = 11
      EndBody
     EndObject

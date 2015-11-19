@@ -1,0 +1,70 @@
+#
+#  Script to export all classgraphs to java
+#
+#
+#
+
+function int process( string graph)
+  open 'graph'
+  printf( "Processing %s...\n", graph);
+  @indcnv3
+  save
+endfunction
+
+main()
+  process( "pwr_c_ai");
+  process( "pwr_c_alarmtable");
+  process( "pwr_c_ao");
+  process( "pwr_c_av");
+  process( "pwr_c_backup_conf");
+  process( "pwr_c_chanai");
+  process( "pwr_c_chanao");
+  process( "pwr_c_chandi");
+  process( "pwr_c_chando");
+  process( "pwr_c_chanii");
+  process( "pwr_c_chanio");
+  process( "pwr_c_chanpo");
+  process( "pwr_c_constav");
+  process( "pwr_c_constiv");
+  process( "pwr_c_di");
+  process( "pwr_c_disksup");
+  process( "pwr_c_do");
+  process( "pwr_c_dsfastconf");
+  process( "pwr_c_dstrendconf");
+  process( "pwr_c_dv");
+  process( "pwr_c_ii");
+  process( "pwr_c_iohandler");
+  process( "pwr_c_io");
+  process( "pwr_c_iv");
+  process( "pwr_c_messagehandler");
+  process( "pwr_c_mode");
+  process( "pwr_c_mode_sub");
+  process( "pwr_c_node_plc");
+  process( "pwr_c_node");
+  process( "pwr_c_pid");
+  process( "pwr_c_pid_tst");
+  process( "pwr_c_plcprocess");
+  process( "pwr_c_plcthread");
+  process( "pwr_c_postconfig");
+  process( "pwr_c_remnode");
+  process( "pwr_c_remnodeudp");
+  process( "pwr_c_remoteconfig");
+  process( "pwr_c_remtrans");
+  process( "pwr_c_reportconfig");
+  process( "pwr_c_sevhistmonitor");
+  process( "pwr_c_simulateconfig_plcpgms");
+  process( "pwr_c_simulateconfig");
+  process( "pwr_c_simulateconfig_server");
+  process( "pwr_c_simulateconfig_threads");
+  process( "pwr_c_sound");
+  process( "pwr_c_soundsequence");
+  process( "pwr_c_sysmonconfig");
+  process( "pwr_c_table");
+  process( "pwr_c_trans");
+  process( "pwr_c_xycurve");
+
+endmain
+
+
+
+

@@ -679,6 +679,18 @@ void Graph::set_mode( grow_eMode mode, bool keep)
 
 }
 
+void Graph::update_color_theme( int color_theme)
+{
+  char color_theme_file[80];
+  int sts;
+
+  sprintf( color_theme_file, "pwr_colortheme%d", color_theme);
+  sts = grow_ReadCustomColorFile( grow->ctx, color_theme_file);
+
+  if ( update_colorpalette_cb)
+    (update_colorpalette_cb)( parent_ctx);
+}
+
 void Graph::flip( glow_eFlipDirection dir)
 {
   journal_store( journal_eAction_AntePropertiesSelect, 0);

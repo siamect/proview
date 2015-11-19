@@ -791,7 +791,37 @@ typedef enum {
 	glow_eDrawType_CustomColor58 = 538,
 	glow_eDrawType_CustomColor59 = 542,
 	glow_eDrawType_CustomColor60 = 546,
-	glow_eDrawType_CustomColor__ = 550,
+	glow_eDrawType_CustomColor61 = 550,
+	glow_eDrawType_CustomColor62 = 554,
+	glow_eDrawType_CustomColor63 = 558,
+	glow_eDrawType_CustomColor64 = 562,
+	glow_eDrawType_CustomColor65 = 566,
+	glow_eDrawType_CustomColor66 = 570,
+	glow_eDrawType_CustomColor67 = 574,
+	glow_eDrawType_CustomColor68 = 578,
+	glow_eDrawType_CustomColor69 = 582,
+	glow_eDrawType_CustomColor70 = 586,
+	glow_eDrawType_CustomColor71 = 590,
+	glow_eDrawType_CustomColor72 = 594,
+	glow_eDrawType_CustomColor73 = 598,
+	glow_eDrawType_CustomColor74 = 602,
+	glow_eDrawType_CustomColor75 = 606,
+	glow_eDrawType_CustomColor76 = 610,
+	glow_eDrawType_CustomColor77 = 614,
+	glow_eDrawType_CustomColor78 = 618,
+	glow_eDrawType_CustomColor79 = 622,
+	glow_eDrawType_CustomColor80 = 626,
+	glow_eDrawType_CustomColor81 = 630,
+	glow_eDrawType_CustomColor82 = 634,
+	glow_eDrawType_CustomColor83 = 638,
+	glow_eDrawType_CustomColor84 = 642,
+	glow_eDrawType_CustomColor85 = 646,
+	glow_eDrawType_CustomColor86 = 650,
+	glow_eDrawType_CustomColor87 = 654,
+	glow_eDrawType_CustomColor88 = 658,
+	glow_eDrawType_CustomColor89 = 662,
+	glow_eDrawType_CustomColor90 = 666,
+	glow_eDrawType_CustomColor__ = 670,
 	glow_eDrawType_Inherit = 9999,
 	glow_eDrawType_No = 10000
 	} glow_eDrawType;
@@ -1907,7 +1937,8 @@ typedef enum {
 	glow_eSave_GrowToolbar_grownode_part	= 4700,
 	glow_eSave_GrowToolbar_nc	        = 4701,
 	glow_eSave_CustomColors_colors_size     = 4800,
-	glow_eSave_CustomColors_colors	        = 4801
+	glow_eSave_CustomColors_colors	        = 4801,
+	glow_eSave_CustomColors_colortheme_lightness = 4802
 	} glow_eSave;
 
 //! Relative or absolute position for an annotation

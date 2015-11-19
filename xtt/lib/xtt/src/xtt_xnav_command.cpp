@@ -193,6 +193,7 @@ static void xnav_open_shist_cb( void *ctx, char *text);
 static void xnav_open_shist_cancel_cb( void *ctx);
 static void xnav_show_objectlist_cb( void *ctx, char *text);
 static void xnav_show_objectlist_cancel_cb( void *ctx);
+static void xnav_colortheme_selector_ok_cb( void *ctx, char *text);
 static int xnav_replace_node_str( char *out, char *object_str);
 
 static int	xnav_help_func(		void		*client_data,
@@ -4935,6 +4936,33 @@ static int	xnav_open_func(	void		*client_data,
 	xnav->set_transient( basewidget);
     }
 
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "COLORTHEMESELECTOR", strlen( arg1_str)) == 0)
+  {
+    gdh_sValueDef *vd;
+    pwr_tString80 cname[30];
+    pwr_tTid tid;
+    int rows;
+    int i;
+    pwr_tOid oid;
+    pwr_tStatus sts;
+
+    sts = gdh_NameToObjid( "pwrb:Type-ColorThemeEnum", &oid);
+    if ( EVEN(sts)) return sts;
+    tid = cdh_TypeObjidToId( oid);
+    sts = gdh_GetEnumValueDef( tid, &vd, &rows);
+    if ( EVEN(sts)) return sts;
+
+    if ( rows > int(sizeof(cname)/sizeof(cname[0])) - 1)
+      rows = int(sizeof(cname)/sizeof(cname[0])) - 1;
+		    
+    for ( i = 0; i < rows; i++)
+      strncpy( cname[i], vd[i].Name, sizeof(cname[0]));    
+    strcpy( cname[i], "");
+    free( vd);
+    
+    xnav->wow->CreateList( "ColorTheme Selector", (char *)cname, sizeof(cname[0]), 
+			   xnav_colortheme_selector_ok_cb, 0, xnav);
   }
   else
     xnav->message('E',"Syntax error");
@@ -9725,6 +9753,46 @@ static void xnav_open_shist_cb( void *ctx, char *text)
 static void xnav_open_shist_cancel_cb( void *ctx)
 {
   free( ctx);
+}
+
+static void xnav_colortheme_selector_ok_cb( void *ctx, char *text)
+{
+  XNav *xnav = (XNav *)ctx;
+  gdh_sValueDef *vd;
+  pwr_tTid tid;
+  int rows;
+  int i;
+  pwr_tOid oid;
+  pwr_tStatus sts;
+  int found;
+  int idx;
+  ApplListElem *elem;
+  
+  sts = gdh_NameToObjid( "pwrb:Type-ColorThemeEnum", &oid);
+  if ( EVEN(sts)) return;
+  tid = cdh_TypeObjidToId( oid);
+  sts = gdh_GetEnumValueDef( tid, &vd, &rows);
+  if ( EVEN(sts)) return;
+
+  found = 0;
+  for ( i = 0; i < rows; i++) {
+    if ( strcmp( text, vd[i].Name) == 0) {
+      idx = vd[i].Value->Value;
+      found = 1;
+      break;
+    }
+  }
+  if ( found) {
+    if ( xnav->gbl.color_theme != idx) {
+      xnav->gbl.color_theme = idx;
+
+      for ( elem = xnav->appl.root; elem; elem = elem->next) {
+	if ( elem->type == applist_eType_Graph)
+	  ((XttGe *)elem->ctx)->update_color_theme( idx);
+      }
+    }
+  }
+  free( vd);
 }
 
 static void xnav_show_objectlist_cb( void *ctx, char *text)

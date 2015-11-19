@@ -461,6 +461,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeDigFourShift((const GeDigFourShift&) *elem); break;
     case ge_mDynType2_ScrollingText:
       e = new GeScrollingText((const GeScrollingText&) *elem); break;
+    case ge_mDynType2_ColorThemeLightness:
+      e = new GeColorThemeLightness((const GeColorThemeLightness&) *elem); break;
     default: ;
     }
     switch( elem->action_type1) {
@@ -595,6 +597,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_DigShift: e = (GeDynElem *) new GeDigShift(this); break;
       case ge_eSave_DigFourShift: e = (GeDynElem *) new GeDigFourShift(this); break;
       case ge_eSave_ScrollingText: e = (GeDynElem *) new GeScrollingText(this); break;
+      case ge_eSave_ColorThemeLightness: e = (GeDynElem *) new GeColorThemeLightness(this); break;
       case ge_eSave_Animation: e = (GeDynElem *) new GeAnimation(this); break;
       case ge_eSave_Video: e = (GeDynElem *) new GeVideo(this); break;
       case ge_eSave_Bar: e = (GeDynElem *) new GeBar(this); break;
@@ -1548,6 +1551,9 @@ GeDynElem *GeDyn::create_dyn2_element( int mask, int instance)
   case ge_mDynType2_ScrollingText:
     e = (GeDynElem *) new GeScrollingText(this);
     break;
+  case ge_mDynType2_ColorThemeLightness:
+    e = (GeDynElem *) new GeColorThemeLightness(this);
+    break;
   default: ;
   }
   return e;
@@ -1747,6 +1753,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
       break;
     case ge_mDynType2_ScrollingText:
       e = (GeDynElem *) new GeScrollingText((GeScrollingText&) x);
+      break;
+    case ge_mDynType2_ColorThemeLightness:
+      e = (GeDynElem *) new GeColorThemeLightness((GeColorThemeLightness&) x);
       break;
     default: ;
     }
@@ -2533,6 +2542,11 @@ void GeDigWarning::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( attribute);
 
+  strcpy( attrinfo[i].name, "DigWarning.UseColorTheme");
+  attrinfo[i].value = &use_colortheme;
+  attrinfo[i].type = glow_eType_Int;
+  attrinfo[i++].size = sizeof( use_colortheme);
+
   *item_count = i;
 }
 
@@ -2558,6 +2572,7 @@ void GeDigWarning::save( ofstream& fp)
 {
   fp << int(ge_eSave_DigWarning) << endl;
   fp << int(ge_eSave_DigWarning_attribute) << FSPACE << attribute << endl;
+  fp << int(ge_eSave_DigWarning_use_colortheme) << FSPACE << use_colortheme << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -2583,6 +2598,7 @@ void GeDigWarning::open( ifstream& fp)
         fp.get();
         fp.getline( attribute, sizeof(attribute));
         break;
+      case ge_eSave_DigWarning_use_colortheme: fp >> use_colortheme; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeDigWarning:open syntax error" << endl;
@@ -2661,7 +2677,7 @@ int GeDigWarning::scan( grow_tObject object)
   }
   else {
     if ( val) {
-      grow_SetObjectFillColor( object, glow_eDrawType_ColorYellow);
+      grow_SetObjectFillColor( object, use_colortheme ? glow_eDrawType_CustomColor41 : glow_eDrawType_ColorYellow);
       dyn->ignore_color = true;
     }
     else {
@@ -2693,6 +2709,11 @@ void GeDigError::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( attribute);
 
+  strcpy( attrinfo[i].name, "DigError.UseColorTheme");
+  attrinfo[i].value = &use_colortheme;
+  attrinfo[i].type = glow_eType_Int;
+  attrinfo[i++].size = sizeof( use_colortheme);
+
   *item_count = i;
 }
 
@@ -2718,6 +2739,7 @@ void GeDigError::save( ofstream& fp)
 {
   fp << int(ge_eSave_DigError) << endl;
   fp << int(ge_eSave_DigError_attribute) << FSPACE << attribute << endl;
+  fp << int(ge_eSave_DigError_use_colortheme) << FSPACE << use_colortheme << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -2743,6 +2765,7 @@ void GeDigError::open( ifstream& fp)
         fp.get();
         fp.getline( attribute, sizeof(attribute));
         break;
+      case ge_eSave_DigError_use_colortheme: fp >> use_colortheme; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeDigError:open syntax error" << endl;
@@ -2821,7 +2844,7 @@ int GeDigError::scan( grow_tObject object)
   }
   else {
     if ( val) {
-      grow_SetObjectFillColor( object, glow_eDrawType_ColorRed);
+      grow_SetObjectFillColor( object, use_colortheme ? glow_eDrawType_CustomColor11 : glow_eDrawType_ColorRed);
       dyn->ignore_color = true;
     }
     else {
@@ -6840,6 +6863,74 @@ int GeScrollingText::export_java( grow_tObject object, ofstream& fp, bool first,
   return 1;
 }
 
+void GeColorThemeLightness::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+}
+
+void GeColorThemeLightness::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
+{
+}
+
+void GeColorThemeLightness::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+}
+
+void GeColorThemeLightness::save( ofstream& fp)
+{
+  fp << int(ge_eSave_ColorThemeLightness) << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeColorThemeLightness::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[40];
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeColorThemeLightness: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+      case ge_eSave_ColorThemeLightness: break;
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeColorThemeLightness:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeColorThemeLightness::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+  trace_data->p = &pdummy;
+  return 1;
+}
+
+int GeColorThemeLightness::disconnect( grow_tObject object)
+{
+  return 1;
+}
+
+int GeColorThemeLightness::scan( grow_tObject object)
+{
+  grow_SetObjectColorThemeLightness( object);
+  return 1;
+}
+
+int GeColorThemeLightness::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
+  return 1;
+}
+
 void GeAnimation::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -9460,6 +9551,7 @@ void GeStatusColor::get_attributes( attr_sItem *attrinfo, int *item_count)
     attrinfo[i].value = &nostatus_color;
     attrinfo[i].type = glow_eType_ToneOrColor;
     attrinfo[i++].size = sizeof( nostatus_color);
+
   }
   else {
     strcpy( attrinfo[i].name, "StatusColor.Attribute");
@@ -9471,6 +9563,11 @@ void GeStatusColor::get_attributes( attr_sItem *attrinfo, int *item_count)
     attrinfo[i].value = &nostatus_color;
     attrinfo[i].type = glow_eType_Color;
     attrinfo[i++].size = sizeof( nostatus_color);
+
+    strcpy( attrinfo[i].name, "StatusColor.UseColorTheme");
+    attrinfo[i].value = &use_colortheme;
+    attrinfo[i].type = glow_eType_Int;
+    attrinfo[i++].size = sizeof( use_colortheme);
   }
   *item_count = i;
 }
@@ -9518,6 +9615,7 @@ void GeStatusColor::save( ofstream& fp)
   fp << int(ge_eSave_StatusColor) << endl;
   fp << int(ge_eSave_StatusColor_attribute) << FSPACE << attribute << endl;
   fp << int(ge_eSave_StatusColor_nostatus_color) << FSPACE << int(nostatus_color) << endl;
+  fp << int(ge_eSave_StatusColor_use_colortheme) << FSPACE << use_colortheme << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -9545,6 +9643,7 @@ void GeStatusColor::open( ifstream& fp)
         fp.getline( attribute, sizeof(attribute));
         break;
       case ge_eSave_StatusColor_nostatus_color: fp >> tmp; nostatus_color = (glow_eDrawType)tmp; break;
+      case ge_eSave_StatusColor_use_colortheme: fp >> use_colortheme; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeStatusColor:open syntax error" << endl;
@@ -9685,15 +9784,15 @@ int GeStatusColor::scan( grow_tObject object)
       grow_ResetObjectFillColor( object);
       break;
     case ge_ePwrStatus_Warning:
-      grow_SetObjectFillColor( object, glow_eDrawType_ColorYellow);
+      grow_SetObjectFillColor( object, use_colortheme ? glow_eDrawType_CustomColor41 : glow_eDrawType_ColorYellow);
       break;
     case ge_ePwrStatus_Error:
-      grow_SetObjectFillColor( object, glow_eDrawType_ColorRed);
+      grow_SetObjectFillColor( object, use_colortheme ? glow_eDrawType_CustomColor11 : glow_eDrawType_ColorRed);
       break;
     case ge_ePwrStatus_Fatal:
       on = !on;
       if ( on)
-	grow_SetObjectFillColor( object, glow_eDrawType_ColorRed);
+	grow_SetObjectFillColor( object, use_colortheme ? glow_eDrawType_CustomColor41 : glow_eDrawType_ColorRed);
       else
 	grow_SetObjectFillColor( object, nostatus_color);
       break;

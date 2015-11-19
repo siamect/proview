@@ -7,7 +7,7 @@
 function int process( string graph)
   printf( "-- Processing %s...\n", graph);
   open 'graph'
-  @conv4
+  @indcnv3
 #  SetExtern( "pwr_motorman");
 #  save
 #  open 'graph'

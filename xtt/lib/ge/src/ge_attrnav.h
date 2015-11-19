@@ -171,6 +171,7 @@ class AttrNav {
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
     static int string_to_mask( int type_id, char *str, pwr_tMask *mask);
     static int string_to_enum( int type_id, char *str, pwr_tEnum *enumval);
+    static int enum_to_string( int type_id, pwr_tEnum enumval, char *str, int strsize);
 };
 
 //! Item for a normal attribute.

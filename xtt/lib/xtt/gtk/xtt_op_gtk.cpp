@@ -413,6 +413,10 @@ OpGtk::OpGtk( void *op_parent_ctx,
   // End Curves submenu
 
   // Submenu View
+  GtkWidget *functions_view_colortheme = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Color theme"));
+  g_signal_connect( functions_view_colortheme, "activate", 
+		    G_CALLBACK(activate_colortheme), this);
+
   GtkWidget *functions_view_incr = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Larger Text"));
   dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_view_incr), 
@@ -429,6 +433,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
 
   GtkWidget *functions_view = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_View"));
   GtkMenu *functions_view_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_view_menu), functions_view_colortheme);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_view_menu), functions_view_incr);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_view_menu), functions_view_decr);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_view),
@@ -1291,6 +1296,15 @@ void OpGtk::activate_zoom_out( GtkWidget *w, gpointer data)
 
   op->text_size -= 2;
   op->update_alarm_info();
+}
+
+void OpGtk::activate_colortheme( GtkWidget *w, gpointer data)
+{
+  OpGtk *op = (OpGtk *)data;
+
+  if ( op->command_cb) {
+    op->command_cb( op->parent_ctx, (char *)"open colorthemeselector");
+  }
 }
 
 void OpGtk::activate_aalarm_incr( GtkWidget *w, gpointer data)

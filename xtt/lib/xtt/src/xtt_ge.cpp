@@ -232,6 +232,12 @@ void XttGe::swap( int mode)
   graph->swap( mode);
 }
 
+void XttGe::update_color_theme( int theme)
+{
+  color_theme = theme;
+  graph->update_color_theme( color_theme);
+}
+
 void XttGe::event_exec( int type, void *event, unsigned int size) 
 { 
   switch ( type) {

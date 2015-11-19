@@ -2188,6 +2188,12 @@ void GlowCtx::set_show_grid( int show)
   }
 }
 
+void GlowCtx::set_colortheme_lightness( int lightness) 
+{ 
+  if ( customcolors) 
+    customcolors->set_colortheme_lightness(lightness);
+}
+
 void GlowWind::set_draw_buffer_only() 
 { 
   if (window->double_buffer_on) 

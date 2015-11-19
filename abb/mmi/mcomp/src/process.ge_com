@@ -7,7 +7,7 @@
 function int process( string graph)
   printf( "-- Processing %s...\n", graph);
   open 'graph'
-  @conv3
+  @indcnv3
 #  SetExtern( "pwr_motorman");
 #  save
 #  SetIntern( "pwr_motorman");
@@ -22,7 +22,7 @@ main()
    process( "pwr_c_abb_acc800.pwg");
    process( "pwr_c_abb_acs800_1param.pwg");
    process( "pwr_c_abb_acs800_1.pwg");
-   process( "pwr_c_abb_acs800_1sim.pwg");
+#   process( "pwr_c_abb_acs800_1sim.pwg");
    process( "pwr_c_abb_acs800fanaggr10.pwg");
    process( "pwr_c_abb_acs800fanaggr11.pwg");
    process( "pwr_c_abb_acs800fanaggr12.pwg");
@@ -71,7 +71,7 @@ main()
    process( "pwr_c_abb_acs800motoraggr8.pwg");
    process( "pwr_c_abb_acs800motoraggr9.pwg");
    process( "pwr_c_abb_acs800motoraggr.pwg");
-   process( "pwr_c_abb_acs800motoraggrsim.pwg");
+#   process( "pwr_c_abb_acs800motoraggrsim.pwg");
    process( "pwr_c_abb_acs800pump1.pwg");
    process( "pwr_c_abb_acs800pump2.pwg");
    process( "pwr_c_abb_acs800pumpaggr10.pwg");
@@ -101,7 +101,7 @@ main()
    process( "pwr_c_abb_acs880_1param2.pwg");
    process( "pwr_c_abb_acs880_1param.pwg");
    process( "pwr_c_abb_acs880_1.pwg");
-   process( "pwr_c_abb_acs880_1sim.pwg");
+#   process( "pwr_c_abb_acs880_1sim.pwg");
    process( "pwr_c_abb_acs880eplfanaggr10.pwg");
    process( "pwr_c_abb_acs880eplfanaggr11.pwg");
    process( "pwr_c_abb_acs880eplfanaggr12.pwg");
@@ -198,7 +198,7 @@ main()
    process( "pwr_c_abb_acs880motoraggr8.pwg");
    process( "pwr_c_abb_acs880motoraggr9.pwg");
    process( "pwr_c_abb_acs880motoraggr.pwg");
-   process( "pwr_c_abb_acs880motoraggrsim.pwg");
+#   process( "pwr_c_abb_acs880motoraggrsim.pwg");
    process( "pwr_c_abb_acs880pnfanaggr10.pwg");
    process( "pwr_c_abb_acs880pnfanaggr11.pwg");
    process( "pwr_c_abb_acs880pnfanaggr12.pwg");

@@ -3094,7 +3094,11 @@ extern "C" {
   int grow_ReadCustomColorFile( grow_tCtx ctx, char *name);
   int grow_WriteCustomColorFile( grow_tCtx ctx, char *name);
   void grow_SetDefaultColorTheme( char *theme);
+  void grow_SetColorThemeLightness( grow_tCtx ctx, int lighness);
+  void grow_SetObjectColorThemeLightness( grow_tObject o);
   void grow_PrintRgbColors( grow_tCtx ctx);
+  int grow_SetRgbColor( grow_tCtx ctx, glow_eDrawType color, double r, double g, double b);
+  int grow_GetRgbColor( grow_tCtx ctx, glow_eDrawType color, double *r, double *g, double *b);
   int grow_GetObjectFill( grow_tObject o);
   int grow_GetObjectBorder( grow_tObject o);
   glow_eDrawType grow_GetObjectFillColor( grow_tObject o);
