@@ -5733,7 +5733,7 @@ pwr_exe:
 99
 99
 3
-300 pwr_valueinputlargerd
+300 pwrct_valueinputlargebg
 301
 2
 26
@@ -20152,7 +20152,7 @@ pwr_exe:
 2701
 2700
 10
-1000 pwr_valueinputlargerd
+1000 pwrct_valueinputlargebg
 1002 O511
 1005
 0

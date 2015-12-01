@@ -59,10 +59,12 @@ GrowPolyLine::GrowPolyLine( GrowCtx *glow_ctx, const char *name,
 		dynamic(0), dynamicsize(0),
 		original_border_drawtype(border_d_type),
 		original_fill_drawtype(fill_d_type), fill_drawtype(fill_d_type),
+		background_drawtype(glow_eDrawType_No),
 		border(display_border), fill_eq_border(0), current_point(0),
 		shadow(display_shadow), shadow_width(5), relief(glow_eRelief_Up),
 		shadow_contrast(2), disable_shadow(0), fill_eq_light(0), 
-		fill_eq_shadow(0), fixcolor(0), fixposition(0),
+		fill_eq_shadow(0), fill_eq_bglight(0), fill_eq_bgshadow(0), fill_eq_background(0),
+		fixcolor(0), fixposition(0),
 		gradient(glow_eGradient_No), gradient_contrast(4), disable_gradient(0)
 { 
   strcpy( n_name, name);
@@ -209,7 +211,7 @@ void GrowPolyLine::calculate_shadow( glow_sShadowInfo **s, int *num, int ish, in
   sp = (glow_sShadowInfo *) calloc( p_num + 1, sizeof(glow_sShadowInfo));
 
   glow_eDrawType fillcolor = ctx->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
-		 highlight, (GrowNode *)colornode, 1);
+						highlight, (GrowNode *)colornode, 1);
 
   int drawtype_incr = shadow_contrast;
   if ( relief == glow_eRelief_Down)
@@ -409,15 +411,35 @@ void GrowPolyLine::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, 
     if ( fill_eq_border)
       drawtype = ctx->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 0);
-    else      
+    else if ( fill_eq_background)
+      drawtype = ctx->get_drawtype( background_drawtype, glow_eDrawType_FillHighlight,
+		 highlight, (GrowNode *)colornode, 3);
+    else
       drawtype = ctx->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 highlight, (GrowNode *)colornode, 1);
+
     if ( fill_eq_light && node && ((GrowNode *)node)->shadow)
       drawtype = ctx->shift_drawtype( drawtype, -shadow_contrast + chot, 
 						   (GrowNode *)colornode);
+    else if ( fill_eq_bglight) { 
+      if ( node && ((GrowNode *)colornode)->background_drawtype != glow_eDrawType_No)
+	drawtype = ctx->shift_drawtype( ((GrowNode *)colornode)->background_drawtype, -shadow_contrast + chot, 
+					(GrowNode *)colornode);
+      else
+	drawtype = ctx->shift_drawtype( original_fill_drawtype, -shadow_contrast + chot, 
+					(GrowNode *)colornode);
+    }
     else if ( fill_eq_shadow && node && ((GrowNode *)node)->shadow)
       drawtype = ctx->shift_drawtype( drawtype, shadow_contrast + chot, 
 				      (GrowNode *)colornode);
+    else if ( fill_eq_bgshadow) {
+      if ( node && ((GrowNode *)colornode)->background_drawtype != glow_eDrawType_No)
+	drawtype = ctx->shift_drawtype( ((GrowNode *)colornode)->background_drawtype, shadow_contrast + chot,
+					(GrowNode *)colornode);
+      else
+	drawtype = ctx->shift_drawtype( original_fill_drawtype, shadow_contrast + chot, 
+					(GrowNode *)colornode);
+    }
     else if ( chot)
       drawtype = GlowColor::shift_drawtype( drawtype, chot, 0);
 
@@ -857,6 +879,7 @@ void GrowPolyLine::save( ofstream& fp, glow_eSaveMode mode)
 		<< int(original_border_drawtype) << endl;
   fp << int(glow_eSave_GrowPolyLine_original_fill_drawtype) << FSPACE 
 		<< int(original_fill_drawtype) << endl;
+  fp << int(glow_eSave_GrowPolyLine_background_drawtype) << FSPACE << int(background_drawtype) << endl;
   fp << int(glow_eSave_GrowPolyLine_fill_drawtype) << FSPACE << int(fill_drawtype) << endl;
   fp << int(glow_eSave_GrowPolyLine_border) << FSPACE << border << endl;
   fp << int(glow_eSave_GrowPolyLine_shadow) << FSPACE << shadow << endl;
@@ -882,11 +905,14 @@ void GrowPolyLine::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowPolyLine_fill_eq_border) << FSPACE << fill_eq_border << endl;
   fp << int(glow_eSave_GrowPolyLine_fill_eq_light) << FSPACE << fill_eq_light << endl;
   fp << int(glow_eSave_GrowPolyLine_fill_eq_shadow) << FSPACE << fill_eq_shadow << endl;
+  fp << int(glow_eSave_GrowPolyLine_fill_eq_bglight) << FSPACE << fill_eq_bglight << endl;
+  fp << int(glow_eSave_GrowPolyLine_fill_eq_bgshadow) << FSPACE << fill_eq_bgshadow << endl;
   fp << int(glow_eSave_GrowPolyLine_fixcolor) << FSPACE << fixcolor << endl;
   fp << int(glow_eSave_GrowPolyLine_fixposition) << FSPACE << fixposition << endl;
   fp << int(glow_eSave_GrowPolyLine_gradient) << FSPACE << int(gradient) << endl;
   fp << int(glow_eSave_GrowPolyLine_gradient_contrast) << FSPACE << gradient_contrast << endl;
   fp << int(glow_eSave_GrowPolyLine_disable_gradient) << FSPACE << disable_gradient << endl;
+  fp << int(glow_eSave_GrowPolyLine_fill_eq_background) << FSPACE << fill_eq_background << endl;
   fp << int(glow_eSave_End) << endl;
 }
 
@@ -924,6 +950,8 @@ void GrowPolyLine::open( ifstream& fp)
 		tmp; original_fill_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_GrowPolyLine_fill_drawtype: fp >> 
 		tmp; fill_drawtype = (glow_eDrawType)tmp; break;
+      case glow_eSave_GrowPolyLine_background_drawtype: fp >> 
+		tmp; background_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_GrowPolyLine_border: fp >> border; break;
       case glow_eSave_GrowPolyLine_shadow_width: fp >> shadow_width; break;
       case glow_eSave_GrowPolyLine_shadow_contrast: fp >> shadow_contrast; break;
@@ -965,8 +993,11 @@ void GrowPolyLine::open( ifstream& fp)
       case glow_eSave_GrowPolyLine_fill_eq_border: fp >> fill_eq_border; break;
       case glow_eSave_GrowPolyLine_fill_eq_light: fp >> fill_eq_light; break;
       case glow_eSave_GrowPolyLine_fill_eq_shadow: fp >> fill_eq_shadow; break;
+      case glow_eSave_GrowPolyLine_fill_eq_bglight: fp >> fill_eq_bglight; break;
+      case glow_eSave_GrowPolyLine_fill_eq_bgshadow: fp >> fill_eq_bgshadow; break;
       case glow_eSave_GrowPolyLine_fixcolor: fp >> fixcolor; break;
       case glow_eSave_GrowPolyLine_fixposition: fp >> fixposition; break;
+      case glow_eSave_GrowPolyLine_fill_eq_background: fp >> fill_eq_background; break;
       case glow_eSave_End: end_found = 1; break;
       default:
         cout << "GrowPolyLine:open syntax error" << endl;

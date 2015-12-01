@@ -7,7 +7,7 @@
 function int process( string graph)
   open 'graph'
   printf( "Processing %s...\n", graph);
-  @indcnv3
+  @gradcnv
   save
 endfunction
 

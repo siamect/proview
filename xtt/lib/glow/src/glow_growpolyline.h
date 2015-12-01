@@ -367,6 +367,7 @@ class GrowPolyLine : public GlowPolyLine {
   glow_eDrawType original_border_drawtype; //!< The original border color, i.e. color drawn at edit time.
   glow_eDrawType original_fill_drawtype; //!< The original fill color, i.e. color drawn at edit time.
   glow_eDrawType fill_drawtype; //!< Fill color.
+  glow_eDrawType background_drawtype; //!< Background color.
   int		border;		//!< Display border.
   int		fill_eq_border;	//!< Fill is drawn with bordercolor.
   GlowTransform trf;		//!< Tranformation matrix of the object.
@@ -379,6 +380,9 @@ class GrowPolyLine : public GlowPolyLine {
   int		disable_shadow;	//!< Disable shadow, even if parent node has shadow.
   int		fill_eq_light;	//!< Fill is drawn with light shadow color.
   int		fill_eq_shadow;	//!< Fill is drawn with dark shadow color.
+  int		fill_eq_bglight; //!< Fill is drawn with background light shadow color.
+  int		fill_eq_bgshadow; //!< Fill is drawn with background dark shadow color.
+  int		fill_eq_background; //!< Fill is drawn with background color.
   int		fixcolor;	//!< Color independent of node color.
   int		fixposition;	//!< Can't be moved.
   glow_eGradient gradient;  //!< Type of gradient.
@@ -484,6 +488,13 @@ class GrowPolyLine : public GlowPolyLine {
   */
   void set_original_border_color( glow_eDrawType drawtype) 
 	{ original_border_drawtype = drawtype; reset_border_color();};
+
+  //! Set the background color.
+  /*!
+    \param color 	Background color.
+  */
+  void set_original_background_color( glow_eDrawType color)
+        { background_drawtype = color; draw();}
 
   //! Draw the object.
   /*!

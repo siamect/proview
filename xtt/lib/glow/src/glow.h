@@ -923,6 +923,86 @@ typedef enum {
 	glow_eDrawTone__
 	} glow_eDrawTone;
 
+#define glow_eCtColor_Background 		glow_eDrawType_CustomColor1
+#define glow_eCtColor_BackgroundGradient 	glow_eDrawType_CustomColor2
+#define glow_eCtColor_AreaDelimiter 		glow_eDrawType_CustomColor3
+#define glow_eCtColor_LineDelimiter 		glow_eDrawType_CustomColor4
+#define glow_eCtColor_BackgroundTextAndLines 	glow_eDrawType_CustomColor5
+#define glow_eCtColor_InputfieldFillcolor 	glow_eDrawType_CustomColor6
+#define glow_eCtColor_InputfieldBordercolor 	glow_eDrawType_CustomColor7
+#define glow_eCtColor_InputfieldTextcolor 	glow_eDrawType_CustomColor8
+#define glow_eCtColor_RedIndicator 		glow_eDrawType_CustomColor11
+#define glow_eCtColor_RedCurve 			glow_eDrawType_CustomColor12
+#define glow_eCtColor_RedBar 			glow_eDrawType_CustomColor13
+#define glow_eCtColor_RedBarLimit 		glow_eDrawType_CustomColor14
+#define glow_eCtColor_RedValuefieldBackground 	glow_eDrawType_CustomColor15
+#define glow_eCtColor_IndicatorBorderColor 	glow_eDrawType_CustomColor16
+#define glow_eCtColor_IndicatorLowColor 	glow_eDrawType_CustomColor17
+#define glow_eCtColor_IndicatorOnDelimiterLowColor glow_eDrawType_CustomColor18
+#define glow_eCtColor_SliderColor 		glow_eDrawType_CustomColor19
+#define glow_eCtColor_SliderBackgroundColor 	glow_eDrawType_CustomColor20
+#define glow_eCtColor_ValuefieldFillcolor 	glow_eDrawType_CustomColor21
+#define glow_eCtColor_ValuefieldBordercolor 	glow_eDrawType_CustomColor22
+#define glow_eCtColor_ValuefieldTextcolor 	glow_eDrawType_CustomColor23
+#define glow_eCtColor_GreenIndicator 		glow_eDrawType_CustomColor26
+#define glow_eCtColor_GreenCurve 		glow_eDrawType_CustomColor27
+#define glow_eCtColor_GreenBar 			glow_eDrawType_CustomColor28
+#define glow_eCtColor_GreenBarLimit 		glow_eDrawType_CustomColor29
+#define glow_eCtColor_GreenValuefieldBackground glow_eDrawType_CustomColor30
+#define glow_eCtColor_LimitswitchHighColor 	glow_eDrawType_CustomColor31
+#define glow_eCtColor_LimitswitchLowColor 	glow_eDrawType_CustomColor32
+#define glow_eCtColor_LimitswitchBorderColor 	glow_eDrawType_CustomColor33
+#define glow_eCtColor_AreaDelimiterTextAndLines glow_eDrawType_CustomColor34
+#define glow_eCtColor_ButtonActiveFillcolor 	glow_eDrawType_CustomColor35
+#define glow_eCtColor_ButtonFillcolor 		glow_eDrawType_CustomColor36
+#define glow_eCtColor_ButtonBordercolor 	glow_eDrawType_CustomColor37
+#define glow_eCtColor_ButtonTextcolor 		glow_eDrawType_CustomColor38
+#define glow_eCtColor_ButtonInsensitiveTextcolor glow_eDrawType_CustomColor39
+#define glow_eCtColor_ButtonInsensitiveBordercolor glow_eDrawType_CustomColor40
+#define glow_eCtColor_YellowIndicatorYellow 	glow_eDrawType_CustomColor41
+#define glow_eCtColor_YellowCurve 		glow_eDrawType_CustomColor42
+#define glow_eCtColor_YellowBar 		glow_eDrawType_CustomColor43
+#define glow_eCtColor_YellowBarLimit 		glow_eDrawType_CustomColor44
+#define glow_eCtColor_YellowValuefieldBackground glow_eDrawType_CustomColor45
+#define glow_eCtColor_SymbolFillcolor 		glow_eDrawType_CustomColor46
+#define glow_eCtColor_SymbolBordercolor 	glow_eDrawType_CustomColor47
+#define glow_eCtColor_SymbolLowColor 		glow_eDrawType_CustomColor48
+#define glow_eCtColor_SymbolEmptyColor 		glow_eDrawType_CustomColor49
+#define glow_eCtColor_BarBarColor 		glow_eDrawType_CustomColor51
+#define glow_eCtColor_BarBackgroundColor 	glow_eDrawType_CustomColor52
+#define glow_eCtColor_BarBarLimitColor 		glow_eDrawType_CustomColor53
+#define glow_eCtColor_BarBackground 		glow_eDrawType_CustomColor54
+#define glow_eCtColor_BarBackgroundLines 	glow_eDrawType_CustomColor55
+#define glow_eCtColor_BlueIndicator 		glow_eDrawType_CustomColor56
+#define glow_eCtColor_BlueCurve 		glow_eDrawType_CustomColor57
+#define glow_eCtColor_BlueBar 			glow_eDrawType_CustomColor58
+#define glow_eCtColor_BlueBarLimit 		glow_eDrawType_CustomColor59
+#define glow_eCtColor_BlueValuefieldBackground 	glow_eDrawType_CustomColor60
+#define glow_eCtColor_MenuFillcolor 		glow_eDrawType_CustomColor61
+#define glow_eCtColor_MenuTextcolor 		glow_eDrawType_CustomColor62
+#define glow_eCtColor_ToolbarFillcolor 		glow_eDrawType_CustomColor63
+#define glow_eCtColor_ToolbarBordercolor 	glow_eDrawType_CustomColor64
+#define glow_eCtColor_ToolbarTextcolor 		glow_eDrawType_CustomColor65
+#define glow_eCtColor_DiagramFillcolor 		glow_eDrawType_CustomColor66
+#define glow_eCtColor_DiagramBordercolor 	glow_eDrawType_CustomColor67
+#define glow_eCtColor_DiagramCurveColor 	glow_eDrawType_CustomColor68
+#define glow_eCtColor_AxisBordercolor 		glow_eDrawType_CustomColor69
+#define glow_eCtColor_OrangeIndicator 		glow_eDrawType_CustomColor71
+#define glow_eCtColor_OrangeCurve 		glow_eDrawType_CustomColor72
+#define glow_eCtColor_OrangeBar 		glow_eDrawType_CustomColor73
+#define glow_eCtColor_OrangeBarLimit 		glow_eDrawType_CustomColor74
+#define glow_eCtColor_OrangeValuefieldBackground glow_eDrawType_CustomColor75
+#define glow_eCtColor_TableFillcolor 		glow_eDrawType_CustomColor76
+#define glow_eCtColor_TableBordercolor 		glow_eDrawType_CustomColor77
+#define glow_eCtColor_TableTextcolor 		glow_eDrawType_CustomColor78
+#define glow_eCtColor_ScrollbarFillcolor 	glow_eDrawType_CustomColor79
+#define glow_eCtColor_ScrollbarBackground 	glow_eDrawType_CustomColor80
+#define glow_eCtColor_YellowgreenIndicator 	glow_eDrawType_CustomColor86
+#define glow_eCtColor_YellowgreenCurve 		glow_eDrawType_CustomColor87
+#define glow_eCtColor_YellowgreenBar 		glow_eDrawType_CustomColor88
+#define glow_eCtColor_YellowgreenBarLimit 	glow_eDrawType_CustomColor89
+#define glow_eCtColor_YellowgreenValuefieldBackground glow_eDrawType_CustomColor90
+
 //! Cursors used
 typedef enum {
   glow_eDrawCursor_Normal,  		//!< The original cursor
@@ -1410,6 +1490,9 @@ typedef enum {
 	glow_eSave_GrowRect_gradient          	= 1921,
 	glow_eSave_GrowRect_gradient_contrast   = 1922,
 	glow_eSave_GrowRect_disable_gradient    = 1923,
+	glow_eSave_GrowRect_bgcolor_gradient    = 1924,
+	glow_eSave_GrowRect_background_drawtype = 1925,
+	glow_eSave_GrowRect_fill_eq_background  = 1926,
 	glow_eSave_GrowLine_x_right		= 2000,
 	glow_eSave_GrowLine_x_left		= 2001,
 	glow_eSave_GrowLine_y_high		= 2002,
@@ -1511,6 +1594,8 @@ typedef enum {
 	glow_eSave_GrowArc_disable_gradient     = 2420,
 	glow_eSave_GrowArc_fixcolor      	= 2421,
 	glow_eSave_GrowArc_fixposition      	= 2422,
+	glow_eSave_GrowArc_background_drawtype  = 2423,
+	glow_eSave_GrowArc_fill_eq_background   = 2424,
 	glow_eSave_PolyLine_draw_type		= 2500,
 	glow_eSave_PolyLine_line_width		= 2501,
 	glow_eSave_PolyLine_a_points		= 2502,
@@ -1542,6 +1627,10 @@ typedef enum {
 	glow_eSave_GrowPolyLine_gradient   	= 2623,
 	glow_eSave_GrowPolyLine_gradient_contrast = 2624,
 	glow_eSave_GrowPolyLine_disable_gradient = 2625,
+	glow_eSave_GrowPolyLine_fill_eq_bglight   = 2626,
+	glow_eSave_GrowPolyLine_fill_eq_bgshadow  = 2627,
+	glow_eSave_GrowPolyLine_fill_eq_background = 2628,
+	glow_eSave_GrowPolyLine_background_drawtype = 2629,
 	glow_eSave_GrowNode_node_part		= 2700,
 	glow_eSave_GrowNode_dynamic		= 2701,
 	glow_eSave_GrowNode_dynamicsize		= 2702,
@@ -1573,6 +1662,8 @@ typedef enum {
 	glow_eSave_GrowNode_text_type          	= 2728,
 	glow_eSave_GrowNode_text_font          	= 2729,
 	glow_eSave_GrowNode_disable_cb         	= 2730,
+	glow_eSave_GrowNode_original_background_drawtype = 2731,
+	glow_eSave_GrowNode_background_drawtype = 2732,
 	glow_eSave_Transform_a11		= 2800,
 	glow_eSave_Transform_a12		= 2801,
 	glow_eSave_Transform_a13		= 2802,
@@ -1938,7 +2029,8 @@ typedef enum {
 	glow_eSave_GrowToolbar_nc	        = 4701,
 	glow_eSave_CustomColors_colors_size     = 4800,
 	glow_eSave_CustomColors_colors	        = 4801,
-	glow_eSave_CustomColors_colortheme_lightness = 4802
+	glow_eSave_CustomColors_colortheme_lightness = 4802,
+	glow_eSave_CustomColors_is_default_colortheme = 4803
 	} glow_eSave;
 
 //! Relative or absolute position for an annotation

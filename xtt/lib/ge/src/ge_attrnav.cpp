@@ -115,6 +115,7 @@ static attrnav_sEnumElement elem_dyn_type2[] = {
 	{ (unsigned int) ge_mDynType2_DigFourShift       , "DigFourShift"},
 	{ (unsigned int) ge_mDynType2_ScrollingText      , "ScrollingText"},
 	{ (unsigned int) ge_mDynType2_ColorThemeLightness, "ColorThemeLightness"},
+	{ (unsigned int) ge_mDynType2_DigBackgroundColor,  "DigBackgroundColor"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_dyn_type1_tone[] = {

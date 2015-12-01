@@ -49,6 +49,7 @@ public class GrowRect extends GlowArrayElem {
     int original_border_drawtype;
     int original_fill_drawtype;
     int fill_drawtype;
+    int background_drawtype;
     int border;
     double shadow_width;
     int shadow_contrast;
@@ -61,6 +62,8 @@ public class GrowRect extends GlowArrayElem {
     int gradient;
     int gradient_contrast;
     int disable_gradient;
+    int bgcolor_gradient;
+    int fill_eq_background;
     int dynamicsize;
     GlowTransform trf;
 
@@ -103,6 +106,7 @@ public class GrowRect extends GlowArrayElem {
 	gradient = Glow.eGradient_No;	
 	gradient_contrast = 4;
 	invisible = 0;
+	background_drawtype = Glow.eDrawType_No;
     }
 
 
@@ -153,6 +157,9 @@ public class GrowRect extends GlowArrayElem {
 		case Glow.eSave_GrowRect_fill_drawtype: 
 		    fill_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
+		case Glow.eSave_GrowRect_background_drawtype: 
+		    background_drawtype = Integer.valueOf(token.nextToken()); 
+		    break;
 		case Glow.eSave_GrowRect_border: 
 		    border = Integer.valueOf(token.nextToken()); 
 		    break;
@@ -188,6 +195,12 @@ public class GrowRect extends GlowArrayElem {
 		    break;
 		case Glow.eSave_GrowRect_disable_gradient:
 		    disable_gradient = Integer.valueOf(token.nextToken());
+		    break;
+		case Glow.eSave_GrowRect_bgcolor_gradient:
+		    bgcolor_gradient = Integer.valueOf(token.nextToken());
+		    break;
+		case Glow.eSave_GrowRect_fill_eq_background:
+		    fill_eq_background = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowRect_dynamicsize:
 		    dynamicsize = Integer.valueOf(token.nextToken());
@@ -339,8 +352,14 @@ public class GrowRect extends GlowArrayElem {
 
 	int ish = (int)( shadow_width / 100 * Math.min(ur_x - ll_x, ur_y - ll_y) + 0.5);
 	boolean display_shadow = ((node != null && ((GrowNode)node).shadow != 0) || shadow != 0) && disable_shadow == 0;
-	int fillcolor = GlowColor.get_drawtype( fill_drawtype, Glow.eDrawType_FillHighlight,
+	int fillcolor;
+	if ( fill_eq_background != 0)
+	    fillcolor = GlowColor.get_drawtype( background_drawtype, Glow.eDrawType_FillHighlight,
+						highlight, colornode, 3, 0);
+	else
+	    fillcolor = GlowColor.get_drawtype( fill_drawtype, Glow.eDrawType_FillHighlight,
 						highlight, colornode, 1, 0);
+
         int grad = gradient;
 	if ( gradient == Glow.eGradient_No && 
 	     (node != null && ((GrowNode)node).gradient != Glow.eGradient_No) && disable_gradient == 0)
@@ -411,7 +430,13 @@ public class GrowRect extends GlowArrayElem {
 		    else
 			rotation = trf.rot();
 
-		    if ( gradient_contrast >= 0) {
+		    if ( bgcolor_gradient != 0 && background_drawtype != Glow.eDrawType_No) {
+			f2 = GlowColor.shift_drawtype( fillcolor, -gradient_contrast/2 + chot, null);
+			f1 = GlowColor.get_drawtype( background_drawtype, Glow.eDrawType_FillHighlight,
+						     highlight, colornode, 1, 0);
+			f1 = GlowColor.shift_drawtype( f1, (int)((float)(gradient_contrast)/2+0.6) + chot, null);
+		    }
+		    else if ( gradient_contrast >= 0) {
 			f2 = GlowColor.shift_drawtype( fillcolor, -gradient_contrast/2 + chot, null);
 			f1 = GlowColor.shift_drawtype( fillcolor, (int)((float)(gradient_contrast)/2+0.6) + chot, null);
 		    }
@@ -438,7 +463,12 @@ public class GrowRect extends GlowArrayElem {
 			rotation = trf.rot( t);
 		    else
 			rotation = trf.rot();
-		    if ( gradient_contrast >= 0) {
+		    if ( bgcolor_gradient != 0 && background_drawtype != Glow.eDrawType_No) {
+			f2 = fillcolor;
+			f1 = GlowColor.get_drawtype( background_drawtype, Glow.eDrawType_FillHighlight,
+						     highlight, colornode, 1, 0);
+		    }
+		    else if ( gradient_contrast >= 0) {
 			f2 = GlowColor.shift_drawtype( fillcolor, -gradient_contrast/2 + chot, null);
 			f1 = GlowColor.shift_drawtype( fillcolor, (int)((float)(gradient_contrast)/2+0.6) + chot, null);
 		    }

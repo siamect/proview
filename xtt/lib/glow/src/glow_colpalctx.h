@@ -74,7 +74,7 @@ class ColPalCtx : public GrowCtx {
     \param zoom_fact	Initial zoomfactor.
   */
   ColPalCtx( const char *ctx_name, double zoom_fact = 100) :
-    GrowCtx( ctx_name, zoom_fact), columns(30), 
+    GrowCtx( ctx_name, zoom_fact), columns(30),
     current_fill( glow_eDrawType_LineGray), current_border( glow_eDrawType_Line),
     current_text(glow_eDrawType_Line), entry_width(0.3), entry_height(1), display_entry_width(3),
     active(colpal_eActive_FillColor)
@@ -124,6 +124,9 @@ class ColPalCtx : public GrowCtx {
   colpal_eActive get_active() { return active;}
   void set_colors();
   void update_custom_colors( GlowCustomColors *cc);
+  static char *color_idx_to_text( int idx);
+  static char *customcolor_idx_to_text( int idx);
+  static char *colortheme_idx_to_text( int idx);
 
   int columns;			//!< Number of columns in the color palette.
   glow_eDrawType current_fill;	//!< The currently selected fill color.
@@ -141,6 +144,8 @@ class ColPalCtx : public GrowCtx {
   GlowArrayElem *text_border;	//!< The border color text object. 
   GlowArrayElem *text_text;	//!< The text color text object. 
   GlowArrayElem *text_tone;	//!< The text tone text object. 
+  GlowArrayElem *color_description; //!< Description text for color theme.
+  GlowArrayElem *color_description_bg; //!< Background rect to description text.
   double entry_width;		//!< Width of a color palette entry.
   double entry_height;		//!< Height of a color palette entry.
   double display_entry_width;	//!< Width of a display entry.
@@ -162,6 +167,7 @@ void colpal_scroll_horizontal( ColPalCtx *ctx, int value, int bottom);
   \param bottom	Scrollbar is in bottom position.
 */
 void colpal_scroll_vertical( ColPalCtx *ctx, int value, int bottom);
+
 
 /*@}*/
 #endif

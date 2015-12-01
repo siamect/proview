@@ -276,7 +276,7 @@ SObject pwrb:Class
       !     The filtering is done on the engineering value,
       !     ActualValue, before storage in rtdb according:
       !  
-      !     ActulaValue(t) = ActulaValue(t-1) + a * (InValue - ActulaValue(t-1)) 
+      !     ActualValue(t) = ActualValue(t-1) + a * (InValue - ActualValue(t-1)) 
       !
       !     where 
       !     - ActualValue(t-1) is the engineering value stored at the 

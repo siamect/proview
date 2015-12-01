@@ -191,10 +191,12 @@ class GrowNode : public GlowNode {
   glow_eDrawType original_border_drawtype; //!< Original border color.
   glow_eDrawType original_text_drawtype; //!< Original text color.
   glow_eDrawType original_fill_drawtype; //!< Original fill color.
+  glow_eDrawType original_background_drawtype; //!< Original background color.
   glow_eDrawType fill_drawtype;	//!< Fill color. 
   glow_eDrawType text_drawtype; //!< Text color.
   glow_eDrawType draw_type;	//!< Border color.
   glow_eDrawType level_fill_drawtype; //!< Level fill color.
+  glow_eDrawType background_drawtype; //!< Background color.
   glow_eDrawTone original_color_tone; //!< Original color tone.
   glow_eDrawTone color_tone;	//!< Color tone.
   glow_eDrawTone level_color_tone; //!< Level color tone.
@@ -499,6 +501,28 @@ class GrowNode : public GlowNode {
   void set_color_inverse( int inverse) 
 	{ color_inverse = inverse;
           draw();};
+
+  //! Set the original background color.
+  /*!
+    \param drawtype	Background color.
+  */
+  void set_original_background_color( glow_eDrawType drawtype) 
+	{ original_background_drawtype = drawtype; 
+          reset_background_color();};
+
+  //! Set the background color.
+  /*!
+    \param color 	Background color.
+  */
+  void set_background_color( glow_eDrawType color)
+        { background_drawtype = color;
+          draw();}
+
+  //! Reset the background color to the original background color.
+  void reset_background_color() 
+	{ if ( background_drawtype == original_background_drawtype) return;
+          background_drawtype = original_background_drawtype; 
+          draw();}
 
   //! Set the level fill color.
   /*!

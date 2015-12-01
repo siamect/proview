@@ -8,12 +8,7 @@ function int process( string graph)
   string subgraph = "pwr_smallbuttoncenter";
   printf( "-- Processing %s...\n", graph);
   open 'graph'
-  #SetExtern( "pwr_mbblockevents");
-  #save
-  #open 'graph'
-  #SetIntern( "pwr_mbblockevents");
-  #set zoom/reset
-  @indcnv3
+  @gradcnv
   save
 endfunction
 

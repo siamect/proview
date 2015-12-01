@@ -1654,6 +1654,13 @@ extern "C" {
   */
   void grow_SetSelectOrigFillColor( grow_tCtx ctx, glow_eDrawType drawtype);
 
+  //! Set background color on all selected objects.
+  /*!
+    \param ctx		Grow context.
+    \param drawtype	Background color.
+  */
+  void grow_SetSelectOrigBackgroundColor( grow_tCtx ctx, glow_eDrawType drawtype);
+
   //! Set original color tone on all selected objects.
   /*!
     \param ctx		Grow context.
@@ -3095,6 +3102,7 @@ extern "C" {
   int grow_WriteCustomColorFile( grow_tCtx ctx, char *name);
   void grow_SetDefaultColorTheme( char *theme);
   void grow_SetColorThemeLightness( grow_tCtx ctx, int lighness);
+  void grow_SetColorThemeIsDefault( grow_tCtx ctx, int isdefault);
   void grow_SetObjectColorThemeLightness( grow_tObject o);
   void grow_PrintRgbColors( grow_tCtx ctx);
   int grow_SetRgbColor( grow_tCtx ctx, glow_eDrawType color, double r, double g, double b);
@@ -3109,6 +3117,10 @@ extern "C" {
   void grow_SetObjectOriginalFillColor( grow_tObject o, glow_eDrawType color);
   void grow_SetObjectOriginalBorderColor( grow_tObject o, glow_eDrawType color);
   void grow_SetObjectOriginalTextColor( grow_tObject o, glow_eDrawType color);
+  void grow_SetObjectBackgroundColor( grow_tObject o, glow_eDrawType color);
+  void grow_SetObjectOriginalBackgroundColor( grow_tObject o, glow_eDrawType color);
+  void grow_ResetObjectBackgroundColor( grow_tObject object);
+
   
 /*@}*/
 #if defined __cplusplus

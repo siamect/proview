@@ -202,6 +202,7 @@ class GlowArray {
   void set_original_fill_color( glow_eDrawType drawtype);
   void set_original_border_color( glow_eDrawType drawtype);
   void set_original_text_color( glow_eDrawType drawtype);
+  void set_original_background_color( glow_eDrawType drawtype);
   void set_color_tone( glow_eDrawTone tone);
   void set_original_color_tone( glow_eDrawTone tone);
   void reset_color_tone();

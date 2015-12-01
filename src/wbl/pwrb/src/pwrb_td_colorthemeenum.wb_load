@@ -148,7 +148,7 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  AzureContrast.
+    !  Azure contrast.
     !*/
     Object AzureContrast $Value
      Body SysBody
@@ -158,13 +158,33 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  Contrast.
+    !  Ochre contrast.
     !*/
     Object OchreContrast $Value
      Body SysBody
        Attr PgmName = "OchreContrast"
        Attr Text = "OchreContrast"
        Attr Value = 11
+     EndBody
+    EndObject
+    !/**
+    !  Chesterfield.
+    !*/
+    Object Chesterfield $Value
+     Body SysBody
+       Attr PgmName = "Chesterfield"
+       Attr Text = "Chesterfield"
+       Attr Value = 12
+     EndBody
+    EndObject
+    !/**
+    !  Terra verte.
+    !*/
+    Object TerraVerte $Value
+     Body SysBody
+       Attr PgmName = "TerraVerte"
+       Attr Text = "TerraVerte"
+       Attr Value = 13
      EndBody
     EndObject
     !/**

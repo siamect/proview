@@ -218,6 +218,9 @@ public class JopSpider {
 
     cmd = cmd.trim();
     System.out.println("JopSpider command : " + cmd);
+    if ( cmd.length() == 0 )
+       return 1;
+
     if ( root instanceof JopApplet) {
       if ( ((JopApplet)root).engine.isInstance())
 	cmd = RtUtilities.strReplace( cmd, "$object", 

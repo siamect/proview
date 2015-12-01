@@ -42,6 +42,8 @@ import java.util.*;
 public class GlowCustomColors {
     static final int colors_size = Glow.eDrawType_CustomColor__-Glow.eDrawType_CustomColor1;
     double colors[][] = new double[colors_size][3];
+    int colortheme_lightness = 0;
+    int is_default_colortheme;
 
     public GlowCustomColors() {
 	for ( int i = 0; i < colors_size; i++) {
@@ -76,6 +78,12 @@ public class GlowCustomColors {
 		    break;
 		case Glow.eSave_CustomColors_colors_size:
 		    csize = Integer.valueOf(token.nextToken());
+		    break;
+		case Glow.eSave_CustomColors_colortheme_lightness:
+		    colortheme_lightness = Integer.valueOf(token.nextToken());
+		    break;
+		case Glow.eSave_CustomColors_is_default_colortheme:
+		    is_default_colortheme = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_CustomColors_colors:
 		    for ( int i = 0; i < csize; i++) {

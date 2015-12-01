@@ -44,8 +44,10 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
     
     public int original_border_drawtype;
     public int border_drawtype;
+    public int background_drawtype;
     public int original_fill_drawtype;
     public int original_text_drawtype;
+    public int original_background_drawtype;
     public int original_color_tone;
     public int original_color_lightness;
     public int original_color_intensity;
@@ -110,8 +112,10 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 	original_border_drawtype = Glow.eDrawType_No;
 	original_text_drawtype = Glow.eDrawType_No;
 	original_fill_drawtype = Glow.eDrawType_No;	
+	original_background_drawtype = Glow.eDrawType_No;	
 	fill_drawtype = Glow.eDrawType_No;
 	level_fill_drawtype = Glow.eDrawType_No;
+	background_drawtype = Glow.eDrawType_No;
 	original_color_tone = Glow.eDrawTone_No;
 	color_tone = Glow.eDrawTone_No;
 	level_color_tone = Glow.eDrawTone_No;
@@ -160,6 +164,12 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 		    break;
 		case Glow.eSave_GrowNode_original_color_tone: 
 		    original_color_tone = Integer.valueOf(token.nextToken()); 
+		    break;
+		case Glow.eSave_GrowNode_original_background_drawtype: 
+		    original_background_drawtype = Integer.valueOf(token.nextToken()); 
+		    break;
+		case Glow.eSave_GrowNode_background_drawtype: 
+		    background_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowNode_color_tone: 
 		    color_tone = Integer.valueOf(token.nextToken()); 
@@ -583,7 +593,6 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
 	return nc.dyn_color[1];
     }
     public int getClassDynType1() {
-	System.out.println("GrowNode getClassDynType1 nc : "  + nc);
 	return nc.dyn_type1;
     }
     public int getClassDynType2() {
@@ -647,6 +656,12 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
     }
     public void resetTextColor() {
 	text_drawtype = original_text_drawtype;
+    }
+    public void setBackgroundColor(int draw_type) {
+	background_drawtype = draw_type;
+    }
+    public void resetBackgroundColor() {
+	background_drawtype = original_background_drawtype;
     }
     public void setColorInverse(int color_inverse) {
 	this.color_inverse = color_inverse;
@@ -1177,11 +1192,22 @@ public class GrowNode extends GlowArrayElem implements GlowColorNode {
     public int getTextDrawtype(){
 	return text_drawtype;
     }
+    public int getBackgroundDrawtype(){
+	return background_drawtype;
+    }
     public int getDrawtype(){
 	return draw_type;
     }
     public int getDimmed(){
 	return dimmed;
+    }
+
+    public void setColorThemeLightness() {
+	if ( cmn.customcolors == null)
+	    return;
+
+	if ( cmn.customcolors.colortheme_lightness != color_lightness)
+	    color_lightness = cmn.customcolors.colortheme_lightness;
     }
 
     public String getName() {

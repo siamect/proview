@@ -244,7 +244,7 @@ dcli_tCmdTable	graph_command_table[] = {
 		{
 			"CUSTOMCOLOR",
 			&graph_customcolor_func,
-			{"dcli_arg", "/FILE", "/LIGHTNESS", ""}
+			{"dcli_arg", "/FILE", "/LIGHTNESS", "/ISDEFAULT", ""}
 		},
 		{"",}};
 
@@ -415,6 +415,18 @@ static int	graph_customcolor_func(void		*client_data,
       }
       grow_SetColorThemeLightness( graph->grow->ctx, lightness);
       graph->message('I', "ColorTheme lightness set");
+    }
+    else if ( ODD( dcli_get_qualifier( "/ISDEFAULT", str, sizeof(str)))) {
+      int isdefault;
+      int num; 
+
+      num = sscanf( str, "%d", &isdefault);
+      if ( num != 1) {
+	graph->message('E', "Syntax error");
+	return GE__SYNTAX;
+      }
+      grow_SetColorThemeIsDefault( graph->grow->ctx, isdefault);
+      graph->message('I', "ColorTheme is default set");
     }
     else {
       graph->message('E', "Syntax error");
@@ -2757,7 +2769,7 @@ static int	graph_create_func( void		*client_data,
     else
       scale_y = 0;
     
-    graph->create_bar( &n1, x1, y1);
+    graph->create_bar( &n1, x1, y1, 0);
 
     if ( scale_x || scale_y) {
       grow_MeasureNode( n1, &ll_x, &ll_y, &ur_x, &ur_y);
@@ -3741,6 +3753,35 @@ static int graph_setobjecttextcolor_func(
   return 1;
 }
 
+static int graph_setobjectbackgroundcolor_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  ccm_sArg 	*arg_p2;
+
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  grow_SetObjectOriginalBackgroundColor( (grow_tObject)arg_list->value_int, (glow_eDrawType)arg_p2->value_int);
+  return 1;
+}
+
 static int graph_getobjectshadow_func(
   void *filectx,
   ccm_sArg *arg_list, 
@@ -4036,6 +4077,7 @@ static int graph_setobjectattribute_func(
        type == glow_eObjectType_GrowFolder ||
        type == glow_eObjectType_GrowBar ||
        type == glow_eObjectType_GrowTrend ||
+       type == glow_eObjectType_GrowRect ||
        type == glow_eObjectType_GrowAxis) {
     attr_sItem 	*itemlist;
     attr_sItem  *item_p;
@@ -4616,6 +4658,8 @@ int Graph::readcmdfile( 	char		*incommand)
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "SetObjectTextColor", graph_setobjecttextcolor_func);
     if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetObjectBackgroundColor", graph_setobjectbackgroundcolor_func);
+    if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "GetObjectShadow", graph_getobjectshadow_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "SetObjectShadow", graph_setobjectshadow_func);
@@ -4640,10 +4684,48 @@ int Graph::readcmdfile( 	char		*incommand)
     if ( EVEN(sts)) return sts;
     ccm_func_registred = 1;
 
+
+
     // Register wb standard functions
 #if LDH
     wccm_register( graph_wccm_get_wbctx_cb, graph_wccm_get_ldhsession_cb, 0);
 #endif
+
+    sts = ccm_create_external_var( "eObjectType_Rect", CCM_DECL_INT, 0, glow_eObjectType_GrowRect, 0);
+    sts = ccm_create_external_var( "eObjectType_Line", CCM_DECL_INT, 0, glow_eObjectType_GrowLine, 0);
+    sts = ccm_create_external_var( "eObjectType_Arc", CCM_DECL_INT, 0, glow_eObjectType_GrowArc, 0);
+    sts = ccm_create_external_var( "eObjectType_ConPoint", CCM_DECL_INT, 0, glow_eObjectType_GrowConPoint, 0);
+    sts = ccm_create_external_var( "eObjectType_Annot", CCM_DECL_INT, 0, glow_eObjectType_GrowSubAnnot, 0);
+    sts = ccm_create_external_var( "eObjectType_PolyLine", CCM_DECL_INT, 0, glow_eObjectType_GrowPolyLine, 0);
+    sts = ccm_create_external_var( "eObjectType_SubGraph", CCM_DECL_INT, 0, glow_eObjectType_GrowNode, 0);
+    sts = ccm_create_external_var( "eObjectType_Text", CCM_DECL_INT, 0, glow_eObjectType_GrowText, 0);
+    sts = ccm_create_external_var( "eObjectType_Bar", CCM_DECL_INT, 0, glow_eObjectType_GrowBar, 0);
+    sts = ccm_create_external_var( "eObjectType_Trend", CCM_DECL_INT, 0, glow_eObjectType_GrowTrend, 0);
+    sts = ccm_create_external_var( "eObjectType_Slider", CCM_DECL_INT, 0, glow_eObjectType_GrowSlider, 0);
+    sts = ccm_create_external_var( "eObjectType_Image", CCM_DECL_INT, 0, glow_eObjectType_GrowImage, 0);
+    sts = ccm_create_external_var( "eObjectType_Group", CCM_DECL_INT, 0, glow_eObjectType_GrowGroup, 0);
+    sts = ccm_create_external_var( "eObjectType_Axis", CCM_DECL_INT, 0, glow_eObjectType_GrowAxis, 0);
+    sts = ccm_create_external_var( "eObjectType_RectRounded", CCM_DECL_INT, 0, glow_eObjectType_GrowRectRounded, 0);
+    sts = ccm_create_external_var( "eObjectType_ConGlue", CCM_DECL_INT, 0, glow_eObjectType_GrowConGlue, 0);
+    sts = ccm_create_external_var( "eObjectType_Menu", CCM_DECL_INT, 0, glow_eObjectType_GrowMenu, 0);
+    sts = ccm_create_external_var( "eObjectType_Window", CCM_DECL_INT, 0, glow_eObjectType_GrowWindow, 0);
+    sts = ccm_create_external_var( "eObjectType_Table", CCM_DECL_INT, 0, glow_eObjectType_GrowTable, 0);
+    sts = ccm_create_external_var( "eObjectType_Folder", CCM_DECL_INT, 0, glow_eObjectType_GrowFolder, 0);
+    sts = ccm_create_external_var( "eObjectType_XYCurve", CCM_DECL_INT, 0, glow_eObjectType_GrowXYCurve, 0);
+    sts = ccm_create_external_var( "eObjectType_AxisArc", CCM_DECL_INT, 0, glow_eObjectType_GrowAxisArc, 0);
+    sts = ccm_create_external_var( "eObjectType_Pie", CCM_DECL_INT, 0, glow_eObjectType_GrowPie, 0);
+    sts = ccm_create_external_var( "eObjectType_BarChart", CCM_DECL_INT, 0, glow_eObjectType_GrowBarChart, 0);
+    sts = ccm_create_external_var( "eObjectType_Toolbar", CCM_DECL_INT, 0, glow_eObjectType_GrowToolbar, 0);
+
+    char varname[40];
+    for ( int i = 1; i <= 300; i++) {
+      sprintf( varname, "eDrawType_Color%d", i);
+      sts = ccm_create_external_var( varname, CCM_DECL_INT, 0, i-1, 0);
+    }
+    for ( int i = 1; i <= 90; i++) {
+      sprintf( varname, "eDrawType_CustomColor%d", i);
+      sts = ccm_create_external_var( varname, CCM_DECL_INT, 0, 310 + 4 * (i - 1), 0);
+    }
   }
 
   strcpy( input_str, incommand);

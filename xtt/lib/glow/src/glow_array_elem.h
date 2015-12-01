@@ -165,6 +165,9 @@ class GlowArrayElem {
     virtual void set_text_color( glow_eDrawType drawtype) {};
     virtual void set_original_text_color( glow_eDrawType drawtype) {};
     virtual void reset_text_color() {};
+    virtual void set_original_background_color( glow_eDrawType drawtype) {};
+    virtual void set_background_color( glow_eDrawType drawtype) {};
+    virtual void reset_background_color() {};
     virtual void set_color_tone( glow_eDrawTone tone) {};
     virtual void set_original_color_tone( glow_eDrawTone tone) {};
     virtual void reset_color_tone() {};

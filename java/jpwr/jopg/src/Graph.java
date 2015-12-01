@@ -151,7 +151,6 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	Dyn dyn = (Dyn)object.getUserData();
 	if ( dyn == null)
 	    return;
-
 	if ( dyn.cycle == Glow.eCycle_Slow && slow_scan_cnt != 0 &&
 	     !((dyn.total_dyn_type1 & Dyn.mDynType1_Animation) != 0 || (dyn.total_dyn_type2 & Dyn.mDynType2_ScrollingText) != 0))
 	    return;
@@ -236,7 +235,6 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	     (idx2 = str.indexOf(']')) != -1 &&
 	     idx2 > idx1) {
 	    try {
-		System.out.println("Elements: " + str.substring(idx1+1, idx2));
 		index = new Integer(str.substring(idx1+1, idx2)).intValue();
 	    }
 	    catch( NumberFormatException e) {
@@ -337,11 +335,11 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	else {
 	    pname.index = stringToIndex(str);
 	    pname.elements = 1;
-	    if ((eidx = str.lastIndexOf('#')) != -1 &&
-		str.charAt(eidx-1) != '#')
-		str = str.substring( 0, eidx);
-	    else
-		str = str.substring(0, idx-1);
+	    // if ((eidx = str.lastIndexOf('#')) != -1 &&
+	    //	str.charAt(eidx-1) != '#')
+	    //	str = str.substring( 0, eid);
+	    // else
+	    //	str = str.substring(0, idx-1);
 	}
 
 	if ( (tidx = str.indexOf("##")) != -1) {

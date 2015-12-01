@@ -656,6 +656,10 @@ class Graph {
   /*! Set currently selected textcolor on all selected objects. */
   void set_select_text_color();
 
+  //! Set background color on all selected objects.
+  /*! Set specified background color on all selected objects. */
+  void set_select_background_color( glow_eDrawType color);
+
   //! Set color tone on all selected objects.
   /*! Set currently selected color tone on all selected objects. */
   void set_select_color_tone( glow_eDrawTone tone);
@@ -1272,8 +1276,9 @@ class Graph {
     \param x		x coordinate for object.
     \param y		y coordinate for object.
     \param dyn_type	Dyntype of the created object.
+    \param colortheme	Use colortheme colors.
   */
-  void create_trend( grow_tObject *object, double x, double y, unsigned int dyn_type);
+  void create_trend( grow_tObject *object, double x, double y, unsigned int dyn_type, int colortheme);
 
   //! Create a xy curve object.
   /*!
@@ -1289,8 +1294,9 @@ class Graph {
     \param object	Created bar object.
     \param x		x coordinate for object.
     \param y		y coordinate for object.
+    \param colortheme  	Use colortheme colors.
   */
-  void create_bar( grow_tObject *object, double x, double y);
+  void create_bar( grow_tObject *object, double x, double y, int colortheme);
 
   //! Create a window object.
   /*!
@@ -1330,8 +1336,8 @@ class Graph {
     \param x		x coordinate for object.
     \param y		y coordinate for object.
   */
-  void create_axis( grow_tObject *object, double x, double y, int dynamic);
-  void create_axisarc( grow_tObject *object, double x, double y, int dynamic);
+  void create_axis( grow_tObject *object, double x, double y, int dynamic, int colortheme);
+  void create_axisarc( grow_tObject *object, double x, double y, int dynamic, int colortheme);
   void create_pie( grow_tObject *object, double x, double y);
   void create_barchart( grow_tObject *object, double x, double y);
 

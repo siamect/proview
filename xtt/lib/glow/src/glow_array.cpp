@@ -1663,6 +1663,12 @@ void GlowArray::set_original_border_color( glow_eDrawType drawtype)
     a[i]->set_original_border_color( drawtype);
 }
 
+void GlowArray::set_original_background_color( glow_eDrawType drawtype) 
+{
+  for ( int i = 0; i < a_size; i++)
+    a[i]->set_original_background_color( drawtype);
+}
+
 void GlowArray::set_original_color_tone( glow_eDrawTone tone) 
 {
   for ( int i = 0; i < a_size; i++)

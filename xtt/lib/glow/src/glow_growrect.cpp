@@ -56,10 +56,11 @@ GrowRect::GrowRect( GrowCtx *glow_ctx, const char *name, double x, double y,
   hot(0), pzero(ctx), highlight(0), inverse(0), user_data(NULL),
   original_border_drawtype(border_d_type),
   original_fill_drawtype(fill_d_type), fill_drawtype(fill_d_type),
-  border(display_border),
+  background_drawtype(glow_eDrawType_No), border(display_border),
   dynamic(0), dynamicsize(0), shadow(display_shadow), shadow_width(5), relief(glow_eRelief_Up),
   shadow_contrast(2), disable_shadow(0), invisible(0), fixcolor(0), fixposition(0), 
-  gradient(glow_eGradient_No), gradient_contrast(4), disable_gradient(0)
+  gradient(glow_eGradient_No), gradient_contrast(4), disable_gradient(0), bgcolor_gradient(0),
+  fill_eq_background(0)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -247,7 +248,8 @@ int GrowRect::event_handler( GlowWind *w, glow_eEvent event, int x, int y, doubl
           ctx->hot_found = 1;
       }
       if ( sts && !hot  &&
-	   !(ctx->node_movement_active || ctx->node_movement_paste_active))
+	   !(ctx->node_movement_active || ctx->node_movement_paste_active) &&
+	   ctx->hot_mode != glow_eHotMode_Disabled)
       {
         ctx->gdraw->set_cursor( w, glow_eDrawCursor_CrossHair);
         hot = 1;
@@ -306,6 +308,9 @@ void GrowRect::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowRect_gradient) << FSPACE << int(gradient) << endl;
   fp << int(glow_eSave_GrowRect_gradient_contrast) << FSPACE << gradient_contrast << endl;
   fp << int(glow_eSave_GrowRect_disable_gradient) << FSPACE << disable_gradient << endl;
+  fp << int(glow_eSave_GrowRect_bgcolor_gradient) << FSPACE << bgcolor_gradient << endl;
+  fp << int(glow_eSave_GrowRect_background_drawtype) << FSPACE << int(background_drawtype) << endl;
+  fp << int(glow_eSave_GrowRect_fill_eq_background) << FSPACE << fill_eq_background << endl;
   fp << int(glow_eSave_GrowRect_dynamicsize) << FSPACE << dynamicsize << endl;
   fp << int(glow_eSave_GrowRect_dynamic) << endl;
   if( dynamic)
@@ -372,6 +377,10 @@ void GrowRect::open( ifstream& fp)
       case glow_eSave_GrowRect_gradient: fp >> tmp; gradient = (glow_eGradient)tmp; break;
       case glow_eSave_GrowRect_gradient_contrast: fp >> gradient_contrast; break;
       case glow_eSave_GrowRect_disable_gradient: fp >> disable_gradient; break;
+      case glow_eSave_GrowRect_bgcolor_gradient: fp >> bgcolor_gradient; break;
+      case glow_eSave_GrowRect_background_drawtype: fp >> 
+		tmp; background_drawtype = (glow_eDrawType)tmp; break;
+      case glow_eSave_GrowRect_fill_eq_background: fp >> fill_eq_background; break;
       case glow_eSave_GrowRect_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowRect_dynamic:
         fp.getline( dummy, sizeof(dummy));
@@ -764,8 +773,13 @@ void GrowRect::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
 
   int ish = int( shadow_width / 100 * min(ur_x - ll_x, ur_y - ll_y) + 0.5);
   int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow;
-  glow_eDrawType fillcolor = ctx->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
-		 highlight, (GrowNode *)colornode, 1);
+  glow_eDrawType fillcolor;
+  if ( fill_eq_background)
+    fillcolor = ctx->get_drawtype( background_drawtype, glow_eDrawType_FillHighlight,
+				   highlight, (GrowNode *)colornode, 3);
+  else
+    fillcolor = ctx->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
+				   highlight, (GrowNode *)colornode, 1);
   glow_eGradient grad = gradient;
   if ( gradient == glow_eGradient_No && 
        (node && ((GrowNode *)node)->gradient != glow_eGradient_No) && !disable_gradient)
@@ -834,7 +848,13 @@ void GrowRect::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
 	else
 	  rotation = trf.rot();
 
-	if ( gradient_contrast >= 0) {
+	if ( bgcolor_gradient && background_drawtype != glow_eDrawType_No) {
+	  f2 = GlowColor::shift_drawtype( fillcolor, -gradient_contrast/2 + chot, 0);
+	  f1 = ctx->get_drawtype( background_drawtype, glow_eDrawType_FillHighlight,
+							highlight, (GrowNode *)colornode, 1);
+	  f1 = GlowColor::shift_drawtype( f1, int(float(gradient_contrast)/2+0.6) + chot, 0);
+	}
+	else if ( gradient_contrast >= 0) {
 	  f2 = GlowColor::shift_drawtype( fillcolor, -gradient_contrast/2 + chot, 0);
 	  f1 = GlowColor::shift_drawtype( fillcolor, int(float(gradient_contrast)/2+0.6) + chot, 0);
 	}
@@ -861,7 +881,12 @@ void GrowRect::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
 	  rotation = trf.rot( t);
 	else
 	  rotation = trf.rot();
-	if ( gradient_contrast >= 0) {
+	if ( bgcolor_gradient && background_drawtype != glow_eDrawType_No) {
+	  f2 = fillcolor;
+	  f1 = ctx->get_drawtype( background_drawtype, glow_eDrawType_FillHighlight,
+							highlight, (GrowNode *)colornode, 1);
+	}
+	else if ( gradient_contrast >= 0) {
 	  f2 = GlowColor::shift_drawtype( fillcolor, -gradient_contrast/2 + chot, 0);
 	  f1 = GlowColor::shift_drawtype( fillcolor, int(float(gradient_contrast)/2+0.6) + chot, 0);
 	}

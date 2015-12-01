@@ -143,6 +143,7 @@
     ge_eDynPrio_AnalogColor,
     ge_eDynPrio_DigColor,
     ge_eDynPrio_DigLowColor,
+    ge_eDynPrio_DigBackgroundColor,
     ge_eDynPrio_DigTextColor,
     ge_eDynPrio_DigBorder,
     ge_eDynPrio_DigText,
@@ -241,7 +242,8 @@
     ge_mDynType2_TimeoutColor  	= 1 << 2,
     ge_mDynType2_DigFourShift  	= 1 << 3,
     ge_mDynType2_ScrollingText 	= 1 << 4,
-    ge_mDynType2_ColorThemeLightness = 1 << 5
+    ge_mDynType2_ColorThemeLightness = 1 << 5,
+    ge_mDynType2_DigBackgroundColor = 1 << 6
   } ge_mDynType2;
 
   //! Action types.
@@ -356,6 +358,7 @@
     ge_eSave_DigFourShift	       	= 41,
     ge_eSave_ScrollingText	       	= 42,
     ge_eSave_ColorThemeLightness       	= 43,
+    ge_eSave_DigBackgroundColor       	= 44,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -574,6 +577,10 @@
     ge_eSave_ScrollingText_direction  	= 4201,
     ge_eSave_ScrollingText_speed   	= 4202,
     ge_eSave_ScrollingText_bounce   	= 4203,
+    ge_eSave_DigBackgroundColor_attribute = 4400,
+    ge_eSave_DigBackgroundColor_color   = 4401,
+    ge_eSave_DigBackgroundColor_instance = 4402,
+    ge_eSave_DigBackgroundColor_instance_mask = 4403,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -778,6 +785,8 @@ class GeDyn {
   Graph		*graph;		       	//!< Graph.
   bool		ignore_color;		//!< All remaining elements with lower prio should ignore color dynamics.
   bool		reset_color;		//!< An element of higher prio is passing color dynamics to elements of lower prio.
+  bool		ignore_bgcolor;		//!< All remaining elements with lower prio should ignore bg color dynamics.
+  bool		reset_bgcolor;		//!< An element of higher prio is passing bg color dynamics to elements of lower prio.
   bool		ignore_invisible;	//!< All remaining elements with lower prio should ignore invisible dynamics.
   bool		reset_invisible;	//!< An element of higher prio is passing invisible dynamics to elements of lower prio.
   bool		ignore_text_a1;		//!< All remaining elements with lower prio should ignore a1 text dynamics.
@@ -801,8 +810,8 @@ class GeDyn {
       \param d_attr_editor Controls attributes displayed in attribute editor.
   */
   GeDyn( Graph *d_graph, ge_eDynAttr d_attr_editor = ge_eDynAttr_All) : 
-    elements(0), graph(d_graph), ignore_color(false), 
-    reset_color(false), ignore_invisible(false), reset_invisible(false),
+    elements(0), graph(d_graph), ignore_color(false), reset_color(false), ignore_bgcolor(false), 
+    reset_bgcolor(false), ignore_invisible(false), reset_invisible(false),
     dyn_type1(ge_mDynType1_Inherit), dyn_type2(ge_mDynType2_No), total_dyn_type1(ge_mDynType1_Inherit), 
     total_dyn_type2(ge_mDynType2_No), action_type1(ge_mActionType1_Inherit), action_type2(ge_mActionType2_No),
     total_action_type1(ge_mActionType1_Inherit), total_action_type2(ge_mActionType2_No),
@@ -1081,6 +1090,42 @@ class GeDigColor : public GeDynElem {
     color(glow_eDrawType_Inherit), bitmask(0)
     { strcpy( attribute, ""); instance = e_instance;}
   GeDigColor( const GeDigColor& x) : 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), color(x.color)
+    { strcpy( attribute, x.attribute); 
+    instance = x.instance; instance_mask = x.instance_mask;}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
+  void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int set_color( grow_tObject object, glow_eDrawType color);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+};
+
+//! Set the supplied fillcolor when the value is high.
+class GeDigBackgroundColor : public GeDynElem {
+ public:
+  pwr_tAName attribute;		//!< Database reference for digital attribute.
+  glow_eDrawType  color;	//!< Color to set when value is high.
+
+  pwr_tBoolean *p;
+  pwr_tSubid subid;
+  int size;
+  graph_eDatabase db;
+  int inverted;
+  bool first_scan;
+  pwr_tBoolean old_value;
+  int a_typeid;
+  unsigned int bitmask;
+
+  GeDigBackgroundColor( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_DigBackgroundColor, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigBackgroundColor),
+    color(glow_eDrawType_Inherit), bitmask(0)
+    { strcpy( attribute, ""); instance = e_instance;}
+  GeDigBackgroundColor( const GeDigBackgroundColor& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), color(x.color)
     { strcpy( attribute, x.attribute); 
     instance = x.instance; instance_mask = x.instance_mask;}
@@ -2662,6 +2707,7 @@ class GeTable : public GeDynElem {
   int is_headerref[TABLE_MAX_COL];
   char **headerref_p[TABLE_MAX_COL];
   pwr_tSubid *headerref_subid[TABLE_MAX_COL];
+  pwr_tMask bitmask[TABLE_MAX_COL];
 
   pwr_tBoolean *sel_p[TABLE_MAX_COL];
   pwr_tSubid sel_subid[TABLE_MAX_COL];
@@ -2674,7 +2720,7 @@ class GeTable : public GeDynElem {
     { memset( attribute,0,sizeof(attribute)); memset( format,0,sizeof(format)); 
     memset( sel_attribute,0,sizeof(sel_attribute)); memset(old_value,0,sizeof(old_value));
     memset( is_headerref, 0, sizeof(is_headerref)); memset(headerref_p,0,sizeof(headerref_p));
-    memset( sel_elements, 0, sizeof(sel_elements));
+    memset( sel_elements, 0, sizeof(sel_elements)); memset( bitmask, 0, sizeof(bitmask));
     }
   GeTable( const GeTable& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)

@@ -52,10 +52,10 @@ GrowNode::GrowNode( GrowCtx *glow_ctx, const char *name, GlowNodeClass *node_cla
 	GlowNode(glow_ctx,name,node_class,x1,y1,nodraw,rel_annot_pos),
 	dynamic(0), dynamicsize(0),
 	original_border_drawtype(glow_eDrawType_No), original_text_drawtype(glow_eDrawType_No),
-	original_fill_drawtype(glow_eDrawType_No), fill_drawtype(glow_eDrawType_No),
-	text_drawtype(glow_eDrawType_No),
+	original_fill_drawtype(glow_eDrawType_No), original_background_drawtype(glow_eDrawType_No),
+	fill_drawtype(glow_eDrawType_No), text_drawtype(glow_eDrawType_No),
 	draw_type(glow_eDrawType_No), level_fill_drawtype(glow_eDrawType_No), 
-	original_color_tone( glow_eDrawTone_No),
+	background_drawtype(glow_eDrawType_No), original_color_tone( glow_eDrawTone_No),
 	color_tone( glow_eDrawTone_No), level_color_tone( glow_eDrawTone_No), 
 	original_color_lightness(0),
 	color_lightness(0), original_color_intensity(0), color_intensity(0),
@@ -145,11 +145,14 @@ void GrowNode::save( ofstream& fp, glow_eSaveMode mode)
 		<< int(original_border_drawtype) << endl;
   fp << int(glow_eSave_GrowNode_original_fill_drawtype) << FSPACE 
 		<< int(original_fill_drawtype) << endl;
+  fp << int(glow_eSave_GrowNode_original_background_drawtype) << FSPACE 
+		<< int(original_background_drawtype) << endl;
   fp << int(glow_eSave_GrowNode_original_text_drawtype) << FSPACE 
 		<< int(original_text_drawtype) << endl;
   fp << int(glow_eSave_GrowNode_fill_drawtype) << FSPACE << int(fill_drawtype) << endl;
   fp << int(glow_eSave_GrowNode_text_drawtype) << FSPACE << int(text_drawtype) << endl;
   fp << int(glow_eSave_GrowNode_draw_type) << FSPACE << int(draw_type) << endl;
+  fp << int(glow_eSave_GrowNode_background_drawtype) << FSPACE << int(background_drawtype) << endl;
   fp << int(glow_eSave_GrowNode_original_color_tone) << FSPACE << int(original_color_tone) << endl;
   fp << int(glow_eSave_GrowNode_color_tone) << FSPACE << int(color_tone) << endl;
   fp << int(glow_eSave_GrowNode_original_color_lightness) << FSPACE << original_color_lightness << endl;
@@ -238,6 +241,8 @@ void GrowNode::open( ifstream& fp)
 		tmp; original_border_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_GrowNode_original_fill_drawtype: fp >> 
 		tmp; original_fill_drawtype = (glow_eDrawType)tmp; break;
+      case glow_eSave_GrowNode_original_background_drawtype: fp >> 
+		tmp; original_background_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_GrowNode_fill_drawtype: fp >> 
 		tmp; fill_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_GrowNode_original_text_drawtype: fp >> 
@@ -250,6 +255,8 @@ void GrowNode::open( ifstream& fp)
 		original_color_tone = (glow_eDrawTone)tmp; break;
       case glow_eSave_GrowNode_color_tone: fp >> tmp; 
 		color_tone = (glow_eDrawTone)tmp; break;
+      case glow_eSave_GrowNode_background_drawtype: fp >> 
+		tmp; background_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_GrowNode_original_color_lightness: fp >> original_color_lightness; break;
       case glow_eSave_GrowNode_color_lightness: fp >> color_lightness; break;
       case glow_eSave_GrowNode_original_color_intensity: fp >> original_color_intensity; break;

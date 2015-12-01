@@ -2042,6 +2042,11 @@ int Ge::colorpalette_cb( GlowCtx *ctx, glow_tEvent event)
   case glow_eEvent_MB1ClickShift:
     gectx->graph->set_select_text_color();
     break;
+  case glow_eEvent_MB1ClickShiftCtrl:
+    if ( event->any.type == glow_eEventType_ColorTone)
+      // This is actually a color, not a tone
+      gectx->graph->set_select_background_color( (glow_eDrawType) event->colortone.tone);
+    break;
   case glow_eEvent_MB2Click:
     gectx->graph->set_select_border_color();
     break;
@@ -2066,6 +2071,8 @@ int Ge::init_colorpalette_cb( GlowCtx *fctx, void *client_data)
   colpal_EnableEvent( gectx->colorpalette_ctx, glow_eEvent_MB1Click, 
 	glow_eEventType_CallBack, Ge::colorpalette_cb);
   colpal_EnableEvent( gectx->colorpalette_ctx, glow_eEvent_MB1ClickShift, 
+	glow_eEventType_CallBack, Ge::colorpalette_cb);
+  colpal_EnableEvent( gectx->colorpalette_ctx, glow_eEvent_MB1ClickShiftCtrl, 
 	glow_eEventType_CallBack, Ge::colorpalette_cb);
   colpal_EnableEvent( gectx->colorpalette_ctx, glow_eEvent_MB2Click, 
 	glow_eEventType_CallBack, Ge::colorpalette_cb);

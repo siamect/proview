@@ -642,6 +642,67 @@ menu Components
     subgraph	Epl_CN  pwr_exe:mcomp_epl_cn.pwsg		5
   }
 }
+menu ColorTheme
+{
+  menu Analog
+  {
+    subgraph 	Axis			pwrct_axis.component 		27
+    subgraph 	DynamicAxis		pwrct_dynamicaxis.component 	27
+    subgraph 	AxisArc			pwrct_axisarc.component 	250
+    subgraph 	DynamicAxisArc		pwrct_dynamicaxisarc.component 	250
+    subgraph    Bar			pwrct_bar.component		26
+    subgraph    Trend			pwrct_trend.component		25
+  }
+  menu Values
+  {
+    subgraph 	ValueSmall		pwr_exe:pwrct_valuesmall.pwsg 		50
+    subgraph 	ValueSmallCenter	pwr_exe:pwrct_valuesmallcenter.pwsg 	50
+    subgraph 	ValueMedium		pwr_exe:pwrct_valuemedium.pwsg 		51
+    subgraph 	ValueMediumCenter	pwr_exe:pwrct_valuemediumcenter.pwsg 	51
+    subgraph 	ValueLarge 		pwr_exe:pwrct_valuelarge.pwsg 		52
+    subgraph 	ValueLargeCenter 	pwr_exe:pwrct_valuelargecenter.pwsg 	52
+    subgraph 	ValueInputSmall		pwr_exe:pwrct_valueinputsmall.pwsg 	50
+    subgraph 	ValueInputSmallBg	pwr_exe:pwrct_valueinputsmallbg.pwsg 	50
+    subgraph 	ValueInputMedium	pwr_exe:pwrct_valueinputmedium.pwsg 	51
+    subgraph 	ValueInputMediumBg	pwr_exe:pwrct_valueinputmediumbg.pwsg 	51
+    subgraph 	ValueInputLarge 	pwr_exe:pwrct_valueinputlarge.pwsg 	52
+    subgraph 	ValueInputLargeBg 	pwr_exe:pwrct_valueinputlargebg.pwsg 	52
+  }
+  menu Indicators
+  {
+    subgraph 	IndSquareGreen 		pwr_exe:pwrct_indsquaregreen.pwsg 	48
+    subgraph 	IndSquareRed		pwr_exe:pwrct_indsquarered.pwsg 	48
+    subgraph 	IndSquareYellow		pwr_exe:pwrct_indsquareyellow.pwsg 	48
+    subgraph 	IndSquareGreenBg 	pwr_exe:pwrct_indsquaregreenbg.pwsg 	48
+    subgraph 	IndSquareRedBg 		pwr_exe:pwrct_indsquareredbg.pwsg 	48
+    subgraph 	IndSquareYellowBg 	pwr_exe:pwrct_indsquareyellowbg.pwsg 	48
+    subgraph 	IndRoundGreen 		pwr_exe:pwrct_indroundgreen.pwsg 	47
+    subgraph 	IndRoundRed 		pwr_exe:pwrct_indroundred.pwsg 		47
+    subgraph 	IndRoundYellow 		pwr_exe:pwrct_indroundyellow.pwsg 	47
+    subgraph 	IndRoundGreenBg 	pwr_exe:pwrct_indroundgreenbg.pwsg 	47
+    subgraph 	IndRoundRedBg 		pwr_exe:pwrct_indroundredbg.pwsg 	47
+    subgraph 	IndRoundYellowBg 	pwr_exe:pwrct_indroundyellowbg.pwsg 	47
+  }
+  menu Pushbuttons
+  {
+    subgraph 	ButtonToggle 		pwr_exe:pwrct_buttontoggle.pwsg 	7
+    subgraph 	ButtonSet 		pwr_exe:pwrct_buttonset.pwsg 		7
+    subgraph 	ButtonCommand 		pwr_exe:pwrct_buttoncommand.pwsg 	7
+    subgraph 	ButtonSmallToggle 	pwr_exe:pwrct_buttonsmalltoggle.pwsg 	95
+    subgraph 	ButtonSmallSet 		pwr_exe:pwrct_buttonsmallset.pwsg 	95
+    subgraph 	ButtonSmallCommand 	pwr_exe:pwrct_buttonsmallcommand.pwsg 	95
+  }
+  menu Sliders
+  {
+    subgraph 	Slider4 		pwr_exe:pwrct_slider4.pwsg 		37
+    subgraph 	SliderBackground1_3 	pwr_exe:pwrct_sliderbackground1_3.pwsg 	38
+  }
+  menu Other
+  {
+    subgraph 	MenuBar2		pwr_exe:pwrct_menubar2.pwsg 		32
+    subgraph 	PulldownMenu2		pwr_exe:pwrct_pulldownmenu2.pwsg 	33
+  }
+}
 localsubgraphs Ssab ssab_exe:*.pwsg
 menu Local
 {

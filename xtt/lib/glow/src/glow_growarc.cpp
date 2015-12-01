@@ -56,11 +56,11 @@ GrowArc::GrowArc( GrowCtx *glow_ctx, const char *name, double x1, double y1,
   hot(0), pzero(ctx), highlight(0), inverse(0), user_data(NULL),
   original_border_drawtype(border_d_type),
   original_fill_drawtype(fill_d_type), fill_drawtype(fill_d_type),
-  border(display_border),
+  background_drawtype(glow_eDrawType_No), border(display_border),
   dynamic(0), dynamicsize(0), shadow(display_shadow), shadow_width(5), 
   relief(glow_eRelief_Up), shadow_contrast(2), disable_shadow(0), fixcolor(0),
   gradient(glow_eGradient_No), gradient_contrast(4), disable_gradient(0),
-  fixposition(0)
+  fixposition(0), fill_eq_background(0)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -287,6 +287,7 @@ void GrowArc::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowArc_original_fill_drawtype) << FSPACE 
 		<< int(original_fill_drawtype) << endl;
   fp << int(glow_eSave_GrowArc_fill_drawtype) << FSPACE << int(fill_drawtype) << endl;
+  fp << int(glow_eSave_GrowArc_background_drawtype) << FSPACE << int(background_drawtype) << endl;
   fp << int(glow_eSave_GrowArc_border) << FSPACE << border << endl;
   fp << int(glow_eSave_GrowArc_shadow) << FSPACE << shadow << endl;
   fp << int(glow_eSave_GrowArc_shadow_width) << FSPACE << shadow_width << endl;
@@ -298,6 +299,7 @@ void GrowArc::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowArc_gradient_contrast) << FSPACE << gradient_contrast << endl;
   fp << int(glow_eSave_GrowArc_disable_gradient) << FSPACE << disable_gradient << endl;
   fp << int(glow_eSave_GrowArc_fixposition) << FSPACE << fixposition << endl;
+  fp << int(glow_eSave_GrowArc_fill_eq_background) << FSPACE << fill_eq_background << endl;
   fp << int(glow_eSave_GrowArc_dynamicsize) << FSPACE << dynamicsize << endl;
   fp << int(glow_eSave_GrowArc_dynamic) << endl;
   if( dynamic)
@@ -352,6 +354,8 @@ void GrowArc::open( ifstream& fp)
 		tmp; original_fill_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_GrowArc_fill_drawtype: fp >> 
 		tmp; fill_drawtype = (glow_eDrawType)tmp; break;
+      case glow_eSave_GrowArc_background_drawtype: fp >> 
+		tmp; background_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_GrowArc_border: fp >> border; break;
       case glow_eSave_GrowArc_shadow: fp >> shadow; break;
       case glow_eSave_GrowArc_shadow_width: fp >> shadow_width; break;
@@ -363,6 +367,7 @@ void GrowArc::open( ifstream& fp)
       case glow_eSave_GrowArc_gradient_contrast: fp >> gradient_contrast; break;
       case glow_eSave_GrowArc_disable_gradient: fp >> disable_gradient; break;
       case glow_eSave_GrowArc_fixposition: fp >> fixposition; break;
+      case glow_eSave_GrowArc_fill_eq_background: fp >> fill_eq_background; break;
       case glow_eSave_GrowArc_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowArc_dynamic:
         fp.getline( dummy, sizeof(dummy));
@@ -766,8 +771,13 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
   if ( fill)
   {
     int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow;
-    glow_eDrawType fillcolor = ctx->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
-		 highlight, (GrowNode *)colornode, 1);
+    glow_eDrawType fillcolor;
+    if ( fill_eq_background)
+      fillcolor = ctx->get_drawtype( background_drawtype, glow_eDrawType_FillHighlight,
+				     highlight, (GrowNode *)colornode, 3);
+    else
+      fillcolor = ctx->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
+				     highlight, (GrowNode *)colornode, 1);
     glow_eGradient grad = gradient;
     if ( gradient == glow_eGradient_No && 
 	 (node && ((GrowNode *)node)->gradient != glow_eGradient_No) && !disable_gradient)
@@ -779,11 +789,13 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
 	  drawtype = GlowColor::shift_drawtype( fillcolor, chot, 0);
 	else
 	  drawtype = fillcolor;
+
 	ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 			      angle1 - rot, angle2, drawtype, 0);
       }
       else {
 	glow_eDrawType f1, f2;
+
 	if ( gradient_contrast >= 0) {
 	  f2 = GlowColor::shift_drawtype( fillcolor, -gradient_contrast/2 + chot, 0);
 	  f1 = GlowColor::shift_drawtype( fillcolor, int(float(gradient_contrast)/2+0.6) + chot, 0);

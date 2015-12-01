@@ -1337,6 +1337,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].type = glow_eType_Boolean;
       attrinfo[i++].size = sizeof( op->invisible);
       
+      strcpy( attrinfo[i].name, "fill_eq_background");
+      attrinfo[i].value_p = &op->fill_eq_background;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->fill_eq_background);
+
       strcpy( attrinfo[i].name, "fixcolor");
       attrinfo[i].value_p = &op->fixcolor;
       attrinfo[i].type = glow_eType_Boolean;
@@ -1351,6 +1356,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].value_p = &op->disable_gradient;
       attrinfo[i].type = glow_eType_Boolean;
       attrinfo[i++].size = sizeof( op->disable_gradient);
+      
+      strcpy( attrinfo[i].name, "bgcolor_gradient");
+      attrinfo[i].value_p = &op->bgcolor_gradient;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->bgcolor_gradient);
       
       strcpy( attrinfo[i].name, "fixposition");
       attrinfo[i].value_p = &op->fixposition;
@@ -1493,6 +1503,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].type = glow_eType_Boolean;
       attrinfo[i++].size = sizeof( op->fill_eq_border);
       
+      strcpy( attrinfo[i].name, "fill_eq_background");
+      attrinfo[i].value_p = &op->fill_eq_background;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->fill_eq_background);
+
       strcpy( attrinfo[i].name, "fill_eq_light");
       attrinfo[i].value_p = &op->fill_eq_light;
       attrinfo[i].type = glow_eType_Boolean;
@@ -1502,6 +1517,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].value_p = &op->fill_eq_shadow;
       attrinfo[i].type = glow_eType_Boolean;
       attrinfo[i++].size = sizeof( op->fill_eq_shadow);
+      
+      strcpy( attrinfo[i].name, "fill_eq_bglight");
+      attrinfo[i].value_p = &op->fill_eq_bglight;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->fill_eq_bglight);
+      
+      strcpy( attrinfo[i].name, "fill_eq_bgshadow");
+      attrinfo[i].value_p = &op->fill_eq_bgshadow;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->fill_eq_bgshadow);
       
       strcpy( attrinfo[i].name, "fixcolor");
       attrinfo[i].value_p = &op->fixcolor;
@@ -1611,6 +1636,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].value_p = &op->fixposition;
       attrinfo[i].type = glow_eType_Boolean;
       attrinfo[i++].size = sizeof( op->fixposition);
+
+      strcpy( attrinfo[i].name, "fill_eq_background");
+      attrinfo[i].value_p = &op->fill_eq_background;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->fill_eq_background);
 
       strcpy( attrinfo[i].name, "Dynamic");
       op->get_dynamic( &dynamic, &dynsize);
@@ -4078,6 +4108,11 @@ void grow_SetSelectOrigFillColor( grow_tCtx ctx, glow_eDrawType drawtype)
   ctx->set_select_original_fill_color( drawtype);
 }
 
+void grow_SetSelectOrigBackgroundColor( grow_tCtx ctx, glow_eDrawType drawtype)
+{
+  ctx->set_select_original_background_color( drawtype);
+}
+
 void grow_SetSelectOrigColorTone( grow_tCtx ctx, glow_eDrawTone tone)
 {
   ctx->set_select_original_color_tone( tone);
@@ -5385,6 +5420,11 @@ void grow_SetColorThemeLightness( grow_tCtx ctx, int lightness)
   ((GlowCtx *)ctx)->set_colortheme_lightness( lightness);
 }
 
+void grow_SetColorThemeIsDefault( grow_tCtx ctx, int isdefault)
+{
+  ((GlowCtx *)ctx)->set_colortheme_is_default( isdefault);
+}
+
 void grow_SetObjectColorThemeLightness( grow_tObject o)
 {
   ((GlowArrayElem *)o)->set_colortheme_lightness();
@@ -5460,6 +5500,22 @@ void grow_SetObjectOriginalTextColor( grow_tObject o, glow_eDrawType color)
 {
   ((GlowArrayElem *)o)->set_original_text_color( color);
 }
+
+void grow_SetObjectBackgroundColor( grow_tObject o, glow_eDrawType color)
+{
+  ((GlowArrayElem *)o)->set_background_color( color);
+}
+
+void grow_SetObjectOriginalBackgroundColor( grow_tObject o, glow_eDrawType color)
+{
+  ((GlowArrayElem *)o)->set_original_background_color( color);
+}
+
+void grow_ResetObjectBackgroundColor( grow_tObject object)
+{
+  ((GlowArrayElem *)object)->reset_background_color();
+}
+
 
 
 /*@}*/

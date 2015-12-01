@@ -231,6 +231,9 @@ public class GlowColor {
 	    else if ( node != null && fill == 2 && ((GlowColorNode)node).getTextDrawtype() != Glow.eDrawType_No) {
 		drawtype = ((GlowColorNode)node).getTextDrawtype();
 	    }
+	    else if ( node != null && fill == 3 && ((GlowColorNode)node).getBackgroundDrawtype() != Glow.eDrawType_No) {
+		drawtype = ((GlowColorNode)node).getBackgroundDrawtype();
+	    }
 	    else if ( node != null && fill == 0 && ((GlowColorNode)node).getDrawtype() != Glow.eDrawType_No) {
 		drawtype = ((GlowColorNode)node).getDrawtype();
 	    }

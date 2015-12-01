@@ -7,7 +7,7 @@
 function int process( string graph)
   printf( "-- Processing %s...\n", graph);
   open 'graph'
-  @indcnv3
+  @gradcnv
 #  SetExtern( "pwr_motorman");
 #  save
 #  open 'graph'
@@ -54,15 +54,15 @@ main()
    process( "pwr_c_basecdamper6.pwg");
    process( "pwr_c_basecdamper7.pwg");
    process( "pwr_c_basecdamper.pwg");
-   process( "pwr_c_basecdampersim.pwg");
+#   process( "pwr_c_basecdampersim.pwg");
    process( "pwr_c_basecircuitbreaker.pwg");
-   process( "pwr_c_basecircuitbreakersim.pwg");
+#   process( "pwr_c_basecircuitbreakersim.pwg");
    process( "pwr_c_basecontactor1.pwg");
    process( "pwr_c_basecontactor2.pwg");
    process( "pwr_c_basecontactor3.pwg");
    process( "pwr_c_basecontactor4.pwg");
    process( "pwr_c_basecontactor.pwg");
-   process( "pwr_c_basecontactorsim.pwg");
+#   process( "pwr_c_basecontactorsim.pwg");
    process( "pwr_c_basecvalve1.pwg");
    process( "pwr_c_basecvalve2.pwg");
    process( "pwr_c_basecvalve3.pwg");
@@ -71,7 +71,7 @@ main()
    process( "pwr_c_basecvalve6.pwg");
    process( "pwr_c_basecvalve7.pwg");
    process( "pwr_c_basecvalve.pwg");
-   process( "pwr_c_basecvalvesim.pwg");
+#   process( "pwr_c_basecvalvesim.pwg");
    process( "pwr_c_basedamper.pwg");
    process( "pwr_c_basedirvalve1.pwg");
    process( "pwr_c_basedirvalve2.pwg");
@@ -80,7 +80,7 @@ main()
    process( "pwr_c_baseelheater1.pwg");
    process( "pwr_c_baseelheater2.pwg");
    process( "pwr_c_baseelheater.pwg");
-   process( "pwr_c_baseelheatersim.pwg");
+#   process( "pwr_c_baseelheatersim.pwg");
    process( "pwr_c_basefanaggr10.pwg");
    process( "pwr_c_basefanaggr11.pwg");
    process( "pwr_c_basefanaggr1.pwg");
@@ -142,7 +142,7 @@ main()
    process( "pwr_c_basefcppo3motoraggr8.pwg");
    process( "pwr_c_basefcppo3motoraggr9.pwg");
    process( "pwr_c_basefcppo3motoraggr.pwg");
-   process( "pwr_c_basefcppo3motoraggrsim.pwg");
+#   process( "pwr_c_basefcppo3motoraggrsim.pwg");
    process( "pwr_c_basefcppo3pumpaggr10.pwg");
    process( "pwr_c_basefcppo3pumpaggr11.pwg");
    process( "pwr_c_basefcppo3pumpaggr12.pwg");
@@ -168,7 +168,7 @@ main()
    process( "pwr_c_basefcppo3pumpaggr9.pwg");
    process( "pwr_c_basefcppo3pumpaggr.pwg");
    process( "pwr_c_basefcppo3.pwg");
-   process( "pwr_c_basefcppo3sim.pwg");
+#   process( "pwr_c_basefcppo3sim.pwg");
    process( "pwr_c_basefcppo5fanaggr10.pwg");
    process( "pwr_c_basefcppo5fanaggr11.pwg");
    process( "pwr_c_basefcppo5fanaggr12.pwg");
@@ -217,7 +217,7 @@ main()
    process( "pwr_c_basefcppo5motoraggr8.pwg");
    process( "pwr_c_basefcppo5motoraggr9.pwg");
    process( "pwr_c_basefcppo5motoraggr.pwg");
-   process( "pwr_c_basefcppo5motoraggrsim.pwg");
+#   process( "pwr_c_basefcppo5motoraggrsim.pwg");
    process( "pwr_c_basefcppo5param.pwg");
    process( "pwr_c_basefcppo5pumpaggr10.pwg");
    process( "pwr_c_basefcppo5pumpaggr11.pwg");
@@ -244,9 +244,9 @@ main()
    process( "pwr_c_basefcppo5pumpaggr9.pwg");
    process( "pwr_c_basefcppo5pumpaggr.pwg");
    process( "pwr_c_basefcppo5.pwg");
-   process( "pwr_c_basefcppo5sim.pwg");
+#   process( "pwr_c_basefcppo5sim.pwg");
    process( "pwr_c_basefilter.pwg");
-   process( "pwr_c_basefiltersim.pwg");
+#   process( "pwr_c_basefiltersim.pwg");
    process( "pwr_c_baseflowsensor.pwg");
    process( "pwr_c_baselevelsensor.pwg");
    process( "pwr_c_baselevelswitch.pwg");
@@ -258,7 +258,7 @@ main()
    process( "pwr_c_basemanvalve2.pwg");
    process( "pwr_c_basemanvalve3.pwg");
    process( "pwr_c_basemanvalve.pwg");
-   process( "pwr_c_basemanvalvesim.pwg");
+#   process( "pwr_c_basemanvalvesim.pwg");
    process( "pwr_c_basemdamper1.pwg");
    process( "pwr_c_basemdamper2.pwg");
    process( "pwr_c_basemdamper3.pwg");
@@ -277,7 +277,7 @@ main()
    process( "pwr_c_basemotoraggr8.pwg");
    process( "pwr_c_basemotoraggr9.pwg");
    process( "pwr_c_basemotoraggr.pwg");
-   process( "pwr_c_basemotoraggrsim.pwg");
+#   process( "pwr_c_basemotoraggrsim.pwg");
    process( "pwr_c_basemotorincrdecraggr10.pwg");
    process( "pwr_c_basemotorincrdecraggr11.pwg");
    process( "pwr_c_basemotorincrdecraggr12.pwg");
@@ -326,16 +326,16 @@ main()
    process( "pwr_c_basemotorincrdecraggr8.pwg");
    process( "pwr_c_basemotorincrdecraggr9.pwg");
    process( "pwr_c_basemotorincrdecraggr.pwg");
-   process( "pwr_c_basemotorincrdecraggrsim.pwg");
+#   process( "pwr_c_basemotorincrdecraggrsim.pwg");
    process( "pwr_c_basemotor.pwg");
-   process( "pwr_c_basemotorsim.pwg");
+#   process( "pwr_c_basemotorsim.pwg");
    process( "pwr_c_basemvalve1.pwg");
    process( "pwr_c_basemvalve2.pwg");
    process( "pwr_c_basemvalve3.pwg");
    process( "pwr_c_basemvalve.pwg");
-   process( "pwr_c_basemvalvesim.pwg");
+#   process( "pwr_c_basemvalvesim.pwg");
    process( "pwr_c_baseoverloadrelay.pwg");
-   process( "pwr_c_baseoverloadrelaysim.pwg");
+#   process( "pwr_c_baseoverloadrelaysim.pwg");
    process( "pwr_c_basepositsensor.pwg");
    process( "pwr_c_basepressuresensor.pwg");
    process( "pwr_c_basepressureswitch.pwg");
@@ -354,12 +354,12 @@ main()
    process( "pwr_c_basepumpaggr.pwg");
    process( "pwr_c_basepump.pwg");
    process( "pwr_c_basesafetyswitch.pwg");
-   process( "pwr_c_basesafetyswitchsim.pwg");
+#   process( "pwr_c_basesafetyswitchsim.pwg");
    process( "pwr_c_basesensor.pwg");
-   process( "pwr_c_basesensorsim.pwg");
+#   process( "pwr_c_basesensorsim.pwg");
    process( "pwr_c_baseswitch.pwg");
    process( "pwr_c_basesupswitch.pwg");
-   process( "pwr_c_basesupswitchsim.pwg");
+#   process( "pwr_c_basesupswitchsim.pwg");
    process( "pwr_c_basetempsensor.pwg");
    process( "pwr_c_basetempswitch.pwg");
    process( "pwr_c_basevalveincrdecr1.pwg");
@@ -370,7 +370,7 @@ main()
    process( "pwr_c_basevalveincrdecr6.pwg");
    process( "pwr_c_basevalveincrdecr7.pwg");
    process( "pwr_c_basevalveincrdecr.pwg");
-   process( "pwr_c_basevalveincrdecrsim.pwg");
+#   process( "pwr_c_basevalveincrdecrsim.pwg");
    process( "pwr_c_basevalve.pwg");
    process( "pwr_c_circuitbreaker.pwg");
    process( "pwr_c_compmodea1.pwg");

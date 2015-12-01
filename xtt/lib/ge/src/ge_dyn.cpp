@@ -463,6 +463,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeScrollingText((const GeScrollingText&) *elem); break;
     case ge_mDynType2_ColorThemeLightness:
       e = new GeColorThemeLightness((const GeColorThemeLightness&) *elem); break;
+    case ge_mDynType2_DigBackgroundColor:
+      e = new GeDigBackgroundColor((const GeDigBackgroundColor&) *elem); break;
     default: ;
     }
     switch( elem->action_type1) {
@@ -598,6 +600,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_DigFourShift: e = (GeDynElem *) new GeDigFourShift(this); break;
       case ge_eSave_ScrollingText: e = (GeDynElem *) new GeScrollingText(this); break;
       case ge_eSave_ColorThemeLightness: e = (GeDynElem *) new GeColorThemeLightness(this); break;
+      case ge_eSave_DigBackgroundColor: e = (GeDynElem *) new GeDigBackgroundColor(this); break;
       case ge_eSave_Animation: e = (GeDynElem *) new GeAnimation(this); break;
       case ge_eSave_Video: e = (GeDynElem *) new GeVideo(this); break;
       case ge_eSave_Bar: e = (GeDynElem *) new GeBar(this); break;
@@ -1554,6 +1557,9 @@ GeDynElem *GeDyn::create_dyn2_element( int mask, int instance)
   case ge_mDynType2_ColorThemeLightness:
     e = (GeDynElem *) new GeColorThemeLightness(this);
     break;
+  case ge_mDynType2_DigBackgroundColor:
+    e = (GeDynElem *) new GeDigBackgroundColor(this, (ge_mInstance)instance);
+    break;
   default: ;
   }
   return e;
@@ -1757,6 +1763,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
     case ge_mDynType2_ColorThemeLightness:
       e = (GeDynElem *) new GeColorThemeLightness((GeColorThemeLightness&) x);
       break;
+    case ge_mDynType2_DigBackgroundColor:
+      e = (GeDynElem *) new GeDigBackgroundColor((GeDigBackgroundColor&) x);
+      break;
     default: ;
     }
   }
@@ -1894,6 +1903,8 @@ int GeDyn::scan( grow_tObject object)
 {
   reset_color = false;
   ignore_color = false;
+  reset_bgcolor = false;
+  ignore_bgcolor = false;
   reset_invisible = false;
   ignore_invisible = false;
   reset_text_a1 = false;
@@ -6931,6 +6942,215 @@ int GeColorThemeLightness::export_java( grow_tObject object, ofstream& fp, bool 
   return 1;
 }
 
+void GeDigBackgroundColor::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  if ( instance == ge_mInstance_1) {
+    strcpy( attrinfo[i].name, "DigBackgroundColor.Attribute");
+    attrinfo[i].value = attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute);
+
+    strcpy( attrinfo[i].name, "DigBackgroundColor.Color");
+    attrinfo[i].value = &color;
+    attrinfo[i].type = glow_eType_Color;
+    attrinfo[i++].size = sizeof( color);
+
+    strcpy( attrinfo[i].name, "DigBackgroundColor.Instances");
+    attrinfo[i].value = &instance_mask;
+    attrinfo[i].type = ge_eAttrType_InstanceMask;
+    attrinfo[i++].size = sizeof( instance_mask);    
+  }
+  else {
+    // Get instance number
+    int inst = 1;
+    unsigned int m = instance;
+    while( m > 1) {
+      m = m >> 1;
+      inst++;
+    }
+
+    sprintf( attrinfo[i].name, "DigBackgroundColor%d.Attribute", inst);
+    attrinfo[i].value = attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute);
+    
+    sprintf( attrinfo[i].name, "DigBackgroundColor%d.Color", inst);
+    attrinfo[i].value = &color;
+    attrinfo[i].type = glow_eType_Color;
+    attrinfo[i++].size = sizeof( color);
+  }
+  *item_count = i;
+}
+
+void GeDigBackgroundColor::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
+{
+  (*cnt)--;
+  if ( *cnt == 0) {
+    char msg[200];
+
+    strncpy( attribute, attr_name, sizeof( attribute));
+    if ( instance == ge_mInstance_1) {
+      snprintf( msg, sizeof(msg), "DigBackgroundColor.Attribute = %s", attr_name);
+    }
+    else {
+      snprintf( msg, sizeof(msg), "DigBackgroundColor%d.Attribute = %s", GeDyn::instance_to_number( instance),
+		attr_name);
+    }
+    msg[sizeof(msg)-1] = 0;
+    dyn->graph->message( 'I', msg);
+  }
+}
+
+void GeDigBackgroundColor::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
+int GeDigBackgroundColor::set_color( grow_tObject object, glow_eDrawType color)
+{
+  char msg[200];
+
+  this->color = color;
+  if ( instance == ge_mInstance_1)
+    snprintf( msg, sizeof(msg), "DigBackgroundColor.Color = %s", grow_ColorToName( this->color));
+  else
+    snprintf( msg, sizeof(msg), "DigBackgroundColor%d.Color = %s", GeDyn::instance_to_number( instance),
+	      grow_ColorToName( this->color));
+
+  msg[sizeof(msg)-1] = 0;
+  dyn->graph->message( 'I', msg);
+  return 1;
+}
+
+void GeDigBackgroundColor::save( ofstream& fp)
+{
+  fp << int(ge_eSave_DigBackgroundColor) << endl;
+  fp << int(ge_eSave_DigBackgroundColor_attribute) << FSPACE << attribute << endl;
+  fp << int(ge_eSave_DigBackgroundColor_color) << FSPACE << int(color) << endl;
+  fp << int(ge_eSave_DigBackgroundColor_instance) << FSPACE << int(instance) << endl;
+  fp << int(ge_eSave_DigBackgroundColor_instance_mask) << FSPACE << int(instance_mask) << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeDigBackgroundColor::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  int		tmp;
+  char		dummy[40];
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDigBackgroundColor: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+      case ge_eSave_DigBackgroundColor: break;
+      case ge_eSave_DigBackgroundColor_attribute:
+        fp.get();
+        fp.getline( attribute, sizeof(attribute));
+        break;
+      case ge_eSave_DigBackgroundColor_color: fp >> tmp; color = (glow_eDrawType)tmp; break;
+      case ge_eSave_DigBackgroundColor_instance: fp >> tmp; instance = (ge_mInstance)tmp; break;
+      case ge_eSave_DigBackgroundColor_instance_mask: fp >> tmp; instance_mask = (ge_mInstance)tmp; break;
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeDigBackgroundColor:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeDigBackgroundColor::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+  int		attr_type, attr_size;
+  pwr_tAName   	parsed_name;
+  int		sts;
+
+  color = dyn->get_color2( object, color);
+  if ( color < 0 || color >= glow_eDrawType__) {
+    printf( "** Color out of range, %s\n", attribute);
+    return 0;
+  }
+
+  size = 4;
+  p = 0;
+  db = dyn->parse_attr_name( attribute, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp( parsed_name,"") == 0)
+    return 1;
+
+  get_bit( parsed_name, attr_type, &bitmask);
+
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
+  a_typeid = attr_type;
+
+  if ( EVEN(sts)) return sts;
+
+  trace_data->p = &pdummy;
+  first_scan = true;
+  return 1;
+}
+
+int GeDigBackgroundColor::disconnect( grow_tObject object)
+{
+  if ( p && db == graph_eDatabase_Gdh)
+    gdh_UnrefObjectInfo( subid);
+  p = 0;
+  return 1;
+}
+
+int GeDigBackgroundColor::scan( grow_tObject object)
+{
+  if ( !p || dyn->ignore_bgcolor)
+    return 1;
+
+  pwr_tBoolean val = *p;
+
+  if ( !get_dig( &val, p, a_typeid, bitmask))
+    return 1;
+
+  if ( inverted)
+    val = !val;
+
+  if ( !first_scan) {
+    if ( old_value == val && !dyn->reset_bgcolor) {
+      // No change since last time
+      if ( val)
+	dyn->ignore_bgcolor = true;
+      return 1;
+    }
+  }
+  else
+    first_scan = false;
+
+  if ( val) {
+    grow_SetObjectBackgroundColor( object, color);
+    dyn->ignore_bgcolor = true;
+  }
+  else {
+    grow_ResetObjectBackgroundColor( object);
+    dyn->reset_bgcolor = true;
+  }
+  old_value = val;
+
+  return 1;
+}
+
+int GeDigBackgroundColor::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
+  return 1;
+}
+
 void GeAnimation::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -8833,6 +9053,9 @@ int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data)
     if ( !elements[i])
       continue;
 
+    if ( attr_type == graph_eType_Bit)
+      get_bit( parsed_name, attr_type, &bitmask[i]);
+
     size[i] = size[i] / elements[i];
     int col_size = size[i] * MIN(rows, elements[i]);
 
@@ -9137,6 +9360,13 @@ int GeTable::scan( grow_tObject object)
 	  len = sprintf( buf, "%s", timstr);
 	  break;
 	}
+	case graph_eType_Bit:
+	  if ( *(pwr_tMask *)headerref_p[i][j] & bitmask[i])
+	    strcpy( buf, "1");
+	  else
+	    strcpy( buf, "0");
+	  len = 1;	  
+	  break;
 	default: {
 	  int sts;
 	  sts = cdh_AttrValueToString( (pwr_eType) type_id[i], 
@@ -9300,6 +9530,13 @@ int GeTable::scan( grow_tObject object)
 	  len = sprintf( buf, "%s", timstr);
 	  break;
 	}
+	case graph_eType_Bit:
+	  if ( *(pwr_tMask *)(p[i] + offs) & bitmask[i])
+	    strcpy( buf, "1");
+	  else
+	    strcpy( buf, "0");
+	  len = 1;	  
+	  break;
 	default: {
 	  int sts;
 	  sts = cdh_AttrValueToString( (pwr_eType) type_id[i], 
@@ -9792,7 +10029,7 @@ int GeStatusColor::scan( grow_tObject object)
     case ge_ePwrStatus_Fatal:
       on = !on;
       if ( on)
-	grow_SetObjectFillColor( object, use_colortheme ? glow_eDrawType_CustomColor41 : glow_eDrawType_ColorRed);
+	grow_SetObjectFillColor( object, use_colortheme ? glow_eDrawType_CustomColor11 : glow_eDrawType_ColorRed);
       else
 	grow_SetObjectFillColor( object, nostatus_color);
       break;
@@ -10772,6 +11009,9 @@ int GeTimeoutColor::scan( grow_tObject object)
 	subid = ((GeDigTextColor *)elem)->subid;
 	break;
       case ge_mDynType2_TimeoutColor:
+	break;
+      case ge_mDynType2_DigBackgroundColor:
+	subid = ((GeDigBackgroundColor *)elem)->subid;
 	break;
       default: ;
       }

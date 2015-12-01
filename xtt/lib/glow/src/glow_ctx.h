@@ -928,6 +928,9 @@ class GlowCtx {
   //! Set colorthem lightness.
   void set_colortheme_lightness( int lightness);
 
+  //! Set colorthem lightness.
+  void set_colortheme_is_default( int isdefault);
+
   //! Destructor
   /*! Delete all objects in the context. */
   ~GlowCtx();

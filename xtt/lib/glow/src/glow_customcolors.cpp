@@ -71,10 +71,18 @@ int GlowCustomColors::set_color( glow_eDrawType dtype, double r, double g, doubl
   colors[idx+1][1] = max( g - 0.12, 0);
   colors[idx+1][2] = max( b - 0.12, 0);;
 
-  // Light
-  colors[idx+2][0] = min( r + 0.18, 1);
-  colors[idx+2][1] = min( g + 0.18, 1);
-  colors[idx+2][2] = min( b + 0.18, 1);
+  // Light  
+  double mv = ( r + g + b) / 3;
+  if ( mv > 0.4) {
+    colors[idx+2][0] = min( r + 0.18, 1);
+    colors[idx+2][1] = min( g + 0.18, 1);
+    colors[idx+2][2] = min( b + 0.18, 1);
+  }
+  else {
+    colors[idx+2][0] = min( r + 0.35 * mv + 0.04, 1);
+    colors[idx+2][1] = min( g + 0.35 * mv + 0.04, 1);
+    colors[idx+2][2] = min( b + 0.35 * mv + 0.04, 1);
+  }
 
   // Hot
   colors[idx+3][0] = min( r + 0.12, 1);
@@ -94,6 +102,7 @@ void GlowCustomColors::save( ofstream& fp, glow_eSaveMode mode)
 {
   fp << int(glow_eSave_CustomColors) << endl;
   fp << int(glow_eSave_CustomColors_colortheme_lightness) << FSPACE << colortheme_lightness << endl;
+  fp << int(glow_eSave_CustomColors_is_default_colortheme) << FSPACE << is_default_colortheme << endl;
   fp << int(glow_eSave_CustomColors_colors_size) << FSPACE << colors_size << endl;
   fp << int(glow_eSave_CustomColors_colors) << endl;
   for ( int i = 0; i < colors_size; i++)
@@ -120,6 +129,7 @@ void GlowCustomColors::open( ifstream& fp)
     switch( type) {
       case glow_eSave_CustomColors: break;
       case glow_eSave_CustomColors_colortheme_lightness: fp >> colortheme_lightness; break;
+      case glow_eSave_CustomColors_is_default_colortheme: fp >> is_default_colortheme; break;
       case glow_eSave_CustomColors_colors_size: fp >> csize; break;
       case glow_eSave_CustomColors_colors:
 	for ( int i = 0; i < csize; i++) {

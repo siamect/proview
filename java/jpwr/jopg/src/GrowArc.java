@@ -49,6 +49,7 @@ public class GrowArc extends GlowArrayElem {
     int original_border_drawtype;
     int original_fill_drawtype;
     int fill_drawtype;
+    int background_drawtype;
     int border;
     double shadow_width;
     int shadow_contrast;
@@ -60,6 +61,7 @@ public class GrowArc extends GlowArrayElem {
     int gradient;
     int gradient_contrast;
     int disable_gradient;
+    int fill_eq_background;
     int dynamicsize;
     GlowTransform trf;
 
@@ -77,6 +79,7 @@ public class GrowArc extends GlowArrayElem {
 	trf = new GlowTransform();
 	ll = new GlowPoint();
 	ur = new GlowPoint();
+	background_drawtype = Glow.eDrawType_No;
     }
 
     public int type() {
@@ -122,6 +125,9 @@ public class GrowArc extends GlowArrayElem {
 		case Glow.eSave_GrowArc_fill_drawtype: 
 		    fill_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
+		case Glow.eSave_GrowArc_background_drawtype: 
+		    background_drawtype = Integer.valueOf(token.nextToken()); 
+		    break;
 		case Glow.eSave_GrowArc_border: 
 		    border = Integer.valueOf(token.nextToken()); 
 		    break;
@@ -154,6 +160,9 @@ public class GrowArc extends GlowArrayElem {
 		    break;
 		case Glow.eSave_GrowArc_disable_gradient:
 		    disable_gradient = Integer.valueOf(token.nextToken());
+		    break;
+		case Glow.eSave_GrowArc_fill_eq_background:
+		    fill_eq_background = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowArc_dynamicsize:
 		    dynamicsize = Integer.valueOf(token.nextToken());
@@ -346,8 +355,14 @@ public class GrowArc extends GlowArrayElem {
 
 	if ( fill != 0) {
 	    boolean display_shadow = ((node != null && ((GrowNode)node).shadow != 0) || shadow != 0) && disable_shadow == 0;
-	    int fillcolor = GlowColor.get_drawtype( fill_drawtype, Glow.eDrawType_FillHighlight,
+	    int fillcolor;
+	    if ( fill_eq_background != 0)
+		fillcolor = GlowColor.get_drawtype( background_drawtype, Glow.eDrawType_FillHighlight,
+						    highlight, colornode, 3, 0);
+	    else
+		fillcolor = GlowColor.get_drawtype( fill_drawtype, Glow.eDrawType_FillHighlight,
 						    highlight, colornode, 1, 0);
+
 	    int grad = gradient;
 	    if ( gradient == Glow.eGradient_No && 
 		 (node != null && ((GrowNode)node).gradient != Glow.eGradient_No) && disable_gradient == 0)

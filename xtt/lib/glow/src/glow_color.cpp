@@ -300,6 +300,9 @@ glow_eDrawType GlowColor::get_drawtype( glow_eDrawType local_drawtype,
     else if ( node && fill == 2 && ((GrowNode *)node)->text_drawtype != glow_eDrawType_No) {
       drawtype = ((GrowNode *)node)->text_drawtype;
     }
+    else if ( node && fill == 3 && ((GrowNode *)node)->background_drawtype != glow_eDrawType_No) {
+      drawtype = ((GrowNode *)node)->background_drawtype;
+    }
     else if ( node && !fill && ((GrowNode *)node)->draw_type != glow_eDrawType_No) {
       drawtype = ((GrowNode *)node)->draw_type;
     }

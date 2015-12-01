@@ -2194,6 +2194,12 @@ void GlowCtx::set_colortheme_lightness( int lightness)
     customcolors->set_colortheme_lightness(lightness);
 }
 
+void GlowCtx::set_colortheme_is_default( int isdefault) 
+{ 
+  if ( customcolors) 
+    customcolors->set_colortheme_is_default(isdefault);
+}
+
 void GlowWind::set_draw_buffer_only() 
 { 
   if (window->double_buffer_on) 

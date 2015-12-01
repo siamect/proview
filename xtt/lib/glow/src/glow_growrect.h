@@ -293,6 +293,7 @@ class GrowRect : public GlowRect {
   glow_eDrawType original_border_drawtype; //!< The original border color, i.e. color drawn at edit time.
   glow_eDrawType original_fill_drawtype; //!< The original fill color, i.e. color drawn at edit time.
   glow_eDrawType fill_drawtype; //!< Fill color.
+  glow_eDrawType background_drawtype; //!< Background color.
   int		border;		//!< Display border.
   char 		*dynamic;	//!< Dynamic code.
   int 		dynamicsize;	//!< Size of dynamic code.
@@ -309,6 +310,8 @@ class GrowRect : public GlowRect {
   glow_eGradient gradient;  //!< Type of gradient.
   int		gradient_contrast; //!< Gradient contrast.
   int		disable_gradient; //!< Disable gradient, even if parent node has gradient.
+  int		bgcolor_gradient; //!< Gradient between fill and background color.
+  int		fill_eq_background; //!< Fill with background color.
 
   //! Set user data.
   /*!
@@ -409,6 +412,13 @@ class GrowRect : public GlowRect {
   */
   void set_original_border_color( glow_eDrawType drawtype) 
 	{ original_border_drawtype = drawtype; reset_border_color();};
+
+  //! Set the background color.
+  /*!
+    \param color 	Background color.
+  */
+  void set_original_background_color( glow_eDrawType color)
+        { background_drawtype = color; draw();}
 
   //! Draw the object.
   /*!

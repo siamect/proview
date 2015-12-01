@@ -338,6 +338,11 @@ class GrowCtx : public GlowCtx {
   void set_select_original_color_tone( glow_eDrawTone tone)
 	{ a_sel.set_original_color_tone( tone);};
 
+  //! Set original background color on all selected objects.
+  /*! \param drawtype	Background color. */
+  void set_select_original_background_color( glow_eDrawType drawtype)
+	{ a_sel.set_original_background_color( drawtype);};
+
   //! Set original color lighness on all selected objects.
   /*! \param lightness	Original color lightness. */
   void set_select_original_color_lightness( int lightness)

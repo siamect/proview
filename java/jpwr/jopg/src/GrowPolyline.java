@@ -49,6 +49,7 @@ public class GrowPolyline extends GlowArrayElem {
     int original_border_drawtype;
     int original_fill_drawtype;
     int fill_drawtype;
+    int background_drawtype;
     int border;
     int fill_eq_border;
     double shadow_width;
@@ -63,6 +64,9 @@ public class GrowPolyline extends GlowArrayElem {
     int disable_gradient;
     int fill_eq_light;
     int fill_eq_shadow;
+    int fill_eq_bglight;
+    int fill_eq_bgshadow;
+    int fill_eq_background;
     int dynamicsize;
     GlowTransform trf;
 
@@ -106,6 +110,7 @@ public class GrowPolyline extends GlowArrayElem {
 	draw_type = border_d_type;
 	line_width = line_w;
 	this.fill = fill;
+	background_drawtype = Glow.eDrawType_No;
 
 	for ( int i = 0; i < point_cnt; i++)
 	    a_points.add(new GlowPoint(pointarray[i]));
@@ -160,6 +165,9 @@ public class GrowPolyline extends GlowArrayElem {
 		case Glow.eSave_GrowPolyLine_fill_drawtype: 
 		    fill_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
+		case Glow.eSave_GrowPolyLine_background_drawtype: 
+		    background_drawtype = Integer.valueOf(token.nextToken()); 
+		    break;
 		case Glow.eSave_GrowPolyLine_border: 
 		    border = Integer.valueOf(token.nextToken()); 
 		    break;
@@ -201,6 +209,15 @@ public class GrowPolyline extends GlowArrayElem {
 		    break;
 		case Glow.eSave_GrowPolyLine_fill_eq_shadow:
 		    fill_eq_shadow = Integer.valueOf(token.nextToken());
+		    break;
+		case Glow.eSave_GrowPolyLine_fill_eq_bglight:
+		    fill_eq_bglight = Integer.valueOf(token.nextToken());
+		    break;
+		case Glow.eSave_GrowPolyLine_fill_eq_bgshadow:
+		    fill_eq_bgshadow = Integer.valueOf(token.nextToken());
+		    break;
+		case Glow.eSave_GrowPolyLine_fill_eq_background:
+		    fill_eq_background = Integer.valueOf(token.nextToken());
 		    break;
 		case Glow.eSave_GrowPolyLine_dynamicsize:
 		    dynamicsize = Integer.valueOf(token.nextToken());
@@ -368,15 +385,34 @@ public class GrowPolyline extends GlowArrayElem {
 	    if ( fill_eq_border != 0)
 		drawtype = GlowColor.get_drawtype( draw_type, Glow.eDrawType_LineHighlight,
 						   highlight, colornode, 0, 0);
+	    else if ( fill_eq_background != 0)
+		drawtype = GlowColor.get_drawtype( background_drawtype, Glow.eDrawType_FillHighlight,
+						   highlight, colornode, 3, 0);
 	    else      
 		drawtype = GlowColor.get_drawtype( fill_drawtype, Glow.eDrawType_FillHighlight,
 						   highlight, colornode, 1, 0);
 	    if ( fill_eq_light != 0 && node != null && ((GrowNode)node).shadow != 0)
 		drawtype = GlowColor.shift_drawtype( drawtype, -shadow_contrast + chot, 
 						     colornode);
+	    else if ( fill_eq_bglight != 0) {
+		if ( colornode != null && ((GrowNode)node).background_drawtype != Glow.eDrawType_No)
+		    drawtype = GlowColor.shift_drawtype( ((GrowNode)colornode).background_drawtype, 
+							 -shadow_contrast + chot, colornode);
+		else
+		    drawtype = GlowColor.shift_drawtype( original_fill_drawtype, -shadow_contrast + chot, 
+							 colornode);
+	    }
 	    else if ( fill_eq_shadow != 0 && node != null && ((GrowNode)node).shadow != 0)
 		drawtype = GlowColor.shift_drawtype( drawtype, shadow_contrast + chot, 
 						     colornode);
+	    else if ( fill_eq_bgshadow != 0) {
+		if ( colornode != null && ((GrowNode)node).background_drawtype != Glow.eDrawType_No)
+		    drawtype = GlowColor.shift_drawtype( ((GrowNode)colornode).background_drawtype, 
+							 shadow_contrast + chot, colornode);
+		else
+		    drawtype = GlowColor.shift_drawtype( original_fill_drawtype, shadow_contrast + chot, 
+							 colornode);
+	    }
 	    else if ( chot != 0)
 		drawtype = GlowColor.shift_drawtype( drawtype, chot, null);
 

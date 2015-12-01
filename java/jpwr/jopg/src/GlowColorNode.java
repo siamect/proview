@@ -48,6 +48,7 @@ public interface GlowColorNode {
     public int getColorTone();
     public int getFillDrawtype();
     public int getTextDrawtype();
+    public int getBackgroundDrawtype();
     public int getDrawtype();
     public int getDimmed();
 

@@ -141,6 +141,15 @@ void ColPalCtx::configure()
 	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 0, (glow_eDrawType) i);
     insert( rect);
   }
+  y += entry_height;
+  x = 0;
+  color_description_bg = new GrowRect( this, "ColorDescriptionBg", x, y + 0.04, 
+	custom_entry_width * 16, entry_height - 0.04, glow_eDrawType_Line, 1, 0, 
+        glow_mDisplayLevel_1, 1, 0, 0, glow_eDrawType_LineErase);
+  color_description = new GrowText( this, "ColorDescription", "", x, y + entry_height / 2 + 0.15, 
+				    glow_eDrawType_TextHelvetica, glow_eDrawType_Line, 3);
+  insert( color_description_bg);
+  insert( color_description);
 
   double tone_entry_width = 3 * entry_width;
   y += entry_height;
@@ -208,6 +217,7 @@ void ColPalCtx::configure()
   redraw();
   change_scrollbar();
   set_colors();
+  hot_mode = glow_eHotMode_Disabled;
 }
 
 void ColPalCtx::change_scrollbar()
@@ -327,6 +337,7 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
   GlowCtx	*ctx;
   double 	fx, fy;
   int		callback = 0;
+  static int current_idx = -1;
 
   ctx = this;
 //  cout << "Event: " << event << endl;
@@ -522,6 +533,39 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
       }
       break;
 
+    case glow_eEvent_MB1ClickShiftCtrl:
+      sts = 0;
+      for ( i = 0; i < a.a_size; i++) {
+        sts = a.a[i]->event_handler( &ctx->mw, event, x, y, fx, fy);
+        if ( sts == GLOW__NO_PROPAGATE)
+          break;
+      }
+
+      if ( callback_object_type != glow_eObjectType_NoObject) {
+        if ( callback_object->type() == glow_eObjectType_GrowRect) {
+          GrowRect *rect;
+          char name[32];
+
+          rect = (GrowRect *)callback_object;
+          rect->get_object_name( name);
+          if ( strcmp( name, "ColorEntry") == 0) {
+	    if ( event_callback[event]) {
+	      static glow_sEvent e;
+
+	      e.event = event;
+	      e.any.type = glow_eEventType_ColorTone;
+	      e.any.x_pixel = x;
+	      e.any.y_pixel = y;
+	      e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+	      e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
+	      e.colortone.tone = (glow_eDrawTone) rect->fill_drawtype;
+	      event_callback[event]( this, &e);
+	    }
+	  }
+	}
+      }
+      break;
+   
     case glow_eEvent_MB1DoubleClick:
       sts = 0;
       for ( i = 0; i < a.a_size; i++) {
@@ -577,6 +621,50 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
       }
       break;
 
+    case glow_eEvent_Leave:
+      current_idx = -1;
+      ((GrowText *)color_description)->set_text( (char *)" ");
+      break;
+    case glow_eEvent_CursorMotion: {
+      int idx = -1;
+      sts = 0;
+
+      hot_found = 0;
+      for ( i = 0; i < a.a_size; i++) {
+        sts = a.a[i]->event_handler( &ctx->mw, event, x, y, fx, fy);
+        if ( sts == GLOW__NO_PROPAGATE)
+          break;
+      }
+
+      if ( callback_object_type != glow_eObjectType_NoObject) {
+        if ( callback_object->type() == glow_eObjectType_GrowRect) {
+          GrowRect *rect;
+          char name[32];
+
+          rect = (GrowRect *)callback_object;
+          rect->get_object_name( name);
+          if ( strcmp( name, "ColorEntry") == 0) {
+	    idx = rect->fill_drawtype;
+	  }
+	}
+      }
+      if ( current_idx != idx) {
+	if ( idx == -1)
+	  ((GrowText *)color_description)->set_text( (char *)" ");
+	else {
+	  if ( idx >= glow_eDrawType_CustomColor1 && idx < glow_eDrawType_CustomColor__) {
+	    if ( customcolors && customcolors->is_default_colortheme)
+	      ((GrowText *)color_description)->set_text( colortheme_idx_to_text( (idx - glow_eDrawType_CustomColor1) / 4));
+	    else
+	      ((GrowText *)color_description)->set_text( customcolor_idx_to_text( idx));
+	  }
+	  else
+	    ((GrowText *)color_description)->set_text( color_idx_to_text(idx));
+	}	    
+	current_idx = idx;
+      }
+      break;
+    }
     case glow_eEvent_Exposure:
       int width, height;
 
@@ -828,4 +916,70 @@ void ColPalCtx::update_custom_colors( GlowCustomColors *cc)
   for ( int i = glow_eDrawType_CustomColor1; i < glow_eDrawType_CustomColor__; i+=4)
     gdraw->update_color( (glow_eDrawType)i);
   redraw();
+}
+
+char *ColPalCtx::color_idx_to_text( int idx)
+{
+  static char text[30][20] = {
+    "Black", "Red", "Grey", "White", "YellowGreen",
+    "Yellow", "Gold", "Orange", "OrangeRed", "Red",
+    "RedViolet", "Violet", "BlueViolet", "BlueBlueViolet", "Blue",
+    "BlueBlueGreen", "BlueGreen", "GreenGreenBlue", "Green", "GreenGreenYellow",
+    "GrayFix1", "GrayFix2", "GrayFix3", "GrayFix4", "GrayFix5", 
+    "GrayFix6", "GrayFix7", "GrayFix8", "GrayFix9", "GrayFix10"};
+
+  static char tonestr[9][20] = { "Gray", "Yellowgreen", "Yellow", "Orange", "Red", "Magenta",
+				"Blue", "SeaBlue", "Green"};
+  static char intensitystr[3][20] = { "Low", "Medium", "High"};  
+  static char str[40];
+  int tone, intensity, lightness;
+
+  if ( idx >= 0 && idx < 30)
+    return text[idx];
+  else if ( idx >= 30 && idx < 300) {
+    tone = idx / 30 - 1;
+    intensity = (idx / 10) % 3;
+    lightness = idx % 10 + 1;
+    sprintf( str, "%s%s%d", tonestr[tone], intensitystr[intensity], lightness);
+    return str;
+  }
+  strcpy( str, "");
+  return str;
+}
+
+char *ColPalCtx::customcolor_idx_to_text( int idx)
+{
+  static char str[20];
+
+  sprintf( str, "CustomColor%d", (idx - glow_eDrawType_CustomColor1)/4 + 1);
+  return str;
+}
+
+char *ColPalCtx::colortheme_idx_to_text( int idx)
+{
+  static char text[90][40] = {
+    "Background", "Background gradient", "Delimiter area", "Delimiter line", "Text/Lines on background",
+    "Inputfield fill color", "Inputfield border color", "Inputfield text color", " ", " ",
+    "Red indicator", "Red curve", "Red bar", "Red bar limit", "Red valuefield color",
+    "Indicator border color", "Indicator low color", "Indicator on delimiter low color", "Slider color", "Slider background color",
+    "Valuefield fill color", "Valuefield border color", "Valuefield text color", " ", " ",
+    "Green indicator", "Green curve", "Green bar", "Green bar limit", "Green valuefield color",
+    "Limitswitch high color", "Limitswitch low color", "Limitswitch border color", "Text/lines on delimiter", "Button active color",
+    "Button fill color", "Button border color", "Button text color", "Button insensitive text color", "Button insensitive border color",
+    "Yellow indicator", "Yellow curve", "Yellow bar", "Yellow bar limit", "Yellow valuefield color",
+    "Symbol fill color", "Symbol border color", "Symbol low color", "Symbol empty color", " ",
+    "Bar bar color", "Bar background color", "Bar bar limit color", "Bar background area", "Bar background lines",
+    "Blue indicator", "Blue curve", "Blue bar", "Blue bar limit", "Blue valuefield color",
+    "Menu fill color", "Menu text color", "Toolbar fill color", "Toolbar border color", "Toolbar text color",
+    "Diagram fill color", "Diagram border color", "Diagram curve color", "Axis border color", " ",
+    "Orange indicator", "Orange curve", "Orange bar", "Orange bar limit", "Orange valuefield color",
+    "Table fill color", "Table border color", "Table text color", "Scrollbar fill color", "Scrollbar background color",
+    " ", " ", " ", " ", " ",
+    "Magenta indicator", "Magenta curve", "Magenta bar", "Magenta bar limit", "Magenta valuefield color"};
+  static char nullstr[] = " ";
+
+  if ( idx >= 0 && idx < 90)
+    return text[idx];
+  else
+    return nullstr;
 }

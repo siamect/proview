@@ -60,7 +60,6 @@ public class GlowVector {
 	case Glow.eSave_Array:
 	  break;
 	case Glow.eSave_NodeClass: {
-	  System.out.println("GlowVector: GlowNodeClass");
 	  GlowNodeClass nc = new GlowNodeClass( cmn);
 	  nc.open( reader);
 	  a.add( (Object) nc);
