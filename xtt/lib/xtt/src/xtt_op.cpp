@@ -381,7 +381,7 @@ void Op::sup_scan( void *data)
 
     if ( color != op->sup_vect[i].old_color) {
       op->sup_vect[i].old_color = color;
-      op->change_sup_color( op->sup_vect[i].imagew, color);
+      op->change_sup_color( op->sup_vect[i].indw, color);
     }
   }
   op->sup_timerid->add( time, sup_scan, op);

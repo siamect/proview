@@ -5523,6 +5523,11 @@ int Graph::get_dimension( char *filename, const char *def_path,
   return grow_GetDimension( fname, width, height);
 }
 
+int Graph::get_colortheme_colors( char *file, double **colors, int *size) {
+  return grow_GetColorThemeColors( file, colors, size);
+}
+
+
 static void graph_free_dyn( grow_tObject object)
 {
   if ( grow_GetObjectType( object) == glow_eObjectType_GrowNode ||

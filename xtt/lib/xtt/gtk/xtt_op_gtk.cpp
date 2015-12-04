@@ -54,6 +54,10 @@
 #include "cow_wow_gtk.h"
 #include "co_lng.h"
 #include "xtt_op_gtk.h"
+#include "glow.h"
+#include "glow_growctx.h"
+#include "glow_growapi.h"
+#include "ge_graph.h"
 #include "rt_xnav_msg.h"
 
 #define OP_HEIGHT_MIN 75
@@ -110,10 +114,17 @@ OpGtk::OpGtk( void *op_parent_ctx,
 {
   pwr_tStatus sts;
   int root_width, root_height;
+  GdkColor black_color;
+
   memset( a_exist, 0, sizeof(a_exist));
   memset( a_active, 0, sizeof(a_active));
-  GdkColor red_color;
+  memset( appl_buttons, 0, sizeof(appl_buttons));
   gdk_color_parse( "#FF7575", &red_color);
+  gdk_color_parse( "Yellow", &yellow_color);
+  gdk_color_parse( "Green", &green_color);
+  gdk_color_parse( "Gray", &gray_color);
+  gdk_color_parse( "Black", &black_color);
+
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 			   "default-height", OP_HEIGHT_MIN,
@@ -151,7 +162,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gtk_misc_set_alignment( GTK_MISC(aalarm_label[4]), 0.02, 0.5);
   gtk_label_set_use_markup( GTK_LABEL(aalarm_label[4]), TRUE);
   alarmcnt_label = gtk_label_new("");
-  GtkWidget *aalarm_mark = gtk_label_new("A");
+  aalarm_mark = gtk_label_new("A");
 
   dcli_translate_filename( fname, "$pwr_exe/xtt_alarm_active.png");
   balarm_active = gtk_image_new_from_file( fname);
@@ -163,82 +174,96 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gtk_label_set_use_markup( GTK_LABEL(balarm_label), TRUE);
 
 
-  aalarm_box[0] = gtk_fixed_new();
+  aalarm_box[0] = gtk_hbox_new( FALSE, 0);
+  GtkWidget *aalarm_bbox1 = gtk_fixed_new();
   GtkWidget *ebox1 = gtk_event_box_new();
   gtk_container_add( GTK_CONTAINER(ebox1), aalarm_label[0]);
   gtk_widget_modify_bg( ebox1, GTK_STATE_NORMAL, &red_color);
-  GtkWidget *abox1 = gtk_event_box_new();
-  gtk_widget_set_size_request( abox1, 20, 20);
-  gtk_container_add( GTK_CONTAINER(abox1), aalarm_active[0]);
+  aalarm_active_box[0] = gtk_event_box_new();
+  gtk_widget_set_size_request( aalarm_active_box[0], 20, 20);
+  gtk_container_add( GTK_CONTAINER(aalarm_active_box[0]), aalarm_active[0]);
   aalarm_info[0] = image_button( "$pwr_exe/xtt_alarm_info.png");
-  gtk_fixed_put( GTK_FIXED(aalarm_box[0]), abox1, 0, 0);
-  gtk_fixed_put( GTK_FIXED(aalarm_box[0]), aalarm_info[0], 21, 0);
-  gtk_fixed_put( GTK_FIXED(aalarm_box[0]), ebox1, 43, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_bbox1), aalarm_active_box[0], 0, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_bbox1), aalarm_info[0], 21, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_bbox1), gtk_label_new(""), 43, 0);
+  gtk_box_pack_start( GTK_BOX(aalarm_box[0]), aalarm_bbox1, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(aalarm_box[0]), ebox1, TRUE, TRUE, 0);
   gtk_widget_set_size_request( aalarm_label[0], -1, 20);
   gtk_widget_set_size_request( aalarm_active[0], -1, 20);
   gtk_widget_set_size_request( aalarm_info[0], 20, 20);
   g_signal_connect(aalarm_info[0], "clicked", G_CALLBACK(activate_info), this);
 
-  aalarm_box[1] = gtk_fixed_new();
+  aalarm_box[1] = gtk_hbox_new( FALSE, 0);
+  GtkWidget *aalarm_bbox2 = gtk_fixed_new();
   GtkWidget *ebox2 = gtk_event_box_new();
   gtk_container_add( GTK_CONTAINER(ebox2), aalarm_label[1]);
   gtk_widget_modify_bg( ebox2, GTK_STATE_NORMAL, &red_color);
-  GtkWidget *abox2 = gtk_event_box_new();
-  gtk_widget_set_size_request( abox2, 20, 20);
+  aalarm_active_box[1] = gtk_event_box_new();
+  gtk_widget_set_size_request( aalarm_active_box[1], 20, 20);
+  gtk_container_add( GTK_CONTAINER(aalarm_active_box[1]), aalarm_active[1]);
   aalarm_info[1] = image_button( "$pwr_exe/xtt_alarm_info.png");
-  gtk_container_add( GTK_CONTAINER(abox2), aalarm_active[1]);
-  gtk_fixed_put( GTK_FIXED(aalarm_box[1]), abox2, 0, 0);
-  gtk_fixed_put( GTK_FIXED(aalarm_box[1]), aalarm_info[1], 21, 0);
-  gtk_fixed_put( GTK_FIXED(aalarm_box[1]), ebox2, 43, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_bbox2), aalarm_active_box[1], 0, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_bbox2), aalarm_info[1], 21, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_bbox2), gtk_label_new(""), 43, 0);
+  gtk_box_pack_start( GTK_BOX(aalarm_box[1]), aalarm_bbox2, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(aalarm_box[1]), ebox2, TRUE, TRUE, 0);
   gtk_widget_set_size_request( aalarm_label[1], -1, 20);
   gtk_widget_set_size_request( aalarm_active[1], -1, 20);
   gtk_widget_set_size_request( aalarm_info[1], 20, 20);
   g_signal_connect(aalarm_info[1], "clicked", G_CALLBACK(activate_info), this);
-  
-  aalarm_box[2] = gtk_fixed_new();
+
+  aalarm_box[2] = gtk_hbox_new( FALSE, 0);
+  GtkWidget *aalarm_bbox3 = gtk_fixed_new();
   GtkWidget *ebox3 = gtk_event_box_new();
   gtk_container_add( GTK_CONTAINER(ebox3), aalarm_label[2]);
   gtk_widget_modify_bg( ebox3, GTK_STATE_NORMAL, &red_color);
-  GtkWidget *abox3 = gtk_event_box_new();
-  gtk_widget_set_size_request( abox3, 20, 20);
-  gtk_container_add( GTK_CONTAINER(abox3), aalarm_active[2]);
+  aalarm_active_box[2] = gtk_event_box_new();
+  gtk_widget_set_size_request( aalarm_active_box[2], 20, 20);
+  gtk_container_add( GTK_CONTAINER(aalarm_active_box[2]), aalarm_active[2]);
   aalarm_info[2] = image_button( "$pwr_exe/xtt_alarm_info.png");
-  gtk_fixed_put( GTK_FIXED(aalarm_box[2]), abox3, 0, 0);
-  gtk_fixed_put( GTK_FIXED(aalarm_box[2]), aalarm_info[2], 21, 0);
-  gtk_fixed_put( GTK_FIXED(aalarm_box[2]), ebox3, 43, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_bbox3), aalarm_active_box[2], 0, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_bbox3), aalarm_info[2], 21, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_bbox3), gtk_label_new(""), 43, 0);
+  gtk_box_pack_start( GTK_BOX(aalarm_box[2]), aalarm_bbox3, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(aalarm_box[2]), ebox3, TRUE, TRUE, 0);
   gtk_widget_set_size_request( aalarm_label[2], -1, 20);
   gtk_widget_set_size_request( aalarm_active[2], -1, 20);
   gtk_widget_set_size_request( aalarm_info[2], 20, 20);
   g_signal_connect(aalarm_info[2], "clicked", G_CALLBACK(activate_info), this);
-  
-  aalarm_box[3] = gtk_fixed_new();
+
+  aalarm_box[3] = gtk_hbox_new( FALSE, 0);
+  GtkWidget *aalarm_bbox4 = gtk_fixed_new();
   GtkWidget *ebox4 = gtk_event_box_new();
   gtk_container_add( GTK_CONTAINER(ebox4), aalarm_label[3]);
   gtk_widget_modify_bg( ebox4, GTK_STATE_NORMAL, &red_color);
-  GtkWidget *abox4 = gtk_event_box_new();
-  gtk_widget_set_size_request( abox4, 20, 20);
-  gtk_container_add( GTK_CONTAINER(abox4), aalarm_active[3]);
+  aalarm_active_box[3] = gtk_event_box_new();
+  gtk_widget_set_size_request( aalarm_active_box[3], 20, 20);
+  gtk_container_add( GTK_CONTAINER(aalarm_active_box[3]), aalarm_active[3]);
   aalarm_info[3] = image_button( "$pwr_exe/xtt_alarm_info.png");
-  gtk_fixed_put( GTK_FIXED(aalarm_box[3]), abox4, 0, 0);
-  gtk_fixed_put( GTK_FIXED(aalarm_box[3]), aalarm_info[3], 21, 0);
-  gtk_fixed_put( GTK_FIXED(aalarm_box[3]), ebox4, 43, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_bbox4), aalarm_active_box[3], 0, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_bbox4), aalarm_info[3], 21, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_bbox4), gtk_label_new(""), 43, 0);
+  gtk_box_pack_start( GTK_BOX(aalarm_box[3]), aalarm_bbox4, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(aalarm_box[3]), ebox4, TRUE, TRUE, 0);
   gtk_widget_set_size_request( aalarm_label[3], -1, 20);
   gtk_widget_set_size_request( aalarm_active[3], -1, 20);
-  gtk_widget_set_size_request( aalarm_info[3], -1, 20);
   gtk_widget_set_size_request( aalarm_info[3], 20, 20);
   g_signal_connect(aalarm_info[3], "clicked", G_CALLBACK(activate_info), this);
-  
-  aalarm_box[4] = gtk_fixed_new();
+
+  aalarm_box[4] = gtk_hbox_new( FALSE, 0);
+  GtkWidget *aalarm_bbox5 = gtk_fixed_new();
   GtkWidget *ebox5 = gtk_event_box_new();
   gtk_container_add( GTK_CONTAINER(ebox5), aalarm_label[4]);
   gtk_widget_modify_bg( ebox5, GTK_STATE_NORMAL, &red_color);
-  GtkWidget *abox5 = gtk_event_box_new();
-  gtk_widget_set_size_request( abox5, 20, 20);
+  aalarm_active_box[4] = gtk_event_box_new();
+  gtk_widget_set_size_request( aalarm_active_box[4], 20, 20);
+  gtk_container_add( GTK_CONTAINER(aalarm_active_box[4]), aalarm_active[4]);
   aalarm_info[4] = image_button( "$pwr_exe/xtt_alarm_info.png");
-  gtk_container_add( GTK_CONTAINER(abox5), aalarm_active[4]);
-  gtk_fixed_put( GTK_FIXED(aalarm_box[4]), abox5, 0, 0);
-  gtk_fixed_put( GTK_FIXED(aalarm_box[4]), aalarm_info[4], 21, 0);
-  gtk_fixed_put( GTK_FIXED(aalarm_box[4]), ebox5, 43, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_bbox5), aalarm_active_box[4], 0, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_bbox5), aalarm_info[4], 21, 0);
+  gtk_fixed_put( GTK_FIXED(aalarm_bbox5), gtk_label_new(""), 43, 0);
+  gtk_box_pack_start( GTK_BOX(aalarm_box[4]), aalarm_bbox5, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(aalarm_box[4]), ebox5, TRUE, TRUE, 0);
   gtk_widget_set_size_request( aalarm_label[4], -1, 20);
   gtk_widget_set_size_request( aalarm_active[4], -1, 20);
   gtk_widget_set_size_request( aalarm_info[4], 20, 20);
@@ -253,15 +278,19 @@ OpGtk::OpGtk( void *op_parent_ctx,
 
   balarm_ebox = gtk_event_box_new();
   gtk_container_add( GTK_CONTAINER(balarm_ebox), balarm_label);
-  GtkWidget *bbox = gtk_event_box_new();
-  gtk_container_add( GTK_CONTAINER(bbox), balarm_active);
-  gtk_widget_set_size_request( bbox, 20, 20);
+  balarm_active_box = gtk_event_box_new();
+  gtk_container_add( GTK_CONTAINER(balarm_active_box), balarm_active);
+  gtk_widget_set_size_request( balarm_active_box, 20, 20);
   balarm_info = image_button( "$pwr_exe/xtt_alarm_info.png");
 
-  balarm_box = gtk_fixed_new();
-  gtk_fixed_put( GTK_FIXED(balarm_box), bbox, 0, 0);
-  gtk_fixed_put( GTK_FIXED(balarm_box), balarm_info, 21, 0);
-  gtk_fixed_put( GTK_FIXED(balarm_box), balarm_ebox, 43, 0);
+  balarm_box = gtk_hbox_new( FALSE, 0);
+  GtkWidget *balarm_bbox = gtk_fixed_new();
+  gtk_fixed_put( GTK_FIXED(balarm_bbox), balarm_active_box, 0, 0);
+  gtk_fixed_put( GTK_FIXED(balarm_bbox), balarm_info, 21, 0);
+  gtk_fixed_put( GTK_FIXED(balarm_bbox), gtk_label_new(""), 43, 0);
+  gtk_box_pack_start( GTK_BOX(balarm_box), balarm_bbox, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(balarm_box), balarm_ebox, TRUE, TRUE, 0);
+  //gtk_fixed_put( GTK_FIXED(balarm_box), balarm_ebox, 43, 0);
   gtk_widget_set_size_request( balarm_info, 20, 20);
   g_signal_connect(balarm_info, "clicked", G_CALLBACK(activate_info), this);
 
@@ -539,8 +568,8 @@ OpGtk::OpGtk( void *op_parent_ctx,
 
 
   // Toolbar
-  GtkWidget *tools = (GtkWidget *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
-  GtkWidget *tools2 = (GtkWidget *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
+  tools = (GtkWidget *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
+  tools2 = (GtkWidget *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
   GtkWidget *tools_zoom_in = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
@@ -655,17 +684,45 @@ OpGtk::OpGtk( void *op_parent_ctx,
       GtkWidget *node_label = gtk_label_new("");
       snprintf( text, sizeof(text), "<span size=\"%d\">%s</span>", 11 * 1024, sup_vect[i].node_name);
       gtk_label_set_markup( GTK_LABEL(node_label), CoWowGtk::convert_utf8(text));
+      GtkWidget *node_label_bg = gtk_event_box_new();
+      gtk_container_add( GTK_CONTAINER(node_label_bg), node_label);
 
       GtkWidget *node_button = gtk_button_new();
       GtkWidget *node_hbox = gtk_hbox_new( FALSE, 0);
-      dcli_translate_filename( fname, "$pwr_exe/xtt_ind_gray2.png");
-      GtkWidget *node_image = gtk_image_new_from_file( fname);
-      gtk_box_pack_start( GTK_BOX(node_hbox), GTK_WIDGET(node_image), FALSE, FALSE, padding1);
-      gtk_box_pack_start( GTK_BOX(node_hbox), GTK_WIDGET(node_label), FALSE, FALSE, padding1);
+      // dcli_translate_filename( fname, "$pwr_exe/xtt_ind_gray2.png");
+      // GtkWidget *node_image = gtk_image_new_from_file( fname);
+
+      GtkWidget *node_ind = gtk_event_box_new();
+      GtkWidget *node_ind_frame = gtk_event_box_new();
+      GtkWidget *node_ind_frame_box = gtk_fixed_new();
+      gtk_fixed_put( GTK_FIXED(node_ind_frame_box), node_ind_frame, 0, 0);
+      gtk_fixed_put( GTK_FIXED(node_ind_frame_box), node_ind, 1, 1);
+      gtk_box_pack_start( GTK_BOX(node_hbox), GTK_WIDGET(node_ind_frame_box), FALSE, FALSE, padding1);
+      gtk_box_pack_start( GTK_BOX(node_hbox), GTK_WIDGET(node_label_bg), TRUE, TRUE, padding1);
+
+      GtkWidget *node_image = gtk_vbox_new( FALSE, 0);
+      GtkWidget *node_ind_filler1 = gtk_event_box_new();
+      GtkWidget *node_ind_filler2 = gtk_event_box_new();
+      gtk_box_pack_start( GTK_BOX(node_image), node_ind_filler1, TRUE, TRUE, 0);
+      gtk_box_pack_start( GTK_BOX(node_image), node_hbox, FALSE, FALSE, 0);
+      gtk_box_pack_start( GTK_BOX(node_image), node_ind_filler2, TRUE, TRUE, 0);
+
+      gtk_widget_modify_bg( GTK_WIDGET(node_ind), GTK_STATE_NORMAL, &gray_color);
+      gtk_widget_set_size_request( node_ind, 18, 18);      
+      gtk_widget_modify_bg( GTK_WIDGET(node_ind_frame), GTK_STATE_NORMAL, &black_color);
+      gtk_widget_modify_bg( GTK_WIDGET(node_ind_frame), GTK_STATE_PRELIGHT, &black_color);
+      gtk_widget_modify_bg( GTK_WIDGET(node_ind_frame), GTK_STATE_ACTIVE, &black_color);
+      gtk_widget_set_size_request( node_ind_frame, 20, 20);
+      
       if ( buttonwidth)
 	gtk_widget_set_size_request( node_button, buttonwidth, -1);
-      gtk_container_add( GTK_CONTAINER(node_button), node_hbox);
-      sup_vect[i].imagew = (void *)node_image;
+      // gtk_button_set_relief( GTK_BUTTON(node_button), GTK_RELIEF_NONE);
+      gtk_container_add( GTK_CONTAINER(node_button), node_image);
+      sup_vect[i].indw = (void *)node_ind;
+      sup_vect[i].indfiller1w = (void *)node_ind_filler1;
+      sup_vect[i].indfiller2w = (void *)node_ind_filler2;
+      sup_vect[i].textw = (void *)node_label;
+      sup_vect[i].textbgw = (void *)node_label_bg;
       sup_vect[i].buttonw = (void *)node_button;
       g_signal_connect( node_button, "clicked", G_CALLBACK(activate_sup_node), this);
       g_object_set( node_button, "can-focus", FALSE, NULL);
@@ -885,8 +942,6 @@ void  OpGtk::update_alarm_info()
     }
 
     if ( info.b_alarm_exist[0]) {
-      GdkColor yellow_color;
-      gdk_color_parse( "Yellow", &yellow_color);
 
       balarm_type = evlist_eEventType_Alarm;
       balarm_prio = mh_eEventPrio_B;
@@ -1004,8 +1059,6 @@ void  OpGtk::update_alarm_info()
     }
     else if ( info.i_alarm_exist[0])
     {
-      GdkColor green_color;
-      gdk_color_parse( "Green", &green_color);
 
       balarm_type = evlist_eEventType_Info;
       strcpy( b_alarm_moretext, info.i_alarm_moretext[0]);
@@ -1115,90 +1168,89 @@ int OpGtk::configure( char *opplace_str)
   }
 
   // Create the application buttons
-  GtkWidget *b[25];
   for ( i = 0; i < sizeof(opplace_p->FastAvail)/sizeof(opplace_p->FastAvail[0]); i++) {
     if ( cdh_ObjidIsNull( button_aref[i].Objid))
       continue;
 
     char *textutf8 = g_convert( button_title[i], -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-    b[i] = gtk_button_new_with_label(textutf8);
+    appl_buttons[i] = gtk_button_new_with_label(textutf8);
     g_free( textutf8);
-    gtk_widget_set_size_request( b[i], -1, 28);
+    gtk_widget_set_size_request( appl_buttons[i], -1, 28);
     switch ( i) {
     case 0:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl1), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl1), this);
       break;
     case 1:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl2), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl2), this);
       break;
     case 2:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl3), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl3), this);
       break;
     case 3:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl4), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl4), this);
       break;
     case 4:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl5), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl5), this);
       break;
     case 5:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl6), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl6), this);
       break;
     case 6:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl7), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl7), this);
       break;
     case 7:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl8), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl8), this);
       break;
     case 8:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl9), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl9), this);
       break;
     case 9:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl10), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl10), this);
       break;
     case 10:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl11), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl11), this);
       break;
     case 11:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl12), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl12), this);
       break;
     case 12:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl13), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl13), this);
       break;
     case 13:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl14), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl14), this);
       break;
     case 14:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl15), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl15), this);
       break;
     case 15:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl16), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl16), this);
       break;
     case 16:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl17), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl17), this);
       break;
     case 17:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl18), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl18), this);
       break;
     case 18:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl19), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl19), this);
       break;
     case 19:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl20), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl20), this);
       break;
     case 20:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl21), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl21), this);
       break;
     case 21:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl22), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl22), this);
       break;
     case 22:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl23), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl23), this);
       break;
     case 23:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl24), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl24), this);
       break;
     case 24:
-      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl25), this);
+      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl25), this);
       break;
     }
   }
@@ -1228,25 +1280,25 @@ int OpGtk::configure( char *opplace_str)
 
     if ( i < 5) {
       if ( cdh_ObjidIsNotNull( button_aref[i].Objid))
-	gtk_box_pack_start( GTK_BOX(funcbox[0]), b[i], TRUE, TRUE, 0);
+	gtk_box_pack_start( GTK_BOX(funcbox[0]), appl_buttons[i], TRUE, TRUE, 0);
     }
     else if ( i < 10) {
       if ( cdh_ObjidIsNotNull( button_aref[i].Objid))
-	gtk_box_pack_start( GTK_BOX(funcbox[1]), b[i], TRUE, TRUE, 0);
+	gtk_box_pack_start( GTK_BOX(funcbox[1]), appl_buttons[i], TRUE, TRUE, 0);
     }
     else if ( i < 15) {
       if ( cdh_ObjidIsNotNull( button_aref[i].Objid))
-	gtk_box_pack_start( GTK_BOX(funcbox[2]), b[i], TRUE, TRUE, 0);
+	gtk_box_pack_start( GTK_BOX(funcbox[2]), appl_buttons[i], TRUE, TRUE, 0);
     }
     else if ( i < 20) {
       if ( cdh_ObjidIsNotNull( button_aref[i].Objid)) {
-	gtk_box_pack_start( GTK_BOX(funcbox[3]), b[i], TRUE, TRUE, 0);
+	gtk_box_pack_start( GTK_BOX(funcbox[3]), appl_buttons[i], TRUE, TRUE, 0);
 	a_height = 4;
       }
     }
     else if ( i < 25) {
       if ( cdh_ObjidIsNotNull( button_aref[i].Objid)) {
-	gtk_box_pack_start( GTK_BOX(funcbox[4]), b[i], TRUE, TRUE, 0);
+	gtk_box_pack_start( GTK_BOX(funcbox[4]), appl_buttons[i], TRUE, TRUE, 0);
 	a_height = 5;
       }
     }
@@ -1723,29 +1775,30 @@ int OpGtk::get_cmd( GtkWidget *w, char *cmd)
 
 void OpGtk::change_sup_color( void *imagew, op_eSupColor color)
 {
-  GtkWidget *image = (GtkWidget *)imagew;
-  pwr_tFileName fname;
+  GdkColor *col;
 
   switch ( color) {
   case op_eSupColor_Gray:
-    dcli_translate_filename( fname, "$pwr_exe/xtt_ind_gray.png");
+    col = &gray_color;
     break;
   case op_eSupColor_Green:
-    dcli_translate_filename( fname, "$pwr_exe/xtt_ind_green.png");
+    col = &green_color;
     break;
   case op_eSupColor_Yellow:
-    dcli_translate_filename( fname, "$pwr_exe/xtt_ind_yellow.png");
+    col = &yellow_color;
     break;
   case op_eSupColor_Red:
-    dcli_translate_filename( fname, "$pwr_exe/xtt_ind_red.png");
+    col = &red_color;
     break;
   case op_eSupColor_Black:
-    dcli_translate_filename( fname, "$pwr_exe/xtt_ind_black.png");
+    col = &gray_color;
     break;
   default:
-    dcli_translate_filename( fname, "$pwr_exe/xtt_ind_gray.png");
+    col = &gray_color;
   }
-  gtk_image_set_from_file( GTK_IMAGE(image), fname);
+  gtk_widget_modify_bg( GTK_WIDGET(imagew), GTK_STATE_NORMAL, col);
+  gtk_widget_modify_bg( GTK_WIDGET(imagew), GTK_STATE_PRELIGHT, col);
+  gtk_widget_modify_bg( GTK_WIDGET(imagew), GTK_STATE_ACTIVE, col);
 }
 
 void  OpGtk::set_title( char *user) 
@@ -1766,4 +1819,140 @@ void  OpGtk::set_title( char *user)
 
   snprintf( text, sizeof(text), "<span size=\"%d\">%s</span>", 14 * 1024, title);
   gtk_label_set_markup( GTK_LABEL(title_label), text);
+}
+
+void OpGtk::set_color_theme( int idx)
+{
+  pwr_tFileName fname;
+  int sts;
+  double *colors;
+  int csize;
+
+  sprintf( fname, "$pwr_exe/pwr_colortheme%d.pwgc", idx);
+
+  sts = Graph::get_colortheme_colors( fname, &colors, &csize);
+  if ( EVEN(sts)) return;
+
+  GdkColor bg;
+  GdkColor bg_text;
+  GdkColor button_bg;
+  GdkColor button_text;
+  GdkColor button_prelight;
+  GdkColor button_active;
+  GdkColor menu;
+  GdkColor menu_text;
+
+  red_color.pixel = 0;
+  red_color.red = 0xFFFF * colors[(glow_eCtColor_RedIndicator-glow_eDrawType_CustomColor1)*3];
+  red_color.green = 0xFFFF * colors[(glow_eCtColor_RedIndicator-glow_eDrawType_CustomColor1)*3+1];
+  red_color.blue = 0xFFFF * colors[(glow_eCtColor_RedIndicator-glow_eDrawType_CustomColor1)*3+2];
+  green_color.pixel = 0;
+  green_color.red = 0xFFFF * colors[(glow_eCtColor_GreenIndicator-glow_eDrawType_CustomColor1)*3];
+  green_color.green = 0xFFFF * colors[(glow_eCtColor_GreenIndicator-glow_eDrawType_CustomColor1)*3+1];
+  green_color.blue = 0xFFFF * colors[(glow_eCtColor_GreenIndicator-glow_eDrawType_CustomColor1)*3+2];
+  yellow_color.pixel = 0;
+  yellow_color.red = 0xFFFF * colors[(glow_eCtColor_YellowIndicator-glow_eDrawType_CustomColor1)*3];
+  yellow_color.green = 0xFFFF * colors[(glow_eCtColor_YellowIndicator-glow_eDrawType_CustomColor1)*3+1];
+  yellow_color.blue = 0xFFFF * colors[(glow_eCtColor_YellowIndicator-glow_eDrawType_CustomColor1)*3+2];
+  gray_color.pixel = 0;
+  gray_color.red = 0xFFFF * colors[(glow_eCtColor_IndicatorLowColor-glow_eDrawType_CustomColor1)*3];
+  gray_color.green = 0xFFFF * colors[(glow_eCtColor_IndicatorLowColor-glow_eDrawType_CustomColor1)*3+1];
+  gray_color.blue = 0xFFFF * colors[(glow_eCtColor_IndicatorLowColor-glow_eDrawType_CustomColor1)*3+2];
+  bg.pixel = 0;
+  bg.red = 0xFFFF * colors[(glow_eCtColor_Background-glow_eDrawType_CustomColor1)*3];
+  bg.green = 0xFFFF * colors[(glow_eCtColor_Background-glow_eDrawType_CustomColor1)*3+1];
+  bg.blue = 0xFFFF * colors[(glow_eCtColor_Background-glow_eDrawType_CustomColor1)*3+2];
+  bg_text.pixel = 0;
+  bg_text.red = 0xFFFF * colors[(glow_eCtColor_BackgroundTextAndLines-glow_eDrawType_CustomColor1)*3];
+  bg_text.green = 0xFFFF * colors[(glow_eCtColor_BackgroundTextAndLines-glow_eDrawType_CustomColor1)*3+1];
+  bg_text.blue = 0xFFFF * colors[(glow_eCtColor_BackgroundTextAndLines-glow_eDrawType_CustomColor1)*3+2];
+  button_bg.pixel = 0;
+  button_bg.red = 0xFFFF * colors[(glow_eCtColor_ButtonFillcolor-glow_eDrawType_CustomColor1)*3];
+  button_bg.green = 0xFFFF * colors[(glow_eCtColor_ButtonFillcolor-glow_eDrawType_CustomColor1)*3+1];
+  button_bg.blue = 0xFFFF * colors[(glow_eCtColor_ButtonFillcolor-glow_eDrawType_CustomColor1)*3+2];
+  button_text.pixel = 0;
+  button_text.red = 0xFFFF * colors[(glow_eCtColor_ButtonTextcolor-glow_eDrawType_CustomColor1)*3];
+  button_text.green = 0xFFFF * colors[(glow_eCtColor_ButtonTextcolor-glow_eDrawType_CustomColor1)*3+1];
+  button_text.blue = 0xFFFF * colors[(glow_eCtColor_ButtonTextcolor-glow_eDrawType_CustomColor1)*3+2];
+  button_prelight.pixel = 0;
+  button_prelight.red = 0xFFFF * colors[(glow_eCtColor_ButtonFillcolor-glow_eDrawType_CustomColor1+3)*3];
+  button_prelight.green = 0xFFFF * colors[(glow_eCtColor_ButtonFillcolor-glow_eDrawType_CustomColor1+3)*3+1];
+  button_prelight.blue = 0xFFFF * colors[(glow_eCtColor_ButtonFillcolor-glow_eDrawType_CustomColor1+3)*3+2];
+  button_active.pixel = 0;
+  button_active.red = 0xFFFF * colors[(glow_eCtColor_ButtonFillcolor-glow_eDrawType_CustomColor1+2)*3];
+  button_active.green = 0xFFFF * colors[(glow_eCtColor_ButtonFillcolor-glow_eDrawType_CustomColor1+2)*3+1];
+  button_active.blue = 0xFFFF * colors[(glow_eCtColor_ButtonFillcolor-glow_eDrawType_CustomColor1+2)*3+2];
+  menu.pixel = 0;
+  menu.red = 0xFFFF * colors[(glow_eCtColor_MenuFillcolor-glow_eDrawType_CustomColor1)*3];
+  menu.green = 0xFFFF * colors[(glow_eCtColor_MenuFillcolor-glow_eDrawType_CustomColor1)*3+1];
+  menu.blue = 0xFFFF * colors[(glow_eCtColor_MenuFillcolor-glow_eDrawType_CustomColor1)*3+2];
+  menu_text.pixel = 0;
+  menu_text.red = 0xFFFF * colors[(glow_eCtColor_MenuTextcolor-glow_eDrawType_CustomColor1)*3];
+  menu_text.green = 0xFFFF * colors[(glow_eCtColor_MenuTextcolor-glow_eDrawType_CustomColor1)*3+1];
+  menu_text.blue = 0xFFFF * colors[(glow_eCtColor_MenuTextcolor-glow_eDrawType_CustomColor1)*3+2];
+
+  gtk_widget_modify_bg( toplevel, GTK_STATE_NORMAL, &bg);
+  gtk_widget_modify_fg( GTK_WIDGET(title_label), GTK_STATE_NORMAL, &bg_text);     
+  
+  gtk_widget_modify_bg( GTK_WIDGET(tools), GTK_STATE_NORMAL, &bg);
+  gtk_widget_modify_bg( GTK_WIDGET(tools2), GTK_STATE_NORMAL, &bg);
+
+  gtk_widget_modify_bg( GTK_WIDGET(alarmcnt_label), GTK_STATE_NORMAL, &bg);
+  gtk_widget_modify_fg( GTK_WIDGET(alarmcnt_label), GTK_STATE_NORMAL, &bg_text);
+  gtk_widget_modify_bg( GTK_WIDGET(aalarm_mark), GTK_STATE_NORMAL, &bg);
+  gtk_widget_modify_fg( GTK_WIDGET(aalarm_mark), GTK_STATE_NORMAL, &bg_text);
+  gtk_widget_modify_bg( GTK_WIDGET(balarm_mark), GTK_STATE_NORMAL, &bg);
+  gtk_widget_modify_fg( GTK_WIDGET(balarm_mark), GTK_STATE_NORMAL, &bg_text);
+  gtk_widget_modify_bg( GTK_WIDGET(balarm_active_box), GTK_STATE_NORMAL, &bg);
+  for ( int i = 0; i < 5; i++)
+    gtk_widget_modify_bg( GTK_WIDGET(aalarm_active_box[i]), GTK_STATE_NORMAL, &bg);
+
+  gtk_widget_modify_bg( GTK_WIDGET(menu_bar), GTK_STATE_NORMAL, &menu);
+  gtk_widget_modify_bg( GTK_WIDGET(menu_bar), GTK_STATE_ACTIVE, &menu);
+
+  GList *children = gtk_container_get_children( GTK_CONTAINER(menu_bar));
+  GList *child;
+  for ( child = g_list_first(children); child; child = g_list_next(child)) {
+    gtk_widget_modify_bg( GTK_WIDGET(child->data), GTK_STATE_NORMAL, &menu);
+    gtk_widget_modify_fg( GTK_WIDGET(child->data), GTK_STATE_NORMAL, &menu_text);    
+
+    GList *children2 = gtk_container_get_children( GTK_CONTAINER(child->data));
+    GList *child2;
+    for ( child2 = g_list_first(children2); child2; child2 = g_list_next(child2)) {
+      gtk_widget_modify_bg( GTK_WIDGET(child2->data), GTK_STATE_NORMAL, &menu);
+      gtk_widget_modify_fg( GTK_WIDGET(child2->data), GTK_STATE_NORMAL, &menu_text);    
+    }
+    g_list_free( children2);
+  }
+  g_list_free( children);
+
+  for ( unsigned int i = 0; i < sup_vect.size(); i++) {
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].buttonw), GTK_STATE_NORMAL, &button_bg);
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].buttonw), GTK_STATE_PRELIGHT, &button_prelight);     
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].buttonw), GTK_STATE_ACTIVE, &button_active);     
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller1w), GTK_STATE_NORMAL, &button_bg);
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller1w), GTK_STATE_PRELIGHT, &button_prelight);     
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller1w), GTK_STATE_ACTIVE, &button_active);     
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller2w), GTK_STATE_NORMAL, &button_bg);
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller2w), GTK_STATE_PRELIGHT, &button_prelight);     
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].indfiller2w), GTK_STATE_ACTIVE, &button_active);     
+    gtk_widget_modify_fg( GTK_WIDGET(sup_vect[i].textw), GTK_STATE_NORMAL, &button_text);
+    gtk_widget_modify_fg( GTK_WIDGET(sup_vect[i].textw), GTK_STATE_PRELIGHT, &button_text);
+    gtk_widget_modify_fg( GTK_WIDGET(sup_vect[i].textw), GTK_STATE_ACTIVE, &button_text);
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].textbgw), GTK_STATE_NORMAL, &button_bg);
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].textbgw), GTK_STATE_PRELIGHT, &button_prelight);
+    gtk_widget_modify_bg( GTK_WIDGET(sup_vect[i].textbgw), GTK_STATE_ACTIVE, &button_active);
+    sup_vect[i].old_color = op_eSupColor_;
+  }
+
+  for ( unsigned int i = 0; i < 25; i++) {
+    if ( appl_buttons[i]) {
+      gtk_widget_modify_bg( GTK_WIDGET(appl_buttons[i]), GTK_STATE_NORMAL, &button_bg);
+      gtk_widget_modify_bg( GTK_WIDGET(appl_buttons[i]), GTK_STATE_PRELIGHT, &button_prelight);     
+      gtk_widget_modify_bg( GTK_WIDGET(appl_buttons[i]), GTK_STATE_ACTIVE, &button_active);           
+      gtk_widget_modify_fg( GTK_WIDGET(gtk_bin_get_child(GTK_BIN(appl_buttons[i]))), GTK_STATE_NORMAL, &button_text);
+      gtk_widget_modify_fg( GTK_WIDGET(gtk_bin_get_child(GTK_BIN(appl_buttons[i]))), GTK_STATE_PRELIGHT, &button_text);
+      gtk_widget_modify_fg( GTK_WIDGET(gtk_bin_get_child(GTK_BIN(appl_buttons[i]))), GTK_STATE_ACTIVE, &button_text);
+    }
+  }
 }

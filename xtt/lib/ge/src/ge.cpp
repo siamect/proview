@@ -75,6 +75,7 @@
 #include "ge_subgraphs.h"
 #include "ge_util.h"
 #include "ge_msg.h"
+#include "cow_wow.h"
 #include "wb_wnav_selformat.h"
 #include "wb_nav.h"
 #include "wb_log.h"
@@ -1654,13 +1655,51 @@ void Ge::activate_select_colortheme()
   strcpy( names[9], "Contrast");
   strcpy( names[10], "AzureContrast");
   strcpy( names[11], "OchreContrast");
+  strcpy( names[11], "Chesterfield");
+  strcpy( names[11], "TerraVerte");
+  strcpy( names[11], "Custom");
   strcpy( names[12], "");
 
   wow->CreateList( "ColorTheme Selector", (char *)names, sizeof(names[0]),
 		   ge_colortheme_selector_ok_cb, 0, this);
 }
 
+void Ge::activate_customcolors_read()
+{
+  wow->CreateFileSelDia( "CustomColors Selection", (void *)this,
+			 customcolors_selected_cb, wow_eFileSelType_ColorTheme);
+}
 
+void Ge::customcolors_selected_cb( void *ctx, char *filename, wow_eFileSelType file_type)
+{
+  Ge *ge = (Ge *)ctx;
+  pwr_tCmd cmd;
+  sprintf( cmd, "custom read/file=\"%s\"", filename);
+  ge->command( cmd);
+}
+
+void Ge::activate_customcolors_write()
+{
+  open_input_dialog( "CustomColors name", "CustomColors Save ", "", 
+		     Ge::customcolors_write_cb);
+}
+
+void Ge::customcolors_write_cb( Ge *gectx, char *name)
+{
+  Ge *ge = (Ge *)gectx;
+  pwr_tCmd cmd;
+  pwr_tFileName fname;
+
+  if ( strchr( name, '/') == 0) {
+    strcpy( fname, "$pwrp_pop/");
+    strcat( fname, name);
+  }
+  else
+    strcpy( fname, name);
+
+  sprintf( cmd, "custom write/file=\"%s\"", fname);
+  ge->command( cmd);
+}
 
 void Ge::activate_subgraphs()
 {

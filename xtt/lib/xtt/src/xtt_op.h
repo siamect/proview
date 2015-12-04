@@ -75,14 +75,19 @@ typedef enum {
 
 class OpSup {
  public:
-  OpSup() : buttonw(0), imagew(0), p(0), old_color(op_eSupColor_), flash(0)
+  OpSup() : buttonw(0), indw(0), indfiller1w(0), indfiller2w(0), 
+    textw(0), textbgw(0), p(0), old_color(op_eSupColor_), flash(0)
     { strcpy( node_name, ""); strcpy( object_name, "");}
   
   pwr_tOid   	node_oid;
   pwr_tOName 	object_name;
   pwr_tObjName 	node_name;
   void 		*buttonw;
-  void		*imagew;
+  void		*indw;
+  void		*indfiller1w;
+  void		*indfiller2w;
+  void		*textw;
+  void		*textbgw;
   pwr_tStatus	*p;
   pwr_tRefId	refid;
   op_eSupColor	old_color;
@@ -124,6 +129,7 @@ class Op {
   virtual int   delete_menu_item( const char *name) { return 0;}
   virtual void  change_sup_color( void *imagew, op_eSupColor color) {}
   virtual void  set_title( char *user) {}
+  virtual void  set_color_theme( int idx) {}
 
   void	set_jop_qid( int qix) { if ( jop) jop->set_jop_qid( qix);};
   void	scan();

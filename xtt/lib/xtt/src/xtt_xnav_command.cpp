@@ -9791,6 +9791,8 @@ static void xnav_colortheme_selector_ok_cb( void *ctx, char *text)
 	  ((XttGe *)elem->ctx)->update_color_theme( idx);
       }
     }
+    if ( xnav->op)
+      xnav->op->set_color_theme( idx);
   }
   free( vd);
 }

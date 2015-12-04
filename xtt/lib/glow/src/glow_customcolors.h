@@ -70,6 +70,7 @@ class GlowCustomColors {
   int read_colorfile( GrowCtx *ctx, char *name);
   void set_colortheme_lightness( int lightness) { colortheme_lightness = lightness;}
   void set_colortheme_is_default( int isdefault) { is_default_colortheme = isdefault;}
+  static int get_colortheme_colors( char *file, double **colorvect, int *size);
 
   int colors_size;
   int colortheme_lightness;

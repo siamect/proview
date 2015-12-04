@@ -1376,6 +1376,8 @@ class Graph {
     else return 1;
   }
 
+  static int get_colortheme_colors( char *file, double **colors, int *size);
+
   //! Enable event logging
   static void eventlog_enable( int enable) { grow_EventLogEnable( enable);}
 

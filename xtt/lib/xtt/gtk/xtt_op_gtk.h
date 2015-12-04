@@ -70,13 +70,16 @@ class OpGtk : public Op {
   GtkWidget		*parent_wid_op;
   GtkWidget		*toplevel;
   GtkWidget		*alarmcnt_label;
+  GtkWidget		*aalarm_mark;
   GtkWidget		*aalarm_label[5];
   GtkWidget		*aalarm_active[5];
+  GtkWidget		*aalarm_active_box[5];
   GtkWidget		*aalarm_info[5];
   GtkWidget		*aalarm_filler[5];
   GtkWidget		*aalarm_box[5];
   GtkWidget		*balarm_label;
   GtkWidget		*balarm_active;
+  GtkWidget		*balarm_active_box;
   GtkWidget		*balarm_info;
   GtkWidget		*balarm_box;
   GtkWidget		*balarm_ebox;
@@ -88,6 +91,13 @@ class OpGtk : public Op {
   GtkWidget		*funcbox[5];
   GtkMenuBar		*menu_bar;
   GtkWidget		*title_label;
+  GtkWidget		*appl_buttons[25];
+  GtkWidget		*tools;
+  GtkWidget		*tools2;
+  GdkColor		red_color;
+  GdkColor		yellow_color;
+  GdkColor		green_color;
+  GdkColor		gray_color;
   int			a_height;
   int			a_exist[5];
   int			a_active[5];
@@ -106,6 +116,7 @@ class OpGtk : public Op {
   int   delete_menu_item( const char *name);
   void  change_sup_color( void *imagew, op_eSupColor color);
   void  set_title( char *user);
+  void  set_color_theme( int idx);
 
   static void activate_exit( GtkWidget *w, gpointer data);
   static void activate_aalarm_ack( GtkWidget *w, gpointer data);

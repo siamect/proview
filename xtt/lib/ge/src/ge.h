@@ -65,6 +65,9 @@ class SubGraphs;
 typedef void *grow_tObject;
 typedef void *GlowCtx;
 #endif
+#ifndef cow_wow_h
+#include "cow_wow.h"
+#endif
 
 /* ge.h -- Simple graphic editor */
 
@@ -156,7 +159,6 @@ class Ge {
   void open_graph( char *name);
   int set_focus( void *component);
 
-
   void activate_change_text();
   void activate_change_name();
   void activate_preview_start();
@@ -221,6 +223,8 @@ class Ge {
   void activate_graph_attr();
   void activate_open();
   void activate_select_colortheme();
+  void activate_customcolors_read();
+  void activate_customcolors_write();
   void activate_subgraphs();
   void activate_reset_mode();
   void activate_rect( bool keep);
@@ -286,6 +290,8 @@ class Ge {
   void activate_confirm_cancel();
 
   static int get_plant_select_cb( void *ge_ctx, char *select_name, int size);
+  static void customcolors_selected_cb( void *ctx, char *filename, wow_eFileSelType file_type);
+  static void customcolors_write_cb( Ge *gectx, char *name);
   static void load_graph_cb( void *ge_ctx, char *name);
   static void save_graph( Ge *gectx, char *name);
   static void save_graph_and_close( Ge *gectx, char *name);

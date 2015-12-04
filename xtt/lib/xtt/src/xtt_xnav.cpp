@@ -3771,6 +3771,8 @@ int XNav::init_brow_base_cb( FlowCtx *fctx, void *client_data)
 	strcat( cmd, " /closebutton");
       xnav->command( cmd);
 
+      if ( xnav->op)
+	xnav->op->set_color_theme( xnav->gbl.color_theme);
       // xnav->load_ev_from_opplace();
       // xnav->appl_startup();
     }

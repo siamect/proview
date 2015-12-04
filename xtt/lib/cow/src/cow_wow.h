@@ -52,6 +52,7 @@ typedef enum {
   wow_eFileSelType_Image,
   wow_eFileSelType_History,
   wow_eFileSelType_Backup,
+  wow_eFileSelType_ColorTheme,
   wow_eFileSelType__
 } wow_eFileSelType;
 

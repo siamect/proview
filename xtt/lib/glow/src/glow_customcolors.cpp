@@ -189,7 +189,7 @@ int GlowCustomColors::read_colorfile( GrowCtx *ctx, char *name)
     found = 1;
   
   // Add some search path
-  if ( !found) {
+  if ( !found && ctx) {
     for ( int i = 0; i < ctx->path_cnt; i++) {
       strcpy( path_name, ctx->path[i]);
       strcat( path_name, filename);
@@ -213,8 +213,28 @@ int GlowCustomColors::read_colorfile( GrowCtx *ctx, char *name)
   open( fp);
   fp.close();
 
-  ctx->gdraw->reset_customcolors( this);
+  if ( ctx)
+    ctx->gdraw->reset_customcolors( this);
 
 
+  return GLOW__SUCCESS;
+}
+
+int GlowCustomColors::get_colortheme_colors( char *file, double **colorvect, int *size)
+{
+  int sts;
+  GlowCustomColors cc;
+  static double cv[(glow_eDrawType_CustomColor__-glow_eDrawType_CustomColor1)*3];
+
+  sts = cc.read_colorfile( 0, file);
+  if ( EVEN(sts))
+    return sts;
+
+  for ( int i = 0; i < 360; i++) {
+    for ( int j = 0; j < 3; j++)
+      cv[i*3+j] = cc.colors[i][j];
+  }
+  *colorvect = cv;
+  *size = (glow_eDrawType_CustomColor__-glow_eDrawType_CustomColor1)*3;
   return GLOW__SUCCESS;
 }

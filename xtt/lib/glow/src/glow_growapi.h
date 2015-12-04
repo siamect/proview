@@ -3098,6 +3098,7 @@ extern "C" {
   void grow_SetEditSetMode( grow_tCtx ctx, glow_eEditSetMode mode);
   int grow_SetCustomColor( grow_tCtx ctx, glow_eDrawType color, double red, double green, double blue);
   void *grow_GetCustomColors( grow_tCtx ctx);
+  int grow_GetColorThemeColors( char *file, double **colors, int *size);
   int grow_ReadCustomColorFile( grow_tCtx ctx, char *name);
   int grow_WriteCustomColorFile( grow_tCtx ctx, char *name);
   void grow_SetDefaultColorTheme( char *theme);

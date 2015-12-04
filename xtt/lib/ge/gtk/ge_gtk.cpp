@@ -808,6 +808,16 @@ void GeGtk::activate_select_colortheme(GtkWidget *w, gpointer gectx)
   ((Ge *)gectx)->activate_select_colortheme();
 }
 
+void GeGtk::activate_customcolors_read(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_customcolors_read();
+}
+
+void GeGtk::activate_customcolors_write(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_customcolors_write();
+}
+
 void GeGtk::activate_import_graph(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->wow->CreateFileSelDia( "Graph Selection", (void *)gectx,
@@ -1687,6 +1697,23 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 			      't', GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), 
 			      GTK_ACCEL_VISIBLE);
 
+  // Submenu customcolors
+  GtkWidget *file_customcolors_read = gtk_menu_item_new_with_mnemonic( "_Read");
+  g_signal_connect( file_customcolors_read, "activate", 
+		    G_CALLBACK(activate_customcolors_read), this);
+
+  GtkWidget *file_customcolors_write = gtk_menu_item_new_with_mnemonic( "_Save");
+  g_signal_connect( file_customcolors_write, "activate", 
+		    G_CALLBACK(activate_customcolors_write), this);
+
+  GtkWidget *file_customcolors = gtk_menu_item_new_with_mnemonic( "CustomColors");
+  GtkMenu *file_customcolors_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_customcolors_menu), file_customcolors_read);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_customcolors_menu), file_customcolors_write);
+
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(file_customcolors),
+			    GTK_WIDGET(file_customcolors_menu));
+
   GtkWidget *file_subgraphs = gtk_menu_item_new_with_mnemonic( "_Loaded Subgraphs...");
   g_signal_connect( file_subgraphs, "activate", 
 		    G_CALLBACK(activate_subgraphs), this);
@@ -1765,6 +1792,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_build);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_graph_attr);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_select_colortheme);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_customcolors);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_subgraphs);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_export);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_import_graph);

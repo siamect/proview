@@ -5400,6 +5400,12 @@ void *grow_GetCustomColors( grow_tCtx ctx)
   return (void *)ctx->get_custom_colors();
 }
 
+
+int grow_GetColorThemeColors( char *file, double **colors, int *size)
+{
+  return GlowCustomColors::get_colortheme_colors( file, colors, size);
+}
+
 int grow_ReadCustomColorFile( grow_tCtx ctx, char *name)
 {
   return ctx->read_customcolor_file( name);

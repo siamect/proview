@@ -959,7 +959,7 @@ typedef enum {
 #define glow_eCtColor_ButtonTextcolor 		glow_eDrawType_CustomColor38
 #define glow_eCtColor_ButtonInsensitiveTextcolor glow_eDrawType_CustomColor39
 #define glow_eCtColor_ButtonInsensitiveBordercolor glow_eDrawType_CustomColor40
-#define glow_eCtColor_YellowIndicatorYellow 	glow_eDrawType_CustomColor41
+#define glow_eCtColor_YellowIndicator     	glow_eDrawType_CustomColor41
 #define glow_eCtColor_YellowCurve 		glow_eDrawType_CustomColor42
 #define glow_eCtColor_YellowBar 		glow_eDrawType_CustomColor43
 #define glow_eCtColor_YellowBarLimit 		glow_eDrawType_CustomColor44
