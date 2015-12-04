@@ -247,6 +247,11 @@ static pwr_tStatus IoAgentWrite (
 
   for (ii = 1; ii < local->device_data.size(); ii++) {
 
+    if (slave_list != NULL) {
+      sp = (pwr_sClass_PnDevice *) slave_list->op;
+      slave_list = slave_list->next;
+    }
+
     if (local->device_data[ii]->device_state == PNAK_DEVICE_STATE_CONNECTED) {
       for (jj = 0; jj < local->device_data[ii]->iocr_data.size(); jj++) {
 	
@@ -283,8 +288,6 @@ static pwr_tStatus IoAgentWrite (
       }
 
       if (slave_list != NULL) {
-	sp = (pwr_sClass_PnDevice *) slave_list->op;
-	slave_list = slave_list->next;
 
 	/* Check if there is a write request pending ?? */
 
@@ -299,7 +302,7 @@ static pwr_tStatus IoAgentWrite (
 		    }
 		    pack_write_req(&local->service_req_res, local->device_data[ii]->device_ref, &sp->WriteReq);
 		    sts = pnak_send_service_req_res(0, &local->service_req_res);
-		    
+		    errh_Info( "Profinet - Asynch write, dev: %d", local->device_data[ii]->device_ref);		    
 		    break;
 		  }
 		}

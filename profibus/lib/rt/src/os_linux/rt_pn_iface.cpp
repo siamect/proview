@@ -272,9 +272,9 @@ void pack_write_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, unsigned short device
  
   /* Calculate length of service */
 
-  service_desc->DataLength = sizeof(T_PN_SERVICE_GET_DEVICE_STATE_REQ) + wr_req->Length;
+  service_desc->DataLength = sizeof(T_PN_SERVICE_WRITE_REQ) + wr_req->Length;
 
-  pWR = (T_PN_SERVICE_WRITE_REQ *) service_desc + 1;
+  pWR = (T_PN_SERVICE_WRITE_REQ *) (service_desc + 1);
 
   pWR->VersionHighByte = 1;
   pWR->VersionLowByte = 0;
@@ -292,7 +292,7 @@ void pack_write_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, unsigned short device
   pWR->LengthHighByte = _PN_U16_HIGH_BYTE(wr_req->Length);
   pWR->LengthLowByte  = _PN_U16_LOW_BYTE(wr_req->Length);
 
-  pData = (unsigned char *) pWR + 1;
+  pData = (unsigned char *) (pWR + 1);
 
   memcpy(pData, wr_req->Data, wr_req->Length);
 }
