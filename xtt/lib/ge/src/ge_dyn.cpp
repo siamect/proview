@@ -16398,9 +16398,10 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
       int sts;
       double scale;
       glow_eFont text_font;
+      glow_eAnnotType annot_type;
       
       sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, 
-				     &bg_color, &scale, &text_font);
+				     &bg_color, &scale, &text_font, &annot_type);
       if ( EVEN(sts)) {
 	text_size = 2;
 	text_drawtype = glow_eDrawType_TextHelveticaBold;
@@ -17206,9 +17207,10 @@ int GeOptionMenu::action( grow_tObject object, glow_tEvent event)
       int sts;
       double scale;
       glow_eFont text_font;
+      glow_eAnnotType annot_type;
 
       sts = grow_GetObjectAnnotInfo( object, 1, &tsize, &text_drawtype, &text_color, &bg_color,
-				     &scale, &text_font);
+				     &scale, &text_font, &annot_type);
       if ( EVEN(sts)) {
 	tsize = 2;
 	text_drawtype = glow_eDrawType_TextHelveticaBold;
@@ -18085,9 +18087,10 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
       int text_size;
       double scale;
       glow_eFont text_font;
+      glow_eAnnotType annot_type;
       
       sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, 
-				     &bg_color, &scale, &text_font);
+				     &bg_color, &scale, &text_font, &annot_type);
       if ( EVEN(sts)) {
 	text_size = 2;
 	text_drawtype = glow_eDrawType_TextHelveticaBold;

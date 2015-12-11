@@ -748,14 +748,15 @@ int GlowNodeClass::find_nc( GlowArrayElem *nodeclass)
 }
 
 int GlowNodeClass::get_annotation_info( void *node, int num, int *t_size, glow_eDrawType *t_drawtype,
-					glow_eDrawType *t_color, glow_eFont *t_font)
+					glow_eDrawType *t_color, glow_eFont *t_font, 
+					glow_eAnnotType *t_type)
 {
   int		i;
 
   for ( i = 0; i < a.a_size; i++) {
     if ( a.a[i]->type() == glow_eObjectType_GrowAnnot &&
          ((GrowAnnot *)a.a[i])->number == num) {
-      ((GrowAnnot *)a.a[i])->get_annotation_info( node, t_size, t_drawtype, t_color, t_font);
+      ((GrowAnnot *)a.a[i])->get_annotation_info( node, t_size, t_drawtype, t_color, t_font, t_type);
       return 1;
     }
   }

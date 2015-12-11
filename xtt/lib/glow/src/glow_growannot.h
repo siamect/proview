@@ -191,7 +191,7 @@ class GrowAnnot : public GlowAnnot {
     \param t_color	Annotation text color.
   */
   void get_annotation_info( void *node, int *t_size, glow_eDrawType *t_drawtype,
-			    glow_eDrawType *t_color, glow_eFont *font);
+			    glow_eDrawType *t_color, glow_eFont *font, glow_eAnnotType *t_type);
 
   int get_text_size( GlowTransform *t, double *tsize);
   void get_text_extent( GlowTransform *t, void *node, double *width, double *height);

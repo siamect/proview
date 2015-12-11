@@ -2522,6 +2522,7 @@ void GrowCtx::clear_all( int keep_paste)
   cycle = glow_eCycle_Slow;
   mb3_action = glow_eMB3Action_PopupMenu;
   translate_on = 0;
+  strcpy( color_theme, "");
   inputfocus_object = 0;
   x0 = y0 = x1 = y1 = 0;
 

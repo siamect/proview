@@ -3041,7 +3041,7 @@ extern "C" {
   */
   int grow_GetObjectAnnotInfo( grow_tObject object, int num, int *text_size, glow_eDrawType *text_drawtype,
 			       glow_eDrawType *text_color, glow_eDrawType *bg_color, double *scale,
-			       glow_eFont *text_font);
+			       glow_eFont *text_font, glow_eAnnotType *type);
 
   //! Get color, textsize and text colors for a menu.
   /*!

@@ -2839,13 +2839,23 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
           sprintf( annot_name, "A%d", j);
           if ( (name = growapi_translate( transtab, annot_name)))
           {
+	    int a_size;
+	    glow_eDrawType a_drawtype, a_color, a_bgcolor;
+	    double a_scale;
+	    glow_eFont a_font;
+	    glow_eAnnotType a_type;
+
+	    op->get_annotation_info( j, &a_size, &a_drawtype, &a_color, &a_bgcolor, &a_scale,
+				     &a_font, &a_type);
             strcpy( attrinfo[i].name, name);
-            attrinfo[i].value_p = malloc( 80);
+            attrinfo[i].value_p = malloc( 1024);
             attrinfo[i].type = glow_eType_String;
-            attrinfo[i].size = 80;
+            attrinfo[i].size = 1024;
 	    attrinfo[i].info_type = grow_eInfoType_Annot;
 	    attrinfo[i].number = j;
-            op->get_annotation( j, (char *)attrinfo[i].value_p, 80);
+	    if ( a_type == glow_eAnnotType_MultiLine)
+	      attrinfo[i].multiline = 1;	    
+            op->get_annotation( j, (char *)attrinfo[i].value_p, 1024);
             i++;
           }
         }
@@ -5176,10 +5186,10 @@ void grow_GetBarChartConf( grow_tObject object, int *bar_num, int *barsegment_nu
 
 int grow_GetObjectAnnotInfo( grow_tObject object, int num, int *text_size, glow_eDrawType *text_drawtype,
 			     glow_eDrawType *text_color, glow_eDrawType *bg_color, double *scale, 
-			     glow_eFont *font)
+			     glow_eFont *font, glow_eAnnotType *type)
 {
   return ((GrowNode *)object)->get_annotation_info( num, text_size, text_drawtype, text_color, bg_color,
-						    scale, font);
+						    scale, font, type);
 }
 
 void grow_GetMenuChar( grow_tObject menu, int *t_size, glow_eDrawType *fill_color, glow_eDrawType *t_drawtype,

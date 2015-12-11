@@ -2101,7 +2101,8 @@ void GrowNode::annot_input_event( glow_eEvent event, int keycode)
 }
 
 int GrowNode::get_annotation_info( int num, int *t_size, glow_eDrawType *t_drawtype, glow_eDrawType *t_color,
-				   glow_eDrawType *bg_color, double *scale, glow_eFont *t_font)
+				   glow_eDrawType *bg_color, double *scale, glow_eFont *t_font,
+				   glow_eAnnotType *t_type)
 {
   int sts;
 
@@ -2109,7 +2110,7 @@ int GrowNode::get_annotation_info( int num, int *t_size, glow_eDrawType *t_drawt
   if ( EVEN(sts))
     *bg_color = glow_eDrawType_No;
 
-  sts = nc->get_annotation_info( (void*)this, num, t_size, t_drawtype, t_color, t_font);
+  sts = nc->get_annotation_info( (void*)this, num, t_size, t_drawtype, t_color, t_font, t_type);
   *scale = trf.vertical_scale(0);
   return sts;
 }

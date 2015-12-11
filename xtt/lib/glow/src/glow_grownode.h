@@ -955,7 +955,8 @@ class GrowNode : public GlowNode {
     \return		0 if annotation doesn't exist, else 1.
   */
   int get_annotation_info( int num, int *t_size, glow_eDrawType *t_drawtype, glow_eDrawType *t_color,
-			   glow_eDrawType *bg_color, double *scale, glow_eFont *font);
+			   glow_eDrawType *bg_color, double *scale, glow_eFont *font,
+			   glow_eAnnotType *t_type);
   int get_annotation_text_size( int num, double *tsize);
   void set_annotation_text_offset( int num, double x, double y);
   void get_annotation_text_extent( int num, double *width, double *height);

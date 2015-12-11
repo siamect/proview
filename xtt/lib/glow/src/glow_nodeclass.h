@@ -366,7 +366,7 @@ class GlowNodeClass : public GlowArrayElem {
     \return		0 if annotation doesn't exist, else 1.
   */
   int get_annotation_info( void *node, int num, int *t_size, glow_eDrawType *t_drawtype,
-			   glow_eDrawType *t_color, glow_eFont *t_font);
+			   glow_eDrawType *t_color, glow_eFont *t_font, glow_eAnnotType *t_type);
 
   int get_annotation_text_size( GlowTransform *t, int num, double *tsize);
 

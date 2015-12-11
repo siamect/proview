@@ -640,11 +640,13 @@ void GrowAnnot::convert( glow_eConvert version)
 }
 
 void GrowAnnot::get_annotation_info( void *node, int *t_size, glow_eDrawType *t_drawtype,
-				     glow_eDrawType *t_color, glow_eFont *t_font)
+				     glow_eDrawType *t_color, glow_eFont *t_font, 
+				     glow_eAnnotType *t_type)
 {
   *t_color = ((GrowCtx *)ctx)->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
-		 0, (GrowNode *)node, 2);
+					       0, (GrowNode *)node, 2);
   *t_size = text_size;
+  *t_type = annot_type;
   if ( node && ((GrowNode *)node)->text_font != glow_eFont_No) {
     *t_font = ((GrowNode *)node)->text_font;
     *t_drawtype = ((GrowNode *)node)->text_type;
