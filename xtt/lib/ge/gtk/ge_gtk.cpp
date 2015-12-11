@@ -803,9 +803,14 @@ void GeGtk::image_file_selected_cb( void *ctx, char *filename, wow_eFileSelType 
   ge->subpalette->select_by_name( cmd);
 }
 
-void GeGtk::activate_select_colortheme(GtkWidget *w, gpointer gectx)
+void GeGtk::activate_colortheme_select(GtkWidget *w, gpointer gectx)
 {
-  ((Ge *)gectx)->activate_select_colortheme();
+  ((Ge *)gectx)->activate_colortheme_select();
+}
+
+void GeGtk::activate_colortheme_next(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_colortheme_next();
 }
 
 void GeGtk::activate_customcolors_read(GtkWidget *w, gpointer gectx)
@@ -1690,15 +1695,31 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_widget_add_accelerator( file_graph_attr, "activate", accel_g,
 			      'g', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE);
 
-  GtkWidget *file_select_colortheme = gtk_menu_item_new_with_mnemonic( "_Select ColorTheme");
-  g_signal_connect( file_select_colortheme, "activate", 
-		    G_CALLBACK(activate_select_colortheme), this);
-  gtk_widget_add_accelerator( file_select_colortheme, "activate", accel_g,
+  // Submenu colortheme
+  GtkWidget *file_colortheme_select = gtk_menu_item_new_with_mnemonic( "_Select");
+  g_signal_connect( file_colortheme_select, "activate", 
+		    G_CALLBACK(activate_colortheme_select), this);
+  gtk_widget_add_accelerator( file_colortheme_select, "activate", accel_g,
 			      't', GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), 
 			      GTK_ACCEL_VISIBLE);
 
+  GtkWidget *file_colortheme_next = gtk_menu_item_new_with_mnemonic( "_Next");
+  g_signal_connect( file_colortheme_next, "activate", 
+		    G_CALLBACK(activate_colortheme_next), this);
+  gtk_widget_add_accelerator( file_colortheme_next, "activate", accel_g,
+			      't', GdkModifierType(GDK_CONTROL_MASK | GDK_MOD1_MASK), 
+			      GTK_ACCEL_VISIBLE);
+
+  GtkWidget *file_colortheme = gtk_menu_item_new_with_mnemonic( "ColorTheme");
+  GtkMenu *file_colortheme_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_colortheme_menu), file_colortheme_select);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_colortheme_menu), file_colortheme_next);
+
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(file_colortheme),
+			    GTK_WIDGET(file_colortheme_menu));
+
   // Submenu customcolors
-  GtkWidget *file_customcolors_read = gtk_menu_item_new_with_mnemonic( "_Read");
+  GtkWidget *file_customcolors_read = gtk_menu_item_new_with_mnemonic( "_Load");
   g_signal_connect( file_customcolors_read, "activate", 
 		    G_CALLBACK(activate_customcolors_read), this);
 
@@ -1791,7 +1812,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_save_as);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_build);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_graph_attr);
-  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_select_colortheme);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_colortheme);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_customcolors);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_subgraphs);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_export);

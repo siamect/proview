@@ -679,13 +679,16 @@ void Graph::set_mode( grow_eMode mode, bool keep)
 
 }
 
-void Graph::update_color_theme( int color_theme)
+void Graph::update_color_theme( int ct)
 {
   char color_theme_file[80];
   int sts;
 
-  sprintf( color_theme_file, "pwr_colortheme%d", color_theme);
+  sprintf( color_theme_file, "pwr_colortheme%d", ct);
   sts = grow_ReadCustomColorFile( grow->ctx, color_theme_file);
+  if ( EVEN(sts)) return;
+
+  color_theme = ct;
 
   if ( update_colorpalette_cb)
     (update_colorpalette_cb)( parent_ctx);

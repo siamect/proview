@@ -222,7 +222,8 @@ class Ge {
   void activate_prevpage();
   void activate_graph_attr();
   void activate_open();
-  void activate_select_colortheme();
+  void activate_colortheme_select();
+  void activate_colortheme_next();
   void activate_customcolors_read();
   void activate_customcolors_write();
   void activate_subgraphs();

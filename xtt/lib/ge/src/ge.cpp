@@ -1604,64 +1604,74 @@ void Ge::activate_open()
   //	Ge::open_graph);
 }
 
+typedef struct {
+  pwr_tString32 name;
+  int idx;
+} tThemes;
+
+static tThemes themes[] = {
+  {"Standard", 0},
+  {"Sand", 1},
+  {"Maroon", 2},
+  {"Sienna", 3},
+  {"DarkBlue", 4},
+  {"Classic", 5},
+  {"Midnight", 6},
+  {"PlayRoom", 7},
+  {"NordicLight", 8},
+  {"Contrast", 9},
+  {"AzureContrast", 10},
+  {"OchreContrast", 11},
+  {"Chesterfield", 12},
+  {"TerraVerte", 13},
+  {"Custom", 100}};
+
 static void ge_colortheme_selector_ok_cb( void *ctx, char *text)
 {
   Ge *gectx = (Ge *)ctx;
-  int idx;
+  int idx = -1;
 
-  if ( strcmp( text, "Standard") == 0) 
-    idx = 0;
-  else if ( strcmp( text, "Sand") == 0) 
-    idx = 1;
-  else if ( strcmp( text, "Maroon") == 0) 
-    idx = 2;
-  else if ( strcmp( text, "Sienna") == 0) 
-    idx = 3;
-  else if ( strcmp( text, "DarkBlue") == 0) 
-    idx = 4;
-  else if ( strcmp( text, "Classic") == 0) 
-    idx = 5;
-  else if ( strcmp( text, "Midnight") == 0) 
-    idx = 6;
-  else if ( strcmp( text, "PlayRoom") == 0) 
-    idx = 7;
-  else if ( strcmp( text, "NordicLight") == 0) 
-    idx = 8;
-  else if ( strcmp( text, "Contrast") == 0) 
-    idx = 9;
-  else if ( strcmp( text, "AzureContrast") == 0) 
-    idx = 10;
-  else if ( strcmp( text, "OchreContrast") == 0) 
-    idx = 11;
-  else
-    return;
+  for ( unsigned int i = 0; i < sizeof(themes)/sizeof(themes[0]); i++) {
+    if ( strcmp( text, themes[i].name) == 0) {
+      idx = themes[i].idx;
+      break;
+    }
+  }
 
-  gectx->graph->update_color_theme( idx);
+  if( idx > 0)
+    gectx->graph->update_color_theme( idx);
 }
 
-void Ge::activate_select_colortheme()
+
+void Ge::activate_colortheme_select()
 {
   pwr_tString80 names[30];
 
-  strcpy( names[0], "Standard");
-  strcpy( names[1], "Sand");
-  strcpy( names[2], "Maroon");
-  strcpy( names[3], "Sienna");
-  strcpy( names[4], "DarkBlue");
-  strcpy( names[5], "Classic");
-  strcpy( names[6], "Midnight");
-  strcpy( names[7], "PlayRoom");
-  strcpy( names[8], "NordicLight");
-  strcpy( names[9], "Contrast");
-  strcpy( names[10], "AzureContrast");
-  strcpy( names[11], "OchreContrast");
-  strcpy( names[11], "Chesterfield");
-  strcpy( names[11], "TerraVerte");
-  strcpy( names[11], "Custom");
-  strcpy( names[12], "");
+  memset( names, 0, sizeof(names));
+  for ( unsigned int i = 0; i < sizeof(themes)/sizeof(themes[0]); i++) {
+    strcpy( names[i], themes[i].name);
+  }
 
   wow->CreateList( "ColorTheme Selector", (char *)names, sizeof(names[0]),
 		   ge_colortheme_selector_ok_cb, 0, this);
+}
+
+void Ge::activate_colortheme_next()
+{
+  int next_idx = -1;
+  for ( unsigned int i = 0; i < sizeof(themes)/sizeof(themes[0]); i++) {
+    if ( themes[i].idx == graph->color_theme) {
+      if ( i == sizeof(themes)/sizeof(themes[0]) - 1)
+	next_idx = themes[0].idx;
+      else
+	next_idx = themes[i+1].idx;
+      break;
+    }
+  }
+  if ( next_idx < 0)
+    next_idx = 0;
+  
+  graph->update_color_theme( next_idx);  
 }
 
 void Ge::activate_customcolors_read()

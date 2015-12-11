@@ -192,7 +192,8 @@ class GeGtk : public Ge {
   static void activate_export_java_as( GtkWidget *w, gpointer gectx);
   static void activate_export_plcfo( GtkWidget *w, gpointer gectx);
   static void activate_export_plcfo_as( GtkWidget *w, gpointer gectx);
-  static void activate_select_colortheme(GtkWidget *w, gpointer gectx);
+  static void activate_colortheme_select(GtkWidget *w, gpointer gectx);
+  static void activate_colortheme_next(GtkWidget *w, gpointer gectx);
   static void activate_customcolors_read(GtkWidget *w, gpointer gectx);
   static void activate_customcolors_write(GtkWidget *w, gpointer gectx);
   static void activate_import_graph( GtkWidget *w, gpointer gectx);
