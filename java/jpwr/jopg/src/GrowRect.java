@@ -423,7 +423,7 @@ public class GrowRect extends GlowArrayElem {
 			       drawtype);
 		}
 		else {
-		    int f1, f2;
+		    int f0, f1, f2;
 		    double rotation;
 		    if ( t != null)
 			rotation = trf.rot( t);
@@ -431,21 +431,23 @@ public class GrowRect extends GlowArrayElem {
 			rotation = trf.rot();
 
 		    if ( bgcolor_gradient != 0 && background_drawtype != Glow.eDrawType_No) {
-			f2 = GlowColor.shift_drawtype( fillcolor, -gradient_contrast/2 + chot, null);
+			f2 = fillcolor;
 			f1 = GlowColor.get_drawtype( background_drawtype, Glow.eDrawType_FillHighlight,
 						     highlight, colornode, 1, 0);
-			f1 = GlowColor.shift_drawtype( f1, (int)((float)(gradient_contrast)/2+0.6) + chot, null);
+			f0 = f1;
 		    }
 		    else if ( gradient_contrast >= 0) {
 			f2 = GlowColor.shift_drawtype( fillcolor, -gradient_contrast/2 + chot, null);
 			f1 = GlowColor.shift_drawtype( fillcolor, (int)((float)(gradient_contrast)/2+0.6) + chot, null);
+			f0 = fillcolor;
 		    }
 		    else {
 			f2 = GlowColor.shift_drawtype( fillcolor, -(int)((float)(gradient_contrast)/2-0.6) + chot, null);
 			f1 = GlowColor.shift_drawtype( fillcolor, gradient_contrast/2 + chot, null);
+			f0 = fillcolor;
 		    }
 		    cmn.gdraw.gradient_fill_rect( ll_x + ish, ll_y + ish, ur_x - ll_x - 2 * ish, ur_y - ll_y - 2 * ish,
-						  fillcolor, f1, f2, cmn.gdraw.gradient_rotate( rotation, grad));
+						  f0, f1, f2, cmn.gdraw.gradient_rotate( rotation, grad));
 		}
 	    }
 	    else {
@@ -457,7 +459,7 @@ public class GrowRect extends GlowArrayElem {
 		    cmn.gdraw.fill_rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype);
 		}
 		else {
-		    int f1, f2;
+		    int f0, f1, f2;
 		    double rotation;
 		    if ( t!= null)
 			rotation = trf.rot( t);
@@ -467,16 +469,19 @@ public class GrowRect extends GlowArrayElem {
 			f2 = fillcolor;
 			f1 = GlowColor.get_drawtype( background_drawtype, Glow.eDrawType_FillHighlight,
 						     highlight, colornode, 1, 0);
+			f0 = f1;
 		    }
 		    else if ( gradient_contrast >= 0) {
 			f2 = GlowColor.shift_drawtype( fillcolor, -gradient_contrast/2 + chot, null);
 			f1 = GlowColor.shift_drawtype( fillcolor, (int)((float)(gradient_contrast)/2+0.6) + chot, null);
+			f0 = fillcolor;
 		    }
 		    else {
 			f2 = GlowColor.shift_drawtype( fillcolor, -(int)((float)(gradient_contrast)/2-0.6) + chot, null);
 			f1 = GlowColor.shift_drawtype( fillcolor, gradient_contrast/2, null);
+			f0 = fillcolor;
 		    }
-		    cmn.gdraw.gradient_fill_rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fillcolor, f1, f2, cmn.gdraw.gradient_rotate( rotation, grad));
+		    cmn.gdraw.gradient_fill_rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, f0, f1, f2, cmn.gdraw.gradient_rotate( rotation, grad));
 		}
 	    }
 	}
