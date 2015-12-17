@@ -207,10 +207,10 @@ void CompModePID_Fo_exec( plc_sThread *tp,
     }
   }
 
-  if ( co->SetVal < co->MinOut)
-    co->SetVal = co->MinOut;
-  else if ( co->SetVal > co->MaxOut)
-    co->SetVal = co->MaxOut;
+  if ( co->SetVal < co->MinSet)
+    co->SetVal = co->MinSet;
+  else if ( co->SetVal > co->MaxSet)
+    co->SetVal = co->MaxSet;
 
   /* Transfer to outputs */
   o->SetVal = co->SetVal;
