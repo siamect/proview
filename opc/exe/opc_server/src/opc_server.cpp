@@ -277,7 +277,7 @@ int main()
       sleep( 10);
     }
     else {
-      fprintf( stderr, "Socket connection successfull: master socket = %d\n", m);
+      fprintf( stderr, "Socket connection successful: master socket = %d\n", m);
       
       for ( int i = 1;; i++) {
 	s = soap_accept( &soap);

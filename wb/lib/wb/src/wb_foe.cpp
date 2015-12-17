@@ -442,7 +442,7 @@ void WFoe::activate_syntax()
       BEEP;
     }
     else
-      message( "Syntax successfull completion");
+      message( "Syntax successful completion");
   }
 
   if ( show_execorder)
@@ -3824,7 +3824,7 @@ int WFoe::change_mode( int new_mode)
       sts = vldh_get_wind_modification( wind, &vldh_mod);
       
       if ( !info.Empty || vldh_mod) {
-	/* Assume mode change is not successfull */
+	/* Assume mode change is not successful */
 	wanted_function = VIEW;
 	set_mode_button_state( VIEW, 0);
 	set_mode_button_state( EDIT, 1);
@@ -3973,7 +3973,7 @@ int WFoe::change_mode( int new_mode)
       sts = vldh_get_wind_modification( wind, &vldh_mod);
       
       if ( !info.Empty || vldh_mod) {
-	/* Assume mode change is not successfull */
+	/* Assume mode change is not successful */
 	wanted_function = TRACE;
 	set_mode_button_state( TRACE, 0);
 	set_mode_button_state( EDIT, 1);
@@ -4059,7 +4059,7 @@ int WFoe::change_mode( int new_mode)
       sts = vldh_get_wind_modification( wind, &vldh_mod);
       
       if ( !info.Empty || vldh_mod) {
-	/* Assume mode change is not successfull */
+	/* Assume mode change is not successful */
 	wanted_function = SIMULATE;
 	set_mode_button_state( SIMULATE, 0);
 	set_mode_button_state( EDIT, 1);

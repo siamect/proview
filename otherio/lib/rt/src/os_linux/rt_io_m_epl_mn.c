@@ -366,7 +366,7 @@ static pwr_tStatus IoAgentInit (io_tCtx ctx, io_sAgent *ap) {
     goto Exit;
   }
     
-  errh_Success ("Powerlink init successfull");
+  errh_Success ("Powerlink init successful");
   return IO__SUCCESS;
     
 

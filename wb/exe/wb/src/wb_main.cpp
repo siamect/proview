@@ -215,11 +215,11 @@ void Wb::login_success( void *ctx)
   pwr_tStatus sts;
   char msg[80];
 
-  printf( "-- Successfull login\n");
+  printf( "-- Successful login\n");
   sprintf( msg, "User %s logged in", CoLogin::username());
   MsgWindow::message( 'I', msg);
 
-  /* Successfull login, start the volume selection */ 
+  /* Successful login, start the volume selection */ 
 
   if ( CoLogin::privilege() & pwr_mPrv_DevRead )
   {
@@ -526,7 +526,7 @@ void Wb::vsel_cancel()
 void Wb::login_cancel( void *ctx)
 {
   printf( "-- Login canceled\n");
-  /* Not successfull login, exit */
+  /* Not successful login, exit */
   exit(LOGIN__AUTHFAIL);
 }
 

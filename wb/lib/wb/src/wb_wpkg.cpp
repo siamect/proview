@@ -117,7 +117,7 @@ void WPkg::activate_distribute()
       wpkgnav->refresh_node( itemlist[i]);
 
       char msg[80];
-      sprintf( msg, "Distribution successfull to %s", ((WItemPkgNode *)itemlist[i])->nodename);
+      sprintf( msg, "Distribution successful to %s", ((WItemPkgNode *)itemlist[i])->nodename);
       message('I', msg);
       flush();
     }
@@ -138,7 +138,7 @@ void WPkg::activate_distribute()
       wpkgnav->refresh_node( itemlist[0]);
 
       char msg[80];
-      sprintf( msg, "Distribution successfull to %s", ((WItemPkgNode *)itemlist[0])->nodename);
+      sprintf( msg, "Distribution successful to %s", ((WItemPkgNode *)itemlist[0])->nodename);
       message('I', msg);
       reset_cursor();
     }
@@ -146,7 +146,7 @@ void WPkg::activate_distribute()
       set_clock_cursor();
       wb_pkg::copyPackage( ((WItemPkgPackage *)itemlist[0])->packagename);
       char msg[80];
-      sprintf( msg, "Distribution successfull of %s", ((WItemPkgPackage *)itemlist[0])->packagename);
+      sprintf( msg, "Distribution successful of %s", ((WItemPkgPackage *)itemlist[0])->packagename);
       message('I', msg);
       reset_cursor();
     }

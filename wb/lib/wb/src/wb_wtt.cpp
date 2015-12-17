@@ -1032,7 +1032,7 @@ void Wtt::activate_syntax()
     message( 'W', msg);
   }
   else
-    message( 'I', "Syntax check successfull");
+    message( 'I', "Syntax check successful");
 }
 
 void Wtt::activate_find()

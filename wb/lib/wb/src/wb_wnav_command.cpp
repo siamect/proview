@@ -5403,7 +5403,7 @@ static int	wnav_check_func(	void		*client_data,
 	wnav->message( errorcount ? 'E' : 'W', msg);
       }
       else
-	wnav->message( 'I', "Successfull syntax check, no errors or warnings found");
+	wnav->message( 'I', "Successful syntax check, no errors or warnings found");
     }
     else {
       if ( EVEN( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr)))) {
@@ -5429,7 +5429,7 @@ static int	wnav_check_func(	void		*client_data,
 	wnav->message( errorcount ? 'E' : 'W', msg);
       }
       else
-	wnav->message( 'I', "Successfull syntax check, no errors or warnings found");
+	wnav->message( 'I', "Successful syntax check, no errors or warnings found");
     }
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "BOOTFILE", strlen( arg1_str)) == 0) {
