@@ -1624,6 +1624,7 @@ static tThemes themes[] = {
   {"OchreContrast", 11},
   {"Chesterfield", 12},
   {"TerraVerte", 13},
+  {"Polar", 14},
   {"Custom", 100}};
 
 static void ge_colortheme_selector_ok_cb( void *ctx, char *text)
@@ -1638,7 +1639,7 @@ static void ge_colortheme_selector_ok_cb( void *ctx, char *text)
     }
   }
 
-  if( idx > 0)
+  if( idx >= 0)
     gectx->graph->update_color_theme( idx);
 }
 

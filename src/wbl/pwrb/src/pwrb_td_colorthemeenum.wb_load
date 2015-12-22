@@ -188,6 +188,16 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
+    !  Polar.
+    !*/
+    Object Polar $Value
+     Body SysBody
+       Attr PgmName = "Polar"
+       Attr Text = "Polar"
+       Attr Value = 14
+     EndBody
+    EndObject
+    !/**
     !  Custom.
     !*/
     Object Custom $Value
