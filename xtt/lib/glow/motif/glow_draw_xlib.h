@@ -212,7 +212,7 @@ class GlowDrawXLib : public GlowDraw {
   virtual void draw_background( GlowWind *wind, int x, int y, int w, int h);
   virtual int create_buffer( GlowWind *w);
   virtual void delete_buffer( GlowWind *w);
-  virtual void buffer_background( DrawWind *w);
+  virtual void buffer_background( DrawWind *w, GlowCtx *cctx);
   virtual int print( char *filename, double x0, double x1, int end);
   void set_clip( DrawWind *w, GC gc);
   void reset_clip( DrawWind *w, GC gc);

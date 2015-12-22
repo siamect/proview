@@ -1938,7 +1938,7 @@ void GlowDrawXLib::clear( GlowWind *wind)
   if ( !w->double_buffer_on)
     XClearWindow( display, w->window);
   else
-    buffer_background( w);
+    buffer_background( w, 0);
 }
 
 void GlowDrawXLib::copy_buffer( GlowWind *wind,
@@ -2341,7 +2341,7 @@ void GlowDrawXLib::set_background( GlowWind *wind, glow_eDrawType drawtype, glow
     XtSetValues( w->toplevel, args, i);
 
     if ( w->buffer)
-      buffer_background( w);
+      buffer_background( w, 0);
   }
   else {
     if ( w->background_pixmap)
@@ -2352,7 +2352,7 @@ void GlowDrawXLib::set_background( GlowWind *wind, glow_eDrawType drawtype, glow
     w->background_pixmap_height = pixmap_height;
     XSetWindowBackgroundPixmap( display, w->window, (Pixmap)pixmap);
     if ( w->buffer)
-      buffer_background( w);
+      buffer_background( w, 0);
   }
 }
 
@@ -2580,7 +2580,7 @@ int GlowDrawXLib::create_buffer( GlowWind *wind)
   w->buffer_width = window_width;
   w->buffer_height = window_height;
 
-  buffer_background( w);
+  buffer_background( w, 0);
   return 1;
 }
 
@@ -2595,7 +2595,7 @@ void GlowDrawXLib::delete_buffer( GlowWind *wind)
   w->buffer_height = 0;
 }
 
-void GlowDrawXLib::buffer_background( DrawWind *wind)
+void GlowDrawXLib::buffer_background( DrawWind *wind, GlowCtx *cctx)
 {
   DrawWindXLib *w = (DrawWindXLib *) wind;
   int window_width, window_height, subwindow_x, subwindow_y;

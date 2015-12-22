@@ -685,8 +685,11 @@ void Graph::update_color_theme( int ct)
   int sts;
 
   sprintf( color_theme_file, "pwr_colortheme%d", ct);
-  sts = grow_ReadCustomColorFile( grow->ctx, color_theme_file);
+
+  sts = grow_ReadCustomColorFile( grow->base_ctx(), color_theme_file);
   if ( EVEN(sts)) return;
+
+  grow_SetDefaultColorTheme( color_theme_file);
 
   color_theme = ct;
 
@@ -1591,19 +1594,19 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 					"Scale9",		"Folder9.Scale",
 					"VerticalScrollbar9", 	"Folder9.VerticalScrollbar",
 					"HorizontalScrollbar9",	"Folder9.HorizontalScrollbar",
-					"Owner10",   		"Folder9.Object",
+					"Owner9",   		"Folder9.Object",
 					"FileName10",   	"Folder10.FileName",
 					"Text10",   		"Folder10.Text",
 					"Scale10",		"Folder10.Scale",
 					"VerticalScrollbar10", 	"Folder10.VerticalScrollbar",
 					"HorizontalScrollbar10","Folder10.HorizontalScrollbar",
-					"Owner11",   		"Folder10.Object",
+					"Owner10",   		"Folder10.Object",
 					"FileName11",   	"Folder11.FileName",
 					"Text11",   		"Folder11.Text",
 					"Scale11",		"Folder11.Scale",
 					"VerticalScrollbar11", 	"Folder11.VerticalScrollbar",
 					"HorizontalScrollbar11","Folder11.HorizontalScrollbar",
-					"Owner12",   		"Folder11.Object",
+					"Owner11",   		"Folder11.Object",
 					"FileName12",   	"Folder12.FileName",
 					"Text12",   		"Folder12.Text",
 					"Scale12",		"Folder12.Scale",

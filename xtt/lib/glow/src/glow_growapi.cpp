@@ -4945,6 +4945,16 @@ void grow_SetNodeClassExtern( grow_tNodeClass nodeclass, int ext)
   ((GlowNodeClass *)nodeclass)->set_extern( ext);
 }
 
+void grow_SetNodeClassExternAll( grow_tCtx ctx, int ext)
+{
+  GlowNodeClass **nc_list;
+  int num;
+
+  ctx->get_nodeclasslist( (GlowArrayElem ***)&nc_list, &num);
+  for ( int i = 0; i < num; i++)
+    nc_list[i]->set_extern( ext);
+}
+
 int grow_GetBackgroundObjectLimits( grow_tCtx ctx, glow_eTraceType type,
 	double x, double y, grow_tObject *background,
 	double *min, double *max, glow_eDirection *direction)
@@ -5497,6 +5507,11 @@ glow_eGradient grow_GetObjectGradient( grow_tObject o)
   return ((GlowArrayElem *)o)->get_gradient();
 }
 
+void grow_SetObjectGradient( grow_tObject o, glow_eGradient gradient)
+{
+  ((GlowArrayElem *)o)->set_gradient( gradient);
+}
+
 int grow_GetObjectShadow( grow_tObject o)
 {
   return ((GlowArrayElem *)o)->get_shadow();
@@ -5530,6 +5545,22 @@ void grow_SetObjectOriginalBackgroundColor( grow_tObject o, glow_eDrawType color
 void grow_ResetObjectBackgroundColor( grow_tObject object)
 {
   ((GlowArrayElem *)object)->reset_background_color();
+}
+
+int grow_SetObjectClass( grow_tObject object, grow_tNodeClass nodeclass)
+{
+  if ( ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowNode ||
+       ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowSlider ||
+       ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowConGlue ||
+       ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowGroup) {
+    ((GrowNode *)object)->nc = (GlowNodeClass *)nodeclass;
+    ((GrowNode *)object)->nc_root = (GlowNodeClass *)nodeclass;    
+    ((GrowNode *)object)->get_node_borders();    
+  }
+  else
+    return 0;
+
+  return 1;
 }
 
 

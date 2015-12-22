@@ -399,6 +399,12 @@ class GraphGrow {
     if ( stack_cnt > 0)
       ctx = ctx_stack[--stack_cnt];
   }
+  GrowCtx *base_ctx() {
+    if ( stack_cnt > 0)
+      return ctx_stack[0];
+    else
+      return ctx;
+  }
 };
 
 

@@ -2025,7 +2025,7 @@ void GlowDrawGtk::clear( GlowWind *wind)
   if ( !w->double_buffer_on)
     gdk_window_clear( w->window);
   else
-    buffer_background( w);
+    buffer_background( w, 0);
 }
 
 void GlowDrawGtk::copy_buffer( GlowWind *wind,
@@ -2410,7 +2410,7 @@ void GlowDrawGtk::set_background( GlowWind *wind, glow_eDrawType drawtype, glow_
     gtk_widget_modify_bg( w->toplevel, GTK_STATE_NORMAL, &background);
 
     if ( w->buffer)
-      buffer_background( w);
+      buffer_background( w, 0);
   }
   else {
     GdkBitmap *mask;
@@ -2425,7 +2425,7 @@ void GlowDrawGtk::set_background( GlowWind *wind, glow_eDrawType drawtype, glow_
     w->background_pixmap_height = pixmap_height;
     gdk_window_set_back_pixmap( w->window, w->background_pixmap, FALSE);
     if ( w->buffer)
-      buffer_background( w);
+      buffer_background( w, 0);
   }
 }
 
@@ -2622,7 +2622,7 @@ int GlowDrawGtk::create_buffer( GlowWind *wind)
   w->buffer_width = window_width;
   w->buffer_height = window_height;
 
-  buffer_background( w);
+  buffer_background( w, 0);
   return 1;
 }
 
@@ -2637,7 +2637,7 @@ void GlowDrawGtk::delete_buffer( GlowWind *wind)
   w->buffer_height = 0;
 }
 
-void GlowDrawGtk::buffer_background( DrawWind *wind)
+void GlowDrawGtk::buffer_background( DrawWind *wind, GlowCtx *cctx)
 {
   DrawWindGtk *w = (DrawWindGtk *) wind;
   int window_width, window_height, subwindow_x, subwindow_y;
@@ -2687,14 +2687,21 @@ void GlowDrawGtk::buffer_background( DrawWind *wind)
       reset_clip( w, get_gc( this, glow_eDrawType_Line, 0));
   }
   else {
+    glow_eDrawType bg;
+    if ( cctx)
+      bg = ((GrowCtx *)cctx)->background_color;
+    else
+      bg = ((GrowCtx *)ctx)->background_color;
+    //glow_eDrawType bg = glow_eDrawType_CustomColor1;
+    //glow_eDrawType bg = glow_eDrawType_LineErase;
     if ( w->clip_on)
-      set_clip( w, get_gc( this, glow_eDrawType_LineErase, 0));
+      set_clip( w, get_gc( this, bg, 0));
 
     gdk_draw_rectangle( w->buffer,
-			get_gc( this, glow_eDrawType_LineErase, 0), 1,
+			get_gc( this, bg, 0), 1,
 			subwindow_x, subwindow_y, window_width, window_height);
     if ( w->clip_on)
-      reset_clip( w, get_gc( this, glow_eDrawType_LineErase, 0));
+      reset_clip( w, get_gc( this, bg, 0));
 
   }
 }

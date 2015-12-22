@@ -562,6 +562,41 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 	      event_callback[event]( this, &e);
 	    }
 	  }
+          else if ( strcmp( name, "ColorEntryBg") == 0) {
+	    if ( event_callback[event]) {
+	      static glow_sEvent e;
+
+	      e.event = event;
+	      e.any.type = glow_eEventType_ColorTone;
+	      e.any.x_pixel = x;
+	      e.any.y_pixel = y;
+	      e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+	      e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
+	      e.colortone.tone = (glow_eDrawTone) glow_eDrawType_LineErase;
+	      event_callback[event]( this, &e);
+	    }
+	  }
+	}
+        else if ( callback_object->type() == glow_eObjectType_GrowText) {
+          GrowText *text;
+          char name[32];
+
+          text = (GrowText *)callback_object;
+          text->get_object_name( name);
+          if ( strcmp( name, "ColorEntryBg") == 0) {
+	    if ( event_callback[event]) {
+	      static glow_sEvent e;
+
+	      e.event = event;
+	      e.any.type = glow_eEventType_ColorTone;
+	      e.any.x_pixel = x;
+	      e.any.y_pixel = y;
+	      e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+	      e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
+	      e.colortone.tone = (glow_eDrawTone) glow_eDrawType_LineErase;
+	      event_callback[event]( this, &e);
+	    }
+	  }
 	}
       }
       break;

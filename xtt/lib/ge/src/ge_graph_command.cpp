@@ -3183,6 +3183,26 @@ static int graph_setextern_func(
   return 1;
 }
 
+static int graph_setexternall_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph		*graph;
+
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  grow_SetNodeClassExternAll( graph->grow->ctx, 1);
+  return 1;
+}
+
 static int graph_setintern_func(
   void *filectx,
   ccm_sArg *arg_list, 
@@ -3215,6 +3235,26 @@ static int graph_setintern_func(
     *return_int = 0;
     *return_decl = CCM_DECL_INT;
   }
+  return 1;
+}
+
+static int graph_setinternall_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph		*graph;
+
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  grow_SetNodeClassExternAll( graph->grow->ctx, 0);
   return 1;
 }
 
@@ -3591,6 +3631,34 @@ static int graph_getobjectgradient_func(
 
   *return_int = grow_GetObjectGradient( (grow_tObject)arg_list->value_int);
   *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int graph_setobjectgradient_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  ccm_sArg 	*arg_p2;
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  grow_SetObjectGradient( (grow_tObject)arg_list->value_int, (glow_eGradient)arg_p2->value_int);
   return 1;
 }
 
@@ -4274,6 +4342,7 @@ static int graph_getobjectattribute_func(
        type == glow_eObjectType_GrowFolder ||
        type == glow_eObjectType_GrowBar ||
        type == glow_eObjectType_GrowTrend ||
+       type == glow_eObjectType_GrowRect ||
        type == glow_eObjectType_GrowAxis) {
     attr_sItem 	*itemlist;
     attr_sItem  *item_p;
@@ -4509,6 +4578,268 @@ static int graph_setrgbcolor_func(
   return 1;
 }
 
+static int graph_measureobject_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  ccm_sArg 	*arg_p2; 	// ll_x
+  ccm_sArg 	*arg_p3; 	// ll_y
+  ccm_sArg 	*arg_p4; 	// ur_x
+  ccm_sArg 	*arg_p5; 	// ur_y
+  double ll_x, ll_y, ur_x, ur_y;
+
+  if ( arg_count != 5)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+  arg_p4 = arg_p3->next;
+  arg_p5 = arg_p4->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+  if ( arg_p3->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+  if ( arg_p4->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+  if ( arg_p5->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  grow_MeasureNode( (grow_tObject)arg_list->value_int, &ll_x, &ll_y, &ur_x, &ur_y);
+  arg_p2->value_float = (float)ll_x;
+  arg_p3->value_float = (float)ll_y;
+  arg_p4->value_float = (float)ur_x;
+  arg_p5->value_float = (float)ur_y;
+  arg_p2->value_returned = 1;
+  arg_p3->value_returned = 1;
+  arg_p4->value_returned = 1;
+  arg_p5->value_returned = 1;
+
+  return 1;
+}
+
+static int graph_deleteobject_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  graph_get_stored_graph( &graph);
+
+  grow_DeleteObject( graph->grow->ctx, (grow_tObject)arg_list->value_int);
+
+  return 1;
+}
+
+static int graph_setobjectclass_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  ccm_sArg *arg_p2; 	// Class
+  int sts;
+  grow_tNodeClass nc;
+  pwr_tFileName cname;
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  sts = grow_FindNodeClassByName( graph->grow->ctx, arg_p2->value_string, &nc);
+  if ( EVEN(sts)) {
+    // Load the subgraph
+
+    strcpy( cname, "$pwrp_exe/");
+    strncat( cname, arg_p2->value_string, sizeof(cname));
+    strncat( cname, ".pwsg", sizeof(cname));
+
+    sts = grow_OpenSubGraph( graph->grow->ctx, cname);
+    if ( EVEN(sts)) {
+      strcpy( cname, "$pwr_exe/");
+      strncat( cname, arg_p2->value_string, sizeof(cname));
+      strncat( cname, ".pwsg", sizeof(cname));
+
+      sts = grow_OpenSubGraph( graph->grow->ctx, cname);
+    }
+  }
+  sts = grow_FindNodeClassByName( graph->grow->ctx, arg_p2->value_string, &nc);
+  if ( EVEN(sts)) {
+    *return_int = sts;
+    *return_decl = CCM_DECL_INT;
+    return 1;
+  }
+    
+  sts = grow_SetObjectClass( (grow_tNode)arg_list->value_int, nc);
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int graph_scaleobject_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  ccm_sArg 	*arg_p2; 	// scale x
+  ccm_sArg 	*arg_p3; 	// scale y
+  double 	scalex, scaley;
+  glow_eScaleType scale_type;
+  grow_tObject  oid = (grow_tObject)arg_list->value_int;
+
+  if ( oid == 0)
+    return 1;
+
+  if ( arg_count != 3)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+  if ( arg_p3->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  scalex = (double)arg_p2->value_float;
+  scaley = (double)arg_p3->value_float;
+
+  scale_type =  glow_eScaleType_LowerLeft;
+
+  grow_StoreTransform( oid);
+  grow_SetObjectScale( oid, scalex, scaley,
+		       0, 0, scale_type);
+
+  return 1;
+}
+static int graph_moveobject_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  ccm_sArg 	*arg_p2; 	// scale x
+  ccm_sArg 	*arg_p3; 	// scale y
+  double 	x0, y0;
+  grow_tObject  oid = (grow_tObject)arg_list->value_int;
+
+  if ( oid == 0)
+    return 1;
+
+  if ( arg_count != 3)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+  if ( arg_p3->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  x0 = (double)arg_p2->value_float;
+  y0 = (double)arg_p3->value_float;
+
+  grow_MoveObject( oid, x0, y0);
+
+  return 1;
+}
+
+
+static int graph_moveabsobject_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  Graph *graph;
+  ccm_sArg 	*arg_p2; 	// scale x
+  ccm_sArg 	*arg_p3; 	// scale y
+  double 	x0, y0;
+  double	ll_x, ll_y, ur_x, ur_y;
+  grow_tObject  oid = (grow_tObject)arg_list->value_int;
+
+  if ( oid == 0)
+    return 1;
+
+  if ( arg_count != 3)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+  if ( arg_p3->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph( &graph);
+
+  grow_MeasureNode( oid, &ll_x, &ll_y, &ur_x, &ur_y);
+
+  x0 = (double)arg_p2->value_float - ll_x;
+  y0 = (double)arg_p3->value_float - ll_y;
+
+  grow_MoveObject( oid, x0, y0);
+
+  return 1;
+}
+
+
 static int graph_ccm_deffilename_func( char *outfile, char *infile, void *client_data)
 {
 
@@ -4618,6 +4949,10 @@ int Graph::readcmdfile( 	char		*incommand)
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "SetIntern", graph_setintern_func);
     if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetExternAll", graph_setexternall_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetInternAll", graph_setinternall_func);
+    if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "SetDraw", graph_setdraw_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "IsW1", graph_true_func);
@@ -4645,6 +4980,8 @@ int Graph::readcmdfile( 	char		*incommand)
     sts = ccm_register_function( "SetObjectBorder", graph_setobjectborder_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "GetObjectGradient", graph_getobjectgradient_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetObjectGradient", graph_setobjectgradient_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "GetObjectFillColor", graph_getobjectfillcolor_func);
     if ( EVEN(sts)) return sts;
@@ -4681,6 +5018,18 @@ int Graph::readcmdfile( 	char		*incommand)
     sts = ccm_register_function( "GetRgbColor", graph_getrgbcolor_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "SetRgbColor", graph_setrgbcolor_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "MeasureObject", graph_measureobject_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "DeleteObject", graph_deleteobject_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetObjectClass", graph_setobjectclass_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "ScaleObject", graph_scaleobject_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "MoveObject", graph_moveobject_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "MoveAbsObject", graph_moveabsobject_func);
     if ( EVEN(sts)) return sts;
     ccm_func_registred = 1;
 
@@ -4792,6 +5141,7 @@ int Graph::readcmdfile( 	char		*incommand)
       sprintf( varname, "eDrawType_Color%d", i);
       sts = ccm_create_external_var( varname, CCM_DECL_INT, 0, i-1, 0);
     }
+    sts = ccm_create_external_var( "eDrawType_LineErase", CCM_DECL_INT, 0, 300, 0);
     for ( int i = 1; i <= 90; i++) {
       sprintf( varname, "eDrawType_CustomColor%d", i);
       sts = ccm_create_external_var( varname, CCM_DECL_INT, 0, 310 + 4 * (i - 1), 0);

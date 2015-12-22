@@ -222,6 +222,7 @@ class GlowArrayElem {
     virtual glow_eDrawType get_border_color() { return glow_eDrawType_No;}
     virtual glow_eDrawType get_text_color() { return glow_eDrawType_No;}
     virtual glow_eGradient get_gradient() { return glow_eGradient_No;}
+    virtual void get_gradient( glow_eGradient gradient) {}
     virtual void set_colortheme_lightness() {}
 
     virtual ~GlowArrayElem() {};

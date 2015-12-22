@@ -99,11 +99,13 @@ class NextElem {
 
 GrowCtx::~GrowCtx()
 {
-  if ( gdraw)
+  if ( gdraw) {
+    set_nodraw();
     clear_all( 0);
+  }
   if ( dynamic)
     free( dynamic);
-  if ( ctx_type == glow_eCtxType_Grow && customcolors) {
+  if ( gdraw && ctx_type == glow_eCtxType_Grow && customcolors) {
     gdraw->reset_customcolors( customcolors);
     free( customcolors);
   }
@@ -2528,6 +2530,7 @@ void GrowCtx::clear_all( int keep_paste)
 
   nav_clear();
   set_nodraw();
+  reset_custom_colors();
   zoom_absolute( mw.base_zoom_factor);
   mw.offset_x = 0;
   mw.offset_y = 0;
@@ -2571,11 +2574,11 @@ void GrowCtx::clear_all( int keep_paste)
       }
     }
   }
-  reset_custom_colors();
   reset_nodraw();
   // if ( show_grid)
   //  draw_grid( 0, 0, mw.window_width, mw.window_height);
   draw( &mw, mw.subwindow_x, mw.subwindow_y, mw.subwindow_x + mw.window_width, mw.subwindow_y  + mw.window_height);
+  reset_custom_colors();
 }
 
 void GrowCtx::redraw_defered()
@@ -2615,7 +2618,7 @@ void GrowCtx::draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y)
   if ( redraw_callback)
     (redraw_callback) ( redraw_data);
   if ( w->double_buffer_on())
-    gdraw->buffer_background( w->window);
+    gdraw->buffer_background( w->window, this);
   for ( i = 0; i < a.a_size; i++) {
     if ( a.a[i]->type() == glow_eObjectType_Con)
       a.a[i]->draw( w, ll_x, ll_y, ur_x, ur_y);
@@ -4692,10 +4695,20 @@ int GrowCtx::read_customcolor_file( char *name)
 { 
   int sts;
 
+  if ( environment == glow_eEnv_Runtime && strcmp( color_theme, "$default") != 0)
+    return 0;
+
   if ( customcolors) {
     sts = customcolors->read_colorfile( this, name);
     if ( ODD(sts)) {
       set_background( background_color);
+    }
+
+    for ( int i = 0; i < a.a_size; i++) {
+      if ( a[i]->type() == glow_eObjectType_GrowWindow ||
+	   a[i]->type() == glow_eObjectType_GrowFolder) {
+	((GrowWindow *)a[i])->window_ctx->read_customcolor_file( name);
+      }
     }
     return sts;
   }

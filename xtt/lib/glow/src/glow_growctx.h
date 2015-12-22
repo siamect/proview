@@ -99,7 +99,7 @@ class GrowCtx : public GlowCtx {
         is_javaapplication(0), cycle(glow_eCycle_Slow),
         mb3_action(glow_eMB3Action_PopupMenu), scale_equal(0), translate_on(0),
         input_focus_mark(glow_eInputFocusMark_Relief), background_disabled(0),
-        redraw_callback(0), redraw_data(0), has_subwindows(-1), bitmap_fonts(0),
+        redraw_callback(0), redraw_data(0), has_subwindows(-1), is_subwindow(0), bitmap_fonts(0),
         environment(glow_eEnv_Runtime), text_coding(glow_eTextCoding_ISO8859_1), recursive_trace(0),
         edit_set_mode(glow_eEditSetMode_None)
 	{ ctx_type = glow_eCtxType_Grow;
@@ -964,6 +964,7 @@ class GrowCtx : public GlowCtx {
   void 		(*redraw_callback)( void *); //!< Backcall function before drawing (if ctx is window component).
   void 		*redraw_data;		//!< Data for redraw callback.
   int		has_subwindows;		//!< Graph contains subwindow objects (GrowWindow or GrowFolder)
+  int		is_subwindow;		//!< Is a subwindow context.
   char		owner[256];		//!< Owner, used by application
   int		bitmap_fonts;		//!< Use bitmap fonts
   glow_eEnv	environment;		//!< Environment Development or Runtime.

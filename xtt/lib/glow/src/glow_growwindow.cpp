@@ -298,10 +298,10 @@ void GrowWindow::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, vo
     window_ctx->mw.zoom_factor_y = window_ctx->mw.subwindow_scale * w->zoom_factor_y;
     // window_ctx->draw_buffer_only = ctx->draw_buffer_only;
 
+    ctx->gdraw->push_customcolors( window_ctx->customcolors);
     if ( fill)
       ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fill_drawtype);
 
-    ctx->gdraw->push_customcolors( window_ctx->customcolors);
     window_ctx->draw( &window_ctx->mw, ll_x, ll_y, ur_x, ur_y);
     ctx->gdraw->pop_customcolors();
   }
@@ -903,6 +903,7 @@ void GrowWindow::new_ctx()
 
   window_ctx = new GrowCtx( "WindowComponent", ctx->mw.zoom_factor_x * window_scale);
   window_ctx->gdraw = ctx->gdraw;
+  window_ctx->is_subwindow = 1;
   window_ctx->mw.window = ctx->mw.window;
   window_ctx->navw.window = ctx->navw.window;
   window_ctx->userdata_save_callback = ctx->userdata_save_callback;

@@ -2754,6 +2754,8 @@ extern "C" {
   */
   void grow_SetNodeClassExtern( grow_tNodeClass nodeclass, int ext);
 
+  void grow_SetNodeClassExternAll( grow_tCtx ctx, int ext);
+
   //! Get the limits configured in a background object for a slider.
   /*!
     \param ctx		Grow context.
@@ -3114,6 +3116,7 @@ extern "C" {
   glow_eDrawType grow_GetObjectBorderColor( grow_tObject o);
   glow_eDrawType grow_GetObjectTextColor( grow_tObject o);
   glow_eGradient grow_GetObjectGradient( grow_tObject o);
+  void grow_SetObjectGradient( grow_tObject o, glow_eGradient gradient);
   int grow_GetObjectShadow( grow_tObject o);
   void grow_SetObjectOriginalFillColor( grow_tObject o, glow_eDrawType color);
   void grow_SetObjectOriginalBorderColor( grow_tObject o, glow_eDrawType color);
@@ -3121,6 +3124,7 @@ extern "C" {
   void grow_SetObjectBackgroundColor( grow_tObject o, glow_eDrawType color);
   void grow_SetObjectOriginalBackgroundColor( grow_tObject o, glow_eDrawType color);
   void grow_ResetObjectBackgroundColor( grow_tObject object);
+  int grow_SetObjectClass( grow_tObject object, grow_tNodeClass nodeclass);
 
   
 /*@}*/
