@@ -273,6 +273,10 @@ static int ccm_func_get_node_name( void *filectx, ccm_sArg *arg_list, int arg_co
 	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
 static int ccm_func_get_language( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
 	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_odd( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_even( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
 
 #define CCM_SYSFUNC_MAX	100
 
@@ -304,6 +308,8 @@ static ccm_sSysFunc	ccm_sysfunc[CCM_SYSFUNC_MAX] = {
 		{"get_pwr_config",  &ccm_func_get_pwr_config},
 		{"get_node_name",  &ccm_func_get_node_name},
 		{"get_language",  &ccm_func_get_language},
+		{"ODD",  	&ccm_func_odd},
+		{"EVEN",  	&ccm_func_even},
 		{"", 		0}};
 
 /************* TEST *********************/
@@ -5191,6 +5197,46 @@ static int ccm_func_get_node_name(
   else
     strcpy( return_string, "");
   *return_decl = K_DECL_STRING;
+  return 1;
+}
+
+static int ccm_func_odd( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+  if ( arg_list->value_decl != K_DECL_INT)
+    return CCM__VARTYPE;
+
+  *return_int = (arg_list->value_int & 1);
+  *return_decl = K_DECL_INT;
+  return 1;
+}
+
+static int ccm_func_even( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+  if ( arg_list->value_decl != K_DECL_INT)
+    return CCM__VARTYPE;
+
+  *return_int = !(arg_list->value_int & 1);
+  *return_decl = K_DECL_INT;
   return 1;
 }
 
