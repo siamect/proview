@@ -691,11 +691,15 @@ menu ColorTheme
     subgraph 	ButtonSmallToggle 	pwr_exe:pwrct_buttonsmalltoggle.pwsg 	95
     subgraph 	ButtonSmallSet 		pwr_exe:pwrct_buttonsmallset.pwsg 	95
     subgraph 	ButtonSmallCommand 	pwr_exe:pwrct_buttonsmallcommand.pwsg 	95
+    subgraph 	ButtonArrow 		pwr_exe:pwrct_buttonarrow.pwsg 	        7
+    subgraph	CheckBox		pwr_exe:pwrct_checkbox.pwsg		88
+    subgraph	RadioButton		pwr_exe:pwrct_radiobutton.pwsg		89
   }
   menu Sliders
   {
     subgraph 	Slider4 		pwr_exe:pwrct_slider4.pwsg 		37
     subgraph 	SliderBackground1_3 	pwr_exe:pwrct_sliderbackground1_3.pwsg 	38
+    subgraph 	SliderBackground1_4 	pwr_exe:pwrct_sliderbackground1_4.pwsg 	38
   }
   menu Other
   {
