@@ -9965,8 +9965,11 @@ CloseGraph()		<LINK> closegraph()
 SetSubwindow()		<LINK> setsubwindow()
 GetIoDeviceData()	<LINK> getiodevicedata()
 SetIoDeviceData()	<LINK> setiodevicedata()
-pwr_get_config()	<LINK> pwr_get_config()
+GetVersion() 		<LINK> getversion()
+get_pwr_config()	<LINK> get_pwr_config()
 get_node_name()		<LINK> get_node_name()
+EVEN()			<LINK> EVEN()
+ODD()			<LINK> ODD()
 
 <h2>wtt-kommandon
 wtt-kommandon		<LINK> wtt-commands
@@ -11596,8 +11599,11 @@ CloseGraph()		<LINK> closegraph()
 SetSubwindow()		<LINK> setsubwindow()
 GetIoDeviceData()	<LINK> getiodevicedata()
 SetIoDeviceData()	<LINK> setiodevicedata()
-pwr_get_config()	<LINK> pwr_get_config()
+GetVersion()		<LINK> getversion()
+get_pwr_config()	<LINK> get_pwr_config()
 get_node_name()		<LINK> get_node_name()
+EVEN()			<LINK> EVEN()
+ODD()			<LINK> ODD()
 </TOPIC>
 
 <headerlevel>
@@ -12029,6 +12035,92 @@ string		<t>value	<t>Värde att sätta.
 <c>  sts = SetIoDeviceData( "Nodes-MyNode-PN-D1", "NetworkSettings-DeviceName", "ET200M-D1");
 
 </TOPIC>
+
+<TOPIC> getversion() <style> function
+GetVersion()
+
+int GetVersion()
+
+<b>Beskrivning
+
+Hämta Proview-versionen för aktuell utgåva.
+Returnerar ett heltalsvärde som är 10000 * major + 100 * minor + release.
+T ex V5.3.1 returnerar 50301.
+
+<b>Exempel
+
+<c>  if ( GetVersion() > 50300)
+<c>    # Only for versions larger than V5.3.0
+<c>    ...
+<c>  endif
+</TOPIC>
+
+<TOPIC> get_pwr_config() <style> function
+get_pwr_config()
+
+string get_pwr_config( string name)
+
+<b>Beskivning
+
+Hämta värdet för en Proview konfigureringsvariabel.
+Konfigureringsvariabler sätts i /etc/proview.cnf.
+Returnerar värdet på konfigureringsvariablen.
+
+<b>Exempel
+
+<c> group = get_pwr_config( "defaultSystemGroup");
+</TOPIC>
+
+<TOPIC> get_node_name() <style> function
+get_node_name()
+
+string get_node_name()
+
+<b>Beskrivning
+
+Hämta nodnamnet för aktuell nod.
+Returnerar nodnamnet.
+
+<b>Exempel
+
+<c>  name = get_node_name();
+</TOPIC>
+
+<TOPIC> EVEN() <style> function
+EVEN()
+
+int EVEN( int sts)
+
+<b>Beskrivning
+
+Testa om ett heltal är jämnt.
+Returnerar 1 om talet är jämnt, 0 om talet är udda.
+
+<b>Exempel
+
+<c>  sts = SetAttribute( "Pump-V1-Switch.Description", "Valve switch open");
+<c>  if ( EVEN(sts))
+<c>    printf("Couldn't set attribute\n");
+<c>  endif
+</TOPIC>
+
+<TOPIC> ODD() <style> function
+ODD()
+
+int ODD( int sts)
+
+<b>Description
+
+Testa om ett heltal är udda.
+Returnerar 1 om heltalet är udda, 0 om det är jämnt.
+
+<b>Exempel
+
+<c>  sts = SetAttribute( "Pump-V1-Switch.Description", "Valve switch open");
+<c>  if ( ODD(sts))
+<c>    printf("Set operation successful\n");
+<c>  endif
+</TOPIC>
 </headerlevel>
 
 <TOPIC> wtt-commands <style> function
@@ -12036,7 +12128,7 @@ Wtt kommandon
 
 Alla wtt kommandon finns tillgängliga i script koden. En wtt-kommando rad
 ska INTE avslutas med semikolon. Variabler kan substitueras i kommandot
-genom add omges av apostrofer.
+genom att omges av apostrofer.
 
 <b>Exempel
  

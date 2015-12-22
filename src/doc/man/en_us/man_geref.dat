@@ -2412,6 +2412,7 @@ working area. If you first activate Functions/ScaleEqual a square is drawn.
 - Linewidth
 - 3D
 - Gradient
+- Backgroundcolor
 
 <h2>Attributes
 <b>Attribute      <t>Description
@@ -2421,6 +2422,8 @@ gradient_contrast <t>Contrast of the gradient. A value in the range 0 - 10.
 gradient      <t>Type of gradient.
 invisible     <t>The object is invisible but sensitive for mouseclicks. This is used in a
               <t>subgraph to increase the area of sensitivity for the subgraph.
+fill_eq_background <t>Indicates that the fill color is drawn with the specified background color 
+              <t>for the object, instead of the current fill color.
 fixcolor      <t>The color is fix. This is used when the object is a part of a subgraph and
               <t>should not be affected by color setting of the subgraph.
 relief        <t>Up gives a shadow on the lower side, and Down gives a shadow on the upper side.
@@ -2430,6 +2433,7 @@ disable_shadow <t>Disables the 3D function. This is used when the object is a pa
 disable_gradient <t>Disables the gradient function. This is used when the object is a part of a
               <t>subgraph and the object should not be drawn with gradient although gradient is
               <t>specified for the subgraph.
+bgcolor_gradient <t>The color of the gradient goes from the background color to the fill color.
 fixposition   <t>The object can not be moved.
 Dynamic       <t>Not implemented.
 </topic>
@@ -2485,6 +2489,7 @@ Functions/ScaleEqual a circle is drawn.
 - Linewidth
 - 3D
 - Gradient
+- Backgroundcolor
 
 <h2>Attributes
 <b>Attribute      <t>Description
@@ -2504,6 +2509,8 @@ disable_gradient <t>Disables the gradient function. This is used when the object
               <t>subgraph and the object should not be drawn with gradient although gradient is
               <t>specified for the subgraph.
 fixposition   <t>The object can not be moved.
+fill_eq_background <t>Indicates that the fill color is drawn with the specified background color 
+              <t>for the object, instead of the current fill color.
 Dynamic       <t>Not implemented.
 </topic>
 
@@ -2551,6 +2558,7 @@ disabled when drawing a polyline with 'Functions/MoveRestrictions/No'.
 - Linewidth
 - 3D
 - Gradient
+- Backgroundcolor
 
 <h2>Attributes
 <b>Attribute      <t>Description
@@ -2568,10 +2576,16 @@ disable_gradient <t>Disables the gradient function. Is used when the object is a
 fill_eq_border <t>Indicates that the fill color is drawn with the specified border color instead
               <t>of the current fill color. This is used for subgraphs where certain elements,
               <t>e.g. arrows, have more in common with the border color than the fill color.
+fill_eq_background <t>Indicates that the fill color is drawn with the specified background color 
+              <t>for the object, instead of the current fill color.
 fill_eq_light <t>If the object is a part of a subgraph, it will have the light 3D-color,
               <t>when 3D is chosen for the subgraph.
 fill_eq_shadow <t>If the object is a part of a subgraph, it will have the same color as a 3D 
               <t>shadow, when 3D is chosen for the subgraph.
+fill_eq_bglight <t>If the object is a part of a subgraph, it is drawn the light 3D-tone of
+              <t>the background color when 3D is chosen for the subgraph.
+fill_eq_bgshadow <t>If the object is a part of a subgraph, it drawn with the dark 3D-tone of
+              <t>the background color, when 3D is chosen for the subgraph.
 fixcolor      <t>The color is fix. This is used when the object is a part of a subgraph and
               <t>should not be affected by color setting of the subgraph.
 fixposition   <t>The object can not be moved.
@@ -5887,13 +5901,51 @@ In Wtt script there is a description of the script language and a description of
 functions. Here follows a list of build in functions that also can be used in Ge script.
 
 <h2>Ge functions
-<b>Function <t>Description
-GetCurrentObject <t>Returns the identity of the last created object.<link>GetCurrentObject()
-GetTextExtent <t>Calculate the extent of a text. <link>GetTextExtent()
-SelectAdd <t>Add an object to select list. <link>SelectAdd()
-SetDraw	  <t>Set drawing on or off. <link>SetDraw()
-SetExtern <t>Set subgraph extern. <link>SetExtern()
-SetIntern <t>Set subgraph intern. <link>SetIntern()
+<b>Function <t><t>Description
+DeleteObject <t><t>Delete an object.<link>DeleteObject()
+GetCurrentObject <t><t>Returns the identity of the last created object.<link>GetCurrentObject()
+GetFirstObject <t><t>Get the first object. <link>GetFirstObject()
+GetNextObject <t><t>Get the next object. <link>GetNextObject()
+GetObjectAttribute <t><t>Get an attribute value of an object. <link>GetObjectAttribute()
+GetObjectBorder <t><t>Get object border. <link>GetObjectBorder()
+GetObjectBorderColor <t><t>Get the border color of an object. <link>GetObjectBorderColor()
+GetObjectClass <t><t>Get object class. <link>GetObjectClass()
+GetObjectDynType <t><t>Get dynamic and action type of an object. <link>GetObjectDynType()
+GetObjectFill <t><t>Get object fill. <link>GetObjectFill()
+GetObjectFillColor <t><t>Get fill color of an object. <link>GetObjectFillColor()
+GetObjectGradient <t><t>Get gradient of an object. <link>GetObjectGradient()
+GetObjectName <t><t>Get object name. <link>GetObjectName()
+GetObjectShadow <t><t>Get shadow of an object. <link>GetObjectShadow()
+GetObjectText <t><t>Get object text. <link>GetObjectText()
+GetObjectTextColor <t><t>Get text color of an object. <link>GetObjectTextColor()
+GetObjectType <t><t>Get object type. <link>GetObjectType()
+GetRgbColor <t><t>Get rgb values of a color. <link>GetRgbColor()
+GetTextExtent <t><t>Calculate the extent of a text. <link>GetTextExtent()
+GroupGetFirstObject <t><t>Get first object in a group. <link>GroupGetFirstObject()
+GroupGetNextObject <t><t>Get next object in a group. <link>GroupGetNextObject()
+MeasureObject <t><t>Get object extent. <link>MeasureObject()
+MoveAbsObject <t><t>Move an object to a position. <link>MoveAbsObject()
+MoveObject <t><t>Move an object a distance. <link>MoveObject()
+Reload <t><t>Read current graph from file. <link>Reload()
+ScaleObject <t><t>Scale an object. <link>ScaleObject()
+SelectAdd <t><t>Add an object to select list. <link>SelectAdd()
+SetCurrentObject <t><t>Set CurrentObject. <link>SetCurrentObject()
+SetDraw	  <t><t>Set drawing on or off. <link>SetDraw()
+SetExtern <t><t>Set subgraph extern. <link>SetExtern()
+SetExternAll <t><t>Set all subgraphs extern. <link>SetExternAll()
+SetIntern <t><t>Set subgraph intern. <link>SetIntern()
+SetInternAll <t><t>Set all subgraph intern. <link>SetInternAll()
+SetObjectAttribute <t><t>Set an attribute value of an object. <link>SetObjectAttribute()
+SetObjectBackgroundColor <t><t>Set background color of an object. <link>SetObjectBackgroundColor()
+SetObjectBorder <t><t>Set object border. <link>SetObjectBorder()
+SetObjectBorderColor <t><t>Set border color of an object. <link>SetObjectBorderColor()
+SetObjectClass <t><t>Replace the subgraph of an object. <link>SetObjectClass()
+SetObjectFill <t><t>Set object fill. <link>SetObjectFill()
+SetObjectFillColor <t><t>Set fill color of an object. <link>SetObjectFillColor()
+SetObjectGradient <t><t>Set gradient of an object. <link>SetObjectGradient()
+SetObjectShadow <t><t>Set object shadow. <link>SetObjectShadow()
+SetObjectTextColor <t><t>Set text color of an object. <link>SetObjectTextColor()
+SetRgbColor <t><t>Set rgb values of a color. <link>SetRgbColor()
 
 <h2>Input and output
 <b>Function <t>Description
@@ -5945,6 +5997,558 @@ time <t>Fetch the system time.
 system <t>Execute a shell command.
 verify <t>Set verify on or off.
 
+<option> printdisable
+<h2>Predefined variables
+There are a number of predefined varlables for
+
+Object types <link> gecmd_variables,objecttypes
+Dynamic and action types <link> gecmd_variables,dyntypes
+Colors <link> gecmd_variables,colors
+<option> printenable
+
+</topic>
+
+<topic> gecmd_variables
+Predefined variables
+
+<h2>Object types <bookmark> objecttypes
+eObjectType_Rect
+eObjectType_Line
+eObjectType_Arc
+eObjectType_ConPoint
+eObjectType_Annot
+eObjectType_PolyLine
+eObjectType_SubGraph
+eObjectType_Text
+eObjectType_Bar
+eObjectType_Trend
+eObjectType_Slider
+eObjectType_Image
+eObjectType_Group
+eObjectType_Axis
+eObjectType_RectRounded
+eObjectType_ConGlue
+eObjectType_Menu
+eObjectType_Window
+eObjectType_Table
+eObjectType_Folder
+eObjectType_XYCurve
+eObjectType_AxisArc
+eObjectType_Pie
+eObjectType_BarChart
+eObjectType_Toolbar
+
+<h2>Dynamic and action types <bookmark> dyntypes
+<b>DynType1
+mDynType1_No
+mDynType1_Inherit
+mDynType1_Tone
+mDynType1_DigLowColor
+mDynType1_DigColor
+mDynType1_DigError
+mDynType1_DigWarning
+mDynType1_DigFlash
+mDynType1_Invisible
+mDynType1_DigBorder
+mDynType1_DigText
+mDynType1_Value
+mDynType1_AnalogColor
+mDynType1_Rotate
+mDynType1_Move
+mDynType1_AnalogShift
+mDynType1_DigShift
+mDynType1_Animation
+mDynType1_Bar
+mDynType1_Trend
+mDynType1_SliderBackground
+mDynType1_Video
+mDynType1_FillLevel
+mDynType1_FastCurve
+mDynType1_AnalogText
+mDynType1_Table
+mDynType1_StatusColor
+mDynType1_HostObject
+mDynType1_DigSound
+mDynType1_XY_Curve
+mDynType1_DigCommand
+mDynType1_Pie
+mDynType1_BarChart
+
+<b>DynType2
+mDynType2_No
+mDynType2_Axis
+mDynType2_DigTextColor
+mDynType2_TimeoutColor
+mDynType2_DigFourShift
+mDynType2_ScrollingText
+mDynType2_ColorThemeLightness
+mDynType2_DigBackgroundColor
+
+<b>ActionType1
+mActionType1_No
+mActionType1_Inherit
+mActionType1_PopupMenu
+mActionType1_SetDig
+mActionType1_ResetDig
+mActionType1_ToggleDig
+mActionType1_StoDig
+mActionType1_Command
+mActionType1_CommandDoubleClick
+mActionType1_Confirm
+mActionType1_IncrAnalog
+mActionType1_RadioButton
+mActionType1_Slider
+mActionType1_ValueInput
+mActionType1_TipText
+mActionType1_Help
+mActionType1_OpenGraph
+mActionType1_OpenURL
+mActionType1_InputFocus
+mActionType1_CloseGraph
+mActionType1_PulldownMenu
+mActionType1_OptionMenu
+mActionType1_SetValue
+mActionType1_MethodToolbar
+mActionType1_MethodPulldownMenu
+mActionType1_Script
+
+<h2>Colors <bookmark> colors
+<b>Standard palette
+eDrawType_Color1 = 0
+eDrawType_Color2 = 1
+eDrawType_Color3 = 2
+...
+eDrawType_Color300 = 299
+
+<b>Custom palette
+eDrawType_CustomColor1 = 310
+eDrawType_CustomColor2 = 314
+eDrawType_CustomColor3 = 318
+...
+eDrawType_CustomColor90 = 666
+
+</topic>
+
+<topic>DeleteObject() <style>function
+DeleteObject()
+void GetObjectAttribute( int oid)
+
+<h2>Description
+Delete an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+
+<b>Example
+<c> int oid;
+ 
+<c> DeleteObject( oid);
+</topic>
+
+<topic>MeasureObject() <style>function
+MeasureObject()
+void MeasureObject( int oid, float ll_x, float ll_y, float ur_x, float ur_y)
+
+<h2>Description
+Get the extention of an object.
+Returns the x and y coordinates for lower left and upper right limits.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+float <t>ll_x  <t>Returned x coordinate for lower left.
+float <t>ll_y  <t>Returned y coordinate for lower left.
+float <t>ur_x  <t>Returned x coordinate for upper right.
+float <t>ur_y  <t>Returned y coordinate for upper right.
+
+<b>Example
+<c> int oid;
+<c> float ll_x;
+<c> float ll_y;
+<c> float ur_x;
+<c> float ur_y;
+ 
+<c> MeasureObject( oid, ll_x, ll_y, ur_x, ur_y);
+</topic>
+
+<topic>GetFirstObject() <style>function
+GetFirstObject()
+int GetFirstObject()
+
+<h2>Description
+Fetches the identity for the first object in a graph. Other objects
+can be fetched with GetNextObject().
+
+Returns an integer with the object identity.
+
+<b>Example
+<c> int oid;
+ 
+<c> oid = GetFirstObject();
+<c> while ( oid != 0)
+<c>   ...
+<c>   oid = GetNextObject( oid)
+<c> endwhile
+</topic>
+
+<topic>GetNextObject() <style>function
+GetNextObject()
+int GetNextObject( int oid)
+
+<h2>Description
+Fetches the identity for the next object in a graph. The first object
+is fetched with GetFirstObject() and the other with GetNextObject().
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+
+Returns an integer with the object identity.
+
+<b>Example
+<c> int oid;
+ 
+<c> oid = GetFirstObject();
+<c> while ( oid != 0)
+<c>   ...
+<c>   oid = GetNextObject( oid)
+<c> endwhile
+</topic>
+
+<topic>GetObjectAttribute() <style>function
+GetObjectAttribute()
+int GetObjectAttribute( int oid, string attribute, (arbitrary type) value)
+
+<h2>Description
+Returns the value of an attribute of en object. The attribute name is the same
+as in the object editor for the object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+string <t>attribut <t>Attribute name.
+(arbitrary type) <t>Fetched attribute value
+
+Returns the status of the operation.
+
+<b>Example
+<c> int sts;
+<c> int oid;
+<c> int color;
+ 
+<c> sts = GetObjectAttribute( oid, "DigColor.Color", color);
+<c> if ( !(sts & 1))
+<c>   printf( "Couldn't get color\n");
+<c> endif
+</topic>
+
+<topic>GetObjectBorder() <style>function
+GetObjectBorder()
+int GetObjectBorder( int oid)
+
+<h2>Description
+Get the border property of an object.
+
+Returns the border value, 0 or 1.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+
+<b>Example
+<c> int oid;
+<c> int border;
+ 
+<c> border = GetObjectBorder( oid);
+</topic>
+
+<topic>GetObjectBorderColor() <style>function
+GetObjectBorderColor()
+int GetObjectBorderColor( int oid)
+
+<h2>Description
+Get the border color of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+
+Returns the border color.
+
+<b>Example
+<c> int oid;
+<c> int bcolor;
+ 
+<c> bcolor = GetObjectBorderColor( oid);
+<c> if ( bcolor == eDrawType_Color33)
+<c>   SetObjectBorderColor( oid, eDrawType_CustomColor24);
+<c> endif
+</topic>
+
+<topic>GetObjectClass() <style>function
+GetObjectClass()
+string GetObjectClass( int oid)
+
+<h2>Description
+Get the name of the subgraph of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+
+Returns the name.
+
+<b>Example
+<c> int oid;
+<c> string class;
+ 
+<c> class = GetObjectClass( oid);
+<c> if ( class == "pwr_roundind")
+<c>   ...
+<c> endif
+</topic>
+
+<topic>GetObjectDynType() <style>function
+GetObjectDynType()
+int GetObjectDynType( int oid, int dyntype1, int dyntype2, int actiontype1, int actiontype2)
+
+<h2>Description
+Get the dynamic type and action type of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+int <t>dyntype1 <t>Returns the value of DynType1.
+int <t>dyntype2 <t>Returns the value of DynType2.
+int <t>actiontype1 <t>Returns the value of ActionType1.
+int <t>actiontype2 <t>Returns the value of ActionType2.
+
+Returns status of the operation.
+
+See Predefined variables for dyntype and actiontype values. <link> gecmd_variables,dyntypes
+
+<b>Example
+<c> int sts;
+<c> int oid;
+<c> int dyntype1;
+<c> int dyntype2;
+<c> int actiontype1;
+<c> int actiontype2;
+ 
+<c> sts = GetObjectDynType( oid, dyntype1, dyntype2, actiontype1, actiontype2);
+<c> if ( dyntype1 & mDynType1_Value)
+<c>   ...
+<c> endif
+</topic>
+
+<topic>GetObjectFill() <style>function
+GetObjectFill()
+int GetObjectFill( int oid)
+
+<h2>Description
+Get the fill property of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identiry.
+
+Returns the fill value, 0 or 1.
+
+<b>Example
+<c> int oid;
+<c> int fill;
+ 
+<c> fill = GetObjectFill( oid);
+</topic>
+
+<topic>GetObjectFillColor() <style>function
+GetObjectFillColor()
+int GetObjectFillColor( int oid)
+
+<h2>Description
+Get the fill color of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+
+Returns the fill color.
+
+<b>Example
+<c> int oid;
+<c> int fcolor;
+ 
+<c> fcolor = GetObjectFillColor( oid);
+<c> if ( fcolor == eDrawType_Color67)
+<c>   SetObjectFillColor( oid, eDrawType_CustomColor23);
+<c> endif
+</topic>
+
+<topic>GetObjectGradient() <style>function
+GetObjectGradient()
+int GetObjectGradient( int oid)
+
+<h2>Description
+Get the gradient of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+
+Returns the gradient value, ie the type of gradient. Value 0 
+means no gradient.
+
+<b>Example
+<c> int oid;
+<c> int grad;
+ 
+<c> grad = GetObjectGradient( oid);
+</topic>
+
+<topic>GetObjectName() <style>function
+GetObjectName()
+string GetObjectName( int oid)
+
+<h2>Description
+Get the object name.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+
+Returns the name.
+
+<b>Example
+<c> int oid;
+<c> string oname;
+ 
+<c> oname = GetObjectName( oid);
+</topic>
+
+<topic>GetObjectShadow() <style>function
+GetObjectShadow()
+int GetObjectShadow( int oid)
+
+<h2>Description
+Get the shadow property of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+
+Returns the shadow, 0 or 1.
+
+<b>Example
+<c> int oid;
+<c> int shadow;
+ 
+<c> shadow = GetObjectShadow( oid);
+</topic>
+
+<topic>GetObjectText() <style>function
+GetObjectText()
+string GetObjectText( int oid)
+
+<h2>Description
+Fetches the text of a text object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+
+Returns the text.
+
+<b>Example
+<c> int oid;
+<c> string text;
+ 
+<c> text = GetObjectText( oid);
+</topic>
+
+<topic>GetObjectTextColor() <style>function
+GetObjectTextColor()
+int GetObjectTextColor( int oid)
+
+<h2>Description
+Get the text color of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+
+Returns the text color.
+
+<b>Example
+<c> int oid;
+<c> int tcolor;
+ 
+<c> tcolor = GetObjectTextColor( oid);
+<c> if ( tcolor == eDrawType_Color49)
+<c>   SetObjectTextColor( oid, eDrawType_CustomColor5);
+<c> endif
+</topic>
+
+<topic>GetObjectType() <style>function
+GetObjectType()
+int GetObjectType( int oid)
+
+<h2>Description
+Get the type of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+
+Returns the object type. 
+See Predefined variables for object type values.<link> gecmd_variables,objecttypes
+
+<b>Example
+<c> int oid;
+<c> int type;
+ 
+<c> type = GetObjectType( oid);
+<c> if ( type == eObjectType_SubGraph)
+<c>   SetObjectFillColor( oid, eDrawType_CustomColor22);
+<c> endif
+</topic>
+
+<topic>GetRgbColor() <style>function
+void GetRgbColor()
+void GetRgbColor( int color, float red, float green, float blue)
+
+<h2>Description
+Fetches rgb values for a color. The color is stated with color index of with color
+symbol, see below. The rgb valus are float values in the range 0 - 1.
+
+<h2>Argument
+
+int <t>color     <t>Color.
+float <t>red     <t>Returns the red value.
+float <t>green   <t>Returns the green value.
+float <t>red     <t>Returns the blue value.
+
+The colors of the standard palette are defined with eDrawType_Color1 - eDrawType_Color300, 
+and the colors of the custom palette with eDrawType_CustomColor1 - eDrawType_CustomColor90.
+
+The corresponding color indexes can also be used, for the standard palette 0 - 299, and
+for the custom palette 310 to 669. For the custom palette the base colors are positioned
+on every fourth index, ie 310, 314, 318, ... 666.
+
+<b>Example
+<c> int i;
+<c> float r;
+<c> float g;
+<c> float b;
+ 
+<c> printf( "Idx  Red   Green Blue\n");
+<c> for ( i = eDrawType_CustomColor1; i <= eDrawType_CustomColor90; i += 4)
+<c>   GetRgbColor( i, r, g, b);
+
+<c>   printf( "%3d  %5.3f %5.3f %5.3f\n", i, r, g, b);
+<c> endfor
+
+<c> GetRgbColor( eDrawType_CustomColor1, red, green, blue);
 </topic>
 
 <topic>GetTextExtent() <style>function
@@ -5971,6 +6575,73 @@ float  <t>descent  <t>The descent is returned in this variable.
 <c> float width;
  
 <c> GetTextExtent("Detta är en text", 12, 1, width);
+</topic>
+
+
+<topic>GroupGetFirstObject() <style>function
+GroupGetFirstObject()
+int GroupGetFirstObject( int group)
+
+<h2>Description
+Get the first object in a group. Other objects can be fetched with 
+GroupGetNextObject().
+
+<h2>Argument
+
+int  <t>group <t>Group identity.
+
+Returns in integer with the object identity.
+
+<b>Example
+<c> int goid;
+<c> int oid;
+ 
+<c> # Get all objects
+<c> goid = GetFirstObject();
+<c> while ( goid != 0)
+<c>   type = GetObjectType( goid);
+<c>   if ( type == eObjectType_Group)	
+<c>     # This is a group, get all objects in the group
+<c>     oid = GroupGetFirstObject( goid);
+<c>     while ( oid != 0)
+<c>       ...
+<c>       oid = GroupGetNextObject( goid, oid)
+<c>   endwhile
+<c> endwhile
+</topic>
+
+<topic>GroupGetNextObject() <style>function
+GroupGetNextObject()
+int GroupGetNextObject( int group, int oid)
+
+<h2>Description
+
+Get the next object in a group, The first object is fetched with 
+GroupGetFirstObject() and the other objects with GroupGetNextObject().
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+
+Returns an integer with the object identity.
+
+</topic>
+
+<topic>Reload() <style>function
+Reload()
+void Reload()
+
+<h2>Description
+
+Reads the current graph from file.
+
+<b>Example
+<c> # Update subgraph pwr_roundind
+<c> SetExtern("pwr_roundind");
+<c> save
+<c> Reload();
+<c> SetIntern("pwr_roundind");
+<c> save
 </topic>
 
 <topic>SelectAdd() <style>function
@@ -6004,6 +6675,80 @@ Returns the identity of the last created object.
 <c> int id;
  
 <c> id = GetCurrentObject();
+</topic>
+
+<topic>MoveAbsObject() <style>function
+MoveAbsObject()
+void MoveAbsObject( int oid, float x, float y)
+
+<h2>Description
+
+Move an object to coordinates x and y.
+
+<h2>Argument
+
+int <t>oid <t>Object identity.
+float <t>x <t>x coordinate.
+float <t>y <t>y coordinate.
+
+<b>Example
+
+<c> MoveAbsObject( oid, 0.5, o.5);
+</topic>
+
+<topic>MoveObject() <style>function
+MoveObject()
+void MoveObject( int oid, float dx, float dy)
+
+<h2>Description
+
+Move an object a distance.
+
+<h2>Argument
+
+int <t>oid <t>Object identity.
+float <t>dx <t>Distance to move in x direction.
+float <t>dy <t>Distance to move in y direction.
+
+<b>Example
+
+<c> MoveObject( oid, 0.5, 0.5);
+</topic>
+
+<topic>ScaleObject() <style>function
+ScaleObject()
+void ScaleObject( int oid, float scalex, float scaley)
+
+<h2>Description
+
+Scale an object.
+
+<h2>Argument
+
+int <t>oid <t>Object identity.
+float <t>scalex <t>Scale factor in x direction.
+float <t>scaley <t>Scale factor in y direction.
+
+<b>Example
+
+<c> ScaleObject( oid, 1.5, 1.5);
+</topic>
+
+<topic>SetCurrentObject() <style>function
+SetCurrentObject()
+void SetCurrentObject( int oid)
+
+<h2>Description
+
+Set CurrentObject.
+
+<h2>Argument
+
+int <t>oid <t>Object identity.
+
+<b>Example
+
+<c> SetCurrentObject( oid);
 </topic>
 
 <topic>SetDraw() <style>function
@@ -6053,6 +6798,19 @@ string      <t>name       <t>Name of the subgraph.
 <c> SetExtern("MySubgraph");
 </topic>
 
+<topic>SetExternAll() <style>function
+SetExternAll()
+void SetExternAll()
+
+<h2>Description
+
+Set all subgraphs extern.
+
+<b>Example
+ 
+<c> SetExternAll();
+</topic>
+
 <topic>SetIntern() <style>function
 SetIntern()
 int SetIntern( string name)
@@ -6068,6 +6826,232 @@ string    <t>name       <t>Name of the subgraph.
 <b>Example
  
 <c> SetIntern("MySubgraph");
+</topic>
+
+<topic>SetInternAll() <style>function
+SetInternAll()
+void SetInternAll( string name)
+
+<h2>Description
+
+Set all subgraphs intern.
+
+<b>Example
+ 
+<c> SetInternAll();
+</topic>
+
+<topic>SetObjectAttribute() <style>function
+SetObjectAttribute()
+int SetObjectAttribute( int oid, string attribute, (arbitrary type) value)
+
+<h2>Description
+Set the value of an attribute in an object. The attribute name is the
+same as in the object editor for the object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+string <t>attribut <t>Attribute name.
+(arbitrary type) <t>Attribute value.
+
+Returns the status of the operation.
+
+<b>Example
+<c> int sts;
+<c> int oid;
+ 
+<c> sts = SetObjectAttribute( oid, "DigColor.Color", eDrawType_Color244);
+</topic>
+
+<topic>SetObjectBackgroundColor() <style>function
+SetObjectBackgroundColor()
+void SetObjectBackgroundColor( int oid, int color)
+
+<h2>Description
+Set the background color of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+int <t>color   <t>Background color.
+
+<b>Example
+ 
+<c> SetObjectBackgroundColor( oid, eDrawType_CustomColor1);
+</topic>
+
+<topic>SetObjectBorder() <style>function
+SetObjectBorder()
+void SetObjectBorder( int oid, int border)
+
+<h2>Description
+Set the border property of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+int <t>border  <t>border property. 1 will display the border, 0 will not.
+
+<b>Example
+ 
+<c> SetObjectBorder( oid, 1);
+</topic>
+
+<topic>SetObjectBorderColor() <style>function
+SetObjectBorderColor()
+void SetObjectBorderColor( int oid, int color)
+
+<h2>Description
+Set the border color of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+int <t>color   <t>Border color.
+
+<b>Example
+ 
+<c> SetObjectBorderColor( oid, eDrawType_CustomColor1);
+</topic>
+
+<topic>SetObjectClass() <style>function
+SetObjectClass()
+void SetObjectClass( int oid, string subgraph)
+
+<h2>Description
+Replace the subgraph of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+string <t>subgraph    <t>The name of the new subgraph.
+
+<b>Example
+ 
+<c> int oid;
+<c> string class;
+
+<c> class = GetObjectClass( oid)
+<c> if ( class == "pwr_indsquare")
+<c>   SetObjectClass( oid, "pwr_indround");
+<c> endif
+</topic>
+
+<topic>SetObjectFill() <style>function
+SetObjectFill()
+void SetObjectFill( int oid, int fill)
+
+<h2>Description
+Set the fill property of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+int <t>fill    <t>Fill property. 1 will draw with fill, 0 will not.
+
+<b>Example
+ 
+<c> SetObjectFill( oid, 1);
+</topic>
+
+<topic>SetObjectFillColor() <style>function
+SetObjectFillColor()
+void SetObjectFillColor( int oid, int color)
+
+<h2>Description
+Set the fill color of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+int <t>color   <t>Fill color.
+
+<b>Example
+ 
+<c> SetObjectFillColor( oid, eDrawType_CustomColor1);
+</topic>
+
+<topic>SetObjectGradient() <style>function
+SetObjectGradient()
+void SetObjectGradient( int oid, int gradient)
+
+<h2>Description
+Set the gradient property of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+int <t>gradient <t>Gradient property. 0 means no gradient.
+
+<b>Example
+ 
+<c> SetObjectGradient( oid, 0);
+</topic>
+
+<topic>SetObjectShadow() <style>function
+SetObjectShadow()
+void SetObjectShadow( int oid, int shadow)
+
+<h2>Description
+Set the shadow property of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+int <t>shadow  <t>Shadow property, 1 will draw the object with shadow, 0 will not.
+
+<b>Example
+ 
+<c> SetObjectShadow( oid, 1);
+</topic>
+
+<topic>SetObjectTextColor() <style>function
+SetObjectTextColor()
+void SetObjectTextColor( int oid, int color)
+
+<h2>Description
+Set the text color of an object.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+int <t>color   <t>Text color.
+
+<b>Example
+ 
+<c> SetObjectTextColor( oid, eDrawType_CustomColor5);
+</topic>
+
+
+<topic>SetRgbColor() <style>function
+void SetRgbColor()
+void SetRgbColor( int color, float red, float green, float blue)
+
+<h2>Description
+Set rgb values for a color in the custom palette. The color is stated with color index of 
+with color symbol, see below. The rgb valus are float values in the range 0 - 1.
+
+<h2>Argument
+
+int <t>color     <t>Color.
+float <t>red     <t>Red value.
+float <t>green   <t>Green value.
+float <t>red     <t>Blue value.
+
+The colors of the standard palette are defined with eDrawType_Color1 - eDrawType_Color300, 
+and the colors of the custom palette with eDrawType_CustomColor1 - eDrawType_CustomColor90.
+
+The corresponding color indexes can also be used, for the standard palette 0 - 299, and
+for the custom palette 310 to 669. For the custom palette the base colors are positioned
+on every fourth index, ie 310, 314, 318, ... 666.
+
+<b>Example
+<c> float red = 0.731;
+<c> float green = 0.224;
+<c> float blue = 0.328;
+
+<c> SetRgbColor( eDrawType_CustomColor1, red, green, blue);
 </topic>
 
 <topic>gecmd_examples <style>function

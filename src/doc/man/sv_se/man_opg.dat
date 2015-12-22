@@ -2574,8 +2574,10 @@ MessageError()		<LINK> messageerror()
 MessageInfo()		<LINK> messageinfo()
 GetCurrentText()	<LINK> getcurrenttext()
 GetCurrentObject()	<LINK> getcurrentobject()
-pwr_get_config()	<LINK> pwr_get_config()
+get_pwr_config()	<LINK> get_pwr_config()
 get_node_name()		<LINK> get_node_name()
+EVEN()			<LINK> EVEN()
+ODD()			<LINK> ODD()
 get_language()		<LINK> get_language()
 GetUser()		<LINK> getuser()
 GetPrivileges()		<LINK> getprivileges()
@@ -3784,8 +3786,10 @@ MessageError()	<t>Skriv ett felmeddelande. <LINK> messageerror()
 MessageInfo()	<t>Skriv ett informationsmeddelande. <LINK> messageinfo()
 GetCurrentText() <t>Hämta text för utvalt alternativ.	<LINK> getcurrenttext()
 GetCurrentObject() <t>Hämta utvalt objekt.	<LINK> getcurrentobject()
-pwr_get_config() <t>Hämta konfigurations-värden <LINK> pwr_get_config()
+get_pwr_config() <t>Hämta konfigurations-värden <LINK> get_pwr_config()
 get_node_name() <t>Hämta nodnamn <LINK> get_node_name()
+EVEN()		<t>Testa om ett värde är jämnt. <LINK> EVEN()
+ODD()		<t>Testa om ett värde är udda.	<LINK> ODD()
 get_language()	<t>Hämta nuvarande språk <LINK> get_language()
 GetUser() 	<t>Hämta nuvarande användare. <LINK> getuser()
 GetPrivileges()	<t>Hämta privilegier för nuvarande användare. <LINK> getprivileges()
@@ -3902,6 +3906,74 @@ returneras en null-sträng.
 <c>  string object;
 
 <c>  object = GetCurrentObject();
+</TOPIC>
+
+<TOPIC> get_pwr_config() <style> function
+get_pwr_config()
+
+string get_pwr_config( string name)
+
+<b>Beskivning
+
+Hämta värdet för en Proview konfigureringsvariabel.
+Konfigureringsvariabler sätts i /etc/proview.cnf.
+Returnerar värdet på konfigureringsvariablen.
+
+<b>Exempel
+<c> string id;
+<c>
+<c> id = get_pwr_config( "qcomBusId");
+</TOPIC>
+
+<TOPIC> get_node_name() <style> function
+get_node_name()
+
+string get_node_name()
+
+<b>Beskrivning
+
+Hämta nodnamnet för aktuell nod.
+Returnerar nodnamnet.
+
+<b>Exempel
+
+<c>  name = get_node_name();
+</TOPIC>
+
+<TOPIC> EVEN() <style> function
+EVEN()
+
+int EVEN( int sts)
+
+<b>Beskrivning
+
+Testa om ett heltal är jämnt.
+Returnerar 1 om talet är jämnt, 0 om talet är udda.
+
+<b>Exempel
+
+<c>  sts = SetAttribute( "Pump-V1-Switch.Description", "Valve switch open");
+<c>  if ( EVEN(sts))
+<c>    printf("Couldn't set attribute\n");
+<c>  endif
+</TOPIC>
+
+<TOPIC> ODD() <style> function
+ODD()
+
+int ODD( int sts)
+
+<b>Description
+
+Testa om ett heltal är udda.
+Returnerar 1 om heltalet är udda, 0 om det är jämnt.
+
+<b>Exempel
+
+<c>  sts = SetAttribute( "Pump-V1-Switch.Description", "Valve switch open");
+<c>  if ( ODD(sts))
+<c>    printf("Set operation successful\n");
+<c>  endif
 </TOPIC>
 
 <TOPIC> get_language() <style> function

@@ -10100,8 +10100,10 @@ SetSubwindow()		<LINK> setsubwindow()
 GetIoDeviceData()	<LINK> getiodevicedata()
 SetIoDeviceData()	<LINK> setiodevicedata()
 GetVersion()		<LINK> getversion()
-pwr_get_config()	<LINK> pwr_get_config()
+get_pwr_config()	<LINK> get_pwr_config()
 get_node_name()		<LINK> get_node_name()
+EVEN()			<LINK> EVEN()
+ODD()			<LINK> ODD()
 
 <h2>wtt-commands
 wtt-commands		<LINK> wtt-commands
@@ -11688,7 +11690,7 @@ string          <t>connectobject   <t>Name of object or attribute to connect to.
 SetPlcObjectAttr()
 
 int SetPlcObjectAttr( string attribute, (arbitrary type) value)
-xxx
+
 <b>Description
 
 Set a value in a plc object.
@@ -11738,8 +11740,10 @@ SetSubwindow()	<t>Open a graph in a window object. <LINK> setsubwindow()
 GetIoDeviceData() <t>Get data from IO configuration. <LINK> getiodevicedata()
 SetIoDeviceData() <t>Set data in IO configuration. <LINK> setiodevicedata()
 GetVersion() <t>Get Proview version. <LINK> getversion()
-pwr_get_config() <t>Get configuration values. <LINK> pwr_get_config()
+get_pwr_config() <t>Get configuration values. <LINK> get_pwr_config()
 get_node_name()	<t>Get node name. <LINK> get_node_name()
+EVEN()		<t>Check if value is even. <LINK> EVEN()
+ODD()		<t>Check if value is odd. <LINK> ODD()
 </TOPIC>
 
 <headerlevel>
@@ -12188,6 +12192,73 @@ For example V5.3.1 returns 50301.
 <c>  if ( GetVersion() > 50300)
 <c>    # Only for versions larger than V5.3.0
 <c>    ...
+<c>  endif
+</TOPIC>
+
+<TOPIC> get_pwr_config() <style> function
+get_pwr_config()
+
+string get_pwr_config( string name)
+
+<b>Description
+
+Get the value of a configuration variable.
+Configuration values are set in /etc/proview.cnf.
+Returns the value of the configuration variable.
+
+<b>Example
+
+<c> group = get_pwr_config( "defaultSystemGroup");
+</TOPIC>
+
+<TOPIC> get_node_name() <style> function
+get_node_name()
+
+string get_node_name()
+
+<b>Description
+
+Get the host name for the current node.
+Returns the host name.
+
+<b>Example
+
+<c>  name = get_node_name();
+</TOPIC>
+
+<TOPIC> EVEN() <style> function
+EVEN()
+
+int EVEN( int sts)
+
+<b>Description
+
+Check is an integer is even. 
+Returns 1 if even and 0 if odd.
+
+<b>Example
+
+<c>  sts = SetAttribute( "Pump-V1-Switch.Description", "Valve switch open");
+<c>  if ( EVEN(sts))
+<c>    printf("Couldn't set attribute\n");
+<c>  endif
+</TOPIC>
+
+<TOPIC> ODD() <style> function
+ODD()
+
+int ODD( int sts)
+
+<b>Description
+
+Check is an integer is odd. 
+Returns 1 if odd and 0 if even.
+
+<b>Example
+
+<c>  sts = SetAttribute( "Pump-V1-Switch.Description", "Valve switch open");
+<c>  if ( ODD(sts))
+<c>    printf("Set operation successful\n");
 <c>  endif
 </TOPIC>
 </headerlevel>

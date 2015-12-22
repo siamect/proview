@@ -2801,8 +2801,10 @@ MessageError()		<LINK> messageerror()
 MessageInfo()		<LINK> messageinfo()
 GetCurrentText()	<LINK> getcurrenttext()
 GetCurrentObject()	<LINK> getcurrentobject()
-pwr_get_config()	<LINK> pwr_get_config()
+get_pwr_config()	<LINK> get_pwr_config()
 get_node_name()		<LINK> get_node_name()
+EVEN()			<LINK> EVEN()
+ODD()			<LINK> ODD()
 get_language()		<LINK> get_language()
 GetUser()		<LINK> getuser()
 GetPrivileges()		<LINK> getprivileges()
@@ -4021,8 +4023,10 @@ MessageError()	<t>Print error message.	<LINK> messageerror()
 MessageInfo()	<t>Print info message.	<LINK> messageinfo()
 GetCurrentText() <t>Get selected text.	<LINK> getcurrenttext()
 GetCurrentObject() <t>Get selected object. <LINK> getcurrentobject()
-pwr_get_config() <t>Get configuration values <LINK> pwr_get_config()
+get_pwr_config() <t>Get configuration values <LINK> get_pwr_config()
 get_node_name() <t>Get node name <LINK> get_node_name()
+EVEN()		<t>Check if value is even. <LINK> EVEN()
+ODD()		<t>Check if value is odd. <LINK> ODD()
 get_language()	<t>Get the current language <LINK> get_language()
 GetUser() 	<t>Get the current user. <LINK> getuser()
 GetPrivileges()	<t>Get the privileges for the current user. <LINK> getprivileges()
@@ -4138,6 +4142,74 @@ If no object is associated, a null-string i returned.
 <c>  string object;
 
 <c>  object = GetCurrentObject();
+</TOPIC>
+
+<TOPIC> get_pwr_config() <style> function
+get_pwr_config()
+
+string get_pwr_config( string name)
+
+<b>Description
+
+Get the value of a configuration variable.
+Configuration values are set in /etc/proview.cnf.
+Returns the value of the configuration variable.
+
+<b>Example
+<c> string id;
+<c>
+<c> id = get_pwr_config( "qcomBusId");
+</TOPIC>
+
+<TOPIC> get_node_name() <style> function
+get_node_name()
+
+string get_node_name()
+
+<b>Description
+
+Get the host name for the current node.
+Returns the host name.
+
+<b>Example
+
+<c>  name = get_node_name();
+</TOPIC>
+
+<TOPIC> EVEN() <style> function
+EVEN()
+
+int EVEN( int sts)
+
+<b>Description
+
+Check is an integer is even. 
+Returns 1 if even and 0 if odd.
+
+<b>Example
+
+<c>  sts = SetAttribute( "Pump-V1-Switch.Description", "Valve switch open");
+<c>  if ( EVEN(sts))
+<c>    printf("Couldn't set attribute\n");
+<c>  endif
+</TOPIC>
+
+<TOPIC> ODD() <style> function
+ODD()
+
+int ODD( int sts)
+
+<b>Description
+
+Check is an integer is odd. 
+Returns 1 if odd and 0 if even.
+
+<b>Example
+
+<c>  sts = SetAttribute( "Pump-V1-Switch.Description", "Valve switch open");
+<c>  if ( ODD(sts))
+<c>    printf("Set operation successful\n");
+<c>  endif
 </TOPIC>
 
 <TOPIC> get_language() <style> function

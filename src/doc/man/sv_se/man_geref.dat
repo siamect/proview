@@ -2399,6 +2399,7 @@ arbetsarean. Om man först aktiverar Functions/ScaleEqual ritas en kvadrat.
 - Kantbredd
 - 3D
 - Gradient
+- Bakgrundsfärg
 
 <h2>Attribut
 <b>Attribut      <t>Beskrivning
@@ -2408,6 +2409,8 @@ gradient_contrast <t>Kontrast på gradienten. Ett värde mellan 0 - 10.
 gradient      <t>Typ av gradient.
 invisible     <t>Objektet är osynligt men känsligt för musklick. Används för subgrafer för att
               <t>den känsliga arean för subgrafen.
+fill_eq_background <t>Markerar att fyllnadsfärgen ritas med angiven bakgrundsfärg för objektet
+	      <t>istället för aktuell fyllnadsfärg.
 fixcolor      <t>Färgen är fix. Används när objektet är den del av en subgraph, och färgen inte
               <t>ska påverkas av färgsättningen av subgrafen.
 relief        <t>Up ger skugga på undersidan och Down ger skugga på ovansidan
@@ -2415,6 +2418,7 @@ disable_shadow <t>Eliminerar 3D-funktionen. Används när objektet ingår i en subg
               <t>och inte ska ritas med 3D när 3D är valt för subgrafs-instansen.
 disable_gradient <t>Eliminerar gradient-funktionen. Används när objektet ingår i en subgraf 
               <t>och inte ska ritas med gradient när gradient är valt för subgrafs-instansen.
+bgcolor_gradient <t>Färgen i gradienten går mellan bakgrundsfärgen och fyllnadsfärgen.
 fixposition   <t>Objektet kan inte flyttas.
 Dynamic       <t>Ej implementerat
 </topic>
@@ -2467,6 +2471,7 @@ Functions/ScaleEqual ritas en cirkel.
 - Kantbredd
 - 3D
 - Gradient
+- Bakgrundsfärg
 
 <h2>Attribut
 <b>Attribut     <t>Beskrivning
@@ -2484,6 +2489,8 @@ disable_shadow <t>Eliminerar 3D-funktionen. Används när objektet ingår i en
 disable_gradient <t>Eliminerar gradient-funktionen. Används när objektet ingår i en subgraf 
               <t>och inte ska ritas med gradient när gradient är valt för subgrafs-instansen.
 fixposition   <t>Objektet kan inte flyttas.
+fill_eq_background <t>Markerar att fyllnadsfärgen ritas med angiven bakgrundsfärg för objektet
+	      <t>istället för aktuell fyllnadsfärg.
 Dynamic      <t>Ej implementerat
 </topic>
 
@@ -2530,6 +2537,7 @@ avbrytas i en polyline med Functions/MoveRestrictions/No.
 - Kantbredd
 - 3D
 - Gradient
+- Bakgrundsfärg
 
 <h2>Attribut
 <b>Attribut    <t>Beskrivning
@@ -2545,10 +2553,16 @@ disable_gradient <t>Eliminerar gradient-funktionen. Används när objektet ingår i
 fill_eq_border <t>Markerar att fyllnadsfärgen ritas med angiven kantfärg istället för 
               <t>aktuell fyllnadsfärg. Detta kan användas i submodeller där vissa 
               <t>markeringar, pilar o dyl, mer hör ihop med kant-färgen än fyllnadsfärgen.
+fill_eq_background <t>Markerar att fyllnadsfärgen ritas med angiven bakgrundsfärg för objekete
+	      <t>istället för aktuell fyllnadsfärg.
 fill_eq_light <t>Om objektet ingår i en subgraf, ges det samma färg som en 3D-dager, 
               <t>när 3D är valt fär subgrafs-instansen.
 fill_eq_shadow <t>Om objektet ingår i en subgraf, ges det samma färg som en 3D-skugga, 
               <t>när 3D är valt fär subgrafs-instansen.
+fill_eq_bglight <t>Om objektet ingår i en subgraf, ritas det med dager-tonen för
+              <t>bakgrundsfärgen, när 3D är valt för subgrafs-instansen.
+fill_eq_bgshadow <t>Om objektet ingår i en subgraf, ritas det med skuggtonen för 
+              <t>bakgrundsfärgen, när 3D är valt för subgrafs-instansen.
 fixcolor      <t>Färgen är fix. Används när objektet är den del av en subgraph, och färgen inte
               <t>ska påverkas av färgsättningen av subgrafen.
 fixposition   <t>Objektet kan inte flyttas.
@@ -5793,12 +5807,50 @@ I pwr_cmd Användarhandledning finns en beskrivning på scriptspråket och beskrivn
 funktioner. Här följer en lista på de inbyggda funktioner som även kan användas i Ge-script.
 
 <h2>Ge funktioner
-<b>Funktion <t>Beskrivning
-GetCurrentObject <t>Returnerar identiteten för senast skapade objekt.<link>GetCurrentObject()
-GetTextExtent <t>Beräkna storleken på en text. <link>GetTextExtent()
-SelectAdd <t>Addera objekt till utvalslistan. <link>SelectAdd()
-SetExtern <t>Sätt en subgraf extern. <link>SetExtern()
-SetIntern <t>Sätt en subgraf intern. <link>SetIntern()
+<b>Funktion <t><t>Beskrivning
+DeleteObject <t><t>Ta bort ett objekt.<link>DeleteObject()
+GetCurrentObject <t><t>Returnerar identiteten för senast skapade objekt.<link>GetCurrentObject()
+GetFirstObject <t><t>Hämta första objekt. <link>GetFirstObject()
+GetNextObject <t><t>Hämta nästa objekt. <link>GetNextObject()
+GetObjectAttribute <t><t>Hämta ett attributvärde för ett objekt. <link>GetObjectAttribute()
+GetObjectBorder <t><t>Hämta kant för ett objekt. <link>GetObjectBorder()
+GetObjectBorderColor <t><t>Hämta kantfärg för ett objekt. <link>GetObjectBorderColor()
+GetObjectClass <t><t>Hämta klass för ett objekt. <link>GetObjectClass()
+GetObjectDynType <t><t>Hämta dynamik- och aktions-typ för ett objekt. <link>GetObjectDynType()
+GetObjectFill <t><t>Hämta fyllnad för ett objekt. <link>GetObjectFill()
+GetObjectFillColor <t><t>Hämta fyllnadsfärg för ett objekt. <link>GetObjectFillColor()
+GetObjectGradient <t><t>Hämta gradient för ett objekt. <link>GetObjectGradient()
+GetObjectName <t><t>Hämta namn på ett objekt. <link>GetObjectName()
+GetObjectShadow <t><t>Hämta skuggning på ett objekt. <link>GetObjectShadow()
+GetObjectText <t><t>Hämta text för ett objekt. <link>GetObjectText()
+GetObjectTextColor <t><t>Hämta textfärg för ett objekt. <link>GetObjectTextColor()
+GetObjectType <t><t>Hämta typ för ett objekt. <link>GetObjectType()
+GetRgbColor <t><t>Hämta rgb-värden för en färg. <link>GetRgbColor()
+GetTextExtent <t><t>Beräkna storleken på en text. <link>GetTextExtent()
+GroupGetFirstObject <t><t>Hämta första objektet i en grupp. <link>GroupGetFirstObject()
+GroupGetNextObject <t><t>Hämta nästa objekt i en grupp. <link>GroupGetNextObject()
+MeasureObject <t><t>Hämta ett objekts utbredning. <link>MeasureObject()
+MoveAbsObject <t><t>Flytta ett objekt till en position. <link>MoveAbsObject()
+MoveObject <t><t>Flytta ett objekt ett visst avstånd. <link>MoveObject()
+Reload <t><t>Läs in nuvarande graph från fil. <link>Reload()
+ScaleObject <t><t>Scale an object. <link>ScaleObject()
+SelectAdd <t><t>Addera objekt till utvalslistan. <link>SelectAdd()
+SetCurrentObject <t><t>Sätt CurrentObject. <link>SetCurrentObject()
+SetDraw <t><t>Sätt ritning till eller från. <link>SetDraw()
+SetExtern <t><t>Sätt en subgraf extern. <link>SetExtern()
+SetExternAll <t><t>Sätt alla subgrafer extern. <link>SetExternAll()
+SetIntern <t><t>Sätt en subgraf intern. <link>SetIntern()
+SetInternAll <t><t>Sätt alla subgrafer intern. <link>SetInternAll()
+SetObjectAttribute <t><t>Sätt värde på ett attribut för ett objekt. <link>SetObjectAttribute()
+SetObjectBackgroundColor <t><t>Sätt bakgrundsfärg på ett objekt. <link>SetObjectBackgroundColor()
+SetObjectBorder <t><t>Sätt kant på ett objekt. <link>SetObjectBorder()
+SetObjectBorderColor <t><t>Sätt kantfärg på ett objekt. <link>SetObjectBorderColor()
+SetObjectFill <t><t>Sätt fyllnad på ett objekt. <link>SetObjectFill()
+SetObjectFillColor <t><t>Sätt fyllnadsfärg på ett objekt. <link>SetObjectFillColor()
+SetObjectGradient <t><t>Sätt gradient på ett objekt. <link>SetObjectGradient()
+SetObjectShadow <t><t>Sätt skuggning på ett objekt. <link>SetObjectShadow()
+SetObjectTextColor <t><t>Sätt textfärg på ett objekt. <link>SetObjectTextColor()
+SetRgbColor <t><t>Sätt rgb-värden för en färg. <link>SetRgbColor()
 
 <h2>In och utmatning
 <b>Funktion <t>Beskrivning
@@ -5850,6 +5902,530 @@ time <t>Hämta systemtiden
 system <t>Exekvera ett shell kommando
 verify <t>Sätt verify på eller av
 
+<option> printdisable
+<h2>Fördefinierade variabler
+Det finns ett antal fördefinierade variabler för
+
+Objekttyper <link> gecmd_variables,objecttypes
+Dynamik och aktionstyper <link> gecmd_variables,dyntypes
+Färger <link> gecmd_variables,colors
+<option> printenable
+
+</topic>
+
+<topic> gecmd_variables
+Fördefinerade variabler
+
+<h2>Objekttyper <bookmark> objecttypes
+eObjectType_Rect
+eObjectType_Line
+eObjectType_Arc
+eObjectType_ConPoint
+eObjectType_Annot
+eObjectType_PolyLine
+eObjectType_SubGraph
+eObjectType_Text
+eObjectType_Bar
+eObjectType_Trend
+eObjectType_Slider
+eObjectType_Image
+eObjectType_Group
+eObjectType_Axis
+eObjectType_RectRounded
+eObjectType_ConGlue
+eObjectType_Menu
+eObjectType_Window
+eObjectType_Table
+eObjectType_Folder
+eObjectType_XYCurve
+eObjectType_AxisArc
+eObjectType_Pie
+eObjectType_BarChart
+eObjectType_Toolbar
+
+<h2>Dynamik och actionstyper <bookmark> dyntypes
+<b>DynType1
+mDynType1_No
+mDynType1_Inherit
+mDynType1_Tone
+mDynType1_DigLowColor
+mDynType1_DigColor
+mDynType1_DigError
+mDynType1_DigWarning
+mDynType1_DigFlash
+mDynType1_Invisible
+mDynType1_DigBorder
+mDynType1_DigText
+mDynType1_Value
+mDynType1_AnalogColor
+mDynType1_Rotate
+mDynType1_Move
+mDynType1_AnalogShift
+mDynType1_DigShift
+mDynType1_Animation
+mDynType1_Bar
+mDynType1_Trend
+mDynType1_SliderBackground
+mDynType1_Video
+mDynType1_FillLevel
+mDynType1_FastCurve
+mDynType1_AnalogText
+mDynType1_Table
+mDynType1_StatusColor
+mDynType1_HostObject
+mDynType1_DigSound
+mDynType1_XY_Curve
+mDynType1_DigCommand
+mDynType1_Pie
+mDynType1_BarChart
+
+<b>DynType2
+mDynType2_No
+mDynType2_Axis
+mDynType2_DigTextColor
+mDynType2_TimeoutColor
+mDynType2_DigFourShift
+mDynType2_ScrollingText
+mDynType2_ColorThemeLightness
+mDynType2_DigBackgroundColor
+
+<b>ActionType1
+mActionType1_No
+mActionType1_Inherit
+mActionType1_PopupMenu
+mActionType1_SetDig
+mActionType1_ResetDig
+mActionType1_ToggleDig
+mActionType1_StoDig
+mActionType1_Command
+mActionType1_CommandDoubleClick
+mActionType1_Confirm
+mActionType1_IncrAnalog
+mActionType1_RadioButton
+mActionType1_Slider
+mActionType1_ValueInput
+mActionType1_TipText
+mActionType1_Help
+mActionType1_OpenGraph
+mActionType1_OpenURL
+mActionType1_InputFocus
+mActionType1_CloseGraph
+mActionType1_PulldownMenu
+mActionType1_OptionMenu
+mActionType1_SetValue
+mActionType1_MethodToolbar
+mActionType1_MethodPulldownMenu
+mActionType1_Script
+
+<h2>Colors <bookmark> colors
+<b>Standardpalett
+eDrawType_Color1 = 0
+eDrawType_Color2 = 1
+eDrawType_Color3 = 2
+...
+eDrawType_Color300 = 299
+
+<b>Custom palett
+eDrawType_CustomColor1 = 310
+eDrawType_CustomColor2 = 314
+eDrawType_CustomColor3 = 318
+...
+eDrawType_CustomColor90 = 666
+
+</topic>
+
+<topic>DeleteObject() <style>function
+DeleteObject()
+void GetObjectAttribute( int oid)
+
+<h2>Beskrivning
+Ta bort ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektsidentitet.
+
+<b>Exempel
+<c> int oid;
+ 
+<c> DeleteObject( oid);
+</topic>
+
+<topic>GetFirstObject() <style>function
+GetFirstObject()
+int GetFirstObject()
+
+<h2>Beskrivning
+Hämtar identiteten för det första objektet i en graf. Övriga objekt
+kan hämtas med GetNextObject(). 
+
+Returnerar en integer med objektsidentiteten.
+
+<b>Exempel
+<c> int oid;
+ 
+<c> oid = GetFirstObject();
+<c> while ( oid != 0)
+<c>   ...
+<c>   oid = GetNextObject( oid)
+<c> endwhile
+</topic>
+
+<topic>GetNextObject() <style>function
+GetNextObject()
+int GetNextObject( int oid)
+
+<h2>Beskrivning
+Hämtar identiteten för nästa objekt i en graf. Det första objektet
+kan hämtas med GetFirstObject() och övriga objekt med GetNextObject() 
+
+<h2>Argument
+
+int <t>oid     <t>Objektidentitet på objekt vars nästa objekt ska hämtas.
+
+Returnerar en integer med objektsidentiteten.
+
+<b>Exempel
+<c> int oid;
+ 
+<c> oid = GetFirstObject();
+<c> while ( oid != 0)
+<c>   ...
+<c>   oid = GetNextObject( oid)
+<c> endwhile
+</topic>
+
+<topic>GetObjectAttribute() <style>function
+GetObjectAttribute()
+int GetObjectAttribute( int oid, string attribute, (arbitrary type) value)
+
+<h2>Beskrivning
+Hämtar värde på ett attribut för ett objekt. Attributet namnges på
+samma sätt som i attributeditorn för objektet.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+string <t>attribut <t>Attributnamn.
+(arbitrary type) <t>Hämtat värde på attributet.
+
+Returnerar status för operationen.
+
+<b>Exempel
+<c> int sts;
+<c> int oid;
+<c> int color;
+ 
+<c> sts = GetObjectAttribute( oid, "DigColor.Color", color);
+<c> if ( !(sts & 1))
+<c>   printf( "Couldn't get color\n");
+<c> endif
+</topic>
+
+<topic>GetObjectBorder() <style>function
+GetObjectBorder()
+int GetObjectBorder( int oid)
+
+<h2>Beskrivning
+Hämtar kant för ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+
+Returnerar värdet på kant, 0 eller 1.
+
+<b>Exempel
+<c> int oid;
+<c> int border;
+ 
+<c> border = GetObjectBorder( oid);
+</topic>
+
+<topic>GetObjectBorderColor() <style>function
+GetObjectBorderColor()
+int GetObjectBorderColor( int oid)
+
+<h2>Beskrivning
+Hämtar kantfärgen för ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+
+Returnerar värdet på kantfärgen.
+
+<b>Exempel
+<c> int oid;
+<c> int bcolor;
+ 
+<c> bcolor = GetObjectBorderColor( oid);
+<c> if ( bcolor == eDrawType_Color33)
+<c>   SetObjectBorderColor( oid, eDrawType_CustomColor24);
+<c> endif
+</topic>
+
+<topic>GetObjectClass() <style>function
+GetObjectClass()
+string GetObjectClass( int oid)
+
+<h2>Beskrivning
+Hämtar namnet på subgrafet för ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+
+Returnerar namnet.
+
+<b>Exempel
+<c> int oid;
+<c> string class;
+ 
+<c> class = GetObjectClass( oid);
+<c> if ( class == "pwr_roundind")
+<c>   ...
+<c> endif
+</topic>
+
+<topic>GetObjectDynType() <style>function
+GetObjectDynType()
+int GetObjectDynType( int oid, int dyntype1, int dyntype2, int actiontype1, int actiontype2)
+
+<h2>Beskrivning
+Hämtar dynamiktyp och aktionstyp för objektet.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+int <t>dyntype1 <t>Hämtat värde på DynType1.
+int <t>dyntype2 <t>Hämtat värde på DynType2.
+int <t>actiontype1 <t>Hämtat värde på ActionType1.
+int <t>actiontype2 <t>Hämtat värde på ActionType2.
+
+Returnerar status för operationen.
+
+Se Fördefinerade variables för värden på dyntype and actiontype. <link> gecmd_variables,dyntypes
+
+<b>Exempel
+<c> int sts;
+<c> int oid;
+<c> int dyntype1;
+<c> int dyntype2;
+<c> int actiontype1;
+<c> int actiontype2;
+ 
+<c> sts = GetObjectDynType( oid, dyntype1, dyntype2, actiontype1, actiontype2);
+<c> if ( dyntype1 & mDynType1_Value)
+<c>   ...
+<c> endif
+</topic>
+
+<topic>GetObjectFill() <style>function
+GetObjectFill()
+int GetObjectFill( int oid)
+
+<h2>Beskrivning
+Hämtar fyllnad för ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+
+Returnerar värdet på fyllnad, 0 eller 1.
+
+<b>Exempel
+<c> int oid;
+<c> int fill;
+ 
+<c> fill = GetObjectFill( oid);
+</topic>
+
+<topic>GetObjectFillColor() <style>function
+GetObjectFillColor()
+int GetObjectFillColor( int oid)
+
+<h2>Beskrivning
+Hämtar fyllnadsfärgen för ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+
+Returnerar värdet på fyllnadsfärgen.
+
+<b>Exempel
+<c> int oid;
+<c> int fcolor;
+ 
+<c> fcolor = GetObjectFillColor( oid);
+<c> if ( fcolor == eDrawType_Color67)
+<c>   SetObjectFillColor( oid, eDrawType_CustomColor23);
+<c> endif
+</topic>
+
+<topic>GetObjectGradient() <style>function
+GetObjectGradient()
+int GetObjectGradient( int oid)
+
+<h2>Beskrivning
+Hämtar gradienten för ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+
+Returnerar värdet på gradienten, dvs typen av gradient. Värdet 0 innebär ingen gradient.
+
+<b>Exempel
+<c> int oid;
+<c> int grad;
+ 
+<c> grad = GetObjectGradient( oid);
+</topic>
+
+<topic>GetObjectName() <style>function
+GetObjectName()
+string GetObjectName( int oid)
+
+<h2>Beskrivning
+Hämtar namnet på ett objekt.
+
+<h2>Argument
+
+Returnerar namnet.
+
+int <t>oid     <t>Objektets identitet.
+
+<b>Exempel
+<c> int oid;
+<c> string oname;
+ 
+<c> oname = GetObjectName( oid);
+</topic>
+
+<topic>GetObjectShadow() <style>function
+GetObjectShadow()
+int GetObjectShadow( int oid)
+
+<h2>Beskrivning
+Hämtar skuggning för ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+
+Returnerar en integer med skuggningen.
+
+<b>Exempel
+<c> int oid;
+<c> int shadow;
+ 
+<c> shadow = GetObjectShadow( oid);
+</topic>
+
+<topic>GetObjectText() <style>function
+GetObjectText()
+string GetObjectText( int oid)
+
+<h2>Beskrivning
+Hämtar text för ett text-objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+
+Returnerar texten.
+
+<b>Exempel
+<c> int oid;
+<c> string text;
+ 
+<c> text = GetObjectText( oid);
+</topic>
+
+<topic>GetObjectTextColor() <style>function
+GetObjectTextColor()
+int GetObjectTextColor( int oid)
+
+<h2>Beskrivning
+Hämtar textfärgen för ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+
+Returnerar värdet på textfärgen.
+
+<b>Exempel
+<c> int oid;
+<c> int tcolor;
+ 
+<c> tcolor = GetObjectTextColor( oid);
+<c> if ( tcolor == eDrawType_Color49)
+<c>   SetObjectTextColor( oid, eDrawType_CustomColor5);
+<c> endif
+</topic>
+
+<topic>GetObjectType() <style>function
+GetObjectType()
+int GetObjectType( int oid)
+
+<h2>Beskrivning
+Hämtar ett objects typ.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+
+Returnerar objectstypen.
+Se Fördefinierade variabler för värden på objekttyper <link> gecmd_variables,objecttypes
+
+<b>Exempel
+<c> int oid;
+<c> int type;
+ 
+<c> type = GetObjectType( oid);
+<c> if ( type == eObjectType_SubGraph)
+<c>   SetObjectFillColor( oid, eDrawType_CustomColor22);
+<c> endif
+</topic>
+
+<topic>GetRgbColor() <style>function
+void GetRgbColor()
+void GetRgbColor( int color, float red, float green, float blue)
+
+<h2>Beskrivning
+Hämtar rgb-värden för en färg. Färgen anges med färgindex eller med symbol, se nedan.
+rgb-värdena är flyttal mellan 0 och 1.
+
+<h2>Argument
+
+int <t>color     <t>Färg.
+float <t>red     <t>Returnerar värde på röd.
+float <t>green   <t>Returnerar värde på grön.
+float <t>blue     <t>Returnerar värde på blå.
+
+Färger i standardpaletten finns definierade med eDrawType_Color1 - eDrawType_Color300, 
+och färger i custom color paletten med eDrawType_CustomColor1 - eDrawType_CustomColor90.
+Motsvarande färgindex kan också användas, för standardpaletten 0 - 299, och för
+custom color paletten 310 - 669. För custom color ligger grundfärgen på var fjärde index, 
+dvs 310, 314, 318, ... 666.
+
+<b>Exempel
+<c> int i;
+<c> float r;
+<c> float g;
+<c> float b;
+ 
+<c> printf( "Idx  Red   Green Blue\n");
+<c> for ( i = eDrawType_CustomColor1; i <= eDrawType_CustomColor90; i += 4)
+<c>   GetRgbColor( i, r, g, b);
+
+<c>   printf( "%3d  %5.3f %5.3f %5.3f\n", i, r, g, b);
+<c> endfor
+
+<c> GetRgbColor( eDrawType_CustomColor1, red, green, blue);
 </topic>
 
 <topic>GetTextExtent() <style>function
@@ -5876,6 +6452,97 @@ float  <t>descent  <t>Textens descent returneras i denna variabel.
 <c> float width;
  
 <c> GetTextExtent("Detta är en text", 12, 1, width);
+</topic>
+
+<topic>GroupGetFirstObject() <style>function
+GroupGetFirstObject()
+int GroupGetFirstObject( int group)
+
+<h2>Beskrivning
+Hämtar identiteten för det första objektet i en grupp. Övriga objekt
+kan hämtas med GroupGetNextObject(). 
+
+<h2>Argument
+
+int  <t>group <t>Identitet på gruppen.
+
+Returnerar en integer med objektsidentiteten.
+
+<b>Exempel
+<c> int goid;
+<c> int oid;
+ 
+<c> # Get all objects
+<c> goid = GetFirstObject();
+<c> while ( goid != 0)
+<c>   type = GetObjectType( goid);
+<c>   if ( type == eObjectType_Group)	
+<c>     # This is a group, get all objects in the group
+<c>     oid = GroupGetFirstObject( goid);
+<c>     while ( oid != 0)
+<c>       ...
+<c>       oid = GroupGetNextObject( goid, oid)
+<c>   endwhile
+<c> endwhile
+</topic>
+
+<topic>GroupGetNextObject() <style>function
+GroupGetNextObject()
+int GroupGetNextObject( int group, int oid)
+
+<h2>Beskrivning
+Hämtar identiteten för nästa objekt i en grupp. Det första objektet
+kan hämtas med GroupGetFirstObject() och övriga objekt med GroupGetNextObject() 
+
+<h2>Argument
+
+int <t>oid     <t>Objektidentitet på objekt vars nästa objekt ska hämtas.
+
+Returnerar en integer med objektsidentiteten.
+
+</topic>
+
+<topic>MeasureObject() <style>function
+MeasureObject()
+void MeasureObject( int oid, float ll_x, float ll_y, float ur_x, float ur_y)
+
+<h2>Beskrivning
+Hämta utbredningen av ett objekt.
+Returnerar x och y koordinat för under vänstra och övre högre hörnpunkterna.
+
+<h2>Argument
+
+int <t>oid     <t>Objektsidentitet
+float <t>ll_x  <t>Returnerad x koordinat för under vänstra.
+float <t>ll_y  <t>Returnerad y koordinat för under vänstra.
+float <t>ur_x  <t>Returnerad x koordinat för övre högra.
+float <t>ur_y  <t>Returnerad y koordinat för övre högra.
+
+<b>Exempel
+<c> int oid;
+<c> float ll_x;
+<c> float ll_y;
+<c> float ur_x;
+<c> float ur_y;
+ 
+<c> MeasureObject( oid, ll_x, ll_y, ur_x, ur_y);
+</topic>
+
+<topic>Reload() <style>function
+Reload()
+void Reload()
+
+<h2>Beskrivning
+
+Läser nuvarande graf från fil.
+
+<b>Exempel
+<c> # Update subgraph pwr_roundind
+<c> SetExtern("pwr_roundind");
+<c> save
+<c> Reload();
+<c> SetIntern("pwr_roundind");
+<c> save
 </topic>
 
 <topic>SelectAdd() <style>function
@@ -5911,6 +6578,129 @@ Returnerar identiteten på senast skapade objekt.
 <c> id = GetCurrentObject();
 </topic>
 
+<topic>Reload() <style>function
+Reload()
+void Reload()
+
+<h2>Beskrivning
+
+Läser nuvarande graf från fil.
+
+<b>Exempel
+<c> SetExtern("pwr_roundind");
+<c> save
+
+<c> Reload();
+
+<c> SetIntern("pwr_roundind");
+<c> save
+</topic>
+
+<topic>MoveAbsObject() <style>function
+MoveAbsObject()
+void MoveAbsObject( int oid, float x, float y)
+
+<h2>Beskrivning
+
+Flytta ett objekt till koordinaterna x och y.
+
+<h2>Argument
+
+int <t>oid <t>Objektsidentitet.
+float <t>x <t>x koordinat.
+float <t>y <t>y koordinat.
+
+<b>Exempel
+
+<c> MoveAbsObject( oid, 0.5, o.5);
+</topic>
+
+<topic>MoveObject() <style>function
+MoveObject()
+void MoveObject( int oid, float dx, float dy)
+
+<h2>Beskrivning
+
+Flytta ett objekt ett visst avstånd.
+
+<h2>Argument
+
+int <t>oid <t>Objektsidentitet.
+float <t>dx <t>Avstånd att flytta i x-led.
+float <t>dy <t>Avstånd att flytta i y-led.
+
+<b>Exempel
+
+<c> MoveObject( oid, 0.5, 0.5);
+</topic>
+
+<topic>ScaleObject() <style>function
+ScaleObject()
+void ScaleObject( int oid, float scalex, float scaley)
+
+<h2>Beskrivning
+
+Skala ett objekt.
+
+<h2>Argument
+
+int <t>oid <t>Objektsidentitet.
+float <t>scalex <t>Skalfaktor i x-led.
+float <t>scaley <t>Skalfaktor i y-led.
+
+<b>Exempel
+
+<c> ScaleObject( oid, 1.5, 1.5);
+</topic>
+
+<topic>SetCurrentObject() <style>function
+SetCurrentObject()
+void SetCurrentObject( int oid)
+
+<h2>Beskrivning
+
+Sätter CurrentObject.
+
+<h2>Argument
+
+int <t>oid <t>Objektsidentitet.
+
+<b>Exempel
+
+<c> SetCurrentObject( oid);
+</topic>
+
+<topic>SetDraw() <style>function
+SetDraw()
+void SetDraw( int draw)
+
+<h2>Beskrivning
+
+Sätter ritning på skärmen till (1) eller från (0).
+
+<h2>Argument
+
+int <t>draw <t>1 innebär att ritning sätts till, och 0 att ritning sätts från.
+
+<b>Exempel
+
+<c>  SetDraw(0);
+
+<c>  for ( i = 0; i < 10000; i++)
+<c>    x2 = x + 0.55;
+<c>    y2 = y + 0.55;
+<c>    create object/sub=pwr_indsquare/x1='x'/y1='y'/x2='x2'/y2='y2'
+<c>    set current attr DigLowColor.Attribute H1-DArray.Val['i']##Boolean
+<c>    x += 0.65;
+<c>    if ( i - (i / 100) * 100 == 99)
+<c>      y += 0.65;
+<c>      x = 0;
+<c>    endif
+<c>  endfor  
+
+<c>  SetDraw(1);
+</topic>
+
 <topic>SetExtern() <style>function
 SetExtern()
 int SetExtern( string name)
@@ -5928,6 +6718,19 @@ string      <t>name       <t>Namn på subgrafen.
 <c> SetExtern("MySubgraph");
 </topic>
 
+<topic>SetExternAll() <style>function
+SetExternAll()
+void SetExternAll()
+
+<h2>Beskrivning
+
+Sätter alla subgrafer extern.
+
+<b>Exempel
+ 
+<c> SetExternAll();
+</topic>
+
 <topic>SetIntern() <style>function
 SetIntern()
 int SetIntern( string name)
@@ -5943,6 +6746,208 @@ string    <t>name       <t>Namn på subgrafen.
 <b>Exempel
  
 <c> SetIntern("MySubgraph");
+</topic>
+
+<topic>SetInternAll() <style>function
+SetInternAll()
+void SetInternAll()
+
+<h2>Beskrivning
+
+Sätter alla subgrafer intern.
+
+<b>Exempel
+ 
+<c> SetInternAll();
+</topic>
+
+<topic>SetObjectAttribute() <style>function
+SetObjectAttribute()
+int SetObjectAttribute( int oid, string attribute, (arbitrary type) value)
+
+<h2>Beskrivning
+Sätter värde på ett attribut i ett objekt. Attributet namnges på
+samma sätt som i attributeditorn för objektet.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+string <t>attribut <t>Attributnamn.
+(arbitrary type) <t>Värde på attributet.
+
+Returnerar status för operationen.
+
+<b>Exempel
+<c> int sts;
+<c> int oid;
+ 
+<c> sts = SetObjectAttribute( oid, "DigColor.Color", eDrawType_Color244);
+</topic>
+
+<topic>SetObjectBackgroundColor() <style>function
+SetObjectBackgroundColor()
+void SetObjectBackgroundColor( int oid, int color)
+
+<h2>Beskrivning
+Sätter bakgrundsfärg på ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+int <t>color   <t>Bakgrundsfärg.
+
+<b>Exempel
+ 
+<c> SetObjectBackgroundColor( oid, eDrawType_CustomColor1);
+</topic>
+
+<topic>SetObjectBorder() <style>function
+SetObjectBorder()
+void SetObjectBorder( int oid, int border)
+
+<h2>Beskrivning
+Sätter kant på ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+int <t>border  <t>1 ritar ut kantlinjen, 0 tar bort kantlinjen.
+
+<b>Exempel
+ 
+<c> SetObjectBorder( oid, 1);
+</topic>
+
+<topic>SetObjectBorderColor() <style>function
+SetObjectBorderColor()
+void SetObjectBorderColor( int oid, int color)
+
+<h2>Beskrivning
+Sätter kantfärg på ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+int <t>color   <t>Kantfärg.
+
+<b>Exempel
+ 
+<c> SetObjectBorderColor( oid, eDrawType_CustomColor1);
+</topic>
+
+<topic>SetObjectFill() <style>function
+SetObjectFill()
+void SetObjectFill( int oid, int fill)
+
+<h2>Beskrivning
+Sätter fyllnad på ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+int <t>fill    <t>Objektets fyllnad, 1 eller 0.
+
+<b>Exempel
+ 
+<c> SetObjectFill( oid, 1);
+</topic>
+
+<topic>SetObjectFillColor() <style>function
+SetObjectFillColor()
+void SetObjectFillColor( int oid, int color)
+
+<h2>Beskrivning
+Sätter fyllnadsfärg på ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+int <t>color   <t>Fyllnadsfärg.
+
+<b>Exempel
+ 
+<c> SetObjectFillColor( oid, eDrawType_CustomColor1);
+</topic>
+
+<topic>SetObjectGradient() <style>function
+SetObjectGradient()
+void SetObjectGradient( int oid, int gradient)
+
+<h2>Beskrivning
+Sätter gradient på ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Object identity.
+int <t>gradient <t>Gradient. 0 betyder ingen gradient.
+
+<b>Exempel
+ 
+<c> SetObjectGradient( oid, 0);
+</topic>
+
+<topic>SetObjectShadow() <style>function
+SetObjectShadow()
+void SetObjectShadow( int oid, int shadow)
+
+<h2>Beskrivning
+Sätter skuggning på ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+int <t>shadow  <t>Objektets skuggning, 1 eller 0.
+
+<b>Exempel
+ 
+<c> SetObjectShadow( oid, 1);
+</topic>
+
+<topic>SetObjectTextColor() <style>function
+SetObjectTextColor()
+void SetObjectTextColor( int oid, int color)
+
+<h2>Beskrivning
+Sätter textfärg på ett objekt.
+
+<h2>Argument
+
+int <t>oid     <t>Objektets identitet.
+int <t>color   <t>Textfärg.
+
+<b>Exempel
+ 
+<c> SetObjectTextColor( oid, eDrawType_CustomColor5);
+</topic>
+
+
+<topic>SetRgbColor() <style>function
+void SetRgbColor()
+void SetRgbColor( int color, float red, float green, float blue)
+
+<h2>Beskrivning
+Sätter rgb-värden på en färg i custom color paletten. Färgen anges med färgindex eller med symbol, se nedan.
+rgb-värdena är flyttal mellan 0 och 1.
+
+<h2>Argument
+
+int <t>color     <t>Färg.
+float <t>red     <t>Värde på röd.
+float <t>green   <t>Värde på grön.
+float <t>red     <t>Värde på blå.
+
+Färger i standardpaletten finns definierade med eDrawType_Color1 - eDrawType_Color300, 
+och färger i custom color paletten med eDrawType_CustomColor1 - eDrawType_CustomColor90.
+Motsvarande färgindex kan också användas, för standardpaletten 0 - 299, och för
+custom color paletten 310 - 669. För custom color ligger grundfärgen på var fjärde index, 
+dvs 310, 314, 318, ... 666.
+<
+b>Exempel
+<c> float red = 0.731;
+<c> float green = 0.224;
+<c> float blue = 0.328;
+
+<c> SetRgbColor( eDrawType_CustomColor1, red, green, blue);
 </topic>
 
 <topic>gecmd_examples <style>function
