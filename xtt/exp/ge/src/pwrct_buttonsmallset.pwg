@@ -1,5 +1,20 @@
 0! DefaultWidth 0
 0! DefaultHeight 0
+199
+!/**
+! ButtonSmallSet
+! Group Pushbuttons
+!
+! <image> pwrct_buttonsmallx_gs.png
+!
+! <h1>Description
+! Button to set a digital signal.
+! The object is drawn with colortheme colors.
+!
+! <h1>Default dynamics
+! SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+!
+!*/
 1
 100 117.756
 135 117.756

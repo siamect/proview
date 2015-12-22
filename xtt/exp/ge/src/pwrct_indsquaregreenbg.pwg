@@ -2,13 +2,15 @@
 0! DefaultHeight 0
 199
 !/**
-! IndSquare
+! IndSquareGreenBg
 ! Group Indicators
 !
-! <image> pwr_indsquare_gs.gif
+! <image> pwrct_indsquaregreenbg_gs.png
 !
 ! <h1>Description
-! Square indicator.
+! Square green indicator with background relief.
+! The object is drawn with colortheme colors.
+! The background relief in drawn with object background color.
 !
 ! <h1>Default dynamics
 ! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat

@@ -5,10 +5,11 @@
 ! PulldownMenu2
 ! Group Other
 !
-! <image> pwr_pulldownmenu2_gs.png
+! <image> pwrct_pulldownmenu2_gs.png
 !
 ! <h1>Description
 ! Pulldown menu. Place the pulldown menu on a menu bar, preferably a menubar of type Menubar2.
+! The object is drawn with colortheme colors.
 !
 ! <h1>Default dynamics
 ! PulldownMenu <link>GeDynPulldownMenu, ,$pwr_lang/man_geref.dat

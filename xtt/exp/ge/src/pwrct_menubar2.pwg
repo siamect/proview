@@ -5,11 +5,12 @@
 ! Menubar2
 ! Group Other
 !
-! <image> pwr_menubar2_gs.png
+! <image> pwrct_menubar2_gs.png
 !
 ! <h1>Description
 ! Menubar. 
 ! Add pulldownmenu-objects to the menubar.
+! The object is drawn with colortheme colors.
 !
 ! <h1>Default dynamics
 ! No default dynamics.

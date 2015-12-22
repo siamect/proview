@@ -5,15 +5,17 @@
 ! Slider4
 ! Group Sliders
 !
-! <image> pwr_slider4_gs.gif
+! <image> pwrct_slider4_gs.png
 !
 ! <h1>Description
 ! The mobile part of a slider. 
 ! Should be placed on a slider background, which defines
-! the moving range for the slider. See also
-! SliderBackground1 <link>pwr_sliderbackground1
-! SliderBackground1_2 <link>pwr_sliderbackground1_2
-! SliderBackground1_3 <link>pwr_sliderbackground1_3
+! the moving range for the slider.
+! The object is drawn with colortheme colors.
+!
+! See also
+! SliderBackground1_3 <link>pwrct_sliderbackground1_3
+! SliderBackground1_4 <link>pwrct_sliderbackground1_4
 !
 ! Note! If you want to rotate the slider, rotate the slider
 ! and the background together.

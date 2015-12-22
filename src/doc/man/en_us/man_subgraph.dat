@@ -34,7 +34,7 @@
 
 
 <hr>
-2015-05-13
+2015-12-21
 Version V5.3.0
 <hr>
 </topic>
@@ -54,6 +54,7 @@ Texts.
 <topic> index
 Subgraph documentation
 <b>General <link>General
+<b>ColorTheme <link>ColorTheme
 <b>Ventilation <link>Ventilation
 <b>CircuitDiagram <link>CircuitDiagram
 <b>BaseComponent <link>BaseComponent
@@ -133,6 +134,7 @@ PressureSwitch <link>pwr_pressureswitch
 ReleaseValve <link>pwr_releasevalve
 ReleaseValveRight <link>pwr_releasevalveright
 Tank <link>pwr_tank
+Tank2 <link>pwr_pool
 Tank2 <link>pwr_tank2
 </topic>
 
@@ -226,6 +228,7 @@ HandWheel <link>pwr_handwheel
 LimitSwitch <link>pwr_limitswitch
 M3WayValve <link>pwr_m3wayvalve
 MDamper <link>pwr_mdamper
+MDamper <link>pwr_mdamper2
 MValve <link>pwr_mvalve
 Motor <link>pwr_motor
 Motor2 <link>pwr_motor2
@@ -257,6 +260,7 @@ ValveAnim2 <link>pwr_valveanim2
 ValveControl <link>pwr_valvecontrol
 ValveControl2 <link>pwr_valvecontrol2
 ValveManuel <link>pwr_valvemanuel
+pwr_scrollingtext <link>pwr_scrollingtext
 </topic>
 
 <topic> General_Pushbuttons
@@ -285,6 +289,7 @@ ButtonUp <link>pwr_buttonup
 CheckBox <link>pwr_checkbox
 CheckBox2 <link>pwr_checkbox2
 CheckBoxRelief <link>pwr_checkboxrelief
+GrayButton <link>pwr_graybutton
 LargeButton <link>pwr_largebutton
 NoteButton <link>pwr_notebutton
 NoteButton2 <link>pwr_notebutton2
@@ -342,10 +347,12 @@ Group Sliders
 Slider1 <link>pwr_slider1
 Slider2 <link>pwr_slider2
 Slider3 <link>pwr_slider3
+Slider4 <link>pwr_slider4
 SliderArrow <link>pwr_sliderarrow
 SliderArrow2 <link>pwr_sliderarrow2
 SliderBackground1 <link>pwr_sliderbackground1
 SliderBackground1_2 <link>pwr_sliderbackground1_2
+SliderBackground1_3 <link>pwr_sliderbackground1_3
 SliderBackground2 <link>pwr_sliderbackground2
 SliderBackground3 <link>pwr_sliderbackground3
 </topic>
@@ -379,6 +386,7 @@ ValueReliefUp <link>pwr_valuereliefup
 ValueSmall <link>pwr_valuesmall
 ValueSmallCenter <link>pwr_valuesmallcenter
 ValueSmallRight <link>pwr_valuesmallright
+pwr_lake <link>pwr_lake
 </topic>
 
 <topic> General_Ventilation
@@ -1022,6 +1030,20 @@ Group Hydraulics
  Group Hydraulics
 
  <image> pwr_tank_gs.gif
+
+ <h1>Description
+ Tank.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> pwr_pool <style> function
+ Tank2
+ Group Hydraulics
+
+ <image> pwr_tank2_gs.gif
 
  <h1>Description
  Tank.
@@ -2179,6 +2201,20 @@ Group Process
 
 </topic>
 
+<topic> pwr_mdamper2 <style> function
+ MDamper
+ Group Process
+
+ <image> pwr_mdamper_gs.gif
+
+ <h1>Description
+ Solenoid damper.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
 <topic> pwr_mvalve <style> function
  MValve
  Group Process
@@ -3057,6 +3093,20 @@ Group Pushbuttons
 
 </topic>
 
+<topic> pwr_graybutton <style> function
+ GrayButton
+ Group Pushbuttons
+
+ <image> pwr_graybutton_gs.png
+
+ <h1>Description
+ A gray button with ToggleDig as default action.
+
+ <h1>Default dynamics
+ ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+
+</topic>
+
 <topic> pwr_largebutton <style> function
  LargeButton
  Group Pushbuttons
@@ -3260,6 +3310,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2circuitdiagram <style> function
@@ -3277,6 +3328,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2crossreferences <style> function
@@ -3294,6 +3346,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2datasheet <style> function
@@ -3311,6 +3364,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2fast <style> function
@@ -3328,6 +3382,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2help <style> function
@@ -3362,6 +3417,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2histevent <style> function
@@ -3379,6 +3435,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2history <style> function
@@ -3396,6 +3453,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2note <style> function
@@ -3413,6 +3471,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2opengraph <style> function
@@ -3430,6 +3489,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2openobject <style> function
@@ -3447,6 +3507,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2openobjectgraph <style> function
@@ -3464,6 +3525,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2openplc <style> function
@@ -3481,6 +3543,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2parentgraph <style> function
@@ -3498,6 +3561,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2photo <style> function
@@ -3515,6 +3579,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2rtnavigator <style> function
@@ -3532,6 +3597,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2simulate <style> function
@@ -3549,6 +3615,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mb2trend <style> function
@@ -3566,6 +3633,7 @@ Group Pushbuttons/Methodbuttons
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
 
  See also MethodToolbar in Ge Reference Manual <link>geg_specialobjects_methodtoolbar, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mbblockevents <style> function
@@ -4052,6 +4120,28 @@ Group Sliders
 
 </topic>
 
+<topic> pwr_slider4 <style> function
+ Slider4
+ Group Sliders
+
+ <image> pwr_slider4_gs.png
+
+ <h1>Description
+ The mobile part of a slider. 
+ Should be placed on a slider background, which defines
+ the moving range for the slider. See also
+ SliderBackground1 <link>pwr_sliderbackground1
+ SliderBackground1_2 <link>pwr_sliderbackground1_2
+ SliderBackground1_3 <link>pwr_sliderbackground1_3
+
+ Note! If you want to rotate the slider, rotate the slider
+ and the background together.
+ 
+ <h1>Default dynamics
+ Slider <link>GeDynSlider, ,$pwr_lang/man_geref.dat
+
+</topic>
+
 <topic> pwr_sliderarrow <style> function
  SliderArrow
  Group Sliders
@@ -4115,6 +4205,26 @@ Group Sliders
  Background to a slider. 
  Defines the moving range for the slider. See also
  Slider1 <link>pwr_slider1
+
+ Note! If you want to rotate the slider, rotate the slider
+ and the background together.
+ 
+ <h1>Default dynamics
+ SliderBackground <link>GeDynSliderBackground, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_sliderbackground1_3 <style> function
+ SliderBackground1_3
+ Group Sliders
+
+ <image> pwr_sliderbackground1_3_gs.png
+
+ <h1>Description
+ Background to a slider. 
+ Defines the moving range for the slider. See also
+ Slider1 <link>pwr_slider1
+ Slider4 <link>pwr_slider4
 
  Note! If you want to rotate the slider, rotate the slider
  and the background together.
@@ -4593,6 +4703,742 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
+</topic>
+
+</headerlevel>
+</headerlevel>
+</chapter>
+<chapter>
+<topic> ColorTheme
+ColorTheme
+<option> printdisable
+<b>Group Indicators <link>ColorTheme_Indicators
+<b>Group Other <link>ColorTheme_Other
+<b>Group Pushbuttons <link>ColorTheme_Pushbuttons
+<b>Group Sliders <link>ColorTheme_Sliders
+<b>Group Values <link>ColorTheme_Values
+</topic>
+
+<topic> ColorTheme_Indicators
+Group Indicators
+IndRoundGreen <link>pwrct_indroundgreen
+IndRoundGreenBg <link>pwrct_indroundgreenbg
+IndRoundRed <link>pwrct_indroundred
+IndRoundRedBg <link>pwrct_indroundredbg
+IndRoundYellow <link>pwrct_indroundyellow
+IndRoundYellowBg <link>pwrct_indroundyellowbg
+IndSquareGreen <link>pwrct_indsquaregreen
+IndSquareGreenBg <link>pwrct_indsquaregreenbg
+IndSquareRed <link>pwrct_indsquarered
+IndSquareRedBg <link>pwrct_indsquareredbg
+IndSquareYellow <link>pwrct_indsquareyellow
+IndSquareYellowBg <link>pwrct_indsquareyellowbg
+</topic>
+
+<topic> ColorTheme_Other
+Group Other
+Menubar2 <link>pwrct_menubar2
+PulldownMenu2 <link>pwrct_pulldownmenu2
+</topic>
+
+<topic> ColorTheme_Pushbuttons
+Group Pushbuttons
+ButtonArrow <link>pwrct_buttonarrow
+ButtonCommand <link>pwrct_buttoncommand
+ButtonSet <link>pwrct_buttonset
+ButtonSmallCommand <link>pwrct_buttonsmallcommand
+ButtonSmallSet <link>pwrct_buttonsmallset
+ButtonSmallToggle <link>pwrct_buttonsmalltoggle
+ButtonToggle <link>pwrct_buttontoggle
+CheckBox <link>pwrct_checkbox
+Radiobutton <link>pwrct_radiobutton
+</topic>
+
+<topic> ColorTheme_Sliders
+Group Sliders
+Slider4 <link>pwrct_slider4
+SliderBackground1_3 <link>pwrct_sliderbackground1_3
+SliderBackground1_4 <link>pwrct_sliderbackground1_4
+</topic>
+
+<topic> ColorTheme_Values
+Group Values
+ValueInputLarge <link>pwrct_valueinputlarge
+ValueInputLargeBg <link>pwrct_valueinputlargebg
+ValueInputMedium <link>pwrct_valueinputmedium
+ValueInputMediumBg <link>pwrct_valueinputmediumbg
+ValueInputSmall <link>pwrct_valueinputsmall
+ValueInputSmallBg <link>pwrct_valueinputsmallbg
+ValueLarge <link>pwrct_valuelarge
+ValueLargeCenter <link>pwrct_valuelargecenter
+ValueMedium <link>pwrct_valuemedium
+ValueMediumCenter <link>pwrct_valuemediumcenter
+ValueSmall <link>pwrct_valuesmall
+ValueSmallCenter <link>pwrct_valuesmallcenter
+</topic>
+
+<option> printenable
+<headerlevel>
+<topic>Indicators__dummy <style> function
+Group Indicators
+</topic>
+<headerlevel>
+<topic> pwrct_indroundgreen <style> function
+ IndRoundGreen
+ Group Indicators
+
+ <image> pwrct_indroundgreen_gs.png
+
+ <h1>Description
+ Round green indicator.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Darkgray when signal is low.
+
+</topic>
+
+<topic> pwrct_indroundgreenbg <style> function
+ IndRoundGreenBg
+ Group Indicators
+
+ <image> pwrct_indroundgreenbg_gs.png
+
+ <h1>Description
+ Round green indicator with background relief.
+ The object is drawn with colortheme colors.
+ The background relief in drawn with object background color.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Darkgray when signal is low.
+
+</topic>
+
+<topic> pwrct_indroundred <style> function
+ IndRoundRed
+ Group Indicators
+
+ <image> pwrct_indroundred_gs.png
+
+ <h1>Description
+ Round red indicator.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Darkgray when signal is low.
+
+</topic>
+
+<topic> pwrct_indroundredbg <style> function
+ IndRoundRedBg
+ Group Indicators
+
+ <image> pwrct_indroundredbg_gs.png
+
+ <h1>Description
+ Round red indicator with background relief.
+ The object is drawn with colortheme colors.
+ The background relief in drawn with object background color.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Darkgray when signal is low.
+
+</topic>
+
+<topic> pwrct_indroundyellow <style> function
+ IndRoundYellow
+ Group Indicators
+
+ <image> pwrct_indroundyellow_gs.png
+
+ <h1>Description
+ Round yellow indicator.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Darkgray when signal is low.
+
+</topic>
+
+<topic> pwrct_indroundyellowbg <style> function
+ IndRoundYellowBg
+ Group Indicators
+
+ <image> pwrct_indroundyellowbg_gs.png
+
+ <h1>Description
+ Round yellow indicator with background relief.
+ The object is drawn with colortheme colors.
+ The background relief in drawn with object background color.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Darkgray when signal is low.
+
+</topic>
+
+<topic> pwrct_indsquaregreen <style> function
+ IndSquareGreen
+ Group Indicators
+
+ <image> pwrct_indsquaregreen_gs.png
+
+ <h1>Description
+ Square green indicator.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Darkgray when signal is low.
+
+</topic>
+
+<topic> pwrct_indsquaregreenbg <style> function
+ IndSquareGreenBg
+ Group Indicators
+
+ <image> pwrct_indsquaregreenbg_gs.png
+
+ <h1>Description
+ Square green indicator with background relief.
+ The object is drawn with colortheme colors.
+ The background relief in drawn with object background color.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Darkgray when signal is low.
+
+</topic>
+
+<topic> pwrct_indsquarered <style> function
+ IndSquareRed
+ Group Indicators
+
+ <image> pwrct_indsquarered_gs.png
+
+ <h1>Description
+ Square red indicator.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Darkgray when signal is low.
+
+</topic>
+
+<topic> pwrct_indsquareredbg <style> function
+ IndSquareRedBg
+ Group Indicators
+
+ <image> pwrct_indsquareredbg_gs.png
+
+ <h1>Description
+ Square red indicator with background relief.
+ The object is drawn with colortheme colors.
+ The background relief in drawn with object background color.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Darkgray when signal is low.
+
+</topic>
+
+<topic> pwrct_indsquareyellow <style> function
+ IndSquareYellow
+ Group Indicators
+
+ <image> pwrct_indsquareyellow_gs.png
+
+ <h1>Description
+ Square yellow indicator.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Darkgray when signal is low.
+
+</topic>
+
+<topic> pwrct_indsquareyellowbg <style> function
+ IndSquareYellowBg
+ Group Indicators
+
+ <image> pwrct_indsquareyellowbg_gs.png
+
+ <h1>Description
+ Square yellow indicator with background relief.
+ The object is drawn with colortheme colors.
+ The background relief in drawn with object background color.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Darkgray when signal is low.
+
+</topic>
+
+</headerlevel>
+<topic>Other__dummy <style> function
+Group Other
+</topic>
+<headerlevel>
+<topic> pwrct_menubar2 <style> function
+ Menubar2
+ Group Other
+
+ <image> pwrct_menubar2_gs.png
+
+ <h1>Description
+ Menubar. 
+ Add pulldownmenu-objects to the menubar.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> pwrct_pulldownmenu2 <style> function
+ PulldownMenu2
+ Group Other
+
+ <image> pwrct_pulldownmenu2_gs.png
+
+ <h1>Description
+ Pulldown menu. Place the pulldown menu on a menu bar, preferably a menubar of type Menubar2.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ PulldownMenu <link>GeDynPulldownMenu, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+</headerlevel>
+<topic>Pushbuttons__dummy <style> function
+Group Pushbuttons
+</topic>
+<headerlevel>
+<topic> pwrct_buttonarrow <style> function
+ ButtonArrow
+ Group Pushbuttons
+
+ <image> pwrct_buttonarrow_gs.png
+
+ <h1>Description
+ Button with an arrow.
+ The object is by default drawn with colortheme colors.
+
+ <h1>Default dynamics
+ ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_buttoncommand <style> function
+ ButtonCommand
+ Group Pushbuttons
+
+ <image> pwrct_buttonx_gs.png
+
+ <h1>Description
+ Button to execute an xtt command.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_buttonset <style> function
+ ButtonSet
+ Group Pushbuttons
+
+ <image> pwrct_buttonx_gs.png
+
+ <h1>Description
+ Button to set a digital signal.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_buttonsmallcommand <style> function
+ ButtonSmallCommand
+ Group Pushbuttons
+
+ <image> pwrct_buttonsmallx_gs.png
+
+ <h1>Description
+ Button to execute an Xtt command.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_buttonsmallset <style> function
+ ButtonSmallSet
+ Group Pushbuttons
+
+ <image> pwrct_buttonsmallx_gs.png
+
+ <h1>Description
+ Button to set a digital signal.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_buttonsmalltoggle <style> function
+ ButtonSmallToggle
+ Group Pushbuttons
+
+ <image> pwrct_buttonsmallx_gs.png
+
+ <h1>Description
+ Button to toggle a digital signal.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_buttontoggle <style> function
+ ButtonToggle
+ Group Pushbuttons
+
+ <image> pwrct_buttonx_gs.png
+
+ <h1>Description
+ Button to toggle a digital signal.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_checkbox <style> function
+ CheckBox
+ Group Pushbuttons
+
+ <image> pwr_checkbox_gs.gif
+
+ <h1>Description
+ Checkbox.
+
+ Subgraph with two pages, checkbox unmarked (page 1) and
+ checkbox marked (page 2).
+ <image> pwr_checkbox_ags.gif
+
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+ ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_radiobutton <style> function
+ Radiobutton
+ Group Pushbuttons
+
+ <image> pwr_radiobutton_gs.gif
+
+ <h1>Description
+ Radiobutton.
+ A radiobutton should be a member of a group with other
+ radiobuttons. Connect the radiobuttons first and the create
+ the group.
+
+ Subgraph with two pages, radiobutton not selected (page 1) and
+ selected (page 2).
+ <image> pwr_radiobutton_ags.gif
+
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ Radiobutton <link>GeDynRadiobutton, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+</headerlevel>
+<topic>Sliders__dummy <style> function
+Group Sliders
+</topic>
+<headerlevel>
+<topic> pwrct_slider4 <style> function
+ Slider4
+ Group Sliders
+
+ <image> pwrct_slider4_gs.png
+
+ <h1>Description
+ The mobile part of a slider. 
+ Should be placed on a slider background, which defines
+ the moving range for the slider.
+ The object is drawn with colortheme colors.
+
+ See also
+ SliderBackground1_3 <link>pwrct_sliderbackground1_3
+ SliderBackground1_4 <link>pwrct_sliderbackground1_4
+
+ Note! If you want to rotate the slider, rotate the slider
+ and the background together.
+ 
+ <h1>Default dynamics
+ Slider <link>GeDynSlider, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_sliderbackground1_3 <style> function
+ SliderBackground1_3
+ Group Sliders
+
+ <image> pwrct_sliderbackground1_3_gs.png
+
+ <h1>Description
+ Background to a slider. 
+ Defines the moving range for the slider. 
+ The object is drawn with colortheme colors.
+
+ See also
+ Slider4 <link>pwrct_slider4
+
+ Note! If you want to rotate the slider, rotate the slider
+ and the background together.
+ 
+ <h1>Default dynamics
+ SliderBackground <link>GeDynSliderBackground, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_sliderbackground1_4 <style> function
+ SliderBackground1_4
+ Group Sliders
+
+ <image> pwrct_sliderbackground1_4_gs.png
+
+ <h1>Description
+ Background to a slider. 
+ Defines the moving range for the slider. 
+ The object is drawn with colortheme colors.
+
+ See also
+ Slider4 <link>pwrct_slider4
+
+ Note! If you want to rotate the slider, rotate the slider
+ and the background together.
+ 
+ <h1>Default dynamics
+ SliderBackground <link>GeDynSliderBackground, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+</headerlevel>
+<topic>Values__dummy <style> function
+Group Values
+</topic>
+<headerlevel>
+<topic> pwrct_valueinputlarge <style> function
+ ValueInputLarge
+ Group Values
+
+ <image> pwrct_valuelarge_gs.png
+
+ <h1>Description
+ Large value input field.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_valueinputlargebg <style> function
+ ValueInputLargeBg
+ Group Values
+
+ <image> pwrct_valueinputlargebg_gs.png
+
+ <h1>Description
+ Large value input field with background relief.
+ The object is drawn with colortheme colors.
+ The background relief is drawn with the background color of 
+ the object.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_valueinputmedium <style> function
+ ValueInputMedium
+ Group Values
+
+ <image> pwrct_valuemedium_gs.png
+
+ <h1>Description
+ Medium value input field.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_valueinputmediumbg <style> function
+ ValueInputMediumBg
+ Group Values
+
+ <image> pwrct_valueinputmediumbg_gs.png
+
+ <h1>Description
+ Medium value input field with background relief.
+ The object is drawn with colortheme colors.
+ The background relief is drawn with the background color of 
+ the object.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_valueinputsmall <style> function
+ ValueInputSmall
+ Group Values
+
+ <image> pwrct_valuesmall_gs.png
+
+ <h1>Description
+ Small value input field.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_valueinputsmallbg <style> function
+ ValueInputSmallBg
+ Group Values
+
+ <image> pwrct_valueinputsmallbg_gs.png
+
+ <h1>Description
+ Small value input field with background relief.
+ The object is drawn with colortheme colors.
+ The background relief is drawn with the background color of 
+ the object.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_valuelarge <style> function
+ ValueLarge
+ Group Values
+
+ <image> pwrct_valuelarge_gs.png
+
+ <h1>Description
+ Large value field with left text alignment.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_valuelargecenter <style> function
+ ValueLargeCenter
+ Group Values
+
+ <image> pwrct_valuelargecenter_gs.png
+
+ <h1>Description
+ Large value field with center text alignment.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_valuemedium <style> function
+ ValueMedium
+ Group Values
+
+ <image> pwrct_valuemedium_gs.png
+
+ <h1>Description
+ Medium value field with left aligned text.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_valuemediumcenter <style> function
+ ValueMediumCenter
+ Group Values
+
+ <image> pwrct_valuemediumcenter_gs.png
+
+ <h1>Description
+ Medium value field with center text alignment.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_valuesmall <style> function
+ ValueSmall
+ Group Values
+
+ <image> pwrct_valuesmall_gs.png
+
+ <h1>Description
+ Small value field with left aligned text.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwrct_valuesmallcenter <style> function
+ ValueSmallCenter
+ Group Values
+
+ <image> pwrct_valuesmallcenter_gs.png
+
+ <h1>Description
+ Small value field with center text alignment.
+ The object is drawn with colortheme colors.
+
+ <h1>Default dynamics
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
 
 </topic>
 

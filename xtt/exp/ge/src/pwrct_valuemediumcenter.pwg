@@ -2,22 +2,17 @@
 0! DefaultHeight 0
 199
 !/**
-! ValueInputMediumRd
+! ValueMediumCenter
 ! Group Values
 !
-! <image> pwr_valueinputmediumrd_gs.gif
+! <image> pwrct_valuemediumcenter_gs.png
 !
 ! <h1>Description
-! Medium value input field with left aligned text.
-!
-! The field has a frame that can be matched to the background.
-! Use the tone choises in the color palette, and the
-! button for lightness, intensity and colorshift in the toolpanel, 
-! to match the frame to the background.
+! Medium value field with center text alignment.
+! The object is drawn with colortheme colors.
 !
 ! <h1>Default dynamics
 ! Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
-! ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
 !
 !*/
 1

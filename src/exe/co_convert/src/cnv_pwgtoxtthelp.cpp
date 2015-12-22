@@ -80,6 +80,7 @@ CnvPwgToXtthelp::CnvPwgToXtthelp( CnvCtx *cnv_ctx) :
   // Get files
   static pwr_tFileName filenames[10] = {
     "$pwre_croot/xtt/lib/ge/src/pwr_*.pwg", 
+    "$pwre_croot/xtt/exp/ge/src/pwrct_*.pwg", 
     "$pwre_croot/xtt/mmi/sis/src/sis*.pwg", 
     "$pwre_croot/xtt/mmi/ssg/src/ssg*.pwg", 
     "$pwre_croot/bcomp/mmi/bcomp/src/bcomp*.pwg", 
@@ -87,6 +88,7 @@ CnvPwgToXtthelp::CnvPwgToXtthelp( CnvCtx *cnv_ctx) :
     ""};
   static pwr_tFileName titles[10] = {
     "General", 
+    "ColorTheme", 
     "Ventilation", 
     "CircuitDiagram", 
     "BaseComponent", 
