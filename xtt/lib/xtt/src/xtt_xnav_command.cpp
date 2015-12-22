@@ -1127,6 +1127,37 @@ static int	xnav_set_func(	void		*client_data,
     if ( EVEN(sts)) return sts;
     return XNAV__SUCCESS;
   }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "COLORTHEME", strlen( arg1_str)) == 0)
+  {    
+    // Command is "SET COLORTHEME"
+    char idx_str[20];
+    int idx;
+    int num;
+    ApplListElem *elem;
+
+    if ( EVEN( dcli_get_qualifier( "/INDEX", idx_str, sizeof(idx_str)))) {
+      xnav->message('E', "Type syntax error");
+      return XNAV__HOLDCOMMAND;
+    }
+
+      
+    num = sscanf( idx_str, "%d", &idx);
+    if ( num != 1) {
+      xnav->message('E', "Type syntax error");
+      return XNAV__HOLDCOMMAND;
+    }
+    
+    if ( xnav->gbl.color_theme != idx) {
+      xnav->gbl.color_theme = idx;
+      
+      for ( elem = xnav->appl.root; elem; elem = elem->next) {
+	if ( elem->type == applist_eType_Graph)
+	  ((XttGe *)elem->ctx)->update_color_theme( idx);
+      }
+    }
+    if ( xnav->op)
+      xnav->op->set_color_theme( idx);
+  }
   else
     xnav->message('E',"Syntax error");
   return 1;
@@ -4952,7 +4983,7 @@ static int	xnav_open_func(	void		*client_data,
     tid = cdh_TypeObjidToId( oid);
     sts = gdh_GetEnumValueDef( tid, &vd, &rows);
     if ( EVEN(sts)) return sts;
-
+      
     if ( rows > int(sizeof(cname)/sizeof(cname[0])) - 1)
       rows = int(sizeof(cname)/sizeof(cname[0])) - 1;
 		    
@@ -4962,7 +4993,7 @@ static int	xnav_open_func(	void		*client_data,
     free( vd);
     
     xnav->wow->CreateList( "ColorTheme Selector", (char *)cname, sizeof(cname[0]), 
-			   xnav_colortheme_selector_ok_cb, 0, xnav);
+			     xnav_colortheme_selector_ok_cb, 0, xnav);
   }
   else
     xnav->message('E',"Syntax error");
