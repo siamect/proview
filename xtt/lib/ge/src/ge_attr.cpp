@@ -70,7 +70,8 @@ Attr::Attr(
   parent_ctx(a_parent_ctx), input_open(0), object(a_object), 
   close_cb(0), redraw_cb(0), get_subgraph_info_cb(0), get_dyn_info_cb(0),
   reconfigure_attr_cb(0),
-  store_cb(0), recall_cb(0), set_data_cb(0), client_data(0), recall_idx(-1),
+  store_cb(0), recall_cb(0), set_data_cb(0), get_plant_select_cb(0), get_current_colors_cb(0),
+  get_current_color_tone_cb(0), client_data(0), recall_idx(-1),
   original_data(0)
 {
 }
