@@ -134,6 +134,7 @@ class GrowTrend : public GrowRect {
 
   void align( double x, double y, glow_eAlignDirection direction);
 
+  void set_no_of_curves( int no_of_curves);
   void set_scan_time( double time);
 
   //! Get scantime

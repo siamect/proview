@@ -69,12 +69,12 @@ class GrowPolyLine : public GlowPolyLine {
     \param nodraw	Don't draw the object now.
   */
   GrowPolyLine( GrowCtx *glow_ctx, const char *name,
-		  glow_sPoint *pointarray, int point_cnt,
-		  glow_eDrawType border_d_type = glow_eDrawType_Line, 
-		  int line_w = 1, int fix_line_w = 0, 
-		  int fill = 0, int display_border = 1, int display_shadow = 0,
-		  glow_eDrawType fill_d_type = glow_eDrawType_Line,
-		  int closed = 0, int nodraw = 0);
+		glow_sPoint *pointarray, int point_cnt,
+		glow_eDrawType border_d_type = glow_eDrawType_Line, 
+		int line_w = 1, int fix_line_w = 0, 
+		int fill = 0, int display_border = 1, int display_shadow = 0,
+		glow_eDrawType fill_d_type = glow_eDrawType_Line,
+		int closed = 0, int nodraw = 0, int noround = 0);
 
   //! Destructor
   ~GrowPolyLine();
@@ -388,6 +388,7 @@ class GrowPolyLine : public GlowPolyLine {
   glow_eGradient gradient;  //!< Type of gradient.
   int		gradient_contrast; //!< Gradient contrast.
   int		disable_gradient; //!< Disable gradient, even if parent node has gradient.
+  float		round;      //!< Value to round or floor points.
 
   //! Set user data.
   /*!

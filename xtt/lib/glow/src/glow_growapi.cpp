@@ -4620,6 +4620,11 @@ void grow_SetTrendScanTime( grow_tObject object, double time)
   ((GrowTrend *)object)->set_scan_time( time);
 }
 
+void grow_SetTrendNoOfCurves( grow_tObject object, int no_of_curves)
+{
+  ((GrowTrend *)object)->set_no_of_curves( no_of_curves);
+}
+
 void grow_SetSliderRange( grow_tObject object, double min, double max)
 {
   ((GrowSlider *)object)->set_range( min, max);

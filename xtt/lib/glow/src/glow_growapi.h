@@ -2330,6 +2330,13 @@ extern "C" {
   */
   void grow_SetTrendScanTime( grow_tObject object, double time);
 
+  //! Set number of curves for of a trend object.
+  /*!
+    \param object	Trend object.
+    \param no_of_curves Number of curves.
+  */
+  void grow_SetTrendNoOfCurves( grow_tObject object, int no_of_curves);
+
   //! Set number of vertical and horizontal lines in a trend object.
   /*!
     \param object	Trend object.

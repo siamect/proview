@@ -114,11 +114,10 @@ void GrowTrend::configure_curves()
   glow_sPoint *point_p;
   int	i;
 
-
-  if ( 0 /* strcmp( trace.data[1], "") == 0 */ )
-    curve_cnt = 1;
-  else
+#if 0
+  if ( !curve_cnt)
     curve_cnt = 2;
+#endif
 
   no_of_points = max( 2, no_of_points);
   points = no_of_points;
@@ -163,8 +162,7 @@ void GrowTrend::configure_curves()
 
     ctx->nodraw++;
     curve[i] = new GrowPolyLine( ctx, "", pointarray, points, dt, 
-	curve_width,
-	0, fill_curve, 1, 0, dt_fill);
+				 curve_width, 0, fill_curve, 1, 0, dt_fill, 0, 1, 1);
     ctx->nodraw--;
   }
   free( (char *) pointarray);
@@ -577,11 +575,15 @@ void GrowTrend::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
     ctx->gdraw->line( w, x, y, x + width, y, drawtype, 0, 0);
   }
 
-  if ( fill_curve)
+  if ( border)
+    ctx->gdraw->rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx, 0);
+
+  if ( fill_curve) {
     for ( i = 0; i < curve_cnt; i++) {
       if ( curve[i])
 	curve[i]->fill = 0;
     }
+  }
   if ( t) {
     GlowTransform tmp = *t * trf;
     for ( i = 0; i < curve_cnt; i++) {
@@ -596,15 +598,15 @@ void GrowTrend::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
     }
   }
 
-  if ( fill_curve)
+  if ( fill_curve) {
+    ctx->gdraw->line( w, ll_x, ll_y, ll_x, ur_y, drawtype, idx, 0);
+    ctx->gdraw->line( w, ur_x, ll_y, ur_x, ur_y, drawtype, idx, 0);
+
     for ( i = 0; i < curve_cnt; i++) {
       if ( curve[i])
 	curve[i]->fill = 1;
     }
-  if ( border) {
-    ctx->gdraw->rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx, 0);
   }
-
 }
 
 //! Erase the object.
@@ -805,6 +807,15 @@ void GrowTrend::get_trace_attr( GlowTraceData **attr)
   *attr = &trace;
 }
 
+//! Set no of curves
+/*!
+  \param no_of_curves		Number of curves.
+*/
+void GrowTrend::set_no_of_curves( int no_of_curves)
+{
+  curve_cnt = no_of_curves;
+  configure_curves();
+}
 //! Set scantime
 /*!
   \param time		Scantime in seconds.
@@ -1003,7 +1014,7 @@ void GrowTrend::set_data( double *data[3], int data_curves, int data_points)
     ctx->nodraw++;
     curve[j] = new GrowPolyLine( ctx, "", pointarray, cpoints, dt, 
 				 curve_width,
-				 0, fill_curve, 1, 0, dt_fill);
+				 0, fill_curve, 1, 0, dt_fill, 0, 1, 1);
     ctx->nodraw--;
   }
   free( (char *) pointarray);

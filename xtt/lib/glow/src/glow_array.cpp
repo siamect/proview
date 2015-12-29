@@ -1155,7 +1155,8 @@ void GlowArray::open( GrowCtx *ctx, ifstream& fp)
       }
       case glow_eSave_GrowTrend: 
       {
-        GrowTrend *n = new GrowTrend( ctx, "");
+        GrowTrend *n = new GrowTrend( ctx, "", 0, 0, 0, 0, glow_eDrawType_Line, 1, glow_mDisplayLevel_1, 
+				      0, 1, glow_eDrawType_Line, 1);
 	n->open( fp);
         insert( n);
         break;

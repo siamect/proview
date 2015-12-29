@@ -7830,6 +7830,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
   pwr_tAName   	parsed_name;
   int		sts;
   int		inverted;
+  int		attr_cnt = 0;
 
   size1 = 4;
   p1 = 0;
@@ -7851,8 +7852,9 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
       trend_typeid1 = attr_type;
       break;
     default:
-      ;
+      ;      
     }
+    attr_cnt++;
   }
   size2 = 4;
   p2 = 0;
@@ -7875,6 +7877,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
     default:
       ;
     }
+    attr_cnt++;
   }
   grow_GetTrendScanTime( object, &scan_time);
   acc_time = scan_time;
@@ -7931,6 +7934,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
     }
   }
 
+  grow_SetTrendNoOfCurves( object, attr_cnt);
   trace_data->p = &pdummy;
   first_scan = true;
   return 1;
