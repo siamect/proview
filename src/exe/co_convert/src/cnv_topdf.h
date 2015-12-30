@@ -51,8 +51,8 @@ using namespace std;
 using namespace std;
 
 #define pdf_cMaxLevel 4
-#define pdf_cPageHeight 790
-#define pdf_cPageWidth 535
+#define pdf_cPageHeight 842
+#define pdf_cPageWidth 595
 #define pdf_cPageNumX (pdf_cPageWidth - 10)
 #define pdf_cPageNumY (pdf_cPageHeight - 13)
 #define pdf_cLeftMargin 100
