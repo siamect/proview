@@ -931,7 +931,7 @@ SObject         pwrb:Class
       !*/
       Object OutWindup $Intern 54 
         Body SysBody
-          Attr TypeRef = "pwrb:Type-Float32"
+          Attr TypeRef = "pwrb:Type-Float64"
           Attr GraphName = "OutWindup"
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	  Attr Flags |= PWR_MASK_STATE
@@ -943,7 +943,7 @@ SObject         pwrb:Class
       !*/
       Object AbsOut $Intern 55 
         Body SysBody
-          Attr TypeRef = "pwrb:Type-Float32"
+          Attr TypeRef = "pwrb:Type-Float64"
           Attr GraphName = "AbsOut"
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	  Attr Flags |= PWR_MASK_STATE

@@ -397,10 +397,10 @@ void pid_exec(
 	float	bfold;
 	float	ddiff;
 	float	derold;
-	float	ut;
-	float	dut;
+	double	ut;
+	double	dut;
 	float	kd;
-	float	absut;
+	double	absut;
 	float	gain;
 
 /* Save old values */

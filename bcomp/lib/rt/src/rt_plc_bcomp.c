@@ -260,10 +260,10 @@ void CompPID_Fo_exec( plc_sThread *tp,
   float	bfold;
   float	ddiff;
   float	derold;
-  float	ut;
-  float	dut;
+  double ut;
+  double dut;
   float kd;
-  float	absut;
+  double absut;
   float	gain;
 
   pwr_sClass_CompPID *co = (pwr_sClass_CompPID *) o->PlcConnectP;
