@@ -136,7 +136,7 @@ pwrb_PlcThread_Exec (
 
   o->Sum     += o->Last;
   o->Mean     = o->Sum / o->Count;
-  o->Coverage = (o->Mean / o->ScanTime) * 100.0;
+  o->Coverage = 0.99 * o->Coverage + 0.01 * (o->Last / o->ScanTime) * 100.0;
 
   if (o->Last < o->Limit_1_8)
     o->Count_1_8++;
