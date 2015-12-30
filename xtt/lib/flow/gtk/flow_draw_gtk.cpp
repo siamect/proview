@@ -955,7 +955,11 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
 	button3_pressed = 0;
 	break;
       }
-      sts = ctx->event_handler_nav( flow_eEvent_ButtonRelease, (int)event.button.x, (int)event.button.y);
+      if ( event.button.button == 1 && 
+	   (event.button.state & GDK_SHIFT_MASK) && !(event.button.state & GDK_CONTROL_MASK))
+	sts = ctx->event_handler_nav( flow_eEvent_MB1ClickShift, (int)event.button.x, (int)event.button.y);
+      else
+	sts = ctx->event_handler_nav( flow_eEvent_ButtonRelease, (int)event.button.x, (int)event.button.y);
       break;          
     case GDK_EXPOSE:
       sts = ctx->event_handler_nav( flow_eEvent_Exposure, 0, 0);

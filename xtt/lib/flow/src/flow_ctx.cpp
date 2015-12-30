@@ -1363,6 +1363,32 @@ int FlowCtx::event_handler_nav( flow_eEvent event, int x, int y)
 
   switch ( event)
   {
+    case flow_eEvent_MB1ClickShift:
+      int delta_x, delta_y, mainwind_delta_x, mainwind_delta_y;
+
+      fdraw->nav_rect_erase( this, nav_rect_ll_x, nav_rect_ll_y, 
+			     nav_rect_ur_x - nav_rect_ll_x, nav_rect_ur_y - nav_rect_ll_y, 0);
+
+      delta_x = x - (nav_rect_ur_x + nav_rect_ll_x) / 2;
+      delta_y = y - (nav_rect_ur_y + nav_rect_ll_y) / 2;;
+      nav_rect_ll_x += delta_x;
+      nav_rect_ur_x += delta_x;
+      nav_rect_ll_y += delta_y;
+      nav_rect_ur_y += delta_y;
+
+      mainwind_delta_x = int( - zoom_factor / nav_zoom_factor * delta_x);
+      mainwind_delta_y = int( - zoom_factor / nav_zoom_factor * delta_y);
+      offset_x -= mainwind_delta_x;
+      offset_y -= mainwind_delta_y;
+      nav_clear();
+      nav_draw( 0, 0, nav_window_width, nav_window_height);
+
+      a.traverse( mainwind_delta_x, mainwind_delta_y);
+
+      clear();
+      draw( 0, 0, window_width, window_height);
+      change_scrollbar();
+      break;
     case flow_eEvent_MB1Press:
       if ( nav_rect_ll_x < x && x < nav_rect_ur_x &&
            nav_rect_ll_y < y && y < nav_rect_ur_y)
