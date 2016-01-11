@@ -486,8 +486,10 @@ palette NavigatorPalette
       class XttMultiView
       class XttVideo
       class WebBrowserConfig
+      class OpPlaceWeb
       class WebGraph
       class WebLink
+      class OpPlaceApp
       class AppGraph
       class AppLink
     }

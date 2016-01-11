@@ -673,11 +673,6 @@ void GeMotif::activate_export_java_as( Widget w, Ge *gectx, XmAnyCallbackStruct 
   gectx->activate_export_java_as();
 }
 
-void GeMotif::activate_generate_web( Widget w, Ge *gectx, XmAnyCallbackStruct *data)
-{
-  gectx->activate_generate_web();
-}
-
 void GeMotif::activate_creanextpage( Widget w, Ge *gectx, XmAnyCallbackStruct *data)
 {
   gectx->activate_creanextpage();
@@ -1364,7 +1359,6 @@ GeMotif::GeMotif( 	void 	*x_parent_ctx,
 	{(char*) "ge_activate_open",(caddr_t)GeMotif::activate_open },
 	{(char*) "ge_activate_export_java",(caddr_t)GeMotif::activate_export_java },
 	{(char*) "ge_activate_export_java_as",(caddr_t)GeMotif::activate_export_java_as },
-	{(char*) "ge_activate_generate_web",(caddr_t)GeMotif::activate_generate_web },
 	{(char*) "ge_activate_creanextpage",(caddr_t)GeMotif::activate_creanextpage },
 	{(char*) "ge_activate_nextpage",(caddr_t)GeMotif::activate_nextpage },
 	{(char*) "ge_activate_prevpage",(caddr_t)GeMotif::activate_prevpage },

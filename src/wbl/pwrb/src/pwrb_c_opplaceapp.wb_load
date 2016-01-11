@@ -33,20 +33,30 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_appgraph.wb_load -- Defines the class AppGraph.
+!  pwrb_c_opplaceapp.wb_load -- Defines the class OpPlaceApp.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  @Summary Defines a link in an android application.
-!  Defines a link in an android application.
-!  AppLink objects should be positioned as children to a OpPlaceApp object.
-!  
+!  @Group NodeConfiguration,Operator
+!  @Summary Configures the App interface on a proview node.
+!  The OpPlaceApp object defines a Android applications interface on 
+!  a proview node.
+!
+!  With the OpPlaceApp object a start page is defined with icons that
+!  opens Ge graphs or links to web pages.
+!
+!  @image orm_opplaceapp_1.png
+!
+!  The start icons is configured with AppGraph and AppLink objects 
+!  that is placed under the OpPlaceApp object.
 !
 ! @b See also
-!  @classlink OpPlaceApp pwrb_opplaceapp.html
+!  @classlink AppGraph pwrb_appgraph.html
+!  @classlink AppLink pwrb_appgraph.html
+!  @classlink WebHandler pwrb_webhandler.html
 !*/
-  Object AppLink $ClassDef 616 
+  Object OpPlaceApp $ClassDef 683 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
@@ -54,33 +64,49 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "AppLink"
+        Attr StructName = "OpPlaceApp"
       EndBody
       !/**
-      !  The URL.
+      !  Optional description.
       !*/
-      Object URL $Attribute 1 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$URL"
-        EndBody
-      EndObject
-      !/**
-      !  Icon text for the link.
-      !*/
-      Object Text $Attribute 2
+      Object Description $Attribute 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
       !/**
-      !  Icon image for the link.
-      !  The default location is $pwrp_exe.
+      !  Specifies default language.
       !*/
-      Object Image $Attribute 3
+      Object Language $Attribute 2
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String80"
+          Attr TypeRef = "pwrb:Type-LanguageEnum"
+        EndBody
+      EndObject
+      !/**
+      !  If AppUseWebDir is set all files used by the Android application is
+      !  read from pwrp_web. 
+      !*/
+      Object AppUseWebDir $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
     EndObject
+    !
+    ! Template for OpPlaceApp
+    !
+    Object Template OpPlaceApp
+      Body RtBody
+	Attr AppUseWebDir = 1
+      EndBody
+    EndObject
   EndObject
 EndSObject
+
+
+
+
+
+
+
+

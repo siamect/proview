@@ -336,6 +336,8 @@ public class Pwrb {
   public static final int cClass_waith = 133072;
   public static final int cClass_WebBrowserConfig = 133488;
   public static final int cClass_WebHandler = 133440;
+  public static final int cClass_OpPlaceWeb = 136528;
+  public static final int cClass_OpPlaceApp = 136536;
   public static final int cClass_WebGraph = 133472;
   public static final int cClass_WebLink = 133480;
   public static final int cClass_xor = 133136;

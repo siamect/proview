@@ -73,36 +73,14 @@ typedef enum {
 static int graph_get_applet_size( char *graphname, int *width, int *height);
 #endif
 
-#if LDH
-static int graph_webhandler_insert( pwr_sAttrRef *aref, void *o_p,
-				    void *c_p, void *dum1, void *dum2, void *dum3)
-{
-  int *count = (int *)c_p;
-  pwr_tObjid *objid_p = (pwr_tObjid *) o_p;
-  
-
-  if ( *count == 0)
-    *objid_p = aref->Objid;
-
-  (*count)++;
-  return 1;
-}
-#endif
-
-int Graph::generate_web( ldh_tSesContext ldhses)
+int Graph::generate_web( ldh_tSesContext ldhses, pwr_tOid opplaceweb_oid)
 {
 #if LDH
-  unsigned long	node_count;
-  pwr_tObjid	*nodelist;
-  pwr_tObjid    node_objid;
   int           sts;
   int           size;
-  pwr_tObjid    webhandler_objid;
-  int           webhandler_cnt = 0;
   pwr_tClassId  classid;
   pwr_tObjid    webgraph_objid;
   pwr_tObjid    weblink_objid;
-  pwr_tClassId  class_vect[2];
   char          *value_p;
   pwr_tString80 title;
   pwr_tString80 text;
@@ -133,45 +111,20 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   char          target_str[80];
   char          sname[80];
   char		arlist[400];
+  pwr_tOName	opplaceweb_name;
 
   ge_get_systemname( sname);
 
   // Get codebase for applets from global config file
   cnf_get_value( "appletCodebase", codebase, sizeof(codebase));
 
-  // Find the WebHandler object
-  
-  sts = trv_get_rtnodes( ldhses, &node_count, &nodelist);
-  if ( ODD(sts))
-  {
-    if ( node_count > 0)
-    {
-      node_objid = *nodelist;
-      free( (char *)nodelist);
-    }
-    else
-      sts = 0;
-  }
-  if ( EVEN(sts)) {
-    return GE__NONODEOBJECT;
-  }
-
-  class_vect[0] = pwr_cClass_WebHandler;
-  class_vect[1] = 0;
-  sts = trv_get_objects_hcn( ldhses, node_objid, class_vect,
-	    NULL, graph_webhandler_insert, (void *)&webhandler_objid, 
-            (void *)&webhandler_cnt,0,0,0);
-  if ( EVEN(sts) || webhandler_cnt == 0) {
-    return GE__NOWEBHANDLER;
-  }
-  if ( webhandler_cnt > 1) {
-    return GE__WEBHANDLERS;
-  }
-
-  // Get WebHandler data
+  // Get OpPlaceWeb data
+  sts = ldh_ObjidToName( ldhses, opplaceweb_oid, ldh_eName_Hierarchy, opplaceweb_name, 
+			 sizeof(opplaceweb_name), &size);
+  if (EVEN(sts)) return sts;
 
   // Attribute FileName
-  sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "FileName",
+  sts = ldh_GetObjectPar( ldhses, opplaceweb_oid, "RtBody", "FileName",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   if ( strcmp( value_p, "") == 0)
@@ -181,21 +134,21 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   free( value_p); 
 
   // Attribute Title
-  sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "Title",
+  sts = ldh_GetObjectPar( ldhses, opplaceweb_oid, "RtBody", "Title",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   strcpy( title, value_p);
   free( value_p); 
 
   // Attribute Text
-  sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "Text",
+  sts = ldh_GetObjectPar( ldhses, opplaceweb_oid, "RtBody", "Text",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   strcpy( text, value_p);
   free( value_p); 
 
   // Attribute PwrHost
-  sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "PwrHost",
+  sts = ldh_GetObjectPar( ldhses, opplaceweb_oid, "RtBody", "PwrHost",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   strcpy( pwrhost, value_p);
@@ -203,49 +156,49 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   dcli_trim( pwrhost, pwrhost);
 
   // Attribute EnableLogin
-  sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "EnableLogin",
+  sts = ldh_GetObjectPar( ldhses, opplaceweb_oid, "RtBody", "EnableLogin",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   enable_login = *(pwr_tBoolean *)value_p;
   free( value_p); 
 
   // Attribute EnableAlarmList
-  sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "EnableAlarmList",
+  sts = ldh_GetObjectPar( ldhses, opplaceweb_oid, "RtBody", "EnableAlarmList",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   enable_alarmlist = *(pwr_tBoolean *)value_p;
   free( value_p); 
 
   // Attribute EnableEventLog
-  sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "EnableEventLog",
+  sts = ldh_GetObjectPar( ldhses, opplaceweb_oid, "RtBody", "EnableEventLog",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   enable_eventlog = *(pwr_tBoolean *)value_p;
   free( value_p); 
 
   // Attribute EnableNavigator
-  sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "EnableNavigator",
+  sts = ldh_GetObjectPar( ldhses, opplaceweb_oid, "RtBody", "EnableNavigator",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   enable_navigator = *(pwr_tBoolean *)value_p;
   free( value_p); 
 
   // Attribute StyleSheet
-  sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "StyleSheet",
+  sts = ldh_GetObjectPar( ldhses, opplaceweb_oid, "RtBody", "StyleSheet",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   strcpy( style_sheet, value_p);
   free( value_p); 
 
   // Attribute StartURL
-  sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "StartURL",
+  sts = ldh_GetObjectPar( ldhses, opplaceweb_oid, "RtBody", "StartURL",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   strcpy( start_URL, value_p);
   free( value_p); 
 
   // Attribute LoadArchives
-  sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "LoadArchives",
+  sts = ldh_GetObjectPar( ldhses, opplaceweb_oid, "RtBody", "LoadArchives",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   strcpy( load_archives, (char *)value_p);
@@ -373,7 +326,7 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   }
 
   // Get all WebGraph objects
-  sts = ldh_GetChild( ldhses, webhandler_objid, &webgraph_objid);
+  sts = ldh_GetChild( ldhses, opplaceweb_oid, &webgraph_objid);
   while( ODD(sts)) {
 
     sts = ldh_GetObjectClass( ldhses, webgraph_objid, &classid);
@@ -444,7 +397,7 @@ graph_text << "'," << resize << "," << width+20 << "," << height+20
 "" << endl;
 
   // Get all WebLink objects
-  sts = ldh_GetChild( ldhses, webhandler_objid, &weblink_objid);
+  sts = ldh_GetChild( ldhses, opplaceweb_oid, &weblink_objid);
   while( ODD(sts)) {
 
     sts = ldh_GetObjectClass( ldhses, weblink_objid, &classid);
@@ -528,7 +481,8 @@ graph_text << "'," << resize << "," << width+20 << "," << height+20
 "      <param name = \"code\" value=\"jpwr.jop.JopOpWindowApplet.class\" >" << endl <<
 "      <param name =\"archive\" value=\"" << arlist << ",pwrp_" << sname << "_web.jar\">" << endl <<
 "      <param name=\"persistState\" value=\"false\" />" << endl <<
-"      <param name=\"scriptable\" value=\"false\">" << endl;
+"      <param name=\"scriptable\" value=\"false\">" << endl <<
+"      <param name=\"pwrplace\" value=\"" << opplaceweb_name << "\">" << endl;
   if ( strcmp( pwrhost, "") != 0)
     fp_ow <<
 "      <param name=\"pwrhost\" value=\"" << pwrhost << "\">" << endl;
@@ -541,7 +495,8 @@ graph_text << "'," << resize << "," << width+20 << "," << height+20
 "      <param name = code value=jpwr.jop.JopOpWindowApplet.class >" << endl <<
 "      <param name =\"archive\" value=\"" << arlist << ",pwrp_" << sname << "_web.jar\">" << endl <<
 "      <param name=\"type\" value=\"application/x-java-applet;version=1.3\">" << endl <<
-"      <param name=\"scriptable\" value=\"false\">" << endl;
+"      <param name=\"scriptable\" value=\"false\">" << endl <<
+"      <param name=\"pwrplace\" value=\"" << opplaceweb_name << "\">" << endl;
   if ( strcmp( pwrhost, "") != 0)
     fp_ow <<
 "      <param name=\"pwrhost\" value=\"" << pwrhost << "\">" << endl;

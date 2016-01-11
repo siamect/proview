@@ -198,7 +198,6 @@ class GeGtk : public Ge {
   static void activate_customcolors_write(GtkWidget *w, gpointer gectx);
   static void activate_import_graph( GtkWidget *w, gpointer gectx);
   static void activate_import_image( GtkWidget *w, gpointer gectx);
-  static void activate_generate_web( GtkWidget *w, gpointer gectx);
   static void activate_creanextpage( GtkWidget *w, gpointer gectx);
   static void activate_nextpage( GtkWidget *w, gpointer gectx);
   static void activate_prevpage( GtkWidget *w, gpointer gectx);

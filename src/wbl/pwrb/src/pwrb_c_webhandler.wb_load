@@ -46,18 +46,8 @@ SObject pwrb:Class
 !  server process (GdhServer) to start, which provides the graph-applets 
 !  with information from the realtime database.
 !
-!  With the 'Generate website' function in Ge it is also possible to
-!  produce html-files for a website, containing a menu-frame and an
-!  applet frame. The links in the menu is defined by WebGraph and WebLink
-!  objects that are children to the WebHandler object.
-!
-!  If the EnableLogin attribute is set, the menu will contain a link to
-!  a login-applet which makes it possible to login as a proview user, and
-!  gain privilege to make changes to the database.
-!
 ! @b See also
-!  @classlink WebGraph pwrb_webgraph.html
-!  @classlink WebLink pwrb_weblink.html
+!  @classlink OpPlaceWeb pwrb_opplaceweb.html
 !*/
   Object WebHandler $ClassDef 296 
     Body SysBody
@@ -103,89 +93,113 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Name of the html-file for the start page.
-      !  Default index.html
+      !  Obsolete since V5.4.
       !*/
       Object FileName $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
-      !  Title in the menu frame.
+      !  Obsolete since V5.4.
       !*/
       Object Title $Attribute 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
-      !  Additional text in the menu frame.
+      !  Obsolete since V5.4.
       !*/
       Object Text $Attribute 5
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
-      !  A language selection entry will be placed in the menu frame.
+      !  Obsolete since V5.4.
       !*/
       Object EnableLanguage $Attribute 14
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
-      !  @Summary A login entry will be placed in the menu frame.
-      !  A login entry will be placed in the menu frame, that makes it possible
-      !  to login as a proview user, and gain privileges to make changes to
-      !  the database.
+      !  Obsolete since V5.4.
       !*/
       Object EnableLogin $Attribute 6
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
-      !  An entry for alarm and eventlist will be placed in the menu.
+      !  Obsolete since V5.4.
       !*/
       Object EnableAlarmList $Attribute 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
-      !  An entry for eventlog will be placed in the menu.
+      !  Obsolete since V5.4.
       !*/
       Object EnableEventLog $Attribute 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
-      !  An entry for runtime navigator will be placed in the menu.
+      !  Obsolete since V5.4.
       !*/
       Object EnableNavigator $Attribute 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
-      !  Disable the Help button.
-      !  The Help button contains a link to the project help text.
+      !  Obsolete since V5.4.
       !*/
       Object DisableHelp $Attribute 16
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
-      !  Disable the Proview button.
-      !  The Proview button contains a link to the Proview web documentation page.
+      !  Obsolete since V5.4.
       !*/
       Object DisableProview $Attribute 17
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
@@ -194,91 +208,75 @@ SObject pwrb:Class
       Object UserObject $Attribute 10
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
-          Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
           Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
-      !  Specifies default language.
+      !  Obsolete since V5.4.
       !*/
       Object Language $Attribute 15
         Body SysBody
           Attr TypeRef = "pwrb:Type-LanguageEnum"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
-      !  @Summary css-file that will be used by generated html-files.
-      !  css-file (Cascading Style Sheets) that will be used by
-      !  generated html-files.
+      !  Obsolete since V5.4.
       !*/
       Object StyleSheet $Attribute 11
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
-      !  @Summary URL in right frame when the website is opened
-      !  The URL that will be displayed in the right frame when the
-      !  web-site is opened.
+      !  Obsolete since V5.4.
       !*/
       Object StartURL $Attribute 12
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
-      !  @Summary Web archives that is loaded when the menu applet is opened.
-      !  Web archives that is loaded when the menu applet is opened.
-      !  Object graphs for some classvolumes are not loaded by default, as
-      !  they are quite large and timeconsuming. They can be loaded by adding
-      !  the name of the archive in this attribute.
-      !  Also archives with graphs from other projects can be added.
-      !  Archive are separated by comma.
-      !  The archives has to be copied to $pwrp_web.
+      !  Obsolete since V5.4.
       !*/
       Object LoadArchives $Attribute 13 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String256"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
-      !  Name of Proview host when web interface is opened from another 
-      !  site than the process or operator station.
+      !  Obsolete since V5.4.
       !*/
       Object PwrHost $Attribute 18 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
-      !  @Summary Signature alias set to the project archive.
-      !  To be able to open the web interface from another site than
-      !  the process or operator station, the host name of the process 
-      !  station has to be stated in PwrHost and a signature has to be 
-      !  applied to the jar-files of the web site. The signature is an 
-      !  alias created by keytool and is stated in AppletSignature.
-      !
-      !  In this example a signature with the alias pwrkey is created with
-      !  a validity of 100 years
-      !
-      !  > keytool -genkey -alias pwrkey
-      !  > keytool -selfcert -alias pwrkey -validity 36500
-      !
-      !  The alias should be signed to all jarfiles in $pwrp_web,
-      !  pwr_rt_client.jar, pwr_jop.jar, pwr_jopc.jar etc. This is done with
-      !  jarsigner
-      !
-      !  > jarsigner $pwrp_web/pwr_rt_client.jar pwrkey
-      !  
-      !  The project specific jarfile will automatically be signed if the
-      !  alias is stated in AppletSignature. Note that the passphrase for the
-      !  keystore has to be entered in the terminal window. It is possible to
-      !  state the passphrase in the AppletSignature after the alias and a '/',
-      !  eg 'pwrkey/mypassphrase'.
+      !  Obsolete since V5.4.
       !*/
       Object AppletSignature $Attribute 19 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
@@ -347,12 +345,14 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  If AppUseWebDir is set all files used by the Android application is
-      !  read from pwrp_web. 
+      !  Obsolete since V5.4.
       !*/
       Object AppUseWebDir $Attribute 42
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
     EndObject
@@ -367,66 +367,6 @@ SObject pwrb:Class
         Attr MaxNoOfEvents = 500
 	Attr AppUseWebDir = 1
       EndBody
-    EndObject
-    Object PostCreate $DbCallBack
-      Body SysBody
-        Attr MethodName = "WebHandler-PostCreate"
-      EndBody
-    EndObject
-    Object NavigatorPosnn $Menu
-      Object Pointed $Menu
-	Object Build $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Build"
-	    Attr MethodName = "WebHandler-Build"
-	    Attr FilterName = "$Object-BuildFilter"
-	  EndBody
-	EndObject
-      EndObject
-    EndObject
-    Object NavigatorPoson $Menu
-      Object Pointed $Menu
-	Object Build $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Build"
-	    Attr MethodName = "WebHandler-Build"
-	    Attr FilterName = "$Object-BuildFilter"
-	  EndBody
-	EndObject
-      EndObject
-    EndObject
-    Object NavigatorPosos $Menu
-      Object Pointed $Menu
-	Object Build $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Build"
-	    Attr MethodName = "WebHandler-Build"
-	    Attr FilterName = "$Object-BuildFilter"
-	  EndBody
-	EndObject
-      EndObject
-    EndObject
-    Object NavigatorPosms $Menu
-      Object Pointed $Menu
-	Object Build $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Build"
-	    Attr MethodName = "WebHandler-Build"
-	    Attr FilterName = "$Object-BuildFilter"
-	  EndBody
-	EndObject
-      EndObject
-    EndObject
-    Object NavigatorPosmn $Menu
-      Object Pointed $Menu
-	Object Build $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Build"
-	    Attr MethodName = "WebHandler-Build"
-	    Attr FilterName = "$Object-BuildFilter"
-	  EndBody
-	EndObject
-      EndObject
     EndObject
   EndObject
 EndSObject

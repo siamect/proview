@@ -72,7 +72,7 @@ class wb_build : public wb_status
   void nodehier( pwr_tOid oid);
   void plcpgm( pwr_tOid oid);
   void xttgraph( pwr_tOid oid);
-  void webhandler( pwr_tOid oid);
+  void opplaceweb( pwr_tOid oid);
   void webbrowserconfig( pwr_tOid oid);
   void webgraph( pwr_tOid oid);
   void appgraph( pwr_tOid oid);

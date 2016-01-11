@@ -1383,30 +1383,6 @@ void Ge::export_plcfo( Ge *gectx, char *filename)
     gectx->message( sts);
 }
 
-void Ge::activate_generate_web()
-{
-  int sts;
-
-  // graph->generate_web();
-  if ( !ldhses) {
-    message( 'E', "Ge is not connected to workbench");
-    return;
-  }
-
-  sts = Graph::generate_web( ldhses);
-  if ( sts == GE__NONODEOBJECT)
-    message( 'E', "Can't find $Node object");
-  else if ( sts == GE__NOWEBHANDLER)
-    message( 'E', "Can't find WebHandler object");
-  else if ( sts == GE__WEBHANDLERS)
-    message( 'E', "More than one WebHandler object found");
-  else if ( EVEN(sts))
-    message( 'E', "Error from generate web");
-  else
-    message( 'I', "Web-pages generated");
-  Graph::generate_web_help();
-}
-
 void Ge::activate_creanextpage()
 {
   char old_name[40];
@@ -2243,11 +2219,6 @@ int Ge::set_focus( void *component)
   }
 
   return 1;
-}
-
-int Ge::generate_web( ldh_tSesContext x_ldhses)
-{
-  return Graph::generate_web( x_ldhses);
 }
 
 int Ge::command( char *cmd)

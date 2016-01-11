@@ -1478,8 +1478,8 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
 				break;
 			}
 			case OPWIN: {
-				// Find AppGraph object under WebHandler, search on two hierarchy levels
-				CdhrObjid oret = gdh.getClassList( Pwrb.cClass_WebHandler);
+				// Find AppGraph object under OpPlaceApp, search on two hierarchy levels
+				CdhrObjid oret = gdh.getClassList( Pwrb.cClass_OpPlaceApp);
 				if (oret.oddSts()) {
 					
 				        CdhrString sret = gdh.objidToName(oret.objid, Cdh.mName_volumeStrict);
@@ -2644,13 +2644,13 @@ public class MainActivity extends Activity implements PlowAppl, GraphApplIfc, Gd
     void loadUrlSymbols() {
 
 	// Get language from webhandler object
-	CdhrObjid webHandler = gdh.getClassList( Pwrb.cClass_WebHandler);
-	if ( webHandler.evenSts()) return;
+	CdhrObjid opPlace = gdh.getClassList( Pwrb.cClass_OpPlaceApp);
+	if ( opPlace.evenSts()) return;
 
-	CdhrString webHandlerName = gdh.objidToName( webHandler.objid, Cdh.mName_volumeStrict);
-	if ( webHandlerName.evenSts()) return;
+	CdhrString opPlaceName = gdh.objidToName( opPlace.objid, Cdh.mName_volumeStrict);
+	if ( opPlaceName.evenSts()) return;
 
-	String attr = webHandlerName.str + ".Language";
+	String attr = opPlaceName.str + ".Language";
 
 	CdhrInt iAttrValue = gdh.getObjectInfoInt( attr);
 	if ( iAttrValue.evenSts()) return;

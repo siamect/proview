@@ -835,11 +835,6 @@ void GeGtk::activate_import_image(GtkWidget *w, gpointer gectx)
 					image_file_selected_cb, wow_eFileSelType_Image);
 }
 
-void GeGtk::activate_generate_web(GtkWidget *w, gpointer gectx)
-{
-  ((Ge *)gectx)->activate_generate_web();
-}
-
 void GeGtk::activate_creanextpage(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_creanextpage();

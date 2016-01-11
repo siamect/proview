@@ -1056,7 +1056,7 @@ relation to the radius, so a LineLength of 0.1 will give a length on the longest
 
 <topic> geg_specialobjects_table
 Table
-Table is a lucid disposition of data, organized in rows and columns, often providede with 
+Table is a lucid disposition of data, organized in rows and columns, often provided with 
 headers. Table is found under the Other map in the subgraph palette.
 
 <image> geg_fig76.png

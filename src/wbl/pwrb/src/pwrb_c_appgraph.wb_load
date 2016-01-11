@@ -40,11 +40,11 @@ SObject pwrb:Class
 !  @Version 1.0
 !  @Summary Defines a graph in an android application.
 !  Defines a graph in an android application.
-!  AppGraph objects should be positioned as children to a WebHandler object.
+!  AppGraph objects should be positioned as children to a OpPlaceApp object.
 !  
 !
 ! @b See also
-!  @classlink WebHandler pwrb_webhandler.html
+!  @classlink OpPlaceApp pwrb_opplaceapp.html
 !*/
   Object AppGraph $ClassDef 611 
     Body SysBody

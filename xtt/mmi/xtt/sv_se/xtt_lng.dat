@@ -545,6 +545,8 @@ E 3.1.19 "TestVärde"
 E 3.1.20 "Inverterad"
 E 3.1.21 "Test"
 E 3.1.22 "Från/Test"
+E 3.1.23 "Öppna kanal"
+E 3.1.24 "Öppna signal"
 #
 # Mode - PID
 E 3.2.1 "Mod"

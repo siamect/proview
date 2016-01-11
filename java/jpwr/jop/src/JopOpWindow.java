@@ -61,18 +61,18 @@ public class JopOpWindow extends JPanel {
   OpWindButton eventLogButton;
   OpWindButton helpButton;
 
-  public JopOpWindow( JopSession session, Object root) {
+  public JopOpWindow( JopSession session, Object root, String pwrPlace) {
     // super( BoxLayout.Y_AXIS);
     // createGlue();
     this.session = session;
     this.root = root;
     en = session.getEngine();
 
-    // Get WebHandler object
-    CdhrObjid oretWebH = en.gdh.getClassList( Pwrb.cClass_WebHandler);
-    if ( oretWebH.evenSts()) return;
+    // Get OpPlaceWeb object
+    CdhrObjid oretOpWeb = en.gdh.nameToObjid( pwrPlace);
+    if ( oretOpWeb.evenSts()) return;
 
-    CdhrString sret = en.gdh.objidToName( oretWebH.objid, Cdh.mName_volumeStrict);            
+    CdhrString sret = en.gdh.objidToName( oretOpWeb.objid, Cdh.mName_volumeStrict);            
     if ( sret.evenSts()) return;
 
     // Set language
@@ -193,7 +193,7 @@ public class JopOpWindow extends JPanel {
     CdhrString sretURL = null;
     CdhrInt iretTarget = null;
 
-    CdhrObjid oret = en.gdh.getChild( oretWebH.objid);
+    CdhrObjid oret = en.gdh.getChild( oretOpWeb.objid);
     while ( oret.oddSts()) {
       CdhrClassId retCid = en.gdh.getObjectClass( oret.objid);
       if ( retCid.evenSts()) return;
@@ -219,7 +219,7 @@ public class JopOpWindow extends JPanel {
 
     this.add( new JSeparator());
 
-    oret = en.gdh.getChild( oretWebH.objid);
+    oret = en.gdh.getChild( oretOpWeb.objid);
     while ( oret.oddSts()) {
       CdhrClassId retCid = en.gdh.getObjectClass( oret.objid);
       if ( retCid.evenSts()) return;

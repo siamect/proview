@@ -439,7 +439,6 @@ procedure
 	ge_activate_subgraphs(integer);
 	ge_activate_export_java(integer);
 	ge_activate_export_java_as(integer);
-	ge_activate_generate_web(integer);
 	ge_activate_creanextpage(integer);
 	ge_activate_nextpage(integer);
 	ge_activate_prevpage(integer);
@@ -762,18 +761,6 @@ object file_entry : XmCascadeButton
 	  callbacks
           {
             XmNactivateCallback = procedure ge_activate_export_java_as(ge_ctx);
-          };
-        };
-        XmPushButton
-        {
-          arguments
-          {
-            XmNlabelString = compound_string("Generate Web");
-            XmNfontList	   = menu_font;
-	  };
-	  callbacks
-          {
-            XmNactivateCallback = procedure ge_activate_generate_web(ge_ctx);
           };
         };
       	XmCascadeButton

@@ -2624,17 +2624,8 @@ static int	wnav_generate_func(	void		*client_data,
   }
 
   if ( cdh_NoCaseStrncmp( arg1_str, "WEB", strlen( arg1_str)) == 0) {
-    int sts;
-
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
-    if ( EVEN(sts)) return sts;
-
-    sts = Ge::generate_web( wnav->ldhses);
-    if ( EVEN(sts))
-    {
-      wnav->message(' ', wnav_get_message(sts));
-      return sts;
-    }
+    wnav->message('E', "Generate web is obsolete");
+    return WNAV__SUCCESS;
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "HISTORY", strlen( arg1_str)) == 0) {
     pwr_tFileName filestr;

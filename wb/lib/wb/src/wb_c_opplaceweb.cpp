@@ -34,7 +34,7 @@
  * General Public License plus this exception.
  **/
 
-/* wb_c_webhandler.cpp -- work bench methods of the WebHandler class. */
+/* wb_c_opplaceweb.cpp -- work bench methods of the OpPlaceWeb class. */
 
 #include "wb_pwrs.h"
 #include "pwr_baseclasses.h"
@@ -60,7 +60,7 @@ static pwr_tStatus Build (
   wb_build build( *(wb_session *)ip->PointedSession, ip->wnav);
 
   build.opt = ip->wnav->gbl.build;
-  build.webhandler( ip->Pointed.Objid);
+  build.opplaceweb( ip->Pointed.Objid);
 
   if ( build.sts() == PWRB__NOBUILT)
     ip->wnav->message( 'I', "Nothing to build");
@@ -73,11 +73,46 @@ static pwr_tStatus PostCreate (
   pwr_tOid	    Father,
   pwr_tCid	    Class
 ) {
-  // Nothing to do from V4.7.0 ...
+  wb_session *sp = (wb_session *) Session;
+  wb_object o = sp->object( Object);
+
+  // Find a unique name for FileName
+  int idx = 0;
+  for ( wb_object co = sp->object( pwr_cClass_OpPlaceWeb); co; co = co.next()) {
+    pwr_tString80 filename;
+    int i;
+
+    if ( cdh_ObjidIsEqual( co.oid(), o.oid()))
+      continue;
+	 
+    wb_attribute ca = sp->attribute( co.oid(), "RtBody", "FileName");
+    if ( !ca) return ca.sts();
+
+    ca.value( filename);
+    if ( (strcmp( filename, "index.html") == 0) && idx < 1)
+      idx = 2;
+    else if ( sscanf( filename, "index%d.html", &i) != 0) {
+      if ( idx <= i)
+	idx = i+1;
+    }      
+    if ( idx > 0) {
+      wb_attribute a = sp->attribute( o.oid(), "RtBody", "FileName");
+      if ( !a) return a.sts();
+
+      sprintf( filename, "index%d.html", idx);
+      try {
+	sp->writeAttribute( a, filename, sizeof(filename));
+      }
+      catch ( wb_error& e) {
+	return e.sts();
+      }
+    }
+  }
+
   return PWRB__SUCCESS;
 }
 
-pwr_dExport pwr_BindMethods(WebHandler) = {
+pwr_dExport pwr_BindMethods(OpPlaceWeb) = {
   pwr_BindMethod(Build),
   pwr_BindMethod(PostCreate),
   pwr_NullMethod

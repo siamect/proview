@@ -1498,7 +1498,7 @@ class Graph {
 
  //! Generate web site from configuration in database.
  /*! \param ldhses	Ldh session. */
- static int generate_web( ldh_tSesContext ldhses);
+ static int generate_web( ldh_tSesContext ldhses, pwr_tOid opplaceweb_oid);
 
  //! Generate web help from xtt_help.
  static int generate_web_help();

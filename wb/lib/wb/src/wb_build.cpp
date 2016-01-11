@@ -89,8 +89,8 @@ void wb_build::classlist( pwr_tCid cid)
     case pwr_cClass_XttGraph:
       xttgraph( o.oid());
       break;
-    case pwr_cClass_WebHandler:
-      webhandler( o.oid());
+    case pwr_cClass_OpPlaceWeb:
+      opplaceweb( o.oid());
       break;
     case pwr_cClass_WebBrowserConfig:
       webbrowserconfig( o.oid());
@@ -491,7 +491,7 @@ void wb_build::rootvolume( pwr_tVid vid)
     if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
       sumsts = m_sts;
 
-    classlist( pwr_cClass_WebHandler);
+    classlist( pwr_cClass_OpPlaceWeb);
     if ( evenSts()) return;
     if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
       sumsts = m_sts;
@@ -727,7 +727,7 @@ void wb_build::nodehier( pwr_tOid oid)
   if ( evenSts()) return;
   sumsts = m_sts;
 
-  classlist( pwr_cClass_WebHandler);
+  classlist( pwr_cClass_OpPlaceWeb);
   if ( evenSts()) return;
   if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
     sumsts = m_sts;
@@ -1055,9 +1055,9 @@ void wb_build::webgraph( pwr_tOid oid)
 	MsgWindow::message('W', cmd, msgw_ePop_No, oid);
       }
       else {
-	// Get signature from WebHandler
+	// Get signature from OpPlaceWeb
 	for ( wb_object p = o.parent(); p.oddSts(); p = p.parent()) {
-	  if ( p.cid() == pwr_cClass_WebHandler) {
+	  if ( p.cid() == pwr_cClass_OpPlaceWeb) {
 	    wb_attribute a = m_session.attribute( p.oid(), "RtBody", "AppletSignature");
 	    if ( !a) {
 	      m_sts = a.sts();
@@ -1231,7 +1231,7 @@ void wb_build::appgraph( pwr_tOid oid)
     m_sts = PWRB__NOBUILT;
 }
 
-void wb_build::webhandler( pwr_tOid oid)
+void wb_build::opplaceweb( pwr_tOid oid)
 {
   pwr_tTime	modtime;
   pwr_tString80 file_name, name;
@@ -1298,11 +1298,11 @@ void wb_build::webhandler( pwr_tOid oid)
   m_sts = PWRB__NOBUILT;
   if ( opt.force || EVEN(fsts) || time_Acomp( &modtime, &ftime) == 1) {
     // modtime > ftime
-    m_sts = Graph::generate_web( (ldh_tSession *)&m_session);
+    m_sts = Graph::generate_web( (ldh_tSession *)&m_session, oid);
     if ( evenSts()) return;
 
     char msg[200];
-    sprintf( msg, "Build:    WebHandler Webpage generated %s", fname);
+    sprintf( msg, "Build:    OpPlaceWeb Webpage generated %s", fname);
     MsgWindow::message( 'I', msg, msgw_ePop_No, oid);
   }
 
@@ -1317,7 +1317,7 @@ void wb_build::webhandler( pwr_tOid oid)
     system( "co_convert -d $pwrp_web -t " pwr_cNameProjectXttHelp);
 
     char msg[200];
-    sprintf( msg, "Build:    WebHandler xtt_help.dat converted to html");
+    sprintf( msg, "Build:    OpPlaceWeb xtt_help.dat converted to html");
     MsgWindow::message( 'I', msg, msgw_ePop_No, oid);
     m_sts = PWRB__SUCCESS;
   }
@@ -1368,7 +1368,7 @@ void wb_build::webhandler( pwr_tOid oid)
 	  sprintf( cmd, "co_convert -d $pwrp_web -t %s", srcname);
 	  system( cmd);
 
-	  sprintf( msg, "Build:    WebHandler plc xtthelp-file for volume %s converted to html", vol_array[0]);
+	  sprintf( msg, "Build:    OpPlaceWeb plc xtthelp-file for volume %s converted to html", vol_array[0]);
 	  MsgWindow::message( 'I', msg, msgw_ePop_No, oid);
 	  m_sts = PWRB__SUCCESS;
 	}

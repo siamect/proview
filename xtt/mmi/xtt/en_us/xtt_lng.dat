@@ -547,7 +547,9 @@ E 3.1.18 "TestOn"
 E 3.1.19 "TestValue"
 E 3.1.20 "Inverted"
 E 3.1.21 "Test"
-E 3.1.22 "Off/Test"
+E 3.1.22 "Off / Test"
+E 3.1.23 "Open Channel"
+E 3.1.24 "Open Signal"
 #
 # Mode - PID
 E 3.2.1 "Mode"

@@ -4714,12 +4714,12 @@ Operatörsmiljön startas sedan med kommandot
 Om det finns ett WebHandler objekt startas server-processerna för webgränssnittet.
 
 <h2>Konfigurering av menyn
-Konfigureringen av menyn i operatörsfönstret gör i nodhierakin med attribut i WebHandler 
+Konfigureringen av menyn i operatörsfönstret gör i nodhierakin med attribut i ett OpPlaceWeb 
 objektet, och ett antal WebGraph och WebLink objekt som läggs under detta objekt.
 
-<b>WebHandler
+<b>OpPlaceWeb
 
-I WebHandler objektet konfigureras vilka standardfunktioner som ska finnas med
+I OpPlaceWeb objektet konfigureras vilka standardfunktioner som ska finnas med
 i operatörsfönstrets meny.
 
 <b>EnableLanguage
@@ -4742,7 +4742,7 @@ Visar en knapp i menyn för att öppna navigatorn.
 
 <b>WebGraph
 WebGraph objekt konfigurererar knappar i menyn för att visa process grafik. WebGraph
-objekt läggs under WebHandler objektet.
+objekt läggs under OpPlaceWeb objektet.
 
 WebGraph objektet gör att grafen öppnas som en Java Frame, dvs i ett eget fönster. I Ge
 editorn måste man ange att grafen ska exporteras som en Java Frame genom att markera
@@ -4776,7 +4776,7 @@ eventuell inlogging.
 Hemsidan för ett projekt består av en meny och en höger ram. I höger ramen visas som 
 default innehållet i xtt-hjälptexten för projektet. Denna konverteras till html när 
 noden byggs. Om man vill ha en annan startsida i högra ramen kan man lägga in en URL
-till denna i WebHandler objektets attribute StartURL. Om man t ex vill visa en Ge graf,
+till denna i OpPlaceWeb objektets attribute StartURL. Om man t ex vill visa en Ge graf,
 exporterar man grafen som en Java Applet och lägger man in html-filen för grafen på samma 
 sätt som i WebLink objektet ovan.
 
@@ -4785,7 +4785,7 @@ Om man vill kunna visa Ge grafer från flera olika projekt, måste java arkiven fö
 projekt vara tillgängliga för web-läsaren. Java klasserna som genereras när graferna 
 exporteras i Ge editorn, läggas i ett arkiv men namnet pwrp_'systemname'_web.jar. 
 Arkivet för det egna projektet laddas alltid, men om även andra arkiv ska laddas, ska de
-läggas in i WebHandler objektets LoadArchive attribut, och kopieras till $pwrp_web.
+läggas in i OpPlaceWeb objektets LoadArchive attribut, och kopieras till $pwrp_web.
 
 <h2>Behörighet
 <b>Default behörighet
@@ -4795,7 +4795,7 @@ något annat än att logga in. Normal sätter man RtRead vilket gör att ej inloggad
 kan titta, men inte ändra värden.
 
 <b>Inloggning
-För att kunna logga in måste inloggingfunktionen vara aktiverad i WebHandler objektet.
+För att kunna logga in måste inloggingfunktionen vara aktiverad i OpPlaceWeb objektet.
 Genom att klicka på Login knappen in operatörsfönstret, kan användaren logga in med
 användarnamn och passerord. Användarnamnet måste vara registrerat i den systemgrupp
 som har angivits i Security objektets WebSystemGroup. Vid registreringen tilldelas 
@@ -4825,13 +4825,13 @@ I det här avsnittet beskrivs med ingående olika funktioner i web och java miljön
 hur de genereras och konfigureras.
 
 <h2>Hemsida
-Hemsidan konfigureras med WebHandler objektet, och genereras av WebHander objektets 
+Hemsidan konfigureras med OpPlaceWeb objektet, och genereras av OpPlaceWeb objektets 
 bygg-metod. Den består av ett antal html-filer och jar-filer som läggs på katalogen
 $pwrp_web.
 
 Startsidan, index.html, består av två ramar. Den vänstra ramen öppnar html-filen för menyn, 
 index_opwin_menu.html, som i sin tur öppnar en applet som knyter upp sig mot Proview 
-servern och bygger upp menyn. Den högra ramen visar den URL som angivits i WebHandler 
+servern och bygger upp menyn. Den högra ramen visar den URL som angivits i OpPlaceWeb 
 objektets StartURL attribut, eller om detta attribut är tomt, startsidan för xtt-hälpen.
 
 <h2>Ge grafer
@@ -4886,9 +4886,9 @@ hierarkier från vilka larm och händelser ska visas.
 
 <h2>Hjälptexter
 Hjälptexterna för projektet, filen xtt_help.dat, exporteras till html-filer på $pwrp_web
-av WebHandler objektets byggmetod. Startsidan för hjälptexterna är 
+av OpPlaceWeb objektets byggmetod. Startsidan för hjälptexterna är 
 $pwrp_web/xtt_help_index.html. Denna vissas som default i hemsidans högra ram, om ingen
-annan URL är angiven i WebHandler objektets StartURL attribut.
+annan URL är angiven i OpPlaceWeb objektets StartURL attribut.
 
 Om hjälptexten innehåller image taggar måste dessa png eller gif filer kopieras till
 $pwrp_web.
@@ -4898,7 +4898,7 @@ För att kunna öppna plc program i web miljön måste .flw filer på $pwrp_load kopi
 $pwrp_web.
 
 <h2>Språk
-Default är språket engelska. Andra språk kan anges i WebHandler objektets Language attribut
+Default är språket engelska. Andra språk kan anges i OpPlaceWeb objektets Language attribut
 eller väljas i språkvalsfönstret om detta är konfigurerat. Om ett annat språk än 
 engelska ska kunna väljas, måste språkfiler för detta språk, och för engelska, kopieras
 från $pwr_exe till $pwrp_web. För t ex svenska skapas katalogerna $pwrp_web/en_us och
@@ -4975,10 +4975,9 @@ mer info.
 När man startar applikationen visas först en startmeny, eller om denna inte är konfigurerad 
 runtime navigatorn.
 
-Start menyn konfigureras under WebHandler objektet med AppGraph och AppLink objekt. AppGraph 
-används för att öppna Ge grafer, och AppLink är en länk till en hemsida eller ett dokument. 
-Om man vill separera App-objekten från Web-objekten under WebHandler objektet kan man skapa 
-en under hierarki men ett $NodeHier-objekt.
+Start menyn konfigureras med ett OpPlaceApp objekt, och under detta med AppGraph och AppLink 
+objekt. AppGraph används för att öppna Ge grafer, och AppLink är en länk till en hemsida eller 
+ett dokument. 
 
 I AppGraph objeket anges namnet på pwg-filen, en bild-fil för ikonen och en text som skrivs 
 under ikonen. I AppLink objektet anges en URL, samt bild-fil och text.
@@ -4990,7 +4989,7 @@ under ikonen. I AppLink objektet anges en URL, samt bild-fil och text.
 <b>Fig Start meny
 
 <h1>Distribution
-Attributet AppUseWebDir i WebHandler-objektet anger om alla filer ska hämtas från pwrp_web 
+Attributet AppUseWebDir i OpPlaceApp-objektet anger om alla filer ska hämtas från pwrp_web 
 katalogen, eller om vissa filer ska hämtas från $pwrp_exe och $pwrp_load. Om AppUseWebDir 
 är satt fungerar appen analogt med webgränssnittet och pwg och flw filer måste kopieras till 
 $pwrp_web. 
@@ -5113,7 +5112,7 @@ Här följer en beskrivning på några byggmetoder.
 
 XttGraph <t>Kopierar .pwg filen för grafen från $pwrp_pop till $pwrp_exe.
 WebGraph <t>Exporterar grafen till java, kompilerar och lägger in i arkiv.
-WebHandler <t>Genererar html-filer för nodens hemsida och konverterar xtt-hjälp filen till
+OpPlaceWeb <t>Genererar html-filer för nodens hemsida och konverterar xtt-hjälp filen till
            <t>web format (html).
 PlcPgm   <t>Genererar c-kod som kompileras av c-kompilatorn.
 RootVolume <t>Anropar byggmetoden för all objekt i volymen, samt skapar en laddatafil med
@@ -6805,7 +6804,7 @@ sina privilegier.
 
 <h1>Behöriget på web
 För operatörbilder på webben finns en speciellt inloggningsfönster som kan öppnas från 
-web menyn, om detta är konfigurerat i WebHandler objektets EnableLogin attribut. Default
+web menyn, om detta är konfigurerat i OpPlaceWeb objektets EnableLogin attribut. Default
 gruppen är common.web, som inte exsisterar i template användar-databasen. Istället används
 då den första existerande föräldergruppen, dvs common, och användarna i denna grupp får
 tillgång till hemsidan. Om man vill begränsa tillgången, skapar man antingen common.web 

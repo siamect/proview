@@ -41,10 +41,10 @@ SObject pwrb:Class
 !  @Summary Defines a web link in a proview website
 !  The WebLink object defines a web link in a proview website, and will
 !  be displayed as an entry in the menu frame.
-!  WebLink objects should be positioned as children to a WebHandler object.
+!  WebLink objects should be positioned as children to a OpPlaceWeb object.
 !  
 ! @b See also
-!  @classlink WebHandler pwrb_webhandler.html
+!  @classlink OpPlaceWeb pwrb_opplaceweb.html
 !  @classlink WebGraph pwrb_webgraph.html
 !*/
   Object WebLink $ClassDef 301 

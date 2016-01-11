@@ -174,7 +174,6 @@ class GeMotif : public Ge {
   static void activate_export_gejava_as( Widget w, Ge *gectx, XmAnyCallbackStruct *data);
   static void activate_export_java( Widget w, Ge *gectx, XmAnyCallbackStruct *data);
   static void activate_export_java_as( Widget w, Ge *gectx, XmAnyCallbackStruct *data);
-  static void activate_generate_web( Widget w, Ge *gectx, XmAnyCallbackStruct *data);
   static void activate_creanextpage( Widget w, Ge *gectx, XmAnyCallbackStruct *data);
   static void activate_nextpage( Widget w, Ge *gectx, XmAnyCallbackStruct *data);
   static void activate_prevpage( Widget w, Ge *gectx, XmAnyCallbackStruct *data);

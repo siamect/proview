@@ -94,8 +94,9 @@ public class JopOpWindowApplet extends JopApplet
   {
     super.init();
     setSize(new Dimension(370, 570));
+    String pwrPlace = this.getParameter("pwrplace");
 
-    localPanel = new JopOpWindow( session, (Object)this);
+    localPanel = new JopOpWindow( session, (Object)this, pwrPlace);
     contentPane = (JPanel) this.getContentPane();
     contentPane.setLayout(borderLayout1);
     scrollPane = new JScrollPane(localPanel);

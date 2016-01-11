@@ -125,7 +125,6 @@ class Ge {
   void open( char *name);
   void save( char *name);
   void clear();
-  static int generate_web( ldh_tSesContext ldhses);
   int command( char *cmd);
   void message( pwr_tStatus sts);
 
@@ -216,7 +215,6 @@ class Ge {
   void activate_export_java_as();
   void activate_export_plcfo();
   void activate_export_plcfo_as();
-  void activate_generate_web();
   void activate_creanextpage();
   void activate_nextpage();
   void activate_prevpage();

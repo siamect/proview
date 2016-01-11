@@ -103,7 +103,8 @@
            [ $appid != "pwr_sim" ] &&
            [ $appid != "pwr_plc" ] &&
            [ "$appfile" != "rt_io_comm" ] &&
-           [ "$s8" != "pwr_plc_" ]; then
+           [ "$s8" != "pwr_plc_" ] &&
+           [ "$applname" != "" ]; then
           killall $appname
         fi
       fi
