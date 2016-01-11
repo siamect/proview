@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Proview   Open Source Process Control.
-# Copyright (C) 2005-2015 SSAB EMEA AB.
+# Copyright (C) 2005-2016 SSAB EMEA AB.
 #
 # This file is part of Proview.
 #
