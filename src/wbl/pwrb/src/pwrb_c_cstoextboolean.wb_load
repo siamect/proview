@@ -70,6 +70,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_RTVIRTUAL
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOREMOVE
+	  Attr Flags |= PWR_MASK_NOINVERT
           Attr PgmName = "ActualValue"
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "VAL"
