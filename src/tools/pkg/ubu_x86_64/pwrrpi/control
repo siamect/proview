@@ -7,5 +7,4 @@ Depends: pwr53 (>= 5.3.1-1)
 Replaces: pwr53
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview RPI development package
- Proview RPI development environment
- 5.3.1-1 Base release 
+ 5.3.1-1 Base release
