@@ -89,7 +89,7 @@ class sev_dbms_env
   int createSevVersion2Tables(void);
   int createSevVersion3Tables(void);
   MYSQL *createDb(void);
-  MYSQL *openDb(void);
+  MYSQL *openDb(unsigned int *sts);
   bool exists() { return m_exists;}    
   int close(void);
   static int get_systemname();

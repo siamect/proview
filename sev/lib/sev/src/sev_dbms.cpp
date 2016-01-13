@@ -45,6 +45,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <mysql/mysqld_error.h>
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"
@@ -492,15 +493,15 @@ int sev_dbms_env::createSevVersion3Tables(void)
   return 1;
 }
 
-MYSQL *sev_dbms_env::openDb()
+MYSQL *sev_dbms_env::openDb( unsigned int *sts)
 {
+  *sts = 0;
+
   m_con = mysql_init(NULL);
 
   MYSQL *con = mysql_real_connect(m_con, host(), user(), passwd(), dbName(), port(), socket(), 0);
-  // printf("Tried to connect to database, con %x: Status: %s\n", (int)con, mysql_error(m_con));
   if (con == 0) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf("Failed to connect to database: Error: %s\n", mysql_error(m_con));
+    *sts = mysql_errno(m_con);
     return 0;
   }
 
@@ -573,8 +574,8 @@ int sev_dbms_env::open(void)
 
   FILE *fp = fopen(buf, "r");
   if (fp == NULL) {
-    printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf("** Cannot open file: %s, %s\n", buf, strerror(errno));
+    // printf("In %s row %d:\n", __FILE__, __LINE__);
+    // printf("** Cannot open file: %s, %s\n", buf, strerror(errno));
     return errno;
   }
 
@@ -674,6 +675,7 @@ sev_db *sev_dbms::open_database()
   char 			socket[200];
   sev_dbms_env 		*env;
   sev_dbms		*db;
+  unsigned int		rc;
 
   sprintf( envname, "$pwrp_db/%s.db", sev_dbms_env::dbName());
   dcli_translate_filename( envname, envname);
@@ -693,9 +695,19 @@ sev_db *sev_dbms::open_database()
     }
   }
   else {    
-    if ( !env->openDb()) {
-      errh_Fatal("Failed to connect to database '%s'", sev_dbms_env::dbName());
-      exit(0);
+    if ( !env->openDb( &rc)) {
+      if ( rc == ER_BAD_DB_ERROR || rc == ER_NO_DB_ERROR) {
+	// Database not created
+	if ( !env->createDb()) {
+	  errh_Fatal("Failed to create to database '%s'", sev_dbms_env::dbName());
+	  exit(0);
+	}
+      }
+      else {
+	printf( "No such database\n");
+	errh_Fatal("Failed to connect to database '%s'", sev_dbms_env::dbName());
+	exit(0);
+      }
     }
   }
 
