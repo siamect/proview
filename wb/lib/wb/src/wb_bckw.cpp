@@ -46,6 +46,7 @@
 #include "co_dcli.h"
 
 #include "co_lng.h"
+#include "co_msg.h"
 #include "cow_xhelp.h"
 #include "cow_wow.h"
 #include "wb_ldh.h"
@@ -123,6 +124,10 @@ void WbBckW::file_selected_cb( void *ctx, char *filename, wow_eFileSelType file_
 
   sts = slist->read();
   if ( EVEN(sts)) {    
+    char msg[200];
+
+    msg_GetMsg( sts, msg, sizeof(msg));
+    bckw->wow->DisplayError( "File read error", msg);
     return;
   }
 

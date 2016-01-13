@@ -385,7 +385,7 @@ pwr_tStatus wb_bck_list::read() {
 
   f = fopen( m_filename, "rb");
   if ( !f)
-    return LDH__NOSUCHFILE;
+    return LDH__FILEOPEN;
 
   // Read header
 

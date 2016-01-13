@@ -80,7 +80,7 @@ dstalrcon	<destination object is already connected to other object>	/error
 notcon		<no connection or disconnection was done>		/error
 notload		<loadfile not created>					/error
 loadtype	<loadtype doesn't exist>				/error
-fileopen	<error open file>					/error
+fileopen	<open file error>					/error
 filepos		<error positioning in file>				/error
 filewrite	<error writing to file>					/error
 fileread	<error reading from file>				/error
