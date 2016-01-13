@@ -62,11 +62,11 @@ public class JopOpWindowFrame extends JFrame implements GdhApplIfc {
   Object root;
   PwrtObjid utilityObjid;
 
-  public JopOpWindowFrame() {
+  public JopOpWindowFrame( String pwrPlace) {
     engine = new JopEngine( 1000, this);
     session = new JopSession( engine, (Object)this);
     root = (Object) this;
-    localPanel = new JopOpWindow( session, (Object)this);
+    localPanel = new JopOpWindow( session, (Object)this, pwrPlace);
     init();
     pack();
   }

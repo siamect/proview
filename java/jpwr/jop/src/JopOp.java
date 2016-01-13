@@ -14,9 +14,9 @@ public class JopOp {
   boolean packFrame = false;
 
   //Construct the application
-  public JopOp() {
+  public JopOp( String pwrPlace) {
 
-    JopOpWindowFrame frame = new JopOpWindowFrame();
+    JopOpWindowFrame frame = new JopOpWindowFrame( pwrPlace);
     //Validate frames that have preset sizes
     //Pack frames that have useful preferred size info, e.g. from their layout
     if (packFrame) {
@@ -73,8 +73,13 @@ public class JopOp {
 
   //Main method
   public static void main(String[] args) {
-    if ( args.length > 0)
-      System.out.println("Arg: " + args[0]);
+    String pwrPlace = null;
+    if ( args.length < 1) {
+      System.out.println( "OpPlaceWeb object is missing");
+      System.exit(0);
+    }
+    pwrPlace = args[0];
+    System.out.println("Arg: " + args[0]);
     try {
       UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
       // UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -83,7 +88,7 @@ public class JopOp {
       System.out.println("setLookAndFeel exception");
       // e.printStackTrace();
     }
-    new JopOp();
+    new JopOp( pwrPlace);
     byte[] buff = new byte[100];
     try {
      System.in.read(buff);
