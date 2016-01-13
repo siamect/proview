@@ -47,19 +47,35 @@
 
 int main (int argc, char **argv)
 {
+  pwr_tInt32		csts;
   char filename [512];
   FILE *f;
   BCK_FILEHEAD_STRUCT fh;
-  BCK_CYCLEHEAD_STRUCT ch;
-  BCK_DATAHEAD_STRUCT dh;
+  bck_t_cycleheader ch;
+  bck_t_writeheader dh;
   char timstr [24];
   int c, d;
   unsigned char *datap, *p;
+  char *namep;
   int i;
 
 /*
  * Open file
  */
+
+  if ( argc > 1 && strcmp( argv[1], "-h") == 0) {
+    printf( "\
+\n\
+	rt_bck_dump   Dump content of backupfile in hex.\n\
+\n\
+	Argument: Name of backupfile.\n\
+\n\
+	Example\n\
+	  > rt_bck_dump $pwrp_load/pwr_backup.bck\n\
+\n\
+");
+    exit(0);
+  }
 
   if (argc == 1) {
     printf ("Name of backup file: ");
@@ -126,23 +142,33 @@ int main (int argc, char **argv)
     for (d=0; d<ch.segments; d++) {
       printf ("\n  Data header %d:\n", d+1);
       fread (&dh, sizeof dh, 1, f);
+      if (dh.namesize > 0) {
+	namep = malloc(dh.namesize + 1);
+	csts = fread(namep, dh.namesize + 1, 1, f);
+      } else 
+	namep = NULL;
       printf ("    Valid:            %x\n", dh.valid);
       printf ("    Dynamic:          %x\n", dh.dynamic);
       printf ("    Class:            %x\n", dh.cid);
-      printf ("    Attrref.Vid:      %x\n", dh.attrref.Objid.vid);
-      printf ("    Attrref.Oix:      %x\n", dh.attrref.Objid.oix);
-      printf ("    Attrref.Offset:   %x\n", dh.attrref.Offset);
-      printf ("    Attrref.Body:     %x\n", dh.attrref.Body);
-      printf ("    Attrref.Size:     %x\n", dh.attrref.Size);
-      printf ("    Attrref.Indirect: %x\n", dh.attrref.Flags.b.Indirect);
-      printf ("    Dataname:         %s\n", dh.dataname);
+      printf ("    Objid.Vid:        %d\n", dh.objid.vid);
+      printf ("    Objid.Oix:        %d\n", dh.objid.oix);
+      //printf ("    Attrref.Vid:      %x\n", dh.attrref.Objid.vid);
+      //printf ("    Attrref.Oix:      %x\n", dh.attrref.Objid.oix);
+      //printf ("    Attrref.Offset:   %x\n", dh.attrref.Offset);
+      //printf ("    Attrref.Body:     %x\n", dh.attrref.Body);
+      //printf ("    Attrref.Size:     %x\n", dh.attrref.Size);
+      //printf ("    Attrref.Indirect: %x\n", dh.attrref.Flags.b.Indirect);
+      if ( namep)
+	printf ("    Name:             %s\n", namep);
+      printf ("    Size:             %d\n", dh.size);
 #ifdef	NODATA
       fseek (f, dh.attrref.Size, 1);
 #else
-      datap = malloc (dh.attrref.Size);
-      fread (datap, dh.attrref.Size, 1, f);
+
+      datap = malloc (dh.size);
+      fread (datap, dh.size, 1, f);
       p = datap;
-      for (i=0; i<dh.attrref.Size; i++, p++) {
+      for (i=0; i<dh.size; i++, p++) {
 	if ((i % 16) == 0) printf ("\n	");
 	printf ("%02x ", *p);
       }
