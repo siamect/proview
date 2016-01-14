@@ -4990,7 +4990,8 @@ int Graph::get_reference_name( char *name, char *tname)
 }
 
 int Graph::ref_object_info( glow_eCycle cycle, char *name, void **data,
-			    pwr_tSubid *subid, unsigned int size, bool now)
+			    pwr_tSubid *subid, unsigned int size, grow_tObject object, 
+			    bool now)
 {
   pwr_tAName aname;
   pwr_tStatus sts;
@@ -5005,7 +5006,7 @@ int Graph::ref_object_info( glow_eCycle cycle, char *name, void **data,
 
 
   if ( !now) {
-    GraphRef gr( aname, subid, size, cycle, data);
+    GraphRef gr( aname, subid, size, cycle, object, data);
     reflist.push_back(gr);
   }
   else {
@@ -5069,9 +5070,13 @@ int Graph::ref_object_info_all()
       if ( reflist[i].m_cycle == cycle[j]) {
 	*reflist[i].m_data = oref[refcnt].adrs;
 	*reflist[i].m_id = refid[refcnt];
-	if ( EVEN(sts) && cdh_RefIdIsNull( refid[refcnt]))
-	  printf( "**    %s\n", reflist[i].m_name);
+	if ( EVEN(sts) && cdh_RefIdIsNull( refid[refcnt])) {
+	  char oname[80] = "";
+	  if ( reflist[i].m_object != 0)
+	    grow_GetObjectName( reflist[i].m_object, oname);
+	  printf( "** %s, %s\n", oname, reflist[i].m_name);
 	     
+	}
 	refcnt++;
       }
     }
@@ -5533,6 +5538,24 @@ int Graph::get_colortheme_colors( char *file, double **colors, int *size) {
   return grow_GetColorThemeColors( file, colors, size);
 }
 
+int Graph::search_object( char *name)
+{
+  int sts;
+  grow_tObject object;
+
+  grow_SelectClear( grow->ctx);
+
+  sts = grow_FindObjectByName( grow->ctx, name, &object);
+  if ( EVEN(sts)) return sts;
+
+  grow_SelectClear( grow->ctx);
+  grow_SetHighlight( object, 1);
+  grow_SelectInsert( grow->ctx, object);
+  if ( !grow_IsVisible( grow->ctx, object, glow_eVisible_Partial))
+    grow_CenterObject( grow->ctx, object);
+
+  return 1;
+}
 
 static void graph_free_dyn( grow_tObject object)
 {

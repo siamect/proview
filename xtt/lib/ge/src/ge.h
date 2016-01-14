@@ -160,6 +160,7 @@ class Ge {
 
   void activate_change_text();
   void activate_change_name();
+  void activate_search_object();
   void activate_preview_start();
   void activate_preview_stop();
   void activate_delete();
@@ -332,6 +333,7 @@ class Ge {
   static int create_modal_dialog_cb( void *ge_ctx, const char *title, const char *text, 
 				     const char *button1, const char *button2, const char *button3, 
 				     const char *image);
+  static void search_object_cb( void *ge_ctx, void *data, char *name);
 };
 
 #endif

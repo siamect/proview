@@ -762,6 +762,21 @@ void Ge::activate_change_name()
   graph->change_select_name();
 }
 
+void Ge::search_object_cb( void *ge_ctx, void *data, char *name)
+{
+  Ge *gectx = (Ge *)ge_ctx;
+  int sts;
+
+  sts = gectx->graph->search_object( name);
+  if ( EVEN(sts))
+    gectx->message( 'E', "No such object");    
+}
+
+void Ge::activate_search_object()
+{
+  wow->CreateInputDialog( this, "Search Object", "Object name", search_object_cb, 0, 80, 0, 0);
+}
+
 void Ge::activate_preview_start()
 {
   int sts;

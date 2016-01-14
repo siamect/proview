@@ -119,6 +119,8 @@ static int	graph_build_func( void		*client_data,
 				  void		*client_flag);
 static int	graph_customcolor_func( void   	*client_data,
 				  void		*client_flag);
+static int	graph_search_func( void   	*client_data,
+				  void		*client_flag);
 
 dcli_tCmdTable	graph_command_table[] = {
 		{
@@ -245,6 +247,11 @@ dcli_tCmdTable	graph_command_table[] = {
 			"CUSTOMCOLOR",
 			&graph_customcolor_func,
 			{"dcli_arg", "/FILE", "/LIGHTNESS", "/ISDEFAULT", ""}
+		},
+		{
+			"SEARCH",
+			&graph_search_func,
+			{"dcli_arg", "dcli_arg2", "/NAME", ""}
 		},
 		{"",}};
 
@@ -432,6 +439,39 @@ static int	graph_customcolor_func(void		*client_data,
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
+  }
+  else {
+    graph->message('E', "Syntax error");
+    return GE__SYNTAX;
+  }
+  return GE__SUCCESS;
+}
+
+static int	graph_search_func(void		*client_data,
+				  void		*client_flag)
+{
+  Graph *graph = (Graph *)client_data;
+  char	arg1_str[80];
+  int	arg1_sts;
+  int   sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( cdh_NoCaseStrncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0) {
+    // Command is "SEARCH OBJECT"
+    char name_str[80];
+
+    sts = dcli_get_qualifier( "/NAME", name_str, sizeof(name_str));
+    if ( EVEN(sts))
+      sts = dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str));
+    if ( EVEN( sts)) {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+
+    sts = graph->search_object( name_str);
+    if ( EVEN( sts))
+      graph->message('E', "No such object");
   }
   else {
     graph->message('E', "Syntax error");

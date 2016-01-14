@@ -347,14 +347,15 @@ class GraphGbl {
 
 class GraphRef {
  public:
-  GraphRef( pwr_tAName name, pwr_tRefId *id, int size, glow_eCycle cycle, void **data) :
-    m_id(id), m_size(size), m_cycle(cycle), m_data(data) {
+  GraphRef( pwr_tAName name, pwr_tRefId *id, int size, glow_eCycle cycle, grow_tObject object, void **data) :
+    m_id(id), m_size(size), m_cycle(cycle), m_object(object), m_data(data) {
     strcpy( m_name, name);
   }
   pwr_tAName m_name;
   pwr_tRefId *m_id;
   int m_size;
   glow_eCycle m_cycle;
+  grow_tObject m_object;
   void **m_data;
 };
 
@@ -1267,7 +1268,8 @@ class Graph {
     \param size		Size of the attribute.
   */
   int ref_object_info( glow_eCycle cycle, char *name, void **data,
-		       pwr_tSubid *subid, unsigned int size, bool now = false);
+		       pwr_tSubid *subid, unsigned int size, grow_tObject object, 
+		       bool now = false);
 
   //! Subscribe all stored subscriptions.
   int ref_object_info_all();
@@ -1376,6 +1378,12 @@ class Graph {
   */
   int export_plcfo( char *filename);
 
+  //! Search on object.
+  /*!
+    \param name    	Object name.
+  */
+  int search_object( char *name);
+
   //! Store in journal file.
   int journal_store( journal_eAction a, grow_tObject o) { 
     if (journal) return journal->store( a, o);
@@ -1390,7 +1398,7 @@ class Graph {
   static void graph_attr_store_cb( void *g, grow_tObject object);
   static int graph_attr_recall_cb( void *g, grow_tObject object, int idx, 
 				   GeDyn **old_dyn);
-
+  
   //
   // Command module
   //

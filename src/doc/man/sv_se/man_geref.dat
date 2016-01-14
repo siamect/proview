@@ -5080,6 +5080,7 @@ save 			<link>gecmd_save
 scale 			<link>gecmd_scale
   <t>scale currentobject <link>gecmd_scale_current
   <t>scale selectedobject <link>gecmd_scale_selected
+search object 		<link>gecmd_search_object
 select 			<link>gecmd_select
   <t>select currentobject <link>gecmd_select_currentobject
   <t>select clear	<link>gecmd_select_clear
@@ -5409,6 +5410,18 @@ Skalar om utvalt objekt.
 /y <t>y-koordinat för skalningens referenspunkt.
 </topic>
 
+<topic>gecmd_search_object
+search object
+
+Sök efter ett objekt.
+När sökningen är gjord väljs det hittade objektet ut.
+
+<b>Syntax
+
+<c>ge> search object /name=
+
+/name <t>Objeksnamn.
+</topic>
 <topic>gecmd_select <style>function
 select
 </topic>

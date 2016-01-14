@@ -414,6 +414,11 @@ void GeGtk::activate_change_name(GtkWidget *w, gpointer gectx)
   ((Ge *)gectx)->activate_change_name();
 }
 
+void GeGtk::activate_search_object(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_search_object();
+}
+
 void GeGtk::activate_preview_start(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_preview_start();
@@ -1875,7 +1880,11 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   g_signal_connect( edit_change_name, "activate", 
 		    G_CALLBACK(activate_change_name), this);
 
-  GtkWidget *edit_objattr_store = gtk_menu_item_new_with_mnemonic( "O_bject Attributes Store");
+  GtkWidget *edit_search_object = gtk_menu_item_new_with_mnemonic( "_Search Object");
+  g_signal_connect( edit_search_object, "activate", 
+		    G_CALLBACK(activate_search_object), this);
+
+  GtkWidget *edit_objattr_store = gtk_menu_item_new_with_mnemonic( "_Object Attributes Store");
   g_signal_connect( edit_objattr_store, "activate", 
 		    G_CALLBACK(activate_objattr_store), this);
   gtk_widget_add_accelerator( edit_objattr_store, "activate", accel_g,
@@ -1905,6 +1914,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_create_subgraph);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_change_text);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_change_name);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_search_object);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_objattr_store);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_objattr_recall);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_command);

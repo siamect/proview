@@ -719,13 +719,13 @@ static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
       strcat( aname, ".ConvMask1");
 
       graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->conv_p, &od->conv_subid, 
-			      sizeof(pwr_tBoolean), true);
+			      sizeof(pwr_tBoolean), 0, true);
 
       strcpy( aname, card_name);
       strcat( aname, ".InvMask1");
 
       graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->inv_p, &od->inv_subid, 
-			      sizeof(pwr_tBoolean), true);
+			      sizeof(pwr_tBoolean), 0, true);
 
       od->mask = 1 << chan_idx;
     }
@@ -734,13 +734,13 @@ static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
       strcat( aname, ".ConvMask2");
 
       graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->conv_p, &od->conv_subid, 
-			      sizeof(pwr_tBoolean), true);
+			      sizeof(pwr_tBoolean), 0, true);
 
       strcpy( aname, card_name);
       strcat( aname, ".InvMask2");
 
       graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->inv_p, &od->inv_subid, 
-			      sizeof(pwr_tBoolean), true);
+			      sizeof(pwr_tBoolean), 0, true);
 
       od->mask = 1 << (chan_idx - 16);
     }
@@ -762,13 +762,13 @@ static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
       strcat( aname, ".TestMask1");
 
       graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->test_p, &od->test_subid, 
-			      sizeof(pwr_tBoolean), true);
+			      sizeof(pwr_tBoolean), 0, true);
 
       strcpy( aname, card_name);
       strcat( aname, ".InvMask1");
 
       graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->inv_p, &od->inv_subid, 
-			      sizeof(pwr_tBoolean), true);
+			      sizeof(pwr_tBoolean), 0, true);
 
       od->mask = 1 << chan_idx;
     }
@@ -777,13 +777,13 @@ static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
       strcat( aname, ".TestMask2");
 
       graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->test_p, &od->test_subid, 
-			      sizeof(pwr_tBoolean), true);
+			      sizeof(pwr_tBoolean), 0, true);
 
       strcpy( aname, card_name);
       strcat( aname, ".InvMask2");
 
       graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->inv_p, &od->inv_subid, 
-			      sizeof(pwr_tBoolean), true);
+			      sizeof(pwr_tBoolean), 0, true);
 
       od->mask = 1 << (chan_idx - 16);
     }
@@ -805,21 +805,21 @@ static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
 	strcpy( aname, chan_name);
 	strcat( aname, ".ConversionOn");
 	graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->conv_p, &od->conv_subid, 
-				sizeof(pwr_tBoolean), true);
+				sizeof(pwr_tBoolean), 0, true);
       }
 
 
       strcpy( aname, chan_name);
       strcat( aname, ".InvertOn");
       graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->inv_p, &od->inv_subid, 
-			      sizeof(pwr_tBoolean), true);
+			      sizeof(pwr_tBoolean), 0, true);
 
 
       if ( od->cid == pwr_cClass_Do) {
 	strcpy( aname, chan_name);
 	strcat( aname, ".TestOn");
 	graph->ref_object_info( glow_eCycle_Slow, aname, (void **)&od->test_p, &od->test_subid, 
-				sizeof(pwr_tBoolean), true);
+				sizeof(pwr_tBoolean), 0, true);
 
 	if ( od->local_conv_p)
 	  *od->local_conv_p = 1;
