@@ -80,6 +80,7 @@ class AttrGtk : public Attr {
     int		input_max_length;
 
     void message( char severity, const char *message);
+    void message_popup( char severity, const char *message);
     void set_prompt( const char *prompt);
     void change_value();
     int reconfigure_attr();

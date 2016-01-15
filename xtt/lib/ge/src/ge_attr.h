@@ -58,6 +58,8 @@ typedef struct {
 	int	noedit;
 	int	multiline;
     	int	mask;
+        int	(*input_validation_cb)( void *ctx, void *value);
+        void	*validation_ctx;
 } attr_sItem;
 
 class AttrNav;
@@ -96,6 +98,7 @@ class Attr {
     GeDyn 	*original_data;
 
     virtual void message( char severity, const char *message) {}
+    virtual void message_popup( char severity, const char *msg) {message(severity,msg);}
     virtual void set_prompt( const char *prompt) {}
     virtual void change_value() {}
     virtual int reconfigure_attr() {return 1;}
@@ -113,7 +116,7 @@ class Attr {
 				attr_sItem **itemlist, int *item_cnt);
     static void change_value_c( void *attr);
     static int reconfigure_attr_c( void *attr);
-    static void message( void *attr, char severity, const char *message);
+    static void message( void *attr, int popup, char severity, const char *message);
     virtual ~Attr();
 };
 

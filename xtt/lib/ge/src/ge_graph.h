@@ -1390,6 +1390,8 @@ class Graph {
     else return 1;
   }
 
+  char *get_next_object_name( const char *prefix, const char *suffix);
+
   static int get_colortheme_colors( char *file, double **colors, int *size);
 
   //! Enable event logging

@@ -130,7 +130,6 @@ class GeGtk : public Ge {
 
   static void activate_create_subgraph(GtkWidget *w, gpointer gectx);
   static void activate_change_text( GtkWidget *w, gpointer gectx);
-  static void activate_change_name( GtkWidget *w, gpointer gectx);
   static void activate_search_object( GtkWidget *w, gpointer gectx);
   static void activate_preview_start( GtkWidget *w, gpointer gectx);
   static void activate_preview_stop( GtkWidget *w, gpointer gectx);

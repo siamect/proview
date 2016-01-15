@@ -4728,3 +4728,35 @@ void GrowCtx::set_default_color_theme( char *theme)
 {
   strncpy( default_color_theme, theme, sizeof(default_color_theme));
 }
+
+int GrowCtx::check_object_name( char *name)
+{
+  static const char ctab[257] =
+"\
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
+!!!!!!!!!!!!!!!!0123456789!!!!!!\
+!ABCDEFGHIJKLMNOPQRSTUVWXYZ!!!!_\
+!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!\
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
+";
+  int len = strlen(name);
+  GlowArrayElem *e;
+  int sts;
+
+  if ( len >= 80)
+    return GLOW__NAME_LONG;
+
+  for ( int i = 0; i < len; i++) {
+    if ( ctab[(unsigned char)name[i]] == '!')
+      return GLOW__NAME_INVCHAR;
+  }
+
+  sts = a.find_by_name( name, &e);
+  if ( ODD(sts))
+    return GLOW__NAME_ALREXIST;
+
+  return GLOW__SUCCESS;
+}

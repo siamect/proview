@@ -1284,6 +1284,15 @@ void grow_SetNextObjectNameNumber( grow_tCtx ctx, int num)
   ctx->set_next_objectname_num( num);
 }
 
+static int grow_name_validation_cb( void *ctx, void *value)
+{
+  GlowArrayElem *op = (GlowArrayElem *)ctx;
+  GrowCtx *gctx;
+
+  op->get_ctx( (void **)&gctx);
+  return gctx->check_object_name( (char *)value);
+}
+
 int grow_GetObjectAttrInfo( grow_tObject object, char *transtab, 
 	grow_sAttrInfo **info, int *attr_cnt)
 {
@@ -1300,6 +1309,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       GrowRect *op = (GrowRect *)object;
       char *dynamic;
       int  dynsize;
+
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
 
       strcpy( attrinfo[i].name, "shadow_width");
       attrinfo[i].value_p = &op->shadow_width;
@@ -1386,6 +1405,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       char *dynamic;
       int  dynsize;
 
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
+
       strcpy( attrinfo[i].name, "round_amount");
       attrinfo[i].value_p = &op->round_amount;
       attrinfo[i].type = glow_eType_Double;
@@ -1456,6 +1485,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       GrowPolyLine *op = (GrowPolyLine *)object;
       char *dynamic;
       int  dynsize;
+
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
 
       strcpy( attrinfo[i].name, "shadow_width");
       attrinfo[i].value_p = &op->shadow_width;
@@ -1557,6 +1596,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       char *dynamic;
       int  dynsize;
 
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
+
       strcpy( attrinfo[i].name, "Dynamic");
       op->get_dynamic( &dynamic, &dynsize);
       attrinfo[i].value_p = malloc( 1024);
@@ -1575,6 +1624,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       GrowArc *op = (GrowArc *)object;
       char *dynamic;
       int  dynsize;
+
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
 
       strcpy( attrinfo[i].name, "angle1");
       attrinfo[i].value_p = &op->angle1;
@@ -1659,6 +1718,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
     {
       GrowConPoint *op = (GrowConPoint *)object;
 
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
+
       strcpy( attrinfo[i].name, "Number");
       attrinfo[i].value_p = &op->number;
       attrinfo[i].type = glow_eType_Int;
@@ -1674,6 +1743,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
     case glow_eObjectType_GrowSubAnnot:
     {
       GrowSubAnnot *op = (GrowSubAnnot *)object;
+
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
 
       strcpy( attrinfo[i].name, "TextSize");
       attrinfo[i].value_p = &op->text_size;
@@ -1713,6 +1792,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       char *dynamic;
       int  dynsize;
 
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
+
       strcpy( attrinfo[i].name, "Text");
       attrinfo[i].value_p = &op->text;
       attrinfo[i].type = glow_eType_String;
@@ -1741,6 +1830,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       GrowImage *op = (GrowImage *)object;
       char *dynamic;
       int  dynsize;
+
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
 
       strcpy( attrinfo[i].name, "Image");
       attrinfo[i].value_p = &op->image_filename;
@@ -1772,6 +1871,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       char *name;
       char *dynamic;
       int  dynsize;
+
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
 
       if ( (name = growapi_translate( transtab, "MaxValue")))
       {
@@ -1844,6 +1953,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       char *name;
       char *dynamic;
       int  dynsize;
+
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
 
       if ( (name = growapi_translate( transtab, "NoOfPoints")))
       {
@@ -1978,6 +2097,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       GrowWindow *op = (GrowWindow *)object;
       char *name;
 
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
+
       if ( (name = growapi_translate( transtab, "FileName"))) {
         strcpy( attrinfo[i].name, name);
         attrinfo[i].value_p = &op->input_file_name;
@@ -2033,6 +2162,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
     {
       GrowTable *op = (GrowTable *)object;
       char *name;
+
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
 
       if ( (name = growapi_translate( transtab, "Rows"))) {
         strcpy( attrinfo[i].name, name);
@@ -2356,6 +2495,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       GrowFolder *op = (GrowFolder *)object;
       char *name;
 
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
+
       if ( (name = growapi_translate( transtab, "Folders"))) {
         strcpy( attrinfo[i].name, name);
         attrinfo[i].value_p = &op->folders;
@@ -2435,6 +2584,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       char *dynamic;
       int  dynsize;
 
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
+
       if ( (name = growapi_translate( transtab, "MaxValue")))
       {
         strcpy( attrinfo[i].name, name);
@@ -2505,6 +2664,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       char *name;
       char *dynamic;
       int  dynsize;
+
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
 
       if ( (name = growapi_translate( transtab, "Angle1")))
       {
@@ -2600,6 +2769,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       char *name;
       char *dynamic;
       int  dynsize;
+
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
 
       if ( (name = growapi_translate( transtab, "Angle1"))) {
         strcpy( attrinfo[i].name, name);
@@ -2701,6 +2880,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       char *name;
       char *dynamic;
       int  dynsize;
+
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
 
       if ( (name = growapi_translate( transtab, "ShadowWidth"))) {
         strcpy( attrinfo[i].name, name);
@@ -2820,6 +3009,15 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       char *name;
       char annot_name[32];
 
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
+      
       if ( (name = growapi_translate( transtab, "SubGraph")))
       {
         if ( ((GrowNode *)object)->type() == glow_eObjectType_GrowGroup)
@@ -2896,6 +3094,16 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       int  dynsize;
       char *name;
       char annot_name[32];
+
+
+      strcpy( attrinfo[i].name, "Name");
+      attrinfo[i].value_p = &op->n_name;
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].no_edit = 0;
+      attrinfo[i].input_validation_cb = grow_name_validation_cb;
+      attrinfo[i].validation_ctx = (void *)op;
+      attrinfo[i++].size = sizeof( op->n_name);
 
       if ( (name = growapi_translate( transtab, "SubGraph")))
       {
@@ -5568,7 +5776,10 @@ int grow_SetObjectClass( grow_tObject object, grow_tNodeClass nodeclass)
   return 1;
 }
 
-
+int grow_CheckObjectName( grow_tCtx ctx, char *name)
+{
+  return ((GrowCtx *)ctx)->check_object_name( name);
+}
 
 /*@}*/
 

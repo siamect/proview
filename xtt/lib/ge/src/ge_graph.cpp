@@ -1412,6 +1412,8 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
       items[i].maxlimit = 0;
       items[i].noedit = grow_info_p->no_edit;
       items[i].multiline = grow_info_p->multiline;
+      items[i].input_validation_cb = grow_info_p->input_validation_cb;
+      items[i].validation_ctx = grow_info_p->validation_ctx;
       grow_info_p++;
     }
 
@@ -1914,6 +1916,8 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
     items[i].maxlimit = grow_info_p->maxlimit;
     items[i].noedit = grow_info_p->no_edit;
     items[i].multiline = grow_info_p->multiline;
+    items[i].input_validation_cb = grow_info_p->input_validation_cb;
+    items[i].validation_ctx = grow_info_p->validation_ctx;
     grow_info_p++;
   }
 
@@ -2945,7 +2949,6 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
       grow_tObject 	*move_list;
       int		move_count;
       int		i;
-      char		name[80];
 
       grow_GetMoveList( graph->grow->ctx, &move_list, &move_count);
       for ( i = 0; i < move_count; i++)
@@ -2953,16 +2956,13 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
         switch ( grow_GetObjectType( move_list[i]))
         {
           case glow_eObjectType_Con:
-            sprintf( name, "C%d", grow_IncrNextObjectNameNumber( graph->grow->ctx));
-            grow_SetObjectName( move_list[i], name);
+            grow_SetObjectName( move_list[i], graph->get_next_object_name("C", ""));
             break;
           case glow_eObjectType_GrowGroup:
-            sprintf( name, "Grp%d_", grow_IncrNextObjectNameNumber( graph->grow->ctx));
-            grow_SetObjectName( move_list[i], name);
+            grow_SetObjectName( move_list[i], graph->get_next_object_name("Grp", "_"));
             break;
           default:
-            sprintf( name, "O%d", grow_IncrNextObjectNameNumber( graph->grow->ctx));
-            grow_SetObjectName( move_list[i], name);
+            grow_SetObjectName( move_list[i], graph->get_next_object_name("O", ""));
             break;
         }
       }
@@ -5106,7 +5106,7 @@ void Graph::create_trend( grow_tObject *object, double x, double y,
     bcolor = glow_eDrawType_Color37;
   }
 
-  grow_CreateGrowTrend( grow->ctx, "", 
+  grow_CreateGrowTrend( grow->ctx, get_next_object_name("O",""), 
 			    x, y, width, height,
 			    bcolor,
 			    1, glow_mDisplayLevel_1, 1, 1,
@@ -5152,7 +5152,7 @@ void Graph::create_xycurve( grow_tObject *object, double x, double y,
   GeDyn *dyn;
   glow_sTrendInfo info;
 
-  grow_CreateGrowXYCurve( grow->ctx, "", 
+  grow_CreateGrowXYCurve( grow->ctx, get_next_object_name("O",""), 
 			  x, y, width, height,
 			  glow_eDrawType_Color37,
 			  1, glow_mDisplayLevel_1, 1, 1,
@@ -5201,7 +5201,7 @@ void Graph::create_bar( grow_tObject *object, double x, double y, int colortheme
     barbordercolor = glow_eDrawType_Color145;
   }
 
-  grow_CreateGrowBar( grow->ctx, "", 
+  grow_CreateGrowBar( grow->ctx, get_next_object_name("O",""), 
 			    x, y, width, height,
 			    glow_eDrawType_Line,
 			    1, glow_mDisplayLevel_1, 1, 1,
@@ -5227,7 +5227,7 @@ void Graph::create_window( grow_tObject *object, double x, double y)
   double height = 6;
   GeDyn *dyn;
 
-  grow_CreateGrowWindow( grow->ctx, "", 
+  grow_CreateGrowWindow( grow->ctx, get_next_object_name("O",""), 
 			    x, y, width, height,
 			    glow_eDrawType_Line,
 			    1, glow_mDisplayLevel_1, NULL, 
@@ -5245,7 +5245,7 @@ void Graph::create_table( grow_tObject *object, double x, double y)
   double height = 6;
   GeDyn *dyn;
 
-  grow_CreateGrowTable( grow->ctx, "", 
+  grow_CreateGrowTable( grow->ctx, get_next_object_name("O",""), 
 			    x, y, width, height,
 			    glow_eDrawType_Line,
 			    1, 1, glow_eDrawType_Color33, glow_mDisplayLevel_1, NULL, 
@@ -5264,7 +5264,7 @@ void Graph::create_folder( grow_tObject *object, double x, double y)
   double height = 6;
   GeDyn *dyn;
 
-  grow_CreateGrowFolder( grow->ctx, "", 
+  grow_CreateGrowFolder( grow->ctx, get_next_object_name("O",""), 
 			    x, y, width, height,
 			    glow_eDrawType_Line, 1, 
 			    glow_eDrawType_Color22, glow_eDrawType_Color25,
@@ -5306,7 +5306,7 @@ void Graph::create_axis( grow_tObject *object, double x, double y, int dynamic, 
   else
     bcolor = glow_eDrawType_Line;
 
-  grow_CreateGrowAxis( grow->ctx, "", 
+  grow_CreateGrowAxis( grow->ctx, get_next_object_name("O",""), 
 		       x, y, x + width, y + height,
 		       bcolor, 1, 1,
 		       glow_eDrawType_TextHelvetica, NULL, object);
@@ -5349,7 +5349,7 @@ void Graph::create_axisarc( grow_tObject *object, double x, double y, int dynami
   else
     bcolor = glow_eDrawType_Line;
 
-  grow_CreateGrowAxisArc( grow->ctx, "", 
+  grow_CreateGrowAxisArc( grow->ctx, get_next_object_name("O",""), 
 			  x, y, x + width, y + height, 0, 180, 
 			  bcolor, 1, 1,
 			  glow_eDrawType_TextHelvetica, NULL, object);
@@ -5397,7 +5397,7 @@ void Graph::create_pie( grow_tObject *object, double x, double y)
 			       glow_eDrawType_Color225 };
   double values[12] = { 8.333, 8.333, 8.333, 8.333, 8.333, 8.333, 8.333, 8.333, 8.333, 8.333, 8.333, 8.333};
 
-  grow_CreateGrowPie( grow->ctx, "", 
+  grow_CreateGrowPie( grow->ctx, get_next_object_name("O",""), 
 		      x, y, x + width, y + height, 0, 360, 
 		      glow_eDrawType_Line, 1, 1, 0, glow_eDrawType_Color38,
 		      NULL, object);
@@ -5429,7 +5429,7 @@ void Graph::create_barchart( grow_tObject *object, double x, double y)
 			       glow_eDrawType_Color195,
 			       glow_eDrawType_Color225 };
 
-  grow_CreateGrowBarChart( grow->ctx, "", 
+  grow_CreateGrowBarChart( grow->ctx, get_next_object_name("O",""), 
 			   x, y, width, height, 
 			   glow_eDrawType_Line, 1, 1, 0, glow_eDrawType_Color40,
 			   NULL, object);
@@ -5555,6 +5555,18 @@ int Graph::search_object( char *name)
     grow_CenterObject( grow->ctx, object);
 
   return 1;
+}
+
+char *Graph::get_next_object_name( const char *prefix, const char *suffix)
+{  
+  static char name[32];
+  int sts = 0;
+
+  while ( EVEN(sts)) {
+    sprintf( name, "%s%d%s", prefix, grow_IncrNextObjectNameNumber( grow->ctx), suffix);
+    sts = grow_CheckObjectName( grow->ctx, name);
+  }
+  return name;
 }
 
 static void graph_free_dyn( grow_tObject object)

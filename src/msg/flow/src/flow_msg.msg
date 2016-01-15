@@ -44,6 +44,6 @@ noparent	<There is no parent>				/error
 noconpoint	<There is no such conpoint>			/error
 nochild		<There is no child>				/error
 nonextsibling	<There is no next sibling>			/error
-destroyed       <Flow ctx is destoryed>                         /info
+destroyed       <Flow ctx is destroyed>                         /info
 no_propagate    <Don't propagate event handling>                /info
 fileopen        <Unable to open file>                           /error

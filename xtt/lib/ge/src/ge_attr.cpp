@@ -193,9 +193,12 @@ int Attr::reconfigure_attr_c( void *attr)
   return ((Attr *)attr)->reconfigure_attr();
 }
 
-void Attr::message( void *attr, char severity, const char *message)
+void Attr::message( void *attr, int popup, char severity, const char *message)
 {
-  ((Attr *)attr)->message( severity, message);
+  if ( popup)
+    ((Attr *)attr)->message_popup( severity, message);
+  else
+    ((Attr *)attr)->message( severity, message);
 }
 
 

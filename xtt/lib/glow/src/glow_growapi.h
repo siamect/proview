@@ -92,6 +92,8 @@ extern "C" {
     int			no_edit;
     double		maxlimit;
     double		minlimit;
+    int			(*input_validation_cb)( void *ctx, void *value);
+    void		*validation_ctx;
   } grow_sAttrInfo;
 
   //! Structs to set attributes for the grow context.
@@ -3132,6 +3134,7 @@ extern "C" {
   void grow_SetObjectOriginalBackgroundColor( grow_tObject o, glow_eDrawType color);
   void grow_ResetObjectBackgroundColor( grow_tObject object);
   int grow_SetObjectClass( grow_tObject object, grow_tNodeClass nodeclass);
+  int grow_CheckObjectName( grow_tCtx ctx, char *name);
 
   
 /*@}*/

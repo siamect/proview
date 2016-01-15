@@ -881,6 +881,7 @@ class GrowCtx : public GlowCtx {
   void reset_custom_colors();
   int read_customcolor_file( char *name);
   int write_customcolor_file( char *name);
+  int check_object_name( char *name);
   static void set_default_color_theme( char *theme);
 
   static int get_dimension( char *filename, int *width, int *heigth);

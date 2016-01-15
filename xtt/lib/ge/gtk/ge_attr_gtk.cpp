@@ -65,6 +65,25 @@ void AttrGtk::message( char severity, const char *message)
   gtk_label_set_text( GTK_LABEL(msg_label), message);
 }
 
+void AttrGtk::message_popup( char severity, const char *message)
+{
+  char title[40];
+
+  switch ( severity) {
+  case 'I':
+    strcpy( title, "Info message");
+    break;
+  case 'W':
+    strcpy( title, "Warning message");
+    break;
+  default:
+    strcpy( title, "Error message");
+  }
+
+  CoWowGtk wow( toplevel);
+  wow.DisplayError( title, message);
+}
+
 void AttrGtk::set_prompt( const char *prompt) {
   if ( strcmp(prompt, "") == 0) {
     g_object_set( cmd_prompt, "visible", FALSE, NULL);

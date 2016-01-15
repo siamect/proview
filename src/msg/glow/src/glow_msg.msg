@@ -52,3 +52,6 @@ noselect        <Nothing is selected>                           /error
 groupclass      <Unable to group this kind of object>           /error
 terminated      <Ctx is terminated>				/info
 subterminated   <Subwindow is terminated>			/info
+name_long       <Name is too long>           			/error
+name_invchar    <Invalid character for name>           		/error
+name_alrexist   <Name already exist>           			/error

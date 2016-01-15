@@ -151,7 +151,7 @@ class AttrNav {
     attr_sItem  	*itemlist;
     int			item_cnt;
     int			trace_started;
-    void 		(*message_cb)( void *, char, const char *);
+    void 		(*message_cb)( void *, int, char, const char *);
     void 		(*change_value_cb)( void *);
     int			(*get_subgraph_info_cb)( void *, char *, attr_sItem  **, int *);
     int			(*get_dyn_info_cb)( void *, GeDyn *, attr_sItem  **, int *);
@@ -163,7 +163,7 @@ class AttrNav {
 
     virtual int set_attr_value( char *value_str);
     virtual int check_attr_value( int *multiline, int *size, char **value);
-    virtual void message( char sev, const char *text);
+    virtual void message( int popup, char sev, const char *text);
     virtual void set_inputfocus() {}
     virtual void force_trace_scan();
     virtual int object_attr();
@@ -180,7 +180,9 @@ class ItemLocal {
     ItemLocal( AttrNav *attrnav, const char *item_name, const char *attr,
 	int attr_type, int attr_size, double attr_min_limit,
 	double attr_max_limit, void *attr_value_p, int attr_multiline, 
-        int attr_noedit, int attr_mask,
+        int attr_noedit, int attr_mask, 
+	int (*attr_input_validation_cb)( void *ctx, void *value),
+        void *attr_validation_ctx,
 	brow_tNode dest, flow_eDest dest_code);
     attrnav_eItemType	type;
     brow_tNode		node;
@@ -195,6 +197,8 @@ class ItemLocal {
     int			multiline;
     int			noedit;
     int			mask;
+    int			(*input_validation_cb)( void *ctx, void *value);
+    void		*validation_ctx;
     int			parent;
     int			subgraph;
 

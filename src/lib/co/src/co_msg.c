@@ -65,6 +65,7 @@
   extern msg_sHead wbMsgHead;
   extern msg_sHead geMsgHead;
   extern msg_sHead flowMsgHead;
+  extern msg_sHead glowMsgHead;
   extern msg_sHead pwrpMsgHead;
 
   static const msg_sHead *heads[] = {
@@ -76,6 +77,7 @@
     &wbMsgHead,
     &geMsgHead,
     &flowMsgHead,
+    &glowMsgHead,
     NULL
   };
 

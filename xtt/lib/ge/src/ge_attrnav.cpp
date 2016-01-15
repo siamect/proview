@@ -45,6 +45,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
+#include "co_msg.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
@@ -1463,9 +1464,9 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
   }
 }
 
-void AttrNav::message( char sev, const char *text)
+void AttrNav::message( int popup, char sev, const char *text)
 {
-  (message_cb)( parent_ctx, sev, text);
+  (message_cb)( parent_ctx, popup, sev, text);
 }
 
 //
@@ -1591,18 +1592,29 @@ int AttrNav::set_attr_value( char *value_str)
 		buffer, sizeof(buffer), item->size);
       if ( EVEN(sts)) return sts;
 
+      if ( item->input_validation_cb) {
+	sts = (item->input_validation_cb)(item->validation_ctx, (void *)buffer);
+	if ( EVEN(sts)) {
+	  char msg[200];
+
+	  msg_GetMsg( sts, msg, sizeof(msg));
+	  message( 1, 'E', msg);
+	  return 0;
+	}
+      }
+
       if ( item->max_limit != 0 || item->min_limit != 0) {
 	if ( item->type_id == glow_eType_Double ) {
 	  if ( *(double *)&buffer < item->min_limit ||
 	       *(double *)&buffer > item->max_limit) {
-	    message( 'E', "Min or maxvalue exceeded");
+	    message( 0, 'E', "Min or maxvalue exceeded");
 	    return 0;
 	  }
 	}
 	else if ( item->type_id == glow_eType_Int ) {
 	  if ( *(int *)&buffer < item->min_limit ||
 	       *(int *)&buffer > item->max_limit) {
-	    message( 'E', "Min or maxvalue exceeded");
+	    message( 0, 'E', "Min or maxvalue exceeded");
 	    return 0;
 	  }
 	}
@@ -1691,7 +1703,7 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
   }
 
   brow_GetCtxUserData( (BrowCtx *)ctx, (void **) &attrnav);
-  attrnav->message( ' ', null_str);
+  attrnav->message( 0, ' ', null_str);
   switch ( event->event)
   {
     case flow_eEvent_Key_PageDown: {
@@ -2367,9 +2379,10 @@ int	AttrNav::object_attr()
   for ( i = 0; i < item_cnt; i++)
   {
     new ItemLocal( this, item_p->name, "LocalAttr", 
-	item_p->type, item_p->size, item_p->minlimit, item_p->maxlimit,
-        item_p->value, item_p->multiline, item_p->noedit, item_p->mask,
-	NULL, flow_eDest_IntoLast);
+		   item_p->type, item_p->size, item_p->minlimit, item_p->maxlimit,
+		   item_p->value, item_p->multiline, item_p->noedit, item_p->mask,
+		   item_p->input_validation_cb, item_p->validation_ctx, 
+		   NULL, flow_eDest_IntoLast);
     
     item_p++;
   }
@@ -2456,12 +2469,15 @@ ItemLocal::ItemLocal( AttrNav *attrnav, const char *item_name, const char *attr,
 	int attr_type, int attr_size, double attr_min_limit, 
 	double attr_max_limit, void *attr_value_p, int attr_multiline,
 	int attr_noedit, int attr_mask,
+	int (*attr_input_validation_cb)( void *ctx, void *value),
+        void *attr_validation_ctx,
 	brow_tNode dest, flow_eDest dest_code) :
 	value_p(attr_value_p), first_scan(1), 
 	type_id(attr_type), size(attr_size), 
 	min_limit(attr_min_limit), max_limit(attr_max_limit),
-	multiline(attr_multiline), noedit(attr_noedit), mask(attr_mask), parent(0),
-	subgraph(0)
+	multiline(attr_multiline), noedit(attr_noedit), mask(attr_mask), 
+        input_validation_cb(attr_input_validation_cb), validation_ctx(attr_validation_ctx),
+	parent(0), subgraph(0)
 {
 
   type = attrnav_eItemType_Local;
@@ -2572,6 +2588,7 @@ int ItemLocal::open_children( AttrNav *attrnav, double x, double y)
       new ItemLocal( attrnav, item_p->name, "LocalAttr", 
 	item_p->type, item_p->size, item_p->minlimit, item_p->maxlimit,
 	item_p->value, item_p->multiline, item_p->noedit, item_p->mask,
+	item_p->input_validation_cb, item_p->validation_ctx, 
 	node, flow_eDest_IntoLast);
       item_p++;
     }
@@ -2657,6 +2674,7 @@ int ItemLocal::open_children( AttrNav *attrnav, double x, double y)
       new ItemLocal( attrnav, item_p->name, "LocalAttr", 
 	item_p->type, item_p->size, item_p->minlimit, item_p->maxlimit,
 	item_p->value, item_p->multiline, item_p->noedit, item_p->mask,
+	item_p->input_validation_cb, item_p->validation_ctx, 
 	node, flow_eDest_IntoLast);
       item_p++;
     }

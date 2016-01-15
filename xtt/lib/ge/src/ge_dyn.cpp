@@ -4084,9 +4084,12 @@ int GeValue::connect( grow_tObject object, glow_sTraceData *trace_data)
     else
       annot_typeid = dyn_get_typeid( format);
 
-    if ( !check_format( format, annot_typeid))
-      printf( "** GeValue: Suspicious format \"%s\" (%s)\n", format, attribute);
+    if ( !check_format( format, annot_typeid)) {
+      char name[80];
 
+      grow_GetObjectName( object, name);
+      printf( "** GeValue: Suspicious format \"%s\" (%s, %s)\n", format, name, attribute);
+    }
     break;
   case graph_eDatabase_Local:
     p = dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
@@ -14443,7 +14446,7 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
     break;
   case glow_eEvent_Key_Left:
     if ( event->object.object_type != glow_eObjectType_NoObject) {
-      char 	name[40];
+      char 	name[80];
       grow_tObject *objectlist, *object_p;
       int 	object_cnt;
       int	i;
@@ -14532,7 +14535,7 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
     break;
   case glow_eEvent_Key_Up:
     if ( event->object.object_type != glow_eObjectType_NoObject) {
-      char 	name[40];
+      char 	name[80];
       grow_tObject *objectlist, *object_p;
       int 	object_cnt;
       int		i;
