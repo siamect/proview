@@ -132,6 +132,18 @@ int RemUtils_InitSerialDev(char *device, int speed, int databits, int stopbits, 
     case 19200:
       tty_attributes.c_cflag |= B19200;
       break;
+    case 38400:
+      tty_attributes.c_cflag |= B38400;
+      break;
+    case 57600:
+      tty_attributes.c_cflag |= B57600;
+      break;
+    case 115200:
+      tty_attributes.c_cflag |= B115200;
+      break;
+    case 230400:
+      tty_attributes.c_cflag |= B230400;
+      break;
     default:
       tty_attributes.c_cflag |= B9600;
       break;
