@@ -140,12 +140,12 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Each attribute specifies the complete name of a Form or
-      !  Graph object which is to be activated by a function
-      !  button in the operator window. The name has to be
-      !  filled on in a consecutive way with the beginning of
-      !  FastAvail[0], representing the first function button in
-      !  the first row.
+      !  Each attribute specifies the complete name of a
+      !  XttGraph object which is to be activated by a function
+      !  button in the operator window. The buttons are are ordered
+      !  in five rows with five buttons in each row.
+      !  The first row contains buttons for FastAvail[0] - FastAvail[4], 
+      !  the second for FastAvail[5] - FastAVail[9] etc.
       !*/
       Object FastAvail $Attribute 32
         Body SysBody
