@@ -1,72 +1,78 @@
-    1   errh
-    2   pwrs
-    3   pwrb
-    4   pwr
-   12   utl
-   13   pool
-   14   mvol
-   15   gdb
-   16   san
-   17	qcom
-   18	qdb
-   19   sync
-   20   que
-   21   lst
-   22	timer
-   23	thread
-   24   proc
-   25   sev
-   26	sim
-   50   hd
-  100   cdh
-  101   ndc
-  102	errno
-  103	ccm
-  104	user
-  105	dcli
-  106	nav
-  107   dbs
-  108   lng
-  110   gdh
-  111   hash
-  130   plc
-  140   io
-  141   pb
-  142   mb
-  143   iom
-  180   ini
-  190   mh
-  191   ph
-  192   smon
-  210   ds
-  211   csup
-  220   ldh
-  230   pro
-  240   goen
-  250   gre
-  260   vldh
-  270   gsx
-  280   foe
-  290   rou
-  299   ate
-  300   tra
-  301   cmd
-  302   vsel
-  303   distr
-  304   lfu
-  305   flow
-  306   ge
-  307   xnav
-  308   wnav
-  309   watt
-  310   rtt
-  311   tlog
-  312   nmps
-  313   glow
-  314   cnv
-  315   rtc
-  316   wda
-  317   xatt
-  320   login
-  321   syi
-  322   wow
+1 ERRH
+2 PWRS
+3 PWRB
+4 PWR
+12 UTL
+13 POOL
+14 MVOL
+15 GDB
+16 SAN
+17 QCOM
+18 QDB
+19 SYNC
+20 QUE
+22 TIMER
+23 THREAD
+24 PROC
+25 SEV
+26 SIM
+50 HD
+100 CDH
+101 NDC
+101 TIME
+102 ERRNO
+103 CCM
+104 USER
+105 DCLI
+106 NAV
+106 TREE
+107 DBS
+108 LNG
+110 GDH
+111 HASH
+112 NET
+130 PLC
+140 IO
+141 PB
+142 MB
+143 IOM
+180 INI
+190 MH
+191 PH
+192 SMON
+210 DS
+211 CSUP
+220 LDH
+221 WSX
+240 GOEN
+250 GRE
+260 VLDH
+270 GSX
+280 FOE
+290 ROU
+300 ATE
+300 TRA
+301 CMD
+302 VSEL
+303 DISTR
+303 PKG
+304 LFU
+305 FLOW
+306 GE
+307 XNAV
+308 WNAV
+309 WATT
+310 RTT
+311 TLOG
+312 NMPS
+313 GLOW
+314 CNV
+315 RTC
+316 WDA
+317 XATT
+320 LOGIN
+320 SUTL
+321 SYI
+322 WOW
+323 VMGM
+531 REM
