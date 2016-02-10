@@ -71,6 +71,7 @@ mh_NetSendMessage(
   msg.type.s = subtype;
   msg.reply = hp->qid;
   msg.size = size;
+  msg.msg_id = 0;
 
   if (recPlatform == NULL || co_IsXdrNeeded(&hp->platform, recPlatform)) {
     hp->xdr = TRUE;
@@ -84,7 +85,6 @@ mh_NetSendMessage(
     hp->xdr = FALSE;
     memcpy(msg.data, hp, size);
   }
-
 
   qcom_Put(&sts, qid, &msg);
   if (EVEN(sts))
