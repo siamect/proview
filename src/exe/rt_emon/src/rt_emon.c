@@ -348,12 +348,15 @@ struct s_Outunit {
   pwr_tTime		birthTime;	/* Time when outunit was started */
   pwr_tObjid		outunit;	/* Object id of outunit object */
   mh_eOutunitType	type;		/* Type of outunit */
+  pwr_tUInt32		ver;		/* Outunit version */
   pwr_tUInt32		ackGen;		/* Generation of last ack received from outunit */
   pwr_tUInt32		blockGen;	/* Generation of last block received from outunit */
   pwr_tUInt32		eventIdx;	/* Index of last sent event to outunit */
   pwr_tUInt32		eventGen;	/* Generation of eventlist when last sent to outunit */
   pwr_tUInt32		maxIdx;		/*  */
   pwr_tUInt32		syncedIdx;	/*  */
+  pwr_tUInt32		lastSentIdx;	/* Last event sent to outunit */
+  pwr_tTime		lastSentTime;	/* Time when last event is sent to outunit */
   pwr_tBoolean		check;
   pwr_tBoolean		linkUp;
   pwr_mEventTypeMask    selEventType;		
@@ -509,6 +512,7 @@ static void		outunitInfo(mh_sHead*, sOutunit*);
 static void		outunitDisconnect(mh_sHead*, sOutunit*);
 static void		outunitLog(sOutunit*, char*);
 static void		outunitSync(mh_sHead *, sOutunit*);
+static void 		outunitAlarmReq(mh_sHead *hp, sOutunit *op);
 static void		procDown(qcom_sAid*);
 static void		receive(qcom_sQid);
 static void		reInitSupList();
@@ -1249,6 +1253,97 @@ cancelAlarm (
   activeListRemove(ap);
   eventToOutunits(ep);
 }
+
+static void
+sendAlarmStatus( sOutunit *op)
+{
+  LstLink(sActive) *al;
+  sEvent	*ep;
+  sActive	*ap;
+  mh_sAlarmStatus *msg;
+  int		msg_size;
+  int		sts;
+  pwr_tBoolean  is_for_outunit;
+
+  /* Count alarms */
+  int count = 0;
+  for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al)) {
+    ap = LstObj(al);
+
+    switch (ap->detect_etp->event) {
+    case mh_eEvent_Info:
+    case mh_eEvent_Alarm:
+    case mh_eEvent_MaintenanceAlarm:
+    case mh_eEvent_SystemAlarm:
+    case mh_eEvent_UserAlarm1:
+    case mh_eEvent_UserAlarm2:
+    case mh_eEvent_UserAlarm3:
+    case mh_eEvent_UserAlarm4:
+
+      ep = ap->detect_etp->ep;
+      if ( ep)
+	is_for_outunit = isForOutunit(op, ep->outunit, ep->object.Objid, ep->objName, ep->msg.info.EventFlags, 
+				     ep->eventType, ep->local);
+      else
+	is_for_outunit = isForOutunit(op, ap->outunit, ap->object.Objid, ap->objName, ap->eventFlags, 
+				      ap->eventType, ap->local);
+      if ( is_for_outunit)
+	count++;
+      break;
+    default: ;
+    }
+  }
+  
+  msg_size = sizeof(mh_sAlarmStatus) + (count - 1) * sizeof(mh_sAlarmSts);
+  msg = (mh_sAlarmStatus *)calloc( 1, msg_size);
+  msg->Nix = l.head.nix;
+  msg->Count = count;
+
+  count = 0;
+  for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al)) {
+    ap = LstObj(al);
+
+    switch (ap->detect_etp->event) {
+    case mh_eEvent_Info:
+    case mh_eEvent_Alarm:
+    case mh_eEvent_MaintenanceAlarm:
+    case mh_eEvent_SystemAlarm:
+    case mh_eEvent_UserAlarm1:
+    case mh_eEvent_UserAlarm2:
+    case mh_eEvent_UserAlarm3:
+    case mh_eEvent_UserAlarm4:
+
+      ep = ap->detect_etp->ep;
+
+      if ( ep)
+	is_for_outunit = isForOutunit(op, ep->outunit, ep->object.Objid, ep->objName, ep->msg.info.EventFlags, 
+				     ep->eventType, ep->local);
+      else
+	is_for_outunit = isForOutunit(op, ap->outunit, ap->object.Objid, ap->objName, ap->eventFlags, 
+				      ap->eventType, ap->local);
+      if ( is_for_outunit) {
+      
+	msg->Sts[count].Idx = ap->idx;
+	msg->Sts[count].Status = ap->status.Event.Status;
+	count++;
+
+#if 0
+	// Test
+	int sts = ap->status.Event.Status;
+	int idx = ap->idx;
+
+	printf( "idx: %d sts: %d\n", idx, sts);	
+	// End test
+#endif
+      }
+      break;
+    default: ;
+    }
+  }
+  sts = sendToOutunit(op, mh_eMsg_HandlerAlarmStatus, 0, msg, msg_size);
+  free( (char *)msg);
+}
+
 
 static void
 checkOutunits ()
@@ -1258,17 +1353,26 @@ checkOutunits ()
 
   for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol)) {
     op = LstObj(ol);
-    if (op->linkUp && op->syncedIdx != op->eventIdx) {
-      if (op->check) {
+
+    if ( op->linkUp && 
+	 op->type == mh_eOutunitType_Operator && 
+	 op->ver >= 5)
+      /* Set alarm status to operator */
+      sendAlarmStatus(op);
+    else {
+      /* Send sync */
+      if (op->linkUp && op->syncedIdx != op->eventIdx) {
+	if (op->check) {
 #if 0
-	errh_Info("Sending sync request to outunit qid: %s, oid: %s\n %d =! %d",
-	  qcom_QidToString(NULL, &op->link.qid, 1),
-	  cdh_ObjidToString(NULL, op->outunit, 1),
-	  op->syncedIdx, op->eventIdx);
+	  errh_Info("Sending sync request to outunit qid: %s, oid: %s\n %d =! %d",
+		    qcom_QidToString(NULL, &op->link.qid, 1),
+		    cdh_ObjidToString(NULL, op->outunit, 1),
+		    op->syncedIdx, op->eventIdx);
 #endif
-        sendToOutunit(op, mh_eMsg_HandlerSync, 0, NULL, 0);
-      } else {
-	op->check = 1;
+	  sendToOutunit(op, mh_eMsg_HandlerSync, 0, NULL, 0);
+	} else {
+	  op->check = 1;
+	}
       }
     }
   }
@@ -1955,8 +2059,9 @@ fromHandler (
 
   switch (hp->type) {
   case mh_eMsg_ProcDown:
-    if (hp->ver != mh_cVersion) {
-      /* Different versions, not yet implemented */
+    if (!(hp->ver == mh_cVersion ||
+	  (mh_cVersion == 5 && (hp->ver == 3 || hp->ver == 4)))) {
+      /* Different versions, not yet implemented (V5 is compatible with V3 and V4 */
       errh_Info("fromHandler, Received a Message with different version");
       break;
     }
@@ -2028,6 +2133,9 @@ fromOutunit (
     break;
   case mh_eMsg_OutunitSync:
     sendToOutunit(op, mh_eMsg_Sync, 0, NULL, 0);
+    break;
+  case mh_eMsg_OutunitAlarmReq:
+    outunitAlarmReq(hp, op);
     break;
   default:
     errh_Error("fromOutunit, program error, type: %d", hp->type);
@@ -3141,7 +3249,7 @@ isValidApplication (
   LstLink(sAppl) *al;
 
   if (!(hp->ver == mh_cVersion || 
-	(mh_cVersion == 4 && hp->ver == 3)))  {  /* V4 is compatible with V3 */
+	(mh_cVersion == 5 && (hp->ver == 4 || hp->ver == 3))))  {  /* V5 is compatible with V3 and V4 */
     /* Different versions, not yet implemented */
     errh_Info("isValidApplication: Received a Message with different version");
     Reply->Sts = MH__VERSION;
@@ -3206,7 +3314,7 @@ isValidOutunit (
   LstLink(sOutunit) *ol;
 
   if (!(hp->ver == mh_cVersion || 
-	(mh_cVersion == 4 && hp->ver == 3)))  {  /* V4 is compatible with V3 */
+	(mh_cVersion == 5 && (hp->ver == 4 || hp->ver == 3))))  {  /* V5 is compatible with V3 and V4 */
     /* Different versions, not yet implemented */
     errh_Info("isValidOutunit: Received a Message with different version");
     return FALSE;
@@ -3231,6 +3339,7 @@ isValidOutunit (
     op->link.platform = hp->platform;
     op->link.nix = hp->nix;
     op->birthTime = net_NetTimeToTime( &hp->birthTime);
+    op->ver = hp->ver;
     op->outunit = hp->outunit;
     /* Insert in outunit list */
     LstIns(&l.outunit_l, op, outunit_l);   
@@ -3628,6 +3737,8 @@ outunitSync (
   if (hp->eventGen != op->eventGen)
     return;
 
+  // printf( "Sync: hp: %d opidx %d opsync %d\n", hp->eventIdx, op->eventIdx, op->syncedIdx);
+
   if (op->eventIdx == op->syncedIdx)
     return;
 
@@ -3647,6 +3758,54 @@ outunitSync (
   }
   sendEventListToOutunit(op);
 }
+
+
+static void
+outunitAlarmReq (
+  mh_sHead *hp,
+  sOutunit *op
+)
+{
+  mh_sOutunitAlarmReq *msg = (mh_sOutunitAlarmReq*) (hp + 1);
+  int i;
+  LstLink(sActive) *al;
+  sActive	*ap;
+  int		ok;
+
+#if 0
+  printf( "outunitAlarmReq: ");
+  for ( i = 0; i < msg->Count; i++)
+    printf( " %d,", msg->Idx[i]);
+  printf("\n");
+#endif
+
+  /* Find events in active list */
+  for ( i = 0; i < msg->Count; i++) {
+    for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l); al = LstNex(al)) {
+      ap = LstObj(al);
+
+      if ( ap->idx == msg->Idx[i]) {
+	ok = reSendEventToOutunit( op, ap->detect_etp);
+#if 0
+	if (ap->detect_etp->ep != NULL)
+	  ok = sendEventToOutunit( op, ap->detect_etp);
+        else
+	  ok = reSendEventToOutunit(op, ap->detect_etp);
+	printf( "Resend %d\n", ap->idx);
+#endif
+	if (ok) {
+	  if ( ap->idx > op->eventIdx)
+	    op->eventIdx = ap->idx;	/* Message was sent, update last sent index */
+	  op->maxIdx = l.event_l->idx;
+	  op->check = 0;
+	}
+      }
+    }
+  }
+  /* Avoid sync mismatch */
+  op->syncedIdx = op->eventIdx;
+}
+
 
 static void
 procDown ( 
@@ -4077,16 +4236,36 @@ sendEventListToOutunit (
   if (etp == NULL)
     return;
     
+  //#if 0
+  // Test
+  if ( op->lastSentIdx == etp->idx) {
+    /* Wait before resending it */
+    pwr_tTime current;
+    pwr_tDeltaTime dt;
+    float df;
+
+    time_GetTime(&current);
+    time_Adiff( &dt, &current, &op->lastSentTime);
+    df = time_DToFloat( 0, &dt);
+    if ( df < 1)
+      return;
+  }
+
   if (etp->ep != NULL) {
     ok = sendEventToOutunit(op, etp);
   } else {
     ok = reSendEventToOutunit(op, etp);
   }
+  // printf( "eventListToOutunit: %d idx: %d ok: %d opidx %d opsynced %d\n", etp->ap ? etp->ap->idx : -1, etp->idx, ok, op->eventIdx, op->syncedIdx);
+  //#endif
+  //ok = 0; // Test
 
   if (ok) {
     op->eventIdx = etp->idx;	/* Message was sent, update last sent index */
     op->maxIdx = l.event_l->idx;
     op->check = 0;
+    op->lastSentIdx = etp->idx;
+    time_GetTime(&op->lastSentTime);
   }
 }
 
@@ -4193,6 +4372,7 @@ sendToOutunit (
   hp->blockGen = op->blockGen;    
   hp->selGen   = op->selGen;    
 
+  // printf( "sendToOutunit: eventIdx %d\n", hp->eventIdx); 
   sts = mh_NetSendMessage(&op->link.qid, &op->link.platform, prio, subType, (mh_sHead *)mp, size);
   if (EVEN(sts) && sts != QCOM__LINKDOWN) {
     errh_Error("%s\n%m", "SendMessage: mh_NetSendMessage", sts);

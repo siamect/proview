@@ -81,7 +81,7 @@ Ev::Ev( void *ev_parent_ctx,
   start_trace_cb(NULL), display_in_xnav_cb(NULL), update_info_cb(NULL),
   help_cb(NULL), popup_menu_cb(0), sound_cb(0), pop_cb(0), is_authorized_cb(0), eve(NULL), ala(NULL),
   blk(0), connected(0), ala_displayed(0), eve_displayed(0), beep(ev_beep), pop_mask(ev_pop_mask), 
-  eventname_seg(ev_eventname_seg), sala_cnt(0), seve_cnt(0)
+  eventname_seg(ev_eventname_seg), sala_cnt(0), seve_cnt(0), modified(0)
 {
 }
 
@@ -305,6 +305,9 @@ void Ev::eve_activate_ack_last()
     sala[i]->ack( id);
   for ( int i = 0; i < seve_cnt; i++)
     seve[i]->ack( id);
+  if ( update_info_cb)
+    update_info_cb( parent_ctx);
+  ala->fill_alarm_tables();
   mh_OutunitAck( &lid);
 }
 
@@ -345,6 +348,9 @@ void Ev::ala_activate_ack_last()
     sala[i]->ack( id);
   for ( int i = 0; i < seve_cnt; i++)
     seve[i]->ack( id);
+  if ( update_info_cb)
+    update_info_cb( parent_ctx);
+  ala->fill_alarm_tables();
   mh_OutunitAck( &lid);
 }
 
@@ -425,7 +431,8 @@ int	Ev::outunit_connect( pwr_tObjid	user)
 		mh_clear_alarmlist_bc,
 		mh_clear_blocklist_bc,
 		mh_info_bc,
-		mh_return_bc
+		mh_return_bc,
+		mh_alarmstatus_bc
 		);
   if (EVEN(sts)) return sts;
 
@@ -437,6 +444,7 @@ void Ev::update( double scantime)
 {
   int sts;
   int nodraw_set = 0;
+  int redraw = 0;
 
   sts = mh_OutunitReceive();     
   while (ODD(sts))
@@ -448,11 +456,17 @@ void Ev::update( double scantime)
       nodraw_set = 1;
     }
     sts = mh_OutunitReceive();     
+    redraw = redraw | ev->modified;
   }
-  if ( nodraw_set)
-  {
-    eve->reset_nodraw();
-    ala->reset_nodraw();
+  if ( nodraw_set) {
+    if ( redraw) {
+      eve->reset_nodraw();
+      ala->reset_nodraw();
+    }
+    else {
+      brow_ResetNodraw( eve->brow->ctx);
+      brow_ResetNodraw( ala->brow->ctx);
+    }
   }
 
   ala->flash();
@@ -481,18 +495,30 @@ void Ev::ack_last_prio( unsigned long type, unsigned long prio)
       sala[i]->ack( id);
     for ( int i = 0; i < seve_cnt; i++)
       seve[i]->ack( id);
+    if ( update_info_cb)
+      update_info_cb( parent_ctx);
+    ala->fill_alarm_tables();
     mh_OutunitAck( &lid);
   }
 }
 
 void Ev::ack_all()
 {
-  mh_sEventId *id;
+  mh_sEventId *id, *idv;
   int sts;
+  int num;
+  int idx;
 
   if (is_authorized_cb && !is_authorized_cb( parent_ctx, pwr_mAccess_RtEventsAck | pwr_mAccess_System))
     return;
 
+  num = ala->get_num_not_acked();
+  if ( num == 0)
+    return;
+  
+  idv = (mh_sEventId *)calloc( num, sizeof(mh_sEventId));
+
+  idx = 0;
   sts = ala->get_last_not_acked( &id);
   while ( ODD(sts)) {
     mh_sEventId lid = *id;
@@ -502,10 +528,18 @@ void Ev::ack_all()
       sala[i]->ack( id);
     for ( int i = 0; i < seve_cnt; i++)
       seve[i]->ack( id);
-    mh_OutunitAck( &lid);
+    idv[idx++] = lid;
 
     sts = ala->get_last_not_acked( &id);
   }
+  if ( update_info_cb)
+    update_info_cb( parent_ctx);
+  ala->fill_alarm_tables();
+
+  for ( int i = 0; i < idx; i++)
+    mh_OutunitAck( &idv[i]);
+
+  free( (char *)idv);
 }
 
 int Ev::get_last_not_acked_prio( mh_sEventId **id, unsigned long type, 
@@ -591,6 +625,7 @@ pwr_tStatus Ev::mh_ack_bc( mh_sAck *MsgP)
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
   ev->ala->fill_alarm_tables();
+  ev->modified = 1;
   return 1;
 }
 
@@ -610,6 +645,7 @@ pwr_tStatus Ev::mh_return_bc( mh_sReturn *MsgP)
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
   ev->ala->fill_alarm_tables();
+  ev->modified = 1;
   return 1;
 }
 
@@ -649,6 +685,7 @@ pwr_tStatus Ev::mh_alarm_bc( mh_sMessage *MsgP)
     if ( pop)
       ev->pop_cb( ev->parent_ctx);
   }
+  ev->modified = 1;
   return 1;
 }
 
@@ -659,6 +696,7 @@ pwr_tStatus Ev::mh_block_bc( mh_sBlock *MsgP)
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
   ev->ala->fill_alarm_tables();
+  ev->modified = 1;
   return 1;
 }
 
@@ -671,6 +709,7 @@ pwr_tStatus Ev::mh_cancel_bc( mh_sReturn *MsgP)
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
   ev->ala->fill_alarm_tables();
+  ev->modified = 1;
   return 1;
 }
 
@@ -687,6 +726,7 @@ pwr_tStatus Ev::mh_info_bc( mh_sMessage *MsgP)
   ev->ala->fill_alarm_tables();
   if ( ev->pop_mask & pwr_mOpWindPopMask_InfoMsg)
     ev->pop_cb( ev->parent_ctx);
+  ev->modified = 1;
 
   return 1;
 }
@@ -700,12 +740,142 @@ pwr_tStatus Ev::mh_clear_alarmlist_bc( pwr_tNodeIndex nix)
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
   ev->ala->fill_alarm_tables();
+  ev->modified = 1;
   return 1;
 }
 
 pwr_tStatus Ev::mh_clear_blocklist_bc( pwr_tNodeIndex nix)
 {
   ev->blk->event_clear_alarmlist( nix);
+  ev->modified = 1;
+  return 1;
+}
+
+pwr_tStatus Ev::mh_alarmstatus_bc( mh_sAlarmStatus *MsgP)
+{
+  brow_tObject 	*object_list;
+  int		object_cnt;
+  ItemAlarm	*item;
+  int		i;
+  unsigned int  j;
+  int		*found;
+  mh_sOutunitAlarmReq *rmsg;
+  int 		modified = 0;
+
+  found = (int *)calloc( 1, MsgP->Count * sizeof(int));  
+
+
+  brow_GetObjectList( ev->ala->browbase->ctx, &object_list, &object_cnt);
+
+  // Reset check to find obsolete items
+  for ( i = 0; i < object_cnt; i++) {
+    brow_GetUserData( object_list[i], (void **)&item);
+    switch( item->type) {
+      case evlist_eItemType_Alarm:
+	if ( MsgP->Nix == item->eventid.Nix)
+	  item->check = 0;
+	break;
+    default: ;
+    }
+  }
+  for ( i = 0; i < object_cnt; i++) {
+    brow_GetUserData( object_list[i], (void **)&item);
+    switch( item->type) {
+      case evlist_eItemType_Alarm:
+	for ( j = 0; j < MsgP->Count; j++) {
+	  if ( MsgP->Nix == item->eventid.Nix &&
+	       MsgP->Sts[j].Idx == item->eventid.Idx) {
+	    found[j] = 1;
+	    item->check = 1;
+	    if ( !(MsgP->Sts[j].Status & mh_mEventStatus_NotRet) &&
+		 (item->status & mh_mEventStatus_NotRet)) {
+	      pwr_tUInt32 status = item->status;
+	      mh_sReturn retmsg;
+	      memset( &retmsg, 0, sizeof(retmsg));
+	      retmsg.TargetId = item->eventid;
+	      
+	      ev->ala->event_return( &retmsg);
+	      for ( int k = 0; k < ev->sala_cnt; k++)
+		ev->sala[k]->mh_return( &retmsg);
+	      modified = 1;
+	      if ( !(status & mh_mEventStatus_NotAck)) {
+		// Item was removed
+		i--;
+		object_cnt--;
+		continue;
+	      }
+	    }
+	    if ( !(MsgP->Sts[j].Status & mh_mEventStatus_NotAck) &&
+		 (item->status & mh_mEventStatus_NotAck)) {
+	      pwr_tUInt32 status = item->status;
+	      mh_sAck ackmsg;
+	      memset( &ackmsg, 0, sizeof(ackmsg));
+	      ackmsg.TargetId = item->eventid;
+	      
+	      ev->ala->event_ack( &ackmsg);
+	      for ( int k = 0; k < ev->sala_cnt; k++)
+		ev->sala[k]->mh_ack( &ackmsg);
+	      modified = 1;
+	      if ( !(status & mh_mEventStatus_NotRet)) {
+		// Item was removed
+		i--;
+		object_cnt--;
+		continue;
+	      }
+	    }
+	  }
+	}
+        break;
+      default:
+        ;
+    }
+  }
+
+  // Find and remove the obsolete items
+  brow_GetObjectList( ev->ala->browbase->ctx, &object_list, &object_cnt);
+  for ( i = 0; i < object_cnt; i++) {
+    brow_GetUserData( object_list[i], (void **)&item);
+    switch( item->type) {
+      case evlist_eItemType_Alarm:
+	if ( MsgP->Nix == item->eventid.Nix && !item->check) {
+	  ev->ala->event_delete( &item->eventid);
+	  for ( int k = 0; k < ev->sala_cnt; k++)
+	    ev->sala[k]->event_delete( &item->eventid);
+	  i--;
+	  object_cnt--;
+	  modified = 1;
+	}
+	break;
+    default: ;
+    }
+  }
+  
+  if ( modified) {
+    if ( ev->update_info_cb)
+      ev->update_info_cb( ev->parent_ctx);
+    ev->ala->fill_alarm_tables();
+  }
+
+  // Request info about any missing ids
+
+  rmsg = (mh_sOutunitAlarmReq *) calloc( 1, sizeof(*rmsg));
+  rmsg->Nix = MsgP->Nix;
+  for ( j = 0; j < MsgP->Count; j++) {
+    if ( !found[j]) {
+      // Request info about this id
+      rmsg->Idx[rmsg->Count] = MsgP->Sts[j].Idx;
+      rmsg->Count++;
+    }
+    if ( rmsg->Count >= sizeof(rmsg->Idx)/sizeof(rmsg->Idx[0]))
+      break;
+  }
+  if ( rmsg->Count > 0)
+    mh_OutunitAlarmRequest( rmsg);    
+
+  free( (char *)rmsg);
+  free( (char *)found);
+  ev->modified = modified;
+
   return 1;
 }
 

@@ -707,7 +707,8 @@ int	rtt_alarm_connect (
 		rtt_mh_clear_alarmlist_bc,
 		rtt_mh_clear_blocklist_bc,
 		rtt_mh_info_bc,
-		rtt_mh_return_bc
+		rtt_mh_return_bc,
+		0
 		);
 
 	if (EVEN(sts)) return sts;

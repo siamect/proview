@@ -126,6 +126,7 @@ class Ev {
     int			sala_cnt;
     EvEve		*seve[20];
     int			seve_cnt;
+    int			modified;
 
     virtual void map_eve( unsigned int options) {}
     virtual void map_ala( unsigned int options) {}
@@ -202,6 +203,7 @@ class Ev {
     static pwr_tStatus mh_info_bc( mh_sMessage *MsgP);
     static pwr_tStatus mh_clear_alarmlist_bc( pwr_tNodeIndex nix);
     static pwr_tStatus mh_clear_blocklist_bc( pwr_tNodeIndex nix);
+    static pwr_tStatus mh_alarmstatus_bc( mh_sAlarmStatus *MsgP);
 
 };
 

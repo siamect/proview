@@ -164,6 +164,18 @@ typedef pwr_tStatus (*mh_cbOutunitInfo)(mh_sMessage *);
  */
 typedef pwr_tStatus (*mh_cbOutunitReturn)(mh_sReturn *); 
 
+/** 
+ * @brief Callback function to handle alarm status messages. 
+ *
+ * It should be declared to the mh_Outunit API at the mh_OutunitConnect call. 
+ * The function can have any name, but the address to the routine should be passed 
+ * in the mh_OutunitConnect call. 
+ * The mh_Outunit API calls this function if an alarm status message arrives. 
+ * @param mh_cbOutunitAlarmStatus Address of a alarm status message. 
+ * @return pwr_tStatus - Status return in standard VMS-format. 
+ */
+typedef pwr_tStatus (*mh_cbOutunitAlarmStatus)(mh_sAlarmStatus *); 
+
 
 /* Exported functions */
 
@@ -188,7 +200,8 @@ pwr_tStatus mh_OutunitConnect(
   mh_cbOutunitClearAlarmList  Callback_ClearAlarmList,
   mh_cbOutunitClearBlockList  Callback_ClearBlockList,
   mh_cbOutunitInfo    Callback_Info,
-  mh_cbOutunitReturn  Callback_Return
+  mh_cbOutunitReturn  Callback_Return,
+  mh_cbOutunitAlarmStatus  Callback_AlarmStatus
 
 );
 pwr_tStatus mh_OutunitDisconnect();
@@ -201,6 +214,9 @@ pwr_tStatus mh_OutunitReceive();
 pwr_tStatus mh_OutunitSetTimeout(int Timeout);
 
 pwr_tStatus mh_OutunitUpdate();
+
+pwr_tStatus
+mh_OutunitAlarmRequest(mh_sOutunitAlarmReq *msg);
 
 /** @} */
 #if defined __cplusplus

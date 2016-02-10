@@ -11,6 +11,7 @@ link =	$(ldxx) -shared -DHW_X86 -DOS_LINUX \
 	${pwre_broot}/${pwre_target}/bld/lib/msg_dummy/msg_dummy_wb.o \
 	${pwre_broot}/${pwre_target}/bld/lib/msg_dummy/msg_dummy_ge.o \
 	${pwre_broot}/${pwre_target}/bld/lib/msg_dummy/msg_dummy_flow.o \
+	${pwre_broot}/${pwre_target}/bld/lib/msg_dummy/msg_dummy_glow.o \
 	${pwre_broot}/${pwre_target}/bld/lib/msg_dummy/msg_dummy_pwrp.o \
 	${pwre_broot}/${pwre_target}/bld/lib/rt/*.o \
 	${pwre_broot}/${pwre_target}/exp/obj/rt_io_user.o \

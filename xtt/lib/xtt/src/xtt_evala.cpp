@@ -239,6 +239,11 @@ void EvAla::update()
     ala->flash();
 }      
 
+int EvAla::event_delete( mh_sEventId *id)
+{
+  return ala->event_delete( id);
+}
+
 void EvAla::ack_last_prio( unsigned long type, unsigned long prio)
 {
   mh_sEventId 	*id;

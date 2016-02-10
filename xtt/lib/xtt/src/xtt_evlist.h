@@ -234,6 +234,8 @@ class EvList {
     void event_ack( mh_sAck *msg);
     void event_return( mh_sReturn *msg);
     void event_clear_alarmlist( pwr_tNodeIndex nix);
+    int event_delete( mh_sEventId *id);
+    int get_num_not_acked();
     int get_last_not_acked( mh_sEventId **id);
     int get_last_not_acked_beep( mh_sEventId **id);
     int id_to_item( mh_sEventId *id, void **item);
@@ -301,11 +303,12 @@ class ItemAlarm : public ItemEvBase {
     unsigned long	eventprio;
     mh_sEventId		eventid;
     pwr_tAttrRef       	object;
-    unsigned long	status;
+    mh_mEventStatus	status;
     char		alias[40];
     pwr_tAttrRef	eventsound;
     pwr_tText256        eventmoretext;
     pwr_tAttrRef       	supobject;
+    int			check;
 
     void	update_text(int tree_node);
 };

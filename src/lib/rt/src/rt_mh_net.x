@@ -42,7 +42,7 @@
 %#endif
 %
 %#define mh_cMsgClass      	201
-%#define mh_cVersion		4
+%#define mh_cVersion		5
 %#define mh_cProcHandler	111
 %#define mh_cProcAllHandlers	qcom_cQmhAllHandlers
 %#define mh_cProcAllOutunits	qcom_cQmhAllOutunits
@@ -147,6 +147,7 @@ enum mh_eMsg {
   mh_eMsg_HandlerDisconnect	= 10,
   mh_eMsg_HandlerHello		= 11,
   mh_eMsg_HandlerSync		= 12,
+  mh_eMsg_HandlerAlarmStatus	= 13,
 
   mh_eMsg_OutunitAck		= 15,
   mh_eMsg_OutunitBlock		= 16,
@@ -155,6 +156,7 @@ enum mh_eMsg {
   mh_eMsg_OutunitInfo		= 20,
   mh_eMsg_OutunitSync		= 21,
   mh_eMsg_OutunitClear		= 22,
+  mh_eMsg_OutunitAlarmReq	= 23,
 
   mh_eMsg_ProcDown		= 24,
 
@@ -402,6 +404,12 @@ struct mh_sReturn {
   pwr_tAName		EventName;
 };
 
+struct mh_sOutunitAlarmReq {
+  pwr_tNodeIndex	Nix;
+  pwr_tUInt32		Count;		/* # of entries */
+  pwr_tUInt32		Idx[20];
+};
+
 #ifdef RPC_HDR
 %struct mh_sOutunitInfo {
 %  pwr_tUInt16		type;
@@ -479,3 +487,48 @@ struct mh_sReturn {
 %
 %#endif
 #endif
+
+struct mh_sAlarmSts {
+  pwr_tUInt32		Idx;
+  mh_mEventStatus	Status;
+};
+
+#ifdef RPC_HDR
+%
+%typedef struct {
+%  pwr_tNodeIndex	Nix;
+%  pwr_tUInt32		Count;		/* # of entries */
+%  mh_sAlarmSts         Sts[1];		/* Specifications (dynamic) */
+%} mh_sAlarmStatus;
+%
+%bool_t
+%xdr_mh_sAlarmStatus();
+%
+#elif defined RPC_XDR
+%
+%bool_t
+%xdr_mh_sAlarmStatus(xdrs, objp)
+%	XDR *xdrs;
+%	mh_sAlarmStatus *objp;
+%{
+%	int count;
+%
+%	if (xdrs->x_op == XDR_DECODE) {
+%		count = (int) ntohl(objp->Count);
+%	} else {
+%		count = objp->Count;
+%	}
+%
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->Nix)) {
+%		return (FALSE);
+%	}
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->Count)) {
+%		return (FALSE);
+%	}
+%	if (!xdr_vector(xdrs, (char *)objp->Sts, count, sizeof(mh_sAlarmSts), (xdrproc_t)xdr_mh_sAlarmSts)) {
+%		return (FALSE);
+%	}
+%	return (TRUE);
+%}
+#endif
+

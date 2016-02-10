@@ -4456,6 +4456,9 @@ static int	xnav_open_func(	void		*client_data,
 	sts = gdh_GetObjectInfo( hist_name, &plot, sizeof(plot));
 	if ( EVEN(sts)) return sts;
 	
+	if ( plot.Layout & pwr_mCurveLayoutMask_AttrDescrFirst)
+	  options |= curve_mOptions_ShowDescrFirst;
+
 	for ( j = 0; j < 20; j++) {
 	  if ( cdh_ObjidIsNull( plot.YObjectName[j].Objid))
 	    break;

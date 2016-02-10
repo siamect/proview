@@ -231,7 +231,8 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitConnect
 		ev_mh_clear_alarmlist_bc,
 		NULL,
 		ev_mh_info_bc,
-		ev_mh_return_bc
+		ev_mh_return_bc,
+		NULL
 		);
   jsts = (jint) sts;
   

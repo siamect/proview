@@ -527,7 +527,8 @@ int main(int argc, char *argv[])
     NULL,
     NULL,
     (mh_cbOutunitInfo)PrintEvent,
-    (mh_cbOutunitReturn)PrintEvent
+    (mh_cbOutunitReturn)PrintEvent,
+    NULL
   );
 
   if (EVEN(sts)) {

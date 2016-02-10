@@ -91,6 +91,7 @@
 #define RTT_RXMIN	500   /* ms */
 #define RTT_RXMAX	10000 /* ms */
 #define RACK_TMO	1
+#define ALLOC_WARNING_LEVEL 500000
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 
@@ -191,6 +192,7 @@ struct sLink {
   qdb_sBuffer		*bp;
   char			*p;
   sIseg			tmo;
+  int			alloc_cnt;
 };
 
 
@@ -349,6 +351,7 @@ static void		window_remove (sLink*, sEseg*);
 static sEseg*		window_tmo (sLink*);
 static void		check_link_status ();
 static void		set_status (pwr_tStatus);
+static void		panic (void);
 
 
 int
@@ -774,6 +777,10 @@ eseg_build (
 	sp->head.flags.b.middle = 1;
 	lst_InsertPred(NULL, &msp->le_seg, &sp->le_seg, sp);
       }
+      lp->alloc_cnt += sp->size;
+      if ( lp->alloc_cnt > ALLOC_WARNING_LEVEL && qcom_sts != QCOM__BUFFHIGH)
+	set_status(QCOM__BUFFHIGH);
+      //printf( "qmon alloc: %d  (%d)\n", sp->lp->alloc_cnt, sp->size);
     }
 
     sp->head.flags.b.middle = 0;
@@ -827,6 +834,9 @@ eseg_free (
 
   if (bcast) thread_MutexLock(&l.bcast); 
 
+  sp->lp->alloc_cnt -= sp->size;
+  //printf( "qmon free:  %d  (%d)\n", sp->lp->alloc_cnt, sp->size);
+
     lst_Remove(NULL, &sp->c.le);
     if (lst_IsEmpty(NULL, &sp->le_bcast) && lst_IsEmpty(NULL, &sp->le_seg)) {
       if (sp->bp != NULL) {
@@ -838,6 +848,7 @@ eseg_free (
       lst_Remove(NULL, &sp->le_bcast);
       lst_Remove(NULL, &sp->le_seg);
     }
+
 
   if (bcast) thread_MutexUnlock(&l.bcast); 
 
@@ -1165,7 +1176,11 @@ iseg_import (
     decode_info(ip);
     qdb_ScopeLock {
       lp->bp = qdb_Alloc(&sts, qdb_eBuffer_base, ip->size);
-   } qdb_ScopeUnlock;
+    } qdb_ScopeUnlock;
+    if ( lp->bp == NULL) {
+      panic();
+      return;
+    }      
     lp->bp->c.flags.m |= ip->flags.m & qdb_mBuffer_maskExport;
     lp->p = (char *)&lp->bp->b.info;
   } else if (!sp->head.flags.b.first) {
@@ -1333,8 +1348,9 @@ link_disconnect (
   errh_Info("Disconnected, link to  %s (%s)",
     lp->np->name, cdh_NodeIdToString(NULL, lp->np->nid, 0, 0));
   qdb_ScopeLock {
-    if (lp->bp != NULL) 
+    if (lp->bp != NULL) {
       qdb_Free(NULL, lp->bp);
+    }
     lp->np->flags.b.active = 0;
     lp->np->flags.b.connected = 0;
     qdb_NetEvent(&sts, lp->np, qcom_eStype_linkDisconnect);
@@ -1342,6 +1358,7 @@ link_disconnect (
 
   lp->bp = NULL;
   lp->p = NULL;
+  lp->alloc_cnt = 0;
   sp = create_connect(lp);
   lst_InsertSucc(NULL, &lp->lh_send, &sp->c.le, sp);
 
@@ -2068,3 +2085,14 @@ pwr_tStatus sts
   }
 }
 
+
+static void
+panic (void)
+{
+  pwr_tStatus sts;
+  sLink *lp;
+
+  errh_Error("Panic, qdb pool exhausted");
+  for (lp = tree_Minimum(&sts, l.links.table); lp != NULL; lp = tree_Successor(&sts, l.links.table, lp))
+    link_disconnect(lp);
+}

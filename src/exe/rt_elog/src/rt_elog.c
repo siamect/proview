@@ -131,7 +131,8 @@ main ()
     NULL, 
     NULL, 
     (mh_cbOutunitInfo)Insert,
-    (mh_cbOutunitReturn)Insert
+    (mh_cbOutunitReturn)Insert,
+    NULL
   );
   If_Error_Log_Exit(sts, "mh_OutunitConnect");
 

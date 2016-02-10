@@ -904,6 +904,7 @@ static pwr_tUInt32 tlog_alarm_connect( 	pwr_tObjid	user_object)
 		NULL,
 		NULL,
 		tlog_mh_info_bc,
+		NULL,
 		NULL
 		);
 	if (EVEN(sts)) return sts;

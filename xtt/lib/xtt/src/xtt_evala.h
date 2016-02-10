@@ -123,6 +123,8 @@ class EvAla {
     void ack( mh_sEventId *id) { ala->ack(id);}
     int get_last_not_acked_prio( mh_sEventId **id, unsigned long type, 
 				 unsigned long prio);
+    int event_delete( mh_sEventId *id);
+
 
     static void ala_display_in_xnav_cb( void *ctx, pwr_tAttrRef *arp);
     static void ala_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);

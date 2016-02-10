@@ -1229,6 +1229,26 @@ void EvList::event_return( mh_sReturn *msg)
   }
 }
 
+int EvList::event_delete( mh_sEventId *id)
+{
+  if ( type == ev_eType_AlarmList) {
+    // Alarmlist
+    ItemAlarm 	*item;
+
+    if ( !id_to_item( id, (void **)&item))
+      return 0;
+
+    brow_DeleteNode( browbase->ctx, item->node);
+    if ( browtree) {
+      if ( item->tree_node)
+	brow_DeleteNode( browtree->ctx, item->tree_node);
+      view_configure();
+    }
+    size--;
+  }
+  return 1;
+}
+
 void EvList::print_nodia( char *filename)
 {
   brow_Print( brow->ctx, filename);
@@ -1791,7 +1811,8 @@ ItemAlarm::ItemAlarm( EvList *item_evlist, const char *item_name, pwr_tTime item
 	brow_tNode dest, flow_eDest dest_code, int *rsts):
         event_type(item_event_type), evlist(item_evlist), tree_node(0), time(item_time), 
 	eventtype(item_eventtype), eventflags(item_eventflags), eventprio(item_eventprio),
-	eventid(item_eventid), object(*item_object), status(item_status), supobject(*item_supobject)
+	eventid(item_eventid), object(*item_object), status(item_status), supobject(*item_supobject),
+	check(0)
 {
   type = evlist_eItemType_Alarm;
   brow_tNodeClass 	nc;
@@ -2354,6 +2375,29 @@ void ItemCategory::flash( EvList *evlist)
     else
       brow_ChangeObjectNodeClass( node, evlist->brow->nc_category_flash);
   }
+}
+
+int EvList::get_num_not_acked()
+{
+  int		i;
+  brow_tObject 	*object_list;
+  int		object_cnt;
+  ItemAlarm	*object_item;
+  int 		num = 0;
+
+  brow_GetObjectList( browbase->ctx, &object_list, &object_cnt);
+  for ( i = 0; i < object_cnt; i++) {
+    brow_GetUserData( object_list[i], (void **)&object_item);
+    switch( object_item->type) {
+      case evlist_eItemType_Alarm:
+        if ( object_item->status & mh_mEventStatus_NotAck)
+	  num++;
+        break;
+      default:
+        ;
+    }
+  }
+  return num;
 }
 
 int EvList::get_last_not_acked( mh_sEventId **id)

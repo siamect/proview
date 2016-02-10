@@ -111,7 +111,8 @@ void rt_post::open()
 		mh_clear_alarmlist_bc,
 		mh_clear_blocklist_bc,
 		mh_info_bc,
-		mh_return_bc
+		mh_return_bc,
+		NULL
 		);
   if ( EVEN(sts)) {
     errh_Error( "Post terminated: %m", sts);
