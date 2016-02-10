@@ -1817,7 +1817,8 @@ void GeDyn::merge( GeDyn& x)
       if ( elem->dyn_type1 == xelem->dyn_type1 && 
 	   elem->dyn_type2 == xelem->dyn_type2 && 
 	   elem->action_type1 == xelem->action_type1 &&
-	   elem->action_type2 == xelem->action_type2) {
+	   elem->action_type2 == xelem->action_type2 &&
+	   elem->instance == xelem->instance) {
 	// Element exists in both, use element in x, i.e. remove current element
 	if ( !prev)
 	  elements = elem->next;
@@ -5820,9 +5821,13 @@ int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
   int		sts;
   double	ur_x, ur_y;
 
+  move_x_p = 0;
+  move_y_p = 0;
+  scale_x_p = 0;
+  scale_y_p = 0;
+
   move_x_size = 4;
   move_x_type = pwr_eType_Float32;
-  move_x_p = 0;
   move_x_db = dyn->parse_attr_name( move_x_attribute, parsed_name,
 				    &inverted, &move_x_type, &move_x_size);
   if ( strcmp( parsed_name,"") != 0) {
@@ -5832,7 +5837,6 @@ int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
   }
   move_y_size = 4;
   move_y_type = pwr_eType_Float32;
-  move_y_p = 0;
   move_y_db = dyn->parse_attr_name( move_y_attribute, parsed_name,
 				    &inverted, &move_y_type, &move_y_size);
   if ( strcmp( parsed_name,"") != 0) {
@@ -5842,7 +5846,6 @@ int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
   }
   scale_x_size = 4;
   scale_x_type = pwr_eType_Float32;
-  scale_x_p = 0;
   scale_x_db = dyn->parse_attr_name( scale_x_attribute, parsed_name,
 				    &inverted, &scale_x_type, &scale_x_size);
   if ( strcmp( parsed_name,"") != 0) {
@@ -5852,7 +5855,6 @@ int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
   }
   scale_y_size = 4;
   scale_y_type = pwr_eType_Float32;
-  scale_y_p = 0;
   scale_y_db = dyn->parse_attr_name( scale_y_attribute, parsed_name,
 				    &inverted, &scale_y_type, &scale_y_size);
   if ( strcmp( parsed_name,"") != 0) {
