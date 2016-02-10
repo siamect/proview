@@ -509,6 +509,17 @@ E 1.20.3 "Input syntax error"
 E 1.21.1 "Fast curve"
 E 1.21.2 "Block events"
 #
+# Video management system
+E 1.22.1 "Panels"
+E 1.22.2 "Cameras"
+E 1.22.3 "Fullscreen"
+E 1.22.4 "Add/Remove"
+E 1.22.5 "Enter panel name"
+E 1.22.6 "Create Panel"
+E 1.22.7 "Delete Panel"
+E 1.22.8 "Do you want to create a panel"
+E 1.22.9 "Do you want to delete the specified panel"
+#
 # Postscript printing
 E 2.1.1 "Contents"
 E 2.1.2 "page"

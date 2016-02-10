@@ -506,6 +506,17 @@ E 1.20.3 "Syntax fel i inmatning"
 E 1.21.1 "Snabbkurva"
 E 1.21.2 "Blockera händelser"
 #
+# Video management system
+E 1.22.1 "Paneler"
+E 1.22.2 "Kameror"
+E 1.22.3 "Helskärm"
+E 1.22.4 "Addera/Ta bort"
+E 1.22.5 "Ange panelnamn"
+E 1.22.6 "Skapa panel"
+E 1.22.7 "Ta bort panel"
+E 1.22.8 "Vill du skapa en panel"
+E 1.22.9 "Vill du ta bort den angivna panelen"
+#
 # Postscript printing
 E 2.1.1 "Innehåll"
 E 2.1.2 "sidan"
