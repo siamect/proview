@@ -196,7 +196,7 @@
 #define AS_OBJ_M_NLIMIT (object->mparams[1]) //Default 80. Maximum numbber of messages in queue.
 #define AS_OBJ_M_ALWAIT (object->mparams[2]) //Default 20. Wait this number of cycles before taking next message from queue.
 #define AS_OBJ_M_ALHOLD (object->mparams[3]) //Default 30. Hold the current message this number of cycles.
-#define AS_OBJ_MESSAGEQP(i) ((AS_messageQ *) object->messageQ[(i)])
+#define AS_OBJ_MESSAGEQP(i) ((AS_messageQ *) (unsigned long int)object->messageQ[(i)])
 #define AS_OBJ_MESSAGEQPP(i) ((AS_messageQ **) &object->messageQ[(i)])
 #define AS_ADDMESSAGE(type, charpp, messageArgs...) {                              \
   if (asprintf(charpp, messageArgs) < 0) { /* ! a malloc() failure */              \

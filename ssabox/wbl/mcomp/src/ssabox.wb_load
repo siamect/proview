@@ -110,6 +110,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object IOSysType $Attribute 1 30-DEC-2005 14:40:05.50
           Body SysBody 30-DEC-2005 14:40:05.50
             Attr PgmName = "IOSysType"
+            Attr Size = 2
             Attr Flags = 32
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -117,12 +118,14 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 2 30-DEC-2005 14:40:05.50
           Body SysBody 30-DEC-2005 14:40:05.50
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object MaxNoOfCards $Attribute 3 30-DEC-2005 14:40:05.50
           Body SysBody 30-DEC-2005 14:40:05.50
             Attr PgmName = "MaxNoOfCards"
+            Attr Size = 2
             Attr Flags = 32
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -130,6 +133,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DataSheet $Attribute 4 30-DEC-2005 14:40:05.50
           Body SysBody 30-DEC-2005 14:40:05.50
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -183,6 +187,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 2432
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseSafetySwitch"
           EndBody
@@ -226,6 +231,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -236,6 +242,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DevName $Attribute 2 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "DevName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -247,6 +254,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorCount $Attribute 3 06-OCT-2005 14:45:53.00
           Body SysBody 21-DEC-2005 09:32:48.52
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -257,6 +265,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorSoftLimit $Attribute 4 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -266,6 +275,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorHardLimit $Attribute 5 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -275,6 +285,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object MaxNoOfChannels $Attribute 6 06-OCT-2005 14:45:53.00
           Body SysBody 21-DEC-2005 09:33:49.07
             Attr PgmName = "MaxNoOfChannels"
+            Attr Size = 2
             Attr Flags = 1056
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -306,6 +317,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object RegAddress $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "RegAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -315,6 +327,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object VectAddress $Attribute 8 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "VectAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -330,6 +343,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Process $Attribute 9 06-OCT-2005 14:45:53.00
           Body SysBody 30-MAY-2008 14:56:47.73
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -352,6 +366,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DataSheet $Attribute 11 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -395,7 +410,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
       Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 5
-        Attr Flags = 16464
+        Attr Flags = 49232
       EndBody
       Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
         Body SysBody 01-JAN-1970 01:00:00.00
@@ -407,6 +422,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -417,6 +433,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DevName $Attribute 2 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "DevName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -428,6 +445,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorCount $Attribute 3 06-OCT-2005 14:45:53.00
           Body SysBody 21-DEC-2005 09:35:03.07
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -438,6 +456,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorSoftLimit $Attribute 4 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -447,6 +466,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorHardLimit $Attribute 5 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -456,6 +476,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object MaxNoOfChannels $Attribute 6 06-OCT-2005 14:45:53.00
           Body SysBody 21-DEC-2005 09:35:22.82
             Attr PgmName = "MaxNoOfChannels"
+            Attr Size = 2
             Attr Flags = 1056
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -491,6 +512,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object RegAddress $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "RegAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -500,6 +522,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object VectAddress $Attribute 8 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "VectAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -515,6 +538,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Process $Attribute 9 06-OCT-2005 14:45:53.00
           Body SysBody 30-MAY-2008 14:58:18.21
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -537,6 +561,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DataSheet $Attribute 11 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -552,6 +577,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ConvMask1 $Attribute 12 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ConvMask1"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-CardMask1_1"
           EndBody
         EndObject
@@ -561,6 +587,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ConvMask2 $Attribute 13 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ConvMask2"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-CardMask2_1"
           EndBody
         EndObject
@@ -574,6 +601,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object InvMask1 $Attribute 14 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "InvMask1"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-CardMask1_1"
           EndBody
         EndObject
@@ -583,6 +611,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object InvMask2 $Attribute 15 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "InvMask2"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-CardMask2_1"
           EndBody
         EndObject
@@ -626,7 +655,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
       Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 5
-        Attr Flags = 16464
+        Attr Flags = 49232
       EndBody
       Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
         Body SysBody 01-JAN-1970 01:00:00.00
@@ -638,6 +667,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -648,6 +678,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DevName $Attribute 2 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "DevName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -659,6 +690,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorCount $Attribute 3 06-OCT-2005 14:45:53.00
           Body SysBody 21-DEC-2005 09:35:42.56
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -669,6 +701,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorSoftLimit $Attribute 4 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -678,6 +711,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorHardLimit $Attribute 5 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -687,6 +721,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object MaxNoOfChannels $Attribute 6 06-OCT-2005 14:45:53.00
           Body SysBody 21-DEC-2005 09:35:50.48
             Attr PgmName = "MaxNoOfChannels"
+            Attr Size = 2
             Attr Flags = 1056
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -713,6 +748,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object RegAddress $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "RegAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -722,6 +758,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object VectAddress $Attribute 8 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "VectAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -737,6 +774,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Process $Attribute 9 06-OCT-2005 14:45:53.00
           Body SysBody 30-MAY-2008 14:58:30.54
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -759,6 +797,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DataSheet $Attribute 11 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -775,6 +814,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object InvMask1 $Attribute 12 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "InvMask1"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-CardMask1_1"
           EndBody
         EndObject
@@ -784,6 +824,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object InvMask2 $Attribute 13 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "InvMask2"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-CardMask2_1"
           EndBody
         EndObject
@@ -800,6 +841,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object TestMask1 $Attribute 14 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "TestMask1"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrb:Type-CardMask1_1"
           EndBody
@@ -810,6 +852,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object TestMask2 $Attribute 15 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "TestMask2"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrb:Type-CardMask2_1"
           EndBody
@@ -831,6 +874,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object TestValue1 $Attribute 16 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "TestValue1"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrb:Type-CardMask1_1"
           EndBody
@@ -841,6 +885,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object TestValue2 $Attribute 17 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "TestValue2"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrb:Type-CardMask2_1"
           EndBody
@@ -853,6 +898,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object FixedOutValue1 $Attribute 18 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "FixedOutValue1"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-CardMask1_1"
           EndBody
         EndObject
@@ -862,6 +908,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object FixedOutValue2 $Attribute 19 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "FixedOutValue2"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-CardMask2_1"
           EndBody
         EndObject
@@ -899,7 +946,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
       Body SysBody 30-JUN-2010 10:14:40.65
         Attr Editor = 0
         Attr Method = 5
-        Attr Flags = 16464
+        Attr Flags = 49232
       EndBody
       Object RtBody $ObjBodyDef 1 30-JUN-2010 10:16:54.04
         Body SysBody 30-JUN-2010 11:30:53.26
@@ -909,18 +956,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 1 30-JUN-2010 10:14:40.65
           Body SysBody 30-JUN-2010 10:14:40.65
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object DevName $Attribute 2 30-JUN-2010 10:14:40.65
           Body SysBody 30-JUN-2010 10:14:40.65
             Attr PgmName = "DevName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         Object ErrorCount $Attribute 3 30-JUN-2010 10:14:40.65
           Body SysBody 30-JUN-2010 10:14:40.65
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -928,18 +978,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorSoftLimit $Attribute 4 30-JUN-2010 10:14:40.65
           Body SysBody 30-JUN-2010 10:14:40.65
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ErrorHardLimit $Attribute 5 30-JUN-2010 10:14:40.65
           Body SysBody 30-JUN-2010 10:14:40.65
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object MaxNoOfAiChannels $Attribute 6 30-JUN-2010 10:29:28.54
           Body SysBody 30-JUN-2010 10:29:31.57
             Attr PgmName = "MaxNoOfAiChannels"
+            Attr Size = 2
             Attr Flags = 1056
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -947,6 +1000,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object MaxNoOfAoChannels $Attribute 20 30-JUN-2010 10:29:39.19
           Body SysBody 30-JUN-2010 10:29:40.54
             Attr PgmName = "MaxNoOfAoChannels"
+            Attr Size = 2
             Attr Flags = 1056
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -954,6 +1008,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object MaxNoOfDiChannels $Attribute 21 30-JUN-2010 10:29:50.06
           Body SysBody 30-JUN-2010 10:29:51.16
             Attr PgmName = "MaxNoOfDiChannels"
+            Attr Size = 2
             Attr Flags = 1056
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -961,6 +1016,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object MaxNoOfDoChannels $Attribute 22 30-JUN-2010 10:29:58.07
           Body SysBody 30-JUN-2010 10:29:59.38
             Attr PgmName = "MaxNoOfDoChannels"
+            Attr Size = 2
             Attr Flags = 1056
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -968,18 +1024,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object RegAddress $Attribute 7 30-JUN-2010 10:14:40.65
           Body SysBody 30-JUN-2010 10:14:40.65
             Attr PgmName = "RegAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object VectAddress $Attribute 8 30-JUN-2010 10:14:40.65
           Body SysBody 30-JUN-2010 10:14:40.65
             Attr PgmName = "VectAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object Process $Attribute 9 30-JUN-2010 10:14:40.65
           Body SysBody 30-JUN-2010 10:14:40.65
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -992,30 +1051,35 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DataSheet $Attribute 11 30-JUN-2010 10:14:40.65
           Body SysBody 30-JUN-2010 10:14:40.65
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
         Object DiConvMask $Attribute 12 30-JUN-2010 10:16:42.55
           Body SysBody 30-JUN-2010 10:16:44.56
             Attr PgmName = "DiConvMask"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-CardMask1_1"
           EndBody
         EndObject
         Object DiInvMask $Attribute 14 30-JUN-2010 10:17:01.95
           Body SysBody 30-JUN-2010 10:17:03.99
             Attr PgmName = "DiInvMask"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-CardMask1_1"
           EndBody
         EndObject
         Object DoInvMask $Attribute 16 30-JUN-2010 10:17:37.44
           Body SysBody 30-JUN-2010 10:17:39.70
             Attr PgmName = "DoInvMask"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-CardMask1_1"
           EndBody
         EndObject
         Object DoTestMask $Attribute 17 30-JUN-2010 10:17:47.62
           Body SysBody 30-JUN-2010 10:17:49.04
             Attr PgmName = "DoTestMask"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrb:Type-CardMask1_1"
           EndBody
@@ -1023,6 +1087,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DoTestValue $Attribute 18 30-JUN-2010 10:17:54.65
           Body SysBody 30-JUN-2010 10:17:56.27
             Attr PgmName = "DoTestValue"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrb:Type-CardMask1_1"
           EndBody
@@ -1030,6 +1095,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DoFixedOutValue $Attribute 19 30-JUN-2010 10:18:02.74
           Body SysBody 30-JUN-2010 10:18:04.05
             Attr PgmName = "DoFixedOutValue"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-CardMask1_1"
           EndBody
         EndObject
@@ -1109,6 +1175,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 320
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
           EndBody
@@ -1120,6 +1187,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch01"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1127,6 +1195,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch02"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1134,6 +1203,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch03"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1141,6 +1211,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch04"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1148,6 +1219,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch05"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1155,6 +1227,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch06"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1162,6 +1235,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch07"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1169,6 +1243,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch08"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1176,6 +1251,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch09 $Attribute 10 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch09"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1183,6 +1259,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch10 $Attribute 11 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch10"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1190,6 +1267,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch11 $Attribute 12 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch11"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1197,6 +1275,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch12 $Attribute 13 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch12"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1204,6 +1283,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch13 $Attribute 14 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch13"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1211,6 +1291,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch14 $Attribute 15 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch14"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1218,6 +1299,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch15 $Attribute 16 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch15"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1225,6 +1307,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch16 $Attribute 17 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch16"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1232,6 +1315,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch17 $Attribute 18 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch17"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1239,6 +1323,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch18 $Attribute 19 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch18"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1246,6 +1331,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch19 $Attribute 20 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch19"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1253,6 +1339,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch20 $Attribute 21 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch20"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1260,6 +1347,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch21 $Attribute 22 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch21"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1267,6 +1355,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch22 $Attribute 23 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch22"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1274,6 +1363,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch23 $Attribute 24 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch23"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1281,6 +1371,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch24 $Attribute 25 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch24"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1288,6 +1379,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch25 $Attribute 26 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch25"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1295,6 +1387,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch26 $Attribute 27 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch26"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1302,6 +1395,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch27 $Attribute 28 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch27"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1309,6 +1403,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch28 $Attribute 29 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch28"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1316,6 +1411,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch29 $Attribute 30 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch29"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1323,6 +1419,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch30 $Attribute 31 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch30"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1330,6 +1427,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch31 $Attribute 32 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch31"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1337,6 +1435,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch32 $Attribute 33 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch32"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1801,6 +1900,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 320
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
           EndBody
@@ -1808,6 +1908,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch01"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1815,6 +1916,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch02"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1822,6 +1924,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch03"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1829,6 +1932,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch04"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1836,6 +1940,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch05"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1843,6 +1948,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch06"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1850,6 +1956,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch07"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1857,6 +1964,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch08"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1864,6 +1972,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch09 $Attribute 10 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch09"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1871,6 +1980,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch10 $Attribute 11 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch10"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1878,6 +1988,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch11 $Attribute 12 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch11"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1885,6 +1996,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch12 $Attribute 13 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch12"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1892,6 +2004,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch13 $Attribute 14 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch13"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1899,6 +2012,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch14 $Attribute 15 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch14"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1906,6 +2020,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch15 $Attribute 16 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch15"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -1913,6 +2028,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch16 $Attribute 17 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch16"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -2185,6 +2301,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 320
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
           EndBody
@@ -2192,6 +2309,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch01"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -2199,6 +2317,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch02"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -2206,6 +2325,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch03"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -2213,6 +2333,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch04"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -2220,6 +2341,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch05"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -2227,6 +2349,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch06"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -2234,6 +2357,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch07"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -2241,6 +2365,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch08"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -2418,6 +2543,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 320
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
           EndBody
@@ -2425,6 +2551,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch01"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2432,6 +2559,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch02"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2439,6 +2567,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch03"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2446,6 +2575,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch04"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2453,6 +2583,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch05"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2460,6 +2591,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch06"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2467,6 +2599,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch07"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2474,6 +2607,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch08"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2641,6 +2775,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 320
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
           EndBody
@@ -2648,6 +2783,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch01"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2655,6 +2791,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch02"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2662,6 +2799,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch03"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2669,6 +2807,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch04"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2676,6 +2815,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch05"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2683,6 +2823,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch06"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2690,6 +2831,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch07"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2697,6 +2839,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch08"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2831,6 +2974,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 320
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
           EndBody
@@ -2838,6 +2982,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch01"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2845,6 +2990,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch02"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2852,6 +2998,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch03"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2859,6 +3006,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch04"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2866,6 +3014,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch05"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2873,6 +3022,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch06"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2880,6 +3030,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch07"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2887,6 +3038,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch08"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2894,6 +3046,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch09 $Attribute 10 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch09"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2901,6 +3054,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch10 $Attribute 11 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch10"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2908,6 +3062,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch11 $Attribute 12 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch11"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2915,6 +3070,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch12 $Attribute 13 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch12"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2922,6 +3078,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch13 $Attribute 14 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch13"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2929,6 +3086,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch14 $Attribute 15 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch14"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2936,6 +3094,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch15 $Attribute 16 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch15"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -2943,6 +3102,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch16 $Attribute 17 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch16"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -3181,6 +3341,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 336
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseDiCard"
           EndBody
@@ -3188,6 +3349,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch01"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3195,6 +3357,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch02"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3202,6 +3365,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch03"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3209,6 +3373,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch04"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3216,6 +3381,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch05"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3223,6 +3389,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch06"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3230,6 +3397,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch07"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3237,6 +3405,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch08"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3244,6 +3413,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch09 $Attribute 10 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch09"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3251,6 +3421,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch10 $Attribute 11 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch10"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3258,6 +3429,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch11 $Attribute 12 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch11"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3265,6 +3437,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch12 $Attribute 13 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch12"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3272,6 +3445,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch13 $Attribute 14 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch13"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3279,6 +3453,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch14 $Attribute 15 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch14"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3286,6 +3461,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch15 $Attribute 16 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch15"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3293,6 +3469,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch16 $Attribute 17 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch16"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3300,6 +3477,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch17 $Attribute 18 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch17"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3307,6 +3485,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch18 $Attribute 19 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch18"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3314,6 +3493,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch19 $Attribute 20 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch19"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3321,6 +3501,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch20 $Attribute 21 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch20"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3328,6 +3509,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch21 $Attribute 22 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch21"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3335,6 +3517,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch22 $Attribute 23 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch22"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3342,6 +3525,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch23 $Attribute 24 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch23"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3349,6 +3533,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch24 $Attribute 25 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch24"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3356,6 +3541,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch25 $Attribute 26 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch25"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3363,6 +3549,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch26 $Attribute 27 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch26"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3370,6 +3557,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch27 $Attribute 28 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch27"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3377,6 +3565,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch28 $Attribute 29 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch28"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3384,6 +3573,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch29 $Attribute 30 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch29"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3391,6 +3581,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch30 $Attribute 31 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch30"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3398,6 +3589,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch31 $Attribute 32 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch31"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3405,6 +3597,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch32 $Attribute 33 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch32"
+            Attr Size = 160
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
@@ -3469,6 +3662,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 352
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseDoCard"
           EndBody
@@ -3476,6 +3670,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch01"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3483,6 +3678,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch02"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3490,6 +3686,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch03"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3497,6 +3694,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch04"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3504,6 +3702,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch05"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3511,6 +3710,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch06"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3518,6 +3718,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch07"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3525,6 +3726,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch08"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3532,6 +3734,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch09 $Attribute 10 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch09"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3539,6 +3742,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch10 $Attribute 11 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch10"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3546,6 +3750,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch11 $Attribute 12 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch11"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3553,6 +3758,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch12 $Attribute 13 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch12"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3560,6 +3766,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch13 $Attribute 14 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch13"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3567,6 +3774,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch14 $Attribute 15 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch14"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3574,6 +3782,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch15 $Attribute 16 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch15"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3581,6 +3790,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch16 $Attribute 17 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch16"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3588,6 +3798,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch17 $Attribute 18 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch17"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3595,6 +3806,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch18 $Attribute 19 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch18"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3602,6 +3814,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch19 $Attribute 20 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch19"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3609,6 +3822,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch20 $Attribute 21 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch20"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3616,6 +3830,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch21 $Attribute 22 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch21"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3623,6 +3838,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch22 $Attribute 23 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch22"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3630,6 +3846,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch23 $Attribute 24 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch23"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3637,6 +3854,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch24 $Attribute 25 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch24"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3644,6 +3862,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch25 $Attribute 26 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch25"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3651,6 +3870,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch26 $Attribute 27 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch26"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3658,6 +3878,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch27 $Attribute 28 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch27"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3665,6 +3886,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch28 $Attribute 29 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch28"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3672,6 +3894,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch29 $Attribute 30 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch29"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3679,6 +3902,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch30 $Attribute 31 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch30"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3686,6 +3910,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch31 $Attribute 32 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch31"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3693,6 +3918,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch32 $Attribute 33 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch32"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3753,6 +3979,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
+            Attr Size = 352
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseDoCard"
           EndBody
@@ -3760,6 +3987,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch01"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3767,6 +3995,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch02"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3774,6 +4003,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch03"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3781,6 +4011,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch04"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3788,6 +4019,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch05"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3795,6 +4027,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch06"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3802,6 +4035,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch07"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3809,6 +4043,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch08"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3816,6 +4051,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch09 $Attribute 10 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch09"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3823,6 +4059,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch10 $Attribute 11 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch10"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3830,6 +4067,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch11 $Attribute 12 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch11"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3837,6 +4075,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch12 $Attribute 13 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch12"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3844,6 +4083,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch13 $Attribute 14 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch13"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3851,6 +4091,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch14 $Attribute 15 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch14"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3858,6 +4099,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch15 $Attribute 16 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch15"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3865,6 +4107,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch16 $Attribute 17 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch16"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3872,6 +4115,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch17 $Attribute 18 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch17"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3879,6 +4123,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch18 $Attribute 19 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch18"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3886,6 +4131,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch19 $Attribute 20 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch19"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3893,6 +4139,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch20 $Attribute 21 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch20"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3900,6 +4147,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch21 $Attribute 22 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch21"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3907,6 +4155,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch22 $Attribute 23 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch22"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3914,6 +4163,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch23 $Attribute 24 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch23"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3921,6 +4171,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch24 $Attribute 25 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch24"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3928,6 +4179,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch25 $Attribute 26 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch25"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3935,6 +4187,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch26 $Attribute 27 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch26"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3942,6 +4195,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch27 $Attribute 28 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch27"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3949,6 +4203,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch28 $Attribute 29 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch28"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3956,6 +4211,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch29 $Attribute 30 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch29"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3963,6 +4219,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch30 $Attribute 31 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch30"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3970,6 +4227,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch31 $Attribute 32 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch31"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -3977,6 +4235,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch32 $Attribute 33 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch32"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4041,7 +4300,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
       Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 5
-        Attr Flags = 16464
+        Attr Flags = 49232
       EndBody
       Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
         Body SysBody 01-JAN-1970 01:00:00.00
@@ -4053,6 +4312,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 2 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -4063,6 +4323,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DevName $Attribute 3 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "DevName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -4074,6 +4335,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorCount $Attribute 4 06-OCT-2005 14:45:53.00
           Body SysBody 21-DEC-2005 09:36:40.89
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -4084,6 +4346,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorSoftLimit $Attribute 5 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -4093,6 +4356,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorHardLimit $Attribute 6 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -4105,6 +4369,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ConvMask $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ConvMask"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Mask"
           EndBody
         EndObject
@@ -4114,6 +4379,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object MaxNoOfCounters $Attribute 8 06-OCT-2005 14:45:53.00
           Body SysBody 21-DEC-2005 09:37:02.98
             Attr PgmName = "MaxNoOfCounters"
+            Attr Size = 2
             Attr Flags = 1056
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -4127,6 +4393,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object COAbsFlag $Attribute 9 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "COAbsFlag"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -4140,6 +4407,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object NoOfBits $Attribute 10 06-OCT-2005 14:45:53.00
           Body SysBody 30-DEC-2005 14:30:21.06
             Attr PgmName = "NoOfBits"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "SsabOx:Type-SsabCoNoOfBitsEnum"
@@ -4151,6 +4419,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object COWrFlag $Attribute 11 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "COWrFlag"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -4164,6 +4433,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object MulCount $Attribute 12 06-OCT-2005 14:45:53.00
           Body SysBody 30-DEC-2005 14:29:27.64
             Attr PgmName = "MulCount"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "SsabOx:Type-SsabCoMulCountEnum"
@@ -4177,6 +4447,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DivCount $Attribute 13 06-OCT-2005 14:45:53.00
           Body SysBody 30-DEC-2005 14:29:57.43
             Attr PgmName = "DivCount"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "SsabOx:Type-SsabCoDivCountEnum"
@@ -4192,6 +4463,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object CopWrRough $Attribute 14 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "CopWrRough"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -4207,6 +4479,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object CopWrFine $Attribute 15 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "CopWrFine"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -4222,6 +4495,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object LoadWrReg $Attribute 16 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "LoadWrReg"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -4237,6 +4511,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object LengthMeasurement $Attribute 17 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "LengthMeasurement"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -4253,6 +4528,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object SpeedMeasurement $Attribute 18 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "SpeedMeasurement"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -4268,6 +4544,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object SyncRawValue $Attribute 19 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "SyncRawValue"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
@@ -4290,6 +4567,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object RegAddress $Attribute 20 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "RegAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -4299,6 +4577,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object VectAddress $Attribute 21 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "VectAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -4314,6 +4593,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Process $Attribute 22 06-OCT-2005 14:45:53.00
           Body SysBody 30-MAY-2008 14:58:51.83
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -4336,6 +4616,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DataSheet $Attribute 24 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -4346,6 +4627,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch1 $Attribute 25 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch1"
+            Attr Size = 216
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanCo"
           EndBody
@@ -4353,6 +4635,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch2 $Attribute 26 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch2"
+            Attr Size = 216
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanCo"
           EndBody
@@ -4360,6 +4643,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch3 $Attribute 27 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch3"
+            Attr Size = 216
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanCo"
           EndBody
@@ -4367,6 +4651,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Ch4 $Attribute 28 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Ch4"
+            Attr Size = 216
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanCo"
           EndBody
@@ -4478,7 +4763,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
       Body SysBody 25-MAR-2009 10:38:54.30
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 16464
+        Attr Flags = 49232
       EndBody
       Object RtBody $ObjBodyDef 1 25-MAR-2009 10:39:31.96
         Body SysBody 27-MAR-2009 13:34:30.21
@@ -4491,6 +4776,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 11 25-MAR-2009 10:41:05.61
           Body SysBody 25-MAR-2009 10:40:51.04
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
@@ -4500,6 +4786,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DevName $Attribute 10 25-MAR-2009 10:41:15.44
           Body SysBody 25-MAR-2009 10:40:51.04
             Attr PgmName = "DevName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -4511,6 +4798,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorCount $Attribute 9 25-MAR-2009 10:41:21.76
           Body SysBody 25-MAR-2009 10:40:51.04
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -4521,6 +4809,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorSoftLimit $Attribute 8 25-MAR-2009 10:41:28.70
           Body SysBody 25-MAR-2009 10:40:51.04
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -4530,6 +4819,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorHardLimit $Attribute 7 25-MAR-2009 10:41:35.61
           Body SysBody 25-MAR-2009 10:40:51.04
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -4548,6 +4838,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object RegAddress $Attribute 5 25-MAR-2009 10:41:55.11
           Body SysBody 25-MAR-2009 10:40:51.04
             Attr PgmName = "RegAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -4558,6 +4849,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object PidXCon $Attribute 12 25-MAR-2009 10:47:49.69
           Body SysBody 25-MAR-2009 10:48:12.80
             Attr PgmName = "PidXCon"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -4573,6 +4865,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Process $Attribute 3 25-MAR-2009 10:42:14.10
           Body SysBody 25-MAR-2009 10:40:51.04
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -4584,6 +4877,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ThreadObject $Attribute 13 25-MAR-2009 10:48:37.17
           Body SysBody 25-MAR-2009 10:48:38.85
             Attr PgmName = "ThreadObject"
+            Attr Size = 8
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
@@ -4595,6 +4889,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DataSheet $Attribute 1 25-MAR-2009 10:44:41.26
           Body SysBody 25-MAR-2009 10:40:51.04
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -4647,6 +4942,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 30-JUN-2010 10:21:42.76
           Body SysBody 30-JUN-2010 10:22:11.99
             Attr PgmName = "Super"
+            Attr Size = 352
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseMCard"
           EndBody
@@ -4654,6 +4950,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ChAi01 $Attribute 2 30-JUN-2010 10:23:13.69
           Body SysBody 30-JUN-2010 10:24:18.70
             Attr PgmName = "ChAi01"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -4661,6 +4958,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ChAi02 $Attribute 3 30-JUN-2010 10:24:22.32
           Body SysBody 30-JUN-2010 10:24:22.27
             Attr PgmName = "ChAi02"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -4668,6 +4966,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ChAi03 $Attribute 4 30-JUN-2010 10:24:23.96
           Body SysBody 30-JUN-2010 10:24:23.91
             Attr PgmName = "ChAi03"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
@@ -4675,6 +4974,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ChAo01 $Attribute 5 30-JUN-2010 10:24:45.78
           Body SysBody 30-JUN-2010 10:24:51.40
             Attr PgmName = "ChAo01"
+            Attr Size = 240
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
@@ -4682,6 +4982,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ChDo01 $Attribute 6 30-JUN-2010 10:25:09.41
           Body SysBody 30-JUN-2010 10:25:16.61
             Attr PgmName = "ChDo01"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4689,6 +4990,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ChDo02 $Attribute 7 30-JUN-2010 10:25:18.65
           Body SysBody 30-JUN-2010 10:25:18.59
             Attr PgmName = "ChDo02"
+            Attr Size = 168
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
@@ -4791,18 +5093,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DevName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -4810,18 +5115,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object MaxNoOfChannels $Attribute 6 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "MaxNoOfChannels"
+            Attr Size = 2
             Attr Flags = 32
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -4829,18 +5137,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object RegAddress $Attribute 7 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "RegAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object VectAddress $Attribute 8 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "VectAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object Process $Attribute 9 30-DEC-2005 11:26:36.69
           Body SysBody 30-MAY-2008 14:59:12.59
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -4853,6 +5164,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DataSheet $Attribute 11 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -4864,6 +5176,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ChannelAllocation"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -4942,18 +5255,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DevName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -4961,18 +5277,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object DevPolyCoef0 $Attribute 6 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DevPolyCoef0"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -4980,6 +5299,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DevPolyCoef1 $Attribute 7 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DevPolyCoef1"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -4987,6 +5307,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object MaxNoOfChannels $Attribute 8 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "MaxNoOfChannels"
+            Attr Size = 2
             Attr Flags = 32
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -4994,18 +5315,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object RegAddress $Attribute 9 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "RegAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object VectAddress $Attribute 10 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "VectAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object Process $Attribute 11 30-DEC-2005 11:26:36.69
           Body SysBody 30-MAY-2008 14:59:22.94
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -5018,6 +5342,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DataSheet $Attribute 13 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -5029,6 +5354,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ChannelAllocation"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5105,18 +5431,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DevName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5124,18 +5453,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object DevPolyCoef0 $Attribute 6 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DevPolyCoef0"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -5143,6 +5475,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DevPolyCoef1 $Attribute 7 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DevPolyCoef1"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -5150,6 +5483,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object MaxNoOfChannels $Attribute 8 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "MaxNoOfChannels"
+            Attr Size = 2
             Attr Flags = 32
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -5157,18 +5491,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object RegAddress $Attribute 9 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "RegAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object VectAddress $Attribute 10 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "VectAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object Process $Attribute 11 30-DEC-2005 11:26:36.69
           Body SysBody 30-MAY-2008 14:59:37.71
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -5181,6 +5518,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DataSheet $Attribute 13 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -5192,6 +5530,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ChannelAllocation"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5270,18 +5609,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DevName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5289,18 +5631,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object DevPolyCoef0 $Attribute 6 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DevPolyCoef0"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -5308,6 +5653,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DevPolyCoef1 $Attribute 7 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DevPolyCoef1"
+            Attr Size = 4
             Attr Flags = 2048
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
@@ -5315,6 +5661,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object MaxNoOfChannels $Attribute 8 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "MaxNoOfChannels"
+            Attr Size = 2
             Attr Flags = 32
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -5322,18 +5669,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object RegAddress $Attribute 9 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "RegAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object VectAddress $Attribute 10 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "VectAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object Process $Attribute 11 30-DEC-2005 11:26:36.69
           Body SysBody 30-MAY-2008 14:59:48.52
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -5346,6 +5696,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DataSheet $Attribute 13 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -5357,6 +5708,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ChannelAllocation"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5433,18 +5785,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DevName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5452,30 +5807,35 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ConvMask $Attribute 6 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ConvMask"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Mask"
           EndBody
         EndObject
         Object MaxNoOfCounters $Attribute 7 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "MaxNoOfCounters"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object COAbsFlag $Attribute 8 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "COAbsFlag"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -5484,6 +5844,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object NoOfBits $Attribute 9 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 14:30:39.00
             Attr PgmName = "NoOfBits"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "SsabOx:Type-SsabCoNoOfBitsEnum"
@@ -5492,6 +5853,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object COWrFlag $Attribute 10 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "COWrFlag"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -5500,6 +5862,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object MulCount $Attribute 11 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 14:30:50.25
             Attr PgmName = "MulCount"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "SsabOx:Type-SsabCoMulCountEnum"
@@ -5508,6 +5871,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DivCount $Attribute 12 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 14:30:58.25
             Attr PgmName = "DivCount"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "SsabOx:Type-SsabCoDivCountEnum"
@@ -5516,6 +5880,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object CopWrRough $Attribute 13 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "CopWrRough"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -5524,6 +5889,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object CopWrFine $Attribute 14 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "CopWrFine"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -5532,6 +5898,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object LoadWrReg $Attribute 15 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "LoadWrReg"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -5540,6 +5907,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object LengthMeasurement $Attribute 16 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "LengthMeasurement"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -5548,6 +5916,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object SpeedMeasurement $Attribute 17 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "SpeedMeasurement"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -5556,6 +5925,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object SyncRawValue $Attribute 18 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "SyncRawValue"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
@@ -5564,18 +5934,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object RegAddress $Attribute 19 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "RegAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object VectAddress $Attribute 20 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "VectAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object Process $Attribute 21 30-DEC-2005 11:26:36.69
           Body SysBody 30-MAY-2008 15:00:07.51
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -5588,6 +5961,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DataSheet $Attribute 23 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -5599,6 +5973,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ChannelAllocation"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5696,18 +6071,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DevName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5715,30 +6093,35 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ConvMask $Attribute 6 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ConvMask"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Mask"
           EndBody
         EndObject
         Object MaxNoOfCounters $Attribute 7 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "MaxNoOfCounters"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object COAbsFlag $Attribute 8 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "COAbsFlag"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -5747,6 +6130,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object NoOfBits $Attribute 9 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 14:31:16.33
             Attr PgmName = "NoOfBits"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "SsabOx:Type-SsabCoNoOfBitsEnum"
@@ -5755,6 +6139,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object COWrFlag $Attribute 10 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "COWrFlag"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -5763,6 +6148,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object MulCount $Attribute 11 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 14:31:25.83
             Attr PgmName = "MulCount"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "SsabOx:Type-SsabCoMulCountEnum"
@@ -5771,6 +6157,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DivCount $Attribute 12 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 14:31:33.34
             Attr PgmName = "DivCount"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "SsabOx:Type-SsabCoDivCountEnum"
@@ -5779,6 +6166,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object CopWrRough $Attribute 13 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "CopWrRough"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -5787,6 +6175,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object CopWrFine $Attribute 14 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "CopWrFine"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -5795,6 +6184,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object LoadWrReg $Attribute 15 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "LoadWrReg"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -5803,6 +6193,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object LengthMeasurement $Attribute 16 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "LengthMeasurement"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -5811,6 +6202,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object SpeedMeasurement $Attribute 17 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "SpeedMeasurement"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -5819,6 +6211,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object SyncRawValue $Attribute 18 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "SyncRawValue"
+            Attr Size = 16
             Attr Flags = 2
             Attr Elements = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
@@ -5827,18 +6220,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object RegAddress $Attribute 19 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "RegAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object VectAddress $Attribute 20 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "VectAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object Process $Attribute 21 30-DEC-2005 11:26:36.69
           Body SysBody 30-MAY-2008 15:00:16.16
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -5851,6 +6247,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DataSheet $Attribute 23 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -5862,6 +6259,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ChannelAllocation"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5959,18 +6357,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DevName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5978,42 +6379,49 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ConvMask1 $Attribute 6 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ConvMask1"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Mask"
           EndBody
         EndObject
         Object ConvMask2 $Attribute 7 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ConvMask2"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Mask"
           EndBody
         EndObject
         Object InvMask1 $Attribute 8 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "InvMask1"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Mask"
           EndBody
         EndObject
         Object InvMask2 $Attribute 9 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "InvMask2"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Mask"
           EndBody
         EndObject
         Object MaxNoOfChannels $Attribute 10 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "MaxNoOfChannels"
+            Attr Size = 2
             Attr Flags = 32
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -6021,18 +6429,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object RegAddress $Attribute 11 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "RegAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object VectAddress $Attribute 12 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "VectAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object Process $Attribute 13 30-DEC-2005 11:26:36.69
           Body SysBody 30-MAY-2008 15:00:24.89
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -6045,6 +6456,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DataSheet $Attribute 15 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -6056,6 +6468,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ChannelAllocation"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -6136,18 +6549,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DevName"
+            Attr Size = 40
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorCount"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -6155,30 +6571,35 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorSoftLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ErrorHardLimit"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object InvMask1 $Attribute 6 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "InvMask1"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Mask"
           EndBody
         EndObject
         Object InvMask2 $Attribute 7 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "InvMask2"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$Mask"
           EndBody
         EndObject
         Object TestMask1 $Attribute 8 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "TestMask1"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrs:Type-$Mask"
           EndBody
@@ -6186,6 +6607,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object TestMask2 $Attribute 9 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "TestMask2"
+            Attr Size = 4
             Attr Flags = 16
             Attr TypeRef = "pwrs:Type-$Mask"
           EndBody
@@ -6193,6 +6615,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object TestValue1 $Attribute 10 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "TestValue1"
+            Attr Size = 2
             Attr Flags = 16
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -6200,6 +6623,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object TestValue2 $Attribute 11 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "TestValue2"
+            Attr Size = 2
             Attr Flags = 16
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -6207,18 +6631,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object FixedOutValue1 $Attribute 12 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "FixedOutValue1"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object FixedOutValue2 $Attribute 13 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "FixedOutValue2"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object MaxNoOfChannels $Attribute 14 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "MaxNoOfChannels"
+            Attr Size = 2
             Attr Flags = 32
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
@@ -6226,18 +6653,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object RegAddress $Attribute 15 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "RegAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object VectAddress $Attribute 16 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "VectAddress"
+            Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
         Object Process $Attribute 17 30-DEC-2005 11:26:36.69
           Body SysBody 30-MAY-2008 15:00:32.64
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -6250,6 +6680,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object DataSheet $Attribute 19 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "DataSheet"
+            Attr Size = 160
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
@@ -6261,6 +6692,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr PgmName = "ChannelAllocation"
+            Attr Size = 4
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -7213,10 +7645,10 @@ Volume SsabOx $ClassVolume 0.0.250.5
         !  object operates individually.
         !*/
         Object other $Input 155 16-JAN-2006 11:27:48.46
-          Body SysBody 16-JAN-2006 11:27:48.46
+          Body SysBody 11-FEB-2016 09:03:28.20
             Attr PgmName = "other"
-            Attr Flags = 1
-            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr Flags = 65537
+            Attr TypeRef = "pwrs:Type-$Void"
             Attr GraphName = "Other"
           EndBody
         EndObject
@@ -7573,7 +8005,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         !  Queue of warning and error messages.
         !*/
         Object messageQ $Intern 180 16-JAN-2006 11:27:48.46
-          Body SysBody 30-JUL-2009 14:12:31.18
+          Body SysBody 11-FEB-2016 13:41:57.72
             Attr PgmName = "messageQ"
             Attr Flags = 68627
             Attr Elements = 2
@@ -8178,30 +8610,35 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Description $Attribute 1 10-FEB-2006 15:49:38.87
           Body SysBody 10-FEB-2006 15:49:38.87
             Attr PgmName = "Description"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object Address $Attribute 3 10-FEB-2006 15:52:17.37
           Body SysBody 10-FEB-2006 15:52:18.34
             Attr PgmName = "Address"
+            Attr Size = 80
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
         Object LocalPort $Attribute 4 17-MAY-2006 10:01:01.52
           Body SysBody 17-MAY-2006 10:01:03.11
             Attr PgmName = "LocalPort"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object RemotePort $Attribute 10 17-MAY-2006 10:01:18.62
           Body SysBody 17-MAY-2006 10:01:19.91
             Attr PgmName = "RemotePort"
+            Attr Size = 2
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         Object Process $Attribute 5 10-FEB-2006 15:59:53.79
           Body SysBody 30-MAY-2008 15:00:50.63
             Attr PgmName = "Process"
+            Attr Size = 4
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
@@ -8214,12 +8651,14 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object StallAction $Attribute 11 17-MAY-2006 10:04:59.08
           Body SysBody 17-MAY-2006 10:08:39.19
             Attr PgmName = "StallAction"
+            Attr Size = 4
             Attr TypeRef = "SsabOx:Type-SsabStallActionEnum"
           EndBody
         EndObject
         Object Status $Attribute 7 10-APR-2006 08:44:55.48
           Body SysBody 17-MAY-2006 10:04:08.04
             Attr PgmName = "Status"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
@@ -8227,6 +8666,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object RX_packets $Attribute 8 10-APR-2006 08:46:05.99
           Body SysBody 17-MAY-2006 10:04:14.36
             Attr PgmName = "RX_packets"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -8234,6 +8674,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object TX_packets $Attribute 9 10-APR-2006 08:47:07.78
           Body SysBody 17-MAY-2006 10:04:18.98
             Attr PgmName = "TX_packets"
+            Attr Size = 4
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
