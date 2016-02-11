@@ -1522,11 +1522,14 @@ pwr_tStatus CoWowGtk::CreateMenuItem( const char *name, void *menu, int pixmap, 
       for( GList *ch = chlist; ch; ch = ch->next) {
 	GtkWidget *labelw = gtk_bin_get_child( GTK_BIN(ch->data));			   
 	strncpy( label, (char *)gtk_label_get_text( GTK_LABEL(labelw)), sizeof(label)); 
-	if ( cdh_NoCaseStrcmp( label, name_array[i]) == 0) {
+	char *label_iso = g_convert( label, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+	if ( cdh_NoCaseStrcmp( label_iso, name_array[i]) == 0) {
 	  child = GTK_WIDGET(ch->data);
 	  found = 1;
+	  g_free( label_iso);
 	  break;
 	}
+	g_free( label_iso);
       }
       if ( !found) {
 	// Create the menu item
