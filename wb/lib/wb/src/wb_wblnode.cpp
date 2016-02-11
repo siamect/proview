@@ -972,7 +972,7 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
     o->a.type = ((pwr_sParam *)o->rbody)->Info.Type = type;
 
   if ( o->a.flags & pwr_mAdef_pointer) {
-    size = sizeof( void *);
+    size = pwr_AlignLW(sizeof( void *));
     // Align pointers on longword
     *boffset = pwr_AlignLW(*boffset);
   }

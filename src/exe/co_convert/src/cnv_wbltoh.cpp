@@ -601,20 +601,22 @@ int CnvWblToH::attribute_exec()
 
   if ( ctx->rw->attr_array && ctx->rw->attr_pointer)
   {
+    // Should be "'typename' *" which is changed to "pwr_tUInt64 " 
+    // to get correct alignment for elements
     fp_struct <<
-"  " << type_name;
+"  " << "pwr_tUInt64";
     if ( !ctx->common_structfile_only)
       cstruc->f <<
-"  " << type_name;
-    for ( i = 0; i < int(35 - strlen(type_name)); i++)
+"  " << "pwr_tUInt64";
+    for ( i = 0; i < int(35 - strlen("pwr_tUInt64")); i++)
     {
       fp_struct << ' ';
       if ( !ctx->common_structfile_only)
         cstruc->f << ' ';
     }
-    fp_struct << " *" << pgmname << "[" << ctx->rw->attr_elements << "]" << alignstr << ";" << endl;
+    fp_struct << " " << pgmname << "[" << ctx->rw->attr_elements << "]" << alignstr << ";" << endl;
     if ( !ctx->common_structfile_only)
-      cstruc->f << " *" << pgmname << "[" << ctx->rw->attr_elements << "]" << alignstr << ";" << endl;
+      cstruc->f << " " << pgmname << "[" << ctx->rw->attr_elements << "]" << alignstr << ";" << endl;
   }
   else if ( ctx->rw->attr_array)
   {
