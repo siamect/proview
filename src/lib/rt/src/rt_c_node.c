@@ -68,13 +68,16 @@ pwrs_Node_Exec (
   errh_eSeverity system_severity;
   errh_eSeverity plc_severity;
   int new_idx = -1;
-  static int supervise[80] = {
+  static int supervise[110] = {
     0,0,0,0,1,1,1,0,1,1,
     1,1,1,0,0,1,0,1,1,1,
     1,1,1,0,0,1,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,
+    1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,
     1,1,1,1,1,1,1,1,1,1,
     1,1,1,1,1,1,1,1,1,1};
   static int reboot_done = 0;
