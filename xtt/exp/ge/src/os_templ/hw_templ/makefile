@@ -21,11 +21,20 @@ vpath %.pwgc $(hw_source):$(os_source):$(co_source)
 
 source_dirs = $(hw_source) $(os_source) $(co_source)
 
-pwg_sources := $(sort \
+pwg_c_sources := $(sort \
              $(foreach file, \
                $(foreach dir, \
                  $(source_dirs), \
                  $(wildcard $(dir)/pwr_c_*.pwg) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
+pwg_t_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/pwr_t_*.pwg) \
                ), $(notdir $(file)) \
              ) \
            )
@@ -57,7 +66,7 @@ html_sources := $(sort \
              ) \
            )
 
-export_pwg := $(addprefix $(exe_dir)/,$(pwg_sources))
+export_pwg := $(addprefix $(exe_dir)/,$(pwg_c_sources)) $(addprefix $(exe_dir)/,$(pwg_t_sources))
 export_pwsg := $(addprefix $(exe_dir)/,$(pwsg_sources))
 export_pwgc := $(addprefix $(exe_dir)/,$(pwgc_sources))
 export_html := $(addprefix $(exe_dir)/,$(html_sources))

@@ -355,6 +355,7 @@ public class Dyn {
     public static final int eSave_Trend_minvalue_attr2      	= 2304;
     public static final int eSave_Trend_maxvalue_attr2      	= 2305;
     public static final int eSave_Trend_hold_attr	      	= 2306;
+    public static final int eSave_Trend_timerange_attr	      	= 2307;
     public static final int eSave_DigFlash_attribute		= 2600;
     public static final int eSave_DigFlash_color		= 2601;
     public static final int eSave_DigFlash_color2		= 2602;
@@ -5854,6 +5855,7 @@ public class Dyn {
 	String minvalue_attr2;
 	String maxvalue_attr2;
 	String hold_attr;
+	String timerange_attr;
 	int p1 = -1;
 	int database1;
 	boolean inverted1;
@@ -5880,10 +5882,18 @@ public class Dyn {
 	float old_min_value2;
 	double scan_time;
 	double acc_time;
+	int no_of_points;
 	int trend_hold;
 	int hold_p;
 	int hold_database;
 	PwrtRefId hold_subid;
+	int timerange_p;
+	int timerange_database;
+	PwrtRefId timerange_subid;
+	float old_timerange;
+	double orig_graph_scan_time;
+	double orig_graph_fast_scan_time;
+	double orig_graph_animation_scan_time;
 
 	public DynTrend( Dyn dyn) {
 	    super(dyn, Dyn.mDynType1_Trend, 0, 0, 0, Dyn.eDynPrio_Trend);
@@ -5898,6 +5908,7 @@ public class Dyn {
 	    maxvalue_attr1 = x.maxvalue_attr1;
 	    maxvalue_attr2 = x.maxvalue_attr2;
 	    hold_attr = x.hold_attr;
+	    timerange_attr = x.timerange_attr;
 	}
 
 	public int connect(GlowArrayElem o) {
@@ -5956,6 +5967,7 @@ public class Dyn {
 		}
 	    }
 
+	    no_of_points = object.get_no_of_points();
 	    scan_time = object.get_scan_time();
 	    acc_time = scan_time;
 	    trend_hold = 0;
@@ -6032,6 +6044,43 @@ public class Dyn {
 		}
 	    }
 
+	    timerange_p = 0;
+	    pname = dyn.parseAttrName(timerange_attr);
+	    if ( pname != null && !pname.name.equals("")) {
+		ret = null;
+
+		switch( pname.database) {
+		case GraphIfc.eDatabase_Gdh:
+		    ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		    break;
+		case GraphIfc.eDatabase_Local:
+		    ret = dyn.graph.getLdb().refObjectInfo( graph, pname.name);
+		    System.out.println("Timerange: " + ret + " pname " + pname.name);
+		    break;
+		default:
+		    ret = null;
+		}
+
+		if ( ret == null || ret.evenSts()) {
+		    System.out.println("Trend: " + timerange_attr);
+		    return 1;
+		}
+		else {
+		    timerange_p = ret.id;
+		    timerange_subid = ret.refid;
+		    timerange_database = pname.database;
+		    if ( pname.database == GraphIfc.eDatabase_Local) {
+			float timerange = dyn.graph.getLdb().getObjectRefInfoFloat(timerange_p);
+			if ( timerange == 0)
+			    dyn.graph.getLdb().setObjectInfo( graph, pname.name, 
+							      (float)scan_time * no_of_points);
+		    }
+		    orig_graph_scan_time = dyn.graph.getScanTime();
+		    orig_graph_fast_scan_time = dyn.graph.getFastScanTime();
+		    orig_graph_animation_scan_time = dyn.graph.getAnimationScanTime();
+		}
+	    }
+
 	    return 1;
 	}
 
@@ -6050,6 +6099,8 @@ public class Dyn {
 		dyn.graph.getGdh().unrefObjectInfo(max_value2_subid);
 	    if ( hold_p != 0 && hold_database == GraphIfc.eDatabase_Gdh)
 		dyn.graph.getGdh().unrefObjectInfo(hold_subid);
+	    if ( timerange_p != 0 && hold_database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(timerange_subid);
 	}
 
 	public void scan( GlowArrayElem o) {
@@ -6072,6 +6123,79 @@ public class Dyn {
 		    return;
 	    }
 
+	    if ( timerange_p != 0) {
+		float timerangeval = 10;
+		switch ( timerange_database) {
+		case GraphIfc.eDatabase_Gdh:
+		    timerangeval = dyn.graph.getGdh().getObjectRefInfoFloat(timerange_p);
+		    break;
+		case GraphIfc.eDatabase_Local:
+		    timerangeval = dyn.graph.getLdb().getObjectRefInfoFloat(timerange_p);
+		    break;
+		}
+		if ( Math.abs(timerangeval - old_timerange) > Float.MIN_VALUE) {
+		    double dt = timerangeval / no_of_points;
+		     
+		    System.out.println("Timerange: " + timerangeval + " " + no_of_points + " " + dt);
+
+		    if ( dt >= 0.001) {
+			object.set_scan_time( dt);
+			scan_time = dt;
+			if ( cycle == Glow.eCycle_Slow) {
+			    double current_graph_scan_time = dyn.graph.getScanTime();
+			    double current_graph_fast_scan_time = dyn.graph.getFastScanTime();
+			    double current_graph_animation_scan_time = dyn.graph.getAnimationScanTime();
+			    if ( current_graph_scan_time > scan_time)
+				dyn.graph.setScanTime(scan_time);
+			    else {
+				if ( scan_time > orig_graph_scan_time)
+				    dyn.graph.setScanTime(orig_graph_scan_time);
+				else
+				    dyn.graph.setScanTime(scan_time);
+			    }
+			    if ( current_graph_fast_scan_time > scan_time)
+				dyn.graph.setFastScanTime(scan_time);
+			    else {
+				if ( scan_time > orig_graph_fast_scan_time)
+				    dyn.graph.setFastScanTime(orig_graph_fast_scan_time);
+				else
+				    dyn.graph.setFastScanTime(scan_time);
+			    }
+			    if ( current_graph_animation_scan_time > scan_time)
+				dyn.graph.setAnimationScanTime(scan_time);
+			    else {
+				if ( scan_time > orig_graph_animation_scan_time)
+				    dyn.graph.setAnimationScanTime(orig_graph_animation_scan_time);
+				else
+				    dyn.graph.setAnimationScanTime(scan_time);
+			    }
+			}
+			else {
+			    // Fast cycle
+			    double current_graph_fast_scan_time = dyn.graph.getFastScanTime();
+			    double current_graph_animation_scan_time = dyn.graph.getAnimationScanTime();
+			    if ( current_graph_fast_scan_time > scan_time)
+				dyn.graph.setFastScanTime(scan_time);
+			    else {
+				if ( scan_time > orig_graph_fast_scan_time)
+				    dyn.graph.setFastScanTime(orig_graph_fast_scan_time);
+				else
+				    dyn.graph.setFastScanTime(scan_time);
+			    }
+			    if ( current_graph_animation_scan_time > scan_time)
+				dyn.graph.setAnimationScanTime(scan_time);
+			    else {
+				if ( scan_time > orig_graph_animation_scan_time)
+				    dyn.graph.setAnimationScanTime(orig_graph_animation_scan_time);
+				else
+				    dyn.graph.setAnimationScanTime(scan_time);
+			    }
+			}
+		    }
+		    old_timerange = timerangeval;
+		}
+	    }
+
 	    float minval, maxval;
 	    if ( max_value1_p != 0 && min_value1_p != 0) {
 		minval = dyn.graph.getGdh().getObjectRefInfoFloat( min_value1_p);
@@ -6087,7 +6211,10 @@ public class Dyn {
 	    if ( firstScan)
 		firstScan = false;
 
-	    acc_time += dyn.graph.getScanTime();
+	    if ( cycle == Glow.eCycle_Slow)
+		acc_time += dyn.graph.getScanTime();
+	    else
+		acc_time += dyn.graph.getFastScanTime();
 	    if ( acc_time + Double.MIN_VALUE >= scan_time) {
 		if ( p1 != -1) {
 		    switch ( a_typeid1) {
@@ -6138,8 +6265,8 @@ public class Dyn {
 		    }
 		}
 
+		acc_time = 0;
 	    }
-	    acc_time = 0;
 	}
 
 	public void open( BufferedReader reader) {
@@ -6183,6 +6310,10 @@ public class Dyn {
 		    case Dyn.eSave_Trend_hold_attr: 
 			if ( token.hasMoreTokens())
 			    hold_attr = token.nextToken();
+			break;
+		    case Dyn.eSave_Trend_timerange_attr: 
+			if ( token.hasMoreTokens())
+			    timerange_attr = token.nextToken();
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;

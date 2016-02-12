@@ -568,8 +568,24 @@ public class Graph implements GraphIfc, GrowApplIfc {
 	return appl.isAuthorized(access);
     }
 
+    public void setScanTime( double scan_time) {
+	this.scan_time = scan_time;
+    }
+
+    public void setFastScanTime( double fast_scan_time) {
+	this.fast_scan_time = fast_scan_time;
+    }
+
+    public void setAnimationScanTime( double animation_scan_time) {
+	this.animation_scan_time = animation_scan_time;
+    }
+
     public double getScanTime() {
 	return scan_time;
+    }
+
+    public double getFastScanTime() {
+	return fast_scan_time;
     }
 
     public double getAnimationScanTime() {

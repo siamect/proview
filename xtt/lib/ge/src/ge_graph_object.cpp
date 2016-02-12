@@ -59,31 +59,14 @@ typedef struct {
     	int 		(*func)( Graph *, pwr_sAttrRef *);
 	} graph_sObjectFunction;
 
-static int graph_attr_float32( Graph *graph, pwr_sAttrRef *attrref);
-static int graph_attr_int32( Graph *graph, pwr_sAttrRef *attrref);
-static int graph_attr_uint32( Graph *graph, pwr_sAttrRef *attrref);
-static int graph_attr_boolean( Graph *graph, pwr_sAttrRef *attrref);
-static int graph_object_ix( Graph *graph, pwr_sAttrRef *attrref);
-static int graph_object_ax( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_dx( Graph *graph, pwr_sAttrRef *attrref);
-static int graph_object_PID( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_PlcThread( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_collect( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref);
 
 static graph_sObjectFunction graph_object_functions[] = {
-	{ pwr_cClass_Av, &graph_object_ax},
-	{ pwr_cClass_Ai, &graph_object_ax},
-	{ pwr_cClass_Ao, &graph_object_ax},
-	{ pwr_cClass_Iv, &graph_object_ix},
-	{ pwr_cClass_Ii, &graph_object_ix},
-	{ pwr_cClass_Io, &graph_object_ix},
-	{ pwr_cClass_Dv, &graph_object_dx},
 	{ pwr_cClass_Di, &graph_object_dx},
 	{ pwr_cClass_Do, &graph_object_dx},
-	{ pwr_cClass_pid, &graph_object_PID},
-	{ /* pwr_cClass_CompPID */ 656576UL, &graph_object_PID},
-	{ pwr_cClass_PlcThread, &graph_object_PlcThread},
 	{ pwr_cClass_PlcThread, &graph_object_PlcThread},
 	{ 0, 0}};
 
@@ -227,24 +210,8 @@ int Graph::init_object_graph( int mode)
     sts = gdh_NameToAttrref( pwr_cNObjid, object_name[0], &attrref);
     if ( EVEN(sts)) return sts;
 
-    if ( strcmp( classname, "float32") == 0) {
-      sts = graph_attr_float32( this, &attrref);
-      return sts;
-    }
-    if ( strcmp( classname, "int32") == 0) {
-      sts = graph_attr_int32( this, &attrref);
-      return sts;
-    }
-    if ( strcmp( classname, "uint32") == 0) {
-      sts = graph_attr_uint32( this, &attrref);
-      return sts;
-    }
-    else if ( strcmp( classname, "boolean") == 0) {
-      sts = graph_attr_boolean( this, &attrref);
-      return sts;
-    }
-    else
-      return 0;
+    // Types are removed
+    return 0;
    
   }
   else
@@ -267,315 +234,13 @@ int Graph::init_object_graph( int mode)
   return 0;
 }
 
-//
-// Attribute graph for Float32
-// 
 
-typedef struct {
-	graph_sObjectTrend 	td;
-	} graph_sAttrFloat32;
-
-static void graph_attr_float32_scan( Graph *graph)
-{
-  graph_sAttrFloat32 *od = (graph_sAttrFloat32 *)graph->graph_object_data;
-
-  graph->trend_scan( &od->td);
-}
-
-static void graph_attr_float32_close( Graph *graph)
-{
-  free( graph->graph_object_data);
-}
-
-static int graph_attr_float32( Graph *graph, pwr_sAttrRef *attrref)
-{
-  int sts;
-  graph_sAttrFloat32 *od;
-
-  od = (graph_sAttrFloat32 *) calloc( 1, sizeof(graph_sAttrFloat32));
-  graph->graph_object_data = (void *) od;
-  graph->graph_object_close = graph_attr_float32_close;
-  graph->graph_object_scan = graph_attr_float32_scan;
-
-  sts = graph->trend_init( &od->td, 0);
-
-  return 1;
-}
-
-//
-// Attribute graph for Int32
-// 
-
-typedef struct {
-	graph_sObjectTrend 	td;
-	} graph_sAttrInt32;
-
-static void graph_attr_int32_scan( Graph *graph)
-{
-  graph_sAttrInt32 *od = (graph_sAttrInt32 *)graph->graph_object_data;
-
-  graph->trend_scan( &od->td);
-}
-
-static void graph_attr_int32_close( Graph *graph)
-{
-  free( graph->graph_object_data);
-}
-
-static int graph_attr_int32( Graph *graph, pwr_sAttrRef *attrref)
-{
-  int sts;
-  graph_sAttrInt32 *od;
-
-  od = (graph_sAttrInt32 *) calloc( 1, sizeof(graph_sAttrInt32));
-  graph->graph_object_data = (void *) od;
-  graph->graph_object_close = graph_attr_int32_close;
-  graph->graph_object_scan = graph_attr_int32_scan;
-
-  sts = graph->trend_init( &od->td, 0);
-
-  return 1;
-}
-
-//
-// Attribute graph for UInt32
-// 
-
-typedef struct {
-	graph_sObjectTrend 	td;
-	} graph_sAttrUInt32;
-
-static void graph_attr_uint32_scan( Graph *graph)
-{
-  graph_sAttrUInt32 *od = (graph_sAttrUInt32 *)graph->graph_object_data;
-
-  graph->trend_scan( &od->td);
-}
-
-static void graph_attr_uint32_close( Graph *graph)
-{
-  free( graph->graph_object_data);
-}
-
-static int graph_attr_uint32( Graph *graph, pwr_sAttrRef *attrref)
-{
-  int sts;
-  graph_sAttrUInt32 *od;
-
-  od = (graph_sAttrUInt32 *) calloc( 1, sizeof(graph_sAttrUInt32));
-  graph->graph_object_data = (void *) od;
-  graph->graph_object_close = graph_attr_uint32_close;
-  graph->graph_object_scan = graph_attr_uint32_scan;
-
-  sts = graph->trend_init( &od->td, 0);
-
-  return 1;
-}
-
-//
-// Attribute graph for Boolean
-// 
-
-typedef struct {
-	graph_sObjectTrend 	td;
-	} graph_sAttrBoolean;
-
-static void graph_attr_boolean_scan( Graph *graph)
-{
-  graph_sAttrBoolean *od = (graph_sAttrBoolean *)graph->graph_object_data;
-
-  graph->trend_scan( &od->td);
-}
-
-static void graph_attr_boolean_close( Graph *graph)
-{
-  free( graph->graph_object_data);
-}
-
-static int graph_attr_boolean( Graph *graph, pwr_sAttrRef *attrref)
-{
-  int sts;
-  graph_sAttrBoolean *od;
-
-  od = (graph_sAttrBoolean *) calloc( 1, sizeof(graph_sAttrBoolean));
-  graph->graph_object_data = (void *) od;
-  graph->graph_object_close = graph_attr_boolean_close;
-  graph->graph_object_scan = graph_attr_boolean_scan;
-
-  sts = graph->trend_init( &od->td, 0);
-  return 1;
-}
-
-//
-// Object graph for Ai, Ao and Av
-// 
-
-typedef struct {
-	grow_tObject 	trend_object;
-	grow_tObject 	hold_button_object;
-	float		*scan_time_p;
-	float		old_scan_time;
-	double		*data_scan_time_p;
-	int		*hold_button_p;
-	int		*hold_p;
-	} graph_sObjectAx;
-
-static void graph_object_ax_scan( Graph *graph)
-{
-  graph_sObjectAx *od = (graph_sObjectAx *)graph->graph_object_data;
-
-  // Reconfigure new scantime
-  if ( od->scan_time_p && 
-       *od->scan_time_p != od->old_scan_time) {
-    if ( graph->scan_time > *od->scan_time_p/200) {
-      graph->scan_time = *od->scan_time_p/200;
-      graph->animation_scan_time = *od->scan_time_p/200;
-    }
-    grow_SetTrendScanTime( od->trend_object, double( *od->scan_time_p/200));
-    od->old_scan_time = *od->scan_time_p;
-    *od->data_scan_time_p = double(*od->scan_time_p)/200;
-  }
-
-  if ( od->hold_button_p && od->hold_p)
-    *od->hold_p = *od->hold_button_p;
-}
-
-static void graph_object_ax_close( Graph *graph)
-{
-  free( graph->graph_object_data);
-}
-
-static int graph_object_ax( Graph *graph, pwr_sAttrRef *arp)
-{
-  int sts;
-  graph_sObjectAx *od;
-  double 	scan_time;
-  GeDyn *dyn;
-
-  od = (graph_sObjectAx *) calloc( 1, sizeof(graph_sObjectAx));
-  graph->graph_object_data = (void *) od;
-  graph->graph_object_close = graph_object_ax_close;
-
-  // Configure trend
-  sts = grow_FindObjectByName( graph->grow->ctx, "ActualValueTrend", 
-		&od->trend_object);
-  if ( EVEN(sts)) return sts;
-
-  // Set scantime variable in local database
-  grow_GetTrendScanTime( od->trend_object, &scan_time);
-  od->scan_time_p = (float *) graph->localdb_ref_or_create( "ScanTime", 
-		pwr_eType_Float32);
-  od->old_scan_time = float( scan_time*200);
-  *od->scan_time_p = od->old_scan_time;
-
-  // Get Hold button
-  sts = grow_FindObjectByName( graph->grow->ctx, "TrendHold", 
-		&od->hold_button_object);
-  if ( ODD(sts))
-    od->hold_button_p = (int *) graph->localdb_ref_or_create( "TrendHold", 
-		pwr_eType_Boolean);
-
-  grow_GetUserData( od->trend_object, (void **)&dyn);
-  od->data_scan_time_p = dyn->ref_trend_scantime();
-  od->hold_p = dyn->ref_trend_hold();
-
-  // Register scan function
-  graph->graph_object_scan = graph_object_ax_scan;
-
-  return 1;
-}
-
-//
-// Object graph for Ii, Io and Iv
-// 
-
-typedef struct {
-	grow_tObject 	trend_object;
-	grow_tObject 	hold_button_object;
-	float		*scan_time_p;
-	float		old_scan_time;
-	double		*data_scan_time_p;
-	int		*hold_button_p;
-	int		*hold_p;
-	} graph_sObjectIx;
-
-static void graph_object_ix_scan( Graph *graph)
-{
-  graph_sObjectIx *od = (graph_sObjectIx *)graph->graph_object_data;
-
-  // Reconfigure new scantime
-  if ( od->scan_time_p && 
-       *od->scan_time_p != od->old_scan_time) {
-    if ( graph->scan_time > *od->scan_time_p/200) {
-      graph->scan_time = *od->scan_time_p/200;
-      graph->animation_scan_time = *od->scan_time_p/200;
-    }
-    grow_SetTrendScanTime( od->trend_object, double( *od->scan_time_p/200));
-    od->old_scan_time = *od->scan_time_p;
-    *od->data_scan_time_p = double(*od->scan_time_p)/200;
-  }
-
-  if ( od->hold_button_p && od->hold_p)
-    *od->hold_p = *od->hold_button_p;
-}
-
-static void graph_object_ix_close( Graph *graph)
-{
-  free( graph->graph_object_data);
-}
-
-static int graph_object_ix( Graph *graph, pwr_sAttrRef *arp)
-{
-  int sts;
-  graph_sObjectIx *od;
-  double 	scan_time;
-  GeDyn *dyn;
-
-  od = (graph_sObjectIx *) calloc( 1, sizeof(graph_sObjectIx));
-  graph->graph_object_data = (void *) od;
-  graph->graph_object_close = graph_object_ix_close;
-
-  // Configure trend
-  sts = grow_FindObjectByName( graph->grow->ctx, "ActualValueTrend", 
-		&od->trend_object);
-  if ( EVEN(sts)) return sts;
-
-  // Set scantime variable in local database
-  grow_GetTrendScanTime( od->trend_object, &scan_time);
-  od->scan_time_p = (float *) graph->localdb_ref_or_create( "ScanTime", 
-		pwr_eType_Float32);
-  od->old_scan_time = float( scan_time*200);
-  *od->scan_time_p = od->old_scan_time;
-
-  // Get Hold button
-  sts = grow_FindObjectByName( graph->grow->ctx, "TrendHold", 
-		&od->hold_button_object);
-  if ( ODD(sts))
-    od->hold_button_p = (int *) graph->localdb_ref_or_create( "TrendHold", 
-		pwr_eType_Boolean);
-
-  grow_GetUserData( od->trend_object, (void **)&dyn);
-  od->data_scan_time_p = dyn->ref_trend_scantime();
-  od->hold_p = dyn->ref_trend_hold();
-
-  // Register scan function
-  graph->graph_object_scan = graph_object_ix_scan;
-
-  return 1;
-}
 //
 // Object graph for Di, Do and Dv
 // 
 
 typedef struct {
   pwr_tCid	cid;
-  grow_tObject 	trend_object;
-  grow_tObject 	hold_button_object;
-  float		*scan_time_p;
-  float		old_scan_time;
-  double	*data_scan_time_p;
-  int		*hold_button_p;
-  int		*hold_p;
   pwr_tBoolean	*conv_p;
   pwr_tBoolean	*inv_p;
   pwr_tBoolean	*test_p;
@@ -591,21 +256,6 @@ typedef struct {
 static void graph_object_dx_scan( Graph *graph)
 {
   graph_sObjectDx *od = (graph_sObjectDx *)graph->graph_object_data;
-
-  // Reconfigure new scantime
-  if ( od->scan_time_p && 
-       *od->scan_time_p != od->old_scan_time) {
-    if ( graph->scan_time > *od->scan_time_p/200) {
-      graph->scan_time = *od->scan_time_p/200;
-      graph->animation_scan_time = *od->scan_time_p/200;
-    }
-    grow_SetTrendScanTime( od->trend_object, double( *od->scan_time_p/200));
-    od->old_scan_time = *od->scan_time_p;
-    *od->data_scan_time_p = double(*od->scan_time_p)/200;
-  }
-
-  if ( od->hold_button_p && od->hold_p)
-    *od->hold_p = *od->hold_button_p;
 
   if ( od->mask) {
     if ( od->local_conv_p && od->conv_p)
@@ -644,8 +294,6 @@ static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
 {
   int sts;
   graph_sObjectDx *od;
-  double 	scan_time;
-  GeDyn *dyn;
   pwr_tAttrRef aref, chanaref;
   pwr_tAName aname;
   pwr_tCid card_cid;
@@ -656,29 +304,6 @@ static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
 
   sts = gdh_GetAttrRefTid( arp, &od->cid);
   if ( EVEN(sts)) return sts;
-
-  // Configure trend
-  sts = grow_FindObjectByName( graph->grow->ctx, "ActualValueTrend", 
-		&od->trend_object);
-  if ( EVEN(sts)) return sts;
-
-  // Set scantime variable in local database
-  grow_GetTrendScanTime( od->trend_object, &scan_time);
-  od->scan_time_p = (float *) graph->localdb_ref_or_create( "ScanTime", 
-		pwr_eType_Float32);
-  od->old_scan_time = float( scan_time*200);
-  *od->scan_time_p = od->old_scan_time;
-
-  // Get Hold button
-  sts = grow_FindObjectByName( graph->grow->ctx, "TrendHold", 
-		&od->hold_button_object);
-  if ( ODD(sts))
-    od->hold_button_p = (int *) graph->localdb_ref_or_create( "TrendHold", 
-		pwr_eType_Boolean);
-
-  grow_GetUserData( od->trend_object, (void **)&dyn);
-  od->data_scan_time_p = dyn->ref_trend_scantime();
-  od->hold_p = dyn->ref_trend_hold();
 
   // Get channel object
   sts = gdh_ArefANameToAref( arp, "SigChanCon", &aref);
@@ -830,104 +455,6 @@ static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
 
   // Register scan function
   graph->graph_object_scan = graph_object_dx_scan;
-  return 1;
-}
-
-
-//
-// Object graph for PID
-//
-
-typedef struct {
-	grow_tObject 	set_trend_object;
-	grow_tObject 	out_trend_object;
-	grow_tObject 	hold_button_object;
-	float		*scan_time_p;
-	float		old_scan_time;
-	double		*data_set_scan_time_p;
-	double		*data_out_scan_time_p;
-	int		*hold_button_p;
-	int		*hold_set_p;
-	int		*hold_out_p;
-	} graph_sObjectPID;
-
-static void graph_object_PID_scan( Graph *graph)
-{
-  graph_sObjectPID *od = (graph_sObjectPID *)graph->graph_object_data;
-
-  // Reconfigure new scantime
-  if ( od->scan_time_p && 
-       *od->scan_time_p != od->old_scan_time) {
-    if ( graph->scan_time > *od->scan_time_p/200) {
-      graph->scan_time = *od->scan_time_p/200;
-      graph->animation_scan_time = *od->scan_time_p/200;
-    }
-    grow_SetTrendScanTime( od->set_trend_object, double( *od->scan_time_p/200));
-    grow_SetTrendScanTime( od->out_trend_object, double( *od->scan_time_p/200));
-    od->old_scan_time = *od->scan_time_p;
-    *od->data_set_scan_time_p = double(*od->scan_time_p)/200;
-    *od->data_out_scan_time_p = double(*od->scan_time_p)/200;
-  }
-
-  *od->hold_set_p = *od->hold_button_p;
-  *od->hold_out_p = *od->hold_button_p;
-}
-
-static void graph_object_PID_close( Graph *graph)
-{
-  free( graph->graph_object_data);
-}
-
-static int graph_object_PID( Graph *graph, pwr_sAttrRef *arp)
-{
-  int sts;
-  graph_sObjectPID *od;
-  pwr_tClassId	classid;
-  double 	scan_time;
-  pwr_tObjid    objid = arp->Objid;
-
-  od = (graph_sObjectPID *) calloc( 1, sizeof(graph_sObjectPID));
-  graph->graph_object_data = (void *) od;
-  graph->graph_object_close = graph_object_PID_close;
-
-  sts = gdh_GetAttrRefTid( arp, &classid);
-  if ( EVEN(sts)) return sts;
-
-  GeDyn *dyn;
-  // Configure SetVal and OutVal trend
-  sts = grow_FindObjectByName( graph->grow->ctx, "SetValTrend", 
-		&od->set_trend_object);
-  if ( EVEN(sts)) return sts;
-
-  sts = grow_FindObjectByName( graph->grow->ctx, "OutValTrend", 
-		&od->out_trend_object);
-  if ( EVEN(sts)) return sts;
-
-  // Set scantime variable in local database
-  grow_GetTrendScanTime( od->set_trend_object, &scan_time);
-  od->scan_time_p = (float *) graph->localdb_ref_or_create( "ScanTime", 
-		pwr_eType_Float32);
-  od->old_scan_time = float( scan_time*200);
-  *od->scan_time_p = od->old_scan_time;
-
-  // Get Hold button
-  sts = grow_FindObjectByName( graph->grow->ctx, "TrendHold", 
-		&od->hold_button_object);
-  if ( ODD(sts))
-    od->hold_button_p = (int *) graph->localdb_ref_or_create( "TrendHold", 
-		pwr_eType_Boolean);
-
-  grow_GetUserData( od->set_trend_object, (void **)&dyn);
-  od->data_set_scan_time_p = dyn->ref_trend_scantime();
-  od->hold_set_p = dyn->ref_trend_hold();
-
-  grow_GetUserData( od->out_trend_object, (void **)&dyn);
-  od->data_out_scan_time_p = dyn->ref_trend_scantime();
-  od->hold_out_p = dyn->ref_trend_hold();
-
-  // Register scan function
-  graph->graph_object_scan = graph_object_PID_scan;
-
   return 1;
 }
 
@@ -1519,30 +1046,6 @@ static void graph_object_PlcThread_scan( Graph *graph)
     od->set_max_show_old = *od->set_max_show_p;
   }      
 
-  // Reconfigure new scantime
-  if ( od->scan_time_p && 
-       *od->scan_time_p != od->old_scan_time)
-  {
-    if ( graph->scan_time > *od->scan_time_p/200)
-    {
-      graph->scan_time = *od->scan_time_p/200;
-      graph->animation_scan_time = *od->scan_time_p/200;
-    }
-    grow_SetTrendScanTime( od->set_trend_object, double( *od->scan_time_p/200));
-    od->old_scan_time = *od->scan_time_p;
-    *od->data_set_scan_time_p = double(*od->scan_time_p)/200;
-  }
-
-  if ( od->hold_button_p && *od->hold_button_p)
-  {
-    *od->hold_set_p = !*od->hold_set_p;
-    *od->hold_button_p = 0;
-    if ( *od->hold_set_p && od->hold_button_object)
-      grow_SetObjectColorTone( od->hold_button_object, glow_eDrawTone_Yellow);
-    else
-      grow_ResetObjectColorTone( od->hold_button_object);
-  }
-
 }
 
 static void graph_object_PlcThread_close( Graph *graph)
@@ -1558,7 +1061,6 @@ static int graph_object_PlcThread( Graph *graph, pwr_sAttrRef *arp)
   pwr_tClassId	classid;
   pwr_tFloat32 max_limit = 1;
   pwr_tFloat32 min_limit = 0;
-  double scan_time;
   pwr_tObjid objid = arp->Objid;
 
   od = (graph_sObjectPlcThread *) calloc( 1, sizeof(graph_sObjectPlcThread));
@@ -1607,31 +1109,6 @@ static int graph_object_PlcThread( Graph *graph, pwr_sAttrRef *arp)
     grow_SetTrendRangeY( od->set_trend_object, 0, double(min_limit), double(max_limit));
     grow_SetTrendRangeY( od->set_trend_object, 1, double(min_limit), double(max_limit));
   }
-
-  // Set scantime variable in local database
-  grow_GetTrendScanTime( od->set_trend_object, &scan_time);
-  od->scan_time_p = (float *) graph->localdb_ref_or_create( "ScanTime", 
-		pwr_eType_Float32);
-  od->old_scan_time = float( scan_time*200);
-  *od->scan_time_p = od->old_scan_time;
-
-  if ( graph->scan_time > *od->scan_time_p/200) {
-    graph->scan_time = *od->scan_time_p/200;
-    graph->animation_scan_time = *od->scan_time_p/200;
-  }
-
-  // Get Hold button
-  sts = grow_FindObjectByName( graph->grow->ctx, "TrendHold", 
-		&od->hold_button_object);
-  if ( ODD(sts))
-    od->hold_button_p = (int *) graph->localdb_ref_or_create( "TrendHold", 
-		pwr_eType_Boolean);
-
-  GeDyn *dyn;
-
-  grow_GetUserData( od->set_trend_object, (void **)&dyn);
-  od->data_set_scan_time_p = dyn->ref_trend_scantime();
-  od->hold_set_p = dyn->ref_trend_hold();
 
   // Register scan function
   graph->graph_object_scan = graph_object_PlcThread_scan;

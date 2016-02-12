@@ -63,7 +63,11 @@ public interface GraphIfc {
     public Object getCurrentSlider();
     public void setCurrentSlider(GrowSlider currentSlider);
     public boolean isAuthorized(int access);
+    public void setScanTime(double scan_time);
+    public void setFastScanTime(double fast_scan_time);
+    public void setAnimationScanTime(double animation_scan_time);
     public double getScanTime();
+    public double getFastScanTime();
     public double getAnimationScanTime();
     public String getCommand(String cmd);
     public void setClickActive(int active);

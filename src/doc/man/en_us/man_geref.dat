@@ -2815,6 +2815,16 @@ MB2 in the working area.
 <b>Attribute     <t><t>Description
 Trend.Attribute1  <t><t>Signal for curve number 1.
 Trend.Attribute2  <t><t>Signal for curve number 2.
+Trend.MinValueAttr1 <t>Signal for minimum value curve number 1. Is used when the
+		  <t>min value is dynamic. For static value, Trend.MinValue1 is used.
+Trend.MaxValueAttr1 <t>Signal for maximum value curve number 1. Is used when the
+		  <t>max value is dynamic. For static value, Trend.MaxValue1 is used.
+Trend.MinValueAttr2 <t>Signal for minimum value curve number 2. Is used when the
+		  <t>min value is dynamic. For static value, Trend.MinValue1 is used.
+Trend.MaxValueAttr2 <t>Signal for maximum value curve number 2. Is used when the
+		  <t>max value is dynamic. For static value, Trend.MaxValue1 is used.
+Trend.HoldAttr <t>Signal to freeze the curve.
+Trend.TimeRangeAttr <t>Signal of type Float32 for the time range of the curve.
 Trend.NoOfPoints  <t><t>Number of points in the curve.
 Trend.ScanTime    <t><t>Time interval between two points.
 Trend.CurveLineWidth <t><t>Linewidth for the curve (1-8)

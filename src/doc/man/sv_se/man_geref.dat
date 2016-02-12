@@ -2797,6 +2797,16 @@ MB2 i arbetsarean.
 <b>Attribut     <t><t>Beskrivning
 Trend.Attribute1  <t><t>Signal för kurva nr 1.
 Trend.Attribute2  <t><t>Signal för kurva nr 2.
+Trend.MinValueAttr1 <t>Signal för minvärde kurva nr 1. Används när minvärdet
+		  <t>är dynamiskt. För statisk värde används Trend.MinValue1.
+Trend.MaxValueAttr1 <t>Signal för maxvärde kurva nr 1. Används när maxvärdet
+		  <t>är dynamiskt. För statisk värde används Trend.MaxValue1.
+Trend.MinValueAttr2 <t>Signal för minvärde kurva nr 2. Används när minvärdet
+		  <t>är dynamiskt. För statisk värde används Trend.MinValue2.
+Trend.MaxValueAttr2 <t>Signal för maxvärde kurva nr 2. Används när maxvärdet
+		  <t>är dynamiskt. För statisk värde används Trend.MaxValue2.
+Trend.HoldAttr <t>Signal för att frysa kurvan.
+Trend.TimeRangeAttr <t>Signal av typen Float32 för kurvans tidskala.
 Trend.NoOfPoints  <t><t>Antal punkter på kurvan
 Trend.ScanTime    <t><t>Tidsintervall mellan två punkter.
 Trend.CurveLineWidth <t><t>Linjebredd på kurvan (1-8)

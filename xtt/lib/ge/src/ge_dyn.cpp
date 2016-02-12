@@ -7724,6 +7724,11 @@ void GeTrend::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( hold_attr);
 
+  strcpy( attrinfo[i].name, "Trend.TimeRangeAttr");
+  attrinfo[i].value = timerange_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( timerange_attr);
+
   *item_count = i;
 }
 
@@ -7758,6 +7763,7 @@ void GeTrend::replace_attribute( char *from, char *to, int *cnt, int strict)
   GeDyn::replace_attribute( minvalue_attr2, sizeof(minvalue_attr2), from, to, cnt, strict);
   GeDyn::replace_attribute( maxvalue_attr2, sizeof(maxvalue_attr2), from, to, cnt, strict);
   GeDyn::replace_attribute( hold_attr, sizeof(hold_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute( timerange_attr, sizeof(timerange_attr), from, to, cnt, strict);
 }
 
 void GeTrend::save( ofstream& fp)
@@ -7770,6 +7776,7 @@ void GeTrend::save( ofstream& fp)
   fp << int(ge_eSave_Trend_minvalue_attr2) << FSPACE << minvalue_attr2 << endl;
   fp << int(ge_eSave_Trend_maxvalue_attr2) << FSPACE << maxvalue_attr2 << endl;
   fp << int(ge_eSave_Trend_hold_attr) << FSPACE << hold_attr << endl;
+  fp << int(ge_eSave_Trend_timerange_attr) << FSPACE << timerange_attr << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -7818,6 +7825,10 @@ void GeTrend::open( ifstream& fp)
       case ge_eSave_Trend_hold_attr:
         fp.get();
         fp.getline( hold_attr, sizeof(hold_attr));
+        break;
+      case ge_eSave_Trend_timerange_attr:
+        fp.get();
+        fp.getline( timerange_attr, sizeof(timerange_attr));
         break;
       case ge_eSave_End: end_found = 1; break;
       default:
@@ -7884,6 +7895,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
     }
     attr_cnt++;
   }
+  no_of_points = grow_GetTrendNoOfPoints( object);
   grow_GetTrendScanTime( object, &scan_time);
   acc_time = scan_time;
   trend_hold = 0;
@@ -7939,6 +7951,29 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
     }
   }
 
+  timerange_p = 0;
+  timerange_db = dyn->parse_attr_name( timerange_attr, parsed_name,
+				  &inverted, &attr_type, &attr_size);
+  if ( strcmp( parsed_name,"") != 0 && attr_type == pwr_eType_Float32) {
+    switch ( timerange_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&timerange_p, 
+					 &timerange_subid, attr_size, object);
+      if ( EVEN(sts)) return sts;
+      break;
+    case graph_eDatabase_Local:
+      timerange_p = (pwr_tFloat32 *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
+      if ( *timerange_p == 0)
+	*timerange_p = scan_time * no_of_points;
+      break;
+    default:
+      ;
+    }
+    orig_graph_scan_time = dyn->graph->scan_time;
+    orig_graph_fast_scan_time = dyn->graph->fast_scan_time;
+    orig_graph_animation_scan_time = dyn->graph->animation_scan_time;
+  }
+
   grow_SetTrendNoOfCurves( object, attr_cnt);
   trace_data->p = &pdummy;
   first_scan = true;
@@ -7972,6 +8007,10 @@ int GeTrend::disconnect( grow_tObject object)
   if ( hold_p && hold_db == graph_eDatabase_Gdh) {
     gdh_UnrefObjectInfo( hold_subid);
     hold_p = 0;
+  }
+  if ( timerange_p && timerange_db == graph_eDatabase_Gdh) {
+    gdh_UnrefObjectInfo( timerange_subid);
+    timerange_p = 0;
   }
   return 1;
 }
@@ -8013,10 +8052,70 @@ int GeTrend::scan( grow_tObject object)
     }      
   }
 
+  if ( timerange_p) {
+    if ( fabsf( *timerange_p - old_timerange) > FLT_EPSILON) {
+      double dt = *timerange_p / no_of_points;
+      if ( dt >= 0.001) {
+	grow_SetTrendScanTime( object, dt);
+	scan_time = dt;
+	if ( dyn->cycle == glow_eCycle_Slow) {
+	  if ( dyn->graph->scan_time > scan_time)
+	    dyn->graph->scan_time = scan_time;
+	  else {
+	    if ( scan_time > orig_graph_scan_time)
+	      dyn->graph->scan_time = orig_graph_scan_time;
+	    else
+	      dyn->graph->scan_time = scan_time;
+	  }
+	  if ( dyn->graph->fast_scan_time > scan_time)
+	    dyn->graph->fast_scan_time = scan_time;
+	  else {
+	    if ( scan_time > orig_graph_fast_scan_time)
+	      dyn->graph->fast_scan_time = orig_graph_fast_scan_time;
+	    else
+	      dyn->graph->fast_scan_time = scan_time;
+	  }
+	  if ( dyn->graph->animation_scan_time > scan_time)	  
+	    dyn->graph->animation_scan_time = scan_time;
+	  else {
+	    if ( scan_time > orig_graph_animation_scan_time)
+	      dyn->graph->animation_scan_time = orig_graph_animation_scan_time;
+	    else
+	      dyn->graph->animation_scan_time = scan_time;
+	  }
+	}
+	else { 
+	  // Fast cycle
+	  if ( dyn->graph->fast_scan_time > scan_time)
+	    dyn->graph->fast_scan_time = scan_time;
+	  else {
+	    if ( scan_time > orig_graph_fast_scan_time)
+	      dyn->graph->fast_scan_time = orig_graph_fast_scan_time;
+	    else
+	      dyn->graph->fast_scan_time = scan_time;
+	  }
+	  if ( dyn->graph->animation_scan_time > scan_time)	  
+	    dyn->graph->animation_scan_time = scan_time;
+	  else {
+	    if ( scan_time > orig_graph_animation_scan_time)
+	      dyn->graph->animation_scan_time = orig_graph_animation_scan_time;
+	    else
+	      dyn->graph->animation_scan_time = scan_time;
+	  }
+	}
+      }
+      old_timerange = *timerange_p;
+    }      
+  }
+
   if ( first_scan)
     first_scan = false;
 
-  acc_time += dyn->graph->scan_time;
+  if ( dyn->cycle == glow_eCycle_Slow)
+    acc_time += dyn->graph->scan_time;
+  else
+    acc_time += dyn->graph->fast_scan_time;
+
   if ( acc_time + DBL_EPSILON >= scan_time) {
     if ( p1) {
       switch ( trend_typeid1) {

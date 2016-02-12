@@ -455,6 +455,7 @@
     ge_eSave_Trend_minvalue_attr2      	= 2304,
     ge_eSave_Trend_maxvalue_attr2      	= 2305,
     ge_eSave_Trend_hold_attr      	= 2306,
+    ge_eSave_Trend_timerange_attr      	= 2307,
     ge_eSave_DigFlash_attribute		= 2600,
     ge_eSave_DigFlash_color		= 2601,
     ge_eSave_DigFlash_color2		= 2602,
@@ -2479,10 +2480,12 @@ class GeTrend : public GeDynElem {
   pwr_tAName minvalue_attr2;
   pwr_tAName maxvalue_attr2;
   pwr_tAName hold_attr;
+  pwr_tAName timerange_attr;
 
   bool first_scan;
   double scan_time;
   double acc_time;
+  int no_of_points;
   int trend_hold;
   pwr_tFloat32 *p1;
   pwr_tSubid subid1;
@@ -2509,22 +2512,29 @@ class GeTrend : public GeDynElem {
   pwr_tBoolean *hold_p;
   graph_eDatabase hold_db;
   pwr_tSubid hold_subid;
+  pwr_tFloat32 *timerange_p;
+  graph_eDatabase timerange_db;
+  pwr_tSubid timerange_subid;
+  pwr_tFloat32 old_timerange;
+  double orig_graph_scan_time;
+  double orig_graph_fast_scan_time;
+  double orig_graph_animation_scan_time;
 
   GeTrend( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType1_Trend, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Trend),
     min_value1_p(0), max_value1_p(0), old_min_value1(0), old_max_value1(0),
     min_value2_p(0), max_value2_p(0), old_min_value2(0), old_max_value2(0),
-    hold_p(0)
+    hold_p(0), timerange_p(0), old_timerange(0)
     { strcpy( attribute1, ""); strcpy( attribute2, "");
     strcpy( minvalue_attr1, ""); strcpy( maxvalue_attr1, "");
     strcpy( minvalue_attr2, ""); strcpy( maxvalue_attr2, "");
-    strcpy( hold_attr, "");}
+    strcpy( hold_attr, ""); strcpy( timerange_attr, "");}
   GeTrend( const GeTrend& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
     { strcpy( attribute1, x.attribute1); strcpy( attribute2, x.attribute2); 
     strcpy( minvalue_attr1, x.minvalue_attr1); strcpy( maxvalue_attr1, x.maxvalue_attr1); 
     strcpy( minvalue_attr2, x.minvalue_attr2); strcpy( maxvalue_attr2, x.maxvalue_attr2);
-    strcpy( hold_attr, x.hold_attr);}
+    strcpy( hold_attr, x.hold_attr); strcpy( timerange_attr, x.timerange_attr);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);

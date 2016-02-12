@@ -463,6 +463,11 @@ public class GrowTrend extends GrowRect {
 	draw();
     }
 
+    public void set_scan_time( double time) {
+	scan_time = time;
+	configure_curves();
+    }
+
     public double get_scan_time() {
 	return scan_time;
     }
