@@ -1384,14 +1384,14 @@ Volume ABB $ClassVolume 0.0.250.2
       EndObject
       Object 7510 $Value 4114 24-JUN-2013 10:50:40.92
         Body SysBody 24-JUN-2013 10:50:40.92
-          Attr Text = "7510 FBA A communication loast"
+          Attr Text = "7510 FBA A communication lost"
           Attr PgmName = "7510"
           Attr Value = 29968
         EndBody
       EndObject
       Object 7520 $Value 4115 24-JUN-2013 10:50:40.92
         Body SysBody 24-JUN-2013 10:50:40.92
-          Attr Text = "7520 FBA B communication loast"
+          Attr Text = "7520 FBA B communication lost"
           Attr PgmName = "7520"
           Attr Value = 29984
         EndBody
