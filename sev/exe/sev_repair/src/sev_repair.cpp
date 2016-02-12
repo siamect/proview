@@ -67,6 +67,7 @@ int sev_repair::init()
 {
   sev_dbms_env 		*env;
   pwr_tFileName 	envname;
+  unsigned int		rc;
 
   sprintf( envname, "$pwrp_db/%s.db", sev_dbms_env::dbName());
   dcli_translate_filename( envname, envname);
@@ -78,7 +79,7 @@ int sev_repair::init()
     exit(0);
   }
 
-  if ( !env->openDb()) {
+  if ( !env->openDb( &rc)) {
     printf("Failed to connect to database '%s'", sev_dbms_env::dbName());
     exit(0);
   }
