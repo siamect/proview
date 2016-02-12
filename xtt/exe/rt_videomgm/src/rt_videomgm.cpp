@@ -1098,16 +1098,26 @@ void XttVideoMgm::cscan()
 
   // Request to set panel by changing current panel
   if ( m_op->CurrentPanel != m_current_panel_old) {
-    if ( m_op->CurrentPanel >= 0 && m_op->CurrentPanel < (int)m_panel.size())
+    if ( m_op->CurrentPanel >= 0 && m_op->CurrentPanel < (int)m_panel.size()) {
       display_panel( m_op->CurrentPanel);
+      // Reset any selected panel
+      for ( unsigned int i = 0; i < sizeof(m_op->PanelArraySelect)/sizeof(m_op->PanelArraySelect[0]); i++)
+	m_op->PanelArraySelect[i] = m_panel_select_old[i] = 0;
+      m_op->PanelArraySelect[m_op->CurrentPanel] = 1;
+      m_panel_select_old[m_op->CurrentPanel] = 1;
+    }
     else
       m_op->CurrentPanel = m_current_panel_old;
   }
 
   // Request to set camera by changing current camera
   if ( m_op->CurrentCamera != m_current_camera_old) {
-    if ( m_op->CurrentCamera >= 0 && m_op->CurrentCamera < (int)m_camera.size())
+    if ( m_op->CurrentCamera >= 0 && m_op->CurrentCamera < (int)m_camera.size()) {
       set_camera_fullscreen( m_op->CurrentCamera);
+      // Reset selected camera
+      for ( unsigned int i = 0; i < sizeof(m_op->CameraArraySelect)/sizeof(m_op->CameraArraySelect[0]); i++)
+	m_op->CameraArraySelect[i] = m_camera_select_old[i] = 0;
+    }
     else
       m_op->CurrentCamera = m_current_camera_old;
   }
@@ -1320,6 +1330,8 @@ void VideoMgmServer::open()
     errh_SetStatus( PWR__SRVTERM);
     exit(sts);    
   }
+
+  aproc_RegisterObject( oid);
 
   m_scantime = serverp->Scantime;
 
