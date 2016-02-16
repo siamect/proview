@@ -869,6 +869,7 @@ class GeDyn {
   //! Execute action after confirm.
   int confirmed_action( grow_tObject object, glow_tEvent event);
   int change_value( grow_tObject object, char *text);
+  void update_dyntype( grow_tObject object);
   ge_mDynType1 get_dyntype1( grow_tObject object);
   ge_mDynType2 get_dyntype2( grow_tObject object);
   ge_mActionType1 get_actiontype1( grow_tObject object);

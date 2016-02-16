@@ -758,6 +758,16 @@ class GrowCtx : public GlowCtx {
   void set_layout( double nx0, double ny0, double nx1, double ny1)
       { x0 = nx0; y0 = ny0; x1 = nx1; y1= ny1; }; 
 
+  //! Get layout
+  /*!
+    \param nx0		x coordinate for left border.
+    \param ny0		y coordinate for low border.
+    \param nx1		x coordinate for right border.
+    \param ny1		y coordinate for high border.
+  */
+  void get_layout( double *nx0, double *ny0, double *nx1, double *ny1)
+      { *nx0 = x0; *ny0 = y0; *nx1 = x1; *ny1= y1; }; 
+
   //! Group the selected objects.
   /*!
     \param group	Created group.

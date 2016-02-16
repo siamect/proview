@@ -659,6 +659,14 @@ void GeDyn::open( ifstream& fp)
   }  
 }
 
+void GeDyn::update_dyntype( grow_tObject object)
+{
+  total_dyn_type1 = get_dyntype1( object);
+  total_dyn_type2 = get_dyntype2( object);
+  total_action_type1 = get_actiontype1( object);
+  total_action_type2 = get_actiontype2( object);
+}
+
 ge_mDynType1 GeDyn::get_dyntype1( grow_tObject object)
 {
   if ( object && dyn_type1 & ge_mDynType1_Inherit) {

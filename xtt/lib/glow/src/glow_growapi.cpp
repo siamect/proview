@@ -751,6 +751,10 @@ void grow_SetAttributes( grow_tCtx ctx, grow_sAttributes *attr,
     ctx->initial_position = attr->initial_position;
   if ( mask & grow_eAttr_environment)
     ctx->environment = attr->environment;
+  if ( mask & grow_eAttr_tooltip_text_size)
+    ctx->tiptext_size = attr->tooltip_text_size;
+  if ( mask & grow_eAttr_color_theme)
+    strncpy( ctx->color_theme, attr->color_theme, sizeof(ctx->color_theme));
 }
 
 void grow_GetAttributes( grow_tCtx ctx, grow_sAttributes *attr, 
@@ -4528,6 +4532,12 @@ void grow_SetLayout( grow_tCtx ctx, double x0, double y0, double x1,
 		     double y1)
 {
   ctx->set_layout( x0, y0, x1, y1);
+}
+
+void grow_GetLayout( grow_tCtx ctx, double *x0, double *y0, double *x1,
+		     double *y1)
+{
+  ctx->get_layout( x0, y0, x1, y1);
 }
 
 void grow_SetPath( grow_tCtx ctx, int path_cnt, const char *path)

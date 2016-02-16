@@ -108,6 +108,7 @@ class XttGtk : public Xtt {
     static void activate_collect_show( GtkWidget *w, gpointer data);
     static void activate_collect_remove( GtkWidget *w, gpointer data);
     static void activate_collect_clear( GtkWidget *w, gpointer data);
+    static void activate_collect_opengraph( GtkWidget *w, gpointer data);
     static void activate_collect_window( GtkWidget *w, gpointer data);
     static void activate_collect_new_window( GtkWidget *w, gpointer data);
     static void activate_collect_signals( GtkWidget *w, gpointer data);

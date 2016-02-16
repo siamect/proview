@@ -491,6 +491,27 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
   if ( borders)
     ((Graph *)graph)->set_borders( borders);
 
+  if ( strcmp( filename, "_none_") == 0 && xg_width == 0 && xg_height == 0) {
+    // Set size from current layout
+    double x0, y0, x1, y1, zoom;
+    float rd = 0.05;
+
+    grow_GetLayout( graph->grow->ctx, &x0, &y0, &x1, &y1);
+    grow_GetZoom( graph->grow->ctx, &zoom);
+    window_width = zoom * ( x1 - x0);
+    window_height = zoom * ( y1 - y0);
+
+    if ( window_width < 300 || window_height < 300)
+      rd = 0.2;
+
+    geometry.min_aspect = gdouble(window_width)/window_height * (1.0 - rd);
+    geometry.max_aspect = gdouble(window_width)/window_height * (1.0 + rd);
+    gtk_window_set_geometry_hints( GTK_WINDOW(toplevel), GTK_WIDGET(toplevel),
+    				   &geometry, GDK_HINT_ASPECT);
+
+    gtk_widget_set_size_request( toplevel, window_width, window_height);
+  }
+
 }
 
 static gint confirm_delete_event( GtkWidget *w, GdkEvent *event, gpointer ge)

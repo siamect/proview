@@ -451,6 +451,27 @@ void XttGtk::activate_collect_clear( GtkWidget *w, gpointer data)
   xtt->xnav->collect_clear();
 }
 
+void XttGtk::activate_collect_opengraph( GtkWidget *w, gpointer data)
+{
+  Xtt *xtt = (Xtt *)data;
+  pwr_tCmd cmd = "open graph /collect";
+
+  if ( !xtt->xnav->is_authorized())
+    return;
+
+  int showed = 0;
+  if ( xtt->xnav->brow->ctx != xtt->xnav->collect_brow->ctx) {
+    xtt->xnav->collect_show();
+    showed = 1;
+  }
+
+  xtt->xnav->command( cmd);
+
+  if ( showed)
+    // Hide
+    xtt->xnav->collect_show();
+}
+
 void XttGtk::activate_collect_window( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
@@ -868,6 +889,10 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   g_signal_connect( functions_collect_clear, "activate", 
 		    G_CALLBACK(XttGtk::activate_collect_clear), this);
 
+  GtkWidget *functions_collect_opengraph = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("O_pen Graph"));
+  g_signal_connect( functions_collect_opengraph, "activate", 
+		    G_CALLBACK(XttGtk::activate_collect_opengraph), this);
+
   GtkWidget *functions_collect_window = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Copy to Window"));
   g_signal_connect( functions_collect_window, "activate", 
 		    G_CALLBACK(XttGtk::activate_collect_window), this);
@@ -901,6 +926,7 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_collect_menu), functions_collect_show);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_collect_menu), functions_collect_remove);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_collect_menu), functions_collect_clear);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_collect_menu), functions_collect_opengraph);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_collect_menu), functions_collect_window);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_collect_menu), functions_collect_new_window);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_collect_menu), functions_collect_signals);

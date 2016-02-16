@@ -61,7 +61,6 @@ typedef struct {
 
 static int graph_object_dx( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_PlcThread( Graph *graph, pwr_sAttrRef *attrref);
-static int graph_object_collect( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref);
 
 static graph_sObjectFunction graph_object_functions[] = {
@@ -162,26 +161,18 @@ int Graph::init_object_graph( int mode)
   int		is_type = 0;
   pwr_sAttrRef	attrref;
 
-  if ( mode == 0)
-  {
-    if ( strcmp( filename, "_none_.pwg") == 0)
-    {
-      if ( strcmp( object_name[0], "collect") == 0)
-      {
+  if ( mode == 0) {
+    if ( strcmp( filename, "_none_.pwg") == 0) {
+      if ( strcmp( object_name[0], "collect") == 0) {
         sts = graph_object_collect_build( this, 0);
         return sts;
       }
     }
     return 1;
   }
-
-  if ( strcmp( filename, "_none_.pwg") == 0)
-  {
+  if ( strcmp( filename, "_none_.pwg") == 0) {
     if ( strcmp( object_name[0], "collect") == 0)
-    {
-      sts = graph_object_collect( this, 0);
-      return sts;
-    }
+        return 1;
   }
 
   // Get class from filename
@@ -673,75 +664,6 @@ int Graph::trend_init( graph_sObjectTrend *td, pwr_sAttrRef *arp)
 
 #define MAX_TREND_OBJECTS 100
 
-typedef struct {
-	char		object_name[120];
-	graph_sObjectTrend 	trend1;
-        grow_tObject trend_objects[MAX_TREND_OBJECTS];
-        double       *data_scan_time_p[MAX_TREND_OBJECTS];
-        int          *hold_p[100];
-        int          trend_cnt;
-	} graph_sObjectCollect;
-
-static void graph_object_collect_scan( Graph *graph)
-{
-  graph_sObjectCollect *od = (graph_sObjectCollect *)graph->graph_object_data;
-  graph_sObjectTrend *td = &od->trend1;
-  int i;
-
-  // Reconfigure new scantime
-  if ( td->scan_time_p && 
-       *td->scan_time_p != td->old_scan_time)
-  {
-    if ( graph->scan_time > *td->scan_time_p/200)
-    {
-      graph->scan_time = *td->scan_time_p/200;
-      graph->animation_scan_time = *td->scan_time_p/200;
-    }
-    for ( i = 0; i < od->trend_cnt; i++) {
-      grow_SetTrendScanTime( od->trend_objects[i], double( *td->scan_time_p/200));
-      *od->data_scan_time_p[i] = double(*td->scan_time_p)/200;
-    }
-    td->old_scan_time = *td->scan_time_p;
-  }
-
-  if ( td->hold_button_p && *td->hold_button_p)
-  {
-    for ( i = 0; i < od->trend_cnt; i++)
-      *od->hold_p[i] = !*od->hold_p[i];
-    *td->hold_button_p = 0;
-    if ( *td->hold_p && td->hold_button_object)
-      grow_SetObjectColorTone( td->hold_button_object, glow_eDrawTone_Yellow);
-    else
-      grow_ResetObjectColorTone( td->hold_button_object);
-  }
-}
-
-
-static void graph_object_collect_close( Graph *graph)
-{
-  free( graph->graph_object_data);
-}
-
-static int graph_object_collect( Graph *graph, pwr_sAttrRef *attrref)
-{
-  int sts;
-  graph_sObjectCollect *od = (graph_sObjectCollect *)graph->graph_object_data;
-  int i;
-
-  if ( !od)
-    return 1;
-
-  sts = graph->trend_init( &od->trend1, attrref);
-
-  for ( i = 0; i < od->trend_cnt; i++) {
-    GeDyn *dyn;
-    grow_GetUserData( od->trend_objects[i], (void **)&dyn);
-    od->data_scan_time_p[i] = dyn->ref_trend_scantime();
-    od->hold_p[i] = dyn->ref_trend_hold();
-  }
-  return 1;
-}
-
 static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref)
 {
   pwr_sAttrRef *alist, *ap;
@@ -749,7 +671,6 @@ static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref)
   int sts;
   char name[120];
   double x1, y1;
-  graph_sObjectCollect *od;
   grow_sAttrInfo *grow_info, *grow_info_p;
   int grow_info_cnt;
   int i;
@@ -758,7 +679,7 @@ static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref)
   grow_tObject t1, l1;
   double z_width, z_height, z_descent;
   double name_width = 0;
-  double trend_width = 28;
+  double trend_width = 48;
   double trend_height = 1.2;
   double y0 = 2.2;
   double x0 = 2;
@@ -766,6 +687,9 @@ static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref)
   unsigned int attr_size, attr_offset, attr_dimension;
   GeDyn *dyn;
   char attr_name[120];
+  grow_sAttributes grow_attr;
+  unsigned long mask;
+  int trend_cnt = 0;
 
 
   if ( ! graph->get_current_objects_cb)
@@ -777,14 +701,23 @@ static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref)
   if ( cdh_ObjidIsNull( alist->Objid))
     return 0;
 
-  od = (graph_sObjectCollect *) calloc( 1, sizeof(graph_sObjectCollect));
-  graph->graph_object_data = (void *) od;
-  graph->graph_object_close = graph_object_collect_close;
+  graph->graph_object_data = 0;
+  graph->graph_object_close = 0;
 
   grow_SetPath( graph->grow->ctx, 1, "pwr_exe:");
 
-  // Scantime button
-  graph->create_node( NULL, "pwr_valuereliefup", x0, y0 - 1, 4, y0 - 1 + 0.7, 
+  // Set graph attributes
+
+  // Default color theme
+  mask = grow_eAttr_color_theme;
+  strcpy( grow_attr.color_theme, "$default");
+  grow_SetAttributes( graph->grow->ctx, &grow_attr, mask);
+  grow_ReadCustomColorFile( graph->grow->ctx, 0);
+
+  grow_SetBackgroundColor( graph->grow->ctx, glow_eDrawType_CustomColor1);
+
+  // Scantime input field
+  graph->create_node( NULL, "pwrct_valueinputsmallbg", x0, y0 - 1.3, 4, y0 - 1.3 + 1.2, 
 		      &scantime_button);
 
   dyn = new GeDyn( graph);
@@ -794,43 +727,33 @@ static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref)
   dyn->update_elements();
   dyn->set_access( (glow_mAccess) 65535);
   dyn->set_attribute( scantime_button, "$local.ScanTime##Float32", 0);
-  dyn->set_value_input( "%6.0f", 2, 10000000);
+  dyn->set_value_input( "%3.0f", 2, 10000000);
 
   // Hold button
-  graph->create_node( "TrendHold", "pwr_smallbutton", x0 + trend_width/2 - 3./2, 
-		      y0 - 1 , x0 + trend_width/2 + 3./2, y0 - 1 + 0.85,
+  graph->create_node( "TrendHold", "pwrct_buttonsmalltoggle", x0 + trend_width/2 - 3./2, 
+		      y0 - 1.4 , x0 + trend_width/2 + 3./2, y0 - 1.4 + 1.2,
 		      &hold_button);
-  grow_SetAnnotation( hold_button, 1, "  Hold", 6);
+  grow_SetAnnotation( hold_button, 1, "Hold", 4);
 
   dyn = new GeDyn( graph);
   grow_SetUserData( hold_button, (void *)dyn);
 
-  // Set color tone
-  grow_SelectClear( graph->grow->ctx);
-  grow_SelectInsert( graph->grow->ctx, hold_button);
-  grow_SetSelectOrigColorTone( graph->grow->ctx, glow_eDrawTone_Gray);
-  grow_SelectRemove( graph->grow->ctx, hold_button);
-
-  dyn->set_dyn( ge_mDynType1_No, ge_mDynType2_No, ge_mActionType1_SetDig, ge_mActionType2_No);
-  dyn->update_elements();
   dyn->set_access( (glow_mAccess) 65535);
   dyn->set_attribute( hold_button, "$local.TrendHold##Boolean", 0);
 
   //  Zero text
   grow_CreateGrowText( graph->grow->ctx, "", "0",
-		       x0 + trend_width - 0.2, y0 - 0.2,
-		       glow_eDrawType_TextHelveticaBold, glow_eDrawType_Line, 2, 
-		       glow_eFont_Helvetica, glow_mDisplayLevel_1,
+		       x0 + trend_width - 0.2, y0 - 0.3,
+		       glow_eDrawType_TextHelvetica, glow_eDrawType_CustomColor5, 3, 
+		       glow_eFont_LucidaSans, glow_mDisplayLevel_1,
 		       NULL, &t1);
 
   ap = alist;
   is_attrp = is_attr;
   x1 = x0;
   y1 = y0;
-  while( cdh_ObjidIsNotNull( ap->Objid))
-  {
-    if ( *is_attrp)
-    {
+  while( cdh_ObjidIsNotNull( ap->Objid)) {
+    if ( *is_attrp) {
       sts = gdh_AttrrefToName( ap, name, sizeof(name), cdh_mNName);
       if ( EVEN(sts)) return sts;
 
@@ -839,69 +762,75 @@ static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref)
       if ( EVEN(sts)) return sts;
 
       switch ( attr_type) {
-        case pwr_eType_Boolean:
+      case pwr_eType_Boolean: {
+	grow_tObject trend;
 
-          grow_CreateGrowTrend( graph->grow->ctx, "ActualValueTrend", 
-			    x1, y1, trend_width, trend_height,
-			    glow_eDrawType_Color37,
-			    0, glow_mDisplayLevel_1, 1, 1,
-			    glow_eDrawType_Color40, NULL, 
-			    &od->trend_objects[od->trend_cnt]);
-	  dyn = new GeDyn( graph);
-	  dyn->dyn_type1 = ge_mDynType1_Trend;
-	  dyn->update_elements();
-	  grow_SetUserData( od->trend_objects[od->trend_cnt], (void *)dyn);
+	grow_CreateGrowTrend( graph->grow->ctx, "ActualValueTrend", 
+			      x1, y1, trend_width, trend_height,
+			      glow_eDrawType_Color37,
+			      0, glow_mDisplayLevel_1, 1, 1,
+			      glow_eDrawType_Color40, NULL, 
+			      &trend);
+	dyn = new GeDyn( graph);
+	dyn->dyn_type1 = ge_mDynType1_Trend;
+	dyn->update_dyntype( trend);
+	dyn->update_elements();
+	grow_SetUserData( trend, (void *)dyn);
 
-          grow_GetObjectAttrInfo( od->trend_objects[od->trend_cnt], NULL, 
-			      &grow_info, &grow_info_cnt);
+	grow_GetObjectAttrInfo( trend, NULL, 
+				&grow_info, &grow_info_cnt);
 
-	  strcpy( attr_name, name);
-	  strcat( attr_name, "##Boolean");
-	  grow_GetUserData( od->trend_objects[od->trend_cnt], (void **)&dyn);
-	  dyn->set_attribute( od->trend_objects[od->trend_cnt], attr_name, 0);
+	strcpy( attr_name, name);
+	strcat( attr_name, "##Boolean");
+	grow_GetUserData( trend, (void **)&dyn);
+	strcpy( ((GeTrend *)dyn->elements)->attribute1, attr_name);
+	strcpy( ((GeTrend *)dyn->elements)->timerange_attr, "$local.ScanTime##Float32");
+	strcpy( ((GeTrend *)dyn->elements)->hold_attr, "$local.TrendHold##Boolean");
+	grow_info_p = grow_info;
+	for ( i = 0; i < grow_info_cnt; i++) {
+	  if ( strcmp( grow_info_p->name, "NoOfPoints") == 0)
+	    *(int *) grow_info_p->value_p = 200;
+	  else if ( strcmp( grow_info_p->name, "HorizontalLines") == 0)
+	    *(int *) grow_info_p->value_p = 0;
+	  else if ( strcmp( grow_info_p->name, "VerticalLines") == 0)
+	    *(int *) grow_info_p->value_p = 9;
+	  else if ( strcmp( grow_info_p->name, "CurveColor1") == 0)
+	    *(int *) grow_info_p->value_p = glow_eDrawType_CustomColor68;
+	  else if ( strcmp( grow_info_p->name, "MaxValue1") == 0)
+	    *(double *) grow_info_p->value_p = 1.2;
+	  else if ( strcmp( grow_info_p->name, "MinValue1") == 0)
+	    *(double *) grow_info_p->value_p = -0.1;
+	  
+	  grow_info_p++;
+	}
+	grow_FreeObjectAttrInfo( grow_info);
+	
+	// This will configure the curves
+	grow_SetTrendScanTime( trend, 0.5);
 
-          grow_info_p = grow_info;
-          for ( i = 0; i < grow_info_cnt; i++)
-          {
-	    if ( strcmp( grow_info_p->name, "NoOfPoints") == 0)
-	      *(int *) grow_info_p->value_p = 200;
-	    else if ( strcmp( grow_info_p->name, "HorizontalLines") == 0)
-	      *(int *) grow_info_p->value_p = 0;
-	    else if ( strcmp( grow_info_p->name, "VerticalLines") == 0)
-	      *(int *) grow_info_p->value_p = 9;
-	    else if ( strcmp( grow_info_p->name, "CurveColor1") == 0)
-	      *(int *) grow_info_p->value_p = glow_eDrawType_Color145;
-	    else if ( strcmp( grow_info_p->name, "MaxValue1") == 0)
-	      *(double *) grow_info_p->value_p = 1.2;
-	    else if ( strcmp( grow_info_p->name, "MinValue1") == 0)
-	      *(double *) grow_info_p->value_p = -0.1;
+	grow_SetObjectOriginalFillColor( trend, glow_eDrawType_CustomColor66);
+	grow_SetObjectOriginalBorderColor( trend, glow_eDrawType_CustomColor67);
 
-            grow_info_p++;
-          }
-          grow_FreeObjectAttrInfo( grow_info);
+	grow_GetTextExtent( graph->grow->ctx, name, 
+			    strlen(name), glow_eDrawType_TextHelvetica,
+			    4, glow_eFont_LucidaSans, &z_width, &z_height, &z_descent);
 
-          // This will configure the curves
-          grow_SetTrendScanTime( od->trend_objects[od->trend_cnt], 0.5);
+	grow_CreateGrowText( graph->grow->ctx, "", name,
+			     x1 + trend_width + 1, y1 + trend_height/2 + z_height/2,
+			     glow_eDrawType_TextHelvetica, glow_eDrawType_CustomColor5, 4, 
+			     glow_eFont_LucidaSans, glow_mDisplayLevel_1,
+			     NULL, &t1);
+	if ( z_width > name_width)
+	  name_width = z_width;
 
-          grow_GetTextExtent( graph->grow->ctx, name, 
-	    strlen(name), glow_eDrawType_TextHelveticaBold,
-	    2, glow_eFont_Helvetica, &z_width, &z_height, &z_descent);
-
-          grow_CreateGrowText( graph->grow->ctx, "", name,
-			       x1 + trend_width + 1, y1 + trend_height/2 + z_height/2,
-			       glow_eDrawType_TextHelveticaBold, glow_eDrawType_Line, 2, 
-			       glow_eFont_Helvetica, glow_mDisplayLevel_1,
-			       NULL, &t1);
-          if ( z_width > name_width)
-            name_width = z_width;
-
-          od->trend_cnt++;
-          y1 += trend_height;
-          break;
-        default:
-          ;
+	trend_cnt++;
+	y1 += trend_height;
+	break;
       }
-      if ( od->trend_cnt >= MAX_TREND_OBJECTS)
+      default:
+	;
+      }
+      if ( trend_cnt >= MAX_TREND_OBJECTS)
         break;
     }
 
@@ -916,36 +845,39 @@ static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref)
   x1 = x0 + trend_width;
   grow_CreateGrowLine( graph->grow->ctx, "", 
 	x0 + trend_width, y1, x0 + trend_width + name_width + 2, y1,
-	glow_eDrawType_Color78, 1, 0, NULL, &l1);
+	glow_eDrawType_CustomColor4, 1, 0, NULL, &l1);
 
-  for ( i = 0; i < od->trend_cnt; i++) {
+  for ( i = 0; i < trend_cnt; i++) {
     y1 += trend_height;
 
     grow_CreateGrowLine( graph->grow->ctx, "", 
 	x0 + trend_width, y1, x0 + trend_width + name_width + 2, y1,
-	glow_eDrawType_Color71, 1, 0, NULL, &l1);
+	glow_eDrawType_CustomColor4, 1, 0, NULL, &l1);
   }
 
   // Draw frame
-  graph->create_node( "", "pwr_framethin", x0 - 0.5, 
-		      y0 - 1.3 , x0 + trend_width + name_width + 2, 
-		      y0 + od->trend_cnt * trend_height + 0.5,
-		      &l1);
-  dyn = new GeDyn( graph);
-  grow_SetUserData( l1, (void *)dyn);
+  grow_CreateGrowRect( graph->grow->ctx, "R1", x0 - 1.5, y0 - 2.7, 
+		       trend_width + name_width + 5.5, 1, glow_eDrawType_CustomColor3,
+		       1, 0, glow_mDisplayLevel_1, 1, 0, 0,
+		       glow_eDrawType_CustomColor3, NULL, &l1);
+  grow_CreateGrowRect( graph->grow->ctx, "R2", x0 - 1.5, y0 + trend_cnt * trend_height + 0.5, 
+		       trend_width + name_width + 5.5, 5, glow_eDrawType_CustomColor3,
+		       1, 0, glow_mDisplayLevel_1, 1, 0, 0,
+		       glow_eDrawType_CustomColor3, NULL, &l1);
+  grow_CreateGrowRect( graph->grow->ctx, "R3", x0 + trend_width + name_width + 2, y0 - 1.7, 
+		       2, y0 + trend_cnt * trend_height + 0.9, glow_eDrawType_CustomColor3,
+		       1, 0, glow_mDisplayLevel_1, 1, 0, 0,
+		       glow_eDrawType_CustomColor3, NULL, &l1);
+  grow_CreateGrowRect( graph->grow->ctx, "R4", x0 - 1.5, y0 - 1.7, 
+		       1, y0 + trend_cnt * trend_height + 0.9, glow_eDrawType_CustomColor3,
+		       1, 0, glow_mDisplayLevel_1, 1, 0, 0,
+		       glow_eDrawType_CustomColor3, NULL, &l1);
 
   grow_SetLayout( graph->grow->ctx, x0 - 1, y0 - 2.3, x0 + trend_width +
-		  name_width + 3, y0 + od->trend_cnt * trend_height + 1.5);
-
-  // Register scan function
-  graph->graph_object_scan = graph_object_collect_scan;
-
+		  name_width + 3, y0 + trend_cnt * trend_height + 1.5);
 
   // Set graph attributes
-  grow_sAttributes grow_attr;
-  unsigned long mask = 0;
-
-  mask |= grow_eAttr_double_buffer_on;
+  mask = grow_eAttr_double_buffer_on;
   grow_attr.double_buffer_on = 1;
   grow_SetAttributes( graph->grow->ctx, &grow_attr, mask);
 

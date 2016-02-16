@@ -120,6 +120,8 @@ extern "C" {
     glow_eHotMode hot_mode;
     glow_eDirection initial_position;
     glow_eEnv	environment;
+    int 	tooltip_text_size;
+    char	color_theme[40];
   } grow_sAttributes;
 
   typedef enum {
@@ -144,7 +146,9 @@ extern "C" {
     grow_eAttr_double_buffer_on     	= 1 << 18,
     grow_eAttr_hot_mode             	= 1 << 19,
     grow_eAttr_initial_position     	= 1 << 20,
-    grow_eAttr_environment	     	= 1 << 21
+    grow_eAttr_environment	     	= 1 << 21,
+    grow_eAttr_tooltip_text_size      	= 1 << 22,
+    grow_eAttr_color_theme	     	= 1 << 23
   } grow_eAttribute;
 
 
@@ -1906,6 +1910,17 @@ extern "C" {
   */
   void grow_SetLayout( grow_tCtx ctx, double x0, double y0, double x1,
 		       double y1);
+
+  //! Get layout.
+  /*!
+    \param ctx		Grow context.
+    \param x0		x coordinate for left border.
+    \param y0		y coordinate for low border.
+    \param x1		x coordinate for right border.
+    \param y1		y coordinate for high border.
+  */
+  void grow_GetLayout( grow_tCtx ctx, double *x0, double *y0, double *x1,
+		       double *y1);
 
   //! Set search path for subgraphs and images.
   /*!

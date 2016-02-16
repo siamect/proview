@@ -4698,6 +4698,9 @@ int GrowCtx::read_customcolor_file( char *name)
   if ( environment == glow_eEnv_Runtime && strcmp( color_theme, "$default") != 0)
     return 0;
 
+  if ( name == 0 && strcmp( default_color_theme, "") != 0)
+    name = default_color_theme;
+
   if ( customcolors) {
     sts = customcolors->read_colorfile( this, name);
     if ( ODD(sts)) {
