@@ -1009,15 +1009,13 @@ handlerAlarmStatus (
 {
   pwr_tStatus sts;
   mh_sAlarmStatus *mp = (mh_sAlarmStatus *) (p + 1);
-  int i;
 
   /* Skip events sent from an old select list. */
   if (p->selGen != l.selGen)
     return;
 
   if (l.cbAlarmStatus != NULL)
-    sts = l.cbAlarmStatus( mp);
-  
+    sts = l.cbAlarmStatus( mp);  
 }
 
 
@@ -1208,7 +1206,7 @@ sendToHandler (
     pfp = &hp->platform;
   }
 
-  sts = mh_NetSendMessage(&qid, pfp, 0, 0, (mh_sHead *)mp, msize);
+  sts = mh_NetSendMessage(&qid, pfp, 0, 0, 0, (mh_sHead *)mp, msize);
 
   free(mp);
   if (ODD(sts)) 

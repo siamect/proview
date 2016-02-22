@@ -56,6 +56,7 @@ mh_NetSendMessage(
   co_sPlatform *recPlatform,  
   int prio,
   int subtype,               
+  unsigned int id,
   mh_sHead *hp,              
   unsigned int size          
 ) {
@@ -71,7 +72,7 @@ mh_NetSendMessage(
   msg.type.s = subtype;
   msg.reply = hp->qid;
   msg.size = size;
-  msg.msg_id = 0;
+  msg.msg_id = id;
 
   if (recPlatform == NULL || co_IsXdrNeeded(&hp->platform, recPlatform)) {
     hp->xdr = TRUE;

@@ -525,7 +525,7 @@ static void		scanTimerList();
 static void		sendEventListToOutunit(sOutunit*);
 static pwr_tBoolean	sendEventToOutunit(sOutunit*, sEventTab*);
 static pwr_tStatus	sendMessage(mh_eMsg, qcom_sQid*, co_sPlatform*, void*, pwr_tUInt32);
-static pwr_tStatus	sendToOutunit(sOutunit*, mh_eMsg, int, void*, int);
+static pwr_tStatus	sendToOutunit(sOutunit*, mh_eMsg, int, unsigned int, void*, int);
 static void		setTimerActive(int, pwr_tBoolean);
 static sSupActive	*supListGet(pwr_tAttrRef*);
 static void		timeOut();
@@ -1340,7 +1340,7 @@ sendAlarmStatus( sOutunit *op)
     default: ;
     }
   }
-  sts = sendToOutunit(op, mh_eMsg_HandlerAlarmStatus, 0, msg, msg_size);
+  sts = sendToOutunit(op, mh_eMsg_HandlerAlarmStatus, 0, op->outunit.oix, msg, msg_size);
   free( (char *)msg);
 }
 
@@ -1369,7 +1369,7 @@ checkOutunits ()
 		    cdh_ObjidToString(NULL, op->outunit, 1),
 		    op->syncedIdx, op->eventIdx);
 #endif
-	  sendToOutunit(op, mh_eMsg_HandlerSync, 0, NULL, 0);
+	  sendToOutunit(op, mh_eMsg_HandlerSync, 0, 0, NULL, 0);
 	} else {
 	  op->check = 1;
 	}
@@ -2132,7 +2132,7 @@ fromOutunit (
     outunitSync(hp, op);
     break;
   case mh_eMsg_OutunitSync:
-    sendToOutunit(op, mh_eMsg_Sync, 0, NULL, 0);
+    sendToOutunit(op, mh_eMsg_Sync, 0, 0, NULL, 0);
     break;
   case mh_eMsg_OutunitAlarmReq:
     outunitAlarmReq(hp, op);
@@ -2221,7 +2221,7 @@ fromEvent (
     }
     for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol)) {
       op = LstObj(ol);
-      sendToOutunit(op, mh_eMsg_OutunitClear, 0, NULL, 0);
+      sendToOutunit(op, mh_eMsg_OutunitClear, 0, 0, NULL, 0);
     }
     for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol)) {
       op = LstObj(ol);
@@ -2245,7 +2245,7 @@ fromEvent (
     for (ol = LstFir(&l.outunit_l); ol != LstEnd(&l.outunit_l); ol = LstNex(ol)) {
       op = LstObj(ol);
       if (op->syncedIdx == op->eventIdx)
-	sendToOutunit(op, mh_eMsg_OutunitClear, 0, NULL, 0);
+	sendToOutunit(op, mh_eMsg_OutunitClear, 0, 0, NULL, 0);
     }
     printf( "rt_emon: SimLoadStart\n");
   }
@@ -3352,7 +3352,7 @@ isValidOutunit (
 
     if (op->birthTime.tv_sec != hp->birthTime.tv_sec) {
       if ( hp->type == mh_eMsg_OutunitInfo) {
-	//sendToOutunit(op, mh_eMsg_OutunitClear, 0, NULL, 0);
+	//sendToOutunit(op, mh_eMsg_OutunitClear, 0, 0, NULL, 0);
 	if ( hp->nix == l.head.nix)
 	  handlerEvent(pwr_eSystemEventTypeEnum_OutunitRestart, hp->nix, 1);
 	
@@ -3498,7 +3498,7 @@ outunitAck (
   sApplActive *aap;
 
   op->ackGen = ip->ackGen;
-  sendToOutunit(op, mh_eMsg_Sync, 0, NULL, 0);
+  sendToOutunit(op, mh_eMsg_Sync, 0, 0, NULL, 0);
 
   if ((ap = activeListGet(ip->targetIdx)) == NULL) {
     /* Alarm does not exist */
@@ -3564,7 +3564,7 @@ outunitBlock (
   pwr_tNodeIndex nix;
 
   op->blockGen = ip->blockGen;
-  sendToOutunit(op, mh_eMsg_Sync, 0, NULL, 0);
+  sendToOutunit(op, mh_eMsg_Sync, 0, 0, NULL, 0);
 
   for (bl = LstFir(&l.block_l); bl != LstEnd(&l.block_l); bl = LstNex(bl))
     if (cdh_ObjidIsEqual(ip->object, LstObj(bl)->link.object.Objid))
@@ -3694,7 +3694,7 @@ outunitInfo (
     op->check = 0;
   }
 
-  sendToOutunit(op, mh_eMsg_Sync, 0, NULL, 0);
+  sendToOutunit(op, mh_eMsg_Sync, 0, 0, NULL, 0);
   sendEventListToOutunit(op);
 
 }
@@ -4051,7 +4051,7 @@ reSendEventToOutunit (
     break;
   }
 
-  sts = sendToOutunit(op, mh_eMsg_Event, etp->event, &event.message, size);
+  sts = sendToOutunit(op, mh_eMsg_Event, etp->event, 0, &event.message, size);
 
   return ODD(sts);
 }
@@ -4278,7 +4278,7 @@ sendEventToOutunit (
   pwr_tStatus	sts;
   sEvent	*ep = etp->ep;
 
-  sts = sendToOutunit(op, mh_eMsg_Event, ep->msg.info.EventType, &ep->msg, ep->msgSize);
+  sts = sendToOutunit(op, mh_eMsg_Event, ep->msg.info.EventType, 0, &ep->msg, ep->msgSize);
 
   if (EVEN(sts)) {
 //    errh_Error("%s\n%m", "sendEventToOutunit", sts);
@@ -4326,7 +4326,7 @@ sendMessage (
     target = *qid;
   }
 
-  sts = mh_NetSendMessage(&target, platform, prio, 0, (mh_sHead *)mp, size);
+  sts = mh_NetSendMessage(&target, platform, prio, 0, 0, (mh_sHead *)mp, size);
   if (EVEN(sts) && sts != QCOM__LINKDOWN) {
     errh_Error("%s\n%m", "SendMessage: mh_NetSendMessage", sts);
   }
@@ -4341,6 +4341,7 @@ sendToOutunit (
   sOutunit	*op,
   mh_eMsg	type,
   int		subType,
+  unsigned int	id,  
   void		*msg,
   int		msgSize
 )
@@ -4373,7 +4374,7 @@ sendToOutunit (
   hp->selGen   = op->selGen;    
 
   // printf( "sendToOutunit: eventIdx %d\n", hp->eventIdx); 
-  sts = mh_NetSendMessage(&op->link.qid, &op->link.platform, prio, subType, (mh_sHead *)mp, size);
+  sts = mh_NetSendMessage(&op->link.qid, &op->link.platform, prio, subType, id, (mh_sHead *)mp, size);
   if (EVEN(sts) && sts != QCOM__LINKDOWN) {
     errh_Error("%s\n%m", "SendMessage: mh_NetSendMessage", sts);
   }

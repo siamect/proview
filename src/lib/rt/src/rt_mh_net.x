@@ -471,6 +471,7 @@ struct mh_sOutunitAlarmReq {
 %  co_sPlatform *recPlatform,
 %  int prio,
 %  int subtype,               
+%  unsigned int id,
 %  mh_sHead *hp,
 %  unsigned int size
 %);
