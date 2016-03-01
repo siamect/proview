@@ -224,6 +224,7 @@ int XAtt::object_attr()
     if ( bd[i].flags & gdh_mAttrDef_Shadowed)
       continue;
     if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
+	 bd[i].attr->Param.Info.Flags & PWR_MASK_RTHIDE || 
 	 (bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE &&
 	  bd[i].attr->Param.Info.Flags & PWR_MASK_POINTER))
       continue;

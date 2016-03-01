@@ -6561,9 +6561,10 @@ int	rtt_object_parameters(
 
 	for ( i = 0; i < rows; i++) {
 	  if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
+	       bd[i].attr->Param.Info.Flags & PWR_MASK_RTHIDE || 
 	       (bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE &&
 		bd[i].attr->Param.Info.Flags & PWR_MASK_POINTER))
-	    /* This parameter does not contain any useful information */
+	    /* This parameter does not contain any useful information, or should be hidden */
 	    continue;
 
 	  elements = 1;
@@ -6593,6 +6594,7 @@ int	rtt_object_parameters(
 	idx = 0;
 	for ( i = 0; i < rows; i++) {
 	  if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
+	       bd[i].attr->Param.Info.Flags & PWR_MASK_RTHIDE || 
 	       (bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE &&
 		bd[i].attr->Param.Info.Flags & PWR_MASK_POINTER))
 	    /* This parameter does not contain any useful information */

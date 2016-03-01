@@ -348,7 +348,8 @@ int ItemBaseObject::open_attributes( XNavBrow *brow, double x, double y)
 	continue;
       if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTHIDE &&
 	   ((brow->usertype == brow_eUserType_XNav && 
-	     !((XNav *)brow->userdata)->gbl.show_allattr) ||
+	     !(((XNav *)brow->userdata)->gbl.show_allattr &&
+	       !(bd[i].attr->Param.Info.Flags & PWR_MASK_DEVHIDEVALUE))) ||
 	    brow->usertype == brow_eUserType_XAttNav))
 	continue;
 
