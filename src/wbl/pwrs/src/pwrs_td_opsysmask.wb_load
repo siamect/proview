@@ -141,11 +141,11 @@ SObject pwrs:Type
      EndBody
     EndObject
     !/**
-    !  Operating system is ARM on x86
+    !  Operating system is Linux on ARM
     !*/
     Object ARM_LINUX $Bit
      Body SysBody
-       Attr PgmName = "ARM_X86"
+       Attr PgmName = "ARM_LINUX"
        Attr Text = "Linux on ARM"
        Attr Value = 512
      EndBody
@@ -178,6 +178,16 @@ SObject pwrs:Type
        Attr PgmName = "X86_CYGWIN"
        Attr Text = "Cygwin on x86"
        Attr Value = 4096
+     EndBody
+    EndObject
+    !/**
+    !  Operating system is Linux on ARM64
+    !*/
+    Object ARM64_LINUX $Bit
+     Body SysBody
+       Attr PgmName = "ARM64_LINUX"
+       Attr Text = "Linux on ARM64"
+       Attr Value = 8192
      EndBody
     EndObject
   EndObject

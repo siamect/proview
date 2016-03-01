@@ -2837,6 +2837,7 @@ char *cdh_OpSysToStr( pwr_mOpSys opsys)
   case pwr_mOpSys_X86_64_LINUX: strcpy( str, "x86_64_linux"); break;
   case pwr_mOpSys_X86_64_MACOS: strcpy( str, "x86_64_macos"); break;
   case pwr_mOpSys_ARM_LINUX: strcpy( str, "arm_linux"); break;
+  case pwr_mOpSys_ARM64_LINUX: strcpy( str, "arm64_linux"); break;
   case pwr_mOpSys_X86_64_FREEBSD: strcpy( str, "x86_64_freebsd"); break;
   case pwr_mOpSys_X86_64_OPENBSD: strcpy( str, "x86_64_openbsd"); break;
   case pwr_mOpSys_X86_CYGWIN: strcpy( str, "x86_cygwin"); break;
@@ -2867,6 +2868,7 @@ char *cdh_OpSysToDirStr( pwr_mOpSys opsys)
   case pwr_mOpSys_X86_64_LINUX: strcpy( str, "os_linux/hw_x86_64"); break;
   case pwr_mOpSys_X86_64_MACOS: strcpy( str, "os_macos/hw_x86_64"); break;
   case pwr_mOpSys_ARM_LINUX: strcpy( str, "os_linux/hw_arm"); break;
+  case pwr_mOpSys_ARM64_LINUX: strcpy( str, "os_linux/hw_arm64"); break;
   case pwr_mOpSys_X86_64_FREEBSD: strcpy( str, "os_freebsd/hw_x86_64"); break;
   case pwr_mOpSys_X86_64_OPENBSD: strcpy( str, "os_openbsd/hw_x86_64"); break;
   case pwr_mOpSys_X86_CYGWIN: strcpy( str, "os_cygwin/hw_x86"); break;

@@ -2938,7 +2938,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	// Print custom build file
 	if ( !( opsys == pwr_mOpSys_PPC_LINUX ||
 		opsys == pwr_mOpSys_X86_LINUX ||
-		opsys == pwr_mOpSys_ARM_LINUX))
+		opsys == pwr_mOpSys_ARM_LINUX ||
+		opsys == pwr_mOpSys_ARM64_LINUX))
 	  continue;
 
 	sprintf( fname, pwr_cNameCustomBuild);
@@ -2954,7 +2955,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	fprintf( fp, "#!/bin/bash\n\n");
 	fprintf( fp, "let OpSys_PPC_LINUX=32\n");
 	fprintf( fp, "let OpSys_X86_LINUX=64\n");
-	fprintf( fp, "let OpSys_ARM_LINUX=512\n\n");
+	fprintf( fp, "let OpSys_ARM_LINUX=512\n");
+	fprintf( fp, "let OpSys_ARM64_LINUX=8192\n\n");
 
 	switch ( opsys) {
 	case pwr_mOpSys_PPC_LINUX:
@@ -2965,6 +2967,9 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  break;
 	case pwr_mOpSys_ARM_LINUX:
 	  strcpy( expdir, "os_linux/hw_arm");
+	  break;
+	case pwr_mOpSys_ARM64_LINUX:
+	  strcpy( expdir, "os_linux/hw_arm64");
 	  break;
 	default: ;
 	  strcpy( expdir, "");
@@ -3010,6 +3015,9 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  break;
 	case pwr_mOpSys_ARM_LINUX:
 	  fprintf( fp, "$pwrb_root/os_linux/hw_arm/exp/exe/wb_gcg.sh \"$1\" \"$2\" \"$3\" \"$OpSys_ARM_LINUX\" \"$5\" \"$6\" \"$7\" \"$8\"\n");
+	  break;
+	case pwr_mOpSys_ARM64_LINUX:
+	  fprintf( fp, "$pwrb_root/os_linux/hw_arm64/exp/exe/wb_gcg.sh \"$1\" \"$2\" \"$3\" \"$OpSys_ARM64_LINUX\" \"$5\" \"$6\" \"$7\" \"$8\"\n");
 	  break;
 	default: ;
 	}
@@ -3593,6 +3601,7 @@ pwr_tStatus lfu_check_opt_file( ldh_tSesContext ldhses, char *nodename, int bus_
     case pwr_mOpSys_X86_LINUX:
     case pwr_mOpSys_X86_64_LINUX:
     case pwr_mOpSys_ARM_LINUX:
+    case pwr_mOpSys_ARM64_LINUX:
     case pwr_mOpSys_X86_64_MACOS:
     case pwr_mOpSys_CustomBuild:
       fp << 

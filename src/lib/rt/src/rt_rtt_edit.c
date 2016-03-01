@@ -868,6 +868,8 @@ static int	save_func(	edit_ctx	ctx,
  	      opsys = pwr_mOpSys_X86_64_LINUX;
 	    else if ( cdh_NoCaseStrncmp( arg1_str, "ARM_LINUX", strlen( arg1_str)) == 0)
  	      opsys = pwr_mOpSys_ARM_LINUX;
+	    else if ( cdh_NoCaseStrncmp( arg1_str, "ARM64_LINUX", strlen( arg1_str)) == 0)
+ 	      opsys = pwr_mOpSys_ARM64_LINUX;
 	    else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_MACOS", strlen( arg1_str)) == 0)
  	      opsys = pwr_mOpSys_X86_64_MACOS;
 	    else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_FREEBSD", strlen( arg1_str)) == 0)
@@ -930,7 +932,9 @@ static int	save_func(	edit_ctx	ctx,
 	        opsys = pwr_mOpSys_X86_64_LINUX;
 	      else if ( cdh_NoCaseStrncmp( arg1_str, "ARM_LINUX", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_ARM_LINUX;
-	      else if ( cdh_NoCaseStrncmp( arg1_str, "ARM_MACOS", strlen( arg1_str)) == 0)
+	      else if ( cdh_NoCaseStrncmp( arg1_str, "ARM64_LINUX", strlen( arg1_str)) == 0)
+	        opsys = pwr_mOpSys_ARM64_LINUX;
+	      else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_MACOS", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_X86_64_MACOS;
 	      else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_FREEBSD", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_X86_64_FREEBSD;
@@ -1041,6 +1045,8 @@ static int	generate_func(	edit_ctx	ctx,
 	    opsys = pwr_mOpSys_X86_64_FREEBSD;
 	  else if ( cdh_NoCaseStrncmp( arg1_str, "ARM_LINUX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_ARM_LINUX;
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "ARM64_LINUX", strlen( arg1_str)) == 0)
+	    opsys = pwr_mOpSys_ARM64_LINUX;
 	  else
 	  {
 	    rtt_message('E', "Unknown platform");
@@ -1786,6 +1792,8 @@ static int	dtt_link_func(	edit_ctx	ctx,
 	    opsys = pwr_mOpSys_X86_64_FREEBSD;
 	  else if ( cdh_NoCaseStrncmp( arg1_str, "ARM_LINUX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_ARM_LINUX;
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "ARM64_LINUX", strlen( arg1_str)) == 0)
+	    opsys = pwr_mOpSys_ARM64_LINUX;
 	  else
 	  {
 	    rtt_message('E', "Unknown platform");
@@ -1896,6 +1904,8 @@ static int	dtt_compile_func(	edit_ctx	ctx,
 	    opsys = pwr_mOpSys_X86_64_FREEBSD;
 	  else if ( cdh_NoCaseStrncmp( arg1_str, "ARM_LINUX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_ARM_LINUX;
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "ARM64_LINUX", strlen( arg1_str)) == 0)
+	    opsys = pwr_mOpSys_ARM64_LINUX;
 	  else
 	  {
 	    rtt_message('E', "Unknown platform");
@@ -7809,6 +7819,8 @@ int	dtt_start( char		*programname)
 	  dtt_current_opsys = pwr_mOpSys_X86_64_LINUX;
 	else if ( strcmp( rtt_hw, "arm") == 0)
 	  dtt_current_opsys = pwr_mOpSys_ARM_LINUX;
+	else if ( strcmp( rtt_hw, "arm64") == 0)
+	  dtt_current_opsys = pwr_mOpSys_ARM64_LINUX;
 	else
 	  dtt_current_opsys = pwr_mOpSys_PPC_LINUX;
 #elif defined OS_MACOS
@@ -10651,6 +10663,7 @@ static char *dtt_opsys_to_name( int opsys)
 	  case pwr_mOpSys_X86_LINUX: strcpy( name, "X86_LINUX"); break;
 	  case pwr_mOpSys_X86_64_LINUX: strcpy( name, "X86_64_LINUX"); break;
 	  case pwr_mOpSys_ARM_LINUX: strcpy( name, "ARM_LINUX"); break;
+	  case pwr_mOpSys_ARM64_LINUX: strcpy( name, "ARM64_LINUX"); break;
 	  case pwr_mOpSys_X86_64_MACOS: strcpy( name, "X86_64_MACOS"); break;
 	  case pwr_mOpSys_X86_64_FREEBSD: strcpy( name, "X86_64_FREEBSD"); break;
 	  case pwr_mOpSys_X86_64_OPENBSD: strcpy( name, "X86_64_OPENBSD"); break;

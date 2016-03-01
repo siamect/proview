@@ -659,7 +659,8 @@ typedef enum {
   pwr_mOpSys_X86_64_OPENBSD = 1 << 11,
   pwr_mOpSys_X86_CYGWIN = 1 << 12,
   pwr_mOpSys_X86_64_CYGWIN = 1 << 13,
-  pwr_mOpSys_ = 1 << 14,
+  pwr_mOpSys_ARM64_LINUX = 1 << 14,
+  pwr_mOpSys_ = 1 << 15,
   pwr_mOpSys_VAX_ELN =  1 << 30    /* TODO Remove! */
 } pwr_mOpSys;
 
