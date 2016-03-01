@@ -1594,6 +1594,9 @@ dissect_qcom(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
 	  case mh_eMsg_HandlerSync:
 	    strcpy( info, "HandlerSync");
 	    break;
+	  case mh_eMsg_HandlerAlarmStatus:
+	    strcpy( info, "HandlerAlarmStatus");
+	    break;
 	  case mh_eMsg_OutunitAck:
 	    strcpy( info, "OutunitAck");
 	    break;
@@ -1611,6 +1614,12 @@ dissect_qcom(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
 	    break;
 	  case mh_eMsg_OutunitSync:
 	    strcpy( info, "OutunitSync");
+	    break;
+	  case mh_eMsg_OutunitClear:
+	    strcpy( info, "OutunitClear");
+	    break;
+	  case mh_eMsg_OutunitAlarmReq:
+	    strcpy( info, "OutunitAlarmReq");
 	    break;
 	  case mh_eMsg_ProcDown:
 	    strcpy( info, "ProcDown");

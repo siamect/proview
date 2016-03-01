@@ -10,6 +10,14 @@ typedef enum {
   eEvent_
 } eEvent;
 
+#define pwr_Bit(b) (1<<b)
+#define mSeg__		0
+#define mSeg_first	pwr_Bit(3)
+#define mSeg_middle	pwr_Bit(4)
+#define mSeg_last	pwr_Bit(5)
+#define mSeg_single	(mSeg_first|mSeg_middle|mSeg_last)
+#define mSeg_sequence	(mSeg_first|mSeg_middle|mSeg_last)
+#define mSeg_bcast	pwr_Bit(8)
 
 /* From rt_qcom.h */
 
@@ -95,6 +103,11 @@ enum net_eMsg {
   net_eMsg_fileList,
   net_eMsg_fileListR,
 
+  net_eMsg_getCircBuffer,
+  net_eMsg_getCircBufferR,
+  net_eMsg_updateCircBuffer,
+  net_eMsg_updateCircBufferR,
+
   net_eMsg_,			/* Not a valid message */
   
   net_eMsg_volumes7,            /* Version 7. Internal only */
@@ -119,6 +132,7 @@ enum mh_eMsg {
   mh_eMsg_HandlerDisconnect	= 10,
   mh_eMsg_HandlerHello		= 11,
   mh_eMsg_HandlerSync		= 12,
+  mh_eMsg_HandlerAlarmStatus	= 13,
 
   mh_eMsg_OutunitAck		= 15,
   mh_eMsg_OutunitBlock		= 16,
@@ -126,6 +140,8 @@ enum mh_eMsg {
   mh_eMsg_OutunitHello		= 19,
   mh_eMsg_OutunitInfo		= 20,
   mh_eMsg_OutunitSync		= 21,
+  mh_eMsg_OutunitClear		= 22,
+  mh_eMsg_OutunitAlarmReq	= 23,
 
   mh_eMsg_ProcDown		= 24,
 
