@@ -103,6 +103,9 @@ public:
   pwr_tEnum connection;
   pwr_tFloat32 qcom_min_resend_time;
   pwr_tFloat32 qcom_max_resend_time;
+  pwr_tUInt32 qcom_export_buf_quota;
+  pwr_tFloat32 qcom_ack_delay;
+  pwr_tUInt32 qcom_segment_size;
 };
       
 
@@ -1557,6 +1560,27 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	a.value( &nc.qcom_max_resend_time);
 	if ( !a) return sts;
 	  
+	// Get attribute QComExportBufSize
+	a = sp->attribute( nodeo.oid(), "RtBody", "QComExportBufQuota");
+	if ( !a) return a.sts();
+	
+	a.value( &nc.qcom_export_buf_quota);
+	if ( !a) return sts;
+	  
+	// Get attribute QComAckDelay
+	a = sp->attribute( nodeo.oid(), "RtBody", "QComAckDelay");
+	if ( !a) return a.sts();
+	
+	a.value( &nc.qcom_ack_delay);
+	if ( !a) return sts;
+	  
+	// Get attribute QComSegmentSize
+	a = sp->attribute( nodeo.oid(), "RtBody", "QComSegmentSize");
+	if ( !a) return a.sts();
+	
+	a.value( &nc.qcom_segment_size);
+	if ( !a) return sts;
+	  
 	if ( !strcmp( nc.nodename, "")) {
 	  char msg[200];
 	  sprintf( msg, "Error in NodeConfig object '%s', NodeName is missing\n",
@@ -1659,6 +1683,29 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	a.value( &nc.qcom_max_resend_time);
 	if ( !a) return sts;
 
+	// Get attribute QComExportBufSize
+	a = sp->attribute( nodeo.oid(), "RtBody", "QComExportBufQuota");
+	if ( !a) return a.sts();
+	
+	a.value( &nc.qcom_export_buf_quota);
+	if ( !a) return sts;
+	  
+	// Get attribute QComAckDelay
+	a = sp->attribute( nodeo.oid(), "RtBody", "QComAckDelay");
+	if ( !a) return a.sts();
+	
+	a.value( &nc.qcom_ack_delay);
+	if ( !a) return sts;
+	  
+	if ( nodeo.cid() == pwr_cClass_SevNodeConfig) {
+	  // Get attribute QComSegmentSize
+	  a = sp->attribute( nodeo.oid(), "RtBody", "QComSegmentSize");
+	  if ( !a) return a.sts();
+
+	  a.value( &nc.qcom_segment_size);
+	  if ( !a) return sts;	  
+	}
+	
 	/* Check that the name is in the global volume list */
 	found = 0;
 	volumelist_ptr = volumelist;
@@ -1699,6 +1746,43 @@ pwr_tStatus lfu_SaveDirectoryVolume(
       default: ;
       }
     }
+
+    // Node config syntax check
+    for ( int i = 0; i < (int)nodevect.size(); i++) {
+      for ( int j = i+1; j < (int)nodevect.size(); j++) {
+	if ( nodevect[i].vid == nodevect[j].vid) {
+	  char msg[200];
+	  pwr_tOName oname1, oname2;
+	  sts = ldh_ObjidToName( ldhses, nodevect[i].oid, ldh_eName_Hierarchy, 
+				 oname1, sizeof(oname1), &size);
+	  if ( EVEN(sts)) return sts;
+	  sts = ldh_ObjidToName( ldhses, nodevect[j].oid, ldh_eName_Hierarchy, 
+				 oname2, sizeof(oname2), &size);
+	  if ( EVEN(sts)) return sts;
+
+	  sprintf( msg, "Error in node '%s' and '%s', Volume is equal\n",
+		   oname1, oname2);
+	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	  syntax_error = 1;
+	}
+	if ( strcmp( nodevect[i].address, nodevect[j].address) == 0) {
+	  char msg[200];
+	  pwr_tOName oname1, oname2;
+	  sts = ldh_ObjidToName( ldhses, nodevect[i].oid, ldh_eName_Hierarchy, 
+				 oname1, sizeof(oname1), &size);
+	  if ( EVEN(sts)) return sts;
+	  sts = ldh_ObjidToName( ldhses, nodevect[j].oid, ldh_eName_Hierarchy, 
+				 oname2, sizeof(oname2), &size);
+	  if ( EVEN(sts)) return sts;
+
+	  sprintf( msg, "Error in node '%s' and '%s', Address is equal\n",
+		   oname1, oname2);
+	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	  syntax_error = 1;
+	}
+      }
+    }	       
+
     // Print file
     for ( wb_object nodeo = buso.first(); nodeo; nodeo = nodeo.after()) {
 
@@ -1735,10 +1819,11 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  if ( qcom_auto_dis == pwr_eYesNoEnum_Yes && i != idx)
 	    continue;
 
-	  fprintf( fp, "%s %s %s %d %d %d %d\n", nc.nodename, 
+	  fprintf( fp, "%s %s %s %d %d %d %d %d %f %d\n", nc.nodename, 
 		   cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, 
 		   nc.connection, int(nc.qcom_min_resend_time * 1000), 
-		   int(nc.qcom_max_resend_time * 1000));
+		   int(nc.qcom_max_resend_time * 1000), nc.qcom_export_buf_quota, nc.qcom_ack_delay,
+		   nc.qcom_segment_size);
 	}
 
 	// Add specific FriendNodes for the node
@@ -1799,6 +1884,20 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    a.value( &nc.qcom_max_resend_time);
 	    if ( !a) return sts;
 	  
+	    // Get attribute QComExportBufSize
+	    a = sp->attribute( nodeo.oid(), "RtBody", "QComExportBufQuota");
+	    if ( !a) return a.sts();
+	    
+	    a.value( &nc.qcom_export_buf_quota);
+	    if ( !a) return sts;
+	  
+	    // Get attribute QComAckDelay
+	    a = sp->attribute( nodeo.oid(), "RtBody", "QComAckDelay");
+	    if ( !a) return a.sts();
+	    
+	    a.value( &nc.qcom_ack_delay);
+	    if ( !a) return sts;
+	  
 	    /* Check that the name is in the global volume list */
 	    found = 0;
 	    volumelist_ptr = volumelist;
@@ -1818,10 +1917,11 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      syntax_error = 1;
 	    }
 
-	    fprintf( fp, "%s %s %s %d %d %d %d\n", nc.nodename, 
+	    fprintf( fp, "%s %s %s %d %d %d %d %d %f %d\n", nc.nodename, 
 		     cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, 
 		     nc.connection, (int)(nc.qcom_min_resend_time * 1000), 
-		     (int)(nc.qcom_max_resend_time * 1000));
+		     (int)(nc.qcom_max_resend_time * 1000), nc.qcom_export_buf_quota, nc.qcom_ack_delay,
+		     nc.qcom_segment_size);
 	    break;
 	  }
 	  default: ;
