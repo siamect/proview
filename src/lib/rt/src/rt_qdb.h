@@ -443,8 +443,8 @@ typedef struct {
   qdb_mLink		flags;
   int			win_count;
   int			win_max;
-  int			rtt_rxmax;
-  int			rtt_rxmin;
+  float			rtt_rxmax;
+  float			rtt_rxmin;
   float			rtt_rtt;
   float			rtt_srtt;
   float			rtt_var;
@@ -453,12 +453,16 @@ typedef struct {
   qdb_sAck		rack;
   int			seq;
   pwr_tBoolean		pending_rack;
-  time_tClock		rack_tmo;
+  pwr_tTime		rack_tmo;
   qcom_tBus		bus;
   struct sockaddr_in	sa;
   pwr_tDeltaTime	timer;
+  int			export_quota;
+  int			export_alloc_cnt;
+  int			export_purge_cnt;
   int			err_red;
   int			err_seq;
+  int			err_seg_seq;
 } qdb_sLink;
 
 typedef char qdb_tQname[32];
@@ -677,6 +681,9 @@ typedef struct {
   qcom_eNodeConnection	connection;     /* Type of connection */
   pwr_tUInt32		min_resend_time;
   pwr_tUInt32		max_resend_time;
+  pwr_tUInt32		export_buf_quota;
+  pwr_tFloat32		ack_delay;
+  pwr_tUInt32		seg_size;
 } qdb_sNode;
 
 typedef struct {

@@ -74,6 +74,9 @@ addNode (
   np->connection = nep->connection;
   np->min_resend_time = nep->min_resend_time;
   np->max_resend_time = nep->max_resend_time;
+  np->export_buf_quota = nep->export_buf_quota;
+  np->ack_delay = nep->ack_delay;
+  np->seg_size = nep->seg_size;
 
   return np;
 }
@@ -121,7 +124,7 @@ qini_ParseFile (
 )
 {
   pwr_tStatus	sts = 1;
-  int		n;
+  int		n, n2;
   char		*s;
   char		buffer[256];
   int		error = 0;
@@ -129,9 +132,12 @@ qini_ParseFile (
   char		s_nid[80];
   char		s_naddr[80];
   char		s_port[80];
-  char		s_connection[80];
-  char		s_min_resend_time[80];
-  char		s_max_resend_time[80];
+  char		s_connection[10];
+  char		s_min_resend_time[20];
+  char		s_max_resend_time[20];
+  char		s_export_buf_quota[20];
+  char		s_ack_delay[20];
+  char		s_seg_size[20];
   pwr_tNodeId	nid;
   struct in_addr	naddr;
   qini_sNode	*nep;
@@ -144,8 +150,8 @@ qini_ParseFile (
       continue;
     }
 
-    n = sscanf(s, "%s %s %s %s %s %s %s", name, s_nid, s_naddr, s_port, s_connection,
-	       s_min_resend_time, s_max_resend_time);
+    n = sscanf(s, "%s %s %s %s %s %s %s %s %s %s", name, s_nid, s_naddr, s_port, s_connection,
+	       s_min_resend_time, s_max_resend_time, s_export_buf_quota, s_ack_delay, s_seg_size);
     if (n < 3) {
       errh_Error("error in line, <wrong number of arguments>, skip to next line.\n>> %s", s);
       (*errors)++;
@@ -215,6 +221,26 @@ qini_ParseFile (
     if (n > 4) nep->connection = atoi(s_connection);
     if (n > 5) nep->min_resend_time = atoi(s_min_resend_time);
     if (n > 6) nep->max_resend_time = atoi(s_max_resend_time);
+    if (n > 7) 
+      nep->export_buf_quota = atoi(s_export_buf_quota);
+    else
+      nep->export_buf_quota = 30000;
+    if (n > 8) {
+      n2 = sscanf( s_ack_delay, "%f", &nep->ack_delay);
+      if ( n2 != 1)
+	nep->ack_delay = 0.01;	
+    }
+    else
+      nep->ack_delay = 0.01;
+    if (n > 9) {
+      nep->seg_size = atoi(s_seg_size);
+      if ( nep->seg_size == 0)
+	nep->seg_size = 8192;
+    }
+    else
+      nep->seg_size = 8192;
+    
+
     memset(&arpreq, 0, sizeof(arpreq));
     memcpy(&arpreq.arp_pa.sa_data, &naddr, sizeof(naddr));
     inet_GetArpEntry(&sts, 0, &arpreq);

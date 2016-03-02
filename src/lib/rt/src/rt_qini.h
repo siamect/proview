@@ -112,6 +112,9 @@ typedef struct {
   unsigned int		min_resend_time;
   unsigned int		max_resend_time;
   pwr_tBoolean		connect;
+  pwr_tUInt32		export_buf_quota;
+  pwr_tFloat32		ack_delay;
+  pwr_tUInt32		seg_size;
 } qini_sNode;    
 
 int			qini_ParseFile (FILE*, tree_sTable*, int*, int*, int*);

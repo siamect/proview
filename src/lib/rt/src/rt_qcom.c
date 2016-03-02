@@ -726,6 +726,10 @@ qcom_Put (
     bp = inPool(sts, pp->data);
     if (bp == NULL) {
       bp = qdb_Alloc(sts, qdb_eBuffer_base, pp->size);
+      if ( bp == NULL) {
+	*sts = QDB__QUOTAEXCEEDED;
+	break;
+      }
       memcpy((char *)(bp + 1), pp->data, pp->size);
     } else {
       /* check that this buffer is really owned by this process */

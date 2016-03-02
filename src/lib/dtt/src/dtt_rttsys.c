@@ -12832,8 +12832,8 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
             menu_ptr->value_ptr = (char *) &np->link.pending_rack;
             menu_ptr++;
 
-            /* rack_tmo */
-            menu_ptr->value_ptr = (char *) &np->link.rack_tmo;
+            /* ack delay */
+            menu_ptr->value_ptr = (char *) &np->ack_delay;
             menu_ptr++;
 
             /* bus */
@@ -12864,6 +12864,10 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
 #endif
             menu_ptr++;
 
+            /* seg_size */
+            menu_ptr->value_ptr = (char *) &np->seg_size;
+            menu_ptr++;
+
             /* timer */
             menu_ptr->value_ptr = (char *) &np->link.timer;
             menu_ptr++;
@@ -12874,6 +12878,22 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
 
             /* err_seq */
             menu_ptr->value_ptr = (char *) &np->link.err_seq;
+            menu_ptr++;
+
+            /* err_seg_seq */
+            menu_ptr->value_ptr = (char *) &np->link.err_seg_seq;
+            menu_ptr++;
+
+            /* export_quota */
+            menu_ptr->value_ptr = (char *) &np->link.export_quota;
+            menu_ptr++;
+
+            /* export_alloc_cnt */
+            menu_ptr->value_ptr = (char *) &np->link.export_alloc_cnt;
+            menu_ptr++;
+
+            /* export_purge_cnt */
+            menu_ptr->value_ptr = (char *) &np->link.export_purge_cnt;
             menu_ptr++;
 
             /* node name */

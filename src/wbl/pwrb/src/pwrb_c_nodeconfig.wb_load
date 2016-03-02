@@ -197,6 +197,37 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
+      !/**
+      ! QCom max export buffer quota.
+      !*/
+      Object QComExportBufQuota $Attribute 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      ! QCom acknowledge delay time in seconds.
+      !*/
+      Object QComAckDelay $Attribute 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      ! QCom segment size.
+      !*/
+      Object QComSegmentSize $Attribute 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+    EndObject
+    Object Template NodeConfig
+      Body RtBody
+        Attr QComExportBufQuota = 600000
+        Attr QComAckDelay = 0.002
+        Attr QComSegmentSize = 1500
+      EndBody
     EndObject
     Object PostCreate $DbCallBack
       Body SysBody
