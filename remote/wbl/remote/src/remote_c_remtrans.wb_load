@@ -154,8 +154,11 @@ SObject Remote:Class
       ! [1] - Address Low byte (0 - 255)
       ! 
       ! TCP/ip and UDP/ip
-      ! [0] - Message address part 1 ( 0 - 65535)
-      ! [1] - Message address part 2 ( 0 - 65535)
+      ! [0] - Message address part 1 (0 - 65535)
+      ! [1] - Message address part 2 (0 - 65535)
+      ! 
+      ! QCom
+      ! [0] - Message address (0 - 255)
       ! 
       ! MODBUS
       ! [0] - Slave address

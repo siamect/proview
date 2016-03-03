@@ -187,6 +187,30 @@ static void AddTransports()
     sts = gdh_GetNextObject (objid, &objid);
   }
 
+  /* Get and configure all QCom remnodes, one process for each remnode */
+
+  sts = gdh_GetClassList (pwr_cClass_RemnodeQCom, &objid);
+  while ( ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer(objid, &objref);
+    sprintf(tp[tpcount].path, "rs_remote_qcom"); 
+    tp[tpcount].id = ((pwr_sClass_RemnodeQCom *) objref)->MyQueue;
+    tp[tpcount].disable = &((pwr_sClass_RemnodeQCom *) objref)->Disable;
+    tp[tpcount].restart_limit = &((pwr_sClass_RemnodeQCom *) objref)->RestartLimit;
+    tp[tpcount].restarts = &((pwr_sClass_RemnodeQCom *) objref)->RestartCount;
+    ((pwr_sClass_RemnodeQCom *) objref)->RestartCount = 0;
+    tp[tpcount].objid = objid;
+    tp[tpcount].objref = objref;
+    tp[tpcount].classid = pwr_cClass_RemnodeQCom;
+    tp[tpcount].cpid = -1;
+    tp[tpcount].first = true;
+      
+    remcfgp->RemNodeObjects[tpcount] = objid;
+
+    tpcount++;
+    sts = gdh_GetNextObject (objid, &objid);
+  }
+
   /* Get and configure all UDP remnodes, one process for each remnode */
 
   sts = gdh_GetClassList (pwr_cClass_RemnodeUDP, &objid);

@@ -1726,7 +1726,7 @@ int XNav::show_remnode()
   strcpy( th.title[th.table_cnt++], "Description");
   new ItemTableHeader( brow, this, "Title", &th,  NULL, flow_eDest_IntoLast);
 
-  for ( int i = 0; i < 8; i++) {
+  for ( int i = 0; i < 9; i++) {
     switch ( i) {
     case 0: cid = pwr_cClass_RemnodeUDP; break;
     case 1: cid = pwr_cClass_RemnodeTCP; break;
@@ -1736,6 +1736,7 @@ int XNav::show_remnode()
     case 5: cid = pwr_cClass_RemnodeModbus; break;
     case 6: cid = pwr_cClass_RemnodeMQ; break;
     case 7: cid = pwr_cClass_RemnodeWMQ; break;
+    case 8: cid = pwr_cClass_RemnodeQCom; break;
     }
 
     sts = gdh_GetClassList( cid, &objid);
@@ -1786,6 +1787,11 @@ int XNav::show_remnode()
       case 7: 
 	strncpy( id, ((pwr_sClass_RemnodeWMQ *)object_ptr)->Id, sizeof(id));
 	strncpy( description, ((pwr_sClass_RemnodeWMQ *)object_ptr)->Description, 
+		 sizeof(description));
+	break;
+      case 8: 
+	strncpy( id, ((pwr_sClass_RemnodeQCom *)object_ptr)->Id, sizeof(id));
+	strncpy( description, ((pwr_sClass_RemnodeQCom *)object_ptr)->Description, 
 		 sizeof(description));
 	break;
       }
