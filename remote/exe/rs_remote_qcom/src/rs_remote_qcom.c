@@ -127,14 +127,14 @@ unsigned int qcom_receive()
 	search_remtrans = false;
 	sts = RemTrans_Receive(remtrans, (char *) get.data, get.size);
 	if (sts != STATUS_OK && sts != STATUS_BUFF) 
-	  errh_Error("Error from RemTrans_Receive, queue %d, status %d", rn_qcom->MyQueue, sts, 0);
+	  errh_Error("Error from RemTrans_Receive, queue %d, status %d", rn_qcom->ReceiveQueue, sts, 0);
 	break;
       }
       remtrans = (remtrans_item *) remtrans->next;
     }
     if (search_remtrans) {
       rn_qcom->ErrCount++;
-      errh_Info("No remtrans for received message, queue %d, class ", rn_qcom->MyQueue, get.type.s, 0);
+      errh_Info("No remtrans for received message, queue %d, class ", rn_qcom->ReceiveQueue, get.type.s, 0);
     }
 
     if ( get.data)
@@ -180,10 +180,13 @@ unsigned int qcom_send(remnode_item *remnode,
   put.reply.qix = 0;
   put.reply.nid = 0;
 
+  if ( remtrans->ReplacePrev)
+    put.msg_id = remtrans->Address[0] + 1;
+
   qcom_Put(&sts, &target_qid, &put);
   if ( EVEN(sts)) {
     remtrans->ErrCount++;
-    errh_Error("Send failed, queue %d, QCom status %d", rn_qcom->MyQueue, sts, 0);
+    errh_Error("Send failed, queue %d, QCom status %d", rn_qcom->ReceiveQueue, sts, 0);
     if (debug) printf("Send failed sts:%d\n", (int) sts);
   }  
 			
@@ -257,7 +260,7 @@ int main(int argc, char *argv[])
     exit(sts);
   }
 
-  if ( !rn_qcom->MyQueue && !rn_qcom->TargetQueue) {
+  if ( !rn_qcom->ReceiveQueue && !rn_qcom->TargetQueue) {
     errh_Fatal("Process terminated, neither send or receive queue configured, %s", id);
     errh_SetStatus(PWR__SRVTERM);
     exit(sts);
@@ -289,14 +292,14 @@ int main(int argc, char *argv[])
   }
 
   /* Create queue */
-  if ( rn_qcom->MyQueue) {
+  if ( rn_qcom->ReceiveQueue) {
     qattr.type = qcom_eQtype_private;
     qattr.quota = 100;
 
     local_qid.nid = 0;
-    local_qid.qix = rn_qcom->MyQueue;
+    local_qid.qix = rn_qcom->ReceiveQueue;
 
-    sprintf( queue_name, "RemQue%d", rn_qcom->MyQueue);
+    sprintf( queue_name, "RemQue%d", rn_qcom->ReceiveQueue);
 
     qcom_CreateQ(&sts, &local_qid, &qattr, queue_name);
     if ( sts == QCOM__QALLREXIST) {
@@ -354,7 +357,7 @@ int main(int argc, char *argv[])
     }   
     aproc_TimeStamp(TIME_INCR, 5);
 
-    if ( rn_qcom->MyQueue)
+    if ( rn_qcom->ReceiveQueue)
       sts = qcom_receive();
     else
       RemoteSleep(TIME_INCR);

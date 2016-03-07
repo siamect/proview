@@ -131,13 +131,13 @@ SObject Remote:Class
       ! The WF_DQF delivery mode delivers the message to the remote
       ! recovery journal and blocks for verification or timeout.
       ! The NN_MEM delivery mode delivers the message to the
-      ! destination queue and doesn\u2019t wait for any verification at all.
+      ! destination queue and doesn't wait for any verification at all.
       ! The SAF function puts the message in the local recovery journal
       ! if the link is down. When using SAF, DMQ handles the
       ! retransmission meaning that we (Proview) can forget the
       ! message and treat it as sent. This works on DMQ 3.2 but is not
       ! supported in the earlier version 3.0.
-      ! The DISC function tells DMQ to discard the message if it isn\u2019t
+      ! The DISC function tells DMQ to discard the message if it isn't
       ! deliverable. Can be used with WF_DQF along with the remote
       ! buffering mechanism.
       ! For a deeper description of delivery modes, consult the DMQ
@@ -231,6 +231,17 @@ SObject Remote:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
+      EndObject
+      !/**
+      !  When set, old messages in the outgoing buffer are replace by new ones. 
+      !  This can be used for cyclic transactions and ensures that the outgoing buffer 
+      !  is not filled with obsolete messages in times of bad network.
+      !  Only implemented for QCom.
+      !*/
+      Object ReplacePrev $Attribute 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	EndBody
       EndObject
       !/**
       ! Current number or stored messages.

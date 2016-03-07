@@ -86,7 +86,7 @@ SObject Remote:Class
       !  Number for queue used to receive messages on the current node.
       !  Can be set to 0 if no receive transactions exist.
       !*/
-      Object MyQueue $Attribute 3
+      Object ReceiveQueue $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
@@ -199,10 +199,6 @@ SObject Remote:Class
     Object Template RemnodeQCom
       Body RtBody
         Attr Prio = 15
-	Attr MyQueue = 0
-	Attr TargetQueue = 0
-	Attr Disable = 0
-	Attr RestartCount = 0
 	Attr RestartLimit = 100
 	Attr ScanTime = 0.1
 	Attr Id = "QCom"
