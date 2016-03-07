@@ -191,6 +191,7 @@
     ge_eDynPrio_MethodPulldownMenu,
     ge_eDynPrio_ScrollingText,
     ge_eDynPrio_ColorThemeLightness,
+    ge_eDynPrio_DigSwap,
 
     // This should always be last
     ge_eDynPrio_Script  = 9998,
@@ -243,7 +244,8 @@
     ge_mDynType2_DigFourShift  	= 1 << 3,
     ge_mDynType2_ScrollingText 	= 1 << 4,
     ge_mDynType2_ColorThemeLightness = 1 << 5,
-    ge_mDynType2_DigBackgroundColor = 1 << 6
+    ge_mDynType2_DigBackgroundColor = 1 << 6,
+    ge_mDynType2_DigSwap       	= 1 << 7
   } ge_mDynType2;
 
   //! Action types.
@@ -359,6 +361,7 @@
     ge_eSave_ScrollingText	       	= 42,
     ge_eSave_ColorThemeLightness       	= 43,
     ge_eSave_DigBackgroundColor       	= 44,
+    ge_eSave_DigSwap		       	= 45,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -582,6 +585,8 @@
     ge_eSave_DigBackgroundColor_color   = 4401,
     ge_eSave_DigBackgroundColor_instance = 4402,
     ge_eSave_DigBackgroundColor_instance_mask = 4403,
+    ge_eSave_DigSwap_attribute 		= 4500,
+    ge_eSave_DigSwap_reset_value       	= 4501,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -1107,7 +1112,7 @@ class GeDigColor : public GeDynElem {
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
 
-//! Set the supplied fillcolor when the value is high.
+//! Set the supplied backgroundcolor when the value is high.
 class GeDigBackgroundColor : public GeDynElem {
  public:
   pwr_tAName attribute;		//!< Database reference for digital attribute.
@@ -1941,7 +1946,7 @@ class GeHostObject : public GeDynElem {
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
 
-//! Play sound specified by a Sound or SoundSequence object.
+ //! Play sound specified by a Sound or SoundSequence object.
 class GeDigSound : public GeDynElem {
  public:
   pwr_tAName attribute;
@@ -1997,6 +2002,40 @@ class GeColorThemeLightness : public GeDynElem {
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
+};
+
+//! Set the supplied backgroundcolor when the value is high.
+class GeDigSwap : public GeDynElem {
+ public:
+  pwr_tAName attribute;		//!< Database reference for digital attribute.
+  pwr_tBoolean reset_value;
+
+  pwr_tBoolean *p;
+  pwr_tSubid subid;
+  int size;
+  graph_eDatabase db;
+  int inverted;
+  bool first_scan;
+  pwr_tBoolean old_value;
+  int a_typeid;
+  unsigned int bitmask;
+
+  GeDigSwap( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_DigSwap, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigSwap), 
+    reset_value(0), bitmask(0)
+    { strcpy( attribute, "");}
+  GeDigSwap( const GeDigSwap& x) : 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), reset_value(x.reset_value)
+    { strcpy( attribute, x.attribute); }
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
+  void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
 
 //! Display the methods popup menu.

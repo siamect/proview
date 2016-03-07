@@ -465,6 +465,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeColorThemeLightness((const GeColorThemeLightness&) *elem); break;
     case ge_mDynType2_DigBackgroundColor:
       e = new GeDigBackgroundColor((const GeDigBackgroundColor&) *elem); break;
+    case ge_mDynType2_DigSwap:
+      e = new GeDigSwap((const GeDigSwap&) *elem); break;
     default: ;
     }
     switch( elem->action_type1) {
@@ -601,6 +603,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_ScrollingText: e = (GeDynElem *) new GeScrollingText(this); break;
       case ge_eSave_ColorThemeLightness: e = (GeDynElem *) new GeColorThemeLightness(this); break;
       case ge_eSave_DigBackgroundColor: e = (GeDynElem *) new GeDigBackgroundColor(this); break;
+      case ge_eSave_DigSwap: e = (GeDynElem *) new GeDigSwap(this); break;
       case ge_eSave_Animation: e = (GeDynElem *) new GeAnimation(this); break;
       case ge_eSave_Video: e = (GeDynElem *) new GeVideo(this); break;
       case ge_eSave_Bar: e = (GeDynElem *) new GeBar(this); break;
@@ -1568,6 +1571,9 @@ GeDynElem *GeDyn::create_dyn2_element( int mask, int instance)
   case ge_mDynType2_DigBackgroundColor:
     e = (GeDynElem *) new GeDigBackgroundColor(this, (ge_mInstance)instance);
     break;
+  case ge_mDynType2_DigSwap:
+    e = (GeDynElem *) new GeDigSwap(this, (ge_mInstance)instance);
+    break;
   default: ;
   }
   return e;
@@ -1773,6 +1779,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
       break;
     case ge_mDynType2_DigBackgroundColor:
       e = (GeDynElem *) new GeDigBackgroundColor((GeDigBackgroundColor&) x);
+      break;
+    case ge_mDynType2_DigSwap:
+      e = (GeDynElem *) new GeDigSwap((GeDigSwap&) x);
       break;
     default: ;
     }
@@ -7160,6 +7169,173 @@ int GeDigBackgroundColor::scan( grow_tObject object)
 }
 
 int GeDigBackgroundColor::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
+  return 1;
+}
+
+void GeDigSwap::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  strcpy( attrinfo[i].name, "DigSwap.Attribute");
+  attrinfo[i].value = attribute;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute);
+
+  strcpy( attrinfo[i].name, "DigSwap.ResetValue");
+  attrinfo[i].value = &reset_value;
+  attrinfo[i].type = glow_eType_Boolean;
+  attrinfo[i++].size = sizeof( reset_value);
+
+  *item_count = i;
+}
+
+void GeDigSwap::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
+{
+  (*cnt)--;
+  if ( *cnt == 0) {
+    char msg[200];
+
+    strncpy( attribute, attr_name, sizeof( attribute));
+    if ( instance == ge_mInstance_1) {
+      snprintf( msg, sizeof(msg), "DigSwap.Attribute = %s", attr_name);
+    }
+    else {
+      snprintf( msg, sizeof(msg), "DigSwap%d.Attribute = %s", GeDyn::instance_to_number( instance),
+		attr_name);
+    }
+    msg[sizeof(msg)-1] = 0;
+    dyn->graph->message( 'I', msg);
+  }
+}
+
+void GeDigSwap::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
+void GeDigSwap::save( ofstream& fp)
+{
+  fp << int(ge_eSave_DigSwap) << endl;
+  fp << int(ge_eSave_DigSwap_attribute) << FSPACE << attribute << endl;
+  fp << int(ge_eSave_DigSwap_reset_value) << FSPACE << reset_value << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeDigSwap::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[40];
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDigSwap: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+      case ge_eSave_DigSwap: break;
+      case ge_eSave_DigSwap_attribute:
+        fp.get();
+        fp.getline( attribute, sizeof(attribute));
+        break;
+      case ge_eSave_DigSwap_reset_value: fp >> reset_value; break;
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeDigSwap:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeDigSwap::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+  int		attr_type, attr_size;
+  pwr_tAName   	parsed_name;
+  int		sts;
+
+  size = 4;
+  p = 0;
+  db = dyn->parse_attr_name( attribute, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp( parsed_name,"") == 0)
+    return 1;
+
+  get_bit( parsed_name, attr_type, &bitmask);
+
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+  a_typeid = attr_type;
+
+  if ( EVEN(sts)) return sts;
+
+  trace_data->p = &pdummy;
+  first_scan = true;
+  return 1;
+}
+
+int GeDigSwap::disconnect( grow_tObject object)
+{
+  if ( p && db == graph_eDatabase_Gdh)
+    gdh_UnrefObjectInfo( subid);
+  p = 0;
+  return 1;
+}
+
+int GeDigSwap::scan( grow_tObject object)
+{
+  pwr_tBoolean val = *p;
+
+  if ( !get_dig( &val, p, a_typeid, bitmask))
+    return 1;
+
+  if ( first_scan) {
+    old_value = val;
+    first_scan = 0;
+    return 1;
+  }
+    
+  if ( inverted)
+    val = !val;
+
+  if ( old_value == val) {
+    // No change since last time
+    return 1;
+  }
+
+  if ( val) {
+    if ( reset_value) {
+      int		attr_type, attr_size;
+      pwr_tAName   	parsed_name;
+      pwr_tStatus	sts;
+
+      dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
+      switch ( attr_type) {
+      case pwr_eType_Boolean: {
+	pwr_tBoolean ivalue = 0;
+	sts = gdh_SetObjectInfo( parsed_name, &ivalue, sizeof(ivalue));
+	break;
+      }
+      default: ;
+      }
+    }
+
+    dyn->graph->swap(0);
+    dyn->graph->swap(1);
+    return GLOW__TERMINATED;
+  }
+  old_value = val;
+
+  return 1;
+}
+
+int GeDigSwap::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
   return 1;
 }

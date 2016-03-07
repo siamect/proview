@@ -128,6 +128,7 @@ public class Dyn {
     public static final int mDynType2_ScrollingText            	= 1 << 4;
     public static final int mDynType2_ColorThemeLightness       = 1 << 5;
     public static final int mDynType2_DigBackgroundColor        = 1 << 6;
+    public static final int mDynType2_DigSwap		        = 1 << 7;
 
     public static final int mActionType1_No			= 0;
     public static final int mActionType1_Inherit		= 1 << 0;
@@ -217,6 +218,7 @@ public class Dyn {
     public static final int eDynPrio_MethodPulldownMenu	       	= 55;
     public static final int eDynPrio_ScrollingText	       	= 56;
     public static final int eDynPrio_ColorThemeLightness       	= 57;
+    public static final int eDynPrio_DigSwap		       	= 58;
     public static final int eDynPrio_Script  			= 9998;
     public static final int eDynPrio_Command  			= 9999;
     public static final int eDynPrio_CloseGraph 		= 10000;
@@ -259,6 +261,7 @@ public class Dyn {
     public static final int eSave_ScrollingText             	= 42;
     public static final int eSave_ColorThemeLightness        	= 43;
     public static final int eSave_DigBackgroundColor        	= 44;
+    public static final int eSave_DigSwap	        	= 45;
     public static final int eSave_PopupMenu	       		= 50;
     public static final int eSave_SetDig	       		= 51;
     public static final int eSave_ResetDig	       		= 52;
@@ -482,6 +485,8 @@ public class Dyn {
     public static final int eSave_DigBackgroundColor_color      = 4401;
     public static final int eSave_DigBackgroundColor_instance   = 4402;
     public static final int eSave_DigBackgroundColor_instance_mask = 4403;
+    public static final int eSave_DigSwap_attribute  		= 4500;
+    public static final int eSave_DigSwap_reset_value  		= 4501;
     public static final int eSave_PopupMenu_ref_object      	= 5000;
     public static final int eSave_SetDig_attribute		= 5100;
     public static final int eSave_SetDig_instance		= 5101;
@@ -809,6 +814,8 @@ public class Dyn {
 		e = new DynColorThemeLightness((DynColorThemeLightness) x.elements.get(i)); break;
 	    case Dyn.mDynType2_DigBackgroundColor:
 		e = new DynDigBackgroundColor((DynDigBackgroundColor) x.elements.get(i)); break;
+	    case Dyn.mDynType2_DigSwap:
+		e = new DynDigSwap((DynDigSwap) x.elements.get(i)); break;
 	    default: ;
 	    }
 	    switch( x.elements.get(i).action_type1) {
@@ -1072,6 +1079,9 @@ public class Dyn {
 	    case mDynType2_DigBackgroundColor:
 		e = (DynElem) new DynDigBackgroundColor((DynDigBackgroundColor) x);
 		break;
+	    case mDynType2_DigSwap:
+		e = (DynElem) new DynDigSwap((DynDigSwap) x);
+		break;
 	    default: ;
 	    }
 	}
@@ -1202,6 +1212,9 @@ public class Dyn {
 		    break;
 		case Dyn.eSave_DigBackgroundColor: 
 		    elem = (DynElem) new DynDigBackgroundColor(this); 
+		    break;
+		case Dyn.eSave_DigSwap: 
+		    elem = (DynElem) new DynDigSwap(this); 
 		    break;
 		case Dyn.eSave_Animation: 
 		    elem = (DynElem) new DynAnimation(this); 
@@ -5376,6 +5389,135 @@ public class Dyn {
 		
 	    } catch ( Exception e) {
 		System.out.println( "IOException DynDigBackgroundColor");
+	    }
+	}
+
+    }
+
+    public class DynDigSwap extends DynElem {
+	String attribute;
+	int reset_value;
+	PwrtRefId subid;
+	int p;
+	int database;
+	boolean inverted;
+	boolean attrFound = false;
+	boolean oldValue;
+	boolean firstScan = true;
+	int bitmask;
+	int a_typeid;
+
+	public DynDigSwap( Dyn dyn) {
+	    super(dyn, 0, Dyn.mDynType2_DigSwap, 0, 0, Dyn.eDynPrio_DigSwap);
+	}
+
+	public DynDigSwap( DynDigSwap x) {
+	    super(x);
+	    reset_value = x.reset_value;
+	    attribute = x.attribute;
+	}
+
+	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+
+	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
+	    if ( pname == null || pname.name.equals("")) 
+		return 1;
+
+	    GdhrRefObjectInfo ret = null;
+
+	    switch( pname.database) {
+	    case GraphIfc.eDatabase_Gdh:
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		break;
+	    default:
+		ret = null;
+	    }
+
+	    if ( ret == null || ret.evenSts()) {
+		System.out.println("DigSwap: " + attribute);
+		return 1;
+	    }
+
+	    p = ret.id;
+	    subid = ret.refid;
+	    inverted = pname.inverted;
+	    a_typeid = pname.type;
+	    bitmask = pname.bitmask;
+	    database = pname.database;
+	    attrFound = true;
+	    return 1;
+	}
+
+	public void disconnect() {
+	    if ( attrFound && database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid);
+	}
+
+	
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+	    if ( !attrFound)
+		return;
+	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
+
+	    if ( !firstScan) {
+		oldValue = value;
+		firstScan = false;
+		return;
+	    }
+
+	    if ( inverted)
+		value = !value;
+
+	    if ( oldValue == value) {
+		// No change since last time
+		return;
+	    }
+	
+	    if ( value) {
+		// Todo
+		// dyn.graph.swap();
+	    }
+	    dyn.repaintNow = true;
+	    oldValue = value;
+	}
+
+	public void open( BufferedReader reader) {
+	    String line;
+	    StringTokenizer token;
+	    boolean end_found = false;
+
+	    try {
+		while( (line = reader.readLine()) != null) {
+		    token = new StringTokenizer(line);
+		    int key = Integer.valueOf(token.nextToken());
+		    if ( Dyn.debug) System.out.println( "DynDigSwap : " + line);
+
+		    switch ( key) {
+		    case Dyn.eSave_DigSwap: 
+			break;
+		    case Dyn.eSave_DigSwap_attribute: 
+			if ( token.hasMoreTokens())
+			    attribute = token.nextToken();
+			break;
+		    case Dyn.eSave_DigSwap_reset_value: 
+			reset_value = Integer.valueOf(token.nextToken());
+			break;
+		    case Dyn.eSave_End:
+			end_found = true;
+			break;
+		    default:
+			System.out.println( "Syntax error in DynDigSwap");
+			break;
+		    }
+
+		    if ( end_found)
+			break;
+		}
+		
+	    } catch ( Exception e) {
+		System.out.println( "IOException DynDigSwap");
 	    }
 	}
 
