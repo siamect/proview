@@ -1,0 +1,396 @@
+!** Description: Generate IO list
+#
+# File $pwrp_doc/create_iolist.pwr_com
+#
+# Description   
+# Script for creating IO-list. Started from each system by writing the command
+# "@$pwrp_doc/create_iolist.pwr_com"
+#                 
+# Revision history
+# 2016-02-01 cs**** File created, just for ChanDi
+# 2016-03-01 sg8050 Functionality improved and tested
+#
+#  --------------------------------------------------------------------------
+
+main()
+
+  string channel;
+  string signal;
+  string attr;
+  string sdescr;
+  string cdescr;
+  string sigchancon;
+  string volume;
+  string outfilename;
+  string tmpfilename;
+  string lvolname;
+  string cmd;
+  int found;
+  int fp;
+  string msg;
+
+  string path = "$pwrp_doc/";
+  string fileend = "_iolist.csv";
+  string tmpname = "tmp";
+  int cntr=0;
+  int cntr_tot=0;
+
+  # Write excuse
+  printf("This will take some time, please wait...\n");
+
+  # Create temporary file name and output file name
+  volume = GetCurrentVolume();
+  lvolname = tolower(volume);
+  outfilename = path + lvolname + fileend;
+  tmpfilename = path + tmpname + fileend;
+
+  # Open temporary file
+  fp = fopen(tmpfilename,"w");
+
+
+
+  # Get all ChanDi
+  channel = GetClassListAttrRef( "ChanDi");
+  while ( channel != "")
+
+    found = 0;
+    signal = GetClassListAttrRef( "Di");
+    while ( signal != "")
+
+      attr = signal + ".SigChanCon";
+      sigchancon = GetAttribute( attr);
+
+      if ( sigchancon == channel)
+        found = 1;
+        break;
+      endif
+
+      signal = GetNextAttrRef( "Di", signal);
+    endwhile
+
+    if ( !found)
+      signal = "-";
+      sdescr = "-";
+    else      
+      attr = signal + ".Description";
+      sdescr = GetAttribute( attr);
+    endif
+
+    attr = channel + ".Description";
+    cdescr = GetAttribute( attr);
+
+    # Write to temporary file
+    fprintf(fp, "%s;%s;\"%s\";\"%s\"\n", channel, signal, sdescr, cdescr);
+
+    # Write alive info to screen
+    cntr++;
+    cntr_tot++;
+    if (cntr >= 100)
+      cntr = 0;
+      printf("Writing line %d\n", cntr_tot);
+    endif
+
+    channel = GetNextAttrRef( "ChanDi", channel);
+
+  endwhile
+
+
+
+  # Get all ChanDo
+  channel = GetClassListAttrRef( "ChanDo");
+  while ( channel != "")
+
+    found = 0;
+    signal = GetClassListAttrRef( "Do");
+    while ( signal != "")
+
+      attr = signal + ".SigChanCon";
+      sigchancon = GetAttribute( attr);
+
+      if ( sigchancon == channel)
+        found = 1;
+        break;
+      endif
+
+      signal = GetNextAttrRef( "Do", signal);
+    endwhile
+
+    if ( !found)
+      signal = "-";
+      sdescr = "-";
+    else      
+      attr = signal + ".Description";
+      sdescr = GetAttribute( attr);
+    endif
+
+    attr = channel + ".Description";
+    cdescr = GetAttribute( attr);
+
+    # Write to temporary file
+    fprintf(fp, "%s;%s;\"%s\";\"%s\"\n", channel, signal, sdescr, cdescr);
+
+    # Write alive info to screen
+    cntr++;
+    cntr_tot++;
+    if (cntr >= 100)
+      cntr = 0;
+      printf("Writing line %d\n", cntr_tot);
+    endif
+
+    channel = GetNextAttrRef( "ChanDo", channel);
+
+  endwhile
+
+
+
+  # Get all ChanAi
+  channel = GetClassListAttrRef( "ChanAi");
+  while ( channel != "")
+
+    found = 0;
+    signal = GetClassListAttrRef( "Ai");
+    while ( signal != "")
+
+      attr = signal + ".SigChanCon";
+      sigchancon = GetAttribute( attr);
+
+      if ( sigchancon == channel)
+        found = 1;
+        break;
+      endif
+
+      signal = GetNextAttrRef( "Ai", signal);
+    endwhile
+
+    if ( !found)
+      signal = "-";
+      sdescr = "-";
+    else      
+      attr = signal + ".Description";
+      sdescr = GetAttribute( attr);
+    endif
+
+    attr = channel + ".Description";
+    cdescr = GetAttribute( attr);
+
+    # Write to temporary file
+    fprintf(fp, "%s;%s;\"%s\";\"%s\"\n", channel, signal, sdescr, cdescr);
+
+    # Write alive info to screen
+    cntr++;
+    cntr_tot++;
+    if (cntr >= 100)
+      cntr = 0;
+      printf("Writing line %d\n", cntr_tot);
+    endif
+
+    channel = GetNextAttrRef( "ChanAi", channel);
+
+  endwhile
+
+
+
+  # Get all ChanAo
+  channel = GetClassListAttrRef( "ChanAo");
+  while ( channel != "")
+
+    found = 0;
+    signal = GetClassListAttrRef( "Ao");
+    while ( signal != "")
+
+      attr = signal + ".SigChanCon";
+      sigchancon = GetAttribute( attr);
+
+      if ( sigchancon == channel)
+        found = 1;
+        break;
+      endif
+
+      signal = GetNextAttrRef( "Ao", signal);
+    endwhile
+
+    if ( !found)
+      signal = "-";
+      sdescr = "-";
+    else      
+      attr = signal + ".Description";
+      sdescr = GetAttribute( attr);
+    endif
+
+    attr = channel + ".Description";
+    cdescr = GetAttribute( attr);
+
+    # Write to temporary file
+    fprintf(fp, "%s;%s;\"%s\";\"%s\"\n", channel, signal, sdescr, cdescr);
+
+    # Write alive info to screen
+    cntr++;
+    cntr_tot++;
+    if (cntr >= 100)
+      cntr = 0;
+      printf("Writing line %d\n", cntr_tot);
+    endif
+
+    channel = GetNextAttrRef( "ChanAo", channel);
+
+  endwhile
+
+
+
+  # Get all ChanCo
+  channel = GetClassListAttrRef( "ChanCo");
+  while ( channel != "")
+
+    found = 0;
+    signal = GetClassListAttrRef( "Co");
+    while ( signal != "")
+
+      attr = signal + ".SigChanCon";
+      sigchancon = GetAttribute( attr);
+
+      if ( sigchancon == channel)
+        found = 1;
+        break;
+      endif
+
+      signal = GetNextAttrRef( "Co", signal);
+    endwhile
+
+    if ( !found)
+      signal = "-";
+      sdescr = "-";
+    else      
+      attr = signal + ".Description";
+      sdescr = GetAttribute( attr);
+    endif
+
+    attr = channel + ".Description";
+    cdescr = GetAttribute( attr);
+
+    # Write to temporary file
+    fprintf(fp, "%s;%s;\"%s\";\"%s\"\n", channel, signal, sdescr, cdescr);
+
+    # Write alive info to screen
+    cntr++;
+    cntr_tot++;
+    if (cntr >= 100)
+      cntr = 0;
+      printf("Writing line %d\n", cntr_tot);
+    endif
+
+    channel = GetNextAttrRef( "ChanCo", channel);
+
+  endwhile
+
+
+
+  # Get all ChanAo
+  channel = GetClassListAttrRef( "ChanIi");
+  while ( channel != "")
+
+    found = 0;
+    signal = GetClassListAttrRef( "Ii");
+    while ( signal != "")
+
+      attr = signal + ".SigChanCon";
+      sigchancon = GetAttribute( attr);
+
+      if ( sigchancon == channel)
+        found = 1;
+        break;
+      endif
+
+      signal = GetNextAttrRef( "Ii", signal);
+    endwhile
+
+    if ( !found)
+      signal = "-";
+      sdescr = "-";
+    else      
+      attr = signal + ".Description";
+      sdescr = GetAttribute( attr);
+    endif
+
+    attr = channel + ".Description";
+    cdescr = GetAttribute( attr);
+
+    # Write to temporary file
+    fprintf(fp, "%s;%s;\"%s\";\"%s\"\n", channel, signal, sdescr, cdescr);
+
+    # Write alive info to screen
+    cntr++;
+    cntr_tot++;
+    if (cntr >= 100)
+      cntr = 0;
+      printf("Writing line %d\n", cntr_tot);
+    endif
+
+    channel = GetNextAttrRef( "ChanIi", channel);
+
+  endwhile
+
+
+
+  # Get all ChanAo
+  channel = GetClassListAttrRef( "ChanIo");
+  while ( channel != "")
+
+    found = 0;
+    signal = GetClassListAttrRef( "Io");
+    while ( signal != "")
+
+      attr = signal + ".SigChanCon";
+      sigchancon = GetAttribute( attr);
+
+      if ( sigchancon == channel)
+        found = 1;
+        break;
+      endif
+
+      signal = GetNextAttrRef( "Io", signal);
+    endwhile
+
+    if ( !found)
+      signal = "-";
+      sdescr = "-";
+    else      
+      attr = signal + ".Description";
+      sdescr = GetAttribute( attr);
+    endif
+
+    attr = channel + ".Description";
+    cdescr = GetAttribute( attr);
+
+    # Write to temporary file
+    fprintf(fp, "%s;%s;\"%s\";\"%s\"\n", channel, signal, sdescr, cdescr);
+
+    # Write alive info to screen
+    cntr++;
+    cntr_tot++;
+    if (cntr >= 100)
+      cntr = 0;
+      printf("Writing line %d\n", cntr_tot);
+    endif
+
+    channel = GetNextAttrRef( "ChanIo", channel);
+
+  endwhile
+
+
+
+  # Close temporary file
+  fclose(fp);
+  
+  # Sort and pipe to output file, remove temporary file
+  cmd = "sort " + tmpfilename + " > " + outfilename;
+  system( cmd );
+  cmd = "rm " + tmpfilename;
+  system( cmd );
+  
+  # Write total no of lines to screen
+  printf("Total %d lines written to file %s\n", cntr_tot, outfilename);
+  msg = "File " + outfilename + " created";
+  MessageInfo( msg);
+  
+
+endmain
