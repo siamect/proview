@@ -917,7 +917,10 @@ void GrowWindow::new_ctx()
   memcpy( window_ctx->event_callback, ctx->event_callback, sizeof( ctx->event_callback));
   window_ctx->event_move_node = ctx->event_move_node;
   window_ctx->background_disabled = 1;
-  strcpy( window_ctx->owner, owner);
+  if ( strcmp( owner, "$object") == 0)
+    strcpy( window_ctx->owner, ctx->owner);
+  else
+    strcpy( window_ctx->owner, owner);
   window_ctx->customcolors = ctx->gdraw->create_customcolors();
 
   if ( !no_file) {
