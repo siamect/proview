@@ -34,68 +34,11 @@
  * General Public License plus this exception.
  **/
 
-/* wb_c_ssab_basedicard.cpp -- work bench methods of the Ssab_BaseDiCard class */
+/* wb_ssab_card_address.h -- Calculate address for ssab cards */
 
-#include <stdio.h>
-#include <string.h>
-#include "wb_pwrs.h"
-#include "wb_ldh_msg.h"
-#include "wb_pwrb_msg.h"
-#include "pwr_baseclasses.h"
-#include "pwr_basecomponentclasses.h"
-#include "pwr_ssaboxclasses.h"
-#include "wb_ldh.h"
-#include "wb_wsx.h"
-#include "wb_session.h"
-#include "wb_dbcb.h"
-#include "wb_ssab_card_address.h"
+#ifndef wb_ssab_card_address_h
+#define wb_ssab_card_address_h
 
-//
-//  Syntax check.
-//
+pwr_tStatus ssab_SetAddress( wb_session *sp, pwr_tOid oid);
 
-static pwr_tStatus SyntaxCheck (
-  ldh_tSesContext Session,
-  pwr_tAttrRef Object,	      /* current object */
-  int *ErrorCount,	      /* accumulated error count */
-  int *WarningCount	      /* accumulated waring count */
-) {
-
-  return wsx_CheckIoDevice( Session, Object, ErrorCount, WarningCount, wsx_mCardOption_ErrorLimits);
-}
-
-static pwr_tStatus PostCreate (
-  ldh_tSesContext   Session,
-  pwr_tOid	    Object,
-  pwr_tOid	    Father,
-  pwr_tCid	    Class
-) {
-  pwr_tStatus sts;
-
-  sts = dbcb_InsertPlcThreadObject( Session, Object);  
-  if ( EVEN(sts)) return sts;
-
-  sts = ssab_SetAddress( (wb_session *)Session, Object);
-  return sts;
-}
-
-static pwr_tStatus SetAddress (
-  ldh_sMenuCall *ip
-)
-{
-  pwr_tStatus sts;
-
-  sts = ssab_SetAddress( (wb_session *)ip->PointedSession, ip->Pointed.Objid);
-  return sts;
-}
-
-//
-//  Every method to be exported to the workbench should be registred here.
-//
-
-pwr_dExport pwr_BindMethods(Ssab_BaseDiCard) = {
-  pwr_BindMethod(SyntaxCheck),
-  pwr_BindMethod(PostCreate),
-  pwr_BindMethod(SetAddress),
-  pwr_NullMethod
-};
+#endif

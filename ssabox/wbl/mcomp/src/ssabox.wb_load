@@ -1,6 +1,6 @@
 Volume SsabOx $ClassVolume 0.0.250.5 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X182"
+    Attr NextOix = "_X257"
     Attr NextCix = "_X33"
     Attr NextTix[0] = "_X5"
   EndBody
@@ -294,9 +294,10 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! @Summary QBUS address of the card.
         ! QBUS address of the card.
         ! The value is set with address switches on the card.
-        ! NoteThe value in RegAddress is a decimal value
+        ! Note! The value in RegAddress is a decimal value
         ! 
         ! 	Card number	Octal address	Decimal Address
+        !
         ! 	Ai1		167000		4189696
         ! 	Ai2		167100		4189760
         ! 	Ai3		167200		4189824
@@ -305,6 +306,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! 	Ai6		167500		4190016
         ! 	Ai7		167600		4190080
         ! 	Ai8		167700		4190144
+        !
         ! 	Ao1		176210		4193416
         ! 	Ao2		176220		4193424
         ! 	Ao3		176230		4193432
@@ -312,7 +314,10 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! 	Ao5		176250		4193448
         ! 	Ao6		176260		4193456
         ! 
-        ! For VAX_ELN RegAddress is used for documentation only, and usually specified as an octal value.
+        ! The value is filled in when the object is created, calculated
+        ! from the current position of the object in the rack. If the
+        ! positions is changed the address can be updated with the SetAddress
+        ! method in the popup menu.
         !*/
         Object RegAddress $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
@@ -322,11 +327,18 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
         !/**
-        ! Vector address. Used on VAX_ELN only, and only for documentation.
+        ! Settings of the address switch on the board.
+        ! The value is filled in when the object is created, calculated
+        ! from the current position of the object in the rack. If the
+        ! positions is changed the settings can be updated with the SetAddress
+        ! method in the popup menu.
+        !
+        ! The settings are presented with an integer value, and leading zeros
+        ! are missing.
         !*/
-        Object VectAddress $Attribute 8 06-OCT-2005 14:45:53.00
-          Body SysBody 01-JAN-1970 01:00:00.00
-            Attr PgmName = "VectAddress"
+        Object SwitchSettings $Attribute 8 04-MAR-2016 13:16:41.87
+          Body SysBody 04-MAR-2016 13:16:46.71
+            Attr PgmName = "SwitchSettings"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -392,11 +404,91 @@ Volume SsabOx $ClassVolume 0.0.250.5
               Attr FilterArguments[1] = "PlcThread"
             EndBody
           EndObject
+          Object SetAddress $MenuButton 183 04-MAR-2016 16:55:09.00
+            Body SysBody 04-MAR-2016 16:55:52.88
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseACard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 184 04-MAR-2016 17:19:07.77
+        Object Pointed $Menu 185 04-MAR-2016 17:03:25.45
+          Object SetAddress $MenuButton 187 04-MAR-2016 17:03:25.45
+            Body SysBody 04-MAR-2016 17:03:25.45
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseACard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 191 04-MAR-2016 17:19:37.39
+        Object Pointed $Menu 192 04-MAR-2016 17:18:35.03
+          Object SetAddress $MenuButton 193 04-MAR-2016 17:18:35.03
+            Body SysBody 04-MAR-2016 17:18:35.03
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseACard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosms $Menu 194 04-MAR-2016 17:20:01.97
+        Object Pointed $Menu 195 04-MAR-2016 17:18:36.44
+          Object SetAddress $MenuButton 196 04-MAR-2016 17:18:36.44
+            Body SysBody 04-MAR-2016 17:18:36.44
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseACard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosmn $Menu 197 04-MAR-2016 17:20:20.77
+        Object Pointed $Menu 198 04-MAR-2016 17:18:37.17
+          Object SetAddress $MenuButton 199 04-MAR-2016 17:18:37.17
+            Body SysBody 04-MAR-2016 17:18:37.17
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseACard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoscn $Menu 206 04-MAR-2016 17:30:58.87
+        Object Pointed $Menu 207 04-MAR-2016 17:30:48.12
+          Object SetAddress $MenuButton 208 04-MAR-2016 17:30:48.12
+            Body SysBody 04-MAR-2016 17:30:48.12
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseACard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
         EndObject
       EndObject
       Object PostCreate $DbCallBack 177 05-OCT-2010 11:14:29.89
-        Body SysBody 05-OCT-2010 16:18:40.17
-          Attr MethodName = "BaseIOCard-PostCreate"
+        Body SysBody 04-MAR-2016 15:26:38.98
+          Attr MethodName = "Ssab_BaseACard-PostCreate"
         EndBody
       EndObject
     EndObject
@@ -507,7 +599,10 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! 	Di17		176500		4193600
         ! 	Di18		176504		4193604
         ! 
-        ! For VAX_ELN RegAddress is used for documentation only, and usually specified as an octal value.
+        ! The value is filled in when the object is created, calculated
+        ! from the current position of the object in the rack. If the
+        ! positions is changed the address can be updated with the SetAddress
+        ! method in the popup menu.
         !*/
         Object RegAddress $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
@@ -517,11 +612,18 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
         !/**
-        ! Vector address. Used on VAX_ELN only, and only for documentation.
+        ! Settings of the address switch on the board.
+        ! The value is filled in when the object is created, calculated
+        ! from the current position of the object in the rack. If the
+        ! positions is changed the settings can be updated with the SetAddress
+        ! method in the popup menu.
+        !
+        ! The settings are presented with an integer value, and leading zeros
+        ! are missing.
         !*/
-        Object VectAddress $Attribute 8 06-OCT-2005 14:45:53.00
-          Body SysBody 01-JAN-1970 01:00:00.00
-            Attr PgmName = "VectAddress"
+        Object SwitchSettings $Attribute 8 04-MAR-2016 13:17:10.05
+          Body SysBody 04-MAR-2016 13:17:07.55
+            Attr PgmName = "SwitchSettings"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -617,8 +719,8 @@ Volume SsabOx $ClassVolume 0.0.250.5
         EndObject
       EndObject
       Object PostCreate $DbCallBack 178 05-OCT-2010 16:19:01.60
-        Body SysBody 05-OCT-2010 16:19:01.60
-          Attr MethodName = "BaseIOCard-PostCreate"
+        Body SysBody 04-MAR-2016 17:49:13.17
+          Attr MethodName = "Ssab_BaseDiCard-PostCreate"
         EndBody
       EndObject
       Object Template Ssab_BaseDiCard 2148499456 06-OCT-2005 14:45:53.00
@@ -638,6 +740,86 @@ Volume SsabOx $ClassVolume 0.0.250.5
               Attr MethodArguments[0] = "ThreadObject"
               Attr MethodArguments[1] = "PlcThread"
               Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+          Object SetAddress $MenuButton 224 04-MAR-2016 17:43:15.40
+            Body SysBody 04-MAR-2016 17:44:03.43
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseDiCard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 209 04-MAR-2016 17:42:55.25
+        Object Pointed $Menu 210 04-MAR-2016 17:42:55.25
+          Object SetAddress $MenuButton 211 04-MAR-2016 17:42:55.25
+            Body SysBody 04-MAR-2016 17:44:14.10
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseDiCard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 212 04-MAR-2016 17:42:55.25
+        Object Pointed $Menu 213 04-MAR-2016 17:42:55.25
+          Object SetAddress $MenuButton 214 04-MAR-2016 17:42:55.25
+            Body SysBody 04-MAR-2016 17:44:20.58
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseDiCard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosms $Menu 215 04-MAR-2016 17:42:55.25
+        Object Pointed $Menu 216 04-MAR-2016 17:42:55.25
+          Object SetAddress $MenuButton 217 04-MAR-2016 17:42:55.25
+            Body SysBody 04-MAR-2016 17:44:26.81
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseDiCard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosmn $Menu 218 04-MAR-2016 17:42:55.25
+        Object Pointed $Menu 219 04-MAR-2016 17:42:55.25
+          Object SetAddress $MenuButton 220 04-MAR-2016 17:42:55.25
+            Body SysBody 04-MAR-2016 17:44:31.16
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseDiCard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoscn $Menu 221 04-MAR-2016 17:42:55.25
+        Object Pointed $Menu 222 04-MAR-2016 17:42:55.25
+          Object SetAddress $MenuButton 223 04-MAR-2016 17:42:55.25
+            Body SysBody 04-MAR-2016 17:44:35.80
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseDiCard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
               Attr FilterArguments[0] = "ThreadObject"
               Attr FilterArguments[1] = "PlcThread"
             EndBody
@@ -743,7 +925,10 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! 	Do8		176034		4193308
         ! 	Do9		176040		4193312
         ! 
-        ! For VAX_ELN RegAddress is used for documentation only, and usually specified as an octal value.
+        ! The value is filled in when the object is created, calculated
+        ! from the current position of the object in the rack. If the
+        ! positions is changed the address can be updated with the SetAddress
+        ! method in the popup menu.
         !*/
         Object RegAddress $Attribute 7 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
@@ -753,11 +938,18 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
         !/**
-        ! Vector address. Used on VAX_ELN only, and only for documentation.
+        ! Settings of the address switch on the board.
+        ! The value is filled in when the object is created, calculated
+        ! from the current position of the object in the rack. If the
+        ! positions is changed the settings can be updated with the SetAddress
+        ! method in the popup menu.
+        !
+        ! The settings are presented with an integer value, and leading zeros
+        ! are missing.
         !*/
-        Object VectAddress $Attribute 8 06-OCT-2005 14:45:53.00
-          Body SysBody 01-JAN-1970 01:00:00.00
-            Attr PgmName = "VectAddress"
+        Object SwitchSettings $Attribute 8 04-MAR-2016 13:17:20.80
+          Body SysBody 04-MAR-2016 13:17:21.79
+            Attr PgmName = "SwitchSettings"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -914,8 +1106,8 @@ Volume SsabOx $ClassVolume 0.0.250.5
         EndObject
       EndObject
       Object PostCreate $DbCallBack 179 05-OCT-2010 16:19:07.83
-        Body SysBody 05-OCT-2010 16:19:07.83
-          Attr MethodName = "BaseIOCard-PostCreate"
+        Body SysBody 04-MAR-2016 17:48:59.70
+          Attr MethodName = "Ssab_BaseDoCard-PostCreate"
         EndBody
       EndObject
       Object Template Ssab_BaseDoCard 2148761600 06-OCT-2005 14:45:53.00
@@ -935,6 +1127,86 @@ Volume SsabOx $ClassVolume 0.0.250.5
               Attr MethodArguments[0] = "ThreadObject"
               Attr MethodArguments[1] = "PlcThread"
               Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+          Object SetAddress $MenuButton 240 04-MAR-2016 17:45:57.05
+            Body SysBody 04-MAR-2016 17:46:34.66
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseDoCard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 225 04-MAR-2016 17:45:36.32
+        Object Pointed $Menu 226 04-MAR-2016 17:45:36.32
+          Object SetAddress $MenuButton 227 04-MAR-2016 17:45:36.32
+            Body SysBody 04-MAR-2016 17:46:40.58
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseDoCard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 228 04-MAR-2016 17:45:36.32
+        Object Pointed $Menu 229 04-MAR-2016 17:45:36.32
+          Object SetAddress $MenuButton 230 04-MAR-2016 17:45:36.32
+            Body SysBody 04-MAR-2016 17:46:44.77
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseDoCard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosms $Menu 231 04-MAR-2016 17:45:36.32
+        Object Pointed $Menu 232 04-MAR-2016 17:45:36.32
+          Object SetAddress $MenuButton 233 04-MAR-2016 17:45:36.32
+            Body SysBody 04-MAR-2016 17:46:49.11
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseDoCard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosmn $Menu 234 04-MAR-2016 17:45:36.32
+        Object Pointed $Menu 235 04-MAR-2016 17:45:36.32
+          Object SetAddress $MenuButton 236 04-MAR-2016 17:46:54.52
+            Body SysBody 04-MAR-2016 17:46:59.15
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseDoCard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoscn $Menu 237 04-MAR-2016 17:45:36.32
+        Object Pointed $Menu 238 04-MAR-2016 17:45:36.32
+          Object SetAddress $MenuButton 239 04-MAR-2016 17:45:36.32
+            Body SysBody 04-MAR-2016 17:47:08.39
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_BaseDoCard-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
               Attr FilterArguments[0] = "ThreadObject"
               Attr FilterArguments[1] = "PlcThread"
             EndBody
@@ -1028,9 +1300,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
-        Object VectAddress $Attribute 8 30-JUN-2010 10:14:40.65
-          Body SysBody 30-JUN-2010 10:14:40.65
-            Attr PgmName = "VectAddress"
+        Object SwitchSettings $Attribute 8 04-MAR-2016 13:17:37.97
+          Body SysBody 04-MAR-2016 13:17:38.90
+            Attr PgmName = "SwitchSettings"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -4562,7 +4834,10 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! 	3		176340		4193504
         ! 	4		176360		4193520
         ! 
-        ! For VAX_ELN RegAddress is used for documentation only, and usually specified as an octal value.
+        ! The value is filled in when the object is created, calculated
+        ! from the current position of the object in the rack. If the
+        ! positions is changed the address can be updated with the SetAddress
+        ! method in the popup menu.
         !*/
         Object RegAddress $Attribute 20 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
@@ -4572,11 +4847,18 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
         !/**
-        ! Vector address. Used on VAX_ELN only, and only for documentation.
+        ! Settings of the address switch on the board.
+        ! The value is filled in when the object is created, calculated
+        ! from the current position of the object in the rack. If the
+        ! positions is changed the settings can be updated with the SetAddress
+        ! method in the popup menu.
+        !
+        ! The settings are presented with an integer value, and leading zeros
+        ! are missing.
         !*/
-        Object VectAddress $Attribute 21 06-OCT-2005 14:45:53.00
-          Body SysBody 01-JAN-1970 01:00:00.00
-            Attr PgmName = "VectAddress"
+        Object SwitchSettings $Attribute 21 04-MAR-2016 13:18:29.15
+          Body SysBody 04-MAR-2016 13:18:30.23
+            Attr PgmName = "SwitchSettings"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -4706,6 +4988,86 @@ Volume SsabOx $ClassVolume 0.0.250.5
               Attr FilterArguments[1] = "PlcThread"
             EndBody
           EndObject
+          Object SetAddress $MenuButton 257 07-MAR-2016 08:40:59.30
+            Body SysBody 07-MAR-2016 08:55:53.02
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_CO4uP-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 241 07-MAR-2016 08:41:17.22
+        Object Pointed $Menu 242 07-MAR-2016 08:38:43.02
+          Object SetAddress $MenuButton 243 07-MAR-2016 08:38:43.02
+            Body SysBody 07-MAR-2016 08:56:01.14
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_CO4uP-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 244 07-MAR-2016 08:41:18.62
+        Object Pointed $Menu 245 07-MAR-2016 08:38:43.02
+          Object SetAddress $MenuButton 246 07-MAR-2016 08:38:43.02
+            Body SysBody 07-MAR-2016 08:56:05.11
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_CO4uP-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosms $Menu 247 07-MAR-2016 08:41:19.63
+        Object Pointed $Menu 248 07-MAR-2016 08:38:43.02
+          Object SetAddress $MenuButton 249 07-MAR-2016 08:38:43.02
+            Body SysBody 07-MAR-2016 08:56:09.21
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_CO4uP-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosmn $Menu 250 07-MAR-2016 08:41:20.63
+        Object Pointed $Menu 251 07-MAR-2016 08:38:43.02
+          Object SetAddress $MenuButton 252 07-MAR-2016 08:42:37.74
+            Body SysBody 07-MAR-2016 08:56:12.95
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_CO4uP-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoscn $Menu 253 07-MAR-2016 08:41:22.15
+        Object Pointed $Menu 254 07-MAR-2016 08:38:43.02
+          Object SetAddress $MenuButton 255 07-MAR-2016 08:38:43.02
+            Body SysBody 07-MAR-2016 08:56:16.88
+              Attr ButtonName = "Set Address"
+              Attr MethodName = "Ssab_CO4uP-SetAddress"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
         EndObject
       EndObject
       Object IoMethods $RtMethod 30 06-OCT-2005 14:45:53.00
@@ -4726,8 +5088,8 @@ Volume SsabOx $ClassVolume 0.0.250.5
         EndObject
       EndObject
       Object PostCreate $DbCallBack 181 05-OCT-2010 16:19:35.86
-        Body SysBody 05-OCT-2010 16:19:35.86
-          Attr MethodName = "BaseIOCard-PostCreate"
+        Body SysBody 07-MAR-2016 09:01:00.96
+          Attr MethodName = "Ssab_CO4uP-PostCreate"
         EndBody
       EndObject
     EndObject
@@ -5141,9 +5503,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
-        Object VectAddress $Attribute 8 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
-            Attr PgmName = "VectAddress"
+        Object SwitchSettings $Attribute 8 04-MAR-2016 13:18:49.23
+          Body SysBody 04-MAR-2016 13:18:50.91
+            Attr PgmName = "SwitchSettings"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5319,9 +5681,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
-        Object VectAddress $Attribute 10 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
-            Attr PgmName = "VectAddress"
+        Object SwitchSettings $Attribute 10 04-MAR-2016 13:19:00.98
+          Body SysBody 04-MAR-2016 13:19:01.89
+            Attr PgmName = "SwitchSettings"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5495,9 +5857,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
-        Object VectAddress $Attribute 10 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
-            Attr PgmName = "VectAddress"
+        Object SwitchSettings $Attribute 10 04-MAR-2016 13:19:11.74
+          Body SysBody 04-MAR-2016 13:19:12.75
+            Attr PgmName = "SwitchSettings"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5673,9 +6035,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
-        Object VectAddress $Attribute 10 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
-            Attr PgmName = "VectAddress"
+        Object SwitchSettings $Attribute 10 04-MAR-2016 13:19:31.64
+          Body SysBody 04-MAR-2016 13:19:33.47
+            Attr PgmName = "SwitchSettings"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -5938,9 +6300,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
-        Object VectAddress $Attribute 20 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
-            Attr PgmName = "VectAddress"
+        Object SwitchSettings $Attribute 20 04-MAR-2016 13:19:48.48
+          Body SysBody 04-MAR-2016 13:19:49.34
+            Attr PgmName = "SwitchSettings"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -6009,7 +6371,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndObject
         EndObject
       EndObject
-      Object IoMethods $RtMethod 104 30-DEC-2005 11:26:36.69
+      Object IoMethods $RtMethod 104 07-MAR-2016 08:38:49.23
         Object IoCardInit $Method 105 30-DEC-2005 11:26:36.69
           Body SysBody 30-DEC-2005 11:26:36.69
             Attr MethodName = "Co_CO4uP-IoCardInit"
@@ -6025,6 +6387,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr MethodName = "Co_CO4uP-IoCardRead"
           EndBody
         EndObject
+      EndObject
+      Object PostCreate $DbCallBack 256 07-MAR-2016 08:38:43.02
+        Body SysBody 07-MAR-2016 08:38:43.02
+          Attr MethodName = "Ssab_BaseACard-PostCreate"
+        EndBody
       EndObject
       Object Template Co_CO4uP 2152955904 01-JAN-1970 01:00:00.00
         Body RtBody 30-DEC-2005 11:44:27.44
@@ -6224,9 +6591,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
-        Object VectAddress $Attribute 20 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
-            Attr PgmName = "VectAddress"
+        Object SwitchSettings $Attribute 20 04-MAR-2016 13:19:58.41
+          Body SysBody 04-MAR-2016 13:19:59.41
+            Attr PgmName = "SwitchSettings"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -6433,9 +6800,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
-        Object VectAddress $Attribute 12 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
-            Attr PgmName = "VectAddress"
+        Object SwitchSettings $Attribute 12 04-MAR-2016 13:20:21.56
+          Body SysBody 04-MAR-2016 13:20:22.55
+            Attr PgmName = "SwitchSettings"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
@@ -6657,9 +7024,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
-        Object VectAddress $Attribute 16 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
-            Attr PgmName = "VectAddress"
+        Object SwitchSettings $Attribute 16 04-MAR-2016 13:20:32.17
+          Body SysBody 04-MAR-2016 13:20:32.98
+            Attr PgmName = "SwitchSettings"
             Attr Size = 4
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody

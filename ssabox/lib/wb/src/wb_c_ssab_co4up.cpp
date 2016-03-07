@@ -34,10 +34,11 @@
  * General Public License plus this exception.
  **/
 
-/* wb_c_ssab_basedicard.cpp -- work bench methods of the Ssab_BaseDiCard class */
+/* wb_c_ssab_co4up.cpp -- work bench methods of the Ssab_CO4uP class */
 
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "wb_pwrs.h"
 #include "wb_ldh_msg.h"
 #include "wb_pwrb_msg.h"
@@ -50,6 +51,7 @@
 #include "wb_dbcb.h"
 #include "wb_ssab_card_address.h"
 
+
 //
 //  Syntax check.
 //
@@ -60,7 +62,6 @@ static pwr_tStatus SyntaxCheck (
   int *ErrorCount,	      /* accumulated error count */
   int *WarningCount	      /* accumulated waring count */
 ) {
-
   return wsx_CheckIoDevice( Session, Object, ErrorCount, WarningCount, wsx_mCardOption_ErrorLimits);
 }
 
@@ -89,11 +90,12 @@ static pwr_tStatus SetAddress (
   return sts;
 }
 
+
 //
 //  Every method to be exported to the workbench should be registred here.
 //
 
-pwr_dExport pwr_BindMethods(Ssab_BaseDiCard) = {
+pwr_dExport pwr_BindMethods(Ssab_CO4uP) = {
   pwr_BindMethod(SyntaxCheck),
   pwr_BindMethod(PostCreate),
   pwr_BindMethod(SetAddress),

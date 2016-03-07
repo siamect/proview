@@ -38,6 +38,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "wb_pwrs.h"
 #include "wb_ldh_msg.h"
 #include "wb_pwrb_msg.h"
@@ -47,6 +48,9 @@
 #include "wb_ldh.h"
 #include "wb_wsx.h"
 #include "wb_session.h"
+#include "wb_dbcb.h"
+#include "wb_ssab_card_address.h"
+
 
 //
 //  Syntax check.
@@ -61,11 +65,39 @@ static pwr_tStatus SyntaxCheck (
   return wsx_CheckIoDevice( Session, Object, ErrorCount, WarningCount, wsx_mCardOption_ErrorLimits);
 }
 
+static pwr_tStatus PostCreate (
+  ldh_tSesContext   Session,
+  pwr_tOid	    Object,
+  pwr_tOid	    Father,
+  pwr_tCid	    Class
+) {
+  pwr_tStatus sts;
+
+  sts = dbcb_InsertPlcThreadObject( Session, Object);  
+  if ( EVEN(sts)) return sts;
+
+  sts = ssab_SetAddress( (wb_session *)Session, Object);
+  return sts;
+}
+
+static pwr_tStatus SetAddress (
+  ldh_sMenuCall *ip
+)
+{
+  pwr_tStatus sts;
+
+  sts = ssab_SetAddress( (wb_session *)ip->PointedSession, ip->Pointed.Objid);
+  return sts;
+}
+
+
 //
 //  Every method to be exported to the workbench should be registred here.
 //
 
 pwr_dExport pwr_BindMethods(Ssab_BaseACard) = {
   pwr_BindMethod(SyntaxCheck),
+  pwr_BindMethod(PostCreate),
+  pwr_BindMethod(SetAddress),
   pwr_NullMethod
 };
