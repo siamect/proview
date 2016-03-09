@@ -224,14 +224,14 @@ qini_ParseFile (
     if (n > 7) 
       nep->export_buf_quota = atoi(s_export_buf_quota);
     else
-      nep->export_buf_quota = 30000;
+      nep->export_buf_quota = 600000;
     if (n > 8) {
       n2 = sscanf( s_ack_delay, "%f", &nep->ack_delay);
       if ( n2 != 1)
-	nep->ack_delay = 0.01;	
+	nep->ack_delay = 0.001;	
     }
     else
-      nep->ack_delay = 0.01;
+      nep->ack_delay = 0.001;
     if (n > 9) {
       nep->seg_size = atoi(s_seg_size);
       if ( nep->seg_size == 0)
