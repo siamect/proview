@@ -917,7 +917,7 @@ void GrowWindow::new_ctx()
   memcpy( window_ctx->event_callback, ctx->event_callback, sizeof( ctx->event_callback));
   window_ctx->event_move_node = ctx->event_move_node;
   window_ctx->background_disabled = 1;
-  if ( strcmp( owner, "$object") == 0)
+  if ( strcmp( owner, "$object") == 0 && ctx->is_subwindow)
     strcpy( window_ctx->owner, ctx->owner);
   else
     strcpy( window_ctx->owner, owner);
