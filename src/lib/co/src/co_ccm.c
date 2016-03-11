@@ -611,7 +611,7 @@ int ccm_varname_parse(
 	    }
 	    sscanf( elementstr, "%d", element);
 	    *s = '\0';
-	    if ( (*element < 0) || (*element > 1000) )
+	    if ( (*element < 0) || (*element > 5000) )
 	    {
 	      return 0;
 	    }

@@ -2371,7 +2371,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 			 nodename_ptr, nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_ApplFile)
 		fprintf( file, "appl %s W "pwr_cNameAppl" $pwrp_load/\n",
-			 nodename_ptr, "$pwrp_cnf/", nodename_ptr, *bus_number_ptr);
+			 nodename_ptr, "$pwrp_load/", nodename_ptr, *bus_number_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_PwrpAliasFile)
 		fprintf( file, "appl %s W $pwrp_load/pwrp_alias.dat $pwrp_load/pwrp_alias.dat\n", 
 			 nodename_ptr);
@@ -2382,7 +2382,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      if ( *components_ptr & pwr_mDistrComponentMask_XMLFiles)
 		fprintf( file, "appl %s W $pwrp_load/*.xml\n", nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_XttHelpFile) {
-		fprintf( file, "appl %s W $pwrp_cnf/%s/xtt_help.dat:$pwrp_cnf/xtt_help.dat $pwrp_load/xtt_help.dat\n", 
+		fprintf( file, "appl %s W $pwrp_load/%s/xtt_help.dat:$pwrp_load/xtt_help.dat $pwrp_load/xtt_help.dat\n", 
 			 nodename_ptr, nodename_ptr);
 	      }
 	      if ( *components_ptr & pwr_mDistrComponentMask_XttResourceFile) {
