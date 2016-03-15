@@ -194,7 +194,7 @@ static void AddTransports()
   {
     sts = gdh_ObjidToPointer(objid, &objref);
     sprintf(tp[tpcount].path, "rs_remote_qcom"); 
-    tp[tpcount].id = ((pwr_sClass_RemnodeQCom *) objref)->MyQueue;
+    tp[tpcount].id = ((pwr_sClass_RemnodeQCom *) objref)->ReceiveQueue;
     tp[tpcount].disable = &((pwr_sClass_RemnodeQCom *) objref)->Disable;
     tp[tpcount].restart_limit = &((pwr_sClass_RemnodeQCom *) objref)->RestartLimit;
     tp[tpcount].restarts = &((pwr_sClass_RemnodeQCom *) objref)->RestartCount;

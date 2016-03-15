@@ -68,7 +68,7 @@ public class GrowFrame implements GraphApplIfc {
 
     public int command(String cmd) {
 	if ( appl != null)
-	    return appl.command(cmd);
+	    return appl.command(cmd, this);
 	return 0;
     }
 
