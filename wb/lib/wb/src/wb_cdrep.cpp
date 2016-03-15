@@ -612,6 +612,7 @@ void wb_cdrep::convertSubClass( pwr_tCid cid, wb_merep *merep,
   // Indentify attribute with the same aix
   while ( ODD(sts)) {
     bool found = false;
+
     wb_adrep *adrep_target = bdrep_target->adrep( &sts);
     while ( ODD(sts)) {
       if ( adrep_source->aix() == adrep_target->aix()) {
@@ -623,6 +624,15 @@ void wb_cdrep::convertSubClass( pwr_tCid cid, wb_merep *merep,
       delete prev;
     }
     if ( found) {	      
+      if ( adrep_source->flags() & pwr_mAdef_pointer ||
+	   adrep_target->flags() & pwr_mAdef_pointer) {
+	wb_adrep *prev = adrep_source;
+	adrep_source = adrep_source->next( &sts);
+	delete prev;
+	delete adrep_target;
+	continue;
+      }
+
       if ( adrep_source->isClass()) {
 	if ( adrep_source->subClass() != adrep_target->subClass()) {
 	  wb_adrep *prev = adrep_source;
@@ -658,7 +668,7 @@ void wb_cdrep::convertSubClass( pwr_tCid cid, wb_merep *merep,
 	  int cidx = conv_GetIdx(adrep_source->type(), adrep_target->type());
 	  if (cidx == conv_eIdx_invalid)
 	    cidx = conv_eIdx_zero; /* Zero the attribute */
-
+	  
 	  int size = adrep_target->size() / adrep_target->nElement();
 	  pwr_mAdef flags;
 	  flags.m = adrep_target->flags();
@@ -801,6 +811,15 @@ void wb_cdrep::convertObject( wb_merep *merep, void *rbody, void *dbody,
 	  }
 
 	  if ( found) {	      	     
+	    if ( adrep_source->flags() & pwr_mAdef_pointer ||
+		 adrep_target->flags() & pwr_mAdef_pointer) {
+	      wb_adrep *prev = adrep_source;
+	      adrep_source = adrep_source->next( &sts);
+	      delete prev;
+	      delete adrep_target;
+	      continue;
+	    }
+
 	    if ( adrep_source->isClass()) {
 	      if ( adrep_source->subClass() != adrep_target->subClass()) {
 		wb_adrep *prev = adrep_source;
@@ -874,11 +893,11 @@ void wb_cdrep::convertObject( wb_merep *merep, void *rbody, void *dbody,
 		int cidx = conv_GetIdx(adrep_source->type(), adrep_target->type());
 		if (cidx == conv_eIdx_invalid)
 		  cidx = conv_eIdx_zero; /* Zero the attribute */
-
+		
 		int size = adrep_target->size() / adrep_target->nElement();
 		pwr_mAdef flags;
 		flags.m = adrep_target->flags();
-
+		
 		if (!conv_Fctn[cidx](adrep_target->nElement(), 
 				     adrep_target->size() / adrep_target->nElement(), 
 				     (char *)body_target + adrep_target->offset(), 
