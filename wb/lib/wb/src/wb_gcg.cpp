@@ -1081,6 +1081,7 @@ static int gcg_cc(
 	    // pwrc: don't redirect output
 	    sprintf( cmd, "%s %d %ld %s %d %s %s %s", 
 	      fname, gcg_debug, filetype, p1, os, p2, p3, systemname);
+	    sts = system( cmd);
 	  }
 	  else {
 	    sprintf( cmd, "%s %d %ld %s %d %s %s %s 2> %s", 
