@@ -1,4 +1,4 @@
-!** Invisible: Script for moving DSup to DSupComp objects during upgrading from V5.0 to V5.1.0
+!** Invisible: Script for to create OpPlaceWeb from WebHandler objects during upgrading from V5.3 to V5.4
 ! 
 # Proview   Open Source Process Control.
 # Copyright (C) 2005-2016 SSAB EMEA AB.
@@ -35,73 +35,234 @@
 # General Public License plus this exception.
 !
 !
-! Script for set Attribute in DSupComp objects during upgrading from V5.0 to V5.1.0,
+! Script to create OpPlaceWeb objects during upgrading from V5.3 to V5.4,
 !
-! Find all DSupComp objects and set Attribute to parent attribute.
+! Find all WebHandler objects and create an OpPlaceWeb.
 !
 
 main()
   string name;
-  string oname;
+  string opname;
   string aname;
-  string attr;
+  string aopname;
+  string attrstr;
+  int attrint;
+  string child;
+  string prevchild;
+  string class;
+  string nchild;
+  string nclass;
   int idx;
-  int idx0 = 0;
   int sts;
-  int len;
 
-  name = GetClassListAttrRef("DSupComp");
+  verify(0);
+
+  name = GetClassListAttrRef("WebHandler");
 
   while ( name != "")
 
-    idx = strrchr( name, ".");
-    idx -= 1;
-    oname = extract( 1, idx, name);
-
-    len = strlen( oname);    
-    idx = len - 7;
-    if ( len > 0)
-      attr = extract( idx, len, oname);
-      if ( attr == ".LimitHH")
-        idx -= 1;
-        oname = extract( 1, idx, oname);
-      endif
-      if ( attr == ".LimitLL")
-        idx -= 1;
-        oname = extract( 1, idx, oname);
-      endif
+    idx = strrchr( name, "-") - 1;
+    opname = extract( 1, idx, name);
+    opname = opname + "-OpWeb";
+    printf( "--\n");
+    printf( "-- Creating OpPlaceWeb object %s\n", opname);
+    printf( "--\n");
+    sts = CreateObject( "OpWeb", "OpPlaceWeb", name, 3);
+    if ( EVEN(sts))
+      printf( "** Unable to create object %s, sts %d\n", opname, sts);
+      quit
     endif
 
-    len = strlen( oname);    
-    idx = len - 6;
-    if ( len > 0)
-      attr = extract( idx, len, oname);
-
-      if ( attr == ".LimitH")
-        idx -= 1;
-        oname = extract( 1, idx, oname);
-      endif
-      if ( attr == ".LimitL")
-        idx -= 1;
-        oname = extract( 1, idx, oname);
-      endif
+    aname = name + ".FileName";
+    aopname = opname + ".FileName";
+    attrstr = GetAttribute( aname, sts);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aname);
+    endif
+    sts = SetAttribute( aopname, attrstr);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aopname);
     endif
 
-    aname = name + ".Attribute";
-    if ( oname == "")
-      printf( "** Not set %s\n", aname);
-    else
-      sts = SetAttribute( aname, oname);
-      if ( !(sts & 1))
-        printf( "** Unable to set %s sts %d\n", aname, sts);
+    aname = name + ".Title";
+    aopname = opname + ".Title";
+    attrstr = GetAttribute( aname, sts);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aname);
+    endif
+    sts = SetAttribute( aopname, attrstr);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aopname);
+    endif
+
+    aname = name + ".Text";
+    aopname = opname + ".Text";
+    attrstr = GetAttribute( aname, sts);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aname);
+    endif
+    sts = SetAttribute( aopname, attrstr);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aopname);
+    endif
+
+    aname = name + ".EnableLanguage";
+    aopname = opname + ".EnableLanguage";
+    attrint = GetAttribute( aname, sts);
+    sts = SetAttribute( aopname, attrint);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aopname);
+    endif
+
+    aname = name + ".EnableLogin";
+    aopname = opname + ".EnableLogin";
+    attrint = GetAttribute( aname, sts);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aname);
+    endif
+    sts = SetAttribute( aopname, attrint);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aopname);
+    endif
+
+    aname = name + ".EnableAlarmList";
+    aopname = opname + ".EnableAlarmList";
+    attrint = GetAttribute( aname, sts);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aname);
+    endif
+    sts = SetAttribute( aopname, attrint);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aopname);
+    endif
+
+    aname = name + ".EnableEventLog";
+    aopname = opname + ".EnableEventLog";
+    attrint = GetAttribute( aname, sts);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aname);
+    endif
+    sts = SetAttribute( aopname, attrint);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aopname);
+    endif
+
+    aname = name + ".DisableHelp";
+    aopname = opname + ".DisableHelp";
+    attrint = GetAttribute( aname, sts);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aname);
+    endif
+    sts = SetAttribute( aopname, attrint);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aopname);
+    endif
+
+    aname = name + ".DisableProview";
+    aopname = opname + ".DisableProview";
+    attrint = GetAttribute( aname, sts);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aname);
+    endif
+    sts = SetAttribute( aopname, attrint);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aopname);
+    endif
+
+    aname = name + ".Language";
+    aopname = opname + ".Language";
+    attrint = GetAttribute( aname, sts);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aname);
+    endif
+    sts = SetAttribute( aopname, attrint);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aopname);
+    endif
+
+    aname = name + ".StyleSheet";
+    aopname = opname + ".StyleSheet";
+    attrstr = GetAttribute( aname, sts);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aname);
+    endif
+    sts = SetAttribute( aopname, attrstr);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aopname);
+    endif
+
+    aname = name + ".StartURL";
+    aopname = opname + ".StartURL";
+    attrstr = GetAttribute( aname, sts);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aname);
+    endif
+    sts = SetAttribute( aopname, attrstr);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aopname);
+    endif
+
+    aname = name + ".LoadArchives";
+    aopname = opname + ".LoadArchives";
+    attrstr = GetAttribute( aname, sts);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aname);
+    endif
+    sts = SetAttribute( aopname, attrstr);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aopname);
+    endif
+
+    aname = name + ".PwrHost";
+    aopname = opname + ".PwrHost";
+    attrstr = GetAttribute( aname, sts);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aname);
+    endif
+    sts = SetAttribute( aopname, attrstr);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aopname);
+    endif
+
+    aname = name + ".AppletSignature";
+    aopname = opname + ".AppletSignature";
+    attrstr = GetAttribute( aname, sts);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aname);
+    endif
+    sts = SetAttribute( aopname, attrstr);
+    if ( EVEN(sts)) 
+      printf( "Attribute error: %s\n", aopname);
+    endif
+
+    # Move WebGraph, WebLink, AppGraph and AppLink objects
+    child = GetChild( name);
+    prevchild = "";
+    while ( child != "")
+      class = GetObjectClass( child);
+      if ( class == "WebGraph" || class == "WebLink" || class == "AppGraph" || class == "AppLink")
+        MoveObject( child, opname, 2);
+        child = prevchild;
+      endif
+      if ( class == "$NodeHier")
+        nchild = GetChild( child);
+        if ( nchild != "")
+          nclass = GetObjectClass( nchild);
+	  if ( nclass == "WebGraph" || nclass == "WebLink" || nclass == "AppGraph" || nclass == "AppLink")
+            MoveObject( child, opname, 2);
+            child = prevchild;
+          endif
+        endif
+      endif
+      prevchild = child;
+      if ( child == "")
+        child = GetChild( name);
       else
-        printf( "-- Set %s = %s\n", aname, oname);
+        child = GetNextSibling( child);
       endif
-    endif
-
-    name = GetNextAttrRef("DSupComp", name);
+    endwhile
+    name = GetNextAttrRef( "WebHandler", name);
   endwhile
-
   save
 
 endmain

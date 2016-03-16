@@ -140,7 +140,7 @@ reload_classvolumes()
           return
         fi
 
-        if wb_cmd create snapshot/file=\"$file\"/out=\"$pwrp_load/$volumelow.dbs\"
+        if wb_cmd -q create snapshot/file=\"$file\"/out=\"$pwrp_load/$volumelow.dbs\"
         then
           reload_status=$reload__success
         else
@@ -289,8 +289,44 @@ reload_cnvobjects()
   reload_continue "Pass convert objects in loaded database"
 
   for cdb in $databases; do
-     wb_cmd -v $cdb @$pwr_exe/upgrade_pb.pwr_com
+     echo "-- Convert volume $cdb"
+     wb_cmd -q -v $cdb @$pwr_exe/upgrade_pb.pwr_com
   done
+
+  reload_status=$reload__success
+}
+
+reload_updateclasses()
+{
+  reload_checkpass "updateclasses" $start_pass
+  if [ $pass_status -ne $pass__execute ]; then
+    reload_status=$reload__success
+    return
+  fi
+
+
+  reload_continue "Pass update classes"
+
+  for cdb in $databases; do
+     echo "-- Update classes in volume $cdb"
+     wb_cmd -q -v $cdb update classes
+  done
+
+  reload_status=$reload__success
+}
+
+reload_savedirectory()
+{
+  reload_checkpass "savedirectory" $start_pass
+  if [ $pass_status -ne $pass__execute ]; then
+    reload_status=$reload__success
+    return
+  fi
+
+
+  reload_continue "Pass save directory volume"
+
+  wb_cmd -q -v directory save
 
   reload_status=$reload__success
 }
@@ -305,14 +341,8 @@ reload_compile()
 
   reload_continue "Pass compile plcprograms"
 
-  list=`eval ls -1d $pwrp_db/*.db`
-  for file in $list; do
-    file=${file##/*/}
-    file=${file%%.*}
-
-    if [ $file != "directory" ] && [ $file != "rt_eventlog" ]; then
-      wb_cmd -v $file compile /all
-    fi
+  for cdb in $databases; do
+    wb_cmd -q -v $cdb compile /all
   done
 
 #  wb_cmd compile /all
@@ -345,18 +375,8 @@ reload_createload()
 
   reload_continue "Pass create loadfiles"
 
-  # Remove all old loadfiles
-  echo "-- Removing old loadfiles"
-  rm $pwrp_load/ld_vol*.dat
-
-  list=`eval ls -1d $pwrp_db/*.db`
-  for file in $list; do
-    file=${file##/*/}
-    file=${file%%.*}
-
-    if [ $file != "directory" ] && [ $file != "rt_eventlog" ]; then
-      wb_cmd -v $file create load/volume=$file
-    fi
+  for cdb in $databases; do
+    wb_cmd -q -v $cdb create load/volume=$cdb
   done
 
   # wb_cmd create load/all
@@ -378,7 +398,56 @@ reload_createboot()
   reload_continue "Pass create bootfiles"
 
   echo "-- Creating bootfiles for all nodes"
-  wb_cmd create boot/all
+  wb_cmd -q create boot/all
+  reload_status=$reload__success
+}
+
+reload_buildnodes()
+{
+  reload_checkpass "buildnodes" $start_pass
+  if [ $pass_status -ne $pass__execute ]; then
+    reload_status=$reload__success
+    return
+  fi
+
+  reload_continue "Pass build nodes"
+
+  echo "-- Build all nodes"
+
+  volumes=`eval cat $pwrp_db/pwrp_cnf_bootlist.dat | awk '{ print $1 }'`
+
+  for volume in $volumes; do
+    vclass=`eval grep \"^$volume \" $pwrp_db/pwrp_cnf_volumelist.dat | awk '{ print $3 }'`
+    if [ "$vclass" == "RootVolume" ]; then
+
+      nodes=`eval grep \"^$volume \" $pwrp_db/pwrp_cnf_bootlist.dat | awk '{ print $3 }'`
+
+      for node in $nodes; do
+        echo -- Building node $node
+        wb_cmd -q -v $volume build node /name=$node
+      done
+
+    fi
+  done
+
+  reload_status=$reload__success
+}
+
+reload_createpackage()
+{
+  reload_checkpass "createpackage" $start_pass
+  if [ $pass_status -ne $pass__execute ]; then
+    reload_status=$reload__success
+    return
+  fi
+
+  reload_continue "Pass create packages"
+
+  echo "-- Creating distribution packages for all nodes"
+  nodes=`eval grep "^node " $pwrp_db/pwrp_cnf_distribute.dat | awk '{ print $2 }'`
+  for node in $nodes; do
+    wb_cmd -q distribute /node=$node /package
+  done
   reload_status=$reload__success
 }
 
@@ -488,7 +557,7 @@ reload_directorystructure()
 
 reload_exit()
 {
-  source pwrp_env.sh setdb
+  #source pwrp_env.sh setdb
   exit $reload_status
 }
 
@@ -559,17 +628,19 @@ usage()
 {
   cat << EOF
 
-  upgrade.sh  Upgrade from V5.2.0 to V5.3.1
+  upgrade.sh  Upgrade from V5.3.1 to V5.4.0
 
 
   Pass
 
+    savedirectory  Save directory volume.
     classvolumes   Create loadfiles for classvolumes.
-    renamedb       Rename old databases.
-    loaddb         Load dumpfiles.
+    updateclasses  Update classes.
+    cnvobjects     Create OpPlaceWeb objects.
     compile        Compile all plcprograms in the database
     createload     Create new loadfiles.
-    createboot     Create bootfiles for all nodes in the project.
+    buildnodes     Build all nodes in the project.
+    createpackage  Create distribution packages for all nodes in the project.
 
 EOF
 }
@@ -602,19 +673,19 @@ databases=""
 for db in $tmp; do
   db=${db##/*/}
   db="${db%.*}"
-  if [ "$db" != "rt_eventlog" ]; then
+  if [ "$db" != "rt_eventlog" ] && [ "${db:0:6}" != "pwrp__" ]; then
     databases="$databases $db"
   fi
 done
 
-passes="classvolumes renamedb loaddb compile createload createboot"
+passes="savedirectory classvolumes updateclasses cnvobjects compile createload buildnodes createpackage"
 #echo "Pass: $passes"
 echo ""
-echo -n "Enter start pass [classvolumes] > "
+echo -n "Enter start pass [savedirectory] > "
 read start_pass
 
 if [ -z $start_pass ]; then
-  start_pass="classvolumes"
+  start_pass="savedirectory"
 fi
 
 for cpass in $passes; do
