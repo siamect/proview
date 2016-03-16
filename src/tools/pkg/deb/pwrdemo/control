@@ -1,9 +1,9 @@
-Package: pwrdemo53
+Package: pwrdemo54
 Version: 5.4.0-1
 Section: base
 Priority: optional
 Architecture: i386
-Depends: sudo, pwr53 (>= 5.3.1-1)
+Depends: sudo, pwr54 (>= 5.4.0-1)
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview Demo Project package
  5.4.0-1 Base release

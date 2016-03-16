@@ -1,10 +1,10 @@
-Package: pwrrpi53
+Package: pwrrpi54
 Version: 5.4.0-1
 Section: base
 Priority: optional
 Architecture: amd64
-Depends: pwr53 (>= 5.3.1-1)
-Replaces: pwr53
+Depends: pwr54 (>= 5.4.0-1)
+Replaces: pwr54
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview RPI development package
  5.4.0-1 Base release

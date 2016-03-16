@@ -1,9 +1,9 @@
-Package: pwrdemo53
+Package: pwrdemo54
 Version: 5.4.0-1
 Section: base
 Priority: optional
 Architecture: i386
-Depends: pwr53 (>= 5.3.1-1)
+Depends: pwr54 (>= 5.4.0-1)
 Replaces:
 Maintainer: Proview <postmaster@proview.se>
 Homepage: http://www.proview.se
