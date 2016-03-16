@@ -239,8 +239,10 @@ void wb_log::generate_html( char *filename, pwr_tStatus *sts)
 
   if ( strcmp(help_fname, "") != 0) {
     fp = fopen( help_fname, "w");
-    if ( !fp)
+    if ( !fp) {
+      *sts = WNAV__NOFILE;
       return;
+    }
 
     fprintf( fp, "\
 <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n\
@@ -276,6 +278,7 @@ CopyPackage	Package distributed to process or operator station. Package displaye
     fclose( fp);
 	     
   }
+  *sts = WNAV__SUCCESS;
 }
 
 void wb_log::filter( vector<VItem> &v)
