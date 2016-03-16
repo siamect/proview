@@ -8813,6 +8813,7 @@ Kommandon
 <b>delete volume<t>Ta bort en volym		<LINK> delete volume
 <b>disconnect 	<t>Koppla ifrån signal och kanal <LINK> disconnect
 <b>display     <t>Visa ett fönster		<LINK> display
+<b>distribute  <t>Distribuera till operatörs eller processtation <LINK> distribute
 <b>edit        <t>Sätt edit mod			<LINK> edit
 <b>exit        <t>Stäng wtt			<LINK> exit
 <b>help        <t>Visa hjälp			<LINK> help help
@@ -9173,6 +9174,20 @@ Visa anläggnings eller nod hierarkin i fönster (w1 eller w2).
 
 <B>wtt> display w1
 <B>wtt> display w2
+</TOPIC>
+
+<TOPIC> distribute <style> function
+Command   distribute
+
+Distribuerar filer till operatörs och processnoder.
+Skapar ett distributions paket, kopierar paketet till
+stationen och packar upp det.
+
+<B>wtt> distribute /node= [/package]
+
+/node		<t>Nod att distribuera till.
+/package	<t>Skapar enbar ett paket. Paketet skapas men kopieras inte.
+
 </TOPIC>
 
 <TOPIC> edit <style> function

@@ -8924,6 +8924,7 @@ Commands
 <b>delete volume<t>Delete a volume		<LINK> delete volume
 <b>disconnect 	<t>Disconnect signal and channel <LINK> disconnect
 <b>display     <t>Display a window		<LINK> display
+<b>distribute  <t>Distribute to operator or process station <LINK> distribute
 <b>edit        <t>set edit mode			<LINK> edit
 <b>exit        <t>close wtt			<LINK> exit
 <b>help        <t>Display help			<LINK> help help
@@ -9290,6 +9291,20 @@ Display plant or node hierarchy window (w1 or w2).
 
 <B>wtt> display w1
 <B>wtt> display w2
+</TOPIC>
+
+<TOPIC> distribute <style> function
+Command   distribute
+
+Distribute files to operator or process station.
+Creates a distribution package, copies the package to
+the station and unpacks the package.
+
+<B>wtt> distribute /node= [/package]
+
+/node		<t>Node to distribute to.
+/package	<t>Only create package. The packaged is created but not copied.
+
 </TOPIC>
 
 <TOPIC> edit <style> function

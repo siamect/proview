@@ -444,7 +444,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 		{
 			"DISTRIBUTE",
 			&wnav_distribute_func,
-			{ "/NODE", ""}
+			{ "/NODE", "/PACKAGE", ""}
 		},
 		{
 			"RELEASE",
@@ -4108,8 +4108,8 @@ static int	wnav_create_func( void		*client_data,
     pwr_tStatus	sts;
 
     // Command is "CREATE OBJECT"
-    first = ODD( dcli_get_qualifier( "/FIRST", 0, 0));
-    last = ODD( dcli_get_qualifier( "/LAST", 0, 0));
+    first = ODD( dcli_get_qualifier( "/FIRSTCHILD", 0, 0));
+    last = ODD( dcli_get_qualifier( "/LASTCHILD", 0, 0));
     after = ODD( dcli_get_qualifier( "/AFTER", 0, 0));
     before = ODD( dcli_get_qualifier( "/BEFORE", 0, 0));
 
@@ -4825,7 +4825,12 @@ static int	wnav_save_func(		void		*client_data,
 					void		*client_flag)
 {
   WNav *wnav = (WNav *)client_data;
+  int sts;
   int quiet;
+  
+
+  sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+  if ( EVEN(sts)) return sts;
 
   quiet =  ODD( dcli_get_qualifier( "/QUIET", 0, 0));
 
@@ -4998,15 +5003,20 @@ static int	wnav_distribute_func(	void		*client_data,
   int		sts;
   char		*node_ptr;
   char		node_str[80];
+  int		package;
+  bool 		distribute;
 
   if ( ODD( dcli_get_qualifier( "/NODE", node_str, sizeof(node_str))))
     node_ptr = node_str;
   else
     node_ptr = NULL;
 
+  package = ODD( dcli_get_qualifier( "/PACKAGE", 0, 0));
+  distribute = package ? false : true;
+
   sts = WNAV__SUCCESS;
   try {
-    wb_pkg *pkg = new wb_pkg( node_ptr);
+    wb_pkg *pkg = new wb_pkg( node_ptr, distribute);
     delete pkg;
   }
   catch ( wb_error &e) {
