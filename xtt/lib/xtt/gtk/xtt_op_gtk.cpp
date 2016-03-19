@@ -687,7 +687,8 @@ OpGtk::OpGtk( void *op_parent_ctx,
       GtkWidget *node_label_bg = gtk_event_box_new();
       gtk_container_add( GTK_CONTAINER(node_label_bg), node_label);
 
-      GtkWidget *node_button = gtk_button_new();
+      GtkWidget *node_button = gtk_event_box_new();
+      gtk_container_set_border_width(GTK_CONTAINER(node_button), 1);
       GtkWidget *node_hbox = gtk_hbox_new( FALSE, 0);
       // dcli_translate_filename( fname, "$pwr_exe/xtt_ind_gray2.png");
       // GtkWidget *node_image = gtk_image_new_from_file( fname);
@@ -724,7 +725,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
       sup_vect[i].textw = (void *)node_label;
       sup_vect[i].textbgw = (void *)node_label_bg;
       sup_vect[i].buttonw = (void *)node_button;
-      g_signal_connect( node_button, "clicked", G_CALLBACK(activate_sup_node), this);
+      g_signal_connect( node_button, "button_press_event", G_CALLBACK(activate_sup_node), this);
       g_object_set( node_button, "can-focus", FALSE, NULL);
       gtk_box_pack_start( GTK_BOX(status_bar), GTK_WIDGET(node_button), FALSE, FALSE, padding2);
     }
@@ -1173,84 +1174,88 @@ int OpGtk::configure( char *opplace_str)
       continue;
 
     char *textutf8 = g_convert( button_title[i], -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-    appl_buttons[i] = gtk_button_new_with_label(textutf8);
+    // appl_buttons[i] = gtk_button_new_with_label(textutf8);
+    appl_buttons[i] = gtk_event_box_new();
+    gtk_container_set_border_width(GTK_CONTAINER(appl_buttons[i]), 1);
+    GtkWidget *label = gtk_label_new( textutf8);
     g_free( textutf8);
+    gtk_container_add( GTK_CONTAINER(appl_buttons[i]), label);
     gtk_widget_set_size_request( appl_buttons[i], -1, 28);
     switch ( i) {
     case 0:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl1), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl1), this);
       break;
     case 1:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl2), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl2), this);
       break;
     case 2:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl3), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl3), this);
       break;
     case 3:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl4), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl4), this);
       break;
     case 4:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl5), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl5), this);
       break;
     case 5:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl6), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl6), this);
       break;
     case 6:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl7), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl7), this);
       break;
     case 7:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl8), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl8), this);
       break;
     case 8:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl9), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl9), this);
       break;
     case 9:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl10), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl10), this);
       break;
     case 10:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl11), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl11), this);
       break;
     case 11:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl12), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl12), this);
       break;
     case 12:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl13), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl13), this);
       break;
     case 13:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl14), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl14), this);
       break;
     case 14:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl15), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl15), this);
       break;
     case 15:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl16), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl16), this);
       break;
     case 16:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl17), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl17), this);
       break;
     case 17:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl18), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl18), this);
       break;
     case 18:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl19), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl19), this);
       break;
     case 19:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl20), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl20), this);
       break;
     case 20:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl21), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl21), this);
       break;
     case 21:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl22), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl22), this);
       break;
     case 22:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl23), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl23), this);
       break;
     case 23:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl24), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl24), this);
       break;
     case 24:
-      g_signal_connect( appl_buttons[i], "clicked", G_CALLBACK(activate_appl25), this);
+      g_signal_connect( appl_buttons[i], "button_press_event", G_CALLBACK(activate_appl25), this);
       break;
     }
   }
@@ -1557,182 +1562,182 @@ void OpGtk::activate_cmd_menu_item( GtkWidget *w, gpointer data)
   }
 }
 
-void OpGtk::activate_sup_node( GtkWidget *w, gpointer data)
+void OpGtk::activate_sup_node( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->activate_sup_node( (void *)w);
 }
 
-void OpGtk::activate_appl1( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl1( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(0);
 }
 
-void OpGtk::activate_appl2( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl2( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(1);
 }
 
-void OpGtk::activate_appl3( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl3( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(2);
 }
 
-void OpGtk::activate_appl4( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl4( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(3);
 }
 
-void OpGtk::activate_appl5( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl5( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(4);
 }
 
-void OpGtk::activate_appl6( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl6( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(5);
 }
 
-void OpGtk::activate_appl7( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl7( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(6);
 }
 
-void OpGtk::activate_appl8( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl8( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(7);
 }
 
-void OpGtk::activate_appl9( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl9( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(8);
 }
 
-void OpGtk::activate_appl10( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl10( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(9);
 }
 
-void OpGtk::activate_appl11( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl11( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(10);
 }
 
-void OpGtk::activate_appl12( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl12( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(11);
 }
 
-void OpGtk::activate_appl13( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl13( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(12);
 }
 
-void OpGtk::activate_appl14( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl14( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(13);
 }
 
-void OpGtk::activate_appl15( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl15( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(14);
 }
 
-void OpGtk::activate_appl16( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl16( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(15);
 }
 
-void OpGtk::activate_appl17( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl17( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(16);
 }
 
-void OpGtk::activate_appl18( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl18( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(17);
 }
 
-void OpGtk::activate_appl19( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl19( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(18);
 }
 
-void OpGtk::activate_appl20( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl20( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(19);
 }
 
-void OpGtk::activate_appl21( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl21( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(20);
 }
 
-void OpGtk::activate_appl22( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl22( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(21);
 }
 
-void OpGtk::activate_appl23( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl23( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(22);
 }
 
-void OpGtk::activate_appl24( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl24( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
   op->appl_action(23);
 }
 
-void OpGtk::activate_appl25( GtkWidget *w, gpointer data)
+void OpGtk::activate_appl25( GtkWidget *w, GdkEventButton *b, gpointer data)
 {
   Op *op = (Op*)data;
 
