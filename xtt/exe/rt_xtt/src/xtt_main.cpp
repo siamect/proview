@@ -53,18 +53,18 @@
 #include "co_dcli.h"
 #include "co_lng.h"
 #include "co_syi.h"
+#include "cow_xhelp.h"
+#include "cow_wow.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
+#include "xtt_op.h"
 #include "rt_xtt_main.h"
 #include "xtt_trace.h"
 #include "xtt_xnav.h"
 #include "xtt_item.h"
 #include "xtt_url.h"
 #include "xtt_methodtoolbar.h"
-#include "co_lng.h"
-#include "cow_xhelp.h"
-#include "cow_wow.h"
 #include "rt_xnav_msg.h"
 
 
@@ -873,6 +873,8 @@ void Xtt::opplace_selected_cb( void *ctx, char *text)
   if ( xtt->op_close_button)
     strcat( cmd, " /closebutton");
   xtt->xnav->command( cmd);
+  if ( xtt->xnav->op)
+    xtt->xnav->op->set_color_theme( xtt->xnav->gbl.color_theme);
   //xtt->xnav->load_ev_from_opplace();
 }
 
