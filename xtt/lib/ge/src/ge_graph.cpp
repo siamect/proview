@@ -4522,9 +4522,10 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
     }
     else {
       pwr_tAName refname;
-      pwr_sAttrRef aref;
       pwr_tStatus sts;
       char *start, *end;
+      pwr_tTid atid;
+      pwr_tUInt32 asize;
  
       start = s;
       strcpy( refname, s+2);
@@ -4533,11 +4534,40 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
 
       *s = 0;
       end = start + strlen(refname) + 3;
-      sts = gdh_GetObjectInfo( refname, &aref, sizeof(aref));
+
+      sts = gdh_GetAttributeCharacteristics( refname, &atid, &asize, 0, 0); 
       if ( EVEN(sts)) return;
       
-      sts = gdh_AttrrefToName( &aref, str, sizeof(str), cdh_mName_volumeStrict);
-      if ( EVEN(sts)) return;
+      switch ( atid) {
+      case pwr_eType_AttrRef: {
+	pwr_tAttrRef aref;
+
+	sts = gdh_GetObjectInfo( refname, &aref, sizeof(aref));
+	if ( EVEN(sts)) return;
+      
+	sts = gdh_AttrrefToName( &aref, str, sizeof(str), cdh_mName_volumeStrict);
+	if ( EVEN(sts)) return;
+	break;
+      }
+      case pwr_eType_Objid: {
+	pwr_tOid oid;
+
+	sts = gdh_GetObjectInfo( refname, &oid, sizeof(oid));
+	if ( EVEN(sts)) return;
+      
+	sts = gdh_ObjidToName( oid, str, sizeof(str), cdh_mName_volumeStrict);
+	if ( EVEN(sts)) return;
+	break;
+      }
+      case pwr_eType_String: {
+	sts = gdh_GetObjectInfo( refname, str, sizeof(str));
+	if ( EVEN(sts)) return;
+      
+	break;
+      }
+      default:
+	return;
+      }
 
       strcat( str, end);
       strcpy( start, str);
