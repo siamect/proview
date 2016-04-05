@@ -4821,6 +4821,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
+        !/**
+        ! Family code.
+        !
+        ! Note! The family code is usually presented with a hexadecimal value
+        ! but should here be entered as a decimal value.
+        !*/
         Object Family $Attribute 22 06-JUN-2010 13:56:28.16
           Body SysBody 06-JUN-2010 13:56:08.04
             Attr PgmName = "Family"
@@ -4880,7 +4886,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr Super.ErrorSoftLimit = 50
           Attr Super.ErrorHardLimit = 100
           Attr Super.MaxNoOfChannels = 1
-          Attr Family = 28
+          Attr Family = 40
           Attr Resolution = 12
           Attr ChAi.ConversionOn = 1
           Attr ChAi.ScanInterval = 1
@@ -4923,6 +4929,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
+        !/**
+        ! Family code.
+        !
+        ! Note! The family code is usually presented with a hexadecimal value
+        ! but should here be entered as a decimal value.
+        !*/
         Object Family $Attribute 26 08-JUN-2011 14:01:02.86
           Body SysBody 08-JUN-2011 14:01:02.86
             Attr PgmName = "Family"
@@ -5045,6 +5057,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
+        !/**
+        ! Family code.
+        !
+        ! Note! The family code is usually presented with a hexadecimal value
+        ! but should here be entered as a decimal value.
+        !*/
         Object Family $Attribute 35 01-NOV-2011 13:31:33.55
           Body SysBody 01-NOV-2011 13:31:33.55
             Attr PgmName = "Family"

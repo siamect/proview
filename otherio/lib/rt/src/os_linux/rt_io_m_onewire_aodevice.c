@@ -68,7 +68,7 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
     local = (io_sLocalAoDevice *) calloc( 1, sizeof(io_sLocalAoDevice));
     cp->Local = local;
 
-    sprintf( name, "%d-%012x", op->Family, op->Super.Address);
+    sprintf( name, "%x-%012x", op->Family, op->Super.Address);
     name_len = strlen(name);
     strncpy( fname, op->DataFile, sizeof(fname));
     

@@ -62,7 +62,7 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
     local = (io_sLocalDS18B20 *) calloc( 1, sizeof(io_sLocalDS18B20));
     cp->Local = local;
 
-    sprintf( name, "%d-%012x", op->Family, op->Super.Address);
+    sprintf( name, "%x-%012x", op->Family, op->Super.Address);
     sprintf( fname, "/sys/bus/w1/devices/w1 bus master/%s/w1_slave", name); 
     local->value_fp = fopen( fname, "r");
     if (!local->value_fp) {
