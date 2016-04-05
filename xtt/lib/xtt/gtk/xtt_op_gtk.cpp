@@ -688,7 +688,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
       gtk_container_add( GTK_CONTAINER(node_label_bg), node_label);
 
       GtkWidget *node_button = gtk_event_box_new();
-      gtk_container_set_border_width(GTK_CONTAINER(node_button), 1);
+      gtk_container_set_border_width(GTK_CONTAINER(node_button), 2);
       GtkWidget *node_hbox = gtk_hbox_new( FALSE, 0);
       // dcli_translate_filename( fname, "$pwr_exe/xtt_ind_gray2.png");
       // GtkWidget *node_image = gtk_image_new_from_file( fname);
@@ -1176,7 +1176,7 @@ int OpGtk::configure( char *opplace_str)
     char *textutf8 = g_convert( button_title[i], -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
     // appl_buttons[i] = gtk_button_new_with_label(textutf8);
     appl_buttons[i] = gtk_event_box_new();
-    gtk_container_set_border_width(GTK_CONTAINER(appl_buttons[i]), 1);
+    gtk_container_set_border_width(GTK_CONTAINER(appl_buttons[i]), 2);
     GtkWidget *label = gtk_label_new( textutf8);
     g_free( textutf8);
     gtk_container_add( GTK_CONTAINER(appl_buttons[i]), label);
@@ -1342,6 +1342,7 @@ void OpGtk::activate_zoom_in( GtkWidget *w, gpointer data)
 
   op->text_size += 2;
   op->update_alarm_info();
+  op->set_text_size();
 }
 
 void OpGtk::activate_zoom_out( GtkWidget *w, gpointer data)
@@ -1353,6 +1354,7 @@ void OpGtk::activate_zoom_out( GtkWidget *w, gpointer data)
 
   op->text_size -= 2;
   op->update_alarm_info();
+  op->set_text_size();
 }
 
 void OpGtk::activate_colortheme( GtkWidget *w, gpointer data)
@@ -1958,6 +1960,24 @@ void OpGtk::set_color_theme( int idx)
       gtk_widget_modify_fg( GTK_WIDGET(gtk_bin_get_child(GTK_BIN(appl_buttons[i]))), GTK_STATE_NORMAL, &button_text);
       gtk_widget_modify_fg( GTK_WIDGET(gtk_bin_get_child(GTK_BIN(appl_buttons[i]))), GTK_STATE_PRELIGHT, &button_text);
       gtk_widget_modify_fg( GTK_WIDGET(gtk_bin_get_child(GTK_BIN(appl_buttons[i]))), GTK_STATE_ACTIVE, &button_text);
+    }
+  }
+}
+
+#define FONT_SCALE 0.7
+
+void OpGtk::set_text_size()
+{
+  PangoFontDescription *fd = NULL;
+  char str[80];
+  char bold_str[10] = "";
+
+  sprintf( str, "%s %s%f", "Lucida Sans", bold_str, FONT_SCALE * (text_size+2));
+  fd = pango_font_description_from_string( str);
+
+  for ( unsigned int i = 0; i < 25; i++) {
+    if ( appl_buttons[i]) {
+      gtk_widget_modify_font( GTK_WIDGET(gtk_bin_get_child(GTK_BIN(appl_buttons[i]))), fd);
     }
   }
 }

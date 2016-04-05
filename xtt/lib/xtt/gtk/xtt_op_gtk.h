@@ -117,6 +117,7 @@ class OpGtk : public Op {
   void  change_sup_color( void *imagew, op_eSupColor color);
   void  set_title( char *user);
   void  set_color_theme( int idx);
+  void  set_text_size();
 
   static void activate_exit( GtkWidget *w, gpointer data);
   static void activate_aalarm_ack( GtkWidget *w, gpointer data);
