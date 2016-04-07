@@ -517,8 +517,10 @@ int sev_server::mainloop()
           qcom_sEvent *ep = (qcom_sEvent*) get.data;
 
           new_event.m  = ep->mask;
-          if (new_event.b.terminate)
+          if (new_event.b.terminate) {
+	    delete m_db;
             exit(0);
+	  }
           break;
         }
       default: ;

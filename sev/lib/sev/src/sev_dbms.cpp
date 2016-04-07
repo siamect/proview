@@ -736,6 +736,8 @@ int sev_dbms::create_table( pwr_tStatus *sts, char *tablename, pwr_eType type,
 
   if ( cnf_get_value( "sevMysqlEngine", engine, sizeof(engine)) != 0)
     snprintf( enginestr, sizeof(enginestr), " engine=%s", engine);
+  if ( cdh_NoCaseStrcmp( engine, "innodb") == 0)
+    strcat( enginestr, " row_format=compressed");
 
   if ( options & pwr_mSevOptionsMask_PosixTime) {
     if ( options & pwr_mSevOptionsMask_HighTimeResolution) {
@@ -993,10 +995,12 @@ int sev_dbms::get_items( pwr_tStatus *sts)
     item.scantime = atof(row[13]);
     item.deadband = atof(row[14]);
     item.options = strtoul(row[15], 0, 10);
-
     item.attrnum = 1;
 
     m_items.push_back( item);
+
+    if ( item.options & pwr_mSevOptionsMask_DeadBandLinearRegr)
+      add_cache( m_items.size()-1);
   }
   mysql_free_result( result);
   
@@ -1008,6 +1012,32 @@ int sev_dbms::get_items( pwr_tStatus *sts)
 }
 
 int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
+                           pwr_tTime time, void *buf, unsigned int size)
+{
+  if ( m_items[item_idx].options & pwr_mSevOptionsMask_DeadBandLinearRegr) {
+    double value;
+    switch ( m_items[item_idx].attr[0].type) {
+    case pwr_eType_Float32:
+      value = *(pwr_tFloat32 *)buf;
+      break;
+    case pwr_eType_Float64:
+      value = *(pwr_tFloat64 *)buf;
+      break;
+    case pwr_eType_Int32:
+      value = *(pwr_tInt32 *)buf;
+      break;
+    default:
+      return 0;
+    }
+    m_items[item_idx].cache->add( value, &time);
+    m_items[item_idx].cache->evaluate();
+    return 1;
+  }
+  else
+    return write_value( sts, item_idx, attr_idx, time, buf, size);
+}
+
+int sev_dbms::write_value( pwr_tStatus *sts, int item_idx, int attr_idx,
                            pwr_tTime time, void *buf, unsigned int size)
 {
   if(size != m_items[item_idx].value_size) {
@@ -2082,6 +2112,9 @@ int sev_dbms::add_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname
 
   m_items.push_back( item);
   *idx = m_items.size() - 1;
+
+  if ( item.options & pwr_mSevOptionsMask_DeadBandLinearRegr)
+    add_cache( *idx);
 
   *sts = SEV__SUCCESS;
   return 1;
@@ -3883,6 +3916,42 @@ int sev_dbms::store_stat( sev_sStat *stat)
   return 1;
 }
 
+void sev_dbms::write_db_cb( void *data, int idx, double value, pwr_tTime *time)
+{
+  pwr_tStatus sts;
+  sev_dbms *dbms = (sev_dbms *)data;
+
+  switch( dbms->m_items[idx].attr[0].type) {
+  case pwr_eType_Float32: {
+    pwr_tFloat32 v = value;
+    dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v));
+    break;
+  }
+  case pwr_eType_Float64: {
+    pwr_tFloat64 v = value;
+    dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v));
+    break;
+  }
+  case pwr_eType_Int32: {
+    pwr_tInt32 v = value;
+    dbms->write_value( &sts, idx, 0, *time, &v, sizeof(v));
+    break;
+  }
+  default: ;
+  }
+}
+
+void sev_dbms::add_cache( int item_idx)
+{
+  if ( m_items[item_idx].options & pwr_mSevOptionsMask_DeadBandMeanValue)
+    m_items[item_idx].cache = new sev_valuecache( sev_eCvType_Mean, m_items[item_idx].deadband, 
+						  m_items[item_idx].scantime);
+  else
+    m_items[item_idx].cache = new sev_valuecache( sev_eCvType_Point, m_items[item_idx].deadband, 
+						  m_items[item_idx].scantime);
+  m_items[item_idx].cache->set_write_cb( write_db_cb, this, item_idx);
+}
+
 int sev_dbms::begin_transaction()
 {
   char query[20];
@@ -3917,6 +3986,9 @@ sev_dbms::~sev_dbms()
 {
   printf("Freeing memory\n");
   for(size_t idx = 0; idx < m_items.size(); idx++) {
+    if ( m_items[idx].cache)
+      // Write last value
+      m_items[idx].cache->write(0);
     if( m_items[idx].old_value != 0 ) {
       free(m_items[idx].old_value);
       m_items[idx].old_value = 0;

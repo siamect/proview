@@ -106,6 +106,26 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
+    !  Deadband calculated with linear regression of last points.
+    !*/
+    Object DeadBandLinearRegr $Bit
+     Body SysBody
+       Attr PgmName = "DeadBandLinearRegr"
+       Attr Text = "DeadBandLinearRegr"
+       Attr Value = 64
+     EndBody
+    EndObject
+    !/**
+    !  Store a mean value calculated with linear regression.
+    !*/
+    Object DeadBandMeanValue $Bit
+     Body SysBody
+       Attr PgmName = "DeadBandMeanValue"
+       Attr Text = "DeadBandMeanValue"
+       Attr Value = 128
+     EndBody
+    EndObject
+    !/**
     !  Not yet implemented.
     !*/
     Object Parameter $Bit

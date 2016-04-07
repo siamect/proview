@@ -41,8 +41,10 @@
 
 #include "pwr.h"
 #include "pwr_class.h"
+#include "pwr_baseclasses.h"
 #include "rt_mh_net.h"
 #include "rt_sev_net.h"
+#include "sev_valuecache.h"
 
 using namespace std;
 
@@ -65,6 +67,25 @@ typedef struct {
   unsigned int items_msg_cnt;
   unsigned int eventstore_msg_cnt;
 } sev_sStat;
+
+typedef struct {
+  pwr_tTime time;
+  pwr_tFloat32 value;
+  int stored;
+} sev_StoredFloat32;
+
+typedef struct {
+  pwr_tTime time;
+  pwr_tInt32 value;
+  int stored;
+} sev_StoredInt32;
+
+typedef struct {
+  int size;
+  int first;
+  int last;
+  void *values;
+} sev_sStoredValues;
 
 class sev_attr {
  public:
@@ -94,18 +115,25 @@ class sev_event {
 class sev_item {
  public:
   sev_item() : deadband_active(0), last_id(0), value_size(0), old_value(0), first_storage(1), status(0), logged_status(0), 
-    idx(0), deleted(0)
-    { /*memset( old_value, 0, sizeof(old_value));*/}
-    sev_item( const sev_item& x) : id(x.id), oid(x.oid), creatime(x.creatime), modtime(x.modtime), 
-      storagetime(x.storagetime), sevid(x.sevid), scantime(x.scantime), deadband(x.deadband), options(x.options),
+    cache(0), idx(0), deleted(0) { 
+    /*memset( old_value, 0, sizeof(old_value));*/
+  }
+  sev_item( const sev_item& x) : id(x.id), oid(x.oid), creatime(x.creatime), modtime(x.modtime), 
+    storagetime(x.storagetime), sevid(x.sevid), scantime(x.scantime), deadband(x.deadband), options(x.options),
     deadband_active(x.deadband_active), last_id(x.last_id), value_size(x.value_size), old_value(x.old_value),
     first_storage(x.first_storage),
-      attrnum(x.attrnum), attr(x.attr), status(x.status), logged_status(x.logged_status), 
-      idx(x.idx), deleted(x.deleted) {
-      strncpy( tablename, x.tablename, sizeof(tablename)); 
-      strncpy( oname, x.oname, sizeof(oname)); 
-      strncpy( description, x.description, sizeof(description));
-    }
+    attrnum(x.attrnum), attr(x.attr), status(x.status), logged_status(x.logged_status), cache(0),
+    idx(x.idx), deleted(x.deleted) {
+    strncpy( tablename, x.tablename, sizeof(tablename)); 
+    strncpy( oname, x.oname, sizeof(oname)); 
+    strncpy( description, x.description, sizeof(description));
+    if ( x.cache)
+      cache = new sev_valuecache(*x.cache);
+  }
+  ~sev_item() {
+    if ( cache)
+      delete cache;
+  }
   unsigned int 	id;
   char		tablename[256];
   pwr_tOid	oid;
@@ -128,6 +156,7 @@ class sev_item {
   vector<sev_attr>	attr;
   pwr_tStatus	status;
   pwr_tStatus   logged_status;
+  sev_valuecache *cache;
   unsigned int	idx;
   int deleted;
 };

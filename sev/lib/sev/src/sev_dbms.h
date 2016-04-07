@@ -139,6 +139,8 @@ class sev_dbms : public sev_db {
 		pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx);  
   int store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
 		   pwr_tTime time, void *buf, unsigned int size);
+  int write_value( pwr_tStatus *sts, int item_idx, int attr_idx,
+		   pwr_tTime time, void *buf, unsigned int size);
   int get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, float deadband, char *aname, 
 		  pwr_eType type, unsigned int size, pwr_tFloat32 scantime, pwr_tTime *creatime,
 		  pwr_tTime *starttime, 
@@ -161,6 +163,7 @@ class sev_dbms : public sev_db {
   char *dbName() { return sev_dbms_env::dbName();}
   char *pwrtype_to_type( pwr_eType type, unsigned int size);
   static int timestr_to_time( char *tstr, pwr_tTime *ts);
+  static void write_db_cb( void *data, int idx, double value, pwr_tTime *time);
   int check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
                          pwr_tDeltaTime storagetime,
 			char *description, pwr_tFloat32 scantime, 
@@ -200,6 +203,7 @@ class sev_dbms : public sev_db {
   int alter_engine( pwr_tStatus *sts, char *tablename);
   int optimize( pwr_tStatus *sts, char *tablename);
   int store_stat( sev_sStat *stat);
+  void add_cache( int item_idx);
   int begin_transaction();
   int commit_transaction();
   inline char* create_colName(unsigned int index, char *attributename) {
