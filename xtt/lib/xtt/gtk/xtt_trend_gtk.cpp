@@ -69,8 +69,9 @@ XttTrendGtk::XttTrendGtk( void *parent_ctx,
 			  int width,
 			  int height,
 			  unsigned int x_options,
+			  int x_color_theme,
 			  int *sts) :
-  XttTrend( parent_ctx, name, trend_list, plotgroup, x_options, sts), 
+  XttTrend( parent_ctx, name, trend_list, plotgroup, x_options, x_color_theme, sts), 
   parent_widget(parent_wid)
 {
   if ( EVEN(*sts))
@@ -78,7 +79,7 @@ XttTrendGtk::XttTrendGtk( void *parent_ctx,
   *sts = XNAV__SUCCESS;
 
   curve = new GeCurveGtk( this, parent_widget, name, NULL, gcd, 1, width, height, 
-			  options);
+			  options, color_theme);
   curve->close_cb = trend_close_cb;
   curve->help_cb = trend_help_cb;
   curve->snapshot_cb = trend_snapshot_cb;

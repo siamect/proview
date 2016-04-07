@@ -183,6 +183,7 @@ static void xnav_trend_help_cb( void *ctx, const char *key);
 static void xnav_tcurve_close_cb( void *ctx, XttTCurve *trend);
 static void xnav_tcurve_help_cb( void *ctx, const char *key);
 static void xnav_sevhist_help_cb( void *ctx, const char *key);
+static void xnav_sevhist_close_cb( void *ctx, XttSevHist *hist);
 static int xnav_sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, char *oname);
 static int xnav_get_select_cb( void *ctx, pwr_tAttrRef *aref, int *is_attr);
 static void xnav_fast_close_cb( void *ctx, XttFast *fast);
@@ -1153,6 +1154,12 @@ static int	xnav_set_func(	void		*client_data,
       for ( elem = xnav->appl.root; elem; elem = elem->next) {
 	if ( elem->type == applist_eType_Graph)
 	  ((XttGe *)elem->ctx)->update_color_theme( idx);
+	else if ( elem->type == applist_eType_SevHist)
+	  ((XttSevHist *)elem->ctx)->update_color_theme( idx);
+	else if ( elem->type == applist_eType_Trend)
+	  ((XttTrend *)elem->ctx)->update_color_theme( idx);
+	else if ( elem->type == applist_eType_Fast)
+	  ((XttFast *)elem->ctx)->update_color_theme( idx);
       }
     }
     if ( xnav->op)
@@ -4099,7 +4106,7 @@ static int	xnav_open_func(	void		*client_data,
         trend->pop();
       }
       else {
-        trend = xnav->xtttrend_new( title_str, NULL, &plotgroup, width, height, options, &sts);
+        trend = xnav->xtttrend_new( title_str, NULL, &plotgroup, width, height, options, xnav->gbl.color_theme, &sts);
         if ( EVEN(sts))
           xnav->message('E',"Error in trend configuration");
         else {
@@ -4119,7 +4126,7 @@ static int	xnav_open_func(	void		*client_data,
 	  trend->pop();
 	}
 	else {
-	  trend = xnav->xtttrend_new( title_str, aref_vect, 0, width, height, options, &sts);
+	  trend = xnav->xtttrend_new( title_str, aref_vect, 0, width, height, options, xnav->gbl.color_theme, &sts);
 	  if ( EVEN(sts))
 	    xnav->message('E',"Error in trend configuration");
 	  else {
@@ -4133,7 +4140,7 @@ static int	xnav_open_func(	void		*client_data,
 	}
       }
       else {
-	trend = xnav->xtttrend_new( title_str, aref_vect, 0, width, height, options, &sts);
+	trend = xnav->xtttrend_new( title_str, aref_vect, 0, width, height, options, xnav->gbl.color_theme, &sts);
 	if ( ODD(sts)) {
 	  trend->close_cb = xnav_trend_close_cb;
 	  trend->command_cb = xnav_trend_command_cb;
@@ -4257,7 +4264,7 @@ static int	xnav_open_func(	void		*client_data,
 
     if ( ODD( dcli_get_qualifier( "/NEW", 0, 0))) {
       XttTCurve *tcurve = xnav->xtttcurve_new( title_str, 0, width, height, 
-					       options, &sts);
+					       options, xnav->gbl.color_theme, &sts);
       if ( ODD(sts)) {
 	tcurve->close_cb = xnav_tcurve_close_cb;
 	tcurve->command_cb = xnav_trend_command_cb;
@@ -4298,7 +4305,7 @@ static int	xnav_open_func(	void		*client_data,
       return XNAV__HOLDCOMMAND;
     }
     XttTCurve *tcurve = xnav->xtttcurve_new( title_str, aref_vect, 
-					     width, height, options, &sts);
+					     width, height, options, xnav->gbl.color_theme, &sts);
     if ( ODD(sts)) {
       tcurve->close_cb = xnav_tcurve_close_cb;
       tcurve->command_cb = xnav_trend_command_cb;
@@ -4373,11 +4380,15 @@ static int	xnav_open_func(	void		*client_data,
 
     if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
       // Open exported history file
-      hist = xnav->xttsevhist_new( title_str, 0, 0, 0, 0, 0, file_str, 
-				   width, height, options, &sts);
+      
+      hist = xnav->xttsevhist_new( file_str, 0, 0, 0, 0, 0, file_str, 
+				   width, height, options, xnav->gbl.color_theme, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
+        hist->close_cb = xnav_sevhist_close_cb;
 	hist->get_select_cb = xnav_sevhist_get_select_cb;
+	xnav->appl.insert( applist_eType_SevHist, (void *)hist, pwr_cNOid, "",
+			   NULL);
       }
       return XNAV__SUCCESS;
     }
@@ -4625,26 +4636,35 @@ static int	xnav_open_func(	void		*client_data,
     xnav->set_clock_cursor();
     if ( plotgroup_found) {
       hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, 
-				   xnav->scctx, 0, width, height, options, &sts);
+				   xnav->scctx, 0, width, height, options, xnav->gbl.color_theme, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
+        hist->close_cb = xnav_sevhist_close_cb;
 	hist->get_select_cb = xnav_sevhist_get_select_cb;
+	xnav->appl.insert( applist_eType_SevHist, (void *)hist, oidv[0], "",
+			   NULL);
       }
     }
     else if( sevHistObjectFound ) {
       hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, 
-				   xnav->scctx, 0, width, height, options, &sts);
+				   xnav->scctx, 0, width, height, options, xnav->gbl.color_theme, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
+        hist->close_cb = xnav_sevhist_close_cb;
 	hist->get_select_cb = xnav_sevhist_get_select_cb;
+	xnav->appl.insert( applist_eType_SevHist, (void *)hist, oidv[0], "",
+			   NULL);
       }
     }
     else {
       hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, 
-				   xnav->scctx, 0, width, height, options, &sts);
+				   xnav->scctx, 0, width, height, options, xnav->gbl.color_theme, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
+        hist->close_cb = xnav_sevhist_close_cb;
 	hist->get_select_cb = xnav_sevhist_get_select_cb;
+	xnav->appl.insert( applist_eType_SevHist, (void *)hist, oidv[0], "",
+			   NULL);
       }
     }
     xnav->reset_cursor();
@@ -4697,7 +4717,7 @@ static int	xnav_open_func(	void		*client_data,
 
     if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
       // Open exported fast file
-      XttFast *fast = xnav->xttfast_new( title_str, 0, width, height, 0, file_str, &sts);
+      XttFast *fast = xnav->xttfast_new( title_str, 0, width, height, 0, file_str, xnav->gbl.color_theme, &sts);
       if ( EVEN(sts))
 	xnav->message('E',"Error in fast configuration");
       else {
@@ -4762,7 +4782,7 @@ static int	xnav_open_func(	void		*client_data,
       fast->pop();
     }
     else {
-      fast = xnav->xttfast_new( title_str, &aref, width, height, options, 0, &sts);
+      fast = xnav->xttfast_new( title_str, &aref, width, height, options, 0, xnav->gbl.color_theme, &sts);
       if ( EVEN(sts))
 	xnav->message('E',"Error in fast configuration");
       else {
@@ -5597,6 +5617,14 @@ static void xnav_sevhist_help_cb( void *ctx, const char *key)
     xnav->message( 'E', "Unable to find topic");
   else
     xnav->message( ' ', null_str);
+}
+
+static void xnav_sevhist_close_cb( void *ctx, XttSevHist *hist)
+{
+  XNav *xnav = (XNav *) ctx;
+
+  xnav->appl.remove( (void *)hist);
+  delete hist;
 }
 
 static int xnav_sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, char *oname)
@@ -9549,7 +9577,7 @@ int XNav::set_parameter( char *name_str, char *value_str, int publicwrite)
 
 void XNav::open_rttlog( char *name, char *filename)
 {
-  gecurve_new( name, filename, NULL, 0, 0);
+  gecurve_new( name, filename, NULL, 0, 0, gbl.color_theme);
 }
 
 
@@ -9823,6 +9851,12 @@ static void xnav_colortheme_selector_ok_cb( void *ctx, char *text)
       for ( elem = xnav->appl.root; elem; elem = elem->next) {
 	if ( elem->type == applist_eType_Graph)
 	  ((XttGe *)elem->ctx)->update_color_theme( idx);
+	else if ( elem->type == applist_eType_SevHist)
+	  ((XttSevHist *)elem->ctx)->update_color_theme( idx);
+	else if ( elem->type == applist_eType_Trend)
+	  ((XttTrend *)elem->ctx)->update_color_theme( idx);
+	else if ( elem->type == applist_eType_Fast)
+	  ((XttFast *)elem->ctx)->update_color_theme( idx);
       }
     }
     if ( xnav->op)

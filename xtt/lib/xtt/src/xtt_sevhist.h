@@ -95,19 +95,22 @@ class XttSevHist {
   long int	time_high_old;
   bool    	sevhistobjectv[XTT_SEVHIST_MAX]; //!< Indicates that it is a SevHistObject
   time_ePeriod	initial_period;
+  int		color_theme;
 
   //! Constructor
   XttSevHist( void *xn_parent_ctx,
-	     const char *xn_name,
-	     pwr_tOid* xn_oidv,
-	     pwr_tOName *xn_aname,
-	     pwr_tOName *xn_oname,
-	     bool *sevhistobjectv,
-	     sevcli_tCtx xn_scctx,
-	     int *sts);
+	      const char *xn_name,
+	      pwr_tOid* xn_oidv,
+	      pwr_tOName *xn_aname,
+	      pwr_tOName *xn_oname,
+	      bool *sevhistobjectv,
+	      sevcli_tCtx xn_scctx,
+	      int xn_color_theme,
+	      int *sts);
   XttSevHist( void *parent_ctx,
 	      const char *name,
 	      char *filename,
+	      int xn_color_theme,
 	      int *sts);
 
   //! Destructor
@@ -122,6 +125,7 @@ class XttSevHist {
 		  bool sevhistobject);
   int read_export( char *filename);
   void setup();
+  void update_color_theme( int ct) { curve->update_color_theme(ct);}
 
   static void sevhist_close_cb( void *ctx);
   static void sevhist_increase_period_cb( void *ctx);

@@ -55,6 +55,7 @@ class XttTCurveGtk : public XttTCurve {
 		int xn_width,
 		int xn_height,
 		unsigned int xn_options, 
+		int xn_color_theme,
 		int *sts);
   ~XttTCurveGtk();
 };

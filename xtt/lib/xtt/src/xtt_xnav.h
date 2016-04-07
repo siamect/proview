@@ -361,13 +361,15 @@ class XNav {
 		      pwr_tStatus *sts) {return 0;}
     virtual Op *op_new( char *opplace, pwr_tStatus *sts) {return 0;}
     virtual XttTrend *xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *plotgroup,
-			    int width, int height, unsigned int options, pwr_tStatus *sts) {return 0;}
+	 int width, int height, unsigned int options, int color_theme, pwr_tStatus *sts) {return 0;}
     virtual XttSevHist *xttsevhist_new( char *name, pwr_tOid *oidv, pwr_tOName *aname,
 					pwr_tOName *oname, bool *sevhistobjectv, sevcli_tCtx scctx, 
-					char *filename, int width, int height, unsigned int options, pwr_tStatus *sts) {return 0;}
-    virtual XttTCurve *xtttcurve_new( char *name, pwr_tAttrRef *arefv, int width, int height, unsigned int options, pwr_tStatus *sts) {return 0;}
+					char *filename, int width, int height, unsigned int options, 
+					int color_theme, pwr_tStatus *sts) {return 0;}
+    virtual XttTCurve *xtttcurve_new( char *name, pwr_tAttrRef *arefv, int width, int height, unsigned int options, 
+				      int color_theme, pwr_tStatus *sts) {return 0;}
     virtual XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, unsigned int options,
-				  char *filename, pwr_tStatus *sts) {return 0;}
+				  char *filename, int color_theme, pwr_tStatus *sts) {return 0;}
     virtual XAttOne *xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
 			  pwr_tStatus *sts) {return 0;}
     virtual CLog *clog_new( const char *name, pwr_tStatus *sts) {return 0;}
@@ -389,7 +391,7 @@ class XNav {
 				   int width, int height, int x, int y, double scan_time, 
 				   unsigned int options, int embedded, pwr_tAttrRef *arp, pwr_tStatus *sts) {return 0;}
     virtual GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
-				  int pos_right, unsigned int options) {return 0;}
+				  int pos_right, unsigned int options, int color_theme) {return 0;}
     virtual XttFileview *fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,
 				       int type, char *target_attr, char *trigger_attr, 
 				       char *filetype) {return 0;}

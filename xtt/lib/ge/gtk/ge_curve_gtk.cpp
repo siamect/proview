@@ -749,9 +749,10 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
 			int pos_right,
 			int gc_width,
 			int gc_height,
-			unsigned int gc_options) :
+			unsigned int gc_options,
+			int gc_color_theme) :
   GeCurve( gc_parent_ctx, curve_name, filename, curve_data, pos_right, 
-	   gc_width, gc_height, gc_options),
+	   gc_width, gc_height, gc_options, gc_color_theme),
   minmax_widget(0), export_widget(0), disable_timecombo_callback(0), clock_cursor(0)
 
 {

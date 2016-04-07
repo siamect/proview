@@ -530,6 +530,7 @@ int GeCurve::init_growcurve_cb( GlowCtx *fctx, void *client_data)
 {
   grow_sAttributes grow_attr;
   unsigned long mask;
+  char path[2][80] = {"$pwrp_exe/", "$pwr_exe/"};
 
   GeCurve *curve = (GeCurve *) client_data;
   curve->growcurve_ctx = (CurveCtx *) fctx;
@@ -545,6 +546,8 @@ int GeCurve::init_growcurve_cb( GlowCtx *fctx, void *client_data)
     mask |= grow_eAttr_initial_position;
     grow_attr.initial_position = glow_eDirection_Right;
   }
+  mask |= grow_eAttr_color_theme;
+  strcpy( grow_attr.color_theme, "$default");
   grow_SetAttributes( curve->growcurve_ctx, &grow_attr, mask); 
 
   grow_SetCtxUserData( curve->growcurve_ctx, curve);
@@ -576,13 +579,23 @@ int GeCurve::init_growcurve_cb( GlowCtx *fctx, void *client_data)
   grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_ScrollDown, 
         glow_eEventType_CallBack, growcurve_cb);
 
+  grow_SetPath( curve->growcurve_ctx, 2, (char *)path);
+  grow_ReadCustomColorFile( curve->growcurve_ctx, 0);
+
+  grow_SetBackgroundColor( curve->growcurve_ctx, glow_eCtColor_Background);
+
   grow_CreateGrowCurve( curve->growcurve_ctx, "curve", NULL, 0, 0, 200, 30,
 			curve->curve_border, 2, glow_mDisplayLevel_1, 1, 1,
                         curve->curve_color, curve, &curve->curve_object);
+  grow_SetObjectOriginalFillColor( curve->curve_object, glow_eCtColor_DiagramFillcolor);
+  grow_SetObjectOriginalBorderColor( curve->curve_object, glow_eCtColor_DiagramBordercolor);
+
   grow_CreateGrowAxis( curve->growcurve_ctx, "y_axis", 0, 30, 200, 31.85,
 		       glow_eDrawType_Line, 1, 5, 
 		       glow_eDrawType_TextHelvetica, curve, 
                        &curve->curve_axisobject);
+  grow_SetObjectOriginalBorderColor( curve->curve_axisobject, glow_eCtColor_AxisBordercolor);
+  grow_SetObjectOriginalTextColor( curve->curve_axisobject, glow_eCtColor_BackgroundTextAndLines);
 
   grow_tNodeClass nc;
   grow_CreateNodeClass( curve->growcurve_ctx, "MarkNc", glow_eNodeGroup_Common, &nc);
@@ -698,9 +711,9 @@ int GeCurve::grownames_cb( GlowCtx *ctx, glow_tEvent event)
             }
             curve->hide[i] = !curve->hide[i];
             if ( curve->hide[i])
-              color = glow_eDrawType_LineErase;
+              color = glow_eCtColor_Background;
             else
-              color = glow_eDrawType_Line;
+              color = glow_eCtColor_BackgroundTextAndLines;
             grow_SetObjectBorderColor( curve->hide_l1[i], color);
             grow_SetObjectBorderColor( curve->hide_l2[i], color);
 
@@ -792,6 +805,8 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
   grow_attr.grid_on = 0;
   mask |= grow_eAttr_hot_mode;
   grow_attr.hot_mode = glow_eHotMode_TraceAction;
+  mask |= grow_eAttr_color_theme;
+  strcpy( grow_attr.color_theme, "$default");
   grow_SetAttributes( curve->grownames_ctx, &grow_attr, mask); 
 
   grow_SetCtxUserData( curve->grownames_ctx, curve);
@@ -814,139 +829,155 @@ int GeCurve::config_names()
 
   grow_tObject t1;
   glow_eDrawType color;
-  double x;
+  double x, y;
+  grow_sAttributes grow_attr;
+  unsigned long mask;
+  char path[2][80] = {"$pwrp_exe/", "$pwr_exe/"};
   int date = (strcmp( cd->x_format[0], "%10t") == 0 || 
 	      strcmp( cd->x_format[0], "%11t") == 0) ? 1 : 0;        
 
   int time_size;
   if ( date)
-    time_size = 7;
+    time_size = 9;
   else
     time_size = 3;
 
   // Create nodeclass for mark values
   grow_New( grownames_ctx);
 
+  mask = grow_eAttr_color_theme;
+  strcpy( grow_attr.color_theme, "$default");
+  grow_SetAttributes( grownames_ctx, &grow_attr, mask); 
+
+  grow_SetPath( grownames_ctx, 2, (char *)path);
+  grow_ReadCustomColorFile( grownames_ctx, 0);
+
+  grow_SetBackgroundColor( grownames_ctx, glow_eCtColor_Background);
+
   grow_tNodeClass nc;
   grow_CreateNodeClass( grownames_ctx, "MarkVal", glow_eNodeGroup_Common, &nc);
-  grow_AddRect( nc, "", 0, 0, time_size, 0.75, glow_eDrawType_LineGray, 1, 0,
+  grow_AddRect( nc, "", 0, 0, time_size, 0.75, glow_eCtColor_Background, 1, 0,
 		glow_mDisplayLevel_1, 0, 0, 0,
 		glow_eDrawType_Line, NULL);
   grow_AddAnnot( nc, 0.2, 0.7, 0, glow_eDrawType_TextHelvetica, 
-		 glow_eDrawType_Line,
-		 2, glow_eAnnotType_OneLine, 0, glow_mDisplayLevel_1, NULL);
+		 glow_eCtColor_BackgroundTextAndLines,
+		 3, glow_eAnnotType_OneLine, 0, glow_mDisplayLevel_1, NULL);
 
   // Draw header
   grow_tObject o1;
-  grow_CreateGrowLine( grownames_ctx, "", 0, 0.75, 60, 0.75,
-			 glow_eDrawType_Color34, 2, 0, NULL, &o1);
-  grow_CreateGrowRect( grownames_ctx, "", 0, 0, 60, 0.8,
-			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 0, 1,
-			 glow_eDrawType_Color32, NULL, &o1);
+  // grow_CreateGrowLine( grownames_ctx, "", 0, 0.75, 60, 0.75,
+  //			 glow_eDrawType_Color34, 2, 0, NULL, &o1);
+  y = 0;
+  grow_CreateGrowRect( grownames_ctx, "", 0, y, 60, y + 0.9,
+			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 0, 0,
+			 glow_eCtColor_AreaDelimiter, NULL, &o1);
   x = 0.8;
   grow_CreateGrowText( grownames_ctx, "", Lng::translate("View"),
-		       x, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+		       x, y + 0.6, glow_eDrawType_TextHelvetica, 
+		       glow_eCtColor_AreaDelimiterTextAndLines, 3, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   x += 1.8;
   grow_CreateGrowText( grownames_ctx, "", Lng::translate("Cursor"),
-		       x, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+		       x, y + 0.6, glow_eDrawType_TextHelvetica, 
+		       glow_eCtColor_AreaDelimiterTextAndLines, 3, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   x += time_size + 0.2;
   grow_CreateGrowText( grownames_ctx, "", Lng::translate("Mark 1"),
-		       x, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+		       x, y + 0.6, glow_eDrawType_TextHelvetica, 
+		       glow_eCtColor_AreaDelimiterTextAndLines, 3, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   // TODO
   x += time_size + 0.2;
   grow_CreateGrowText( grownames_ctx, "", Lng::translate("Mark 2"),
-		       x, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+		       x, y + 0.6, glow_eDrawType_TextHelvetica, 
+		       glow_eCtColor_AreaDelimiterTextAndLines, 3, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   x += time_size + 0.2;
   grow_CreateGrowText( grownames_ctx, "", Lng::translate("Unit"),
-		       x, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+		       x, y + 0.6, glow_eDrawType_TextHelvetica, 
+		       glow_eCtColor_AreaDelimiterTextAndLines, 3, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   x += 2;
   grow_CreateGrowText( grownames_ctx, "", Lng::translate("Scale"),
-		       x, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+		       x, y + 0.6, glow_eDrawType_TextHelvetica, 
+		       glow_eCtColor_AreaDelimiterTextAndLines, 3, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   if ( options & curve_mOptions_ShowDescrFirst) {
     x += 3;
     grow_CreateGrowText( grownames_ctx, "", Lng::translate("Description"),
-			 x, 0.6, glow_eDrawType_TextHelvetica, 
-			 glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+			 x, y + 0.6, glow_eDrawType_TextHelvetica, 
+			 glow_eCtColor_AreaDelimiterTextAndLines, 3, glow_eFont_LucidaSans, 
 			 glow_mDisplayLevel_1, NULL, &o1);
   
     x += 14;
     grow_CreateGrowText( grownames_ctx, "", Lng::translate("Attribute"),
-			 x, 0.6, glow_eDrawType_TextHelvetica, 
-			 glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+			 x, y + 0.6, glow_eDrawType_TextHelvetica, 
+			 glow_eCtColor_AreaDelimiterTextAndLines, 3, glow_eFont_LucidaSans, 
 			 glow_mDisplayLevel_1, NULL, &o1);
   }
   else {
     x += 3;
     grow_CreateGrowText( grownames_ctx, "", Lng::translate("Attribute"),
-			 x, 0.6, glow_eDrawType_TextHelvetica, 
-			 glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+			 x, y + 0.6, glow_eDrawType_TextHelvetica, 
+			 glow_eCtColor_AreaDelimiterTextAndLines, 3, glow_eFont_LucidaSans, 
 			 glow_mDisplayLevel_1, NULL, &o1);
   
     x += 14;
     grow_CreateGrowText( grownames_ctx, "", Lng::translate("Description"),
-			 x, 0.6, glow_eDrawType_TextHelvetica, 
-			 glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+			 x, y + 0.6, glow_eDrawType_TextHelvetica, 
+			 glow_eCtColor_AreaDelimiterTextAndLines, 3, glow_eFont_LucidaSans, 
 			 glow_mDisplayLevel_1, NULL, &o1);
   }
   
+  y += 1;
   for ( int i = 0; i < cd->cols; i++) {
     // Draw shadowed frame
-    grow_CreateGrowRect( grownames_ctx, "", 0, (i+0.8), 60, 1,
-			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 0, 1,
-			 glow_eDrawType_Color32, NULL, &o1);
+    grow_CreateGrowLine( grownames_ctx, "", 0, y + 1, 60, y + 1,
+			 glow_eCtColor_LineDelimiter, 1, 0, NULL, &o1);
+
     // Draw color rectangle
-    grow_CreateGrowRect( grownames_ctx, "", 0.25, (i+0.8)+0.3, 0.75, 0.5,
-			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
+    grow_CreateGrowRect( grownames_ctx, "", 0.25, y + 0.3, 0.75, 0.5,
+			 glow_eCtColor_IndicatorBorderColor, 1, 0, glow_mDisplayLevel_1, 1, 1, 0,
 			 cd->color[i], NULL, &name_rect[i]);
 
     if ( hide[i])
-      color = glow_eDrawType_LineErase;
+      color = glow_eCtColor_Background;
     else
-      color = glow_eDrawType_Line;
+      color = glow_eCtColor_BackgroundTextAndLines;
 
     // Draw checkbox for hide
-    grow_CreateGrowLine( grownames_ctx, "", 1.4, (i+0.8)+0.45, 1.52, (i+0.8)+0.75,
+    grow_CreateGrowLine( grownames_ctx, "", 1.4, y + 0.45, 1.52, y + 0.75,
 			 color, 2, 0, NULL, &hide_l1[i]);
-    grow_CreateGrowLine( grownames_ctx, "", 1.50, (i+0.8)+0.75, 1.77, (i+0.8)+0.35,
+    grow_CreateGrowLine( grownames_ctx, "", 1.50, y + 0.75, 1.77, y + 0.35,
 			 color, 2, 0, NULL, &hide_l2[i]);
-    grow_CreateGrowRect( grownames_ctx, "", 1.3, (i+0.8)+0.3, 0.5, 0.5,
-			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 1, 1,
-			 glow_eDrawType_Color32, NULL, &hide_rect[i]);
+    grow_CreateGrowRect( grownames_ctx, "", 1.3, y + 0.3, 0.5, 0.5,
+			 color, 1, 0, glow_mDisplayLevel_1, 0, 1, 0,
+			 glow_eCtColor_Background, NULL, &hide_rect[i]);
 
     // Draw nodes for mark and cursor values
     x = 2.2;
-    grow_CreateGrowNode( grownames_ctx, "", nc, x, (i+0.8)+0.05, NULL, 
+    grow_CreateGrowNode( grownames_ctx, "", nc, x, y + 0.05, NULL, 
 			 &cursor_annot[i]);
     x += time_size + 0.2;
-    grow_CreateGrowNode( grownames_ctx, "", nc, x, (i+0.8)+0.05, NULL, 
+    grow_CreateGrowNode( grownames_ctx, "", nc, x, y + 0.05, NULL, 
 			 &mark1_annot[i]);
     // TODO
     x += time_size + 0.2;
-    grow_CreateGrowNode( grownames_ctx, "", nc, x, (i+0.8)+0.05, NULL, 
+    grow_CreateGrowNode( grownames_ctx, "", nc, x, y + 0.05, NULL, 
 			 &mark2_annot[i]);
     // Draw unit
     x += time_size + 0.6;
+    if ( strcmp( cd->y_unit[i], "") == 0)
+      strcpy( cd->y_unit[i], " ");
     grow_CreateGrowText( grownames_ctx, "", cd->y_unit[i],
-		       x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+			 x, y + 0.75, glow_eDrawType_TextHelvetica, 
+			 glow_eCtColor_BackgroundTextAndLines, 3, glow_eFont_LucidaSans, 
 			 glow_mDisplayLevel_1, NULL, &t1);
     // Draw button for scale
     x += 2;
-    grow_CreateGrowRect( grownames_ctx, "", x, (i+0.8)+0.1, 1.2, 0.7,
-			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
-			 glow_eDrawType_Color33, NULL, &scale_rect[i]);
+    grow_CreateGrowRect( grownames_ctx, "", x, y + 0.1, 1.2, 0.7,
+			 glow_eCtColor_ButtonBordercolor, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
+			 glow_eCtColor_ButtonFillcolor, NULL, &scale_rect[i]);
     grow_SetObjectShadowWidth( scale_rect[i], 20);
     // Draw attribute name
     if ( options & curve_mOptions_ShowDescrFirst) {
@@ -955,12 +986,12 @@ int GeCurve::config_names()
       x += 3;
       if ( strcmp( cd->y_description[i], "") != 0) {
 	grow_CreateGrowText( grownames_ctx, "", cd->y_description[i],
-			     x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica,
-			     glow_eDrawType_Line, 2, glow_eFont_LucidaSans,
+			     x, y + 0.75, glow_eDrawType_TextHelvetica,
+			     glow_eCtColor_BackgroundTextAndLines, 3, glow_eFont_LucidaSans,
 			     glow_mDisplayLevel_1, NULL, &t1);
 
 	grow_GetTextExtent( grownames_ctx, cd->y_name[i], strlen(cd->y_name[i]),
-			    glow_eDrawType_TextHelvetica, 2, glow_eFont_LucidaSans, &w, &h, &descent);
+			    glow_eDrawType_TextHelvetica, 3, glow_eFont_LucidaSans, &w, &h, &descent);
 	if ( w < 13)
 	  x += 14;
 	else
@@ -970,30 +1001,30 @@ int GeCurve::config_names()
 	x += 14;
 	
       grow_CreateGrowText( grownames_ctx, "", cd->y_name[i],
-			   x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica,
-			   glow_eDrawType_Line, 2, glow_eFont_LucidaSans,
+			   x, y + 0.75, glow_eDrawType_TextHelvetica,
+			   glow_eCtColor_BackgroundTextAndLines, 3, glow_eFont_LucidaSans,
 			   glow_mDisplayLevel_1, NULL, &t1);
     }
     else {
       x += 3;
       grow_CreateGrowText( grownames_ctx, "", cd->y_name[i],
-			   x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica,
-			   glow_eDrawType_Line, 2, glow_eFont_LucidaSans,
+			   x, y + 0.75, glow_eDrawType_TextHelvetica,
+			   glow_eCtColor_BackgroundTextAndLines, 3, glow_eFont_LucidaSans,
 			   glow_mDisplayLevel_1, NULL, &t1);
 
       if ( strcmp( cd->y_description[i], "") != 0) {
 	double w, h, descent;
 
 	grow_GetTextExtent( grownames_ctx, cd->y_name[i], strlen(cd->y_name[i]),
-			    glow_eDrawType_TextHelvetica, 2, glow_eFont_LucidaSans, &w, &h, &descent);
+			    glow_eDrawType_TextHelvetica, 3, glow_eFont_LucidaSans, &w, &h, &descent);
 	if ( w < 13)
 	  x += 14;
 	else
 	  x += w + 1;
 	
 	grow_CreateGrowText( grownames_ctx, "", cd->y_description[i],
-			     x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica,
-			     glow_eDrawType_Line, 2, glow_eFont_LucidaSans,
+			     x, y + 0.75, glow_eDrawType_TextHelvetica,
+			     glow_eCtColor_BackgroundTextAndLines, 3, glow_eFont_LucidaSans,
 			     glow_mDisplayLevel_1, NULL, &t1);
       }
     }
@@ -1001,39 +1032,39 @@ int GeCurve::config_names()
     grow_SetAnnotation( cursor_annot[i], 0, "0", 1);
     grow_SetAnnotation( mark1_annot[i], 0, "0", 1);
     grow_SetAnnotation( mark2_annot[i], 0, "0", 1);
+    y += 1;
   }
   // Draw nodes for time values
   // Draw shadowed frame
-  grow_CreateGrowRect( grownames_ctx, "", 0, (cd->cols+0.8), 60, 1,
-			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 0, 1,
-			 glow_eDrawType_Color32, NULL, &o1);
+  grow_CreateGrowLine( grownames_ctx, "", 0, y + 1, 60, y + 1,
+		       glow_eCtColor_LineDelimiter, 1, 0, NULL, &o1);
   x = 2.2;
-  grow_CreateGrowNode( grownames_ctx, "", nc, x, (cd->cols+0.8)+0.05, NULL, 
+  grow_CreateGrowNode( grownames_ctx, "", nc, x, y + 0.05, NULL, 
 		       &cursor_annot[cd->cols]);
   x += time_size + 0.2;
-  grow_CreateGrowNode( grownames_ctx, "", nc, x, (cd->cols+0.8)+0.05, NULL, 
+  grow_CreateGrowNode( grownames_ctx, "", nc, x, y +0.05, NULL, 
 		       &mark1_annot[cd->cols]);
   // TODO
   x += time_size + 0.2;
-  grow_CreateGrowNode( grownames_ctx, "", nc, x, (cd->cols+0.8)+0.05, NULL, 
+  grow_CreateGrowNode( grownames_ctx, "", nc, x, y + 0.05, NULL, 
 		       &mark2_annot[cd->cols]);
   // Draw unit
   x += time_size + 0.6;
   grow_CreateGrowText( grownames_ctx, "", "s",
-		       x, (cd->cols+0.8) + 0.75, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+		       x, y + 0.75, glow_eDrawType_TextHelvetica, 
+		       glow_eCtColor_BackgroundTextAndLines, 3, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &t1);
   // Draw button for scale
   x += 2;
-  grow_CreateGrowRect( grownames_ctx, "", x, (cd->cols+0.8)+0.1, 1.2, 0.7,
-		       glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
-		       glow_eDrawType_Color33, NULL, &scale_rect[cd->cols]);
+  grow_CreateGrowRect( grownames_ctx, "", x, y + 0.1, 1.2, 0.7,
+		       glow_eCtColor_ButtonBordercolor, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
+		       glow_eCtColor_ButtonFillcolor, NULL, &scale_rect[cd->cols]);
   grow_SetObjectShadowWidth( scale_rect[cd->cols], 20);
   // Draw attribute name
   x += 3;
   grow_CreateGrowText( grownames_ctx, "", Lng::translate("Time axis"),
-		       x, (cd->cols+0.8) + 0.75, glow_eDrawType_TextHelvetica,
-		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
+		       x, y + 0.75, glow_eDrawType_TextHelvetica,
+		       glow_eCtColor_BackgroundTextAndLines, 3, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &t1);
   grow_SetAnnotation( cursor_annot[cd->cols], 0, "0", 1);
   grow_SetAnnotation( mark1_annot[cd->cols], 0, "0", 1);
@@ -1082,12 +1113,25 @@ int GeCurve::configure_axes()
 {
   double x = 0;
   int i, idx;
+  grow_sAttributes grow_attr;
+  unsigned long mask;
+  char path[2][80] = {"$pwrp_exe/", "$pwr_exe/"};
 
   if ( !cd)
     return 0;
 
   grow_SetNodraw( growaxis_ctx);
   grow_New( growaxis_ctx);
+
+  mask = grow_eAttr_color_theme;
+  strcpy( grow_attr.color_theme, "$default");
+  grow_SetAttributes( growaxis_ctx, &grow_attr, mask); 
+
+  grow_SetPath( growaxis_ctx, 2, (char *)path);
+  grow_ReadCustomColorFile( growaxis_ctx, 0);
+
+  grow_SetBackgroundColor( growaxis_ctx, glow_eCtColor_Background);
+
   memset( axis_object, 0, sizeof( axis_object));
 
   for ( i = 0; i < cd->cols; i++) {
@@ -1526,17 +1570,19 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
                   int   pos_right,
 		  int 	gc_width,
 		  int	gc_height,
-		  unsigned int gc_options) :
-  parent_ctx(gc_parent_ctx), growcurve_ctx(0), background_dark(glow_eDrawType_Color29),
+		  unsigned int gc_options,
+		  int   gc_color_theme) :
+  parent_ctx(gc_parent_ctx), growcurve_ctx(0), background_dark(glow_eCtColor_DiagramFillcolor),
   background_bright(glow_eDrawType_Color21),
-  border_dark(glow_eDrawType_Color28),
+  border_dark(glow_eCtColor_DiagramBordercolor),
   border_bright(glow_eDrawType_Color22),
   cd(0), axis_window_width(0), auto_refresh(1), axis_displayed(1),
   minmax_idx(0), close_cb(0), help_cb(0), increase_period_cb(0), decrease_period_cb(0), reload_cb(0),
   prev_period_cb(0), next_period_cb(0), add_cb(0), madd_cb(0), remove_cb(0), export_cb(0), new_cb(0),
   save_cb(0), open_cb(0), snapshot_cb(0),
   initial_right_position(pos_right), last_cursor_x(0), last_mark1_x(0), last_mark2_x(0),
-  deferred_configure_axes(0), center_from_window(0), options(gc_options), layout_mask(0)
+  deferred_configure_axes(0), center_from_window(0), options(gc_options), layout_mask(0), 
+  color_theme(gc_color_theme)
 {
   pwr_tStatus sts;
 
@@ -1566,6 +1612,10 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
     cd = curve_data;
     cd->select_color( curve_color == background_dark);
   }
+
+  char color_theme_file[80];
+  sprintf( color_theme_file, "pwr_colortheme%d", color_theme);
+  grow_SetDefaultColorTheme( color_theme_file);
 }
 
 GeCurveData::GeCurveData( curve_eDataType datatype) :
@@ -2247,3 +2297,25 @@ void GeCurve::x_to_points( double x, double *t, double *values)
     }
   }
 }
+
+void GeCurve::update_color_theme( int ct)
+{
+  char color_theme_file[80];
+  int sts;
+
+  sprintf( color_theme_file, "pwr_colortheme%d", ct);
+
+  sts = grow_ReadCustomColorFile( grownames_ctx, color_theme_file);
+  if ( EVEN(sts)) return;
+
+  sts = grow_ReadCustomColorFile( growcurve_ctx, color_theme_file);
+  if ( EVEN(sts)) return;
+
+  sts = grow_ReadCustomColorFile( growaxis_ctx, color_theme_file);
+  if ( EVEN(sts)) return;
+
+  grow_SetDefaultColorTheme( color_theme_file);
+
+  color_theme = ct;
+}
+

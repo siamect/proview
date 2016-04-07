@@ -67,9 +67,10 @@
 XttFast::XttFast( void *parent_ctx,
 		  char *name,
 		  pwr_sAttrRef *fast_arp,
+		  int xn_color_theme,
 		  int *sts) :
   xnav(parent_ctx), fast_cnt(0), timerid(0), close_cb(0), help_cb(0), first_scan(1),
-  axis_configured(false)
+  axis_configured(false), color_theme(xn_color_theme)
 {
   pwr_sAttrRef aref = pwr_cNAttrRef;
   pwr_tAName fast_name;
@@ -216,8 +217,9 @@ XttFast::XttFast( void *parent_ctx,
 XttFast::XttFast( void *parent_ctx,
 		  const char *name,
 		  char *filename,
+		  int xn_color_theme,
 		  int *sts) :  xnav(parent_ctx), fast_cnt(0), timerid(0), close_cb(0), help_cb(0),
-			       first_scan(1), axis_configured(false)
+			       first_scan(1), axis_configured(false), color_theme(xn_color_theme)
 
 {
   *sts = read_export( filename);

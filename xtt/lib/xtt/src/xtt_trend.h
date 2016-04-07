@@ -84,17 +84,20 @@ class XttTrend {
   void       (*command_cb)( void *, const char *);
   int        (*get_select_cb)( void *, pwr_tAttrRef *, int *); //!< Get selected trend object.
   CoWow	     *wow;
+  int	     color_theme;
 
   XttTrend( void *xn_parent_ctx,
 	    char *xn_name,
 	    pwr_sAttrRef *objid,
 	    pwr_sAttrRef *plotgroup,
 	    unsigned int options,
+	    int xn_color_theme,
 	    int *sts);
   virtual ~XttTrend();
   void pop();
   void setup();
   void curve_add( pwr_tAttrRef *arp, pwr_tAttrRef *trend_arp, pwr_tStatus *sts);
+  void update_color_theme( int ct) { curve->update_color_theme(ct);}
 
   static void trend_close_cb( void *ctx);
   static void trend_help_cb( void *ctx);

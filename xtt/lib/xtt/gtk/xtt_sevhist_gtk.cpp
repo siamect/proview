@@ -73,8 +73,9 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
 			      int xn_width,
 			      int xn_height,
 			      unsigned int xn_options,
+			      int xn_color_theme,
 			      int *sts) :
-  XttSevHist( parent_ctx, name, xn_oidv, xn_anamev, xn_onamev, sevhistobjectv, xn_scctx, sts), 
+  XttSevHist( parent_ctx, name, xn_oidv, xn_anamev, xn_onamev, sevhistobjectv, xn_scctx, xn_color_theme, sts), 
   parent_widget(parent_wid)
 {
   char title[250];
@@ -87,7 +88,7 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
   *sts = XNAV__SUCCESS;
 
   curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 1, 
-			  xn_width, xn_height, xn_options);
+			  xn_width, xn_height, xn_options, color_theme);
   curve->close_cb = sevhist_close_cb;
   curve->help_cb = sevhist_help_cb;
   curve->increase_period_cb = sevhist_increase_period_cb;
@@ -116,8 +117,9 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
 			      const char *name,
 			      GtkWidget **w,
 			      char *filename,
+			      int xn_color_theme,
 			      int *sts) :
-  XttSevHist( parent_ctx, name, filename, sts), 
+  XttSevHist( parent_ctx, name, filename, xn_color_theme, sts), 
   parent_widget(parent_wid)
 {
   char title[250];
@@ -129,7 +131,7 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
 
   *sts = XNAV__SUCCESS;
 
-  curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 1, 0, 0, 0);
+  curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 1, 0, 0, 0, color_theme);
   curve->close_cb = sevhist_close_cb;
   curve->help_cb = sevhist_help_cb;
   curve->enable(0);

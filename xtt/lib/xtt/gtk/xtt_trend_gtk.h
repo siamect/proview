@@ -56,6 +56,7 @@ class XttTrendGtk : public XttTrend {
 	       int width,
 	       int height,
 	       unsigned int options,
+	       int x_color_theme,
 	       int *sts);
   ~XttTrendGtk();
 };

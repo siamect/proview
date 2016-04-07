@@ -275,41 +275,41 @@ Op *XNavGtk::op_new( char *opplace, pwr_tStatus *sts)
 }
 
 XttTrend *XNavGtk::xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *plotgroup,
-				 int width, int height, unsigned int options,  pwr_tStatus *sts)
+				 int width, int height, unsigned int options, int color_theme,  pwr_tStatus *sts)
 {
   GtkWidget *w;
 
-  return new XttTrendGtk( this, parent_wid, name, &w, objar, plotgroup, width, height, options, sts);
+  return new XttTrendGtk( this, parent_wid, name, &w, objar, plotgroup, width, height, options, color_theme, sts);
 }
 
 XttSevHist *XNavGtk::xttsevhist_new( char *name, pwr_tOid *oidv, pwr_tOName *anamev, pwr_tOName *onamev,
 				     bool *sevhistobjectv, sevcli_tCtx scctx, char *filename, 
-				     int width, int height, unsigned int options, pwr_tStatus *sts)
+				     int width, int height, unsigned int options, int color_theme, pwr_tStatus *sts)
 {
   GtkWidget *w;
 
   if ( !filename)
-    return new XttSevHistGtk( this, parent_wid, name, &w, oidv, anamev, onamev, sevhistobjectv, scctx, width, height, options, sts);
+    return new XttSevHistGtk( this, parent_wid, name, &w, oidv, anamev, onamev, sevhistobjectv, scctx, width, height, options, color_theme, sts);
   else
-    return new XttSevHistGtk( this, parent_wid, name, &w, filename, sts);
+    return new XttSevHistGtk( this, parent_wid, name, &w, filename, color_theme, sts);
 }
 
-XttTCurve *XNavGtk::xtttcurve_new( char *name, pwr_tAttrRef *arefv, int width, int height, unsigned int options, pwr_tStatus *sts)
+XttTCurve *XNavGtk::xtttcurve_new( char *name, pwr_tAttrRef *arefv, int width, int height, unsigned int options, int color_theme, pwr_tStatus *sts)
 {
   GtkWidget *w;
 
-  return new XttTCurveGtk( this, parent_wid, name, &w, arefv, width, height, options, sts);
+  return new XttTCurveGtk( this, parent_wid, name, &w, arefv, width, height, options, color_theme, sts);
 }
 
 XttFast *XNavGtk::xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, 
-			       unsigned int options, char *filename, pwr_tStatus *sts)
+			       unsigned int options, char *filename, int color_theme, pwr_tStatus *sts)
 {
   GtkWidget *w;
 
   if ( !filename)
-    return new XttFastGtk( this, parent_wid, name, &w, objar, width, height, options, sts);
+    return new XttFastGtk( this, parent_wid, name, &w, objar, width, height, options, color_theme, sts);
   else
-    return new XttFastGtk( this, parent_wid, name, &w, filename, sts);
+    return new XttFastGtk( this, parent_wid, name, &w, filename, color_theme, sts);
 }
 
 XAttOne *XNavGtk::xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
@@ -359,9 +359,9 @@ XttStream *XNavGtk::stream_new( const char *name, const char *uri,
 }
 
 GeCurve *XNavGtk::gecurve_new( char *name, char *filename, GeCurveData *data,
-			       int pos_right, unsigned int options)
+			       int pos_right, unsigned int options, int color_theme)
 {
-  return new GeCurveGtk( this, parent_wid, name, filename, data, pos_right, 0, 0, options);
+  return new GeCurveGtk( this, parent_wid, name, filename, data, pos_right, 0, 0, options, color_theme);
 }
 
 XttFileview *XNavGtk::fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,

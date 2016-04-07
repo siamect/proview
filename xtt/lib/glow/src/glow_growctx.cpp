@@ -1637,7 +1637,8 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 	      e.any.y = double (y + mw.offset_y) / mw.zoom_factor_y;
 	      e.object.object = restriction_object;
 	      e.object.object_type = restriction_object->type();
-	      event_callback[glow_eEvent_SliderMoveEnd]( this, &e);
+	      if ( event_callback[glow_eEvent_SliderMoveEnd])
+		event_callback[glow_eEvent_SliderMoveEnd]( this, &e);
 	    }
             node_move_last_x = x;
             node_move_last_y = y;

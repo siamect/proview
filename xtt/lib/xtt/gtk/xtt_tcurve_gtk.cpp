@@ -69,8 +69,9 @@ XttTCurveGtk::XttTCurveGtk( void *parent_ctx,
 			    int xn_width,
 			    int xn_height,
 			    unsigned int xn_options,
+			    int xn_color_theme,
 			    int *sts) :
-  XttTCurve( parent_ctx, name, xn_arefv, sts), 
+  XttTCurve( parent_ctx, name, xn_arefv, xn_color_theme, sts), 
   parent_widget(parent_wid)
 {
   char title[250];
@@ -83,7 +84,7 @@ XttTCurveGtk::XttTCurveGtk( void *parent_ctx,
   *sts = XNAV__SUCCESS;
 
   curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 1, 
-			  xn_width, xn_height, xn_options);
+			  xn_width, xn_height, xn_options, color_theme);
   curve->close_cb = tcurve_close_cb;
   curve->help_cb = tcurve_help_cb;
   curve->increase_period_cb = tcurve_increase_period_cb;

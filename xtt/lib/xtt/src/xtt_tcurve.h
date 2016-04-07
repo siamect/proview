@@ -113,11 +113,13 @@ class XttTCurve {
   long int	time_low_old;
   long int	time_high_old;
   tcurve_sTc    tc;
+  int		color_theme;
 
   //! Constructor
   XttTCurve( void *xn_parent_ctx,
 	     const char *xn_name,
 	     pwr_tAttrRef* xn_arefv,
+	     int xn_color_theme,
 	     int *sts);
 
   //! Destructor
@@ -132,6 +134,7 @@ class XttTCurve {
   void save( char *filename);
   void open( char *filename);
   void set_title( const char *str);
+  void update_color_theme( int ct) { curve->update_color_theme(ct);}
 
   static void tcurve_close_cb( void *ctx);
   static void tcurve_new_cb( void *ctx);

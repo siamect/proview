@@ -208,10 +208,11 @@ class GeCurve {
     int		 center_from_window;
     unsigned int options;
     unsigned int layout_mask;
+    int 	 color_theme;
 
     GeCurve( void *gc_parent_ctx, char *curve_name,
 	     char *filename, GeCurveData *curve_data, int pos_right, 
-	     int gc_width, int gc_height, unsigned int options);
+	     int gc_width, int gc_height, unsigned int options, int color_theme);
     virtual ~GeCurve();
     virtual void write_title( char *str) {}
     virtual void pop() {}
@@ -261,6 +262,7 @@ class GeCurve {
     void x_to_points( double x, double *time, double *values);
     void set_center_from_window( int val) { center_from_window = val;}
     void set_title( const char *str);
+    void update_color_theme( int ct);
     
     static int growcurve_cb( GlowCtx *ctx, glow_tEvent event);
     static int init_growcurve_cb( GlowCtx *fctx, void *client_data);

@@ -49,7 +49,8 @@ typedef enum {
 	applist_eType_Hist,
 	applist_eType_Fast,
 	applist_eType_MultiView,
-	applist_eType_Stream
+	applist_eType_Stream,
+	applist_eType_SevHist
 } applist_eType;
 
 

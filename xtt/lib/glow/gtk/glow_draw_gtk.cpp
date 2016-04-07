@@ -637,7 +637,7 @@ GlowDrawGtk::GlowDrawGtk(
   original_background = background;
 
 
-  if ( type == glow_eCtxType_Grow) {
+  if ( type == glow_eCtxType_Grow || type == glow_eCtxType_Curve) {
     ctx->customcolors = create_customcolors();
     push_customcolors( ctx->customcolors);
   }

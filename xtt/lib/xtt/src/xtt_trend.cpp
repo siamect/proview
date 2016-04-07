@@ -68,9 +68,10 @@ XttTrend::XttTrend( void *parent_ctx,
 		    pwr_sAttrRef *trend_list,
 		    pwr_sAttrRef *plotgroup,
 		    unsigned int x_options,
+		    int xn_color_theme,
 		    int *sts) :
   xnav(parent_ctx), trend_cnt(0), update_time(1000), options(x_options), 
-  close_cb(0), help_cb(0), command_cb(0), get_select_cb(0)
+  close_cb(0), help_cb(0), command_cb(0), get_select_cb(0), color_theme(xn_color_theme)
 {
   pwr_sAttrRef *aref_list;
   pwr_sAttrRef *aref_p;
