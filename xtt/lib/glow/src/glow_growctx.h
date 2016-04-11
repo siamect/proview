@@ -885,7 +885,7 @@ class GrowCtx : public GlowCtx {
 		       double *ur_x, double *ur_y);
 
   void pop( GlowArrayElem *element) { a.pop( element);}
-  void set_text_coding( glow_eTextCoding coding) { text_coding = coding;}
+  void set_text_coding( glow_eTextCoding coding);
   void set_edit_set_mode( glow_eEditSetMode mode) { edit_set_mode = mode;}
   int set_custom_color( glow_eDrawType color, double red, double green, double blue);
   void reset_custom_colors();

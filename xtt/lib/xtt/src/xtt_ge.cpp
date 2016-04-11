@@ -254,6 +254,11 @@ void XttGe::event_exec( int type, void *event, unsigned int size)
   }
 }
 
+void XttGe::set_text_coding( lng_eCoding coding)
+{
+  graph->set_text_coding( coding);
+}
+
 XttGe::XttGe( void *xg_parent_ctx, const char *xg_name, const char *xg_filename,
 	      int xg_scrollbar, int xg_menu, int xg_navigator, int xg_width, int xg_height,
 	      int x, int y, double scan_time, const char *object_name,

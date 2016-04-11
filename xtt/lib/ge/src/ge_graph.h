@@ -44,6 +44,9 @@
 #ifndef pwr_h
 # include "pwr.h"
 #endif
+#ifndef co_lng_h
+# include "co_lng.h"
+#endif
 #ifndef glow_h
 #include "glow.h"
 #endif
@@ -1391,6 +1394,8 @@ class Graph {
   }
 
   char *get_next_object_name( const char *prefix, const char *suffix);
+
+  void set_text_coding( lng_eCoding coding);
 
   static int get_colortheme_colors( char *file, double **colors, int *size);
 

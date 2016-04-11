@@ -97,6 +97,7 @@ class XttGe {
   void swap( int mode);
   void update_color_theme( int color_theme);
   void event_exec( int type, void *event, unsigned int size);
+  void set_text_coding( lng_eCoding coding);
 
   static void graph_init_cb( void *client_data);
   static int graph_close_cb( void *client_data);

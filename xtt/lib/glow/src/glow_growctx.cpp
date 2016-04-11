@@ -4764,3 +4764,15 @@ int GrowCtx::check_object_name( char *name)
 
   return GLOW__SUCCESS;
 }
+
+void GrowCtx::set_text_coding( glow_eTextCoding coding) 
+{ 
+  text_coding = coding;
+
+  // Set for subwindow
+  for ( int i = 0; i < a.a_size; i++) {
+    if ( a[i]->type() == glow_eObjectType_GrowWindow ||
+	 a[i]->type() == glow_eObjectType_GrowFolder)
+      ((GrowWindow *)a[i])->window_ctx->set_text_coding( coding);
+  }
+}

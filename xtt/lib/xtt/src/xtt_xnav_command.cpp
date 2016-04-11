@@ -1039,6 +1039,7 @@ static int	xnav_set_func(	void		*client_data,
   else if ( cdh_NoCaseStrncmp( arg1_str, "LANGUAGE", strlen( arg1_str)) == 0)
   {    
     char language_str[80];
+    ApplListElem *elem;
 
     // Command is "SET LANGUAGE"
     if ( EVEN( dcli_get_qualifier( "dcli_arg2", language_str, sizeof(language_str)))) {
@@ -1047,6 +1048,12 @@ static int	xnav_set_func(	void		*client_data,
     }
     cdh_ToLower( language_str, language_str);
     Lng::set( language_str);
+
+    // Set new coding to all graphs
+    for ( elem = xnav->appl.root; elem; elem = elem->next) {
+      if ( elem->type == applist_eType_Graph)
+	((XttGe *)elem->ctx)->set_text_coding( Lng::translatefile_coding());
+    }
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "NORATIO", strlen( arg1_str)) == 0)
   {    

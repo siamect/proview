@@ -5599,6 +5599,22 @@ char *Graph::get_next_object_name( const char *prefix, const char *suffix)
   return name;
 }
 
+void Graph::set_text_coding( lng_eCoding coding)
+{
+  glow_eTextCoding c;
+
+  switch ( coding) {
+  case lng_eCoding_ISO8859_1:
+    c = glow_eTextCoding_ISO8859_1;
+    break;
+  case lng_eCoding_UTF_8:
+    c = glow_eTextCoding_UTF_8;
+    break;
+  }
+
+  grow_SetTextCoding( grow->base_ctx(), c);
+}
+
 static void graph_free_dyn( grow_tObject object)
 {
   if ( grow_GetObjectType( object) == glow_eObjectType_GrowNode ||

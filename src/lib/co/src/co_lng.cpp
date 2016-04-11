@@ -379,6 +379,8 @@ bool Lng::read()
   char fname1[120];
   char fname2[120];
   pwr_tStatus sts;
+  pwr_tStatus basests;
+  bool first_set = true;
 
   if ( tree)
     tree_DeleteTable( &sts, tree);
@@ -390,20 +392,21 @@ bool Lng::read()
   strcpy( fname1, "$pwr_exe/en_us/xtt_lng.dat");
   strcpy( fname2, "$pwr_exe/%s/xtt_lng.dat");
 
-  if ( !read_files( fname1, fname2, true,  &sts))
-    return false;
+  if ( read_files( fname1, fname2, true,  &basests))
+    first_set = false;
 
   // Read project files
   strcpy( fname1, "$pwrp_exe/xtt_lng_en_us.dat");
   strcpy( fname2, "$pwrp_exe/xtt_lng_%s.dat");
 
-  if ( !read_files( fname1, fname2, false, &sts))
+  read_files( fname1, fname2, first_set, &sts);
+  if ( EVEN(sts) && EVEN(basests))
     return false;
 
   return true;
 }
 
-bool Lng::read_files( char *fname1, char *fname2, bool global, pwr_tStatus *sts)
+bool Lng::read_files( char *fname1, char *fname2, bool first_set, pwr_tStatus *sts)
 {
   pwr_tFileName filename1, filename2;
 
@@ -425,7 +428,7 @@ bool Lng::read_files( char *fname1, char *fname2, bool global, pwr_tStatus *sts)
   }
   else if ( !fp1) {
     *sts = LNG__FILE;
-    return global ? false : true;
+    return false;
   }
   
   ifstream fp2( filename2);
@@ -442,16 +445,16 @@ bool Lng::read_files( char *fname1, char *fname2, bool global, pwr_tStatus *sts)
   }
   else if ( !fp2) {
     *sts = LNG__FILE;
-    return global ? false : true;
+    return false;
   }
   
   Row r1( fp1, filename1);
   Row r2( fp2, filename2);
   
-  read_metadata( fp1, global, sts);
-  read_metadata( fp2, global, sts);
-  
-  read_include( fp1, fp2, global, sts);
+  read_metadata( fp1, first_set, sts);
+  read_metadata( fp2, first_set, sts);
+
+  read_include( fp1, fp2, false, sts);
 
   bool hit = true;
   for (;;) {
@@ -623,13 +626,24 @@ bool Lng::is_installed( lng_eLanguage language)
   dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
   if ( ODD(sts)) return true;
 
+  // Try local translation file on $pwrp_exe also 
+  strcpy( fname, "$pwrp_exe/xtt_lng_");
+  strcat( fname, lang_to_str( language));
+  strcat( fname, ".dat");
+
+  dcli_translate_filename( fname, fname);
+
+  sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+  dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+  if ( ODD(sts)) return true;
+
   return false;
 }
 
 
-void Lng::read_metadata( ifstream& fp2, bool global, pwr_tStatus *sts) 
+void Lng::read_metadata( ifstream& fp2, bool first_set, pwr_tStatus *sts) 
 {
-  char line[40];
+  char line[200];
 
   for (;;) {
     if ( !fp2.getline( line, sizeof( line))) {
@@ -641,20 +655,20 @@ void Lng::read_metadata( ifstream& fp2, bool global, pwr_tStatus *sts)
   }
 
   if ( strncmp( line, "Coding:UTF-8", 12) == 0) {
-    if ( global)
+    if ( first_set)
       translfile_coding = lng_eCoding_UTF_8;
     else if ( translfile_coding != lng_eCoding_UTF_8)
       *sts = LNG__DIFFCODING;
   }
   else if ( strncmp( line, "Coding:ISO8859-1", 16) == 0) {
-    if ( global)
+    if ( first_set)
       translfile_coding = lng_eCoding_ISO8859_1;
     else if ( translfile_coding != lng_eCoding_ISO8859_1)
       *sts = LNG__DIFFCODING;
   }
   else {
     fp2.seekg( 0, ios::beg);
-    if ( global)
+    if ( first_set)
       translfile_coding = lng_eCoding_ISO8859_1;
     else if ( translfile_coding != lng_eCoding_ISO8859_1)
       *sts = LNG__DIFFCODING;
@@ -662,7 +676,7 @@ void Lng::read_metadata( ifstream& fp2, bool global, pwr_tStatus *sts)
   *sts = LNG__SUCCESS;
 }
 
-void Lng::read_include( ifstream& fp1, ifstream& fp2, bool global, pwr_tStatus *sts) 
+void Lng::read_include( ifstream& fp1, ifstream& fp2, bool first_set, pwr_tStatus *sts) 
 {
   char line1[200];
   char line2[200];
@@ -697,7 +711,7 @@ void Lng::read_include( ifstream& fp1, ifstream& fp2, bool global, pwr_tStatus *
       
       dcli_trim( fname1, &line1[8]);
       dcli_trim( fname2, &line2[8]);
-      if ( !read_files( fname1, fname2, global, sts))
+      if ( !read_files( fname1, fname2, first_set, sts))
 	return;
     }
     else {
