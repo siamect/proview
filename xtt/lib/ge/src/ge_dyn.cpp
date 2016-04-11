@@ -13507,7 +13507,7 @@ int GeScript::action( grow_tObject object, glow_tEvent event)
 
       //dyn->graph->get_command( command, cmd, dyn);
       sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, 0, script);
-      return 1;
+      return sts;
     }
     break;
   default: ;    
