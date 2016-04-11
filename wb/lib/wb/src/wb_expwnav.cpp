@@ -1210,7 +1210,10 @@ pwr_tStatus WbExpWNav::exp()
 	if ( !mp->update)
 	  continue;
 
-	sprintf( cmd, "cd %s;make %s", mp->dir, mp->makefile);
+	if ( strcmp( mp->makefile, "") == 0)
+	  sprintf( cmd, "cd %s;make", mp->dir);
+	else
+	  sprintf( cmd, "cd %s;make -f %s", mp->dir, mp->makefile);
 	printf( "%s\n", cmd);
 	sts = system( cmd);
 	if ( sts != 0) {
