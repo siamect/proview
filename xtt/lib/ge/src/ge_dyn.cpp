@@ -4637,6 +4637,11 @@ void GeValueInput::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( maxvalue_attr);
 
+  strcpy( attrinfo[i].name, "ValueInput.KeyboardType");
+  attrinfo[i].value = &keyboard_type;
+  attrinfo[i].type = ge_eAttrType_KeyboardType;
+  attrinfo[i++].size = sizeof( keyboard_type);
+
   dyn->display_access = true;
   *item_count = i;
 }
@@ -4658,6 +4663,7 @@ void GeValueInput::save( ofstream& fp)
   fp << int(ge_eSave_ValueInput_minvalue_attr) << FSPACE << minvalue_attr << endl;
   fp << int(ge_eSave_ValueInput_maxvalue_attr) << FSPACE << maxvalue_attr << endl;
   fp << int(ge_eSave_ValueInput_escape_store) << FSPACE << escape_store << endl;
+  fp << int(ge_eSave_ValueInput_keyboard_type) << FSPACE << (int)keyboard_type << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -4666,6 +4672,7 @@ void GeValueInput::open( ifstream& fp)
   int		type;
   int 		end_found = 0;
   char		dummy[40];
+  int		tmp;
 
   for (;;)
   {
@@ -4693,6 +4700,7 @@ void GeValueInput::open( ifstream& fp)
         fp.getline( maxvalue_attr, sizeof(maxvalue_attr));
         break;
       case ge_eSave_ValueInput_escape_store: fp >> escape_store; break;
+      case ge_eSave_ValueInput_keyboard_type: fp >> tmp; keyboard_type = (graph_eKeyboard)tmp; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeValueInput:open syntax error" << endl;
@@ -4767,6 +4775,8 @@ int GeValueInput::action( grow_tObject object, glow_tEvent event)
 	if ( unselect)
 	  grow_SetAnnotationSelection( object, 0);
       }
+      if ( dyn->graph->keyboard_cb)
+	(dyn->graph->keyboard_cb)( dyn->graph->parent_ctx, keyboard_mAction_Open, keyboard_type);
     }
     else {
       if ( dyn->graph->change_value_cb) {
@@ -4791,12 +4801,18 @@ int GeValueInput::action( grow_tObject object, glow_tEvent event)
     grow_CloseAnnotationInput( object, 1);
     value_element->first_scan = 1;
 
+    if ( dyn->graph->keyboard_cb)
+      (dyn->graph->keyboard_cb)( dyn->graph->parent_ctx, keyboard_mAction_Close, 0);
+
     break;
   }
   case glow_eEvent_Key_Escape:
     if ( grow_AnnotationInputIsOpen( object, 1)) {
       grow_CloseAnnotationInputAll( dyn->graph->grow->ctx);
       grow_SetObjectInputFocus( object, 0, event->event);
+
+      if ( dyn->graph->keyboard_cb)
+	(dyn->graph->keyboard_cb)( dyn->graph->parent_ctx, keyboard_mAction_Close | keyboard_mAction_ResetInput, 0);
     }
     break;
   default: ;    
@@ -14665,8 +14681,20 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
     dyn->graph->set_inputfocus( 1);
     break;
   case glow_eEvent_InputFocusInit:
-    if ( initial_focus & ge_mInputFocus_InitialFocus)
+    if ( initial_focus & ge_mInputFocus_InitialFocus) {
       grow_SetObjectInputFocus( object, 1, event->event);
+      if ( dyn->graph->keyboard_cb) {
+	// Get keyboard type from ValueInput
+	graph_eKeyboard keyboard_type = graph_eKeyboard_Standard;
+	for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
+	  if ( elem->action_type1 == ge_mActionType1_ValueInput) {
+	    keyboard_type = ((GeValueInput *)elem)->keyboard_type;
+	    break;
+	  }
+	}
+	(dyn->graph->keyboard_cb)( dyn->graph->parent_ctx, keyboard_mAction_Open, keyboard_type);
+      }
+    }
     break;
   case glow_eEvent_Key_Right:
     if ( event->object.object_type != glow_eObjectType_NoObject) {
@@ -14770,7 +14798,7 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	// Check that this object can handle input focus
 	GeDyn 	*prev_dyn;
 	grow_GetUserData( prev, (void **)&prev_dyn);
-	if ( prev_dyn->total_action_type1 & ge_mActionType1_InputFocus)		
+	if ( prev_dyn->total_action_type1 & ge_mActionType1_InputFocus)
 	  grow_SetObjectInputFocus( prev, 1, event->event);
 	else
 	  grow_SetObjectInputFocus( object, 0, event->event);
@@ -14860,7 +14888,7 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	// Check that this object can handle input focus
 	GeDyn 	*prev_dyn;
 	grow_GetUserData( prev, (void **)&prev_dyn);
-	if ( prev_dyn->total_action_type1 & ge_mActionType1_InputFocus)		
+	if ( prev_dyn->total_action_type1 & ge_mActionType1_InputFocus)
 	  grow_SetObjectInputFocus( prev, 1, event->event);
 	else
 	  grow_SetObjectInputFocus( object, 0, event->event);

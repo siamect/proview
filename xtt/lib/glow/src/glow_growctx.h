@@ -844,6 +844,9 @@ class GrowCtx : public GlowCtx {
   //! Close annotation input for all nodes.
   void close_annotation_input_all();
 
+  //! Remove input focus for all nodes.
+  void reset_input_focus_all();
+
   //! Send an input focus init event.
   void inputfocus_init_event();
 
@@ -883,6 +886,8 @@ class GrowCtx : public GlowCtx {
 
   void measure_window( double *ll_x, double *ll_y, 
 		       double *ur_x, double *ur_y);
+
+  int key_pressed( int key);
 
   void pop( GlowArrayElem *element) { a.pop( element);}
   void set_text_coding( glow_eTextCoding coding);

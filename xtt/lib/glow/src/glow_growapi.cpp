@@ -331,6 +331,11 @@ void grow_CloseAnnotationInputAll( GrowCtx *ctx)
   ctx->close_annotation_input_all();
 }
 
+void grow_ResetInputFocusAll( GrowCtx *ctx)
+{
+  ctx->reset_input_focus_all();
+}
+
 int grow_AnnotationInputIsOpen( grow_tNode node, int number)
 {
   if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode)
@@ -5789,6 +5794,11 @@ int grow_SetObjectClass( grow_tObject object, grow_tNodeClass nodeclass)
 int grow_CheckObjectName( grow_tCtx ctx, char *name)
 {
   return ((GrowCtx *)ctx)->check_object_name( name);
+}
+
+int grow_KeyPressed( grow_tCtx ctx, int key)
+{
+  return ((GrowCtx *)ctx)->key_pressed( key);
 }
 
 /*@}*/

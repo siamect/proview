@@ -42,6 +42,7 @@
 #endif
 
 #include "glow.h"
+#include "xtt_utility.h"
 
 #ifndef xtt_applist_h
 #include "xtt_applist.h"
@@ -70,7 +71,7 @@ class MVRecall {
   int get_next();    
 };
 
-class XttMultiView {
+class XttMultiView : XttUtility {
  public:
   void 		*parent_ctx;
   pwr_tAttrRef	aref;
@@ -90,6 +91,7 @@ class XttMultiView {
   int           (*sound_cb)(void *, pwr_tAttrRef *);
   void          (*eventlog_cb)(void *, void *, int, void *, unsigned int);
   int		(*get_select_cb)(void *, pwr_tOid *, char *, char *);
+  void          (*keyboard_cb)(void *, void *, int, int);
   int		width;
   int		height;
   int		rows;
@@ -102,7 +104,8 @@ class XttMultiView {
 		int x, int y, unsigned int options, int color_theme,
 		int (*xg_command_cb) (void *, char *, char *, void *),
 		int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-		int (*xg_is_authorized_cb) (void *, unsigned int));
+		int (*xg_is_authorized_cb) (void *, unsigned int),
+		void (*xg_keyboard_cb) (void *, void *, int, int));
   virtual ~XttMultiView();
 
   virtual void pop() {}
@@ -110,7 +113,10 @@ class XttMultiView {
   virtual void *get_widget() { return 0;}
   virtual int set_subwindow_source( const char *name, char *source, char *object, double *borders,
 				    int insert = 1, int cont = 0) {return 0;}
+  virtual int key_pressed( int key) {return 0;}
+  virtual void close_input_all() {}
 
+  xtt_eUtility get_type() { return xtt_eUtility_MultiView;}
   void message( char severity, const char *msg);
   int set_object_focus( const char *name, int empty);
   int set_folder_index( const char *name, int idx);
@@ -137,6 +143,7 @@ class XttMultiView {
 				     int **is_alist);
   static void multiview_ge_eventlog_cb( void *multiview_ctx, void *gectx, int category,
 					void *value, unsigned int size);
+  static void multiview_keyboard_cb( void *multiview_ctx, void *ge_ctx, int action, int type);
   static void multiview_ge_help_cb( void *multiview_ctx, const char *key);
   static void multiview_trend_close_cb( void *ctx, XttTrend *trend);
   static void multiview_trend_command_cb( void *ctx, const char *cmd);

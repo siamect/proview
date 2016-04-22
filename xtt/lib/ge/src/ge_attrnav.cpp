@@ -1129,6 +1129,14 @@ static attrnav_sEnumElement elem_methodtoolbar_type[] = {
 	{ (unsigned int) ge_eMethodToolbarType_Simulate,"Simulate"},
 	{ 0, ""}};
 
+static attrnav_sEnumElement elem_keyboard_type[] = {
+	{ (unsigned int) graph_eKeyboard_Standard,	"Standard"},
+	{ (unsigned int) graph_eKeyboard_StandardShifted, "StandardShifted"},
+	{ (unsigned int) graph_eKeyboard_Numeric,	"Numeric"},
+	{ (unsigned int) graph_eKeyboard_Alphabetic,	"Alphabetic"},
+	{ (unsigned int) graph_eKeyboard_AlphabeticShifted, "AlphabeticShifted"},
+	{ 0, ""}};
+
 static attrnav_sEnum enum_types[] = {
 	{ (unsigned int) glow_eType_Direction, 	(attrnav_sEnumElement *) &elem_direction},
 	{ (unsigned int) glow_eType_Color, 	(attrnav_sEnumElement *) &elem_color},
@@ -1152,6 +1160,7 @@ static attrnav_sEnum enum_types[] = {
 	{ (unsigned int) ge_eAttrType_OptionMenuType, (attrnav_sEnumElement *) &elem_optionmenu_type},
 	{ (unsigned int) ge_eAttrType_MethodsMenuType, (attrnav_sEnumElement *) &elem_methodsmenu_type},
 	{ (unsigned int) ge_eAttrType_MethodToolbarType, (attrnav_sEnumElement *) &elem_methodtoolbar_type},
+	{ (unsigned int) ge_eAttrType_KeyboardType, (attrnav_sEnumElement *) &elem_keyboard_type},
 	{ 0, NULL}};
 
 static attrnav_sEnum mask_types[] = {
@@ -1319,6 +1328,7 @@ int  attrnav_attr_string_to_value( int type_id, char *value_str,
     case ge_eAttrType_OptionMenuType:
     case ge_eAttrType_MethodsMenuType:
     case ge_eAttrType_MethodToolbarType:
+    case ge_eAttrType_KeyboardType:
     {
       if ( sscanf( value_str, "%u", (int *)buffer_ptr) != 1)
         return ATTRNAV__INPUT_SYNTAX;
@@ -1403,6 +1413,7 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
     case ge_eAttrType_OptionMenuType:
     case ge_eAttrType_MethodsMenuType:
     case ge_eAttrType_MethodToolbarType:
+    case ge_eAttrType_KeyboardType:
     {
       attrnav_sEnumElement	*elem_p;
       attrnav_sEnum		*enum_p;
@@ -2524,6 +2535,7 @@ ItemLocal::ItemLocal( AttrNav *attrnav, const char *item_name, const char *attr,
     case ge_eAttrType_OptionMenuType:
     case ge_eAttrType_MethodsMenuType:
     case ge_eAttrType_MethodToolbarType:
+    case ge_eAttrType_KeyboardType:
       if ( !noedit)
       {
         brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrarray);

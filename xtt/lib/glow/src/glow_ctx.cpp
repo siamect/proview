@@ -59,6 +59,7 @@
 #include "glow_growctx.h"
 #include "glow_colpalctx.h"
 #include "glow_curvectx.h"
+#include "glow_keyboardctx.h"
 #include "glow_growgroup.h"
 
 #include "glow_msg.h"
@@ -974,6 +975,8 @@ int GlowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
     return ((GrowCtx *)this)->event_handler( event, x, y, w, h);
   else if ( ctx_type == glow_eCtxType_ColPal)
     return ((ColPalCtx *)this)->event_handler( event, x, y, w, h);
+  else if ( ctx_type == glow_eCtxType_Keyboard)
+    return ((KeyboardCtx *)this)->event_handler( event, x, y, w, h);
 
   ctx = this;
 //  cout << "Event: " << event << endl;

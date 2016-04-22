@@ -207,10 +207,11 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 				  pwr_tStatus *sts,
 				  int (*mv_command_cb) (void *, char *, char *, void *),
 				  int (*mv_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-				  int (*mv_is_authorized_cb) (void *, unsigned int)) :
+				  int (*mv_is_authorized_cb) (void *, unsigned int),
+				  void (*mv_keyboard_cb) (void *, void *, int, int)) :
   XttMultiView( mv_parent_ctx, mv_name, mv_aref, mv_width,
 		mv_height, mv_x, mv_y, mv_options, mv_color_theme,
-		mv_command_cb, mv_get_current_objects_cb, mv_is_authorized_cb), 
+		mv_command_cb, mv_get_current_objects_cb, mv_is_authorized_cb, mv_keyboard_cb), 
   parent_wid(mv_parent_wid)
 {
   int	window_width = 600;
@@ -416,7 +417,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 					    1.0, objectname_p, 0, 0, 
 					    ge_mOptions_Embedded, 0, bordersp, color_theme,
 					    multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
-					    multiview_ge_is_authorized_cb);
+					    multiview_ge_is_authorized_cb, multiview_keyboard_cb);
 
 	  gectx[i*rows + j]->close_cb = multiview_ge_close_cb;
 	  gectx[i*rows + j]->help_cb = multiview_ge_help_cb;
@@ -447,7 +448,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 						   &graph_aref, w, h, mv_x, mv_y, 
 						   ge_mOptions_Embedded, color_theme, &lsts,
 						   multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
-						   multiview_ge_is_authorized_cb);
+						   multiview_ge_is_authorized_cb, multiview_keyboard_cb);
 	  
 	  mvctx[i*rows + j]->close_cb = multiview_ge_close_cb;
 	  mvctx[i*rows + j]->help_cb = multiview_ge_help_cb;
@@ -954,7 +955,7 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
 					  1.0, object, 0, 0, 
 					  ge_mOptions_Embedded, 0, borders, color_theme,
 					  multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
-					  multiview_ge_is_authorized_cb);
+					  multiview_ge_is_authorized_cb, multiview_keyboard_cb);
 	    
 	    ctx->close_cb = multiview_ge_close_cb;
 	    ctx->help_cb = multiview_ge_help_cb;
@@ -992,10 +993,10 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
 	    if ( EVEN(sts)) break;
 
 	    XttMultiViewGtk *ctx = new XttMultiViewGtk( toplevel, this, "No title", 
-					  &source_aref, w, h, x, y, 
-					  ge_mOptions_Embedded, color_theme, &sts,
-					  multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
-					  multiview_ge_is_authorized_cb);
+							&source_aref, w, h, x, y, 
+							ge_mOptions_Embedded, color_theme, &sts,
+							multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
+							multiview_ge_is_authorized_cb, multiview_keyboard_cb);
 	    
 	    ctx->close_cb = multiview_ge_close_cb;
 	    ctx->help_cb = multiview_ge_help_cb;
@@ -1349,5 +1350,34 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
     return 1;
   else
     return GLOW__TERMINATED;
+}
+
+int XttMultiViewGtk::key_pressed( int key)
+{
+  int sts;
+
+  for ( int i = 0; i < cols * rows; i++) {
+    if ( gectx[i] != 0) {
+      sts = gectx[i]->key_pressed( key);
+      if ( ODD(sts))
+	return sts;
+    }
+    else if ( mvctx[i] != 0) {
+      sts = mvctx[i]->key_pressed( key);
+      if ( ODD(sts))
+	return sts;
+    }
+  }
+  return 0;
+}
+ 
+void XttMultiViewGtk::close_input_all()
+{
+  for ( int i = 0; i < cols * rows; i++) {
+    if ( gectx[i] != 0)
+      gectx[i]->close_input_all();
+    else if ( mvctx[i] != 0)
+      mvctx[i]->close_input_all();
+  }
 }
 

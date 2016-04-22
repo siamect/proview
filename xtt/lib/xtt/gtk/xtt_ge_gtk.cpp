@@ -297,10 +297,11 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
 		    int color_theme,
 		    int (*xg_command_cb) (void *, char *, char *, void *),
 		    int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-		    int (*xg_is_authorized_cb) (void *, unsigned int)) :
+		    int (*xg_is_authorized_cb) (void *, unsigned int),
+		    void (*xg_keyboard_cb) (void *, void *, int, int)) :
   XttGe( xg_parent_ctx, xg_name, xg_filename, xg_scrollbar, xg_menu, xg_navigator, xg_width,
 	 xg_height, x, y, scan_time, object_name, use_default_access, access, options, color_theme,
-	 xg_command_cb, xg_get_current_objects_cb, xg_is_authorized_cb), 
+	 xg_command_cb, xg_get_current_objects_cb, xg_is_authorized_cb, xg_keyboard_cb), 
   parent_wid(xg_parent_wid), nav_shell(0), value_dialog(0), confirm_widget(0), message_dia_widget(0)
 {
   int	window_width = 600;
@@ -422,8 +423,9 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
 
   graph_form = gtk_vbox_new( FALSE, 0);
   graph = new GraphGtk( this, graph_form, "Plant", 
-		&grow_widget, &sts, "pwrp_exe:", graph_eMode_Runtime, 
-		scrollbar, 1, object_name, use_default_access, access, 0, color_theme);
+			&grow_widget, &sts, "pwrp_exe:", graph_eMode_Runtime, 
+			scrollbar, 1, object_name, use_default_access, access, 0, color_theme,
+			ge_keyboard_cb);
   // graph->set_scantime( scan_time);
   graph->message_cb = &message_cb;
   graph->close_cb = &graph_close_cb;

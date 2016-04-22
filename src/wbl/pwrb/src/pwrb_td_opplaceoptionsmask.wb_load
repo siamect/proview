@@ -91,6 +91,16 @@ SObject pwrb:Type
        Attr Value = 8
      EndBody
     EndObject
+    !/**
+    !  Virtual keyboard.
+    !*/
+    Object VirtualKeyboard $Bit
+     Body SysBody
+       Attr PgmName = "VirtualKeyboard"
+       Attr Text = "VirtualKeyboard"
+       Attr Value = 16
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

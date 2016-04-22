@@ -1368,7 +1368,8 @@ XNav::XNav(
 	base_priv(pwr_mPrv_System), priv(pwr_mPrv_System), displayed(0),
         current_logging_index(-1), search_last_found(0), search_compiled(0), 
 	attach_audio(0), audio(0), op_close_button(xn_op_close_button), cologin(0), scctx(0),
-	last_xcolwind(0), current_cmd_ctx(0), elog_enabled(0), elog_checked(0)
+	last_xcolwind(0), current_cmd_ctx(0), elog_enabled(0), elog_checked(0), keyboard(0),
+	keyboard_owner(0)
 {
   strcpy( name, xn_name);
   strcpy( opplace_name, xn_opplace_name);

@@ -176,6 +176,14 @@ void XttGe::ge_eventlog_cb( void *ge_ctx, void *data, unsigned int size)
     (ge->eventlog_cb)( ge->parent_ctx, ge, xttlog_eCategory_Event, data, size);
 }
 
+void XttGe::ge_keyboard_cb( void *ge_ctx, int action, int type)
+{
+  XttGe	*ge = (XttGe *)ge_ctx;
+
+  if ( ge->keyboard_cb)
+    (ge->keyboard_cb)( ge->parent_ctx, ge, action, type);
+}
+
 void XttGe::message_cb( void *ctx, char severity, const char *msg)
 {
   ((XttGe *)ctx)->message( severity, msg);
@@ -259,6 +267,16 @@ void XttGe::set_text_coding( lng_eCoding coding)
   graph->set_text_coding( coding);
 }
 
+int XttGe::key_pressed( int key) 
+{ 
+  return graph->key_pressed( key);
+}
+
+void XttGe::close_input_all()
+{
+  graph->close_input_all();
+}
+
 XttGe::XttGe( void *xg_parent_ctx, const char *xg_name, const char *xg_filename,
 	      int xg_scrollbar, int xg_menu, int xg_navigator, int xg_width, int xg_height,
 	      int x, int y, double scan_time, const char *object_name,
@@ -266,13 +284,15 @@ XttGe::XttGe( void *xg_parent_ctx, const char *xg_name, const char *xg_filename,
 	      int xg_color_theme,
 	      int (*xg_command_cb) (void *, char *, char *, void *),
 	      int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-	      int (*xg_is_authorized_cb) (void *, unsigned int)) :
+	      int (*xg_is_authorized_cb) (void *, unsigned int),
+	      void (*xg_keyboard_cb) (void *, void *, int, int)) :
   parent_ctx(xg_parent_ctx), scrollbar(xg_scrollbar),
   navigator(xg_navigator), menu(xg_menu), current_value_object(0),
   current_confirm_object(0), value_input_open(0), confirm_open(0), 
   command_cb(xg_command_cb), close_cb(0), help_cb(0), display_in_xnav_cb(0), 
   is_authorized_cb(xg_is_authorized_cb), popup_menu_cb(0), call_method_cb(0), 
   get_current_objects_cb(xg_get_current_objects_cb), sound_cb(0), eventlog_cb(0),
+  keyboard_cb(xg_keyboard_cb),
   width(xg_width), height(xg_height), options(xg_options), color_theme(xg_color_theme)
 {
   strcpy( filename, xg_filename);

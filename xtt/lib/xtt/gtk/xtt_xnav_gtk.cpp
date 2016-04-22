@@ -90,6 +90,7 @@ typedef void *Widget;
 #include "xtt_hist_gtk.h"
 #include "ge_curve_gtk.h"
 #include "xtt_fileview_gtk.h"
+#include "xtt_keyboard_gtk.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -330,12 +331,13 @@ XttGe *XNavGtk::xnav_ge_new( const char *name, const char *filename, int scrollb
 			     unsigned int options, void *basewidget, double *borders, int color_theme,
 			     int (*command_cb) (void *, char *, char *, void *),
 			     int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-			     int (*is_authorized_cb) (void *, unsigned int))
+			     int (*is_authorized_cb) (void *, unsigned int),
+			     void (*keyboard_cb) (void *, void *, int, int))
 {
   return new XttGeGtk( parent_wid, this, name, filename, scrollbar, menu, navigator,
 		       width, height, x, y, scan_time, object_name, use_default_access,
 		       access, options, basewidget, borders, color_theme,
-		       command_cb, get_current_objects_cb, is_authorized_cb);
+		       command_cb, get_current_objects_cb, is_authorized_cb, keyboard_cb);
 }
 
 XttMultiView *XNavGtk::multiview_new( const char *name, pwr_tAttrRef *aref, 
@@ -343,11 +345,12 @@ XttMultiView *XNavGtk::multiview_new( const char *name, pwr_tAttrRef *aref,
 				      int color_theme, pwr_tStatus *sts,
 				      int (*command_cb) (void *, char *, char *, void *),
 				      int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-				      int (*is_authorized_cb) (void *, unsigned int))
+				      int (*is_authorized_cb) (void *, unsigned int),
+				      void (*keyboard_cb) (void *, void *, int, int))
 {
   return new XttMultiViewGtk( parent_wid, this, name, aref,
 			      width, height, x, y, options, color_theme, sts, command_cb, 
-			      get_current_objects_cb, is_authorized_cb);
+			      get_current_objects_cb, is_authorized_cb, keyboard_cb);
 }
 
 XttStream *XNavGtk::stream_new( const char *name, const char *uri,
@@ -378,6 +381,13 @@ CoLogin *XNavGtk::login_new( const char		*name,
 			     pwr_tStatus  	*status)
 {
   return new CoLoginGtk( this, parent_wid, name, groupname, bc_success, bc_cancel, status);
+}
+
+XttKeyboard *XNavGtk::keyboard_new( const char *name, keyboard_eKeymap keymap, keyboard_eType type, 
+				    int color_theme, pwr_tStatus *sts)
+{
+  GtkWidget *w;
+  return new XttKeyboardGtk( this, parent_wid, name, &w, keymap, type, color_theme, sts);
 }
 
 void XNavGtk::bell( int time)

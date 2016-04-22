@@ -56,6 +56,7 @@ using namespace std;
 #include "glow_browctx.h"
 #include "glow_growctx.h"
 #include "glow_colpalctx.h"
+#include "glow_keyboardctx.h"
 #include "glow_curvectx.h"
 #include "glow_draw_gtk.h"
 #include "glow_customcolors_gtk.h"
@@ -616,6 +617,8 @@ GlowDrawGtk::GlowDrawGtk(
     ctx = (GlowCtx *) new GrowCtx("Claes context", 20);
   else if ( type == glow_eCtxType_ColPal)
     ctx = (GlowCtx *) new ColPalCtx("Claes context", 20);
+  else if ( type == glow_eCtxType_Keyboard)
+    ctx = (GlowCtx *) new KeyboardCtx("Claes context", 20);
   else if ( type == glow_eCtxType_Curve)
     ctx = (GlowCtx *) new CurveCtx("Claes context", 20);
   else
@@ -637,7 +640,8 @@ GlowDrawGtk::GlowDrawGtk(
   original_background = background;
 
 
-  if ( type == glow_eCtxType_Grow || type == glow_eCtxType_Curve) {
+  if ( type == glow_eCtxType_Grow || type == glow_eCtxType_Curve ||
+       type == glow_eCtxType_Keyboard) {
     ctx->customcolors = create_customcolors();
     push_customcolors( ctx->customcolors);
   }

@@ -96,13 +96,15 @@ class XNavGtk : public XNav {
 			void *basewidget, double *borders, int color_theme,
 			int (*xg_command_cb) (void *, char *, char *, void *),
 			int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-			int (*xg_is_authorized_cb) (void *, unsigned int));
+			int (*xg_is_authorized_cb) (void *, unsigned int),
+			void (*xg_keyboard_cb) (void *, void *, int, int));
     XttMultiView *multiview_new( const char *name, pwr_tAttrRef *aref, 
 				 int width, int height, int x, int y, unsigned int options,
 				 int color_theme, pwr_tStatus *sts,
 				 int (*command_cb) (void *, char *, char *, void *),
 				 int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-				 int (*is_authorized_cb) (void *, unsigned int));
+				 int (*is_authorized_cb) (void *, unsigned int),
+				 void (*keyboard_cb) (void *, void *, int, int));
     XttStream *stream_new( const char *name, const char *uri,
 			   int width, int height, int x, int y, double scan_time, 
 			   unsigned int options, int embedded, pwr_tAttrRef *arp, pwr_tStatus *sts);
@@ -115,6 +117,8 @@ class XNavGtk : public XNav {
 			void		(* wl_bc_success)( void *),
 			void		(* wl_bc_cancel)( void *),
 			pwr_tStatus  	*status);
+    XttKeyboard *keyboard_new( const char *name, keyboard_eKeymap keymap, keyboard_eType type, 
+			       int color_theme, pwr_tStatus *status);
     void bell( int time);
     void get_popup_menu( pwr_sAttrRef attrref,
 			 xmenu_eItemType item_type, 

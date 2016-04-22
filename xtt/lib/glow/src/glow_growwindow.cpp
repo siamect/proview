@@ -961,8 +961,10 @@ void GrowWindow::new_ctx()
     trace_scan();
   }
 
-  if ( input_focus)
-    window_ctx->inputfocus_init_event();
+  // if ( input_focus)
+  ctx->inputfocus_object = this;
+  window_ctx->inputfocus_init_event();
+
 }
 
 void GrowWindow::redraw_cb( void *o)

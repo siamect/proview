@@ -112,7 +112,8 @@ typedef enum {
 	glow_eCtxType_Brow,
 	glow_eCtxType_Grow,	//!< Type is grow context
 	glow_eCtxType_ColPal,
-	glow_eCtxType_Curve	//!< Type is a curve context
+	glow_eCtxType_Curve,	//!< Type is a curve context
+	glow_eCtxType_Keyboard	//!< Type is a virtual keyboard
 	} glow_eCtxType;
 
 //! Policy when selecting an area with the select rectangle

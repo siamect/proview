@@ -99,6 +99,9 @@ class NextElem {
 
 GrowCtx::~GrowCtx()
 {
+  if ( inputfocus_object)
+    register_inputfocus( inputfocus_object, 0);
+
   if ( gdraw) {
     set_nodraw();
     clear_all( 0);
@@ -4212,9 +4215,34 @@ void GrowCtx::convert( glow_eConvert version)
 void GrowCtx::close_annotation_input_all()
 {
   for ( int i = 0; i < a.a_size; i++) {
-    if ( a[i]->type() == glow_eObjectType_GrowNode)
+    switch ( a[i]->type()) {
+    case glow_eObjectType_GrowNode:
       ((GrowNode *)a[i])->close_annotation_input();
+      break;
+    case glow_eObjectType_GrowWindow:
+    case glow_eObjectType_GrowFolder:
+      ((GrowWindow *)a[i])->window_ctx->close_annotation_input_all();
+      break;
+    default: ;
+    }
   }
+}
+
+void GrowCtx::reset_input_focus_all()
+{
+  for ( int i = 0; i < a.a_size; i++) {
+    switch ( a[i]->type()) {
+    case glow_eObjectType_GrowNode:
+      ((GrowNode *)a[i])->set_input_focus( 0, glow_eEvent_Null);
+      break;
+    case glow_eObjectType_GrowWindow:
+    case glow_eObjectType_GrowFolder:
+      ((GrowWindow *)a[i])->window_ctx->reset_input_focus_all();
+      break;
+    default: ;
+    }
+  }
+  inputfocus_object = 0;
 }
 
 void GrowCtx::inputfocus_init_event()
@@ -4234,6 +4262,7 @@ void GrowCtx::inputfocus_init_event()
     e.object.object = 0;
     event_callback[glow_eEvent_InputFocusInit]( this, &e);
   }
+
 }
 
 void GrowCtx::delete_menu_child( GlowArrayElem *parent)
@@ -4775,4 +4804,57 @@ void GrowCtx::set_text_coding( glow_eTextCoding coding)
 	 a[i]->type() == glow_eObjectType_GrowFolder)
       ((GrowWindow *)a[i])->window_ctx->set_text_coding( coding);
   }
+}
+
+int GrowCtx::key_pressed( int key)
+{
+  glow_eEvent event;
+
+  if ( inputfocus_object) {
+    switch ( key) {
+    case 9:
+      event = glow_eEvent_Key_Tab;
+      break;
+    case 13:
+      event = glow_eEvent_Key_Return;
+      break;
+    case 27:
+      event = glow_eEvent_Key_Escape;
+      break;
+    case 8:
+      event = glow_eEvent_Key_BackSpace;
+      break;
+    case 0xff52:
+      event = glow_eEvent_Key_Up;
+      break;
+    case 0xff54:
+      event = glow_eEvent_Key_Down;
+      break;
+    case 0xff51:
+      event = glow_eEvent_Key_Left;
+      break;
+    case 0xff53:
+      event = glow_eEvent_Key_Right;
+      break;
+    case 0xff55:
+      event = glow_eEvent_Key_PageUp;
+      break;
+    case 0xff56:
+      event = glow_eEvent_Key_PageDown;
+      break;
+    default:
+      event = glow_eEvent_Key_Ascii;      
+    }
+
+    switch( inputfocus_object->type()) {
+    case glow_eObjectType_GrowNode:
+      ((GrowNode *)inputfocus_object)->annot_input_event( event, key);
+      return 1;
+    case glow_eObjectType_GrowWindow:
+    case glow_eObjectType_GrowFolder:
+      return ((GrowWindow *)inputfocus_object)->window_ctx->key_pressed( key);
+    default: ;
+    }
+  }
+  return 0;
 }

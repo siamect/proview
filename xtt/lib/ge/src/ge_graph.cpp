@@ -157,7 +157,8 @@ Graph::Graph(
 	int xn_use_default_access,
 	unsigned int xn_default_access,
 	unsigned int xn_options,
-	int xn_color_theme) :
+	int xn_color_theme,
+	void (*xn_keyboard_cb) (void *, int, int)) :
 	attr_list( 0, NULL),
 	parent_ctx(xn_parent_ctx),
 	grow(0), grow_cnt(0), ldhses(0), journal(0),
@@ -170,6 +171,7 @@ Graph::Graph(
 	traverse_focus_cb(NULL), set_focus_cb(NULL), get_ldhses_cb(NULL),
 	get_current_objects_cb(NULL), popup_menu_cb(NULL), call_method_cb(NULL),
 	sound_cb(0), create_modal_dialog_cb(0), eventlog_cb(0), update_colorpalette_cb(0),
+	keyboard_cb(xn_keyboard_cb),
 	linewidth(1), linetype(glow_eLineType_Solid), textsize(2), 
 	textbold(0), textfont(glow_eFont_Helvetica),
 	border_color(1), fill_color(1), fill(0), border(1), shadow(0),
@@ -3087,6 +3089,14 @@ void graph_eventlog_cb( void *ctx, void *data, unsigned int size)
     (graph->eventlog_cb) ( graph->parent_ctx, data, size);
 }
 
+void graph_keyboard_cb( void *ctx, int action, int type)
+{
+  Graph		*graph = (Graph *)ctx;
+
+  if ( graph && graph->keyboard_cb)
+    (graph->keyboard_cb) ( graph->parent_ctx, action, type);
+}
+
 void graph_userdata_save_cb( void *f, void *object, glow_eUserdataCbType utype)
 {
   ofstream *fp = (ofstream *)f;
@@ -4489,6 +4499,8 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
       pwr_sAttrRef aref;
       pwr_tStatus sts;
       char *start, *end, *start2;
+      pwr_tTid atid;
+      pwr_tUInt32 asize;
  
       start = s;
       strcpy( refname, s+4);
@@ -4510,13 +4522,48 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
       *s = 0;
       end = start2 + strlen(start2) + 1;
       strncat( str, start2, sizeof(str));
+      strcpy( refname, str);
 
+      sts = gdh_GetAttributeCharacteristics( refname, &atid, &asize, 0, 0); 
+      if ( EVEN(sts)) return;
+      
+      switch ( atid) {
+      case pwr_eType_AttrRef: {
+	pwr_tAttrRef aref;
+
+	sts = gdh_GetObjectInfo( refname, &aref, sizeof(aref));
+	if ( EVEN(sts)) return;
+      
+	sts = gdh_AttrrefToName( &aref, str, sizeof(str), cdh_mName_volumeStrict);
+	if ( EVEN(sts)) return;
+	break;
+      }
+      case pwr_eType_Objid: {
+	pwr_tOid oid;
+
+	sts = gdh_GetObjectInfo( refname, &oid, sizeof(oid));
+	if ( EVEN(sts)) return;
+      
+	sts = gdh_ObjidToName( oid, str, sizeof(str), cdh_mName_volumeStrict);
+	if ( EVEN(sts)) return;
+	break;
+      }
+      case pwr_eType_String: {
+	sts = gdh_GetObjectInfo( refname, str, sizeof(str));
+	if ( EVEN(sts)) return;
+      
+	break;
+      }
+      default:
+	return;
+      }
+#if 0
       sts = gdh_GetObjectInfo( str, &aref, sizeof(aref));
       if ( EVEN(sts)) return;
       
       sts = gdh_AttrrefToName( &aref, str, sizeof(str), cdh_mName_volumeStrict);
       if ( EVEN(sts)) return;
-
+#endif
       strcat( str, end);
       strcpy( start, str);
     }
@@ -5613,6 +5660,15 @@ void Graph::set_text_coding( lng_eCoding coding)
   }
 
   grow_SetTextCoding( grow->base_ctx(), c);
+}
+
+int Graph::key_pressed( int key) {
+  return grow_KeyPressed( grow->ctx, key);
+}
+
+void Graph::close_input_all() {
+  grow_CloseAnnotationInputAll( grow->ctx);
+  grow_ResetInputFocusAll( grow->ctx);
 }
 
 static void graph_free_dyn( grow_tObject object)

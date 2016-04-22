@@ -76,7 +76,8 @@ class GraphGtk : public Graph {
 	int xn_use_default_access = 0,
 	unsigned int xn_default_access = 0,
 	unsigned int xn_options = 0,
-	int xn_color_theme = 0);
+	int xn_color_theme = 0,
+	void (*xn_keyboard_cb) (void *, int, int) = 0);
 
   void trace_timer_remove();
   void trace_timer_add( int time);

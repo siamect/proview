@@ -435,6 +435,9 @@ extern "C" {
   /*! \param ctx	Grow context. */
   void grow_CloseAnnotationInputAll( GrowCtx *ctx);
 
+  //! Reset input focus on all nodes.
+  void grow_ResetInputFocusAll( GrowCtx *ctx);
+
   //! Set the text of on annotation of an GrowNode object in the paste list.
   /*!
     \param node		Node object.
@@ -3150,6 +3153,7 @@ extern "C" {
   void grow_ResetObjectBackgroundColor( grow_tObject object);
   int grow_SetObjectClass( grow_tObject object, grow_tNodeClass nodeclass);
   int grow_CheckObjectName( grow_tCtx ctx, char *name);
+  int grow_KeyPressed( grow_tCtx ctx, int key);
 
   
 /*@}*/

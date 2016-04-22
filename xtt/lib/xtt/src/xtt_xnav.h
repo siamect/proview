@@ -111,6 +111,10 @@ extern "C" {
 #include "xtt_multiview.h"
 #endif
 
+#ifndef xtt_keyboard_h
+#include "xtt_keyboard.h"
+#endif
+
 #define xnav_cVersion	"X3.0b"
 #define XNAV_BROW_MAX	25
 #define XNAV_LOGG_MAX   10
@@ -339,6 +343,8 @@ class XNav {
     int			elog_checked;
     int 		dialog_ok;
     int 		dialog_cancel;
+    XttKeyboard 	*keyboard;
+    void 		*keyboard_owner;
 
     virtual void set_inputfocus() {}
     virtual void pop() {}
@@ -380,13 +386,15 @@ class XNav {
 				void *basewidget, double *borders, int color_theme,
 				int (*xg_command_cb) (void *, char *, char *, void *),
 				int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-				int (*xg_is_authorized_cb) (void *, unsigned int)) {return 0;}
+				int (*xg_is_authorized_cb) (void *, unsigned int),
+				void (*xg_keyboard_cb) (void *, void *, int, int)) {return 0;}
     virtual XttMultiView *multiview_new( const char *name, pwr_tAttrRef *aref, 
 					 int width, int height, int x, int y, unsigned int options,
 					 int color_theme, pwr_tStatus *sts,
 					 int (*command_cb) (void *, char *, char *, void *),
 					 int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-					 int (*is_authorized_cb) (void *, unsigned int)) {return 0;}
+ 					 int (*is_authorized_cb) (void *, unsigned int),
+ 					 void (*keyboard_cb) (void *, void *, int, int)) {return 0;}
     virtual XttStream *stream_new( const char *name, const char *uri,
 				   int width, int height, int x, int y, double scan_time, 
 				   unsigned int options, int embedded, pwr_tAttrRef *arp, pwr_tStatus *sts) {return 0;}
@@ -400,6 +408,8 @@ class XNav {
 				void		(* wl_bc_success)( void *),
 				void		(* wl_bc_cancel)( void *),
 				pwr_tStatus  	*status) { return 0;}
+    virtual XttKeyboard *keyboard_new( const char *name, keyboard_eKeymap keymap, keyboard_eType type, 
+				       int color_theme, pwr_tStatus *status) {return 0;}
     virtual void bell( int time) {}
     virtual int confirm_dialog( char *title, char *text) { return 0; }
     virtual void set_clock_cursor() {}
@@ -555,6 +565,8 @@ class XNav {
     int create_object( char *classname, char *name);
     int delete_object( char *name);
     void print_methods();
+    void open_keyboard( void *owner, keyboard_eKeymap keymap, int type);
+    void close_keyboard( int action);
     static pwr_tStatus get_instance_classgraph( char *instance_str, pwr_tFileName filename);
 
     // Table module member functions

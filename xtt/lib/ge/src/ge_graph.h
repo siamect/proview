@@ -106,6 +106,7 @@ typedef enum {
   ge_eAttrType_OptionMenuType   = 1010,				//!< OptionMenu type.
   ge_eAttrType_MethodsMenuType  = 1011,				//!< MethodsMenu type.
   ge_eAttrType_MethodToolbarType  = 1012,	       		//!< MethodToolbar type.
+  ge_eAttrType_KeyboardType  	= 1013,	       			//!< Virtual keyboard type.
   ge_eAttrType_DynType2        	= glow_eType_DynType2,  	//!< DynType mask 2.
   ge_eAttrType_ActionType2      = glow_eType_ActionType2,  	//!< ActionType mask 2.
 } ge_eAttrType;
@@ -127,6 +128,16 @@ typedef enum {
   graph_eDatabase_Local,	//!< Graph local database.
   graph_eDatabase_Ccm		//!< Scrip external variable database.
 } graph_eDatabase;
+
+//! Keyboards
+typedef enum {
+  graph_eKeyboard_Standard,    	//!< Keyboard standad.
+  graph_eKeyboard_StandardShifted, //!< Keyboard standard opened in shifted mode.
+  graph_eKeyboard_Numeric,    	//!< Keyboard numeric.
+  graph_eKeyboard_Alphabetic, 	//!< Keyboard alphabetic.
+  graph_eKeyboard_AlphabeticShifted, //!< Keyboard alphabetic opened in shifted mode.
+} graph_eKeyboard;
+
 
 //! Extension of proview type pwr_eType. Should not collide with any pwr_eType.
 typedef enum {
@@ -443,7 +454,8 @@ class Graph {
 	int xn_use_default_access = 0,
 	unsigned int xn_default_access = 0,
 	unsigned int xn_options = 0,
-	int xn_color_theme = 0);
+	int xn_color_theme = 0,
+	void (*xn_keyboard_cb) (void *, int, int) = 0);
 
   virtual void trace_timer_remove() {}
   virtual void trace_timer_add( int time) {}
@@ -496,6 +508,7 @@ class Graph {
 					   const char *, const char *);
   void         	(*eventlog_cb)(void *, void *, unsigned int);
   void         	(*update_colorpalette_cb)(void *);
+  void         	(*keyboard_cb)(void *, int, int);
   int			linewidth;		//!< Selected linewidth.
   glow_eLineType	linetype;		//!< Selected linetype.
   int			textsize;		//!< Selected text size.
@@ -1397,6 +1410,9 @@ class Graph {
 
   void set_text_coding( lng_eCoding coding);
 
+  int key_pressed( int key);
+  void close_input_all();
+
   static int get_colortheme_colors( char *file, double **colors, int *size);
 
   //! Enable event logging
@@ -1406,6 +1422,7 @@ class Graph {
   static int graph_attr_recall_cb( void *g, grow_tObject object, int idx, 
 				   GeDyn **old_dyn);
   
+
   //
   // Command module
   //

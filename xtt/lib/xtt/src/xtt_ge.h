@@ -41,10 +41,11 @@
 # include "pwr.h"
 #endif
 #include "glow.h"
+#include "xtt_utility.h"
 
 class Graph;
 
-class XttGe {
+class XttGe : XttUtility {
  public:
   void 		*parent_ctx;
   pwr_tAName   	name;
@@ -69,6 +70,7 @@ class XttGe {
   int           (*get_current_objects_cb)(void *, pwr_sAttrRef **, int **);
   int           (*sound_cb)(void *, pwr_tAttrRef *);
   void          (*eventlog_cb)(void *, void *, int, void *, unsigned int);
+  void          (*keyboard_cb)(void *, void *, int, int);
   int		width;
   int		height;
   unsigned int	options;
@@ -80,7 +82,8 @@ class XttGe {
 	 unsigned int access, unsigned int options, int color_theme,
 	 int (*xg_command_cb) (void *, char *, char *, void *),
 	 int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-	 int (*xg_is_authorized_cb) (void *, unsigned int));
+  	 int (*xg_is_authorized_cb) (void *, unsigned int),
+  	 void (*xg_keyboard_cb) (void *, void *, int, int));
   virtual ~XttGe();
 
   virtual void pop() {}
@@ -88,6 +91,7 @@ class XttGe {
   virtual void confirm_reply( int ok) {}
   virtual void *get_widget() { return 0;}
 
+  xtt_eUtility get_type() { return xtt_eUtility_Graph;}
   void message( char severity, const char *msg);
   void print();
   void export_image( char *filename);
@@ -98,6 +102,8 @@ class XttGe {
   void update_color_theme( int color_theme);
   void event_exec( int type, void *event, unsigned int size);
   void set_text_coding( lng_eCoding coding);
+  int key_pressed( int key);
+  void close_input_all();
 
   static void graph_init_cb( void *client_data);
   static int graph_close_cb( void *client_data);
@@ -114,6 +120,7 @@ class XttGe {
   static int ge_get_current_objects_cb( void *ge_ctx, pwr_sAttrRef **alist,
 				     int **is_alist);
   static void ge_eventlog_cb( void *ge_ctx, void *value, unsigned int size);
+  static void ge_keyboard_cb( void *ge_ctx, int action, int type);
   static void message_cb( void *ctx, char severity, const char *msg);
   static void eventlog_enable( int enable);
 };

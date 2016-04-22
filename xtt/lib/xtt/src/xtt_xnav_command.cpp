@@ -82,6 +82,7 @@
 
 #include "glow_curvectx.h"
 #include "ge_curve.h"
+#include "ge_graph.h"
 #include "xtt_trend.h"
 #include "xtt_sevhist.h"
 #include "xtt_tcurve.h"
@@ -155,6 +156,7 @@ static int xnav_ge_get_current_objects_cb( void *vxnav, pwr_sAttrRef **alist,
 					   int **is_areflist);
 static int xnav_ge_sound_cb( void *xnav, pwr_sAttrRef *arp);
 static void xnav_ge_eventlog_cb( void *xnav, void *gectx, int type, void *data, unsigned int size);
+static void xnav_ge_keyboard_cb( void *ctx, void *gectx, int action, int type);
 static void xnav_ge_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp);
 static int xnav_ge_is_authorized_cb( void *xnav, unsigned int access);
 static int xnav_attribute_func ( 
@@ -195,6 +197,8 @@ static void xnav_open_shist_cancel_cb( void *ctx);
 static void xnav_show_objectlist_cb( void *ctx, char *text);
 static void xnav_show_objectlist_cancel_cb( void *ctx);
 static void xnav_colortheme_selector_ok_cb( void *ctx, char *text);
+static void xnav_keyboard_key_pressed_cb( void *, int);
+static void xnav_keyboard_close_cb( void *);
 static int xnav_replace_node_str( char *out, char *object_str);
 
 static int	xnav_help_func(		void		*client_data,
@@ -282,13 +286,13 @@ dcli_tCmdTable	xnav_command_table[] = {
 			  "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE", "/ICONIFY", "/HIDE", 
 			  "/XPOSITION", "/YPOSITION", "/X0", "/Y0", "/X1", "/Y1", "/URL", "/CONTINOUS", 
 			  "/CAMERAPOSITION", "/CAMERACONTROLPANEL", "/VIDEOCONTROLPANEL", 
-			  "/VIDEOPROGRESSBAR", "/SCANTIME", ""}
+			  "/VIDEOPROGRESSBAR", "/SCANTIME", "/KEYMAP", ""}
 		},
 		{
 			"CLOSE",
 			&xnav_close_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/OBJECT",
-			  "/INSTANCE", "/CLASSGRAPH", "/ALL", "/EXCEPT", ""}
+			  "/INSTANCE", "/CLASSGRAPH", "/ALL", "/EXCEPT", "/MVEXCEPT" ""}
 		},
 		{
 			"CREATE",
@@ -1167,7 +1171,9 @@ static int	xnav_set_func(	void		*client_data,
 	  ((XttTrend *)elem->ctx)->update_color_theme( idx);
 	else if ( elem->type == applist_eType_Fast)
 	  ((XttFast *)elem->ctx)->update_color_theme( idx);
-      }
+      }      
+      if ( xnav->keyboard)
+	xnav->keyboard->update_color_theme( idx);
     }
     if ( xnav->op)
       xnav->op->set_color_theme( idx);
@@ -3562,7 +3568,8 @@ static int	xnav_open_func(	void		*client_data,
 				   xnav->gbl.color_theme, &sts,
 				   &xnav_multiview_command_cb,
 				   &xnav_ge_get_current_objects_cb, 
-				   &xnav_ge_is_authorized_cb);
+				   &xnav_ge_is_authorized_cb,
+				   &xnav_ge_keyboard_cb);
       if ( EVEN(sts)) {
 	xnav->message(' ', XNav::get_message(sts));
 	return sts;
@@ -5025,6 +5032,43 @@ static int	xnav_open_func(	void		*client_data,
     xnav->wow->CreateList( "ColorTheme Selector", (char *)cname, sizeof(cname[0]), 
 			     xnav_colortheme_selector_ok_cb, 0, xnav);
   }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "KEYBOARD", strlen( arg1_str)) == 0)
+  {
+    char keymap_str[80]; 
+    char type_str[80];
+    keyboard_eKeymap keymap;
+    graph_eKeyboard type;
+
+    if ( ODD( dcli_get_qualifier( "/KEYMAP", keymap_str, sizeof(keymap_str)))) {
+      if ( cdh_NoCaseStrcmp( keymap_str, "en_us") == 0)
+	keymap = keyboard_eKeymap_Low_en_us;
+      else if ( cdh_NoCaseStrcmp( keymap_str, "sv_se") == 0)
+	keymap = keyboard_eKeymap_Low_sv_se;	
+      else {
+	xnav->message('E',"Unknown keymap");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      keymap = keyboard_eKeymap_;
+
+    if ( ODD( dcli_get_qualifier( "/TYPE", type_str, sizeof(type_str)))) {
+      if ( cdh_NoCaseStrcmp( type_str, "standard") == 0)
+	type = graph_eKeyboard_Standard;
+      else if ( cdh_NoCaseStrcmp( type_str, "numeric") == 0)
+	type = graph_eKeyboard_Numeric;
+      else if ( cdh_NoCaseStrcmp( type_str, "alphabetic") == 0)
+	type = graph_eKeyboard_Alphabetic;
+      else {
+	xnav->message('E',"Unknown type");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      type = graph_eKeyboard_Standard;
+
+    xnav->open_keyboard( 0, keymap, type);
+  }
   else
     xnav->message('E',"Syntax error");
 
@@ -5318,12 +5362,17 @@ static int	xnav_close_func(	void		*client_data,
   {
     char except_str[400];
     char name_array[20][80];
+    char mvname_array[10][200];
     int names;
+    int mvnames;
+    pwr_tAttrRef mv_aref_array[10];
     ApplListElem *elem, *next_elem;
     applist_eType type;
+    XttMultiView *mvctx;
     int keep;
     int i;
-        
+    pwr_tStatus sts;
+    int except_current = 0;
 
     // Close everything
 
@@ -5332,20 +5381,52 @@ static int	xnav_close_func(	void		*client_data,
       names = dcli_parse( except_str, ",", "",
 	     (char *) name_array, sizeof( name_array)/sizeof( name_array[0]), 
 	     sizeof( name_array[0]), 0);
+      for ( int i = 0; i < names; i++) {
+	if ( strcmp( name_array[i], "$current") == 0) {
+	  except_current = 1;
+	  break;
+	}	  
+      }
     }
     else
       names = 0;
+
+    if ( ODD( dcli_get_qualifier( "/MVEXCEPT", except_str, sizeof(except_str)))) {
+      // The except string can contain several items separated by ','
+      mvnames = dcli_parse( except_str, ",", "",
+	     (char *) mvname_array, sizeof( mvname_array)/sizeof( mvname_array[0]), 
+	     sizeof( mvname_array[0]), 0);
+      for ( int i = 0; i < mvnames; i++) {
+	if ( strcmp( mvname_array[i], "$current") == 0) {
+	  except_current = 1;
+	}	  
+	else {
+	  sts = gdh_NameToAttrref( pwr_cNObjid, mvname_array[i], &mv_aref_array[i]);
+	  if ( EVEN(sts)) {
+	    xnav->message('E', "No such multiview");
+	    return XNAV__HOLDCOMMAND;
+	  }
+	}
+      }
+    }
+    else
+      mvnames = 0;
 
     // Close graphs
     type = applist_eType_Graph;
     for ( elem = xnav->appl.root; elem;) {
       if ( elem->type == type) {
         keep = 0;
-        for ( i = 0; i < names; i++) {
-          if ( cdh_NoCaseStrcmp( name_array[i], elem->name) == 0) {
-            keep = 1;
-            break;
-          }
+	if ( except_current && elem->ctx == xnav->current_cmd_ctx) {
+	  keep = 1;
+	}
+	else {
+	  for ( i = 0; i < names; i++) {
+	    if ( cdh_NoCaseStrcmp( name_array[i], elem->name) == 0) {
+	      keep = 1;
+	      break;
+	    }
+	  }
 	}
         if ( keep) {
           elem = elem->next;
@@ -5353,6 +5434,38 @@ static int	xnav_close_func(	void		*client_data,
         }
         next_elem = elem->next;
         xnav->close_graph( elem->name, elem->instance);
+        elem = next_elem;
+        continue;
+      }
+      elem = elem->next;
+    }
+
+    // Close multiviews
+    type = applist_eType_MultiView;
+    for ( elem = xnav->appl.root; elem;) {
+      if ( elem->type == type) {
+        keep = 0;
+	if ( except_current && elem->ctx == xnav->current_cmd_ctx) {
+	  keep = 1;
+	}
+	else {
+	  for ( i = 0; i < mvnames; i++) {
+	    if ( cdh_ObjidIsEqual( mv_aref_array[i].Objid, elem->aref.Objid) &&
+		 mv_aref_array[i].Offset == elem->aref.Offset) {
+	      
+	      keep = 1;
+	      break;
+	    }
+	  }
+	}
+	if ( keep) {
+	  elem = elem->next;
+          continue;
+        }
+        next_elem = elem->next;
+	mvctx = (XttMultiView *)elem->ctx;
+	xnav->appl.remove( (void *)mvctx);
+	delete mvctx;
         elem = next_elem;
         continue;
       }
@@ -5531,8 +5644,12 @@ static void xnav_ge_close_cb( void *nav, void *ctx)
     else
       exit(0);
   }
-  else
+  else {
+    if ( xnav->keyboard_owner == ctx)
+      xnav->close_keyboard( keyboard_mAction_Close);
+
     xnav->appl.remove( (void *)ctx);
+  }
 }
 
 static void xnav_multiview_close_cb( void *nav, void *ctx)
@@ -8695,6 +8812,7 @@ static int xnav_attribute_func (
             break;
           }
           case pwr_eType_Int32:
+          case pwr_eType_Enum:
           {
 	    int_val = *(pwr_tInt32 *)object_element;
 	    decl = CCM_DECL_INT;
@@ -8724,6 +8842,7 @@ static int xnav_attribute_func (
 	  case pwr_eType_CastId:
 	  case pwr_eType_VolumeId:
 	  case pwr_eType_ObjectIx:
+	  case pwr_eType_Mask:
           {
 	    int_val = *(pwr_tUInt32 *)object_element;
 	    decl = CCM_DECL_INT;
@@ -9275,6 +9394,52 @@ static void xnav_ge_eventlog_cb( void *xnav, void *gectx, int type, void *data, 
   }
 }
 
+static void xnav_ge_keyboard_cb( void *ctx, void *gectx, int action, int type)
+{
+  int sts;
+  XNav *xnav = (XNav *)ctx;
+  char		name[80];
+  pwr_tAName    instance;
+  pwr_tTime	current_time;
+  pwr_tDeltaTime dt;
+  static pwr_tTime open_time = pwr_cNTime;
+
+  if ( !(xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_VirtualKeyboard))
+    return;
+
+  if ( action & keyboard_mAction_Open) {
+    // Open keyboard
+    sts = xnav->appl.find( applist_eType_Graph, gectx, name, instance);
+    if ( ODD(sts))
+      xnav->open_keyboard( gectx, keyboard_eKeymap_, type);
+    else {
+      sts = xnav->appl.find( applist_eType_MultiView, gectx, name, instance);
+      if ( ODD(sts))
+	xnav->open_keyboard( gectx, keyboard_eKeymap_, type);
+    }
+    if ( EVEN(sts)) {
+      switch ( ((XttUtility *)gectx)->get_type()) {
+      case xtt_eUtility_Graph:
+      case xtt_eUtility_MultiView:
+	xnav->open_keyboard( gectx, keyboard_eKeymap_, type);
+	break;
+      default: ;
+      }
+    }
+    // Disable close keyboard request from lost input focus
+    time_GetTime( &open_time);
+
+  }
+  else {
+    // Close keyboard
+    time_GetTime( &current_time);
+    if ( time_DToFloat( 0, time_Adiff( &dt, &current_time, &open_time)) < 0.1)
+      return;
+
+    xnav->close_keyboard( action);
+  }
+}
+
 static void xnav_ev_pop_cb( void *xnav)
 {
   if (((XNav *)xnav)->op)
@@ -9311,6 +9476,43 @@ static int xnav_ge_get_current_objects_cb( void *vxnav, pwr_sAttrRef **alist,
   return sts;
 }
 
+static void xnav_keyboard_key_pressed_cb( void *ctx, int ascii)
+{
+  XNav *xnav = (XNav *) ctx;
+  ApplListElem *elem;
+
+  if ( ascii == 27) {
+    // Escape, close all input
+    for ( elem = xnav->appl.root; elem; elem = elem->next) {
+      if ( elem->type == applist_eType_Graph)
+	((XttGe *)elem->ctx)->close_input_all();
+      else if ( elem->type == applist_eType_MultiView)
+	((XttMultiView *)elem->ctx)->close_input_all();    
+    }
+    xnav->keyboard_owner = 0;
+    xnav->close_keyboard( keyboard_mAction_Close | keyboard_mAction_ResetInput);
+  }
+  else {
+    // Forward key to current owner
+    for ( elem = xnav->appl.root; elem; elem = elem->next) {
+      if ( elem->ctx == xnav->keyboard_owner) {
+	if ( elem->type == applist_eType_Graph)
+	  ((XttGe *)elem->ctx)->key_pressed( ascii);
+	else if ( elem->type == applist_eType_MultiView)
+	  ((XttMultiView *)elem->ctx)->key_pressed( ascii);
+	break;
+      }
+    }
+  }
+}
+
+static void xnav_keyboard_close_cb( void *ctx)
+{
+  XNav *xnav = (XNav *) ctx;
+
+  xnav->close_keyboard( keyboard_mAction_Close | keyboard_mAction_ResetInput);
+}
+
 void XNav::open_graph( const char *name, const char *filename, int scrollbar, int menu, 
 		       int navigator, int width, int height, int x, int y, 
 		       const char *object_name, const char *focus_name, int input_focus_empty,
@@ -9331,7 +9533,8 @@ void XNav::open_graph( const char *name, const char *filename, int scrollbar, in
 			 scrollbar, menu, navigator, width, height, x, y, gbl.scantime,
 			 object_name, use_default_access, access, options, basewidget,
 			 borders, gbl.color_theme, &xnav_ge_command_cb,
-			 &xnav_ge_get_current_objects_cb, &xnav_ge_is_authorized_cb);
+			 &xnav_ge_get_current_objects_cb, &xnav_ge_is_authorized_cb,
+			 &xnav_ge_keyboard_cb);
     gectx->close_cb = xnav_ge_close_cb;
     gectx->help_cb = xnav_ge_help_cb;
     gectx->display_in_xnav_cb = xnav_ge_display_in_xnav_cb;
@@ -9865,6 +10068,8 @@ static void xnav_colortheme_selector_ok_cb( void *ctx, char *text)
 	else if ( elem->type == applist_eType_Fast)
 	  ((XttFast *)elem->ctx)->update_color_theme( idx);
       }
+      if ( xnav->keyboard)
+	xnav->keyboard->update_color_theme( idx);
     }
     if ( xnav->op)
       xnav->op->set_color_theme( idx);
@@ -10049,6 +10254,80 @@ int XNav::collect_window( int copy, int type)
     }      
   }
   return XNAV__SUCCESS;
+}
+
+void XNav::open_keyboard( void *owner, keyboard_eKeymap keymap, int type)
+{
+  pwr_tStatus sts;
+  keyboard_eType keyboard_type;
+  int shifted = 0;
+  void *basewidget = 0;
+
+  if ( !(opplace_p->Options & pwr_mOpPlaceOptionsMask_VirtualKeyboard))
+    return;
+
+  if ( keymap == keyboard_eKeymap_)
+    keymap = keyboard_eKeymap_Low_en_us;
+
+  if ( keyboard) 
+    delete keyboard;
+
+  switch ( type) {
+  case graph_eKeyboard_StandardShifted:
+    shifted = 1;
+  case graph_eKeyboard_Standard:
+    keyboard_type = keyboard_eType_Standard;
+    break;
+  case graph_eKeyboard_Numeric:
+    keyboard_type = keyboard_eType_Numeric;
+    break;
+  case graph_eKeyboard_AlphabeticShifted:
+    shifted = 1;
+  case graph_eKeyboard_Alphabetic:
+    keyboard_type = keyboard_eType_Alphabetic;
+    break;
+  }
+
+  keyboard = keyboard_new( "Keyboard", keymap, keyboard_type, gbl.color_theme, &sts);
+  keyboard->key_pressed_cb = xnav_keyboard_key_pressed_cb;
+  keyboard->close_cb = xnav_keyboard_close_cb;
+  keyboard_owner = owner;
+  
+  if ( shifted) 
+    keyboard->set_shift(1);
+  
+  if ( opplace_p->Options & pwr_mOpPlaceOptionsMask_AllMainTransient) {
+    if ( ge_main)
+      basewidget = ge_main->get_widget();
+    else if ( multiview_main)
+      basewidget = multiview_main->get_widget();
+    if ( basewidget)
+      keyboard->set_transient( basewidget);
+  }
+  
+}
+
+void XNav::close_keyboard( int action)
+{
+  ApplListElem *elem;
+
+  if ( !(opplace_p->Options & pwr_mOpPlaceOptionsMask_VirtualKeyboard))
+    return;
+
+  if ( keyboard) {
+    delete keyboard;
+    keyboard = 0;
+    keyboard_owner = 0;
+
+    if ( action & keyboard_mAction_ResetInput) {
+      for ( elem = appl.root; elem; elem = elem->next) {
+	if ( elem->type == applist_eType_Graph)
+	  ((XttGe *)elem->ctx)->close_input_all();
+	else if ( elem->type == applist_eType_MultiView)
+	  ((XttMultiView *)elem->ctx)->close_input_all();
+      }
+    }
+  }
 }
 
 static int xnav_replace_node_str( char *out, char *object_str) 

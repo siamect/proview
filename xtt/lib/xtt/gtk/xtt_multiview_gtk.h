@@ -81,7 +81,8 @@ class XttMultiViewGtk : public XttMultiView {
 		   pwr_tStatus *sts,
 		   int (*mv_command_cb) (void *, char *, char *, void *),
 		   int (*mv_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-		   int (*mv_is_authorized_cb) (void *, unsigned int));
+		   int (*mv_is_authorized_cb) (void *, unsigned int),
+		   void (*mv_keyboard_cb) (void *, void *, int, int));
   ~XttMultiViewGtk();
 
   void pop();
@@ -91,6 +92,8 @@ class XttMultiViewGtk : public XttMultiView {
   void *get_widget();
   int set_subwindow_source( const char *name, char *source, char *object, double *borders,
 			    int insert = 1, int more = 0);
+  int key_pressed( int key);
+  void close_input_all();
 
   static void ge_change_value_cb( void *ge_ctx, void *value_object, char *text);
   static void confirm_cb( void *ge_ctx, void *confirm_object, char *text);

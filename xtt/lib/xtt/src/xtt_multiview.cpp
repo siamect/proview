@@ -190,6 +190,14 @@ void XttMultiView::multiview_ge_eventlog_cb( void *multiview_ctx, void *gectx, i
     (multiview->eventlog_cb)( multiview->parent_ctx, gectx, category, data, size);
 }
 
+void XttMultiView::multiview_keyboard_cb( void *multiview_ctx, void *ge_ctx, int action, int type)
+{
+  XttMultiView	*multiview = (XttMultiView *)multiview_ctx;
+
+  if ( multiview->keyboard_cb)
+    (multiview->keyboard_cb)( multiview->parent_ctx, multiview, action, type);
+}
+
 void XttMultiView::multiview_ge_help_cb( void *multiview_ctx, const char *key)
 {
   XttMultiView	*multiview = (XttMultiView *)multiview_ctx;
@@ -331,12 +339,13 @@ XttMultiView::XttMultiView( void *mv_parent_ctx, const char *mv_name,
 			    int mv_x, int mv_y, unsigned int mv_options, int mv_color_theme,
 			    int (*mv_command_cb) (void *, char *, char *, void *),
 			    int (*mv_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-			    int (*mv_is_authorized_cb) (void *, unsigned int)) :
+			    int (*mv_is_authorized_cb) (void *, unsigned int),
+			    void (*mv_keyboard_cb) (void *, void *, int, int)) :
   parent_ctx(mv_parent_ctx), options(mv_options), color_theme(mv_color_theme),
   command_cb(mv_command_cb), close_cb(0), help_cb(0), display_in_xnav_cb(0), 
   is_authorized_cb(mv_is_authorized_cb), popup_menu_cb(0), call_method_cb(0), 
   get_current_objects_cb(mv_get_current_objects_cb), sound_cb(0), eventlog_cb(0),
-  get_select_cb(0),
+  get_select_cb(0), keyboard_cb(mv_keyboard_cb),
   width(mv_width), height(mv_height)
 {
   strcpy( name, mv_name);
