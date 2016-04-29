@@ -850,6 +850,10 @@ void EvList::event_info( mh_sMessage *msg)
   brow_tNode	dest_node;
 
   if ( type == ev_eType_AlarmList &&
+       !(event->Info.EventFlags & mh_mEventFlags_Ack))
+    return;
+
+  if ( type == ev_eType_AlarmList &&
        !( msg->Status & mh_mEventStatus_NotAck ||
           msg->Status & mh_mEventStatus_NotRet))
     return;

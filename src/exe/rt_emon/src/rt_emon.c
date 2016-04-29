@@ -1281,6 +1281,10 @@ sendAlarmStatus( sOutunit *op)
     case mh_eEvent_UserAlarm4:
 
       ep = ap->detect_etp->ep;
+
+      if ( ap->detect_etp->event == mh_eEvent_Info && !(ep->msg.info.EventFlags & mh_mEventFlags_Ack))
+	break;
+
       if ( ep)
 	is_for_outunit = isForOutunit(op, ep->outunit, ep->object.Objid, ep->objName, ep->msg.info.EventFlags, 
 				     ep->eventType, ep->local);
@@ -1314,6 +1318,9 @@ sendAlarmStatus( sOutunit *op)
     case mh_eEvent_UserAlarm4:
 
       ep = ap->detect_etp->ep;
+
+      if ( ap->detect_etp->event == mh_eEvent_Info && !(ep->msg.info.EventFlags & mh_mEventFlags_Ack))
+	break;
 
       if ( ep)
 	is_for_outunit = isForOutunit(op, ep->outunit, ep->object.Objid, ep->objName, ep->msg.info.EventFlags, 
@@ -2523,6 +2530,28 @@ handleReturn (
 )
 {
   sEvent *ep;
+
+  if ( sp->link.event == mh_eEvent_Info &&
+       !(sp->link.eventFlags & mh_mEventFlags_Ack) &&
+       !(sp->link.eventFlags & mh_mEventFlags_Return)) {
+    /* Remove without adding event */
+    sActive *ap = (sActive *)sp;
+
+    ap->status.All = 0;
+    updateAlarmInfo(ap);
+    if (ap->source == mh_eSource_Scanner) {
+      sp->sup->DetectCheck = TRUE;   /* Activate detection */
+      sp->sup->AlarmCheck = TRUE;    /* Activate alarm supervision */
+      sp->sup->AlarmStatus.All = ap->status.All;
+      if (sp->supType == mh_eSupType_Cycle) {
+	pwr_sClass_CycleSup *cp = (pwr_sClass_CycleSup *) sp->op;
+	cp->DelayNoted = FALSE;
+	cp->Delayed = FALSE;
+      }
+    }
+    activeListRemove(ap);
+    return;
+  }    
 
   ep = eventListInsert(mh_eEvent_Return, NULL, (sActive*) sp);
 
@@ -4527,13 +4556,13 @@ updateAlarm (
     if (ap->source == mh_eSource_Scanner) {
       ap->status.Event.Prio = sp->sup->EventPriority;
       if (sp->sup->EventFlags & mh_mEventFlags_Returned)
-        ap->status.Event.Status &= ~mh_mEventStatus_NotRet;
+	ap->status.Event.Status &= ~mh_mEventStatus_NotRet;
     } else {
       ap->status.Event.Prio = aap->message.EventPrio;
       if (aap->message.EventFlags & mh_mEventFlags_Returned)
-        ap->status.Event.Status &= ~mh_mEventStatus_NotRet;
+	ap->status.Event.Status &= ~mh_mEventStatus_NotRet;
     }
-
+    
     ep->msg.message.Status = ap->status.All;
     break;
   case mh_eEvent_Info:
@@ -4542,11 +4571,11 @@ updateAlarm (
     if (ap->source == mh_eSource_Scanner) {
       ap->status.Event.Prio = 0;
       if (sp->sup->EventFlags & mh_mEventFlags_Returned)
-        ap->status.Event.Status &= ~mh_mEventStatus_NotRet;
+	ap->status.Event.Status &= ~mh_mEventStatus_NotRet;
     } else {
       ap->status.Event.Prio = 0;
       if (aap->message.EventFlags & mh_mEventFlags_Returned)
-        ap->status.Event.Status &= ~mh_mEventStatus_NotRet;
+	ap->status.Event.Status &= ~mh_mEventStatus_NotRet;
     }
     ep->msg.message.Status = ap->status.All;
     break;
@@ -4557,7 +4586,7 @@ updateAlarm (
     if (ap->idx >= l.event_l->oldIdx) {
       /* Alarm message still in event list, update status */
       l.event_l->list[ap->idx % l.event_l->size].msg.message.Status =
-        ap->status.All;
+	ap->status.All;
     }
     break;
   case mh_eEvent_Return:
@@ -4565,16 +4594,18 @@ updateAlarm (
     if (ap->idx >= l.event_l->oldIdx) {
       /* Alarm message still in event list, update status */
       l.event_l->list[ap->idx % l.event_l->size].msg.message.Status =
-        ap->status.All;
+	ap->status.All;
     }
     break;
   default:
     break;
   }
 
-  if ((ap->status.Event.Status &
-    (mh_mEventStatus_NotRet | mh_mEventStatus_NotAck)) == 0
-  ) { /* The alarm is acked and unactive, remove it from alarm list */
+  if (((ap->status.Event.Status &
+	(mh_mEventStatus_NotRet | mh_mEventStatus_NotAck)) == 0) ||
+      (ap->event == mh_eEvent_Info && ep->event == mh_eEvent_Return && 
+       !(aap->message.EventFlags & mh_mEventFlags_Ack))
+      ) { /* The alarm is acked and unactive, remove it from alarm list */
     ap->status.All = 0;
     updateAlarmInfo(ap);
     if (ap->source == mh_eSource_Scanner) {
