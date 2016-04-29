@@ -366,7 +366,7 @@ system objects.
 The Directoy volume only exists in the development environment. Here the volumes and nodes of
 the system are configured.
 
-<h1>Volyme Identity
+<h1>Volume Identity
 Each volume has a unique identity, that is written with four numbers, separated by periods,
 e.g. "_V0.3.4.23". The prefix _V states that it is a volume identity. To verify that the volume
 identities are unique, there is a global volume list that contains all volumes. Before creating
