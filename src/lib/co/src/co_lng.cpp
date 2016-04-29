@@ -562,24 +562,26 @@ void Lng::get_uid( char *in, char *out)
   strcpy( out, result);
 }
 
-void Lng::set( char *language) 
+pwr_tStatus Lng::set( char *language) 
 { 
   pwr_tStatus sts;
 
   lng_eLanguage l = str_to_lang( language);
   if ( l != lng_eLanguage_) {
     sts = set( l);
-    if ( EVEN(sts)) return;
+    if ( EVEN(sts)) return sts;
   }
   setlocale( LC_ALL, lang_to_locale( l));
   setlocale( LC_NUMERIC, "POSIX");
   setlocale( LC_TIME, "en_US");
+
+  return 1;
 }
 
 pwr_tStatus Lng::set( lng_eLanguage language) 
 { 
   if ( lang == language)
-    return 1;
+    return LNG__ALREADYSET;
 
   if ( language == lng_eLanguage_en_US) {
     lang = language;

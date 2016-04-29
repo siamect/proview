@@ -44,5 +44,6 @@ eof		<End of file>						/error
 diffcoding	<Coding of global and local translationfiles differ>	/error
 file		<Unable to open file>					/error
 includemismatch	<Include statement mismatch>				/error
+alreadyset	<Specified language already set>			/error
 
 .end

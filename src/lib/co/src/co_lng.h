@@ -286,7 +286,7 @@ class Lng {
     static void unload();
     static pwr_tStatus set( lng_eLanguage language);
     static lng_eLanguage current() { return lang;}
-    static void set( char *language);
+    static pwr_tStatus set( char *language);
     static char *get( int item)
       { return items[lang][item];}
     static char *get( lng_eLanguage language, int item)

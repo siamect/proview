@@ -1044,6 +1044,7 @@ static int	xnav_set_func(	void		*client_data,
   {    
     char language_str[80];
     ApplListElem *elem;
+    pwr_tStatus sts;
 
     // Command is "SET LANGUAGE"
     if ( EVEN( dcli_get_qualifier( "dcli_arg2", language_str, sizeof(language_str)))) {
@@ -1051,8 +1052,12 @@ static int	xnav_set_func(	void		*client_data,
       return XNAV__HOLDCOMMAND;
     }
     cdh_ToLower( language_str, language_str);
-    Lng::set( language_str);
-
+    sts = Lng::set( language_str);
+    if ( EVEN(sts)) {
+      xnav->message(' ', XNav::get_message(sts));
+      return XNAV__SUCCESS;
+    }
+    
     // Set new coding to all graphs
     for ( elem = xnav->appl.root; elem; elem = elem->next) {
       if ( elem->type == applist_eType_Graph)
