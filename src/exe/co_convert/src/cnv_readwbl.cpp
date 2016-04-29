@@ -480,7 +480,8 @@ int CnvReadWbl::read_wbl( char *filename)
           }
 	  else if ( state & cread_mState_TypeDef && classdef_level == object_level) {
             state &= ~cread_mState_TypeDef;
-            if ( wblto->type() == Cnv_eWblToType_Html &&
+            if ( (wblto->type() == Cnv_eWblToType_Html ||
+		  wblto->type() == Cnv_eWblToType_Xtthelp) &&
 		 wblto->class_open())
               wblto->typedef_close();
             if ( wblto->type() == Cnv_eWblToType_H &&
@@ -1271,7 +1272,8 @@ int CnvReadWbl::typedef_close()
   }
 
   if ( wblto->type() == Cnv_eWblToType_Html ||
-       wblto->type() == Cnv_eWblToType_Ps)
+       wblto->type() == Cnv_eWblToType_Ps ||
+       wblto->type() == Cnv_eWblToType_Xtthelp)
     wblto->typedef_exec();
   if ( wblto->type() == Cnv_eWblToType_H &&
        object_state == cread_mState_TypeDef)

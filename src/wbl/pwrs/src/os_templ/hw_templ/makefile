@@ -75,11 +75,11 @@ $(doc_dir)/en_us/orm/pwrs_allclasses.html :
 
 $(exe_dir)/en_us/pwrs_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrs classes en_us"
-	@ $(co_convert) -x -d $(exe_dir)/en_us "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
+	@ $(co_convert) -x -d $(exe_dir)/en_us "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 
 $(exe_dir)/sv_se/pwrs_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrs classes sv_se"
-	@ $(co_convert) -x -l sv_se -d $(exe_dir)/sv_se "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
+	@ $(co_convert) -x -l sv_se -d $(exe_dir)/sv_se "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 
 
 #$(export_wbl) : $(cnf_dir)/%.wb_vers : %.wb_load

@@ -137,7 +137,7 @@ int CnvWblToXtthelp::init( char *first)
   fp_tmp.open( cread_cTmpFile2);
 
   xtthelp_index_open = 1;
-  xtthelp_in_topic= 1;
+  xtthelp_in_topic= 0;
 
   fp_xtthelp_index <<
 "<TOPIC> " << ctx->rw->volume_name << endl <<
@@ -307,6 +307,86 @@ int CnvWblToXtthelp::class_close()
 
 int CnvWblToXtthelp::bit_exec()
 {
+  int i;
+  char txt[200];
+  char prefix[80];
+  char link_ref[80];
+  char *s;
+  int lng_sts = 1;
+
+  if ( Lng::current() != lng_eLanguage_en_US)
+    lng_sts = ctx->rw->read_lng( ctx->rw->typedef_name, ctx->rw->bit_name);
+
+  if ( first_bit) {
+    if ( strstr( ctx->rw->typedef_name, "Enum"))
+      fp_tmp <<
+	"<H1>" << Lng::translate("Enumerations") << endl;
+    else 
+      fp_tmp <<
+	"<H1>" << Lng::translate("Bits") << endl;
+    first_bit = 0;
+  }
+
+  fp_tmp << "<B>" << ctx->rw->bit_name << endl;
+
+  // char bitchar = _tolower(ctx->rw->typedef_typeref[0]);
+  //fp_tmp << "  pwr_" << bitchar << ctx->rw->typedef_name << "_" << ctx->rw->bit_pgmname << endl;
+
+  if ( ctx->rw->doc_fresh)
+  {
+    for ( i = 0; i < ctx->rw->doc_cnt; i++) {
+      CnvCtx::remove_spaces( ctx->rw->doc_text[i], txt);
+      if ( strncmp( CnvCtx::low(txt), "@image", 6) == 0)  {
+	char imagefile[80];
+
+	CnvCtx::remove_spaces( txt + 6, imagefile);
+	fp_tmp << "<IMAGE> " << imagefile << endl;
+      }
+      else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
+	fp_tmp << "<B> " << txt + 2 << endl;
+      }
+      else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
+	fp_tmp << "<H1> " << txt + 3 << endl;
+      }
+      else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
+	fp_tmp << "<H2> " << txt + 3 << endl;
+      }
+      else if ( strncmp( CnvCtx::low(txt), "@i", 2) == 0)  {
+	fp_tmp << "<i>" << txt + 2 << endl;
+      }
+      else
+	fp_tmp << ctx->rw->doc_text[i] << endl;
+    }
+  }
+  for ( i = 0; i < ctx->rw->doc_clink_cnt; i++) {
+    strcpy( prefix, CnvCtx::low(ctx->rw->volume_name));
+    strcat( prefix, "_");
+    if ( strncmp( ctx->rw->doc_clink_ref[i], prefix, strlen(prefix)) == 0) {
+      strcpy( link_ref, &ctx->rw->doc_clink_ref[i][strlen(prefix)]);
+      if ( (s = strrchr( link_ref, '.')))
+	*s = 0;
+    }
+    else {
+      if ( (s = strchr( ctx->rw->doc_clink_ref[i], '_'))) {
+	int len = s - ctx->rw->doc_clink_ref[i];
+	memset( link_ref, 0, sizeof(link_ref));
+	strcpy( link_ref, &ctx->rw->doc_clink_ref[i][len+1]);
+	if ( (s = strrchr( link_ref, '.')))
+	  *s = 0;
+	strcat( link_ref, ", ,$pwr_lang/");
+	strncat( link_ref, ctx->rw->doc_clink_ref[i], len);
+	strcat( link_ref, "_xtthelp.dat");
+      }
+      else {
+	strcpy( link_ref, ctx->rw->doc_clink_ref[i]);
+	if ( (s = strrchr( link_ref, '.')))
+	  *s = 0;
+      }
+    }
+    fp_tmp << "      " << ctx->rw->doc_clink_text[i] << " <LINK>" << link_ref << endl;
+  }
+  fp_tmp << endl;
+
   return 1;
 }
 
@@ -369,3 +449,128 @@ int CnvWblToXtthelp::attribute_exec()
   return 1;
 }
 
+int CnvWblToXtthelp::typedef_exec()
+{
+  int i;
+  char full_class_name[80];
+  char link_ref[80];
+  char *s;
+  char txt[256];
+  char prefix[80];
+  int lng_sts = 1;
+
+  if ( Lng::current() != lng_eLanguage_en_US)
+    lng_sts = ctx->rw->read_lng( ctx->rw->class_name, 0);
+
+  strcpy( ctx->rw->class_name, ctx->rw->typedef_name);
+
+  strcpy( full_class_name, ctx->rw->volume_name);
+  strcat( full_class_name, ":");
+  strcat( full_class_name, ctx->rw->class_name);
+  
+  // Add into index file
+  fp_xtthelp_index <<
+"<B>" << ctx->rw->class_name << "<T><T> " << ctx->rw->doc_summary << " <LINK> " << ctx->rw->class_name << endl;
+
+  // Add to class file
+  if ( xtthelp_in_topic)
+    fp_tmp <<
+"</TOPIC>" << endl;
+
+  xtthelp_in_topic = 1;
+  fp_tmp <<
+"<TOPIC> " << ctx->rw->class_name << endl << "Type" << " " << full_class_name << endl <<
+"<H1>" << ctx->rw->class_name << endl << endl;
+
+  if ( !lng_sts)
+    fp_tmp <<
+"(" << Lng::translate( "English text not available") << ")" << endl << endl;
+
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_author, "") != 0)
+  {
+    fp_tmp <<
+"<B>" << Lng::translate("Author") << "<T>" << ctx->rw->doc_author << endl;
+  }
+
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_creator, "") != 0)
+  {
+    fp_tmp <<
+"<B>" << Lng::translate("Creator") << "<T>" << ctx->rw->doc_creator << endl;
+  }
+
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_version, "") != 0)
+  {
+    fp_tmp <<
+"<B>" << Lng::translate("Version") << "<T>" << ctx->rw->doc_version << endl;
+  }
+
+  fp_tmp <<
+    "<H1>"<< Lng::translate("Description") << endl;
+
+  if ( ctx->rw->doc_fresh) {
+
+    for ( i = 0; i < ctx->rw->doc_cnt; i++) {
+      CnvCtx::remove_spaces( ctx->rw->doc_text[i], txt);
+      if ( strncmp( CnvCtx::low(txt), "@image", 6) == 0)  {
+	char imagefile[80];
+
+	CnvCtx::remove_spaces( txt + 6, imagefile);
+	fp_tmp << "<IMAGE> " << imagefile << endl;
+      }
+      else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
+	fp_tmp << "<B> " << txt + 2 << endl;
+      }
+      else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
+	fp_tmp << "<H1> " << txt + 3 << endl;
+      }
+      else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
+	fp_tmp << "<H2> " << txt + 3 << endl;
+      }
+      else if ( strncmp( CnvCtx::low(txt), "@i", 2) == 0)  {
+	fp_tmp << "<i>" << txt + 2 << endl;
+      }
+      else
+	fp_tmp << ctx->rw->doc_text[i] << endl;
+    }
+  }
+  for ( i = 0; i < ctx->rw->doc_clink_cnt; i++) {
+    strcpy( prefix, CnvCtx::low(ctx->rw->volume_name));
+    strcat( prefix, "_");
+    if ( strncmp( ctx->rw->doc_clink_ref[i], prefix, strlen(prefix)) == 0) {
+      strcpy( link_ref, &ctx->rw->doc_clink_ref[i][strlen(prefix)]);
+      if ( (s = strrchr( link_ref, '.')))
+	*s = 0;
+    }
+    else {
+      if ( (s = strchr( ctx->rw->doc_clink_ref[i], '_'))) {
+	int len = s - ctx->rw->doc_clink_ref[i];
+	memset( link_ref, 0, sizeof(link_ref));
+	strcpy( link_ref, &ctx->rw->doc_clink_ref[i][len+1]);
+	if ( (s = strrchr( link_ref, '.')))
+	  *s = 0;
+	strcat( link_ref, ", ,$pwr_lang/");
+	strncat( link_ref, ctx->rw->doc_clink_ref[i], len);
+	strcat( link_ref, "_xtthelp.dat");
+      }
+      else {
+	strcpy( link_ref, ctx->rw->doc_clink_ref[i]);
+	if ( (s = strrchr( link_ref, '.')))
+	  *s = 0;
+      }
+    }
+    fp_tmp << "      " << ctx->rw->doc_clink_text[i] << " <LINK>" << link_ref << endl;
+  }
+  first_bit = 1;
+  return 1;
+}
+
+int CnvWblToXtthelp::typedef_close()
+{
+
+  xtthelp_in_topic = 0;
+  first_bit = 0;
+  fp_tmp <<
+"</TOPIC>" << endl << endl;
+
+  return 1;
+}
