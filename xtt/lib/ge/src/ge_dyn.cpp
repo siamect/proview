@@ -12628,6 +12628,14 @@ int GeSetDig::action( grow_tObject object, glow_tEvent event)
 	if ( EVEN(sts)) printf("SetDig error: %s\n", attribute);
 	break;
       }
+      case pwr_eType_Int32:
+      case pwr_eType_UInt32: {
+	pwr_tInt32	value = 1;
+	
+	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	if ( EVEN(sts)) printf("SetDig error: %s\n", attribute);
+	break;
+      }
       case graph_eType_Bit: {
 	// Get bit number from parsed name
 	pwr_tUInt32	value = 1;
@@ -12829,6 +12837,14 @@ int GeResetDig::action( grow_tObject object, glow_tEvent event)
       if ( EVEN(sts)) printf("SetDig error: %s\n", attribute);
       break;
     }
+    case pwr_eType_Int32:
+    case pwr_eType_UInt32: {
+      pwr_tInt32	value = 0;
+	
+      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+      if ( EVEN(sts)) printf("SetDig error: %s\n", attribute);
+      break;
+    }
     case graph_eType_Bit: {
       // Get bit number from parsed name
       pwr_tUInt32	value = 0;
@@ -12994,6 +13010,18 @@ int GeToggleDig::action( grow_tObject object, glow_tEvent event)
 	if ( EVEN(sts)) printf("ToggleDig error: %s\n", attribute);
 
 	value = !value;
+	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	if ( EVEN(sts)) printf("ToggleDig error: %s\n", attribute);
+	break;
+      }
+      case pwr_eType_Int32: {
+      case pwr_eType_UInt32:
+	pwr_tInt32	value;
+
+	sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
+	if ( EVEN(sts)) printf("ToggleDig error: %s\n", attribute);
+
+	value = value ? 0 : 1;
 	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
 	if ( EVEN(sts)) printf("ToggleDig error: %s\n", attribute);
 	break;
