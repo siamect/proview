@@ -332,7 +332,12 @@ static GdkColor flow_allocate_color( FlowDrawGtk *draw_ctx, const char *named_co
       return draw_ctx->color_vect[0];
     }
 
-    if ( !gdk_color_parse( named_color, &color))
+    if ( strcmp( named_color, "yellow") == 0) {
+      color.red = 61952;
+      color.green = 58880;
+      color.blue = 0;
+    }
+    else if ( !gdk_color_parse( named_color, &color))
       gdk_color_parse( "black", &color);
     gdk_colormap_alloc_color( draw_ctx->colormap, &color, FALSE, TRUE);
 

@@ -512,8 +512,8 @@ void EvListBrow::create_nodeclasses()
   // Nodeclass for A-alarm
   brow_CreateNodeClass( ctx, "A_Alarm", 
 		flow_eNodeGroup_Common, &nc_a_alarm);
-  brow_AddFilledRect( nc_a_alarm, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_LineRed);
-  brow_AddRect( nc_a_alarm, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
+  brow_AddFilledRect( nc_a_alarm, 0.05, 0.05, 0.6, 0.6, flow_eDrawType_LineRed);
+  brow_AddRect( nc_a_alarm, 0.05, 0.05, 0.6, 0.6, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_a_alarm, 0.8, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnotPixmap( nc_a_alarm, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
@@ -533,8 +533,8 @@ void EvListBrow::create_nodeclasses()
   // Nodeclass for B-alarm
   brow_CreateNodeClass( ctx, "B_Alarm", 
 		flow_eNodeGroup_Common, &nc_b_alarm);
-  brow_AddFilledRect( nc_b_alarm, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Yellow);
-  brow_AddRect( nc_b_alarm, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
+  brow_AddFilledRect( nc_b_alarm, 0.05, 0.05, 0.6, 0.6, flow_eDrawType_Yellow);
+  brow_AddRect( nc_b_alarm, 0.05, 0.05, 0.6, 0.6, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_b_alarm, 0.8, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnotPixmap( nc_b_alarm, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
@@ -554,8 +554,8 @@ void EvListBrow::create_nodeclasses()
   // Nodeclass for Info
   brow_CreateNodeClass( ctx, "Info", 
 		flow_eNodeGroup_Common, &nc_info);
-  brow_AddFilledRect( nc_info, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Green);
-  brow_AddRect( nc_info, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
+  brow_AddFilledRect( nc_info, 0.05, 0.05, 0.6, 0.6, flow_eDrawType_Green);
+  brow_AddRect( nc_info, 0.05, 0.05, 0.6, 0.6, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_info, 0.8, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnotPixmap( nc_info, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
@@ -576,7 +576,7 @@ void EvListBrow::create_nodeclasses()
 		flow_eNodeGroup_Common, &nc_category);
   brow_AddAnnotPixmap( nc_category, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_category, 1, 1.8, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddRect( nc_category, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_LineGray, 0, 0);
+  brow_AddRect( nc_category, 1.05, 0.05, 0.6, 0.6, flow_eDrawType_LineGray, 0, 0);
   brow_AddAnnot( nc_category, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_category, 4.8, 0.6, 1,
@@ -590,8 +590,8 @@ void EvListBrow::create_nodeclasses()
 		flow_eNodeGroup_Common, &nc_category_a);
   brow_AddAnnotPixmap( nc_category_a, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_category_a, 1, 1.8, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddFilledRect( nc_category_a, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_LineRed);
-  brow_AddRect( nc_category_a, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
+  brow_AddFilledRect( nc_category_a, 1.05, 0.05, 0.6, 0.6, flow_eDrawType_LineRed);
+  brow_AddRect( nc_category_a, 1.05, 0.05, 0.6, 0.6, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_a, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_category_a, 4.8, 0.6, 1,
@@ -605,8 +605,8 @@ void EvListBrow::create_nodeclasses()
 		flow_eNodeGroup_Common, &nc_category_b);
   brow_AddAnnotPixmap( nc_category_b, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_category_b, 1, 1.8, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddFilledRect( nc_category_b, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Yellow);
-  brow_AddRect( nc_category_b, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
+  brow_AddFilledRect( nc_category_b, 1.05, 0.05, 0.6, 0.6, flow_eDrawType_Yellow);
+  brow_AddRect( nc_category_b, 1.05, 0.05, 0.6, 0.6, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_b, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_category_b, 4.8, 0.6, 1,
@@ -620,8 +620,8 @@ void EvListBrow::create_nodeclasses()
 		flow_eNodeGroup_Common, &nc_category_c);
   brow_AddAnnotPixmap( nc_category_c, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_category_c, 1, 1.8, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddFilledRect( nc_category_c, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_LineGray);
-  brow_AddRect( nc_category_c, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
+  brow_AddFilledRect( nc_category_c, 1.05, 0.05, 0.6, 0.6, flow_eDrawType_LineGray);
+  brow_AddRect( nc_category_c, 1.05, 0.05, 0.6, 0.6, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_c, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_category_c, 4.8, 0.6, 1,
@@ -635,8 +635,8 @@ void EvListBrow::create_nodeclasses()
 		flow_eNodeGroup_Common, &nc_category_d);
   brow_AddAnnotPixmap( nc_category_d, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_category_d, 1, 1.8, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddFilledRect( nc_category_d, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_LineGray);
-  brow_AddRect( nc_category_d, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
+  brow_AddFilledRect( nc_category_d, 1.05, 0.05, 0.6, 0.6, flow_eDrawType_LineGray);
+  brow_AddRect( nc_category_d, 1.05, 0.05, 0.6, 0.6, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_d, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_category_d, 4.8, 0.6, 1,
@@ -650,8 +650,8 @@ void EvListBrow::create_nodeclasses()
 		flow_eNodeGroup_Common, &nc_category_i);
   brow_AddAnnotPixmap( nc_category_i, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_category_i, 1, 1.8, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddFilledRect( nc_category_i, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Green);
-  brow_AddRect( nc_category_i, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
+  brow_AddFilledRect( nc_category_i, 1.05, 0.05, 0.6, 0.6, flow_eDrawType_Green);
+  brow_AddRect( nc_category_i, 1.05, 0.05, 0.6, 0.6, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_i, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_category_i, 4.8, 0.6, 1,
@@ -665,8 +665,8 @@ void EvListBrow::create_nodeclasses()
 		flow_eNodeGroup_Common, &nc_category_flash);
   brow_AddAnnotPixmap( nc_category_flash, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_category_flash, 1, 1.8, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddFilledRect( nc_category_flash, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line);
-  brow_AddRect( nc_category_flash, 1.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
+  brow_AddFilledRect( nc_category_flash, 1.05, 0.05, 0.6, 0.6, flow_eDrawType_Line);
+  brow_AddRect( nc_category_flash, 1.05, 0.05, 0.6, 0.6, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_category_flash, 2.5, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_category_flash, 4.8, 0.6, 1,
@@ -1156,13 +1156,21 @@ void EvList::event_ack( mh_sAck *msg)
         break;
       case evlist_eEventType_Info:
         if ( item->eventflags & mh_mEventFlags_InfoWindow) {
-          brow_DeleteNode( browbase->ctx, item->node);
-	  if ( browtree) {
+	  if ( item->status & mh_mEventStatus_NotRet) {
+	    item->status &= ~mh_mEventStatus_NotAck;
+	    item->update_text(0);
 	    if ( item->tree_node)
-	      brow_DeleteNode( browtree->ctx, item->tree_node);
-	    view_configure();
+	      item->update_text(1);
 	  }
-          size--;
+	  else {
+	    brow_DeleteNode( browbase->ctx, item->node);
+	    if ( browtree) {
+	      if ( item->tree_node)
+		brow_DeleteNode( browtree->ctx, item->tree_node);
+	      view_configure();
+	    }
+	    size--;
+	  }
         }
         break;
       default:
