@@ -1516,7 +1516,9 @@ void WFoe::activate_helpclass()
 			   sizeof(cname), &size);
   if ( EVEN(sts)) return;
 
-  CoXHelp::dhelp( cname, 0, navh_eHelpFile_Base, 0, 1);
+  sts = CoXHelp::dhelp( cname, 0, navh_eHelpFile_Base, 0, 1);
+  if ( EVEN(sts))
+    sts = CoXHelp::dhelp( cname, 0, navh_eHelpFile_Project, 0, 1);
 }
 
 //
