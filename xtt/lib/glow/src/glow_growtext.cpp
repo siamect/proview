@@ -359,9 +359,11 @@ void GrowText::open( ifstream& fp)
   // Translate the text to current language
   if ( ctx->translate_on && 
        ctx->event_callback[glow_eEvent_Translate]) {
-    if ( ctx->translate_cb( this, text, &new_text))
-      strcpy( text, new_text);
-      get_node_borders();
+    if ( ctx->translate_cb( this, text, &new_text)) {
+      strncpy( text, new_text, sizeof(text));
+      text[sizeof(text)-1] = 0;
+    }
+    get_node_borders();
   }
 }
 
