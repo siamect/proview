@@ -28,6 +28,7 @@ public class AEv {
 	public PlowNodeClass eveNcBAlarm;
 	public PlowNodeClass eveNcCAlarm;
 	public PlowNodeClass eveNcDAlarm;
+	public PlowNodeClass eveNcInfoSuccess;
 	public PlowNodeClass eveNcInfo;
 	public PlowPixmapData iconEventAlarm;
 	public PlowPixmapData iconEventAcked;
@@ -70,6 +71,12 @@ public class AEv {
 	public void newMess(MhrEvent ev) {
 		switch (ev.eventType) {
 		case Mh.mh_eEvent_Alarm:
+		case Mh.mh_eEvent_MaintenanceAlarm:
+		case Mh.mh_eEvent_SystemAlarm:
+		case Mh.mh_eEvent_UserAlarm1:
+		case Mh.mh_eEvent_UserAlarm2:
+		case Mh.mh_eEvent_UserAlarm3:
+		case Mh.mh_eEvent_UserAlarm4:
 			// Add to alarm and event list
 			new AEvItemAlarm(aev, ev, null, Plow.DEST_AFTER);
 			cmnAla.configure();
@@ -125,6 +132,7 @@ public class AEv {
 	    	  }
 	    	  break;
 	      case Mh.mh_eEvent_Info:
+	      case Mh.mh_eEvent_InfoSuccess:
 	    	  // Add to alarm list
 	    	  if((ev.eventFlags & Mh.mh_mEventFlags_InfoWindow) != 0) {
 	  				new AEvItemAlarm(aev, ev, null, Plow.DEST_AFTER);
@@ -327,7 +335,7 @@ public class AEv {
 		cmnEve.insert_nc(eveNcDAlarm);		
 
 		r1 = new PlowRect(cmnEve, 0D, 0D, 50D, 1.5D, Plow.COLOR_WHITE, Plow.COLOR_BLACK,true,false,false);
-		r2 = new PlowRect(cmnEve, 0.4D, 0.3D, 0.9D, 0.9D, Plow.COLOR_GREEN, Plow.COLOR_BLACK,true,true,true);
+		r2 = new PlowRect(cmnEve, 0.4D, 0.3D, 0.9D, 0.9D, Plow.COLOR_WHITE, Plow.COLOR_BLACK,true,true,true);
 		a1 = new PlowAnnot(cmnEve, 4D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.NEXT_RELATIVE_POSITION, 0);
 		a2 = new PlowAnnot(cmnEve, 10D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.RELATIVE_POSITION, 1);
 		a3 = new PlowAnnot(cmnEve, 26D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.RELATIVE_POSITION, 2);
@@ -340,6 +348,21 @@ public class AEv {
 		eveNcInfo.insert(a3);
 		eveNcInfo.insert(p1);
 		cmnEve.insert_nc(eveNcInfo);		
+
+		r1 = new PlowRect(cmnEve, 0D, 0D, 50D, 1.5D, Plow.COLOR_WHITE, Plow.COLOR_BLACK,true,false,false);
+		r2 = new PlowRect(cmnEve, 0.4D, 0.3D, 0.9D, 0.9D, Plow.COLOR_GREEN, Plow.COLOR_BLACK,true,true,true);
+		a1 = new PlowAnnot(cmnEve, 4D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.NEXT_RELATIVE_POSITION, 0);
+		a2 = new PlowAnnot(cmnEve, 10D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.RELATIVE_POSITION, 1);
+		a3 = new PlowAnnot(cmnEve, 26D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.RELATIVE_POSITION, 2);
+		p1 = new PlowAnnotPixmap(cmnEve, 2D, 0.28D, 0);
+		eveNcInfoSuccess = new PlowNodeClass(cmnEve);
+		eveNcInfoSuccess.insert(r1);
+		eveNcInfoSuccess.insert(r2);
+		eveNcInfoSuccess.insert(a1);
+		eveNcInfoSuccess.insert(a2);
+		eveNcInfoSuccess.insert(a3);
+		eveNcInfoSuccess.insert(p1);
+		cmnEve.insert_nc(eveNcInfoSuccess);		
 
 		r1 = new PlowRect(cmnEve, 0D, 0D, 50D, 1.5D, Plow.COLOR_WHITE, Plow.COLOR_BLACK,true,false,false);
 		a1 = new PlowAnnot(cmnEve, 4D, 1.1D, 12, Plow.COLOR_BLACK, 0, PlowAnnot.NEXT_RELATIVE_POSITION, 0);

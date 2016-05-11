@@ -124,6 +124,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gdk_color_parse( "Green", &green_color);
   gdk_color_parse( "Gray", &gray_color);
   gdk_color_parse( "Black", &black_color);
+  gdk_color_parse( "White", &white_color);
 
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
@@ -1061,7 +1062,7 @@ void  OpGtk::update_alarm_info()
     else if ( info.i_alarm_exist[0])
     {
 
-      balarm_type = evlist_eEventType_Info;
+      balarm_type = info.i_alarm_eventtype[0];
       strcpy( b_alarm_moretext, info.i_alarm_moretext[0]);
       cnv_pango_text( info.i_alarm_text[0], ctext, sizeof(ctext));
       if ( show_time) {
@@ -1076,7 +1077,10 @@ void  OpGtk::update_alarm_info()
       snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
 	       fsize, info.i_alarm_alias[0], ctext);
       gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::convert_utf8(text));
-      gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &green_color);
+      if ( balarm_type == evlist_eEventType_InfoSuccess)
+	gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &green_color);
+      else
+	gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &white_color);
       g_object_set( balarm_box, "visible", TRUE, NULL);
 
       gtk_label_set_text( GTK_LABEL(balarm_mark), "I");

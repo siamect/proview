@@ -90,7 +90,7 @@ public class Mh
   public static final int mh_eEvent_Reblock	= 6;
   public static final int mh_eEvent_Return	= 7;
   public static final int mh_eEvent_Unblock	= 8;
-  public static final int mh_eEvent_Info	= 32;
+  public static final int mh_eEvent_InfoSuccess	= 32;
   public static final int mh_eEvent_Alarm	= 64;
   public static final int mh_eEvent_MaintenanceAlarm = 128;
   public static final int mh_eEvent_SystemAlarm	= 256;
@@ -98,7 +98,8 @@ public class Mh
   public static final int mh_eEvent_UserAlarm2	= 1024;
   public static final int mh_eEvent_UserAlarm3	= 2048;
   public static final int mh_eEvent_UserAlarm4	= 4096;
-  public static final int mh_eEvent_   		= 4097;
+  public static final int mh_eEvent_Info	= 8192;
+  public static final int mh_eEvent_   		= 8193;
   
   public static final int EventType_ClearAlarmList = 66;
   //public static final int EventType_Return = 1;

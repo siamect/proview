@@ -554,7 +554,7 @@ void EvListBrow::create_nodeclasses()
   // Nodeclass for Info
   brow_CreateNodeClass( ctx, "Info", 
 		flow_eNodeGroup_Common, &nc_info);
-  brow_AddFilledRect( nc_info, 0.05, 0.05, 0.6, 0.6, flow_eDrawType_Green);
+  // brow_AddFilledRect( nc_info, 0.05, 0.05, 0.6, 0.6, flow_eDrawType_Green);
   brow_AddRect( nc_info, 0.05, 0.05, 0.6, 0.6, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_info, 0.8, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
@@ -570,6 +570,26 @@ void EvListBrow::create_nodeclasses()
   brow_AddAnnot( nc_info, 29.5, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
   brow_AddFrame( nc_info, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
+
+  // Nodeclass for InfoSuccess
+  brow_CreateNodeClass( ctx, "InfoSuccess", 
+		flow_eNodeGroup_Common, &nc_infosuccess);
+  brow_AddFilledRect( nc_infosuccess, 0.05, 0.05, 0.6, 0.6, flow_eDrawType_Green);
+  brow_AddRect( nc_infosuccess, 0.05, 0.05, 0.6, 0.6, flow_eDrawType_Line, 0, 0);
+  brow_AddAnnot( nc_infosuccess, 0.8, 0.6, 0,
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
+  brow_AddAnnotPixmap( nc_infosuccess, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnotPixmap( nc_infosuccess, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnotPixmapButton( nc_infosuccess, 2, 3.0, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnot( nc_infosuccess, 4.8, 0.6, 1,
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
+  brow_AddAnnot( nc_infosuccess, 11.5, 0.6, 2,
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
+  brow_AddAnnot( nc_infosuccess, 13.5, 0.6, 3,
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
+  brow_AddAnnot( nc_infosuccess, 29.5, 0.6, 4,
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
+  brow_AddFrame( nc_infosuccess, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Category
   brow_CreateNodeClass( ctx, "Category", 
@@ -874,13 +894,25 @@ void EvList::event_info( mh_sMessage *msg)
     dest_node = NULL;
   }
 
+  evlist_eEventType eventtype;
+  switch( event->Msg.Info.EventType) {
+  case mh_eEvent_Info:
+    eventtype = evlist_eEventType_Info;
+    break;
+  case mh_eEvent_InfoSuccess:
+    eventtype = evlist_eEventType_InfoSuccess;
+    break;
+  default:
+    return;
+  }
+
   new ItemAlarm( this, "Alarm",
 		 net_NetTimeToTime( &event->Info.EventTime), event->Msg.EventText,
 		 event->Msg.EventName, event->Info.EventType, event->Info.EventFlags,
 		 event->Info.EventPrio, event->Info.Id,
 		 &event->Msg.Object, &event->Msg.EventSound, 
 		 event->Msg.EventMoreText, msg->Status, 
-		 evlist_eEventType_Info, &event->Msg.SupObject, dest_node, dest_code, &sts);
+		 eventtype, &event->Msg.SupObject, dest_node, dest_code, &sts);
   if ( EVEN(sts)) return;
   size++;
 }
@@ -1155,6 +1187,7 @@ void EvList::event_ack( mh_sAck *msg)
         }
         break;
       case evlist_eEventType_Info:
+      case evlist_eEventType_InfoSuccess:
         if ( item->eventflags & mh_mEventFlags_InfoWindow) {
 	  if ( item->status & mh_mEventStatus_NotRet) {
 	    item->status &= ~mh_mEventStatus_NotAck;
@@ -1863,6 +1896,9 @@ ItemAlarm::ItemAlarm( EvList *item_evlist, const char *item_name, pwr_tTime item
   case evlist_eEventType_Info:
     nc = evlist->browbase->nc_info;
     break;
+  case evlist_eEventType_InfoSuccess:
+    nc = evlist->browbase->nc_infosuccess;
+    break;
   default:
     nc = evlist->browbase->nc_event;
     break;
@@ -1938,6 +1974,7 @@ void ItemAlarm::update_text( int use_treenode)
         brow_SetAnnotPixmap( n, 0, evlist->browbase->pixmap_eventacked);
         break;
       case evlist_eEventType_Info:
+      case evlist_eEventType_InfoSuccess:
       case evlist_eEventType_Alarm:
         brow_SetAnnotPixmap( n, 0, evlist->browbase->pixmap_eventalarm);
         break;
@@ -1951,6 +1988,7 @@ void ItemAlarm::update_text( int use_treenode)
   switch ( event_type)
   {
     case evlist_eEventType_Info:
+    case evlist_eEventType_InfoSuccess:
       strcpy( type_str, "I");
       brow_SetAnnotation( n, 1, type_str, strlen(type_str));
       break;
@@ -1987,6 +2025,7 @@ void ItemAlarm::update_text( int use_treenode)
   switch ( event_type)
   {
     case evlist_eEventType_Info:
+    case evlist_eEventType_InfoSuccess:
     case evlist_eEventType_Alarm:
     case evlist_eEventType_Return:
     case evlist_eEventType_Block:
@@ -2072,7 +2111,8 @@ void ItemCategory::configure( EvList *evlist)
 	  ODD(sts);
 	  sts = brow_GetNextSibling( evlist->brow->ctx, next, &next)) {
       brow_GetUserData( next, (void **)&item);
-      if ( item->event_type == evlist_eEventType_Info) {
+      if ( item->event_type == evlist_eEventType_Info || 
+	   item->event_type == evlist_eEventType_InfoSuccess) {
 	if ( 1 > child_prio)
 	  child_prio = 1;
       }	
@@ -2091,14 +2131,16 @@ void ItemCategory::configure( EvList *evlist)
       switch( item->type) {
       case evlist_eItemType_Alarm: {
 	for ( int j = 0; j < member_cnt; j++) {
-	  if ( item->eventtype != mh_eEvent_Info &&  select_priority != 0 && !(select_priority & prio_enum_to_mask( item->eventprio)))
+	  if ( item->eventtype != mh_eEvent_Info && item->eventtype != mh_eEvent_InfoSuccess && 
+	       select_priority != 0 && !(select_priority & prio_enum_to_mask( item->eventprio)))
 	    continue;
 	  if ( select_eventtype != 0 && !(select_eventtype & item->eventtype))
 	    continue;
 
 	  if ( strncmp( members[j], item->eventname, strlen(members[j])) == 0) {
 	    // Presupmtive child
-	    if ( item->event_type == evlist_eEventType_Info) {
+	    if ( item->event_type == evlist_eEventType_Info || 
+		 item->event_type == evlist_eEventType_InfoSuccess) {
 	      if ( 1 > child_prio)
 		child_prio = 1;
 	    }	
@@ -2185,6 +2227,9 @@ void ItemCategory::alarm( EvList *evlist, ItemAlarm *item)
 	case evlist_eEventType_Info:
 	  nc = evlist->brow->nc_info;
 	  break;
+	case evlist_eEventType_InfoSuccess:
+	  nc = evlist->brow->nc_infosuccess;
+	  break;
 	default:
 	  nc = evlist->brow->nc_event;
 	  break;
@@ -2257,7 +2302,8 @@ int ItemCategory::open_children( EvList *evlist, double x, double y)
       case evlist_eItemType_Alarm: {
 	if ( item->tree_node)
 	  continue;
-	if ( item->eventtype != mh_eEvent_Info &&  select_priority != 0 && !(select_priority & prio_enum_to_mask( item->eventprio)))
+	if ( item->eventtype != mh_eEvent_Info && item->eventtype != mh_eEvent_InfoSuccess && 
+	     select_priority != 0 && !(select_priority & prio_enum_to_mask( item->eventprio)))
 	  continue;
 	if ( select_eventtype != 0 && !(select_eventtype & item->eventtype))
 	  continue;
@@ -2281,6 +2327,9 @@ int ItemCategory::open_children( EvList *evlist, double x, double y)
 	      break;
 	    case evlist_eEventType_Info:
 	      nc = evlist->brow->nc_info;
+	      break;
+	    case evlist_eEventType_InfoSuccess:
+	      nc = evlist->brow->nc_infosuccess;
 	      break;
 	    default:
 	      nc = evlist->brow->nc_event;
@@ -2469,6 +2518,7 @@ int EvList::get_last_not_acked_beep( mh_sEventId **id)
 	    }
 	    break;
           case evlist_eEventType_Info:
+          case evlist_eEventType_InfoSuccess:
 	    *id = &object_item->eventid;
 	    prio = 1;
 	    found = 1;
@@ -2510,6 +2560,7 @@ int EvList::get_last_not_acked_prio( mh_sEventId **id, unsigned long type,
             }
             break;
           case evlist_eEventType_Info:
+          case evlist_eEventType_InfoSuccess:
             if ( object_item->status & mh_mEventStatus_NotAck &&
 	         object_item->event_type == (evlist_eEventType) type)
             {
@@ -2638,6 +2689,7 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
             }
             break;
           case evlist_eEventType_Info:
+          case evlist_eEventType_InfoSuccess:
             if ( object_item->eventflags & mh_mEventFlags_InfoWindow && 
                  object_item->status & mh_mEventStatus_NotAck) 
             {
@@ -2652,6 +2704,7 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
 	      info->i_alarm_time[i_cnt] = object_item->time;
               info->i_alarm_active[i_cnt] = object_item->status & mh_mEventStatus_NotRet;
               info->i_alarm_exist[i_cnt] = 1;
+	      info->i_alarm_eventtype[i_cnt] = object_item->event_type;
               i_cnt++;
             }
             break;
@@ -3124,8 +3177,11 @@ void EvList::fill_alarm_tables()
 	skip = 0;
 	switch ( item->event_type) {
 	case evlist_eEventType_Info:
+	case evlist_eEventType_InfoSuccess:
 	  if ( alarm_tables[j]->EventType & pwr_mEventTypeMask_Info)
 	    eventtype = pwr_eEventTypeEnum_Info;
+	  else if ( alarm_tables[j]->EventType & pwr_mEventTypeMask_InfoSuccess)
+	    eventtype = pwr_eEventTypeEnum_InfoSuccess;
 	  else
 	    skip = 1;
 	  break;

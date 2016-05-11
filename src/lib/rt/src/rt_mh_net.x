@@ -75,7 +75,7 @@ enum mh_eEvent {
   mh_eEvent_Reblock	= 6,
   mh_eEvent_Return	= 7,
   mh_eEvent_Unblock	= 8,
-  mh_eEvent_Info	= 32,
+  mh_eEvent_InfoSuccess	= 32,
   mh_eEvent_Alarm	= 64,
   mh_eEvent_MaintenanceAlarm = 128,
   mh_eEvent_SystemAlarm	= 256,
@@ -83,7 +83,8 @@ enum mh_eEvent {
   mh_eEvent_UserAlarm2	= 1024,
   mh_eEvent_UserAlarm3	= 2048,
   mh_eEvent_UserAlarm4	= 4096,
-  mh_eEvent_   		= 4097
+  mh_eEvent_Info	= 8192,
+  mh_eEvent_   		= 8193
 };
 
 %/** 

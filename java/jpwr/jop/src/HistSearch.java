@@ -103,6 +103,7 @@ public class HistSearch extends JFrame implements ActionListener, GdhApplIfc {
     // type is an array of radiobuttons, one for each type of event
     JCheckBox[] type = new JCheckBox[10];
     String[] nameType = {JopLang.transl("Info"),
+			   JopLang.transl("InfoSuccess"),
 			   JopLang.transl("Alarm"),
 			   JopLang.transl("MaintenanceAlarm"),
 			   JopLang.transl("SystemAlarm"),
@@ -635,6 +636,7 @@ public class HistSearch extends JFrame implements ActionListener, GdhApplIfc {
 	//Useful words in english and swedish.
 	String[] words ={JopLang.transl("All "), 
 			 JopLang.transl(" Info"), 
+			 JopLang.transl(" InfoSuccess"), 
 			 JopLang.transl(" Alarm"), 
 			 JopLang.transl(" MaintenanceAlarm"), 
 			 JopLang.transl(" SystemAlarm"), 
@@ -655,7 +657,7 @@ public class HistSearch extends JFrame implements ActionListener, GdhApplIfc {
 	String eval="<html>" + words[0];
 	String temp="";
 	boolean[] noCheck ={true,true};
-	boolean[] typeSelected = {false,false,false,false,false,false,false,false,false,false};
+	boolean[] typeSelected = {false,false,false,false,false,false,false,false,false,false,false};
 	boolean[] prioSelected = {false,false,false,false};
     
 	for ( int i = 0; i < 10; i++){
@@ -664,7 +666,7 @@ public class HistSearch extends JFrame implements ActionListener, GdhApplIfc {
 		if (noCheck[0]) 
 		    noCheck[0] = false;
 		else 
-		    eval=eval+words[18];
+		    eval=eval+words[19];
 		eval=eval + "<b>" +words[i+1] + "</b>";
 	    }
 	}
@@ -674,20 +676,20 @@ public class HistSearch extends JFrame implements ActionListener, GdhApplIfc {
 		if (noCheck[1]) 
 		    noCheck[1]=false;
 		else 
-		    temp=temp+words[18];
+		    temp=temp+words[19];
 		int charA =(int)'A';
 		charA=charA+i;                          
 		temp=temp + " <b>" + (char) charA + "</b>";
 	    }
 	}
-	eval= eval + words[11] + " ";
+	eval= eval + words[12] + " ";
 	if (temp.length()>0) {
-	    eval=eval+ words[12] + temp + words[13] ;
+	    eval=eval+ words[13] + temp + words[14] ;
 	}
     
-	eval=eval+"<br>"+words[12]+words[14]+" <b>"+txName.getText() +"</b><br>";
-	eval=eval+words[12]+words[15]+" <b>"+txText.getText() +"</b><br>";
-	eval=eval + words[16] + "<b>"+ dateText(calStart)+ "</b>" + words[17]  + "<b>" + dateText(calStop)+"</b> </html>";
+	eval=eval+"<br>"+words[13]+words[15]+" <b>"+txName.getText() +"</b><br>";
+	eval=eval+words[13]+words[16]+" <b>"+txText.getText() +"</b><br>";
+	eval=eval + words[17] + "<b>"+ dateText(calStart)+ "</b>" + words[18]  + "<b>" + dateText(calStop)+"</b> </html>";
 	
 	String nameFormatted= txName.getText().replace('"','*');
 	String textFormatted= txText.getText().replace('"','*');

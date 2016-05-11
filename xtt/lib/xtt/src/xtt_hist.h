@@ -94,6 +94,7 @@ class Hist {
     bool		eventType_Ack;
     bool		eventType_Alarm;
     bool		eventType_Info;
+    bool		eventType_InfoSuccess;
     bool		eventType_MaintenanceAlarm;
     bool		eventType_SystemAlarm;
     bool		eventType_UserAlarm1;

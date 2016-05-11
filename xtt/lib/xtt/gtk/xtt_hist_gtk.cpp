@@ -322,6 +322,8 @@ HistGtk::HistGtk( void *hist_parent_ctx,
 
   info_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("Info"));
   gtk_widget_set_size_request( info_toggle_w, 120, -1);
+  infosuccess_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("InfoSuccess"));
+  gtk_widget_set_size_request( infosuccess_toggle_w, 120, -1);
   alarm_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("Alarm"));
   gtk_widget_set_size_request( alarm_toggle_w, 120, -1);
   mnt_alarm_toggle_w = gtk_check_button_new_with_label( CoWowGtk::translate_utf8("MaintenanceAlarm"));
@@ -344,6 +346,7 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   GtkWidget *sea_typebox = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(sea_typebox), sea_type_label, FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(sea_typebox), info_toggle_w, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(sea_typebox), infosuccess_toggle_w, FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(sea_typebox), alarm_toggle_w, FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(sea_typebox), mnt_alarm_toggle_w, FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(sea_typebox), sys_alarm_toggle_w, FALSE, FALSE, 0);
@@ -554,6 +557,8 @@ void HistGtk::ok_btn( GtkWidget *w, gpointer data)
 
   brow_DeleteAll(histOP->hist->brow->ctx);
   histOP->eventType_Info = (bool)gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( ((HistGtk *)histOP)->info_toggle_w));
+
+  histOP->eventType_InfoSuccess = (bool)gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( ((HistGtk *)histOP)->infosuccess_toggle_w));
 
   histOP->eventType_Alarm = (bool)gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(((HistGtk *)histOP)->alarm_toggle_w));
 

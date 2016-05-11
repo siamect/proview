@@ -92,7 +92,7 @@ Hist::Hist( void *hist_parent_ctx,
   help_cb(NULL), hist(NULL), minTime_str(NULL), maxTime_str(NULL),
   eventName_str(NULL), eventText_str(NULL), eventPrio_A(false),
   eventPrio_B(false), eventPrio_C(false), eventPrio_D(false),
-  eventType_Ack(false), eventType_Alarm(false), eventType_Info(false),
+  eventType_Ack(false), eventType_Alarm(false), eventType_Info(false), eventType_InfoSuccess(false),
   eventType_Return(false), eventType_Cancel(false), eventType_Block(false),
   eventType_Unblock(false), eventType_Reblock(false),
   eventType_CancelBlock(false)
@@ -425,6 +425,7 @@ void Hist::get_hist_list()
         hist_add_alarm_mess( &(it->Mess.message) );
         break;
       case mh_eEvent_Info:
+      case mh_eEvent_InfoSuccess:
         hist_add_info_mess( &(it->Mess.message) );
         break;
       case mh_eEvent_Ack:
@@ -585,6 +586,7 @@ void Hist::stat()
       hist_add_alarm_mess( &evv[i].event.Mess.message);
       break;
     case mh_eEvent_Info:
+    case mh_eEvent_InfoSuccess:
       hist_add_info_mess( &evv[i].event.Mess.message);
       break;
     default: ;
@@ -632,7 +634,7 @@ int Hist::check_conditions(sEvent *evp)
   //then we compare the EventType if nothing is selected everything is selected
   if(eventType_Ack || eventType_Alarm || eventType_MaintenanceAlarm || eventType_SystemAlarm || 
      eventType_UserAlarm1 || eventType_UserAlarm2 || eventType_UserAlarm3 || eventType_UserAlarm4 || 
-     eventType_Info || eventType_Return || eventType_Cancel || eventType_Block ||
+     eventType_Info || eventType_InfoSuccess || eventType_Return || eventType_Cancel || eventType_Block ||
      eventType_Unblock || eventType_Reblock || eventType_CancelBlock)
   {
     switch(evp->EventType) 
@@ -667,6 +669,10 @@ int Hist::check_conditions(sEvent *evp)
         break;
       case mh_eEvent_Info:
         if(!eventType_Info)
+	  ret = true;
+        break;
+      case mh_eEvent_InfoSuccess:
+        if(!eventType_InfoSuccess)
 	  ret = true;
         break;
       case mh_eEvent_Ack:
@@ -720,6 +726,7 @@ int Hist::check_conditions(sEvent *evp)
     case mh_eEvent_UserAlarm3:
     case mh_eEvent_UserAlarm4:
     case mh_eEvent_Info:
+    case mh_eEvent_InfoSuccess:
       msgInfop = &(evp->Mess.message.Info);
       eventNamep = evp->Mess.message.EventName;
       mp = &(evp->Mess.message);
@@ -871,7 +878,7 @@ void Hist::printSearchStr()
       searchStr[i] += "D";
     addAnd = true;
    }
-  if(eventType_Ack || eventType_Alarm || eventType_Info || eventType_Return)
+  if(eventType_Ack || eventType_Alarm || eventType_Info || eventType_InfoSuccess || eventType_Return)
   {
     if(addAnd) searchStr[i] += Lng::translate(" and");
     if(!prioPrinted)
@@ -887,6 +894,10 @@ void Hist::printSearchStr()
     }
     if(eventType_Info) {
       searchStr[i] += Lng::translate("Info");
+      searchStr[i] += " ";;
+    }
+    if(eventType_InfoSuccess) {
+      searchStr[i] += Lng::translate("InfoSuccess");
       searchStr[i] += " ";;
     }
     if(eventType_Return)

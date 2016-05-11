@@ -173,6 +173,7 @@ public class MhData
         }
         break;
       case Mh.mh_eEvent_Info:
+      case Mh.mh_eEvent_InfoSuccess:
         // Add to alarm list
         if((ev.eventFlags & Mh.mh_mEventFlags_InfoWindow) != 0)
         {

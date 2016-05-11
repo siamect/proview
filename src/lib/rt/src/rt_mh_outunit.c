@@ -947,6 +947,7 @@ handlerEvent (
       sts = l.cbCancel(cp);
     break;
   case mh_eEvent_Info:
+  case mh_eEvent_InfoSuccess:
     if (l.cbInfo != NULL)
       sts = l.cbInfo((mh_sMessage*) mp);
     break;

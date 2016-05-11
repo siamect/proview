@@ -57,7 +57,7 @@ public class HistServer {
     public final static int __IO_EXCEPTION = 2000;
 
     static boolean ignoreHandler = false;
-    static boolean log = false;
+    static boolean log = true;
     static boolean logStatistics = false;
     static boolean test = false;
     boolean keepRunning = true;
@@ -100,8 +100,8 @@ public class HistServer {
     
       ServerSocket serverSocket = null;
       if(test) {
-	  boolean[] type = new boolean[10];
-	  for ( int i = 0; i < 10; i++)
+	  boolean[] type = new boolean[11];
+	  for ( int i = 0; i < 11; i++)
 	      type[i] = false;
 	  type[0] = true;
 	  boolean[] prio = new boolean[4];
@@ -119,6 +119,7 @@ public class HistServer {
 					   query.type[7],
 					   query.type[8],
 					   query.type[9],
+					   query.type[10],
 					   query.priority[0],
 					   query.priority[1],
 					   query.priority[2],
@@ -223,10 +224,12 @@ public class HistServer {
 	      in = new ObjectInputStream(socket.getInputStream());
 	      //wait for the question	    
 	      HistQuery query = (HistQuery)in.readObject();
+	      System.out.println( "Query.type.length: " + query.type.length);
+
 	      if ( log) {
 		  System.out.println("Recieved a query");
 		  System.out.println("query: Prio(ABCD): " + query.priority[0] + query.priority[1] + query.priority[2] + query.priority[3]);
-		  System.out.println("       type(Info Ala Mnt Sys Usr1 2 3 4 Ack Ret): " + query.type[0] + query.type[1] + query.type[2] + query.type[3] + query.type[4] + query.type[5] + query.type[6] + query.type[7] + query.type[8] + query.type[9] + query.type[10]);
+		  System.out.println("       type(Info Succ Ala Mnt Sys Usr1 2 3 4 Ack Ret): " + query.type[0] + query.type[1] + query.type[2] + query.type[3] + query.type[4] + query.type[5] + query.type[6] + query.type[7] + query.type[8] + query.type[9] + query.type[10] );
 		  System.out.println("       startTime: " + query.startTime);
 		  System.out.println("       stopTime: " + query.stopTime);
 		  System.out.println("       name: " + query.name);
@@ -245,6 +248,7 @@ public class HistServer {
 					       query.type[7],
 					       query.type[8],
 					       query.type[9],
+					       query.type[10],
 					       query.priority[0],
 					       query.priority[1],
 					       query.priority[2],

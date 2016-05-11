@@ -106,7 +106,8 @@ import jpwr.rt.MhrEvent;
 	      MhrEvent ev = mhData.getEvent(row);//(MhrEvent)eventData.get(row);
 	      if (col == 0) {
 		  //System.out.println("col == 0 i eventTable.getValueAt()");
-		  if ( ev.eventType ==  Mh.mh_eEvent_Info)
+		  if ( ev.eventType ==  Mh.mh_eEvent_Info ||
+		       ev.eventType ==  Mh.mh_eEvent_InfoSuccess)
 		      return "";
 		  if(ev.eventPrio == Mh.mh_eEventPrio_A)
 		      return "A";
@@ -169,6 +170,9 @@ import jpwr.rt.MhrEvent;
 		      break;
 		  case Mh.mh_eEvent_Info:
 		      returnString = "Info";
+		      break;
+		  case Mh.mh_eEvent_InfoSuccess:
+		      returnString = "InfoSuccess";
 		      break;
 		  case Mh.mh_eEvent_:
 		      returnString = "?";

@@ -177,8 +177,15 @@ xdrEvent (
       return MH__XDRFAILED;
     break;
 
-  case mh_eEvent_Alarm:
   case mh_eEvent_Info:
+  case mh_eEvent_InfoSuccess:
+  case mh_eEvent_Alarm:
+  case mh_eEvent_MaintenanceAlarm:
+  case mh_eEvent_SystemAlarm:
+  case mh_eEvent_UserAlarm1:
+  case mh_eEvent_UserAlarm2:
+  case mh_eEvent_UserAlarm3:
+  case mh_eEvent_UserAlarm4:
     if (!xdr_mh_sMessage(xdrs, (mh_sMessage *)mp))
       return MH__XDRFAILED;
     break;

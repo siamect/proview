@@ -58,6 +58,20 @@ SObject pwrb:Type
      Body SysBody
        Attr PgmName = "Info"
        Attr Text = "Info"
+       Attr Value = 8192
+     EndBody
+    EndObject
+    !/**
+    !  Type InfoSuccess.
+    !  If the message requires acknowledgement is
+    !  it sent to the info part of the alarm
+    !  window and the event list, otherwise only
+    !  to the event list.
+    !*/
+    Object InfoSuccess $Value
+     Body SysBody
+       Attr PgmName = "InfoSuccess"
+       Attr Text = "InfoSuccess"
        Attr Value = 32
      EndBody
     EndObject

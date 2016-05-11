@@ -77,6 +77,7 @@ public class Hist
   public native static MhrEvent[] getHistList(String startTime,
 					  String stopTime,
 					  boolean typeInfo,
+					  boolean typeInfoSuccess,
 					  boolean typeAlarm,
 					  boolean typeMaintenanceAlarm,
 					  boolean typeSystemAlarm,

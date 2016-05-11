@@ -72,6 +72,33 @@ class ItemAlarm;
 #define ALARM_TABLE_SIZE 10
 typedef pwr_tAName ev_sAlarmTableMembers[200];
 
+typedef enum {
+	ev_eType_AlarmList,
+	ev_eType_EventList,
+	ev_eType_HistList,
+	ev_eType_BlockList
+	} ev_eType;
+
+typedef enum {
+	evlist_eEventType_Info,
+	evlist_eEventType_InfoSuccess,
+	evlist_eEventType_Return,
+	evlist_eEventType_Ack,
+	evlist_eEventType_Alarm,
+	evlist_eEventType_Block,
+	evlist_eEventType_Cancel
+	} evlist_eEventType;
+
+typedef enum {
+	evlist_eItemType_Alarm,
+	evlist_eItemType_Category
+	} evlist_eItemType;
+
+typedef enum {
+	evlist_mOpen_All       	= ~0,
+	evlist_mOpen_Children	= 1 << 0
+	} evlist_mOpen;
+
 #define ALARM_INFO_A_SIZE  5
 #define ALARM_INFO_B_SIZE  2
 #define ALARM_INFO_C_SIZE  2
@@ -108,35 +135,10 @@ typedef struct {
 	pwr_tTime i_alarm_time[ALARM_INFO_I_SIZE];
 	int	i_alarm_active[ALARM_INFO_I_SIZE];
 	int	i_alarm_exist[ALARM_INFO_I_SIZE];
+	evlist_eEventType i_alarm_eventtype[ALARM_INFO_I_SIZE];
 	int	alarms_total;
 	int	alarms_notacked;
 	} evlist_sAlarmInfo;
-
-typedef enum {
-	ev_eType_AlarmList,
-	ev_eType_EventList,
-	ev_eType_HistList,
-	ev_eType_BlockList
-	} ev_eType;
-
-typedef enum {
-	evlist_eEventType_Info,
-	evlist_eEventType_Return,
-	evlist_eEventType_Ack,
-	evlist_eEventType_Alarm,
-	evlist_eEventType_Block,
-	evlist_eEventType_Cancel
-	} evlist_eEventType;
-
-typedef enum {
-	evlist_eItemType_Alarm,
-	evlist_eItemType_Category
-	} evlist_eItemType;
-
-typedef enum {
-	evlist_mOpen_All       	= ~0,
-	evlist_mOpen_Children	= 1 << 0
-	} evlist_mOpen;
 
 class EvListBrow {
   public:
@@ -149,6 +151,7 @@ class EvListBrow {
     brow_tNodeClass 	nc_a_alarm;
     brow_tNodeClass 	nc_b_alarm;
     brow_tNodeClass 	nc_info;
+    brow_tNodeClass 	nc_infosuccess;
     brow_tNodeClass 	nc_category;
     brow_tNodeClass 	nc_category_a;
     brow_tNodeClass 	nc_category_b;

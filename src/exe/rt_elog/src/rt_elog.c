@@ -455,6 +455,7 @@ CopyEvent (
   case mh_eEvent_UserAlarm3:
   case mh_eEvent_UserAlarm4:
   case mh_eEvent_Info:
+  case mh_eEvent_InfoSuccess:
     sp->Mess.message = *mp;
     break;
   case mh_eEvent_Ack:

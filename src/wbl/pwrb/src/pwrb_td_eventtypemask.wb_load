@@ -55,6 +55,16 @@ SObject pwrb:Type
      Body SysBody
        Attr PgmName = "Info"
        Attr Text = "Info"
+       Attr Value = 8192
+     EndBody
+    EndObject
+    !/**
+    !  Type InfoSuccess.
+    !*/
+    Object InfoSuccess $Bit
+     Body SysBody
+       Attr PgmName = "InfoSuccess"
+       Attr Text = "InfoSuccess"
        Attr Value = 32
      EndBody
     EndObject

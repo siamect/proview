@@ -66,6 +66,7 @@ class HistGtk : public Hist {
   GtkWidget		*event_name_entry_w;
   GtkWidget		*alarm_toggle_w;
   GtkWidget		*info_toggle_w;
+  GtkWidget		*infosuccess_toggle_w;
   GtkWidget		*mnt_alarm_toggle_w;
   GtkWidget		*sys_alarm_toggle_w;
   GtkWidget		*user_alarm1_toggle_w;

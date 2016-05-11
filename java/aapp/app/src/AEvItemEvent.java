@@ -19,7 +19,16 @@ System.out.println("New itemevent: " + e.eventPrio + " " + e.eventText + " " + e
 		case Mh.mh_eEvent_Info:
 			nc = aev.eveNcInfo;
 			break;
+		case Mh.mh_eEvent_InfoSuccess:
+			nc = aev.eveNcInfoSuccess;
+			break;
 		case Mh.mh_eEvent_Alarm:
+		case Mh.mh_eEvent_MaintenanceAlarm:
+		case Mh.mh_eEvent_SystemAlarm:
+		case Mh.mh_eEvent_UserAlarm1:
+		case Mh.mh_eEvent_UserAlarm2:
+		case Mh.mh_eEvent_UserAlarm3:
+		case Mh.mh_eEvent_UserAlarm4:
 			switch ( this.e.eventPrio) {
 			case Mh.mh_eEventPrio_A:
 				nc = aev.eveNcAAlarm;
@@ -45,6 +54,12 @@ System.out.println("New itemevent: " + e.eventPrio + " " + e.eventText + " " + e
 
 		switch(this.e.eventType) {
 		case Mh.mh_eEvent_Alarm:
+		case Mh.mh_eEvent_MaintenanceAlarm:
+		case Mh.mh_eEvent_SystemAlarm:
+		case Mh.mh_eEvent_UserAlarm1:
+		case Mh.mh_eEvent_UserAlarm2:
+		case Mh.mh_eEvent_UserAlarm3:
+		case Mh.mh_eEvent_UserAlarm4:
 			node.setAnnotPixmap(0, aev.iconEventAlarm);			
 			break;
 		case Mh.mh_eEvent_Ack:

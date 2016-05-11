@@ -98,6 +98,7 @@ class OpGtk : public Op {
   GdkColor		yellow_color;
   GdkColor		green_color;
   GdkColor		gray_color;
+  GdkColor		white_color;
   int			a_height;
   int			a_exist[5];
   int			a_active[5];

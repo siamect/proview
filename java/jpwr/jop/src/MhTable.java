@@ -100,6 +100,7 @@ public class MhTable extends JPanel
   Color CLarmColor = new Color(135,206,235); // Color.blue;
   Color DLarmColor = new Color(177,156,217); // Color.cyan;
   Color InfoColor = Color.green;
+  Color InfoSuccessColor = Color.white;
   /**
    *  Constructor for the MhTable object
    *
@@ -720,6 +721,9 @@ public class MhTable extends JPanel
 	    case Mh.mh_eEvent_Info:
 	      returnString = JopLang.transl("Info");
 	      break;
+	    case Mh.mh_eEvent_InfoSuccess:
+	      returnString = JopLang.transl("InfoSuccess");
+	      break;
 	    case Mh.mh_eEvent_:
 	      returnString = "?";
 	      break;
@@ -1062,7 +1066,8 @@ public class MhTable extends JPanel
       }
 
       boolean setColor = false;
-      if( ev.eventType == Mh.mh_eEvent_Alarm || ev.eventType == Mh.mh_eEvent_Info ||
+      if( ev.eventType == Mh.mh_eEvent_Alarm ||
+	  ev.eventType == Mh.mh_eEvent_Info || ev.eventType == Mh.mh_eEvent_InfoSuccess ||
 	  ev.eventType == Mh.mh_eEvent_MaintenanceAlarm || ev.eventType == Mh.mh_eEvent_SystemAlarm ||
 	  ev.eventType == Mh.mh_eEvent_UserAlarm1 || ev.eventType == Mh.mh_eEvent_UserAlarm2 ||
 	  ev.eventType == Mh.mh_eEvent_UserAlarm3 || ev.eventType == Mh.mh_eEvent_UserAlarm4)
@@ -1106,7 +1111,10 @@ public class MhTable extends JPanel
       {
         if(setColor)
         {
-          this.setBackground(InfoColor);
+	  if ( ev.eventType == Mh.mh_eEvent_InfoSuccess)
+	    this.setBackground(InfoColor);
+	  else		
+	    this.setBackground(InfoSuccessColor);
         }
         this.setText(" ");
       }

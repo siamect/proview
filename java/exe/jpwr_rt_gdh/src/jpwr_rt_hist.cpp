@@ -97,6 +97,7 @@ typedef struct HistQueryStruct
     bool                eventType_UserAlarm3;
     bool                eventType_UserAlarm4;
     bool                eventType_Info;
+    bool                eventType_InfoSuccess;
     bool                eventType_Return;
     bool                eventType_Cancel;
     bool                eventType_Block;
@@ -138,7 +139,7 @@ JNIEXPORT void JNICALL Java_jpwr_rt_Hist_initHistIDs
  * Signature: (Ljava/lang/String;Ljava/lang/String;ZZZZZZZZLjava/lang/String;Ljava/lang/String;)[Ljpwr/rt/MhrEvent;
  */
 JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Hist_getHistList
-  (JNIEnv *env, jclass obj, jstring jstartTime, jstring jstopTime, jboolean jtypeInfo, jboolean jtypeAlarm, jboolean jtypeMaintenanceAlarm, jboolean jtypeSystemAlarm, jboolean jtypeUserAlarm1, jboolean jtypeUserAlarm2, jboolean jtypeUserAlarm3, jboolean jtypeUserAlarm4, jboolean jtypeReturn, jboolean jtypeAck, jboolean jprioA, jboolean jprioB, jboolean jprioC, jboolean jprioD, jstring jname, jstring jtext)
+(JNIEnv *env, jclass obj, jstring jstartTime, jstring jstopTime, jboolean jtypeInfo, jboolean jtypeInfoSuccess, jboolean jtypeAlarm, jboolean jtypeMaintenanceAlarm, jboolean jtypeSystemAlarm, jboolean jtypeUserAlarm1, jboolean jtypeUserAlarm2, jboolean jtypeUserAlarm3, jboolean jtypeUserAlarm4, jboolean jtypeReturn, jboolean jtypeAck, jboolean jprioA, jboolean jprioB, jboolean jprioC, jboolean jprioD, jstring jname, jstring jtext)
 {
 #ifdef PWRE_CONF_LIBDB_CXX
   const char *str;
@@ -205,6 +206,7 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Hist_getHistList
   query.eventType_UserAlarm4 = jtypeUserAlarm4;
   query.eventType_Return = jtypeReturn;
   query.eventType_Info = jtypeInfo;
+  query.eventType_InfoSuccess = jtypeInfoSuccess;
   query.eventPrio_A = jprioA;
   query.eventPrio_B = jprioB;
   query.eventPrio_C = jprioC;
@@ -316,6 +318,7 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Hist_getHistList
       case mh_eEvent_UserAlarm3:
       case mh_eEvent_UserAlarm4:
       case mh_eEvent_Info:
+      case mh_eEvent_InfoSuccess:
         env->SetObjectArrayElement(jobjectArr, i, convertAlarmOrInfoToMhrEvent( (mh_sMessage *)(&(ev.Mess) ) ) );
         //printMess(sp, outFile);
       break;
@@ -391,6 +394,7 @@ int check_conditions(sEvent *evp, HistQuery *query)
      query->eventType_UserAlarm3 || 
      query->eventType_UserAlarm4 || 
      query->eventType_Info || 
+     query->eventType_InfoSuccess || 
      query->eventType_Return || 
      query->eventType_Cancel || 
      query->eventType_Block ||
@@ -430,6 +434,10 @@ int check_conditions(sEvent *evp, HistQuery *query)
         break;
       case mh_eEvent_Info:
         if(!query->eventType_Info)
+	  ret = true;
+        break;
+      case mh_eEvent_InfoSuccess:
+        if(!query->eventType_InfoSuccess)
 	  ret = true;
         break;
       case mh_eEvent_Ack:
@@ -483,6 +491,7 @@ int check_conditions(sEvent *evp, HistQuery *query)
     case mh_eEvent_UserAlarm3:
     case mh_eEvent_UserAlarm4:
     case mh_eEvent_Info:
+    case mh_eEvent_InfoSuccess:
       msgInfop = &(evp->Mess.message.Info);
       mp = &(evp->Mess.message);
       event_name_p = evp->Mess.message.EventName;

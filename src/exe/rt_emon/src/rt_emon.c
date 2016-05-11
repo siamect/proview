@@ -717,6 +717,7 @@ activeListInsert (
     ++l.emon->BlockCount;
     break;
   case  mh_eEvent_Info:
+  case  mh_eEvent_InfoSuccess:
     break;
   default:
     errh_Error("activeListInsert, program error, event: %d", ap->event);
@@ -764,6 +765,7 @@ activeListRemove (
     --l.emon->BlockCount;
     break;
   case  mh_eEvent_Info:
+  case  mh_eEvent_InfoSuccess:
     break;
   default:
     errh_Error("activeListRemove, program error, event: %d", ap->event);
@@ -986,7 +988,7 @@ applMessage (
 
   aap->message = *ip;
 
-  if (ip->EventType == mh_eEvent_Info &&
+  if ((ip->EventType == mh_eEvent_Info || ip->EventType == mh_eEvent_InfoSuccess) &&
     !(ip->EventFlags & mh_mEventFlags_InfoWindow)
   ) {
     ep = eventListInsert(ip->EventType, NULL, (sActive*) aap);
@@ -1119,6 +1121,7 @@ applReturn (
     updateAlarm(ap, ep);
     break;
   case mh_eEvent_Info:
+  case mh_eEvent_InfoSuccess:
     if (aap->link.eventFlags & mh_mEventFlags_InfoWindow)
       updateAlarm(ap, ep);
     break;
@@ -1272,6 +1275,7 @@ sendAlarmStatus( sOutunit *op)
 
     switch (ap->detect_etp->event) {
     case mh_eEvent_Info:
+    case mh_eEvent_InfoSuccess:
     case mh_eEvent_Alarm:
     case mh_eEvent_MaintenanceAlarm:
     case mh_eEvent_SystemAlarm:
@@ -1282,7 +1286,7 @@ sendAlarmStatus( sOutunit *op)
 
       ep = ap->detect_etp->ep;
 
-      if ( ap->detect_etp->event == mh_eEvent_Info) {
+      if ( ap->detect_etp->event == mh_eEvent_Info || ap->detect_etp->event == mh_eEvent_InfoSuccess) {
 	if ( !(ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow))
 	  break;
 	if ( ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow &&
@@ -1315,6 +1319,7 @@ sendAlarmStatus( sOutunit *op)
 
     switch (ap->detect_etp->event) {
     case mh_eEvent_Info:
+    case mh_eEvent_InfoSuccess:
     case mh_eEvent_Alarm:
     case mh_eEvent_MaintenanceAlarm:
     case mh_eEvent_SystemAlarm:
@@ -1325,7 +1330,7 @@ sendAlarmStatus( sOutunit *op)
 
       ep = ap->detect_etp->ep;
 
-      if ( ap->detect_etp->event == mh_eEvent_Info) {
+      if ( ap->detect_etp->event == mh_eEvent_Info || ap->detect_etp->event == mh_eEvent_InfoSuccess) {
 	if ( !(ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow))
 	  break;
 	if ( ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow &&
@@ -1604,7 +1609,7 @@ eventListInsert (
   }
   ep->etp = etp = tree_Insert(&sts, l.eventTab, &idx);
   
-  if (ap->event != mh_eEvent_Info || (ap->eventFlags & mh_mEventFlags_InfoWindow) != 0)
+  if ((ap->event != mh_eEvent_Info && ap->event != mh_eEvent_InfoSuccess) || (ap->eventFlags & mh_mEventFlags_InfoWindow) != 0)
     etp->ap = ap;
   else
     etp->ap = NULL;
@@ -1613,6 +1618,7 @@ eventListInsert (
 
   switch (event) {
   case mh_eEvent_Info:
+  case mh_eEvent_InfoSuccess:
   case mh_eEvent_Alarm:
   case mh_eEvent_MaintenanceAlarm:
   case mh_eEvent_SystemAlarm:
@@ -1706,6 +1712,7 @@ formatApplEvent (
   case mh_eEvent_UserAlarm3:
   case mh_eEvent_UserAlarm4:
   case mh_eEvent_Info:
+  case mh_eEvent_InfoSuccess:
     mp = &up->message;
     ip->Id.Idx = aap->link.idx;
     ip->EventTime = net_TimeToNetTime( &aap->message.EventTime);
@@ -1839,6 +1846,7 @@ formatSupEvent (
   case mh_eEvent_UserAlarm3:
   case mh_eEvent_UserAlarm4:
   case mh_eEvent_Info:
+  case mh_eEvent_InfoSuccess:
     mp = &up->message;
     ip->Id.Idx = sp->link.idx;
     ip->EventTime = net_TimeToNetTime( &sup->DetectTime);
@@ -2495,7 +2503,7 @@ handleInfo (
     sp->link.eventFlags |= mh_mEventFlags_Return;
   }
 
-  ep = eventListInsert(mh_eEvent_Info, NULL, (sActive*) sp);
+  ep = eventListInsert(sp->link.eventType, NULL, (sActive*) sp);
   if (sp->link.eventFlags & mh_mEventFlags_InfoWindow) {
     activeListInsert((sActive *) sp, ep, mh_eSource_Scanner);
     updateAlarm((sActive *) sp, ep);
@@ -2560,6 +2568,7 @@ handleReturn (
     updateAlarm((sActive *) sp, ep);
     break;
   case mh_eEvent_Info:
+  case mh_eEvent_InfoSuccess:
     if (sp->link.eventFlags & mh_mEventFlags_InfoWindow) {
       ep = eventListInsert(mh_eEvent_Return, NULL, (sActive*) sp);
       updateAlarm((sActive *) sp, ep);
@@ -2614,6 +2623,7 @@ handlerEvent (
     case mh_eEvent_UserAlarm3:
     case mh_eEvent_UserAlarm4:
     case mh_eEvent_Info:
+    case mh_eEvent_InfoSuccess:
       hp = handlerListAlloc( event);
       break;
     case mh_eEvent_Return:
@@ -2640,6 +2650,7 @@ handlerEvent (
     case mh_eEvent_UserAlarm3:
     case mh_eEvent_UserAlarm4:
     case mh_eEvent_Info:
+    case mh_eEvent_InfoSuccess:
 
       ip = &hp->message;
       ip->EventFlags = ssup->EventFlags;
@@ -3564,6 +3575,7 @@ outunitAck (
     updateAlarm(ap, ep);
     break;
   case mh_eEvent_Info:
+  case mh_eEvent_InfoSuccess:
     if ((ap->eventFlags & mh_mEventFlags_InfoWindow) != 0)
       updateAlarm(ap, ep);
     break;
@@ -4071,6 +4083,7 @@ reSendEventToOutunit (
   case mh_eEvent_UserAlarm3:
   case mh_eEvent_UserAlarm4:
   case mh_eEvent_Info:
+  case mh_eEvent_InfoSuccess:
     event.message.Status = Status;
     break;
   default:
@@ -4161,6 +4174,7 @@ scanSupList ()
 
         switch (sp->link.event) {
         case mh_eEvent_Info:
+        case mh_eEvent_InfoSuccess:
           handleInfo(sp);
           break;
         case mh_eEvent_Alarm:
@@ -4563,6 +4577,7 @@ updateAlarm (
     ep->msg.message.Status = ap->status.All;
     break;
   case mh_eEvent_Info:
+  case mh_eEvent_InfoSuccess:
     ap->status.Event.Status = mh_mEventStatus_NotRet |
       mh_mEventStatus_NotAck;
     if (ap->source == mh_eSource_Scanner) {
@@ -4746,7 +4761,8 @@ static void msgToV3( mh_eEvent type, uEvent *up)
 {
   switch ( type) {
   case mh_eEvent_Alarm:
-  case mh_eEvent_Info: {
+  case mh_eEvent_Info:
+  case mh_eEvent_InfoSuccess: {
     mh_sMessage *mp = &up->message;
 
     mp->Info.Object_V3 = mp->Object.Objid;
