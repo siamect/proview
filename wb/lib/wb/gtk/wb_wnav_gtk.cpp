@@ -466,7 +466,7 @@ CoLogin *WNavGtk::login_new( const char		*name,
 			     void		(* bc_cancel)( void *),
 			     pwr_tStatus  	*status)
 {
-  return new CoLoginGtk( this, parent_wid, name, groupname, bc_success, bc_cancel, status);
+  return new CoLoginGtk( this, parent_wid, name, groupname, bc_success, bc_cancel, 0, status);
 }
 
 WCrr *WNavGtk::wcrr_new( pwr_tAttrRef *aref, pwr_tStatus  *status)

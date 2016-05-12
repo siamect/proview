@@ -661,6 +661,7 @@ static int	xnav_login_func(	void		*client_data,
   char	systemgroup[80];
   unsigned int	priv;
   char	msg[120];
+  void  *basewidget = 0;
 	
   sts = gdh_GetObjectInfo ( "pwrNode-System.SystemGroup", &systemgroup, 
 		sizeof(systemgroup));
@@ -668,9 +669,19 @@ static int	xnav_login_func(	void		*client_data,
 
   if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str))))
   {
-    xnav->cologin = xnav->login_new( "PwR Login", systemgroup, xnav_login_success_bc, 
-				     xnav_login_cancel_bc, &sts);
+    if ( xnav->cologin)
+      xnav->cologin->pop();
+    else {
+      if ( xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_AllMainTransient) {
+	if ( xnav->ge_main)
+	  basewidget = xnav->ge_main->get_widget();
+	else if ( xnav->multiview_main)
+	  basewidget = xnav->multiview_main->get_widget();
+      }
 
+      xnav->cologin = xnav->login_new( "PwR Login", systemgroup, xnav_login_success_bc, 
+				       xnav_login_cancel_bc, basewidget, &sts);
+    }
     return 1;
   }
   if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
@@ -3471,6 +3482,7 @@ static int	xnav_open_func(	void		*client_data,
     int nr;
     pwr_tStatus sts;
     pwr_tAttrRef aref_vect[2];
+    void *basewidget = 0;
     
     // Command is "OPEN MULTIVIEW"
 
@@ -3569,8 +3581,15 @@ static int	xnav_open_func(	void		*client_data,
       mvctx->pop();
     }
     else {
+      if ( xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_AllMainTransient) {
+	if ( xnav->ge_main)
+	  basewidget = xnav->ge_main->get_widget();
+	else if ( xnav->multiview_main)
+	  basewidget = xnav->multiview_main->get_widget();
+      }
+
       mvctx = xnav->multiview_new( name_str, &aref, width, height, x, y, options, 
-				   xnav->gbl.color_theme, &sts,
+				   basewidget, xnav->gbl.color_theme, &sts,
 				   &xnav_multiview_command_cb,
 				   &xnav_ge_get_current_objects_cb, 
 				   &xnav_ge_is_authorized_cb,
@@ -4120,12 +4139,21 @@ static int	xnav_open_func(	void		*client_data,
         strcpy( title_str, "Trend");
     }
 
+    void *basewidget = 0;
+    if ( xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_AllMainTransient) {
+      if ( xnav->ge_main)
+	basewidget = xnav->ge_main->get_widget();
+      else if ( xnav->multiview_main)
+	basewidget = xnav->multiview_main->get_widget();
+    }
+
     if ( plotgroup_found) {
       if ( xnav->appl.find( applist_eType_Trend, &plotgroup, (void **) &trend)) {
         trend->pop();
       }
       else {
-        trend = xnav->xtttrend_new( title_str, NULL, &plotgroup, width, height, options, xnav->gbl.color_theme, &sts);
+        trend = xnav->xtttrend_new( title_str, NULL, &plotgroup, width, height, options, xnav->gbl.color_theme, 
+				    basewidget, &sts);
         if ( EVEN(sts))
           xnav->message('E',"Error in trend configuration");
         else {
@@ -4145,7 +4173,8 @@ static int	xnav_open_func(	void		*client_data,
 	  trend->pop();
 	}
 	else {
-	  trend = xnav->xtttrend_new( title_str, aref_vect, 0, width, height, options, xnav->gbl.color_theme, &sts);
+	  trend = xnav->xtttrend_new( title_str, aref_vect, 0, width, height, options, xnav->gbl.color_theme, 
+				      basewidget, &sts);
 	  if ( EVEN(sts))
 	    xnav->message('E',"Error in trend configuration");
 	  else {
@@ -4159,7 +4188,8 @@ static int	xnav_open_func(	void		*client_data,
 	}
       }
       else {
-	trend = xnav->xtttrend_new( title_str, aref_vect, 0, width, height, options, xnav->gbl.color_theme, &sts);
+	trend = xnav->xtttrend_new( title_str, aref_vect, 0, width, height, options, xnav->gbl.color_theme, 
+				    basewidget, &sts);
 	if ( ODD(sts)) {
 	  trend->close_cb = xnav_trend_close_cb;
 	  trend->command_cb = xnav_trend_command_cb;
@@ -4281,9 +4311,17 @@ static int	xnav_open_func(	void		*client_data,
       strcpy( title_str, "Trend");
     }
 
+    void *basewidget = 0;
+    if ( xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_AllMainTransient) {
+      if ( xnav->ge_main)
+	basewidget = xnav->ge_main->get_widget();
+      else if ( xnav->multiview_main)
+	basewidget = xnav->multiview_main->get_widget();
+    }
+
     if ( ODD( dcli_get_qualifier( "/NEW", 0, 0))) {
       XttTCurve *tcurve = xnav->xtttcurve_new( title_str, 0, width, height, 
-					       options, xnav->gbl.color_theme, &sts);
+					       options, xnav->gbl.color_theme, basewidget, &sts);
       if ( ODD(sts)) {
 	tcurve->close_cb = xnav_tcurve_close_cb;
 	tcurve->command_cb = xnav_trend_command_cb;
@@ -4324,7 +4362,8 @@ static int	xnav_open_func(	void		*client_data,
       return XNAV__HOLDCOMMAND;
     }
     XttTCurve *tcurve = xnav->xtttcurve_new( title_str, aref_vect, 
-					     width, height, options, xnav->gbl.color_theme, &sts);
+					     width, height, options, xnav->gbl.color_theme, 
+					     basewidget, &sts);
     if ( ODD(sts)) {
       tcurve->close_cb = xnav_tcurve_close_cb;
       tcurve->command_cb = xnav_trend_command_cb;
@@ -4397,11 +4436,19 @@ static int	xnav_open_func(	void		*client_data,
     else
       height = 0;
 
+    void *basewidget = 0;
+    if ( xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_AllMainTransient) {
+      if ( xnav->ge_main)
+	basewidget = xnav->ge_main->get_widget();
+      else if ( xnav->multiview_main)
+	basewidget = xnav->multiview_main->get_widget();
+    }
+
     if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
       // Open exported history file
       
       hist = xnav->xttsevhist_new( file_str, 0, 0, 0, 0, 0, file_str, 
-				   width, height, options, xnav->gbl.color_theme, &sts);
+				   width, height, options, xnav->gbl.color_theme, basewidget, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
         hist->close_cb = xnav_sevhist_close_cb;
@@ -4655,7 +4702,8 @@ static int	xnav_open_func(	void		*client_data,
     xnav->set_clock_cursor();
     if ( plotgroup_found) {
       hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, 
-				   xnav->scctx, 0, width, height, options, xnav->gbl.color_theme, &sts);
+				   xnav->scctx, 0, width, height, options, xnav->gbl.color_theme, 
+				   basewidget, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
         hist->close_cb = xnav_sevhist_close_cb;
@@ -4666,7 +4714,8 @@ static int	xnav_open_func(	void		*client_data,
     }
     else if( sevHistObjectFound ) {
       hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, 
-				   xnav->scctx, 0, width, height, options, xnav->gbl.color_theme, &sts);
+				   xnav->scctx, 0, width, height, options, xnav->gbl.color_theme, 
+				   basewidget, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
         hist->close_cb = xnav_sevhist_close_cb;
@@ -4677,7 +4726,8 @@ static int	xnav_open_func(	void		*client_data,
     }
     else {
       hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, 
-				   xnav->scctx, 0, width, height, options, xnav->gbl.color_theme, &sts);
+				   xnav->scctx, 0, width, height, options, xnav->gbl.color_theme, 
+				   basewidget, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
         hist->close_cb = xnav_sevhist_close_cb;
@@ -4734,9 +4784,18 @@ static int	xnav_open_func(	void		*client_data,
     else
       height = 0;
 
+    void *basewidget = 0;
+    if ( xnav->opplace_p->Options & pwr_mOpPlaceOptionsMask_AllMainTransient) {
+      if ( xnav->ge_main)
+	basewidget = xnav->ge_main->get_widget();
+      else if ( xnav->multiview_main)
+	basewidget = xnav->multiview_main->get_widget();
+    }
+
     if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
       // Open exported fast file
-      XttFast *fast = xnav->xttfast_new( title_str, 0, width, height, 0, file_str, xnav->gbl.color_theme, &sts);
+      XttFast *fast = xnav->xttfast_new( title_str, 0, width, height, 0, file_str, xnav->gbl.color_theme, 
+					 basewidget, &sts);
       if ( EVEN(sts))
 	xnav->message('E',"Error in fast configuration");
       else {
@@ -4801,7 +4860,8 @@ static int	xnav_open_func(	void		*client_data,
       fast->pop();
     }
     else {
-      fast = xnav->xttfast_new( title_str, &aref, width, height, options, 0, xnav->gbl.color_theme, &sts);
+      fast = xnav->xttfast_new( title_str, &aref, width, height, options, 0, xnav->gbl.color_theme, 
+				basewidget, &sts);
       if ( EVEN(sts))
 	xnav->message('E',"Error in fast configuration");
       else {
@@ -9792,7 +9852,15 @@ int XNav::set_parameter( char *name_str, char *value_str, int publicwrite)
 
 void XNav::open_rttlog( char *name, char *filename)
 {
-  gecurve_new( name, filename, NULL, 0, 0, gbl.color_theme);
+  void *basewidget = 0;
+  if ( opplace_p->Options & pwr_mOpPlaceOptionsMask_AllMainTransient) {
+    if ( ge_main)
+      basewidget = ge_main->get_widget();
+    else if ( multiview_main)
+      basewidget = multiview_main->get_widget();
+  }
+
+  gecurve_new( name, filename, NULL, 0, 0, gbl.color_theme, basewidget);
 }
 
 

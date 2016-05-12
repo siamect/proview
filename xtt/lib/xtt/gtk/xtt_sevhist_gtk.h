@@ -59,14 +59,16 @@ class XttSevHistGtk : public XttSevHist {
 		 int width,
 		 int height,
 		 unsigned int options,
-		 int xn_color_theme,
+		 int xn_color_theme, 
+		 void *basewidget,
 		 int *sts);
   XttSevHistGtk( void *parent_ctx,
 		 GtkWidget *parent_wid,
 		 const char *name,
 		 GtkWidget **w,
 		 char *filename,
-		 int xn_color_theme,
+		 int xn_color_theme, 
+		 void *basewidget,
 		 int *sts);
   ~XttSevHistGtk();
 };

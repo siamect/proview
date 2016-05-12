@@ -62,11 +62,13 @@ class CoLoginGtk : public CoLogin {
 	       const char      	*wl_groupname,
 	       void		(* wl_bc_success)( void *),
 	       void		(* wl_bc_cancel)( void *),
+	       void		*base_widget,
 	       pwr_tStatus   	*sts);
   ~CoLoginGtk();
 
   pwr_tStatus get_values();
   void message( const char *new_label);
+  void pop();
 
   static void activate_ok( GtkWidget *w, gpointer data);
   static void activate_cancel( GtkWidget *w, gpointer data);

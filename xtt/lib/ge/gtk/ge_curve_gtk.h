@@ -49,7 +49,8 @@ class GeCurveGtk : public GeCurve {
   public:
     GeCurveGtk( void *gc_parent_ctx, GtkWidget *parent_widget, char *curve_name,
 		char *filename, GeCurveData *curve_data, int pos_right,
-		int gc_width, int gc_height, unsigned int gc_options, int gc_color_theme);
+		int gc_width, int gc_height, unsigned int gc_options, int gc_color_theme,
+		void *basewidget);
     GtkWidget	*parent_wid;
     GtkWidget	*grow_widget;
     GtkWidget	*curve_widget;

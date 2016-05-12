@@ -77,15 +77,16 @@ class XNavGtk : public XNav {
 		      pwr_tStatus *sts);
     Op *op_new( char *opplace, pwr_tStatus *sts);
     XttTrend *xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *plotgroup,
-			    int width, int height, unsigned int options, int color_theme, pwr_tStatus *sts);
+			    int width, int height, unsigned int options, int color_theme, void *basewidget, 
+			    pwr_tStatus *sts);
     XttSevHist *xttsevhist_new( char *name, pwr_tOid *oidv, pwr_tOName *anamev,
 				pwr_tOName *onamev, bool *sevhistobjectv, sevcli_tCtx scctx, 
 				char *filename, int width, int height, unsigned int options, int color_theme, 
-				pwr_tStatus *sts);
+				void *basewidget, pwr_tStatus *sts);
     XttTCurve *xtttcurve_new( char *name, pwr_tAttrRef *arefv, int width, int height, unsigned int options, 
-			      int color_theme, pwr_tStatus *sts);
+			      int color_theme, void *basewidget, pwr_tStatus *sts);
     XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, unsigned int options, 
-			  char *filename, int color_theme, pwr_tStatus *sts);
+			  char *filename, int color_theme, void *basewidget, pwr_tStatus *sts);
     XAttOne *xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
 			  pwr_tStatus *sts);
     CLog *clog_new( const char *name, pwr_tStatus *sts);
@@ -100,7 +101,7 @@ class XNavGtk : public XNav {
 			void (*xg_keyboard_cb) (void *, void *, int, int));
     XttMultiView *multiview_new( const char *name, pwr_tAttrRef *aref, 
 				 int width, int height, int x, int y, unsigned int options,
-				 int color_theme, pwr_tStatus *sts,
+				 void *basewidget, int color_theme, pwr_tStatus *sts,
 				 int (*command_cb) (void *, char *, char *, void *),
 				 int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 				 int (*is_authorized_cb) (void *, unsigned int),
@@ -109,13 +110,14 @@ class XNavGtk : public XNav {
 			   int width, int height, int x, int y, double scan_time, 
 			   unsigned int options, int embedded, pwr_tAttrRef *arp, pwr_tStatus *sts);
     GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
-			  int pos_right, unsigned int options, int color_theme);
+			  int pos_right, unsigned int options, int color_theme, void *basewidget);
     XttFileview *fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,
 			       int type, char *target_attr, char *trigger_attr, char *filetype);
     CoLogin *login_new( const char     	*wl_name,
 			const char     	*wl_groupname,
 			void		(* wl_bc_success)( void *),
 			void		(* wl_bc_cancel)( void *),
+			void		*basewidget,
 			pwr_tStatus  	*status);
     XttKeyboard *keyboard_new( const char *name, keyboard_eKeymap keymap, keyboard_eType type, 
 			       int color_theme, pwr_tStatus *status);

@@ -55,14 +55,16 @@ class XttFastGtk : public XttFast {
 	      int width,
 	      int height,
 	      unsigned int xn_options,
-	      int xn_color_theme,
+	      int xn_color_theme, 
+	      void *basewidget,
 	      int *sts);
   XttFastGtk( void *parent_ctx,
 	      GtkWidget *parent_wid,
 	      const char *name,
 	      GtkWidget **w,
 	      char *filename,
-	      int xn_color_theme,
+	      int xn_color_theme, 
+	      void *basewidget,
 	      int *sts);
   ~XttFastGtk();
 };

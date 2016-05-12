@@ -276,41 +276,45 @@ Op *XNavGtk::op_new( char *opplace, pwr_tStatus *sts)
 }
 
 XttTrend *XNavGtk::xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *plotgroup,
-				 int width, int height, unsigned int options, int color_theme,  pwr_tStatus *sts)
+				 int width, int height, unsigned int options, int color_theme,
+				 void *basewidget, pwr_tStatus *sts)
 {
   GtkWidget *w;
 
-  return new XttTrendGtk( this, parent_wid, name, &w, objar, plotgroup, width, height, options, color_theme, sts);
+  return new XttTrendGtk( this, parent_wid, name, &w, objar, plotgroup, width, height, options, color_theme, 
+			  basewidget, sts);
 }
 
 XttSevHist *XNavGtk::xttsevhist_new( char *name, pwr_tOid *oidv, pwr_tOName *anamev, pwr_tOName *onamev,
 				     bool *sevhistobjectv, sevcli_tCtx scctx, char *filename, 
-				     int width, int height, unsigned int options, int color_theme, pwr_tStatus *sts)
+				     int width, int height, unsigned int options, int color_theme, 
+				     void *basewidget, pwr_tStatus *sts)
 {
   GtkWidget *w;
 
   if ( !filename)
-    return new XttSevHistGtk( this, parent_wid, name, &w, oidv, anamev, onamev, sevhistobjectv, scctx, width, height, options, color_theme, sts);
+    return new XttSevHistGtk( this, parent_wid, name, &w, oidv, anamev, onamev, sevhistobjectv, scctx, width, height, options, color_theme, basewidget, sts);
   else
-    return new XttSevHistGtk( this, parent_wid, name, &w, filename, color_theme, sts);
+    return new XttSevHistGtk( this, parent_wid, name, &w, filename, color_theme, basewidget, sts);
 }
 
-XttTCurve *XNavGtk::xtttcurve_new( char *name, pwr_tAttrRef *arefv, int width, int height, unsigned int options, int color_theme, pwr_tStatus *sts)
+XttTCurve *XNavGtk::xtttcurve_new( char *name, pwr_tAttrRef *arefv, int width, int height, unsigned int options, int color_theme, void *basewidget, pwr_tStatus *sts)
 {
   GtkWidget *w;
 
-  return new XttTCurveGtk( this, parent_wid, name, &w, arefv, width, height, options, color_theme, sts);
+  return new XttTCurveGtk( this, parent_wid, name, &w, arefv, width, height, options, color_theme, basewidget, sts);
 }
 
 XttFast *XNavGtk::xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, 
-			       unsigned int options, char *filename, int color_theme, pwr_tStatus *sts)
+			       unsigned int options, char *filename, int color_theme, void *basewidget, 
+			       pwr_tStatus *sts)
 {
   GtkWidget *w;
 
   if ( !filename)
-    return new XttFastGtk( this, parent_wid, name, &w, objar, width, height, options, color_theme, sts);
+    return new XttFastGtk( this, parent_wid, name, &w, objar, width, height, options, color_theme, basewidget, sts);
   else
-    return new XttFastGtk( this, parent_wid, name, &w, filename, color_theme, sts);
+    return new XttFastGtk( this, parent_wid, name, &w, filename, color_theme, basewidget, sts);
 }
 
 XAttOne *XNavGtk::xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
@@ -342,14 +346,14 @@ XttGe *XNavGtk::xnav_ge_new( const char *name, const char *filename, int scrollb
 
 XttMultiView *XNavGtk::multiview_new( const char *name, pwr_tAttrRef *aref, 
 				      int width, int height, int x, int y, unsigned int options,
-				      int color_theme, pwr_tStatus *sts,
+				      void *basewidget, int color_theme, pwr_tStatus *sts,
 				      int (*command_cb) (void *, char *, char *, void *),
 				      int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 				      int (*is_authorized_cb) (void *, unsigned int),
 				      void (*keyboard_cb) (void *, void *, int, int))
 {
   return new XttMultiViewGtk( parent_wid, this, name, aref,
-			      width, height, x, y, options, color_theme, sts, command_cb, 
+			      width, height, x, y, options, basewidget, color_theme, sts, command_cb, 
 			      get_current_objects_cb, is_authorized_cb, keyboard_cb);
 }
 
@@ -362,9 +366,10 @@ XttStream *XNavGtk::stream_new( const char *name, const char *uri,
 }
 
 GeCurve *XNavGtk::gecurve_new( char *name, char *filename, GeCurveData *data,
-			       int pos_right, unsigned int options, int color_theme)
+			       int pos_right, unsigned int options, int color_theme, void *basewidget)
 {
-  return new GeCurveGtk( this, parent_wid, name, filename, data, pos_right, 0, 0, options, color_theme);
+  return new GeCurveGtk( this, parent_wid, name, filename, data, pos_right, 0, 0, options, color_theme,
+			 basewidget);
 }
 
 XttFileview *XNavGtk::fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,
@@ -378,9 +383,10 @@ CoLogin *XNavGtk::login_new( const char		*name,
 			     const char		*groupname,
 			     void		(* bc_success)( void *),
 			     void		(* bc_cancel)( void *),
+			     void		*basewidget,
 			     pwr_tStatus  	*status)
 {
-  return new CoLoginGtk( this, parent_wid, name, groupname, bc_success, bc_cancel, status);
+  return new CoLoginGtk( this, parent_wid, name, groupname, bc_success, bc_cancel, basewidget, status);
 }
 
 XttKeyboard *XNavGtk::keyboard_new( const char *name, keyboard_eKeymap keymap, keyboard_eType type, 

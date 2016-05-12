@@ -45,6 +45,14 @@
 #include "co_api.h"
 #include "co_dcli.h"
 
+
+void CoLoginGtk::pop()
+{
+  gtk_editable_delete_text( GTK_EDITABLE(widgets.usernamevalue), 0, -1);
+  gtk_editable_delete_text( GTK_EDITABLE(widgets.passwordvalue), 0, -1);
+  gtk_window_present( GTK_WINDOW(widgets.toplevel));  
+}
+
 //
 //	Callback from the pushbutton.
 //
@@ -104,6 +112,7 @@ CoLoginGtk::CoLoginGtk( void		*wl_parent_ctx,
 			const char   	*wl_groupname,
 			void		(* wl_bc_success)( void *),
 			void		(* wl_bc_cancel)( void *),
+			void		*basewidget,
 			pwr_tStatus  	*status) :
   CoLogin(wl_parent_ctx,wl_name,wl_groupname,wl_bc_success,wl_bc_cancel,status),
   parent_wid(wl_parent_wid)
@@ -179,6 +188,9 @@ CoLoginGtk::CoLoginGtk( void		*wl_parent_ctx,
 
   gtk_widget_show_all( widgets.toplevel);
   gtk_widget_grab_focus( widgets.usernamevalue);
+
+  if ( basewidget)
+    gtk_window_set_transient_for(GTK_WINDOW(widgets.toplevel), GTK_WINDOW(basewidget));
 
   *status = 1;
 }

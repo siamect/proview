@@ -74,10 +74,10 @@ class XNavMotif : public XNav {
 		      pwr_tStatus *sts);
     Op *op_new( char *opplace, pwr_tStatus *sts);
     XttTrend *xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *plotgroup,
-			    int width, int height, unsigned int options, 
+			    int width, int height, unsigned int options, void *basewidget, 
 			    pwr_tStatus *sts);
     XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, 
-			  unsigned int options, pwr_tStatus *sts);
+			  unsigned int options, void *basewidget, pwr_tStatus *sts);
     XAttOne *xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
 			  pwr_tStatus *sts);
     CLog *clog_new( const char *name, pwr_tStatus *sts);
@@ -90,11 +90,12 @@ class XNavMotif : public XNav {
 			int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 			int (*xg_is_authorized_cb) (void *, unsigned int));
     GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
-			  int pos_right, unsigned int options);
+			  int pos_right, unsigned int options, void *basewidget);
     CoLogin *login_new( const char     	*wl_name,
 			const char     	*wl_groupname,
 			void		(* wl_bc_success)( void *),
 			void		(* wl_bc_cancel)( void *),
+			void		*basewidget,
 			pwr_tStatus  	*status);
     void bell( int time);
     void get_popup_menu( pwr_sAttrRef attrref,

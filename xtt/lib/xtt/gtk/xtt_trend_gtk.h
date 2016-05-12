@@ -57,6 +57,7 @@ class XttTrendGtk : public XttTrend {
 	       int height,
 	       unsigned int options,
 	       int x_color_theme,
+	       void *basewidget,
 	       int *sts);
   ~XttTrendGtk();
 };

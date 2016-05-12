@@ -263,14 +263,16 @@ Op *XNavMotif::op_new( char *opplace, pwr_tStatus *sts)
 }
 
 XttTrend *XNavMotif::xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *plotgroup,
-				   int width, int height, unsigned int options, pwr_tStatus *sts)
+				   int width, int height, unsigned int options, void *basewidget, 
+				   pwr_tStatus *sts)
 {
   Widget w;
 
   return new XttTrendMotif( this, parent_wid, name, &w, objar, plotgroup, width, height, options, sts);
 }
 
-XttFast *XNavMotif::xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, unsigned int options, pwr_tStatus *sts)
+XttFast *XNavMotif::xttfast_new( char *name, pwr_tAttrRef *objar, int width, int height, unsigned int options, 
+				 void *basewidget, pwr_tStatus *sts)
 {
   Widget w;
 
@@ -304,7 +306,7 @@ XttGe *XNavMotif::xnav_ge_new( const char *name, const char *filename, int scrol
 }
 
 GeCurve *XNavMotif::gecurve_new( char *name, char *filename, GeCurveData *data,
-				 int pos_right, unsigned int options)
+				 int pos_right, unsigned int options, basewidget)
 {
   return new GeCurveMotif( this, parent_wid, name, filename, data, pos_right, 0, 0, options);
 }
@@ -313,6 +315,7 @@ CoLogin *XNavMotif::login_new( const char      	*name,
 			       const char      	*groupname,
 			       void		(* bc_success)( void *),
 			       void		(* bc_cancel)( void *),
+			       void		*basewidget,
 			       pwr_tStatus  	*status)
 {
   return new CoLoginMotif( this, parent_wid, name, groupname, bc_success, bc_cancel, status);

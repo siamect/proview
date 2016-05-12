@@ -70,7 +70,8 @@ XttFastGtk::XttFastGtk( void *parent_ctx,
 			int width,
 			int height,
 			unsigned int options,
-			int xn_color_theme,
+			int xn_color_theme, 
+			void *basewidget,
 			int *sts) :
   XttFast( parent_ctx, name, fast_arp, xn_color_theme, sts), parent_widget(parent_wid)
 {
@@ -87,7 +88,7 @@ XttFastGtk::XttFastGtk( void *parent_ctx,
     gdh_AttrrefToName( fast_arp, title, sizeof(title), cdh_mNName);
 
   curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 0, width, height,
-			  options, color_theme);
+			  options, color_theme, basewidget);
   curve->close_cb = fast_close_cb;
   curve->help_cb = fast_help_cb;
   curve->export_cb = fast_export_cb;
@@ -104,7 +105,8 @@ XttFastGtk::XttFastGtk( void *parent_ctx,
 			const char *name,
 			GtkWidget **w,
 			char *filename,
-			int xn_color_theme,
+			int xn_color_theme, 
+			void *basewidget,
 			int *sts) :
   XttFast( parent_ctx, name, filename, xn_color_theme, sts), 
   parent_widget(parent_wid)
@@ -118,7 +120,7 @@ XttFastGtk::XttFastGtk( void *parent_ctx,
 
   *sts = XNAV__SUCCESS;
 
-  curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 1, 0, 0, 0, color_theme);
+  curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 1, 0, 0, 0, color_theme, basewidget);
   curve->close_cb = fast_close_cb;
   curve->help_cb = fast_help_cb;
   curve->enable(0);

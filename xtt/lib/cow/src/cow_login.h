@@ -79,6 +79,7 @@ class CoLogin {
 
   virtual pwr_tStatus get_values() {return 0;}
   virtual void message( const char *new_label) {}
+  virtual void pop() {}
 
   static pwr_tStatus user_check( const char *groupname, const char *username, const char *password);
   static pwr_tStatus insert_login_info( const char *groupname, const char *password, const char *username, 

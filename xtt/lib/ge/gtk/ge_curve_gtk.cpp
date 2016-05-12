@@ -750,7 +750,8 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
 			int gc_width,
 			int gc_height,
 			unsigned int gc_options,
-			int gc_color_theme) :
+			int gc_color_theme,
+			void *basewidget) :
   GeCurve( gc_parent_ctx, curve_name, filename, curve_data, pos_right, 
 	   gc_width, gc_height, gc_options, gc_color_theme),
   minmax_widget(0), export_widget(0), disable_timecombo_callback(0), clock_cursor(0)
@@ -1166,6 +1167,10 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
       gtk_window_iconify( GTK_WINDOW(toplevel));
     else if ( options & curve_mOptions_Invisible)
       g_object_set( toplevel, "visible", FALSE, NULL);
+
+    if ( basewidget)
+      gtk_window_set_transient_for(GTK_WINDOW(toplevel), GTK_WINDOW(basewidget));
+
   }  
 }
 

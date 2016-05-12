@@ -203,8 +203,8 @@ static void destroy_event( GtkWidget *w, gpointer data)
 
 XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx, const char *mv_name, 
 				  pwr_tAttrRef *mv_aref, int mv_width, int mv_height, 
-				  int mv_x, int mv_y, unsigned int mv_options, int mv_color_theme,
-				  pwr_tStatus *sts,
+				  int mv_x, int mv_y, unsigned int mv_options, void *basewidget, 
+				  int mv_color_theme, pwr_tStatus *sts,
 				  int (*mv_command_cb) (void *, char *, char *, void *),
 				  int (*mv_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 				  int (*mv_is_authorized_cb) (void *, unsigned int),
@@ -446,7 +446,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 
 	  mvctx[i*rows + j] = new XttMultiViewGtk( toplevel, this, "No title", 
 						   &graph_aref, w, h, mv_x, mv_y, 
-						   ge_mOptions_Embedded, color_theme, &lsts,
+						   ge_mOptions_Embedded, 0, color_theme, &lsts,
 						   multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
 						   multiview_ge_is_authorized_cb, multiview_keyboard_cb);
 	  
@@ -497,14 +497,14 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  if ( plotgroup_found) {
 	    trend[i*rows + j] = new XttTrendGtk( this, toplevel, (char *)"No title", &widget,
 						 0, &plotgroup, w, h, (unsigned int)curve_mOptions_Embedded, 
-						 color_theme, sts);
+						 color_theme, 0, sts);
 	  }
 	  else {
 	    arefv[0] = mv.Action[i*rows+j].Object[0];
 	    memset( &arefv[1], 0, sizeof(arefv[0]));
 	    trend[i*rows + j] = new XttTrendGtk( this, toplevel, (char *)"No title", &widget,
 						 arefv, 0, w, h, (unsigned int)curve_mOptions_Embedded, 
-						 color_theme, sts);
+						 color_theme, 0, sts);
 	  }
 	  if ( EVEN(*sts)) break;
 
@@ -701,7 +701,7 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
 	  sevhist[i*rows + j] = new XttSevHistGtk( this, toplevel, (char *)"No title", &widget,
 						   oidv, anamev, onamev, sevhistobjectv, 
 						   xnav->scctx, w, h, 
-						   (unsigned int)curve_mOptions_Embedded, color_theme, sts);
+						   (unsigned int)curve_mOptions_Embedded, color_theme, 0, sts);
 	  if ( EVEN(*sts)) break;
 
 	  sevhist[i*rows + j]->help_cb = multiview_trend_help_cb;
@@ -892,10 +892,14 @@ XttMultiViewGtk::XttMultiViewGtk( GtkWidget *mv_parent_wid, void *mv_parent_ctx,
       gtk_window_iconify( GTK_WINDOW(toplevel));
     else if ( options & ge_mOptions_Invisible)
       g_object_set( toplevel, "visible", FALSE, NULL);
+
+    if ( basewidget)
+      gtk_window_set_transient_for(GTK_WINDOW(toplevel), GTK_WINDOW(basewidget));
   }
   else {
     gtk_widget_set_size_request( box_widget, window_width, window_height);
   }
+
 
   *sts = XNAV__SUCCESS;
 }
@@ -994,7 +998,7 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
 
 	    XttMultiViewGtk *ctx = new XttMultiViewGtk( toplevel, this, "No title", 
 							&source_aref, w, h, x, y, 
-							ge_mOptions_Embedded, color_theme, &sts,
+							ge_mOptions_Embedded, 0, color_theme, &sts,
 							multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
 							multiview_ge_is_authorized_cb, multiview_keyboard_cb);
 	    
@@ -1062,14 +1066,14 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
 	    if ( plotgroup_found) {
 	      ctx = new XttTrendGtk( this, toplevel, (char *)"No title", &comp_w,
 				     0, &plotgroup, w, h, (unsigned int)curve_mOptions_Embedded, 
-				     color_theme, &lsts);
+				     color_theme, 0, &lsts);
 	    }
 	    else {
 	      arefv[0] = object_aref;
 	      memset( &arefv[1], 0, sizeof(arefv[0]));
 	      ctx = new XttTrendGtk( this, toplevel, (char *)"No title", &comp_w,
 				     arefv, 0, w, h, (unsigned int)curve_mOptions_Embedded, 
-				     color_theme, &lsts);
+				     color_theme, 0, &lsts);
 	    }
 	    if ( EVEN(lsts)) break;
 
@@ -1263,7 +1267,7 @@ int XttMultiViewGtk::set_subwindow_source( const char *name, char *source, char 
 	    ctx = new XttSevHistGtk( this, toplevel, (char *)"No title", &comp_w,
 				     oidv, anamev, onamev, sevhistobjectv, 
 				     xnav->scctx, w, h, 
-				     (unsigned int)curve_mOptions_Embedded, color_theme, &lsts);
+				     (unsigned int)curve_mOptions_Embedded, color_theme, 0, &lsts);
 	    if ( EVEN(lsts)) break;
 
 	    ctx->help_cb = multiview_trend_help_cb;
