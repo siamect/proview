@@ -207,9 +207,9 @@ void XttStream::action_scroll( int direction, int x, int y, int cnt)
   double zoom;
 
   if ( direction)
-    zoom = - cnt * 4;
-  else
     zoom = cnt * 4;
+  else
+    zoom = - cnt * 4;
 
   camera_control->zoom_relative( zoom);
 }
