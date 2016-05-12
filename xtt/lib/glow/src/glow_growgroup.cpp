@@ -45,6 +45,7 @@
 #include "glow_draw.h"
 #include "glow_growctx.h"
 #include "glow_nodegroup.h"
+#include "glow_msg.h"
 
 GrowGroup::GrowGroup( GrowCtx *glow_ctx, const char *name, GlowArray& array,
 	int nodraw) :
@@ -151,12 +152,17 @@ void GrowGroup::open( ifstream& fp)
   }
 }
  
-void GrowGroup::trace_scan()
+int GrowGroup::trace_scan()
 {
-  if ( trace.p && ctx->trace_scan_func)
-    ctx->trace_scan_func( (void *) this, trace.p);
+  int sts;
 
-  nc->a.trace_scan();
+  if ( trace.p && ctx->trace_scan_func) {
+    sts = ctx->trace_scan_func( (void *) this, trace.p);
+    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED)
+      return sts;
+  }
+
+  return nc->a.trace_scan();
 }
 
 int GrowGroup::trace_init()

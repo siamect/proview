@@ -101,7 +101,7 @@ class GrowToolbar : public GrowNode {
   //! Scan trace
   /*! Calls the trace scan callback for the toolbar and all members.
    */
-  void trace_scan();
+  int trace_scan();
 
   //! Init trace
   /*! Calls the trace connect callback for the toolbar and all members.

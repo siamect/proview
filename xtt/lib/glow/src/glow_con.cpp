@@ -3951,12 +3951,12 @@ void GlowCon::remove_notify()
   }
 }
 
-void GlowCon::trace_scan()
+int GlowCon::trace_scan()
 {
   int on;
 
   if ( !trace_p)
-    return;
+    return 1;
   switch( trace_attr_type)
   {
     case glow_eTraceType_Boolean:
@@ -3967,6 +3967,7 @@ void GlowCon::trace_scan()
     default:
       break;
   }
+  return 1;
 }
 
 int GlowCon::trace_init()

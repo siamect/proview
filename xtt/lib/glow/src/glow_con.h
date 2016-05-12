@@ -262,7 +262,7 @@ class GlowCon : public GlowArrayElem {
 
   void set_user_data( void *data) { user_data = data;};
   void get_user_data( void **data) { *data = user_data;};
-  void trace_scan();
+  int trace_scan();
   int trace_init();
   void trace_close();
   void *get_ctx() { return this->ctx;};

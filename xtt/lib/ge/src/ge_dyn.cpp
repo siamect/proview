@@ -1919,6 +1919,8 @@ int GeDyn::connect( grow_tObject object, glow_sTraceData *trace_data)
 
 int GeDyn::scan( grow_tObject object)
 {
+  int sts;
+
   reset_color = false;
   ignore_color = false;
   reset_bgcolor = false;
@@ -1927,8 +1929,12 @@ int GeDyn::scan( grow_tObject object)
   ignore_invisible = false;
   reset_text_a1 = false;
   ignore_text_a1 = false;
-  for ( GeDynElem *elem = elements; elem; elem = elem->next)
-    elem->scan( object);
+  for ( GeDynElem *elem = elements; elem; elem = elem->next) {
+    sts = elem->scan( object);
+    if ( sts == GE__NO_PROPAGATE || sts == GLOW__TERMINATED ||
+	 sts == GLOW__SUBTERMINATED)
+      return sts;
+  }
   return 1;
 }
 
@@ -12172,6 +12178,8 @@ int GeDigCommand::disconnect( grow_tObject object)
 
 int GeDigCommand::scan( grow_tObject object)
 {
+  int sts;
+  
   if ( !p)
     return 1;
 
@@ -12199,7 +12207,8 @@ int GeDigCommand::scan( grow_tObject object)
 	char cmd[400];
 
 	dyn->graph->get_command( command, cmd, dyn);
-	(dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
+	sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
+	return sts;
       }
     }
   }

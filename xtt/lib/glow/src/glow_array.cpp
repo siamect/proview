@@ -1867,11 +1867,16 @@ int GlowArray::find_cc( GlowArrayElem *cc)
   return 0;
 }
 
-void GlowArray::trace_scan()
+int GlowArray::trace_scan()
 {
+  int sts;
 
-  for ( int i = 0; i < a_size; i++)
-    a[i]->trace_scan();
+  for ( int i = 0; i < a_size; i++) {
+    sts = a[i]->trace_scan();
+    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED)
+      return sts;
+  }
+  return 1;
 }
 
 

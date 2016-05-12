@@ -3762,6 +3762,7 @@ static int graph_trace_ctrl_bc( int type, void *data)
 static int graph_trace_scan_bc( grow_tObject object, void *p)
 {
   GeDyn *dyn;
+  int sts;
 
   grow_GetUserData( object, (void **)&dyn);
   if ( !dyn)
@@ -3776,7 +3777,9 @@ static int graph_trace_scan_bc( grow_tObject object, void *p)
        !(dyn->total_dyn_type1 & ge_mDynType1_Animation || dyn->total_dyn_type2 & ge_mDynType2_ScrollingText))
     return 1;
 
-  dyn->scan( object);
+  sts = dyn->scan( object);
+  if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED)
+    return sts;
 
   return 1;
 }

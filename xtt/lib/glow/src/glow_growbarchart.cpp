@@ -151,10 +151,11 @@ void GrowBarChart::open( ifstream& fp)
   }
 }
 
-void GrowBarChart::trace_scan()
+int GrowBarChart::trace_scan()
 {
   if ( trace.p && ctx->trace_scan_func)
     ctx->trace_scan_func( (void *) this, trace.p);
+  return 1;
 }
 
 int GrowBarChart::trace_init()

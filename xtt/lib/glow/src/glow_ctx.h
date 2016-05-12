@@ -713,7 +713,7 @@ class GlowCtx {
 
   //! Trace scan.
   /*! Calls the scan backcall function for all connected objects. */
-  void trace_scan();
+  int trace_scan();
 
   void *user_data;		//!< User data.
 

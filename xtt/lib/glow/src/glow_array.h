@@ -234,7 +234,7 @@ class GlowArray {
   void align( double x, double y, glow_eAlignDirection direction);
   int find_nc( GlowArrayElem *nc);
   int find_cc( GlowArrayElem *cc);
-  void trace_scan();
+  int trace_scan();
   int trace_init();
   void trace_close();
   void get_nodegroups( void *a);

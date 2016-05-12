@@ -122,7 +122,7 @@ class GrowTrend : public GrowRect {
 
   void draw();
 
-  void trace_scan();
+  int trace_scan();
 
   int trace_init();
 

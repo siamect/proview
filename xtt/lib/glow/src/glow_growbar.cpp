@@ -498,16 +498,14 @@ void GrowBar::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   w->reset_draw_buffer_only();
 }
 
-void GrowBar::trace_scan()
+int GrowBar::trace_scan()
 {
   if ( !trace.p)
-    return;
+    return 1;
 
   if ( ctx->trace_scan_func)
-  {
     ctx->trace_scan_func( (void *) this, trace.p);
-    return;
-  }    
+  return 1;
 }
 
 int GrowBar::trace_init()

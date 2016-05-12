@@ -157,10 +157,11 @@ void GrowPie::open( ifstream& fp)
   }
 }
 
-void GrowPie::trace_scan()
+int GrowPie::trace_scan()
 {
   if ( trace.p && ctx->trace_scan_func)
     ctx->trace_scan_func( (void *) this, trace.p);
+  return 1;
 }
 
 int GrowPie::trace_init()

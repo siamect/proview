@@ -130,7 +130,7 @@ class GlowArrayElem {
     virtual void remove_notify() {};
     virtual void set_user_data( void *data) {};
     virtual void get_user_data( void **data) {};
-    virtual void trace_scan() {};
+    virtual int trace_scan() { return 1;};
     virtual int trace_init() { return 1;};
     virtual void trace_close() {};
     virtual void set_trace_attr( GlowTraceData *data) {};

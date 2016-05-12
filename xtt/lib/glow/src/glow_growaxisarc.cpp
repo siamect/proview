@@ -692,16 +692,14 @@ void GrowAxisArc::export_javabean( GlowTransform *t, void *node,
      pass, shape_cnt, node_cnt, fp);
 }
 
-void GrowAxisArc::trace_scan()
+int GrowAxisArc::trace_scan()
 {
   if ( !trace.p)
-    return;
+    return 1;
 
   if ( ctx->trace_scan_func)
-  {
     ctx->trace_scan_func( (void *) this, trace.p);
-    return;
-  }    
+  return 1;
 }
 
 int GrowAxisArc::trace_init()

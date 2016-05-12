@@ -669,16 +669,14 @@ void GrowTrend::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 //! Scan trace
 /*! Calls the trace scan callback for the object.
  */
-void GrowTrend::trace_scan()
+int GrowTrend::trace_scan()
 {
   if ( !trace.p)
-    return;
+    return 1;
 
   if ( ctx->trace_scan_func)
-  {
     ctx->trace_scan_func( (void *) this, trace.p);
-    return;
-  }    
+  return 1;   
 }
 
 //! Init trace

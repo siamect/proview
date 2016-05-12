@@ -98,7 +98,7 @@ class GrowBarChart : public GrowRect {
   //! Scan trace
   /*! Calls the trace scan callback for the object.
    */
-  void trace_scan();
+  int trace_scan();
 
   //! Init trace
   /*! Calls the trace connect callback for the object.

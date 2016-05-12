@@ -387,10 +387,15 @@ void GrowWindow::draw_brief( GlowWind *w, GlowTransform *t, int highlight, int h
 	drawtype, idx, 0);
 }
 
-void GrowWindow::trace_scan()
+int GrowWindow::trace_scan()
 {
-  if ( trace.p && ctx->trace_scan_func)
-    ctx->trace_scan_func( (void *) this, trace.p);
+  int sts;
+
+  if ( trace.p && ctx->trace_scan_func) {
+    sts = ctx->trace_scan_func( (void *) this, trace.p);
+    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED)
+      return sts;
+  }
 
   if ( window_ctx) {
     int ur_x = int( (x_right - vertical_scrollbar * scrollbar_width) * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
@@ -404,13 +409,16 @@ void GrowWindow::trace_scan()
     if ( ctx->trace_ctrl_func)
       (ctx->trace_ctrl_func) ( glow_eTraceCtrl_CtxPop, window_ctx);
 
-    window_ctx->trace_scan();
+    sts = window_ctx->trace_scan();
+    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED)
+      return sts;
 
     if ( ctx->trace_ctrl_func)
       (ctx->trace_ctrl_func) ( glow_eTraceCtrl_CtxPush, window_ctx);
 
     ctx->gdraw->reset_clip_rectangle( &ctx->mw);
   }
+  return 1;
 }
 
 int GrowWindow::trace_init()

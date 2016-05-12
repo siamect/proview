@@ -1740,15 +1740,21 @@ void GlowCtx::trace_close()
   trace_started = 0;
 }
 
-void GlowCtx::trace_scan()
+int GlowCtx::trace_scan()
 {
-  if ( nodraw)
-     return;
+  int sts;
 
-  a.trace_scan();
+  if ( nodraw)
+     return 1;
+
+  sts = a.trace_scan();
+  if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED)
+    return sts;
 
   if ( ctx_type == glow_eCtxType_Grow)
     ((GrowCtx *)this)->exec_dynamic();
+
+  return 1;
 }
 
 void GlowCtx::get_selected_nodes( GlowArrayElem ***nodes, int *num)

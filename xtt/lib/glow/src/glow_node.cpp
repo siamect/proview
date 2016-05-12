@@ -48,6 +48,7 @@
 #include "glow_growctx.h"
 #include "glow_tracedata.h"
 #include "glow_grownode.h"
+#include "glow_msg.h"
 
 GlowNode::GlowNode( GrowCtx *glow_ctx, const char *name, GlowNodeClass *node_class,
 	double x1, double y1, int nodraw, int rel_annot_pos) : 
@@ -404,13 +405,20 @@ void GlowNode::get_trace_attr( GlowTraceData **attr)
   *attr = &trace;
 }
 
-void GlowNode::trace_scan()
+int GlowNode::trace_scan()
 {
-  if ( ctx->trace_scan_func && trace.p)
-    ctx->trace_scan_func( (void *) this, trace.p);
+  int sts;
+
+  if ( ctx->trace_scan_func && trace.p) {
+    sts = ctx->trace_scan_func( (void *) this, trace.p);
+    if ( sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED)
+      return sts;
+  }
 
   if ( nc->recursive_trace)
     nc->a.trace_scan();
+
+  return 1;
 }
 
 int GlowNode::trace_init()

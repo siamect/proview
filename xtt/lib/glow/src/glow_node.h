@@ -246,7 +246,7 @@ class GlowNode : public GlowArrayElem {
   //! Scan trace
   /*! Calls the trace scan callback.
    */
-  void trace_scan();
+  int trace_scan();
 
   //! Scan trace
   /*! Calls the trace connect callback.
