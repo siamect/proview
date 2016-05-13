@@ -932,7 +932,9 @@ void GrowWindow::new_ctx()
   window_ctx->customcolors = ctx->gdraw->create_customcolors();
 
   if ( !no_file) {
+    window_ctx->set_nodraw();
     sts = window_ctx->open( fname, glow_eSaveMode_Edit);
+    window_ctx->reset_nodraw();
     if ( EVEN(sts))
       printf( "** Unable to open graph %s\n", fname);
   }
@@ -963,6 +965,12 @@ void GrowWindow::new_ctx()
     ctx->mw.zoom_factor_x * window_ctx->mw.subwindow_scale;
   window_ctx->move_restriction = glow_eMoveRestriction_Disable;
   window_ctx->a.zoom();
+
+#if 0
+  window_ctx->gdraw->push_customcolors( window_ctx->customcolors);
+  window_ctx->draw( &window_ctx->mw, 0, 0, window_ctx->mw.window_width, window_ctx->mw.window_height);
+  window_ctx->gdraw->pop_customcolors();
+#endif
 
   if ( ctx->trace_started) {
     trace_init();
@@ -1065,7 +1073,10 @@ int GrowWindow::set_source( char *source, char *new_owner)
   if ( new_owner)
     strncpy( owner, new_owner, sizeof(owner));
   update_attributes();
+
+  window_ctx->gdraw->push_customcolors( window_ctx->customcolors);
   draw();
+  window_ctx->gdraw->pop_customcolors();
 
   if ( clip_removed)
     // Set a clip to match the previous reset
