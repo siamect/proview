@@ -41,6 +41,7 @@
 
 #include <string.h>
 #include "co_wow_msg.h"
+#include "co_lng.h"
 
 typedef enum {
   wow_eFileSelType_,
@@ -117,7 +118,7 @@ class CoWow {
 				void (* questionbox_ok) ( void *, void *),
 				void (* questionbox_cancel) ( void *, void *),
 				void *data) {}
-  virtual void DisplayError( const char *title, const char *text) {}
+  virtual void DisplayError( const char *title, const char *text, lng_eCoding coding = lng_eCoding_ISO8859_1) {}
   virtual void DisplayText( const char *title, const char *text, int width = 0, int height = 0) {}
   virtual void CreateInputDialog( void *ctx, const char *title, const char *text,
 				  void (* inputdialogbox_ok) ( void *, void *, char *),

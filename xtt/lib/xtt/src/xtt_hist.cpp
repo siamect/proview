@@ -52,7 +52,6 @@ using namespace std;
 #include <string>
 #include <vector>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 #include "cow_wow.h"
@@ -64,7 +63,6 @@ extern "C" {
 #include "rt_elog.h"
 #include "co_dcli.h"
 #include <db.h>
-}
 
 #include <deque>
 #include <algorithm>
