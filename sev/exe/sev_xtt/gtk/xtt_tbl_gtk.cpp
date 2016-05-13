@@ -224,7 +224,7 @@ XttSevHist *XttTblGtk::sevhist_new( pwr_tOid *oidv, pwr_tOName *anamev, pwr_tONa
   GtkWidget *w;
 
   return new XttSevHistGtk( (void *)this, toplevel, "Process History", &w, oidv, anamev, onamev,
-			    sevhistobjectv, sevcli, 0, 0, 0, 0, sts);
+			    sevhistobjectv, sevcli, 0, 0, 0, 0, 0, sts);
 }
 
 CoLogin *XttTblGtk::login_new( const char      	*name,
@@ -233,7 +233,7 @@ CoLogin *XttTblGtk::login_new( const char      	*name,
 			       void		(* bc_cancel)( void *),
 			       pwr_tStatus  	*status)
 {
-  return new CoLoginGtk( this, toplevel, name, groupname, bc_success, bc_cancel, status);
+  return new CoLoginGtk( this, toplevel, name, groupname, bc_success, bc_cancel, 0, status);
 }
 
 void XttTblGtk::activate_command( GtkWidget *w, gpointer data)

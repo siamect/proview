@@ -331,7 +331,7 @@ WbGtk::WbGtk( int argc, char *argv[]) : mainwindow(0)
   }
   else if ( login_display)
     new CoLoginGtk( NULL, mainwindow, "PwR Login", systemgroup,
-		   &Wb::login_success, &Wb::login_cancel, &sts);
+		    &Wb::login_success, &Wb::login_cancel, 0, &sts);
 
 
   strcpy( title, "PwR Development ");
