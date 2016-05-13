@@ -17377,7 +17377,6 @@ int GeOptionMenu::scan( grow_tObject object)
       update_texts = 1;
   }
   else {
-    first_scan = false;
     if ( update_p)
       update_texts = 1;
   }
@@ -17403,6 +17402,16 @@ int GeOptionMenu::scan( grow_tObject object)
     sts = gdh_GetObjectInfo( pname, items_text, text_size * sizeof(pwr_tString80));
     if ( EVEN(sts)) return sts;
   }
+
+  if ( (first_scan || update_texts) && grow_GetTranslate( dyn->graph->grow->ctx)) {
+    for ( int i = 0; i < 32; i++) {
+      if ( strcmp(items_text[i],"") != 0)
+	Lng::translate( items_text[i], items_text[i]);
+    }
+  }  
+    
+  if ( first_scan)
+    first_scan = false;
 
   switch( type_id) {
   case pwr_eType_Float32: 
