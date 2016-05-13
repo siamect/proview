@@ -2039,8 +2039,8 @@ void GrowNode::annot_input_event( glow_eEvent event, int keycode)
     }
   }
 
-  if ( !annotv[idx])
-    return;
+  if ( !annotv[idx] && annotsize[idx] == 0)
+    annotv[idx] = (char *) calloc( 1, annotsize[idx] + 1);
   
   switch ( event) {
   case glow_eEvent_Key_Right:
