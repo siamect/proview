@@ -501,6 +501,8 @@ E 1.19.28 "Höger"
 E 1.20.1 "Inmatad sträng för lång"
 E 1.20.2 "Objektet finns inte"
 E 1.20.3 "Syntax fel i inmatning"
+E 1.20.4 "Maxvärde överskridet"
+E 1.20.5 "Minvärde underskridet"
 #
 # Method toolbar
 E 1.21.1 "Snabbkurva"

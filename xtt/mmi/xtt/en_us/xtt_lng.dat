@@ -504,6 +504,8 @@ E 1.19.28 "Right"
 E 1.20.1 "Input string too long"
 E 1.20.2 "Object not found"
 E 1.20.3 "Input syntax error"
+E 1.20.4 "Maxvalue exceeded"
+E 1.20.5 "Value below minvalue"
 #
 # Method toolbar
 E 1.21.1 "Fast curve"
