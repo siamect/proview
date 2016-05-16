@@ -2078,6 +2078,8 @@ void GrowNode::annot_input_event( glow_eEvent event, int keycode)
     if ( annotsize[idx] < (int)strlen(annotv[idx]) + 2) {
       // Increase size of annotv
       char *tmp = annotv[idx];
+      if ( annotsize[idx] == 0)
+	annotsize[idx] = 1;
       annotv[idx] = (char *) calloc( 1, annotsize[idx] + 1);
       memcpy( annotv[idx], tmp, annotsize[idx]);
       free( tmp);
