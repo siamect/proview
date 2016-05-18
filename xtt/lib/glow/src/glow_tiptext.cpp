@@ -74,7 +74,7 @@ void GlowTipText::draw_text( GlowArrayElem *e, char *text, int x, int y)
   }
 
   ctx->gdraw->get_text_extent( text, strlen(text), glow_eDrawType_TextHelvetica, text_size, 
-			       glow_eFont_Helvetica, &z_width, &z_height, &z_descent,
+			       glow_eFont_LucidaSans, &z_width, &z_height, &z_descent,
 			       ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size), 0);
 
   text_x = x + TIPTEXT_OFFSET_X;
@@ -108,7 +108,7 @@ void GlowTipText::draw()
 		       glow_eDrawType_Line, 0, 0);
   ctx->gdraw->text( &ctx->mw, text_x + 2, text_y + text_height - text_descent - 2, tiptext, 
 		    strlen(tiptext), glow_eDrawType_TextHelvetica, glow_eDrawType_Line, text_size, 
-		    0, 0, glow_eFont_Helvetica,
+		    0, 0, glow_eFont_LucidaSans,
 		    ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size), 0);
   if ( ctx->mw.double_buffer_on() && !ctx->mw.draw_buffer_only())
     ctx->gdraw->copy_buffer( &ctx->mw, text_x, text_y, text_x + text_width, text_y + text_height);
