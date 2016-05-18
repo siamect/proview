@@ -18172,16 +18172,26 @@ int GeMethodToolbar::action( grow_tObject object, glow_tEvent event)
     break;
   case glow_eEvent_MB1Up:
     break;
-  case glow_eEvent_TipText:
-    if ( event->toolbar.category == 1)
-      grow_SetTipText( dyn->graph->grow->ctx, event->toolbar.object, 		       
-		       GeMethods::op_tooltip[event->toolbar.idx],
-		       event->any.x_pixel, event->any.y_pixel);
-    else
-      grow_SetTipText( dyn->graph->grow->ctx, event->toolbar.object, 		       
-		       GeMethods::mnt_tooltip[event->toolbar.idx], 
-		       event->any.x_pixel, event->any.y_pixel);
+  case glow_eEvent_TipText: {
+    pwr_tString80 text;
+
+    if ( event->toolbar.category == 1) {
+      if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	Lng::translate( GeMethods::op_tooltip[event->toolbar.idx], text);
+      else
+	strcpy( text, GeMethods::op_tooltip[event->toolbar.idx]);
+    }
+    else {
+      if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	Lng::translate( GeMethods::mnt_tooltip[event->toolbar.idx], text);
+      else
+	strcpy( text, GeMethods::mnt_tooltip[event->toolbar.idx]);
+    }
+    grow_SetTipText( dyn->graph->grow->ctx, event->toolbar.object, 		       
+		     text, event->any.x_pixel, event->any.y_pixel);
+
     break;
+  }
   case glow_eEvent_Key_Return:
   case glow_eEvent_MB1Click: {
     int sts;
@@ -18421,7 +18431,10 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
   
 	if ( opmask & (1 << i)) {
 	  info.item[menu_idx].type = glow_eMenuItem_Button;
-	  strcpy( info.item[menu_idx].text, GeMethods::op_name[i]);
+	  if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	    Lng::translate( GeMethods::op_name[i], info.item[menu_idx].text);
+	  else
+	    strcpy( info.item[menu_idx].text, GeMethods::op_name[i]);
 	  info.item[menu_idx].occupied = true;
 	  if ( insensitive_opmask & (1 << i))
 	    info.item[menu_idx].type = glow_eMenuItem_ButtonDisabled;
@@ -18440,7 +18453,10 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
 
 	if ( mntmask & (1 << i)) {
 	  info.item[menu_idx].type = glow_eMenuItem_Button;
-	  strcpy( info.item[menu_idx].text, GeMethods::mnt_name[i]);
+	  if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	    Lng::translate( GeMethods::mnt_name[i], info.item[menu_idx].text);
+	  else
+	    strcpy( info.item[menu_idx].text, GeMethods::mnt_name[i]);
 	  info.item[menu_idx].occupied = true;
 	  if ( insensitive_mntmask & (1 << i))
 	    info.item[menu_idx].type = glow_eMenuItem_ButtonDisabled;

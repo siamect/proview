@@ -507,6 +507,10 @@ E 1.20.5 "Minvärde underskridet"
 # Method toolbar
 E 1.21.1 "Snabbkurva"
 E 1.21.2 "Blockera händelser"
+E 1.21.3 "Händelselogg"
+E 1.21.4 "Simulera"
+E 1.21.5 "Öppna förälders objektsbild"
+E 1.21.6 "Kamera"
 #
 # Video management system
 E 1.22.1 "Paneler"
@@ -735,6 +739,10 @@ E 4.15.7 "Order Öppna"
 E 4.15.8 "Order Stäng"
 # BaseCDamper
 E 4.16.1 "Spjäll"
+# BaseFilter
+E 4.17.1 "Filter igensatt"
+# BasePositSensor
+E 4.18.1 "Kalibrering"
 #
 # Manufacturer components
 #
