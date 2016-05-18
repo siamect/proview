@@ -1647,3 +1647,18 @@ Database	RTTSYS
 Declaration	INT
 x,y		77	0
 -------------------------------------------------------------------
+Number		305
+Text		"Print"
+Type		SET
+Parameter	SHOW_SUBSRV_PRINT
+Text/Dualpar	""
+Privileges	OP
+Outputflags	NO
+Characters	0
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		75	1
+-------------------------------------------------------------------

@@ -535,6 +535,78 @@ static int	rttsys_get_nodename( pwr_tNodeId nid, char *nodename)
 #endif
 }
 
+typedef struct {
+  int subid;
+  int count;
+  pwr_tNid nid;
+  pwr_tAttrRef aref;
+} subsrv_tData;
+
+void print_subsrv() 
+{
+  pwr_tStatus sts;
+  pool_sQlink		*sl;
+  sub_sServer	 	*ssrvp;
+  char 			nodename[80];
+  pwr_tAName	       	astr = "";
+  int			subcnt;
+  FILE			*fp;
+  subsrv_tData		*data;
+  int			i;
+  pwr_tFileName		fname = "/tmp/subsrv.txt";
+  char			msg[200];
+    
+  fp = fopen( fname, "w");
+  if ( !fp)
+    return;
+
+  fprintf( fp, "%5s %5s %8s %4s %4s %s\n", "Subid", "Count", "Node", "Size", "Offs", "Object");
+
+  gdb_ScopeLock {
+    subcnt = 0;
+    for (
+	 sl = pool_Qsucc(&sts, gdbroot->pool, &gdbroot->db->subs_lh);
+	 sl != &gdbroot->db->subs_lh;
+	 sl = pool_Qsucc(&sts, gdbroot->pool, sl)) {
+      subcnt++;
+    }
+
+    data = (subsrv_tData *)calloc( subcnt, sizeof(subsrv_tData));
+
+    subcnt = 0;
+    for (
+	 sl = pool_Qsucc(&sts, gdbroot->pool, &gdbroot->db->subs_lh);
+	 sl != &gdbroot->db->subs_lh;
+	 sl = pool_Qsucc(&sts, gdbroot->pool, sl)) {
+      ssrvp = pool_Qitem(sl, sub_sServer, subs_ll);      
+
+      data[subcnt].nid = ssrvp->nid;
+      data[subcnt].aref = ssrvp->aref;
+      data[subcnt].subid = ssrvp->sid.rix;
+      data[subcnt].count = ssrvp->count;
+      subcnt++;
+    }    
+  } gdb_ScopeUnlock;
+
+  for ( i = 0; i < subcnt; i++) {
+    rttsys_get_nodename( data[i].nid, nodename);
+
+    sts = gdh_AttrrefToName( &data[i].aref, astr, sizeof(astr), cdh_mNName);
+    if ( EVEN(sts))
+      cdh_ArefToString( astr, &data[i].aref, 1);
+
+
+    fprintf( fp, "%5d %5d %8s %4d %4d %s%s\n", 
+	     data[i].subid, data[i].count, nodename, data[i].aref.Size,
+	     data[i].aref.Offset, data[i].aref.Flags.b.Indirect ? "@" : "", astr); 
+  }
+  free( data);
+  fclose( fp);
+
+  sprintf( msg, "Subscriptions printed to %s", fname);
+  rtt_message('I', msg);
+}
+
 int RTTSYS_SHOW_SUBSRV( menu_ctx	ctx,
 			int		event,
 			char		*parameter_ptr,
@@ -623,6 +695,11 @@ int RTTSYS_SHOW_SUBSRV( menu_ctx	ctx,
       SHOW_SUBSRV_MAXPAGE = max( 1, (k - 1)/ SHOW_SUBSRV_PAGESIZE + 1);
 
       SHOW_SUBSRV_COUNTER = k;
+
+      if ( SHOW_SUBSRV_PRINT) {
+	print_subsrv();
+	SHOW_SUBSRV_PRINT = 0;
+      }
 
       return RTT__SUCCESS;
 
