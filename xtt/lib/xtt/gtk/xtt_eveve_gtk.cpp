@@ -468,6 +468,9 @@ void EvEveGtk::eve_activate_exit( GtkWidget *w, gpointer data)
 {
   EvEve *ev = (EvEve *)data;
 
+  if ( ev->options & ev_mAlaOptions_Embedded)
+    return;
+
   // ev->unmap_ala();
   // ev->eve_displayed = 0;
 

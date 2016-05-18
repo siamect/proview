@@ -491,6 +491,9 @@ void EvAlaGtk::ala_activate_exit( GtkWidget *w, gpointer data)
 {
   EvAla *ev = (EvAla *)data;
 
+  if ( ev->options & ev_mAlaOptions_Embedded)
+    return;
+
   // ev->unmap_ala();
   // ev->ala_displayed = 0;
 
