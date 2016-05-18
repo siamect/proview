@@ -113,7 +113,7 @@ class Ev {
     int			eve_size;
     int			ala_size;
     int			blk_size;
-    ev_sAlias		alias_list[20];
+    ev_sAlias		alias_list[40];
     CoWow		*wow;
     static Ev		*ev;
     pwr_tMask		pop_mask;
