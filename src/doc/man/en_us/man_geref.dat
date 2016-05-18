@@ -4033,12 +4033,21 @@ dynamics specified. The value is changed by clicking MB1 on the object.
 The signal is specified in Value.Attribute.
 
 <b>Attribute <t><t>Description
-ValueInput.MinValule  <t><t>Minimum input value.
+ValueInput.MinValue   <t><t>Minimum input value.
 ValueInput.MaxValue   <t><t>Maximum input value.
 ValueInput.Clear      <t><t>The field is cleared when opened for input.
 ValueInput.Popup      <t><t>Input is done in a popup box.
 ValueInput.Unselect   <t><t>The text in the field is not selected when the 
                       <t><t>field is opened for input.
+ValueInput.EscapeStore <t><t>Normally a value is stored into database when Enter
+                      <t><t>is pressed, but with EscapeStore, the storage is 
+                      <t><t>also done when when input focus is lost.
+                      <t><t>I will also be stored by the xtt command 'set graph /escapestore'.
+ValueInput.MinValueAttr <t><t>Signal for minimum input value.
+ValueInput.MaxValueAttr <t><t>Signal for maximum input value.
+ValueInput.KeyboardType <t><t>Type of virtual keyboard that is opened when the field 
+                      <t><t>has input focus. Requires that VirtualKeyboards is enbled for the
+                      <t><t>operator place.
 </topic>
 
 <topic>GeDynToolTip <style>function

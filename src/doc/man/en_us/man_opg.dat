@@ -1606,6 +1606,7 @@ set display<t>Set format of display for selected attribute <LINK> set display
 set folder  <t>Set a folder in a tabbed window. <LINK> set folder
 set parameter<t>Set the value of an attribute  	<LINK> set parameter
 set subwindow<t>View a graph in a Ge window object.  <LINK> set subwindow
+set graph   <t>Handling of a graph		<LINK> set graph
 setup       <t>Xtt setup			<LINK> setup
 show version<t>Show xtt version			<LINK> show version
 show symbol <t>Show a symbol			<LINK> show symbol
@@ -2517,6 +2518,19 @@ as identity.
 <B>xtt> set display integer
 <B>xtt> set display float
 <B>xtt> set display identity
+
+</TOPIC>
+
+<TOPIC> set graph <style> function
+Command   set graph
+
+Executes a storage of open inputfields with the EscapeStore property set.
+
+<B>xtt> set graph 'filename' /escapestore [/instance=]
+/escapestore <t>Executes a storage of open inputfields with the EscapeStore
+             <t>property set. 
+/instance <t>Instance specified for the graph.
+
 
 </TOPIC>
 

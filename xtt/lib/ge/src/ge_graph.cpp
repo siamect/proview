@@ -4305,25 +4305,31 @@ int Graph::set_object_focus( const char *name, int empty)
   grow_tObject object;
   GeDyn *dyn;
 
-  if ( !change_value_cb)
-    return 0;
+  if ( !name) {
+    // Remove focus
+    grow_ResetInputFocusAll( grow->ctx);
+  }
+  else {
+    // Set focus
+    if ( !change_value_cb)
+      return 0;
 
-  sts = grow_FindObjectByName( grow->ctx, name, &object);
-  if ( EVEN(sts)) return GE__OBJNOTFOUND;
+    sts = grow_FindObjectByName( grow->ctx, name, &object);
+    if ( EVEN(sts)) return GE__OBJNOTFOUND;
 
-  grow_GetUserData( object, (void **)&dyn);
-  if ( !dyn)
-    return 0;
+    grow_GetUserData( object, (void **)&dyn);
+    if ( !dyn)
+      return 0;
 
-  dyn_type1 = dyn->get_dyntype1( object);
-  action_type1 = dyn->get_actiontype1( object);
+    dyn_type1 = dyn->get_dyntype1( object);
+    action_type1 = dyn->get_actiontype1( object);
 
-  if ( !is_authorized( dyn->access))
-    return GE__NOACCESS;
+    if ( !is_authorized( dyn->access))
+      return GE__NOACCESS;
 
-  if ( action_type1 & ge_mActionType1_InputFocus || action_type1 & ge_mActionType1_ValueInput)
-    grow_SetObjectInputFocus( object, 1, glow_eEvent_Null);
-
+    if ( action_type1 & ge_mActionType1_InputFocus || action_type1 & ge_mActionType1_ValueInput)
+      grow_SetObjectInputFocus( object, 1, glow_eEvent_Null);
+  }
   return GE__SUCCESS;
 }
 

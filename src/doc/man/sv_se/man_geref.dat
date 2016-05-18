@@ -3991,6 +3991,14 @@ ValueInput.MaxValue   <t><t>Maximivärde vid inmatning
 ValueInput.Clear      <t><t>Fältet töms när det öppnas för inmatning.
 ValueInput.Popup      <t><t>Vid inmatning öppnas ett inmatningsfönster.
 ValueInput.Unselect   <t><t>Texten i fältet markeras inte när fältet öppnas för inmatning.
+ValueInput.EscapeStore <t><t>Om fältet är öppet när grafen stängs, lagras det imatade
+                      <t><t>värdet i databasen. Det lagras även av xtt kommandot
+                      <t><t>'set graph /escapestore'.
+ValueInput.MinValueAttr <t><t>Signal för minivärde vid inmatning.
+ValueInput.MaxValueAttr <t><t>Signal för maxivärde vid inmatning.
+ValueInput.KeyboardType <t><t>Typ av virtuellt tangentbord som öppnas när fältet har 
+                      <t><t>input focus. Kräver att VirtualKeyboard är angivet för
+                      <t><t>operatörsplatsen.
 </topic>
 
 <topic>GeDynToolTip <style>function

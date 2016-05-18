@@ -369,7 +369,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			&xnav_set_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/VALUE",
 			  "/BYPASS", "/PUBLICWRITE", "/INDEX", "/SOURCE", "/OBJECT", "/CONTINUE", 
-			  "/X0", "/Y0", "/X1", "/Y1", ""}
+			  "/X0", "/Y0", "/X1", "/Y1", "/INSTANCE", "/ESCAPESTORE", ""}
 		},
 		{
 			"SETUP",
@@ -1193,6 +1193,35 @@ static int	xnav_set_func(	void		*client_data,
     }
     if ( xnav->op)
       xnav->op->set_color_theme( idx);
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "GRAPH", strlen( arg1_str)) == 0)
+  {    
+    // Command is "SET GRAPH"
+    pwr_tAName instance_str;
+    char *instance_p = 0;
+    char name_str[200];
+    XttGe *gectx;
+    
+    if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str))))
+      instance_p = instance_str;
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
+      xnav->message('E', "Syntax error");
+      return XNAV__SUCCESS;      
+    }
+    if ( !xnav->appl.find( applist_eType_Graph, name_str, instance_p, 
+			   (void **) &gectx)) {
+      xnav->message('E', "Graph not found");
+      return XNAV__SUCCESS;      
+    }
+
+    if ( ODD( dcli_get_qualifier( "/ESCAPESTORE", 0, 0))) {
+      gectx->set_object_focus( 0, 0);
+    }
+    else {
+      xnav->message('E', "Syntax error");
+      return XNAV__SUCCESS;      
+    }
   }
   else
     xnav->message('E',"Syntax error");
