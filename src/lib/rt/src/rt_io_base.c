@@ -2957,7 +2957,7 @@ static pwr_tStatus io_init_agent(
 	    sts = gdh_NameToObjid( io_name, &io_oid);
 	    if ( ODD(sts)) {
 	      sts = gdh_GetObjectClass( io_oid, &io_cid);
-	      if ( ODD(sts) && io_cid == pwr_eClass_NodeHier) {
+	      if ( ODD(sts) && (io_cid == pwr_eClass_NodeHier || io_cid == pwr_eClass_PlantHier)) {
 		sts = io_trv_child( io_oid, 0, io_init_rack, ctx, ap, agent_type, iocomm_swap);
 	      }
 	    }
