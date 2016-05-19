@@ -192,11 +192,11 @@ static void xnav_fast_close_cb( void *ctx, XttFast *fast);
 static void xnav_fast_help_cb( void *ctx, const char *key);
 static void xnav_xao_close_cb( void *ctx, XAttOne *xao);
 static void xnav_clog_close_cb( void *ctx);
-static void xnav_open_shist_cb( void *ctx, char *text);
+static void xnav_open_shist_cb( void *ctx, char *text, int ok_pressed);
 static void xnav_open_shist_cancel_cb( void *ctx);
-static void xnav_show_objectlist_cb( void *ctx, char *text);
+static void xnav_show_objectlist_cb( void *ctx, char *text, int ok_pressed);
 static void xnav_show_objectlist_cancel_cb( void *ctx);
-static void xnav_colortheme_selector_ok_cb( void *ctx, char *text);
+static void xnav_colortheme_selector_ok_cb( void *ctx, char *text, int ok_pressed);
 static void xnav_keyboard_key_pressed_cb( void *, int);
 static void xnav_keyboard_close_cb( void *);
 static int xnav_replace_node_str( char *out, char *object_str);
@@ -2666,8 +2666,8 @@ static int	xnav_show_func(	void		*client_data,
     ctx->cid = cid[0];
     ctx->xnav = xnav;
 
-    xnav->wow->CreateList( title_str, (char *)names, sizeof(names[0]), xnav_show_objectlist_cb, 
-			   xnav_show_objectlist_cancel_cb, ctx);
+    xnav->wow->CreateList( title_str, (char *)names, sizeof(names[0]), xnav_show_objectlist_cb, 	
+		   xnav_show_objectlist_cancel_cb, ctx);
     free( names);
   }
   else
@@ -4291,8 +4291,8 @@ static int	xnav_open_func(	void		*client_data,
     ctx = (xnav_sHistList *) calloc( 1, sizeof(xnav_sHistList));
     ctx->oid = oid;
     ctx->xnav = xnav;
-    xnav->wow->CreateList( "History List", (char *)cname, sizeof(cname[0]), xnav_open_shist_cb, 
-			   xnav_open_shist_cancel_cb, ctx);
+    xnav->wow->CreateList( "History List", (char *)cname, sizeof(cname[0]), xnav_open_shist_cb, 	
+		   xnav_open_shist_cancel_cb, ctx);
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "TCURVE", strlen( arg1_str)) == 0)
   {
@@ -6197,7 +6197,7 @@ static int	xnav_delete_func( void		*client_data,
   return XNAV__SUCCESS;	
 }
 
-static void xnav_collect_open_cb( void *ctx, char *text)
+static void xnav_collect_open_cb( void *ctx, char *text, int ok_pressed)
 {
   XNav *xnav = (XNav *)ctx;
   pwr_tCmd cmd;
@@ -6355,7 +6355,7 @@ static int	xnav_collect_func(	void		*client_data,
     }
     else
       xnav->wow->CreateFileList( "Open Collection", "$pwrp_load", "*", "rtt_col",
-				     xnav_collect_open_cb, 0, xnav, 1);
+				 xnav_collect_open_cb, 0, xnav, 1);
 
     return XNAV__SUCCESS;
   }
@@ -10101,7 +10101,7 @@ void XNav::print_methods()
   }
 }
 
-static void xnav_open_shist_cb( void *ctx, char *text)
+static void xnav_open_shist_cb( void *ctx, char *text, int ok_pressed)
 {
   pwr_tOName oname;
   pwr_tOid coid;
@@ -10129,7 +10129,7 @@ static void xnav_open_shist_cancel_cb( void *ctx)
   free( ctx);
 }
 
-static void xnav_colortheme_selector_ok_cb( void *ctx, char *text)
+static void xnav_colortheme_selector_ok_cb( void *ctx, char *text, int ok_pressed)
 {
   XNav *xnav = (XNav *)ctx;
   gdh_sValueDef *vd;
@@ -10179,7 +10179,7 @@ static void xnav_colortheme_selector_ok_cb( void *ctx, char *text)
   free( vd);
 }
 
-static void xnav_show_objectlist_cb( void *ctx, char *text)
+static void xnav_show_objectlist_cb( void *ctx, char *text, int ok_pressed)
 {
   XNav *xnav = ((xnav_sObjectList *)ctx)->xnav;
   pwr_tCid cid = ((xnav_sObjectList *)ctx)->cid;

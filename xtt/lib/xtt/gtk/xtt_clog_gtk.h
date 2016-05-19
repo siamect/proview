@@ -91,7 +91,7 @@ class CLogGtk : public CLog {
     static void filter_ok_cb( GtkWidget*w, gpointer data);
     static void filter_apply_cb( GtkWidget*w, gpointer data);
     static void filter_cancel_cb( GtkWidget*w, gpointer data);
-    static void file_selected_cb( void *ctx, char *text);
+    static void file_selected_cb( void *ctx, char *text, int ok_pressed);
     
 };
 

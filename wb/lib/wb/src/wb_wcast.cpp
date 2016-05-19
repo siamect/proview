@@ -126,7 +126,7 @@ void WCast::get_subcid( pwr_tCid cid)
   }
 }
 
-void WCast::selected_cb( void *ctx, char *text)
+void WCast::selected_cb( void *ctx, char *text, int ok_pressed)
 {
   WCast *wcast = (WCast *)ctx;
   pwr_tStatus sts;

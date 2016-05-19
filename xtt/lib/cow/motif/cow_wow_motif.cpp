@@ -264,7 +264,7 @@ void CoWowMotif::list_ok_cb( Widget w, XtPointer data,
   if ( ctx->action_cb) {
     if (XmListGetSelectedPos( ctx->list, &pos_list, &pos_cnt)) {
       strcpy( selected_text, ctx->texts + (pos_list[0] - 1) * ctx->textsize);
-      (ctx->action_cb)( ctx->parent_ctx, selected_text);
+      (ctx->action_cb)( ctx->parent_ctx, selected_text, 1);
 
       XtFree( (char *)pos_list);
     }
@@ -313,7 +313,7 @@ void CoWowMotif::list_action_cb( Widget w, XtPointer data,
 }
 
 void *CoWowMotif::CreateList( const char *title, const char *texts, int textsize,
-			      void (action_cb)( void *, char *),
+			      void (action_cb)( void *, char *, int),
 			      void (cancel_cb)( void *),
 			      void *parent_ctx,
 			      int show_apply_button)
@@ -335,6 +335,7 @@ void *CoWowMotif::CreateList( const char *title, const char *texts, int textsize
   ctx->action_cb = action_cb;
   ctx->cancel_cb = cancel_cb;
   ctx->parent_ctx = parent_ctx;
+  ctx->ok_pressed = 1;
   
   i=0;
   XtSetArg( args[i], XmNiconName, title); i++;

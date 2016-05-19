@@ -433,13 +433,16 @@ void CoWowGtk::DisplayText( const char *title, const char *text, int width, int 
 
 class WowListCtx {
  public:
+  WowListCtx() : 
+    texts(0), textsize(0),ok_pressed(0) {}
   GtkWidget    *toplevel;
   GtkWidget    *list;
   char      *texts;
   int	    textsize;
-  void      (* action_cb) ( void *, char *);
+  void      (* action_cb) ( void *, char *, int);
   void      (* cancel_cb) ( void *);
   void      *parent_ctx;
+  int	    ok_pressed;
 };
 
 void CoWowGtk::list_row_activated_cb( GtkTreeView *tree_view, 
@@ -475,7 +478,7 @@ void CoWowGtk::list_apply_cb (
     strcpy( selected_text, textiso);
     g_free( textiso);
 
-    (ctx->action_cb)( ctx->parent_ctx, selected_text);
+    (ctx->action_cb)( ctx->parent_ctx, selected_text, ctx->ok_pressed);
   }
 
 }
@@ -487,6 +490,7 @@ void CoWowGtk::list_ok_cb (
 {
   WowListCtx *ctx = (WowListCtx *) data;
 
+  ctx->ok_pressed = 1;
   list_apply_cb( w, data);
 
   gtk_widget_destroy( ctx->toplevel);
@@ -521,11 +525,27 @@ static gboolean list_delete_event( GtkWidget *w, GdkEvent *event, gpointer data)
   return TRUE;
 }
 
+void CoWowGtk::PopList ( void *data)
+{
+  WowListCtx *ctx = (WowListCtx *) data;
+  
+  gtk_window_present( GTK_WINDOW(ctx->toplevel));
+}
+
+void CoWowGtk::DeleteList ( void *data)
+{
+  WowListCtx *ctx = (WowListCtx *) data;
+  
+  gtk_widget_destroy( ctx->toplevel);
+  free( ctx->texts);
+  delete ctx;  
+}
+
 void *CoWowGtk::CreateList (
   const char	    *title,
   const char      *texts,
   int		textsize,
-  void	    (action_cb)( void *, char *),
+  void	    (action_cb)( void *, char *, int),
   void	    (cancel_cb)( void *),
   void	    *parent_ctx,
   int	    show_apply_button

@@ -78,7 +78,7 @@ class WCast {
 
     ~WCast();
 
-    static void selected_cb( void *ctx, char *text);
+    static void selected_cb( void *ctx, char *text, int ok_pressed);
 };
 
 #endif

@@ -118,6 +118,7 @@ class Ge {
   int		subpalette_mapped;
   unsigned int	options;
   CoWow		*wow;
+  void		*open_dialog;
 
   Ge( void *parent_ctx,
       ldh_tSesContext ldhses, int exit_when_close, unsigned int x_options);
@@ -140,8 +141,9 @@ class Ge {
   virtual void subgraphs_new() {}
   virtual void update() {}
   virtual int get_plant_select( char *name, int size) { return 0;}
-  virtual void create_list( const char *title, const char *texts,
-			    void (action_cb)( void *, char *), void *ctx) {}
+  virtual void *create_list( const char *title, const char *texts,
+			     void (action_cb)( void *, char *, int), 
+			     void (cancel_cb)( void *), void *ctx) {return 0;}
   virtual int create_modal_dialog( const char *title, const char *text, const char *button1, 
 				   const char *button2, const char *button3,
 				   const char *image) { return 0;}
@@ -320,7 +322,8 @@ class Ge {
   static void subgraphs_close_cb( SubGraphs *subgraphs);
   static void status_msg( void *ge_ctx, double x, double y);
   static int command_cb( void *ge_ctx, char *command, char *script);
-  static void open_list_cb( void *ctx, char *text);
+  static void open_list_cb( void *ctx, char *text, int ok_pressed);
+  static void open_cancel_cb( void *ctx);
   static int sort_files( const void *file1, const void *file2);
 
   static int colorpalette_cb( GlowCtx *ctx, glow_tEvent event);

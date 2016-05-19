@@ -500,7 +500,7 @@ void XttTCurve::tcurve_save_cb( void *ctx)
 					 tcurve_file_selected_cb, 0, 40, tcurve->title, 0);
 }
 
-void XttTCurve::tcurve_open_file_cb( void *ctx, char *text)
+void XttTCurve::tcurve_open_file_cb( void *ctx, char *text, int ok_pressed)
 {
   XttTCurve *tcurve = (XttTCurve *)ctx;
 

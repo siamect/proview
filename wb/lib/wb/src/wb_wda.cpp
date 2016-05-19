@@ -125,7 +125,7 @@ void Wda::import_textfile()
 		       import_file_cb, 0, this, 1);
 }
 
-void Wda::import_file_cb( void *ctx, char *text)
+void Wda::import_file_cb( void *ctx, char *text, int ok_pressed)
 {
   pwr_tFileName filename;
   Wda *wda = (Wda *)ctx;
@@ -358,7 +358,7 @@ int Wda::prev_attr()
   return WDA__NOPREVATTR;
 }
 
-void Wda::set_attr_cb( void *ctx, char *text)
+void Wda::set_attr_cb( void *ctx, char *text, int ok_pressed)
 {
   Wda *wda = (Wda *)ctx;
   int sts;

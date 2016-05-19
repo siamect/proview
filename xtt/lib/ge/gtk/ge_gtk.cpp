@@ -123,11 +123,12 @@ int GeGtk::create_modal_dialog( const char *title, const char *text, const char 
   return wow->CreateModalDialog( title, text, button1, button2, button3, image);
 }
 
-void GeGtk::create_list( const char *title, const char *texts,
-			   void (action_cb)( void *, char *), void *ctx) 
+void *GeGtk::create_list( const char *title, const char *texts,
+			  void (action_cb)( void *, char *, int), 
+			  void (cancel_cb)( void *), void *ctx) 
 {
   CoWowGtk wow( toplevel);
-  wow.CreateList( title, texts, 80, action_cb, 0, ctx, 1);
+  return wow.CreateList( title, texts, 80, action_cb, cancel_cb, ctx, 1);
 }
 
 void GeGtk::subgraphs_new()
@@ -1591,6 +1592,8 @@ gboolean GeGtk::ge_action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer da
 
 GeGtk::~GeGtk()
 {
+  if ( open_dialog)
+    wow->DeleteList( open_dialog);
   if ( subgraphs)
     delete subgraphs;
   delete recall_entry;

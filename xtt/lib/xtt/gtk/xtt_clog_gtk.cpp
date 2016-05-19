@@ -338,7 +338,7 @@ void CLogGtk::activate_select_file( GtkWidget *w, gpointer data)
   free( str);
 }
 
-void CLogGtk::file_selected_cb( void *ctx, char *text)
+void CLogGtk::file_selected_cb( void *ctx, char *text, int ok_pressed)
 {
   CLog *clog = (CLog *)ctx;
   int idx = -1;

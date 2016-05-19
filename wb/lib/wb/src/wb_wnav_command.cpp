@@ -5720,7 +5720,7 @@ static int	wnav_backup_func(	void		*client_data,
   return 1;
 }
 
-static void wnav_clone_volume_cb( void *ctx, char *text)
+static void wnav_clone_volume_cb( void *ctx, char *text, int ok_pressed)
 {
   WNav *wnav = (WNav *)ctx;
   pwr_tObjName vname;

@@ -67,7 +67,7 @@ void *CoWow::CreateFileList(
   const char *dir,
   const char *pattern,
   const char *type,
-  void	    (action_cb)( void *, char *),
+  void	    (action_cb)( void *, char *, int),
   void	    (cancel_cb)( void *),
   void	    *ctx,
   int	    show_apply_button

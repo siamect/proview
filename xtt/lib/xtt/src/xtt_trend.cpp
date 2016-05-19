@@ -542,7 +542,7 @@ public:
   vector<AttrList> v;
 };
   
-static void add_objectlist_cb( void *ctx, char *text)
+static void add_objectlist_cb( void *ctx, char *text, int ok_pressed)
 {
   printf( "%s\n", text);
 

@@ -50,7 +50,7 @@ typedef struct {
   Widget    list;
   char      *texts;
   int	    textsize;
-  void      (* action_cb) ( void *, char *);
+  void      (* action_cb) ( void *, char *, int);
   void      (* cancel_cb) ( void *);
   void      *parent_ctx;
 } *wow_tListCtx;
@@ -111,7 +111,7 @@ class CoWowMotif : public CoWow {
   void DisplayError( const char *title, const char *text);
   void DisplayText( const char *title, const char *text) {}
   void *CreateList( const char *title, const char *texts, int textsize,
-		    void (action_cb)( void *, char *),
+		    void (action_cb)( void *, char *, int),
 		    void (cancel_cb)( void *),
 		    void *ctx,
 		    int show_apply_button = 0);

@@ -1517,9 +1517,16 @@ void Ge::activate_graph_attr()
     graph->edit_subgraph_attributes();
 }
 
-void Ge::open_list_cb( void *ctx, char *text)
+void Ge::open_list_cb( void *ctx, char *text, int ok_pressed)
 {
   ((Ge *)ctx)->open_graph( text);
+  if ( ok_pressed)
+    ((Ge *)ctx)->open_dialog = 0;    
+}
+
+void Ge::open_cancel_cb( void *ctx)
+{
+  ((Ge *)ctx)->open_dialog = 0;
 }
 
 int Ge::sort_files( const void *file1, const void *file2)
@@ -1542,6 +1549,11 @@ void Ge::activate_open()
   char file[80];
   char type[80];
   int version;
+
+  if ( open_dialog) {
+    wow->PopList( open_dialog);
+    return;
+  }
 
   // Get the pwg files and order them
   dcli_translate_filename( fname, "$pwrp_pop/*.pwg");
@@ -1586,8 +1598,8 @@ void Ge::activate_open()
     
   qsort( file_p, file_cnt, sizeof(*file_p), Ge::sort_files);
 
-  create_list( "Open Graph", 
-	       (char *)file_p, Ge::open_list_cb, (void *)this);
+  open_dialog = create_list( "Open Graph", 
+			     (char *)file_p, Ge::open_list_cb, Ge::open_cancel_cb, (void *)this);
 
   free( file_p);
 
@@ -1618,7 +1630,7 @@ static tThemes themes[] = {
   {"Polar", 14},
   {"Custom", 100}};
 
-static void ge_colortheme_selector_ok_cb( void *ctx, char *text)
+static void ge_colortheme_selector_ok_cb( void *ctx, char *text, int ok_pressed)
 {
   Ge *gectx = (Ge *)ctx;
   int idx = -1;
@@ -2258,6 +2270,7 @@ void Ge::help_cb( void *ctx, char *topic, char *helpfile)
 
 Ge::~Ge()
 {
+
 #ifdef LDH
   if ( ldhses)
     ldh_CloseSession( ldhses);
@@ -2274,7 +2287,8 @@ Ge::Ge( 	void 	*x_parent_ctx,
   yesnodia_yes_cb(0), yesnodia_no_cb(0), india_ok_cb(0), current_text_object(0),
   current_value_object(0), current_confirm_object(0), ldhses(0), plantctx(0),
   exit_when_close(x_exit_when_close), prev_count(0), focused_component(0),
-  recover_object(0), plant_mapped(0), subpalette_mapped(0), options(x_options)
+  recover_object(0), plant_mapped(0), subpalette_mapped(0), options(x_options),
+  open_dialog(0)
 {
   strcpy( name, "PwR Ge");
 

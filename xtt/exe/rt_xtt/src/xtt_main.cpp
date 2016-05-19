@@ -864,7 +864,7 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
 
 }
 
-void Xtt::opplace_selected_cb( void *ctx, char *text)
+void Xtt::opplace_selected_cb( void *ctx, char *text, int ok_pressed)
 {
   Xtt *xtt = (Xtt *)ctx;
   pwr_tCmd cmd;

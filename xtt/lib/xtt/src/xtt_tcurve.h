@@ -151,7 +151,7 @@ class XttTCurve {
 				int rows, int idx, char *filename);
   static void tcurve_help_cb( void *ctx);
   static void tcurve_file_selected_cb( void *ctx, void *data, char *text);
-  static void tcurve_open_file_cb( void *ctx, char *text);
+  static void tcurve_open_file_cb( void *ctx, char *text, int ok_pressed);
   static void tcurve_scan( void *data);
 
 };

@@ -91,11 +91,12 @@
 #include "wb_wnav_selformat.h"
 #include "wb_nav_motif.h"
 
-void GeMotif::create_list( const char *title, const char *texts,
-			   void (action_cb)( void *, char *), void *ctx) 
+void *GeMotif::create_list( const char *title, const char *texts,
+			    void (action_cb)( void *, char *, int), 
+			    void (cancel_cb)( void *), void *ctx) 
 {
   CoWowMotif wow( toplevel);
-  wow.CreateList( title, texts, 80, action_cb, 0, ctx);
+  return wow.CreateList( title, texts, 80, action_cb, cancel_cb, ctx);
 }
 
 void GeMotif::subgraphs_new()

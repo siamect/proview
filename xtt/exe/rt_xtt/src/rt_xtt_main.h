@@ -96,7 +96,7 @@ class Xtt {
     virtual void print() {}
 
     void list_opplace();
-    static void opplace_selected_cb( void *ctx, char *text);
+    static void opplace_selected_cb( void *ctx, char *text, int ok_pressed);
 
     void hotkey_activate_command( char *cmdp);
     static void hotkey_activate_toggledig( char *namep);

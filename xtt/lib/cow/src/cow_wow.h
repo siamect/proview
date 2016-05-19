@@ -127,10 +127,12 @@ class CoWow {
 				  char *init_text,
 				  void *data) {}
   virtual void *CreateList( const char *title, const char *texts, int textsize,
-			    void (action_cb)( void *, char *),
+			    void (action_cb)( void *, char *, int),
 			    void (cancel_cb)( void *),
 			    void *ctx, 
 			    int show_apply_button = 0) { return NULL;}
+  virtual void PopList( void *ctx) {};
+  virtual void DeleteList( void *ctx) {};
   virtual void CreateFileSelDia( const char *title, void *parent_ctx,
 				 void (*file_selected_cb)(void *, char *, wow_eFileSelType),
 				 wow_eFileSelType file_type) {}
@@ -149,7 +151,7 @@ class CoWow {
 			const char *dir,
 			const char *pattern,
 			const char *type,
-			void	    (action_cb)( void *, char *),
+			void	    (action_cb)( void *, char *, int),
 			void	    (cancel_cb)( void *),
 			void	    *ctx,
 			int	    show_apply_button = 0);
