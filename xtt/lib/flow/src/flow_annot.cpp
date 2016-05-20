@@ -77,6 +77,7 @@ void FlowAnnot::print( void *pos, void *node, int highlight)
 		(text_size +4) - 4);
   double size = 8.0 + 6.0/3*idx;
   double x;
+  double print_zoom_factor = 312;
 
   if ( size <= 0)
     return;
@@ -162,24 +163,25 @@ void FlowAnnot::print( void *pos, void *node, int highlight)
 	      switch ( ctx->current_print->type()) {
 	      case print_eType_Pdf: {
 		ctx->fdraw->get_text_extent( ctx, "Ag", 2, flow_eDrawType_TextHelveticaBold, h1_size, &z_width, &z_height,
-					     ctx->print_zoom_factor / ctx->base_zoom_factor * (12+2*h1_size));
-		float k = - 2.5 * ctx->print_zoom_factor / ctx->base_zoom_factor + 2.62;
-		z_height *= k;
+					     print_zoom_factor / ctx->base_zoom_factor * (12+2*h1_size));
+		float k = - 2.5 * print_zoom_factor / ctx->base_zoom_factor + 2.62;
+		z_height *= k * ctx->print_zoom_factor / print_zoom_factor;
+		size = 0.85 * z_height;
 		break;
 	      }
 	      default:
 		ctx->fdraw->get_text_extent( ctx, "Ag", 2, flow_eDrawType_TextHelveticaBold, 
 					     h1_size, &z_width, &z_height,
 					     ctx->print_zoom_factor / ctx->base_zoom_factor * (12+2*h1_size));
+		float k = - 2.5 * ctx->print_zoom_factor / ctx->base_zoom_factor + 2.62;
+		z_height *= k;
+		size = 8.0 + 48.0/3*idx;
 	      }
 
-	      float k = - 2.5 * ctx->print_zoom_factor / ctx->base_zoom_factor + 2.62;
-	      z_height *= k;
 	      if ( line_cnt > 0)
 		y_offs += z_height;
 	      else
 		y_offs += z_height/3;
-	      size = 8.0 + 48.0/3*idx;
 	      ctx->current_print->text( z_x, z_y + y_offs, &line[4], 
 					len-4, flow_eDrawType_TextHelveticaBold, size, line_cnt);
 	    }
@@ -188,24 +190,25 @@ void FlowAnnot::print( void *pos, void *node, int highlight)
 	      switch ( ctx->current_print->type()) {
 	      case print_eType_Pdf: {
 		ctx->fdraw->get_text_extent( ctx, "Ag", 2, flow_eDrawType_TextHelveticaBold, h2_size, &z_width, &z_height,
-					     ctx->print_zoom_factor / ctx->base_zoom_factor * (12+2*h2_size));
-		float k = - 2.5 * ctx->print_zoom_factor / ctx->base_zoom_factor + 2.62;
+					     print_zoom_factor / ctx->base_zoom_factor * (12+2*h2_size));
+		float k = (- 2.5 * print_zoom_factor / ctx->base_zoom_factor + 2.62) * ctx->print_zoom_factor / print_zoom_factor;
 		z_height *= k;
+		size = 0.85 * z_height;
 		break;
 	      }
 	      default:
 		ctx->fdraw->get_text_extent( ctx, "Ag", 2, flow_eDrawType_TextHelveticaBold, 
 					     h2_size, &z_width, &z_height,
 					     ctx->print_zoom_factor / ctx->base_zoom_factor * (12+2*h2_size));
+		float k = - 2.5 * ctx->print_zoom_factor / ctx->base_zoom_factor + 2.62;
+		z_height *= k;
+		size = 8.0 + 20.0/3*idx;
 	      }
 
-	      float k = - 2.5 * ctx->print_zoom_factor / ctx->base_zoom_factor + 2.62;
-	      z_height *= k;
 	      if ( line_cnt > 0)
 		y_offs += z_height;
 	      else
 		y_offs += z_height/3;
-	      size = 8.0 + 20.0/3*idx;
 	      ctx->current_print->text( z_x, z_y + y_offs, &line[4], 
 					len-4, flow_eDrawType_TextHelveticaBold, size, line_cnt);
 	    }
@@ -213,24 +216,25 @@ void FlowAnnot::print( void *pos, void *node, int highlight)
 	      switch ( ctx->current_print->type()) {
 	      case print_eType_Pdf: {
 		ctx->fdraw->get_text_extent( ctx, "Ag", 2, flow_eDrawType_TextHelveticaBold, text_size, &z_width, &z_height,
-					     ctx->print_zoom_factor / ctx->base_zoom_factor * (12+2*text_size));
-		float k = - 2.5 * ctx->print_zoom_factor / ctx->base_zoom_factor + 2.62;
-		z_height *= k;
+					     print_zoom_factor / ctx->base_zoom_factor * (12+2*text_size));
+		float k = - 2.5 * print_zoom_factor / ctx->base_zoom_factor + 2.62;
+		z_height *= k * ctx->print_zoom_factor / print_zoom_factor;
+		size = 0.85 * z_height;
 		break;
 	      }
 	      default:
 		ctx->fdraw->get_text_extent( ctx, "Ag", 2, flow_eDrawType_TextHelveticaBold, 
 					     text_size, &z_width, &z_height,
 					     ctx->print_zoom_factor / ctx->base_zoom_factor * (12+2*text_size));
+		float k = - 2.5 * ctx->print_zoom_factor / ctx->base_zoom_factor + 2.62;
+		z_height *= k;
+		size = 8.0 + 6.0/3*idx;
 	      }
 
-	      float k = - 2.5 * ctx->print_zoom_factor / ctx->base_zoom_factor + 2.62;
-	      z_height *= k;
 	      if ( line_cnt > 0)
 		y_offs += z_height;
 	      else
 		y_offs += z_height/3;
-	      size = 8.0 + 6.0/3*idx;
 	      ctx->current_print->text( z_x, z_y + y_offs, &line[3], 
 					len-3, flow_eDrawType_TextHelveticaBold, size, line_cnt);
 
@@ -253,9 +257,9 @@ void FlowAnnot::print( void *pos, void *node, int highlight)
 	      switch ( ctx->current_print->type()) {
 	      case print_eType_Pdf: {
 		ctx->fdraw->get_text_extent( ctx, "Ag", 2, flow_eDrawType_TextHelvetica, text_size, &z_width, &z_height,
-					     ctx->print_zoom_factor / ctx->base_zoom_factor * (12+2*text_size));
-		float k = - 2.5 * ctx->print_zoom_factor / ctx->base_zoom_factor + 2.62;
-		z_height *= k;
+					     print_zoom_factor / ctx->base_zoom_factor * (12+2*text_size));
+		float k = - 2.5 * print_zoom_factor / ctx->base_zoom_factor + 2.62;
+		z_height *= k * ctx->print_zoom_factor / print_zoom_factor;
 		break;
 	      }
 	      default:
