@@ -73,6 +73,7 @@ function int print_channels( int fp, string chanclass, string sigclass)
       signal = "-";
       sdescr = "-";
     else      
+      signal = signals[i];
       attr = signals[i] + ".Description";
       sdescr = GetAttribute( attr);
     endif
@@ -81,7 +82,7 @@ function int print_channels( int fp, string chanclass, string sigclass)
     cdescr = GetAttribute( attr);
 
     # Write to temporary file
-    fprintf( fp, "%s;%s;\"%s\";\"%s\"\n", channel, signals[i], sdescr, cdescr);
+    fprintf( fp, "%s;%s;\"%s\";\"%s\"\n", channel, signal, sdescr, cdescr);
 
     channel = GetNextAttrRef( chanclass, channel);
   endwhile
@@ -142,6 +143,6 @@ main()
   MessageInfo( msg);
   
 
-  delete signals[1000];
-  delete sigchancons[1000];
+  delete signals[4000];
+  delete sigchancons[4000];
 endmain
