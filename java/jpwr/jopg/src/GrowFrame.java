@@ -400,7 +400,6 @@ public class GrowFrame extends JFrame implements GraphApplIfc, ActionListener {
     }
 
     public int script(String script) {
-	System.out.println("Ge script : " + script);
 	if ( appl != null)
  	    return appl.script(script);
 	return 0;

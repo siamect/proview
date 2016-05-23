@@ -196,6 +196,7 @@
     ge_eDynPrio_ScrollingText,
     ge_eDynPrio_ColorThemeLightness,
     ge_eDynPrio_DigSwap,
+    ge_eDynPrio_DigScript,
 
     // This should always be last
     ge_eDynPrio_Script  = 9998,
@@ -249,7 +250,8 @@
     ge_mDynType2_ScrollingText 	= 1 << 4,
     ge_mDynType2_ColorThemeLightness = 1 << 5,
     ge_mDynType2_DigBackgroundColor = 1 << 6,
-    ge_mDynType2_DigSwap       	= 1 << 7
+    ge_mDynType2_DigSwap       	= 1 << 7,
+    ge_mDynType2_DigScript     	= 1 << 8
   } ge_mDynType2;
 
   //! Action types.
@@ -366,6 +368,7 @@
     ge_eSave_ColorThemeLightness       	= 43,
     ge_eSave_DigBackgroundColor       	= 44,
     ge_eSave_DigSwap		       	= 45,
+    ge_eSave_DigScript		       	= 46,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -546,6 +549,7 @@
     ge_eSave_DigCommand_command      	= 3501,
     ge_eSave_DigCommand_instance        = 3502,
     ge_eSave_DigCommand_instance_mask 	= 3503,
+    ge_eSave_DigCommand_level	 	= 3504,
     ge_eSave_Pie_attribute1      	= 3600,
     ge_eSave_Pie_attribute2      	= 3601,
     ge_eSave_Pie_attribute3      	= 3602,
@@ -592,6 +596,10 @@
     ge_eSave_DigBackgroundColor_instance_mask = 4403,
     ge_eSave_DigSwap_attribute 		= 4500,
     ge_eSave_DigSwap_reset_value       	= 4501,
+    ge_eSave_DigScript_attribute      	= 4600,
+    ge_eSave_DigScript_script      	= 4601,
+    ge_eSave_DigScript_script_len      	= 4602,
+    ge_eSave_DigScript_level      	= 4603,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -2673,6 +2681,7 @@ class GeDigCommand : public GeDynElem {
  public:
   pwr_tAName attribute;		//!< Database reference for digital attribute.
   char       command[400];	//!< Command to execute.
+  int 	     level;
 
   pwr_tBoolean *p;
   pwr_tSubid subid;
@@ -2685,11 +2694,48 @@ class GeDigCommand : public GeDynElem {
   unsigned int bitmask;  
 
   GeDigCommand( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
-    GeDynElem(e_dyn, ge_mDynType1_DigCommand, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigCommand)
+    GeDynElem(e_dyn, ge_mDynType1_DigCommand, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigCommand), level(0)
     { strcpy( attribute, ""); strcpy( command, ""); instance = e_instance;}
   GeDigCommand( const GeDigCommand& x) : 
-    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio)
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), level(x.level)
     { strcpy( attribute, x.attribute); strcpy( command, x.command);
+    instance = x.instance; instance_mask = x.instance_mask;}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
+  void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+};
+
+//! Execute the supplied command when the value gets high.
+class GeDigScript : public GeDynElem {
+ public:
+  pwr_tAName attribute;		//!< Database reference for digital attribute.
+  char script[2048];
+  int script_len;
+  int level;
+
+  pwr_tBoolean *p;
+  pwr_tSubid subid;
+  int size;
+  graph_eDatabase db;
+  int inverted;
+  bool first_scan;
+  pwr_tBoolean old_value;
+  int a_typeid;
+  unsigned int bitmask;  
+
+  GeDigScript( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
+    GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_DigScript, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DigScript), script_len(0), level(0)
+    { strcpy( attribute, ""); strcpy( script, ""); instance = e_instance;}
+  GeDigScript( const GeDigScript& x) : 
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), script_len(x.script_len),
+    level(x.level)
+    { strcpy( attribute, x.attribute); strcpy( script, x.script);
     instance = x.instance; instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);

@@ -3211,7 +3211,8 @@ AnalogShift <t>Float32 Int32 <t>Skiftar mellan olika sidor i subgrafen. Värdet <
 Animation <t>Boolean    <t>Olika typer av animering. <link>GeDynAnimation
 Video     <t>-          <t>Kontinuerlig uppdatering av en blidfil. <link>GeDynVideo
 SliderBackground <t>-   <t>Markerar att subgrafen är bakgrund till en slider-komponent. <link>GeDynSliderBackground
-DigCommand <t>Boolean   <t>Exekverar ett kommando när signalet blir hög. <link>GeDynDigCommand
+DigCommand <t>Boolean   <t>Exekverar ett kommando när signalen blir hög. <link>GeDynDigCommand
+DigScript <t>Boolean   <t>Exekverar ett script när signalen blir hög. <link>GeDynDigScript
 ScrollingText <t>Boolean   <t>Visar en rullande text. <link>GeDynScrollingText
 
 <h2>Inherit
@@ -3739,19 +3740,36 @@ Video har inga attribut.
 
 <topic>GeDynDigCommand <style>function
 DigCommand
-Exekvera ett kommando när signalen går från låg till hög.
+Exekvera ett kommando när signalen går från låg till hög, eller när signalen är hög.
 
-Objektet kopplas till en digital signal i rtdb. När signalvärdet ändras från 0 till 1 
-exekveras kommandot.
+Objektet kopplas till en digital signal i rtdb. Kommandot exekveras antingen när 
+signalvärdet ändras från 0 till 1, eller cykliskt när signalvärdet är högt.
 
 DigCommand kan finnas i flera instanser, vilket gör det möjlit att exekvera flera kommandon.
 
 <b>Attribute <t><t>Description
 DigCommand.Attribute <t><t>Signal i databasen av typ boolean som ska påverka komponenten.
+DigCommand.Level  <t><t>Om Level är 0, exekveras kommandot när signalen ändras från 0 till 1.
+                  <t><t>Om level är 1, exekveras kommandot cykliskt när signalen är hög.
 DigCommand.Command <t><t>Xtt kommando som exekveras när signalen går från 0 till 1.
 DigCommand.Instance <t><t>Anger vilka instanser som ska skapas.
 DigCommand2.Attribute <t><t>Signal för instans nr 2.
+DigCommand2.Level <t><t>Level for instans nr 2.
 DigCommand2.Command <t><t>Kommando för instans nr 2.
+</topic>
+
+<topic>GeDynDigScript <style>function
+DigScript
+Exekvera ett script när signalen går från låg till hög, eller när signalen är hög.
+
+Objektet kopplas till en digital signal i rtdb. Scriptet exekveras antingen när 
+signalvärdet ändras från 0 till 1, eller cykliskt när signalvärdet är högt.
+
+<b>Attribute <t><t>Description
+DigScript.Attribute <t><t>Signal i databasen av typ boolean som ska påverka komponenten.
+DigScript.Level  <t><t>Om Level är 0, exekveras scriptet när signalen ändras från 0 till 1.
+                  <t><t>Om level är 1, exekveras scriptet cykliskt när signalen är hög.
+DigScript.Script <t><t>Xtt script som exekveras när signalen går från 0 till 1.
 </topic>
 </headerlevel>
 <pagebreak>
@@ -3774,6 +3792,7 @@ StoDig    <t>Boolean    <t>Sätter värdet på en signal så länge knappen är intryc
 SetValue    <t>Float, Int, String  <t>Sätter vardet på en signal till ett angivet värde. <link>GeDynSetValue
 Command   <t>-          <t>Exekverar ett xtt-kommando vid Klick MB1. <link>GeDynCommand
 CommandDoubleClick <t>- <t>Exekverar ett xtt-kommando vid Dubbelklick MB1. <link>GeDynCommandDoubleClick
+Command   <t>-          <t>Exekverar ett xtt-script vid Klick MB1. <link>GeDynScript
 Confirm   <t>-          <t>Verifiering innan aktionen utförs. <link>GeDynConfirm
 IncrAnalog <t>Float32   <t>Öka eller minska ett analogt värde. <link>GeDynIncrAnalog
 RadioButton <t>Boolean  <t>Radio-knapps uppförande hos komponenten. <link>GeDynRadioButton
@@ -3903,6 +3922,17 @@ Exekverar ett xtt-kommando vid Dubbelklick MB1 på objektet.
 <b>Attribut <t><t>Beskrivning
 CommandDoubleClick.Command <t><t>Xtt-kommando som exekveras vid mus-klick 
               <t><t>på objektet.
+</topic>
+
+<topic>GeDynScript <style>function
+Script
+
+Exekverar ett xtt-script vid Klick MB1 på objektet.
+
+<b>Attribut <t><t>Beskrivning
+Script.Script <t><t>Xtt-script som exekveras vid mus-klick 
+                <t><t>på objektet.
+
 </topic>
 
 <topic>GeDynHelp <style>function

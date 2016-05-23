@@ -83,7 +83,6 @@ public class JopSpider {
 	return sts;
     }
     public int script( String script) {
-	System.out.println("JopSpider script callback : " + script);
 	return JopSpider.script( session, script);
     }
     public void frameClosed( Object utility) {

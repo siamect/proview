@@ -129,6 +129,7 @@ public class Dyn {
     public static final int mDynType2_ColorThemeLightness       = 1 << 5;
     public static final int mDynType2_DigBackgroundColor        = 1 << 6;
     public static final int mDynType2_DigSwap		        = 1 << 7;
+    public static final int mDynType2_DigScript		        = 1 << 8;
 
     public static final int mActionType1_No			= 0;
     public static final int mActionType1_Inherit		= 1 << 0;
@@ -219,6 +220,7 @@ public class Dyn {
     public static final int eDynPrio_ScrollingText	       	= 56;
     public static final int eDynPrio_ColorThemeLightness       	= 57;
     public static final int eDynPrio_DigSwap		       	= 58;
+    public static final int eDynPrio_DigScript		       	= 59;
     public static final int eDynPrio_Script  			= 9998;
     public static final int eDynPrio_Command  			= 9999;
     public static final int eDynPrio_CloseGraph 		= 10000;
@@ -262,6 +264,7 @@ public class Dyn {
     public static final int eSave_ColorThemeLightness        	= 43;
     public static final int eSave_DigBackgroundColor        	= 44;
     public static final int eSave_DigSwap	        	= 45;
+    public static final int eSave_DigScript	        	= 46;
     public static final int eSave_PopupMenu	       		= 50;
     public static final int eSave_SetDig	       		= 51;
     public static final int eSave_ResetDig	       		= 52;
@@ -441,6 +444,7 @@ public class Dyn {
     public static final int eSave_DigCommand_command      	= 3501;
     public static final int eSave_DigCommand_instance        	= 3502;
     public static final int eSave_DigCommand_instance_mask 	= 3503;
+    public static final int eSave_DigCommand_level 		= 3504;
     public static final int eSave_Pie_attribute1      		= 3600;
     public static final int eSave_Pie_attribute2      		= 3601;
     public static final int eSave_Pie_attribute3      		= 3602;
@@ -487,6 +491,10 @@ public class Dyn {
     public static final int eSave_DigBackgroundColor_instance_mask = 4403;
     public static final int eSave_DigSwap_attribute  		= 4500;
     public static final int eSave_DigSwap_reset_value  		= 4501;
+    public static final int eSave_DigScript_attribute  		= 4600;
+    public static final int eSave_DigScript_script  		= 4601;
+    public static final int eSave_DigScript_script_len         	= 4602;
+    public static final int eSave_DigScript_level  		= 4603;
     public static final int eSave_PopupMenu_ref_object      	= 5000;
     public static final int eSave_SetDig_attribute		= 5100;
     public static final int eSave_SetDig_instance		= 5101;
@@ -816,6 +824,8 @@ public class Dyn {
 		e = new DynDigBackgroundColor((DynDigBackgroundColor) x.elements.get(i)); break;
 	    case Dyn.mDynType2_DigSwap:
 		e = new DynDigSwap((DynDigSwap) x.elements.get(i)); break;
+	    case Dyn.mDynType2_DigScript:
+		e = new DynDigScript((DynDigScript) x.elements.get(i)); break;
 	    default: ;
 	    }
 	    switch( x.elements.get(i).action_type1) {
@@ -1082,6 +1092,9 @@ public class Dyn {
 	    case mDynType2_DigSwap:
 		e = (DynElem) new DynDigSwap((DynDigSwap) x);
 		break;
+	    case mDynType2_DigScript:
+		e = (DynElem) new DynDigScript((DynDigScript) x);
+		break;
 	    default: ;
 	    }
 	}
@@ -1215,6 +1228,9 @@ public class Dyn {
 		    break;
 		case Dyn.eSave_DigSwap: 
 		    elem = (DynElem) new DynDigSwap(this); 
+		    break;
+		case Dyn.eSave_DigScript: 
+		    elem = (DynElem) new DynDigScript(this); 
 		    break;
 		case Dyn.eSave_Animation: 
 		    elem = (DynElem) new DynAnimation(this); 
@@ -8920,6 +8936,7 @@ public class Dyn {
     public class DynDigCommand extends DynElem {
 	String attribute;
 	String command;
+	int level;
   	PwrtRefId subid;
 	int p;
 	int database;
@@ -8938,6 +8955,7 @@ public class Dyn {
 	    super(x);
 	    attribute = x.attribute;
 	    command = x.command;
+	    level = x.level;
 	}
 
  	public int connect(GlowArrayElem o) {
@@ -8961,7 +8979,7 @@ public class Dyn {
 	    }
 
 	    if ( ret == null || ret.evenSts()) {
-		System.out.println("DigLowColor: " + attribute);
+		System.out.println("DigCommand: " + attribute);
 		return 1;
 	    }
 
@@ -8991,14 +9009,14 @@ public class Dyn {
 	    if ( inverted)
 		value = !value;
 
-	    if ( !firstScan) {
-		if ( oldValue == value)
-		    return;
-	    }
-	    else
+	    if ( firstScan) {
 		firstScan = false;
-	    System.out.println("DigCommand: value " + value);	
-	    if ( value && !oldValue) {
+		oldValue = value;
+		return;
+	    }
+
+	    if ( (level == 0 && value && !oldValue) ||
+		 (level != 0 && value)) {
 		String cmd = graph.getCommand(command);
 
 		dyn.graph.command(cmd);
@@ -9028,6 +9046,9 @@ public class Dyn {
 			if ( token.hasMoreTokens())
 			    command = line.substring(5);
 			break;
+		    case Dyn.eSave_DigCommand_level: 
+			level = Integer.valueOf(token.nextToken());
+			break;
 		    case Dyn.eSave_DigCommand_instance: 
 			instance = Integer.valueOf(token.nextToken());
 			break;
@@ -9048,6 +9069,175 @@ public class Dyn {
 		
 	    } catch ( Exception e) {
 		System.out.println( "IOException DynDigCommand");
+	    }
+	}
+
+    }
+
+    public class DynDigScript extends DynElem {
+	String attribute;
+	String script;
+	int script_len;
+	int level;
+  	PwrtRefId subid;
+	int p;
+	int database;
+	boolean inverted;
+	boolean attrFound = false;
+	boolean firstScan = true;
+	int bitmask;
+	int a_typeid;
+	boolean oldValue;
+
+	public DynDigScript( Dyn dyn) {
+	    super(dyn, 0, Dyn.mDynType2_DigScript, 0, 0, Dyn.eDynPrio_DigScript);
+	}
+
+	public DynDigScript( DynDigScript x) {
+	    super(x);
+	    attribute = x.attribute;
+	    script_len = x.script_len;
+	    script = x.script;
+	    level = x.level;
+	}
+
+ 	public int connect(GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+
+	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
+	    if ( pname == null || pname.name.equals("")) 
+		return 1;
+
+	    GdhrRefObjectInfo ret = null;
+
+	    switch( pname.database) {
+	    case GraphIfc.eDatabase_Gdh:
+		ret = dyn.graph.getGdh().refObjectInfo( pname.tname);
+		break;
+	    case GraphIfc.eDatabase_Ccm:
+		// TODO
+		break;
+	    default:
+		ret = null;
+	    }
+
+	    if ( ret == null || ret.evenSts()) {
+		System.out.println("DigScript: " + attribute);
+		return 1;
+	    }
+
+	    p = ret.id;
+	    subid = ret.refid;
+	    inverted = pname.inverted;
+	    a_typeid = pname.type;
+	    bitmask = pname.bitmask;
+	    database = pname.database;
+	    attrFound = true;
+
+	    return 1;
+	}
+
+	public void disconnect() {
+	    if ( attrFound && database == GraphIfc.eDatabase_Gdh)
+		dyn.graph.getGdh().unrefObjectInfo(subid);
+	}
+
+	
+	public void scan( GlowArrayElem o) {
+	    GrowNode object = (GrowNode)o;
+
+	    if ( !attrFound)
+		return;
+	    boolean value = dyn.getDig(p, a_typeid, bitmask, database);
+
+	    if ( inverted)
+		value = !value;
+
+	    if ( firstScan) {
+		firstScan = false;
+		oldValue = value;
+		return;
+	    }
+
+	    if ( (level == 0 && value && !oldValue) ||
+		 (level != 0 && value)) {
+
+		if ( script == null)
+		    return;
+
+		dyn.graph.script(script);
+	    }	
+	    oldValue = value;
+	}
+
+	public void open( BufferedReader reader) {
+	    String line;
+	    StringTokenizer token;
+	    boolean end_found = false;
+
+	    try {
+		while( (line = reader.readLine()) != null) {
+		    token = new StringTokenizer(line);
+		    int key = Integer.valueOf(token.nextToken());
+		    if ( Dyn.debug) System.out.println( "DynDigScript : " + line);
+
+		    switch ( key) {
+		    case Dyn.eSave_DigScript: 
+			break;
+		    case Dyn.eSave_DigScript_attribute: 
+			if ( token.hasMoreTokens())
+			    attribute = token.nextToken();
+			break;
+		    case Dyn.eSave_DigScript_script_len: 
+			script_len = Integer.valueOf(token.nextToken());
+			break;
+		    case Dyn.eSave_DigScript_script: 
+			int idx;
+			boolean end = false;
+			script = "";
+			line = reader.readLine().trim().substring(1);
+
+			idx = 0;
+			while ( line != null) {			    
+			    System.out.println("Script line: " + line);
+			    while ( (idx = line.indexOf('"', idx)) != -1) {
+				if ( idx > 0 && (line.charAt(idx-1) == '\\')) {
+				    line = new StringBuffer(line).delete(idx-1,idx).toString();
+				    System.out.println("Modif  line: " + line);
+				}
+				else {				
+				    if ( idx > 0)
+					line = line.substring( 0, idx - 1);
+				    else
+					line = "";
+				    script += line;
+				    end = true;
+				    break;
+				}
+			    }
+			    if ( end)
+				break;
+			    script += line + "\n";
+			    line = reader.readLine();
+			}			
+			break;
+		    case Dyn.eSave_DigScript_level: 
+			level = Integer.valueOf(token.nextToken());
+			break;
+		    case Dyn.eSave_End:
+			end_found = true;
+			break;
+		    default:
+			System.out.println( "Syntax error in DynDigScript");
+			break;
+		    }
+
+		    if ( end_found)
+			break;
+		}
+		
+	    } catch ( Exception e) {
+		System.out.println( "IOException DynDigScript");
 	    }
 	}
 

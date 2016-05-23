@@ -3238,6 +3238,7 @@ Animation <t>Boolean    <t>Different types of animation. <link>GeDynAnimation
 Video     <t>-          <t>Display a continuously updated image file. <link>GeDynVideo
 SliderBackground <t>-   <t>Indicates that the subgraph is background to a slider component. <link>GeDynSliderBackground
 DigCommand <t>Boolean   <t>Executes a command when signal gets high. <link>GeDynDigCommand
+DigCommand <t>Boolean   <t>Executes a script when signal gets high. <link>GeDynDigScript
 ScrollingText <t>Boolean <t>Display a scrolling text. <link>GeDynScrollingText
 
 <h2>Inherit
@@ -3781,21 +3782,42 @@ Video has no attribues.
 
 <topic>GeDynDigCommand <style>function
 DigCommand
-Execute specified command when the signal goes from low to high.
+Execute specified command when the signal goes from low to high, or when the signal
+is high.
 
-The object is connected to a digital signal in the database. When the value changes from 0 to 
-1, the command is executed.
+The object is connected to a digital signal in the database. The command is executed either
+on positive edge of the signal, or cyclically when the signal is high.
 
 DigCommand can exist in several instances, which makes it possible to execute several 
-command.
+commands.
 
 <b>Attribute <t><t>Description
 DigCommand.Attribute <t><t>Signal in the database of type boolean that should 
-                   <t><t>influence the component.
-DigCommand.Command <t><t>Xtt command that is executed when the signal value changes from 0 to 1.
+                  <t><t>influence the component.
+DigCommand.Level  <t><t>If Level is 0, the command is executed when the signal changes
+                  <t><t>from 0 to 1. If Level is 1, the command is executed cyclically 
+                  <t><t>when the signal is high.
+DigCommand.Command <t><t>Xtt command that is executed.
 DigCommand.Instance <t><t>States the number of instances that is created.
-DigCommand.Attribute <t><t>Signal for instance number 2.
-DigCommand.Command <t><t>Command for instance number 2.
+DigCommand2.Attribute <t><t>Signal for instance number 2.
+DigCommand2.Level <t><t>Command for instance number 2.
+DigCommand2.Command <t><t>Command for instance number 2.
+</topic>
+
+<topic>GeDynDigScript <style>function
+DigScript
+Execute a script when the signal goes from low to high, or when the signal is high.
+
+The object is connected to a digital signal in the database. The script is executed either
+on positive edge of the signal, or cyclically when the signal is high.
+
+<b>Attribute <t><t>Description
+DigScript.Attribute <t><t>Signal in the database of type boolean that should 
+                   <t><t>influence the component.
+DigScript.Level    <t><t>If level is 0, the script is executed when the signal changes
+                   <t><t>from 0 to 1. If level is 1, the script is executed cyclically 
+                   <t><t>when the signal is high.
+DigScript.Script <t><t>Xtt script that is executed.
 </topic>
 </headerlevel>
 <pagebreak>
@@ -3816,8 +3838,9 @@ ResetDig  <t>Boolean    <t>Set the value of a signal to false with Click MB1. <l
 ToggleDig <t>Boolean    <t>Change the value of a signal with Click MB1. <link>GeDynToggleDig
 StoDig    <t>Boolean    <t>Set the value of a signal as long as the button is pressed. <link>GeDynStoDig
 SetValue  <t>Int, Float, String  <t>Set the value of a signal to a specified value. <link>GeDynSetValue
-Command   <t>-          <t>Execute a xtt command with Click MB1. <link>GeDynCommand
-CommandDoubleClick <t>- <t>Execute a xtt command with Doubleclick MB1. <link>GeDynCommandDoubleClick
+Command   <t>-          <t>Execute an xtt command with Click MB1. <link>GeDynCommand
+CommandDoubleClick <t>- <t>Execute an xtt command with Doubleclick MB1. <link>GeDynCommandDoubleClick
+Script    <t>-          <t>Execute an xtt script with Click MB1. <link>GeDynScript
 Confirm   <t>-          <t>Confirm before the action is executed. <link>GeDynConfirm
 IncrAnalog <t>Float32   <t>Increase or decrease an analog value. <link>GeDynIncrAnalog
 RadioButton <t>Boolean  <t>Action for radio buttons. <link>GeDynRadioButton
@@ -3907,7 +3930,7 @@ SetValue.Value     <t><t>The value that is set.
 <topic>GeDynCommand <style>function
 Command
 
-Execute a xtt command by clicking MB1 on the object.
+Execute an xtt command by clicking MB1 on the object.
 
 <b>Attribute <t><t>Description
 Command.Command <t><t>Xtt command that is executed when the 
@@ -3943,11 +3966,22 @@ possible to state double steps of attribute references with the syntax
 <topic>GeDynCommandDoubleClick <style>function
 CommandDoubleClick
 
-Execute a xtt command by doubleclicking MB1 on the object.
+Execute an xtt command by doubleclicking MB1 on the object.
 
 <b>Attribute <t><t>Description
 CommandDoubleClick.Command <t><t>Xtt command that is executed when the object
                            <t><t>is activated.
+</topic>
+
+<topic>GeDynScript <style>function
+Script
+
+Execute an xtt script by clicking MB1 on the object.
+
+<b>Attribute <t><t>Description
+Script.Script <t><t>Xtt script that is executed when the 
+              <t><t>object is activated.
+
 </topic>
 
 <topic>GeDynHelp <style>function

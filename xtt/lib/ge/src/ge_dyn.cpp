@@ -467,6 +467,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeDigBackgroundColor((const GeDigBackgroundColor&) *elem); break;
     case ge_mDynType2_DigSwap:
       e = new GeDigSwap((const GeDigSwap&) *elem); break;
+    case ge_mDynType2_DigScript:
+      e = new GeDigScript((const GeDigScript&) *elem); break;
     default: ;
     }
     switch( elem->action_type1) {
@@ -604,6 +606,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_ColorThemeLightness: e = (GeDynElem *) new GeColorThemeLightness(this); break;
       case ge_eSave_DigBackgroundColor: e = (GeDynElem *) new GeDigBackgroundColor(this); break;
       case ge_eSave_DigSwap: e = (GeDynElem *) new GeDigSwap(this); break;
+      case ge_eSave_DigScript: e = (GeDynElem *) new GeDigScript(this); break;
       case ge_eSave_Animation: e = (GeDynElem *) new GeAnimation(this); break;
       case ge_eSave_Video: e = (GeDynElem *) new GeVideo(this); break;
       case ge_eSave_Bar: e = (GeDynElem *) new GeBar(this); break;
@@ -1574,6 +1577,9 @@ GeDynElem *GeDyn::create_dyn2_element( int mask, int instance)
   case ge_mDynType2_DigSwap:
     e = (GeDynElem *) new GeDigSwap(this, (ge_mInstance)instance);
     break;
+  case ge_mDynType2_DigScript:
+    e = (GeDynElem *) new GeDigScript(this, (ge_mInstance)instance);
+    break;
   default: ;
   }
   return e;
@@ -1782,6 +1788,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
       break;
     case ge_mDynType2_DigSwap:
       e = (GeDynElem *) new GeDigSwap((GeDigSwap&) x);
+      break;
+    case ge_mDynType2_DigScript:
+      e = (GeDynElem *) new GeDigScript((GeDigScript&) x);
       break;
     default: ;
     }
@@ -12038,6 +12047,11 @@ void GeDigCommand::get_attributes( attr_sItem *attrinfo, int *item_count)
     attrinfo[i].type = glow_eType_String;
     attrinfo[i++].size = sizeof( attribute);
 
+    strcpy( attrinfo[i].name, "DigCommand.Level");
+    attrinfo[i].value = &level;
+    attrinfo[i].type = glow_eType_Boolean;
+    attrinfo[i++].size = sizeof( level);
+
     strcpy( attrinfo[i].name, "DigCommand.Command");
     attrinfo[i].value = command;
     attrinfo[i].type = glow_eType_String;
@@ -12061,6 +12075,11 @@ void GeDigCommand::get_attributes( attr_sItem *attrinfo, int *item_count)
     attrinfo[i].value = attribute;
     attrinfo[i].type = glow_eType_String;
     attrinfo[i++].size = sizeof( attribute);
+
+    sprintf( attrinfo[i].name, "DigCommand%d.Level", inst);
+    attrinfo[i].value = &level;
+    attrinfo[i].type = glow_eType_Boolean;
+    attrinfo[i++].size = sizeof( level);
 
     sprintf( attrinfo[i].name, "DigCommand%d.Command", inst);
     attrinfo[i].value = command;
@@ -12099,6 +12118,7 @@ void GeDigCommand::save( ofstream& fp)
   fp << int(ge_eSave_DigCommand) << endl;
   fp << int(ge_eSave_DigCommand_attribute) << FSPACE << attribute << endl;
   fp << int(ge_eSave_DigCommand_command) << FSPACE << command << endl;
+  fp << int(ge_eSave_DigCommand_level) << FSPACE << level << endl;
   fp << int(ge_eSave_DigCommand_instance) << FSPACE << int(instance) << endl;
   fp << int(ge_eSave_DigCommand_instance_mask) << FSPACE << int(instance_mask) << endl;
   fp << int(ge_eSave_End) << endl;
@@ -12131,6 +12151,7 @@ void GeDigCommand::open( ifstream& fp)
         fp.get();
         fp.getline( command, sizeof(command));
         break;
+      case ge_eSave_DigCommand_level: fp >> level; break;
       case ge_eSave_DigCommand_instance: fp >> tmp; instance = (ge_mInstance)tmp; break;
       case ge_eSave_DigCommand_instance_mask: fp >> tmp; instance_mask = (ge_mInstance)tmp; break;
       case ge_eSave_End: end_found = 1; break;
@@ -12178,7 +12199,7 @@ int GeDigCommand::disconnect( grow_tObject object)
 
 int GeDigCommand::scan( grow_tObject object)
 {
-  int sts;
+  int sts = 1;
   
   if ( !p)
     return 1;
@@ -12197,24 +12218,19 @@ int GeDigCommand::scan( grow_tObject object)
     return 1;
   }
     
-  if ( old_value == val) {
-    // No change since last time
-    return 1;
-  }
-  else {
-    if ( val) {
-      if ( dyn->graph->command_cb) {
-	char cmd[400];
+  if ( (!level && val && !old_value) || 
+       (level && val)) {
+    if ( dyn->graph->command_cb) {
+      char cmd[400];
 
-	dyn->graph->get_command( command, cmd, dyn);
-	sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
-	return sts;
-      }
+      dyn->graph->get_command( command, cmd, dyn);
+      sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd, 0);
+      return sts;
     }
   }
   old_value = val;
 
-  return 1;
+  return sts;
 }
 
 int GeDigCommand::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
@@ -12226,6 +12242,189 @@ int GeDigCommand::export_java( grow_tObject object, ofstream& fp, bool first, ch
     fp << "      ,";
   fp << "new GeDynDigCommand(" << var_name << ".dd, \"" << attribute << "\",\"" << command << "\")" << endl;
 #endif
+  return 1;
+}
+
+void GeDigScript::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  strcpy( attrinfo[i].name, "DigScript.Attribute");
+  attrinfo[i].value = attribute;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute);
+
+  strcpy( attrinfo[i].name, "DigScript.Level");
+  attrinfo[i].value = &level;
+  attrinfo[i].type = glow_eType_Boolean;
+  attrinfo[i++].size = sizeof( level);
+
+  strcpy( attrinfo[i].name, "DigScript.Script");
+  attrinfo[i].value = script;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i].multiline = 1;
+  attrinfo[i++].size = sizeof(script);
+  
+  *item_count = i;
+}
+
+void GeDigScript::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
+{
+  (*cnt)--;
+  if ( *cnt == 0) {
+    char msg[200];
+
+    strncpy( attribute, attr_name, sizeof( attribute));
+    snprintf( msg, sizeof(msg), "DigScript.Attribute = %s", attr_name);
+    msg[sizeof(msg)-1] = 0;
+    dyn->graph->message( 'I', msg);
+  }
+}
+
+void GeDigScript::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
+void GeDigScript::save( ofstream& fp)
+{
+  fp << int(ge_eSave_DigScript) << endl;
+  fp << int(ge_eSave_DigScript_attribute) << FSPACE << attribute << endl;
+  fp << int(ge_eSave_DigScript_level) << FSPACE << level << endl;
+  fp << int(ge_eSave_DigScript_script_len) << FSPACE << script_len << endl;
+  fp << int(ge_eSave_DigScript_script) << endl;
+  fp << "\"";
+  for ( char *s  = script; *s; s++) {
+    if ( *s == '"')
+      fp << "\\";
+    fp << *s;
+  }
+  fp << endl << "\"" << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeDigScript::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[200];
+  char		c;
+
+  for (;;)
+  {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDigScript: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch( type) {
+      case ge_eSave_DigScript: break;
+      case ge_eSave_DigScript_attribute:
+        fp.get();
+        fp.getline( attribute, sizeof(attribute));
+        break;
+      case ge_eSave_DigScript_level: fp >> level; break;
+      case ge_eSave_DigScript_script_len: fp >> script_len; break;
+      case ge_eSave_DigScript_script: {
+	fp.getline( dummy, sizeof(dummy));
+	fp.get();
+	int j = 0;
+	while ( 1) {
+	  if ( j > (int)sizeof(script))
+	    break;
+	  if ((c = fp.get()) == '"') {
+	    if ( script[j-1] == '\\')
+	      j--;
+	    else {
+	      script[j] = 0;
+	      break;
+	    }
+	  }
+	  script[j++] = c;
+	}
+	script[sizeof(script)-1] = 0;
+	break;
+      }
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeDigScript:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeDigScript::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+  int		attr_type, attr_size;
+  pwr_tAName   	parsed_name;
+  int		sts;
+
+  size = 4;
+  p = 0;
+  db = dyn->parse_attr_name( attribute, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp( parsed_name,"") == 0)
+    return 1;
+
+  get_bit( parsed_name, attr_type, &bitmask);
+  a_typeid = attr_type;
+
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size, object);
+
+  if ( EVEN(sts)) return sts;
+
+  trace_data->p = &pdummy;
+  first_scan = true;
+  return 1;
+}
+
+int GeDigScript::disconnect( grow_tObject object)
+{
+  if ( p && db == graph_eDatabase_Gdh)
+    gdh_UnrefObjectInfo( subid);
+  p = 0;
+  return 1;
+}
+
+int GeDigScript::scan( grow_tObject object)
+{
+  int sts = 1;
+  
+  if ( !p)
+    return 1;
+
+  pwr_tBoolean val;
+
+  if ( !get_dig( &val, p, a_typeid, bitmask))
+    return 1;
+
+  if ( inverted)
+    val = !val;
+
+  if ( first_scan) {
+    old_value = val;
+    first_scan = false;
+    return 1;
+  }
+    
+  if ( (!level && val && !old_value) || 
+       (level && val)) {
+    if ( dyn->graph->command_cb) {
+      sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, 0, script);
+    }
+  }
+  old_value = val;
+
+  return sts;
+}
+
+int GeDigScript::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
   return 1;
 }
 
@@ -13483,7 +13682,7 @@ void GeScript::save( ofstream& fp)
       fp << "\\";
     fp << *s;
   }
-  fp << "\"" << endl;
+  fp << endl << "\"" << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -13491,7 +13690,7 @@ void GeScript::open( ifstream& fp)
 {
   int		type;
   int 		end_found = 0;
-  char		dummy[40];
+  char		dummy[200];
   char		c;
 
   for (;;)
