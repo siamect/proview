@@ -143,6 +143,6 @@ main()
   MessageInfo( msg);
   
 
-  delete signals[1000];
-  delete sigchancons[1000];
+  delete signals[4000];
+  delete sigchancons[4000];
 endmain
