@@ -18373,17 +18373,20 @@ int GeMethodToolbar::action( grow_tObject object, glow_tEvent event)
     break;
   case glow_eEvent_TipText: {
     pwr_tString80 text;
+    int sts;
 
     if ( event->toolbar.category == 1) {
+      sts = 0;
       if ( grow_GetTranslate( dyn->graph->grow->ctx))
-	Lng::translate( GeMethods::op_tooltip[event->toolbar.idx], text);
-      else
+	sts = Lng::translate( GeMethods::op_tooltip[event->toolbar.idx], text);
+      if ( EVEN(sts))
 	strcpy( text, GeMethods::op_tooltip[event->toolbar.idx]);
     }
     else {
+      sts = 0;
       if ( grow_GetTranslate( dyn->graph->grow->ctx))
-	Lng::translate( GeMethods::mnt_tooltip[event->toolbar.idx], text);
-      else
+	sts = Lng::translate( GeMethods::mnt_tooltip[event->toolbar.idx], text);
+      if ( EVEN(sts))
 	strcpy( text, GeMethods::mnt_tooltip[event->toolbar.idx]);
     }
     grow_SetTipText( dyn->graph->grow->ctx, event->toolbar.object, 		       
@@ -18630,9 +18633,10 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
   
 	if ( opmask & (1 << i)) {
 	  info.item[menu_idx].type = glow_eMenuItem_Button;
+	  sts = 0;
 	  if ( grow_GetTranslate( dyn->graph->grow->ctx))
-	    Lng::translate( GeMethods::op_name[i], info.item[menu_idx].text);
-	  else
+	    sts = Lng::translate( GeMethods::op_name[i], info.item[menu_idx].text);
+	  if ( EVEN(sts))
 	    strcpy( info.item[menu_idx].text, GeMethods::op_name[i]);
 	  info.item[menu_idx].occupied = true;
 	  if ( insensitive_opmask & (1 << i))
@@ -18652,9 +18656,10 @@ int GeMethodPulldownMenu::action( grow_tObject object, glow_tEvent event)
 
 	if ( mntmask & (1 << i)) {
 	  info.item[menu_idx].type = glow_eMenuItem_Button;
+	  sts = 0;
 	  if ( grow_GetTranslate( dyn->graph->grow->ctx))
-	    Lng::translate( GeMethods::mnt_name[i], info.item[menu_idx].text);
-	  else
+	    sts = Lng::translate( GeMethods::mnt_name[i], info.item[menu_idx].text);
+	  if ( EVEN(sts))
 	    strcpy( info.item[menu_idx].text, GeMethods::mnt_name[i]);
 	  info.item[menu_idx].occupied = true;
 	  if ( insensitive_mntmask & (1 << i))
