@@ -48,7 +48,7 @@ Volume Simul $ClassVolume 0.0.0.8
     ! @Summary Signal generator
     ! This is a signal generator (sine, triangle, rectangle).
     ! Noise and offset can be added to simulate real world behavior.
-    !
+    ! 
     ! @image orm_sim_siggen_fo.png
     !*/
     Object Sim_SigGen $ClassDef 13 23-MAY-2016 16:28:12.28
@@ -218,12 +218,12 @@ Volume Simul $ClassVolume 0.0.0.8
     ! @Code simul.c
     ! @Summary Integrator
     ! Integator.
-    !
+    ! 
     ! @image orm_sim_integrator_fo.png
-    !
+    ! 
     ! Performs a discrete time integration with dynamic gain. 
     ! In Laplace transform:
-    !
+    ! 
     !            K
     ! F(s) = -------
     !            s
@@ -287,7 +287,7 @@ Volume Simul $ClassVolume 0.0.0.8
         EndObject
       EndObject
       Object GraphPlcNode $GraphPlcNode 33 02-MAR-2016 12:51:57.93
-        Body SysBody 02-MAR-2016 12:51:57.93
+        Body SysBody 27-MAY-2016 15:39:09.03
           Attr object_type = 11
           Attr parameters[0] = 4
           Attr parameters[1] = 0
@@ -295,7 +295,7 @@ Volume Simul $ClassVolume 0.0.0.8
           Attr parameters[3] = 0
           Attr graphmethod = 0
           Attr graphindex = 0
-          Attr default_mask[0] = 15
+          Attr default_mask[0] = 1
           Attr default_mask[1] = 1
           Attr segname_annotation = 1
           Attr compmethod = 4
@@ -323,12 +323,12 @@ Volume Simul $ClassVolume 0.0.0.8
     ! @Code simul.c
     ! @Summary Lead / lag filter
     ! Lead / lag filter.
-    !
+    ! 
     ! @image orm_sim_leadlagfilter_fo.png
-    !
+    ! 
     ! Performs a discrete time lead / lag filtering. 
     ! In Laplace transform:
-    !
+    ! 
     !          1 + Tlead.s
     ! F(s) = ----------------
     !          1 + Tlag.s
@@ -452,12 +452,12 @@ Volume Simul $ClassVolume 0.0.0.8
     ! @Code simul.c
     ! @Summary Lag filter
     ! Lag filter.
-    !
+    ! 
     ! @image orm_sim_lagfilter_fo.png
-    !
+    ! 
     ! Performs a discrete time lag filtering. 
     ! In Laplace transform:
-    !
+    ! 
     !               1
     ! F(s) = --------------
     !          1 + Tlag.s
@@ -528,7 +528,7 @@ Volume Simul $ClassVolume 0.0.0.8
         EndObject
       EndObject
       Object GraphPlcNode $GraphPlcNode 27 28-FEB-2016 17:10:40.90
-        Body SysBody 28-FEB-2016 17:10:40.90
+        Body SysBody 27-MAY-2016 15:39:55.87
           Attr object_type = 11
           Attr parameters[0] = 3
           Attr parameters[1] = 2
@@ -536,7 +536,7 @@ Volume Simul $ClassVolume 0.0.0.8
           Attr parameters[3] = 0
           Attr graphmethod = 0
           Attr graphindex = 0
-          Attr default_mask[0] = 3
+          Attr default_mask[0] = 1
           Attr default_mask[1] = 1
           Attr segname_annotation = 1
           Attr compmethod = 4
@@ -565,12 +565,12 @@ Volume Simul $ClassVolume 0.0.0.8
     ! @Code simul.c
     ! @Summary Analog 100 cells delay plc function.
     ! Analog 100 cells delay plc function.
-    !
+    ! 
     ! @image orm_sim_delay_fo.png
-    !
+    ! 
     ! Performs a discrete time delay on a 100 float numbers cells shift register. 
     ! In Laplace transform:
-    !
+    ! 
     ! F(s) = exp(-T.s)
     !*/
     Object Sim_Delay $ClassDef 6 23-MAY-2016 16:30:07.79
@@ -692,16 +692,16 @@ Volume Simul $ClassVolume 0.0.0.8
     ! @Code simul.c
     ! @Summary Second order underdamped filter
     ! Second order underdamped filter.
-    !
+    ! 
     ! @image orm_sim_soufilter_fo.png
-    !
+    ! 
     ! Performs a discrete time second order underdamped filtering. 
     ! In Laplace transform:
-    !
+    ! 
     !             1
     ! F(s) = ---------------------------------
     !         1/(w0^2).s^2 + 2.ksi/w0.s + 1
-    !
+    ! 
     ! ksi: damping factor
     ! w0:  pseudo resonance pulsation
     !*/
@@ -800,7 +800,7 @@ Volume Simul $ClassVolume 0.0.0.8
         EndObject
       EndObject
       Object GraphPlcNode $GraphPlcNode 25 28-FEB-2016 17:10:08.34
-        Body SysBody 28-FEB-2016 17:10:08.34
+        Body SysBody 27-MAY-2016 15:41:05.31
           Attr object_type = 11
           Attr parameters[0] = 4
           Attr parameters[1] = 4
@@ -808,7 +808,7 @@ Volume Simul $ClassVolume 0.0.0.8
           Attr parameters[3] = 0
           Attr graphmethod = 0
           Attr graphindex = 0
-          Attr default_mask[0] = 255
+          Attr default_mask[0] = 1
           Attr default_mask[1] = 1
           Attr segname_annotation = 1
           Attr compmethod = 4
@@ -838,17 +838,17 @@ Volume Simul $ClassVolume 0.0.0.8
     ! @Code simul.c
     ! @Summary Second order underdamped/overdamped filter
     ! Second order underdamped/overdamped filter.
-    !
+    ! 
     ! @image orm_sim_soutoofilter_fo.png
-    !
+    ! 
     ! Performs a discrete time second order uderdamped to overdamped filtering. 
     ! In Laplace transform:
-    !
+    ! 
     !          1/(w0^2).s^2 + 2.ksi/w0.s + 1
     ! F(s) = -----------------------------------
     !          (1 + Tlag1.s) . (1 + Tlag2.s)
-    !
-    !
+    ! 
+    ! 
     ! ksi: damping factor
     ! w0: pseudo resonance pulsation
     !*/
@@ -977,7 +977,7 @@ Volume Simul $ClassVolume 0.0.0.8
         EndObject
       EndObject
       Object GraphPlcNode $GraphPlcNode 24 28-FEB-2016 17:09:58.96
-        Body SysBody 28-FEB-2016 17:09:58.96
+        Body SysBody 27-MAY-2016 15:41:29.12
           Attr object_type = 11
           Attr parameters[0] = 6
           Attr parameters[1] = 6
@@ -985,7 +985,7 @@ Volume Simul $ClassVolume 0.0.0.8
           Attr parameters[3] = 0
           Attr graphmethod = 0
           Attr graphindex = 0
-          Attr default_mask[0] = 255
+          Attr default_mask[0] = 1
           Attr default_mask[1] = 1
           Attr segname_annotation = 1
           Attr compmethod = 4
@@ -1017,9 +1017,9 @@ Volume Simul $ClassVolume 0.0.0.8
     ! @Code simul.c
     ! @Summary Slew rate limiter
     ! Slew rate limiter.
-    !
+    ! 
     ! @image orm_sim_slewratelimiter_fo.png
-    !
+    ! 
     ! Performs a slew rate limitation. 
     !*/
     Object Sim_SlewRateLimiter $ClassDef 14 23-MAY-2016 16:31:07.61
@@ -1081,7 +1081,7 @@ Volume Simul $ClassVolume 0.0.0.8
         EndObject
       EndObject
       Object GraphPlcNode $GraphPlcNode 32 28-FEB-2016 17:12:52.52
-        Body SysBody 28-FEB-2016 17:12:52.52
+        Body SysBody 27-MAY-2016 15:40:34.27
           Attr object_type = 11
           Attr parameters[0] = 4
           Attr parameters[1] = 0
@@ -1089,7 +1089,7 @@ Volume Simul $ClassVolume 0.0.0.8
           Attr parameters[3] = 0
           Attr graphmethod = 0
           Attr graphindex = 0
-          Attr default_mask[0] = 0
+          Attr default_mask[0] = 1
           Attr default_mask[1] = 1
           Attr segname_annotation = 1
           Attr compmethod = 4
