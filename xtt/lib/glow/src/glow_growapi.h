@@ -2383,6 +2383,8 @@ extern "C" {
 
   void grow_SetAxisRange( grow_tObject object, double minval, double maxval, int keep_settings);
 
+  void grow_SetAxisFormat( grow_tObject object, const char *format);
+  void grow_GetAxisFormat( grow_tObject object, char *format);
 
   //! Set that graph is modified or not since last save.
   /*! 

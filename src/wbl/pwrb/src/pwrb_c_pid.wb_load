@@ -702,6 +702,15 @@ SObject         pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Specifies the number of characters displayed after the decimal point
+      !  for set value and process value in the object graph.
+      !*/
+      Object SetPrecision $Intern 56 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-FloatPrecisionEnum"
+        EndBody
+      EndObject
+      !/**
       !  The lower respectively upper limit in the graph at
       !  presentation of the control signal OutVal in the Pid
       !  object display. The values may be changed in the more
@@ -727,6 +736,23 @@ SObject         pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String16"
           Attr GraphName = "OutEngUnit"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the number of characters displayed after the decimal point
+      !  for output value in the object graph.
+      !*/
+      Object OutPrecision $Intern 57 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-FloatPrecisionEnum"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies time range for the trends in the object graph.
+      !*/
+      Object TrendTimeRange $Intern 58 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
       !/**
@@ -1005,7 +1031,10 @@ SObject         pwrb:Class
         Attr OutMaxShow = 100.0
         Attr SetMaxShow = 100.0
         Attr SetEngUnit = "%"
+        Attr SetPrecision = 1
         Attr OutEngUnit = "%"
+        Attr OutPrecision = 1
+        Attr TrendTimeRange = 100
         Attr WindupMask = 4
         Attr MaxWindup = 100.0
       EndBody

@@ -225,6 +225,12 @@ class GrowAxisArc : public GrowArc {
   void set_conf( double max_val, double min_val, int no_of_lines, 
                    int long_quot, int value_quot, double rot, const char *format);
 
+  //! Set format for the axis.
+  void set_format( const char *f) { strncpy( format, f, sizeof(format));}
+
+  //! Get format for the axis.
+  void get_format( char *f) { strcpy( f, format);}
+
   //! Scan trace
   /*! Calls the trace scan callback for the object.
    */

@@ -357,6 +357,7 @@ void mode_exec(
 	    object->ForcVal = object->OutVal;
 	  }
 	}
+	object->Error = object->ProcVal - object->SetVal;
 }
 
 /*_*

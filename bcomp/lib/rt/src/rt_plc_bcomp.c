@@ -39,6 +39,7 @@
 #else
 #include <stdio.h>
 #endif
+#include <math.h>
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"
@@ -211,6 +212,8 @@ void CompModePID_Fo_exec( plc_sThread *tp,
     co->SetVal = co->MinSet;
   else if ( co->SetVal > co->MaxSet)
     co->SetVal = co->MaxSet;
+
+  co->Error = co->ProcVal - co->SetVal;
 
   /* Transfer to outputs */
   o->SetVal = co->SetVal;
@@ -564,6 +567,279 @@ void CompOnOffZoneFo_exec( plc_sThread	    *tp,
     co->CycleCount = 0;
 }
 
+
+/*_*
+  PLC interface & calculus to discrete time Internal Model Controler component
+
+  @aref compimc
+  @aref compimc_fo CompImc_Fo
+
+  2015 - 12 - 19	Bruno: initial object.
+  2016 - 04 - 11	Bruno: cleaning.
+*/
+#define Clamp(x, min, max) x = ((x)<(min)) ? (min) : (((x)>(max)) ? (max) : (x))   
+#define Normalize(x, y, xmin, xmax, ymin, ymax) y = (((((ymax)-(ymin))/((xmax)-(xmin)))*((x)-(xmin)))+(ymin))
+#define Te tp->ActualScanTime
+#define MAXCELLS 100
+
+void CompIMC_Fo_init( pwr_sClass_CompIMC_Fo *plc_obj) 
+{
+	pwr_tDlid dlid;
+	pwr_tStatus sts;
+	sts = gdh_DLRefObjectInfoAttrref( &plc_obj->PlcConnect, (void **)&plc_obj->PlcConnectP, &dlid);
+	if ( EVEN(sts))
+	plc_obj->PlcConnectP = 0;
+}
+
+
+void CompIMC_Fo_exec( plc_sThread *tp, 
+                         pwr_sClass_CompIMC_Fo *plc_obj) 
+{ 
+	pwr_sClass_CompIMC *plant_obj = (pwr_sClass_CompIMC *) plc_obj->PlcConnectP;
+	if ( !plant_obj) return;
+	pwr_tFloat32 man_OP, sig,  yr, LSP, PV, nLSP, nPV, Tl1, Tl2;
+
+	void LagFilter(pwr_tInt16 n, pwr_tFloat32 Tlag)
+	{
+		if (Tlag < Te) { plant_obj->S[n+1] = plant_obj->S[n]; return; }	
+		pwr_tFloat32 kf= 1.0/(1.0+Tlag/Te);
+		Clamp (plant_obj->S[n+1], 0.0, 100.0);
+		plant_obj->S[n+1]  = (1.0-kf)* plant_obj->S[n+1] + kf * plant_obj->S[n];
+	}
+
+	void LeadLagFilter(pwr_tInt16 n, pwr_tFloat32 T1, pwr_tFloat32 T2)
+	{
+		if (T2 < Te)  { plant_obj->S[n+1] = plant_obj->S[n]; plant_obj->M[n]=plant_obj->S[n];return; }	
+		pwr_tFloat32 kc = -T1/Te;
+		pwr_tFloat32 kd = T2/Te;
+		pwr_tFloat32 ka = 1.0+kd;
+		pwr_tFloat32 kb = 1.0-kc;	
+
+		Clamp (plant_obj->S[n+1], 0.0, 100.0);
+		plant_obj->S[n+1] = 
+			  kd/ka* plant_obj->S[n+1] 
+			+ kb/ka*plant_obj->S[n] 
+			+ kc/ka* plant_obj->M[n];
+		plant_obj->M[n]=plant_obj->S[n];
+	}
+
+	void SouFilter(pwr_tInt16 n, pwr_tFloat32 w0P, pwr_tFloat32 ksi)
+	{
+		if (w0P<=0.0) {plant_obj->S[n+1] = plant_obj->S[n];return;}
+		pwr_tFloat32 a0 = Te*Te*w0P*w0P+2.0*ksi*Te*w0P+1.0;
+		pwr_tFloat32 a1 = 2.0*(ksi*Te*w0P+1.0);
+		pwr_tFloat32 a2 = -1.0;
+		pwr_tFloat32 b0 = Te*Te*w0P*w0P;
+
+		Clamp (plant_obj->S[n+1], 0.0, 100.0);
+		plant_obj->uOutm2 = plant_obj->uOutm1;
+		plant_obj->uOutm1 = plant_obj->S[n+1];
+		plant_obj->S[n+1]= 
+ 			  a1/a0 * plant_obj->uOutm1 
+			+ a2/a0 * plant_obj->uOutm2 
+			+ b0/a0 * plant_obj->S[n];
+	}
+
+
+	void SouTOoFilter(pwr_tInt16 n, pwr_tFloat32 w0, pwr_tFloat32 ksi, pwr_tFloat32 Tl1, pwr_tFloat32 Tl2)
+	{
+		if (w0<=0.0) {plant_obj->S[n+1] = plant_obj->S[n];return;}
+		pwr_tFloat32 b0 = Te*Te*w0*w0+2.0*ksi*Te*w0+1.0;
+		pwr_tFloat32 b1 = -2.0*(ksi*Te*w0+1.0);
+		pwr_tFloat32 b2 = 1.0;
+		pwr_tFloat32 a0 = w0*w0*(Tl1+Te)*(Tl2+Te);
+		pwr_tFloat32 a1 = w0*w0*(2.0*Tl1*Tl2+Te*(Tl1+Tl2));
+		pwr_tFloat32 a2 = -w0*w0*Tl1*Tl2;
+		
+		Clamp (plant_obj->S[n+1], 0.0, 100.0);
+		plant_obj->Outm2 = plant_obj->Outm1;
+		plant_obj->Outm1 = plant_obj->S[n+1];
+		plant_obj->S[n+1] = 
+			  a1/a0 * plant_obj->Outm1 
+			+ a2/a0 *plant_obj->Outm2 
+			+ b0/a0 * plant_obj->S[n]
+			+ b1/a0 * plant_obj->Inm1
+			+ b2/a0 * plant_obj->Inm2;
+		plant_obj->Inm2 = plant_obj->Inm1;
+		plant_obj->Inm1 = plant_obj->S[n];
+	}
+
+	void Delay(pwr_tInt16 n, pwr_tFloat32 Delay) // Only one delay per IMC object available
+	{
+		pwr_tFloat32 OP=0.0;
+		int i, Ntime, Nscan;	
+
+	
+		if ((int) Delay < Te) { plant_obj->S[n+1]=plant_obj->S[n]; return; } // return if nothing can be done	
+		if (plant_obj->PrevDelay != Delay) for(i=MAXCELLS-1; i>=0; i--) plant_obj->D[i]=plant_obj->S[n]; // reset if delay param as changed
+		plant_obj->PrevDelay = Delay; // Apply new delay
+		Nscan = (int) (0.5+Delay/Te); // Calculate number of cells needed
+		if (Nscan > MAXCELLS) // Things to do if delay time is more than 100 times scan time
+		{
+			Ntime = (int) (0.5+Delay/(Te * (pwr_tFloat32) MAXCELLS)); // calculate number of time lags to count
+			if (plant_obj->DtCtr==0) for(i=0; i<=MAXCELLS; i++) plant_obj->D[i]=plant_obj->S[n]; // reset all the array
+			OP=plant_obj->D[MAXCELLS-1]; // copy last array item to output
+			if (plant_obj->DtCtr >= Ntime) // if time elapsed -> shift array
+			{
+				plant_obj->DtCtr=0; // Reset time lag counter
+				for(i=MAXCELLS-1; i>0; i--) plant_obj->D[i]=plant_obj->D[i-1]; // shift all the array
+				plant_obj->D[0]=plant_obj->S[n]; // copy input to first array item 
+			}
+			plant_obj->DtCtr++; // decrement time lag counter
+		}
+		else // things to do if delay time is less than (or equal to) 100 times scan time
+		{
+			OP = plant_obj->D[Nscan-1]; // copy last active array item to output
+			for(i=Nscan; i>0; i--) plant_obj->D[i]=plant_obj->D[i-1]; // shift a sufficient part of the array
+			plant_obj->D[0]=plant_obj->S[n]; // copy input to first array item 
+		}	
+		plant_obj->S[n+1]=OP; // copy to function output
+	}
+
+	pwr_tInt16 i;
+	pwr_tFloat32 OP;
+	
+
+	plant_obj->PV  = *plc_obj->PVP; // Process value: copy IMC_Fo to IMC
+	plant_obj->SP  = *plc_obj->SPP; // Setpoint value: copy IMC_Fo to IMC
+	plant_obj->aut = *plc_obj->autP; // Auto input: copy IMC_Fo to IMC	
+
+	LSP=plant_obj->SP+plant_obj->Trim_SP; // Calculate working setpoint
+	Clamp (LSP, plant_obj->LL_SP, plant_obj->HL_SP); // Apply limits
+	Normalize(LSP,nLSP, plant_obj->LR_PV, plant_obj->HR_PV,0.0,100.0); // Normalize setpoint value
+	
+	PV = plant_obj->PV; // Copy from GUI 
+	Normalize(PV,nPV, plant_obj->LR_PV, plant_obj->HR_PV,0.0,100.0);  // Normalize process value
+	sig = (plant_obj->Inverse) ? nLSP - nPV : nPV - nLSP; 	// Error signal after direct/inverse Comparator
+	plant_obj->EP=-sig; // Calculate error value to display
+
+	if(!plant_obj->aut){	// Manage manual mode & reset all buffers
+		sig=0; 
+		Normalize(*plc_obj->Man_OPP, man_OP, plant_obj->LR_OP, plant_obj->HR_OP, 0.0, 100.0);
+
+		for (i=0; i<12; i++) plant_obj->S[i]=man_OP;
+		for (i=0; i<100; i++) plant_obj->D[i]=man_OP;
+		for (i=0; i<10; i++) plant_obj->M[i]=man_OP;
+		plant_obj->Inm1=plant_obj->Inm2=plant_obj->Outm1=plant_obj->Outm2=man_OP;
+		plant_obj->uOutm1=plant_obj->uOutm2=man_OP; 
+
+		yr = *plc_obj->Man_OPP;
+		Clamp (yr, plant_obj->LL_OP, plant_obj->HL_OP); // Apply limits on control signal
+		plc_obj->OP=plant_obj->OP = yr;
+	} 
+	else{ // Calculate IMC controller
+		
+		sig /= plant_obj->Gain;	// Apply static gain
+		
+		plant_obj->S[0] = sig+plant_obj->S[11];	// Add previous model's feedback 	
+
+		LagFilter(0,plant_obj->RobTau); // Increasing robustness by low pass filtering
+		
+		if(plant_obj->ProcModel & 8) 
+		{
+			LagFilter(1, plant_obj->LeadT);	
+			LeadLagFilter(2, plant_obj->LagT3, plant_obj->LagT3/plant_obj->Accel);	
+		}
+			else plant_obj->S[3]=plant_obj->S[2]=plant_obj->S[1];
+
+		if(plant_obj->ProcModel & 1) LeadLagFilter(3, plant_obj->LagT1, plant_obj->LagT1/plant_obj->Accel); 
+			else plant_obj->S[4]=plant_obj->S[3];
+
+		if(plant_obj->ProcModel & 2) LeadLagFilter(4, plant_obj->LagT2, plant_obj->LagT2/plant_obj->Accel); 
+			else plant_obj->S[5]=plant_obj->S[4];
+
+		if(plant_obj->ProcModel & 4) 
+			{
+				Tl1 = Tl2 = plant_obj->ksi*M_PI/(2.0*plant_obj->Accel*plant_obj->w0);
+				SouTOoFilter(5, plant_obj->w0, plant_obj->ksi, Tl1, Tl2);
+			}
+			else plant_obj->S[6]=plant_obj->S[5];
+		
+		OP=plant_obj->S[6];
+		Clamp (OP, 0.0, 100.0); // Apply limits on model output		
+		Normalize(OP,yr,0.0,100.0,plant_obj->LR_OP, plant_obj->HR_OP);	// Denormalize output
+		yr+=plant_obj->FF; // Add feedforward input value
+		Clamp (yr, plant_obj->LL_OP, plant_obj->HL_OP); // Apply limits to control signal
+		plc_obj->OP=plant_obj->OP = yr; // copy to GUI objects
+	
+		// Model's feedback
+
+		if(plant_obj->ProcModel & 1) LagFilter(6,plant_obj->LagT1);
+			else plant_obj->S[7]=plant_obj->S[6];
+
+		if(plant_obj->ProcModel & 2) LagFilter(7,plant_obj->LagT2);
+			else plant_obj->S[8]=plant_obj->S[7];
+
+		if(plant_obj->ProcModel & 8) LeadLagFilter(8,plant_obj->LeadT, plant_obj->LagT3);
+			else plant_obj->S[9]=plant_obj->S[8];
+
+		if(plant_obj->ProcModel & 4) SouFilter(9, plant_obj->w0, plant_obj->ksi);
+			else plant_obj->S[10]=plant_obj->S[9];
+
+		Delay(10, plant_obj->DelayT);
+		
+	
+	// ----
+	}
+} 
+
+/*_*
+  PLC Mode interface to a discrete time Internal Model Controler component
+
+  @aref compmodeimc
+  @aref compmodeimc_fo CompImc_Fo
+
+  2015 - 12 - 19	Bruno: initial object.
+  2016 - 04 - 11	Bruno: cleaning.
+*/
+
+
+void CompModeIMC_Fo_init( pwr_sClass_CompModeIMC_Fo *plc_obj) 
+{
+	pwr_tDlid dlid;
+	pwr_tStatus sts;
+	sts = gdh_DLRefObjectInfoAttrref( &plc_obj->PlcConnect, (void **)&plc_obj->PlcConnectP, &dlid);
+	if ( EVEN(sts))
+	plc_obj->PlcConnectP = 0;
+}
+
+
+void CompModeIMC_Fo_exec( plc_sThread *tp, 
+                         pwr_sClass_CompModeIMC_Fo *plc_obj) 
+{ 
+	pwr_sClass_CompModeIMC *plant_obj = (pwr_sClass_CompModeIMC *) plc_obj->PlcConnectP;
+	if ( !plc_obj)
+	return;
+
+	plant_obj->PV=*plc_obj->PVP; // Copy from GUI
+	plant_obj->OP=*plc_obj->OPP; // Copy from GUI
+
+	if((plant_obj->Mode==pwr_eImcModeEnum_Manual) // Manage manual mode
+		&&(plant_obj->PrevMode!=pwr_eImcModeEnum_Manual)) 
+			plant_obj->Loc_OP=plant_obj->OP;
+
+	if (plant_obj->Mode!=pwr_eImcModeEnum_Manual) // Manage auto mode
+			plant_obj->Loc_OP=*plc_obj->OPP; 
+		else 
+			plc_obj->Man_OP = plant_obj->Loc_OP;
+
+	if((plant_obj->Mode!=pwr_eImcModeEnum_Manual)
+		&&(plant_obj->PrevMode==pwr_eImcModeEnum_Manual)
+		&&(plant_obj->BumpLess)) // copy PV to SP when bumpless is set & aut to man transition
+			plant_obj->Loc_SP=plant_obj->PV;
+
+	if((plant_obj->Mode==pwr_eImcModeEnum_Auto)
+		&&(plant_obj->PrevMode==pwr_eImcModeEnum_Remote)
+		&&(plant_obj->BumpLess)) // copy PV to SP when bumpless is set & rem to man transition
+			plant_obj->Loc_SP=plant_obj->PV;  
+
+	if(plant_obj->Loc_SP != plant_obj->SP) plant_obj->SP = plant_obj->Loc_SP; // set SP to manual GUI SP setting
+	if(plant_obj->Mode == pwr_eImcModeEnum_Remote) plant_obj->SP = *plc_obj->Rem_SPP;// set SP to external SP when remote mode is selected
+	plc_obj->SP=plant_obj->SP; // copy plant SP to plc SP
+	plc_obj->aut=(plant_obj->Mode!=pwr_eImcModeEnum_Manual); // set aut output on plc object
+	plant_obj->EP= (plant_obj->PV-plant_obj->SP); // calculate EP
+	plant_obj->PrevMode=plant_obj->Mode; // memorize last mode
+}
 
 
 

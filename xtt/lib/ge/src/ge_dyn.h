@@ -426,6 +426,8 @@
     ge_eSave_Value_instance      	= 1202,
     ge_eSave_Value_instance_mask 	= 1203,
     ge_eSave_Value_zero_blank 		= 1204,
+    ge_eSave_Value_decimals_attr       	= 1205,
+    ge_eSave_Value_decimals_decr       	= 1206,
     ge_eSave_ValueInput_attribute      	= 1300,
     ge_eSave_ValueInput_format		= 1301,
     ge_eSave_ValueInput_min_value      	= 1302,
@@ -1417,6 +1419,8 @@ class GeValue : public GeDynElem {
   pwr_tAName attribute;	  	//!< Database reference of an attribute with arbitrary type. 
   char format[80];		//!< Format of conversion from value to string.
   int zero_blank;		//!< Blank field when value i zero (integer or float).
+  pwr_tAName decimals_attr;     //!< Database reference to number of decimals for float format.
+  int decimals_decr;
 
   void *p;
   pwr_tSubid subid;
@@ -1430,12 +1434,13 @@ class GeValue : public GeDynElem {
 
   GeValue( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType1_Value, ge_mDynType2_No, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Value),
-    zero_blank(0), annot_typeid(0), annot_size(0), tid(0)
-    { strcpy( attribute, ""); strcpy( format, ""); instance = e_instance;
+    zero_blank(0), decimals_decr(0), annot_typeid(0), annot_size(0), tid(0)
+    { strcpy( attribute, ""); strcpy( format, ""); strcpy( decimals_attr, ""); instance = e_instance;
       memset(old_value, 0, sizeof(old_value));}
   GeValue( const GeValue& x) : 
-    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), zero_blank(x.zero_blank)
-    { strcpy( attribute, x.attribute); strcpy( format, x.format);
+    GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), zero_blank(x.zero_blank),
+    decimals_decr(x.decimals_decr)
+    { strcpy( attribute, x.attribute); strcpy( format, x.format); strcpy( decimals_attr, x.decimals_attr);
       instance = x.instance; instance_mask = x.instance_mask;
       memset(old_value, 0, sizeof(old_value));}
   void get_attributes( attr_sItem *attrinfo, int *item_count); 
@@ -3155,14 +3160,15 @@ class GeAxis : public GeDynElem {
 
   GeAxis( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_Axis, ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_Axis),
-    min_value(0), max_value(100), keep_settings(0), imin_value(0), imax_value(0), min_value_p(0), max_value_p(0), imin_value_p(0),
+    min_value(0), max_value(100), keep_settings(0), imin_value(0), imax_value(0), min_value_p(0), 
+    max_value_p(0), imin_value_p(0),
     imax_value_p(0), attr_type(0)
     { strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");}
   GeAxis( const GeAxis& x) : 
     GeDynElem(x.dyn,x.dyn_type1,x.dyn_type2,x.action_type1,x.action_type2,x.prio), 
-    min_value(x.min_value),max_value(x.max_value), keep_settings(x.keep_settings),
+    min_value(x.min_value),max_value(x.max_value), keep_settings(x.keep_settings), 
     min_value_p(0), max_value_p(0), imin_value_p(0), imax_value_p(0)
-    { strcpy( minvalue_attr, x.minvalue_attr); strcpy( maxvalue_attr, x.maxvalue_attr);}
+    { strcpy( minvalue_attr, x.minvalue_attr); strcpy( maxvalue_attr, x.maxvalue_attr); }
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);

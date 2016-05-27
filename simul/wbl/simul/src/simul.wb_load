@@ -1,0 +1,1115 @@
+Volume Simul $ClassVolume 0.0.0.8 
+  Body SysBody 01-JAN-1970 01:00:00.00
+    Attr NextOix = "_X36"
+    Attr NextCix = "_X16"
+    Attr NextTix[0] = "_X6"
+  EndBody
+  Object Type $TypeHier 3 28-FEB-2016 17:05:51.66
+    Object Sim_GenType $TypeDef 1 23-MAY-2016 16:31:35.02
+      Body SysBody 28-FEB-2016 17:05:07.97
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object Triangle $Value 4 28-FEB-2016 17:05:07.97
+        Body SysBody 28-FEB-2016 17:05:07.97
+          Attr Text = "Triangle"
+          Attr PgmName = "Triangle"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object Square $Value 5 28-FEB-2016 17:05:07.97
+        Body SysBody 28-FEB-2016 17:05:07.97
+          Attr Text = "Square"
+          Attr PgmName = "Square"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object Sine $Value 6 28-FEB-2016 17:05:07.97
+        Body SysBody 28-FEB-2016 17:05:07.97
+          Attr Text = "Sine"
+          Attr PgmName = "Sine"
+          Attr Value = 4
+        EndBody
+      EndObject
+      Object None $Value 36 06-APR-2016 15:15:22.93
+        Body SysBody 06-APR-2016 15:15:30.24
+          Attr Text = "None"
+          Attr PgmName = "None"
+          Attr Value = 8
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+  Object Class $ClassHier 21 28-FEB-2016 17:06:54.40
+    !/**
+    ! @Author Bruno PERMANNE
+    ! @Version 0.2
+    ! @Code simul.c
+    ! @Summary Signal generator
+    ! This is a signal generator (sine, triangle, rectangle).
+    ! Noise and offset can be added to simulate real world behavior.
+    !
+    ! @image orm_sim_siggen_fo.png
+    !*/
+    Object Sim_SigGen $ClassDef 13 23-MAY-2016 16:28:12.28
+      Body SysBody 28-FEB-2016 17:12:37.80
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-APR-2016 14:19:19.68
+        Body SysBody 23-MAY-2016 16:28:36.14
+          Attr StructName = "Sim_SigGen"
+          Attr NextAix = "_X27"
+        EndBody
+        !/**
+        ! Peak to peak amplitude of output signal
+        !*/
+        Object Range $Input 14 06-APR-2016 14:04:14.54
+          Body SysBody 06-APR-2016 14:04:43.65
+            Attr PgmName = "Range"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Range"
+          EndBody
+        EndObject
+        !/**
+        ! Amplitude of offset of the output signal
+        !*/
+        Object Offset $Input 15 06-APR-2016 14:04:54.45
+          Body SysBody 06-APR-2016 14:05:04.47
+            Attr PgmName = "Offset"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Offset"
+          EndBody
+        EndObject
+        !/**
+        ! Period (s) of output signal
+        !*/
+        Object Period $Input 16 28-FEB-2016 17:12:37.80
+          Body SysBody 28-FEB-2016 17:12:37.80
+            Attr PgmName = "Period"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Period"
+          EndBody
+        EndObject
+        !/**
+        ! Peak to peak amplitude of noise of the output signal
+        !*/
+        Object NGain $Input 25 06-APR-2016 14:18:43.65
+          Body SysBody 06-APR-2016 14:18:58.00
+            Attr PgmName = "NGain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "NGain"
+          EndBody
+        EndObject
+        !/**
+        ! Time constant (s) of first order noise filter.
+        !*/
+        Object NFilterT $Input 26 06-APR-2016 14:19:39.05
+          Body SysBody 06-APR-2016 14:19:56.72
+            Attr PgmName = "NFilterT"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "NFilterT"
+          EndBody
+        EndObject
+        !/**
+        ! Shape (sine, triangle, rectangle, none) of output signal
+        !*/
+        Object Wave $Intern 17 28-FEB-2016 17:12:37.80
+          Body SysBody 28-FEB-2016 19:01:39.51
+            Attr PgmName = "Wave"
+            Attr TypeRef = "Simul:Type-Sim_GenType"
+            Attr GraphName = "Wave"
+          EndBody
+        EndObject
+        !/**
+        ! Private (wave index)
+        !*/
+        Object wavei $Intern 21 28-MAR-2016 15:49:18.64
+          Body SysBody 06-APR-2016 14:06:28.71
+            Attr PgmName = "wavei"
+            Attr Flags = 8455168
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "wavei"
+          EndBody
+        EndObject
+        !/**
+        ! Private (noise generator)
+        !*/
+        Object sf $Intern 23 28-MAR-2016 16:08:53.40
+          Body SysBody 06-APR-2016 14:05:33.84
+            Attr PgmName = "sf"
+            Attr Flags = 8455168
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "sf"
+          EndBody
+        EndObject
+        !/**
+        ! Private (inversion sign of wave)
+        !*/
+        Object sign $Intern 22 28-MAR-2016 15:50:58.17
+          Body SysBody 06-APR-2016 14:05:53.14
+            Attr PgmName = "sign"
+            Attr Flags = 8455168
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "sign"
+          EndBody
+        EndObject
+        !/**
+        ! Signal generator wave out.
+        !*/
+        Object Out $Output 18 28-FEB-2016 17:12:37.80
+          Body SysBody 12-APR-2016 14:21:09.66
+            Attr PgmName = "Out"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Out"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 28-FEB-2016 17:12:37.80
+        Body SysBody 23-MAY-2016 16:28:41.14
+          Attr StructName = "Sim_SigGen"
+          Attr NextAix = "_X3"
+        EndBody
+        Object PlcNode $Buffer 2 28-FEB-2016 17:12:37.80
+          Body SysBody 28-FEB-2016 17:12:37.80
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 31 28-FEB-2016 17:12:37.80
+        Body SysBody 28-FEB-2016 17:12:37.80
+          Attr object_type = 11
+          Attr parameters[0] = 5
+          Attr parameters[1] = 4
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 0
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 4
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 2
+          Attr objname = "SigGen"
+          Attr graphname = "SigGen"
+        EndBody
+      EndObject
+      Object Template Sim_SigGen 2151120896 01-JAN-1970 01:00:00.00
+        Body RtBody 06-APR-2016 14:22:12.81
+          Attr Range = 2.000000e+01
+          Attr Period = 3.000000e+00
+          Attr NFilterT = 1.000000e+00
+          Attr Wave = 4
+          Attr sign = 1
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    ! @Author Bruno PERMANNE
+    ! @Version 0.2
+    ! @Code simul.c
+    ! @Summary Integrator
+    ! Integator.
+    !
+    ! @image orm_sim_integrator_fo.png
+    !
+    ! Performs a discrete time integration with dynamic gain. 
+    ! In Laplace transform:
+    !
+    !            K
+    ! F(s) = -------
+    !            s
+    !*/
+    Object Sim_Integrator $ClassDef 15 23-MAY-2016 16:28:52.08
+      Body SysBody 02-MAR-2016 12:51:18.10
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAR-2016 12:51:57.93
+        Body SysBody 23-MAY-2016 16:28:56.94
+          Attr StructName = "Sim_Integrator"
+          Attr NextAix = "_X6"
+        EndBody
+        Object In $Input 5 02-MAR-2016 12:54:32.62
+          Body SysBody 02-MAR-2016 12:55:19.91
+            Attr PgmName = "In"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "In"
+          EndBody
+        EndObject
+        Object HL_OP $Input 4 02-MAR-2016 13:21:04.07
+          Body SysBody 02-MAR-2016 13:21:18.96
+            Attr PgmName = "HL_OP"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "HL_OP"
+          EndBody
+        EndObject
+        Object LL_OP $Input 3 02-MAR-2016 13:21:29.35
+          Body SysBody 02-MAR-2016 13:27:12.89
+            Attr PgmName = "LL_OP"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "LL_OP"
+          EndBody
+        EndObject
+        Object DynGain $Input 2 02-MAR-2016 13:36:57.94
+          Body SysBody 02-MAR-2016 13:37:12.63
+            Attr PgmName = "DynGain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "DynGain"
+          EndBody
+        EndObject
+        Object Out $Output 1 02-MAR-2016 12:53:11.73
+          Body SysBody 02-MAR-2016 12:55:48.60
+            Attr PgmName = "Out"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Out"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 02-MAR-2016 12:51:57.93
+        Body SysBody 23-MAY-2016 16:29:01.80
+          Attr StructName = "Sim_Integrator"
+          Attr NextAix = "_X2"
+        EndBody
+        Object PlcNode $Buffer 1 02-MAR-2016 12:51:57.93
+          Body SysBody 02-MAR-2016 12:51:57.93
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 33 02-MAR-2016 12:51:57.93
+        Body SysBody 02-MAR-2016 12:51:57.93
+          Attr object_type = 11
+          Attr parameters[0] = 4
+          Attr parameters[1] = 0
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 15
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 4
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 2
+          Attr objname = "Integrator"
+          Attr graphname = "Integrator"
+        EndBody
+      EndObject
+      Object Template Sim_Integrator 2151645184 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAR-2016 13:21:55.02
+          Attr HL_OP = 1.000000e+02
+          Attr DynGain = 1.000000e+00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    ! @Author Bruno PERMANNE
+    ! @Version 0.2
+    ! @Code simul.c
+    ! @Summary Lead / lag filter
+    ! Lead / lag filter.
+    !
+    ! @image orm_sim_leadlagfilter_fo.png
+    !
+    ! Performs a discrete time lead / lag filtering. 
+    ! In Laplace transform:
+    !
+    !          1 + Tlead.s
+    ! F(s) = ----------------
+    !          1 + Tlag.s
+    !*/
+    Object Sim_LeadLagFilter $ClassDef 8 23-MAY-2016 16:29:22.68
+      Body SysBody 28-FEB-2016 17:10:52.82
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 28-FEB-2016 17:10:52.82
+        Body SysBody 23-MAY-2016 16:29:27.15
+          Attr StructName = "Sim_LeadLagFilter"
+          Attr NextAix = "_X26"
+        EndBody
+        Object In $Input 18 28-FEB-2016 17:10:52.82
+          Body SysBody 28-FEB-2016 17:10:52.82
+            Attr PgmName = "In"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "In"
+          EndBody
+        EndObject
+        Object LeadTime $Input 19 28-FEB-2016 17:10:52.82
+          Body SysBody 28-FEB-2016 17:10:52.82
+            Attr PgmName = "LeadTime"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "LeadTime"
+          EndBody
+        EndObject
+        Object LagTime $Input 20 28-FEB-2016 17:10:52.82
+          Body SysBody 28-FEB-2016 17:10:52.82
+            Attr PgmName = "LagTime"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "LagTime"
+          EndBody
+        EndObject
+        Object Gain $Input 21 28-FEB-2016 17:10:52.82
+          Body SysBody 28-FEB-2016 17:10:52.82
+            Attr PgmName = "Gain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Gain"
+          EndBody
+        EndObject
+        Object HL_OP $Intern 22 28-FEB-2016 17:10:52.82
+          Body SysBody 28-FEB-2016 17:10:52.82
+            Attr PgmName = "HL_OP"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "HL_OP"
+          EndBody
+        EndObject
+        Object LL_OP $Intern 23 28-FEB-2016 17:10:52.82
+          Body SysBody 28-FEB-2016 17:10:52.82
+            Attr PgmName = "LL_OP"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "LL_OP"
+          EndBody
+        EndObject
+        Object PrevIn $Intern 24 28-FEB-2016 17:10:52.82
+          Body SysBody 28-FEB-2016 17:10:52.82
+            Attr PgmName = "PrevIn"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "PrevIn"
+          EndBody
+        EndObject
+        Object Out $Output 25 28-FEB-2016 17:10:52.82
+          Body SysBody 28-FEB-2016 17:10:52.82
+            Attr PgmName = "Out"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Out"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 28-FEB-2016 17:10:52.82
+        Body SysBody 23-MAY-2016 16:29:32.14
+          Attr StructName = "Sim_LeadLagFilter"
+          Attr NextAix = "_X4"
+        EndBody
+        Object PlcNode $Buffer 3 28-FEB-2016 17:10:52.82
+          Body SysBody 28-FEB-2016 17:10:52.82
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 28 28-FEB-2016 17:10:52.82
+        Body SysBody 28-FEB-2016 17:10:52.82
+          Attr object_type = 11
+          Attr parameters[0] = 4
+          Attr parameters[1] = 3
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 1
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 4
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 2
+          Attr objname = "LeadLagFilter"
+          Attr graphname = "LeadLagFilter"
+        EndBody
+      EndObject
+      Object Template Sim_LeadLagFilter 2149810176 01-JAN-1970 01:00:00.00
+        Body RtBody 27-MAR-2016 21:32:32.29
+          Attr LeadTime = 1.000000e+00
+          Attr LagTime = 5.000000e+00
+          Attr Gain = 1.000000e+00
+          Attr HL_OP = 1.000000e+02
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    ! @Author Bruno PERMANNE
+    ! @Version 0.2
+    ! @Code simul.c
+    ! @Summary Lag filter
+    ! Lag filter.
+    !
+    ! @image orm_sim_lagfilter_fo.png
+    !
+    ! Performs a discrete time lag filtering. 
+    ! In Laplace transform:
+    !
+    !               1
+    ! F(s) = --------------
+    !          1 + Tlag.s
+    !*/
+    Object Sim_LagFilter $ClassDef 7 23-MAY-2016 16:29:46.33
+      Body SysBody 28-FEB-2016 17:10:40.90
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 28-FEB-2016 17:10:40.90
+        Body SysBody 23-MAY-2016 16:29:53.63
+          Attr StructName = "Sim_LagFilter"
+          Attr NextAix = "_X18"
+        EndBody
+        Object In $Input 12 28-FEB-2016 17:10:40.90
+          Body SysBody 28-FEB-2016 17:10:40.90
+            Attr PgmName = "In"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "In"
+          EndBody
+        EndObject
+        Object LagTime $Input 13 28-FEB-2016 17:10:40.90
+          Body SysBody 28-FEB-2016 17:10:40.90
+            Attr PgmName = "LagTime"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "LagTime"
+          EndBody
+        EndObject
+        Object Gain $Input 14 28-FEB-2016 17:10:40.90
+          Body SysBody 28-FEB-2016 17:10:40.90
+            Attr PgmName = "Gain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Gain"
+          EndBody
+        EndObject
+        Object HL_OP $Intern 15 28-FEB-2016 17:10:40.90
+          Body SysBody 28-FEB-2016 17:10:40.90
+            Attr PgmName = "HL_OP"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "HL_OP"
+          EndBody
+        EndObject
+        Object LL_OP $Intern 16 28-FEB-2016 17:10:40.90
+          Body SysBody 28-FEB-2016 17:10:40.90
+            Attr PgmName = "LL_OP"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "LL_OP"
+          EndBody
+        EndObject
+        Object Out $Output 17 28-FEB-2016 17:10:40.90
+          Body SysBody 28-FEB-2016 17:10:40.90
+            Attr PgmName = "Out"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Out"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 28-FEB-2016 17:10:40.90
+        Body SysBody 23-MAY-2016 16:29:57.67
+          Attr StructName = "Sim_LagFilter"
+          Attr NextAix = "_X4"
+        EndBody
+        Object PlcNode $Buffer 3 28-FEB-2016 17:10:40.90
+          Body SysBody 28-FEB-2016 17:10:40.90
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 27 28-FEB-2016 17:10:40.90
+        Body SysBody 28-FEB-2016 17:10:40.90
+          Attr object_type = 11
+          Attr parameters[0] = 3
+          Attr parameters[1] = 2
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 3
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 4
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 2
+          Attr objname = "LagFilter"
+          Attr graphname = "LagFilter"
+        EndBody
+      EndObject
+      Object Template Sim_LagFilter 2149548032 01-JAN-1970 01:00:00.00
+        Body RtBody 27-MAR-2016 21:33:06.67
+          Attr LagTime = 1.000000e+00
+          Attr Gain = 1.000000e+00
+          Attr HL_OP = 1.000000e+02
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    ! @Author Bruno PERMANNE
+    ! @Version 1.0
+    ! @Code simul.c
+    ! @Summary Analog 100 cells delay plc function.
+    ! Analog 100 cells delay plc function.
+    !
+    ! @image orm_sim_delay_fo.png
+    !
+    ! Performs a discrete time delay on a 100 float numbers cells shift register. 
+    ! In Laplace transform:
+    !
+    ! F(s) = exp(-T.s)
+    !*/
+    Object Sim_Delay $ClassDef 6 23-MAY-2016 16:30:07.79
+      Body SysBody 28-FEB-2016 17:10:19.82
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 28-FEB-2016 17:10:19.82
+        Body SysBody 23-MAY-2016 16:30:13.62
+          Attr StructName = "Sim_Delay"
+          Attr NextAix = "_X34"
+        EndBody
+        Object In $Input 26 28-FEB-2016 17:10:19.82
+          Body SysBody 28-FEB-2016 17:10:19.82
+            Attr PgmName = "In"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "In"
+          EndBody
+        EndObject
+        Object Delay $Input 27 28-FEB-2016 17:10:19.82
+          Body SysBody 28-FEB-2016 17:10:19.82
+            Attr PgmName = "Delay"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Delay"
+          EndBody
+        EndObject
+        Object PrevDelay $Intern 33 28-MAR-2016 14:30:38.11
+          Body SysBody 07-APR-2016 19:25:56.59
+            Attr PgmName = "PrevDelay"
+            Attr Flags = 8457216
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "PrevDelay"
+          EndBody
+        EndObject
+        Object HL_OP $Intern 28 28-FEB-2016 17:10:19.82
+          Body SysBody 28-FEB-2016 17:10:19.82
+            Attr PgmName = "HL_OP"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "HL_OP"
+          EndBody
+        EndObject
+        Object LL_OP $Intern 29 28-FEB-2016 17:10:19.82
+          Body SysBody 28-FEB-2016 17:10:19.82
+            Attr PgmName = "LL_OP"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "LL_OP"
+          EndBody
+        EndObject
+        Object DtCtr $Intern 30 28-FEB-2016 17:10:19.82
+          Body SysBody 07-APR-2016 19:25:43.36
+            Attr PgmName = "DtCtr"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$Int16"
+            Attr GraphName = "DtCtr"
+          EndBody
+        EndObject
+        Object D $Intern 31 28-FEB-2016 17:10:19.82
+          Body SysBody 07-APR-2016 19:25:33.47
+            Attr PgmName = "D"
+            Attr Flags = 3074
+            Attr Elements = 100
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "D"
+          EndBody
+        EndObject
+        Object Out $Output 32 28-FEB-2016 17:10:19.82
+          Body SysBody 28-FEB-2016 17:10:19.82
+            Attr PgmName = "Out"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Out"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 28-FEB-2016 17:10:19.82
+        Body SysBody 23-MAY-2016 16:30:16.91
+          Attr StructName = "Sim_Delay"
+          Attr NextAix = "_X4"
+        EndBody
+        Object PlcNode $Buffer 3 28-FEB-2016 17:10:19.82
+          Body SysBody 28-FEB-2016 17:10:19.82
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 26 28-FEB-2016 17:10:19.82
+        Body SysBody 28-FEB-2016 17:10:19.82
+          Attr object_type = 11
+          Attr parameters[0] = 2
+          Attr parameters[1] = 5
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 1
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 4
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 2
+          Attr objname = "Delay"
+          Attr graphname = "Delay"
+        EndBody
+      EndObject
+      Object Template Sim_Delay 2149285888 01-JAN-1970 01:00:00.00
+        Body RtBody 27-MAR-2016 21:33:27.25
+          Attr HL_OP = 1.000000e+02
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    ! @Author Bruno PERMANNE
+    ! @Version 0.2
+    ! @Code simul.c
+    ! @Summary Second order underdamped filter
+    ! Second order underdamped filter.
+    !
+    ! @image orm_sim_soufilter_fo.png
+    !
+    ! Performs a discrete time second order underdamped filtering. 
+    ! In Laplace transform:
+    !
+    !             1
+    ! F(s) = ---------------------------------
+    !         1/(w0^2).s^2 + 2.ksi/w0.s + 1
+    !
+    ! ksi: damping factor
+    ! w0:  pseudo resonance pulsation
+    !*/
+    Object Sim_SouFilter $ClassDef 5 23-MAY-2016 16:30:28.01
+      Body SysBody 28-FEB-2016 17:10:08.34
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 28-FEB-2016 17:10:08.34
+        Body SysBody 23-MAY-2016 16:30:34.47
+          Attr StructName = "Sim_SouFilter"
+          Attr NextAix = "_X32"
+        EndBody
+        Object In $Input 23 28-FEB-2016 17:10:08.34
+          Body SysBody 28-FEB-2016 17:10:08.34
+            Attr PgmName = "In"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "In"
+          EndBody
+        EndObject
+        !/**
+        !  Pseudo resonance pulsation.
+        !*/
+        Object w0 $Input 24 28-FEB-2016 17:10:08.34
+          Body SysBody 28-FEB-2016 17:10:08.34
+            Attr PgmName = "w0"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "w0"
+          EndBody
+        EndObject
+        !/**
+        !  Damping factor.
+        !*/
+        Object ksi $Input 25 28-FEB-2016 17:10:08.34
+          Body SysBody 28-FEB-2016 17:10:08.34
+            Attr PgmName = "ksi"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "ksi"
+          EndBody
+        EndObject
+        Object Gain $Input 26 28-FEB-2016 17:10:08.34
+          Body SysBody 28-FEB-2016 17:10:08.34
+            Attr PgmName = "Gain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Gain"
+          EndBody
+        EndObject
+        Object HL_OP $Intern 27 28-FEB-2016 17:10:08.34
+          Body SysBody 28-FEB-2016 17:10:08.34
+            Attr PgmName = "HL_OP"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "HL_OP"
+          EndBody
+        EndObject
+        Object LL_OP $Intern 28 28-FEB-2016 17:10:08.34
+          Body SysBody 28-FEB-2016 17:10:08.34
+            Attr PgmName = "LL_OP"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "LL_OP"
+          EndBody
+        EndObject
+        Object Outm1 $Intern 29 28-FEB-2016 17:10:08.34
+          Body SysBody 07-APR-2016 19:26:30.63
+            Attr PgmName = "Outm1"
+            Attr Flags = 68608
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Outm1"
+          EndBody
+        EndObject
+        Object Outm2 $Intern 30 28-FEB-2016 17:10:08.34
+          Body SysBody 07-APR-2016 19:26:40.10
+            Attr PgmName = "Outm2"
+            Attr Flags = 68608
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Outm2"
+          EndBody
+        EndObject
+        Object Out $Output 31 28-FEB-2016 17:10:08.34
+          Body SysBody 28-FEB-2016 17:10:08.34
+            Attr PgmName = "Out"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Out"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 28-FEB-2016 17:10:08.34
+        Body SysBody 23-MAY-2016 16:30:37.83
+          Attr StructName = "Sim_SouFilter"
+          Attr NextAix = "_X4"
+        EndBody
+        Object PlcNode $Buffer 3 28-FEB-2016 17:10:08.34
+          Body SysBody 28-FEB-2016 17:10:08.34
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 25 28-FEB-2016 17:10:08.34
+        Body SysBody 28-FEB-2016 17:10:08.34
+          Attr object_type = 11
+          Attr parameters[0] = 4
+          Attr parameters[1] = 4
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 255
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 4
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 2
+          Attr objname = "SouFilter"
+          Attr graphname = "SouFilter"
+        EndBody
+      EndObject
+      Object Template Sim_SouFilter 2149023744 01-JAN-1970 01:00:00.00
+        Body RtBody 27-MAR-2016 21:33:53.13
+          Attr w0 = 3.300000e-01
+          Attr ksi = 5.000000e-01
+          Attr Gain = 1.000000e+00
+          Attr HL_OP = 1.000000e+02
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    ! @Author Bruno PERMANNE
+    ! @Version 0.2
+    ! @Code simul.c
+    ! @Summary Second order underdamped/overdamped filter
+    ! Second order underdamped/overdamped filter.
+    !
+    ! @image orm_sim_soutoofilter_fo.png
+    !
+    ! Performs a discrete time second order uderdamped to overdamped filtering. 
+    ! In Laplace transform:
+    !
+    !          1/(w0^2).s^2 + 2.ksi/w0.s + 1
+    ! F(s) = -----------------------------------
+    !          (1 + Tlag1.s) . (1 + Tlag2.s)
+    !
+    !
+    ! ksi: damping factor
+    ! w0: pseudo resonance pulsation
+    !*/
+    Object Sim_SouTOoFilter $ClassDef 4 23-MAY-2016 16:30:50.20
+      Body SysBody 28-FEB-2016 17:09:58.96
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 28-FEB-2016 17:09:58.96
+        Body SysBody 23-MAY-2016 16:30:53.58
+          Attr StructName = "Sim_SouTOoFilter"
+          Attr NextAix = "_X49"
+        EndBody
+        Object In $Input 36 28-FEB-2016 17:09:58.96
+          Body SysBody 28-FEB-2016 17:09:58.96
+            Attr PgmName = "In"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "In"
+          EndBody
+        EndObject
+        !/**
+        ! Pseudo resonance pulsation.
+        !*/
+        Object w0 $Input 37 28-FEB-2016 17:09:58.96
+          Body SysBody 28-FEB-2016 17:09:58.96
+            Attr PgmName = "w0"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "w0"
+          EndBody
+        EndObject
+        !/**
+        ! Damping factor.
+        !*/
+        Object ksi $Input 38 28-FEB-2016 17:09:58.96
+          Body SysBody 28-FEB-2016 17:09:58.96
+            Attr PgmName = "ksi"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "ksi"
+          EndBody
+        EndObject
+        Object LagTime1 $Input 39 28-FEB-2016 17:09:58.96
+          Body SysBody 28-FEB-2016 17:09:58.96
+            Attr PgmName = "LagTime1"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "LagTime1"
+          EndBody
+        EndObject
+        Object LagTime2 $Input 40 28-FEB-2016 17:09:58.96
+          Body SysBody 28-FEB-2016 17:09:58.96
+            Attr PgmName = "LagTime2"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "LagTime2"
+          EndBody
+        EndObject
+        Object Gain $Input 41 28-FEB-2016 17:09:58.96
+          Body SysBody 28-FEB-2016 17:09:58.96
+            Attr PgmName = "Gain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Gain"
+          EndBody
+        EndObject
+        Object HL_OP $Intern 42 28-FEB-2016 17:09:58.96
+          Body SysBody 28-FEB-2016 17:09:58.96
+            Attr PgmName = "HL_OP"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "HL_OP"
+          EndBody
+        EndObject
+        Object LL_OP $Intern 43 28-FEB-2016 17:09:58.96
+          Body SysBody 28-FEB-2016 17:09:58.96
+            Attr PgmName = "LL_OP"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "LL_OP"
+          EndBody
+        EndObject
+        Object Outm1 $Intern 44 28-FEB-2016 17:09:58.96
+          Body SysBody 07-APR-2016 19:27:43.69
+            Attr PgmName = "Outm1"
+            Attr Flags = 68608
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Outm1"
+          EndBody
+        EndObject
+        Object Outm2 $Intern 45 28-FEB-2016 17:09:58.96
+          Body SysBody 07-APR-2016 19:27:54.68
+            Attr PgmName = "Outm2"
+            Attr Flags = 68608
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Outm2"
+          EndBody
+        EndObject
+        Object Inm1 $Intern 46 28-FEB-2016 17:09:58.96
+          Body SysBody 07-APR-2016 19:28:04.45
+            Attr PgmName = "Inm1"
+            Attr Flags = 68608
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Inm1"
+          EndBody
+        EndObject
+        Object Inm2 $Intern 47 28-FEB-2016 17:09:58.96
+          Body SysBody 07-APR-2016 19:28:13.47
+            Attr PgmName = "Inm2"
+            Attr Flags = 68608
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Inm2"
+          EndBody
+        EndObject
+        Object Out $Output 48 28-FEB-2016 17:09:58.96
+          Body SysBody 28-FEB-2016 17:09:58.96
+            Attr PgmName = "Out"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Out"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 28-FEB-2016 17:09:58.96
+        Body SysBody 23-MAY-2016 16:30:56.39
+          Attr StructName = "Sim_SouTOoFilter"
+          Attr NextAix = "_X5"
+        EndBody
+        Object PlcNode $Buffer 4 28-FEB-2016 17:09:58.96
+          Body SysBody 28-FEB-2016 17:09:58.96
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 24 28-FEB-2016 17:09:58.96
+        Body SysBody 28-FEB-2016 17:09:58.96
+          Attr object_type = 11
+          Attr parameters[0] = 6
+          Attr parameters[1] = 6
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 255
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 4
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 2
+          Attr objname = "SouTOoFilter"
+          Attr graphname = "SouTOoFilter"
+        EndBody
+      EndObject
+      Object Template Sim_SouTOoFilter 2148761600 01-JAN-1970 01:00:00.00
+        Body RtBody 27-MAR-2016 21:34:36.94
+          Attr w0 = 3.300000e-01
+          Attr ksi = 5.000000e-01
+          Attr LagTime1 = 2.000000e+00
+          Attr LagTime2 = 2.000000e+00
+          Attr Gain = 1.000000e+00
+          Attr HL_OP = 1.000000e+02
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    ! @Author Bruno PERMANNE
+    ! @Version 0.2
+    ! @Code simul.c
+    ! @Summary Slew rate limiter
+    ! Slew rate limiter.
+    !
+    ! @image orm_sim_slewratelimiter_fo.png
+    !
+    ! Performs a slew rate limitation. 
+    !*/
+    Object Sim_SlewRateLimiter $ClassDef 14 23-MAY-2016 16:31:07.61
+      Body SysBody 28-FEB-2016 17:12:52.52
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 28-FEB-2016 17:12:52.52
+        Body SysBody 23-MAY-2016 16:31:13.56
+          Attr StructName = "Sim_SlewRateLimiter"
+          Attr NextAix = "_X25"
+        EndBody
+        Object In $Input 20 28-FEB-2016 17:12:52.52
+          Body SysBody 02-MAR-2016 12:55:09.15
+            Attr PgmName = "In"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "In"
+          EndBody
+        EndObject
+        Object HL $Input 21 28-FEB-2016 17:12:52.52
+          Body SysBody 28-FEB-2016 17:12:52.52
+            Attr PgmName = "HL"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "HL"
+          EndBody
+        EndObject
+        Object LL $Input 22 28-FEB-2016 17:12:52.52
+          Body SysBody 28-FEB-2016 17:12:52.52
+            Attr PgmName = "LL"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "LL"
+          EndBody
+        EndObject
+        Object Slope $Input 23 28-FEB-2016 17:12:52.52
+          Body SysBody 28-FEB-2016 17:12:52.52
+            Attr PgmName = "Slope"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Slope"
+          EndBody
+        EndObject
+        Object Out $Output 24 28-FEB-2016 17:12:52.52
+          Body SysBody 28-FEB-2016 17:12:52.52
+            Attr PgmName = "Out"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Out"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 28-FEB-2016 17:12:52.52
+        Body SysBody 23-MAY-2016 16:31:16.82
+          Attr StructName = "Sim_SlewRateLimiter"
+          Attr NextAix = "_X4"
+        EndBody
+        Object PlcNode $Buffer 3 28-FEB-2016 17:12:52.52
+          Body SysBody 28-FEB-2016 17:12:52.52
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 32 28-FEB-2016 17:12:52.52
+        Body SysBody 28-FEB-2016 17:12:52.52
+          Attr object_type = 11
+          Attr parameters[0] = 4
+          Attr parameters[1] = 0
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 0
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 4
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 2
+          Attr objname = "SlewRateLimiter"
+          Attr graphname = "SlewRateLimiter"
+        EndBody
+      EndObject
+      Object Template Sim_SlewRateLimiter 2151383040 01-JAN-1970 01:00:00.00
+        Body RtBody 07-APR-2016 19:28:49.52
+          Attr HL = 1.000000e+02
+          Attr Slope = 1.000000e+00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndVolume

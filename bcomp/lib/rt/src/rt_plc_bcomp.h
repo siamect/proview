@@ -50,5 +50,9 @@ void CompOnOffBurnerFo_exec( plc_sThread *tp, pwr_sClass_CompOnOffBurnerFo *obje
 void CompOnOffBurnerFo_init( pwr_sClass_CompOnOffBurnerFo *object);
 void CompOnOffZoneFo_exec( plc_sThread *tp, pwr_sClass_CompOnOffZoneFo *object);
 void CompOnOffZoneFo_init( pwr_sClass_CompOnOffZoneFo *object);
+void CompIMC_Fo_init( pwr_sClass_CompIMC_Fo *plc_obj);
+void CompIMC_Fo_exec( plc_sThread *tp, pwr_sClass_CompIMC_Fo *plc_obj);
+void CompModeIMC_Fo_init( pwr_sClass_CompModeIMC_Fo *plc_obj);
+void CompModeIMC_Fo_exec( plc_sThread *tp, pwr_sClass_CompModeIMC_Fo *plc_obj);
 
 #endif

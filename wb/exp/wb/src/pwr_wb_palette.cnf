@@ -131,6 +131,8 @@ palette NavigatorPalette
         class BaseSwitch
         class BaseTempSensor
         class BaseTempSwitch
+        class CompImc
+        class CompModeImc
         class CompModePID
         class CompOnOffBurner
         class CompOnOffZone
@@ -508,6 +510,7 @@ palette NavigatorPalette
     classvolume Remote Remote
     classvolume Opc Opc
     classvolume BaseComponent BaseComponent
+    classvolume Simul Simul
     classvolume Inor Inor
     classvolume OtherManufacturer OtherManufacturer
     classvolume OtherIO OtherIO
@@ -1194,6 +1197,17 @@ palette PlcEditorPalette
   {
     class Misc_DemoPattern
   }
+  menu Simul
+  {
+    class Sim_Integrator
+    class Sim_Delay
+    class Sim_LagFilter
+    class Sim_LeadLagFilter
+    class Sim_SigGen
+    class Sim_SlewRateLimiter
+    class Sim_SouFilter
+    class Sim_SouTOoFilter
+  }
   menu Components 
   {
     menu BaseComponent
@@ -1229,6 +1243,8 @@ palette PlcEditorPalette
       class CompModeAMFo
       class CompModePID_Fo
       class CompPID_Fo
+      class CompModeImc_Fo
+      class CompImc_Fo
       class CompOnOffBurnerFo
       class CompOnOffZoneFo
       class BaseMotorAggrFo

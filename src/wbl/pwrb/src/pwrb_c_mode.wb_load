@@ -37,7 +37,7 @@
 !
 SObject pwrb:Class
 !/**
-!  @Version 1.0
+!  @Version 2.0
 !  @Code rt_plc_pid.c
 !  @Group Plc,PlcControl
 !  @Summary Select control modes or forced control of Pid objects.
@@ -401,6 +401,16 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Specifies the number of characters displayed after the decimal point
+      !  for set value and process value in the object graph.
+      !*/
+      Object SetPrecision $Intern 28 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-FloatPrecisionEnum"
+          Attr GraphName = "SetPrecision"
+        EndBody
+      EndObject
+      !/**
       !  The lower respectively upper limits in the bar graph at
       !  presentation of the control signal, OutVal, of the Pid
       !  object in the Mode display. The values may be changed
@@ -427,6 +437,52 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String16"
           Attr GraphName = "OutEngUnit"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the number of characters displayed after the decimal point
+      !  for output value in the object graph.
+      !*/
+      Object OutPrecision $Intern 29 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-FloatPrecisionEnum"
+          Attr GraphName = "OutPrecision"
+        EndBody
+      EndObject
+      !/**
+      !  The difference between process value and set value.
+      !*/
+      Object Error $Intern 30
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Error"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  The lower respectively upper limits in the graphical
+      !  display of the error in the object graph.
+      !*/
+      Object ErrorMinShow $Intern 31 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ErrorMinShow"
+        EndBody
+      EndObject
+      Object ErrorMaxShow $Intern 32 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ErrorMaxShow"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies that the ranges for set value, process value and output
+      !  in the object graph can be adjusted.
+      !*/
+      Object AdjustableRanges $Intern 33 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
       !/**
@@ -483,6 +539,10 @@ SObject pwrb:Class
         Attr SetMaxShow = 100.0
         Attr OutEngUnit = "%"
         Attr SetEngUnit = "%"
+        Attr SetPrecision = 1
+        Attr OutPrecision = 1
+        Attr ErrorMinShow = -10.0
+        Attr ErrorMaxShow = 10.0
       EndBody
     EndObject
   EndObject

@@ -3960,6 +3960,16 @@ void GeValue::get_attributes( attr_sItem *attrinfo, int *item_count)
     attrinfo[i].type = glow_eType_Int;
     attrinfo[i++].size = sizeof( zero_blank);
 
+    strcpy( attrinfo[i].name, "Value.DecimalsAttr");
+    attrinfo[i].value = decimals_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( decimals_attr);
+
+    strcpy( attrinfo[i].name, "Value.DecimalsDecrease");
+    attrinfo[i].value = &decimals_decr;
+    attrinfo[i].type = glow_eType_Int;
+    attrinfo[i++].size = sizeof( decimals_decr);
+
     strcpy( attrinfo[i].name, "Value.Instances");
     attrinfo[i].value = &instance_mask;
     attrinfo[i].type = ge_eAttrType_InstanceMask;
@@ -3983,6 +3993,22 @@ void GeValue::get_attributes( attr_sItem *attrinfo, int *item_count)
     attrinfo[i].value = format;
     attrinfo[i].type = glow_eType_String;
     attrinfo[i++].size = sizeof( format);
+
+    sprintf( attrinfo[i].name, "Value[%d].ZeroBlank", inst);
+    attrinfo[i].value = &zero_blank;
+    attrinfo[i].type = glow_eType_Int;
+    attrinfo[i++].size = sizeof( zero_blank);
+
+    sprintf( attrinfo[i].name, "Value[%d].DecimalsAttr", inst);
+    attrinfo[i].value = decimals_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( decimals_attr);
+
+    sprintf( attrinfo[i].name, "Value[%d].DecimalsDecrease", inst);
+    attrinfo[i].value = &decimals_decr;
+    attrinfo[i].type = glow_eType_Int;
+    attrinfo[i++].size = sizeof( decimals_decr);
+
   }
   *item_count = i;
 }
@@ -4016,6 +4042,7 @@ void GeValue::set_attribute( grow_tObject object, const char *attr_name, int *cn
 void GeValue::replace_attribute( char *from, char *to, int *cnt, int strict)
 {
   GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+  GeDyn::replace_attribute( decimals_attr, sizeof(decimals_attr), from, to, cnt, strict);
 }
 
 void GeValue::save( ofstream& fp)
@@ -4026,6 +4053,8 @@ void GeValue::save( ofstream& fp)
   fp << int(ge_eSave_Value_instance) << FSPACE << int(instance) << endl;
   fp << int(ge_eSave_Value_instance_mask) << FSPACE << int(instance_mask) << endl;
   fp << int(ge_eSave_Value_zero_blank) << FSPACE << int(zero_blank) << endl;
+  fp << int(ge_eSave_Value_decimals_attr) << FSPACE << decimals_attr << endl;
+  fp << int(ge_eSave_Value_decimals_decr) << FSPACE << decimals_decr << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -4059,6 +4088,11 @@ void GeValue::open( ifstream& fp)
       case ge_eSave_Value_instance: fp >> tmp; instance = (ge_mInstance)tmp; break;
       case ge_eSave_Value_instance_mask: fp >> tmp; instance_mask = (ge_mInstance)tmp; break;
       case ge_eSave_Value_zero_blank: fp >> zero_blank; break;
+      case ge_eSave_Value_decimals_attr:
+        fp.get();
+        fp.getline( decimals_attr, sizeof(decimals_attr));
+        break;
+      case ge_eSave_Value_decimals_decr: fp >> decimals_decr; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeValue:open syntax error" << endl;
@@ -4067,6 +4101,48 @@ void GeValue::open( ifstream& fp)
     if ( end_found)
       break;
   }
+}
+
+static int read_decimals( GeDyn *dyn, char *attr, int decr, char *format)
+{
+  int		attr_type, attr_size;
+  pwr_tAName   	parsed_name;
+  int		sts;
+  int		inverted;
+  char		*s;
+  pwr_tInt32 	decimals;
+
+  dyn->parse_attr_name( attr, parsed_name, &inverted, &attr_type, &attr_size);
+  switch ( attr_type) {
+  case pwr_eType_Int32:
+  case pwr_eType_UInt32:
+  case pwr_eType_Enum:
+  case pwr_eType_Mask:
+    break;
+  default:
+    return 0;
+  }
+
+  sts = gdh_GetObjectInfo( parsed_name, &decimals, sizeof(decimals));
+  if ( EVEN(sts)) return sts;
+
+  decimals -= decr;
+  if ( decimals < 0)
+    decimals = 0;
+  if ( decimals >= 10)
+    return 0;
+
+  // Print format, of replace digit between . and f
+  s = strchr( format, 'f');
+  if ( s == 0)
+    sprintf( format, "%%.%df", decimals);
+  else {
+    if ( *(s-2) != '.')
+      sprintf( format, "%%.%df", decimals);
+    else
+      *(s-1) = 48 + decimals;
+  }
+  return 1;
 }
 
 int GeValue::connect( grow_tObject object, glow_sTraceData *trace_data)
@@ -4146,6 +4222,10 @@ int GeValue::connect( grow_tObject object, glow_sTraceData *trace_data)
     break;
   default:
     ;
+  }
+
+  if ( strcmp( decimals_attr, "") != 0) {
+    read_decimals( dyn, decimals_attr, decimals_decr, format);
   }
 
   trace_data->p = &pdummy;

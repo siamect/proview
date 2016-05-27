@@ -663,8 +663,12 @@ menu ColorTheme
     subgraph 	ValueLargeCenter 	pwr_exe:pwrct_valuelargecenter.pwsg 	52
     subgraph 	ValueInputSmall		pwr_exe:pwrct_valueinputsmall.pwsg 	50
     subgraph 	ValueInputSmallBg	pwr_exe:pwrct_valueinputsmallbg.pwsg 	50
+    subgraph 	ValueInputSmallCenterBg	pwr_exe:pwrct_valueinputsmallcenterbg.pwsg 50
     subgraph 	ValueInputMedium	pwr_exe:pwrct_valueinputmedium.pwsg 	51
     subgraph 	ValueInputMediumBg	pwr_exe:pwrct_valueinputmediumbg.pwsg 	51
+    subgraph 	ValueInputMediumBgs	pwr_exe:pwrct_valueinputmediumbgs.pwsg 	51
+    subgraph 	ValueInputMediumCenterBg pwr_exe:pwrct_valueinputmediumcenterbg.pwsg 51
+    subgraph 	ValueInputMediumCenterBgs pwr_exe:pwrct_valueinputmediumcenterbgs.pwsg 51
     subgraph 	ValueInputLarge 	pwr_exe:pwrct_valueinputlarge.pwsg 	52
     subgraph 	ValueInputLargeBg 	pwr_exe:pwrct_valueinputlargebg.pwsg 	52
   }
