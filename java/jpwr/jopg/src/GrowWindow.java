@@ -527,7 +527,8 @@ public class GrowWindow extends GrowRect implements GrowScrollBarIfc {
 	    file_name = input_file_name;
 	    new_ctx();
 
-	    windowCmn.ctx.traceConnect();
+	    if ( windowCmn != null)
+		windowCmn.ctx.traceConnect();
 	    cmn.gdraw.reset_clip_rectangle();
 	}
     }

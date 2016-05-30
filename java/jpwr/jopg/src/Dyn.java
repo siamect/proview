@@ -2488,7 +2488,7 @@ public class Dyn {
 
 	public int connect(GlowArrayElem o) {
 
-	    if ( attribute.toLowerCase().startsWith("$cmd(")) {
+	    if ( attribute != null && attribute.toLowerCase().startsWith("$cmd(")) {
 		cmd = true;
 		int idx = attribute.lastIndexOf(')');
 		if ( idx != -1 && idx > 5)

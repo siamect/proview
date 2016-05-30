@@ -93,7 +93,7 @@ public class GrowFolder extends GrowWindow {
 		    text_color_drawtype = Integer.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowFolder_header_height: 
-		    header_height = Integer.valueOf(token.nextToken()); 
+		    header_height = Double.valueOf(token.nextToken()); 
 		    break;
 		case Glow.eSave_GrowFolder_color_selected: 
 		    color_selected = Integer.valueOf(token.nextToken()); 
@@ -376,7 +376,7 @@ public class GrowFolder extends GrowWindow {
 	    super.update_attributes();
 
 	} catch ( Exception e) {
-	    System.out.println( "IOException GrowWindow");
+	    System.out.println( "IOException GrowFolder");
 	}
     }    
 
@@ -492,7 +492,7 @@ public class GrowFolder extends GrowWindow {
 	    }
 	    cmn.gdraw.polyline( p, 4, drawtype, idx, 0);
       
-	    if ( text_idx >= 0) {
+	    if ( text_idx >= 0 && folder_text[i] != null) {
 		cmn.gdraw.text( x + h/2, ll_y + h - 2,
 				folder_text[i], text_drawtype, text_color_drawtype, 
 				text_idx, highlight, 0, Glow.eFont_Helvetica, tsize, 0);
