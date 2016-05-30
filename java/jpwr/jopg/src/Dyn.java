@@ -322,6 +322,8 @@ public class Dyn {
     public static final int eSave_Value_instance      		= 1202;
     public static final int eSave_Value_instance_mask 		= 1203;
     public static final int eSave_Value_zero_blank     		= 1204;
+    public static final int eSave_Value_decimals_attr          	= 1205;
+    public static final int eSave_Value_decimals_decr          	= 1206;
     public static final int eSave_ValueInput_attribute      	= 1300;
     public static final int eSave_ValueInput_format		= 1301;
     public static final int eSave_ValueInput_min_value      	= 1302;
@@ -332,6 +334,7 @@ public class Dyn {
     public static final int eSave_ValueInput_minvalue_attr   	= 1307;
     public static final int eSave_ValueInput_maxvalue_attr   	= 1308;
     public static final int eSave_ValueInput_escape_store    	= 1309;
+    public static final int eSave_ValueInput_keyboard_type    	= 1310;
     public static final int eSave_Rotate_attribute		= 1400;
     public static final int eSave_Rotate_x0			= 1401;
     public static final int eSave_Rotate_y0			= 1402;
@@ -3032,6 +3035,8 @@ public class Dyn {
 	String attribute;
 	String format;
 	int zero_blank;
+	String decimals_attr;
+	int decimals_decr;
 	PwrtRefId subid;
 	int p;
 	int database;
@@ -3057,13 +3062,61 @@ public class Dyn {
 	    attribute = x.attribute;
 	    zero_blank = x.zero_blank;
 	    format = x.format;
-	    cFormat = new GlowCFormat(format);
+	}
+
+	public String read_decimals( Dyn dyn, String attr, int decr, String format) {
+	    int 	decimals;
+
+	    DynParsedAttrName pname = dyn.parseAttrName(attr);
+	    if ( pname == null || pname.name.equals("")) 
+		return format;
+	    
+	    switch ( pname.type) {
+	    case Pwr.eType_Int32:
+	    case Pwr.eType_UInt32:
+	    case Pwr.eType_Enum:
+	    case Pwr.eType_Mask:
+		break;
+	    default:
+		return format;
+	    }
+
+	    CdhrInt ret = dyn.graph.getGdh().getObjectInfoInt( pname.name);
+	    if ( ret.evenSts()) return format;
+
+	    decimals = ret.value - decr;
+	    if ( decimals < 0)
+		decimals = 0;
+	    if ( decimals >= 10)
+		return format;
+
+	    if ( format == null)
+		return "%." + decimals + "f";
+
+	    // Print format, of replace digit between . and f
+	    int s = format.indexOf( 'f');
+	    if ( s == -1)
+		return "%." + decimals + "f";
+	    else {
+		if ( s < 2 || format.charAt(s-2) != '.')
+		    return "%." + decimals + "f";
+		else
+		    return format.substring( 0, s-1) + decimals + format.substring(s);
+	    }
 	}
 
  	public int connect(GlowArrayElem o) {
 	    GrowNode object = (GrowNode)o;
+	    if ( format == null && decimals_attr == null)
+		return 1;
+
+	    if ( decimals_attr != null && !decimals_attr.isEmpty()) {
+		format = read_decimals( dyn, decimals_attr, decimals_decr, format);
+		System.out.println( "read_decimals " + format);
+	    }
 	    if ( format == null)
 		return 1;
+	    cFormat = new GlowCFormat(format);
 
 	    DynParsedAttrName pname = dyn.parseAttrName(attribute);
 	    if ( pname == null || pname.name.equals("")) 
@@ -3095,6 +3148,8 @@ public class Dyn {
 	    database = pname.database;
 	    attrFound = true;
 	    System.out.println( "DynValue.connect " + attribute + " " + ret.id + " " + pname.type);
+
+		
 	    return 1;
 	}
 
@@ -3261,6 +3316,13 @@ public class Dyn {
 			break;
 		    case Dyn.eSave_Value_zero_blank: 
 			zero_blank = Integer.valueOf(token.nextToken());
+			break;
+		    case Dyn.eSave_Value_decimals_attr: 
+			if ( token.hasMoreTokens())
+			    decimals_attr = token.nextToken();
+			break;
+		    case Dyn.eSave_Value_decimals_decr: 
+			decimals_decr = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
@@ -3502,6 +3564,7 @@ public class Dyn {
 	String minvalue_attr;
 	String maxvalue_attr;
 	int escape_store;
+	int keyboard_type;
 	DynValue value_element;
 	int a_typeid;
 
@@ -3593,6 +3656,9 @@ public class Dyn {
 			break;
 		    case Dyn.eSave_ValueInput_escape_store: 
 			escape_store = Integer.valueOf(token.nextToken());
+			break;
+		    case Dyn.eSave_ValueInput_keyboard_type: 
+			keyboard_type = Integer.valueOf(token.nextToken());
 			break;
 		    case Dyn.eSave_End:
 			end_found = true;
