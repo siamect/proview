@@ -1514,56 +1514,82 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
   }
   if ( item.options & pwr_mSevOptionsMask_Event) {
     total_rows = atoi(row[4]);
-  }
-  else if ( starttime && endtime) {
-    pwr_tTime update_time;
-    if ( row[12])
-      timestr_to_time( row[12], &update_time);
-
-    if ( time_Acomp( creatime, &stime) == 1)
-      stime = *creatime;
-
-    if ( row[12] && time_Acomp( &etime, &update_time) == 1)
-      etime = update_time;
-
-    time_Adiff( &dt, &etime, &stime);
-    total_rows = int (time_DToFloat( 0, &dt) / scantime);
-
     div = total_rows / maxsize + 1;
   }
-  else if ( starttime) {
-    pwr_tTime update_time;
-    if ( row[12])
-      timestr_to_time( row[12], &update_time);
+  else if ( item.options & pwr_mSevOptionsMask_UseDeadBand && 
+	    item.options & pwr_mSevOptionsMask_DeadBandLinearRegr) {
+    int startid;
+    int endid;
+
+    if ( starttime) {
+      // Get id for starttime
+      *sts = get_closest_time( item.tablename, item.options, starttime, 1, &startid);      
+    }
     else
-      time_GetTime( &update_time);
-
-    if ( time_Acomp( &update_time, starttime) != 1) {
-      mysql_free_result( result);
-      *sts = SEV__NODATATIME;
-      return 0;
+      startid = 0;
+    if ( endtime) {
+      // Get id for starttime
+      *sts = get_closest_time( item.tablename, item.options, endtime, 0, &endid);
+      if ( endid == 0)
+	endid = atoi(row[4]);
     }
-    time_Adiff( &dt, &update_time, starttime);
-    total_rows = int (time_DToFloat( 0, &dt) / scantime);
-  }
-  else if ( endtime) {
-    pwr_tTime create_time;
-    timestr_to_time( row[11], &create_time);
+    else 
+      endid = atoi(row[4]);
 
-    if ( time_Acomp( endtime, &create_time) != 1) {
-      mysql_free_result( result);
-      *sts = SEV__NODATATIME;
-      return 0;
-    }
-    time_Adiff( &dt, endtime, &create_time);
-    total_rows = int (time_DToFloat( 0, &dt) / scantime);
+    printf( "startid %d, endid %d\n", startid, endid);
+    div = (endid - startid + 1) / maxsize + 1;
   }
   else {
-    total_rows = atoi(row[4]);
+    if ( starttime && endtime) {
+      pwr_tTime update_time;
+      if ( row[12])
+	timestr_to_time( row[12], &update_time);
+      
+      if ( time_Acomp( creatime, &stime) == 1)
+	stime = *creatime;
+      
+      if ( row[12] && time_Acomp( &etime, &update_time) == 1)
+	etime = update_time;
+      
+      time_Adiff( &dt, &etime, &stime);
+      total_rows = int (time_DToFloat( 0, &dt) / scantime);
+      
+      div = total_rows / maxsize + 1;
+    }
+    else if ( starttime) {
+      pwr_tTime update_time;
+      if ( row[12])
+	timestr_to_time( row[12], &update_time);
+      else
+	time_GetTime( &update_time);
+      
+      if ( time_Acomp( &update_time, starttime) != 1) {
+	mysql_free_result( result);
+	*sts = SEV__NODATATIME;
+	return 0;
+      }
+      time_Adiff( &dt, &update_time, starttime);
+      total_rows = int (time_DToFloat( 0, &dt) / scantime);
+    }
+    else if ( endtime) {
+      pwr_tTime create_time;
+      timestr_to_time( row[11], &create_time);
+      
+      if ( time_Acomp( endtime, &create_time) != 1) {
+	mysql_free_result( result);
+	*sts = SEV__NODATATIME;
+	return 0;
+      }
+      time_Adiff( &dt, endtime, &create_time);
+      total_rows = int (time_DToFloat( 0, &dt) / scantime);
+    }
+    else {
+      total_rows = atoi(row[4]);
+    }
+    div = total_rows / maxsize + 1;
   }
   mysql_free_result( result);
 
-  div = total_rows / maxsize + 1;
 
   if ( starttime) {
     *sts = time_AtoAscii( &stime, time_eFormat_NumDateAndTime, starttimstr,
@@ -3169,6 +3195,58 @@ int sev_dbms::check_deadband(pwr_eType type, unsigned int size, pwr_tFloat32 dea
   return deadband_active;
 }
 
+int sev_dbms::get_closest_time( char *tablename, unsigned int options, pwr_tTime *time, int before, int *id)
+{
+  char query[200];
+  pwr_tStatus sts;
+  char timstr[20];
+
+  sts = time_AtoAscii( time, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
+  if ( EVEN(sts)) return sts;
+  timstr[19] = 0;
+
+  if ( options & pwr_mSevOptionsMask_PosixTime) {
+    if ( before)
+      sprintf( query, "select id from %s where time <= %ld order by time desc limit 1",  tablename, (long int)time->tv_sec);
+    else
+      sprintf( query, "select id from %s where time >= %ld order by time asc limit 1",  tablename, (long int)time->tv_sec);
+  }
+  else {
+    if ( before)
+      sprintf( query, "select id from %s where time <= '%s' order by time desc limit 1",  tablename, timstr);
+    else
+      sprintf( query, "select id from %s where time >= '%s' order by time asc limit 1",  tablename, timstr);
+  }
+      
+  int rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Query Error\n", __FUNCTION__);
+    return SEV__DBERROR;
+  }
+  
+  MYSQL_ROW row;
+  MYSQL_RES *result = mysql_store_result( m_env->con());
+  
+  if ( !result) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Status Result Error\n", __FUNCTION__);
+    return SEV__DBERROR;
+  }
+
+  row = mysql_fetch_row( result);
+  if (!row) {
+    *id = 0;
+  }
+  else
+    *id = atoi(row[0]);
+
+  mysql_free_result( result);
+
+  return 1;
+}
+
+
 int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
 			  unsigned int size, pwr_tTime *starttime, pwr_tTime *endtime, 
 			  int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize)
@@ -3226,6 +3304,27 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   }
   if ( item->options & pwr_mSevOptionsMask_Event) {
     total_rows = atoi(row[4]);
+  }
+  else if ( item->options & pwr_mSevOptionsMask_UseDeadBand && 
+	    item->options & pwr_mSevOptionsMask_DeadBandLinearRegr) {
+    int startid;
+    int endid;
+
+    if ( starttime) {
+      // Get id for starttime
+      *sts = get_closest_time( item->tablename, item->options, starttime, 1, &startid);
+    }
+    else
+      startid = 0;
+    if ( endtime) {
+      // Get id for starttime
+      *sts = get_closest_time( item->tablename, item->options, endtime, 0, &endid);
+    }
+    else 
+      endid = atoi(row[4]);
+
+    printf( "startid %d, endid %d\n", startid, endid);
+    div = (endid - startid + 1) / maxsize + 1;
   }
   else if ( starttime && endtime) {
     pwr_tTime update_time;

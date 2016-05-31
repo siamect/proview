@@ -206,6 +206,7 @@ class sev_dbms : public sev_db {
   void add_cache( int item_idx);
   int begin_transaction();
   int commit_transaction();
+  int get_closest_time( char *tablename, unsigned int options, pwr_tTime *time, int before, int *id);
   inline char* create_colName(unsigned int index, char *attributename) {
     static char colName[constMaxColNameLength];
     strncpy(colName, attributename, constMaxColNameLength);
