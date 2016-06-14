@@ -2975,7 +2975,7 @@ Ett table-objekt visar en tabell med ett visst antal rader och kolumner. Varje k
 till ett vektor-attribut i databasen, och värdet för elementen i vektorn visas i kolumnen. 
 
 En cell i tabellen kan väljas ut genom att man klickar på den eller med pil-tangenterna (om 
-dynamik-typen InputFocus är konfigurerad för tabellen). Till varje kolumn kan man koppla ett 
+aktions-typen InputFocus är konfigurerad för tabellen). Till varje kolumn kan man koppla ett 
 urvals-attribut, i form av ett vektor-attribut i databasen av typen Boolean. När en cell 
 väljs ut, sätts motsvarande element i urvals-attributet, och det tidigare utvalda återställs.
 

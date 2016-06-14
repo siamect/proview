@@ -2995,7 +2995,7 @@ A table object displays a table with a number of rows and columns. Each column i
 to an array attribute in the database, and the values of the array elements are displayed
 in the column.
 
-A cell in the table is selected by clicking on it, or by the arrow keys (if dynamic type
+A cell in the table is selected by clicking on it, or by the arrow keys (if action type
 InputFocus is configured for the table). To each column you can connect a select attribute,
 i.e. an array attribute in the database of type Boolean. When a cell is selected, the 
 corresponding element in the select attribute is set, and the previous selected is reset.
